@@ -88,11 +88,11 @@
 		</lay-out>
 	</section>
 
-    <h3>fade-up-left() trigger-enter</h3>
+    <h3>fade-up-left() trigger</h3>
 	<section>
-		<small>Items fade in and move up-left. Entry only — no reverse on exit.</small>
-		<code>&lt;lay-out animate="fade-up-left() trigger-enter" lg="columns(3)"&gt;</code>
-		<lay-out animate="fade-up-left() trigger-enter" lg="columns(3)">
+		<small>Items fade in and move up-left.</small>
+		<code>&lt;lay-out animate="fade-up-left() trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-up-left() trigger" lg="columns(3)">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
@@ -338,11 +338,11 @@
 		</lay-out>
 	</section>
 
-    <h3>zoom-out() trigger-enter</h3>
+    <h3>zoom-out() trigger</h3>
 	<section>
-		<small>Items zoom out (from large to normal). Entry only.</small>
-		<code>&lt;lay-out animate="zoom-out() trigger-enter" lg="columns(3)"&gt;</code>
-		<lay-out animate="zoom-out() trigger-enter" lg="columns(3)">
+		<small>Items zoom out (from large to normal).</small>
+		<code>&lt;lay-out animate="zoom-out() trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="zoom-out() trigger" lg="columns(3)">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
@@ -423,24 +423,13 @@
 	</section>
 
 	<h2>Trigger Direction</h2>
-	<p>Control whether triggered animations play on entry, exit, or both. Uses <code>trigger</code> (both), <code>trigger-enter</code> (entry only), or <code>trigger-exit</code> (exit only).</p>
+	<p>Control whether triggered animations play on entry, exit, or both. Uses <code>trigger</code> (entry), <code>trigger-exit</code> (exit only), or <code>trigger-both</code> (entry + exit).</p>
 
-	<h3>fade-up() trigger (both)</h3>
+	<h3>fade-up() trigger</h3>
 	<section>
-		<small>Items fade up on entry, reverse on exit.</small>
+		<small>Items fade up on entry — stay visible on exit.</small>
 		<code>&lt;lay-out animate="fade-up() trigger" lg="columns(3)"&gt;</code>
 		<lay-out animate="fade-up() trigger" lg="columns(3)">
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card></item-card>
-		</lay-out>
-	</section>
-
-	<h3>fade-up() trigger-enter</h3>
-	<section>
-		<small>Items fade up on entry only — stay visible on exit.</small>
-		<code>&lt;lay-out animate="fade-up() trigger-enter" lg="columns(3)"&gt;</code>
-		<lay-out animate="fade-up() trigger-enter" lg="columns(3)">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
@@ -458,11 +447,22 @@
 		</lay-out>
 	</section>
 
-	<h3>zoom-in() trigger-enter</h3>
+	<h3>fade-up() trigger-both</h3>
 	<section>
-		<small>Items zoom in on entry only.</small>
-		<code>&lt;lay-out animate="zoom-in() trigger-enter" lg="columns(3)"&gt;</code>
-		<lay-out animate="zoom-in() trigger-enter" lg="columns(3)">
+		<small>Items fade up on entry, reverse on exit.</small>
+		<code>&lt;lay-out animate="fade-up() trigger-both" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-up() trigger-both" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>zoom-in() trigger-both</h3>
+	<section>
+		<small>Items zoom in on entry, reverse on exit.</small>
+		<code>&lt;lay-out animate="zoom-in() trigger-both" lg="columns(3)"&gt;</code>
+		<lay-out animate="zoom-in() trigger-both" lg="columns(3)">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>

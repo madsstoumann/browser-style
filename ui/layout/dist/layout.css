@@ -525,6 +525,11 @@
 
 		/* === Morph Overlay (::after morphs away to reveal content) === */
 
+		[morph] {
+			position: sticky;
+			top: 0;
+		}
+
 		[morph]::after {
 			content: '';
 			position: absolute;
