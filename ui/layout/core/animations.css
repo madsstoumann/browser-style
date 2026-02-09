@@ -552,8 +552,8 @@
 	}
 
 	@keyframes reveal-superellipse {
-		0%   { border-top-right-radius: 100%; corner-shape: superellipse(-6); opacity: 0; }
-		100% { border-top-right-radius: 0; corner-shape: superellipse(6); opacity: 1; }
+		0%   { clip-path: ellipse(0% 0% at 0% 100%); }
+		100% { clip-path: ellipse(150% 150% at 0% 100%); }
 	}
 
 	/* --- Slide --- */
