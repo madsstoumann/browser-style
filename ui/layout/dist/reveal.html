@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Reveal Demos</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Reveal demos — containers self-clip via clip-path on scroll entry">
+	<link rel="stylesheet" href="layout.min.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
+</head>
+<body>
+	<h1>Reveal Demos</h1>
+	<p>These demos show <strong>reveal</strong> animations on the <strong>lay-out</strong> container using <strong>animate-self</strong>.<br>
+	Scroll down to see containers reveal via clip-path as they enter the viewport.</p>
+
+	<div style="height: 60vh; display: grid; place-items: center;">
+		<p style="opacity: 0.5;">&darr; Scroll down to see animations &darr;</p>
+	</div>
+
+	<h2>Reveal Variants</h2>
+
+	<h3>reveal(circle)</h3>
+	<section>
+		<small>Container reveals via circular clip-path.</small>
+		<code>&lt;lay-out animate-self="reveal(circle)" lg="columns(3)"&gt;</code>
+		<lay-out animate-self="reveal(circle)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(inset)</h3>
+	<section>
+		<small>Container reveals via inset clip-path expanding from center.</small>
+		<code>&lt;lay-out animate-self="reveal(inset)" lg="columns(3)"&gt;</code>
+		<lay-out animate-self="reveal(inset)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(polygon)</h3>
+	<section>
+		<small>Container reveals via diamond-to-rectangle polygon clip-path.</small>
+		<code>&lt;lay-out animate-self="reveal(polygon)" lg="columns(3)"&gt;</code>
+		<lay-out animate-self="reveal(polygon)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(superellipse)</h3>
+	<section>
+		<small>Container reveals with superellipse (squircle) corners via <strong>corner-shape</strong>.</small>
+		<code>&lt;lay-out animate-self="reveal(superellipse)" lg="columns(3)"&gt;</code>
+		<lay-out animate-self="reveal(superellipse)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Pace</h2>
+
+	<h3>reveal(circle) pace="slow"</h3>
+	<section>
+		<small>Wider scroll range for a gentler reveal.</small>
+		<code>&lt;lay-out animate-self="reveal(circle)" pace="slow" lg="columns(3)"&gt;</code>
+		<lay-out animate-self="reveal(circle)" pace="slow" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(inset) pace="fast"</h3>
+	<section>
+		<small>Narrow scroll range for a snappy reveal.</small>
+		<code>&lt;lay-out animate-self="reveal(inset)" pace="fast" lg="columns(3)"&gt;</code>
+		<lay-out animate-self="reveal(inset)" pace="fast" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Pace &mdash; Exit</h2>
+
+	<h3>reveal(circle) pace="exit"</h3>
+	<section>
+		<small>Reveals on entry, reverses on exit.</small>
+		<code>&lt;lay-out animate-self="reveal(circle)" pace="exit" lg="columns(3)"&gt;</code>
+		<lay-out animate-self="reveal(circle)" pace="exit" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(polygon) pace="slow exit-fast"</h3>
+	<section>
+		<small>Slow entry, snappy exit.</small>
+		<code>&lt;lay-out animate-self="reveal(polygon)" pace="slow exit-fast" lg="columns(3)"&gt;</code>
+		<lay-out animate-self="reveal(polygon)" pace="slow exit-fast" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Custom Easings</h2>
+
+	<h3>reveal(circle) easing="ease-spring-3"</h3>
+	<section>
+		<small>Spring easing on circle reveal.</small>
+		<code>&lt;lay-out animate-self="reveal(circle)" easing="ease-spring-3" lg="columns(3)"&gt;</code>
+		<lay-out animate-self="reveal(circle)" easing="ease-spring-3" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Combined Animations</h2>
+
+	<h3>reveal(polygon) + fade-up()</h3>
+	<section>
+		<small>Polygon reveal combined with a fade-up.</small>
+		<code>&lt;lay-out animate-self="reveal(polygon) fade-up()" lg="columns(3)"&gt;</code>
+		<lay-out animate-self="reveal(polygon) fade-up()" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal(circle) + zoom-in()</h3>
+	<section>
+		<small>Circle reveal combined with a zoom-in.</small>
+		<code>&lt;lay-out animate-self="reveal(circle) zoom-in()" lg="columns(3)"&gt;</code>
+		<lay-out animate-self="reveal(circle) zoom-in()" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+</body>
+</html>

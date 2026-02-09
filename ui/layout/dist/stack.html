@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Stack Layouts</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Stack Layouts — overlapping children in the same grid cell">
+	<link rel="stylesheet" href="layout.min.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
+	<style>
+		.stack-demo { position: relative; min-height: 200px; }
+		.stack-demo > * { display: grid; place-content: center; min-height: 200px; }
+		.stack-back { background: hsl(220 60% 85%); }
+		.stack-front { background: hsl(220 60% 50% / 0.6); color: white; }
+		.stack-hero-img { background: hsl(200 40% 70%); min-height: 300px; }
+		.stack-hero-text { background: linear-gradient(to top, hsl(0 0% 0% / 0.7), transparent); color: white; align-content: end; padding: 2rem; }
+		.stack-badge { background: hsl(350 70% 55%); color: white; width: 3rem; height: 3rem; border-radius: 50%; display: grid; place-content: center; font-weight: bold; margin: 1rem; justify-self: end; align-self: start; }
+	</style>
+</head>
+<body>
+	<h1>Stack Layouts</h1>
+	<p>The <strong>stack()</strong> layout overlaps all children in the same grid cell.<br>
+		Use any custom name — <code>stack(hero)</code>, <code>stack(overlay)</code>, <code>stack(my-thing)</code> — the CSS is always the same.</p>
+
+	<h2>Basic Stack</h2>
+	<section>
+		<small>Two children overlapping. The second child renders on top of the first.</small>
+		<code>&lt;lay-out lg="stack(basic)"&gt;</code>
+		<lay-out lg="stack(basic)" class="stack-demo">
+			<div class="stack-back">Back layer</div>
+			<div class="stack-front">Front layer</div>
+		</lay-out>
+	</section>
+
+	<h2>Hero with Text Overlay</h2>
+	<section>
+		<small>Image area with gradient text overlay — a common hero pattern. Stacks at <strong>sm</strong> and up.</small>
+		<code>&lt;lay-out sm="stack(hero)"&gt;</code>
+		<lay-out sm="stack(hero)">
+			<div class="stack-hero-img" style="display:grid; place-content:center;">Image placeholder</div>
+			<div class="stack-hero-text">
+				<h3 style="margin:0; font-size:1.5rem;">Hero Title</h3>
+				<p style="margin:0.25rem 0 0;">Subtitle text layered on top of the image.</p>
+			</div>
+		</lay-out>
+	</section>
+
+	<h2>Card with Badge</h2>
+	<section>
+		<small>A card with a floating badge — the badge is a sibling, not absolutely positioned.</small>
+		<code>&lt;lay-out xs="stack(card)"&gt;</code>
+		<lay-out xs="stack(card)">
+			<div style="background: hsl(220 20% 95%); padding: 2rem; min-height: 150px;">
+				<h3 style="margin:0;">Product Card</h3>
+				<p style="margin:0.5rem 0 0;">Card content underneath the badge.</p>
+			</div>
+			<div class="stack-badge">3</div>
+		</lay-out>
+	</section>
+
+	<h2>Breakpoint Transition</h2>
+	<section>
+		<small>Two columns at <strong>md</strong>, stacked/overlapping at <strong>lg</strong>. Resize the viewport to see the switch.</small>
+		<code>&lt;lay-out md="columns(2)" lg="stack(transition)"&gt;</code>
+		<lay-out md="columns(2)" lg="stack(transition)" class="stack-demo">
+			<div class="stack-back">Column 1 → Back layer</div>
+			<div class="stack-front">Column 2 → Front layer</div>
+		</lay-out>
+	</section>
+
+	<h2>Three Layers</h2>
+	<section>
+		<small>Three children stacked. Layer order follows DOM order (last child on top).</small>
+		<code>&lt;lay-out sm="stack(layers)"&gt;</code>
+		<lay-out sm="stack(layers)" class="stack-demo">
+			<div style="background: hsl(220 60% 85%); min-height: 200px; display: grid; place-content: center;">Layer 1 (bottom)</div>
+			<div style="background: hsl(220 60% 65% / 0.7); color: white; min-height: 200px; display: grid; place-content: center;">Layer 2 (middle)</div>
+			<div style="background: hsl(220 60% 45% / 0.5); color: white; min-height: 200px; display: grid; place-content: center;">Layer 3 (top)</div>
+		</lay-out>
+	</section>
+</body>
+</html>

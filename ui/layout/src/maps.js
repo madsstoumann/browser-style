@@ -14,6 +14,7 @@ const configPath = join(__dirname, '../layout.config.json')
 function extractLayoutData(layoutFile) {
     const layouts = {}
     for (const layout of layoutFile.layouts) {
+        if (layout.id === '*') continue
         const key = `${layoutFile.prefix}(${layout.id})`
         layouts[key] = layout.srcset
     }

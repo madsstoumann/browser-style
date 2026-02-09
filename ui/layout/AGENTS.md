@@ -191,7 +191,7 @@ Controls animation speed via `pace` attribute (space-separated tokens).
 
 #### Scroll-Triggered Mode (Chrome 145+)
 
-Behind `@supports (timeline-trigger-name: --t)`. Scroll position *starts* the animation but doesn't control its progress — animations play at a fixed `--layout-anim-dur` duration.
+Behind `@supports (timeline-trigger-name: --t)`. Scroll position *starts* the animation but doesn't control its progress — animations play at a fixed `--animate-dur` duration.
 
 | Token | Direction | `animation-trigger` keyword |
 |-------|-----------|---------------------------|
@@ -199,7 +199,7 @@ Behind `@supports (timeline-trigger-name: --t)`. Scroll position *starts* the an
 | `trigger-exit` | Exit only | `play-backwards` |
 | `trigger-both` | Both | `play-forwards play-backwards` |
 
-Stagger uses `animation-delay` with `sibling-index()` multiplied by `--layout-anim-stagger` (default `10`) and `--layout-anim-delay` (default `0.005s`). Pace tokens map to `--layout-anim-dur` in this mode.
+Stagger uses `animation-delay` with `sibling-index()` multiplied by `--animate-stagger` (default `10`) and `--animate-delay` (default `0.005s`). Pace tokens map to `--animate-dur` in this mode.
 
 **Important:** `animation-trigger` requires literal keywords — `var()` cannot be used for play direction.
 
@@ -211,18 +211,18 @@ Stagger uses `animation-delay` with `sibling-index()` multiplied by `--layout-an
 
 #### Morph Overlay
 
-The `morph` attribute adds a solid-color `::after` pseudo-element that covers the `lay-out` and morphs away via `clip-path` on scroll, revealing content underneath. Differs from `reveal-*` animations (which clip the element itself with opacity) — morph overlays are opaque pseudo-elements with clip-path only.
+The `morph()` function in `animate-self` or `animate` adds a solid-color `::after` pseudo-element that covers the `lay-out` and morphs away via `clip-path` on scroll, revealing content underneath. Differs from `reveal-*` animations (which clip the element itself with opacity) -- morph overlays are opaque pseudo-elements with clip-path only.
 
 | Value | Shape |
 |-------|-------|
-| `circle` | Circle shrinks to point |
-| `inset` | Rectangle contracts from edges |
-| `polygon` | Rectangle morphs to diamond |
+| `morph(circle)` | Circle shrinks to point |
+| `morph(inset)` | Rectangle contracts from edges |
+| `morph(polygon)` | Rectangle morphs to diamond |
 
-Set `--layout-morph-bg` to match the previous section's background for seamless transitions. Reuses `pace`, `easing`, and exit tokens via inherited custom properties. Can combine with `animate-self`.
+Set `--layout-morph-bg` to match the previous section's background for seamless transitions. Reuses `pace`, `easing`, and exit tokens via inherited custom properties. Can combine with other animations in the same attribute.
 
 ```html
-<lay-out bleed="0" morph="circle" pace="slow"
+<lay-out bleed="0" animate-self="morph(circle)" pace="slow"
          style="--layout-bg: white; --layout-morph-bg: navy;">
 ```
 

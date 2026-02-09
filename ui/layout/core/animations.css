@@ -8,38 +8,38 @@
 
 	[animate-self], [animate] {
 		/* Public API */
-		--layout-anim-dg: 100deg;
-		--layout-anim-tx: 55px;
-		--layout-anim-ty: 110px;
-		--layout-anim-txv: 100vw;
-		--layout-anim-tyv: 100vh;
-		--layout-anim-zi: 0.6;
-		--layout-anim-zo: 1.2;
-		--layout-anim-mult: 1;
-		--layout-anim-delay: 0.005s;
-		--layout-anim-stagger: 10;
-		--layout-anim-dur: 0.5s;
-		--layout-anim-dur-very-slow: 1.5s;
-		--layout-anim-dur-slow: 1s;
-		--layout-anim-dur-fast: 0.3s;
-		--layout-anim-dur-very-fast: 0.15s;
+		--animate-dg: 100deg;
+		--animate-tx: 55px;
+		--animate-ty: 110px;
+		--animate-txv: 100vw;
+		--animate-tyv: 100vh;
+		--animate-zi: 0.6;
+		--animate-zo: 1.2;
+		--animate-mult: 1;
+		--animate-delay: 0.005s;
+		--animate-stagger: 10;
+		--animate-dur: 0.5s;
+		--animate-dur-very-slow: 1.5s;
+		--animate-dur-slow: 1s;
+		--animate-dur-fast: 0.3s;
+		--animate-dur-very-fast: 0.15s;
 
 		/* Internal (consumed by keyframes) */
-		--_dg: calc(var(--layout-anim-dg) * var(--layout-anim-mult));
-		--_tx: calc(var(--layout-anim-tx) * var(--layout-anim-mult));
-		--_ty: calc(var(--layout-anim-ty) * var(--layout-anim-mult));
-		--_txv: calc(var(--layout-anim-txv) * var(--layout-anim-mult));
-		--_tyv: calc(var(--layout-anim-tyv) * var(--layout-anim-mult));
-		--_zi: calc(var(--layout-anim-zi) / var(--layout-anim-mult));
-		--_zo: calc(1 + (var(--layout-anim-zo) - 1) * var(--layout-anim-mult));
+		--_dg: calc(var(--animate-dg) * var(--animate-mult));
+		--_tx: calc(var(--animate-tx) * var(--animate-mult));
+		--_ty: calc(var(--animate-ty) * var(--animate-mult));
+		--_txv: calc(var(--animate-txv) * var(--animate-mult));
+		--_tyv: calc(var(--animate-tyv) * var(--animate-mult));
+		--_zi: calc(var(--animate-zi) / var(--animate-mult));
+		--_zo: calc(1 + (var(--animate-zo) - 1) * var(--animate-mult));
 	}
 
 	/* ==========================================================================
 	   Multiplier: animate-self="fade-up(2)" or animate="fade-up(2)"
 	   ========================================================================== */
 
-	[animate-self*="(2)"], [animate*="(2)"] { --layout-anim-mult: 2; }
-	[animate-self*="(3)"], [animate*="(3)"] { --layout-anim-mult: 3; }
+	[animate-self*="(2)"], [animate*="(2)"] { --animate-mult: 2; }
+	[animate-self*="(3)"], [animate*="(3)"] { --animate-mult: 3; }
 
 	/* ==========================================================================
 	   Easing: maps [easing] attribute to --animtm custom property.
@@ -160,7 +160,7 @@
 	   ========================================================================== */
 
 	/* Bounce */
-	[animate-self*="bounce("],          [animate*="bounce("] > *          { --_animn: bounce-in; --layout-anim-zi: 0.3; }
+	[animate-self*="bounce("],          [animate*="bounce("] > *          { --_animn: bounce-in; --animate-zi: 0.3; }
 	[animate-self*="bounce-in-down("],  [animate*="bounce-in-down("] > *  { --_animn: bounce-in-down; }
 	[animate-self*="bounce-in-left("],  [animate*="bounce-in-left("] > *  { --_animn: bounce-in-left; }
 	[animate-self*="bounce-in-right("], [animate*="bounce-in-right("] > * { --_animn: bounce-in-right; }
@@ -189,9 +189,10 @@
 	[animate-self*="opacity("],         [animate*="opacity("] > *         { --_animn: opacity; }
 
 	/* Reveal */
-	[animate-self*="reveal("],          [animate*="reveal("] > *          { --_animn: reveal; }
-	[animate-self*="reveal-circle("],   [animate*="reveal-circle("] > *   { --_animn: reveal-circle; }
-	[animate-self*="reveal-polygon("],  [animate*="reveal-polygon("] > *  { --_animn: reveal-polygon; }
+	[animate-self*="reveal(circle)"]       { --_animn: reveal-circle; }
+	[animate-self*="reveal(inset)"]        { --_animn: reveal-inset; }
+	[animate-self*="reveal(polygon)"]      { --_animn: reveal-polygon; }
+	[animate-self*="reveal(superellipse)"] { --_animn: reveal-superellipse; }
 
 	/* Slide */
 	[animate-self*="slide-down("],      [animate*="slide-down("] > *      { --_animn: slide-down; }
@@ -204,14 +205,6 @@
 	[animate-self*="zoom-in-rotate("],  [animate*="zoom-in-rotate("] > *  { --_animn: zoom-in-rotate; }
 	[animate-self*="zoom-out("],        [animate*="zoom-out("] > *        { --_animn: zoom-out; }
 	[animate-self*="zoom-out-rotate("], [animate*="zoom-out-rotate("] > * { --_animn: zoom-out-rotate; }
-
-	/* ==========================================================================
-	   Morph Overlay: solid-color ::after that morphs away via clip-path
-	   ========================================================================== */
-
-	[morph="circle"]   { --_morphn: morph-circle; }
-	[morph="inset"]    { --_morphn: morph-inset; }
-	[morph="polygon"]  { --_morphn: morph-polygon; }
 
 	/* ==========================================================================
 	   Pace: entry speed
@@ -308,35 +301,14 @@
 		[animate~="deep"] > * > :nth-child(3) { --_child-offset: 20; }
 		[animate~="deep"] > * > :nth-child(4) { --_child-offset: 30; }
 
-		/* === Morph Overlay (::after morphs away to reveal content) === */
+		/* === Reveal: sticky full-screen section with clip-path transition === */
 
-		[morph] {
+		/* [animate-self*="reveal("] {
 			min-height: 100dvh;
 			padding-block-end: var(--layout-morph-pad, 100dvh);
 			position: sticky;
 			top: 0;
-		}
-
-		[morph]::after {
-			content: '';
-			position: absolute;
-			inset: 0 0 var(--layout-morph-pad, 100dvh);
-			background: var(--layout-morph-bg, var(--layout-bg, black));
-			pointer-events: none;
-			z-index: 1;
-			animation-name: var(--_morphn), var(--_morph-exit, none);
-			animation-direction: normal, reverse;
-			animation-timeline: view(), view();
-			animation-timing-function: var(--animtm, linear), var(--animtm, linear);
-			animation-fill-mode: forwards, forwards;
-			animation-range:
-				var(--_animrs, entry 0%) var(--_animre, entry 75%),
-				var(--_exit-rs, exit 0%) var(--_exit-re, exit 100%);
-		}
-
-		:where([pace~="exit"], [pace~="exit-fast"], [pace~="exit-slow"])[morph]::after {
-			--_morph-exit: var(--_morphn);
-		}
+		} */
 	}
 
 	/* ==========================================================================
@@ -378,9 +350,9 @@
 		/* trigger: shared item properties */
 		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"]) > * {
 			animation-timeline: auto;
-			animation-duration: var(--layout-anim-dur);
+			animation-duration: var(--animate-dur);
 			animation-range: normal;
-			animation-delay: calc((sibling-index() - 1) * var(--layout-anim-stagger) * var(--layout-anim-delay));
+			animation-delay: calc((sibling-index() - 1) * var(--animate-stagger) * var(--animate-delay));
 		}
 
 		/* trigger direction per variant */
@@ -393,10 +365,10 @@
 			animation-name: var(--_animn);
 			animation-timing-function: var(--layout-item-timing, var(--animtm, ease-out));
 			animation-fill-mode: both;
-			animation-duration: var(--layout-anim-dur);
+			animation-duration: var(--animate-dur);
 			animation-timeline: auto;
 			animation-range: normal;
-			animation-delay: calc((var(--_item-offset, 0) + var(--_child-offset, 0)) * var(--layout-anim-delay));
+			animation-delay: calc((var(--_item-offset, 0) + var(--_child-offset, 0)) * var(--animate-delay));
 		}
 
 		/* trigger direction per variant (deep) */
@@ -405,10 +377,10 @@
 		[animate~="trigger-both"][animate~="deep"] > * > *  { animation-trigger: --layout-trigger play-forwards play-backwards; }
 
 		/* Pace → duration mapping (triggered mode) */
-		[pace~="very-slow"] { --layout-anim-dur: var(--layout-anim-dur-very-slow); }
-		[pace~="slow"]      { --layout-anim-dur: var(--layout-anim-dur-slow); }
-		[pace~="fast"]      { --layout-anim-dur: var(--layout-anim-dur-fast); }
-		[pace~="very-fast"] { --layout-anim-dur: var(--layout-anim-dur-very-fast); }
+		[pace~="very-slow"] { --animate-dur: var(--animate-dur-very-slow); }
+		[pace~="slow"]      { --animate-dur: var(--animate-dur-slow); }
+		[pace~="fast"]      { --animate-dur: var(--animate-dur-fast); }
+		[pace~="very-fast"] { --animate-dur: var(--animate-dur-very-fast); }
 	}
 
 	/* ==========================================================================
@@ -538,16 +510,16 @@
 		100% { transform: perspective(2500px) rotateX(0); }
 	}
 
-	/* --- Reveal --- */
-
-	@keyframes reveal {
-		0%   { opacity: 0; clip-path: inset(45% 20% 45% 20%); }
-		100% { opacity: 1; clip-path: inset(0% 0% 0% 0%); }
-	}
+	/* --- Reveal (normal = appear, reverse = morph away) --- */
 
 	@keyframes reveal-circle {
 		0%   { opacity: 0; clip-path: circle(0% at 50% 50%); }
 		100% { opacity: 1; clip-path: circle(100% at 50% 50%); }
+	}
+
+	@keyframes reveal-inset {
+		0%   { opacity: 0; clip-path: inset(45% 20% 45% 20%); }
+		100% { opacity: 1; clip-path: inset(0% 0% 0% 0%); }
 	}
 
 	@keyframes reveal-polygon {
@@ -555,21 +527,9 @@
 		100% { opacity: 1; clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); }
 	}
 
-	/* --- Morph (overlay clip-path, no opacity — mirrors reveal shapes) --- */
-
-	@keyframes morph-circle {
-		0%   { clip-path: circle(100% at 50% 50%); }
-		100% { clip-path: circle(0% at 50% 50%); }
-	}
-
-	@keyframes morph-inset {
-		0%   { clip-path: inset(0% 0% 0% 0%); }
-		100% { clip-path: inset(45% 20% 45% 20%); }
-	}
-
-	@keyframes morph-polygon {
-		0%   { clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); }
-		100% { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+	@keyframes reveal-superellipse {
+		0%   { opacity: 0; corner-shape: superellipse(-6); }
+		100% { opacity: 1; corner-shape: superellipse(6); }
 	}
 
 	/* --- Slide --- */

@@ -179,28 +179,28 @@ Override these on any `[animate-self]` or `[animate]` element:
 
 | Property | Default | Description |
 |----------|---------|-------------|
-| `--layout-anim-ty` | `110px` | Vertical translation distance |
-| `--layout-anim-tx` | `55px` | Horizontal translation distance |
-| `--layout-anim-dg` | `100deg` | Rotation angle (flips) |
-| `--layout-anim-txv` | `100vw` | Viewport-width translation (slides, bounces) |
-| `--layout-anim-tyv` | `100vh` | Viewport-height translation (slides, bounces) |
-| `--layout-anim-zi` | `0.6` | Zoom-in start scale |
-| `--layout-anim-zo` | `1.2` | Zoom-out start scale |
-| `--layout-anim-mult` | `1` | Multiplier (set automatically by `(1)`/`(2)`/`(3)`) |
-| `--layout-anim-delay` | `0.005s` | Time factor per offset unit (triggered mode) |
-| `--layout-anim-stagger` | `10` | Stagger multiplier for item trigger delay |
-| `--layout-anim-dur` | `0.5s` | Animation duration in triggered mode |
-| `--layout-anim-dur-very-slow` | `1.5s` | Duration for `very-slow` pace (triggered mode) |
-| `--layout-anim-dur-slow` | `1s` | Duration for `slow` pace (triggered mode) |
-| `--layout-anim-dur-fast` | `0.3s` | Duration for `fast` pace (triggered mode) |
-| `--layout-anim-dur-very-fast` | `0.15s` | Duration for `very-fast` pace (triggered mode) |
+| `--animate-ty` | `110px` | Vertical translation distance |
+| `--animate-tx` | `55px` | Horizontal translation distance |
+| `--animate-dg` | `100deg` | Rotation angle (flips) |
+| `--animate-txv` | `100vw` | Viewport-width translation (slides, bounces) |
+| `--animate-tyv` | `100vh` | Viewport-height translation (slides, bounces) |
+| `--animate-zi` | `0.6` | Zoom-in start scale |
+| `--animate-zo` | `1.2` | Zoom-out start scale |
+| `--animate-mult` | `1` | Multiplier (set automatically by `(1)`/`(2)`/`(3)`) |
+| `--animate-delay` | `0.005s` | Time factor per offset unit (triggered mode) |
+| `--animate-stagger` | `10` | Stagger multiplier for item trigger delay |
+| `--animate-dur` | `0.5s` | Animation duration in triggered mode |
+| `--animate-dur-very-slow` | `1.5s` | Duration for `very-slow` pace (triggered mode) |
+| `--animate-dur-slow` | `1s` | Duration for `slow` pace (triggered mode) |
+| `--animate-dur-fast` | `0.3s` | Duration for `fast` pace (triggered mode) |
+| `--animate-dur-very-fast` | `0.15s` | Duration for `very-fast` pace (triggered mode) |
 | `--layout-item-timing` | `ease-out` | Timing function for item/deep animations |
 | `--layout-morph-bg` | `var(--layout-bg, black)` | Overlay color for `morph` attribute |
 
 Example — custom translation distance with multiplier:
 
 ```html
-<lay-out animate-self="fade-up(2)" style="--layout-anim-ty: 200px">
+<lay-out animate-self="fade-up(2)" style="--animate-ty: 200px">
 <!-- Result: 200px * 2 = 400px translation -->
 ```
 
@@ -264,23 +264,23 @@ The animation system uses layered feature detection:
 `@supports (width: calc(sibling-index() * 1px))` — Replaces fixed nth-child stagger rules with dynamic calculation. Scales to any number of children without additional selectors.
 
 ### Layer 3: Scroll-triggered animations (Chrome 145+)
-`@supports (timeline-trigger-name: --t)` — Enables time-based delays for item and deep animations via the `trigger` token, triggered by scroll position. Inner elements use `animation-delay` instead of scroll-range offsets, producing smoother stagger timing. Pace tokens map to `--layout-anim-dur` in this mode.
+`@supports (timeline-trigger-name: --t)` — Enables time-based delays for item and deep animations via the `trigger` token, triggered by scroll position. Inner elements use `animation-delay` instead of scroll-range offsets, producing smoother stagger timing. Pace tokens map to `--animate-dur` in this mode.
 
-In this mode, `--layout-anim-delay` controls the time factor per offset unit. The existing `--_item-offset` and `--_child-offset` values are reused as delay multipliers.
+In this mode, `--animate-delay` controls the time factor per offset unit. The existing `--_item-offset` and `--_child-offset` values are reused as delay multipliers.
 
 ## Architecture
 
 ```
-Public API          --layout-anim-ty (110px)
+Public API          --animate-ty (110px)
                               |
-Multiplier          --layout-anim-mult (1|2|3)
+Multiplier          --animate-mult (1|2|3)
                               |
-Computed            --_ty = calc(--layout-anim-ty * --layout-anim-mult)
+Computed            --_ty = calc(--animate-ty * --animate-mult)
                               |
 Keyframe            translate: 0px var(--_ty)
 ```
 
-Internal computed variables (`--_ty`, `--_tx`, `--_dg`, etc.) are consumed by keyframes and should not be overridden directly. Override the `--layout-anim-*` public properties instead.
+Internal computed variables (`--_ty`, `--_tx`, `--_dg`, etc.) are consumed by keyframes and should not be overridden directly. Override the `--animate-*` public properties instead.
 
 ### Two-Slot Animation Pattern
 
@@ -342,7 +342,7 @@ Browsers without `timeline-trigger-name` support ignore the `@supports` block an
 │                                                          │
 │  Children > *                                            │
 │    → animation-timeline: auto  (time-based)              │
-│    → animation-duration: var(--layout-anim-dur)          │
+│    → animation-duration: var(--animate-dur)          │
 │    → animation-delay:                                    │
 │         (sibling-index() - 1) * stagger * delay          │
 │                                                          │
@@ -356,7 +356,7 @@ Browsers without `timeline-trigger-name` support ignore the `@supports` block an
 └──────────────────────────────────────────────────────────┘
 ```
 
-The container defines a `timeline-trigger` that fires when it enters the viewport. Children switch from scroll-driven to time-based animations, using `animation-trigger` to link to the container's trigger. Stagger uses `animation-delay` with `sibling-index()` instead of scroll-range offsets. The `--layout-anim-stagger` property (default `10`) multiplies the delay factor to produce visible stagger between items.
+The container defines a `timeline-trigger` that fires when it enters the viewport. Children switch from scroll-driven to time-based animations, using `animation-trigger` to link to the container's trigger. Stagger uses `animation-delay` with `sibling-index()` instead of scroll-range offsets. The `--animate-stagger` property (default `10`) multiplies the delay factor to produce visible stagger between items.
 
 **Important:** The `animation-trigger` property requires literal keywords (`play-forwards`, `play-backwards`) — CSS custom properties cannot be used for play direction.
 
@@ -371,15 +371,15 @@ The container defines a `timeline-trigger` that fires when it enters the viewpor
 
 ### Pace Mapping
 
-In scroll-driven mode, `pace` tokens set `animation-range` values. In triggered mode, the same entry speed tokens map to `--layout-anim-dur`:
+In scroll-driven mode, `pace` tokens set `animation-range` values. In triggered mode, the same entry speed tokens map to `--animate-dur`:
 
 | Token | Scroll-driven effect | Triggered effect |
 |-------|---------------------|---------------------|
-| `very-slow` | Widest scroll range | `--layout-anim-dur: 1.5s` |
-| `slow` | Wide scroll range | `--layout-anim-dur: 1s` |
-| *(default)* | Normal range | `--layout-anim-dur: 0.5s` |
-| `fast` | Narrow scroll range | `--layout-anim-dur: 0.3s` |
-| `very-fast` | Narrowest scroll range | `--layout-anim-dur: 0.15s` |
+| `very-slow` | Widest scroll range | `--animate-dur: 1.5s` |
+| `slow` | Wide scroll range | `--animate-dur: 1s` |
+| *(default)* | Normal range | `--animate-dur: 0.5s` |
+| `fast` | Narrow scroll range | `--animate-dur: 0.3s` |
+| `very-fast` | Narrowest scroll range | `--animate-dur: 0.15s` |
 
 Exit direction in triggered mode is controlled by the trigger token (`trigger-exit`, `trigger-both`), not by `pace` exit tokens. The `pace` exit tokens (`exit`, `exit-fast`, `exit-slow`) only apply in scroll-driven mode.
 
@@ -410,10 +410,10 @@ When a trigger token and `deep` are combined, the existing deep stagger logic (i
 <lay-out animate="slide-down() trigger clip" lg="columns(3)">
 
 <!-- Custom duration -->
-<lay-out animate="zoom-in() trigger" style="--layout-anim-dur: 0.8s" lg="columns(3)">
+<lay-out animate="zoom-in() trigger" style="--animate-dur: 0.8s" lg="columns(3)">
 
 <!-- Custom stagger -->
-<lay-out animate="fade-up() trigger" style="--layout-anim-stagger: 20" lg="columns(3)">
+<lay-out animate="fade-up() trigger" style="--animate-stagger: 20" lg="columns(3)">
 ```
 
 ---
@@ -433,19 +433,23 @@ The existing `reveal-*` animations (`reveal()`, `reveal-circle()`, `reveal-polyg
 | End state | Element fully visible | Overlay clipped away |
 | Keyframes | `clip-path` + `opacity` | `clip-path` only (no opacity) |
 
-### Attribute
+### Syntax
 
-| Attribute | Target | Description |
-|-----------|--------|-------------|
-| `morph` | Container | Adds a solid-color `::after` overlay that morphs away on scroll |
+Morph uses the same function-call syntax as other animations, specified via `animate-self` or `animate`:
+
+```html
+<lay-out animate-self="morph(circle)">
+<lay-out animate-self="morph(inset)">
+<lay-out animate-self="morph(polygon)">
+```
 
 ### Morph Types
 
 | Value | Shape | Description |
 |-------|-------|-------------|
-| `circle` | Circle | Overlay shrinks from full coverage to a point |
-| `inset` | Rectangle | Overlay contracts from all edges |
-| `polygon` | Diamond | Overlay morphs from rectangle to diamond |
+| `morph(circle)` | Circle | Overlay shrinks from full coverage to a point |
+| `morph(inset)` | Rectangle | Overlay contracts from all edges |
+| `morph(polygon)` | Diamond | Overlay morphs from rectangle to diamond |
 
 ### Custom Properties
 
@@ -460,29 +464,29 @@ Morph reuses the animation system's custom properties via inheritance on `::afte
 - **`pace`** entry tokens control `animation-range` (via `--_animrs` / `--_animre`)
 - **`pace`** exit tokens activate a second animation slot that reverses the morph
 - **`easing`** sets `animation-timing-function` (via `--animtm`)
-- **`animate-self`** can be combined — the element animates while the overlay morphs
+- **Other animations** can be combined in the same attribute — e.g. `animate-self="fade-up() morph(circle)"`
 
 ### Usage
 
 ```html
 <!-- Circle morph — overlay matches previous section -->
-<lay-out bleed="0" morph="circle"
+<lay-out bleed="0" animate-self="morph(circle)"
          style="--layout-bg: #e2e8f0; --layout-morph-bg: #0f172a;">
 
 <!-- Inset morph with slow pace -->
-<lay-out bleed="0" morph="inset" pace="slow"
+<lay-out bleed="0" animate-self="morph(inset)" pace="slow"
          style="--layout-bg: #1e293b; --layout-morph-bg: #e2e8f0;">
 
 <!-- Polygon morph with exit (overlay returns on scroll-back) -->
-<lay-out bleed="0" morph="polygon" pace="exit"
+<lay-out bleed="0" animate-self="morph(polygon)" pace="exit"
          style="--layout-bg: #7c3aed; --layout-morph-bg: #0d9488;">
 
 <!-- Combined: content fades up while overlay morphs away -->
-<lay-out bleed="0" morph="polygon" animate-self="fade-up()"
+<lay-out bleed="0" animate-self="fade-up() morph(polygon)"
          style="--layout-bg: #0f172a; --layout-morph-bg: #ea580c;">
 
 <!-- Custom easing -->
-<lay-out bleed="0" morph="circle" easing="ease-spring-3"
+<lay-out bleed="0" animate-self="morph(circle)" easing="ease-spring-3"
          style="--layout-bg: #ea580c; --layout-morph-bg: #7c3aed;">
 ```
 
@@ -495,12 +499,12 @@ For seamless transitions between full-screen sections, set `--layout-morph-bg` o
   <!-- Section 1 -->
 </lay-out>
 
-<lay-out bleed="0" morph="circle"
+<lay-out bleed="0" animate-self="morph(circle)"
          style="--layout-bg: white; --layout-morph-bg: navy; min-height: 100vh;">
   <!-- Section 2: navy overlay morphs away to reveal white -->
 </lay-out>
 
-<lay-out bleed="0" morph="inset"
+<lay-out bleed="0" animate-self="morph(inset)"
          style="--layout-bg: darkgreen; --layout-morph-bg: white; min-height: 100vh;">
   <!-- Section 3: white overlay morphs away to reveal green -->
 </lay-out>

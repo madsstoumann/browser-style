@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Stack Reveal Demos</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Stack reveal demos — the last child clips away to reveal content underneath">
+	<link rel="stylesheet" href="layout.min.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
+	<style>
+		body { margin: 0; }
+		.hero {
+			background: #0f172a;
+			color: white;
+			display: grid;
+			font-family: system-ui;
+			min-height: 100dvh;
+			place-content: center;
+			text-align: center;
+		}
+		.hero h1 { font-size: clamp(2rem, 6vw, 4rem); font-weight: 200; margin: 0; }
+		.hero p { font-size: 1.2rem; opacity: 0.6; }
+		.layer {
+			display: grid;
+			font-family: system-ui;
+			min-height: 100dvh;
+			place-content: center;
+			text-align: center;
+		}
+		.layer h2 {
+			border: 0;
+			color: inherit;
+			font-size: clamp(1.5rem, 4vw, 3rem);
+			font-weight: 300;
+			margin: 0;
+		}
+		.layer p { font-size: 1rem; margin: 0; opacity: 0.7; }
+		.layer code {
+			background: rgb(255 255 255 / 15%);
+			border-radius: 0.5ch;
+			color: inherit;
+			display: inline-block;
+			font-size: 0.8rem;
+			padding: 0.5ch 1.25ch;
+		}
+	</style>
+</head>
+<body>
+
+	<div class="hero">
+		<h1>Stack Reveal Demos</h1>
+		<p>The last child clips away via clip-path to reveal content underneath.</p>
+		<p style="opacity: 0.3; margin-top: 4rem;">&darr; Scroll down &darr;</p>
+	</div>
+
+	<!-- =================================================================
+	     Circle reveal — last child clips away to reveal image layer
+	     ================================================================= -->
+
+	<lay-out bleed="0" xs="stack(circle)" animate-self="reveal(circle)">
+		<div class="layer" style="background: url('https://picsum.photos/1600/900?random=1') center/cover; color: white;">
+			<div>
+				<h2>Revealed Layer</h2>
+				<p>This image was hidden beneath the overlay.</p>
+			</div>
+		</div>
+		<div class="layer" style="background: #0f172a; color: white;">
+			<div>
+				<h2>Circle Reveal</h2>
+				<p>This entire section clips away in a circle, revealing the layer below.</p>
+				<code>xs="stack(circle)" animate-self="reveal(circle)"</code>
+			</div>
+		</div>
+	</lay-out>
+
+	<!-- =================================================================
+	     Inset reveal — last child contracts from edges
+	     ================================================================= -->
+
+	<lay-out bleed="0" xs="stack(inset)" animate-self="reveal(inset)">
+		<div class="layer" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+			<div>
+				<h2>Gradient Layer</h2>
+				<p>A rich gradient revealed by the inset reveal.</p>
+			</div>
+		</div>
+		<div class="layer" style="background: #e2e8f0; color: #1e293b;">
+			<div>
+				<h2>Inset Reveal</h2>
+				<p>The top layer contracts from all edges, revealing the gradient.</p>
+				<code>xs="stack(inset)" animate-self="reveal(inset)"</code>
+			</div>
+		</div>
+	</lay-out>
+
+	<!-- =================================================================
+	     Polygon reveal — top layer morphs into diamond shape
+	     ================================================================= -->
+
+	<lay-out bleed="0" xs="stack(polygon)" animate-self="reveal(polygon)">
+		<div class="layer" style="background: #dc2626; color: white;">
+			<div>
+				<h2>Bold Red</h2>
+				<p>High-contrast section revealed via diamond clip.</p>
+			</div>
+		</div>
+		<div class="layer" style="background: linear-gradient(135deg, #1e293b, #334155); color: #94a3b8;">
+			<div>
+				<h2>Polygon Reveal</h2>
+				<p>The top layer clips into a diamond, revealing the red section.</p>
+				<code>xs="stack(polygon)" animate-self="reveal(polygon)"</code>
+			</div>
+		</div>
+	</lay-out>
+
+	<!-- =================================================================
+	     Circle reveal + exit — reverses on scroll-back
+	     ================================================================= -->
+
+	<lay-out bleed="0" xs="stack(exit)" animate-self="reveal(circle)" pace="exit">
+		<div class="layer" style="background: #0d9488; color: white;">
+			<div>
+				<h2>Teal Section</h2>
+				<p>Scroll back up — the overlay returns.</p>
+			</div>
+		</div>
+		<div class="layer" style="background: #7c3aed; color: white;">
+			<div>
+				<h2>Reveal + Exit</h2>
+				<p>Uses <strong>pace="exit"</strong> — the clip-path reverses when scrolling back.</p>
+				<code>animate-self="reveal(circle)" pace="exit"</code>
+			</div>
+		</div>
+	</lay-out>
+
+	<!-- =================================================================
+	     Circle reveal + fade-up — container fades up while last child clips
+	     ================================================================= -->
+
+	<lay-out bleed="0" xs="stack(combined)" animate-self="reveal(circle) fade-up()" pace="slow">
+		<div class="layer" style="background: #0f172a; color: white;">
+			<div>
+				<h2>Combined Effect</h2>
+				<p>The container faded up while the top layer clipped away.</p>
+			</div>
+		</div>
+		<div class="layer" style="background: #ea580c; color: white;">
+			<div>
+				<h2>Reveal + Fade Up</h2>
+				<p>Container fades up while the last child clips away simultaneously.</p>
+				<code>animate-self="reveal(circle) fade-up()" pace="slow"</code>
+			</div>
+		</div>
+	</lay-out>
+
+	<div class="hero" style="background: #0f172a;">
+		<p style="opacity: 0.3;">End of demos</p>
+	</div>
+
+</body>
+</html>
