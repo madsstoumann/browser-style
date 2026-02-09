@@ -128,6 +128,30 @@
 			}
 		}
 
+		/* === stack(reveal) === */
+		&:where(
+			[xs*="stack(reveal)"],
+			[sm*="stack(reveal)"],
+			[md*="stack(reveal)"],
+			[lg*="stack(reveal)"],
+			[xl*="stack(reveal)"],
+			[xxl*="stack(reveal)"]
+		) {
+			contain: inline-size;
+			grid-template-rows: 1fr;
+			min-height: calc(100dvh + var(--layout-reveal-pad, 200dvh));
+
+			& > * {
+				align-self: start;
+				position: sticky;
+				top: 0;
+			}
+
+			& > :last-child {
+				z-index: 1;
+			}
+		}
+
 		/* === overflow === */
 		&[overflow] {
 			display: flex;

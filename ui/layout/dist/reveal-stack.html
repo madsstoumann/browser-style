@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="/ui/layout/demo.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
 	<style>
-		body { margin: 0; }
+		/* body { margin: 0; } */
 		.hero {
 			background: #0f172a;
 			color: white;
@@ -58,7 +58,7 @@
 	     Circle reveal — last child clips away to reveal image layer
 	     ================================================================= -->
 
-	<lay-out bleed="0" xs="stack(circle)" animate-self="reveal(circle)">
+	<lay-out bleed="0" xs="stack(reveal)" animate-self="reveal(circle)">
 		<div class="layer" style="background: url('https://picsum.photos/1600/900?random=1') center/cover; color: white;">
 			<div>
 				<h2>Revealed Layer</h2>
@@ -69,7 +69,7 @@
 			<div>
 				<h2>Circle Reveal</h2>
 				<p>This entire section clips away in a circle, revealing the layer below.</p>
-				<code>xs="stack(circle)" animate-self="reveal(circle)"</code>
+				<code>xs="stack(reveal)" animate-self="reveal(circle)"</code>
 			</div>
 		</div>
 	</lay-out>
@@ -78,7 +78,7 @@
 	     Inset reveal — last child contracts from edges
 	     ================================================================= -->
 
-	<lay-out bleed="0" xs="stack(inset)" animate-self="reveal(inset)">
+	<lay-out bleed="0" xs="stack(reveal)" animate-self="reveal(inset)">
 		<div class="layer" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
 			<div>
 				<h2>Gradient Layer</h2>
@@ -89,7 +89,7 @@
 			<div>
 				<h2>Inset Reveal</h2>
 				<p>The top layer contracts from all edges, revealing the gradient.</p>
-				<code>xs="stack(inset)" animate-self="reveal(inset)"</code>
+				<code>xs="stack(reveal)" animate-self="reveal(inset)"</code>
 			</div>
 		</div>
 	</lay-out>
@@ -98,7 +98,7 @@
 	     Polygon reveal — top layer morphs into diamond shape
 	     ================================================================= -->
 
-	<lay-out bleed="0" xs="stack(polygon)" animate-self="reveal(polygon)">
+	<lay-out bleed="0" xs="stack(reveal)" animate-self="reveal(polygon)">
 		<div class="layer" style="background: #dc2626; color: white;">
 			<div>
 				<h2>Bold Red</h2>
@@ -109,7 +109,7 @@
 			<div>
 				<h2>Polygon Reveal</h2>
 				<p>The top layer clips into a diamond, revealing the red section.</p>
-				<code>xs="stack(polygon)" animate-self="reveal(polygon)"</code>
+				<code>xs="stack(reveal)" animate-self="reveal(polygon)"</code>
 			</div>
 		</div>
 	</lay-out>
@@ -118,7 +118,7 @@
 	     Circle reveal + exit — reverses on scroll-back
 	     ================================================================= -->
 
-	<lay-out bleed="0" xs="stack(exit)" animate-self="reveal(circle)" pace="exit">
+	<lay-out bleed="0" xs="stack(reveal)" animate-self="reveal(circle)" pace="exit">
 		<div class="layer" style="background: #0d9488; color: white;">
 			<div>
 				<h2>Teal Section</h2>
@@ -129,7 +129,7 @@
 			<div>
 				<h2>Reveal + Exit</h2>
 				<p>Uses <strong>pace="exit"</strong> — the clip-path reverses when scrolling back.</p>
-				<code>animate-self="reveal(circle)" pace="exit"</code>
+				<code>xs="stack(reveal)" animate-self="reveal(circle)" pace="exit"</code>
 			</div>
 		</div>
 	</lay-out>
@@ -138,7 +138,7 @@
 	     Circle reveal + fade-up — container fades up while last child clips
 	     ================================================================= -->
 
-	<lay-out bleed="0" xs="stack(combined)" animate-self="reveal(circle) fade-up()" pace="slow">
+	<lay-out bleed="0" xs="stack(reveal)" animate-self="reveal(circle) fade-up()" pace="slow">
 		<div class="layer" style="background: #0f172a; color: white;">
 			<div>
 				<h2>Combined Effect</h2>
@@ -149,7 +149,7 @@
 			<div>
 				<h2>Reveal + Fade Up</h2>
 				<p>Container fades up while the last child clips away simultaneously.</p>
-				<code>animate-self="reveal(circle) fade-up()" pace="slow"</code>
+				<code>xs="stack(reveal)" animate-self="reveal(circle) fade-up()" pace="slow"</code>
 			</div>
 		</div>
 	</lay-out>

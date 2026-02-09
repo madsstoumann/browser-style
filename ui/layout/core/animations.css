@@ -301,14 +301,37 @@
 		[animate~="deep"] > * > :nth-child(3) { --_child-offset: 20; }
 		[animate~="deep"] > * > :nth-child(4) { --_child-offset: 30; }
 
-		/* === Reveal: sticky full-screen section with clip-path transition === */
+		/* === stack(reveal): redirect reveal to last child via named timeline === */
 
-		/* [animate-self*="reveal("] {
-			min-height: 100dvh;
-			padding-block-end: var(--layout-morph-pad, 100dvh);
-			position: sticky;
-			top: 0;
-		} */
+		:where(
+			[xs*="stack(reveal)"],
+			[sm*="stack(reveal)"],
+			[md*="stack(reveal)"],
+			[lg*="stack(reveal)"],
+			[xl*="stack(reveal)"],
+			[xxl*="stack(reveal)"]
+		):where([animate-self*="reveal("]) {
+			animation-name: none, none;
+			view-timeline: --stack-reveal;
+		}
+
+		:where(
+			[xs*="stack(reveal)"],
+			[sm*="stack(reveal)"],
+			[md*="stack(reveal)"],
+			[lg*="stack(reveal)"],
+			[xl*="stack(reveal)"],
+			[xxl*="stack(reveal)"]
+		):where([animate-self*="reveal("]) > :last-child {
+			animation-name: var(--_animn), var(--_anim-exit, none);
+			animation-direction: reverse, normal;
+			animation-timeline: --stack-reveal, --stack-reveal;
+			animation-timing-function: var(--animtm, linear), var(--animtm, linear);
+			animation-fill-mode: forwards, forwards;
+			animation-range:
+				cover 25% cover 60%,
+				cover 60% cover 75%;
+		}
 	}
 
 	/* ==========================================================================
