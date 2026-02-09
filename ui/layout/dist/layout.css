@@ -611,6 +611,7 @@
 
 		/* trigger: shared item properties */
 		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"]) > * {
+			animation-fill-mode: both;
 			animation-timeline: auto;
 			animation-duration: var(--animate-dur);
 			animation-range: normal;
@@ -790,8 +791,8 @@
 	}
 
 	@keyframes reveal-superellipse {
-		0%   { corner-shape: superellipse(-6); }
-		100% { corner-shape: superellipse(6); }
+		0%   { border-top-right-radius: 100%; corner-shape: superellipse(-6); opacity: 0; }
+		100% { border-top-right-radius: 0; corner-shape: superellipse(6); opacity: 1; }
 	}
 
 	/* --- Slide --- */
