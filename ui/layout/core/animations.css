@@ -372,7 +372,6 @@
 
 		/* trigger: shared item properties */
 		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"]) > * {
-			animation-fill-mode: both;
 			animation-timeline: auto;
 			animation-duration: var(--animate-dur);
 			animation-range: normal;
@@ -510,28 +509,28 @@
 	/* --- Flip --- */
 
 	@keyframes flip-diagonal {
-		0%   { backface-visibility: hidden; transform: perspective(2500px) rotateX(calc(-1 * var(--_dg))) rotateY(calc(-1 * var(--_dg))); }
-		100% { transform: perspective(2500px) rotateX(0) rotateY(0); }
+		0%   { backface-visibility: hidden; opacity: 0; transform: perspective(2500px) rotateX(calc(-1 * var(--_dg))) rotateY(calc(-1 * var(--_dg))); }
+		100% { opacity: 1; transform: perspective(2500px) rotateX(0) rotateY(0); }
 	}
 
 	@keyframes flip-down {
-		0%   { backface-visibility: hidden; transform: perspective(2500px) rotateX(var(--_dg)); }
-		100% { transform: perspective(2500px) rotateX(0); }
+		0%   { backface-visibility: hidden; opacity: 0; transform: perspective(2500px) rotateX(var(--_dg)); }
+		100% { opacity: 1; transform: perspective(2500px) rotateX(0); }
 	}
 
 	@keyframes flip-left {
-		0%   { backface-visibility: hidden; transform: perspective(2500px) rotateY(calc(-1 * var(--_dg))); }
-		100% { transform: perspective(2500px) rotateY(0); }
+		0%   { backface-visibility: hidden; opacity: 0; transform: perspective(2500px) rotateY(calc(-1 * var(--_dg))); }
+		100% { opacity: 1; transform: perspective(2500px) rotateY(0); }
 	}
 
 	@keyframes flip-right {
-		0%   { backface-visibility: hidden; transform: perspective(2500px) rotateY(var(--_dg)); }
-		100% { transform: perspective(2500px) rotateY(0); }
+		0%   { backface-visibility: hidden; opacity: 0; transform: perspective(2500px) rotateY(var(--_dg)); }
+		100% { opacity: 1; transform: perspective(2500px) rotateY(0); }
 	}
 
 	@keyframes flip-up {
-		0%   { backface-visibility: hidden; transform: perspective(2500px) rotateX(calc(-1 * var(--_dg))); }
-		100% { transform: perspective(2500px) rotateX(0); }
+		0%   { backface-visibility: hidden; opacity: 0; transform: perspective(2500px) rotateX(calc(-1 * var(--_dg))); }
+		100% { opacity: 1; transform: perspective(2500px) rotateX(0); }
 	}
 
 	/* --- Reveal (normal = appear, reverse = morph away) --- */
@@ -559,23 +558,23 @@
 	/* --- Slide --- */
 
 	@keyframes slide-down {
-		0%   { translate: 0 calc(-1 * var(--_tyv)); }
-		100% { translate: 0; }
+		0%   { opacity: 0; translate: 0 calc(-1 * var(--_tyv)); }
+		100% { opacity: 1; translate: 0; }
 	}
 
 	@keyframes slide-in {
-		0%   { translate: calc(-1 * var(--_txv)) 0; }
-		100% { translate: 0; }
+		0%   { opacity: 0; translate: calc(-1 * var(--_txv)) 0; }
+		100% { opacity: 1; translate: 0; }
 	}
 
 	@keyframes slide-out {
-		0%   { translate: 0; }
-		100% { translate: var(--_txv) 0; }
+		0%   { opacity: 1; translate: 0; }
+		100% { opacity: 0; translate: var(--_txv) 0; }
 	}
 
 	@keyframes slide-up {
-		0%   { translate: 0 var(--_tyv); }
-		100% { translate: 0; }
+		0%   { opacity: 0; translate: 0 var(--_tyv); }
+		100% { opacity: 1; translate: 0; }
 	}
 
 	/* --- Zoom --- */
