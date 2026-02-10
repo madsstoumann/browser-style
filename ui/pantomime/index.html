@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Pantomime</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	
+	<meta name="view-transition" content="same-origin">
+<style>
+body { background: #eee;}
+
+/* === CARD === */
+section {
+  container-type: inline-size;
+  display: grid;
+  place-items: end center;
+}
+figure {
+  --gap: 1ch;
+  --rivet: 1.5em;
+  --width: 275px;
+  background-color: #FFF;
+  border-radius: 2em;
+  box-shadow: 0.5em 0.5em 1.5em -0.125em #0002;
+  display: grid;
+  font-family: system-ui, ui-sans-serif, sans-serif;
+  grid-area: 1 / -1;
+  margin: 0;
+  padding-block-end: calc(10 * var(--gap));
+  position: relative;
+  rotate: calc((sibling-index() - (sibling-count() + 1) / 2) * (35deg / sibling-count()));
+  row-gap: var(--gap);
+  transform-origin: calc(100% - var(--rivet)) calc(100% - var(--rivet));
+  width: var(--width);
+  z-index: calc(sibling-count() - sibling-index());
+  &:first-of-type {
+    
+    /* rivet */
+    &::after {
+      aspect-ratio: 1;
+      background: radial-gradient(circle at 35% 35%, #FFF 0%, #F5F5F5 30%, #E8E8E8 60%, #DDD 80%, #E0E0E0 100%);
+      border-radius: 50%;
+      bottom: var(--rivet);
+      box-shadow:
+        0 1px 2px 0 #0004,
+        inset 0 -1px 1px 0 #0002,
+        inset 0 1px 2px 0 #FFF8;
+      content: "";
+      display: block;
+      height: var(--rivet);
+      position: absolute;
+      right: var(--rivet);
+      scale: 1.5;
+      width: var(--rivet);
+    }
+  }
+}
+figcaption {
+  font-size: 1.5em;
+  text-align: center;
+  padding-block-start: var(--gap);
+}
+figcaption, strong {
+  font-weight: 700;
+  text-box: cap alphabetic;
+  text-transform: uppercase;
+}
+ul {
+  display: contents;
+}
+li {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: 1fr 1fr;
+  list-style: none;
+  &::before {
+    aspect-ratio: 2.5 / 1;
+    background-color: var(--c);
+    content: "";
+    display: block;
+    grid-column: span 2;
+  }  
+}
+dd {
+  margin: 0;
+  text-align: end;
+}
+dl {
+  color: darkgray;
+  display: grid;
+  font-size: .8em;
+  font-weight: 300;
+  grid-template-columns: max-content auto;
+  gap: .25ch;
+  padding-inline-end: var(--gap);
+}
+strong {
+  letter-spacing: -0.025ch;
+  padding-inline-start: var(--gap);
+}
+
+</style>
+</head>
+<body>
+<section>
+  <figure>
+    <figcaption>Reds</figcaption>
+    <ul>
+      <li style="--c: #FADADD">
+        <strong>Pale Rose</strong>
+        <dl>
+          <dt>HEX</dt><dd>#FADADD</dd>
+          <dt>RGB</dt><dd>250, 218, 221</dd>
+          <dt>LAB</dt><dd>89, 12, 4</dd>
+        </dl>
+      </li>
+      <li style="--c: #F4A7B0">
+        <strong>Candy Pink</strong>
+        <dl>
+          <dt>HEX</dt><dd>#F4A7B0</dd>
+          <dt>RGB</dt><dd>244, 167, 176</dd>
+          <dt>LAB</dt><dd>75, 27, 7</dd>
+        </dl>
+      </li>
+      <li style="--c: #E8747E">
+        <strong>Strawberry</strong>
+        <dl>
+          <dt>HEX</dt><dd>#E8747E</dd>
+          <dt>RGB</dt><dd>232, 116, 126</dd>
+          <dt>LAB</dt><dd>60, 41, 12</dd>
+        </dl>
+      </li>
+      <li style="--c: #DC3D4C">
+        <strong>Poppy Red</strong>
+        <dl>
+          <dt>HEX</dt><dd>#DC3D4C</dd>
+          <dt>RGB</dt><dd>220, 61, 76</dd>
+          <dt>LAB</dt><dd>45, 56, 25</dd>
+        </dl>
+      </li>
+      <li style="--c: #C41E3A">
+        <strong>Cardinal</strong>
+        <dl>
+          <dt>HEX</dt><dd>#C41E3A</dd>
+          <dt>RGB</dt><dd>196, 30, 58</dd>
+          <dt>LAB</dt><dd>37, 58, 22</dd>
+        </dl>
+      </li>
+      <li style="--c: #8B1A2B">
+        <strong>Burgundy</strong>
+        <dl>
+          <dt>HEX</dt><dd>#8B1A2B</dd>
+          <dt>RGB</dt><dd>139, 26, 43</dd>
+          <dt>LAB</dt><dd>24, 42, 14</dd>
+        </dl>
+      </li>
+      <li style="--c: #5C0A1A">
+        <strong>Oxblood</strong>
+        <dl>
+          <dt>HEX</dt><dd>#5C0A1A</dd>
+          <dt>RGB</dt><dd>92, 10, 26</dd>
+          <dt>LAB</dt><dd>14, 32, 10</dd>
+        </dl>
+      </li>
+    </ul>
+  </figure>
+
+  <figure>
+    <figcaption>Oranges</figcaption>
+    <ul>
+      <li style="--c: #FDE8D0">
+        <strong>Peach Puff</strong>
+        <dl>
+          <dt>HEX</dt><dd>#FDE8D0</dd>
+          <dt>RGB</dt><dd>253, 232, 208</dd>
+          <dt>LAB</dt><dd>93, 5, 16</dd>
+        </dl>
+      </li>
+      <li style="--c: #F5B87A">
+        <strong>Amber</strong>
+        <dl>
+          <dt>HEX</dt><dd>#F5B87A</dd>
+          <dt>RGB</dt><dd>245, 184, 122</dd>
+          <dt>LAB</dt><dd>79, 14, 42</dd>
+        </dl>
+      </li>
+      <li style="--c: #ED8A3E">
+        <strong>Marigold</strong>
+        <dl>
+          <dt>HEX</dt><dd>#ED8A3E</dd>
+          <dt>RGB</dt><dd>237, 138, 62</dd>
+          <dt>LAB</dt><dd>66, 26, 56</dd>
+        </dl>
+      </li>
+      <li style="--c: #E05E20">
+        <strong>Tangerine</strong>
+        <dl>
+          <dt>HEX</dt><dd>#E05E20</dd>
+          <dt>RGB</dt><dd>224, 94, 32</dd>
+          <dt>LAB</dt><dd>53, 40, 58</dd>
+        </dl>
+      </li>
+      <li style="--c: #C04410">
+        <strong>Burnt Orange</strong>
+        <dl>
+          <dt>HEX</dt><dd>#C04410</dd>
+          <dt>RGB</dt><dd>192, 68, 16</dd>
+          <dt>LAB</dt><dd>42, 40, 52</dd>
+        </dl>
+      </li>
+      <li style="--c: #963510">
+        <strong>Rust</strong>
+        <dl>
+          <dt>HEX</dt><dd>#963510</dd>
+          <dt>RGB</dt><dd>150, 53, 16</dd>
+          <dt>LAB</dt><dd>33, 32, 40</dd>
+        </dl>
+      </li>
+      <li style="--c: #6B2810">
+        <strong>Cinnamon</strong>
+        <dl>
+          <dt>HEX</dt><dd>#6B2810</dd>
+          <dt>RGB</dt><dd>107, 40, 16</dd>
+          <dt>LAB</dt><dd>23, 22, 28</dd>
+        </dl>
+      </li>
+    </ul>
+  </figure>
+
+  <figure>
+    <figcaption>Yellows</figcaption>
+    <ul>
+      <li style="--c: #FFF7D6">
+        <strong>Cream</strong>
+        <dl>
+          <dt>HEX</dt><dd>#FFF7D6</dd>
+          <dt>RGB</dt><dd>255, 247, 214</dd>
+          <dt>LAB</dt><dd>97, -2, 18</dd>
+        </dl>
+      </li>
+      <li style="--c: #FFE680">
+        <strong>Primrose</strong>
+        <dl>
+          <dt>HEX</dt><dd>#FFE680</dd>
+          <dt>RGB</dt><dd>255, 230, 128</dd>
+          <dt>LAB</dt><dd>92, -2, 52</dd>
+        </dl>
+      </li>
+      <li style="--c: #FFD33D">
+        <strong>Sunflower</strong>
+        <dl>
+          <dt>HEX</dt><dd>#FFD33D</dd>
+          <dt>RGB</dt><dd>255, 211, 61</dd>
+          <dt>LAB</dt><dd>87, 2, 76</dd>
+        </dl>
+      </li>
+      <li style="--c: #F0B800">
+        <strong>Saffron</strong>
+        <dl>
+          <dt>HEX</dt><dd>#F0B800</dd>
+          <dt>RGB</dt><dd>240, 184, 0</dd>
+          <dt>LAB</dt><dd>78, 6, 78</dd>
+        </dl>
+      </li>
+      <li style="--c: #C89600">
+        <strong>Honey</strong>
+        <dl>
+          <dt>HEX</dt><dd>#C89600</dd>
+          <dt>RGB</dt><dd>200, 150, 0</dd>
+          <dt>LAB</dt><dd>66, 6, 66</dd>
+        </dl>
+      </li>
+      <li style="--c: #9A7400">
+        <strong>Bronze</strong>
+        <dl>
+          <dt>HEX</dt><dd>#9A7400</dd>
+          <dt>RGB</dt><dd>154, 116, 0</dd>
+          <dt>LAB</dt><dd>52, 4, 52</dd>
+        </dl>
+      </li>
+      <li style="--c: #6B5000">
+        <strong>Dark Gold</strong>
+        <dl>
+          <dt>HEX</dt><dd>#6B5000</dd>
+          <dt>RGB</dt><dd>107, 80, 0</dd>
+          <dt>LAB</dt><dd>37, 2, 38</dd>
+        </dl>
+      </li>
+    </ul>
+  </figure>
+
+  <figure>
+    <figcaption>Greens</figcaption>
+    <ul>
+      <li style="--c: #D8F0D8">
+        <strong>Honeydew</strong>
+        <dl>
+          <dt>HEX</dt><dd>#D8F0D8</dd>
+          <dt>RGB</dt><dd>216, 240, 216</dd>
+          <dt>LAB</dt><dd>93, -14, 10</dd>
+        </dl>
+      </li>
+      <li style="--c: #8FD88F">
+        <strong>Spring Bud</strong>
+        <dl>
+          <dt>HEX</dt><dd>#8FD88F</dd>
+          <dt>RGB</dt><dd>143, 216, 143</dd>
+          <dt>LAB</dt><dd>81, -34, 26</dd>
+        </dl>
+      </li>
+      <li style="--c: #4CAF50">
+        <strong>Fern</strong>
+        <dl>
+          <dt>HEX</dt><dd>#4CAF50</dd>
+          <dt>RGB</dt><dd>76, 175, 80</dd>
+          <dt>LAB</dt><dd>64, -40, 30</dd>
+        </dl>
+      </li>
+      <li style="--c: #2E8B2E">
+        <strong>Kelly Green</strong>
+        <dl>
+          <dt>HEX</dt><dd>#2E8B2E</dd>
+          <dt>RGB</dt><dd>46, 139, 46</dd>
+          <dt>LAB</dt><dd>51, -40, 32</dd>
+        </dl>
+      </li>
+      <li style="--c: #1B6B1B">
+        <strong>Verdant</strong>
+        <dl>
+          <dt>HEX</dt><dd>#1B6B1B</dd>
+          <dt>RGB</dt><dd>27, 107, 27</dd>
+          <dt>LAB</dt><dd>40, -36, 28</dd>
+        </dl>
+      </li>
+      <li style="--c: #0E4D0E">
+        <strong>Forest</strong>
+        <dl>
+          <dt>HEX</dt><dd>#0E4D0E</dd>
+          <dt>RGB</dt><dd>14, 77, 14</dd>
+          <dt>LAB</dt><dd>29, -30, 22</dd>
+        </dl>
+      </li>
+      <li style="--c: #0A350A">
+        <strong>Pine</strong>
+        <dl>
+          <dt>HEX</dt><dd>#0A350A</dd>
+          <dt>RGB</dt><dd>10, 53, 10</dd>
+          <dt>LAB</dt><dd>20, -22, 16</dd>
+        </dl>
+      </li>
+    </ul>
+  </figure>
+
+  <figure>
+    <figcaption>Cyans</figcaption>
+    <ul>
+      <li style="--c: #D0F0F0">
+        <strong>Pale Aqua</strong>
+        <dl>
+          <dt>HEX</dt><dd>#D0F0F0</dd>
+          <dt>RGB</dt><dd>208, 240, 240</dd>
+          <dt>LAB</dt><dd>93, -10, -4</dd>
+        </dl>
+      </li>
+      <li style="--c: #80D4D4">
+        <strong>Pool Blue</strong>
+        <dl>
+          <dt>HEX</dt><dd>#80D4D4</dd>
+          <dt>RGB</dt><dd>128, 212, 212</dd>
+          <dt>LAB</dt><dd>80, -22, -8</dd>
+        </dl>
+      </li>
+      <li style="--c: #40B8B8">
+        <strong>Lagoon</strong>
+        <dl>
+          <dt>HEX</dt><dd>#40B8B8</dd>
+          <dt>RGB</dt><dd>64, 184, 184</dd>
+          <dt>LAB</dt><dd>69, -28, -10</dd>
+        </dl>
+      </li>
+      <li style="--c: #20908D">
+        <strong>Teal</strong>
+        <dl>
+          <dt>HEX</dt><dd>#20908D</dd>
+          <dt>RGB</dt><dd>32, 144, 141</dd>
+          <dt>LAB</dt><dd>55, -26, -8</dd>
+        </dl>
+      </li>
+      <li style="--c: #106B6B">
+        <strong>Deep Teal</strong>
+        <dl>
+          <dt>HEX</dt><dd>#106B6B</dd>
+          <dt>RGB</dt><dd>16, 107, 107</dd>
+          <dt>LAB</dt><dd>41, -22, -8</dd>
+        </dl>
+      </li>
+      <li style="--c: #084D4D">
+        <strong>Evergreen</strong>
+        <dl>
+          <dt>HEX</dt><dd>#084D4D</dd>
+          <dt>RGB</dt><dd>8, 77, 77</dd>
+          <dt>LAB</dt><dd>30, -18, -6</dd>
+        </dl>
+      </li>
+      <li style="--c: #043535">
+        <strong>Dark Spruce</strong>
+        <dl>
+          <dt>HEX</dt><dd>#043535</dd>
+          <dt>RGB</dt><dd>4, 53, 53</dd>
+          <dt>LAB</dt><dd>20, -14, -4</dd>
+        </dl>
+      </li>
+    </ul>
+  </figure>
+
+  <figure>
+    <figcaption>Blues</figcaption>
+    <ul>
+      <li style="--c: #D6E4F0">
+        <strong>Ice Blue</strong>
+        <dl>
+          <dt>HEX</dt><dd>#D6E4F0</dd>
+          <dt>RGB</dt><dd>214, 228, 240</dd>
+          <dt>LAB</dt><dd>90, -3, -9</dd>
+        </dl>
+      </li>
+      <li style="--c: #88B4DC">
+        <strong>Cornflower</strong>
+        <dl>
+          <dt>HEX</dt><dd>#88B4DC</dd>
+          <dt>RGB</dt><dd>136, 180, 220</dd>
+          <dt>LAB</dt><dd>73, -4, -22</dd>
+        </dl>
+      </li>
+      <li style="--c: #4488CC">
+        <strong>Azure</strong>
+        <dl>
+          <dt>HEX</dt><dd>#4488CC</dd>
+          <dt>RGB</dt><dd>68, 136, 204</dd>
+          <dt>LAB</dt><dd>56, -4, -36</dd>
+        </dl>
+      </li>
+      <li style="--c: #2266AA">
+        <strong>Cobalt</strong>
+        <dl>
+          <dt>HEX</dt><dd>#2266AA</dd>
+          <dt>RGB</dt><dd>34, 102, 170</dd>
+          <dt>LAB</dt><dd>43, -4, -36</dd>
+        </dl>
+      </li>
+      <li style="--c: #1A4D88">
+        <strong>Sapphire</strong>
+        <dl>
+          <dt>HEX</dt><dd>#1A4D88</dd>
+          <dt>RGB</dt><dd>26, 77, 136</dd>
+          <dt>LAB</dt><dd>33, -2, -32</dd>
+        </dl>
+      </li>
+      <li style="--c: #103366">
+        <strong>Navy</strong>
+        <dl>
+          <dt>HEX</dt><dd>#103366</dd>
+          <dt>RGB</dt><dd>16, 51, 102</dd>
+          <dt>LAB</dt><dd>22, 0, -28</dd>
+        </dl>
+      </li>
+      <li style="--c: #0A2040">
+        <strong>Midnight</strong>
+        <dl>
+          <dt>HEX</dt><dd>#0A2040</dd>
+          <dt>RGB</dt><dd>10, 32, 64</dd>
+          <dt>LAB</dt><dd>13, 0, -20</dd>
+        </dl>
+      </li>
+    </ul>
+  </figure>
+
+  <figure>
+    <figcaption>Violets</figcaption>
+    <ul>
+      <li style="--c: #E8D8F0">
+        <strong>Lavender</strong>
+        <dl>
+          <dt>HEX</dt><dd>#E8D8F0</dd>
+          <dt>RGB</dt><dd>232, 216, 240</dd>
+          <dt>LAB</dt><dd>89, 10, -10</dd>
+        </dl>
+      </li>
+      <li style="--c: #C8A0DC">
+        <strong>Wisteria</strong>
+        <dl>
+          <dt>HEX</dt><dd>#C8A0DC</dd>
+          <dt>RGB</dt><dd>200, 160, 220</dd>
+          <dt>LAB</dt><dd>72, 20, -20</dd>
+        </dl>
+      </li>
+      <li style="--c: #9B59B6">
+        <strong>Amethyst</strong>
+        <dl>
+          <dt>HEX</dt><dd>#9B59B6</dd>
+          <dt>RGB</dt><dd>155, 89, 182</dd>
+          <dt>LAB</dt><dd>48, 34, -30</dd>
+        </dl>
+      </li>
+      <li style="--c: #7B3FA0">
+        <strong>Royal Purple</strong>
+        <dl>
+          <dt>HEX</dt><dd>#7B3FA0</dd>
+          <dt>RGB</dt><dd>123, 63, 160</dd>
+          <dt>LAB</dt><dd>37, 38, -36</dd>
+        </dl>
+      </li>
+      <li style="--c: #5C2D82">
+        <strong>Plum</strong>
+        <dl>
+          <dt>HEX</dt><dd>#5C2D82</dd>
+          <dt>RGB</dt><dd>92, 45, 130</dd>
+          <dt>LAB</dt><dd>28, 32, -32</dd>
+        </dl>
+      </li>
+      <li style="--c: #3E1D5C">
+        <strong>Grape</strong>
+        <dl>
+          <dt>HEX</dt><dd>#3E1D5C</dd>
+          <dt>RGB</dt><dd>62, 29, 92</dd>
+          <dt>LAB</dt><dd>18, 22, -24</dd>
+        </dl>
+      </li>
+      <li style="--c: #241040">
+        <strong>Dark Purple</strong>
+        <dl>
+          <dt>HEX</dt><dd>#241040</dd>
+          <dt>RGB</dt><dd>36, 16, 64</dd>
+          <dt>LAB</dt><dd>10, 16, -20</dd>
+        </dl>
+      </li>
+    </ul>
+  </figure>
+
+  <figure>
+    <figcaption>Pinks</figcaption>
+    <ul>
+      <li style="--c: #FCE4EC">
+        <strong>Ballet Slipper</strong>
+        <dl>
+          <dt>HEX</dt><dd>#FCE4EC</dd>
+          <dt>RGB</dt><dd>252, 228, 236</dd>
+          <dt>LAB</dt><dd>93, 10, 0</dd>
+        </dl>
+      </li>
+      <li style="--c: #F48FB1">
+        <strong>Flamingo</strong>
+        <dl>
+          <dt>HEX</dt><dd>#F48FB1</dd>
+          <dt>RGB</dt><dd>244, 143, 177</dd>
+          <dt>LAB</dt><dd>72, 36, -2</dd>
+        </dl>
+      </li>
+      <li style="--c: #E91E8C">
+        <strong>Hot Pink</strong>
+        <dl>
+          <dt>HEX</dt><dd>#E91E8C</dd>
+          <dt>RGB</dt><dd>233, 30, 140</dd>
+          <dt>LAB</dt><dd>48, 68, -10</dd>
+        </dl>
+      </li>
+      <li style="--c: #C2185B">
+        <strong>Fuchsia</strong>
+        <dl>
+          <dt>HEX</dt><dd>#C2185B</dd>
+          <dt>RGB</dt><dd>194, 24, 91</dd>
+          <dt>LAB</dt><dd>38, 60, 2</dd>
+        </dl>
+      </li>
+      <li style="--c: #96114A">
+        <strong>Magenta</strong>
+        <dl>
+          <dt>HEX</dt><dd>#96114A</dd>
+          <dt>RGB</dt><dd>150, 17, 74</dd>
+          <dt>LAB</dt><dd>28, 48, 2</dd>
+        </dl>
+      </li>
+      <li style="--c: #6B0D38">
+        <strong>Berry</strong>
+        <dl>
+          <dt>HEX</dt><dd>#6B0D38</dd>
+          <dt>RGB</dt><dd>107, 13, 56</dd>
+          <dt>LAB</dt><dd>20, 36, 0</dd>
+        </dl>
+      </li>
+      <li style="--c: #400A24">
+        <strong>Dark Berry</strong>
+        <dl>
+          <dt>HEX</dt><dd>#400A24</dd>
+          <dt>RGB</dt><dd>64, 10, 36</dd>
+          <dt>LAB</dt><dd>12, 24, -2</dd>
+        </dl>
+      </li>
+    </ul>
+  </figure>
+
+  <figure>
+    <figcaption>Neutrals</figcaption>
+    <ul>
+      <li style="--c: #F5F5F0">
+        <strong>Cloud</strong>
+        <dl>
+          <dt>HEX</dt><dd>#F5F5F0</dd>
+          <dt>RGB</dt><dd>245, 245, 240</dd>
+          <dt>LAB</dt><dd>97, 0, 2</dd>
+        </dl>
+      </li>
+      <li style="--c: #D5D0C8">
+        <strong>Pebble</strong>
+        <dl>
+          <dt>HEX</dt><dd>#D5D0C8</dd>
+          <dt>RGB</dt><dd>213, 208, 200</dd>
+          <dt>LAB</dt><dd>84, 0, 4</dd>
+        </dl>
+      </li>
+      <li style="--c: #A8A098">
+        <strong>Driftwood</strong>
+        <dl>
+          <dt>HEX</dt><dd>#A8A098</dd>
+          <dt>RGB</dt><dd>168, 160, 152</dd>
+          <dt>LAB</dt><dd>66, 0, 4</dd>
+        </dl>
+      </li>
+      <li style="--c: #808078">
+        <strong>Steel Grey</strong>
+        <dl>
+          <dt>HEX</dt><dd>#808078</dd>
+          <dt>RGB</dt><dd>128, 128, 120</dd>
+          <dt>LAB</dt><dd>53, 0, 4</dd>
+        </dl>
+      </li>
+      <li style="--c: #585850">
+        <strong>Charcoal</strong>
+        <dl>
+          <dt>HEX</dt><dd>#585850</dd>
+          <dt>RGB</dt><dd>88, 88, 80</dd>
+          <dt>LAB</dt><dd>38, 0, 4</dd>
+        </dl>
+      </li>
+      <li style="--c: #363630">
+        <strong>Raven</strong>
+        <dl>
+          <dt>HEX</dt><dd>#363630</dd>
+          <dt>RGB</dt><dd>54, 54, 48</dd>
+          <dt>LAB</dt><dd>23, 0, 4</dd>
+        </dl>
+      </li>
+      <li style="--c: #1A1A18">
+        <strong>Obsidian</strong>
+        <dl>
+          <dt>HEX</dt><dd>#1A1A18</dd>
+          <dt>RGB</dt><dd>26, 26, 24</dd>
+          <dt>LAB</dt><dd>10, 0, 2</dd>
+        </dl>
+      </li>
+    </ul>
+  </figure>
+</section>
+</body>
+</html>
