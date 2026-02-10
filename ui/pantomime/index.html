@@ -35,13 +35,18 @@ figure {
   width: var(--width);
   z-index: calc(sibling-count() - sibling-index());
   &:first-of-type {
+    align-items: start;
     background: linear-gradient(180deg, #FE592A 70%, #FFF 0 70%);
     height: 78dvh; /* FIX */
 
-    h2, h3 {
+    header {
       text-orientation: mixed;
       writing-mode: sideways-lr;
     }
+
+    h2, h3 { color: #FFF; }
+    h2 { font-size: 3em; }
+    h3 { font-size: 1.5em; }
     /* rivet */
     &::after {
       aspect-ratio: 1;
@@ -67,7 +72,7 @@ figcaption {
   text-align: center;
   padding-block-start: var(--gap);
 }
-figcaption, strong {
+figcaption, h2, h3, strong {
   font-weight: 700;
   text-box: cap alphabetic;
   text-transform: uppercase;
@@ -112,8 +117,10 @@ strong {
 <section>
    <figure>
     <figcaption>Formula Guide</figcaption>
-    <h2>Formula Guide</h2>
-    <h3>Solid Coated</h3>
+    <header>
+      <h2>Formula Guide</h2>
+      <h3>Solid Coated</h3>
+    </header>
   </figure>
   <figure>
     <figcaption>Reds</figcaption>
