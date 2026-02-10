@@ -25,6 +25,7 @@ figure {
   display: grid;
   font-family: system-ui, ui-sans-serif, sans-serif;
   grid-area: 1 / -1;
+  /* height: 70dvh; */
   margin: 0;
   padding-block-end: calc(10 * var(--gap));
   position: relative;
@@ -34,7 +35,13 @@ figure {
   width: var(--width);
   z-index: calc(sibling-count() - sibling-index());
   &:first-of-type {
-    
+    background: linear-gradient(180deg, #FE592A 70%, #FFF 0 70%);
+    height: 78dvh; /* FIX */
+
+    h2, h3 {
+      text-orientation: mixed;
+      writing-mode: sideways-lr;
+    }
     /* rivet */
     &::after {
       aspect-ratio: 1;
@@ -103,6 +110,11 @@ strong {
 </head>
 <body>
 <section>
+   <figure>
+    <figcaption>Formula Guide</figcaption>
+    <h2>Formula Guide</h2>
+    <h3>Solid Coated</h3>
+  </figure>
   <figure>
     <figcaption>Reds</figcaption>
     <ul>
