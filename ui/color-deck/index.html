@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>Pantomime</title>
+	<title>Color Deck</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	
@@ -16,8 +16,10 @@ section {
   place-items: end center;
 }
 figure {
+  --end-degree: 15deg;
   --gap: 1ch;
   --rivet: 1.5em;
+  --start-degree: -20deg;
   --width: 275px;
   background-color: #FFF;
   border-radius: 2em;
@@ -25,19 +27,18 @@ figure {
   display: grid;
   font-family: system-ui, ui-sans-serif, sans-serif;
   grid-area: 1 / -1;
-  /* height: 70dvh; */
   margin: 0;
   padding-block-end: calc(10 * var(--gap));
   position: relative;
-  rotate: calc((sibling-index() - (sibling-count() + 1) / 2) * (35deg / sibling-count()));
+  rotate: calc(var(--start-degree) + (var(--end-degree) - var(--start-degree)) * (sibling-index() - 1) / (sibling-count() - 1));
   row-gap: var(--gap);
   transform-origin: calc(100% - var(--rivet)) calc(100% - var(--rivet));
   width: var(--width);
   z-index: calc(sibling-count() - sibling-index());
   &:first-of-type {
     align-items: start;
+    align-self: stretch;
     background: linear-gradient(180deg, #FE592A 70%, #FFF 0 70%);
-    height: 78dvh; /* FIX */
 
     header {
       text-orientation: mixed;
