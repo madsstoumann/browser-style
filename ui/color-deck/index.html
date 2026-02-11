@@ -12,7 +12,13 @@
   inherits: true;
   initial-value: 0;
 }
-body { background: #eee;}
+body {
+  background: #eee;
+  margin: 2rem 0;
+}
+html {
+    scrollbar-width: none;
+}
 
 /* === CARD === */
 section {
@@ -49,7 +55,6 @@ figure {
     + var(--is-after) * (var(--end-degree) - var(--start-degree)) * (1 - (sibling-index() - 1) / (sibling-count() - 1)) * 0.85
   );
   row-gap: var(--gap);
-  user-select: none;
   transform-origin: calc(100% - var(--rivet)) calc(100% - var(--rivet));
   transition: rotate .25s linear;
   width: var(--width);
@@ -67,6 +72,7 @@ figure {
 
     h2 { font-size: 3rem; }
     h3 { font-size: 1.5rem; }
+
     /* rivet */
     &::after {
       aspect-ratio: 1;
@@ -93,6 +99,8 @@ figcaption {
   justify-content: center;
   text-align: center;
   padding-block-start: var(--gap);
+  user-select: none;
+  -webkit-user-select: none;
   span {
     background: #EEE;
     border-radius: 50%;
@@ -163,7 +171,7 @@ strong {
   <figure>
     <figcaption>Reds <span>×</span></figcaption>
     <ul>
-      <li style="--c: #FADADD">
+      <li style="--c: lab(89% 12 4)">
         <strong>Pale Rose</strong>
         <dl>
           <dt>HEX</dt><dd>#FADADD</dd>
@@ -171,7 +179,7 @@ strong {
           <dt>LAB</dt><dd>89, 12, 4</dd>
         </dl>
       </li>
-      <li style="--c: #F4A7B0">
+      <li style="--c: lab(75% 27 7)">
         <strong>Candy Pink</strong>
         <dl>
           <dt>HEX</dt><dd>#F4A7B0</dd>
@@ -179,7 +187,7 @@ strong {
           <dt>LAB</dt><dd>75, 27, 7</dd>
         </dl>
       </li>
-      <li style="--c: #E8747E">
+      <li style="--c: lab(60% 49 14)">
         <strong>Strawberry</strong>
         <dl>
           <dt>HEX</dt><dd>#E8747E</dd>
@@ -187,7 +195,7 @@ strong {
           <dt>LAB</dt><dd>60, 41, 12</dd>
         </dl>
       </li>
-      <li style="--c: #DC3D4C">
+      <li style="--c: lab(45% 67 30)">
         <strong>Poppy Red</strong>
         <dl>
           <dt>HEX</dt><dd>#DC3D4C</dd>
@@ -195,7 +203,7 @@ strong {
           <dt>LAB</dt><dd>45, 56, 25</dd>
         </dl>
       </li>
-      <li style="--c: #C41E3A">
+      <li style="--c: lab(37% 70 26)">
         <strong>Cardinal</strong>
         <dl>
           <dt>HEX</dt><dd>#C41E3A</dd>
@@ -203,7 +211,7 @@ strong {
           <dt>LAB</dt><dd>37, 58, 22</dd>
         </dl>
       </li>
-      <li style="--c: #8B1A2B">
+      <li style="--c: lab(24% 42 14)">
         <strong>Burgundy</strong>
         <dl>
           <dt>HEX</dt><dd>#8B1A2B</dd>
@@ -211,7 +219,7 @@ strong {
           <dt>LAB</dt><dd>24, 42, 14</dd>
         </dl>
       </li>
-      <li style="--c: #5C0A1A">
+      <li style="--c: lab(14% 32 10)">
         <strong>Oxblood</strong>
         <dl>
           <dt>HEX</dt><dd>#5C0A1A</dd>
@@ -225,7 +233,7 @@ strong {
   <figure>
     <figcaption>Oranges <span>×</span></figcaption>
     <ul>
-      <li style="--c: #FDE8D0">
+      <li style="--c: lab(93% 5 16)">
         <strong>Peach Puff</strong>
         <dl>
           <dt>HEX</dt><dd>#FDE8D0</dd>
@@ -233,7 +241,7 @@ strong {
           <dt>LAB</dt><dd>93, 5, 16</dd>
         </dl>
       </li>
-      <li style="--c: #F5B87A">
+      <li style="--c: lab(79% 17 50)">
         <strong>Amber</strong>
         <dl>
           <dt>HEX</dt><dd>#F5B87A</dd>
@@ -241,7 +249,7 @@ strong {
           <dt>LAB</dt><dd>79, 14, 42</dd>
         </dl>
       </li>
-      <li style="--c: #ED8A3E">
+      <li style="--c: lab(66% 31 67)">
         <strong>Marigold</strong>
         <dl>
           <dt>HEX</dt><dd>#ED8A3E</dd>
@@ -249,7 +257,7 @@ strong {
           <dt>LAB</dt><dd>66, 26, 56</dd>
         </dl>
       </li>
-      <li style="--c: #E05E20">
+      <li style="--c: lab(53% 48 70)">
         <strong>Tangerine</strong>
         <dl>
           <dt>HEX</dt><dd>#E05E20</dd>
@@ -257,7 +265,7 @@ strong {
           <dt>LAB</dt><dd>53, 40, 58</dd>
         </dl>
       </li>
-      <li style="--c: #C04410">
+      <li style="--c: lab(42% 48 62)">
         <strong>Burnt Orange</strong>
         <dl>
           <dt>HEX</dt><dd>#C04410</dd>
@@ -265,7 +273,7 @@ strong {
           <dt>LAB</dt><dd>42, 40, 52</dd>
         </dl>
       </li>
-      <li style="--c: #963510">
+      <li style="--c: lab(33% 38 48)">
         <strong>Rust</strong>
         <dl>
           <dt>HEX</dt><dd>#963510</dd>
@@ -273,7 +281,7 @@ strong {
           <dt>LAB</dt><dd>33, 32, 40</dd>
         </dl>
       </li>
-      <li style="--c: #6B2810">
+      <li style="--c: lab(23% 22 28)">
         <strong>Cinnamon</strong>
         <dl>
           <dt>HEX</dt><dd>#6B2810</dd>
@@ -287,7 +295,7 @@ strong {
   <figure>
     <figcaption>Yellows <span>×</span></figcaption>
     <ul>
-      <li style="--c: #FFF7D6">
+      <li style="--c: lab(97% -2 18)">
         <strong>Cream</strong>
         <dl>
           <dt>HEX</dt><dd>#FFF7D6</dd>
@@ -295,7 +303,7 @@ strong {
           <dt>LAB</dt><dd>97, -2, 18</dd>
         </dl>
       </li>
-      <li style="--c: #FFE680">
+      <li style="--c: lab(92% -2 52)">
         <strong>Primrose</strong>
         <dl>
           <dt>HEX</dt><dd>#FFE680</dd>
@@ -303,7 +311,7 @@ strong {
           <dt>LAB</dt><dd>92, -2, 52</dd>
         </dl>
       </li>
-      <li style="--c: #FFD33D">
+      <li style="--c: lab(87% 2 76)">
         <strong>Sunflower</strong>
         <dl>
           <dt>HEX</dt><dd>#FFD33D</dd>
@@ -311,7 +319,7 @@ strong {
           <dt>LAB</dt><dd>87, 2, 76</dd>
         </dl>
       </li>
-      <li style="--c: #F0B800">
+      <li style="--c: lab(78% 7 94)">
         <strong>Saffron</strong>
         <dl>
           <dt>HEX</dt><dd>#F0B800</dd>
@@ -319,7 +327,7 @@ strong {
           <dt>LAB</dt><dd>78, 6, 78</dd>
         </dl>
       </li>
-      <li style="--c: #C89600">
+      <li style="--c: lab(66% 7 79)">
         <strong>Honey</strong>
         <dl>
           <dt>HEX</dt><dd>#C89600</dd>
@@ -327,7 +335,7 @@ strong {
           <dt>LAB</dt><dd>66, 6, 66</dd>
         </dl>
       </li>
-      <li style="--c: #9A7400">
+      <li style="--c: lab(52% 5 62)">
         <strong>Bronze</strong>
         <dl>
           <dt>HEX</dt><dd>#9A7400</dd>
@@ -335,7 +343,7 @@ strong {
           <dt>LAB</dt><dd>52, 4, 52</dd>
         </dl>
       </li>
-      <li style="--c: #6B5000">
+      <li style="--c: lab(37% 2 46)">
         <strong>Dark Gold</strong>
         <dl>
           <dt>HEX</dt><dd>#6B5000</dd>
@@ -349,7 +357,7 @@ strong {
   <figure>
     <figcaption>Greens <span>×</span></figcaption>
     <ul>
-      <li style="--c: #D8F0D8">
+      <li style="--c: lab(93% -14 10)">
         <strong>Honeydew</strong>
         <dl>
           <dt>HEX</dt><dd>#D8F0D8</dd>
@@ -357,7 +365,7 @@ strong {
           <dt>LAB</dt><dd>93, -14, 10</dd>
         </dl>
       </li>
-      <li style="--c: #8FD88F">
+      <li style="--c: lab(81% -34 26)">
         <strong>Spring Bud</strong>
         <dl>
           <dt>HEX</dt><dd>#8FD88F</dd>
@@ -365,7 +373,7 @@ strong {
           <dt>LAB</dt><dd>81, -34, 26</dd>
         </dl>
       </li>
-      <li style="--c: #4CAF50">
+      <li style="--c: lab(64% -48 36)">
         <strong>Fern</strong>
         <dl>
           <dt>HEX</dt><dd>#4CAF50</dd>
@@ -373,7 +381,7 @@ strong {
           <dt>LAB</dt><dd>64, -40, 30</dd>
         </dl>
       </li>
-      <li style="--c: #2E8B2E">
+      <li style="--c: lab(51% -48 38)">
         <strong>Kelly Green</strong>
         <dl>
           <dt>HEX</dt><dd>#2E8B2E</dd>
@@ -381,7 +389,7 @@ strong {
           <dt>LAB</dt><dd>51, -40, 32</dd>
         </dl>
       </li>
-      <li style="--c: #1B6B1B">
+      <li style="--c: lab(40% -43 34)">
         <strong>Verdant</strong>
         <dl>
           <dt>HEX</dt><dd>#1B6B1B</dd>
@@ -389,7 +397,7 @@ strong {
           <dt>LAB</dt><dd>40, -36, 28</dd>
         </dl>
       </li>
-      <li style="--c: #0E4D0E">
+      <li style="--c: lab(29% -36 26)">
         <strong>Forest</strong>
         <dl>
           <dt>HEX</dt><dd>#0E4D0E</dd>
@@ -397,7 +405,7 @@ strong {
           <dt>LAB</dt><dd>29, -30, 22</dd>
         </dl>
       </li>
-      <li style="--c: #0A350A">
+      <li style="--c: lab(20% -22 16)">
         <strong>Pine</strong>
         <dl>
           <dt>HEX</dt><dd>#0A350A</dd>
@@ -411,7 +419,7 @@ strong {
   <figure>
     <figcaption>Cyans <span>×</span></figcaption>
     <ul>
-      <li style="--c: #D0F0F0">
+      <li style="--c: lab(93% -10 -4)">
         <strong>Pale Aqua</strong>
         <dl>
           <dt>HEX</dt><dd>#D0F0F0</dd>
@@ -419,7 +427,7 @@ strong {
           <dt>LAB</dt><dd>93, -10, -4</dd>
         </dl>
       </li>
-      <li style="--c: #80D4D4">
+      <li style="--c: lab(80% -22 -8)">
         <strong>Pool Blue</strong>
         <dl>
           <dt>HEX</dt><dd>#80D4D4</dd>
@@ -427,7 +435,7 @@ strong {
           <dt>LAB</dt><dd>80, -22, -8</dd>
         </dl>
       </li>
-      <li style="--c: #40B8B8">
+      <li style="--c: lab(69% -28 -10)">
         <strong>Lagoon</strong>
         <dl>
           <dt>HEX</dt><dd>#40B8B8</dd>
@@ -435,7 +443,7 @@ strong {
           <dt>LAB</dt><dd>69, -28, -10</dd>
         </dl>
       </li>
-      <li style="--c: #20908D">
+      <li style="--c: lab(55% -26 -8)">
         <strong>Teal</strong>
         <dl>
           <dt>HEX</dt><dd>#20908D</dd>
@@ -443,7 +451,7 @@ strong {
           <dt>LAB</dt><dd>55, -26, -8</dd>
         </dl>
       </li>
-      <li style="--c: #106B6B">
+      <li style="--c: lab(41% -22 -8)">
         <strong>Deep Teal</strong>
         <dl>
           <dt>HEX</dt><dd>#106B6B</dd>
@@ -451,7 +459,7 @@ strong {
           <dt>LAB</dt><dd>41, -22, -8</dd>
         </dl>
       </li>
-      <li style="--c: #084D4D">
+      <li style="--c: lab(30% -18 -6)">
         <strong>Evergreen</strong>
         <dl>
           <dt>HEX</dt><dd>#084D4D</dd>
@@ -459,7 +467,7 @@ strong {
           <dt>LAB</dt><dd>30, -18, -6</dd>
         </dl>
       </li>
-      <li style="--c: #043535">
+      <li style="--c: lab(20% -14 -4)">
         <strong>Dark Spruce</strong>
         <dl>
           <dt>HEX</dt><dd>#043535</dd>
@@ -473,7 +481,7 @@ strong {
   <figure>
     <figcaption>Blues <span>×</span></figcaption>
     <ul>
-      <li style="--c: #D6E4F0">
+      <li style="--c: lab(90% -3 -9)">
         <strong>Ice Blue</strong>
         <dl>
           <dt>HEX</dt><dd>#D6E4F0</dd>
@@ -481,7 +489,7 @@ strong {
           <dt>LAB</dt><dd>90, -3, -9</dd>
         </dl>
       </li>
-      <li style="--c: #88B4DC">
+      <li style="--c: lab(73% -4 -22)">
         <strong>Cornflower</strong>
         <dl>
           <dt>HEX</dt><dd>#88B4DC</dd>
@@ -489,7 +497,7 @@ strong {
           <dt>LAB</dt><dd>73, -4, -22</dd>
         </dl>
       </li>
-      <li style="--c: #4488CC">
+      <li style="--c: lab(56% -5 -43)">
         <strong>Azure</strong>
         <dl>
           <dt>HEX</dt><dd>#4488CC</dd>
@@ -497,7 +505,7 @@ strong {
           <dt>LAB</dt><dd>56, -4, -36</dd>
         </dl>
       </li>
-      <li style="--c: #2266AA">
+      <li style="--c: lab(43% -5 -43)">
         <strong>Cobalt</strong>
         <dl>
           <dt>HEX</dt><dd>#2266AA</dd>
@@ -505,7 +513,7 @@ strong {
           <dt>LAB</dt><dd>43, -4, -36</dd>
         </dl>
       </li>
-      <li style="--c: #1A4D88">
+      <li style="--c: lab(33% -2 -38)">
         <strong>Sapphire</strong>
         <dl>
           <dt>HEX</dt><dd>#1A4D88</dd>
@@ -513,7 +521,7 @@ strong {
           <dt>LAB</dt><dd>33, -2, -32</dd>
         </dl>
       </li>
-      <li style="--c: #103366">
+      <li style="--c: lab(22% 0 -28)">
         <strong>Navy</strong>
         <dl>
           <dt>HEX</dt><dd>#103366</dd>
@@ -521,7 +529,7 @@ strong {
           <dt>LAB</dt><dd>22, 0, -28</dd>
         </dl>
       </li>
-      <li style="--c: #0A2040">
+      <li style="--c: lab(13% 0 -20)">
         <strong>Midnight</strong>
         <dl>
           <dt>HEX</dt><dd>#0A2040</dd>
@@ -535,7 +543,7 @@ strong {
   <figure>
     <figcaption>Violets <span>×</span></figcaption>
     <ul>
-      <li style="--c: #E8D8F0">
+      <li style="--c: lab(89% 10 -10)">
         <strong>Lavender</strong>
         <dl>
           <dt>HEX</dt><dd>#E8D8F0</dd>
@@ -543,7 +551,7 @@ strong {
           <dt>LAB</dt><dd>89, 10, -10</dd>
         </dl>
       </li>
-      <li style="--c: #C8A0DC">
+      <li style="--c: lab(72% 20 -20)">
         <strong>Wisteria</strong>
         <dl>
           <dt>HEX</dt><dd>#C8A0DC</dd>
@@ -551,7 +559,7 @@ strong {
           <dt>LAB</dt><dd>72, 20, -20</dd>
         </dl>
       </li>
-      <li style="--c: #9B59B6">
+      <li style="--c: lab(48% 41 -36)">
         <strong>Amethyst</strong>
         <dl>
           <dt>HEX</dt><dd>#9B59B6</dd>
@@ -559,7 +567,7 @@ strong {
           <dt>LAB</dt><dd>48, 34, -30</dd>
         </dl>
       </li>
-      <li style="--c: #7B3FA0">
+      <li style="--c: lab(37% 46 -43)">
         <strong>Royal Purple</strong>
         <dl>
           <dt>HEX</dt><dd>#7B3FA0</dd>
@@ -567,7 +575,7 @@ strong {
           <dt>LAB</dt><dd>37, 38, -36</dd>
         </dl>
       </li>
-      <li style="--c: #5C2D82">
+      <li style="--c: lab(28% 38 -38)">
         <strong>Plum</strong>
         <dl>
           <dt>HEX</dt><dd>#5C2D82</dd>
@@ -575,7 +583,7 @@ strong {
           <dt>LAB</dt><dd>28, 32, -32</dd>
         </dl>
       </li>
-      <li style="--c: #3E1D5C">
+      <li style="--c: lab(18% 22 -24)">
         <strong>Grape</strong>
         <dl>
           <dt>HEX</dt><dd>#3E1D5C</dd>
@@ -583,7 +591,7 @@ strong {
           <dt>LAB</dt><dd>18, 22, -24</dd>
         </dl>
       </li>
-      <li style="--c: #241040">
+      <li style="--c: lab(10% 16 -20)">
         <strong>Dark Purple</strong>
         <dl>
           <dt>HEX</dt><dd>#241040</dd>
@@ -597,7 +605,7 @@ strong {
   <figure>
     <figcaption>Pinks <span>×</span></figcaption>
     <ul>
-      <li style="--c: #FCE4EC">
+      <li style="--c: lab(93% 10 0)">
         <strong>Ballet Slipper</strong>
         <dl>
           <dt>HEX</dt><dd>#FCE4EC</dd>
@@ -605,7 +613,7 @@ strong {
           <dt>LAB</dt><dd>93, 10, 0</dd>
         </dl>
       </li>
-      <li style="--c: #F48FB1">
+      <li style="--c: lab(72% 43 -2)">
         <strong>Flamingo</strong>
         <dl>
           <dt>HEX</dt><dd>#F48FB1</dd>
@@ -613,7 +621,7 @@ strong {
           <dt>LAB</dt><dd>72, 36, -2</dd>
         </dl>
       </li>
-      <li style="--c: #E91E8C">
+      <li style="--c: lab(48% 82 -12)">
         <strong>Hot Pink</strong>
         <dl>
           <dt>HEX</dt><dd>#E91E8C</dd>
@@ -621,7 +629,7 @@ strong {
           <dt>LAB</dt><dd>48, 68, -10</dd>
         </dl>
       </li>
-      <li style="--c: #C2185B">
+      <li style="--c: lab(38% 72 2)">
         <strong>Fuchsia</strong>
         <dl>
           <dt>HEX</dt><dd>#C2185B</dd>
@@ -629,7 +637,7 @@ strong {
           <dt>LAB</dt><dd>38, 60, 2</dd>
         </dl>
       </li>
-      <li style="--c: #96114A">
+      <li style="--c: lab(28% 58 2)">
         <strong>Magenta</strong>
         <dl>
           <dt>HEX</dt><dd>#96114A</dd>
@@ -637,7 +645,7 @@ strong {
           <dt>LAB</dt><dd>28, 48, 2</dd>
         </dl>
       </li>
-      <li style="--c: #6B0D38">
+      <li style="--c: lab(20% 36 0)">
         <strong>Berry</strong>
         <dl>
           <dt>HEX</dt><dd>#6B0D38</dd>
@@ -645,7 +653,7 @@ strong {
           <dt>LAB</dt><dd>20, 36, 0</dd>
         </dl>
       </li>
-      <li style="--c: #400A24">
+      <li style="--c: lab(12% 24 -2)">
         <strong>Dark Berry</strong>
         <dl>
           <dt>HEX</dt><dd>#400A24</dd>
@@ -659,7 +667,7 @@ strong {
   <figure>
     <figcaption>Neutrals <span>×</span></figcaption>
     <ul>
-      <li style="--c: #F5F5F0">
+      <li style="--c: lab(97% 0 2)">
         <strong>Cloud</strong>
         <dl>
           <dt>HEX</dt><dd>#F5F5F0</dd>
@@ -667,7 +675,7 @@ strong {
           <dt>LAB</dt><dd>97, 0, 2</dd>
         </dl>
       </li>
-      <li style="--c: #D5D0C8">
+      <li style="--c: lab(84% 0 4)">
         <strong>Pebble</strong>
         <dl>
           <dt>HEX</dt><dd>#D5D0C8</dd>
@@ -675,7 +683,7 @@ strong {
           <dt>LAB</dt><dd>84, 0, 4</dd>
         </dl>
       </li>
-      <li style="--c: #A8A098">
+      <li style="--c: lab(66% 0 4)">
         <strong>Driftwood</strong>
         <dl>
           <dt>HEX</dt><dd>#A8A098</dd>
@@ -683,7 +691,7 @@ strong {
           <dt>LAB</dt><dd>66, 0, 4</dd>
         </dl>
       </li>
-      <li style="--c: #808078">
+      <li style="--c: lab(53% 0 4)">
         <strong>Steel Grey</strong>
         <dl>
           <dt>HEX</dt><dd>#808078</dd>
@@ -691,7 +699,7 @@ strong {
           <dt>LAB</dt><dd>53, 0, 4</dd>
         </dl>
       </li>
-      <li style="--c: #585850">
+      <li style="--c: lab(38% 0 4)">
         <strong>Charcoal</strong>
         <dl>
           <dt>HEX</dt><dd>#585850</dd>
@@ -699,7 +707,7 @@ strong {
           <dt>LAB</dt><dd>38, 0, 4</dd>
         </dl>
       </li>
-      <li style="--c: #363630">
+      <li style="--c: lab(23% 0 4)">
         <strong>Raven</strong>
         <dl>
           <dt>HEX</dt><dd>#363630</dd>
@@ -707,7 +715,7 @@ strong {
           <dt>LAB</dt><dd>23, 0, 4</dd>
         </dl>
       </li>
-      <li style="--c: #1A1A18">
+      <li style="--c: lab(10% 0 2)">
         <strong>Obsidian</strong>
         <dl>
           <dt>HEX</dt><dd>#1A1A18</dd>
