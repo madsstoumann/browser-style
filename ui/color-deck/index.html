@@ -4,7 +4,7 @@
 	<title>Color Deck</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	
+
 	<meta name="view-transition" content="same-origin">
 <style>
 @property --is-active {
@@ -26,7 +26,7 @@ section {
   display: grid;
   place-items: end center;
 }
-figure {
+section > * {
   --spread: progress(100cqi, 300px, 1440px);
   --end-degree: calc(var(--spread) * 45deg);
   --gap: 1ch;
@@ -34,10 +34,9 @@ figure {
   --start-degree: calc(var(--spread) * -45deg);
   --width: 265px;
 
-  --has-active: min(1, var(--active-index, 0));
-  --is-before: max(0, sign(var(--active-index, 0) - sibling-index()));
-  --is-active: calc(1 - abs(sign(var(--active-index, 0) - sibling-index())));
-  --is-after: calc(var(--has-active) * max(0, sign(sibling-index() - var(--active-index, 0))));
+  --has-active: 0;
+  --is-before: 0;
+  --is-after: 0;
 
   background-color: #FFF;
   border-radius: 2em;
@@ -59,7 +58,7 @@ figure {
   transition: rotate .25s linear;
   width: var(--width);
   z-index: calc(sibling-count() - sibling-index());
-  &:first-of-type {
+  &:first-child {
     align-items: start;
     align-self: stretch;
     background: linear-gradient(180deg, #FE592A 70%, #FFF 0 70%);
@@ -93,7 +92,24 @@ figure {
     }
   }
 }
-figcaption {
+
+/* State flags via selectors */
+section:has(details[open]) > * { --has-active: 1; }
+section > :has(~ details[open]) { --is-before: 1; }
+details[open] { --is-active: 1; }
+details[open] ~ * { --is-after: 1; }
+
+/* Keep details content always visible */
+details::details-content {
+  content-visibility: visible;
+  display: contents;
+}
+summary {
+  list-style: none;
+  &::-webkit-details-marker { display: none; }
+}
+
+:is(figcaption, summary) {
   display: flex;
   font-size: 1.25rem;
   justify-content: center;
@@ -118,7 +134,7 @@ figcaption {
     }
   }
 }
-figcaption, h2, h3, strong {
+figcaption, summary, h2, h3, strong {
   font-weight: 700;
   text-box: cap alphabetic;
   text-transform: uppercase;
@@ -137,7 +153,7 @@ li {
     content: "";
     display: block;
     grid-column: span 2;
-  }  
+  }
 }
 dd {
   margin: 0;
@@ -168,8 +184,8 @@ strong {
       <h3>Solid Coated</h3>
     </header>
   </figure>
-  <figure>
-    <figcaption>Reds <span>×</span></figcaption>
+  <details name="deck">
+    <summary>Reds <span>×</span></summary>
     <ul>
       <li style="--c: lab(89% 12 4)">
         <strong>Pale Rose</strong>
@@ -228,10 +244,10 @@ strong {
         </dl>
       </li>
     </ul>
-  </figure>
+  </details>
 
-  <figure>
-    <figcaption>Oranges <span>×</span></figcaption>
+  <details name="deck">
+    <summary>Oranges <span>×</span></summary>
     <ul>
       <li style="--c: lab(93% 5 16)">
         <strong>Peach Puff</strong>
@@ -290,10 +306,10 @@ strong {
         </dl>
       </li>
     </ul>
-  </figure>
+  </details>
 
-  <figure>
-    <figcaption>Yellows <span>×</span></figcaption>
+  <details name="deck">
+    <summary>Yellows <span>×</span></summary>
     <ul>
       <li style="--c: lab(97% -2 18)">
         <strong>Cream</strong>
@@ -352,10 +368,10 @@ strong {
         </dl>
       </li>
     </ul>
-  </figure>
+  </details>
 
-  <figure>
-    <figcaption>Greens <span>×</span></figcaption>
+  <details name="deck">
+    <summary>Greens <span>×</span></summary>
     <ul>
       <li style="--c: lab(93% -14 10)">
         <strong>Honeydew</strong>
@@ -414,10 +430,10 @@ strong {
         </dl>
       </li>
     </ul>
-  </figure>
+  </details>
 
-  <figure>
-    <figcaption>Cyans <span>×</span></figcaption>
+  <details name="deck">
+    <summary>Cyans <span>×</span></summary>
     <ul>
       <li style="--c: lab(93% -10 -4)">
         <strong>Pale Aqua</strong>
@@ -476,10 +492,10 @@ strong {
         </dl>
       </li>
     </ul>
-  </figure>
+  </details>
 
-  <figure>
-    <figcaption>Blues <span>×</span></figcaption>
+  <details name="deck">
+    <summary>Blues <span>×</span></summary>
     <ul>
       <li style="--c: lab(90% -3 -9)">
         <strong>Ice Blue</strong>
@@ -538,10 +554,10 @@ strong {
         </dl>
       </li>
     </ul>
-  </figure>
+  </details>
 
-  <figure>
-    <figcaption>Violets <span>×</span></figcaption>
+  <details name="deck">
+    <summary>Violets <span>×</span></summary>
     <ul>
       <li style="--c: lab(89% 10 -10)">
         <strong>Lavender</strong>
@@ -600,10 +616,10 @@ strong {
         </dl>
       </li>
     </ul>
-  </figure>
+  </details>
 
-  <figure>
-    <figcaption>Pinks <span>×</span></figcaption>
+  <details name="deck">
+    <summary>Pinks <span>×</span></summary>
     <ul>
       <li style="--c: lab(93% 10 0)">
         <strong>Ballet Slipper</strong>
@@ -662,10 +678,10 @@ strong {
         </dl>
       </li>
     </ul>
-  </figure>
+  </details>
 
-  <figure>
-    <figcaption>Neutrals <span>×</span></figcaption>
+  <details name="deck">
+    <summary>Neutrals <span>×</span></summary>
     <ul>
       <li style="--c: lab(97% 0 2)">
         <strong>Cloud</strong>
@@ -724,17 +740,7 @@ strong {
         </dl>
       </li>
     </ul>
-  </figure>
+  </details>
 </section>
-<script>
-document.querySelector('section').addEventListener('click', (e) => {
-  const figure = e.target.closest('figure');
-  if (!figure) return;
-  const section = figure.parentElement;
-  const index = [...section.children].indexOf(figure) + 1;
-  const current = parseInt(section.style.getPropertyValue('--active-index')) || 0;
-  section.style.setProperty('--active-index', current === index ? 0 : index);
-});
-</script>
 </body>
 </html>
