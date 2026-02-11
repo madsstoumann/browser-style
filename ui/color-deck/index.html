@@ -83,9 +83,26 @@ figure {
   }
 }
 figcaption {
+  display: flex;
   font-size: 1.25rem;
+  gap: 1ch;
+  justify-content: center;
   text-align: center;
   padding-block-start: var(--gap);
+  span {
+    aspect-ratio: 1;
+    background: #EEE;
+    border-radius: 50%;
+    display: grid;
+    height: 1.5ch;
+    place-content: center;
+    text-box: ex alphabetic;
+    width: 1.5ch;
+    &:hover {
+      background: #333;
+      color: #FFF;
+    }
+  }
 }
 figcaption, h2, h3, strong {
   font-weight: 700;
@@ -131,14 +148,14 @@ strong {
 <body>
 <section>
    <figure>
-    <figcaption>Formula Guide</figcaption>
+    <figcaption>Color Fan Deck</figcaption>
     <header>
-      <h2>Formula Guide</h2>
+      <h2>Color Fan Deck</h2>
       <h3>Solid Coated</h3>
     </header>
   </figure>
   <figure>
-    <figcaption>Reds</figcaption>
+    <figcaption>Reds <span>×</span></figcaption>
     <ul>
       <li style="--c: #FADADD">
         <strong>Pale Rose</strong>
@@ -200,7 +217,7 @@ strong {
   </figure>
 
   <figure>
-    <figcaption>Oranges</figcaption>
+    <figcaption>Oranges <span>×</span></figcaption>
     <ul>
       <li style="--c: #FDE8D0">
         <strong>Peach Puff</strong>
@@ -262,7 +279,7 @@ strong {
   </figure>
 
   <figure>
-    <figcaption>Yellows</figcaption>
+    <figcaption>Yellows <span>×</span></figcaption>
     <ul>
       <li style="--c: #FFF7D6">
         <strong>Cream</strong>
@@ -324,7 +341,7 @@ strong {
   </figure>
 
   <figure>
-    <figcaption>Greens</figcaption>
+    <figcaption>Greens <span>×</span></figcaption>
     <ul>
       <li style="--c: #D8F0D8">
         <strong>Honeydew</strong>
@@ -386,7 +403,7 @@ strong {
   </figure>
 
   <figure>
-    <figcaption>Cyans</figcaption>
+    <figcaption>Cyans <span>×</span></figcaption>
     <ul>
       <li style="--c: #D0F0F0">
         <strong>Pale Aqua</strong>
@@ -448,7 +465,7 @@ strong {
   </figure>
 
   <figure>
-    <figcaption>Blues</figcaption>
+    <figcaption>Blues <span>×</span></figcaption>
     <ul>
       <li style="--c: #D6E4F0">
         <strong>Ice Blue</strong>
@@ -510,7 +527,7 @@ strong {
   </figure>
 
   <figure>
-    <figcaption>Violets</figcaption>
+    <figcaption>Violets <span>×</span></figcaption>
     <ul>
       <li style="--c: #E8D8F0">
         <strong>Lavender</strong>
@@ -572,7 +589,7 @@ strong {
   </figure>
 
   <figure>
-    <figcaption>Pinks</figcaption>
+    <figcaption>Pinks <span>×</span></figcaption>
     <ul>
       <li style="--c: #FCE4EC">
         <strong>Ballet Slipper</strong>
@@ -634,7 +651,7 @@ strong {
   </figure>
 
   <figure>
-    <figcaption>Neutrals</figcaption>
+    <figcaption>Neutrals <span>×</span></figcaption>
     <ul>
       <li style="--c: #F5F5F0">
         <strong>Cloud</strong>
