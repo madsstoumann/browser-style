@@ -7,6 +7,11 @@
 	
 	<meta name="view-transition" content="same-origin">
 <style>
+@property --is-active {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
 body { background: #eee;}
 
 /* === CARD === */
@@ -85,19 +90,20 @@ figure {
 figcaption {
   display: flex;
   font-size: 1.25rem;
-  gap: 1ch;
   justify-content: center;
   text-align: center;
   padding-block-start: var(--gap);
   span {
-    aspect-ratio: 1;
     background: #EEE;
     border-radius: 50%;
     display: grid;
-    height: 1.5ch;
+    height: calc(var(--is-active) * 1.5ch);
+    margin-inline-start: calc(var(--is-active) * 1ch);
+    opacity: var(--is-active);
+    overflow: hidden;
     place-content: center;
     text-box: ex alphabetic;
-    width: 1.5ch;
+    width: calc(var(--is-active) * 1.5ch);
     &:hover {
       background: #333;
       color: #FFF;
