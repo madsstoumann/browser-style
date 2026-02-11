@@ -23,8 +23,10 @@ figure {
   --start-degree: calc(var(--spread) * -45deg);
   --width: 265px;
 
+  --has-active: min(1, var(--active-index, 0));
   --is-before: max(0, sign(var(--active-index, 0) - sibling-index()));
   --is-active: calc(1 - abs(sign(var(--active-index, 0) - sibling-index())));
+  --is-after: calc(var(--has-active) * max(0, sign(sibling-index() - var(--active-index, 0))));
 
   background-color: #FFF;
   border-radius: 2em;
@@ -36,9 +38,10 @@ figure {
   padding-block-end: calc(10 * var(--gap));
   position: relative;
   rotate: calc(
-    var(--start-degree) +
-    (var(--end-degree) - var(--start-degree)) * (sibling-index() - 1) / (sibling-count() - 1)
-    * (1 - var(--is-before) * 0.85)
+    (var(--start-degree) + (var(--end-degree) - var(--start-degree)) * (sibling-index() - 1) / (sibling-count() - 1))
+    * (1 - var(--is-active))
+    - var(--is-before) * (var(--end-degree) - var(--start-degree)) * (sibling-index() - 1) / (sibling-count() - 1) * 0.85
+    + var(--is-after) * (var(--end-degree) - var(--start-degree)) * (1 - (sibling-index() - 1) / (sibling-count() - 1)) * 0.85
   );
   row-gap: var(--gap);
   user-select: none;
