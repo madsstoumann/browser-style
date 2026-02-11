@@ -7,11 +7,6 @@
 
 	<meta name="view-transition" content="same-origin">
 <style>
-@property --is-active {
-  syntax: "<number>";
-  inherits: true;
-  initial-value: 0;
-}
 body {
   background: #eee;
   margin: 2rem 0;
@@ -20,12 +15,12 @@ html {
     scrollbar-width: none;
 }
 
-/* === CARD === */
 section {
   container-type: inline-size;
   display: grid;
   place-items: end center;
 }
+
 section > * {
   --spread: progress(100cqi, 300px, 1440px);
   --end-degree: calc(var(--spread) * 45deg);
@@ -35,6 +30,7 @@ section > * {
   --width: 265px;
 
   --has-active: 0;
+  --is-active: 0;
   --is-before: 0;
   --is-after: 0;
 
@@ -118,20 +114,21 @@ summary {
   user-select: none;
   -webkit-user-select: none;
   span {
-    background: #EEE;
-    border-radius: 50%;
-    display: grid;
-    height: calc(var(--is-active) * 1.5ch);
-    margin-inline-start: calc(var(--is-active) * 1ch);
-    opacity: var(--is-active);
-    overflow: hidden;
-    place-content: center;
-    text-box: ex alphabetic;
-    width: calc(var(--is-active) * 1.5ch);
-    &:hover {
-      background: #333;
-      color: #FFF;
-    }
+    display: none;
+  }
+}
+details[open] summary span {
+  background: #EEE;
+  border-radius: 50%;
+  display: grid;
+  height: 1.5ch;
+  margin-inline-start: 1ch;
+  place-content: center;
+  text-box: ex alphabetic;
+  width: 1.5ch;
+  &:hover {
+    background: #333;
+    color: #FFF;
   }
 }
 figcaption, summary, h2, h3, strong {
