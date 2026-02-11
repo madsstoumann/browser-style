@@ -22,6 +22,10 @@ figure {
   --rivet: 1.5rem;
   --start-degree: calc(var(--spread) * -45deg);
   --width: 265px;
+
+  --is-before: max(0, sign(var(--active-index, 0) - sibling-index()));
+  --is-active: calc(1 - abs(sign(var(--active-index, 0) - sibling-index())));
+
   background-color: #FFF;
   border-radius: 2em;
   box-shadow: 0.5em 0.5em 1.5em -0.125em #0002;
@@ -31,7 +35,11 @@ figure {
   margin: 0;
   padding-block-end: calc(10 * var(--gap));
   position: relative;
-  rotate: calc(var(--start-degree) + (var(--end-degree) - var(--start-degree)) * (sibling-index() - 1) / (sibling-count() - 1));
+  rotate: calc(
+    var(--start-degree) +
+    (var(--end-degree) - var(--start-degree)) * (sibling-index() - 1) / (sibling-count() - 1)
+    * (1 - var(--is-before) * 0.85)
+  );
   row-gap: var(--gap);
   user-select: none;
   transform-origin: calc(100% - var(--rivet)) calc(100% - var(--rivet));
@@ -684,5 +692,15 @@ strong {
     </ul>
   </figure>
 </section>
+<script>
+document.querySelector('section').addEventListener('click', (e) => {
+  const figure = e.target.closest('figure');
+  if (!figure) return;
+  const section = figure.parentElement;
+  const index = [...section.children].indexOf(figure) + 1;
+  const current = parseInt(section.style.getPropertyValue('--active-index')) || 0;
+  section.style.setProperty('--active-index', current === index ? 0 : index);
+});
+</script>
 </body>
 </html>
