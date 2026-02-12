@@ -72,12 +72,12 @@
 		};
 
 		window.addEventListener('message', async (event) => {
-			const { type, value, origin: senderOrigin, workerUrl, apiKey, src } = event.data || {};
+			const { type, value, origin: senderOrigin, workerUrl, apiKey, detail, src } = event.data || {};
 
 			switch (type) {
 				case 'init':
 					if (senderOrigin) umbracoOrigin = senderOrigin;
-					await initComponent({ value, workerUrl, apiKey, src });
+					await initComponent({ value, workerUrl, apiKey, detail, src });
 					break;
 
 				case 'setValue':
