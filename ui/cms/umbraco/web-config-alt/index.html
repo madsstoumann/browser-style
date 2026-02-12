@@ -48,9 +48,12 @@
 
 			if (config?.detail) editor.detail = config.detail;
 			if (config?.src) editor.src = config.src;
-			if (config?.value) editor.value = config.value;
 
 			app.appendChild(editor);
+
+			// Set value after append — connectedCallback is async, wait for render
+			await new Promise(r => requestAnimationFrame(r));
+			if (config?.value) editor.value = config.value;
 
 			editor.addEventListener('change', (event) => {
 				const { alt } = event.detail || {};
