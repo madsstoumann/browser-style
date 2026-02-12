@@ -46,8 +46,6 @@
 
 			editor = document.createElement('web-config-alt');
 
-			if (config?.workerUrl) editor.workerUrl = config.workerUrl;
-			if (config?.apiKey) editor.apiKey = config.apiKey;
 			if (config?.detail) editor.detail = config.detail;
 			if (config?.src) editor.src = config.src;
 			if (config?.value) editor.value = config.value;
@@ -58,6 +56,10 @@
 				const { alt } = event.detail || {};
 				sendToUmbraco('valueChanged', { value: alt ?? '' });
 				requestAnimationFrame(updateHeight);
+			});
+
+			editor.addEventListener('requestGenerate', (event) => {
+				sendToUmbraco('requestGenerate', { detail: event.detail?.detail });
 			});
 
 			sendToUmbraco('ready');
@@ -87,6 +89,20 @@
 				case 'setSrc':
 					if (editor && src !== undefined) {
 						editor.src = src;
+					}
+					break;
+
+				case 'generateResult':
+					if (editor) {
+						const { alt, error } = event.data;
+						if (error) {
+							editor.showError(error);
+						} else {
+							editor.value = alt;
+							sendToUmbraco('valueChanged', { value: alt });
+						}
+						editor.generating = false;
+						requestAnimationFrame(updateHeight);
 					}
 					break;
 
