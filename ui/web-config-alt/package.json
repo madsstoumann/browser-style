@@ -1,0 +1,9 @@
+{
+  "name": "@browser.style/web-config-alt",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./src/index.js",
+  "dependencies": {
+    "@browser.style/web-config-shared": "^1.0.0"
+  }
+}

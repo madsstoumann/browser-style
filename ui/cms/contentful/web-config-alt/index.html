@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Web Config Alt - Contentful App</title>
+	<script src="https://unpkg.com/contentful-ui-extensions-sdk@4"></script>
+	<script type="importmap">
+		{
+			"imports": {
+				"@browser.style/web-config-shared": "https://browser.style/ui/web-config-shared/index.js"
+			}
+		}
+	</script>
+	<style>
+		body { margin: 0; padding: 16px; min-height: 100px; }
+		#app { min-height: 60px; }
+	</style>
+</head>
+<body>
+	<div id="app"></div>
+
+	<script type="module">
+		import 'https://browser.style/ui/web-config-alt/src/index.js';
+
+		const mount = async (api) => {
+			const app = document.getElementById('app');
+
+			await customElements.whenDefined('web-config-alt');
+
+			const editor = document.createElement('web-config-alt');
+
+			if (api) {
+				const params = api.parameters?.installation || {};
+				if (params.workerUrl) editor.workerUrl = params.workerUrl;
+				if (params.apiKey) editor.apiKey = params.apiKey;
+
+				const currentValue = api.field.getValue();
+				if (typeof currentValue === 'string' && currentValue.trim()) {
+					editor.value = currentValue;
+				}
+
+				// Get the asset's image URL from the entry context
+				const fields = api.entry?.fields;
+				if (fields?.file) {
+					const locale = api.field.locale || 'en-US';
+					const fileValue = fields.file.getValue(locale);
+					if (fileValue?.url) {
+						editor.src = fileValue.url.startsWith('//') ? `https:${fileValue.url}` : fileValue.url;
+					}
+				}
+
+				editor.addEventListener('change', (event) => {
+					const { alt } = event.detail || {};
+					api.field.setValue(typeof alt === 'string' ? alt : null);
+				});
+
+				api.window.startAutoResizer();
+			}
+
+			app.appendChild(editor);
+		};
+
+		if (window.contentfulExtension) {
+			try {
+				const initResult = window.contentfulExtension.init(async (api) => mount(api));
+				if (initResult && typeof initResult.catch === 'function') {
+					initResult.catch((error) => console.error('Contentful SDK error:', error));
+				}
+			} catch (error) {
+				console.error('Failed to initialize Contentful SDK:', error);
+			}
+		} else {
+			mount(null);
+		}
+	</script>
+</body>
+</html>

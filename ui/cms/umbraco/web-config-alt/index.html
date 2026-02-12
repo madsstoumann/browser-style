@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Web Config Alt - Umbraco Property Editor</title>
+	<script type="importmap">
+		{
+			"imports": {
+				"@browser.style/web-config-shared": "https://browser.style/ui/web-config-shared/index.js"
+			}
+		}
+	</script>
+	<style>
+		* { box-sizing: border-box; }
+		body {
+			margin: 0;
+			padding: 12px;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+			background: transparent;
+		}
+		#app { min-height: 60px; }
+	</style>
+</head>
+<body>
+	<div id="app"></div>
+
+	<script type="module">
+		import 'https://browser.style/ui/web-config-alt/src/index.js';
+
+		const app = document.getElementById('app');
+		let editor = null;
+		let umbracoOrigin = '*';
+
+		const sendToUmbraco = (type, data = {}) => {
+			window.parent.postMessage({ type, ...data }, umbracoOrigin);
+		};
+
+		const updateHeight = () => {
+			const height = document.body.scrollHeight;
+			sendToUmbraco('resize', { height });
+		};
+
+		const initComponent = async (config) => {
+			await customElements.whenDefined('web-config-alt');
+
+			editor = document.createElement('web-config-alt');
+
+			if (config?.workerUrl) editor.workerUrl = config.workerUrl;
+			if (config?.apiKey) editor.apiKey = config.apiKey;
+			if (config?.src) editor.src = config.src;
+			if (config?.value) editor.value = config.value;
+
+			app.appendChild(editor);
+
+			editor.addEventListener('change', (event) => {
+				const { alt } = event.detail || {};
+				sendToUmbraco('valueChanged', { value: alt || null });
+				requestAnimationFrame(updateHeight);
+			});
+
+			sendToUmbraco('ready');
+			requestAnimationFrame(updateHeight);
+
+			const resizeObserver = new ResizeObserver(() => {
+				requestAnimationFrame(updateHeight);
+			});
+			resizeObserver.observe(app);
+		};
+
+		window.addEventListener('message', async (event) => {
+			const { type, value, origin: senderOrigin, workerUrl, apiKey, src } = event.data || {};
+
+			switch (type) {
+				case 'init':
+					if (senderOrigin) umbracoOrigin = senderOrigin;
+					await initComponent({ value, workerUrl, apiKey, src });
+					break;
+
+				case 'setValue':
+					if (editor && value !== undefined) {
+						editor.value = value;
+					}
+					break;
+
+				case 'setSrc':
+					if (editor && src !== undefined) {
+						editor.src = src;
+					}
+					break;
+
+				case 'getState':
+					if (editor) {
+						sendToUmbraco('state', { value: editor.value });
+					}
+					break;
+			}
+		});
+
+		if (window === window.parent) {
+			console.log('Running in standalone mode');
+			initComponent(null);
+		} else {
+			sendToUmbraco('loaded');
+		}
+	</script>
+</body>
+</html>
