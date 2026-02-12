@@ -9,6 +9,7 @@ class WebConfigAlt extends HTMLElement {
 	#src = '';
 	#detail = 'standard';
 	#isGenerating = false;
+	#pendingValue = null;
 
 	constructor() {
 		super();
@@ -29,13 +30,17 @@ class WebConfigAlt extends HTMLElement {
 
 	get value() {
 		const textarea = this.shadowRoot.querySelector('[data-alt-text]');
-		return textarea ? textarea.value : '';
+		return textarea ? textarea.value : (this.#pendingValue || '');
 	}
 	set value(v) {
 		const text = v || '';
 		this._internals.setFormValue(text);
 		const textarea = this.shadowRoot.querySelector('[data-alt-text]');
-		if (textarea) textarea.value = text;
+		if (textarea) {
+			textarea.value = text;
+		} else {
+			this.#pendingValue = text;
+		}
 	}
 
 	get generating() { return this.#isGenerating; }
@@ -137,6 +142,11 @@ class WebConfigAlt extends HTMLElement {
 		errorEl.className = 'alt-error';
 
 		this.shadowRoot.replaceChildren(btn, textarea, spinner, errorEl);
+
+		if (this.#pendingValue !== null) {
+			textarea.value = this.#pendingValue;
+			this.#pendingValue = null;
+		}
 
 		this.#updateGenerateButton();
 
