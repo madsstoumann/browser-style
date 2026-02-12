@@ -55,25 +55,6 @@ function drawToCanvas(img, w, h, resolve, reject) {
 	);
 }
 
-function el(tag, attrs = {}, children = []) {
-	const node = document.createElement(tag);
-	for (const [key, val] of Object.entries(attrs)) {
-		if (key.startsWith('data-')) node.setAttribute(key, val);
-		else if (key === 'className') node.className = val;
-		else if (key === 'textContent') node.textContent = val;
-		else if (key === 'type') node.type = val;
-		else if (key === 'disabled') node.disabled = val;
-		else if (key === 'selected') node.selected = val;
-		else if (key === 'value') node.value = val;
-		else node.setAttribute(key, val);
-	}
-	for (const child of children) {
-		if (typeof child === 'string') node.appendChild(document.createTextNode(child));
-		else node.appendChild(child);
-	}
-	return node;
-}
-
 class WebConfigAlt extends HTMLElement {
 	static formAssociated = true;
 	static observedAttributes = ['value', 'detail'];
@@ -81,13 +62,13 @@ class WebConfigAlt extends HTMLElement {
 	#workerUrl = '';
 	#apiKey = '';
 	#src = '';
+	#detail = 'standard';
 	#isGenerating = false;
 
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
 		this._internals = this.attachInternals();
-		this.state = { alt: '', detail: 'standard', charCount: 0, maxLength: 0 };
 	}
 
 	get workerUrl() { return this.#workerUrl; }
@@ -102,11 +83,20 @@ class WebConfigAlt extends HTMLElement {
 		this.#updateGenerateButton();
 	}
 
-	get value() { return this.state.alt; }
+	get detail() { return this.#detail; }
+	set detail(v) {
+		this.#detail = DETAIL_LEVELS.includes(v) ? v : 'standard';
+	}
+
+	get value() {
+		const textarea = this.shadowRoot.querySelector('[data-alt-text]');
+		return textarea ? textarea.value : '';
+	}
 	set value(v) {
-		this.state.alt = v || '';
-		this._internals.setFormValue(this.state.alt);
-		this.#updateResult();
+		const text = v || '';
+		this._internals.setFormValue(text);
+		const textarea = this.shadowRoot.querySelector('[data-alt-text]');
+		if (textarea) textarea.value = text;
 	}
 
 	async connectedCallback() {
@@ -119,27 +109,13 @@ class WebConfigAlt extends HTMLElement {
 				gap: var(--web-config-gap);
 				align-items: end;
 			}
-			.alt-controls label {
-				flex: 1;
-			}
-			.alt-result {
-				display: none;
-				background: var(--web-config-accent);
-				border: 1px solid var(--web-config-bdc);
-				border-radius: var(--web-config-bdrs);
+			textarea[data-alt-text] {
+				field-sizing: content;
+				font: inherit;
+				min-height: 2lh;
 				padding: var(--web-config-gap);
-				font-size: inherit;
-				line-height: 1.6;
-			}
-			.alt-result[data-visible] {
-				display: block;
-			}
-			.alt-meta {
-				display: flex;
-				gap: 1ch;
-				font-size: small;
-				color: GrayText;
-				margin-block-start: 0.5ch;
+				resize: vertical;
+				width: 100%;
 			}
 			.alt-error {
 				display: none;
@@ -180,53 +156,44 @@ class WebConfigAlt extends HTMLElement {
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (oldValue === newValue) return;
 		if (name === 'value') {
-			this.state.alt = newValue || '';
-			this._internals.setFormValue(this.state.alt);
-			this.#updateResult();
+			this.value = newValue;
 		}
 		if (name === 'detail') {
-			const detail = DETAIL_LEVELS.includes(newValue) ? newValue : 'standard';
-			this.state.detail = detail;
-			const select = this.shadowRoot.querySelector('[data-detail]');
-			if (select) select.value = detail;
+			this.#detail = DETAIL_LEVELS.includes(newValue) ? newValue : 'standard';
 		}
 	}
 
 	render() {
-		const detail = this.getAttribute('detail') || 'standard';
-		this.state.detail = DETAIL_LEVELS.includes(detail) ? detail : 'standard';
+		const attrDetail = this.getAttribute('detail');
+		if (attrDetail && DETAIL_LEVELS.includes(attrDetail)) {
+			this.#detail = attrDetail;
+		}
 
-		const select = el('select', { 'data-detail': '' },
-			DETAIL_LEVELS.map(d =>
-				el('option', { value: d, selected: d === this.state.detail, textContent: d.charAt(0).toUpperCase() + d.slice(1) })
-			)
-		);
+		const btn = document.createElement('button');
+		btn.type = 'button';
+		btn.setAttribute('data-generate', '');
+		btn.disabled = true;
+		btn.textContent = 'Generate';
 
-		const btn = el('button', { type: 'button', 'data-generate': '', disabled: true, textContent: 'Generate' });
-		const controls = el('div', { className: 'alt-controls' }, [
-			el('label', {}, [
-				el('small', { textContent: 'Detail' }),
-				select
-			]),
-			btn
-		]);
+		const textarea = document.createElement('textarea');
+		textarea.setAttribute('data-alt-text', '');
+		textarea.placeholder = 'Alt text will appear here...';
 
-		const spinner = el('div', { className: 'spinner' });
-		const errorEl = el('div', { className: 'alt-error' });
-		const altText = el('span', { 'data-alt-text': '' });
-		const metaDetail = el('span', { 'data-meta-detail': '' });
-		const metaChars = el('span', { 'data-meta-chars': '' });
-		const meta = el('div', { className: 'alt-meta' }, [metaDetail, metaChars]);
-		const resultEl = el('div', { className: 'alt-result' }, [altText, meta]);
+		const spinner = document.createElement('div');
+		spinner.className = 'spinner';
 
-		this.shadowRoot.replaceChildren(controls, spinner, errorEl, resultEl);
+		const errorEl = document.createElement('div');
+		errorEl.className = 'alt-error';
+
+		this.shadowRoot.replaceChildren(btn, textarea, spinner, errorEl);
 
 		this.#updateGenerateButton();
-		if (this.state.alt) this.#updateResult();
 
 		btn.addEventListener('click', () => this.#generate());
-		select.addEventListener('change', (e) => {
-			this.state.detail = e.target.value;
+		textarea.addEventListener('input', () => {
+			const text = textarea.value;
+			this._internals.setFormValue(text);
+			this.#dispatchChange(text);
 		});
 	}
 
@@ -235,21 +202,12 @@ class WebConfigAlt extends HTMLElement {
 		if (btn) btn.disabled = !this.#src || this.#isGenerating;
 	}
 
-	#updateResult() {
-		const resultEl = this.shadowRoot.querySelector('.alt-result');
-		const textEl = this.shadowRoot.querySelector('[data-alt-text]');
-		const metaDetail = this.shadowRoot.querySelector('[data-meta-detail]');
-		const metaChars = this.shadowRoot.querySelector('[data-meta-chars]');
-		if (!resultEl || !textEl) return;
-
-		if (this.state.alt) {
-			textEl.textContent = this.state.alt;
-			if (metaDetail) metaDetail.textContent = this.state.detail;
-			if (metaChars) metaChars.textContent = `${this.state.charCount} / ${this.state.maxLength} chars`;
-			resultEl.setAttribute('data-visible', '');
-		} else {
-			resultEl.removeAttribute('data-visible');
-		}
+	#dispatchChange(alt) {
+		this.dispatchEvent(new CustomEvent('change', {
+			bubbles: true,
+			composed: true,
+			detail: { alt }
+		}));
 	}
 
 	async #generate() {
@@ -260,17 +218,15 @@ class WebConfigAlt extends HTMLElement {
 
 		const spinner = this.shadowRoot.querySelector('.spinner');
 		const errorEl = this.shadowRoot.querySelector('.alt-error');
-		const resultEl = this.shadowRoot.querySelector('.alt-result');
 
 		spinner.setAttribute('data-visible', '');
 		errorEl.removeAttribute('data-visible');
-		resultEl.removeAttribute('data-visible');
 
 		try {
 			const file = await resizeImage(this.#src);
 			const formData = new FormData();
 			formData.append('image', file);
-			formData.append('detail', this.state.detail);
+			formData.append('detail', this.#detail);
 
 			const headers = {};
 			if (this.#apiKey) headers['X-API-Key'] = this.#apiKey;
@@ -288,23 +244,8 @@ class WebConfigAlt extends HTMLElement {
 				return;
 			}
 
-			this.state.alt = data.alt;
-			this.state.detail = data.detail;
-			this.state.charCount = data.charCount;
-			this.state.maxLength = data.maxLength;
-			this._internals.setFormValue(this.state.alt);
-			this.#updateResult();
-
-			this.dispatchEvent(new CustomEvent('change', {
-				bubbles: true,
-				composed: true,
-				detail: {
-					alt: data.alt,
-					detail: data.detail,
-					charCount: data.charCount,
-					maxLength: data.maxLength,
-				}
-			}));
+			this.value = data.alt;
+			this.#dispatchChange(data.alt);
 		} catch (err) {
 			this.#showError(`Request failed: ${err.message}`);
 		} finally {
