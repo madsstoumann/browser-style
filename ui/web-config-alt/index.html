@@ -22,7 +22,7 @@
 	<fieldset style="margin-block-end:2ch;">
 		<label>
 			Worker URL
-			<input type="url" id="workerUrl" placeholder="https://alt-text.stoumann.workers.dev" value="http://localhost:8787">
+			<input type="url" id="workerUrl" placeholder="https://your-worker.workers.dev" value="http://localhost:8787">
 		</label>
 		<label>
 			API Key
@@ -45,9 +45,12 @@
 		const apiKeyInput = document.getElementById('apiKey');
 		const imageSrcInput = document.getElementById('imageSrc');
 
+		workerUrlInput.value = localStorage.getItem('wca-worker-url') || workerUrlInput.value;
+		apiKeyInput.value = localStorage.getItem('wca-api-key') || '';
+
 		function update() {
-			editor.workerUrl = workerUrlInput.value;
-			editor.apiKey = apiKeyInput.value;
+			localStorage.setItem('wca-worker-url', workerUrlInput.value);
+			localStorage.setItem('wca-api-key', apiKeyInput.value);
 			editor.src = imageSrcInput.value;
 		}
 
@@ -56,7 +59,44 @@
 		imageSrcInput.addEventListener('input', update);
 
 		editor.addEventListener('change', (e) => {
-			console.log('Alt text generated:', e.detail);
+			console.log('Alt text changed:', e.detail);
+		});
+
+		editor.addEventListener('requestGenerate', async (e) => {
+			const workerUrl = workerUrlInput.value;
+			const apiKey = apiKeyInput.value;
+			const src = imageSrcInput.value;
+
+			console.log('[requestGenerate]', { workerUrl, apiKey: apiKey ? '***' : '(empty)', src, detail: e.detail.detail });
+
+			if (!workerUrl || !src) {
+				editor.showError('Worker URL and Image URL are required.');
+				editor.generating = false;
+				return;
+			}
+
+			try {
+				const endpoint = workerUrl.replace(/\/+$/, '') + '/analyze';
+				const response = await fetch(endpoint, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-API-Key': apiKey
+					},
+					body: JSON.stringify({ url: src, detail: e.detail.detail })
+				});
+
+				if (!response.ok) throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+
+				const data = await response.json();
+				console.log('[requestGenerate] Response:', data);
+				editor.value = data.alt || data.text || data.result || JSON.stringify(data);
+			} catch (err) {
+				console.error('[requestGenerate] Error:', err);
+				editor.showError(err.message);
+			} finally {
+				editor.generating = false;
+			}
 		});
 
 		update();
