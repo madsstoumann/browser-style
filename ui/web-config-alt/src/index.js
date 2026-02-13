@@ -68,12 +68,14 @@ class WebConfigAlt extends HTMLElement {
 		const localCss = new CSSStyleSheet();
 		await localCss.replace(`
 			textarea[data-alt-text] {
-				field-sizing: content;
 				font: inherit;
 				min-height: 2lh;
 				padding: var(--web-config-gap);
 				resize: vertical;
 				width: 100%;
+			}
+			button[data-generate] {
+				justify-self: end;
 			}
 			.alt-error {
 				display: none;
@@ -128,6 +130,7 @@ class WebConfigAlt extends HTMLElement {
 		const btn = document.createElement('button');
 		btn.type = 'button';
 		btn.setAttribute('data-generate', '');
+		btn.setAttribute('data-action', '');
 		btn.disabled = true;
 		btn.textContent = 'Generate';
 
@@ -141,7 +144,7 @@ class WebConfigAlt extends HTMLElement {
 		const errorEl = document.createElement('div');
 		errorEl.className = 'alt-error';
 
-		this.shadowRoot.replaceChildren(btn, textarea, spinner, errorEl);
+		this.shadowRoot.replaceChildren(textarea, btn, spinner, errorEl);
 
 		if (this.#pendingValue !== null) {
 			textarea.value = this.#pendingValue;

@@ -208,7 +208,7 @@ li {
 	padding: .5ch 1ch;
 	place-content: center;
 
-	/* &[data-status="danger"] {
+	&[data-status="danger"] {
 		background: var(--web-config-status-danger-bg);
 		border-color: var(--web-config-status-danger);
 		color: var(--web-config-status-danger);
@@ -230,7 +230,7 @@ li {
 		background: var(--web-config-status-info-bg);
 		border-color: var(--web-config-status-info);
 		color: var(--web-config-status-info);
-	} */
+	}
 
 	&:has(button):not([data-status]) { background: var(--web-config-accent); }
 	
