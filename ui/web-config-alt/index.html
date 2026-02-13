@@ -32,6 +32,14 @@
 			Image URL
 			<input type="url" id="imageSrc" placeholder="https://example.com/photo.jpg" value="https://picsum.photos/id/237/400/300.jpg">
 		</label>
+		<label>
+			Detail level
+			<select id="detailLevel">
+				<option value="brief">Brief (≤125 chars)</option>
+				<option value="standard" selected>Standard (≤250 chars)</option>
+				<option value="detailed">Detailed (≤500 chars)</option>
+			</select>
+		</label>
 	</fieldset>
 	
 
@@ -44,6 +52,7 @@
 		const workerUrlInput = document.getElementById('workerUrl');
 		const apiKeyInput = document.getElementById('apiKey');
 		const imageSrcInput = document.getElementById('imageSrc');
+		const detailSelect = document.getElementById('detailLevel');
 
 		workerUrlInput.value = localStorage.getItem('wca-worker-url') || workerUrlInput.value;
 		apiKeyInput.value = localStorage.getItem('wca-api-key') || '';
@@ -52,11 +61,13 @@
 			localStorage.setItem('wca-worker-url', workerUrlInput.value);
 			localStorage.setItem('wca-api-key', apiKeyInput.value);
 			editor.src = imageSrcInput.value;
+			editor.detail = detailSelect.value;
 		}
 
 		workerUrlInput.addEventListener('input', update);
 		apiKeyInput.addEventListener('input', update);
 		imageSrcInput.addEventListener('input', update);
+		detailSelect.addEventListener('change', update);
 
 		editor.addEventListener('change', (e) => {
 			console.log('Alt text changed:', e.detail);
