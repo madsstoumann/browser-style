@@ -31,15 +31,28 @@ export default class DevTo extends HTMLElement {
 	#dateFormatter;
 	#i18n = DevTo.CONFIG.I18N;
 	#lang = DevTo.CONFIG.LANG;
+	#pendingSlug = null;
 	
 	constructor() {
 		super();
 		this.#root = this.hasAttribute('noshadow') ? this : this.attachShadow({ mode: 'open' });
 		this.#loadStyles();
-		window.addEventListener('popstate', () => {
+		window.addEventListener('popstate', (e) => {
 			const url = new URL(window.location.href);
-			const articleId = url.searchParams.get('article');
+			const articleId = e.state?.articleId || url.searchParams.get('article');
 			const pageNum = url.searchParams.get('page');
+
+			if (!articleId) {
+				// Check for slug in pathname
+				const slug = url.pathname.replace(/^\//, '').replace(/\/$/, '');
+				if (slug && !slug.includes('/') && !slug.includes('.')) {
+					const match = this.#articles.find(a => a.slug === slug);
+					if (match) {
+						this.setAttribute('article', String(match.id));
+						return;
+					}
+				}
+			}
 
 			if (articleId) {
 				this.setAttribute('article', articleId);
@@ -104,6 +117,7 @@ export default class DevTo extends HTMLElement {
 	}
 
 	async connectedCallback() {
+		clearTimeout(this.#updateTimeout);
 		try {
 			const i18nAttr = this.getAttribute('i18n');
 			if (i18nAttr) this.#i18n = JSON.parse(i18nAttr);
@@ -118,14 +132,19 @@ export default class DevTo extends HTMLElement {
 			day: 'numeric'
 		});
 
-		// Check URL for article or page parameter on initial load
+		// Check URL for article, page, or slug on initial load
 		const url = new URL(window.location.href);
 		const articleId = url.searchParams.get('article');
 		const pageNum = url.searchParams.get('page');
 		if (articleId) {
 			this.setAttribute('article', articleId);
-		} else if (pageNum) {
-			this.#currentPage = parseInt(pageNum, 10) || 1;
+		} else {
+			const slug = url.pathname.replace(/^\//, '').replace(/\/$/, '');
+			if (slug && !slug.includes('/') && !slug.includes('.')) {
+				this.#pendingSlug = slug;
+			} else if (pageNum) {
+				this.#currentPage = parseInt(pageNum, 10) || 1;
+			}
 		}
 
 		await this.updateContent();
@@ -222,6 +241,17 @@ export default class DevTo extends HTMLElement {
 			// When using baseurl, handle client-side pagination
 			if (baseUrl) {
 				this.#articles = articles;
+
+				// Resolve pending slug before rendering list
+				if (this.#pendingSlug) {
+					const match = this.#articles.find(a => a.slug === this.#pendingSlug);
+					this.#pendingSlug = null;
+					if (match) {
+						await this.#fetchArticle(match.id);
+						return;
+					}
+				}
+
 				// On initial load, show all pages up to currentPage
 				const end = this.#currentPage * this.itemsPerPage;
 				articles = this.#articles.slice(0, end);
@@ -282,18 +312,21 @@ export default class DevTo extends HTMLElement {
 	}
 
 	renderArticlesList(articles, isFirstPage = true) {
+		const useSlugUrls = !!this.getAttribute('baseurl');
 		const articlesToRender = articles.length === 0 ? this.#articles : articles;
-		const list = articlesToRender.map(article => `
+		const list = articlesToRender.map(article => {
+			const href = useSlugUrls && article.slug ? `/${article.slug}` : article.url;
+			return `
 			<li>
-				<a href="${article.url}" data-id="${article.id}">
+				<a href="${href}" data-id="${article.id}">
 					<img src="${article.cover_image}" alt="${DevTo.#encode(article.title)}">
 				</a>
-				<a href="${article.url}" data-id="${article.id}">
+				<a href="${href}" data-id="${article.id}">
 					${DevTo.#encode(article.title)}
 					<time datetime="${article.published_timestamp}">${this.#dateFormatter.format(new Date(article.published_timestamp))}</time>
 				</a>
-			</li>
-		`).join('');
+			</li>`;
+		}).join('');
 
 		if (isFirstPage) {
 			this.#root.innerHTML = `
@@ -345,10 +378,15 @@ export default class DevTo extends HTMLElement {
 			<article>${article.body_html}</article>
 		`;
 
-		const url = new URL(window.location.href);
-		url.searchParams.delete('page');
-		url.searchParams.set('article', article.id);
-		history.pushState({ articleId: article.id, previousPage: this.#currentPage }, article.title, url);
+		const baseUrl = this.getAttribute('baseurl');
+		if (baseUrl && article.slug) {
+			history.pushState({ articleId: String(article.id), slug: article.slug, previousPage: this.#currentPage }, article.title, `/${article.slug}`);
+		} else {
+			const url = new URL(window.location.href);
+			url.searchParams.delete('page');
+			url.searchParams.set('article', article.id);
+			history.pushState({ articleId: String(article.id), previousPage: this.#currentPage }, article.title, url);
+		}
 	}
 }
 
