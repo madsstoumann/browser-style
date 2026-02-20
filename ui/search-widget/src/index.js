@@ -9,7 +9,6 @@ stylesheet.replaceSync(`
 	border-radius: 50%;
 	display: grid;
 	place-items: center;
-
 }
 
 	:host(:not([position="inline"])) [part="search-trigger"] { position: fixed; }
@@ -106,17 +105,6 @@ function icon(name, part) {
 	return `<svg viewBox="0 0 24 24" aria-hidden="true"${partAttr}>${ICONS[name].map(d => `<path d="${d}"/>`).join('')}</svg>`;
 }
 
-const ELEMENTS = {
-	clear: '[part="search-clear"]',
-	dialog: 'dialog',
-	form: 'form',
-	input: 'input[name="q"]',
-	labelText: '[part="search-label-text"]',
-	remember: '[part="search-remember"]',
-	results: '[part="search-results"]',
-	summary: '[part="search-summary"]',
-};
-
 class SearchWidget extends HTMLElement {
 	static observedAttributes = ['api'];
 
@@ -132,29 +120,33 @@ class SearchWidget extends HTMLElement {
 		return `search-widget:${this.getAttribute('api') || 'default'}`;
 	}
 
+	$(selector) { return this.shadowRoot.querySelector(selector); }
+
 	connectedCallback() {
 		this.render();
-		this.elements = Object.fromEntries(
-			Object.entries(ELEMENTS).map(([key, selector]) => [key, this.shadowRoot.querySelector(selector)])
-		);
+		this.elements = {
+			clear: this.$('[part="search-clear"]'),
+			form: this.$('form'),
+			input: this.$('input[name="q"]'),
+			labelText: this.$('[part="search-label-text"]'),
+			remember: this.$('[part="search-remember"]'),
+			results: this.$('[part="search-results"]'),
+			summary: this.$('[part="search-summary"]'),
+		};
 		this.elements.form.addEventListener('submit', (e) => {
 			e.preventDefault();
 			this.search(this.elements.input.value);
 		});
 		this.elements.clear.addEventListener('click', () => this.clearHistory());
 		this.elements.remember.addEventListener('change', (e) => {
-			if (!e.target.checked) {
-				localStorage.removeItem(this.storageKey);
-			} else {
-				this.saveState();
-			}
+			e.target.checked ? this.saveState() : localStorage.removeItem(this.storageKey);
 		});
 		this.restoreState();
 	}
 
 	search(query) {
 		if (!query?.trim() || !this.hasAttribute('api')) return;
-		if (this.eventSource) this.eventSource.close();
+		this.closeEventSource();
 
 		const api = this.getAttribute('api');
 		const params = { query, display_mode: 'full', generate_mode: 'summarize' };
@@ -163,77 +155,69 @@ class SearchWidget extends HTMLElement {
 		const url = `${api}/ask?${new URLSearchParams(params)}`;
 		this.eventSource = new EventSource(url);
 
-		const { summary, results, input } = this.elements;
-		summary.innerHTML = '';
-		results.innerHTML = '';
-		input.value = '';
+		const { summary } = this.elements;
+		this.elements.summary.innerHTML = this.elements.results.innerHTML = this.elements.input.value = '';
+		const queryHTML = `<strong>${query}</strong>`;
+		summary.innerHTML = queryHTML;
 		let summaryText = '';
 		const refs = {};
-
-		this.eventSource.onmessage = (e) => {
-			const data = JSON.parse(e.data);
-			if (data.message_type === 'summary') {
-				summaryText += data.message;
-				summary.textContent = summaryText;
-			} else if (data.message_type === 'result_batch') {
-				for (const item of data.results) {
-					const s = item.schema_object || {};
-					refs[item.url] = s.name || item.name;
-					this.lastAnswers.push({ name: s.name || item.name, url: item.url });
-				}
-				this.lastAnswers = this.lastAnswers.slice(-20);
-				results.insertAdjacentHTML('beforeend', data.results.map(item => {
-					const s = item.schema_object || {};
-					const title = s.name || item.name;
-					const img = s.image ? `<img src="${s.image}" alt="" loading="lazy" part="search-result-img">` : '';
-					const desc = s.description ? `<small part="search-result-desc">${s.description}</small>` : '';
-					return `<li><a href="${item.url}">${img}<strong>${title}</strong><p>${desc}</p></a></li>`;
-				}).join(''));
-			} else if (data.message_type === 'complete') {
-				this.eventSource.close();
-				this.eventSource = null;
-				summary.innerHTML = this.parseSummary(summaryText, refs);
+		const messageHandlers = {
+			summary: ({ message }) => {
+				summaryText += message;
+				summary.innerHTML = `${queryHTML}<br>${summaryText}`;
+			},
+			result_batch: ({ results }) => this.appendResults(results, refs),
+			complete: () => {
+				this.closeEventSource();
+				summary.innerHTML = `${queryHTML}<br>${this.parseSummary(summaryText, refs)}`;
 				this.prevQueries.push(query);
 				this.prevQueries = this.prevQueries.slice(-10);
 				this.updateLabel();
 				this.saveState();
-			}
+			},
 		};
-		this.eventSource.onerror = () => {
-			this.eventSource.close();
-			this.eventSource = null;
+
+		this.eventSource.onmessage = (e) => {
+			const data = JSON.parse(e.data);
+			messageHandlers[data.message_type]?.(data);
 		};
+		this.eventSource.onerror = () => this.closeEventSource();
+	}
+
+	appendResults(items, refs) {
+		this.elements.results.insertAdjacentHTML('beforeend', items.map(item => {
+			const schema = item.schema_object || {};
+			const title = schema.name || item.name;
+			refs[item.url] = title;
+			this.lastAnswers.push({ name: title, url: item.url });
+			const img = schema.image ? `<img src="${schema.image}" alt="" loading="lazy" part="search-result-img">` : '';
+			const desc = schema.description ? `<small part="search-result-desc">${schema.description}</small>` : '';
+			return `<li><a href="${item.url}">${img}<strong>${title}</strong><p>${desc}</p></a></li>`;
+		}).join(''));
+		this.lastAnswers = this.lastAnswers.slice(-20);
 	}
 
 	parseSummary(text, refs) {
 		const lines = text.split('\n');
+		const refIdx = lines.findIndex(l => l.trim().toLowerCase().startsWith('references'));
+		const bodyLines = refIdx === -1 ? lines : lines.slice(0, refIdx);
 		const refMap = {};
-		const bodyLines = [];
-		let inRefs = false;
-		for (const line of lines) {
-			const refMatch = line.match(/^\[(\d+)]\s*(https?:\/\/\S+)/);
-			if (line.trim().toLowerCase().startsWith('references')) {
-				inRefs = true;
-				continue;
-			}
-			if (inRefs && refMatch) {
-				refMap[refMatch[1]] = refMatch[2];
-			} else if (!inRefs) {
-				bodyLines.push(line);
-			}
+		for (const line of refIdx === -1 ? [] : lines.slice(refIdx + 1)) {
+			const m = line.match(/^\[(\d+)]\s*(https?:\/\/\S+)/);
+			if (m) refMap[m[1]] = m[2];
 		}
-		let html = bodyLines.join('\n').replace(/\[(\d+)]/g, (_, n) => {
-			const url = refMap[n];
-			if (!url) return `[${n}]`;
-			const title = refs[url] || url;
-			return `<a href="${url}">[${title}]</a>`;
-		});
+		let html = bodyLines.join('\n')
+			.replace(/\[(\d+)]/g, (_, n) => {
+				const url = refMap[n];
+				return url ? `<a href="${url}">${refs[url] || url}</a>` : `[${n}]`;
+			});
+		html = html.replace(/(?:^|\n)\*\s+(.+?)(?=\n|$)/g, (_, item) => `\n<li>${item}</li>`);
+		html = html.replace(/(<li>.*?<\/li>\n?)+/gs, match => `<ul>${match}</ul>`);
 		return html.replace(/\n/g, '<br>');
 	}
 
 	saveState() {
-		if (!this.hasAttribute('preserve-state')) return;
-		if (!this.elements.remember.checked) return;
+		if (!(this.hasAttribute('preserve-state') && this.elements.remember.checked)) return;
 		const state = {
 			prevQueries: this.prevQueries,
 			lastAnswers: this.lastAnswers,
@@ -246,14 +230,9 @@ class SearchWidget extends HTMLElement {
 
 	restoreState() {
 		if (!this.hasAttribute('preserve-state')) return;
-		const raw = localStorage.getItem(this.storageKey);
-		if (!raw) return;
 		try {
-			const state = JSON.parse(raw);
-			if (Date.now() - state.timestamp > EXPIRY_MS) {
-				localStorage.removeItem(this.storageKey);
-				return;
-			}
+			const state = JSON.parse(localStorage.getItem(this.storageKey) || 'null');
+			if (!state || Date.now() - state.timestamp > EXPIRY_MS) throw new Error();
 			this.prevQueries = state.prevQueries || [];
 			this.lastAnswers = state.lastAnswers || [];
 			this.elements.summary.innerHTML = state.summaryHTML || '';
@@ -271,15 +250,17 @@ class SearchWidget extends HTMLElement {
 	clearHistory() {
 		this.prevQueries = [];
 		this.lastAnswers = [];
-		this.elements.summary.innerHTML = '';
-		this.elements.results.innerHTML = '';
+		this.elements.summary.innerHTML = this.elements.results.innerHTML = this.elements.input.value = '';
 		this.updateLabel();
 		localStorage.removeItem(this.storageKey);
 	}
 
-	disconnectedCallback() {
-		if (this.eventSource) this.eventSource.close();
+	closeEventSource() {
+		this.eventSource?.close();
+		this.eventSource = null;
 	}
+
+	disconnectedCallback() { this.closeEventSource(); }
 
 	render() {
 		this.shadowRoot.innerHTML = `
