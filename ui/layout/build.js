@@ -6,7 +6,6 @@ import { fileURLToPath } from 'url'
 import { existsSync, writeFileSync, readFileSync } from 'fs'
 import postcss from 'postcss'
 import cssnano from 'cssnano'
-import preset from 'cssnano-preset-advanced'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -53,7 +52,11 @@ async function build() {
 		// Generate minified version
 		const css = readFileSync(outputPath, 'utf8')
 		const result = await postcss([
-			cssnano({ preset: preset() })
+			cssnano({ preset: ['cssnano-preset-advanced', {
+				convertValues: false,
+				reduceIdents: false,
+				discardUnused: false
+			}] })
 		]).process(css, { from: outputPath })
 
 		const minPath = outputPath.replace(/\.css$/, '.min.css')

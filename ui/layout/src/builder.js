@@ -201,7 +201,10 @@ export class LayoutBuilder {
 
 	generateLayoutCSS(layout, layoutPrefix, layoutId, breakpointName, mediaQuery, processedGlobalRules) {
 		const elementSelector = this.config.element || 'lay-out'
-		const selectorValue = `${layoutPrefix}(${layoutId})`
+		const isWildcard = layoutId === '*'
+		const selectorValue = isWildcard
+			? `${layoutPrefix}(`
+			: `${layoutPrefix}(${layoutId})`
 		const baseSelector = `${elementSelector}[${breakpointName}*="${selectorValue}"]`
 
 		const containerProps = {}

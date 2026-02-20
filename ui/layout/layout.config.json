@@ -12,7 +12,7 @@
     "xs": {
       "type": "@media",
       "min": "240px",
-      "layouts": ["autofit"]
+      "layouts": ["autofit", "stack"]
     },
     "sm": {
       "type": "@media",
@@ -20,6 +20,7 @@
       "layouts": [
         "autofit",
         "lanes",
+        "stack",
         {
           "columns": ["columns(2)"],
           "grid": ["grid(3a)"],
@@ -33,6 +34,7 @@
       "layouts": [
         "columns",
         "lanes",
+        "stack",
         {
           "grid": ["grid(3a)"]
         }
@@ -41,12 +43,13 @@
     "lg": {
       "type": "@media",
       "min": "720px",
-      "layouts": ["asymmetrical", "bento", "columns", "grid", "lanes", "ratios"]
+      "layouts": ["asymmetrical", "bento", "columns", "grid", "lanes", "ratios", "stack"]
     },
     "xl": {
       "type": "@media",
       "min": "920px",
       "layouts": [
+        "stack",
         {
           "bento": ["bento(6a)"],
           "mosaic": ["mosaic(scatter)", "mosaic(hex)", "mosaic(pinwheel)", "mosaic(cornerstone)"]
@@ -57,6 +60,7 @@
       "type": "@media",
       "min": "1140px",
       "layouts": [
+        "stack",
         {
           "bento": ["bento(6a)"]
         }

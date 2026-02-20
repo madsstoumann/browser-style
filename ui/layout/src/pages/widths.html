@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Width Tokens</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Width Tokens using CSS layout system">
+	<link rel="stylesheet" href="layout.min.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
+	<style>
+		lay-out[width] { --layout-bg: hsl(220 60% 95%); }
+	</style>
+</head>
+<body>
+	<h1>Width Tokens</h1>
+	<p>The <strong>width</strong> attribute constrains the layout to predefined max-widths.<br>
+		Available tokens: <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, <code>xxl</code>.</p>
+
+	<h2>Width Tokens</h2>
+	<p>Each token maps to a CSS custom property for consistent sizing.</p>
+	<section>
+		<h3>Width XS (20rem)</h3>
+		<small>Extra small container - 320px</small>
+		<code>&lt;lay-out md="columns(1)" width="xs"&gt;</code>
+		<lay-out md="columns(1)" width="xs">
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Width SM (30rem)</h3>
+		<small>Small container - 480px</small>
+		<code>&lt;lay-out md="columns(1)" width="sm"&gt;</code>
+		<lay-out md="columns(1)" width="sm">
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Width MD (48rem)</h3>
+		<small>Medium container - 768px</small>
+		<code>&lt;lay-out md="columns(2)" width="md"&gt;</code>
+		<lay-out md="columns(2)" width="md">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Width LG (64rem)</h3>
+		<small>Large container - 1024px</small>
+		<code>&lt;lay-out md="columns(2)" width="lg"&gt;</code>
+		<lay-out md="columns(2)" width="lg">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Width XL (80rem)</h3>
+		<small>Extra large container - 1280px</small>
+		<code>&lt;lay-out md="columns(2)" width="xl"&gt;</code>
+		<lay-out md="columns(2)" width="xl">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Width XXL (96rem)</h3>
+		<small>Extra extra large container - 1536px</small>
+		<code>&lt;lay-out md="columns(2)" width="xxl"&gt;</code>
+		<lay-out md="columns(2)" width="xxl">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+</body>
+</html>

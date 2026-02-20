@@ -1,0 +1,24 @@
+{
+  "name": "Stack Layouts",
+  "prefix": "stack",
+  "desc": "Overlapping children in the same grid cell. Use <strong>stack(name)</strong> with any custom name.",
+  "layouts": [
+    {
+      "id": "*",
+      "description": "Stack all children in the same grid cell (overlapping)",
+      "columns": "1fr",
+      "items": 2,
+      "icon": [
+        { "w": 80, "h": 70, "x": 5, "y": 25, "class": "light" },
+        { "w": 80, "h": 70, "x": 15, "y": 5 }
+      ],
+      "srcset": "100%",
+      "rules": [
+        {
+          "selector": "*",
+          "properties": { "--layout-ga": "1 / 1" }
+        }
+      ]
+    }
+  ]
+}

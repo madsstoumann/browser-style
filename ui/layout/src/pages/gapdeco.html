@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Gap Decorations</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Gap Decorations using CSS layout system">
+	<link rel="stylesheet" href="layout.min.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
+	<style>
+		lay-out[gap-decorations] {
+			--layout-rule-w: 1px;
+			--layout-rule-c: #999;
+		}
+	</style>
+</head>
+<body>
+	<h1>Gap Decorations</h1>
+	<p>The <strong>gap-decorations</strong> attribute adds visual separators (rules) between grid items.<br>
+		Use <strong>cols</strong>, <strong>rows</strong>, or both for different effects.</p>
+
+	<h2>Column Rules</h2>
+	<p>Vertical lines between columns.</p>
+	<section>
+		<h3>Grid 3a with Column Rules</h3>
+		<small>Vertical separators between columns</small>
+		<code>&lt;lay-out lg="columns(2)" gap-decorations="cols"&gt;</code>
+		<lay-out lg="columns(2)" gap-decorations="cols">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Row Rules</h2>
+	<p>Horizontal lines between rows.</p>
+	<section>
+		<h3>Grid 3a with Row Rules</h3>
+		<small>Horizontal separators between rows</small>
+		<code>&lt;lay-out lg="grid(3a)" gap-decorations="rows"&gt;</code>
+		<lay-out lg="grid(3a)" gap-decorations="rows">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	
+	<h2>Both Column and Row Rules</h2>
+	<p>Full grid decoration with both directions.</p>
+	<section>
+		<h3>Grid 3a with Both</h3>
+		<small>Complete grid decoration</small>
+		<code>&lt;lay-out lg="grid(3a)" gap-decorations="cols rows"&gt;</code>
+		<lay-out lg="grid(3a)" gap-decorations="cols rows">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+</body>
+</html>
