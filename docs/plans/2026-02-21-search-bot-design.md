@@ -2,7 +2,22 @@
 
 ## Overview
 
-Rename `search-widget` to `search-bot`. A CSS-first web component that works as both a full-screen search overlay and a compact chatbot panel, controlled by a `mode` attribute. Communication runs in a dedicated Web Worker with an adapter layer for provider-agnostic API integration.
+Rename `search-widget` to `search-bot`. A CSS-first web component that works as both a full-screen search overlay and a compact chatbot panel, controlled by a `mode` attribute. Uses SSE streaming on the main thread with an adapter layer for provider-agnostic API integration.
+
+## Migration from search-widget
+
+This is a refactor of the existing `ui/search-widget/` component, not a greenfield build.
+
+### Steps
+
+1. **Rename directory** — `ui/search-widget/` → `ui/search-bot/`
+2. **Rename custom element** — `customElements.define('search-widget', ...)` → `customElements.define('search-bot', ...)`
+3. **Update storage prefix** — `search-widget:` → `search-bot:` (localStorage keys)
+4. **Add `package.json`** — new file for `@browser.style/search-bot`
+5. **Refactor `index.js`** — extract SSE + NLWeb-specific logic into `adapters/nlweb.js`, add adapter dispatch, events, state preservation, markdown parsing, renderer registry
+6. **Extend `index.css`** — add `:host([mode="chatbot"])` rules, `preserve-history` visibility, chatbot sizing/positioning
+
+The existing conversation logic (`messages` array, `saveChat`, `loadChat`, `renderHistory`, `getSearchContext`), DOM structure (`<dialog>`, `<form>`, popover history panel), and rendering helpers (`el()`, `icon()`, `appendResultItem`) are preserved and built upon.
 
 ## File Structure
 
@@ -11,19 +26,18 @@ ui/search-bot/
 ├── package.json            @browser.style/search-bot
 ├── index.html              Demo page
 ├── src/
-│   ├── index.js            Component (UI, state, Worker management)
+│   ├── index.js            Component (UI, state, SSE connection)
 │   ├── index.css           Styles (both modes, all layout variants)
-│   ├── worker.js           Web Worker (SSE connection, adapter dispatch)
 │   └── adapters/
-│       └── nlweb.js        NLWeb/Cloudflare adapter
+│       └── nlweb.js        NLWeb adapter (request builder + response parser)
 ```
 
 ## Attributes
 
 | Attribute | Values | Description |
 |-----------|--------|-------------|
-| `api` | URL string | Endpoint URL, passed to the Worker |
-| `provider` | `"nlweb"` (default) | Selects which adapter the Worker loads |
+| `api` | URL string | Endpoint URL |
+| `provider` | `"nlweb"` (default) | Selects which adapter module to load |
 | `mode` | `"search"` (default), `"chatbot"` | Pure CSS — controls overlay vs docked panel |
 | `position` | `"bottom right"`, etc. | CSS-driven trigger button placement |
 | `preserve-history` | boolean attribute | Opt-in to save chats to localStorage |
@@ -72,81 +86,61 @@ History button hidden when `preserve-history` is absent:
 }
 ```
 
-## Web Worker & Adapter Layer
-
-### Worker Lifecycle
-
-- **`connectedCallback`** — spawns Worker, sends `{ type: 'connect', api, provider }`
-- **`disconnectedCallback`** — sends `{ type: 'abort' }`, then `worker.terminate()`
-- **Per query** — sends `{ type: 'query', query, context }`
-- **Cancel / new chat** — sends `{ type: 'abort' }`
-
-### Message Protocol
-
-Component → Worker:
-```
-{ type: 'connect', api, provider }
-{ type: 'query', query, context }
-{ type: 'abort' }
-```
-
-Worker → Component:
-```
-{ type: 'chunk', text }
-{ type: 'results', items: [{ url, name, description, image }] }
-{ type: 'done' }
-{ type: 'error', message }
-```
+## Adapter Layer
 
 ### Adapter Interface
 
-Each provider adapter exports two functions:
+Each provider adapter is a plain ES module exporting two functions:
 
 ```js
-export function buildRequest(api, query, context) → { url, params }
+export function buildRequest(api, query, context) → { url }
 export function parseEvent(eventData) → { type, ... } | null
 ```
 
-- **`buildRequest`** — constructs the SSE URL + query parameters from the normalized query and context.
-- **`parseEvent`** — parses a raw SSE event and returns a normalized message (`chunk`, `results`, `done`, `error`) or `null` to skip.
+- **`buildRequest`** — constructs the SSE URL with query parameters from the normalized query and context.
+- **`parseEvent`** — parses a raw SSE event and returns a normalized message (`chunk`, `results`, `component`, `done`, `error`) or `null` to skip.
 
 The `nlweb.js` adapter maps:
 - `summary` → `{ type: 'chunk', text }`
-- `result_batch` → `{ type: 'results', items }` (with `normalizeResult` logic)
+- `result_batch` → `{ type: 'results', items }` (with result normalization)
 - `complete` → `{ type: 'done' }`
 
-### Worker Internals
+### Component ↔ Adapter Flow
+
+The component imports the adapter dynamically based on the `provider` attribute and uses it directly on the main thread:
 
 ```js
-// worker.js (pseudocode)
-let adapter, eventSource;
-
-self.onmessage = async ({ data }) => {
-  switch (data.type) {
-    case 'connect':
-      adapter = await import(`./adapters/${data.provider}.js`);
-      break;
-    case 'query':
-      eventSource?.close();
-      const { url } = adapter.buildRequest(data.api, data.query, data.context);
-      eventSource = new EventSource(url);
-      eventSource.onmessage = (e) => {
-        const msg = adapter.parseEvent(e.data);
-        if (msg) self.postMessage(msg);
-        if (msg?.type === 'done') eventSource.close();
-      };
-      eventSource.onerror = () => {
-        self.postMessage({ type: 'error', message: 'Connection failed' });
-        eventSource.close();
-      };
-      break;
-    case 'abort':
-      eventSource?.close();
-      eventSource = null;
-      break;
+// index.js (pseudocode)
+async search(query) {
+  if (!this.adapter) {
+    const provider = this.getAttribute('provider') || 'nlweb';
+    this.adapter = await import(`./adapters/${provider}.js`);
   }
-};
+
+  this.closeEventSource();
+  const { url } = this.adapter.buildRequest(this.getAttribute('api'), query, this.getSearchContext());
+  this.eventSource = new EventSource(url);
+
+  this.eventSource.onmessage = (e) => {
+    const msg = this.adapter.parseEvent(e.data);
+    if (!msg) return;
+    switch (msg.type) {
+      case 'chunk': this.appendChunk(msg.text); break;
+      case 'results': this.appendResults(msg.items); break;
+      case 'component': this.renderComponent(msg.name, msg.props); break;
+      case 'done': this.completeResponse(); break;
+      case 'error': this.handleError(msg.message); break;
+    }
+  };
+
+  this.eventSource.onerror = () => {
+    this.emit('search-bot:error', { chatKey: this.chatKey, message: 'Connection failed' });
+    this.closeEventSource();
+  };
+}
 ```
+
+EventSource is inherently non-blocking — the browser handles the HTTP connection on a network thread. The per-chunk cost on the main thread (JSON parse + DOM append) is negligible. A Web Worker can be added later if profiling shows a need, without changing the adapter interface.
 
 ## State Preservation
 
@@ -195,7 +189,7 @@ Single key `search-bot:ui-state`:
 {
   "name": "@browser.style/search-bot",
   "version": "1.0.0",
-  "description": "Search overlay and chatbot component with Web Worker communication",
+  "description": "Search overlay and chatbot component with adapter-based SSE streaming",
   "type": "module",
   "module": "index.js",
   "exports": {
@@ -259,7 +253,7 @@ Since text streams in chunks, markdown tokens can arrive split across two messag
 
 ### Implementation
 
-The parser lives in the component (`index.js`), not the Worker. The Worker sends raw text chunks — the component handles rendering. This keeps the Worker generic and the rendering logic co-located with the DOM.
+The parser lives in the component (`index.js`). The adapter sends raw text via normalized `chunk` messages — the component handles parsing and rendering.
 
 ```js
 // Pseudocode
@@ -368,7 +362,7 @@ The component emits custom events at key lifecycle moments. All events use `bubb
 | `search-bot:response` | A complete response is received (`done`) | `{ chatKey, summary, results }` |
 | `search-bot:chat-clear` | User starts a new chat | `{ previousChatKey }` |
 | `search-bot:feedback` | User clicks like/dislike (requires `feedback` attr) | `{ chatKey, messageIndex, value: 'like' \| 'dislike' }` |
-| `search-bot:error` | Worker reports an error | `{ chatKey, message }` |
+| `search-bot:error` | SSE connection or adapter error | `{ chatKey, message }` |
 
 ### Usage Example
 
@@ -396,13 +390,12 @@ bot.addEventListener('search-bot:message', () => {
 
 ## Key Decisions
 
-1. **SSE** — kept as transport. No WebSocket needed for request → streamed response pattern.
-2. **Web Worker** — thread isolation for SSE, JSON parsing, and adapter logic.
-3. **Adapter pattern** — normalizes both request building and response parsing per provider.
-4. **CSS-only modes** — `mode` attribute switches between overlay and chatbot via `:host()` selectors.
-5. **Opt-in persistence** — `preserve-history` for localStorage, `preserve-state` for sessionStorage.
-6. **Five normalized message types** — `chunk`, `results`, `component`, `done`, `error`. Provider-specific formats stay inside adapters.
-7. **Normal navigation** — same-domain links navigate normally; state is restored via sessionStorage on the new page.
-8. **Inline markdown** — lightweight parser for links, bare URLs, bold, italic, code. Chunk buffering handles split tokens across streamed messages. DOM-based rendering (no innerHTML) to prevent XSS.
-9. **Rich components** — dual path: server-suggested via adapter + client-configured via attributes. Renderer registry on the component instance controls what renders. No arbitrary HTML from server — only registered renderers execute.
-10. **Custom events** — granular lifecycle events (`open`, `close`, `chat-start`, `message`, `response`, `chat-clear`, `feedback`, `error`) enable server-side storage, analytics, login gates, and any host-page integration without coupling.
+1. **SSE on main thread** — kept as transport. EventSource is inherently non-blocking. No Web Worker needed — can be added later if profiling shows a need.
+2. **Adapter pattern** — normalizes both request building and response parsing per provider. Loaded as plain ES modules on the main thread.
+3. **CSS-only modes** — `mode` attribute switches between overlay and chatbot via `:host()` selectors.
+4. **Opt-in persistence** — `preserve-history` for localStorage, `preserve-state` for sessionStorage.
+5. **Five normalized message types** — `chunk`, `results`, `component`, `done`, `error`. Provider-specific formats stay inside adapters.
+6. **Normal navigation** — same-domain links navigate normally; state is restored via sessionStorage on the new page.
+7. **Inline markdown** — lightweight parser for links, bare URLs, bold, italic, code. Chunk buffering handles split tokens across streamed messages. DOM-based rendering (no innerHTML) to prevent XSS.
+8. **Rich components** — dual path: server-suggested via adapter + client-configured via attributes. Renderer registry on the component instance controls what renders. No arbitrary HTML from server — only registered renderers execute.
+9. **Custom events** — granular lifecycle events (`open`, `close`, `chat-start`, `message`, `response`, `chat-clear`, `feedback`, `error`) enable server-side storage, analytics, login gates, and any host-page integration without coupling.
