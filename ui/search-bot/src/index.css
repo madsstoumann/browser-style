@@ -1,0 +1,463 @@
+/* ==========================================================================
+   Search Bot (<search-bot>) Component Styles
+   ==========================================================================
+   A conversational search overlay / chatbot web component that streams
+   results via SSE. Can be displayed as a full-screen modal (default) or as
+   a positioned chatbot panel. All visual properties are driven by custom
+   properties prefixed with --sbot-* to allow external theming.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Host & Custom Properties
+   --------------------------------------------------------------------------
+   The :host block defines all themeable custom properties, grouped by the
+   component part they affect. The universal box-sizing rule ensures
+   consistent sizing for every element inside the shadow tree.
+   -------------------------------------------------------------------------- */
+
+:host * { box-sizing: border-box; }
+
+:host {
+	/* Host typography */
+	--sbot-ff: 'Iowan Old Style', 'Palatino Linotype', 'URW Palladio L', P052, serif;
+
+	/* Trigger button (the floating icon that opens the overlay) */
+	--sbot-trigger-bg: hsl(0 0% 10% / 0.15);
+	--sbot-trigger-bdrs: 50%;
+	--sbot-trigger-offset: 1rem;
+
+	/* Overlay / dialog (the full-screen or chatbot modal container) */
+	--sbot-overlay-bg: hsl(0 0% 100% / 0.15);
+	--sbot-overlay-bdf: blur(16px) saturate(180%);
+	--sbot-overlay-bdc: hsl(0 0% 100% / 0.3);
+	--sbot-overlay-backdrop: hsl(0 0% 90% / 0.4);
+
+	/* Header (top bar with history toggle and close button) */
+	--sbot-header-g: 0.5rem;
+	--sbot-header-p: 1rem 2rem;
+
+	/* History panel (popover listing saved conversations) */
+	--sbot-history-bg: hsl(0 0% 100% / 0.95);
+	--sbot-history-bdf: blur(8px);
+	--sbot-history-bdc: hsl(0 0% 0% / 0.1);
+	--sbot-history-bdrs: 0.5rem;
+	--sbot-history-bxsh: 0 4px 12px hsl(0 0% 0% / 0.15);
+	--sbot-history-mxbs: 60vh;
+	--sbot-history-mxis: 20rem;
+
+	/* Conversation (the scrollable message thread) */
+	--sbot-conversation-mxw: 70ch;
+
+	/* User message bubble */
+	--sbot-user-bgc: hsl(200 25% 90% / 1);
+	--sbot-user-bdrs: 0.75rem;
+	--sbot-user-p: 0.625rem 1rem;
+
+	/* Inline code spans inside response messages */
+	--sbot-code-bg: hsl(0 0% 0% / 0.06);
+	--sbot-code-bdrs: 0.25em;
+	--sbot-code-ff: monospace;
+
+	/* Links inside response messages */
+	--sbot-link-c: hsl(210 100% 40%);
+
+	/* Form / input (sticky bottom bar with search textarea) */
+	--sbot-form-p: 1rem 2rem;
+	--sbot-input-bdrs: 1ch;
+	--sbot-input-p: 1ch 2ch;
+
+	/* Result images (thumbnails shown with search results) */
+	--sbot-img-ar: 16/9;
+	--sbot-img-bgc: hsl(0 0% 50% / 0.15);
+	--sbot-img-mxis: 200px;
+
+	/* SVG icons */
+	--sbot-icon-sz: 2em;
+
+	/* Feedback buttons (thumbs-up / thumbs-down on responses) */
+	--sbot-feedback-g: 0.5rem;
+	--sbot-feedback-bdc: hsl(0 0% 0% / 0.1);
+	--sbot-feedback-bdrs: 0.25rem;
+
+	/* Chatbot mode (positioned panel instead of full-screen modal) */
+	--sbot-chatbot-bs: min(600px, 80vh);
+	--sbot-chatbot-is: min(400px, 90vw);
+	--sbot-chatbot-bdrs: 1rem;
+	--sbot-chatbot-bxsh: 0 8px 32px hsl(0 0% 0% / 0.2);
+	--sbot-chatbot-offset: 5rem;
+
+	/* Scrollbar */
+	--sbot-scrollbar-thumb: hsl(0 0% 0% / 0.25);
+	--sbot-scrollbar-track: transparent;
+
+	/* Shared hover background used by history items and feedback buttons */
+	--sbot-hover-bg: hsl(0 0% 0% / 0.05);
+
+	font-family: var(--sbot-ff);
+	scrollbar-color: var(--sbot-scrollbar-thumb) var(--sbot-scrollbar-track);
+	scrollbar-width: thin;
+}
+
+/* --------------------------------------------------------------------------
+   2. Trigger Button
+   --------------------------------------------------------------------------
+   The circular button that opens the search overlay. It can be placed at
+   any screen corner via the host's `position` attribute (e.g. "bottom right")
+   or rendered inline when position="inline".
+   -------------------------------------------------------------------------- */
+
+[part="search-trigger"] {
+	aspect-ratio: 1;
+	background: var(--sbot-trigger-bg);
+	border: 0;
+	border-radius: var(--sbot-trigger-bdrs);
+	display: grid;
+	place-items: center;
+}
+
+/* Fixed positioning for non-inline triggers */
+:host(:not([position="inline"])) [part="search-trigger"] { position: fixed; }
+
+/* Corner placement controlled by the position attribute */
+:host([position*="top"]) [part="search-trigger"]    { inset-block-start: var(--sbot-trigger-offset); }
+:host([position*="bottom"]) [part="search-trigger"] { inset-block-end: var(--sbot-trigger-offset); }
+:host([position*="left"]) [part="search-trigger"]   { inset-inline-start: var(--sbot-trigger-offset); }
+:host([position*="right"]) [part="search-trigger"]  { inset-inline-end: var(--sbot-trigger-offset); }
+
+/* --------------------------------------------------------------------------
+   3. Search Overlay (Dialog)
+   --------------------------------------------------------------------------
+   The main container rendered as a <dialog> element. In default mode it
+   fills the entire viewport as a frosted-glass modal. When open, it becomes
+   a flex column so the conversation area stretches between the header and
+   the sticky input form.
+   -------------------------------------------------------------------------- */
+
+[part="search-overlay"] {
+	background: var(--sbot-overlay-bg);
+	backdrop-filter: var(--sbot-overlay-bdf);
+	border: 1px solid var(--sbot-overlay-bdc);
+	block-size: 100%;
+	inline-size: 100%;
+	max-block-size: 100%;
+	max-inline-size: 100%;
+	padding: 0;
+}
+
+[part="search-overlay"][open] {
+	display: flex;
+	flex-direction: column;
+}
+
+[part="search-overlay"]::backdrop {
+	background: var(--sbot-overlay-backdrop);
+}
+
+/* --------------------------------------------------------------------------
+   4. Header
+   --------------------------------------------------------------------------
+   Top bar inside the dialog containing the history toggle button and the
+   close button. The close button is pushed to the far end via auto margin.
+   -------------------------------------------------------------------------- */
+
+[part="search-header"] {
+	display: flex;
+	align-items: center;
+	gap: var(--sbot-header-g);
+	padding: var(--sbot-header-p);
+}
+
+[part="search-close"] {
+	margin-inline-start: auto;
+}
+
+/* --------------------------------------------------------------------------
+   5. History Panel
+   --------------------------------------------------------------------------
+   A popover anchored below the header that lists previously saved
+   conversations. Each history item shows a title, date, and a delete
+   button. The panel is scrollable and constrained in size.
+   -------------------------------------------------------------------------- */
+
+/* Panel container (popover) */
+[part="search-history-panel"] {
+	background: var(--sbot-history-bg);
+	backdrop-filter: var(--sbot-history-bdf);
+	border: 1px solid var(--sbot-history-bdc);
+	border-radius: var(--sbot-history-bdrs);
+	box-shadow: var(--sbot-history-bxsh);
+	inset: auto;
+	inset-block-start: 3.5rem;
+	inset-inline-start: 1rem;
+	margin: 0;
+	max-block-size: var(--sbot-history-mxbs);
+	max-inline-size: var(--sbot-history-mxis);
+	overflow-y: auto;
+	padding: 0.5rem;
+}
+
+/* History list reset */
+[part="search-history-list"] {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+/* Individual history entry: title + delete button in a grid row */
+[part="search-history-list"] li[data-key] {
+	align-items: center;
+	border-radius: 0.25rem;
+	cursor: pointer;
+	display: grid;
+	grid-template-columns: 1fr auto;
+	padding: 0.5rem 0.75rem;
+}
+
+[part="search-history-list"] li[data-key] span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+[part="search-history-list"] li:hover {
+	background: var(--sbot-hover-bg);
+}
+
+/* Timestamp below each history entry title */
+[part="search-history-list"] small {
+	color: hsl(0 0% 50%);
+	display: block;
+	font-size: 0.75em;
+}
+
+/* Delete button inside each history entry */
+[part="search-history-delete"] {
+	background: none;
+	border: 0;
+	cursor: pointer;
+	font-size: 1em;
+	grid-row: 1 / -1;
+	opacity: 0.4;
+	padding: 0.25rem;
+}
+
+[part="search-history-delete"]:hover {
+	opacity: 1;
+}
+
+/* Hide the history toggle when the host lacks preserve-history */
+:host(:not([preserve-history])) [part="search-history"] {
+	display: none;
+}
+
+/* --------------------------------------------------------------------------
+   6. Conversation Thread
+   --------------------------------------------------------------------------
+   An ordered list (<ol>) of user messages and bot responses. It fills
+   available space, scrolls vertically, and is hidden when empty so the
+   form floats to the center on first load.
+   -------------------------------------------------------------------------- */
+
+[part="search-conversation"] {
+	flex: 1;
+	list-style: none;
+	margin: 0;
+	overflow-y: auto;
+	padding-inline: max(0px, calc(50% - var(--sbot-conversation-mxw) / 2));
+}
+
+[part="search-conversation"]:empty {
+	display: none;
+}
+
+/* --------------------------------------------------------------------------
+   7. Messages (User & Response)
+   --------------------------------------------------------------------------
+   Each conversation turn is an <li> with part="user" or part="response".
+   User messages are styled as rounded bubbles aligned to the end.
+   Response messages contain parsed markdown, result lists, and feedback.
+   -------------------------------------------------------------------------- */
+
+/* Shared vertical spacing for both message types */
+[part="user"],
+[part="response"] {
+	padding: 0.75rem 0;
+}
+
+/* User message bubble */
+[part="user"] {
+	background-color: var(--sbot-user-bgc);
+	border-radius: var(--sbot-user-bdrs);
+	justify-self: end;
+	padding: var(--sbot-user-p);
+}
+
+/* Response list reset (results are rendered as unstyled <ul>) */
+[part="response"] ul {
+	list-style: none;
+	padding: 0;
+}
+
+/* Inline code inside response text */
+[part="response"] code {
+	background: var(--sbot-code-bg);
+	border-radius: var(--sbot-code-bdrs);
+	font-family: var(--sbot-code-ff);
+	padding: 0.1em 0.3em;
+}
+
+/* Links inside response text */
+[part="response"] a {
+	color: var(--sbot-link-c);
+}
+
+/* --------------------------------------------------------------------------
+   8. Result Images
+   --------------------------------------------------------------------------
+   Thumbnail images displayed alongside search results. They maintain a
+   fixed aspect ratio and are capped at a max width.
+   -------------------------------------------------------------------------- */
+
+[part="search-result-img"] {
+	aspect-ratio: var(--sbot-img-ar);
+	background-color: var(--sbot-img-bgc);
+	display: block;
+	max-inline-size: var(--sbot-img-mxis);
+	object-fit: cover;
+}
+
+/* --------------------------------------------------------------------------
+   9. Feedback Buttons
+   --------------------------------------------------------------------------
+   Thumbs-up and thumbs-down buttons appended to a response when the
+   `feedback` attribute is present on the host. They are removed after a
+   user clicks one.
+   -------------------------------------------------------------------------- */
+
+[part="search-feedback"] {
+	display: flex;
+	gap: var(--sbot-feedback-g);
+	padding-block-start: 0.5rem;
+}
+
+[part="search-feedback-like"],
+[part="search-feedback-dislike"] {
+	background: none;
+	border: 1px solid var(--sbot-feedback-bdc);
+	border-radius: var(--sbot-feedback-bdrs);
+	cursor: pointer;
+	padding: 0.25rem;
+}
+
+[part="search-feedback-like"] svg,
+[part="search-feedback-dislike"] svg {
+	block-size: 1em;
+	inline-size: 1em;
+}
+
+[part="search-feedback-like"]:hover,
+[part="search-feedback-dislike"]:hover {
+	background: var(--sbot-hover-bg);
+}
+
+/* --------------------------------------------------------------------------
+   10. Form & Input
+   --------------------------------------------------------------------------
+   The sticky bottom bar containing a <fieldset> with a legend (contextual
+   label that changes between "Ask a question" and "Ask a follow-up") and
+   the search <textarea>. It inherits the overlay background so content
+   scrolling behind it is hidden.
+   -------------------------------------------------------------------------- */
+
+[part="search-form"] {
+	position: sticky;
+	bottom: 0;
+	background: inherit;
+	padding-block: 1rem;
+	padding-inline: max(2rem, calc(50% - var(--sbot-conversation-mxw) / 2));
+}
+
+[part="search-fieldset"] {
+	all: unset;
+	display: grid;
+}
+
+[part="search-legend"] {
+	all: unset;
+	text-align: center;
+}
+
+[part="search-input"] {
+	border-radius: var(--sbot-input-bdrs);
+	font: inherit;
+	padding: var(--sbot-input-p);
+	resize: vertical;
+}
+
+/* --------------------------------------------------------------------------
+   11. SVG Icons
+   --------------------------------------------------------------------------
+   Default sizing for all inline SVG icons. Individual contexts (like the
+   feedback buttons) override these dimensions as needed.
+   -------------------------------------------------------------------------- */
+
+svg {
+	block-size: var(--sbot-icon-sz);
+	inline-size: var(--sbot-icon-sz);
+}
+
+[part="icon-stroke"] {
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+/* --------------------------------------------------------------------------
+   12. Chatbot Mode
+   --------------------------------------------------------------------------
+   When the host has mode="chatbot", the overlay becomes a smaller fixed
+   panel instead of a full-screen modal. The backdrop is transparent and
+   non-blocking, and the panel is positioned at the corner specified by
+   the `position` attribute with an offset from the viewport edge.
+   -------------------------------------------------------------------------- */
+
+/* Transparent, non-blocking backdrop */
+:host([mode="chatbot"]) [part="search-overlay"]::backdrop {
+	background: transparent;
+	pointer-events: none;
+}
+
+/* Chatbot panel sizing and appearance */
+:host([mode="chatbot"]) [part="search-overlay"] {
+	block-size: var(--sbot-chatbot-bs);
+	inline-size: var(--sbot-chatbot-is);
+	max-block-size: 80vh;
+	max-inline-size: 90vw;
+	border-radius: var(--sbot-chatbot-bdrs);
+	position: fixed;
+	margin: 0;
+	box-shadow: var(--sbot-chatbot-bxsh);
+}
+
+/* Chatbot corner placement */
+:host([mode="chatbot"][position*="bottom"]) [part="search-overlay"] {
+	inset-block-end: var(--sbot-chatbot-offset);
+	inset-block-start: auto;
+}
+
+:host([mode="chatbot"][position*="top"]) [part="search-overlay"] {
+	inset-block-start: var(--sbot-chatbot-offset);
+	inset-block-end: auto;
+}
+
+:host([mode="chatbot"][position*="right"]) [part="search-overlay"] {
+	inset-inline-end: 1rem;
+	inset-inline-start: auto;
+}
+
+:host([mode="chatbot"][position*="left"]) [part="search-overlay"] {
+	inset-inline-start: 1rem;
+	inset-inline-end: auto;
+}

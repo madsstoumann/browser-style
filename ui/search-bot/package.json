@@ -1,0 +1,38 @@
+{
+  "name": "@browser.style/search-bot",
+  "version": "1.0.0",
+  "description": "Search overlay and chatbot component with adapter-based SSE streaming",
+  "type": "module",
+  "module": "src/index.js",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "style": "./src/index.css"
+    },
+    "./style": "./src/index.css"
+  },
+  "files": [
+    "src/"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "search-bot",
+    "chatbot"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/search-bot"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/search-bot"
+}

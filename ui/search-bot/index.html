@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Search Bot</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Search overlay and chatbot component with adapter-based SSE streaming">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<script type="module" src="./src/index.js"></script>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Search Bot</h2>
+	<p>Search overlay and chatbot component with adapter-based SSE streaming.</p>
+
+	<search-bot
+		api="https://wild-flower-99ce-nlweb.stoumann.workers.dev"
+		provider="nlweb"
+		position="bottom right"
+		preserve-history
+		preserve-state
+		feedback
+	>
+	</search-bot>
+</body>
+</html>
