@@ -10,7 +10,8 @@ stylesheet.replaceSync(`
 	display: grid;
 	place-items: center;
 }
-	:host * { box-sizing: border-box; }
+
+:host * { box-sizing: border-box; }
 :host(:not([position="inline"])) [part="search-trigger"] { position: fixed; }
 :host([position*="top"]) [part="search-trigger"] { inset-block-start: 1rem; }
 :host([position*="bottom"]) [part="search-trigger"] { inset-block-end: 1rem; }
@@ -20,11 +21,9 @@ stylesheet.replaceSync(`
 [part="search-overlay"] {
 	background: hsl(0 0% 100% / 0.15);
 	backdrop-filter: blur(16px) saturate(180%);
-	-webkit-backdrop-filter: blur(16px) saturate(180%);
+	/* -webkit-backdrop-filter: blur(16px) saturate(180%); */
 	border: 1px solid hsl(0 0% 100% / 0.3);
-	border-radius: 0;
 	block-size: 100%;
-	
 	inline-size: 100%;
 	max-block-size: 100%;
 	max-inline-size: 100%;
@@ -48,6 +47,60 @@ stylesheet.replaceSync(`
 	margin-inline-start: auto;
 }
 
+[part="search-history-panel"] {
+	background: hsl(0 0% 100% / 0.95);
+	backdrop-filter: blur(8px);
+	border: 1px solid hsl(0 0% 0% / 0.1);
+	border-radius: 0.5rem;
+	box-shadow: 0 4px 12px hsl(0 0% 0% / 0.15);
+	inset: auto;
+	inset-block-start: 3.5rem;
+	inset-inline-start: 1rem;
+	margin: 0;
+	max-block-size: 60vh;
+	max-inline-size: 20rem;
+	overflow-y: auto;
+	padding: 0.5rem;
+}
+[part="search-history-list"] {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+[part="search-history-list"] li[data-key] {
+	align-items: center;
+	border-radius: 0.25rem;
+	cursor: pointer;
+	display: grid;
+	grid-template-columns: 1fr auto;
+	padding: 0.5rem 0.75rem;
+}
+[part="search-history-list"] li[data-key] span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+[part="search-history-delete"] {
+	background: none;
+	border: 0;
+	cursor: pointer;
+	font-size: 1em;
+	grid-row: 1 / -1;
+	opacity: 0.4;
+	padding: 0.25rem;
+}
+[part="search-history-delete"]:hover {
+	opacity: 1;
+}
+[part="search-history-list"] li:hover {
+	background: hsl(0 0% 0% / 0.05);
+}
+[part="search-history-list"] small {
+	color: hsl(0 0% 50%);
+	display: block;
+	font-size: 0.75em;
+}
+
 [part="search-conversation"] {
 	flex: 1;
 	list-style: none;
@@ -62,8 +115,10 @@ stylesheet.replaceSync(`
 	padding: 0.75rem 0;
 }
 [part="user"] {
-	background-color: hsl(200 100% 50% / 0.15);
+	background-color: hsl(200 25% 90% / 1);
+	border-radius: 0.75rem;
 	justify-self: end;
+	padding: 0.625rem 1rem;
 }
 [part="response"] ul {
 	list-style: none;
@@ -115,7 +170,9 @@ svg {
 const I18N = {
 	close: 'Close',
 	followUp: 'Ask a follow-up question',
+	history: 'Chat history',
 	newQuestion: 'New question',
+	noHistory: 'No saved conversations',
 	search: 'Search',
 	searchLabel: 'Ask a question',
 	searchPlaceholder: 'Ask a question or a follow-up',
@@ -124,6 +181,7 @@ const I18N = {
 const ICONS = {
 	ai: ['M11 5a9.37 9.37 0 0 0 7.7 7.7 9.37 9.37 0 0 0-7.7 7.7 9.37 9.37 0 0 0-7.7-7.7A9.37 9.37 0 0 0 11 5M18 2a4.26 4.26 0 0 0 3.5 3.5A4.26 4.26 0 0 0 18 9a4.26 4.26 0 0 0-3.5-3.5A4.26 4.26 0 0 0 18 2m-1 15a2.43 2.43 0 0 0 2 2 2.43 2.43 0 0 0-2 2 2.43 2.43 0 0 0-2-2 2.43 2.43 0 0 0 2-2'],
 	close: ['M19 2h-14a3 3 0 0 0 -3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3 -3v-14a3 3 0 0 0 -3 -3zm-9.387 6.21l.094 .083l2.293 2.292l2.293 -2.292a1 1 0 0 1 1.497 1.32l-.083 .094l-2.292 2.293l2.292 2.293a1 1 0 0 1 -1.32 1.497l-.094 -.083l-2.293 -2.292l-2.293 2.292a1 1 0 0 1 -1.497 -1.32l.083 -.094l2.292 -2.293l-2.292 -2.293a1 1 0 0 1 1.32 -1.497z'],
+	history: ['M8 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2', 'M16 2v4', 'M8 2v4', 'M4 10h16', 'M8 14h.01', 'M12 14h.01', 'M16 14h.01', 'M8 18h.01', 'M12 18h.01'],
 	newQuestion: ['M12 5l0 14', 'M5 12l14 0'],
 };
 
@@ -139,8 +197,6 @@ function chatKey(query) {
 }
 
 class SearchWidget extends HTMLElement {
-	static observedAttributes = ['api'];
-
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
@@ -164,6 +220,8 @@ class SearchWidget extends HTMLElement {
 		this.elements = {
 			conversation: this.$('[part="search-conversation"]'),
 			form: this.$('form'),
+			historyList: this.$('[part="search-history-list"]'),
+			historyPanel: this.$('#search-history-popover'),
 			input: this.$('textarea[name="q"]'),
 			legend: this.$('[part="search-legend"]'),
 			newQuestion: this.$('[part="search-new"]'),
@@ -179,6 +237,29 @@ class SearchWidget extends HTMLElement {
 			}
 		});
 		this.elements.newQuestion.addEventListener('click', () => this.newChat());
+		this.elements.historyPanel.addEventListener('toggle', (e) => {
+			if (e.newState === 'open') this.renderHistory();
+		});
+		this.elements.historyList.addEventListener('click', (e) => {
+			if (e.target.closest('[part="search-history-delete"]')) {
+				const li = e.target.closest('li[data-key]');
+				if (!li) return;
+				localStorage.removeItem(li.dataset.key);
+				if (this.chatKey === li.dataset.key) this.newChat();
+				li.remove();
+				if (!this.elements.historyList.querySelector('li[data-key]')) {
+					const empty = document.createElement('li');
+					empty.textContent = I18N.noHistory;
+					this.elements.historyList.append(empty);
+				}
+				return;
+			}
+			const li = e.target.closest('li[data-key]');
+			if (li) {
+				this.loadChat(li.dataset.key);
+				this.elements.historyPanel.hidePopover();
+			}
+		});
 	}
 
 	search(query) {
@@ -248,12 +329,10 @@ class SearchWidget extends HTMLElement {
 					strong.textContent = title;
 					a.append(strong);
 					if (schema.description) {
-						const p = document.createElement('p');
 						const small = document.createElement('small');
 						small.setAttribute('part', 'search-result-desc');
 						small.textContent = schema.description;
-						p.append(small);
-						a.append(p);
+						a.append(small);
 					}
 					li.append(a);
 					resultsUl.append(li);
@@ -349,6 +428,82 @@ class SearchWidget extends HTMLElement {
 		localStorage.setItem(this.chatKey, JSON.stringify(data));
 	}
 
+	renderHistory() {
+		const list = this.elements.historyList;
+		list.replaceChildren();
+		const chats = [];
+		for (let i = 0; i < localStorage.length; i++) {
+			const key = localStorage.key(i);
+			if (!key.startsWith(STORAGE_PREFIX)) continue;
+			try {
+				const data = JSON.parse(localStorage.getItem(key));
+				if (data?.title) chats.push({ key, title: data.title, created: data.created || 0 });
+			} catch { /* skip invalid entries */ }
+		}
+		chats.sort((a, b) => b.created - a.created);
+		if (!chats.length) {
+			const li = document.createElement('li');
+			li.textContent = I18N.noHistory;
+			list.append(li);
+			return;
+		}
+		for (const chat of chats) {
+			const li = document.createElement('li');
+			li.dataset.key = chat.key;
+			const span = document.createElement('span');
+			span.textContent = chat.title;
+			li.append(span);
+			if (chat.created) {
+				const small = document.createElement('small');
+				small.textContent = new Date(chat.created).toLocaleDateString();
+				li.append(small);
+			}
+			const del = document.createElement('button');
+			del.setAttribute('part', 'search-history-delete');
+			del.setAttribute('aria-label', I18N.close);
+			del.textContent = '\u00d7';
+			li.append(del);
+			list.append(li);
+		}
+	}
+
+	loadChat(key) {
+		try {
+			const data = JSON.parse(localStorage.getItem(key));
+			if (!data?.messages) return;
+			this.closeEventSource();
+			this.chatKey = key;
+			this.messages = data.messages;
+			this.elements.conversation.replaceChildren();
+			for (const msg of this.messages) {
+				const li = document.createElement('li');
+				li.setAttribute('part', msg.role === 'user' ? 'user' : 'response');
+				if (msg.role === 'user') {
+					li.textContent = msg.text;
+				} else {
+					const refs = {};
+					for (const r of msg.results || []) refs[r.url] = r.name;
+					this.renderParsedSummary(li, msg.summary || '', refs);
+					if (msg.results?.length) {
+						const ul = document.createElement('ul');
+						for (const r of msg.results) {
+							const rli = document.createElement('li');
+							const a = document.createElement('a');
+							a.href = r.url;
+							a.textContent = r.name;
+							rli.append(a);
+							ul.append(rli);
+						}
+						li.append(ul);
+					}
+				}
+				this.elements.conversation.append(li);
+			}
+			this.updateLabel();
+			this.elements.conversation.lastElementChild?.scrollIntoView({ block: 'end' });
+		} catch { /* skip invalid data */ }
+	}
+
 	newChat() {
 		this.closeEventSource();
 		this.chatKey = null;
@@ -359,7 +514,7 @@ class SearchWidget extends HTMLElement {
 	}
 
 	updateLabel() {
-		this.elements.legend.textContent = this.messages.some(m => m.role === 'user') ? I18N.followUp : I18N.searchLabel;
+		this.elements.legend.textContent = this.messages.length ? I18N.followUp : I18N.searchLabel;
 	}
 
 	closeEventSource() {
@@ -376,7 +531,10 @@ class SearchWidget extends HTMLElement {
 			</button>
 			<dialog id="search-dialog" part="search-overlay" closedby="any">
 				<div part="search-header">
-					<button part="search-new" aria-label="${I18N.newQuestion}">${icon('newQuestion', 'icon-stroke')} ${I18N.newQuestion}</button>
+					<button part="search-history" popovertarget="search-history-popover" aria-label="${I18N.history}">${icon('history', 'icon-stroke')}</button>
+					<div id="search-history-popover" part="search-history-panel" popover>
+						<ul part="search-history-list"></ul>
+					</div>
 					<button part="search-close" commandfor="search-dialog" command="close" aria-label="${I18N.close}">${icon('close')}</button>
 				</div>
 				<ol part="search-conversation"></ol>
@@ -385,6 +543,7 @@ class SearchWidget extends HTMLElement {
 						<legend part="search-legend">${I18N.searchLabel}</legend>
 						<textarea part="search-input" name="q" autocomplete="off" autofocus enterkeyhint="search" placeholder="${I18N.searchPlaceholder}"></textarea>
 					</fieldset>
+					<button part="search-new" aria-label="${I18N.newQuestion}">${icon('newQuestion', 'icon-stroke')} ${I18N.newQuestion}</button>
 				</form>
 			</dialog>
 		`;
