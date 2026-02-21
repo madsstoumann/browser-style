@@ -1,171 +1,6 @@
 const STORAGE_PREFIX = 'search-widget:';
 
-const stylesheet = new CSSStyleSheet();
-stylesheet.replaceSync(`
-[part="search-trigger"] {
-	aspect-ratio: 1;
-	background: hsl(0 0% 10% / 0.15);
-	border: 0;
-	border-radius: 50%;
-	display: grid;
-	place-items: center;
-}
-
-:host * { box-sizing: border-box; }
-:host(:not([position="inline"])) [part="search-trigger"] { position: fixed; }
-:host([position*="top"]) [part="search-trigger"] { inset-block-start: 1rem; }
-:host([position*="bottom"]) [part="search-trigger"] { inset-block-end: 1rem; }
-:host([position*="left"]) [part="search-trigger"] { inset-inline-start: 1rem; }
-:host([position*="right"]) [part="search-trigger"] { inset-inline-end: 1rem; }
-
-[part="search-overlay"] {
-	background: hsl(0 0% 100% / 0.15);
-	backdrop-filter: blur(16px) saturate(180%);
-	/* -webkit-backdrop-filter: blur(16px) saturate(180%); */
-	border: 1px solid hsl(0 0% 100% / 0.3);
-	block-size: 100%;
-	inline-size: 100%;
-	max-block-size: 100%;
-	max-inline-size: 100%;
-	padding: 0;
-}
-[part="search-overlay"][open] {
-	display: flex;
-	flex-direction: column;
-}
-[part="search-overlay"]::backdrop {
-	background: hsl(0 0% 90% / 0.4);
-}
-
-[part="search-header"] {
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	padding: 1rem 2rem;
-}
-[part="search-close"] {
-	margin-inline-start: auto;
-}
-
-[part="search-history-panel"] {
-	background: hsl(0 0% 100% / 0.95);
-	backdrop-filter: blur(8px);
-	border: 1px solid hsl(0 0% 0% / 0.1);
-	border-radius: 0.5rem;
-	box-shadow: 0 4px 12px hsl(0 0% 0% / 0.15);
-	inset: auto;
-	inset-block-start: 3.5rem;
-	inset-inline-start: 1rem;
-	margin: 0;
-	max-block-size: 60vh;
-	max-inline-size: 20rem;
-	overflow-y: auto;
-	padding: 0.5rem;
-}
-[part="search-history-list"] {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
-[part="search-history-list"] li[data-key] {
-	align-items: center;
-	border-radius: 0.25rem;
-	cursor: pointer;
-	display: grid;
-	grid-template-columns: 1fr auto;
-	padding: 0.5rem 0.75rem;
-}
-[part="search-history-list"] li[data-key] span {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-[part="search-history-delete"] {
-	background: none;
-	border: 0;
-	cursor: pointer;
-	font-size: 1em;
-	grid-row: 1 / -1;
-	opacity: 0.4;
-	padding: 0.25rem;
-}
-[part="search-history-delete"]:hover {
-	opacity: 1;
-}
-[part="search-history-list"] li:hover {
-	background: hsl(0 0% 0% / 0.05);
-}
-[part="search-history-list"] small {
-	color: hsl(0 0% 50%);
-	display: block;
-	font-size: 0.75em;
-}
-
-[part="search-conversation"] {
-	flex: 1;
-	list-style: none;
-	margin: 0;
-	overflow-y: auto;
-}
-	[part="search-conversation"]:empty {
-	display: none;
-	}
-[part="user"],
-[part="response"] {
-	padding: 0.75rem 0;
-}
-[part="user"] {
-	background-color: hsl(200 25% 90% / 1);
-	border-radius: 0.75rem;
-	justify-self: end;
-	padding: 0.625rem 1rem;
-}
-[part="response"] ul {
-	list-style: none;
-	padding: 0;
-}
-
-[part="search-form"] {
-	position: sticky;
-	bottom: 0;
-	padding: 1rem 2rem;
-	background: inherit;
-}
-[part="search-fieldset"] {
-	all: unset;
-	display: grid;
-}
-[part="search-legend"] {
-	all: unset;
-	text-align: center;
-}
-[part="search-input"] {
-	border-radius: 1ch;
-	font: inherit;
-	padding: 1ch 2ch;
-	resize: vertical;
-}
-
-[part="search-result-img"] {
-	aspect-ratio: 16/9;
-	background-color: hsl(0 0% 50% / 0.15);
-	display: block;
-	max-inline-size: 200px;
-	object-fit: cover;
-}
-
-svg {
-	block-size: 2em;
-	inline-size: 2em;
-}
-[part="icon-stroke"] {
-	fill: none;
-	stroke: currentColor;
-	stroke-width: 2;
-	stroke-linecap: round;
-	stroke-linejoin: round;
-}
-`);
+import stylesheet from './index.css' with { type: 'css' };
 
 const I18N = {
 	close: 'Close',
@@ -182,7 +17,6 @@ const ICONS = {
 	ai: ['M11 5a9.37 9.37 0 0 0 7.7 7.7 9.37 9.37 0 0 0-7.7 7.7 9.37 9.37 0 0 0-7.7-7.7A9.37 9.37 0 0 0 11 5M18 2a4.26 4.26 0 0 0 3.5 3.5A4.26 4.26 0 0 0 18 9a4.26 4.26 0 0 0-3.5-3.5A4.26 4.26 0 0 0 18 2m-1 15a2.43 2.43 0 0 0 2 2 2.43 2.43 0 0 0-2 2 2.43 2.43 0 0 0-2-2 2.43 2.43 0 0 0 2-2'],
 	close: ['M19 2h-14a3 3 0 0 0 -3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3 -3v-14a3 3 0 0 0 -3 -3zm-9.387 6.21l.094 .083l2.293 2.292l2.293 -2.292a1 1 0 0 1 1.497 1.32l-.083 .094l-2.292 2.293l2.292 2.293a1 1 0 0 1 -1.32 1.497l-.094 -.083l-2.293 -2.292l-2.293 2.292a1 1 0 0 1 -1.497 -1.32l.083 -.094l2.292 -2.293l-2.292 -2.293a1 1 0 0 1 1.32 -1.497z'],
 	history: ['M8 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2', 'M16 2v4', 'M8 2v4', 'M4 10h16', 'M8 14h.01', 'M12 14h.01', 'M16 14h.01', 'M8 18h.01', 'M12 18h.01'],
-	newQuestion: ['M12 5l0 14', 'M5 12l14 0'],
 };
 
 function icon(name, part) {
@@ -543,7 +377,7 @@ class SearchWidget extends HTMLElement {
 						<legend part="search-legend">${I18N.searchLabel}</legend>
 						<textarea part="search-input" name="q" autocomplete="off" autofocus enterkeyhint="search" placeholder="${I18N.searchPlaceholder}"></textarea>
 					</fieldset>
-					<button part="search-new" aria-label="${I18N.newQuestion}">${icon('newQuestion', 'icon-stroke')} ${I18N.newQuestion}</button>
+					<button part="search-new" aria-label="${I18N.newQuestion}">${I18N.newQuestion}</button>
 				</form>
 			</dialog>
 		`;
