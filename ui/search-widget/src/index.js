@@ -1,7 +1,9 @@
-const STORAGE_PREFIX = 'search-widget:';
-
 import stylesheet from './index.css' with { type: 'css' };
-
+const ICONS = {
+	ai: ['M11 5a9.37 9.37 0 0 0 7.7 7.7 9.37 9.37 0 0 0-7.7 7.7 9.37 9.37 0 0 0-7.7-7.7A9.37 9.37 0 0 0 11 5M18 2a4.26 4.26 0 0 0 3.5 3.5A4.26 4.26 0 0 0 18 9a4.26 4.26 0 0 0-3.5-3.5A4.26 4.26 0 0 0 18 2m-1 15a2.43 2.43 0 0 0 2 2 2.43 2.43 0 0 0-2 2 2.43 2.43 0 0 0-2-2 2.43 2.43 0 0 0 2-2'],
+	close: ['M19 2h-14a3 3 0 0 0 -3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3 -3v-14a3 3 0 0 0 -3 -3zm-9.387 6.21l.094 .083l2.293 2.292l2.293 -2.292a1 1 0 0 1 1.497 1.32l-.083 .094l-2.292 2.293l2.292 2.293a1 1 0 0 1 -1.32 1.497l-.094 -.083l-2.293 -2.292l-2.293 2.292a1 1 0 0 1 -1.497 -1.32l.083 -.094l2.292 -2.293l-2.292 -2.293a1 1 0 0 1 1.32 -1.497z'],
+	history: ['M8 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2', 'M16 2v4', 'M8 2v4', 'M4 10h16', 'M8 14h.01', 'M12 14h.01', 'M16 14h.01', 'M8 18h.01', 'M12 18h.01'],
+};
 const I18N = {
 	close: 'Close',
 	followUp: 'Ask a follow-up question',
@@ -12,12 +14,7 @@ const I18N = {
 	searchLabel: 'Ask a question',
 	searchPlaceholder: 'Ask a question or a follow-up',
 };
-
-const ICONS = {
-	ai: ['M11 5a9.37 9.37 0 0 0 7.7 7.7 9.37 9.37 0 0 0-7.7 7.7 9.37 9.37 0 0 0-7.7-7.7A9.37 9.37 0 0 0 11 5M18 2a4.26 4.26 0 0 0 3.5 3.5A4.26 4.26 0 0 0 18 9a4.26 4.26 0 0 0-3.5-3.5A4.26 4.26 0 0 0 18 2m-1 15a2.43 2.43 0 0 0 2 2 2.43 2.43 0 0 0-2 2 2.43 2.43 0 0 0-2-2 2.43 2.43 0 0 0 2-2'],
-	close: ['M19 2h-14a3 3 0 0 0 -3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3 -3v-14a3 3 0 0 0 -3 -3zm-9.387 6.21l.094 .083l2.293 2.292l2.293 -2.292a1 1 0 0 1 1.497 1.32l-.083 .094l-2.292 2.293l2.292 2.293a1 1 0 0 1 -1.32 1.497l-.094 -.083l-2.293 -2.292l-2.293 2.292a1 1 0 0 1 -1.497 -1.32l.083 -.094l2.292 -2.293l-2.292 -2.293a1 1 0 0 1 1.32 -1.497z'],
-	history: ['M8 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2', 'M16 2v4', 'M8 2v4', 'M4 10h16', 'M8 14h.01', 'M12 14h.01', 'M16 14h.01', 'M8 18h.01', 'M12 18h.01'],
-};
+const STORAGE_PREFIX = 'search-widget:';
 
 function icon(name, part) {
 	return `<svg viewBox="0 0 24 24" aria-hidden="true"${part ? ` part="${part}"` : ''}>${ICONS[name].map(d => `<path d="${d}"/>`).join('')}</svg>`;
@@ -28,18 +25,55 @@ function chatKey(query) {
 	return `${STORAGE_PREFIX}${slug}-${Date.now()}`;
 }
 
+function fromStorage(key) {
+	try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
+}
+
+function el(tag, attrs = {}, children = []) {
+	const node = document.createElement(tag);
+	for (const [key, value] of Object.entries(attrs)) {
+		if (value == null) continue;
+		if (key === 'part') node.setAttribute('part', value);
+		else if (key === 'text') node.textContent = value;
+		else if (key in node) node[key] = value;
+		else node.setAttribute(key, value);
+	}
+	for (const child of (Array.isArray(children) ? children : [children])) if (child != null) node.append(child);
+	return node;
+}
+
 class SearchWidget extends HTMLElement {
 	constructor() {
-		super();
-		this.attachShadow({ mode: 'open' });
-		this.shadowRoot.adoptedStyleSheets = [stylesheet];
-		this.messages = [];
-		this.chatKey = null;
+		super(); this.attachShadow({ mode: 'open' }); this.shadowRoot.adoptedStyleSheets = [stylesheet]; this.messages = []; this.chatKey = null; this.eventSource = null;
 	}
 
-	get prevQueries() { return this.messages.filter(m => m.role === 'user').map(m => m.text).slice(-10); }
-	get lastAnswers() { return this.messages.filter(m => m.role === 'response').flatMap(m => m.results || []).slice(-20); }
 	$(selector) { return this.shadowRoot.querySelector(selector); }
+	message(role, text) { return el('li', { part: role, text }); }
+	ensureResultsList(container) { return container.querySelector('ul') || container.appendChild(document.createElement('ul')); }
+	emptyHistory() { this.elements.historyList.append(el('li', { text: I18N.noHistory })); }
+	normalizeResult(item) {
+		const schema = item.schema_object || {};
+		return { description: schema.description, image: schema.image, name: schema.name || item.name, url: item.url };
+	}
+
+	appendResultItem(ul, { url, name, description, image }, rich = false) {
+		const children = [];
+		if (rich) {
+			if (image) children.push(el('img', { src: image, alt: '', loading: 'lazy', part: 'search-result-img' }));
+			children.push(el('strong', { text: name }));
+			if (description) children.push(el('small', { part: 'search-result-desc', text: description }));
+		} else children.push(document.createTextNode(name));
+		ul.append(el('li', {}, el('a', { href: url }, children)));
+	}
+
+	getSearchContext() {
+		const prev = [], last = [];
+		for (const message of this.messages) {
+			if (message.role === 'user') prev.push(message.text);
+			if (message.role === 'response' && message.results?.length) last.push(...message.results);
+		}
+		return { prev: prev.slice(-10), last: last.slice(-20) };
+	}
 
 	connectedCallback() {
 		this.render();
@@ -52,123 +86,72 @@ class SearchWidget extends HTMLElement {
 			legend: this.$('[part="search-legend"]'),
 			newQuestion: this.$('[part="search-new"]'),
 		};
-		this.elements.form.addEventListener('submit', (e) => {
-			e.preventDefault();
-			this.search(this.elements.input.value);
-		});
+		const { form, historyList, historyPanel, input, newQuestion } = this.elements;
+		form.addEventListener('submit', (e) => { e.preventDefault(); this.search(input.value); });
 		this.elements.input.addEventListener('keydown', (e) => {
-			if (e.key === 'Enter' && !e.shiftKey) {
-				e.preventDefault();
-				this.elements.form.requestSubmit();
-			}
+			if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
 		});
-		this.elements.newQuestion.addEventListener('click', () => this.newChat());
-		this.elements.historyPanel.addEventListener('toggle', (e) => {
-			if (e.newState === 'open') this.renderHistory();
-		});
-		this.elements.historyList.addEventListener('click', (e) => {
+		newQuestion.addEventListener('click', () => this.newChat());
+		historyPanel.addEventListener('toggle', (e) => { if (e.newState === 'open') this.renderHistory(); });
+		historyList.addEventListener('click', (e) => {
 			const li = e.target.closest('li[data-key]');
 			if (!li) return;
 			if (e.target.closest('[part="search-history-delete"]')) {
 				localStorage.removeItem(li.dataset.key);
 				if (this.chatKey === li.dataset.key) this.newChat();
 				li.remove();
-				if (!this.elements.historyList.querySelector('li[data-key]')) {
-					const empty = document.createElement('li');
-					empty.textContent = I18N.noHistory;
-					this.elements.historyList.append(empty);
-				}
+				if (!historyList.querySelector('li[data-key]')) this.emptyHistory();
 			} else {
 				this.loadChat(li.dataset.key);
-				this.elements.historyPanel.hidePopover();
+				historyPanel.hidePopover();
 			}
 		});
 	}
 
 	search(query) {
-		if (!query?.trim() || !this.hasAttribute('api')) return;
+		const trimmed = query?.trim();
+		if (!trimmed || !this.hasAttribute('api')) return;
 		this.closeEventSource();
-
-		this.chatKey ??= chatKey(query);
-		this.messages.push({ role: 'user', text: query });
-
-		const userLi = document.createElement('li');
-		userLi.setAttribute('part', 'user');
-		userLi.textContent = query;
-		this.elements.conversation.append(userLi);
-
-		const responseLi = document.createElement('li');
-		responseLi.setAttribute('part', 'response');
+		this.chatKey ??= chatKey(trimmed);
+		this.messages.push({ role: 'user', text: trimmed });
+		this.elements.conversation.append(this.message('user', trimmed));
+		const responseLi = this.message('response');
 		this.elements.conversation.append(responseLi);
-
-		this.elements.input.value = '';
-		this.updateLabel();
-
-		const params = new URLSearchParams({ query, display_mode: 'full', generate_mode: 'summarize' });
-		if (this.prevQueries.length > 1) params.set('prev', JSON.stringify(this.prevQueries.slice(0, -1)));
-		if (this.lastAnswers.length) params.set('last_ans', JSON.stringify(this.lastAnswers));
-		
+		this.elements.input.value = ''; this.updateLabel();
+		const { prev, last } = this.getSearchContext();
+		const params = new URLSearchParams({ query: trimmed, display_mode: 'full', generate_mode: 'summarize' });
+		if (prev.length > 1) params.set('prev', JSON.stringify(prev.slice(0, -1)));
+		if (last.length) params.set('last_ans', JSON.stringify(last));
 		this.eventSource = new EventSource(`${this.getAttribute('api')}/ask?${params}`);
-
 		let summaryText = '';
-		const refs = {};
-		const results = [];
-		const summaryNode = document.createTextNode('');
+		const refs = {}, results = [], summaryNode = document.createTextNode('');
 		responseLi.append(summaryNode);
-
-		const messageHandlers = {
-			summary: ({ message }) => {
-				summaryText += message;
-				summaryNode.textContent = summaryText;
-			},
-			result_batch: ({ results: items }) => {
-				items.forEach(item => {
-					const schema = item.schema_object || {};
-					const title = schema.name || item.name;
-					refs[item.url] = title;
-					results.push({ name: title, url: item.url });
-
-					let resultsUl = responseLi.querySelector('ul');
-					if (!resultsUl) {
-						resultsUl = document.createElement('ul');
-						responseLi.append(resultsUl);
-					}
-					const li = document.createElement('li');
-					const a = document.createElement('a');
-					a.href = item.url;
-					if (schema.image) {
-						const img = document.createElement('img');
-						img.src = schema.image;
-						img.alt = '';
-						img.loading = 'lazy';
-						img.setAttribute('part', 'search-result-img');
-						a.append(img);
-					}
-					const strong = document.createElement('strong');
-					strong.textContent = title;
-					a.append(strong);
-					if (schema.description) {
-						const small = document.createElement('small');
-						small.setAttribute('part', 'search-result-desc');
-						small.textContent = schema.description;
-						a.append(small);
-					}
-					li.append(a);
-					resultsUl.append(li);
-				});
-			},
-			complete: () => {
-				this.closeEventSource();
-				this.renderParsedSummary(responseLi, summaryText, refs);
-				this.messages.push({ role: 'response', summary: summaryText, results });
-				this.saveChat();
-				responseLi.scrollIntoView({ behavior: 'smooth', block: 'end' });
-			},
-		};
-
 		this.eventSource.onmessage = (e) => {
-			const data = JSON.parse(e.data);
-			messageHandlers[data.message_type]?.(data);
+			try {
+				const data = JSON.parse(e.data);
+				switch (data.message_type) {
+					case 'summary':
+						summaryText += data.message;
+						summaryNode.textContent = summaryText;
+						break;
+					case 'result_batch': {
+						const ul = this.ensureResultsList(responseLi);
+						for (const item of data.results) {
+							const result = this.normalizeResult(item);
+							refs[result.url] = result.name;
+							results.push({ name: result.name, url: result.url });
+							this.appendResultItem(ul, result, true);
+						}
+						break;
+					}
+					case 'complete':
+						this.closeEventSource();
+						this.renderParsedSummary(responseLi, summaryText, refs);
+						this.messages.push({ role: 'response', summary: summaryText, results });
+						this.saveChat();
+						responseLi.scrollIntoView({ behavior: 'smooth', block: 'end' });
+				}
+			} catch {}
 		};
 		this.eventSource.onerror = () => this.closeEventSource();
 	}
@@ -184,8 +167,7 @@ class SearchWidget extends HTMLElement {
 				.map(m => [m[1], m[2]])
 		);
 
-		const fragment = document.createDocumentFragment();
-		let ul = null;
+		const fragment = document.createDocumentFragment(); let ul = null;
 
 		for (const line of bodyLines) {
 			const bulletMatch = line.match(/^\*\s+(.+)/);
@@ -194,14 +176,7 @@ class SearchWidget extends HTMLElement {
 				const li = document.createElement('li');
 				this.appendTextWithRefs(li, bulletMatch[1], refs, refMap);
 				ul.append(li);
-			} else {
-				ul = null;
-				if (line.trim()) {
-					const p = document.createElement('p');
-					this.appendTextWithRefs(p, line, refs, refMap);
-					fragment.append(p);
-				}
-			}
+			} else { ul = null; if (line.trim()) { const p = document.createElement('p'); this.appendTextWithRefs(p, line, refs, refMap); fragment.append(p); } }
 		}
 
 		const existingUl = container.querySelector('ul');
@@ -213,9 +188,7 @@ class SearchWidget extends HTMLElement {
 		for (const part of text.split(/(\[\d+\])/g)) {
 			const m = part.match(/^\[(\d+)\]$/);
 			if (m && refMap[m[1]]) {
-				const a = document.createElement('a');
-				a.href = refMap[m[1]];
-				a.textContent = refs[refMap[m[1]]] || refMap[m[1]];
+				const a = document.createElement('a'); a.href = refMap[m[1]]; a.textContent = refs[refMap[m[1]]] || refMap[m[1]];
 				container.append(a);
 			} else {
 				container.append(part);
@@ -227,7 +200,7 @@ class SearchWidget extends HTMLElement {
 		if (!this.chatKey) return;
 		localStorage.setItem(this.chatKey, JSON.stringify({
 			title: this.messages.find(m => m.role === 'user')?.text || '',
-			created: parseInt(this.chatKey.split('-').pop()),
+			created: Number(this.chatKey.split('-').pop()),
 			messages: this.messages,
 		}));
 	}
@@ -237,85 +210,50 @@ class SearchWidget extends HTMLElement {
 		list.replaceChildren();
 		const chats = Object.keys(localStorage)
 			.filter(k => k.startsWith(STORAGE_PREFIX))
-			.map(k => {
-				try {
-					const data = JSON.parse(localStorage.getItem(k));
-					return data?.title ? { key: k, title: data.title, created: data.created || 0 } : null;
-				} catch { return null; }
-			})
+			.map(k => { const data = fromStorage(k); return data?.title ? { key: k, title: data.title, created: data.created || 0 } : null; })
 			.filter(Boolean)
 			.sort((a, b) => b.created - a.created);
-
-		if (!chats.length) {
-			const li = document.createElement('li');
-			li.textContent = I18N.noHistory;
-			list.append(li);
-			return;
-		}
+		if (!chats.length) return this.emptyHistory();
 
 		for (const chat of chats) {
-			const li = document.createElement('li');
-			li.dataset.key = chat.key;
-			const span = document.createElement('span');
-			span.textContent = chat.title;
-			li.append(span);
-			if (chat.created) {
-				const small = document.createElement('small');
-				small.textContent = new Date(chat.created).toLocaleDateString();
-				li.append(small);
-			}
-			const del = document.createElement('button');
-			del.setAttribute('part', 'search-history-delete');
-			del.setAttribute('aria-label', I18N.close);
-			del.textContent = '\u00d7';
-			li.append(del);
-			list.append(li);
+			list.append(el('li', { 'data-key': chat.key }, [
+				el('span', { text: chat.title }),
+				chat.created ? el('small', { text: new Date(chat.created).toLocaleDateString() }) : null,
+				el('button', { part: 'search-history-delete', ariaLabel: I18N.close, text: '\u00d7' }),
+			]));
 		}
 	}
 
 	loadChat(key) {
-		try {
-			const data = JSON.parse(localStorage.getItem(key));
-			if (!data?.messages) return;
-			this.closeEventSource();
-			this.chatKey = key;
-			this.messages = data.messages;
-			this.elements.conversation.replaceChildren();
-			for (const msg of this.messages) {
-				const li = document.createElement('li');
-				li.setAttribute('part', msg.role === 'user' ? 'user' : 'response');
-				if (msg.role === 'user') {
-					li.textContent = msg.text;
-				} else {
-					const refs = Object.fromEntries((msg.results || []).map(r => [r.url, r.name]));
-					this.renderParsedSummary(li, msg.summary || '', refs);
-					if (msg.results?.length) {
-						const ul = document.createElement('ul');
-						for (const r of msg.results) {
-							const rli = document.createElement('li');
-							const a = document.createElement('a');
-							a.href = r.url;
-							a.textContent = r.name;
-							rli.append(a);
-							ul.append(rli);
-						}
-						li.append(ul);
-					}
-				}
-				this.elements.conversation.append(li);
+		const data = fromStorage(key);
+		if (!data?.messages) return;
+		this.closeEventSource();
+		this.chatKey = key;
+		this.messages = data.messages;
+		this.elements.conversation.replaceChildren();
+		for (const msg of this.messages) {
+			if (msg.role === 'user') {
+				this.elements.conversation.append(this.message('user', msg.text));
+				continue;
 			}
-			this.updateLabel();
-			this.elements.conversation.lastElementChild?.scrollIntoView({ block: 'end' });
-		} catch { /* skip invalid data */ }
+			const li = this.message('response');
+			this.renderParsedSummary(li, msg.summary || '', Object.fromEntries((msg.results || []).map(r => [r.url, r.name])));
+			if (msg.results?.length) {
+				const ul = document.createElement('ul');
+				for (const result of msg.results) this.appendResultItem(ul, result);
+				li.append(ul);
+			}
+			this.elements.conversation.append(li);
+		}
+		this.updateLabel();
+		this.elements.conversation.lastElementChild?.scrollIntoView({ block: 'end' });
 	}
 
 	newChat() {
 		this.closeEventSource();
-		this.chatKey = null;
-		this.messages = [];
+		this.chatKey = null; this.messages = [];
 		this.elements.conversation.replaceChildren();
-		this.updateLabel();
-		this.elements.input.focus();
+		this.updateLabel(); this.elements.input.focus();
 	}
 
 	updateLabel() { this.elements.legend.textContent = this.messages.length ? I18N.followUp : I18N.searchLabel; }
