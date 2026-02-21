@@ -353,6 +353,47 @@ Five types total:
 { type: 'error', message }
 ```
 
+## Custom Events
+
+The component emits custom events at key lifecycle moments. All events use `bubbles: true, composed: true` so they cross the shadow DOM boundary. The host page listens on the element or any ancestor.
+
+### Event Catalog
+
+| Event | Fired when | `detail` payload |
+|-------|------------|------------------|
+| `search-bot:open` | Dialog opens | `{ chatKey }` |
+| `search-bot:close` | Dialog closes | `{ chatKey }` |
+| `search-bot:chat-start` | New conversation begins (first query) | `{ chatKey, query }` |
+| `search-bot:message` | Each user query is submitted | `{ chatKey, role: 'user', text }` |
+| `search-bot:response` | A complete response is received (`done`) | `{ chatKey, summary, results }` |
+| `search-bot:chat-clear` | User starts a new chat | `{ previousChatKey }` |
+| `search-bot:feedback` | User clicks like/dislike (requires `feedback` attr) | `{ chatKey, messageIndex, value: 'like' \| 'dislike' }` |
+| `search-bot:error` | Worker reports an error | `{ chatKey, message }` |
+
+### Usage Example
+
+```js
+document.querySelector('search-bot').addEventListener('search-bot:response', (e) => {
+  const { chatKey, summary, results } = e.detail;
+  // Post to server, attach user_id, enforce login gate, etc.
+  fetch('/api/conversations', {
+    method: 'POST',
+    body: JSON.stringify({ chatKey, summary, results, userId: currentUser?.id }),
+  });
+});
+```
+
+### Login Gate Pattern (Future)
+
+The host page counts `search-bot:message` events and shows a login modal after N messages. The component is unaware of auth — it just emits events.
+
+```js
+let messageCount = 0;
+bot.addEventListener('search-bot:message', () => {
+  if (++messageCount >= 5 && !currentUser) showLoginModal();
+});
+```
+
 ## Key Decisions
 
 1. **SSE** — kept as transport. No WebSocket needed for request → streamed response pattern.
@@ -364,3 +405,4 @@ Five types total:
 7. **Normal navigation** — same-domain links navigate normally; state is restored via sessionStorage on the new page.
 8. **Inline markdown** — lightweight parser for links, bare URLs, bold, italic, code. Chunk buffering handles split tokens across streamed messages. DOM-based rendering (no innerHTML) to prevent XSS.
 9. **Rich components** — dual path: server-suggested via adapter + client-configured via attributes. Renderer registry on the component instance controls what renders. No arbitrary HTML from server — only registered renderers execute.
+10. **Custom events** — granular lifecycle events (`open`, `close`, `chat-start`, `message`, `response`, `chat-clear`, `feedback`, `error`) enable server-side storage, analytics, login gates, and any host-page integration without coupling.
