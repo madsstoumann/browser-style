@@ -263,7 +263,7 @@ class SearchBot extends HTMLElement {
 		const ul = this.ensureResultsList(li);
 		for (const item of items) {
 			refs[item.url] = item.name;
-			results.push({ name: item.name, url: item.url });
+			results.push({ name: item.name, url: item.url, image: item.image, description: item.description });
 			this.appendResultItem(ul, item, true);
 		}
 	}
@@ -414,7 +414,7 @@ class SearchBot extends HTMLElement {
 			this.renderParsedSummary(li, msg.summary || '', Object.fromEntries((msg.results || []).map(r => [r.url, r.name])));
 			if (msg.results?.length) {
 				const ul = document.createElement('ul');
-				for (const result of msg.results) this.appendResultItem(ul, result);
+				for (const result of msg.results) this.appendResultItem(ul, result, true);
 				li.append(ul);
 			}
 			this.elements.conversation.append(li);
