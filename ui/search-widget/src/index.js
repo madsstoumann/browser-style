@@ -53,7 +53,6 @@ stylesheet.replaceSync(`
 	list-style: none;
 	margin: 0;
 	overflow-y: auto;
-	// padding: 0 2rem;
 }
 	[part="search-conversation"]:empty {
 	display: none;
@@ -63,8 +62,7 @@ stylesheet.replaceSync(`
 	padding: 0.75rem 0;
 }
 [part="user"] {
-background-color: hsl(200 100% 50% / 0.15);
-	// font-weight: 600;
+	background-color: hsl(200 100% 50% / 0.15);
 	justify-self: end;
 }
 [part="response"] ul {
@@ -215,11 +213,13 @@ class SearchWidget extends HTMLElement {
 		let summaryText = '';
 		const refs = {};
 		const results = [];
+		const summaryNode = document.createTextNode('');
+		responseLi.append(summaryNode);
 
 		const messageHandlers = {
 			summary: ({ message }) => {
 				summaryText += message;
-				responseLi.textContent = summaryText;
+				summaryNode.textContent = summaryText;
 			},
 			result_batch: ({ results: items }) => {
 				items.forEach(item => {
@@ -370,60 +370,24 @@ class SearchWidget extends HTMLElement {
 	disconnectedCallback() { this.closeEventSource(); }
 
 	render() {
-		const trigger = document.createElement('button');
-		trigger.setAttribute('part', 'search-trigger');
-		trigger.setAttribute('commandfor', 'search-dialog');
-		trigger.setAttribute('command', 'show-modal');
-		trigger.setAttribute('aria-label', I18N.search);
-		const slot = document.createElement('slot');
-		slot.name = 'icon';
-		slot.innerHTML = icon('ai');
-		trigger.append(slot);
-
-		const dialog = document.createElement('dialog');
-		dialog.id = 'search-dialog';
-		dialog.setAttribute('part', 'search-overlay');
-		dialog.setAttribute('closedby', 'any');
-
-		const header = document.createElement('div');
-		header.setAttribute('part', 'search-header');
-
-		const newBtn = document.createElement('button');
-		newBtn.setAttribute('part', 'search-new');
-		newBtn.setAttribute('aria-label', I18N.newQuestion);
-		newBtn.innerHTML = icon('newQuestion', 'icon-stroke');
-		newBtn.append(` ${I18N.newQuestion}`);
-
-		const closeBtn = document.createElement('button');
-		closeBtn.setAttribute('part', 'search-close');
-		closeBtn.setAttribute('commandfor', 'search-dialog');
-		closeBtn.setAttribute('command', 'close');
-		closeBtn.setAttribute('aria-label', I18N.close);
-		closeBtn.innerHTML = icon('close');
-
-		header.append(newBtn, closeBtn);
-
-		const ol = document.createElement('ol');
-		ol.setAttribute('part', 'search-conversation');
-
-		const form = document.createElement('form');
-		form.setAttribute('part', 'search-form');
-		const fieldset = document.createElement('fieldset');
-		fieldset.setAttribute('part', 'search-fieldset');
-		const legend = document.createElement('legend');
-		legend.setAttribute('part', 'search-legend');
-		legend.textContent = I18N.searchLabel;
-		const textarea = document.createElement('textarea');
-		textarea.setAttribute('part', 'search-input');
-		textarea.name = 'q';
-		textarea.autocomplete = 'off';
-		textarea.setAttribute('enterkeyhint', 'search');
-		textarea.placeholder = I18N.searchPlaceholder;
-		fieldset.append(legend, textarea);
-		form.append(fieldset);
-
-		dialog.append(header, ol, form);
-		this.shadowRoot.append(trigger, dialog);
+		this.shadowRoot.innerHTML = `
+			<button part="search-trigger" commandfor="search-dialog" command="show-modal" aria-label="${I18N.search}">
+				<slot name="icon">${icon('ai')}</slot>
+			</button>
+			<dialog id="search-dialog" part="search-overlay" closedby="any">
+				<div part="search-header">
+					<button part="search-new" aria-label="${I18N.newQuestion}">${icon('newQuestion', 'icon-stroke')} ${I18N.newQuestion}</button>
+					<button part="search-close" commandfor="search-dialog" command="close" aria-label="${I18N.close}">${icon('close')}</button>
+				</div>
+				<ol part="search-conversation"></ol>
+				<form part="search-form">
+					<fieldset part="search-fieldset">
+						<legend part="search-legend">${I18N.searchLabel}</legend>
+						<textarea part="search-input" name="q" autocomplete="off" autofocus enterkeyhint="search" placeholder="${I18N.searchPlaceholder}"></textarea>
+					</fieldset>
+				</form>
+			</dialog>
+		`;
 	}
 }
 
