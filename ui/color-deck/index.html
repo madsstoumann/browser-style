@@ -7,12 +7,15 @@
 
 	<meta name="view-transition" content="same-origin">
 <style>
+* {
+  box-sizing: border-box;
+}
 body {
   background: #eee;
   margin: 2rem 0;
 }
 html {
-    scrollbar-width: none;
+  scrollbar-width: none;
 }
 
 section {
@@ -121,11 +124,10 @@ details[open] summary span {
   background: #EEE;
   border-radius: 50%;
   display: grid;
-  height: 1.5ch;
+  height: 1.25em;
   margin-inline-start: 1ch;
-  place-content: center;
   text-box: ex alphabetic;
-  width: 1.5ch;
+  width: 1.25em;
   &:hover {
     background: #333;
     color: #FFF;

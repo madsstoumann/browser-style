@@ -1,4 +1,4 @@
-const EXPIRY_MS = 24 * 60 * 60 * 1000;
+const STORAGE_PREFIX = 'search-widget:';
 
 const stylesheet = new CSSStyleSheet();
 stylesheet.replaceSync(`
@@ -10,84 +10,114 @@ stylesheet.replaceSync(`
 	display: grid;
 	place-items: center;
 }
+	:host * { box-sizing: border-box; }
+:host(:not([position="inline"])) [part="search-trigger"] { position: fixed; }
+:host([position*="top"]) [part="search-trigger"] { inset-block-start: 1rem; }
+:host([position*="bottom"]) [part="search-trigger"] { inset-block-end: 1rem; }
+:host([position*="left"]) [part="search-trigger"] { inset-inline-start: 1rem; }
+:host([position*="right"]) [part="search-trigger"] { inset-inline-end: 1rem; }
 
-	:host(:not([position="inline"])) [part="search-trigger"] { position: fixed; }
-	:host([position*="top"]) [part="search-trigger"] { inset-block-start: 1rem; }
-	:host([position*="bottom"]) [part="search-trigger"] { inset-block-end: 1rem; }
-	:host([position*="left"]) [part="search-trigger"] { inset-inline-start: 1rem; }
-	:host([position*="right"]) [part="search-trigger"] { inset-inline-end: 1rem; }
+[part="search-overlay"] {
+	background: hsl(0 0% 100% / 0.15);
+	backdrop-filter: blur(16px) saturate(180%);
+	-webkit-backdrop-filter: blur(16px) saturate(180%);
+	border: 1px solid hsl(0 0% 100% / 0.3);
+	border-radius: 0;
+	block-size: 100%;
+	
+	inline-size: 100%;
+	max-block-size: 100%;
+	max-inline-size: 100%;
+	padding: 0;
+}
+[part="search-overlay"][open] {
+	display: flex;
+	flex-direction: column;
+}
+[part="search-overlay"]::backdrop {
+	background: hsl(0 0% 90% / 0.4);
+}
 
-	[part="search-overlay"] {
-		background: hsl(0 0% 100% / 0.15);
-		backdrop-filter: blur(16px) saturate(180%);
-		-webkit-backdrop-filter: blur(16px) saturate(180%);
-		border: 1px solid hsl(0 0% 100% / 0.3);
-		border-radius: 0;
-		block-size: 100%;
-		box-sizing: border-box;
-		inline-size: 100%;
-		max-block-size: 100%;
-		max-inline-size: 100%;
-		padding: 2rem;
-	}
-	[part="search-overlay"]::backdrop {
-		background: hsl(0 0% 90% / 0.4);
-	}
+[part="search-header"] {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 1rem 2rem;
+}
+[part="search-close"] {
+	margin-inline-start: auto;
+}
 
-	[part="search-header"] {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		margin-block-end: 1rem;
+[part="search-conversation"] {
+	flex: 1;
+	list-style: none;
+	margin: 0;
+	overflow-y: auto;
+	// padding: 0 2rem;
+}
+	[part="search-conversation"]:empty {
+	display: none;
 	}
-	[part="search-form"] {
-		display: flex;
-		gap: 0.5rem;
-		align-items: end;
-	}
-	[part="search-label"] {
-		display: grid;
-		gap: 0.25rem;
-	}
-	[part="search-input"] {
-		font: inherit;
-		padding: 0.5em;
-	}
-	[part="search-close"] {
-		margin-inline-start: auto;
-	}
-	[part="search-remember-label"] {
-		display: flex;
-		align-items: center;
-		gap: 0.25rem;
-		font-size: 0.85em;
-	}
+[part="user"],
+[part="response"] {
+	padding: 0.75rem 0;
+}
+[part="user"] {
+background-color: hsl(200 100% 50% / 0.15);
+	// font-weight: 600;
+	justify-self: end;
+}
+[part="response"] ul {
+	list-style: none;
+	padding: 0;
+}
 
-	svg {
-		block-size: 2em;
-		inline-size: 2em;
-	}
-	[part="icon-stroke"] {
-		fill: none;
-		stroke: currentColor;
-		stroke-width: 2;
-		stroke-linecap: round;
-		stroke-linejoin: round;
-	}
-	[part="search-result-img"] {
-		aspect-ratio: 16/9;
-		background-color: hsl(0 0% 50% / 0.15);
-		display: block;
-		max-inline-size: 200px;
-		object-fit: cover;
-	}
+[part="search-form"] {
+	position: sticky;
+	bottom: 0;
+	padding: 1rem 2rem;
+	background: inherit;
+}
+[part="search-fieldset"] {
+	all: unset;
+	display: grid;
+}
+[part="search-legend"] {
+	all: unset;
+	text-align: center;
+}
+[part="search-input"] {
+	border-radius: 1ch;
+	font: inherit;
+	padding: 1ch 2ch;
+	resize: vertical;
+}
+
+[part="search-result-img"] {
+	aspect-ratio: 16/9;
+	background-color: hsl(0 0% 50% / 0.15);
+	display: block;
+	max-inline-size: 200px;
+	object-fit: cover;
+}
+
+svg {
+	block-size: 2em;
+	inline-size: 2em;
+}
+[part="icon-stroke"] {
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
 `);
 
 const I18N = {
-	clear: 'Clear history',
 	close: 'Close',
 	followUp: 'Ask a follow-up question',
-	remember: 'Remember chat history',
+	newQuestion: 'New question',
 	search: 'Search',
 	searchLabel: 'Ask a question',
 	searchPlaceholder: 'Ask a question or a follow-up',
@@ -95,14 +125,19 @@ const I18N = {
 
 const ICONS = {
 	ai: ['M11 5a9.37 9.37 0 0 0 7.7 7.7 9.37 9.37 0 0 0-7.7 7.7 9.37 9.37 0 0 0-7.7-7.7A9.37 9.37 0 0 0 11 5M18 2a4.26 4.26 0 0 0 3.5 3.5A4.26 4.26 0 0 0 18 9a4.26 4.26 0 0 0-3.5-3.5A4.26 4.26 0 0 0 18 2m-1 15a2.43 2.43 0 0 0 2 2 2.43 2.43 0 0 0-2 2 2.43 2.43 0 0 0-2-2 2.43 2.43 0 0 0 2-2'],
-	clear: ['M20.926 13.15a9 9 0 1 0-7.835 7.784', 'M12 7v5l2 2', 'M22 22l-5-5', 'M17 22l5-5'],
 	close: ['M19 2h-14a3 3 0 0 0 -3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3 -3v-14a3 3 0 0 0 -3 -3zm-9.387 6.21l.094 .083l2.293 2.292l2.293 -2.292a1 1 0 0 1 1.497 1.32l-.083 .094l-2.292 2.293l2.292 2.293a1 1 0 0 1 -1.32 1.497l-.094 -.083l-2.293 -2.292l-2.293 2.292a1 1 0 0 1 -1.497 -1.32l.083 -.094l2.292 -2.293l-2.292 -2.293a1 1 0 0 1 1.32 -1.497z'],
-	search: ['M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0', 'M21 21l-6 -6'],
+	newQuestion: ['M12 5l0 14', 'M5 12l14 0'],
 };
 
 function icon(name, part) {
 	const partAttr = part ? ` part="${part}"` : '';
 	return `<svg viewBox="0 0 24 24" aria-hidden="true"${partAttr}>${ICONS[name].map(d => `<path d="${d}"/>`).join('')}</svg>`;
+}
+
+function chatKey(query) {
+	const slug = query.trim().toLowerCase()
+		.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50);
+	return `${STORAGE_PREFIX}${slug}-${Date.now()}`;
 }
 
 class SearchWidget extends HTMLElement {
@@ -112,12 +147,16 @@ class SearchWidget extends HTMLElement {
 		super();
 		this.attachShadow({ mode: 'open' });
 		this.shadowRoot.adoptedStyleSheets = [stylesheet];
-		this.prevQueries = [];
-		this.lastAnswers = [];
+		this.messages = [];
+		this.chatKey = null;
 	}
 
-	get storageKey() {
-		return `search-widget:${this.getAttribute('api') || 'default'}`;
+	get prevQueries() {
+		return this.messages.filter(m => m.role === 'user').map(m => m.text).slice(-10);
+	}
+
+	get lastAnswers() {
+		return this.messages.filter(m => m.role === 'response').flatMap(m => m.results || []).slice(-20);
 	}
 
 	$(selector) { return this.shadowRoot.querySelector(selector); }
@@ -125,55 +164,107 @@ class SearchWidget extends HTMLElement {
 	connectedCallback() {
 		this.render();
 		this.elements = {
-			clear: this.$('[part="search-clear"]'),
+			conversation: this.$('[part="search-conversation"]'),
 			form: this.$('form'),
-			input: this.$('input[name="q"]'),
-			labelText: this.$('[part="search-label-text"]'),
-			remember: this.$('[part="search-remember"]'),
-			results: this.$('[part="search-results"]'),
-			summary: this.$('[part="search-summary"]'),
+			input: this.$('textarea[name="q"]'),
+			legend: this.$('[part="search-legend"]'),
+			newQuestion: this.$('[part="search-new"]'),
 		};
 		this.elements.form.addEventListener('submit', (e) => {
 			e.preventDefault();
 			this.search(this.elements.input.value);
 		});
-		this.elements.clear.addEventListener('click', () => this.clearHistory());
-		this.elements.remember.addEventListener('change', (e) => {
-			e.target.checked ? this.saveState() : localStorage.removeItem(this.storageKey);
+		this.elements.input.addEventListener('keydown', (e) => {
+			if (e.key === 'Enter' && !e.shiftKey) {
+				e.preventDefault();
+				this.elements.form.requestSubmit();
+			}
 		});
-		this.restoreState();
+		this.elements.newQuestion.addEventListener('click', () => this.newChat());
 	}
 
 	search(query) {
 		if (!query?.trim() || !this.hasAttribute('api')) return;
 		this.closeEventSource();
 
+		if (!this.chatKey) {
+			this.chatKey = chatKey(query);
+		}
+
+		this.messages.push({ role: 'user', text: query });
+
+		const userLi = document.createElement('li');
+		userLi.setAttribute('part', 'user');
+		userLi.textContent = query;
+		this.elements.conversation.append(userLi);
+
+		const responseLi = document.createElement('li');
+		responseLi.setAttribute('part', 'response');
+		this.elements.conversation.append(responseLi);
+
+		this.elements.input.value = '';
+		this.updateLabel();
+
 		const api = this.getAttribute('api');
 		const params = { query, display_mode: 'full', generate_mode: 'summarize' };
-		if (this.prevQueries.length) params.prev = JSON.stringify(this.prevQueries);
+		if (this.prevQueries.length > 1) params.prev = JSON.stringify(this.prevQueries.slice(0, -1));
 		if (this.lastAnswers.length) params.last_ans = JSON.stringify(this.lastAnswers);
 		const url = `${api}/ask?${new URLSearchParams(params)}`;
 		this.eventSource = new EventSource(url);
 
-		const { summary } = this.elements;
-		this.elements.summary.innerHTML = this.elements.results.innerHTML = this.elements.input.value = '';
-		const queryHTML = `<strong>${query}</strong>`;
-		summary.innerHTML = queryHTML;
 		let summaryText = '';
 		const refs = {};
+		const results = [];
+
 		const messageHandlers = {
 			summary: ({ message }) => {
 				summaryText += message;
-				summary.innerHTML = `${queryHTML}<br>${summaryText}`;
+				responseLi.textContent = summaryText;
 			},
-			result_batch: ({ results }) => this.appendResults(results, refs),
+			result_batch: ({ results: items }) => {
+				items.forEach(item => {
+					const schema = item.schema_object || {};
+					const title = schema.name || item.name;
+					refs[item.url] = title;
+					results.push({ name: title, url: item.url });
+
+					let resultsUl = responseLi.querySelector('ul');
+					if (!resultsUl) {
+						resultsUl = document.createElement('ul');
+						responseLi.append(resultsUl);
+					}
+					const li = document.createElement('li');
+					const a = document.createElement('a');
+					a.href = item.url;
+					if (schema.image) {
+						const img = document.createElement('img');
+						img.src = schema.image;
+						img.alt = '';
+						img.loading = 'lazy';
+						img.setAttribute('part', 'search-result-img');
+						a.append(img);
+					}
+					const strong = document.createElement('strong');
+					strong.textContent = title;
+					a.append(strong);
+					if (schema.description) {
+						const p = document.createElement('p');
+						const small = document.createElement('small');
+						small.setAttribute('part', 'search-result-desc');
+						small.textContent = schema.description;
+						p.append(small);
+						a.append(p);
+					}
+					li.append(a);
+					resultsUl.append(li);
+				});
+			},
 			complete: () => {
 				this.closeEventSource();
-				summary.innerHTML = `${queryHTML}<br>${this.parseSummary(summaryText, refs)}`;
-				this.prevQueries.push(query);
-				this.prevQueries = this.prevQueries.slice(-10);
-				this.updateLabel();
-				this.saveState();
+				this.renderParsedSummary(responseLi, summaryText, refs);
+				this.messages.push({ role: 'response', summary: summaryText, results });
+				this.saveChat();
+				responseLi.scrollIntoView({ behavior: 'smooth', block: 'end' });
 			},
 		};
 
@@ -184,20 +275,7 @@ class SearchWidget extends HTMLElement {
 		this.eventSource.onerror = () => this.closeEventSource();
 	}
 
-	appendResults(items, refs) {
-		this.elements.results.insertAdjacentHTML('beforeend', items.map(item => {
-			const schema = item.schema_object || {};
-			const title = schema.name || item.name;
-			refs[item.url] = title;
-			this.lastAnswers.push({ name: title, url: item.url });
-			const img = schema.image ? `<img src="${schema.image}" alt="" loading="lazy" part="search-result-img">` : '';
-			const desc = schema.description ? `<small part="search-result-desc">${schema.description}</small>` : '';
-			return `<li><a href="${item.url}">${img}<strong>${title}</strong><p>${desc}</p></a></li>`;
-		}).join(''));
-		this.lastAnswers = this.lastAnswers.slice(-20);
-	}
-
-	parseSummary(text, refs) {
+	renderParsedSummary(container, text, refs) {
 		const lines = text.split('\n');
 		const refIdx = lines.findIndex(l => l.trim().toLowerCase().startsWith('references'));
 		const bodyLines = refIdx === -1 ? lines : lines.slice(0, refIdx);
@@ -206,53 +284,82 @@ class SearchWidget extends HTMLElement {
 			const m = line.match(/^\[(\d+)]\s*(https?:\/\/\S+)/);
 			if (m) refMap[m[1]] = m[2];
 		}
-		let html = bodyLines.join('\n')
-			.replace(/\[(\d+)]/g, (_, n) => {
-				const url = refMap[n];
-				return url ? `<a href="${url}">${refs[url] || url}</a>` : `[${n}]`;
-			});
-		html = html.replace(/(?:^|\n)\*\s+(.+?)(?=\n|$)/g, (_, item) => `\n<li>${item}</li>`);
-		html = html.replace(/(<li>.*?<\/li>\n?)+/gs, match => `<ul>${match}</ul>`);
-		return html.replace(/\n/g, '<br>');
+
+		const fragment = document.createDocumentFragment();
+		let listItems = [];
+
+		for (const line of bodyLines) {
+			const bulletMatch = line.match(/^\*\s+(.+)/);
+			if (bulletMatch) {
+				listItems.push(bulletMatch[1]);
+				continue;
+			}
+			if (listItems.length) {
+				fragment.append(this.createList(listItems, refs, refMap));
+				listItems = [];
+			}
+			if (line.trim()) {
+				const p = document.createElement('p');
+				this.appendTextWithRefs(p, line, refs, refMap);
+				fragment.append(p);
+			}
+		}
+		if (listItems.length) {
+			fragment.append(this.createList(listItems, refs, refMap));
+		}
+
+		const existingUl = container.querySelector('ul');
+		container.replaceChildren(fragment);
+		if (existingUl) container.append(existingUl);
 	}
 
-	saveState() {
-		if (!(this.hasAttribute('preserve-state') && this.elements.remember.checked)) return;
-		const state = {
-			prevQueries: this.prevQueries,
-			lastAnswers: this.lastAnswers,
-			summaryHTML: this.elements.summary.innerHTML,
-			resultsHTML: this.elements.results.innerHTML,
-			timestamp: Date.now(),
-		};
-		localStorage.setItem(this.storageKey, JSON.stringify(state));
+	createList(items, refs, refMap) {
+		const ul = document.createElement('ul');
+		for (const item of items) {
+			const li = document.createElement('li');
+			this.appendTextWithRefs(li, item, refs, refMap);
+			ul.append(li);
+		}
+		return ul;
 	}
 
-	restoreState() {
-		if (!this.hasAttribute('preserve-state')) return;
-		try {
-			const state = JSON.parse(localStorage.getItem(this.storageKey) || 'null');
-			if (!state || Date.now() - state.timestamp > EXPIRY_MS) throw new Error();
-			this.prevQueries = state.prevQueries || [];
-			this.lastAnswers = state.lastAnswers || [];
-			this.elements.summary.innerHTML = state.summaryHTML || '';
-			this.elements.results.innerHTML = state.resultsHTML || '';
-			this.updateLabel();
-		} catch {
-			localStorage.removeItem(this.storageKey);
+	appendTextWithRefs(container, text, refs, refMap) {
+		const parts = text.split(/(\[\d+\])/g);
+		for (const part of parts) {
+			const m = part.match(/^\[(\d+)\]$/);
+			if (m && refMap[m[1]]) {
+				const a = document.createElement('a');
+				a.href = refMap[m[1]];
+				a.textContent = refs[refMap[m[1]]] || refMap[m[1]];
+				container.append(a);
+			} else {
+				container.append(part);
+			}
 		}
 	}
 
-	updateLabel() {
-		this.elements.labelText.textContent = this.prevQueries.length > 0 ? I18N.followUp : I18N.searchLabel;
+	saveChat() {
+		if (!this.chatKey) return;
+		const firstUserMsg = this.messages.find(m => m.role === 'user');
+		const data = {
+			title: firstUserMsg?.text || '',
+			created: parseInt(this.chatKey.split('-').pop()),
+			messages: this.messages,
+		};
+		localStorage.setItem(this.chatKey, JSON.stringify(data));
 	}
 
-	clearHistory() {
-		this.prevQueries = [];
-		this.lastAnswers = [];
-		this.elements.summary.innerHTML = this.elements.results.innerHTML = this.elements.input.value = '';
+	newChat() {
+		this.closeEventSource();
+		this.chatKey = null;
+		this.messages = [];
+		this.elements.conversation.replaceChildren();
 		this.updateLabel();
-		localStorage.removeItem(this.storageKey);
+		this.elements.input.focus();
+	}
+
+	updateLabel() {
+		this.elements.legend.textContent = this.messages.some(m => m.role === 'user') ? I18N.followUp : I18N.searchLabel;
 	}
 
 	closeEventSource() {
@@ -263,29 +370,60 @@ class SearchWidget extends HTMLElement {
 	disconnectedCallback() { this.closeEventSource(); }
 
 	render() {
-		this.shadowRoot.innerHTML = `
-			<button part="search-trigger" commandfor="search-dialog" command="show-modal" aria-label="${I18N.search}">
-				<slot name="icon">${icon('ai')}</slot>
-			</button>
-			<dialog id="search-dialog" part="search-overlay" closedby="any">
-				<div part="search-header">
-					<button part="search-clear" aria-label="${I18N.clear}">${icon('clear', 'icon-stroke')}</button>
-					<label part="search-remember-label">
-						<input type="checkbox" part="search-remember" ${this.hasAttribute('preserve-state') ? 'checked' : ''}>
-						${I18N.remember}
-					</label>
-					<button part="search-close" commandfor="search-dialog" command="close" aria-label="${I18N.close}">${icon('close')}</button>
-				</div>
-				<form part="search-form">
-					<label part="search-label"><span part="search-label-text">${I18N.searchLabel}</span>
-						<input part="search-input" type="search" name="q" autocomplete="off" placeholder="${I18N.searchPlaceholder}">
-					</label>
-					<button part="search-submit" type="submit" aria-label="${I18N.search}">${icon('search', 'icon-stroke')}</button>
-				</form>
-				<p part="search-summary"></p>
-				<ul part="search-results"></ul>
-			</dialog>
-		`;
+		const trigger = document.createElement('button');
+		trigger.setAttribute('part', 'search-trigger');
+		trigger.setAttribute('commandfor', 'search-dialog');
+		trigger.setAttribute('command', 'show-modal');
+		trigger.setAttribute('aria-label', I18N.search);
+		const slot = document.createElement('slot');
+		slot.name = 'icon';
+		slot.innerHTML = icon('ai');
+		trigger.append(slot);
+
+		const dialog = document.createElement('dialog');
+		dialog.id = 'search-dialog';
+		dialog.setAttribute('part', 'search-overlay');
+		dialog.setAttribute('closedby', 'any');
+
+		const header = document.createElement('div');
+		header.setAttribute('part', 'search-header');
+
+		const newBtn = document.createElement('button');
+		newBtn.setAttribute('part', 'search-new');
+		newBtn.setAttribute('aria-label', I18N.newQuestion);
+		newBtn.innerHTML = icon('newQuestion', 'icon-stroke');
+		newBtn.append(` ${I18N.newQuestion}`);
+
+		const closeBtn = document.createElement('button');
+		closeBtn.setAttribute('part', 'search-close');
+		closeBtn.setAttribute('commandfor', 'search-dialog');
+		closeBtn.setAttribute('command', 'close');
+		closeBtn.setAttribute('aria-label', I18N.close);
+		closeBtn.innerHTML = icon('close');
+
+		header.append(newBtn, closeBtn);
+
+		const ol = document.createElement('ol');
+		ol.setAttribute('part', 'search-conversation');
+
+		const form = document.createElement('form');
+		form.setAttribute('part', 'search-form');
+		const fieldset = document.createElement('fieldset');
+		fieldset.setAttribute('part', 'search-fieldset');
+		const legend = document.createElement('legend');
+		legend.setAttribute('part', 'search-legend');
+		legend.textContent = I18N.searchLabel;
+		const textarea = document.createElement('textarea');
+		textarea.setAttribute('part', 'search-input');
+		textarea.name = 'q';
+		textarea.autocomplete = 'off';
+		textarea.setAttribute('enterkeyhint', 'search');
+		textarea.placeholder = I18N.searchPlaceholder;
+		fieldset.append(legend, textarea);
+		form.append(fieldset);
+
+		dialog.append(header, ol, form);
+		this.shadowRoot.append(trigger, dialog);
 	}
 }
 
