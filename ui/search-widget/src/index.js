@@ -20,13 +20,11 @@ const ICONS = {
 };
 
 function icon(name, part) {
-	const partAttr = part ? ` part="${part}"` : '';
-	return `<svg viewBox="0 0 24 24" aria-hidden="true"${partAttr}>${ICONS[name].map(d => `<path d="${d}"/>`).join('')}</svg>`;
+	return `<svg viewBox="0 0 24 24" aria-hidden="true"${part ? ` part="${part}"` : ''}>${ICONS[name].map(d => `<path d="${d}"/>`).join('')}</svg>`;
 }
 
 function chatKey(query) {
-	const slug = query.trim().toLowerCase()
-		.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50);
+	const slug = query.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50);
 	return `${STORAGE_PREFIX}${slug}-${Date.now()}`;
 }
 
@@ -39,14 +37,8 @@ class SearchWidget extends HTMLElement {
 		this.chatKey = null;
 	}
 
-	get prevQueries() {
-		return this.messages.filter(m => m.role === 'user').map(m => m.text).slice(-10);
-	}
-
-	get lastAnswers() {
-		return this.messages.filter(m => m.role === 'response').flatMap(m => m.results || []).slice(-20);
-	}
-
+	get prevQueries() { return this.messages.filter(m => m.role === 'user').map(m => m.text).slice(-10); }
+	get lastAnswers() { return this.messages.filter(m => m.role === 'response').flatMap(m => m.results || []).slice(-20); }
 	$(selector) { return this.shadowRoot.querySelector(selector); }
 
 	connectedCallback() {
@@ -75,9 +67,9 @@ class SearchWidget extends HTMLElement {
 			if (e.newState === 'open') this.renderHistory();
 		});
 		this.elements.historyList.addEventListener('click', (e) => {
+			const li = e.target.closest('li[data-key]');
+			if (!li) return;
 			if (e.target.closest('[part="search-history-delete"]')) {
-				const li = e.target.closest('li[data-key]');
-				if (!li) return;
 				localStorage.removeItem(li.dataset.key);
 				if (this.chatKey === li.dataset.key) this.newChat();
 				li.remove();
@@ -86,10 +78,7 @@ class SearchWidget extends HTMLElement {
 					empty.textContent = I18N.noHistory;
 					this.elements.historyList.append(empty);
 				}
-				return;
-			}
-			const li = e.target.closest('li[data-key]');
-			if (li) {
+			} else {
 				this.loadChat(li.dataset.key);
 				this.elements.historyPanel.hidePopover();
 			}
@@ -100,10 +89,7 @@ class SearchWidget extends HTMLElement {
 		if (!query?.trim() || !this.hasAttribute('api')) return;
 		this.closeEventSource();
 
-		if (!this.chatKey) {
-			this.chatKey = chatKey(query);
-		}
-
+		this.chatKey ??= chatKey(query);
 		this.messages.push({ role: 'user', text: query });
 
 		const userLi = document.createElement('li');
@@ -118,12 +104,11 @@ class SearchWidget extends HTMLElement {
 		this.elements.input.value = '';
 		this.updateLabel();
 
-		const api = this.getAttribute('api');
-		const params = { query, display_mode: 'full', generate_mode: 'summarize' };
-		if (this.prevQueries.length > 1) params.prev = JSON.stringify(this.prevQueries.slice(0, -1));
-		if (this.lastAnswers.length) params.last_ans = JSON.stringify(this.lastAnswers);
-		const url = `${api}/ask?${new URLSearchParams(params)}`;
-		this.eventSource = new EventSource(url);
+		const params = new URLSearchParams({ query, display_mode: 'full', generate_mode: 'summarize' });
+		if (this.prevQueries.length > 1) params.set('prev', JSON.stringify(this.prevQueries.slice(0, -1)));
+		if (this.lastAnswers.length) params.set('last_ans', JSON.stringify(this.lastAnswers));
+		
+		this.eventSource = new EventSource(`${this.getAttribute('api')}/ask?${params}`);
 
 		let summaryText = '';
 		const refs = {};
@@ -192,33 +177,31 @@ class SearchWidget extends HTMLElement {
 		const lines = text.split('\n');
 		const refIdx = lines.findIndex(l => l.trim().toLowerCase().startsWith('references'));
 		const bodyLines = refIdx === -1 ? lines : lines.slice(0, refIdx);
-		const refMap = {};
-		for (const line of refIdx === -1 ? [] : lines.slice(refIdx + 1)) {
-			const m = line.match(/^\[(\d+)]\s*(https?:\/\/\S+)/);
-			if (m) refMap[m[1]] = m[2];
-		}
+		const refMap = Object.fromEntries(
+			(refIdx === -1 ? [] : lines.slice(refIdx + 1))
+				.map(l => l.match(/^\[(\d+)]\s*(https?:\/\/\S+)/))
+				.filter(Boolean)
+				.map(m => [m[1], m[2]])
+		);
 
 		const fragment = document.createDocumentFragment();
-		let listItems = [];
+		let ul = null;
 
 		for (const line of bodyLines) {
 			const bulletMatch = line.match(/^\*\s+(.+)/);
 			if (bulletMatch) {
-				listItems.push(bulletMatch[1]);
-				continue;
+				if (!ul) fragment.append(ul = document.createElement('ul'));
+				const li = document.createElement('li');
+				this.appendTextWithRefs(li, bulletMatch[1], refs, refMap);
+				ul.append(li);
+			} else {
+				ul = null;
+				if (line.trim()) {
+					const p = document.createElement('p');
+					this.appendTextWithRefs(p, line, refs, refMap);
+					fragment.append(p);
+				}
 			}
-			if (listItems.length) {
-				fragment.append(this.createList(listItems, refs, refMap));
-				listItems = [];
-			}
-			if (line.trim()) {
-				const p = document.createElement('p');
-				this.appendTextWithRefs(p, line, refs, refMap);
-				fragment.append(p);
-			}
-		}
-		if (listItems.length) {
-			fragment.append(this.createList(listItems, refs, refMap));
 		}
 
 		const existingUl = container.querySelector('ul');
@@ -226,19 +209,8 @@ class SearchWidget extends HTMLElement {
 		if (existingUl) container.append(existingUl);
 	}
 
-	createList(items, refs, refMap) {
-		const ul = document.createElement('ul');
-		for (const item of items) {
-			const li = document.createElement('li');
-			this.appendTextWithRefs(li, item, refs, refMap);
-			ul.append(li);
-		}
-		return ul;
-	}
-
 	appendTextWithRefs(container, text, refs, refMap) {
-		const parts = text.split(/(\[\d+\])/g);
-		for (const part of parts) {
+		for (const part of text.split(/(\[\d+\])/g)) {
 			const m = part.match(/^\[(\d+)\]$/);
 			if (m && refMap[m[1]]) {
 				const a = document.createElement('a');
@@ -253,34 +225,34 @@ class SearchWidget extends HTMLElement {
 
 	saveChat() {
 		if (!this.chatKey) return;
-		const firstUserMsg = this.messages.find(m => m.role === 'user');
-		const data = {
-			title: firstUserMsg?.text || '',
+		localStorage.setItem(this.chatKey, JSON.stringify({
+			title: this.messages.find(m => m.role === 'user')?.text || '',
 			created: parseInt(this.chatKey.split('-').pop()),
 			messages: this.messages,
-		};
-		localStorage.setItem(this.chatKey, JSON.stringify(data));
+		}));
 	}
 
 	renderHistory() {
 		const list = this.elements.historyList;
 		list.replaceChildren();
-		const chats = [];
-		for (let i = 0; i < localStorage.length; i++) {
-			const key = localStorage.key(i);
-			if (!key.startsWith(STORAGE_PREFIX)) continue;
-			try {
-				const data = JSON.parse(localStorage.getItem(key));
-				if (data?.title) chats.push({ key, title: data.title, created: data.created || 0 });
-			} catch { /* skip invalid entries */ }
-		}
-		chats.sort((a, b) => b.created - a.created);
+		const chats = Object.keys(localStorage)
+			.filter(k => k.startsWith(STORAGE_PREFIX))
+			.map(k => {
+				try {
+					const data = JSON.parse(localStorage.getItem(k));
+					return data?.title ? { key: k, title: data.title, created: data.created || 0 } : null;
+				} catch { return null; }
+			})
+			.filter(Boolean)
+			.sort((a, b) => b.created - a.created);
+
 		if (!chats.length) {
 			const li = document.createElement('li');
 			li.textContent = I18N.noHistory;
 			list.append(li);
 			return;
 		}
+
 		for (const chat of chats) {
 			const li = document.createElement('li');
 			li.dataset.key = chat.key;
@@ -315,8 +287,7 @@ class SearchWidget extends HTMLElement {
 				if (msg.role === 'user') {
 					li.textContent = msg.text;
 				} else {
-					const refs = {};
-					for (const r of msg.results || []) refs[r.url] = r.name;
+					const refs = Object.fromEntries((msg.results || []).map(r => [r.url, r.name]));
 					this.renderParsedSummary(li, msg.summary || '', refs);
 					if (msg.results?.length) {
 						const ul = document.createElement('ul');
@@ -347,15 +318,8 @@ class SearchWidget extends HTMLElement {
 		this.elements.input.focus();
 	}
 
-	updateLabel() {
-		this.elements.legend.textContent = this.messages.length ? I18N.followUp : I18N.searchLabel;
-	}
-
-	closeEventSource() {
-		this.eventSource?.close();
-		this.eventSource = null;
-	}
-
+	updateLabel() { this.elements.legend.textContent = this.messages.length ? I18N.followUp : I18N.searchLabel; }
+	closeEventSource() { this.eventSource?.close(); this.eventSource = null; }
 	disconnectedCallback() { this.closeEventSource(); }
 
 	render() {
