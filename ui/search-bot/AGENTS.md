@@ -65,9 +65,11 @@ disconnectedCallback()
 
 **Three-file component structure:**
 
-- **src/index.js** (475 lines) — SearchBot class, helpers, inline markdown parser
+- **src/index.js** (481 lines) — SearchBot class, helpers, inline markdown parser
 - **src/index.css** (464 lines) — Shadow DOM styles with `--sbot-*` custom properties
-- **src/adapters/nlweb.js** (39 lines) — NLWeb provider adapter
+- **src/adapters/nlweb.js** (40 lines) — NLWeb protocol adapter
+- **src/adapters/aisearch.js** (37 lines) — Cloudflare AI Search streaming adapter
+- **src/adapters/README.md** — Adapter documentation and authoring guide
 
 **No external dependencies.** Pure vanilla JavaScript, no build step required.
 
@@ -87,7 +89,7 @@ search(query)  [index.js:202]
   ↓
   Lazy-load adapter: import(`./adapters/${provider}.js`)
   ↓
-  adapter.buildRequest(api, query, context)
+  adapter.buildRequest(api, query, context, options)
     → { url } for EventSource
   ↓
   new EventSource(url)
@@ -153,14 +155,17 @@ Adapters are plain ES modules at `src/adapters/{provider}.js` loaded dynamically
 ```javascript
 /**
  * Build the SSE request URL from component state.
- * @param {string} api     - Base URL from the component's api attribute
- * @param {string} query   - Trimmed user query
- * @param {object} context - { prev: string[], last: object[] }
+ * @param {string} api      - Base URL from the component's api attribute
+ * @param {string} query    - Trimmed user query
+ * @param {object} context  - { prev: string[], last: object[] }
  *   prev: last 10 user queries for conversation context
  *   last: last 20 result objects for search context
+ * @param {object} [options] - Optional tuning from element attributes
+ *   maxResults: number from max-results attribute
+ *   rewrite: boolean from rewrite attribute
  * @returns {{ url: string }}
  */
-export function buildRequest(api, query, context) { ... }
+export function buildRequest(api, query, context, options = {}) { ... }
 
 /**
  * Parse a raw SSE event into a normalized message.
@@ -182,30 +187,58 @@ export function parseEvent(eventData) { ... }
 
 ### NLWeb Adapter (nlweb.js)
 
+For backends implementing Microsoft's NLWeb SSE protocol. Used by full NLWeb servers (e.g. `wild-flower`) and custom workers that emit the same message types.
+
+**Endpoint:** `{api}/ask?query=...&display_mode=full&generate_mode=summarize`
+
 Maps NLWeb protocol to normalized messages:
 - `message_type: 'summary'` → `{ type: 'chunk' }`
 - `message_type: 'result_batch'` → `{ type: 'results' }` with `normalizeResult()` extracting `schema_object`
 - `message_type: 'complete'` → `{ type: 'done' }`
 - Unknown types → `null` (skipped)
 
+**Context:** Sends `prev` (previous queries) and `last_ans` (previous results) as query parameters.
+
+**Options:** Forwards `max_results` and `rewrite` as query parameters. Note: full NLWeb servers (like `wild-flower`) ignore these; custom workers (like `wpp-search`) respect them.
+
+### AI Search Adapter (aisearch.js)
+
+For backends using Cloudflare AI Search (`aiSearch`) with streaming. The worker calls `aiSearch({ stream: true })` for the LLM summary and `rag.search()` in parallel for result items (since `aiSearch` streaming only returns response tokens, not search results).
+
+**Endpoint:** `{api}/stream?query=...`
+
+Maps a simpler event format to normalized messages:
+- `type: 'chunk'` → `{ type: 'chunk' }`
+- `type: 'results'` → `{ type: 'results' }` with `normalizeResult()` extracting `schema_object`
+- `type: 'done'` → `{ type: 'done' }`
+- `type: 'error'` → `{ type: 'error' }`
+
+**Context:** Sends `prev` (previous queries). Does not send `last_ans`.
+
+**Options:** Forwards `max_results` and `rewrite` as query parameters.
+
 ### Writing a Custom Adapter
+
+See `src/adapters/README.md` for the full authoring guide. Minimal example:
 
 ```javascript
 // src/adapters/my-provider.js
-export function buildRequest(api, query, context) {
+export function buildRequest(api, query, context, options = {}) {
   return { url: `${api}/search?q=${encodeURIComponent(query)}` };
 }
 
 export function parseEvent(eventData) {
   try {
     const data = JSON.parse(eventData);
-    if (data.type === 'text') return { type: 'chunk', text: data.content };
-    if (data.type === 'results') return { type: 'results', items: data.items };
-    if (data.type === 'end') return { type: 'done' };
+    if (data.text) return { type: 'chunk', text: data.text };
+    if (data.hits) return { type: 'results', items: data.hits };
+    if (data.end) return { type: 'done' };
     return null;
   } catch { return null; }
 }
 ```
+
+Use it with `<search-bot provider="my-provider">`. The component dynamically imports `./adapters/${provider}.js`, so no registration step is needed.
 
 ## State Management
 
@@ -355,6 +388,8 @@ bot.addEventListener('search-bot:feedback', (e) => {
 | `provider` | string | `'nlweb'` | Adapter module name (`./adapters/{provider}.js`) |
 | `mode` | string | `'search'` | `'search'` (full-screen) or `'chatbot'` (docked panel) |
 | `position` | string | — | Trigger/panel placement: `'bottom right'`, `'top left'`, `'inline'`, etc. |
+| `max-results` | number | — | Maximum search results (passed to adapter as `options.maxResults`) |
+| `rewrite` | `'true'\|'false'` | — | Whether backend should rewrite query (passed as `options.rewrite`) |
 | `preserve-history` | boolean | — | Enable localStorage chat persistence |
 | `preserve-state` | boolean | — | Restore dialog open state on reload (requires `preserve-history`) |
 | `feedback` | boolean | — | Show like/dislike buttons on responses |
@@ -669,8 +704,10 @@ search-bot {
 
 | File | Lines | Purpose |
 |------|-------|---------|
-| src/index.js | 475 | Main component class + helpers |
+| src/index.js | 481 | Main component class + helpers |
 | src/index.css | 464 | Shadow DOM styles with --sbot-* theming |
-| src/adapters/nlweb.js | 39 | NLWeb protocol adapter |
+| src/adapters/nlweb.js | 40 | NLWeb protocol adapter |
+| src/adapters/aisearch.js | 37 | Cloudflare AI Search streaming adapter |
+| src/adapters/README.md | — | Adapter documentation and authoring guide |
 | index.html | 28 | Demo page |
 | package.json | 38 | Package metadata |

@@ -294,8 +294,19 @@
 
 /* Response list reset (results are rendered as unstyled <ul>) */
 [part="response"] ul {
+	display: grid;
 	list-style: none;
-	padding: 0;
+	padding: 1em 0;
+	row-gap: var(--sbot-response-ul-rg, 2ch);
+	li a:has(img) {
+		align-items: start;
+		column-gap: 1ch;
+		display: grid;
+		grid-template-columns: var(--sbot-response-img-is, auto) 1fr;
+		strong, small {
+			display: block;
+		}
+	}
 }
 
 /* Inline code inside response text */
@@ -319,11 +330,11 @@
    -------------------------------------------------------------------------- */
 
 [part="search-result-img"] {
-	aspect-ratio: var(--sbot-img-ar);
+	/* aspect-ratio: var(--sbot-img-ar); */
 	background-color: var(--sbot-img-bgc);
 	display: block;
 	max-inline-size: var(--sbot-img-mxis);
-	object-fit: cover;
+	/* object-fit: cover; */
 }
 
 /* --------------------------------------------------------------------------

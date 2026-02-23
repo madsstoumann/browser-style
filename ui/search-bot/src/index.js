@@ -106,8 +106,9 @@ class SearchBot extends HTMLElement {
 		const children = [];
 		if (rich) {
 			if (image) children.push(el('img', { src: image, alt: '', loading: 'lazy', part: 'search-result-img' }));
-			children.push(el('strong', { text: name }));
-			if (description) children.push(el('small', { part: 'search-result-desc', text: description }));
+			const textChildren = [el('strong', { text: name })];
+			if (description) textChildren.push(el('small', { part: 'search-result-desc', text: description }));
+			children.push(el('span', { part: 'search-result-text' }, textChildren));
 		} else children.push(document.createTextNode(name));
 		ul.append(el('li', {}, el('a', { href: url }, children)));
 	}
@@ -203,6 +204,7 @@ class SearchBot extends HTMLElement {
 		const trimmed = query?.trim();
 		if (!trimmed || !this.hasAttribute('api')) return;
 		this.closeEventSource();
+		this.currentResponse = null;
 
 		const isNewChat = !this.chatKey;
 		this.chatKey ??= chatKey(trimmed);
@@ -229,8 +231,14 @@ class SearchBot extends HTMLElement {
 			this.adapter = await import(`./adapters/${provider}.js`);
 		}
 
+		const options = {};
+		const maxResults = this.getAttribute('max-results');
+		if (maxResults) options.maxResults = Number(maxResults);
+		const rewrite = this.getAttribute('rewrite');
+		if (rewrite != null) options.rewrite = rewrite !== 'false';
+
 		const { url } = this.adapter.buildRequest(
-			this.getAttribute('api'), trimmed, this.getSearchContext()
+			this.getAttribute('api'), trimmed, this.getSearchContext(), options
 		);
 
 		this.eventSource = new EventSource(url);
@@ -250,6 +258,7 @@ class SearchBot extends HTMLElement {
 		this.eventSource.onerror = () => {
 			this.emit('error', { chatKey: this.chatKey, message: 'Connection failed' });
 			this.closeEventSource();
+			this.currentResponse = null;
 		};
 	}
 
@@ -295,6 +304,7 @@ class SearchBot extends HTMLElement {
 	handleError(message) {
 		this.emit('error', { chatKey: this.chatKey, message });
 		this.closeEventSource();
+		this.currentResponse = null;
 	}
 
 	appendFeedback(responseLi) {
@@ -441,8 +451,12 @@ class SearchBot extends HTMLElement {
 
 	disconnectedCallback() {
 		this.closeEventSource();
+		this.currentResponse = null;
+		this.messages = [];
+		this.elements = null;
 		if (this._beforeUnloadHandler) {
 			window.removeEventListener('beforeunload', this._beforeUnloadHandler);
+			this._beforeUnloadHandler = null;
 		}
 	}
 
