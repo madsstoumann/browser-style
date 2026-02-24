@@ -1,9 +1,6 @@
-/* ==========================================================================
-   Search Bot (<search-bot>) Component Styles
-   ========================================================================== */
+/* --- Host --- */
 
 :host * { box-sizing: border-box; }
-
 :host {
 	--sbot-gap: 12px;
 	--sbot-bdc: light-dark(hsl(220 15% 85%), hsl(220 10% 50%));
@@ -12,26 +9,22 @@
 	--sbot-conversation-mxw: 70ch;
 	--sbot-hover-bg: light-dark(hsl(220 15% 88%), hsl(220 10% 18%));
 	--sbot-chatbot-offset: 5rem;
-
 	color-scheme: light dark;
 	font-family: var(--sbot-ff, 'Iowan Old Style', 'Palatino Linotype', 'URW Palladio L', P052, serif);
 	scrollbar-color: var(--sbot-scrollbar-thumb, light-dark(hsl(220 10% 75%), hsl(220 10% 30%))) var(--sbot-scrollbar-track, transparent);
 	scrollbar-width: thin;
 }
 
-/* --- Trigger Button --- */
+/* --- Trigger --- */
 
-[part="search-trigger"] {
-	display: grid;
-}
-
+[part="search-trigger"] { display: grid; }
 :host(:not([position="inline"])) [part="search-trigger"] { position: fixed; }
 :host([position*="top"]) [part="search-trigger"]    { inset-block-start: var(--sbot-trigger-offset); }
 :host([position*="bottom"]) [part="search-trigger"] { inset-block-end: var(--sbot-trigger-offset); }
 :host([position*="left"]) [part="search-trigger"]   { inset-inline-start: var(--sbot-trigger-offset); }
 :host([position*="right"]) [part="search-trigger"]  { inset-inline-end: var(--sbot-trigger-offset); }
 
-/* --- Overlay (Dialog) --- */
+/* --- Overlay --- */
 
 [part="search-overlay"] {
 	background: var(--sbot-overlay-bg, #0000);
@@ -43,19 +36,14 @@
 	max-block-size: 100%;
 	max-inline-size: 100%;
 	padding: 0;
+	&[open] { align-content: start; display: grid; }
+	&::backdrop {
+		background: var(--sbot-overlay-backdrop);
+		backdrop-filter: var(--sbot-overlay-bdf, blur(20px) saturate(180%));
+	}
 }
 
-[part="search-overlay"][open] {
-	align-content: start;
-	display: grid;
-}
-
-[part="search-overlay"]::backdrop {
-	background: var(--sbot-overlay-backdrop);
-	backdrop-filter: var(--sbot-overlay-bdf, blur(20px) saturate(180%));
-}
-
-/* --- Header --- */
+/* --- Header & History --- */
 
 [part="search-header"] {
 	background: var(--sbot-header-bg, #0000);
@@ -65,16 +53,8 @@
 	gap: calc(var(--sbot-gap) / 2);
 	padding: var(--sbot-gap);
 }
-
-[part="search-history"] {
-	anchor-name: --sbot-history;
-}
-
-[part="search-close"] {
-	margin-inline-start: auto;
-}
-
-/* --- History Panel --- */
+[part="search-history"] { anchor-name: --sbot-history; }
+[part="search-close"] { margin-inline-start: auto; }
 
 [part="search-history-panel"] {
 	background: var(--sbot-history-bg, light-dark(hsl(220 15% 98% / 0.95), hsl(220 15% 14% / 0.95)));
@@ -95,55 +75,30 @@
 	list-style: none;
 	margin: 0;
 	padding: 0;
-}
-
-[part="search-history-list"] li[data-key] {
-	align-items: center;
-	border-radius: 0.25rem;
-	cursor: pointer;
-	display: grid;
-	gap: calc(var(--sbot-gap) / 2);
-	grid-template-columns: 1fr auto;
-	padding: calc(var(--sbot-gap) / 2) var(--sbot-gap);
-}
-
-[part="search-history-list"] li[data-key] span {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-[part="search-history-list"] li:hover {
-	background: var(--sbot-hover-bg);
-}
-
-[part="search-history-list"] small {
-	color: light-dark(hsl(220 10% 45%), hsl(220 10% 55%));
-	display: block;
-	font-size: 0.75em;
+	li[data-key] {
+		align-items: center;
+		border-radius: 0.25rem;
+		cursor: pointer;
+		display: grid;
+		gap: calc(var(--sbot-gap) / 2);
+		grid-template-columns: 1fr auto;
+		padding: calc(var(--sbot-gap) / 2) var(--sbot-gap);
+		span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+	}
 }
 
 [part="search-history-delete"] {
 	aspect-ratio: 1;
 	background: light-dark(hsl(220 15% 88%), hsl(220 10% 22%));
 	border: 0;
-	border-radius: .25rem;
+	border-radius: 0.25rem;
 	cursor: pointer;
 	display: inline-grid;
 	place-content: center;
 }
+:host(:not([preserve-history])) [part="search-history"] { display: none; }
 
-@media (hover: hover) {
-	[part="search-history-delete"]:hover {
-		background: light-dark(hsl(220 15% 78%), hsl(220 10% 32%));
-	}
-}
-
-:host(:not([preserve-history])) [part="search-history"] {
-	display: none;
-}
-
-/* --- Conversation Thread --- */
+/* --- Conversation & Messages --- */
 
 [part="search-conversation"] {
 	flex: 1;
@@ -153,17 +108,10 @@
 	padding-block: var(--sbot-gap);
 	padding-inline: max(var(--sbot-gap), calc(50% - var(--sbot-conversation-mxw) / 2));
 }
-
-[part="search-conversation"]:empty {
-	display: none;
-}
-
-/* --- Messages --- */
+[part="search-conversation"]:empty { display: none; }
 
 [part="user"],
-[part="response"] {
-	padding: 0.75em 0;
-}
+[part="response"] { padding: 0.75em 0; }
 
 [part="user"] {
 	background-color: var(--sbot-user-bgc, light-dark(hsl(220 10% 90%), hsl(215 25% 22%)));
@@ -173,42 +121,37 @@
 	padding: var(--sbot-user-p, 0.625rem 1rem);
 }
 
-[part="response"] ul {
-	display: grid;
-	list-style: none;
-	padding: 1em 0;
-	row-gap: var(--sbot-response-ul-rg, 2ch);
-
-	@container (min-width: 500px) {
-		li a:has(img) { grid-template-columns: var(--sbot-response-img-is, auto) 1fr; }
-	}
-
-	li {
-		display: contents;
-		a {
-			display: grid;
-			column-gap: var(--sbot-gap);
-			row-gap: calc(var(--sbot-gap) / 2);
-			text-decoration: none;
-			small, strong { display: block; }
-			small { color: initial; }
-			strong { text-decoration: underline; }
+[part="response"] {
+	ul {
+		display: grid;
+		list-style: none;
+		padding: 1em 0;
+		row-gap: var(--sbot-response-ul-rg, 2ch);
+		@container (min-width: 500px) {
+			li a:has(img) { grid-template-columns: var(--sbot-response-img-is, auto) 1fr; }
+		}
+		li {
+			display: contents;
+			a {
+				display: grid;
+				column-gap: var(--sbot-gap);
+				row-gap: calc(var(--sbot-gap) / 2);
+				text-decoration: none;
+				small, strong { display: block; }
+				small { color: initial; }
+				strong { text-decoration: underline; }
+			}
 		}
 	}
+	code {
+		background: var(--sbot-code-bg, light-dark(hsl(220 15% 88%), hsl(220 10% 20%)));
+		border-radius: 0.25em;
+		font-family: var(--sbot-code-ff, monospace);
+		padding: 0.1em 0.3em;
+	}
+	a { color: var(--sbot-link-c, light-dark(hsl(215 80% 40%), hsl(215 70% 65%))); }
 }
 
-[part="response"] code {
-	background: var(--sbot-code-bg, light-dark(hsl(220 15% 88%), hsl(220 10% 20%)));
-	border-radius: 0.25em;
-	font-family: var(--sbot-code-ff, monospace);
-	padding: 0.1em 0.3em;
-}
-
-[part="response"] a {
-	color: var(--sbot-link-c, light-dark(hsl(215 80% 40%), hsl(215 70% 65%)));
-}
-
-/* Typing indicator */
 [part~="pending"]::before {
 	animation: l3 1s infinite linear;
 	aspect-ratio: 2;
@@ -219,7 +162,6 @@
 	display: block;
 	width: 45px;
 }
-
 @keyframes l3 {
 	20%  { background-position: 0% 0%, 50% 50%, 100% 50% }
 	40%  { background-position: 0% 100%, 50% 0%, 100% 50% }
@@ -227,60 +169,27 @@
 	80%  { background-position: 0% 50%, 50% 50%, 100% 100% }
 }
 
-/* --- Result Images --- */
-
 [part="search-result-img"] {
 	background-color: var(--sbot-img-bgc, light-dark(hsl(220 10% 90%), hsl(220 10% 20%)));
 	display: block;
 	max-inline-size: var(--sbot-img-mxis, 200px);
 }
 
-/* --- SVG Icon Buttons --- */
-
-button[part]:has(svg) {
-	aspect-ratio: 1;
-	background: var(--sbot-btn-bg, light-dark(hsl(215 20% 90%), hsl(215 15% 22%)));
-	border: 0;
-	border-radius: 50%;
-	display: inline-grid;
-	place-items: center;
-}
-
-@media (hover: hover) {
-	button[part]:has(svg):hover {
-		background: var(--sbot-btn-bg-hover, light-dark(hsl(215 20% 82%), hsl(215 15% 30%)));
-	}
-}
-
-/* --- Feedback Buttons --- */
-
 [part="search-feedback"] {
 	display: flex;
 	gap: calc(var(--sbot-gap) / 2);
 	padding-block-start: 0.5rem;
+	button {
+		background: none;
+		border: 1px solid var(--sbot-bdc);
+		border-radius: 0.25rem;
+		cursor: pointer;
+		padding: 0.25rem;
+		svg { block-size: 1em; inline-size: 1em; }
+	}
 }
 
-[part="search-feedback-like"],
-[part="search-feedback-dislike"] {
-	background: none;
-	border: 1px solid var(--sbot-bdc);
-	border-radius: 0.25rem;
-	cursor: pointer;
-	padding: 0.25rem;
-}
-
-[part="search-feedback-like"] svg,
-[part="search-feedback-dislike"] svg {
-	block-size: 1em;
-	inline-size: 1em;
-}
-
-[part="search-feedback-like"]:hover,
-[part="search-feedback-dislike"]:hover {
-	background: var(--sbot-hover-bg);
-}
-
-/* --- Form & Input --- */
+/* --- Form --- */
 
 [part="search-form"] {
 	bottom: 0;
@@ -300,72 +209,47 @@ button[part]:has(svg) {
 	grid-template-columns: auto min-content;
 	padding: var(--sbot-input-p, 1ch 2ch);
 }
+[part="search-legend"] { all: unset; text-align: center; }
+[part="search-input"] { background: transparent; border: 0; color: FieldText; font: inherit; outline: none; resize: none; }
 
-[part="search-legend"] {
-	all: unset;
-	text-align: center;
-}
+/* --- Icons & Buttons --- */
 
-[part="search-input"] {
-	background: transparent;
+svg { block-size: var(--sbot-icon-sz, 2em); inline-size: var(--sbot-icon-sz, 2em); }
+[part="icon-stroke"] { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+button[part]:has(svg) {
+	aspect-ratio: 1;
+	background: var(--sbot-btn-bg, light-dark(hsl(215 20% 90%), hsl(215 15% 22%)));
 	border: 0;
-	color: FieldText;
-	font: inherit;
-	outline: none;
-	resize: none;
+	border-radius: 50%;
+	display: inline-grid;
+	place-items: center;
 }
 
-/* --- SVG Icons --- */
+/* --- Hover --- */
 
-svg {
-	block-size: var(--sbot-icon-sz, 2em);
-	inline-size: var(--sbot-icon-sz, 2em);
-}
-
-[part="icon-stroke"] {
-	fill: none;
-	stroke: currentColor;
-	stroke-width: 2;
-	stroke-linecap: round;
-	stroke-linejoin: round;
+@media (hover: hover) {
+	button[part]:has(svg):hover { background: var(--sbot-btn-bg-hover, light-dark(hsl(215 20% 82%), hsl(215 15% 30%))); }
+	[part="search-history-list"] li:hover { background: var(--sbot-hover-bg); }
+	[part="search-history-delete"]:hover { background: light-dark(hsl(220 15% 78%), hsl(220 10% 32%)); }
+	[part="search-feedback"] button:hover { background: var(--sbot-hover-bg); }
 }
 
 /* --- Chatbot Mode --- */
 
-:host([mode="chatbot"]) [part="search-overlay"]::backdrop {
-	background: transparent;
-	backdrop-filter: none;
-	pointer-events: none;
-}
-
 :host([mode="chatbot"]) [part="search-overlay"] {
 	background: var(--sbot-overlay-backdrop);
 	block-size: var(--sbot-chatbot-bs, min(600px, 80vh));
+	border-radius: var(--sbot-chatbot-bdrs, 1rem);
+	box-shadow: var(--sbot-chatbot-bxsh, light-dark(0 8px 32px hsl(220 15% 30% / 0.18), 0 8px 32px hsl(0 0% 0% / 0.4)));
 	inline-size: var(--sbot-chatbot-is, min(400px, 90vw));
+	margin: 0;
 	max-block-size: 80vh;
 	max-inline-size: 90vw;
-	border-radius: var(--sbot-chatbot-bdrs, 1rem);
 	position: fixed;
-	margin: 0;
-	box-shadow: var(--sbot-chatbot-bxsh, light-dark(0 8px 32px hsl(220 15% 30% / 0.18), 0 8px 32px hsl(0 0% 0% / 0.4)));
+	&::backdrop { background: transparent; backdrop-filter: none; pointer-events: none; }
 }
-
-:host([mode="chatbot"][position*="bottom"]) [part="search-overlay"] {
-	inset-block-end: var(--sbot-chatbot-offset);
-	inset-block-start: auto;
-}
-
-:host([mode="chatbot"][position*="top"]) [part="search-overlay"] {
-	inset-block-start: var(--sbot-chatbot-offset);
-	inset-block-end: auto;
-}
-
-:host([mode="chatbot"][position*="right"]) [part="search-overlay"] {
-	inset-inline-end: 1rem;
-	inset-inline-start: auto;
-}
-
-:host([mode="chatbot"][position*="left"]) [part="search-overlay"] {
-	inset-inline-start: 1rem;
-	inset-inline-end: auto;
-}
+:host([mode="chatbot"][position*="bottom"]) [part="search-overlay"] { inset-block: auto var(--sbot-chatbot-offset); }
+:host([mode="chatbot"][position*="top"]) [part="search-overlay"]    { inset-block: var(--sbot-chatbot-offset) auto; }
+:host([mode="chatbot"][position*="right"]) [part="search-overlay"]  { inset-inline: auto 1rem; }
+:host([mode="chatbot"][position*="left"]) [part="search-overlay"]   { inset-inline: 1rem auto; }
