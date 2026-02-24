@@ -6,6 +6,7 @@ const ICONS = {
 	history: ['M18 3a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-4.724l-4.762 2.857a1 1 0 0 1 -1.508 -.743l-.006 -.114v-2h-1a4 4 0 0 1 -3.995 -3.8l-.005 -.2v-8a4 4 0 0 1 4 -4zm-2.8 9.286a1 1 0 0 0 -1.414 .014a2.5 2.5 0 0 1 -3.572 0a1 1 0 0 0 -1.428 1.4a4.5 4.5 0 0 0 6.428 0a1 1 0 0 0 -.014 -1.414m-5.69 -4.286h-.01a1 1 0 1 0 0 2h.01a1 1 0 0 0 0 -2m5 0h-.01a1 1 0 0 0 0 2h.01a1 1 0 0 0 0 -2'],
 	like: ['M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z', 'M1 22h4V9H1z'],
 	dislike: ['M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z', 'M23 2h-4v13h4z'],
+	send: ['M10 14l11 -11', 'M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5']
 };
 
 const I18N = {
@@ -19,11 +20,9 @@ const I18N = {
 	searchPlaceholder: 'Ask a question or a follow-up',
 };
 
-const STORAGE_PREFIX = 'search-bot:';
-
-function chatKey(query) {
+function chatKey(prefix, query) {
 	const slug = query.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50);
-	return `${STORAGE_PREFIX}${slug}-${Date.now()}`;
+	return `${prefix}${slug}-${Date.now()}`;
 }
 
 function fromStorage(key) {
@@ -87,6 +86,7 @@ class SearchBot extends HTMLElement {
 		this.adapter = null;
 		this.renderers = new Map();
 		this.currentResponse = null;
+		this._uid = Math.random().toString(36).slice(2, 8);
 	}
 
 	$(selector) { return this.shadowRoot.querySelector(selector); }
@@ -127,13 +127,14 @@ class SearchBot extends HTMLElement {
 	}
 
 	connectedCallback() {
+		this._storagePrefix = this.id ? `${this.id}:` : 'search-bot:';
 		this.render();
 		this.elements = {
 			conversation: this.$('[part="search-conversation"]'),
 			dialog: this.$('[part="search-overlay"]'),
 			form: this.$('form'),
 			historyList: this.$('[part="search-history-list"]'),
-			historyPanel: this.$('#search-history-popover'),
+			historyPanel: this.$(`#search-history-popover-${this._uid}`),
 			input: this.$('textarea[name="q"]'),
 			legend: this.$('[part="search-legend"]'),
 			newQuestion: this.$('[part="search-new"]'),
@@ -180,7 +181,7 @@ class SearchBot extends HTMLElement {
 			this._beforeUnloadHandler = () => this.saveUIState();
 			window.addEventListener('beforeunload', this._beforeUnloadHandler);
 			try {
-				const state = JSON.parse(sessionStorage.getItem('search-bot:ui-state'));
+				const state = JSON.parse(sessionStorage.getItem(`${this._storagePrefix}ui-state`));
 				if (state?.open && state.activeChatKey) {
 					this.loadChat(state.activeChatKey);
 					dialog.showModal();
@@ -193,7 +194,7 @@ class SearchBot extends HTMLElement {
 	saveUIState() {
 		if (!this.hasAttribute('preserve-state') || !this.hasAttribute('preserve-history')) return;
 		try {
-			sessionStorage.setItem('search-bot:ui-state', JSON.stringify({
+			sessionStorage.setItem(`${this._storagePrefix}ui-state`, JSON.stringify({
 				open: this.elements.dialog?.open || false,
 				activeChatKey: this.chatKey,
 			}));
@@ -207,7 +208,7 @@ class SearchBot extends HTMLElement {
 		this.currentResponse = null;
 
 		const isNewChat = !this.chatKey;
-		this.chatKey ??= chatKey(trimmed);
+		this.chatKey ??= chatKey(this._storagePrefix, trimmed);
 		if (isNewChat) this.emit('chat-start', { chatKey: this.chatKey, query: trimmed });
 
 		this.messages.push({ role: 'user', text: trimmed });
@@ -215,7 +216,7 @@ class SearchBot extends HTMLElement {
 		this.elements.conversation.append(this.message('user', trimmed));
 
 		this.currentResponse = {
-			li: this.message('response'),
+			li: el('li', { part: 'response pending' }),
 			summaryText: '',
 			results: [],
 			refs: {},
@@ -263,11 +264,13 @@ class SearchBot extends HTMLElement {
 	}
 
 	appendChunk(text) {
+		this.currentResponse.li.part.remove('pending');
 		this.currentResponse.summaryText += text;
 		this.currentResponse.summaryNode.textContent = this.currentResponse.summaryText;
 	}
 
 	appendResults(items) {
+		this.currentResponse.li.part.remove('pending');
 		const { li, results, refs } = this.currentResponse;
 		const ul = this.ensureResultsList(li);
 		for (const item of items) {
@@ -278,6 +281,7 @@ class SearchBot extends HTMLElement {
 	}
 
 	appendComponent(name, props) {
+		this.currentResponse.li.part.remove('pending');
 		const renderer = this.renderers.get(name);
 		if (!renderer) return;
 		const node = renderer(props);
@@ -384,7 +388,7 @@ class SearchBot extends HTMLElement {
 		const list = this.elements.historyList;
 		list.replaceChildren();
 		const chats = Object.keys(localStorage)
-			.filter(k => k.startsWith(STORAGE_PREFIX))
+			.filter(k => k.startsWith(this._storagePrefix))
 			.map(k => { const data = fromStorage(k); return data?.title ? { key: k, title: data.title, created: data.created || 0 } : null; })
 			.filter(Boolean)
 			.sort((a, b) => b.created - a.created);
@@ -461,23 +465,27 @@ class SearchBot extends HTMLElement {
 	}
 
 	render() {
+		const uid = this._uid;
 		this.shadowRoot.innerHTML = `
-			<button part="search-trigger" commandfor="search-dialog" command="show-modal" aria-label="${I18N.search}">
+			<button part="search-trigger" commandfor="search-dialog-${uid}" command="show-modal" aria-label="${I18N.search}">
 				<slot name="icon">${icon('ai')}</slot>
 			</button>
-			<dialog id="search-dialog" part="search-overlay" closedby="any">
+			<dialog id="search-dialog-${uid}" part="search-overlay" closedby="any">
 				<div part="search-header">
-					<button part="search-history" popovertarget="search-history-popover" aria-label="${I18N.history}">${icon('history')}</button>
-					<div id="search-history-popover" part="search-history-panel" popover>
+					<button part="search-history" popovertarget="search-history-popover-${uid}" aria-label="${I18N.history}">${icon('history')}</button>
+					<div id="search-history-popover-${uid}" part="search-history-panel" popover>
 						<ul part="search-history-list"></ul>
 					</div>
-					<button part="search-close" commandfor="search-dialog" command="close" aria-label="${I18N.close}">${icon('close', 'icon-stroke')}</button>
+					<button part="search-close" commandfor="search-dialog-${uid}" command="close" aria-label="${I18N.close}">${icon('close', 'icon-stroke')}</button>
 				</div>
 				<ol part="search-conversation"></ol>
 				<form part="search-form">
 					<fieldset part="search-fieldset">
 						<legend part="search-legend">${I18N.searchLabel}</legend>
 						<textarea part="search-input" name="q" autocomplete="off" autofocus enterkeyhint="search" placeholder="${I18N.searchPlaceholder}"></textarea>
+						<nav part="search-actions">
+							<button type="submit" part="search-submit" aria-label="${I18N.search}">${icon('send', 'icon-stroke')}</button>
+						</nav>
 					</fieldset>
 					<button part="search-new" aria-label="${I18N.newQuestion}">${I18N.newQuestion}</button>
 				</form>

@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Search overlay and chatbot component with adapter-based SSE streaming">
 	<meta name="view-transition" content="same-origin">
-	<link rel="stylesheet" href="/ui/base/index.css">
+	<!-- <link rel="stylesheet" href="/ui/base/index.css"> -->
 	<script type="module" src="./src/index.js"></script>
 </head>
 <body>
@@ -17,24 +17,27 @@
 
 	<search-bot
 		api="https://wild-flower-99ce-nlweb.stoumann.workers.dev"
-		provider="nlweb"
+		feedback
+		id="blog"
 		mode="search"
-		position="bottom right"
+		position="top right"
 		preserve-history
 		preserve-state
-		feedback
+		provider="nlweb"
 	>
 	</search-bot>
 
-	<!-- <search-bot
+	<search-bot
 		api="https://wpp-search.stoumann.workers.dev"
-		provider="aisearch"
+		feedback
+		id="wpp"
+		max-results="5"
+		mode="chatbot"
 		position="bottom right"
 		preserve-history
 		preserve-state
-		max-results="5"
+		provider="aisearch"
 		rewrite="true"
-		feedback
-	></search-bot> -->
+	></search-bot>
 </body>
 </html>
