@@ -2,107 +2,27 @@
    Search Bot (<search-bot>) Component Styles
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   1. Host & Custom Properties
-   -------------------------------------------------------------------------- */
-
 :host * { box-sizing: border-box; }
 
 :host {
-	--sbot-ff: 'Iowan Old Style', 'Palatino Linotype', 'URW Palladio L', P052, serif;
 	--sbot-gap: 12px;
-
-	/* Trigger button */
-	--sbot-trigger-bg: light-dark(hsl(215 20% 90%), hsl(215 15% 22%));
-	--sbot-trigger-bdrs: 50%;
-	--sbot-trigger-offset: 1rem;
-
-	/* Overlay / dialog */
-	/* --sbot-overlay-bg: light-dark(hsl(220 15% 96% / 0.8), hsl(220 15% 10% / 0.8)); */
-	--sbot-overlay-bdf: blur(20px) saturate(180%);
-	--sbot-overlay-bdc: light-dark(hsl(220 15% 85%), hsl(220 10% 20%));
-	/* --sbot-overlay-backdrop: light-dark(hsl(220 10% 50% / 0.3), hsl(220 10% 5% / 0.5)); */
-	--sbot-overlay-backdrop: light-dark(hsl(220 15% 96% / 0.8), hsl(220 15% 10% / 0.9));
-
-	/* Header */
-	--sbot-header-bg: light-dark(hsl(220 15% 97%), hsl(220 15% 13%));
 	--sbot-bdc: light-dark(hsl(220 15% 85%), hsl(220 10% 50%));
-
-	/* History panel */
-	--sbot-history-bg: light-dark(hsl(220 15% 98% / 0.95), hsl(220 15% 14% / 0.95));
-	--sbot-history-bdf: blur(8px);
-	--sbot-history-bdc: light-dark(hsl(220 10% 82%), hsl(220 10% 22%));
-	--sbot-history-bdrs: 0.5rem;
-	--sbot-history-bxsh: light-dark(0 4px 12px hsl(220 15% 30% / 0.12), 0 4px 12px hsl(0 0% 0% / 0.3));
-	--sbot-history-mxbs: 60vh;
-	--sbot-history-mxis: 20rem;
-
-	/* Conversation */
-	--sbot-conversation-bg: light-dark(hsl(220 14% 96%), hsl(220 12% 11%));
+	--sbot-overlay-backdrop: light-dark(hsl(220 15% 96% / 0.8), hsl(220 15% 10% / 0.9));
+	--sbot-trigger-offset: 1rem;
 	--sbot-conversation-mxw: 70ch;
-
-	/* User message bubble */
-	--sbot-user-bgc: light-dark(hsl(220 10% 90%), hsl(215 25% 22%));
-	--sbot-user-bdrs: 0.75rem;
-	--sbot-user-p: 0.625rem 1rem;
-
-	/* Inline code */
-	--sbot-code-bg: light-dark(hsl(220 15% 88%), hsl(220 10% 20%));
-	--sbot-code-bdrs: 0.25em;
-	--sbot-code-ff: monospace;
-
-	/* Links */
-	--sbot-link-c: light-dark(hsl(215 80% 40%), hsl(215 70% 65%));
-
-	/* Form / input */
-	--sbot-form-bg: light-dark(hsl(220 14% 96%), hsl(220 12% 11%));
-	--sbot-input-bdrs: 1ch;
-	--sbot-input-p: 1ch 2ch;
-
-	/* Result images */
-	--sbot-img-ar: 16/9;
-	--sbot-img-bgc: light-dark(hsl(220 10% 90%), hsl(220 10% 20%));
-	--sbot-img-mxis: 200px;
-
-	/* SVG icon buttons */
-	--sbot-icon-sz: 2em;
-	--sbot-btn-icon-bg: light-dark(hsl(215 20% 90%), hsl(215 15% 22%));
-
-	/* Feedback buttons */
-	--sbot-feedback-bdc: light-dark(hsl(220 10% 82%), hsl(220 10% 25%));
-	--sbot-feedback-bdrs: 0.25rem;
-
-	/* Chatbot mode */
-	--sbot-chatbot-bs: min(600px, 80vh);
-	--sbot-chatbot-is: min(400px, 90vw);
-	--sbot-chatbot-bdrs: 1rem;
-	--sbot-chatbot-bxsh: light-dark(0 8px 32px hsl(220 15% 30% / 0.18), 0 8px 32px hsl(0 0% 0% / 0.4));
+	--sbot-hover-bg: light-dark(hsl(220 15% 88%), hsl(220 10% 18%));
 	--sbot-chatbot-offset: 5rem;
 
-	/* Scrollbar */
-	--sbot-scrollbar-thumb: light-dark(hsl(220 10% 75%), hsl(220 10% 30%));
-	--sbot-scrollbar-track: transparent;
-
-	/* Hover */
-	--sbot-hover-bg: light-dark(hsl(220 15% 88%), hsl(220 10% 18%));
-
 	color-scheme: light dark;
-	font-family: var(--sbot-ff);
-	scrollbar-color: var(--sbot-scrollbar-thumb) var(--sbot-scrollbar-track);
+	font-family: var(--sbot-ff, 'Iowan Old Style', 'Palatino Linotype', 'URW Palladio L', P052, serif);
+	scrollbar-color: var(--sbot-scrollbar-thumb, light-dark(hsl(220 10% 75%), hsl(220 10% 30%))) var(--sbot-scrollbar-track, transparent);
 	scrollbar-width: thin;
 }
 
-/* --------------------------------------------------------------------------
-   2. Trigger Button
-   -------------------------------------------------------------------------- */
+/* --- Trigger Button --- */
 
 [part="search-trigger"] {
-	aspect-ratio: 1;
-	background: var(--sbot-trigger-bg);
-	border: 0;
-	border-radius: var(--sbot-trigger-bdrs);
 	display: grid;
-	place-items: center;
 }
 
 :host(:not([position="inline"])) [part="search-trigger"] { position: fixed; }
@@ -111,13 +31,11 @@
 :host([position*="left"]) [part="search-trigger"]   { inset-inline-start: var(--sbot-trigger-offset); }
 :host([position*="right"]) [part="search-trigger"]  { inset-inline-end: var(--sbot-trigger-offset); }
 
-/* --------------------------------------------------------------------------
-   3. Search Overlay (Dialog)
-   -------------------------------------------------------------------------- */
+/* --- Overlay (Dialog) --- */
 
 [part="search-overlay"] {
 	background: var(--sbot-overlay-bg, #0000);
-	border: 1px solid var(--sbot-overlay-bdc);
+	border: 1px solid var(--sbot-bdc);
 	block-size: 100%;
 	container-type: inline-size;
 	font-size: 1rem;
@@ -134,16 +52,13 @@
 
 [part="search-overlay"]::backdrop {
 	background: var(--sbot-overlay-backdrop);
-	backdrop-filter: var(--sbot-overlay-bdf);
-	/* -webkit-backdrop-filter: var(--sbot-overlay-bdf); */
+	backdrop-filter: var(--sbot-overlay-bdf, blur(20px) saturate(180%));
 }
 
-/* --------------------------------------------------------------------------
-   4. Header
-   -------------------------------------------------------------------------- */
+/* --- Header --- */
 
 [part="search-header"] {
-	/* background: var(--sbot-header-bg); */
+	background: var(--sbot-header-bg, #0000);
 	border-block-end: 1px solid var(--sbot-bdc);
 	display: flex;
 	align-items: center;
@@ -151,28 +66,29 @@
 	padding: var(--sbot-gap);
 }
 
+[part="search-history"] {
+	anchor-name: --sbot-history;
+}
+
 [part="search-close"] {
 	margin-inline-start: auto;
 }
 
-/* --------------------------------------------------------------------------
-   5. History Panel
-   -------------------------------------------------------------------------- */
+/* --- History Panel --- */
 
 [part="search-history-panel"] {
-	background: var(--sbot-history-bg);
-	backdrop-filter: var(--sbot-history-bdf);
-	border: 1px solid var(--sbot-history-bdc);
-	border-radius: var(--sbot-history-bdrs);
-	box-shadow: var(--sbot-history-bxsh);
-	inset: auto;
-	inset-block-start: 3.5rem;
-	inset-inline-start: 1rem;
+	background: var(--sbot-history-bg, light-dark(hsl(220 15% 98% / 0.95), hsl(220 15% 14% / 0.95)));
+	backdrop-filter: var(--sbot-history-bdf, blur(8px));
+	border: 1px solid var(--sbot-bdc);
+	border-radius: var(--sbot-history-bdrs, 0.5rem);
+	box-shadow: var(--sbot-history-bxsh, light-dark(0 4px 12px hsl(220 15% 30% / 0.12), 0 4px 12px hsl(0 0% 0% / 0.3)));
 	margin: 0;
-	max-block-size: var(--sbot-history-mxbs);
-	max-inline-size: var(--sbot-history-mxis);
+	max-block-size: var(--sbot-history-mxbs, 60vh);
+	max-inline-size: var(--sbot-history-mxis, 20rem);
 	overflow-y: auto;
 	padding: 0.5rem;
+	position-anchor: --sbot-history;
+	position-area: block-end span-inline-end;
 }
 
 [part="search-history-list"] {
@@ -186,8 +102,9 @@
 	border-radius: 0.25rem;
 	cursor: pointer;
 	display: grid;
+	gap: calc(var(--sbot-gap) / 2);
 	grid-template-columns: 1fr auto;
-	padding: 0.5rem 0.75rem;
+	padding: calc(var(--sbot-gap) / 2) var(--sbot-gap);
 }
 
 [part="search-history-list"] li[data-key] span {
@@ -207,29 +124,28 @@
 }
 
 [part="search-history-delete"] {
-	background: none;
+	aspect-ratio: 1;
+	background: light-dark(hsl(220 15% 88%), hsl(220 10% 22%));
 	border: 0;
+	border-radius: .25rem;
 	cursor: pointer;
-	font-size: 1em;
-	grid-row: 1 / -1;
-	opacity: 0.4;
-	padding: 0.25rem;
+	display: inline-grid;
+	place-content: center;
 }
 
-[part="search-history-delete"]:hover {
-	opacity: 1;
+@media (hover: hover) {
+	[part="search-history-delete"]:hover {
+		background: light-dark(hsl(220 15% 78%), hsl(220 10% 32%));
+	}
 }
 
 :host(:not([preserve-history])) [part="search-history"] {
 	display: none;
 }
 
-/* --------------------------------------------------------------------------
-   6. Conversation Thread
-   -------------------------------------------------------------------------- */
+/* --- Conversation Thread --- */
 
 [part="search-conversation"] {
-	/* background: var(--sbot-conversation-bg); */
 	flex: 1;
 	list-style: none;
 	margin: 0;
@@ -242,9 +158,7 @@
 	display: none;
 }
 
-/* --------------------------------------------------------------------------
-   7. Messages (User & Response)
-   -------------------------------------------------------------------------- */
+/* --- Messages --- */
 
 [part="user"],
 [part="response"] {
@@ -252,11 +166,11 @@
 }
 
 [part="user"] {
-	background-color: var(--sbot-user-bgc);
-	border-radius: var(--sbot-user-bdrs);
+	background-color: var(--sbot-user-bgc, light-dark(hsl(220 10% 90%), hsl(215 25% 22%)));
+	border-radius: var(--sbot-user-bdrs, 0.75rem);
 	justify-self: end;
 	max-width: 80%;
-	padding: var(--sbot-user-p);
+	padding: var(--sbot-user-p, 0.625rem 1rem);
 }
 
 [part="response"] ul {
@@ -284,14 +198,14 @@
 }
 
 [part="response"] code {
-	background: var(--sbot-code-bg);
-	border-radius: var(--sbot-code-bdrs);
-	font-family: var(--sbot-code-ff);
+	background: var(--sbot-code-bg, light-dark(hsl(220 15% 88%), hsl(220 10% 20%)));
+	border-radius: 0.25em;
+	font-family: var(--sbot-code-ff, monospace);
 	padding: 0.1em 0.3em;
 }
 
 [part="response"] a {
-	color: var(--sbot-link-c);
+	color: var(--sbot-link-c, light-dark(hsl(215 80% 40%), hsl(215 70% 65%)));
 }
 
 /* Typing indicator */
@@ -313,32 +227,32 @@
 	80%  { background-position: 0% 50%, 50% 50%, 100% 100% }
 }
 
-/* --------------------------------------------------------------------------
-   8. Result Images
-   -------------------------------------------------------------------------- */
+/* --- Result Images --- */
 
 [part="search-result-img"] {
-	background-color: var(--sbot-img-bgc);
+	background-color: var(--sbot-img-bgc, light-dark(hsl(220 10% 90%), hsl(220 10% 20%)));
 	display: block;
-	max-inline-size: var(--sbot-img-mxis);
+	max-inline-size: var(--sbot-img-mxis, 200px);
 }
 
-/* --------------------------------------------------------------------------
-   SVG icon buttons
-   -------------------------------------------------------------------------- */
+/* --- SVG Icon Buttons --- */
 
 button[part]:has(svg) {
 	aspect-ratio: 1;
-	background: var(--sbot-btn-icon-bg);
+	background: var(--sbot-btn-bg, light-dark(hsl(215 20% 90%), hsl(215 15% 22%)));
 	border: 0;
 	border-radius: 50%;
 	display: inline-grid;
 	place-items: center;
 }
 
-/* --------------------------------------------------------------------------
-   9. Feedback Buttons
-   -------------------------------------------------------------------------- */
+@media (hover: hover) {
+	button[part]:has(svg):hover {
+		background: var(--sbot-btn-bg-hover, light-dark(hsl(215 20% 82%), hsl(215 15% 30%)));
+	}
+}
+
+/* --- Feedback Buttons --- */
 
 [part="search-feedback"] {
 	display: flex;
@@ -349,8 +263,8 @@ button[part]:has(svg) {
 [part="search-feedback-like"],
 [part="search-feedback-dislike"] {
 	background: none;
-	border: 1px solid var(--sbot-feedback-bdc);
-	border-radius: var(--sbot-feedback-bdrs);
+	border: 1px solid var(--sbot-bdc);
+	border-radius: 0.25rem;
 	cursor: pointer;
 	padding: 0.25rem;
 }
@@ -366,12 +280,9 @@ button[part]:has(svg) {
 	background: var(--sbot-hover-bg);
 }
 
-/* --------------------------------------------------------------------------
-   10. Form & Input
-   -------------------------------------------------------------------------- */
+/* --- Form & Input --- */
 
 [part="search-form"] {
-	/* background: var(--sbot-form-bg); */
 	bottom: 0;
 	padding-block: var(--sbot-gap);
 	padding-inline: max(var(--sbot-gap), calc(50% - var(--sbot-conversation-mxw) / 2));
@@ -381,13 +292,13 @@ button[part]:has(svg) {
 [part="search-fieldset"] {
 	all: unset;
 	background: light-dark(Field, hsl(220 12% 15%));
-	border: 1px solid var(--sbot-overlay-bdc);
-	border-radius: var(--sbot-input-bdrs);
+	border: 1px solid var(--sbot-bdc);
+	border-radius: var(--sbot-input-bdrs, 1ch);
 	column-gap: var(--sbot-gap);
 	display: grid;
 	font: inherit;
 	grid-template-columns: auto min-content;
-	padding: var(--sbot-input-p);
+	padding: var(--sbot-input-p, 1ch 2ch);
 }
 
 [part="search-legend"] {
@@ -404,13 +315,11 @@ button[part]:has(svg) {
 	resize: none;
 }
 
-/* --------------------------------------------------------------------------
-   11. SVG Icons
-   -------------------------------------------------------------------------- */
+/* --- SVG Icons --- */
 
 svg {
-	block-size: var(--sbot-icon-sz);
-	inline-size: var(--sbot-icon-sz);
+	block-size: var(--sbot-icon-sz, 2em);
+	inline-size: var(--sbot-icon-sz, 2em);
 }
 
 [part="icon-stroke"] {
@@ -421,9 +330,7 @@ svg {
 	stroke-linejoin: round;
 }
 
-/* --------------------------------------------------------------------------
-   12. Chatbot Mode
-   -------------------------------------------------------------------------- */
+/* --- Chatbot Mode --- */
 
 :host([mode="chatbot"]) [part="search-overlay"]::backdrop {
 	background: transparent;
@@ -433,14 +340,14 @@ svg {
 
 :host([mode="chatbot"]) [part="search-overlay"] {
 	background: var(--sbot-overlay-backdrop);
-	block-size: var(--sbot-chatbot-bs);
-	inline-size: var(--sbot-chatbot-is);
+	block-size: var(--sbot-chatbot-bs, min(600px, 80vh));
+	inline-size: var(--sbot-chatbot-is, min(400px, 90vw));
 	max-block-size: 80vh;
 	max-inline-size: 90vw;
-	border-radius: var(--sbot-chatbot-bdrs);
+	border-radius: var(--sbot-chatbot-bdrs, 1rem);
 	position: fixed;
 	margin: 0;
-	box-shadow: var(--sbot-chatbot-bxsh);
+	box-shadow: var(--sbot-chatbot-bxsh, light-dark(0 8px 32px hsl(220 15% 30% / 0.18), 0 8px 32px hsl(0 0% 0% / 0.4)));
 }
 
 :host([mode="chatbot"][position*="bottom"]) [part="search-overlay"] {

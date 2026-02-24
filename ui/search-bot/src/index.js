@@ -3,7 +3,8 @@ import stylesheet from './index.css' with { type: 'css' };
 const ICONS = {
 	ai: ['M11 5a9.37 9.37 0 0 0 7.7 7.7 9.37 9.37 0 0 0-7.7 7.7 9.37 9.37 0 0 0-7.7-7.7A9.37 9.37 0 0 0 11 5M18 2a4.26 4.26 0 0 0 3.5 3.5A4.26 4.26 0 0 0 18 9a4.26 4.26 0 0 0-3.5-3.5A4.26 4.26 0 0 0 18 2m-1 15a2.43 2.43 0 0 0 2 2 2.43 2.43 0 0 0-2 2 2.43 2.43 0 0 0-2-2 2.43 2.43 0 0 0 2-2'],
 	close: ['M18 6L6 18M6 6l12 12'],
-	history: ['M18 3a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-4.724l-4.762 2.857a1 1 0 0 1 -1.508 -.743l-.006 -.114v-2h-1a4 4 0 0 1 -3.995 -3.8l-.005 -.2v-8a4 4 0 0 1 4 -4zm-2.8 9.286a1 1 0 0 0 -1.414 .014a2.5 2.5 0 0 1 -3.572 0a1 1 0 0 0 -1.428 1.4a4.5 4.5 0 0 0 6.428 0a1 1 0 0 0 -.014 -1.414m-5.69 -4.286h-.01a1 1 0 1 0 0 2h.01a1 1 0 0 0 0 -2m5 0h-.01a1 1 0 0 0 0 2h.01a1 1 0 0 0 0 -2'],
+	plus: ['M12 5v14M5 12h14'],
+	history: ['M12 8l0 4l2 2', 'M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5'],
 	like: ['M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z', 'M1 22h4V9H1z'],
 	dislike: ['M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z', 'M23 2h-4v13h4z'],
 	send: ['M10 14l11 -11', 'M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5']
@@ -397,7 +398,6 @@ class SearchBot extends HTMLElement {
 		for (const chat of chats) {
 			list.append(el('li', { 'data-key': chat.key }, [
 				el('span', { text: chat.title }),
-				chat.created ? el('small', { text: new Date(chat.created).toLocaleDateString() }) : null,
 				el('button', { part: 'search-history-delete', ariaLabel: I18N.close, text: '\u00d7' }),
 			]));
 		}
@@ -472,10 +472,11 @@ class SearchBot extends HTMLElement {
 			</button>
 			<dialog id="search-dialog-${uid}" part="search-overlay" closedby="any">
 				<div part="search-header">
-					<button part="search-history" popovertarget="search-history-popover-${uid}" aria-label="${I18N.history}">${icon('history')}</button>
+					<button part="search-history" popovertarget="search-history-popover-${uid}" aria-label="${I18N.history}">${icon('history', 'icon-stroke')}</button>
 					<div id="search-history-popover-${uid}" part="search-history-panel" popover>
 						<ul part="search-history-list"></ul>
 					</div>
+					<button part="search-new" aria-label="${I18N.newQuestion}">${icon('plus', 'icon-stroke')}</button>
 					<button part="search-close" commandfor="search-dialog-${uid}" command="close" aria-label="${I18N.close}">${icon('close', 'icon-stroke')}</button>
 				</div>
 				<ol part="search-conversation"></ol>
@@ -487,7 +488,6 @@ class SearchBot extends HTMLElement {
 							<button type="submit" part="search-submit" aria-label="${I18N.search}">${icon('send', 'icon-stroke')}</button>
 						</nav>
 					</fieldset>
-					<button part="search-new" aria-label="${I18N.newQuestion}">${I18N.newQuestion}</button>
 				</form>
 			</dialog>
 		`;
