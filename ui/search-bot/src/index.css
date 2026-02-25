@@ -220,7 +220,7 @@
 	column-gap: var(--sbot-gap);
 	display: grid;
 	font: inherit;
-	grid-template-columns: auto min-content;
+	grid-template-columns: auto max-content;
 	padding: var(--sbot-input-p, 1ch 2ch);
 }
 [part="search-legend"] { all: unset; text-align: center; }
@@ -230,7 +230,8 @@
 
 svg { block-size: var(--sbot-icon-sz, 2em); fill: none; inline-size: var(--sbot-icon-sz, 2em); stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
 [part="search-trigger"] svg,
-[part="search-feedback"] svg { fill: currentColor; stroke: none; }
+[part="search-feedback"] svg,
+[part="search-stop"] svg { fill: currentColor; stroke: none; }
 
 button[part]:has(svg) {
 	aspect-ratio: 1;
@@ -239,6 +240,7 @@ button[part]:has(svg) {
 	border-radius: 50%;
 	display: inline-grid;
 	place-items: center;
+	&[hidden] { display: none; }
 }
 
 /* --- Hover --- */

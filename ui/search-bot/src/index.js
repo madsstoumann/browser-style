@@ -7,7 +7,8 @@ const ICONS = {
 	history: ['M12 8l0 4l2 2', 'M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5'],
 	like: ['M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z', 'M1 22h4V9H1z'],
 	dislike: ['M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z', 'M23 2h-4v13h4z'],
-	send: ['M10 14l11 -11', 'M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5']
+	send: ['M10 14l11 -11', 'M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5'],
+	stop: ['M17 4h-10a3 3 0 0 0 -3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3 -3v-10a3 3 0 0 0 -3 -3z']
 };
 
 const I18N = {
@@ -16,7 +17,9 @@ const I18N = {
 	history: 'Chat history',
 	newQuestion: 'New question',
 	noHistory: 'No saved conversations',
+	aborted: 'Response stopped',
 	search: 'Search',
+	stop: 'Stop',
 	searchLabel: 'Ask a question',
 	searchPlaceholder: 'Ask a question or a follow-up',
 };
@@ -139,12 +142,14 @@ class SearchBot extends HTMLElement {
 			input: this.$('textarea[name="q"]'),
 			legend: this.$('[part="search-legend"]'),
 			newQuestion: this.$('[part="search-new"]'),
+			stop: this.$('[part="search-stop"]'),
 			trigger: this.$('[part="search-trigger"]'),
 		};
 
-		const { dialog, form, historyList, historyPanel, input, newQuestion, trigger } = this.elements;
+		const { dialog, form, historyList, historyPanel, input, newQuestion, stop, trigger } = this.elements;
 
 		form.addEventListener('submit', (e) => { e.preventDefault(); this.search(input.value); });
+		stop.addEventListener('click', () => this.abortSearch());
 		input.addEventListener('keydown', (e) => {
 			if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
 		});
@@ -243,6 +248,7 @@ class SearchBot extends HTMLElement {
 			this.getAttribute('api'), trimmed, this.getSearchContext(), options
 		);
 
+		this.elements.stop.hidden = false;
 		this.eventSource = new EventSource(url);
 
 		this.eventSource.onmessage = (e) => {
@@ -258,6 +264,7 @@ class SearchBot extends HTMLElement {
 		};
 
 		this.eventSource.onerror = () => {
+			this.elements.stop.hidden = true;
 			this.emit('error', { chatKey: this.chatKey, message: 'Connection failed' });
 			this.closeEventSource();
 			this.currentResponse = null;
@@ -292,6 +299,7 @@ class SearchBot extends HTMLElement {
 	}
 
 	completeResponse() {
+		this.elements.stop.hidden = true;
 		this.closeEventSource();
 		const { li, summaryText, results, refs, components } = this.currentResponse;
 		this.renderParsedSummary(li, summaryText, refs);
@@ -307,6 +315,7 @@ class SearchBot extends HTMLElement {
 	}
 
 	handleError(message) {
+		this.elements.stop.hidden = true;
 		this.emit('error', { chatKey: this.chatKey, message });
 		this.closeEventSource();
 		this.currentResponse = null;
@@ -450,6 +459,21 @@ class SearchBot extends HTMLElement {
 		if (previousChatKey) this.emit('chat-clear', { previousChatKey });
 	}
 
+	abortSearch() {
+		if (!this.eventSource) return;
+		this.elements.stop.hidden = true;
+		this.closeEventSource();
+		if (this.currentResponse) {
+			this.currentResponse.li.part.remove('pending');
+			const abortedEl = el('em', { part: 'search-aborted', text: I18N.aborted });
+			this.currentResponse.li.append(abortedEl);
+			this.messages.push({ role: 'response', summary: this.currentResponse.summaryText, results: this.currentResponse.results });
+			this.emit('abort', { chatKey: this.chatKey });
+			this.saveChat();
+			this.currentResponse = null;
+		}
+	}
+
 	updateLabel() { this.elements.legend.textContent = this.messages.length ? I18N.followUp : I18N.searchLabel; }
 	closeEventSource() { this.eventSource?.close(); this.eventSource = null; }
 
@@ -486,6 +510,7 @@ class SearchBot extends HTMLElement {
 						<textarea part="search-input" name="q" autocomplete="off" autofocus enterkeyhint="search" placeholder="${I18N.searchPlaceholder}"></textarea>
 						<nav part="search-actions">
 							<button type="submit" part="search-submit" aria-label="${I18N.search}"><slot name="icon-submit">${icon('send')}</slot></button>
+							<button type="button" part="search-stop" hidden aria-label="${I18N.stop}"><slot name="icon-stop">${icon('stop')}</slot></button>
 						</nav>
 					</fieldset>
 				</form>
