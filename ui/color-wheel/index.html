@@ -6,14 +6,18 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<meta name="view-transition" content="same-origin">
-	<!-- <link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="ui-range-circular.css"> -->
+	<!-- <link rel="stylesheet" href="/ui/base/index.css"> -->
+	
 	<style>
 
 @layer bs-component {
 	:where(color-wheel) {
-		--color-wheel-ring-w: 3rem;
-		--color-wheel-thumb-gap: .5rem;
+		--color-wheel-border-gap: 1cqi;
+		--color-wheel-border-w: 2cqi;
+		--color-wheel-harmony-w: 3cqi;
+		--color-wheel-ring-w: 10cqi;
+		--color-wheel-sz: 78cqi;
+		--color-wheel-thumb-gap: 1cqi;
 		--_mask: radial-gradient(circle farthest-side at center, #0000 calc(100% - var(--color-wheel-ring-w)), #000 calc(100% - var(--color-wheel-ring-w)));
 		aspect-ratio: 1;
 		border-radius: 50%;
@@ -34,16 +38,75 @@
 			width: 100%;
 		}
 
+		& label {
+			background:
+				radial-gradient(circle,
+					Canvas calc(50% - var(--color-wheel-harmony-w)),
+					#0000 calc(50% - var(--color-wheel-harmony-w))
+				),
+				conic-gradient(
+					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 30deg)) 14.28%,
+					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 120deg)) 14.28% 28.57%,
+					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 150deg)) 28.57% 42.86%,
+					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 180deg)) 42.86% 57.14%,
+					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 210deg)) 57.14% 71.43%,
+					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 240deg)) 71.43% 85.71%,
+					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 330deg)) 85.71% 100%
+				);
+			border-radius: 50%;
+			color: contrast-color(oklch(0.7 0.15 var(--_angle, 0deg)));
+			display: grid;
+			font-family: system-ui, sans-serif;
+			grid-area: 1 / -1;
+			height: var(--color-wheel-sz);
+			place-items: center;
+			width: var(--color-wheel-sz);
+			&::after {
+				content: "oklch(0.7 0.15 " attr(data-hue) ")";
+				grid-area: 1 / -1;
+				pointer-events: none;
+			}
+		}
+
 		& input[type="range"] {
+			all: unset;
 			appearance: none;
-			background: oklch(0.7 0.15 var(--_angle, 0));
+			background:
+				radial-gradient(circle,
+					oklch(0.7 0.15 var(--_angle, 0deg)) calc(50% - var(--color-wheel-border-w) - var(--color-wheel-border-gap)),
+					Canvas calc(50% - var(--color-wheel-border-w) - var(--color-wheel-border-gap)),
+					Canvas calc(50% - var(--color-wheel-border-w)),
+					#0000 calc(50% - var(--color-wheel-border-w))
+				),
+				conic-gradient(
+					oklch(0.20 0.15 var(--_angle, 0deg)) 5%,
+					oklch(0.25 0.15 var(--_angle, 0deg)) 5% 10%,
+					oklch(0.30 0.15 var(--_angle, 0deg)) 10% 15%,
+					oklch(0.35 0.15 var(--_angle, 0deg)) 15% 20%,
+					oklch(0.40 0.15 var(--_angle, 0deg)) 20% 25%,
+					oklch(0.45 0.15 var(--_angle, 0deg)) 25% 30%,
+					oklch(0.50 0.15 var(--_angle, 0deg)) 30% 35%,
+					oklch(0.55 0.15 var(--_angle, 0deg)) 35% 40%,
+					oklch(0.60 0.15 var(--_angle, 0deg)) 40% 45%,
+					oklch(0.65 0.15 var(--_angle, 0deg)) 45% 50%,
+					oklch(0.75 0.15 var(--_angle, 0deg)) 50% 55%,
+					oklch(0.78 0.15 var(--_angle, 0deg)) 55% 60%,
+					oklch(0.81 0.15 var(--_angle, 0deg)) 60% 65%,
+					oklch(0.84 0.15 var(--_angle, 0deg)) 65% 70%,
+					oklch(0.87 0.15 var(--_angle, 0deg)) 70% 75%,
+					oklch(0.90 0.15 var(--_angle, 0deg)) 75% 80%,
+					oklch(0.93 0.15 var(--_angle, 0deg)) 80% 85%,
+					oklch(0.96 0.15 var(--_angle, 0deg)) 85% 90%,
+					oklch(0.98 0.15 var(--_angle, 0deg)) 90% 95%,
+					oklch(1.00 0.15 var(--_angle, 0deg)) 95% 100%
+				);
 			border-radius: 50%;
 			grid-area: 1 / -1;
-			height: 70cqi;
+			height: calc(var(--color-wheel-sz) - 2 * var(--color-wheel-harmony-w) - 2 * var(--color-wheel-border-gap));
 			pointer-events: none;
-			width: 70cqi;
-			&::-webkit-slider-thumb { appearance: none; }
-			&::-moz-range-thumb { appearance: none; }
+			width: calc(var(--color-wheel-sz) - 2 * var(--color-wheel-harmony-w) - 2 * var(--color-wheel-border-gap));
+			&::-webkit-slider-thumb { all: unset; appearance: none; }
+			&::-moz-range-thumb { all: unset; appearance: none; }
 		}
 
 		&::after {
@@ -74,13 +137,21 @@
 	</p>
 
 	<color-wheel>
-		<input type="range" min="0" max="360" value="0">
+		<label data-hue="0">
+			<input type="range" min="0" max="360" value="0">
+		</label>
 	</color-wheel>
 
 	<script type="module">
 		document.querySelectorAll('color-wheel').forEach(wheel => {
 			const input = wheel.querySelector('input');
-			const set = (deg) => { input.value = deg; wheel.style.setProperty('--_angle', `${deg}deg`); };
+			const label = wheel.querySelector('label');
+			const set = (deg) => {
+				const angle = Math.round(deg);
+				input.value = angle;
+				wheel.style.setProperty('--_angle', `${angle}deg`);
+				label.dataset.hue = angle;
+			};
 			const move = (e) => {
 				const r = wheel.getBoundingClientRect();
 				set((Math.atan2(e.clientY - r.top - r.height / 2, e.clientX - r.left - r.width / 2) * 180 / Math.PI + 450) % 360);
@@ -88,6 +159,7 @@
 			wheel.addEventListener('pointerdown', (e) => { move(e); wheel.addEventListener('pointermove', move); });
 			wheel.addEventListener('pointerup', () => wheel.removeEventListener('pointermove', move));
 			input.addEventListener('input', () => set(input.value));
+			set(input.value);
 		});
 	</script>
 </body>
