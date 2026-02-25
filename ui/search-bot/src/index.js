@@ -6,9 +6,12 @@ const ICONS = {
 	copy: ['M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666', 'M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1'],
 	plus: ['M12 5v14M5 12h14'],
 	history: ['M12 8l0 4l2 2', 'M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5'],
-	like: ['M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z', 'M1 22h4V9H1z'],
-	dislike: ['M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z', 'M23 2h-4v13h4z'],
-	send: ['M10 14l11 -11', 'M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5'],
+	like: ['M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3'],
+	likeFilled: ['M13 3a3 3 0 0 1 2.995 2.824l.005 .176v4h2a3 3 0 0 1 2.98 2.65l.015 .174l.005 .176l-.02 .196l-1.006 5.032c-.381 1.626 -1.502 2.796 -2.81 2.78l-.164 -.008h-8a1 1 0 0 1 -.993 -.883l-.007 -.117l.001 -9.536a1 1 0 0 1 .5 -.865a2.998 2.998 0 0 0 1.492 -2.397l.007 -.202v-1a3 3 0 0 1 3 -3z', 'M5 10a1 1 0 0 1 .993 .883l.007 .117v9a1 1 0 0 1 -.883 .993l-.117 .007h-1a2 2 0 0 1 -1.995 -1.85l-.005 -.15v-7a2 2 0 0 1 1.85 -1.995l.15 -.005h1z'],
+	dislike: ['M7 13v-8a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v7a1 1 0 0 0 1 1h3a4 4 0 0 1 4 4v1a2 2 0 0 0 4 0v-5h3a2 2 0 0 0 2 -2l-1 -5a2 3 0 0 0 -2 -2h-7a3 3 0 0 0 -3 3'],
+	dislikeFilled: ['M13 21.008a3 3 0 0 0 2.995 -2.823l.005 -.177v-4h2a3 3 0 0 0 2.98 -2.65l.015 -.173l.005 -.177l-.02 -.196l-1.006 -5.032c-.381 -1.625 -1.502 -2.796 -2.81 -2.78l-.164 .008h-8a1 1 0 0 0 -.993 .884l-.007 .116l.001 9.536a1 1 0 0 0 .5 .866a2.998 2.998 0 0 1 1.492 2.396l.007 .202v1a3 3 0 0 0 3 3z', 'M5 14.008a1 1 0 0 0 .993 -.883l.007 -.117v-9a1 1 0 0 0 -.883 -.993l-.117 -.007h-1a2 2 0 0 0 -1.995 1.852l-.005 .15v7a2 2 0 0 0 1.85 1.994l.15 .005h1z'],
+	share: ['M3 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0', 'M15 6a3 3 0 1 0 6 0a3 3 0 1 0 -6 0', 'M15 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0', 'M8.7 10.7l6.6 -3.4', 'M8.7 13.3l6.6 3.4'],
+	submit: ['M10 14l11 -11', 'M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5'],
 	stop: ['M17 4h-10a3 3 0 0 0 -3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3 -3v-10a3 3 0 0 0 -3 -3z']
 };
 
@@ -19,6 +22,8 @@ const I18N = {
 	newQuestion: 'New question',
 	noHistory: 'No saved conversations',
 	aborted: 'Response stopped',
+	copy: 'Copy to clipboard',
+	share: 'Share',
 	search: 'Search',
 	stop: 'Stop',
 	searchLabel: 'Ask a question',
@@ -310,7 +315,7 @@ class SearchBot extends HTMLElement {
 		}
 		this.emit('response', { chatKey: this.chatKey, summary: summaryText, results });
 		this.saveChat();
-		if (this.hasAttribute('feedback')) this.appendFeedback(li);
+		this.appendResponseActions(li);
 		li.scrollIntoView({ behavior: 'smooth', block: 'end' });
 		this.currentResponse = null;
 	}
@@ -322,21 +327,51 @@ class SearchBot extends HTMLElement {
 		this.currentResponse = null;
 	}
 
-	appendFeedback(responseLi) {
+	appendResponseActions(responseLi) {
+		const hasFeedback = this.hasAttribute('feedback');
+		const hasShare = this.hasAttribute('share');
+		if (!hasFeedback && !hasShare) return;
+
 		const msgIdx = this.messages.length - 1;
 		const container = el('div', { part: 'search-feedback' });
-		container.innerHTML = ['like', 'dislike'].map(v =>
-			`<button part="search-feedback-${v}" aria-label="${v}">${icon(v)}</button>`
-		).join('');
-		container.addEventListener('click', (e) => {
-			const btn = e.target.closest('button');
-			if (!btn) return;
-			const value = btn.ariaLabel;
-			const prev = container.querySelector('[aria-pressed="true"]');
-			if (prev) prev.removeAttribute('aria-pressed');
-			btn.setAttribute('aria-pressed', 'true');
-			this.emit('feedback', { chatKey: this.chatKey, messageIndex: msgIdx, value });
-		});
+
+		if (hasFeedback) {
+			container.innerHTML = ['like', 'dislike'].map(v =>
+				`<button type="button" part="search-feedback-${v}" aria-label="${v}">${icon(v)}${icon(v + 'Filled')}</button>`
+			).join('');
+			container.addEventListener('click', (e) => {
+				const btn = e.target.closest('[part^="search-feedback-"]');
+				if (!btn) return;
+				const value = btn.ariaLabel;
+				const prev = container.querySelector('[aria-pressed="true"]');
+				if (prev) prev.removeAttribute('aria-pressed');
+				btn.setAttribute('aria-pressed', 'true');
+				this.emit('feedback', { chatKey: this.chatKey, messageIndex: msgIdx, value });
+			});
+		}
+
+		if (hasShare) {
+			const text = () => responseLi.textContent.trim();
+			const copyBtn = el('button', { type: 'button', ariaLabel: I18N.copy });
+			copyBtn.innerHTML = icon('copy');
+			copyBtn.addEventListener('click', async () => {
+				await navigator.clipboard.writeText(text());
+				this.emit('copy', { chatKey: this.chatKey, text: text() });
+			});
+			container.append(copyBtn);
+			if (navigator.share) {
+				const shareBtn = el('button', { type: 'button', ariaLabel: I18N.share });
+				shareBtn.innerHTML = icon('share');
+				shareBtn.addEventListener('click', async () => {
+					try {
+						await navigator.share({ text: text() });
+						this.emit('share', { chatKey: this.chatKey, text: text() });
+					} catch {}
+				});
+				container.append(shareBtn);
+			}
+		}
+
 		responseLi.append(container);
 	}
 
@@ -447,10 +482,8 @@ class SearchBot extends HTMLElement {
 			this.elements.conversation.append(li);
 		}
 
-		if (this.hasAttribute('feedback')) {
-			const lastResponse = this.elements.conversation.querySelector('li[part="response"]:last-of-type');
-			if (lastResponse) this.appendFeedback(lastResponse);
-		}
+		const lastResponse = this.elements.conversation.querySelector('li[part="response"]:last-of-type');
+		if (lastResponse) this.appendResponseActions(lastResponse);
 
 		this.updateLabel();
 		this.elements.conversation.lastElementChild?.scrollIntoView({ block: 'end' });
@@ -518,7 +551,7 @@ class SearchBot extends HTMLElement {
 						<legend part="search-legend">${I18N.searchLabel}</legend>
 						<textarea part="search-input" name="q" autocomplete="off" autofocus enterkeyhint="search" placeholder="${I18N.searchPlaceholder}"></textarea>
 						<nav part="search-actions">
-							<button type="submit" part="search-submit" aria-label="${I18N.search}"><slot name="icon-submit">${icon('send')}</slot></button>
+							<button type="submit" part="search-submit" aria-label="${I18N.search}"><slot name="icon-submit">${icon('submit')}</slot></button>
 							<button type="button" part="search-stop" hidden aria-label="${I18N.stop}"><slot name="icon-stop">${icon('stop')}</slot></button>
 						</nav>
 					</fieldset>

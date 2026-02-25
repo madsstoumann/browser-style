@@ -249,13 +249,21 @@
 	gap: calc(var(--sbot-gap) / 2);
 	padding-block-start: 0.5rem;
 	button {
+		aspect-ratio: 1;
 		background: none;
 		border: 1px solid var(--sbot-bdc);
 		border-radius: 0.25rem;
 		cursor: pointer;
+		display: inline-grid;
 		padding: 0.25rem;
+		place-items: center;
 		svg { block-size: 1em; inline-size: 1em; }
-		&[aria-pressed="true"] { background: var(--sbot-btn-bg); }
+		svg + svg { display: none; fill: currentColor; stroke: none; }
+		&[aria-pressed="true"] {
+			background: var(--sbot-btn-bg);
+			svg { display: none; }
+			svg + svg { display: block; }
+		}
 	}
 }
 
@@ -286,10 +294,9 @@
 
 svg { block-size: var(--sbot-icon-sz, 2em); fill: none; inline-size: var(--sbot-icon-sz, 2em); stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
 [part="search-trigger"] svg,
-[part="search-feedback"] svg,
 [part="search-stop"] svg { fill: currentColor; stroke: none; }
 
-button[part]:has(svg) {
+button[part]:has(svg):not([part*="feedback"]) {
 	aspect-ratio: 1;
 	background: var(--sbot-btn-bg);
 	border: 0;
