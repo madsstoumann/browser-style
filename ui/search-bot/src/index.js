@@ -48,7 +48,8 @@ function el(tag, attrs = {}, children = []) {
 		else if (key in node) node[key] = value;
 		else node.setAttribute(key, value);
 	}
-	for (const child of (Array.isArray(children) ? children : [children])) if (child != null) node.append(child);
+	const list = Array.isArray(children) ? children : [children];
+	for (const child of list) if (child != null) node.append(child);
 	return node;
 }
 
@@ -63,8 +64,10 @@ function parseInlineMarkdown(text) {
 		else if (match[2] != null) frag.append(el('strong', { text: match[2] }));
 		else if (match[3] != null) frag.append(el('em', { text: match[3] }));
 		else if (match[4] != null) {
-			try { if (/^https?:$/.test(new URL(match[5]).protocol)) frag.append(el('a', { href: match[5], text: match[4] })); else frag.append(match[4]); }
-			catch { frag.append(match[4]); }
+			try {
+				const safe = /^https?:$/.test(new URL(match[5]).protocol);
+				frag.append(safe ? el('a', { href: match[5], text: match[4] }) : match[4]);
+			} catch { frag.append(match[4]); }
 		}
 		else {
 			try {
@@ -260,6 +263,9 @@ class SearchBot extends HTMLElement {
 		this.eventSource.onmessage = (e) => {
 			const msg = this.adapter.parseEvent(e.data);
 			if (!msg) return;
+			if (msg.type === 'chunk' || msg.type === 'results' || msg.type === 'component') {
+				this.currentResponse.li.part.remove('pending');
+			}
 			switch (msg.type) {
 				case 'chunk': this.appendChunk(msg.text); break;
 				case 'results': this.appendResults(msg.items); break;
@@ -269,22 +275,15 @@ class SearchBot extends HTMLElement {
 			}
 		};
 
-		this.eventSource.onerror = () => {
-			this.elements.stop.hidden = true;
-			this.emit('error', { chatKey: this.chatKey, message: 'Connection failed' });
-			this.closeEventSource();
-			this.currentResponse = null;
-		};
+		this.eventSource.onerror = () => this.handleError('Connection failed');
 	}
 
 	appendChunk(text) {
-		this.currentResponse.li.part.remove('pending');
 		this.currentResponse.summaryText += text;
 		this.currentResponse.summaryNode.textContent = this.currentResponse.summaryText;
 	}
 
 	appendResults(items) {
-		this.currentResponse.li.part.remove('pending');
 		const { li, results, refs } = this.currentResponse;
 		const ul = this.ensureResultsList(li);
 		for (const item of items) {
@@ -295,7 +294,6 @@ class SearchBot extends HTMLElement {
 	}
 
 	appendComponent(name, props) {
-		this.currentResponse.li.part.remove('pending');
 		const renderer = this.renderers.get(name);
 		if (!renderer) return;
 		const node = renderer(props);
@@ -355,17 +353,19 @@ class SearchBot extends HTMLElement {
 			const copyBtn = el('button', { type: 'button', ariaLabel: I18N.copy });
 			copyBtn.innerHTML = icon('copy');
 			copyBtn.addEventListener('click', async () => {
-				await navigator.clipboard.writeText(text());
-				this.emit('copy', { chatKey: this.chatKey, text: text() });
+				const content = text();
+				await navigator.clipboard.writeText(content);
+				this.emit('copy', { chatKey: this.chatKey, text: content });
 			});
 			container.append(copyBtn);
 			if (navigator.share) {
 				const shareBtn = el('button', { type: 'button', ariaLabel: I18N.share });
 				shareBtn.innerHTML = icon('share');
 				shareBtn.addEventListener('click', async () => {
+					const content = text();
 					try {
-						await navigator.share({ text: text() });
-						this.emit('share', { chatKey: this.chatKey, text: text() });
+						await navigator.share({ text: content });
+						this.emit('share', { chatKey: this.chatKey, text: content });
 					} catch {}
 				});
 				container.append(shareBtn);

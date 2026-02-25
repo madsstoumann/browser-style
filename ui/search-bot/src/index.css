@@ -179,9 +179,6 @@
 }
 [part="search-conversation"]:empty { display: none; }
 
-[part="user"],
-[part="response"] { padding: 0.75em 0; }
-
 [part="user"] {
 	background-color: var(--sbot-user-bgc);
 	border-radius: var(--sbot-user-bdrs, 0.75rem);
@@ -191,6 +188,7 @@
 }
 
 [part="response"] {
+	padding: 0.75em 0;
 	ul {
 		display: grid;
 		list-style: none;
@@ -318,7 +316,7 @@ button[part]:has(svg):not([part*="feedback"]) {
 /* --- Overlay Mode --- */
 
 :host([mode="overlay"]) [part="search-overlay"] {
-	background: #FFF; /* TODO */
+	background: #FFF;
 	border-radius: var(--sbot-overlay-bdrs, 1rem);
 	box-shadow: var(--sbot-chatbot-bxsh);
 	grid-template-rows: auto 1fr auto;
