@@ -12,9 +12,10 @@
 
 @layer bs-component {
 	:where(color-wheel) {
-		--color-wheel-border-gap: 1cqi;
-		--color-wheel-border-w: 2cqi;
-		--color-wheel-harmony-w: 3cqi;
+		--color-wheel-tints-gap: 1cqi;
+		--color-wheel-tints-w: 10cqi;
+		--color-wheel-harmony-gap: 1cqi;
+		--color-wheel-harmony-w: 5cqi;
 		--color-wheel-ring-w: 10cqi;
 		--color-wheel-sz: 78cqi;
 		--color-wheel-thumb-gap: 1cqi;
@@ -39,20 +40,6 @@
 		}
 
 		& label {
-			background:
-				radial-gradient(circle,
-					Canvas calc(50% - var(--color-wheel-harmony-w)),
-					#0000 calc(50% - var(--color-wheel-harmony-w))
-				),
-				conic-gradient(
-					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 30deg)) 14.28%,
-					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 120deg)) 14.28% 28.57%,
-					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 150deg)) 28.57% 42.86%,
-					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 180deg)) 42.86% 57.14%,
-					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 210deg)) 57.14% 71.43%,
-					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 240deg)) 71.43% 85.71%,
-					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 330deg)) 85.71% 100%
-				);
 			border-radius: 50%;
 			color: contrast-color(oklch(0.7 0.15 var(--_angle, 0deg)));
 			display: grid;
@@ -72,11 +59,11 @@
 			all: unset;
 			appearance: none;
 			background:
-				radial-gradient(circle,
-					oklch(0.7 0.15 var(--_angle, 0deg)) calc(50% - var(--color-wheel-border-w) - var(--color-wheel-border-gap)),
-					Canvas calc(50% - var(--color-wheel-border-w) - var(--color-wheel-border-gap)),
-					Canvas calc(50% - var(--color-wheel-border-w)),
-					#0000 calc(50% - var(--color-wheel-border-w))
+				radial-gradient(circle closest-side,
+					oklch(0.7 0.15 var(--_angle, 0deg)) calc(100% - var(--color-wheel-harmony-w) - var(--color-wheel-harmony-gap) - var(--color-wheel-tints-w) - var(--color-wheel-tints-gap)),
+					Canvas calc(100% - var(--color-wheel-harmony-w) - var(--color-wheel-harmony-gap) - var(--color-wheel-tints-w) - var(--color-wheel-tints-gap)),
+					Canvas calc(100% - var(--color-wheel-harmony-w) - var(--color-wheel-harmony-gap) - var(--color-wheel-tints-w)),
+					#0000 calc(100% - var(--color-wheel-harmony-w) - var(--color-wheel-harmony-gap) - var(--color-wheel-tints-w))
 				),
 				conic-gradient(
 					oklch(0.20 0.15 var(--_angle, 0deg)) 5%,
@@ -99,12 +86,28 @@
 					oklch(0.96 0.15 var(--_angle, 0deg)) 85% 90%,
 					oklch(0.98 0.15 var(--_angle, 0deg)) 90% 95%,
 					oklch(1.00 0.15 var(--_angle, 0deg)) 95% 100%
+				),
+				radial-gradient(circle closest-side,
+					Canvas calc(100% - var(--color-wheel-harmony-w)),
+					#0000 calc(100% - var(--color-wheel-harmony-w))
+				),
+				conic-gradient(
+					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 30deg)) 14.28%,
+					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 120deg)) 14.28% 28.57%,
+					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 150deg)) 28.57% 42.86%,
+					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 180deg)) 42.86% 57.14%,
+					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 210deg)) 57.14% 71.43%,
+					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 240deg)) 71.43% 85.71%,
+					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 330deg)) 85.71% 100%
 				);
+			background-clip: padding-box, content-box, padding-box, padding-box;
 			border-radius: 50%;
+			box-sizing: border-box;
 			grid-area: 1 / -1;
-			height: calc(var(--color-wheel-sz) - 2 * var(--color-wheel-harmony-w) - 2 * var(--color-wheel-border-gap));
+			height: var(--color-wheel-sz);
+			padding: calc(var(--color-wheel-harmony-w) + var(--color-wheel-harmony-gap));
 			pointer-events: none;
-			width: calc(var(--color-wheel-sz) - 2 * var(--color-wheel-harmony-w) - 2 * var(--color-wheel-border-gap));
+			width: var(--color-wheel-sz);
 			&::-webkit-slider-thumb { all: unset; appearance: none; }
 			&::-moz-range-thumb { all: unset; appearance: none; }
 		}
