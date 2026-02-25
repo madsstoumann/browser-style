@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Range Circular</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<!-- <link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="ui-range-circular.css"> -->
+	<style>
+
+@layer bs-component {
+	:where(color-wheel) {
+		--color-wheel-ring-w: 3rem;
+		--color-wheel-thumb-gap: .5rem;
+		--_mask: radial-gradient(circle farthest-side at center, #0000 calc(100% - var(--color-wheel-ring-w)), #000 calc(100% - var(--color-wheel-ring-w)));
+		aspect-ratio: 1;
+		border-radius: 50%;
+		container-type: inline-size;
+		display: grid;
+		place-items: center;
+		pointer-events: none;
+		touch-action: none;
+
+		&::before {
+			background: conic-gradient(in oklch longer hue, oklch(0.7 0.15 0), oklch(0.7 0.15 0));
+			border-radius: 50%;
+			content: "";
+			grid-area: 1 / -1;
+			height: 100%;
+			mask: var(--_mask);
+			pointer-events: auto;
+			width: 100%;
+		}
+
+		& input[type="range"] {
+			appearance: none;
+			background: oklch(0.7 0.15 var(--_angle, 0));
+			border-radius: 50%;
+			grid-area: 1 / -1;
+			height: 70cqi;
+			pointer-events: none;
+			width: 70cqi;
+			&::-webkit-slider-thumb { appearance: none; }
+			&::-moz-range-thumb { appearance: none; }
+		}
+
+		&::after {
+			background: radial-gradient(circle calc(var(--color-wheel-ring-w) / 2 - var(--color-wheel-thumb-gap)) at center calc(var(--color-wheel-ring-w) / 2), #FFF8 100%, #0000 100%);
+			content: "";
+			grid-area: 1 / -1;
+			height: 100%;
+			pointer-events: auto;
+			rotate: var(--_angle, 0deg);
+			touch-action: none;
+			width: var(--color-wheel-ring-w);
+		}
+
+		&:has(input:focus-visible)::after {
+			background: radial-gradient(circle calc(var(--color-wheel-ring-w) / 2 - var(--color-wheel-thumb-gap)) at center calc(var(--color-wheel-ring-w) / 2), #FFFC 100%, #0000 100%);
+			filter: drop-shadow(0 0 4px #FFF);
+		}
+	}
+}
+	</style>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Range: Color Wheel</h2>
+	<p>
+		<!-- <strong>Range: Circular</strong> presents a circular range alongside a percentage value, managed through an <code>&lt;input type="range"&gt;</code> HTML element. -->
+	</p>
+
+	<color-wheel>
+		<input type="range" min="0" max="360" value="0">
+	</color-wheel>
+
+	<script type="module">
+		document.querySelectorAll('color-wheel').forEach(wheel => {
+			const input = wheel.querySelector('input');
+			const set = (deg) => { input.value = deg; wheel.style.setProperty('--_angle', `${deg}deg`); };
+			const move = (e) => {
+				const r = wheel.getBoundingClientRect();
+				set((Math.atan2(e.clientY - r.top - r.height / 2, e.clientX - r.left - r.width / 2) * 180 / Math.PI + 450) % 360);
+			};
+			wheel.addEventListener('pointerdown', (e) => { move(e); wheel.addEventListener('pointermove', move); });
+			wheel.addEventListener('pointerup', () => wheel.removeEventListener('pointermove', move));
+			input.addEventListener('input', () => set(input.value));
+		});
+	</script>
+</body>
+</html>
