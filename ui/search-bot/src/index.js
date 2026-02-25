@@ -70,8 +70,8 @@ function parseInlineMarkdown(text) {
 	return frag;
 }
 
-function icon(name, part) {
-	return `<svg viewBox="0 0 24 24" aria-hidden="true"${part ? ` part="${part}"` : ''}>${ICONS[name].map(d => `<path d="${d}"/>`).join('')}</svg>`;
+function icon(name) {
+	return `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[name].map(d => `<path d="${d}"/>`).join('')}</svg>`;
 }
 
 class SearchBot extends HTMLElement {
@@ -316,7 +316,7 @@ class SearchBot extends HTMLElement {
 		const msgIdx = this.messages.length - 1;
 		const container = el('div', { part: 'search-feedback' });
 		container.innerHTML = ['like', 'dislike'].map(v =>
-			`<button part="search-feedback-${v}" aria-label="${v}">${icon(v, 'icon-stroke')}</button>`
+			`<button part="search-feedback-${v}" aria-label="${v}">${icon(v)}</button>`
 		).join('');
 		container.addEventListener('click', (e) => {
 			const btn = e.target.closest('button');
@@ -468,16 +468,16 @@ class SearchBot extends HTMLElement {
 		const uid = this._uid;
 		this.shadowRoot.innerHTML = `
 			<button part="search-trigger" commandfor="search-dialog-${uid}" command="show-modal" aria-label="${I18N.search}">
-				<slot name="icon">${icon('ai')}</slot>
+				<slot name="icon-trigger">${icon('ai')}</slot>
 			</button>
 			<dialog id="search-dialog-${uid}" part="search-overlay" closedby="any">
 				<div part="search-header">
-					<button part="search-history" popovertarget="search-history-popover-${uid}" aria-label="${I18N.history}">${icon('history', 'icon-stroke')}</button>
+					<button part="search-history" popovertarget="search-history-popover-${uid}" aria-label="${I18N.history}"><slot name="icon-history">${icon('history')}</slot></button>
 					<div id="search-history-popover-${uid}" part="search-history-panel" popover>
 						<ul part="search-history-list"></ul>
 					</div>
-					<button part="search-new" aria-label="${I18N.newQuestion}">${icon('plus', 'icon-stroke')}</button>
-					<button part="search-close" commandfor="search-dialog-${uid}" command="close" aria-label="${I18N.close}">${icon('close', 'icon-stroke')}</button>
+					<button part="search-new" aria-label="${I18N.newQuestion}"><slot name="icon-new">${icon('plus')}</slot></button>
+					<button part="search-close" commandfor="search-dialog-${uid}" command="close" aria-label="${I18N.close}"><slot name="icon-close">${icon('close')}</slot></button>
 				</div>
 				<ol part="search-conversation"></ol>
 				<form part="search-form">
@@ -485,7 +485,7 @@ class SearchBot extends HTMLElement {
 						<legend part="search-legend">${I18N.searchLabel}</legend>
 						<textarea part="search-input" name="q" autocomplete="off" autofocus enterkeyhint="search" placeholder="${I18N.searchPlaceholder}"></textarea>
 						<nav part="search-actions">
-							<button type="submit" part="search-submit" aria-label="${I18N.search}">${icon('send', 'icon-stroke')}</button>
+							<button type="submit" part="search-submit" aria-label="${I18N.search}"><slot name="icon-submit">${icon('send')}</slot></button>
 						</nav>
 					</fieldset>
 				</form>

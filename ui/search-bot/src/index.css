@@ -2,16 +2,30 @@
 
 :host * { box-sizing: border-box; }
 :host {
-	--sbot-gap: 12px;
 	--sbot-bdc: light-dark(hsl(220 15% 85%), hsl(220 10% 50%));
-	--sbot-overlay-backdrop: light-dark(hsl(220 15% 96% / 0.8), hsl(220 15% 10% / 0.9));
-	--sbot-trigger-offset: 1rem;
-	--sbot-conversation-mxw: 70ch;
-	--sbot-hover-bg: light-dark(hsl(220 15% 88%), hsl(220 10% 18%));
+	--sbot-btn-bg: light-dark(hsl(215 20% 90%), hsl(215 15% 22%));
+	--sbot-btn-bg-hover: light-dark(hsl(215 20% 82%), hsl(215 15% 30%));
+	--sbot-chatbot-bxsh: light-dark(0 8px 32px hsl(220 15% 30% / 0.18), 0 8px 32px hsl(0 0% 0% / 0.4));
 	--sbot-chatbot-offset: 5rem;
+	--sbot-code-bg: light-dark(hsl(220 15% 88%), hsl(220 10% 20%));
+	--sbot-conversation-mxw: 70ch;
+	--sbot-fieldset-bg: light-dark(Field, hsl(220 12% 15%));
+	--sbot-gap: 12px;
+	--sbot-header-bg: light-dark(#FFF, #333);
+	--sbot-history-bg: light-dark(hsl(220 15% 98% / 0.95), hsl(220 15% 14% / 0.95));
+	--sbot-history-bxsh: light-dark(0 4px 12px hsl(220 15% 30% / 0.12), 0 4px 12px hsl(0 0% 0% / 0.3));
+	--sbot-history-delete-bg: light-dark(hsl(220 15% 88%), hsl(220 10% 22%));
+	--sbot-history-delete-bg-hover: light-dark(hsl(220 15% 78%), hsl(220 10% 32%));
+	--sbot-hover-bg: light-dark(hsl(220 15% 88%), hsl(220 10% 18%));
+	--sbot-img-bgc: light-dark(hsl(220 10% 90%), hsl(220 10% 20%));
+	--sbot-link-c: light-dark(hsl(215 80% 40%), hsl(215 70% 65%));
+	--sbot-overlay-backdrop: light-dark(hsl(220 15% 96% / 0.8), hsl(220 15% 10% / 0.9));
+	--sbot-scrollbar-thumb: light-dark(hsl(220 10% 75%), hsl(220 10% 30%));
+	--sbot-trigger-offset: 1rem;
+	--sbot-user-bgc: light-dark(hsl(220 10% 90%), hsl(215 25% 22%));
 	color-scheme: light dark;
 	font-family: var(--sbot-ff, 'Iowan Old Style', 'Palatino Linotype', 'URW Palladio L', P052, serif);
-	scrollbar-color: var(--sbot-scrollbar-thumb, light-dark(hsl(220 10% 75%), hsl(220 10% 30%))) var(--sbot-scrollbar-track, transparent);
+	scrollbar-color: var(--sbot-scrollbar-thumb) var(--sbot-scrollbar-track, transparent);
 	scrollbar-width: thin;
 }
 
@@ -46,7 +60,7 @@
 /* --- Header & History --- */
 
 [part="search-header"] {
-	background: var(--sbot-header-bg, #0000);
+	background: var(--sbot-header-bg);
 	border-block-end: 1px solid var(--sbot-bdc);
 	display: flex;
 	align-items: center;
@@ -57,11 +71,11 @@
 [part="search-close"] { margin-inline-start: auto; }
 
 [part="search-history-panel"] {
-	background: var(--sbot-history-bg, light-dark(hsl(220 15% 98% / 0.95), hsl(220 15% 14% / 0.95)));
+	background: var(--sbot-history-bg);
 	backdrop-filter: var(--sbot-history-bdf, blur(8px));
 	border: 1px solid var(--sbot-bdc);
 	border-radius: var(--sbot-history-bdrs, 0.5rem);
-	box-shadow: var(--sbot-history-bxsh, light-dark(0 4px 12px hsl(220 15% 30% / 0.12), 0 4px 12px hsl(0 0% 0% / 0.3)));
+	box-shadow: var(--sbot-history-bxsh);
 	margin: 0;
 	max-block-size: var(--sbot-history-mxbs, 60vh);
 	max-inline-size: var(--sbot-history-mxis, 20rem);
@@ -89,7 +103,7 @@
 
 [part="search-history-delete"] {
 	aspect-ratio: 1;
-	background: light-dark(hsl(220 15% 88%), hsl(220 10% 22%));
+	background: var(--sbot-history-delete-bg);
 	border: 0;
 	border-radius: 0.25rem;
 	cursor: pointer;
@@ -114,7 +128,7 @@
 [part="response"] { padding: 0.75em 0; }
 
 [part="user"] {
-	background-color: var(--sbot-user-bgc, light-dark(hsl(220 10% 90%), hsl(215 25% 22%)));
+	background-color: var(--sbot-user-bgc);
 	border-radius: var(--sbot-user-bdrs, 0.75rem);
 	justify-self: end;
 	max-width: 80%;
@@ -144,12 +158,12 @@
 		}
 	}
 	code {
-		background: var(--sbot-code-bg, light-dark(hsl(220 15% 88%), hsl(220 10% 20%)));
+		background: var(--sbot-code-bg);
 		border-radius: 0.25em;
 		font-family: var(--sbot-code-ff, monospace);
 		padding: 0.1em 0.3em;
 	}
-	a { color: var(--sbot-link-c, light-dark(hsl(215 80% 40%), hsl(215 70% 65%))); }
+	a { color: var(--sbot-link-c); }
 }
 
 [part~="pending"]::before {
@@ -170,7 +184,7 @@
 }
 
 [part="search-result-img"] {
-	background-color: var(--sbot-img-bgc, light-dark(hsl(220 10% 90%), hsl(220 10% 20%)));
+	background-color: var(--sbot-img-bgc);
 	display: block;
 	max-inline-size: var(--sbot-img-mxis, 200px);
 }
@@ -200,7 +214,7 @@
 
 [part="search-fieldset"] {
 	all: unset;
-	background: light-dark(Field, hsl(220 12% 15%));
+	background: var(--sbot-fieldset-bg);
 	border: 1px solid var(--sbot-bdc);
 	border-radius: var(--sbot-input-bdrs, 1ch);
 	column-gap: var(--sbot-gap);
@@ -210,16 +224,17 @@
 	padding: var(--sbot-input-p, 1ch 2ch);
 }
 [part="search-legend"] { all: unset; text-align: center; }
-[part="search-input"] { background: transparent; border: 0; color: FieldText; font: inherit; outline: none; resize: none; }
+[part="search-input"] { background: #0000; border: 0; color: FieldText; field-sizing: content; font: inherit; outline: none; padding-block-end: 1.5ch; resize: none; }
 
 /* --- Icons & Buttons --- */
 
-svg { block-size: var(--sbot-icon-sz, 2em); inline-size: var(--sbot-icon-sz, 2em); }
-[part="icon-stroke"] { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+svg { block-size: var(--sbot-icon-sz, 2em); fill: none; inline-size: var(--sbot-icon-sz, 2em); stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+[part="search-trigger"] svg,
+[part="search-feedback"] svg { fill: currentColor; stroke: none; }
 
 button[part]:has(svg) {
 	aspect-ratio: 1;
-	background: var(--sbot-btn-bg, light-dark(hsl(215 20% 90%), hsl(215 15% 22%)));
+	background: var(--sbot-btn-bg);
 	border: 0;
 	border-radius: 50%;
 	display: inline-grid;
@@ -229,9 +244,9 @@ button[part]:has(svg) {
 /* --- Hover --- */
 
 @media (hover: hover) {
-	button[part]:has(svg):hover { background: var(--sbot-btn-bg-hover, light-dark(hsl(215 20% 82%), hsl(215 15% 30%))); }
+	button[part]:has(svg):hover { background: var(--sbot-btn-bg-hover); }
 	[part="search-history-list"] li:hover { background: var(--sbot-hover-bg); }
-	[part="search-history-delete"]:hover { background: light-dark(hsl(220 15% 78%), hsl(220 10% 32%)); }
+	[part="search-history-delete"]:hover { background: var(--sbot-history-delete-bg-hover); }
 	[part="search-feedback"] button:hover { background: var(--sbot-hover-bg); }
 }
 
@@ -241,7 +256,7 @@ button[part]:has(svg) {
 	background: var(--sbot-overlay-backdrop);
 	block-size: var(--sbot-chatbot-bs, min(600px, 80vh));
 	border-radius: var(--sbot-chatbot-bdrs, 1rem);
-	box-shadow: var(--sbot-chatbot-bxsh, light-dark(0 8px 32px hsl(220 15% 30% / 0.18), 0 8px 32px hsl(0 0% 0% / 0.4)));
+	box-shadow: var(--sbot-chatbot-bxsh);
 	inline-size: var(--sbot-chatbot-is, min(400px, 90vw));
 	margin: 0;
 	max-block-size: 80vh;
@@ -253,3 +268,14 @@ button[part]:has(svg) {
 :host([mode="chatbot"][position*="top"]) [part="search-overlay"]    { inset-block: var(--sbot-chatbot-offset) auto; }
 :host([mode="chatbot"][position*="right"]) [part="search-overlay"]  { inset-inline: auto 1rem; }
 :host([mode="chatbot"][position*="left"]) [part="search-overlay"]   { inset-inline: 1rem auto; }
+
+/* --- Options --- */
+:host(:not([options~="close"])) [part="search-close"],
+:host(:not([options~="history"])) [part="search-history"],
+:host(:not([options~="new"])) [part="search-new"],
+:host(:not([options~="submit"])) [part="search-submit"] { display: none; }
+
+:host(:not([options~="divider"])) [part="search-header"] {
+	background: #0000;
+	border: 0;
+}
