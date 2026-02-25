@@ -8,6 +8,16 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<script type="module" src="./src/index.js"></script>
+	<style>
+    html {
+			min-height: 100dvh;
+			background: linear-gradient(45deg, red, purple, deeppink, aqua) no-repeat;
+			background-size: cover;
+    }
+		body {
+			background: #0000;
+		}
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
@@ -19,7 +29,7 @@
 		api="https://wild-flower-99ce-nlweb.stoumann.workers.dev"
 		feedback
 		id="blog"
-		mode="search"
+		mode="overlay"
 		options="close history new"
 		position="top right"
 		preserve-history

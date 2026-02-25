@@ -5,7 +5,11 @@ Add "options"-attribute:
 - history
 - divider
 - close
-- send
+- send --> submit
 - like / dislike
 - share
 - stop
+- copy
+
+Replace like/dislike with stroked versions
+Overlay (like Raffle) / or full

@@ -3,6 +3,7 @@ import stylesheet from './index.css' with { type: 'css' };
 const ICONS = {
 	ai: ['M11 5a9.37 9.37 0 0 0 7.7 7.7 9.37 9.37 0 0 0-7.7 7.7 9.37 9.37 0 0 0-7.7-7.7A9.37 9.37 0 0 0 11 5M18 2a4.26 4.26 0 0 0 3.5 3.5A4.26 4.26 0 0 0 18 9a4.26 4.26 0 0 0-3.5-3.5A4.26 4.26 0 0 0 18 2m-1 15a2.43 2.43 0 0 0 2 2 2.43 2.43 0 0 0-2 2 2.43 2.43 0 0 0-2-2 2.43 2.43 0 0 0 2-2'],
 	close: ['M18 6L6 18M6 6l12 12'],
+	copy: ['M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666', 'M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1'],
 	plus: ['M12 5v14M5 12h14'],
 	history: ['M12 8l0 4l2 2', 'M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5'],
 	like: ['M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z', 'M1 22h4V9H1z'],
@@ -330,8 +331,11 @@ class SearchBot extends HTMLElement {
 		container.addEventListener('click', (e) => {
 			const btn = e.target.closest('button');
 			if (!btn) return;
-			this.emit('feedback', { chatKey: this.chatKey, messageIndex: msgIdx, value: btn.ariaLabel });
-			container.remove();
+			const value = btn.ariaLabel;
+			const prev = container.querySelector('[aria-pressed="true"]');
+			if (prev) prev.removeAttribute('aria-pressed');
+			btn.setAttribute('aria-pressed', 'true');
+			this.emit('feedback', { chatKey: this.chatKey, messageIndex: msgIdx, value });
 		});
 		responseLi.append(container);
 	}
@@ -441,6 +445,11 @@ class SearchBot extends HTMLElement {
 				li.append(ul);
 			}
 			this.elements.conversation.append(li);
+		}
+
+		if (this.hasAttribute('feedback')) {
+			const lastResponse = this.elements.conversation.querySelector('li[part="response"]:last-of-type');
+			if (lastResponse) this.appendFeedback(lastResponse);
 		}
 
 		this.updateLabel();
