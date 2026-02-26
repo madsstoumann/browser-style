@@ -1,69 +1,40 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>Range Circular</title>
+	<title>Hue Wheel</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="description" content="Hue Wheel is an interactive color picker built with CSS gradients and minimal JavaScript, featuring a hue ring, harmony colors, and tint variations.">
 	<meta name="view-transition" content="same-origin">
-	<!-- <link rel="stylesheet" href="/ui/base/index.css"> -->
-	
+	<link rel="stylesheet" href="/ui/base/index.css">
+
 	<style>
 
-@layer bs-component {
-	:where(color-wheel) {
-		--color-wheel-tints-gap: 1cqi;
-		--color-wheel-tints-w: 10cqi;
-		--color-wheel-harmony-gap: 1cqi;
-		--color-wheel-harmony-w: 5cqi;
-		--color-wheel-ring-w: 10cqi;
-		--color-wheel-sz: 78cqi;
-		--color-wheel-thumb-gap: 1cqi;
-		--_mask: radial-gradient(circle farthest-side at center, #0000 calc(100% - var(--color-wheel-ring-w)), #000 calc(100% - var(--color-wheel-ring-w)));
+	:where(.ui-hue-wheel) {
+		--hue-wheel-hue-gap: 1cqi;
+		--hue-wheel-hue-w: 10cqi;
+		--hue-wheel-harmonies-gap: 1cqi;
+		--hue-wheel-harmonies-w: 5cqi;
+		--hue-wheel-tints-gap: 1cqi;
+		--hue-wheel-tints-w: 10cqi;
+		--hue-wheel-sz: 100cqi;
+		--hue-wheel-thumb-gap: 1cqi;
 		aspect-ratio: 1;
-		border-radius: 50%;
 		container-type: inline-size;
 		display: grid;
 		place-items: center;
-		pointer-events: none;
+		pointer-events: auto;
 		touch-action: none;
-
-		&::before {
-			background: conic-gradient(in oklch longer hue, oklch(0.7 0.15 0), oklch(0.7 0.15 0));
-			border-radius: 50%;
-			content: "";
-			grid-area: 1 / -1;
-			height: 100%;
-			mask: var(--_mask);
-			pointer-events: auto;
-			width: 100%;
-		}
-
-		& label {
-			border-radius: 50%;
-			color: contrast-color(oklch(0.7 0.15 var(--_angle, 0deg)));
-			display: grid;
-			font-family: system-ui, sans-serif;
-			grid-area: 1 / -1;
-			height: var(--color-wheel-sz);
-			place-items: center;
-			width: var(--color-wheel-sz);
-			&::after {
-				content: "oklch(0.7 0.15 " attr(data-hue) ")";
-				grid-area: 1 / -1;
-				pointer-events: none;
-			}
-		}
 
 		& input[type="range"] {
 			all: unset;
 			appearance: none;
 			background:
 				radial-gradient(circle closest-side,
-					oklch(0.7 0.15 var(--_angle, 0deg)) calc(100% - var(--color-wheel-harmony-w) - var(--color-wheel-harmony-gap) - var(--color-wheel-tints-w) - var(--color-wheel-tints-gap)),
-					Canvas calc(100% - var(--color-wheel-harmony-w) - var(--color-wheel-harmony-gap) - var(--color-wheel-tints-w) - var(--color-wheel-tints-gap)),
-					Canvas calc(100% - var(--color-wheel-harmony-w) - var(--color-wheel-harmony-gap) - var(--color-wheel-tints-w)),
-					#0000 calc(100% - var(--color-wheel-harmony-w) - var(--color-wheel-harmony-gap) - var(--color-wheel-tints-w))
+					oklch(0.7 0.15 var(--_angle, 0deg)) calc(100% - var(--hue-wheel-tints-w) - var(--hue-wheel-tints-gap)),
+					Canvas calc(100% - var(--hue-wheel-tints-w) - var(--hue-wheel-tints-gap)),
+					Canvas calc(100% - var(--hue-wheel-tints-w)),
+					#0000 calc(100% - var(--hue-wheel-tints-w))
 				),
 				conic-gradient(
 					oklch(0.20 0.15 var(--_angle, 0deg)) 5%,
@@ -88,8 +59,8 @@
 					oklch(1.00 0.15 var(--_angle, 0deg)) 95% 100%
 				),
 				radial-gradient(circle closest-side,
-					Canvas calc(100% - var(--color-wheel-harmony-w)),
-					#0000 calc(100% - var(--color-wheel-harmony-w))
+					Canvas calc(100% - var(--hue-wheel-harmonies-w)),
+					#0000 calc(100% - var(--hue-wheel-harmonies-w))
 				),
 				conic-gradient(
 					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 30deg)) 14.28%,
@@ -99,61 +70,75 @@
 					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 210deg)) 57.14% 71.43%,
 					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 240deg)) 71.43% 85.71%,
 					oklch(0.7 0.15 calc(var(--_angle, 0deg) + 330deg)) 85.71% 100%
-				);
-			background-clip: padding-box, content-box, padding-box, padding-box;
+				),
+				radial-gradient(circle closest-side,
+					Canvas calc(100% - var(--hue-wheel-hue-w)),
+					#0000 calc(100% - var(--hue-wheel-hue-w))
+				),
+				conic-gradient(in oklch longer hue, oklch(0.7 0.15 0), oklch(0.7 0.15 0));
+			background-clip: content-box, content-box, padding-box, padding-box, border-box, border-box;
+			background-origin: content-box, content-box, padding-box, padding-box, border-box, border-box;
+			border: calc(var(--hue-wheel-hue-w) + var(--hue-wheel-hue-gap)) solid transparent;
 			border-radius: 50%;
 			box-sizing: border-box;
 			grid-area: 1 / -1;
-			height: var(--color-wheel-sz);
-			padding: calc(var(--color-wheel-harmony-w) + var(--color-wheel-harmony-gap));
+			height: var(--hue-wheel-sz);
+			padding: calc(var(--hue-wheel-harmonies-w) + var(--hue-wheel-harmonies-gap));
 			pointer-events: none;
-			width: var(--color-wheel-sz);
+			width: var(--hue-wheel-sz);
 			&::-webkit-slider-thumb { all: unset; appearance: none; }
 			&::-moz-range-thumb { all: unset; appearance: none; }
 		}
 
-		&::after {
-			background: radial-gradient(circle calc(var(--color-wheel-ring-w) / 2 - var(--color-wheel-thumb-gap)) at center calc(var(--color-wheel-ring-w) / 2), #FFF8 100%, #0000 100%);
+		&::before {
+			background: radial-gradient(circle calc(var(--hue-wheel-hue-w) / 2 - var(--hue-wheel-thumb-gap)) at center calc(var(--hue-wheel-hue-w) / 2), #FFF8 100%, #0000 100%);
 			content: "";
 			grid-area: 1 / -1;
-			height: 100%;
+			height: var(--hue-wheel-sz);
 			pointer-events: auto;
 			rotate: var(--_angle, 0deg);
 			touch-action: none;
-			width: var(--color-wheel-ring-w);
+			width: var(--hue-wheel-hue-w);
 		}
 
-		&:has(input:focus-visible)::after {
-			background: radial-gradient(circle calc(var(--color-wheel-ring-w) / 2 - var(--color-wheel-thumb-gap)) at center calc(var(--color-wheel-ring-w) / 2), #FFFC 100%, #0000 100%);
+		&:has(input:focus-visible)::before {
+			background: radial-gradient(circle calc(var(--hue-wheel-hue-w) / 2 - var(--hue-wheel-thumb-gap)) at center calc(var(--hue-wheel-hue-w) / 2), #FFFC 100%, #0000 100%);
 			filter: drop-shadow(0 0 4px #FFF);
 		}
+
+		&::after {
+			color: #FFF8;
+			content: attr(data-angle) "°";
+			font-family: Bahnschrift, 'DIN Alternate', 'Franklin Gothic Medium', 'Nimbus Sans Narrow', sans-serif-condensed, sans-serif;
+			font-size: 15cqi;
+			font-weight: normal;
+			grid-area: 1 / -1;
+			pointer-events: none;
+		}
 	}
-}
+
 	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
-	<h2>Range: Color Wheel</h2>
+	<h2>Range: Hue Wheel</h2>
 	<p>
-		<!-- <strong>Range: Circular</strong> presents a circular range alongside a percentage value, managed through an <code>&lt;input type="range"&gt;</code> HTML element. -->
+		<strong>Hue Wheel</strong> is an interactive color picker built with CSS gradients and minimal JavaScript, featuring a hue ring, harmony colors, and tint variations.
 	</p>
 
-	<color-wheel>
-		<label data-hue="0">
-			<input type="range" min="0" max="360" value="0">
-		</label>
-	</color-wheel>
+	<label class="ui-hue-wheel">
+		<input type="range" min="0" max="360" value="0">
+	</label>
 
 	<script type="module">
-		document.querySelectorAll('color-wheel').forEach(wheel => {
+		document.querySelectorAll('.ui-hue-wheel').forEach(wheel => {
 			const input = wheel.querySelector('input');
-			const label = wheel.querySelector('label');
 			const set = (deg) => {
 				const angle = Math.round(deg);
 				input.value = angle;
+				wheel.dataset.angle = angle;
 				wheel.style.setProperty('--_angle', `${angle}deg`);
-				label.dataset.hue = angle;
 			};
 			const move = (e) => {
 				const r = wheel.getBoundingClientRect();
