@@ -140,6 +140,7 @@ class SearchBot extends HTMLElement {
 	}
 
 	connectedCallback() {
+		this._isInline = this.getAttribute('mode') === 'inline';
 		this._storagePrefix = this.id ? `${this.id}:` : 'search-bot:';
 		this.render();
 		this.elements = {
@@ -178,31 +179,33 @@ class SearchBot extends HTMLElement {
 			}
 		});
 
-		trigger.addEventListener('click', () => {
-			queueMicrotask(() => {
-				if (dialog.open) {
-					this.emit('open', { chatKey: this.chatKey });
-					this.saveUIState();
-				}
+		if (!this._isInline) {
+			trigger.addEventListener('click', () => {
+				queueMicrotask(() => {
+					if (dialog.open) {
+						this.emit('open', { chatKey: this.chatKey });
+						this.saveUIState();
+					}
+				});
 			});
-		});
 
-		dialog.addEventListener('close', () => {
-			this.emit('close', { chatKey: this.chatKey });
-			this.saveUIState();
-		});
+			dialog.addEventListener('close', () => {
+				this.emit('close', { chatKey: this.chatKey });
+				this.saveUIState();
+			});
 
-		if (this.hasAttribute('preserve-state') && this.hasAttribute('preserve-history')) {
-			this._beforeUnloadHandler = () => this.saveUIState();
-			window.addEventListener('beforeunload', this._beforeUnloadHandler);
-			try {
-				const state = JSON.parse(sessionStorage.getItem(`${this._storagePrefix}ui-state`));
-				if (state?.open && state.activeChatKey) {
-					this.loadChat(state.activeChatKey);
-					dialog.showModal();
-					this.emit('open', { chatKey: this.chatKey });
-				}
-			} catch {}
+			if (this.hasAttribute('preserve-state') && this.hasAttribute('preserve-history')) {
+				this._beforeUnloadHandler = () => this.saveUIState();
+				window.addEventListener('beforeunload', this._beforeUnloadHandler);
+				try {
+					const state = JSON.parse(sessionStorage.getItem(`${this._storagePrefix}ui-state`));
+					if (state?.open && state.activeChatKey) {
+						this.loadChat(state.activeChatKey);
+						dialog.showModal();
+						this.emit('open', { chatKey: this.chatKey });
+					}
+				} catch {}
+			}
 		}
 	}
 
@@ -532,18 +535,20 @@ class SearchBot extends HTMLElement {
 
 	render() {
 		const uid = this._uid;
-		this.shadowRoot.innerHTML = `
-			<button part="search-trigger" commandfor="search-dialog-${uid}" command="show-modal" aria-label="${I18N.search}">
+		const il = this._isInline;
+		const tag = il ? 'div' : `dialog id="search-dialog-${uid}" closedby="any"`;
+		this.shadowRoot.innerHTML = `${il ? '' :
+			`<button part="search-trigger" commandfor="search-dialog-${uid}" command="show-modal" aria-label="${I18N.search}">
 				<slot name="icon-trigger">${icon('ai')}</slot>
-			</button>
-			<dialog id="search-dialog-${uid}" part="search-overlay" closedby="any">
+			</button>`}
+			<${tag} part="search-overlay">
 				<div part="search-header">
 					<button part="search-history" popovertarget="search-history-popover-${uid}" aria-label="${I18N.history}"><slot name="icon-history">${icon('history')}</slot></button>
 					<div id="search-history-popover-${uid}" part="search-history-panel" popover>
 						<ul part="search-history-list"></ul>
 					</div>
-					<button part="search-new" aria-label="${I18N.newQuestion}"><slot name="icon-new">${icon('plus')}</slot></button>
-					<button part="search-close" commandfor="search-dialog-${uid}" command="close" aria-label="${I18N.close}"><slot name="icon-close">${icon('close')}</slot></button>
+					<button part="search-new" aria-label="${I18N.newQuestion}"><slot name="icon-new">${icon('plus')}</slot></button>${il ? '' :
+					`<button part="search-close" commandfor="search-dialog-${uid}" command="close" aria-label="${I18N.close}"><slot name="icon-close">${icon('close')}</slot></button>`}
 				</div>
 				<ol part="search-conversation"></ol>
 				<form part="search-form">
@@ -556,7 +561,7 @@ class SearchBot extends HTMLElement {
 						</nav>
 					</fieldset>
 				</form>
-			</dialog>
+			</${il ? 'div' : 'dialog'}>
 		`;
 	}
 }

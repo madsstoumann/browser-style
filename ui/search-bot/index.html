@@ -11,11 +11,13 @@
 	<style>
     html {
 			min-height: 100dvh;
-			background: linear-gradient(45deg, red, purple, deeppink, aqua) no-repeat;
+			background: linear-gradient(rgb(0, 0, 0) 0%, rgb(0, 0, 80) 63.153%, rgb(0, 0, 166) 100%);
 			background-size: cover;
+			
     }
 		body {
 			background: #0000;
+			color: #FFF;
 		}
 	</style>
 </head>
@@ -24,6 +26,20 @@
 
 	<h2>Search Bot</h2>
 	<p>Search overlay and chatbot component with adapter-based SSE streaming.</p>
+
+	<search-bot
+		api="https://wild-flower-99ce-nlweb.stoumann.workers.dev"
+		feedback
+		id="blog"
+		mode="inline"
+		options="close history new"
+		position="top left"
+		preserve-history
+		preserve-state
+		provider="nlweb"
+		share
+	>
+	</search-bot>
 
 	<search-bot
 		api="https://wild-flower-99ce-nlweb.stoumann.workers.dev"

@@ -103,7 +103,7 @@
 
 /* --- Search mode: anchor to trigger position --- */
 
-:host(:not([mode="chatbot"])) [part="search-overlay"] {
+:host(:not([mode="chatbot"]):not([mode="inline"])) [part="search-overlay"] {
 	@starting-style {
 		&[open] { border-radius: var(--sbot-icon-sz, 2em); left: anchor(left); top: anchor(top); }
 	}
@@ -326,6 +326,19 @@ button[part]:has(svg):not([part*="feedback"]) {
 	top: calc((100dvh - var(--sbot-overlay-h, 85dvh)) / 2);
 	width: var(--sbot-overlay-w, 85vw);
 	&:has(ol:empty) { height: max-content; }
+}
+
+/* --- Inline Mode --- */
+
+:host([mode="inline"]) [part="search-trigger"] { display: none; }
+:host([mode="inline"]) [part="search-overlay"] {
+	border-radius: var(--sbot-inline-bdrs, 0.5rem);
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+	height: var(--sbot-inline-h, 100%);
+	opacity: 1;
+	overflow: clip;
+	width: 100%;
 }
 
 /* --- Chatbot Mode --- */
