@@ -4,7 +4,7 @@
 		--ui-listgrid-gap: 1px;
 		all: unset;
 		background: var(--ui-listgrid-bg);
-		border: 1px solid var(--ui-listgrid-bg);
+		border: var(--ui-listgrid-gap) solid var(--ui-listgrid-bg);
 		border-radius: var(--ui-listgrid-bdrs, 12px);
 		display: flex;
 		flex-wrap: wrap;
