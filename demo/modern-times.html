@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Modern Times</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<style>
+
+
+modern-times {
+	--md-arm: #a78d53;
+	--md-bezel: #efd092;
+	--md-dial: hsl(192, 63%, 28%);
+	--md-dot: #a78d53;
+	--md-inner-edge: #11171A;
+	--md-inner-ring: #C2B18C;
+	--md-outer-ring: #F6ECB3;
+	--md-outer-edge: #efd092;
+
+	aspect-ratio: 1;
+	background: radial-gradient(circle closest-side,
+		var(--md-dial) 88%,
+		var(--md-inner-edge) 89% 90%,
+		var(--md-inner-ring) 91% 91%,
+		var(--md-bezel) 92% 98%,
+		var(--md-outer-ring) 98% 99%,
+		var(--md-outer-edge) 99%
+	);
+	border-radius: 50%;
+	box-sizing: border-box;
+	container-type: inline-size;
+	display: grid;
+	width: 100%;
+
+	&::before {
+		aspect-ratio: 1;
+		/* animation: dot 60s steps(60) infinite; */
+		background: var(--md-dot);
+		border-radius: 50%;
+		content: "";
+		offset-distance: var(--_od, 0%);
+		offset-path: circle(37.5% at center);
+		width: 5%;
+	}
+	&::after {
+		background: var(--md-arm);
+		border-radius: 2rem;
+		content: "";
+		display: block;
+		height: 7.5%;
+		width: 50%;
+	}
+}
+
+@keyframes dot { to { offset-distance: 100%; } }
+
+body {
+	/* background: hsl(12, 63%, 28%); */
+	max-width: 400px;
+	margin: 2rem auto;	
+}
+
+	
+	</style>
+</head>
+<body>
+
+<modern-times></modern-times>
+
+</body>
+</html>

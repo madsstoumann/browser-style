@@ -1,0 +1,32 @@
+@layer bs-component {
+  :where(.ui-listgrid) {
+    --ui-listgrid-bg: gray;
+    --ui-listgrid-gap: 1px;
+    all: unset;
+    background: var(--ui-listgrid-bg);
+    border: 1px solid var(--ui-listgrid-bg);
+    border-radius: var(--ui-listgrid-bdrs, 12px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ui-listgrid-gap);
+    overflow: hidden;
+
+    li {
+      background: #FFFE;
+      display: grid;
+      flex: 1 1 var(--ui-listgrid-mincol, 200px);
+      padding: var(--ui-listgrid-item-p, 1ch);
+      place-content: center;
+      row-gap: 10px;
+      text-align: center;
+    }
+
+    small, strong {
+      display: block;
+      text-box: cap alphabetic;
+    }
+    small {
+      text-transform: uppercase;
+    }
+  }
+}
