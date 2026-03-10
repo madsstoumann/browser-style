@@ -8,6 +8,7 @@
 		border-radius: var(--ui-listgrid-bdrs, 12px);
 		display: flex;
 		flex-wrap: wrap;
+		font-size: var(--ui-listgrid-fs, .875rem);
 		gap: var(--ui-listgrid-gap);
 		overflow: hidden;
 
@@ -15,9 +16,9 @@
 			background: var(--ui-listgrid-item-bg, Canvas);
 			display: grid;
 			flex: 1 1 var(--ui-listgrid-mincol, 15ch);
-			padding: var(--ui-listgrid-item-p, 1ch);
+			padding: var(--ui-listgrid-item-p, 1em);
 			place-content: center;
-			row-gap: 10px;
+			row-gap: .5em;
 			text-align: center;
 		}
 		small, strong {
