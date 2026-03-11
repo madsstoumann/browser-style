@@ -16,6 +16,10 @@
 			--ui-rating-symbol: url('/assets/svg/thumb.svg');
 			--ui-rating-c: #007bff;
 		}
+		&.--dots {
+			--ui-rating-symbol: radial-gradient(circle, #000 45%, #0000 46%);
+			--ui-rating-c: #007bff;
+		}
 
 		&::-webkit-slider-runnable-track {
 			background: var(--_bgi);
