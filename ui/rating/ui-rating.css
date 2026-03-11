@@ -1,12 +1,16 @@
 @layer bs-component {
 	:where(.ui-rating) {
+		--min: attr(min type(<number>), 1);
+		--max: attr(max type(<number>), 5);
+		--value: attr(value type(<number>), 3);
+
 		--_bgi: linear-gradient(to var(--_dir, right), var(--ui-rating-c, gold) 0 var(--_x), var(--ui-rating-bg, var(--ButtonFace)) 0 var(--_x));
 		--_mask: repeat left center/var(--input-bs) var(--ui-rating-symbol, url('/assets/svg/star.svg'));
-		--_x: calc(100% * (var(--value, 3) / var(--_max, 5)));
+		--_x: calc(100% * (var(--value) / var(--max)));
 
 		background: none;
 		block-size: var(--input-bs);
-		inline-size: calc(var(--input-bs) * var(--_max, 5));
+		inline-size: calc(var(--input-bs) * var(--max));
 
 		&.--heart {
 			--ui-rating-symbol: url('/assets/svg/heart.svg');
@@ -18,7 +22,7 @@
 		}
 		&.--dots {
 			--ui-rating-symbol: radial-gradient(circle, #000 45%, #0000 46%);
-			--ui-rating-c: #007bff;
+			--ui-rating-c: #7f7f7f;
 		}
 
 		&::-webkit-slider-runnable-track {
