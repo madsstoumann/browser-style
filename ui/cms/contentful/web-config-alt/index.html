@@ -30,17 +30,24 @@
 
 			const editor = document.createElement('web-config-alt');
 
-			if (api) {
-				const params = api.parameters?.installation || {};
-				if (params.workerUrl) editor.workerUrl = params.workerUrl;
-				if (params.apiKey) editor.apiKey = params.apiKey;
+			// Installation params: workerUrl, apiKey (shared across all fields)
+			const installParams = api?.parameters?.installation || {};
+			const workerUrl = installParams.workerUrl || '';
+			const apiKey = installParams.apiKey || '';
 
+			// Instance params: detail level (per field)
+			const instanceParams = api?.parameters?.instance || {};
+			const detail = instanceParams.detail || 'standard';
+			editor.detail = detail;
+
+			if (api) {
+				// Load existing value
 				const currentValue = api.field.getValue();
 				if (typeof currentValue === 'string' && currentValue.trim()) {
 					editor.value = currentValue;
 				}
 
-				// Get the asset's image URL from the entry context
+				// Resolve image URL from a sibling media field
 				const fields = api.entry?.fields;
 				if (fields?.file) {
 					const locale = api.field.locale || 'en-US';
@@ -50,6 +57,49 @@
 					}
 				}
 
+				// Handle alt text generation
+				editor.addEventListener('requestGenerate', async (event) => {
+					const src = editor.src;
+					if (!workerUrl || !src) {
+						editor.showError('Worker URL and image source are required.');
+						editor.generating = false;
+						return;
+					}
+
+					try {
+						const endpoint = workerUrl.replace(/\/+$/, '') + '/analyze';
+						const response = await fetch(endpoint, {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+								...(apiKey && { 'X-API-Key': apiKey })
+							},
+							body: JSON.stringify({
+								url: src,
+								detail: event.detail?.detail || detail
+							})
+						});
+
+						if (!response.ok) {
+							throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+						}
+
+						const data = await response.json();
+
+						if (data.error) {
+							editor.showError(data.error);
+						} else {
+							editor.value = data.alt || data.text || data.result || '';
+							api.field.setValue(editor.value);
+						}
+					} catch (err) {
+						editor.showError(err.message);
+					} finally {
+						editor.generating = false;
+					}
+				});
+
+				// Save on manual edits
 				editor.addEventListener('change', (event) => {
 					const { alt } = event.detail || {};
 					api.field.setValue(typeof alt === 'string' ? alt : null);

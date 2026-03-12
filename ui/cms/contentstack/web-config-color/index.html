@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Config Color - Contentstack Extension</title>
+  <script src="https://unpkg.com/@contentstack/app-sdk@2/dist/index.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "@browser.style/web-config-shared": "https://browser.style/ui/web-config-shared/index.js"
+      }
+    }
+  </script>
+  <style>
+    body { margin: 0; padding: 16px; min-height: 100px; }
+    #app { min-height: 100px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script type="module">
+    import 'https://browser.style/ui/web-config-color/src/index.js';
+
+    const mount = async (fieldApi) => {
+      const app = document.getElementById('app');
+
+      await customElements.whenDefined('web-config-color');
+
+      const editor = document.createElement('web-config-color');
+
+      // Read presets from extension config (set by UCM adapter during sync)
+      const config = fieldApi?.config;
+      const presets = config?.presets;
+      if (presets) {
+        editor.presets = typeof presets === 'string' ? JSON.parse(presets) : presets;
+      }
+
+      app.appendChild(editor);
+
+      if (fieldApi) {
+        const currentValue = fieldApi.field.getData();
+        if (currentValue) editor.value = currentValue;
+
+        editor.addEventListener('color-change', (e) => {
+          fieldApi.field.setData(e.detail.label);
+        });
+      }
+    };
+
+    if (window.ContentstackAppSdk) {
+      try {
+        const sdk = await window.ContentstackAppSdk.init();
+        const customField = sdk.location.CustomField;
+        mount(customField);
+      } catch (error) {
+        console.error('Contentstack SDK error:', error);
+      }
+    } else {
+      mount(null);
+    }
+  </script>
+</body>
+</html>
