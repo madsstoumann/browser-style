@@ -90,6 +90,8 @@
     };
 
     window.addEventListener('message', async (event) => {
+      if (umbracoOrigin !== '*' && event.origin !== umbracoOrigin) return;
+
       const { type, value, origin: senderOrigin } = event.data || {};
 
       switch (type) {
