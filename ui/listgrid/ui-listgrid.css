@@ -16,10 +16,14 @@
 			background: var(--ui-listgrid-item-bg, Canvas);
 			display: grid;
 			flex: 1 1 var(--ui-listgrid-mincol, 15ch);
-			padding: var(--ui-listgrid-item-p, 1em);
+			padding: var(--ui-listgrid-item-p, .66em);
 			place-content: center;
 			row-gap: .5em;
 			text-align: center;
+		}
+		input[type=range] {
+			font-size: 4px;
+			margin: 0;
 		}
 		small, strong {
 			display: block;
