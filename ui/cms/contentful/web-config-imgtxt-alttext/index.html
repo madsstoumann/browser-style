@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Accessible Image - Contentful App</title>
+	<script src="https://unpkg.com/contentful-ui-extensions-sdk@4"></script>
+	<script type="importmap">
+		{
+			"imports": {
+				"@browser.style/web-config-shared": "https://browser.style/ui/web-config-shared/index.js"
+			}
+		}
+	</script>
+	<style>
+		body { margin: 0; padding: 16px; min-height: 100px; }
+		#app { min-height: 60px; }
+	</style>
+</head>
+<body>
+	<div id="app"></div>
+
+	<script type="module">
+		import 'https://browser.style/ui/web-config-imgtxt/src/index.js';
+
+		const mount = async (api) => {
+			const app = document.getElementById('app');
+
+			await customElements.whenDefined('web-config-imgtxt');
+
+			const editor = document.createElement('web-config-imgtxt');
+			editor.setAttribute('preset', 'alttext');
+
+			const installParams = api?.parameters?.installation || {};
+			const workerUrl = installParams.workerUrl || '';
+			const apiKey = installParams.apiKey || '';
+
+			const instanceParams = api?.parameters?.instance || {};
+			const mediaField = instanceParams.mediaField || 'media';
+			const longdescField = instanceParams.longdescField || 'longdesc';
+
+			if (api) {
+				const locale = api.field.locale || 'en-US';
+
+				// Load existing alt value
+				const currentValue = api.field.getValue();
+				if (typeof currentValue === 'string' && currentValue.trim()) {
+					editor.value = JSON.stringify({ alt: currentValue, longdesc: '' });
+				}
+
+				// Load existing longdesc from sibling field
+				const fields = api.entry?.fields;
+				if (fields?.[longdescField]) {
+					const longdescValue = fields[longdescField].getValue(locale);
+					if (longdescValue) {
+						const current = editor.result || {};
+						editor.result = { ...current, longdesc: longdescValue };
+					}
+				}
+
+				// Resolve image URL from sibling media field
+				if (fields?.[mediaField]) {
+					const fileValue = fields[mediaField].getValue(locale);
+					const url = fileValue?.fields?.file?.[locale]?.url
+						|| fileValue?.url
+						|| (fileValue?.fields?.file?.url);
+					if (url) {
+						editor.src = url.startsWith('//') ? 'https:' + url : url;
+					}
+				}
+
+				// Handle generation
+				editor.addEventListener('requestGenerate', async () => {
+					const src = editor.src;
+					if (!workerUrl || !src) {
+						editor.showError('Worker URL and image source are required.');
+						editor.generating = false;
+						return;
+					}
+
+					try {
+						const endpoint = workerUrl.replace(/\/+$/, '') + '/analyze';
+						const response = await fetch(endpoint, {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+								...(apiKey && { 'X-API-Key': apiKey })
+							},
+							body: JSON.stringify({ url: src, preset: 'alttext' })
+						});
+
+						if (!response.ok) {
+							throw new Error('HTTP ' + response.status + ': ' + (await response.text()));
+						}
+
+						const data = await response.json();
+
+						if (data.error) {
+							editor.showError(data.error);
+						} else {
+							editor.result = data.result;
+							api.field.setValue(data.result.alt || '');
+							if (fields?.[longdescField]) {
+								fields[longdescField].setValue(data.result.longdesc || '', locale);
+							}
+						}
+					} catch (err) {
+						editor.showError(err.message);
+					} finally {
+						editor.generating = false;
+					}
+				});
+
+				// Save on manual edits
+				editor.addEventListener('change', (event) => {
+					const { alt, longdesc } = event.detail || {};
+					api.field.setValue(typeof alt === 'string' ? alt : '');
+					if (fields?.[longdescField] && typeof longdesc === 'string') {
+						fields[longdescField].setValue(longdesc, locale);
+					}
+				});
+
+				api.window.startAutoResizer();
+			}
+
+			app.appendChild(editor);
+		};
+
+		if (window.contentfulExtension) {
+			try {
+				const initResult = window.contentfulExtension.init(async (api) => mount(api));
+				if (initResult && typeof initResult.catch === 'function') {
+					initResult.catch((error) => console.error('Contentful SDK error:', error));
+				}
+			} catch (error) {
+				console.error('Failed to initialize Contentful SDK:', error);
+			}
+		} else {
+			mount(null);
+		}
+	</script>
+</body>
+</html>
