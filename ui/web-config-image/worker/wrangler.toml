@@ -1,0 +1,10 @@
+name = "image"
+main = "src/index.ts"
+compatibility_date = "2025-02-01"
+workers_dev = true
+preview_urls = false
+
+[[d1_databases]]
+binding = "DB"
+database_name = "img-txt-db"
+database_id = "bd90f2a2-a032-4344-9803-0eff9e307837"

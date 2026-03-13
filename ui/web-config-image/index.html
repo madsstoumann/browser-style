@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Web Config Image</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Web Config Image - AI-powered image analysis with presets">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<script type="importmap">
+		{
+			"imports": {
+				"@browser.style/web-config-shared": "../web-config-shared/index.js"
+			}
+		}
+	</script>
+</head>
+<body>
+	<h1>Web Config: Image Analysis</h1>
+	<p>AI-powered image analysis with presets. Select a preset, configure the worker URL and API key, then click Generate.</p>
+
+	<fieldset style="margin-block-end:2ch;">
+		<label>
+			Preset
+			<select id="presetSelect">
+				<option value="alttext">Alt Text</option>
+				<option value="food">Food Recognition</option>
+			</select>
+		</label>
+		<label>
+			Worker URL
+			<input type="url" id="workerUrl" placeholder="https://image.stoumann.workers.dev" value="http://localhost:8787">
+		</label>
+		<label>
+			API Key
+			<input type="password" id="apiKey" placeholder="Enter your API key">
+		</label>
+		<label>
+			Image URL
+			<input type="url" id="imageSrc" placeholder="https://example.com/photo.jpg">
+		</label>
+	</fieldset>
+
+	<web-config-image id="editor" preset="alttext"></web-config-image>
+
+	<h3 style="margin-block-start:2ch;">Stored value</h3>
+	<pre id="output" style="background:#f5f5f5;padding:1ch;border-radius:4px;font-size:small;overflow:auto;"></pre>
+
+	<script type="module">
+		import './src/index.js';
+
+		const presetImages = {
+			alttext: 'https://picsum.photos/id/237/400/300.jpg',
+			food: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400',
+		};
+
+		const editor = document.getElementById('editor');
+		const presetSelect = document.getElementById('presetSelect');
+		const workerUrlInput = document.getElementById('workerUrl');
+		const apiKeyInput = document.getElementById('apiKey');
+		const imageSrcInput = document.getElementById('imageSrc');
+		const output = document.getElementById('output');
+
+		workerUrlInput.value = localStorage.getItem('wci-worker-url') || workerUrlInput.value;
+		apiKeyInput.value = localStorage.getItem('wci-api-key') || '';
+		imageSrcInput.value = presetImages.alttext;
+
+		presetSelect.addEventListener('change', () => {
+			const preset = presetSelect.value;
+			editor.setAttribute('preset', preset);
+			imageSrcInput.value = presetImages[preset] || '';
+			update();
+		});
+
+		function update() {
+			localStorage.setItem('wci-worker-url', workerUrlInput.value);
+			localStorage.setItem('wci-api-key', apiKeyInput.value);
+			editor.src = imageSrcInput.value;
+		}
+
+		workerUrlInput.addEventListener('input', update);
+		apiKeyInput.addEventListener('input', update);
+		imageSrcInput.addEventListener('input', update);
+
+		editor.addEventListener('change', (e) => {
+			output.textContent = JSON.stringify(e.detail, null, 2);
+		});
+
+		editor.addEventListener('requestGenerate', async () => {
+			const workerUrl = workerUrlInput.value;
+			const apiKey = apiKeyInput.value;
+			const src = imageSrcInput.value;
+
+			if (!workerUrl || !src) {
+				editor.showError('Worker URL and Image URL are required.');
+				editor.generating = false;
+				return;
+			}
+
+			try {
+				const endpoint = workerUrl.replace(/\/+$/, '') + '/analyze';
+				const response = await fetch(endpoint, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-API-Key': apiKey,
+					},
+					body: JSON.stringify({ url: src, preset: editor.preset }),
+				});
+
+				if (!response.ok) {
+					const text = await response.text();
+					throw new Error('HTTP ' + response.status + ': ' + text);
+				}
+
+				const data = await response.json();
+				editor.result = data.result;
+				output.textContent = editor.value;
+			} catch (err) {
+				editor.showError(err.message);
+			} finally {
+				editor.generating = false;
+			}
+		});
+
+		update();
+	</script>
+</body>
+</html>
