@@ -6,7 +6,7 @@ The `cms` directory contains **CMS-specific wrappers** that adapt browser.style 
 
 **Component Type:** Contentful App wrappers (HTML + inline JavaScript)
 
-**Supported CMS:** Contentful (primary)
+**Supported CMS:** Contentful, Umbraco
 
 **Key architectural decisions:**
 - **HTML-based wrappers**: Each wrapper is an HTML page, not a JavaScript module
@@ -57,17 +57,34 @@ If SDK unavailable → Fallback to standalone mode
 
 ```
 cms/
-├── claude.md                          # This documentation
-└── contentful/
-    ├── README.md                      # Setup instructions
+├── AGENTS.md                          # This documentation
+├── contentful/
+│   ├── README.md                      # Setup instructions
+│   ├── web-config-imgtxt-alttext/     # Accessible Image (alt + longdesc)
+│   │   ├── index.html
+│   │   └── icon.svg
+│   ├── web-config-csp/
+│   │   └── index.html                 # CSP editor wrapper
+│   ├── web-config-manifest/
+│   │   └── index.html                 # Manifest editor wrapper
+│   ├── web-config-robots/
+│   │   └── index.html                 # Robots.txt editor wrapper
+│   └── web-config-security/
+│       └── index.html                 # Security.txt editor wrapper
+└── umbraco/
+    ├── README.md
+    ├── web-config-imgtxt-alttext/     # Accessible Image (alt + longdesc)
+    │   └── index.html
+    ├── web-config-card/
+    │   └── index.html
     ├── web-config-csp/
-    │   └── index.html                 # CSP editor wrapper (121 lines)
+    │   └── index.html
     ├── web-config-manifest/
-    │   └── index.html                 # Manifest editor wrapper (72 lines)
+    │   └── index.html
     ├── web-config-robots/
-    │   └── index.html                 # Robots.txt editor wrapper (87 lines)
+    │   └── index.html
     └── web-config-security/
-        └── index.html                 # Security.txt editor wrapper (87 lines)
+        └── index.html
 ```
 
 ## Wrapper Implementations
@@ -203,6 +220,59 @@ Nearly identical to robots wrapper.
 
 **Code Duplication:** `waitForReady()` function duplicated from robots wrapper.
 
+---
+
+### web-config-imgtxt-alttext (Contentful + Umbraco)
+
+AI-powered accessible image editor. Uses `<web-config-imgtxt preset="alttext">` to generate alt text and long descriptions from images via Claude Vision API.
+
+**Component:** `<web-config-imgtxt>`
+
+**Preset:** `alttext` (fixed)
+
+**Cross-Field Writing:** This wrapper writes to TWO sibling fields:
+- `alt` (Short text) — the field it's attached to
+- `longdesc` (Long text) — a sibling field, written via `api.entry.fields[longdescField].setValue()`
+
+**Installation Params (shared):** `workerUrl`, `apiKey`
+
+**Instance Params:** `mediaField` (default: `media`), `longdescField` (default: `longdesc`)
+
+**Content Type Pattern — "Accessible Image":**
+```
+Accessible Image (content type)
+├── media        (Asset link)
+├── alt          (Short text, editor: web-config-imgtxt-alttext app)
+└── longdesc     (Long text, written by the alt app)
+```
+
+**Contentful Data Flow:**
+```
+api.entry.fields[mediaField].getValue() → editor.src (image URL)
+                     ↓
+              User clicks Generate
+                     ↓
+              POST worker/analyze { url, preset: "alttext" }
+                     ↓
+              { result: { alt, longdesc } }
+                     ↓
+              api.field.setValue(alt)
+              api.entry.fields[longdescField].setValue(longdesc)
+```
+
+**Umbraco Data Flow:**
+```
+Parent sends 'init' { value, longdesc, src }
+                     ↓
+              User clicks Generate
+                     ↓
+              Child sends 'requestGenerate'
+              Parent calls worker, sends 'generateResult' { alt, longdesc }
+                     ↓
+              Child sends 'valueChanged' { alt, longdesc }
+              Parent writes to both properties
+```
+
 ## Common Patterns
 
 ### Import Map Requirement
@@ -262,6 +332,7 @@ await Promise.race([
 
 | Wrapper | Component | Event Name | Event Detail | Contentful Action |
 |---------|-----------|------------|--------------|-------------------|
+| web-config-imgtxt-alttext | `<web-config-imgtxt>` | `change` | `{ alt, longdesc }` | `setValue(alt)` + cross-write `longdesc` |
 | web-config-csp | `<web-config-csp>` | `csp-change` | `{ policy, evaluations }` | `setValue(policy)` + validation |
 | web-config-manifest | `<web-config-manifest>` | `manifest-change` | manifest object | `setValue(detail)` |
 | web-config-robots | `<web-config-robots>` | `robtxt-change` | `{ robotsTxt }` | `setValue(robotsTxt)` |
@@ -275,6 +346,7 @@ await Promise.race([
 2. Set App URL: `https://browser.style/ui/cms/contentful/[component]/`
 3. Enable **Entry field** location
 4. Select appropriate field type:
+   - Accessible Image (imgtxt-alttext): Short text (attached to `alt` field)
    - CSP: JSON object
    - Manifest: JSON object
    - Robots: Long text
