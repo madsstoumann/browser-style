@@ -35,38 +35,28 @@
 			const workerUrl = installParams.workerUrl || '';
 			const apiKey = installParams.apiKey || '';
 
-			const instanceParams = api?.parameters?.instance || {};
-			const mediaField = instanceParams.mediaField || 'media';
-			const longdescField = instanceParams.longdescField || 'longdesc';
-
 			if (api) {
-				const locale = api.field.locale || 'en-US';
+				const locale = api.locales.default || 'en-US';
+				const fields = api.entry.fields;
 
-				// Load existing alt value
-				const currentValue = api.field.getValue();
-				if (typeof currentValue === 'string' && currentValue.trim()) {
-					editor.value = JSON.stringify({ alt: currentValue, longdesc: '' });
+				// Load image URL from the asset's file field
+				const fileValue = fields.file?.getValue(locale);
+				const url = fileValue?.url;
+				if (url) {
+					editor.src = url.startsWith('//') ? 'https:' + url : url;
 				}
 
-				// Load existing longdesc from sibling field
-				const fields = api.entry?.fields;
-				if (fields?.[longdescField]) {
-					const longdescValue = fields[longdescField].getValue(locale);
-					if (longdescValue) {
-						const current = editor.result || {};
-						editor.result = { ...current, longdesc: longdescValue };
-					}
-				}
+				// Watch for file changes (e.g. user uploads a new image)
+				fields.file?.onValueChanged(locale, (newFile) => {
+					const newUrl = newFile?.url;
+					editor.src = newUrl ? (newUrl.startsWith('//') ? 'https:' + newUrl : newUrl) : '';
+				});
 
-				// Resolve image URL from sibling media field
-				if (fields?.[mediaField]) {
-					const fileValue = fields[mediaField].getValue(locale);
-					const url = fileValue?.fields?.file?.[locale]?.url
-						|| fileValue?.url
-						|| (fileValue?.fields?.file?.url);
-					if (url) {
-						editor.src = url.startsWith('//') ? 'https:' + url : url;
-					}
+				// Load existing title (alt text) and description (longdesc)
+				const currentTitle = fields.title?.getValue(locale) || '';
+				const currentDesc = fields.description?.getValue(locale) || '';
+				if (currentTitle || currentDesc) {
+					editor.result = { alt: currentTitle, longdesc: currentDesc };
 				}
 
 				// Handle generation
@@ -99,10 +89,8 @@
 							editor.showError(data.error);
 						} else {
 							editor.result = data.result;
-							api.field.setValue(data.result.alt || '');
-							if (fields?.[longdescField]) {
-								fields[longdescField].setValue(data.result.longdesc || '', locale);
-							}
+							fields.title?.setValue(data.result.alt || '', locale);
+							fields.description?.setValue(data.result.longdesc || '', locale);
 						}
 					} catch (err) {
 						editor.showError(err.message);
@@ -114,10 +102,8 @@
 				// Save on manual edits
 				editor.addEventListener('change', (event) => {
 					const { alt, longdesc } = event.detail || {};
-					api.field.setValue(typeof alt === 'string' ? alt : '');
-					if (fields?.[longdescField] && typeof longdesc === 'string') {
-						fields[longdescField].setValue(longdesc, locale);
-					}
+					if (typeof alt === 'string') fields.title?.setValue(alt, locale);
+					if (typeof longdesc === 'string') fields.description?.setValue(longdesc, locale);
 				});
 
 				api.window.startAutoResizer();

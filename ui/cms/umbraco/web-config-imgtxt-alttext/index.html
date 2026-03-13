@@ -30,10 +30,10 @@
 
 		const app = document.getElementById('app');
 		let editor = null;
-		let umbracoOrigin = '*';
+		let umbracoOrigin = null;
 
 		const sendToUmbraco = (type, data = {}) => {
-			window.parent.postMessage({ type, ...data }, umbracoOrigin);
+			window.parent.postMessage({ type, ...data }, umbracoOrigin || '*');
 		};
 
 		const updateHeight = () => {
@@ -80,15 +80,20 @@
 		};
 
 		window.addEventListener('message', async (event) => {
-			if (umbracoOrigin !== '*' && event.origin !== umbracoOrigin) return;
-
 			const { type, value, longdesc, origin: senderOrigin, src } = event.data || {};
 
+			// Before init: only accept the init message
+			if (!umbracoOrigin) {
+				if (type !== 'init') return;
+				if (senderOrigin) umbracoOrigin = senderOrigin;
+				await initComponent(event.data);
+				return;
+			}
+
+			// After init: strict origin check
+			if (event.origin !== umbracoOrigin) return;
+
 			switch (type) {
-				case 'init':
-					if (senderOrigin) umbracoOrigin = senderOrigin;
-					await initComponent(event.data);
-					break;
 
 				case 'setValue':
 					if (editor) {
