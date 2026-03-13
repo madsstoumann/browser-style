@@ -43,6 +43,9 @@
 
 	<web-config-image id="editor" preset="alttext"></web-config-image>
 
+	<h3 style="margin-block-start:2ch;">Usage</h3>
+	<p id="usage" style="font-size:small;color:#666;"></p>
+
 	<h3 style="margin-block-start:2ch;">Stored value</h3>
 	<pre id="output" style="background:#f5f5f5;padding:1ch;border-radius:4px;font-size:small;overflow:auto;"></pre>
 
@@ -51,7 +54,7 @@
 
 		const presetImages = {
 			alttext: 'https://picsum.photos/id/237/400/300.jpg',
-			food: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400',
+			food: 'https://images.pexels.com/photos/1435904/pexels-photo-1435904.jpeg?auto=compress&w=150',
 		};
 
 		const editor = document.getElementById('editor');
@@ -60,6 +63,7 @@
 		const apiKeyInput = document.getElementById('apiKey');
 		const imageSrcInput = document.getElementById('imageSrc');
 		const output = document.getElementById('output');
+		const usageEl = document.getElementById('usage');
 
 		workerUrlInput.value = localStorage.getItem('wci-worker-url') || workerUrlInput.value;
 		apiKeyInput.value = localStorage.getItem('wci-api-key') || '';
@@ -87,6 +91,7 @@
 		});
 
 		editor.addEventListener('requestGenerate', async () => {
+			usageEl.textContent = '';
 			const workerUrl = workerUrlInput.value;
 			const apiKey = apiKeyInput.value;
 			const src = imageSrcInput.value;
@@ -116,6 +121,12 @@
 				const data = await response.json();
 				editor.result = data.result;
 				output.textContent = editor.value;
+				if (data.usage) {
+					const u = data.usage;
+					const cost = u.estimated_cost != null ? ` | Cost: $${u.estimated_cost.toFixed(6)}` : '';
+					const tokens = u.input_tokens != null ? `Tokens: ${u.input_tokens} in / ${u.output_tokens} out${cost} | ` : '';
+					usageEl.textContent = `${tokens}Requests today: ${u.requests_today}/${u.daily_limit}`;
+				}
 			} catch (err) {
 				editor.showError(err.message);
 			} finally {

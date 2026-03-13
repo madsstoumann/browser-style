@@ -93,10 +93,16 @@ export async function handleAnalyze(request: Request, env: Env): Promise<Respons
 
   const requestsToday = await getTodayCount(env, auth.apiKey.id);
 
+  const inputCost = (vision.inputTokens / 1_000_000) * 1.00;
+  const outputCost = (vision.outputTokens / 1_000_000) * 5.00;
+
   return Response.json({
     preset: presetName,
     result: vision.result,
     usage: {
+      input_tokens: vision.inputTokens,
+      output_tokens: vision.outputTokens,
+      estimated_cost: Math.round((inputCost + outputCost) * 1_000_000) / 1_000_000,
       requests_today: requestsToday,
       daily_limit: auth.apiKey.daily_limit,
     },
