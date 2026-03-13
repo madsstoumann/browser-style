@@ -1,15 +1,22 @@
 import { adoptSharedStyles } from '@browser.style/web-config-shared';
 
-const DETAIL_LEVELS = ['brief', 'standard', 'detailed'];
+function createLabel(text, hint) {
+	const label = document.createElement('label');
+	label.append(text + ' ');
+	const span = document.createElement('span');
+	span.textContent = hint;
+	label.append(span);
+	return label;
+}
 
 class WebConfigAlt extends HTMLElement {
 	static formAssociated = true;
-	static observedAttributes = ['value', 'detail'];
+	static observedAttributes = ['value', 'longdesc'];
 
 	#src = '';
-	#detail = 'standard';
 	#isGenerating = false;
 	#pendingValue = null;
+	#pendingLongdesc = null;
 
 	constructor() {
 		super();
@@ -23,23 +30,32 @@ class WebConfigAlt extends HTMLElement {
 		this.#updateGenerateButton();
 	}
 
-	get detail() { return this.#detail; }
-	set detail(v) {
-		this.#detail = DETAIL_LEVELS.includes(v) ? v : 'standard';
-	}
-
 	get value() {
-		const textarea = this.shadowRoot.querySelector('[data-alt-text]');
+		const textarea = this.shadowRoot.querySelector('[data-alt]');
 		return textarea ? textarea.value : (this.#pendingValue || '');
 	}
 	set value(v) {
 		const text = v || '';
 		this._internals.setFormValue(text);
-		const textarea = this.shadowRoot.querySelector('[data-alt-text]');
+		const textarea = this.shadowRoot.querySelector('[data-alt]');
 		if (textarea) {
 			textarea.value = text;
 		} else {
 			this.#pendingValue = text;
+		}
+	}
+
+	get longdesc() {
+		const textarea = this.shadowRoot.querySelector('[data-longdesc]');
+		return textarea ? textarea.value : (this.#pendingLongdesc || '');
+	}
+	set longdesc(v) {
+		const text = v || '';
+		const textarea = this.shadowRoot.querySelector('[data-longdesc]');
+		if (textarea) {
+			textarea.value = text;
+		} else {
+			this.#pendingLongdesc = text;
 		}
 	}
 
@@ -67,12 +83,28 @@ class WebConfigAlt extends HTMLElement {
 
 		const localCss = new CSSStyleSheet();
 		await localCss.replace(`
-			textarea[data-alt-text] {
+			:host {
+				display: grid;
+				gap: var(--web-config-gap);
+			}
+			label {
+				display: grid;
+				font-size: small;
+				font-weight: 500;
+				gap: 0.25em;
+			}
+			label span {
+				color: var(--web-config-color-muted, #666);
+			}
+			textarea {
 				font: inherit;
 				min-height: 2lh;
 				padding: var(--web-config-gap);
 				resize: vertical;
 				width: 100%;
+			}
+			textarea[data-longdesc] {
+				min-height: 4lh;
 			}
 			button[data-generate] {
 				justify-self: end;
@@ -116,16 +148,23 @@ class WebConfigAlt extends HTMLElement {
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (oldValue === newValue) return;
 		if (name === 'value') this.value = newValue;
-		if (name === 'detail') {
-			this.#detail = DETAIL_LEVELS.includes(newValue) ? newValue : 'standard';
-		}
+		if (name === 'longdesc') this.longdesc = newValue;
 	}
 
 	render() {
-		const attrDetail = this.getAttribute('detail');
-		if (attrDetail && DETAIL_LEVELS.includes(attrDetail)) {
-			this.#detail = attrDetail;
-		}
+		const altLabel = createLabel('Alt text', '(max 125 chars)');
+		const altTextarea = document.createElement('textarea');
+		altTextarea.setAttribute('data-alt', '');
+		altTextarea.placeholder = 'Alt text will appear here...';
+		altTextarea.maxLength = 125;
+		altLabel.append(altTextarea);
+
+		const longdescLabel = createLabel('Long description', '(max 512 chars)');
+		const longdescTextarea = document.createElement('textarea');
+		longdescTextarea.setAttribute('data-longdesc', '');
+		longdescTextarea.placeholder = 'Long description will appear here...';
+		longdescTextarea.maxLength = 512;
+		longdescLabel.append(longdescTextarea);
 
 		const btn = document.createElement('button');
 		btn.type = 'button';
@@ -134,21 +173,21 @@ class WebConfigAlt extends HTMLElement {
 		btn.disabled = true;
 		btn.textContent = 'Generate';
 
-		const textarea = document.createElement('textarea');
-		textarea.setAttribute('data-alt-text', '');
-		textarea.placeholder = 'Alt text will appear here...';
-
 		const spinner = document.createElement('div');
 		spinner.className = 'spinner';
 
 		const errorEl = document.createElement('div');
 		errorEl.className = 'alt-error';
 
-		this.shadowRoot.replaceChildren(textarea, btn, spinner, errorEl);
+		this.shadowRoot.replaceChildren(altLabel, longdescLabel, btn, spinner, errorEl);
 
 		if (this.#pendingValue !== null) {
-			textarea.value = this.#pendingValue;
+			altTextarea.value = this.#pendingValue;
 			this.#pendingValue = null;
+		}
+		if (this.#pendingLongdesc !== null) {
+			longdescTextarea.value = this.#pendingLongdesc;
+			this.#pendingLongdesc = null;
 		}
 
 		this.#updateGenerateButton();
@@ -162,20 +201,21 @@ class WebConfigAlt extends HTMLElement {
 
 			this.dispatchEvent(new CustomEvent('requestGenerate', {
 				bubbles: true,
-				composed: true,
-				detail: { detail: this.#detail }
+				composed: true
 			}));
 		});
 
-		textarea.addEventListener('input', () => {
-			const text = textarea.value;
-			this._internals.setFormValue(text);
+		const emitChange = () => {
+			this._internals.setFormValue(altTextarea.value);
 			this.dispatchEvent(new CustomEvent('change', {
 				bubbles: true,
 				composed: true,
-				detail: { alt: text }
+				detail: { alt: altTextarea.value, longdesc: longdescTextarea.value }
 			}));
-		});
+		};
+
+		altTextarea.addEventListener('input', emitChange);
+		longdescTextarea.addEventListener('input', emitChange);
 	}
 
 	#updateGenerateButton() {

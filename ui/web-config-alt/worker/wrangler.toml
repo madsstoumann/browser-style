@@ -1,0 +1,8 @@
+name = "alt-text"
+main = "src/index.ts"
+compatibility_date = "2025-02-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "alt-text-db"
+database_id = "cfbb8802-d5c7-4f24-9d14-33cd8218b75b"

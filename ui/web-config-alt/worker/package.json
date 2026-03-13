@@ -1,0 +1,14 @@
+{
+  "name": "alt-text-worker",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260210.0",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.64.0"
+  }
+}

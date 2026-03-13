@@ -8,6 +8,8 @@ _v2/
 # local env files
 .env.local
 .env.*.local
+.dev.vars
+.wrangler/
 
 # Editor directories and files
 .idea
