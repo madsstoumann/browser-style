@@ -169,7 +169,7 @@ const renderers = {
 	},
 };
 
-class WebConfigImage extends HTMLElement {
+class WebConfigImgTxt extends HTMLElement {
 	static formAssociated = true;
 	static observedAttributes = ['preset'];
 
@@ -299,4 +299,4 @@ class WebConfigImage extends HTMLElement {
 	}
 }
 
-customElements.define('web-config-image', WebConfigImage);
+customElements.define('web-config-imgtxt', WebConfigImgTxt);

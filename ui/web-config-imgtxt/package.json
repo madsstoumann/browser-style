@@ -1,5 +1,5 @@
 {
-  "name": "@browser.style/web-config-image",
+  "name": "@browser.style/web-config-imgtxt",
   "version": "1.0.0",
   "type": "module",
   "main": "./src/index.js",
