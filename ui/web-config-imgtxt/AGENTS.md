@@ -1,4 +1,4 @@
-# Web Config Image
+# Web Config ImgTxt
 
 A web component and Cloudflare Worker for AI-powered image analysis with multiple presets. Supports alt text generation and food recognition, with an extensible preset registry pattern.
 
@@ -6,7 +6,7 @@ A web component and Cloudflare Worker for AI-powered image analysis with multipl
 
 | Property | Value |
 |----------|-------|
-| Custom Element | `<web-config-image>` |
+| Custom Element | `<web-config-imgtxt>` |
 | Shadow DOM | Yes (open mode, adoptedStyleSheets) |
 | Form Associated | Yes |
 | Dependencies | `@browser.style/web-config-shared` |
@@ -16,16 +16,16 @@ A web component and Cloudflare Worker for AI-powered image analysis with multipl
 ## Installation
 
 ```bash
-npm install @browser.style/web-config-image
+npm install @browser.style/web-config-imgtxt
 ```
 
 ## Usage
 
 ```html
-<web-config-image id="editor" preset="alttext"></web-config-image>
+<web-config-imgtxt id="editor" preset="alttext"></web-config-imgtxt>
 
 <script type="module">
-  import '@browser.style/web-config-image';
+  import '@browser.style/web-config-imgtxt';
 
   const editor = document.getElementById('editor');
   editor.src = 'https://example.com/photo.jpg';
@@ -170,16 +170,16 @@ Adding a new preset: add an entry to the `presets` record in `presets.ts`, then 
 
 1. **Worker:** Add entry to `presets` in `worker/src/presets.ts`
 2. **Component:** Add renderer to `renderers` in `src/index.js`
-3. **Usage:** `<web-config-image preset="newpreset">`
+3. **Usage:** `<web-config-imgtxt preset="newpreset">`
 
 ## File Structure
 
 ```
-web-config-image/
+web-config-imgtxt/
 ├── index.html      # Demo page with preset dropdown
 ├── package.json    # Web component package
 ├── src/
-│   └── index.js    # <web-config-image> web component
+│   └── index.js    # <web-config-imgtxt> web component
 ├── worker/         # Cloudflare Worker backend
 │   └── ...
 ├── AGENTS.md       # This file
