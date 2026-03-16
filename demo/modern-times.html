@@ -55,7 +55,11 @@ modern-times {
 		display: block;
 		grid-area: 1 / -1;
 		height: var(--_h);
-		mask: radial-gradient(circle at center, #0000 0.25em, #000 0.25em);
+		mask:
+			radial-gradient(circle at center, #0000 0.25em, #000 0.25em),
+			radial-gradient(circle calc(var(--_h) / 2) at 50% center, #000 100%, #0000 100%),
+			linear-gradient(to right, #0000 50%, #000 50%);
+		mask-composite: intersect, add;
 		place-self: center center;
 		rotate: 45deg;
 		width: var(--_w);
