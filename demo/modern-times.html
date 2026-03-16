@@ -8,25 +8,27 @@
 
 
 modern-times {
-	--md-arm: #a78d53;
-	--md-bezel: #efd092;
-	--md-dial: hsl(192, 63%, 28%);
-	--md-dot: #a78d53;
-	--md-inner-edge: #11171A;
-	--md-inner-ring: #C2B18C;
-	--md-outer-ring: #F6ECB3;
-	--md-outer-edge: #efd092;
+	
+	--mt-bg: hsl(12, 63%, 28%);
+	--mt-bezel: #efd092;
+	--mt-dial: hsl(192, 63%, 28%);
+	
+	--mt-minute: #a78d53;
+	--mt-hour: #a78d53;
 
 	aspect-ratio: 1;
-	background: radial-gradient(circle closest-side,
-		var(--md-dial) 88%,
-		var(--md-inner-edge) 89% 90%,
-		var(--md-inner-ring) 91% 91%,
-		var(--md-bezel) 92% 98%,
-		var(--md-outer-ring) 98% 99%,
-		var(--md-outer-edge) 99%
-	);
-	border-radius: 50%;
+	background:
+		radial-gradient(circle closest-side,
+			var(--mt-dial) 80%,
+			#0000 81%
+		),
+		radial-gradient(circle closest-side,
+			#0000 80%,
+			var(--mt-bezel) 81% 90%,
+			#0000 91%
+		),
+		var(--mt-bg);
+
 	box-sizing: border-box;
 	container-type: inline-size;
 	display: grid;
@@ -35,27 +37,34 @@ modern-times {
 	&::before {
 		aspect-ratio: 1;
 		/* animation: dot 60s steps(60) infinite; */
-		background: var(--md-dot);
+		background: var(--mt-hour);
 		border-radius: 50%;
 		content: "";
+		grid-area: 1 / -1;
 		offset-distance: var(--_od, 0%);
-		offset-path: circle(37.5% at center);
-		width: 5%;
+		offset-path: circle(30% at center);
+		width: 7.5%;
 	}
 	&::after {
-		background: var(--md-arm);
-		border-radius: 2rem;
+
+		--_w: 70%;
+		--_h: 1em;
+		background: var(--mt-minute);
+		border-radius: 1em;
 		content: "";
 		display: block;
-		height: 7.5%;
-		width: 50%;
+		grid-area: 1 / -1;
+		height: var(--_h);
+		mask: radial-gradient(circle at center, #0000 0.25em, #000 0.25em);
+		place-self: center center;
+		rotate: 45deg;
+		width: var(--_w);
 	}
 }
 
 @keyframes dot { to { offset-distance: 100%; } }
 
 body {
-	/* background: hsl(12, 63%, 28%); */
 	max-width: 400px;
 	margin: 2rem auto;	
 }
@@ -65,7 +74,7 @@ body {
 </head>
 <body>
 
-<modern-times></modern-times>
+	<modern-times></modern-times>
 
 </body>
 </html>
