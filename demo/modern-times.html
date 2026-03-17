@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <style>
+
 @property --_a {
   syntax: "<angle>";
   initial-value: 0turn;
@@ -12,24 +13,23 @@
 }
 
 modern-times {
-  --mt-bezel: attr(bezel type(<color>), Canvastext);
   --mt-arms: attr(arms type(<color>), var(--mt-bezel));
+  --mt-bezel-w: 12%;
+  --mt-bezel: attr(bezel type(<color>), Canvastext);
   --mt-bg: attr(bg type(<color>), hsl(from var(--mt-dial) calc(h + 180) s l));
   --mt-dial: attr(dial type(<color>), Canvas);
-  --mt-second: attr(dot type(<color>), var(--mt-dial));
+  --mt-dot: attr(dot type(<color>), var(--mt-dial));
   --mt-gap: 10%;
-  --bezel-w: 12%;
-  --mt-hole: calc(var(--bezel-w) / 5);
-
-  --mt-minute: var(--mt-arms);
+  --mt-hole: calc(var(--mt-bezel-w) / 5);
   --mt-hour: hsl(from var(--mt-arms) h s l / 0.5);
+  --mt-minute: var(--mt-arms);
 
   --_hour: attr(hour type(<number>), 0);
   --_minute: attr(minute type(<number>), 0);
   --_second: attr(second type(<number>), 0);
 
   --_bezel-outer: calc(100% - var(--mt-gap));
-  --_bezel-inner: calc(100% - var(--mt-gap) - var(--bezel-w));
+  --_bezel-inner: calc(100% - var(--mt-gap) - var(--mt-bezel-w));
   --_r: calc((var(--_bezel-outer) + var(--_bezel-inner)) / 4);
 
   animation: bg-turn 60s steps(60) infinite;
@@ -41,7 +41,7 @@ modern-times {
       #0000 calc(var(--_bezel-inner) + 1%)
     ),
     radial-gradient(circle at calc(50% + sin(var(--_a)) * var(--_r)) calc(50% - cos(var(--_a)) * var(--_r)),
-      var(--mt-second) calc(var(--mt-hole) / 2),
+      var(--mt-dot) calc(var(--mt-hole) / 2),
       #0000 calc(var(--mt-hole) / 2 + 0.5%)
     ),
     radial-gradient(circle closest-side,
@@ -59,7 +59,7 @@ modern-times {
   font-family: ui-sans-serif, system-ui;
   font-size: 12px;
   font-weight: 300;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.125em;
   padding-block-start: 60%;
   place-items: start center;
   position: relative;
@@ -112,11 +112,9 @@ modern-times {
   }
 }
 
-@keyframes turn { to { rotate: 1turn; } }
 @keyframes bg-turn { to { --_a: 1turn; } }
 @keyframes dot { to { offset-distance: 100%; } }
-
-
+@keyframes turn { to { rotate: 1turn; } }
 
 body {
   display: grid;
@@ -124,7 +122,6 @@ body {
   margin: 0;
 }
 
-  
   </style>
 </head>
 <body>
