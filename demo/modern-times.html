@@ -9,68 +9,91 @@
 
 modern-times {
 	
-	--mt-bg: hsl(12, 63%, 28%);
+	--mt-dial: attr(dial type(<color>), hsl(192, 63%, 28%));
+	--mt-bg: hsl(from var(--mt-dial) calc(h + 180) s l);
 	--mt-bezel: #efd092;
-	--mt-dial: hsl(192, 63%, 28%);
-	
+	--mt-gap: 10%;
+	--bezel-w: 10%;
+
 	--mt-minute: #a78d53;
 	--mt-hour: #a78d53;
+
+	--_hour: attr(hour type(<number>), 0);
+	--_minute: attr(minute type(<number>), 0);
+
+	--_bezel-outer: calc(100% - var(--mt-gap));
+	--_bezel-inner: calc(100% - var(--mt-gap) - var(--bezel-w));
 
 	aspect-ratio: 1;
 	background:
 		radial-gradient(circle closest-side,
-			var(--mt-dial) 80%,
-			#0000 81%
+			var(--mt-dial) var(--_bezel-inner),
+			#0000 calc(var(--_bezel-inner) + 1%)
 		),
 		radial-gradient(circle closest-side,
-			#0000 80%,
-			var(--mt-bezel) 81% 90%,
-			#0000 91%
+			#0000 var(--_bezel-inner),
+			var(--mt-bezel) calc(var(--_bezel-inner) + 1%) var(--_bezel-outer),
+			#0000 calc(var(--_bezel-outer) + 1%)
 		),
 		var(--mt-bg);
 
-	box-sizing: border-box;
-	container-type: inline-size;
-	display: grid;
-	width: 100%;
+		box-sizing: border-box;
+		container-type: inline-size;
+		display: grid;
+		width: 100%;
 
 	&::before {
-		aspect-ratio: 1;
-		/* animation: dot 60s steps(60) infinite; */
+		--_w: calc(var(--_bezel-inner) * 0.65);
+		--_h: 5cqi;
+		animation-delay: calc((var(--_hour) * -3600s) + (var(--_minute) * -60s) - 32400s);
+		animation-duration: 43200s;
 		background: var(--mt-hour);
-		border-radius: 50%;
-		content: "";
-		grid-area: 1 / -1;
-		offset-distance: var(--_od, 0%);
-		offset-path: circle(30% at center);
-		width: 7.5%;
 	}
-	&::after {
 
-		--_w: 70%;
-		--_h: 1em;
+	&::after {
+		--_w: calc(var(--_bezel-inner) * 0.9);
+		--_h: 5cqi;
+		animation-delay: calc((var(--_minute) * -60s) - 2700s);
+		animation-duration: 3600s;
 		background: var(--mt-minute);
-		border-radius: 1em;
+	}
+
+	&::after, &::before {
+		animation-name: turn;
+		animation-iteration-count: infinite;
+		animation-timing-function: linear;
+		border-radius: var(--_h);
 		content: "";
 		display: block;
 		grid-area: 1 / -1;
 		height: var(--_h);
 		mask:
-			radial-gradient(circle at center, #0000 0.25em, #000 0.25em),
+			radial-gradient(circle at center, #0000 calc(var(--_h) / 4), #000 calc(var(--_h) / 4)),
 			radial-gradient(circle calc(var(--_h) / 2) at 50% center, #000 100%, #0000 100%),
 			linear-gradient(to right, #0000 50%, #000 50%);
 		mask-composite: intersect, add;
 		place-self: center center;
-		rotate: 45deg;
 		width: var(--_w);
+	}
+
+	&[mode=picto]::before {
+		--_w: 7.5%;
+		--_h: 7.5%;
+		/* animation: dot 60s steps(60) infinite; */
+		border-radius: 50%;
+		offset-distance: var(--_d, 0%);
+		offset-path: circle(30% at center);
+		place-self: center end;
 	}
 }
 
+@keyframes turn { to { rotate: 1turn; } }
 @keyframes dot { to { offset-distance: 100%; } }
 
 body {
-	max-width: 400px;
-	margin: 2rem auto;	
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	margin: 0;
 }
 
 	
@@ -78,7 +101,30 @@ body {
 </head>
 <body>
 
-	<modern-times></modern-times>
+	<modern-times hour="0" minute="0" dial="hsl(0, 63%, 28%)"></modern-times>
+	<modern-times hour="0" minute="30" dial="hsl(15, 63%, 28%)"></modern-times>
+	<modern-times hour="1" minute="0" dial="hsl(30, 63%, 28%)"></modern-times>
+	<modern-times hour="1" minute="30" dial="hsl(45, 63%, 28%)"></modern-times>
+	<modern-times hour="2" minute="0" dial="hsl(60, 63%, 28%)"></modern-times>
+	<modern-times hour="2" minute="30" dial="hsl(75, 63%, 28%)"></modern-times>
+	<modern-times hour="3" minute="0" dial="hsl(90, 63%, 28%)"></modern-times>
+	<modern-times hour="3" minute="30" dial="hsl(105, 63%, 28%)"></modern-times>
+	<modern-times hour="4" minute="0" dial="hsl(120, 63%, 28%)"></modern-times>
+	<modern-times hour="4" minute="30" dial="hsl(135, 63%, 28%)"></modern-times>
+	<modern-times hour="5" minute="0" dial="hsl(150, 63%, 28%)"></modern-times>
+	<modern-times hour="5" minute="30" dial="hsl(165, 63%, 28%)"></modern-times>
+	<modern-times hour="6" minute="0" dial="hsl(180, 63%, 28%)"></modern-times>
+	<modern-times hour="6" minute="30" dial="hsl(195, 63%, 28%)"></modern-times>
+	<modern-times hour="7" minute="0" dial="hsl(210, 63%, 28%)"></modern-times>
+	<modern-times hour="7" minute="30" dial="hsl(225, 63%, 28%)"></modern-times>
+	<modern-times hour="8" minute="0" dial="hsl(240, 63%, 28%)"></modern-times>
+	<modern-times hour="8" minute="30" dial="hsl(255, 63%, 28%)"></modern-times>
+	<modern-times hour="9" minute="0" dial="hsl(270, 63%, 28%)"></modern-times>
+	<modern-times hour="9" minute="30" dial="hsl(285, 63%, 28%)"></modern-times>
+	<modern-times hour="10" minute="0" dial="hsl(300, 63%, 28%)"></modern-times>
+	<modern-times hour="10" minute="30" dial="hsl(315, 63%, 28%)"></modern-times>
+	<modern-times hour="11" minute="0" dial="hsl(330, 63%, 28%)"></modern-times>
+	<modern-times hour="11" minute="30" dial="hsl(345, 63%, 28%)"></modern-times>
 
 </body>
 </html>
