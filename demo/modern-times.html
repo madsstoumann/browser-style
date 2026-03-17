@@ -1,139 +1,138 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>Modern Times</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<style>
+  <title>Modern Times</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <style>
 
 
 modern-times {
-	--mt-arms: attr(arms type(<color>), #a78d53);
-	--mt-bg: attr(bg type(<color>), hsl(from var(--mt-dial) calc(h + 180) s l));
-	--mt-bezel: attr(bezel type(<color>), #efd092);
-	--mt-dial: attr(dial type(<color>), hsl(192, 63%, 28%));
-	--mt-gap: 10%;
-	--bezel-w: 10%;
+  --mt-arms: attr(arms type(<color>), #a78d53);
+  --mt-bg: attr(bg type(<color>), hsl(from var(--mt-dial) calc(h + 180) s l));
+  --mt-bezel: attr(bezel type(<color>), #efd092);
+  --mt-dial: attr(dial type(<color>), hsl(192, 63%, 28%));
+  --mt-gap: 10%;
+  --bezel-w: 10%;
 
-	--mt-minute: var(--mt-arms);
-	--mt-hour: hsl(from var(--mt-arms) h s l / 0.6);
+  --mt-minute: var(--mt-arms);
+  --mt-hour: hsl(from var(--mt-arms) h s l / 0.6);
 
-	--_hour: attr(hour type(<number>), 0);
-	--_minute: attr(minute type(<number>), 0);
+  --_hour: attr(hour type(<number>), 0);
+  --_minute: attr(minute type(<number>), 0);
 
-	--_bezel-outer: calc(100% - var(--mt-gap));
-	--_bezel-inner: calc(100% - var(--mt-gap) - var(--bezel-w));
+  --_bezel-outer: calc(100% - var(--mt-gap));
+  --_bezel-inner: calc(100% - var(--mt-gap) - var(--bezel-w));
 
-	aspect-ratio: 1;
-	background:
-		radial-gradient(circle closest-side,
-			var(--mt-dial) var(--_bezel-inner),
-			#0000 calc(var(--_bezel-inner) + 1%)
-		),
-		radial-gradient(circle closest-side,
-			#0000 var(--_bezel-inner),
-			var(--mt-bezel) calc(var(--_bezel-inner) + 1%) var(--_bezel-outer),
-			#0000 calc(var(--_bezel-outer) + 1%)
-		),
-		var(--mt-bg);
+  aspect-ratio: 1;
+  background:
+    radial-gradient(circle closest-side,
+      var(--mt-dial) var(--_bezel-inner),
+      #0000 calc(var(--_bezel-inner) + 1%)
+    ),
+    radial-gradient(circle closest-side,
+      #0000 var(--_bezel-inner),
+      var(--mt-bezel) calc(var(--_bezel-inner) + 1%) var(--_bezel-outer),
+      #0000 calc(var(--_bezel-outer) + 1%)
+    ),
+    var(--mt-bg);
 
-	box-sizing: border-box;
-	color: hsl(from var(--mt-bezel) h s l / 0.5);
-	container-type: inline-size;
-	display: grid;
-	font-family: ui-sans-serif, system-ui;
-	font-size: 12px;
-	font-weight: 300;
-	letter-spacing: 0.05em;
-	padding-block-start: 60%;
-	place-items: start center;
-	position: relative;
-	text-transform: uppercase;
-	width: 100%;
+  box-sizing: border-box;
+  color: hsl(from var(--mt-bezel) h s l / 0.5);
+  container-type: inline-size;
+  display: grid;
+  font-family: ui-sans-serif, system-ui;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  padding-block-start: 60%;
+  place-items: start center;
+  position: relative;
+  text-transform: uppercase;
+  width: 100%;
 
-	&::before {
-		--_w: calc(var(--_bezel-inner) * 0.65);
-		--_h: 5cqi;
-		animation-delay: calc((var(--_hour) * -3600s) + (var(--_minute) * -60s) - 32400s);
-		animation-duration: 43200s;
-		background: var(--mt-hour);
-	}
+  &::before {
+    --_w: calc(var(--_bezel-inner) * 0.65);
+    --_h: 6cqi;
+    animation-delay: calc((var(--_hour) * -3600s) + (var(--_minute) * -60s) - 32400s);
+    animation-duration: 43200s;
+    background: var(--mt-hour);
+  }
 
-	&::after {
-		--_w: calc(var(--_bezel-inner) * 0.9);
-		--_h: 5cqi;
-		animation-delay: calc((var(--_minute) * -60s) - 2700s);
-		animation-duration: 3600s;
-		background: var(--mt-minute);
-	}
+  &::after {
+    --_w: calc(var(--_bezel-inner) * 0.9);
+    --_h: 6cqi;
+    animation-delay: calc((var(--_minute) * -60s) - 2700s);
+    animation-duration: 3600s;
+    background: var(--mt-minute);
+  }
 
-	&::after, &::before {
-		animation-name: turn;
-		animation-iteration-count: infinite;
-		animation-timing-function: linear;
-		border-radius: var(--_h);
-		content: "";
-		height: var(--_h);
-		inset: 0;
-		margin: auto;
-		mask:
-			radial-gradient(circle at center, #0000 calc(var(--_h) / 4), #000 calc(var(--_h) / 4)),
-			radial-gradient(circle calc(var(--_h) / 2) at 50% center, #000 100%, #0000 100%),
-			linear-gradient(to right, #0000 50%, #000 50%);
-		mask-composite: intersect, add;
-		position: absolute;
-		width: var(--_w);
-	}
+  &::after, &::before {
+    animation-name: turn;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    border-radius: var(--_h);
+    content: "";
+    height: var(--_h);
+    inset: 0;
+    margin: auto;
+    mask:
+      radial-gradient(circle at center, #0000 calc(var(--_h) / 4), #000 calc(var(--_h) / 4)),
+      radial-gradient(circle calc(var(--_h) / 2) at 50% center, #000 100%, #0000 100%),
+      linear-gradient(to right, #0000 50%, #000 50%);
+    mask-composite: intersect, add;
+    position: absolute;
+    width: var(--_w);
+  }
 
-	&[mode=picto]::before {
-		--_w: 7.5%;
-		--_h: 7.5%;
-		/* animation: dot 60s steps(60) infinite; */
-		border-radius: 50%;
-		offset-distance: var(--_d, 0%);
-		offset-path: circle(30% at center);
-		place-self: center end;
-	}
+  &[mode=picto]::before {
+    --_w: 7.5%;
+    --_h: 7.5%;
+    /* animation: dot 60s steps(60) infinite; */
+    background: var(--mt-arms);
+    border-radius: 50%;
+    offset-distance: var(--_d, 0%);
+    offset-path: circle(30% at center);
+    place-self: center end;
+  }
 }
 
 @keyframes turn { to { rotate: 1turn; } }
 @keyframes dot { to { offset-distance: 100%; } }
 
 body {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-	margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  margin: 0;
 }
 
-	
-	</style>
+  
+  </style>
 </head>
 <body>
-
-	<modern-times hour="0" minute="0" dial="#741a1a">London</modern-times>
-	<modern-times hour="0" minute="30" dial="#48889a" bezel="#d6d6d6" arms="#d9d9d9" bg="#31525d"></modern-times>
-	<modern-times hour="1" minute="0" dial="#0a0a0a" bezel="#009aa0" arms="#009aa0" bg="#2c2c2c">Paris</modern-times>
-	<modern-times hour="1" minute="30" dial="#74741a"></modern-times>
-	<modern-times hour="2" minute="0" dial="#5a741a">Cairo</modern-times>
-	<modern-times hour="2" minute="30" dial="#3a741a">Marquesas</modern-times>
-	<modern-times hour="3" minute="0" dial="#1a741a">Moscow</modern-times>
-	<modern-times hour="3" minute="30" dial="#1a743a">Tehran</modern-times>
-	<modern-times hour="4" minute="0" dial="#1a745a">Dubai</modern-times>
-	<modern-times hour="4" minute="30" dial="#1a7474">Kabul</modern-times>
-	<modern-times hour="5" minute="0" dial="#1a5a74">Karachi</modern-times>
-	<modern-times hour="5" minute="30" dial="#1a3a74">Mumbai</modern-times>
-	<modern-times hour="6" minute="0" dial="#1a1a74">Dhaka</modern-times>
-	<modern-times hour="6" minute="30" dial="#3a1a74">Yangon</modern-times>
-	<modern-times hour="7" minute="0" dial="#5a1a74">Bangkok</modern-times>
-	<modern-times hour="7" minute="30" dial="#741a74"></modern-times>
-	<modern-times hour="8" minute="0" dial="#741a5a">Shanghai</modern-times>
-	<modern-times hour="8" minute="30" dial="#741a3a">St. John's</modern-times>
-	<modern-times hour="9" minute="0" dial="#8b1a1a">Tokyo</modern-times>
-	<modern-times hour="9" minute="30" dial="#8b4a1a">Adelaide</modern-times>
-	<modern-times hour="10" minute="0" dial="#1a6b5a">Sydney</modern-times>
-	<modern-times hour="10" minute="30" dial="#4a1a6b">Lord Howe Is.</modern-times>
-	<modern-times hour="11" minute="0" dial="#6b1a4a">Nouméa</modern-times>
-	<modern-times hour="11" minute="30" dial="#1a4a6b">Norfolk Is.</modern-times>
-
+  <modern-times hour="0" minute="0" dial="#741a1a">London</modern-times>
+  <modern-times hour="0" minute="45" dial="#48889a" bezel="#d6d6d6" arms="#d9d9d9" bg="#31525d" mode="picto">Somewhere</modern-times>
+  <modern-times hour="1" minute="0" dial="#0a0a0a" bezel="#009aa0" arms="#009aa0" bg="#2c2c2c">Paris</modern-times>
+  <modern-times hour="1" minute="30" dial="#ac8663" bezel="#2a2a2b" arms="#2a2a2b">Nowhere</modern-times>
+  <modern-times hour="2" minute="0" dial="#5a741a">Cairo</modern-times>
+  <modern-times hour="2" minute="30" dial="#3a741a">Marquesas</modern-times>
+  <modern-times hour="3" minute="0" dial="#1a741a">Moscow</modern-times>
+  <modern-times hour="3" minute="30" dial="#1a743a">Tehran</modern-times>
+  <modern-times hour="4" minute="0" dial="#1a745a">Dubai</modern-times>
+  <modern-times hour="4" minute="30" dial="#1a7474">Kabul</modern-times>
+  <modern-times hour="5" minute="0" dial="#1a5a74">Karachi</modern-times>
+  <modern-times hour="5" minute="30" dial="#1a3a74">Mumbai</modern-times>
+  <modern-times hour="6" minute="0" dial="#1a1a74">Dhaka</modern-times>
+  <modern-times hour="6" minute="30" dial="#3a1a74">Yangon</modern-times>
+  <modern-times hour="7" minute="0" dial="#5a1a74">Bangkok</modern-times>
+  <modern-times hour="7" minute="30" dial="#741a74"></modern-times>
+  <modern-times hour="8" minute="0" dial="#741a5a">Shanghai</modern-times>
+  <modern-times hour="8" minute="30" dial="#741a3a">St. John's</modern-times>
+  <modern-times hour="9" minute="0" dial="#8b1a1a">Tokyo</modern-times>
+  <modern-times hour="9" minute="30" dial="#8b4a1a">Adelaide</modern-times>
+  <modern-times hour="10" minute="0" dial="#1a6b5a">Sydney</modern-times>
+  <modern-times hour="10" minute="30" dial="#4a1a6b">Lord Howe Is.</modern-times>
+  <modern-times hour="11" minute="0" dial="#6b1a4a">Nouméa</modern-times>
+  <modern-times hour="11" minute="30" dial="#1a4a6b">Norfolk Is.</modern-times>
 </body>
 </html>
