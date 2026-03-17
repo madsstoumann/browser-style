@@ -12,11 +12,11 @@
 }
 
 modern-times {
-  --mt-arms: attr(arms type(<color>), CanvasText);
-  --mt-bg: attr(bg type(<color>), hsl(from var(--mt-dial) calc(h + 180) s l));
   --mt-bezel: attr(bezel type(<color>), Canvastext);
+  --mt-arms: attr(arms type(<color>), var(--mt-bezel));
+  --mt-bg: attr(bg type(<color>), hsl(from var(--mt-dial) calc(h + 180) s l));
   --mt-dial: attr(dial type(<color>), Canvas);
-  --mt-second: attr(second-color type(<color>), var(--mt-dial));
+  --mt-second: attr(dot type(<color>), var(--mt-dial));
   --mt-gap: 10%;
   --bezel-w: 12%;
   --mt-hole: calc(var(--bezel-w) / 5);
@@ -128,29 +128,29 @@ body {
   </style>
 </head>
 <body>
-  <modern-times hour="0" minute="0" dial="#741a1a" bezel="#efd092" arms="#efd092">London</modern-times>
+  <modern-times hour="0" minute="0" dial="#741a1a" bezel="#efd092">London</modern-times>
   <modern-times hour="0" minute="45" dial="#48889a" bezel="#d6d6d6" arms="#d9d9d9" bg="#31525d" mode="picto">Picto</modern-times>
-  <modern-times hour="1" minute="0" dial="#0a0a0a" bezel="#009aa0" arms="#009aa0" bg="#2c2c2c">Paris</modern-times>
-  <modern-times hour="1" minute="30" dial="#ac8663" bezel="#2a2a2b" arms="#2a2a2b">Nowhere</modern-times>
-  <modern-times hour="2" minute="0" dial="#acbdd6" bezel="#a97758" arms="#a97758" bg="#59698a"></modern-times>
-  <modern-times hour="2" minute="30" dial="#19191b" bezel="#dec813" arms="#dec813"></modern-times>
-  <modern-times hour="3" minute="0" dial="#2c725c" bezel="#e0bf74" arms="#e0bf74" bg="#194034"></modern-times>
-  <modern-times hour="3" minute="30" dial="#252d4c" bezel="#c1c1c1" arms="#c1c1c1" bg="#252d4c"></modern-times>
-  <modern-times hour="4" minute="0" dial="#2d735e" bezel="#c4ab73" arms="#c4ab73" bg="#364947"></modern-times>
-  <modern-times hour="4" minute="30" dial="#ca9851" bezel="#e0e0e0" arms="#e0e0e0" bg="#555555"></modern-times>
-  <modern-times hour="5" minute="0" dial="#6c6c6c" bezel="#cdcdcd" arms="#cdcdcd" bg="#6c6c6c"></modern-times>
-  <modern-times hour="5" minute="30" dial="#73755e" bezel="#e4e4e4" arms="#e4e4e4" bg="#343e4f"></modern-times>
-  <modern-times hour="6" minute="0" dial="#ededed" bezel="#070707" arms="#070707" bg="#3e3e3e" mode="picto">Dhaka</modern-times>
-  <modern-times hour="6" minute="30" dial="#3a1a74"></modern-times>
-  <modern-times hour="7" minute="0" dial="#5a1a74"></modern-times>
-  <modern-times hour="7" minute="30" dial="#741a74"></modern-times>
-  <modern-times hour="8" minute="0" dial="#741a5a"></modern-times>
-  <modern-times hour="8" minute="30" dial="#741a3a"></modern-times>
-  <modern-times hour="9" minute="0" dial="#8b1a1a"></modern-times>
-  <modern-times hour="9" minute="30" dial="#8b4a1a"></modern-times>
-  <modern-times hour="10" minute="0" dial="#1a6b5a"></modern-times>
-  <modern-times hour="10" minute="30" dial="#4a1a6b"></modern-times>
-  <modern-times hour="11" minute="0">Default</modern-times>
-  <modern-times hour="11" minute="30" dial="#1a4a6b">Norfolk Is.</modern-times>
+  <modern-times hour="1" minute="0" dial="#0a0a0a" bezel="#009aa0" bg="#2c2c2c">Paris</modern-times>
+  <modern-times hour="1" minute="30" dial="#ac8663" bezel="#2a2a2b"></modern-times>
+  <modern-times hour="2" minute="0" dial="#acbdd6" bezel="#a97758" bg="#59698a"></modern-times>
+  <modern-times hour="2" minute="30" dial="#19191b" bezel="#dec813"></modern-times>
+  <modern-times hour="3" minute="0" dial="#2c725c" bezel="#e0bf74" bg="#194034"></modern-times>
+  <modern-times hour="3" minute="30" dial="#252d4c" bezel="#c1c1c1" bg="#252d4c"></modern-times>
+  <modern-times hour="4" minute="0" dial="#2d735e" bezel="#c4ab73" bg="#364947"></modern-times>
+  <modern-times hour="4" minute="30" dial="#ca9851" bezel="#e0e0e0" bg="#555555"></modern-times>
+  <modern-times hour="5" minute="0" dial="#6c6c6c" bezel="#cdcdcd" bg="#6c6c6c"></modern-times>
+  <modern-times hour="5" minute="30" dial="#73755e" bezel="#e4e4e4" bg="#343e4f"></modern-times>
+  <modern-times hour="6" minute="0" dial="#ededed" bezel="#070707" bg="#3e3e3e" mode="picto">Picto</modern-times>
+  <modern-times hour="6" minute="30" dial="#c07a9f" bezel="#e2d5b5" bg="#bc9875"></modern-times>
+  <modern-times hour="7" minute="0" dial="#151517" bg="#606060" bezel="#f2c67f"></modern-times>
+  <modern-times hour="7" minute="30" dial="#ad8561" bezel="#2b2b2d" bg="#ad8561"></modern-times>
+  <modern-times hour="8" minute="0" dial="#e1d3e2" bezel="#d7af90" bg="#4f1629"></modern-times>
+  <modern-times hour="8" minute="30" dial="#0e0e15" bezel="#0e0e15" arms="#d9b901" bg="#d9b901" dot="#d9b901"></modern-times>
+  <modern-times hour="9" minute="0" dial="#fdfdfd" bezel="#535353" bg="#e7cfb6"></modern-times>
+  <modern-times hour="9" minute="30" dial="#a63a3f" bg="#e3c146" bezel="#963026" arms="#f4e5c2" dot="#f4e5c2"></modern-times>
+  <modern-times hour="10" minute="0" dial="#da5c30" bezel="#f2d99a" arms="#d9cda4" bg="#d34806"></modern-times>
+  <modern-times hour="10" minute="30" dial="#49899b" bezel="#dadada" bg="#388d9b"></modern-times>
+  <modern-times hour="11" minute="0" dial="#49365c" bezel="#d9bb60" bg="#49365c"></modern-times>
+  <modern-times hour="11" minute="30" dial="#ec273a" bezel="#e6e5e3" bg="#f7162b"></modern-times>
 </body>
 </html>
