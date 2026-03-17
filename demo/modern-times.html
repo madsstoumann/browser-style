@@ -5,30 +5,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <style>
-
+@property --_a {
+  syntax: "<angle>";
+  initial-value: 0turn;
+  inherits: false;
+}
 
 modern-times {
-  --mt-arms: attr(arms type(<color>), #a78d53);
+  --mt-arms: attr(arms type(<color>), CanvasText);
   --mt-bg: attr(bg type(<color>), hsl(from var(--mt-dial) calc(h + 180) s l));
-  --mt-bezel: attr(bezel type(<color>), #efd092);
-  --mt-dial: attr(dial type(<color>), hsl(192, 63%, 28%));
+  --mt-bezel: attr(bezel type(<color>), Canvastext);
+  --mt-dial: attr(dial type(<color>), Canvas);
+  --mt-second: attr(second-color type(<color>), var(--mt-dial));
   --mt-gap: 10%;
-  --bezel-w: 10%;
+  --bezel-w: 12%;
+  --mt-hole: calc(var(--bezel-w) / 5);
 
   --mt-minute: var(--mt-arms);
   --mt-hour: hsl(from var(--mt-arms) h s l / 0.6);
 
   --_hour: attr(hour type(<number>), 0);
   --_minute: attr(minute type(<number>), 0);
+  --_second: attr(second type(<number>), 0);
 
   --_bezel-outer: calc(100% - var(--mt-gap));
   --_bezel-inner: calc(100% - var(--mt-gap) - var(--bezel-w));
+  --_r: calc((var(--_bezel-outer) + var(--_bezel-inner)) / 4);
 
+  animation: bg-turn 60s steps(60) infinite;
+  animation-delay: calc(var(--_second) * -1s);
   aspect-ratio: 1;
   background:
     radial-gradient(circle closest-side,
       var(--mt-dial) var(--_bezel-inner),
       #0000 calc(var(--_bezel-inner) + 1%)
+    ),
+    radial-gradient(circle at calc(50% + sin(var(--_a)) * var(--_r)) calc(50% - cos(var(--_a)) * var(--_r)),
+      var(--mt-second) calc(var(--mt-hole) / 2),
+      #0000 calc(var(--mt-hole) / 2 + 0.5%)
     ),
     radial-gradient(circle closest-side,
       #0000 var(--_bezel-inner),
@@ -39,6 +53,7 @@ modern-times {
 
   box-sizing: border-box;
   color: hsl(from var(--mt-bezel) h s l / 0.5);
+  color-scheme: light dark;
   container-type: inline-size;
   display: grid;
   font-family: ui-sans-serif, system-ui;
@@ -56,6 +71,7 @@ modern-times {
     --_h: 6cqi;
     animation-delay: calc((var(--_hour) * -3600s) + (var(--_minute) * -60s) - 32400s);
     animation-duration: 43200s;
+    animation-timing-function: linear;
     background: var(--mt-hour);
   }
 
@@ -64,13 +80,13 @@ modern-times {
     --_h: 6cqi;
     animation-delay: calc((var(--_minute) * -60s) - 2700s);
     animation-duration: 3600s;
+    animation-timing-function: steps(60);
     background: var(--mt-minute);
   }
 
   &::after, &::before {
     animation-name: turn;
     animation-iteration-count: infinite;
-    animation-timing-function: linear;
     border-radius: var(--_h);
     content: "";
     height: var(--_h);
@@ -88,7 +104,6 @@ modern-times {
   &[mode=picto]::before {
     --_w: 7.5%;
     --_h: 7.5%;
-    /* animation: dot 60s steps(60) infinite; */
     background: var(--mt-arms);
     border-radius: 50%;
     offset-distance: var(--_d, 0%);
@@ -98,7 +113,10 @@ modern-times {
 }
 
 @keyframes turn { to { rotate: 1turn; } }
+@keyframes bg-turn { to { --_a: 1turn; } }
 @keyframes dot { to { offset-distance: 100%; } }
+
+
 
 body {
   display: grid;
@@ -132,7 +150,7 @@ body {
   <modern-times hour="9" minute="30" dial="#8b4a1a">Adelaide</modern-times>
   <modern-times hour="10" minute="0" dial="#1a6b5a">Sydney</modern-times>
   <modern-times hour="10" minute="30" dial="#4a1a6b">Lord Howe Is.</modern-times>
-  <modern-times hour="11" minute="0" dial="#6b1a4a">Nouméa</modern-times>
+  <modern-times hour="11" minute="0">Default</modern-times>
   <modern-times hour="11" minute="30" dial="#1a4a6b">Norfolk Is.</modern-times>
 </body>
 </html>
