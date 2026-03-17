@@ -149,37 +149,38 @@ body {
   <modern-times hour="10" minute="30" dial="#49899b" bezel="#dadada" bg="#388d9b"></modern-times>
   <modern-times hour="11" minute="0" dial="#49365c" bezel="#d9bb60" bg="#49365c"></modern-times>
   <modern-times hour="11" minute="30" dial="#ec273a" bezel="#e6e5e3" bg="#f7162b"></modern-times>
+
 <script>
 /* JS *NOT NEEDED* for Chrome, only for Safari/Firefox */
 /* Uses the enhanced attr()-method in CSS */
-function isAdvancedAttrSupported() {
-  const T = document.createElement('div');
-  document.body.appendChild(T);
-  try {
-    T.style.setProperty('--t', 'attr(data-test type(<number>), 0)');
-    T.dataset.test = '123';
-    return getComputedStyle(T).getPropertyValue('--t').trim() === '123';
-  } catch { return false; }
-  finally { T.remove(); }
-}
+// function isAdvancedAttrSupported() {
+//   const T = document.createElement('div');
+//   document.body.appendChild(T);
+//   try {
+//     T.style.setProperty('--t', 'attr(data-test type(<number>), 0)');
+//     T.dataset.test = '123';
+//     return getComputedStyle(T).getPropertyValue('--t').trim() === '123';
+//   } catch { return false; }
+//   finally { T.remove(); }
+// }
 
-if (!isAdvancedAttrSupported()) {
-  const attrMap = {
-    dial:   ['--mt-dial',  'Canvas'],
-    bezel:  ['--mt-bezel', 'Canvastext'],
-    bg:     ['--mt-bg',    'hsl(from var(--mt-dial) calc(h + 180) s l)'],
-    arms:   ['--mt-arms',  'var(--mt-bezel)'],
-    dot:    ['--mt-dot',   'var(--mt-dial)'],
-    hour:   ['--_hour',    0],
-    minute: ['--_minute',  0],
-    second: ['--_second',  0]
-  };
-  document.querySelectorAll('modern-times').forEach(el => {
-    for (const [attr, [prop, fallback]] of Object.entries(attrMap)) {
-      el.style.setProperty(prop, el.getAttribute(attr) ?? fallback);
-    }
-  });
-}
+// if (!isAdvancedAttrSupported()) {
+//   const attrMap = {
+//     dial:   ['--mt-dial',  'Canvas'],
+//     bezel:  ['--mt-bezel', 'Canvastext'],
+//     bg:     ['--mt-bg',    'hsl(from var(--mt-dial) calc(h + 180) s l)'],
+//     arms:   ['--mt-arms',  'var(--mt-bezel)'],
+//     dot:    ['--mt-dot',   'var(--mt-dial)'],
+//     hour:   ['--_hour',    0],
+//     minute: ['--_minute',  0],
+//     second: ['--_second',  0]
+//   };
+//   document.querySelectorAll('modern-times').forEach(el => {
+//     for (const [attr, [prop, fallback]] of Object.entries(attrMap)) {
+//       el.style.setProperty(prop, el.getAttribute(attr) ?? fallback);
+//     }
+//   });
+// }
 </script>
 </body>
 </html>
