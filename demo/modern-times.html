@@ -101,11 +101,24 @@ modern-times {
     width: var(--_w);
   }
 
-  &[mode=picto]::before {
+  /* Fix for Safari's broken mask support */
+  :root[data-safari] &::after,
+  :root[data-safari] &::before {
+      mask:
+        radial-gradient(circle at center, #0000 calc(var(--_h) / 4), #000 calc(var(--_h) / 4) calc(var(--_h) / 2), #0000 calc(var(--_h) / 2)),
+        linear-gradient(to right, #0000 calc(50% + var(--_h) / 4 - 1px), #000 calc(50% + var(--_h) / 4 - 1px));
+      mask-composite: add;
+  }
+
+  &[mode=picto]::before,
+  :root[data-safari] &[mode=picto]::before {
     --_w: 7.5%;
     --_h: 7.5%;
     background: var(--mt-arms);
     border-radius: 50%;
+    -webkit-mask: none;
+    mask: none;
+    mask-composite: unset;
     offset-distance: var(--_d, 0%);
     offset-path: circle(30% at center);
     place-self: center end;
@@ -151,36 +164,44 @@ body {
   <modern-times hour="11" minute="30" dial="#ec273a" bezel="#e6e5e3" bg="#f7162b"></modern-times>
 
 <script>
-/* JS *NOT NEEDED* for Chrome, only for Safari/Firefox */
-/* Uses the enhanced attr()-method in CSS */
-// function isAdvancedAttrSupported() {
-//   const T = document.createElement('div');
-//   document.body.appendChild(T);
-//   try {
-//     T.style.setProperty('--t', 'attr(data-test type(<number>), 0)');
-//     T.dataset.test = '123';
-//     return getComputedStyle(T).getPropertyValue('--t').trim() === '123';
-//   } catch { return false; }
-//   finally { T.remove(); }
-// }
+/* 
+SINGLE-ELEMENT CLOCK COMPONENT WITH PURE CSS ANIMATION AND NO JAVASCRIPT
+(except for a fallback for Safari/Firefox)
+*/
 
-// if (!isAdvancedAttrSupported()) {
-//   const attrMap = {
-//     dial:   ['--mt-dial',  'Canvas'],
-//     bezel:  ['--mt-bezel', 'Canvastext'],
-//     bg:     ['--mt-bg',    'hsl(from var(--mt-dial) calc(h + 180) s l)'],
-//     arms:   ['--mt-arms',  'var(--mt-bezel)'],
-//     dot:    ['--mt-dot',   'var(--mt-dial)'],
-//     hour:   ['--_hour',    0],
-//     minute: ['--_minute',  0],
-//     second: ['--_second',  0]
-//   };
-//   document.querySelectorAll('modern-times').forEach(el => {
-//     for (const [attr, [prop, fallback]] of Object.entries(attrMap)) {
-//       el.style.setProperty(prop, el.getAttribute(attr) ?? fallback);
-//     }
-//   });
-// }
+/* Safari detection */
+if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+  document.documentElement.setAttribute('data-safari', '');
+}
+
+/* Uses the enhanced attr()-method in CSS */
+function isAdvancedAttrSupported() {
+  const T = document.createElement('div');
+  document.body.appendChild(T);
+  try {
+    T.style.setProperty('--t', 'attr(data-test type(<number>), 0)');
+    T.dataset.test = '123';
+    return getComputedStyle(T).getPropertyValue('--t').trim() === '123';
+  } catch { return false; }
+  finally { T.remove(); }
+}
+if (!isAdvancedAttrSupported()) {
+  const attrMap = {
+    dial:   ['--mt-dial',  'Canvas'],
+    bezel:  ['--mt-bezel', 'Canvastext'],
+    bg:     ['--mt-bg',    'hsl(from var(--mt-dial) calc(h + 180) s l)'],
+    arms:   ['--mt-arms',  'var(--mt-bezel)'],
+    dot:    ['--mt-dot',   'var(--mt-dial)'],
+    hour:   ['--_hour',    0],
+    minute: ['--_minute',  0],
+    second: ['--_second',  0]
+  };
+  document.querySelectorAll('modern-times').forEach(el => {
+    for (const [attr, [prop, fallback]] of Object.entries(attrMap)) {
+      el.style.setProperty(prop, el.getAttribute(attr) ?? fallback);
+    }
+  });
+}
 </script>
 </body>
 </html>
