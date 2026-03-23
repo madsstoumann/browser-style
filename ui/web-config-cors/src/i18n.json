@@ -1,0 +1,68 @@
+{
+	"en": {
+		"ui": {
+			"title": "CORS Configuration",
+			"origins": "Origins",
+			"methods": "Methods",
+			"headers": "Headers",
+			"options": "Options",
+			"allowedOrigins": "Allowed Origins",
+			"allowedOriginsHint": "https://app.example.com",
+			"allowedMethods": "Allowed Methods",
+			"allowedHeaders": "Allowed Headers",
+			"allowedHeadersHint": "Header name",
+			"exposeHeaders": "Expose Headers",
+			"exposeHeadersHint": "Header name",
+			"maxAge": "Max Age (seconds)",
+			"maxAgeHint": "Preflight cache duration",
+			"allowCredentials": "Allow Credentials",
+			"credentialsWarning": "Cannot use credentials with wildcard (*) origins",
+			"optionsWarning": "OPTIONS should be included in allowed methods for preflight requests",
+			"add": "Add",
+			"remove": "Remove",
+			"noOutput": "# No CORS configuration defined",
+			"output": "CORS Headers",
+			"presets": "Common presets"
+		},
+		"presetHeaders": {
+			"Content-Type": "Content-Type",
+			"Authorization": "Authorization",
+			"X-Requested-With": "X-Requested-With",
+			"Accept": "Accept",
+			"Origin": "Origin"
+		}
+	},
+	"da": {
+		"ui": {
+			"title": "CORS Konfiguration",
+			"origins": "Oprindelser",
+			"methods": "Metoder",
+			"headers": "Headers",
+			"options": "Indstillinger",
+			"allowedOrigins": "Tilladte oprindelser",
+			"allowedOriginsHint": "https://app.example.com",
+			"allowedMethods": "Tilladte metoder",
+			"allowedHeaders": "Tilladte headers",
+			"allowedHeadersHint": "Header-navn",
+			"exposeHeaders": "Eksponerede headers",
+			"exposeHeadersHint": "Header-navn",
+			"maxAge": "Maks. alder (sekunder)",
+			"maxAgeHint": "Preflight cache-varighed",
+			"allowCredentials": "Tillad legitimationsoplysninger",
+			"credentialsWarning": "Kan ikke bruge legitimationsoplysninger med wildcard (*) oprindelser",
+			"optionsWarning": "OPTIONS bør inkluderes i tilladte metoder for preflight-anmodninger",
+			"add": "Tilføj",
+			"remove": "Fjern",
+			"noOutput": "# Ingen CORS konfiguration defineret",
+			"output": "CORS Headers",
+			"presets": "Almindelige presets"
+		},
+		"presetHeaders": {
+			"Content-Type": "Content-Type",
+			"Authorization": "Authorization",
+			"X-Requested-With": "X-Requested-With",
+			"Accept": "Accept",
+			"Origin": "Origin"
+		}
+	}
+}

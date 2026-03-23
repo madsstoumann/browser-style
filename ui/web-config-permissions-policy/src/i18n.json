@@ -1,0 +1,62 @@
+{
+	"en": {
+		"ui": {
+			"title": "Permissions-Policy",
+			"privacy": "Privacy",
+			"media": "Media",
+			"other": "Other",
+			"disabled": "Disabled",
+			"selfOnly": "Self only",
+			"custom": "Custom origins",
+			"add": "Add",
+			"remove": "Remove",
+			"originHint": "https://example.com",
+			"noOutput": "# No Permissions-Policy configured",
+			"output": "Permissions-Policy Header"
+		},
+		"features": {
+			"camera": "Camera",
+			"microphone": "Microphone",
+			"geolocation": "Geolocation",
+			"interest-cohort": "Interest Cohort (FLoC)",
+			"autoplay": "Autoplay",
+			"picture-in-picture": "Picture-in-Picture",
+			"display-capture": "Display Capture",
+			"encrypted-media": "Encrypted Media",
+			"fullscreen": "Fullscreen",
+			"payment": "Payment",
+			"screen-wake-lock": "Screen Wake Lock",
+			"xr-spatial-tracking": "XR Spatial Tracking"
+		}
+	},
+	"da": {
+		"ui": {
+			"title": "Permissions-Policy",
+			"privacy": "Privatliv",
+			"media": "Medier",
+			"other": "Andet",
+			"disabled": "Deaktiveret",
+			"selfOnly": "Kun eget domæne",
+			"custom": "Brugerdefinerede oprindelser",
+			"add": "Tilføj",
+			"remove": "Fjern",
+			"originHint": "https://example.com",
+			"noOutput": "# Ingen Permissions-Policy konfigureret",
+			"output": "Permissions-Policy Header"
+		},
+		"features": {
+			"camera": "Kamera",
+			"microphone": "Mikrofon",
+			"geolocation": "Geolokation",
+			"interest-cohort": "Interest Cohort (FLoC)",
+			"autoplay": "Autoplay",
+			"picture-in-picture": "Billede-i-billede",
+			"display-capture": "Skærmoptagelse",
+			"encrypted-media": "Krypterede medier",
+			"fullscreen": "Fuldskærm",
+			"payment": "Betaling",
+			"screen-wake-lock": "Skærm Wake Lock",
+			"xr-spatial-tracking": "XR Spatial Tracking"
+		}
+	}
+}

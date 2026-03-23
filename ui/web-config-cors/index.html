@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Web Config CORS</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Web Config CORS - Visual editor for CORS headers">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<script type="importmap">
+		{
+			"imports": {
+				"@browser.style/web-config-shared": "../web-config-shared/index.js"
+			}
+		}
+	</script>
+</head>
+<body>
+	<h1>Web Config: CORS</h1>
+	<p>
+		A visual editor for configuring CORS (Cross-Origin Resource Sharing) headers.
+		See the <a href="/ui/web-config-cors/demo.html">demo page</a> for an example with preset configuration.
+	</p>
+	<web-config-cors></web-config-cors>
+	<script type="module" src="./src/index.js"></script>
+</body>
+</html>
