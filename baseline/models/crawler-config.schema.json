@@ -52,7 +52,7 @@
     },
     "robots_txt": {
       "type": "text",
-      "title": "robots.txt",
+      "title": "Directives",
       "description": "robots.txt content",
       "ui": {
         "widget": "web-config-robots"

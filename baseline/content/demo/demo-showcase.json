@@ -27,14 +27,6 @@
       "Demonstrates select, radio, checkbox, and slider widgets",
       "Shows geopoint, color, and object fields"
     ],
-    "heroImage": {
-      "$asset": "assets/demo-hero",
-      "assetId": "demo-hero"
-    },
-    "croppedImage": {
-      "$asset": "assets/demo-cropped",
-      "assetId": "demo-cropped"
-    },
     "author": {
       "$ref": "content-card/profile-1"
     },

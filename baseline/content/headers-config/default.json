@@ -11,18 +11,11 @@
   "fields": {
     "title": "Headers Config",
     "csp": {
-      "default-src": ["'self'"],
-      "script-src": ["'self'", "https://consent.cookiebot.com", "https://www.googletagmanager.com", "https://static.hotjar.com", "https://widget.intercom.io"],
-      "style-src": ["'self'", "'unsafe-inline'"],
-      "img-src": ["'self'", "data:", "https://images.ctfassets.net", "https://example.com"],
-      "font-src": ["'self'"],
-      "connect-src": ["'self'", "https://consentcdn.cookiebot.com", "https://www.google-analytics.com", "https://api-iam.intercom.io"],
-      "frame-src": ["'self'", "https://consentcdn.cookiebot.com", "https://www.youtube.com"],
-      "object-src": ["'none'"],
-      "base-uri": ["'self'"],
-      "form-action": ["'self'"],
-      "frame-ancestors": ["'none'"],
-      "upgrade-insecure-requests": true
+      "script-src": { "added": ["https://consent.cookiebot.com", "https://www.googletagmanager.com", "https://static.hotjar.com", "https://widget.intercom.io"] },
+      "style-src": { "added": ["'unsafe-inline'"] },
+      "img-src": { "added": ["data:", "https://images.ctfassets.net", "https://example.com"] },
+      "connect-src": { "added": ["https://consentcdn.cookiebot.com", "https://www.google-analytics.com", "https://api-iam.intercom.io"] },
+      "frame-src": { "added": ["https://consentcdn.cookiebot.com", "https://www.youtube.com"] }
     },
     "permissions_policy": {
       "camera": [],
