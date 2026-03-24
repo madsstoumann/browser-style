@@ -28,6 +28,7 @@
       "type": "text",
       "title": "security.txt",
       "description": "security.txt content (served at /.well-known/security.txt)",
+      "localized": false,
       "ui": {
         "widget": "web-config-security"
       }

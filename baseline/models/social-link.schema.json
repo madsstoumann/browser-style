@@ -13,7 +13,8 @@
     "platform": {
       "type": "string",
       "title": "Platform",
-      "description": "Social media platform name (e.g., LinkedIn, Twitter, Facebook)"
+      "description": "Social media platform name (e.g., LinkedIn, Twitter, Facebook)",
+      "localized": false
     },
     "url": {
       "type": "url",

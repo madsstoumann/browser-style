@@ -20,17 +20,20 @@
     "name": {
       "type": "string",
       "title": "Name",
-      "description": "Human-readable label (e.g. 'Google Tag Manager', 'Cookiebot')"
+      "description": "Human-readable label (e.g. 'Google Tag Manager', 'Cookiebot')",
+      "localized": false
     },
     "provider": {
       "type": "string",
       "title": "Provider",
-      "description": "Machine key (e.g. 'gtm', 'cookiebot', 'hotjar')"
+      "description": "Machine key (e.g. 'gtm', 'cookiebot', 'hotjar')",
+      "localized": false
     },
     "id": {
       "type": "string",
       "title": "ID / Key",
-      "description": "Provider-specific identifier (e.g. 'GTM-XXXX', 'cbid-XXXX')"
+      "description": "Provider-specific identifier (e.g. 'GTM-XXXX', 'cbid-XXXX')",
+      "localized": false
     },
     "url": {
       "type": "url",
@@ -40,7 +43,8 @@
     "integrity": {
       "type": "string",
       "title": "SRI Hash",
-      "description": "Subresource Integrity hash (e.g. 'sha384-...')"
+      "description": "Subresource Integrity hash (e.g. 'sha384-...')",
+      "localized": false
     },
     "category": {
       "type": "select",

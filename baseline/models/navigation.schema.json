@@ -17,12 +17,14 @@
     "name": {
       "type": "string",
       "title": "Navigation Name",
-      "description": "Descriptive name (e.g. \"Main Header\", \"Footer\", \"Sidebar\", \"Account Menu\")"
+      "description": "Descriptive name (e.g. \"Main Header\", \"Footer\", \"Sidebar\", \"Account Menu\")",
+      "localized": false
     },
     "description": {
       "type": "text",
       "title": "Description",
-      "description": "Internal description for CMS editors"
+      "description": "Internal description for CMS editors",
+      "localized": false
     },
     "items": {
       "type": "reference",

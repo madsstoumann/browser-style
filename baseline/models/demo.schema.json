@@ -156,7 +156,8 @@
       "type": "string",
       "title": "Contact Email",
       "description": "Email address field (format: email)",
-      "format": "email"
+      "format": "email",
+      "localized": false
     },
     "externalLink": {
       "type": "url",
@@ -262,6 +263,7 @@
       "type": "string",
       "title": "System ID",
       "description": "Read-only system identifier (ui.widget: readonly)",
+      "localized": false,
       "ui": {
         "widget": "readonly"
       }

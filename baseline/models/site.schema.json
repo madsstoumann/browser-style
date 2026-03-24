@@ -83,12 +83,14 @@
     "site_name": {
       "type": "string",
       "title": "Site Name",
-      "description": "Site name"
+      "description": "Site name",
+      "localized": false
     },
     "site_url": {
       "type": "string",
       "title": "Site URL",
-      "description": "Site base URL (e.g., \"https://example.com\")"
+      "description": "Site base URL (e.g., \"https://example.com\")",
+      "localized": false
     },
     "site_description": {
       "type": "string",
@@ -114,22 +116,26 @@
     "legal_name": {
       "type": "string",
       "title": "Legal Name",
-      "description": "Official business name (e.g. 'Browser Style Ltd.')"
+      "description": "Official business name (e.g. 'Browser Style Ltd.')",
+      "localized": false
     },
     "contact_email": {
       "type": "string",
       "title": "Contact Email",
-      "description": "Public contact email address"
+      "description": "Public contact email address",
+      "localized": false
     },
     "contact_phone": {
       "type": "string",
       "title": "Contact Phone",
-      "description": "Public phone number"
+      "description": "Public phone number",
+      "localized": false
     },
     "address": {
       "type": "text",
       "title": "Address",
-      "description": "Physical business address"
+      "description": "Physical business address",
+      "localized": false
     },
     "privacy_policy_id": {
       "type": "reference",

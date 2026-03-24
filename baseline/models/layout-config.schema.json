@@ -41,6 +41,7 @@
       "type": "string",
       "title": "Config Name",
       "description": "Config name (\"Hero Full Width\", \"Card Grid Narrow\")",
+      "localized": false,
       "validation": {
         "unique": true
       }
@@ -53,22 +54,26 @@
     "animation_name": {
       "type": "string",
       "title": "Animation Name",
-      "description": "Animation name (e.g., \"fade-in\")"
+      "description": "Animation name (e.g., \"fade-in\")",
+      "localized": false
     },
     "animation_range": {
       "type": "string",
       "title": "Animation Range",
-      "description": "Animation range (e.g., \"entry 0% cover 50%\")"
+      "description": "Animation range (e.g., \"entry 0% cover 50%\")",
+      "localized": false
     },
     "columns": {
       "type": "string",
       "title": "Grid Columns",
-      "description": "Default CSS grid-template-columns value (default: \"1fr\"). Overridden by breakpoint layout patterns."
+      "description": "Default CSS grid-template-columns value (default: \"1fr\"). Overridden by breakpoint layout patterns.",
+      "localized": false
     },
     "rows": {
       "type": "string",
       "title": "Grid Rows",
-      "description": "Default CSS grid-template-rows value (default: \"auto\")"
+      "description": "Default CSS grid-template-rows value (default: \"auto\")",
+      "localized": false
     },
     "col_gap": {
       "type": "number",
@@ -93,57 +98,68 @@
     "max_width": {
       "type": "string",
       "title": "Max Width",
-      "description": "Maximum width (CSS value, e.g., \"1200px\")"
+      "description": "Maximum width (CSS value, e.g., \"1200px\")",
+      "localized": false
     },
     "width": {
       "type": "string",
       "title": "Width",
-      "description": "Width (CSS value, e.g., \"100%\")"
+      "description": "Width (CSS value, e.g., \"100%\")",
+      "localized": false
     },
     "overflow": {
       "type": "string",
       "title": "Overflow",
-      "description": "Overflow behavior: none, preview, preview-xs, preview-sm, preview-lg, preview-xl, fade, fade-start, fade-end"
+      "description": "Overflow behavior: none, preview, preview-xs, preview-sm, preview-lg, preview-xl, fade, fade-start, fade-end",
+      "localized": false
     },
     "self": {
       "type": "string",
       "title": "Self Alignment",
-      "description": "CSS place-self value"
+      "description": "CSS place-self value",
+      "localized": false
     },
     "size": {
       "type": "string",
       "title": "Size",
-      "description": "Content visibility intrinsic size hint"
+      "description": "Content visibility intrinsic size hint",
+      "localized": false
     },
     "xs": {
       "type": "string",
       "title": "Extra Small (240px+)",
-      "description": "Layout pattern + spacing tokens for extra small screens, e.g. \"columns(1) pi(1) pbs(1)\""
+      "description": "Layout pattern + spacing tokens for extra small screens, e.g. \"columns(1) pi(1) pbs(1)\"",
+      "localized": false
     },
     "sm": {
       "type": "string",
       "title": "Small (380px+)",
-      "description": "Layout pattern + spacing tokens for small screens, e.g. \"columns(1) pi(1) pbs(1)\""
+      "description": "Layout pattern + spacing tokens for small screens, e.g. \"columns(1) pi(1) pbs(1)\"",
+      "localized": false
     },
     "md": {
       "type": "string",
       "title": "Medium (540px+)",
-      "description": "Layout pattern + spacing tokens for medium screens, e.g. \"columns(2) pi(2) pbs(1) cg(2)\""
+      "description": "Layout pattern + spacing tokens for medium screens, e.g. \"columns(2) pi(2) pbs(1) cg(2)\"",
+      "localized": false
     },
     "lg": {
       "type": "string",
       "title": "Large (720px+)",
-      "description": "Layout pattern + spacing tokens for large screens, e.g. \"columns(3) pi(2) pbs(2) cg(2)\""
+      "description": "Layout pattern + spacing tokens for large screens, e.g. \"columns(3) pi(2) pbs(2) cg(2)\"",
+      "localized": false
     },
     "xl": {
       "type": "string",
       "title": "Extra Large (920px+)",
-      "description": "Layout pattern + spacing tokens for extra large screens, e.g. \"columns(4) pi(4) pbs(2) cg(2)\""
+      "description": "Layout pattern + spacing tokens for extra large screens, e.g. \"columns(4) pi(4) pbs(2) cg(2)\"",
+      "localized": false
     },
     "xxl": {
       "type": "string",
       "title": "2X Large (1140px+)",
-      "description": "Layout pattern + spacing tokens for 2K+ screens"
+      "description": "Layout pattern + spacing tokens for 2K+ screens",
+      "localized": false
     }
   },
   "required": [

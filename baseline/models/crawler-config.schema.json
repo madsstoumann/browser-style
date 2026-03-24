@@ -54,6 +54,7 @@
       "type": "text",
       "title": "Directives",
       "description": "robots.txt content",
+      "localized": false,
       "ui": {
         "widget": "web-config-robots"
       }
@@ -90,7 +91,8 @@
     "llms_preamble": {
       "type": "text",
       "title": "llms.txt Preamble",
-      "description": "Introductory block at the top of llms.txt (what the site is, who it's for)"
+      "description": "Introductory block at the top of llms.txt (what the site is, who it's for)",
+      "localized": false
     },
     "llms_exclude_patterns": {
       "type": "array",
