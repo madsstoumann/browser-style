@@ -58,15 +58,15 @@ const config = {
             title: 'Docs',
             items: [
               { label: 'Introduction', to: '/' },
-              { label: 'Site', to: '/content/site' },
-              { label: 'Page', to: '/content/page' },
+              { label: 'Site', to: '/site' },
+              { label: 'Page', to: '/page' },
             ],
           },
           {
             title: 'Guides',
             items: [
-              { label: 'Vercel', to: '/guides/vercel' },
-              { label: 'Cloudflare', to: '/guides/cloudflare' },
+              { label: 'Vercel', to: '/vercel' },
+              { label: 'Cloudflare', to: '/cloudflare' },
             ],
           },
         ],

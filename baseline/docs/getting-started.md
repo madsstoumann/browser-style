@@ -126,7 +126,7 @@ npx create-next-app@latest my-site
 cd my-site
 ```
 
-Set up Edge Config for configuration singletons and ISR for pages. See the [Vercel platform guide](./guides/vercel.md) for complete implementation details.
+Set up Edge Config for configuration singletons and ISR for pages. See the [Vercel platform guide](./vercel.md) for complete implementation details.
 
 Key environment variables (see `.env.local.example` in Baseline CMS):
 
@@ -142,11 +142,11 @@ NEXT_PUBLIC_SITE_URL=https://your-site.com
 
 ### Cloudflare (Workers / Pages)
 
-Create a Workers or Pages project. Set up KV namespaces for configuration singletons and use the Cache API or KV for page content. See the [Cloudflare platform guide](./guides/cloudflare.md) for complete implementation details.
+Create a Workers or Pages project. Set up KV namespaces for configuration singletons and use the Cache API or KV for page content. See the [Cloudflare platform guide](./cloudflare.md) for complete implementation details.
 
 ### Other platforms
 
-The same architecture applies — CMS webhooks write to an edge store, and the frontend reads from it at request time. The [Webhook & Edge Delivery plan](./guides/webhook.edge.md) covers the platform-agnostic architecture.
+The same architecture applies — CMS webhooks write to an edge store, and the frontend reads from it at request time. The [Webhook & Edge Delivery plan](./webhook.edge.md) covers the platform-agnostic architecture.
 
 ---
 
@@ -166,7 +166,7 @@ Configure your CMS to send webhooks when content is published. The webhook handl
 | `site` | Resolve all refs, write full site payload to edge store |
 | `translation-namespace` | Trigger deploy hook for static regeneration |
 
-See [Webhook & Edge Delivery](./guides/webhook.edge.md) for the full architecture and handler implementations.
+See [Webhook & Edge Delivery](./webhook.edge.md) for the full architecture and handler implementations.
 
 ---
 
@@ -181,7 +181,7 @@ npm run prebuild:sitemap        # → public/sitemap.xml
 npm run prebuild:llms           # → public/llms.txt, public/llms-full.txt
 ```
 
-See [Sitemap](./content/sitemap.md) for sitemap generation details, and [Crawler Config](./content/crawler-config.md) for llms.txt.
+See [Sitemap](./sitemap.md) for sitemap generation details, and [Crawler Config](./crawler-config.md) for llms.txt.
 
 ---
 

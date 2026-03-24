@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "translation-namespace",
+  "title": "Translation Namespace",
+  "description": "Localized UI strings grouped by namespace, used to generate flat locale files",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-03-16",
+    "displayField": "namespace"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "contentTree": {
+      "folder": "Translations",
+      "path": "Configuration/Translations"
+    }
+  },
+  "type": "object",
+  "properties": {
+    "namespace": {
+      "type": "string",
+      "title": "Namespace",
+      "description": "Grouping key used as dot-prefix in locale files (e.g. 'card', 'nav', 'form')",
+      "localized": false,
+      "validation": {
+        "unique": true,
+        "pattern": "^[a-z][a-z0-9-]*$"
+      }
+    },
+    "strings": {
+      "type": "object",
+      "title": "Translations",
+      "description": "Key-value pairs for this namespace. Keys become dot-suffixed entries in locale files (e.g. 'add' becomes 'card.add')"
+    }
+  },
+  "required": ["namespace", "strings"]
+}

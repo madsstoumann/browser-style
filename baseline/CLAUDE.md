@@ -1,5 +1,7 @@
-# Baseline CMS
+# Baseline
 
+Package: `@browser.style/baseline`
+Part of the [browser-style](https://github.com/madsstoumann/browser-style) monorepo.
 CMS-agnostic content architecture — models, content examples, and documentation for a complete site system.
 Designed to work with [UCM](../unified-content-model) (Unified Content Model, `@browser.style/unified-content`) for syncing to any supported CMS.
 
@@ -8,12 +10,18 @@ Designed to work with [UCM](../unified-content-model) (Unified Content Model, `@
 ```
 models/          # Content type schemas (JSON Schema draft-07)
 content/         # UCF content examples, organized by model
-docs/
-  content/       # Per-model documentation (site, page, layout, config, etc.)
-  guides/        # Architecture guides (webhooks, edge delivery, markdown endpoints)
-  README.md      # Documentation entry point
-.env.local.example  # Environment template
+docs/            # All documentation (flat — no subdirectories)
+src/css/         # Docusaurus custom styles
 ```
+
+## Documentation (Docusaurus)
+
+- Built with Docusaurus, served at `https://browser.style/baseline/`
+- `baseUrl: '/baseline/'` in `docusaurus.config.js`
+- All doc pages live flat in `docs/` (no `content/` or `guides/` subdirectories)
+- Build: `npm run build` — builds to `site/`, copies output to project root, removes `site/`
+- Build artifacts (`index.html`, `404.html`, `sitemap.xml`, `assets/`) are committed to git for GitHub Pages
+- Dev server: `npx docusaurus start` from this directory (uses root `node_modules` via workspaces)
 
 ## Validation
 
@@ -21,7 +29,7 @@ Schemas are validated from the sibling UCM project:
 ```bash
 cd ../unified-content-model && npm run validate
 ```
-The validate script points to `../baseline-cms/models/*.schema.json`.
+The validate script points to `../baseline/models/*.schema.json`.
 
 ## Schema Conventions
 
@@ -85,17 +93,19 @@ Special: `slug`, `tags`, `color`, `geopoint`
 ## Dependencies
 
 - [UCM](../unified-content-model) — schema validation, CMS sync, type system (`@browser.style/unified-content`)
-- [browser-style layout system](../browser-style/ui/layout) — the `<lay-out>` custom element and 63+ CSS layout patterns that `layout-config` maps to
+- [browser-style layout system](ui/layout) — the `<lay-out>` custom element and 63+ CSS layout patterns that `layout-config` maps to
 
 ## Platform Support
 
 Documentation and implementation plans cover multiple deployment targets:
 - **Vercel** — Edge Config + Next.js ISR + middleware (primary, fully documented)
 - **Cloudflare** — Workers KV + Pages (documented as alternative in all docs)
-- Other platforms (AWS, Netlify, Deno) — same architecture, see `docs/guides/webhook.edge.md`
+- Other platforms (AWS, Netlify, Deno) — same architecture, see `docs/webhook.edge.md`
 
 ## Gotchas
 
 - `contentTree` as a string will fail validation — always use the object form
 - The `/models/cards/` directory in UCM is OBSOLETE — all cards are in `content-card.schema.json`
 - `demo.schema.json` and `demo.widgets.schema.json` are test/showcase models, not site models
+- All doc pages are flat in `docs/` — do NOT create subdirectories like `docs/content/` or `docs/guides/`
+- No local `node_modules` — dependencies are hoisted to the monorepo root via workspaces

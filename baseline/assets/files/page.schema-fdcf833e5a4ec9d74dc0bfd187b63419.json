@@ -1,0 +1,123 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "page",
+  "title": "Page",
+  "description": "Top-level table for URLs and page configuration",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2025-12-04",
+    "displayField": "title"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "allowedChildContentTypes": [
+      "layout"
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Page Title",
+      "description": "Page title (SEO)"
+    },
+    "url": {
+      "type": "string",
+      "title": "Page URL",
+      "description": "Page URL"
+    },
+    "description": {
+      "type": "text",
+      "title": "Meta Description",
+      "description": "Meta description (SEO)"
+    },
+    "layouts": {
+      "type": "reference",
+      "title": "Layouts",
+      "description": "Array of references to layout table",
+      "options": {
+        "referenceType": "layout",
+        "multiple": true
+      }
+    },
+    "header_nav_id": {
+      "type": "reference",
+      "title": "Header Navigation",
+      "description": "Override default header navigation from site",
+      "options": {
+        "referenceType": "navigation",
+        "multiple": false
+      }
+    },
+    "footer_nav_id": {
+      "type": "reference",
+      "title": "Footer Navigation",
+      "description": "Override default footer navigation from site",
+      "options": {
+        "referenceType": "navigation",
+        "multiple": false
+      }
+    },
+    "og_title": {
+      "type": "string",
+      "title": "Open Graph Title",
+      "description": "Open Graph title (defaults to title)"
+    },
+    "og_description": {
+      "type": "text",
+      "title": "Open Graph Description",
+      "description": "Open Graph description (defaults to description)"
+    },
+    "og_image": {
+      "type": "media",
+      "title": "Open Graph Image",
+      "description": "Open Graph image (falls back to site.og_image)"
+    },
+    "canonical_url": {
+      "type": "url",
+      "title": "Canonical URL",
+      "description": "Canonical URL override for this page (defaults to site_url + url if not set)"
+    },
+    "og_type": {
+      "type": "select",
+      "title": "Open Graph Type",
+      "description": "Open Graph content type",
+      "options": [
+        { "value": "website", "label": "Website" },
+        { "value": "article", "label": "Article" },
+        { "value": "product", "label": "Product" },
+        { "value": "profile", "label": "Profile" }
+      ]
+    },
+    "robots": {
+      "type": "select",
+      "title": "Robots Directives",
+      "description": "Search engine crawling and indexing directives for this page",
+      "options": {
+        "multiple": true,
+        "choices": [
+          { "value": "noindex", "label": "No Index" },
+          { "value": "nofollow", "label": "No Follow" },
+          { "value": "noarchive", "label": "No Archive" },
+          { "value": "nosnippet", "label": "No Snippet" },
+          { "value": "noimageindex", "label": "No Image Index" },
+          { "value": "notranslate", "label": "No Translate" }
+        ]
+      },
+      "ui": {
+        "widget": "checkbox"
+      },
+      "localized": false
+    },
+    "csp": {
+      "type": "object",
+      "title": "Content Security Policy",
+      "description": "Page-specific Content Security Policy (CSP) configuration. Overwrites or appends to the global CSP."
+    }
+  },
+  "required": [
+    "title",
+    "url",
+    "description"
+  ]
+}

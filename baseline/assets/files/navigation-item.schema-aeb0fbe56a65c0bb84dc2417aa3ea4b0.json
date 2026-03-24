@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "navigation-item",
+  "title": "Navigation Item",
+  "description": "A navigation entry: link, group (with children), or divider",
+  "metadata": {
+    "version": "2.0.0",
+    "lastModified": "2026-03-18",
+    "displayField": "label"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Navigation"
+  },
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "select",
+      "title": "Item Type",
+      "description": "Link navigates to a URL, group contains children, divider is a visual separator",
+      "options": [
+        { "value": "link", "label": "Link" },
+        { "value": "group", "label": "Group" },
+        { "value": "divider", "label": "Divider" }
+      ]
+    },
+    "label": {
+      "type": "string",
+      "title": "Label",
+      "description": "Display text (also used to identify the item in CMS list views)"
+    },
+    "url": {
+      "type": "url",
+      "title": "URL",
+      "description": "Link destination (for type \"link\")"
+    },
+    "target": {
+      "type": "select",
+      "title": "Link Target",
+      "description": "How the link opens",
+      "options": [
+        { "value": "_self", "label": "Same window" },
+        { "value": "_blank", "label": "New window" }
+      ]
+    },
+    "description": {
+      "type": "text",
+      "title": "Description",
+      "description": "Subtitle or tooltip text (useful for mega menus)"
+    },
+    "icon": {
+      "type": "media",
+      "title": "Icon",
+      "description": "Icon image or SVG"
+    },
+    "image": {
+      "type": "media",
+      "title": "Featured Image",
+      "description": "Featured image (for mega menu panels or promotional items)"
+    },
+    "badge": {
+      "type": "string",
+      "title": "Badge",
+      "description": "Badge text (e.g. \"New\", \"Beta\", \"Sale\")"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "title": "Featured",
+      "description": "Highlight or emphasize this item (e.g. CTA buttons)"
+    },
+    "children": {
+      "type": "reference",
+      "title": "Children",
+      "description": "Child items within this group. Array order determines display order.",
+      "options": {
+        "referenceType": "navigation-item",
+        "multiple": true
+      }
+    }
+  },
+  "required": [
+    "type",
+    "label"
+  ]
+}
