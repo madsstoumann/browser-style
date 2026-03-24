@@ -1,0 +1,45 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "news-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-07-16T10:00:00Z",
+    "updatedAt": "2025-07-16T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/News"
+  },
+  "fields": {
+    "headline": "The Future of Quantum Computing is:",
+    "subheadline": "A Major Leap Forward",
+    "summary": "Scientists have made a breakthrough in quantum computing that could change everything we know about processing power.",
+    "category": "Technology",
+    "data": {
+      "type": "news",
+      "content": {
+        "headlineTag": "h3",
+        "published": {
+          "datetime": "2025-07-16T10:00:00Z",
+          "formatted": "July 16, 2025"
+        },
+        "modified": {
+          "datetime": "2025-07-16T12:00:00Z",
+          "formatted": "(Updated July 16, 2025)"
+        },
+        "readingTime": "4 min read"
+      },
+      "sticker": {
+        "text": "New",
+        "style": "badge",
+        "position": "top-right"
+      },
+      "links": [
+        {
+          "url": "#",
+          "text": "Read More",
+          "hideText": true
+        }
+      ]
+    }
+  }
+}

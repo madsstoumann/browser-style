@@ -1,0 +1,54 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "product-3",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Commerce/Product"
+  },
+  "fields": {
+    "headline": "SoundWave Mini",
+    "summary": "Compact portable Bluetooth speaker with surprising sound quality and 12-hour battery life.",
+    "category": "Audio",
+    "tags": [
+      "Bluetooth",
+      "Portable",
+      "Waterproof"
+    ],
+    "data": {
+      "type": "product",
+      "content": {
+        "text": "Perfect for outdoor adventures or small gatherings. Waterproof design with deep bass and crisp highs."
+      },
+      "product": {
+        "price": {
+          "current": "39.99",
+          "original": "49.99",
+          "currency": "USD",
+          "discountText": "Sale"
+        },
+        "availability": "In Stock",
+        "rating": {
+          "value": 2.8,
+          "count": 450,
+          "max": 5,
+          "min": 0
+        }
+      },
+      "engagement": {
+        "viewCount": 3240,
+        "shareCount": 45
+      },
+      "sku": "SWM-BLU-003",
+      "actions": [
+        {
+          "text": "Add to Cart",
+          "icon": "add_to_basket"
+        }
+      ]
+    }
+  }
+}

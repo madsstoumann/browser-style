@@ -1,0 +1,15 @@
+{
+  "$schema": "../../models/security-config.schema.json",
+  "id": "default",
+  "model": "security-config",
+  "meta": {
+    "createdAt": "2026-02-01T08:00:00Z",
+    "updatedAt": "2026-03-10T11:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "title": "Security Config",
+    "security_txt": "Contact: mailto:security@example.com\nExpires: 2027-03-18T00:00:00.000Z\nEncryption: https://example.com/.well-known/pgp-key.txt\nPreferred-Languages: en\nCanonical: https://example.com/.well-known/security.txt\nPolicy: https://example.com/security-policy\nHiring: https://example.com/careers"
+  }
+}

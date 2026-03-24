@@ -1,0 +1,72 @@
+{
+  "$schema": "../../models/demo.widgets.schema.json",
+  "id": "widget-showcase",
+  "model": "widgets",
+  "meta": {
+    "createdAt": "2026-03-20T10:00:00Z",
+    "updatedAt": "2026-03-20T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Demo"
+  },
+  "fields": {
+    "title": "Widget Registry Showcase",
+    "card_data": {
+      "type": "product",
+      "sku": "UCM-WIDGET-001",
+      "name": "Universal Widget",
+      "price": {
+        "amount": 0,
+        "currency": "USD"
+      },
+      "features": ["cross-platform", "schema-driven", "extensible"]
+    },
+    "csp": {
+      "default-src": ["'self'"],
+      "script-src": ["'self'", "https://cdn.example.com"],
+      "style-src": ["'self'", "'unsafe-inline'"],
+      "img-src": ["'self'", "data:", "https:"],
+      "font-src": ["'self'", "https://fonts.gstatic.com"],
+      "connect-src": ["'self'", "https://api.example.com"],
+      "frame-ancestors": ["'none'"],
+      "base-uri": ["'self'"],
+      "form-action": ["'self'"]
+    },
+    "manifest": {
+      "name": "UCM Demo App",
+      "short_name": "UCM",
+      "description": "Unified Content Model demo application",
+      "start_url": "/",
+      "display": "standalone",
+      "background_color": "#ffffff",
+      "theme_color": "#09bc8a",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "src": "/icons/icon-512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
+    },
+    "robots_txt": "User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /admin/\n\nSitemap: https://example.com/sitemap.xml",
+    "security_txt": "Contact: mailto:security@example.com\nExpires: 2027-03-20T00:00:00Z\nPreferred-Languages: en\nCanonical: https://example.com/.well-known/security.txt\nPolicy: https://example.com/security-policy",
+    "alt_config": {
+      "redirects": [
+        { "from": "/old-page", "to": "/new-page", "status": 301 },
+        { "from": "/legacy/*", "to": "/modern/:splat", "status": 302 }
+      ],
+      "headers": {
+        "X-Frame-Options": "DENY",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin"
+      }
+    },
+    "theme_color": "#09bc8a",
+    "brand_color": "#583459"
+  }
+}

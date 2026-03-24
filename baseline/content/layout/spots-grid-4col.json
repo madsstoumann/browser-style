@@ -1,0 +1,20 @@
+{
+  "$schema": "../../models/layout.schema.json",
+  "id": "spots-grid-4col",
+  "model": "layout",
+  "meta": {
+    "createdAt": "2026-01-13T10:00:00Z",
+    "updatedAt": "2026-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "title": "Spots Grid 4 Column",
+    "content": [
+      { "$ref": "content-card/spot-1" },
+      { "$ref": "content-card/spot-2" },
+      { "$ref": "content-card/spot-3" },
+      { "$ref": "content-card/spot-4" }
+    ]
+  }
+}

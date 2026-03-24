@@ -1,0 +1,21 @@
+{
+  "$schema": "../../models/navigation-item.schema.json",
+  "id": "footer-resources",
+  "model": "navigation-item",
+  "meta": {
+    "createdAt": "2026-03-18T10:00:00Z",
+    "updatedAt": "2026-03-18T10:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "type": "group",
+    "label": "Resources",
+    "children": [
+      { "$ref": "navigation-item/footer-resource-docs" },
+      { "$ref": "navigation-item/footer-resource-blog" },
+      { "$ref": "navigation-item/footer-resource-github" },
+      { "$ref": "navigation-item/footer-resource-support" }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "news-4",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/News"
+  },
+  "fields": {
+    "headline": "The Rise of Sustainable Gastronomy",
+    "summary": "How chefs are embracing local, seasonal, and zero-waste cooking to create a more sustainable food culture.",
+    "category": "Lifestyle",
+    "data": {
+      "type": "news",
+      "links": [
+        {
+          "url": "#",
+          "text": "Discover Recipes",
+          "icon": "recipe"
+        }
+      ]
+    }
+  }
+}

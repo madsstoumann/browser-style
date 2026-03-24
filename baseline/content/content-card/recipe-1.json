@@ -1,0 +1,88 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "recipe-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Recipe"
+  },
+  "fields": {
+    "headline": "Classic Spaghetti Carbonara",
+    "summary": "A creamy and delicious pasta dish made with eggs, cheese, pancetta, and pepper. Ready in just 20 minutes.",
+    "category": "Italian",
+    "tags": [
+      "Italian",
+      "Pasta",
+      "Quick Meal"
+    ],
+    "data": {
+      "type": "recipe",
+      "content": {
+        "readingTime": "20 min",
+        "text": [
+          "400g spaghetti",
+          "200g pancetta or guanciale, diced",
+          "4 large eggs",
+          "100g Pecorino Romano cheese, grated",
+          "50g Parmesan cheese, grated",
+          "2 cloves garlic, minced",
+          "Fresh black pepper",
+          "Salt for pasta water"
+        ]
+      },
+      "recipe": {
+        "prepTime": "10 min",
+        "cookTime": "15 min",
+        "servings": "4",
+        "instructions": [
+          "Bring a large pot of salted water to boil and cook spaghetti according to package directions.",
+          "While pasta cooks, heat a large skillet over medium heat and cook pancetta until crispy.",
+          "In a bowl, whisk together eggs, grated cheeses, and black pepper.",
+          "Drain pasta, reserving 1 cup of pasta water.",
+          "Add hot pasta to the skillet with pancetta and remove from heat.",
+          "Quickly stir in the egg mixture, adding pasta water gradually to create a creamy sauce.",
+          "Serve immediately with extra cheese and black pepper."
+        ]
+      },
+      "ribbon": {
+        "text": "Popular",
+        "style": "popular"
+      },
+      "authors": [
+        {
+          "name": "Chef Mario Rossi",
+          "role": "Italian Cuisine Expert"
+        }
+      ],
+      "engagement": {
+        "reactions": [
+          {
+            "type": "like",
+            "icon": "thumbs_up",
+            "count": 250,
+            "value": 4.5,
+            "max": 5,
+            "min": 0,
+            "ariaLabel": "Like this recipe"
+          }
+        ],
+        "commentCount": 45,
+        "shareCount": 120,
+        "viewCount": 12000
+      },
+      "actions": [
+        {
+          "text": "Save Recipe",
+          "icon": "bookmark"
+        },
+        {
+          "text": "Share",
+          "icon": "share"
+        }
+      ]
+    }
+  }
+}

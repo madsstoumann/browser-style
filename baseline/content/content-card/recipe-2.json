@@ -1,0 +1,47 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "recipe-2",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Recipe"
+  },
+  "fields": {
+    "headline": "Vibrant Summer Salad",
+    "summary": "A refreshing and healthy salad with mixed greens, berries, goat cheese, and a light vinaigrette dressing.",
+    "category": "Recipe",
+    "tags": [
+      "Vegan",
+      "Healthy"
+    ],
+    "data": {
+      "type": "recipe",
+      "content": {
+        "readingTime": "Prep time: 10 min"
+      },
+      "engagement": {
+        "reactions": [
+          {
+            "type": "like",
+            "icon": "thumbs_up",
+            "count": 120,
+            "ariaLabel": "Like this recipe"
+          }
+        ],
+        "commentCount": 15,
+        "shareCount": 30,
+        "viewCount": 8500
+      },
+      "links": [
+        {
+          "url": "#",
+          "text": "View Recipe",
+          "icon": "recipe"
+        }
+      ]
+    }
+  }
+}

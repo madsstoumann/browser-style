@@ -1,0 +1,59 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "news-11",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-07-16T14:00:00Z",
+    "updatedAt": "2025-07-16T14:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/News"
+  },
+  "fields": {
+    "headline": "In-depth Analysis of the New International Trade Agreement",
+    "summary": "The recently signed trade agreement is set to reshape global commerce, affecting everything from local businesses to multinational corporations. This article provides a comprehensive look into the key clauses, potential impacts on various sectors, and expert opinions on what the future holds for international trade relations.",
+    "category": "Politics",
+    "data": {
+      "type": "news",
+      "content": {
+        "published": {
+          "datetime": "2025-07-16T14:00:00Z",
+          "formatted": "July 16, 2025"
+        },
+        "readingTime": "12 min read"
+      },
+      "authors": [
+        {
+          "name": "Jane Smith",
+          "role": "Chief Political Correspondent",
+          "avatar": {
+            "src": "https://browser.style/assets/images/janesmith.png",
+            "alt": "Jane Smith",
+            "width": 40,
+            "height": 40
+          },
+          "contacts": [
+            {
+              "type": "email",
+              "value": "jane.smith@example.com",
+              "label": "Email"
+            },
+            {
+              "type": "twitter",
+              "value": "https://twitter.com/janesmith",
+              "label": "Twitter"
+            }
+          ],
+          "url": "/authors/jane-smith"
+        }
+      ],
+      "links": [
+        {
+          "url": "#",
+          "text": "Read Full Analysis",
+          "icon": "analytics"
+        }
+      ]
+    }
+  }
+}

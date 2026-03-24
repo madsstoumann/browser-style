@@ -1,0 +1,27 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "video-5",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2023-04-15T14:30:00Z",
+    "updatedAt": "2023-04-15T14:30:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media/Video"
+  },
+  "fields": {
+    "headline": "What's new in the web",
+    "summary": "Discover the latest features landing in stable and beta web browsers, from new CSS functions to powerful web platform APIs.",
+    "category": "Web Platform",
+    "data": {
+      "type": "article",
+      "links": [
+        {
+          "url": "https://youtu.be/beYbnNT_02U",
+          "text": "Watch on YouTube",
+          "icon": "smart_display"
+        }
+      ]
+    }
+  }
+}

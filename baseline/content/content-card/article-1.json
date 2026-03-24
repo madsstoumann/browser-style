@@ -1,0 +1,74 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "article-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2024-12-15T09:00:00Z",
+    "updatedAt": "2024-12-16T14:30:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Article"
+  },
+  "fields": {
+    "headline": "Mastering Interactive Popovers in Modern Web Design",
+    "subheadline": "A comprehensive guide to creating accessible and engaging popover experiences",
+    "summary": "Learn how to implement interactive popovers that enhance user experience without compromising accessibility. This guide covers best practices, implementation patterns, and real-world examples.",
+    "category": "Web Development",
+    "tags": [
+      "UX Design",
+      "JavaScript",
+      "Accessibility",
+      "Frontend"
+    ],
+    "data": {
+      "type": "article",
+      "content": {
+        "text": "<p>Interactive popovers have become a cornerstone of modern web design, providing contextual information and actions without disrupting the user's flow. In this comprehensive guide, we'll explore the principles behind effective popover design and implementation.</p><p>From accessibility considerations to performance optimization, we'll cover everything you need to know to create popovers that delight users and meet modern web standards.</p>",
+        "published": {
+          "datetime": "2024-12-15T09:00:00Z",
+          "formatted": "December 15, 2024"
+        },
+        "modified": {
+          "datetime": "2024-12-16T14:30:00Z",
+          "formatted": "December 16, 2024"
+        },
+        "readingTime": "8 min read"
+      },
+      "authors": [
+        {
+          "name": "Sarah Chen",
+          "role": "UX Engineer",
+          "email": "sarah.chen@example.com",
+          "sameAs": [
+            "https://twitter.com/sarahuxchen",
+            "https://github.com/sarahchen"
+          ]
+        }
+      ],
+      "engagement": {
+        "viewCount": 2840,
+        "likeCount": 156,
+        "shareCount": 42,
+        "commentCount": 23
+      },
+      "actions": [
+        {
+          "text": "Read More in Popover",
+          "popover": {
+            "content": "<h3>More Details</h3><p>This is a small article inside a popover.</p><p>It can contain any HTML content.</p><p>This demonstrates the flexibility of the popover component.</p><p>Click the close button to dismiss.</p>"
+          }
+        }
+      ],
+      "links": [
+        {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/API/Popover_API",
+          "text": "MDN Popover API"
+        },
+        {
+          "url": "https://web.dev/popover-api/",
+          "text": "web.dev Guide"
+        }
+      ]
+    }
+  }
+}

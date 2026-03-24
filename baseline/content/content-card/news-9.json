@@ -1,0 +1,27 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "news-9",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/News"
+  },
+  "fields": {
+    "headline": "Revival of Classic Cinema in Theaters",
+    "summary": "Independent theaters are seeing a resurgence in popularity by screening timeless classic films for a new generation.",
+    "category": "Culture",
+    "data": {
+      "type": "news",
+      "links": [
+        {
+          "url": "#",
+          "text": "Find a Screening",
+          "icon": "movie"
+        }
+      ]
+    }
+  }
+}

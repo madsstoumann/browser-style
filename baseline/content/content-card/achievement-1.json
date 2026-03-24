@@ -1,0 +1,41 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "achievement-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2024-08-15T10:00:00Z",
+    "updatedAt": "2024-08-15T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Achievement"
+  },
+  "fields": {
+    "headline": "AWS Certified Solutions Architect",
+    "summary": "Professional-level certification demonstrating expertise in designing distributed systems on AWS.",
+    "category": "Professional Certification",
+    "data": {
+      "type": "achievement",
+      "content": {
+        "published": {
+          "formatted": "Earned August 2024"
+        }
+      },
+      "achievement": {
+        "achievementName": "AWS Certified Solutions Architect - Professional",
+        "issuingOrganization": "Amazon Web Services",
+        "dateEarned": "2024-08-15",
+        "expirationDate": "2027-08-15",
+        "verificationUrl": "https://aws.amazon.com/verification/ABC123XYZ",
+        "skillLevel": "Professional",
+        "credentialId": "AWS-SAP-2024-001234"
+      },
+      "actions": [
+        {
+          "text": "Verify Credential",
+          "url": "https://aws.amazon.com/verification/ABC123XYZ",
+          "icon": "verified"
+        }
+      ]
+    }
+  }
+}

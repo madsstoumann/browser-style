@@ -1,0 +1,20 @@
+{
+  "$schema": "../../models/layout.schema.json",
+  "id": "recipes-grid-tertiary",
+  "model": "layout",
+  "meta": {
+    "createdAt": "2026-01-13T10:00:00Z",
+    "updatedAt": "2026-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "title": "Recipes Grid Tertiary",
+    "content": [
+      { "$ref": "content-card/recipe-3" },
+      { "$ref": "content-card/recipe-1" },
+      { "$ref": "content-card/recipe-2" },
+      { "$ref": "content-card/recipe-4" }
+    ]
+  }
+}

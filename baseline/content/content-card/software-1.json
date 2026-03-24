@@ -1,0 +1,74 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "software-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Business/Software"
+  },
+  "fields": {
+    "headline": "Code Editor Pro",
+    "summary": "Advanced code editor with AI-powered suggestions, built-in terminal, and extensive plugin ecosystem.",
+    "category": "Development Tools",
+    "data": {
+      "type": "software",
+      "content": {
+        "text": "Perfect for full-stack developers working with multiple languages and frameworks."
+      },
+      "software": {
+        "applicationCategory": "Development Environment",
+        "operatingSystem": [
+          "Windows",
+          "macOS",
+          "Linux"
+        ],
+        "version": "3.2.1",
+        "fileSize": "125 MB",
+        "developer": {
+          "name": "DevTools Inc",
+          "website": "https://devtools.com"
+        },
+        "screenshots": [
+          "https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=600&h=400&fit=crop&auto=format",
+          "https://images.unsplash.com/photo-1618477388954-7852f32655ec?w=600&h=400&fit=crop&auto=format"
+        ],
+        "systemRequirements": {
+          "ram": "4GB minimum, 8GB recommended",
+          "storage": "200MB available space",
+          "processor": "Intel i3 or equivalent"
+        },
+        "price": {
+          "current": "49.99",
+          "currency": "USD",
+          "type": "one-time"
+        }
+      },
+      "engagement": {
+        "reactions": [
+          {
+            "type": "like",
+            "icon": "thumbs_up",
+            "count": 2100,
+            "value": 4.6,
+            "max": 5
+          }
+        ],
+        "viewCount": 45000,
+        "shareCount": 890
+      },
+      "actions": [
+        {
+          "text": "Download",
+          "icon": "download"
+        },
+        {
+          "text": "Free Trial",
+          "icon": "play_arrow"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "review-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-07-20T10:00:00Z",
+    "updatedAt": "2025-07-20T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media/Review"
+  },
+  "fields": {
+    "headline": "Excellent product quality and fast delivery",
+    "summary": "I've been using this for 3 months now and it's exceeded my expectations. The build quality is outstanding and customer service is very responsive.",
+    "category": "Customer Review",
+    "data": {
+      "type": "review",
+      "review": {
+        "rating": {
+          "value": 5,
+          "max": 5
+        },
+        "reviewer": {
+          "name": "Jennifer M.",
+          "verified": true,
+          "purchaseDate": "2025-06-15"
+        },
+        "reviewDate": "2025-07-20",
+        "helpfulVotes": 23,
+        "productReviewed": "AuraSound Pro Headphones",
+        "itemType": "Product",
+        "productImage": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop&auto=format",
+        "aggregateRating": {
+          "ratingValue": 4.6,
+          "ratingCount": 1847,
+          "bestRating": 5,
+          "worstRating": 1
+        },
+        "productPrice": {
+          "amount": "299.00",
+          "currency": "USD"
+        }
+      },
+      "engagement": {
+        "reactions": [
+          {
+            "type": "helpful",
+            "icon": "thumb_up",
+            "count": 23,
+            "ariaLabel": "Mark as helpful"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "text": "Helpful",
+          "icon": "thumb_up"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "$schema": "../../models/demo.schema.json",
+  "id": "demo-showcase",
+  "model": "demo",
+  "meta": {
+    "createdAt": "2026-03-20T10:00:00Z",
+    "updatedAt": "2026-03-20T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Demo"
+  },
+  "fields": {
+    "title": "UCM Field Type Showcase",
+    "slug": "ucm-field-type-showcase",
+    "description": "This demo entry exercises every UCM field type.\nUse it as a reference when building new content models or verifying CMS adapter behaviour.",
+    "body": {
+      "$richtext": true,
+      "content": "<h2>Welcome to the UCM Demo</h2><p>This page demonstrates every field type supported by the <strong>Unified Content Model</strong>. Each tab in the CMS editor maps to a group of fields defined in <code>demo.schema.json</code>.</p><h3>Why a demo page?</h3><p>Having a single entry that covers all field types makes it easy to:</p><ul><li>Verify adapter mappings after changes</li><li>Test round-trip pull/push across platforms</li><li>Onboard new developers with a concrete example</li></ul>",
+      "format": "html"
+    },
+    "readme": "# UCM Demo Entry\n\nThis is a **markdown** field rendered by the `markdown` type.\n\n## Supported syntax\n\n- **Bold**, *italic*, ~~strikethrough~~\n- [Links](https://example.com)\n- `inline code` and fenced blocks\n\n```js\nconsole.log('Hello from UCM');\n```",
+    "category": "tutorial",
+    "tags": ["ucm", "demo", "tutorial", "development", "testing"],
+    "bulletPoints": [
+      "Covers every primitive type (string, number, boolean, date)",
+      "Includes media, references, and rich text",
+      "Demonstrates select, radio, checkbox, and slider widgets",
+      "Shows geopoint, color, and object fields"
+    ],
+    "heroImage": {
+      "$asset": "assets/demo-hero",
+      "assetId": "demo-hero"
+    },
+    "croppedImage": {
+      "$asset": "assets/demo-cropped",
+      "assetId": "demo-cropped"
+    },
+    "author": {
+      "$ref": "content-card/profile-1"
+    },
+    "relatedItems": [
+      { "$ref": "content-card/article-1" },
+      { "$ref": "content-card/product-1" }
+    ],
+    "callToAction": {
+      "url": "https://github.com/AimWhy/unified-content-model",
+      "label": "View on GitHub",
+      "target": "_blank"
+    },
+    "pageContent": [
+      { "$ref": "content-card/spot-1" },
+      { "$ref": "content-card/spot-2" },
+      { "$ref": "content-card/faq-1" }
+    ],
+    "isActive": true,
+    "rating": 4.5,
+    "score": 4,
+    "volume": 75,
+    "publishDate": "2026-03-20",
+    "eventTime": "2026-04-15T14:00:00Z",
+    "contactEmail": "demo@ucm.dev",
+    "externalLink": "https://json-schema.org/draft-07/schema",
+    "settings": {
+      "theme": "light",
+      "showSidebar": true,
+      "maxRelated": 3,
+      "analytics": {
+        "trackClicks": true,
+        "provider": "plausible"
+      }
+    },
+    "systemId": "ucm-demo-001",
+    "priority": "medium",
+    "features": ["wifi", "parking"],
+    "brandColor": "#09bc8a",
+    "accentColor": "#1d57f3",
+    "location": {
+      "lat": 55.6761,
+      "lng": 12.5683
+    }
+  }
+}

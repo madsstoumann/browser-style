@@ -1,0 +1,38 @@
+{
+  "$schema": "../../models/page.schema.json",
+  "id": "content-card-demo",
+  "model": "page",
+  "meta": {
+    "createdAt": "2026-01-13T10:00:00Z",
+    "updatedAt": "2026-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "title": "Content Card - Demo Page",
+    "url": "/content-card-demo",
+    "description": "A comprehensive demo page showcasing various content card types and layout configurations.",
+    "layouts": [
+      { "$ref": "layout/news-grid-3col" },
+      { "$ref": "layout/news-featured-secondary" },
+      { "$ref": "layout/news-columns-pair" },
+      { "$ref": "layout/spots-grid-4col" },
+      { "$ref": "layout/news-hero-tertiary" },
+      { "$ref": "layout/news-subgrid-3col" },
+      { "$ref": "layout/news-single-secondary" },
+      { "$ref": "layout/bento-mixed-primary" },
+      { "$ref": "layout/products-carousel" },
+      { "$ref": "layout/recipes-grid-tertiary" },
+      { "$ref": "layout/news-event-mixed" },
+      { "$ref": "layout/article-poll-grid" },
+      { "$ref": "layout/spots-bento-6a" },
+      { "$ref": "layout/videos-grid-tertiary" },
+      { "$ref": "layout/youtube-videos-grid" },
+      { "$ref": "layout/content-mixed-2col" },
+      { "$ref": "layout/footer-business" }
+    ],
+    "og_title": "Content Card Demo",
+    "og_description": "Showcasing 25+ content card types across various layout configurations.",
+    "og_type": "website"
+  }
+}

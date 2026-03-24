@@ -1,0 +1,19 @@
+{
+  "$schema": "../../models/external-script.schema.json",
+  "id": "cookiebot",
+  "model": "external-script",
+  "meta": {
+    "createdAt": "2026-02-10T08:00:00Z",
+    "updatedAt": "2026-03-01T10:30:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "name": "Cookiebot",
+    "provider": "cookiebot",
+    "id": "cbid-a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "url": "https://consent.cookiebot.com/uc.js",
+    "category": "consent",
+    "loading": "blocking"
+  }
+}

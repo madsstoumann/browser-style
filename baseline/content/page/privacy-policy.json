@@ -1,0 +1,19 @@
+{
+  "$schema": "../../models/page.schema.json",
+  "id": "privacy-policy",
+  "model": "page",
+  "meta": {
+    "createdAt": "2026-01-10T08:00:00Z",
+    "updatedAt": "2026-03-01T09:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "title": "Privacy Policy",
+    "url": "/privacy-policy",
+    "description": "How we collect, use, and protect your personal data under GDPR and CCPA.",
+    "robots": ["noindex"],
+    "og_title": "Privacy Policy — Generic Site",
+    "og_description": "Our commitment to your data privacy and how we handle your information."
+  }
+}

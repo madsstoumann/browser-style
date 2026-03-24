@@ -1,0 +1,47 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "recipe-3",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Recipe"
+  },
+  "fields": {
+    "headline": "Perfect Chocolate Chip Cookies",
+    "summary": "The ultimate guide to baking soft, chewy, and delicious chocolate chip cookies from scratch.",
+    "category": "Recipe",
+    "data": {
+      "type": "recipe",
+      "content": {
+        "readingTime": "Prep time: 45 min"
+      },
+      "ribbon": {
+        "text": "Popular",
+        "style": "popular"
+      },
+      "engagement": {
+        "reactions": [
+          {
+            "type": "like",
+            "icon": "thumbs_up",
+            "count": 530,
+            "ariaLabel": "Like this recipe"
+          }
+        ],
+        "commentCount": 95,
+        "shareCount": 250,
+        "viewCount": 35000
+      },
+      "links": [
+        {
+          "url": "#",
+          "text": "View Recipe",
+          "icon": "recipe"
+        }
+      ]
+    }
+  }
+}

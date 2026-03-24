@@ -1,0 +1,20 @@
+{
+  "$schema": "../../models/navigation.schema.json",
+  "id": "main-footer",
+  "model": "navigation",
+  "meta": {
+    "createdAt": "2026-03-18T10:00:00Z",
+    "updatedAt": "2026-03-18T10:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "name": "Main Footer Navigation",
+    "description": "Footer navigation with product links, resources, and legal pages.",
+    "items": [
+      { "$ref": "navigation-item/footer-products" },
+      { "$ref": "navigation-item/footer-resources" },
+      { "$ref": "navigation-item/footer-legal" }
+    ]
+  }
+}

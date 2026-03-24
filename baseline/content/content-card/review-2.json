@@ -1,0 +1,61 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "review-2",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-08-15T10:00:00Z",
+    "updatedAt": "2025-08-15T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media/Review"
+  },
+  "fields": {
+    "headline": "Amazing Photography Tour Experience",
+    "summary": "The guided photography tour was exceptional! Our guide knew all the best spots and times for capturing the bridge. Professional equipment provided and great tips shared.",
+    "category": "Service Review",
+    "data": {
+      "type": "review",
+      "review": {
+        "rating": {
+          "value": 5,
+          "max": 5
+        },
+        "reviewer": {
+          "name": "Michael T.",
+          "verified": false
+        },
+        "reviewDate": "2025-08-15",
+        "helpfulVotes": 42,
+        "productReviewed": "Golden Gate Bridge Photography Tour",
+        "itemType": "Product",
+        "productImage": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&auto=format",
+        "aggregateRating": {
+          "ratingValue": 4.8,
+          "ratingCount": 156,
+          "bestRating": 5,
+          "worstRating": 1
+        },
+        "productPrice": {
+          "amount": "75.00",
+          "currency": "USD"
+        }
+      },
+      "engagement": {
+        "reactions": [
+          {
+            "type": "helpful",
+            "icon": "thumb_up",
+            "count": 42,
+            "ariaLabel": "Mark as helpful"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "text": "Helpful",
+          "icon": "thumb_up"
+        }
+      ]
+    }
+  }
+}

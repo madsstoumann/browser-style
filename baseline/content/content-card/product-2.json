@@ -1,0 +1,52 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "product-2",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Commerce/Product"
+  },
+  "fields": {
+    "headline": "FitTrack 5",
+    "summary": "Advanced fitness tracker with heart rate monitoring, GPS, and 7-day battery life.",
+    "category": "Wearables",
+    "tags": [
+      "Fitness",
+      "GPS",
+      "Health"
+    ],
+    "data": {
+      "type": "product",
+      "content": {
+        "text": "Track your fitness goals with precision. Monitor workouts, sleep patterns, and health metrics all day long."
+      },
+      "product": {
+        "price": {
+          "current": "149.95",
+          "currency": "USD"
+        },
+        "availability": "In Stock",
+        "rating": {
+          "value": 4.5,
+          "count": 890,
+          "max": 5,
+          "min": 0
+        }
+      },
+      "engagement": {
+        "viewCount": 8350,
+        "shareCount": 120
+      },
+      "sku": "FT5-BLK-002",
+      "actions": [
+        {
+          "text": "Add to Cart",
+          "icon": "add_to_basket"
+        }
+      ]
+    }
+  }
+}

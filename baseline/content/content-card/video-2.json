@@ -1,0 +1,45 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "video-2",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-03-22T14:45:00Z",
+    "updatedAt": "2025-03-22T14:45:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media/Video"
+  },
+  "fields": {
+    "headline": "Big Buck Bunny Adventures",
+    "category": "Video",
+    "data": {
+      "type": "article",
+      "content": {
+        "published": {
+          "datetime": "2025-03-22T14:45:00Z",
+          "formatted": "Mar 22, 2025"
+        }
+      },
+      "actions": [
+        {
+          "text": "Watch Video",
+          "popover": {
+            "video": {
+              "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+              "name": "Big Buck Bunny Adventures",
+              "description": "An animated short film featuring the adventures of Big Buck Bunny",
+              "uploadDate": "2025-03-22T14:45:00Z",
+              "thumbnailUrl": "https://browser.style/assets/images/bunny.png",
+              "options": {
+                "controls": true,
+                "muted": true,
+                "autoplay": true,
+                "playsinline": true
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "article-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2024-12-15T09:00:00Z",
+    "updatedAt": "2024-12-16T14:30:00Z",
+    "locale": "de-DE",
+    "status": "published",
+    "folder": "Cards/Article"
+  },
+  "fields": {
+    "headline": "Interaktive Popovers im modernen Webdesign meistern",
+    "subheadline": "Ein umfassender Leitfaden zur Erstellung zugänglicher und ansprechender Popover-Erlebnisse",
+    "summary": "Erfahren Sie, wie Sie interaktive Popovers implementieren, die das Benutzererlebnis verbessern, ohne die Barrierefreiheit zu beeinträchtigen. Dieser Leitfaden behandelt Best Practices, Implementierungsmuster und Beispiele aus der Praxis.",
+    "category": "Webentwicklung",
+    "tags": [
+      "UX Design",
+      "JavaScript",
+      "Barrierefreiheit",
+      "Frontend"
+    ],
+    "data": {
+      "type": "article",
+      "content": {
+        "text": "<p>Interaktive Popovers sind zu einem Eckpfeiler des modernen Webdesigns geworden und bieten kontextbezogene Informationen und Aktionen, ohne den Benutzerfluss zu unterbrechen. In diesem umfassenden Leitfaden werden wir die Prinzipien hinter effektivem Popover-Design und -Implementierung erkunden.</p><p>Von Überlegungen zur Barrierefreiheit bis zur Leistungsoptimierung behandeln wir alles, was Sie wissen müssen, um Popovers zu erstellen, die Benutzer begeistern und moderne Webstandards erfüllen.</p>",
+        "published": {
+          "datetime": "2024-12-15T09:00:00Z",
+          "formatted": "15. Dezember 2024"
+        },
+        "modified": {
+          "datetime": "2024-12-16T14:30:00Z",
+          "formatted": "16. Dezember 2024"
+        },
+        "readingTime": "8 Min. Lesezeit"
+      },
+      "authors": [
+        {
+          "name": "Sarah Chen",
+          "role": "UX-Ingenieurin",
+          "email": "sarah.chen@example.com",
+          "sameAs": [
+            "https://twitter.com/sarahuxchen",
+            "https://github.com/sarahchen"
+          ]
+        }
+      ],
+      "engagement": {
+        "viewCount": 2840,
+        "likeCount": 156,
+        "shareCount": 42,
+        "commentCount": 23
+      },
+      "actions": [
+        {
+          "text": "Mehr im Popover lesen",
+          "popover": {
+            "content": "<h3>Weitere Details</h3><p>Dies ist ein kleiner Artikel in einem Popover.</p><p>Er kann beliebigen HTML-Inhalt enthalten.</p><p>Dies demonstriert die Flexibilität der Popover-Komponente.</p><p>Klicken Sie auf die Schließen-Schaltfläche, um zu schließen.</p>"
+          }
+        }
+      ],
+      "links": [
+        {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/API/Popover_API",
+          "text": "MDN Popover API"
+        },
+        {
+          "url": "https://web.dev/popover-api/",
+          "text": "web.dev Leitfaden"
+        }
+      ]
+    }
+  }
+}

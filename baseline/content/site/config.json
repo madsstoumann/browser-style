@@ -1,0 +1,79 @@
+{
+  "$schema": "../../models/site.schema.json",
+  "id": "config",
+  "model": "site",
+  "meta": {
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-03-18T12:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "site_name": "Generic Site",
+    "site_url": "https://example.com",
+    "site_description": "A modern website showcasing products, documentation, and resources. Built with the Unified Content Model for CMS portability.",
+    "default_locale": "en-US",
+
+    "legal_name": "Example Corp.",
+    "contact_email": "hello@example.com",
+    "contact_phone": "+1 (555) 012-3456",
+    "address": "123 Main Street, Suite 400\nSan Francisco, CA 94105\nUnited States",
+
+    "privacy_policy_id": { "$ref": "page/privacy-policy" },
+    "terms_service_id": { "$ref": "page/terms-of-service" },
+
+    "social_links": [
+      { "$ref": "social-link/github" },
+      { "$ref": "social-link/linkedin" },
+      { "$ref": "social-link/x" },
+      { "$ref": "social-link/bluesky" }
+    ],
+
+    "external_scripts": [
+      { "$ref": "external-script/cookiebot" },
+      { "$ref": "external-script/google-tag-manager" },
+      { "$ref": "external-script/hotjar" },
+      { "$ref": "external-script/intercom" }
+    ],
+
+    "favicon": {
+      "$asset": "assets/favicon.ico",
+      "url": "https://example.com/favicon.ico",
+      "title": "Favicon"
+    },
+    "favicon_svg": {
+      "$asset": "assets/favicon.svg",
+      "url": "https://example.com/favicon.svg",
+      "title": "Favicon SVG"
+    },
+    "apple_touch_icon": {
+      "$asset": "assets/apple-touch-icon.png",
+      "url": "https://example.com/apple-touch-icon.png",
+      "title": "Apple Touch Icon"
+    },
+    "og_image": {
+      "$asset": "assets/og-default.png",
+      "url": "https://example.com/og-default.png",
+      "title": "Generic Site — Products & Documentation"
+    },
+
+    "header_nav_id": { "$ref": "navigation/main-header" },
+    "footer_nav_id": { "$ref": "navigation/main-footer" },
+
+    "error_pages": [
+      { "$ref": "error-page/401" },
+      { "$ref": "error-page/404" },
+      { "$ref": "error-page/500" }
+    ],
+
+    "crawler_config_id": { "$ref": "crawler-config/default" },
+    "headers_config_id": { "$ref": "headers-config/default" },
+    "security_config_id": { "$ref": "security-config/default" },
+
+    "personas": [
+      { "$ref": "persona/developer" },
+      { "$ref": "persona/designer" },
+      { "$ref": "persona/content-editor" }
+    ]
+  }
+}

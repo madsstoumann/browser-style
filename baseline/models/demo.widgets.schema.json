@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "widgets",
+  "title": "Demo Widgets",
+  "description": "Showcases every custom widget from the widget registry — use as a reference and test fixture.",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-03-12",
+    "displayField": "title"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Demo",
+    "layout": [
+      {
+        "type": "tab",
+        "name": "Content",
+        "fields": ["title", "card_data"]
+      },
+      {
+        "type": "tab",
+        "name": "Web Configuration",
+        "fields": ["csp", "manifest", "robots_txt", "security_txt", "alt_config"]
+      },
+      {
+        "type": "tab",
+        "name": "Color",
+        "fields": ["theme_color", "brand_color"]
+      }
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Title",
+      "description": "Descriptive name for this widget demo entry",
+      "validation": {
+        "required": true,
+        "maxLength": 100
+      }
+    },
+    "card_data": {
+      "type": "object",
+      "title": "Card Data",
+      "description": "Content card JSON editor (widget: web-config-card)",
+      "ui": {
+        "widget": "web-config-card"
+      }
+    },
+    "csp": {
+      "type": "object",
+      "title": "Content Security Policy",
+      "description": "CSP directive editor (widget: web-config-csp)",
+      "ui": {
+        "widget": "web-config-csp"
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "title": "Web App Manifest",
+      "description": "manifest.json configuration editor (widget: web-config-manifest)",
+      "ui": {
+        "widget": "web-config-manifest"
+      }
+    },
+    "robots_txt": {
+      "type": "text",
+      "title": "robots.txt",
+      "description": "robots.txt content editor (widget: web-config-robots)",
+      "ui": {
+        "widget": "web-config-robots"
+      }
+    },
+    "security_txt": {
+      "type": "text",
+      "title": "security.txt",
+      "description": "security.txt content editor (widget: web-config-security)",
+      "ui": {
+        "widget": "web-config-security"
+      }
+    },
+    "alt_config": {
+      "type": "object",
+      "title": "Alternative Configuration",
+      "description": "Alternative config editor (widget: web-config-alt)",
+      "ui": {
+        "widget": "web-config-alt"
+      }
+    },
+    "theme_color": {
+      "type": "color",
+      "title": "Theme Color",
+      "description": "Free-form color picker via custom widget (widget: color-picker)",
+      "options": {
+        "format": "hex"
+      },
+      "validation": {
+        "pattern": "^#[0-9A-Fa-f]{6}$"
+      },
+      "ui": {
+        "widget": "color-picker"
+      }
+    },
+    "brand_color": {
+      "type": "color",
+      "title": "Brand Color",
+      "description": "Labeled preset color palette (widget: web-config-color)",
+      "options": {
+        "format": "hex",
+        "presets": [
+          { "value": "#ecaba4", "label": "bg-coral" },
+          { "value": "#583459", "label": "bg-purple" },
+          { "value": "#09bc8a", "label": "bg-green" },
+          { "value": "#fbfeb5", "label": "bg-yellow" },
+          { "value": "#1d57f3", "label": "bg-blue" },
+          { "value": "#111316", "label": "bg-black" },
+          { "value": "#ffffff", "label": "bg-white" },
+          { "value": "#dfdcd3", "label": "bg-gray" },
+          { "value": "#f4f3f0", "label": "bg-gray-light" },
+          { "value": "#b09293", "label": "bg-pink" }
+        ]
+      },
+      "ui": {
+        "widget": "web-config-color"
+      }
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "news-13",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/News"
+  },
+  "fields": {
+    "headline": "Creativity Sparks Change",
+    "summary": "Discover how creative minds are driving innovation.",
+    "category": "Inspiration",
+    "data": {
+      "type": "news",
+      "links": [
+        {
+          "url": "#",
+          "text": "Read the Story",
+          "icon": "lightbulb"
+        }
+      ]
+    }
+  }
+}

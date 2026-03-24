@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude Code
+.claude/
+
+# Environment
+.env
+.env.local
+.env.*.local
+.cmsconfig
+
+# Build
+dist/
+out/
+build/
+.docusaurus/
+
+# Logs
+*.log
+npm-debug.log*

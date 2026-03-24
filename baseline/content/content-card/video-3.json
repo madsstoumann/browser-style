@@ -1,0 +1,46 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "video-3",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-06-08T09:15:00Z",
+    "updatedAt": "2025-06-08T09:15:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media/Video"
+  },
+  "fields": {
+    "headline": "Elephants Dream Documentary",
+    "category": "Video",
+    "data": {
+      "type": "article",
+      "content": {
+        "published": {
+          "datetime": "2025-06-08T09:15:00Z",
+          "formatted": "Jun 8, 2025"
+        }
+      },
+      "actions": [
+        {
+          "text": "Watch Video",
+          "popover": {
+            "video": {
+              "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+              "name": "Elephants Dream Documentary",
+              "description": "A surreal computer-animated short film exploring dreams and imagination",
+              "uploadDate": "2025-06-08T09:15:00Z",
+              "thumbnailUrl": "https://browser.style/assets/images/elephant.png",
+              "options": {
+                "controls": true,
+                "muted": true,
+                "autoplay": false,
+                "playsinline": true,
+                "resetOnClose": true
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../models/headers-config.schema.json",
+  "id": "default",
+  "model": "headers-config",
+  "meta": {
+    "createdAt": "2026-02-01T08:00:00Z",
+    "updatedAt": "2026-03-10T11:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "title": "Headers Config",
+    "csp": {
+      "default-src": ["'self'"],
+      "script-src": ["'self'", "https://consent.cookiebot.com", "https://www.googletagmanager.com", "https://static.hotjar.com", "https://widget.intercom.io"],
+      "style-src": ["'self'", "'unsafe-inline'"],
+      "img-src": ["'self'", "data:", "https://images.ctfassets.net", "https://example.com"],
+      "font-src": ["'self'"],
+      "connect-src": ["'self'", "https://consentcdn.cookiebot.com", "https://www.google-analytics.com", "https://api-iam.intercom.io"],
+      "frame-src": ["'self'", "https://consentcdn.cookiebot.com", "https://www.youtube.com"],
+      "object-src": ["'none'"],
+      "base-uri": ["'self'"],
+      "form-action": ["'self'"],
+      "frame-ancestors": ["'none'"],
+      "upgrade-insecure-requests": true
+    },
+    "permissions_policy": {
+      "camera": [],
+      "microphone": [],
+      "geolocation": [],
+      "interest-cohort": [],
+      "autoplay": ["self"],
+      "fullscreen": ["self"],
+      "picture-in-picture": ["self"]
+    },
+    "referrer_policy": "strict-origin-when-cross-origin",
+    "hsts_max_age": 63072000,
+    "hsts_include_sub_domains": true,
+    "hsts_preload": true,
+    "cors": {
+      "allowed_origins": ["https://example.com"],
+      "allowed_methods": ["GET", "POST", "OPTIONS"],
+      "allowed_headers": ["Content-Type", "Authorization"],
+      "expose_headers": [],
+      "max_age": 86400,
+      "allow_credentials": false
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "product-7",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Commerce/Product"
+  },
+  "fields": {
+    "headline": "CutMaster Pro 8-inch",
+    "category": "Kitchenware",
+    "data": {
+      "type": "product",
+      "product": {
+        "price": {
+          "current": "79.00",
+          "original": "99.00",
+          "currency": "USD",
+          "discountText": "Limited Time"
+        },
+        "availability": "In Stock",
+        "rating": {
+          "value": 4.9,
+          "count": 2500
+        }
+      },
+      "sku": "SG-SLV-007",
+      "actions": [
+        {
+          "text": "Add to Cart",
+          "icon": "add_to_basket"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "news-3",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/News"
+  },
+  "fields": {
+    "headline": "Underdogs Clinch Championship Title",
+    "category": "Sport",
+    "data": {
+      "type": "news",
+      "ribbon": {
+        "text": "LIVE",
+        "style": "live"
+      },
+      "links": [
+        {
+          "url": "#",
+          "text": "Watch Highlights",
+          "icon": "play"
+        }
+      ]
+    }
+  }
+}

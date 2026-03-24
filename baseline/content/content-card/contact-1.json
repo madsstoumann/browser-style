@@ -1,0 +1,60 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "contact-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Business/Contact"
+  },
+  "fields": {
+    "headline": "Technical Support",
+    "summary": "Get help with technical issues, account problems, or general questions about our products and services.",
+    "category": "Customer Support",
+    "data": {
+      "type": "contact",
+      "contact": {
+        "contactType": "Technical Support",
+        "availableHours": "Monday - Friday, 9 AM - 6 PM PST",
+        "responseTime": "Usually within 4 hours",
+        "contactMethods": [
+          {
+            "type": "email",
+            "value": "support@company.com",
+            "label": "Email Support"
+          },
+          {
+            "type": "phone",
+            "value": "+1-800-555-HELP",
+            "label": "Phone Support"
+          },
+          {
+            "type": "chat",
+            "value": "Live Chat",
+            "label": "Live Chat",
+            "available": true
+          }
+        ],
+        "languagesSupported": [
+          "English",
+          "Spanish",
+          "French"
+        ],
+        "department": "Technical Support Team"
+      },
+      "actions": [
+        {
+          "text": "Start Live Chat",
+          "icon": "chat"
+        },
+        {
+          "text": "Call Support",
+          "url": "tel:+18005554357",
+          "icon": "phone"
+        }
+      ]
+    }
+  }
+}

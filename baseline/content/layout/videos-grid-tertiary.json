@@ -1,0 +1,19 @@
+{
+  "$schema": "../../models/layout.schema.json",
+  "id": "videos-grid-tertiary",
+  "model": "layout",
+  "meta": {
+    "createdAt": "2026-01-13T10:00:00Z",
+    "updatedAt": "2026-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "title": "Videos Grid Tertiary",
+    "content": [
+      { "$ref": "content-card/video-1" },
+      { "$ref": "content-card/video-2" },
+      { "$ref": "content-card/video-3" }
+    ]
+  }
+}

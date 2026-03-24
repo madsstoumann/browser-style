@@ -1,0 +1,34 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "news-5",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-07-15T18:30:00Z",
+    "updatedAt": "2025-07-15T18:30:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/News"
+  },
+  "fields": {
+    "headline": "New Infrastructure Bill Passed",
+    "summary": "The new bill promises to upgrade roads, bridges, and public transport systems across the nation over the next decade.",
+    "category": "Domestic",
+    "data": {
+      "type": "news",
+      "content": {
+        "published": {
+          "datetime": "2025-07-15T18:30:00Z",
+          "formatted": "July 15, 2025"
+        },
+        "readingTime": "6 min read"
+      },
+      "links": [
+        {
+          "url": "#",
+          "text": "See the Plan",
+          "icon": "map"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "gallery-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Data/Gallery"
+  },
+  "fields": {
+    "headline": "UI/UX Design Showcase 2024",
+    "summary": "A collection of recent design projects including web applications, mobile apps, and design systems.",
+    "category": "Design Portfolio",
+    "data": {
+      "type": "gallery",
+      "gallery": {
+        "totalCount": 24,
+        "featuredMedia": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=300&fit=crop&auto=format",
+        "albumName": "2024 Portfolio",
+        "downloadOptions": [
+          "High Resolution",
+          "Web Optimized"
+        ],
+        "slideshowEnabled": true,
+        "categories": [
+          "Web Design",
+          "Mobile Apps",
+          "Branding"
+        ]
+      },
+      "engagement": {
+        "viewCount": 3250,
+        "shareCount": 78
+      },
+      "actions": [
+        {
+          "text": "View Gallery",
+          "icon": "photo_library"
+        },
+        {
+          "text": "Download Archive",
+          "icon": "download"
+        }
+      ]
+    }
+  }
+}

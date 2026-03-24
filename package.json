@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "workspaces": [
-    "ui/*"
+    "ui/*",
+    "baseline"
   ],
   "scripts": {
     "build": "npm run build --workspaces",

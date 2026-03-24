@@ -1,0 +1,67 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "product-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Commerce/Product"
+  },
+  "fields": {
+    "headline": "AuraSound Pro",
+    "summary": "Premium wireless noise-cancelling headphones with 30-hour battery life and crystal-clear audio quality.",
+    "category": "Electronics",
+    "tags": [
+      "Wireless",
+      "Noise-Cancelling",
+      "Premium"
+    ],
+    "data": {
+      "type": "product",
+      "content": {
+        "text": "Experience superior sound quality with our advanced noise-cancelling technology. Perfect for travel, work, or relaxation."
+      },
+      "product": {
+        "price": {
+          "current": "199.99",
+          "original": "249.99",
+          "currency": "USD",
+          "discountText": "20% off"
+        },
+        "availability": "In Stock",
+        "validUntil": "2025-12-31",
+        "rating": {
+          "value": 4.7,
+          "count": 1250,
+          "max": 5,
+          "min": 0
+        }
+      },
+      "ribbon": {
+        "text": "Best Seller",
+        "style": "popular"
+      },
+      "engagement": {
+        "reactions": [
+          {
+            "type": "like",
+            "icon": "thumbs_up",
+            "count": 89,
+            "ariaLabel": "Like this product"
+          }
+        ],
+        "viewCount": 15420,
+        "shareCount": 245
+      },
+      "sku": "ASP-WH-001",
+      "actions": [
+        {
+          "text": "Add to Cart",
+          "icon": "add_to_basket"
+        }
+      ]
+    }
+  }
+}

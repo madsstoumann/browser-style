@@ -1,0 +1,23 @@
+{
+  "$schema": "../../models/navigation.schema.json",
+  "id": "main-header",
+  "model": "navigation",
+  "meta": {
+    "createdAt": "2026-03-18T10:00:00Z",
+    "updatedAt": "2026-03-18T10:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "name": "Main Header Navigation",
+    "description": "Primary site navigation displayed in the header.",
+    "items": [
+      { "$ref": "navigation-item/header-home" },
+      { "$ref": "navigation-item/header-docs" },
+      { "$ref": "navigation-item/header-components" },
+      { "$ref": "navigation-item/header-examples" },
+      { "$ref": "navigation-item/header-blog" },
+      { "$ref": "navigation-item/header-github-cta" }
+    ]
+  }
+}

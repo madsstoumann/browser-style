@@ -1,0 +1,57 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "profile-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Service/Profile"
+  },
+  "fields": {
+    "headline": "Sarah Chen",
+    "subheadline": "Senior UX Engineer",
+    "summary": "Passionate about creating inclusive digital experiences. 8+ years in frontend development and user experience design.",
+    "category": "Team Member",
+    "data": {
+      "type": "profile",
+      "profile": {
+        "jobTitle": "Senior UX Engineer",
+        "organization": "TechCorp Solutions",
+        "bio": "Sarah specializes in accessibility-first design and has led the redesign of multiple award-winning web applications. She's a frequent speaker at design conferences and mentors junior developers.",
+        "location": "San Francisco, CA",
+        "skills": [
+          "React",
+          "Accessibility",
+          "Design Systems",
+          "User Research"
+        ],
+        "contacts": [
+          {
+            "type": "email",
+            "value": "sarah.chen@techcorp.com",
+            "label": "Email"
+          },
+          {
+            "type": "linkedin",
+            "value": "https://linkedin.com/in/sarahchen",
+            "label": "LinkedIn"
+          },
+          {
+            "type": "twitter",
+            "value": "https://twitter.com/sarahuxchen",
+            "label": "Twitter"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "text": "View Portfolio",
+          "url": "https://sarahchen.design",
+          "icon": "portfolio"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "booking-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Commerce/Booking"
+  },
+  "fields": {
+    "headline": "Conference Room A",
+    "summary": "Spacious conference room with modern AV equipment, perfect for team meetings and presentations.",
+    "category": "Conference Room",
+    "data": {
+      "type": "booking",
+      "booking": {
+        "serviceName": "Conference Room A Rental",
+        "venue": "TechHub Downtown",
+        "capacity": 12,
+        "duration": "2 hours",
+        "availableSlots": [
+          {
+            "date": "2025-08-25",
+            "times": [
+              "9:00 AM",
+              "2:00 PM",
+              "4:00 PM"
+            ]
+          },
+          {
+            "date": "2025-08-26",
+            "times": [
+              "10:00 AM",
+              "1:00 PM",
+              "3:00 PM"
+            ]
+          }
+        ],
+        "price": {
+          "hourlyRate": 45,
+          "currency": "USD"
+        },
+        "amenities": [
+          "Projector",
+          "Whiteboard",
+          "Video Conferencing",
+          "Coffee Service"
+        ],
+        "cancellationPolicy": "Free cancellation up to 24 hours before booking",
+        "specialRequests": "Available upon request"
+      },
+      "actions": [
+        {
+          "text": "Book Now",
+          "icon": "event"
+        },
+        {
+          "text": "Check Availability",
+          "icon": "schedule"
+        }
+      ]
+    }
+  }
+}

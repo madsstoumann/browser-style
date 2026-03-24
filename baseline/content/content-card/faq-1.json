@@ -1,0 +1,31 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "faq-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Data/FAQ"
+  },
+  "fields": {
+    "headline": "Frequently Asked Questions",
+    "category": "FAQ",
+    "data": {
+      "type": "faq",
+      "content": {
+        "text": [
+          {
+            "headline": "What is Quantum Computing?",
+            "text": "Quantum computing uses quantum bits to perform computations much faster than classical computers for certain problems."
+          },
+          {
+            "headline": "When will it be mainstream?",
+            "text": "Experts predict quantum computers will become more widely available within the next decade."
+          }
+        ]
+      }
+    }
+  }
+}

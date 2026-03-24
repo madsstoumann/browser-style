@@ -1,0 +1,21 @@
+{
+  "$schema": "../../models/layout.schema.json",
+  "id": "spots-bento-6a",
+  "model": "layout",
+  "meta": {
+    "createdAt": "2026-01-13T10:00:00Z",
+    "updatedAt": "2026-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "title": "Spots Bento 6a",
+    "content": [
+      { "$ref": "content-card/spot-1" },
+      { "$ref": "content-card/spot-2" },
+      { "$ref": "content-card/spot-3" },
+      { "$ref": "content-card/spot-4" },
+      { "$ref": "content-card/spot-1" }
+    ]
+  }
+}

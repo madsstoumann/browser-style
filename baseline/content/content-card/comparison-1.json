@@ -1,0 +1,68 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "comparison-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Data/Comparison"
+  },
+  "fields": {
+    "headline": "Headphone Comparison: Premium vs Pro",
+    "summary": "Compare features, pricing, and performance between our two flagship headphone models.",
+    "category": "Product Comparison",
+    "data": {
+      "type": "comparison",
+      "comparison": {
+        "items": [
+          {
+            "name": "AuraSound Premium",
+            "price": "$199",
+            "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=200&fit=crop&auto=format"
+          },
+          {
+            "name": "AuraSound Pro",
+            "price": "$299",
+            "image": "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300&h=200&fit=crop&auto=format"
+          }
+        ],
+        "criteria": [
+          {
+            "feature": "Battery Life",
+            "premium": "25 hours",
+            "pro": "30 hours",
+            "winner": "pro"
+          },
+          {
+            "feature": "Noise Cancellation",
+            "premium": "Good",
+            "pro": "Excellent",
+            "winner": "pro"
+          },
+          {
+            "feature": "Weight",
+            "premium": "280g",
+            "pro": "320g",
+            "winner": "premium"
+          },
+          {
+            "feature": "Wireless Range",
+            "premium": "10m",
+            "pro": "15m",
+            "winner": "pro"
+          }
+        ],
+        "recommendation": "pro",
+        "summary": "AuraSound Pro offers superior performance for professionals and audiophiles"
+      },
+      "actions": [
+        {
+          "text": "View Full Comparison",
+          "icon": "compare_arrows"
+        }
+      ]
+    }
+  }
+}

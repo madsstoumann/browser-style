@@ -1,0 +1,20 @@
+{
+  "$schema": "../../models/social-link.schema.json",
+  "id": "bluesky",
+  "model": "social-link",
+  "meta": {
+    "createdAt": "2026-02-01T08:00:00Z",
+    "updatedAt": "2026-02-01T08:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "platform": "Bluesky",
+    "url": "https://bsky.app/profile/example.com",
+    "icon": {
+      "$asset": "assets/icons/social/bluesky.svg",
+      "url": "https://example.com/icons/social/bluesky.svg",
+      "title": "Bluesky"
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "video-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2024-12-15T10:30:00Z",
+    "updatedAt": "2024-12-15T10:30:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media/Video"
+  },
+  "fields": {
+    "headline": "Peaceful River Journey",
+    "category": "Video",
+    "data": {
+      "type": "article",
+      "content": {
+        "published": {
+          "datetime": "2024-12-15T10:30:00Z",
+          "formatted": "Dec 15, 2024"
+        }
+      },
+      "actions": [
+        {
+          "text": "Watch Video",
+          "popover": {
+            "video": {
+              "src": "https://assets.stoumann.dk/video/river.mp4",
+              "name": "Peaceful River Journey",
+              "description": "A serene video showcasing the peaceful flow of a river through nature",
+              "uploadDate": "2024-12-15T10:30:00Z",
+              "thumbnailUrl": "https://browser.style/assets/images/river.png",
+              "options": {
+                "controls": true,
+                "autoplay": true,
+                "playsinline": true
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

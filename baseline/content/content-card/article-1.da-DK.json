@@ -1,0 +1,74 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "article-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2024-12-15T09:00:00Z",
+    "updatedAt": "2024-12-16T14:30:00Z",
+    "locale": "da-DK",
+    "status": "published",
+    "folder": "Cards/Article"
+  },
+  "fields": {
+    "headline": "Mestre interaktive popovers i moderne webdesign",
+    "subheadline": "En omfattende guide til at skabe tilgængelige og engagerende popover-oplevelser",
+    "summary": "Lær hvordan du implementerer interaktive popovers, der forbedrer brugeroplevelsen uden at gå på kompromis med tilgængeligheden. Denne guide dækker bedste praksis, implementeringsmønstre og eksempler fra den virkelige verden.",
+    "category": "Webudvikling",
+    "tags": [
+      "UX Design",
+      "JavaScript",
+      "Tilgængelighed",
+      "Frontend"
+    ],
+    "data": {
+      "type": "article",
+      "content": {
+        "text": "<p>Interaktive popovers er blevet en hjørnesten i moderne webdesign, der giver kontekstuel information og handlinger uden at forstyrre brugerens flow. I denne omfattende guide vil vi udforske principperne bag effektivt popover-design og implementering.</p><p>Fra tilgængelighedsovervejelser til ydeevneoptimering dækker vi alt, hvad du skal vide for at skabe popovers, der begejstrer brugerne og opfylder moderne webstandarder.</p>",
+        "published": {
+          "datetime": "2024-12-15T09:00:00Z",
+          "formatted": "15. december 2024"
+        },
+        "modified": {
+          "datetime": "2024-12-16T14:30:00Z",
+          "formatted": "16. december 2024"
+        },
+        "readingTime": "8 min læsetid"
+      },
+      "authors": [
+        {
+          "name": "Sarah Chen",
+          "role": "UX Ingeniør",
+          "email": "sarah.chen@example.com",
+          "sameAs": [
+            "https://twitter.com/sarahuxchen",
+            "https://github.com/sarahchen"
+          ]
+        }
+      ],
+      "engagement": {
+        "viewCount": 2840,
+        "likeCount": 156,
+        "shareCount": 42,
+        "commentCount": 23
+      },
+      "actions": [
+        {
+          "text": "Læs mere i popover",
+          "popover": {
+            "content": "<h3>Flere detaljer</h3><p>Dette er en lille artikel inde i en popover.</p><p>Den kan indeholde ethvert HTML-indhold.</p><p>Dette demonstrerer fleksibiliteten af popover-komponenten.</p><p>Klik på luk-knappen for at afvise.</p>"
+          }
+        }
+      ],
+      "links": [
+        {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/API/Popover_API",
+          "text": "MDN Popover API"
+        },
+        {
+          "url": "https://web.dev/popover-api/",
+          "text": "web.dev Guide"
+        }
+      ]
+    }
+  }
+}

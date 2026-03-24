@@ -1,0 +1,49 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "announcement-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-08-20T09:00:00Z",
+    "updatedAt": "2025-08-20T09:00:00Z",
+    "locale": "de-DE",
+    "status": "published",
+    "folder": "Cards/Announcement"
+  },
+  "fields": {
+    "headline": "Geplante Wartung - 25. August",
+    "summary": "Unsere Dienste werden vorübergehend nicht verfügbar sein aufgrund geplanter Wartungsarbeiten. Bitte planen Sie entsprechend.",
+    "data": {
+      "type": "announcement",
+      "content": {
+        "published": {
+          "datetime": "2025-08-20T09:00:00Z",
+          "formatted": "20. August 2025"
+        }
+      },
+      "announcement": {
+        "priority": "high",
+        "announcementType": "maintenance",
+        "effectiveDate": {
+          "start": "2025-08-25T02:00:00Z",
+          "end": "2025-08-25T06:00:00Z"
+        },
+        "targetAudience": "Alle Benutzer",
+        "actionRequired": "Keine - Dienste werden automatisch fortgesetzt",
+        "isDismissible": false
+      },
+      "sticker": {
+        "text": "DRINGEND",
+        "style": "badge",
+        "position": "top-right"
+      },
+      "actions": [
+        {
+          "text": "Details anzeigen",
+          "popover": {
+            "content": "<h3>Wartungsdetails</h3><p>Wir aktualisieren unsere Datenbankserver, um Leistung und Zuverlässigkeit zu verbessern.</p><p>Dauer: 4 Stunden (02:00 - 06:00 MEZ)</p>"
+          }
+        }
+      ]
+    }
+  }
+}

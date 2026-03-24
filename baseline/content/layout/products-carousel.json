@@ -1,0 +1,24 @@
+{
+  "$schema": "../../models/layout.schema.json",
+  "id": "products-carousel",
+  "model": "layout",
+  "meta": {
+    "createdAt": "2026-01-13T10:00:00Z",
+    "updatedAt": "2026-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "title": "Products Carousel",
+    "content": [
+      { "$ref": "content-card/product-1" },
+      { "$ref": "content-card/product-2" },
+      { "$ref": "content-card/product-3" },
+      { "$ref": "content-card/product-4" },
+      { "$ref": "content-card/product-5" },
+      { "$ref": "content-card/product-6" },
+      { "$ref": "content-card/product-7" },
+      { "$ref": "content-card/product-8" }
+    ]
+  }
+}

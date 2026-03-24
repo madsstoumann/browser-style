@@ -1,0 +1,15 @@
+{
+  "$schema": "../../models/error-page.schema.json",
+  "id": "401",
+  "model": "error-page",
+  "meta": {
+    "createdAt": "2026-03-22T12:00:00Z",
+    "updatedAt": "2026-03-22T12:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "status_code": "401",
+    "page_id": { "$ref": "page/not-authenticated" }
+  }
+}

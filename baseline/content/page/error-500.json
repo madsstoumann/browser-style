@@ -1,0 +1,19 @@
+{
+  "$schema": "../../models/page.schema.json",
+  "id": "error-500",
+  "model": "page",
+  "meta": {
+    "createdAt": "2026-01-10T08:00:00Z",
+    "updatedAt": "2026-02-20T14:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "title": "Something Went Wrong",
+    "url": "/500",
+    "description": "We encountered an unexpected error. Our team has been notified.",
+    "robots": ["noindex", "nofollow"],
+    "og_title": "500 — Server Error",
+    "og_description": "Something went wrong on our end. Please try again later."
+  }
+}

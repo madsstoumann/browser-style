@@ -1,0 +1,46 @@
+{
+  "$schema": "../../models/crawler-config.schema.json",
+  "id": "default",
+  "model": "crawler-config",
+  "meta": {
+    "createdAt": "2026-02-01T08:00:00Z",
+    "updatedAt": "2026-03-10T11:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "title": "Crawler Config",
+    "robots_txt": "User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /preview/\nDisallow: /api/\n\nUser-agent: GPTBot\nAllow: /\nDisallow: /admin/\n\nUser-agent: Google-Extended\nAllow: /\n\nSitemap: https://example.com/sitemap.xml",
+    "manifest": {
+      "name": "Generic Site",
+      "short_name": "GS",
+      "description": "A modern website with products, documentation, and resources",
+      "start_url": "/",
+      "display": "standalone",
+      "background_color": "#ffffff",
+      "theme_color": "#0f172a"
+    },
+    "app_icon_small": {
+      "$asset": "assets/icon-192.png",
+      "url": "https://example.com/icons/icon-192.png",
+      "title": "App Icon 192x192"
+    },
+    "app_icon_medium": {
+      "$asset": "assets/icon-384.png",
+      "url": "https://example.com/icons/icon-384.png",
+      "title": "App Icon 384x384"
+    },
+    "app_icon_large": {
+      "$asset": "assets/icon-512.png",
+      "url": "https://example.com/icons/icon-512.png",
+      "title": "App Icon 512x512"
+    },
+    "llms_enabled": true,
+    "llms_preamble": "Generic Site provides products, documentation, and resources for developers and designers. The site includes guides, examples, and a blog covering best practices.",
+    "llms_exclude_patterns": [
+      "/admin/*",
+      "/preview/*",
+      "/api/*"
+    ]
+  }
+}

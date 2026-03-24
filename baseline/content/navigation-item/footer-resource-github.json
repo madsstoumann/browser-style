@@ -1,0 +1,17 @@
+{
+  "$schema": "../../models/navigation-item.schema.json",
+  "id": "footer-resource-github",
+  "model": "navigation-item",
+  "meta": {
+    "createdAt": "2026-03-18T10:00:00Z",
+    "updatedAt": "2026-03-18T10:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "type": "link",
+    "label": "GitHub",
+    "url": "https://github.com/example/generic-site",
+    "target": "_blank"
+  }
+}

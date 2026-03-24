@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "navigation",
+  "title": "Navigation",
+  "description": "Navigation container for any purpose (header, footer, sidebar, mega menu, etc.)",
+  "metadata": {
+    "version": "2.0.0",
+    "lastModified": "2026-03-18",
+    "displayField": "name"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Navigation"
+  },
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Navigation Name",
+      "description": "Descriptive name (e.g. \"Main Header\", \"Footer\", \"Sidebar\", \"Account Menu\")"
+    },
+    "description": {
+      "type": "text",
+      "title": "Description",
+      "description": "Internal description for CMS editors"
+    },
+    "items": {
+      "type": "reference",
+      "title": "Items",
+      "description": "Top-level navigation items (links, groups, dividers). Array order determines display order.",
+      "options": {
+        "referenceType": "navigation-item",
+        "multiple": true
+      }
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

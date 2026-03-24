@@ -1,0 +1,20 @@
+{
+  "$schema": "../../models/social-link.schema.json",
+  "id": "github",
+  "model": "social-link",
+  "meta": {
+    "createdAt": "2026-01-15T08:00:00Z",
+    "updatedAt": "2026-01-15T08:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "platform": "GitHub",
+    "url": "https://github.com/example/generic-site",
+    "icon": {
+      "$asset": "assets/icons/social/github.svg",
+      "url": "https://example.com/icons/social/github.svg",
+      "title": "GitHub"
+    }
+  }
+}

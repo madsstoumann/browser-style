@@ -1,0 +1,17 @@
+{
+  "$schema": "../../models/layout.schema.json",
+  "id": "footer-business",
+  "model": "layout",
+  "meta": {
+    "createdAt": "2026-01-13T10:00:00Z",
+    "updatedAt": "2026-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "title": "Footer Business",
+    "content": [
+      { "$ref": "content-card/business-1" }
+    ]
+  }
+}

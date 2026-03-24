@@ -1,0 +1,54 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "social-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-08-21T14:30:00Z",
+    "updatedAt": "2025-08-21T14:30:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media/Social"
+  },
+  "fields": {
+    "headline": "Just shipped a major update to our design system!",
+    "summary": "New components, improved accessibility, and better documentation. Check it out and let us know what you think!",
+    "data": {
+      "type": "social",
+      "content": {
+        "published": {
+          "datetime": "2025-08-21T14:30:00Z",
+          "formatted": "2 hours ago"
+        }
+      },
+      "social": {
+        "platform": "Twitter",
+        "postContent": "Just shipped a major update to our design system! New components, improved accessibility, and better documentation. Check it out and let us know what you think! #DesignSystems #UX",
+        "author": "@DesignTeam",
+        "engagement": {
+          "likes": 156,
+          "shares": 42,
+          "comments": 18
+        },
+        "hashtags": [
+          "#DesignSystems",
+          "#UX",
+          "#Accessibility"
+        ],
+        "mediaAttachments": [
+          "https://images.unsplash.com/photo-1559028006-448665bd7c7f?w=500&h=300&fit=crop&auto=format"
+        ]
+      },
+      "actions": [
+        {
+          "text": "View on Twitter",
+          "url": "https://twitter.com/designteam/status/123456789",
+          "icon": "open_in_new"
+        },
+        {
+          "text": "Share",
+          "icon": "share"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "membership-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Service/Membership"
+  },
+  "fields": {
+    "headline": "Professional Plan",
+    "summary": "Everything you need to scale your business. Advanced features, priority support, and unlimited projects.",
+    "category": "Subscription Plan",
+    "data": {
+      "type": "membership",
+      "membership": {
+        "planName": "Professional",
+        "price": {
+          "monthly": "29.99",
+          "yearly": "299.99",
+          "currency": "USD",
+          "savings": "20% off annual"
+        },
+        "features": [
+          "Unlimited projects",
+          "Advanced analytics",
+          "Priority email support",
+          "Custom integrations",
+          "Team collaboration (up to 10 users)",
+          "99.9% uptime SLA"
+        ],
+        "limitations": [
+          "10 team members max",
+          "50GB storage"
+        ],
+        "trialPeriod": "14 days free",
+        "isPopular": true
+      },
+      "ribbon": {
+        "text": "Most Popular",
+        "style": "popular"
+      },
+      "actions": [
+        {
+          "text": "Start Free Trial",
+          "icon": "play_arrow"
+        },
+        {
+          "text": "Compare Plans",
+          "icon": "compare_arrows"
+        }
+      ]
+    }
+  }
+}

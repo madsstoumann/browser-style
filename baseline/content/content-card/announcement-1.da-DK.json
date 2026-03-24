@@ -1,0 +1,49 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "announcement-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-08-20T09:00:00Z",
+    "updatedAt": "2025-08-20T09:00:00Z",
+    "locale": "da-DK",
+    "status": "published",
+    "folder": "Cards/Announcement"
+  },
+  "fields": {
+    "headline": "Planlagt vedligeholdelse - 25. august",
+    "summary": "Vores tjenester vil midlertidigt ikke være tilgængelige på grund af planlagt vedligeholdelse. Planlæg venligst i overensstemmelse hermed.",
+    "data": {
+      "type": "announcement",
+      "content": {
+        "published": {
+          "datetime": "2025-08-20T09:00:00Z",
+          "formatted": "20. august 2025"
+        }
+      },
+      "announcement": {
+        "priority": "high",
+        "announcementType": "maintenance",
+        "effectiveDate": {
+          "start": "2025-08-25T02:00:00Z",
+          "end": "2025-08-25T06:00:00Z"
+        },
+        "targetAudience": "Alle brugere",
+        "actionRequired": "Ingen - tjenesterne genoptages automatisk",
+        "isDismissible": false
+      },
+      "sticker": {
+        "text": "VIGTIGT",
+        "style": "badge",
+        "position": "top-right"
+      },
+      "actions": [
+        {
+          "text": "Se detaljer",
+          "popover": {
+            "content": "<h3>Vedligeholdelsesdetaljer</h3><p>Vi opgraderer vores databaseservere for at forbedre ydeevne og pålidelighed.</p><p>Varighed: 4 timer (02:00 - 06:00 CET)</p>"
+          }
+        }
+      ]
+    }
+  }
+}

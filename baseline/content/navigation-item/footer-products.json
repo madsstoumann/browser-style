@@ -1,0 +1,21 @@
+{
+  "$schema": "../../models/navigation-item.schema.json",
+  "id": "footer-products",
+  "model": "navigation-item",
+  "meta": {
+    "createdAt": "2026-03-18T10:00:00Z",
+    "updatedAt": "2026-03-18T10:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "type": "group",
+    "label": "Products",
+    "children": [
+      { "$ref": "navigation-item/footer-product-components" },
+      { "$ref": "navigation-item/footer-product-examples" },
+      { "$ref": "navigation-item/footer-product-pricing" },
+      { "$ref": "navigation-item/footer-product-changelog" }
+    ]
+  }
+}

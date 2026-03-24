@@ -1,0 +1,25 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "spot-3",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Spot"
+  },
+  "fields": {
+    "headline": "Autumn",
+    "data": {
+      "type": "spot",
+      "links": [
+        {
+          "hideText": true,
+          "url": "#autumn",
+          "text": "Read more"
+        }
+      ]
+    }
+  }
+}

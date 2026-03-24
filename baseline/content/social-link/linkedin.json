@@ -1,0 +1,20 @@
+{
+  "$schema": "../../models/social-link.schema.json",
+  "id": "linkedin",
+  "model": "social-link",
+  "meta": {
+    "createdAt": "2026-01-15T08:00:00Z",
+    "updatedAt": "2026-01-15T08:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "platform": "LinkedIn",
+    "url": "https://www.linkedin.com/company/example-corp",
+    "icon": {
+      "$asset": "assets/icons/social/linkedin.svg",
+      "url": "https://example.com/icons/social/linkedin.svg",
+      "title": "LinkedIn"
+    }
+  }
+}

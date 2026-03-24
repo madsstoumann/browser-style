@@ -1,0 +1,33 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "product-8",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Commerce/Product"
+  },
+  "fields": {
+    "headline": "SlimFold Wallet",
+    "category": "Accessories",
+    "data": {
+      "type": "product",
+      "product": {
+        "price": {
+          "current": "45.00",
+          "currency": "USD"
+        },
+        "availability": "In Stock"
+      },
+      "sku": "UP-BLK-008",
+      "actions": [
+        {
+          "text": "Add to Cart",
+          "icon": "add_to_basket"
+        }
+      ]
+    }
+  }
+}

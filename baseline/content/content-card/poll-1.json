@@ -1,0 +1,78 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "poll-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Data/Poll"
+  },
+  "fields": {
+    "headline": "What's your favorite front-end framework?",
+    "summary": "Help us understand what the community loves to build with.",
+    "category": "Community Poll",
+    "data": {
+      "type": "poll",
+      "content": {
+        "text": [
+          {
+            "id": "react",
+            "headline": "React",
+            "text": "A JavaScript library for building user interfaces"
+          },
+          {
+            "id": "vue",
+            "headline": "Vue.js",
+            "text": "The progressive JavaScript framework"
+          },
+          {
+            "id": "svelte",
+            "headline": "Svelte",
+            "text": "Cybernetically enhanced web apps"
+          },
+          {
+            "id": "angular",
+            "headline": "Angular",
+            "text": "Platform for building mobile and desktop web applications"
+          },
+          {
+            "id": "other",
+            "headline": "Other",
+            "text": "Something else entirely"
+          }
+        ]
+      },
+      "poll": {
+        "endpoint": "./api/polls/poll-1.json",
+        "allowMultiple": false,
+        "showResults": "afterVote",
+        "totalVotes": 5420,
+        "labels": {
+          "vote": "Vote",
+          "submitVote": "Submit Vote",
+          "results": "Results",
+          "totalVotes": "Total votes:",
+          "votes": "votes",
+          "fallbackTitle": "Poll"
+        }
+      },
+      "engagement": {
+        "viewCount": 5420
+      },
+      "actions": [
+        {
+          "text": "Vote",
+          "attributes": {
+            "type": "submit",
+            "itemscope": true,
+            "itemtype": "https://schema.org/VoteAction",
+            "data-target": "#poll-1",
+            "data-object": "Which JavaScript framework do you prefer?"
+          }
+        }
+      ]
+    }
+  }
+}

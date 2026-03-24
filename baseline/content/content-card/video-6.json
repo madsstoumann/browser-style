@@ -1,0 +1,38 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "video-6",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2023-03-22T11:15:00Z",
+    "updatedAt": "2023-03-22T11:15:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media/Video"
+  },
+  "fields": {
+    "data": {
+      "type": "article",
+      "actions": [
+        {
+          "text": "Watch Video",
+          "popover": {
+            "video": {
+              "type": "youtube",
+              "src": "https://www.youtube.com/watch?v=5b4YcLB4DVI",
+              "alt": "Building a UI component library",
+              "description": "Learn how to build a comprehensive UI component library for modern web development",
+              "uploadDate": "2023-03-22T11:15:00Z",
+              "thumbnailUrl": "https://i.ytimg.com/vi/5b4YcLB4DVI/hqdefault.jpg",
+              "options": {
+                "controls": true,
+                "muted": true,
+                "autoplay": true,
+                "playsinline": true
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

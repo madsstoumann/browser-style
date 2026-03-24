@@ -1,0 +1,356 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "demo",
+  "title": "Demo",
+  "description": "Showcases every UCM field type — use as a reference and test fixture.",
+  "metadata": {
+    "version": "2.0.0",
+    "lastModified": "2026-03-11",
+    "displayField": "title",
+    "isPage": true
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Demo",
+    "layout": [
+      {
+        "type": "tab",
+        "name": "Content",
+        "fields": ["title", "slug", "description", "body", "readme", "category", "tags", "bulletPoints"]
+      },
+      {
+        "type": "tab",
+        "name": "Media & References",
+        "fields": ["heroImage", "croppedImage", "author", "relatedItems", "callToAction"]
+      },
+      {
+        "type": "tab",
+        "name": "Composition",
+        "fields": ["pageContent"]
+      },
+      {
+        "type": "tab",
+        "name": "Data",
+        "fields": ["isActive", "rating", "score", "volume", "publishDate", "eventTime", "contactEmail", "externalLink", "settings", "systemId"]
+      },
+      {
+        "type": "tab",
+        "name": "Design",
+        "fields": ["brandColor", "accentColor"]
+      },
+      {
+        "type": "tab",
+        "name": "Preferences",
+        "fields": ["priority", "features"]
+      },
+      {
+        "type": "tab",
+        "name": "Location",
+        "fields": ["location"]
+      }
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Title",
+      "description": "Primary headline",
+      "validation": {
+        "required": true,
+        "maxLength": 100
+      }
+    },
+    "slug": {
+      "type": "slug",
+      "title": "URL Slug",
+      "description": "URL-friendly identifier, auto-generated from title",
+      "validation": {
+        "required": true,
+        "unique": true,
+        "pattern": "^[a-z0-9-]+$",
+        "prohibitPattern": "(admin|api|system)"
+      },
+      "options": {
+        "source": "title"
+      }
+    },
+    "description": {
+      "type": "text",
+      "title": "Description",
+      "description": "Multi-line plain text summary",
+      "validation": {
+        "maxLength": 500
+      }
+    },
+    "body": {
+      "type": "richtext",
+      "title": "Body",
+      "description": "Rich text content with formatting, images and embeds",
+      "options": {
+        "allowImages": true,
+        "allowEmbeds": true,
+        "allowedContentTypes": ["content-card"]
+      }
+    },
+    "readme": {
+      "type": "markdown",
+      "title": "README",
+      "description": "Markdown-formatted supplementary content"
+    },
+    "isActive": {
+      "type": "boolean",
+      "title": "Active",
+      "description": "Whether this item is active/published",
+      "default": false
+    },
+    "rating": {
+      "type": "number",
+      "title": "Rating",
+      "description": "Numeric rating value",
+      "validation": {
+        "minimum": 0,
+        "maximum": 5
+      }
+    },
+    "score": {
+      "type": "number",
+      "title": "Score",
+      "description": "Star-based score selector (ui.widget: rating)",
+      "validation": {
+        "minimum": 0,
+        "maximum": 5
+      },
+      "ui": {
+        "widget": "rating",
+        "stars": 5
+      }
+    },
+    "volume": {
+      "type": "number",
+      "title": "Volume",
+      "description": "Slider control for numeric range (ui.widget: slider)",
+      "validation": {
+        "minimum": 0,
+        "maximum": 100
+      },
+      "ui": {
+        "widget": "slider",
+        "step": 5
+      }
+    },
+    "publishDate": {
+      "type": "date",
+      "title": "Publish Date",
+      "description": "Date of publication (no time component)",
+      "validation": {
+        "required": true
+      }
+    },
+    "eventTime": {
+      "type": "datetime",
+      "title": "Event Time",
+      "description": "Full date and time with timezone"
+    },
+    "contactEmail": {
+      "type": "string",
+      "title": "Contact Email",
+      "description": "Email address field (format: email)",
+      "format": "email"
+    },
+    "externalLink": {
+      "type": "url",
+      "title": "External Link",
+      "description": "URL to an external resource"
+    },
+    "category": {
+      "type": "select",
+      "title": "Category",
+      "description": "Content category",
+      "options": [
+        { "value": "news", "label": "News" },
+        { "value": "tutorial", "label": "Tutorial" },
+        { "value": "case-study", "label": "Case Study" },
+        { "value": "announcement", "label": "Announcement" }
+      ]
+    },
+    "tags": {
+      "type": "tags",
+      "title": "Tags",
+      "description": "Keywords for categorisation and search",
+      "options": {
+        "maxTags": 10,
+        "autocomplete": true,
+        "allowCustom": true,
+        "suggestions": ["technology", "design", "development", "tutorial", "news"]
+      }
+    },
+    "heroImage": {
+      "type": "media",
+      "title": "Hero Image",
+      "description": "Primary image asset",
+      "options": {
+        "accept": ["image/*"]
+      }
+    },
+    "croppedImage": {
+      "type": "media",
+      "title": "Cropped Image",
+      "description": "Image with focal point and predefined crop definitions",
+      "options": {
+        "accept": ["image/*"],
+        "focalPoint": true,
+        "crops": [
+          { "alias": "wide", "width": 1200, "height": 400 },
+          { "alias": "square", "width": 600, "height": 600 },
+          { "alias": "thumbnail", "width": 150, "height": 150 }
+        ]
+      }
+    },
+    "author": {
+      "type": "reference",
+      "title": "Author",
+      "description": "Reference to a content card (author profile)",
+      "options": {
+        "referenceType": "content-card",
+        "multiple": false
+      }
+    },
+    "relatedItems": {
+      "type": "array",
+      "title": "Related Items",
+      "description": "Ordered list of related content references",
+      "items": {
+        "type": "reference",
+        "options": {
+          "referenceType": ["content-card", "demo"]
+        }
+      },
+      "validation": {
+        "maxItems": 5
+      }
+    },
+    "callToAction": {
+      "type": "link",
+      "title": "Call to Action",
+      "description": "Polymorphic link — internal page, external URL, or media download",
+      "options": {
+        "allowInternal": true,
+        "allowExternal": true,
+        "allowMedia": true,
+        "allowedContentTypes": ["page", "content-card"]
+      }
+    },
+    "pageContent": {
+      "type": "blocks",
+      "title": "Page Content",
+      "description": "Composable content blocks for page layout",
+      "options": {
+        "allowedContentTypes": ["content-card"]
+      },
+      "validation": {
+        "minItems": 1,
+        "maxItems": 20
+      }
+    },
+    "settings": {
+      "type": "object",
+      "title": "Settings",
+      "description": "Arbitrary JSON data for configuration"
+    },
+    "systemId": {
+      "type": "string",
+      "title": "System ID",
+      "description": "Read-only system identifier (ui.widget: readonly)",
+      "ui": {
+        "widget": "readonly"
+      }
+    },
+    "priority": {
+      "type": "select",
+      "title": "Priority",
+      "description": "Single select rendered as radio buttons (ui.widget: radio)",
+      "options": [
+        { "value": "low", "label": "Low" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "high", "label": "High" },
+        { "value": "critical", "label": "Critical" }
+      ],
+      "ui": {
+        "widget": "radio"
+      }
+    },
+    "features": {
+      "type": "select",
+      "title": "Features",
+      "description": "Multi-select rendered as checkboxes (ui.widget: checkbox)",
+      "options": {
+        "multiple": true,
+        "choices": [
+          { "value": "wifi", "label": "WiFi" },
+          { "value": "parking", "label": "Parking" },
+          { "value": "pool", "label": "Pool" },
+          { "value": "gym", "label": "Gym" }
+        ]
+      },
+      "ui": {
+        "widget": "checkbox"
+      }
+    },
+    "bulletPoints": {
+      "type": "array",
+      "title": "Bullet Points",
+      "description": "Repeatable text strings (ui.widget: repeatable)",
+      "items": {
+        "type": "string"
+      },
+      "ui": {
+        "widget": "repeatable"
+      }
+    },
+    "brandColor": {
+      "type": "color",
+      "title": "Brand Color",
+      "description": "Pick from a predefined palette of brand colors (labeled presets)",
+      "options": {
+        "format": "hex",
+        "presets": [
+          { "value": "#ecaba4", "label": "bg-coral" },
+          { "value": "#583459", "label": "bg-purple" },
+          { "value": "#09bc8a", "label": "bg-green" },
+          { "value": "#fbfeb5", "label": "bg-yellow" },
+          { "value": "#1d57f3", "label": "bg-blue" },
+          { "value": "#111316", "label": "bg-black" },
+          { "value": "#ffffff", "label": "bg-white" },
+          { "value": "#dfdcd3", "label": "bg-gray" },
+          { "value": "#f4f3f0", "label": "bg-gray-light" },
+          { "value": "#b09293", "label": "bg-pink" }
+        ]
+      }
+    },
+    "accentColor": {
+      "type": "color",
+      "title": "Accent Color",
+      "description": "Free-form color picker — any hex value",
+      "options": {
+        "format": "hex"
+      },
+      "validation": {
+        "pattern": "^#[0-9A-Fa-f]{6}$"
+      },
+      "ui": {
+        "widget": "color-picker"
+      }
+    },
+    "location": {
+      "type": "geopoint",
+      "title": "Location",
+      "description": "Geographic coordinates for mapping"
+    }
+  },
+  "required": [
+    "title",
+    "slug",
+    "publishDate"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "content-2",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-02T14:30:00Z",
+    "updatedAt": "2025-01-02T14:30:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Content"
+  },
+  "fields": {
+    "headline": "Minimal Content Display",
+    "summary": "Sometimes you just need a simple card without the complexity of specialized schemas. The content card provides exactly that.",
+    "category": "Showcase",
+    "data": {
+      "type": "content",
+      "content": {
+        "published": {
+          "datetime": "2025-01-02T14:30:00Z",
+          "formatted": "January 2, 2025"
+        }
+      },
+      "links": [
+        {
+          "url": "#",
+          "text": "View Details",
+          "isWrapper": true
+        }
+      ]
+    }
+  }
+}

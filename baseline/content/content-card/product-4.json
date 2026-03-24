@@ -1,0 +1,52 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "product-4",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Commerce/Product"
+  },
+  "fields": {
+    "headline": "ErgoComfort Pro",
+    "summary": "Professional ergonomic office chair with lumbar support and adjustable height settings.",
+    "category": "Furniture",
+    "tags": [
+      "Ergonomic",
+      "Office",
+      "Adjustable"
+    ],
+    "data": {
+      "type": "product",
+      "content": {
+        "text": "Designed for long work sessions. Features breathable mesh back, memory foam seat, and full adjustability for maximum comfort."
+      },
+      "product": {
+        "price": {
+          "current": "350.00",
+          "currency": "USD"
+        },
+        "availability": "Ships in 2-3 days",
+        "rating": {
+          "value": 1.9,
+          "count": 120,
+          "max": 5,
+          "min": 0
+        }
+      },
+      "engagement": {
+        "viewCount": 1890,
+        "shareCount": 12
+      },
+      "sku": "ECP-GRY-004",
+      "actions": [
+        {
+          "text": "Add to Cart",
+          "icon": "add_to_basket"
+        }
+      ]
+    }
+  }
+}

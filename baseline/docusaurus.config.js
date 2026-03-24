@@ -1,0 +1,82 @@
+// @ts-check
+
+/** @type {import('@docusaurus/types').Config} */
+const config = {
+  title: 'Baseline',
+  tagline: 'CMS-agnostic content architecture',
+  url: 'https://browser.style',
+  baseUrl: '/baseline/',
+  onBrokenLinks: 'throw',
+  favicon: 'img/favicon.ico',
+
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en'],
+  },
+
+  presets: [
+    [
+      'classic',
+      /** @type {import('@docusaurus/preset-classic').Options} */
+      ({
+        docs: {
+          routeBasePath: '/',
+          sidebarPath: './sidebars.js',
+          editUrl: 'https://github.com/madsstoumann/browser-style/edit/main/baseline/',
+        },
+        blog: false,
+        theme: {
+          customCss: './src/css/custom.css',
+        },
+      }),
+    ],
+  ],
+
+  themeConfig:
+    /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
+    ({
+      navbar: {
+        title: 'Baseline',
+        items: [
+          {
+            type: 'docSidebar',
+            sidebarId: 'docs',
+            position: 'left',
+            label: 'Documentation',
+          },
+          {
+            href: 'https://github.com/madsstoumann/browser-style/tree/main/baseline',
+            label: 'GitHub',
+            position: 'right',
+          },
+        ],
+      },
+      footer: {
+        style: 'dark',
+        links: [
+          {
+            title: 'Docs',
+            items: [
+              { label: 'Introduction', to: '/' },
+              { label: 'Site', to: '/content/site' },
+              { label: 'Page', to: '/content/page' },
+            ],
+          },
+          {
+            title: 'Guides',
+            items: [
+              { label: 'Vercel', to: '/guides/vercel' },
+              { label: 'Cloudflare', to: '/guides/cloudflare' },
+            ],
+          },
+        ],
+        copyright: `Copyright © ${new Date().getFullYear()} browser.style`,
+      },
+      prism: {
+        theme: require('prism-react-renderer').themes.github,
+        darkTheme: require('prism-react-renderer').themes.dracula,
+      },
+    }),
+};
+
+module.exports = config;

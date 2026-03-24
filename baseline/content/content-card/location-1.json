@@ -1,0 +1,57 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "location-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Business/Location"
+  },
+  "fields": {
+    "headline": "Golden Gate Bridge",
+    "summary": "Iconic suspension bridge connecting San Francisco to Marin County. One of the most photographed structures in the world.",
+    "category": "Tourist Destination",
+    "data": {
+      "type": "location",
+      "location": {
+        "address": {
+          "streetAddress": "Golden Gate Bridge",
+          "addressLocality": "San Francisco",
+          "addressRegion": "CA",
+          "addressCountry": "US"
+        },
+        "geo": {
+          "latitude": "37.8199",
+          "longitude": "-122.4783"
+        },
+        "hours": "Always open",
+        "contact": "+1-415-921-5858",
+        "amenities": [
+          "Visitor Center",
+          "Gift Shop",
+          "Parking",
+          "Bike Rental",
+          "Guided Tours"
+        ],
+        "rating": {
+          "value": 4.7,
+          "count": 95000,
+          "max": 5
+        }
+      },
+      "actions": [
+        {
+          "text": "Get Directions",
+          "icon": "directions"
+        },
+        {
+          "text": "Visit Website",
+          "url": "https://goldengatebridge.org",
+          "icon": "open_in_new"
+        }
+      ]
+    }
+  }
+}

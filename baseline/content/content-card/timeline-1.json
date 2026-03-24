@@ -1,0 +1,35 @@
+{
+  "$schema": "../../models/content-card.schema.json",
+  "id": "timeline-1",
+  "model": "content-card",
+  "meta": {
+    "createdAt": "2025-01-13T10:00:00Z",
+    "updatedAt": "2025-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Data/Timeline"
+  },
+  "fields": {
+    "headline": "Milestones in Quantum Computing",
+    "category": "History",
+    "data": {
+      "type": "timeline",
+      "content": {
+        "text": [
+          {
+            "headline": "1980s",
+            "text": "Theoretical foundations of quantum computing are established."
+          },
+          {
+            "headline": "1994",
+            "text": "Peter Shor develops Shor's algorithm, showing quantum computers can factor large numbers efficiently."
+          },
+          {
+            "headline": "2020s",
+            "text": "Quantum computers achieve quantum supremacy on specific tasks."
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "../../models/layout.schema.json",
+  "id": "article-poll-grid",
+  "model": "layout",
+  "meta": {
+    "createdAt": "2026-01-13T10:00:00Z",
+    "updatedAt": "2026-01-13T10:00:00Z",
+    "locale": "en-US",
+    "status": "published"
+  },
+  "fields": {
+    "title": "Article Poll Grid",
+    "content": [
+      { "$ref": "content-card/article-1" },
+      { "$ref": "content-card/poll-1" }
+    ]
+  }
+}
