@@ -1,0 +1,2321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WPP Adaptable Card — Layout Visualizer</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,300&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+:root {
+  --card-radius: 6px;
+  --media-bg: #e8e0d8;
+  --media-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' fill='none'%3E%3Crect width='120' height='120' rx='60' fill='%23c4b8aa'/%3E%3Cpath d='M60 35c-8 0-14 6-14 14s6 14 14 14 14-6 14-14-6-14-14-14Zm-24 50c0-12 16-18 24-18s24 6 24 18' stroke='%23a89888' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E");
+  --surface: #fff;
+  --surface-alt: #f7f5f2;
+  --ink: #1a1a1a;
+  --ink-muted: #6b6560;
+  --accent: #e84e1b;
+  --accent-light: #fff0eb;
+  --tag-bg: #f0ece8;
+  --border: #e0dbd5;
+  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04);
+  --shadow-hover: 0 2px 8px rgba(0,0,0,.08), 0 8px 24px rgba(0,0,0,.06);
+}
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--surface-alt);
+  color: var(--ink);
+  line-height: 1.5;
+  padding: 0 0 6rem;
+}
+
+/* ═══════════════════════════════════════════════════
+   PAGE HEADER
+   ═══════════════════════════════════════════════════ */
+.page-header {
+  background: var(--ink);
+  color: #fff;
+  padding: 3rem 2rem 2.5rem;
+  margin-bottom: 3rem;
+}
+.page-header h1 {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.3rem;
+}
+.page-header p {
+  color: #a09890;
+  font-size: 1rem;
+  font-weight: 300;
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTIONS
+   ═══════════════════════════════════════════════════ */
+section {
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+  padding: 0 1.5rem;
+}
+section > h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
+}
+section > p.desc {
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  font-weight: 300;
+}
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4rem auto;
+  max-width: 1200px;
+}
+
+/* ═══════════════════════════════════════════════════
+   CARD — core structure
+   ═══════════════════════════════════════════════════ */
+.card {
+  display: grid;
+  background: var(--surface);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: box-shadow .25s ease;
+  text-decoration: none;
+  color: inherit;
+}
+.card:hover { box-shadow: var(--shadow-hover); }
+
+/* ── MEDIA AREA ── */
+.card__media {
+  position: relative;
+  background: var(--media-bg);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  min-height: 180px;
+}
+.card__media-placeholder {
+  width: 80px;
+  height: 80px;
+  background: var(--media-img) center/contain no-repeat;
+  border-radius: 50%;
+  opacity: .6;
+}
+.card__caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 0.4rem 0.7rem;
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+}
+/* caption positions */
+.card__caption--tl { top: 0; left: 0; bottom: auto; right: auto; }
+.card__caption--tr { top: 0; right: 0; bottom: auto; left: auto; }
+.card__caption--bl { bottom: 0; left: 0; top: auto; right: auto; }
+.card__caption--br { bottom: 0; right: 0; top: auto; left: auto; }
+.card__splash {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── CONTENT AREA ── */
+.card__content {
+  padding: 1.25rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+.card__eyebrow {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+.card__headline {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+.card__subheadline {
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+  font-weight: 300;
+  font-style: italic;
+}
+.card__summary {
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  line-height: 1.55;
+  font-weight: 300;
+}
+.card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.15rem;
+}
+.card__tag {
+  font-size: 0.65rem;
+  font-weight: 500;
+  padding: 0.2rem 0.55rem;
+  border-radius: 100px;
+  background: var(--tag-bg);
+  color: var(--ink-muted);
+  letter-spacing: 0.02em;
+}
+.card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-top: 0.3rem;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
+.card__cta::after {
+  content: '\2192';
+  transition: translate .2s ease;
+}
+.card:hover .card__cta::after { translate: 3px 0; }
+
+/* ── BUTTON CTA ── */
+.card__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 0.65rem 1.4rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  margin-top: 0.4rem;
+  transition: background .2s ease, color .2s ease, box-shadow .2s ease;
+  align-self: flex-start;
+}
+.card__btn--primary {
+  background: var(--accent);
+  color: #fff;
+}
+.card__btn--primary:hover {
+  background: #cf4316;
+  box-shadow: 0 2px 8px rgba(232,78,27,.25);
+}
+.card__btn--secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--border);
+}
+.card__btn--secondary:hover {
+  border-color: var(--ink);
+  background: var(--surface-alt);
+}
+/* ghost removed — use "link" variant instead */
+
+/* button group */
+.card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+/* ── LINKS LIST ── */
+.card__links {
+  list-style: none;
+  padding: 0;
+  margin: 0.3rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.card__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--border);
+  transition: color .15s ease, border-color .15s ease;
+}
+.card__links a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.card__links a::before {
+  content: '\2192';
+  color: var(--accent);
+  font-size: 0.75rem;
+  transition: translate .15s ease;
+}
+.card__links a:hover::before { translate: 2px 0; }
+
+/* ── MINIMAL CAPTION CARD (employee gallery) ── */
+.card--caption-only .card__content {
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+.card--caption-only .card__headline {
+  font-size: 0.9rem;
+}
+.card--caption-only .card__subheadline {
+  font-size: 0.75rem;
+  margin-top: -0.15rem;
+}
+
+/* ── GALLERY (multiple media items) ── */
+.card__gallery {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.card__gallery::-webkit-scrollbar { display: none; }
+.card__gallery-slide {
+  scroll-snap-align: start;
+  display: grid;
+  place-items: center;
+  min-height: 180px;
+}
+.card__media--gallery {
+  position: relative;
+  background: var(--media-bg);
+  overflow: hidden;
+}
+.card__media--gallery > .card__caption,
+.card__media--gallery > .card__splash {
+  z-index: 2;
+  pointer-events: none;
+}
+.card__gallery-dots {
+  position: absolute;
+  bottom: 0.6rem;
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  gap: 0.35rem;
+  z-index: 2;
+}
+.card__gallery-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.45);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.card__gallery-dot--active { background: #fff; }
+.card__gallery-arrow {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+  transition: background .15s ease;
+}
+.card__gallery-arrow:hover { background: #cf4316; }
+.card__gallery-arrow--prev { left: 0.6rem; rotate: 180deg; }
+.card__gallery-arrow--next { right: 0.6rem; }
+.card__gallery-counter {
+  position: absolute;
+  bottom: 0.6rem;
+  right: 0.8rem;
+  font-size: 0.65rem;
+  color: #fff;
+  background: rgba(0,0,0,.45);
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  z-index: 2;
+}
+
+/* ── THEMED CONTENT AREA ── */
+.card__content--dark {
+  background: var(--ink);
+  color: #fff;
+}
+.card__content--dark .card__eyebrow { color: rgba(255,255,255,.6); }
+.card__content--dark .card__subheadline { color: rgba(255,255,255,.6); }
+.card__content--dark .card__summary { color: rgba(255,255,255,.7); }
+.card__content--dark .card__cta { color: #fff; }
+.card__content--dark .card__tag {
+  background: rgba(255,255,255,.12);
+  color: rgba(255,255,255,.85);
+}
+.card__content--dark .card__btn--primary {
+  background: #fff;
+  color: var(--ink);
+}
+.card__content--dark .card__btn--secondary {
+  border-color: rgba(255,255,255,.3);
+  color: #fff;
+}
+.card__content--dark .card__links a {
+  color: rgba(255,255,255,.85);
+  border-color: rgba(255,255,255,.15);
+}
+.card__content--dark .card__links a:hover {
+  color: #fff;
+  border-color: rgba(255,255,255,.4);
+}
+.card__content--dark .card__links a::before { color: rgba(255,255,255,.5); }
+
+.card__content--brand {
+  background: var(--accent);
+  color: #fff;
+}
+.card__content--brand .card__eyebrow { color: rgba(255,255,255,.7); }
+.card__content--brand .card__subheadline { color: rgba(255,255,255,.8); }
+.card__content--brand .card__summary { color: rgba(255,255,255,.85); }
+.card__content--brand .card__cta { color: #fff; }
+.card__content--brand .card__tag {
+  background: rgba(255,255,255,.2);
+  color: #fff;
+}
+
+/* ── MEDIA-ONLY CARD ── */
+.card--media-only .card__media {
+  min-height: unset;
+}
+
+/* ── EYEBROW EXTERNAL (outside the card) ── */
+.card-with-eyebrow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.card-with-eyebrow > .card__eyebrow-ext {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+/* ── EYEBROW ABOVE MEDIA ── */
+.card--eyebrow-above {
+  grid-template-rows: auto auto 1fr;
+}
+.card--eyebrow-above > .card__eyebrow-top {
+  padding: 0.75rem 1.25rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+/* ═══════════════════════════════════════════════════
+   SUBGRID — aligned content rows
+   ═══════════════════════════════════════════════════ */
+.demo-row--subgrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+/* card spans 6 rows: media, eyebrow, headline, summary, tags, cta */
+.demo-row--subgrid > .card {
+  grid-row: span 6;
+  grid-template-rows: subgrid;
+}
+/* content spans rows 2–6 and inherits the parent tracks */
+.demo-row--subgrid > .card > .card__content {
+  grid-row: span 5;
+  display: grid;
+  grid-template-rows: subgrid;
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+@media (max-width: 700px) {
+  .demo-row--subgrid { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════════════════
+   VARIANT: CLASSIC  (media top / content bottom)
+   ═══════════════════════════════════════════════════ */
+.card--vertical {
+  grid-template-rows: auto 1fr;
+}
+.card--vertical:has(> :only-child) {
+  grid-template-rows: 1fr;
+}
+
+/* ═══════════════════════════════════════════════════
+   VARIANT: REVERSED  (content top / media bottom)
+   ═══════════════════════════════════════════════════ */
+.card--vertical-reversed {
+  grid-template-rows: 1fr auto;
+}
+.card--vertical-reversed > .card__content { order: -1; }
+
+/* ═══════════════════════════════════════════════════
+   VARIANT: HORIZONTAL  (media left / content right)
+   ═══════════════════════════════════════════════════ */
+.card--horizontal {
+  grid-template-columns: 2fr 3fr;
+}
+.card--horizontal .card__media { min-height: 220px; }
+
+/* ═══════════════════════════════════════════════════
+   VARIANT: HORIZONTAL REVERSED  (content left / media right)
+   ═══════════════════════════════════════════════════ */
+.card--horizontal-reversed {
+  grid-template-columns: 3fr 2fr;
+}
+.card--horizontal-reversed > .card__content { order: -1; }
+.card--horizontal-reversed .card__media { min-height: 220px; }
+
+/* ═══════════════════════════════════════════════════
+   VARIANT: OVERLAY — content on top of media
+   ═══════════════════════════════════════════════════ */
+.card--overlay {
+  grid-template: 1fr / 1fr;
+  aspect-ratio: 4 / 3;
+}
+.card--overlay > .card__media,
+.card--overlay > .card__content {
+  grid-area: 1 / 1;
+}
+.card--overlay > .card__media {
+  min-height: unset;
+}
+.card--overlay > .card__content {
+  z-index: 1;
+  color: #fff;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,.0) 0%,
+    rgba(0,0,0,.35) 100%
+  );
+}
+.card--overlay .card__eyebrow { color: rgba(255,255,255,.8); }
+.card--overlay .card__summary { color: rgba(255,255,255,.75); }
+.card--overlay .card__cta { color: #fff; }
+.card--overlay .card__tag {
+  background: rgba(255,255,255,.18);
+  color: rgba(255,255,255,.9);
+  backdrop-filter: blur(4px);
+}
+
+/* overlay alignment via CSS custom property */
+.card--overlay > .card__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: var(--overlay-y, end);
+  align-items: var(--overlay-x, start);
+  text-align: var(--overlay-text, left);
+}
+
+/* alignment presets */
+.card--overlay.pos-tl > .card__content { --overlay-y: start; --overlay-x: start; --overlay-text: left; }
+.card--overlay.pos-tc > .card__content { --overlay-y: start; --overlay-x: center; --overlay-text: center; }
+.card--overlay.pos-tr > .card__content { --overlay-y: start; --overlay-x: end; --overlay-text: right; }
+.card--overlay.pos-cl > .card__content { --overlay-y: center; --overlay-x: start; --overlay-text: left; }
+.card--overlay.pos-cc > .card__content { --overlay-y: center; --overlay-x: center; --overlay-text: center; }
+.card--overlay.pos-cr > .card__content { --overlay-y: center; --overlay-x: end; --overlay-text: right; }
+.card--overlay.pos-bl > .card__content { --overlay-y: end; --overlay-x: start; --overlay-text: left; }
+.card--overlay.pos-bc > .card__content { --overlay-y: end; --overlay-x: center; --overlay-text: center; }
+.card--overlay.pos-br > .card__content { --overlay-y: end; --overlay-x: end; --overlay-text: right; }
+
+/* gradient direction per vertical alignment */
+.card--overlay.pos-tl > .card__content,
+.card--overlay.pos-tc > .card__content,
+.card--overlay.pos-tr > .card__content {
+  background: linear-gradient(to bottom, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 100%);
+}
+.card--overlay.pos-cl > .card__content,
+.card--overlay.pos-cc > .card__content,
+.card--overlay.pos-cr > .card__content {
+  background: radial-gradient(ellipse at center, rgba(0,0,0,.4) 0%, rgba(0,0,0,.05) 100%);
+}
+
+/* ═══════════════════════════════════════════════════
+   DEMO GRIDS
+   ═══════════════════════════════════════════════════ */
+.demo-row {
+  display: grid;
+  gap: 1.5rem;
+}
+.demo-row--2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+.demo-row--3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.demo-row--4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+.overlay-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+@media (max-width: 700px) {
+  .overlay-grid { grid-template-columns: 1fr; }
+}
+
+/* label pills */
+.label {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  background: var(--ink);
+  color: #fff;
+  margin-bottom: 0.75rem;
+}
+.label--pos {
+  background: var(--accent);
+  font-family: 'DM Sans', monospace;
+  letter-spacing: 0.06em;
+}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <h1>WPP Adaptable Card</h1>
+  <p>Layout Variations Visualizer</p>
+</header>
+
+<!-- ════════════════════════════════════════════════════════
+     1. CLASSIC — Media Top / Content Bottom
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Classic Vertical</h2>
+  <p class="desc">Media area on top, content area below. The default card orientation.</p>
+
+  <div class="demo-row demo-row--3">
+    <article class="card card--vertical">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+        <span class="card__caption">Image Caption</span>
+        <span class="card__splash">New</span>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Digital</span>
+        <h3 class="card__headline">Reimagining customer experience through data</h3>
+        <p class="card__summary">How leading brands are using first-party data to create meaningful connections across every touchpoint.</p>
+        <div class="card__tags">
+          <span class="card__tag">CX</span>
+          <span class="card__tag">Data</span>
+          <span class="card__tag">Innovation</span>
+        </div>
+        <a href="#" class="card__cta">Read more</a>
+      </div>
+    </article>
+
+    <article class="card card--vertical">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">WPP iQ</span>
+        <h3 class="card__headline">The future of commerce is everywhere</h3>
+        <p class="card__subheadline">Blurring the line between content and conversion</p>
+        <p class="card__summary">Social platforms, connected TV, and in-store digital experiences are converging into a single commerce ecosystem.</p>
+        <a href="#" class="card__cta">Explore</a>
+      </div>
+    </article>
+
+    <article class="card card--vertical">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Sustainability</span>
+        <h3 class="card__headline">Net zero creative production</h3>
+        <p class="card__summary">Measuring and reducing the carbon footprint of campaign production at scale.</p>
+        <a href="#" class="card__cta">Learn more</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     2. REVERSED VERTICAL — Content Top / Media Bottom
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Reversed Vertical</h2>
+  <p class="desc">Content area on top, media area below. Leads with the message.</p>
+
+  <div class="demo-row demo-row--3">
+    <article class="card card--vertical-reversed">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Event</span>
+        <h3 class="card__headline">Stream 2024 Global Summit</h3>
+        <p class="card__subheadline">Athens, September 17-20</p>
+        <p class="card__summary">Join 800+ leaders shaping the future of marketing, creativity and technology.</p>
+        <a href="#" class="card__cta">Register now</a>
+      </div>
+    </article>
+
+    <article class="card card--vertical-reversed">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+        <span class="card__splash">Live</span>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Webinar</span>
+        <h3 class="card__headline">AI in creative workflows</h3>
+        <p class="card__summary">Practical applications of generative AI across the creative supply chain.</p>
+        <div class="card__tags">
+          <span class="card__tag">AI</span>
+          <span class="card__tag">Creative</span>
+        </div>
+        <a href="#" class="card__cta">Watch</a>
+      </div>
+    </article>
+
+    <article class="card card--vertical-reversed">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Report</span>
+        <h3 class="card__headline">Annual Report 2023</h3>
+        <p class="card__summary">Revenue, strategy, and outlook for the year ahead.</p>
+        <a href="#" class="card__cta">Download PDF</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     3. HORIZONTAL — Media Left / Content Right
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Horizontal — Media Left</h2>
+  <p class="desc">Media area on the left, content area on the right. Good for listing layouts and teasers.</p>
+
+  <div class="demo-row" style="gap: 1.25rem;">
+    <article class="card card--horizontal">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+        <span class="card__caption">Photo: Campaign shoot</span>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Featured Work</span>
+        <h3 class="card__headline">Never Stop Evolving</h3>
+        <p class="card__subheadline">Redefining the future of sport through digital innovation</p>
+        <p class="card__summary">A groundbreaking campaign that merged physical and digital experiences, reaching 40M+ consumers across 12 markets.</p>
+        <div class="card__tags">
+          <span class="card__tag">Digital</span>
+          <span class="card__tag">Sport</span>
+          <span class="card__tag">Innovation</span>
+        </div>
+        <a href="#" class="card__cta">View campaign</a>
+      </div>
+    </article>
+
+    <article class="card card--horizontal">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Financial Releases</span>
+        <h3 class="card__headline">WPP 2023 Preliminary Results</h3>
+        <p class="card__summary">Revenue less pass-through costs up 1.6% on a like-for-like basis.</p>
+        <a href="#" class="card__cta">Read more</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     4. HORIZONTAL REVERSED — Content Left / Media Right
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Horizontal — Media Right</h2>
+  <p class="desc">Content area on the left, media area on the right. Content-first reading order.</p>
+
+  <div class="demo-row" style="gap: 1.25rem;">
+    <article class="card card--horizontal-reversed">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+        <span class="card__splash">2024</span>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Company</span>
+        <h3 class="card__headline">Ogilvy</h3>
+        <p class="card__subheadline">An iconic global agency that makes brands matter</p>
+        <p class="card__summary">Creative, PR, consulting and health — operating across 131 offices in 93 countries worldwide.</p>
+        <div class="card__tags">
+          <span class="card__tag">Creative</span>
+          <span class="card__tag">Advertising</span>
+          <span class="card__tag">PR</span>
+        </div>
+        <a href="#" class="card__cta">Visit profile</a>
+      </div>
+    </article>
+
+    <article class="card card--horizontal-reversed">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Podcast</span>
+        <h3 class="card__headline">The changers: Creativity in the age of AI</h3>
+        <p class="card__summary">A conversation with leading creatives about how artificial intelligence is reshaping ideation.</p>
+        <a href="#" class="card__cta">Listen now</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     5. OVERLAY — Content on top of Media (9 positions)
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Overlay — 9 Grid Positions</h2>
+  <p class="desc">Content area placed on top of the media area. The media's aspect-ratio determines size. Content positioned via CSS grid alignment.</p>
+
+  <div class="overlay-grid">
+
+    <!-- Top Left -->
+    <div>
+      <span class="label label--pos">top-left</span>
+      <article class="card card--overlay pos-tl">
+        <div class="card__media">
+          <div class="card__media-placeholder"></div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">Campaign</span>
+          <h3 class="card__headline">Bold moves start here</h3>
+          <a href="#" class="card__cta">Explore</a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Top Center -->
+    <div>
+      <span class="label label--pos">top-center</span>
+      <article class="card card--overlay pos-tc">
+        <div class="card__media">
+          <div class="card__media-placeholder"></div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">WPP iQ</span>
+          <h3 class="card__headline">The creative edge</h3>
+          <a href="#" class="card__cta">Read</a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Top Right -->
+    <div>
+      <span class="label label--pos">top-right</span>
+      <article class="card card--overlay pos-tr">
+        <div class="card__media">
+          <div class="card__media-placeholder"></div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">News</span>
+          <h3 class="card__headline">Breaking boundaries</h3>
+          <a href="#" class="card__cta">More</a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Center Left -->
+    <div>
+      <span class="label label--pos">center-left</span>
+      <article class="card card--overlay pos-cl">
+        <div class="card__media">
+          <div class="card__media-placeholder"></div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">Insight</span>
+          <h3 class="card__headline">Data-driven creativity</h3>
+          <a href="#" class="card__cta">Discover</a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Center Center -->
+    <div>
+      <span class="label label--pos">center-center</span>
+      <article class="card card--overlay pos-cc">
+        <div class="card__media">
+          <div class="card__media-placeholder"></div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">Featured</span>
+          <h3 class="card__headline">Transform your world</h3>
+          <a href="#" class="card__cta">Learn more</a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Center Right -->
+    <div>
+      <span class="label label--pos">center-right</span>
+      <article class="card card--overlay pos-cr">
+        <div class="card__media">
+          <div class="card__media-placeholder"></div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">Report</span>
+          <h3 class="card__headline">Global trends 2024</h3>
+          <a href="#" class="card__cta">Download</a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Bottom Left -->
+    <div>
+      <span class="label label--pos">bottom-left</span>
+      <article class="card card--overlay pos-bl">
+        <div class="card__media">
+          <div class="card__media-placeholder"></div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">Event</span>
+          <h3 class="card__headline">Stream 2024</h3>
+          <p class="card__summary">The definitive marketing event.</p>
+          <a href="#" class="card__cta">Register</a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Bottom Center -->
+    <div>
+      <span class="label label--pos">bottom-center</span>
+      <article class="card card--overlay pos-bc">
+        <div class="card__media">
+          <div class="card__media-placeholder"></div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">Sustainability</span>
+          <h3 class="card__headline">Our commitment</h3>
+          <p class="card__summary">Net zero by 2030.</p>
+          <a href="#" class="card__cta">See progress</a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Bottom Right -->
+    <div>
+      <span class="label label--pos">bottom-right</span>
+      <article class="card card--overlay pos-br">
+        <div class="card__media">
+          <div class="card__media-placeholder"></div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">Investor</span>
+          <h3 class="card__headline">Q3 Results</h3>
+          <p class="card__summary">Strong performance across all segments.</p>
+          <a href="#" class="card__cta">View</a>
+        </div>
+      </article>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     6. BUTTON CTA VARIANTS
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Button CTAs</h2>
+  <p class="desc">Cards with button-style CTAs instead of text links. Primary, secondary, and ghost variants.</p>
+
+  <div class="demo-row demo-row--3">
+    <article class="card card--vertical">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Event</span>
+        <h3 class="card__headline">Stream 2024 Global Summit</h3>
+        <p class="card__summary">Join 800+ leaders shaping the future of marketing, creativity and technology.</p>
+        <div class="card__actions">
+          <a href="#" class="card__btn card__btn--primary">Register now</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card card--vertical">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Report</span>
+        <h3 class="card__headline">Annual Report 2023</h3>
+        <p class="card__summary">Revenue, strategy, and outlook for the year ahead.</p>
+        <div class="card__actions">
+          <a href="#" class="card__btn card__btn--primary">Download PDF</a>
+          <a href="#" class="card__btn card__btn--secondary">View online</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card card--vertical">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Campaign</span>
+        <h3 class="card__headline">Never Stop Evolving</h3>
+        <p class="card__summary">A groundbreaking campaign merging physical and digital experiences.</p>
+        <div class="card__actions">
+          <a href="#" class="card__btn card__btn--primary">View campaign</a>
+          <a href="#" class="card__cta">Behind the scenes</a>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     7. MULTIPLE LINKS
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Multiple Links</h2>
+  <p class="desc">Cards with a list of links — sidebar navigation, related content, and resource collections.</p>
+
+  <div class="demo-row demo-row--3">
+    <article class="card card--vertical">
+      <div class="card__content">
+        <span class="card__eyebrow">Navigation</span>
+        <h3 class="card__headline">Investor Relations</h3>
+        <ul class="card__links">
+          <li><a href="#">Share price</a></li>
+          <li><a href="#">Results &amp; reports</a></li>
+          <li><a href="#">Shareholder centre</a></li>
+          <li><a href="#">Financial calendar</a></li>
+          <li><a href="#">Contact IR team</a></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="card card--vertical">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Company</span>
+        <h3 class="card__headline">AKQA</h3>
+        <p class="card__subheadline">Innovation by design</p>
+        <p class="card__summary">A creative agency delivering ideas and innovation across brand, product, and service.</p>
+        <ul class="card__links">
+          <li><a href="#">Visit website</a></li>
+          <li><a href="#">View featured work</a></li>
+          <li><a href="#">Open positions</a></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="card card--vertical">
+      <div class="card__content">
+        <span class="card__eyebrow">Resources</span>
+        <h3 class="card__headline">Press &amp; Media</h3>
+        <p class="card__summary">Latest press releases, media contacts, and brand assets.</p>
+        <ul class="card__links">
+          <li><a href="#">Press releases</a></li>
+          <li><a href="#">Media contacts</a></li>
+          <li><a href="#">Brand guidelines</a></li>
+          <li><a href="#">Logo downloads</a></li>
+        </ul>
+        <div class="card__actions">
+          <a href="#" class="card__btn card__btn--secondary">Media enquiries</a>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     8. IMAGE + CAPTION ONLY (Employee Gallery)
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Image + Caption Only</h2>
+  <p class="desc">Minimal cards with just an image and a name/role caption. Ideal for employee galleries, team pages, and leadership grids.</p>
+
+  <div class="demo-row demo-row--4">
+    <article class="card card--vertical card--caption-only">
+      <div class="card__media" style="aspect-ratio: 1; min-height: unset;">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <h3 class="card__headline">Sarah Chen</h3>
+        <p class="card__subheadline">Chief Executive Officer</p>
+      </div>
+    </article>
+
+    <article class="card card--vertical card--caption-only">
+      <div class="card__media" style="aspect-ratio: 1; min-height: unset;">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <h3 class="card__headline">James Okafor</h3>
+        <p class="card__subheadline">Chief Creative Officer</p>
+      </div>
+    </article>
+
+    <article class="card card--vertical card--caption-only">
+      <div class="card__media" style="aspect-ratio: 1; min-height: unset;">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <h3 class="card__headline">Maria Lopez</h3>
+        <p class="card__subheadline">Chief Financial Officer</p>
+      </div>
+    </article>
+
+    <article class="card card--vertical card--caption-only">
+      <div class="card__media" style="aspect-ratio: 1; min-height: unset;">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <h3 class="card__headline">David Park</h3>
+        <p class="card__subheadline">Chief Technology Officer</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     9. EYEBROW PLACEMENT
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Eyebrow</h2>
+  <p class="desc">The eyebrow is a card-level element that sits above the media area — not inside the content area. It acts as a category/section label for the entire card.</p>
+
+  <div class="demo-row demo-row--3">
+
+    <article class="card card--eyebrow-above">
+      <div class="card__eyebrow-top">Leadership</div>
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+        <span class="card__caption">Photo: Annual conference</span>
+      </div>
+      <div class="card__content">
+        <h3 class="card__headline">Sarah Chen appointed CEO</h3>
+        <p class="card__summary">Chen brings 20 years of experience in digital transformation and creative leadership to the role.</p>
+        <a href="#" class="card__cta">Read announcement</a>
+      </div>
+    </article>
+
+    <article class="card card--eyebrow-above">
+      <div class="card__eyebrow-top">WPP iQ</div>
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <h3 class="card__headline">The creative edge in AI advertising</h3>
+        <p class="card__summary">How machine learning is reshaping campaign ideation without replacing the human spark.</p>
+        <div class="card__tags">
+          <span class="card__tag">AI</span>
+          <span class="card__tag">Creative</span>
+          <span class="card__tag">Innovation</span>
+        </div>
+        <a href="#" class="card__cta">Read article</a>
+      </div>
+    </article>
+
+    <article class="card card--eyebrow-above">
+      <div class="card__eyebrow-top">Featured Work</div>
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+        <span class="card__caption">AKQA for Nike, 2023</span>
+        <span class="card__splash">New</span>
+      </div>
+      <div class="card__content">
+        <h3 class="card__headline">Never Stop Evolving</h3>
+        <p class="card__subheadline">Redefining sport through digital innovation</p>
+        <p class="card__summary">A groundbreaking campaign merging physical and digital experiences across 12 global markets.</p>
+        <div class="card__actions">
+          <a href="#" class="card__btn card__btn--primary">View campaign</a>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div style="margin-top: 2.5rem;">
+    <span class="label">Eyebrow outside the card</span>
+    <p class="desc" style="margin-bottom: 1rem;">The eyebrow sits above the card as a sibling element — not inside it.</p>
+
+    <div class="demo-row demo-row--3">
+      <div class="card-with-eyebrow">
+        <span class="card__eyebrow-ext">Leadership</span>
+        <article class="card card--vertical">
+          <div class="card__media">
+            <div class="card__media-placeholder"></div>
+            <span class="card__caption">Photo: Annual conference</span>
+          </div>
+          <div class="card__content">
+            <h3 class="card__headline">Sarah Chen appointed CEO</h3>
+            <p class="card__summary">Chen brings 20 years of experience in digital transformation and creative leadership to the role.</p>
+            <a href="#" class="card__cta">Read announcement</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="card-with-eyebrow">
+        <span class="card__eyebrow-ext">WPP iQ</span>
+        <article class="card card--vertical">
+          <div class="card__media">
+            <div class="card__media-placeholder"></div>
+          </div>
+          <div class="card__content">
+            <h3 class="card__headline">The creative edge in AI advertising</h3>
+            <p class="card__summary">How machine learning is reshaping campaign ideation without replacing the human spark.</p>
+            <div class="card__tags">
+              <span class="card__tag">AI</span>
+              <span class="card__tag">Creative</span>
+              <span class="card__tag">Innovation</span>
+            </div>
+            <a href="#" class="card__cta">Read article</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="card-with-eyebrow">
+        <span class="card__eyebrow-ext">Featured Work</span>
+        <article class="card card--vertical">
+          <div class="card__media">
+            <div class="card__media-placeholder"></div>
+            <span class="card__caption">AKQA for Nike, 2023</span>
+            <span class="card__splash">New</span>
+          </div>
+          <div class="card__content">
+            <h3 class="card__headline">Never Stop Evolving</h3>
+            <p class="card__subheadline">Redefining sport through digital innovation</p>
+            <p class="card__summary">A groundbreaking campaign merging physical and digital experiences across 12 global markets.</p>
+            <div class="card__actions">
+              <a href="#" class="card__btn card__btn--primary">View campaign</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     10. CAPTION POSITIONS
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Caption Positions</h2>
+  <p class="desc">The image caption can be placed at any corner of the media area.</p>
+
+  <div class="demo-row demo-row--4">
+    <div>
+      <span class="label label--pos">bottom-left (default)</span>
+      <article class="card card--vertical">
+        <div class="card__media">
+          <div class="card__media-placeholder"></div>
+          <span class="card__caption card__caption--bl">Photo: Campaign shoot</span>
+        </div>
+        <div class="card__content">
+          <h3 class="card__headline">Default position</h3>
+          <p class="card__summary">Caption anchored to the bottom-left corner.</p>
+        </div>
+      </article>
+    </div>
+
+    <div>
+      <span class="label label--pos">bottom-right</span>
+      <article class="card card--vertical">
+        <div class="card__media">
+          <div class="card__media-placeholder"></div>
+          <span class="card__caption card__caption--br">AKQA, 2024</span>
+        </div>
+        <div class="card__content">
+          <h3 class="card__headline">Credit style</h3>
+          <p class="card__summary">Common for photo credits and copyright notices.</p>
+        </div>
+      </article>
+    </div>
+
+    <div>
+      <span class="label label--pos">top-left</span>
+      <article class="card card--vertical">
+        <div class="card__media">
+          <div class="card__media-placeholder"></div>
+          <span class="card__caption card__caption--tl">Featured</span>
+        </div>
+        <div class="card__content">
+          <h3 class="card__headline">Badge style</h3>
+          <p class="card__summary">Top-left works well for status badges and labels.</p>
+        </div>
+      </article>
+    </div>
+
+    <div>
+      <span class="label label--pos">top-right</span>
+      <article class="card card--vertical">
+        <div class="card__media">
+          <div class="card__media-placeholder"></div>
+          <span class="card__caption card__caption--tr">3 min read</span>
+        </div>
+        <div class="card__content">
+          <h3 class="card__headline">Metadata style</h3>
+          <p class="card__summary">Top-right suits reading time, duration, or date overlays.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     11. FIELD COMBINATIONS
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Field Combinations</h2>
+  <p class="desc">The card adapts to its content. These show different combinations of eyebrow, image, caption, and summary.</p>
+
+  <div class="demo-row demo-row--3">
+
+    <!-- Eyebrow + Image + Caption + Summary -->
+    <article class="card card--vertical">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+        <span class="card__caption">AKQA for Nike, Portland 2023</span>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Featured Work</span>
+        <h3 class="card__headline">Never Stop Evolving</h3>
+        <p class="card__summary">A groundbreaking campaign that merged physical and digital experiences across 12 global markets.</p>
+        <a href="#" class="card__cta">View campaign</a>
+      </div>
+    </article>
+
+    <!-- Image + Caption only (no eyebrow, no summary) -->
+    <article class="card card--vertical">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+        <span class="card__caption">GroupM HQ, London</span>
+      </div>
+      <div class="card__content">
+        <h3 class="card__headline">GroupM global headquarters</h3>
+      </div>
+    </article>
+
+    <!-- Eyebrow + Summary only (no image) -->
+    <article class="card card--vertical">
+      <div class="card__content">
+        <span class="card__eyebrow">Investor Update</span>
+        <h3 class="card__headline">Q3 2024 Trading Update</h3>
+        <p class="card__summary">Like-for-like revenue less pass-through costs grew 4.1% in the third quarter, reflecting strong demand in Technology and Commerce practices.</p>
+        <a href="#" class="card__cta">Read full update</a>
+      </div>
+    </article>
+  </div>
+
+  <div class="demo-row demo-row--2" style="margin-top: 1.5rem;">
+
+    <!-- Horizontal: Eyebrow + Image + Caption + Summary -->
+    <article class="card card--horizontal">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+        <span class="card__caption">Photo: Cannes Lions 2024</span>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Awards</span>
+        <h3 class="card__headline">WPP named most creative company at Cannes</h3>
+        <p class="card__subheadline">Record-breaking year across the network</p>
+        <p class="card__summary">WPP agencies collected 195 Lions across all categories, including 12 Grand Prix awards. AKQA, Ogilvy, and VML led the charge.</p>
+        <div class="card__tags">
+          <span class="card__tag">Cannes Lions</span>
+          <span class="card__tag">Awards</span>
+        </div>
+        <div class="card__actions">
+          <a href="#" class="card__btn card__btn--primary">See all wins</a>
+          <a href="#" class="card__cta">Press release</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Horizontal: Image + Summary (minimal) -->
+    <article class="card card--horizontal">
+      <div class="card__media">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <h3 class="card__headline">Sustainability Report 2023</h3>
+        <p class="card__summary">Our progress towards net zero, inclusive workforce targets, and responsible media practices.</p>
+        <a href="#" class="card__cta">Download report</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     11. ASPECT RATIOS + HERO BANNER
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Aspect Ratios</h2>
+  <p class="desc">The media area supports different aspect ratios via <code>mediaAspectRatio</code>. Overlay cards use it to control the card's overall dimensions.</p>
+
+  <!-- Full-width hero banner -->
+  <div style="margin-bottom: 2rem;">
+    <span class="label">Hero Banner — 21:9 overlay, bottom-left</span>
+    <article class="card card--overlay pos-bl" style="aspect-ratio: 21/9;">
+      <div class="card__media" style="min-height: unset; background: linear-gradient(135deg, #2d1b14 0%, #4a2a1a 30%, #1a1a1a 100%);">
+        <div class="card__media-placeholder" style="width: 140px; height: 140px; opacity: .25;"></div>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Featured Campaign</span>
+        <h3 class="card__headline" style="font-size: 2rem;">Never Stop Evolving</h3>
+        <p class="card__subheadline" style="color: rgba(255,255,255,.7);">Redefining the future of sport through digital innovation</p>
+        <div class="card__actions">
+          <a href="#" class="card__btn card__btn--primary">View campaign</a>
+          <a href="#" class="card__btn card__btn--secondary" style="color: #fff; border-color: rgba(255,255,255,.3);">Behind the scenes</a>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- Aspect ratio comparison row -->
+  <div class="demo-row demo-row--4" style="align-items: start;">
+    <div>
+      <span class="label label--pos">1:1</span>
+      <article class="card card--vertical">
+        <div class="card__media" style="aspect-ratio: 1; min-height: unset;">
+          <div class="card__media-placeholder"></div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">Profile</span>
+          <h3 class="card__headline">Square format</h3>
+          <p class="card__summary">Best for portraits, avatars, and social content.</p>
+        </div>
+      </article>
+    </div>
+
+    <div>
+      <span class="label label--pos">4:3</span>
+      <article class="card card--vertical">
+        <div class="card__media" style="aspect-ratio: 4/3; min-height: unset;">
+          <div class="card__media-placeholder"></div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">Standard</span>
+          <h3 class="card__headline">Classic frame</h3>
+          <p class="card__summary">Traditional photo and video format.</p>
+        </div>
+      </article>
+    </div>
+
+    <div>
+      <span class="label label--pos">16:9</span>
+      <article class="card card--vertical">
+        <div class="card__media" style="aspect-ratio: 16/9; min-height: unset;">
+          <div class="card__media-placeholder"></div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">Widescreen</span>
+          <h3 class="card__headline">Cinematic</h3>
+          <p class="card__summary">Video thumbnails, presentations, hero images.</p>
+        </div>
+      </article>
+    </div>
+
+    <div>
+      <span class="label label--pos">3:4 / 9:16</span>
+      <article class="card card--vertical">
+        <div class="card__media" style="aspect-ratio: 3/4; min-height: unset;">
+          <div class="card__media-placeholder"></div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">Portrait</span>
+          <h3 class="card__headline">Tall format</h3>
+          <p class="card__summary">Editorial photos, full-body portraits, mobile-first content.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     13. SUBGRID — ALIGNED CONTENT ROWS
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Subgrid Alignment</h2>
+  <p class="desc">Using CSS subgrid, content fields align vertically across cards — even when one headline is much longer than the others.</p>
+
+  <div style="margin-bottom: 2.5rem;">
+    <span class="label">Without subgrid (default)</span>
+    <div class="demo-row demo-row--3">
+      <article class="card card--vertical">
+        <div class="card__media" style="aspect-ratio: 16/9; min-height: unset;">
+          <div class="card__media-placeholder"></div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">Sustainability</span>
+          <h3 class="card__headline">Net zero creative production</h3>
+          <p class="card__summary">Measuring and reducing the carbon footprint of campaign production at scale.</p>
+          <div class="card__tags">
+            <span class="card__tag">ESG</span>
+            <span class="card__tag">Net Zero</span>
+          </div>
+          <a href="#" class="card__cta">Learn more</a>
+        </div>
+      </article>
+
+      <article class="card card--vertical">
+        <div class="card__media" style="aspect-ratio: 16/9; min-height: unset;">
+          <div class="card__media-placeholder"></div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">Featured Work</span>
+          <h3 class="card__headline">How AKQA and Nike redefined the future of sport through a groundbreaking digital-first campaign</h3>
+          <p class="card__summary">A multi-market campaign that merged physical and digital experiences, reaching 40M+ consumers.</p>
+          <div class="card__tags">
+            <span class="card__tag">Digital</span>
+            <span class="card__tag">Sport</span>
+            <span class="card__tag">Innovation</span>
+          </div>
+          <a href="#" class="card__cta">View campaign</a>
+        </div>
+      </article>
+
+      <article class="card card--vertical">
+        <div class="card__media" style="aspect-ratio: 16/9; min-height: unset;">
+          <div class="card__media-placeholder"></div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">WPP iQ</span>
+          <h3 class="card__headline">The future of commerce</h3>
+          <p class="card__summary">Social platforms, connected TV, and in-store experiences are converging into a single ecosystem.</p>
+          <div class="card__tags">
+            <span class="card__tag">Commerce</span>
+            <span class="card__tag">Retail</span>
+          </div>
+          <a href="#" class="card__cta">Explore</a>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <span class="label" style="background: var(--accent);">With subgrid</span>
+  <div class="demo-row--subgrid">
+    <article class="card card--vertical">
+      <div class="card__media" style="aspect-ratio: 16/9; min-height: unset;">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Sustainability</span>
+        <h3 class="card__headline">Net zero creative production</h3>
+        <p class="card__summary">Measuring and reducing the carbon footprint of campaign production at scale.</p>
+        <div class="card__tags">
+          <span class="card__tag">ESG</span>
+          <span class="card__tag">Net Zero</span>
+        </div>
+        <a href="#" class="card__cta">Learn more</a>
+      </div>
+    </article>
+
+    <article class="card card--vertical">
+      <div class="card__media" style="aspect-ratio: 16/9; min-height: unset;">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">Featured Work</span>
+        <h3 class="card__headline">How AKQA and Nike redefined the future of sport through a groundbreaking digital-first campaign</h3>
+        <p class="card__summary">A multi-market campaign that merged physical and digital experiences, reaching 40M+ consumers.</p>
+        <div class="card__tags">
+          <span class="card__tag">Digital</span>
+          <span class="card__tag">Sport</span>
+          <span class="card__tag">Innovation</span>
+        </div>
+        <a href="#" class="card__cta">View campaign</a>
+      </div>
+    </article>
+
+    <article class="card card--vertical">
+      <div class="card__media" style="aspect-ratio: 16/9; min-height: unset;">
+        <div class="card__media-placeholder"></div>
+      </div>
+      <div class="card__content">
+        <span class="card__eyebrow">WPP iQ</span>
+        <h3 class="card__headline">The future of commerce</h3>
+        <p class="card__summary">Social platforms, connected TV, and in-store experiences are converging into a single ecosystem.</p>
+        <div class="card__tags">
+          <span class="card__tag">Commerce</span>
+          <span class="card__tag">Retail</span>
+        </div>
+        <a href="#" class="card__cta">Explore</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     14. MEDIA-ONLY CARDS
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Media Only</h2>
+  <p class="desc">Cards with only a media area — no content area at all. Optional splash and caption overlays.</p>
+
+  <div class="demo-row demo-row--4">
+    <article class="card card--media-only">
+      <div class="card__media" style="aspect-ratio: 1;">
+        <div class="card__media-placeholder"></div>
+      </div>
+    </article>
+
+    <article class="card card--media-only">
+      <div class="card__media" style="aspect-ratio: 1;">
+        <div class="card__media-placeholder"></div>
+        <span class="card__caption card__caption--bl">Studio portrait, 2024</span>
+      </div>
+    </article>
+
+    <article class="card card--media-only">
+      <div class="card__media" style="aspect-ratio: 1;">
+        <div class="card__media-placeholder"></div>
+        <span class="card__splash">New</span>
+      </div>
+    </article>
+
+    <article class="card card--media-only">
+      <div class="card__media" style="aspect-ratio: 1;">
+        <div class="card__media-placeholder"></div>
+        <span class="card__caption card__caption--br">AKQA, 2024</span>
+        <span class="card__splash">Live</span>
+      </div>
+    </article>
+  </div>
+
+  <div class="demo-row demo-row--2" style="margin-top: 1.5rem;">
+    <article class="card card--media-only">
+      <div class="card__media" style="aspect-ratio: 16/9;">
+        <div class="card__media-placeholder"></div>
+        <span class="card__caption card__caption--bl">Campaign hero, Nike x AKQA</span>
+      </div>
+    </article>
+
+    <article class="card card--media-only">
+      <div class="card__media" style="aspect-ratio: 16/9;">
+        <div class="card__media-placeholder"></div>
+        <span class="card__caption card__caption--tr">3:24</span>
+        <span class="card__splash">Play</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     15. CONTENT-ONLY WITH THEMED BACKGROUNDS
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Content Only — Themed</h2>
+  <p class="desc">Cards with no media area. Background color applied directly to the content area for visual weight and variety.</p>
+
+  <div class="demo-row demo-row--3">
+    <!-- Light (default) -->
+    <article class="card card--vertical">
+      <div class="card__content">
+        <span class="card__eyebrow">Investor Update</span>
+        <h3 class="card__headline">Q3 2024 Trading Update</h3>
+        <p class="card__summary">Like-for-like revenue less pass-through costs grew 4.1% in the third quarter.</p>
+        <div class="card__tags">
+          <span class="card__tag">Financials</span>
+          <span class="card__tag">Q3 2024</span>
+        </div>
+        <a href="#" class="card__cta">Read full update</a>
+      </div>
+    </article>
+
+    <!-- Dark -->
+    <article class="card card--vertical">
+      <div class="card__content card__content--dark">
+        <span class="card__eyebrow">Featured</span>
+        <h3 class="card__headline">The power of creative transformation</h3>
+        <p class="card__summary">How the world's most innovative brands are rethinking their approach to creativity in an AI-driven landscape.</p>
+        <div class="card__tags">
+          <span class="card__tag">AI</span>
+          <span class="card__tag">Creative</span>
+        </div>
+        <a href="#" class="card__cta">Explore</a>
+      </div>
+    </article>
+
+    <!-- Brand -->
+    <article class="card card--vertical">
+      <div class="card__content card__content--brand">
+        <span class="card__eyebrow">Event</span>
+        <h3 class="card__headline">Stream 2024</h3>
+        <p class="card__subheadline">Athens, September 17-20</p>
+        <p class="card__summary">The definitive event for marketing, creativity and technology leadership.</p>
+        <a href="#" class="card__cta">Register now</a>
+      </div>
+    </article>
+  </div>
+
+  <div class="demo-row demo-row--2" style="margin-top: 1.5rem;">
+    <!-- Dark with links -->
+    <article class="card card--vertical">
+      <div class="card__content card__content--dark">
+        <span class="card__eyebrow">Navigation</span>
+        <h3 class="card__headline">Investor Relations</h3>
+        <ul class="card__links">
+          <li><a href="#">Share price</a></li>
+          <li><a href="#">Results &amp; reports</a></li>
+          <li><a href="#">Shareholder centre</a></li>
+          <li><a href="#">Financial calendar</a></li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- Dark with buttons -->
+    <article class="card card--vertical">
+      <div class="card__content card__content--dark">
+        <span class="card__eyebrow">Report</span>
+        <h3 class="card__headline">Annual Report 2023</h3>
+        <p class="card__summary">Revenue, strategy, and outlook for the year ahead. Including ESG performance and sustainability targets.</p>
+        <div class="card__actions">
+          <a href="#" class="card__btn card__btn--primary" style="background: #fff; color: var(--ink);">Download PDF</a>
+          <a href="#" class="card__btn card__btn--secondary">View online</a>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     16. GALLERY — MULTIPLE MEDIA ITEMS
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Gallery — Multiple Media Items</h2>
+  <p class="desc">When <code>media</code> contains 2+ items, the media area becomes a swipeable gallery. Splash and caption stay fixed on top of the slides.</p>
+
+  <div class="demo-row demo-row--2">
+
+    <!-- Media-only gallery with dots + arrows -->
+    <div>
+      <span class="label">Media only — dots + arrows</span>
+      <article class="card card--media-only">
+        <div class="card__media card__media--gallery" style="aspect-ratio: 4/3;">
+          <div class="card__gallery">
+            <div class="card__gallery-slide"><div class="card__media-placeholder"></div></div>
+            <div class="card__gallery-slide"><div class="card__media-placeholder"></div></div>
+            <div class="card__gallery-slide"><div class="card__media-placeholder"></div></div>
+            <div class="card__gallery-slide"><div class="card__media-placeholder"></div></div>
+          </div>
+          <span class="card__caption card__caption--tl">Campaign shoot, Portland 2023</span>
+          <span class="card__splash">New</span>
+          <button class="card__gallery-arrow card__gallery-arrow--prev">&#x2192;</button>
+          <button class="card__gallery-arrow card__gallery-arrow--next">&#x2192;</button>
+          <div class="card__gallery-dots">
+            <button class="card__gallery-dot card__gallery-dot--active"></button>
+            <button class="card__gallery-dot"></button>
+            <button class="card__gallery-dot"></button>
+            <button class="card__gallery-dot"></button>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Media-only gallery with counter -->
+    <div>
+      <span class="label">Media only — counter</span>
+      <article class="card card--media-only">
+        <div class="card__media card__media--gallery" style="aspect-ratio: 4/3;">
+          <div class="card__gallery">
+            <div class="card__gallery-slide"><div class="card__media-placeholder"></div></div>
+            <div class="card__gallery-slide"><div class="card__media-placeholder"></div></div>
+            <div class="card__gallery-slide"><div class="card__media-placeholder"></div></div>
+          </div>
+          <span class="card__caption card__caption--tl">AKQA for Nike</span>
+          <button class="card__gallery-arrow card__gallery-arrow--prev">&#x2192;</button>
+          <button class="card__gallery-arrow card__gallery-arrow--next">&#x2192;</button>
+          <span class="card__gallery-counter">1 / 3</span>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <div class="demo-row demo-row--2" style="margin-top: 1.5rem;">
+
+    <!-- Gallery + content area -->
+    <div>
+      <span class="label">Gallery + content area (vertical)</span>
+      <article class="card card--vertical">
+        <div class="card__media card__media--gallery" style="aspect-ratio: 16/9; min-height: unset;">
+          <div class="card__gallery">
+            <div class="card__gallery-slide"><div class="card__media-placeholder"></div></div>
+            <div class="card__gallery-slide"><div class="card__media-placeholder"></div></div>
+            <div class="card__gallery-slide"><div class="card__media-placeholder"></div></div>
+            <div class="card__gallery-slide"><div class="card__media-placeholder"></div></div>
+            <div class="card__gallery-slide"><div class="card__media-placeholder"></div></div>
+          </div>
+          <span class="card__splash">Live</span>
+          <div class="card__gallery-dots">
+            <button class="card__gallery-dot card__gallery-dot--active"></button>
+            <button class="card__gallery-dot"></button>
+            <button class="card__gallery-dot"></button>
+            <button class="card__gallery-dot"></button>
+            <button class="card__gallery-dot"></button>
+          </div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">Featured Work</span>
+          <h3 class="card__headline">Never Stop Evolving</h3>
+          <p class="card__subheadline">Redefining sport through digital innovation</p>
+          <p class="card__summary">A groundbreaking campaign merging physical and digital experiences across 12 global markets.</p>
+          <div class="card__tags">
+            <span class="card__tag">Digital</span>
+            <span class="card__tag">Sport</span>
+          </div>
+          <a href="#" class="card__cta">View campaign</a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Gallery + content area (horizontal) -->
+    <div>
+      <span class="label">Gallery + content area (horizontal)</span>
+      <article class="card card--horizontal">
+        <div class="card__media card__media--gallery" style="min-height: 260px;">
+          <div class="card__gallery">
+            <div class="card__gallery-slide"><div class="card__media-placeholder"></div></div>
+            <div class="card__gallery-slide"><div class="card__media-placeholder"></div></div>
+            <div class="card__gallery-slide"><div class="card__media-placeholder"></div></div>
+          </div>
+          <span class="card__splash">New</span>
+          <div class="card__gallery-dots">
+            <button class="card__gallery-dot card__gallery-dot--active"></button>
+            <button class="card__gallery-dot"></button>
+            <button class="card__gallery-dot"></button>
+          </div>
+        </div>
+        <div class="card__content">
+          <span class="card__eyebrow">Company</span>
+          <h3 class="card__headline">Ogilvy</h3>
+          <p class="card__subheadline">An iconic global agency that makes brands matter</p>
+          <p class="card__summary">Creative, PR, consulting and health across 131 offices worldwide.</p>
+          <div class="card__actions">
+            <a href="#" class="card__btn card__btn--primary">Visit profile</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     17. CONTENT MODEL REFERENCE
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <h2>Content Model</h2>
+  <p class="desc">Every field is optional. The card renders what is present and collapses what is absent. Fields are grouped into two areas plus card-level configuration.</p>
+
+  <style>
+    .model { margin-top: 2rem; }
+    .model__group {
+      background: var(--surface);
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    .model__group-header {
+      padding: 1rem 1.5rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-bottom: 1px solid var(--border);
+    }
+    .model__group-header--media { background: var(--media-bg); }
+    .model__group-header--content { background: var(--accent-light); color: var(--accent); }
+    .model__group-header--config { background: var(--ink); color: #fff; }
+    .model__field {
+      display: grid;
+      grid-template-columns: 160px 100px 1fr;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+      font-size: 0.82rem;
+    }
+    .model__field:last-child { border-bottom: none; }
+    .model__field-name {
+      font-weight: 700;
+      font-family: 'DM Sans', monospace;
+      font-size: 0.8rem;
+    }
+    .model__field-type {
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+      background: var(--surface-alt);
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      text-align: center;
+      align-self: start;
+    }
+    .model__field-desc {
+      color: var(--ink-muted);
+      line-height: 1.5;
+    }
+    .model__field-desc code {
+      font-size: 0.72rem;
+      background: var(--surface-alt);
+      padding: 0.1rem 0.35rem;
+      border-radius: 3px;
+    }
+    .model__preview {
+      margin-top: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: var(--surface-alt);
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    .model__preview-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-bottom: 0.4rem;
+    }
+    @media (max-width: 700px) {
+      .model__field {
+        grid-template-columns: 1fr;
+        gap: 0.3rem;
+      }
+    }
+  </style>
+
+  <div class="model">
+
+    <!-- ── MEDIA AREA ── -->
+    <div class="model__group">
+      <div class="model__group-header model__group-header--media">Media Area</div>
+
+      <div class="model__field">
+        <div class="model__field-name">media</div>
+        <div class="model__field-type">MediaItem[]</div>
+        <div class="model__field-desc">
+          Ordered list of media items. 1 item = single display. 2+ items = gallery with navigation.
+          <div class="model__preview">
+            <div class="model__preview-label">Each MediaItem</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.5rem; font-size: 0.75rem;">
+              <div><strong>type</strong><br><code>image</code> <code>video</code> <code>icon</code> <code>logo</code> <code>embed</code></div>
+              <div><strong>src</strong><br>URL / asset reference</div>
+              <div><strong>alt</strong><br>Alt text for images/icons</div>
+              <div><strong>caption</strong><br>Optional credit line</div>
+              <div><strong>poster</strong><br>Video poster image</div>
+              <div><strong>mimeType</strong><br><code>video/mp4</code> etc.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="model__field">
+        <div class="model__field-name">splash</div>
+        <div class="model__field-type">String</div>
+        <div class="model__field-desc">
+          Optional badge overlay on the media area. Short text like a label or status indicator.
+          <div class="model__preview">
+            <div style="display: flex; gap: 1rem; align-items: center;">
+              <span class="card__splash" style="position: static;">New</span>
+              <span class="card__splash" style="position: static;">Live</span>
+              <span class="card__splash" style="position: static;">Play</span>
+              <span class="card__splash" style="position: static;">2024</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="model__field">
+        <div class="model__field-name">captionPosition</div>
+        <div class="model__field-type">Enum</div>
+        <div class="model__field-desc">
+          Position of the caption overlay within the media area.
+          <code>bottom-left</code> <code>bottom-right</code> <code>top-left</code> <code>top-right</code>
+          <div class="model__preview">
+            <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+              <div style="position: relative; width: 100px; height: 60px; background: var(--media-bg); border-radius: 3px;">
+                <span style="position: absolute; bottom: 0; left: 0; padding: 0.15rem 0.4rem; background: rgba(0,0,0,.55); color: #fff; font-size: 0.55rem;">bottom-left</span>
+              </div>
+              <div style="position: relative; width: 100px; height: 60px; background: var(--media-bg); border-radius: 3px;">
+                <span style="position: absolute; bottom: 0; right: 0; padding: 0.15rem 0.4rem; background: rgba(0,0,0,.55); color: #fff; font-size: 0.55rem;">bottom-right</span>
+              </div>
+              <div style="position: relative; width: 100px; height: 60px; background: var(--media-bg); border-radius: 3px;">
+                <span style="position: absolute; top: 0; left: 0; padding: 0.15rem 0.4rem; background: rgba(0,0,0,.55); color: #fff; font-size: 0.55rem;">top-left</span>
+              </div>
+              <div style="position: relative; width: 100px; height: 60px; background: var(--media-bg); border-radius: 3px;">
+                <span style="position: absolute; top: 0; right: 0; padding: 0.15rem 0.4rem; background: rgba(0,0,0,.55); color: #fff; font-size: 0.55rem;">top-right</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="model__field">
+        <div class="model__field-name">mediaAspectRatio</div>
+        <div class="model__field-type">Enum</div>
+        <div class="model__field-desc">
+          <code>auto</code> <code>21:9</code> <code>16:9</code> <code>4:3</code> <code>1:1</code> <code>3:4</code> <code>9:16</code>
+          <div class="model__preview">
+            <div style="display: flex; gap: 0.75rem; align-items: end; flex-wrap: wrap;">
+              <div style="text-align: center;">
+                <div style="width: 105px; aspect-ratio: 21/9; background: var(--media-bg); border-radius: 3px;"></div>
+                <div style="font-size: 0.65rem; color: var(--ink-muted); margin-top: 0.2rem;">21:9 hero</div>
+              </div>
+              <div style="text-align: center;">
+                <div style="width: 80px; aspect-ratio: 16/9; background: var(--media-bg); border-radius: 3px;"></div>
+                <div style="font-size: 0.65rem; color: var(--ink-muted); margin-top: 0.2rem;">16:9 wide</div>
+              </div>
+              <div style="text-align: center;">
+                <div style="width: 68px; aspect-ratio: 4/3; background: var(--media-bg); border-radius: 3px;"></div>
+                <div style="font-size: 0.65rem; color: var(--ink-muted); margin-top: 0.2rem;">4:3 classic</div>
+              </div>
+              <div style="text-align: center;">
+                <div style="width: 56px; aspect-ratio: 1; background: var(--media-bg); border-radius: 3px;"></div>
+                <div style="font-size: 0.65rem; color: var(--ink-muted); margin-top: 0.2rem;">1:1 square</div>
+              </div>
+              <div style="text-align: center;">
+                <div style="width: 42px; aspect-ratio: 3/4; background: var(--media-bg); border-radius: 3px;"></div>
+                <div style="font-size: 0.65rem; color: var(--ink-muted); margin-top: 0.2rem;">3:4 portrait</div>
+              </div>
+              <div style="text-align: center;">
+                <div style="width: 32px; aspect-ratio: 9/16; background: var(--media-bg); border-radius: 3px;"></div>
+                <div style="font-size: 0.65rem; color: var(--ink-muted); margin-top: 0.2rem;">9:16 tall</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CONTENT AREA ── -->
+    <div class="model__group">
+      <div class="model__group-header model__group-header--content">Content Area</div>
+
+      <div class="model__field">
+        <div class="model__field-name">eyebrow</div>
+        <div class="model__field-type">String</div>
+        <div class="model__field-desc">
+          Small label above the card image — category, date, or section name.
+          <div class="model__preview">
+            <span style="font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent);">Featured Work</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="model__field">
+        <div class="model__field-name">headline</div>
+        <div class="model__field-type">String</div>
+        <div class="model__field-desc">
+          Primary title. Rendered as an <code>&lt;h3&gt;</code> by default.
+          <div class="model__preview">
+            <span style="font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em;">Never Stop Evolving</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="model__field">
+        <div class="model__field-name">subheadline</div>
+        <div class="model__field-type">String</div>
+        <div class="model__field-desc">
+          Secondary title or tagline.
+          <div class="model__preview">
+            <span style="font-size: 0.85rem; color: var(--ink-muted); font-weight: 300; font-style: italic;">Redefining the future of sport through digital innovation</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="model__field">
+        <div class="model__field-name">tags</div>
+        <div class="model__field-type">String[]</div>
+        <div class="model__field-desc">
+          Taxonomy tags, rendered as pills/chips.
+          <div class="model__preview">
+            <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+              <span class="card__tag">Digital</span>
+              <span class="card__tag">Sport</span>
+              <span class="card__tag">Innovation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="model__field">
+        <div class="model__field-name">summary</div>
+        <div class="model__field-type">String</div>
+        <div class="model__field-desc">
+          Short description / teaser. Plain text, limited length.
+          <div class="model__preview">
+            <span style="font-size: 0.82rem; color: var(--ink-muted); font-weight: 300; line-height: 1.55;">A groundbreaking campaign that merged physical and digital experiences, reaching 40M+ consumers across 12 markets.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="model__field">
+        <div class="model__field-name">description</div>
+        <div class="model__field-type">Rich text</div>
+        <div class="model__field-desc">
+          Longer body content. Supports inline formatting, links, and lists.
+          <div class="model__preview">
+            <div style="font-size: 0.82rem; color: var(--ink-muted); line-height: 1.6;">
+              <p style="margin-bottom: 0.4rem;">The campaign spanned <strong>12 markets</strong> across three continents, combining real-time data with personalised creative.</p>
+              <p>Key results included a <strong>34% increase</strong> in brand consideration and a <a href="#" style="color: var(--accent);">Cannes Lions Gold</a>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="model__field">
+        <div class="model__field-name">links</div>
+        <div class="model__field-type">LinkItem[]</div>
+        <div class="model__field-desc">
+          All interactive actions — navigation, CTAs, and custom functions. Replaces separate <code>cta</code> and <code>links</code> fields.
+          <div class="model__preview">
+            <div class="model__preview-label">Each LinkItem</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.5rem; font-size: 0.75rem; margin-bottom: 0.75rem;">
+              <div><strong>label</strong> <em>(required)</em><br>Display text</div>
+              <div><strong>url</strong><br>Navigation target. Use for links.</div>
+              <div><strong>action</strong><br>Function name / event. Use for buttons like "add to basket".</div>
+              <div><strong>variant</strong><br><code>link</code> <code>primary</code> <code>secondary</code><br>Default: <code>link</code></div>
+              <div><strong>target</strong><br><code>_blank</code> etc. Only for <code>url</code>.</div>
+            </div>
+          </div>
+
+          <div class="model__preview" style="margin-top: 0.5rem;">
+            <div class="model__preview-label">Rendering variants</div>
+            <div style="display: flex; gap: 1.5rem; align-items: start; flex-wrap: wrap;">
+              <div>
+                <div class="model__preview-label">variant: "link"</div>
+                <a href="#" class="card__cta" style="margin: 0;">View campaign</a>
+              </div>
+              <div>
+                <div class="model__preview-label">variant: "primary"</div>
+                <a href="#" class="card__btn card__btn--primary" style="margin: 0;">Register now</a>
+              </div>
+              <div>
+                <div class="model__preview-label">variant: "secondary"</div>
+                <a href="#" class="card__btn card__btn--secondary" style="margin: 0;">View online</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="model__preview" style="margin-top: 0.5rem;">
+            <div class="model__preview-label">Single link — card becomes clickable</div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <a href="#" class="card__cta" style="margin: 0;">View campaign</a>
+              <span style="font-size: 0.7rem; color: var(--ink-muted);">Entire card is a click-through link</span>
+            </div>
+          </div>
+
+          <div class="model__preview" style="margin-top: 0.5rem;">
+            <div class="model__preview-label">Multiple links — each renders independently</div>
+            <div class="card__actions" style="margin: 0;">
+              <a href="#" class="card__btn card__btn--primary">Download PDF</a>
+              <a href="#" class="card__btn card__btn--secondary">View online</a>
+            </div>
+          </div>
+
+          <div class="model__preview" style="margin-top: 0.5rem;">
+            <div class="model__preview-label">Action buttons — custom functions, not navigation</div>
+            <div class="card__actions" style="margin: 0;">
+              <button class="card__btn card__btn--primary" type="button">Add to basket</button>
+              <button class="card__btn card__btn--secondary" type="button">Save for later</button>
+            </div>
+            <div style="font-size: 0.7rem; color: var(--ink-muted); margin-top: 0.4rem;">Rendered as <code>&lt;button&gt;</code> not <code>&lt;a&gt;</code> — card is never clickable</div>
+          </div>
+
+          <div class="model__preview" style="margin-top: 0.5rem;">
+            <div class="model__preview-label">Navigation list — sidebar variant</div>
+            <ul class="card__links" style="margin: 0; max-width: 260px;">
+              <li><a href="#">Share price</a></li>
+              <li><a href="#">Results &amp; reports</a></li>
+              <li><a href="#">Shareholder centre</a></li>
+            </ul>
+            <div style="margin-top: 0.5rem;">
+              <a href="#" class="card__btn card__btn--primary">Contact IR team</a>
+            </div>
+            <div style="font-size: 0.7rem; color: var(--ink-muted); margin-top: 0.4rem;">Default variant renders as list, <code>primary</code> variant renders as CTA button</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CARD-LEVEL CONFIG ── -->
+    <div class="model__group">
+      <div class="model__group-header model__group-header--config">Card-Level Configuration</div>
+
+      <div class="model__field">
+        <div class="model__field-name">variant</div>
+        <div class="model__field-type">Enum</div>
+        <div class="model__field-desc">
+          Layout variant. Controls field emphasis and area arrangement.
+          <div class="model__preview">
+            <div style="display: flex; flex-wrap: wrap; gap: 0.35rem;">
+              <code>hero</code> <code>feature</code> <code>teaser</code> <code>profile</code> <code>stat</code> <code>download</code> <code>sidebar</code> <code>metadata</code> <code>minimal</code>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="model__field">
+        <div class="model__field-name">orientation</div>
+        <div class="model__field-type">Enum</div>
+        <div class="model__field-desc">
+          How media and content areas are arranged.
+          <div class="model__preview">
+            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+              <div style="text-align: center;">
+                <div style="width: 60px; display: grid; grid-template-rows: 1fr 1fr; gap: 2px; height: 70px;">
+                  <div style="background: var(--media-bg); border-radius: 2px;"></div>
+                  <div style="background: var(--accent-light); border-radius: 2px;"></div>
+                </div>
+                <div style="font-size: 0.65rem; color: var(--ink-muted); margin-top: 0.3rem;"><code>vertical</code></div>
+              </div>
+              <div style="text-align: center;">
+                <div style="width: 90px; display: grid; grid-template-columns: 1fr 1fr; gap: 2px; height: 70px;">
+                  <div style="background: var(--media-bg); border-radius: 2px;"></div>
+                  <div style="background: var(--accent-light); border-radius: 2px;"></div>
+                </div>
+                <div style="font-size: 0.65rem; color: var(--ink-muted); margin-top: 0.3rem;"><code>horizontal</code></div>
+              </div>
+              <div style="text-align: center;">
+                <div style="width: 90px; height: 70px; position: relative; border-radius: 2px; overflow: hidden;">
+                  <div style="position: absolute; inset: 0; background: var(--media-bg);"></div>
+                  <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 50%; background: rgba(232,78,27,.2); border-radius: 0 0 2px 2px;"></div>
+                </div>
+                <div style="font-size: 0.65rem; color: var(--ink-muted); margin-top: 0.3rem;"><code>overlay</code></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="model__field">
+        <div class="model__field-name">reversed</div>
+        <div class="model__field-type">Boolean</div>
+        <div class="model__field-desc">
+          Flips the order of media and content. In <code>vertical</code>: content on top, media below. In <code>horizontal</code>: content on left, media on right. Ignored for <code>overlay</code>.
+        </div>
+      </div>
+
+      <div class="model__field">
+        <div class="model__field-name">contentPosition</div>
+        <div class="model__field-type">Enum</div>
+        <div class="model__field-desc">
+          Alignment of the content area within an <code>overlay</code> card. Only applies when orientation is <code>overlay</code>.
+          <div class="model__preview">
+            <div style="display: inline-grid; grid-template-columns: repeat(3, auto); grid-template-rows: repeat(3, auto); gap: 3px;">
+              <div style="background: var(--accent); color: #fff; font-size: 0.55rem; display: grid; place-content: center; border-radius: 2px; padding: 0.4rem 0.6rem;">top-left</div>
+              <div style="background: var(--accent); color: #fff; font-size: 0.55rem; display: grid; place-content: center; border-radius: 2px; padding: 0.4rem 0.6rem;">top-center</div>
+              <div style="background: var(--accent); color: #fff; font-size: 0.55rem; display: grid; place-content: center; border-radius: 2px; padding: 0.4rem 0.6rem;">top-right</div>
+              <div style="background: var(--accent); color: #fff; font-size: 0.55rem; display: grid; place-content: center; border-radius: 2px; padding: 0.4rem 0.6rem;">center-left</div>
+              <div style="background: var(--accent); color: #fff; font-size: 0.55rem; display: grid; place-content: center; border-radius: 2px; padding: 0.4rem 0.6rem;">center</div>
+              <div style="background: var(--accent); color: #fff; font-size: 0.55rem; display: grid; place-content: center; border-radius: 2px; padding: 0.4rem 0.6rem;">center-right</div>
+              <div style="background: var(--accent); color: #fff; font-size: 0.55rem; display: grid; place-content: center; border-radius: 2px; padding: 0.4rem 0.6rem;">bottom-left</div>
+              <div style="background: var(--accent); color: #fff; font-size: 0.55rem; display: grid; place-content: center; border-radius: 2px; padding: 0.4rem 0.6rem;">bottom-center</div>
+              <div style="background: var(--accent); color: #fff; font-size: 0.55rem; display: grid; place-content: center; border-radius: 2px; padding: 0.4rem 0.6rem;">bottom-right</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="model__field">
+        <div class="model__field-name">theme</div>
+        <div class="model__field-type">Enum</div>
+        <div class="model__field-desc">
+          <code>light</code> <code>dark</code> <code>brand</code> <code>transparent</code>
+        </div>
+      </div>
+
+      <div class="model__field">
+        <div class="model__field-name">clickable</div>
+        <div class="model__field-type">Boolean</div>
+        <div class="model__field-desc">
+          When <code>true</code> and <code>links</code> contains exactly 1 item with a <code>url</code>, the entire card becomes a click-through link via a stretched <code>&lt;a&gt;</code>. Ignored when there are multiple links or when a link uses <code>action</code> instead of <code>url</code>.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</body>
+</html>
