@@ -5,7 +5,7 @@ const config = {
   title: 'Baseline',
   tagline: 'CMS-agnostic content architecture',
   url: 'https://browser.style',
-  baseUrl: '/baseline/',
+  baseUrl: '/baseline/docs/',
   onBrokenLinks: 'throw',
   favicon: 'img/favicon.ico',
 
@@ -20,6 +20,7 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          path: './pages',
           routeBasePath: '/',
           sidebarPath: './sidebars.js',
           editUrl: 'https://github.com/madsstoumann/browser-style/edit/main/baseline/',

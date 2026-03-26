@@ -5,7 +5,7 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
-    "build": "docusaurus build --out-dir site && cp -r site/* . && rm -rf site",
+    "build": "docusaurus build --out-dir docs",
     "swizzle": "docusaurus swizzle",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve"
@@ -13,7 +13,7 @@
   "files": [
     "models/",
     "content/",
-    "docs/",
+    "pages/",
     "README.md",
     "LICENSE"
   ],

@@ -10,7 +10,8 @@ Designed to work with [UCM](../unified-content-model) (Unified Content Model, `@
 ```
 models/          # Content type schemas (JSON Schema draft-07)
 content/         # UCF content examples, organized by model
-docs/            # All documentation (flat — no subdirectories)
+pages/           # Markdown source documents (flat — no subdirectories)
+docs/            # Generated Docusaurus output (do not edit manually)
 src/css/         # Docusaurus custom styles
 ```
 
@@ -18,9 +19,8 @@ src/css/         # Docusaurus custom styles
 
 - Built with Docusaurus, served at `https://browser.style/baseline/`
 - `baseUrl: '/baseline/'` in `docusaurus.config.js`
-- All doc pages live flat in `docs/` (no `content/` or `guides/` subdirectories)
-- Build: `npm run build` — builds to `site/`, copies output to project root, removes `site/`
-- Build artifacts (`index.html`, `404.html`, `sitemap.xml`, `assets/`) are committed to git for GitHub Pages
+- Markdown sources live flat in `pages/` (no subdirectories)
+- Build: `npm run build` — builds Docusaurus output into `docs/`
 - Dev server: `npx docusaurus start` from this directory (uses root `node_modules` via workspaces)
 
 ## Validation
@@ -107,5 +107,6 @@ Documentation and implementation plans cover multiple deployment targets:
 - `contentTree` as a string will fail validation — always use the object form
 - The `/models/cards/` directory in UCM is OBSOLETE — all cards are in `content-card.schema.json`
 - `demo.schema.json` and `demo.widgets.schema.json` are test/showcase models, not site models
-- All doc pages are flat in `docs/` — do NOT create subdirectories like `docs/content/` or `docs/guides/`
+- All doc pages are flat in `pages/` — do NOT create subdirectories like `pages/content/` or `pages/guides/`
+- `docs/` is generated output — do NOT edit files there manually
 - No local `node_modules` — dependencies are hoisted to the monorepo root via workspaces
