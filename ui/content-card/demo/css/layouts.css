@@ -1,0 +1,217 @@
+/* ============================================================
+   LAYOUTS — base (card attribute, no container query)
+   ============================================================ */
+
+/* -- vertical (default: grid-template-rows set in base.css) -- */
+content-card:not([card]) .cc-inner,
+content-card[card*="vertical"]:not([card*="vertical-r"]) .cc-inner {
+  grid-template-rows: auto 1fr;
+  grid-template-columns: none;
+}
+
+/* handle single-child (media-only or content-only by data) */
+content-card .cc-inner:has(> :only-child) {
+  grid-template-rows: 1fr;
+}
+
+/* -- vertical-r -- */
+content-card[card*="vertical-r"] .cc-inner {
+  grid-template-rows: 1fr auto;
+  grid-template-columns: none;
+}
+content-card[card*="vertical-r"] .cc-content { order: -1; }
+
+/* -- horizontal -- */
+content-card[card*="horizontal"]:not([card*="horizontal-r"]) .cc-inner {
+  grid-template-columns: var(--card-split, 2fr 3fr);
+  grid-template-rows: none;
+}
+
+/* -- horizontal-r -- */
+content-card[card*="horizontal-r"] .cc-inner {
+  grid-template-columns: var(--card-split, 3fr 2fr);
+  grid-template-rows: none;
+}
+content-card[card*="horizontal-r"] .cc-content { order: -1; }
+
+/* -- media-only -- */
+content-card[card*="media-only"] .cc-content { display: none; }
+content-card[card*="media-only"] .cc-media { min-height: unset; }
+content-card[card*="media-only"] .cc-inner { grid-template-rows: 1fr; }
+
+/* -- content-only -- */
+content-card[card*="content-only"] .cc-media { display: none; }
+content-card[card*="content-only"] .cc-inner { grid-template-rows: 1fr; }
+
+/* -- eyebrow(above) — 3-row grid -- */
+content-card[card*="eyebrow(above)"] .cc-inner {
+  grid-template-rows: auto auto 1fr;
+}
+
+/* -- subgrid support --
+   Row structure: media | eyebrow | headline | summary | tags | cta = 6 rows
+   cc-content spans rows 2–6 (5 rows). Missing elements collapse to 0 height.
+
+   Cards in a subgrid MUST have a consistent number of content children.
+   The standard set: eyebrow, headline, summary, tags, cta = 5.
+
+   Uses display:contents on cc-inner to flatten the 3-level nesting
+   (content-card → cc-inner → cc-content) into 2 levels, matching the
+   card visualizer's structure (.card → .card__content).
+
+   Usage:
+     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+       <content-card card="vertical subgrid" content="..."></content-card>
+       ...
+     </div>
+   ──────────────────────────────────────────────────────── */
+
+/* content-card becomes the grid + takes over cc-inner's visual role */
+content-card[card*="subgrid"] {
+  display: grid;
+  grid-row: span 6;
+  grid-template-rows: subgrid;
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  color: var(--card-ink);
+  transition: box-shadow var(--card-transition);
+}
+
+content-card[card*="subgrid"]:hover {
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* cc-inner is removed from the box tree — its children become
+   direct grid items of content-card */
+content-card[card*="subgrid"] > .cc-inner {
+  display: contents;
+}
+
+/* cc-content spans rows 2–6, switches from flex to grid+subgrid */
+content-card[card*="subgrid"] .cc-content {
+  grid-row: span 5;
+  display: grid;
+  grid-template-rows: subgrid;
+}
+
+/* ============================================================
+   LAYOUTS — card-md  @container card (min-width: 400px)
+   ============================================================ */
+@container card (min-width: 400px) {
+  content-card[card-md*="vertical"]:not([card-md*="vertical-r"]) .cc-inner {
+    grid-template-rows: auto 1fr;
+    grid-template-columns: none;
+  }
+
+  content-card[card-md*="vertical-r"] .cc-inner {
+    grid-template-rows: 1fr auto;
+    grid-template-columns: none;
+  }
+  content-card[card-md*="vertical-r"] .cc-content { order: -1; }
+
+  content-card[card-md*="horizontal"]:not([card-md*="horizontal-r"]) .cc-inner {
+    grid-template-columns: var(--card-split-md, 2fr 3fr);
+    grid-template-rows: none;
+  }
+
+  content-card[card-md*="horizontal-r"] .cc-inner {
+    grid-template-columns: var(--card-split-md, 3fr 2fr);
+    grid-template-rows: none;
+  }
+  content-card[card-md*="horizontal-r"] .cc-content { order: -1; }
+
+  content-card[card-md*="media-only"] .cc-content { display: none; }
+  content-card[card-md*="media-only"] .cc-media { min-height: unset; }
+
+  content-card[card-md*="content-only"] .cc-media { display: none; }
+
+  content-card[card-md*="eyebrow(above)"] .cc-inner {
+    grid-template-rows: auto auto 1fr;
+  }
+
+  /* subgrid at md */
+  content-card[card-md*="subgrid"] {
+    display: grid;
+    grid-row: span 6;
+    grid-template-rows: subgrid;
+    background: var(--card-bg);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    color: var(--card-ink);
+  }
+  content-card[card-md*="subgrid"] > .cc-inner {
+    display: contents;
+  }
+  content-card[card-md*="subgrid"] .cc-content {
+    grid-row: span 5;
+    display: grid;
+    grid-template-rows: subgrid;
+  }
+
+  /* Aspect ratio at md */
+  content-card[style*="--card-ar-md"] .cc-media {
+    aspect-ratio: var(--card-ar-md);
+    min-height: unset;
+  }
+}
+
+/* ============================================================
+   LAYOUTS — card-xl  @container card (min-width: 700px)
+   ============================================================ */
+@container card (min-width: 700px) {
+  content-card[card-xl*="vertical"]:not([card-xl*="vertical-r"]) .cc-inner {
+    grid-template-rows: auto 1fr;
+    grid-template-columns: none;
+  }
+
+  content-card[card-xl*="vertical-r"] .cc-inner {
+    grid-template-rows: 1fr auto;
+    grid-template-columns: none;
+  }
+  content-card[card-xl*="vertical-r"] .cc-content { order: -1; }
+
+  content-card[card-xl*="horizontal"]:not([card-xl*="horizontal-r"]) .cc-inner {
+    grid-template-columns: var(--card-split-xl, 2fr 3fr);
+    grid-template-rows: none;
+  }
+
+  content-card[card-xl*="horizontal-r"] .cc-inner {
+    grid-template-columns: var(--card-split-xl, 3fr 2fr);
+    grid-template-rows: none;
+  }
+  content-card[card-xl*="horizontal-r"] .cc-content { order: -1; }
+
+  content-card[card-xl*="media-only"] .cc-content { display: none; }
+  content-card[card-xl*="media-only"] .cc-media { min-height: unset; }
+
+  content-card[card-xl*="content-only"] .cc-media { display: none; }
+
+  content-card[card-xl*="eyebrow(above)"] .cc-inner {
+    grid-template-rows: auto auto 1fr;
+  }
+
+  /* subgrid at xl */
+  content-card[card-xl*="subgrid"] {
+    display: grid;
+    grid-row: span 6;
+    grid-template-rows: subgrid;
+  }
+  content-card[card-xl*="subgrid"][card-xl] > .cc-inner {
+    grid-row: span 6;
+    grid-template-rows: subgrid;
+  }
+  content-card[card-xl*="subgrid"][card-xl] .cc-content {
+    grid-row: span 5;
+    display: grid;
+    grid-template-rows: subgrid;
+  }
+
+  /* Aspect ratio at xl */
+  content-card[style*="--card-ar-xl"] .cc-media {
+    aspect-ratio: var(--card-ar-xl);
+    min-height: unset;
+  }
+}

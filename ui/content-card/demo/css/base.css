@@ -1,0 +1,150 @@
+/* === Custom Properties === */
+content-card {
+  color-scheme: light dark;
+
+  /* Surface */
+  --card-bg: light-dark(#fff, #1e1e1e);
+  --card-radius: 6px;
+  --card-shadow: light-dark(
+    0 1px 3px rgba(0,0,0,.06) 0 4px 12px rgba(0,0,0,.04),
+    0 1px 3px rgba(0,0,0,.2) 0 4px 12px rgba(0,0,0,.15)
+  );
+  --card-shadow-hover: light-dark(
+    0 2px 8px rgba(0,0,0,.08) 0 8px 24px rgba(0,0,0,.06),
+    0 2px 8px rgba(0,0,0,.2) 0 8px 24px rgba(0,0,0,.15)
+  );
+  --card-border: light-dark(#e0dbd5, #3a3530);
+  --card-transition: .25s ease;
+
+  /* Colors */
+  --card-accent: light-dark(#e84e1b, #f06530);
+  --card-ink: light-dark(#1a1a1a, #e5e5e5);
+  --card-ink-muted: light-dark(#6b6560, #a09890);
+  --card-on-accent: #fff;
+
+  /* Overlay */
+  --card-overlay-ink: #fff;
+  --card-overlay-ink-muted: rgba(255,255,255,.75);
+  --card-overlay-eyebrow: rgba(255,255,255,.8);
+  --card-overlay-subheadline: rgba(255,255,255,.7);
+  --card-overlay-tag-bg: rgba(255,255,255,.18);
+  --card-overlay-tag-color: rgba(255,255,255,.9);
+  --card-overlay-gradient-start: rgba(0,0,0,.45);
+  --card-overlay-gradient-end: rgba(0,0,0,0);
+  --card-overlay-gradient-center: rgba(0,0,0,.4);
+  --card-overlay-gradient-center-end: rgba(0,0,0,.05);
+  --card-overlay-blur: 4px;
+
+  /* Spacing */
+  --card-gap: 0;
+  --card-pi: 1.25rem;
+  --card-pb: 1.5rem;
+  --card-content-gap: 0.4rem;
+  --card-actions-gap: 0.5rem;
+  --card-tags-gap: 0.35rem;
+  --card-links-gap: 0.25rem;
+
+  /* Media */
+  --card-media-bg: light-dark(#e8e0d8, #2a2520);
+  --card-media-min-h: 180px;
+
+  /* Eyebrow */
+  --card-eyebrow-size: 0.7rem;
+  --card-eyebrow-weight: 500;
+  --card-eyebrow-ls: 0.08em;
+  --card-eyebrow-color: var(--card-accent);
+  --card-eyebrow-above-pbs: 0.75rem;
+  --card-eyebrow-above-pbe: 0.5rem;
+
+  /* Headline */
+  --card-headline-size: 1.15rem;
+  --card-headline-weight: 700;
+  --card-headline-lh: 1.25;
+  --card-headline-ls: -0.02em;
+  --card-hs-sm: 1.15rem;
+  --card-hs-md: 1.5rem;
+  --card-hs-lg: 2rem;
+  --card-hs-xl: 2.5rem;
+
+  /* Subheadline */
+  --card-subheadline-size: 0.85rem;
+  --card-subheadline-weight: 300;
+  --card-subheadline-color: var(--card-ink-muted);
+
+  /* Summary */
+  --card-summary-size: 0.82rem;
+  --card-summary-weight: 300;
+  --card-summary-lh: 1.55;
+  --card-summary-color: var(--card-ink-muted);
+
+  /* Tags */
+  --card-tag-size: 0.65rem;
+  --card-tag-weight: 500;
+  --card-tag-bg: light-dark(#f0ece8, #333);
+  --card-tag-color: var(--card-ink-muted);
+  --card-tag-radius: 100px;
+  --card-tag-px: 0.55rem;
+  --card-tag-py: 0.2rem;
+
+  /* Buttons */
+  --card-btn-size: 0.78rem;
+  --card-btn-weight: 700;
+  --card-btn-radius: 4px;
+  --card-btn-px: 1.4rem;
+  --card-btn-py: 0.65rem;
+
+  /* Links */
+  --card-link-size: 0.8rem;
+  --card-link-weight: 500;
+  --card-link-py: 0.3rem;
+
+  /* Caption */
+  --card-caption-size: 0.7rem;
+  --card-caption-bg: rgba(0,0,0,.55);
+  --card-caption-py: 0.4rem;
+  --card-caption-px: 0.7rem;
+
+  /* Ribbon */
+  --card-ribbon-size: 0.7rem;
+  --card-ribbon-weight: 700;
+  --card-ribbon-py: 0.35rem;
+  --card-ribbon-pe: 1rem;
+  --card-ribbon-ps: 0.7rem;
+
+  /* Sticker */
+  --card-sticker-size: 0.6rem;
+  --card-sticker-weight: 700;
+  --card-sticker-width: 52px;
+  --card-sticker-inset: 1rem;
+
+  /* Gallery */
+  --card-gallery-dot-size: 7px;
+  --card-gallery-dot-bg: rgba(255,255,255,.45);
+  --card-gallery-dot-active-bg: light-dark(#fff, #e5e5e5);
+  --card-gallery-arrow-size: 32px;
+  --card-gallery-arrow-shadow: 0 2px 6px rgba(0,0,0,.15);
+  --card-gallery-inset: 0.6rem;
+}
+
+/* === Container Setup === */
+content-card {
+  display: block;
+  container-type: inline-size;
+  container-name: card;
+}
+
+/* === Inner Grid Wrapper === */
+.cc-inner {
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  color: var(--card-ink);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: clip;
+  transition: box-shadow var(--card-transition);
+}
+
+.cc-inner:hover {
+  box-shadow: var(--card-shadow-hover);
+}

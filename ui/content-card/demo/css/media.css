@@ -1,0 +1,163 @@
+/* === Media Area === */
+.cc-media {
+  position: relative;
+  background: var(--card-media-bg);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  min-height: var(--card-media-min-h);
+  margin: 0;
+  padding: 0;
+  aspect-ratio: var(--card-ar, auto);
+}
+
+/* When aspect-ratio is explicitly set, remove min-height */
+content-card[style*="--card-ar"] .cc-media {
+  min-height: unset;
+}
+
+.cc-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* === Caption === */
+.cc-caption {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  padding: var(--card-caption-py) var(--card-caption-px);
+  background: var(--card-caption-bg);
+  color: var(--card-on-accent);
+  font-size: var(--card-caption-size);
+  letter-spacing: 0.02em;
+}
+
+.cc-caption--tl { inset-block-start: 0; inset-inline-start: 0; inset-block-end: auto; inset-inline-end: auto; }
+.cc-caption--tr { inset-block-start: 0; inset-inline-end: 0; inset-block-end: auto; inset-inline-start: auto; }
+.cc-caption--bl { inset-block-end: 0; inset-inline-start: 0; inset-block-start: auto; inset-inline-end: auto; }
+.cc-caption--br { inset-block-end: 0; inset-inline-end: 0; inset-block-start: auto; inset-inline-start: auto; }
+
+/* === Ribbon === */
+.cc-ribbon {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  padding: var(--card-ribbon-py) var(--card-ribbon-pe) var(--card-ribbon-py) var(--card-ribbon-ps);
+  background: var(--card-accent);
+  color: var(--card-on-accent);
+  font-size: var(--card-ribbon-size);
+  font-weight: var(--card-ribbon-weight);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+
+/* === Sticker / Splash === */
+.cc-sticker {
+  position: absolute;
+  inset-block-start: var(--card-sticker-inset);
+  inset-inline-end: var(--card-sticker-inset);
+  width: var(--card-sticker-width);
+  height: var(--card-sticker-width);
+  border-radius: 50%;
+  background: var(--card-accent);
+  color: var(--card-on-accent);
+  display: grid;
+  place-items: center;
+  font-size: var(--card-sticker-size);
+  font-weight: var(--card-sticker-weight);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* === Gallery === */
+.cc-media--gallery {
+  display: grid;
+  place-items: initial;
+}
+
+.cc-gallery {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.cc-gallery::-webkit-scrollbar { display: none; }
+
+.cc-gallery-slide {
+  scroll-snap-align: start;
+  display: grid;
+  place-items: center;
+  min-height: inherit;
+}
+
+.cc-gallery-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* gallery dots */
+.cc-gallery-dots {
+  position: absolute;
+  inset-block-end: var(--card-gallery-inset);
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  display: flex;
+  gap: var(--card-tags-gap);
+
+}
+
+.cc-gallery-dot {
+  width: var(--card-gallery-dot-size);
+  height: var(--card-gallery-dot-size);
+  border-radius: 50%;
+  background: var(--card-gallery-dot-bg);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.cc-gallery-dot--active { background: var(--card-gallery-dot-active-bg); }
+
+/* gallery arrows */
+.cc-gallery-arrow {
+  position: absolute;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+
+  width: var(--card-gallery-arrow-size);
+  height: var(--card-gallery-arrow-size);
+  border-radius: 50%;
+  border: none;
+  background: var(--card-accent);
+  color: var(--card-on-accent);
+  font-size: 1rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  box-shadow: var(--card-gallery-arrow-shadow);
+  transition: background var(--card-transition);
+}
+
+.cc-gallery-arrow:hover { filter: brightness(0.9); }
+.cc-gallery-arrow--prev { inset-inline-start: var(--card-gallery-inset); rotate: 180deg; }
+.cc-gallery-arrow--next { inset-inline-end: var(--card-gallery-inset); }
+
+/* gallery counter */
+.cc-gallery-counter {
+  position: absolute;
+  inset-block-end: var(--card-gallery-inset);
+  inset-inline-end: var(--card-gallery-inset);
+  font-size: var(--card-tag-size);
+  color: var(--card-on-accent);
+  background: var(--card-caption-bg);
+  padding: var(--card-caption-py) var(--card-caption-px);
+  border-radius: var(--card-btn-radius);
+}

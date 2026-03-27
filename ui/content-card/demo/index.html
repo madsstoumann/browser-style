@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Card — Unified Component Demo</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/content.css">
+<link rel="stylesheet" href="css/media.css">
+<link rel="stylesheet" href="css/layouts.css">
+<link rel="stylesheet" href="css/overlays.css">
+<script type="module" src="content-card.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,300&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: #f7f5f2;
+    color: #1a1a1a;
+    line-height: 1.5;
+    padding: 0 0 6rem;
+  }
+
+  .page-header {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 3rem 2rem 2.5rem;
+    margin-bottom: 3rem;
+  }
+  .page-header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.3rem;
+  }
+  .page-header p { color: #a09890; font-size: 1rem; font-weight: 300; }
+
+  section {
+    max-width: 1200px;
+    margin: 0 auto 4rem;
+    padding: 0 1.5rem;
+  }
+  section > h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+  }
+  section > .desc {
+    color: #6b6560;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+  }
+
+  .divider {
+    height: 1px;
+    background: #e0dbd5;
+    margin: 4rem auto;
+    max-width: 1200px;
+  }
+
+  .demo-row { display: grid; gap: 1.5rem; }
+  .demo-row--2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+  .demo-row--3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .demo-row--4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+  .overlay-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  @media (max-width: 700px) { .overlay-grid { grid-template-columns: 1fr; } }
+
+  .label {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+    background: #1a1a1a;
+    color: #fff;
+    margin-bottom: 0.75rem;
+  }
+  .label--pos { background: #e84e1b; }
+  .label--code {
+    background: #f0ece8;
+    color: #6b6560;
+    font-family: monospace;
+    letter-spacing: 0;
+    font-size: 0.7rem;
+  }
+
+  .resize-container {
+    resize: horizontal;
+    overflow: hidden;
+    border: 2px dashed #e0dbd5;
+    border-radius: 8px;
+    padding: 1.5rem;
+    min-width: 280px;
+    max-width: 100%;
+  }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <h1>Unified &lt;content-card&gt;</h1>
+  <p>Container-query-driven responsive card component</p>
+</header>
+
+<!-- 1. CLASSIC VERTICAL -->
+<section>
+  <h2>Classic Vertical</h2>
+  <p class="desc">Media area on top, content area below. The default card orientation.</p>
+  <div class="demo-row demo-row--3">
+    <content-card content="demo-1" card="vertical"></content-card>
+    <content-card content="demo-2" card="vertical"></content-card>
+    <content-card content="demo-3" card="vertical"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 2. REVERSED VERTICAL -->
+<section>
+  <h2>Reversed Vertical</h2>
+  <p class="desc">Content area on top, media area below. Leads with the message.</p>
+  <div class="demo-row demo-row--3">
+    <content-card content="demo-4" card="vertical-r"></content-card>
+    <content-card content="demo-3" card="vertical-r"></content-card>
+    <content-card content="demo-9" card="vertical-r"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 3. HORIZONTAL -->
+<section>
+  <h2>Horizontal — Media Left</h2>
+  <p class="desc">Media area on the left, content area on the right.</p>
+  <div class="demo-row" style="gap: 1.25rem;">
+    <content-card content="demo-5" card="horizontal"></content-card>
+    <content-card content="demo-2" card="horizontal"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 4. HORIZONTAL REVERSED -->
+<section>
+  <h2>Horizontal — Media Right</h2>
+  <p class="desc">Content area on the left, media area on the right.</p>
+  <div class="demo-row" style="gap: 1.25rem;">
+    <content-card content="demo-13" card="horizontal-r"></content-card>
+    <content-card content="demo-3" card="horizontal-r"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 5. OVERLAY — 9 POSITIONS -->
+<section>
+  <h2>Overlay — 9 Grid Positions</h2>
+  <p class="desc">Content area placed on top of the media area, positioned via CSS grid alignment.</p>
+  <div class="overlay-grid">
+    <div><span class="label label--pos">top-left</span>
+      <content-card content="demo-8" card="overlay(tl) ar(4/3)"></content-card></div>
+    <div><span class="label label--pos">top-center</span>
+      <content-card content="demo-8" card="overlay(tc) ar(4/3)"></content-card></div>
+    <div><span class="label label--pos">top-right</span>
+      <content-card content="demo-8" card="overlay(tr) ar(4/3)"></content-card></div>
+    <div><span class="label label--pos">center-left</span>
+      <content-card content="demo-8" card="overlay(cl) ar(4/3)"></content-card></div>
+    <div><span class="label label--pos">center-center</span>
+      <content-card content="demo-8" card="overlay(cc) ar(4/3)"></content-card></div>
+    <div><span class="label label--pos">center-right</span>
+      <content-card content="demo-8" card="overlay(cr) ar(4/3)"></content-card></div>
+    <div><span class="label label--pos">bottom-left</span>
+      <content-card content="demo-8" card="overlay(bl) ar(4/3)"></content-card></div>
+    <div><span class="label label--pos">bottom-center</span>
+      <content-card content="demo-8" card="overlay(bc) ar(4/3)"></content-card></div>
+    <div><span class="label label--pos">bottom-right</span>
+      <content-card content="demo-8" card="overlay(br) ar(4/3)"></content-card></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 6. BUTTON CTAs -->
+<section>
+  <h2>Button CTAs</h2>
+  <p class="desc">Cards with button-style CTAs: primary, secondary, and mixed.</p>
+  <div class="demo-row demo-row--3">
+    <content-card content="demo-4" card="vertical"></content-card>
+    <content-card content="demo-9" card="vertical"></content-card>
+    <content-card content="demo-5" card="vertical"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 7. MULTIPLE LINKS -->
+<section>
+  <h2>Multiple Links</h2>
+  <p class="desc">Cards with a list of links for navigation and resource collections.</p>
+  <div class="demo-row demo-row--3">
+    <content-card content="demo-10" card="content-only"></content-card>
+    <content-card content="demo-10" card="content-only"></content-card>
+    <content-card content="demo-10" card="content-only"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 8. IMAGE + CAPTION (data-driven minimal) -->
+<section>
+  <h2>Image + Caption</h2>
+  <p class="desc">Minimal cards driven by data — just an image, name, and role. No special layout needed.</p>
+  <div class="demo-row demo-row--4">
+    <content-card content="demo-6" card="vertical ar(1/1)"></content-card>
+    <content-card content="demo-6" card="vertical ar(1/1)"></content-card>
+    <content-card content="demo-6" card="vertical ar(1/1)"></content-card>
+    <content-card content="demo-6" card="vertical ar(1/1)"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 9. EYEBROW PLACEMENT -->
+<section>
+  <h2>Eyebrow Placement</h2>
+  <p class="desc">The eyebrow can appear inside content (default), above the media area, or outside the card entirely.</p>
+  <div class="demo-row demo-row--3">
+    <div>
+      <span class="label label--code">eyebrow (default)</span>
+      <content-card content="demo-14" card="vertical"></content-card>
+    </div>
+    <div>
+      <span class="label label--code">eyebrow(above)</span>
+      <content-card content="demo-14" card="vertical eyebrow(above)"></content-card>
+    </div>
+    <div>
+      <span class="label label--code">eyebrow(outside)</span>
+      <content-card content="demo-14" card="vertical eyebrow(outside)"></content-card>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 10. ASPECT RATIOS + HERO BANNER -->
+<section>
+  <h2>Aspect Ratios</h2>
+  <p class="desc">The media area supports different aspect ratios via the <code>ar()</code> token.</p>
+
+  <div style="margin-bottom: 2rem;">
+    <span class="label">Hero Banner — 21:9 overlay, hs(xl)</span>
+    <content-card content="demo-15" card="overlay(bl) ar(21/9) hs(xl)"></content-card>
+  </div>
+
+  <div class="demo-row demo-row--4" style="align-items: start;">
+    <div><span class="label label--pos">1:1</span>
+      <content-card content="demo-3" card="vertical ar(1/1)"></content-card></div>
+    <div><span class="label label--pos">4:3</span>
+      <content-card content="demo-3" card="vertical ar(4/3)"></content-card></div>
+    <div><span class="label label--pos">16:9</span>
+      <content-card content="demo-3" card="vertical ar(16/9)"></content-card></div>
+    <div><span class="label label--pos">3:4</span>
+      <content-card content="demo-3" card="vertical ar(3/4)"></content-card></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 11. CONTENT ONLY -->
+<section>
+  <h2>Content Only</h2>
+  <p class="desc">Cards with no media area.</p>
+  <div class="demo-row demo-row--3">
+    <content-card content="demo-7" card="content-only"></content-card>
+    <content-card content="demo-11" card="content-only"></content-card>
+    <content-card content="demo-10" card="content-only"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 12. MEDIA ONLY -->
+<section>
+  <h2>Media Only</h2>
+  <p class="desc">Cards with only a media area. Optional splash and caption overlays.</p>
+  <div class="demo-row demo-row--4">
+    <content-card content="demo-1" card="media-only ar(1/1)"></content-card>
+    <content-card content="demo-5" card="media-only ar(1/1)"></content-card>
+    <content-card content="demo-8" card="media-only ar(1/1)"></content-card>
+    <content-card content="demo-3" card="media-only ar(1/1)"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 13. GALLERY -->
+<section>
+  <h2>Gallery</h2>
+  <p class="desc">When media contains 2+ items, the media area becomes a swipeable gallery.</p>
+  <div class="demo-row demo-row--2">
+    <content-card content="demo-13" card="vertical ar(4/3)"></content-card>
+    <content-card content="demo-13" card="horizontal"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 14. SPLIT RATIOS -->
+<section>
+  <h2>Split Ratios</h2>
+  <p class="desc">Horizontal layouts support custom column ratios via the <code>split()</code> token.</p>
+  <div class="demo-row" style="gap: 1.25rem;">
+    <div><span class="label label--code">split(1/1) — 50/50</span>
+      <content-card content="demo-5" card="horizontal split(1/1)"></content-card></div>
+    <div><span class="label label--code">split(1/2) — 33/66</span>
+      <content-card content="demo-5" card="horizontal split(1/2)"></content-card></div>
+    <div><span class="label label--code">split(2/1) — 66/33</span>
+      <content-card content="demo-5" card="horizontal split(2/1)"></content-card></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 15. SUBGRID ALIGNMENT -->
+<section>
+  <h2>Subgrid Alignment</h2>
+  <p class="desc">Using CSS subgrid, content fields align vertically across cards — even when headlines have different lengths. Cards must have a consistent number of content elements (eyebrow, headline, summary, tags, link = 5).</p>
+
+  <div style="margin-block-end: 2.5rem;">
+    <span class="label">Without subgrid (default)</span>
+    <div class="demo-row demo-row--3">
+      <content-card content="demo-3" card="vertical ar(16/9)"></content-card>
+      <content-card content="demo-7" card="vertical ar(16/9)"></content-card>
+      <content-card content="demo-11" card="vertical ar(16/9)"></content-card>
+    </div>
+  </div>
+
+  <div>
+    <span class="label label--pos">With subgrid</span>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+      <content-card content="demo-3" card="vertical subgrid ar(16/9)"></content-card>
+      <content-card content="demo-7" card="vertical subgrid ar(16/9)"></content-card>
+      <content-card content="demo-11" card="vertical subgrid ar(16/9)"></content-card>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 16. RESPONSIVE — CONTAINER QUERY DEMO -->
+<section>
+  <h2>Responsive — Container Queries</h2>
+  <p class="desc">Drag the resize handle to see the card adapt. The same card changes layout based on its own width, not the viewport.</p>
+
+  <div style="margin-bottom: 2rem;">
+    <span class="label label--code">card="vertical ar(1/1)" card-md="horizontal ar(4/3)" card-xl="overlay(bl) ar(21/9)"</span>
+    <div class="resize-container" style="width: 100%;">
+      <content-card content="demo-5"
+        card="vertical ar(1/1)"
+        card-md="horizontal ar(4/3)"
+        card-xl="overlay(bl) ar(21/9)">
+      </content-card>
+    </div>
+  </div>
+
+  <div>
+    <span class="label label--code">card="vertical" card-md="horizontal split(1/1)" card-xl="horizontal-r split(2/1)"</span>
+    <div class="resize-container" style="width: 100%;">
+      <content-card content="demo-12"
+        card="vertical"
+        card-md="horizontal split(1/1)"
+        card-xl="horizontal-r split(2/1)">
+      </content-card>
+    </div>
+  </div>
+</section>
+
+<!-- INIT SCRIPT -->
+<script type="module">
+  const response = await fetch('data/cards.json');
+  const cards = await response.json();
+
+  document.querySelectorAll('content-card[content]').forEach(el => {
+    const id = el.getAttribute('content');
+    const cardData = cards.find(c => c.id === id);
+    if (cardData) {
+      el.setAttribute('type', cardData.data?.type || 'article');
+      el.data = cardData;
+    }
+  });
+</script>
+
+</body>
+</html>

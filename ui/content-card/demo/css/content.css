@@ -1,0 +1,195 @@
+/* === Content Area === */
+.cc-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--card-content-gap);
+  padding: var(--card-pi) var(--card-pi) var(--card-pb);
+}
+
+/* === Eyebrow === */
+.cc-eyebrow {
+  color: var(--card-eyebrow-color);
+  font-size: var(--card-eyebrow-size);
+  font-weight: var(--card-eyebrow-weight);
+  letter-spacing: var(--card-eyebrow-ls);
+  text-transform: uppercase;
+}
+
+/* eyebrow(above): placed before media inside cc-inner */
+.cc-eyebrow--above {
+  color: var(--card-eyebrow-color);
+  font-size: var(--card-eyebrow-size);
+  font-weight: var(--card-eyebrow-weight);
+  letter-spacing: var(--card-eyebrow-ls);
+  padding: var(--card-eyebrow-above-pbs) var(--card-pi) var(--card-eyebrow-above-pbe);
+  text-transform: uppercase;
+}
+
+/* eyebrow(outside): placed before cc-inner */
+.cc-eyebrow--outside {
+  color: var(--card-eyebrow-color);
+  font-size: var(--card-eyebrow-size);
+  font-weight: var(--card-eyebrow-weight);
+  letter-spacing: var(--card-eyebrow-ls);
+  margin-block-end: var(--card-content-gap);
+  text-transform: uppercase;
+}
+
+/* === Headline === */
+.cc-headline {
+  font-size: var(--card-hs, var(--card-headline-size));
+  font-weight: var(--card-headline-weight);
+  letter-spacing: var(--card-headline-ls);
+  line-height: var(--card-headline-lh);
+  margin: 0;
+}
+
+@container card (min-width: 400px) {
+  .cc-headline { font-size: var(--card-hs-md, var(--card-hs, var(--card-headline-size))); }
+}
+@container card (min-width: 700px) {
+  .cc-headline { font-size: var(--card-hs-xl, var(--card-hs-md, var(--card-hs, var(--card-headline-size)))); }
+}
+
+/* === Subheadline === */
+.cc-subheadline {
+  font-size: var(--card-subheadline-size);
+  color: var(--card-subheadline-color);
+  font-weight: var(--card-subheadline-weight);
+  font-style: italic;
+}
+
+/* === Summary === */
+.cc-summary {
+  font-size: var(--card-summary-size);
+  color: var(--card-summary-color);
+  line-height: var(--card-summary-lh);
+  font-weight: var(--card-summary-weight);
+}
+
+/* === Tags === */
+.cc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--card-tags-gap);
+}
+
+
+.cc-tag {
+  font-size: var(--card-tag-size);
+  font-weight: var(--card-tag-weight);
+  padding: var(--card-tag-py) var(--card-tag-px);
+  border-radius: var(--card-tag-radius);
+  background: var(--card-tag-bg);
+  color: var(--card-tag-color);
+  letter-spacing: 0.02em;
+}
+
+/* === Link CTA === */
+.cc-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--card-content-gap);
+  font-size: var(--card-btn-size);
+  font-weight: var(--card-btn-weight);
+  color: var(--card-accent);
+  margin-block-start: var(--card-content-gap);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
+
+.cc-cta::after {
+  content: '\2192';
+  transition: translate var(--card-transition);
+}
+
+.cc-inner:hover .cc-cta::after {
+  translate: 3px 0;
+}
+
+/* === Button CTAs === */
+.cc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--card-actions-gap);
+  margin-block-start: var(--card-content-gap);
+}
+
+.cc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--card-content-gap);
+  font-family: inherit;
+  font-size: var(--card-btn-size);
+  font-weight: var(--card-btn-weight);
+  letter-spacing: 0.02em;
+  padding: var(--card-btn-py) var(--card-btn-px);
+  border: none;
+  border-radius: var(--card-btn-radius);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--card-transition), color var(--card-transition), box-shadow var(--card-transition);
+  align-self: flex-start;
+}
+
+.cc-btn--primary {
+  background: var(--card-accent);
+  color: var(--card-on-accent);
+}
+
+.cc-btn--primary:hover {
+  filter: brightness(0.9);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--card-accent) 25%, transparent);
+}
+
+.cc-btn--secondary {
+  background: transparent;
+  color: var(--card-ink);
+  border: 1.5px solid var(--card-border);
+}
+
+.cc-btn--secondary:hover {
+  border-color: var(--card-ink);
+}
+
+/* === Link List === */
+.cc-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-block-start: var(--card-content-gap);
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-links-gap);
+}
+
+.cc-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--card-tags-gap);
+  font-size: var(--card-link-size);
+  font-weight: var(--card-link-weight);
+  color: var(--card-ink);
+  text-decoration: none;
+  padding-block: var(--card-link-py);
+  border-block-end: 1px solid var(--card-border);
+  transition: color var(--card-transition), border-color var(--card-transition);
+}
+
+.cc-links a:hover {
+  color: var(--card-accent);
+  border-color: var(--card-accent);
+}
+
+.cc-links a::before {
+  content: '\2192';
+  color: var(--card-accent);
+  font-size: var(--card-caption-size);
+  transition: translate var(--card-transition);
+}
+
+.cc-links a:hover::before {
+  translate: 2px 0;
+}

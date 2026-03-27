@@ -1,0 +1,212 @@
+[
+  {
+    "id": "demo-1",
+    "headline": "Reimagining customer experience through data",
+    "subheadline": "Blurring the line between content and conversion",
+    "summary": "How leading brands are using first-party data to create meaningful connections across every touchpoint.",
+    "category": "Digital",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/demo1/800/600", "alt": "Abstract digital landscape" }],
+      "caption": "Image: Data visualization"
+    },
+    "tags": [{ "name": "CX" }, { "name": "Data" }, { "name": "Innovation" }],
+    "data": {
+      "type": "article",
+      "content": {
+        "headlineTag": "h3",
+        "published": { "datetime": "2025-07-16T10:00:00Z", "formatted": "July 16, 2025" },
+        "readingTime": "4 min read"
+      },
+      "sticker": { "text": "New", "position": "top-right" }
+    },
+    "links": [{ "url": "#", "text": "Read more" }]
+  },
+  {
+    "id": "demo-2",
+    "headline": "The future of commerce is everywhere",
+    "subheadline": "Social platforms and connected TV converge",
+    "summary": "Social platforms, connected TV, and in-store digital experiences are converging into a single commerce ecosystem.",
+    "category": "WPP iQ",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/demo2/800/600", "alt": "Commerce ecosystem" }]
+    },
+    "data": { "type": "article", "content": { "headlineTag": "h3" } },
+    "links": [{ "url": "#", "text": "Explore" }]
+  },
+  {
+    "id": "demo-3",
+    "headline": "Net zero creative production",
+    "summary": "Measuring and reducing the carbon footprint of campaign production at scale.",
+    "category": "Sustainability",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/demo3/800/600", "alt": "Green landscape" }]
+    },
+    "tags": [{ "name": "ESG" }, { "name": "Net Zero" }],
+    "data": { "type": "article", "content": { "headlineTag": "h3" } },
+    "links": [{ "url": "#", "text": "Learn more" }]
+  },
+  {
+    "id": "demo-4",
+    "headline": "Stream 2024 Global Summit",
+    "subheadline": "Athens, September 17-20",
+    "summary": "Join 800+ leaders shaping the future of marketing, creativity and technology.",
+    "category": "Event",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/demo4/800/600", "alt": "Conference stage" }]
+    },
+    "data": { "type": "event", "content": { "headlineTag": "h3" } },
+    "actions": [{ "text": "Register now", "style": "primary" }]
+  },
+  {
+    "id": "demo-5",
+    "headline": "Never Stop Evolving",
+    "subheadline": "Redefining the future of sport through digital innovation",
+    "summary": "A groundbreaking campaign that merged physical and digital experiences, reaching 40M+ consumers across 12 markets.",
+    "category": "Featured Work",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/demo5/800/600", "alt": "Athletic campaign" }],
+      "caption": "Photo: Campaign shoot"
+    },
+    "tags": [{ "name": "Digital" }, { "name": "Sport" }, { "name": "Innovation" }],
+    "data": {
+      "type": "article",
+      "content": { "headlineTag": "h3" },
+      "sticker": { "text": "New" }
+    },
+    "actions": [{ "text": "View campaign", "style": "primary" }],
+    "links": [{ "url": "#", "text": "Behind the scenes" }]
+  },
+  {
+    "id": "demo-6",
+    "headline": "Sarah Chen",
+    "subheadline": "Chief Executive Officer",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/demo6/400/400", "alt": "Sarah Chen portrait" }]
+    },
+    "data": { "type": "article", "content": { "headlineTag": "h3" } }
+  },
+  {
+    "id": "demo-7",
+    "headline": "How AKQA and Nike redefined the future of sport through a groundbreaking digital-first campaign across 12 markets",
+    "summary": "Like-for-like revenue less pass-through costs grew 4.1% in the third quarter, reflecting strong demand in Technology and Commerce practices.",
+    "category": "Featured Work",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/demo7/800/600", "alt": "Campaign visual" }]
+    },
+    "tags": [{ "name": "Digital" }, { "name": "Sport" }, { "name": "Innovation" }],
+    "data": { "type": "article", "content": { "headlineTag": "h3" } },
+    "links": [{ "url": "#", "text": "View campaign" }]
+  },
+  {
+    "id": "demo-8",
+    "headline": "Bold moves start here",
+    "category": "Campaign",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/demo8/800/600", "alt": "Campaign visual" }]
+    },
+    "data": { "type": "article", "content": { "headlineTag": "h3" } },
+    "links": [{ "url": "#", "text": "Explore" }]
+  },
+  {
+    "id": "demo-9",
+    "headline": "Annual Report 2023",
+    "summary": "Revenue, strategy, and outlook for the year ahead. Including ESG performance and sustainability targets.",
+    "category": "Report",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/demo9/800/600", "alt": "Annual report cover" }]
+    },
+    "data": { "type": "article", "content": { "headlineTag": "h3" } },
+    "actions": [
+      { "text": "Download PDF", "style": "primary" },
+      { "text": "View online", "style": "secondary" }
+    ]
+  },
+  {
+    "id": "demo-10",
+    "headline": "Investor Relations",
+    "category": "Navigation",
+    "data": { "type": "article", "content": { "headlineTag": "h3" } },
+    "links": [
+      { "url": "#", "text": "Share price" },
+      { "url": "#", "text": "Results & reports" },
+      { "url": "#", "text": "Shareholder centre" },
+      { "url": "#", "text": "Financial calendar" },
+      { "url": "#", "text": "Contact IR team" }
+    ]
+  },
+  {
+    "id": "demo-11",
+    "headline": "The power of creative transformation",
+    "summary": "How the world's most innovative brands are rethinking their approach to creativity in an AI-driven landscape.",
+    "category": "Featured",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/demo11/800/600", "alt": "Creative workspace" }]
+    },
+    "tags": [{ "name": "AI" }, { "name": "Creative" }],
+    "data": { "type": "article", "content": { "headlineTag": "h3" } },
+    "links": [{ "url": "#", "text": "Explore" }]
+  },
+  {
+    "id": "demo-12",
+    "headline": "WPP named most creative company at Cannes",
+    "subheadline": "Record-breaking year across the network",
+    "summary": "WPP agencies collected 195 Lions across all categories, including 12 Grand Prix awards.",
+    "category": "Awards",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/demo12/800/600", "alt": "Cannes Lions trophy" }],
+      "caption": "Photo: Cannes Lions 2024"
+    },
+    "tags": [{ "name": "Cannes Lions" }, { "name": "Awards" }],
+    "data": { "type": "news", "content": { "headlineTag": "h3" } },
+    "actions": [{ "text": "See all wins", "style": "primary" }],
+    "links": [{ "url": "#", "text": "Press release" }]
+  },
+  {
+    "id": "demo-13",
+    "headline": "Ogilvy",
+    "subheadline": "An iconic global agency that makes brands matter",
+    "summary": "Creative, PR, consulting and health — operating across 131 offices in 93 countries worldwide.",
+    "category": "Company",
+    "media": {
+      "sources": [
+        { "type": "image", "src": "https://picsum.photos/seed/demo13a/800/600", "alt": "Ogilvy office" },
+        { "type": "image", "src": "https://picsum.photos/seed/demo13b/800/600", "alt": "Ogilvy team" },
+        { "type": "image", "src": "https://picsum.photos/seed/demo13c/800/600", "alt": "Ogilvy work" }
+      ]
+    },
+    "tags": [{ "name": "Creative" }, { "name": "Advertising" }, { "name": "PR" }],
+    "data": {
+      "type": "article",
+      "content": { "headlineTag": "h3" },
+      "sticker": { "text": "2024" }
+    },
+    "links": [{ "url": "#", "text": "Visit profile" }]
+  },
+  {
+    "id": "demo-14",
+    "headline": "Sarah Chen appointed CEO",
+    "summary": "Chen brings 20 years of experience in digital transformation and creative leadership to the role.",
+    "category": "Leadership",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/demo14/800/600", "alt": "Sarah Chen" }],
+      "caption": "Photo: Annual conference"
+    },
+    "data": { "type": "news", "content": { "headlineTag": "h3" } },
+    "links": [{ "url": "#", "text": "Read announcement" }]
+  },
+  {
+    "id": "demo-15",
+    "headline": "Never Stop Evolving",
+    "subheadline": "Redefining the future of sport through digital innovation",
+    "summary": "A groundbreaking campaign merging physical and digital experiences across 12 global markets.",
+    "category": "Featured Campaign",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/demo15/1200/500", "alt": "Hero campaign" }]
+    },
+    "data": { "type": "article", "content": { "headlineTag": "h3" } },
+    "actions": [
+      { "text": "View campaign", "style": "primary" },
+      { "text": "Behind the scenes", "style": "secondary" }
+    ]
+  }
+]
