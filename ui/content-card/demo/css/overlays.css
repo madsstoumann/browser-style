@@ -1,122 +1,177 @@
 /* ============================================================
    OVERLAY — base (card attribute)
    ============================================================ */
+content-card[card*="overlay"] {
+  & .cc-inner {
+    grid-template: 1fr / 1fr;
+  }
 
-content-card[card*="overlay"] .cc-inner {
-  grid-template: 1fr / 1fr;
-}
+  & .cc-media,
+  & .cc-content {
+    grid-area: 1 / 1;
+  }
 
-content-card[card*="overlay"] .cc-media,
-content-card[card*="overlay"] .cc-content {
-  grid-area: 1 / 1;
-}
+  & .cc-media {
+    min-height: unset;
+  }
 
-content-card[card*="overlay"] .cc-media {
-  min-height: unset;
-}
+  & .cc-content {
+    z-index: 1;
+    color: var(--card-overlay-ink);
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(to top, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%);
+  }
 
-content-card[card*="overlay"] .cc-content {
-  z-index: 1;
-  color: var(--card-overlay-ink);
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(to top, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%);
-}
+  /* --- Positions --- */
+  &[card*="overlay(bl)"] .cc-content { justify-content: end; align-items: start; text-align: start; }
+  &[card*="overlay(bc)"] .cc-content { justify-content: end; align-items: center; text-align: center; }
+  &[card*="overlay(br)"] .cc-content { justify-content: end; align-items: end; text-align: end; }
 
-/* --- Positions --- */
-content-card[card*="overlay(bl)"] .cc-content { justify-content: end; align-items: start; text-align: start; }
-content-card[card*="overlay(bc)"] .cc-content { justify-content: end; align-items: center; text-align: center; }
-content-card[card*="overlay(br)"] .cc-content { justify-content: end; align-items: end; text-align: end; }
+  &[card*="overlay(cl)"] .cc-content { justify-content: center; align-items: start; text-align: start; }
+  &[card*="overlay(cc)"] .cc-content { justify-content: center; align-items: center; text-align: center; }
+  &[card*="overlay(cr)"] .cc-content { justify-content: center; align-items: end; text-align: end; }
 
-content-card[card*="overlay(cl)"] .cc-content { justify-content: center; align-items: start; text-align: start; }
-content-card[card*="overlay(cc)"] .cc-content { justify-content: center; align-items: center; text-align: center; }
-content-card[card*="overlay(cr)"] .cc-content { justify-content: center; align-items: end; text-align: end; }
+  &[card*="overlay(tl)"] .cc-content { justify-content: start; align-items: start; text-align: start; }
+  &[card*="overlay(tc)"] .cc-content { justify-content: start; align-items: center; text-align: center; }
+  &[card*="overlay(tr)"] .cc-content { justify-content: start; align-items: end; text-align: end; }
 
-content-card[card*="overlay(tl)"] .cc-content { justify-content: start; align-items: start; text-align: start; }
-content-card[card*="overlay(tc)"] .cc-content { justify-content: start; align-items: center; text-align: center; }
-content-card[card*="overlay(tr)"] .cc-content { justify-content: start; align-items: end; text-align: end; }
+  /* --- Gradient direction per vertical alignment --- */
+  &[card*="overlay(t"] .cc-content {
+    background: linear-gradient(to bottom, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%);
+  }
+  &[card*="overlay(c"] .cc-content {
+    background: radial-gradient(ellipse at center, var(--card-overlay-gradient-center) 0%, var(--card-overlay-gradient-center-end) 100%);
+  }
 
-/* --- Gradient direction per vertical alignment --- */
-content-card[card*="overlay(t"] .cc-content {
-  background: linear-gradient(to bottom, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%);
-}
-content-card[card*="overlay(c"] .cc-content {
-  background: radial-gradient(ellipse at center, var(--card-overlay-gradient-center) 0%, var(--card-overlay-gradient-center-end) 100%);
-}
-
-/* --- Overlay text colors --- */
-content-card[card*="overlay"] .cc-eyebrow { color: var(--card-overlay-eyebrow); }
-content-card[card*="overlay"] .cc-summary { color: var(--card-overlay-ink-muted); }
-content-card[card*="overlay"] .cc-subheadline { color: var(--card-overlay-subheadline); }
-content-card[card*="overlay"] .cc-cta { color: var(--card-overlay-ink); }
-content-card[card*="overlay"] .cc-tag {
-  background: var(--card-overlay-tag-bg);
-  color: var(--card-overlay-tag-color);
-  backdrop-filter: blur(var(--card-overlay-blur));
+  /* --- Overlay text colors --- */
+  & .cc-eyebrow { color: var(--card-overlay-eyebrow); }
+  & .cc-summary { color: var(--card-overlay-ink-muted); }
+  & .cc-subheadline { color: var(--card-overlay-subheadline); }
+  & .cc-cta { color: var(--card-overlay-ink); }
+  & .cc-tag {
+    background: var(--card-overlay-tag-bg);
+    color: var(--card-overlay-tag-color);
+    backdrop-filter: blur(var(--card-overlay-blur));
+  }
 }
 
 /* ============================================================
    OVERLAY — card-md  @container card (min-width: 400px)
    ============================================================ */
 @container card (min-width: 400px) {
-  content-card[card-md*="overlay"] .cc-inner { grid-template: 1fr / 1fr; }
-  content-card[card-md*="overlay"] .cc-media,
-  content-card[card-md*="overlay"] .cc-content { grid-area: 1 / 1; }
-  content-card[card-md*="overlay"] .cc-media { min-height: unset; }
-  content-card[card-md*="overlay"] .cc-content {
-    z-index: 1; color: var(--card-overlay-ink); display: flex; flex-direction: column;
-    background: linear-gradient(to top, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%);
+  content-card[card-md*="overlay"] {
+    & .cc-inner {
+      grid-template: 1fr / 1fr;
+    }
+
+    & .cc-media,
+    & .cc-content {
+      grid-area: 1 / 1;
+    }
+
+    & .cc-media {
+      min-height: unset;
+    }
+
+    & .cc-content {
+      z-index: 1;
+      color: var(--card-overlay-ink);
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(to top, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%);
+    }
+
+    /* --- Positions --- */
+    &[card-md*="overlay(bl)"] .cc-content { justify-content: end; align-items: start; text-align: start; }
+    &[card-md*="overlay(bc)"] .cc-content { justify-content: end; align-items: center; text-align: center; }
+    &[card-md*="overlay(br)"] .cc-content { justify-content: end; align-items: end; text-align: end; }
+
+    &[card-md*="overlay(cl)"] .cc-content { justify-content: center; align-items: start; text-align: start; }
+    &[card-md*="overlay(cc)"] .cc-content { justify-content: center; align-items: center; text-align: center; }
+    &[card-md*="overlay(cr)"] .cc-content { justify-content: center; align-items: end; text-align: end; }
+
+    &[card-md*="overlay(tl)"] .cc-content { justify-content: start; align-items: start; text-align: start; }
+    &[card-md*="overlay(tc)"] .cc-content { justify-content: start; align-items: center; text-align: center; }
+    &[card-md*="overlay(tr)"] .cc-content { justify-content: start; align-items: end; text-align: end; }
+
+    /* --- Gradient direction per vertical alignment --- */
+    &[card-md*="overlay(t"] .cc-content {
+      background: linear-gradient(to bottom, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%);
+    }
+    &[card-md*="overlay(c"] .cc-content {
+      background: radial-gradient(ellipse at center, var(--card-overlay-gradient-center) 0%, var(--card-overlay-gradient-center-end) 100%);
+    }
+
+    /* --- Overlay text colors --- */
+    & .cc-eyebrow { color: var(--card-overlay-eyebrow); }
+    & .cc-summary { color: var(--card-overlay-ink-muted); }
+    & .cc-subheadline { color: var(--card-overlay-subheadline); }
+    & .cc-cta { color: var(--card-overlay-ink); }
+    & .cc-tag {
+      background: var(--card-overlay-tag-bg);
+      color: var(--card-overlay-tag-color);
+      backdrop-filter: blur(var(--card-overlay-blur));
+    }
   }
-
-  content-card[card-md*="overlay(bl)"] .cc-content { justify-content: end; align-items: start; text-align: start; }
-  content-card[card-md*="overlay(bc)"] .cc-content { justify-content: end; align-items: center; text-align: center; }
-  content-card[card-md*="overlay(br)"] .cc-content { justify-content: end; align-items: end; text-align: end; }
-  content-card[card-md*="overlay(cl)"] .cc-content { justify-content: center; align-items: start; text-align: start; }
-  content-card[card-md*="overlay(cc)"] .cc-content { justify-content: center; align-items: center; text-align: center; }
-  content-card[card-md*="overlay(cr)"] .cc-content { justify-content: center; align-items: end; text-align: end; }
-  content-card[card-md*="overlay(tl)"] .cc-content { justify-content: start; align-items: start; text-align: start; }
-  content-card[card-md*="overlay(tc)"] .cc-content { justify-content: start; align-items: center; text-align: center; }
-  content-card[card-md*="overlay(tr)"] .cc-content { justify-content: start; align-items: end; text-align: end; }
-
-  content-card[card-md*="overlay(t"] .cc-content { background: linear-gradient(to bottom, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%); }
-  content-card[card-md*="overlay(c"] .cc-content { background: radial-gradient(ellipse at center, var(--card-overlay-gradient-center) 0%, var(--card-overlay-gradient-center-end) 100%); }
-
-  content-card[card-md*="overlay"] .cc-eyebrow { color: var(--card-overlay-eyebrow); }
-  content-card[card-md*="overlay"] .cc-summary { color: var(--card-overlay-ink-muted); }
-  content-card[card-md*="overlay"] .cc-subheadline { color: var(--card-overlay-subheadline); }
-  content-card[card-md*="overlay"] .cc-cta { color: var(--card-overlay-ink); }
-  content-card[card-md*="overlay"] .cc-tag { background: var(--card-overlay-tag-bg); color: var(--card-overlay-tag-color); backdrop-filter: blur(var(--card-overlay-blur)); }
 }
 
 /* ============================================================
    OVERLAY — card-xl  @container card (min-width: 700px)
    ============================================================ */
 @container card (min-width: 700px) {
-  content-card[card-xl*="overlay"] .cc-inner { grid-template: 1fr / 1fr; }
-  content-card[card-xl*="overlay"] .cc-media,
-  content-card[card-xl*="overlay"] .cc-content { grid-area: 1 / 1; }
-  content-card[card-xl*="overlay"] .cc-media { min-height: unset; }
-  content-card[card-xl*="overlay"] .cc-content {
-    z-index: 1; color: var(--card-overlay-ink); display: flex; flex-direction: column;
-    background: linear-gradient(to top, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%);
+  content-card[card-xl*="overlay"] {
+    & .cc-inner {
+      grid-template: 1fr / 1fr;
+    }
+
+    & .cc-media,
+    & .cc-content {
+      grid-area: 1 / 1;
+    }
+
+    & .cc-media {
+      min-height: unset;
+    }
+
+    & .cc-content {
+      z-index: 1;
+      color: var(--card-overlay-ink);
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(to top, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%);
+    }
+
+    /* --- Positions --- */
+    &[card-xl*="overlay(bl)"] .cc-content { justify-content: end; align-items: start; text-align: start; }
+    &[card-xl*="overlay(bc)"] .cc-content { justify-content: end; align-items: center; text-align: center; }
+    &[card-xl*="overlay(br)"] .cc-content { justify-content: end; align-items: end; text-align: end; }
+
+    &[card-xl*="overlay(cl)"] .cc-content { justify-content: center; align-items: start; text-align: start; }
+    &[card-xl*="overlay(cc)"] .cc-content { justify-content: center; align-items: center; text-align: center; }
+    &[card-xl*="overlay(cr)"] .cc-content { justify-content: center; align-items: end; text-align: end; }
+
+    &[card-xl*="overlay(tl)"] .cc-content { justify-content: start; align-items: start; text-align: start; }
+    &[card-xl*="overlay(tc)"] .cc-content { justify-content: start; align-items: center; text-align: center; }
+    &[card-xl*="overlay(tr)"] .cc-content { justify-content: start; align-items: end; text-align: end; }
+
+    /* --- Gradient direction per vertical alignment --- */
+    &[card-xl*="overlay(t"] .cc-content {
+      background: linear-gradient(to bottom, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%);
+    }
+    &[card-xl*="overlay(c"] .cc-content {
+      background: radial-gradient(ellipse at center, var(--card-overlay-gradient-center) 0%, var(--card-overlay-gradient-center-end) 100%);
+    }
+
+    /* --- Overlay text colors --- */
+    & .cc-eyebrow { color: var(--card-overlay-eyebrow); }
+    & .cc-summary { color: var(--card-overlay-ink-muted); }
+    & .cc-subheadline { color: var(--card-overlay-subheadline); }
+    & .cc-cta { color: var(--card-overlay-ink); }
+    & .cc-tag {
+      background: var(--card-overlay-tag-bg);
+      color: var(--card-overlay-tag-color);
+      backdrop-filter: blur(var(--card-overlay-blur));
+    }
   }
-
-  content-card[card-xl*="overlay(bl)"] .cc-content { justify-content: end; align-items: start; text-align: start; }
-  content-card[card-xl*="overlay(bc)"] .cc-content { justify-content: end; align-items: center; text-align: center; }
-  content-card[card-xl*="overlay(br)"] .cc-content { justify-content: end; align-items: end; text-align: end; }
-  content-card[card-xl*="overlay(cl)"] .cc-content { justify-content: center; align-items: start; text-align: start; }
-  content-card[card-xl*="overlay(cc)"] .cc-content { justify-content: center; align-items: center; text-align: center; }
-  content-card[card-xl*="overlay(cr)"] .cc-content { justify-content: center; align-items: end; text-align: end; }
-  content-card[card-xl*="overlay(tl)"] .cc-content { justify-content: start; align-items: start; text-align: start; }
-  content-card[card-xl*="overlay(tc)"] .cc-content { justify-content: start; align-items: center; text-align: center; }
-  content-card[card-xl*="overlay(tr)"] .cc-content { justify-content: start; align-items: end; text-align: end; }
-
-  content-card[card-xl*="overlay(t"] .cc-content { background: linear-gradient(to bottom, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%); }
-  content-card[card-xl*="overlay(c"] .cc-content { background: radial-gradient(ellipse at center, var(--card-overlay-gradient-center) 0%, var(--card-overlay-gradient-center-end) 100%); }
-
-  content-card[card-xl*="overlay"] .cc-eyebrow { color: var(--card-overlay-eyebrow); }
-  content-card[card-xl*="overlay"] .cc-summary { color: var(--card-overlay-ink-muted); }
-  content-card[card-xl*="overlay"] .cc-subheadline { color: var(--card-overlay-subheadline); }
-  content-card[card-xl*="overlay"] .cc-cta { color: var(--card-overlay-ink); }
-  content-card[card-xl*="overlay"] .cc-tag { background: var(--card-overlay-tag-bg); color: var(--card-overlay-tag-color); backdrop-filter: blur(var(--card-overlay-blur)); }
 }

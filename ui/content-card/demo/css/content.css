@@ -1,10 +1,18 @@
 /* === Content Area === */
 .cc-content {
+  column-gap: var(--card-cg);
   display: flex;
   flex-direction: column;
   flex: 1;
-  gap: var(--card-content-gap);
   padding: var(--card-pi) var(--card-pi) var(--card-pb);
+  row-gap: calc(var(--card-rg) * var(--card-rg-m, 1));
+}
+
+@container card (min-width: 400px) {
+  .cc-content { row-gap: calc(var(--card-rg) * var(--card-rg-m-md, var(--card-rg-m, 1))); }
+}
+@container card (min-width: 700px) {
+  .cc-content { row-gap: calc(var(--card-rg) * var(--card-rg-m-xl, var(--card-rg-m-md, var(--card-rg-m, 1)))); }
 }
 
 /* === Eyebrow === */
@@ -32,7 +40,7 @@
   font-size: var(--card-eyebrow-size);
   font-weight: var(--card-eyebrow-weight);
   letter-spacing: var(--card-eyebrow-ls);
-  margin-block-end: var(--card-content-gap);
+  margin-block-end: var(--card-rg);
   text-transform: uppercase;
 }
 
@@ -90,11 +98,11 @@
 .cc-cta {
   display: inline-flex;
   align-items: center;
-  gap: var(--card-content-gap);
+  gap: var(--card-rg);
   font-size: var(--card-btn-size);
   font-weight: var(--card-btn-weight);
   color: var(--card-accent);
-  margin-block-start: var(--card-content-gap);
+  margin-block-start: var(--card-rg);
   text-decoration: none;
   letter-spacing: 0.01em;
 }
@@ -113,14 +121,14 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--card-actions-gap);
-  margin-block-start: var(--card-content-gap);
+  margin-block-start: var(--card-rg);
 }
 
 .cc-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--card-content-gap);
+  gap: var(--card-rg);
   font-family: inherit;
   font-size: var(--card-btn-size);
   font-weight: var(--card-btn-weight);
@@ -159,7 +167,7 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  margin-block-start: var(--card-content-gap);
+  margin-block-start: var(--card-rg);
   display: flex;
   flex-direction: column;
   gap: var(--card-links-gap);
@@ -192,4 +200,55 @@
 
 .cc-links a:hover::before {
   translate: 2px 0;
+}
+
+/* === Stretched Link (clickable card) === */
+.cc-stretched-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--card-rg);
+  font-size: var(--card-btn-size);
+  font-weight: var(--card-btn-weight);
+  color: var(--card-accent);
+  text-decoration: none;
+}
+
+.cc-stretched-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.cc-stretched-link::after {
+  content: '\2192';
+  transition: translate var(--card-transition);
+}
+
+content-card[clickable] {
+  position: relative;
+  cursor: pointer;
+}
+
+content-card[clickable] .cc-inner {
+  position: relative;
+}
+
+content-card[clickable]:hover .cc-stretched-link::after {
+  translate: 3px 0;
+}
+
+/* clickable="hide" — visually hide the link text */
+.cc-stretched-link--hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.cc-stretched-link--hidden::after {
+  display: none;
 }

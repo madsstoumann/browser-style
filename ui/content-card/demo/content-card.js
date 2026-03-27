@@ -47,6 +47,7 @@ function parseTokens(attrValue) {
     split: null,
     eyebrow: null,
     hs: null,
+    rg: null,
     subgrid: false
   };
 
@@ -66,6 +67,9 @@ function parseTokens(attrValue) {
 
   const hsMatch = str.match(/hs\(([^)]+)\)/);
   if (hsMatch) tokens.hs = hsMatch[1];
+
+  const rgMatch = str.match(/rg\(([^)]+)\)/);
+  if (rgMatch) tokens.rg = rgMatch[1];
 
   if (str.includes('subgrid')) tokens.subgrid = true;
 
@@ -131,8 +135,13 @@ function renderMedia(data) {
   `;
 }
 
-function renderContent(data, headlineTag = 'h2', skipEyebrow = false) {
+function renderContent(data, headlineTag = 'h2', skipEyebrow = false, clickable = null) {
   const { headline, subheadline, summary, category, tags, actions, links } = data;
+
+  /* Determine if stretched-link applies:
+     clickable attribute present + exactly 1 link with a url */
+  const isStretched = clickable !== null && links?.length === 1 && links[0].url;
+  const hideLink = clickable === 'hide';
 
   const parts = [];
 
@@ -168,7 +177,11 @@ function renderContent(data, headlineTag = 'h2', skipEyebrow = false) {
     parts.push(`<div class="cc-actions">${btns}</div>`);
   }
 
-  if (links?.length) {
+  if (isStretched) {
+    const link = links[0];
+    const hideCls = hideLink ? ' cc-stretched-link--hidden' : '';
+    parts.push(`<a href="${link.url}" class="cc-stretched-link${hideCls}">${link.text}</a>`);
+  } else if (links?.length) {
     const items = links.map(l => `<li><a href="${l.url || '#'}">${l.text}</a></li>`).join('');
     parts.push(`<ul class="cc-links">${items}</ul>`);
   }
@@ -179,7 +192,7 @@ function renderContent(data, headlineTag = 'h2', skipEyebrow = false) {
 
 /* Web Component */
 export default class ContentCard extends HTMLElement {
-  static observedAttributes = ['card', 'card-md', 'card-xl', 'type'];
+  static observedAttributes = ['card', 'card-md', 'card-xl', 'type', 'clickable'];
 
   _data = null;
 
@@ -231,6 +244,13 @@ export default class ContentCard extends HTMLElement {
       } else {
         this.style.removeProperty(hsProp);
       }
+
+      const rgProp = suffix ? `--card-rg-m${suffix}` : '--card-rg-m';
+      if (tokens.rg) {
+        this.style.setProperty(rgProp, tokens.rg);
+      } else {
+        this.style.removeProperty(rgProp);
+      }
     }
   }
 
@@ -250,8 +270,12 @@ export default class ContentCard extends HTMLElement {
     const headlineTag = this._data.data?.content?.headlineTag || 'h2';
     const hasEyebrowPlacement = baseTokens.eyebrow && this._data.category;
 
+    /* clickable: attribute present = '' (empty string), clickable="hide" = 'hide', absent = null */
+    const clickableAttr = this.getAttribute('clickable');
+    const clickable = clickableAttr !== null ? (clickableAttr || true) : null;
+
     const mediaHtml = renderMedia(this._data);
-    const contentHtml = renderContent(this._data, headlineTag, hasEyebrowPlacement);
+    const contentHtml = renderContent(this._data, headlineTag, hasEyebrowPlacement, clickable);
 
     let eyebrowAboveHtml = '';
     let eyebrowOutsideHtml = '';

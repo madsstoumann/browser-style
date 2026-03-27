@@ -36,10 +36,10 @@ content-card {
   --card-overlay-blur: 4px;
 
   /* Spacing */
-  --card-gap: 0;
   --card-pi: 1.25rem;
   --card-pb: 1.5rem;
-  --card-content-gap: 0.4rem;
+  --card-rg: 0.4rem;
+  --card-cg: 0;
   --card-actions-gap: 0.5rem;
   --card-tags-gap: 0.35rem;
   --card-links-gap: 0.25rem;

@@ -217,7 +217,29 @@
 
 <div class="divider"></div>
 
-<!-- 8. IMAGE + CAPTION (data-driven minimal) -->
+<!-- 8. CLICKABLE CARD -->
+<section>
+  <h2>Clickable Card</h2>
+  <p class="desc">When a card has exactly one link and the <code>clickable</code> attribute, the entire card becomes a click-through. Use <code>clickable="hide"</code> to visually hide the link text.</p>
+  <div class="demo-row demo-row--3">
+    <div>
+      <span class="label label--code">clickable</span>
+      <content-card content="demo-3" card="vertical" clickable></content-card>
+    </div>
+    <div>
+      <span class="label label--code">clickable="hide"</span>
+      <content-card content="demo-3" card="vertical" clickable="hide"></content-card>
+    </div>
+    <div>
+      <span class="label label--code">no clickable (default)</span>
+      <content-card content="demo-3" card="vertical"></content-card>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 9. IMAGE + CAPTION (data-driven minimal) -->
 <section>
   <h2>Image + Caption</h2>
   <p class="desc">Minimal cards driven by data — just an image, name, and role. No special layout needed.</p>
