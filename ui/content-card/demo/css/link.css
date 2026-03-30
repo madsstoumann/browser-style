@@ -1,0 +1,111 @@
+/* === CTA Link === */
+.cc-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cc-rg);
+  font-size: var(--cc-btn-fs);
+  font-weight: var(--cc-btn-fw);
+  color: var(--cc-accent);
+  margin-block-start: var(--cc-rg);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
+
+.cc-cta::after {
+  content: '\2192';
+  transition: translate var(--cc-trs);
+}
+
+.cc-inner:hover .cc-cta::after {
+  translate: 3px 0;
+}
+
+/* === Link List === */
+.cc-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-block-start: var(--cc-rg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--cc-links-gap);
+}
+
+.cc-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cc-tags-gap);
+  font-size: var(--cc-link-fs);
+  font-weight: var(--cc-link-fw);
+  color: var(--cc-c);
+  text-decoration: none;
+  padding-block: var(--cc-link-pb);
+  border-block-end: 1px solid var(--cc-bd);
+  transition: color var(--cc-trs), border-color var(--cc-trs);
+}
+
+.cc-links a:hover {
+  color: var(--cc-accent);
+  border-color: var(--cc-accent);
+}
+
+.cc-links a::before {
+  content: '\2192';
+  color: var(--cc-accent);
+  font-size: var(--cc-caption-fs);
+  transition: translate var(--cc-trs);
+}
+
+.cc-links a:hover::before {
+  translate: 2px 0;
+}
+
+/* === Stretched Link (clickable card) === */
+.cc-stretched-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--cc-rg);
+  font-size: var(--cc-btn-fs);
+  font-weight: var(--cc-btn-fw);
+  color: var(--cc-accent);
+  text-decoration: none;
+}
+
+.cc-stretched-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.cc-stretched-link::after {
+  content: '\2192';
+  transition: translate var(--cc-trs);
+}
+
+content-card[clickable] {
+  position: relative;
+  cursor: pointer;
+}
+
+content-card[clickable] .cc-inner {
+  position: relative;
+}
+
+content-card[clickable]:hover .cc-stretched-link::after {
+  translate: 3px 0;
+}
+
+.cc-stretched-link--hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.cc-stretched-link--hidden::after {
+  display: none;
+}

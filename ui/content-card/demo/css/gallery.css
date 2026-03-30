@@ -1,0 +1,87 @@
+/* === Gallery Media Variant === */
+.cc-media--gallery {
+  display: grid;
+  place-items: initial;
+}
+
+/* === Gallery Container === */
+.cc-gallery {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.cc-gallery::-webkit-scrollbar { display: none; }
+
+.cc-gallery-slide {
+  scroll-snap-align: start;
+  display: grid;
+  place-items: center;
+  min-height: inherit;
+}
+
+.cc-gallery-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* === Gallery Dots === */
+.cc-gallery-dots {
+  position: absolute;
+  inset-block-end: var(--cc-gallery-inset);
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  display: flex;
+  gap: var(--cc-tags-gap);
+}
+
+.cc-gallery-dot {
+  width: var(--cc-gallery-dot-sz);
+  height: var(--cc-gallery-dot-sz);
+  border-radius: 50%;
+  background: var(--cc-gallery-dot-bg);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.cc-gallery-dot--active { background: var(--cc-gallery-dot-active-bg); }
+
+/* === Gallery Arrows === */
+.cc-gallery-arrow {
+  position: absolute;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+  width: var(--cc-gallery-arrow-sz);
+  height: var(--cc-gallery-arrow-sz);
+  border-radius: 50%;
+  border: none;
+  background: var(--cc-accent);
+  color: var(--cc-on-accent);
+  font-size: 1rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  box-shadow: var(--cc-gallery-arrow-bxsh);
+  transition: background var(--cc-trs);
+}
+
+.cc-gallery-arrow:hover { filter: brightness(0.9); }
+.cc-gallery-arrow--prev { inset-inline-start: var(--cc-gallery-inset); rotate: 180deg; }
+.cc-gallery-arrow--next { inset-inline-end: var(--cc-gallery-inset); }
+
+/* === Gallery Counter === */
+.cc-gallery-counter {
+  position: absolute;
+  inset-block-end: var(--cc-gallery-inset);
+  inset-inline-end: var(--cc-gallery-inset);
+  font-size: var(--cc-tag-fs);
+  color: var(--cc-on-accent);
+  background: var(--cc-caption-bg);
+  padding: var(--cc-caption-pb) var(--cc-caption-pi);
+  border-radius: var(--cc-btn-bdrs);
+}

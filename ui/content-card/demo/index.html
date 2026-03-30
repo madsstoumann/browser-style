@@ -5,10 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Content Card — Unified Component Demo</title>
 <link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/content.css">
+<link rel="stylesheet" href="css/typography.css">
+<link rel="stylesheet" href="css/button.css">
+<link rel="stylesheet" href="css/link.css">
+<link rel="stylesheet" href="css/tag.css">
 <link rel="stylesheet" href="css/media.css">
+<link rel="stylesheet" href="css/badge.css">
+<link rel="stylesheet" href="css/gallery.css">
 <link rel="stylesheet" href="css/layouts.css">
-<link rel="stylesheet" href="css/overlays.css">
+<link rel="stylesheet" href="css/overlay.css">
 <script type="module" src="content-card.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,300&display=swap');
@@ -281,8 +286,8 @@
   <p class="desc">The media area supports different aspect ratios via the <code>ar()</code> token.</p>
 
   <div style="margin-bottom: 2rem;">
-    <span class="label">Hero Banner — 21:9 overlay, hs(xl)</span>
-    <content-card content="demo-15" card="overlay(bl) ar(21/9) hs(xl)"></content-card>
+    <span class="label">Hero Banner — 21:9 overlay, fsh(3)</span>
+    <content-card content="demo-15" card="overlay(bl) ar(21/9) fsh(3)"></content-card>
   </div>
 
   <div class="demo-row demo-row--4" style="align-items: start;">

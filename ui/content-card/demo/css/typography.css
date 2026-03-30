@@ -1,0 +1,51 @@
+/* === Headline === */
+.cc-headline {
+  font-size: calc(var(--cc-fsh) * var(--cc-fsh-m, 1));
+  font-weight: var(--cc-fwh);
+  letter-spacing: var(--cc-lsh);
+  line-height: var(--cc-lhh);
+  margin: 0;
+}
+
+/* === Eyebrow === */
+.cc-eyebrow {
+  color: var(--cc-accent);
+  font-size: var(--cc-fs-eyebrow);
+  font-weight: var(--cc-fw-eyebrow);
+  letter-spacing: var(--cc-ls-eyebrow);
+  text-transform: uppercase;
+}
+
+.cc-eyebrow--above {
+  color: var(--cc-accent);
+  font-size: var(--cc-fs-eyebrow);
+  font-weight: var(--cc-fw-eyebrow);
+  letter-spacing: var(--cc-ls-eyebrow);
+  padding: var(--cc-eyebrow-above-pbs) var(--cc-pi) var(--cc-eyebrow-above-pbe);
+  text-transform: uppercase;
+}
+
+.cc-eyebrow--outside {
+  color: var(--cc-accent);
+  font-size: var(--cc-fs-eyebrow);
+  font-weight: var(--cc-fw-eyebrow);
+  letter-spacing: var(--cc-ls-eyebrow);
+  margin-block-end: var(--cc-rg);
+  text-transform: uppercase;
+}
+
+/* === Subheadline === */
+.cc-subheadline {
+  font-size: calc(var(--cc-fsb) * var(--cc-fsb-m, 1));
+  color: var(--cc-c-muted);
+  font-weight: var(--cc-fwb);
+  font-style: italic;
+}
+
+/* === Summary === */
+.cc-summary {
+  font-size: calc(var(--cc-fsb) * var(--cc-fsb-m, 1));
+  color: var(--cc-c-muted);
+  line-height: var(--cc-lhb);
+  font-weight: var(--cc-fwb);
+}

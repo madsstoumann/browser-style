@@ -40,54 +40,22 @@ const SCHEMA_MAP = {
 /* Token Parser */
 function parseTokens(attrValue) {
   if (!attrValue) return null;
-
+  const str = attrValue.trim();
   const tokens = {
     layout: 'vertical',
-    ar: null,
-    split: null,
     eyebrow: null,
-    hs: null,
-    rg: null,
     subgrid: false
   };
-
-  const str = attrValue.trim();
 
   const layoutMatch = str.match(/^(vertical-r|vertical|horizontal-r|horizontal|overlay\([^)]+\)|media-only|content-only)/);
   if (layoutMatch) tokens.layout = layoutMatch[1];
 
-  const arMatch = str.match(/ar\(([^)]+)\)/);
-  if (arMatch) tokens.ar = arMatch[1];
-
-  const splitMatch = str.match(/split\(([^)]+)\)/);
-  if (splitMatch) tokens.split = splitMatch[1];
-
   const eyebrowMatch = str.match(/eyebrow\(([^)]+)\)/);
   if (eyebrowMatch) tokens.eyebrow = eyebrowMatch[1];
-
-  const hsMatch = str.match(/hs\(([^)]+)\)/);
-  if (hsMatch) tokens.hs = hsMatch[1];
-
-  const rgMatch = str.match(/rg\(([^)]+)\)/);
-  if (rgMatch) tokens.rg = rgMatch[1];
 
   if (str.includes('subgrid')) tokens.subgrid = true;
 
   return tokens;
-}
-
-/* Headline size: resolve t-shirt keyword to custom property reference */
-function resolveHs(keyword) {
-  const sizes = ['sm', 'md', 'lg', 'xl'];
-  return sizes.includes(keyword) ? `var(--card-hs-${keyword})` : null;
-}
-
-/* Split ratio to fr units */
-function toFr(splitValue) {
-  if (!splitValue) return null;
-  const parts = splitValue.split('/').map(Number);
-  if (parts.length !== 2 || parts.some(isNaN)) return null;
-  return `${parts[0]}fr ${parts[1]}fr`;
 }
 
 /* Render Helpers */
@@ -202,55 +170,12 @@ export default class ContentCard extends HTMLElement {
   }
 
   connectedCallback() {
-    this._applyTokens();
     if (this._data) this._render();
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue !== newValue) {
-      this._applyTokens();
       if (this._data) this._render();
-    }
-  }
-
-  _applyTokens() {
-    const breakpoints = [
-      { attr: 'card', suffix: '' },
-      { attr: 'card-md', suffix: '-md' },
-      { attr: 'card-xl', suffix: '-xl' }
-    ];
-
-    for (const { attr, suffix } of breakpoints) {
-      const tokens = parseTokens(this.getAttribute(attr));
-      if (!tokens) continue;
-
-      if (tokens.ar) {
-        this.style.setProperty(`--card-ar${suffix}`, tokens.ar);
-      } else {
-        this.style.removeProperty(`--card-ar${suffix}`);
-      }
-
-      if (tokens.split) {
-        const fr = toFr(tokens.split);
-        if (fr) this.style.setProperty(`--card-split${suffix}`, fr);
-      } else {
-        this.style.removeProperty(`--card-split${suffix}`);
-      }
-
-      const hsProp = suffix ? `--card-hs${suffix}` : '--card-hs';
-      if (tokens.hs) {
-        const resolved = resolveHs(tokens.hs);
-        if (resolved) this.style.setProperty(hsProp, resolved);
-      } else {
-        this.style.removeProperty(hsProp);
-      }
-
-      const rgProp = suffix ? `--card-rg-m${suffix}` : '--card-rg-m';
-      if (tokens.rg) {
-        this.style.setProperty(rgProp, tokens.rg);
-      } else {
-        this.style.removeProperty(rgProp);
-      }
     }
   }
 
@@ -308,7 +233,6 @@ export default class ContentCard extends HTMLElement {
   set data(value) {
     this._data = value;
     if (this.isConnected) {
-      this._applyTokens();
       this._render();
     }
   }

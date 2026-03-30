@@ -1,0 +1,49 @@
+/* === Caption === */
+.cc-caption {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  padding: var(--cc-caption-pb) var(--cc-caption-pi);
+  background: var(--cc-caption-bg);
+  color: var(--cc-on-accent);
+  font-size: var(--cc-caption-fs);
+  letter-spacing: 0.02em;
+}
+
+.cc-caption--tl { inset-block-start: 0; inset-inline-start: 0; inset-block-end: auto; inset-inline-end: auto; }
+.cc-caption--tr { inset-block-start: 0; inset-inline-end: 0; inset-block-end: auto; inset-inline-start: auto; }
+.cc-caption--bl { inset-block-end: 0; inset-inline-start: 0; inset-block-start: auto; inset-inline-end: auto; }
+.cc-caption--br { inset-block-end: 0; inset-inline-end: 0; inset-block-start: auto; inset-inline-start: auto; }
+
+/* === Ribbon === */
+.cc-ribbon {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  padding: var(--cc-ribbon-pb) var(--cc-ribbon-pe) var(--cc-ribbon-pb) var(--cc-ribbon-ps);
+  background: var(--cc-accent);
+  color: var(--cc-on-accent);
+  font-size: var(--cc-ribbon-fs);
+  font-weight: var(--cc-ribbon-fw);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+
+/* === Sticker === */
+.cc-sticker {
+  position: absolute;
+  inset-block-start: var(--cc-sticker-inset);
+  inset-inline-end: var(--cc-sticker-inset);
+  width: var(--cc-sticker-w);
+  height: var(--cc-sticker-w);
+  border-radius: 50%;
+  background: var(--cc-accent);
+  color: var(--cc-on-accent);
+  display: grid;
+  place-items: center;
+  font-size: var(--cc-sticker-fs);
+  font-weight: var(--cc-sticker-fw);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}

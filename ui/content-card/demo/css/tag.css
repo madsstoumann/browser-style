@@ -1,0 +1,16 @@
+/* === Tags === */
+.cc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cc-tags-gap);
+}
+
+.cc-tag {
+  font-size: var(--cc-tag-fs);
+  font-weight: var(--cc-tag-fw);
+  padding: var(--cc-tag-pb) var(--cc-tag-pi);
+  border-radius: var(--cc-tag-bdrs);
+  background: var(--cc-tag-bg);
+  color: var(--cc-tag-c);
+  letter-spacing: 0.02em;
+}

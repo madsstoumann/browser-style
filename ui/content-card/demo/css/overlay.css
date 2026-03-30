@@ -17,10 +17,10 @@ content-card[card*="overlay"] {
 
   & .cc-content {
     z-index: 1;
-    color: var(--card-overlay-ink);
+    color: var(--cc-overlay-ink);
     display: flex;
     flex-direction: column;
-    background: linear-gradient(to top, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%);
+    background: linear-gradient(to top, var(--cc-overlay-gradient-start) 0%, var(--cc-overlay-gradient-end) 100%);
   }
 
   /* --- Positions --- */
@@ -38,21 +38,21 @@ content-card[card*="overlay"] {
 
   /* --- Gradient direction per vertical alignment --- */
   &[card*="overlay(t"] .cc-content {
-    background: linear-gradient(to bottom, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%);
+    background: linear-gradient(to bottom, var(--cc-overlay-gradient-start) 0%, var(--cc-overlay-gradient-end) 100%);
   }
   &[card*="overlay(c"] .cc-content {
-    background: radial-gradient(ellipse at center, var(--card-overlay-gradient-center) 0%, var(--card-overlay-gradient-center-end) 100%);
+    background: radial-gradient(ellipse at center, var(--cc-overlay-gradient-center) 0%, var(--cc-overlay-gradient-center-end) 100%);
   }
 
   /* --- Overlay text colors --- */
-  & .cc-eyebrow { color: var(--card-overlay-eyebrow); }
-  & .cc-summary { color: var(--card-overlay-ink-muted); }
-  & .cc-subheadline { color: var(--card-overlay-subheadline); }
-  & .cc-cta { color: var(--card-overlay-ink); }
+  & .cc-eyebrow { color: var(--cc-overlay-eyebrow); }
+  & .cc-summary { color: var(--cc-overlay-ink-muted); }
+  & .cc-subheadline { color: var(--cc-overlay-subheadline); }
+  & .cc-cta { color: var(--cc-overlay-ink); }
   & .cc-tag {
-    background: var(--card-overlay-tag-bg);
-    color: var(--card-overlay-tag-color);
-    backdrop-filter: blur(var(--card-overlay-blur));
+    background: var(--cc-overlay-tag-bg);
+    color: var(--cc-overlay-tag-c);
+    backdrop-filter: blur(var(--cc-overlay-blur));
   }
 }
 
@@ -76,10 +76,10 @@ content-card[card*="overlay"] {
 
     & .cc-content {
       z-index: 1;
-      color: var(--card-overlay-ink);
+      color: var(--cc-overlay-ink);
       display: flex;
       flex-direction: column;
-      background: linear-gradient(to top, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%);
+      background: linear-gradient(to top, var(--cc-overlay-gradient-start) 0%, var(--cc-overlay-gradient-end) 100%);
     }
 
     /* --- Positions --- */
@@ -97,21 +97,21 @@ content-card[card*="overlay"] {
 
     /* --- Gradient direction per vertical alignment --- */
     &[card-md*="overlay(t"] .cc-content {
-      background: linear-gradient(to bottom, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%);
+      background: linear-gradient(to bottom, var(--cc-overlay-gradient-start) 0%, var(--cc-overlay-gradient-end) 100%);
     }
     &[card-md*="overlay(c"] .cc-content {
-      background: radial-gradient(ellipse at center, var(--card-overlay-gradient-center) 0%, var(--card-overlay-gradient-center-end) 100%);
+      background: radial-gradient(ellipse at center, var(--cc-overlay-gradient-center) 0%, var(--cc-overlay-gradient-center-end) 100%);
     }
 
     /* --- Overlay text colors --- */
-    & .cc-eyebrow { color: var(--card-overlay-eyebrow); }
-    & .cc-summary { color: var(--card-overlay-ink-muted); }
-    & .cc-subheadline { color: var(--card-overlay-subheadline); }
-    & .cc-cta { color: var(--card-overlay-ink); }
+    & .cc-eyebrow { color: var(--cc-overlay-eyebrow); }
+    & .cc-summary { color: var(--cc-overlay-ink-muted); }
+    & .cc-subheadline { color: var(--cc-overlay-subheadline); }
+    & .cc-cta { color: var(--cc-overlay-ink); }
     & .cc-tag {
-      background: var(--card-overlay-tag-bg);
-      color: var(--card-overlay-tag-color);
-      backdrop-filter: blur(var(--card-overlay-blur));
+      background: var(--cc-overlay-tag-bg);
+      color: var(--cc-overlay-tag-c);
+      backdrop-filter: blur(var(--cc-overlay-blur));
     }
   }
 }
@@ -136,10 +136,10 @@ content-card[card*="overlay"] {
 
     & .cc-content {
       z-index: 1;
-      color: var(--card-overlay-ink);
+      color: var(--cc-overlay-ink);
       display: flex;
       flex-direction: column;
-      background: linear-gradient(to top, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%);
+      background: linear-gradient(to top, var(--cc-overlay-gradient-start) 0%, var(--cc-overlay-gradient-end) 100%);
     }
 
     /* --- Positions --- */
@@ -157,21 +157,21 @@ content-card[card*="overlay"] {
 
     /* --- Gradient direction per vertical alignment --- */
     &[card-xl*="overlay(t"] .cc-content {
-      background: linear-gradient(to bottom, var(--card-overlay-gradient-start) 0%, var(--card-overlay-gradient-end) 100%);
+      background: linear-gradient(to bottom, var(--cc-overlay-gradient-start) 0%, var(--cc-overlay-gradient-end) 100%);
     }
     &[card-xl*="overlay(c"] .cc-content {
-      background: radial-gradient(ellipse at center, var(--card-overlay-gradient-center) 0%, var(--card-overlay-gradient-center-end) 100%);
+      background: radial-gradient(ellipse at center, var(--cc-overlay-gradient-center) 0%, var(--cc-overlay-gradient-center-end) 100%);
     }
 
     /* --- Overlay text colors --- */
-    & .cc-eyebrow { color: var(--card-overlay-eyebrow); }
-    & .cc-summary { color: var(--card-overlay-ink-muted); }
-    & .cc-subheadline { color: var(--card-overlay-subheadline); }
-    & .cc-cta { color: var(--card-overlay-ink); }
+    & .cc-eyebrow { color: var(--cc-overlay-eyebrow); }
+    & .cc-summary { color: var(--cc-overlay-ink-muted); }
+    & .cc-subheadline { color: var(--cc-overlay-subheadline); }
+    & .cc-cta { color: var(--cc-overlay-ink); }
     & .cc-tag {
-      background: var(--card-overlay-tag-bg);
-      color: var(--card-overlay-tag-color);
-      backdrop-filter: blur(var(--card-overlay-blur));
+      background: var(--cc-overlay-tag-bg);
+      color: var(--cc-overlay-tag-c);
+      backdrop-filter: blur(var(--cc-overlay-blur));
     }
   }
 }

@@ -1,150 +1,325 @@
-/* === Custom Properties === */
+/* ===================================================================
+   Content Card Design System — base.css
+   Token definitions, container setup, inner grid, multipliers,
+   aspect ratios, and split ratios.
+   =================================================================== */
+
+/* === Token Definitions === */
 content-card {
   color-scheme: light dark;
 
-  /* Surface */
-  --card-bg: light-dark(#fff, #1e1e1e);
-  --card-radius: 6px;
-  --card-shadow: light-dark(
-    0 1px 3px rgba(0,0,0,.06) 0 4px 12px rgba(0,0,0,.04),
-    0 1px 3px rgba(0,0,0,.2) 0 4px 12px rgba(0,0,0,.15)
+  /* — Surface — */
+  --cc-bg: light-dark(#fff, #1e1e1e);
+  --cc-bdrs: 6px;
+  --cc-bxsh: light-dark(
+    0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04),
+    0 1px 3px rgba(0,0,0,.2), 0 4px 12px rgba(0,0,0,.15)
   );
-  --card-shadow-hover: light-dark(
-    0 2px 8px rgba(0,0,0,.08) 0 8px 24px rgba(0,0,0,.06),
-    0 2px 8px rgba(0,0,0,.2) 0 8px 24px rgba(0,0,0,.15)
+  --cc-bxsh-hover: light-dark(
+    0 2px 8px rgba(0,0,0,.08), 0 8px 24px rgba(0,0,0,.06),
+    0 2px 8px rgba(0,0,0,.2), 0 8px 24px rgba(0,0,0,.15)
   );
-  --card-border: light-dark(#e0dbd5, #3a3530);
-  --card-transition: .25s ease;
+  --cc-bd: light-dark(#e0dbd5, #3a3530);
+  --cc-trs: .25s ease;
 
-  /* Colors */
-  --card-accent: light-dark(#e84e1b, #f06530);
-  --card-ink: light-dark(#1a1a1a, #e5e5e5);
-  --card-ink-muted: light-dark(#6b6560, #a09890);
-  --card-on-accent: #fff;
+  /* — Ink — */
+  --cc-c: light-dark(#1a1a1a, #e5e5e5);
+  --cc-c-muted: light-dark(#6b6560, #a09890);
+  --cc-accent: light-dark(#e84e1b, #f06530);
+  --cc-on-accent: #fff;
 
-  /* Overlay */
-  --card-overlay-ink: #fff;
-  --card-overlay-ink-muted: rgba(255,255,255,.75);
-  --card-overlay-eyebrow: rgba(255,255,255,.8);
-  --card-overlay-subheadline: rgba(255,255,255,.7);
-  --card-overlay-tag-bg: rgba(255,255,255,.18);
-  --card-overlay-tag-color: rgba(255,255,255,.9);
-  --card-overlay-gradient-start: rgba(0,0,0,.45);
-  --card-overlay-gradient-end: rgba(0,0,0,0);
-  --card-overlay-gradient-center: rgba(0,0,0,.4);
-  --card-overlay-gradient-center-end: rgba(0,0,0,.05);
-  --card-overlay-blur: 4px;
+  /* — Overlay — */
+  --cc-overlay-ink: #fff;
+  --cc-overlay-ink-muted: rgba(255,255,255,.75);
+  --cc-overlay-eyebrow: rgba(255,255,255,.8);
+  --cc-overlay-subheadline: rgba(255,255,255,.7);
+  --cc-overlay-tag-bg: rgba(255,255,255,.18);
+  --cc-overlay-tag-c: rgba(255,255,255,.9);
+  --cc-overlay-gradient-start: rgba(0,0,0,.45);
+  --cc-overlay-gradient-end: rgba(0,0,0,0);
+  --cc-overlay-gradient-center: rgba(0,0,0,.4);
+  --cc-overlay-gradient-center-end: rgba(0,0,0,.05);
+  --cc-overlay-blur: 4px;
 
-  /* Spacing */
-  --card-pi: 1.25rem;
-  --card-pb: 1.5rem;
-  --card-rg: 0.4rem;
-  --card-cg: 0;
-  --card-actions-gap: 0.5rem;
-  --card-tags-gap: 0.35rem;
-  --card-links-gap: 0.25rem;
+  /* — Spacing (base values — scaled by multipliers) — */
+  --cc-pi: 1.25rem;
+  --cc-pb: 1.5rem;
+  --cc-rg: 0.4rem;
+  --cc-cg: 0;
+  --cc-actions-gap: 0.5rem;
+  --cc-tags-gap: 0.35rem;
+  --cc-links-gap: 0.25rem;
 
-  /* Media */
-  --card-media-bg: light-dark(#e8e0d8, #2a2520);
-  --card-media-min-h: 180px;
+  /* — Multipliers (default 1, overridden per breakpoint via attributes) — */
+  --cc-fsh-m: 1;
+  --cc-fsb-m: 1;
+  --cc-pi-m: 1;
+  --cc-pb-m: 1;
+  --cc-rg-m: 1;
+  --cc-cg-m: 1;
 
-  /* Eyebrow */
-  --card-eyebrow-size: 0.7rem;
-  --card-eyebrow-weight: 500;
-  --card-eyebrow-ls: 0.08em;
-  --card-eyebrow-color: var(--card-accent);
-  --card-eyebrow-above-pbs: 0.75rem;
-  --card-eyebrow-above-pbe: 0.5rem;
+  /* — Headline Typography — */
+  --cc-fsh: 1.15rem;
+  --cc-fwh: 700;
+  --cc-lhh: 1.25;
+  --cc-lsh: -0.02em;
 
-  /* Headline */
-  --card-headline-size: 1.15rem;
-  --card-headline-weight: 700;
-  --card-headline-lh: 1.25;
-  --card-headline-ls: -0.02em;
-  --card-hs-sm: 1.15rem;
-  --card-hs-md: 1.5rem;
-  --card-hs-lg: 2rem;
-  --card-hs-xl: 2.5rem;
+  /* — Body Typography (summary, subheadline) — */
+  --cc-fsb: 0.85rem;
+  --cc-fwb: 300;
+  --cc-lhb: 1.55;
 
-  /* Subheadline */
-  --card-subheadline-size: 0.85rem;
-  --card-subheadline-weight: 300;
-  --card-subheadline-color: var(--card-ink-muted);
+  /* — Eyebrow Typography — */
+  --cc-fs-eyebrow: 0.7rem;
+  --cc-fw-eyebrow: 500;
+  --cc-ls-eyebrow: 0.08em;
+  --cc-eyebrow-above-pbs: 0.75rem;
+  --cc-eyebrow-above-pbe: 0.5rem;
 
-  /* Summary */
-  --card-summary-size: 0.82rem;
-  --card-summary-weight: 300;
-  --card-summary-lh: 1.55;
-  --card-summary-color: var(--card-ink-muted);
+  /* — Media — */
+  --cc-media-bg: light-dark(#e8e0d8, #2a2520);
+  --cc-media-min-h: 180px;
 
-  /* Tags */
-  --card-tag-size: 0.65rem;
-  --card-tag-weight: 500;
-  --card-tag-bg: light-dark(#f0ece8, #333);
-  --card-tag-color: var(--card-ink-muted);
-  --card-tag-radius: 100px;
-  --card-tag-px: 0.55rem;
-  --card-tag-py: 0.2rem;
+  /* — Tags — */
+  --cc-tag-fs: 0.65rem;
+  --cc-tag-fw: 500;
+  --cc-tag-bg: light-dark(#f0ece8, #333);
+  --cc-tag-c: var(--cc-c-muted);
+  --cc-tag-bdrs: 100px;
+  --cc-tag-pi: 0.55rem;
+  --cc-tag-pb: 0.2rem;
 
-  /* Buttons */
-  --card-btn-size: 0.78rem;
-  --card-btn-weight: 700;
-  --card-btn-radius: 4px;
-  --card-btn-px: 1.4rem;
-  --card-btn-py: 0.65rem;
+  /* — Buttons — */
+  --cc-btn-fs: 0.78rem;
+  --cc-btn-fw: 700;
+  --cc-btn-bdrs: 4px;
+  --cc-btn-pi: 1.4rem;
+  --cc-btn-pb: 0.65rem;
 
-  /* Links */
-  --card-link-size: 0.8rem;
-  --card-link-weight: 500;
-  --card-link-py: 0.3rem;
+  /* — Links — */
+  --cc-link-fs: 0.8rem;
+  --cc-link-fw: 500;
+  --cc-link-pb: 0.3rem;
 
-  /* Caption */
-  --card-caption-size: 0.7rem;
-  --card-caption-bg: rgba(0,0,0,.55);
-  --card-caption-py: 0.4rem;
-  --card-caption-px: 0.7rem;
+  /* — Caption — */
+  --cc-caption-fs: 0.7rem;
+  --cc-caption-bg: rgba(0,0,0,.55);
+  --cc-caption-pb: 0.4rem;
+  --cc-caption-pi: 0.7rem;
 
-  /* Ribbon */
-  --card-ribbon-size: 0.7rem;
-  --card-ribbon-weight: 700;
-  --card-ribbon-py: 0.35rem;
-  --card-ribbon-pe: 1rem;
-  --card-ribbon-ps: 0.7rem;
+  /* — Ribbon — */
+  --cc-ribbon-fs: 0.7rem;
+  --cc-ribbon-fw: 700;
+  --cc-ribbon-pb: 0.35rem;
+  --cc-ribbon-pe: 1rem;
+  --cc-ribbon-ps: 0.7rem;
 
-  /* Sticker */
-  --card-sticker-size: 0.6rem;
-  --card-sticker-weight: 700;
-  --card-sticker-width: 52px;
-  --card-sticker-inset: 1rem;
+  /* — Sticker — */
+  --cc-sticker-fs: 0.6rem;
+  --cc-sticker-fw: 700;
+  --cc-sticker-w: 52px;
+  --cc-sticker-inset: 1rem;
 
-  /* Gallery */
-  --card-gallery-dot-size: 7px;
-  --card-gallery-dot-bg: rgba(255,255,255,.45);
-  --card-gallery-dot-active-bg: light-dark(#fff, #e5e5e5);
-  --card-gallery-arrow-size: 32px;
-  --card-gallery-arrow-shadow: 0 2px 6px rgba(0,0,0,.15);
-  --card-gallery-inset: 0.6rem;
-}
+  /* — Gallery — */
+  --cc-gallery-dot-sz: 7px;
+  --cc-gallery-dot-bg: rgba(255,255,255,.45);
+  --cc-gallery-dot-active-bg: light-dark(#fff, #e5e5e5);
+  --cc-gallery-arrow-sz: 32px;
+  --cc-gallery-arrow-bxsh: 0 2px 6px rgba(0,0,0,.15);
+  --cc-gallery-inset: 0.6rem;
 
-/* === Container Setup === */
-content-card {
+  /* — Container — */
   display: block;
   container-type: inline-size;
   container-name: card;
 }
 
-/* === Inner Grid Wrapper === */
+/* === Inner Grid + Content Area === */
 .cc-inner {
-  background: var(--card-bg);
-  border-radius: var(--card-radius);
-  box-shadow: var(--card-shadow);
-  color: var(--card-ink);
+  background: var(--cc-bg);
+  border-radius: var(--cc-bdrs);
+  box-shadow: var(--cc-bxsh);
+  color: var(--cc-c);
   display: grid;
   grid-template-rows: auto 1fr;
   overflow: clip;
-  transition: box-shadow var(--card-transition);
+  transition: box-shadow var(--cc-trs);
 }
 
 .cc-inner:hover {
-  box-shadow: var(--card-shadow-hover);
+  box-shadow: var(--cc-bxsh-hover);
+}
+
+.cc-content {
+  column-gap: calc(var(--cc-cg) * var(--cc-cg-m, 1));
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: calc(var(--cc-pi) * var(--cc-pi-m, 1)) calc(var(--cc-pi) * var(--cc-pi-m, 1)) calc(var(--cc-pb) * var(--cc-pb-m, 1));
+  row-gap: calc(var(--cc-rg) * var(--cc-rg-m, 1));
+}
+
+/* === Multipliers — Base (always active) === */
+content-card {
+  &[card*="fsh(1.5)"] { --cc-fsh-m: 1.5; }
+  &[card*="fsh(2)"]   { --cc-fsh-m: 2; }
+  &[card*="fsh(2.5)"] { --cc-fsh-m: 2.5; }
+  &[card*="fsh(3)"]   { --cc-fsh-m: 3; }
+  &[card*="fsh(4)"]   { --cc-fsh-m: 4; }
+
+  &[card*="fsb(1.5)"] { --cc-fsb-m: 1.5; }
+  &[card*="fsb(2)"]   { --cc-fsb-m: 2; }
+
+  &[card*="pi(1.5)"]  { --cc-pi-m: 1.5; }
+  &[card*="pi(2)"]    { --cc-pi-m: 2; }
+
+  &[card*="pb(1.5)"]  { --cc-pb-m: 1.5; }
+  &[card*="pb(2)"]    { --cc-pb-m: 2; }
+
+  &[card*="rg(1.5)"]  { --cc-rg-m: 1.5; }
+  &[card*="rg(2)"]    { --cc-rg-m: 2; }
+  &[card*="rg(3)"]    { --cc-rg-m: 3; }
+
+  &[card*="cg(1)"]    { --cc-cg-m: 1; }
+  &[card*="cg(2)"]    { --cc-cg-m: 2; }
+}
+
+/* === Multipliers — Medium (container >= 400px) === */
+@container card (min-width: 400px) {
+  content-card {
+    &[card-md*="fsh(1.5)"] { --cc-fsh-m: 1.5; }
+    &[card-md*="fsh(2)"]   { --cc-fsh-m: 2; }
+    &[card-md*="fsh(2.5)"] { --cc-fsh-m: 2.5; }
+    &[card-md*="fsh(3)"]   { --cc-fsh-m: 3; }
+    &[card-md*="fsh(4)"]   { --cc-fsh-m: 4; }
+
+    &[card-md*="fsb(1.5)"] { --cc-fsb-m: 1.5; }
+    &[card-md*="fsb(2)"]   { --cc-fsb-m: 2; }
+
+    &[card-md*="pi(1.5)"]  { --cc-pi-m: 1.5; }
+    &[card-md*="pi(2)"]    { --cc-pi-m: 2; }
+
+    &[card-md*="pb(1.5)"]  { --cc-pb-m: 1.5; }
+    &[card-md*="pb(2)"]    { --cc-pb-m: 2; }
+
+    &[card-md*="rg(1.5)"]  { --cc-rg-m: 1.5; }
+    &[card-md*="rg(2)"]    { --cc-rg-m: 2; }
+    &[card-md*="rg(3)"]    { --cc-rg-m: 3; }
+
+    &[card-md*="cg(1)"]    { --cc-cg-m: 1; }
+    &[card-md*="cg(2)"]    { --cc-cg-m: 2; }
+  }
+}
+
+/* === Multipliers — Extra Large (container >= 700px) === */
+@container card (min-width: 700px) {
+  content-card {
+    &[card-xl*="fsh(1.5)"] { --cc-fsh-m: 1.5; }
+    &[card-xl*="fsh(2)"]   { --cc-fsh-m: 2; }
+    &[card-xl*="fsh(2.5)"] { --cc-fsh-m: 2.5; }
+    &[card-xl*="fsh(3)"]   { --cc-fsh-m: 3; }
+    &[card-xl*="fsh(4)"]   { --cc-fsh-m: 4; }
+
+    &[card-xl*="fsb(1.5)"] { --cc-fsb-m: 1.5; }
+    &[card-xl*="fsb(2)"]   { --cc-fsb-m: 2; }
+
+    &[card-xl*="pi(1.5)"]  { --cc-pi-m: 1.5; }
+    &[card-xl*="pi(2)"]    { --cc-pi-m: 2; }
+
+    &[card-xl*="pb(1.5)"]  { --cc-pb-m: 1.5; }
+    &[card-xl*="pb(2)"]    { --cc-pb-m: 2; }
+
+    &[card-xl*="rg(1.5)"]  { --cc-rg-m: 1.5; }
+    &[card-xl*="rg(2)"]    { --cc-rg-m: 2; }
+    &[card-xl*="rg(3)"]    { --cc-rg-m: 3; }
+
+    &[card-xl*="cg(1)"]    { --cc-cg-m: 1; }
+    &[card-xl*="cg(2)"]    { --cc-cg-m: 2; }
+  }
+}
+
+/* === Aspect Ratios — Base === */
+content-card {
+  &[card*="ar(square)"]    { --cc-ar: 1 / 1; }
+  &[card*="ar(portrait)"]  { --cc-ar: 3 / 4; }
+  &[card*="ar(landscape)"] { --cc-ar: 4 / 3; }
+  &[card*="ar(panorama)"]  { --cc-ar: 21 / 9; }
+  &[card*="ar(1/1)"]       { --cc-ar: 1 / 1; }
+  &[card*="ar(3/4)"]       { --cc-ar: 3 / 4; }
+  &[card*="ar(4/3)"]       { --cc-ar: 4 / 3; }
+  &[card*="ar(16/9)"]      { --cc-ar: 16 / 9; }
+  &[card*="ar(21/9)"]      { --cc-ar: 21 / 9; }
+}
+
+content-card[card*="ar("] .cc-media { min-height: unset; }
+
+/* === Aspect Ratios — Medium (container >= 400px) === */
+@container card (min-width: 400px) {
+  content-card {
+    &[card-md*="ar(square)"]    { --cc-ar: 1 / 1; }
+    &[card-md*="ar(portrait)"]  { --cc-ar: 3 / 4; }
+    &[card-md*="ar(landscape)"] { --cc-ar: 4 / 3; }
+    &[card-md*="ar(panorama)"]  { --cc-ar: 21 / 9; }
+    &[card-md*="ar(1/1)"]       { --cc-ar: 1 / 1; }
+    &[card-md*="ar(3/4)"]       { --cc-ar: 3 / 4; }
+    &[card-md*="ar(4/3)"]       { --cc-ar: 4 / 3; }
+    &[card-md*="ar(16/9)"]      { --cc-ar: 16 / 9; }
+    &[card-md*="ar(21/9)"]      { --cc-ar: 21 / 9; }
+  }
+
+  content-card[card-md*="ar("] .cc-media { min-height: unset; }
+}
+
+/* === Aspect Ratios — Extra Large (container >= 700px) === */
+@container card (min-width: 700px) {
+  content-card {
+    &[card-xl*="ar(square)"]    { --cc-ar: 1 / 1; }
+    &[card-xl*="ar(portrait)"]  { --cc-ar: 3 / 4; }
+    &[card-xl*="ar(landscape)"] { --cc-ar: 4 / 3; }
+    &[card-xl*="ar(panorama)"]  { --cc-ar: 21 / 9; }
+    &[card-xl*="ar(1/1)"]       { --cc-ar: 1 / 1; }
+    &[card-xl*="ar(3/4)"]       { --cc-ar: 3 / 4; }
+    &[card-xl*="ar(4/3)"]       { --cc-ar: 4 / 3; }
+    &[card-xl*="ar(16/9)"]      { --cc-ar: 16 / 9; }
+    &[card-xl*="ar(21/9)"]      { --cc-ar: 21 / 9; }
+  }
+
+  content-card[card-xl*="ar("] .cc-media { min-height: unset; }
+}
+
+/* === Split Ratios — Base === */
+content-card {
+  &[card*="split(1/1)"] { --cc-split: 1fr 1fr; }
+  &[card*="split(1/2)"] { --cc-split: 1fr 2fr; }
+  &[card*="split(2/1)"] { --cc-split: 2fr 1fr; }
+  &[card*="split(1/3)"] { --cc-split: 1fr 3fr; }
+  &[card*="split(3/1)"] { --cc-split: 3fr 1fr; }
+  &[card*="split(2/3)"] { --cc-split: 2fr 3fr; }
+  &[card*="split(3/2)"] { --cc-split: 3fr 2fr; }
+}
+
+/* === Split Ratios — Medium (container >= 400px) === */
+@container card (min-width: 400px) {
+  content-card {
+    &[card-md*="split(1/1)"] { --cc-split-md: 1fr 1fr; }
+    &[card-md*="split(1/2)"] { --cc-split-md: 1fr 2fr; }
+    &[card-md*="split(2/1)"] { --cc-split-md: 2fr 1fr; }
+    &[card-md*="split(1/3)"] { --cc-split-md: 1fr 3fr; }
+    &[card-md*="split(3/1)"] { --cc-split-md: 3fr 1fr; }
+    &[card-md*="split(2/3)"] { --cc-split-md: 2fr 3fr; }
+    &[card-md*="split(3/2)"] { --cc-split-md: 3fr 2fr; }
+  }
+}
+
+/* === Split Ratios — Extra Large (container >= 700px) === */
+@container card (min-width: 700px) {
+  content-card {
+    &[card-xl*="split(1/1)"] { --cc-split-xl: 1fr 1fr; }
+    &[card-xl*="split(1/2)"] { --cc-split-xl: 1fr 2fr; }
+    &[card-xl*="split(2/1)"] { --cc-split-xl: 2fr 1fr; }
+    &[card-xl*="split(1/3)"] { --cc-split-xl: 1fr 3fr; }
+    &[card-xl*="split(3/1)"] { --cc-split-xl: 3fr 1fr; }
+    &[card-xl*="split(2/3)"] { --cc-split-xl: 2fr 3fr; }
+    &[card-xl*="split(3/2)"] { --cc-split-xl: 3fr 2fr; }
+  }
 }

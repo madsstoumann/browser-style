@@ -1,0 +1,48 @@
+/* === Actions Container === */
+.cc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cc-actions-gap);
+  margin-block-start: var(--cc-rg);
+}
+
+/* === Button Base === */
+.cc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--cc-rg);
+  font-family: inherit;
+  font-size: var(--cc-btn-fs);
+  font-weight: var(--cc-btn-fw);
+  letter-spacing: 0.02em;
+  padding: var(--cc-btn-pb) var(--cc-btn-pi);
+  border: none;
+  border-radius: var(--cc-btn-bdrs);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--cc-trs), color var(--cc-trs), box-shadow var(--cc-trs);
+  align-self: flex-start;
+}
+
+/* === Primary === */
+.cc-btn--primary {
+  background: var(--cc-accent);
+  color: var(--cc-on-accent);
+}
+
+.cc-btn--primary:hover {
+  filter: brightness(0.9);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--cc-accent) 25%, transparent);
+}
+
+/* === Secondary === */
+.cc-btn--secondary {
+  background: transparent;
+  color: var(--cc-c);
+  border: 1.5px solid var(--cc-bd);
+}
+
+.cc-btn--secondary:hover {
+  border-color: var(--cc-c);
+}
