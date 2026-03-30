@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "navigation",
+  "title": "Navigation",
+  "description": "Navigation container (header, footer, sidebar, etc.)",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2025-12-04",
+    "displayField": "name"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Navigation"
+  },
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Navigation Name",
+      "description": "Navigation name (\"Main Header\", \"Footer Links\", \"Sidebar\")"
+    },
+    "type": {
+      "type": "string",
+      "title": "Navigation Type",
+      "description": "Navigation type (\"header\", \"footer\", \"sidebar\", \"mobile\")"
+    },
+    "description": {
+      "type": "text",
+      "title": "Description",
+      "description": "Description for CMS editors"
+    }
+  },
+  "required": [
+    "name",
+    "type"
+  ]
+}

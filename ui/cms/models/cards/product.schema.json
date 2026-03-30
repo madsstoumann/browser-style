@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "product",
+  "title": "Product Card",
+  "description": "Product card with pricing, ratings, and availability",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "availability": {
+      "type": "select",
+      "title": "Availability",
+      "description": "Product availability status",
+      "options": {
+        "choices": [
+          {
+            "value": "InStock",
+            "label": "In Stock"
+          },
+          {
+            "value": "OutOfStock",
+            "label": "Out of Stock"
+          },
+          {
+            "value": "PreOrder",
+            "label": "Pre-Order"
+          }
+        ]
+      }
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "description": {
+      "type": "richtext",
+      "title": "Description",
+      "description": "Detailed product description"
+    },
+    "discount_text": {
+      "type": "string",
+      "title": "Discount Text",
+      "description": "Discount label (e.g., '20% OFF')"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Product image"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "price_currency": {
+      "type": "string",
+      "title": "Currency",
+      "description": "Price currency code",
+      "default": "USD"
+    },
+    "price_current": {
+      "type": "number",
+      "title": "Current Price",
+      "description": "Current selling price"
+    },
+    "price_original": {
+      "type": "number",
+      "title": "Original Price",
+      "description": "Original price (before discount)"
+    },
+    "rating_count": {
+      "type": "number",
+      "title": "Rating Count",
+      "description": "Number of ratings"
+    },
+    "rating_max": {
+      "type": "number",
+      "title": "Rating Maximum",
+      "description": "Maximum rating value",
+      "default": 5
+    },
+    "rating_value": {
+      "type": "number",
+      "title": "Rating Value",
+      "description": "Average rating value"
+    },
+    "ribbon_style": {
+      "type": "string",
+      "title": "Ribbon Style",
+      "description": "Ribbon style class"
+    },
+    "ribbon_text": {
+      "type": "string",
+      "title": "Ribbon Text",
+      "description": "Ribbon badge text (e.g., 'NEW', 'SALE')"
+    },
+    "sku": {
+      "type": "string",
+      "title": "SKU",
+      "description": "Stock keeping unit"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "valid_until": {
+      "type": "date",
+      "title": "Valid Until",
+      "description": "Offer valid until date"
+    }
+  },
+  "required": []
+}

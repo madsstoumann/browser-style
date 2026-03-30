@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "quote",
+  "title": "Quote Card",
+  "description": "Quote card for quotations and testimonials",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "author_name"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "author_name": {
+      "type": "string",
+      "title": "Author Name",
+      "description": "Name of the person quoted"
+    },
+    "author_role": {
+      "type": "string",
+      "title": "Author Role",
+      "description": "Role or title of the person quoted"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Featured image for the quote"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "quote_text": {
+      "type": "text",
+      "title": "Quote Text",
+      "description": "The quotation text",
+      "validation": {
+        "required": true
+      }
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "quote_text"
+  ]
+}

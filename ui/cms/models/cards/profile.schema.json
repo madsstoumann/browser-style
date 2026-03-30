@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "profile",
+  "title": "Profile Card",
+  "description": "Profile card for persons with contact information and professional details",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "bio": {
+      "type": "text",
+      "title": "Bio",
+      "description": "Detailed biography"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "contact_email": {
+      "type": "string",
+      "title": "Email",
+      "description": "Email address",
+      "format": "email"
+    },
+    "contact_github": {
+      "type": "url",
+      "title": "GitHub URL",
+      "description": "GitHub profile URL"
+    },
+    "contact_linkedin": {
+      "type": "url",
+      "title": "LinkedIn URL",
+      "description": "LinkedIn profile URL"
+    },
+    "contact_phone": {
+      "type": "string",
+      "title": "Phone",
+      "description": "Phone number"
+    },
+    "contact_twitter": {
+      "type": "url",
+      "title": "Twitter URL",
+      "description": "Twitter profile URL"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Profile Photo",
+      "description": "Profile photo or avatar"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "location": {
+      "type": "string",
+      "title": "Location",
+      "description": "Location or city"
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "organization": {
+      "type": "string",
+      "title": "Organization",
+      "description": "Company or organization"
+    },
+    "skills": {
+      "type": "array",
+      "title": "Skills",
+      "description": "List of skills",
+      "items": {
+        "type": "string"
+      }
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": []
+}

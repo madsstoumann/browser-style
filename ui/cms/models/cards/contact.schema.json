@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "contact",
+  "title": "Contact Card",
+  "description": "Contact card for customer service and support information",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "available_hours": {
+      "type": "string",
+      "title": "Available Hours",
+      "description": "Hours of availability"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "contact_email": {
+      "type": "string",
+      "title": "Email",
+      "description": "Contact email",
+      "format": "email"
+    },
+    "contact_phone": {
+      "type": "string",
+      "title": "Phone",
+      "description": "Contact phone number"
+    },
+    "contact_type": {
+      "type": "string",
+      "title": "Contact Type",
+      "description": "Type of contact (e.g., 'Customer Support', 'Sales')"
+    },
+    "department": {
+      "type": "string",
+      "title": "Department",
+      "description": "Department name"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Contact image"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "languages_supported": {
+      "type": "array",
+      "title": "Languages Supported",
+      "description": "Supported languages",
+      "items": {
+        "type": "string"
+      }
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "response_time": {
+      "type": "string",
+      "title": "Response Time",
+      "description": "Expected response time"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": []
+}

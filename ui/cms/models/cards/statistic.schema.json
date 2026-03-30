@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "statistic",
+  "title": "Statistic Card",
+  "description": "Statistic card for data visualization and metrics",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "comparison_period": {
+      "type": "string",
+      "title": "Comparison Period",
+      "description": "Time period for comparison"
+    },
+    "current_value": {
+      "type": "number",
+      "title": "Current Value",
+      "description": "Current metric value"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Featured image"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "metric_name": {
+      "type": "string",
+      "title": "Metric Name",
+      "description": "Name of the metric"
+    },
+    "period": {
+      "type": "string",
+      "title": "Period",
+      "description": "Time period"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "target_value": {
+      "type": "number",
+      "title": "Target Value",
+      "description": "Target or goal value"
+    },
+    "trend": {
+      "type": "select",
+      "title": "Trend",
+      "description": "Trend direction",
+      "options": {
+        "choices": [
+          {
+            "value": "up",
+            "label": "Up"
+          },
+          {
+            "value": "down",
+            "label": "Down"
+          },
+          {
+            "value": "stable",
+            "label": "Stable"
+          }
+        ]
+      }
+    },
+    "trend_percentage": {
+      "type": "number",
+      "title": "Trend Percentage",
+      "description": "Percentage change"
+    },
+    "unit": {
+      "type": "string",
+      "title": "Unit",
+      "description": "Unit of measurement"
+    }
+  },
+  "required": []
+}

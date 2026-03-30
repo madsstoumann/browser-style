@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "gallery",
+  "title": "Gallery Card",
+  "description": "Gallery card for media collections and albums",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "album_name": {
+      "type": "string",
+      "title": "Album Name",
+      "description": "Album or collection name"
+    },
+    "categories": {
+      "type": "array",
+      "title": "Categories",
+      "description": "Gallery categories",
+      "items": {
+        "type": "string"
+      }
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "download_options": {
+      "type": "array",
+      "title": "Download Options",
+      "description": "Available download formats",
+      "items": {
+        "type": "string"
+      }
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Featured image from gallery"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "share_count": {
+      "type": "number",
+      "title": "Share Count",
+      "description": "Number of shares"
+    },
+    "slideshow_enabled": {
+      "type": "boolean",
+      "title": "Slideshow Enabled",
+      "description": "Enable slideshow feature"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "total_count": {
+      "type": "number",
+      "title": "Total Count",
+      "description": "Total number of items in gallery"
+    },
+    "view_count": {
+      "type": "number",
+      "title": "View Count",
+      "description": "Number of views"
+    }
+  },
+  "required": []
+}

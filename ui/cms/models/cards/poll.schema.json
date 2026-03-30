@@ -1,0 +1,127 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "poll",
+  "title": "Poll Card",
+  "description": "Poll card for surveys and voting",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "allow_multiple": {
+      "type": "boolean",
+      "title": "Allow Multiple",
+      "description": "Allow multiple choice selection"
+    },
+    "authors": {
+      "type": "reference",
+      "title": "Authors",
+      "description": "Poll creators",
+      "options": {
+        "referenceType": "author",
+        "multiple": true
+      }
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "endpoint": {
+      "type": "url",
+      "title": "Endpoint",
+      "description": "API endpoint for submitting votes"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Poll image"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "poll_options": {
+      "type": "reference",
+      "title": "Poll Options",
+      "description": "Poll answer options",
+      "options": {
+        "referenceType": "poll-option",
+        "multiple": true
+      }
+    },
+    "share_count": {
+      "type": "number",
+      "title": "Share Count",
+      "description": "Number of shares"
+    },
+    "show_results": {
+      "type": "select",
+      "title": "Show Results",
+      "description": "When to show results",
+      "options": {
+        "choices": [
+          {
+            "value": "always",
+            "label": "Always"
+          },
+          {
+            "value": "after-vote",
+            "label": "After Vote"
+          },
+          {
+            "value": "never",
+            "label": "Never"
+          }
+        ]
+      }
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "total_votes": {
+      "type": "number",
+      "title": "Total Votes",
+      "description": "Total number of votes"
+    },
+    "view_count": {
+      "type": "number",
+      "title": "View Count",
+      "description": "Number of views"
+    }
+  },
+  "required": []
+}

@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "review",
+  "title": "Review Card",
+  "description": "Review card for product and service reviews",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Review image"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "helpful_votes": {
+      "type": "number",
+      "title": "Helpful Votes",
+      "description": "Number of helpful votes"
+    },
+    "item_type": {
+      "type": "string",
+      "title": "Item Type",
+      "description": "Type of item (Product, Service, etc.)"
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "product_image": {
+      "type": "url",
+      "title": "Product Image",
+      "description": "URL to product image"
+    },
+    "product_reviewed": {
+      "type": "string",
+      "title": "Product Reviewed",
+      "description": "Name of product/service reviewed"
+    },
+    "purchase_date": {
+      "type": "date",
+      "title": "Purchase Date",
+      "description": "Date of purchase"
+    },
+    "rating_max": {
+      "type": "number",
+      "title": "Rating Maximum",
+      "description": "Maximum rating",
+      "default": 5
+    },
+    "rating_value": {
+      "type": "number",
+      "title": "Rating Value",
+      "description": "Rating given"
+    },
+    "review_date": {
+      "type": "date",
+      "title": "Review Date",
+      "description": "Date review was written"
+    },
+    "reviewer_name": {
+      "type": "string",
+      "title": "Reviewer Name",
+      "description": "Name of reviewer"
+    },
+    "reviewer_verified": {
+      "type": "boolean",
+      "title": "Verified Purchase",
+      "description": "Verified purchase indicator"
+    },
+    "share_count": {
+      "type": "number",
+      "title": "Share Count",
+      "description": "Number of shares"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "view_count": {
+      "type": "number",
+      "title": "View Count",
+      "description": "Number of views"
+    }
+  },
+  "required": []
+}

@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "booking",
+  "title": "Booking Card",
+  "description": "Booking card for reservations and service bookings",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "amenities": {
+      "type": "array",
+      "title": "Amenities",
+      "description": "Included amenities",
+      "items": {
+        "type": "string"
+      }
+    },
+    "cancellation_policy": {
+      "type": "text",
+      "title": "Cancellation Policy",
+      "description": "Cancellation policy details"
+    },
+    "capacity": {
+      "type": "number",
+      "title": "Capacity",
+      "description": "Maximum capacity (number of people)"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "duration": {
+      "type": "string",
+      "title": "Duration",
+      "description": "Minimum booking duration"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Venue or service image"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "hourly_rate": {
+      "type": "number",
+      "title": "Hourly Rate",
+      "description": "Price per hour"
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "price_currency": {
+      "type": "string",
+      "title": "Currency",
+      "description": "Price currency",
+      "default": "USD"
+    },
+    "service_name": {
+      "type": "string",
+      "title": "Service Name",
+      "description": "Name of the service"
+    },
+    "special_requests": {
+      "type": "text",
+      "title": "Special Requests",
+      "description": "Information about special requests"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "venue_name": {
+      "type": "string",
+      "title": "Venue Name",
+      "description": "Venue or location name"
+    }
+  },
+  "required": []
+}

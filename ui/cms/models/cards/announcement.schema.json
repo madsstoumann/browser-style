@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "announcement",
+  "title": "Announcement Card",
+  "description": "Announcement card for notifications and important messages",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "action_required": {
+      "type": "string",
+      "title": "Action Required",
+      "description": "Required action from users"
+    },
+    "announcement_type": {
+      "type": "string",
+      "title": "Announcement Type",
+      "description": "Type of announcement"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "effective_end": {
+      "type": "datetime",
+      "title": "Effective End",
+      "description": "End date and time"
+    },
+    "effective_start": {
+      "type": "datetime",
+      "title": "Effective Start",
+      "description": "Start date and time"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Announcement image"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "is_dismissible": {
+      "type": "boolean",
+      "title": "Is Dismissible",
+      "description": "Can users dismiss this announcement",
+      "default": true
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "priority": {
+      "type": "select",
+      "title": "Priority",
+      "description": "Priority level",
+      "options": {
+        "choices": [
+          {
+            "value": "low",
+            "label": "Low"
+          },
+          {
+            "value": "medium",
+            "label": "Medium"
+          },
+          {
+            "value": "high",
+            "label": "High"
+          },
+          {
+            "value": "critical",
+            "label": "Critical"
+          }
+        ]
+      }
+    },
+    "published_date": {
+      "type": "datetime",
+      "title": "Published Date",
+      "description": "Publication date"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "target_audience": {
+      "type": "string",
+      "title": "Target Audience",
+      "description": "Intended audience"
+    }
+  },
+  "required": []
+}

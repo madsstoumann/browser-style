@@ -1,0 +1,153 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "recipe",
+  "title": "Recipe Card",
+  "description": "Recipe card with ingredients, instructions, and cooking details",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "authors": {
+      "type": "reference",
+      "title": "Authors",
+      "description": "Recipe authors/chefs",
+      "options": {
+        "referenceType": "author",
+        "multiple": true
+      }
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "comment_count": {
+      "type": "number",
+      "title": "Comment Count",
+      "description": "Number of comments"
+    },
+    "cook_time": {
+      "type": "string",
+      "title": "Cook Time",
+      "description": "Cooking time (ISO 8601 duration)"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Recipe image or video"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "ingredients": {
+      "type": "array",
+      "title": "Ingredients",
+      "description": "List of ingredients",
+      "items": {
+        "type": "string"
+      }
+    },
+    "instructions": {
+      "type": "array",
+      "title": "Instructions",
+      "description": "Cooking instructions",
+      "items": {
+        "type": "string"
+      },
+      "validation": {
+        "required": true
+      }
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "media_caption": {
+      "type": "string",
+      "title": "Media Caption",
+      "description": "Media caption"
+    },
+    "prep_time": {
+      "type": "string",
+      "title": "Prep Time",
+      "description": "Preparation time (ISO 8601 duration, e.g., 'PT15M')"
+    },
+    "rating_count": {
+      "type": "number",
+      "title": "Rating Count",
+      "description": "Number of ratings"
+    },
+    "rating_value": {
+      "type": "number",
+      "title": "Rating Value",
+      "description": "Average rating"
+    },
+    "reading_time": {
+      "type": "string",
+      "title": "Reading Time",
+      "description": "Estimated reading time"
+    },
+    "ribbon_style": {
+      "type": "string",
+      "title": "Ribbon Style",
+      "description": "Ribbon style class"
+    },
+    "ribbon_text": {
+      "type": "string",
+      "title": "Ribbon Text",
+      "description": "Ribbon badge text"
+    },
+    "servings": {
+      "type": "string",
+      "title": "Servings",
+      "description": "Number of servings"
+    },
+    "share_count": {
+      "type": "number",
+      "title": "Share Count",
+      "description": "Number of shares"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "view_count": {
+      "type": "number",
+      "title": "View Count",
+      "description": "Number of views"
+    }
+  },
+  "required": [
+    "instructions"
+  ]
+}

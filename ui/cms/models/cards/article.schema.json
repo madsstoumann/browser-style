@@ -1,0 +1,123 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "article",
+  "title": "Article Card",
+  "description": "Article card with publication details, authors, and content",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "authors": {
+      "type": "reference",
+      "title": "Authors",
+      "description": "Article authors (references to author content type)",
+      "options": {
+        "referenceType": "author",
+        "multiple": true
+      }
+    },
+    "body": {
+      "type": "richtext",
+      "title": "Body Content",
+      "description": "Main article body content"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "comment_count": {
+      "type": "number",
+      "title": "Comment Count",
+      "description": "Number of comments"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Featured image or video",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "like_count": {
+      "type": "number",
+      "title": "Like Count",
+      "description": "Number of likes"
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "media_caption": {
+      "type": "string",
+      "title": "Media Caption",
+      "description": "Caption for featured media"
+    },
+    "modified_date": {
+      "type": "datetime",
+      "title": "Modified Date",
+      "description": "Last modification date and time"
+    },
+    "published_date": {
+      "type": "datetime",
+      "title": "Published Date",
+      "description": "Article publication date and time"
+    },
+    "reading_time": {
+      "type": "string",
+      "title": "Reading Time",
+      "description": "Estimated reading time (e.g., '5 min read')"
+    },
+    "share_count": {
+      "type": "number",
+      "title": "Share Count",
+      "description": "Number of shares"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "view_count": {
+      "type": "number",
+      "title": "View Count",
+      "description": "Number of views"
+    }
+  },
+  "required": []
+}

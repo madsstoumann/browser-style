@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "comparison",
+  "title": "Comparison Card",
+  "description": "Comparison card for comparing multiple products or services",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "comparison_items": {
+      "type": "reference",
+      "title": "Comparison Items",
+      "description": "Items being compared (products, services, etc.)",
+      "options": {
+        "referenceType": "comparison-item",
+        "multiple": true
+      }
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Comparison image"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "recommendation": {
+      "type": "string",
+      "title": "Recommendation",
+      "description": "Recommended item"
+    },
+    "recommendation_summary": {
+      "type": "text",
+      "title": "Recommendation Summary",
+      "description": "Explanation of recommendation"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": []
+}
