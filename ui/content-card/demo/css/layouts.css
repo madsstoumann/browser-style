@@ -73,6 +73,15 @@ content-card[subgrid] {
     display: contents;
   }
 }
+content-card[subgrid] .cc-content > * {
+  padding-inline: calc(var(--cc-pi) * var(--cc-pi-m, 1));
+}
+/* content-card[subgrid] .cc-content > :first-child {
+  padding-block-start: calc(var(--cc-pi) * var(--cc-pi-m, 1));
+} */
+content-card[subgrid] .cc-content > :last-child {
+  padding-block-end: calc(var(--cc-pb) * var(--cc-pb-m, 1));
+}
 
 /* ============================================================
    LAYOUTS — card-md  @container card (min-width: 400px)

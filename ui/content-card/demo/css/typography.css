@@ -14,6 +14,7 @@
   font-size: var(--cc-fs-eyebrow);
   font-weight: var(--cc-fw-eyebrow);
   letter-spacing: var(--cc-ls-eyebrow);
+  text-box: cap alphabetic;
   text-transform: uppercase;
 }
 

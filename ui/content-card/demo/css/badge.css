@@ -1,13 +1,13 @@
 /* === Caption === */
 .cc-caption {
-  position: absolute;
-  inset-block-end: 0;
-  inset-inline-start: 0;
-  padding: var(--cc-caption-pb) var(--cc-caption-pi);
   background: var(--cc-caption-bg);
   color: var(--cc-on-accent);
   font-size: var(--cc-caption-fs);
+  inset-block-end: 0;
+  inset-inline-start: 0;
   letter-spacing: 0.02em;
+  padding: var(--cc-caption-pb) var(--cc-caption-pi);
+  position: absolute;
 }
 
 .cc-caption--tl { inset-block-start: 0; inset-inline-start: 0; inset-block-end: auto; inset-inline-end: auto; }
@@ -17,33 +17,33 @@
 
 /* === Ribbon === */
 .cc-ribbon {
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline-start: 0;
-  padding: var(--cc-ribbon-pb) var(--cc-ribbon-pe) var(--cc-ribbon-pb) var(--cc-ribbon-ps);
   background: var(--cc-accent);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
   color: var(--cc-on-accent);
   font-size: var(--cc-ribbon-fs);
   font-weight: var(--cc-ribbon-fw);
-  text-transform: uppercase;
+  inset-block-start: 0;
+  inset-inline-start: 0;
   letter-spacing: 0.05em;
-  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  padding: var(--cc-ribbon-pb) var(--cc-ribbon-pe) var(--cc-ribbon-pb) var(--cc-ribbon-ps);
+  position: absolute;
+  text-transform: uppercase;
 }
 
 /* === Sticker === */
 .cc-sticker {
-  position: absolute;
-  inset-block-start: var(--cc-sticker-inset);
-  inset-inline-end: var(--cc-sticker-inset);
-  width: var(--cc-sticker-w);
-  height: var(--cc-sticker-w);
-  border-radius: 50%;
   background: var(--cc-accent);
+  border-radius: 50%;
   color: var(--cc-on-accent);
   display: grid;
-  place-items: center;
   font-size: var(--cc-sticker-fs);
   font-weight: var(--cc-sticker-fw);
-  text-transform: uppercase;
+  height: var(--cc-sticker-w);
+  inset-block-start: var(--cc-sticker-inset);
+  inset-inline-end: var(--cc-sticker-inset);
   letter-spacing: 0.05em;
+  place-items: center;
+  position: absolute;
+  text-transform: uppercase;
+  width: var(--cc-sticker-w);
 }
