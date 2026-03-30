@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "id": "content-card",
-  "title": "🃏 Content Card",
+  "title": "📰 Content Card",
   "description": "A polymorphic card component supporting 25 different content types.",
   "metadata": {
     "localized": true,
