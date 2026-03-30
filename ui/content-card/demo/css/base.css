@@ -37,7 +37,7 @@ content-card {
 
   /* — Spacing (base values — scaled by multipliers) — */
   --cc-pi: var(--space-lg, 1rem);
-  --cc-pb: var(--space-xl, 1.5rem);
+  --cc-pb: var(--space-lg, 1rem);
   --cc-rg: var(--space-md, 0.75rem);
   --cc-cg: 0;
   --cc-actions-gap: var(--space-sm, 0.5rem);
