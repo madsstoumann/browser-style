@@ -1,15 +1,24 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "id": "social-link",
-  "title": "Social Link",
+  "title": "🌐 Social Link",
   "description": "A social media profile link",
   "metadata": {
     "version": "1.0.0",
     "lastModified": "2025-12-16",
-    "displayField": "platform"
+    "displayField": "internalName"
   },
   "type": "object",
   "properties": {
+    "internalName": {
+      "type": "string",
+      "title": "Internal Name",
+      "description": "Internal name for CMS editors — not displayed on the front end",
+      "localized": false,
+      "validation": {
+        "required": true
+      }
+    },
     "platform": {
       "type": "string",
       "title": "Platform",
