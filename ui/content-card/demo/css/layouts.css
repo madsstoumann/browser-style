@@ -3,8 +3,7 @@
    ============================================================ */
 
 /* -- vertical (default) -- */
-content-card:not([card]):not([subgrid]) .cc-inner,
-content-card[card*="vertical"]:not([card*="vertical-r"]):not([subgrid]) .cc-inner {
+:where(content-card:not([card]), content-card[card*="vertical"]:not([card*="vertical-r"])) .cc-inner {
   grid-template-rows: auto 1fr;
   grid-template-columns: none;
 }
@@ -62,26 +61,11 @@ content-card[card*="eyebrow(above)"] {
   }
 }
 
-/* -- subgrid support --
-   Row structure: media | eyebrow | headline | summary | tags | cta = 6 rows
-   cc-content spans rows 2–6 (5 rows). Missing elements collapse to 0 height.
-
-   Cards in a subgrid MUST have a consistent number of content children.
-   The standard set: eyebrow, headline, summary, tags, cta = 5.
-
-   Uses display:contents on cc-inner to flatten the 3-level nesting
-   (content-card → cc-inner → cc-content) into 2 levels, matching the
-   card visualizer's structure (.card → .card__content).
-
-   Usage:
-     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
-       <content-card card="vertical subgrid" content="..."></content-card>
-       ...
-     </div>
-   ──────────────────────────────────────────────────────── */
-content-card[card*="subgrid"] {
+/* -- subgrid support -- */
+content-card[subgrid] {
+  --_sg: attr(subgrid type(<integer>), 7);
   & >.cc-inner {
-    grid-row: 1 / 7;
+    grid-row: 1 / var(--_sg);
     grid-template-rows: subgrid;
   }
 
@@ -146,28 +130,6 @@ content-card[card*="subgrid"] {
       grid-template-rows: auto auto 1fr;
     }
   }
-
-  /* -- subgrid -- */
-  content-card[card-md*="subgrid"] {
-    display: grid;
-    grid-row: span 6;
-    grid-template-rows: subgrid;
-    background: var(--cc-bg);
-    border-radius: var(--cc-bdrs);
-    box-shadow: var(--cc-bxsh);
-    overflow: hidden;
-    color: var(--cc-c);
-
-    & > .cc-inner {
-      display: contents;
-    }
-
-    & .cc-content {
-      grid-row: span 5;
-      display: grid;
-      grid-template-rows: subgrid;
-    }
-  }
 }
 
 /* ============================================================
@@ -224,23 +186,6 @@ content-card[card*="subgrid"] {
   content-card[card-xl*="eyebrow(above)"] {
     & .cc-inner {
       grid-template-rows: auto auto 1fr;
-    }
-  }
-
-  /* -- subgrid -- */
-  content-card[card-xl*="subgrid"] {
-    display: grid;
-    grid-row: span 6;
-    grid-template-rows: subgrid;
-
-    & > .cc-inner {
-      display: contents;
-    }
-
-    & .cc-content {
-      grid-row: span 5;
-      display: grid;
-      grid-template-rows: subgrid;
     }
   }
 }
