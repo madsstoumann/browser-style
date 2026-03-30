@@ -54,6 +54,13 @@ content-card[card*="overlay"] {
     color: var(--cc-overlay-tag-c);
     backdrop-filter: blur(var(--cc-overlay-blur));
   }
+  & .cc-btn--secondary {
+    color: var(--cc-overlay-ink);
+    border-color: rgba(255,255,255,.4);
+  }
+  & .cc-btn--secondary:hover {
+    border-color: var(--cc-overlay-ink);
+  }
 }
 
 /* ============================================================
@@ -112,6 +119,13 @@ content-card[card*="overlay"] {
       background: var(--cc-overlay-tag-bg);
       color: var(--cc-overlay-tag-c);
       backdrop-filter: blur(var(--cc-overlay-blur));
+    }
+    & .cc-btn--secondary {
+      color: var(--cc-overlay-ink);
+      border-color: rgba(255,255,255,.4);
+    }
+    & .cc-btn--secondary:hover {
+      border-color: var(--cc-overlay-ink);
     }
   }
 }
@@ -172,6 +186,13 @@ content-card[card*="overlay"] {
       background: var(--cc-overlay-tag-bg);
       color: var(--cc-overlay-tag-c);
       backdrop-filter: blur(var(--cc-overlay-blur));
+    }
+    & .cc-btn--secondary {
+      color: var(--cc-overlay-ink);
+      border-color: rgba(255,255,255,.4);
+    }
+    & .cc-btn--secondary:hover {
+      border-color: var(--cc-overlay-ink);
     }
   }
 }

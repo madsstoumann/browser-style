@@ -9,27 +9,21 @@ content-card {
   color-scheme: light dark;
 
   /* — Surface — */
-  --cc-bg: light-dark(#fff, #1e1e1e);
-  --cc-bdrs: 6px;
-  --cc-bxsh: light-dark(
-    0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04),
-    0 1px 3px rgba(0,0,0,.2), 0 4px 12px rgba(0,0,0,.15)
-  );
-  --cc-bxsh-hover: light-dark(
-    0 2px 8px rgba(0,0,0,.08), 0 8px 24px rgba(0,0,0,.06),
-    0 2px 8px rgba(0,0,0,.2), 0 8px 24px rgba(0,0,0,.15)
-  );
-  --cc-bd: light-dark(#e0dbd5, #3a3530);
-  --cc-trs: .25s ease;
+  --cc-bg: light-dark(var(--c-white, #fff), var(--c-gray-80, #161616));
+  --cc-bdrs: var(--bdrs-md, 6px);
+  --cc-bxsh: var(--bxsh-sm, 0 2px 4px 0 rgba(0, 0, 0, 0.05));
+  --cc-bxsh-hover: var(--bxsh-md, 0 4px 8px 0 rgba(0, 0, 0, 0.05));
+  --cc-bd: light-dark(var(--c-gray-20, #e0e0e0), var(--c-gray-60, #393939));
+  --cc-trs: var(--animdur-normal, 300ms) ease;
 
   /* — Ink — */
-  --cc-c: light-dark(#1a1a1a, #e5e5e5);
-  --cc-c-muted: light-dark(#6b6560, #a09890);
-  --cc-accent: light-dark(#e84e1b, #f06530);
-  --cc-on-accent: #fff;
+  --cc-c: light-dark(var(--c-gray-90, #0f0f0f), var(--c-gray-20, #e0e0e0));
+  --cc-c-muted: light-dark(var(--c-gray-50, #525252), var(--c-gray-40, #8d8d8d));
+  --cc-accent: light-dark(var(--c-accent, #e84e1b), var(--c-accent-light, #f06530));
+  --cc-on-accent: var(--c-white, #fff);
 
   /* — Overlay — */
-  --cc-overlay-ink: #fff;
+  --cc-overlay-ink: var(--c-white, #fff);
   --cc-overlay-ink-muted: rgba(255,255,255,.75);
   --cc-overlay-eyebrow: rgba(255,255,255,.8);
   --cc-overlay-subheadline: rgba(255,255,255,.7);
@@ -42,13 +36,13 @@ content-card {
   --cc-overlay-blur: 4px;
 
   /* — Spacing (base values — scaled by multipliers) — */
-  --cc-pi: 1.25rem;
-  --cc-pb: 1.5rem;
-  --cc-rg: 0.4rem;
+  --cc-pi: var(--space-lg, 1rem);
+  --cc-pb: var(--space-xl, 1.5rem);
+  --cc-rg: var(--space-md, 0.75rem);
   --cc-cg: 0;
-  --cc-actions-gap: 0.5rem;
-  --cc-tags-gap: 0.35rem;
-  --cc-links-gap: 0.25rem;
+  --cc-actions-gap: var(--space-sm, 0.5rem);
+  --cc-tags-gap: var(--space-xs, 0.25rem);
+  --cc-links-gap: var(--space-xs, 0.25rem);
 
   /* — Multipliers (default 1, overridden per breakpoint via attributes) — */
   --cc-fsh-m: 1;
@@ -59,74 +53,75 @@ content-card {
   --cc-cg-m: 1;
 
   /* — Headline Typography — */
-  --cc-fsh: 1.15rem;
-  --cc-fwh: 700;
-  --cc-lhh: 1.25;
-  --cc-lsh: -0.02em;
+  --cc-ffh: var(--ff-industrial);
+  --cc-fsh: var(--fs-fluid-xl, clamp(1.25rem, 1rem + 1.25cqi, 2.5rem));
+  --cc-fwh: var(--fw-bold, 700);
+  --cc-lhh: var(--lh-tight, 1.25);
+  --cc-lsh: var(--ls-normal, 0);
 
   /* — Body Typography (summary, subheadline) — */
-  --cc-fsb: 0.85rem;
-  --cc-fwb: 300;
-  --cc-lhb: 1.55;
+  --cc-fsb: var(--fs-sm, 0.875rem);
+  --cc-fwb: var(--fw-light, 200);
+  --cc-lhb: var(--lh-normal, 1.5);
 
   /* — Eyebrow Typography — */
-  --cc-fs-eyebrow: 0.7rem;
-  --cc-fw-eyebrow: 500;
-  --cc-ls-eyebrow: 0.08em;
-  --cc-eyebrow-above-pbs: 0.75rem;
-  --cc-eyebrow-above-pbe: 0.5rem;
+  --cc-fs-eyebrow: var(--fs-xs, 0.75rem);
+  --cc-fw-eyebrow: var(--fw-medium, 500);
+  --cc-ls-eyebrow: var(--ls-wide, 0.05em);
+  --cc-eyebrow-above-pbs: var(--space-md, 0.75rem);
+  --cc-eyebrow-above-pbe: var(--space-sm, 0.5rem);
 
   /* — Media — */
-  --cc-media-bg: light-dark(#e8e0d8, #2a2520);
+  --cc-media-bg: light-dark(var(--c-gray-10, #f4f4f4), var(--c-gray-70, #262626));
   --cc-media-min-h: 180px;
 
   /* — Tags — */
-  --cc-tag-fs: 0.65rem;
-  --cc-tag-fw: 500;
-  --cc-tag-bg: light-dark(#f0ece8, #333);
+  --cc-tag-fs: var(--fs-xs, 0.75rem);
+  --cc-tag-fw: var(--fw-medium, 500);
+  --cc-tag-bg: light-dark(var(--c-gray-10, #f4f4f4), var(--c-gray-60, #393939));
   --cc-tag-c: var(--cc-c-muted);
-  --cc-tag-bdrs: 100px;
-  --cc-tag-pi: 0.55rem;
-  --cc-tag-pb: 0.2rem;
+  --cc-tag-bdrs: var(--bdrs-pill, 100px);
+  --cc-tag-pi: var(--space-sm, 0.5rem);
+  --cc-tag-pb: var(--space-2xs, 0.125rem);
 
   /* — Buttons — */
-  --cc-btn-fs: 0.78rem;
-  --cc-btn-fw: 700;
-  --cc-btn-bdrs: 4px;
-  --cc-btn-pi: 1.4rem;
-  --cc-btn-pb: 0.65rem;
+  --cc-btn-fs: var(--fs-sm, 0.875rem);
+  --cc-btn-fw: var(--fw-bold, 700);
+  --cc-btn-bdrs: var(--bdrs-sm, 4px);
+  --cc-btn-pi: var(--space-xl, 1.5rem);
+  --cc-btn-pb: var(--space-md, 0.75rem);
 
   /* — Links — */
-  --cc-link-fs: 0.8rem;
-  --cc-link-fw: 500;
-  --cc-link-pb: 0.3rem;
+  --cc-link-fs: var(--fs-sm, 0.875rem);
+  --cc-link-fw: var(--fw-medium, 500);
+  --cc-link-pb: var(--space-xs, 0.25rem);
 
   /* — Caption — */
-  --cc-caption-fs: 0.7rem;
+  --cc-caption-fs: var(--fs-xs, 0.75rem);
   --cc-caption-bg: rgba(0,0,0,.55);
-  --cc-caption-pb: 0.4rem;
-  --cc-caption-pi: 0.7rem;
+  --cc-caption-pb: var(--space-xs, 0.25rem);
+  --cc-caption-pi: var(--space-md, 0.75rem);
 
   /* — Ribbon — */
-  --cc-ribbon-fs: 0.7rem;
-  --cc-ribbon-fw: 700;
-  --cc-ribbon-pb: 0.35rem;
-  --cc-ribbon-pe: 1rem;
-  --cc-ribbon-ps: 0.7rem;
+  --cc-ribbon-fs: var(--fs-xs, 0.75rem);
+  --cc-ribbon-fw: var(--fw-bold, 700);
+  --cc-ribbon-pb: var(--space-xs, 0.25rem);
+  --cc-ribbon-pe: var(--space-lg, 1rem);
+  --cc-ribbon-ps: var(--space-md, 0.75rem);
 
   /* — Sticker — */
-  --cc-sticker-fs: 0.6rem;
-  --cc-sticker-fw: 700;
+  --cc-sticker-fs: var(--fs-xs, 0.75rem);
+  --cc-sticker-fw: var(--fw-bold, 700);
   --cc-sticker-w: 52px;
-  --cc-sticker-inset: 1rem;
+  --cc-sticker-inset: var(--space-lg, 1rem);
 
   /* — Gallery — */
   --cc-gallery-dot-sz: 7px;
   --cc-gallery-dot-bg: rgba(255,255,255,.45);
-  --cc-gallery-dot-active-bg: light-dark(#fff, #e5e5e5);
+  --cc-gallery-dot-active-bg: light-dark(var(--c-white, #fff), var(--c-gray-20, #e0e0e0));
   --cc-gallery-arrow-sz: 32px;
-  --cc-gallery-arrow-bxsh: 0 2px 6px rgba(0,0,0,.15);
-  --cc-gallery-inset: 0.6rem;
+  --cc-gallery-arrow-bxsh: var(--bxsh-sm, 0 2px 4px 0 rgba(0, 0, 0, 0.05));
+  --cc-gallery-inset: var(--space-sm, 0.5rem);
 
   /* — Container — */
   display: block;
@@ -167,6 +162,12 @@ content-card {
   &[card*="fsh(3)"]   { --cc-fsh-m: 3; }
   &[card*="fsh(4)"]   { --cc-fsh-m: 4; }
 
+  &[card*="lh(0)"]   { --cc-lhh: 1; }
+  &[card*="lh(1.1)"] { --cc-lhh: 1.1; }
+  &[card*="lh(1.25)"]{ --cc-lhh: 1.25; }
+  &[card*="lh(1.5)"] { --cc-lhh: 1.5; }
+  &[card*="lh(2)"]   { --cc-lhh: 2; }
+
   &[card*="fsb(1.5)"] { --cc-fsb-m: 1.5; }
   &[card*="fsb(2)"]   { --cc-fsb-m: 2; }
 
@@ -176,10 +177,12 @@ content-card {
   &[card*="pb(1.5)"]  { --cc-pb-m: 1.5; }
   &[card*="pb(2)"]    { --cc-pb-m: 2; }
 
+  &[card*="rg(0)"]    { --cc-rg-m: 0; }
   &[card*="rg(1.5)"]  { --cc-rg-m: 1.5; }
   &[card*="rg(2)"]    { --cc-rg-m: 2; }
   &[card*="rg(3)"]    { --cc-rg-m: 3; }
 
+  &[card*="cg(0)"]    { --cc-cg-m: 0; }
   &[card*="cg(1)"]    { --cc-cg-m: 1; }
   &[card*="cg(2)"]    { --cc-cg-m: 2; }
 }
@@ -193,6 +196,12 @@ content-card {
     &[card-md*="fsh(3)"]   { --cc-fsh-m: 3; }
     &[card-md*="fsh(4)"]   { --cc-fsh-m: 4; }
 
+    &[card-md*="lh(0)"]      { --cc-lhh: var(--lh-none, 1); }
+    &[card-md*="lh(tight)"]  { --cc-lhh: var(--lh-tight, 1.25); }
+    &[card-md*="lh(normal)"] { --cc-lhh: var(--lh-normal, 1.5); }
+    &[card-md*="lh(1)"]      { --cc-lhh: 1; }
+    &[card-md*="lh(1.1)"]    { --cc-lhh: 1.1; }
+
     &[card-md*="fsb(1.5)"] { --cc-fsb-m: 1.5; }
     &[card-md*="fsb(2)"]   { --cc-fsb-m: 2; }
 
@@ -202,10 +211,12 @@ content-card {
     &[card-md*="pb(1.5)"]  { --cc-pb-m: 1.5; }
     &[card-md*="pb(2)"]    { --cc-pb-m: 2; }
 
+    &[card-md*="rg(0)"]    { --cc-rg-m: 0; }
     &[card-md*="rg(1.5)"]  { --cc-rg-m: 1.5; }
     &[card-md*="rg(2)"]    { --cc-rg-m: 2; }
     &[card-md*="rg(3)"]    { --cc-rg-m: 3; }
 
+    &[card-md*="cg(0)"]    { --cc-cg-m: 0; }
     &[card-md*="cg(1)"]    { --cc-cg-m: 1; }
     &[card-md*="cg(2)"]    { --cc-cg-m: 2; }
   }
@@ -220,6 +231,12 @@ content-card {
     &[card-xl*="fsh(3)"]   { --cc-fsh-m: 3; }
     &[card-xl*="fsh(4)"]   { --cc-fsh-m: 4; }
 
+    &[card-xl*="lh(0)"]      { --cc-lhh: var(--lh-none, 1); }
+    &[card-xl*="lh(tight)"]  { --cc-lhh: var(--lh-tight, 1.25); }
+    &[card-xl*="lh(normal)"] { --cc-lhh: var(--lh-normal, 1.5); }
+    &[card-xl*="lh(1)"]      { --cc-lhh: 1; }
+    &[card-xl*="lh(1.1)"]    { --cc-lhh: 1.1; }
+
     &[card-xl*="fsb(1.5)"] { --cc-fsb-m: 1.5; }
     &[card-xl*="fsb(2)"]   { --cc-fsb-m: 2; }
 
@@ -229,10 +246,12 @@ content-card {
     &[card-xl*="pb(1.5)"]  { --cc-pb-m: 1.5; }
     &[card-xl*="pb(2)"]    { --cc-pb-m: 2; }
 
+    &[card-xl*="rg(0)"]    { --cc-rg-m: 0; }
     &[card-xl*="rg(1.5)"]  { --cc-rg-m: 1.5; }
     &[card-xl*="rg(2)"]    { --cc-rg-m: 2; }
     &[card-xl*="rg(3)"]    { --cc-rg-m: 3; }
 
+    &[card-xl*="cg(0)"]    { --cc-cg-m: 0; }
     &[card-xl*="cg(1)"]    { --cc-cg-m: 1; }
     &[card-xl*="cg(2)"]    { --cc-cg-m: 2; }
   }

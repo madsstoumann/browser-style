@@ -3,8 +3,8 @@
    ============================================================ */
 
 /* -- vertical (default) -- */
-content-card:not([card]) .cc-inner,
-content-card[card*="vertical"]:not([card*="vertical-r"]) .cc-inner {
+content-card:not([card]):not([subgrid]) .cc-inner,
+content-card[card*="vertical"]:not([card*="vertical-r"]):not([subgrid]) .cc-inner {
   grid-template-rows: auto 1fr;
   grid-template-columns: none;
 }
@@ -80,31 +80,13 @@ content-card[card*="eyebrow(above)"] {
      </div>
    ──────────────────────────────────────────────────────── */
 content-card[card*="subgrid"] {
-  display: grid;
-  /* display: grid;
-  grid-row: span 6;
-  grid-template-rows: subgrid;
-  background: var(--cc-bg);
-  border-radius: var(--cc-bdrs);
-  box-shadow: var(--cc-bxsh);
-  overflow: hidden;
-  color: var(--cc-c);
-  transition: box-shadow var(--cc-trs); */
-
-  /* &:hover {
-    box-shadow: var(--cc-bxsh-hover);
-  } */
-
-  & .cc-inner {
-    grid-row: 1 / 6;
+  & >.cc-inner {
+    grid-row: 1 / 7;
     grid-template-rows: subgrid;
   }
 
-  & .cc-content, & .cc-media {
+  &, & .cc-content, & .cc-media {
     display: contents;
-    /* grid-row: span 5;
-    display: grid;
-    grid-template-rows: subgrid; */
   }
 }
 

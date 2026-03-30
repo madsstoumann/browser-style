@@ -1,5 +1,6 @@
 /* === Headline === */
 .cc-headline {
+  font-family: var(--cc-ffh, inherit);
   font-size: calc(var(--cc-fsh) * var(--cc-fsh-m, 1));
   font-weight: var(--cc-fwh);
   letter-spacing: var(--cc-lsh);

@@ -1,0 +1,158 @@
+/* ===================================================================
+   Design System Tokens
+   Global design tokens following W3C Design Tokens specification.
+   Source of truth for all primitive values used by component tokens.
+   =================================================================== */
+
+:root {
+  /* =========================
+     Animation Duration
+     ========================= */
+  --animdur-fast: 100ms;
+  --animdur-immediate: 200ms;
+  --animdur-normal: 300ms;
+  --animdur-deliberate: 400ms;
+  --animdur-slow: 700ms;
+
+  /* =========================
+     Aspect Ratio
+     ========================= */
+  --ar-square: 1 / 1;
+  --ar-portrait: 3 / 4;
+  --ar-landscape: 4 / 3;
+  --ar-panorama: 16 / 9;
+  --ar-panorama-wide: 21 / 9;
+  --ar-panorama-ultra-wide: 32 / 9;
+
+  /* =========================
+     Colors — Gray
+     ========================= */
+  --c-gray-10: #f4f4f4;
+  --c-gray-20: #e0e0e0;
+  --c-gray-30: #c6c6c6;
+  --c-gray-40: #8d8d8d;
+  --c-gray-50: #525252;
+  --c-gray-60: #393939;
+  --c-gray-70: #262626;
+  --c-gray-80: #161616;
+  --c-gray-90: #0f0f0f;
+  --c-gray-100: #050505;
+
+  /* =========================
+     Colors — Blue
+     ========================= */
+  --c-blue-10: #e5f4ff;
+  --c-blue-20: #cce8ff;
+  --c-blue-30: #99d1ff;
+  --c-blue-40: #66baff;
+  --c-blue-50: #3399ff;
+  --c-blue-60: #0072ce;
+  --c-blue-70: #00539a;
+  --c-blue-80: #002d5c;
+  --c-blue-90: #001a33;
+  --c-blue-100: #000d1a;
+
+  /* =========================
+     Colors — Semantic
+     ========================= */
+  --c-white: #fff;
+  --c-black: #000;
+  --c-accent: #e84e1b;
+  --c-accent-light: #f06530;
+
+  /* =========================
+     Shadows — Box
+     ========================= */
+  --bxsh-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --bxsh-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+  --bxsh-md: 0 4px 8px 0 rgba(0, 0, 0, 0.05);
+  --bxsh-lg: 0 8px 16px 0 rgba(0, 0, 0, 0.05);
+  --bxsh-xl: 0 16px 32px 0 rgba(0, 0, 0, 0.05);
+  --bxshi-sm: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+  /* =========================
+     Shadows — Text
+     ========================= */
+  --txsh-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --txsh-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --txsh-md: 0 4px 8px rgba(0, 0, 0, 0.05);
+  --txsh-lg: 0 8px 16px rgba(0, 0, 0, 0.05);
+  --txsh-xl: 0 16px 32px rgba(0, 0, 0, 0.05);
+
+  /* =========================
+     Typography — Font Family
+     ========================= */
+  --ff-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  --ff-serif: Georgia, Cambria, 'Times New Roman', Times, serif;
+  --ff-mono: Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+  /* =========================
+     Typography — Font Size
+     ========================= */
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.25rem;
+  --fs-2xl: 1.5rem;
+  --fs-3xl: 2rem;
+
+  /* =========================
+     Typography — Font Size (fluid)
+     ========================= */
+  --fs-fluid-sm: clamp(0.875rem, 0.8rem + 0.25cqi, 1.125rem);
+  --fs-fluid-md: clamp(1rem, 0.9rem + 0.5cqi, 1.5rem);
+  --fs-fluid-lg: clamp(1.125rem, 1rem + 0.75cqi, 2rem);
+  --fs-fluid-xl: clamp(1.25rem, 1rem + 1.25cqi, 2.5rem);
+  --fs-fluid-2xl: clamp(1.5rem, 1rem + 2cqi, 3.5rem);
+
+  /* =========================
+     Typography — Font Weight
+     ========================= */
+  --fw-light: 200;
+  --fw-normal: 400;
+  --fw-medium: 500;
+  --fw-bold: 700;
+  --fw-black: 900;
+
+  /* =========================
+     Typography — Letter Spacing
+     ========================= */
+  --ls-tight: -0.05em;
+  --ls-normal: 0;
+  --ls-wide: 0.05em;
+  --ls-wider: 0.1em;
+  --ls-widest: 0.25em;
+
+  /* =========================
+     Typography — Line Height
+     ========================= */
+  --lh-none: 1;
+  --lh-tight: 1.25;
+  --lh-normal: 1.5;
+  --lh-loose: 2;
+  --lh-looser: 2.5;
+
+  /* =========================
+     Spacing
+     ========================= */
+  --space-2xs: 0.125rem;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 0.75rem;
+  --space-lg: 1rem;
+  --space-xl: 1.5rem;
+  --space-2xl: 2rem;
+  --space-3xl: 3rem;
+  --space-4xl: 4rem;
+
+  /* =========================
+     Border Radius
+     ========================= */
+  --bdrs-xs: 2px;
+  --bdrs-sm: 4px;
+  --bdrs-md: 6px;
+  --bdrs-lg: 8px;
+  --bdrs-xl: 12px;
+  --bdrs-pill: 100px;
+}
