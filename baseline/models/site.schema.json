@@ -1,12 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "id": "site",
-  "title": "Site",
+  "title": "🏠 Site",
   "description": "Site-wide singleton configuration (only one record)",
   "metadata": {
     "version": "3.0.0",
     "lastModified": "2026-03-22",
-    "displayField": "site_name",
+    "displayField": "internalName",
     "singleton": true
   },
   "structure": {
@@ -18,7 +18,7 @@
         "name": "Identity & Business",
         "description": "Basic site configuration",
         "collapse": false,
-        "fields": ["site_name", "site_url", "default_locale", "legal_name", "contact_email", "contact_phone", "address", "privacy_policy_id", "terms_service_id", "social_links"]
+        "fields": ["internalName", "site_name", "site_url", "default_locale", "legal_name", "contact_email", "contact_phone", "address", "privacy_policy_id", "terms_service_id", "social_links"]
       },
       {
         "area": "main",
@@ -80,6 +80,15 @@
   },
   "type": "object",
   "properties": {
+    "internalName": {
+      "type": "string",
+      "title": "Internal Name",
+      "description": "Internal name for CMS editors — not displayed on the front end",
+      "localized": false,
+      "validation": {
+        "required": true
+      }
+    },
     "site_name": {
       "type": "string",
       "title": "Site Name",

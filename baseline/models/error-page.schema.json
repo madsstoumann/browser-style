@@ -1,15 +1,24 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "id": "error-page",
-  "title": "Error Page",
+  "title": "⚠️ Error Page",
   "description": "Maps an HTTP status code to a custom error page",
   "metadata": {
     "version": "1.0.0",
     "lastModified": "2026-03-22",
-    "displayField": "status_code"
+    "displayField": "internalName"
   },
   "type": "object",
   "properties": {
+    "internalName": {
+      "type": "string",
+      "title": "Internal Name",
+      "description": "Internal name for CMS editors — not displayed on the front end",
+      "localized": false,
+      "validation": {
+        "required": true
+      }
+    },
     "status_code": {
       "type": "select",
       "title": "Status Code",

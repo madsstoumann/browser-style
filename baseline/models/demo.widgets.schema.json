@@ -1,12 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "id": "widgets",
-  "title": "Demo Widgets",
+  "title": "🧩 Demo Widgets",
   "description": "Showcases every custom widget from the widget registry — use as a reference and test fixture.",
   "metadata": {
     "version": "1.0.0",
     "lastModified": "2026-03-12",
-    "displayField": "title"
+    "displayField": "internalName"
   },
   "structure": {
     "allowedAsRoot": true,
@@ -31,6 +31,15 @@
   },
   "type": "object",
   "properties": {
+    "internalName": {
+      "type": "string",
+      "title": "Internal Name",
+      "description": "Internal name for CMS editors — not displayed on the front end",
+      "localized": false,
+      "validation": {
+        "required": true
+      }
+    },
     "title": {
       "type": "string",
       "title": "Title",

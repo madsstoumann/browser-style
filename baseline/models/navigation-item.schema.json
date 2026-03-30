@@ -1,12 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "id": "navigation-item",
-  "title": "Navigation Item",
+  "title": "📍 Navigation Item",
   "description": "A navigation entry: link, group (with children), or divider",
   "metadata": {
     "version": "2.0.0",
     "lastModified": "2026-03-18",
-    "displayField": "label"
+    "displayField": "internalName"
   },
   "structure": {
     "allowedAsRoot": true,
@@ -14,6 +14,15 @@
   },
   "type": "object",
   "properties": {
+    "internalName": {
+      "type": "string",
+      "title": "Internal Name",
+      "description": "Internal name for CMS editors — not displayed on the front end",
+      "localized": false,
+      "validation": {
+        "required": true
+      }
+    },
     "type": {
       "type": "select",
       "title": "Item Type",
