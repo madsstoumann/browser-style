@@ -138,7 +138,7 @@ function renderAddress(addr) {
 function renderContactMethods(methods) {
   if (!methods?.length) return '';
   return `<div class="cc-contact-methods">${methods.map(m => {
-    const prop = m.type === 'email' ? 'email' : m.type === 'phone' ? 'telephone' : 'contactPoint';
+    const prop = m.type === 'email' ? 'email' : m.type === 'phone' ? 'telephone' : 'url';
     return `<a class="cc-contact-method" itemprop="${prop}" href="${m.type === 'email' ? 'mailto:' : m.type === 'phone' ? 'tel:' : '#'}${m.value}"><span class="cc-contact-icon">${m.type}</span><span>${m.label || m.value}</span></a>`;
   }).join('')}</div>`;
 }
@@ -267,7 +267,7 @@ const TYPE_RENDERERS = {
 
   event(d) {
     const loc = d?.location || {};
-    return meta('eventStatus', d?.status ? `https://schema.org/EventStatus${d.status}` : '')
+    return meta('eventStatus', d?.status ? `https://schema.org/Event${d.status}` : '')
       + meta('eventAttendanceMode', 'https://schema.org/OfflineEventAttendanceMode')
       + meta('startDate', d?.startDate)
       + meta('endDate', d?.endDate)
