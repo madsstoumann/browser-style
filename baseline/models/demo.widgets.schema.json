@@ -15,7 +15,7 @@
       {
         "type": "tab",
         "name": "Content",
-        "fields": ["title", "card_data"]
+        "fields": ["internalName", "title", "card_data"]
       },
       {
         "type": "tab",

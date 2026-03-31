@@ -22,7 +22,7 @@
         "name": "robots.txt",
         "description": "Crawler directives",
         "collapse": false,
-        "fields": ["robots_txt"]
+        "fields": ["internalName", "robots_txt"]
       },
       {
         "area": "main",

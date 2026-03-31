@@ -18,7 +18,7 @@
         "name": "Breakpoints",
         "description": "Responsive layout and spacing per breakpoint. Each value is a space-separated string of layout pattern + spacing tokens, e.g. \"columns(3) pi(2) pbs(1) cg(2)\"",
         "collapse": false,
-        "fields": ["xs", "sm", "md", "lg", "xl", "xxl"]
+        "fields": ["internalName", "xs", "sm", "md", "lg", "xl", "xxl"]
       },
       {
         "area": "main",

@@ -16,7 +16,7 @@
       {
         "type": "tab",
         "name": "Content",
-        "fields": ["title", "slug", "description", "body", "readme", "category", "tags", "bulletPoints"]
+        "fields": ["internalName", "title", "slug", "description", "body", "readme", "category", "tags", "bulletPoints"]
       },
       {
         "type": "tab",

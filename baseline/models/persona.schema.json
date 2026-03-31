@@ -21,7 +21,7 @@
         "name": "Identity",
         "description": "Persona display settings",
         "collapse": false,
-        "fields": ["slug", "displayName", "description", "sortOrder", "isDefault"]
+        "fields": ["internalName", "slug", "displayName", "description", "sortOrder", "isDefault"]
       },
       {
         "area": "main",

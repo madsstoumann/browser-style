@@ -22,7 +22,7 @@
         "name": "Content Security Policy",
         "description": "CSP directives controlling allowed content sources",
         "collapse": false,
-        "fields": ["csp"]
+        "fields": ["internalName", "csp"]
       },
       {
         "area": "main",

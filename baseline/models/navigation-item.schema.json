@@ -10,7 +10,41 @@
   },
   "structure": {
     "allowedAsRoot": true,
-    "folder": "Navigation"
+    "folder": "Navigation",
+    "layout": [
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Content",
+        "description": "Core navigation item settings",
+        "collapse": false,
+        "fields": ["internalName", "type", "label", "url"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Link Options",
+        "description": "Link target and description",
+        "collapse": true,
+        "fields": ["target", "description"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Featured",
+        "description": "Visual enhancements: icon, image, badge, and featured flag",
+        "collapse": true,
+        "fields": ["icon", "image", "badge", "is_featured"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Children",
+        "description": "Nested navigation items within this group",
+        "collapse": true,
+        "fields": ["children"]
+      }
+    ]
   },
   "type": "object",
   "properties": {

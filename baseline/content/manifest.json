@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-03-24T10:24:32.113Z",
+  "lastUpdated": "2026-03-31T09:01:00.483Z",
   "environments": {
     "contentful:stoumann": {
       "content-card/achievement-1": "64tTZlcDnOlJ1rjLKJC9yq",
@@ -89,7 +89,7 @@
       "navigation-item/header-docs": "7qs85NOJwLhcFbboKFTx4O",
       "navigation-item/header-examples": "yZsqrPmx9JGNIyqTk92Mg",
       "navigation-item/header-github-cta": "65yFGDV3NCIZuEvrV8G8Q4",
-      "navigation-item/header-home": "6Srn0BXDBJGT0rjkDKGgK9",
+      "navigation-item/header-home": "6o1jiuew62CTKp2Kqu1vaN",
       "page/error-404": "17LZUqjjbBv0JoHSq9rp3S",
       "page/error-500": "4v4DSwKfVinVfav5PK4osn",
       "page/privacy-policy": "1eN7U2ciebka1ctEJ4e50m",
