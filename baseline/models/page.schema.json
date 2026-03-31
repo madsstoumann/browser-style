@@ -73,7 +73,7 @@
       "description": "Page title (SEO)"
     },
     "slug": {
-      "type": "slug",
+      "type": "url",
       "title": "Slug",
       "description": "Page slug"
     },
