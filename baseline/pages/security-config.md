@@ -1,8 +1,8 @@
 ---
-sidebar_label: Security Config
+sidebar_label: 🛠️ Security Config
 ---
 
-# 🔴 Security Config
+# 🛠️ Security Config 🔴
 
 A **singleton** containing the site's vulnerability disclosure policy, served at `/.well-known/security.txt`.
 

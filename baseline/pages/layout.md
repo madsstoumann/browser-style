@@ -1,8 +1,8 @@
 ---
-sidebar_label: Layout
+sidebar_label: 📐 Layout
 ---
 
-# 🟢 Layout
+# 📐 Layout 🟢
 
 A `layout` is a content section on a page — a hero banner, a card grid, a feature list, a testimonial carousel, etc. Pages reference an ordered array of layouts, each containing a configuration preset and polymorphic content references.
 

@@ -1,8 +1,8 @@
 ---
-sidebar_label: Crawler Config
+sidebar_label: 🛠️ Crawler Config
 ---
 
-# 🔴 Crawler Config
+# 🛠️ Crawler Config 🔴
 
 A **singleton** controlling how the site interacts with search engine crawlers, AI agents, and PWA installation.
 

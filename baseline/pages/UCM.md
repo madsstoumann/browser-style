@@ -42,6 +42,32 @@ Every unified content type schema must include:
 - `properties`: Field definitions
 - `required`: Array of required field names (optional)
 
+### The `internalName` Field
+
+Every content type includes an `internalName` field as its **first property**. This is a non-localized, required string used as the `displayField` in `metadata` — the value CMS editors see in list views and reference pickers.
+
+```json
+{
+  "internalName": {
+    "type": "string",
+    "title": "Internal Name",
+    "description": "Internal name for CMS editors — not displayed on the front end",
+    "localized": false,
+    "validation": {
+      "required": true
+    }
+  }
+}
+```
+
+**Why a dedicated field?**
+
+- **Locale-independent** — the display label stays the same regardless of which locale the editor is working in. Without it, a page titled "Forside" in Danish becomes unfindable when an editor switches to the English locale.
+- **Free-form naming conventions** — editors can use patterns like `"EN | Homepage | Hero Layout"` or `"2026-Q1 Campaign Banner"` to make entries instantly identifiable.
+- **Decoupled from front-end** — the user-facing `title`, `name`, or `headline` field remains fully localized and SEO-optimized, while `internalName` serves only the CMS editorial interface.
+
+This follows the Contentful best practice of a dedicated internal name, but benefits all CMS platforms equally — every adapter uses `metadata.displayField` to determine which field to show in list views.
+
 ### Unified Field Types
 
 The model defines these field types that map to all supported CMS platforms:

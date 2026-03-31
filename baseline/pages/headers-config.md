@@ -1,8 +1,8 @@
 ---
-sidebar_label: Headers Config
+sidebar_label: 🛠️ Headers Config
 ---
 
-# 🔴 Headers Config
+# 🛠️ Headers Config 🔴
 
 A **singleton** controlling HTTP security and privacy headers applied to every response via middleware.
 

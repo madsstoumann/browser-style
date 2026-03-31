@@ -5,7 +5,7 @@ const sidebars = {
     'getting-started',
     {
       type: 'category',
-      label: 'Site & Config',
+      label: '🏠 Site & Config',
       items: [
         'site',
         'headers-config',
@@ -19,7 +19,7 @@ const sidebars = {
     },
     {
       type: 'category',
-      label: 'Pages & Layouts',
+      label: '📄 Pages & Layouts',
       items: [
         'page',
         'layout',
@@ -28,14 +28,14 @@ const sidebars = {
     },
     {
       type: 'category',
-      label: 'Navigation',
+      label: '🧭 Navigation',
       items: [
         'navigation',
       ],
     },
     {
       type: 'category',
-      label: 'Features',
+      label: '✨ Features',
       items: [
         'persona',
         'translation-namespace',
@@ -43,7 +43,7 @@ const sidebars = {
     },
     {
       type: 'category',
-      label: 'Specifications',
+      label: '📋 Specifications',
       items: [
         'UCM',
         'UCF',
@@ -51,7 +51,7 @@ const sidebars = {
     },
     {
       type: 'category',
-      label: 'Guides',
+      label: '📖 Guides',
       items: [
         'vercel',
         'cloudflare',

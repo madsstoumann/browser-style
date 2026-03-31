@@ -22,33 +22,33 @@ CMS-agnostic content architecture — models, content examples, and documentatio
 
 How the content model is organized, from the global site singleton down to individual pages.
 
-- 🔴 [**Site**](./site.md) — Global singleton: identity, icons, SEO defaults, navigation, error pages, and references to all configuration
-- 🟢 [**Page**](./page.md) — URL-addressable unit: SEO metadata, layouts, robots directives, navigation overrides, and the fallback chain from page to site
-- 🟠 [**Error Page**](./error-page.md) — Maps HTTP status codes (401, 403, 404, 500, 503) to custom page entries
+- 🔴 🏠 [**Site**](./site.md) — Global singleton: identity, icons, SEO defaults, navigation, error pages, and references to all configuration
+- 🟢 📄 [**Page**](./page.md) — URL-addressable unit: SEO metadata, layouts, robots directives, navigation overrides, and the fallback chain from page to site
+- 🟠 ⚠️ [**Error Page**](./error-page.md) — Maps HTTP status codes (401, 403, 404, 500, 503) to custom page entries
 
 ## Layouts
 
-- 🟢 [**Layout**](./layout.md) — Content sections on a page: hero banners, card grids, feature lists, etc.
-- 🟠 [**Layout Config**](./layout-config.md) — Layout configuration presets: responsive breakpoints, spacing, grid settings, animations, and overflow
+- 🟢 📐 [**Layout**](./layout.md) — Content sections on a page: hero banners, card grids, feature lists, etc.
+- 🟠 ⚙️ [**Layout Config**](./layout-config.md) — Layout configuration presets: responsive breakpoints, spacing, grid settings, animations, and overflow
 
 ## Navigation
 
-- 🟠 [**Navigation**](./navigation.md) — Navigation containers and items: simple menus, dropdown menus, mega menus with columns and promotional slots, footer columns, and sidebar trees
+- 🟠 🧭 [**Navigation**](./navigation.md) — Navigation containers and items: simple menus, dropdown menus, mega menus with columns and promotional slots, footer columns, and sidebar trees
 
 ## Configuration
 
 Referenced singletons for infrastructure settings, each with a dedicated visual editor and independent webhook lifecycle.
 
-- 🔴 [**Crawler Config**](./crawler-config.md) — robots.txt, web app manifest (manifest.json), and LLM index (llms.txt / llms-full.txt)
-- 🔴 [**Sitemap**](./sitemap.md) — sitemap.xml generation: Vercel (built-in), Cloudflare (prebuild or Worker), and vanilla
-- 🔴 [**Headers Config**](./headers-config.md) — Content Security Policy, Permissions-Policy, and Referrer-Policy
-- 🔴 [**Security Config**](./security-config.md) — security.txt for vulnerability disclosure (RFC 9116)
-- 🔴 [**External Scripts**](./external-script.md) — Third-party script management: analytics, consent, marketing, support
+- 🔴 🛠️ [**Crawler Config**](./crawler-config.md) — robots.txt, web app manifest (manifest.json), and LLM index (llms.txt / llms-full.txt)
+- 🔴 🛠️ [**Sitemap**](./sitemap.md) — sitemap.xml generation: Vercel (built-in), Cloudflare (prebuild or Worker), and vanilla
+- 🔴 🛠️ [**Headers Config**](./headers-config.md) — Content Security Policy, Permissions-Policy, and Referrer-Policy
+- 🔴 🛠️ [**Security Config**](./security-config.md) — security.txt for vulnerability disclosure (RFC 9116)
+- 🔴 🛠️ [**External Scripts**](./external-script.md) — Third-party script management: analytics, consent, marketing, support
 
 ## Content Features
 
-- 🟠 [**Personas**](./persona.md) — Audience-specific search experiences with LLM system prompts and content retrieval bias
-- 🔵 [**Translations**](./translation-namespace.md) — Namespace-based UI string localization, built into flat locale files at deploy time
+- 🟠 👤 [**Personas**](./persona.md) — Audience-specific search experiences with LLM system prompts and content retrieval bias
+- 🔵 🌍 [**Translations**](./translation-namespace.md) — Namespace-based UI string localization, built into flat locale files at deploy time
 
 ## Specifications
 

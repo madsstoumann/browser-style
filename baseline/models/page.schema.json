@@ -12,6 +12,48 @@
     "allowedAsRoot": true,
     "allowedChildContentTypes": [
       "layout"
+    ],
+    "layout": [
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Content",
+        "description": "Page title, URL, description, and layouts",
+        "collapse": false,
+        "fields": ["internalName", "title", "url", "description", "layouts"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Navigation",
+        "description": "Override default header and footer navigation",
+        "collapse": true,
+        "fields": ["header_nav_id", "footer_nav_id"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Open Graph",
+        "description": "Social sharing metadata (falls back to page title, description, and site OG image)",
+        "collapse": true,
+        "fields": ["og_title", "og_description", "og_image", "og_type"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "SEO & Indexing",
+        "description": "Canonical URL and search engine directives",
+        "collapse": true,
+        "fields": ["canonical_url", "robots"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Security",
+        "description": "Page-level Content Security Policy override",
+        "collapse": true,
+        "fields": ["csp"]
+      }
     ]
   },
   "type": "object",

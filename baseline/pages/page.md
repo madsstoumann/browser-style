@@ -1,8 +1,8 @@
 ---
-sidebar_label: Page
+sidebar_label: 📄 Page
 ---
 
-# 🟢 Page
+# 📄 Page 🟢
 
 A `page` is the URL-addressable unit of the site. It carries SEO metadata and references an ordered array of layouts that contain the actual content.
 

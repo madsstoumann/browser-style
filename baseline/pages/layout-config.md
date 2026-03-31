@@ -1,8 +1,8 @@
 ---
-sidebar_label: Layout Config
+sidebar_label: ⚙️ Layout Config
 ---
 
-# 🟠 Layout Config
+# ⚙️ Layout Config 🟠
 
 Layout configuration presets control the visual presentation of a [layout](./layout.md) — responsive breakpoints with integrated spacing, grid defaults, overflow behavior, and animations.
 
