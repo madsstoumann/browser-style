@@ -1,0 +1,49 @@
+/* === Meta Row (dates, reading time, location, etc.) === */
+.cc-meta {
+  color: var(--cc-c-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: var(--cc-meta-fs, var(--fs-xs, 0.75rem));
+  gap: var(--cc-meta-gap, var(--space-sm, 0.5rem));
+}
+
+.cc-meta-item {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.3em;
+}
+
+.cc-meta-item:not(:last-child)::after {
+  color: var(--cc-bd);
+  content: '\00b7';
+  margin-inline-start: var(--cc-meta-gap, var(--space-sm, 0.5rem));
+}
+
+/* === Key-Value pair (used for job meta, software meta, etc.) === */
+.cc-detail {
+  color: var(--cc-c-muted);
+  display: flex;
+  font-size: var(--cc-meta-fs, var(--fs-xs, 0.75rem));
+  gap: var(--cc-meta-gap, var(--space-sm, 0.5rem));
+}
+
+.cc-detail-label {
+  font-weight: var(--fw-medium, 500);
+  color: var(--cc-c);
+}
+
+/* === Detail list (vertical key-value pairs) === */
+.cc-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cc-tags-gap, var(--space-xs, 0.25rem));
+}
+
+.cc-details .cc-detail {
+  justify-content: space-between;
+  padding-block: var(--space-2xs, 0.125rem);
+}
+
+.cc-details .cc-detail:not(:last-child) {
+  border-block-end: 1px solid var(--cc-bd);
+}

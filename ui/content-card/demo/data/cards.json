@@ -17,7 +17,10 @@
         "published": { "datetime": "2025-07-16T10:00:00Z", "formatted": "July 16, 2025" },
         "readingTime": "4 min read"
       },
-      "sticker": { "text": "New", "position": "top-right" }
+      "sticker": { "text": "New", "position": "top-right" },
+      "article": {
+        "authors": [{ "name": "Sarah Chen", "role": "Senior Editor" }]
+      }
     },
     "links": [{ "url": "#", "text": "Read more" }]
   },
@@ -54,7 +57,17 @@
     "media": {
       "sources": [{ "type": "image", "src": "https://picsum.photos/seed/demo4/800/600", "alt": "Conference stage" }]
     },
-    "data": { "type": "event", "content": { "headlineTag": "h3" } },
+    "data": {
+      "type": "event",
+      "content": { "headlineTag": "h3" },
+      "event": {
+        "startDate": "2025-09-17T09:00:00Z",
+        "endDate": "2025-09-20T18:00:00Z",
+        "status": "Scheduled",
+        "location": { "name": "Athens Convention Centre", "address": "Athens, Greece" },
+        "organizer": { "name": "WPP" }
+      }
+    },
     "actions": [{ "text": "Register now", "style": "primary" }]
   },
   {
@@ -157,7 +170,13 @@
       "caption": "Photo: Cannes Lions 2024"
     },
     "tags": [{ "name": "Cannes Lions" }, { "name": "Awards" }],
-    "data": { "type": "news", "content": { "headlineTag": "h3" } },
+    "data": {
+      "type": "news",
+      "content": { "headlineTag": "h3" },
+      "news": {
+        "authors": [{ "name": "James Rivera", "role": "Staff Writer" }]
+      }
+    },
     "actions": [{ "text": "See all wins", "style": "primary" }],
     "links": [{ "url": "#", "text": "Press release" }]
   },
@@ -208,5 +227,538 @@
       { "text": "View campaign", "style": "primary" },
       { "text": "Behind the scenes", "style": "secondary" }
     ]
+  },
+  {
+    "id": "demo-recipe-1",
+    "headline": "Classic Spaghetti Carbonara",
+    "summary": "The authentic Roman pasta dish with guanciale, pecorino, and egg — no cream allowed.",
+    "category": "Italian",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/recipe1/800/600", "alt": "Spaghetti Carbonara" }]
+    },
+    "tags": [{ "name": "Pasta" }, { "name": "Italian" }, { "name": "Quick" }],
+    "data": {
+      "type": "recipe",
+      "content": { "headlineTag": "h3" },
+      "recipe": {
+        "content": { "text": ["400g spaghetti", "200g guanciale", "4 large eggs", "100g pecorino romano", "Freshly ground black pepper"] },
+        "recipe": { "prepTime": "15 minutes", "cookTime": "20 minutes", "servings": "4 servings", "instructions": ["Bring a large pot of salted water to boil", "Cook spaghetti until al dente, reserve 1 cup pasta water", "Crisp guanciale in a large pan over medium heat", "Whisk eggs with grated pecorino and pepper", "Toss drained pasta with guanciale off heat", "Add egg mixture and toss rapidly, using pasta water to emulsify"] },
+        "authors": [{ "name": "Marco Rossi", "role": "Executive Chef" }]
+      }
+    },
+    "links": [{ "url": "#", "text": "Full recipe" }]
+  },
+  {
+    "id": "demo-product-1",
+    "headline": "Sony WH-1000XM5 Wireless Headphones",
+    "summary": "Industry-leading noise cancellation with exceptional sound quality, 30-hour battery life, and multipoint connection.",
+    "category": "Audio",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/product1/800/600", "alt": "Sony headphones" }]
+    },
+    "tags": [{ "name": "Wireless" }, { "name": "Noise Cancelling" }],
+    "data": {
+      "type": "product",
+      "content": { "headlineTag": "h3" },
+      "product": {
+        "sku": "WH-1000XM5",
+        "product": {
+          "availability": "In Stock",
+          "validUntil": "2025-12-31",
+          "price": { "current": "349.99", "original": "399.99", "currency": "USD", "discountText": "Save 12%" }
+        }
+      }
+    },
+    "actions": [{ "text": "Add to cart", "style": "primary", "url": "#" }]
+  },
+  {
+    "id": "demo-review-1",
+    "headline": "Exceptional noise cancellation, premium comfort",
+    "summary": "After 3 months of daily use, these headphones have become my essential work-from-home companion. The ANC is a game-changer for focus.",
+    "category": "Review",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/review1/800/600", "alt": "Headphones review" }]
+    },
+    "data": {
+      "type": "review",
+      "content": { "headlineTag": "h3" },
+      "review": {
+        "productReviewed": "Sony WH-1000XM5",
+        "reviewDate": "2025-06-15",
+        "rating": { "value": 4, "max": 5 },
+        "reviewer": { "name": "Alex Morgan", "verified": true }
+      }
+    }
+  },
+  {
+    "id": "demo-job-1",
+    "headline": "Senior Frontend Engineer",
+    "summary": "Join our platform team building the next generation of developer tools. You'll work on performance-critical UI and design systems.",
+    "category": "Engineering",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/job1/800/600", "alt": "Office workspace" }]
+    },
+    "tags": [{ "name": "Remote" }, { "name": "Full-time" }],
+    "data": {
+      "type": "job",
+      "content": { "headlineTag": "h3" },
+      "job": {
+        "company": "Acme Corp",
+        "location": "San Francisco, CA",
+        "employmentType": "Full-time",
+        "salaryRange": { "min": 120000, "max": 180000, "currency": "USD", "period": "annually" },
+        "applicationDeadline": "2025-10-15",
+        "qualifications": ["5+ years frontend experience", "React or Vue expertise", "TypeScript proficiency", "CI/CD experience"],
+        "benefits": ["Remote-friendly", "Unlimited PTO", "401k matching", "Health & dental"]
+      }
+    },
+    "actions": [{ "text": "Apply now", "style": "primary", "url": "#" }]
+  },
+  {
+    "id": "demo-course-1",
+    "headline": "Advanced CSS Architecture",
+    "summary": "Master modern CSS techniques including custom properties, container queries, cascade layers, and design token systems.",
+    "category": "Web Development",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/course1/800/600", "alt": "Course preview" }]
+    },
+    "tags": [{ "name": "CSS" }, { "name": "Frontend" }],
+    "data": {
+      "type": "course",
+      "content": { "headlineTag": "h3" },
+      "course": {
+        "duration": "8 weeks",
+        "difficultyLevel": "Intermediate",
+        "instructor": { "name": "Dr. Lisa Park", "title": "Lead Instructor" },
+        "price": { "current": "149.99", "original": "249.99", "currency": "USD" },
+        "prerequisites": ["Basic JavaScript knowledge", "HTML & CSS fundamentals", "Git basics"]
+      }
+    },
+    "actions": [{ "text": "Enroll now", "style": "primary", "url": "#" }]
+  },
+  {
+    "id": "demo-booking-1",
+    "headline": "Professional Photography Studio",
+    "summary": "Fully equipped photography studio with natural and artificial lighting, backdrops, and a comfortable client lounge.",
+    "category": "Creative Space",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/booking1/800/600", "alt": "Photography studio" }]
+    },
+    "data": {
+      "type": "booking",
+      "content": { "headlineTag": "h3" },
+      "booking": {
+        "serviceName": "Photography Studio",
+        "venue": "The Light Room",
+        "capacity": 6,
+        "duration": "2 hours minimum",
+        "price": { "hourlyRate": 75, "currency": "USD" },
+        "amenities": ["Professional lighting", "Backdrop collection", "Props library", "Changing room", "WiFi"],
+        "cancellationPolicy": "Free cancellation up to 24h before"
+      }
+    },
+    "actions": [{ "text": "Book now", "style": "primary", "url": "#" }]
+  },
+  {
+    "id": "demo-profile-1",
+    "headline": "Elena Vasquez",
+    "subheadline": "Principal Engineer at Mozilla",
+    "summary": "Open-source advocate and web standards contributor.",
+    "category": "Engineering",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/profile1/400/400", "alt": "Elena Vasquez portrait" }]
+    },
+    "data": {
+      "type": "profile",
+      "content": { "headlineTag": "h3" },
+      "profile": {
+        "jobTitle": "Principal Engineer",
+        "organization": "Mozilla",
+        "bio": "Open-source advocate and web standards contributor. 15+ years building browser engines and developer tools.",
+        "location": "Portland, OR",
+        "skills": ["Rust", "WebAssembly", "CSS", "JavaScript", "Web Standards"],
+        "contacts": [
+          { "type": "email", "value": "elena@mozilla.org", "label": "elena@mozilla.org" },
+          { "type": "phone", "value": "+1-503-555-0142", "label": "+1 (503) 555-0142" }
+        ]
+      }
+    }
+  },
+  {
+    "id": "demo-quote-1",
+    "headline": "On Imagination",
+    "summary": "Imagination is more important than knowledge. Knowledge is limited. Imagination encircles the world.",
+    "category": "Science",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/quote1/800/600", "alt": "Stars and cosmos" }]
+    },
+    "data": {
+      "type": "quote",
+      "content": { "headlineTag": "h3" },
+      "quote": {
+        "authors": [{ "name": "Albert Einstein", "role": "Physicist" }]
+      }
+    }
+  },
+  {
+    "id": "demo-faq-1",
+    "headline": "Frequently Asked Questions",
+    "summary": "Find answers to common questions about our plans, billing, and features.",
+    "category": "Support",
+    "data": {
+      "type": "faq",
+      "content": { "headlineTag": "h3" },
+      "faq": {
+        "content": {
+          "text": [
+            { "headline": "What payment methods do you accept?", "text": "We accept all major credit cards, PayPal, Apple Pay, and Google Pay. Enterprise customers can also pay via wire transfer." },
+            { "headline": "Can I cancel my subscription?", "text": "Yes, you can cancel anytime from your account settings. Your access continues until the end of your billing period." },
+            { "headline": "Do you offer refunds?", "text": "We offer a 30-day money-back guarantee for all plans. Contact support for assistance." },
+            { "headline": "Is there a free trial?", "text": "Yes! All plans include a 14-day free trial with full access to all features." }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "demo-poll-1",
+    "headline": "Which JavaScript framework do you prefer?",
+    "summary": "Community poll — cast your vote and see where the industry stands.",
+    "category": "Developer Survey",
+    "data": {
+      "type": "poll",
+      "content": { "headlineTag": "h3" },
+      "poll": {
+        "content": {
+          "text": [
+            { "id": "opt-1", "headline": "React", "text": "1842" },
+            { "id": "opt-2", "headline": "Vue", "text": "1256" },
+            { "id": "opt-3", "headline": "Svelte", "text": "987" },
+            { "id": "opt-4", "headline": "Angular", "text": "654" }
+          ]
+        },
+        "poll": { "endpoint": "#", "allowMultiple": false, "showResults": "always", "totalVotes": 4739 }
+      }
+    }
+  },
+  {
+    "id": "demo-gallery-1",
+    "headline": "Architecture & Design 2025",
+    "summary": "A curated collection of the year's most striking architectural photography.",
+    "category": "Photography",
+    "media": {
+      "sources": [
+        { "type": "image", "src": "https://picsum.photos/seed/gallery1a/800/600", "alt": "Modern architecture" },
+        { "type": "image", "src": "https://picsum.photos/seed/gallery1b/800/600", "alt": "Brutalist building" },
+        { "type": "image", "src": "https://picsum.photos/seed/gallery1c/800/600", "alt": "Art deco facade" }
+      ]
+    },
+    "data": {
+      "type": "gallery",
+      "content": { "headlineTag": "h3" },
+      "gallery": {
+        "totalCount": 48,
+        "albumName": "Architecture & Design 2025",
+        "categories": ["Modern", "Brutalist", "Art Deco", "Minimalist"]
+      }
+    }
+  },
+  {
+    "id": "demo-timeline-1",
+    "headline": "Our Journey",
+    "summary": "Key milestones in our company's growth from garage startup to global platform.",
+    "category": "Company",
+    "data": {
+      "type": "timeline",
+      "content": { "headlineTag": "h3" },
+      "timeline": {
+        "content": {
+          "text": [
+            { "headline": "2020", "text": "Company founded in a small garage with a team of three." },
+            { "headline": "2021", "text": "Secured Series A funding and expanded to 25 employees." },
+            { "headline": "2022", "text": "Launched flagship product, reaching 10K users in 3 months." },
+            { "headline": "2023", "text": "Expanded internationally across 12 markets." },
+            { "headline": "2024", "text": "Crossed 1M active users and opened new HQ." }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "demo-stat-1",
+    "headline": "Monthly Active Users",
+    "category": "Growth",
+    "data": {
+      "type": "statistic",
+      "content": { "headlineTag": "h3" },
+      "statistic": {
+        "metricName": "Monthly Active Users",
+        "currentValue": 2400000,
+        "unit": "users",
+        "trend": "up",
+        "trendPercentage": 23.5
+      }
+    }
+  },
+  {
+    "id": "demo-stat-2",
+    "headline": "Annual Revenue",
+    "category": "Finance",
+    "data": {
+      "type": "statistic",
+      "content": { "headlineTag": "h3" },
+      "statistic": {
+        "metricName": "Revenue",
+        "currentValue": 8700000,
+        "unit": "USD",
+        "trend": "up",
+        "trendPercentage": 12.8
+      }
+    }
+  },
+  {
+    "id": "demo-stat-3",
+    "headline": "Churn Rate",
+    "category": "Retention",
+    "data": {
+      "type": "statistic",
+      "content": { "headlineTag": "h3" },
+      "statistic": {
+        "metricName": "Churn Rate",
+        "currentValue": 3.2,
+        "unit": "%",
+        "trend": "down",
+        "trendPercentage": 0.5
+      }
+    }
+  },
+  {
+    "id": "demo-achievement-1",
+    "headline": "AWS Solutions Architect Professional",
+    "summary": "Validated expertise in designing distributed systems and deploying applications on AWS.",
+    "category": "Certification",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/achieve1/800/600", "alt": "AWS certification badge" }]
+    },
+    "data": {
+      "type": "achievement",
+      "content": { "headlineTag": "h3" },
+      "achievement": {
+        "achievementName": "AWS Solutions Architect Professional",
+        "issuingOrganization": "Amazon Web Services",
+        "dateEarned": "2024-08-15",
+        "expirationDate": "2027-08-15",
+        "verificationUrl": "#verify",
+        "skillLevel": "Professional",
+        "credentialId": "AWS-SAP-2024-8821"
+      }
+    }
+  },
+  {
+    "id": "demo-announcement-1",
+    "headline": "Scheduled System Maintenance",
+    "summary": "We will be performing scheduled maintenance to upgrade our infrastructure. Some services may be temporarily unavailable.",
+    "category": "System",
+    "data": {
+      "type": "announcement",
+      "content": { "headlineTag": "h3" },
+      "announcement": {
+        "priority": "high",
+        "announcementType": "Maintenance",
+        "effectiveDate": { "start": "2025-08-25T02:00:00Z", "end": "2025-08-25T06:00:00Z" },
+        "targetAudience": "All users",
+        "actionRequired": "Save your work before the maintenance window",
+        "isDismissible": true
+      }
+    }
+  },
+  {
+    "id": "demo-business-1",
+    "headline": "Brew & Bean Coffee Roasters",
+    "summary": "Artisan coffee roastery and cafe serving single-origin beans and house-made pastries since 2018.",
+    "category": "Cafe",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/business1/800/600", "alt": "Coffee shop interior" }]
+    },
+    "tags": [{ "name": "Coffee" }, { "name": "Bakery" }],
+    "data": {
+      "type": "business",
+      "content": { "headlineTag": "h3" },
+      "business": {
+        "telephone": "+1-415-555-0198",
+        "email": "hello@brewandbean.com",
+        "website": "https://brewandbean.com",
+        "address": {
+          "streetAddress": "742 Valencia St",
+          "addressLocality": "San Francisco",
+          "addressRegion": "CA",
+          "postalCode": "94110",
+          "addressCountry": "US"
+        },
+        "openingHours": [
+          { "display": "Mon–Fri: 6AM–8PM", "schema": "Mo-Fr 06:00-20:00" },
+          { "display": "Sat–Sun: 7AM–6PM", "schema": "Sa-Su 07:00-18:00" }
+        ]
+      }
+    }
+  },
+  {
+    "id": "demo-comparison-1",
+    "headline": "Choose Your Plan",
+    "summary": "Compare features across our pricing tiers to find the right fit for your team.",
+    "category": "Pricing",
+    "data": {
+      "type": "comparison",
+      "content": { "headlineTag": "h3" },
+      "comparison": {
+        "items": [
+          { "name": "Starter", "price": "$9/mo", "image": "https://picsum.photos/seed/comp1/100/100" },
+          { "name": "Pro", "price": "$29/mo", "image": "https://picsum.photos/seed/comp2/100/100" },
+          { "name": "Enterprise", "price": "$99/mo", "image": "https://picsum.photos/seed/comp3/100/100" }
+        ],
+        "recommendation": "Pro",
+        "summary": "Pro offers the best value for growing teams with unlimited projects and priority support."
+      }
+    }
+  },
+  {
+    "id": "demo-contact-1",
+    "headline": "Get in Touch",
+    "summary": "Our support team is here to help with any questions about your account or our products.",
+    "category": "Support",
+    "data": {
+      "type": "contact",
+      "content": { "headlineTag": "h3" },
+      "contact": {
+        "contactType": "Technical Support",
+        "availableHours": "Mon–Fri, 9AM–6PM EST",
+        "responseTime": "Under 2 hours",
+        "contactMethods": [
+          { "type": "email", "value": "support@example.com", "label": "support@example.com" },
+          { "type": "phone", "value": "+1-800-555-0123", "label": "1-800-555-0123" },
+          { "type": "chat", "value": "#", "label": "Live Chat" }
+        ]
+      }
+    }
+  },
+  {
+    "id": "demo-location-1",
+    "headline": "Golden Gate Bridge Vista Point",
+    "summary": "Iconic landmark and scenic viewpoint offering panoramic views of San Francisco Bay and the Pacific Ocean.",
+    "category": "Landmark",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/location1/800/600", "alt": "Golden Gate Bridge" }]
+    },
+    "tags": [{ "name": "San Francisco" }, { "name": "Landmark" }],
+    "data": {
+      "type": "location",
+      "content": { "headlineTag": "h3" },
+      "location": {
+        "hours": "Open daily, 6AM–10PM",
+        "contact": "+1-415-555-0456",
+        "address": {
+          "streetAddress": "Golden Gate Bridge",
+          "addressLocality": "San Francisco",
+          "addressRegion": "CA",
+          "addressCountry": "US"
+        },
+        "amenities": ["Free parking", "Visitor center", "Gift shop", "Guided tours", "Bicycle rental"]
+      }
+    }
+  },
+  {
+    "id": "demo-membership-1",
+    "headline": "Basic",
+    "summary": "Everything you need to get started with essential tools and features.",
+    "category": "Plans",
+    "data": {
+      "type": "membership",
+      "content": { "headlineTag": "h3" },
+      "membership": {
+        "planName": "Basic",
+        "trialPeriod": "7 days free",
+        "isPopular": false,
+        "price": { "monthly": "9.99", "yearly": "99", "currency": "USD" },
+        "features": ["5 projects", "Basic analytics", "Email support", "1 GB storage"],
+        "limitations": ["No custom domains", "No API access"]
+      }
+    }
+  },
+  {
+    "id": "demo-membership-2",
+    "headline": "Pro",
+    "summary": "For growing teams that need advanced features and priority support.",
+    "category": "Plans",
+    "data": {
+      "type": "membership",
+      "content": { "headlineTag": "h3" },
+      "membership": {
+        "planName": "Pro",
+        "trialPeriod": "14 days free",
+        "isPopular": true,
+        "price": { "monthly": "29.99", "yearly": "299", "currency": "USD" },
+        "features": ["Unlimited projects", "Advanced analytics", "Priority support", "50 GB storage", "Custom domains", "API access"],
+        "limitations": ["No white-label"]
+      }
+    }
+  },
+  {
+    "id": "demo-membership-3",
+    "headline": "Enterprise",
+    "summary": "Full-scale solution with dedicated support and enterprise-grade security.",
+    "category": "Plans",
+    "data": {
+      "type": "membership",
+      "content": { "headlineTag": "h3" },
+      "membership": {
+        "planName": "Enterprise",
+        "trialPeriod": "30 days free",
+        "isPopular": false,
+        "price": { "monthly": "99.99", "yearly": "999", "currency": "USD" },
+        "features": ["Everything in Pro", "White-label", "Dedicated account manager", "SSO & SAML", "Unlimited storage", "SLA guarantee"],
+        "limitations": []
+      }
+    }
+  },
+  {
+    "id": "demo-social-1",
+    "headline": "New design system shipped",
+    "summary": "Just shipped our new token-based design system. Container queries + CSS custom properties = responsive components that actually work.",
+    "category": "Social",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/social1/800/600", "alt": "Code screenshot" }]
+    },
+    "data": {
+      "type": "social",
+      "content": { "headlineTag": "h3" },
+      "social": {
+        "platform": "Twitter",
+        "author": "@designsystems",
+        "postContent": "Just shipped our new token-based design system. Container queries + CSS custom properties = responsive components that actually work.\n\nNo JavaScript needed for layout.",
+        "hashtags": ["DesignSystems", "CSS", "WebComponents"]
+      }
+    }
+  },
+  {
+    "id": "demo-software-1",
+    "headline": "DevTools Pro",
+    "summary": "A powerful integrated development environment with intelligent code completion, built-in terminal, and Git integration.",
+    "category": "Developer Tools",
+    "media": {
+      "sources": [{ "type": "image", "src": "https://picsum.photos/seed/software1/800/600", "alt": "IDE screenshot" }]
+    },
+    "tags": [{ "name": "IDE" }, { "name": "Developer" }],
+    "data": {
+      "type": "software",
+      "content": { "headlineTag": "h3" },
+      "software": {
+        "version": "3.2.1",
+        "applicationCategory": "Development Environment",
+        "operatingSystem": ["Windows", "macOS", "Linux"],
+        "price": { "current": "49.99", "currency": "USD" },
+        "developer": { "name": "DevTools Inc.", "website": "https://devtools.example.com" }
+      }
+    },
+    "actions": [{ "text": "Download", "style": "primary", "url": "#" }]
   }
 ]

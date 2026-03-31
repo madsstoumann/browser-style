@@ -1,0 +1,91 @@
+/* === Statistic Value === */
+.cc-stat-value {
+  color: var(--cc-c);
+  font-size: var(--cc-stat-fs, clamp(2rem, 1.5rem + 3cqi, 4rem));
+  font-weight: var(--fw-black, 900);
+  letter-spacing: var(--ls-tight, -0.05em);
+  line-height: 1;
+}
+
+.cc-stat-unit {
+  color: var(--cc-c-muted);
+  font-size: 0.4em;
+  font-weight: var(--fw-normal, 400);
+  letter-spacing: 0;
+  margin-inline-start: 0.2em;
+}
+
+/* === Trend Indicator === */
+.cc-trend {
+  align-items: center;
+  display: inline-flex;
+  font-size: var(--cc-meta-fs, var(--fs-sm, 0.875rem));
+  font-weight: var(--fw-medium, 500);
+  gap: 0.3em;
+}
+
+.cc-trend--up { color: light-dark(#28a745, #5cb85c); }
+.cc-trend--down { color: light-dark(#dc3545, #ff6b6b); }
+.cc-trend--flat { color: var(--cc-c-muted); }
+
+.cc-trend-arrow--up::before { content: '\2191'; }
+.cc-trend-arrow--down::before { content: '\2193'; }
+.cc-trend-arrow--flat::before { content: '\2192'; }
+
+/* === Progress Bar === */
+.cc-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs, 0.125rem);
+}
+
+.cc-progress-bar {
+  appearance: none;
+  background: light-dark(var(--c-gray-10, #f4f4f4), var(--c-gray-60, #393939));
+  border: none;
+  border-radius: var(--bdrs-pill, 100px);
+  height: var(--cc-progress-h, 8px);
+  width: 100%;
+}
+
+.cc-progress-bar::-webkit-progress-bar {
+  background: light-dark(var(--c-gray-10, #f4f4f4), var(--c-gray-60, #393939));
+  border-radius: var(--bdrs-pill, 100px);
+}
+
+.cc-progress-bar::-webkit-progress-value {
+  background: var(--cc-accent);
+  border-radius: var(--bdrs-pill, 100px);
+}
+
+.cc-progress-bar::-moz-progress-bar {
+  background: var(--cc-accent);
+  border-radius: var(--bdrs-pill, 100px);
+}
+
+.cc-progress-label {
+  color: var(--cc-c-muted);
+  display: flex;
+  font-size: var(--cc-meta-fs, var(--fs-xs, 0.75rem));
+  justify-content: space-between;
+}
+
+/* === Sparkline (mini bar chart) === */
+.cc-sparkline {
+  align-items: flex-end;
+  display: flex;
+  gap: 2px;
+  height: 32px;
+}
+
+.cc-sparkline-bar {
+  background: var(--cc-accent);
+  border-radius: 2px 2px 0 0;
+  flex: 1;
+  min-width: 4px;
+  opacity: 0.6;
+}
+
+.cc-sparkline-bar:last-child {
+  opacity: 1;
+}

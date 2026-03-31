@@ -1,0 +1,28 @@
+/* === Blockquote === */
+.cc-blockquote {
+  border-inline-start: 3px solid var(--cc-accent);
+  color: var(--cc-c);
+  font-size: calc(var(--cc-fsb) * var(--cc-fsb-m, 1));
+  font-style: italic;
+  line-height: var(--lh-normal, 1.5);
+  margin: 0;
+  padding-inline-start: var(--space-lg, 1rem);
+}
+
+.cc-blockquote::before {
+  color: var(--cc-accent);
+  content: '\201C';
+  display: block;
+  font-size: 2.5em;
+  font-style: normal;
+  line-height: 0.5;
+  margin-block-end: var(--space-xs, 0.25rem);
+}
+
+.cc-citation {
+  color: var(--cc-c-muted);
+  display: block;
+  font-size: var(--cc-meta-fs, var(--fs-xs, 0.75rem));
+  font-style: normal;
+  margin-block-start: var(--space-sm, 0.5rem);
+}

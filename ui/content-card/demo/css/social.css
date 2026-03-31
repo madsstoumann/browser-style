@@ -1,0 +1,48 @@
+/* === Engagement Row (likes, shares, comments, views) === */
+.cc-engagement {
+  color: var(--cc-c-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: var(--cc-meta-fs, var(--fs-xs, 0.75rem));
+  gap: var(--space-md, 0.75rem);
+}
+
+.cc-engagement-item {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.3em;
+}
+
+.cc-engagement-count {
+  font-weight: var(--fw-medium, 500);
+}
+
+/* === Platform badge === */
+.cc-platform {
+  align-items: center;
+  background: light-dark(var(--c-gray-10, #f4f4f4), var(--c-gray-70, #262626));
+  border-radius: var(--bdrs-pill, 100px);
+  color: var(--cc-c-muted);
+  display: inline-flex;
+  font-size: var(--cc-meta-fs, var(--fs-xs, 0.75rem));
+  font-weight: var(--fw-medium, 500);
+  gap: 0.3em;
+  padding: var(--space-2xs, 0.125rem) var(--space-sm, 0.5rem);
+}
+
+/* === Hashtags === */
+.cc-hashtags {
+  color: var(--cc-accent);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: var(--cc-meta-fs, var(--fs-sm, 0.875rem));
+  gap: var(--space-xs, 0.25rem);
+}
+
+/* === Post content (social) === */
+.cc-post-content {
+  color: var(--cc-c);
+  font-size: calc(var(--cc-fsb) * var(--cc-fsb-m, 1));
+  line-height: var(--lh-normal, 1.5);
+  white-space: pre-line;
+}

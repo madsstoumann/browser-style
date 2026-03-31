@@ -1,0 +1,151 @@
+/* === Collapsible list (ingredients, FAQ, requirements) === */
+.cc-collapsible {
+  border: 1px solid var(--cc-bd);
+  border-radius: var(--cc-bdrs, var(--bdrs-md, 6px));
+  overflow: clip;
+}
+
+.cc-collapsible summary {
+  background: light-dark(var(--c-gray-10, #f4f4f4), var(--c-gray-70, #262626));
+  cursor: pointer;
+  font-size: var(--cc-meta-fs, var(--fs-sm, 0.875rem));
+  font-weight: var(--fw-medium, 500);
+  list-style: none;
+  padding: var(--space-sm, 0.5rem) var(--space-md, 0.75rem);
+}
+
+.cc-collapsible summary::marker,
+.cc-collapsible summary::-webkit-details-marker {
+  display: none;
+}
+
+.cc-collapsible summary::after {
+  content: '+';
+  float: inline-end;
+  font-weight: var(--fw-bold, 700);
+}
+
+.cc-collapsible[open] summary::after {
+  content: '\2212';
+}
+
+.cc-collapsible-body {
+  font-size: var(--cc-meta-fs, var(--fs-sm, 0.875rem));
+  padding: var(--space-sm, 0.5rem) var(--space-md, 0.75rem);
+}
+
+/* === Ordered list (instructions, timeline) === */
+.cc-ordered-list {
+  color: var(--cc-c-muted);
+  counter-reset: steps;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--cc-meta-fs, var(--fs-sm, 0.875rem));
+  gap: var(--space-sm, 0.5rem);
+  list-style: none;
+  padding: 0;
+}
+
+.cc-ordered-list li {
+  counter-increment: steps;
+  display: flex;
+  gap: var(--space-sm, 0.5rem);
+  line-height: var(--lh-normal, 1.5);
+}
+
+.cc-ordered-list li::before {
+  align-items: center;
+  background: var(--cc-accent);
+  border-radius: 50%;
+  color: var(--cc-on-accent);
+  content: counter(steps);
+  display: inline-flex;
+  flex-shrink: 0;
+  font-size: var(--fs-xs, 0.75rem);
+  font-weight: var(--fw-bold, 700);
+  height: 22px;
+  justify-content: center;
+  margin-block-start: 0.15em;
+  width: 22px;
+}
+
+/* === Unordered list (qualifications, benefits, amenities) === */
+.cc-check-list {
+  color: var(--cc-c-muted);
+  display: flex;
+  flex-direction: column;
+  font-size: var(--cc-meta-fs, var(--fs-sm, 0.875rem));
+  gap: var(--space-xs, 0.25rem);
+  list-style: none;
+  padding: 0;
+}
+
+.cc-check-list li {
+  display: flex;
+  gap: var(--space-sm, 0.5rem);
+  line-height: var(--lh-normal, 1.5);
+}
+
+.cc-check-list li::before {
+  content: '\2713';
+  color: light-dark(#28a745, #5cb85c);
+  flex-shrink: 0;
+  font-weight: var(--fw-bold, 700);
+}
+
+.cc-check-list--x li::before {
+  color: light-dark(#dc3545, #ff6b6b);
+  content: '\2717';
+}
+
+/* === Bullet list (generic) === */
+.cc-bullet-list {
+  color: var(--cc-c-muted);
+  display: flex;
+  flex-direction: column;
+  font-size: var(--cc-meta-fs, var(--fs-sm, 0.875rem));
+  gap: var(--space-xs, 0.25rem);
+  list-style: disc;
+  padding-inline-start: 1.2em;
+}
+
+/* === FAQ items (details/summary) === */
+.cc-faq {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.cc-faq details {
+  border-block-end: 1px solid var(--cc-bd);
+}
+
+.cc-faq summary {
+  cursor: pointer;
+  font-size: var(--cc-meta-fs, var(--fs-sm, 0.875rem));
+  font-weight: var(--fw-medium, 500);
+  list-style: none;
+  padding: var(--space-sm, 0.5rem) 0;
+}
+
+.cc-faq summary::marker,
+.cc-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.cc-faq summary::after {
+  content: '+';
+  float: inline-end;
+  font-weight: var(--fw-bold, 700);
+}
+
+.cc-faq details[open] summary::after {
+  content: '\2212';
+}
+
+.cc-faq .cc-faq-answer {
+  color: var(--cc-c-muted);
+  font-size: var(--cc-meta-fs, var(--fs-sm, 0.875rem));
+  line-height: var(--lh-normal, 1.5);
+  padding-block-end: var(--space-md, 0.75rem);
+}

@@ -1,0 +1,255 @@
+/* === Priority Badge === */
+.cc-priority {
+  align-items: center;
+  border-radius: var(--bdrs-sm, 4px);
+  display: inline-flex;
+  font-size: var(--cc-meta-fs, var(--fs-xs, 0.75rem));
+  font-weight: var(--fw-bold, 700);
+  gap: 0.3em;
+  letter-spacing: 0.05em;
+  padding: var(--space-2xs, 0.125rem) var(--space-sm, 0.5rem);
+  text-transform: uppercase;
+}
+
+.cc-priority--low {
+  background: light-dark(#d4edda, #1e3a2a);
+  color: light-dark(#155724, #5cb85c);
+}
+
+.cc-priority--medium {
+  background: light-dark(#fff3cd, #3d3000);
+  color: light-dark(#856404, #ffc107);
+}
+
+.cc-priority--high {
+  background: light-dark(#f8d7da, #3d1215);
+  color: light-dark(#721c24, #ff6b6b);
+}
+
+/* === Opening Hours Table === */
+.cc-hours {
+  color: var(--cc-c-muted);
+  display: flex;
+  flex-direction: column;
+  font-size: var(--cc-meta-fs, var(--fs-sm, 0.875rem));
+  gap: var(--space-2xs, 0.125rem);
+}
+
+.cc-hours-row {
+  display: flex;
+  justify-content: space-between;
+  padding-block: var(--space-2xs, 0.125rem);
+}
+
+.cc-hours-row:not(:last-child) {
+  border-block-end: 1px solid var(--cc-bd);
+}
+
+/* === Address Block === */
+.cc-address {
+  color: var(--cc-c-muted);
+  font-size: var(--cc-meta-fs, var(--fs-sm, 0.875rem));
+  font-style: normal;
+  line-height: var(--lh-normal, 1.5);
+}
+
+/* === Contact Methods === */
+.cc-contact-methods {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--cc-meta-fs, var(--fs-sm, 0.875rem));
+  gap: var(--space-xs, 0.25rem);
+}
+
+.cc-contact-method {
+  align-items: center;
+  color: var(--cc-c);
+  display: flex;
+  gap: var(--space-sm, 0.5rem);
+  text-decoration: none;
+}
+
+.cc-contact-method:hover {
+  color: var(--cc-accent);
+}
+
+.cc-contact-icon {
+  color: var(--cc-accent);
+  flex-shrink: 0;
+  font-size: 1.1em;
+}
+
+/* === Comparison Grid === */
+.cc-comparison-items {
+  display: grid;
+  gap: var(--space-sm, 0.5rem);
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+}
+
+.cc-comparison-item {
+  align-items: center;
+  border: 1px solid var(--cc-bd);
+  border-radius: var(--cc-bdrs, var(--bdrs-md, 6px));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs, 0.25rem);
+  padding: var(--space-sm, 0.5rem);
+  text-align: center;
+}
+
+.cc-comparison-item--recommended {
+  border-color: var(--cc-accent);
+  border-width: 2px;
+}
+
+.cc-comparison-item img {
+  border-radius: var(--bdrs-sm, 4px);
+  height: 60px;
+  object-fit: cover;
+  width: 60px;
+}
+
+.cc-comparison-name {
+  font-size: var(--cc-meta-fs, var(--fs-sm, 0.875rem));
+  font-weight: var(--fw-medium, 500);
+}
+
+.cc-comparison-price {
+  color: var(--cc-c-muted);
+  font-size: var(--cc-meta-fs, var(--fs-xs, 0.75rem));
+}
+
+/* === Pros / Cons === */
+.cc-pros-cons {
+  display: grid;
+  gap: var(--space-md, 0.75rem);
+  grid-template-columns: 1fr 1fr;
+}
+
+@container card (max-width: 399px) {
+  .cc-pros-cons { grid-template-columns: 1fr; }
+}
+
+.cc-pros-cons h4 {
+  font-size: var(--cc-meta-fs, var(--fs-sm, 0.875rem));
+  font-weight: var(--fw-bold, 700);
+  margin-block-end: var(--space-xs, 0.25rem);
+}
+
+/* === Popular badge === */
+.cc-popular {
+  background: var(--cc-accent);
+  border-radius: var(--bdrs-sm, 4px);
+  color: var(--cc-on-accent);
+  font-size: var(--cc-meta-fs, var(--fs-xs, 0.75rem));
+  font-weight: var(--fw-bold, 700);
+  letter-spacing: 0.05em;
+  padding: var(--space-2xs, 0.125rem) var(--space-sm, 0.5rem);
+  text-transform: uppercase;
+}
+
+/* === Timeline === */
+.cc-timeline {
+  border-inline-start: 2px solid var(--cc-bd);
+  display: flex;
+  flex-direction: column;
+  font-size: var(--cc-meta-fs, var(--fs-sm, 0.875rem));
+  gap: var(--space-md, 0.75rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  padding-inline-start: var(--space-lg, 1rem);
+}
+
+.cc-timeline li {
+  position: relative;
+}
+
+.cc-timeline li::before {
+  background: var(--cc-accent);
+  border: 2px solid var(--cc-bg);
+  border-radius: 50%;
+  content: '';
+  height: 10px;
+  inset-block-start: 0.35em;
+  inset-inline-start: calc(-1 * var(--space-lg, 1rem) - 6px);
+  position: absolute;
+  width: 10px;
+}
+
+.cc-timeline-date {
+  color: var(--cc-accent);
+  font-weight: var(--fw-bold, 700);
+}
+
+.cc-timeline-text {
+  color: var(--cc-c-muted);
+  line-height: var(--lh-normal, 1.5);
+}
+
+/* === Poll Options === */
+.cc-poll {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm, 0.5rem);
+}
+
+.cc-poll-option {
+  align-items: center;
+  border: 1px solid var(--cc-bd);
+  border-radius: var(--cc-bdrs, var(--bdrs-md, 6px));
+  cursor: pointer;
+  display: flex;
+  font-size: var(--cc-meta-fs, var(--fs-sm, 0.875rem));
+  gap: var(--space-sm, 0.5rem);
+  padding: var(--space-sm, 0.5rem) var(--space-md, 0.75rem);
+  position: relative;
+  transition: border-color var(--cc-trs);
+}
+
+.cc-poll-option:hover {
+  border-color: var(--cc-accent);
+}
+
+.cc-poll-option input {
+  accent-color: var(--cc-accent);
+}
+
+.cc-poll-bar {
+  background: light-dark(rgba(232, 78, 27, 0.1), rgba(240, 101, 48, 0.15));
+  border-radius: inherit;
+  height: 100%;
+  inset: 0;
+  position: absolute;
+  transition: width var(--cc-trs);
+  width: 0;
+  z-index: -1;
+}
+
+.cc-poll-pct {
+  color: var(--cc-c-muted);
+  font-weight: var(--fw-bold, 700);
+  margin-inline-start: auto;
+}
+
+.cc-poll-total {
+  color: var(--cc-c-muted);
+  font-size: var(--cc-meta-fs, var(--fs-xs, 0.75rem));
+  text-align: end;
+}
+
+/* === Skills (profile) === */
+.cc-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cc-tags-gap, var(--space-xs, 0.25rem));
+}
+
+.cc-skill {
+  background: light-dark(rgba(232, 78, 27, 0.1), rgba(240, 101, 48, 0.15));
+  border-radius: var(--cc-tag-bdrs, var(--bdrs-pill, 100px));
+  color: var(--cc-accent);
+  font-size: var(--cc-tag-fs, var(--fs-xs, 0.75rem));
+  font-weight: var(--cc-tag-fw, var(--fw-medium, 500));
+  padding: var(--cc-tag-pb, var(--space-2xs, 0.125rem)) var(--cc-tag-pi, var(--space-sm, 0.5rem));
+}

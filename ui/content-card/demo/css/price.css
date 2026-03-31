@@ -1,0 +1,51 @@
+/* === Price Display === */
+.cc-price {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm, 0.5rem);
+}
+
+.cc-price-current {
+  color: var(--cc-c);
+  font-size: var(--cc-price-fs, var(--fs-xl, 1.25rem));
+  font-weight: var(--fw-bold, 700);
+}
+
+.cc-price-original {
+  color: var(--cc-c-muted);
+  font-size: var(--cc-meta-fs, var(--fs-sm, 0.875rem));
+  text-decoration: line-through;
+}
+
+.cc-price-discount {
+  background: light-dark(#fef3cd, #5a4600);
+  border-radius: var(--bdrs-sm, 4px);
+  color: light-dark(#856404, #ffc107);
+  font-size: var(--cc-meta-fs, var(--fs-xs, 0.75rem));
+  font-weight: var(--fw-bold, 700);
+  padding: var(--space-2xs, 0.125rem) var(--space-xs, 0.25rem);
+}
+
+/* === Availability badge === */
+.cc-availability {
+  font-size: var(--cc-meta-fs, var(--fs-xs, 0.75rem));
+  font-weight: var(--fw-medium, 500);
+}
+
+.cc-availability--in-stock { color: light-dark(#28a745, #5cb85c); }
+.cc-availability--low-stock { color: light-dark(#e0a800, #ffc107); }
+.cc-availability--out-of-stock { color: light-dark(#dc3545, #ff6b6b); }
+
+/* === Salary range === */
+.cc-salary {
+  color: var(--cc-c);
+  font-size: var(--cc-price-fs, var(--fs-xl, 1.25rem));
+  font-weight: var(--fw-bold, 700);
+}
+
+.cc-salary-period {
+  color: var(--cc-c-muted);
+  font-size: var(--cc-meta-fs, var(--fs-xs, 0.75rem));
+  font-weight: var(--fw-normal, 400);
+}

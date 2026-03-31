@@ -16,6 +16,15 @@
 <link rel="stylesheet" href="css/gallery.css">
 <link rel="stylesheet" href="css/layouts.css">
 <link rel="stylesheet" href="css/overlay.css">
+<link rel="stylesheet" href="css/author.css">
+<link rel="stylesheet" href="css/meta.css">
+<link rel="stylesheet" href="css/rating.css">
+<link rel="stylesheet" href="css/price.css">
+<link rel="stylesheet" href="css/list.css">
+<link rel="stylesheet" href="css/blockquote.css">
+<link rel="stylesheet" href="css/stat.css">
+<link rel="stylesheet" href="css/social.css">
+<link rel="stylesheet" href="css/priority.css">
 <script type="module" src="content-card.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,300&display=swap');
@@ -412,6 +421,305 @@
         card-xl="horizontal-r split(2/1)">
       </content-card>
     </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SCHEMA-DRIVEN CARD TYPES                                      -->
+<!-- ============================================================ -->
+
+<div class="divider"></div>
+
+<!-- 17. SCHEMA CARD TYPES HEADER -->
+<header class="page-header">
+  <h1>Schema-Driven Cards</h1>
+  <p>Type-specific content cards powered by Schema.org data models</p>
+</header>
+
+<!-- 18. ARTICLE -->
+<section>
+  <h2>Article</h2>
+  <p class="desc">Standard article cards with author bylines and metadata.</p>
+  <div class="demo-row demo-row--2">
+    <content-card content="demo-1" card="vertical"></content-card>
+    <content-card content="demo-1" card="horizontal"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 19. NEWS -->
+<section>
+  <h2>News</h2>
+  <p class="desc">Breaking news and journalism cards with publication metadata.</p>
+  <div class="demo-row demo-row--2">
+    <content-card content="demo-12" card="vertical"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 20. RECIPE -->
+<section>
+  <h2>Recipe</h2>
+  <p class="desc">Recipe cards with prep time, servings, and ingredient highlights.</p>
+  <div class="demo-row demo-row--2">
+    <content-card content="demo-recipe-1" card="vertical"></content-card>
+    <content-card content="demo-recipe-1" card="horizontal"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 21. PRODUCT -->
+<section>
+  <h2>Product</h2>
+  <p class="desc">Product cards with pricing, ratings, and availability.</p>
+  <div class="demo-row demo-row--3">
+    <content-card content="demo-product-1" card="vertical"></content-card>
+    <content-card content="demo-product-1" card="vertical"></content-card>
+    <content-card content="demo-product-1" card="vertical"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 22. REVIEW -->
+<section>
+  <h2>Review</h2>
+  <p class="desc">Review cards with star ratings, author attribution, and verdict summaries.</p>
+  <div class="demo-row">
+    <content-card content="demo-review-1" card="horizontal"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 23. EVENT -->
+<section>
+  <h2>Event</h2>
+  <p class="desc">Event cards with date, time, venue, and ticket information.</p>
+  <div class="demo-row demo-row--2">
+    <content-card content="demo-4" card="vertical"></content-card>
+    <content-card content="demo-4" card="horizontal"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 24. JOB POSTING -->
+<section>
+  <h2>Job Posting</h2>
+  <p class="desc">Job listing cards with role details, company info, and application links.</p>
+  <div class="demo-row demo-row--2">
+    <content-card content="demo-job-1" card="vertical"></content-card>
+    <content-card content="demo-job-1" card="content-only"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 25. COURSE -->
+<section>
+  <h2>Course</h2>
+  <p class="desc">Course cards with instructor, duration, and enrollment details.</p>
+  <div class="demo-row demo-row--2">
+    <content-card content="demo-course-1" card="vertical"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 26. BOOKING -->
+<section>
+  <h2>Booking</h2>
+  <p class="desc">Booking and reservation cards with availability and pricing.</p>
+  <div class="demo-row">
+    <content-card content="demo-booking-1" card="horizontal"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 27. PROFILE -->
+<section>
+  <h2>Profile</h2>
+  <p class="desc">Profile cards with avatar, bio, and social links.</p>
+  <div class="demo-row demo-row--3">
+    <content-card content="demo-profile-1" card="vertical ar(1/1)"></content-card>
+    <content-card content="demo-profile-1" card="vertical ar(1/1)"></content-card>
+    <content-card content="demo-profile-1" card="vertical ar(1/1)"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 28. QUOTE -->
+<section>
+  <h2>Quote</h2>
+  <p class="desc">Quotation cards with attribution and source styling.</p>
+  <div class="demo-row demo-row--2">
+    <content-card content="demo-quote-1" card="content-only"></content-card>
+    <content-card content="demo-quote-1" card="horizontal"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 29. FAQ -->
+<section>
+  <h2>FAQ</h2>
+  <p class="desc">Frequently asked question cards with expandable answers.</p>
+  <div class="demo-row">
+    <content-card content="demo-faq-1" card="content-only"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 30. POLL -->
+<section>
+  <h2>Poll</h2>
+  <p class="desc">Poll and survey cards with voting options and results.</p>
+  <div class="demo-row">
+    <content-card content="demo-poll-1" card="content-only"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 31. GALLERY -->
+<section>
+  <h2>Gallery</h2>
+  <p class="desc">Image gallery cards with multiple media items and captions.</p>
+  <div class="demo-row demo-row--2">
+    <content-card content="demo-gallery-1" card="vertical ar(4/3)"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 32. TIMELINE -->
+<section>
+  <h2>Timeline</h2>
+  <p class="desc">Chronological timeline cards for milestones and historical events.</p>
+  <div class="demo-row">
+    <content-card content="demo-timeline-1" card="content-only"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 33. STATISTICS -->
+<section>
+  <h2>Statistics</h2>
+  <p class="desc">Data-driven stat cards for KPIs, metrics, and numerical highlights.</p>
+  <div class="demo-row demo-row--3">
+    <content-card content="demo-stat-1" card="content-only"></content-card>
+    <content-card content="demo-stat-2" card="content-only"></content-card>
+    <content-card content="demo-stat-3" card="content-only"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 34. ACHIEVEMENT -->
+<section>
+  <h2>Achievement</h2>
+  <p class="desc">Achievement and badge cards for gamification and milestones.</p>
+  <div class="demo-row demo-row--2">
+    <content-card content="demo-achievement-1" card="vertical"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 35. ANNOUNCEMENT -->
+<section>
+  <h2>Announcement</h2>
+  <p class="desc">Announcement and notice cards for important updates.</p>
+  <div class="demo-row">
+    <content-card content="demo-announcement-1" card="content-only"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 36. BUSINESS -->
+<section>
+  <h2>Business</h2>
+  <p class="desc">Business listing cards with contact info, hours, and location.</p>
+  <div class="demo-row">
+    <content-card content="demo-business-1" card="horizontal"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 37. COMPARISON -->
+<section>
+  <h2>Comparison</h2>
+  <p class="desc">Side-by-side comparison cards for features and specifications.</p>
+  <div class="demo-row">
+    <content-card content="demo-comparison-1" card="content-only"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 38. CONTACT -->
+<section>
+  <h2>Contact</h2>
+  <p class="desc">Contact cards with communication channels and availability.</p>
+  <div class="demo-row">
+    <content-card content="demo-contact-1" card="content-only"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 39. LOCATION -->
+<section>
+  <h2>Location</h2>
+  <p class="desc">Location cards with address, map preview, and directions.</p>
+  <div class="demo-row">
+    <content-card content="demo-location-1" card="horizontal"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 40. MEMBERSHIP -->
+<section>
+  <h2>Membership</h2>
+  <p class="desc">Membership and pricing tier cards for subscription plans.</p>
+  <div class="demo-row demo-row--3">
+    <content-card content="demo-membership-1" card="vertical"></content-card>
+    <content-card content="demo-membership-2" card="vertical"></content-card>
+    <content-card content="demo-membership-3" card="vertical"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 41. SOCIAL -->
+<section>
+  <h2>Social</h2>
+  <p class="desc">Social media style cards with engagement metrics and sharing.</p>
+  <div class="demo-row demo-row--2">
+    <content-card content="demo-social-1" card="vertical"></content-card>
+    <content-card content="demo-social-1" card="content-only"></content-card>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 42. SOFTWARE -->
+<section>
+  <h2>Software</h2>
+  <p class="desc">Software and app cards with version info, platform support, and download links.</p>
+  <div class="demo-row">
+    <content-card content="demo-software-1" card="horizontal"></content-card>
   </div>
 </section>
 

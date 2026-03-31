@@ -1,0 +1,32 @@
+/* === Star Rating === */
+.cc-rating {
+  align-items: baseline;
+  display: flex;
+  gap: var(--space-xs, 0.25rem);
+}
+
+.cc-stars {
+  color: var(--cc-rating-c, #f5a623);
+  font-size: var(--cc-rating-fs, 1rem);
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.cc-stars-empty {
+  color: var(--cc-rating-empty, var(--c-gray-30, #c6c6c6));
+}
+
+.cc-rating-count {
+  color: var(--cc-c-muted);
+  font-size: var(--cc-meta-fs, var(--fs-xs, 0.75rem));
+}
+
+/* === Verified badge === */
+.cc-verified {
+  align-items: center;
+  color: var(--cc-rating-c, #f5a623);
+  display: inline-flex;
+  font-size: var(--cc-meta-fs, var(--fs-xs, 0.75rem));
+  font-weight: var(--fw-medium, 500);
+  gap: 0.3em;
+}
