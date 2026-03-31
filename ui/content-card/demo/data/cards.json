@@ -57,13 +57,15 @@
     },
     "data": {
       "type": "event",
-      "content": { "headlineTag": "h3" },
+      "content": { "headlineTag": "h3", "published": { "formatted": "September 17-20, 2025" } },
       "event": {
         "startDate": "2025-09-17T09:00:00Z",
         "endDate": "2025-09-20T18:00:00Z",
         "status": "Scheduled",
         "location": { "name": "Athens Convention Centre", "address": "Athens, Greece" },
-        "organizer": { "name": "WPP" }
+        "organizer": { "name": "WPP" },
+        "offers": [{ "name": "Early Bird Ticket", "price": "299", "currency": "USD" }],
+        "attendanceMode": "OfflineEventAttendanceMode"
       }
     },
     "actions": [{ "text": "Register now", "style": "primary" }]
@@ -235,9 +237,11 @@
     "tags": [{ "name": "Pasta" }, { "name": "Italian" }, { "name": "Quick" }],
     "data": {
       "type": "recipe",
-      "content": { "headlineTag": "h3", "text": ["400g spaghetti", "200g guanciale", "4 large eggs", "100g pecorino romano", "Freshly ground black pepper"] },
+      "content": { "headlineTag": "h3", "readingTime": "20 min", "text": ["400g spaghetti", "200g guanciale", "4 large eggs", "100g pecorino romano", "Freshly ground black pepper"] },
       "recipe": { "prepTime": "15 minutes", "cookTime": "20 minutes", "servings": "4 servings", "instructions": ["Bring a large pot of salted water to boil", "Cook spaghetti until al dente, reserve 1 cup pasta water", "Crisp guanciale in a large pan over medium heat", "Whisk eggs with grated pecorino and pepper", "Toss drained pasta with guanciale off heat", "Add egg mixture and toss rapidly, using pasta water to emulsify"] },
-      "authors": [{ "name": "Marco Rossi", "role": "Executive Chef" }]
+      "ribbon": { "text": "Popular", "style": "popular" },
+      "authors": [{ "name": "Marco Rossi", "role": "Executive Chef" }],
+      "engagement": { "reactions": [{ "type": "like", "icon": "thumbs_up", "count": 250, "value": 4.5, "max": 5, "ariaLabel": "Like this recipe" }], "commentCount": 45, "shareCount": 120, "viewCount": 12000 }
     },
     "links": [{ "url": "#", "text": "Full recipe" }]
   },
@@ -253,11 +257,15 @@
     "data": {
       "type": "product",
       "content": { "headlineTag": "h3" },
+      "content": { "headlineTag": "h3", "text": "Industry-leading noise cancellation with exceptional sound quality. 30-hour battery life and multipoint connection." },
       "product": {
         "availability": "In Stock",
         "validUntil": "2025-12-31",
-        "price": { "current": "349.99", "original": "399.99", "currency": "USD", "discountText": "Save 12%" }
+        "price": { "current": "349.99", "original": "399.99", "currency": "USD", "discountText": "Save 12%" },
+        "rating": { "value": 4.7, "count": 1250, "max": 5, "min": 0 }
       },
+      "ribbon": { "text": "Best Seller", "style": "popular" },
+      "engagement": { "reactions": [{ "type": "like", "icon": "thumbs_up", "count": 89, "ariaLabel": "Like this product" }], "viewCount": 15420, "shareCount": 245 },
       "sku": "WH-1000XM5"
     },
     "actions": [{ "text": "Add to cart", "style": "primary", "url": "#" }]
@@ -277,8 +285,14 @@
         "productReviewed": "Sony WH-1000XM5",
         "reviewDate": "2025-06-15",
         "rating": { "value": 4, "max": 5 },
-        "reviewer": { "name": "Alex Morgan", "verified": true }
-      }
+        "reviewer": { "name": "Alex Morgan", "verified": true, "purchaseDate": "2025-03-10" },
+        "helpfulVotes": 23,
+        "itemType": "Product",
+        "productImage": "https://picsum.photos/seed/reviewprod/400/300",
+        "aggregateRating": { "ratingValue": 4.6, "ratingCount": 1847, "bestRating": 5, "worstRating": 1 },
+        "productPrice": { "amount": "349.99", "currency": "USD" }
+      },
+      "engagement": { "reactions": [{ "type": "helpful", "icon": "thumb_up", "count": 23, "ariaLabel": "Mark as helpful" }] }
     }
   },
   {
@@ -316,14 +330,19 @@
     "tags": [{ "name": "CSS" }, { "name": "Frontend" }],
     "data": {
       "type": "course",
-      "content": { "headlineTag": "h3" },
+      "content": { "headlineTag": "h3", "readingTime": "40 hours" },
       "course": {
         "duration": "8 weeks",
+        "courseWorkload": "PT40H",
         "difficultyLevel": "Intermediate",
-        "instructor": { "name": "Dr. Lisa Park", "title": "Lead Instructor" },
+        "instructor": { "name": "Dr. Lisa Park", "title": "Lead Instructor", "experience": "10+ years" },
+        "provider": "Browser Style Academy",
         "price": { "current": "149.99", "original": "249.99", "currency": "USD" },
-        "prerequisites": ["Basic JavaScript knowledge", "HTML & CSS fundamentals", "Git basics"]
-      }
+        "prerequisites": ["Basic JavaScript knowledge", "HTML & CSS fundamentals", "Git basics"],
+        "learningOutcomes": ["Master custom properties and cascade layers", "Build responsive components with container queries", "Create design token systems"]
+      },
+      "ribbon": { "text": "Bestseller", "style": "popular" },
+      "engagement": { "reactions": [{ "type": "like", "icon": "thumbs_up", "count": 1250, "value": 4.8, "max": 5, "ariaLabel": "Rate this course" }], "viewCount": 15420, "shareCount": 340 }
     },
     "actions": [{ "text": "Enroll now", "style": "primary", "url": "#" }]
   },
@@ -344,8 +363,10 @@
         "capacity": 6,
         "duration": "2 hours minimum",
         "price": { "hourlyRate": 75, "currency": "USD" },
+        "availableSlots": [{ "date": "2025-08-25", "times": ["9:00 AM", "2:00 PM", "4:00 PM"] }],
         "amenities": ["Professional lighting", "Backdrop collection", "Props library", "Changing room", "WiFi"],
-        "cancellationPolicy": "Free cancellation up to 24h before"
+        "cancellationPolicy": "Free cancellation up to 24h before",
+        "specialRequests": "Available upon request"
       }
     },
     "actions": [{ "text": "Book now", "style": "primary", "url": "#" }]
@@ -423,7 +444,8 @@
           { "id": "opt-4", "headline": "Angular", "text": "654" }
         ]
       },
-      "poll": { "endpoint": "#", "allowMultiple": false, "showResults": "always", "totalVotes": 4739 }
+      "poll": { "endpoint": "#", "allowMultiple": false, "showResults": "always", "totalVotes": 4739, "labels": { "vote": "Vote", "submitVote": "Submit Vote", "results": "Results", "totalVotes": "Total votes:", "votes": "votes", "fallbackTitle": "Poll" } },
+      "engagement": { "viewCount": 4739 }
     }
   },
   {
@@ -443,9 +465,13 @@
       "content": { "headlineTag": "h3" },
       "gallery": {
         "totalCount": 48,
+        "featuredMedia": "https://picsum.photos/seed/gallery1a/800/600",
         "albumName": "Architecture & Design 2025",
+        "downloadOptions": ["High Resolution", "Web Optimized"],
+        "slideshowEnabled": true,
         "categories": ["Modern", "Brutalist", "Art Deco", "Minimalist"]
-      }
+      },
+      "engagement": { "viewCount": 3250, "shareCount": 78 }
     }
   },
   {
@@ -479,7 +505,11 @@
         "currentValue": 2400000,
         "unit": "users",
         "trend": "up",
-        "trendPercentage": 23.5
+        "trendPercentage": 23.5,
+        "comparisonPeriod": "vs. last month",
+        "targetValue": 3000000,
+        "chartData": [1800000, 2000000, 2200000, 2400000],
+        "period": "Last 4 months"
       }
     }
   },
@@ -525,7 +555,7 @@
     },
     "data": {
       "type": "achievement",
-      "content": { "headlineTag": "h3" },
+      "content": { "headlineTag": "h3", "published": { "formatted": "Earned August 2024" } },
       "achievement": {
         "achievementName": "AWS Solutions Architect Professional",
         "issuingOrganization": "Amazon Web Services",
@@ -544,7 +574,8 @@
     "category": "System",
     "data": {
       "type": "announcement",
-      "content": { "headlineTag": "h3" },
+      "content": { "headlineTag": "h3", "published": { "datetime": "2025-08-20T09:00:00Z", "formatted": "August 20, 2025" } },
+      "sticker": { "text": "URGENT", "style": "badge", "position": "top-right" },
       "announcement": {
         "priority": "high",
         "announcementType": "Maintenance",
@@ -571,6 +602,8 @@
         "telephone": "+1-415-555-0198",
         "email": "hello@brewandbean.com",
         "website": "https://brewandbean.com",
+        "sameAs": ["https://facebook.com/brewandbean", "https://instagram.com/brewandbean"],
+        "foundingDate": "2018-03-15",
         "address": {
           "streetAddress": "742 Valencia St",
           "addressLocality": "San Francisco",
@@ -578,6 +611,7 @@
           "postalCode": "94110",
           "addressCountry": "US"
         },
+        "geo": { "latitude": "37.7599", "longitude": "-122.4214" },
         "openingHours": [
           { "display": "Mon–Fri: 6AM–8PM", "schema": "Mo-Fr 06:00-20:00" },
           { "display": "Sat–Sun: 7AM–6PM", "schema": "Sa-Su 07:00-18:00" }
@@ -598,6 +632,11 @@
           { "name": "Starter", "price": "$9/mo", "image": "https://picsum.photos/seed/comp1/100/100" },
           { "name": "Pro", "price": "$29/mo", "image": "https://picsum.photos/seed/comp2/100/100" },
           { "name": "Enterprise", "price": "$99/mo", "image": "https://picsum.photos/seed/comp3/100/100" }
+        ],
+        "criteria": [
+          { "feature": "Projects", "Starter": "5", "Pro": "Unlimited", "Enterprise": "Unlimited", "winner": "Pro" },
+          { "feature": "Support", "Starter": "Email", "Pro": "Priority", "Enterprise": "Dedicated", "winner": "Enterprise" },
+          { "feature": "Storage", "Starter": "1 GB", "Pro": "50 GB", "Enterprise": "Unlimited", "winner": "Enterprise" }
         ],
         "recommendation": "Pro",
         "summary": "Pro offers the best value for growing teams with unlimited projects and priority support."
@@ -620,7 +659,9 @@
           { "type": "email", "value": "support@example.com", "label": "support@example.com" },
           { "type": "phone", "value": "+1-800-555-0123", "label": "1-800-555-0123" },
           { "type": "chat", "value": "#", "label": "Live Chat" }
-        ]
+        ],
+        "languagesSupported": ["English", "Spanish", "French"],
+        "department": "Technical Support Team"
       }
     }
   },
@@ -645,7 +686,9 @@
           "addressRegion": "CA",
           "addressCountry": "US"
         },
-        "amenities": ["Free parking", "Visitor center", "Gift shop", "Guided tours", "Bicycle rental"]
+        "geo": { "latitude": "37.8199", "longitude": "-122.4783" },
+        "amenities": ["Free parking", "Visitor center", "Gift shop", "Guided tours", "Bicycle rental"],
+        "rating": { "value": 4.7, "count": 95000, "max": 5 }
       }
     }
   },
@@ -661,7 +704,7 @@
         "planName": "Basic",
         "trialPeriod": "7 days free",
         "isPopular": false,
-        "price": { "monthly": "9.99", "yearly": "99", "currency": "USD" },
+        "price": { "monthly": "9.99", "yearly": "99", "currency": "USD", "savings": "17% off annual" },
         "features": ["5 projects", "Basic analytics", "Email support", "1 GB storage"],
         "limitations": ["No custom domains", "No API access"]
       }
@@ -679,10 +722,11 @@
         "planName": "Pro",
         "trialPeriod": "14 days free",
         "isPopular": true,
-        "price": { "monthly": "29.99", "yearly": "299", "currency": "USD" },
+        "price": { "monthly": "29.99", "yearly": "299", "currency": "USD", "savings": "20% off annual" },
         "features": ["Unlimited projects", "Advanced analytics", "Priority support", "50 GB storage", "Custom domains", "API access"],
         "limitations": ["No white-label"]
-      }
+      },
+      "ribbon": { "text": "Most Popular", "style": "popular" }
     }
   },
   {
@@ -713,12 +757,14 @@
     },
     "data": {
       "type": "social",
-      "content": { "headlineTag": "h3" },
+      "content": { "headlineTag": "h3", "published": { "datetime": "2025-08-21T14:30:00Z", "formatted": "2 hours ago" } },
       "social": {
         "platform": "Twitter",
         "author": "@designsystems",
         "postContent": "Just shipped our new token-based design system. Container queries + CSS custom properties = responsive components that actually work.\n\nNo JavaScript needed for layout.",
-        "hashtags": ["DesignSystems", "CSS", "WebComponents"]
+        "engagement": { "likes": 156, "shares": 42, "comments": 18 },
+        "hashtags": ["DesignSystems", "CSS", "WebComponents"],
+        "mediaAttachments": ["https://picsum.photos/seed/social1att/500/300"]
       }
     }
   },
@@ -733,14 +779,18 @@
     "tags": [{ "name": "IDE" }, { "name": "Developer" }],
     "data": {
       "type": "software",
-      "content": { "headlineTag": "h3" },
+      "content": { "headlineTag": "h3", "text": "Perfect for full-stack developers working with multiple languages and frameworks." },
       "software": {
         "version": "3.2.1",
         "applicationCategory": "Development Environment",
         "operatingSystem": ["Windows", "macOS", "Linux"],
-        "price": { "current": "49.99", "currency": "USD" },
-        "developer": { "name": "DevTools Inc.", "website": "https://devtools.example.com" }
-      }
+        "fileSize": "125 MB",
+        "developer": { "name": "DevTools Inc.", "website": "https://devtools.example.com" },
+        "screenshots": ["https://picsum.photos/seed/sw1/600/400", "https://picsum.photos/seed/sw2/600/400"],
+        "systemRequirements": { "ram": "4GB minimum, 8GB recommended", "storage": "200MB available space", "processor": "Intel i3 or equivalent" },
+        "price": { "current": "49.99", "currency": "USD", "type": "one-time" }
+      },
+      "engagement": { "reactions": [{ "type": "like", "icon": "thumbs_up", "count": 2100, "value": 4.6, "max": 5 }], "viewCount": 45000, "shareCount": 890 }
     },
     "actions": [{ "text": "Download", "style": "primary", "url": "#" }]
   }
