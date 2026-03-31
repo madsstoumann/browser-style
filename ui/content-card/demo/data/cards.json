@@ -18,9 +18,7 @@
         "readingTime": "4 min read"
       },
       "sticker": { "text": "New", "position": "top-right" },
-      "article": {
-        "authors": [{ "name": "Sarah Chen", "role": "Senior Editor" }]
-      }
+      "authors": [{ "name": "Sarah Chen", "role": "Senior Editor" }]
     },
     "links": [{ "url": "#", "text": "Read more" }]
   },
@@ -173,9 +171,7 @@
     "data": {
       "type": "news",
       "content": { "headlineTag": "h3" },
-      "news": {
-        "authors": [{ "name": "James Rivera", "role": "Staff Writer" }]
-      }
+      "authors": [{ "name": "James Rivera", "role": "Staff Writer" }]
     },
     "actions": [{ "text": "See all wins", "style": "primary" }],
     "links": [{ "url": "#", "text": "Press release" }]
@@ -239,12 +235,9 @@
     "tags": [{ "name": "Pasta" }, { "name": "Italian" }, { "name": "Quick" }],
     "data": {
       "type": "recipe",
-      "content": { "headlineTag": "h3" },
-      "recipe": {
-        "content": { "text": ["400g spaghetti", "200g guanciale", "4 large eggs", "100g pecorino romano", "Freshly ground black pepper"] },
-        "recipe": { "prepTime": "15 minutes", "cookTime": "20 minutes", "servings": "4 servings", "instructions": ["Bring a large pot of salted water to boil", "Cook spaghetti until al dente, reserve 1 cup pasta water", "Crisp guanciale in a large pan over medium heat", "Whisk eggs with grated pecorino and pepper", "Toss drained pasta with guanciale off heat", "Add egg mixture and toss rapidly, using pasta water to emulsify"] },
-        "authors": [{ "name": "Marco Rossi", "role": "Executive Chef" }]
-      }
+      "content": { "headlineTag": "h3", "text": ["400g spaghetti", "200g guanciale", "4 large eggs", "100g pecorino romano", "Freshly ground black pepper"] },
+      "recipe": { "prepTime": "15 minutes", "cookTime": "20 minutes", "servings": "4 servings", "instructions": ["Bring a large pot of salted water to boil", "Cook spaghetti until al dente, reserve 1 cup pasta water", "Crisp guanciale in a large pan over medium heat", "Whisk eggs with grated pecorino and pepper", "Toss drained pasta with guanciale off heat", "Add egg mixture and toss rapidly, using pasta water to emulsify"] },
+      "authors": [{ "name": "Marco Rossi", "role": "Executive Chef" }]
     },
     "links": [{ "url": "#", "text": "Full recipe" }]
   },
@@ -261,13 +254,11 @@
       "type": "product",
       "content": { "headlineTag": "h3" },
       "product": {
-        "sku": "WH-1000XM5",
-        "product": {
-          "availability": "In Stock",
-          "validUntil": "2025-12-31",
-          "price": { "current": "349.99", "original": "399.99", "currency": "USD", "discountText": "Save 12%" }
-        }
-      }
+        "availability": "In Stock",
+        "validUntil": "2025-12-31",
+        "price": { "current": "349.99", "original": "399.99", "currency": "USD", "discountText": "Save 12%" }
+      },
+      "sku": "WH-1000XM5"
     },
     "actions": [{ "text": "Add to cart", "style": "primary", "url": "#" }]
   },
@@ -395,9 +386,7 @@
     "data": {
       "type": "quote",
       "content": { "headlineTag": "h3" },
-      "quote": {
-        "authors": [{ "name": "Albert Einstein", "role": "Physicist" }]
-      }
+      "authors": [{ "name": "Albert Einstein", "role": "Physicist" }]
     }
   },
   {
@@ -407,16 +396,14 @@
     "category": "Support",
     "data": {
       "type": "faq",
-      "content": { "headlineTag": "h3" },
-      "faq": {
-        "content": {
-          "text": [
-            { "headline": "What payment methods do you accept?", "text": "We accept all major credit cards, PayPal, Apple Pay, and Google Pay. Enterprise customers can also pay via wire transfer." },
-            { "headline": "Can I cancel my subscription?", "text": "Yes, you can cancel anytime from your account settings. Your access continues until the end of your billing period." },
-            { "headline": "Do you offer refunds?", "text": "We offer a 30-day money-back guarantee for all plans. Contact support for assistance." },
-            { "headline": "Is there a free trial?", "text": "Yes! All plans include a 14-day free trial with full access to all features." }
-          ]
-        }
+      "content": {
+        "headlineTag": "h3",
+        "text": [
+          { "headline": "What payment methods do you accept?", "text": "We accept all major credit cards, PayPal, Apple Pay, and Google Pay. Enterprise customers can also pay via wire transfer." },
+          { "headline": "Can I cancel my subscription?", "text": "Yes, you can cancel anytime from your account settings. Your access continues until the end of your billing period." },
+          { "headline": "Do you offer refunds?", "text": "We offer a 30-day money-back guarantee for all plans. Contact support for assistance." },
+          { "headline": "Is there a free trial?", "text": "Yes! All plans include a 14-day free trial with full access to all features." }
+        ]
       }
     }
   },
@@ -427,18 +414,16 @@
     "category": "Developer Survey",
     "data": {
       "type": "poll",
-      "content": { "headlineTag": "h3" },
-      "poll": {
-        "content": {
-          "text": [
-            { "id": "opt-1", "headline": "React", "text": "1842" },
-            { "id": "opt-2", "headline": "Vue", "text": "1256" },
-            { "id": "opt-3", "headline": "Svelte", "text": "987" },
-            { "id": "opt-4", "headline": "Angular", "text": "654" }
-          ]
-        },
-        "poll": { "endpoint": "#", "allowMultiple": false, "showResults": "always", "totalVotes": 4739 }
-      }
+      "content": {
+        "headlineTag": "h3",
+        "text": [
+          { "id": "opt-1", "headline": "React", "text": "1842" },
+          { "id": "opt-2", "headline": "Vue", "text": "1256" },
+          { "id": "opt-3", "headline": "Svelte", "text": "987" },
+          { "id": "opt-4", "headline": "Angular", "text": "654" }
+        ]
+      },
+      "poll": { "endpoint": "#", "allowMultiple": false, "showResults": "always", "totalVotes": 4739 }
     }
   },
   {
@@ -470,17 +455,15 @@
     "category": "Company",
     "data": {
       "type": "timeline",
-      "content": { "headlineTag": "h3" },
-      "timeline": {
-        "content": {
-          "text": [
-            { "headline": "2020", "text": "Company founded in a small garage with a team of three." },
-            { "headline": "2021", "text": "Secured Series A funding and expanded to 25 employees." },
-            { "headline": "2022", "text": "Launched flagship product, reaching 10K users in 3 months." },
-            { "headline": "2023", "text": "Expanded internationally across 12 markets." },
-            { "headline": "2024", "text": "Crossed 1M active users and opened new HQ." }
-          ]
-        }
+      "content": {
+        "headlineTag": "h3",
+        "text": [
+          { "headline": "2020", "text": "Company founded in a small garage with a team of three." },
+          { "headline": "2021", "text": "Secured Series A funding and expanded to 25 employees." },
+          { "headline": "2022", "text": "Launched flagship product, reaching 10K users in 3 months." },
+          { "headline": "2023", "text": "Expanded internationally across 12 markets." },
+          { "headline": "2024", "text": "Crossed 1M active users and opened new HQ." }
+        ]
       }
     }
   },

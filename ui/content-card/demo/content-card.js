@@ -153,7 +153,7 @@ function renderAvailability(availability) {
 /* ── Type-specific renderers (with full Schema.org microdata) ── */
 
 const TYPE_RENDERERS = {
-  article(d, content, category) {
+  article(d, content, category, cardData) {
     const parts = [];
     if (category) parts.push(meta('articleSection', category));
     if (content?.published?.datetime) parts.push(meta('datePublished', content.published.datetime));
@@ -163,47 +163,45 @@ const TYPE_RENDERERS = {
     if (content?.published?.formatted) headerItems.push(`<time class="cc-meta-item" datetime="${content.published.datetime || ''}">${content.published.formatted}</time>`);
     if (content?.readingTime) headerItems.push(`<span class="cc-meta-item">${content.readingTime}</span>`);
     if (headerItems.length) parts.push(`<div class="cc-meta">${headerItems.join('')}</div>`);
-    parts.push(renderAuthors(d?.authors));
+    parts.push(renderAuthors(cardData?.authors));
     return parts.join('');
   },
 
-  news(d, content, category) {
-    return TYPE_RENDERERS.article(d, content, category);
+  news(d, content, category, cardData) {
+    return TYPE_RENDERERS.article(d, content, category, cardData);
   },
 
-  recipe(d, content, category) {
-    const r = d?.recipe || {};
-    return meta('recipeCategory', category) + meta('prepTime', r.prepTime) + meta('cookTime', r.cookTime) + meta('recipeYield', r.servings)
-      + renderMetaRow([['Prep', r.prepTime], ['Cook', r.cookTime], ['Servings', r.servings]])
-      + (d?.content?.text?.length
-        ? `<details class="cc-collapsible"><summary>Ingredients</summary><div class="cc-collapsible-body"><ul itemprop="recipeIngredient">${d.content.text.map(i => `<li>${i}</li>`).join('')}</ul></div></details>`
+  recipe(d, content, category, cardData) {
+    return meta('recipeCategory', category) + meta('prepTime', d?.prepTime) + meta('cookTime', d?.cookTime) + meta('recipeYield', d?.servings)
+      + renderMetaRow([['Prep', d?.prepTime], ['Cook', d?.cookTime], ['Servings', d?.servings]])
+      + (content?.text?.length
+        ? `<details class="cc-collapsible"><summary>Ingredients</summary><div class="cc-collapsible-body"><ul itemprop="recipeIngredient">${content.text.map(i => `<li>${i}</li>`).join('')}</ul></div></details>`
         : '')
-      + (r.instructions?.length
-        ? `<details class="cc-collapsible"><summary>Instructions</summary><div class="cc-collapsible-body"><ol class="cc-ordered-list" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/ItemList">${r.instructions.map((s, i) => `<li itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep">${meta('position', i + 1)}<span itemprop="text">${s}</span></li>`).join('')}</ol></div></details>`
+      + (d?.instructions?.length
+        ? `<details class="cc-collapsible"><summary>Instructions</summary><div class="cc-collapsible-body"><ol class="cc-ordered-list" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/ItemList">${d.instructions.map((s, i) => `<li itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep">${meta('position', i + 1)}<span itemprop="text">${s}</span></li>`).join('')}</ol></div></details>`
         : '')
-      + renderAuthors(d?.authors);
+      + renderAuthors(cardData?.authors);
   },
 
-  product(d, content, category) {
-    const p = d?.product || {};
-    const availUrl = p.availability?.toLowerCase().includes('in')
+  product(d, content, category, cardData) {
+    const availUrl = d?.availability?.toLowerCase().includes('in')
       ? 'https://schema.org/InStock'
-      : p.availability?.toLowerCase().includes('low')
+      : d?.availability?.toLowerCase().includes('low')
         ? 'https://schema.org/LimitedAvailability'
         : 'https://schema.org/OutOfStock';
     return meta('category', category)
-      + (p.price
+      + (d?.price
         ? `<div class="cc-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-            ${meta('priceCurrency', p.price.currency)}
-            <span class="cc-price-current" itemprop="price" content="${p.price.current}">${p.price.currency || ''} ${p.price.current}</span>
-            ${p.price.original ? `<span class="cc-price-original">${p.price.currency || ''} ${p.price.original}</span>` : ''}
-            ${p.price.discountText ? `<span class="cc-price-discount">${p.price.discountText}</span>` : ''}
+            ${meta('priceCurrency', d.price.currency)}
+            <span class="cc-price-current" itemprop="price" content="${d.price.current}">${d.price.currency || ''} ${d.price.current}</span>
+            ${d.price.original ? `<span class="cc-price-original">${d.price.currency || ''} ${d.price.original}</span>` : ''}
+            ${d.price.discountText ? `<span class="cc-price-discount">${d.price.discountText}</span>` : ''}
             ${meta('availability', availUrl)}
             ${meta('itemCondition', 'https://schema.org/NewCondition')}
           </div>`
         : '')
-      + renderAvailability(p.availability)
-      + renderMetaRow([['SKU', d?.sku], ['Valid until', p.validUntil]]);
+      + renderAvailability(d?.availability)
+      + renderMetaRow([['SKU', cardData?.sku], ['Valid until', d?.validUntil]]);
   },
 
   review(d) {
@@ -338,12 +336,12 @@ const TYPE_RENDERERS = {
     return parts.join('');
   },
 
-  quote(d) {
-    return renderAuthors(d?.authors);
+  quote(d, content, category, cardData) {
+    return renderAuthors(cardData?.authors);
   },
 
-  faq(d) {
-    const items = d?.content?.text;
+  faq(d, content) {
+    const items = content?.text;
     if (!items?.length) return '';
     return `<div class="cc-faq">${items.map(item => `
       <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
@@ -355,9 +353,9 @@ const TYPE_RENDERERS = {
     `).join('')}</div>`;
   },
 
-  poll(d) {
-    const items = d?.content?.text;
-    const poll = d?.poll || {};
+  poll(d, content) {
+    const items = content?.text;
+    const poll = d || {};
     if (!items?.length) return '';
     const total = poll.totalVotes || 0;
     return `<div class="cc-poll">${items.map(item => {
@@ -380,8 +378,8 @@ const TYPE_RENDERERS = {
       + (d?.categories?.length ? `<div class="cc-tags">${d.categories.map(c => `<span class="cc-tag">${c}</span>`).join('')}</div>` : '');
   },
 
-  timeline(d) {
-    const items = d?.content?.text;
+  timeline(d, content) {
+    const items = content?.text;
     if (!items?.length) return '';
     return `<ol class="cc-timeline">${items.map(item => `
       <li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
@@ -572,7 +570,7 @@ function renderContent(data, headlineTag = 'h2', skipEyebrow = false, clickable 
   /* For quote type, summary is the quote text */
   if (summary) {
     if (type === 'quote') {
-      parts.push(`<blockquote class="cc-blockquote" itemprop="text">${summary}<cite class="cc-citation">${data.data?.quote?.authors?.[0]?.name || ''}</cite></blockquote>`);
+      parts.push(`<blockquote class="cc-blockquote" itemprop="text">${summary}<cite class="cc-citation">${data.data?.authors?.[0]?.name || ''}</cite></blockquote>`);
     } else {
       parts.push(`<p class="cc-summary" itemprop="${summaryProp}">${summary}</p>`);
     }
@@ -582,7 +580,7 @@ function renderContent(data, headlineTag = 'h2', skipEyebrow = false, clickable 
   const typeData = cardData[type];
   const renderer = type && TYPE_RENDERERS[type];
   if (renderer) {
-    const typeHtml = renderer(typeData, cardData.content, category);
+    const typeHtml = renderer(typeData, cardData.content, category, cardData);
     if (typeHtml) parts.push(typeHtml);
   }
 
