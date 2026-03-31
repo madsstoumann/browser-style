@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "id": "page",
   "title": "📄 Page",
-  "description": "Top-level table for URLs and page configuration",
+  "description": "Top-level table for slugs and page configuration",
   "metadata": {
     "version": "1.0.0",
     "lastModified": "2025-12-04",
@@ -18,9 +18,9 @@
         "area": "main",
         "type": "group",
         "name": "Content",
-        "description": "Page title, URL, description, and layouts",
+        "description": "Page title, slug, description, and layouts",
         "collapse": false,
-        "fields": ["internalName", "title", "url", "description", "layouts"]
+        "fields": ["internalName", "title", "slug", "description", "layouts"]
       },
       {
         "area": "main",
@@ -72,10 +72,10 @@
       "title": "Page Title",
       "description": "Page title (SEO)"
     },
-    "url": {
-      "type": "string",
-      "title": "Page URL",
-      "description": "Page URL"
+    "slug": {
+      "type": "slug",
+      "title": "Slug",
+      "description": "Page slug"
     },
     "description": {
       "type": "text",
@@ -127,7 +127,7 @@
     "canonical_url": {
       "type": "url",
       "title": "Canonical URL",
-      "description": "Canonical URL override for this page (defaults to site_url + url if not set)"
+      "description": "Canonical URL override for this page (defaults to site_url + slug if not set)"
     },
     "og_type": {
       "type": "select",
@@ -168,7 +168,7 @@
   },
   "required": [
     "title",
-    "url",
+    "slug",
     "description"
   ]
 }
