@@ -1,8 +1,8 @@
 ---
-sidebar_label: Translation Namespace
+sidebar_label: 🌍 Translation Namespace
 ---
 
-# 🔵 Translation Namespace
+# 🌍 Translation Namespace 🔵
 
 Localized UI strings grouped by functional area (namespace). Used to generate flat locale files at build time, providing framework-agnostic internationalization for short strings like button labels, form placeholders, and navigation text.
 

@@ -1,8 +1,8 @@
 ---
-sidebar_label: Site
+sidebar_label: 🏠 Site
 ---
 
-# 🔴 Site (Global Configuration)
+# 🏠 Site (Global Configuration) 🔴
 
 The `site` model is a **singleton** — exactly one record exists per project. It holds everything that applies across all pages and acts as the central hub linking to all other global configuration.
 

@@ -1,30 +1,81 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "id": "page",
-  "title": "Page",
-  "description": "Top-level table for URLs and page configuration",
+  "title": "📄 Page",
+  "description": "Top-level table for slugs and page configuration",
   "metadata": {
     "version": "1.0.0",
     "lastModified": "2025-12-04",
-    "displayField": "title"
+    "displayField": "internalName"
   },
   "structure": {
     "allowedAsRoot": true,
     "allowedChildContentTypes": [
       "layout"
+    ],
+    "layout": [
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Content",
+        "description": "Page title, slug, description, and layouts",
+        "collapse": false,
+        "fields": ["internalName", "title", "slug", "description", "layouts"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Navigation",
+        "description": "Override default header and footer navigation",
+        "collapse": true,
+        "fields": ["header_nav_id", "footer_nav_id"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Open Graph",
+        "description": "Social sharing metadata (falls back to page title, description, and site OG image)",
+        "collapse": true,
+        "fields": ["og_title", "og_description", "og_image", "og_type"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "SEO & Indexing",
+        "description": "Canonical URL and search engine directives",
+        "collapse": true,
+        "fields": ["canonical_url", "robots"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Security",
+        "description": "Page-level Content Security Policy override",
+        "collapse": true,
+        "fields": ["csp"]
+      }
     ]
   },
   "type": "object",
   "properties": {
+    "internalName": {
+      "type": "string",
+      "title": "Internal Name",
+      "description": "Internal name for CMS editors — not displayed on the front end",
+      "localized": false,
+      "validation": {
+        "required": true
+      }
+    },
     "title": {
       "type": "string",
       "title": "Page Title",
       "description": "Page title (SEO)"
     },
-    "url": {
-      "type": "string",
-      "title": "Page URL",
-      "description": "Page URL"
+    "slug": {
+      "type": "url",
+      "title": "Slug",
+      "description": "Page slug"
     },
     "description": {
       "type": "text",
@@ -76,7 +127,7 @@
     "canonical_url": {
       "type": "url",
       "title": "Canonical URL",
-      "description": "Canonical URL override for this page (defaults to site_url + url if not set)"
+      "description": "Canonical URL override for this page (defaults to site_url + slug if not set)"
     },
     "og_type": {
       "type": "select",
@@ -117,7 +168,7 @@
   },
   "required": [
     "title",
-    "url",
+    "slug",
     "description"
   ]
 }

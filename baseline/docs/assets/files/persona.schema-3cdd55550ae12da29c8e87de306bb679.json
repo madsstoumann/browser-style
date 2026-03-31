@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "persona",
+  "title": "👤 Persona",
+  "description": "Search persona defining audience-specific content retrieval and AI behavior",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-03-16",
+    "displayField": "internalName"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "contentTree": {
+      "folder": "Personas",
+      "path": "Configuration/Personas"
+    },
+    "layout": [
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Identity",
+        "description": "Persona display settings",
+        "collapse": false,
+        "fields": ["slug", "displayName", "description", "sortOrder", "isDefault"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "AI Configuration",
+        "description": "LLM and search behavior settings",
+        "collapse": true,
+        "fields": ["systemPrompt", "searchBias"]
+      }
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "internalName": {
+      "type": "string",
+      "title": "Internal Name",
+      "description": "Internal name for CMS editors — not displayed on the front end",
+      "localized": false,
+      "validation": {
+        "required": true
+      }
+    },
+    "slug": {
+      "type": "slug",
+      "title": "Slug",
+      "description": "Machine key used in query parameters and API calls (e.g. 'investor', 'hcp')",
+      "options": {
+        "source": "displayName"
+      }
+    },
+    "displayName": {
+      "type": "string",
+      "title": "Display Name",
+      "description": "Localized name shown in the search persona selector"
+    },
+    "description": {
+      "type": "text",
+      "title": "Description",
+      "description": "Localized tooltip or helper text for this persona"
+    },
+    "systemPrompt": {
+      "type": "text",
+      "title": "System Prompt",
+      "description": "LLM system prompt prefix for this persona",
+      "localized": false
+    },
+    "searchBias": {
+      "type": "object",
+      "title": "Search Bias",
+      "description": "Retrieval configuration (content types, tags, boost weights)",
+      "localized": false
+    },
+    "sortOrder": {
+      "type": "number",
+      "title": "Sort Order",
+      "description": "Display order in the persona selector",
+      "default": 0
+    },
+    "isDefault": {
+      "type": "boolean",
+      "title": "Default Persona",
+      "description": "Whether this persona is pre-selected",
+      "default": false
+    }
+  },
+  "required": ["slug", "displayName", "systemPrompt"]
+}

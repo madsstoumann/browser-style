@@ -1,8 +1,8 @@
 ---
-sidebar_label: External Script
+sidebar_label: 🛠️ External Script
 ---
 
-# 🔴 External Script
+# 🛠️ External Script 🔴
 
 Individual third-party script configurations, referenced as an array from the [site model](./site.md). Each script is a separate content entry, enabling granular control and independent webhook updates.
 

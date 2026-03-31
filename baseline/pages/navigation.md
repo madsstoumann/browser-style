@@ -1,8 +1,8 @@
 ---
-sidebar_label: Navigation
+sidebar_label: 🧭 Navigation
 ---
 
-# 🟠 Navigation
+# 🧭 Navigation 🟠
 
 The navigation system uses two models — `navigation` (container) and `navigation-item` (entry) — to build any menu structure: simple link lists, grouped dropdowns, full mega menus, footer column layouts, and sidebar trees.
 

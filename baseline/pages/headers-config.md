@@ -1,8 +1,8 @@
 ---
-sidebar_label: Headers Config
+sidebar_label: 🛠️ Headers Config
 ---
 
-# 🔴 Headers Config
+# 🛠️ Headers Config 🔴
 
 A **singleton** controlling HTTP security and privacy headers applied to every response via middleware.
 
@@ -198,5 +198,5 @@ Request → Middleware / Worker
 
 For full implementation details with code examples:
 
-- [Vercel: HTTP Security Headers](./vercel.md#http-security-headers-csp-permissions-policy-referrer-policy) — Edge Config batch read in middleware, per-request nonce
+- [Vercel: HTTP Security Headers](./vercel.md#http-security-headers-csp-permissions-policy-referrer-policy-hsts-cors) — Edge Config batch read in middleware, per-request nonce
 - [Cloudflare: HTTP Security Headers](./cloudflare.md#http-security-headers-csp-permissions-policy-referrer-policy) — KV read in Worker fetch handler, `crypto.randomUUID()` nonce

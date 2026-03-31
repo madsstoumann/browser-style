@@ -1,12 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "id": "persona",
-  "title": "Persona",
+  "title": "👤 Persona",
   "description": "Search persona defining audience-specific content retrieval and AI behavior",
   "metadata": {
     "version": "1.0.0",
     "lastModified": "2026-03-16",
-    "displayField": "displayName"
+    "displayField": "internalName"
   },
   "structure": {
     "allowedAsRoot": true,
@@ -21,7 +21,7 @@
         "name": "Identity",
         "description": "Persona display settings",
         "collapse": false,
-        "fields": ["slug", "displayName", "description", "sortOrder", "isDefault"]
+        "fields": ["internalName", "slug", "displayName", "description", "sortOrder", "isDefault"]
       },
       {
         "area": "main",
@@ -35,6 +35,15 @@
   },
   "type": "object",
   "properties": {
+    "internalName": {
+      "type": "string",
+      "title": "Internal Name",
+      "description": "Internal name for CMS editors — not displayed on the front end",
+      "localized": false,
+      "validation": {
+        "required": true
+      }
+    },
     "slug": {
       "type": "slug",
       "title": "Slug",

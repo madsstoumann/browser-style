@@ -1,8 +1,8 @@
 ---
-sidebar_label: Error Page
+sidebar_label: ⚠️ Error Page
 ---
 
-# 🟠 Error Page
+# ⚠️ Error Page 🟠
 
 An `error-page` maps an HTTP status code to a custom [page](./page.md). The site references an array of these, so any status code can have a custom error page — no schema changes needed.
 

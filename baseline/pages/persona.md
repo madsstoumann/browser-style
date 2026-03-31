@@ -1,8 +1,8 @@
 ---
-sidebar_label: Persona
+sidebar_label: 👤 Persona
 ---
 
-# 🟠 Persona
+# 👤 Persona 🟠
 
 Personas define audience-specific search experiences for AI-powered site search. Each persona tailors the LLM system prompt and content retrieval to a specific audience segment.
 

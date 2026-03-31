@@ -1,11 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "id": "layout-config",
-  "title": "Layout Configuration",
+  "title": "⚙️ Layout Configuration",
   "description": "Layout configuration presets with responsive breakpoints, spacing, and grid settings",
   "metadata": {
     "version": "2.0.0",
-    "lastModified": "2026-03-22"
+    "lastModified": "2026-03-22",
+    "displayField": "internalName"
   },
   "structure": {
     "allowedAsRoot": true,
@@ -17,7 +18,7 @@
         "name": "Breakpoints",
         "description": "Responsive layout and spacing per breakpoint. Each value is a space-separated string of layout pattern + spacing tokens, e.g. \"columns(3) pi(2) pbs(1) cg(2)\"",
         "collapse": false,
-        "fields": ["xs", "sm", "md", "lg", "xl", "xxl"]
+        "fields": ["internalName", "xs", "sm", "md", "lg", "xl", "xxl"]
       },
       {
         "area": "main",
@@ -37,6 +38,15 @@
   },
   "type": "object",
   "properties": {
+    "internalName": {
+      "type": "string",
+      "title": "Internal Name",
+      "description": "Internal name for CMS editors — not displayed on the front end",
+      "localized": false,
+      "validation": {
+        "required": true
+      }
+    },
     "name": {
       "type": "string",
       "title": "Config Name",
