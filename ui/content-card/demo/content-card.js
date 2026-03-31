@@ -148,15 +148,16 @@ function renderMap(geoData, businessName = 'business location') {
   const lat = parseFloat(geoData.latitude);
   const lng = parseFloat(geoData.longitude);
   const mp = geoData.mapProvider;
-  const latOffset = mp.latOffset || 0.003;
-  const lngOffset = mp.lngOffset || 0.005;
+  const latOff = mp.latOffset || 0.003;
+  const lngOff = mp.lngOffset || 0.005;
+  const r = (n) => Number(n.toFixed(6));
   const mapUrl = mp.url
-    .replace('{lat}', lat).replace('{lng}', lng)
-    .replace('{lat1}', lat - latOffset).replace('{lat2}', lat + latOffset)
-    .replace('{lng1}', lng - lngOffset).replace('{lng2}', lng + lngOffset)
+    .replace('{lng1}', r(lng - lngOff)).replace('{lat1}', r(lat - latOff))
+    .replace('{lng2}', r(lng + lngOff)).replace('{lat2}', r(lat + latOff))
+    .replace('{lat}', r(lat)).replace('{lng}', r(lng))
     .replace('{zoom}', mp.zoom || 15);
   const providerName = mp.name || mp.type || 'Map';
-  return `<iframe class="cc-business-map" src="${mapUrl}" loading="lazy" title="${providerName} showing ${businessName}"></iframe>`;
+  return `<iframe class="cc-business-map" src="${mapUrl}" loading="lazy" title="${providerName} showing ${businessName}" itemprop="hasMap" itemscope itemtype="https://schema.org/Map"></iframe>`;
 }
 
 function renderAvailability(availability) {
@@ -217,6 +218,12 @@ const TYPE_RENDERERS = {
           </div>`
         : '')
       + renderAvailability(d?.availability)
+      + (d?.rating
+        ? `<div itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+            ${meta('ratingValue', d.rating.value)}${meta('ratingCount', d.rating.count)}${meta('reviewCount', d.rating.count)}${meta('bestRating', d.rating.max ?? 5)}${meta('worstRating', d.rating.min ?? 0)}
+            <span class="cc-rating"><span class="cc-stars">${renderStars(d.rating.value, d.rating.max || 5)}</span> (${d.rating.value} / ${d.rating.max || 5}, ${d.rating.count} ratings)</span>
+          </div>`
+        : '')
       + renderMetaRow([['SKU', cardData?.sku], ['Valid until', d?.validUntil]]);
   },
 
