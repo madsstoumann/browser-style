@@ -143,6 +143,22 @@ function renderContactMethods(methods) {
   }).join('')}</div>`;
 }
 
+function renderMap(geoData, businessName = 'business location') {
+  if (!geoData?.mapProvider?.url) return '';
+  const lat = parseFloat(geoData.latitude);
+  const lng = parseFloat(geoData.longitude);
+  const mp = geoData.mapProvider;
+  const latOffset = mp.latOffset || 0.003;
+  const lngOffset = mp.lngOffset || 0.005;
+  const mapUrl = mp.url
+    .replace('{lat}', lat).replace('{lng}', lng)
+    .replace('{lat1}', lat - latOffset).replace('{lat2}', lat + latOffset)
+    .replace('{lng1}', lng - lngOffset).replace('{lng2}', lng + lngOffset)
+    .replace('{zoom}', mp.zoom || 15);
+  const providerName = mp.name || mp.type || 'Map';
+  return `<iframe class="cc-business-map" src="${mapUrl}" loading="lazy" title="${providerName} showing ${businessName}"></iframe>`;
+}
+
 function renderAvailability(availability) {
   if (!availability) return '';
   const cls = availability.toLowerCase().includes('in') ? 'in-stock'
@@ -424,6 +440,7 @@ const TYPE_RENDERERS = {
 
   business(d) {
     return renderAddress(d?.address)
+      + renderMap(d?.geo, d?.address?.addressLocality || 'business location')
       + (d?.telephone ? `<a class="cc-contact-method" itemprop="telephone" href="tel:${d.telephone}"><span class="cc-contact-icon">phone</span>${d.telephone}</a>` : '')
       + (d?.email ? `<a class="cc-contact-method" itemprop="email" href="mailto:${d.email}"><span class="cc-contact-icon">email</span>${d.email}</a>` : '')
       + (d?.website ? meta('url', d.website) : '')

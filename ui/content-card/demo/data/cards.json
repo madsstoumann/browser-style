@@ -611,7 +611,17 @@
           "postalCode": "94110",
           "addressCountry": "US"
         },
-        "geo": { "latitude": "37.7599", "longitude": "-122.4214" },
+        "geo": {
+          "latitude": "37.7599",
+          "longitude": "-122.4214",
+          "mapProvider": {
+            "type": "openstreetmap",
+            "name": "OpenStreetMap",
+            "url": "https://www.openstreetmap.org/export/embed.html?bbox={lng1},{lat1},{lng2},{lat2}&layer=mapnik&marker={lat},{lng}",
+            "latOffset": 0.003,
+            "lngOffset": 0.005
+          }
+        },
         "openingHours": [
           { "display": "Mon–Fri: 6AM–8PM", "schema": "Mo-Fr 06:00-20:00" },
           { "display": "Sat–Sun: 7AM–6PM", "schema": "Sa-Su 07:00-18:00" }

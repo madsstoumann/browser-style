@@ -45,6 +45,14 @@
   border-block-end: 1px solid var(--cc-bd);
 }
 
+/* === Business Map === */
+.cc-business-map {
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--cc-bd);
+  border-radius: var(--cc-bdrs, var(--bdrs-md, 6px));
+  width: 100%;
+}
+
 /* === Address Block === */
 .cc-address {
   color: var(--cc-c-muted);
