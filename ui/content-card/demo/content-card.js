@@ -24,14 +24,14 @@ const SCHEMA_MAP = {
   faq: 'FAQPage',
   quote: 'Quotation',
   timeline: 'EventSeries',
-  gallery: 'ImageGallery',
+  gallery: 'MediaGallery',
   statistic: 'Observation',
   achievement: 'EducationalOccupationalCredential',
   announcement: 'SpecialAnnouncement',
   business: 'LocalBusiness',
-  comparison: 'ItemList',
-  contact: 'ContactPage',
-  location: 'Place',
+  comparison: 'Table',
+  contact: 'ContactPoint',
+  location: 'TouristDestination',
   membership: 'Offer',
   social: 'SocialMediaPosting',
   software: 'SoftwareApplication'
@@ -153,21 +153,27 @@ function renderAvailability(availability) {
 /* ── Type-specific renderers (with full Schema.org microdata) ── */
 
 const TYPE_RENDERERS = {
-  article(d, content) {
-    return (content?.published ? `${meta('datePublished', content.published.datetime)}${meta('articleSection', '')}` : '')
-      + (content?.published?.formatted || content?.readingTime
-        ? renderMetaRow([[content?.published?.formatted || '', ''], [content?.readingTime || '', '']].filter(([v]) => v))
-        : '')
-      + renderAuthors(d?.authors);
+  article(d, content, category) {
+    const parts = [];
+    if (category) parts.push(meta('articleSection', category));
+    if (content?.published?.datetime) parts.push(meta('datePublished', content.published.datetime));
+    if (content?.modified) parts.push(meta('dateModified', content.modified));
+    /* Header row with time + reading time */
+    const headerItems = [];
+    if (content?.published?.formatted) headerItems.push(`<time class="cc-meta-item" datetime="${content.published.datetime || ''}">${content.published.formatted}</time>`);
+    if (content?.readingTime) headerItems.push(`<span class="cc-meta-item">${content.readingTime}</span>`);
+    if (headerItems.length) parts.push(`<div class="cc-meta">${headerItems.join('')}</div>`);
+    parts.push(renderAuthors(d?.authors));
+    return parts.join('');
   },
 
-  news(d, content) {
-    return TYPE_RENDERERS.article(d, content);
+  news(d, content, category) {
+    return TYPE_RENDERERS.article(d, content, category);
   },
 
-  recipe(d) {
+  recipe(d, content, category) {
     const r = d?.recipe || {};
-    return meta('prepTime', r.prepTime) + meta('cookTime', r.cookTime) + meta('recipeYield', r.servings)
+    return meta('recipeCategory', category) + meta('prepTime', r.prepTime) + meta('cookTime', r.cookTime) + meta('recipeYield', r.servings)
       + renderMetaRow([['Prep', r.prepTime], ['Cook', r.cookTime], ['Servings', r.servings]])
       + (d?.content?.text?.length
         ? `<details class="cc-collapsible"><summary>Ingredients</summary><div class="cc-collapsible-body"><ul itemprop="recipeIngredient">${d.content.text.map(i => `<li>${i}</li>`).join('')}</ul></div></details>`
@@ -178,45 +184,132 @@ const TYPE_RENDERERS = {
       + renderAuthors(d?.authors);
   },
 
-  product(d) {
+  product(d, content, category) {
     const p = d?.product || {};
-    return renderPrice(p.price)
+    const availUrl = p.availability?.toLowerCase().includes('in')
+      ? 'https://schema.org/InStock'
+      : p.availability?.toLowerCase().includes('low')
+        ? 'https://schema.org/LimitedAvailability'
+        : 'https://schema.org/OutOfStock';
+    return meta('category', category)
+      + (p.price
+        ? `<div class="cc-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+            ${meta('priceCurrency', p.price.currency)}
+            <span class="cc-price-current" itemprop="price" content="${p.price.current}">${p.price.currency || ''} ${p.price.current}</span>
+            ${p.price.original ? `<span class="cc-price-original">${p.price.currency || ''} ${p.price.original}</span>` : ''}
+            ${p.price.discountText ? `<span class="cc-price-discount">${p.price.discountText}</span>` : ''}
+            ${meta('availability', availUrl)}
+            ${meta('itemCondition', 'https://schema.org/NewCondition')}
+          </div>`
+        : '')
       + renderAvailability(p.availability)
       + renderMetaRow([['SKU', d?.sku], ['Valid until', p.validUntil]]);
   },
 
   review(d) {
-    return renderRating(d?.rating, d?.reviewer)
-      + (d?.productReviewed ? `<div itemprop="itemReviewed" itemscope itemtype="https://schema.org/Product">${meta('name', d.productReviewed)}</div>` : '')
-      + (d?.reviewDate ? `<time itemprop="datePublished" datetime="${d.reviewDate}">${d.reviewDate}</time>` : '');
+    const parts = [];
+    /* Rating with stars */
+    if (d?.rating) {
+      parts.push(`
+        <div class="cc-rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+          ${meta('ratingValue', d.rating.value)}${meta('bestRating', d.rating.max || 5)}${meta('worstRating', '1')}
+          <div class="cc-stars" role="img" aria-label="Rating: ${d.rating.value} out of ${d.rating.max || 5} stars">
+            <span aria-hidden="true">${renderStars(d.rating.value, d.rating.max || 5)}</span>
+            <span class="cc-rating-count">(${d.rating.value}/${d.rating.max || 5})</span>
+          </div>
+        </div>
+      `);
+    }
+    /* Reviewer as author */
+    if (d?.reviewer) {
+      parts.push(`
+        <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+          <div class="cc-author">
+            <div class="cc-author-info">
+              <span class="cc-author-name" itemprop="name">${d.reviewer.name}</span>
+              ${d.reviewer.verified ? '<span class="cc-verified" title="Verified Purchase">\u2713 Verified</span>' : ''}
+            </div>
+          </div>
+        </div>
+      `);
+    }
+    /* Review date */
+    if (d?.reviewDate) {
+      parts.push(`<time itemprop="datePublished" datetime="${d.reviewDate}">${d.reviewDate}</time>`);
+    }
+    /* Reviewed item with nested hidden aggregateRating + Offer */
+    if (d?.productReviewed) {
+      parts.push(`
+        <div itemprop="itemReviewed" itemscope itemtype="https://schema.org/Product">
+          <span itemprop="name">${d.productReviewed}</span>
+          <div itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating" style="display:none">
+            ${meta('ratingValue', d.rating?.value)}${meta('ratingCount', '1')}${meta('bestRating', d.rating?.max || 5)}${meta('worstRating', '1')}
+          </div>
+        </div>
+      `);
+    }
+    return parts.join('');
   },
 
   event(d) {
     const loc = d?.location || {};
-    return meta('startDate', d?.startDate) + meta('endDate', d?.endDate) + meta('eventStatus', d?.status ? `https://schema.org/EventStatus${d.status}` : '')
-      + renderMetaRow([['Start', d?.startDate], ['End', d?.endDate], ['Status', d?.status]])
-      + (loc.name ? `<div itemprop="location" itemscope itemtype="https://schema.org/Place"><span itemprop="name">${loc.name}</span>${loc.address ? `<span itemprop="address">, ${loc.address}</span>` : ''}</div>` : '')
-      + (d?.organizer?.name ? `<div itemprop="organizer" itemscope itemtype="https://schema.org/Organization"><span class="cc-meta-item"><span class="cc-detail-label">Organizer</span> <span itemprop="name">${d.organizer.name}</span></span></div>` : '');
+    return meta('eventStatus', d?.status ? `https://schema.org/EventStatus${d.status}` : '')
+      + meta('eventAttendanceMode', 'https://schema.org/OfflineEventAttendanceMode')
+      + meta('startDate', d?.startDate)
+      + meta('endDate', d?.endDate)
+      + renderMetaRow([['Date', d?.startDate], ['Status', d?.status]])
+      + (loc.name
+        ? `<div class="cc-meta" itemprop="location" itemscope itemtype="https://schema.org/Place">
+            <span itemprop="name">${loc.name}</span>
+            ${loc.address ? `<span itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"><span itemprop="streetAddress">${loc.address}</span></span>` : ''}
+          </div>`
+        : '')
+      + (d?.organizer?.name ? `<div class="cc-meta" itemprop="organizer" itemscope itemtype="https://schema.org/Organization"><span class="cc-detail-label">Organizer</span> <span itemprop="name">${d.organizer.name}</span></div>` : '');
   },
 
-  job(d) {
+  job(d, content, category) {
     const sal = d?.salaryRange;
-    return (d?.company ? `<div itemprop="hiringOrganization" itemscope itemtype="https://schema.org/Organization">${meta('name', d.company)}</div>` : '')
-      + (d?.location ? `<div itemprop="jobLocation" itemscope itemtype="https://schema.org/Place">${meta('name', d.location)}</div>` : '')
+    return meta('industry', category)
+      + meta('datePosted', new Date().toISOString().split('T')[0])
+      + (d?.company ? `<div itemprop="hiringOrganization" itemscope itemtype="https://schema.org/Organization">${meta('name', d.company)}</div>` : '')
+      + (d?.location ? `<div itemprop="jobLocation" itemscope itemtype="https://schema.org/Place"><span itemprop="name">${d.location}</span>${meta('address', d.location)}</div>` : '')
       + (d?.employmentType ? meta('employmentType', d.employmentType) : '')
       + (d?.applicationDeadline ? meta('validThrough', d.applicationDeadline) : '')
-      + renderMetaRow([['Company', d?.company], ['Location', d?.location], ['Type', d?.employmentType], ['Deadline', d?.applicationDeadline]])
-      + (sal ? `<div itemprop="baseSalary" itemscope itemtype="https://schema.org/MonetaryAmount">${meta('currency', sal.currency)}<div class="cc-salary"><span itemprop="value" itemscope itemtype="https://schema.org/QuantitativeValue">${meta('minValue', sal.min)}${meta('maxValue', sal.max)}${meta('unitText', sal.period || 'YEAR')}${sal.currency || ''} ${sal.min}\u2013${sal.max}</span><span class="cc-salary-period">/${sal.period || 'year'}</span></div></div>` : '')
-      + (d?.qualifications?.length ? `<details class="cc-collapsible"><summary>Qualifications</summary><div class="cc-collapsible-body">${renderCheckList(d.qualifications)}</div></details>` : '')
+      + renderMetaRow([['Company', d?.company], ['Location', d?.location], ['Type', d?.employmentType], ['Apply by', d?.applicationDeadline]])
+      + (sal
+        ? `<div class="cc-salary" itemprop="baseSalary" itemscope itemtype="https://schema.org/MonetaryAmount">
+            ${meta('currency', sal.currency)}
+            <span itemprop="value" itemscope itemtype="https://schema.org/QuantitativeValue">
+              ${meta('minValue', sal.min)}${meta('maxValue', sal.max)}${meta('unitText', sal.period || 'YEAR')}
+              ${sal.currency || ''}${sal.min?.toLocaleString?.() ?? sal.min}\u2013${sal.max?.toLocaleString?.() ?? sal.max}
+            </span>
+            <span class="cc-salary-period">${sal.period || 'annually'}</span>
+          </div>`
+        : '')
+      + (d?.qualifications?.length
+        ? `<details class="cc-collapsible"><summary>Requirements</summary><div class="cc-collapsible-body"><ul class="cc-check-list" itemprop="qualifications">${d.qualifications.map(q => `<li>${q}</li>`).join('')}</ul></div></details>`
+        : '')
       + (d?.benefits?.length ? `<details class="cc-collapsible"><summary>Benefits</summary><div class="cc-collapsible-body">${renderCheckList(d.benefits)}</div></details>` : '');
   },
 
-  course(d) {
-    return (d?.duration ? `<span itemprop="timeRequired">${meta('timeRequired', d.duration)}</span>` : '')
+  course(d, content, category) {
+    return meta('about', category)
+      + (d?.duration ? meta('timeRequired', d.duration) : '')
       + (d?.difficultyLevel ? meta('educationalLevel', d.difficultyLevel) : '')
+      + `<div itemprop="hasCourseInstance" itemscope itemtype="https://schema.org/CourseInstance" style="display:none">${meta('courseMode', 'Online')}</div>`
       + renderMetaRow([['Duration', d?.duration], ['Level', d?.difficultyLevel], ['Instructor', d?.instructor?.name]])
       + (d?.instructor ? `<div itemprop="provider" itemscope itemtype="https://schema.org/Organization">${meta('name', d.instructor.name)}</div>` : '')
-      + renderPrice(d?.price)
+      + (d?.price
+        ? `<div itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+            ${meta('priceCurrency', d.price.currency)}
+            <div class="cc-price">
+              <span class="cc-price-current" itemprop="price" content="${d.price.current}">${d.price.currency || ''} ${d.price.current}</span>
+              ${d.price.original ? `<span class="cc-price-original">${d.price.currency || ''} ${d.price.original}</span>` : ''}
+            </div>
+            ${meta('availability', 'https://schema.org/InStock')}
+            ${meta('category', category)}
+          </div>`
+        : '')
       + (d?.prerequisites?.length ? `<details class="cc-collapsible"><summary>Prerequisites</summary><div class="cc-collapsible-body"><ul class="cc-bullet-list">${d.prerequisites.map(p => `<li>${p}</li>`).join('')}</ul></div></details>` : '');
   },
 
@@ -230,12 +323,19 @@ const TYPE_RENDERERS = {
   },
 
   profile(d) {
-    return (d?.jobTitle ? `<div itemprop="jobTitle" class="cc-meta-item">${d.jobTitle}</div>` : '')
-      + (d?.organization ? `<div itemprop="worksFor" itemscope itemtype="https://schema.org/Organization"><span class="cc-meta-item" itemprop="name">${d.organization}</span></div>` : '')
-      + (d?.location ? `<div itemprop="address" class="cc-meta-item">${d.location}</div>` : '')
-      + (d?.bio ? `<p class="cc-post-content" itemprop="description">${d.bio}</p>` : '')
-      + (d?.skills?.length ? `<div class="cc-skills">${d.skills.map(s => `<span class="cc-skill">${s}</span>`).join('')}</div>` : '')
-      + renderContactMethods(d?.contacts);
+    const parts = [];
+    if (d?.jobTitle) parts.push(`<div class="cc-meta-item" itemprop="jobTitle">${d.jobTitle}</div>`);
+    if (d?.organization) parts.push(`<div itemprop="worksFor" itemscope itemtype="https://schema.org/Organization"><span class="cc-meta-item" itemprop="name">${d.organization}</span></div>`);
+    if (d?.location) parts.push(`<div class="cc-meta-item" itemprop="address">${d.location}</div>`);
+    if (d?.bio) parts.push(`<p class="cc-post-content" itemprop="description">${d.bio}</p>`);
+    if (d?.skills?.length) parts.push(`<div class="cc-skills">${d.skills.map(s => `<span class="cc-skill">${s}</span>`).join('')}</div>`);
+    if (d?.contacts?.length) {
+      parts.push(`<div class="cc-contact-methods">${d.contacts.map(m => {
+        const href = m.type === 'email' ? `mailto:${m.value}` : m.type === 'phone' ? `tel:${m.value}` : m.value;
+        return `<a class="cc-contact-method" itemprop="contactPoint" href="${href}"><span class="cc-contact-icon">${m.type}</span><span>${m.label || m.value}</span></a>`;
+      }).join('')}</div>`);
+    }
+    return parts.join('');
   },
 
   quote(d) {
@@ -314,11 +414,14 @@ const TYPE_RENDERERS = {
 
   announcement(d) {
     const eff = d?.effectiveDate;
-    return meta('datePosted', eff?.start)
+    return meta('datePosted', new Date().toISOString().split('T')[0])
+      + meta('spatialCoverage', 'Global')
+      + (eff?.start ? meta('datePublished', eff.start) : '')
+      + (eff?.end ? meta('expires', eff.end) : '')
       + (d?.priority ? `<span class="cc-priority cc-priority--${d.priority}">${d.priority}</span>` : '')
       + renderMetaRow([['Type', d?.announcementType], ['From', eff?.start], ['Until', eff?.end]])
       + (d?.targetAudience ? `<div itemprop="audience" itemscope itemtype="https://schema.org/Audience"><span class="cc-meta-item"><span class="cc-detail-label">Audience</span> <span itemprop="audienceType">${d.targetAudience}</span></span></div>` : '')
-      + (d?.actionRequired ? `<span class="cc-detail" style="font-weight:var(--fw-bold,700);color:var(--cc-accent)">Action required</span>` : '');
+      + (d?.actionRequired ? `<span class="cc-detail" style="font-weight:var(--fw-bold,700);color:var(--cc-accent)">Action required: ${d.actionRequired}</span>` : '');
   },
 
   business(d) {
@@ -361,13 +464,23 @@ const TYPE_RENDERERS = {
     const price = d?.price;
     return (d?.isPopular ? '<span class="cc-popular">Most Popular</span>' : '')
       + renderMetaRow([['Plan', d?.planName], ['Trial', d?.trialPeriod]])
-      + (price ? `<div itemprop="priceSpecification" itemscope itemtype="https://schema.org/PriceSpecification">${meta('priceCurrency', price.currency)}${meta('price', price.monthly)}<div class="cc-price"><span class="cc-price-current">${price.currency || ''} ${price.monthly}/mo</span>${price.yearly ? `<span class="cc-detail">${price.currency || ''} ${price.yearly}/yr</span>` : ''}</div></div>` : '')
-      + (d?.features?.length ? renderCheckList(d.features) : '')
+      + (d?.trialPeriod ? meta('eligibleDuration', d.trialPeriod) : '')
+      + (price
+        ? `<div itemscope itemtype="https://schema.org/PriceSpecification">
+            ${meta('priceCurrency', price.currency)}${meta('price', price.monthly)}
+            <div class="cc-price">
+              <span class="cc-price-current">${price.currency || ''} ${price.monthly}/mo</span>
+              ${price.yearly ? `<span class="cc-detail">${price.currency || ''} ${price.yearly}/yr</span>` : ''}
+            </div>
+          </div>`
+        : '')
+      + (d?.features?.length ? `<ul class="cc-check-list" itemprop="includesObject">${d.features.map(f => `<li>${f}</li>`).join('')}</ul>` : '')
       + (d?.limitations?.length ? renderCheckList(d.limitations, true) : '');
   },
 
   social(d) {
-    return (d?.platform ? `<div itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><span class="cc-platform" itemprop="name">${d.platform}</span></div>` : '')
+    return meta('datePublished', new Date().toISOString())
+      + (d?.platform ? `<div itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><span class="cc-platform" itemprop="name">${d.platform}</span></div>` : '')
       + (d?.author ? `<div itemprop="author" itemscope itemtype="https://schema.org/Person"><div class="cc-author"><div class="cc-author-info"><span class="cc-author-name" itemprop="name">${d.author}</span></div></div></div>` : '')
       + (d?.postContent ? `<div class="cc-post-content" itemprop="text">${d.postContent}</div>` : '')
       + (d?.hashtags?.length ? `<div class="cc-hashtags">${d.hashtags.map(h => `<span>#${h}</span>`).join(' ')}</div>` : '');
@@ -379,7 +492,7 @@ const TYPE_RENDERERS = {
       + (d?.applicationCategory ? meta('applicationCategory', d.applicationCategory) : '')
       + renderMetaRow([['Version', d?.version], ['Category', d?.applicationCategory], ['OS', d?.operatingSystem?.join(', ')]])
       + (d?.operatingSystem?.length ? d.operatingSystem.map(os => meta('operatingSystem', os)).join('') : '')
-      + (dev ? `<div itemprop="author" itemscope itemtype="https://schema.org/Organization">${meta('name', dev.name)}${meta('url', dev.website)}<span class="cc-meta-item"><span class="cc-detail-label">Developer</span> <span itemprop="name">${dev.name}</span></span></div>` : '')
+      + (dev ? `<div itemprop="author" itemscope itemtype="https://schema.org/Organization">${meta('url', dev.website)}<span class="cc-meta-item"><span class="cc-detail-label">Developer</span> <span itemprop="name">${dev.name}</span></span></div>` : '')
       + renderPrice(d?.price);
   }
 };
@@ -440,12 +553,12 @@ function renderContent(data, headlineTag = 'h2', skipEyebrow = false, clickable 
   const type = cardData.type;
 
   /* Schema.org headline prop varies by type */
-  const headlineProp = (type === 'job') ? 'title' : (type === 'profile') ? 'name' : (type === 'quote') ? 'name' : 'headline';
-  const summaryProp = 'description';
+  const HEADLINE_NAME_TYPES = ['recipe', 'product', 'event', 'course', 'booking', 'profile', 'quote', 'faq', 'gallery', 'timeline', 'statistic', 'achievement', 'announcement', 'business', 'comparison', 'contact', 'location', 'membership', 'social', 'software', 'poll'];
+  const headlineProp = (type === 'job') ? 'title' : HEADLINE_NAME_TYPES.includes(type) ? 'name' : 'headline';
+  const summaryProp = (type === 'review') ? 'reviewBody' : 'description';
 
   if (category && !skipEyebrow) {
-    const eyebrowProp = (type === 'article' || type === 'news') ? 'articleSection' : '';
-    parts.push(`<span class="cc-eyebrow"${eyebrowProp ? ` itemprop="${eyebrowProp}"` : ''}>${category}</span>`);
+    parts.push(`<span class="cc-eyebrow">${category}</span>`);
   }
 
   if (headline) {
@@ -465,11 +578,11 @@ function renderContent(data, headlineTag = 'h2', skipEyebrow = false, clickable 
     }
   }
 
-  /* Type-specific content */
+  /* Type-specific content — pass category for schema meta */
   const typeData = cardData[type];
   const renderer = type && TYPE_RENDERERS[type];
   if (renderer) {
-    const typeHtml = renderer(typeData, cardData.content);
+    const typeHtml = renderer(typeData, cardData.content, category);
     if (typeHtml) parts.push(typeHtml);
   }
 
