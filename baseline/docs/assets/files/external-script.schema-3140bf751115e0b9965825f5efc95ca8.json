@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "external-script",
+  "title": "🛠️ External Script",
+  "description": "Third-party script configuration (analytics, consent, marketing, support, etc.)",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-03-16",
+    "displayField": "internalName"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "contentTree": {
+      "folder": "Configuration",
+      "path": "Configuration/External Scripts"
+    }
+  },
+  "type": "object",
+  "properties": {
+    "internalName": {
+      "type": "string",
+      "title": "Internal Name",
+      "description": "Internal name for CMS editors — not displayed on the front end",
+      "localized": false,
+      "validation": {
+        "required": true
+      }
+    },
+    "name": {
+      "type": "string",
+      "title": "Name",
+      "description": "Human-readable label (e.g. 'Google Tag Manager', 'Cookiebot')",
+      "localized": false
+    },
+    "provider": {
+      "type": "string",
+      "title": "Provider",
+      "description": "Machine key (e.g. 'gtm', 'cookiebot', 'hotjar')",
+      "localized": false
+    },
+    "id": {
+      "type": "string",
+      "title": "ID / Key",
+      "description": "Provider-specific identifier (e.g. 'GTM-XXXX', 'cbid-XXXX')",
+      "localized": false
+    },
+    "url": {
+      "type": "url",
+      "title": "Script URL",
+      "description": "Full URL to the script"
+    },
+    "integrity": {
+      "type": "string",
+      "title": "SRI Hash",
+      "description": "Subresource Integrity hash (e.g. 'sha384-...')",
+      "localized": false
+    },
+    "category": {
+      "type": "select",
+      "title": "Category",
+      "description": "Determines loading behavior and consent gating",
+      "options": [
+        { "value": "consent", "label": "Consent Management" },
+        { "value": "analytics", "label": "Analytics" },
+        { "value": "marketing", "label": "Marketing" },
+        { "value": "support", "label": "Support / Chat" },
+        { "value": "other", "label": "Other" }
+      ]
+    },
+    "loading": {
+      "type": "select",
+      "title": "Loading Strategy",
+      "description": "How the script is loaded in the browser",
+      "options": [
+        { "value": "blocking", "label": "Blocking (head)" },
+        { "value": "async", "label": "Async" },
+        { "value": "defer", "label": "Defer" }
+      ]
+    }
+  },
+  "required": [
+    "name",
+    "provider"
+  ]
+}

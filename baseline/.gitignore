@@ -24,7 +24,6 @@ Thumbs.db
 dist/
 out/
 build/
-docs/
 .docusaurus/
 
 # Logs
