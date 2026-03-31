@@ -4,8 +4,8 @@
   "title": "📍 Navigation Item",
   "description": "A navigation entry: link, group (with children), or divider",
   "metadata": {
-    "version": "2.0.0",
-    "lastModified": "2026-03-18",
+    "version": "3.0.0",
+    "lastModified": "2026-03-31",
     "displayField": "internalName"
   },
   "structure": {
@@ -18,15 +18,23 @@
         "name": "Content",
         "description": "Core navigation item settings",
         "collapse": false,
-        "fields": ["internalName", "type", "label", "url"]
+        "fields": ["internalName", "type", "label", "page"]
       },
       {
         "area": "main",
         "type": "group",
-        "name": "Link Options",
-        "description": "Link target and description",
+        "name": "External Link",
+        "description": "URL and target for external links — ignored if a page is selected",
         "collapse": true,
-        "fields": ["target", "description"]
+        "fields": ["url", "target"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Description",
+        "description": "Subtitle or tooltip text",
+        "collapse": true,
+        "fields": ["description"]
       },
       {
         "area": "main",
@@ -63,8 +71,7 @@
       "description": "Link navigates to a URL, group contains children, divider is a visual separator",
       "options": [
         { "value": "link", "label": "Link" },
-        { "value": "group", "label": "Group" },
-        { "value": "divider", "label": "Divider" }
+        { "value": "group", "label": "Group" }
       ]
     },
     "label": {
@@ -72,10 +79,18 @@
       "title": "Label",
       "description": "Display text (also used to identify the item in CMS list views)"
     },
+    "page": {
+      "type": "reference",
+      "title": "Page",
+      "description": "Pick an internal page — overrides external URL",
+      "options": {
+        "referenceType": "page"
+      }
+    },
     "url": {
       "type": "url",
-      "title": "URL",
-      "description": "Link destination (for type \"link\")"
+      "title": "External URL",
+      "description": "For external links — ignored if a page is selected"
     },
     "target": {
       "type": "select",
