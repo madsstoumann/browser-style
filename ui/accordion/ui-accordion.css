@@ -63,4 +63,21 @@
 			--ui-accordion-pi: 2.5ch;
 		}
 	}
+	.ui-accordion-group.--media {
+		container-type: inline-size;
+		@container (inline-size > 650px) {
+			& > .ui-accordion[open] summary + div {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 1.5ch;
+				& > :is(img, video, picture) {
+					grid-column: 2;
+					grid-row: 1 / -1;
+					block-size: 100%;
+					inline-size: 100%;
+					object-fit: cover;
+				}
+			}
+		}
+	}
 }
