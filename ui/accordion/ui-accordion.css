@@ -1,9 +1,26 @@
+/**
+ * ui-accordion
+ * @version 3.0.0
+ * @date 2026-04-01
+ * @author Mads Stoumann
+ */
 @import '../icon/index.css';
 @layer bs-component {
 	:where(.ui-accordion) {
 		--ui-accordion-bds: solid;
 		--ui-accordion-bdw: 1px;
+		--ui-accordion-bdrs: 0;
 		--ui-accordion-bg--hover: linear-gradient(to right, #0000, var(--Field) 10% 90%, #0000);
+		--ui-accordion-bxsh: none;
+		--ui-accordion-mbe: 0;
+		--ui-accordion-pb: 1.5ch;
+		--ui-accordion-pi: 0;
+		--ui-accordion-trsdu: .3s;
+		border-radius: var(--ui-accordion-bdrs);
+		box-shadow: var(--ui-accordion-bxsh);
+		interpolate-size: allow-keywords;
+		margin-block-end: var(--ui-accordion-mbe);
+		padding-inline: var(--ui-accordion-pi);
 		& summary {
 			align-items: center;
 			border-block-end: var(--ui-accordion-bdw) var(--ui-accordion-bds) var(--ButtonBorder);
@@ -13,63 +30,37 @@
 			font-size: larger;
 			font-weight: 500;
 			justify-content: space-between;
-			padding-block: 1.5ch;
+			padding-block: var(--ui-accordion-pb);
 			text-decoration: none;
 			transition: background .2s ease-in-out;
 			&::-webkit-details-marker { display: none; }
 		}
+		&::details-content {
+			block-size: 0;
+			content-visibility: hidden;
+			overflow: hidden;
+			transition: block-size var(--ui-accordion-trsdu), content-visibility var(--ui-accordion-trsdu), padding-block var(--ui-accordion-trsdu);
+			transition-behavior: allow-discrete;
+		}
+		&[open]::details-content {
+			block-size: auto;
+			content-visibility: visible;
+		}
 		&:not([open]) summary:hover { background: var(--ui-accordion-bg--hover); }
-		&[open] summary { 
-			border: 0; 
+		&[open] summary {
+			border: 0;
 			& + div {
 				border-block-end: var(--ui-accordion-bdw) var(--ui-accordion-bds) var(--ButtonBorder);
-				padding-block: 0 1.5ch;
+				padding-block: 0 var(--ui-accordion-pb);
 			}
 		}
 		&.--no-border { --ui-accordion-bdw: 0; }
 		&.--item {
 			--ui-accordion-bdw: 0;
-			border-radius: 1em;
-			box-shadow: 0em 1em 4em color-mix(in srgb, CanvasText 10%, transparent);
-			margin-block-end: 2em;
-			padding-inline: 2.5ch;
-		}
-	}
-
-	ul.ui-accordion {
-		all: unset;
-		& > li {
-			border-block-end: var(--ui-accordion-bdw) var(--ui-accordion-bds) var(--ButtonBorder);
-			padding-block: 1.5ch;
-			list-style: none;
-			transition: background .2s ease-in-out;
-			& > a {
-				color: inherit;
-				align-items: center;
-				display: flex;
-				justify-content: space-between;
-				font-size: larger;
-				text-decoration: none;
-				& strong {
-					font-weight: 500;
-					pointer-events: none;
-				}
-			}
-			& > div {
-				display: grid;
-				grid-template-rows: 0fr;
-				transition: grid-template-rows 0.25s cubic-bezier(.4, 0, .2, 1);
-				& > * { overflow: hidden; }
-			}
-			&:is(:target, .--open) > div { grid-template-rows: 1fr; }
-			&:not(:target):not(.--open) > div {
-				transition-duration: var(--_trsdu-close, .15s);
-				transition-timing-function: var(--_trstf-close, ease-out); 
-				& > * { margin: 0; padding: 0; }
-			}
-			@media (hover: hover) {
-				&:hover { background: var(--ui-accordion-bg--hover); }
-			}
+			--ui-accordion-bdrs: 1em;
+			--ui-accordion-bxsh: 0 1em 4em color-mix(in srgb, CanvasText 10%, transparent);
+			--ui-accordion-mbe: 2em;
+			--ui-accordion-pi: 2.5ch;
 		}
 	}
 }
