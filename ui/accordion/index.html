@@ -8,6 +8,7 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-accordion.css">
+	<script type="module" src="index.js"></script>
 
 </head>
 <body>
@@ -215,5 +216,44 @@
 			</details>
 		</div>
 	</div>
+
+	<br>
+	<h2>Web Component</h2>
+	<p>Using <code>&lt;ui-accordion&gt;</code> and <code>&lt;ui-accordion-item&gt;</code> — renders the same native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> HTML under the hood.</p>
+
+	<ui-accordion name="wc-demo">
+		<ui-accordion-item label="How do I reset my password?">
+			<p>To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account.</p>
+		</ui-accordion-item>
+		<ui-accordion-item label="How long does shipping take?">
+			<p>The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days.</p>
+		</ui-accordion-item>
+		<ui-accordion-item label="What payment methods do you accept?" open>
+			<p>We accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we support PayPal, Apple Pay, and Google Pay.</p>
+		</ui-accordion-item>
+	</ui-accordion>
+
+	<br>
+	<h3>Web Component with variant</h3>
+	<ui-accordion name="wc-item" variant="item">
+		<ui-accordion-item label="First item" icon="chevron down" open>
+			<p>This uses the <code>--item</code> card-style variant, applied via the <code>variant</code> attribute on the parent.</p>
+		</ui-accordion-item>
+		<ui-accordion-item label="Second item" icon="chevron down">
+			<p>All items inherit the variant and name from the parent <code>&lt;ui-accordion&gt;</code> element.</p>
+		</ui-accordion-item>
+	</ui-accordion>
+
+	<br>
+	<h3>Web Component with custom icon</h3>
+	<ui-accordion name="wc-icons">
+		<ui-accordion-item label="With chevron" icon="chevron right">
+			<p>Each item can specify its own icon type via the <code>icon</code> attribute.</p>
+		</ui-accordion-item>
+		<ui-accordion-item label="With arrow" icon="arrow right">
+			<p>Any <code>ui-icon</code> type works here.</p>
+		</ui-accordion-item>
+	</ui-accordion>
+
 </body>
 </html>
