@@ -1,6 +1,6 @@
 /**
  * ui-blinds
- * @version 2.0.0
+ * @version 2.0.1
  * @date 2026-04-01
  * @author Mads Stoumann
  */
@@ -34,7 +34,6 @@
 				writing-mode: vertical-lr;
 				& > summary {
 					block-size: 100%;
-					margin: 0;
 					padding-inline: var(--ui-blinds-pb);
 				}
 			}
