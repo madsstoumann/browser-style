@@ -11,6 +11,7 @@
 		--ui-accordion-bdw: 1px;
 		--ui-accordion-bdrs: 0;
 		--ui-accordion-bg--hover: linear-gradient(to right, #0000, var(--Field) 10% 90%, #0000);
+		--ui-accordion-cg: 2rem;
 		--ui-accordion-bxsh: none;
 		--ui-accordion-mbe: 0;
 		--ui-accordion-pb: 1.5ch;
@@ -63,19 +64,38 @@
 			--ui-accordion-pi: 2.5ch;
 		}
 	}
-	.ui-accordion-group.--media {
+	.ui-accordion-media {
 		container-type: inline-size;
+	}
+	.ui-accordion-group.--media {
 		@container (inline-size > 650px) {
-			& > .ui-accordion[open] summary + div {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			
+			& > .ui-accordion {
+				grid-column: 1 / -1;
 				display: grid;
-				grid-template-columns: 1fr 1fr;
-				gap: 1.5ch;
-				& > :is(img, video, picture) {
-					grid-column: 2;
-					grid-row: 1 / -1;
-					block-size: 100%;
-					inline-size: 100%;
-					object-fit: cover;
+				grid-template-columns: subgrid;
+				& summary { grid-column: 1; }
+				&[open]::details-content {
+					display: contents;
+				}
+				& summary + div {
+					column-gap: var(--ui-accordion-cg);
+					grid-column: 1 / -1;
+					display: grid;
+					grid-template-columns: subgrid;
+					& > :not(:is(img, video, picture)) { grid-column: 1; }
+					& > :is(img, video, picture) {
+						grid-column: 2;
+						grid-row: 1 / -1;
+						position: sticky;
+						top: 1rem;
+						align-self: start;
+						inline-size: 100%;
+						border-radius: .5em;
+						object-fit: cover;
+					}
 				}
 			}
 		}
