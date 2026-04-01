@@ -159,10 +159,10 @@
 	</details>
 
 	<br>
-	<h2>With <code>--media</code> modifier</h2>
+	<h2>With <code>ui-accordion-media</code> wrapper</h2>
 
 	<div class="ui-accordion-media">
-		<div class="ui-accordion-group --media">
+		<div class="ui-accordion-group">
 			<details class="ui-accordion" name="accordion-media" open>
 				<summary>Our Workspace<ui-icon type="plus-minus"></ui-icon></summary>
 				<div>
@@ -178,6 +178,35 @@
 				</div>
 			</details>
 			<details class="ui-accordion" name="accordion-media">
+				<summary>Product Demo<ui-icon type="plus-minus"></ui-icon></summary>
+				<div>
+					<p>Watch our latest product demo to see the new features in action. This walkthrough covers the key improvements and how they can benefit your workflow.</p>
+					<video src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" controls></video>
+				</div>
+			</details>
+		</div>
+	</div>
+
+	<br>
+	<p>With <code>--no-collapse</code> modifier — ensures one item is always open.</p>
+
+	<div class="ui-accordion-media">
+		<div class="ui-accordion-group --no-collapse">
+			<details class="ui-accordion" name="accordion-media-2" open>
+				<summary>Our Workspace<ui-icon type="plus-minus"></ui-icon></summary>
+				<div>
+					<p>Our modern workspace is designed to inspire creativity and collaboration. With open floor plans, natural lighting, and dedicated quiet zones, we provide an environment where teams can do their best work.</p>
+					<img src="https://picsum.photos/seed/workspace/800/500" alt="Modern workspace">
+				</div>
+			</details>
+			<details class="ui-accordion" name="accordion-media-2">
+				<summary>Meet the Team<ui-icon type="plus-minus"></ui-icon></summary>
+				<div>
+					<p>Our diverse team brings together experts from various fields. We believe that great products are built by great people, and we invest heavily in talent development and team culture.</p>
+					<img src="https://picsum.photos/seed/team/800/500" alt="Team photo">
+				</div>
+			</details>
+			<details class="ui-accordion" name="accordion-media-2">
 				<summary>Product Demo<ui-icon type="plus-minus"></ui-icon></summary>
 				<div>
 					<p>Watch our latest product demo to see the new features in action. This walkthrough covers the key improvements and how they can benefit your workflow.</p>

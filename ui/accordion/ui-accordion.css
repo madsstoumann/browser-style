@@ -55,7 +55,7 @@
 				padding-block: 0 var(--ui-accordion-pb);
 			}
 		}
-		&.--no-border { --ui-accordion-bdw: 0; }
+		/* Variants */
 		&.--item {
 			--ui-accordion-bdw: 0;
 			--ui-accordion-bdrs: 1em;
@@ -63,38 +63,38 @@
 			--ui-accordion-mbe: 2em;
 			--ui-accordion-pi: 2.5ch;
 		}
+		&.--no-border { --ui-accordion-bdw: 0; }
 	}
+
+	/* Grouping */
+	.ui-accordion-group {
+		&.--no-collapse {
+			& > .ui-accordion[open] summary {
+				pointer-events: none;
+			}
+		}
+	}
+
+	/* With Media Wrapper */
 	.ui-accordion-media {
 		container-type: inline-size;
-	}
-	.ui-accordion-group.--media {
-		@container (inline-size > 650px) {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			
-			& > .ui-accordion {
-				grid-column: 1 / -1;
+			.ui-accordion-group {
+			@container (inline-size > 650px) {
 				display: grid;
-				grid-template-columns: subgrid;
-				& summary { grid-column: 1; }
-				&[open]::details-content {
-					display: contents;
-				}
-				& summary + div {
-					column-gap: var(--ui-accordion-cg);
-					grid-column: 1 / -1;
-					display: grid;
-					grid-template-columns: subgrid;
-					& > :not(:is(img, video, picture)) { grid-column: 1; }
-					& > :is(img, video, picture) {
-						grid-column: 2;
-						grid-row: 1 / -1;
-						position: sticky;
-						top: 1rem;
-						align-self: start;
-						inline-size: 100%;
-						border-radius: .5em;
+				grid-template-columns: 1fr 1fr;
+				position: relative;
+				& > .ui-accordion {
+					grid-column: 1;
+					&[open]::details-content {
+						display: contents;
+					}
+					& summary + div > :is(img, video, picture) {
+						block-size: auto;
+						inline-size: calc(50% - var(--ui-accordion-cg));
+						inset-block-start: 0;
+						inset-inline-end: 0;
 						object-fit: cover;
+						position: absolute;
 					}
 				}
 			}
