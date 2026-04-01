@@ -1,32 +1,94 @@
 @layer bs-core {
 	:root {
-		--AccentColor: light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%));
-		--AccentColorDark: light-dark(hsl(211, 80%, 30%), hsl(211, 30%, 20%));
-		--AccentColorText: hsl(211, 100%, 95%);
-		--ButtonBorder: light-dark(hsl(0, 0%, 80%), hsl(0, 0%, 20%));
-		--ButtonFace: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));
-		--ButtonText: light-dark(hsl(0, 0%, 40%), hsl(0, 0%, 60%));
-		--Canvas: light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%));
-		--CanvasGray: light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%));
-		--CanvasText: light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%));
-		--Field: light-dark(hsl(0, 0%, 97.5%), hsl(0, 0%, 2.5%));
-		--GrayText: light-dark(hsl(0, 0%, 60%), hsl(0, 0%, 40%));
-		--Highlight: light-dark(hsl(211, 100%, 95%), hsl(211, 30%, 20%));
-		--LinkText: light-dark(hsl(221, 100%, 73%), hsl(221, 70%, 70%));
-		--Mark: light-dark(hsl(61, 100%, 80%), hsl(61, 50%, 80%));
-		--MarkText: light-dark(hsl(60, 100%, 2%), hsl(60, 50%, 10%));
-		--VisitedText: light-dark(hsl(264, 33%, 61%), hsl(264, 25%, 70%));
-		--ColorInfo: light-dark(hsl(210, 60%, 46%), hsl(210, 30%, 46%));
-		--ColorError: light-dark(hsl(360, 60%, 46%), hsl(360, 40%, 56%));
-		--ColorSuccess: light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%));
-		--ColorWarning: light-dark(hsl(33, 99%, 59%), hsl(33, 69%, 59%));
+		/* ── Design Tokens ── */
 
-		/* Fonts */
-		--ff-body: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
-		--ff-form: ui-sans-serif, system-ui;
-		--ff-headers: inherit;
-		--ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
-		--ff-serif:  'Iowan Old Style', 'Palatino Linotype', 'URW Palladio L', P052, serif;
+		/* Colors */
+		--color-accent: light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%));
+		--color-accent-dark: light-dark(hsl(211, 80%, 30%), hsl(211, 30%, 20%));
+		--color-accent-text: hsl(211, 100%, 95%);
+		--color-border: light-dark(hsl(0, 0%, 80%), hsl(0, 0%, 20%));
+		--color-button: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));
+		--color-button-text: light-dark(hsl(0, 0%, 40%), hsl(0, 0%, 60%));
+		--color-surface: light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%));
+		--color-surface-alt: light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%));
+		--color-text: light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%));
+		--color-field: light-dark(hsl(0, 0%, 97.5%), hsl(0, 0%, 2.5%));
+		--color-text-muted: light-dark(hsl(0, 0%, 60%), hsl(0, 0%, 40%));
+		--color-highlight: light-dark(hsl(211, 100%, 95%), hsl(211, 30%, 20%));
+		--color-link: light-dark(hsl(221, 100%, 73%), hsl(221, 70%, 70%));
+		--color-mark: light-dark(hsl(61, 100%, 80%), hsl(61, 50%, 80%));
+		--color-mark-text: light-dark(hsl(60, 100%, 2%), hsl(60, 50%, 10%));
+		--color-link-visited: light-dark(hsl(264, 33%, 61%), hsl(264, 25%, 70%));
+		--color-info: light-dark(hsl(210, 60%, 46%), hsl(210, 30%, 46%));
+		--color-error: light-dark(hsl(360, 60%, 46%), hsl(360, 40%, 56%));
+		--color-success: light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%));
+		--color-warning: light-dark(hsl(33, 99%, 59%), hsl(33, 69%, 59%));
+
+		/* Typography */
+		--font-body: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+		--font-form: ui-sans-serif, system-ui;
+		--font-heading: inherit;
+		--font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+		--font-serif: 'Iowan Old Style', 'Palatino Linotype', 'URW Palladio L', P052, serif;
+
+		/* Spacing */
+		--spacing-xs: 0.25rem;
+		--spacing-sm: 0.5rem;
+		--spacing-md: 1rem;
+		--spacing-lg: 1.5rem;
+		--spacing-xl: 2rem;
+		--spacing-2xl: 3rem;
+
+		/* Border Radius */
+		--radius-xs: 0.125rem;
+		--radius-sm: 0.25rem;
+		--radius-md: 0.375rem;
+		--radius-lg: 0.5rem;
+		--radius-xl: 0.75rem;
+		--radius-2xl: 1rem;
+		--radius-3xl: 1.5rem;
+		--radius-4xl: 2rem;
+		--radius-circle: 50%;
+		--radius-pill: calc(infinity * 1px);
+
+		/* Shadows */
+		--shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+		--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+		--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+		--shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+
+		/* Transitions */
+		--duration-fast: 100ms;
+		--duration-normal: 200ms;
+		--duration-slow: 300ms;
+		--ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+
+		/* ── Legacy Aliases (remove in next major version) ── */
+		--AccentColor: var(--color-accent);
+		--AccentColorDark: var(--color-accent-dark);
+		--AccentColorText: var(--color-accent-text);
+		--ButtonBorder: var(--color-border);
+		--ButtonFace: var(--color-button);
+		--ButtonText: var(--color-button-text);
+		--Canvas: var(--color-surface);
+		--CanvasGray: var(--color-surface-alt);
+		--CanvasText: var(--color-text);
+		--Field: var(--color-field);
+		--GrayText: var(--color-text-muted);
+		--Highlight: var(--color-highlight);
+		--LinkText: var(--color-link);
+		--Mark: var(--color-mark);
+		--MarkText: var(--color-mark-text);
+		--VisitedText: var(--color-link-visited);
+		--ColorInfo: var(--color-info);
+		--ColorError: var(--color-error);
+		--ColorSuccess: var(--color-success);
+		--ColorWarning: var(--color-warning);
+		--ff-body: var(--font-body);
+		--ff-form: var(--font-form);
+		--ff-headers: var(--font-heading);
+		--ff-mono: var(--font-mono);
+		--ff-serif: var(--font-serif);
 
 		interpolate-size: allow-keywords;
 		text-size-adjust: 100%;
@@ -38,22 +100,22 @@
 	[hidden] { display: none; }
 	[data-sr] {
 		border: 0;
-		clip: rect(0 0 0 0); 
+		clip: rect(0 0 0 0);
 		clip-path: inset(50%);
 		height: 1px;
 		overflow: hidden;
 		position: absolute;
-		white-space: nowrap; 
+		white-space: nowrap;
 		width: 1px;
 	}
 
 	/* Elements */
 	:where(body) {
-		accent-color: var(--AccentColor);
-		background-color: var(--Canvas);
-		color: var(--CanvasText);
+		accent-color: var(--color-accent);
+		background-color: var(--color-surface);
+		color: var(--color-text);
 		color-scheme: light dark;
-		font-family: var(--ff-body);
+		font-family: var(--font-body);
 		font-size: clamp(1rem, 0.8661rem + 0.4286vw, 1.1875rem);
 		line-height: 1.5;
 		margin-inline: auto;
@@ -62,9 +124,9 @@
 		text-rendering: optimizeLegibility;
 	}
 	:where(a) {
-		color: var(--LinkText);
+		color: var(--color-link);
 		-webkit-tap-highlight-color: transparent;
-		&:visited { color: var(--VisitedText); }
+		&:visited { color: var(--color-link-visited); }
 	}
 	:where(abbr) {
 		cursor: help;
@@ -73,11 +135,11 @@
 	}
 	:where(audio) {
 		&::-webkit-media-controls-panel {
-			background: var(--CanvasGray);
+			background: var(--color-surface-alt);
 		}
 	}
 	:where(blockquote) {
-		border-inline-start: .75ch solid var(--GrayText); 
+		border-inline-start: .75ch solid var(--color-text-muted);
 		padding-inline-start: 2ch;
 	}
 	:where(blockquote, dl, figure, h1, ol, p, pre, ul) {
@@ -89,12 +151,12 @@
 		margin-block: 1rlh;
 	}
 	:where(code) {
-		background-color: var(--CanvasGray);
-		font-family: var(--ff-mono);
+		background-color: var(--color-surface-alt);
+		font-family: var(--font-mono);
 		font-size: 80%;
 		padding: .165ch .33ch;
 	}
-	:where(del) { color: var(--ColorError); }
+	:where(del) { color: var(--color-error); }
 	:where(dfn) {
 		text-decoration: underline;
 		text-decoration-style: double;
@@ -102,14 +164,14 @@
 	:where(dt) { font-weight: 700; }
 	:where(figcaption) { font-size: smaller; }
 	:where(h1, h2, h3, h4) {
-		font-family: var(--ff-headers);
+		font-family: var(--font-heading);
 		line-height: 1.3;
 		overflow-wrap: break-word;
 		text-wrap: balance;
 	}
 	:where(h2) { margin-block: .75rlh; }
 	:where(hr) {
-		border: solid var(--ButtonBorder);
+		border: solid var(--color-border);
 		border-width: 1px 0 0;
 		margin-block: .5rlh;
 	}
@@ -118,20 +180,20 @@
 		height: auto;
 		max-width: 100%;
 	}
-	:where(ins) { color: var(--ColorSuccess) }
+	:where(ins) { color: var(--color-success) }
 	:where(kbd) {
-		background-color: var(--ButtonFace);
+		background-color: var(--color-button);
 		font-size: smaller;
 		padding: .33ch .66ch;
 	}
 	:where(mark) {
-		background-color: var(--Mark);
-		color: var(--MarkText);
+		background-color: var(--color-mark);
+		color: var(--color-mark-text);
 	}
 	:where(p) { text-wrap: pretty; }
 	:where(pre) { font-size: smaller; overflow: auto; }
 	:where(pre, tr:nth-of-type(even)) {
-		background-color: var(--CanvasGray);
+		background-color: var(--color-surface-alt);
 	}
 	:where(table) {
 		border-collapse: collapse;
@@ -142,7 +204,7 @@
 		&[data-c4~="center"] tr > *:nth-of-type(4),
 		&[data-c5~="center"] tr > *:nth-of-type(5),
 		&[data-c6~="center"] tr > *:nth-of-type(6),
-		&[data-c7~="center"] tr > *:nth-of-type(7),  
+		&[data-c7~="center"] tr > *:nth-of-type(7),
 		&[data-c8~="center"] tr > *:nth-of-type(8) { text-align: center; }
 
 		&[data-c1~="end"] tr > *:nth-of-type(1),

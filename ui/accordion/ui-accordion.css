@@ -1,70 +1,71 @@
 /**
  * ui-accordion
- * @version 3.0.1
+ * @version 4.0.0
  * @date 2026-04-01
  * @author Mads Stoumann
  */
 @import '../icon/index.css';
 @layer bs-component {
 	:where(.ui-accordion) {
-		--ui-accordion-bds: solid;
-		--ui-accordion-bdw: 1px;
-		--ui-accordion-bdrs: 0;
-		--ui-accordion-bg--hover: linear-gradient(to right, #0000, var(--Field) 10% 90%, #0000);
-		--ui-accordion-cg: 2rem;
-		--ui-accordion-bxsh: none;
-		--ui-accordion-mbe: 0;
-		--ui-accordion-pb: 1.5ch;
-		--ui-accordion-pi: 0;
-		--ui-accordion-trsdu: .3s;
-		--ui-accordion-media-trsdu: .6s;
-		border-radius: var(--ui-accordion-bdrs);
-		box-shadow: var(--ui-accordion-bxsh);
+		--ui-accordion-border-style: solid;
+		--ui-accordion-border-width: var(--input-border-width, 1px);
+		--ui-accordion-border-color: var(--color-border, hsl(0, 0%, 80%));
+		--ui-accordion-border-radius: 0;
+		--ui-accordion-bg-hover: linear-gradient(to right, #0000, var(--color-field, hsl(0, 0%, 97.5%)) 10% 90%, #0000);
+		--ui-accordion-gap: var(--spacing-xl, 2rem);
+		--ui-accordion-shadow: none;
+		--ui-accordion-margin-end: 0;
+		--ui-accordion-padding-block: 1.5ch;
+		--ui-accordion-padding-inline: 0;
+		--ui-accordion-duration: var(--duration-slow, .3s);
+		--ui-accordion-media-duration: .6s;
+		border-radius: var(--ui-accordion-border-radius);
+		box-shadow: var(--ui-accordion-shadow);
 		interpolate-size: allow-keywords;
-		margin-block-end: var(--ui-accordion-mbe);
-		padding-inline: var(--ui-accordion-pi);
+		margin-block-end: var(--ui-accordion-margin-end);
+		padding-inline: var(--ui-accordion-padding-inline);
 		& summary {
 			align-items: center;
-			border-block-end: var(--ui-accordion-bdw) var(--ui-accordion-bds) var(--ButtonBorder);
+			border-block-end: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
 			color: inherit;
 			cursor: pointer;
 			display: flex;
 			font-size: larger;
 			font-weight: 500;
 			justify-content: space-between;
-			padding-block: var(--ui-accordion-pb);
+			padding-block: var(--ui-accordion-padding-block);
 			text-decoration: none;
-			transition: background .2s ease-in-out;
+			transition: background var(--duration-normal, .2s) ease-in-out;
 			&::-webkit-details-marker { display: none; }
 		}
 		&::details-content {
 			block-size: 0;
 			content-visibility: hidden;
 			overflow: hidden;
-			transition: block-size var(--ui-accordion-trsdu), content-visibility var(--ui-accordion-trsdu), padding-block var(--ui-accordion-trsdu);
+			transition: block-size var(--ui-accordion-duration), content-visibility var(--ui-accordion-duration), padding-block var(--ui-accordion-duration);
 			transition-behavior: allow-discrete;
 		}
 		&[open]::details-content {
 			block-size: auto;
 			content-visibility: visible;
 		}
-		&:not([open]) summary:hover { background: var(--ui-accordion-bg--hover); }
+		&:not([open]) summary:hover { background: var(--ui-accordion-bg-hover); }
 		&[open] summary {
 			border: 0;
 			& + div {
-				border-block-end: var(--ui-accordion-bdw) var(--ui-accordion-bds) var(--ButtonBorder);
-				padding-block: 0 var(--ui-accordion-pb);
+				border-block-end: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+				padding-block: 0 var(--ui-accordion-padding-block);
 			}
 		}
 		/* Variants */
 		&.--item {
-			--ui-accordion-bdw: 0;
-			--ui-accordion-bdrs: 1em;
-			--ui-accordion-bxsh: 0 1em 4em color-mix(in srgb, CanvasText 10%, transparent);
-			--ui-accordion-mbe: 2em;
-			--ui-accordion-pi: 2.5ch;
+			--ui-accordion-border-width: 0;
+			--ui-accordion-border-radius: 1em;
+			--ui-accordion-shadow: 0 1em 4em color-mix(in srgb, CanvasText 10%, transparent);
+			--ui-accordion-margin-end: 2em;
+			--ui-accordion-padding-inline: 2.5ch;
 		}
-		&.--no-border { --ui-accordion-bdw: 0; }
+		&.--no-border { --ui-accordion-border-width: 0; }
 	}
 
 	/* Grouping */
@@ -90,9 +91,9 @@
 						display: contents;
 					}
 					&[open] summary + div > :is(img, video, picture) {
-						animation: accordion-media-in var(--ui-accordion-media-trsdu) ease;
+						animation: accordion-media-in var(--ui-accordion-media-duration) ease;
 						block-size: auto;
-						inline-size: calc(50% - var(--ui-accordion-cg));
+						inline-size: calc(50% - var(--ui-accordion-gap));
 						inset-block-start: 0;
 						inset-inline-end: 0;
 						object-fit: cover;

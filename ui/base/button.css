@@ -1,0 +1,72 @@
+/*
+-----------------
+ Button Styles
+-----------------
+*/
+@layer bs-core {
+	:where(button, .ui-button), [type=file]::file-selector-button {
+		--button-bg--hover: color-mix(in srgb, var(--button-bg, var(--color-button, hsl(0, 0%, 90%))), var(--button-hover-mix, var(--color-text, hsl(0, 0%, 15%)) 25%));
+		--button-bxsh--hover: color-mix(in srgb, var(--button-bg, var(--color-button, hsl(0, 0%, 90%))), transparent 75%) 0px 0px 0px .16em;
+		--button-c--hover: var(--button-c, inherit);
+		align-items: center;
+		background: var(--button-bg, var(--color-button, hsl(0, 0%, 90%)));
+		border-color: var(--button-bdc, transparent);
+		color: var(--button-c, inherit);
+		display: inline-grid;
+		font-weight: 500;
+		gap: 1ch;
+		grid-auto-flow: column;
+		line-height: normal;
+		padding: var(--button-p, 1ch 2.5ch);
+		place-content: center;
+		text-decoration: none;
+		transition: all var(--duration-normal, .2s) ease-in-out;
+		user-select: none;
+		&:where([disabled], .--disabled) {
+			cursor: not-allowed;
+			opacity: .33;
+		}
+		&:focus-visible {
+			outline-color: var(--button-bg, var(--color-button, hsl(0, 0%, 90%)));
+			outline-offset: 0.3em;
+		}
+		&:not([disabled],.--disabled):is(:focus-visible, :hover),
+		&:has(input:focus-visible) {
+			background: var(--button-bg--hover);
+			box-shadow: var(--button-bxsh--hover);
+			color: var(--button-c--hover);
+		}
+		&.--icon {
+			--button-p: 1ch;
+			align-content: baseline;
+			aspect-ratio: 1 / 1;
+			border-radius: var(--radius-circle, 50%);
+			grid-template-columns: 1fr;
+			height: auto;
+		}
+		&.--outline {
+			&:not(:focus-visible, :hover) {
+				--button-bdc: currentColor;
+				background: #0000;
+			}
+			&.--icon { border-width: 2px; }
+		}
+		&.--rounded { border-radius: var(--radius-pill, 3em); }
+		&.--end { justify-self: end; }
+		&.--start { justify-self: start; }
+		&.--text { --button-bg: transparent; --button-c: var(--color-text, hsl(0, 0%, 15%));}
+		&.--toggle { --button-p: 0; }
+		&.--transparent { background: transparent; }
+	}
+	:where([type=submit]), input[type=file]::file-selector-button {
+		--button-bg: var(--color-accent, hsl(211, 100%, 50%));
+		--button-c: var(--color-accent-text, hsl(211, 100%, 95%));
+		&.--outline {
+			--button-bg: #0000;
+			--button-c: var(--color-accent, hsl(211, 100%, 50%));
+			--button-bg--hover: var(--color-accent, hsl(211, 100%, 50%));
+			--button-c--hover: var(--color-accent-text, hsl(211, 100%, 95%));
+			outline-color: var(--color-accent, hsl(211, 100%, 50%));
+		}
+	}
+}
