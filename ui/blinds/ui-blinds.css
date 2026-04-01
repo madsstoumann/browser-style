@@ -14,16 +14,14 @@
 		grid-auto-flow: column;
 
 		& > details {
-			--_bg: var(--ui-blinds-bg);
+			--_bg: color-mix(
+				in oklab,
+				var(--ui-blinds-bg),
+				#FFF calc((sibling-index() - 1) / max(sibling-count() - 1, 1) * var(--ui-blinds-mix, 80%))
+			);
 			background: var(--_bg);
 			color: contrast-color(var(--_bg));
 			padding: var(--ui-blinds-pb) var(--ui-blinds-pi);
-
-			&:nth-of-type(2) { --_bg: color-mix(in oklab, var(--ui-blinds-bg), #FFF 20%); }
-			&:nth-of-type(3) { --_bg: color-mix(in oklab, var(--ui-blinds-bg), #FFF 40%); }
-			&:nth-of-type(4) { --_bg: color-mix(in oklab, var(--ui-blinds-bg), #FFF 50%); }
-			&:nth-of-type(5) { --_bg: color-mix(in oklab, var(--ui-blinds-bg), #FFF 65%); }
-			&:nth-of-type(6) { --_bg: color-mix(in oklab, var(--ui-blinds-bg), #FFF 80%); }
 
 			& > summary {
 				color: inherit;
