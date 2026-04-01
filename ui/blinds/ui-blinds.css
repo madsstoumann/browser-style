@@ -24,11 +24,9 @@
 			padding: var(--ui-blinds-pb) var(--ui-blinds-pi);
 
 			& > summary {
-				color: inherit;
 				cursor: pointer;
 				font-size: var(--ui-blinds-heading-fz, 1.17em);
 				list-style: none;
-				&::-webkit-details-marker { display: none; }
 			}
 			&:not([open]) {
 				box-shadow: var(--ui-blinds-bxsh, -0.25em 0 1em -0.5em rgba(0,0,0,0.5));
