@@ -72,20 +72,13 @@
 				padding-block: 0 var(--ui-accordion-padding-block);
 			}
 		}
-		/* Variants (class-based, applied by parent or directly) */
-		&.--item {
-			--ui-accordion-border-width: 0;
-			--ui-accordion-border-radius: 1em;
-			--ui-accordion-shadow: 0 1em 4em color-mix(in srgb, CanvasText 10%, transparent);
-			--ui-accordion-margin-end: 2em;
-			--ui-accordion-padding-inline: 2.5ch;
-		}
 		&.--no-border { --ui-accordion-border-width: 0; }
 	}
 
-	/* Variant: item — applied via parent attribute */
+	/* Variant: item — applied via parent attribute or class */
 	:where(ui-accordion[variant~="item"]) > .ui-accordion,
-	:where(ui-accordion[variant~="item"]) > ui-accordion-item > .ui-accordion {
+	:where(ui-accordion[variant~="item"]) > ui-accordion-item > .ui-accordion,
+	:where(.ui-accordion).--item {
 		--ui-accordion-border-width: 0;
 		--ui-accordion-border-radius: 1em;
 		--ui-accordion-shadow: 0 1em 4em color-mix(in srgb, CanvasText 10%, transparent);

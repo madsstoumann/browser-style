@@ -14,20 +14,16 @@ class UiAccordionItem extends HTMLElement {
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (oldValue === newValue || !this.isConnected) return;
-		const details = this.querySelector('details');
+		const details = this.querySelector(':scope > details');
 		if (!details) return;
 
 		if (name === 'open') {
 			details.open = this.hasAttribute('open');
 		} else if (name === 'label') {
-			const summary = details.querySelector('summary');
-			if (summary) {
-				const icon = summary.querySelector('ui-icon');
-				summary.textContent = newValue || '';
-				if (icon) summary.appendChild(icon);
-			}
+			const span = details.querySelector('summary > span');
+			if (span) span.textContent = newValue || '';
 		} else if (name === 'icon') {
-			const icon = details.querySelector('summary ui-icon');
+			const icon = details.querySelector('summary > ui-icon');
 			if (icon) icon.setAttribute('type', newValue || 'plus-minus');
 		}
 	}
@@ -36,16 +32,18 @@ class UiAccordionItem extends HTMLElement {
 		const label = this.getAttribute('label') || '';
 		const icon = this.getAttribute('icon') || 'plus-minus';
 		const isOpen = this.hasAttribute('open');
-		const parent = this.closest('ui-accordion');
-		const name = parent?.getAttribute('name') || '';
 
 		const details = document.createElement('details');
 		details.className = 'ui-accordion';
-		if (name) details.setAttribute('name', name);
 		if (isOpen) details.open = true;
 
 		const summary = document.createElement('summary');
-		summary.innerHTML = `${label}<ui-icon type="${icon}"></ui-icon>`;
+		const span = document.createElement('span');
+		span.textContent = label;
+		const iconEl = document.createElement('ui-icon');
+		iconEl.setAttribute('type', icon);
+		summary.appendChild(span);
+		summary.appendChild(iconEl);
 
 		const content = document.createElement('div');
 		while (this.firstChild) {
@@ -74,8 +72,13 @@ class UiAccordion extends HTMLElement {
 	propagateName() {
 		const name = this.getAttribute('name');
 		if (!name) return;
-		for (const details of this.querySelectorAll('details.ui-accordion')) {
-			details.setAttribute('name', name);
+		for (const child of this.children) {
+			if (child.matches('details.ui-accordion')) {
+				child.setAttribute('name', name);
+			} else if (child.matches('ui-accordion-item')) {
+				const details = child.querySelector(':scope > details.ui-accordion');
+				if (details) details.setAttribute('name', name);
+			}
 		}
 	}
 }
