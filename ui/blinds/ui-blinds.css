@@ -1,63 +1,45 @@
+/**
+ * ui-blinds
+ * @version 2.0.0
+ * @date 2026-04-01
+ * @author Mads Stoumann
+ */
 @layer bs-component {
 	:where(.ui-blinds) {
-		--ui-blinds-bg: hsl(211, 100%, 50%); 
-		--ui-blinds-bg-1: color-mix(in oklab, var(--ui-blinds-bg), #000 40%);
-		--ui-blinds-bg-2: color-mix(in oklab, var(--ui-blinds-bg), #000 20%);
-		--ui-blinds-bg-3: var(--ui-blinds-bg);
-		--ui-blinds-bg-4: color-mix(in oklab, var(--ui-blinds-bg), #FFF 20%);
-		--ui-blinds-bg-5: color-mix(in oklab, var(--ui-blinds-bg), #FFF 40%);
-		--ui-blinds-bg-6: color-mix(in oklab, var(--ui-blinds-bg), #FFF 60%);
-
-		--ui-blinds-c-1: #FFF;
-		--ui-blinds-c-2: #FFF;
-		--ui-blinds-c-3: #000;
-		--ui-blinds-c-4: #000;
-		--ui-blinds-c-5: #000;
-		--ui-blinds-c-6: #000;
-
+		--ui-blinds-bg: oklch(0.35 0.18 210);
 		--ui-blinds-pb: .5em;
 		--ui-blinds-pi: 2ch;
-		container-type: inline-size;
+		clip-path: inset(0% 0% 0% 0% round var(--ui-blinds-bdrs, 0.5em));
+		display: grid;
+		grid-auto-flow: column;
 
-		& ul {
-			all: unset;
-			clip-path: inset(0% 0% 0% 0% round var(--ui-blinds-bdrs, 0.5em));
-			display: grid;
+		& > details {
+			--_bg: var(--ui-blinds-bg);
+			background: var(--_bg);
+			color: contrast-color(var(--_bg));
+			padding: var(--ui-blinds-pb) var(--ui-blinds-pi);
 
-			& li {
-				background: var(--_bg, var(--ui-blinds-bg-1));
-				color: var(--_c, var(--ui-blinds-c-1));
-				/* Use contrast-color() or color-contrast() when working cross-browser */
-				/* color: color-contrast(var(--_bg, var(--ui-blinds-bg-1)) vs #000, #FFF); */
+			&:nth-of-type(2) { --_bg: color-mix(in oklab, var(--ui-blinds-bg), #FFF 20%); }
+			&:nth-of-type(3) { --_bg: color-mix(in oklab, var(--ui-blinds-bg), #FFF 40%); }
+			&:nth-of-type(4) { --_bg: color-mix(in oklab, var(--ui-blinds-bg), #FFF 50%); }
+			&:nth-of-type(5) { --_bg: color-mix(in oklab, var(--ui-blinds-bg), #FFF 65%); }
+			&:nth-of-type(6) { --_bg: color-mix(in oklab, var(--ui-blinds-bg), #FFF 80%); }
+
+			& > summary {
+				color: inherit;
+				cursor: pointer;
+				font-size: var(--ui-blinds-heading-fz, 1.17em);
 				list-style: none;
-				padding: var(--ui-blinds-pb) var(--ui-blinds-pi);
-
-				&:nth-of-type(2) { --_bg: var(--ui-blinds-bg-2); --_c: var(--ui-blinds-c-2); }
-				&:nth-of-type(3) { --_bg: var(--ui-blinds-bg-3); --_c: var(--ui-blinds-c-3); }
-				&:nth-of-type(4) { --_bg: var(--ui-blinds-bg-4); --_c: var(--ui-blinds-c-4); }
-				&:nth-of-type(5) { --_bg: var(--ui-blinds-bg-5); --_c: var(--ui-blinds-c-5); }
-				&:nth-of-type(6) { --_bg: var(--ui-blinds-bg-6); --_c: var(--ui-blinds-c-6); }
-
-				& > a {
-					color: inherit;
-					font-size: var(--ui-blinds-heading-fz, 1.17em);
-					text-decoration: none;
-				}
-				&:not(:target):not(.--open) {
-					& > a {
-						block-size: 100%;
-						display: block;
-						padding-inline: var(--ui-blinds-pb);
-						& + * { display: none; }
-					}
-				}
+				&::-webkit-details-marker { display: none; }
 			}
-			@container (min-width: 600px) { 
-				grid-auto-flow: column;
-				& li:not(:target):not(.--open) {
-					box-shadow: var(--ui-blinds-bxsh, -0.25em 0 1em -0.5em rgba(0,0,0,0.5));
-					padding: var(--ui-blinds-pb);
-					writing-mode: vertical-lr;
+			&:not([open]) {
+				box-shadow: var(--ui-blinds-bxsh, -0.25em 0 1em -0.5em rgba(0,0,0,0.5));
+				padding: var(--ui-blinds-pb);
+				writing-mode: vertical-lr;
+				& > summary {
+					block-size: 100%;
+					margin: 0;
+					padding-inline: var(--ui-blinds-pb);
 				}
 			}
 		}

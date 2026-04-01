@@ -1,3 +1,0 @@
-# Blinds
-
-Requires `listTarget.js`
