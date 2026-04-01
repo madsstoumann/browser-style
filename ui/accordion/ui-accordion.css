@@ -6,6 +6,21 @@
  */
 @import '../icon/index.css';
 @layer bs-component {
+	/* Wrapper element */
+	:where(ui-accordion) {
+		display: block;
+		&[no-collapse] {
+			& > .ui-accordion[open] summary,
+			& > ui-accordion-item > .ui-accordion[open] summary {
+				pointer-events: none;
+			}
+		}
+		&[variant~="media"] {
+			container-type: inline-size;
+		}
+	}
+
+	/* Item styles */
 	:where(.ui-accordion) {
 		--ui-accordion-border-style: solid;
 		--ui-accordion-border-width: var(--input-border-width, 1px);
@@ -57,7 +72,7 @@
 				padding-block: 0 var(--ui-accordion-padding-block);
 			}
 		}
-		/* Variants */
+		/* Variants (class-based, applied by parent or directly) */
 		&.--item {
 			--ui-accordion-border-width: 0;
 			--ui-accordion-border-radius: 1em;
@@ -68,41 +83,46 @@
 		&.--no-border { --ui-accordion-border-width: 0; }
 	}
 
-	/* Grouping */
-	.ui-accordion-group {
-		&.--no-collapse {
-			& > .ui-accordion[open] summary {
-				pointer-events: none;
-			}
-		}
+	/* Variant: item — applied via parent attribute */
+	:where(ui-accordion[variant~="item"]) > .ui-accordion,
+	:where(ui-accordion[variant~="item"]) > ui-accordion-item > .ui-accordion {
+		--ui-accordion-border-width: 0;
+		--ui-accordion-border-radius: 1em;
+		--ui-accordion-shadow: 0 1em 4em color-mix(in srgb, CanvasText 10%, transparent);
+		--ui-accordion-margin-end: 2em;
+		--ui-accordion-padding-inline: 2.5ch;
 	}
 
-	/* With Media Wrapper */
-	.ui-accordion-media {
-		container-type: inline-size;
-			.ui-accordion-group {
-			@container (inline-size > 650px) {
-				display: grid;
-				grid-template-columns: 1fr 1fr;
-				position: relative;
-				& > .ui-accordion {
-					grid-column: 1;
-					&[open]::details-content {
-						display: contents;
-					}
-					&[open] summary + div > :is(img, video, picture) {
-						animation: accordion-media-in var(--ui-accordion-media-duration) ease;
-						block-size: auto;
-						inline-size: calc(50% - var(--ui-accordion-gap));
-						inset-block-start: 0;
-						inset-inline-end: 0;
-						object-fit: cover;
-						position: absolute;
-					}
+	/* Variant: media */
+	@container (inline-size > 650px) {
+		:where(ui-accordion[variant~="media"]) {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			position: relative;
+			& > .ui-accordion,
+			& > ui-accordion-item > .ui-accordion {
+				grid-column: 1;
+				&[open]::details-content {
+					display: contents;
+				}
+				&[open] summary + div > :is(img, video, picture) {
+					animation: accordion-media-in var(--ui-accordion-media-duration, .6s) ease;
+					block-size: auto;
+					inline-size: calc(50% - var(--ui-accordion-gap, 2rem));
+					inset-block-start: 0;
+					inset-inline-end: 0;
+					object-fit: cover;
+					position: absolute;
 				}
 			}
 		}
 	}
+
+	/* Web component item — renders inline (light DOM) */
+	:where(ui-accordion-item) {
+		display: contents;
+	}
+
 	@keyframes accordion-media-in {
 		from { opacity: 0; scale: 1.02; }
 	}

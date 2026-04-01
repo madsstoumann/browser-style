@@ -8,8 +8,9 @@ A CSS-first accordion component built on native `<details>` and `<summary>` elem
 - Exclusive open behavior via the HTML `name` attribute (no JS needed)
 - Smooth open/close transitions via `::details-content`
 - Light/dark mode support via design tokens
-- Variants: default, `--item` (card-style), `--no-border`
-- Optional `<ui-accordion>` / `<ui-accordion-item>` web components for framework use
+- Variants: `item` (card-style), `media` (side-by-side layout)
+- `no-collapse` attribute to ensure one item stays open
+- Optional `<ui-accordion-item>` web component for framework use
 - Works standalone or with `@browser.style/base` for full theming
 
 ---
@@ -50,36 +51,32 @@ Or via CSS `@import`:
 @import '@browser.style/accordion/style';
 ```
 
-Then use native `<details>` elements:
+Wrap items in `<ui-accordion>` — it's a plain HTML element that works as a structural wrapper even without JavaScript:
 
 ```html
-<details class="ui-accordion" name="faq">
-  <summary>How do I reset my password?</summary>
-  <div>
-    <p>Go to the login page and click "Forgot Password".</p>
-  </div>
-</details>
-
-<details class="ui-accordion" name="faq">
-  <summary>What payment methods do you accept?</summary>
-  <div>
-    <p>We accept Visa, Mastercard, PayPal, and Apple Pay.</p>
-  </div>
-</details>
+<ui-accordion>
+  <details class="ui-accordion" name="faq">
+    <summary>How do I reset my password?</summary>
+    <div>
+      <p>Go to the login page and click "Forgot Password".</p>
+    </div>
+  </details>
+  <details class="ui-accordion" name="faq">
+    <summary>What payment methods do you accept?</summary>
+    <div>
+      <p>We accept Visa, Mastercard, PayPal, and Apple Pay.</p>
+    </div>
+  </details>
+</ui-accordion>
 ```
 
 The `name` attribute groups items — only one can be open at a time (native browser behavior, no JS).
 
-To add an animated icon indicator:
+To add an animated icon indicator, use `<ui-icon>` inside the summary:
 
 ```html
-<details class="ui-accordion" name="faq">
-  <summary>Question?<ui-icon type="plus-minus"></ui-icon></summary>
-  <div>Answer.</div>
-</details>
+<summary>Question?<ui-icon type="plus-minus"></ui-icon></summary>
 ```
-
-> **Note**: `<ui-icon>` is a web component from `@browser.style/icon`. If you prefer CSS-only, you can omit it or use your own icon solution.
 
 ---
 
@@ -102,35 +99,34 @@ import '@browser.style/accordion';
 </ui-accordion>
 ```
 
-The web component renders the **exact same** native `<details>` + `<summary>` HTML into the light DOM. It's a convenience wrapper, not a replacement.
+The web component renders the **exact same** native `<details class="ui-accordion">` + `<summary>` HTML into the light DOM. It's a convenience wrapper, not a replacement — the CSS is identical in both modes.
+
+The `name` attribute on `<ui-accordion>` automatically propagates to all child `<details>` elements.
 
 #### Attributes
 
 **`<ui-accordion>`**
 
-| Attribute | Description |
-|-----------|-------------|
-| `name` | Groups items for exclusive open behavior (maps to `<details name>`) |
-| `variant` | Applies a variant to all child items (e.g. `"item"`) |
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `name` | string | Groups items for exclusive open behavior (propagated to `<details>`) |
+| `variant` | string | Space-separated variants: `"item"`, `"media"`, `"item media"` |
+| `no-collapse` | boolean | Ensures one item always stays open |
 
 **`<ui-accordion-item>`**
 
-| Attribute | Description |
-|-----------|-------------|
-| `label` | The summary/heading text (required) |
-| `open` | Opens this item by default |
-| `icon` | Icon type for the indicator (default: `"plus-minus"`) |
-| `variant` | Per-item variant override (e.g. `"item"`, `"no-border"`) |
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `label` | string | The summary/heading text (required) |
+| `open` | boolean | Opens this item by default |
+| `icon` | string | Icon type for the indicator (default: `"plus-minus"`) |
 
 ---
 
 ### React
 
 ```jsx
-// Import the web component (registers custom elements)
 import '@browser.style/accordion';
-
-// Import styles — your bundler handles CSS
 import '@browser.style/base';
 import '@browser.style/accordion/style';
 
@@ -158,12 +154,14 @@ import '@browser.style/accordion/style';
 
 function FAQ() {
   return (
-    <details className="ui-accordion" name="faq">
-      <summary>How do I reset my password?</summary>
-      <div>
-        <p>Go to the login page and click "Forgot Password".</p>
-      </div>
-    </details>
+    <ui-accordion>
+      <details className="ui-accordion" name="faq">
+        <summary>How do I reset my password?</summary>
+        <div>
+          <p>Go to the login page and click "Forgot Password".</p>
+        </div>
+      </details>
+    </ui-accordion>
   );
 }
 ```
@@ -226,19 +224,18 @@ import '@browser.style/accordion/style';
 Astro, PHP, Rails, Django, or any server framework — use the CSS-only approach:
 
 ```html
----
-// Astro example
-import '@browser.style/base';
-import '@browser.style/accordion/style';
----
+<link rel="stylesheet" href="@browser.style/base/core.css">
+<link rel="stylesheet" href="@browser.style/accordion/index.css">
 
-<details class="ui-accordion" name="faq">
-  <summary>How do I reset my password?</summary>
-  <div><p>Click "Forgot Password" on the login page.</p></div>
-</details>
+<ui-accordion>
+  <details class="ui-accordion" name="faq">
+    <summary>How do I reset my password?</summary>
+    <div><p>Click "Forgot Password" on the login page.</p></div>
+  </details>
+</ui-accordion>
 ```
 
-Add the web component script only if you want the declarative API:
+Add the web component script only if you want the `<ui-accordion-item>` declarative API:
 
 ```html
 <script type="module">
@@ -253,21 +250,25 @@ Add the web component script only if you want the declarative API:
 ### Default
 
 ```html
-<details class="ui-accordion" name="group">
-  <summary>Title</summary>
-  <div>Content</div>
-</details>
+<ui-accordion>
+  <details class="ui-accordion" name="group">
+    <summary>Title</summary>
+    <div>Content</div>
+  </details>
+</ui-accordion>
 ```
 
-### Card style (`--item`)
+### Card style (`variant="item"`)
 
 Adds shadow, border radius, spacing, and removes the border:
 
 ```html
-<details class="ui-accordion --item" name="group">
-  <summary>Title</summary>
-  <div>Content</div>
-</details>
+<ui-accordion variant="item" name="group">
+  <details class="ui-accordion">
+    <summary>Title</summary>
+    <div>Content</div>
+  </details>
+</ui-accordion>
 ```
 
 Web component:
@@ -278,13 +279,47 @@ Web component:
 </ui-accordion>
 ```
 
-### No border (`--no-border`)
+### Media layout (`variant="media"`)
+
+At wider viewports, shows content beside a media panel:
 
 ```html
-<details class="ui-accordion --no-border">
-  <summary>Title</summary>
-  <div>Content</div>
-</details>
+<ui-accordion variant="media" name="media">
+  <details class="ui-accordion" open>
+    <summary>Title</summary>
+    <div>
+      <p>Description text</p>
+      <img src="photo.jpg" alt="Photo">
+    </div>
+  </details>
+</ui-accordion>
+```
+
+### No-collapse (`no-collapse`)
+
+Keeps one item always open — the open item's summary becomes non-interactive:
+
+```html
+<ui-accordion no-collapse name="always-one">
+  <details class="ui-accordion" open>
+    <summary>Always visible</summary>
+    <div>This item cannot be closed while others are collapsed.</div>
+  </details>
+  <details class="ui-accordion">
+    <summary>Collapsible</summary>
+    <div>This can be toggled.</div>
+  </details>
+</ui-accordion>
+```
+
+### Combining variants
+
+Variants can be combined:
+
+```html
+<ui-accordion variant="media" no-collapse name="combined">
+  ...
+</ui-accordion>
 ```
 
 ---
@@ -332,49 +367,6 @@ Override accordion-specific tokens for targeted changes:
 | `--ui-accordion-padding-inline` | `0` | Horizontal padding |
 | `--ui-accordion-duration` | `var(--duration-slow, .3s)` | Open/close animation speed |
 | `--ui-accordion-media-duration` | `.6s` | Media image transition speed |
-
----
-
-## Grouping
-
-### Exclusive open (accordion behavior)
-
-Use the `name` attribute — native HTML, no JS:
-
-```html
-<details class="ui-accordion" name="faq">...</details>
-<details class="ui-accordion" name="faq">...</details>
-<details class="ui-accordion" name="faq">...</details>
-```
-
-### No-collapse group
-
-Wrap in `.ui-accordion-group.--no-collapse` to keep one item always open:
-
-```html
-<div class="ui-accordion-group --no-collapse">
-  <details class="ui-accordion" name="always-one" open>...</details>
-  <details class="ui-accordion" name="always-one">...</details>
-</div>
-```
-
-### Media layout
-
-At wider viewports, shows content beside a media panel:
-
-```html
-<div class="ui-accordion-media">
-  <div class="ui-accordion-group">
-    <details class="ui-accordion" name="media" open>
-      <summary>Title</summary>
-      <div>
-        <p>Description text</p>
-        <img src="photo.jpg" alt="Photo">
-      </div>
-    </details>
-  </div>
-</div>
-```
 
 ---
 

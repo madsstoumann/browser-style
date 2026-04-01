@@ -9,72 +9,73 @@ class UiAccordionItem extends HTMLElement {
 	static observedAttributes = ['label', 'open', 'icon'];
 
 	connectedCallback() {
-		this.render();
+		if (!this.querySelector('details')) this.render();
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
-		if (oldValue !== newValue && this.isConnected) this.render();
+		if (oldValue === newValue || !this.isConnected) return;
+		const details = this.querySelector('details');
+		if (!details) return;
+
+		if (name === 'open') {
+			details.open = this.hasAttribute('open');
+		} else if (name === 'label') {
+			const summary = details.querySelector('summary');
+			if (summary) {
+				const icon = summary.querySelector('ui-icon');
+				summary.textContent = newValue || '';
+				if (icon) summary.appendChild(icon);
+			}
+		} else if (name === 'icon') {
+			const icon = details.querySelector('summary ui-icon');
+			if (icon) icon.setAttribute('type', newValue || 'plus-minus');
+		}
 	}
 
 	render() {
 		const label = this.getAttribute('label') || '';
 		const icon = this.getAttribute('icon') || 'plus-minus';
 		const isOpen = this.hasAttribute('open');
-		const variant = this.getAttribute('variant') || '';
-		const name = this.closest('ui-accordion')?.getAttribute('name') || '';
+		const parent = this.closest('ui-accordion');
+		const name = parent?.getAttribute('name') || '';
 
-		const details = this.querySelector('details') || document.createElement('details');
-		const isNew = !details.parentNode;
-
-		const classes = ['ui-accordion', ...variant.split(/\s+/).filter(Boolean).map(v => `--${v}`)].join(' ');
-		details.className = classes;
+		const details = document.createElement('details');
+		details.className = 'ui-accordion';
 		if (name) details.setAttribute('name', name);
 		if (isOpen) details.open = true;
 
-		if (isNew) {
-			const summary = document.createElement('summary');
-			const content = document.createElement('div');
+		const summary = document.createElement('summary');
+		summary.innerHTML = `${label}<ui-icon type="${icon}"></ui-icon>`;
 
-			summary.innerHTML = `${label}<ui-icon type="${icon}"></ui-icon>`;
-
-			/* Move slotted content into the content div */
-			while (this.firstChild && this.firstChild !== details) {
-				content.appendChild(this.firstChild);
-			}
-
-			details.appendChild(summary);
-			details.appendChild(content);
-			this.appendChild(details);
-		} else {
-			const summary = details.querySelector('summary');
-			if (summary) summary.innerHTML = `${label}<ui-icon type="${icon}"></ui-icon>`;
+		const content = document.createElement('div');
+		while (this.firstChild) {
+			content.appendChild(this.firstChild);
 		}
+
+		details.appendChild(summary);
+		details.appendChild(content);
+		this.appendChild(details);
 	}
 }
 
 class UiAccordion extends HTMLElement {
-	static observedAttributes = ['name', 'variant'];
+	static observedAttributes = ['name'];
 
 	connectedCallback() {
-		this.propagateAttributes();
+		this.propagateName();
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
-		if (oldValue !== newValue && this.isConnected) this.propagateAttributes();
+		if (name === 'name' && oldValue !== newValue && this.isConnected) {
+			this.propagateName();
+		}
 	}
 
-	propagateAttributes() {
+	propagateName() {
 		const name = this.getAttribute('name');
-		const variant = this.getAttribute('variant');
-
-		for (const item of this.querySelectorAll('ui-accordion-item')) {
-			if (name && !item.hasAttribute('name')) {
-				const details = item.querySelector('details');
-				if (details) details.setAttribute('name', name);
-			}
-			if (variant && !item.hasAttribute('variant')) {
-				item.setAttribute('variant', variant);
-			}
+		if (!name) return;
+		for (const details of this.querySelectorAll('details.ui-accordion')) {
+			details.setAttribute('name', name);
 		}
 	}
 }
