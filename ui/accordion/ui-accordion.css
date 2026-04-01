@@ -1,6 +1,6 @@
 /**
  * ui-accordion
- * @version 3.0.0
+ * @version 3.0.1
  * @date 2026-04-01
  * @author Mads Stoumann
  */
@@ -17,6 +17,7 @@
 		--ui-accordion-pb: 1.5ch;
 		--ui-accordion-pi: 0;
 		--ui-accordion-trsdu: .3s;
+		--ui-accordion-media-trsdu: .6s;
 		border-radius: var(--ui-accordion-bdrs);
 		box-shadow: var(--ui-accordion-bxsh);
 		interpolate-size: allow-keywords;
@@ -88,7 +89,8 @@
 					&[open]::details-content {
 						display: contents;
 					}
-					& summary + div > :is(img, video, picture) {
+					&[open] summary + div > :is(img, video, picture) {
+						animation: accordion-media-in var(--ui-accordion-media-trsdu) ease;
 						block-size: auto;
 						inline-size: calc(50% - var(--ui-accordion-cg));
 						inset-block-start: 0;
@@ -99,5 +101,8 @@
 				}
 			}
 		}
+	}
+	@keyframes accordion-media-in {
+		from { opacity: 0; scale: 1.02; }
 	}
 }
