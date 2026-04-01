@@ -1,46 +1,65 @@
 /**
- * ui-accordion
- * @version 2.0.0
+ * ui-badge
+ * @version 3.0.0
  * @date 2026-04-01
  * @author Mads Stoumann
  */
 @layer bs-component {
-	:where(.ui-badge) {
-		--ui-badge-sz: 1.5rem;
-		background: var(--ui-badge-bg, var(--CanvasText));
-		border-radius: 50%;
-		border: 1px solid var(--ui-badge-bdc, transparent);
-		color: var(--ui-badge-c, Canvas);
+	:where(.ui-badge, ui-badge) {
+		--ui-badge-size: 1.5rem;
+		--ui-badge-bg: var(--color-text, hsl(0, 0%, 15%));
+		--ui-badge-color: var(--color-surface, hsl(0, 0%, 100%));
+		--ui-badge-border-color: transparent;
+		--ui-badge-border-radius: var(--radius-circle, 50%);
+		--ui-badge-font-size: .675rem;
+		background: var(--ui-badge-bg);
+		border-radius: var(--ui-badge-border-radius);
+		border: 1px solid var(--ui-badge-border-color);
+		color: var(--ui-badge-color);
 		display: inline-grid;
-		font-size: var(--ui-badge-fs, .675rem);
-		height: var(--ui-badge-sz);
-		inset-block-start: 0px;
-		inset-inline-end: 0px;
+		font-size: var(--ui-badge-font-size);
+		height: var(--ui-badge-size);
+		inset-block-start: 0;
+		inset-inline-end: 0;
 		line-height: 0;
-		min-width: var(--ui-badge-sz);
+		min-width: var(--ui-badge-size);
 		place-content: center;
 		position: absolute;
 		text-box: cap alphabetic;
 		translate: 50% -50%;
-		&.--inline {
-			margin-inline-start: 0.6ch;
-			position: static;
-			translate: 0;
-		}
-		&.--text {
-			border-radius: var(--input-bdrs);
-			height: auto;
-			line-height: 1;
-			padding: .33ch .66ch;
-		}
-		&.--bottom-right {
-			inset-block: auto 0;
-			translate: 0 0;
-		}
-		&.--top-right {
-			translate: 0 0;
-		}
 		&:dir(rtl) { translate: -50% 0; }
 	}
-	*:has(.ui-badge) { position: relative; }
+
+	/* Variant: inline */
+	:where(.ui-badge).--inline,
+	:where(ui-badge[variant~="inline"]) {
+		margin-inline-start: 0.6ch;
+		position: static;
+		translate: 0;
+	}
+
+	/* Variant: text */
+	:where(.ui-badge).--text,
+	:where(ui-badge[variant~="text"]) {
+		--ui-badge-border-radius: var(--input-radius, var(--radius-sm, 0.25em));
+		height: auto;
+		line-height: 1;
+		padding: .33ch .66ch;
+	}
+
+	/* Variant: bottom-right */
+	:where(.ui-badge).--bottom-right,
+	:where(ui-badge[variant~="bottom-right"]) {
+		inset-block: auto 0;
+		translate: 0 0;
+	}
+
+	/* Variant: top-right */
+	:where(.ui-badge).--top-right,
+	:where(ui-badge[variant~="top-right"]) {
+		translate: 0 0;
+	}
+
+	/* Auto-position parent */
+	*:has(> .ui-badge, > ui-badge) { position: relative; }
 }
