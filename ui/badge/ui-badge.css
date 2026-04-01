@@ -1,3 +1,9 @@
+/**
+ * ui-accordion
+ * @version 2.0.0
+ * @date 2026-04-01
+ * @author Mads Stoumann
+ */
 @layer bs-component {
 	:where(.ui-badge) {
 		--ui-badge-sz: 1.5rem;
@@ -10,9 +16,11 @@
 		height: var(--ui-badge-sz);
 		inset-block-start: 0px;
 		inset-inline-end: 0px;
+		line-height: 0;
 		min-width: var(--ui-badge-sz);
 		place-content: center;
 		position: absolute;
+		text-box: cap alphabetic;
 		translate: 50% -50%;
 		&.--inline {
 			margin-inline-start: 0.6ch;
