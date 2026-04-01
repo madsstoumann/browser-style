@@ -20,64 +20,53 @@
 	<h2>Badge</h2>
 	<p>
 		A badge is a small status or notification symbol that can be added to an avatar, button, chip, or other components.
+		Use the <code>&lt;ui-badge&gt;</code> element with <code>color</code> and <code>variant</code> attributes.
 	</p>
 
-	<h3>CSS-only (class-based)</h3>
-	<p>Use any tag with a <code>class</code> of <code>ui-badge</code>. Modifiers: <code>.--inline</code>, <code>.--text</code>, <code>.--bottom-right</code>, <code>.--top-right</code>.</p>
+	<h3>Basic</h3>
 
 	<div class="ui-avatar">
 		<abbr title="Kim Cronos">KC</abbr>
 		<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-		<b class="ui-badge bg-success --top-right">99</b>
+		<ui-badge color="success" variant="top-right">99</ui-badge>
 	</div>
 	<div class="ui-avatar">
 		<abbr title="Kim Cronos">KC</abbr>
 		<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-		<b class="ui-badge bg-info --bottom-right">👍</b>
+		<ui-badge color="info" variant="bottom-right">👍</ui-badge>
 	</div>
 
-	<p><button type="button">Button with badge<b class="ui-badge bg-info">5</b></button></p>
-	<p><span class="ui-chip">Chip with badge<b class="ui-badge bg-error">4</b></span></p>
-	<p><span class="ui-chip">Inline badge<b class="ui-badge bg-warning --inline">4</b></span></p>
-	<p><span class="ui-chip">With text<b class="ui-badge --text bg-success --light">new</b></span></p>
+	<p><button type="button">Button with badge<ui-badge color="info">5</ui-badge></button></p>
+	<p><span class="ui-chip">Chip with badge<ui-badge color="error">4</ui-badge></span></p>
+	<p><span class="ui-chip">Inline badge<ui-badge color="warning" variant="inline">4</ui-badge></span></p>
+	<p><span class="ui-chip">With text<ui-badge color="success" variant="text">new</ui-badge></span></p>
 
-	<h3>Web Component (<code>&lt;ui-badge&gt;</code>)</h3>
-	<p>Use the <code>&lt;ui-badge&gt;</code> element with a <code>variant</code> attribute instead of modifier classes.</p>
+	<h3>Colors</h3>
+	<p>
+		<ui-badge color="info" variant="inline">info</ui-badge>
+		<ui-badge color="success" variant="inline">success</ui-badge>
+		<ui-badge color="warning" variant="inline">warning</ui-badge>
+		<ui-badge color="error" variant="inline">error</ui-badge>
+		<ui-badge variant="inline">default</ui-badge>
+	</p>
 
-	<div class="ui-avatar">
-		<abbr title="Kim Cronos">KC</abbr>
-		<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-		<ui-badge class="bg-success" variant="top-right">99</ui-badge>
-	</div>
-	<div class="ui-avatar">
-		<abbr title="Kim Cronos">KC</abbr>
-		<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-		<ui-badge class="bg-info" variant="bottom-right">👍</ui-badge>
-	</div>
-
-	<p><button type="button">Button with badge<ui-badge class="bg-info">5</ui-badge></button></p>
-	<p><span class="ui-chip">Chip with badge<ui-badge class="bg-error">4</ui-badge></span></p>
-	<p><span class="ui-chip">Inline badge<ui-badge class="bg-warning" variant="inline">4</ui-badge></span></p>
-	<p><span class="ui-chip">With text<ui-badge class="bg-success" variant="text">new</ui-badge></span></p>
-
-	<br>
 	<h3>With opposite color-scheme</h3>
 	<div class="bdrs-md cs-opposite pb-3 pi-3">
 		<div class="ui-avatar">
 			<abbr title="Kim Cronos">KC</abbr>
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-			<ui-badge class="bg-success" variant="top-right">99</ui-badge>
+			<ui-badge color="success" variant="top-right">99</ui-badge>
 		</div>
 		<div class="ui-avatar">
 			<abbr title="Kim Cronos">KC</abbr>
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-			<ui-badge class="bg-info" variant="bottom-right">👍</ui-badge>
+			<ui-badge color="info" variant="bottom-right">👍</ui-badge>
 		</div>
 
-		<p><button type="button">Button with badge<ui-badge class="bg-info">5</ui-badge></button></p>
-		<p><span class="ui-chip">Chip with badge<ui-badge class="bg-error">4</ui-badge></span></p>
-		<p><span class="ui-chip">Inline badge<ui-badge class="bg-warning" variant="inline">4</ui-badge></span></p>
-		<p><span class="ui-chip">With text<ui-badge class="bg-success" variant="text">new</ui-badge></span></p>
+		<p><button type="button">Button with badge<ui-badge color="info">5</ui-badge></button></p>
+		<p><span class="ui-chip">Chip with badge<ui-badge color="error">4</ui-badge></span></p>
+		<p><span class="ui-chip">Inline badge<ui-badge color="warning" variant="inline">4</ui-badge></span></p>
+		<p><span class="ui-chip">With text<ui-badge color="success" variant="text">new</ui-badge></span></p>
 	</div>
 
 	<br>
@@ -86,18 +75,18 @@
 		<div class="ui-avatar">
 			<abbr title="Kim Cronos">KC</abbr>
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-			<ui-badge class="bg-success" variant="top-right">99</ui-badge>
+			<ui-badge color="success" variant="top-right">99</ui-badge>
 		</div>
 		<div class="ui-avatar">
 			<abbr title="Kim Cronos">KC</abbr>
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-			<ui-badge class="bg-info" variant="bottom-right">👍</ui-badge>
+			<ui-badge color="info" variant="bottom-right">👍</ui-badge>
 		</div>
 
-		<p><button type="button">Button with badge<ui-badge class="bg-info">5</ui-badge></button></p>
-		<p><span class="ui-chip">Chip with badge<ui-badge class="bg-error">4</ui-badge></span></p>
-		<p><span class="ui-chip">Inline badge<ui-badge class="bg-warning" variant="inline">4</ui-badge></span></p>
-		<p><span class="ui-chip">With text<ui-badge class="bg-success" variant="text">new</ui-badge></span></p>
+		<p><button type="button">Button with badge<ui-badge color="info">5</ui-badge></button></p>
+		<p><span class="ui-chip">Chip with badge<ui-badge color="error">4</ui-badge></span></p>
+		<p><span class="ui-chip">Inline badge<ui-badge color="warning" variant="inline">4</ui-badge></span></p>
+		<p><span class="ui-chip">With text<ui-badge color="success" variant="text">new</ui-badge></span></p>
 	</div>
 </body>
 </html>
