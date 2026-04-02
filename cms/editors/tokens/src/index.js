@@ -1,5 +1,5 @@
-import '/ui/design-token/index.js';
-import { buildRegistry, exportTokensToCSS, toCssValue } from '/ui/design-token-utils/index.js';
+import '/ui/design-tokens/core/index.js';
+import { buildRegistry, exportTokensToCSS, toCssValue } from '/ui/design-tokens/utils/index.js';
 
 const ICONS = {
 	up: {

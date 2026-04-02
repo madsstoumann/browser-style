@@ -89,8 +89,8 @@ Each component follows a consistent structure:
 ### Form Controls
 `button`, `button-group`, `checkbox`, `radio`, `select`, `range`, `input-button`, `color-input`, `number-snapper`, `circular-range`
 
-### Data Display & Entry
-`table`, `data-grid`, `data-mapper`, `data-entry`, `data-chart`, `bar-chart`, `column-chart`, `area-chart`, `candlestick-chart`
+### Data Display & Entry (`ui/data/`)
+`chart`, `grid`, `entry`, `mapper` (chart demos in `data/chart/demos/`)
 
 ### Layout & Navigation
 `layout`, `accordion`, `tabs`, `tab-cordion`, `breadcrumbs`, `menu`, `nav-compass`, `carousel`, `bento`
@@ -98,14 +98,14 @@ Each component follows a consistent structure:
 ### Cards & Content
 `card`, `card-expand`, `card-flip`, `content-card`, `product-card`, `article`, `blockquote`, `chat`
 
-### Design Token System
-`design-token`, `design-token-editors`, `design-token-utils`, `design-token-styles`
+### Design Token System (`ui/design-tokens/`)
+`core`, `editors`, `utils`, `styles`
 
 ### Color Tools
 `color-picker`, `color-palette`, `color-grid`, `color-input`, `color-compare`, `color-swatch`, `color-visualizer-rgb`
 
-### Weather Components
-`weather-widget`, `weather-overview`, `weather-forecast-*`, `weather-radar`, `weather-current`, `weather-alert`
+### Weather Components (`ui/weather/`)
+`widget`, `widgets`, `overview`, `forecast-days`, `forecast-hours`, `feelslike`, `humidity`, `moonphase`, `precipitation`, `pressure`, `sunphase`, `temperature`, `uv`, `visibility`, `wind`
 
 ### Interactive
 `piano-keys`, `word-wheel`, `xy`, `color-picker`
@@ -189,10 +189,10 @@ my-component::part(button) {
 Some packages depend on others:
 
 ```
-design-token
-  └── design-token-utils (toCssValue)
-  └── design-token-styles (shared CSS)
-  └── design-token-editors (lazy loaded)
+design-tokens/ (ui/design-tokens/)
+  └── utils (toCssValue)
+  └── styles (shared CSS)
+  └── editors (lazy loaded)
 
 editor-* (in cms/editors/)
   └── editor-shared (common utilities)

@@ -72,12 +72,13 @@ The `ui/` folder contains component packages organized by function:
 | Category | Examples |
 |----------|----------|
 | **Form Controls** | button, checkbox, radio, select, range, input-button |
-| **Data Display** | table, data-grid, data-mapper, data-entry, data-chart |
+| **Data** (`ui/data/`) | chart, grid, entry, mapper |
 | **Navigation** | layout, nav-compass, breadcrumbs, tabs, menu |
 | **Cards/Content** | card, content-card, card-expand, product-card |
-| **Design Tokens** | design-token, design-token-editors, design-token-utils |
-| **Visualization** | color-picker, color-palette, data-chart, bar-chart |
-| **Weather** | weather-widget, weather-overview, weather-forecast-* |
+| **Design Tokens** (`ui/design-tokens/`) | core, editors, styles, utils |
+| **Visualization** | color-picker, color-palette |
+| **Weather** (`ui/weather/`) | widget, overview, forecast-*, feelslike, etc. |
+| **GUI** (`ui/gui/`) | app, control, group, panel, tabs, icon, icon-button |
 | **CMS Editors** | editor-card, editor-csp, editor-manifest (in `cms/editors/`) |
 | **Interactive** | piano-keys, rich-text, xy, color-picker |
 
@@ -110,7 +111,7 @@ npm run update-peers
   "name": "@browser-style/workspace",
   "private": true,
   "type": "module",
-  "workspaces": ["ui/*", "cms/baseline", "cms/editors/*"]
+  "workspaces": ["ui/*", "ui/weather/*", "ui/gui/*", "ui/data/*", "ui/design-tokens/*", "cms/baseline", "cms/editors/*"]
 }
 ```
 

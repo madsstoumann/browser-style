@@ -527,10 +527,10 @@ handleTokenChange({ token, cssVar }) {
 
 | Import | Source | Purpose |
 |--------|--------|---------|
-| `design-token` | `/ui/design-token/index.js` | Individual token component |
-| `buildRegistry` | `/ui/design-token-utils/index.js` | Build token registry |
-| `exportTokensToCSS` | `/ui/design-token-utils/index.js` | Generate CSS from tokens |
-| `toCssValue` | `/ui/design-token-utils/index.js` | Convert token to CSS value |
+| `design-token` | `/ui/design-tokens/core/index.js` | Individual token component |
+| `buildRegistry` | `/ui/design-tokens/utils/index.js` | Build token registry |
+| `exportTokensToCSS` | `/ui/design-tokens/utils/index.js` | Generate CSS from tokens |
+| `toCssValue` | `/ui/design-tokens/utils/index.js` | Convert token to CSS value |
 
 ## Shadow DOM Structure
 

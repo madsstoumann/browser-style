@@ -4,6 +4,10 @@
   "type": "module",
   "workspaces": [
     "ui/*",
+    "ui/weather/*",
+    "ui/gui/*",
+    "ui/data/*",
+    "ui/design-tokens/*",
     "cms/baseline",
     "cms/editors/*"
   ],
