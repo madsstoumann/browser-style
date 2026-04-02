@@ -174,7 +174,47 @@ This element:
 - Hosts variant attributes: `variant="pills"`, `no-collapse`, etc.
 - Becomes a proper web component when JS is loaded
 
-### 5. Create the web component (Light DOM)
+### 5. Handle container queries (`<cq-box>`)
+
+If the component uses `container-type` on its wrapper element **and** has `@container` rules, it needs a `<cq-box>` inner wrapper (a container can't query its own size).
+
+**CSS:** Target `> cq-box` inside `@container` rules:
+
+```css
+@container (inline-size > 650px) {
+  :where(ui-[component][variant~="responsive"]) > cq-box {
+    /* responsive layout */
+  }
+}
+```
+
+**CSS-only HTML:** Document that users must add `<cq-box>` manually.
+
+**Web component JS:** Auto-insert `<cq-box>` when the relevant variant is set:
+
+```javascript
+ensureCqBox() {
+  const needs = (this.getAttribute('variant') || '').includes('media');
+  if (needs && !this.querySelector(':scope > cq-box')) {
+    const box = document.createElement('cq-box');
+    while (this.firstChild) box.appendChild(this.firstChild);
+    this.appendChild(box);
+  }
+}
+```
+
+Call `ensureCqBox()` from `connectedCallback()` and when the `variant` attribute changes.
+
+When propagating attributes to children, check for `cq-box` first:
+
+```javascript
+const container = this.querySelector(':scope > cq-box') || this;
+for (const child of container.children) { /* ... */ }
+```
+
+Reference: `ui/accordion/` demonstrates this pattern fully (media variant).
+
+### 6. Create the web component (Light DOM)
 
 #### 5a. Pattern: parent + item components
 
@@ -248,7 +288,7 @@ export { Ui[Component], Ui[Component]Item };
 }
 ```
 
-### 6. Create `package.json`
+### 7. Create `package.json`
 
 ```json
 {
@@ -297,7 +337,7 @@ export { Ui[Component], Ui[Component]Item };
 
 Add additional peer dependencies as needed (e.g., `@browser.style/icon`).
 
-### 7. Write `readme.md`
+### 8. Write `readme.md`
 
 Follow this structure (see `ui/accordion/readme.md` as reference):
 
@@ -315,7 +355,7 @@ Follow this structure (see `ui/accordion/readme.md` as reference):
 12. **Accessibility** - native semantics, keyboard support, ARIA notes
 13. **Browser support** - feature requirements and graceful degradation
 
-### 8. Update demo HTML
+### 9. Update demo HTML
 
 Update `ui/$ARGUMENTS/index.html` to demonstrate both modes:
 - CSS-only examples
@@ -323,7 +363,7 @@ Update `ui/$ARGUMENTS/index.html` to demonstrate both modes:
 - All variants
 - Token customization example
 
-### 9. Verify
+### 10. Verify
 
 Run the following checks:
 
@@ -334,7 +374,7 @@ Run the following checks:
 5. **CSS duplication**: No variant tokens defined in multiple selectors
 6. **Package valid**: `cd ui/$ARGUMENTS && npm pack --dry-run` lists expected files
 
-### 10. Final checklist
+### 11. Final checklist
 
 Use `AskUserQuestion` to confirm with the user before committing:
 

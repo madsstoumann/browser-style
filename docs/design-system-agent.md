@@ -165,6 +165,72 @@ From `docs/token-audit.md`, ranked by hardcoded value count:
 
 ---
 
+## Container Query Pattern: `<cq-box>`
+
+A CSS container can't query its own size — `@container` rules must target a **descendant**. When a component uses `container-type: inline-size` on its wrapper element and needs `@container` rules for layout changes, insert a `<cq-box>` element between the container host and the queryable children.
+
+**`<cq-box>`** is a generic, zero-layout wrapper (`display: contents`) defined in `ui/base/webcomponents.css`. It exists solely to be the "measurable descendant" inside a container query host.
+
+### When to use
+
+Any component that:
+1. Sets `container-type` on its outer element (e.g., `<ui-accordion>`)
+2. Uses `@container` rules to restyle its children at certain widths
+
+### Pattern
+
+**CSS:** Set `container-type` on the custom element, write `@container` rules targeting `> cq-box`:
+
+```css
+:where(ui-component[variant~="responsive"]) {
+  container-type: inline-size;
+}
+@container (inline-size > 650px) {
+  :where(ui-component[variant~="responsive"]) > cq-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+```
+
+**CSS-only HTML** — developers add `<cq-box>` manually:
+
+```html
+<ui-component variant="responsive">
+  <cq-box>
+    <!-- children here -->
+  </cq-box>
+</ui-component>
+```
+
+**Web component JS** — auto-insert `<cq-box>` when the variant requires it:
+
+```javascript
+ensureCqBox() {
+  const needs = (this.getAttribute('variant') || '').includes('media');
+  const existing = this.querySelector(':scope > cq-box');
+  if (needs && !existing) {
+    const box = document.createElement('cq-box');
+    while (this.firstChild) box.appendChild(this.firstChild);
+    this.appendChild(box);
+  }
+}
+```
+
+### Components using container queries
+
+These components use `container-type` and may need `<cq-box>` during conversion:
+
+| Component | Has `@container` rules | `cq-box` status |
+|-----------|----------------------|-----------------|
+| `accordion` (media variant) | Yes | Done (v4) |
+| `carousel` | Yes | Needs conversion |
+| `product-list-grid` | Yes | Needs conversion |
+| `testimonial` | Yes | Needs conversion |
+| `bento`, `cinema`, `gallery`, `slideshow` | No (container-type only) | May need during conversion |
+
+---
+
 ## Content Width Token Mapping
 
 Components with hardcoded `max-width`/`max-inline-size` should use `--width-*` tokens:
