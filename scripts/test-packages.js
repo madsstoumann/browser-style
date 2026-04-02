@@ -5,13 +5,14 @@ import { fileURLToPath } from 'url';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const uiPath = join(__dirname, '..', 'ui');
+const editorsPath = join(__dirname, '..', 'cms', 'editors');
 
 const checkPackages = async () => {
   try {
     const dirs = await readdir(uiPath, { withFileTypes: true });
-    
+
     console.log('\nChecking UI packages:\n');
-    
+
     for (const dir of dirs) {
       if (dir.isDirectory()) {
         const hasPackage = existsSync(join(uiPath, dir.name, 'package.json'));
@@ -19,7 +20,22 @@ const checkPackages = async () => {
       }
     }
   } catch (error) {
-    console.error('Error checking packages:', error);
+    console.error('Error checking UI packages:', error);
+  }
+
+  try {
+    const dirs = await readdir(editorsPath, { withFileTypes: true });
+
+    console.log('\nChecking CMS Editor packages:\n');
+
+    for (const dir of dirs) {
+      if (dir.isDirectory()) {
+        const hasPackage = existsSync(join(editorsPath, dir.name, 'package.json'));
+        console.log(`${dir.name}: ${hasPackage ? '✓ has package.json' : '⨯ no package.json'}`);
+      }
+    }
+  } catch (error) {
+    console.error('Error checking CMS Editor packages:', error);
   }
 };
 

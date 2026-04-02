@@ -73,7 +73,7 @@ connectedCallback()
 
 ## Unified Data Model
 
-All card data is stored in a single JSON file: `public/static/data/all-cards.json`. This unified format is compatible with the `web-config-card` component for visual editing.
+All card data is stored in a single JSON file: `public/static/data/all-cards.json`. This unified format is compatible with the `editor-card` component (in `cms/editors/card/`) for visual editing.
 
 ### Card Data Structure
 

@@ -1,0 +1,138 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "headers-config",
+  "title": "🛠️ Headers Config",
+  "description": "HTTP security and privacy headers configuration",
+  "metadata": {
+    "version": "2.1.0",
+    "lastModified": "2026-03-23",
+    "displayField": "internalName",
+    "singleton": true
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "contentTree": {
+      "folder": "Configuration",
+      "path": "Configuration/Headers"
+    },
+    "layout": [
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Content Security Policy",
+        "description": "CSP directives controlling allowed content sources",
+        "collapse": false,
+        "fields": ["internalName", "csp"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Permissions Policy",
+        "description": "Browser feature permissions",
+        "collapse": true,
+        "fields": ["permissions_policy"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Referrer Policy",
+        "description": "Controls how much referrer information is sent with requests",
+        "collapse": true,
+        "fields": ["referrer_policy"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "HSTS",
+        "description": "HTTP Strict Transport Security — forces HTTPS connections",
+        "collapse": true,
+        "fields": ["hsts_max_age", "hsts_include_sub_domains", "hsts_preload"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "CORS",
+        "description": "Cross-Origin Resource Sharing — controls which origins can access resources",
+        "collapse": true,
+        "fields": ["cors"]
+      }
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "internalName": {
+      "type": "string",
+      "title": "Internal Name",
+      "description": "Internal name for CMS editors — not displayed on the front end",
+      "localized": false,
+      "validation": {
+        "required": true
+      }
+    },
+    "title": {
+      "type": "string",
+      "title": "Title",
+      "description": "Editorial label for this configuration",
+      "localized": false
+    },
+    "csp": {
+      "type": "object",
+      "title": "Content Security Policy",
+      "description": "Global Content Security Policy (CSP) configuration",
+      "ui": {
+        "widget": "editor-csp"
+      }
+    },
+    "permissions_policy": {
+      "type": "object",
+      "title": "Permissions-Policy",
+      "description": "Browser feature permissions configuration",
+      "ui": {
+        "widget": "editor-permissions"
+      }
+    },
+    "referrer_policy": {
+      "type": "select",
+      "title": "Referrer-Policy",
+      "description": "Controls how much referrer information is sent with requests",
+      "default": "strict-origin-when-cross-origin",
+      "options": [
+        { "value": "no-referrer", "label": "no-referrer" },
+        { "value": "origin", "label": "origin" },
+        { "value": "origin-when-cross-origin", "label": "origin-when-cross-origin" },
+        { "value": "same-origin", "label": "same-origin" },
+        { "value": "strict-origin", "label": "strict-origin" },
+        { "value": "strict-origin-when-cross-origin", "label": "strict-origin-when-cross-origin" },
+        { "value": "no-referrer-when-downgrade", "label": "no-referrer-when-downgrade" },
+        { "value": "unsafe-url", "label": "unsafe-url" }
+      ]
+    },
+    "hsts_max_age": {
+      "type": "number",
+      "title": "Max Age (seconds)",
+      "description": "Duration the browser should remember to use HTTPS. Recommended: 63072000 (2 years). Start with 86400 (1 day) during setup.",
+      "default": 63072000
+    },
+    "hsts_include_sub_domains": {
+      "type": "boolean",
+      "title": "Include Subdomains",
+      "description": "Apply HSTS to all subdomains. Required for preload list submission.",
+      "default": true
+    },
+    "hsts_preload": {
+      "type": "boolean",
+      "title": "Preload",
+      "description": "Opt-in to the HSTS Preload List. Requires max_age ≥ 31536000 and includeSubDomains enabled.",
+      "default": true
+    },
+    "cors": {
+      "type": "object",
+      "title": "CORS",
+      "description": "Cross-Origin Resource Sharing configuration",
+      "ui": {
+        "widget": "editor-cors"
+      }
+    }
+  },
+  "required": ["title"]
+}

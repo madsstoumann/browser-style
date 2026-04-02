@@ -13,10 +13,14 @@
 ```
 browser-style/
 ├── package.json          Workspace root (npm workspaces)
-├── ui/                   Monorepo containing all components
+├── ui/                   UI component packages
 │   ├── base/             Core CSS package (@browser.style/base)
 │   ├── [component]/      Individual component packages
 │   └── ...
+├── cms/                  CMS tools and integrations
+│   ├── baseline/         Content architecture docs & JSON schemas
+│   ├── editors/          CMS field editor web components (@browser.style/editor-*)
+│   └── integrations/     CMS platform wrappers (Contentful, Umbraco, etc.)
 ├── scripts/              Build and publish utilities
 └── docs/                 Documentation
 ```
@@ -30,7 +34,7 @@ browser-style/
 - Web Components for complex interactive functionality
 
 ### Package Structure
-- **Monorepo**: npm workspaces with `ui/*` as workspace members
+- **Monorepo**: npm workspaces with `ui/*`, `cms/baseline`, and `cms/editors/*` as workspace members
 - **Independent versioning**: Each package versioned separately
 - **Public npm registry**: Published under `@browser.style` scope
 
@@ -68,7 +72,7 @@ The `ui/` folder contains component packages organized by function:
 | **Design Tokens** | design-token, design-token-editors, design-token-utils |
 | **Visualization** | color-picker, color-palette, data-chart, bar-chart |
 | **Weather** | weather-widget, weather-overview, weather-forecast-* |
-| **Web Config** | web-config-card, web-config-csp, web-config-manifest |
+| **CMS Editors** | editor-card, editor-csp, editor-manifest (in `cms/editors/`) |
 | **Interactive** | calculator, piano-keys, rich-text, barcode-scanner |
 
 ## Development
@@ -100,7 +104,7 @@ npm run update-peers
   "name": "@browser-style/workspace",
   "private": true,
   "type": "module",
-  "workspaces": ["ui/*"]
+  "workspaces": ["ui/*", "cms/baseline", "cms/editors/*"]
 }
 ```
 

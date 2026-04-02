@@ -1,0 +1,41 @@
+{
+  "name": "@browser.style/editor-cors",
+  "version": "1.0.0",
+  "description": "A web component to interactively configure CORS headers.",
+  "type": "module",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "dependencies": {
+    "@browser.style/editor-shared": "^1.0.0"
+  },
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src",
+    "index.html",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "cors",
+    "security-headers",
+    "editor"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "cms/editors/cors"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/cms/editors/cors"
+}

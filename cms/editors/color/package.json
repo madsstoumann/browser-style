@@ -1,0 +1,33 @@
+{
+  "name": "@browser.style/editor-color",
+  "version": "1.0.0",
+  "description": "A color palette picker web component for CMS integration. Renders labeled color swatches and emits the selected label.",
+  "type": "module",
+  "main": "./src/index.js",
+  "dependencies": {
+    "@browser.style/editor-shared": "^1.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "editor-color",
+    "color-picker",
+    "color-swatch",
+    "cms"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "cms/editors/color"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/cms/editors/color"
+}

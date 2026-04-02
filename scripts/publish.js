@@ -6,11 +6,11 @@ import { execSync } from 'child_process';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const getPackages = async () => {
-  const uiDir = join(__dirname, '..', 'ui');
-  const dirs = await readdir(uiDir, { withFileTypes: true });
   const packages = [];
 
-  for (const dir of dirs) {
+  const uiDir = join(__dirname, '..', 'ui');
+  const uiDirs = await readdir(uiDir, { withFileTypes: true });
+  for (const dir of uiDirs) {
     if (dir.isDirectory()) {
       try {
         await readFile(join(uiDir, dir.name, 'package.json'));
@@ -20,6 +20,24 @@ const getPackages = async () => {
       }
     }
   }
+
+  const editorsDir = join(__dirname, '..', 'cms', 'editors');
+  try {
+    const editorsDirs = await readdir(editorsDir, { withFileTypes: true });
+    for (const dir of editorsDirs) {
+      if (dir.isDirectory()) {
+        try {
+          await readFile(join(editorsDir, dir.name, 'package.json'));
+          packages.push(`cms/editors/${dir.name}`);
+        } catch {
+          // Skip directories without package.json
+        }
+      }
+    }
+  } catch {
+    // cms/editors directory may not exist
+  }
+
   return packages;
 };
 

@@ -1,0 +1,41 @@
+{
+  "name": "@browser.style/editor-manifest",
+  "version": "1.0.0",
+  "description": "A web component to interactively build and manage a web app manifest (manifest.json).",
+  "type": "module",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "dependencies": {
+    "@browser.style/editor-shared": "^1.0.0"
+  },
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src",
+    "fixtures",
+    "index.html"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "manifest.json",
+    "pwa",
+    "editor"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "cms/editors/manifest"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/cms/editors/manifest"
+}

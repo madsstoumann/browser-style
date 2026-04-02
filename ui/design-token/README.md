@@ -122,7 +122,7 @@ More editors coming soon for gradients, shadows, borders, etc.
 The component works as part of a larger design token system:
 
 ```
-web-config-tokens (container)
+editor-tokens (container, in cms/editors/tokens/)
   ├─ Generates CSS custom properties from all tokens
   ├─ Builds token registry for reference resolution
   └─ Creates multiple <design-token> components

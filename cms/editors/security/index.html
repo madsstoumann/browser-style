@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Editor Security</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Editor Security - Visual editor for security.txt files">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<script type="importmap">
+		{
+			"imports": {
+				"@browser.style/editor-shared": "../shared/index.js"
+			}
+		}
+	</script>
+</head>
+<body>
+	<h1>Editor: security.txt</h1>
+	<p>
+		A visual editor for managing <code>security.txt</code> files.
+		See the <a href="./demo.html">demo page</a> for an example with a security.txt file loaded.
+	</p>
+	<editor-security></editor-security>
+	<script type="module" src="./src/index.js"></script>
+</body>
+</html>

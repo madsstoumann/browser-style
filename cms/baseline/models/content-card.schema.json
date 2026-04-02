@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "content-card",
+  "title": "📰 Content Card",
+  "description": "A polymorphic card component supporting 25 different content types.",
+  "metadata": {
+    "localized": true,
+    "version": "1.0.0",
+    "lastModified": "2026-01-18",
+    "displayField": "internalName"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "internalName": {
+      "type": "string",
+      "title": "Internal Name",
+      "description": "Internal name for CMS editors — not displayed on the front end",
+      "localized": false,
+      "validation": {
+        "required": true
+      }
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "tags": {
+      "type": "tags",
+      "title": "Tags",
+      "description": "Keywords or tags"
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": ["image/*", "video/*"]
+      }
+    },
+    "data": {
+      "type": "object",
+      "title": "Card Data",
+      "description": "Stores complex common data (media, actions) and type-specific content.",
+      "validation": {
+        "required": true
+      },
+      "ui": {
+        "widget": "editor-card"
+      }
+    }
+  },
+  "required": []
+}

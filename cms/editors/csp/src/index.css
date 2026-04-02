@@ -1,0 +1,66 @@
+details {
+	&:has([data-remove]) summary::after { content: ' *'; color: var(--editor-accent-dark); }
+	&:not(:has(:checked)):not(:has(pre)) { display: none; }
+}
+
+label:has(input[data-directive]) {
+	background: var(--csp-manager-remove-bg, hsl(0, 85%, 40%));
+	border-radius: 10ch;
+	color: var(--csp-manager-remove-c, hsl(0, 85%, 950%));
+	font-size: small;
+	justify-self: start;
+	padding: .75ch 2.5ch;
+	&:focus-within { box-shadow: inset 0 0 0 2px var(--csp-manager-remove-bg, hsl(0, 85%, 30%)); outline: 0; }
+}
+
+/* Evaluation styles */
+/* details[data-status="danger"] { border-color: var(--editor-status-danger); }
+details[data-status="warn"] { border-color: var(--editor-status-warn); }
+details[data-status="ok"] { border-color: var(--editor-status-ok); } */
+
+.eval-findings {
+	display: grid;
+	gap: calc(var(--editor-gap) / 2);
+	margin-block: var(--editor-gap);
+}
+
+.eval-finding {
+	border-inline-start: 3px solid;
+	display: block;
+	padding: 1ch 2ch;
+	font-size: small;
+	border-radius: calc(var(--editor-bdrs) / 2);
+	margin: unset;
+}
+
+
+.eval-finding[data-status="danger"] {
+	background: var(--editor-status-danger-bg);
+	border-color: var(--editor-status-danger);
+	color: var(--editor-status-danger);
+}
+
+.eval-finding[data-status="warn"] {
+	background: var(--editor-status-warn-bg);
+	border-color: var(--editor-status-warn);
+	color: var(--editor-status-warn);
+}
+
+.eval-finding[data-status="ok"] {
+	background: var(--editor-status-ok-bg);
+	border-color: var(--editor-status-ok);
+	color: var(--editor-status-ok);
+}
+
+.eval-finding strong {
+	display: block;
+	margin-block-end: 0.5ch;
+	color: inherit;
+}
+
+.eval-finding em {
+	display: block;
+	font-style: normal;
+	color: color-mix(in srgb, currentColor 70%, black);
+	margin-block-start: 0.5ch;
+}

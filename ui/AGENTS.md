@@ -107,9 +107,6 @@ Each component follows a consistent structure:
 ### Weather Components
 `weather-widget`, `weather-overview`, `weather-forecast-*`, `weather-radar`, `weather-current`, `weather-alert`
 
-### Web Config Tools
-`web-config-card`, `web-config-csp`, `web-config-manifest`, `web-config-robots`, `web-config-security`, `web-config-shared`, `web-config-taxonomy`, `web-config-tokens`
-
 ### Interactive/Games
 `calculator`, `piano-keys`, `periodic-table`, `lottery-numbers`, `word-wheel`, `pocket-synth`, `barcode-scanner`
 
@@ -197,9 +194,9 @@ design-token
   └── design-token-styles (shared CSS)
   └── design-token-editors (lazy loaded)
 
-web-config-*
-  └── web-config-shared (common utilities)
-  └── web-config-card (UI container)
+editor-* (in cms/editors/)
+  └── editor-shared (common utilities)
+  └── editor-card (UI container)
 ```
 
 ## Creating New Components

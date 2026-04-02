@@ -1,0 +1,9 @@
+{
+  "name": "@browser.style/editor-image-text",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./src/index.js",
+  "dependencies": {
+    "@browser.style/editor-shared": "^1.0.0"
+  }
+}

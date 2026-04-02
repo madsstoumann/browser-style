@@ -1,0 +1,224 @@
+# Contentful Integration Guide
+
+This directory contains Contentful app wrappers for browser.style UI components. Each component is packaged to work seamlessly within Contentful's iframe-based app architecture.
+
+## Available Components
+
+- **editor-csp** - Content Security Policy visual editor with security evaluation
+- **editor-robots** - robots.txt editor (structured config + output)
+- **editor-security** - security.txt editor (structured config + output)
+- **editor-manifest** - web app manifest editor
+
+## Setup Instructions
+
+### 1. Create a New App in Contentful
+
+1. Go to your Contentful organization settings
+2. Navigate to **Apps** → **Manage apps** → **Create app**
+3. Choose **Create a custom app**
+4. Fill in the app details:
+   - **App name**: `Editor CSP` (or component name)
+   - **Short description**: Brief description of what the app does
+   - **App URL**: `https://browser.style/cms/integrations/contentful/editor-csp/`
+
+### 2. Configure App Locations
+
+In the app configuration, enable the **Entry field** location:
+
+1. Under **Locations**, check **Entry field**
+2. Configure field types that the app supports:
+   - For **editor-csp**: Select **JSON object** as the field type
+   - For **editor-robots**: Select **Long text** as the field type
+   - For **editor-security**: Select **Long text** as the field type
+   - For **editor-manifest**: Select **JSON object** as the field type
+3. Save the configuration
+
+### 3. Install App to Space
+
+1. After creating the app, go to the **Install** tab
+2. Select the space(s) where you want to use this app
+3. Click **Install to selected spaces**
+4. The app will now be available in those spaces
+
+### 4. Add to Content Model
+
+1. In your Contentful space, go to **Content model**
+2. Select the content type where you want to use the component
+3. Click **Add field**
+4. Choose the appropriate field type:
+   - For **editor-csp**: Select **JSON object**
+   - For **editor-robots**: Select **Long text**
+   - For **editor-security**: Select **Long text**
+   - For **editor-manifest**: Select **JSON object**
+5. Configure the field:
+   - **Name**: e.g., "Content Security Policy"
+   - **Field ID**: e.g., `contentSecurityPolicy`
+6. In the **Appearance** tab:
+   - Select your custom app (e.g., "Editor CSP")
+7. Save the content type
+
+## Field Type Requirements
+
+Each component requires a specific Contentful field type:
+
+| Component | Field Type | Description |
+|-----------|------------|-------------|
+| editor-csp | JSON object | Stores CSP policy configuration as structured JSON |
+| editor-robots | Long text | Stores robots.txt as plain text |
+| editor-security | Long text | Stores security.txt as plain text |
+| editor-manifest | JSON object | Stores manifest.json as structured JSON |
+
+## Using the Components
+
+### Editor CSP
+
+**Initial State:**
+- If the field is **empty**, the component starts with a blank slate (no directives enabled)
+- Users build their CSP from scratch using the "Add directive" button
+- If the field has **existing data**, it loads that saved policy
+
+**Features:**
+- Visual CSP policy editor
+- Real-time security evaluation
+- High-severity issues block publishing
+- Auto-saves changes to Contentful
+
+**Data Format:**
+```json
+{
+  "default-src": {
+    "added": ["'self'"]
+  },
+  "script-src": {
+    "added": ["'self'", "'unsafe-inline'"],
+    "defaults": ["'strict-dynamic'"]
+  }
+}
+```
+
+## Security Headers
+
+These apps are served from `/cms/integrations/contentful/*` with special security headers configured in Cloudflare:
+
+- **Content-Security-Policy**: Allows iframe embedding from `*.contentful.com`
+- **No X-Frame-Options**: Prevents conflicts with CSP frame-ancestors
+- **No Permissions-Policy**: CMS apps need flexible permissions
+
+This is handled automatically via Cloudflare Rules.
+
+## Import Map Requirement
+
+⚠️ **CRITICAL**: All Contentful app HTML files must include an import map to resolve the shared module dependency.
+
+Each component imports from `@browser.style/editor-shared`, which is a **bare module specifier**. When loading from the CDN (browser.style), browsers cannot resolve this without an import map.
+
+**Required import map** (must be in `<head>` before module scripts):
+
+```html
+<script type="importmap">
+  {
+    "imports": {
+      "@browser.style/editor-shared": "https://browser.style/cms/editors/shared/index.js"
+    }
+  }
+</script>
+```
+
+### Why is this needed?
+
+The editor components use imports like:
+```javascript
+import { adoptSharedStyles } from '@browser.style/editor-shared';
+```
+
+Without the import map, the browser sees this error:
+```
+Uncaught TypeError: Failed to resolve module specifier "@browser.style/editor-shared".
+Relative references must start with either "/", "./", or "../".
+```
+
+The import map tells the browser to fetch the module from the full CDN URL.
+
+### Alternative Solutions (Not Implemented)
+
+1. **Publish to npm + use ESM CDN** (esm.sh, jspm.io, skypack.dev)
+   - Would auto-resolve dependencies
+   - No import map needed
+   - Requires npm publishing
+
+2. **Use relative imports in source**
+   - Change to: `import { ... } from '../../../editor-shared/index.js'`
+   - No import map needed
+   - Makes code harder to maintain
+
+## Troubleshooting
+
+### Error: "Failed to resolve module specifier @browser.style/editor-shared"
+
+**Cause**: Missing or incorrect import map
+
+**Solution**: Ensure the import map is present in the `<head>` section **before** any module scripts. See "Import Map Requirement" section above.
+
+### App doesn't load in Contentful
+
+1. **Check the URL**: Ensure it's `https://browser.style/cms/integrations/contentful/[component]/`
+2. **Verify field type**: Must match the component requirements
+3. **Check browser console**: Look for CSP or iframe errors
+4. **Verify Cloudflare rules**: Ensure `/cms/integrations/*` has correct headers
+5. **Check import map**: Ensure the import map is present (see above)
+
+### Data not saving
+
+1. **Check field type**: Must match the component requirements (CSP/manifest: JSON object; robots/security: Long text)
+2. **Check browser console**: Look for Contentful SDK errors
+3. **Verify API keys**: Ensure Contentful space has proper permissions
+
+### Validation errors
+
+For **editor-csp**, high-severity security issues will block publishing. This is intentional. Review and fix the security findings before publishing.
+
+### Editor Robots
+
+**Initial State:**
+- If the field is **empty**, the component starts blank
+- If the field has **existing data**, it loads that saved config
+
+**Data Format:**
+The field stores the component's `config` object.
+
+### Editor Security
+
+**Initial State:**
+- If the field is **empty**, the component starts blank
+- If the field has **existing data**, it loads that saved config
+
+**Data Format:**
+The field stores the component's `config` object.
+
+### Editor Manifest
+
+**Initial State:**
+- If the field is **empty**, the component starts with defaults
+- If the field has **existing data**, it loads that saved manifest
+
+**Data Format:**
+The field stores the manifest JSON object.
+
+## Adding New Components
+
+To add a new component to Contentful:
+
+1. Create a new directory: `/cms/integrations/contentful/[component-name]/`
+2. Create `index.html` with Contentful SDK integration
+3. Import the original component: `import 'https://browser.style/cms/editors/[component-name]/index.js'`
+4. Handle Contentful field lifecycle:
+   - Initialize with `api.field.getValue()`
+   - Save changes with `api.field.setValue(data)`
+   - Add validation if needed
+5. Follow the setup instructions above to register in Contentful
+
+## Resources
+
+- [Contentful Apps Documentation](https://www.contentful.com/developers/docs/extensibility/app-framework/)
+- [Contentful UI Extensions SDK](https://github.com/contentful/ui-extensions-sdk)
+- [browser.style Components](https://browser.style/)

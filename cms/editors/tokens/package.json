@@ -1,0 +1,39 @@
+{
+  "name": "@browser.style/editor-tokens",
+  "version": "1.0.0",
+  "description": "A web component to render W3C Design Tokens",
+  "type": "module",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src",
+    "index.html",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "export": "node export-css.js"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "design-tokens"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "cms/editors/tokens"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/cms/editors/tokens"
+}

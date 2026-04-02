@@ -1,0 +1,52 @@
+{
+  "name": "@browser.style/editor-taxonomy",
+  "version": "2.1.0",
+  "description": "A web component and factory for adding Google and Facebook product taxonomy search to the browser.style auto-suggest component.",
+  "type": "module",
+  "main": "./src/index.js",
+  "module": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./component": "./src/index.js",
+    "./factory": "./factory.js",
+    "./parsers": "./parsers.js"
+  },
+  "files": [
+    "index.js",
+    "factory.js",
+    "parsers.js",
+    "src",
+    "google.txt",
+    "facebook.txt"
+  ],
+  "peerDependencies": {
+    "@browser.style/auto-suggest": "^1.1.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "editor-taxonomy",
+    "google-taxonomy",
+    "facebook-taxonomy",
+    "meta-taxonomy",
+    "product-taxonomy",
+    "auto-suggest",
+    "cms",
+    "contentful"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "cms/editors/taxonomy"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/cms/editors/taxonomy"
+}

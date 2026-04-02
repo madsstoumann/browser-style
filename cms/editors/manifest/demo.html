@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Editor Manifest</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Editor Manifest - Visual editor for manifest.json files">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<script type="importmap">
+		{
+			"imports": {
+				"@browser.style/editor-shared": "../shared/index.js"
+			}
+		}
+	</script>
+</head>
+<body>
+	<h1>Editor: manifest.json</h1>
+	<editor-manifest src="./fixtures/manifest.json"></editor-manifest>
+	<script type="module" src="./src/index.js"></script>
+</body>
+</html>

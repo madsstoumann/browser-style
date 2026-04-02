@@ -4,7 +4,8 @@
   "type": "module",
   "workspaces": [
     "ui/*",
-    "baseline"
+    "cms/baseline",
+    "cms/editors/*"
   ],
   "scripts": {
     "build": "npm run build --workspaces",
