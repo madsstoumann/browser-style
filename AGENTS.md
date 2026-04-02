@@ -17,6 +17,12 @@ browser-style/
 │   ├── base/             Core CSS package (@browser.style/base)
 │   ├── [component]/      Individual component packages
 │   └── ...
+├── apps/                 Standalone apps, games & tools (not npm packages)
+│   ├── games/            Calculator, Lottery, Wheel of Fortune, etc.
+│   ├── science/          Periodic Table, Solar System, BMI
+│   ├── media/            ePub Reader, Image Edit, Dev.to
+│   ├── music/            Fret Board, Pocket Synth
+│   └── utilities/        Barcode Scanner, Print Preview, etc.
 ├── cms/                  CMS tools and integrations
 │   ├── baseline/         Content architecture docs & JSON schemas
 │   ├── editors/          CMS field editor web components (@browser.style/editor-*)
@@ -73,7 +79,7 @@ The `ui/` folder contains component packages organized by function:
 | **Visualization** | color-picker, color-palette, data-chart, bar-chart |
 | **Weather** | weather-widget, weather-overview, weather-forecast-* |
 | **CMS Editors** | editor-card, editor-csp, editor-manifest (in `cms/editors/`) |
-| **Interactive** | calculator, piano-keys, rich-text, barcode-scanner |
+| **Interactive** | piano-keys, rich-text, xy, color-picker |
 
 ## Development
 

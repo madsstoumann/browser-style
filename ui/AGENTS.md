@@ -107,11 +107,11 @@ Each component follows a consistent structure:
 ### Weather Components
 `weather-widget`, `weather-overview`, `weather-forecast-*`, `weather-radar`, `weather-current`, `weather-alert`
 
-### Interactive/Games
-`calculator`, `piano-keys`, `periodic-table`, `lottery-numbers`, `word-wheel`, `pocket-synth`, `barcode-scanner`
+### Interactive
+`piano-keys`, `word-wheel`, `xy`, `color-picker`
 
 ### Utilities
-`async-loader`, `asset-handler`, `print-preview`, `msg-box`, `snack-bar`, `tooltip`
+`async-loader`, `asset-handler`, `msg-box`, `snack-bar`, `tooltip`
 
 ## Component Development Patterns
 

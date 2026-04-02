@@ -28,12 +28,12 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madsstoumann/browser-style.git",
-    "directory": "ui/speed-ticket"
+    "directory": "apps/utilities/speed-ticket"
   },
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://browser.style/ui/speed-ticket",
+  "homepage": "https://browser.style/apps/utilities/speed-ticket",
   "dependencies": {
     "@browser.style/circular-range": "^1.0.9",
     "@browser.style/video-scrub": "^1.0.1"

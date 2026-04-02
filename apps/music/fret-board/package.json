@@ -30,10 +30,10 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madsstoumann/browser-style.git",
-    "directory": "ui/fret-board"
+    "directory": "apps/music/fret-board"
   },
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://browser.style/ui/fret-board"
+  "homepage": "https://browser.style/apps/music/fret-board"
 }

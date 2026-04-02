@@ -1,7 +1,7 @@
 {
-  "name": "@browser.style/barcode-scanner",
-  "version": "1.0.13",
-  "description": "Barcode Scanner component for browser.style",
+  "name": "@browser.style/dev-to",
+  "version": "1.0.7",
+  "description": "Load articles from dev.to",
   "type": "module",
   "module": "index.js",
   "exports": {
@@ -25,18 +25,17 @@
   "keywords": [
     "browser.style",
     "web-components",
-    "barcode-scanner"
+    "dev-to"
   ],
   "author": "Mads Stoumann",
   "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madsstoumann/browser-style.git",
-    "directory": "ui/barcode-scanner"
+    "directory": "apps/media/dev-to"
   },
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://browser.style/ui/barcode-scanner",
-  "customElements": "custom-elements.json"
+  "homepage": "https://browser.style/apps/media/dev-to"
 }
