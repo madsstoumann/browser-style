@@ -4,6 +4,7 @@
   "type": "module",
   "workspaces": [
     "ui/*",
+    "layout",
     "ui/weather/*",
     "ui/gui/*",
     "ui/data/*",
