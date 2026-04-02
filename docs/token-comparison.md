@@ -201,17 +201,15 @@
 
 ## Z-Index
 
-| Purpose | browser.style | Tailwind v4 | Open Props |
-|---------|--------------|-------------|------------|
-| Base | `--z-index-base` (0) | `--z-0` (0) | `--layer-1` (1) |
-| Raised | `--z-index-raised` (1) | `--z-10` (10) | `--layer-2` (2) |
-| Dropdown | `--z-index-dropdown` (100) | `--z-20` (20) | `--layer-3` (3) |
-| Sticky | `--z-index-sticky` (500) | `--z-30` (30) | `--layer-4` (4) |
-| Overlay | `--z-index-overlay` (1000) | `--z-40` (40) | `--layer-5` (5) |
-| Modal | `--z-index-modal` (1100) | `--z-50` (50) | *(none)* |
-| Toast | `--z-index-toast` (1200) | *(none)* | *(none)* |
+| Step | browser.style | Tailwind v4 | Open Props |
+|------|--------------|-------------|------------|
+| 1 | `--z-index-1` (1) | `--z-10` (10) | `--layer-1` (1) |
+| 2 | `--z-index-2` (10) | `--z-20` (20) | `--layer-2` (2) |
+| 3 | `--z-index-3` (100) | `--z-30` (30) | `--layer-3` (3) |
+| 4 | `--z-index-4` (500) | `--z-40` (40) | `--layer-4` (4) |
+| 5 | `--z-index-5` (1000) | `--z-50` (50) | `--layer-5` (5) |
 
-**Note:** Tailwind uses arbitrary numeric names. Open Props uses `--layer-*` (1-5). browser.style uses semantic names for clarity.
+**Note:** All three use a 5-step numeric scale. browser.style uses real-world stacking values (1, 10, 100, 500, 1000) that leave gaps for component-level z-indexes in between. Open Props uses 1-5 literally. Tailwind uses 10-50.
 
 ---
 

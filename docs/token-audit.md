@@ -22,7 +22,7 @@
 | **Duration** | `--duration-fast` (100ms), `--duration-normal` (200ms), `--duration-slow` (300ms), `--duration-slower` (400ms) |
 | **Easing** | `--ease-default`, `--ease-in`, `--ease-out`, `--ease-in-out` |
 | **Blur** | `--blur-sm` (4px), `--blur-md` (12px), `--blur-lg` (24px) |
-| **Z-Index** | `--z-index-base` (0), `--z-index-raised` (1), `--z-index-dropdown` (100), `--z-index-sticky` (500), `--z-index-overlay` (1000), `--z-index-modal` (1100), `--z-index-toast` (1200) |
+| **Z-Index** | `--z-index-1` (1), `--z-index-2` (10), `--z-index-3` (100), `--z-index-4` (500), `--z-index-5` (1000) |
 | **Opacity** | `--opacity-disabled` (0.5) |
 
 ---
@@ -182,7 +182,7 @@ All high and medium priority tokens have been added to `core.css`. New categorie
 - **Duration** — added `--duration-slower` (400ms)
 - **Easing** — added `--ease-in`, `--ease-out`, `--ease-in-out` (cubic-bezier values)
 - **Blur** — 3 steps for backdrop-filter (4px, 12px, 24px)
-- **Z-Index** — 7-step semantic scale (base–toast)
+- **Z-Index** — 5-step numeric scale (1, 10, 100, 500, 1000)
 - **Opacity** — `--opacity-disabled` (0.5)
 - **Overlay Colors** — `--color-overlay`, `--color-overlay-light` (color-mix based, light/dark safe)
 
