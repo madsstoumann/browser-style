@@ -45,15 +45,19 @@
 |------|--------------|-------------|------------|
 | Extra small | `--font-size-xs` (0.75rem) | `--font-size-xs` (0.75rem) | `--font-size-0` (0.75rem) |
 | Small | `--font-size-sm` (0.875rem) | `--font-size-sm` (0.875rem) | `--font-size-1` (1rem) |
-| Base | `--font-size-md` (1rem) | `--font-size-base` (1rem) | `--font-size-2` (1.1rem) |
+| Base | `--font-size-base` (1rem) | `--font-size-base` (1rem) | `--font-size-2` (1.1rem) |
 | Large | `--font-size-lg` (1.125rem) | `--font-size-lg` (1.125rem) | `--font-size-3` (1.25rem) |
 | XL | `--font-size-xl` (1.25rem) | `--font-size-xl` (1.25rem) | `--font-size-4` (1.5rem) |
 | 2XL | `--font-size-2xl` (1.5rem) | `--font-size-2xl` (1.5rem) | `--font-size-5` (2rem) |
 | 3XL | `--font-size-3xl` (1.875rem) | `--font-size-3xl` (1.875rem) | `--font-size-6` (2.5rem) |
 | 4XL | `--font-size-4xl` (2.25rem) | `--font-size-4xl` (2.25rem) | `--font-size-7` (3.5rem) |
 | 5XL | `--font-size-5xl` (3rem) | `--font-size-5xl` (3rem) | `--font-size-8` (6rem) |
+| 6XL | `--font-size-6xl` (3.75rem) | `--font-size-6xl` (3.75rem) | *(none)* |
+| 7XL | `--font-size-7xl` (4.5rem) | `--font-size-7xl` (4.5rem) | *(none)* |
+| 8XL | `--font-size-8xl` (6rem) | `--font-size-8xl` (6rem) | *(none)* |
+| 9XL | `--font-size-9xl` (8rem) | `--font-size-9xl` (8rem) | *(none)* |
 
-**Note:** browser.style values are identical to Tailwind v4. Open Props uses numeric keys and a steeper scale at the high end.
+**Note:** browser.style names and values are identical to Tailwind v4 across the full 13-step scale. Open Props uses numeric keys and stops at step 8.
 
 ---
 

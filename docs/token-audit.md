@@ -11,7 +11,7 @@
 |----------|--------|
 | **Colors** | `--color-accent`, `--color-accent-dark`, `--color-accent-text`, `--color-border`, `--color-button`, `--color-button-text`, `--color-surface`, `--color-surface-alt`, `--color-text`, `--color-field`, `--color-text-muted`, `--color-highlight`, `--color-link`, `--color-mark`, `--color-mark-text`, `--color-link-visited`, `--color-info`, `--color-error`, `--color-success`, `--color-warning`, `--color-overlay`, `--color-overlay-light` |
 | **Font Family** | `--font-body`, `--font-form`, `--font-heading`, `--font-mono`, `--font-serif` |
-| **Font Size** | `--font-size-xs` (0.75rem) .. `--font-size-5xl` (3rem) — 9 steps |
+| **Font Size** | `--font-size-xs` (0.75rem) .. `--font-size-9xl` (8rem) — 13 steps |
 | **Font Weight** | `--font-weight-thin` (100), `--font-weight-light` (300), `--font-weight-normal` (400), `--font-weight-medium` (500), `--font-weight-semibold` (600), `--font-weight-bold` (700), `--font-weight-black` (900) |
 | **Line Height** | `--line-height-none` (1), `--line-height-tight` (1.1), `--line-height-snug` (1.25), `--line-height-normal` (1.5), `--line-height-relaxed` (1.625), `--line-height-loose` (2) |
 | **Letter Spacing** | `--tracking-tighter` (-0.05em) .. `--tracking-widest` (0.1em) — 6 steps |
