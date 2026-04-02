@@ -57,22 +57,34 @@ class UiAccordionItem extends HTMLElement {
 }
 
 class UiAccordion extends HTMLElement {
-	static observedAttributes = ['name'];
+	static observedAttributes = ['name', 'variant'];
 
 	connectedCallback() {
+		this.ensureCqBox();
 		this.propagateName();
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
-		if (name === 'name' && oldValue !== newValue && this.isConnected) {
-			this.propagateName();
+		if (oldValue === newValue || !this.isConnected) return;
+		if (name === 'variant') this.ensureCqBox();
+		if (name === 'name') this.propagateName();
+	}
+
+	ensureCqBox() {
+		const hasMedia = (this.getAttribute('variant') || '').split(/\s+/).includes('media');
+		const existing = this.querySelector(':scope > cq-box');
+		if (hasMedia && !existing) {
+			const box = document.createElement('cq-box');
+			while (this.firstChild) box.appendChild(this.firstChild);
+			this.appendChild(box);
 		}
 	}
 
 	propagateName() {
 		const name = this.getAttribute('name');
 		if (!name) return;
-		for (const child of this.children) {
+		const container = this.querySelector(':scope > cq-box') || this;
+		for (const child of container.children) {
 			if (child.matches('details.ui-accordion')) {
 				child.setAttribute('name', name);
 			} else if (child.matches('ui-accordion-item')) {

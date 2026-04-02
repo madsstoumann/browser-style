@@ -5,6 +5,15 @@
 */
 @layer bs-core {
 
+	/* === CQ Box ===
+	  Generic container query wrapper. Place inside any element with
+	  container-type: inline-size to enable @container queries on children.
+	  Works as a plain structural element — no JavaScript required.
+	*/
+	:where(cq-box) {
+		display: contents;
+	}
+
 	/* === Auto-Suggest ===
 	  Only required when using `<auto-suggest list-mode="ul">` 
 	*/

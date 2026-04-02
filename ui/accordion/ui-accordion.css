@@ -11,7 +11,9 @@
 		display: block;
 		&[no-collapse] {
 			& > .ui-accordion[open] summary,
-			& > ui-accordion-item > .ui-accordion[open] summary {
+			& > ui-accordion-item > .ui-accordion[open] summary,
+			& > cq-box > .ui-accordion[open] summary,
+			& > cq-box > ui-accordion-item > .ui-accordion[open] summary {
 				pointer-events: none;
 			}
 		}
@@ -86,9 +88,9 @@
 		--ui-accordion-padding-inline: 2.5ch;
 	}
 
-	/* Variant: media */
+	/* Variant: media — requires <cq-box> as inner wrapper for container query */
 	@container (inline-size > 650px) {
-		:where(ui-accordion[variant~="media"]) {
+		:where(ui-accordion[variant~="media"]) > cq-box {
 			display: grid;
 			grid-template-columns: 1fr 1fr;
 			position: relative;
