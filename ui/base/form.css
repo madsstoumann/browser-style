@@ -35,6 +35,11 @@
 		font-family: var(--font-form);
 		font-size: var(--input-fs, 1rem);
 	}
+	:where(input:not([type=checkbox],[type=radio],[type=range]), select, textarea):focus-visible {
+		border-color: var(--ring-color);
+		outline: var(--ring-width) solid var(--ring-color);
+		outline-offset: var(--ring-offset);
+	}
 	:where(fieldset) {
 		display: grid;
 		margin: 0;

@@ -21,7 +21,7 @@
 			border-inline-width: var(--input-bdw);
 			border-end-end-radius: var(--input-bdrs);
 			border-end-start-radius: var(--input-bdrs);
-			box-shadow: 0px 10px 20px -5px color-mix(in srgb, CanvasText 25%, transparent);
+			box-shadow: 0px 10px 20px -5px var(--color-overlay-light);
 			inset-block: anchor(bottom);
 			inset-inline: anchor(start);
 			margin: 0;

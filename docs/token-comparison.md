@@ -227,6 +227,56 @@
 
 ---
 
+## Ring / Focus
+
+| Purpose | browser.style | Tailwind v4 | Open Props |
+|---------|--------------|-------------|------------|
+| Ring width | `--ring-width` (2px) | `--ring-width` (1px) | *(none)* |
+| Ring offset | `--ring-offset` (3px) | `--ring-offset` (0px) | *(none)* |
+| Ring color | `--ring-color` (var(--color-accent)) | `--ring-color` (currentColor) | *(none)* |
+
+**Note:** browser.style defaults to accent color and a visible offset. Used consistently across form inputs, buttons, and utility focus states.
+
+---
+
+## Content Widths
+
+| Step | browser.style | Tailwind v4 | Open Props |
+|------|--------------|-------------|------------|
+| XS | `--width-xs` (20rem) | `--width-xs` (20rem) | *(none)* |
+| SM | `--width-sm` (24rem) | `--width-sm` (24rem) | *(none)* |
+| MD | `--width-md` (28rem) | `--width-md` (28rem) | *(none)* |
+| LG | `--width-lg` (32rem) | `--width-lg` (32rem) | *(none)* |
+| XL | `--width-xl` (36rem) | `--width-xl` (36rem) | *(none)* |
+| 2XL | `--width-2xl` (42rem) | `--width-2xl` (42rem) | *(none)* |
+| 3XL | `--width-3xl` (48rem) | `--width-3xl` (48rem) | `--size-content-3` (60ch) |
+| 4XL | `--width-4xl` (56rem) | `--width-4xl` (56rem) | *(none)* |
+| 5XL | `--width-5xl` (64rem) | `--width-5xl` (64rem) | *(none)* |
+| 6XL | `--width-6xl` (72rem) | `--width-6xl` (72rem) | *(none)* |
+| 7XL | `--width-7xl` (80rem) | `--width-7xl` (80rem) | *(none)* |
+| Prose | `--width-prose` (65ch) | `--width-prose` (65ch) | `--size-content-2` (45ch) |
+
+**Note:** browser.style matches Tailwind exactly. Open Props uses `--size-content-*` (3 steps only).
+
+---
+
+## Fluid Font Size
+
+| Step | browser.style | Tailwind v4 | Open Props |
+|------|--------------|-------------|------------|
+| XS | `--font-size-fluid-xs` | *(none)* | `--font-size-fluid-0` |
+| SM | `--font-size-fluid-sm` | *(none)* | `--font-size-fluid-1` |
+| Base | `--font-size-fluid-base` | *(none)* | `--font-size-fluid-2` |
+| LG | `--font-size-fluid-lg` | *(none)* | `--font-size-fluid-3` |
+| XL | `--font-size-fluid-xl` | *(none)* | *(none)* |
+| 2XL | `--font-size-fluid-2xl` | *(none)* | *(none)* |
+| 3XL | `--font-size-fluid-3xl` | *(none)* | *(none)* |
+| 4XL | `--font-size-fluid-4xl` | *(none)* | *(none)* |
+
+**Note:** Tailwind does not offer fluid font sizes. Open Props provides 4 steps. browser.style provides 8 steps using `clamp()` for smooth scaling without breakpoints.
+
+---
+
 ## Categories Not in browser.style
 
 | Category | Tailwind v4 | Open Props | browser.style rationale |
@@ -235,4 +285,3 @@
 | Aspect ratio | `--aspect-*` (utility) | `--ratio-square`, `--ratio-landscape` | Not needed — CSS `aspect-ratio` property suffices |
 | Named animations | `--animate-*` | `--animation-fade-in`, etc. | Component-level — no shared animation tokens |
 | Container/breakpoints | `--breakpoint-sm` etc. | *(none)* | Not tokenizable as CSS custom properties for `@media` |
-| Ring/outline width | `--ring-*` | *(none)* | Could add later — only 5 components use ring patterns |

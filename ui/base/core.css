@@ -131,6 +131,35 @@
 		/* Opacity */
 		--opacity-disabled: 0.5;
 
+		/* Ring / Focus */
+		--ring-width: 2px;
+		--ring-offset: 3px;
+		--ring-color: var(--color-accent);
+
+		/* Content Widths */
+		--width-xs: 20rem;
+		--width-sm: 24rem;
+		--width-md: 28rem;
+		--width-lg: 32rem;
+		--width-xl: 36rem;
+		--width-2xl: 42rem;
+		--width-3xl: 48rem;
+		--width-4xl: 56rem;
+		--width-5xl: 64rem;
+		--width-6xl: 72rem;
+		--width-7xl: 80rem;
+		--width-prose: 65ch;
+
+		/* Fluid Font Size (responsive, no breakpoints) */
+		--font-size-fluid-xs: clamp(0.75rem, 0.65rem + 0.25vw, 0.875rem);
+		--font-size-fluid-sm: clamp(0.875rem, 0.8rem + 0.25vw, 1rem);
+		--font-size-fluid-base: clamp(1rem, 0.875rem + 0.5vw, 1.25rem);
+		--font-size-fluid-lg: clamp(1.125rem, 0.95rem + 0.75vw, 1.5rem);
+		--font-size-fluid-xl: clamp(1.25rem, 1rem + 1vw, 1.875rem);
+		--font-size-fluid-2xl: clamp(1.5rem, 1.1rem + 1.5vw, 2.25rem);
+		--font-size-fluid-3xl: clamp(1.875rem, 1.3rem + 2vw, 3rem);
+		--font-size-fluid-4xl: clamp(2.25rem, 1.5rem + 2.5vw, 3.75rem);
+
 		/* ── Legacy Aliases (remove in next major version) ── */
 		--AccentColor: var(--color-accent);
 		--AccentColorDark: var(--color-accent-dark);

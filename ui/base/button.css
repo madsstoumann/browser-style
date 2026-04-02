@@ -27,8 +27,8 @@
 			opacity: .33;
 		}
 		&:focus-visible {
-			outline-color: var(--button-bg, var(--color-button, hsl(0, 0%, 90%)));
-			outline-offset: 0.3em;
+			outline: var(--ring-width) solid var(--ring-color);
+			outline-offset: var(--ring-offset);
 		}
 		&:not([disabled],.--disabled):is(:focus-visible, :hover),
 		&:has(input:focus-visible) {

@@ -24,6 +24,9 @@
 | **Blur** | `--blur-sm` (4px), `--blur-md` (12px), `--blur-lg` (24px) |
 | **Z-Index** | `--z-index-1` (1), `--z-index-2` (10), `--z-index-3` (100), `--z-index-4` (500), `--z-index-5` (1000) |
 | **Opacity** | `--opacity-disabled` (0.5) |
+| **Ring / Focus** | `--ring-width` (2px), `--ring-offset` (3px), `--ring-color` (var(--color-accent)) |
+| **Content Widths** | `--width-xs` (20rem) .. `--width-7xl` (80rem), `--width-prose` (65ch) — 12 steps |
+| **Fluid Font Size** | `--font-size-fluid-xs` .. `--font-size-fluid-4xl` — 8 clamp-based steps |
 
 ---
 

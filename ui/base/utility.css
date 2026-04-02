@@ -122,8 +122,8 @@
 			&:not([disabled],.--disabled):is(:focus-visible, :hover) {
 				background: color-mix(in srgb, var(--_bg, var(--ButtonFace)), var(--CanvasText) 25%);
 				box-shadow: color-mix(in srgb, var(--_bg), transparent 75%) 0px 0px 0px .16em;
-				outline-color: var(--_bg);
-				outline-offset: 0.3em;
+				outline: var(--ring-width) solid var(--_bg);
+				outline-offset: var(--ring-offset);
 				&.--light {
 					background: var(--_bg);
 					color: #FFF;
