@@ -23,6 +23,8 @@ browser-style/
 │   ├── media/            ePub Reader, Image Edit, Dev.to
 │   ├── music/            Fret Board, Pocket Synth, Piano Chord
 │   └── utilities/        Barcode Scanner, Print Preview, etc.
+├── content/              Content rendering components
+│   └── card/             Content card system (@browser.style/content-card)
 ├── layout/               Layout system (@browser.style/layout)
 ├── cms/                  CMS tools and integrations
 │   ├── baseline/         Content architecture docs & JSON schemas
@@ -76,7 +78,7 @@ The `ui/` folder contains component packages organized by function:
 | **Data** (`ui/data/`) | grid, entry, mapper |
 | **Charts** (`ui/charts/`) | chart (component) + demo pages |
 | **Navigation** | nav-compass, breadcrumbs, tabs, menu |
-| **Cards/Content** | card, content-card, card-expand, product-card |
+| **Cards/Content** | card, card-expand, product-card |
 | **Design Tokens** (`ui/design-tokens/`) | core, editors, styles, utils |
 | **Visualization** | color-picker, color-palette |
 | **Weather** (`ui/weather/`) | widget, overview, forecast-*, feelslike, etc. |
