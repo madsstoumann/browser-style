@@ -43,16 +43,27 @@ Component Token --> Global Semantic Token --> Hardcoded Fallback
 
 #### 2a. Identify global tokens from `ui/base/core.css`
 
-Available global tokens (defined in `:root`):
+Available global tokens (defined in `:root`). Full reference: `docs/design-system-agent.md`.
 
 | Category | Tokens |
 |----------|--------|
-| **Colors** | `--color-accent`, `--color-accent-dark`, `--color-accent-text`, `--color-border`, `--color-button`, `--color-button-text`, `--color-surface`, `--color-surface-alt`, `--color-text`, `--color-field`, `--color-text-muted`, `--color-highlight`, `--color-link`, `--color-mark`, `--color-mark-text`, `--color-link-visited`, `--color-info`, `--color-error`, `--color-success`, `--color-warning` |
-| **Typography** | `--font-body`, `--font-form`, `--font-heading`, `--font-mono`, `--font-serif` |
+| **Colors** | `--color-accent`, `--color-accent-dark`, `--color-accent-text`, `--color-border`, `--color-button`, `--color-button-text`, `--color-surface`, `--color-surface-alt`, `--color-text`, `--color-field`, `--color-text-muted`, `--color-highlight`, `--color-link`, `--color-mark`, `--color-mark-text`, `--color-link-visited`, `--color-info`, `--color-error`, `--color-success`, `--color-warning`, `--color-overlay`, `--color-overlay-light` |
+| **Font family** | `--font-body`, `--font-form`, `--font-heading`, `--font-mono`, `--font-serif` |
+| **Font size** | `--font-size-xs` .. `--font-size-9xl` (13 steps), `--font-size-fluid-xs` .. `--font-size-fluid-4xl` (8 clamp-based) |
+| **Font weight** | `--font-weight-thin` (100), `--font-weight-light` (300), `--font-weight-normal` (400), `--font-weight-medium` (500), `--font-weight-semibold` (600), `--font-weight-bold` (700), `--font-weight-black` (900) |
+| **Line height** | `--line-height-none` (1), `--line-height-tight` (1.1), `--line-height-snug` (1.25), `--line-height-normal` (1.5), `--line-height-relaxed` (1.625), `--line-height-loose` (2) |
+| **Letter spacing** | `--tracking-tighter` (-0.05em) .. `--tracking-widest` (0.1em) — 6 steps |
 | **Spacing** | `--spacing-xs` (0.25rem), `--spacing-sm` (0.5rem), `--spacing-md` (1rem), `--spacing-lg` (1.5rem), `--spacing-xl` (2rem), `--spacing-2xl` (3rem) |
-| **Radius** | `--radius-xs` (0.125rem), `--radius-sm` (0.25rem), `--radius-md` (0.375rem), `--radius-lg` (0.5rem), `--radius-xl` (0.75rem), `--radius-2xl` (1rem), `--radius-3xl` (1.5rem), `--radius-4xl` (2rem), `--radius-circle` (50%), `--radius-pill` (calc(infinity * 1px)) |
+| **Border width** | `--border-width` (1px), `--border-width-thick` (2px), `--border-width-heavy` (3px) |
+| **Radius** | `--radius-xs` (0.125rem) .. `--radius-4xl` (2rem), `--radius-circle` (50%), `--radius-pill` |
 | **Shadows** | `--shadow-sm`, `--shadow-md`, `--shadow-lg`, `--shadow-xl` |
-| **Transitions** | `--duration-fast` (100ms), `--duration-normal` (200ms), `--duration-slow` (300ms), `--duration-slower` (500ms) |
+| **Duration** | `--duration-fast` (100ms), `--duration-normal` (200ms), `--duration-slow` (300ms), `--duration-slower` (400ms) |
+| **Easing** | `--ease-default`, `--ease-in`, `--ease-out`, `--ease-in-out` |
+| **Blur** | `--blur-sm` (4px), `--blur-md` (12px), `--blur-lg` (24px) |
+| **Z-index** | `--z-index-1` (1), `--z-index-2` (10), `--z-index-3` (100), `--z-index-4` (500), `--z-index-5` (1000) |
+| **Opacity** | `--opacity-disabled` (0.5) |
+| **Ring / focus** | `--ring-width` (2px), `--ring-offset` (3px), `--ring-color` (accent) |
+| **Content widths** | `--width-xs` (20rem) .. `--width-7xl` (80rem), `--width-prose` (65ch) |
 
 #### 2b. Define component tokens
 
