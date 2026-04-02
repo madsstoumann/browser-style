@@ -18,10 +18,10 @@ browser-style/
 │   ├── [component]/      Individual component packages
 │   └── ...
 ├── apps/                 Standalone apps, games & tools (not npm packages)
-│   ├── games/            Calculator, Lottery, Wheel of Fortune, etc.
+│   ├── games/            Lottery, Wheel of Fortune, Word Search
 │   ├── science/          Periodic Table, Solar System, BMI
 │   ├── media/            ePub Reader, Image Edit, Dev.to
-│   ├── music/            Fret Board, Pocket Synth
+│   ├── music/            Fret Board, Pocket Synth, Piano Chord
 │   └── utilities/        Barcode Scanner, Print Preview, etc.
 ├── cms/                  CMS tools and integrations
 │   ├── baseline/         Content architecture docs & JSON schemas
