@@ -8,7 +8,7 @@ A CSS-first accordion component built on native `<details>` and `<summary>` elem
 - Exclusive open behavior via the HTML `name` attribute (no JS needed)
 - Smooth open/close transitions via `::details-content`
 - Light/dark mode support via design tokens
-- Variants: `item` (card-style), `media` (side-by-side layout)
+- Variants: `item` (card-style), `media` (side-by-side layout with `<cq-box>`)
 - `no-collapse` attribute to ensure one item stays open
 - Optional `<ui-accordion-item>` web component for framework use
 - Works standalone or with `@browser.style/base` for full theming
@@ -110,7 +110,7 @@ The `name` attribute on `<ui-accordion>` automatically propagates to all child `
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `name` | string | Groups items for exclusive open behavior (propagated to `<details>`) |
-| `variant` | string | Space-separated variants: `"item"`, `"media"`, `"item media"` |
+| `variant` | string | Space-separated variants: `"item"`, `"media"` |
 | `no-collapse` | boolean | Ensures one item always stays open |
 
 **`<ui-accordion-item>`**
@@ -146,26 +146,6 @@ function FAQ() {
 
 > React 19+ handles custom elements natively. For React 18, custom element attributes work in JSX but you may need `ref` for setting properties.
 
-Or use the **CSS-only approach** in React — just write the HTML:
-
-```jsx
-import '@browser.style/base';
-import '@browser.style/accordion/style';
-
-function FAQ() {
-  return (
-    <ui-accordion>
-      <details className="ui-accordion" name="faq">
-        <summary>How do I reset my password?</summary>
-        <div>
-          <p>Go to the login page and click "Forgot Password".</p>
-        </div>
-      </details>
-    </ui-accordion>
-  );
-}
-```
-
 ---
 
 ### Vue
@@ -191,7 +171,7 @@ import '@browser.style/accordion/style';
 
 > Tell Vue to skip custom element resolution in `vite.config.js`:
 > ```js
-> vue({ template: { compilerOptions: { isCustomElement: tag => tag.startsWith('ui-') } } })
+> vue({ template: { compilerOptions: { isCustomElement: tag => tag.startsWith('ui-') || tag === 'cq-box' } } })
 > ```
 
 ---
@@ -215,13 +195,11 @@ import '@browser.style/accordion/style';
 </ui-accordion>
 ```
 
-> Svelte handles custom elements natively. No extra config needed.
-
 ---
 
 ### Astro / Server-rendered HTML
 
-Astro, PHP, Rails, Django, or any server framework — use the CSS-only approach:
+Use the CSS-only approach:
 
 ```html
 <link rel="stylesheet" href="@browser.style/base/core.css">
@@ -252,7 +230,7 @@ Add the web component script only if you want the `<ui-accordion-item>` declarat
 ```html
 <ui-accordion>
   <details class="ui-accordion" name="group">
-    <summary>Title</summary>
+    <summary>Title<ui-icon type="plus-minus"></ui-icon></summary>
     <div>Content</div>
   </details>
 </ui-accordion>
@@ -265,7 +243,7 @@ Adds shadow, border radius, spacing, and removes the border:
 ```html
 <ui-accordion variant="item" name="group">
   <details class="ui-accordion">
-    <summary>Title</summary>
+    <summary>Title<ui-icon type="chevron down"></ui-icon></summary>
     <div>Content</div>
   </details>
 </ui-accordion>
@@ -275,25 +253,53 @@ Web component:
 
 ```html
 <ui-accordion name="group" variant="item">
-  <ui-accordion-item label="Title">Content</ui-accordion-item>
+  <ui-accordion-item label="Title" icon="chevron down">Content</ui-accordion-item>
 </ui-accordion>
 ```
 
 ### Media layout (`variant="media"`)
 
-At wider viewports, shows content beside a media panel:
+At wider viewports (>650px), shows text in a left column with images/video in a right panel. Requires a `<cq-box>` wrapper inside `<ui-accordion>` for CSS-only usage — this enables the container query.
+
+CSS-only:
 
 ```html
-<ui-accordion variant="media" name="media">
-  <details class="ui-accordion" open>
-    <summary>Title</summary>
-    <div>
-      <p>Description text</p>
-      <img src="photo.jpg" alt="Photo">
-    </div>
-  </details>
+<ui-accordion variant="media" name="showcase">
+  <cq-box>
+    <details class="ui-accordion" open>
+      <summary>Our Workspace<ui-icon type="plus-minus"></ui-icon></summary>
+      <div>
+        <p>Description text</p>
+        <img src="photo.jpg" alt="Photo">
+      </div>
+    </details>
+    <details class="ui-accordion">
+      <summary>Meet the Team<ui-icon type="plus-minus"></ui-icon></summary>
+      <div>
+        <p>More text</p>
+        <img src="team.jpg" alt="Team photo">
+      </div>
+    </details>
+  </cq-box>
 </ui-accordion>
 ```
+
+Web component (no `<cq-box>` needed — auto-inserted by JS):
+
+```html
+<ui-accordion variant="media" name="showcase">
+  <ui-accordion-item label="Our Workspace" open>
+    <p>Description text</p>
+    <img src="photo.jpg" alt="Photo">
+  </ui-accordion-item>
+  <ui-accordion-item label="Meet the Team">
+    <p>More text</p>
+    <img src="team.jpg" alt="Team photo">
+  </ui-accordion-item>
+</ui-accordion>
+```
+
+> **Why `<cq-box>`?** A container can't query its own size — the `@container` rule must target a descendant. `<cq-box>` is a generic, zero-layout wrapper (`display: contents`) provided by `@browser.style/base` that sits between the container host and its queryable children. The web component inserts it automatically.
 
 ### No-collapse (`no-collapse`)
 
@@ -312,13 +318,13 @@ Keeps one item always open — the open item's summary becomes non-interactive:
 </ui-accordion>
 ```
 
-### Combining variants
-
-Variants can be combined:
+Works with all variants:
 
 ```html
 <ui-accordion variant="media" no-collapse name="combined">
-  ...
+  <cq-box>
+    ...
+  </cq-box>
 </ui-accordion>
 ```
 
