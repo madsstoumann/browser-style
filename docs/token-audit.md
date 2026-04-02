@@ -5,20 +5,29 @@
 
 ---
 
-## Current Global Tokens (core.css)
+## Global Tokens (core.css — v4)
 
 | Category | Tokens |
 |----------|--------|
-| **Colors** | `--color-accent`, `--color-accent-dark`, `--color-accent-text`, `--color-border`, `--color-button`, `--color-button-text`, `--color-surface`, `--color-surface-alt`, `--color-text`, `--color-field`, `--color-text-muted`, `--color-highlight`, `--color-link`, `--color-mark`, `--color-mark-text`, `--color-link-visited`, `--color-info`, `--color-error`, `--color-success`, `--color-warning` |
-| **Typography** | `--font-body`, `--font-form`, `--font-heading`, `--font-mono`, `--font-serif` |
+| **Colors** | `--color-accent`, `--color-accent-dark`, `--color-accent-text`, `--color-border`, `--color-button`, `--color-button-text`, `--color-surface`, `--color-surface-alt`, `--color-text`, `--color-field`, `--color-text-muted`, `--color-highlight`, `--color-link`, `--color-mark`, `--color-mark-text`, `--color-link-visited`, `--color-info`, `--color-error`, `--color-success`, `--color-warning`, `--color-overlay`, `--color-overlay-light` |
+| **Font Family** | `--font-body`, `--font-form`, `--font-heading`, `--font-mono`, `--font-serif` |
+| **Font Size** | `--font-size-xs` (0.75rem) .. `--font-size-5xl` (3rem) — 9 steps |
+| **Font Weight** | `--font-weight-thin` (100), `--font-weight-light` (300), `--font-weight-normal` (400), `--font-weight-medium` (500), `--font-weight-semibold` (600), `--font-weight-bold` (700), `--font-weight-black` (900) |
+| **Line Height** | `--line-height-none` (1), `--line-height-tight` (1.1), `--line-height-snug` (1.25), `--line-height-normal` (1.5), `--line-height-relaxed` (1.625), `--line-height-loose` (2) |
+| **Letter Spacing** | `--tracking-tighter` (-0.05em) .. `--tracking-widest` (0.1em) — 6 steps |
 | **Spacing** | `--spacing-xs` (0.25rem), `--spacing-sm` (0.5rem), `--spacing-md` (1rem), `--spacing-lg` (1.5rem), `--spacing-xl` (2rem), `--spacing-2xl` (3rem) |
-| **Radius** | `--radius-xs` (0.125rem), `--radius-sm` (0.25rem), `--radius-md` (0.375rem), `--radius-lg` (0.5rem), `--radius-xl` (0.75rem), `--radius-2xl` (1rem), `--radius-3xl` (1.5rem), `--radius-4xl` (2rem), `--radius-circle` (50%), `--radius-pill` (calc(infinity * 1px)) |
+| **Border Width** | `--border-width` (1px), `--border-width-thick` (2px), `--border-width-heavy` (3px) |
+| **Radius** | `--radius-xs` (0.125rem) .. `--radius-4xl` (2rem), `--radius-circle` (50%), `--radius-pill` — 12 steps |
 | **Shadows** | `--shadow-sm`, `--shadow-md`, `--shadow-lg`, `--shadow-xl` |
-| **Transitions** | `--duration-fast` (100ms), `--duration-normal` (200ms), `--duration-slow` (300ms), `--ease-default` |
+| **Duration** | `--duration-fast` (100ms), `--duration-normal` (200ms), `--duration-slow` (300ms), `--duration-slower` (400ms) |
+| **Easing** | `--ease-default`, `--ease-in`, `--ease-out`, `--ease-in-out` |
+| **Blur** | `--blur-sm` (4px), `--blur-md` (12px), `--blur-lg` (24px) |
+| **Z-Index** | `--z-index-base` (0), `--z-index-raised` (1), `--z-index-dropdown` (100), `--z-index-sticky` (500), `--z-index-overlay` (1000), `--z-index-modal` (1100), `--z-index-toast` (1200) |
+| **Opacity** | `--opacity-disabled` (0.5) |
 
 ---
 
-## Missing Global Tokens — Proposed Additions
+## Audit Findings — Hardcoded Values Across Components
 
 ### 1. Spacing Scale (gaps in `ch` / `em` units)
 
@@ -161,72 +170,21 @@ Not tokenizable in CSS custom properties, but worth documenting for consistency:
 
 ---
 
-## Summary: Recommended New Global Tokens
+## Implemented in v4
 
-### High Priority (used in 10+ components)
+All high and medium priority tokens have been added to `core.css`. New categories:
 
-```css
-:root {
-  /* Border Width */
-  --border-width: 1px;
-  --border-width-thick: 2px;
-  --border-width-heavy: 3px;
-
-  /* Font Weight */
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-bold: 700;
-  --font-weight-black: 900;
-
-  /* Line Height */
-  --line-height-none: 1;
-  --line-height-tight: 1.1;
-  --line-height-snug: 1.2;
-  --line-height-normal: 1.4;
-  --line-height-relaxed: 1.6;
-
-  /* Transition Duration (additions) */
-  --duration-slower: 400ms;
-
-  /* Easing (additions) */
-  --ease-in-out: ease-in-out;
-  --ease-in: ease-in;
-  --ease-out: ease-out;
-
-  /* Overlay Colors */
-  --color-overlay: color-mix(in srgb, CanvasText, transparent 50%);
-  --color-overlay-light: color-mix(in srgb, CanvasText 25%, transparent);
-}
-```
-
-### Medium Priority (used in 3–10 components)
-
-```css
-:root {
-  /* Font Weight (extended) */
-  --font-weight-thin: 100;
-  --font-weight-light: 300;
-  --font-weight-semibold: 600;
-
-  /* Opacity */
-  --opacity-disabled: 0.5;
-
-  /* Backdrop Blur */
-  --blur-sm: 3px;
-  --blur-md: 10px;
-  --blur-lg: 20px;
-
-  /* Z-Index Scale */
-  --z-index-base: 0;
-  --z-index-raised: 1;
-  --z-index-dropdown: 100;
-  --z-index-sticky: 500;
-  --z-index-overlay: 1000;
-
-  /* Duration (extended) */
-  --duration-slowest: 600ms;
-}
-```
+- **Font Size** — 9-step scale (xs–5xl), aligned with Tailwind v4
+- **Font Weight** — 7 named weights (thin–black), aligned with Tailwind/Shoelace
+- **Line Height** — 6-step scale (none–loose), aligned with Tailwind `--leading-*`
+- **Letter Spacing** — 6-step scale (tighter–widest), aligned with Tailwind `--tracking-*`
+- **Border Width** — 3 steps (1px, 2px, 3px)
+- **Duration** — added `--duration-slower` (400ms)
+- **Easing** — added `--ease-in`, `--ease-out`, `--ease-in-out` (cubic-bezier values)
+- **Blur** — 3 steps for backdrop-filter (4px, 12px, 24px)
+- **Z-Index** — 7-step semantic scale (base–toast)
+- **Opacity** — `--opacity-disabled` (0.5)
+- **Overlay Colors** — `--color-overlay`, `--color-overlay-light` (color-mix based, light/dark safe)
 
 ### Low Priority / Not Recommended
 

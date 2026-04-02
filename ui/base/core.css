@@ -2,7 +2,7 @@
 	:root {
 		/* ── Design Tokens ── */
 
-		/* Colors */
+		/* Colors — Semantic */
 		--color-accent: light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%));
 		--color-accent-dark: light-dark(hsl(211, 80%, 30%), hsl(211, 30%, 20%));
 		--color-accent-text: hsl(211, 100%, 95%);
@@ -23,13 +23,51 @@
 		--color-error: light-dark(hsl(360, 60%, 46%), hsl(360, 40%, 56%));
 		--color-success: light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%));
 		--color-warning: light-dark(hsl(33, 99%, 59%), hsl(33, 69%, 59%));
+		--color-overlay: color-mix(in srgb, CanvasText, transparent 50%);
+		--color-overlay-light: color-mix(in srgb, CanvasText 25%, transparent);
 
-		/* Typography */
+		/* Font Family */
 		--font-body: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
 		--font-form: ui-sans-serif, system-ui;
 		--font-heading: inherit;
 		--font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 		--font-serif: 'Iowan Old Style', 'Palatino Linotype', 'URW Palladio L', P052, serif;
+
+		/* Font Size */
+		--font-size-xs: 0.75rem;
+		--font-size-sm: 0.875rem;
+		--font-size-md: 1rem;
+		--font-size-lg: 1.125rem;
+		--font-size-xl: 1.25rem;
+		--font-size-2xl: 1.5rem;
+		--font-size-3xl: 1.875rem;
+		--font-size-4xl: 2.25rem;
+		--font-size-5xl: 3rem;
+
+		/* Font Weight */
+		--font-weight-thin: 100;
+		--font-weight-light: 300;
+		--font-weight-normal: 400;
+		--font-weight-medium: 500;
+		--font-weight-semibold: 600;
+		--font-weight-bold: 700;
+		--font-weight-black: 900;
+
+		/* Line Height */
+		--line-height-none: 1;
+		--line-height-tight: 1.1;
+		--line-height-snug: 1.25;
+		--line-height-normal: 1.5;
+		--line-height-relaxed: 1.625;
+		--line-height-loose: 2;
+
+		/* Letter Spacing */
+		--tracking-tighter: -0.05em;
+		--tracking-tight: -0.025em;
+		--tracking-normal: 0em;
+		--tracking-wide: 0.025em;
+		--tracking-wider: 0.05em;
+		--tracking-widest: 0.1em;
 
 		/* Spacing */
 		--spacing-xs: 0.25rem;
@@ -38,6 +76,11 @@
 		--spacing-lg: 1.5rem;
 		--spacing-xl: 2rem;
 		--spacing-2xl: 3rem;
+
+		/* Border Width */
+		--border-width: 1px;
+		--border-width-thick: 2px;
+		--border-width-heavy: 3px;
 
 		/* Border Radius */
 		--radius-xs: 0.125rem;
@@ -57,11 +100,34 @@
 		--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
 		--shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
 
-		/* Transitions */
+		/* Duration */
 		--duration-fast: 100ms;
 		--duration-normal: 200ms;
 		--duration-slow: 300ms;
+		--duration-slower: 400ms;
+
+		/* Easing */
 		--ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+		--ease-in: cubic-bezier(0.4, 0, 1, 1);
+		--ease-out: cubic-bezier(0, 0, 0.2, 1);
+		--ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+		/* Blur */
+		--blur-sm: 4px;
+		--blur-md: 12px;
+		--blur-lg: 24px;
+
+		/* Z-Index */
+		--z-index-base: 0;
+		--z-index-raised: 1;
+		--z-index-dropdown: 100;
+		--z-index-sticky: 500;
+		--z-index-overlay: 1000;
+		--z-index-modal: 1100;
+		--z-index-toast: 1200;
+
+		/* Opacity */
+		--opacity-disabled: 0.5;
 
 		/* ── Legacy Aliases (remove in next major version) ── */
 		--AccentColor: var(--color-accent);
