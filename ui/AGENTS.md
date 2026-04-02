@@ -90,7 +90,10 @@ Each component follows a consistent structure:
 `button`, `button-group`, `checkbox`, `radio`, `select`, `range`, `input-button`, `color-input`, `number-snapper`, `circular-range`
 
 ### Data Display & Entry (`ui/data/`)
-`chart`, `grid`, `entry`, `mapper` (chart demos in `data/chart/demos/`)
+`grid`, `entry`, `mapper`
+
+### Charts (`ui/charts/`)
+`chart` (web component) + demo pages (area, bar, candlestick, column, donut, line, pie, poll)
 
 ### Layout & Navigation
 `layout`, `accordion`, `tabs`, `tab-cordion`, `breadcrumbs`, `menu`, `nav-compass`, `carousel`, `bento`
