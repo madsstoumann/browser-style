@@ -8,7 +8,8 @@ A CSS-first accordion component built on native `<details>` and `<summary>` elem
 - Exclusive open behavior via the HTML `name` attribute (no JS needed)
 - Smooth open/close transitions via `::details-content`
 - Light/dark mode support via design tokens
-- Variants: `item` (card-style), `media` (side-by-side layout with `<cq-box>`)
+- Variants: `item`, `media`/`split-view`, composable (`bordered`, `divided`, `separated`, `rounded`, `breakout`, `elevated`, `background`)
+- `type="horizontal"` for blinds-style horizontal layout (responsive via container query)
 - `no-collapse` attribute to ensure one item stays open
 - Optional `<ui-accordion-item>` web component for framework use
 - Works standalone or with `@browser.style/base` for full theming
@@ -110,7 +111,8 @@ The `name` attribute on `<ui-accordion>` automatically propagates to all child `
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `name` | string | Groups items for exclusive open behavior (propagated to `<details>`) |
-| `variant` | string | Space-separated variants: `"item"`, `"media"` |
+| `variant` | string | Space-separated: `item`, `media`, `split-view`, `bordered`, `divided`, `separated`, `rounded`, `breakout`, `elevated`, `background` |
+| `type` | string | Layout mode: `"horizontal"` for blinds-style layout |
 | `no-collapse` | boolean | Ensures one item always stays open |
 
 **`<ui-accordion-item>`**
@@ -318,15 +320,70 @@ Keeps one item always open — the open item's summary becomes non-interactive:
 </ui-accordion>
 ```
 
-Works with all variants:
+Works with all variants.
+
+### Composable variants
+
+Combine variants via space-separated values. These only override custom properties — they never break the open/close mechanism.
 
 ```html
-<ui-accordion variant="media" no-collapse name="combined">
+<!-- Framed group with rounded corners -->
+<ui-accordion variant="bordered rounded" name="group">
+
+<!-- Separated cards -->
+<ui-accordion variant="separated rounded" name="group">
+
+<!-- Breakout with shadow -->
+<ui-accordion variant="breakout elevated rounded" name="group">
+
+<!-- Full treatment -->
+<ui-accordion variant="background bordered divided rounded" name="group">
+```
+
+| Token | What it does |
+|-------|-------------|
+| `bordered` | Border frame around the group + inline padding |
+| `divided` | Divider line on each item |
+| `separated` | Card-style: gap between items + full border on each |
+| `rounded` | Border-radius on first/last (or all with `separated`, or contextual with `breakout`) |
+| `breakout` | Open item shifts out via translate; adjacent items react |
+| `elevated` | Box-shadow instead of border on open item (requires `breakout`) |
+| `background` | Container background color + padding |
+
+### Split view (`variant="split-view"`)
+
+Same as `media` but also supports `data-split` on any element for generic split content:
+
+```html
+<ui-accordion variant="split-view" name="showcase">
   <cq-box>
-    ...
+    <details class="ui-accordion" open>
+      <summary>Feature<ui-icon type="plus-minus"></ui-icon></summary>
+      <div>
+        <p>Text content</p>
+        <div data-split>Any content in the split panel</div>
+      </div>
+    </details>
   </cq-box>
 </ui-accordion>
 ```
+
+### Horizontal layout (`type="horizontal"`)
+
+Blinds-style layout at wider viewports (>650px). Falls back to vertical accordion below. Requires `<cq-box>` for CSS-only; auto-inserted by web component.
+
+```html
+<ui-accordion type="horizontal" name="sections" style="block-size: 300px;">
+  <cq-box>
+    <details class="ui-accordion" name="sections" open>
+      <summary>About Us</summary>
+      <div><p>Content</p></div>
+    </details>
+  </cq-box>
+</ui-accordion>
+```
+
+Variants adapt: `divided` draws vertical lines, `bordered` frames the group, `rounded` applies left/right radii.
 
 ---
 
@@ -362,17 +419,31 @@ Override accordion-specific tokens for targeted changes:
 | Token | Default | Description |
 |-------|---------|-------------|
 | `--ui-accordion-border-style` | `solid` | Border line style |
-| `--ui-accordion-border-width` | `var(--input-border-width, 1px)` | Border width |
+| `--ui-accordion-border-width` | `var(--border-width, 1px)` | Border width |
 | `--ui-accordion-border-color` | `var(--color-border, hsl(0,0%,80%))` | Border color |
-| `--ui-accordion-border-radius` | `0` | Corner radius |
+| `--ui-accordion-border-color-open` | `light-dark(hsl(0 0% 60%), hsl(0 0% 40%))` | Border color for open items (breakout) |
+| `--ui-accordion-border-width-open` | `var(--border-width-thick, 2px)` | Border width for open items (breakout) |
+| `--ui-accordion-border-radius` | `0` | Base corner radius |
+| `--ui-accordion-border-radius-rounded` | `var(--radius-lg, 1em)` | Radius for `rounded` variant |
+| `--ui-accordion-border-radius-separated` | `var(--radius-xl, 1.5em)` | Larger radius for `rounded` + `separated` |
 | `--ui-accordion-bg-hover` | gradient using `--color-field` | Summary hover background |
-| `--ui-accordion-gap` | `var(--spacing-xl, 2rem)` | Media layout column gap |
+| `--ui-accordion-gap` | `var(--spacing-xl, 2rem)` | Split-view / media column gap |
+| `--ui-accordion-row-gap` | `var(--spacing-md, 1em)` | Gap between items (`separated`) |
 | `--ui-accordion-shadow` | `none` | Box shadow |
+| `--ui-accordion-shadow-elevated` | `var(--shadow-md, ...)` | Shadow for open items (`elevated`) |
+| `--ui-accordion-shadow-elevated-adjacent` | `var(--shadow-sm, ...)` | Shadow for adjacent items (`elevated`) |
 | `--ui-accordion-margin-end` | `0` | Bottom margin |
 | `--ui-accordion-padding-block` | `1.5ch` | Vertical padding |
 | `--ui-accordion-padding-inline` | `0` | Horizontal padding |
+| `--ui-accordion-summary-font-size` | `1em` | Summary heading font size |
+| `--ui-accordion-summary-font-weight` | `var(--font-weight-medium, 500)` | Summary heading font weight |
 | `--ui-accordion-duration` | `var(--duration-slow, .3s)` | Open/close animation speed |
-| `--ui-accordion-media-duration` | `.6s` | Media image transition speed |
+| `--ui-accordion-split-view-duration` | `.6s` | Split-view / media transition speed |
+| `--ui-accordion-background` | `var(--color-surface-alt, ...)` | Background color (`background` variant) |
+| `--ui-accordion-background-padding` | `1.5ch` | Padding (`background` variant) |
+| `--ui-accordion-breakout-unit` | `1rem` | Translate distance (`breakout`) |
+| `--ui-accordion-horizontal-border-radius` | `var(--radius-md, 0.5em)` | Clip-path radius (horizontal) |
+| `--ui-accordion-horizontal-shadow` | `-0.25em 0 1em -0.5em var(--color-overlay, ...)` | Shadow on collapsed horizontal items |
 
 ---
 
