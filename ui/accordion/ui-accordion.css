@@ -1,7 +1,7 @@
 /**
  * ui-accordion
- * @version 5.0.0
- * @date 2026-04-03
+ * @version 4.0.0
+ * @date 2026-04-01
  * @author Mads Stoumann
  */
 @import '../icon/index.css';
@@ -17,7 +17,7 @@
 				pointer-events: none;
 			}
 		}
-		&[variant~="split-view"] {
+		&[variant~="media"] {
 			container-type: inline-size;
 		}
 	}
@@ -25,31 +25,21 @@
 	/* Item styles */
 	:where(.ui-accordion) {
 		--ui-accordion-border-style: solid;
-		--ui-accordion-border-width: var(--border-width, 1px);
+		--ui-accordion-border-width: var(--input-border-width, 1px);
 		--ui-accordion-border-color: var(--color-border, hsl(0, 0%, 80%));
-		--ui-accordion-border-color-open: light-dark(hsl(0 0% 60%), hsl(0 0% 40%));
-		--ui-accordion-border-width-open: var(--border-width-thick, 2px);
 		--ui-accordion-border-radius: 0;
-		--ui-accordion-border-radius-rounded: var(--radius-lg, 1em);
-		--ui-accordion-border-radius-separated: var(--radius-xl, 1.5em);
 		--ui-accordion-bg-hover: linear-gradient(to right, #0000, var(--color-field, hsl(0, 0%, 97.5%)) 10% 90%, #0000);
 		--ui-accordion-gap: var(--spacing-xl, 2rem);
-		--ui-accordion-row-gap: var(--spacing-md, 1em);
 		--ui-accordion-shadow: none;
-		--ui-accordion-shadow-elevated: var(--shadow-md, 0 0 2px rgba(0,0,0,.14), 0 2px 2px rgba(0,0,0,.12), 0 1px 3px rgba(0,0,0,.2));
-		--ui-accordion-shadow-elevated-adjacent: var(--shadow-sm, 0 0 1px rgba(0,0,0,.07), 0 1px 1px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.1));
+		--ui-accordion-margin-end: 0;
 		--ui-accordion-padding-block: 1.5ch;
 		--ui-accordion-padding-inline: 0;
 		--ui-accordion-duration: var(--duration-slow, .3s);
-		--ui-accordion-split-view-duration: .6s;
-		--ui-accordion-background: var(--color-surface-alt, light-dark(#EEE, #222527));
-		--ui-accordion-background-padding: 1.5ch;
-		--ui-accordion-breakout-unit: 1rem;
-		--ui-accordion-horizontal-border-radius: var(--radius-md, 0.5em);
-		--ui-accordion-horizontal-shadow: -0.25em 0 1em -0.5em var(--color-overlay, rgba(0,0,0,0.5));
+		--ui-accordion-media-duration: .6s;
 		border-radius: var(--ui-accordion-border-radius);
 		box-shadow: var(--ui-accordion-shadow);
 		interpolate-size: allow-keywords;
+		margin-block-end: var(--ui-accordion-margin-end);
 		padding-inline: var(--ui-accordion-padding-inline);
 		& summary {
 			align-items: center;
@@ -87,130 +77,20 @@
 		&.--no-border { --ui-accordion-border-width: 0; }
 	}
 
-	/* === Variant: bordered — border around the entire group === */
-	:where(ui-accordion[variant~="bordered"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		border-inline: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-		&:first-of-type {
-			border-block-start: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-		}
-		&:last-of-type {
-			border-block-end: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-		}
-	}
-	/* bordered: suppress last-of-type bottom border when divided is also active */
-	:where(ui-accordion[variant~="bordered"]:not([variant~="divided"])) > :is(.ui-accordion, ui-accordion-item > .ui-accordion):last-of-type {
-		border-block-end: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+	/* Variant: item — applied via parent attribute or class */
+	:where(ui-accordion[variant~="item"]) > .ui-accordion,
+	:where(ui-accordion[variant~="item"]) > ui-accordion-item > .ui-accordion,
+	:where(.ui-accordion).--item {
+		--ui-accordion-border-width: 0;
+		--ui-accordion-border-radius: 1em;
+		--ui-accordion-shadow: 0 1em 4em color-mix(in srgb, CanvasText 10%, transparent);
+		--ui-accordion-margin-end: 2em;
+		--ui-accordion-padding-inline: 2.5ch;
 	}
 
-	/* === Variant: divided — divider line between each item === */
-	:where(ui-accordion[variant~="divided"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		border-block-end: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-		& summary {
-			border-block-end: 0;
-		}
-		&[open] summary + div {
-			border-block-end: 0;
-		}
-	}
-
-	/* === Variant: separated — card-style with gap between items === */
-	:where(ui-accordion[variant~="separated"]) {
-		display: flex;
-		flex-direction: column;
-		row-gap: var(--ui-accordion-row-gap);
-	}
-	:where(ui-accordion[variant~="separated"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		border: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-		& summary {
-			border-block-end: 0;
-		}
-		&[open] summary {
-			border: 0;
-			& + div {
-				border-block-end: 0;
-			}
-		}
-	}
-
-	/* === Variant: rounded === */
-	/* Default: first/last item get top/bottom radius */
-	:where(ui-accordion[variant~="rounded"]:not([variant~="separated"], [variant~="breakout"])) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		&:first-of-type,
-		&:first-of-type summary {
-			border-start-start-radius: var(--ui-accordion-border-radius-rounded);
-			border-start-end-radius: var(--ui-accordion-border-radius-rounded);
-		}
-		&:last-of-type,
-		&:last-of-type summary {
-			border-end-start-radius: var(--ui-accordion-border-radius-rounded);
-			border-end-end-radius: var(--ui-accordion-border-radius-rounded);
-		}
-	}
-	/* Rounded + separated: all items get larger radius */
-	:where(ui-accordion[variant~="rounded"][variant~="separated"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		border-radius: var(--ui-accordion-border-radius-separated);
-		& summary {
-			border-radius: var(--ui-accordion-border-radius-separated);
-		}
-	}
-	/* Rounded + breakout: open item gets full radius, adjacent items get side radius */
-	:where(ui-accordion[variant~="rounded"][variant~="breakout"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		&:first-of-type,
-		&[open] + :is(.ui-accordion, ui-accordion-item > .ui-accordion),
-		&[open] + :is(.ui-accordion, ui-accordion-item > .ui-accordion) summary {
-			border-start-start-radius: var(--ui-accordion-border-radius-rounded);
-			border-start-end-radius: var(--ui-accordion-border-radius-rounded);
-		}
-		&:last-of-type,
-		&:has(+ :is(.ui-accordion[open], ui-accordion-item > .ui-accordion[open])),
-		&:has(+ :is(.ui-accordion[open], ui-accordion-item > .ui-accordion[open])) summary {
-			border-end-start-radius: var(--ui-accordion-border-radius-rounded);
-			border-end-end-radius: var(--ui-accordion-border-radius-rounded);
-		}
-		&[open] {
-			border-radius: var(--ui-accordion-border-radius-rounded);
-		}
-	}
-
-	/* === Variant: breakout — open item shifts out === */
-	:where(ui-accordion[variant~="breakout"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		translate: 0 calc(var(--_y, 0) * var(--ui-accordion-breakout-unit));
-		transition: translate var(--ui-accordion-duration) ease, box-shadow var(--ui-accordion-duration) ease;
-		&[open] {
-			border: var(--ui-accordion-border-width-open) var(--ui-accordion-border-style) var(--ui-accordion-border-color-open);
-		}
-		&[open] + :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-			border-block-start: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-		}
-	}
-	:where(ui-accordion[variant~="breakout"]) > :is(.ui-accordion[open]:not(:first-of-type), .ui-accordion[open]:first-of-type ~ .ui-accordion) {
-		--_y: 1;
-	}
-	:where(ui-accordion[variant~="breakout"]) > .ui-accordion[open] ~ .ui-accordion {
-		--_y: 2;
-	}
-
-	/* === Variant: elevated — shadow on items (requires breakout) === */
-	:where(ui-accordion[variant~="breakout"][variant~="elevated"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		&[open] {
-			--ui-accordion-border-width-open: 0px;
-			box-shadow: var(--ui-accordion-shadow-elevated);
-		}
-		&:last-of-type:not([open]),
-		&:has(+ :is(.ui-accordion[open], ui-accordion-item > .ui-accordion[open])) {
-			box-shadow: var(--ui-accordion-shadow-elevated-adjacent);
-		}
-	}
-
-	/* === Variant: background — container background + padding === */
-	:where(ui-accordion[variant~="background"]) {
-		background: var(--ui-accordion-background);
-		padding: var(--ui-accordion-background-padding);
-	}
-
-	/* === Variant: split-view — side-by-side layout at >650px === */
+	/* Variant: media — requires <cq-box> as inner wrapper for container query */
 	@container (inline-size > 650px) {
-		:where(ui-accordion[variant~="split-view"]) > cq-box {
+		:where(ui-accordion[variant~="media"]) > cq-box {
 			display: grid;
 			grid-template-columns: 1fr 1fr;
 			position: relative;
@@ -220,8 +100,8 @@
 				&[open]::details-content {
 					display: contents;
 				}
-				&[open] summary + div > :is(img, video, picture, [data-split]) {
-					animation: accordion-split-view-in var(--ui-accordion-split-view-duration, .6s) ease;
+				&[open] summary + div > :is(img, video, picture) {
+					animation: accordion-media-in var(--ui-accordion-media-duration, .6s) ease;
 					block-size: auto;
 					inline-size: calc(50% - var(--ui-accordion-gap, 2rem));
 					inset-block-start: 0;
@@ -233,98 +113,12 @@
 		}
 	}
 
-	/* === Type: horizontal — blinds-style layout === */
-	:where(ui-accordion[type="horizontal"]) {
-		display: grid;
-		grid-auto-flow: column;
-		clip-path: inset(0% 0% 0% 0% round var(--ui-accordion-horizontal-border-radius));
-	}
-	:where(ui-accordion[type="horizontal"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		padding: var(--ui-accordion-padding-block) var(--ui-accordion-padding-inline);
-		& summary {
-			border-block-end: 0;
-			cursor: pointer;
-			list-style: none;
-		}
-		&[open] summary + div {
-			border-block-end: 0;
-		}
-		&:not([open]) {
-			box-shadow: var(--ui-accordion-horizontal-shadow);
-			writing-mode: vertical-lr;
-			& > summary {
-				block-size: 100%;
-			}
-		}
-	}
-
-	/* === Horizontal overrides for variants === */
-
-	/* Divided: vertical lines between items */
-	:where(ui-accordion[type="horizontal"][variant~="divided"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		border-block-end: 0;
-		border-inline-end: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-		& summary { border-block-end: 0; }
-		&[open] summary + div { border-block-end: 0; }
-		&:last-of-type { border-inline-end: 0; }
-	}
-
-	/* Bordered: frame around the group */
-	:where(ui-accordion[type="horizontal"][variant~="bordered"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		border-inline: 0;
-		border-block: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-		& summary { border-block-end: 0; }
-		&[open] summary + div { border-block-end: 0; }
-		&:first-of-type {
-			border-inline-start: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-		}
-		&:last-of-type {
-			border-inline-end: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-		}
-	}
-
-	/* Rounded: left radii on first, right radii on last */
-	:where(ui-accordion[type="horizontal"][variant~="rounded"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		&:first-of-type,
-		&:first-of-type summary {
-			border-start-start-radius: var(--ui-accordion-border-radius-rounded);
-			border-end-start-radius: var(--ui-accordion-border-radius-rounded);
-		}
-		&:last-of-type,
-		&:last-of-type summary {
-			border-start-end-radius: var(--ui-accordion-border-radius-rounded);
-			border-end-end-radius: var(--ui-accordion-border-radius-rounded);
-		}
-	}
-
-	/* Separated: column-gap instead of row-gap */
-	:where(ui-accordion[type="horizontal"][variant~="separated"]) {
-		column-gap: var(--ui-accordion-row-gap);
-	}
-	:where(ui-accordion[type="horizontal"][variant~="separated"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		border: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-		& summary { border-block-end: 0; }
-		&[open] summary + div { border-block-end: 0; }
-	}
-
-	/* Breakout: translate on x-axis */
-	:where(ui-accordion[type="horizontal"][variant~="breakout"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		translate: calc(var(--_x, 0) * var(--ui-accordion-breakout-unit)) 0;
-		transition: translate var(--ui-accordion-duration) ease, box-shadow var(--ui-accordion-duration) ease;
-	}
-	:where(ui-accordion[type="horizontal"][variant~="breakout"]) > :is(.ui-accordion[open]:not(:first-of-type), .ui-accordion[open]:first-of-type ~ .ui-accordion) {
-		--_x: 1;
-	}
-	:where(ui-accordion[type="horizontal"][variant~="breakout"]) > .ui-accordion[open] ~ .ui-accordion {
-		--_x: 2;
-	}
-
 	/* Web component item — renders inline (light DOM) */
 	:where(ui-accordion-item) {
 		display: contents;
 	}
 
-	@keyframes accordion-split-view-in {
+	@keyframes accordion-media-in {
 		from { opacity: 0; scale: 1.02; }
 	}
 }
