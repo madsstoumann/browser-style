@@ -2,7 +2,7 @@
  * <ui-accordion> and <ui-accordion-item>
  * Light DOM web component wrappers for the CSS-first accordion.
  * Renders native <details>/<summary> elements — no Shadow DOM.
- * @version 5.0.0
+ * @version 4.0.0
  */
 
 class UiAccordionItem extends HTMLElement {
@@ -57,7 +57,7 @@ class UiAccordionItem extends HTMLElement {
 }
 
 class UiAccordion extends HTMLElement {
-	static observedAttributes = ['name', 'variant', 'type'];
+	static observedAttributes = ['name', 'variant'];
 
 	connectedCallback() {
 		this.ensureCqBox();
@@ -66,15 +66,14 @@ class UiAccordion extends HTMLElement {
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (oldValue === newValue || !this.isConnected) return;
-		if (name === 'variant' || name === 'type') this.ensureCqBox();
+		if (name === 'variant') this.ensureCqBox();
 		if (name === 'name') this.propagateName();
 	}
 
 	ensureCqBox() {
-		const variants = (this.getAttribute('variant') || '').split(/\s+/);
-		const needsCqBox = variants.includes('media') || variants.includes('split-view') || this.getAttribute('type') === 'horizontal';
+		const hasMedia = (this.getAttribute('variant') || '').split(/\s+/).includes('media');
 		const existing = this.querySelector(':scope > cq-box');
-		if (needsCqBox && !existing) {
+		if (hasMedia && !existing) {
 			const box = document.createElement('cq-box');
 			while (this.firstChild) box.appendChild(this.firstChild);
 			this.appendChild(box);
