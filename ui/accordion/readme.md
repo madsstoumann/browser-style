@@ -386,20 +386,39 @@ By default, `img`, `video`, and `picture` elements auto-position in the split pa
 
 ## Horizontal Layout
 
-Set `type="horizontal"` for a blinds-style layout where collapsed items display text vertically:
+Set `type="horizontal"` for a blinds-style layout where collapsed items display text vertically. At wider viewports (>650px) the layout switches from vertical to horizontal via a container query. Requires `<cq-box>` for CSS-only usage.
+
+CSS-only:
 
 ```html
 <ui-accordion type="horizontal" name="sections" style="block-size: 300px;">
-  <details class="ui-accordion" name="sections" open>
-    <summary>About Us</summary>
-    <div><p>Content here.</p></div>
-  </details>
-  <details class="ui-accordion" name="sections">
-    <summary>Products</summary>
-    <div><p>Content here.</p></div>
-  </details>
+  <cq-box>
+    <details class="ui-accordion" name="sections" open>
+      <summary>About Us</summary>
+      <div><p>Content here.</p></div>
+    </details>
+    <details class="ui-accordion" name="sections">
+      <summary>Products</summary>
+      <div><p>Content here.</p></div>
+    </details>
+  </cq-box>
 </ui-accordion>
 ```
+
+Web component (no `<cq-box>` needed — auto-inserted by JS):
+
+```html
+<ui-accordion type="horizontal" name="sections" style="block-size: 300px;">
+  <ui-accordion-item label="About Us" open>
+    <p>Content here.</p>
+  </ui-accordion-item>
+  <ui-accordion-item label="Products">
+    <p>Content here.</p>
+  </ui-accordion-item>
+</ui-accordion>
+```
+
+Below 650px, horizontal mode falls back to a standard vertical accordion.
 
 Variants adapt to horizontal layout:
 
@@ -410,7 +429,9 @@ Variants adapt to horizontal layout:
 
 ```html
 <ui-accordion type="horizontal" variant="bordered rounded" style="block-size: 300px;">
-  ...
+  <cq-box>
+    ...
+  </cq-box>
 </ui-accordion>
 ```
 

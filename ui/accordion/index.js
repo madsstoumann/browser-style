@@ -66,14 +66,15 @@ class UiAccordion extends HTMLElement {
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (oldValue === newValue || !this.isConnected) return;
-		if (name === 'variant') this.ensureCqBox();
+		if (name === 'variant' || name === 'type') this.ensureCqBox();
 		if (name === 'name') this.propagateName();
 	}
 
 	ensureCqBox() {
 		const hasSplitView = (this.getAttribute('variant') || '').split(/\s+/).includes('split-view');
+		const isHorizontal = this.getAttribute('type') === 'horizontal';
 		const existing = this.querySelector(':scope > cq-box');
-		if (hasSplitView && !existing) {
+		if ((hasSplitView || isHorizontal) && !existing) {
 			const box = document.createElement('cq-box');
 			while (this.firstChild) box.appendChild(this.firstChild);
 			this.appendChild(box);

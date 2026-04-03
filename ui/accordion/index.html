@@ -276,84 +276,92 @@
 
 	<br>
 	<h2>Horizontal Layout</h2>
-	<p>With <code>type="horizontal"</code> — blinds-style layout. Collapsed items display text vertically.</p>
+	<p>With <code>type="horizontal"</code> — blinds-style layout at wider viewports (&gt;650px), vertical accordion below. Requires <code>&lt;cq-box&gt;</code> for CSS-only usage (auto-inserted by web component).</p>
 
 	<ui-accordion type="horizontal" name="h-default" style="block-size: 300px;">
-		<details class="ui-accordion" name="h-default" open>
-			<summary>About Us</summary>
-			<div>
-				<p>We are a team of passionate developers building tools that make the web better. Our mission is to embrace native browser capabilities.</p>
-			</div>
-		</details>
-		<details class="ui-accordion" name="h-default">
-			<summary>Our Products</summary>
-			<div>
-				<p>We build CSS-first components that work without JavaScript. Progressive enhancement is at the core of everything we do.</p>
-			</div>
-		</details>
-		<details class="ui-accordion" name="h-default">
-			<summary>Contact</summary>
-			<div>
-				<p>Reach out to us through our GitHub repository or via email. We love hearing from the community.</p>
-			</div>
-		</details>
-		<details class="ui-accordion" name="h-default">
-			<summary>Careers</summary>
-			<div>
-				<p>Join our growing team. We are always looking for talented individuals who share our passion for the web platform.</p>
-			</div>
-		</details>
+		<cq-box>
+			<details class="ui-accordion" name="h-default" open>
+				<summary>About Us</summary>
+				<div>
+					<p>We are a team of passionate developers building tools that make the web better. Our mission is to embrace native browser capabilities.</p>
+				</div>
+			</details>
+			<details class="ui-accordion" name="h-default">
+				<summary>Our Products</summary>
+				<div>
+					<p>We build CSS-first components that work without JavaScript. Progressive enhancement is at the core of everything we do.</p>
+				</div>
+			</details>
+			<details class="ui-accordion" name="h-default">
+				<summary>Contact</summary>
+				<div>
+					<p>Reach out to us through our GitHub repository or via email. We love hearing from the community.</p>
+				</div>
+			</details>
+			<details class="ui-accordion" name="h-default">
+				<summary>Careers</summary>
+				<div>
+					<p>Join our growing team. We are always looking for talented individuals who share our passion for the web platform.</p>
+				</div>
+			</details>
+		</cq-box>
 	</ui-accordion>
 
 	<br>
 	<h3>Horizontal with <code>variant="divided"</code></h3>
 	<ui-accordion type="horizontal" variant="divided" name="h-divided" style="block-size: 300px;">
-		<details class="ui-accordion" name="h-divided" open>
-			<summary>Section One</summary>
-			<div><p>Vertical divider lines between horizontal items.</p></div>
-		</details>
-		<details class="ui-accordion" name="h-divided">
-			<summary>Section Two</summary>
-			<div><p>Each item is separated by a vertical line.</p></div>
-		</details>
-		<details class="ui-accordion" name="h-divided">
-			<summary>Section Three</summary>
-			<div><p>The last item has no trailing divider.</p></div>
-		</details>
+		<cq-box>
+			<details class="ui-accordion" name="h-divided" open>
+				<summary>Section One</summary>
+				<div><p>Vertical divider lines between horizontal items.</p></div>
+			</details>
+			<details class="ui-accordion" name="h-divided">
+				<summary>Section Two</summary>
+				<div><p>Each item is separated by a vertical line.</p></div>
+			</details>
+			<details class="ui-accordion" name="h-divided">
+				<summary>Section Three</summary>
+				<div><p>The last item has no trailing divider.</p></div>
+			</details>
+		</cq-box>
 	</ui-accordion>
 
 	<br>
 	<h3>Horizontal with <code>variant="bordered rounded"</code></h3>
 	<ui-accordion type="horizontal" variant="bordered rounded" name="h-bordered" style="block-size: 300px;">
-		<details class="ui-accordion" name="h-bordered" open>
-			<summary>Section One</summary>
-			<div><p>Bordered frame with rounded corners on horizontal layout.</p></div>
-		</details>
-		<details class="ui-accordion" name="h-bordered">
-			<summary>Section Two</summary>
-			<div><p>Left radii on first item, right radii on last item.</p></div>
-		</details>
-		<details class="ui-accordion" name="h-bordered">
-			<summary>Section Three</summary>
-			<div><p>The border adapts to the horizontal axis.</p></div>
-		</details>
+		<cq-box>
+			<details class="ui-accordion" name="h-bordered" open>
+				<summary>Section One</summary>
+				<div><p>Bordered frame with rounded corners on horizontal layout.</p></div>
+			</details>
+			<details class="ui-accordion" name="h-bordered">
+				<summary>Section Two</summary>
+				<div><p>Left radii on first item, right radii on last item.</p></div>
+			</details>
+			<details class="ui-accordion" name="h-bordered">
+				<summary>Section Three</summary>
+				<div><p>The border adapts to the horizontal axis.</p></div>
+			</details>
+		</cq-box>
 	</ui-accordion>
 
 	<br>
 	<h3>Horizontal with <code>variant="separated rounded"</code></h3>
 	<ui-accordion type="horizontal" variant="separated rounded" name="h-separated" style="block-size: 300px;">
-		<details class="ui-accordion" name="h-separated" open>
-			<summary>Card One</summary>
-			<div><p>Card-style horizontal items with column gap.</p></div>
-		</details>
-		<details class="ui-accordion" name="h-separated">
-			<summary>Card Two</summary>
-			<div><p>Each item is a separate card with full border and rounded corners.</p></div>
-		</details>
-		<details class="ui-accordion" name="h-separated">
-			<summary>Card Three</summary>
-			<div><p>Gap between cards uses <code>--ui-accordion-row-gap</code>.</p></div>
-		</details>
+		<cq-box>
+			<details class="ui-accordion" name="h-separated" open>
+				<summary>Card One</summary>
+				<div><p>Card-style horizontal items with column gap.</p></div>
+			</details>
+			<details class="ui-accordion" name="h-separated">
+				<summary>Card Two</summary>
+				<div><p>Each item is a separate card with full border and rounded corners.</p></div>
+			</details>
+			<details class="ui-accordion" name="h-separated">
+				<summary>Card Three</summary>
+				<div><p>Gap between cards uses <code>--ui-accordion-row-gap</code>.</p></div>
+			</details>
+		</cq-box>
 	</ui-accordion>
 
 	<br>

@@ -17,7 +17,8 @@
 				pointer-events: none;
 			}
 		}
-		&[variant~="split-view"] {
+		&[variant~="split-view"],
+		&[type="horizontal"] {
 			container-type: inline-size;
 		}
 	}
@@ -233,90 +234,91 @@
 		}
 	}
 
-	/* === Type: horizontal — blinds-style layout === */
-	:where(ui-accordion[type="horizontal"]) {
-		display: grid;
-		grid-auto-flow: column;
-		clip-path: inset(0% 0% 0% 0% round var(--ui-accordion-horizontal-border-radius));
-	}
-	:where(ui-accordion[type="horizontal"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		padding: var(--ui-accordion-padding-block) var(--ui-accordion-padding-inline);
-		& summary {
-			border-block-end: 0;
-			cursor: pointer;
-			list-style: none;
-		}
-		&[open] summary + div {
-			border-block-end: 0;
-		}
-		&:not([open]) {
-			box-shadow: var(--ui-accordion-horizontal-shadow);
-			writing-mode: vertical-lr;
-			& > summary {
-				block-size: 100%;
+	/* === Type: horizontal — blinds-style layout at >650px, vertical below === */
+	@container (inline-size > 650px) {
+		:where(ui-accordion[type="horizontal"]) > cq-box {
+			display: grid;
+			grid-auto-flow: column;
+			clip-path: inset(0% 0% 0% 0% round var(--ui-accordion-horizontal-border-radius));
+			& > .ui-accordion,
+			& > ui-accordion-item > .ui-accordion {
+				padding: var(--ui-accordion-padding-block) var(--ui-accordion-padding-inline);
+				& summary {
+					border-block-end: 0;
+					cursor: pointer;
+					list-style: none;
+				}
+				&[open] summary + div {
+					border-block-end: 0;
+				}
+				&:not([open]) {
+					box-shadow: var(--ui-accordion-horizontal-shadow);
+					writing-mode: vertical-lr;
+					& > summary {
+						block-size: 100%;
+					}
+				}
 			}
 		}
-	}
 
-	/* === Horizontal overrides for variants === */
-
-	/* Divided: vertical lines between items */
-	:where(ui-accordion[type="horizontal"][variant~="divided"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		border-block-end: 0;
-		border-inline-end: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-		& summary { border-block-end: 0; }
-		&[open] summary + div { border-block-end: 0; }
-		&:last-of-type { border-inline-end: 0; }
-	}
-
-	/* Bordered: frame around the group */
-	:where(ui-accordion[type="horizontal"][variant~="bordered"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		border-inline: 0;
-		border-block: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-		& summary { border-block-end: 0; }
-		&[open] summary + div { border-block-end: 0; }
-		&:first-of-type {
-			border-inline-start: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-		}
-		&:last-of-type {
+		/* Divided: vertical lines between items */
+		:where(ui-accordion[type="horizontal"][variant~="divided"]) > cq-box > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
+			border-block-end: 0;
 			border-inline-end: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+			& summary { border-block-end: 0; }
+			&[open] summary + div { border-block-end: 0; }
+			&:last-of-type { border-inline-end: 0; }
 		}
-	}
 
-	/* Rounded: left radii on first, right radii on last */
-	:where(ui-accordion[type="horizontal"][variant~="rounded"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		&:first-of-type,
-		&:first-of-type summary {
-			border-start-start-radius: var(--ui-accordion-border-radius-rounded);
-			border-end-start-radius: var(--ui-accordion-border-radius-rounded);
+		/* Bordered: frame around the group */
+		:where(ui-accordion[type="horizontal"][variant~="bordered"]) > cq-box > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
+			border-inline: 0;
+			border-block: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+			& summary { border-block-end: 0; }
+			&[open] summary + div { border-block-end: 0; }
+			&:first-of-type {
+				border-inline-start: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+			}
+			&:last-of-type {
+				border-inline-end: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+			}
 		}
-		&:last-of-type,
-		&:last-of-type summary {
-			border-start-end-radius: var(--ui-accordion-border-radius-rounded);
-			border-end-end-radius: var(--ui-accordion-border-radius-rounded);
+
+		/* Rounded: left radii on first, right radii on last */
+		:where(ui-accordion[type="horizontal"][variant~="rounded"]) > cq-box > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
+			&:first-of-type,
+			&:first-of-type summary {
+				border-start-start-radius: var(--ui-accordion-border-radius-rounded);
+				border-end-start-radius: var(--ui-accordion-border-radius-rounded);
+			}
+			&:last-of-type,
+			&:last-of-type summary {
+				border-start-end-radius: var(--ui-accordion-border-radius-rounded);
+				border-end-end-radius: var(--ui-accordion-border-radius-rounded);
+			}
 		}
-	}
 
-	/* Separated: column-gap instead of row-gap */
-	:where(ui-accordion[type="horizontal"][variant~="separated"]) {
-		column-gap: var(--ui-accordion-row-gap);
-	}
-	:where(ui-accordion[type="horizontal"][variant~="separated"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		border: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-		& summary { border-block-end: 0; }
-		&[open] summary + div { border-block-end: 0; }
-	}
+		/* Separated: column-gap instead of row-gap */
+		:where(ui-accordion[type="horizontal"][variant~="separated"]) > cq-box {
+			column-gap: var(--ui-accordion-row-gap);
+		}
+		:where(ui-accordion[type="horizontal"][variant~="separated"]) > cq-box > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
+			border: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+			& summary { border-block-end: 0; }
+			&[open] summary + div { border-block-end: 0; }
+		}
 
-	/* Breakout: translate on x-axis */
-	:where(ui-accordion[type="horizontal"][variant~="breakout"]) > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
-		translate: calc(var(--_x, 0) * var(--ui-accordion-breakout-unit)) 0;
-		transition: translate var(--ui-accordion-duration) ease, box-shadow var(--ui-accordion-duration) ease;
-	}
-	:where(ui-accordion[type="horizontal"][variant~="breakout"]) > :is(.ui-accordion[open]:not(:first-of-type), .ui-accordion[open]:first-of-type ~ .ui-accordion) {
-		--_x: 1;
-	}
-	:where(ui-accordion[type="horizontal"][variant~="breakout"]) > .ui-accordion[open] ~ .ui-accordion {
-		--_x: 2;
+		/* Breakout: translate on x-axis */
+		:where(ui-accordion[type="horizontal"][variant~="breakout"]) > cq-box > :is(.ui-accordion, ui-accordion-item > .ui-accordion) {
+			translate: calc(var(--_x, 0) * var(--ui-accordion-breakout-unit)) 0;
+			transition: translate var(--ui-accordion-duration) ease, box-shadow var(--ui-accordion-duration) ease;
+		}
+		:where(ui-accordion[type="horizontal"][variant~="breakout"]) > cq-box > :is(.ui-accordion[open]:not(:first-of-type), .ui-accordion[open]:first-of-type ~ .ui-accordion) {
+			--_x: 1;
+		}
+		:where(ui-accordion[type="horizontal"][variant~="breakout"]) > cq-box > .ui-accordion[open] ~ .ui-accordion {
+			--_x: 2;
+		}
 	}
 
 	/* Web component item — renders inline (light DOM) */
