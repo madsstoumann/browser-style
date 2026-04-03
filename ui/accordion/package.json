@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/accordion",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "CSS-first accordion component with optional web component wrapper",
   "type": "module",
   "module": "index.js",

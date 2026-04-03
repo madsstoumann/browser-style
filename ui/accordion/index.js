@@ -2,7 +2,7 @@
  * <ui-accordion> and <ui-accordion-item>
  * Light DOM web component wrappers for the CSS-first accordion.
  * Renders native <details>/<summary> elements — no Shadow DOM.
- * @version 4.0.0
+ * @version 5.0.0
  */
 
 class UiAccordionItem extends HTMLElement {
@@ -57,7 +57,7 @@ class UiAccordionItem extends HTMLElement {
 }
 
 class UiAccordion extends HTMLElement {
-	static observedAttributes = ['name', 'variant'];
+	static observedAttributes = ['name', 'variant', 'type'];
 
 	connectedCallback() {
 		this.ensureCqBox();
@@ -71,9 +71,9 @@ class UiAccordion extends HTMLElement {
 	}
 
 	ensureCqBox() {
-		const hasMedia = (this.getAttribute('variant') || '').split(/\s+/).includes('media');
+		const hasSplitView = (this.getAttribute('variant') || '').split(/\s+/).includes('split-view');
 		const existing = this.querySelector(':scope > cq-box');
-		if (hasMedia && !existing) {
+		if (hasSplitView && !existing) {
 			const box = document.createElement('cq-box');
 			while (this.firstChild) box.appendChild(this.firstChild);
 			this.appendChild(box);
