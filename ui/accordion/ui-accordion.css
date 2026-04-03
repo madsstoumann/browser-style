@@ -1,14 +1,13 @@
 /**
  * ui-accordion
- * @version 4.0.0
- * @date 2026-04-01
+ * @version 4.5.0
+ * @date 2026-04-03
  * @author Mads Stoumann
  */
 @import '../icon/index.css';
 @layer bs-component {
 	/* Wrapper element */
 	:where(ui-accordion) {
-		display: block;
 		&[no-collapse] {
 			& > .ui-accordion[open] summary,
 			& > ui-accordion-item > .ui-accordion[open] summary,
@@ -17,65 +16,120 @@
 				pointer-events: none;
 			}
 		}
-		&[variant~="media"] {
-			container-type: inline-size;
-		}
 	}
 
-	/* Item styles */
-	:where(.ui-accordion) {
+
+	:where(ui-accordion) {
 		--ui-accordion-border-style: solid;
 		--ui-accordion-border-width: var(--input-border-width, 1px);
 		--ui-accordion-border-color: var(--color-border, hsl(0, 0%, 80%));
-		--ui-accordion-border-radius: 0;
+		--ui-accordion-border-radius: 1ch;
 		--ui-accordion-bg-hover: linear-gradient(to right, #0000, var(--color-field, hsl(0, 0%, 97.5%)) 10% 90%, #0000);
 		--ui-accordion-gap: var(--spacing-xl, 2rem);
 		--ui-accordion-shadow: none;
 		--ui-accordion-margin-end: 0;
 		--ui-accordion-padding-block: 1.5ch;
-		--ui-accordion-padding-inline: 0;
+		--ui-accordion-padding-inline: 1.5ch;
 		--ui-accordion-duration: var(--duration-slow, .3s);
 		--ui-accordion-media-duration: .6s;
-		border-radius: var(--ui-accordion-border-radius);
+	
 		box-shadow: var(--ui-accordion-shadow);
+		container-type: inline-size;
+		display: grid;
 		interpolate-size: allow-keywords;
-		margin-block-end: var(--ui-accordion-margin-end);
-		padding-inline: var(--ui-accordion-padding-inline);
-		& summary {
-			align-items: center;
+
+		details {
+			&::details-content {
+				block-size: 0;
+				content-visibility: hidden;
+				overflow: hidden;
+				transition: block-size var(--ui-accordion-duration), content-visibility var(--ui-accordion-duration), padding-block var(--ui-accordion-duration);
+				transition-behavior: allow-discrete;
+			}
+			&[open]::details-content {
+				block-size: auto;
+				content-visibility: visible;
+				padding-block: var(--ui-accordion-padding-block);
+			}
+			& summary {
+				align-items: center;
+				color: inherit;
+				cursor: pointer;
+				display: flex;
+				font-size: var(--ui-accordion-summary-font-size, 1em);
+				font-weight: var(--ui-accordion-summary-font-weight, 500);
+				justify-content: space-between;
+				padding-block: var(--ui-accordion-padding-block);
+				text-decoration: none;
+				transition: background var(--duration-normal, .2s) ease-in-out;
+				&::-webkit-details-marker { display: none; }
+			}			
+			&:not([open]) summary:hover { background: var(--ui-accordion-bg-hover); }
+		}		
+	}
+
+	/* Variants */
+
+	/* bordered */
+	ui-accordion[variant~="bordered"]  {
+		border: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+		details {
+			padding-inline: var(--ui-accordion-padding-inline);
+		}
+	}
+
+	/* divided */
+	ui-accordion[variant~="divided"]  {
+		details:not(:last-of-type) {
 			border-block-end: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-			color: inherit;
-			cursor: pointer;
-			display: flex;
-			font-size: larger;
-			font-weight: 500;
-			justify-content: space-between;
-			padding-block: var(--ui-accordion-padding-block);
-			text-decoration: none;
-			transition: background var(--duration-normal, .2s) ease-in-out;
-			&::-webkit-details-marker { display: none; }
 		}
-		&::details-content {
-			block-size: 0;
-			content-visibility: hidden;
-			overflow: hidden;
-			transition: block-size var(--ui-accordion-duration), content-visibility var(--ui-accordion-duration), padding-block var(--ui-accordion-duration);
-			transition-behavior: allow-discrete;
+	}
+
+	/* rounded */
+	ui-accordion[variant~="rounded"] {
+		border-radius: var(--ui-accordion-border-radius);
+		&[variant~="separate"] details {
+			border-radius: var(--ui-accordion-border-radius);
 		}
-		&[open]::details-content {
-			block-size: auto;
-			content-visibility: visible;
+	}
+
+	/* separate */
+	ui-accordion[variant~="separate"] {
+		row-gap: var(--ui-accordion-gap);
+		details {
+			border: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+			padding-inline: var(--ui-accordion-padding-inline);
 		}
-		&:not([open]) summary:hover { background: var(--ui-accordion-bg-hover); }
-		&[open] summary {
-			border: 0;
-			& + div {
-				border-block-end: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-				padding-block: 0 var(--ui-accordion-padding-block);
+	}
+
+	@container (inline-size > 650px) {
+		/* === type: horizontal === */
+		ui-accordion[type~="horizontal"] {
+			cq-box {
+				display: grid;
+				grid-auto-flow: column;
+
+				details:not([open]) {
+					padding-inline: 0;
+					writing-mode: vertical-lr;
+					summary {
+						block-size: 100%;
+						padding-inline: var(--ui-accordion-padding-inline);
+					}
+				}
+				ui-icon { display: none; }
+			}
+			&[variant~="divided"] details[open]:not(:last-of-type) {
+				border-block-end: 0;
+				border-inline-end: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
 			}
 		}
-		&.--no-border { --ui-accordion-border-width: 0; }
+		
+		/* === type: split === */
+		ui-accordion[type~="split"] {}
 	}
+
+
 
 	/* Variant: item — applied via parent attribute or class */
 	:where(ui-accordion[variant~="item"]) > .ui-accordion,
