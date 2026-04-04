@@ -52,7 +52,7 @@
 				justify-content: space-between;
 				padding-block: var(--ui-accordion-padding-block);
 				text-decoration: none;
-				transition: background var(--duration-normal, .2s) ease-in-out;
+				transition: background var(--duration-normal, .2s) var(--ease-in-out, ease-in-out);
 				&::-webkit-details-marker { display: none; }
 			}			
 			&:not([open]) summary:hover { background: var(--ui-accordion-bg-hover); }
@@ -94,7 +94,7 @@
 		details[open] {
 			border: var(--ui-accordion-breakout-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
 		}
-		details:where([open] + details) {
+		details[open] + details {
 			border-block-start: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
 		}
 		details[open]:not(:first-of-type),
@@ -216,12 +216,12 @@
 					}
 					&[open] [data-split]{
 						block-size: auto;
-						inline-size: calc(50% - var(--ui-accordion-gap, 2rem));
+						inline-size: calc(50% - var(--ui-accordion-gap));
 						inset-block-start: 0;
 						inset-inline-end: 0;
 						position: absolute;
 						&:is(img, video, picture) {
-							animation: accordion-media-in var(--ui-accordion-media-duration, .6s) ease;
+							animation: accordion-media-in var(--ui-accordion-media-duration) ease;
 							object-fit: cover;
 						}
 					}
