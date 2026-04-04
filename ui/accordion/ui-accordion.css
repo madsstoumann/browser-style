@@ -1,35 +1,42 @@
 /**
  * ui-accordion
- * @version 4.0.1
+ * @version 4.0.2
  * @date 2026-04-04
  * @author Mads Stoumann
  */
 @import '../icon/index.css';
 @layer bs-component {
 	:where(ui-accordion) {
-		--ui-accordion-border-style: solid;
-		--ui-accordion-border-width: var(--input-border-width, 1px);
+		--ui-accordion-background: inherit;
+		--ui-accordion-bg-hover: linear-gradient(to right, #0000, var(--color-field, hsl(0, 0%, 97.5%)) 10% 90%, #0000);
 		--ui-accordion-border-color: var(--color-border, hsl(0, 0%, 80%));
 		--ui-accordion-border-radius: 1ch;
-		--ui-accordion-bg-hover: linear-gradient(to right, #0000, var(--color-field, hsl(0, 0%, 97.5%)) 10% 90%, #0000);
-		--ui-accordion-gap: var(--spacing-xl, 2rem);
-		--ui-accordion-shadow: none;
-		--ui-accordion-margin-end: 0;
-		--ui-accordion-padding-block: 1.5ch;
-		--ui-accordion-padding-inline: 1.5ch;
-		--ui-accordion-padding-inline-separate: 2.25ch;
-		--ui-accordion-duration: var(--duration-slow, .3s);
-		--ui-accordion-media-duration: .6s;
-		--ui-accordion-breakout-unit: var(--spacing-md, 1rem);
+		--ui-accordion-border-style: solid;
+		--ui-accordion-border-width: var(--input-border-width, 1px);
 		--ui-accordion-breakout-border-width: var(--border-width-thick, 2px);
+		--ui-accordion-breakout-unit: var(--spacing-md, 1rem);
+		--ui-accordion-color: inherit;
+		--ui-accordion-duration: var(--duration-slow, .3s);
+		--ui-accordion-gap: var(--spacing-xl, 2rem);
 		--ui-accordion-horizontal-fixed-height: 400px;
-	
+		--ui-accordion-margin-end: 0;
+		--ui-accordion-media-duration: .6s;
+		--ui-accordion-padding-block: 1.5ch;
+		--ui-accordion-padding-inline-separate: 2.25ch;
+		--ui-accordion-padding-inline: 1.5ch;
+		--ui-accordion-shadow: none;
+		
+		--_border: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+		--_border-breakout: var(--ui-accordion-breakout-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+
 		box-shadow: var(--ui-accordion-shadow);
 		container-type: inline-size;
 		display: grid;
 		interpolate-size: allow-keywords;
 
 		details {
+			background: var(--ui-accordion-background);
+			color: var(--ui-accordion-color);
 			&::details-content {
 				block-size: 0;
 				content-visibility: hidden;
@@ -68,34 +75,30 @@
 
 	/* bordered */
 	ui-accordion[variant~="bordered"] {
-		border: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+		border: var(--_border);
 		details {
 			padding-inline: var(--ui-accordion-padding-inline);
 		}
 	}
 
 	/* breakout */
-	ui-accordion[variant~="breakout"]:has(details[open]) {
-		margin-block-end: calc(2 * var(--ui-accordion-breakout-unit));
-	}
 	ui-accordion[variant~="breakout"] {
+		&:has(details[open]) {
+			margin-block-end: calc(2 * var(--ui-accordion-breakout-unit));
+		}
 		details {
-			border-inline: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+			border-inline: var(--_border);
 			padding-inline: var(--ui-accordion-padding-inline);
 			translate: 0 calc(var(--_y, 0) * var(--ui-accordion-breakout-unit));
 			transition: translate var(--ui-accordion-duration) ease;
-			&:first-of-type {
-				border-block-start: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-			}
-			&:last-of-type {
-				border-block-end: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-			}
+			&:first-of-type { border-block-start: var(--_border); }
+			&:last-of-type { border-block-end: var(--_border); }
 		}
 		details[open] {
-			border: var(--ui-accordion-breakout-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+			border: var(--_border-breakout);
 		}
 		details[open] + details {
-			border-block-start: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+			border-block-start: var(--_border);
 		}
 		details[open]:not(:first-of-type),
 		details[open]:first-of-type ~ details {
@@ -124,15 +127,11 @@
 	}
 
 	/* divided */
-	ui-accordion[variant~="bordered"],
-	ui-accordion[variant~="breakout"],
-	ui-accordion[variant~="divided"] {
-		details:not(:last-of-type) {
-			border-block-end: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-		}
+	ui-accordion:is([variant~="bordered"], [variant~="breakout"], [variant~="divided"]) details:not(:last-of-type) {
+		border-block-end: var(--_border);
 	}
 	ui-accordion[variant~="breakout"] details[open]:not(:last-of-type) {
-		border-block-end: var(--ui-accordion-breakout-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+		border-block-end: var(--_border-breakout);
 	}
 
 	/* rounded */
@@ -143,12 +142,11 @@
 		}
 	}
 
-	/* separate */
-	ui-accordion[variant~="separate"],
-	ui-accordion[variant~="shadow"] {
+	/* separate / shadow */
+	ui-accordion:is([variant~="separate"], [variant~="shadow"]) {
 		row-gap: var(--ui-accordion-gap);
 		details {
-			border: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+			border: var(--_border);
 			padding-inline: var(--ui-accordion-padding-inline-separate);
 		}
 	}
@@ -159,6 +157,7 @@
 			--ui-accordion-border-width: 0;
 			--ui-accordion-border-radius: 1em;
 			--ui-accordion-shadow: 0 1em 4em color-mix(in srgb, CanvasText 10%, transparent);
+			border: 0;
 			box-shadow: var(--ui-accordion-shadow);
 		}
 		&[variant~="rounded"] details { border-radius: var(--ui-accordion-border-radius); }
@@ -186,7 +185,7 @@
 			}
 			&:where([variant~="divided"], [variant~="bordered"]) details[open]:not(:last-of-type) {
 				border-block-end: 0;
-				border-inline-end: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+				border-inline-end: var(--_border);
 			}
 		}
 
