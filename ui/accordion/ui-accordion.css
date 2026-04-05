@@ -194,11 +194,17 @@
 		ui-accordion[type="horizontal-fixed"] {
 			cq-box {
 				block-size: var(--ui-accordion-horizontal-fixed-height);
+				display: flex;
 				details {
+					display: flex;
+					flex: 0 0 auto;
 					overflow: hidden;
-				}
-				details::details-content {
-					transition: inline-size var(--ui-accordion-duration), content-visibility var(--ui-accordion-duration);
+					transition: flex var(--ui-accordion-duration) ease, inline-size var(--ui-accordion-duration) ease;
+					&[open] {
+						flex: 1;
+						flex-direction: column;
+					}
+					&::details-content { transition: none; }
 				}
 			}
 		}
