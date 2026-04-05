@@ -190,7 +190,7 @@
 			}
 		}
 
-		/* horizontal-fixed: fixed height + inline-size transition */
+		/* horizontal-fixed: fixed height + inline-size transition: https://codepen.io/web-dot-dev/pen/XWvBZNo */
 		ui-accordion[type="horizontal-fixed"] {
 			cq-box {
 				block-size: var(--ui-accordion-horizontal-fixed-height);
