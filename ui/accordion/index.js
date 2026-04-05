@@ -2,7 +2,7 @@
  * <ui-accordion> and <ui-accordion-item>
  * Light DOM web component wrappers for the CSS-first accordion.
  * Renders native <details>/<summary> elements — no Shadow DOM.
- * @version 4.0.0
+ * @version 5.0.0
  */
 
 class UiAccordionItem extends HTMLElement {
@@ -34,7 +34,6 @@ class UiAccordionItem extends HTMLElement {
 		const isOpen = this.hasAttribute('open');
 
 		const details = document.createElement('details');
-		details.className = 'ui-accordion';
 		if (isOpen) details.open = true;
 
 		const summary = document.createElement('summary');
@@ -57,7 +56,7 @@ class UiAccordionItem extends HTMLElement {
 }
 
 class UiAccordion extends HTMLElement {
-	static observedAttributes = ['name', 'variant'];
+	static observedAttributes = ['name', 'variant', 'type'];
 
 	connectedCallback() {
 		this.ensureCqBox();
@@ -66,14 +65,15 @@ class UiAccordion extends HTMLElement {
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (oldValue === newValue || !this.isConnected) return;
-		if (name === 'variant') this.ensureCqBox();
+		if (name === 'type') this.ensureCqBox();
 		if (name === 'name') this.propagateName();
 	}
 
 	ensureCqBox() {
-		const hasMedia = (this.getAttribute('variant') || '').split(/\s+/).includes('media');
+		const type = this.getAttribute('type') || '';
+		const needsCqBox = ['split', 'horizontal', 'horizontal-fixed'].includes(type);
 		const existing = this.querySelector(':scope > cq-box');
-		if (hasMedia && !existing) {
+		if (needsCqBox && !existing) {
 			const box = document.createElement('cq-box');
 			while (this.firstChild) box.appendChild(this.firstChild);
 			this.appendChild(box);
@@ -85,10 +85,10 @@ class UiAccordion extends HTMLElement {
 		if (!name) return;
 		const container = this.querySelector(':scope > cq-box') || this;
 		for (const child of container.children) {
-			if (child.matches('details.ui-accordion')) {
+			if (child.matches('details')) {
 				child.setAttribute('name', name);
 			} else if (child.matches('ui-accordion-item')) {
-				const details = child.querySelector(':scope > details.ui-accordion');
+				const details = child.querySelector(':scope > details');
 				if (details) details.setAttribute('name', name);
 			}
 		}
