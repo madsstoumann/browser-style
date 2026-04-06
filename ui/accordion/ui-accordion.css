@@ -8,7 +8,7 @@
 @layer bs-component {
 	:where(ui-accordion) {
 		--ui-accordion-background: inherit;
-		--ui-accordion-bg-hover: linear-gradient(to right, #0000, var(--color-field, hsl(0, 0%, 97.5%)) 10% 90%, #0000);
+		--ui-accordion-bg-hover: linear-gradient(90deg, #0000, var(--color-field, hsl(0, 0%, 97.5%)) 10% 90%, #0000);
 		--ui-accordion-border-color: var(--color-border, hsl(0, 0%, 80%));
 		--ui-accordion-border-radius: 1ch;
 		--ui-accordion-border-style: solid;
@@ -175,6 +175,7 @@
 					padding-inline: 0;
 					writing-mode: vertical-lr;
 					summary {
+						--ui-accordion-bg-hover: linear-gradient(180deg, #0000, var(--color-field, hsl(0, 0%, 97.5%)) 10% 90%, #0000);
 						block-size: 100%;
 						padding-inline: var(--ui-accordion-padding-inline);
 					}
