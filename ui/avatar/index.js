@@ -1,14 +1,45 @@
 /**
  * <ui-avatar> and <ui-avatar-group>
  * Light DOM web component wrappers for the CSS-first avatar.
- * All visual behavior is handled by CSS — JS provides custom element registration.
+ * CSS handles all visual behavior. JS adds overflow counting (max attribute).
  * @version 4.0.0
  */
 
 class UiAvatar extends HTMLElement {}
 
 class UiAvatarGroup extends HTMLElement {
-	static observedAttributes = ['variant'];
+	static observedAttributes = ['max'];
+
+	connectedCallback() {
+		this.applyMax();
+	}
+
+	attributeChangedCallback(name, oldValue, newValue) {
+		if (oldValue === newValue || !this.isConnected) return;
+		if (name === 'max') this.applyMax();
+	}
+
+	applyMax() {
+		const max = parseInt(this.getAttribute('max'));
+		const existing = this.querySelector(':scope > ui-avatar[overflow]');
+		if (existing) existing.remove();
+
+		const avatars = Array.from(this.children).filter(c => c.matches('ui-avatar:not([overflow])'));
+		for (const avatar of avatars) avatar.hidden = false;
+
+		if (!max || max < 1 || avatars.length <= max) return;
+
+		for (let i = max; i < avatars.length; i++) {
+			avatars[i].hidden = true;
+		}
+
+		const counter = document.createElement('ui-avatar');
+		counter.setAttribute('overflow', '');
+		const abbr = document.createElement('abbr');
+		abbr.textContent = `+${avatars.length - max}`;
+		counter.appendChild(abbr);
+		avatars[max - 1].after(counter);
+	}
 }
 
 customElements.define('ui-avatar', UiAvatar);
