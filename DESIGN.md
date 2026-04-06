@@ -298,6 +298,14 @@ Use the `variant` attribute with space-separated values — not CSS classes:
 <ui-accordion variant="bordered rounded">
 ```
 
+For standard HTML elements or cases where `variant` is not a valid attribute, use `data-variant` instead. The CSS should target both:
+
+```css
+:where(ui-accordion):is([variant~="bordered"], [data-variant~="bordered"]) { /* ... */ }
+```
+
+This is useful when a component wraps a native element (e.g., `<blockquote>`, `<table>`) rather than a custom element, since `variant` on a native element may trigger validation warnings or conflict with future HTML attributes.
+
 ### Semantic color attributes
 
 Use `color` for status semantics (info, success, warning, error):
