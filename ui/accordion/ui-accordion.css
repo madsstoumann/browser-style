@@ -140,6 +140,14 @@
 		&[variant~="separate"] details {
 			border-radius: var(--ui-accordion-border-radius);
 		}
+		details:first-of-type {
+			border-start-start-radius: var(--ui-accordion-border-radius);
+			border-start-end-radius: var(--ui-accordion-border-radius);
+		}
+		details:last-of-type {
+			border-end-start-radius: var(--ui-accordion-border-radius);
+			border-end-end-radius: var(--ui-accordion-border-radius);
+		}
 	}
 
 	/* separate / shadow */
@@ -206,6 +214,16 @@
 			&:where([variant~="divided"], [variant~="bordered"]) details[open]:not(:last-of-type) {
 				border-block-end: 0;
 				border-inline-end: var(--_border);
+			}
+			&[variant~="rounded"]:not([variant~="separate"]) cq-box {
+				details:first-of-type[open] {
+					border-start-end-radius: 0;
+					border-end-start-radius: var(--ui-accordion-border-radius);
+				}
+				details:last-of-type[open] {
+					border-start-end-radius: var(--ui-accordion-border-radius);
+					border-end-start-radius: 0;
+				}
 			}
 		}
 
