@@ -1,7 +1,7 @@
 /**
  * ui-accordion
- * @version 4.0.2
- * @date 2026-04-04
+ * @version 4.0.3
+ * @date 2026-04-06
  * @author Mads Stoumann
  */
 @import '../icon/index.css';
@@ -163,6 +163,23 @@
 		&[variant~="rounded"] details { border-radius: var(--ui-accordion-border-radius); }
 	}
 
+	/* tinted */
+	ui-accordion[variant~="tinted"] {
+		--ui-accordion-tint: attr(tint type(<color>), var(--color-accent, oklch(0.5 0.2 260)));
+		--ui-accordion-tint-mix: 80%;
+		details {
+			--_bg: color-mix(
+				in oklab,
+				var(--ui-accordion-tint),
+				#FFF calc((sibling-index() - 1) / max(sibling-count() - 1, 1) * var(--ui-accordion-tint-mix))
+			);
+			--_hover: #FFF3;
+			--ui-accordion-bg-hover: linear-gradient(90deg, #0000, #FFF3 10% 90%, #0000);
+			background: var(--_bg);
+			color: contrast-color(var(--_bg));
+		}
+	}
+
 	@container (inline-size > 650px) {
 		/* === type: horizontal, horizontal-fixed === */
 		ui-accordion:where([type="horizontal"], [type="horizontal-fixed"]) {
@@ -175,8 +192,9 @@
 					padding-inline: 0;
 					writing-mode: vertical-lr;
 					summary {
-						--ui-accordion-bg-hover: linear-gradient(180deg, #0000, var(--color-field, hsl(0, 0%, 97.5%)) 10% 90%, #0000);
+						--ui-accordion-bg-hover: linear-gradient(180deg, #0000, var(--_hover, var(--color-field, hsl(0, 0%, 97.5%))) 10% 90%, #0000);
 						block-size: 100%;
+						inline-size: 100%;
 						padding-inline: var(--ui-accordion-padding-inline);
 					}
 				}
