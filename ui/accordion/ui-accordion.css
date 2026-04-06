@@ -64,6 +64,7 @@
 				text-decoration: none;
 				transition: background var(--duration-normal, .2s) var(--ease-in-out, ease-in-out);
 				&::-webkit-details-marker { display: none; }
+				&:focus-visible { outline: var(--ring-width, 2px) solid var(--ring-color, var(--color-accent, hsl(211, 100%, 50%))); outline-offset: var(--ring-offset, 3px); }
 			}			
 			&:not([open]) summary:hover { background: var(--ui-accordion-bg-hover); }
 			&[open] summary { text-decoration: var(--ui-accordion-open-decoration) #0000 var(--ui-accordion-open-decoration-width); text-decoration-skip-ink: auto; text-underline-offset: var(--ui-accordion-open-decoration-offset); transition: text-decoration-color var(--duration-normal, .2s) var(--ease-in-out, ease-in-out); }
