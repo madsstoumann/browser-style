@@ -11,6 +11,10 @@ Convert an existing `ui/<component>` CSS component into a publishable dual-mode 
 
 **Reference implementation:** `ui/accordion/` — all patterns below are modeled on it.
 
+### Design philosophy
+
+The visual language is neutral — no strong brand color bias, no opinionated aesthetic. Components should feel like natural extensions of the browser's default UI, enhanced with consistent spacing, typography, and subtle depth. Light and dark modes are supported natively via `light-dark()` and `color-scheme: light dark`.
+
 ## Input
 
 `$ARGUMENTS` is the component name (e.g., `tabs`, `card`, `tooltip`). The source lives at `ui/$ARGUMENTS/`.
@@ -81,8 +85,10 @@ Every component token MUST have a fallback chain:
 Rules:
 - **Use full property names**: `border-width` not `bdw`, `border-color` not `bdc`
 - **Always include a hardcoded fallback** as the last value so the component works without core.css
+- **Use `light-dark()` for color fallbacks** that should adapt to dark mode (see `DESIGN.md` for all HSL values)
 - **Map to the closest global token** where one exists
 - **Declare all component tokens** at the top of the component rule block
+- **Reference `DESIGN.md`** for actual token values (HSL colors, cubic-bezier easings, shadow CSS, etc.) when writing hardcoded fallbacks
 
 #### 2c. Rename any PascalCase properties
 
@@ -101,6 +107,32 @@ If the component uses old PascalCase tokens (--AccentColor, --Canvas, etc.), upd
 | `--ff-form` | `--font-form` |
 | `--ff-mono` | `--font-mono` |
 
+#### 2d. Common hardcoded-to-token replacements
+
+When auditing the existing CSS, look for these common patterns:
+
+| Hardcoded pattern | Replace with |
+|-------------------|-------------|
+| `rgba(0,0,0,.25)` / `color-mix(CanvasText, transparent)` | `--color-overlay` / `--color-overlay-light` |
+| `backdrop-filter: blur(10px)` | `--blur-md` |
+| `box-shadow: 0 0 0 2px` (focus rings) | `--ring-width` and `--ring-color` |
+| `border: 1px solid` | `--border-width` |
+| `font-weight: 700` | `--font-weight-bold` |
+| `transition: .2s ease-in-out` | `--duration-normal` and `--ease-in-out` |
+| `max-inline-size: 1200px` | `--width-7xl` (80rem) |
+| `z-index: 1` | `--z-index-1` |
+
+#### 2e. Content width mapping
+
+Components with hardcoded `max-width`/`max-inline-size` should use `--width-*` tokens:
+
+| Hardcoded value | Closest token | Common components |
+|-----------------|---------------|-------------------|
+| `300px` (18.75rem) | `--width-xs` (20rem) | calendar, color-grid |
+| `320px` (20rem) | `--width-xs` (20rem) | range-arc, range-circular, range-gauge |
+| `30em` (480px) | `--width-md` (28rem) or `--width-lg` (32rem) | chat |
+| `1200px` (75rem) | `--width-7xl` (80rem) | menu, menu-details |
+
 ### 3. Refactor CSS
 
 #### 3a. Wrap in `@layer bs-component`
@@ -113,39 +145,39 @@ If the component uses old PascalCase tokens (--AccentColor, --Canvas, etc.), upd
 
 #### 3b. Use `:where()` for zero-specificity base styles
 
+Target the custom element directly — not classes:
+
 ```css
-:where(.ui-tabs) {
+:where(ui-tabs) {
   --ui-tabs-border-color: var(--color-border, hsl(0, 0%, 80%));
   /* ... tokens ... */
   border-color: var(--ui-tabs-border-color);
 }
 ```
 
-#### 3c. Modifier pattern
+#### 3c. Variant pattern
 
-Use `.--modifier` class pattern (dot-dash-dash):
+Use the `variant` attribute with space-separated values on custom elements:
 
-```css
-:where(.ui-tabs) {
-  &.--vertical { /* variant */ }
-  &.--rounded { /* variant */ }
-}
+```html
+<ui-tabs variant="pills rounded">
 ```
 
-For variants controlled by a parent wrapper element, use attribute selectors:
+CSS targets variants with `[variant~="value"]`:
 
 ```css
 :where(ui-tabs[variant~="pills"]) > .ui-tab { /* ... */ }
 ```
 
-Consolidate duplicate variant rules — never define the same tokens in both a class-based and attribute-based selector. Combine them:
+**`data-variant` fallback for native elements:** When a component wraps a native HTML element (e.g., `<blockquote>`, `<table>`) rather than a custom element, use `data-variant` instead of `variant` to avoid validation warnings. Target both in CSS:
 
 ```css
-:where(ui-tabs[variant~="pills"]) > .ui-tab,
-:where(.ui-tab).--pills {
-  /* tokens defined once */
+:where(ui-blockquote):is([variant~="bordered"], [data-variant~="bordered"]) {
+  /* variant styles */
 }
 ```
+
+Consolidate duplicate variant rules — never define the same tokens in both a class-based and attribute-based selector.
 
 #### 3d. Create `index.css`
 
@@ -368,11 +400,14 @@ Update `ui/$ARGUMENTS/index.html` to demonstrate both modes:
 Run the following checks:
 
 1. **Token audit**: Every hardcoded color/spacing/radius in the CSS should be a component token referencing a global token with a hardcoded fallback
-2. **No PascalCase**: `grep -E '--[A-Z]' ui/$ARGUMENTS/*.css` should return nothing
-3. **No innerHTML with data**: Verify the JS never sets innerHTML with attribute values
-4. **No querySelectorAll leaks**: Verify scoping with `:scope >` or `this.children`
-5. **CSS duplication**: No variant tokens defined in multiple selectors
-6. **Package valid**: `cd ui/$ARGUMENTS && npm pack --dry-run` lists expected files
+2. **Dark mode**: Color fallbacks use `light-dark()` where appropriate (check `DESIGN.md` for correct HSL pairs)
+3. **No PascalCase**: `grep -E '--[A-Z]' ui/$ARGUMENTS/*.css` should return nothing
+4. **No innerHTML with data**: Verify the JS never sets innerHTML with attribute values
+5. **No querySelectorAll leaks**: Verify scoping with `:scope >` or `this.children`
+6. **CSS duplication**: No variant tokens defined in multiple selectors
+7. **Consistent corners**: Don't mix rounded and sharp corners within the same component variant
+8. **Body text readability**: Body text uses `--line-height-normal` (1.5) unless there's a specific reason not to
+9. **Package valid**: `cd ui/$ARGUMENTS && npm pack --dry-run` lists expected files
 
 ### 11. Final checklist
 
