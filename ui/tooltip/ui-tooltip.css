@@ -1,27 +1,27 @@
 @layer bs-component {
-	:where([data-tooltip]) {
-		--ui-tooltip-bg: var(--CanvasText);
+	:where([data-tooltip], [tooltip]) {
+		--ui-tooltip-bg: var(--color-text, light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%)));
 		--ui-tooltip-triangle-h: 0%;
 		position: relative;
 		&::before {
 			background: var(--ui-tooltip-bg);
-			border-radius: var(--tooltip-bdrs, .25em);
+			border-radius: var(--ui-tooltip-border-radius, var(--radius-sm, 0.25em));
 			content: attr(data-tooltip);
-			color: Canvas;
+			color: var(--color-surface, light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%)));
 			display: inline-grid;
-			font-size: var(--ui-tooltip-fs, 80%);
+			font-size: var(--ui-tooltip-font-size, 80%);
 			inset-block: calc(100% + var(--ui-tooltip-triangle-h)) auto;
 			inset-inline: 50% auto;
 			isolation: isolate;
 			opacity: 0;
-			line-height: 1.1;
-			padding: var(--ui-tooltip-p, .5em .75em);
+			line-height: var(--line-height-tight, 1.1);
+			padding: var(--ui-tooltip-padding, .5em .75em);
 			place-content: center;
 			position: absolute;
-			transition: all .2s ease-in-out;
+			transition: all var(--duration-normal, .2s) var(--ease-in-out, ease-in-out);
 			translate: -50% 0;
 			white-space: nowrap;
-			z-index: 1;
+			z-index: var(--z-index-3, 100);
 		}
 		&:focus-visible::before,
 		&:hover::before { opacity: 0.9; }
@@ -43,21 +43,22 @@
 				opacity: 0;
 				position: absolute;
 				translate: -50% 0;
-				transition: all .2s ease-in-out;
+				transition: all var(--duration-normal, .2s) var(--ease-in-out, ease-in-out);
 				width: calc(2 * var(--ui-tooltip-triangle-h));
 			}
 			&:focus-visible::after,
 			&:hover::after { opacity: 0.9; }
 		}
-		&[data-tooltip-ui*=top][data-tooltip-ui*=triangle]::after { 
+		&[data-tooltip-ui*=top][data-tooltip-ui*=triangle]::after {
 			clip-path: polygon(50% 100%, 100% 0%, 0% 0%);
 			inset-block: auto calc(100% - 1px);
 		}
-		&[data-tooltip-ui*=underline] { 
+		&[data-tooltip-ui*=underline] {
 			text-decoration: .0625em dotted underline;
 			text-underline-offset: .2em;
 		}
 		&:dir(rtl)::before,
 		&:dir(rtl)::after { translate: 50% 0; }
 	}
+	:where([tooltip])::before { content: attr(tooltip); }
 }

@@ -17,94 +17,171 @@
 	<p>
 		An avatar is a graphical representation of a user or the user's character. It may take either a two-letter abbreviation or an image. This avatar is built with an <code>abbr</code>-tag and an <code>img</code>-tag.
 	</p>
-	<div class="ui-avatar">
+	<ui-avatar>
 		<abbr title="Kim Cronos">KC</abbr>
 		<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-	</div>
+	</ui-avatar>
 
 	<p>Without image, using <code>abbr</code>-tag:</p>
 
-	<div class="ui-avatar">
+	<ui-avatar>
 		<abbr title="Kim Cronos">KC</abbr>
-	</div>
+	</ui-avatar>
 
 	<h2>Avatar List</h2>
-	<p>Wrapped in a list, using <code>data-tooltip</code> instead of <code>abbr</code>-tag.<br>
+	<p>Wrapped in a list, using <code>tooltip</code> instead of <code>abbr</code>-tag.<br>
 		For demo-purposes, <code>tab-index</code> has been added in order to show <code>:focus-visible</code>-styles.
 	</p>
-	<ul class="ui-avatar-list">
-		<li class="ui-avatar" data-tooltip="Kim Cronos" tabindex="0">
+	<ui-avatar-group>
+		<ui-avatar tooltip="Kim Cronos" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-		</li>
-		<li class="ui-avatar" data-tooltip="Greg Hanson" tabindex="0">
+		</ui-avatar>
+		<ui-avatar tooltip="Greg Hanson" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
-		</li>
-		<li class="ui-avatar" data-tooltip="John Doe" tabindex="0">
+		</ui-avatar>
+		<ui-avatar tooltip="John Doe" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="Jon Doe" loading="lazy">
-		</li>
-		<li class="ui-avatar" data-tooltip="Linda Payne" tabindex="0">
+		</ui-avatar>
+		<ui-avatar tooltip="Linda Payne" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
-		</li>
-	</ul>
+		</ui-avatar>
+	</ui-avatar-group>
 
 	<br>
 	<h2>With opposite color-scheme</h2>
 	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<ul class="ui-avatar-list">
-			<li class="ui-avatar" data-tooltip="Kim Cronos" tabindex="0">
+		<ui-avatar-group>
+			<ui-avatar tooltip="Kim Cronos" tabindex="0">
 				<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-			</li>
-			<li class="ui-avatar" data-tooltip="Greg Hanson" tabindex="0">
+			</ui-avatar>
+			<ui-avatar tooltip="Greg Hanson" tabindex="0">
 				<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
-			</li>
-			<li class="ui-avatar" data-tooltip="John Doe" tabindex="0">
+			</ui-avatar>
+			<ui-avatar tooltip="John Doe" tabindex="0">
 				<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="Jon Doe" loading="lazy">
-			</li>
-			<li class="ui-avatar" data-tooltip="Linda Payne" tabindex="0">
+			</ui-avatar>
+			<ui-avatar tooltip="Linda Payne" tabindex="0">
 				<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
-			</li>
-		</ul>
+			</ui-avatar>
+		</ui-avatar-group>
 	</div>
 
 	<br>
 	<h2>With right-to-left</h2>
-	<ul class="ui-avatar-list" dir="rtl">
-		<li class="ui-avatar" data-tooltip="Kim Cronos" tabindex="0">
+	<ui-avatar-group dir="rtl">
+		<ui-avatar tooltip="Kim Cronos" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-		</li>
-		<li class="ui-avatar" data-tooltip="Greg Hanson" tabindex="0">
+		</ui-avatar>
+		<ui-avatar tooltip="Greg Hanson" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
-		</li>
-		<li class="ui-avatar" data-tooltip="John Doe" tabindex="0">
+		</ui-avatar>
+		<ui-avatar tooltip="John Doe" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="Jon Doe" loading="lazy">
-		</li>
-		<li class="ui-avatar" data-tooltip="Linda Payne" tabindex="0">
+		</ui-avatar>
+		<ui-avatar tooltip="Linda Payne" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
-		</li>
-	</ul>
+		</ui-avatar>
+	</ui-avatar-group>
+
+	<br>
+	<h2>Sizes</h2>
+	<p>Use the <code>size</code> attribute: <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code> (default), <code>xl</code>, <code>2xl</code>.</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-avatar size="xs" tooltip="Anna Berg"><abbr title="Anna Berg">AB</abbr></ui-avatar>
+		<ui-avatar size="sm" tooltip="Linda Payne">
+			<abbr title="Linda Payne">LP</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+		</ui-avatar>
+		<ui-avatar size="md" tooltip="John Doe">
+			<abbr title="John Doe">JD</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+		</ui-avatar>
+		<ui-avatar size="lg" tooltip="Kim Cronos">
+			<abbr title="Kim Cronos">KC</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+		</ui-avatar>
+		<ui-avatar size="xl" tooltip="Greg Hanson">
+			<abbr title="Greg Hanson">GH</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+		</ui-avatar>
+		<ui-avatar size="2xl" tooltip="John Doe">
+			<abbr title="John Doe">JD</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+		</ui-avatar>
+	</div>
+
+	<p>With <code>variant="square"</code>:</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-avatar size="xs" variant="square" tooltip="Anna Berg"><abbr title="Anna Berg">AB</abbr></ui-avatar>
+		<ui-avatar size="sm" variant="square" tooltip="Linda Payne">
+			<abbr title="Linda Payne">LP</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+		</ui-avatar>
+		<ui-avatar size="md" variant="square" tooltip="John Doe">
+			<abbr title="John Doe">JD</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+		</ui-avatar>
+		<ui-avatar size="lg" variant="square" tooltip="Kim Cronos">
+			<abbr title="Kim Cronos">KC</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+		</ui-avatar>
+		<ui-avatar size="xl" variant="square" tooltip="Greg Hanson">
+			<abbr title="Greg Hanson">GH</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+		</ui-avatar>
+		<ui-avatar size="2xl" variant="square" tooltip="John Doe">
+			<abbr title="John Doe">JD</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+		</ui-avatar>
+	</div>
+
+	<p>With <code>variant="squircle"</code>:</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-avatar size="xs" variant="squircle" tooltip="Anna Berg"><abbr title="Anna Berg">AB</abbr></ui-avatar>
+		<ui-avatar size="sm" variant="squircle" tooltip="Linda Payne">
+			<abbr title="Linda Payne">LP</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+		</ui-avatar>
+		<ui-avatar size="md" variant="squircle" tooltip="John Doe">
+			<abbr title="John Doe">JD</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+		</ui-avatar>
+		<ui-avatar size="lg" variant="squircle" tooltip="Kim Cronos">
+			<abbr title="Kim Cronos">KC</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+		</ui-avatar>
+		<ui-avatar size="xl" variant="squircle" tooltip="Greg Hanson">
+			<abbr title="Greg Hanson">GH</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+		</ui-avatar>
+		<ui-avatar size="2xl" variant="squircle" tooltip="John Doe">
+			<abbr title="John Doe">JD</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+		</ui-avatar>
+	</div>
 
 	<br>
 	<h2>Avatar Color</h2>
 	<p>Based on the initials — the <code>innerText</code> of the <code>abbr</code>-tag — a background-color is set using <code>strToRGB</code>.</p>
-	<ul class="ui-avatar-list">
-		<li class="ui-avatar">
+	<ui-avatar-group>
+		<ui-avatar>
 			<abbr title="Kim Cronos">KC</abbr>
-		</li>
-		<li class="ui-avatar">
+		</ui-avatar>
+		<ui-avatar>
 			<abbr title="Greg Hanson">GH</abbr>
-		</li>
-		<li class="ui-avatar">
+		</ui-avatar>
+		<ui-avatar>
 			<abbr title="John Doe">JD</abbr>
-		</li>
-		<li class="ui-avatar">
+		</ui-avatar>
+		<ui-avatar>
 			<abbr title="Lars Poulsen">LP</abbr>
-		</li>
-	</ul>
+		</ui-avatar>
+	</ui-avatar-group>
 
 	<script type="module">
 		import { init } from './../../assets/js/common.js';
 		import uiAvatar from './uiAvatar.js';
-		init('.ui-avatar:has(abbr)', uiAvatar);
+		init('ui-avatar:has(abbr)', uiAvatar);
 	</script>
 
 </body>

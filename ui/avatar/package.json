@@ -1,0 +1,44 @@
+{
+  "name": "@browser.style/avatar",
+  "version": "4.0.0",
+  "description": "CSS-first avatar component with random colors, shape variants, and group layouts",
+  "type": "module",
+  "module": "index.js",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css"
+  },
+  "files": [
+    "index.js",
+    "index.css",
+    "ui-avatar.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "avatar",
+    "css-first",
+    "web-components",
+    "random",
+    "contrast-color"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/avatar"
+  },
+  "homepage": "https://browser.style/ui/avatar",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11"
+  }
+}
