@@ -23,3 +23,6 @@ _v2/
 
 # CMS Configuration Files
 .cmsconfig
+
+# Docusaurus build cache
+baseline/.docusaurus/
