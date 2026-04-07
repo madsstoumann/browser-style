@@ -1,3 +1,9 @@
+@property --_show-counter {
+	syntax: '<number>';
+	inherits: false;
+	initial-value: 0;
+}
+
 @layer bs-component {
 	:where(ui-avatar) {
 		--ui-avatar-background: oklch(0.7 0.15 random(auto, 0, 360));
@@ -13,7 +19,7 @@
 		place-content: center;
 		position: relative;
 		& abbr {
-			font-size: 33cqi;
+			font-size: var(--ui-avatar-font-size, 33cqi);
 			place-self: center;
 			text-decoration: none;
 			user-select: none;
@@ -64,12 +70,6 @@
 			0 0 0 calc(var(--ui-avatar-ring-offset, 2px) + var(--ui-avatar-ring-width, 2px)) var(--_ring);
 	}
 
-	/* Overflow counter (created by JS when max is set) */
-	:where(ui-avatar[overflow]) {
-		--ui-avatar-background: var(--color-surface-alt, light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%)));
-		color: var(--color-text-muted, light-dark(hsl(0, 0%, 60%), hsl(0, 0%, 40%)));
-	}
-
 	:where(ui-avatar-group) {
 		--ui-tooltip-font-size: x-small;
 		all: unset;
@@ -92,5 +92,48 @@
 	:where(ui-avatar-group[variant~="spread"]) {
 		gap: var(--spacing-sm, 0.5rem);
 		& > *:not(:first-child) { margin-inline-start: 0; }
+	}
+
+	/* Overflow handling — CSS-only via sibling-index() / sibling-count() */
+	:where(ui-avatar-group[max]) {
+		--_max: attr(max type(<number>), 0);
+		counter-reset: overflow 0;
+	}
+	:where(ui-avatar-group[max]) > :where(ui-avatar) {
+		--_hidden: clamp(0, sibling-index() - var(--_max) - 1, 1);
+		--_is-counter: calc(1 - clamp(0, abs(sibling-index() - var(--_max) - 1), 1));
+		--_has-overflow: clamp(0, sibling-count() - var(--_max), 1);
+		--_show-counter: calc(var(--_is-counter) * var(--_has-overflow));
+
+		block-size: calc(var(--ui-avatar-size, 4em) * (1 - var(--_hidden)));
+		border-width: calc(var(--ui-avatar-border-width, 2px) * (1 - var(--_hidden)));
+		counter-set: overflow calc(sibling-count() - var(--_max));
+		opacity: calc(1 - var(--_hidden));
+	}
+	@container style(--_show-counter: 1) {
+		ui-avatar::after {
+			background: var(--color-surface-alt, light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%)));
+			block-size: auto;
+			border: 0;
+			border-radius: inherit;
+			color: var(--color-text-muted, light-dark(hsl(0, 0%, 60%), hsl(0, 0%, 40%)));
+			content: "+" counter(overflow);
+			display: grid;
+			font-size: var(--ui-avatar-font-size, 33cqi);
+			inline-size: auto;
+			inset: 0;
+			place-content: center;
+			pointer-events: none;
+			position: absolute;
+			z-index: 1;
+		}
+		ui-avatar::before {
+			content: none;
+			display: none;
+		}
+		:where(ui-avatar) > :where(img, abbr) {
+			opacity: 0;
+			scale: 0;
+		}
 	}
 }
