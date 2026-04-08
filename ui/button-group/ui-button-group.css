@@ -24,7 +24,7 @@
 			}
 		}
 		& legend { padding-block-end: var(--label-rg); }
-		&.--border {
+		&[data-variant~="border"] {
 			column-gap: 0;
 			& label {
 				border: var(--ui-button-group-bdw) solid var(--ui-button-group-bg);
@@ -40,8 +40,8 @@
 				}
 			}
 		}
-		&.--inline { display: inline-grid; }
-		&.--outline {
+		&[data-variant~="inline"] { display: inline-grid; }
+		&[data-variant~="outline"] {
 			& label {
 				&:not(:has(:checked)) { border-color: var(--ButtonBorder); }
 				&:has(:checked) {
@@ -54,7 +54,7 @@
 				}
 			}
 		}
-		&.--rounded {
+		&[data-variant~="rounded"] {
 			& label { border-radius: var(--ui-button-group-bdrs, 3em); }
 		}
 	}

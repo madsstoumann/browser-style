@@ -26,12 +26,12 @@
 		--input-thumb-sz: var(--input-thumb-size);
 		--label-rg: var(--label-gap);
 	}
-	:where(button, .ui-button, fieldset, input, select, textarea), [type=file]::file-selector-button {
+	:where(fieldset, input, select, textarea), [type=file]::file-selector-button {
 		border: var(--input-border-width) solid var(--color-border);
 		border-radius: var(--input-radius);
 		&::placeholder { color: var(--color-text-muted); }
 	}
-	:where(button, .ui-button, input, select, textarea) {
+	:where(input, select, textarea) {
 		font-family: var(--font-form);
 		font-size: var(--input-fs, 1rem);
 	}

@@ -196,7 +196,7 @@ export function renderTBody(context) {
 					const buttonHTML = ` <button type="button" tabindex="-1" popovertarget="${popoverId}">${context.renderIcon(icons.dots)}</button>`;
 					const popoverHTML = `
 						<div id="${popoverId}" popover class="ui-table-expand ${context.settings.expandType ? context.settings.expandType : '--inline-end'}">
-							<button type="button" popovertarget="${popoverId}" popovertargetaction="hide" class="--icon">${context.renderIcon(icons.close)}</button>
+							<button type="button" popovertarget="${popoverId}" popovertargetaction="hide" data-variant="icon">${context.renderIcon(icons.close)}</button>
 							${expandFields}
 						</div>
 					`;

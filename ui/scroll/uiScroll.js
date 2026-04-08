@@ -9,11 +9,11 @@ export default function uiScroll(scroll, args = {}) {
     scrollInfinite: false,
     scrollNav: 'ui-scroll-nav',
     scrollNavCallback: null,
-    scrollNext: '--icon',
+    scrollNext: 'icon',
     scrollNextInner: `<ui-icon type="chevron right"></ui-icon>`,
-    scrollPrev: '--icon',
+    scrollPrev: 'icon',
     scrollPrevInner: `<ui-icon type="chevron left"></ui-icon>`,
-    scrollPlay: '--icon',
+    scrollPlay: 'icon',
     scrollPlayInner: `<ui-icon type="play-pause"></ui-icon>`,
     scrollResizeThreshold: 75,
     scrollTabs: '',
@@ -72,15 +72,15 @@ export default function uiScroll(scroll, args = {}) {
     const prev = nav.querySelector('[data-action=prev]') || document.createElement('button')
     const play = nav.querySelector('[data-action=play]') || document.createElement('button')
     if (!nav.children.length) {
-      next.classList.add(config.scrollNext)
+      next.dataset.variant = config.scrollNext
       next.innerHTML = config.scrollNextInner
       next.type = 'button'
       next.dataset.action = 'next'
-      prev.classList.add(config.scrollPrev)
+      prev.dataset.variant = config.scrollPrev
       prev.innerHTML = config.scrollPrevInner
       prev.type = 'button'
       prev.dataset.action = 'prev'
-      play.classList.add(config.scrollPlay)
+      play.dataset.variant = config.scrollPlay
       play.innerHTML = config.scrollPlayInner
       play.type = 'button'
       play.dataset.action = 'play'

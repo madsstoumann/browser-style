@@ -119,18 +119,18 @@
 		background: var(--_bg);
 		color: var(--_c, #FFF);
 		&:is(button, .ui-button) {
-			&:not([disabled],.--disabled):is(:focus-visible, :hover) {
+			&:not([disabled],[data-variant~="disabled"]):is(:focus-visible, :hover) {
 				background: color-mix(in srgb, var(--_bg, var(--ButtonFace)), var(--CanvasText) 25%);
 				box-shadow: color-mix(in srgb, var(--_bg), transparent 75%) 0px 0px 0px .16em;
 				outline: var(--ring-width) solid var(--_bg);
 				outline-offset: var(--ring-offset);
-				&.--light {
+				&[data-variant~="light"] {
 					background: var(--_bg);
 					color: #FFF;
 				}
 			}
 		}
-		&.--light {
+		&:is(.--light, [data-variant~="light"]) {
 			background: color-mix(in srgb, var(--_bg), var(--Canvas) 80%);
 			color: var(--_bg);
 		}
@@ -138,7 +138,7 @@
 	.bg-accent {
 		--_bg: var(--AccentColor);
 		--_c: var(--AccentColorText);
-		&.--outline {
+		&:is(.--outline, [data-variant~="outline"]) {
 			background: #0000;
 			color: var(--AccentColor);
 			&:is(:focus-visible, :hover) {
@@ -150,7 +150,7 @@
 	.bg-black {
 		--_bg: var(--CanvasText);
 		--_c: var(--Canvas);
-		&.--outline {
+		&:is(.--outline, [data-variant~="outline"]) {
 			background: #0000;
 			color: var(--CanvasText);
 			&:is(:focus-visible, :hover) {
