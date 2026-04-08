@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Avatar — Web Component</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Web component demo for ui-avatar and ui-avatar-group">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="ui-avatar.css">
+	<link rel="stylesheet" href="../tooltip/ui-tooltip.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Avatar — Web Component</h2>
+	<p>
+		Using <code>&lt;ui-avatar&gt;</code> and <code>&lt;ui-avatar-group&gt;</code> as registered custom elements.
+		The JS registers the elements and provides overflow counting via the <code>max</code> attribute.
+	</p>
+
+	<h3>Single Avatar</h3>
+	<ui-avatar>
+		<abbr title="Kim Cronos">KC</abbr>
+		<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+	</ui-avatar>
+
+	<h3>Sizes</h3>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-avatar size="xs"><abbr title="Anna Berg">AB</abbr></ui-avatar>
+		<ui-avatar size="sm">
+			<abbr title="Linda Payne">LP</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+		</ui-avatar>
+		<ui-avatar size="md">
+			<abbr title="John Doe">JD</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+		</ui-avatar>
+		<ui-avatar size="lg">
+			<abbr title="Kim Cronos">KC</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+		</ui-avatar>
+		<ui-avatar size="xl">
+			<abbr title="Greg Hanson">GH</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+		</ui-avatar>
+		<ui-avatar size="2xl">
+			<abbr title="John Doe">JD</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+		</ui-avatar>
+	</div>
+
+	<h3>Variants</h3>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-avatar tooltip="Circle (default)">
+			<abbr title="KC">KC</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+		</ui-avatar>
+		<ui-avatar variant="square" tooltip="Square">
+			<abbr title="GH">GH</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+		</ui-avatar>
+		<ui-avatar variant="squircle" tooltip="Squircle">
+			<abbr title="JD">JD</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+		</ui-avatar>
+	</div>
+
+	<h3>Status</h3>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-avatar status="online" tooltip="Online">
+			<abbr title="Kim Cronos">KC</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+		</ui-avatar>
+		<ui-avatar status="away" tooltip="Away">
+			<abbr title="Greg Hanson">GH</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+		</ui-avatar>
+		<ui-avatar status="busy" tooltip="Busy">
+			<abbr title="John Doe">JD</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+		</ui-avatar>
+		<ui-avatar status="offline" tooltip="Offline">
+			<abbr title="Linda Payne">LP</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+		</ui-avatar>
+	</div>
+
+	<h3>Ring</h3>
+	<div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+		<ui-avatar ring>
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+		</ui-avatar>
+		<ui-avatar ring="hsl(136, 41%, 41%)">
+			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+		</ui-avatar>
+		<ui-avatar ring="hsl(33, 99%, 59%)" variant="squircle">
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+		</ui-avatar>
+		<ui-avatar ring="hsl(360, 60%, 46%)" variant="square">
+			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+		</ui-avatar>
+	</div>
+
+	<h3>Avatar Group: Stack (default)</h3>
+	<ui-avatar-group>
+		<ui-avatar tooltip="Kim Cronos" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+		</ui-avatar>
+		<ui-avatar tooltip="Greg Hanson" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+		</ui-avatar>
+		<ui-avatar tooltip="John Doe" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+		</ui-avatar>
+		<ui-avatar tooltip="Linda Payne" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+		</ui-avatar>
+	</ui-avatar-group>
+
+	<h3>Avatar Group: Spread</h3>
+	<ui-avatar-group variant="spread">
+		<ui-avatar tooltip="Kim Cronos" status="online" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+		</ui-avatar>
+		<ui-avatar tooltip="Greg Hanson" status="away" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+		</ui-avatar>
+		<ui-avatar tooltip="John Doe" status="online" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+		</ui-avatar>
+		<ui-avatar tooltip="Linda Payne" status="busy" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+		</ui-avatar>
+	</ui-avatar-group>
+
+	<h3>Avatar Group: Overflow (<code>max</code>)</h3>
+	<p>The <code>max</code> attribute limits visible avatars. The JS-powered <code>applyMax()</code> hides excess avatars and inserts a <code>+N</code> counter.</p>
+	<ui-avatar-group max="3">
+		<ui-avatar tooltip="Kim Cronos" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+		</ui-avatar>
+		<ui-avatar tooltip="Greg Hanson" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+		</ui-avatar>
+		<ui-avatar tooltip="John Doe" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+		</ui-avatar>
+		<ui-avatar tooltip="Linda Payne" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+		</ui-avatar>
+		<ui-avatar tooltip="Anna Berg" tabindex="0">
+			<abbr title="Anna Berg">AB</abbr>
+		</ui-avatar>
+		<ui-avatar tooltip="Tom Niles" tabindex="0">
+			<abbr title="Tom Niles">TN</abbr>
+		</ui-avatar>
+		<ui-avatar tooltip="Sara Koch" tabindex="0">
+			<abbr title="Sara Koch">SK</abbr>
+		</ui-avatar>
+	</ui-avatar-group>
+
+	<h3>Avatar Group: Overflow with Spread</h3>
+	<ui-avatar-group max="4" variant="spread">
+		<ui-avatar tooltip="Kim Cronos" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+		</ui-avatar>
+		<ui-avatar tooltip="Greg Hanson" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+		</ui-avatar>
+		<ui-avatar tooltip="John Doe" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+		</ui-avatar>
+		<ui-avatar tooltip="Linda Payne" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+		</ui-avatar>
+		<ui-avatar tooltip="Anna Berg" tabindex="0">
+			<abbr title="Anna Berg">AB</abbr>
+		</ui-avatar>
+		<ui-avatar tooltip="Tom Niles" tabindex="0">
+			<abbr title="Tom Niles">TN</abbr>
+		</ui-avatar>
+	</ui-avatar-group>
+
+	<script type="module">
+		import './index.js';
+		import attrFallback from '/assets/js/attr_fallback.js';
+		attrFallback({
+			'ui-avatar[ring]': { '--_ring': ['ring', 'hsl(211, 100%, 50%)'] },
+			'ui-avatar-group[max]': { '--_max': 'max' },
+		});
+	</script>
+
+</body>
+</html>
