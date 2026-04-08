@@ -1,3 +1,10 @@
+/**
+ * ui-avatar
+ * @version 4.0.0
+ * @date 2026-04-08
+ * @author Mads Stoumann
+ */
+
 @property --_show-counter {
 	syntax: '<number>';
 	inherits: false;
@@ -7,13 +14,13 @@
 @layer bs-component {
 	:where(ui-avatar) {
 		--ui-avatar-background: oklch(0.65 0.25 random(auto, 0, 360));
+		--ui-tooltip-font-size: clamp(0.5rem, 18cqi, 0.875rem);
 		aspect-ratio: 1 / 1;
 		background: var(--ui-avatar-background, var(--color-button, light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%))));
 		block-size: var(--ui-avatar-size, 4em);
-		border: var(--ui-avatar-border-width, 2px) solid var(--color-surface-alt, light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%)));
 		border-radius: var(--ui-avatar-border-radius, 50%);
+		border: var(--ui-avatar-border-width, 2px) solid var(--color-surface-alt, light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%)));
 		color: var(--ui-avatar-color, contrast-color(var(--ui-avatar-background)));
-		--ui-tooltip-font-size: clamp(0.5rem, 18cqi, 0.875rem);
 		container-type: inline-size;
 		display: grid;
 		place-content: center;
@@ -44,11 +51,11 @@
 	:where(ui-avatar[variant~="squircle"]) { corners: 50% superellipse(2); & img { corners: inherit; } &[status]::after { inset-block-end: -1cqi; inset-inline-end: -1cqi; } }
 
 	/* `status` indicator */
-	:where(ui-avatar[status])::after {
+	:where(ui-avatar[status]):not(ui-avatar[size="xs"])::after {
 		background: var(--ui-avatar-status-color);
-		border: var(--ui-avatar-status-border-width, 3cqi) solid var(--color-surface, light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%)));
-		border-radius: 50%;
 		block-size: var(--ui-avatar-status-size, 20cqi);
+		border-radius: 50%;
+		border: var(--ui-avatar-status-border-width, 3cqi) solid var(--color-surface, light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%)));
 		content: "";
 		display: block;
 		inline-size: var(--ui-avatar-status-size, 20cqi);
@@ -78,7 +85,7 @@
 			margin-inline-start: var(--ui-avatar-overlap, -1cqi);
 		}
 		& [tooltip] {
-			color: transparent;
+			color: #0000;
 		}
 
 		& ui-avatar:focus-visible img { scale: 1.1; }
@@ -94,9 +101,9 @@
 		counter-reset: overflow 0;
 	}
 	:where(ui-avatar-group[max]) > :where(ui-avatar) {
+		--_has-overflow: clamp(0, sibling-count() - var(--_max), 1);
 		--_hidden: clamp(0, sibling-index() - var(--_max) - 1, 1);
 		--_is-counter: calc(1 - clamp(0, abs(sibling-index() - var(--_max) - 1), 1));
-		--_has-overflow: clamp(0, sibling-count() - var(--_max), 1);
 		--_show-counter: calc(var(--_is-counter) * var(--_has-overflow));
 
 		block-size: calc(var(--ui-avatar-size, 4em) * (1 - var(--_hidden)));
@@ -122,7 +129,7 @@
 			z-index: 1;
 		}
 		ui-avatar::before {
-			content: none;
+			/* content: none; */
 			display: none;
 		}
 		:where(ui-avatar) > :where(img, abbr) {
