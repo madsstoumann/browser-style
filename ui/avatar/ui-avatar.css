@@ -108,7 +108,7 @@
 
 		block-size: calc(var(--ui-avatar-size, 4em) * (1 - var(--_hidden)));
 		border-width: calc(var(--ui-avatar-border-width, 2px) * (1 - var(--_hidden)));
-		counter-set: overflow calc(sibling-count() - var(--_max));
+		counter-set: overflow calc(sibling-count() - var(--_max) - 1);
 		opacity: calc(1 - var(--_hidden));
 	}
 	@container style(--_show-counter: 1) {
