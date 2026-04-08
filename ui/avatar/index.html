@@ -181,7 +181,7 @@
 	<br>
 	<h2>Avatar Group: Spread</h2>
 	<p>Use <code>variant="spread"</code> for evenly spaced avatars instead of overlapping.</p>
-	<ui-avatar-group variant="spread" max="2">
+	<ui-avatar-group variant="spread">
 		<ui-avatar tooltip="Kim Cronos" status="online" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
 		</ui-avatar>
@@ -241,9 +241,14 @@
 		</ui-avatar>
 	</ui-avatar-group>
 
-	<!-- <script type="module">
+	<script type="module">
 		import './index.js';
-	</script> -->
-
+		import attrFallback from '/assets/js/attr_fallback.js';
+		attrFallback({
+			'ui-avatar[ring]': { '--_ring': ['ring', 'hsl(211, 100%, 50%)'] },
+			'ui-avatar-group[max]': { '--_max': 'max' },
+		});
+	</script>
+i
 </body>
 </html>

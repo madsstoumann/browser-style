@@ -6,7 +6,7 @@
 
 @layer bs-component {
 	:where(ui-avatar) {
-		--ui-avatar-background: oklch(0.7 0.15 random(auto, 0, 360));
+		--ui-avatar-background: oklch(0.65 0.25 random(auto, 0, 360));
 		aspect-ratio: 1 / 1;
 		background: var(--ui-avatar-background, var(--color-button, light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%))));
 		block-size: var(--ui-avatar-size, 4em);
@@ -25,8 +25,7 @@
 			user-select: none;
 		}
 		& abbr, & img {
-			grid-column: 1 / -1;
-			grid-row: 1 / -1;
+			grid-area: 1 / -1;
 		}
 		& img {
 			border-radius: inherit;
@@ -44,17 +43,17 @@
 	:where(ui-avatar[variant~="square"]) { --ui-avatar-border-radius: var(--radius-md, 0.375rem); }
 	:where(ui-avatar[variant~="squircle"]) { corners: 50% superellipse(2); & img { corners: inherit; } &[status]::after { inset-block-end: -1cqi; inset-inline-end: -1cqi; } }
 
-	/* Status indicator */
+	/* `status` indicator */
 	:where(ui-avatar[status])::after {
 		background: var(--ui-avatar-status-color);
-		border: 3cqi solid var(--color-surface, light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%)));
+		border: var(--ui-avatar-status-border-width, 3cqi) solid var(--color-surface, light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%)));
 		border-radius: 50%;
 		block-size: var(--ui-avatar-status-size, 20cqi);
 		content: "";
 		display: block;
 		inline-size: var(--ui-avatar-status-size, 20cqi);
-		inset-block-end: 2cqi;
-		inset-inline-end: 2cqi;
+		inset-block-end: var(--ui-avatar-status-inset, 2cqi);
+		inset-inline-end: var(--ui-avatar-status-inset, 2cqi);
 		position: absolute;
 	}
 	:where(ui-avatar[status="online"]) { --ui-avatar-status-color: var(--color-success, light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%))); }
@@ -62,7 +61,7 @@
 	:where(ui-avatar[status="busy"]) { --ui-avatar-status-color: var(--color-error, light-dark(hsl(360, 60%, 46%), hsl(360, 40%, 56%))); }
 	:where(ui-avatar[status="away"]) { --ui-avatar-status-color: var(--color-warning, light-dark(hsl(33, 99%, 59%), hsl(33, 69%, 59%))); }
 
-	/* Ring — use attr() for custom color: <ui-avatar ring="red"> */
+	/* `ring` */
 	:where(ui-avatar[ring]) {
 		--_ring: attr(ring type(<color>), var(--color-accent, hsl(211, 100%, 50%)));
 		box-shadow:
@@ -70,6 +69,7 @@
 			0 0 0 calc(var(--ui-avatar-ring-offset, 2px) + var(--ui-avatar-ring-width, 2px)) var(--_ring);
 	}
 
+	/* === Avatar Group === */
 	:where(ui-avatar-group) {
 		--ui-tooltip-font-size: x-small;
 		all: unset;
@@ -88,13 +88,7 @@
 		}
 	}
 
-	/* Spread — evenly spaced */
-	:where(ui-avatar-group[variant~="spread"]) {
-		gap: var(--spacing-sm, 0.5rem);
-		& > *:not(:first-child) { margin-inline-start: 0; }
-	}
-
-	/* Overflow handling — CSS-only via sibling-index() / sibling-count() */
+	/* `max` — overflow handling */
 	:where(ui-avatar-group[max]) {
 		--_max: attr(max type(<number>), 0);
 		counter-reset: overflow 0;
@@ -135,5 +129,11 @@
 			opacity: 0;
 			scale: 0;
 		}
+	}
+
+	/* `variant=spread` — evenly spaced */
+	:where(ui-avatar-group[variant~="spread"]) {
+		gap: var(--spacing-sm, 0.5rem);
+		& > *:not(:first-child) { margin-inline-start: 0; }
 	}
 }
