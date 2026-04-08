@@ -40,15 +40,22 @@
 			transition: scale var(--duration-normal, .2s) var(--ease-in-out, ease-in-out);
 		}
 	}
-	:where(ui-avatar[size="xs"]) { --ui-avatar-size: 1.5rem; }
-	:where(ui-avatar[size="sm"]) { --ui-avatar-size: 2rem; }
-	:where(ui-avatar[size="md"]) { --ui-avatar-size: 2.5rem; }
-	:where(ui-avatar[size="lg"]) { --ui-avatar-size: 4rem; }
-	:where(ui-avatar[size="xl"]) { --ui-avatar-size: 6rem; }
-	:where(ui-avatar[size="2xl"]) { --ui-avatar-size: 8rem; }
 
+	/* sizes */
+	:where(ui-avatar[size="xs"]) { --ui-avatar-size: var(--size-5, 1.5rem); }
+	:where(ui-avatar[size="sm"]) { --ui-avatar-size: var(--size-7, 2rem); }
+	:where(ui-avatar[size="md"]) { --ui-avatar-size: var(--size-8, 3rem); }
+	:where(ui-avatar[size="lg"]) { --ui-avatar-size: var(--size-9, 4rem); }
+	:where(ui-avatar[size="xl"]) { --ui-avatar-size: var(--size-10, 5rem); }
+	:where(ui-avatar[size="2xl"]) { --ui-avatar-size: var(--size-11, 7.5rem); }
+
+	/* variants */
 	:where(ui-avatar[variant~="square"]) { --ui-avatar-border-radius: var(--radius-md, 0.375rem); }
-	:where(ui-avatar[variant~="squircle"]) { corners: 50% superellipse(2); & img { corners: inherit; } &[status]::after { inset-block-end: -1cqi; inset-inline-end: -1cqi; } }
+	:where(ui-avatar[variant~="squircle"]) {
+		--ui-avatar-status-inset: 2cqi;
+		corners: 50% superellipse(2); 
+		img { corners: inherit; }
+	}
 
 	/* `status` indicator */
 	:where(ui-avatar[status]):not(ui-avatar[size="xs"])::after {
@@ -59,8 +66,8 @@
 		content: "";
 		display: block;
 		inline-size: var(--ui-avatar-status-size, 20cqi);
-		inset-block-end: var(--ui-avatar-status-inset, 2cqi);
-		inset-inline-end: var(--ui-avatar-status-inset, 2cqi);
+		inset-block-end: var(--ui-avatar-status-inset, 4cqi);
+		inset-inline-end: var(--ui-avatar-status-inset, 4cqi);
 		position: absolute;
 	}
 	:where(ui-avatar[status="online"]) { --ui-avatar-status-color: var(--color-success, light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%))); }
