@@ -1,6 +1,6 @@
 /**
  * ui-avatar
- * @version 4.0.0
+ * @version 4.0.1
  * @date 2026-04-08
  * @author Mads Stoumann
  */
@@ -19,7 +19,7 @@
 		background: var(--ui-avatar-background, var(--color-button, light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%))));
 		block-size: var(--ui-avatar-size, 4em);
 		border-radius: var(--ui-avatar-border-radius, 50%);
-		border: var(--ui-avatar-border-width, 2px) solid var(--color-surface-alt, light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%)));
+		border: var(--ui-avatar-border-width, var(--border-width-thick, 2px)) solid var(--color-surface-alt, light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%)));
 		color: var(--ui-avatar-color, contrast-color(var(--ui-avatar-background)));
 		container-type: inline-size;
 		display: grid;
@@ -31,9 +31,7 @@
 			text-decoration: none;
 			user-select: none;
 		}
-		& abbr, & img {
-			grid-area: 1 / -1;
-		}
+		& abbr, & img { grid-area: 1 / -1; }
 		& img {
 			border-radius: inherit;
 			pointer-events: none;
@@ -52,7 +50,7 @@
 	/* variants */
 	:where(ui-avatar[variant~="square"]) { --ui-avatar-border-radius: var(--radius-md, 0.375rem); }
 	:where(ui-avatar[variant~="squircle"]) {
-		--ui-avatar-status-inset: 2cqi;
+		--ui-avatar-status-inset: -2cqi;
 		corners: 50% superellipse(2); 
 		img { corners: inherit; }
 	}
@@ -79,8 +77,8 @@
 	:where(ui-avatar[ring]) {
 		--_ring: attr(ring type(<color>), var(--color-accent, hsl(211, 100%, 50%)));
 		box-shadow:
-			0 0 0 var(--ui-avatar-ring-offset, 2px) var(--color-surface, light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%))),
-			0 0 0 calc(var(--ui-avatar-ring-offset, 2px) + var(--ui-avatar-ring-width, 2px)) var(--_ring);
+			0 0 0 var(--ui-avatar-ring-offset, var(--ring-offset, 3px)) var(--color-surface, light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%))),
+			0 0 0 calc(var(--ui-avatar-ring-offset, var(--ring-offset, 3px)) + var(--ui-avatar-ring-width, var(--ring-width, 2px))) var(--_ring);
 	}
 
 	/* === Avatar Group === */
@@ -127,7 +125,7 @@
 				place-content: center;
 				pointer-events: none;
 				position: absolute;
-				z-index: 1;
+				z-index: var(--z-index-1, 1);
 			}
 			ui-avatar::before {
 				display: none;

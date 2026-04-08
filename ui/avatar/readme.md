@@ -6,8 +6,7 @@ CSS-first avatar component with random per-element colors, shape variants, and f
 
 - Pure CSS color generation using `random(per-element)` and `contrast-color()`
 - Shape variants: circle (default), square, squircle (`corner-shape`)
-- Author variant for avatar + name + description
-- Group layouts: stack (overlapping), spread, grid, list
+- Group layouts: stack (overlapping), spread
 - Light/dark mode support via `light-dark()`
 - RTL support via logical properties
 - Focus-visible and hover interactions
@@ -174,25 +173,6 @@ const { name, initials, src } = Astro.props;
 
 The squircle variant uses `corner-shape: squircle` with `border-radius: 25%`. Browsers without `corner-shape` support fall back to standard rounded corners.
 
-### Author variant
-
-Display an avatar alongside a name and description:
-
-```html
-<ui-avatar variant="author">
-  <img src="avatar.webp" alt="Kim Cronos">
-  <strong>Kim Cronos</strong>
-  <small>Product Designer</small>
-</ui-avatar>
-
-<!-- Combine with shape variants -->
-<ui-avatar variant="author squircle">
-  <abbr title="GH">GH</abbr>
-  <strong>Greg Hanson</strong>
-  <small>Frontend Engineer</small>
-</ui-avatar>
-```
-
 ### Group variants
 
 ```html
@@ -201,23 +181,6 @@ Display an avatar alongside a name and description:
 
 <!-- Spread: evenly spaced row -->
 <ui-avatar-group variant="spread">...</ui-avatar-group>
-
-<!-- Grid: responsive grid layout -->
-<ui-avatar-group variant="grid">...</ui-avatar-group>
-
-<!-- List: vertical column (pairs well with author variant) -->
-<ui-avatar-group variant="list">
-  <ui-avatar variant="author">
-    <img src="a1.webp" alt="Kim Cronos">
-    <strong>Kim Cronos</strong>
-    <small>Product Designer</small>
-  </ui-avatar>
-  <ui-avatar variant="author">
-    <img src="a2.webp" alt="Greg Hanson">
-    <strong>Greg Hanson</strong>
-    <small>Frontend Engineer</small>
-  </ui-avatar>
-</ui-avatar-group>
 ```
 
 ## Customization
@@ -237,15 +200,16 @@ Display an avatar alongside a name and description:
 
 | Token | Default | Description |
 |-------|---------|-------------|
-| `--ui-avatar-background` | `oklch(0.7 0.14 random(...))` | Background color (random per element) |
-| `--ui-avatar-border-color` | `var(--color-border)` | Border color |
+| `--ui-avatar-background` | `oklch(0.65 0.25 random(...))` | Background color (random per element) |
 | `--ui-avatar-border-width` | `var(--border-width-thick, 2px)` | Border width |
-| `--ui-avatar-border-radius` | `var(--radius-circle, 50%)` | Border radius |
+| `--ui-avatar-border-radius` | `50%` | Border radius |
 | `--ui-avatar-color` | `contrast-color(...)` | Text color (auto-contrast) |
+| `--ui-avatar-font-size` | `33cqi` | Initials font size |
 | `--ui-avatar-size` | `4em` | Avatar dimensions |
-| `--ui-avatar-author-gap` | `var(--spacing-sm, 0.5rem)` | Gap in author variant |
-| `--ui-avatar-group-gap` | `var(--spacing-sm, 0.5rem)` | Gap in spread/grid/list |
-| `--ui-avatar-group-overlap` | `-0.75em` | Overlap in stack layout |
+| `--ui-avatar-overlap` | `-1cqi` | Overlap in stack layout |
+| `--ui-avatar-ring-offset` | `var(--ring-offset, 3px)` | Ring gap from avatar edge |
+| `--ui-avatar-ring-width` | `var(--ring-width, 2px)` | Ring stroke width |
+| `--ui-avatar-status-size` | `20cqi` | Status indicator size |
 
 ### Example: custom size and colors
 
