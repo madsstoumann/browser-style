@@ -203,49 +203,12 @@
 	}
 
 	@container (inline-size > 650px) {
-		/* === type: horizontal, horizontal-fixed === */
-		ui-accordion:where([type="horizontal"], [type="horizontal-fixed"]) {
+		/* === type: horizontal === */
+		ui-accordion[type="horizontal"] {
 			cq-box {
-				display: grid;
-				gap: inherit;
-				grid-auto-flow: column;
-
-				details:not([open]) {
-					padding-inline: 0;
-					writing-mode: vertical-lr;
-					summary {
-						--ui-accordion-bg-hover: linear-gradient(180deg, #0000, var(--_hover, var(--color-field, hsl(0, 0%, 97.5%))) 10% 90%, #0000);
-						block-size: 100%;
-						inline-size: 100%;
-						padding-inline: var(--ui-accordion-padding-inline);
-					}
-				}
-				details::details-content {
-					transition: none;
-				}
-				ui-icon { display: none; }
-			}
-			&:where([variant~="divided"], [variant~="bordered"]) details[open]:not(:last-of-type) {
-				border-block-end: 0;
-				border-inline-end: var(--_border);
-			}
-			&[variant~="rounded"]:not([variant~="separate"]) cq-box {
-				details:first-of-type[open] {
-					border-start-end-radius: 0;
-					border-end-start-radius: var(--ui-accordion-border-radius);
-				}
-				details:last-of-type[open] {
-					border-start-end-radius: var(--ui-accordion-border-radius);
-					border-end-start-radius: 0;
-				}
-			}
-		}
-
-		/* horizontal-fixed: fixed height + inline-size transition: https://codepen.io/web-dot-dev/pen/XWvBZNo */
-		ui-accordion[type="horizontal-fixed"] {
-			cq-box {
-				block-size: var(--ui-accordion-horizontal-fixed-height);
 				display: flex;
+				gap: inherit;
+				
 				details {
 					display: flex;
 					flex: 0 0 auto;
@@ -256,6 +219,30 @@
 						flex-direction: column;
 					}
 					&::details-content { transition: none; }
+					&:not([open]) {
+						padding-inline: 0;
+						summary {
+							--ui-accordion-bg-hover: linear-gradient(180deg, #0000, var(--_hover, var(--color-field, hsl(0, 0%, 97.5%))) 10% 90%, #0000);
+							padding-inline: var(--ui-accordion-padding-inline);
+							writing-mode: vertical-lr;
+						}
+					}
+				}
+				
+				ui-icon { display: none; }
+			}
+			&:where([variant~="divided"], [variant~="bordered"]) details:not(:last-of-type) {
+				border-block-end: 0;
+				border-inline-end: var(--_border);
+			}
+			&[variant~="rounded"]:not([variant~="separate"]) cq-box {
+				details:first-of-type {
+					border-start-end-radius: 0;
+					border-end-start-radius: var(--ui-accordion-border-radius);
+				}
+				details:last-of-type {
+					border-start-end-radius: var(--ui-accordion-border-radius);
+					border-end-start-radius: 0;
 				}
 			}
 		}

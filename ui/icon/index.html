@@ -4,100 +4,70 @@
 	<title>Icon</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="description" content="CSS-only icon component with animated state transitions, built with pseudo-elements and CSS transforms.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="index.css">
 	<style>
-		/* For this demo-page only */
-		p {
+		/* Demo-page only */
+		.icon-grid {
 			align-items: start;
 			display: flex;
 			flex-wrap: wrap;
 			gap: 1ch;
 		}
+		.icon-grid button[data-variant="icon"] {
+			min-width: 2.5em;
+		}
+		.state-demo {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 2ch;
+		}
+		.state-demo details,
+		.state-demo label {
+			align-items: center;
+			border: var(--border-width, 1px) solid var(--color-border, hsl(0,0%,80%));
+			border-radius: var(--radius-md, .375rem);
+			display: inline-flex;
+			gap: 1ch;
+			padding: .75ch 1.5ch;
+		}
+		.state-demo details > div { padding-block: .5ch; }
+		.state-demo summary {
+			align-items: center;
+			cursor: pointer;
+			display: flex;
+			gap: 1ch;
+			list-style: none;
+			&::-webkit-details-marker { display: none; }
+		}
+		.state-demo label { cursor: pointer; }
+		.state-demo input[type="checkbox"] { display: none; }
 	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Icon</h2>
-	CSS-only icons with a variety of shapes and styles, using custom element <code>&lt;ui-icon&gt;</code>.<br>
-	See <a href="/ui/accordion/">Accordion</a> for examples of state-based icons — on <code>[open]</code> and <code>:checked</code>.
 	<p>
-		<button type="button" data-variant="icon"><ui-icon type="plus"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="minus"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="cross"></ui-icon></button>
+		<code>&lt;ui-icon&gt;</code> is a CSS-first icon component built entirely with pseudo-elements and CSS transforms. No SVG sprites, no icon fonts, no JavaScript required. Use the <code>type</code> attribute for shape, <code>size</code> and <code>stroke</code> for dimensions, and <code>variant="rounded"</code> for soft line caps.
+	</p>
+	<p>
+		Icons animate automatically when inside an <code>[open]</code> parent (e.g. <code>&lt;details&gt;</code>) or next to a <code>:checked</code> input. See the <a href="#state">state transitions</a> section below.
+	</p>
+
+	<!-- Directional -->
+	<h3>Chevrons</h3>
+	<div class="icon-grid">
 		<button type="button" data-variant="icon"><ui-icon type="chevron left"></ui-icon></button>
 		<button type="button" data-variant="icon"><ui-icon type="chevron right"></ui-icon></button>
 		<button type="button" data-variant="icon"><ui-icon type="chevron down"></ui-icon></button>
 		<button type="button" data-variant="icon"><ui-icon type="chevron up"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="arrow left"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="arrow right"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="arrow down"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="arrow up"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="arrow upleft"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="arrow upright"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="arrow downleft"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="arrow downright"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="check"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="burger-menu"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="veggie-menu"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="kebab"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="meatball"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="grid"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="drag"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="chevron left first"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="stop"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="pause"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="play"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="chevron right last"></ui-icon></button>
-	</p>
-
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-1 pi-3">
-		<p>
-			<button type="button" data-variant="icon"><ui-icon type="plus"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="minus"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="cross"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="chevron left"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="chevron right"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="chevron down"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="chevron up"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="arrow left"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="arrow right"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="arrow down"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="arrow up"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="arrow upleft"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="arrow upright"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="arrow downleft"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="arrow downright"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="check"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="burger-menu"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="veggie-menu"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="kebab"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="meatball"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="grid"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="drag"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="chevron left first"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="stop"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="pause"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="play"></ui-icon></button>
-			<button type="button" data-variant="icon"><ui-icon type="chevron right last"></ui-icon></button>
-		</p>
 	</div>
 
-
-	<h2>Icon direction: rtl</h2>
-	<p dir="rtl">
-		<button type="button" data-variant="icon"><ui-icon type="plus"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="minus"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="cross"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="chevron left"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="chevron right"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="chevron down"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="chevron up"></ui-icon></button>
+	<h3>Arrows</h3>
+	<div class="icon-grid">
 		<button type="button" data-variant="icon"><ui-icon type="arrow left"></ui-icon></button>
 		<button type="button" data-variant="icon"><ui-icon type="arrow right"></ui-icon></button>
 		<button type="button" data-variant="icon"><ui-icon type="arrow down"></ui-icon></button>
@@ -106,69 +76,276 @@
 		<button type="button" data-variant="icon"><ui-icon type="arrow upright"></ui-icon></button>
 		<button type="button" data-variant="icon"><ui-icon type="arrow downleft"></ui-icon></button>
 		<button type="button" data-variant="icon"><ui-icon type="arrow downright"></ui-icon></button>
+	</div>
+
+	<!-- Toggles -->
+	<h3>Toggles</h3>
+	<div class="icon-grid">
+		<button type="button" data-variant="icon"><ui-icon type="plus"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="minus"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="cross"></ui-icon></button>
 		<button type="button" data-variant="icon"><ui-icon type="check"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="plus-minus"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="plus-cross"></ui-icon></button>
+	</div>
+
+	<!-- Menu -->
+	<h3>Menu</h3>
+	<div class="icon-grid">
 		<button type="button" data-variant="icon"><ui-icon type="burger-menu"></ui-icon></button>
 		<button type="button" data-variant="icon"><ui-icon type="veggie-menu"></ui-icon></button>
+	</div>
+
+	<!-- Dots -->
+	<h3>Dots</h3>
+	<div class="icon-grid">
 		<button type="button" data-variant="icon"><ui-icon type="kebab"></ui-icon></button>
 		<button type="button" data-variant="icon"><ui-icon type="meatball"></ui-icon></button>
 		<button type="button" data-variant="icon"><ui-icon type="grid"></ui-icon></button>
 		<button type="button" data-variant="icon"><ui-icon type="drag"></ui-icon></button>
+	</div>
+
+	<!-- Media controls -->
+	<h3>Media controls</h3>
+	<div class="icon-grid">
 		<button type="button" data-variant="icon"><ui-icon type="chevron left first"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="stop"></ui-icon></button>
-		<button type="button" data-variant="icon"><ui-icon type="pause"></ui-icon></button>
 		<button type="button" data-variant="icon"><ui-icon type="play"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="pause"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="stop"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="triangle"></ui-icon></button>
 		<button type="button" data-variant="icon"><ui-icon type="chevron right last"></ui-icon></button>
-	</p>
+	</div>
 
-	<br>
-	<h2>SVG Icons</h2>
-	When using SVG-based icons, use <code>class="ui-icon"</code> instead of custom element.<br>
-	Use modifiers <code>--[xl,lg,md,sm]-stroke</code> for stroke-widths:
-	<p>
-		<svg viewBox="0 0 24 24" class="ui-icon --xl-stroke --md-icon">
-			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
-			<path d="M13.5 6.5l4 4"></path>
-		</svg>
-		<svg viewBox="0 0 24 24" class="ui-icon --lg-stroke --md-icon">
-			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
-			<path d="M13.5 6.5l4 4"></path>
-		</svg>
-		<svg viewBox="0 0 24 24" class="ui-icon --md-stroke --md-icon">
-			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
-			<path d="M13.5 6.5l4 4"></path>
-		</svg>
-		<svg viewBox="0 0 24 24" class="ui-icon --xs-stroke --md-icon">
-			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
-			<path d="M13.5 6.5l4 4"></path>
-		</svg>
-	</p>
+	<!-- Variant: rounded -->
+	<h3>Variant: <code>rounded</code></h3>
+	<p>Adds rounded line caps to line-based icons. Compare with the default sharp-ended versions above.</p>
+	<div class="icon-grid">
+		<button type="button" data-variant="icon"><ui-icon type="plus" variant="rounded"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="minus" variant="rounded"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="cross" variant="rounded"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="plus-minus" variant="rounded"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="plus-cross" variant="rounded"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="arrow left" variant="rounded"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="arrow right" variant="rounded"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="burger-menu" variant="rounded"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="veggie-menu" variant="rounded"></ui-icon></button>
+	</div>
 
-	<p>
-		Use modifiers <code>--[xl,lg,md,sm,xs]-icon</code> for sizes:
-	</p>
+	<!-- State transitions -->
+	<h3 id="state">State transitions: <code>[open]</code></h3>
+	<p>Icons animate when a parent <code>&lt;details&gt;</code> element is opened. Click to toggle.</p>
+	<div class="state-demo">
+		<details>
+			<summary>plus-minus <ui-icon type="plus-minus"></ui-icon></summary>
+			<div></div>
+		</details>
+		<details>
+			<summary>plus-cross <ui-icon type="plus-cross"></ui-icon></summary>
+			<div></div>
+		</details>
+		<details>
+			<summary>chevron down <ui-icon type="chevron down"></ui-icon></summary>
+			<div></div>
+		</details>
+		<details>
+			<summary>chevron right <ui-icon type="chevron right"></ui-icon></summary>
+			<div></div>
+		</details>
+		<details>
+			<summary>burger-menu <ui-icon type="burger-menu"></ui-icon></summary>
+			<div></div>
+		</details>
+		<details>
+			<summary>veggie-menu <ui-icon type="veggie-menu"></ui-icon></summary>
+			<div></div>
+		</details>
+		<details>
+			<summary>kebab <ui-icon type="kebab"></ui-icon></summary>
+			<div></div>
+		</details>
+		<details>
+			<summary>meatball <ui-icon type="meatball"></ui-icon></summary>
+			<div></div>
+		</details>
+		<details>
+			<summary>grid <ui-icon type="grid"></ui-icon></summary>
+			<div></div>
+		</details>
+	</div>
 
-	<p>
-		<svg viewBox="0 0 24 24" class="ui-icon --xl-icon">
-			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
-			<path d="M13.5 6.5l4 4"></path>
-		</svg>
-		<svg viewBox="0 0 24 24" class="ui-icon --lg-icon">
-			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
-			<path d="M13.5 6.5l4 4"></path>
-		</svg>
-		<svg viewBox="0 0 24 24" class="ui-icon --md-icon">
-			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
-			<path d="M13.5 6.5l4 4"></path>
-		</svg>
-		<svg viewBox="0 0 24 24" class="ui-icon --sm-icon">
-			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
-			<path d="M13.5 6.5l4 4"></path>
-		</svg>
-		<svg viewBox="0 0 24 24" class="ui-icon --xs-icon">
-			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
-			<path d="M13.5 6.5l4 4"></path>
-		</svg>
-	</p>
+	<h3>State transitions: <code>:checked</code></h3>
+	<p>Icons animate when an adjacent <code>&lt;input type="checkbox"&gt;</code> is checked. Click to toggle.</p>
+	<div class="state-demo">
+		<label>
+			<input type="checkbox">
+			plus-cross <ui-icon type="plus-cross"></ui-icon>
+		</label>
+		<label>
+			<input type="checkbox">
+			chevron down <ui-icon type="chevron down"></ui-icon>
+		</label>
+		<label>
+			<input type="checkbox">
+			burger-menu <ui-icon type="burger-menu"></ui-icon>
+		</label>
+		<label>
+			<input type="checkbox">
+			plus-minus <ui-icon type="plus-minus"></ui-icon>
+		</label>
+		<label>
+			<input type="checkbox">
+			kebab <ui-icon type="kebab"></ui-icon>
+		</label>
+		<label>
+			<input type="checkbox">
+			meatball <ui-icon type="meatball"></ui-icon>
+		</label>
+		<label>
+			<input type="checkbox">
+			grid <ui-icon type="grid"></ui-icon>
+		</label>
+	</div>
+
+	<!-- Size -->
+	<h3>Size</h3>
+	<p>Use the <code>size</code> attribute: <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, <code>xxl</code>.</p>
+	<div class="icon-grid" style="align-items: center;">
+		<ui-icon type="chevron right" size="xs"></ui-icon>
+		<ui-icon type="chevron right" size="sm"></ui-icon>
+		<ui-icon type="chevron right" size="md"></ui-icon>
+		<ui-icon type="chevron right"></ui-icon>
+		<ui-icon type="chevron right" size="lg"></ui-icon>
+		<ui-icon type="chevron right" size="xl"></ui-icon>
+		<ui-icon type="chevron right" size="xxl"></ui-icon>
+	</div>
+
+	<!-- Stroke -->
+	<h3>Stroke</h3>
+	<p>Use the <code>stroke</code> attribute: <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>.</p>
+	<div class="icon-grid">
+		<button type="button" data-variant="icon"><ui-icon type="chevron right" stroke="xs"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="chevron right" stroke="sm"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="chevron right"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="chevron right" stroke="md"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="chevron right" stroke="lg"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="chevron right" stroke="xl"></ui-icon></button>
+	</div>
+
+	<!-- Opposite color-scheme -->
+	<h3>Opposite color-scheme</h3>
+	<div class="icon-grid bdrs-md cs-opposite pb-1 pi-3">
+		<button type="button" data-variant="icon"><ui-icon type="plus"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="minus"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="cross"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="chevron left"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="chevron right"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="arrow left"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="arrow right"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="burger-menu"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="kebab"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="play"></ui-icon></button>
+	</div>
+
+	<!-- RTL -->
+	<h3>Direction: <code>rtl</code></h3>
+	<div class="icon-grid" dir="rtl">
+		<button type="button" data-variant="icon"><ui-icon type="arrow left"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="arrow right"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="chevron left"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="chevron right"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="chevron left first"></ui-icon></button>
+		<button type="button" data-variant="icon"><ui-icon type="chevron right last"></ui-icon></button>
+	</div>
+
+	<!-- SVG icons -->
+	<h3>SVG icons</h3>
+	<p>Wrap any SVG inside <code>&lt;ui-icon&gt;</code> for consistent sizing and stroke. Use the <code>size</code> and <code>stroke</code> attributes.</p>
+
+	<h4>Stroke variants</h4>
+	<div class="icon-grid" style="align-items: center;">
+		<ui-icon size="lg" stroke="xs">
+			<svg viewBox="0 0 24 24">
+				<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+				<path d="M13.5 6.5l4 4"></path>
+			</svg>
+		</ui-icon>
+		<ui-icon size="lg" stroke="sm">
+			<svg viewBox="0 0 24 24">
+				<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+				<path d="M13.5 6.5l4 4"></path>
+			</svg>
+		</ui-icon>
+		<ui-icon size="lg">
+			<svg viewBox="0 0 24 24">
+				<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+				<path d="M13.5 6.5l4 4"></path>
+			</svg>
+		</ui-icon>
+		<ui-icon size="lg" stroke="md">
+			<svg viewBox="0 0 24 24">
+				<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+				<path d="M13.5 6.5l4 4"></path>
+			</svg>
+		</ui-icon>
+		<ui-icon size="lg" stroke="lg">
+			<svg viewBox="0 0 24 24">
+				<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+				<path d="M13.5 6.5l4 4"></path>
+			</svg>
+		</ui-icon>
+		<ui-icon size="lg" stroke="xl">
+			<svg viewBox="0 0 24 24">
+				<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+				<path d="M13.5 6.5l4 4"></path>
+			</svg>
+		</ui-icon>
+	</div>
+
+	<h4>Size variants</h4>
+	<div class="icon-grid" style="align-items: center;">
+		<ui-icon size="xs">
+			<svg viewBox="0 0 24 24">
+				<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+				<path d="M13.5 6.5l4 4"></path>
+			</svg>
+		</ui-icon>
+		<ui-icon size="sm">
+			<svg viewBox="0 0 24 24">
+				<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+				<path d="M13.5 6.5l4 4"></path>
+			</svg>
+		</ui-icon>
+		<ui-icon size="md">
+			<svg viewBox="0 0 24 24">
+				<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+				<path d="M13.5 6.5l4 4"></path>
+			</svg>
+		</ui-icon>
+		<ui-icon>
+			<svg viewBox="0 0 24 24">
+				<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+				<path d="M13.5 6.5l4 4"></path>
+			</svg>
+		</ui-icon>
+		<ui-icon size="lg">
+			<svg viewBox="0 0 24 24">
+				<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+				<path d="M13.5 6.5l4 4"></path>
+			</svg>
+		</ui-icon>
+		<ui-icon size="xl">
+			<svg viewBox="0 0 24 24">
+				<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+				<path d="M13.5 6.5l4 4"></path>
+			</svg>
+		</ui-icon>
+		<ui-icon size="xxl">
+			<svg viewBox="0 0 24 24">
+				<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+				<path d="M13.5 6.5l4 4"></path>
+			</svg>
+		</ui-icon>
+	</div>
 
 </body>
 </html>
