@@ -134,9 +134,9 @@
 		</ui-avatar>
 	</ui-avatar-group>
 
-	<h3>Avatar Group: Overflow (<code>max</code>)</h3>
-	<p>The <code>max</code> attribute limits visible avatars. The JS-powered <code>applyMax()</code> hides excess avatars and inserts a <code>+N</code> counter.</p>
-	<ui-avatar-group max="3">
+	<h3>Avatar Group: Overflow</h3>
+	<p>In a framework context, render only the visible avatars and add a <code>&lt;ui-avatar overflow&gt;</code> element with the count. No <code>max</code> attribute needed — the framework controls the loop.</p>
+	<ui-avatar-group>
 		<ui-avatar tooltip="Kim Cronos" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
 		</ui-avatar>
@@ -146,22 +146,11 @@
 		<ui-avatar tooltip="John Doe" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
 		</ui-avatar>
-		<ui-avatar tooltip="Linda Payne" tabindex="0">
-			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
-		</ui-avatar>
-		<ui-avatar tooltip="Anna Berg" tabindex="0">
-			<abbr title="Anna Berg">AB</abbr>
-		</ui-avatar>
-		<ui-avatar tooltip="Tom Niles" tabindex="0">
-			<abbr title="Tom Niles">TN</abbr>
-		</ui-avatar>
-		<ui-avatar tooltip="Sara Koch" tabindex="0">
-			<abbr title="Sara Koch">SK</abbr>
-		</ui-avatar>
+		<ui-avatar overflow><abbr>+4</abbr></ui-avatar>
 	</ui-avatar-group>
 
 	<h3>Avatar Group: Overflow with Spread</h3>
-	<ui-avatar-group max="4" variant="spread">
+	<ui-avatar-group variant="spread">
 		<ui-avatar tooltip="Kim Cronos" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
 		</ui-avatar>
@@ -174,12 +163,7 @@
 		<ui-avatar tooltip="Linda Payne" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
 		</ui-avatar>
-		<ui-avatar tooltip="Anna Berg" tabindex="0">
-			<abbr title="Anna Berg">AB</abbr>
-		</ui-avatar>
-		<ui-avatar tooltip="Tom Niles" tabindex="0">
-			<abbr title="Tom Niles">TN</abbr>
-		</ui-avatar>
+		<ui-avatar overflow><abbr>+2</abbr></ui-avatar>
 	</ui-avatar-group>
 
 	<script type="module">
@@ -187,7 +171,6 @@
 		import attrFallback from '/assets/js/attr_fallback.js';
 		attrFallback({
 			'ui-avatar[ring]': { '--_ring': ['ring', 'hsl(211, 100%, 50%)'] },
-			'ui-avatar-group[max]': { '--_max': 'max' },
 		});
 	</script>
 

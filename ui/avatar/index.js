@@ -21,13 +21,15 @@ class UiAvatarGroup extends HTMLElement {
 
 	applyMax() {
 		const max = parseInt(this.getAttribute('max'));
+		if (!max || max < 1) return;
+
 		const existing = this.querySelector(':scope > ui-avatar[overflow]');
 		if (existing) existing.remove();
 
 		const avatars = Array.from(this.children).filter(c => c.matches('ui-avatar:not([overflow])'));
 		for (const avatar of avatars) avatar.hidden = false;
 
-		if (!max || max < 1 || avatars.length <= max) return;
+		if (avatars.length <= max) return;
 
 		for (let i = max; i < avatars.length; i++) {
 			avatars[i].hidden = true;

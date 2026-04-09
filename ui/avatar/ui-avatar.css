@@ -136,6 +136,12 @@
 			}
 		}
 	}
+	
+	/* `overflow` — JS-rendered counter element */
+	:where(ui-avatar[overflow]) {
+		--ui-avatar-background: var(--color-surface-alt, light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%)));
+		--ui-avatar-color: var(--color-text-muted, light-dark(hsl(0, 0%, 60%), hsl(0, 0%, 40%)));
+	}
 
 	/* `variant=spread` — evenly spaced */
 	:where(ui-avatar-group[variant~="spread"]) {
