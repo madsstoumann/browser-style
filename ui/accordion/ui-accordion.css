@@ -13,7 +13,7 @@
 		--ui-accordion-border-radius: 1ch;
 		--ui-accordion-border-style: solid;
 		--ui-accordion-border-width: var(--input-border-width, 1px);
-		--ui-accordion-breakout-border-width: var(--border-width-thick, 2px);
+		--ui-accordion-breakout-border-width: var(--border-width, 1px);
 		--ui-accordion-breakout-unit: var(--spacing-md, 1rem);
 		--ui-accordion-color: inherit;
 		--ui-accordion-duration: var(--duration-slow, .3s);

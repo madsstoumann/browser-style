@@ -1,7 +1,7 @@
 /**
  * ui-avatar
- * @version 4.0.1
- * @date 2026-04-08
+ * @version 4.0.2
+ * @date 2026-04-09
  * @author Mads Stoumann
  */
 
@@ -13,7 +13,7 @@
 
 @layer bs-component {
 	:where(ui-avatar) {
-		--ui-avatar-background: oklch(0.65 0.25 random(auto, 0, 360));
+		--ui-avatar-background: oklch(0.5 0.25 random(auto, 0, 360));
 		--ui-tooltip-font-size: clamp(0.5rem, 18cqi, 0.875rem);
 		aspect-ratio: 1 / 1;
 		background: var(--ui-avatar-background, var(--color-button, light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%))));
@@ -105,6 +105,7 @@
 			--_is-counter: calc(1 - clamp(0, abs(sibling-index() - var(--_max) - 1), 1));
 			--_show-counter: calc(var(--_is-counter) * var(--_has-overflow));
 
+			background: color-mix(in oklch, var(--ui-avatar-background) calc((1 - var(--_show-counter)) * 100%), transparent calc(var(--_show-counter) * 100%));
 			block-size: calc(var(--ui-avatar-size, 4em) * (1 - var(--_hidden)));
 			border-width: calc(var(--ui-avatar-border-width, 2px) * (1 - var(--_hidden)));
 			counter-set: overflow calc(sibling-count() - var(--_max) - 1);
