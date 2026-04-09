@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Accordion — Web Component</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Web component demo for ui-accordion and ui-accordion-item">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="ui-accordion.css">
+	<script type="module" src="index.js"></script>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Accordion — Web Component</h2>
+	<p>
+		Using <code>&lt;ui-accordion&gt;</code> with <code>&lt;ui-accordion-item&gt;</code> — renders the same native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> HTML into the light DOM. See the <a href="index.html">CSS-only demo</a> for the non-JS version.
+	</p>
+
+	<h3>With <code>variant="divided"</code></h3>
+	<ui-accordion name="wc-divided" variant="divided">
+		<ui-accordion-item label="How do I reset my password?">
+			To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely.
+		</ui-accordion-item>
+		<ui-accordion-item label="How long does shipping take?">
+			Generally, we aim to process and ship orders within 1-2 business days. Estimated delivery time ranges from 2 to 7 business days.
+		</ui-accordion-item>
+		<ui-accordion-item label="What payment methods do you accept?" open>
+			We accept Visa, Mastercard, American Express, PayPal, Apple Pay, and Google Pay.
+		</ui-accordion-item>
+		<ui-accordion-item label="How can I contact customer support?">
+			You can reach us by phone, email, or live chat during business hours.
+		</ui-accordion-item>
+	</ui-accordion>
+
+	<br>
+	<h3>With <code>variant="bordered divided rounded"</code></h3>
+	<ui-accordion name="wc-bordered" variant="bordered divided rounded">
+		<ui-accordion-item label="How do I reset my password?" icon="chevron down" open>
+			To reset your password, go to the login page and click on the "Forgot Password" link. Follow the instructions sent to your email.
+		</ui-accordion-item>
+		<ui-accordion-item label="How long does shipping take?" icon="chevron down">
+			Generally, we aim to process and ship orders within 1-2 business days.
+		</ui-accordion-item>
+		<ui-accordion-item label="What payment methods do you accept?" icon="chevron down">
+			We accept Visa, Mastercard, American Express, PayPal, Apple Pay, and Google Pay.
+		</ui-accordion-item>
+		<ui-accordion-item label="How can I contact customer support?" icon="chevron down">
+			You can reach us by phone, email, or live chat during business hours.
+		</ui-accordion-item>
+	</ui-accordion>
+
+	<br>
+	<h3>With <code>variant="breakout divided rounded"</code></h3>
+	<ui-accordion name="wc-breakout" variant="breakout divided rounded">
+		<ui-accordion-item label="How do I reset my password?" icon="chevron down">
+			To reset your password, go to the login page and click on the "Forgot Password" link. Follow the instructions sent to your email.
+		</ui-accordion-item>
+		<ui-accordion-item label="How long does shipping take?" icon="chevron down" open>
+			Generally, we aim to process and ship orders within 1-2 business days.
+		</ui-accordion-item>
+		<ui-accordion-item label="What payment methods do you accept?" icon="chevron down">
+			We accept Visa, Mastercard, American Express, PayPal, Apple Pay, and Google Pay.
+		</ui-accordion-item>
+		<ui-accordion-item label="How can I contact customer support?" icon="chevron down">
+			You can reach us by phone, email, or live chat during business hours.
+		</ui-accordion-item>
+	</ui-accordion>
+
+	<br>
+	<h3>With <code>variant="separate divided rounded"</code></h3>
+	<ui-accordion name="wc-separate" variant="separate divided rounded">
+		<ui-accordion-item label="How do I reset my password?" icon="chevron down">
+			To reset your password, go to the login page and click on the "Forgot Password" link. Follow the instructions sent to your email.
+		</ui-accordion-item>
+		<ui-accordion-item label="How long does shipping take?" icon="chevron down" open>
+			Generally, we aim to process and ship orders within 1-2 business days.
+		</ui-accordion-item>
+		<ui-accordion-item label="What payment methods do you accept?" icon="chevron down">
+			We accept Visa, Mastercard, American Express, PayPal, Apple Pay, and Google Pay.
+		</ui-accordion-item>
+		<ui-accordion-item label="How can I contact customer support?" icon="chevron down">
+			You can reach us by phone, email, or live chat during business hours.
+		</ui-accordion-item>
+	</ui-accordion>
+
+	<br>
+	<h3>With <code>variant="shadow divided rounded"</code></h3>
+	<ui-accordion name="wc-shadow" variant="shadow divided rounded">
+		<ui-accordion-item label="How do I reset my password?" icon="chevron down">
+			To reset your password, go to the login page and click on the "Forgot Password" link. Follow the instructions sent to your email.
+		</ui-accordion-item>
+		<ui-accordion-item label="How long does shipping take?" icon="chevron down" open>
+			Generally, we aim to process and ship orders within 1-2 business days.
+		</ui-accordion-item>
+		<ui-accordion-item label="What payment methods do you accept?" icon="chevron down">
+			We accept Visa, Mastercard, American Express, PayPal, Apple Pay, and Google Pay.
+		</ui-accordion-item>
+	</ui-accordion>
+
+	<br>
+	<h3>With <code>no-collapse</code></h3>
+	<p>Ensures one item is always open.</p>
+	<ui-accordion name="wc-nocollapse" variant="divided" no-collapse>
+		<ui-accordion-item label="How do I reset my password?" open>
+			To reset your password, go to the login page and click on the "Forgot Password" link. Follow the instructions sent to your email.
+		</ui-accordion-item>
+		<ui-accordion-item label="How long does shipping take?">
+			Generally, we aim to process and ship orders within 1-2 business days.
+		</ui-accordion-item>
+		<ui-accordion-item label="What payment methods do you accept?">
+			We accept Visa, Mastercard, American Express, PayPal, Apple Pay, and Google Pay.
+		</ui-accordion-item>
+	</ui-accordion>
+
+	<br>
+	<h3>With <code>type="horizontal"</code></h3>
+	<p>Blinds-style layout at wider viewports (&gt;650px). The <code>&lt;cq-box&gt;</code> wrapper is auto-inserted by JS.</p>
+	<ui-accordion name="wc-horizontal" variant="bordered divided rounded" type="horizontal">
+		<ui-accordion-item label="How do I reset my password?" icon="chevron down">
+			To reset your password, go to the login page and click on the "Forgot Password" link. Follow the instructions sent to your email.
+		</ui-accordion-item>
+		<ui-accordion-item label="How long does shipping take?" icon="chevron down" open>
+			Generally, we aim to process and ship orders within 1-2 business days. Estimated delivery time ranges from 2 to 7 business days.
+		</ui-accordion-item>
+		<ui-accordion-item label="What payment methods do you accept?" icon="chevron down">
+			We accept Visa, Mastercard, American Express, PayPal, Apple Pay, and Google Pay.
+		</ui-accordion-item>
+		<ui-accordion-item label="How can I contact customer support?" icon="chevron down">
+			You can reach us by phone, email, or live chat during business hours.
+		</ui-accordion-item>
+	</ui-accordion>
+
+	<br>
+	<h3>With <code>type="split"</code> and <code>no-collapse</code></h3>
+	<p>At wider viewports, shows text in a left column with <code>data-split</code> content in a right panel.</p>
+	<ui-accordion name="wc-split" type="split" variant="divided" no-collapse>
+		<ui-accordion-item label="Our Workspace" open>
+			Our modern workspace is designed to inspire creativity and collaboration. With open floor plans, natural lighting, and dedicated quiet zones, we provide an environment where teams can do their best work.
+			<img src="https://picsum.photos/seed/workspace/800/500" alt="Modern workspace" data-split>
+		</ui-accordion-item>
+		<ui-accordion-item label="Meet the Team">
+			Our diverse team brings together experts from various fields. We believe that great products are built by great people.
+			<img src="https://picsum.photos/seed/team/800/500" alt="Team photo" data-split>
+		</ui-accordion-item>
+		<ui-accordion-item label="Product Demo">
+			Watch our latest product demo to see the new features in action.
+			<video src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" controls data-split></video>
+		</ui-accordion-item>
+	</ui-accordion>
+
+	<br>
+	<h3>Icon variants</h3>
+	<ui-accordion name="wc-icons" variant="divided">
+		<ui-accordion-item label="With plus-minus (default)">
+			This is the default icon type.
+		</ui-accordion-item>
+		<ui-accordion-item label="With chevron right" icon="chevron right">
+			Uses the chevron right icon, which rotates on open.
+		</ui-accordion-item>
+		<ui-accordion-item label="With arrow right" icon="arrow right">
+			Uses the arrow right icon.
+		</ui-accordion-item>
+		<ui-accordion-item label="With plus-cross" icon="plus-cross">
+			Plus morphs into a cross on open.
+		</ui-accordion-item>
+		<ui-accordion-item label="With chevron down" icon="chevron down">
+			Chevron pointing down, rotates on open.
+		</ui-accordion-item>
+	</ui-accordion>
+
+</body>
+</html>

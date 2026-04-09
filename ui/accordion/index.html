@@ -14,10 +14,12 @@
 <body>
 	<h1>UI: Components</h1>
 
-	<h2>Accordion — CSS-only</h2>
+	<h2>Accordion</h2>
 	<p>
-		An accordion is a collapsible content panel that allows users to toggle the visibility of sections of content. This accordion is built with a <code>details</code> element containing a <code>summary</code> and a <code>div</code>.<br>
-		It is <strong>not</strong> using JavaScript. Use the <code>name</code>-attribute to autocollapse in supported browsers.
+		<code>&lt;ui-accordion&gt;</code> is a CSS-first collapsible content panel built on native <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> elements. Use the <code>name</code> attribute for exclusive open behavior, and compose variants like <code>bordered</code>, <code>divided</code>, <code>rounded</code>, <code>breakout</code>, and <code>shadow</code>.
+	</p>
+	<p>
+		This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript). See the <a href="wc-demo.html">web component demo</a> for the JS-enhanced version using <code>&lt;ui-accordion-item&gt;</code>.
 	</p>
 
 	<ui-accordion>
@@ -582,47 +584,5 @@
 			</details>
 		</cq-box>
 	</ui-accordion>
-
-
-
-	<!-- <br>
-	<h2>Web Component</h2>
-	<p>Using <code>&lt;ui-accordion&gt;</code> with <code>&lt;ui-accordion-item&gt;</code> — renders the same native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> HTML under the hood.</p>
-
-	<ui-accordion name="wc-demo">
-		<ui-accordion-item label="How do I reset my password?">
-			<p>To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account.</p>
-		</ui-accordion-item>
-		<ui-accordion-item label="How long does shipping take?">
-			<p>The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days.</p>
-		</ui-accordion-item>
-		<ui-accordion-item label="What payment methods do you accept?" open>
-			<p>We accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we support PayPal, Apple Pay, and Google Pay.</p>
-		</ui-accordion-item>
-	</ui-accordion>
-
-	<br>
-	<h3>Web Component with <code>variant="item"</code></h3>
-	<ui-accordion name="wc-item" variant="item">
-		<ui-accordion-item label="First item" icon="chevron down" open>
-			<p>This uses the <code>item</code> card-style variant, applied via the <code>variant</code> attribute on the parent.</p>
-		</ui-accordion-item>
-		<ui-accordion-item label="Second item" icon="chevron down">
-			<p>All items inherit the <code>name</code> from the parent <code>&lt;ui-accordion&gt;</code> element.</p>
-		</ui-accordion-item>
-	</ui-accordion>
-
-	<br>
-	<h3>Web Component with <code>variant="media"</code></h3>
-	<ui-accordion name="wc-media" variant="media">
-		<ui-accordion-item label="Our Workspace" open>
-			<p>Our modern workspace is designed to inspire creativity and collaboration.</p>
-			<img src="https://picsum.photos/seed/workspace/800/500" alt="Modern workspace">
-		</ui-accordion-item>
-		<ui-accordion-item label="Meet the Team">
-			<p>Our diverse team brings together experts from various fields.</p>
-			<img src="https://picsum.photos/seed/team/800/500" alt="Team photo">
-		</ui-accordion-item>
-	</ui-accordion> -->
 </body>
 </html>
