@@ -25,14 +25,6 @@
 			gap: 2ch;
 		}
 		.state-demo details,
-		.state-demo label {
-			align-items: center;
-			border: var(--border-width, 1px) solid var(--color-border, hsl(0,0%,80%));
-			border-radius: var(--radius-md, .375rem);
-			display: inline-flex;
-			gap: 1ch;
-			padding: .75ch 1.5ch;
-		}
 		.state-demo details > div { padding-block: .5ch; }
 		.state-demo summary {
 			align-items: center;
@@ -42,8 +34,6 @@
 			list-style: none;
 			&::-webkit-details-marker { display: none; }
 		}
-		.state-demo label { cursor: pointer; }
-		.state-demo input[type="checkbox"] { display: none; }
 	</style>
 </head>
 <body>
@@ -121,11 +111,10 @@
 		<ui-icon type="plus" variant="rounded" size="xxl" stroke="xl"></ui-icon>
 		<ui-icon type="minus" variant="rounded" size="xxl" stroke="xl"></ui-icon>
 		<ui-icon type="cross" variant="rounded" size="xxl" stroke="xl"></ui-icon>
-		<ui-icon type="arrow left" variant="rounded" size="xxl" stroke="xl"></ui-icon>
-		<ui-icon type="arrow right" variant="rounded" size="xxl" stroke="xl"></ui-icon>
 		<ui-icon type="burger-menu" variant="rounded" size="xxl" stroke="xl"></ui-icon>
 		<ui-icon type="veggie-menu" variant="rounded" size="xxl" stroke="xl"></ui-icon>
 	</div>
+	<p>Chevrons and arrowheads use CSS borders (two sides of a rotated box), so their endpoints cannot be rounded with <code>border-radius</code>. Only line-based icons (plus, minus, cross, menu bars, arrow shafts) are affected.</p>
 
 	<!-- State transitions -->
 	<h3 id="state">State transitions: <code>[open]</code></h3>
@@ -167,39 +156,6 @@
 			<summary>grid <ui-icon type="grid"></ui-icon></summary>
 			<div></div>
 		</details>
-	</div>
-
-	<h3>State transitions: <code>:checked</code></h3>
-	<p>Icons animate when an adjacent <code>&lt;input type="checkbox"&gt;</code> is checked. Click to toggle.</p>
-	<div class="state-demo">
-		<label>
-			<input type="checkbox">
-			plus-cross <ui-icon type="plus-cross"></ui-icon>
-		</label>
-		<label>
-			<input type="checkbox">
-			chevron down <ui-icon type="chevron down"></ui-icon>
-		</label>
-		<label>
-			<input type="checkbox">
-			burger-menu <ui-icon type="burger-menu"></ui-icon>
-		</label>
-		<label>
-			<input type="checkbox">
-			plus-minus <ui-icon type="plus-minus"></ui-icon>
-		</label>
-		<label>
-			<input type="checkbox">
-			kebab <ui-icon type="kebab"></ui-icon>
-		</label>
-		<label>
-			<input type="checkbox">
-			meatball <ui-icon type="meatball"></ui-icon>
-		</label>
-		<label>
-			<input type="checkbox">
-			grid <ui-icon type="grid"></ui-icon>
-		</label>
 	</div>
 
 	<!-- Size -->

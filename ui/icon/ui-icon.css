@@ -18,7 +18,6 @@
 		--_cosh: calc(1em * cos(45deg));
 
 		border-radius: var(--ui-icon-border-radius);
-		box-sizing: border-box;
 		display: inline-grid;
 		font-size: var(--ui-icon-size);
 		grid-template-rows: 0;
@@ -31,7 +30,6 @@
 	}
 	ui-icon::before,
 	ui-icon::after {
-		box-sizing: border-box;
 		content: "";
 		display: block;
 		transition: var(--ui-icon-duration) var(--ui-icon-easing);
@@ -72,7 +70,7 @@
 	/* Grid, Kebab, Meatball, Menu */
 	ui-icon:is([type=drag],[type=grid],[type=kebab],[type=meatball])::after {
 		background: currentColor;
-		border-radius: 50%;
+		border-radius: var(--radius-circle, 50%);
 		height: .2em;
 		width: .2em;
 	}
@@ -145,31 +143,19 @@
 	ui-icon[size=xl] { --ui-icon-size: 140%; }
 	ui-icon[size=xxl] { --ui-icon-size: 200%; }
 
-	/* State */
-	[open] >* >ui-icon:is([type=kebab],[type=meatball],[type=plus-cross]) { rotate: 45deg; }
-	[open] >* >ui-icon[type*=menu] { gap: 0; }
-	[open] >* >ui-icon[type*=menu]::before { box-shadow: none; rotate: -45deg; }
-	[open] >* >ui-icon[type*=menu]::after { rotate: 45deg; }
-	[open] >* >ui-icon[type~=down] { scale: -1; }
-	[open] >* >ui-icon[type=grid] { rotate: 135deg; }
-	[open] >* >ui-icon:is([type=grid],[type=kebab],[type=meatball])::after { box-shadow: -.3em 0 0, 0 .3em 0, 0 -.3em 0, .3em 0 0; }
-	[open] >* >ui-icon[type*=plus-minus]::after { rotate: 0deg; }
+	/* State: [open] and :checked */
+	:is([open] >* > ui-icon, :checked + ui-icon):is([type=kebab],[type=meatball],[type=plus-cross]) { rotate: 45deg; }
+	:is([open] >* > ui-icon, :checked + ui-icon)[type*=menu] { gap: 0; }
+	:is([open] >* > ui-icon, :checked + ui-icon)[type*=menu]::before { box-shadow: none; rotate: -45deg; }
+	:is([open] >* > ui-icon, :checked + ui-icon)[type*=menu]::after { rotate: 45deg; }
+	:is([open] >* > ui-icon, :checked + ui-icon)[type~=down] { scale: -1; }
+	:is([open] >* > ui-icon, :checked + ui-icon)[type=grid] { rotate: 135deg; }
+	:is([open] >* > ui-icon, :checked + ui-icon):is([type=grid],[type=kebab],[type=meatball])::after { box-shadow: -.3em 0 0, 0 .3em 0, 0 -.3em 0, .3em 0 0; }
+	:is([open] >* > ui-icon, :checked + ui-icon)[type*=plus-minus]::after { rotate: 0deg; }
 	[open] >* >ui-icon[type~=right] { rotate: 90deg; }
 
 	/* re-visit */
 	[open] >* * ui-icon[type~=right] { rotate: 90deg; }
-
-	/* [type="checkbox"] + <ui-icon> */
-	:checked + ui-icon[type~=down] { scale: -1; }
-	:checked + ui-icon:is([type=kebab],[type=meatball],[type=plus-cross]) { rotate: 45deg; }
-	:checked + ui-icon:is([type=grid],[type=kebab],[type=meatball])::after { box-shadow: -.3em 0 0, 0 .3em 0, 0 -.3em 0, .3em 0 0; }
-	:checked + ui-icon[type=grid] { rotate: 135deg; }
-	:checked + ui-icon[type*=plus-minus]::after { rotate: 0deg; }
-	:checked + ui-icon[type*=menu] {
-		gap: 0;
-		&::before { box-shadow: none; rotate: -45deg; }
-		&::after { rotate: 45deg; }
-	}
 
 	/* Variant: rounded — rounds line caps on line-based icons */
 	ui-icon[variant~=rounded]:is([type*=arrow],[type=cross],[type*=menu],[type*=plus])::before,
