@@ -19,6 +19,7 @@
 		--ui-accordion-duration: var(--duration-slow, .3s);
 		--ui-accordion-gap: var(--spacing-xl, 2rem);
 		--ui-accordion-horizontal-fixed-height: 400px;
+		--ui-accordion-horizontal-padding-inline: 2ch;
 		--ui-accordion-margin-end: 0;
 		--ui-accordion-media-duration: .6s;
 		--ui-accordion-open-decoration-offset: 0.3ch;
@@ -208,22 +209,35 @@
 			cq-box {
 				display: flex;
 				gap: inherit;
-				
+
 				details {
 					display: flex;
-					flex: 0 0 auto;
+					flex-basis: calc(100% / sibling-count() / sibling-count() + 2 * var(--ui-accordion-padding-inline));
+					flex-grow: 1;
+					flex-shrink: 0;
 					overflow: hidden;
-					transition: flex var(--ui-accordion-duration) ease, inline-size var(--ui-accordion-duration) ease;
+					transition: flex-grow var(--ui-accordion-duration) ease;
 					&[open] {
-						flex: 1;
+						flex-grow: calc(sibling-count() * sibling-count());
 						flex-direction: column;
 					}
-					&::details-content { transition: none; }
+					&::details-content {
+						opacity: 0;
+						transition: block-size 0s, content-visibility 0s, opacity 0s;
+					}
+					&[open]::details-content {
+						opacity: 1;
+						transition:
+							block-size var(--ui-accordion-duration) ease var(--ui-accordion-duration),
+							content-visibility 0s var(--ui-accordion-duration),
+							opacity var(--ui-accordion-duration) ease var(--ui-accordion-duration);
+					}
 					&:not([open]) {
 						padding-inline: 0;
 						summary {
 							--ui-accordion-bg-hover: linear-gradient(180deg, #0000, var(--_hover, var(--color-field, hsl(0, 0%, 97.5%))) 10% 90%, #0000);
-							padding-inline: var(--ui-accordion-padding-inline);
+							block-size: 100%;
+							padding-inline: var(--ui-accordion-horizontal-padding-inline, 2.5ch);
 							writing-mode: vertical-lr;
 						}
 					}
