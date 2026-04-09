@@ -372,10 +372,8 @@ Same as `media` but also supports `data-split` on any element for generic split 
 
 Blinds-style layout at wider viewports (>650px). Falls back to vertical accordion below. Requires `<cq-box>` for CSS-only; auto-inserted by web component.
 
-Using `no-collapse` is recommended so one item always stays open — this avoids an empty collapsed state that can look broken in horizontal mode.
-
 ```html
-<ui-accordion type="horizontal" variant="bordered rounded" name="sections" no-collapse>
+<ui-accordion type="horizontal" variant="bordered rounded" name="sections">
   <cq-box>
     <details class="ui-accordion" name="sections" open>
       <summary>About Us</summary>
