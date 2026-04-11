@@ -134,8 +134,13 @@
 	</div>
 
 	<h3>Sizes</h3>
-	<p>Use the <code>size</code> attribute: <code>sm</code>, <code>md</code> (default), <code>lg</code>.</p>
+	<p>Use the <code>size</code> attribute: <code>xs</code>, <code>sm</code>, <code>md</code> (default), <code>lg</code>.</p>
 	<div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+		<ui-avatar size="sm">
+			<abbr title="Kim Cronos">KC</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+			<ui-badge size="xs" color="success">1</ui-badge>
+		</ui-avatar>
 		<ui-avatar size="md">
 			<abbr title="Kim Cronos">KC</abbr>
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
@@ -153,11 +158,12 @@
 		</ui-avatar>
 	</div>
 
-	<p>Sizes on chips and buttons:</p>
+	<p>Sizes on chips — chip size matches the badge size:</p>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-chip>Small<ui-badge size="sm" color="info">2</ui-badge></ui-chip>
-		<ui-chip>Medium<ui-badge size="md" color="info">12</ui-badge></ui-chip>
-		<ui-chip>Large<ui-badge size="lg" color="info">99</ui-badge></ui-chip>
+		<ui-chip size="sm">Extra small<ui-badge size="xs" color="info">2</ui-badge></ui-chip>
+		<ui-chip size="sm">Small<ui-badge size="sm" color="info">5</ui-badge></ui-chip>
+		<ui-chip size="md">Medium<ui-badge size="md" color="info">12</ui-badge></ui-chip>
+		<ui-chip size="lg">Large<ui-badge size="lg" color="info">99</ui-badge></ui-chip>
 	</div>
 
 	<h3>Shape variants</h3>

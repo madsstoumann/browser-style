@@ -34,6 +34,8 @@
 		--font-serif: 'Iowan Old Style', 'Palatino Linotype', 'URW Palladio L', P052, serif;
 
 		/* Font Size */
+		--font-size-3xs: 0.5rem;
+		--font-size-2xs: 0.625rem;
 		--font-size-xs: 0.75rem;
 		--font-size-sm: 0.875rem;
 		--font-size-base: 1rem;

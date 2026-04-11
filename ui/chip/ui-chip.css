@@ -60,7 +60,8 @@
 	}
 
 	/* Sizes — only font-size changes; padding and square radius scale via em */
-	:where(ui-chip[size="sm"]) { --ui-chip-font-size: var(--font-size-xs, 0.75rem); }
+	
+	:where(ui-chip[size="sm"]) { --ui-chip-font-size: var(--font-size-2xs, 0.75rem); }
 	:where(ui-chip[size="md"]) { --ui-chip-font-size: var(--font-size-sm, 0.875rem); }
 	:where(ui-chip[size="lg"]) { --ui-chip-font-size: var(--font-size-base, 1rem); }
 
