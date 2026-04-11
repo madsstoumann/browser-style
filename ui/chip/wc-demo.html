@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>Chip</title>
+	<title>Chip — Web Component</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="CSS-first chip component with optional web component wrapper.">
+	<meta name="description" content="Web component demo for ui-chip">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-chip.css">
@@ -15,12 +15,9 @@
 <body>
 	<h1>UI: Components</h1>
 
-	<h2>Chip</h2>
+	<h2>Chip — Web Component</h2>
 	<p>
-		<code>&lt;ui-chip&gt;</code> is a CSS-first chip component for tags, labels, filters, and status indicators. It's visually aligned with <code>&lt;ui-button&gt;</code> and shares the same color and spacing tokens. Use <code>color</code> for semantic colors, <code>size</code> for scale, and <code>variant</code> for style (light, outline, square, squircle).
-	</p>
-	<p>
-		This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript). See the <a href="wc-demo.html">web component demo</a> for the JS-enhanced version.
+		Using <code>&lt;ui-chip&gt;</code> as a registered custom element. The JS only registers the element — all visual behavior is CSS-driven.
 	</p>
 
 	<h3>Basic</h3>
@@ -33,7 +30,6 @@
 	</div>
 
 	<h3>Light variant</h3>
-	<p>Use <code>variant="light"</code> for a tinted background with the semantic color as text.</p>
 	<div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
 		<ui-chip variant="light">Default</ui-chip>
 		<ui-chip variant="light" color="info">Premium User ★</ui-chip>
@@ -43,7 +39,6 @@
 	</div>
 
 	<h3>Outline variant</h3>
-	<p>Use <code>variant="outline"</code> for a transparent background with a colored border.</p>
 	<div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
 		<ui-chip variant="outline">Default</ui-chip>
 		<ui-chip variant="outline" color="info">Premium User ★</ui-chip>
@@ -53,7 +48,6 @@
 	</div>
 
 	<h3>Sizes</h3>
-	<p>Use the <code>size</code> attribute: <code>sm</code>, <code>md</code> (default), <code>lg</code>.</p>
 	<div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
 		<ui-chip size="sm" color="info">Small</ui-chip>
 		<ui-chip size="md" color="info">Medium</ui-chip>
@@ -61,7 +55,6 @@
 	</div>
 
 	<h3>Shape variants</h3>
-	<p>Default is pill-shaped. Use <code>variant="square"</code> for rounded corners or <code>variant="squircle"</code> for an iOS-style superellipse.</p>
 	<div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
 		<ui-chip color="success">Pill (default)</ui-chip>
 		<ui-chip variant="square" color="success">Square</ui-chip>
@@ -69,37 +62,14 @@
 	</div>
 
 	<h3>With badge</h3>
-	<p>Chips can host a <code>&lt;ui-badge&gt;</code> at any corner.</p>
 	<div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
 		<ui-chip>Notifications<ui-badge color="error">4</ui-badge></ui-chip>
 		<ui-chip color="info">Messages<ui-badge color="warning" position="bottom-right">2</ui-badge></ui-chip>
 		<ui-chip variant="light" color="success">Tasks<ui-badge color="info" variant="text">new</ui-badge></ui-chip>
 	</div>
 
-	<p>With <code>variant="inline"</code> on the badge, the chip tightens its end padding and pushes the badge to the inline end automatically:</p>
-	<div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-		<ui-chip>Inline badge<ui-badge color="warning" variant="inline">4</ui-badge></ui-chip>
-		<ui-chip variant="light" color="info">Messages<ui-badge color="info" variant="inline">12</ui-badge></ui-chip>
-		<ui-chip variant="outline" color="success">Tasks<ui-badge color="success" variant="inline">3</ui-badge></ui-chip>
-	</div>
-
-	<h3>With opposite color-scheme</h3>
-	<div class="bdrs-md cs-opposite pb-3 pi-3" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-		<ui-chip>Default</ui-chip>
-		<ui-chip color="info">Premium User ★</ui-chip>
-		<ui-chip color="success">All services up ✓</ui-chip>
-		<ui-chip color="warning">Warning: Low ☀</ui-chip>
-		<ui-chip color="error">No Connection ❖</ui-chip>
-	</div>
-
-	<br>
-	<h3>With right-to-left</h3>
-	<div dir="rtl" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-		<ui-chip>Default</ui-chip>
-		<ui-chip color="info">Premium User ★</ui-chip>
-		<ui-chip color="success">All services up ✓</ui-chip>
-		<ui-chip color="warning">Warning: Low ☀</ui-chip>
-		<ui-chip color="error">No Connection ❖</ui-chip>
-	</div>
+	<script type="module">
+		import './index.js';
+	</script>
 </body>
 </html>

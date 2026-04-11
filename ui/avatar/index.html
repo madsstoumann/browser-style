@@ -9,6 +9,7 @@
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-avatar.css">
 	<link rel="stylesheet" href="../tooltip/ui-tooltip.css">
+	<link rel="stylesheet" href="../badge/ui-badge.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
@@ -179,6 +180,54 @@
 		</ui-avatar>
 		<ui-avatar ring="hsl(360, 60%, 46%)" variant="square">
 			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+		</ui-avatar>
+	</div>
+
+	<br>
+	<h2>Combined: ring, status, tooltip, and badge</h2>
+	<p>
+		Avatars compose cleanly with <code>&lt;ui-badge&gt;</code>. Add a badge as a child — circular avatars automatically inset the badge to sit on the arc (see the badge docs for details).
+	</p>
+	<p>Status lives at the bottom-right of the avatar, so badges should use <code>top-right</code> (default), <code>top-left</code>, or <code>bottom-left</code> to avoid clashing with it.</p>
+	<div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+		<ui-avatar size="xl" ring status="online" tooltip="Kim Cronos" tabindex="0">
+			<abbr title="Kim Cronos">KC</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+			<ui-badge color="error">9</ui-badge>
+		</ui-avatar>
+		<ui-avatar size="xl" ring="hsl(136, 41%, 41%)" status="away" tooltip="Greg Hanson" tabindex="0">
+			<abbr title="Greg Hanson">GH</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+			<ui-badge color="info" position="top-left">3</ui-badge>
+		</ui-avatar>
+		<ui-avatar size="xl" ring="hsl(33, 99%, 59%)" status="busy" tooltip="John Doe" tabindex="0" variant="squircle">
+			<abbr title="John Doe">JD</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+			<ui-badge color="warning">!</ui-badge>
+		</ui-avatar>
+		<ui-avatar size="xl" ring="hsl(360, 60%, 46%)" status="offline" tooltip="Linda Payne" tabindex="0" variant="square">
+			<abbr title="Linda Payne">LP</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+			<ui-badge color="success" position="bottom-left">✓</ui-badge>
+		</ui-avatar>
+	</div>
+
+	<p>Larger avatars with enlarged <code>size="lg"</code> badges:</p>
+	<div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+		<ui-avatar size="2xl" ring status="online" tooltip="Kim Cronos" tabindex="0">
+			<abbr title="Kim Cronos">KC</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+			<ui-badge size="lg" color="success" variant="text" position="top-left">pro</ui-badge>
+		</ui-avatar>
+		<ui-avatar size="2xl" ring="hsl(136, 41%, 41%)" status="away" tooltip="Greg Hanson" tabindex="0">
+			<abbr title="Greg Hanson">GH</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+			<ui-badge size="lg" color="info" variant="text">new</ui-badge>
+		</ui-avatar>
+		<ui-avatar size="2xl" ring="hsl(360, 60%, 46%)" status="busy" tooltip="John Doe" tabindex="0" variant="squircle">
+			<abbr title="John Doe">JD</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+			<ui-badge size="lg" color="error">12</ui-badge>
 		</ui-avatar>
 	</div>
 

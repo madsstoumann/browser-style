@@ -1,7 +1,7 @@
 {
-  "name": "@browser.style/badge",
+  "name": "@browser.style/chip",
   "version": "4.0.0",
-  "description": "CSS-first badge component with optional web component wrapper",
+  "description": "CSS-first chip component with optional web component wrapper",
   "type": "module",
   "module": "index.js",
   "style": "index.css",
@@ -16,7 +16,7 @@
   "files": [
     "index.js",
     "index.css",
-    "ui-badge.css"
+    "ui-chip.css"
   ],
   "publishConfig": {
     "access": "public",
@@ -24,19 +24,19 @@
   },
   "keywords": [
     "browser.style",
-    "badge",
+    "chip",
+    "tag",
     "css-first",
-    "web-components",
-    "notification"
+    "web-components"
   ],
   "author": "Mads Stoumann",
   "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madsstoumann/browser-style.git",
-    "directory": "ui/badge"
+    "directory": "ui/chip"
   },
-  "homepage": "https://browser.style/ui/badge",
+  "homepage": "https://browser.style/ui/chip",
   "peerDependencies": {
     "@browser.style/base": "^1.0.11"
   }

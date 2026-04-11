@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>Badge</title>
+	<title>Badge — Web Component</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="CSS-first badge component with optional web component wrapper.">
+	<meta name="description" content="Web component demo for ui-badge">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-badge.css">
@@ -17,16 +17,12 @@
 <body>
 	<h1>UI: Components</h1>
 
-	<h2>Badge</h2>
+	<h2>Badge — Web Component</h2>
 	<p>
-		<code>&lt;ui-badge&gt;</code> is a CSS-first badge component for status indicators and notification counts. It positions itself at a corner of its parent (avatar, button, chip, etc.) or can flow inline as a label. Use <code>color</code> for semantic colors, <code>size</code> for scale, <code>position</code> for corner placement, and <code>variant</code> for shape and inline behavior.
-	</p>
-	<p>
-		This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript). See the <a href="wc-demo.html">web component demo</a> for the JS-enhanced version.
+		Using <code>&lt;ui-badge&gt;</code> as a registered custom element. The JS adds a <code>role="status"</code> for screen readers — all visual behavior is CSS-driven.
 	</p>
 
 	<h3>Basic</h3>
-	<p>The badge positions itself at the top-right corner of its parent. The parent automatically gets <code>position: relative</code>. Circular <code>&lt;ui-avatar&gt;</code> parents are auto-detected and the badge is inset to sit on the arc.</p>
 	<div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
 		<ui-avatar>
 			<abbr title="Kim Cronos">KC</abbr>
@@ -46,7 +42,6 @@
 	<p><ui-chip>With text<ui-badge color="success" variant="text">new</ui-badge></ui-chip></p>
 
 	<h3>Positions</h3>
-	<p>Use <code>position</code>: <code>top-right</code> (default), <code>top-left</code>, <code>bottom-right</code>, <code>bottom-left</code>.</p>
 	<div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
 		<ui-avatar variant="square" size="xl">
 			<abbr title="Kim Cronos">KC</abbr>
@@ -71,9 +66,7 @@
 	</div>
 
 	<h3>Host shape: circle</h3>
-	<p>
-		Add <code>host-shape="circle"</code> when the badge's parent is circular so it sits on the arc (offset inward by ~14.6%) instead of floating outside the visible circle. For <code>&lt;ui-avatar&gt;</code> parents, this is applied automatically.
-	</p>
+	<p>Auto-applied for <code>&lt;ui-avatar&gt;</code> without <code>variant="square"</code> / <code>variant="squircle"</code>. For other circular hosts, set <code>host-shape="circle"</code> explicitly.</p>
 	<div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
 		<ui-avatar size="xl">
 			<abbr title="Kim Cronos">KC</abbr>
@@ -98,7 +91,6 @@
 	</div>
 
 	<h3>Colors</h3>
-	<p>Use the <code>color</code> attribute for semantic colors: <code>info</code>, <code>success</code>, <code>warning</code>, <code>error</code>. Omit for the default (neutral text color).</p>
 	<div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
 		<ui-avatar size="lg">
 			<abbr title="Kim Cronos">KC</abbr>
@@ -126,7 +118,7 @@
 		</ui-avatar>
 	</div>
 	<p>Using <code>variant="text"</code> for labels:</p>
-	<div style="display: flex; flex-direction: column; align-items: flex-start; gap: 1.5rem;">
+	<div style="display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem;">
 		<ui-chip>Info<ui-badge color="info" variant="text">info</ui-badge></ui-chip>
 		<ui-chip>Success<ui-badge color="success" variant="text">success</ui-badge></ui-chip>
 		<ui-chip>Warning<ui-badge color="warning" variant="text">warning</ui-badge></ui-chip>
@@ -134,7 +126,6 @@
 	</div>
 
 	<h3>Sizes</h3>
-	<p>Use the <code>size</code> attribute: <code>sm</code>, <code>md</code> (default), <code>lg</code>.</p>
 	<div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
 		<ui-avatar size="md">
 			<abbr title="Kim Cronos">KC</abbr>
@@ -153,7 +144,6 @@
 		</ui-avatar>
 	</div>
 
-	<p>Sizes on chips and buttons:</p>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
 		<ui-chip>Small<ui-badge size="sm" color="info">2</ui-badge></ui-chip>
 		<ui-chip>Medium<ui-badge size="md" color="info">12</ui-badge></ui-chip>
@@ -161,7 +151,6 @@
 	</div>
 
 	<h3>Shape variants</h3>
-	<p>Use <code>variant="square"</code> for rounded corners or <code>variant="squircle"</code> for an iOS-style superellipse.</p>
 	<div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
 		<ui-avatar variant="square" size="lg">
 			<abbr title="Greg Hanson">GH</abbr>
@@ -180,46 +169,14 @@
 		</ui-avatar>
 	</div>
 
-	<p>Square and squircle on chips:</p>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
 		<ui-chip>Square<ui-badge color="info" variant="square">5</ui-badge></ui-chip>
 		<ui-chip>Squircle<ui-badge color="success" variant="squircle">3</ui-badge></ui-chip>
 	</div>
 
-	<h3>With opposite color-scheme</h3>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
-			<ui-avatar>
-				<abbr title="Kim Cronos">KC</abbr>
-				<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-				<ui-badge color="success">99</ui-badge>
-			</ui-avatar>
-			<ui-avatar>
-				<abbr title="Kim Cronos">KC</abbr>
-				<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-				<ui-badge color="info" position="bottom-right">👍</ui-badge>
-			</ui-avatar>
-		</div>
+	<script type="module">
+		import './index.js';
+	</script>
 
-		<p><button type="button">Button with badge<ui-badge color="info">5</ui-badge></button></p>
-		<p><ui-chip>Chip with badge<ui-badge color="error">4</ui-badge></ui-chip></p>
-		<p><ui-chip>Inline badge<ui-badge color="warning" variant="inline">4</ui-badge></ui-chip></p>
-		<p><ui-chip>With text<ui-badge color="success" variant="text">new</ui-badge></ui-chip></p>
-	</div>
-
-	<br>
-	<h3>With right-to-left</h3>
-	<div dir="rtl" style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
-		<ui-avatar>
-			<abbr title="Kim Cronos">KC</abbr>
-			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-			<ui-badge color="success">99</ui-badge>
-		</ui-avatar>
-		<ui-avatar>
-			<abbr title="Kim Cronos">KC</abbr>
-			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-			<ui-badge color="info" position="bottom-right">👍</ui-badge>
-		</ui-avatar>
-	</div>
 </body>
 </html>

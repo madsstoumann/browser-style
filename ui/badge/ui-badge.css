@@ -1,59 +1,108 @@
 /**
  * ui-badge
- * @version 3.0.0
- * @date 2026-04-01
+ * @version 4.0.0
+ * @date 2026-04-11
  * @author Mads Stoumann
  */
 @layer bs-component {
 	:where(ui-badge) {
-		--ui-badge-size: 1.5rem;
-		--ui-badge-bg: var(--color-text, hsl(0, 0%, 15%));
-		--ui-badge-color: var(--color-surface, hsl(0, 0%, 100%));
 		--ui-badge-border-color: transparent;
-		--ui-badge-border-radius: var(--radius-circle, 50%);
-		--ui-badge-font-size: .675rem;
-		background: var(--ui-badge-bg);
-		border-radius: var(--ui-badge-border-radius);
-		border: 1px solid var(--ui-badge-border-color);
-		color: var(--ui-badge-color);
+		--ui-badge-border-width: var(--border-width, 1px);
+		--ui-badge-inset: 0%;
+		background: var(--ui-badge-bg, var(--color-text, hsl(0, 0%, 15%)));
+		border-radius: var(--ui-badge-border-radius, var(--radius-circle, 50%));
+		border: var(--ui-badge-border-width) solid var(--ui-badge-border-color);
+		color: var(--ui-badge-color, var(--color-surface, hsl(0, 0%, 100%)));
 		display: inline-grid;
-		font-size: var(--ui-badge-font-size);
-		height: var(--ui-badge-size);
-		inset-block-start: 0;
-		inset-inline-end: 0;
+		font-size: var(--ui-badge-font-size, 0.675rem);
+		height: var(--ui-badge-size, var(--size-5, 1.5rem));
+		inset-block-start: var(--ui-badge-inset);
+		inset-inline-end: var(--ui-badge-inset);
 		line-height: 0;
-		min-width: var(--ui-badge-size);
+		min-width: var(--ui-badge-size, var(--size-5, 1.5rem));
 		place-content: center;
 		position: absolute;
 		text-box: cap alphabetic;
 		translate: 50% -50%;
-		&:dir(rtl) { translate: -50% 0; }
 
-		/* Colors */
-		&[color="info"]    { --ui-badge-bg: var(--color-info, hsl(210, 60%, 46%)); }
-		&[color="success"] { --ui-badge-bg: var(--color-success, hsl(136, 41%, 41%)); }
-		&[color="warning"] { --ui-badge-bg: var(--color-warning, hsl(33, 99%, 59%)); }
-		&[color="error"]   { --ui-badge-bg: var(--color-error, hsl(360, 60%, 46%)); }
+		/* Colors — fixed white text so contrast is stable in cs-opposite / dark mode */
+		&[color="info"]    { --ui-badge-bg: var(--color-info, hsl(210, 60%, 46%));    --ui-badge-color: hsl(0, 0%, 100%); }
+		&[color="success"] { --ui-badge-bg: var(--color-success, hsl(136, 41%, 41%)); --ui-badge-color: hsl(0, 0%, 100%); }
+		&[color="warning"] { --ui-badge-bg: var(--color-warning, hsl(33, 99%, 59%));  --ui-badge-color: hsl(0, 0%, 100%); }
+		&[color="error"]   { --ui-badge-bg: var(--color-error, hsl(360, 60%, 46%));   --ui-badge-color: hsl(0, 0%, 100%); }
+
+		/* Positions */
+		&[position="top-left"] {
+			inset-block-start: var(--ui-badge-inset);
+			inset-inline-end: auto;
+			inset-inline-start: var(--ui-badge-inset);
+			translate: -50% -50%;
+		}
+		&[position="bottom-right"] {
+			inset-block-start: auto;
+			inset-block-end: var(--ui-badge-inset);
+			inset-inline-end: var(--ui-badge-inset);
+			translate: 50% 50%;
+		}
+		&[position="bottom-left"] {
+			inset-block-start: auto;
+			inset-block-end: var(--ui-badge-inset);
+			inset-inline-end: auto;
+			inset-inline-start: var(--ui-badge-inset);
+			translate: -50% 50%;
+		}
+
+		/* Host shape: circle — offset badge inward so it sits on the 45° arc */
+		&[host-shape="circle"] {
+			--ui-badge-inset: 14.6%;
+		}
 
 		/* Variants */
 		&[variant~="inline"] {
-			margin-inline-start: 0.6ch;
+			inset: auto;
+			margin-inline-start: var(--ui-badge-inline-margin, 0.6ch);
 			position: static;
 			translate: 0;
 		}
 		&[variant~="text"] {
-			--ui-badge-border-radius: var(--input-radius, var(--radius-sm, 0.25em));
+			--ui-badge-border-radius: var(--radius-sm, 0.25em);
 			height: auto;
 			line-height: 1;
-			padding: .33ch .66ch;
+			padding: var(--ui-badge-padding-block, 0.33ch) var(--ui-badge-padding-inline, 0.66ch);
 		}
-		&[variant~="bottom-right"] {
-			inset-block: auto 0;
-			translate: 0 0;
+		&[variant~="square"] {
+			--ui-badge-border-radius: var(--radius-md, 0.375rem);
 		}
-		&[variant~="top-right"] {
-			translate: 0 0;
+		&[variant~="squircle"] {
+			corners: 50% superellipse(2);
 		}
+
+		/* RTL: flip X axis of translate for each position */
+		&:dir(rtl) {
+			translate: -50% -50%;
+			&[position="top-left"]    { translate: 50% -50%; }
+			&[position="bottom-right"] { translate: -50% 50%; }
+			&[position="bottom-left"]  { translate: 50% 50%; }
+		}
+	}
+
+	/* Sizes */
+	:where(ui-badge[size="sm"]) {
+		--ui-badge-size: var(--size-4, 1.25rem);
+		--ui-badge-font-size: var(--font-size-xs, 0.75rem);
+	}
+	:where(ui-badge[size="md"]) {
+		--ui-badge-size: var(--size-5, 1.5rem);
+		--ui-badge-font-size: var(--font-size-sm, 0.875rem);
+	}
+	:where(ui-badge[size="lg"]) {
+		--ui-badge-size: var(--size-7, 2rem);
+		--ui-badge-font-size: var(--font-size-base, 1rem);
+	}
+
+	/* Auto-detect: circular ui-avatar (the default shape) without explicit host-shape */
+	:where(ui-avatar:not([variant~="square"]):not([variant~="squircle"])) > ui-badge:not([host-shape]) {
+		--ui-badge-inset: 14.6%;
 	}
 
 	/* Auto-position parent */

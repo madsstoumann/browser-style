@@ -1,13 +1,76 @@
+/**
+ * ui-chip
+ * @version 4.0.0
+ * @date 2026-04-11
+ * @author Mads Stoumann
+ */
 @layer bs-component {
-	:where(.ui-chip) {
+	:where(ui-chip) {
+		--ui-chip-border-color: transparent;
+		--ui-chip-border-width: var(--border-width, 1px);
+		--ui-chip-padding-block: 0.5em;
+		--ui-chip-padding-inline: 1.125em;
+		--ui-chip-padding-inline-end: var(--ui-chip-padding-inline);
 		align-items: center;
-		background: var(--ui-chip-bg, var(--ButtonFace));
-		border-radius: var(--ui-chip-bdrs, 3ch);
-		color: var(--ui-chip-c, var(--CanvasText));
+		background: var(--ui-chip-background, var(--color-button, light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%))));
+		border-radius: var(--ui-chip-border-radius, var(--radius-pill, 9999px));
+		border: var(--ui-chip-border-width) solid var(--ui-chip-border-color);
+		color: var(--ui-chip-color, var(--color-text, light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%))));
+		column-gap: var(--ui-chip-column-gap, 0);
 		display: inline-flex;
-		font-size: smaller;
-		margin: var(--ui-chip-m, .5ch 0);
-		padding: var(--ui-chip-p, .5ch 2.125ch);
+		font-family: var(--ui-chip-font-family, var(--font-form, inherit));
+		font-size: var(--ui-chip-font-size, var(--font-size-sm, 0.875rem));
+		font-weight: var(--ui-chip-font-weight, var(--font-weight-medium, 500));
+		line-height: var(--ui-chip-line-height, var(--line-height-snug, 1.25));
+		padding-block: var(--ui-chip-padding-block);
+		padding-inline: var(--ui-chip-padding-inline) var(--ui-chip-padding-inline-end);
+		text-box: cap alphabetic;
 		user-select: none;
+
+		/* Colors — fixed white text so contrast is stable in cs-opposite / dark mode */
+		&[color="info"]    { --ui-chip-background: var(--color-info, hsl(210, 60%, 46%));    --ui-chip-color: hsl(0, 0%, 100%); }
+		&[color="success"] { --ui-chip-background: var(--color-success, hsl(136, 41%, 41%)); --ui-chip-color: hsl(0, 0%, 100%); }
+		&[color="warning"] { --ui-chip-background: var(--color-warning, hsl(33, 99%, 59%));  --ui-chip-color: hsl(0, 0%, 100%); }
+		&[color="error"]   { --ui-chip-background: var(--color-error, hsl(360, 60%, 46%));   --ui-chip-color: hsl(0, 0%, 100%); }
+
+		/* Variants */
+		&[variant~="light"] {
+			--ui-chip-background: color-mix(in oklch, var(--ui-chip-color) 15%, var(--color-surface, hsl(0, 0%, 100%)));
+		}
+		&[variant~="light"][color="info"]    { --ui-chip-color: var(--color-info, hsl(210, 60%, 46%)); }
+		&[variant~="light"][color="success"] { --ui-chip-color: var(--color-success, hsl(136, 41%, 41%)); }
+		&[variant~="light"][color="warning"] { --ui-chip-color: var(--color-warning, hsl(33, 99%, 59%)); }
+		&[variant~="light"][color="error"]   { --ui-chip-color: var(--color-error, hsl(360, 60%, 46%)); }
+
+		&[variant~="outline"] {
+			--ui-chip-background: transparent;
+			--ui-chip-border-color: currentColor;
+		}
+		&[variant~="outline"][color="info"]    { --ui-chip-color: var(--color-info, hsl(210, 60%, 46%)); }
+		&[variant~="outline"][color="success"] { --ui-chip-color: var(--color-success, hsl(136, 41%, 41%)); }
+		&[variant~="outline"][color="warning"] { --ui-chip-color: var(--color-warning, hsl(33, 99%, 59%)); }
+		&[variant~="outline"][color="error"]   { --ui-chip-color: var(--color-error, hsl(360, 60%, 46%)); }
+
+		&[variant~="square"] {
+			--ui-chip-border-radius: 0.4em;
+		}
+		&[variant~="squircle"] {
+			corners: 50% superellipse(2);
+		}
+	}
+
+	/* Sizes — only font-size changes; padding and square radius scale via em */
+	:where(ui-chip[size="sm"]) { --ui-chip-font-size: var(--font-size-xs, 0.75rem); }
+	:where(ui-chip[size="md"]) { --ui-chip-font-size: var(--font-size-sm, 0.875rem); }
+	:where(ui-chip[size="lg"]) { --ui-chip-font-size: var(--font-size-base, 1rem); }
+
+	/* Auto: when a chip contains an inline badge, tighten the end padding,
+	   add a minimum gap, and push the badge to the inline end via auto margin */
+	:where(ui-chip):has(> ui-badge[variant~="inline"]) {
+		--ui-chip-padding-inline-end: 0.5em;
+		--ui-chip-column-gap: 0.75em;
+	}
+	:where(ui-chip) > ui-badge[variant~="inline"] {
+		margin-inline-start: auto;
 	}
 }
