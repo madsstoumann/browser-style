@@ -9,10 +9,10 @@
 		--ui-badge-border-color: transparent;
 		--ui-badge-border-width: var(--border-width, 1px);
 		--ui-badge-inset: 0%;
-		background: var(--ui-badge-bg, var(--color-text, hsl(0, 0%, 15%)));
-		border-radius: var(--ui-badge-border-radius, var(--radius-circle, 50%));
+		background: var(--ui-badge-background, var(--color-text, light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%))));
 		border: var(--ui-badge-border-width) solid var(--ui-badge-border-color);
-		color: var(--ui-badge-color, var(--color-surface, hsl(0, 0%, 100%)));
+		border-radius: var(--ui-badge-border-radius, var(--radius-circle, 50%));
+		color: var(--ui-badge-color, var(--color-surface, light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%))));
 		display: inline-grid;
 		font-family: var(--ui-badge-font-family, var(--font-body, Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif));
 		font-size: var(--ui-badge-font-size, 0.675rem);
@@ -28,13 +28,14 @@
 		text-box: cap alphabetic;
 		translate: 50% -50%;
 
-		/* Colors — fixed white text so contrast is stable in cs-opposite / dark mode */
-		&[color="info"]    { --ui-badge-bg: var(--color-info, hsl(210, 60%, 46%));    --ui-badge-color: hsl(0, 0%, 100%); }
-		&[color="success"] { --ui-badge-bg: var(--color-success, hsl(136, 41%, 41%)); --ui-badge-color: hsl(0, 0%, 100%); }
-		&[color="warning"] { --ui-badge-bg: var(--color-warning, hsl(33, 99%, 59%));  --ui-badge-color: hsl(0, 0%, 100%); }
-		&[color="error"]   { --ui-badge-bg: var(--color-error, hsl(360, 60%, 46%));   --ui-badge-color: hsl(0, 0%, 100%); }
+		/* colors — fixed white text so contrast stays stable in cs-opposite / dark mode */
+		&[color]           { --ui-badge-color: hsl(0, 0%, 100%); }
+		&[color="info"]    { --ui-badge-background: var(--color-info, light-dark(hsl(210, 60%, 46%), hsl(210, 30%, 46%))); }
+		&[color="success"] { --ui-badge-background: var(--color-success, light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%))); }
+		&[color="warning"] { --ui-badge-background: var(--color-warning, light-dark(hsl(33, 99%, 59%), hsl(33, 69%, 59%))); }
+		&[color="error"]   { --ui-badge-background: var(--color-error, light-dark(hsl(360, 60%, 46%), hsl(360, 40%, 56%))); }
 
-		/* Positions */
+		/* positions */
 		&[position="top-left"] {
 			inset-block-start: var(--ui-badge-inset);
 			inset-inline-end: auto;
@@ -55,12 +56,12 @@
 			translate: -50% 50%;
 		}
 
-		/* Host shape: circle — offset badge inward so it sits on the 45° arc */
+		/* `host-shape="circle"` — offset inward so the badge sits on the 45° arc */
 		&[host-shape="circle"] {
 			--ui-badge-inset: 14.6%;
 		}
 
-		/* Variants */
+		/* variants */
 		&[variant~="inline"] {
 			inset: auto;
 			margin-inline-start: var(--ui-badge-inline-margin, 0.6ch);
@@ -80,7 +81,7 @@
 			corners: 50% superellipse(2);
 		}
 
-		/* RTL: flip X axis of translate for each position */
+		/* rtl — flip X axis of translate per position */
 		&:dir(rtl) {
 			translate: -50% -50%;
 			&[position="top-left"]    { translate: 50% -50%; }
@@ -89,7 +90,7 @@
 		}
 	}
 
-	/* Sizes */
+	/* sizes */
 	:where(ui-badge[size="xs"]) {
 		--ui-badge-size: var(--size-3, 1rem);
 		--ui-badge-font-size: var(--font-size-3xs, 0.5rem);
@@ -107,11 +108,6 @@
 		--ui-badge-font-size: var(--font-size-sm, 0.875rem);
 	}
 
-	/* Auto-detect: circular ui-avatar (the default shape) without explicit host-shape */
-	:where(ui-avatar:not([variant~="square"]):not([variant~="squircle"])) > ui-badge:not([host-shape]) {
-		--ui-badge-inset: 14.6%;
-	}
-
-	/* Auto-position parent */
+	/* auto-position host parent of a badge */
 	*:has(> ui-badge) { position: relative; }
 }
