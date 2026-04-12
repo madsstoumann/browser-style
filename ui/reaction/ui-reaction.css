@@ -5,7 +5,7 @@
 		all: unset;
 	}
 	.ui-reaction-list {
-		--ui-tooltip-fs: .675rem;
+		--ui-tooltip-font-size: var(--font-size-2xs, 0.625rem);
 		border: 1px solid var(--ButtonBorder);
 		border-radius: var(--ui-reaction-bdrs, 1.5em);
 		display: flex;

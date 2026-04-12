@@ -14,7 +14,6 @@
 @layer bs-component {
 	:where(ui-avatar) {
 		--ui-avatar-background: oklch(0.5 0.25 random(auto, 0, 360));
-		--ui-avatar-tooltip-font-size: clamp(0.5rem, 18cqi, 0.875rem);
 		aspect-ratio: 1 / 1;
 		background: var(--ui-avatar-background, var(--color-button, light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%))));
 		block-size: var(--ui-avatar-size, 4em);
@@ -87,7 +86,6 @@
 		& > *:not(:first-child) {
 			margin-inline-start: var(--ui-avatar-overlap, -1cqi);
 		}
-		& [tooltip] { color: #0000; }
 		& ui-avatar:focus-visible img { scale: 1.1; }
 
 		@media (hover: hover) {
@@ -128,12 +126,7 @@
 				position: absolute;
 				z-index: var(--z-index-1, 1);
 			}
-			:where(ui-avatar)[tooltip]::before,
-			:where(ui-avatar)[data-tooltip]::before {
-				content: none;
-				display: none;
-			}
-			:where(ui-avatar) > :where(img, abbr) {
+			:where(ui-avatar) > :where(img, abbr, ui-tooltip) {
 				opacity: 0;
 				scale: 0;
 			}

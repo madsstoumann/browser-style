@@ -53,37 +53,44 @@
 
 	<h3>Variants</h3>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-avatar tooltip="Circle (default)">
+		<ui-avatar>
 			<abbr title="KC">KC</abbr>
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Circle (default)</ui-tooltip>
 		</ui-avatar>
-		<ui-avatar variant="square" tooltip="Square">
+		<ui-avatar variant="square">
 			<abbr title="GH">GH</abbr>
 			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Square</ui-tooltip>
 		</ui-avatar>
-		<ui-avatar variant="squircle" tooltip="Squircle">
+		<ui-avatar variant="squircle">
 			<abbr title="JD">JD</abbr>
 			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Squircle</ui-tooltip>
 		</ui-avatar>
 	</div>
 
 	<h3>Status</h3>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-avatar status="online" tooltip="Online">
+		<ui-avatar status="online">
 			<abbr title="Kim Cronos">KC</abbr>
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Online</ui-tooltip>
 		</ui-avatar>
-		<ui-avatar status="away" tooltip="Away">
+		<ui-avatar status="away">
 			<abbr title="Greg Hanson">GH</abbr>
 			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Away</ui-tooltip>
 		</ui-avatar>
-		<ui-avatar status="busy" tooltip="Busy">
+		<ui-avatar status="busy">
 			<abbr title="John Doe">JD</abbr>
 			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Busy</ui-tooltip>
 		</ui-avatar>
-		<ui-avatar status="offline" tooltip="Offline">
+		<ui-avatar status="offline">
 			<abbr title="Linda Payne">LP</abbr>
 			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Offline</ui-tooltip>
 		</ui-avatar>
 	</div>
 
@@ -105,64 +112,79 @@
 
 	<h3>Avatar Group: Stack (default)</h3>
 	<ui-avatar-group>
-		<ui-avatar tooltip="Kim Cronos" tabindex="0">
+		<ui-avatar tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Kim Cronos</ui-tooltip>
 		</ui-avatar>
-		<ui-avatar tooltip="Greg Hanson" tabindex="0">
+		<ui-avatar tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Greg Hanson</ui-tooltip>
 		</ui-avatar>
-		<ui-avatar tooltip="John Doe" tabindex="0">
+		<ui-avatar tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+			<ui-tooltip size="match" position="bottom">John Doe</ui-tooltip>
 		</ui-avatar>
-		<ui-avatar tooltip="Linda Payne" tabindex="0">
+		<ui-avatar tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Linda Payne</ui-tooltip>
 		</ui-avatar>
 	</ui-avatar-group>
 
 	<h3>Avatar Group: Spread</h3>
 	<ui-avatar-group variant="spread">
-		<ui-avatar tooltip="Kim Cronos" status="online" tabindex="0">
+		<ui-avatar status="online" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Kim Cronos</ui-tooltip>
 		</ui-avatar>
-		<ui-avatar tooltip="Greg Hanson" status="away" tabindex="0">
+		<ui-avatar status="away" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Greg Hanson</ui-tooltip>
 		</ui-avatar>
-		<ui-avatar tooltip="John Doe" status="online" tabindex="0">
+		<ui-avatar status="online" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+			<ui-tooltip size="match" position="bottom">John Doe</ui-tooltip>
 		</ui-avatar>
-		<ui-avatar tooltip="Linda Payne" status="busy" tabindex="0">
+		<ui-avatar status="busy" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Linda Payne</ui-tooltip>
 		</ui-avatar>
 	</ui-avatar-group>
 
 	<h3>Avatar Group: Overflow</h3>
 	<p>In a framework context, render only the visible avatars and add a <code>&lt;ui-avatar overflow&gt;</code> element with the count. No <code>max</code> attribute needed — the framework controls the loop.</p>
 	<ui-avatar-group>
-		<ui-avatar tooltip="Kim Cronos" tabindex="0">
+		<ui-avatar tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Kim Cronos</ui-tooltip>
 		</ui-avatar>
-		<ui-avatar tooltip="Greg Hanson" tabindex="0">
+		<ui-avatar tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Greg Hanson</ui-tooltip>
 		</ui-avatar>
-		<ui-avatar tooltip="John Doe" tabindex="0">
+		<ui-avatar tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+			<ui-tooltip size="match" position="bottom">John Doe</ui-tooltip>
 		</ui-avatar>
 		<ui-avatar overflow><abbr>+4</abbr></ui-avatar>
 	</ui-avatar-group>
 
 	<h3>Avatar Group: Overflow with Spread</h3>
 	<ui-avatar-group variant="spread">
-		<ui-avatar tooltip="Kim Cronos" tabindex="0">
+		<ui-avatar tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Kim Cronos</ui-tooltip>
 		</ui-avatar>
-		<ui-avatar tooltip="Greg Hanson" tabindex="0">
+		<ui-avatar tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Greg Hanson</ui-tooltip>
 		</ui-avatar>
-		<ui-avatar tooltip="John Doe" tabindex="0">
+		<ui-avatar tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+			<ui-tooltip size="match" position="bottom">John Doe</ui-tooltip>
 		</ui-avatar>
-		<ui-avatar tooltip="Linda Payne" tabindex="0">
+		<ui-avatar tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Linda Payne</ui-tooltip>
 		</ui-avatar>
 		<ui-avatar overflow><abbr>+2</abbr></ui-avatar>
 	</ui-avatar-group>

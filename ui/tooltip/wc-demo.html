@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Tooltip — Web Component</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Web component demo for ui-tooltip">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="ui-tooltip.css">
+
+	<!-- Below required for demo -->
+	<link rel="stylesheet" href="../avatar/ui-avatar.css">
+	<link rel="stylesheet" href="../badge/ui-badge.css">
+	<link rel="stylesheet" href="../chip/ui-chip.css">
+	<style>
+		.demo-row {
+			display: flex;
+			align-items: center;
+			gap: 3rem;
+			flex-wrap: wrap;
+			margin-block: 1.5rem;
+		}
+	</style>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Tooltip — Web Component</h2>
+	<p>
+		Using <code>&lt;ui-tooltip&gt;</code> as a registered custom element. The JS adds <code>role="tooltip"</code>, <code>aria-describedby</code> wiring on the parent, and ESC-to-dismiss. All visual behavior is CSS-driven.
+	</p>
+
+	<h3>Basic</h3>
+	<div class="demo-row">
+		<button type="button">
+			Save
+			<ui-tooltip>Press <kbd>⌘S</kbd></ui-tooltip>
+		</button>
+		<button type="button">
+			Hover me
+			<ui-tooltip position="bottom">Tooltip below</ui-tooltip>
+		</button>
+	</div>
+
+	<h3>Positions</h3>
+	<div class="demo-row">
+		<button type="button">top<ui-tooltip position="top">top</ui-tooltip></button>
+		<button type="button">top-start<ui-tooltip position="top-start">top-start</ui-tooltip></button>
+		<button type="button">top-end<ui-tooltip position="top-end">top-end</ui-tooltip></button>
+	</div>
+	<div class="demo-row">
+		<button type="button">bottom<ui-tooltip position="bottom">bottom</ui-tooltip></button>
+		<button type="button">bottom-start<ui-tooltip position="bottom-start">bottom-start</ui-tooltip></button>
+		<button type="button">bottom-end<ui-tooltip position="bottom-end">bottom-end</ui-tooltip></button>
+	</div>
+
+	<h3>Colors</h3>
+	<div class="demo-row">
+		<button type="button">Info<ui-tooltip color="info">Info tooltip</ui-tooltip></button>
+		<button type="button">Success<ui-tooltip color="success">Success tooltip</ui-tooltip></button>
+		<button type="button">Warning<ui-tooltip color="warning">Warning tooltip</ui-tooltip></button>
+		<button type="button">Error<ui-tooltip color="error">Error tooltip</ui-tooltip></button>
+	</div>
+
+	<h3>Avatars (size="match")</h3>
+	<p>The web component sets <code>aria-describedby</code> on each focusable avatar, so screen readers announce the tooltip text on focus.</p>
+	<div class="demo-row">
+		<ui-avatar size="md" tabindex="0">
+			<abbr>KC</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Kim Cronos</ui-tooltip>
+		</ui-avatar>
+		<ui-avatar size="lg" tabindex="0">
+			<abbr>GH</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Greg Hanson</ui-tooltip>
+		</ui-avatar>
+		<ui-avatar size="xl" tabindex="0">
+			<abbr>JD</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+			<ui-tooltip size="match" position="bottom">John Doe</ui-tooltip>
+		</ui-avatar>
+		<ui-avatar size="2xl" tabindex="0">
+			<abbr>LP</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Linda Payne</ui-tooltip>
+		</ui-avatar>
+	</div>
+
+	<h3>Press ESC to dismiss</h3>
+	<p>The web component listens for the Escape key and sets <code>[hidden]</code> on the tooltip. Hover or focus the parent again to re-show.</p>
+	<div class="demo-row">
+		<button type="button">
+			Save
+			<ui-tooltip>Press ESC to dismiss</ui-tooltip>
+		</button>
+	</div>
+
+	<script type="module">
+		import './index.js';
+	</script>
+</body>
+</html>

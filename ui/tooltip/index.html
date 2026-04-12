@@ -4,80 +4,212 @@
 	<title>Tooltip</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="description" content="CSS-first speech-bubble tooltip with optional web component wrapper.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-tooltip.css">
+
+	<!-- Below required for demo -->
+	<link rel="stylesheet" href="../avatar/ui-avatar.css">
+	<link rel="stylesheet" href="../badge/ui-badge.css">
+	<link rel="stylesheet" href="../chip/ui-chip.css">
+	<style>
+		.demo-row {
+			display: flex;
+			align-items: center;
+			gap: 3rem;
+			flex-wrap: wrap;
+			margin-block: 1.5rem;
+		}
+		.demo-row button {
+			min-width: 6em;
+		}
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Tooltip</h2>
 	<p>
-		A tooltip is a small, floating box that appears to explain a UI element when hovered over or focused on.
+		<code>&lt;ui-tooltip&gt;</code> is a CSS-first speech-bubble tooltip drawn as a single element via <code>clip-path</code>, so backgrounds (including gradients) flow seamlessly across the bubble and arrow. Drop it as a child of any focusable element. The parent automatically gets <code>position: relative</code>; the tooltip shows on hover or keyboard focus.
 	</p>
-
-	<hr>
 	<p>
-		A tooltip can be <span data-tooltip="Tooltip text"><em>below content</em></span> as well as 
-		<span data-tooltip="Tooltip text" data-tooltip-ui="top"><em>above content</em></span>.
+		This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript). See the <a href="wc-demo.html">web component demo</a> for the JS-enhanced version with ARIA wiring.
 	</p>
 
-	<h3>Triangle / Tail</h3>
+	<h3>Basic</h3>
+	<p>The default <code>position</code> is <code>top</code>. Hover or tab to the buttons.</p>
+	<div class="demo-row">
+		<button type="button">
+			Hover me
+			<ui-tooltip>Tooltip text</ui-tooltip>
+		</button>
+		<button type="button">
+			Save
+			<ui-tooltip>Press <kbd>⌘S</kbd></ui-tooltip>
+		</button>
+	</div>
+
+	<h3>Positions</h3>
+	<p>Use <code>position</code>: <code>top</code> (default), <code>top-start</code>, <code>top-end</code>, <code>bottom</code>, <code>bottom-start</code>, <code>bottom-end</code>.</p>
+	<div class="demo-row">
+		<button type="button">top<ui-tooltip position="top">top</ui-tooltip></button>
+		<button type="button">top-start<ui-tooltip position="top-start">top-start</ui-tooltip></button>
+		<button type="button">top-end<ui-tooltip position="top-end">top-end</ui-tooltip></button>
+	</div>
+	<div class="demo-row">
+		<button type="button">bottom<ui-tooltip position="bottom">bottom</ui-tooltip></button>
+		<button type="button">bottom-start<ui-tooltip position="bottom-start">bottom-start</ui-tooltip></button>
+		<button type="button">bottom-end<ui-tooltip position="bottom-end">bottom-end</ui-tooltip></button>
+	</div>
+
+	<h3>Colors</h3>
+	<p>Use the <code>color</code> attribute for semantic colors: <code>info</code>, <code>success</code>, <code>warning</code>, <code>error</code>.</p>
+	<div class="demo-row">
+		<button type="button">Default<ui-tooltip>Default tooltip</ui-tooltip></button>
+		<button type="button">Info<ui-tooltip color="info">Info tooltip</ui-tooltip></button>
+		<button type="button">Success<ui-tooltip color="success">Success tooltip</ui-tooltip></button>
+		<button type="button">Warning<ui-tooltip color="warning">Warning tooltip</ui-tooltip></button>
+		<button type="button">Error<ui-tooltip color="error">Error tooltip</ui-tooltip></button>
+	</div>
+
+	<h3>Gradient backgrounds</h3>
+	<p>Because the bubble and arrow share one element, a gradient flows seamlessly across both.</p>
+	<div class="demo-row">
+		<button type="button">
+			Premium
+			<ui-tooltip style="--ui-tooltip-background: linear-gradient(135deg, hsl(260, 70%, 55%), hsl(320, 70%, 55%));">
+				Pro feature
+			</ui-tooltip>
+		</button>
+		<button type="button">
+			Sunset
+			<ui-tooltip position="bottom" style="--ui-tooltip-background: linear-gradient(135deg, hsl(20, 90%, 55%), hsl(340, 80%, 60%));">
+				Warm gradient
+			</ui-tooltip>
+		</button>
+		<button type="button">
+			Ocean
+			<ui-tooltip position="bottom" style="--ui-tooltip-background: linear-gradient(135deg, hsl(190, 80%, 50%), hsl(220, 70%, 50%));">
+				Cool gradient
+			</ui-tooltip>
+		</button>
+	</div>
+
+	<h3>Sizes</h3>
+	<p>Use the <code>size</code> attribute: <code>sm</code>, <code>md</code> (default), <code>lg</code>, <code>match</code>. The <code>match</code> size scales with its container's inline size (uses container query units).</p>
+	<div class="demo-row">
+		<button type="button">Small<ui-tooltip size="sm">Small tooltip</ui-tooltip></button>
+		<button type="button">Medium<ui-tooltip size="md">Medium tooltip</ui-tooltip></button>
+		<button type="button">Large<ui-tooltip size="lg">Large tooltip</ui-tooltip></button>
+	</div>
+
+	<p>The <code>match</code> size scales with the trigger — perfect for avatars, where the tooltip should shrink for tiny avatars and grow for large ones:</p>
+	<div class="demo-row">
+		<ui-avatar size="sm">
+			<abbr title="Anna Berg">AB</abbr>
+			<ui-tooltip size="match" position="bottom">Anna Berg</ui-tooltip>
+		</ui-avatar>
+		<ui-avatar size="md">
+			<abbr title="Linda Payne">LP</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Linda Payne</ui-tooltip>
+		</ui-avatar>
+		<ui-avatar size="lg">
+			<abbr title="John Doe">JD</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
+			<ui-tooltip size="match" position="bottom">John Doe</ui-tooltip>
+		</ui-avatar>
+		<ui-avatar size="xl">
+			<abbr title="Greg Hanson">GH</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Greg Hanson</ui-tooltip>
+		</ui-avatar>
+		<ui-avatar size="2xl">
+			<abbr title="Kim Cronos">KC</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+			<ui-tooltip size="match" position="bottom">Kim Cronos</ui-tooltip>
+		</ui-avatar>
+	</div>
+
+	<h3>Multiline / wrapping</h3>
+	<p>Add <code>variant="multiline"</code> to allow wrapping. Set <code>--ui-tooltip-max-width</code> to control the max width.</p>
+	<div class="demo-row">
+		<button type="button">
+			Long tooltip
+			<ui-tooltip variant="multiline" style="--ui-tooltip-max-width: 16rem;">
+				This is a longer tooltip that wraps onto multiple lines so it can hold a sentence or two of explanation.
+			</ui-tooltip>
+		</button>
+	</div>
+
+	<h3>No arrow</h3>
+	<p>Add <code>variant="no-arrow"</code> for a plain rounded rectangle (no speech-bubble tail).</p>
+	<div class="demo-row">
+		<button type="button">No arrow<ui-tooltip variant="no-arrow">Plain rectangle</ui-tooltip></button>
+		<button type="button">Bottom<ui-tooltip variant="no-arrow" position="bottom">Below</ui-tooltip></button>
+	</div>
+
+	<h3>Inline help in body text</h3>
+	<p>Use <code>variant="underline"</code> or <code>variant="overline"</code> to style the parent element with a dotted text decoration and help cursor — perfect for inline help text inside paragraphs.</p>
 	<p>
-		A tooltip can have a <strong>triangle</strong> <span data-tooltip="Tooltip text" data-tooltip-ui="triangle"><em>below content</em></span> as well as 
-		<span data-tooltip="Tooltip text" data-tooltip-ui="top triangle"><em>above content</em></span>.
+		The display uses
+		<abbr>
+			OLED panels
+			<ui-tooltip variant="underline">Organic Light-Emitting Diode</ui-tooltip>
+		</abbr>
+		for true blacks. The
+		<abbr>
+			GPU
+			<ui-tooltip variant="underline" color="info">Graphics Processing Unit — handles all visual rendering</ui-tooltip>
+		</abbr>
+		can also be used for
+		<abbr>
+			compute workloads
+			<ui-tooltip variant="underline" color="success">General-purpose parallel computation via CUDA, Metal, or WebGPU</ui-tooltip>
+		</abbr>.
 	</p>
-
-	<h3>Underline and cursor</h3>
+	<p>Or use <code>variant="help"</code> alone for just the help cursor without any text decoration:</p>
 	<p>
-		A tooltip can have an <span data-tooltip="Tooltip text" data-tooltip-ui="underline"><em>underline</em></span> as well as a 
-		<span data-tooltip="Tooltip text" data-tooltip-ui="help"><em>help cursor</em></span> — or a
-		<span data-tooltip="Tooltip text" data-tooltip-ui="overline underline help"><em>combination</em></span>
+		Hover this <span><strong>highlighted phrase</strong><ui-tooltip variant="help">Just a help cursor, no underline</ui-tooltip></span> for more info.
 	</p>
 
-	<br>
-	<h2>With opposite color-scheme</h2>
+	<h3>Delay</h3>
+	<p>Use <code>delay</code>: <code>none</code>, <code>short</code> (default ~100ms), <code>long</code> (~400ms).</p>
+	<div class="demo-row">
+		<button type="button">No delay<ui-tooltip delay="none">Instant</ui-tooltip></button>
+		<button type="button">Short<ui-tooltip delay="short">100ms</ui-tooltip></button>
+		<button type="button">Long<ui-tooltip delay="long">400ms</ui-tooltip></button>
+	</div>
+
+	<h3>On chips</h3>
+	<div class="demo-row">
+		<ui-chip color="info">
+			Premium
+			<ui-tooltip position="bottom">All features unlocked</ui-tooltip>
+		</ui-chip>
+		<ui-chip variant="outline" color="success">
+			Available
+			<ui-tooltip position="bottom" color="success">In stock — ships today</ui-tooltip>
+		</ui-chip>
+	</div>
+
+	<h3>With opposite color-scheme</h3>
 	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<p>
-			A tooltip can be <span data-tooltip="Tooltip text"><em>below content</em></span> as well as 
-			<span data-tooltip="Tooltip text" data-tooltip-ui="top"><em>above content</em></span>.
-		</p>
-
-		<h3>Triangle / Tail</h3>
-		<p>
-			A tooltip can have a <strong>triangle</strong> <span data-tooltip="Tooltip text" data-tooltip-ui="triangle"><em>below content</em></span> as well as 
-			<span data-tooltip="Tooltip text" data-tooltip-ui="top triangle"><em>above content</em></span>.
-		</p>
-
-		<h3>Underline and cursor</h3>
-		<p>
-			A tooltip can have an <span data-tooltip="Tooltip text" data-tooltip-ui="underline"><em>underline</em></span> as well as a 
-			<span data-tooltip="Tooltip text" data-tooltip-ui="help"><em>help cursor</em></span> — or a
-			<span data-tooltip="Tooltip text" data-tooltip-ui="overline underline help"><em>combination</em></span>
-		</p>
+		<div class="demo-row">
+			<button type="button">Default<ui-tooltip>Default tooltip</ui-tooltip></button>
+			<button type="button">Info<ui-tooltip color="info">Info tooltip</ui-tooltip></button>
+			<button type="button">Success<ui-tooltip color="success">Success tooltip</ui-tooltip></button>
+			<button type="button">Error<ui-tooltip color="error" position="bottom">Error tooltip</ui-tooltip></button>
+		</div>
 	</div>
 
 	<br>
-	<h2>With right-to-left</h2>
-	<div dir="rtl">
-		<p>
-			A tooltip can be <span data-tooltip="Tooltip text"><em>below content</em></span> as well as 
-			<span data-tooltip="Tooltip text" data-tooltip-ui="top"><em>above content</em></span>.
-		</p>
-
-		<h3>Triangle / Tail</h3>
-		<p>
-			A tooltip can have a <strong>triangle</strong> <span data-tooltip="Tooltip text" data-tooltip-ui="triangle"><em>below content</em></span> as well as 
-			<span data-tooltip="Tooltip text" data-tooltip-ui="top triangle"><em>above content</em></span>.
-		</p>
-
-		<h3>Underline and cursor</h3>
-		<p>
-			A tooltip can have an <span data-tooltip="Tooltip text" data-tooltip-ui="underline"><em>underline</em></span> as well as a 
-			<span data-tooltip="Tooltip text" data-tooltip-ui="help"><em>help cursor</em></span> — or a
-			<span data-tooltip="Tooltip text" data-tooltip-ui="overline underline help"><em>combination</em></span>
-		</p>
+	<h3>With right-to-left</h3>
+	<div dir="rtl" class="demo-row">
+		<button type="button">أعلى<ui-tooltip>تلميح</ui-tooltip></button>
+		<button type="button">أسفل<ui-tooltip position="bottom">تلميح أسفل</ui-tooltip></button>
+		<button type="button">بداية<ui-tooltip position="bottom-start">بداية</ui-tooltip></button>
 	</div>
 </body>
 </html>
