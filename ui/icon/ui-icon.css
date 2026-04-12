@@ -7,39 +7,39 @@
 @layer bs-component {
 	:where(ui-icon) {
 		/* Component tokens */
-		--ui-icon-border-radius: var(--radius-circle, 50%);
-		--ui-icon-duration: var(--duration-slow, .3s);
-		--ui-icon-easing: var(--ease-default, cubic-bezier(0.4, 0, 0.2, 1));
-		--ui-icon-size: 100%;
-		--ui-icon-stroke: var(--border-width-thick, 2px);
+		--ui-icon-border-radius: var(--radius-circle);
+		--_d: var(--duration-slow);
+		--_e: var(--ease-default);
+		--_sz: 100%;
+		--_s: var(--border-width-thick);
 
 		/* Private */
-		--_bdwh: calc(var(--ui-icon-stroke) / 2);
+		--_bdwh: calc(var(--_s) / 2);
 		--_cosh: calc(1em * cos(45deg));
 
 		border-radius: var(--ui-icon-border-radius);
 		display: inline-grid;
-		font-size: var(--ui-icon-size);
+		font-size: var(--_sz);
 		grid-template-rows: 0;
 		height: 1em;
 		margin-block: var(--_mb, 0);
 		margin-inline: var(--_mi, var(--_mis, 0) var(--_mie, 0));
 		place-content: center;
-		transition: var(--ui-icon-duration) var(--ui-icon-easing);
+		transition: var(--_d) var(--_e);
 		width: 1em;
 	}
 	ui-icon::before,
 	ui-icon::after {
 		content: "";
 		display: block;
-		transition: var(--ui-icon-duration) var(--ui-icon-easing);
+		transition: var(--_d) var(--_e);
 	}
 
 	/* Arrow, Check, Chevron (Common: Cross, Menu, Plus) */
 	ui-icon:is([type*=arrow],[type=check],[type*=chevron])::after {
 		border-color: currentColor;
 		border-style: solid;
-		border-width: var(--ui-icon-stroke) var(--ui-icon-stroke) 0 0;
+		border-width: var(--_s) var(--_s) 0 0;
 		height: var(--_cosh);
 		rotate: 45deg;
 		width: var(--_cosh);
@@ -47,18 +47,18 @@
 	ui-icon:is([type*=arrow],[type=cross],[type*=menu],[type*=plus])::before,
 	ui-icon:is([type=cross],[type*=menu],[type*=minus],[type*=plus])::after {
 		background-color: currentColor;
-		height: var(--ui-icon-stroke);
+		height: var(--_s);
 		width: 1em;
 	}
 	ui-icon[type*=arrow]::after {
-		translate: calc((.25em - var(--ui-icon-stroke)) * cos(45deg));
+		translate: calc((.25em - var(--_s)) * cos(45deg));
 	}
 	ui-icon[type*=arrow]::before {
-		width: calc(1em - var(--ui-icon-stroke));
+		width: calc(1em - var(--_s));
 		translate: calc(0px - var(--_bdwh)) calc((.5em * cos(45deg)) - var(--_bdwh));
 	}
 	ui-icon[type=check]::after {
-		border-width: 0 var(--ui-icon-stroke) var(--ui-icon-stroke) 0;
+		border-width: 0 var(--_s) var(--_s) 0;
 		height: calc(1em * cos(22.5deg));
 		translate: 0 calc((.25em - var(--_bdwh)) * cos(45deg) * -1);
 		width: calc(var(--_cosh)* 0.6);
@@ -70,7 +70,7 @@
 	/* Grid, Kebab, Meatball, Menu */
 	ui-icon:is([type=drag],[type=grid],[type=kebab],[type=meatball])::after {
 		background: currentColor;
-		border-radius: var(--radius-circle, 50%);
+		border-radius: var(--radius-circle);
 		height: .2em;
 		width: .2em;
 	}
@@ -118,8 +118,8 @@
 		&::before {
 			background: currentColor;
 			height: 1em;
-			translate: .88em calc(0px - var(--ui-icon-stroke));
-			width: var(--ui-icon-stroke);
+			translate: .88em calc(0px - var(--_s));
+			width: var(--_s);
 		}
 	}
 	ui-icon[type*=last] { translate: -.22em 0; }
@@ -136,12 +136,12 @@
 	ui-icon[margin=xl] { --_mb: 2ch; --_mi: 2ch; }
 
 	/* Size */
-	ui-icon[size=xs] { --ui-icon-size: 50%; }
-	ui-icon[size=sm] { --ui-icon-size: 60%; }
-	ui-icon[size=md] { --ui-icon-size: 80%; }
-	ui-icon[size=lg] { --ui-icon-size: 120%; }
-	ui-icon[size=xl] { --ui-icon-size: 140%; }
-	ui-icon[size=xxl] { --ui-icon-size: 200%; }
+	ui-icon[size=xs] { --_sz: 50%; }
+	ui-icon[size=sm] { --_sz: 60%; }
+	ui-icon[size=md] { --_sz: 80%; }
+	ui-icon[size=lg] { --_sz: 120%; }
+	ui-icon[size=xl] { --_sz: 140%; }
+	ui-icon[size=xxl] { --_sz: 200%; }
 
 	/* State: [open] and :checked */
 	:is([open] >* > ui-icon, :checked + ui-icon):is([type=kebab],[type=meatball],[type=plus-cross]) { rotate: 45deg; }
@@ -160,15 +160,15 @@
 	/* Variant: rounded — rounds line caps on line-based icons */
 	ui-icon[variant~=rounded]:is([type*=arrow],[type=cross],[type*=menu],[type*=plus])::before,
 	ui-icon[variant~=rounded]:is([type=cross],[type*=menu],[type*=minus],[type*=plus])::after {
-		border-radius: var(--ui-icon-stroke);
+		border-radius: var(--_s);
 	}
 
 	/* Stroke */
-	ui-icon[stroke=xs] { --ui-icon-stroke: 1px; --ui-icon-svg-stroke: 0.5; }
-	ui-icon[stroke=sm] { --ui-icon-stroke: 1.5px; --ui-icon-svg-stroke: 1; }
-	ui-icon[stroke=md] { --ui-icon-stroke: 3px; --ui-icon-svg-stroke: 1.5; }
-	ui-icon[stroke=lg] { --ui-icon-stroke: 4px; --ui-icon-svg-stroke: 2; }
-	ui-icon[stroke=xl] { --ui-icon-stroke: 6px; --ui-icon-svg-stroke: 2.5; }
+	ui-icon[stroke=xs] { --_s: 1px; --ui-icon-svg-stroke: 0.5; }
+	ui-icon[stroke=sm] { --_s: 1.5px; --ui-icon-svg-stroke: 1; }
+	ui-icon[stroke=md] { --_s: 3px; --ui-icon-svg-stroke: 1.5; }
+	ui-icon[stroke=lg] { --_s: 4px; --ui-icon-svg-stroke: 2; }
+	ui-icon[stroke=xl] { --_s: 6px; --ui-icon-svg-stroke: 2.5; }
 
 	/* SVG inside <ui-icon> */
 	ui-icon:has(svg) svg {
@@ -186,7 +186,7 @@
 	[dir=rtl] ui-icon {
 		&[type~=arrow] {
 			&::before {
-				translate: calc(var(--_bdwh) + var(--ui-icon-stroke)) calc((.5em * cos(45deg)) - var(--_bdwh))
+				translate: calc(var(--_bdwh) + var(--_s)) calc((.5em * cos(45deg)) - var(--_bdwh))
 			}
 			&[type~=left] { translate: -.2em 0; }
 			&[type~=right] { translate: .2em 0; }
@@ -199,11 +199,11 @@
 		}
 		&[type*=first] {
 			translate: -.22em 0;
-			&::before { translate: .33em calc(0px - var(--ui-icon-stroke)); }
+			&::before { translate: .33em calc(0px - var(--_s)); }
 		}
 		&[type*=last] {
 			translate: .22em 0;
-			&::before { translate: .33em calc(0px - var(--ui-icon-stroke)); }
+			&::before { translate: .33em calc(0px - var(--_s)); }
 		}
 		&[type~=left] { rotate: 0deg; }
 		&[type~=right] { rotate: -180deg; }

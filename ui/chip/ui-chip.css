@@ -12,26 +12,26 @@
 		--ui-chip-padding-inline: 1.125em;
 		--ui-chip-padding-inline-end: var(--ui-chip-padding-inline);
 		align-items: center;
-		background: var(--ui-chip-background, var(--color-button, light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%))));
+		background: var(--ui-chip-background, var(--color-button));
 		border: var(--ui-chip-border-width) solid var(--ui-chip-border-color);
-		border-radius: var(--ui-chip-border-radius, var(--radius-pill, calc(infinity * 1px)));
-		color: var(--ui-chip-color, var(--color-text, light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%))));
+		border-radius: var(--ui-chip-border-radius, var(--radius-pill));
+		color: var(--ui-chip-color, var(--color-text));
 		column-gap: var(--ui-chip-column-gap, 0);
 		display: inline-flex;
-		font-family: var(--ui-chip-font-family, var(--font-form, inherit));
-		font-size: var(--ui-chip-font-size, var(--font-size-sm, 0.875rem));
-		font-weight: var(--ui-chip-font-weight, var(--font-weight-medium, 500));
-		line-height: var(--ui-chip-line-height, var(--line-height-snug, 1.25));
+		font-family: var(--ui-chip-font-family, var(--font-form));
+		font-size: var(--ui-chip-font-size, var(--font-size-sm));
+		font-weight: var(--ui-chip-font-weight, var(--font-weight-medium));
+		line-height: var(--ui-chip-line-height, var(--line-height-snug));
 		padding-block: var(--ui-chip-padding-block);
 		padding-inline: var(--ui-chip-padding-inline) var(--ui-chip-padding-inline-end);
 		text-box: cap alphabetic;
 		user-select: none;
 
 		/* colors — single accent token drives solid, light, and outline */
-		&[color="info"]    { --ui-chip-accent: var(--color-info, light-dark(hsl(210, 60%, 46%), hsl(210, 30%, 46%))); }
-		&[color="success"] { --ui-chip-accent: var(--color-success, light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%))); }
-		&[color="warning"] { --ui-chip-accent: var(--color-warning, light-dark(hsl(33, 99%, 59%), hsl(33, 69%, 59%))); }
-		&[color="error"]   { --ui-chip-accent: var(--color-error, light-dark(hsl(360, 60%, 46%), hsl(360, 40%, 56%))); }
+		&[color="info"]    { --ui-chip-accent: var(--color-info); }
+		&[color="success"] { --ui-chip-accent: var(--color-success); }
+		&[color="warning"] { --ui-chip-accent: var(--color-warning); }
+		&[color="error"]   { --ui-chip-accent: var(--color-error); }
 		&[color] {
 			--ui-chip-background: var(--ui-chip-accent);
 			--ui-chip-color: hsl(0, 0%, 100%);
@@ -58,9 +58,9 @@
 	}
 
 	/* sizes — only font-size changes; padding and square radius scale via em */
-	:where(ui-chip[size="sm"]) { --ui-chip-font-size: var(--font-size-2xs, 0.625rem); }
-	:where(ui-chip[size="md"]) { --ui-chip-font-size: var(--font-size-sm, 0.875rem); }
-	:where(ui-chip[size="lg"]) { --ui-chip-font-size: var(--font-size-base, 1rem); }
+	:where(ui-chip[size="sm"]) { --ui-chip-font-size: var(--font-size-2xs); }
+	:where(ui-chip[size="md"]) { --ui-chip-font-size: var(--font-size-sm); }
+	:where(ui-chip[size="lg"]) { --ui-chip-font-size: var(--font-size-base); }
 
 	/* `variant="inline"` badge — auto-push to inline end with a minimum gap */
 	:where(ui-chip):has(> ui-badge[variant~="inline"]) {

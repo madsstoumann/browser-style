@@ -14,16 +14,16 @@
 		--ui-accordion-border-style: solid;
 		--ui-accordion-border-width: var(--input-border-width, 1px);
 		--ui-accordion-breakout-border-width: var(--border-width, 1px);
-		--ui-accordion-breakout-unit: var(--spacing-md, 1rem);
+		--ui-accordion-breakout-unit: var(--spacing-md);
 		--ui-accordion-color: inherit;
-		--ui-accordion-duration: var(--duration-slow, .3s);
-		--ui-accordion-gap: var(--spacing-xl, 2rem);
+		--ui-accordion-duration: var(--duration-slow);
+		--ui-accordion-gap: var(--spacing-xl);
 		--ui-accordion-horizontal-fixed-height: 400px;
 		--ui-accordion-horizontal-padding-inline: 2ch;
 		--ui-accordion-margin-end: 0;
 		--ui-accordion-media-duration: .6s;
 		--ui-accordion-open-decoration-offset: 0.3ch;
-		--ui-accordion-open-decoration-width: var(--border-width-thick, 2px);
+		--ui-accordion-open-decoration-width: var(--border-width-thick);
 		--ui-accordion-open-decoration: underline;
 		--ui-accordion-padding-block: 1.5ch;
 		--ui-accordion-padding-inline-separate: 2.25ch;
@@ -63,12 +63,12 @@
 				justify-content: space-between;
 				padding-block: var(--ui-accordion-padding-block);
 				text-decoration: none;
-				transition: background var(--duration-normal, .2s) var(--ease-in-out, ease-in-out);
+				transition: background var(--duration-normal) var(--ease-in-out);
 				&::-webkit-details-marker { display: none; }
-				&:focus-visible { outline: var(--ring-width, 2px) solid var(--ring-color, var(--color-accent, hsl(211, 100%, 50%))); outline-offset: var(--ring-offset, 3px); }
+				&:focus-visible { outline: var(--ring-width) solid var(--ring-color))); outline-offset: var(--ring-offset); }
 			}			
 			&:not([open]) summary:hover { background: var(--ui-accordion-bg-hover); }
-			&[open] summary { text-decoration: var(--ui-accordion-open-decoration) #0000 var(--ui-accordion-open-decoration-width); text-decoration-skip-ink: auto; text-underline-offset: var(--ui-accordion-open-decoration-offset); transition: text-decoration-color var(--duration-normal, .2s) var(--ease-in-out, ease-in-out); }
+			&[open] summary { text-decoration: var(--ui-accordion-open-decoration) #0000 var(--ui-accordion-open-decoration-width); text-decoration-skip-ink: auto; text-underline-offset: var(--ui-accordion-open-decoration-offset); transition: text-decoration-color var(--duration-normal) var(--ease-in-out); }
 			&[open] summary:hover { text-decoration-color: currentColor; }
 		}
 		&[no-collapse] {

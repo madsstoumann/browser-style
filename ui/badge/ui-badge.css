@@ -9,20 +9,20 @@
 		--ui-badge-border-color: transparent;
 		--ui-badge-border-width: var(--border-width, 1px);
 		--ui-badge-inset: 0%;
-		background: var(--ui-badge-background, var(--color-text, light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%))));
+		background: var(--ui-badge-background, var(--color-text));
 		border: var(--ui-badge-border-width) solid var(--ui-badge-border-color);
-		border-radius: var(--ui-badge-border-radius, var(--radius-circle, 50%));
-		color: var(--ui-badge-color, var(--color-surface, light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%))));
+		border-radius: var(--ui-badge-border-radius, var(--radius-circle));
+		color: var(--ui-badge-color, var(--color-surface));
 		display: inline-grid;
-		font-family: var(--ui-badge-font-family, var(--font-body, Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif));
+		font-family: var(--ui-badge-font-family, var(--font-body));
 		font-size: var(--ui-badge-font-size, 0.675rem);
 		font-variant-numeric: tabular-nums;
-		font-weight: var(--ui-badge-font-weight, var(--font-weight-normal, 400));
-		height: var(--ui-badge-size, var(--size-5, 1.5rem));
+		font-weight: var(--ui-badge-font-weight, var(--font-weight-normal));
+		height: var(--ui-badge-size, var(--size-5));
 		inset-block-start: var(--ui-badge-inset);
 		inset-inline-end: var(--ui-badge-inset);
 		line-height: 0;
-		min-width: var(--ui-badge-size, var(--size-5, 1.5rem));
+		min-width: var(--ui-badge-size, var(--size-5));
 		place-content: center;
 		position: absolute;
 		text-box: cap alphabetic;
@@ -30,10 +30,10 @@
 
 		/* colors — fixed white text so contrast stays stable in cs-opposite / dark mode */
 		&[color]           { --ui-badge-color: hsl(0, 0%, 100%); }
-		&[color="info"]    { --ui-badge-background: var(--color-info, light-dark(hsl(210, 60%, 46%), hsl(210, 30%, 46%))); }
-		&[color="success"] { --ui-badge-background: var(--color-success, light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%))); }
-		&[color="warning"] { --ui-badge-background: var(--color-warning, light-dark(hsl(33, 99%, 59%), hsl(33, 69%, 59%))); }
-		&[color="error"]   { --ui-badge-background: var(--color-error, light-dark(hsl(360, 60%, 46%), hsl(360, 40%, 56%))); }
+		&[color="info"]    { --ui-badge-background: var(--color-info); }
+		&[color="success"] { --ui-badge-background: var(--color-success); }
+		&[color="warning"] { --ui-badge-background: var(--color-warning); }
+		&[color="error"]   { --ui-badge-background: var(--color-error); }
 
 		/* positions */
 		&[position="top-left"] {
@@ -69,13 +69,13 @@
 			translate: 0;
 		}
 		&[variant~="text"] {
-			--ui-badge-border-radius: var(--radius-sm, 0.25em);
+			--ui-badge-border-radius: var(--radius-sm);
 			height: auto;
 			line-height: 1;
 			padding: var(--ui-badge-padding-block, 0.33ch) var(--ui-badge-padding-inline, 0.66ch);
 		}
 		&[variant~="square"] {
-			--ui-badge-border-radius: var(--radius-md, 0.375rem);
+			--ui-badge-border-radius: var(--radius-md);
 		}
 		&[variant~="squircle"] {
 			corners: 50% superellipse(2);
@@ -92,20 +92,20 @@
 
 	/* sizes */
 	:where(ui-badge[size="xs"]) {
-		--ui-badge-size: var(--size-3, 1rem);
-		--ui-badge-font-size: var(--font-size-3xs, 0.5rem);
+		--ui-badge-size: var(--size-3);
+		--ui-badge-font-size: var(--font-size-3xs);
 	}
 	:where(ui-badge[size="sm"]) {
-		--ui-badge-size: var(--size-4, 1.25rem);
-		--ui-badge-font-size: var(--font-size-2xs, 0.625rem);
+		--ui-badge-size: var(--size-4);
+		--ui-badge-font-size: var(--font-size-2xs);
 	}
 	:where(ui-badge[size="md"]) {
-		--ui-badge-size: var(--size-5, 1.5rem);
-		--ui-badge-font-size: var(--font-size-xs, 0.75rem);
+		--ui-badge-size: var(--size-5);
+		--ui-badge-font-size: var(--font-size-xs);
 	}
 	:where(ui-badge[size="lg"]) {
-		--ui-badge-size: var(--size-7, 2rem);
-		--ui-badge-font-size: var(--font-size-sm, 0.875rem);
+		--ui-badge-size: var(--size-7);
+		--ui-badge-font-size: var(--font-size-sm);
 	}
 
 	/* auto-position host parent of a badge */

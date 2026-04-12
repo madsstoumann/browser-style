@@ -15,10 +15,10 @@
 	:where(ui-avatar) {
 		--ui-avatar-background: oklch(0.5 0.25 random(auto, 0, 360));
 		aspect-ratio: 1 / 1;
-		background: var(--ui-avatar-background, var(--color-button, light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%))));
+		background: var(--ui-avatar-background, var(--color-button));
 		block-size: var(--ui-avatar-size, 4em);
-		border: var(--ui-avatar-border-width, var(--border-width-thick, 2px)) solid var(--ui-avatar-border-color, var(--color-surface-alt, light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%))));
-		border-radius: var(--ui-avatar-border-radius, var(--radius-circle, 50%));
+		border: var(--ui-avatar-border-width, var(--border-width-thick)) solid var(--ui-avatar-border-color, var(--color-surface-alt));
+		border-radius: var(--ui-avatar-border-radius, var(--radius-circle));
 		color: var(--ui-avatar-color, contrast-color(var(--ui-avatar-background)));
 		container-type: inline-size;
 		display: grid;
@@ -34,20 +34,20 @@
 		& img {
 			border-radius: inherit;
 			pointer-events: none;
-			transition: scale var(--duration-normal, .2s) var(--ease-in-out, ease-in-out);
+			transition: scale var(--duration-normal) var(--ease-in-out);
 		}
 	}
 
 	/* sizes */
-	:where(ui-avatar[size="xs"]) { --ui-avatar-size: var(--size-5, 1.5rem); }
-	:where(ui-avatar[size="sm"]) { --ui-avatar-size: var(--size-7, 2rem); }
-	:where(ui-avatar[size="md"]) { --ui-avatar-size: var(--size-8, 3rem); }
-	:where(ui-avatar[size="lg"]) { --ui-avatar-size: var(--size-9, 4rem); }
-	:where(ui-avatar[size="xl"]) { --ui-avatar-size: var(--size-10, 5rem); }
-	:where(ui-avatar[size="2xl"]) { --ui-avatar-size: var(--size-11, 7.5rem); }
+	:where(ui-avatar[size="xs"]) { --ui-avatar-size: var(--size-5); }
+	:where(ui-avatar[size="sm"]) { --ui-avatar-size: var(--size-7); }
+	:where(ui-avatar[size="md"]) { --ui-avatar-size: var(--size-8); }
+	:where(ui-avatar[size="lg"]) { --ui-avatar-size: var(--size-9); }
+	:where(ui-avatar[size="xl"]) { --ui-avatar-size: var(--size-10); }
+	:where(ui-avatar[size="2xl"]) { --ui-avatar-size: var(--size-11); }
 
 	/* variants */
-	:where(ui-avatar[variant~="square"]) { --ui-avatar-border-radius: var(--radius-md, 0.375rem); }
+	:where(ui-avatar[variant~="square"]) { --ui-avatar-border-radius: var(--radius-md); }
 	:where(ui-avatar[variant~="squircle"]) {
 		--ui-avatar-status-inset: -2cqi;
 		corners: 50% superellipse(2); 
@@ -58,8 +58,8 @@
 	:where(ui-avatar[status]):not([size="xs"])::after {
 		background: var(--ui-avatar-status-color);
 		block-size: var(--ui-avatar-status-size, 20cqi);
-		border: var(--ui-avatar-status-border-width, 3cqi) solid var(--color-surface, light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%)));
-		border-radius: var(--radius-circle, 50%);
+		border: var(--ui-avatar-status-border-width, 3cqi) solid var(--color-surface);
+		border-radius: var(--radius-circle);
 		content: "";
 		display: block;
 		inline-size: var(--ui-avatar-status-size, 20cqi);
@@ -67,17 +67,17 @@
 		inset-inline-end: var(--ui-avatar-status-inset, 4cqi);
 		position: absolute;
 	}
-	:where(ui-avatar[status="online"]) { --ui-avatar-status-color: var(--color-success, light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%))); }
-	:where(ui-avatar[status="offline"]) { --ui-avatar-status-color: var(--color-text-muted, light-dark(hsl(0, 0%, 60%), hsl(0, 0%, 40%))); }
-	:where(ui-avatar[status="busy"]) { --ui-avatar-status-color: var(--color-error, light-dark(hsl(360, 60%, 46%), hsl(360, 40%, 56%))); }
-	:where(ui-avatar[status="away"]) { --ui-avatar-status-color: var(--color-warning, light-dark(hsl(33, 99%, 59%), hsl(33, 69%, 59%))); }
+	:where(ui-avatar[status="online"]) { --ui-avatar-status-color: var(--color-success); }
+	:where(ui-avatar[status="offline"]) { --ui-avatar-status-color: var(--color-text-muted); }
+	:where(ui-avatar[status="busy"]) { --ui-avatar-status-color: var(--color-error); }
+	:where(ui-avatar[status="away"]) { --ui-avatar-status-color: var(--color-warning); }
 
 	/* `ring` */
 	:where(ui-avatar[ring]) {
 		--_ring: attr(ring type(<color>), var(--color-accent, hsl(211, 100%, 50%)));
 		box-shadow:
-			0 0 0 var(--ui-avatar-ring-offset, var(--ring-offset, 3px)) var(--color-surface, light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%))),
-			0 0 0 calc(var(--ui-avatar-ring-offset, var(--ring-offset, 3px)) + var(--ui-avatar-ring-width, var(--ring-width, 2px))) var(--_ring);
+			0 0 0 var(--ui-avatar-ring-offset, var(--ring-offset)) var(--color-surface),
+			0 0 0 calc(var(--ui-avatar-ring-offset, var(--ring-offset)) + var(--ui-avatar-ring-width, var(--ring-width))) var(--_ring);
 	}
 
 	/* === Avatar Group === */
@@ -105,17 +105,17 @@
 
 			background: color-mix(in oklch, var(--ui-avatar-background) calc((1 - var(--_show-counter)) * 100%), transparent calc(var(--_show-counter) * 100%));
 			block-size: calc(var(--ui-avatar-size, 4em) * (1 - var(--_hidden)));
-			border-width: calc(var(--ui-avatar-border-width, var(--border-width-thick, 2px)) * (1 - var(--_hidden)));
+			border-width: calc(var(--ui-avatar-border-width, var(--border-width-thick)) * (1 - var(--_hidden)));
 			counter-set: overflow calc(sibling-count() - var(--_max) - 1);
 			opacity: calc(1 - var(--_hidden));
 		}
 		@container style(--_show-counter: 1) {
 			:where(ui-avatar)::after {
-				background: var(--color-surface-alt, light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%)));
+				background: var(--color-surface-alt);
 				block-size: auto;
 				border: 0;
 				border-radius: inherit;
-				color: var(--color-text-muted, light-dark(hsl(0, 0%, 60%), hsl(0, 0%, 40%)));
+				color: var(--color-text-muted);
 				content: "+" counter(overflow);
 				display: grid;
 				font-size: var(--ui-avatar-font-size, 33cqi);
@@ -124,7 +124,7 @@
 				place-content: center;
 				pointer-events: none;
 				position: absolute;
-				z-index: var(--z-index-1, 1);
+				z-index: var(--z-index-1);
 			}
 			:where(ui-avatar) > :where(img, abbr, ui-tooltip) {
 				opacity: 0;
@@ -135,13 +135,13 @@
 	
 	/* `overflow` — JS-rendered counter element */
 	:where(ui-avatar[overflow]) {
-		--ui-avatar-background: var(--color-surface-alt, light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%)));
-		--ui-avatar-color: var(--color-text-muted, light-dark(hsl(0, 0%, 60%), hsl(0, 0%, 40%)));
+		--ui-avatar-background: var(--color-surface-alt);
+		--ui-avatar-color: var(--color-text-muted);
 	}
 
 	/* `variant=spread` — evenly spaced */
 	:where(ui-avatar-group[variant~="spread"]) {
-		gap: var(--spacing-sm, 0.5rem);
+		gap: var(--spacing-sm);
 		& > *:not(:first-child) { margin-inline-start: 0; }
 	}
 
