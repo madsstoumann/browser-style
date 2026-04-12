@@ -4,17 +4,10 @@
  * @date 2026-04-12
  * @author Mads Stoumann
  *
- * Speech-bubble tooltip using the css-generators.com technique:
- * real border-radius on the bubble, ::before pseudo with background-image: inherit
- * + clip-path triangle for the arrow. Gradients flow seamlessly across both.
+ * Speech-bubble tooltip using the css-generators.com technique.
  */
 @layer bs-component {
 	:where(ui-tooltip) {
-		--ui-tooltip-arrow-base: 1em;
-		--ui-tooltip-arrow-height: 0.4em;
-		--ui-tooltip-arrow-position: 50%;
-		--ui-tooltip-offset: 0.25em;
-		--ui-tooltip-open-delay: 100ms;
 		color: var(--ui-tooltip-color, var(--color-surface, light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%))));
 		display: block;
 		font-family: var(--ui-tooltip-font-family, var(--font-body, Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif));
@@ -35,15 +28,18 @@
 		white-space: nowrap;
 		z-index: var(--ui-tooltip-z-index, var(--z-index-3, 100));
 
-		/* arrow — pseudo fills the bubble + extends by arrow-height in one direction.
-		   background-image: inherit picks up gradients; background-color: inherit handles solid colors.
-		   z-index: -1 sits behind the bubble so only the protruding triangle is visible. */
+		/* internal helpers to make calculations easier to read */
+		--_b: var(--ui-tooltip-arrow-base, 1em);
+		--_h: var(--ui-tooltip-arrow-height, 0.4em);
+		--_p: var(--ui-tooltip-arrow-position, 50%);
+		--_r: var(--ui-tooltip-border-radius, 0.25em);
+
 		&::before {
-			background-color: inherit;
-			background-image: inherit;
 			content: "";
 			position: absolute;
 			z-index: -1;
+			background-color: inherit;
+			background-image: inherit;
 		}
 
 		/* colors */
@@ -59,7 +55,7 @@
 			white-space: normal;
 		}
 		&[variant~="no-arrow"] {
-			--ui-tooltip-arrow-height: 0em;
+			--_h: 0em;
 			&::before { display: none; }
 		}
 
@@ -74,80 +70,39 @@
 		&[delay="long"] { --ui-tooltip-open-delay: 400ms; }
 	}
 
-	/* positions */
-
 	/* top (default): bubble above trigger, arrow at bottom edge pointing down */
 	:where(ui-tooltip),
 	:where(ui-tooltip[position^="top"]) {
-		background:
-			var(--ui-tooltip-background, var(--color-text, light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%))))
-			0 0 / 100% calc(100% + var(--ui-tooltip-arrow-height));
-		border-radius:
-			var(--ui-tooltip-border-radius, 0.25em)
-			var(--ui-tooltip-border-radius, 0.25em)
-			min(var(--ui-tooltip-border-radius, 0.25em), 100% - var(--ui-tooltip-arrow-position) - var(--ui-tooltip-arrow-base) / 2)
-			min(var(--ui-tooltip-border-radius, 0.25em), var(--ui-tooltip-arrow-position) - var(--ui-tooltip-arrow-base) / 2)
-			/ var(--ui-tooltip-border-radius, 0.25em);
-		inset-block-end: calc(100% + var(--ui-tooltip-offset) + var(--ui-tooltip-arrow-height));
+		background: var(--ui-tooltip-background, var(--color-text, light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%)))) 0 0 / 100% calc(100% + var(--_h));
+		border-radius: var(--_r) var(--_r) min(var(--_r), 100% - var(--_p) - var(--_b)/2) min(var(--_r), var(--_p) - var(--_b)/2) / var(--_r);
+		inset-block-end: calc(100% + var(--ui-tooltip-offset, 0.25em) + var(--_h));
 		inset-inline-start: 50%;
 		translate: -50% 0;
 		&::before {
-			inset: 0 0 calc(-1 * var(--ui-tooltip-arrow-height));
-			clip-path: polygon(
-				max(0%, var(--ui-tooltip-arrow-position) - var(--ui-tooltip-arrow-base) / 2) calc(100% - var(--ui-tooltip-arrow-height)),
-				var(--ui-tooltip-arrow-position) 100%,
-				min(100%, var(--ui-tooltip-arrow-position) + var(--ui-tooltip-arrow-base) / 2) calc(100% - var(--ui-tooltip-arrow-height)),
-				50% 50%
-			);
+			inset: 0 0 calc(-1 * var(--_h));
+			clip-path: polygon(max(0%, var(--_p) - var(--_b)/2) calc(100% - var(--_h)), var(--_p) 100%, min(100%, var(--_p) + var(--_b)/2) calc(100% - var(--_h)), 50% 50%);
 		}
 	}
 
 	/* bottom: bubble below trigger, arrow at top edge pointing up */
 	:where(ui-tooltip[position^="bottom"]) {
-		background:
-			var(--ui-tooltip-background, var(--color-text, light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%))))
-			0 100% / 100% calc(100% + var(--ui-tooltip-arrow-height));
-		border-radius:
-			min(var(--ui-tooltip-border-radius, 0.25em), var(--ui-tooltip-arrow-position) - var(--ui-tooltip-arrow-base) / 2)
-			min(var(--ui-tooltip-border-radius, 0.25em), 100% - var(--ui-tooltip-arrow-position) - var(--ui-tooltip-arrow-base) / 2)
-			var(--ui-tooltip-border-radius, 0.25em)
-			var(--ui-tooltip-border-radius, 0.25em)
-			/ var(--ui-tooltip-border-radius, 0.25em);
+		background: var(--ui-tooltip-background, var(--color-text, light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%)))) 0 100% / 100% calc(100% + var(--_h));
+		border-radius: min(var(--_r), var(--_p) - var(--_b)/2) min(var(--_r), 100% - var(--_p) - var(--_b)/2) var(--_r) var(--_r) / var(--_r);
 		inset-block-end: auto;
-		inset-block-start: calc(100% + var(--ui-tooltip-offset) + var(--ui-tooltip-arrow-height));
+		inset-block-start: calc(100% + var(--ui-tooltip-offset, 0.25em) + var(--_h));
 		inset-inline-start: 50%;
 		translate: -50% 0;
 		&::before {
-			inset: calc(-1 * var(--ui-tooltip-arrow-height)) 0 0;
-			clip-path: polygon(
-				min(100%, var(--ui-tooltip-arrow-position) + var(--ui-tooltip-arrow-base) / 2) var(--ui-tooltip-arrow-height),
-				var(--ui-tooltip-arrow-position) 0,
-				max(0%, var(--ui-tooltip-arrow-position) - var(--ui-tooltip-arrow-base) / 2) var(--ui-tooltip-arrow-height),
-				50% 50%
-			);
+			inset: calc(-1 * var(--_h)) 0 0;
+			clip-path: polygon(min(100%, var(--_p) + var(--_b)/2) var(--_h), var(--_p) 0, max(0%, var(--_p) - var(--_b)/2) var(--_h), 50% 50%);
 		}
 	}
 
 	/* alignment — start/end shifts the bubble; arrow stays near the trigger edge */
-	:where(ui-tooltip[position$="-start"]) {
-		--ui-tooltip-arrow-position: 1em;
-	}
-	:where(ui-tooltip[position$="-end"]) {
-		--ui-tooltip-arrow-position: calc(100% - 1em);
-	}
-	:where(ui-tooltip[position="top-start"]),
-	:where(ui-tooltip[position="bottom-start"]) {
-		inset-inline-start: 0;
-		translate: 0 0;
-	}
-	:where(ui-tooltip[position="top-end"]),
-	:where(ui-tooltip[position="bottom-end"]) {
-		inset-inline-start: auto;
-		inset-inline-end: 0;
-		translate: 0 0;
-	}
+	:where(ui-tooltip[position$="-start"]) { --_p: 1em; inset-inline-start: 0; translate: 0 0; }
+	:where(ui-tooltip[position$="-end"])   { --_p: calc(100% - 1em); inset-inline-start: auto; inset-inline-end: 0; translate: 0 0; }
 
-	/* rtl — flip center-aligned translate; start/end use translate: 0 so they're fine */
+	/* rtl — flip center-aligned translate */
 	:where(ui-tooltip:not([position$="-start"], [position$="-end"])):dir(rtl) {
 		translate: 50% 0;
 	}
@@ -156,25 +111,17 @@
 	*:hover > :where(ui-tooltip:not([disabled], [hidden])),
 	*:focus-visible > :where(ui-tooltip:not([disabled], [hidden])) {
 		opacity: var(--ui-tooltip-opacity, 0.95);
-		transition-delay: var(--ui-tooltip-open-delay);
+		transition-delay: var(--ui-tooltip-open-delay, 100ms);
 	}
 
-	/* parent-affecting variants — for inline help text in body copy */
+	/* parent-affecting variants */
 	*:has(> ui-tooltip[variant~="help"])      { cursor: help; }
-	*:has(> ui-tooltip[variant~="underline"]) {
-		cursor: help;
-		text-decoration: underline dotted;
-		text-underline-offset: 0.2em;
-	}
-	*:has(> ui-tooltip[variant~="overline"])  {
-		cursor: help;
-		text-decoration: overline dotted;
-	}
+	*:has(> ui-tooltip[variant~="underline"]) { cursor: help; text-decoration: underline dotted; text-underline-offset: 0.2em; }
+	*:has(> ui-tooltip[variant~="overline"])  { cursor: help; text-decoration: overline dotted; }
 
 	/* auto-position host parent of a tooltip */
 	*:has(> ui-tooltip) { position: relative; }
 
-	/* enhancement: anchor positioning + flip-on-collision in modern browsers */
 	@supports (position-try-fallbacks: flip-block) {
 		*:has(> ui-tooltip) { anchor-name: --ui-tooltip-trigger; }
 		:where(ui-tooltip) { position-anchor: --ui-tooltip-trigger; }
