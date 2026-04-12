@@ -1,18 +1,40 @@
 {
   "name": "@browser.style/table",
-  "version": "1.0.10",
+  "version": "4.0.0",
+  "description": "CSS-first table styling system with composable layout variants and hover effects",
+  "type": "module",
+  "module": "index.js",
   "style": "index.css",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css"
+  },
   "files": [
-    "index.css"
+    "index.js",
+    "index.css",
+    "ui-table.css"
   ],
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
+  "keywords": [
+    "browser.style",
+    "table",
+    "css-first",
+    "web-components",
+    "data-grid"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madsstoumann/browser-style.git",
-    "directory": "ui/table-expand"
+    "directory": "ui/table"
   },
   "homepage": "https://browser.style/ui/table",
   "peerDependencies": {

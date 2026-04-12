@@ -1,228 +1,300 @@
-# Table Component
+# @browser.style/table
 
-A collection of CSS modifier classes to enhance the appearance of native HTML tables. Supports zebra striping, hover effects, sticky headers/columns, and more—all without JavaScript.
+A CSS-first table styling system with composable layout variants and interactive hover effects. No JavaScript required — an optional web component wrapper provides a declarative API for framework integration.
 
-## Installation
+## Features
+
+- Composable layout variants: `rounded`, `split-cols`, `split-rows`, `block-border`, `th-dark`, `th-light`, `fixed`, `no-border`, `no-wrap`, density sizes
+- Zebra striping: rows and columns, even/odd
+- 8 hover effects via separate `data-hover` attribute: `col`, `col-outline`, `td`, `td-outline`, `tr`, `tr-outline`, `th-outline`, `all`
+- Row states: `data-row="active"` and `data-row="selected"` on `<tr>`
+- Overflow wrapper with sticky header/columns and scroll-driven shadow
+- Light/dark mode via design tokens
+- RTL support with logical properties
+- Touch-safe: hover effects wrapped in `@media (hover: hover)`
+
+---
+
+## Install
 
 ```bash
 npm install @browser.style/table
 ```
 
-For required dependencies and basic setup, see the [main documentation](../readme.md).
+Peer dependency:
+
+```bash
+npm install @browser.style/base
+```
+
+---
 
 ## Usage
 
-Import the component CSS:
+### CSS-only (vanilla HTML)
 
-```html
-<link rel="stylesheet" href="node_modules/@browser.style/table/index.css">
-```
-
-Or in your CSS:
 ```css
-@import '@browser.style/table';
+@import '@browser.style/base';
+@import '@browser.style/table/style';
 ```
 
-## Basic Example
+Add `data-variant` to the `<table>` for layout variants, and `data-hover` for hover effects:
 
 ```html
-<table class="ui-table">
+<table data-variant="rounded" data-hover="tr td">
   <colgroup><col><col><col></colgroup>
   <thead>
-    <tr><th>Name</th><th>Role</th><th>Status</th></tr>
+    <tr><th>Name</th><th>Role</th><th>Location</th></tr>
   </thead>
   <tbody>
-    <tr><td>Alice</td><td>Developer</td><td>Active</td></tr>
-    <tr><td>Bob</td><td>Designer</td><td>Away</td></tr>
+    <tr><td>Bruce Wayne</td><td>Batman</td><td>Gotham</td></tr>
+    <tr><td>Clark Kent</td><td>Superman</td><td>Metropolis</td></tr>
   </tbody>
 </table>
 ```
 
-> **Note:** Include `<colgroup>` with `<col>` elements for column hover and zebra column effects to work.
+> Column hover effects (`col`, `col-outline`) require `<colgroup>` with `<col>` elements matching the column count.
 
-## Table Modifiers
+---
 
-Add these classes to the `<table class="ui-table">` element:
+### Web Component
 
-| Modifier | Description |
-|----------|-------------|
-| `--block-border` | Bottom borders only |
-| `--density-sm` | Smaller font size and padding |
-| `--density-lg` | Larger font size and padding |
-| `--fixed` | Fixed table layout (`table-layout: fixed`) |
-| `--no-border` | Remove all borders |
-| `--no-wrap` | Prevent text wrapping in cells |
-| `--rounded` | Rounded corners (0.33rem) |
-| `--split-cols` | Horizontal spacing between columns |
-| `--split-rows` | Vertical spacing between rows |
-| `--th-dark` | Dark header background |
-| `--th-light` | Light header background |
+```js
+import '@browser.style/table';
+```
 
-### Zebra Striping
-
-| Modifier | Description |
-|----------|-------------|
-| `--zebracol-even` | Stripe even columns |
-| `--zebracol-odd` | Stripe odd columns |
-| `--zebrarow-even` | Stripe even rows |
-| `--zebrarow-odd` | Stripe odd rows |
-
-Column striping requires `<colgroup>` with `<col>` elements.
-
-### Hover Effects
-
-All hover effects are wrapped in `@media (hover: hover)` to prevent sticky states on touch devices.
-
-| Modifier | Description |
-|----------|-------------|
-| `--hover-all` | Enable all hover effects |
-| `--hover-col` | Column background highlight on hover |
-| `--hover-col-outline` | Column outline on hover |
-| `--hover-td` | Cell fill on hover |
-| `--hover-td-outline` | Cell outline on hover |
-| `--hover-tr` | Row background highlight on hover |
-| `--hover-tr-outline` | Row outline on hover |
-| `--hover-th-outline` | Header cell outline on hover |
-
-## Row Modifiers
-
-Apply these classes directly to `<tr>` elements:
-
-| Modifier | Description |
-|----------|-------------|
-| `--row-active` | Active row state (AccentColor background) |
-| `--row-selected` | Selected row state (Highlight background) |
+`<ui-table>` forwards `variant` and `hover` to the child `<table>` as `data-variant` and `data-hover`:
 
 ```html
-<tr class="--row-selected"><td>Selected row</td><td>...</td></tr>
-<tr class="--row-active"><td>Active row</td><td>...</td></tr>
+<ui-table variant="rounded split-cols th-dark" hover="col td">
+  <table>
+    <colgroup><col><col><col></colgroup>
+    <thead>
+      <tr><th>Name</th><th>Role</th><th>Location</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Bruce Wayne</td><td>Batman</td><td>Gotham</td></tr>
+    </tbody>
+  </table>
+</ui-table>
 ```
+
+#### Attributes
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `variant` | string | Space-separated layout variants (forwarded as `data-variant`) |
+| `hover` | string | Space-separated hover effects (forwarded as `data-hover`) |
+| `overflow` | boolean | Enables scroll container with sticky header |
+
+---
+
+### React
+
+```jsx
+import '@browser.style/table';
+import '@browser.style/table/style';
+
+function DataTable() {
+  return (
+    <ui-table variant="rounded" hover="tr">
+      <table>
+        <colgroup><col /><col /><col /></colgroup>
+        <thead><tr><th>Name</th><th>Role</th><th>City</th></tr></thead>
+        <tbody>
+          <tr><td>Bruce Wayne</td><td>Batman</td><td>Gotham</td></tr>
+        </tbody>
+      </table>
+    </ui-table>
+  );
+}
+```
+
+---
+
+### Vue
+
+```vue
+<script setup>
+import '@browser.style/table';
+import '@browser.style/table/style';
+</script>
+
+<template>
+  <ui-table variant="rounded" hover="tr">
+    <table>
+      <colgroup><col /><col /><col /></colgroup>
+      <thead><tr><th>Name</th><th>Role</th><th>City</th></tr></thead>
+      <tbody>
+        <tr><td>Bruce Wayne</td><td>Batman</td><td>Gotham</td></tr>
+      </tbody>
+    </table>
+  </ui-table>
+</template>
+```
+
+---
+
+### Svelte
+
+```svelte
+<script>
+  import '@browser.style/table';
+  import '@browser.style/table/style';
+</script>
+
+<ui-table variant="rounded" hover="tr">
+  <table>
+    <colgroup><col><col><col></colgroup>
+    <thead><tr><th>Name</th><th>Role</th><th>City</th></tr></thead>
+    <tbody>
+      <tr><td>Bruce Wayne</td><td>Batman</td><td>Gotham</td></tr>
+    </tbody>
+  </table>
+</ui-table>
+```
+
+---
+
+### Astro / Server-rendered HTML
+
+```html
+<link rel="stylesheet" href="@browser.style/base/index.css">
+<link rel="stylesheet" href="@browser.style/table/index.css">
+
+<table data-variant="rounded th-dark" data-hover="tr">
+  <colgroup><col><col><col></colgroup>
+  <thead><tr><th>A</th><th>B</th><th>C</th></tr></thead>
+  <tbody><tr><td>1</td><td>2</td><td>3</td></tr></tbody>
+</table>
+```
+
+---
+
+## Layout Variants (`data-variant`)
+
+| Variant | Description |
+|---------|-------------|
+| `block-border` | Bottom borders only |
+| `density-sm` | Compact: smaller font and padding |
+| `density-lg` | Spacious: larger font and padding |
+| `fixed` | `table-layout: fixed` |
+| `no-border` | Remove all borders |
+| `no-wrap` | Prevent text wrapping in cells |
+| `rounded` | Rounded corners on the table |
+| `split-cols` | Horizontal spacing between columns |
+| `split-rows` | Vertical spacing between rows |
+| `th-dark` | Dark header background |
+| `th-light` | Light/tinted header background |
+| `zebracol-even` | Stripe even columns (requires `<colgroup>`) |
+| `zebracol-odd` | Stripe odd columns (requires `<colgroup>`) |
+| `zebrarow-even` | Stripe even rows |
+| `zebrarow-odd` | Stripe odd rows |
+
+Variants are composable:
+
+```html
+<table data-variant="rounded split-cols th-dark zebrarow-odd">
+```
+
+---
+
+## Hover Effects (`data-hover`)
+
+| Value | Description |
+|-------|-------------|
+| `all` | Enable col + td + tr + th-outline simultaneously |
+| `col` | Column background highlight (requires `<colgroup>`) |
+| `col-outline` | Column outline on hover |
+| `td` | Cell fill on hover |
+| `td-outline` | Cell outline on hover |
+| `tr` | Row background highlight |
+| `tr-outline` | Row outline on hover |
+| `th-outline` | Header cell outline on hover |
+
+Composable and touch-safe (`@media (hover: hover)`):
+
+```html
+<table data-variant="rounded" data-hover="col td th-outline">
+```
+
+---
+
+## Row States (`data-row`)
+
+Applied directly to `<tr>` elements:
+
+```html
+<tr data-row="active"><td>Active row</td></tr>
+<tr data-row="selected"><td>Selected row</td></tr>
+```
+
+---
 
 ## Overflow Wrapper
 
-For scrollable tables with sticky headers and columns, wrap the table in `.ui-table-wrapper`:
+For scrollable tables with sticky headers and columns:
 
 ```html
-<div class="ui-table-wrapper --overflowing --rounded" style="max-height: 300px;">
-  <table class="ui-table --hover-tr">
+<ui-table overflow overflowing data-sticky="c0 c1" style="--c0: 0; --c1: 100px; max-height: 300px;">
+  <table data-variant="rounded" data-hover="tr">
     <colgroup><col><col><col></colgroup>
     ...
   </table>
+</ui-table>
+```
+
+Or CSS-only:
+
+```html
+<div data-table-wrapper overflowing data-sticky="c0" style="--c0: 0; max-height: 300px;">
+  <table data-variant="rounded" data-hover="tr">...</table>
 </div>
 ```
 
-### Wrapper Modifiers
+---
 
-| Modifier | Description |
-|----------|-------------|
-| `--overflowing` | Enable sticky header and scroll shadows |
-| `--rounded` | Rounded corners on wrapper border |
-| `--c0` to `--c8` | Make columns 1-9 sticky |
+## Customization
 
-### Sticky Columns
+### All component tokens
 
-For multiple sticky columns, provide cumulative offsets:
+| Token | Default | Description |
+|-------|---------|-------------|
+| `--ui-table-border-color` | `var(--color-border)` | Border color |
+| `--ui-table-border-width` | `var(--border-width)` | Border width |
+| `--ui-table-border-radius` | `0` | Corner radius (`rounded` sets `--radius-md`) |
+| `--ui-table-padding` | `.6ch 1.2ch` | Cell padding |
+| `--ui-table-font-family` | `inherit` | Font family |
+| `--ui-table-font-size` | `inherit` | Font size |
+| `--ui-table-cell-bg` | `inherit` | Cell background |
+| `--ui-table-header-bg` | `inherit` | Header background |
+| `--ui-table-header-font-weight` | `var(--font-weight-semibold)` | Header font weight |
+| `--ui-table-col-hover-bg` | `var(--color-button)` | Column hover background |
+| `--ui-table-cell-hover-bg` | `var(--color-button-text)` | Cell hover fill color |
+| `--ui-table-row-hover-bg` | `var(--color-button)` | Row hover background |
+| `--ui-table-outline-color` | `var(--color-button-text)` | Outline hover color |
+| `--ui-table-outline-width` | `var(--border-width-thick)` | Outline hover width |
+| `--ui-table-zebra-bg` | `var(--color-surface-alt)` | Zebra stripe background |
+| `--ui-table-th-dark-bg` | `var(--color-button-text)` | Dark header background |
+| `--ui-table-active-bg` | `var(--color-accent)` | Active row background |
+| `--ui-table-active-color` | `var(--color-accent-text)` | Active row text |
+| `--ui-table-selected-bg` | `var(--color-highlight)` | Selected row background |
+| `--ui-table-selected-color` | `var(--color-text)` | Selected row text |
 
-```html
-<div class="ui-table-wrapper --overflowing --c0 --c1"
-     style="--c0: 0; --c1: 100px; max-height: 400px;">
-  <table class="ui-table">...</table>
-</div>
-```
+---
 
-The `--c0`, `--c1`, etc. custom properties define the `left` position for each sticky column.
+## Accessibility
 
-## CSS Custom Properties
+- Built on native `<table>` semantics — screen readers handle structure automatically
+- Hover effects use `@media (hover: hover)` to avoid sticky states on touch devices
+- Focus-visible styles on cells for keyboard navigation
+- Row states (`data-row`) are visual only — add `aria-selected="true"` for programmatic selection
 
-### Core Properties
+---
 
-| Property | Default | Description |
-|----------|---------|-------------|
-| `--ui-table-bdrs` | `0` | Border radius |
-| `--ui-table-bdw` | `1px` | Border width |
-| `--ui-table-bdc` | `var(--ButtonBorder)` | Border color |
-| `--ui-table-bdsp-x` | `0` | Horizontal border spacing |
-| `--ui-table-bdsp-y` | `0` | Vertical border spacing |
-| `--ui-table-ff` | `inherit` | Font family |
-| `--ui-table-fs` | `inherit` | Font size |
-| `--ui-table-p` | `.6ch 1.2ch` | Cell padding |
+## Browser support
 
-### Background Properties
-
-| Property | Default | Description |
-|----------|---------|-------------|
-| `--ui-table-td-bg` | `inherit` | Cell background |
-| `--ui-table-th-bg` | `inherit` | Header background |
-| `--ui-table-th-dark` | `var(--ButtonText)` | Dark header color |
-| `--ui-table-zebra-bgc` | `var(--CanvasGray)` | Zebra stripe color |
-
-### Hover Properties
-
-| Property | Default | Description |
-|----------|---------|-------------|
-| `--ui-table-col-hover` | `var(--ButtonFace)` | Column hover background |
-| `--ui-table-td-hover` | `var(--ButtonText)` | Cell hover background |
-| `--ui-table-tr-hover` | `var(--ButtonFace)` | Row hover background |
-| `--ui-table-outline-bdc` | `var(--ButtonText)` | Outline hover color |
-| `--ui-table-outline-bdw` | `2px` | Outline hover width |
-
-### Row State Properties
-
-| Property | Default | Description |
-|----------|---------|-------------|
-| `--ui-table-tr-active-bg` | `var(--AccentColor)` | Active row background |
-| `--ui-table-tr-active-color` | `var(--AccentColorText)` | Active row text |
-| `--ui-table-tr-active-hover` | `var(--AccentColorDark)` | Active row cell hover background |
-| `--ui-table-tr-selected-bg` | `var(--Highlight)` | Selected row background |
-| `--ui-table-tr-selected-color` | `var(--HighlightText)` | Selected row text |
-| `--ui-table-tr-selected-hover` | `var(--AccentColor)` | Selected row cell hover background |
-
-## Examples
-
-### Split Columns with Dark Header
-
-```html
-<table class="ui-table --split-cols --th-dark --rounded --hover-tr">
-  <colgroup><col><col><col></colgroup>
-  <thead><tr><th>A</th><th>B</th><th>C</th></tr></thead>
-  <tbody>
-    <tr><td>1</td><td>2</td><td>3</td></tr>
-  </tbody>
-</table>
-```
-
-### Zebra Rows with Cell Outline Hover
-
-```html
-<table class="ui-table --zebrarow-odd --hover-td-outline">
-  <colgroup><col><col><col></colgroup>
-  <thead><tr><th>A</th><th>B</th><th>C</th></tr></thead>
-  <tbody>
-    <tr><td>1</td><td>2</td><td>3</td></tr>
-    <tr><td>4</td><td>5</td><td>6</td></tr>
-  </tbody>
-</table>
-```
-
-### Scrollable with Sticky Header
-
-```html
-<div class="ui-table-wrapper --overflowing --rounded" style="max-height: 200px;">
-  <table class="ui-table --hover-tr">
-    <colgroup><col><col><col></colgroup>
-    <thead><tr><th>A</th><th>B</th><th>C</th></tr></thead>
-    <tbody>
-      <tr><td>Row 1</td><td>...</td><td>...</td></tr>
-      <!-- More rows -->
-    </tbody>
-  </table>
-</div>
-```
-
-## Notes
-
-- **Column hover requires `<colgroup>`**: The `--hover-col` and `--zebracol-*` modifiers only work if the table has `<colgroup>` with matching `<col>` elements.
-- **Column limit**: Column hover and sticky columns are limited to columns 1-9.
-- **Touch devices**: Hover effects are disabled on touch devices via `@media (hover: hover)`.
-- **RTL support**: Uses logical properties (`inline-start`, `block-end`) for RTL compatibility.
-- **Scroll shadow**: The sticky header shadow uses scroll-driven animations (browsers supporting `animation-timeline: scroll()`).
+- All modern browsers (Chrome, Firefox, Safari, Edge)
+- `:has()` selector: Chrome 105+, Firefox 121+, Safari 15.4+
+- `animation-timeline: scroll()`: Chrome 115+ (scroll shadow degrades gracefully)
+- Column hover limited to 9 columns via explicit CSS selectors
