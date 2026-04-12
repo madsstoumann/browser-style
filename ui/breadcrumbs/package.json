@@ -1,0 +1,43 @@
+{
+  "name": "@browser.style/breadcrumbs",
+  "version": "4.0.0",
+  "description": "CSS-first breadcrumbs component with optional web component wrapper",
+  "type": "module",
+  "module": "index.js",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css"
+  },
+  "files": [
+    "index.js",
+    "index.css",
+    "ui-breadcrumbs.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "breadcrumbs",
+    "css-first",
+    "web-components",
+    "navigation"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/breadcrumbs"
+  },
+  "homepage": "https://browser.style/ui/breadcrumbs",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11"
+  }
+}

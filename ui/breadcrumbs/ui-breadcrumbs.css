@@ -1,26 +1,47 @@
-/* Not using `::marker` because it's not supported in Safari */
+/**
+ * ui-breadcrumbs
+ * @version 4.0.0
+ * @date 2026-04-12
+ * @author Mads Stoumann
+ */
 @layer bs-component {
-	:where(.ui-breadcrumbs) {
-		--_c: color-mix(in srgb, currentColor, Canvas 45%);
+	:where(ui-breadcrumbs, ol[data-breadcrumbs]) {
+		--ui-breadcrumbs-separator-color: var(--color-text-muted);
+
 		all: unset;
-		align-items: var(--ui-breadcrumbs-ai, baseline);
+		align-items: var(--ui-breadcrumbs-align, baseline);
 		display: flex;
+		flex-wrap: wrap;
+
 		& a {
-			color: var(--_c);
+			color: var(--ui-breadcrumbs-link-color, var(--color-text-muted));
 			display: inline;
 			text-decoration: none;
-			text-underline-offset: .5em;
-			&:visited { color: var(--_c); }
+			text-underline-offset: var(--ui-breadcrumbs-underline-offset, .5em);
+			&:visited { color: var(--ui-breadcrumbs-link-color, var(--color-text-muted)); }
 			&:hover { text-decoration: underline; }
 		}
+
 		& li {
 			list-style-type: none;
 			&:not(:last-of-type)::after {
-				content: var(--ui-breadcrumbs-marker, "›");
-				font-size: var(--ui-breadcrumbs-fs, 1.25em);
+				color: var(--ui-breadcrumbs-separator-color);
+				content: var(--ui-breadcrumbs-separator, '\203A');
+				font-size: var(--ui-breadcrumbs-separator-font-size, 1.25em);
 				margin-inline: var(--ui-breadcrumbs-gap, .25ch .5ch);
 			}
-			&:not(:last-of-type)::after { color: var(--_c); }
+		}
+
+		/* separator variants */
+		&:is([variant~="slash"], [data-variant~="slash"]) li:not(:last-of-type)::after {
+			content: '/';
+		}
+		&:is([variant~="dot"], [data-variant~="dot"]) li:not(:last-of-type)::after {
+			content: '\00B7';
+			font-size: var(--ui-breadcrumbs-separator-font-size, 1.5em);
+		}
+		&:is([variant~="arrow"], [data-variant~="arrow"]) li:not(:last-of-type)::after {
+			content: '\2192';
 		}
 	}
 }
