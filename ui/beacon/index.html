@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Beacon</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="CSS-first live indicator with blink and ticker modes.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="ui-beacon.css">
+	<script type="module" src="index.js"></script>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Beacon</h2>
+	<p>
+		A live indicator combining two animation modes: a <strong>live ticker</strong> (default) with sliding text and animated dots, and a <strong>classic blink</strong> variant with click-to-pause toggle.
+	</p>
+
+	<hr>
+	<h2>CSS-only</h2>
+
+	<h3>Default (live ticker)</h3>
+	<ui-beacon>
+		<span>Live <i></i></span>
+	</ui-beacon>
+
+	<br>
+	<h3>With opposite color-scheme</h3>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<ui-beacon>
+			<span>Live <i></i></span>
+		</ui-beacon>
+	</div>
+
+	<br>
+	<h3>With right-to-left</h3>
+	<div dir="rtl">
+		<ui-beacon>
+			<span>Live <i></i></span>
+		</ui-beacon>
+	</div>
+
+	<br>
+	<h3>Blink variant</h3>
+	<p>Click to pause/resume.</p>
+	<ui-beacon variant="blink">
+		<label>
+			<input type="checkbox" data-sr>
+			<span>Live now</span>
+		</label>
+	</ui-beacon>
+
+	<br><br>
+	<h3>Blink with opposite color-scheme</h3>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<ui-beacon variant="blink">
+			<label>
+				<input type="checkbox" data-sr>
+				<span>Live now</span>
+			</label>
+		</ui-beacon>
+	</div>
+
+	<hr>
+	<h2>Semantic Colors</h2>
+
+	<h3>Live ticker</h3>
+	<div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: start;">
+		<ui-beacon>
+			<span>Default <i></i></span>
+		</ui-beacon>
+		<ui-beacon color="info">
+			<span>Info <i></i></span>
+		</ui-beacon>
+		<ui-beacon color="success">
+			<span>Active <i></i></span>
+		</ui-beacon>
+		<ui-beacon color="warning">
+			<span>Caution <i></i></span>
+		</ui-beacon>
+		<ui-beacon color="error">
+			<span>Live <i></i></span>
+		</ui-beacon>
+	</div>
+
+	<br>
+	<h3>Blink variant</h3>
+	<div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: start;">
+		<ui-beacon variant="blink">
+			<label><input type="checkbox" data-sr><span>Default</span></label>
+		</ui-beacon>
+		<ui-beacon variant="blink" color="info">
+			<label><input type="checkbox" data-sr><span>Info</span></label>
+		</ui-beacon>
+		<ui-beacon variant="blink" color="success">
+			<label><input type="checkbox" data-sr><span>Active</span></label>
+		</ui-beacon>
+		<ui-beacon variant="blink" color="warning">
+			<label><input type="checkbox" data-sr><span>Caution</span></label>
+		</ui-beacon>
+		<ui-beacon variant="blink" color="error">
+			<label><input type="checkbox" data-sr><span>LIVE</span></label>
+		</ui-beacon>
+	</div>
+
+	<hr>
+	<h2>Web Component</h2>
+	<p>The web component auto-generates the inner structure (dots for live, label+checkbox for blink).</p>
+
+	<h3>Live ticker</h3>
+	<ui-beacon>Live</ui-beacon>
+
+	<br>
+	<h3>Live ticker with color</h3>
+	<div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: start;">
+		<ui-beacon color="info">Info</ui-beacon>
+		<ui-beacon color="success">Active</ui-beacon>
+		<ui-beacon color="warning">Caution</ui-beacon>
+		<ui-beacon color="error">Live</ui-beacon>
+	</div>
+
+	<br>
+	<h3>Blink</h3>
+	<ui-beacon variant="blink">Live now</ui-beacon>
+
+	<br><br>
+	<h3>Blink with color</h3>
+	<div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: start;">
+		<ui-beacon variant="blink" color="info">Info</ui-beacon>
+		<ui-beacon variant="blink" color="success">On Air</ui-beacon>
+		<ui-beacon variant="blink" color="warning">Caution</ui-beacon>
+		<ui-beacon variant="blink" color="error">LIVE</ui-beacon>
+	</div>
+
+	<hr>
+	<h2>Token Customization</h2>
+	<ui-beacon style="--ui-beacon-bg: crimson; --ui-beacon-color: white; --ui-beacon-slide-duration: 8s;">
+		<span>Custom <i></i></span>
+	</ui-beacon>
+
+</body>
+</html>

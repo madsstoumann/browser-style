@@ -1,0 +1,89 @@
+/**
+ * ui-beacon
+ * @version 4.0.0
+ * @date 2026-04-12
+ * @author Mads Stoumann
+ */
+@layer bs-component {
+	:where(ui-beacon) {
+		--ui-beacon-bg: var(--color-accent);
+		--ui-beacon-color: var(--color-accent-text);
+
+		display: block;
+		overflow: hidden;
+		width: fit-content;
+
+		/* default: live ticker */
+		background: var(--ui-beacon-track-bg, var(--color-highlight));
+
+		& > span {
+			align-items: center;
+			animation: beacon-slide var(--ui-beacon-slide-duration, 5s) infinite linear;
+			background: var(--ui-beacon-bg);
+			color: var(--ui-beacon-color);
+			display: flex;
+			font-size: var(--ui-beacon-font-size, smaller);
+			font-weight: var(--ui-beacon-font-weight, var(--font-weight-medium));
+			gap: 1ch;
+			padding: var(--ui-beacon-padding, 0.25ch 1.5ch);
+		}
+
+		/* animated dots */
+		& i {
+			--_g: no-repeat radial-gradient(circle closest-side, currentColor 90%, #0000);
+			animation: beacon-dots 1.5s infinite linear;
+			aspect-ratio: 4 / 1;
+			background: var(--_g) 0% 50%, var(--_g) 50% 50%, var(--_g) 100% 50%;
+			background-size: calc(100%/3) 100%;
+			display: block;
+			width: 1.4em;
+		}
+
+		/* colors */
+		&[color]           { --ui-beacon-color: hsl(0, 0%, 100%); }
+		&[color="info"]    { --ui-beacon-bg: var(--color-info); }
+		&[color="success"] { --ui-beacon-bg: var(--color-success); }
+		&[color="warning"] { --ui-beacon-bg: var(--color-warning); }
+		&[color="error"]   { --ui-beacon-bg: var(--color-error); }
+	}
+
+	/* === Blink variant === */
+	ui-beacon[variant~="blink"] {
+		background: var(--ui-beacon-bg);
+		color: var(--ui-beacon-color);
+		cursor: pointer;
+		font-size: var(--ui-beacon-font-size, smaller);
+		overflow: visible;
+		padding: var(--ui-beacon-padding, .33ch 1ch);
+		user-select: none;
+
+		& span {
+			animation: beacon-blink var(--ui-beacon-blink-duration, 2s) infinite;
+		}
+		& input:checked + span {
+			animation-play-state: paused;
+			opacity: 1;
+		}
+		&:has(input:focus-visible) {
+			outline: var(--ring-width) solid var(--ring-color);
+			outline-offset: var(--ring-offset);
+		}
+	}
+
+	@keyframes beacon-blink {
+		50% { opacity: 0; }
+	}
+	@keyframes beacon-slide {
+		70%  { opacity: 1; translate: 0 0; }
+		80%  { translate: -100% 0; }
+		81%  { opacity: 0; translate: 100% 0; }
+		82%  { opacity: 1; }
+		90%  { translate: 100% 0; }
+		100% { translate: 0 0; }
+	}
+	@keyframes beacon-dots {
+		33% { background-size: calc(100%/3) 0%, calc(100%/3) 100%, calc(100%/3) 100%; }
+		50% { background-size: calc(100%/3) 100%, calc(100%/3) 0%, calc(100%/3) 100%; }
+		66% { background-size: calc(100%/3) 100%, calc(100%/3) 100%, calc(100%/3) 0%; }
+	}
+}
