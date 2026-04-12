@@ -1,32 +1,21 @@
 /**
  * ui-accordion
- * @version 4.0.3
- * @date 2026-04-09
+ * @version 4.0.4
+ * @date 2026-04-12
  * @author Mads Stoumann
  */
 @import '../icon/index.css';
 @layer bs-component {
 	:where(ui-accordion) {
-		--ui-accordion-background: inherit;
-		--ui-accordion-bg-hover: linear-gradient(90deg, #0000, var(--color-field, hsl(0, 0%, 97.5%)) 10% 90%, #0000);
-		--ui-accordion-border-color: var(--color-border, hsl(0, 0%, 80%));
+		--ui-accordion-bg-hover: linear-gradient(90deg, #0000, var(--color-field) 10% 90%, #0000);
+		--ui-accordion-border-color: var(--color-border);
 		--ui-accordion-border-radius: 1ch;
 		--ui-accordion-border-style: solid;
-		--ui-accordion-border-width: var(--input-border-width, 1px);
-		--ui-accordion-breakout-border-width: var(--border-width, 1px);
+		--ui-accordion-border-width: var(--input-border-width, var(--border-width));
+		--ui-accordion-breakout-border-width: var(--border-width);
 		--ui-accordion-breakout-unit: var(--spacing-md);
-		--ui-accordion-color: inherit;
 		--ui-accordion-duration: var(--duration-slow);
-		--ui-accordion-gap: var(--spacing-xl);
-		--ui-accordion-horizontal-fixed-height: 400px;
-		--ui-accordion-horizontal-padding-inline: 2ch;
-		--ui-accordion-margin-end: 0;
-		--ui-accordion-media-duration: .6s;
-		--ui-accordion-open-decoration-offset: 0.3ch;
-		--ui-accordion-open-decoration-width: var(--border-width-thick);
-		--ui-accordion-open-decoration: underline;
 		--ui-accordion-padding-block: 1.5ch;
-		--ui-accordion-padding-inline-separate: 2.25ch;
 		--ui-accordion-padding-inline: 1.5ch;
 		--ui-accordion-shadow: none;
 		
@@ -39,8 +28,8 @@
 		interpolate-size: allow-keywords;
 
 		details {
-			background: var(--ui-accordion-background);
-			color: var(--ui-accordion-color);
+			background: var(--ui-accordion-background, inherit);
+			color: var(--ui-accordion-color, inherit);
 			&::details-content {
 				block-size: 0;
 				content-visibility: hidden;
@@ -65,10 +54,10 @@
 				text-decoration: none;
 				transition: background var(--duration-normal) var(--ease-in-out);
 				&::-webkit-details-marker { display: none; }
-				&:focus-visible { outline: var(--ring-width) solid var(--ring-color))); outline-offset: var(--ring-offset); }
+				&:focus-visible { outline: var(--ring-width) solid var(--ring-color); outline-offset: var(--ring-offset); }
 			}			
 			&:not([open]) summary:hover { background: var(--ui-accordion-bg-hover); }
-			&[open] summary { text-decoration: var(--ui-accordion-open-decoration) #0000 var(--ui-accordion-open-decoration-width); text-decoration-skip-ink: auto; text-underline-offset: var(--ui-accordion-open-decoration-offset); transition: text-decoration-color var(--duration-normal) var(--ease-in-out); }
+			&[open] summary { text-decoration: var(--ui-accordion-open-decoration, underline) #0000 var(--ui-accordion-open-decoration-width, var(--border-width-thick)); text-decoration-skip-ink: auto; text-underline-offset: var(--ui-accordion-open-decoration-offset, 0.3ch); transition: text-decoration-color var(--duration-normal) var(--ease-in-out); }
 			&[open] summary:hover { text-decoration-color: currentColor; }
 		}
 		&[no-collapse] {
@@ -159,10 +148,10 @@
 
 	/* separate / shadow */
 	ui-accordion:is([variant~="separate"], [variant~="shadow"]) {
-		gap: var(--ui-accordion-gap);
+		gap: var(--ui-accordion-gap, var(--spacing-xl));
 		details {
 			border: var(--_border);
-			padding-inline: var(--ui-accordion-padding-inline-separate);
+			padding-inline: var(--ui-accordion-padding-inline-separate, 2.25ch);
 		}
 	}
 
@@ -228,16 +217,16 @@
 					&[open]::details-content {
 						opacity: 1;
 						transition:
-							block-size var(--ui-accordion-duration) ease var(--ui-accordion-duration),
-							content-visibility 0s var(--ui-accordion-duration),
-							opacity var(--ui-accordion-duration) ease var(--ui-accordion-duration);
+							block-size var(--ui-accordion-duration) ease var(--ui-accordion-delay, calc(var(--ui-accordion-duration) * 0.5)),
+							content-visibility 0s var(--ui-accordion-delay, calc(var(--ui-accordion-duration) * 0.5)),
+							opacity var(--ui-accordion-duration) ease var(--ui-accordion-delay, calc(var(--ui-accordion-duration) * 0.5));
 					}
 					&:not([open]) {
 						padding-inline: 0;
 						summary {
-							--ui-accordion-bg-hover: linear-gradient(180deg, #0000, var(--_hover, var(--color-field, hsl(0, 0%, 97.5%))) 10% 90%, #0000);
+							--ui-accordion-bg-hover: linear-gradient(180deg, #0000, var(--_hover, var(--color-field)) 10% 90%, #0000);
 							block-size: 100%;
-							padding-inline: var(--ui-accordion-horizontal-padding-inline, 2.5ch);
+							padding-inline: var(--ui-accordion-horizontal-padding-inline, 2ch);
 							writing-mode: vertical-lr;
 						}
 					}
@@ -274,12 +263,12 @@
 					}
 					&[open] [data-split]{
 						block-size: auto;
-						inline-size: calc(50% - var(--ui-accordion-gap));
-						inset-block-start: 0;
-						inset-inline-end: 0;
+						inline-size: calc(50% - var(--ui-accordion-gap, var(--spacing-xl)));
+						inset-block: 0 auto;
+						inset-inline: auto 0;
 						position: absolute;
 						&:is(img, video, picture) {
-							animation: accordion-media-in var(--ui-accordion-media-duration) ease;
+							animation: accordion-media-in var(--ui-accordion-media-duration, 0.6s) ease;
 							object-fit: cover;
 						}
 					}
