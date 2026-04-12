@@ -1,7 +1,7 @@
 /**
  * ui-avatar
  * @version 4.0.2
- * @date 2026-04-09
+ * @date 2026-04-12
  * @author Mads Stoumann
  */
 
@@ -51,33 +51,52 @@
 	:where(ui-avatar[variant~="squircle"]) {
 		--ui-avatar-status-inset: -2cqi;
 		corners: 50% superellipse(2); 
-		img { corners: inherit; }
+		& img, &::before { corners: inherit; }
 	}
 
 	/* `status` indicator */
-	:where(ui-avatar[status]):not([size="xs"])::after {
-		background: var(--ui-avatar-status-color);
-		block-size: var(--ui-avatar-status-size, 20cqi);
-		border: var(--ui-avatar-status-border-width, 3cqi) solid var(--color-surface);
-		border-radius: var(--radius-circle);
-		content: "";
-		display: block;
-		inline-size: var(--ui-avatar-status-size, 20cqi);
-		inset-block-end: var(--ui-avatar-status-inset, 4cqi);
-		inset-inline-end: var(--ui-avatar-status-inset, 4cqi);
-		position: absolute;
+	:where(ui-avatar[status]) {
+		&:not([size="xs"])::after {
+			background: var(--ui-avatar-status-color);
+			block-size: var(--ui-avatar-status-size, 20cqi);
+			border: var(--ui-avatar-status-border-width, 3cqi) solid var(--color-surface);
+			border-radius: var(--radius-circle);
+			content: "";
+			display: block;
+			inline-size: var(--ui-avatar-status-size, 20cqi);
+			inset-block-end: var(--ui-avatar-status-inset, 4cqi);
+			inset-inline-end: var(--ui-avatar-status-inset, 4cqi);
+			position: absolute;
+		}
+		&[status="away"] { --ui-avatar-status-color: var(--color-warning); }
+		&[status="busy"] { --ui-avatar-status-color: var(--color-error); }
+		&[status="offline"] { --ui-avatar-status-color: var(--color-text-muted); }
+		&[status="online"] { --ui-avatar-status-color: var(--color-success); }
 	}
-	:where(ui-avatar[status="online"]) { --ui-avatar-status-color: var(--color-success); }
-	:where(ui-avatar[status="offline"]) { --ui-avatar-status-color: var(--color-text-muted); }
-	:where(ui-avatar[status="busy"]) { --ui-avatar-status-color: var(--color-error); }
-	:where(ui-avatar[status="away"]) { --ui-avatar-status-color: var(--color-warning); }
 
 	/* `ring` */
 	:where(ui-avatar[ring]) {
-		--_ring: attr(ring type(<color>), var(--color-accent, hsl(211, 100%, 50%)));
-		box-shadow:
-			0 0 0 var(--ui-avatar-ring-offset, var(--ring-offset)) var(--color-surface),
-			0 0 0 calc(var(--ui-avatar-ring-offset, var(--ring-offset)) + var(--ui-avatar-ring-width, var(--ring-width))) var(--_ring);
+		--_ring-offset: var(--ui-avatar-ring-offset, calc(var(--ring-offset) + 2px));
+		--_ring-width: var(--ui-avatar-ring-width, var(--ring-width));
+		--_ring: var(--ui-avatar-ring, attr(ring type(<color>), var(--color-accent)));
+
+		&::before {
+			background: var(--_ring);
+			border-radius: inherit;
+			content: "";
+			inset: calc(-1 * (var(--_ring-offset) + var(--_ring-width)));
+			mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+			mask-composite: exclude;
+			padding: var(--_ring-width);
+			pointer-events: none;
+			position: absolute;
+			z-index: -1;
+		}
+
+		&[ring="error"]   { --_ring: var(--color-error); }
+		&[ring="info"]    { --_ring: var(--color-info); }
+		&[ring="success"] { --_ring: var(--color-success); }
+		&[ring="warning"] { --_ring: var(--color-warning); }
 	}
 
 	/* === Avatar Group === */
