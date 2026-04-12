@@ -71,23 +71,46 @@ Available global tokens (defined in `:root`). Full reference: `docs/design-syste
 
 #### 2b. Define component tokens
 
-Naming convention: `--ui-[component]-[property]` with **full readable names** (no Emmet abbreviations).
+Naming convention: `--ui-[component]-[property]`.
 
-Every component token MUST have a fallback chain:
+**Inline vs. declared:** Only declare a component token as a custom property at the top of the component rule block when it is **referenced more than once** (e.g., by variants, pseudo-classes, or child selectors). If a token is used only once, apply it directly on the CSS property with a fallback:
 
 ```css
---ui-tabs-border-color: var(--color-border, hsl(0, 0%, 80%));
---ui-tabs-border-radius: var(--radius-md, 0.375rem);
---ui-tabs-padding: var(--spacing-md, 1rem);
---ui-tabs-duration: var(--duration-normal, .2s);
+/* Single-use — inline with fallback, no separate declaration */
+background: var(--ui-chip-bg, var(--color-button, hsl(0, 0%, 90%)));
+border-radius: var(--ui-chip-bdrs, 3ch);
+color: var(--ui-chip-c, inherit);
+
+/* Multi-use — declared at top, referenced by variants */
+--ui-badge-bg: var(--color-text, hsl(0, 0%, 15%));
+--ui-badge-border-color: transparent;
+```
+
+**Use CSS shorthand properties** where possible instead of separate longhand declarations:
+
+```css
+/* Good — shorthand */
+border: var(--ui-badge-bdw, 1px) solid var(--ui-badge-border-color);
+padding: var(--ui-component-p, .5ch 2ch);
+
+/* Avoid — separate longhands when a shorthand suffices */
+border-width: var(--ui-badge-bdw, 1px);
+border-style: solid;
+border-color: var(--ui-badge-border-color);
+```
+
+When a component needs a complex shorthand assembled from multiple tokens, use a **private custom property** (double-underscore prefix):
+
+```css
+--_border: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+border: var(--_border);
 ```
 
 Rules:
-- **Use full property names**: `border-width` not `bdw`, `border-color` not `bdc`
 - **Always include a hardcoded fallback** as the last value so the component works without core.css
 - **Use `light-dark()` for color fallbacks** that should adapt to dark mode (see `DESIGN.md` for all HSL values)
 - **Map to the closest global token** where one exists
-- **Declare all component tokens** at the top of the component rule block
+- **Prefer shorthand** CSS properties (`border`, `padding`, `margin`, `gap`) over separate longhands
 - **Reference `DESIGN.md`** for actual token values (HSL colors, cubic-bezier easings, shadow CSS, etc.) when writing hardcoded fallbacks
 
 #### 2c. Rename any PascalCase properties
@@ -145,29 +168,83 @@ Components with hardcoded `max-width`/`max-inline-size` should use `--width-*` t
 
 #### 3b. Use `:where()` for zero-specificity base styles
 
-Target the custom element directly — not classes:
+For custom elements, target the element name directly. Multi-use tokens go at the top; single-use tokens go inline on their CSS property:
 
 ```css
-:where(ui-tabs) {
-  --ui-tabs-border-color: var(--color-border, hsl(0, 0%, 80%));
-  /* ... tokens ... */
-  border-color: var(--ui-tabs-border-color);
+:where(ui-badge) {
+  /* Multi-use tokens — declared here because variants override them */
+  --ui-badge-bg: var(--color-text, hsl(0, 0%, 15%));
+  --ui-badge-border-color: transparent;
+
+  /* Single-use tokens — inline with fallback */
+  background: var(--ui-badge-bg);
+  border: 1px solid var(--ui-badge-border-color);
+  border-radius: var(--ui-badge-border-radius, var(--radius-circle, 50%));
+  color: var(--ui-badge-color, var(--color-surface, hsl(0, 0%, 100%)));
+  display: inline-grid;
+  font-size: var(--ui-badge-font-size, .675rem);
+  height: var(--ui-badge-size, 1.5rem);
 }
 ```
 
-#### 3c. Variant pattern
-
-Use the `variant` attribute with space-separated values on custom elements:
-
-```html
-<ui-tabs variant="pills rounded">
-```
-
-CSS targets variants with `[variant~="value"]`:
+For components not yet converted to custom elements, use a class selector:
 
 ```css
-:where(ui-tabs[variant~="pills"]) > .ui-tab { /* ... */ }
+:where(.ui-chip) {
+  background: var(--ui-chip-bg, var(--color-button, hsl(0, 0%, 90%)));
+  border-radius: var(--ui-chip-bdrs, 3ch);
+  color: var(--ui-chip-c, inherit);
+}
 ```
+
+#### 3c. Attribute sections with comments
+
+Use `variant` attribute with space-separated values for custom elements. Use `data-variant` for native HTML elements where `variant` is not a valid attribute. Add a **short comment** above each attribute group:
+
+```css
+:where(ui-badge) {
+  /* ... base styles ... */
+
+  /* Colors */
+  &[color="info"]    { --ui-badge-bg: var(--color-info, hsl(210, 60%, 46%)); }
+  &[color="success"] { --ui-badge-bg: var(--color-success, hsl(136, 41%, 41%)); }
+  &[color="warning"] { --ui-badge-bg: var(--color-warning, hsl(33, 99%, 59%)); }
+  &[color="error"]   { --ui-badge-bg: var(--color-error, hsl(360, 60%, 46%)); }
+
+  /* Variants */
+  &[variant~="inline"] {
+    position: static;
+    translate: 0;
+  }
+  &[variant~="text"] {
+    --ui-badge-border-radius: var(--radius-sm, 0.25em);
+    height: auto;
+    padding: .33ch .66ch;
+  }
+}
+```
+
+For complex components, variant selectors live **outside** the base `:where()` block at full specificity:
+
+```css
+/* === Variants === */
+
+/* bordered */
+ui-accordion[variant~="bordered"] {
+  border: var(--_border);
+  details { padding-inline: var(--ui-accordion-padding-inline); }
+}
+
+/* breakout */
+ui-accordion[variant~="breakout"] { /* ... */ }
+
+/* divided — shared by bordered/breakout/divided */
+ui-accordion:is([variant~="bordered"], [variant~="breakout"], [variant~="divided"]) details:not(:last-of-type) {
+  border-block-end: var(--_border);
+}
+```
+
+Use `:is()` to combine related variant selectors that share rules. Never define the same tokens in multiple selectors.
 
 **`data-variant` fallback for native elements:** When a component wraps a native HTML element (e.g., `<blockquote>`, `<table>`) rather than a custom element, use `data-variant` instead of `variant` to avoid validation warnings. Target both in CSS:
 
@@ -176,8 +253,6 @@ CSS targets variants with `[variant~="value"]`:
   /* variant styles */
 }
 ```
-
-Consolidate duplicate variant rules — never define the same tokens in both a class-based and attribute-based selector.
 
 #### 3d. Create `index.css`
 
@@ -399,7 +474,7 @@ Update `ui/$ARGUMENTS/index.html` to demonstrate both modes:
 
 Run the following checks:
 
-1. **Token audit**: Every hardcoded color/spacing/radius in the CSS should be a component token referencing a global token with a hardcoded fallback
+1. **Token audit**: Every hardcoded color/spacing/radius in the CSS should use a component token referencing a global token with a hardcoded fallback — either declared at root (multi-use) or inline on the property (single-use)
 2. **Dark mode**: Color fallbacks use `light-dark()` where appropriate (check `DESIGN.md` for correct HSL pairs)
 3. **No PascalCase**: `grep -E '--[A-Z]' ui/$ARGUMENTS/*.css` should return nothing
 4. **No innerHTML with data**: Verify the JS never sets innerHTML with attribute values
@@ -415,6 +490,10 @@ Use `AskUserQuestion` to confirm with the user before committing:
 
 - [ ] Component tokens use `--ui-[component]-[property]` naming
 - [ ] All tokens have fallback chains (global token + hardcoded)
+- [ ] Single-use tokens are inline on the property, not declared at root
+- [ ] Multi-use tokens (overridden by variants) are declared at root
+- [ ] CSS shorthand properties used where possible
+- [ ] Attribute sections have short comments (`/* Colors */`, `/* Variants */`)
 - [ ] CSS wrapped in `@layer bs-component`
 - [ ] Base styles use `:where()` for zero specificity
 - [ ] Light DOM web component (no Shadow DOM)
