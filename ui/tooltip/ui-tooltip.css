@@ -88,8 +88,7 @@
 	:where(ui-tooltip[position^="bottom"]) {
 		background: var(--ui-tooltip-background, var(--color-text)) 0 100% / 100% calc(100% + var(--_h));
 		border-radius: min(var(--_r), var(--_p) - var(--_b)/2) min(var(--_r), 100% - var(--_p) - var(--_b)/2) var(--_r) var(--_r) / var(--_r);
-		inset-block-end: auto;
-		inset-block-start: calc(100% + var(--ui-tooltip-offset, 0.25em) + var(--_h));
+		inset-block: calc(100% + var(--ui-tooltip-offset, 0.25em) + var(--_h)) auto;
 		inset-inline-start: 50%;
 		translate: -50% 0;
 		&::before {
@@ -99,8 +98,8 @@
 	}
 
 	/* alignment — start/end shifts the bubble; arrow stays near the trigger edge */
-	:where(ui-tooltip[position$="-start"]) { --_p: 1em; inset-inline-start: 0; translate: 0 0; }
-	:where(ui-tooltip[position$="-end"])   { --_p: calc(100% - 1em); inset-inline-start: auto; inset-inline-end: 0; translate: 0 0; }
+	:where(ui-tooltip[position$="-start"]) { --_p: 1em; inset-inline: 0 auto; translate: 0 0; }
+	:where(ui-tooltip[position$="-end"])   { --_p: calc(100% - 1em); inset-inline: auto 0; translate: 0 0; }
 
 	/* rtl — flip center-aligned translate */
 	:where(ui-tooltip:not([position$="-start"], [position$="-end"])):dir(rtl) {
