@@ -1,0 +1,42 @@
+{
+  "name": "@browser.style/blockquote",
+  "version": "4.0.0",
+  "description": "CSS-first blockquote component with optional web component wrapper",
+  "type": "module",
+  "module": "index.js",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css"
+  },
+  "files": [
+    "index.js",
+    "index.css",
+    "ui-blockquote.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "blockquote",
+    "css-first",
+    "web-components"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/blockquote"
+  },
+  "homepage": "https://browser.style/ui/blockquote",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11"
+  }
+}

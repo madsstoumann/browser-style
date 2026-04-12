@@ -1,62 +1,80 @@
+/**
+ * ui-blockquote
+ * @version 4.0.0
+ * @date 2026-04-12
+ * @author Mads Stoumann
+ */
 @layer bs-component {
-	:where(.ui-blockquote) {
+	:where(ui-blockquote, blockquote[data-variant]) {
+		--ui-blockquote-accent-color: var(--color-text-muted);
+		--ui-blockquote-accent-font-size: var(--font-size-9xl);
+
+		display: block;
 		margin-inline: auto;
 		position: relative;
+
 		& cite {
 			display: block;
 			margin-block-start: 1ch;
-			&::before { content: '— '; }
+			&::before { content: '\2014\00a0'; }
 		}
-		&.--bigquote {
+
+		/* bigquote — large decorative open-quote */
+		&:is([variant~="bigquote"], [data-variant~="bigquote"]) {
 			border: 0;
-			padding-inline-start: 5rem;
+			padding-inline-start: var(--ui-blockquote-bigquote-indent, 5rem);
 			&::before {
-				color: var(--GrayText);
-				content: '“';
+				color: var(--ui-blockquote-accent-color);
+				content: '\201C';
 				display: block;
-				font-family: ui-serif, serif;
-				font-size: 10rem;
+				font-family: var(--ui-blockquote-accent-font-family, ui-serif, serif);
+				font-size: var(--ui-blockquote-accent-font-size);
 				inset-block-start: 0;
 				inset-inline-start: 0;
-				line-height: 0.5;
+				line-height: var(--line-height-none);
 				position: absolute;
 			}
 		}
-		&.--breaker {
+
+		/* breaker — centered with horizontal rules */
+		&:is([variant~="breaker"], [data-variant~="breaker"]) {
 			border: 0;
+			max-width: var(--ui-blockquote-breaker-max-width, var(--width-xs));
 			padding: 0;
-			max-width: 320px;
 			text-align: center;
 			&::after,
 			&::before {
-				background-color: var(--GrayText);
+				background-color: var(--ui-blockquote-accent-color);
 				content: '';
 				display: block;
-				height: 1px;
-				margin: 3ch auto;
+				height: var(--border-width);
+				margin: var(--ui-blockquote-breaker-rule-spacing, 3ch) auto;
 				width: 75%;
 			}
 		}
-		&.--code {
+
+		/* code — curly brace decoration */
+		&:is([variant~="code"], [data-variant~="code"]) {
 			border: 0;
-			padding-inline: 6ch;
+			padding-inline: var(--ui-blockquote-code-indent, 6ch);
 			text-align: center;
-				&::before, &::after {
-					color: var(--GrayText);
-					font-size: 8rem;
-					line-height: 0.5;
-					position: absolute;
-					top: 0;
-				}
-				&::before {
-					content: '{';
-					inset-inline-start: 0;
-					padding-inline-end: .5ch;
-				}
-				&::after {
-					content: '}';
-					inset-inline-end: 0;
-					padding-inline-start: .5ch; }
+			&::before, &::after {
+				color: var(--ui-blockquote-accent-color);
+				font-size: var(--ui-blockquote-accent-font-size);
+				line-height: var(--line-height-none);
+				position: absolute;
+				top: 0;
+			}
+			&::before {
+				content: '{';
+				inset-inline-start: 0;
+				padding-inline-end: .5ch;
+			}
+			&::after {
+				content: '}';
+				inset-inline-end: 0;
+				padding-inline-start: .5ch;
+			}
 		}
 	}
 }
