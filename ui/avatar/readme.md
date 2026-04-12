@@ -7,7 +7,7 @@ A CSS-first avatar component with random per-element colors, status indicators, 
 - Pure CSS color generation using `random(per-element)` and `contrast-color()`
 - Shape variants: circle (default), square, squircle (`corner-shape`)
 - Status indicators: online, offline, busy, away
-- Activity ring with customizable color
+- Activity ring with semantic colors, custom colors, and gradients
 - Group layouts: stack (overlapping), spread
 - Overflow counting: CSS-only via `max` attribute, or framework-rendered via `overflow` attribute
 - Light/dark mode support via `light-dark()`
@@ -107,7 +107,7 @@ The web component uses the **exact same** HTML structure as CSS-only. It's a con
 | `size` | string | Predefined size: `xs`, `sm`, `md`, `lg` (default), `xl`, `2xl` |
 | `variant` | string | Shape variant: `square`, `squircle` (default: circle) |
 | `status` | string | Status indicator: `online`, `offline`, `busy`, `away` |
-| `ring` | color \| boolean | Activity ring. Empty = accent color, or provide a CSS color value |
+| `ring` | color \| boolean | Activity ring: `error`, `info`, `success`, `warning`, a custom color, or use `--ui-avatar-ring` for gradients |
 | `tooltip` | string | Tooltip text (uses `ui-tooltip` styles) |
 | `overflow` | boolean | Marks this avatar as the overflow counter element (see [Overflow](#overflow)) |
 
@@ -383,8 +383,9 @@ The `overflow` attribute applies a neutral background and muted text color, matc
 | `--ui-avatar-font-size` | `33cqi` | Initials font size |
 | `--ui-avatar-size` | `4em` | Avatar dimensions |
 | `--ui-avatar-overlap` | `-1cqi` | Overlap in stack layout |
-| `--ui-avatar-ring-offset` | `2px` | Ring gap from avatar edge |
-| `--ui-avatar-ring-width` | `2px` | Ring stroke width |
+| `--ui-avatar-ring` | `attr(ring)` | Background for the ring |
+| `--ui-avatar-ring-offset` | `calc(var(--ring-offset) + 2px)` | Ring gap from avatar edge |
+| `--ui-avatar-ring-width` | `var(--ring-width)` | Ring stroke width |
 | `--ui-avatar-status-size` | `20cqi` | Status indicator size |
 | `--ui-avatar-status-border-width` | `3cqi` | Status indicator border |
 | `--ui-avatar-status-inset` | `2cqi` | Status indicator position |

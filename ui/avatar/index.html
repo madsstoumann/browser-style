@@ -52,6 +52,15 @@
 	</ui-avatar-group>
 
 	<br>
+	<h2>Status</h2>
+	<p>Use the <code>status</code> attribute to show a presence indicator. Available options: <code>online</code>, <code>offline</code>, <code>busy</code>, and <code>away</code>.</p>
+	<div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+		<ui-avatar status="online"><abbr title="Online">ON</abbr></ui-avatar>
+		<ui-avatar status="offline"><abbr title="Offline">OF</abbr></ui-avatar>
+		<ui-avatar status="busy"><abbr title="Busy">BU</abbr></ui-avatar>
+		<ui-avatar status="away"><abbr title="Away">AW</abbr></ui-avatar>
+	</div>
+	<br>
 	<h2>Sizes and Variants</h2>
 	<p>Use the <code>size</code> attribute: <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code> (default), <code>xl</code>, <code>2xl</code>.</p>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
@@ -147,16 +156,6 @@
 			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="John Doe" loading="lazy">
 			<ui-tooltip size="match" position="bottom">John Doe</ui-tooltip>
 		</ui-avatar>
-	</div>
-
-	<br>
-	<h2>Status</h2>
-	<p>Use the <code>status</code> attribute to show a presence indicator. Available options: <code>online</code>, <code>offline</code>, <code>busy</code>, and <code>away</code>.</p>
-	<div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
-		<ui-avatar status="online"><abbr title="Online">ON</abbr></ui-avatar>
-		<ui-avatar status="offline"><abbr title="Offline">OF</abbr></ui-avatar>
-		<ui-avatar status="busy"><abbr title="Busy">BU</abbr></ui-avatar>
-		<ui-avatar status="away"><abbr title="Away">AW</abbr></ui-avatar>
 	</div>
 
 	<br>
@@ -360,7 +359,6 @@
 	</ui-avatar-group>
 
 	<script type="module">
-		// import './index.js';
 		import attrFallback from '/assets/js/attr_fallback.js';
 		attrFallback({
 			'ui-avatar[ring]': { '--_ring': ['ring', 'hsl(211, 100%, 50%)'] },
