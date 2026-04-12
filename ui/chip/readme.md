@@ -190,6 +190,12 @@ Chips can host `<ui-badge>` at any corner:
 <ui-chip color="info">Messages <ui-badge color="warning" position="bottom-right">2</ui-badge></ui-chip>
 ```
 
+Add `variant="inline"` to the badge to automatically push it to the inline end inside a chip:
+
+```html
+<ui-chip>Inline badge<ui-badge color="warning" variant="inline">4</ui-badge></ui-chip>
+```
+
 ---
 
 ## Customization

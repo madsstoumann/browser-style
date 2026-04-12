@@ -6,7 +6,7 @@ A CSS-first badge component for status indicators and notification counts. It po
 
 - Auto-positioning — parent gets `position: relative` automatically
 - Semantic colors: info, success, warning, error
-- Three sizes: small, medium (default), large
+- Four sizes: extra-small (`xs`), small, medium (default), large
 - Shape variants: circle (default), square, squircle (`corner-shape`)
 - Four corner positions: top-right (default), top-left, bottom-right, bottom-left
 - Circular-host awareness — badge sits on the arc, not outside the circle
@@ -85,7 +85,7 @@ The web component uses the **exact same** HTML structure as CSS-only. It's a con
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `color` | string | Semantic color: `info`, `success`, `warning`, `error` |
-| `size` | string | Predefined size: `sm`, `md` (default), `lg` |
+| `size` | string | Predefined size: `xs`, `sm`, `md` (default), `lg` |
 | `position` | string | Corner placement: `top-right` (default), `top-left`, `bottom-right`, `bottom-left` |
 | `host-shape` | string | Hint about the parent's shape. `circle` offsets the badge inward so it sits on the 45° arc. Auto-applied when the parent is a circular `<ui-avatar>`. |
 | `variant` | string | Space-separated: `inline`, `text`, `square`, `squircle` |
@@ -192,9 +192,10 @@ Use the `color` attribute for semantic colors:
 
 ## Sizes
 
-Use the `size` attribute: `sm`, `md` (default), `lg`.
+Use the `size` attribute: `xs`, `sm`, `md` (default), `lg`.
 
 ```html
+<ui-badge size="xs" color="info">1</ui-badge>
 <ui-badge size="sm" color="info">3</ui-badge>
 <ui-badge size="md" color="info">12</ui-badge>
 <ui-badge size="lg" color="info">99</ui-badge>
@@ -274,7 +275,7 @@ The squircle variant uses `corners: 50% superellipse(2)`. Browsers without suppo
 | Token | Default | Description |
 |-------|---------|-------------|
 | `--ui-badge-size` | `var(--size-5, 1.5rem)` | Height and min-width |
-| `--ui-badge-bg` | `var(--color-text)` | Background color |
+| `--ui-badge-background` | `var(--color-text)` | Background color |
 | `--ui-badge-color` | `var(--color-surface)` | Text color |
 | `--ui-badge-border-color` | `transparent` | Border color |
 | `--ui-badge-border-width` | `var(--border-width, 1px)` | Border width |

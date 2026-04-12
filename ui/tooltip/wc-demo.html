@@ -63,6 +63,111 @@
 		<button type="button">Error<ui-tooltip color="error">Error tooltip</ui-tooltip></button>
 	</div>
 
+	<h3>Gradient backgrounds</h3>
+	<p>Because the bubble and arrow share one element, a gradient flows seamlessly across both.</p>
+	<div class="demo-row">
+		<button type="button">
+			Premium
+			<ui-tooltip style="--ui-tooltip-background: linear-gradient(135deg, hsl(260, 70%, 55%), hsl(320, 70%, 55%));">
+				Pro feature
+			</ui-tooltip>
+		</button>
+		<button type="button">
+			Sunset
+			<ui-tooltip position="bottom" style="--ui-tooltip-background: linear-gradient(135deg, hsl(20, 90%, 55%), hsl(340, 80%, 60%));">
+				Warm gradient
+			</ui-tooltip>
+		</button>
+		<button type="button">
+			Ocean
+			<ui-tooltip position="bottom" style="--ui-tooltip-background: linear-gradient(135deg, hsl(190, 80%, 50%), hsl(220, 70%, 50%));">
+				Cool gradient
+			</ui-tooltip>
+		</button>
+	</div>
+
+	<h3>Sizes</h3>
+	<p>Use the <code>size</code> attribute: <code>sm</code>, <code>md</code> (default), <code>lg</code>, <code>match</code>. The <code>match</code> size scales with its container's inline size (uses container query units).</p>
+	<div class="demo-row">
+		<button type="button">Small<ui-tooltip size="sm">Small tooltip</ui-tooltip></button>
+		<button type="button">Medium<ui-tooltip size="md">Medium tooltip</ui-tooltip></button>
+		<button type="button">Large<ui-tooltip size="lg">Large tooltip</ui-tooltip></button>
+	</div>
+
+	<h3>Multiline / wrapping</h3>
+	<p>Add <code>variant="multiline"</code> to allow wrapping. Set <code>--ui-tooltip-max-width</code> to control the max width.</p>
+	<div class="demo-row">
+		<button type="button">
+			Long tooltip
+			<ui-tooltip variant="multiline" style="--ui-tooltip-max-width: 16rem;">
+				This is a longer tooltip that wraps onto multiple lines so it can hold a sentence or two of explanation.
+			</ui-tooltip>
+		</button>
+	</div>
+
+	<h3>No arrow</h3>
+	<p>Add <code>variant="no-arrow"</code> for a plain rounded rectangle (no speech-bubble tail).</p>
+	<div class="demo-row">
+		<button type="button">No arrow<ui-tooltip variant="no-arrow">Plain rectangle</ui-tooltip></button>
+		<button type="button">Bottom<ui-tooltip variant="no-arrow" position="bottom">Below</ui-tooltip></button>
+	</div>
+
+	<h3>Inline help in body text</h3>
+	<p>Use <code>variant="underline"</code> or <code>variant="overline"</code> to style the parent element with a dotted text decoration and help cursor — perfect for inline help text inside paragraphs.</p>
+	<p>
+		The display uses
+		<abbr>
+			OLED panels
+			<ui-tooltip variant="underline">Organic Light-Emitting Diode</ui-tooltip>
+		</abbr>
+		for true blacks. The
+		<abbr>
+			GPU
+			<ui-tooltip variant="underline" color="info">Graphics Processing Unit — handles all visual rendering</ui-tooltip>
+		</abbr>
+		can also be used for
+		<abbr>
+			compute workloads
+			<ui-tooltip variant="underline" color="success">General-purpose parallel computation via CUDA, Metal, or WebGPU</ui-tooltip>
+		</abbr>.
+	</p>
+	<p>Or use <code>variant="help"</code> alone for just the help cursor without any text decoration:</p>
+	<p>
+		Hover this <span><strong>highlighted phrase</strong><ui-tooltip variant="help">Just a help cursor, no underline</ui-tooltip></span> for more info.
+	</p>
+
+	<h3>Delay</h3>
+	<p>Use <code>delay</code>: <code>none</code>, <code>short</code> (default ~100ms), <code>long</code> (~400ms).</p>
+	<div class="demo-row">
+		<button type="button">No delay<ui-tooltip delay="none">Instant</ui-tooltip></button>
+		<button type="button">Short<ui-tooltip delay="short">100ms</ui-tooltip></button>
+		<button type="button">Long<ui-tooltip delay="long">400ms</ui-tooltip></button>
+	</div>
+
+	<h3>On chips</h3>
+	<div class="demo-row">
+		<ui-chip color="info">
+			Premium
+			<ui-tooltip position="bottom">All features unlocked</ui-tooltip>
+		</ui-chip>
+		<ui-chip variant="outline" color="success">
+			Available
+			<ui-tooltip position="bottom" color="success">In stock — ships today</ui-tooltip>
+		</ui-chip>
+	</div>
+
+	<h3>With opposite color-scheme</h3>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<div class="demo-row">
+			<button type="button">Default<ui-tooltip>Default tooltip</ui-tooltip></button>
+			<button type="button">Info<ui-tooltip color="info">Info tooltip</ui-tooltip></button>
+			<button type="button">Success<ui-tooltip color="success">Success tooltip</ui-tooltip></button>
+			<button type="button">Error<ui-tooltip color="error" position="bottom">Error tooltip</ui-tooltip></button>
+		</div>
+	</div>
+
+	<br>
+
 	<h3>Avatars (size="match")</h3>
 	<p>The web component sets <code>aria-describedby</code> on each focusable avatar, so screen readers announce the tooltip text on focus.</p>
 	<div class="demo-row">
