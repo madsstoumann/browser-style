@@ -20,9 +20,9 @@
 
 ## Design Token System
 
-### Source of truth: `ui/base/core.css`
+### Source of truth: `ui/base/tokens.css`
 
-All global tokens are defined in `:root` inside `@layer bs-core`. The system covers 18 categories:
+All global tokens are defined in `:root` inside `@layer bs-core`. Since `@browser.style/base` is a required peer dependency, global tokens are always available — components do not need hardcoded fallbacks when referencing them. The system covers 18 categories:
 
 | Category | Pattern | Example |
 |----------|---------|---------|
@@ -48,11 +48,11 @@ All global tokens are defined in `:root` inside `@layer bs-core`. The system cov
 ### Three-tier token architecture
 
 ```
-Component Token  -->  Global Semantic Token  -->  Hardcoded Fallback
---ui-card-bg         var(--color-surface,         hsl(0, 0%, 100%))
+Component Token  -->  Global Semantic Token
+--ui-card-bg         var(--color-surface)
 ```
 
-Every component token MUST have a fallback chain ending in a hardcoded value. This ensures components work standalone without `core.css`.
+Since `@browser.style/base` is required, global tokens from `tokens.css` are always available. No hardcoded fallbacks are needed when referencing global tokens. Only add hardcoded fallbacks for component-specific values that don't come from a global token.
 
 ### Naming rules
 
@@ -74,7 +74,8 @@ Every component token MUST have a fallback chain ending in a hardcoded value. Th
 
 | File | Purpose |
 |------|---------|
-| `ui/base/core.css` | Global tokens, CSS reset, element styles |
+| `ui/base/tokens.css` | Global design tokens (source of truth) |
+| `ui/base/core.css` | CSS reset, element styles |
 | `ui/base/form.css` | Form normalization, focus styles using `--ring-*` tokens |
 | `ui/base/button.css` | Button styles (extracted from form.css), focus ring tokens |
 | `ui/base/utility.css` | Utility classes (`bg-*`, `c-*`, layout helpers) |
@@ -274,7 +275,8 @@ Components with hardcoded `max-width`/`max-inline-size` should use `--width-*` t
 
 ```
 ui/base/
-├── core.css              Global design tokens (source of truth)
+├── tokens.css            Global design tokens (source of truth)
+├── core.css              CSS reset, element styles
 ├── form.css              Form styles + focus ring tokens
 ├── button.css            Button styles (extracted from form.css)
 ├── utility.css           Utility classes

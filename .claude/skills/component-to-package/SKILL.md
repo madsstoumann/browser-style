@@ -37,17 +37,17 @@ Use `AskUserQuestion` to confirm:
 - Are there any dependencies on other components (icons, shared utils)?
 - Should the component use Shadow DOM or Light DOM? (Default: Light DOM)
 
-### 2. Refactor design tokens (three-tier architecture)
+### 2. Refactor design tokens (two-tier architecture)
 
-The token system follows three tiers with fallback chains:
+Since `@browser.style/base` is a required peer dependency for all components, global tokens from `ui/base/tokens.css` are always available. No hardcoded fallbacks are needed when referencing global tokens — only component-level tokens that introduce new values need fallbacks.
 
 ```
-Component Token --> Global Semantic Token --> Hardcoded Fallback
+Component Token --> Global Semantic Token (from tokens.css)
 ```
 
-#### 2a. Identify global tokens from `ui/base/core.css`
+#### 2a. Identify global tokens from `ui/base/tokens.css`
 
-Available global tokens (defined in `:root`). Full reference: `docs/design-system-agent.md`.
+Available global tokens (defined in `:root`). Full reference: `DESIGN.md`.
 
 | Category | Tokens |
 |----------|--------|
@@ -73,17 +73,29 @@ Available global tokens (defined in `:root`). Full reference: `docs/design-syste
 
 Naming convention: `--ui-[component]-[property]`.
 
-**Inline vs. declared:** Only declare a component token as a custom property at the top of the component rule block when it is **referenced more than once** (e.g., by variants, pseudo-classes, or child selectors). If a token is used only once, apply it directly on the CSS property with a fallback:
+**Inline vs. declared:** Only declare a component token as a custom property at the top of the component rule block when it is **referenced more than once** (e.g., by variants, pseudo-classes, or child selectors). If a token is used only once, apply it directly on the CSS property:
 
 ```css
-/* Single-use — inline with fallback, no separate declaration */
-background: var(--ui-chip-bg, var(--color-button, hsl(0, 0%, 90%)));
+/* Single-use — inline, no separate declaration needed */
+background: var(--ui-chip-bg, var(--color-button));
 border-radius: var(--ui-chip-bdrs, 3ch);
 color: var(--ui-chip-c, inherit);
 
 /* Multi-use — declared at top, referenced by variants */
---ui-badge-bg: var(--color-text, hsl(0, 0%, 15%));
+--ui-badge-bg: var(--color-text);
 --ui-badge-border-color: transparent;
+```
+
+**Fallback rules:** Global tokens from `tokens.css` are always available (base is a required peer dep), so **no hardcoded fallback is needed** when referencing them. Only add a hardcoded fallback for component-specific values that don't come from a global token:
+
+```css
+/* Global token reference — no fallback needed */
+border-color: var(--ui-component-border-color, var(--color-border));
+duration: var(--ui-component-duration, var(--duration-slow));
+
+/* Component-specific value — hardcoded fallback */
+border-radius: var(--ui-chip-bdrs, 3ch);
+padding: var(--ui-component-p, .5ch 2ch);
 ```
 
 **Use CSS shorthand properties** where possible instead of separate longhand declarations:
@@ -107,11 +119,11 @@ border: var(--_border);
 ```
 
 Rules:
-- **Always include a hardcoded fallback** as the last value so the component works without core.css
-- **Use `light-dark()` for color fallbacks** that should adapt to dark mode (see `DESIGN.md` for all HSL values)
+- **No fallbacks for global tokens** — `tokens.css` is always loaded via the required `@browser.style/base` peer dependency
+- **Hardcoded fallbacks only** for component-specific values not sourced from a global token
 - **Map to the closest global token** where one exists
 - **Prefer shorthand** CSS properties (`border`, `padding`, `margin`, `gap`) over separate longhands
-- **Reference `DESIGN.md`** for actual token values (HSL colors, cubic-bezier easings, shadow CSS, etc.) when writing hardcoded fallbacks
+- **Reference `DESIGN.md`** for actual token values when needed
 
 #### 2c. Rename any PascalCase properties
 
@@ -173,14 +185,14 @@ For custom elements, target the element name directly. Multi-use tokens go at th
 ```css
 :where(ui-badge) {
   /* Multi-use tokens — declared here because variants override them */
-  --ui-badge-bg: var(--color-text, hsl(0, 0%, 15%));
+  --ui-badge-bg: var(--color-text);
   --ui-badge-border-color: transparent;
 
-  /* Single-use tokens — inline with fallback */
+  /* Single-use tokens — inline, no fallback needed for global tokens */
   background: var(--ui-badge-bg);
   border: 1px solid var(--ui-badge-border-color);
-  border-radius: var(--ui-badge-border-radius, var(--radius-circle, 50%));
-  color: var(--ui-badge-color, var(--color-surface, hsl(0, 0%, 100%)));
+  border-radius: var(--ui-badge-border-radius, var(--radius-circle));
+  color: var(--ui-badge-color, var(--color-surface));
   display: inline-grid;
   font-size: var(--ui-badge-font-size, .675rem);
   height: var(--ui-badge-size, 1.5rem);
@@ -191,7 +203,7 @@ For components not yet converted to custom elements, use a class selector:
 
 ```css
 :where(.ui-chip) {
-  background: var(--ui-chip-bg, var(--color-button, hsl(0, 0%, 90%)));
+  background: var(--ui-chip-bg, var(--color-button));
   border-radius: var(--ui-chip-bdrs, 3ch);
   color: var(--ui-chip-c, inherit);
 }
@@ -206,10 +218,10 @@ Use `variant` attribute with space-separated values for custom elements. Use `da
   /* ... base styles ... */
 
   /* Colors */
-  &[color="info"]    { --ui-badge-bg: var(--color-info, hsl(210, 60%, 46%)); }
-  &[color="success"] { --ui-badge-bg: var(--color-success, hsl(136, 41%, 41%)); }
-  &[color="warning"] { --ui-badge-bg: var(--color-warning, hsl(33, 99%, 59%)); }
-  &[color="error"]   { --ui-badge-bg: var(--color-error, hsl(360, 60%, 46%)); }
+  &[color="info"]    { --ui-badge-bg: var(--color-info); }
+  &[color="success"] { --ui-badge-bg: var(--color-success); }
+  &[color="warning"] { --ui-badge-bg: var(--color-warning); }
+  &[color="error"]   { --ui-badge-bg: var(--color-error); }
 
   /* Variants */
   &[variant~="inline"] {
@@ -474,7 +486,7 @@ Update `ui/$ARGUMENTS/index.html` to demonstrate both modes:
 
 Run the following checks:
 
-1. **Token audit**: Every hardcoded color/spacing/radius in the CSS should use a component token referencing a global token with a hardcoded fallback — either declared at root (multi-use) or inline on the property (single-use)
+1. **Token audit**: Every hardcoded color/spacing/radius in the CSS should use a component token referencing a global token — either declared at root (multi-use) or inline on the property (single-use). No hardcoded fallbacks for global tokens.
 2. **Dark mode**: Color fallbacks use `light-dark()` where appropriate (check `DESIGN.md` for correct HSL pairs)
 3. **No PascalCase**: `grep -E '--[A-Z]' ui/$ARGUMENTS/*.css` should return nothing
 4. **No innerHTML with data**: Verify the JS never sets innerHTML with attribute values
@@ -489,7 +501,7 @@ Run the following checks:
 Use `AskUserQuestion` to confirm with the user before committing:
 
 - [ ] Component tokens use `--ui-[component]-[property]` naming
-- [ ] All tokens have fallback chains (global token + hardcoded)
+- [ ] Global token references have no hardcoded fallbacks (base is required)
 - [ ] Single-use tokens are inline on the property, not declared at root
 - [ ] Multi-use tokens (overridden by variants) are declared at root
 - [ ] CSS shorthand properties used where possible

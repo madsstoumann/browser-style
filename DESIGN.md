@@ -15,7 +15,7 @@ Light and dark modes are supported natively via `light-dark()` and `color-scheme
 
 ### Token source of truth
 
-All design tokens are defined as CSS custom properties in [`ui/base/core.css`](ui/base/core.css) inside `@layer bs-core`.
+All design tokens are defined as CSS custom properties in [`ui/base/tokens.css`](ui/base/tokens.css) inside `@layer bs-core`. Since `@browser.style/base` is a required peer dependency for all components, global tokens are always available — no hardcoded fallbacks are needed when referencing them.
 
 ---
 
@@ -314,12 +314,18 @@ Use `color` for status semantics (info, success, warning, error):
 <ui-badge color="success">Active</ui-badge>
 ```
 
-### Three-tier token fallback
+### Token fallback
 
-Every component token chains to a global token with a hardcoded fallback, so components work standalone:
+Component tokens reference global tokens directly — no hardcoded fallback needed since `@browser.style/base` is always loaded:
 
 ```css
---ui-card-bg: var(--color-surface, hsl(0, 0%, 100%));
+--ui-card-bg: var(--color-surface);
+```
+
+Only add hardcoded fallbacks for component-specific values that don't come from a global token:
+
+```css
+border-radius: var(--ui-chip-bdrs, 3ch);
 ```
 
 ---
@@ -327,7 +333,8 @@ Every component token chains to a global token with a hardcoded fallback, so com
 ## Do's and Don'ts
 
 - Do use semantic token names (`--color-border`) not raw values (`hsl(0,0%,80%)`) in component CSS
-- Do provide hardcoded fallbacks in every component token so it works without `core.css`
+- Do reference global tokens without hardcoded fallbacks — `tokens.css` is always loaded via the required base peer dependency
+- Do add hardcoded fallbacks only for component-specific values not sourced from a global token
 - Do use `light-dark()` for any color that should adapt to dark mode
 - Do keep body text at `--line-height-normal` (1.5) for readability
 - Don't tokenize `ch` units — they are already content-relative by design
