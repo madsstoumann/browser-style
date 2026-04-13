@@ -1,359 +1,150 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>UI</title>
+	<title>UI: Components</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="description" content="Browser Style — CSS-first component library and design system.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="./grid/ui-grid.css">
+	<link rel="stylesheet" href="./accordion/ui-accordion.css">
+	<link rel="stylesheet" href="./chip/ui-chip.css">
+	<link rel="stylesheet" href="./icon/index.css">
+
+	<style>
+		a { text-decoration: none; color: inherit; }
+		h3 { margin: 0; }
+		li { list-style: none; }
+		small { line-height: 1; }
+		ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(225px, 1fr)); margin: 0; padding: 0; gap: 1em; }
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
-	<ul>
-		<li>🎨 CSS-only</li>
-		<li>⚡ Install from <code>npm</code></li>
-		<li>* Component is work-in-progress</li>
-	</ul>
+	<p>Browse all components by category. Each links to its CSS-only demo page and, where available, a web component demo.</p>
 
-	<ol class="ui-grid --sm-c-2 --md-c-3">
-		<li><a href="/ui/accordion/">Accordion</a> 🎨</li>
-		<li><a href="/ui/analog-clock/">Analog Clock</a> ⚡</li>
-		<li><a href="/ui/analog-gauge/">Analog Gauge</a> ⚡</li>
-		<li><a href="/ui/async-loader/">Async Loader</a> ⚡</li>
-		<li><a href="/ui/auto-suggest/">Autosuggest</a> ⚡</li>
-		<li><a href="/ui/avatar/">Avatar</a> 🎨</li>
-		<li><a href="/ui/avatar/">Avatar Group</a> 🎨</li>
-		<li><a href="/ui/badge/">Badge</a> 🎨</li>
-		<!-- IGNORE "/ui/base/" -->
-		<li><a href="/apps/utilities/barcode-scanner/">Barcode Scanner</a> ⚡</li>
-		<li><a href="/ui/bento/">Bento</a> 🎨</li>
-		
-		<li><a href="/ui/blink/">Blink</a> 🎨</li>
-		<li><a href="/ui/blockquote/">Blockquote</a> 🎨</li>
-		<li><a href="/ui/breadcrumbs/">Breadcrumbs</a> 🎨</li>
-		<li><a href="/ui/bubble-grid/">Bubble Grid</a> 🎨</li>
-		<li><a href="/ui/button/">Button</a> 🎨</li>
-		<li><a href="/ui/button-group/">Button Group</a> 🎨</li>
-		<li><a href="/apps/utilities/calculator/">Calculator</a></li>
-		<li><a href="/ui/calendar/">Calendar</a></li>
-		<li><a href="/ui/card/">Card</a> 🎨</li>
-		<li><a href="/ui/card-expand">Card Expand</a> 🎨</li>
-		<!-- <li><a href="/ui/card-flip">*Card Flip</a></li> -->
-		<li><a href="/ui/carousel/">Carousel</a></li>
-		<li><a href="/ui/chat/">Chat</a></li>
-		<li><a href="/ui/check-list/">Check List</a> 🎨</li>
-		<li><a href="/ui/check-radio/">Check / Radio</a> 🎨</li>
-		<li><a href="/ui/chip/">Chip</a> 🎨</li>
-		<li><a href="/ui/chronology/">Chronology</a> 🎨</li>
-		<li><a href="/ui/cinema/">Cinema</a> 🎨</li>
-		<li><a href="/ui/circular-range/">Circular Range</a> ⚡</li>
-		<!-- IGNORE "/ui/cms/" -->
-		<li><a href="/ui/color-compare/">Color Compare</a></li>
-		<li><a href="/ui/color-deck/">Color Deck</a> 🎨</li>
-		<li><a href="/ui/color-grid/">Color Grid</a></li>
-		<li><a href="/ui/color-key/">Color Key</a> 🎨</li>
-		<li><a href="/ui/color-mask/">Color Mask</a> 🎨</li>
-		<li><a href="/ui/color-picker/">Color Picker</a></li>
-		<li><a href="/ui/color-swatch/">Color Swatch</a></li>
-		<!-- IGNORE "/ui/color-input/" -->
-		<li><a href="/ui/combobox/">Combobox</a></li>
-		<!-- IGNORE "/ui/common/" -->
-		<li><a href="/ui/confetti/">Confetti</a></li>
-		<li><a href="/ui/config-group/">Config Group</a></li>
-		<li><a href="/ui/context-menu">Context Menu</a></li>
-		<li><a href="/ui/countdown/">Countdown</a></li>
-		<li><a href="/ui/country/">Country</a></li>
-		<!-- <li><a href="/ui/cover-flow/">*Cover Flow</a></li> -->
-		<li><a href="/ui/custom-color/">Custom Color</a></li>
-		<li><a href="/ui/dark-mode/">Dark Mode</a></li>
-		<li><a href="/ui/data/entry">Data Entry</a> ⚡</li>
-		<li><a href="/ui/data/grid/">DataGrid</a> ⚡</li>
-		<li><a href="/ui/data/mapper">Data Mapper</a> ⚡</li>
-		<li><a href="/ui/description-list/">Description List</a> 🎨</li>
-		<!-- IGNORE "/ui/design-tokens/editors/" -->
-		<!-- IGNORE "/ui/design-tokens/styles/" -->
-		<!-- IGNORE "/ui/design-tokens/utils/" -->
-		<li><a href="/apps/media/dev-to/">Dev To</a> ⚡</li>
-		<li><a href="/ui/dialog/">Dialog</a></li>
-		<li><a href="/ui/digital-clock/">Digital Clock</a> ⚡</li>
-		<li><a href="/ui/divider/">Divider</a> 🎨</li>
-		<li><a href="/ui/dock/">Dock</a></li>
-		<li><a href="/ui/draggable/">Draggable</a></li>
-		<li><a href="/ui/drawer/">*Drawer</a></li>
-		<li><a href="/ui/expand-feature">*Expand Feature</a></li>
-		<li><a href="/ui/feature-compare">Feature Compare</a> 🎨</li>
-		<li><a href="/ui/file-list">File List</a></li>
-		<li><a href="/ui/file-tree">File Tree</a> 🎨</li>
-		<li><a href="/ui/flight">Flight</a> 🎨</li>
-		<li><a href="/ui/footer">Footer</a> 🎨</li>
-		<li><a href="/examples/form">Form</a></li>
-		<!-- <li><a href="/ui/form-step">*Form Step</a></li> -->
-		<li><a href="/apps/music/fret-board">Fret Board</a> ⚡</li>
-		<li><a href="/ui/gallery">Gallery</a></li>
-		<li><a href="/ui/gradient-text">Gradient Text</a> 🎨</li>
-		<li><a href="/ui/grid/">Grid</a> 🎨</li>
-		<li><a href="/ui/gui/app/">*GUI App</a></li>
-		<li><a href="/ui/gui/control/">GUI Control</a> ⚡</li>
-		<li><a href="/ui/gui/panel/">GUI Panel</a> ⚡</li>
-		<!-- <li><a href="/ui/gui/group/">GUI Group</a></li> -->
-		<!-- <li><a href="/ui/gui/icon/">GUI Icon</a></li> -->
-		<!-- <li><a href="/ui/gui/icon-button/">GUI Icon Button</a></li> -->
-		<!-- <li><a href="/ui/gui/tabs/">GUI Tabs</a></li> -->
-		<li><a href="/ui/hex-grid">Hex Grid</a> 🎨</li>
-		<li><a href="/ui/icon">Icon</a> ⚡🎨</li>
-		<li><a href="/ui/image-compare">Image Compare</a></li>
-		<!-- <li><a href="/apps/media/image-edit/">Image Edit</a></li> -->
-		<li><a href="/ui/image-gallery">Image Gallery</a></li>
-		<li><a href="/ui/image-map">Image Map</a></li>
-		<li><a href="/ui/image-select">Image Select</a> 🎨</li>
-		<li><a href="/ui/indeterminate">Indeterminate</a> 🎨</li>
-		<li><a href="/ui/input-button">Input Button</a> 🎨</li>
-		<!-- <li><a href="/ui/journey-planner">Journey Planner</a></li> -->
-		<li><a href="/ui/launchpad">*Launchpad</a></li>
-		<!-- <li><a href="/layout/">Layout</a></li> -->
-		<li><a href="/ui/linenumber/">Linenumber</a></li>
-		<li><a href="/ui/live">Live</a></li>
-		<li><a href="/ui/location">Location</a></li>
-		<li><a href="/apps/games/lottery-numbers/">Lottery Numbers</a></li>
-		<li><a href="/ui/map">Map</a></li>
-		<li><a href="/ui/markdown">Markdown</a></li>
-		<li><a href="/ui/marquee">Marquee</a></li>
-		<li><a href="/ui/mask">Mask</a></li>
-		<li><a href="/ui/mega-menu">Mega Menu*</a></li>
-		<li><a href="/ui/menu">Menu</a></li>
-		<li><a href="/ui/menu-js">Menu JS</a></li>
-		<li><a href="/ui/menu-list">Menu List</a></li>
-		<li><a href="/ui/meter">Meter</a></li>
-		<li><a href="/ui/mood">Mood</a></li>
-		<li><a href="/ui/moon-phase/">Moon Phase</a> ⚡</li>
-		<li><a href="/ui/msg-box">MsgBox</a> ⚡</li>
-		<li><a href="/ui/nav-compass">Nav Compass</a> ⚡</li>
-		<!-- <li><a href="/ui/navigator-consent/">Navigator Consent</a></li> -->
-		<li><a href="/ui/notification">Notification</a> 🎨</li>
-		<li><a href="/ui/number">Number</a></li>
-		<li><a href="/ui/number-snapper/">Number Snapper</a> ⚡</li>
-		<li><a href="/ui/number-spinner/">Number Spinner</a> ⚡</li>
-		<li><a href="/ui/onetimecode">One Time Code</a></li>
-		<li><a href="/ui/overflow">Overflow</a></li>
-		<li><a href="/ui/pagination">Pagination</a></li>
-		<li><a href="/ui/password-strength">Password Strength</a></li>
-		<li><a href="/ui/password-toggle">Password Toggle</a></li>
-		<li><a href="/apps/science/periodic-table/">Periodic Table</a> 🎨</li>
-		<li><a href="/apps/music/piano-chord/">Piano Chord</a> 🎨</li>
-		<li><a href="/ui/piano-keys">Piano Keys</a> ⚡</li>
-		<li><a href="/ui/placeholder">Placeholder</a> 🎨</li>
-		<li><a href="/apps/music/pocket-synth">Pocket Synth</a></li>
-		<li><a href="/ui/position">Position</a> 🎨</li>
-		<li><a href="/ui/price-card">Price Card</a> 🎨</li>
-		<li><a href="/apps/utilities/print-preview/">Print Preview</a> ⚡</li>
-		<li><a href="/ui/product-card">Product Card</a> 🎨</li>
-		<li><a href="/ui/product-grid">Product Grid</a> 🎨</li>
-		<li><a href="/ui/product-list-grid">Product List Grid</a> 🎨</li>
-		<li><a href="/ui/progress">Progress</a></li>
-		<li><a href="/ui/progress-circular">Progress — Circular</a></li>
-		<li><a href="/ui/progress-goal">Progress Goal</a></li>
-		<li><a href="/ui/progress-meter">Progress Meter</a></li>
-		<li><a href="/ui/progress-timer">Progress Timer</a></li>
-		<li><a href="/ui/radial-menu">Radial Menu</a></li>
-		<li><a href="/ui/range">Range</a></li>
-		<li><a href="/ui/range-arc">Range — Arc</a></li>
-		
-		<li><a href="/ui/range-gauge">Range — Gauge</a></li>
-		<li><a href="/ui/range-mask">Range — Mask</a></li>
-		<li><a href="/ui/range-minmax">Range — MinMax</a></li>
-		<li><a href="/ui/rating">Rating</a></li>
-		<li><a href="/ui/rating-histogram">Rating Histogram</a></li>
-		<!-- <li><a href="/ui/reaction">*Reaction</a></li> -->
-		<li><a href="/ui/reading-progress">Reading Progress</a></li>
-		<!-- <li><a href="/ui/responsive-card/">Responsive Card</a></li> -->
-		<li><a href="/ui/ribbon">Ribbon</a> 🎨</li>
-		<li><a href="/ui/rich-text">Rich Text Editor</a> ⚡</li>
-		<!-- IGNORE "/ui/scroll" -->
-		<li><a href="/ui/scroll-animations/">Scroll-Driven Animations</a></li>
-		<li><a href="/ui/scroll-mask/">Scroll Mask</a></li>
-		<li><a href="/ui/select">Select</a></li>
-		<li><a href="/ui/share">Share</a></li>
-		<li><a href="/ui/skeleton">Skeleton</a> 🎨</li>
-		<li><a href="/ui/slider">Slider</a></li>
-		<li><a href="/ui/slider/control.html">Slider Control</a></li>
-		<li><a href="/ui/slideshow">Slideshow</a> 🎨</li>
-		<li><a href="/ui/snack-bar">Snack Bar</a> ⚡</li>
-		<li><a href="/apps/science/solar-system">Solar System</a> 🎨</li>
-		<li><a href="/ui/split-panel">Split Panel</a></li>
-		<li><a href="/ui/step">Step</a> 🎨</li>
-		<li><a href="/ui/sun-phase/">Sun Phase</a> ⚡</li>
-		<li><a href="/ui/swap">Swap</a></li>
-		<li><a href="/ui/syntax">Syntax Highlight</a> 🎨</li>
-		<li><a href="/ui/tab-bar">Tab Bar</a></li>
-		<li><a href="/ui/tab-cordion">*Tab Cordion</a> 🎨</li>
-		<!-- <li><a href="/ui/tab-group/">Tab Group</a></li> -->
-		<li><a href="/ui/table">Table</a> 🎨 ⚡</li>
-		<li><a href="/ui/table-expand">Table Expand</a> 🎨 ⚡</li>
-		<li><a href="/ui/table-resize">Table Resize</a></li>
-		<li><a href="/ui/tabs">Tabs</a></li>
-		<li><a href="/ui/tag">Tag</a></li>
-		<li><a href="/ui/team">Team</a> 🎨</li>
-		<li><a href="/ui/testimonial">Testimonial</a> 🎨</li>
-		<li><a href="/ui/text-slider">Text Slider</a></li>
-		<li><a href="/ui/timeline">Timeline</a></li>
-		<li><a href="/ui/timeslot">Timeslot</a> 🎨</li>
-		<li><a href="/ui/toggletip">Toggle Tip</a></li>
-		<li><a href="/ui/toolbar">Toolbar</a></li>
-		<li><a href="/ui/tooltip">Tooltip</a> 🎨</li>
-		<li><a href="/ui/transfer-list">Transfer List</a></li>
-		<li><a href="/ui/underline">Underline</a> 🎨</li>
-		<!-- IGNORE "/ui/validate" -->
-		<li><a href="/ui/video-embed">Video Embed</a></li>
-		<li><a href="/ui/video-list">Video List</a></li>
-		<li><a href="/ui/video-scrub/">Video Scrub</a> ⚡</li>
-		<!-- IGNORE "/ui/web-component" -->
-		<li><a href="/apps/games/wheeloffortune">Wheel of Fortune</a></li>
-		<li><a href="/ui/word-cloud">Word Cloud</a> 🎨</li>
-		<li><a href="/ui/word-replace">Word Replace</a> 🎨</li>
-		<li><a href="/ui/word-wheel">Word Wheel</a> 🎨</li>
-		<!-- <li><a href="/ui/worldmap">*World Map</a></li> -->
-		<li><a href="/ui/xy">XY Controller</a> ⚡</li>
-		<li><a href="/ui/year">Year</a></li>
-	</ol>
-	<hr>
-	<h3>📐 Layout System</h3>
-	<h4>Layout Types</h4>
-	<ol class="ui-grid --sm-c-2 --md-c-3">
-		<li><a href="/ui/layout/dist/asymmetrical.html">Asymmetrical</a></li>
-		<li><a href="/ui/layout/dist/autofit.html">Autofit</a></li>
-		<li><a href="/ui/layout/dist/bento.html">Bento</a></li>
-		<li><a href="/ui/layout/dist/columns.html">Columns</a></li>
-		<li><a href="/ui/layout/dist/grid.html">Grid</a></li>
-		<li><a href="/ui/layout/dist/lanes.html">Lanes</a></li>
-		<li><a href="/ui/layout/dist/mosaic.html">Mosaic</a></li>
-		<li><a href="/ui/layout/dist/ratios.html">Ratios</a></li>
-		<li><a href="/ui/layout/dist/stack.html">Stack</a></li>
-	</ol>
-	<hr>
-	<h4>Layout Additions</h4>
-	<ol class="ui-grid --sm-c-2 --md-c-3">
-		<li><a href="/ui/layout/dist/animations.html">Animations</a></li>
-		<li><a href="/ui/layout/dist/bleed.html">Bleed</a></li>
-		<li><a href="/ui/layout/dist/gapdeco.html">Gap Decorations</a></li>
-		<li><a href="/ui/layout/dist/icons.html">Icons</a></li>
-		<li><a href="/ui/layout/dist/overflow.html">Overflow</a></li>
-		<li><a href="/ui/layout/dist/page.html">Page</a></li>
-		<li><a href="/ui/layout/dist/spacing.html">Spacing</a></li>
-		<li><a href="/ui/layout/dist/widths.html">Widths</a></li>
-		<!-- LAYOUT COMPOSER -->
-	</ol>
+	<ui-accordion variant="breakout rounded" name="ui-index">
 
-	<!-- <hr>
-	<h3>📇 Content Cards</h3>
-	<ol class="ui-grid --sm-c-2 --md-c-3">
-		<li><a href="/ui/content-card/dist/achievement.html">Achievement</a></li>
-		<li><a href="/ui/content-card/dist/announcement.html">Announcement</a></li>
-		<li><a href="/ui/content-card/dist/article.html">Article</a></li>
-		<li><a href="/ui/content-card/dist/booking.html">Booking</a></li>
-		<li><a href="/ui/content-card/dist/business.html">Business</a></li>
-		<li><a href="/ui/content-card/dist/comparison.html">Comparison</a></li>
-		<li><a href="/ui/content-card/dist/contact.html">Contact</a></li>
-		<li><a href="/ui/content-card/dist/course.html">Course</a></li>
-		<li><a href="/ui/content-card/dist/event.html">Event</a></li>
-		<li><a href="/ui/content-card/dist/faq.html">FAQ</a></li>
-		<li><a href="/ui/content-card/dist/gallery.html">Gallery</a></li>
-		<li><a href="/ui/content-card/dist/job.html">Job</a></li>
-		<li><a href="/ui/content-card/dist/location.html">Location</a></li>
-		<li><a href="/ui/content-card/dist/membership.html">Membership</a></li>
-		<li><a href="/ui/content-card/dist/news.html">News</a></li>
-		<li><a href="/ui/content-card/dist/poll.html">Poll</a></li>
-		<li><a href="/ui/content-card/dist/product.html">Product</a></li>
-		<li><a href="/ui/content-card/dist/profile.html">Profile</a></li>
-		<li><a href="/ui/content-card/dist/quote.html">Quote</a></li>
-		<li><a href="/ui/content-card/dist/recipe.html">Recipe</a></li>
-		<li><a href="/ui/content-card/dist/review.html">Review</a></li>
-		<li><a href="/ui/content-card/dist/social.html">Social</a></li>
-		<li><a href="/ui/content-card/dist/software.html">Software</a></li>
-		<li><a href="/ui/content-card/dist/statistic.html">Statistic</a></li>
-		<li><a href="/ui/content-card/dist/timeline.html">Timeline</a></li>
-	</ol>
-	<p>
-		A demo of all cards in one page using Layout System can be <a href="/ui/content-card/dist/">found here</a>
-	</p> -->
+		<!-- Input -->
+		<details name="ui-index">
+			<summary>Input<ui-icon type="chevron down"></ui-icon></summary>
+			<div>
+				<ul>
+					<li>
+						<h3><a href="button/index.html">Button</a></h3>
+						<small>Native button styles with variant modifiers, color utilities, and proportional sizing.</small><br>
+						<a href="button/index.html"><ui-chip size="sm" color="success" variant="light">CSS</ui-chip></a>					</li>
+				</ul>
+			</div>
+		</details>
 
-	<hr>
-	<h3>📊 Charts</h3>
-	<ol class="ui-grid --sm-c-2 --md-c-3">
-		<li><a href="/ui/charts/area-chart.html">Area Chart</a></li>
-		<li><a href="/ui/charts/bar-chart.html">Bar Chart</a></li>
-		<li><a href="/ui/charts/candlestick-chart.html">Candlestick Chart</a></li>
-		<li><a href="/ui/charts/column-chart.html">Column Chart</a></li>
-		<li><a href="/ui/charts/chart/">Data Chart</a> ⚡</li>
-		<li><a href="/ui/charts/donut-chart.html">Donut Chart</a></li>
-		<li><a href="/ui/charts/line-chart.html">Line Chart</a></li>
-		<li><a href="/ui/charts/pie-chart.html">Pie Chart</a></li>
-		<li><a href="/ui/charts/poll-chart.html">Poll Chart</a></li>
-	</ol>
+		<!-- Data Display -->
+		<details name="ui-index" open>
+			<summary>Data Display<ui-icon type="chevron down"></ui-icon></summary>
+			<div>
+				<ul>
+					<li>
+						<h3><a href="avatar/index.html">Avatar</a></h3>
+						<small>Random per-element colors, status indicators, activity rings, and group layouts with overflow.</small><br>
+						<a href="avatar/index.html"><ui-chip size="sm" color="success" variant="light">CSS</ui-chip></a>
+						<a href="avatar/wc-demo.html"><ui-chip size="sm" color="info" variant="light">Web Component</ui-chip></a>					</li>
+					<li>
+						<h3><a href="badge/index.html">Badge</a></h3>
+						<small>Status indicators and notification counts. Positions at any corner with circular-host awareness.</small><br>
+						<a href="badge/index.html"><ui-chip size="sm" color="success" variant="light">CSS</ui-chip></a>
+						<a href="badge/wc-demo.html"><ui-chip size="sm" color="info" variant="light">Web Component</ui-chip></a>					</li>
+					<li>
+						<h3><a href="chip/index.html">Chip</a></h3>
+						<small>Tags, labels, filters, and status indicators with semantic colors and inline-badge support.</small><br>
+						<a href="chip/index.html"><ui-chip size="sm" color="success" variant="light">CSS</ui-chip></a>
+						<a href="chip/wc-demo.html"><ui-chip size="sm" color="info" variant="light">Web Component</ui-chip></a>					</li>
+					<li>
+						<h3><a href="table/index.html">Table</a></h3>
+						<small>Responsive data tables with row variants, hover states, and sticky headers.</small><br>
+						<a href="table/index.html"><ui-chip size="sm" color="success" variant="light">CSS</ui-chip></a>
+					</li>
+					<li>
+						<h3><a href="tooltip/index.html">Tooltip</a></h3>
+						<small>Speech-bubble tooltip with seamless gradient support, adaptive border-radius, and anchor-positioning enhancement.</small><br>
+						<a href="tooltip/index.html"><ui-chip size="sm" color="success" variant="light">CSS</ui-chip></a>
+						<a href="tooltip/wc-demo.html"><ui-chip size="sm" color="info" variant="light">Web Component</ui-chip></a>					</li>
+				</ul>
+			</div>
+		</details>
 
-	<!-- <li><a href="/content/card/">Content Card</a></li> -->
+		<!-- Feedback -->
+		<details name="ui-index">
+			<summary>Feedback<ui-icon type="chevron down"></ui-icon></summary>
+			<div>
+				<ul>
+					<li><em>Components coming soon</em></li>
+				</ul>
+			</div>
+		</details>
 
-	<hr>
-	<h3>⚙️ CMS Editors</h3>
-	<ol class="ui-grid --sm-c-2 --md-c-3">
-		<li><a href="/cms/editors/card/">Content Card</a> ⚡</li>
-		<li><a href="/cms/editors/csp/">Content-Security-Policy</a> ⚡</li>
-		<li><a href="/cms/editors/image-text/">Image Analysis</a> ⚡</li>
-		<li><a href="/cms/editors/manifest/">manifest.json</a> ⚡</li>
-		<li><a href="/cms/editors/taxonomy/">Product Taxonomy</a> ⚡</li>
-		<li><a href="/cms/editors/robots/">robots.txt</a> ⚡</li>
-		<li><a href="/cms/editors/security/">security.txt</a> ⚡</li>
+		<!-- Surfaces -->
+		<details name="ui-index">
+			<summary>Surfaces<ui-icon type="chevron down"></ui-icon></summary>
+			<div>
+				<ul>
+					<li>
+						<h3><a href="accordion/index.html">Accordion</a></h3>
+						<small>Collapsible content sections with exclusive-open, responsive media variant, and container queries.</small><br>
+						<a href="accordion/index.html"><ui-chip size="sm" color="success" variant="light">CSS</ui-chip></a>
+						<a href="accordion/wc-demo.html"><ui-chip size="sm" color="info" variant="light">Web Component</ui-chip></a>					</li>
+					<li>
+						<h3><a href="blockquote/index.html">Blockquote</a></h3>
+						<small>Styled quotations with citation support and decorative variants.</small><br>
+						<a href="blockquote/index.html"><ui-chip size="sm" color="success" variant="light">CSS</ui-chip></a>
+					</li>
+				</ul>
+			</div>
+		</details>
 
-		<!-- <li><a href="/cms/editors/tokens/">tokens.json</a> ⚡</li> -->
-		<!-- <li><a href="/ui/design-tokens/core/">Design Token</a> ⚡</li> -->
-	</ol>
-	<p>CMS integrations available for Contentful, Umbraco, and more — see <a href="https://github.com/madsstoumann/browser-style/tree/main/cms/integrations">GitHub</a> for examples.</p>
+		<!-- Navigation -->
+		<details name="ui-index">
+			<summary>Navigation<ui-icon type="chevron down"></ui-icon></summary>
+			<div>
+				<ul>
+					<li>
+						<h3><a href="breadcrumbs/index.html">Breadcrumbs</a></h3>
+						<small>Navigation trail with separator customization and RTL support.</small><br>
+						<a href="breadcrumbs/index.html"><ui-chip size="sm" color="success" variant="light">CSS</ui-chip></a>
+					</li>
+				</ul>
+			</div>
+		</details>
 
-	<hr>
-	<h3>🌤️ Weather Widgets</h3>
-	<ol class="ui-grid --sm-c-2 --md-c-3">
-		<li><a href="/ui/weather/feelslike/">Weather Feels Like</a> ⚡</li>
-		<li><a href="/ui/weather/forecast-days/">Weather Forecast Days</a> ⚡</li>
-		<li><a href="/ui/weather/forecast-hours/">Weather Forecast Hours</a> ⚡</li>
-		<li><a href="/ui/weather/humidity/">Weather Humidity</a> ⚡</li>
-		<li><a href="/ui/weather/moonphase/">Weather Moonphase</a> ⚡</li>
-		<li><a href="/ui/weather/overview/">Weather Overview</a> ⚡</li>
-		<li><a href="/ui/weather/precipitation/">Weather Precipitation</a> ⚡</li>
-		<li><a href="/ui/weather/pressure/">Weather Pressure</a> ⚡</li>
-		<li><a href="/ui/weather/sunphase/">Weather Sunphase</a> ⚡</li>
-		<li><a href="/ui/weather/temperature/">Weather Temperature</a> ⚡</li>
-		<li><a href="/ui/weather/uv/">Weather UV</a> ⚡</li>
-		<li><a href="/ui/weather/visibility/">Weather Visibility</a> ⚡</li>
-		<li><a href="/ui/weather/wind/">Weather Wind</a> ⚡</li>
-		<li><a href="/ui/weather/widget">Weather Widget</a> ⚡</li>
-		<li><a href="/ui/weather/widgets">Weather Widgets</a></li>
-	</ol>
+		<!-- Layout -->
+		<details name="ui-index">
+			<summary>Layout<ui-icon type="chevron down"></ui-icon></summary>
+			<div>
+				<ul>
+					<li><em>Components coming soon</em></li>
+				</ul>
+			</div>
+		</details>
 
-	<hr>
-	<h3>📱 Micro Apps</h3>
-	<ol class="ui-grid --sm-c-2 --md-c-3">
-		<!-- <li><a href="/apps/utilities/alcohol-tester/">*Alcohol Tester</a></li> -->
-		<!-- <li><a href="/apps/utilities/asset-handler/">Asset Handler</a></li> -->
-		<li><a href="/apps/science/bmi/">BMI Calculator</a></li>
-		<li><a href="/ui/color-palette/">Color Palette</a></li>
-		<li><a href="/ui/color-visualizer-rgb/">Color Visualizer RGB</a></li>
-		<li><a href="/apps/utilities/drug-ticket/">DUI Fine Calculator</a></li>
-		<!-- <li><a href="/apps/media/epub-reader/">ePub Reader</a></li> -->
-		<!-- <li><a href="/apps/utilities/oneblock/">OneBlock</a></li> -->
-		<!-- <li><a href="/ui/read-this/">Read This</a></li> -->
-		<!-- <li><a href="/apps/utilities/speed-ticket/">*Speed Ticket</a></li> -->
-		<!-- <li><a href="/apps/games/word-search/">*Word Search</a></li> -->
-	</ol>
+		<!-- Media & Visualization -->
+		<details name="ui-index">
+			<summary>Media &amp; Visualization<ui-icon type="chevron down"></ui-icon></summary>
+			<div>
+				<ul>
+					<li><em>Components coming soon</em></li>
+				</ul>
+			</div>
+		</details>
 
-	<hr>
-	<h3>🛠️ Tools and deprecated</h3>
-	<ol class="ui-grid --sm-c-2 --md-c-3">
-		<li><a href="/ui/anchor/">Anchor</a></li>
-		<li><a href="/ui/details/">Details</a></li>
-		<li><a href="/ui/range-circular">Range — Circular</a></li>
-		<li><a href="/ui/toast">Toast</a></li>
-	</ol>
+		<!-- Specialized -->
+		<details name="ui-index">
+			<summary>Specialized<ui-icon type="chevron down"></ui-icon></summary>
+			<div>
+				<ul>
+					<li><em>Components coming soon</em></li>
+				</ul>
+			</div>
+		</details>
 
+	</ui-accordion>
 </body>
 </html>
