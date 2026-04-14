@@ -84,6 +84,14 @@
 	.pi-3 { padding-inline: 1rem; }
 	.pi-4 { padding-inline: 2rem; }
 
+	/* Shadow / Elevation */
+	.shadow-sm { box-shadow: var(--shadow-sm); }
+	.shadow-md { box-shadow: var(--shadow-md); }
+	.shadow-lg { box-shadow: var(--shadow-lg); }
+	.shadow-xl { box-shadow: var(--shadow-xl); }
+	.shadow-2xl { box-shadow: var(--shadow-2xl); }
+	.shadow-none { box-shadow: none; }
+
 	/* Text Align */
 	.ta-center { text-align: center; }
 	.ta-end { text-align: end; }

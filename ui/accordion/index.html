@@ -14,12 +14,15 @@
 <body>
 	<h1>UI: Accordion</h1>
 
-	<h2>CSS Only</h2>
+	<h2>CSS</h2>
 	<p>
 		<code>&lt;ui-accordion&gt;</code> is a CSS-first collapsible content panel built on native <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> elements. Use the <code>name</code> attribute for exclusive open behavior, and compose variants like <code>bordered</code>, <code>divided</code>, <code>rounded</code>, <code>breakout</code>, and <code>shadow</code>.
 	</p>
 	<p>
-		This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript). See the <a href="wc-demo.html">web component demo</a> for the JS-enhanced version using <code>&lt;ui-accordion-item&gt;</code>.
+		This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript).
+	</p>
+	<p>
+		See the <a href="wc-demo.html">web component demo</a> for the JS-enhanced version using <code>&lt;ui-accordion-item&gt;</code>.
 	</p>
 
 	<ui-accordion>
@@ -292,7 +295,7 @@
 	</ui-accordion>
 
 	<br>
-	<p>With <code>variant="separate"</code>:</p>
+	<p>With <code>variant="separate rounded"</code>:</p>
 	<ui-accordion variant="separate divided rounded" name="accordion-separate">
 		<details name="accordion-separate">
 			<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
@@ -321,27 +324,27 @@
 	</ui-accordion>
 
 	<br>
-	<p>With <code>variant="shadow"</code>:</p>
-	<ui-accordion variant="shadow rounded" name="accordion-shadow">
-		<details name="accordion-shadow">
+	<p>With <code>variant="noborder rounded separate"</code> and box-shadow set through a utility class:</p>
+	<ui-accordion variant="noborder rounded separate" name="accordion-shadow">
+		<details name="accordion-shadow" class="shadow-2xl">
 			<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
 			<div>
 				To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
 			</div>
 		</details>
-		<details name="accordion-shadow" open>
+		<details name="accordion-shadow" class="shadow-2xl" open>
 			<summary>How long does shipping take?<ui-icon type="chevron down"></ui-icon></summary>
 			<div>
 				The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
 			</div>
 		</details>
-		<details name="accordion-shadow">
+		<details name="accordion-shadow" class="shadow-2xl">
 			<summary>What payment methods do you accept?<ui-icon type="chevron down"></ui-icon></summary>
 			<div>
 				We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
 			</div>
 		</details>
-		<details name="accordion-shadow">
+		<details name="accordion-shadow" class="shadow-2xl">
 			<summary>How can I contact customer support?<ui-icon type="chevron down"></ui-icon></summary>
 			<div>
 				Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
@@ -469,41 +472,41 @@
 	</ui-accordion>
 
 	<br>
-	<p>With <code>variant="separate"</code></p>
+	<p>With <code>variant="separate"</code> and box-shadow set through a utility class:</p>
 
 	<ui-accordion variant="separate" name="accordion-horizontal-sp" type="horizontal">
 		<cq-box>
-		<details name="accordion-horizontal-sp">
+		<details name="accordion-horizontal-sp" class="shadow-md">
 			<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
 			<div>
 				To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
 			</div>
 		</details>
-		<details name="accordion-horizontal-sp" open>
+		<details name="accordion-horizontal-sp" class="shadow-md" open>
 			<summary>How long does shipping take?<ui-icon type="chevron down"></ui-icon></summary>
 			<div>
 				The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
 			</div>
 		</details>
-		<details name="accordion-horizontal-sp">
+		<details name="accordion-horizontal-sp" class="shadow-md">
 			<summary>What payment methods do you accept?<ui-icon type="chevron down"></ui-icon></summary>
 			<div>
 				We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
 			</div>
 		</details>
-		<details name="accordion-horizontal-sp">
+		<details name="accordion-horizontal-sp" class="shadow-md">
 			<summary>How can I contact customer support?<ui-icon type="chevron down"></ui-icon></summary>
 			<div>
 				Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
 			</div>
 		</details>
-		<details name="accordion-horizontal-sp">
+		<details name="accordion-horizontal-sp" class="shadow-md">
 			<summary>Can I change my order after placing it?<ui-icon type="chevron down"></ui-icon></summary>
 			<div>
 				You can modify your order within one hour of placing it by visiting your account's order history page. After that window, our fulfillment process begins and changes may not be possible. If you need to make urgent changes, please contact our support team immediately and we will do our best to accommodate your request.
 			</div>
 		</details>
-		<details name="accordion-horizontal-sp">
+		<details name="accordion-horizontal-sp" class="shadow-md">
 			<summary>Do you offer international shipping?<ui-icon type="chevron down"></ui-icon></summary>
 			<div>
 				Yes, we ship to over 50 countries worldwide. International shipping rates and delivery times vary depending on the destination. Customs duties and taxes may apply and are the responsibility of the recipient. You can see the available shipping options and estimated costs at checkout.

@@ -1,13 +1,13 @@
 /**
  * ui-accordion
- * @version 4.0.4
- * @date 2026-04-12
+ * @version 4.0.5
+ * @date 2026-04-14
  * @author Mads Stoumann
  */
 @import '../icon/index.css';
 @layer bs-component {
 	:where(ui-accordion) {
-		--ui-accordion-bg-hover: linear-gradient(90deg, #0000, var(--color-field) 10% 90%, #0000);
+		--ui-accordion-bg-hover: linear-gradient(90deg, #0000, light-dark(var(--color-field), var(--color-surface-alt)) 10% 90%, #0000);
 		--ui-accordion-border-color: var(--color-border);
 		--ui-accordion-border-radius: 1ch;
 		--ui-accordion-border-style: solid;
@@ -17,12 +17,10 @@
 		--ui-accordion-duration: var(--duration-slow);
 		--ui-accordion-padding-block: 1.5ch;
 		--ui-accordion-padding-inline: 1.5ch;
-		--ui-accordion-shadow: none;
 		
 		--_border: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
 		--_border-breakout: var(--ui-accordion-breakout-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
 
-		box-shadow: var(--ui-accordion-shadow);
 		container-type: inline-size;
 		display: grid;
 		interpolate-size: allow-keywords;
@@ -53,6 +51,7 @@
 				padding-block: var(--ui-accordion-padding-block);
 				text-decoration: none;
 				transition: background var(--duration-normal) var(--ease-in-out);
+				user-select: none;
 				&::-webkit-details-marker { display: none; }
 				&:focus-visible { outline: var(--ring-width) solid var(--ring-color); outline-offset: var(--ring-offset); }
 			}			
@@ -146,8 +145,8 @@
 		}
 	}
 
-	/* separate / shadow */
-	ui-accordion:is([variant~="separate"], [variant~="shadow"]) {
+	/* separate */
+	ui-accordion:is([variant~="separate"]) {
 		gap: var(--ui-accordion-gap, var(--spacing-xl));
 		details {
 			border: var(--_border);
@@ -155,14 +154,10 @@
 		}
 	}
 
-	/* shadow */
-	ui-accordion[variant~="shadow"] {
+	/* noborder */
+	ui-accordion[variant~="noborder"] {
 		details {
-			--ui-accordion-border-width: 0;
-			--ui-accordion-border-radius: 1em;
-			--ui-accordion-shadow: 0 1em 4em color-mix(in srgb, CanvasText 10%, transparent);
 			border: 0;
-			box-shadow: var(--ui-accordion-shadow);
 		}
 		&[variant~="rounded"] details { border-radius: var(--ui-accordion-border-radius); }
 	}
@@ -224,7 +219,7 @@
 					&:not([open]) {
 						padding-inline: 0;
 						summary {
-							--ui-accordion-bg-hover: linear-gradient(180deg, #0000, var(--_hover, var(--color-field)) 10% 90%, #0000);
+							--ui-accordion-bg-hover: linear-gradient(180deg, #0000, var(--_hover, light-dark(var(--color-field), var(--color-surface-alt))) 10% 90%, #0000);
 							block-size: 100%;
 							padding-inline: var(--ui-accordion-horizontal-padding-inline, 2ch);
 							writing-mode: vertical-lr;
