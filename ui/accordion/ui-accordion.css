@@ -186,12 +186,12 @@
 			box-sizing: border-box;
 			padding-inline: var(--ui-accordion-padding-inline);
 			translate: calc(100% * var(--_dir, 1)) 0;
-			transition: block-size var(--ui-accordion-duration) ease, padding-block var(--ui-accordion-duration) ease, content-visibility var(--ui-accordion-duration) allow-discrete, translate var(--ui-accordion-duration) ease;
+			transition: block-size var(--ui-accordion-duration), content-visibility var(--ui-accordion-duration) allow-discrete, padding-block var(--ui-accordion-duration), translate var(--ui-accordion-duration) var(--ease-in-out, ease);
 			z-index: var(--z-index-2, 10);
 		}
-		details[open] summary ui-icon:first-of-type,
-		details summary ui-icon:last-of-type { display: none; }
-		details[open] summary ui-icon:last-of-type { display: grid; }
+		details summary ui-icon:last-of-type,
+		details[open] summary ui-icon:first-of-type { display: none; }
+		details[open] summary ui-icon:last-of-type { display: block; }
 	}
 	:where([dir="rtl"]) ui-accordion[type="slide"] { --_dir: -1; }
 
