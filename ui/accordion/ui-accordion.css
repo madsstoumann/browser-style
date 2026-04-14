@@ -40,6 +40,10 @@
 				content-visibility: visible;
 				padding-block: var(--ui-accordion-padding-block);
 			}
+			&:has(:focus-visible) {
+				outline: var(--ring-width) solid var(--ring-color);
+				summary { outline: none; }
+			}
 			& summary {
 				align-items: center;
 				color: inherit;
@@ -53,7 +57,6 @@
 				transition: background var(--duration-normal) var(--ease-in-out);
 				user-select: none;
 				&::-webkit-details-marker { display: none; }
-				&:focus-visible { outline: var(--ring-width) solid var(--ring-color); outline-offset: var(--ring-offset); }
 			}			
 			&:not([open]) summary:hover { background: var(--ui-accordion-bg-hover); }
 			&[open] summary { text-decoration: var(--ui-accordion-open-decoration, underline) #0000 var(--ui-accordion-open-decoration-width, var(--border-width-thick)); text-decoration-skip-ink: auto; text-underline-offset: var(--ui-accordion-open-decoration-offset, 0.3ch); transition: text-decoration-color var(--duration-normal) var(--ease-in-out); }
@@ -171,6 +174,16 @@
 		overflow: hidden;
 		position: relative;
 
+		details:has(:focus-visible) {
+			outline-offset: calc(-1 * var(--ring-width, 2px));
+			&[open] {
+				outline: none;
+				summary ui-icon:last-of-type {
+					outline: var(--ring-width) solid var(--ring-color);
+					outline-offset: var(--ring-offset);
+				}
+			}
+		}
 		&:has(details[open]) details:not([open]) {
 			opacity: 0;
 			pointer-events: none;
@@ -191,7 +204,7 @@
 		}
 		details summary ui-icon:last-of-type,
 		details[open] summary ui-icon:first-of-type { display: none; }
-		details[open] summary ui-icon:last-of-type { display: block; }
+		details[open] summary ui-icon:last-of-type { display: grid; }
 	}
 	:where([dir="rtl"]) ui-accordion[type="slide"] { --_dir: -1; }
 
