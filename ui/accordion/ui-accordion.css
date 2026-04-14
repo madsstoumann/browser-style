@@ -198,7 +198,7 @@
 			background: var(--ui-accordion-slide-bg, var(--ui-accordion-background, Canvas));
 			box-sizing: border-box;
 			padding-inline: var(--ui-accordion-padding-inline);
-			translate: calc(100% * var(--_dir, 1)) 0;
+			translate: calc(100% * var(--_slidedir, 1)) 0;
 			transition: block-size var(--ui-accordion-duration), content-visibility var(--ui-accordion-duration) allow-discrete, padding-block var(--ui-accordion-duration), translate var(--ui-accordion-duration) var(--ease-in-out, ease);
 			z-index: var(--z-index-2, 10);
 		}
@@ -206,7 +206,7 @@
 		details[open] summary ui-icon:first-of-type { display: none; }
 		details[open] summary ui-icon:last-of-type { display: grid; }
 	}
-	:where([dir="rtl"]) ui-accordion[type="slide"] { --_dir: -1; }
+	:where([dir="rtl"]) ui-accordion[type="slide"] { --_slidedir: -1; }
 
 	@container (inline-size > 650px) {
 		/* === type: horizontal === */
