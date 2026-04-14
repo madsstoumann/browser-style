@@ -1,0 +1,28 @@
+/*
+-----
+ Tint
+-----
+ Generic color-tinting system. Two orthogonal primitives:
+
+ - `tint` / `data-tint` — sets a base color via an attribute
+ - `tinted` / `data-tinted` — graduated ramp across direct children
+   using sibling-index() / sibling-count()
+
+ Components consume `--tint-bg` and `--tint-fg` on children,
+ falling back to the solid `--_tint` when not graduated.
+*/
+@layer bs-core {
+	:where([tint], [data-tint]) {
+		--_tint: attr(tint type(<color>), var(--color-accent));
+	}
+	:where([data-tint]) {
+		--_tint: attr(data-tint type(<color>), var(--color-accent));
+	}
+
+	:where([tinted], [data-tinted]) > * {
+		--tint-mix: 80%;
+		--tint-step: calc((sibling-index() - 1) / max(sibling-count() - 1, 1) * var(--tint-mix));
+		--tint-bg: color-mix(in oklab, var(--_tint), light-dark(#fff, #000) var(--tint-step));
+		--tint-fg: contrast-color(var(--tint-bg));
+	}
+}

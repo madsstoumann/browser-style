@@ -8,7 +8,8 @@ A CSS-first accordion component built on native `<details>` and `<summary>` elem
 - Exclusive open behavior via the HTML `name` attribute (no JS needed)
 - Smooth open/close transitions via `::details-content`
 - Light/dark mode support via design tokens
-- Composable variants: `bordered`, `divided`, `rounded`, `breakout`, `separate`, `tinted`
+- Composable variants: `bordered`, `divided`, `rounded`, `breakout`, `separate`
+- Color tinting via `tint` + `tinted` attributes (from `@browser.style/base`)
 - `type="horizontal"` for blinds-style horizontal layout (responsive via container query)
 - `type="split"` for two-column layout with `data-split` content panels
 - `no-collapse` attribute to ensure one item stays open
@@ -112,9 +113,10 @@ The `name` attribute on `<ui-accordion>` automatically propagates to all child `
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `name` | string | Groups items for exclusive open behavior (propagated to `<details>`) |
-| `variant` | string | Space-separated: `bordered`, `divided`, `rounded`, `breakout`, `separate`, `tinted` |
+| `variant` | string | Space-separated: `bordered`, `divided`, `rounded`, `breakout`, `separate` |
 | `type` | string | Layout mode: `"horizontal"` (blinds-style) or `"split"` (two-column with `data-split` content) |
-| `tint` | color | Base color for `tinted` variant (e.g. `oklch(0.35 0.18 210)`) |
+| `tint` | color | Base color for tinting items (e.g. `oklch(0.35 0.18 210)`) |
+| `tinted` | boolean | Enables a graduated color ramp across items (requires `tint`) |
 | `no-collapse` | boolean | Ensures one item always stays open |
 
 **`<ui-accordion-item>`**

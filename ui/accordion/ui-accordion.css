@@ -158,29 +158,12 @@
 		}
 	}
 
-	/* tint / tinted shared */
-	ui-accordion[tint] {
-		--_tint: attr(tint type(<color>), var(--color-accent, oklch(0.5 0.2 260)));
-		details {
-			--_hover: #FFF3;
-			--ui-accordion-bg-hover: linear-gradient(90deg, #0000, var(--_hover) 10% 90%, #0000);
-			background: var(--_tint);
-			color: contrast-color(var(--_tint));
-		}
-	}
-
-	/* tinted (graduated ramp) */
-	ui-accordion[variant~="tinted"] {
-		--ui-accordion-tint-mix: 80%;
-		details {
-			--_bg: color-mix(
-				in oklab,
-				var(--_tint),
-				#FFF calc((sibling-index() - 1) / max(sibling-count() - 1, 1) * var(--ui-accordion-tint-mix))
-			);
-			background: var(--_bg);
-			color: contrast-color(var(--_bg));
-		}
+	/* tint / tinted — consumes generic --_tint / --tint-bg / --tint-fg from base/tint.css */
+	ui-accordion:is([tint], [data-tint]) details {
+		--_hover: #FFF3;
+		--ui-accordion-bg-hover: linear-gradient(90deg, #0000, var(--_hover) 10% 90%, #0000);
+		background: var(--tint-bg, var(--_tint));
+		color: var(--tint-fg, contrast-color(var(--_tint)));
 	}
 
 	@container (inline-size > 650px) {

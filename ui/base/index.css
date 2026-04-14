@@ -2,5 +2,6 @@
 @import './core.css';
 @import './form.css';
 @import './button.css';
+@import './tint.css';
 @import './utility.css'; /* REWORK ? */
 @import './webcomponents.css'; /* NEEDED ? */
