@@ -16,7 +16,7 @@
 
 	<h2>CSS</h2>
 	<p>
-		<code>&lt;ui-accordion&gt;</code> is a CSS-first collapsible content panel built on native <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> elements. Use the <code>name</code> attribute for exclusive open behavior, and compose variants like <code>bordered</code>, <code>divided</code>, <code>rounded</code>, <code>breakout</code>, and <code>shadow</code>.
+		<code>&lt;ui-accordion&gt;</code> is a CSS-first collapsible content panel built on native <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> elements. Use the <code>name</code> attribute for exclusive open behavior, and compose variants like <code>bordered</code>, <code>divided</code>, <code>rounded</code>, <code>breakout</code> and <code>separate</code>.
 	</p>
 	<p>
 		This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript).
@@ -149,36 +149,7 @@
 
 	<br>
 	<h2>Variants</h2>
-	<p>With various <code>ui-icon</code> variants:</p>
-
-	<ui-accordion variant="divided" name="accordion-icons">
-		<details name="accordion-icons">
-			<summary>With chevron-right icon<ui-icon type="chevron right"></ui-icon></summary>
-			<div>
-				The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
-			</div>
-		</details>
-		<details name="accordion-icons">
-			<summary>With arrow-right icon<ui-icon type="arrow right"></ui-icon></summary>
-			<div>
-				The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
-			</div>
-		</details>
-		<details name="accordion-icons">
-			<summary>With plus-to-cross icon<ui-icon type="plus-cross"></ui-icon></summary>
-			<div>
-				We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
-			</div>
-		</details>
-		<details name="accordion-icons">
-			<summary>With arrow-down icon<ui-icon type="arrow down"></ui-icon></summary>
-			<div>
-				Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
-			</div>
-		</details>
-	</ui-accordion>
-
-	<br>
+	
 	<p>With <code>variant="bordered"</code>:</p>
 	<ui-accordion variant="bordered" name="accordion-border">
 		<details name="accordion-border" open>
@@ -295,8 +266,8 @@
 	</ui-accordion>
 
 	<br>
-	<p>With <code>variant="separate rounded"</code>:</p>
-	<ui-accordion variant="separate divided rounded" name="accordion-separate">
+	<p>With <code>variant="bordered separate rounded"</code>:</p>
+	<ui-accordion variant="bordered separate rounded" name="accordion-separate">
 		<details name="accordion-separate">
 			<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
 			<div>
@@ -324,8 +295,8 @@
 	</ui-accordion>
 
 	<br>
-	<p>With <code>variant="noborder rounded separate"</code> and box-shadow set through a utility class:</p>
-	<ui-accordion variant="noborder rounded separate" name="accordion-shadow">
+	<p>With <code>variant="separate rounded"</code> and box-shadow set through a utility class:</p>
+	<ui-accordion variant="separate rounded" name="accordion-shadow">
 		<details name="accordion-shadow" class="shadow-2xl">
 			<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
 			<div>
@@ -474,7 +445,7 @@
 	<br>
 	<p>With <code>variant="separate"</code> and box-shadow set through a utility class:</p>
 
-	<ui-accordion variant="separate" name="accordion-horizontal-sp" type="horizontal">
+	<ui-accordion variant="bordered separate" name="accordion-horizontal-sp" type="horizontal">
 		<cq-box>
 		<details name="accordion-horizontal-sp" class="shadow-md">
 			<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
@@ -516,7 +487,8 @@
 	</ui-accordion>
 
 	<br>
-	<p>With <code>type="split"</code> and <code>no-collapse</code> attribute — ensures one item is always open.</p>
+	<h2>With <code>type="split"</code></h2>
+	 <p>Also has the <code>no-collapse</code> attribute — ensures one item is always open.</p>
 
 	<ui-accordion name="accordion-media" type="split" variant="divided" no-collapse>
 		<cq-box>
@@ -543,5 +515,38 @@
 			</details>
 		</cq-box>
 	</ui-accordion>
+
+	<br>
+	<h2>Icon Variants</h2>
+	<p>With various <code>ui-icon</code> variants:</p>
+
+	<ui-accordion variant="divided" name="accordion-icons">
+		<details name="accordion-icons">
+			<summary>With chevron-right icon<ui-icon type="chevron right"></ui-icon></summary>
+			<div>
+				The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
+			</div>
+		</details>
+		<details name="accordion-icons">
+			<summary>With arrow-right icon<ui-icon type="arrow right"></ui-icon></summary>
+			<div>
+				The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
+			</div>
+		</details>
+		<details name="accordion-icons">
+			<summary>With plus-to-cross icon<ui-icon type="plus-cross"></ui-icon></summary>
+			<div>
+				We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
+			</div>
+		</details>
+		<details name="accordion-icons">
+			<summary>With arrow-down icon<ui-icon type="arrow down"></ui-icon></summary>
+			<div>
+				Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
+			</div>
+		</details>
+	</ui-accordion>
+
+	
 </body>
 </html>

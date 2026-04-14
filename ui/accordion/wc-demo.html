@@ -11,14 +11,16 @@
 	<script type="module" src="index.js"></script>
 </head>
 <body>
-	<h1>UI: Components</h1>
+	<h1>UI: Accordion</h1>
 
-	<h2>Accordion — Web Component</h2>
+	<h2>Web Component</h2>
 	<p>
 		Using <code>&lt;ui-accordion&gt;</code> with <code>&lt;ui-accordion-item&gt;</code> — renders the same native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> HTML into the light DOM. See the <a href="index.html">CSS-only demo</a> for the non-JS version.
 	</p>
 
-	<h3>With <code>variant="divided"</code></h3>
+	<h2>Variants</h2>
+
+	<p>With <code>variant="divided"</code>:</p>
 	<ui-accordion name="wc-divided" variant="divided">
 		<ui-accordion-item label="How do I reset my password?">
 			To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely.
@@ -35,7 +37,7 @@
 	</ui-accordion>
 
 	<br>
-	<h3>With <code>variant="bordered divided rounded"</code></h3>
+	<p>With <code>variant="bordered divided rounded"</code>:</p>
 	<ui-accordion name="wc-bordered" variant="bordered divided rounded">
 		<ui-accordion-item label="How do I reset my password?" icon="chevron down" open>
 			To reset your password, go to the login page and click on the "Forgot Password" link. Follow the instructions sent to your email.
@@ -52,7 +54,7 @@
 	</ui-accordion>
 
 	<br>
-	<h3>With <code>variant="breakout divided rounded"</code></h3>
+	<p>With <code>variant="breakout divided rounded"</code>:</p>
 	<ui-accordion name="wc-breakout" variant="breakout divided rounded">
 		<ui-accordion-item label="How do I reset my password?" icon="chevron down">
 			To reset your password, go to the login page and click on the "Forgot Password" link. Follow the instructions sent to your email.
@@ -69,8 +71,8 @@
 	</ui-accordion>
 
 	<br>
-	<h3>With <code>variant="separate divided rounded"</code></h3>
-	<ui-accordion name="wc-separate" variant="separate divided rounded">
+	<p>With <code>variant="bordered separate rounded"</code>:</p>
+	<ui-accordion name="wc-separate" variant="bordered separate rounded">
 		<ui-accordion-item label="How do I reset my password?" icon="chevron down">
 			To reset your password, go to the login page and click on the "Forgot Password" link. Follow the instructions sent to your email.
 		</ui-accordion-item>
@@ -86,21 +88,7 @@
 	</ui-accordion>
 
 	<br>
-	<h3>With <code>variant="shadow divided rounded"</code></h3>
-	<ui-accordion name="wc-shadow" variant="shadow divided rounded">
-		<ui-accordion-item label="How do I reset my password?" icon="chevron down">
-			To reset your password, go to the login page and click on the "Forgot Password" link. Follow the instructions sent to your email.
-		</ui-accordion-item>
-		<ui-accordion-item label="How long does shipping take?" icon="chevron down" open>
-			Generally, we aim to process and ship orders within 1-2 business days.
-		</ui-accordion-item>
-		<ui-accordion-item label="What payment methods do you accept?" icon="chevron down">
-			We accept Visa, Mastercard, American Express, PayPal, Apple Pay, and Google Pay.
-		</ui-accordion-item>
-	</ui-accordion>
-
-	<br>
-	<h3>With <code>no-collapse</code></h3>
+	<h2>With <code>no-collapse</code></h2>
 	<p>Ensures one item is always open.</p>
 	<ui-accordion name="wc-nocollapse" variant="divided" no-collapse>
 		<ui-accordion-item label="How do I reset my password?" open>
@@ -115,7 +103,7 @@
 	</ui-accordion>
 
 	<br>
-	<h3>With <code>type="horizontal"</code></h3>
+	<h2>With <code>type="horizontal"</code></h2>
 	<p>Blinds-style layout at wider viewports (&gt;650px). The <code>&lt;cq-box&gt;</code> wrapper is auto-inserted by JS.</p>
 	<ui-accordion name="wc-horizontal" variant="bordered divided rounded" type="horizontal" no-collapse>
 		<ui-accordion-item label="How do I reset my password?" icon="chevron down">
@@ -133,7 +121,7 @@
 	</ui-accordion>
 
 	<br>
-	<h3>With <code>type="split"</code> and <code>no-collapse</code></h3>
+	<h2>With <code>type="split"</code> and <code>no-collapse</code></h2>
 	<p>At wider viewports, shows text in a left column with <code>data-split</code> content in a right panel.</p>
 	<ui-accordion name="wc-split" type="split" variant="divided" no-collapse>
 		<ui-accordion-item label="Our Workspace" open>
@@ -151,7 +139,7 @@
 	</ui-accordion>
 
 	<br>
-	<h3>Icon variants</h3>
+	<h2>Icon Variants</h2>
 	<ui-accordion name="wc-icons" variant="divided">
 		<ui-accordion-item label="With plus-minus (default)">
 			This is the default icon type.

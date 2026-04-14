@@ -8,8 +8,9 @@ A CSS-first accordion component built on native `<details>` and `<summary>` elem
 - Exclusive open behavior via the HTML `name` attribute (no JS needed)
 - Smooth open/close transitions via `::details-content`
 - Light/dark mode support via design tokens
-- Variants: `item`, `media`/`split-view`, composable (`bordered`, `divided`, `separated`, `rounded`, `breakout`, `elevated`, `background`)
+- Composable variants: `bordered`, `divided`, `rounded`, `breakout`, `separate`, `tinted`
 - `type="horizontal"` for blinds-style horizontal layout (responsive via container query)
+- `type="split"` for two-column layout with `data-split` content panels
 - `no-collapse` attribute to ensure one item stays open
 - Optional `<ui-accordion-item>` web component for framework use
 - Works standalone or with `@browser.style/base` for full theming
@@ -111,8 +112,9 @@ The `name` attribute on `<ui-accordion>` automatically propagates to all child `
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `name` | string | Groups items for exclusive open behavior (propagated to `<details>`) |
-| `variant` | string | Space-separated: `item`, `media`, `split-view`, `bordered`, `divided`, `separated`, `rounded`, `breakout`, `elevated`, `background` |
-| `type` | string | Layout mode: `"horizontal"` for blinds-style layout |
+| `variant` | string | Space-separated: `bordered`, `divided`, `rounded`, `breakout`, `separate`, `tinted` |
+| `type` | string | Layout mode: `"horizontal"` (blinds-style) or `"split"` (two-column with `data-split` content) |
+| `tint` | color | Base color for `tinted` variant (e.g. `oklch(0.35 0.18 210)`) |
 | `no-collapse` | boolean | Ensures one item always stays open |
 
 **`<ui-accordion-item>`**
@@ -238,71 +240,6 @@ Add the web component script only if you want the `<ui-accordion-item>` declarat
 </ui-accordion>
 ```
 
-### Card style (`variant="item"`)
-
-Adds shadow, border radius, spacing, and removes the border:
-
-```html
-<ui-accordion variant="item" name="group">
-  <details class="ui-accordion">
-    <summary>Title<ui-icon type="chevron down"></ui-icon></summary>
-    <div>Content</div>
-  </details>
-</ui-accordion>
-```
-
-Web component:
-
-```html
-<ui-accordion name="group" variant="item">
-  <ui-accordion-item label="Title" icon="chevron down">Content</ui-accordion-item>
-</ui-accordion>
-```
-
-### Media layout (`variant="media"`)
-
-At wider viewports (>650px), shows text in a left column with images/video in a right panel. Requires a `<cq-box>` wrapper inside `<ui-accordion>` for CSS-only usage — this enables the container query.
-
-CSS-only:
-
-```html
-<ui-accordion variant="media" name="showcase">
-  <cq-box>
-    <details class="ui-accordion" open>
-      <summary>Our Workspace<ui-icon type="plus-minus"></ui-icon></summary>
-      <div>
-        <p>Description text</p>
-        <img src="photo.jpg" alt="Photo">
-      </div>
-    </details>
-    <details class="ui-accordion">
-      <summary>Meet the Team<ui-icon type="plus-minus"></ui-icon></summary>
-      <div>
-        <p>More text</p>
-        <img src="team.jpg" alt="Team photo">
-      </div>
-    </details>
-  </cq-box>
-</ui-accordion>
-```
-
-Web component (no `<cq-box>` needed — auto-inserted by JS):
-
-```html
-<ui-accordion variant="media" name="showcase">
-  <ui-accordion-item label="Our Workspace" open>
-    <p>Description text</p>
-    <img src="photo.jpg" alt="Photo">
-  </ui-accordion-item>
-  <ui-accordion-item label="Meet the Team">
-    <p>More text</p>
-    <img src="team.jpg" alt="Team photo">
-  </ui-accordion-item>
-</ui-accordion>
-```
-
-> **Why `<cq-box>`?** A container can't query its own size — the `@container` rule must target a descendant. `<cq-box>` is a generic, zero-layout wrapper (`display: contents`) provided by `@browser.style/base` that sits between the container host and its queryable children. The web component inserts it automatically.
-
 ### No-collapse (`no-collapse`)
 
 Keeps one item always open — the open item's summary becomes non-interactive:
@@ -330,43 +267,73 @@ Combine variants via space-separated values. These only override custom properti
 <!-- Framed group with rounded corners -->
 <ui-accordion variant="bordered rounded" name="group">
 
-<!-- Separated cards -->
-<ui-accordion variant="separated rounded" name="group">
+<!-- Separated borderless items (gap only) -->
+<ui-accordion variant="separate rounded" name="group">
 
-<!-- Breakout with shadow -->
-<ui-accordion variant="breakout elevated rounded" name="group">
+<!-- Separated cards with borders around each item -->
+<ui-accordion variant="bordered separate rounded" name="group">
+
+<!-- Breakout with rounded corners -->
+<ui-accordion variant="breakout rounded" name="group">
+
+<!-- Floating cards (shadow via utility class on each details) -->
+<ui-accordion variant="separate rounded" name="group">
+  <details class="shadow-2xl">...</details>
+</ui-accordion>
 
 <!-- Full treatment -->
-<ui-accordion variant="background bordered divided rounded" name="group">
+<ui-accordion variant="bordered divided rounded" name="group">
 ```
 
 | Token | What it does |
 |-------|-------------|
-| `bordered` | Border frame around the group + inline padding |
+| `bordered` | Border frame around the group + inline padding. Combined with `separate`, the border moves to each item instead |
 | `divided` | Divider line on each item |
-| `separated` | Card-style: gap between items + full border on each |
-| `rounded` | Border-radius on first/last (or all with `separated`, or contextual with `breakout`) |
+| `separate` | Gap between items (no borders by default — add `bordered` for framed cards, or use a shadow utility for floating cards) |
+| `rounded` | Border-radius on first/last (or all with `separate`, or contextual with `breakout`) |
 | `breakout` | Open item shifts out via translate; adjacent items react |
-| `elevated` | Box-shadow instead of border on open item (requires `breakout`) |
-| `background` | Container background color + padding |
 
-### Split view (`variant="split-view"`)
+### Split layout (`type="split"`)
 
-Same as `media` but also supports `data-split` on any element for generic split content:
+Two-column layout at wider viewports (>650px): summary and text occupy the left column while any element marked with `data-split` (image, video, or arbitrary content) is pulled into the right panel. Requires `<cq-box>` for CSS-only; auto-inserted by the web component.
 
 ```html
-<ui-accordion variant="split-view" name="showcase">
+<ui-accordion type="split" variant="divided" name="showcase" no-collapse>
   <cq-box>
-    <details class="ui-accordion" open>
-      <summary>Feature<ui-icon type="plus-minus"></ui-icon></summary>
+    <details name="showcase" open>
+      <summary>Our Workspace</summary>
       <div>
-        <p>Text content</p>
-        <div data-split>Any content in the split panel</div>
+        <p>Description text in the left column.</p>
+        <img src="photo.jpg" alt="Photo" data-split>
+      </div>
+    </details>
+    <details name="showcase">
+      <summary>Product Demo</summary>
+      <div>
+        <p>Short description.</p>
+        <video src="demo.webm" controls data-split></video>
       </div>
     </details>
   </cq-box>
 </ui-accordion>
 ```
+
+Web component (no `<cq-box>` needed — auto-inserted):
+
+```html
+<ui-accordion type="split" variant="divided" name="showcase" no-collapse>
+  <ui-accordion-item label="Our Workspace" open>
+    <p>Description text.</p>
+    <img src="photo.jpg" alt="Photo" data-split>
+  </ui-accordion-item>
+  <ui-accordion-item label="Product Demo">
+    <p>Short description.</p>
+    <video src="demo.webm" controls data-split></video>
+  </ui-accordion-item>
+</ui-accordion>
+```
+
+> **Why `<cq-box>`?** A container can't query its own size — the `@container` rule must target a descendant. `<cq-box>` is a generic, zero-layout wrapper (`display: contents`) provided by `@browser.style/base` that sits between the container host and its queryable children. The web component inserts it automatically.
 
 ### Horizontal layout (`type="horizontal"`)
 
@@ -429,13 +396,10 @@ Override accordion-specific tokens for targeted changes:
 | `--ui-accordion-border-width-open` | `var(--border-width-thick, 2px)` | Border width for open items (breakout) |
 | `--ui-accordion-border-radius` | `0` | Base corner radius |
 | `--ui-accordion-border-radius-rounded` | `var(--radius-lg, 1em)` | Radius for `rounded` variant |
-| `--ui-accordion-border-radius-separated` | `var(--radius-xl, 1.5em)` | Larger radius for `rounded` + `separated` |
+| `--ui-accordion-border-radius-separate` | `var(--radius-xl, 1.5em)` | Larger radius for `rounded` + `separate` |
 | `--ui-accordion-bg-hover` | gradient using `--color-field` | Summary hover background |
 | `--ui-accordion-gap` | `var(--spacing-xl, 2rem)` | Split-view / media column gap |
-| `--ui-accordion-row-gap` | `var(--spacing-md, 1em)` | Gap between items (`separated`) |
-| `--ui-accordion-shadow` | `none` | Box shadow |
-| `--ui-accordion-shadow-elevated` | `var(--shadow-md, ...)` | Shadow for open items (`elevated`) |
-| `--ui-accordion-shadow-elevated-adjacent` | `var(--shadow-sm, ...)` | Shadow for adjacent items (`elevated`) |
+| `--ui-accordion-row-gap` | `var(--spacing-md, 1em)` | Gap between items (`separate`) |
 | `--ui-accordion-margin-end` | `0` | Bottom margin |
 | `--ui-accordion-padding-block` | `1.5ch` | Vertical padding |
 | `--ui-accordion-padding-inline` | `0` | Horizontal padding |
@@ -447,7 +411,6 @@ Override accordion-specific tokens for targeted changes:
 | `--ui-accordion-background-padding` | `1.5ch` | Padding (`background` variant) |
 | `--ui-accordion-breakout-unit` | `1rem` | Translate distance (`breakout`) |
 | `--ui-accordion-horizontal-border-radius` | `var(--radius-md, 0.5em)` | Clip-path radius (horizontal) |
-| `--ui-accordion-horizontal-shadow` | `-0.25em 0 1em -0.5em var(--color-overlay, ...)` | Shadow on collapsed horizontal items |
 
 ---
 
