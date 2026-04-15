@@ -316,7 +316,7 @@
 				/* --- tab indicator --- */
 				&::after { 
 					block-size: anchor-size(--tab-active height);
-					border-block-end: var(--ui-accordion-tab-active-border-width, var(--border-width-heavy)) solid var(--ui-accordion-tab-active-border-color, var(--color-text-muted));
+					border-block-end: var(--ui-accordion-tab-active-border-width, var(--border-width-heavy)) solid var(--ui-accordion-tab-active-border-color, var(--color-accent));
 					content: "";
 					display: block;
 					grid-row: 1;
@@ -351,6 +351,7 @@
 				&[open] summary {
 					anchor-name: --tab-active;
 					/* background: var(--ui-accordion-tab-active-background, color-mix(in srgb, var(--color-surface) 20%, transparent)); */
+					background: var(--ui-accordion-tab-active-background, var(--color-surface));
 				}
 			}
 
