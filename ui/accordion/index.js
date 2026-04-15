@@ -54,7 +54,7 @@ class UiAccordion extends HTMLElement {
 
 	ensureCqBox() {
 		const type = this.getAttribute('type') || '';
-		const needsCqBox = ['horizontal', 'horizontal-fixed', 'split'].includes(type);
+		const needsCqBox = ['horizontal', 'horizontal-fixed', 'split', 'tabs'].includes(type);
 		const existing = this.querySelector(':scope > cq-box');
 		if (needsCqBox && !existing) {
 			const box = document.createElement('cq-box');

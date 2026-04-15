@@ -1,11 +1,17 @@
 /**
  * ui-accordion
- * @version 4.0.5
- * @date 2026-04-14
+ * @version 4.0.6
+ * @date 2026-04-15
  * @author Mads Stoumann
  */
 @import '../icon/index.css';
 @layer bs-component {
+	@property --_tabindex {
+		syntax: "<integer>";
+		inherits: true;
+		initial-value: 1;
+	}
+
 	:where(ui-accordion) {
 		--ui-accordion-bg-hover: linear-gradient(90deg, #0000, light-dark(var(--color-field), var(--color-surface-alt)) 10% 90%, #0000);
 		--ui-accordion-border-color: var(--color-border);
@@ -291,6 +297,71 @@
 						}
 					}
 				}
+			}
+		}
+
+		/* === type: tabs === */
+		ui-accordion[type="tabs"] {
+			cq-box {
+				display: grid;
+				grid-template-columns: repeat(4, 1fr);
+				grid-template-rows: auto 1fr;
+				/* position: relative; */
+
+				/* --- tab indicator --- */
+				&::after { 
+					background: var(--ui-accordion-tab-active-background, var(--color-surface));
+					block-size: anchor-size(--tab-active height);
+					box-sizing: border-box;
+					content: "";
+					display: block;
+					grid-row: 1;
+					inline-size: anchor-size(--tab-active width);
+					/* inset-block-start: 0; */
+					inset-inline-start: anchor(--tab-active left);
+					position: absolute;
+					transition: inset-inline-start var(--ui-accordion-duration) ease, inline-size var(--ui-accordion-duration) ease;
+				}
+				&::before {
+					background: var(--ui-accordion-tab-background, var(--color-surface-alt));
+					content: "";
+					grid-column: 1 / -1;
+					grid-row: 1;
+				}
+				/* &[variant~="rounded"]::before {
+					border-radius: var(--ui-accordion-border-radius) var(--ui-accordion-border-radius) 0 0;
+				} */
+			}
+
+			details {
+				--_tabindex: sibling-index();
+				border: 0 !important;
+				box-shadow: none;
+				display: grid;
+				grid-column: 1 / -1;
+				grid-row: 1 / span 2;
+				grid-template-columns: subgrid;
+				grid-template-rows: subgrid;
+				pointer-events: none;
+				&[open] summary {
+					anchor-name: --tab-active;
+				}
+			}
+
+			details::details-content {
+				grid-column: 1 / -1;
+				grid-row: 2;
+				pointer-events: auto;
+				transition: none;
+			}
+
+			summary {
+				display: flex;
+				grid-column: var(--_tabindex);
+				justify-content: center;
+				pointer-events: auto;
+				z-index: 2;
+				ui-icon { display: none; }
 			}
 		}
 	}
