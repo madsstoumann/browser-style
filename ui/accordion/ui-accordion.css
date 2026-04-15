@@ -316,7 +316,7 @@
 				/* --- tab indicator --- */
 				&::after { 
 					block-size: anchor-size(--tab-active height);
-					border-block-end: var(--ui-accordion-tab-active-border-width, var(--border-width-heavy)) solid var(--ui-accordion-tab-active-border-color, var(--color-button-text));
+					border-block-end: var(--ui-accordion-tab-active-border-width, var(--border-width-heavy)) solid var(--ui-accordion-tab-active-border-color, var(--color-text-muted));
 					content: "";
 					display: block;
 					grid-row: 1;
