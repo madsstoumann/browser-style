@@ -31,12 +31,15 @@
 	</p>
 
 	<h2>Basic</h2>
-	<p>Use the <code>size</code> attribute: <code>sm</code> (iOS home-icon size, 4rem), <code>md</code> (7.5rem), <code>lg</code> (15rem). Without <code>size</code>, the clock fills its container.</p>
+	<p>Use the <code>size</code> attribute: <code>sm</code>, <code>md</code> and <code>lg</code>. Without <code>size</code>, the clock fills its container.</p>
 	<div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
 		<ui-analog-clock size="sm">
-			<ol>
+			<!-- <ol>
 				<li>12</li><li>3</li><li>6</li><li>9</li>
-			</ol>
+			</ol> -->
+			<ul style="--ui-analog-clock-indices-size:80cqi"> <!-- FIX!!! -->
+				<li data-hour>●</li><li data-hour>●</li><li data-hour>●</li><li data-hour>●</li>
+			</ul>
 			<nav>
 				<b data-hand="seconds"></b>
 				<b data-hand="minutes"></b>
@@ -85,7 +88,9 @@
 	</div>
 
 	<br>
-	<h2>With hour indices</h2>
+	<h2>Indices</h2>
+	
+	<h3>Hours</h3>
 	<p>12 tick marks arranged on the outer ring using <code>offset-path: content-box</code>.</p>
 	<div class="clock-grid">
 		<ui-analog-clock>
@@ -108,7 +113,7 @@
 	</div>
 
 	<br>
-	<h2>With minute indices (hour marks every fifth)</h2>
+	<h3>Minutes</h3>
 	<p>60 ticks, all using <code>|</code>. <code>data-hour</code> on every fifth makes hour marks bolder and darker via CSS — no character change needed.</p>
 	<div class="clock-grid">
 		<ui-analog-clock>
@@ -139,7 +144,7 @@
 	</div>
 
 	<br>
-	<h2>With dotted indices</h2>
+	<h3>Dotted</h3>
 	<p>60 <code>●</code> marks — same character for hour and minute, <code>data-hour</code> makes the hour ones darker/bolder. The <code>--ui-analog-clock-indices-font-size</code> is reduced so the dots stay small.</p>
 	<div class="clock-grid">
 		<ui-analog-clock style="--ui-analog-clock-indices-font-size: 3cqi">
