@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Analog Clock - Web Component</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="index.css">
+	<style>
+		.clock-grid {
+			display: grid;
+			gap: 2rem;
+			grid-template-columns: repeat(auto-fit, minmax(180px, 240px));
+		}
+	</style>
+	<script type="module" src="index.js"></script>
+</head>
+<body>
+	<h1>UI: Analog Clock (Web Component)</h1>
+	<p>This demo showcases the fallback Light DOM web component, which auto-generates the inner HTML and injects the current time dynamically via CSS custom properties.</p>
+
+	<h2>Basic (Auto-generated content)</h2>
+	<div class="clock-grid">
+		<!-- Minimal definition triggers structure auto-generation -->
+		<ui-analog-clock numerals="12" indices="60" label="London"></ui-analog-clock>
+		<ui-analog-clock size="lg" type="roman" numerals="12" indices="12" label="Tokyo" timezone="9"></ui-analog-clock>
+	</div>
+
+	<h2>Squircle variant</h2>
+	<p>Add <code>variant="squircle"</code> for a mathematical superellipse (squircle) design.</p>
+	<div class="clock-grid">
+		<!-- Custom component still fully supports standard web component parameters -->
+		<ui-analog-clock variant="squircle" numerals="12" indices="60"></ui-analog-clock>
+	</div>
+</body>
+</html>

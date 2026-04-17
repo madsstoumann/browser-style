@@ -1,256 +1,142 @@
-const styles = new CSSStyleSheet();
-styles.replaceSync(`
-  :host {
-    aspect-ratio: 1;
-    background: var(--analog-clock-bg, light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%)));
-    border-radius: 50%;
-    color: var(--analog-clock-c, light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%)));
-    color-scheme: light dark;
-    container-type: inline-size;
-    font-family: var(--analog-clock-ff, ui-sans-serif, system-ui, sans-serif);
-    display: grid;
-    grid-template-rows: repeat(3, 1fr);
-    inline-size: 100%;
-    overflow: clip;
-    position: relative;
-  }
+/**
+ * <ui-analog-clock>
+ * Light DOM web component wrapper for the CSS-first analog clock.
+ * Auto-generates standard structural elements (ol, ul, nav, span) when omitted.
+ * Sets CSS initial variables for the current time based on timezone.
+ * @version 4.0.0
+ */
 
-  /* === Indices === */
+class UiAnalogClock extends HTMLElement {
+	static observedAttributes = ['timezone', 'date', 'numerals', 'indices', 'marker', 'marker-hour', 'label', 'type'];
+	#dateEl;
 
-  :host::part(indices) {
-    aspect-ratio: 1;
-    border-radius: 50%;
-    box-sizing: border-box;
-    color: var(--analog-clock-indices-c, light-dark(hsl(0, 0%, 85%), hsl(0, 0%, 35%)));
-    font-size: var(--analog-clock-indices-fs, 6cqi);
-    grid-area: 1 / 1 / 4 / 1;
-    margin: 0;
-    padding: var(--analog-clock-indices-p, 0);
-    place-self: center;
-    width: 100%;
-  }
-  :host::part(hour) {
-    color: var(--analog-clock-indices-hour-c, light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%)));
-    font-weight: var(--analog-clock-indices-hour-fw, 800);
-  }
-  :host [part~=indices] li {
-    display: inline-block;
-    list-style: none;
-    offset-distance: var(--_d);
-    offset-path: content-box;
-    width: fit-content;
-  }
+	connectedCallback() {
+		if (!this.querySelector(':scope > nav')) this.render();
+		this.updateClock();
+	}
 
-  /* === Numerals === */
+	attributeChangedCallback(name, oldValue, newValue) {
+		if (oldValue === newValue || !this.isConnected) return;
+		if (['numerals', 'indices', 'marker', 'marker-hour', 'type'].includes(name)) {
+			// Wipe and re-render structure if these structural attributes change
+			this.innerHTML = '';
+			this.render();
+		}
+		this.updateClock();
+	}
 
-  :host::part(numerals) {
-    grid-area: 1 / 1 / 4 / 1;
-    margin: var(--analog-clock-numerals-m, 0);
-    padding: 0;
-    position: relative;
-  }
-  :host [part~=numerals] li {
-    --_r: calc((100% - 15cqi) / 2);
-    --_x: calc(var(--_r) + (var(--_r) * cos(var(--_d))));
-    --_y: calc(var(--_r) + (var(--_r) * sin(var(--_d))));
-    aspect-ratio: 1;
-    display: grid;
-    font-size: var(--analog-clock-fs, 6cqi);
-    font-weight: var(--analog-clock-fw, 700);
-    left: var(--_x);
-    place-content: center;
-    position: absolute;
-    top: var(--_y);
-    width: 15cqi;
-  }
+	render() {
+		const label = this.getAttribute('label');
+		const indices = this.getAttribute('indices');
+		const numerals = this.getAttribute('numerals');
 
-  /* === Hands and Date === */
+		// Ticks
+		if (indices) {
+			const count = indices === 'hours' ? 12 : parseInt(indices) || 60;
+			const ul = document.createElement('ul');
+			const marker = this.getAttribute('marker') || '|';
+			const markerHour = this.getAttribute('marker-hour') || marker;
 
-  :host::part(hands) {
-    display: grid;
-    grid-area: 2 / 1 / 3 / 1;
-    grid-template-columns: repeat(3, 1fr);
-  }
-  :host::part(hands)::after {
-    aspect-ratio: 1;
-    background-color: var(--analog-clock-cap, currentColor);
-    border-radius: 50%;
-    content: "";
-    grid-area: 1 / 2 / 1 / 3;
-    height: var(--analog-clock-cap-sz, 8cqi);
-    isolation: isolate;
-    place-self: center;
-  }
-  :host [part~="hands"] b {
-    border-radius: calc(var(--_w) * 2);
-    display: block;
-    height: var(--_h);
-    left: calc((100% - var(--_w)) / 2);
-    position: absolute;
-    top: calc((100% / 2) - var(--_h));
-    transform: rotate(0deg);
-    transform-origin: bottom;
-    width: var(--_w);
-  }
-  :host::part(hours) {
-    --_h: 35%;
-    --_w: 2cqi;
-    animation: turn 43200s linear infinite;
-    animation-delay: var(--_dh, 0ms);
-    background-color: var(--analog-clock-hour, currentColor);
-  }
-  :host::part(minutes) {
-    --_h: 45%;
-    --_w: 2cqi;
-    animation: turn 3600s steps(60, end) infinite;
-    animation-delay: var(--_dm, 0ms);
-    background-color: var(--analog-clock-minute, currentColor);
-  }
-  :host::part(seconds) {
-    --_h: 45%;
-    --_w: 1cqi;
-    animation: turn 60s var(--_tf, linear) infinite;
-    animation-delay: var(--_ds, 0ms);
-    background-color: var(--analog-clock-second, #ff8c05);
-  }
+			for (let i = 0; i < count; i++) {
+				const li = document.createElement('li');
+				const isHourMark = (count === 12) || i % 5 === 0;
+				if (isHourMark) li.setAttribute('data-hour', '');
+				li.textContent = isHourMark ? markerHour : marker;
+				ul.appendChild(li);
+			}
+			this.appendChild(ul);
+		}
 
-  /* === Label and Date === */
- 
-  :host::part(date) { 
-    border: .25cqi solid currentColor;
-    color: var(--analog-clock-date-c, #888);
-    font-family: var(--analog-clock-date-ff, ui-monospace, monospace);
-    font-size: var(--analog-clock-date-fs, 5cqi);
-    grid-area: 1 / 3 / 1 / 4;
-    padding: 0 .6ch;
-    place-self: center start;
-  }
-  :host::part(label) {
-    color: var(--analog-clock-label-c, currentColor);
-    font-size: var(--analog-clock-label-fs, 5cqi);
-    font-weight: var(--analog-clock-label-fw, 600);
-    grid-area: 3 / 1 / 4 / 2;
-    place-self: start center;
-  }
+		// Numerals
+		if (numerals) {
+			let count = parseInt(numerals) || 12;
+			count = Math.min(12, Math.max(1, count));
+			const ol = document.createElement('ol');
+			for (let i = 0; i < count; i++) {
+				const li = document.createElement('li');
+				const num = ((i * (12 / count))) % 12 || 12;
+				li.textContent = this.formatNumber(num);
+				ol.appendChild(li);
+			}
+			this.appendChild(ol);
+		}
 
-  @keyframes turn {
-    to { transform: rotate(1turn); }
-  }
-`);
+		// Hands
+		const nav = document.createElement('nav');
+		['seconds', 'minutes', 'hours'].forEach(hand => {
+			const b = document.createElement('b');
+			b.setAttribute('data-hand', hand);
+			nav.appendChild(b);
+		});
+		
+		if (this.hasAttribute('date')) {
+			this.#dateEl = document.createElement('time');
+			nav.appendChild(this.#dateEl);
+		}
+		this.appendChild(nav);
 
-export default class AnalogClock extends HTMLElement {
-  #root;
-  #date;
-  #numberFormatter;
-  #romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+		// Label
+		if (label) {
+			const span = document.createElement('span');
+			span.textContent = label;
+			this.appendChild(span);
+		}
+	}
 
-  constructor() {
-    super();
-    this.#root = this.attachShadow({ mode: 'open' });
-    this.#root.adoptedStyleSheets = [styles];
-    this.#root.innerHTML = `
-      <ul part="indices">${this.#generateIndices()}</ul>
-      <ol part="numerals">${this.#generateNumerals(this.getAttribute('numerals'))}</ol>
-      <nav part="hands">
-        <b part="seconds"></b>
-        <b part="minutes"></b>
-        <b part="hours"></b>
-        <time part="date"></time>
-      </nav>
-      <span part="label"></span>`;
+	formatNumber(num) {
+		const type = this.getAttribute('type') || 'arab';
+		const map = {
+			'roman': ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'],
+			'roman-alt': ['I','II','III','IIII','V','VI','VII','VIII','IX','X','XI','XII']
+		};
+		if (!map[type]) return num.toString();
+		return map[type][num - 1];
+	}
 
-    this.#date = this.#root.querySelector('[part="date"]');
-    this.#root.querySelector('[part="label"]').textContent = this.getAttribute('label') || '';
+	roundTzOffset(offset) {
+		return Math.round((parseFloat(offset) || 0) * 4) / 4;
+	}
 
-    if (this.hasAttribute('steps')) {
-      this.style.setProperty('--_tf', 'steps(60)');
-    }
+	updateClock() {
+		const time = new Date();
+		const tzOffset = this.roundTzOffset(this.getAttribute('timezone') || -(time.getTimezoneOffset() / 60));
+		
+		// Setup UTC tracking then apply tzOffset
+		const utc = time.getTime() + (time.getTimezoneOffset() * 60000);
+		const tzTime = new Date(utc + (3600000 * tzOffset));
 
-    this.#updateClock();
-  }
+		const hour = -3600 * (tzTime.getHours() % 12);
+		const mins = -60 * tzTime.getMinutes();
+		const secs = -tzTime.getSeconds();
 
-  #formatDate(tzTime) {
-    const date = this.getAttribute('date');
-    if (!date) {
-      this.#date.hidden = true;
-      return '';
-    }
+		if (this.#dateEl && this.hasAttribute('date')) {
+			this.#dateEl.textContent = this.formatDate(tzTime);
+		}
 
-    this.#date.hidden = false;
-    const parts = {
-      day: tzTime.getDate().toString().padStart(2, '0'),
-      month: (tzTime.getMonth() + 1).toString().padStart(2, '0'),
-      year: tzTime.getFullYear().toString()
-    };
+		// Update base CSS vars injected dynamically onto the host block
+		this.style.setProperty('--_dh', `${(hour+mins)}s`);
+		this.style.setProperty('--_dm', `${mins}s`);
+		this.style.setProperty('--_ds', `${secs}s`);
+		
+		if (this.hasAttribute('label')) {
+			let span = this.querySelector(':scope > span');
+			if (!span) {
+				span = document.createElement('span');
+				this.appendChild(span);
+			}
+			span.textContent = this.getAttribute('label');
+		}
+	}
 
-    return date.split(' ')
-      .map(part => parts[part])
-      .filter(Boolean)
-      .join(' ');
-  }
-
-  #formatNumber(num) {
-    const system = this.getAttribute('system') || 'latn';
-
-    if (system === 'roman') return this.#romanNumerals[num - 1];
-    if (system === 'romanlow') return this.#romanNumerals[num - 1].toLowerCase();
-    
-    if (!this.#numberFormatter) {
-      this.#numberFormatter = new Intl.NumberFormat('en', { 
-        numberingSystem: system
-      });
-    }
-    return this.#numberFormatter.format(num);
-  }
-
-  #generateIndices() {
-    if (!this.hasAttribute('indices')) return '';
-    const isHours = this.getAttribute('indices') === 'hours';
-    const count = isHours ? 12 : 60;
-    const step = 100 / count;
-    const marker = this.getAttribute('marker') || '|';
-    const markerHour = this.getAttribute('marker-hour') || marker;
-    
-    return Array.from({ length: count }, (_, i) => {
-      const percentage = `${(i * step)}%`;
-      const isHourMark = isHours || i % 5 === 0;
-      const part = isHourMark ? 'part="index hour"' : 'part="index"';
-      const currentMarker = isHourMark ? markerHour : marker;
-      return `<li style="--_d:${percentage}" ${part}>${currentMarker}</li>`;
-    }).join('');
-  }
-
-  #generateNumerals(count) {
-    count = Math.min(12, Math.max(1, parseInt(count) || 12));
-    const step = 360 / count;
-    return Array.from({ length: count }, (_, i) => {
-      const deg = ((i * step) + 270) % 360;
-      const num = ((i * (12 / count))) % 12 || 12;
-      return `<li style="--_d:${deg}deg">${this.#formatNumber(num)}</li>`;
-    }).join('');
-  }
-
-  #roundTzOffset(offset) {
-    return Math.round((parseFloat(offset) || 0) * 4) / 4
-  };
-
-  #updateClock() {
-    const time = new Date();
-    const tzOffset = this.#roundTzOffset(this.getAttribute('timezone') || '0');
-    const utc = time.getTime() + (time.getTimezoneOffset() * 60000);
-    const tzTime = new Date(utc + (3600000 * tzOffset));
-
-    const hour = -3600 * (tzTime.getHours() % 12);
-    const mins = -60 * tzTime.getMinutes();
-    const secs = -tzTime.getSeconds();
-
-    // Update date display
-    this.#date.textContent = this.#formatDate(tzTime);
-
-    this.style.setProperty('--_dh', `${(hour+mins)}s`);
-    this.style.setProperty('--_dm', `${mins}s`);
-    this.style.setProperty('--_ds', `${secs}s`);
-  }
+	formatDate(tzTime) {
+		const dateSetting = this.getAttribute('date');
+		if (dateSetting === "short") return tzTime.getDate();
+		return new Intl.DateTimeFormat(document.documentElement.lang || 'en', { 
+			weekday: "short", 
+			day: "numeric" 
+		}).format(tzTime);
+	}
 }
 
-customElements.define('analog-clock', AnalogClock);
+customElements.define('ui-analog-clock', UiAnalogClock);
+export { UiAnalogClock };

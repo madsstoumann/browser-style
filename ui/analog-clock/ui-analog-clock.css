@@ -154,6 +154,8 @@
 	:where(ui-analog-clock[variant~="squircle"]) {
 		--_squircle-exponent: 4;
 		corners: 50% superellipse(2);
+		
+		/* Push ticks mathematically to borders */
 		& > ul {
 			corners: inherit;
 			& > li {
@@ -165,11 +167,28 @@
 				--_sin: abs(sin(var(--_d)));
 				--_r: calc(1 / pow(pow(var(--_cos), var(--_squircle-exponent)) + pow(var(--_sin), var(--_squircle-exponent)), calc(1 / var(--_squircle-exponent))));
 				--_w: calc(100% - var(--ui-analog-clock-indices-size, 95cqi));
-				--_radius: calc(50% - var(--_w) / 2);
-				left: calc(50% + var(--_radius) * var(--_r) * cos(var(--_d)));
-				top: calc(50% + var(--_radius) * var(--_r) * sin(var(--_d)));
+				--_pad: calc(50% - var(--_w) / 2);
+				left: calc(50% + var(--_pad) * var(--_r) * cos(var(--_d)));
+				top: calc(50% + var(--_pad) * var(--_r) * sin(var(--_d)));
 				transform: translate(-50%, -50%) rotate(calc(var(--_d) + 90deg));
 			}
+		}
+
+		/* Mathematically apply the identical squircle offset to the numerals */
+		& > ol > li {
+			--_cos: abs(cos(var(--_d)));
+			--_sin: abs(sin(var(--_d)));
+			--_sq-val: calc(1 / pow(pow(var(--_cos), var(--_squircle-exponent)) + pow(var(--_sin), var(--_squircle-exponent)), calc(1 / var(--_squircle-exponent))));
+			
+			/* 
+			   If you want to pull the entire ring of numerals inwards relative to the ticks, 
+			   you can scale the radius radius slightly (e.g. * 0.9 or similar variable).
+			   By default, it perfectly tracks the squircle arc.
+			*/
+			--_sq-r: calc(var(--_r) * var(--_sq-val) * var(--ui-analog-clock-squircle-numerals-scale, 0.9));
+			
+			--_x: calc(var(--_r) + (var(--_sq-r) * cos(var(--_d))));
+			--_y: calc(var(--_r) + (var(--_sq-r) * sin(var(--_d))));
 		}
 	}
 

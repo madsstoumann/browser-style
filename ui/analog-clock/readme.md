@@ -1,164 +1,145 @@
-# Analog Clock
+# @browser.style/analog-clock
 
-A customizable analog clock web component that displays time with support for multiple time zones, number systems, indices and visual styles.
+A CSS-first analog clock component built entirely on native HTML elements (`<ol>`, `<ul>`, `<nav>`) and CSS trigonometric functions (`sin()`, `cos()`, `pow()`). It handles all placement mathematically — no JavaScript is needed for positioning. An optional Light DOM web component wrapper provides a declarative API for easier framework integration.
 
-## Installation
+## Features
+
+- **Pure CSS Layout**: Numerals and ticks are evenly distributed using `sibling-index()` / `sibling-count()` along with mathematical evaluation of polar formulas.
+- **Dynamic Shapes**: Includes a `squircle` variant that perfectly calculates superellipse tick boundaries dynamically. 
+- **Zero-JS Core**: The clock runs completely on CSS animations. JavaScript is only required for updating the UI with the *current time* (via short `animation-delay` assignments `var(--_ds)`, `var(--_dm)`, `var(--_dh)`).
+- **Light/Dark Mode**: Fully supports native `color-scheme: light dark` and responds gracefully to `@browser.style/base` tokens.
+- **Web Component Wrapper**: Simply add `<ui-analog-clock numerals="12" indices="60">` and the web component will automatically scaffold the inner `.innerHTML` requirements on its own.
+
+---
+
+## Install
 
 ```bash
 npm install @browser.style/analog-clock
 ```
 
-## Basic Usage
+Peer dependencies:
+
+```bash
+npm install @browser.style/base
+```
+
+> `@browser.style/base` provides the design token system and core layout semantics.
+
+---
+
+## 1. Usage: CSS-only (Vanilla HTML)
+
+For full control, write the internal structure and trigger the hand angles using inline CSS variables. A tiny helper file (`uiAnalogClock.js`) is standard practice to grab `new Date()` once on load.
+
+```html
+<link rel="stylesheet" href="@browser.style/base/index.css">
+<link rel="stylesheet" href="@browser.style/analog-clock/index.css">
+
+<ui-analog-clock style="--_dh: -25000s; --_dm: -1230s; --_ds: -45s;">
+  <!-- Indices -> ticking markers -->
+  <ul>
+    <li data-hour>|</li>
+    <li>|</li>
+    <!-- ... repeat 60x ... -->
+  </ul>
+  
+  <!-- Numerals (12 indices placed evenly mathematically) -->
+  <ol>
+    <li>12</li>
+...
+  </ol>
+  
+  <!-- The hands structure -->
+  <nav>
+    <b data-hand="seconds"></b>
+    <b data-hand="minutes"></b>
+    <b data-hand="hours"></b>
+  </nav>
+</ui-analog-clock>
+```
+
+## 2. Usage: Web Component Wrapper
+
+When using a JS framework or handling complicated numeral mappings, the web component reduces markup.
 
 ```javascript
 import '@browser.style/analog-clock';
 ```
 
 ```html
-<analog-clock></analog-clock>
+<ui-analog-clock numerals="12" indices="60" timezone="-5" label="New York"></ui-analog-clock>
 ```
 
-## Attributes
+### Web Component Attributes
 
-| Attribute | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `date` | String | — | Date format tokens: "day", "month", "year" or any combination |
-| `indices` | Boolean/String | — | Show tick marks; "hours" for 12 marks, empty for 60 |
-| `label` | String | — | Text label displayed below clock |
-| `marker` | String | `"\|"` | Character used for minute tick marks |
-| `marker-hour` | String | (marker) | Character used for hour tick marks |
-| `numerals` | Number | `12` | Number of numerals to display (1-12) |
-| `steps` | Boolean | `false` | Use stepping animation for seconds hand |
-| `system` | String | `"latn"` | Number system: "roman", "romanlow", or any valid [Intl numberingSystem](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#numberingsystem) |
-| `timezone` | Number | `0` | UTC offset in hours (e.g., -4, +5.5, +9) |
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `indices` | —       | Automatically generates ticks. `"60"` or `"hours"` (12 ticks). |
+| `numerals` | —      | Generates count of numbers (`1`-`12`). |
+| `label` | —       | Appends text under the clock. |
+| `marker` / `marker-hour` | `\|` | String for custom indices representation. |
+| `type` | `"arab"` | Number type rendering: `"roman"`, `"roman-alt"`, `"arab"`. |
+| `timezone` | System | Time zone integer offset (`9`, `-4`, `+12.5`). |
+| `date` | — | Renders a `<time>` node. Set to `"short"` for `DD`. |
 
-## CSS Parts
+---
 
-Style internal elements using the `::part()` pseudo-element.
+## Examples & Variants
 
-| Part | Description |
-|------|-------------|
-| `indices` | Tick marks container |
-| `index` | Individual tick mark |
-| `hour` | Hour tick mark (combined with `index`) |
-| `numerals` | Numerals container |
-| `hands` | Hands container |
-| `seconds` | Second hand |
-| `minutes` | Minute hand |
-| `hours` | Hour hand |
-| `date` | Date display |
-| `label` | Label text |
-
-Example:
-```css
-analog-clock::part(seconds) {
-  background-color: red;
-}
-
-analog-clock::part(hour) {
-  color: gold;
-  font-weight: 900;
-}
-```
-
-## CSS Custom Properties
-
-### Layout & Typography
-
-| Property | Default | Description |
-|----------|---------|-------------|
-| `--analog-clock-ff` | `ui-sans-serif, system-ui, sans-serif` | Font family |
-| `--analog-clock-fs` | `6cqi` | Font size for numerals |
-| `--analog-clock-fw` | `700` | Font weight for numerals |
-
-### Colors & Theme
-
-| Property | Default | Description |
-|----------|---------|-------------|
-| `--analog-clock-bg` | `light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%))` | Background color/gradient |
-| `--analog-clock-c` | `light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%))` | Main text color |
-| `--analog-clock-cap` | `currentColor` | Center cap color |
-| `--analog-clock-cap-sz` | `8cqi` | Center cap size |
-| `--analog-clock-hour` | `currentColor` | Hour hand color |
-| `--analog-clock-minute` | `currentColor` | Minute hand color |
-| `--analog-clock-second` | `#ff8c05` | Second hand color |
-
-### Indices
-
-| Property | Default | Description |
-|----------|---------|-------------|
-| `--analog-clock-indices-c` | `light-dark(hsl(0, 0%, 85%), hsl(0, 0%, 35%))` | Indices color |
-| `--analog-clock-indices-fs` | `6cqi` | Indices font size |
-| `--analog-clock-indices-p` | `0` | Indices container padding |
-| `--analog-clock-indices-hour-c` | `light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%))` | Hour mark color |
-| `--analog-clock-indices-hour-fw` | `800` | Hour mark font weight |
-
-### Numerals
-
-| Property | Default | Description |
-|----------|---------|-------------|
-| `--analog-clock-numerals-m` | `0` | Numerals container margin |
-
-### Date & Label
-
-| Property | Default | Description |
-|----------|---------|-------------|
-| `--analog-clock-date-c` | `#888` | Date text color |
-| `--analog-clock-date-ff` | `ui-monospace, monospace` | Date font family |
-| `--analog-clock-date-fs` | `5cqi` | Date font size |
-| `--analog-clock-label-c` | `currentColor` | Label text color |
-| `--analog-clock-label-fs` | `5cqi` | Label font size |
-| `--analog-clock-label-fw` | `600` | Label font weight |
-
-## Examples
+### Sizes
+Clock dimensions inherit the base sizes:
 
 ```html
-<!-- Basic clock with New York time -->
-<analog-clock label="New York" timezone="-4"></analog-clock>
-
-<!-- Gold-themed clock with Roman numerals and hour marks -->
-<analog-clock
-  class="gold"
-  system="roman"
-  numerals="4"
-  indices="hours"
-  marker="●"
-></analog-clock>
-
-<!-- Clock with minute indices and date display -->
-<analog-clock
-  indices
-  marker="|"
-  date="day month"
-></analog-clock>
-
-<!-- Clock with different markers for hours and minutes -->
-<analog-clock
-  indices
-  marker="·"
-  marker-hour="●"
-  date="day month"
-></analog-clock>
+<ui-analog-clock size="sm"></ui-analog-clock> <!-- 4rem -->
+<ui-analog-clock size="md"></ui-analog-clock> <!-- 7.5rem -->
+<ui-analog-clock size="lg"></ui-analog-clock> <!-- 15rem, default 100% -->
 ```
+
+### "Quartz" Steps
+Force the seconds hand mechanism to tick abruptly `steps(60)` rather than a linear sweeping transition.
+```html
+<ui-analog-clock steps></ui-analog-clock>
+```
+
+### Squircle and Trigonometry math
+```html
+<ui-analog-clock variant="squircle"></ui-analog-clock>
+```
+
+Applying the `squircle` variant turns the clock boundary into a superellipse using `corners: 50% superellipse(2)`. However, masking the clock visual shape isn't enough; the internal ticking boundary and numbers must respect the squircle walls perfectly.
+
+**Math in CSS**:  
+Normal clocks calculate polar positions exclusively using $r \cdot \cos(\theta)$ and $r \cdot \sin(\theta)$.  
+When `squircle` is applied, we leverage the polar definition of a superellipse to scale $r$:
+$$r(\theta) = \frac{1}{\left( |\cos\theta|^n + |\sin\theta|^n \right)^{1/n}}$$
+
+This formula dictates how far from the origin ($0,0$) a tick or numeral should shift on its given angle $\theta$. The `n` variable is defined via `--_squircle-exponent`, which defaults to 4. 
 
 ```css
-/* Gold theme example */
-.gold {
-  --_gold: #E2CA7D;
-  --_dark: color-mix(in oklab, var(--_gold) 60%, black);
-  --_accent: color-mix(in oklab, var(--_gold) 80%, maroon);
-
-  --analog-clock-bg: radial-gradient(
-    circle at 50% 50%,
-    color-mix(in oklab, var(--_gold) 20%, white) 50%,
-    var(--_gold) 51%,
-    color-mix(in oklab, var(--_gold) 85%, black) 95%
-  );
-  --analog-clock-c: color-mix(in oklab, var(--_gold) 50%, black);
-  --analog-clock-ff: "Didot", serif;
-  --analog-clock-hour: var(--_dark);
-  --analog-clock-minute: var(--_dark);
-  --analog-clock-second: var(--_accent);
-  --analog-clock-cap: color-mix(in oklab, var(--_dark), white 20%);
-}
+--_squircle-exponent: 4;
+--_sq-val: calc(1 / pow(pow(abs(cos(var(--_d))), var(--_squircle-exponent)) + pow(abs(sin(var(--_d))), var(--_squircle-exponent)), calc(1 / var(--_squircle-exponent))));
 ```
+
+Multiplying the standard circular $r$ value with `--_sq-val` allows the numerals and ticking layers (both `<ul>` and `<ol>`) to trace an exact squircle shape mathematically aligned perfectly out of the box — dynamically re-padding corners without an ounce of manual padding logic or JS dimension listening!
+
+---
+
+## Customization / Design Tokens
+
+The clock is extensively tied to global tokens from `@browser.style/base`. Local overrides prefix `--ui-analog-clock`.
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| `--ui-analog-clock-background` | `var(--color-surface-alt)` | The clock face |
+| `--ui-analog-clock-color` | `var(--color-text)` | Default copy color |
+| `--ui-analog-clock-font-family` | `var(--font-form)` | Default type |
+| `--ui-analog-clock-second-color` | `#ff8c05` | Second hand brand color |
+| `--ui-analog-clock-cap-color` | `currentColor` | Circle pin connecting hands |
+| `--ui-analog-clock-squircle-numerals-scale` | `0.9` | Float scale value ensuring 1..12 padding is kept clear from the tick outline |
+
+## Browser Support
+
+- **Container Queries & Styles**: `<cq-box>` architecture supported across all modern browsers.
+- **CSS Trigonometry**: Native math (`sin()`, `cos()`, `pow()`) is heavily relied upon and supported natively globally (since late 2023 / early 2024 across major versions).
+- **Graceful degradation**: Browsers without `sibling-index()` default to non-separated content strings.

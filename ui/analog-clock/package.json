@@ -1,19 +1,22 @@
 {
   "name": "@browser.style/analog-clock",
   "version": "1.0.4",
-  "description": "Analog Clock Component",
+  "description": "CSS-first analog clock component with optional web component wrapper",
   "type": "module",
   "module": "index.js",
+  "style": "index.css",
   "exports": {
     ".": {
       "import": "./index.js",
       "style": "./index.css"
     },
-    "./style": "./index.css"
+    "./style": "./index.css",
+    "./index.css": "./index.css"
   },
   "files": [
     "index.js",
-    "index.css"
+    "index.css",
+    "ui-analog-clock.css"
   ],
   "publishConfig": {
     "access": "public",
@@ -21,8 +24,9 @@
   },
   "keywords": [
     "browser.style",
-    "web-components",
-    "analog-clock"
+    "analog-clock",
+    "css-first",
+    "web-components"
   ],
   "author": "Mads Stoumann",
   "license": "ISC",
@@ -31,9 +35,8 @@
     "url": "git+https://github.com/madsstoumann/browser-style.git",
     "directory": "ui/analog-clock"
   },
-  "bugs": {
-    "url": "https://github.com/madsstoumann/browser-style/issues"
-  },
   "homepage": "https://browser.style/ui/analog-clock",
-  "customElements": "custom-elements.json"
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.0"
+  }
 }

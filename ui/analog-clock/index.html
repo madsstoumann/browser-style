@@ -171,42 +171,9 @@
 
 	<br>
 	<h2>Squircle variant</h2>
-	<p>Add <code>variant="squircle"</code> for an iOS-home-icon shape. The indices use <code>offset-path: content-box</code>, and since the <code>&lt;ul&gt;</code> inherits <code>corners</code> from the host, the tick marks follow the squircle edge — not a circle.</p>
-	<div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
-		<ui-analog-clock size="sm" variant="squircle">
-			<ul>
-				<li data-hour>|</li><li data-hour>|</li><li data-hour>|</li>
-				<li data-hour>|</li><li data-hour>|</li><li data-hour>|</li>
-				<li data-hour>|</li><li data-hour>|</li><li data-hour>|</li>
-				<li data-hour>|</li><li data-hour>|</li><li data-hour>|</li>
-			</ul>
-			<ol>
-				<li>12</li><li>3</li><li>6</li><li>9</li>
-			</ol>
-			<nav>
-				<b data-hand="seconds"></b>
-				<b data-hand="minutes"></b>
-				<b data-hand="hours"></b>
-			</nav>
-		</ui-analog-clock>
-		<ui-analog-clock size="md" variant="squircle">
-			<ul>
-				<li data-hour>|</li><li data-hour>|</li><li data-hour>|</li>
-				<li data-hour>|</li><li data-hour>|</li><li data-hour>|</li>
-				<li data-hour>|</li><li data-hour>|</li><li data-hour>|</li>
-				<li data-hour>|</li><li data-hour>|</li><li data-hour>|</li>
-			</ul>
-			<ol>
-				<li>12</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
-				<li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li>
-			</ol>
-			<nav>
-				<b data-hand="seconds"></b>
-				<b data-hand="minutes"></b>
-				<b data-hand="hours"></b>
-			</nav>
-		</ui-analog-clock>
-		<ui-analog-clock size="lg" variant="squircle">
+	<p>Add <code>variant="squircle"</code> for a squircle-shaped clock. The ticks and numerals are automatically positioned to mathematically follow the superellipse edge to ensure uniform padding.</p>
+	<div class="clock-grid">
+		<ui-analog-clock variant="squircle">
 			<ul>
 				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
 				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
