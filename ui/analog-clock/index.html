@@ -4,38 +4,320 @@
 	<title>Analog Clock</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="Analog Clock: CSS-driven analog clock with JavaScript initialization.">
-  <meta name="view-transition" content="same-origin">
+	<meta name="description" content="CSS-first analog clock component.">
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
+	<link rel="stylesheet" href="ui-analog-clock.css">
 	<style>
-		.round-markers {
-			--analog-clock-indices-fs: 3cqi;
-			--analog-clock-indices-hour-fw: 400;
-			--analog-clock-indices-p: 2ch;
-			--analog-clock-numerals-m: 1ch;
-			}
+		.clock-grid {
+			display: grid;
+			gap: 2rem;
+			grid-template-columns: repeat(auto-fit, minmax(180px, 240px));
+		}
 	</style>
 </head>
 <body>
-	<h1>UI: Components</h1>
+	<h1>UI: Analog Clock</h1>
 
-	<h2>Analog Clock</h2>
-	<p>Web Component, using CSS to drive an analog clock.</p>
+	<h2>CSS</h2>
+	<p>
+		<code>&lt;ui-analog-clock&gt;</code> is a CSS-first analog clock. Compose it from native elements: <code>&lt;ol&gt;</code> for numerals, <code>&lt;ul&gt;</code> for indices, <code>&lt;nav&gt;</code> for hands and date, <code>&lt;span&gt;</code> for the label. Numeral and index positions are computed from <code>sibling-index()</code> / <code>sibling-count()</code> — no inline angles needed.
+	</p>
+	<p>
+		This page demonstrates the <strong>CSS-only</strong> approach. Because a clock needs the current time to place its hands, a tiny JS helper at the bottom of this page sets the animation delays (<code>--_dh</code>, <code>--_dm</code>, <code>--_ds</code>). Without it, hands rest at 12:00. See <a href="basic/uiAnalogClock.js"><code>basic/uiAnalogClock.js</code></a>.
+	</p>
+	<p>
+		For features that require logic (timezones, dynamic numerals, localized numbering systems), see the <a href="wc-demo.html">web component demo</a>.
+	</p>
 
-	<div class="ui-grid --xs-c-1 --md-c-3">
-		<analog-clock label="New York" timezone="-4"></analog-clock>
-		<analog-clock label="Copenhagen" timezone="+1" indices steps date="day"></analog-clock>
-		<analog-clock label="Tokyo" timezone="+9" indices marker="●" class="round-markers" steps></analog-clock>
+	<h2>Basic</h2>
+	<p>Use the <code>size</code> attribute: <code>sm</code> (iOS home-icon size, 4rem), <code>md</code> (7.5rem), <code>lg</code> (15rem). Without <code>size</code>, the clock fills its container.</p>
+	<div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+		<ui-analog-clock size="sm">
+			<ol>
+				<li>12</li><li>3</li><li>6</li><li>9</li>
+			</ol>
+			<nav>
+				<b data-hand="seconds"></b>
+				<b data-hand="minutes"></b>
+				<b data-hand="hours"></b>
+			</nav>
+		</ui-analog-clock>
+		<ui-analog-clock size="md">
+			<ol>
+				<li>12</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+				<li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li>
+			</ol>
+			<nav>
+				<b data-hand="seconds"></b>
+				<b data-hand="minutes"></b>
+				<b data-hand="hours"></b>
+			</nav>
+		</ui-analog-clock>
+		<ui-analog-clock size="lg">
+			<ol>
+				<li>12</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+				<li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li>
+			</ol>
+			<nav>
+				<b data-hand="seconds"></b>
+				<b data-hand="minutes"></b>
+				<b data-hand="hours"></b>
+			</nav>
+		</ui-analog-clock>
+	</div>
+
+	<br>
+	<h2>Roman Numerals</h2>
+	<p>Same markup — just different text content.</p>
+	<div class="clock-grid">
+		<ui-analog-clock>
+			<ol style="font-family: 'Iowan Old Style', 'Palatino Linotype', 'URW Palladio L', P052, serif; font-weight: normal;">
+				<li>XII</li><li>I</li><li>II</li><li>III</li><li>IV</li><li>V</li>
+				<li>VI</li><li>VII</li><li>VIII</li><li>IX</li><li>X</li><li>XI</li>
+			</ol>
+			<nav>
+				<b data-hand="seconds"></b>
+				<b data-hand="minutes"></b>
+				<b data-hand="hours"></b>
+			</nav>
+		</ui-analog-clock>
+	</div>
+
+	<br>
+	<h2>With hour indices</h2>
+	<p>12 tick marks arranged on the outer ring using <code>offset-path: content-box</code>.</p>
+	<div class="clock-grid">
+		<ui-analog-clock>
+			<ul>
+				<li data-hour>•</li><li data-hour>•</li><li data-hour>•</li>
+				<li data-hour>•</li><li data-hour>•</li><li data-hour>•</li>
+				<li data-hour>•</li><li data-hour>•</li><li data-hour>•</li>
+				<li data-hour>•</li><li data-hour>•</li><li data-hour>•</li>
+			</ul>
+			<ol>
+				<li>12</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+				<li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li>
+			</ol>
+			<nav>
+				<b data-hand="seconds"></b>
+				<b data-hand="minutes"></b>
+				<b data-hand="hours"></b>
+			</nav>
+		</ui-analog-clock>
+	</div>
+
+	<br>
+	<h2>With minute indices (hour marks every fifth)</h2>
+	<p>60 ticks, all using <code>|</code>. <code>data-hour</code> on every fifth makes hour marks bolder and darker via CSS — no character change needed.</p>
+	<div class="clock-grid">
+		<ui-analog-clock>
+			<ul>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+			</ul>
+			<ol>
+				<li>12</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+				<li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li>
+			</ol>
+			<nav>
+				<b data-hand="seconds"></b>
+				<b data-hand="minutes"></b>
+				<b data-hand="hours"></b>
+			</nav>
+		</ui-analog-clock>
+	</div>
+
+	<br>
+	<h2>With dotted indices</h2>
+	<p>60 <code>●</code> marks — same character for hour and minute, <code>data-hour</code> makes the hour ones darker/bolder. The <code>--ui-analog-clock-indices-font-size</code> is reduced so the dots stay small.</p>
+	<div class="clock-grid">
+		<ui-analog-clock style="--ui-analog-clock-indices-font-size: 3cqi">
+			<ul>
+				<li data-hour>●</li><li>●</li><li>●</li><li>●</li><li>●</li>
+				<li data-hour>●</li><li>●</li><li>●</li><li>●</li><li>●</li>
+				<li data-hour>●</li><li>●</li><li>●</li><li>●</li><li>●</li>
+				<li data-hour>●</li><li>●</li><li>●</li><li>●</li><li>●</li>
+				<li data-hour>●</li><li>●</li><li>●</li><li>●</li><li>●</li>
+				<li data-hour>●</li><li>●</li><li>●</li><li>●</li><li>●</li>
+				<li data-hour>●</li><li>●</li><li>●</li><li>●</li><li>●</li>
+				<li data-hour>●</li><li>●</li><li>●</li><li>●</li><li>●</li>
+				<li data-hour>●</li><li>●</li><li>●</li><li>●</li><li>●</li>
+				<li data-hour>●</li><li>●</li><li>●</li><li>●</li><li>●</li>
+				<li data-hour>●</li><li>●</li><li>●</li><li>●</li><li>●</li>
+				<li data-hour>●</li><li>●</li><li>●</li><li>●</li><li>●</li>
+			</ul>
+			<ol>
+				<li>12</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+				<li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li>
+			</ol>
+			<nav>
+				<b data-hand="seconds"></b>
+				<b data-hand="minutes"></b>
+				<b data-hand="hours"></b>
+			</nav>
+		</ui-analog-clock>
+	</div>
+
+	<br>
+	<h2>Squircle variant</h2>
+	<p>Add <code>variant="squircle"</code> for an iOS-home-icon shape. The indices use <code>offset-path: content-box</code>, and since the <code>&lt;ul&gt;</code> inherits <code>corners</code> from the host, the tick marks follow the squircle edge — not a circle.</p>
+	<div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+		<ui-analog-clock size="sm" variant="squircle">
+			<ul>
+				<li data-hour>|</li><li data-hour>|</li><li data-hour>|</li>
+				<li data-hour>|</li><li data-hour>|</li><li data-hour>|</li>
+				<li data-hour>|</li><li data-hour>|</li><li data-hour>|</li>
+				<li data-hour>|</li><li data-hour>|</li><li data-hour>|</li>
+			</ul>
+			<ol>
+				<li>12</li><li>3</li><li>6</li><li>9</li>
+			</ol>
+			<nav>
+				<b data-hand="seconds"></b>
+				<b data-hand="minutes"></b>
+				<b data-hand="hours"></b>
+			</nav>
+		</ui-analog-clock>
+		<ui-analog-clock size="md" variant="squircle">
+			<ul>
+				<li data-hour>|</li><li data-hour>|</li><li data-hour>|</li>
+				<li data-hour>|</li><li data-hour>|</li><li data-hour>|</li>
+				<li data-hour>|</li><li data-hour>|</li><li data-hour>|</li>
+				<li data-hour>|</li><li data-hour>|</li><li data-hour>|</li>
+			</ul>
+			<ol>
+				<li>12</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+				<li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li>
+			</ol>
+			<nav>
+				<b data-hand="seconds"></b>
+				<b data-hand="minutes"></b>
+				<b data-hand="hours"></b>
+			</nav>
+		</ui-analog-clock>
+		<ui-analog-clock size="lg" variant="squircle">
+			<ul>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+				<li data-hour>|</li><li>|</li><li>|</li><li>|</li><li>|</li>
+			</ul>
+			<ol>
+				<li>12</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+				<li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li>
+			</ol>
+			<nav>
+				<b data-hand="seconds"></b>
+				<b data-hand="minutes"></b>
+				<b data-hand="hours"></b>
+			</nav>
+		</ui-analog-clock>
+	</div>
+
+	<br>
+	<h2>Stepping hands (<code>steps</code>)</h2>
+	<p>By default all three hands sweep smoothly (linear). Add the <code>steps</code> attribute for classic tick-tick motion on seconds, minutes, and hours — like a quartz watch. Internally this sets <code>--ui-analog-clock-hand-timing: steps(60)</code>; override that property directly for any other timing function.</p>
+	<div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+		<ui-analog-clock size="md">
+			<ol>
+				<li>12</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+				<li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li>
+			</ol>
+			<nav>
+				<b data-hand="seconds"></b>
+				<b data-hand="minutes"></b>
+				<b data-hand="hours"></b>
+			</nav>
+			<span>fluid</span>
+		</ui-analog-clock>
+		<ui-analog-clock size="md" steps>
+			<ol>
+				<li>12</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+				<li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li>
+			</ol>
+			<nav>
+				<b data-hand="seconds"></b>
+				<b data-hand="minutes"></b>
+				<b data-hand="hours"></b>
+			</nav>
+			<span>steps</span>
+		</ui-analog-clock>
+	</div>
+
+	<br>
+	<h2>With label and date</h2>
+	<p>Add a <code>&lt;span&gt;</code> for the label and a <code>&lt;time&gt;</code> inside <code>&lt;nav&gt;</code> for the date.</p>
+	<div class="clock-grid">
+		<ui-analog-clock>
+			<ol>
+				<li>12</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+				<li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li>
+			</ol>
+			<nav>
+				<b data-hand="seconds"></b>
+				<b data-hand="minutes"></b>
+				<b data-hand="hours"></b>
+				<time>17</time>
+			</nav>
+			<span>Copenhagen</span>
+		</ui-analog-clock>
+	</div>
+
+	<br>
+	<h2>Custom colors</h2>
+	<p>Override component tokens — e.g. <code>--ui-analog-clock-background</code>, <code>--ui-analog-clock-second-color</code>.</p>
+	<div class="clock-grid">
+		<ui-analog-clock style="--ui-analog-clock-background: oklch(0.35 0.08 260); --ui-analog-clock-color: oklch(0.95 0.02 260); --ui-analog-clock-second-color: oklch(0.78 0.18 70);">
+			<ol>
+				<li>12</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+				<li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li>
+			</ol>
+			<nav>
+				<b data-hand="seconds"></b>
+				<b data-hand="minutes"></b>
+				<b data-hand="hours"></b>
+			</nav>
+		</ui-analog-clock>
 	</div>
 
 	<br>
 	<h2>With opposite color-scheme</h2>
-	<div class="ui-grid --xs-c-1 --md-c-3">
-		<analog-clock label="New York" timezone="-4" class="cs-opposite"></analog-clock>
-		<analog-clock label="Copenhagen" timezone="+1" indices steps date="day" class="cs-opposite"></analog-clock>
-		<analog-clock label="Tokyo" timezone="+9" indices marker="●" steps class="round-markers cs-opposite"></analog-clock>
+	<div class="clock-grid">
+		<ui-analog-clock class="cs-opposite">
+			<ol>
+				<li>12</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+				<li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li>
+			</ol>
+			<nav>
+				<b data-hand="seconds"></b>
+				<b data-hand="minutes"></b>
+				<b data-hand="hours"></b>
+			</nav>
+		</ui-analog-clock>
 	</div>
-	<script type="module" src="./index.js"></script>
+
+	<script type="module">
+		import uiAnalogClock from './basic/uiAnalogClock.js';
+		document.querySelectorAll('ui-analog-clock').forEach(uiAnalogClock);
+	</script>
 </body>
 </html>

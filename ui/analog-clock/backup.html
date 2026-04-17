@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Analog Clock</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Analog Clock: CSS-driven analog clock with JavaScript initialization.">
+  <meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
+	<style>
+		.round-markers {
+			--analog-clock-indices-fs: 3cqi;
+			--analog-clock-indices-hour-fw: 400;
+			--analog-clock-indices-p: 2ch;
+			--analog-clock-numerals-m: 1ch;
+			}
+	</style>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Analog Clock</h2>
+	<p>Web Component, using CSS to drive an analog clock.</p>
+
+	<div class="ui-grid --xs-c-1 --md-c-3">
+		<analog-clock label="New York" timezone="-4"></analog-clock>
+		<analog-clock label="Copenhagen" timezone="+1" indices steps date="day"></analog-clock>
+		<analog-clock label="Tokyo" timezone="+9" indices marker="●" class="round-markers" steps></analog-clock>
+	</div>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="ui-grid --xs-c-1 --md-c-3">
+		<analog-clock label="New York" timezone="-4" class="cs-opposite"></analog-clock>
+		<analog-clock label="Copenhagen" timezone="+1" indices steps date="day" class="cs-opposite"></analog-clock>
+		<analog-clock label="Tokyo" timezone="+9" indices marker="●" steps class="round-markers cs-opposite"></analog-clock>
+	</div>
+	<script type="module" src="./index.js"></script>
+</body>
+</html>

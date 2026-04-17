@@ -1,0 +1,201 @@
+/**
+ * ui-analog-clock
+ * @version 4.0.0
+ * @date 2026-04-17
+ * @author Mads Stoumann
+ */
+@layer bs-component {
+	:where(ui-analog-clock) {
+		--ui-analog-clock-background: var(--color-surface-alt);
+		--ui-analog-clock-color: var(--color-text);
+		--ui-analog-clock-font-family: var(--font-form);
+
+		--ui-analog-clock-cap-color: currentColor;
+		--ui-analog-clock-cap-size: 8cqi;
+
+		--ui-analog-clock-hand-timing: linear;
+		--ui-analog-clock-hour-color: currentColor;
+		--ui-analog-clock-minute-color: currentColor;
+		--ui-analog-clock-second-color: #ff8c05;
+
+		--ui-analog-clock-indices-color: var(--color-border);
+		--ui-analog-clock-indices-font-size: 6cqi;
+		--ui-analog-clock-indices-hour-color: var(--color-text);
+		--ui-analog-clock-indices-hour-font-weight: var(--font-weight-bold);
+		--ui-analog-clock-indices-size: 95cqi;
+
+		--ui-analog-clock-numerals-font-size: clamp(var(--font-size-3xs), 6cqi, var(--font-size-xl));
+		--ui-analog-clock-numerals-font-weight: var(--font-weight-bold);
+		--ui-analog-clock-numerals-margin: 0;
+
+		--ui-analog-clock-date-color: var(--color-text-muted);
+		--ui-analog-clock-date-font-family: var(--font-mono);
+		--ui-analog-clock-date-font-size: 5cqi;
+
+		--ui-analog-clock-label-color: currentColor;
+		--ui-analog-clock-label-font-size: 5cqi;
+		--ui-analog-clock-label-font-weight: var(--font-weight-semibold);
+
+		aspect-ratio: 1;
+		background: var(--ui-analog-clock-background);
+		border-radius: var(--radius-circle);
+		color: var(--ui-analog-clock-color);
+		color-scheme: light dark;
+		container-type: inline-size;
+		display: grid;
+		font-family: var(--ui-analog-clock-font-family);
+		grid-template-rows: repeat(3, 1fr);
+		inline-size: var(--ui-analog-clock-size, 100%);
+		overflow: clip;
+		position: relative;
+
+		/* Indices — tick marks on outer ring */
+		& > ul {
+			aspect-ratio: 1;
+			border-radius: inherit;
+			box-sizing: border-box;
+			color: var(--ui-analog-clock-indices-color);
+			font-size: var(--ui-analog-clock-indices-font-size);
+			grid-area: 1 / 1 / 4 / 1;
+			margin: 0;
+			padding: 0;
+			place-self: center;
+			width: var(--ui-analog-clock-indices-size);
+			& > li {
+				display: inline-block;
+				list-style: none;
+				offset-distance: calc(100% * (sibling-index() - 1) / sibling-count());
+				offset-path: content-box;
+				width: fit-content;
+				&[data-hour] {
+					color: var(--ui-analog-clock-indices-hour-color);
+					font-weight: var(--ui-analog-clock-indices-hour-font-weight);
+				}
+			}
+		}
+
+		/* Numerals — positioned with CSS trigonometry */
+		& > ol {
+			grid-area: 1 / 1 / 4 / 1;
+			margin: var(--ui-analog-clock-numerals-margin);
+			padding: 0;
+			position: relative;
+			& > li {
+				--_cell: 20cqi;
+				--_step: calc(360deg / sibling-count());
+				--_d: calc((sibling-index() - 1) * var(--_step) + 270deg);
+				--_r: calc((100% - var(--_cell)) / 2);
+				--_x: calc(var(--_r) + (var(--_r) * cos(var(--_d))));
+				--_y: calc(var(--_r) + (var(--_r) * sin(var(--_d))));
+				aspect-ratio: 1;
+				display: grid;
+				font-size: var(--ui-analog-clock-numerals-font-size);
+				font-weight: var(--ui-analog-clock-numerals-font-weight);
+				left: var(--_x);
+				list-style: none;
+				place-content: center;
+				position: absolute;
+				top: var(--_y);
+				width: var(--_cell);
+			}
+		}
+
+		/* Hands container + center cap */
+		& > nav {
+			display: grid;
+			grid-area: 2 / 1 / 3 / 1;
+			grid-template-columns: repeat(3, 1fr);
+			&::after {
+				aspect-ratio: 1;
+				background-color: var(--ui-analog-clock-cap-color);
+				border-radius: var(--radius-circle);
+				content: "";
+				grid-area: 1 / 2 / 1 / 3;
+				height: var(--ui-analog-clock-cap-size);
+				isolation: isolate;
+				place-self: center;
+			}
+			& > b {
+				border-radius: calc(var(--_w) * 2);
+				display: block;
+				height: var(--_h);
+				left: calc((100% - var(--_w)) / 2);
+				position: absolute;
+				top: calc((100% / 2) - var(--_h));
+				transform: rotate(0deg);
+				transform-origin: bottom;
+				width: var(--_w);
+			}
+			& > b[data-hand="seconds"] {
+				--_h: 45%;
+				--_w: clamp(2px, 1cqi, 4px);
+				animation: turn 60s var(--ui-analog-clock-hand-timing) infinite;
+				animation-delay: var(--_ds, 0ms);
+				background-color: var(--ui-analog-clock-second-color);
+			}
+			& > b[data-hand="minutes"] {
+				--_h: 45%;
+				--_w: clamp(3px, 2cqi, 6px);
+				animation: turn 3600s var(--ui-analog-clock-hand-timing) infinite;
+				animation-delay: var(--_dm, 0ms);
+				background-color: var(--ui-analog-clock-minute-color);
+			}
+			& > b[data-hand="hours"] {
+				--_h: 35%;
+				--_w: clamp(3px, 2cqi, 6px);
+				animation: turn 43200s var(--ui-analog-clock-hand-timing) infinite;
+				animation-delay: var(--_dh, 0ms);
+				background-color: var(--ui-analog-clock-hour-color);
+			}
+			& > time {
+				border: 0.25cqi solid currentColor;
+				color: var(--ui-analog-clock-date-color);
+				font-family: var(--ui-analog-clock-date-font-family);
+				font-size: var(--ui-analog-clock-date-font-size);
+				grid-area: 1 / 3 / 1 / 4;
+				padding: 0 0.6ch;
+				place-self: center start;
+			}
+		}
+
+		/* Label */
+		& > span {
+			color: var(--ui-analog-clock-label-color);
+			font-size: var(--ui-analog-clock-label-font-size);
+			font-weight: var(--ui-analog-clock-label-font-weight);
+			grid-area: 3 / 1 / 4 / 2;
+			place-self: start center;
+		}
+	}
+
+	/* sizes */
+	:where(ui-analog-clock[size="sm"]) {
+		--ui-analog-clock-size: var(--size-9);
+		--ui-analog-clock-numerals-margin: var(--size-1);
+	}
+	:where(ui-analog-clock[size="md"]) { --ui-analog-clock-size: var(--size-11); }
+	:where(ui-analog-clock[size="lg"]) { --ui-analog-clock-size: var(--size-13); }
+
+	/* stepping hands (applies to all three) */
+	:where(ui-analog-clock[steps]) { --ui-analog-clock-hand-timing: steps(60); }
+
+	/* variants */
+	:where(ui-analog-clock[variant~="squircle"]) {
+		corners: 50% superellipse(2);
+		& > ul {
+			corners: inherit;
+			& > li {
+				offset-path: shape(from 50% 0%,
+					curve to 100% 50% with 85% 0% / 100% 15%,
+					curve to 50% 100% with 100% 85% / 85% 100%,
+					curve to 0% 50% with 15% 100% / 0% 85%,
+					curve to 50% 0% with 0% 15% / 15% 0%,
+					close);
+			}
+		}
+	}
+
+	@keyframes turn {
+		to { transform: rotate(1turn); }
+	}
+}
