@@ -6,7 +6,7 @@ A CSS-first styling system for native HTML `<table>` elements, with composable l
 
 - Native `<table>` — accessible, screen-reader friendly, works without JS
 - Composable layout variants: `rounded`, `split-cols`, `split-rows`, `block-border`, `th-dark`, `th-light`, `fixed`, `no-border`, `no-wrap`
-- Three density sizes via `data-size` (`sm`, default, `lg`) — matches the convention used by `<ui-avatar>`, `<ui-badge>`, etc.
+- Three density sizes via `data-size` (`sm`, default, `lg`)
 - Zebra striping: rows *and* columns, even/odd
 - 8 hover effects via separate `data-hover` attribute: `col`, `col-outline`, `td`, `td-outline`, `tr`, `tr-outline`, `th-outline`, `all`
 - Row states: `data-row="active" | "selected"` plus semantic variants `"success" | "warning" | "error" | "info"`
@@ -245,7 +245,7 @@ Combine variants via space-separated values. They only override custom propertie
 
 ### Density (`data-size`)
 
-Separate attribute, mirroring the convention used by `<ui-avatar>`, `<ui-badge>`, etc.
+Separate attribute for density.
 
 | Value | What it does |
 |-------|-------------|

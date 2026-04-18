@@ -66,7 +66,7 @@
 
 	<br>
 	<h2>Sizes</h2>
-	<p>Density via the dedicated <code>data-size</code> attribute: <code>sm</code>, default, <code>lg</code>. Matches the convention used by <code>&lt;ui-avatar&gt;</code>, <code>&lt;ui-badge&gt;</code>, etc., and mirrors the three density controls in <code>&lt;data-grid&gt;</code>.</p>
+	<p>Density via the dedicated <code>data-size</code> attribute: <code>sm</code>, default, <code>lg</code>.</p>
 
 	<p>With <code>data-size="sm"</code>:</p>
 	<table data-size="sm">
@@ -132,6 +132,7 @@
 		</tbody>
 	</table>
 
+	<br>
 	<h2>Footer rows (<code>&lt;tfoot&gt;</code>)</h2>
 	<p>Footer rows render with a thicker top border and semibold text — use them for totals or summary rows.</p>
 	<table data-variant data-hover="tr" data-c3="end tabular" data-c4="end tabular">
@@ -194,7 +195,6 @@
 		</tbody>
 	</table>
 
-	<br>
 	<p>With <code>rounded</code> added:</p>
 	<table data-variant="split-cols th-dark rounded" data-hover="tr td">
 		<colgroup><col><col><col><col></colgroup>
@@ -208,7 +208,6 @@
 		</tbody>
 	</table>
 
-	<br>
 	<p>With <code>data-variant="split-rows th-light"</code> and <code>data-hover="tr td-outline"</code>:</p>
 	<table data-variant="split-rows th-light" data-hover="tr td-outline">
 		<colgroup><col><col><col><col></colgroup>
@@ -222,7 +221,6 @@
 		</tbody>
 	</table>
 
-	<br>
 	<p>With <code>rounded</code> added:</p>
 	<table data-variant="split-rows th-light rounded" data-hover="tr td-outline">
 		<colgroup><col><col><col><col></colgroup>
@@ -236,6 +234,7 @@
 		</tbody>
 	</table>
 
+	<br>
 	<h2>Zebra striping</h2>
 	<p>Alternating stripes on columns (<code>zebracol-even</code> / <code>zebracol-odd</code>) or rows (<code>zebrarow-even</code> / <code>zebrarow-odd</code>). Column striping requires a <code>&lt;colgroup&gt;</code> with matching <code>&lt;col&gt;</code> elements; row striping doesn't. <code>zebrarow-even</code> also tints the header to match.</p>
 
@@ -252,7 +251,6 @@
 		</tbody>
 	</table>
 
-	<br>
 	<p>With <code>data-variant="zebracol-odd rounded"</code> and <code>data-hover="col-outline"</code> (requires collapsed borders; not compatible with split-cols/rows):</p>
 	<table data-variant="zebracol-odd rounded" data-hover="col-outline">
 		<colgroup><col><col><col><col></colgroup>
@@ -266,7 +264,6 @@
 		</tbody>
 	</table>
 
-	<br>
 	<p>With <code>data-variant="zebrarow-even"</code> and <code>data-hover="td-outline"</code>:</p>
 	<table data-variant="zebrarow-even" data-hover="td-outline">
 		<colgroup><col><col><col><col></colgroup>
@@ -280,7 +277,6 @@
 		</tbody>
 	</table>
 
-	<br>
 	<p>With <code>data-variant="zebrarow-odd"</code> and <code>data-hover="col-outline"</code>:</p>
 	<table data-variant="zebrarow-odd" data-hover="col-outline">
 		<colgroup><col><col><col><col></colgroup>
@@ -294,7 +290,6 @@
 		</tbody>
 	</table>
 
-	<br>
 	<p>With <code>data-variant="zebrarow-even no-border"</code> and <code>data-hover="tr-outline"</code>:</p>
 	<table data-variant="zebrarow-even no-border" data-hover="tr-outline">
 		<colgroup><col><col><col><col></colgroup>
@@ -308,6 +303,7 @@
 		</tbody>
 	</table>
 
+	<br>
 	<h2>Row states</h2>
 	<p>Per-row state on <code>&lt;tr&gt;</code> via <code>data-row</code>. Values are space-separated and compose: <code>active</code> / <code>selected</code> apply solid accent/highlight colors; the semantic tints <code>success</code> / <code>warning</code> / <code>error</code> / <code>info</code> use <code>color-mix()</code> over <code>--color-surface</code> for softer emphasis.</p>
 	<table data-variant data-hover="all">
@@ -322,7 +318,6 @@
 		</tbody>
 	</table>
 
-	<br>
 	<p>Semantic status variants: <code>data-row="success|warning|error|info"</code>. Tinted via <code>color-mix()</code> from the global status tokens.</p>
 	<table data-variant>
 		<colgroup><col><col><col><col></colgroup>
@@ -335,6 +330,7 @@
 		</tbody>
 	</table>
 
+	<br>
 	<h2>Section / group headers</h2>
 	<p>Add <code>data-row="group"</code> to a <code>&lt;tr&gt;</code> containing a single <code>&lt;td colspan="<em>N</em>"&gt;</code> to turn it into a section heading: semibold text on a tinted background, drawn inside <code>&lt;tbody&gt;</code> like any other row. Compose with a status variant (<code>data-row="group error"</code>, <code>data-row="group info"</code>, …) to tint the heading with a semantic color. Because <code>data-row</code> uses <code>~=</code> word-matching, the values compose freely.</p>
 
@@ -357,6 +353,7 @@
 		</tbody>
 	</table>
 
+	<br>
 	<h2>Overflow wrapper (CSS-only)</h2>
 	<p>Zero JavaScript. <code>&lt;ui-table-wrapper&gt;</code> (an un-registered custom element, styled purely via CSS) turns its child table into a scrollable container with a sticky <code>&lt;thead&gt;</code> and optional sticky columns. Two scroll-driven animations (<code>animation-timeline: scroll(self inline)</code> + <code>scroll(self block)</code>) flip the <code>--_has-overflow</code> flag when the content actually overflows on either axis — that gates the wrapper frame and collapses the inner table's edge borders. Sticky columns are declared via <code>data-sticky="c0 c2"</code> (0-indexed); the pin positions come from <code>--c0</code>, <code>--c2</code>, which you measure once in devtools and hard-code. In this demo "First Name" renders at ~101px wide, so "Known As" pins at <code>--c2: 101px</code> — flush against col 0. Safari (no scroll-driven animations yet) falls back to a manual <code>overflowing</code> attribute, which the <code>&lt;ui-table&gt;</code> web component toggles automatically.</p>
 
@@ -388,7 +385,6 @@
 		</table>
 	</ui-table-wrapper>
 
-	<br>
 	<p>Vertical scrolling with sticky header — constrain the wrapper via <code>max-block-size</code>. The <code>&lt;thead&gt;</code> uses <code>position: sticky</code> always (no-op without scroll) and pins to the top as rows scroll under it. A scroll-driven shadow (<code>animation-timeline: scroll()</code>) appears on the header once you start scrolling:</p>
 
 	<ui-table-wrapper data-variant="rounded" style="inline-size: fit-content; max-block-size: 240px;">
@@ -419,6 +415,7 @@
 		</table>
 	</ui-table-wrapper>
 
+	<br>
 	<h2>Hover effects</h2>
 	<p>Interactive hover via the separate <code>data-hover</code> attribute. Values are space-separated and compose: <code>col</code>, <code>td</code>, <code>tr</code>, their <code>-outline</code> variants, <code>th-outline</code>, or <code>all</code> as a shorthand. All effects are wrapped in <code>@media (hover: hover)</code> so they don't stick on touch devices.</p>
 
@@ -435,7 +432,6 @@
 		</tbody>
 	</table>
 
-	<br>
 	<p>With <code>data-hover="col-outline"</code> — column outline on hover (incompatible with <code>split-cols</code>/<code>split-rows</code>):</p>
 	<table data-variant="rounded" data-hover="col-outline">
 		<colgroup><col><col><col><col></colgroup>
@@ -449,7 +445,6 @@
 		</tbody>
 	</table>
 
-	<br>
 	<p>With <code>data-hover="td"</code> — individual cell fill on hover:</p>
 	<table data-variant data-hover="td">
 		<colgroup><col><col><col><col></colgroup>
@@ -463,7 +458,6 @@
 		</tbody>
 	</table>
 
-	<br>
 	<p>With <code>data-hover="td-outline"</code> — cell outline on hover:</p>
 	<table data-variant="rounded" data-hover="td-outline">
 		<colgroup><col><col><col><col></colgroup>
@@ -477,7 +471,6 @@
 		</tbody>
 	</table>
 
-	<br>
 	<p>With <code>data-hover="tr"</code> — row background highlight:</p>
 	<table data-variant="block-border th-light" data-hover="tr">
 		<colgroup><col><col><col><col></colgroup>
@@ -491,7 +484,6 @@
 		</tbody>
 	</table>
 
-	<br>
 	<p>With <code>data-hover="tr-outline"</code> — row outline on hover:</p>
 	<table data-variant="rounded" data-hover="tr-outline">
 		<colgroup><col><col><col><col></colgroup>
@@ -505,7 +497,6 @@
 		</tbody>
 	</table>
 
-	<br>
 	<p>With <code>data-hover="th-outline"</code> — header-cell outline on hover (signals sortable):</p>
 	<table data-variant data-hover="th-outline">
 		<colgroup><col><col><col><col></colgroup>
@@ -519,7 +510,6 @@
 		</tbody>
 	</table>
 
-	<br>
 	<p>Composed: <code>data-variant="rounded"</code> with <code>data-hover="col td"</code> — column highlight + cell fill together:</p>
 	<table data-variant="rounded" data-hover="col td">
 		<colgroup><col><col><col><col></colgroup>
@@ -533,7 +523,6 @@
 		</tbody>
 	</table>
 
-	<br>
 	<p>Shorthand: <code>data-hover="all"</code> — enables <code>col</code> + <code>td</code> + <code>tr</code> + <code>th-outline</code> simultaneously:</p>
 	<table data-variant data-hover="all">
 		<colgroup><col><col><col><col></colgroup>
@@ -566,7 +555,6 @@
 		</table>
 	</ui-table>
 
-	<br>
 	<p>With <code>variant="split-cols th-dark rounded"</code> and <code>hover="col td"</code>:</p>
 	<ui-table variant="split-cols th-dark rounded" hover="col td">
 		<table>
@@ -582,6 +570,7 @@
 		</table>
 	</ui-table>
 
+	<br>
 	<h3>Overflow with auto-detection</h3>
 	<p>A wide table inside <code>&lt;ui-table overflow&gt;</code> reveals the scrollable wrapper (with sticky header and optional sticky columns via <code>sticky="c0 c2"</code>) when it overflows the viewport. The script sets cumulative widths as CSS custom properties (e.g. <code>style="--c0: 0px; --c2: 36px;"</code>) so sticky columns pin at the correct positions. Resize the window to see the responsive behavior.</p>
 
