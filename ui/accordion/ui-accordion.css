@@ -351,7 +351,7 @@
 				&[open] summary {
 					anchor-name: --tab-active;
 					/* background: var(--ui-accordion-tab-active-background, color-mix(in srgb, var(--color-surface) 20%, transparent)); */
-					background: var(--ui-accordion-tab-active-background, var(--color-surface));
+					/* background: var(--ui-accordion-tab-active-background, var(--color-surface)); */
 				}
 			}
 

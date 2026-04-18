@@ -1,7 +1,7 @@
 /**
  * ui-tooltip
- * @version 4.0.0
- * @date 2026-04-12
+ * @version 4.0.1
+ * @date 2026-04-18
  * @author Mads Stoumann
  *
  * Speech-bubble tooltip using the css-generators.com technique.
@@ -11,18 +11,18 @@
 		color: var(--ui-tooltip-color, var(--color-surface));
 		display: block;
 		font-family: var(--ui-tooltip-font-family, var(--font-body));
-		font-size: var(--ui-tooltip-font-size, var(--font-size-xs));
+		font-size: var(--ui-tooltip-font-size, var(--font-size-sm));
 		font-weight: var(--ui-tooltip-font-weight, var(--font-weight-normal));
 		inline-size: max-content;
 		line-height: var(--ui-tooltip-line-height, var(--line-height-tight));
 		max-inline-size: var(--ui-tooltip-max-width, var(--width-xs));
 		opacity: 0;
-		padding-block: var(--ui-tooltip-padding-block, 0.6em);
-		padding-inline: var(--ui-tooltip-padding-inline, 0.75em);
+		padding-block: var(--ui-tooltip-padding-block, 0.5ch);
+		padding-inline: var(--ui-tooltip-padding-inline, 1.15ch);
 		pointer-events: none;
 		position: absolute;
 		text-align: center;
-		text-box: cap alphabetic;
+		text-box: auto;
 		transition: opacity var(--duration-normal) var(--ease-in-out);
 		user-select: none;
 		white-space: nowrap;
@@ -35,11 +35,11 @@
 		--_r: var(--ui-tooltip-border-radius, 0.25em);
 
 		&::before {
+			background-color: inherit;
+			background-image: inherit;
 			content: "";
 			position: absolute;
 			z-index: -1;
-			background-color: inherit;
-			background-image: inherit;
 		}
 
 		/* colors */
@@ -109,7 +109,7 @@
 	/* show when parent is hovered or focus-visible */
 	*:hover > :where(ui-tooltip:not([disabled], [hidden])),
 	*:focus-visible > :where(ui-tooltip:not([disabled], [hidden])) {
-		opacity: var(--ui-tooltip-opacity, 0.95);
+		opacity: var(--ui-tooltip-opacity, 0.9);
 		transition-delay: var(--ui-tooltip-open-delay, 100ms);
 	}
 
