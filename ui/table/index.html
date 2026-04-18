@@ -14,10 +14,8 @@
 	<h1>UI: Table</h1>
 
 	<h2>CSS</h2>
-	<p>
-		<strong>Table</strong> is a CSS-first styling system for native <code>&lt;table&gt;</code> elements. Use <code>data-variant</code> for layout (borders, split layouts, dark/light header), <code>data-size</code> for density, <code>data-hover</code> for interactive hover effects, and <code>data-row</code> / <code>data-c<em>N</em></code> for row- and column-level semantics.
-	</p>
-	<p>This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript). See the <a href="#web-component">Web Component</a> section for the JS-enhanced version using <code>&lt;ui-table&gt;</code>.</p>
+	<p><strong>Table</strong> is a CSS-first styling system for native <code>&lt;table&gt;</code> elements. Each feature is an attribute — compose them freely on the table, its rows, or a wrapping <code>&lt;ui-table-wrapper&gt;</code>. Light/dark mode, RTL, and touch-safe hover come for free.</p>
+	<p>This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript). See the <a href="#web-component">Web Component</a> section for the JS-enhanced <code>&lt;ui-table&gt;</code>.</p>
 
 	<p>Default:</p>
 	<table data-variant>
@@ -68,7 +66,7 @@
 
 	<br>
 	<h2>Sizes</h2>
-	<p>Three density levels via the dedicated <code>data-size</code> attribute (matches <code>&lt;ui-avatar&gt;</code>, <code>&lt;ui-badge&gt;</code> etc.): <code>sm</code>, default, and <code>lg</code>. Mirrors the three density controls in <code>&lt;data-grid&gt;</code>.</p>
+	<p>Density via the dedicated <code>data-size</code> attribute: <code>sm</code>, default, <code>lg</code>. Matches the convention used by <code>&lt;ui-avatar&gt;</code>, <code>&lt;ui-badge&gt;</code>, etc., and mirrors the three density controls in <code>&lt;data-grid&gt;</code>.</p>
 
 	<p>With <code>data-size="sm"</code>:</p>
 	<table data-size="sm">
@@ -181,6 +179,8 @@
 
 	<br>
 	<h2>Split layouts</h2>
+	<p>Break the table into card-like cells via <code>data-variant="split-cols"</code> (horizontal spacing between columns) or <code>data-variant="split-rows"</code> (vertical spacing between rows). Each becomes its own visually-separated shape. Compose with <code>rounded</code>, <code>th-dark</code>, <code>th-light</code>.</p>
+
 	<p>With <code>data-variant="split-cols th-dark"</code> and <code>data-hover="tr td"</code>:</p>
 	<table data-variant="split-cols th-dark" data-hover="tr td">
 		<colgroup><col><col><col><col></colgroup>
@@ -237,6 +237,7 @@
 	</table>
 
 	<h2>Zebra striping</h2>
+	<p>Alternating stripes on columns (<code>zebracol-even</code> / <code>zebracol-odd</code>) or rows (<code>zebrarow-even</code> / <code>zebrarow-odd</code>). Column striping requires a <code>&lt;colgroup&gt;</code> with matching <code>&lt;col&gt;</code> elements; row striping doesn't. <code>zebrarow-even</code> also tints the header to match.</p>
 
 	<p>With <code>data-variant="zebracol-even"</code> and <code>data-hover="tr-outline"</code>:</p>
 	<table data-variant="zebracol-even" data-hover="tr-outline">
@@ -308,7 +309,7 @@
 	</table>
 
 	<h2>Row states</h2>
-	<p>Row-level state via <code>data-row="active"</code> and <code>data-row="selected"</code>.</p>
+	<p>Per-row state on <code>&lt;tr&gt;</code> via <code>data-row</code>. Values are space-separated and compose: <code>active</code> / <code>selected</code> apply solid accent/highlight colors; the semantic tints <code>success</code> / <code>warning</code> / <code>error</code> / <code>info</code> use <code>color-mix()</code> over <code>--color-surface</code> for softer emphasis.</p>
 	<table data-variant data-hover="all">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
@@ -419,9 +420,10 @@
 	</ui-table-wrapper>
 
 	<h2>Hover effects</h2>
+	<p>Interactive hover via the separate <code>data-hover</code> attribute. Values are space-separated and compose: <code>col</code>, <code>td</code>, <code>tr</code>, their <code>-outline</code> variants, <code>th-outline</code>, or <code>all</code> as a shorthand. All effects are wrapped in <code>@media (hover: hover)</code> so they don't stick on touch devices.</p>
 
-	<p>With <code>data-hover="all"</code> (enables col, td, tr, and th-outline):</p>
-	<table data-variant data-hover="all">
+	<p>With <code>data-hover="col"</code> — column background highlight (requires <code>&lt;colgroup&gt;</code>):</p>
+	<table data-variant data-hover="col">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
 		<tbody>
@@ -434,7 +436,91 @@
 	</table>
 
 	<br>
-	<p>With <code>data-variant="rounded"</code> and <code>data-hover="col td"</code>:</p>
+	<p>With <code>data-hover="col-outline"</code> — column outline on hover (incompatible with <code>split-cols</code>/<code>split-rows</code>):</p>
+	<table data-variant="rounded" data-hover="col-outline">
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<br>
+	<p>With <code>data-hover="td"</code> — individual cell fill on hover:</p>
+	<table data-variant data-hover="td">
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<br>
+	<p>With <code>data-hover="td-outline"</code> — cell outline on hover:</p>
+	<table data-variant="rounded" data-hover="td-outline">
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<br>
+	<p>With <code>data-hover="tr"</code> — row background highlight:</p>
+	<table data-variant="block-border th-light" data-hover="tr">
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<br>
+	<p>With <code>data-hover="tr-outline"</code> — row outline on hover:</p>
+	<table data-variant="rounded" data-hover="tr-outline">
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<br>
+	<p>With <code>data-hover="th-outline"</code> — header-cell outline on hover (signals sortable):</p>
+	<table data-variant data-hover="th-outline">
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<br>
+	<p>Composed: <code>data-variant="rounded"</code> with <code>data-hover="col td"</code> — column highlight + cell fill together:</p>
 	<table data-variant="rounded" data-hover="col td">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
@@ -448,8 +534,8 @@
 	</table>
 
 	<br>
-	<p>With <code>data-variant="block-border th-light"</code> and <code>data-hover="tr"</code>:</p>
-	<table data-variant="block-border th-light" data-hover="tr">
+	<p>Shorthand: <code>data-hover="all"</code> — enables <code>col</code> + <code>td</code> + <code>tr</code> + <code>th-outline</code> simultaneously:</p>
+	<table data-variant data-hover="all">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
 		<tbody>
