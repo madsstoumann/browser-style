@@ -42,9 +42,7 @@
 			text-overflow: ellipsis;
 			&:first-of-type { border-inline-start-width: var(--ui-table-border-width); }
 		}
-		& td {
-			background: var(--ui-table-cell-bg, inherit);
-		}
+		& td { background: var(--ui-table-cell-bg, inherit); }
 		& th {
 			background: var(--ui-table-header-bg, inherit);
 			font-weight: var(--ui-table-header-font-weight, var(--font-weight-semibold));
@@ -71,217 +69,160 @@
 			--ui-table-cell-bg: var(--ui-table-selected-bg);
 			color: var(--ui-table-selected-color);
 		}
-	}
 
-	/* === Layout variants === */
-
-	/* block-border */
-	table[data-variant~="block-border"] :is(td, th) { border-width: 0 0 var(--ui-table-border-width) 0; }
-
-	/* density-sm */
-	table[data-variant~="density-sm"] {
-		--ui-table-font-family: system-ui, sans-serif;
-		--ui-table-font-size: var(--font-size-sm);
-		--ui-table-padding: .44ch .88ch;
-	}
-	/* density-lg */
-	table[data-variant~="density-lg"] {
-		--ui-table-font-size: var(--font-size-xl);
-		--ui-table-padding: .75ch 1.5ch;
-	}
-
-	/* fixed */
-	table[data-variant~="fixed"] { table-layout: fixed; }
-
-	/* no-border */
-	table[data-variant~="no-border"] :is(td, th) { border: 0; }
-
-	/* no-wrap */
-	table[data-variant~="no-wrap"] :is(td, th) { text-wrap: nowrap; }
-
-	/* rounded */
-	table[data-variant~="rounded"] { --ui-table-border-radius: var(--radius-md); }
-
-	/* split-cols */
-	table[data-variant~="split-cols"] {
-		--ui-table-spacing-x: 2ch;
-		margin-inline: calc(0px - var(--ui-table-spacing-x));
-		& :is(td, th) { border-inline-width: var(--ui-table-border-width); }
-		&[data-variant~="th-dark"] th {
-			--ui-table-border-color: var(--ui-table-th-dark-bg, var(--color-button-text));
+		/* === Layout variants === */
+		&[data-variant~="block-border"] :is(td, th) { border-width: 0 0 var(--ui-table-border-width) 0; }
+		&[data-variant~="density-sm"] {
+			--ui-table-font-family: system-ui, sans-serif;
+			--ui-table-font-size: var(--font-size-sm);
+			--ui-table-padding: .44ch .88ch;
 		}
-		&[data-variant~="rounded"] {
-			& tr:first-of-type th {
-				border-radius: var(--ui-table-border-radius) var(--ui-table-border-radius) 0 0;
-			}
-			& tr:last-of-type td {
-				border-radius: 0 0 var(--ui-table-border-radius) var(--ui-table-border-radius);
-			}
+		&[data-variant~="density-lg"] {
+			--ui-table-font-size: var(--font-size-xl);
+			--ui-table-padding: .75ch 1.5ch;
 		}
-	}
-
-	/* split-rows */
-	table[data-variant~="split-rows"] {
-		--ui-table-spacing-y: 1.5ch;
-		margin-block: calc(0px - var(--ui-table-spacing-y));
-		& :is(td, th) { border-block-width: var(--ui-table-border-width); }
-	}
-
-	/* th-dark */
-	table[data-variant~="th-dark"] th {
-		--ui-table-header-bg: var(--ui-table-th-dark-bg, var(--color-button-text));
-		border-block-color: var(--ui-table-th-dark-bg, var(--color-button-text));
-		color: var(--color-surface);
-		&:first-of-type { border-inline-start-color: var(--ui-table-th-dark-bg, var(--color-button-text)); }
-		&:last-of-type { border-inline-end-color: var(--ui-table-th-dark-bg, var(--color-button-text)); }
-	}
-
-	/* th-light / zebra header */
-	table:is([data-variant~="th-light"], [data-variant~="zebrarow-even"]) th {
-		--ui-table-header-bg: var(--ui-table-zebra-bg, var(--color-surface-alt));
-	}
-
-	/* zebra striping */
-	table[data-variant~="zebracol-even"] col:nth-of-type(even),
-	table[data-variant~="zebracol-odd"] col:nth-of-type(odd),
-	table[data-variant~="zebrarow-even"] tr:nth-of-type(even) td,
-	table[data-variant~="zebrarow-odd"] tr:nth-of-type(odd) td {
-		--ui-table-cell-bg: var(--ui-table-zebra-bg, var(--color-surface-alt));
-	}
-
-	/* per-column text alignment: data-c1..data-c9 = start | center | end */
-	table[data-c1="start"] :is(td,th):nth-child(1),
-	table[data-c2="start"] :is(td,th):nth-child(2),
-	table[data-c3="start"] :is(td,th):nth-child(3),
-	table[data-c4="start"] :is(td,th):nth-child(4),
-	table[data-c5="start"] :is(td,th):nth-child(5),
-	table[data-c6="start"] :is(td,th):nth-child(6),
-	table[data-c7="start"] :is(td,th):nth-child(7),
-	table[data-c8="start"] :is(td,th):nth-child(8),
-	table[data-c9="start"] :is(td,th):nth-child(9) { text-align: start; }
-
-	table[data-c1="center"] :is(td,th):nth-child(1),
-	table[data-c2="center"] :is(td,th):nth-child(2),
-	table[data-c3="center"] :is(td,th):nth-child(3),
-	table[data-c4="center"] :is(td,th):nth-child(4),
-	table[data-c5="center"] :is(td,th):nth-child(5),
-	table[data-c6="center"] :is(td,th):nth-child(6),
-	table[data-c7="center"] :is(td,th):nth-child(7),
-	table[data-c8="center"] :is(td,th):nth-child(8),
-	table[data-c9="center"] :is(td,th):nth-child(9) { text-align: center; }
-
-	table[data-c1="end"] :is(td,th):nth-child(1),
-	table[data-c2="end"] :is(td,th):nth-child(2),
-	table[data-c3="end"] :is(td,th):nth-child(3),
-	table[data-c4="end"] :is(td,th):nth-child(4),
-	table[data-c5="end"] :is(td,th):nth-child(5),
-	table[data-c6="end"] :is(td,th):nth-child(6),
-	table[data-c7="end"] :is(td,th):nth-child(7),
-	table[data-c8="end"] :is(td,th):nth-child(8),
-	table[data-c9="end"] :is(td,th):nth-child(9) { text-align: end; }
-
-	/* === Hover modifiers === */
-	@media (hover: hover) {
-
-		/* col highlight */
-		table:is([data-hover~="all"], [data-hover~="col"]) {
-			&:has(:is(td,th):nth-child(1):is(:focus-visible,:hover)) col:nth-child(1),
-			&:has(:is(td,th):nth-child(2):is(:focus-visible,:hover)) col:nth-child(2),
-			&:has(:is(td,th):nth-child(3):is(:focus-visible,:hover)) col:nth-child(3),
-			&:has(:is(td,th):nth-child(4):is(:focus-visible,:hover)) col:nth-child(4),
-			&:has(:is(td,th):nth-child(5):is(:focus-visible,:hover)) col:nth-child(5),
-			&:has(:is(td,th):nth-child(6):is(:focus-visible,:hover)) col:nth-child(6),
-			&:has(:is(td,th):nth-child(7):is(:focus-visible,:hover)) col:nth-child(7),
-			&:has(:is(td,th):nth-child(8):is(:focus-visible,:hover)) col:nth-child(8),
-			&:has(:is(td,th):nth-child(9):is(:focus-visible,:hover)) col:nth-child(9) {
-				background-color: var(--ui-table-col-hover-bg);
+		&[data-variant~="fixed"] { table-layout: fixed; }
+		&[data-variant~="no-border"] :is(td, th) { border: 0; }
+		&[data-variant~="no-wrap"] :is(td, th) { text-wrap: nowrap; }
+		&[data-variant~="rounded"] { --ui-table-border-radius: var(--radius-md); }
+		&[data-variant~="split-cols"] {
+			--ui-table-spacing-x: 2ch;
+			margin-inline: calc(0px - var(--ui-table-spacing-x));
+			& :is(td, th) { border-inline-width: var(--ui-table-border-width); }
+			&[data-variant~="th-dark"] th {
+				--ui-table-border-color: var(--ui-table-th-dark-bg, var(--color-button-text));
 			}
-		}
-
-		/* col outline */
-		table[data-hover~="col-outline"] {
-			& :is(td,th) {
-				position: relative;
-				&::after {
-					border-inline: var(--ui-table-outline-width) solid transparent;
-					border-radius: inherit;
-					content: '';
-					inset: calc(0px - var(--ui-table-border-width)) 0 0 0;
-					position: absolute;
+			&[data-variant~="rounded"] {
+				& tr:first-of-type th {
+					border-radius: var(--ui-table-border-radius) var(--ui-table-border-radius) 0 0;
+				}
+				& tr:last-of-type td {
+					border-radius: 0 0 var(--ui-table-border-radius) var(--ui-table-border-radius);
 				}
 			}
-			& tr:first-of-type th::after { border-block-start: var(--ui-table-outline-width) solid transparent; }
-			& tr:last-of-type td::after { border-block-end: var(--ui-table-outline-width) solid transparent; }
-
-			&:has(:is(td,th):nth-child(1):is(:focus-visible,:hover)) :is(td,th):nth-child(1),
-			&:has(:is(td,th):nth-child(2):is(:focus-visible,:hover)) :is(td,th):nth-child(2),
-			&:has(:is(td,th):nth-child(3):is(:focus-visible,:hover)) :is(td,th):nth-child(3),
-			&:has(:is(td,th):nth-child(4):is(:focus-visible,:hover)) :is(td,th):nth-child(4),
-			&:has(:is(td,th):nth-child(5):is(:focus-visible,:hover)) :is(td,th):nth-child(5),
-			&:has(:is(td,th):nth-child(6):is(:focus-visible,:hover)) :is(td,th):nth-child(6),
-			&:has(:is(td,th):nth-child(7):is(:focus-visible,:hover)) :is(td,th):nth-child(7),
-			&:has(:is(td,th):nth-child(8):is(:focus-visible,:hover)) :is(td,th):nth-child(8),
-			&:has(:is(td,th):nth-child(9):is(:focus-visible,:hover)) :is(td,th):nth-child(9) {
-				&::after { border-color: var(--ui-table-outline-color); }
-			}
+		}
+		&[data-variant~="split-rows"] {
+			--ui-table-spacing-y: 1.5ch;
+			margin-block: calc(0px - var(--ui-table-spacing-y));
+			& :is(td, th) { border-block-width: var(--ui-table-border-width); }
+		}
+		&[data-variant~="th-dark"] th {
+			--ui-table-header-bg: var(--ui-table-th-dark-bg, var(--color-button-text));
+			border-block-color: var(--ui-table-th-dark-bg, var(--color-button-text));
+			color: var(--color-surface);
+			&:first-of-type { border-inline-start-color: var(--ui-table-th-dark-bg, var(--color-button-text)); }
+			&:last-of-type { border-inline-end-color: var(--ui-table-th-dark-bg, var(--color-button-text)); }
+		}
+		&:is([data-variant~="th-light"], [data-variant~="zebrarow-even"]) th {
+			--ui-table-header-bg: var(--ui-table-zebra-bg, var(--color-surface-alt));
+		}
+		&[data-variant~="zebracol-even"] col:nth-of-type(even),
+		&[data-variant~="zebracol-odd"] col:nth-of-type(odd) {
+			background-color: var(--ui-table-zebra-bg, var(--color-surface-alt));
+		}
+		&[data-variant~="zebrarow-even"] tr:nth-of-type(even) td,
+		&[data-variant~="zebrarow-odd"] tr:nth-of-type(odd) td {
+			--ui-table-cell-bg: var(--ui-table-zebra-bg, var(--color-surface-alt));
 		}
 
-		/* cell fill */
-		table:is([data-hover~="all"], [data-hover~="td"]) {
-			td:is(:focus-visible,:hover) {
-				--ui-table-border-color: var(--ui-table-cell-hover-bg);
-				--ui-table-cell-bg: var(--ui-table-cell-hover-bg);
-				color: var(--color-surface);
-				outline: 0;
+		/* === Hover modifiers === */
+		@media (hover: hover) {
+			/* col highlight */
+			&:is([data-hover~="all"], [data-hover~="col"]) {
+				&:has(:is(td,th):nth-child(1):is(:focus-visible,:hover)) col:nth-child(1),
+				&:has(:is(td,th):nth-child(2):is(:focus-visible,:hover)) col:nth-child(2),
+				&:has(:is(td,th):nth-child(3):is(:focus-visible,:hover)) col:nth-child(3),
+				&:has(:is(td,th):nth-child(4):is(:focus-visible,:hover)) col:nth-child(4),
+				&:has(:is(td,th):nth-child(5):is(:focus-visible,:hover)) col:nth-child(5),
+				&:has(:is(td,th):nth-child(6):is(:focus-visible,:hover)) col:nth-child(6),
+				&:has(:is(td,th):nth-child(7):is(:focus-visible,:hover)) col:nth-child(7),
+				&:has(:is(td,th):nth-child(8):is(:focus-visible,:hover)) col:nth-child(8),
+				&:has(:is(td,th):nth-child(9):is(:focus-visible,:hover)) col:nth-child(9) {
+					background-color: var(--ui-table-col-hover-bg);
+				}
 			}
-			tr[data-row="active"] td:is(:focus-visible,:hover) {
-				--ui-table-cell-bg: var(--ui-table-active-hover-bg);
-				color: var(--ui-table-active-hover-color);
-			}
-			tr[data-row="selected"] td:is(:focus-visible,:hover) {
-				--ui-table-cell-bg: var(--ui-table-selected-hover-bg);
-				color: var(--ui-table-selected-hover-color);
-			}
-		}
 
-		/* cell outline */
-		table[data-hover~="td-outline"] {
-			td:is(:focus-visible,:hover) {
+			/* col outline */
+			&[data-hover~="col-outline"] {
+				& :is(td,th) {
+					position: relative;
+					&::after {
+						border-inline: var(--ui-table-outline-width) solid transparent;
+						border-radius: inherit;
+						content: '';
+						inset: calc(0px - var(--ui-table-border-width)) 0 0 0;
+						position: absolute;
+					}
+				}
+				& tr:first-of-type th::after { border-block-start: var(--ui-table-outline-width) solid transparent; }
+				& tr:last-of-type td::after { border-block-end: var(--ui-table-outline-width) solid transparent; }
+
+				&:has(:is(td,th):nth-child(1):is(:focus-visible,:hover)) :is(td,th):nth-child(1),
+				&:has(:is(td,th):nth-child(2):is(:focus-visible,:hover)) :is(td,th):nth-child(2),
+				&:has(:is(td,th):nth-child(3):is(:focus-visible,:hover)) :is(td,th):nth-child(3),
+				&:has(:is(td,th):nth-child(4):is(:focus-visible,:hover)) :is(td,th):nth-child(4),
+				&:has(:is(td,th):nth-child(5):is(:focus-visible,:hover)) :is(td,th):nth-child(5),
+				&:has(:is(td,th):nth-child(6):is(:focus-visible,:hover)) :is(td,th):nth-child(6),
+				&:has(:is(td,th):nth-child(7):is(:focus-visible,:hover)) :is(td,th):nth-child(7),
+				&:has(:is(td,th):nth-child(8):is(:focus-visible,:hover)) :is(td,th):nth-child(8),
+				&:has(:is(td,th):nth-child(9):is(:focus-visible,:hover)) :is(td,th):nth-child(9) {
+					&::after { border-color: var(--ui-table-outline-color); }
+				}
+			}
+
+			/* cell fill */
+			&:is([data-hover~="all"], [data-hover~="td"]) {
+				td:is(:focus-visible,:hover) {
+					--ui-table-border-color: var(--ui-table-cell-hover-bg);
+					--ui-table-cell-bg: var(--ui-table-cell-hover-bg);
+					color: var(--color-surface);
+					outline: 0;
+				}
+				tr[data-row="active"] td:is(:focus-visible,:hover) {
+					--ui-table-cell-bg: var(--ui-table-active-hover-bg);
+					color: var(--ui-table-active-hover-color);
+				}
+				tr[data-row="selected"] td:is(:focus-visible,:hover) {
+					--ui-table-cell-bg: var(--ui-table-selected-hover-bg);
+					color: var(--ui-table-selected-hover-color);
+				}
+			}
+
+			/* cell outline */
+			&[data-hover~="td-outline"] td:is(:focus-visible,:hover) {
 				outline: var(--ui-table-outline-width) solid var(--ui-table-outline-color);
 				outline-offset: calc(0px - var(--ui-table-border-width));
 			}
-		}
 
-		/* th outline */
-		table:is([data-hover~="all"], [data-hover~="th-outline"]) {
-			th:is(:focus-visible,:hover) {
-				cursor: pointer;
-				outline: var(--ui-table-outline-width) solid var(--ui-table-outline-color);
-				outline-offset: calc(0px - var(--ui-table-outline-width));
-				user-select: none;
+			/* th outline */
+			&:is([data-hover~="all"], [data-hover~="th-outline"]) {
+				th:is(:focus-visible,:hover) {
+					cursor: pointer;
+					outline: var(--ui-table-outline-width) solid var(--ui-table-outline-color);
+					outline-offset: calc(0px - var(--ui-table-outline-width));
+					user-select: none;
+				}
+				&[data-variant~="th-dark"] th:is(:focus-visible,:hover) {
+					--ui-table-outline-color: var(--color-surface-alt);
+					outline-offset: calc(0px - (3 * var(--ui-table-outline-width)));
+				}
 			}
-			&[data-variant~="th-dark"] th:is(:focus-visible,:hover) {
-				--ui-table-outline-color: var(--color-surface-alt);
-				outline-offset: calc(0px - (3 * var(--ui-table-outline-width)));
-			}
-		}
 
-		/* row highlight */
-		table:is([data-hover~="all"], [data-hover~="tr"]) {
-			tr:has(td:is(:focus-visible,:hover)) {
-				--ui-table-cell-bg: var(--ui-table-row-hover-bg);
+			/* row highlight */
+			&:is([data-hover~="all"], [data-hover~="tr"]) {
+				tr:has(td:is(:focus-visible,:hover)) {
+					--ui-table-cell-bg: var(--ui-table-row-hover-bg);
+				}
+				tr[data-row="active"]:has(td:is(:focus-visible,:hover)) {
+					--ui-table-cell-bg: var(--ui-table-active-bg);
+				}
+				tr[data-row="selected"]:has(td:is(:focus-visible,:hover)) {
+					--ui-table-cell-bg: var(--ui-table-selected-bg);
+				}
 			}
-			tr[data-row="active"]:has(td:is(:focus-visible,:hover)) {
-				--ui-table-cell-bg: var(--ui-table-active-bg);
-			}
-			tr[data-row="selected"]:has(td:is(:focus-visible,:hover)) {
-				--ui-table-cell-bg: var(--ui-table-selected-bg);
-			}
-		}
 
-		/* row outline */
-		table[data-hover~="tr-outline"] {
-			tr:has(td):hover {
+			/* row outline */
+			&[data-hover~="tr-outline"] tr:has(td):hover {
 				outline: var(--ui-table-outline-width) solid var(--ui-table-outline-color);
 				outline-offset: calc(0px - var(--ui-table-outline-width));
 			}
@@ -300,6 +241,12 @@
 			border: var(--border-width) solid var(--color-border);
 			border-radius: var(--ui-table-border-radius, 0);
 			& table {
+				--ui-table-cell-bg: var(--color-surface);
+				& thead {
+					inset-block-start: 0;
+					position: sticky;
+					z-index: var(--z-index-1);
+				}
 				& tr:first-of-type th { border-block-start-width: 0; }
 				& :is(td,th):first-of-type { border-inline-start-width: 0; }
 				& :is(td,th):last-of-type { border-inline-end-width: 0; }
@@ -308,15 +255,7 @@
 				--ui-table-border-radius: var(--radius-md);
 				& tr:last-of-type td { --ui-table-border-radius: 0; }
 			}
-			& table thead {
-				inset-block-start: 0;
-				position: sticky;
-				z-index: var(--z-index-1);
-			}
 			/* sticky columns */
-			& table {
-				--ui-table-cell-bg: var(--color-surface);
-			}
 			&[data-sticky~="c0"] :is(td,th):nth-of-type(1),
 			&[data-sticky~="c1"] :is(td,th):nth-of-type(2),
 			&[data-sticky~="c2"] :is(td,th):nth-of-type(3),

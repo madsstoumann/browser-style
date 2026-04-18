@@ -11,18 +11,15 @@
 	<script type="module" src="index.js"></script>
 </head>
 <body>
-	<h1>UI: Components</h1>
+	<h1>UI: Table</h1>
 
-	<h2>Table</h2>
+	<h2>CSS</h2>
 	<p>
-		<strong>Table</strong> is a composable CSS styling system for native <code>&lt;table&gt;</code> elements.
-		Use <code>data-variant</code> for layout and <code>data-hover</code> for hover effects.
+		<strong>Table</strong> is a CSS-first styling system for native <code>&lt;table&gt;</code> elements. Use <code>data-variant</code> for layout (density, borders, split layouts, zebra striping, dark/light header) and <code>data-hover</code> for interactive hover effects on columns, cells, rows, and headers.
 	</p>
+	<p>This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript). See the <a href="#web-component">Web Component</a> section for the JS-enhanced version using <code>&lt;ui-table&gt;</code>.</p>
 
-	<hr>
-	<h2>CSS-only (data-variant)</h2>
-
-	<h3>Default</h3>
+	<p>Default:</p>
 	<table data-variant>
 		<colgroup><col><col><col><col></colgroup>
 		<thead>
@@ -38,7 +35,7 @@
 	</table>
 
 	<br>
-	<h3>With opposite color-scheme</h3>
+	<p>With opposite color-scheme:</p>
 	<table data-variant class="cs-opposite">
 		<colgroup><col><col><col><col></colgroup>
 		<thead>
@@ -54,7 +51,7 @@
 	</table>
 
 	<br>
-	<h3>With right-to-left</h3>
+	<p>With right-to-left:</p>
 	<table data-variant dir="rtl">
 		<colgroup><col><col><col><col></colgroup>
 		<thead>
@@ -69,10 +66,53 @@
 		</tbody>
 	</table>
 
-	<hr>
-	<h2>Layout Variants</h2>
+	<h2>Densities</h2>
+	<p>Three density levels mirror the controls in <code>&lt;data-grid&gt;</code>: small, medium (default), and large.</p>
 
-	<h3>data-hover="all"</h3>
+	<p>With <code>data-variant="density-sm"</code> (small):</p>
+	<table data-variant="density-sm">
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<br>
+	<p>Default (medium):</p>
+	<table data-variant>
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<br>
+	<p>With <code>data-variant="density-lg"</code> (large):</p>
+	<table data-variant="density-lg">
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<h2>Hover effects</h2>
+
+	<p>With <code>data-hover="all"</code> (enables col, td, tr, and th-outline):</p>
 	<table data-variant data-hover="all">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
@@ -86,7 +126,7 @@
 	</table>
 
 	<br>
-	<h3>data-variant="rounded" data-hover="col td"</h3>
+	<p>With <code>data-variant="rounded"</code> and <code>data-hover="col td"</code>:</p>
 	<table data-variant="rounded" data-hover="col td">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
@@ -100,7 +140,22 @@
 	</table>
 
 	<br>
-	<h3>data-variant="split-cols th-dark" data-hover="tr td"</h3>
+	<p>With <code>data-variant="block-border th-light"</code> and <code>data-hover="tr"</code>:</p>
+	<table data-variant="block-border th-light" data-hover="tr">
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<h2>Split layouts</h2>
+
+	<p>With <code>data-variant="split-cols th-dark"</code> and <code>data-hover="tr td"</code>:</p>
 	<table data-variant="split-cols th-dark" data-hover="tr td">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
@@ -114,7 +169,7 @@
 	</table>
 
 	<br>
-	<h3>With rounded added</h3>
+	<p>With <code>rounded</code> added:</p>
 	<table data-variant="split-cols th-dark rounded" data-hover="tr td">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
@@ -128,7 +183,7 @@
 	</table>
 
 	<br>
-	<h3>data-variant="split-rows th-light" data-hover="tr td-outline"</h3>
+	<p>With <code>data-variant="split-rows th-light"</code> and <code>data-hover="tr td-outline"</code>:</p>
 	<table data-variant="split-rows th-light" data-hover="tr td-outline">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
@@ -142,7 +197,7 @@
 	</table>
 
 	<br>
-	<h3>With rounded added</h3>
+	<p>With <code>rounded</code> added:</p>
 	<table data-variant="split-rows th-light rounded" data-hover="tr td-outline">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
@@ -155,22 +210,9 @@
 		</tbody>
 	</table>
 
-	<br>
-	<h3>data-variant="block-border th-light" data-hover="tr"</h3>
-	<table data-variant="block-border th-light" data-hover="tr">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<h2>Zebra striping</h2>
 
-	<br>
-	<h3>data-variant="zebracol-even" data-hover="tr-outline"</h3>
+	<p>With <code>data-variant="zebracol-even"</code> and <code>data-hover="tr-outline"</code>:</p>
 	<table data-variant="zebracol-even" data-hover="tr-outline">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
@@ -184,8 +226,7 @@
 	</table>
 
 	<br>
-	<h3>data-variant="zebracol-odd rounded" data-hover="col-outline"</h3>
-	<p>Column-outline hover. Note: requires collapsed borders, so it will not work with split-cols or split-rows.</p>
+	<p>With <code>data-variant="zebracol-odd rounded"</code> and <code>data-hover="col-outline"</code> (requires collapsed borders; not compatible with split-cols/rows):</p>
 	<table data-variant="zebracol-odd rounded" data-hover="col-outline">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
@@ -199,7 +240,7 @@
 	</table>
 
 	<br>
-	<h3>data-variant="zebrarow-even" data-hover="td-outline"</h3>
+	<p>With <code>data-variant="zebrarow-even"</code> and <code>data-hover="td-outline"</code>:</p>
 	<table data-variant="zebrarow-even" data-hover="td-outline">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
@@ -213,7 +254,7 @@
 	</table>
 
 	<br>
-	<h3>data-variant="zebrarow-odd" data-hover="col-outline"</h3>
+	<p>With <code>data-variant="zebrarow-odd"</code> and <code>data-hover="col-outline"</code>:</p>
 	<table data-variant="zebrarow-odd" data-hover="col-outline">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
@@ -227,7 +268,7 @@
 	</table>
 
 	<br>
-	<h3>data-variant="zebrarow-even no-border" data-hover="tr-outline"</h3>
+	<p>With <code>data-variant="zebrarow-even no-border"</code> and <code>data-hover="tr-outline"</code>:</p>
 	<table data-variant="zebrarow-even no-border" data-hover="tr-outline">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
@@ -240,9 +281,10 @@
 		</tbody>
 	</table>
 
-	<br>
-	<h3>data-variant="block-border" data-hover="col" with column alignment</h3>
-	<p>Per-column text alignment via <code>data-c2="center"</code> and <code>data-c4="end"</code>.</p>
+	<h2>Column alignment</h2>
+	<p>Per-column text alignment via <code>data-c<em>N</em></code> attributes (provided by <code>@browser.style/base</code>'s <code>core.css</code>). Values: <code>start</code>, <code>center</code>, <code>end</code>.</p>
+
+	<p>With <code>data-variant="block-border"</code>, <code>data-hover="col"</code>, <code>data-c2="center"</code> and <code>data-c4="end"</code>:</p>
 	<table data-variant="block-border" data-hover="col" data-c2="center" data-c4="end">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
@@ -255,8 +297,8 @@
 		</tbody>
 	</table>
 
-	<br>
-	<h3>Row states: data-row="active" and data-row="selected"</h3>
+	<h2>Row states</h2>
+	<p>Row-level state via <code>data-row="active"</code> and <code>data-row="selected"</code>.</p>
 	<table data-variant data-hover="all">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
@@ -269,10 +311,10 @@
 		</tbody>
 	</table>
 
-	<hr>
-	<h2>Web Component</h2>
+	<h2 id="web-component">Web Component</h2>
+	<p><code>&lt;ui-table&gt;</code> forwards <code>variant</code>, <code>hover</code>, and <code>sticky</code> attributes to the child <code>&lt;table&gt;</code> as <code>data-*</code> attributes. When <code>overflow</code> is set it also toggles the <code>overflowing</code> attribute and outputs cumulative column widths for sticky columns.</p>
 
-	<h3>variant="rounded zebrarow-odd" hover="tr td-outline"</h3>
+	<p>With <code>variant="rounded zebrarow-odd"</code> and <code>hover="tr td-outline"</code>:</p>
 	<ui-table variant="rounded zebrarow-odd" hover="tr td-outline">
 		<table>
 			<colgroup><col><col><col><col></colgroup>
@@ -288,7 +330,7 @@
 	</ui-table>
 
 	<br>
-	<h3>variant="split-cols th-dark rounded" hover="col td"</h3>
+	<p>With <code>variant="split-cols th-dark rounded"</code> and <code>hover="col td"</code>:</p>
 	<ui-table variant="split-cols th-dark rounded" hover="col td">
 		<table>
 			<colgroup><col><col><col><col></colgroup>
@@ -299,6 +341,31 @@
 				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
 				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
 				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
+
+	<h2>Overflow wrapper</h2>
+	<p>A wide table inside <code>&lt;ui-table overflow&gt;</code> reveals the scrollable wrapper (with sticky header and optional sticky columns via <code>sticky="c0"</code>) when it overflows the viewport. The script sets cumulative widths as CSS custom properties (e.g. <code>style="--c0: 0px; --c2: 36px;"</code>) so sticky columns pin at the correct positions. Resize the window to see the responsive behavior.</p>
+
+	<ui-table overflow sticky="c0 c2" variant="rounded th-light no-wrap" hover="tr">
+		<table>
+			<colgroup><col><col><col><col><col><col><col><col></colgroup>
+			<thead>
+				<tr>
+					<th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th>
+					<th>Affiliation</th><th>First Appearance</th><th>Creator</th><th>Powers</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td><td>Justice League</td><td>Detective Comics #27 (1939)</td><td>Bob Kane, Bill Finger</td><td>Martial arts, gadgets</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td><td>Justice League</td><td>Action Comics #1 (1938)</td><td>Jerry Siegel, Joe Shuster</td><td>Flight, super strength</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td><td>Avengers</td><td>Tales of Suspense #39 (1963)</td><td>Stan Lee, Larry Lieber</td><td>Powered armor suit</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td><td>Avengers</td><td>Amazing Fantasy #15 (1962)</td><td>Stan Lee, Steve Ditko</td><td>Wall-crawling, spider sense</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td><td>Defenders</td><td>Daredevil #1 (1964)</td><td>Stan Lee, Bill Everett</td><td>Radar sense, acrobatics</td></tr>
+				<tr><td>Steve</td><td>Rogers</td><td>Captain America</td><td>Brooklyn</td><td>Avengers</td><td>Captain America Comics #1 (1941)</td><td>Joe Simon, Jack Kirby</td><td>Super soldier serum</td></tr>
+				<tr><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Themyscira</td><td>Justice League</td><td>All Star Comics #8 (1941)</td><td>William Moulton Marston</td><td>Divine strength, lasso</td></tr>
+				<tr><td>Natasha</td><td>Romanoff</td><td>Black Widow</td><td>Moscow</td><td>Avengers</td><td>Tales of Suspense #52 (1964)</td><td>Stan Lee, Don Rico</td><td>Espionage, martial arts</td></tr>
 			</tbody>
 		</table>
 	</ui-table>
