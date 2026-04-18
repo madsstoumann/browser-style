@@ -60,18 +60,41 @@
 			}
 		}
 
+		/* footer rows */
+		& tfoot :is(td, th) {
+			border-block-start-width: var(--ui-table-border-width-thick, var(--border-width-thick));
+			font-weight: var(--font-weight-semibold);
+		}
+
 		/* row states */
-		& tr[data-row="active"] {
+		& tr[data-row~="active"] {
 			--ui-table-cell-bg: var(--ui-table-active-bg);
 			color: var(--ui-table-active-color);
 		}
-		& tr[data-row="selected"] {
+		& tr[data-row~="selected"] {
 			--ui-table-cell-bg: var(--ui-table-selected-bg);
 			color: var(--ui-table-selected-color);
+		}
+		& tr[data-row~="group"] {
+			--ui-table-cell-bg: var(--color-surface-alt);
+			font-weight: var(--font-weight-semibold);
+		}
+		& tr[data-row~="success"] {
+			--ui-table-cell-bg: color-mix(in oklab, var(--color-success) 15%, var(--color-surface));
+		}
+		& tr[data-row~="warning"] {
+			--ui-table-cell-bg: color-mix(in oklab, var(--color-warning) 20%, var(--color-surface));
+		}
+		& tr[data-row~="error"] {
+			--ui-table-cell-bg: color-mix(in oklab, var(--color-error) 15%, var(--color-surface));
+		}
+		& tr[data-row~="info"] {
+			--ui-table-cell-bg: color-mix(in oklab, var(--color-info) 15%, var(--color-surface));
 		}
 
 		/* === Layout variants === */
 		&[data-variant~="block-border"] :is(td, th) { border-width: 0 0 var(--ui-table-border-width) 0; }
+		&[data-variant~="caption-bottom"] { caption-side: bottom; }
 		&[data-size="sm"] {
 			--ui-table-font-family: system-ui, sans-serif;
 			--ui-table-font-size: var(--font-size-sm);
@@ -178,11 +201,11 @@
 					color: var(--color-surface);
 					outline: 0;
 				}
-				tr[data-row="active"] td:is(:focus-visible,:hover) {
+				tr[data-row~="active"] td:is(:focus-visible,:hover) {
 					--ui-table-cell-bg: var(--ui-table-active-hover-bg);
 					color: var(--ui-table-active-hover-color);
 				}
-				tr[data-row="selected"] td:is(:focus-visible,:hover) {
+				tr[data-row~="selected"] td:is(:focus-visible,:hover) {
 					--ui-table-cell-bg: var(--ui-table-selected-hover-bg);
 					color: var(--ui-table-selected-hover-color);
 				}
@@ -213,10 +236,10 @@
 				tr:has(td:is(:focus-visible,:hover)) {
 					--ui-table-cell-bg: var(--ui-table-row-hover-bg);
 				}
-				tr[data-row="active"]:has(td:is(:focus-visible,:hover)) {
+				tr[data-row~="active"]:has(td:is(:focus-visible,:hover)) {
 					--ui-table-cell-bg: var(--ui-table-active-bg);
 				}
-				tr[data-row="selected"]:has(td:is(:focus-visible,:hover)) {
+				tr[data-row~="selected"]:has(td:is(:focus-visible,:hover)) {
 					--ui-table-cell-bg: var(--ui-table-selected-bg);
 				}
 			}

@@ -122,6 +122,18 @@
 		&[data-c8~="end"] tr > *:nth-of-type(8) {
 			text-align: end;
 		}
+
+		/* Tabular figures — monospaced digits for numeric columns, composes with alignment */
+		&[data-c1~="tabular"] tr > *:nth-of-type(1),
+		&[data-c2~="tabular"] tr > *:nth-of-type(2),
+		&[data-c3~="tabular"] tr > *:nth-of-type(3),
+		&[data-c4~="tabular"] tr > *:nth-of-type(4),
+		&[data-c5~="tabular"] tr > *:nth-of-type(5),
+		&[data-c6~="tabular"] tr > *:nth-of-type(6),
+		&[data-c7~="tabular"] tr > *:nth-of-type(7),
+		&[data-c8~="tabular"] tr > *:nth-of-type(8) {
+			font-variant-numeric: tabular-nums;
+		}
 	}
 	:where(td) { border: 1px solid; }
 	:where(td, th) {

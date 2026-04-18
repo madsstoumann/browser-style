@@ -9,8 +9,10 @@ A CSS-first styling system for native HTML `<table>` elements, with composable l
 - Three density sizes via `data-size` (`sm`, default, `lg`) — matches the convention used by `<ui-avatar>`, `<ui-badge>`, etc.
 - Zebra striping: rows *and* columns, even/odd
 - 8 hover effects via separate `data-hover` attribute: `col`, `col-outline`, `td`, `td-outline`, `tr`, `tr-outline`, `th-outline`, `all`
-- Row states: `data-row="active"` and `data-row="selected"` on `<tr>`
+- Row states: `data-row="active" | "selected"` plus semantic variants `"success" | "warning" | "error" | "info"`
+- `<caption>` styled via `@browser.style/base`'s global reset; `<tfoot>` rows get thicker top border + semibold text
 - Per-column text alignment via `data-c1`…`data-c8` (provided by `@browser.style/base`'s `core.css`)
+- Tabular figures per column via the same attribute (`data-c3="end tabular"`) — `font-variant-numeric: tabular-nums`
 - Overflow wrapper with sticky header, sticky columns, and scroll-driven shadow
 - Light/dark mode via design tokens
 - RTL support via logical properties throughout
@@ -219,6 +221,7 @@ Combine variants via space-separated values. They only override custom propertie
 | Variant | What it does |
 |---------|-------------|
 | `block-border` | Bottom borders only (horizontal-rule look) |
+| `caption-bottom` | Renders `<caption>` below the table (`caption-side: bottom`) |
 | `fixed` | `table-layout: fixed` — equal-width columns |
 | `no-border` | Remove all cell borders |
 | `no-wrap` | Prevent text wrapping in cells |
@@ -281,19 +284,46 @@ Applied directly to `<tr>` for persistent visual state:
 ```html
 <tr data-row="active"><td>Active row (accent color)</td></tr>
 <tr data-row="selected"><td>Selected row (highlight color)</td></tr>
+<tr data-row="success"><td>Tinted green (uses --color-success)</td></tr>
+<tr data-row="warning"><td>Tinted amber (uses --color-warning)</td></tr>
+<tr data-row="error"><td>Tinted red (uses --color-error)</td></tr>
+<tr data-row="info"><td>Tinted blue (uses --color-info)</td></tr>
+<tr data-row="group"><td colspan="4">Section heading</td></tr>
+<tr data-row="group info"><td colspan="4">Tinted section heading</td></tr>
 ```
+
+`active`/`selected` apply solid accent/highlight colors; the semantic variants (`success`/`warning`/`error`/`info`) apply a soft tint via `color-mix()` over `--color-surface`, so they read as row emphasis without dominating the cell. `group` turns a `<tr>` into a section divider: pair a single `<td colspan="N">` with `data-row="group"` for a semibold, `--color-surface-alt`-tinted heading inside a `<tbody>`. Values are space-separated and compose — `data-row="group info"` gives you a semibold section heading tinted with the info color.
 
 Row states compose with hover: hovering an active/selected row shows a distinct hover color; hovering a cell in an active/selected row with `hover="td"` shows the state's "hover" variant.
 
-### Per-column text alignment
+### Per-column text alignment & tabular figures
 
 Provided by `@browser.style/base`'s `core.css` — apply `data-c1`…`data-c8` to any `<table>`:
 
 ```html
-<table data-c2="center" data-c4="end">
+<table data-c2="center" data-c3="end tabular" data-c4="end">
 ```
 
-Values: `start` (default), `center`, `end`. Extend beyond 8 columns by copying the pattern from `core.css`.
+Values: `start` (default), `center`, `end`, `tabular`. They compose — `end tabular` right-aligns the column *and* uses monospaced digit widths (`font-variant-numeric: tabular-nums`), so figures line up vertically. Extend beyond 8 columns by copying the pattern from `core.css`.
+
+### Caption & footer
+
+Native `<caption>` and `<tfoot>` both work out of the box:
+
+```html
+<table data-variant>
+  <caption>Orders — October 2026</caption>
+  <thead>…</thead>
+  <tbody>…</tbody>
+  <tfoot>
+    <tr><td colspan="3">Total</td><td>$2,060.50</td></tr>
+  </tfoot>
+</table>
+```
+
+`<caption>` inherits the global reset (italic, smaller, `margin-block: 1rlh`). Flip it below the table with `data-variant="caption-bottom"`. `<tfoot>` rows get a thicker top border (`--border-width-thick`) and `font-weight: semibold` — ideal for totals and summary rows.
+
+> **Known limitation with `<tfoot>`:** the base rule that draws the bottom border on `tr:last-of-type td` fires once per parent, so both `<tbody>`'s last row *and* `<tfoot>`'s last row currently get a bottom border. This is visually OK in practice (both borders collapse onto the same pixel line in most cases) and the current behavior is preserved by design. If you need strict single-border behavior, switch to a structural selector such as `table > tfoot > tr:last-of-type td, table:not(:has(tfoot)) > tbody > tr:last-of-type td`.
 
 ### Overflow wrapper
 

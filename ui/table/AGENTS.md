@@ -29,8 +29,8 @@ Two wrapper options, same styles: the `<ui-table>` web component (JS-driven, aut
 | `data-variant` | table | Space-separated layout tokens (`rounded`, `split-cols`, `th-dark`, `fixed`, …) |
 | `data-hover` | table | Space-separated hover effects (`col`, `col-outline`, `td`, `tr`, `all`, …) |
 | `data-size` | table | Density: `sm` / `lg` (no value = medium). Separate from `data-variant` to match the convention used by `<ui-avatar>`, `<ui-badge>` etc. |
-| `data-row` | `<tr>` | Row state: `active` / `selected` |
-| `data-c1`…`data-c8` | table | Per-column text alignment — provided by `@browser.style/base`'s `core.css`, not this package |
+| `data-row` | `<tr>` | Space-separated list of states — selector uses `~=` so values compose. `active` / `selected` apply solid accent/highlight; `success` / `warning` / `error` / `info` apply a soft `color-mix()` tint over `--color-surface`; `group` turns the row into a section heading (semibold + `--color-surface-alt` tint) and pairs naturally with a single `<td colspan="N">`. Tint rules are ordered after `group` in the CSS, so e.g. `data-row="group info"` gives a semibold section heading with the info tint. |
+| `data-c1`…`data-c8` | table | Per-column formatting — composable values: `start` / `center` / `end` (text alignment) + `tabular` (`font-variant-numeric: tabular-nums`). Defined in `@browser.style/base`'s `core.css`, not this package. |
 | `<ui-table-wrapper>` | wrapper | CSS-only overflow-wrapper element (an un-registered custom element, styled purely via CSS — no JS dependency) |
 | `data-sticky` | wrapper | Sticky column indices (e.g. `c0 c2`, 0-indexed) |
 
@@ -97,6 +97,15 @@ Pin positions (`--c0`, `--c2`, …) are up to the caller:
 - **Web component**: JS reads `cell.offsetWidth` for each sticky `<th>` and writes the values on the host.
 
 Sticky thead and columns apply always — they're no-ops when the wrapper isn't actually scrollable.
+
+## `<caption>` and `<tfoot>`
+
+- **`<caption>`** is styled by `@browser.style/base`'s `core.css` reset (italic, smaller, `margin-block: 1rlh`). No per-component rules needed; works out of the box. Flip position with inline `caption-side: bottom`.
+- **`<tfoot>`** rows get `border-block-start-width: var(--border-width-thick)` and `font-weight: semibold` (via the component token `--ui-table-border-width-thick`). Note: the `tr:last-of-type td` rule that draws the bottom border fires once per parent, so `<tbody>`'s last row *and* `<tfoot>`'s last row both currently get a bottom border. Left as-is because the lines visually collapse onto the same edge and the change is invasive. Strict fix if ever needed: `table > tfoot > tr:last-of-type td, table:not(:has(tfoot)) > tbody > tr:last-of-type td`.
+
+## Section / group header rows
+
+Supported via `data-row~="group"` on a `<tr>` containing a single `<td colspan="N">`. Gets `--ui-table-cell-bg: var(--color-surface-alt)` and semibold font-weight. Composes with status variants (`data-row="group info"` etc.) because the status rules are ordered *after* `group` in the CSS and write the same `--ui-table-cell-bg`, overriding the default surface-alt with the tint.
 
 ## Critical gotchas
 
