@@ -355,7 +355,7 @@
 
 	<br>
 	<h2>Overflow wrapper (CSS-only)</h2>
-	<p>Zero JavaScript. <code>&lt;ui-table-wrapper&gt;</code> (an un-registered custom element, styled purely via CSS) turns its child table into a scrollable container with a sticky <code>&lt;thead&gt;</code> and optional sticky columns. Two scroll-driven animations (<code>animation-timeline: scroll(self inline)</code> + <code>scroll(self block)</code>) flip the <code>--_has-overflow</code> flag when the content actually overflows on either axis — that gates the wrapper frame and collapses the inner table's edge borders. Sticky columns are declared via <code>data-sticky="c0 c2"</code> (0-indexed); the pin positions come from <code>--c0</code>, <code>--c2</code>, which you measure once in devtools and hard-code. In this demo "First Name" renders at ~101px wide, so "Known As" pins at <code>--c2: 101px</code> — flush against col 0. Safari (no scroll-driven animations yet) falls back to a manual <code>overflowing</code> attribute, which the <code>&lt;ui-table&gt;</code> web component toggles automatically.</p>
+	<p>Wrap a table in <code>&lt;ui-table-wrapper&gt;</code> for a scrollable container with sticky <code>&lt;thead&gt;</code> and optional sticky columns — zero JavaScript. Declare sticky columns via <code>data-sticky="c0 c2"</code> and hard-code the pin positions as <code>--c0</code>, <code>--c2</code> (measure once in devtools). See the <a href="readme.md#advanced-how-the-css-only-overflow-detection-works">readme</a> for the scroll-driven detection mechanism and the Safari fallback.</p>
 
 	<ui-table-wrapper data-variant="rounded" data-sticky="c0 c2" style="--c0: 0px; --c2: 101px;">
 		<table data-variant="rounded no-wrap" data-hover="tr">
