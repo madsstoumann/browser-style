@@ -30,7 +30,7 @@ Two wrapper options, same styles: the `<ui-table>` web component (JS-driven, aut
 | `data-hover` | table | Space-separated hover effects (`col`, `col-outline`, `td`, `tr`, `all`, …) |
 | `data-size` | table | Density: `sm` / `lg` (no value = medium). Separate from `data-variant` so density composes orthogonally with layout tokens. |
 | `data-row` | `<tr>` | Space-separated list of states — selector uses `~=` so values compose. `active` / `selected` apply solid accent/highlight; `success` / `warning` / `error` / `info` apply a soft `color-mix()` tint over `--color-surface`; `group` turns the row into a section heading (semibold + `--color-surface-alt` tint) and pairs naturally with a single `<td colspan="N">`. Tint rules are ordered after `group` in the CSS, so e.g. `data-row="group info"` gives a semibold section heading with the info tint. |
-| `data-c1`…`data-c8` | table | Per-column formatting — composable values: `start` / `center` / `end` (text alignment) + `tabular` (`font-variant-numeric: tabular-nums`). Defined in `@browser.style/base`'s `core.css`, not this package. |
+| `data-c1`…`data-c8` | table | Per-column formatting — composable values: `start` / `center` / `end` (text alignment) + `tabular` (`font-variant-numeric: tabular-nums`). Defined in a top-level `:where(table) { … }` block so it works on any `<table>`, not just tables that opt into this component. |
 | `<ui-table-wrapper>` | wrapper | CSS-only overflow-wrapper element (an un-registered custom element, styled purely via CSS — no JS dependency) |
 | `data-sticky` | wrapper | Sticky column indices (e.g. `c0 c2`, 0-indexed) |
 

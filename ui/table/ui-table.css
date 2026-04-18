@@ -1,23 +1,28 @@
 /**
  * ui-table
- * @version 4.0.1
+ * @version 4.0.2
  * @date 2026-04-18
  * @author Mads Stoumann
  */
 @layer bs-component {
+
+	/* === Core table ===
+	 * Root selector matches any <table> that opts in via data-variant/hover/size,
+	 * plus any <table> directly inside <ui-table>.
+	 */
 	:where(table:is([data-variant], [data-hover], [data-size]), ui-table > table) {
+
+		/* --- Tokens --- */
 		--ui-table-border-color: var(--color-border);
 		--ui-table-border-radius: 0;
 		--ui-table-border-width: var(--border-width);
 
-		/* hover */
 		--ui-table-col-hover-bg: var(--color-button);
 		--ui-table-cell-hover-bg: var(--color-button-text);
 		--ui-table-row-hover-bg: var(--color-button);
 		--ui-table-outline-color: var(--color-button-text);
 		--ui-table-outline-width: var(--border-width-thick);
 
-		/* row states */
 		--ui-table-active-bg: var(--color-accent);
 		--ui-table-active-color: var(--color-accent-text);
 		--ui-table-active-hover-bg: var(--color-accent-dark);
@@ -27,6 +32,7 @@
 		--ui-table-selected-hover-bg: var(--color-accent);
 		--ui-table-selected-hover-color: var(--color-accent-text);
 
+		/* --- Base --- */
 		border-collapse: separate;
 		border-spacing: var(--ui-table-spacing-x, 0) var(--ui-table-spacing-y, 0);
 		font-family: var(--ui-table-font-family, inherit);
@@ -60,13 +66,16 @@
 			}
 		}
 
-		/* footer rows */
+		/* --- Footer rows --- */
 		& tfoot :is(td, th) {
 			border-block-start-width: var(--ui-table-border-width-thick, var(--border-width-thick));
 			font-weight: var(--font-weight-semibold);
 		}
 
-		/* row states */
+		/* === Row states ===
+		 * data-row is a space-separated list on <tr>. Values compose.
+		 * Order below matters: group tint is default, status tints override it.
+		 */
 		& tr[data-row~="active"] {
 			--ui-table-cell-bg: var(--ui-table-active-bg);
 			color: var(--ui-table-active-color);
@@ -93,8 +102,8 @@
 		}
 
 		/* === Layout variants === */
-		&[data-variant~="block-border"] :is(td, th) { border-width: 0 0 var(--ui-table-border-width) 0; }
-		&[data-variant~="caption-bottom"] { caption-side: bottom; }
+
+		/* --- Density (data-size) --- */
 		&[data-size="sm"] {
 			--ui-table-font-family: system-ui, sans-serif;
 			--ui-table-font-size: var(--font-size-sm);
@@ -104,10 +113,16 @@
 			--ui-table-font-size: var(--font-size-xl);
 			--ui-table-padding: .75ch 1.5ch;
 		}
-		&[data-variant~="fixed"] { table-layout: fixed; }
+
+		/* --- Borders --- */
+		&[data-variant~="block-border"] :is(td, th) { border-width: 0 0 var(--ui-table-border-width) 0; }
 		&[data-variant~="no-border"] :is(td, th) { border: 0; }
-		&[data-variant~="no-wrap"] :is(td, th) { text-wrap: nowrap; }
 		&[data-variant~="rounded"] { --ui-table-border-radius: var(--radius-md); }
+
+		/* --- Layout --- */
+		&[data-variant~="caption-bottom"] { caption-side: bottom; }
+		&[data-variant~="fixed"] { table-layout: fixed; }
+		&[data-variant~="no-wrap"] :is(td, th) { text-wrap: nowrap; }
 		&[data-variant~="split-cols"] {
 			--ui-table-spacing-x: 2ch;
 			margin-inline: calc(0px - var(--ui-table-spacing-x));
@@ -129,6 +144,8 @@
 			margin-block: calc(0px - var(--ui-table-spacing-y));
 			& :is(td, th) { border-block-width: var(--ui-table-border-width); }
 		}
+
+		/* --- Header styling --- */
 		&[data-variant~="th-dark"] th {
 			--ui-table-header-bg: var(--ui-table-th-dark-bg, var(--color-button-text));
 			border-block-color: var(--ui-table-th-dark-bg, var(--color-button-text));
@@ -139,6 +156,8 @@
 		&:is([data-variant~="th-light"], [data-variant~="zebrarow-even"]) th {
 			--ui-table-header-bg: var(--ui-table-zebra-bg, var(--color-surface-alt));
 		}
+
+		/* --- Zebra striping --- */
 		&[data-variant~="zebracol-even"] col:nth-of-type(even),
 		&[data-variant~="zebracol-odd"] col:nth-of-type(odd) {
 			background-color: var(--ui-table-zebra-bg, var(--color-surface-alt));
@@ -148,9 +167,13 @@
 			--ui-table-cell-bg: var(--ui-table-zebra-bg, var(--color-surface-alt));
 		}
 
-		/* === Hover modifiers === */
+		/* === Hover modifiers ===
+		 * data-hover is a space-separated list. Wrapped in @media (hover: hover)
+		 * so touch devices don't get stuck states.
+		 */
 		@media (hover: hover) {
-			/* col highlight */
+
+			/* --- Column highlight --- */
 			&:is([data-hover~="all"], [data-hover~="col"]) {
 				&:has(:is(td,th):nth-child(1):is(:focus-visible,:hover)) col:nth-child(1),
 				&:has(:is(td,th):nth-child(2):is(:focus-visible,:hover)) col:nth-child(2),
@@ -165,7 +188,7 @@
 				}
 			}
 
-			/* col outline */
+			/* --- Column outline --- */
 			&[data-hover~="col-outline"] {
 				& :is(td,th) {
 					position: relative;
@@ -193,7 +216,7 @@
 				}
 			}
 
-			/* cell fill */
+			/* --- Cell fill --- */
 			&:is([data-hover~="all"], [data-hover~="td"]) {
 				td:is(:focus-visible,:hover) {
 					--ui-table-border-color: var(--ui-table-cell-hover-bg);
@@ -211,13 +234,13 @@
 				}
 			}
 
-			/* cell outline */
+			/* --- Cell outline --- */
 			&[data-hover~="td-outline"] td:is(:focus-visible,:hover) {
 				outline: var(--ui-table-outline-width) solid var(--ui-table-outline-color);
 				outline-offset: calc(0px - var(--ui-table-border-width));
 			}
 
-			/* th outline */
+			/* --- Header outline --- */
 			&:is([data-hover~="all"], [data-hover~="th-outline"]) {
 				th:is(:focus-visible,:hover) {
 					cursor: pointer;
@@ -231,7 +254,7 @@
 				}
 			}
 
-			/* row highlight */
+			/* --- Row highlight --- */
 			&:is([data-hover~="all"], [data-hover~="tr"]) {
 				tr:has(td:is(:focus-visible,:hover)) {
 					--ui-table-cell-bg: var(--ui-table-row-hover-bg);
@@ -244,7 +267,7 @@
 				}
 			}
 
-			/* row outline */
+			/* --- Row outline --- */
 			&[data-hover~="tr-outline"] tr:has(td):hover {
 				outline: var(--ui-table-outline-width) solid var(--ui-table-outline-color);
 				outline-offset: calc(0px - var(--ui-table-outline-width));
@@ -252,15 +275,49 @@
 		}
 	}
 
+	/* === Per-column formatting ===
+	 * data-c1..data-c8 on any <table>. Space-separated, composable values:
+	 *   start | center | end   → text-align
+	 *   tabular                → font-variant-numeric: tabular-nums
+	 * Extend beyond 8 columns by duplicating the pattern.
+	 */
+	:where(table) {
+		&[data-c1~="center"] tr > *:nth-of-type(1),
+		&[data-c2~="center"] tr > *:nth-of-type(2),
+		&[data-c3~="center"] tr > *:nth-of-type(3),
+		&[data-c4~="center"] tr > *:nth-of-type(4),
+		&[data-c5~="center"] tr > *:nth-of-type(5),
+		&[data-c6~="center"] tr > *:nth-of-type(6),
+		&[data-c7~="center"] tr > *:nth-of-type(7),
+		&[data-c8~="center"] tr > *:nth-of-type(8) { text-align: center; }
+
+		&[data-c1~="end"] tr > *:nth-of-type(1),
+		&[data-c2~="end"] tr > *:nth-of-type(2),
+		&[data-c3~="end"] tr > *:nth-of-type(3),
+		&[data-c4~="end"] tr > *:nth-of-type(4),
+		&[data-c5~="end"] tr > *:nth-of-type(5),
+		&[data-c6~="end"] tr > *:nth-of-type(6),
+		&[data-c7~="end"] tr > *:nth-of-type(7),
+		&[data-c8~="end"] tr > *:nth-of-type(8) { text-align: end; }
+
+		&[data-c1~="tabular"] tr > *:nth-of-type(1),
+		&[data-c2~="tabular"] tr > *:nth-of-type(2),
+		&[data-c3~="tabular"] tr > *:nth-of-type(3),
+		&[data-c4~="tabular"] tr > *:nth-of-type(4),
+		&[data-c5~="tabular"] tr > *:nth-of-type(5),
+		&[data-c6~="tabular"] tr > *:nth-of-type(6),
+		&[data-c7~="tabular"] tr > *:nth-of-type(7),
+		&[data-c8~="tabular"] tr > *:nth-of-type(8) { font-variant-numeric: tabular-nums; }
+	}
+
 	/* === Overflow wrapper ===
 	 * Overflow state is tracked by the custom property --_has-overflow (0 or 1).
 	 * It is set to 1 by two independent mechanisms:
-	 *   1. CSS-only: scroll-driven animation via `animation-timeline: scroll(self inline)`
-	 *      flips the flag when the element has inline scrollable overflow.
+	 *   1. CSS-only: scroll-driven animations on inline + block axes flip the flag
+	 *      when the element has scrollable overflow on either axis.
 	 *   2. JS fallback: `[overflowing]` attribute (for browsers without scroll-timeline
 	 *      support, e.g. Safari ≤ 18). The <ui-table> component toggles this.
-	 * Wrapper styles (frame, edge border removal) are then gated via calc() on the flag,
-	 * so the CSS-only path works with zero JavaScript when column widths are user-set.
+	 * Wrapper styles (frame, edge border removal) are gated via calc() on the flag.
 	 */
 	:where(ui-table[overflow], ui-table-wrapper) {
 		--_has-overflow: 0;
@@ -276,13 +333,18 @@
 		}
 		&[overflowing] { --_has-overflow: 1; }
 
-		/* Frame — gated by --_has-overflow */
+		/* --- Frame (gated by --_has-overflow) --- */
 		border-color: var(--color-border);
 		border-radius: calc(var(--_has-overflow) * var(--ui-table-border-radius, 0));
 		border-style: solid;
 		border-width: calc(var(--_has-overflow) * var(--border-width));
 
-		/* Inner table: sticky thead always; edge borders collapse when framed */
+		&[data-variant~="rounded"] {
+			--ui-table-border-radius: var(--radius-md);
+			& tr:last-of-type td { --ui-table-border-radius: 0; }
+		}
+
+		/* --- Inner table: sticky thead, group displacement, edge collapse --- */
 		& table {
 			--ui-table-cell-bg: var(--color-surface);
 			--ui-table-header-bg: var(--color-surface);
@@ -290,6 +352,12 @@
 				inset-block-start: 0;
 				position: sticky;
 				z-index: var(--z-index-1);
+			}
+			/* Sticky group headers — pin below thead and displace each other */
+			& tr[data-row~="group"] {
+				inset-block-start: var(--ui-table-group-offset, 33.6px);
+				position: sticky;
+				z-index: calc(var(--z-index-1) - 1);
 			}
 			& tr:first-of-type th {
 				border-block-start-width: calc((1 - var(--_has-overflow)) * var(--ui-table-border-width));
@@ -305,12 +373,7 @@
 			}
 		}
 
-		&[data-variant~="rounded"] {
-			--ui-table-border-radius: var(--radius-md);
-			& tr:last-of-type td { --ui-table-border-radius: 0; }
-		}
-
-		/* Sticky columns — always applied (no-op without scroll) */
+		/* --- Sticky columns (data-sticky) --- */
 		&[data-sticky~="c0"] :is(td,th):nth-of-type(1),
 		&[data-sticky~="c1"] :is(td,th):nth-of-type(2),
 		&[data-sticky~="c2"] :is(td,th):nth-of-type(3),
@@ -334,6 +397,7 @@
 		&[data-sticky~="c7"] :is(td,th):nth-of-type(8) { --_iis: var(--c7); }
 		&[data-sticky~="c8"] :is(td,th):nth-of-type(9) { --_iis: var(--c8); }
 
+		/* --- Scroll shadow on sticky thead --- */
 		@supports (animation-timeline: scroll()) {
 			& table thead {
 				animation: table-scroll-shadow linear both;

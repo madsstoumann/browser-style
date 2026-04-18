@@ -15,7 +15,9 @@
 
 	<h2>CSS</h2>
 	<p><strong>Table</strong> is a CSS-first styling system for native <code>&lt;table&gt;</code> elements. Each feature is an attribute — compose them freely on the table, its rows, or a wrapping <code>&lt;ui-table-wrapper&gt;</code>. Light/dark mode, RTL, and touch-safe hover come for free.</p>
-	<p>This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript). See the <a href="#web-component">Web Component</a> section for the JS-enhanced <code>&lt;ui-table&gt;</code>.</p>
+	<p>This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript).<br>
+		See the <a href="#web-component">Web Component</a> section for the JS-enhanced <code>&lt;ui-table&gt;</code>.
+	</p>
 
 	<p>Default:</p>
 	<table data-variant>
@@ -150,7 +152,7 @@
 
 	<br>
 	<h2>Column alignment</h2>
-	<p>Per-column text alignment via <code>data-c<em>N</em></code> attributes (provided by <code>@browser.style/base</code>'s <code>core.css</code>). Values: <code>start</code>, <code>center</code>, <code>end</code>.</p>
+	<p>Per-column text alignment via <code>data-c<em>N</em></code> attributes on the table. Values: <code>start</code>, <code>center</code>, <code>end</code>.</p>
 
 	<p>With <code>data-variant="block-border"</code>, <code>data-hover="col"</code>, <code>data-c2="center"</code> and <code>data-c4="end"</code>:</p>
 	<table data-variant="block-border" data-hover="col" data-c2="center" data-c4="end">
@@ -354,7 +356,7 @@
 	</table>
 
 	<br>
-	<h2>Overflow wrapper (CSS-only)</h2>
+	<h2>Overflow wrapper</h2>
 	<p>Wrap a table in <code>&lt;ui-table-wrapper&gt;</code> for a scrollable container with sticky <code>&lt;thead&gt;</code> and optional sticky columns — zero JavaScript. Declare sticky columns via <code>data-sticky="c0 c2"</code> and hard-code the pin positions as <code>--c0</code>, <code>--c2</code> (measure once in devtools). See the <a href="readme.md#advanced-how-the-css-only-overflow-detection-works">readme</a> for the scroll-driven detection mechanism and the Safari fallback.</p>
 
 	<ui-table-wrapper data-variant="rounded" data-sticky="c0 c2" style="--c0: 0px; --c2: 101px;">
@@ -411,6 +413,47 @@
 				<tr><td>Scott</td><td>Lang</td><td>Ant-Man</td><td>San Francisco</td></tr>
 				<tr><td>Carol</td><td>Danvers</td><td>Captain Marvel</td><td>Harmony Grove</td></tr>
 				<tr><td>T'Challa</td><td>Challa</td><td>Black Panther</td><td>Wakanda</td></tr>
+			</tbody>
+		</table>
+	</ui-table-wrapper>
+
+	<br>
+	<p>Sticky group headers — contact-scroller style. Each <code>&lt;tr data-row="group"&gt;</code> inside the overflow wrapper pins just below the sticky <code>&lt;thead&gt;</code> and gets displaced when the next one scrolls up to meet it. The offset defaults to <code>--ui-table-group-offset: 33.6px</code> (thead height); override per-table for different densities.</p>
+
+	<ui-table-wrapper data-variant="rounded" style="inline-size: fit-content; max-block-size: 280px;">
+		<table data-variant="rounded th-light" data-hover="tr">
+			<colgroup><col><col><col><col></colgroup>
+			<thead>
+				<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+			</thead>
+			<tbody>
+				<tr data-row="group"><td colspan="4">A</td></tr>
+				<tr><td>Arthur</td><td>Curry</td><td>Aquaman</td><td>Atlantis</td></tr>
+				<tr data-row="group"><td colspan="4">B</td></tr>
+				<tr><td>Barry</td><td>Allen</td><td>The Flash</td><td>Central City</td></tr>
+				<tr><td>Bruce</td><td>Banner</td><td>Hulk</td><td>Dayton, Ohio</td></tr>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr data-row="group"><td colspan="4">C</td></tr>
+				<tr><td>Carol</td><td>Danvers</td><td>Captain Marvel</td><td>Harmony Grove</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr data-row="group"><td colspan="4">D</td></tr>
+				<tr><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Themyscira</td></tr>
+				<tr data-row="group"><td colspan="4">H</td></tr>
+				<tr><td>Hal</td><td>Jordan</td><td>Green Lantern</td><td>Coast City</td></tr>
+				<tr data-row="group"><td colspan="4">M</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+				<tr data-row="group"><td colspan="4">N</td></tr>
+				<tr><td>Natasha</td><td>Romanoff</td><td>Black Widow</td><td>Moscow</td></tr>
+				<tr data-row="group"><td colspan="4">P</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr data-row="group"><td colspan="4">S</td></tr>
+				<tr><td>Scott</td><td>Lang</td><td>Ant-Man</td><td>San Francisco</td></tr>
+				<tr><td>Steve</td><td>Rogers</td><td>Captain America</td><td>Brooklyn</td></tr>
+				<tr data-row="group"><td colspan="4">T</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>T'Challa</td><td>Challa</td><td>Black Panther</td><td>Wakanda</td></tr>
+				<tr data-row="group"><td colspan="4">W</td></tr>
+				<tr><td>Wanda</td><td>Maximoff</td><td>Scarlet Witch</td><td>Transia</td></tr>
 			</tbody>
 		</table>
 	</ui-table-wrapper>

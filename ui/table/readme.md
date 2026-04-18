@@ -11,7 +11,7 @@ A CSS-first styling system for native HTML `<table>` elements, with composable l
 - 8 hover effects via separate `data-hover` attribute: `col`, `col-outline`, `td`, `td-outline`, `tr`, `tr-outline`, `th-outline`, `all`
 - Row states: `data-row="active" | "selected"` plus semantic variants `"success" | "warning" | "error" | "info"`
 - `<caption>` styled via `@browser.style/base`'s global reset; `<tfoot>` rows get thicker top border + semibold text
-- Per-column text alignment via `data-c1`…`data-c8` (provided by `@browser.style/base`'s `core.css`)
+- Per-column text alignment via `data-c1`…`data-c8` — works on any `<table>`
 - Tabular figures per column via the same attribute (`data-c3="end tabular"`) — `font-variant-numeric: tabular-nums`
 - Overflow wrapper with sticky header, sticky columns, and scroll-driven shadow
 - Light/dark mode via design tokens
@@ -33,7 +33,7 @@ Peer dependency:
 npm install @browser.style/base
 ```
 
-> `@browser.style/base` provides the design token system (colors, spacing, radii, etc.) *and* the `data-c1`…`data-c8` column-alignment rules via `core.css`. The table works without it — tokens fall back to neutral defaults — but you'll want it for complete theming.
+> `@browser.style/base` provides the design token system (colors, spacing, radii, etc.). The table works without it — tokens fall back to neutral defaults — but you'll want it for complete theming.
 
 ---
 
@@ -298,13 +298,13 @@ Row states compose with hover: hovering an active/selected row shows a distinct 
 
 ### Per-column text alignment & tabular figures
 
-Provided by `@browser.style/base`'s `core.css` — apply `data-c1`…`data-c8` to any `<table>`:
+Apply `data-c1`…`data-c8` to any `<table>`:
 
 ```html
 <table data-c2="center" data-c3="end tabular" data-c4="end">
 ```
 
-Values: `start` (default), `center`, `end`, `tabular`. They compose — `end tabular` right-aligns the column *and* uses monospaced digit widths (`font-variant-numeric: tabular-nums`), so figures line up vertically. Extend beyond 8 columns by copying the pattern from `core.css`.
+Values: `start` (default), `center`, `end`, `tabular`. They compose — `end tabular` right-aligns the column *and* uses monospaced digit widths (`font-variant-numeric: tabular-nums`), so figures line up vertically. Extend beyond 8 columns by copying the pattern in `ui-table.css`.
 
 ### Caption & footer
 
