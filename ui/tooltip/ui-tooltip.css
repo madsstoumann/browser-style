@@ -1,6 +1,6 @@
 /**
  * ui-tooltip
- * @version 4.0.1
+ * @version 4.0.3
  * @date 2026-04-18
  * @author Mads Stoumann
  *
@@ -10,6 +10,7 @@
 	:where(ui-tooltip) {
 		color: var(--ui-tooltip-color, var(--color-surface));
 		display: block;
+		filter: drop-shadow(var(--ui-tooltip-shadow, 0 2px 4px rgb(0 0 0 / 0.15)));
 		font-family: var(--ui-tooltip-font-family, var(--font-body));
 		font-size: var(--ui-tooltip-font-size, var(--font-size-sm));
 		font-weight: var(--ui-tooltip-font-weight, var(--font-weight-normal));
@@ -21,14 +22,16 @@
 		padding-inline: var(--ui-tooltip-padding-inline, 1.15ch);
 		pointer-events: none;
 		position: absolute;
+		scale: var(--ui-tooltip-scale-start, 0.96);
 		text-align: center;
 		text-box: auto;
-		transition: opacity var(--duration-normal) var(--ease-in-out);
+		transition:
+			opacity var(--duration-normal) var(--ease-in-out) var(--ui-tooltip-close-delay, 0ms),
+			scale var(--duration-normal) var(--ease-in-out) var(--ui-tooltip-close-delay, 0ms);
 		user-select: none;
 		white-space: nowrap;
 		z-index: var(--ui-tooltip-z-index, var(--z-index-3));
 
-		/* internal helpers to make calculations easier to read */
 		--_b: var(--ui-tooltip-arrow-base, 1em);
 		--_h: var(--ui-tooltip-arrow-height, 0.4em);
 		--_p: var(--ui-tooltip-arrow-position, 50%);
@@ -97,19 +100,48 @@
 		}
 	}
 
-	/* alignment — start/end shifts the bubble; arrow stays near the trigger edge */
-	:where(ui-tooltip[position$="-start"]) { --_p: 1em; inset-inline: 0 auto; translate: 0 0; }
-	:where(ui-tooltip[position$="-end"])   { --_p: calc(100% - 1em); inset-inline: auto 0; translate: 0 0; }
+	/* left: bubble on inline-start of trigger, arrow on inline-end edge pointing out */
+	:where(ui-tooltip[position^="left"]) {
+		background: var(--ui-tooltip-background, var(--color-text)) 0 0 / calc(100% + var(--_h)) 100%;
+		border-radius: var(--_r) min(var(--_r), var(--_p) - var(--_b)/2) min(var(--_r), 100% - var(--_p) - var(--_b)/2) var(--_r) / var(--_r);
+		inset-block: 50% auto;
+		inset-inline: auto calc(100% + var(--ui-tooltip-offset, 0.25em) + var(--_h));
+		translate: 0 -50%;
+		&::before {
+			inset: 0 calc(-1 * var(--_h)) 0 0;
+			clip-path: polygon(calc(100% - var(--_h)) max(0%, var(--_p) - var(--_b)/2), 100% var(--_p), calc(100% - var(--_h)) min(100%, var(--_p) + var(--_b)/2), 50% 50%);
+		}
+	}
 
-	/* rtl — flip center-aligned translate */
-	:where(ui-tooltip:not([position$="-start"], [position$="-end"])):dir(rtl) {
+	/* right: bubble on inline-end of trigger, arrow on inline-start edge pointing out */
+	:where(ui-tooltip[position^="right"]) {
+		background: var(--ui-tooltip-background, var(--color-text)) 100% 0 / calc(100% + var(--_h)) 100%;
+		border-radius: min(var(--_r), var(--_p) - var(--_b)/2) var(--_r) var(--_r) min(var(--_r), 100% - var(--_p) - var(--_b)/2) / var(--_r);
+		inset-block: 50% auto;
+		inset-inline: calc(100% + var(--ui-tooltip-offset, 0.25em) + var(--_h)) auto;
+		translate: 0 -50%;
+		&::before {
+			inset: 0 0 0 calc(-1 * var(--_h));
+			clip-path: polygon(var(--_h) max(0%, var(--_p) - var(--_b)/2), 0 var(--_p), var(--_h) min(100%, var(--_p) + var(--_b)/2), 50% 50%);
+		}
+	}
+
+	/* alignment — start/end shifts the bubble; arrow stays near the trigger edge */
+	:where(ui-tooltip[position="top-start"], ui-tooltip[position="bottom-start"]) { --_p: 1em; inset-inline: 0 auto; translate: 0 0; }
+	:where(ui-tooltip[position="top-end"], ui-tooltip[position="bottom-end"])     { --_p: calc(100% - 1em); inset-inline: auto 0; translate: 0 0; }
+	:where(ui-tooltip[position="left-start"], ui-tooltip[position="right-start"]) { --_p: 1em; inset-block: 0 auto; translate: 0 0; }
+	:where(ui-tooltip[position="left-end"], ui-tooltip[position="right-end"])     { --_p: calc(100% - 1em); inset-block: auto 0; translate: 0 0; }
+
+	/* rtl — flip center-aligned translate on block-axis tooltips */
+	:where(ui-tooltip[position^="top"], ui-tooltip[position^="bottom"], ui-tooltip:not([position])):not([position$="-start"], [position$="-end"]):dir(rtl) {
 		translate: 50% 0;
 	}
 
-	/* show when parent is hovered or focus-visible */
+	/* show on hover or focus-visible */
 	*:hover > :where(ui-tooltip:not([disabled], [hidden])),
 	*:focus-visible > :where(ui-tooltip:not([disabled], [hidden])) {
 		opacity: var(--ui-tooltip-opacity, 0.9);
+		scale: 1;
 		transition-delay: var(--ui-tooltip-open-delay, 100ms);
 	}
 
@@ -126,5 +158,14 @@
 		:where(ui-tooltip) { position-anchor: --ui-tooltip-trigger; }
 		:where(ui-tooltip[position^="top"]),
 		:where(ui-tooltip[position^="bottom"]) { position-try-fallbacks: flip-block; }
+		:where(ui-tooltip[position^="left"]),
+		:where(ui-tooltip[position^="right"]) { position-try-fallbacks: flip-inline; }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:where(ui-tooltip) {
+			scale: 1;
+			transition: none;
+		}
 	}
 }

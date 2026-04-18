@@ -149,6 +149,37 @@
 		--ui-table-cell-bg: var(--ui-table-zebra-bg, var(--color-surface-alt));
 	}
 
+	/* per-column text alignment: data-c1..data-c9 = start | center | end */
+	table[data-c1="start"] :is(td,th):nth-child(1),
+	table[data-c2="start"] :is(td,th):nth-child(2),
+	table[data-c3="start"] :is(td,th):nth-child(3),
+	table[data-c4="start"] :is(td,th):nth-child(4),
+	table[data-c5="start"] :is(td,th):nth-child(5),
+	table[data-c6="start"] :is(td,th):nth-child(6),
+	table[data-c7="start"] :is(td,th):nth-child(7),
+	table[data-c8="start"] :is(td,th):nth-child(8),
+	table[data-c9="start"] :is(td,th):nth-child(9) { text-align: start; }
+
+	table[data-c1="center"] :is(td,th):nth-child(1),
+	table[data-c2="center"] :is(td,th):nth-child(2),
+	table[data-c3="center"] :is(td,th):nth-child(3),
+	table[data-c4="center"] :is(td,th):nth-child(4),
+	table[data-c5="center"] :is(td,th):nth-child(5),
+	table[data-c6="center"] :is(td,th):nth-child(6),
+	table[data-c7="center"] :is(td,th):nth-child(7),
+	table[data-c8="center"] :is(td,th):nth-child(8),
+	table[data-c9="center"] :is(td,th):nth-child(9) { text-align: center; }
+
+	table[data-c1="end"] :is(td,th):nth-child(1),
+	table[data-c2="end"] :is(td,th):nth-child(2),
+	table[data-c3="end"] :is(td,th):nth-child(3),
+	table[data-c4="end"] :is(td,th):nth-child(4),
+	table[data-c5="end"] :is(td,th):nth-child(5),
+	table[data-c6="end"] :is(td,th):nth-child(6),
+	table[data-c7="end"] :is(td,th):nth-child(7),
+	table[data-c8="end"] :is(td,th):nth-child(8),
+	table[data-c9="end"] :is(td,th):nth-child(9) { text-align: end; }
+
 	/* === Hover modifiers === */
 	@media (hover: hover) {
 
