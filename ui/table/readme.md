@@ -5,7 +5,8 @@ A CSS-first styling system for native HTML `<table>` elements, with composable l
 ## Features
 
 - Native `<table>` — accessible, screen-reader friendly, works without JS
-- Composable layout variants: `rounded`, `split-cols`, `split-rows`, `block-border`, `th-dark`, `th-light`, `fixed`, `no-border`, `no-wrap`, three density sizes
+- Composable layout variants: `rounded`, `split-cols`, `split-rows`, `block-border`, `th-dark`, `th-light`, `fixed`, `no-border`, `no-wrap`
+- Three density sizes via `data-size` (`sm`, default, `lg`) — matches the convention used by `<ui-avatar>`, `<ui-badge>`, etc.
 - Zebra striping: rows *and* columns, even/odd
 - 8 hover effects via separate `data-hover` attribute: `col`, `col-outline`, `td`, `td-outline`, `tr`, `tr-outline`, `th-outline`, `all`
 - Row states: `data-row="active"` and `data-row="selected"` on `<tr>`
@@ -101,6 +102,7 @@ import '@browser.style/table';
 |-----------|------|-------------|
 | `variant` | string | Space-separated layout variants (forwarded as `data-variant`) |
 | `hover` | string | Space-separated hover effects (forwarded as `data-hover`) |
+| `size` | `sm` \| `lg` | Density — smaller or larger font/padding (forwarded as `data-size`) |
 | `overflow` | boolean | Enables scrollable wrapper with sticky header and auto overflow detection |
 | `sticky` | string | Space-separated sticky column indices (e.g. `"c0 c2"`) — pins columns 1 and 3 |
 
@@ -217,8 +219,6 @@ Combine variants via space-separated values. They only override custom propertie
 | Variant | What it does |
 |---------|-------------|
 | `block-border` | Bottom borders only (horizontal-rule look) |
-| `density-sm` | Compact: smaller font + tighter padding |
-| `density-lg` | Spacious: larger font + roomier padding |
 | `fixed` | `table-layout: fixed` — equal-width columns |
 | `no-border` | Remove all cell borders |
 | `no-wrap` | Prevent text wrapping in cells |
@@ -234,10 +234,25 @@ Combine variants via space-separated values. They only override custom propertie
 
 ```html
 <!-- Framed, striped, dense -->
-<table data-variant="rounded th-dark zebrarow-odd density-sm">
+<table data-variant="rounded th-dark zebrarow-odd" data-size="sm">
 
 <!-- Card-like columns with rounded ends -->
 <table data-variant="split-cols rounded th-dark">
+```
+
+### Density (`data-size`)
+
+Separate attribute, mirroring the convention used by `<ui-avatar>`, `<ui-badge>`, etc.
+
+| Value | What it does |
+|-------|-------------|
+| `sm` | Compact: smaller font + tighter padding |
+| (unset) | Default (medium) |
+| `lg` | Spacious: larger font + roomier padding |
+
+```html
+<table data-size="sm">…</table>
+<ui-table size="lg">…</ui-table>
 ```
 
 ### Hover effects (`data-hover`)
@@ -282,9 +297,23 @@ Values: `start` (default), `center`, `end`. Extend beyond 8 columns by copying t
 
 ### Overflow wrapper
 
-Scrollable container with sticky header, optional sticky columns, and a scroll-driven shadow effect. Two modes:
+Scrollable container with sticky header, optional sticky columns, and a scroll-driven shadow. How overflow is detected depends on which mode you use.
 
-**Web component (recommended — auto-detection):**
+**CSS-only** — wrap the table in `<ui-table-wrapper>` (an un-registered custom element — just styled via CSS, no JS dependency). Two scroll-driven animations (`animation-timeline: scroll(self inline)` + `scroll(self block)`) detect overflow on either axis and toggle an internal `--_has-overflow` flag (0 or 1), which gates the wrapper frame and edge-border collapse via `calc()`:
+
+```html
+<ui-table-wrapper data-variant="rounded" data-sticky="c0 c2" style="--c0: 0; --c2: 101px;">
+  <table data-variant="rounded no-wrap" data-hover="tr">
+    <colgroup>...</colgroup>
+    <thead>...</thead>
+    <tbody>...</tbody>
+  </table>
+</ui-table-wrapper>
+```
+
+For sticky columns you measure the pin positions once in devtools and hard-code them as `--c0`, `--c1`, … `--c8`. Each value is the scroll-x offset at which that column should lock — effectively the cumulative width of sticky columns *before* it (non-sticky columns scroll away and don't contribute). In the snippet above, "First Name" renders at ~101px, so "Known As" pins at `--c2: 101px`.
+
+**Web component** — `<ui-table overflow>` does the measuring for you. A `ResizeObserver` toggles the `overflowing` attribute when the table is wider than the wrapper, and walks the `sticky` attribute to write the correct `--cN` values on the host. This is also the fallback path on browsers without scroll-driven animations (Safari ≤ 18):
 
 ```html
 <ui-table overflow sticky="c0 c2" variant="rounded th-light no-wrap" hover="tr">
@@ -296,23 +325,9 @@ Scrollable container with sticky header, optional sticky columns, and a scroll-d
 </ui-table>
 ```
 
-`<ui-table>` does three things when `overflow` is set:
-1. Observes its own size with `ResizeObserver` and toggles the `overflowing` attribute when the table is wider than the wrapper.
-2. Walks the `sticky` attribute and writes cumulative widths as CSS custom properties on the host (e.g. `style="--c0: 0px; --c2: 36px;"`) — the third column pins at the right edge of the first (since the second column scrolls away).
-3. Applies the wrapper styling (border, border-radius, sticky thead) only while actually overflowing.
+The `overflowing` attribute and the `--_has-overflow` flag converge on the same styles, so both paths render identically — the only difference is who computes them.
 
-**CSS-only:** the same CSS works on any element with `data-table-wrapper`. You set the `overflowing` attribute and `--cN` widths yourself:
-
-```html
-<div data-table-wrapper overflowing data-sticky="c0" style="--c0: 0; max-block-size: 400px;">
-  <table data-variant="rounded" data-hover="tr">
-    <colgroup>...</colgroup>
-    ...
-  </table>
-</div>
-```
-
-Sticky columns use `data-sticky~="c0"`…`c8` (0-indexed: `c0` = 1st column). Values in the `--cN` custom properties should be the cumulative width of *sticky* columns only.
+Sticky columns are declared via `data-sticky~="c0"` … `c8` (0-indexed: `c0` = first column). Up to 9 columns via explicit selectors; extend in the CSS if you need more.
 
 ---
 
@@ -373,6 +388,76 @@ table[data-variant] {
 | `--ui-table-selected-color` | `var(--color-text)` | Selected row text |
 | `--ui-table-selected-hover-bg` | `var(--color-accent)` | Selected row cell-hover background |
 | `--ui-table-selected-hover-color` | `var(--color-accent-text)` | Selected row cell-hover text |
+
+---
+
+## Advanced: how the CSS-only overflow detection works
+
+The wrapper needs two visual states: a plain scroll container when the table fits, and a framed container with collapsed edge borders when it overflows. CSS has no built-in selector for "is this element's content wider than its box," so we need a trick.
+
+### Why `overflow: scroll` alone isn't enough
+
+`overflow: auto` / `overflow: scroll` makes an element scrollable — it doesn't give CSS a way to *react* to the scrollable state. You can always scroll, but you can't write `@if-scrollable { border: … }`. Whatever styles you attach to the wrapper apply equally whether it's 1px or 10000px of content, with no distinction between "fits" and "overflows."
+
+### Why `@container scroll-state()` doesn't solve it
+
+`container-type: scroll-state` + `@container scroll-state(scrollable: inline)` is the semantically correct query — "is this container scrollable horizontally?" — but `@container` rules apply only to *descendants* of the container. You cannot style the container itself through `@container`. Since the wrapper frame (border, border-radius, edge-border collapse) lives on the container, scroll-state container queries are unusable for this case.
+
+### The scroll-timeline trick
+
+`animation-timeline: scroll()` binds an element's scroll position as an animation timeline, and — critically — it animates properties on the element *itself*, not just descendants. That's the escape hatch:
+
+```css
+@property --_has-overflow {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@keyframes table-overflow-mark {
+  from, to { --_has-overflow: 1; }
+}
+
+ui-table-wrapper {
+  --_has-overflow: 0;                             /* baseline */
+  animation: table-overflow-mark linear, table-overflow-mark linear;
+  animation-timeline: scroll(self inline), scroll(self block);
+}
+```
+
+Two animations, same keyframe, one per axis — so the flag flips when the element overflows on *either* inline or block. The key insight is how scroll timelines behave when there's nothing to scroll:
+
+- **No scrollable overflow on that axis** → the timeline is *inactive*. Inactive timelines cause animations to produce no output: properties use their un-animated cascade values. If both axes are inactive, `--_has-overflow` stays at its declared `0`.
+- **Scrollable overflow exists** → that timeline activates. Both keyframes set `--_has-overflow: 1`, so regardless of where the user is scrolled (0%, 50%, 100%), the value clamps to `1`. If only one axis overflows, only that animation is active — the other sits idle and doesn't reset the flag back to 0.
+
+It's an overflow *presence* detector, not a scroll-progress animator. `@property` declares the type as `<number>` so `calc()` can use it:
+
+```css
+ui-table-wrapper {
+  border-width: calc(var(--_has-overflow) * var(--border-width));
+  border-radius: calc(var(--_has-overflow) * var(--ui-table-border-radius, 0));
+}
+ui-table-wrapper :is(td,th):first-of-type {
+  border-inline-start-width: calc((1 - var(--_has-overflow)) * var(--ui-table-border-width));
+}
+```
+
+When `--_has-overflow` is `0`, multiply-by-zero turns frame styles off; when `1`, they come on. The inverse `(1 - flag)` collapses the inner table's edge borders once the wrapper frame takes over, preventing double borders.
+
+### JS fallback path
+
+Safari ≤ 18 (and any browser without scroll-driven animations) fails the `@supports (animation-timeline: scroll())` guard. The `<ui-table overflow>` web component covers those: a `ResizeObserver` checks `scrollWidth > clientWidth` and toggles the `overflowing` attribute, which a separate rule converts to the same flag:
+
+```css
+ui-table-wrapper[overflowing] { --_has-overflow: 1; }
+```
+
+Both paths flip the same flag → the same `calc()`-gated styles render. The only difference is who flips it.
+
+### `scroll(self <axis>)` specifics
+
+- **`self`** — the element's own scroll position drives the timeline. Without `self`, `scroll()` defaults to the nearest ancestor scroll container, which isn't what we want here. The wrapper *is* the scrollable thing.
+- **`inline` + `block` (two timelines)** — one detects horizontal overflow, the other vertical. We need both because the frame should activate whenever the wrapper is scrollable on *any* axis — a narrow-but-tall table scrolling vertically has just as much right to the "overflowing" framed look as a wide-but-short one scrolling horizontally.
 
 ---
 

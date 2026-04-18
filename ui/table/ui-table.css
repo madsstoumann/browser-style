@@ -1,11 +1,11 @@
 /**
  * ui-table
- * @version 4.0.0
- * @date 2026-04-12
+ * @version 4.0.1
+ * @date 2026-04-18
  * @author Mads Stoumann
  */
 @layer bs-component {
-	:where(table:is([data-variant], [data-hover]), ui-table > table) {
+	:where(table:is([data-variant], [data-hover], [data-size]), ui-table > table) {
 		--ui-table-border-color: var(--color-border);
 		--ui-table-border-radius: 0;
 		--ui-table-border-width: var(--border-width);
@@ -72,12 +72,12 @@
 
 		/* === Layout variants === */
 		&[data-variant~="block-border"] :is(td, th) { border-width: 0 0 var(--ui-table-border-width) 0; }
-		&[data-variant~="density-sm"] {
+		&[data-size="sm"] {
 			--ui-table-font-family: system-ui, sans-serif;
 			--ui-table-font-size: var(--font-size-sm);
 			--ui-table-padding: .44ch .88ch;
 		}
-		&[data-variant~="density-lg"] {
+		&[data-size="lg"] {
 			--ui-table-font-size: var(--font-size-xl);
 			--ui-table-padding: .75ch 1.5ch;
 		}
@@ -229,64 +229,106 @@
 		}
 	}
 
-	/* === Overflow wrapper === */
-	:where(ui-table[overflow], [data-table-wrapper]) {
+	/* === Overflow wrapper ===
+	 * Overflow state is tracked by the custom property --_has-overflow (0 or 1).
+	 * It is set to 1 by two independent mechanisms:
+	 *   1. CSS-only: scroll-driven animation via `animation-timeline: scroll(self inline)`
+	 *      flips the flag when the element has inline scrollable overflow.
+	 *   2. JS fallback: `[overflowing]` attribute (for browsers without scroll-timeline
+	 *      support, e.g. Safari ≤ 18). The <ui-table> component toggles this.
+	 * Wrapper styles (frame, edge border removal) are then gated via calc() on the flag,
+	 * so the CSS-only path works with zero JavaScript when column widths are user-set.
+	 */
+	:where(ui-table[overflow], ui-table-wrapper) {
+		--_has-overflow: 0;
 		display: block;
 		max-block-size: 100%;
 		overflow: auto;
 		scrollbar-color: var(--color-border) #0000;
 		scrollbar-width: thin;
 
-		&[overflowing] {
-			border: var(--border-width) solid var(--color-border);
-			border-radius: var(--ui-table-border-radius, 0);
-			& table {
-				--ui-table-cell-bg: var(--color-surface);
-				& thead {
-					inset-block-start: 0;
-					position: sticky;
-					z-index: var(--z-index-1);
-				}
-				& tr:first-of-type th { border-block-start-width: 0; }
-				& :is(td,th):first-of-type { border-inline-start-width: 0; }
-				& :is(td,th):last-of-type { border-inline-end-width: 0; }
-			}
-			&[data-variant~="rounded"] {
-				--ui-table-border-radius: var(--radius-md);
-				& tr:last-of-type td { --ui-table-border-radius: 0; }
-			}
-			/* sticky columns */
-			&[data-sticky~="c0"] :is(td,th):nth-of-type(1),
-			&[data-sticky~="c1"] :is(td,th):nth-of-type(2),
-			&[data-sticky~="c2"] :is(td,th):nth-of-type(3),
-			&[data-sticky~="c3"] :is(td,th):nth-of-type(4),
-			&[data-sticky~="c4"] :is(td,th):nth-of-type(5),
-			&[data-sticky~="c5"] :is(td,th):nth-of-type(6),
-			&[data-sticky~="c6"] :is(td,th):nth-of-type(7),
-			&[data-sticky~="c7"] :is(td,th):nth-of-type(8),
-			&[data-sticky~="c8"] :is(td,th):nth-of-type(9) {
-				inset-inline-start: var(--_iis);
+		@supports (animation-timeline: scroll()) {
+			animation: table-overflow-mark linear, table-overflow-mark linear;
+			animation-timeline: scroll(self inline), scroll(self block);
+		}
+		&[overflowing] { --_has-overflow: 1; }
+
+		/* Frame — gated by --_has-overflow */
+		border-color: var(--color-border);
+		border-radius: calc(var(--_has-overflow) * var(--ui-table-border-radius, 0));
+		border-style: solid;
+		border-width: calc(var(--_has-overflow) * var(--border-width));
+
+		/* Inner table: sticky thead always; edge borders collapse when framed */
+		& table {
+			--ui-table-cell-bg: var(--color-surface);
+			--ui-table-header-bg: var(--color-surface);
+			& thead {
+				inset-block-start: 0;
 				position: sticky;
 				z-index: var(--z-index-1);
 			}
-			&[data-sticky~="c0"] :is(td,th):nth-of-type(1) { --_iis: var(--c0); }
-			&[data-sticky~="c1"] :is(td,th):nth-of-type(2) { --_iis: var(--c1); }
-			&[data-sticky~="c2"] :is(td,th):nth-of-type(3) { --_iis: var(--c2); }
-			&[data-sticky~="c3"] :is(td,th):nth-of-type(4) { --_iis: var(--c3); }
-			&[data-sticky~="c4"] :is(td,th):nth-of-type(5) { --_iis: var(--c4); }
-			&[data-sticky~="c5"] :is(td,th):nth-of-type(6) { --_iis: var(--c5); }
-			&[data-sticky~="c6"] :is(td,th):nth-of-type(7) { --_iis: var(--c6); }
-			&[data-sticky~="c7"] :is(td,th):nth-of-type(8) { --_iis: var(--c7); }
-			&[data-sticky~="c8"] :is(td,th):nth-of-type(9) { --_iis: var(--c8); }
+			& tr:first-of-type th {
+				border-block-start-width: calc((1 - var(--_has-overflow)) * var(--ui-table-border-width));
+			}
+			& tr:last-of-type td {
+				border-block-end-width: calc((1 - var(--_has-overflow)) * var(--ui-table-border-width));
+			}
+			& :is(td,th):first-of-type {
+				border-inline-start-width: calc((1 - var(--_has-overflow)) * var(--ui-table-border-width));
+			}
+			& :is(td,th):last-of-type {
+				border-inline-end-width: calc((1 - var(--_has-overflow)) * var(--ui-table-border-width));
+			}
 		}
+
+		&[data-variant~="rounded"] {
+			--ui-table-border-radius: var(--radius-md);
+			& tr:last-of-type td { --ui-table-border-radius: 0; }
+		}
+
+		/* Sticky columns — always applied (no-op without scroll) */
+		&[data-sticky~="c0"] :is(td,th):nth-of-type(1),
+		&[data-sticky~="c1"] :is(td,th):nth-of-type(2),
+		&[data-sticky~="c2"] :is(td,th):nth-of-type(3),
+		&[data-sticky~="c3"] :is(td,th):nth-of-type(4),
+		&[data-sticky~="c4"] :is(td,th):nth-of-type(5),
+		&[data-sticky~="c5"] :is(td,th):nth-of-type(6),
+		&[data-sticky~="c6"] :is(td,th):nth-of-type(7),
+		&[data-sticky~="c7"] :is(td,th):nth-of-type(8),
+		&[data-sticky~="c8"] :is(td,th):nth-of-type(9) {
+			inset-inline-start: var(--_iis);
+			position: sticky;
+			z-index: var(--z-index-1);
+		}
+		&[data-sticky~="c0"] :is(td,th):nth-of-type(1) { --_iis: var(--c0); }
+		&[data-sticky~="c1"] :is(td,th):nth-of-type(2) { --_iis: var(--c1); }
+		&[data-sticky~="c2"] :is(td,th):nth-of-type(3) { --_iis: var(--c2); }
+		&[data-sticky~="c3"] :is(td,th):nth-of-type(4) { --_iis: var(--c3); }
+		&[data-sticky~="c4"] :is(td,th):nth-of-type(5) { --_iis: var(--c4); }
+		&[data-sticky~="c5"] :is(td,th):nth-of-type(6) { --_iis: var(--c5); }
+		&[data-sticky~="c6"] :is(td,th):nth-of-type(7) { --_iis: var(--c6); }
+		&[data-sticky~="c7"] :is(td,th):nth-of-type(8) { --_iis: var(--c7); }
+		&[data-sticky~="c8"] :is(td,th):nth-of-type(9) { --_iis: var(--c8); }
+
 		@supports (animation-timeline: scroll()) {
-			&[overflowing] table thead {
+			& table thead {
 				animation: table-scroll-shadow linear both;
 				animation-timeline: scroll();
 				animation-range: 0ex 5ex;
 			}
 		}
 	}
+}
+
+@property --_has-overflow {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0;
+}
+
+@keyframes table-overflow-mark {
+	from, to { --_has-overflow: 1; }
 }
 
 @keyframes table-scroll-shadow {

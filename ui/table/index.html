@@ -66,11 +66,11 @@
 		</tbody>
 	</table>
 
-	<h2>Densities</h2>
-	<p>Three density levels mirror the controls in <code>&lt;data-grid&gt;</code>: small, medium (default), and large.</p>
+	<h2>Sizes</h2>
+	<p>Three density levels via the dedicated <code>data-size</code> attribute (matches <code>&lt;ui-avatar&gt;</code>, <code>&lt;ui-badge&gt;</code> etc.): <code>sm</code>, default, and <code>lg</code>. Mirrors the three density controls in <code>&lt;data-grid&gt;</code>.</p>
 
-	<p>With <code>data-variant="density-sm"</code> (small):</p>
-	<table data-variant="density-sm">
+	<p>With <code>data-size="sm"</code>:</p>
+	<table data-size="sm">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
 		<tbody>
@@ -97,8 +97,8 @@
 	</table>
 
 	<br>
-	<p>With <code>data-variant="density-lg"</code> (large):</p>
-	<table data-variant="density-lg">
+	<p>With <code>data-size="lg"</code>:</p>
+	<table data-size="lg">
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
 		<tbody>
@@ -311,6 +311,67 @@
 		</tbody>
 	</table>
 
+	<h2>Overflow wrapper (CSS-only)</h2>
+	<p>Zero JavaScript. <code>&lt;ui-table-wrapper&gt;</code> (an un-registered custom element, styled purely via CSS) turns its child table into a scrollable container with a sticky <code>&lt;thead&gt;</code> and optional sticky columns. Two scroll-driven animations (<code>animation-timeline: scroll(self inline)</code> + <code>scroll(self block)</code>) flip the <code>--_has-overflow</code> flag when the content actually overflows on either axis — that gates the wrapper frame and collapses the inner table's edge borders. Sticky columns are declared via <code>data-sticky="c0 c2"</code> (0-indexed); the pin positions come from <code>--c0</code>, <code>--c2</code>, which you measure once in devtools and hard-code. In this demo "First Name" renders at ~101px wide, so "Known As" pins at <code>--c2: 101px</code> — flush against col 0. Safari (no scroll-driven animations yet) falls back to a manual <code>overflowing</code> attribute, which the <code>&lt;ui-table&gt;</code> web component toggles automatically.</p>
+
+	<ui-table-wrapper data-variant="rounded" data-sticky="c0 c2" style="--c0: 0px; --c2: 101px;">
+		<table data-variant="rounded no-wrap" data-hover="tr">
+			<colgroup><col><col><col><col><col><col><col><col></colgroup>
+			<thead>
+				<tr>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Known As</th>
+					<th>Place</th>
+					<th>Affiliation</th>
+					<th>First Appearance</th>
+					<th>Creator</th>
+					<th>Powers</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td><td>Justice League</td><td>Detective Comics #27 (1939)</td><td>Bob Kane, Bill Finger</td><td>Martial arts, gadgets</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td><td>Justice League</td><td>Action Comics #1 (1938)</td><td>Jerry Siegel, Joe Shuster</td><td>Flight, super strength</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td><td>Avengers</td><td>Tales of Suspense #39 (1963)</td><td>Stan Lee, Larry Lieber</td><td>Powered armor suit</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td><td>Avengers</td><td>Amazing Fantasy #15 (1962)</td><td>Stan Lee, Steve Ditko</td><td>Wall-crawling, spider sense</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td><td>Defenders</td><td>Daredevil #1 (1964)</td><td>Stan Lee, Bill Everett</td><td>Radar sense, acrobatics</td></tr>
+				<tr><td>Steve</td><td>Rogers</td><td>Captain America</td><td>Brooklyn</td><td>Avengers</td><td>Captain America Comics #1 (1941)</td><td>Joe Simon, Jack Kirby</td><td>Super soldier serum</td></tr>
+				<tr><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Themyscira</td><td>Justice League</td><td>All Star Comics #8 (1941)</td><td>William Moulton Marston</td><td>Divine strength, lasso</td></tr>
+				<tr><td>Natasha</td><td>Romanoff</td><td>Black Widow</td><td>Moscow</td><td>Avengers</td><td>Tales of Suspense #52 (1964)</td><td>Stan Lee, Don Rico</td><td>Espionage, martial arts</td></tr>
+			</tbody>
+		</table>
+	</ui-table-wrapper>
+
+	<br>
+	<p>Vertical scrolling with sticky header — constrain the wrapper via <code>max-block-size</code>. The <code>&lt;thead&gt;</code> uses <code>position: sticky</code> always (no-op without scroll) and pins to the top as rows scroll under it. A scroll-driven shadow (<code>animation-timeline: scroll()</code>) appears on the header once you start scrolling:</p>
+
+	<ui-table-wrapper data-variant="rounded" style="inline-size: fit-content; max-block-size: 240px;">
+		<table data-variant="rounded th-light" data-hover="tr">
+			<colgroup><col><col><col><col></colgroup>
+			<thead>
+				<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+				<tr><td>Steve</td><td>Rogers</td><td>Captain America</td><td>Brooklyn</td></tr>
+				<tr><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Themyscira</td></tr>
+				<tr><td>Natasha</td><td>Romanoff</td><td>Black Widow</td><td>Moscow</td></tr>
+				<tr><td>Arthur</td><td>Curry</td><td>Aquaman</td><td>Atlantis</td></tr>
+				<tr><td>Barry</td><td>Allen</td><td>The Flash</td><td>Central City</td></tr>
+				<tr><td>Hal</td><td>Jordan</td><td>Green Lantern</td><td>Coast City</td></tr>
+				<tr><td>Wanda</td><td>Maximoff</td><td>Scarlet Witch</td><td>Transia</td></tr>
+				<tr><td>Scott</td><td>Lang</td><td>Ant-Man</td><td>San Francisco</td></tr>
+				<tr><td>Carol</td><td>Danvers</td><td>Captain Marvel</td><td>Harmony Grove</td></tr>
+				<tr><td>T'Challa</td><td>Challa</td><td>Black Panther</td><td>Wakanda</td></tr>
+			</tbody>
+		</table>
+	</ui-table-wrapper>
+
+	<br><hr>
 	<h2 id="web-component">Web Component</h2>
 	<p><code>&lt;ui-table&gt;</code> forwards <code>variant</code>, <code>hover</code>, and <code>sticky</code> attributes to the child <code>&lt;table&gt;</code> as <code>data-*</code> attributes. When <code>overflow</code> is set it also toggles the <code>overflowing</code> attribute and outputs cumulative column widths for sticky columns.</p>
 

@@ -10,7 +10,7 @@
  */
 
 class UiTable extends HTMLElement {
-	static observedAttributes = ['variant', 'hover', 'sticky'];
+	static observedAttributes = ['variant', 'hover', 'size', 'sticky'];
 
 	connectedCallback() {
 		this.propagateAttributes();
@@ -42,6 +42,9 @@ class UiTable extends HTMLElement {
 
 		const hover = this.getAttribute('hover');
 		if (hover) table.setAttribute('data-hover', hover);
+
+		const size = this.getAttribute('size');
+		if (size) table.setAttribute('data-size', size);
 
 		const sticky = this.getAttribute('sticky');
 		if (sticky) this.setAttribute('data-sticky', sticky);
