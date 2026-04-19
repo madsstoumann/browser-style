@@ -16,7 +16,7 @@
 	<h2>CSS</h2>
 	<p><strong>Table</strong> is a CSS-first styling system for native <code>&lt;table&gt;</code> elements. Each feature is an attribute — compose them freely on the table, its rows, or a wrapping <code>&lt;ui-table-wrapper&gt;</code>. Light/dark mode, RTL, and touch-safe hover come for free.</p>
 	<p>This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript).<br>
-		See the <a href="#web-component">Web Component</a> section for the JS-enhanced <code>&lt;ui-table&gt;</code>.
+		See the <a href="wc-demo.html">web component demo</a> for the JS-enhanced version using <code>&lt;ui-table&gt;</code>.
 	</p>
 
 	<p>Default:</p>
@@ -357,9 +357,9 @@
 
 	<br>
 	<h2>Overflow wrapper</h2>
-	<p>Wrap a table in <code>&lt;ui-table-wrapper&gt;</code> for a scrollable container with sticky <code>&lt;thead&gt;</code> and optional sticky columns — zero JavaScript. Declare sticky columns via <code>data-sticky="c0 c2"</code> and hard-code the pin positions as <code>--c0</code>, <code>--c2</code> (measure once in devtools). See the <a href="readme.md#advanced-how-the-css-only-overflow-detection-works">readme</a> for the scroll-driven detection mechanism and the Safari fallback.</p>
+	<p>Wrap a table in <code>&lt;ui-table-wrapper&gt;</code> — scrollable container, sticky <code>&lt;thead&gt;</code>. Opt into sticky columns with <code>data-sticky="c0 c2 c4"</code> (0-indexed) and pin each one via <code>--c0</code>, <code>--c2</code>, <code>--c4</code>. Each value is the sum of the <em>sticky</em> column widths before it — non-sticky columns scroll away, so they don't count. Here col 0 pins at 0, col 2 at col 0's width (100.59px), and col 4 at col 0 + col 2 (234.79px). See the <a href="readme.md#advanced-how-the-css-only-overflow-detection-works">readme</a> for details.</p>
 
-	<ui-table-wrapper data-variant="rounded" data-sticky="c0 c2" style="--c0: 0px; --c2: 101px;">
+	<ui-table-wrapper data-variant="rounded" data-sticky="c0 c2 c4" style="--c0: 0px; --c2: 100.59px; --c4: 234.79px">
 		<table data-variant="rounded no-wrap" data-hover="tr">
 			<colgroup><col><col><col><col><col><col><col><col></colgroup>
 			<thead>
@@ -579,65 +579,6 @@
 		</tbody>
 	</table>
 
-	<br><hr>
-	<h2 id="web-component">Web Component</h2>
-	<p><code>&lt;ui-table&gt;</code> forwards <code>variant</code>, <code>hover</code>, <code>size</code>, and <code>sticky</code> attributes to the child <code>&lt;table&gt;</code> as <code>data-*</code> attributes. When <code>overflow</code> is set it also toggles the <code>overflowing</code> attribute and outputs cumulative column widths for sticky columns.</p>
-
-	<p>With <code>variant="rounded zebrarow-odd"</code> and <code>hover="tr td-outline"</code>:</p>
-	<ui-table variant="rounded zebrarow-odd" hover="tr td-outline">
-		<table>
-			<colgroup><col><col><col><col></colgroup>
-			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-			<tbody>
-				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-			</tbody>
-		</table>
-	</ui-table>
-
-	<p>With <code>variant="split-cols th-dark rounded"</code> and <code>hover="col td"</code>:</p>
-	<ui-table variant="split-cols th-dark rounded" hover="col td">
-		<table>
-			<colgroup><col><col><col><col></colgroup>
-			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-			<tbody>
-				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-			</tbody>
-		</table>
-	</ui-table>
-
-	<br>
-	<h3>Overflow with auto-detection</h3>
-	<p>A wide table inside <code>&lt;ui-table overflow&gt;</code> reveals the scrollable wrapper (with sticky header and optional sticky columns via <code>sticky="c0 c2"</code>) when it overflows the viewport. The script sets cumulative widths as CSS custom properties (e.g. <code>style="--c0: 0px; --c2: 36px;"</code>) so sticky columns pin at the correct positions. Resize the window to see the responsive behavior.</p>
-
-	<ui-table overflow sticky="c0 c2" variant="rounded th-light no-wrap" hover="tr">
-		<table>
-			<colgroup><col><col><col><col><col><col><col><col></colgroup>
-			<thead>
-				<tr>
-					<th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th>
-					<th>Affiliation</th><th>First Appearance</th><th>Creator</th><th>Powers</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td><td>Justice League</td><td>Detective Comics #27 (1939)</td><td>Bob Kane, Bill Finger</td><td>Martial arts, gadgets</td></tr>
-				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td><td>Justice League</td><td>Action Comics #1 (1938)</td><td>Jerry Siegel, Joe Shuster</td><td>Flight, super strength</td></tr>
-				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td><td>Avengers</td><td>Tales of Suspense #39 (1963)</td><td>Stan Lee, Larry Lieber</td><td>Powered armor suit</td></tr>
-				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td><td>Avengers</td><td>Amazing Fantasy #15 (1962)</td><td>Stan Lee, Steve Ditko</td><td>Wall-crawling, spider sense</td></tr>
-				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td><td>Defenders</td><td>Daredevil #1 (1964)</td><td>Stan Lee, Bill Everett</td><td>Radar sense, acrobatics</td></tr>
-				<tr><td>Steve</td><td>Rogers</td><td>Captain America</td><td>Brooklyn</td><td>Avengers</td><td>Captain America Comics #1 (1941)</td><td>Joe Simon, Jack Kirby</td><td>Super soldier serum</td></tr>
-				<tr><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Themyscira</td><td>Justice League</td><td>All Star Comics #8 (1941)</td><td>William Moulton Marston</td><td>Divine strength, lasso</td></tr>
-				<tr><td>Natasha</td><td>Romanoff</td><td>Black Widow</td><td>Moscow</td><td>Avengers</td><td>Tales of Suspense #52 (1964)</td><td>Stan Lee, Don Rico</td><td>Espionage, martial arts</td></tr>
-			</tbody>
-		</table>
-	</ui-table>
 
 </body>
 </html>

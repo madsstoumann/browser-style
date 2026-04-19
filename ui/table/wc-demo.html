@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Table — Web Component</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Web component demo for ui-table">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="ui-table.css">
+	<script type="module" src="index.js"></script>
+</head>
+<body>
+	<h1>UI: Table</h1>
+
+	<h2>Web Component</h2>
+	<p><code>&lt;ui-table&gt;</code> forwards <code>variant</code>, <code>hover</code>, <code>size</code>, and <code>sticky</code> attributes to the child <code>&lt;table&gt;</code> as <code>data-*</code> attributes. When <code>overflow</code> is set it observes its own size and toggles the <code>overflowing</code> attribute, and walks the <code>sticky</code> list to compute cumulative column widths as <code>--cN</code> custom properties. See the <a href="index.html">CSS-only demo</a> for the non-JS version.</p>
+
+	<p>With <code>variant="rounded zebrarow-odd"</code> and <code>hover="tr td-outline"</code>:</p>
+	<ui-table variant="rounded zebrarow-odd" hover="tr td-outline">
+		<table>
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
+
+	<br>
+	<p>With <code>variant="split-cols th-dark rounded"</code> and <code>hover="col td"</code>:</p>
+	<ui-table variant="split-cols th-dark rounded" hover="col td">
+		<table>
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
+
+	<br>
+	<h2>Overflow with auto-detection</h2>
+	<p>A wide table inside <code>&lt;ui-table overflow&gt;</code> activates the scrollable wrapper when it overflows the viewport. Unlike the CSS-only version, you don't hard-code <code>--cN</code> values: pass <code>sticky="c0 c2 c4"</code> and the script measures each sticky column's rendered width on resize, setting the cumulative offsets for you. Resize the window to see the responsive behavior.</p>
+
+	<ui-table overflow sticky="c0 c2 c4" variant="rounded th-light no-wrap" hover="tr">
+		<table>
+			<colgroup><col><col><col><col><col><col><col><col></colgroup>
+			<thead>
+				<tr>
+					<th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th>
+					<th>Affiliation</th><th>First Appearance</th><th>Creator</th><th>Powers</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td><td>Justice League</td><td>Detective Comics #27 (1939)</td><td>Bob Kane, Bill Finger</td><td>Martial arts, gadgets</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td><td>Justice League</td><td>Action Comics #1 (1938)</td><td>Jerry Siegel, Joe Shuster</td><td>Flight, super strength</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td><td>Avengers</td><td>Tales of Suspense #39 (1963)</td><td>Stan Lee, Larry Lieber</td><td>Powered armor suit</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td><td>Avengers</td><td>Amazing Fantasy #15 (1962)</td><td>Stan Lee, Steve Ditko</td><td>Wall-crawling, spider sense</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td><td>Defenders</td><td>Daredevil #1 (1964)</td><td>Stan Lee, Bill Everett</td><td>Radar sense, acrobatics</td></tr>
+				<tr><td>Steve</td><td>Rogers</td><td>Captain America</td><td>Brooklyn</td><td>Avengers</td><td>Captain America Comics #1 (1941)</td><td>Joe Simon, Jack Kirby</td><td>Super soldier serum</td></tr>
+				<tr><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Themyscira</td><td>Justice League</td><td>All Star Comics #8 (1941)</td><td>William Moulton Marston</td><td>Divine strength, lasso</td></tr>
+				<tr><td>Natasha</td><td>Romanoff</td><td>Black Widow</td><td>Moscow</td><td>Avengers</td><td>Tales of Suspense #52 (1964)</td><td>Stan Lee, Don Rico</td><td>Espionage, martial arts</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
+
+</body>
+</html>
