@@ -409,6 +409,42 @@
 	</table>
 
 	<br>
+	<h2>Graduated tint</h2>
+	<p>Wire up <code>@browser.style/base</code>'s generic tint system to the table: <code>data-tint</code> (or a bare <code>tint</code>) on any ancestor sets the base color, and where you put <code>tinted</code> chooses the <em>direction</em> of the ramp:</p>
+	<ul>
+		<li><code>&lt;tbody tinted&gt;</code> — <strong>vertical</strong> ramp (first row = full color, last row ≈ white)</li>
+		<li><code>&lt;colgroup tinted&gt;</code> — <strong>horizontal</strong> ramp (first column = full color, last column ≈ white)</li>
+	</ul>
+	<p>Each ramp uses <code>sibling-index()</code> / <code>sibling-count()</code> across the direct children of the <code>tinted</code> element. The thead and other sections stay out of the ramp because they're outside the <code>tinted</code> subtree. Text color is automatic via <code>contrast-color()</code>.</p>
+
+	<p>Vertical ramp — <code>&lt;tbody tinted&gt;</code> (default accent):</p>
+	<table data-variant="rounded th-dark" data-tint>
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody tinted>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<br>
+	<p>Horizontal ramp — <code>&lt;colgroup tinted&gt;</code> with a custom color:</p>
+	<table data-variant="rounded th-dark" data-tint="oklch(0.6 0.18 160)">
+		<colgroup tinted><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<br>
 	<h2>Section / group headers</h2>
 	<p>Add <code>data-row="group"</code> to a <code>&lt;tr&gt;</code> containing a single <code>&lt;td colspan="<em>N</em>"&gt;</code> to turn it into a section heading: semibold text on a tinted background, drawn inside <code>&lt;tbody&gt;</code> like any other row. Compose with a status variant (<code>data-row="group error"</code>, <code>data-row="group info"</code>, …) to tint the heading with a semantic color. Because <code>data-row</code> uses <code>~=</code> word-matching, the values compose freely.</p>
 

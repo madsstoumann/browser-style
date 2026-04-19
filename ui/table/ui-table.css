@@ -193,6 +193,30 @@
 			--ui-table-cell-bg: var(--ui-table-zebra-bg, var(--color-surface-alt));
 		}
 
+		/* --- Graduated tint — direction is driven by where `tinted` is placed:
+		   `tinted` on <tbody>    → vertical ramp (across tr children)
+		   `tinted` on <colgroup> → horizontal ramp (across col children)
+		   First slot = full --_tint, last slot ≈ white, in both color-schemes. */
+		& tbody[tinted] > tr {
+			--ui-table-cell-bg: color-mix(
+				in oklab, var(--_tint),
+				#FFF calc((sibling-index() - 1) / max(sibling-count() - 1, 1) * 80%)
+			);
+			color: contrast-color(var(--ui-table-cell-bg));
+		}
+		& colgroup[tinted] > col {
+			background-color: color-mix(
+				in oklab, var(--_tint),
+				#FFF calc((sibling-index() - 1) / max(sibling-count() - 1, 1) * 80%)
+			);
+		}
+		& colgroup[tinted] ~ tbody > tr > td {
+			color: contrast-color(color-mix(
+				in oklab, var(--_tint),
+				#FFF calc((sibling-index() - 1) / max(sibling-count() - 1, 1) * 80%)
+			));
+		}
+
 		/* === Hover modifiers ===
 		 * data-hover is a space-separated list. Wrapped in @media (hover: hover)
 		 * so touch devices don't get stuck states.
@@ -442,6 +466,12 @@
 	syntax: '<number>';
 	inherits: true;
 	initial-value: 0;
+}
+
+@property --ui-table-cell-bg {
+	syntax: '<color>';
+	inherits: true;
+	initial-value: transparent;
 }
 
 @keyframes table-overflow-mark {
