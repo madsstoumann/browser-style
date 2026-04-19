@@ -13,13 +13,13 @@
  falling back to the solid `--_tint` when not graduated.
 */
 @layer bs-core {
-	:where([tint], [data-tint]) {
+	:where([tint]) {
 		--_tint: attr(tint type(<color>), var(--color-accent));
 	}
 	:where([data-tint]) {
 		--_tint: attr(data-tint type(<color>), var(--color-accent));
 	}
-	:where([tint-end], [data-tint-end]) {
+	:where([tint-end]) {
 		--_tint-end: attr(tint-end type(<color>), light-dark(#fff, #000));
 	}
 	:where([data-tint-end]) {
