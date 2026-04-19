@@ -1,9 +1,42 @@
 /**
  * ui-table
- * @version 4.0.3
+ * @version 4.0.4
  * @date 2026-04-19
  * @author Mads Stoumann
+ *
+ * Private custom properties (--_*)
+ *   --_rb  row-bg         tr-hover background (one per row variant)
+ *   --_hb  hover-bg       td-hover background (one per row variant)
+ *   --_tc  tint-color     row tint (active/selected/status)
+ *   --_tm  tint-mix       computed graduated-tint ramp color at this row/column
+ *   --_thd th-dark        background used by the th-dark header variant
+ *   --_dw  divider-width  thead/tbody divider width (th-divide-lg/xl family)
+ *   --_ds  divider-style  thead/tbody divider style (th-dotted/dashed/double/groove/ridge)
+ *   --_iis inset-start    inset-inline-start for sticky columns
+ *   --_has-overflow       overflow flag (0 or 1) gating the wrapper frame
  */
+
+/* Registered custom properties — declared up front so the browser knows their syntax
+   before any rule sets them. `--ui-table-cell-bg` and `--_tm` are typed <color> so
+   sibling-index()/color-mix() inside their values evaluate eagerly in the element
+   where they're authored (otherwise substitution is lazy and sibling-index() would
+   re-run in whatever context reads the var — wrong axis for tinted rows). */
+@property --_has-overflow {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0;
+}
+@property --ui-table-cell-bg {
+	syntax: '<color>';
+	inherits: true;
+	initial-value: transparent;
+}
+@property --_tm {
+	syntax: '<color>';
+	inherits: true;
+	initial-value: transparent;
+}
+
 @layer bs-component {
 
 	/* === Core table ===
@@ -22,15 +55,6 @@
 		--ui-table-row-hover-bg: var(--color-button);
 		--ui-table-outline-color: var(--color-button-text);
 		--ui-table-outline-width: var(--border-width-thick);
-
-		--ui-table-active-bg: var(--color-accent);
-		--ui-table-active-color: var(--color-accent-text);
-		--ui-table-active-hover-bg: var(--color-accent-dark);
-		--ui-table-active-hover-color: var(--color-accent-text);
-		--ui-table-selected-bg: var(--color-highlight);
-		--ui-table-selected-color: var(--color-text);
-		--ui-table-selected-hover-bg: var(--color-accent);
-		--ui-table-selected-hover-color: var(--color-accent-text);
 
 		/* Private hover vars — each row variant publishes a bg for tr-hover (--_rb)
 		   and td-hover (--_hb). Text color is derived from the new bg via
@@ -54,9 +78,9 @@
 			text-overflow: ellipsis;
 			&:first-of-type { border-inline-start-width: var(--ui-table-border-width); }
 		}
-		& td { background: var(--ui-table-cell-bg, inherit); }
+		& td { background: var(--ui-table-cell-bg, var(--color-surface)); }
 		& th {
-			background: var(--ui-table-header-bg, inherit);
+			background: var(--ui-table-header-bg, var(--color-surface));
 			font-weight: var(--ui-table-header-font-weight, var(--font-weight-semibold));
 			text-align: start;
 			vertical-align: middle;
@@ -90,20 +114,17 @@
 
 		/* === Row states ===
 		 * data-row is a space-separated list on <tr>. Values compose.
-		 * Order below matters: group tint is default, status tints override it.
+		 * Each colored variant owns one --_tc (tint-color) and derives bg/hover
+		 * via formulas — no per-variant tokens needed.
 		 */
-		& tr[data-row~="active"] {
-			--ui-table-cell-bg: var(--ui-table-active-bg);
-			color: var(--ui-table-active-color);
-			--_rb: var(--ui-table-active-bg);
-			--_hb: var(--ui-table-active-hover-bg);
+		& tr:is([data-row~="active"], [data-row~="selected"]) {
+			--ui-table-cell-bg: var(--_tc);
+			color: contrast-color(var(--_tc) 3 vs white, black);
+			--_rb: var(--_tc);
+			--_hb: color-mix(in oklab, var(--_tc), #000 15%);
 		}
-		& tr[data-row~="selected"] {
-			--ui-table-cell-bg: var(--ui-table-selected-bg);
-			color: var(--ui-table-selected-color);
-			--_rb: var(--ui-table-selected-bg);
-			--_hb: var(--ui-table-selected-hover-bg);
-		}
+		& tr[data-row~="active"]   { --_tc: var(--color-accent); }
+		& tr[data-row~="selected"] { --_tc: var(--color-highlight); }
 		& tr[data-row~="group"] {
 			--ui-table-cell-bg: var(--color-surface-alt);
 			font-weight: var(--font-weight-semibold);
@@ -464,27 +485,6 @@
 		&[data-sticky~="c7"] :is(td,th):nth-of-type(8) { --_iis: var(--c7); }
 		&[data-sticky~="c8"] :is(td,th):nth-of-type(9) { --_iis: var(--c8); }
 	}
-}
-
-@property --_has-overflow {
-	syntax: '<number>';
-	inherits: true;
-	initial-value: 0;
-}
-
-@property --ui-table-cell-bg {
-	syntax: '<color>';
-	inherits: true;
-	initial-value: transparent;
-}
-
-/* Registered so sibling-index()/sibling-count() inside its value evaluates eagerly
-   in the row/cell context where it's authored. The derived --_rb/--_hb just reference
-   this computed color, so no further registration is needed. */
-@property --_tm {
-	syntax: '<color>';
-	inherits: true;
-	initial-value: transparent;
 }
 
 @keyframes table-overflow-mark {

@@ -456,14 +456,6 @@ table[data-variant] {
 | `--ui-table-row-hover-bg` | `var(--color-button)` | Row hover background |
 | `--ui-table-outline-color` | `var(--color-button-text)` | Outline hover color |
 | `--ui-table-outline-width` | `var(--border-width-thick)` | Outline hover width |
-| `--ui-table-active-bg` | `var(--color-accent)` | Active row background |
-| `--ui-table-active-color` | `var(--color-accent-text)` | Active row text |
-| `--ui-table-active-hover-bg` | `var(--color-accent-dark)` | Active row cell-hover background |
-| `--ui-table-active-hover-color` | `var(--color-accent-text)` | Active row cell-hover text |
-| `--ui-table-selected-bg` | `var(--color-highlight)` | Selected row background |
-| `--ui-table-selected-color` | `var(--color-text)` | Selected row text |
-| `--ui-table-selected-hover-bg` | `var(--color-accent)` | Selected row cell-hover background |
-| `--ui-table-selected-hover-color` | `var(--color-accent-text)` | Selected row cell-hover text |
 | `--ui-table-group-offset` | `33.6px` | Sticky offset for `data-row="group"` rows inside the overflow wrapper (distance below the sticky thead) |
 
 ---
