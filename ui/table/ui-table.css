@@ -100,13 +100,13 @@
 		}
 		/* Status tints: light mode = 15% tint on white, dark mode = solid (muted) color. */
 		& tr:is([data-row~="success"], [data-row~="warning"], [data-row~="error"], [data-row~="info"]) {
-			--ui-table-cell-bg: light-dark(color-mix(in oklab, var(--_c) 15%, #FFF), var(--_c));
+			--ui-table-cell-bg: light-dark(color-mix(in oklab, var(--_tc) 15%, #FFF), var(--_tc));
 			color: contrast-color(var(--ui-table-cell-bg));
 		}
-		& tr[data-row~="success"] { --_c: var(--color-success); }
-		& tr[data-row~="warning"] { --_c: var(--color-warning); }
-		& tr[data-row~="error"]   { --_c: var(--color-error); }
-		& tr[data-row~="info"]    { --_c: var(--color-info); }
+		& tr[data-row~="success"] { --_tc: var(--color-success); }
+		& tr[data-row~="warning"] { --_tc: var(--color-warning); }
+		& tr[data-row~="error"]   { --_tc: var(--color-error); }
+		& tr[data-row~="info"]    { --_tc: var(--color-info); }
 
 		/* === Layout variants === */
 
@@ -135,7 +135,7 @@
 			margin-inline: calc(0px - var(--ui-table-spacing-x));
 			& :is(td, th) { border-inline-width: var(--ui-table-border-width); }
 			&[data-variant~="th-dark"] th {
-				--ui-table-border-color: var(--ui-table-th-dark-bg, var(--color-button-text));
+				--ui-table-border-color: var(--_thd);
 			}
 			&[data-variant~="rounded"] {
 				& tr:first-of-type th {
@@ -154,11 +154,12 @@
 
 		/* --- Header styling --- */
 		&[data-variant~="th-dark"] th {
-			--ui-table-header-bg: var(--ui-table-th-dark-bg, var(--color-button-text));
-			border-block-color: var(--ui-table-th-dark-bg, var(--color-button-text));
+			--_thd: var(--ui-table-th-dark-bg, var(--color-button-text));
+			--ui-table-header-bg: var(--_thd);
+			border-block-color: var(--_thd);
 			color: var(--color-surface);
-			&:first-of-type { border-inline-start-color: var(--ui-table-th-dark-bg, var(--color-button-text)); }
-			&:last-of-type { border-inline-end-color: var(--ui-table-th-dark-bg, var(--color-button-text)); }
+			&:first-of-type { border-inline-start-color: var(--_thd); }
+			&:last-of-type { border-inline-end-color: var(--_thd); }
 		}
 		&:is([data-variant~="th-light"], [data-variant~="zebrarow-even"]) th {
 			--ui-table-header-bg: var(--ui-table-zebra-bg, var(--color-surface-alt));
@@ -175,7 +176,6 @@
 			border-block-start-style: var(--_ds, solid);
 			border-block-start-width: var(--_dw, var(--border-width-thick));
 		}
-		&[data-variant~="th-divide-lg"] { --_dw: var(--border-width-thick); }
 		&[data-variant~="th-divide-xl"] { --_dw: calc(var(--border-width-thick) * 2); }
 		&[data-variant~="th-dotted"]    { --_ds: dotted; }
 		&[data-variant~="th-dashed"]    { --_ds: dashed; }
@@ -294,7 +294,7 @@
 			}
 
 			/* --- Row outline --- */
-			&[data-hover~="tr-outline"] tr:has(td):hover {
+			&[data-hover~="tr-outline"] tr:has(td):is(:focus-visible, :hover) {
 				outline: var(--ui-table-outline-width) solid var(--ui-table-outline-color);
 				outline-offset: calc(0px - var(--ui-table-outline-width));
 			}
@@ -353,9 +353,15 @@
 		scrollbar-color: var(--color-border) #0000;
 		scrollbar-width: thin;
 
+		/* --- Scroll-driven detection (flips --_has-overflow) + thead scroll shadow --- */
 		@supports (animation-timeline: scroll()) {
 			animation: table-overflow-mark linear, table-overflow-mark linear;
 			animation-timeline: scroll(self inline), scroll(self block);
+			& table thead {
+				animation: table-scroll-shadow linear both;
+				animation-timeline: scroll();
+				animation-range: 0ex 5ex;
+			}
 		}
 		&[overflowing] { --_has-overflow: 1; }
 
@@ -364,11 +370,11 @@
 			outline: var(--ring-width) solid var(--ring-color);
 			outline-offset: var(--ring-offset);
 		}
-		& :focus-within { outline: 0; }
+		& :is(td, th):focus-within { outline: 0; }
 
 		/* --- Frame (gated by --_has-overflow) --- */
 		border-color: var(--color-border);
-		border-radius: calc(var(--_has-overflow) * var(--ui-table-border-radius, 0));
+		border-radius: calc(var(--_has-overflow) * var(--ui-table-border-radius));
 		border-style: solid;
 		border-width: calc(var(--_has-overflow) * var(--border-width));
 
@@ -429,15 +435,6 @@
 		&[data-sticky~="c6"] :is(td,th):nth-of-type(7) { --_iis: var(--c6); }
 		&[data-sticky~="c7"] :is(td,th):nth-of-type(8) { --_iis: var(--c7); }
 		&[data-sticky~="c8"] :is(td,th):nth-of-type(9) { --_iis: var(--c8); }
-
-		/* --- Scroll shadow on sticky thead --- */
-		@supports (animation-timeline: scroll()) {
-			& table thead {
-				animation: table-scroll-shadow linear both;
-				animation-timeline: scroll();
-				animation-range: 0ex 5ex;
-			}
-		}
 	}
 }
 
