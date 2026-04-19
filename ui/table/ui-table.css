@@ -32,6 +32,12 @@
 		--ui-table-selected-hover-bg: var(--color-accent);
 		--ui-table-selected-hover-color: var(--color-accent-text);
 
+		/* Private hover vars — each row variant publishes a bg for tr-hover (--_rb)
+		   and td-hover (--_hb). Text color is derived from the new bg via
+		   contrast-color(). Border-color stays untouched on hover. */
+		--_rb: var(--ui-table-row-hover-bg);
+		--_hb: var(--ui-table-cell-hover-bg);
+
 		/* --- Base --- */
 		border-collapse: separate;
 		border-spacing: var(--ui-table-spacing-x, 0) var(--ui-table-spacing-y, 0);
@@ -89,19 +95,26 @@
 		& tr[data-row~="active"] {
 			--ui-table-cell-bg: var(--ui-table-active-bg);
 			color: var(--ui-table-active-color);
+			--_rb: var(--ui-table-active-bg);
+			--_hb: var(--ui-table-active-hover-bg);
 		}
 		& tr[data-row~="selected"] {
 			--ui-table-cell-bg: var(--ui-table-selected-bg);
 			color: var(--ui-table-selected-color);
+			--_rb: var(--ui-table-selected-bg);
+			--_hb: var(--ui-table-selected-hover-bg);
 		}
 		& tr[data-row~="group"] {
 			--ui-table-cell-bg: var(--color-surface-alt);
 			font-weight: var(--font-weight-semibold);
 		}
-		/* Status tints: light mode = 15% tint on white, dark mode = solid (muted) color. */
+		/* Status tints: light mode = 15% tint on white, dark mode = solid (muted) color.
+		   Hover (td + tr) lands on the solid tint color. */
 		& tr:is([data-row~="success"], [data-row~="warning"], [data-row~="error"], [data-row~="info"]) {
 			--ui-table-cell-bg: light-dark(color-mix(in oklab, var(--_tc) 15%, #FFF), var(--_tc));
 			color: contrast-color(var(--ui-table-cell-bg));
+			--_rb: light-dark(var(--_tc), color-mix(in oklab, var(--_tc), #FFF 25%));
+			--_hb: var(--_rb);
 		}
 		& tr[data-row~="success"] { --_tc: var(--color-success); }
 		& tr[data-row~="warning"] { --_tc: var(--color-warning); }
@@ -196,25 +209,23 @@
 		/* --- Graduated tint — direction is driven by where `tinted` is placed:
 		   `tinted` on <tbody>    → vertical ramp (across tr children)
 		   `tinted` on <colgroup> → horizontal ramp (across col children)
-		   Start color = --_tint (from data-tint), end color = --_tint-end (from data-tint-end, default #FFF). */
+		   Start color = --_tint (from data-tint), end color = --_tint-end (from data-tint-end, default #FFF).
+		   Hover = ramp color mixed with light-dark(#000, #FFF) at 20%. Hover vars are authored in
+		   the element whose sibling-index() resolves to the right axis (tr for vertical, td for horizontal). */
 		& tbody:is([tinted], [data-tinted]) > tr {
-			--ui-table-cell-bg: color-mix(
-				in oklab, var(--_tint),
-				var(--_tint-end, #FFF) calc(sibling-index() / sibling-count() * 80%)
-			);
-			color: contrast-color(var(--ui-table-cell-bg));
+			--_tm: color-mix(in oklab, var(--_tint), var(--_tint-end, #FFF) calc(sibling-index() / sibling-count() * 80%));
+			--ui-table-cell-bg: var(--_tm);
+			color: contrast-color(var(--_tm));
+			--_rb: color-mix(in oklab, var(--_tm), light-dark(#000, #FFF) 20%);
+			--_hb: var(--_rb);
 		}
 		& colgroup:is([tinted], [data-tinted]) > col {
-			background-color: color-mix(
-				in oklab, var(--_tint),
-				var(--_tint-end, #FFF) calc(sibling-index() / sibling-count() * 80%)
-			);
+			background-color: color-mix(in oklab, var(--_tint), var(--_tint-end, #FFF) calc(sibling-index() / sibling-count() * 80%));
 		}
 		& colgroup:is([tinted], [data-tinted]) ~ tbody > tr > td {
-			color: contrast-color(color-mix(
-				in oklab, var(--_tint),
-				var(--_tint-end, #FFF) calc(sibling-index() / sibling-count() * 80%)
-			));
+			--_tm: color-mix(in oklab, var(--_tint), var(--_tint-end, #FFF) calc(sibling-index() / sibling-count() * 80%));
+			color: contrast-color(var(--_tm));
+			--_hb: color-mix(in oklab, var(--_tm), light-dark(#000, #FFF) 20%);
 		}
 
 		/* --- Tint anchoring: when the table is tinted AND has a tinted descendant,
@@ -277,36 +288,11 @@
 				}
 			}
 
-			/* --- Cell fill --- */
-			&:is([data-hover~="all"], [data-hover~="td"]) {
-				td:is(:focus-visible,:hover) {
-					--ui-table-border-color: var(--ui-table-cell-hover-bg);
-					--ui-table-cell-bg: var(--ui-table-cell-hover-bg);
-					color: var(--color-surface);
-					outline: 0;
-				}
-				tr[data-row~="active"] td:is(:focus-visible,:hover) {
-					--ui-table-cell-bg: var(--ui-table-active-hover-bg);
-					color: var(--ui-table-active-hover-color);
-				}
-				tr[data-row~="selected"] td:is(:focus-visible,:hover) {
-					--ui-table-cell-bg: var(--ui-table-selected-hover-bg);
-					color: var(--ui-table-selected-hover-color);
-				}
-				tr:is([data-row~="success"], [data-row~="warning"], [data-row~="error"], [data-row~="info"]) td:is(:focus-visible,:hover) {
-					--ui-table-border-color: var(--color-border);
-					--ui-table-cell-bg: light-dark(var(--_tc), color-mix(in oklab, var(--_tc), #FFF 25%));
-					color: contrast-color(var(--ui-table-cell-bg));
-				}
-				colgroup:is([tinted], [data-tinted]) ~ tbody > tr > td:is(:focus-visible,:hover) {
-					--ui-table-border-color: var(--color-border);
-					background-color: color-mix(
-						in oklab,
-						color-mix(in oklab, var(--_tint), var(--_tint-end, #FFF) calc(sibling-index() / sibling-count() * 80%)),
-						light-dark(#000, #FFF) 20%
-					);
-					color: contrast-color(color-mix(in oklab, var(--_tint), var(--_tint-end, #FFF) calc(sibling-index() / sibling-count() * 80%)));
-				}
+			/* --- Cell fill — variants publish --_hb; text falls out of contrast-color */
+			&:is([data-hover~="all"], [data-hover~="td"]) td:is(:focus-visible,:hover) {
+				--ui-table-cell-bg: var(--_hb);
+				color: contrast-color(var(--ui-table-cell-bg));
+				outline: 0;
 			}
 
 			/* --- Cell outline --- */
@@ -329,29 +315,10 @@
 				}
 			}
 
-			/* --- Row highlight --- */
-			&:is([data-hover~="all"], [data-hover~="tr"]) {
-				tr:has(td:is(:focus-visible,:hover)) {
-					--ui-table-cell-bg: var(--ui-table-row-hover-bg);
-				}
-				tr[data-row~="active"]:has(td:is(:focus-visible,:hover)) {
-					--ui-table-cell-bg: var(--ui-table-active-bg);
-				}
-				tr[data-row~="selected"]:has(td:is(:focus-visible,:hover)) {
-					--ui-table-cell-bg: var(--ui-table-selected-bg);
-				}
-				tr:is([data-row~="success"], [data-row~="warning"], [data-row~="error"], [data-row~="info"]):has(td:is(:focus-visible,:hover)) {
-					--ui-table-cell-bg: light-dark(var(--_tc), color-mix(in oklab, var(--_tc), #FFF 25%));
-					color: contrast-color(var(--ui-table-cell-bg));
-				}
-				tbody:is([tinted], [data-tinted]) > tr:has(td:is(:focus-visible,:hover)) {
-					--ui-table-cell-bg: color-mix(
-						in oklab,
-						color-mix(in oklab, var(--_tint), var(--_tint-end, #FFF) calc(sibling-index() / sibling-count() * 80%)),
-						light-dark(#000, #FFF) 20%
-					);
-					color: contrast-color(var(--ui-table-cell-bg));
-				}
+			/* --- Row highlight — variants publish --_rb; text falls out of contrast-color */
+			&:is([data-hover~="all"], [data-hover~="tr"]) tr:has(td:is(:focus-visible,:hover)) {
+				--ui-table-cell-bg: var(--_rb);
+				color: contrast-color(var(--ui-table-cell-bg));
 			}
 
 			/* --- Row outline --- */
@@ -506,6 +473,15 @@
 }
 
 @property --ui-table-cell-bg {
+	syntax: '<color>';
+	inherits: true;
+	initial-value: transparent;
+}
+
+/* Registered so sibling-index()/sibling-count() inside its value evaluates eagerly
+   in the row/cell context where it's authored. The derived --_rb/--_hb just reference
+   this computed color, so no further registration is needed. */
+@property --_tm {
 	syntax: '<color>';
 	inherits: true;
 	initial-value: transparent;

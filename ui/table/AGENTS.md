@@ -127,6 +127,54 @@ The four semantic variants (`success`/`warning`/`error`/`info`) use a shared rul
 - **Text color** is resolved by `contrast-color()`, which picks black or white based on contrast with the resolved background — no per-variant `color` declaration needed
 
 
+## Hover routing via private vars
+
+Each row variant publishes two private vars — `--_rb` (bg on tr-hover) and `--_hb` (bg on td-hover) — alongside its base state. The entire `@media (hover: hover)` fill section is two rules that read them:
+
+```css
+/* Defaults on the table; variants overwrite what they need */
+--_rb: var(--ui-table-row-hover-bg);
+--_hb: var(--ui-table-cell-hover-bg);
+
+/* Variant example */
+& tr[data-row~="active"] {
+  --ui-table-cell-bg: var(--ui-table-active-bg);
+  color: var(--ui-table-active-color);
+  --_rb: var(--ui-table-active-bg);        /* tr-hover bg */
+  --_hb: var(--ui-table-active-hover-bg);  /* td-hover bg */
+}
+
+/* Hover block */
+@media (hover: hover) {
+  &:is([data-hover~="all"], [data-hover~="td"]) td:is(:focus-visible,:hover) {
+    --ui-table-cell-bg: var(--_hb);
+    color: contrast-color(var(--ui-table-cell-bg));
+    outline: 0;
+  }
+  &:is([data-hover~="all"], [data-hover~="tr"]) tr:has(td:is(:focus-visible,:hover)) {
+    --ui-table-cell-bg: var(--_rb);
+    color: contrast-color(var(--ui-table-cell-bg));
+  }
+}
+```
+
+### Why only two vars per variant (not five)
+
+**Text color is derived, not stored.** `color: contrast-color(var(--ui-table-cell-bg))` picks black or white based on the just-applied bg — no per-variant `--_rc`/`--_hc` needed. Works uniformly for plain, active, selected, status, and tinted rows.
+
+**Border-color stays put on hover.** The old "border merges with hover bg" flip caused a color jump on tinted tables (whose static border is tint-blended, not gray). Removing the flip fixes that visually and drops `--_hd` entirely.
+
+### Why `--_tm` is registered as `<color>`
+
+Tinted rows compute their ramp via `sibling-index()`, which must evaluate *in the element where the formula is authored* — `<tr>` for vertical tint (row index), `<td>` for horizontal tint (column index). Without `@property syntax: '<color>'`, substitution is lazy and `var(--_tm)` read on a different element would re-run `sibling-index()` in the wrong context.
+
+Registering `--_tm` forces eager evaluation. Its downstream derivations `--_rb` and `--_hb` just reference `var(--_tm)` — they inherit a concrete color and don't need their own registration.
+
+### What this replaces
+
+Ten previous variant-specific hover rules (plain, active, selected, status, vertical-tinted × td + tr, plus horizontal-tinted td) collapse to two. Public tokens (`--ui-table-active-hover-bg`, etc.) are unchanged — variants route them through `--_rb`/`--_hb`.
+
+
 ## Focus ring
 
 The overflow wrapper surfaces its inner focus state on itself:
