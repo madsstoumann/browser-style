@@ -396,7 +396,7 @@
 		</tbody>
 	</table>
 
-	<p>Semantic status variants: <code>data-row="success|warning|error|info"</code>. Tinted via <code>color-mix()</code> from the global status tokens.</p>
+	<p>Semantic status variants: <code>data-row="success|warning|error|info"</code>. Tinted via <code>color-mix()</code> from the global status tokens. Status rows have built-in hover states — add <code>data-hover</code> to see them.</p>
 	<table data-variant>
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>ID</th><th>Order</th><th>Status</th><th>Note</th></tr></thead>
@@ -409,16 +409,42 @@
 	</table>
 
 	<br>
-	<h2>Graduated tint</h2>
-	<p>Wire up <code>@browser.style/base</code>'s generic tint system to the table: <code>data-tint</code> (or a bare <code>tint</code>) on any ancestor sets the base color, and where you put <code>tinted</code> chooses the <em>direction</em> of the ramp:</p>
-	<ul>
-		<li><code>&lt;tbody tinted&gt;</code> — <strong>vertical</strong> ramp (first row = full color, last row ≈ white)</li>
-		<li><code>&lt;colgroup tinted&gt;</code> — <strong>horizontal</strong> ramp (first column = full color, last column ≈ white)</li>
-	</ul>
-	<p>Each ramp uses <code>sibling-index()</code> / <code>sibling-count()</code> across the direct children of the <code>tinted</code> element. The thead and other sections stay out of the ramp because they're outside the <code>tinted</code> subtree. Text color is automatic via <code>contrast-color()</code>.</p>
+	<p>With <code>data-hover="td"</code> — hovered cell jumps to the unmixed status color:</p>
+	<table data-variant data-hover="td">
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>ID</th><th>Order</th><th>Status</th><th>Note</th></tr></thead>
+		<tbody>
+			<tr data-row="success"><td>1001</td><td>Shipped</td><td>Delivered</td><td>On time</td></tr>
+			<tr data-row="info"><td>1002</td><td>Processing</td><td>In transit</td><td>Expected tomorrow</td></tr>
+			<tr data-row="warning"><td>1003</td><td>Backorder</td><td>Delayed</td><td>Awaiting stock</td></tr>
+			<tr data-row="error"><td>1004</td><td>Refunded</td><td>Cancelled</td><td>Customer request</td></tr>
+		</tbody>
+	</table>
 
-	<p>Vertical ramp — <code>&lt;tbody tinted&gt;</code> (default accent):</p>
-	<table data-variant="rounded th-dark" data-tint>
+	<br>
+	<p>With <code>data-hover="tr"</code> — whole row jumps to the unmixed status color:</p>
+	<table data-variant data-hover="tr">
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>ID</th><th>Order</th><th>Status</th><th>Note</th></tr></thead>
+		<tbody>
+			<tr data-row="success"><td>1001</td><td>Shipped</td><td>Delivered</td><td>On time</td></tr>
+			<tr data-row="info"><td>1002</td><td>Processing</td><td>In transit</td><td>Expected tomorrow</td></tr>
+			<tr data-row="warning"><td>1003</td><td>Backorder</td><td>Delayed</td><td>Awaiting stock</td></tr>
+			<tr data-row="error"><td>1004</td><td>Refunded</td><td>Cancelled</td><td>Customer request</td></tr>
+		</tbody>
+	</table>
+
+	<br>
+	<h2>Graduated tint</h2>
+	<p>Wire up <code>@browser.style/base</code>'s generic tint system. <code>data-tint</code> on the table sets the ramp's <em>start</em> color; <code>data-tint-end</code> (optional) sets the end color (defaults to white). Where you put <code>tinted</code> chooses the <em>direction</em>:</p>
+	<ul>
+		<li><code>&lt;tbody tinted&gt;</code> — <strong>vertical</strong> ramp across rows</li>
+		<li><code>&lt;colgroup tinted&gt;</code> — <strong>horizontal</strong> ramp across columns</li>
+	</ul>
+	<p>When the table carries <code>data-tint</code> and has a <code>tinted</code> descendant, two extras kick in: the <code>&lt;thead&gt;</code> is painted with the start color (acting as "step 0" of the ramp), and the cell borders adopt a tint-blended color instead of the default gray. Text contrast on every row/column is automatic via <code>contrast-color()</code>.</p>
+
+	<p>Vertical ramp, default accent, end = white (thead = accent, borders = tint-blended):</p>
+	<table data-variant="rounded" data-hover="tr" data-tint>
 		<colgroup><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
 		<tbody tinted>
@@ -431,8 +457,22 @@
 	</table>
 
 	<br>
-	<p>Horizontal ramp — <code>&lt;colgroup tinted&gt;</code> with a custom color:</p>
-	<table data-variant="rounded th-dark" data-tint="oklch(0.6 0.18 160)">
+	<p>Vertical ramp with a custom end color — <code>data-tint="aqua" data-tint-end="hotpink"</code>:</p>
+	<table data-variant="rounded" data-hover="tr" data-tint="aqua" data-tint-end="hotpink">
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody tinted>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<br>
+	<p>Horizontal ramp — <code>&lt;colgroup tinted&gt;</code> with a green start:</p>
+	<table data-variant="rounded" data-hover="td" data-tint="oklch(0.6 0.18 160)">
 		<colgroup tinted><col><col><col><col></colgroup>
 		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
 		<tbody>
@@ -472,7 +512,7 @@
 	<p>Wrap a table in <code>&lt;ui-table-wrapper&gt;</code> — scrollable container, sticky <code>&lt;thead&gt;</code>. Opt into sticky columns with <code>data-sticky="c0 c2 c4"</code> (0-indexed) and pin each one via <code>--c0</code>, <code>--c2</code>, <code>--c4</code>. Each value is the sum of the <em>sticky</em> column widths before it — non-sticky columns scroll away, so they don't count. Here col 0 pins at 0, col 2 at col 0's width (100.59px), and col 4 at col 0 + col 2 (234.79px). See the <a href="readme.md#advanced-how-the-css-only-overflow-detection-works">readme</a> for details.</p>
 
 	<ui-table-wrapper data-variant="rounded" data-sticky="c0 c2 c4" style="--c0: 0px; --c2: 100.59px; --c4: 234.79px">
-		<table data-variant="rounded no-wrap" data-hover="tr">
+		<table data-variant="rounded no-wrap th-light th-divide-xl" data-hover="tr">
 			<colgroup><col><col><col><col><col><col><col><col></colgroup>
 			<thead>
 				<tr>

@@ -111,20 +111,21 @@ Supported via `data-row~="group"` on a `<tr>` containing a single `<td colspan="
 
 ## Status tints
 
-The four semantic variants (`success`/`warning`/`error`/`info`) use a shared rule with a private `--_c` variable to stay compact:
+The four semantic variants (`success`/`warning`/`error`/`info`) use a shared rule with a private `--_tc` variable to stay compact:
 
 ```css
 & tr:is([data-row~="success"], [data-row~="warning"], [data-row~="error"], [data-row~="info"]) {
-  --ui-table-cell-bg: light-dark(color-mix(in oklab, var(--_c) 15%, #FFF), var(--_c));
+  --ui-table-cell-bg: light-dark(color-mix(in oklab, var(--_tc) 15%, #FFF), var(--_tc));
   color: contrast-color(var(--ui-table-cell-bg));
 }
-& tr[data-row~="success"] { --_c: var(--color-success); }
+& tr[data-row~="success"] { --_tc: var(--color-success); }
 /* …warning/error/info */
 ```
 
 - **Light mode** mixes 15% of the semantic color with white for a soft tinted background
 - **Dark mode** uses the color directly — the muted dark-mode variants of `--color-success` etc. already work well as backgrounds, so no mixing needed (and mixing with a near-black surface just looked near-black)
 - **Text color** is resolved by `contrast-color()`, which picks black or white based on contrast with the resolved background — no per-variant `color` declaration needed
+
 
 ## Focus ring
 
