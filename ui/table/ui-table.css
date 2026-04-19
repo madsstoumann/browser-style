@@ -1,7 +1,7 @@
 /**
  * ui-table
- * @version 4.0.2
- * @date 2026-04-18
+ * @version 4.0.3
+ * @date 2026-04-19
  * @author Mads Stoumann
  */
 @layer bs-component {
@@ -332,6 +332,13 @@
 			animation-timeline: scroll(self inline), scroll(self block);
 		}
 		&[overflowing] { --_has-overflow: 1; }
+
+		/* --- Focus ring: surface inner :focus-visible on the wrapper --- */
+		&:focus-within {
+			outline: var(--ring-width) solid var(--ring-color);
+			outline-offset: var(--ring-offset);
+		}
+		& :focus-within { outline: 0; }
 
 		/* --- Frame (gated by --_has-overflow) --- */
 		border-color: var(--color-border);
