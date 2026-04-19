@@ -88,18 +88,15 @@
 			--ui-table-cell-bg: var(--color-surface-alt);
 			font-weight: var(--font-weight-semibold);
 		}
-		& tr[data-row~="success"] {
-			--ui-table-cell-bg: color-mix(in oklab, var(--color-success) 15%, var(--color-surface));
+		/* Status tints: light mode = 15% tint on white, dark mode = solid (muted) color. */
+		& tr:is([data-row~="success"], [data-row~="warning"], [data-row~="error"], [data-row~="info"]) {
+			--ui-table-cell-bg: light-dark(color-mix(in oklab, var(--_c) 15%, #FFF), var(--_c));
+			color: contrast-color(var(--ui-table-cell-bg));
 		}
-		& tr[data-row~="warning"] {
-			--ui-table-cell-bg: color-mix(in oklab, var(--color-warning) 20%, var(--color-surface));
-		}
-		& tr[data-row~="error"] {
-			--ui-table-cell-bg: color-mix(in oklab, var(--color-error) 15%, var(--color-surface));
-		}
-		& tr[data-row~="info"] {
-			--ui-table-cell-bg: color-mix(in oklab, var(--color-info) 15%, var(--color-surface));
-		}
+		& tr[data-row~="success"] { --_c: var(--color-success); }
+		& tr[data-row~="warning"] { --_c: var(--color-warning); }
+		& tr[data-row~="error"]   { --_c: var(--color-error); }
+		& tr[data-row~="info"]    { --_c: var(--color-info); }
 
 		/* === Layout variants === */
 
