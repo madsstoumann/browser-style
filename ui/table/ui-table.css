@@ -57,6 +57,16 @@
 			&:first-of-type { border-start-start-radius: var(--ui-table-border-radius); }
 			&:last-of-type { border-start-end-radius: var(--ui-table-border-radius); }
 		}
+		/* Multi-row thead: only the topmost row should round at the table corners,
+		   and the first th in row 2+ is never at the left edge (a rowspan covers it),
+		   so drop its inline-start border to avoid doubling with the neighbor's end border. */
+		& thead tr:not(:first-of-type) th {
+			&:first-of-type {
+				border-inline-start-width: 0;
+				border-start-start-radius: 0;
+			}
+			&:last-of-type { border-start-end-radius: 0; }
+		}
 		& tr {
 			background: none;
 			&:last-of-type td {
@@ -153,6 +163,25 @@
 		&:is([data-variant~="th-light"], [data-variant~="zebrarow-even"]) th {
 			--ui-table-header-bg: var(--ui-table-zebra-bg, var(--color-surface-alt));
 		}
+		/* Thead/tbody divider — compose width × style freely.
+		   Width:  th-divide-lg | th-divide-xl
+		   Style:  th-dotted | th-dashed | th-double | th-groove | th-ridge
+		   Any of these activates the border; unset tokens fall back to thick / solid. */
+		&:is(
+			[data-variant~="th-divide-lg"], [data-variant~="th-divide-xl"],
+			[data-variant~="th-dotted"], [data-variant~="th-dashed"], [data-variant~="th-double"],
+			[data-variant~="th-groove"], [data-variant~="th-ridge"]
+		) tbody > tr:first-of-type :is(td, th) {
+			border-block-start-style: var(--_ds, solid);
+			border-block-start-width: var(--_dw, var(--border-width-thick));
+		}
+		&[data-variant~="th-divide-lg"] { --_dw: var(--border-width-thick); }
+		&[data-variant~="th-divide-xl"] { --_dw: calc(var(--border-width-thick) * 2); }
+		&[data-variant~="th-dotted"]    { --_ds: dotted; }
+		&[data-variant~="th-dashed"]    { --_ds: dashed; }
+		&[data-variant~="th-double"]    { --_ds: double; --_dw: calc(var(--border-width-thick) * 2); }
+		&[data-variant~="th-groove"]    { --_ds: groove; --_dw: calc(var(--border-width-heavy) * 2); }
+		&[data-variant~="th-ridge"]     { --_ds: ridge;  --_dw: calc(var(--border-width-heavy) * 2); }
 
 		/* --- Zebra striping --- */
 		&[data-variant~="zebracol-even"] col:nth-of-type(even),

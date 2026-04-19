@@ -83,19 +83,6 @@
 		</tbody>
 	</table>
 
-	<p>Default (medium):</p>
-	<table data-variant>
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
-
 	<p>With <code>data-size="lg"</code>:</p>
 	<table data-size="lg">
 		<colgroup><col><col><col><col></colgroup>
@@ -148,6 +135,95 @@
 		<tfoot>
 			<tr><td colspan="3">Total</td><td>$2,060.50</td></tr>
 		</tfoot>
+	</table>
+
+	<br>
+	<h2>Thead divider</h2>
+	<p>Opt into a stronger border between the <code>&lt;thead&gt;</code> and the first <code>&lt;tbody&gt;</code> row. Width and style are independent variants that compose: widths <code>th-divide-lg</code> / <code>th-divide-xl</code>; styles <code>th-dotted</code>, <code>th-dashed</code>, <code>th-double</code>, <code>th-groove</code>, <code>th-ridge</code>. Any one activates the border; unset pieces fall back to thick / solid. <code>th-double</code>, <code>th-groove</code>, and <code>th-ridge</code> auto-force the width they need to render (double: 4px, 3D: 6px).</p>
+
+	<p>With <code>data-variant="th-divide-lg"</code>:</p>
+	<table data-variant="th-divide-lg" data-hover="tr">
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+		</tbody>
+	</table>
+
+	<br>
+	<p>With <code>data-variant="th-dotted"</code>:</p>
+	<table data-variant="th-dotted" data-hover="tr">
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+		</tbody>
+	</table>
+
+	<br>
+	<p>With <code>data-variant="th-double"</code>:</p>
+	<table data-variant="th-double" data-hover="tr">
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+		</tbody>
+	</table>
+
+	<br>
+	<p>With <code>data-variant="th-groove"</code>:</p>
+	<table data-variant="th-groove" data-hover="tr">
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+		</tbody>
+	</table>
+
+	<br>
+	<p>With <code>data-variant="th-ridge"</code>:</p>
+	<table data-variant="th-ridge" data-hover="tr">
+		<colgroup><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+		</tbody>
+	</table>
+
+	<br>
+	<h2>Grouped column headers</h2>
+	<p>Multi-row <code>&lt;thead&gt;</code> — use <code>colspan</code> for group headings on the top row and regular cells on the bottom row. A <code>rowspan</code> cell can span both levels. The table's corner radii apply only to the topmost header row, so rounded tables stay clean.</p>
+	<table data-variant="rounded th-light th-divide-lg" data-hover="tr" data-c4="end tabular">
+		<colgroup><col><col><col><col><col></colgroup>
+		<thead>
+			<tr>
+				<th rowspan="2">Hero</th>
+				<th colspan="2">Identity</th>
+				<th colspan="2">First Appearance</th>
+			</tr>
+			<tr>
+				<th>Real Name</th>
+				<th>Location</th>
+				<th>Publisher</th>
+				<th>Year</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr><td>Batman</td><td>Bruce Wayne</td><td>Gotham City</td><td>DC</td><td>1939</td></tr>
+			<tr><td>Superman</td><td>Clark Kent</td><td>Metropolis</td><td>DC</td><td>1938</td></tr>
+			<tr><td>Iron Man</td><td>Tony Stark</td><td>Malibu</td><td>Marvel</td><td>1963</td></tr>
+			<tr><td>Spider-Man</td><td>Peter Parker</td><td>New York City</td><td>Marvel</td><td>1962</td></tr>
+		</tbody>
 	</table>
 
 	<br>

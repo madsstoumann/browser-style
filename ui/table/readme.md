@@ -5,16 +5,18 @@ A CSS-first styling system for native HTML `<table>` elements, with composable l
 ## Features
 
 - Native `<table>` — accessible, screen-reader friendly, works without JS
-- Composable layout variants: `rounded`, `split-cols`, `split-rows`, `block-border`, `th-dark`, `th-light`, `fixed`, `no-border`, `no-wrap`
+- Composable layout variants: `rounded`, `split-cols`, `split-rows`, `block-border`, `th-dark`, `th-light`, thead-divider family (`th-divide-lg/xl` widths, `th-dotted/dashed/double/groove/ridge` styles), `caption-bottom`, `fixed`, `no-border`, `no-wrap`
 - Three density sizes via `data-size` (`sm`, default, `lg`)
 - Zebra striping: rows *and* columns, even/odd
 - 8 hover effects via separate `data-hover` attribute: `col`, `col-outline`, `td`, `td-outline`, `tr`, `tr-outline`, `th-outline`, `all`
-- Row states: `data-row="active" | "selected"` plus semantic variants `"success" | "warning" | "error" | "info"`
+- Row states: `data-row="active" | "selected"` plus semantic tints `"success" | "warning" | "error" | "info"` and `"group"` for section headers (composes, e.g. `"group info"`)
+- Multi-row `<thead>` with `<th colspan>` / `<th rowspan>` — corner radii stay on the top row only, and the border doubling on row 2+'s first `<th>` is auto-resolved
 - `<caption>` styled via `@browser.style/base`'s global reset; `<tfoot>` rows get thicker top border + semibold text
 - Per-column text alignment via `data-c1`…`data-c8` — works on any `<table>`
 - Tabular figures per column via the same attribute (`data-c3="end tabular"`) — `font-variant-numeric: tabular-nums`
-- Overflow wrapper with sticky header, sticky columns, and scroll-driven shadow
-- Light/dark mode via design tokens
+- Overflow wrapper with sticky header, sticky columns, sticky **group headers** (iOS contact-list displacement), scroll-end shadow on the inline axis, and scroll-driven shadow on the sticky thead
+- Inner focus surfaces on the wrapper via `:focus-within` — one consolidated ring, not per-cell
+- Light/dark mode via design tokens (`contrast-color()` handles foreground text)
 - RTL support via logical properties throughout
 - Touch-safe: hover effects wrapped in `@media (hover: hover)`
 - Optional `<ui-table>` web component handles overflow detection and sticky-column offsets
@@ -230,6 +232,13 @@ Combine variants via space-separated values. They only override custom propertie
 | `split-rows` | Visual gap between rows; each row reads as a separate card |
 | `th-dark` | Dark header background (inverted text) |
 | `th-light` | Tinted header background (subtle contrast) |
+| `th-divide-lg` | Thead/tbody divider, thick solid (width opt-in; default style + color) |
+| `th-divide-xl` | Thead/tbody divider, xl solid |
+| `th-dotted` | Thead/tbody divider, dotted (default thick width) |
+| `th-dashed` | Thead/tbody divider, dashed (default thick width) |
+| `th-double` | Thead/tbody divider, double-line (auto-forces xl width — CSS `double` needs ≥3px) |
+| `th-groove` | Thead/tbody divider, groove 3D style (auto-forces 6px width for visible 3D effect) |
+| `th-ridge` | Thead/tbody divider, ridge 3D style (auto-forces 6px width for visible 3D effect) |
 | `zebracol-even` | Stripe even columns (requires `<colgroup>`) |
 | `zebracol-odd` | Stripe odd columns (requires `<colgroup>`) |
 | `zebrarow-even` | Stripe even rows |
@@ -292,7 +301,9 @@ Applied directly to `<tr>` for persistent visual state:
 <tr data-row="group info"><td colspan="4">Tinted section heading</td></tr>
 ```
 
-`active`/`selected` apply solid accent/highlight colors; the semantic variants (`success`/`warning`/`error`/`info`) apply a soft tint via `color-mix()` over `--color-surface`, so they read as row emphasis without dominating the cell. `group` turns a `<tr>` into a section divider: pair a single `<td colspan="N">` with `data-row="group"` for a semibold, `--color-surface-alt`-tinted heading inside a `<tbody>`. Values are space-separated and compose — `data-row="group info"` gives you a semibold section heading tinted with the info color.
+`active`/`selected` apply solid accent/highlight colors. The semantic tints (`success`/`warning`/`error`/`info`) use `light-dark()`: in light mode they're a soft 15% `color-mix` tint over white; in dark mode they use the muted status color directly (the dark-mode variants of `--color-success` etc. already work well as backgrounds). `contrast-color()` picks a readable text color in both modes. `group` turns a `<tr>` into a section divider: pair a single `<td colspan="N">` with `data-row="group"` for a semibold, `--color-surface-alt`-tinted heading inside a `<tbody>`. Values are space-separated and compose — `data-row="group info"` gives you a semibold section heading tinted with the info color.
+
+**Sticky group headers** — inside the overflow wrapper, `data-row~="group"` rows are also `position: sticky` and displace each other on vertical scroll (iOS contact-list pattern: each new section pushes the previous one out as you scroll past). The pin offset defaults to `--ui-table-group-offset: 33.6px` (roughly one thead row) and can be overridden per-table for different densities.
 
 Row states compose with hover: hovering an active/selected row shows a distinct hover color; hovering a cell in an active/selected row with `hover="td"` shows the state's "hover" variant.
 
@@ -324,6 +335,35 @@ Native `<caption>` and `<tfoot>` both work out of the box:
 `<caption>` inherits the global reset (italic, smaller, `margin-block: 1rlh`). Flip it below the table with `data-variant="caption-bottom"`. `<tfoot>` rows get a thicker top border (`--border-width-thick`) and `font-weight: semibold` — ideal for totals and summary rows.
 
 > **Known limitation with `<tfoot>`:** the base rule that draws the bottom border on `tr:last-of-type td` fires once per parent, so both `<tbody>`'s last row *and* `<tfoot>`'s last row currently get a bottom border. This is visually OK in practice (both borders collapse onto the same pixel line in most cases) and the current behavior is preserved by design. If you need strict single-border behavior, switch to a structural selector such as `table > tfoot > tr:last-of-type td, table:not(:has(tfoot)) > tbody > tr:last-of-type td`.
+
+### Multi-row headers (`<th colspan>` / `<th rowspan>`)
+
+Grouped column headers work with normal HTML — the CSS handles the edge cases automatically:
+
+```html
+<table data-variant="rounded th-light th-divide-lg">
+  <thead>
+    <tr>
+      <th rowspan="2">Hero</th>
+      <th colspan="2">Identity</th>
+      <th colspan="2">First Appearance</th>
+    </tr>
+    <tr>
+      <th>Real Name</th>
+      <th>Location</th>
+      <th>Publisher</th>
+      <th>Year</th>
+    </tr>
+  </thead>
+  <tbody>…</tbody>
+</table>
+```
+
+Two things the CSS handles for you on row 2+ of the thead:
+1. **Border radii are reset** so only the topmost header row contributes to the table's rounded corners.
+2. **The inline-start border on the first `<th>` of row 2+ is zeroed** — it's never at the visual left edge (a `rowspan` from row 1 covers it), so without the reset it would sit adjacent to the rowspan cell's inline-end border and produce a 2px double line.
+
+> **Caveat**: the border-reset assumes that in a multi-row thead, the first `<th>` of each non-top row is always covered by a `rowspan` from above (the normal grouped-header pattern). If you build a multi-row thead where row 2 genuinely starts at the table's left edge (no rowspan above), you'd need to re-add `border-inline-start-width: var(--ui-table-border-width)` on that cell.
 
 ### Overflow wrapper
 
@@ -358,6 +398,12 @@ For sticky columns you measure the pin positions once in devtools and hard-code 
 The `overflowing` attribute and the `--_has-overflow` flag converge on the same styles, so both paths render identically — the only difference is who computes them.
 
 Sticky columns are declared via `data-sticky~="c0"` … `c8` (0-indexed: `c0` = first column). Up to 9 columns via explicit selectors; extend in the CSS if you need more.
+
+**What else the wrapper does:**
+
+- **Scroll-end shadow on the inline axis** — a scroll-driven `box-shadow` on the wrapper's inline-end edge. It's visible whenever there's horizontal content to the right, and fades out as you reach the end. Signals "more this way". Counterpart to the sticky-thead bottom shadow that appears when vertical scroll is possible.
+- **Focus ring surfacing** — `&:focus-within { outline: var(--ring-width) solid var(--ring-color); outline-offset: var(--ring-offset); }`. When any cell inside receives focus (keyboard or click), the wrapper itself gets the ring — and the inner cell's default ring is suppressed. One consolidated indicator, matching iOS/macOS scroll-container behavior. Uses `--ring-*` tokens from `@browser.style/base`.
+- **Sticky group headers** — `<tr data-row~="group">` inside the wrapper is `position: sticky` and displaces each other on vertical scroll. Offset defaults to `var(--ui-table-group-offset, 33.6px)` (one thead row tall). Override per-table for different densities.
 
 ---
 
@@ -418,6 +464,7 @@ table[data-variant] {
 | `--ui-table-selected-color` | `var(--color-text)` | Selected row text |
 | `--ui-table-selected-hover-bg` | `var(--color-accent)` | Selected row cell-hover background |
 | `--ui-table-selected-hover-color` | `var(--color-accent-text)` | Selected row cell-hover text |
+| `--ui-table-group-offset` | `33.6px` | Sticky offset for `data-row="group"` rows inside the overflow wrapper (distance below the sticky thead) |
 
 ---
 
