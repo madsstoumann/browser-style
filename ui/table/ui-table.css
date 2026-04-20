@@ -315,15 +315,13 @@
 
 			/* --- Column outline --- */
 			&[data-hover~="col-outline"] {
-				& :is(td,th) {
-					position: relative;
-					&::after {
-						border-inline: var(--ui-table-outline-width) solid transparent;
-						border-radius: inherit;
-						content: '';
-						inset: calc(0px - var(--ui-table-border-width)) 0 0 0;
-						position: absolute;
-					}
+				& :is(td,th) { position: relative; }
+				& :is(td,th)::after {
+					border-inline: var(--ui-table-outline-width) solid transparent;
+					border-radius: inherit;
+					content: '';
+					inset: calc(0px - var(--ui-table-border-width)) 0 0 0;
+					position: absolute;
 				}
 				& tr:first-of-type th::after { border-block-start: var(--ui-table-outline-width) solid transparent; }
 				& tr:last-of-type td::after { border-block-end: var(--ui-table-outline-width) solid transparent; }

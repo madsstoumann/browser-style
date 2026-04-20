@@ -265,7 +265,7 @@
 	<br>
 	<h2>Grouped column headers</h2>
 	<p>Multi-row <code>&lt;thead&gt;</code> via <code>colspan</code> and <code>rowspan</code>. Corner radii apply only to the topmost row.</p>
-	<ui-table frame variant="rounded">
+	<ui-table>
 		<table data-variant="rounded th-light th-divide-lg" data-hover="tr" data-c4="end tabular">
 			<colgroup><col><col><col><col><col></colgroup>
 			<thead>
@@ -296,7 +296,7 @@
 
 	<p>With <code>data-variant="block-border"</code>, <code>data-hover="col"</code>, <code>data-c2="center"</code> and <code>data-c4="end"</code>:</p>
 	<ui-table>
-		<table data-variant="block-border" data-hover="col" data-c2="center" data-c4="end">
+		<table data-variant="block-border th-dark" data-hover="col" data-c2="center" data-c4="end">
 			<colgroup><col><col><col><col></colgroup>
 			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
 			<tbody>
@@ -313,7 +313,7 @@
 	<h2>Tabular figures</h2>
 	<p>Add <code>tabular</code> to <code>data-c<em>N</em></code> for <code>font-variant-numeric: tabular-nums</code>. Composes with alignment (e.g. <code>data-c3="end tabular"</code>).</p>
 	<ui-table>
-		<table data-variant data-c2="end tabular" data-c3="end tabular" data-c4="end tabular">
+		<table data-variant="th-light" data-c2="end tabular" data-c3="end tabular" data-c4="end tabular">
 			<colgroup><col><col><col><col></colgroup>
 			<thead><tr><th>Ticker</th><th>Open</th><th>Close</th><th>Change</th></tr></thead>
 			<tbody>
