@@ -24,7 +24,7 @@ The wrapper `<ui-table>` has two modes, selected by whether the `frame` attribut
 Independently, `<ui-table>` works in two JS modes:
 
 - **CSS-only** (no JS imported): `<ui-table>` is an unregistered custom element — just a tag with a hyphen, valid HTML, styled purely via CSS. Author writes `data-variant` on the inner `<table>` and (in frame mode) hard-codes sticky offsets (`style="--c0: 0; --c2: 101px"`). Scroll-driven animations handle overflow detection.
-- **Registered web component** (JS imported): `customElements.define('ui-table', UiTable)` upgrades the element. Attributes on `<ui-table>` (`variant`, `hover`, `size`, `sticky`) are forwarded to the child `<table>` as `data-*`. When `frame` is set, a `ResizeObserver` auto-computes sticky column offsets and toggles an `[overflowing]` attribute as a Safari ≤ 18 fallback for browsers without `animation-timeline` support.
+- **Registered web component** (JS imported): `customElements.define('ui-table', UiTable)` upgrades the element. Attributes on `<ui-table>` — `variant`, `hover`, `size`, `tint`, `tint-end`, `tint-tr`, `tint-bl`, `c1`–`c8` — are forwarded to the child `<table>` as `data-*`. `variant` is also mirrored to the wrapper (since `data-variant~="rounded"` applies to both). `sticky` is mirrored to the wrapper as `data-sticky`. When `frame` is set, a `ResizeObserver` auto-computes sticky column offsets and toggles an `[overflowing]` attribute as a Safari ≤ 18 fallback for browsers without `animation-timeline` support. Forwarding lists live in `FORWARD_TO_TABLE` / `FORWARD_TO_SELF` at the top of `index.js`.
 
 ## Attribute surface
 

@@ -1,17 +1,33 @@
 /**
  * <ui-table>
  * Light DOM web component wrapper for the CSS-first table.
- * Forwards variant/hover/sticky attributes to child <table> as data-attributes.
+ * Forwards these attributes to the child <table> as data-attributes:
+ *   variant, hover, size
+ *   tint, tint-end, tint-tr, tint-bl   (graduated-tint family)
+ *   c1 … c8                            (per-column alignment / tabular)
+ * Forwards to self as data-*:
+ *   variant (also)                     (wrapper uses data-variant~="rounded")
+ *   sticky                             (data-sticky activates sticky-column rules)
+ *
  * When `frame` is set (framed scroll-container mode), toggles an `overflowing`
  * attribute based on wrapper width (Safari ≤ 18 fallback for scroll-driven
  * overflow detection) and outputs cumulative widths for sticky columns as
  * CSS custom properties (e.g. style="--c0: 0px; --c2: 36px;").
  * No Shadow DOM.
- * @version 4.2.0
+ * @version 4.3.0
  */
 
+const FORWARD_TO_TABLE = [
+	'variant', 'hover', 'size',
+	'tint', 'tint-end', 'tint-tr', 'tint-bl',
+	'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8',
+];
+const FORWARD_TO_SELF = ['variant', 'sticky'];
+
 class UiTable extends HTMLElement {
-	static observedAttributes = ['variant', 'hover', 'size', 'sticky'];
+	static observedAttributes = [
+		...new Set([...FORWARD_TO_TABLE, ...FORWARD_TO_SELF]),
+	];
 
 	connectedCallback() {
 		this.propagateAttributes();
@@ -35,20 +51,15 @@ class UiTable extends HTMLElement {
 		const table = this.querySelector(':scope > table');
 		if (!table) return;
 
-		const variant = this.getAttribute('variant');
-		if (variant) {
-			table.setAttribute('data-variant', variant);
-			this.setAttribute('data-variant', variant);
+		for (const attr of FORWARD_TO_TABLE) {
+			const value = this.getAttribute(attr);
+			if (value !== null) table.setAttribute(`data-${attr}`, value);
 		}
 
-		const hover = this.getAttribute('hover');
-		if (hover) table.setAttribute('data-hover', hover);
-
-		const size = this.getAttribute('size');
-		if (size) table.setAttribute('data-size', size);
-
-		const sticky = this.getAttribute('sticky');
-		if (sticky) this.setAttribute('data-sticky', sticky);
+		for (const attr of FORWARD_TO_SELF) {
+			const value = this.getAttribute(attr);
+			if (value !== null) this.setAttribute(`data-${attr}`, value);
+		}
 	}
 
 	update() {

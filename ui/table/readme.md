@@ -98,15 +98,19 @@ import '@browser.style/table';
 </ui-table>
 ```
 
-`<ui-table>` is a light-DOM wrapper that forwards `variant`, `hover`, `size`, and `sticky` to the child `<table>` as `data-*` attributes. When `frame` is set, a `ResizeObserver` also toggles the `overflowing` attribute based on actual scroll width (Safari ≤ 18 fallback) and writes cumulative widths for sticky columns as CSS custom properties (e.g. `style="--c0: 0px; --c2: 36px;"`).
+`<ui-table>` is a light-DOM wrapper that forwards layout, hover, size, tint, and per-column attributes to the child `<table>` as `data-*`. When `frame` is set, a `ResizeObserver` also toggles the `overflowing` attribute based on actual scroll width (Safari ≤ 18 fallback) and writes cumulative widths for sticky columns as CSS custom properties (e.g. `style="--c0: 0px; --c2: 36px;"`).
 
 #### Attributes
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
-| `variant` | string | Space-separated layout variants (forwarded as `data-variant`) |
+| `variant` | string | Space-separated layout variants (forwarded as `data-variant` on both `<ui-table>` and child `<table>`) |
 | `hover` | string | Space-separated hover effects (forwarded as `data-hover`) |
 | `size` | `sm` \| `lg` | Density — smaller or larger font/padding (forwarded as `data-size`) |
+| `tint` | string | Graduated-tint start color (forwarded as `data-tint`). Pair with `tinted` on `<tbody>`/`<colgroup>`. |
+| `tint-end` | string | Graduated-tint end color (forwarded as `data-tint-end`). Default white. |
+| `tint-tr` / `tint-bl` | string | 2D-tint top-right / bottom-left corner colors (forwarded as `data-tint-tr` / `data-tint-bl`). Used with `<tbody tinted="2d">`. |
+| `c1` … `c8` | string | Per-column formatting — `start`/`center`/`end` for text alignment, or `tabular` for `font-variant-numeric: tabular-nums` (forwarded as `data-c<em>N</em>`). Composable: `c3="end tabular"`. |
 | `frame` | boolean | Upgrades bare scroll container to full framed mode: border, rounded, sticky thead + group rows, sticky columns, focus-ring surfacing, `ResizeObserver`-driven offset computation |
 | `sticky` | string | Space-separated sticky column indices (e.g. `"c0 c2"`) — pins columns 1 and 3. Requires `frame`. |
 

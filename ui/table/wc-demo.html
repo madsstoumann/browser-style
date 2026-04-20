@@ -14,7 +14,12 @@
 	<h1>UI: Table</h1>
 
 	<h2>Web Component</h2>
-	<p><code>&lt;ui-table&gt;</code> forwards <code>variant</code>, <code>hover</code>, <code>size</code>, and <code>sticky</code> attributes to the child <code>&lt;table&gt;</code> as <code>data-*</code> attributes. Add <code>frame</code> to upgrade from a bare scroll container to the full framed mode; in that mode a <code>ResizeObserver</code> observes its own size, toggles the <code>overflowing</code> attribute as a Safari ≤ 18 fallback, and walks the <code>sticky</code> list to compute cumulative column widths as <code>--cN</code> custom properties. See the <a href="index.html">CSS-only demo</a> for the non-JS version.</p>
+	<p>
+		<code>&lt;ui-table&gt;</code> forwards <code>variant</code>, <code>hover</code>, <code>size</code>, <code>sticky</code>, the <code>tint*</code> family (<code>tint</code>, <code>tint-end</code>, <code>tint-tr</code>, <code>tint-bl</code>), and <code>c1</code>…<code>c8</code> to the child <code>&lt;table&gt;</code> as <code>data-*</code> attributes. Add <code>frame</code> to upgrade from a bare scroll container to the full framed mode; in that mode a <code>ResizeObserver</code> toggles the <code>overflowing</code> attribute (Safari ≤ 18 fallback) and walks <code>sticky</code> to compute cumulative column widths as <code>--c<em>N</em></code> custom properties.
+	</p>
+	<p>
+		See the <a href="index.html">CSS-only demo</a> for the non-JS version, and the <a href="readme.md">readme</a> for full documentation.
+	</p>
 
 	<p>With <code>variant="rounded zebrarow-odd"</code> and <code>hover="tr td-outline"</code>:</p>
 	<ui-table variant="rounded zebrarow-odd" hover="tr td-outline">
@@ -69,6 +74,68 @@
 				<tr><td>Steve</td><td>Rogers</td><td>Captain America</td><td>Brooklyn</td><td>Avengers</td><td>Captain America Comics #1 (1941)</td><td>Joe Simon, Jack Kirby</td><td>Super soldier serum</td></tr>
 				<tr><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Themyscira</td><td>Justice League</td><td>All Star Comics #8 (1941)</td><td>William Moulton Marston</td><td>Divine strength, lasso</td></tr>
 				<tr><td>Natasha</td><td>Romanoff</td><td>Black Widow</td><td>Moscow</td><td>Avengers</td><td>Tales of Suspense #52 (1964)</td><td>Stan Lee, Don Rico</td><td>Espionage, martial arts</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
+
+	<br>
+	<h2>Grouped column headers (<code>frame</code>)</h2>
+	<p>Multi-row <code>&lt;thead&gt;</code> with <code>colspan</code> + <code>rowspan</code>, wrapped in a framed container. <code>variant="rounded th-light th-divide-lg"</code> and <code>c4="end tabular"</code> are forwarded to the inner <code>&lt;table&gt;</code>:</p>
+	<ui-table frame variant="rounded th-light th-divide-lg" hover="tr" c4="end tabular">
+		<table>
+			<colgroup><col><col><col><col><col></colgroup>
+			<thead>
+				<tr>
+					<th rowspan="2">Hero</th>
+					<th colspan="2">Identity</th>
+					<th colspan="2">First Appearance</th>
+				</tr>
+				<tr>
+					<th>Real Name</th>
+					<th>Location</th>
+					<th>Publisher</th>
+					<th>Year</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr><td>Batman</td><td>Bruce Wayne</td><td>Gotham City</td><td>DC</td><td>1939</td></tr>
+				<tr><td>Superman</td><td>Clark Kent</td><td>Metropolis</td><td>DC</td><td>1938</td></tr>
+				<tr><td>Iron Man</td><td>Tony Stark</td><td>Malibu</td><td>Marvel</td><td>1963</td></tr>
+				<tr><td>Spider-Man</td><td>Peter Parker</td><td>New York City</td><td>Marvel</td><td>1962</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
+
+	<br>
+	<h2>Graduated tint (vertical)</h2>
+	<p>Forward <code>tint</code> to the inner <code>&lt;table&gt;</code> and place <code>tinted</code> on the <code>&lt;tbody&gt;</code> for a vertical ramp. <code>tint</code> with no value uses <code>--color-accent</code>:</p>
+	<ui-table frame variant="rounded" hover="tr" tint>
+		<table>
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody tinted>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
+
+	<br>
+	<h2>2D bilinear tint (four corners)</h2>
+	<p>All four corner colors bind to <code>&lt;ui-table&gt;</code> as <code>tint</code>, <code>tint-end</code>, <code>tint-tr</code>, <code>tint-bl</code>. The component forwards them as <code>data-*</code> and the <code>&lt;tbody tinted="2d"&gt;</code> ramps across the cells:</p>
+	<ui-table frame variant="no-border rounded" hover="tr" tint="aqua" tint-end="hotpink" tint-tr="yellow" tint-bl="lime">
+		<table>
+			<colgroup><col><col><col><col><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th><th>Affiliation</th><th>First Appearance</th><th>Creator</th><th>Powers</th></tr></thead>
+			<tbody tinted="2d">
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td><td>Justice League</td><td>Detective Comics #27 (1939)</td><td>Bob Kane, Bill Finger</td><td>Martial arts, gadgets</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td><td>Justice League</td><td>Action Comics #1 (1938)</td><td>Jerry Siegel, Joe Shuster</td><td>Flight, super strength</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td><td>Avengers</td><td>Tales of Suspense #39 (1963)</td><td>Stan Lee, Larry Lieber</td><td>Powered armor suit</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td><td>Avengers</td><td>Amazing Fantasy #15 (1962)</td><td>Stan Lee, Steve Ditko</td><td>Wall-crawling, spider sense</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td><td>Defenders</td><td>Daredevil #1 (1964)</td><td>Stan Lee, Bill Everett</td><td>Radar sense, acrobatics</td></tr>
 			</tbody>
 		</table>
 	</ui-table>
