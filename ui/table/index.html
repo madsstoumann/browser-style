@@ -8,13 +8,14 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-table.css">
+		<script type="module" src="index.js"></script>
 </head>
 <body>
 	<h1>UI: Table</h1>
 
 	<h2>CSS</h2>
 	<p>
-		<code>&lt;ui-table&gt;</code> is a CSS-first scroll wrapper for native <code>&lt;table&gt;</code>. Compose layout via <code>data-variant</code> (<code>rounded</code>, <code>split-cols</code>, <code>split-rows</code>, <code>th-dark</code>, <code>th-light</code>, thead-divider family, <code>zebracol-*</code>, <code>zebrarow-*</code>, <code>no-border</code>, <code>no-wrap</code>, <code>fixed</code>); density via <code>data-size</code>; per-row state via <code>data-row</code>; per-column alignment / tabular figures via <code>data-c<em>N</em></code>; hover effects via <code>data-hover</code>; graduated tints via <code>data-tint</code> + <code>tinted</code>. Add <code>frame</code> to the wrapper for a framed scroll container with sticky thead, sticky group rows, and opt-in sticky columns via <code>data-sticky</code>.
+		<code>&lt;ui-table&gt;</code> is a CSS-first scroll wrapper for native <code>&lt;table&gt;</code>. Compose layout via <code>data-variant</code> (<code>rounded</code>, <code>split-cols</code>, <code>split-rows</code>, <code>th-dark</code>, <code>th-light</code>, thead-divider family, <code>zebracol-*</code>, <code>zebrarow-*</code>, <code>no-border</code>, <code>no-wrap</code>, <code>fixed</code>); density via <code>data-size</code>; per-row state via <code>data-row</code>; per-column alignment / tabular figures via <code>data-c<em>N</em></code>; hover effects via <code>data-hover</code>; graduated tints via <code>data-tint</code> + <code>tinted</code>. Add <code>frame</code> to the wrapper for a framed scroll container with sticky thead, sticky group rows, and opt-in sticky columns via <code>sticky</code>.
 	</p>
 	<p>
 		This page demonstrates the <strong>CSS-only</strong> approach.
@@ -502,7 +503,7 @@
 
 	<br>
 	<p>2D bilinear ramp — <code>data-tint="aqua" data-tint-end="hotpink"</code>, corners default to a diagonal mid-mix:</p>
-	<ui-table variant="rounded">
+	<ui-table>
 		<table data-variant="no-border rounded" data-hover="tr" data-tint="aqua" data-tint-end="hotpink">
 			<colgroup><col><col><col><col><col><col><col><col></colgroup>
 			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th><th>Affiliation</th><th>First Appearance</th><th>Creator</th><th>Powers</th></tr></thead>
@@ -518,7 +519,7 @@
 
 	<br>
 	<p>With all four corners specified — <code>data-tint-tr="yellow" data-tint-bl="lime"</code>:</p>
-	<ui-table variant="rounded">
+	<ui-table>
 		<table data-variant="no-border rounded" data-hover="tr" data-tint="aqua" data-tint-end="hotpink" data-tint-tr="yellow" data-tint-bl="lime">
 			<colgroup><col><col><col><col><col><col><col><col></colgroup>
 			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th><th>Affiliation</th><th>First Appearance</th><th>Creator</th><th>Powers</th></tr></thead>
@@ -575,9 +576,9 @@
 
 	<br>
 	<h2>Overflow wrapper</h2>
-	<p>Bare <code>&lt;ui-table&gt;</code> is a passive scroll container. Add <code>frame</code> for border, rounded corners, sticky <code>&lt;thead&gt;</code>, sticky group rows, and sticky columns via <code>data-sticky</code> (0-indexed, with <code>--c<em>N</em></code> offsets). See the <a href="readme.md">readme</a>.</p>
+	<p>Bare <code>&lt;ui-table&gt;</code> is a passive scroll container. Add <code>frame</code> for border, rounded corners, sticky <code>&lt;thead&gt;</code>, sticky group rows, and sticky columns via <code>sticky</code> (0-indexed, with <code>--c<em>N</em></code> offsets). See the <a href="readme.md">readme</a>.</p>
 
-	<ui-table frame data-variant="rounded" data-sticky="c0 c2 c4" style="--c0: 0px; --c2: 100.59px; --c4: 234.79px">
+	<ui-table frame data-variant="rounded" sticky="c0 c2 c4">
 		<table data-variant="rounded no-wrap th-light th-divide-xl" data-hover="tr">
 			<colgroup><col><col><col><col><col><col><col><col></colgroup>
 			<thead>

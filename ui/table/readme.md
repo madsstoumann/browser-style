@@ -98,21 +98,24 @@ import '@browser.style/table';
 </ui-table>
 ```
 
-`<ui-table>` is a light-DOM wrapper that forwards layout, hover, size, tint, and per-column attributes to the child `<table>` as `data-*`. When `frame` is set, a `ResizeObserver` also toggles the `overflowing` attribute based on actual scroll width (Safari ≤ 18 fallback) and writes cumulative widths for sticky columns as CSS custom properties (e.g. `style="--c0: 0px; --c2: 36px;"`).
+`<ui-table>` is a light-DOM wrapper. JS behaviour gates on two opt-in attributes: `mount` (forwarding only) and `frame` (framed visuals + forwarding + `ResizeObserver` for Safari ≤ 18 fallback and sticky-offset computation). Bare `<ui-table>` (neither attribute) is inert — a CSS-only scroll container — even when this module is imported.
 
 #### Attributes
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
-| `variant` | string | Space-separated layout variants (forwarded as `data-variant` on both `<ui-table>` and child `<table>`) |
-| `hover` | string | Space-separated hover effects (forwarded as `data-hover`) |
-| `size` | `sm` \| `lg` | Density — smaller or larger font/padding (forwarded as `data-size`) |
-| `tint` | string | Graduated-tint start color (forwarded as `data-tint`). Pair with `tinted` on `<tbody>`/`<colgroup>`. |
-| `tint-end` | string | Graduated-tint end color (forwarded as `data-tint-end`). Default white. |
-| `tint-tr` / `tint-bl` | string | 2D-tint top-right / bottom-left corner colors (forwarded as `data-tint-tr` / `data-tint-bl`). Used with `<tbody tinted="2d">`. |
-| `c1` … `c8` | string | Per-column formatting — `start`/`center`/`end` for text alignment, or `tabular` for `font-variant-numeric: tabular-nums` (forwarded as `data-c<em>N</em>`). Composable: `c3="end tabular"`. |
-| `frame` | boolean | Upgrades bare scroll container to full framed mode: border, rounded, sticky thead + group rows, sticky columns, focus-ring surfacing, `ResizeObserver`-driven offset computation |
-| `sticky` | string | Space-separated sticky column indices (e.g. `"c0 c2"`) — pins columns 1 and 3. Requires `frame`. |
+| `mount` | boolean | Activates JS attribute forwarding only. No visual change. Use for framework reactivity on visually plain tables. |
+| `frame` | boolean | Framed scroll-container mode — border, rounded corners, sticky thead + group rows, sticky columns, focus-ring surfacing, opaque cell bg. Implies `mount` plus `ResizeObserver`-driven overflow detection and sticky-offset computation. |
+| `variant` | string | Forwarded as `data-variant` on both `<ui-table>` and child `<table>`. Requires `mount` or `frame`. |
+| `hover` | string | Space-separated hover effects (forwarded as `data-hover`). Requires `mount` or `frame`. |
+| `size` | `sm` \| `lg` | Density (forwarded as `data-size`). Requires `mount` or `frame`. |
+| `tint` | string | Graduated-tint start color (forwarded as `data-tint`). Pair with `tinted` on `<tbody>`/`<colgroup>`. Requires `mount` or `frame`. |
+| `tint-end` | string | Graduated-tint end color (default white). Requires `mount` or `frame`. |
+| `tint-tr` / `tint-bl` | string | 2D-tint top-right / bottom-left corner colors. Requires `mount` or `frame`. |
+| `c1` … `c8` | string | Per-column formatting — `start`/`center`/`end` for text alignment, or `tabular` for `font-variant-numeric: tabular-nums`. Composable: `c3="end tabular"`. Requires `mount` or `frame`. |
+| `sticky` | string | Space-separated sticky column indices (e.g. `"c0 c2"`). Requires `frame`. |
+
+On initial mount the component respects any `data-*` already set on the child `<table>` — author's direct markup wins. Later changes to attributes on `<ui-table>` (via `setAttribute` / framework reactivity) do overwrite.
 
 ---
 
@@ -307,7 +310,7 @@ Applied directly to `<tr>` for persistent visual state:
 
 `active`/`selected` apply solid accent/highlight colors. The semantic tints (`success`/`warning`/`error`/`info`) use `light-dark()`: in light mode they're a soft 15% `color-mix` tint over white; in dark mode they use the muted status color directly (the dark-mode variants of `--color-success` etc. already work well as backgrounds). `contrast-color()` picks a readable text color in both modes. `group` turns a `<tr>` into a section divider: pair a single `<td colspan="N">` with `data-row="group"` for a semibold, `--color-surface-alt`-tinted heading inside a `<tbody>`. Values are space-separated and compose — `data-row="group info"` gives you a semibold section heading tinted with the info color.
 
-**Sticky group headers** — inside the overflow wrapper, `data-row~="group"` rows are also `position: sticky` and displace each other on vertical scroll (iOS contact-list pattern: each new section pushes the previous one out as you scroll past). The pin offset defaults to `--ui-table-group-offset: 33.6px` (roughly one thead row) and can be overridden per-table for different densities.
+**Sticky group headers** — inside the overflow wrapper, `data-row~="group"` rows are also `position: sticky` and displace each other on vertical scroll (iOS contact-list pattern: each new section pushes the previous one out as you scroll past). The pin offset is driven by `--ui-table-group-offset`; the web component measures the actual thead height on mount/resize and writes it on the host. CSS-only users get a `33.6px` fallback (roughly one thead row at default density) and can override inline when their thead is taller.
 
 Row states compose with hover: hovering an active/selected row shows a distinct hover color; hovering a cell in an active/selected row with `hover="td"` shows the state's "hover" variant.
 
@@ -384,10 +387,10 @@ Two things the CSS handles for you on row 2+ of the thead:
   </ui-table>
   ```
 
-- **Framed** (`<ui-table frame>`) — full iOS-style framed scroll container. Adds border (appears only when actually overflowing), rounded corners, scroll-driven overflow detection via `animation-timeline: scroll()`, sticky `<thead>`, sticky group rows, opt-in sticky columns via `data-sticky`, and focus-ring surfacing on the wrapper.
+- **Framed** (`<ui-table frame>`) — full iOS-style framed scroll container. Adds border (appears only when actually overflowing), rounded corners, scroll-driven overflow detection via `animation-timeline: scroll()`, sticky `<thead>`, sticky group rows, opt-in sticky columns via `sticky`, and focus-ring surfacing on the wrapper.
 
   ```html
-  <ui-table frame data-variant="rounded" data-sticky="c0 c2" style="--c0: 0; --c2: 101px;">
+  <ui-table frame data-variant="rounded" sticky="c0 c2" style="--c0: 0; --c2: 101px;">
     <table data-variant="rounded no-wrap" data-hover="tr">
       <colgroup>...</colgroup>
       <thead>...</thead>
@@ -398,7 +401,7 @@ Two things the CSS handles for you on row 2+ of the thead:
 
   For sticky columns, measure pin positions once in devtools and hard-code them as `--c0`, `--c1`, … `--c8`. Each value is the scroll-x offset at which that column should lock — effectively the cumulative width of sticky columns *before* it (non-sticky columns scroll away and don't contribute).
 
-**Web component path** — import `index.js` to register `<ui-table>`. Attributes on `<ui-table>` (`variant`, `hover`, `size`, `sticky`) are forwarded to the child `<table>` as `data-*`. When `frame` is set, a `ResizeObserver` additionally toggles the `overflowing` attribute (Safari ≤ 18 fallback for browsers without scroll-driven animations) and walks the `sticky` attribute to write the correct `--cN` values on the host — so framework code can bind to the wrapper directly without computing offsets:
+**Web component path** — import `index.js` to register `<ui-table>`. With `mount` or `frame`, attributes on `<ui-table>` (`variant`, `hover`, `size`, and the tint / per-column family) are forwarded to the child `<table>` as `data-*`. `sticky` stays a plain attribute on the wrapper — CSS reads it directly. With `frame`, a `ResizeObserver` additionally toggles the `overflowing` attribute (Safari ≤ 18 fallback for browsers without scroll-driven animations) and walks the `sticky` attribute to write the correct `--cN` values on the host — so framework code can bind to the wrapper directly without computing offsets:
 
 ```html
 <ui-table frame sticky="c0 c2" variant="rounded th-light no-wrap" hover="tr">
@@ -412,13 +415,13 @@ Two things the CSS handles for you on row 2+ of the thead:
 
 The `overflowing` attribute and the `--_has-overflow` flag converge on the same styles, so both paths render identically — the only difference is who computes them.
 
-Sticky columns are declared via `data-sticky~="c0"` … `c8` (0-indexed: `c0` = first column). Up to 9 columns via explicit selectors; extend in the CSS if you need more.
+Sticky columns are declared via `sticky~="c0"` … `c8` (0-indexed: `c0` = first column). Up to 9 columns via explicit selectors; extend in the CSS if you need more.
 
 **What else the wrapper does:**
 
 - **Scroll-end shadow on the inline axis** — a scroll-driven `box-shadow` on the wrapper's inline-end edge. It's visible whenever there's horizontal content to the right, and fades out as you reach the end. Signals "more this way". Counterpart to the sticky-thead bottom shadow that appears when vertical scroll is possible.
 - **Focus ring surfacing** — `&:focus-within { outline: var(--ring-width) solid var(--ring-color); outline-offset: var(--ring-offset); }`. When any cell inside receives focus (keyboard or click), the wrapper itself gets the ring — and the inner cell's default ring is suppressed. One consolidated indicator, matching iOS/macOS scroll-container behavior. Uses `--ring-*` tokens from `@browser.style/base`.
-- **Sticky group headers** — `<tr data-row~="group">` inside the wrapper is `position: sticky` and displaces each other on vertical scroll. Offset defaults to `var(--ui-table-group-offset, 33.6px)` (one thead row tall). Override per-table for different densities.
+- **Sticky group headers** — `<tr data-row~="group">` inside the wrapper is `position: sticky` and displaces each other on vertical scroll. Offset is `var(--ui-table-group-offset, 33.6px)` — the web component measures `thead.offsetHeight` and writes the var on the host; CSS-only users get the 33.6px fallback (one thead row at default density) and can override inline for taller theads.
 
 ---
 

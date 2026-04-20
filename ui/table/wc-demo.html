@@ -15,14 +15,21 @@
 
 	<h2>Web Component</h2>
 	<p>
-		<code>&lt;ui-table&gt;</code> forwards <code>variant</code>, <code>hover</code>, <code>size</code>, <code>sticky</code>, the <code>tint*</code> family (<code>tint</code>, <code>tint-end</code>, <code>tint-tr</code>, <code>tint-bl</code>), and <code>c1</code>…<code>c8</code> to the child <code>&lt;table&gt;</code> as <code>data-*</code> attributes. Add <code>frame</code> to upgrade from a bare scroll container to the full framed mode; in that mode a <code>ResizeObserver</code> toggles the <code>overflowing</code> attribute (Safari ≤ 18 fallback) and walks <code>sticky</code> to compute cumulative column widths as <code>--c<em>N</em></code> custom properties.
+		JS behaviour gates on two opt-in attributes:
+	</p>
+	<ul>
+		<li><code>mount</code> — attribute forwarding only. Forwards <code>variant</code>, <code>hover</code>, <code>size</code>, <code>sticky</code>, the <code>tint*</code> family (<code>tint</code>, <code>tint-end</code>, <code>tint-tr</code>, <code>tint-bl</code>), and <code>c1</code>…<code>c8</code> to the inner <code>&lt;table&gt;</code> as <code>data-*</code>. Use for framework-binding on a visually plain scroll container.</li>
+		<li><code>frame</code> — framed scroll-container mode. Implies <code>mount</code>, plus runs a <code>ResizeObserver</code> that toggles <code>overflowing</code> (Safari ≤ 18 fallback) and walks <code>sticky</code> to compute cumulative column widths as <code>--c<em>N</em></code> custom properties.</li>
+	</ul>
+	<p>
+		Bare <code>&lt;ui-table&gt;</code> (neither attribute) is inert — CSS-only scroll container, no JS.
 	</p>
 	<p>
 		See the <a href="index.html">CSS-only demo</a> for the non-JS version, and the <a href="readme.md">readme</a> for full documentation.
 	</p>
 
-	<p>With <code>variant="rounded zebrarow-odd"</code> and <code>hover="tr td-outline"</code>:</p>
-	<ui-table variant="rounded zebrarow-odd" hover="tr td-outline">
+	<p>With <code>mount</code>, <code>variant="rounded zebrarow-odd"</code>, and <code>hover="tr td-outline"</code> — attribute forwarding, no framed visuals:</p>
+	<ui-table mount variant="rounded zebrarow-odd" hover="tr td-outline">
 		<table>
 			<colgroup><col><col><col><col></colgroup>
 			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
@@ -37,8 +44,8 @@
 	</ui-table>
 
 	<br>
-	<p>With <code>variant="split-cols th-dark rounded"</code> and <code>hover="col td"</code>:</p>
-	<ui-table variant="split-cols th-dark rounded" hover="col td">
+	<p>With <code>mount</code>, <code>variant="split-cols th-dark rounded"</code>, and <code>hover="col td"</code>:</p>
+	<ui-table mount variant="split-cols th-dark rounded" hover="col td">
 		<table>
 			<colgroup><col><col><col><col></colgroup>
 			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>

@@ -444,7 +444,7 @@
 	/* === Framed scroll wrapper ===
 	 * <ui-table frame> adds the full treatment: border frame that appears when
 	 * actually overflowing, rounded corners, scroll-driven detection, sticky thead
-	 * + sticky group rows, sticky columns (data-sticky), opaque cell backgrounds
+	 * + sticky group rows, sticky columns (sticky), opaque cell backgrounds
 	 * (so sticky cells aren't transparent during scroll), focus-ring surfacing.
 	 *
 	 * Overflow state is tracked by --_has-overflow (0 or 1). It is set to 1 by
@@ -526,29 +526,29 @@
 			}
 		}
 
-		/* --- Sticky columns (data-sticky) --- */
-		&[data-sticky~="c0"] :is(td,th):nth-of-type(1),
-		&[data-sticky~="c1"] :is(td,th):nth-of-type(2),
-		&[data-sticky~="c2"] :is(td,th):nth-of-type(3),
-		&[data-sticky~="c3"] :is(td,th):nth-of-type(4),
-		&[data-sticky~="c4"] :is(td,th):nth-of-type(5),
-		&[data-sticky~="c5"] :is(td,th):nth-of-type(6),
-		&[data-sticky~="c6"] :is(td,th):nth-of-type(7),
-		&[data-sticky~="c7"] :is(td,th):nth-of-type(8),
-		&[data-sticky~="c8"] :is(td,th):nth-of-type(9) {
+		/* --- Sticky columns (sticky) --- */
+		&[sticky~="c0"] :is(td,th):nth-of-type(1),
+		&[sticky~="c1"] :is(td,th):nth-of-type(2),
+		&[sticky~="c2"] :is(td,th):nth-of-type(3),
+		&[sticky~="c3"] :is(td,th):nth-of-type(4),
+		&[sticky~="c4"] :is(td,th):nth-of-type(5),
+		&[sticky~="c5"] :is(td,th):nth-of-type(6),
+		&[sticky~="c6"] :is(td,th):nth-of-type(7),
+		&[sticky~="c7"] :is(td,th):nth-of-type(8),
+		&[sticky~="c8"] :is(td,th):nth-of-type(9) {
 			inset-inline-start: var(--_iis);
 			position: sticky;
 			z-index: var(--z-index-1);
 		}
-		&[data-sticky~="c0"] :is(td,th):nth-of-type(1) { --_iis: var(--c0); }
-		&[data-sticky~="c1"] :is(td,th):nth-of-type(2) { --_iis: var(--c1); }
-		&[data-sticky~="c2"] :is(td,th):nth-of-type(3) { --_iis: var(--c2); }
-		&[data-sticky~="c3"] :is(td,th):nth-of-type(4) { --_iis: var(--c3); }
-		&[data-sticky~="c4"] :is(td,th):nth-of-type(5) { --_iis: var(--c4); }
-		&[data-sticky~="c5"] :is(td,th):nth-of-type(6) { --_iis: var(--c5); }
-		&[data-sticky~="c6"] :is(td,th):nth-of-type(7) { --_iis: var(--c6); }
-		&[data-sticky~="c7"] :is(td,th):nth-of-type(8) { --_iis: var(--c7); }
-		&[data-sticky~="c8"] :is(td,th):nth-of-type(9) { --_iis: var(--c8); }
+		&[sticky~="c0"] :is(td,th):nth-of-type(1) { --_iis: var(--c0); }
+		&[sticky~="c1"] :is(td,th):nth-of-type(2) { --_iis: var(--c1); }
+		&[sticky~="c2"] :is(td,th):nth-of-type(3) { --_iis: var(--c2); }
+		&[sticky~="c3"] :is(td,th):nth-of-type(4) { --_iis: var(--c3); }
+		&[sticky~="c4"] :is(td,th):nth-of-type(5) { --_iis: var(--c4); }
+		&[sticky~="c5"] :is(td,th):nth-of-type(6) { --_iis: var(--c5); }
+		&[sticky~="c6"] :is(td,th):nth-of-type(7) { --_iis: var(--c6); }
+		&[sticky~="c7"] :is(td,th):nth-of-type(8) { --_iis: var(--c7); }
+		&[sticky~="c8"] :is(td,th):nth-of-type(9) { --_iis: var(--c8); }
 	}
 }
 

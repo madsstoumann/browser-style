@@ -19,12 +19,12 @@ The wrapper `<ui-table>` has two modes, selected by whether the `frame` attribut
 
 **Bare** (`<ui-table>`) is a pure scroll container — `display: block; overflow: auto` and a styled scrollbar. Scrollbars appear only when the inner `<table>` overflows. No border, no sticky thead, no `--ui-table-cell-bg` override, so `<col>`-based features (zebracol, col hover, colgroup tint) keep working. Use this to let wide tables scroll horizontally on narrow viewports without any other visual change.
 
-**Framed** (`<ui-table frame>`) adds the full treatment: a border frame gated by `--_has-overflow` (appears only when actually overflowing), rounded corners, scroll-driven overflow detection, sticky `<thead>`, sticky group rows (`<tr data-row="group">`), sticky columns via `data-sticky`, opaque cell backgrounds (so sticky cells don't bleed through during scroll), focus-ring surfacing on the wrapper. Use for data tables that benefit from a framed, iOS-style scroll container.
+**Framed** (`<ui-table frame>`) adds the full treatment: a border frame gated by `--_has-overflow` (appears only when actually overflowing), rounded corners, scroll-driven overflow detection, sticky `<thead>`, sticky group rows (`<tr data-row="group">`), sticky columns via `sticky`, opaque cell backgrounds (so sticky cells don't bleed through during scroll), focus-ring surfacing on the wrapper. Use for data tables that benefit from a framed, iOS-style scroll container.
 
 Independently, `<ui-table>` works in two JS modes:
 
 - **CSS-only** (no JS imported): `<ui-table>` is an unregistered custom element — just a tag with a hyphen, valid HTML, styled purely via CSS. Author writes `data-variant` on the inner `<table>` and (in frame mode) hard-codes sticky offsets (`style="--c0: 0; --c2: 101px"`). Scroll-driven animations handle overflow detection.
-- **Registered web component** (JS imported): `customElements.define('ui-table', UiTable)` upgrades the element. Attributes on `<ui-table>` — `variant`, `hover`, `size`, `tint`, `tint-end`, `tint-tr`, `tint-bl`, `c1`–`c8` — are forwarded to the child `<table>` as `data-*`. `variant` is also mirrored to the wrapper (since `data-variant~="rounded"` applies to both). `sticky` is mirrored to the wrapper as `data-sticky`. When `frame` is set, a `ResizeObserver` auto-computes sticky column offsets and toggles an `[overflowing]` attribute as a Safari ≤ 18 fallback for browsers without `animation-timeline` support. Forwarding lists live in `FORWARD_TO_TABLE` / `FORWARD_TO_SELF` at the top of `index.js`.
+- **Registered web component** (JS imported): `customElements.define('ui-table', UiTable)` upgrades the element, but the instance is inert unless `mount` or `frame` is present — a bare `<ui-table>` does zero work, not even attribute forwarding. With `mount`, the component forwards `variant`, `hover`, `size`, `tint`, `tint-end`, `tint-tr`, `tint-bl`, `c1`–`c8` to the child `<table>` as `data-*`; `variant` is also mirrored to the wrapper (since `data-variant~="rounded"` applies to both). `sticky` stays a plain attribute on `<ui-table>` — CSS matches it directly via `[sticky~="cN"]`. With `frame` (which implies `mount`), a `ResizeObserver` additionally auto-computes sticky column offsets and toggles an `[overflowing]` attribute as a Safari ≤ 18 fallback for browsers without `animation-timeline` support. Forwarding lists live in `FORWARD_TO_TABLE` / `FORWARD_TO_SELF` at the top of `index.js`. The component also respects any `data-*` already set on the inner `<table>` at mount time — author's direct markup wins over forwarding on first render.
 
 ## Attribute surface
 
@@ -36,8 +36,8 @@ Independently, `<ui-table>` works in two JS modes:
 | `data-row` | `<tr>` | Space-separated list of states — selector uses `~=` so values compose. `active` / `selected` apply solid accent/highlight; `success` / `warning` / `error` / `info` apply a tint (see *Status tints* below); `group` turns the row into a section heading (semibold + `--color-surface-alt` tint) and pairs naturally with a single `<td colspan="N">`. Tint rules are ordered after `group` in the CSS, so e.g. `data-row="group info"` gives a semibold section heading with the info tint. When inside the overflow wrapper, `group` rows are also `position: sticky` and displace each other on vertical scroll (iOS contact-list pattern). |
 | `data-c1`…`data-c8` | table | Per-column formatting — composable values: `start` / `center` / `end` (text alignment) + `tabular` (`font-variant-numeric: tabular-nums`). Defined in a top-level `:where(table) { … }` block so it works on any `<table>`, not just tables that opt into this component. |
 | `<ui-table>` | wrapper | Passive scroll container (`display: block; overflow: auto` + styled scrollbar). No other visual change. |
-| `<ui-table frame>` | wrapper | Framed scroll container: adds border (gated by `--_has-overflow`), radius, sticky `<thead>` + group rows, opaque cell bg, focus-ring surfacing. Enables `data-sticky` and the scroll-driven overflow detection. |
-| `data-sticky` | wrapper | Sticky column indices (e.g. `c0 c2`, 0-indexed) on `<ui-table frame>`. No-op in bare mode. |
+| `<ui-table frame>` | wrapper | Framed scroll container: adds border (gated by `--_has-overflow`), radius, sticky `<thead>` + group rows, opaque cell bg, focus-ring surfacing. Enables `sticky` and the scroll-driven overflow detection. |
+| `sticky` | wrapper | Sticky column indices (e.g. `c0 c2`, 0-indexed) on `<ui-table frame>`. No-op in bare mode. |
 
 ## Column hover via `:has()` + `<colgroup>`
 
@@ -85,11 +85,11 @@ When `index.js` is imported and the element upgrades, a `ResizeObserver` toggles
 
 ## Sticky columns
 
-Author declares them via `data-sticky="c0 c2"` on the wrapper (0-indexed). CSS enumerates for c0..c8:
+Author declares them via `sticky="c0 c2"` on the wrapper (0-indexed). CSS enumerates for c0..c8:
 
 ```css
-&[data-sticky~="c0"] :is(td,th):nth-of-type(1) { --_iis: var(--c0); }
-&[data-sticky~="c0"] :is(td,th):nth-of-type(1), … {
+&[sticky~="c0"] :is(td,th):nth-of-type(1) { --_iis: var(--c0); }
+&[sticky~="c0"] :is(td,th):nth-of-type(1), … {
   inset-inline-start: var(--_iis);
   position: sticky;
   z-index: var(--z-index-1);
@@ -112,7 +112,7 @@ Sticky thead and columns apply always — they're no-ops when the wrapper isn't 
 
 Supported via `data-row~="group"` on a `<tr>` containing a single `<td colspan="N">`. Gets `--ui-table-cell-bg: var(--color-surface-alt)` and semibold font-weight. Composes with status variants (`data-row="group info"` etc.) because the status rules are ordered *after* `group` in the CSS and write the same `--ui-table-cell-bg`, overriding the default surface-alt with the tint.
 
-**Sticky group displacement (inside the overflow wrapper):** group rows are `position: sticky; inset-block-start: var(--ui-table-group-offset, 33.6px)` with `z-index: calc(var(--z-index-1) - 1)` (one below the sticky thead). CSS sticky's native behavior handles the displacement — when a second group row scrolls up to meet the first at the threshold, it pushes the first out of view. The 33.6px default matches the default thead height; override per-table via the custom property for different densities.
+**Sticky group displacement (inside the overflow wrapper):** group rows are `position: sticky; inset-block-start: var(--ui-table-group-offset, 33.6px)` with `z-index: calc(var(--z-index-1) - 1)` (one below the sticky thead). CSS sticky's native behavior handles the displacement — when a second group row scrolls up to meet the first at the threshold, it pushes the first out of view. The 33.6px fallback matches a default-density single-row thead; the web component overrides it dynamically on mount and resize via `setGroupOffset()` (reads `thead.offsetHeight` and writes the var on the host). CSS-only users can override per-table by setting `--ui-table-group-offset` inline or in a rule if their thead differs from the fallback.
 
 ## Status tints
 
