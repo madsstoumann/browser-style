@@ -8,525 +8,576 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-table.css">
-	<script type="module" src="index.js"></script>
 </head>
 <body>
 	<h1>UI: Table</h1>
 
 	<h2>CSS</h2>
-	<p><strong>Table</strong> is a CSS-first styling system for native <code>&lt;table&gt;</code> elements. Each feature is an attribute — compose them freely on the table, its rows, or a wrapping <code>&lt;ui-table-wrapper&gt;</code>. Light/dark mode, RTL, and touch-safe hover come for free.</p>
-	<p>This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript).<br>
-		See the <a href="wc-demo.html">web component demo</a> for the JS-enhanced version using <code>&lt;ui-table&gt;</code>.
+	<p>
+		<code>&lt;ui-table&gt;</code> is a CSS-first scroll wrapper for native <code>&lt;table&gt;</code>. Compose layout via <code>data-variant</code> (<code>rounded</code>, <code>split-cols</code>, <code>split-rows</code>, <code>th-dark</code>, <code>th-light</code>, thead-divider family, <code>zebracol-*</code>, <code>zebrarow-*</code>, <code>no-border</code>, <code>no-wrap</code>, <code>fixed</code>); density via <code>data-size</code>; per-row state via <code>data-row</code>; per-column alignment / tabular figures via <code>data-c<em>N</em></code>; hover effects via <code>data-hover</code>; graduated tints via <code>data-tint</code> + <code>tinted</code>. Add <code>frame</code> to the wrapper for a framed scroll container with sticky thead, sticky group rows, and opt-in sticky columns via <code>data-sticky</code>.
+	</p>
+	<p>
+		This page demonstrates the <strong>CSS-only</strong> approach.
+	</p>
+	<p>
+		See the <a href="wc-demo.html">web component demo</a> for the JS-enhanced version using <code>&lt;ui-table&gt;</code>, and the <a href="readme.md">readme</a> for full documentation.
 	</p>
 
 	<p>Default:</p>
-	<table data-variant>
-		<colgroup><col><col><col><col></colgroup>
-		<thead>
-			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
-		</thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant>
+			<colgroup><col><col><col><col></colgroup>
+			<thead>
+				<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<p>With opposite color-scheme:</p>
-	<table data-variant class="cs-opposite">
-		<colgroup><col><col><col><col></colgroup>
-		<thead>
-			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
-		</thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant class="cs-opposite">
+			<colgroup><col><col><col><col></colgroup>
+			<thead>
+				<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<p>With right-to-left:</p>
-	<table data-variant dir="rtl">
-		<colgroup><col><col><col><col></colgroup>
-		<thead>
-			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
-		</thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant dir="rtl">
+			<colgroup><col><col><col><col></colgroup>
+			<thead>
+				<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<h2>Sizes</h2>
 	<p>Density via the dedicated <code>data-size</code> attribute: <code>sm</code>, default, <code>lg</code>.</p>
 
 	<p>With <code>data-size="sm"</code>:</p>
-	<table data-size="sm">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-size="sm">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<p>With <code>data-size="lg"</code>:</p>
-	<table data-size="lg">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-size="lg">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<h2>Caption</h2>
 	<p>Native <code>&lt;caption&gt;</code> inherits styling from <code>@browser.style/base</code>'s <code>core.css</code> (italic, smaller, margin). Useful for accessibility and table titling.</p>
-	<table data-variant>
-		<caption>Justice League members by alias</caption>
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant>
+			<caption>Justice League members by alias</caption>
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<p>With <code>data-variant="caption-bottom"</code>:</p>
-	<table data-variant="caption-bottom">
-		<caption>Fig. 1 — Known aliases and home locations</caption>
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="caption-bottom">
+			<caption>Fig. 1 — Known aliases and home locations</caption>
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<h2>Footer rows (<code>&lt;tfoot&gt;</code>)</h2>
 	<p>Footer rows render with a thicker top border and semibold text — use them for totals or summary rows.</p>
-	<table data-variant data-hover="tr" data-c3="end tabular" data-c4="end tabular">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>Item</th><th>SKU</th><th>Qty</th><th>Price</th></tr></thead>
-		<tbody>
-			<tr><td>Cowl</td><td>BAT-001</td><td>1</td><td>$250.00</td></tr>
-			<tr><td>Cape</td><td>BAT-002</td><td>2</td><td>$180.00</td></tr>
-			<tr><td>Utility Belt</td><td>BAT-003</td><td>1</td><td>$1,450.50</td></tr>
-		</tbody>
-		<tfoot>
-			<tr><td colspan="3">Total</td><td>$2,060.50</td></tr>
-		</tfoot>
-	</table>
+	<ui-table>
+		<table data-variant data-hover="tr" data-c3="end tabular" data-c4="end tabular">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>Item</th><th>SKU</th><th>Qty</th><th>Price</th></tr></thead>
+			<tbody>
+				<tr><td>Cowl</td><td>BAT-001</td><td>1</td><td>$250.00</td></tr>
+				<tr><td>Cape</td><td>BAT-002</td><td>2</td><td>$180.00</td></tr>
+				<tr><td>Utility Belt</td><td>BAT-003</td><td>1</td><td>$1,450.50</td></tr>
+			</tbody>
+			<tfoot>
+				<tr><td colspan="3">Total</td><td>$2,060.50</td></tr>
+			</tfoot>
+		</table>
+	</ui-table>
 
 	<br>
 	<h2>Thead divider</h2>
-	<p>Opt into a stronger border between the <code>&lt;thead&gt;</code> and the first <code>&lt;tbody&gt;</code> row. Width and style are independent variants that compose: widths <code>th-divide-lg</code> / <code>th-divide-xl</code>; styles <code>th-dotted</code>, <code>th-dashed</code>, <code>th-double</code>, <code>th-groove</code>, <code>th-ridge</code>. Any one activates the border; unset pieces fall back to thick / solid. <code>th-double</code>, <code>th-groove</code>, and <code>th-ridge</code> auto-force the width they need to render (double: 4px, 3D: 6px).</p>
+	<p>Stronger border between <code>&lt;thead&gt;</code> and the first <code>&lt;tbody&gt;</code> row. Width (<code>th-divide-lg</code>/<code>xl</code>) and style (<code>th-dotted</code>/<code>dashed</code>/<code>double</code>/<code>groove</code>/<code>ridge</code>) compose.</p>
 
 	<p>With <code>data-variant="th-divide-lg"</code>:</p>
-	<table data-variant="th-divide-lg" data-hover="tr">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="th-divide-lg" data-hover="tr">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<p>With <code>data-variant="th-dotted"</code>:</p>
-	<table data-variant="th-dotted" data-hover="tr">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="th-dotted" data-hover="tr">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<p>With <code>data-variant="th-double"</code>:</p>
-	<table data-variant="th-double" data-hover="tr">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="th-double" data-hover="tr">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<p>With <code>data-variant="th-groove"</code>:</p>
-	<table data-variant="th-groove" data-hover="tr">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="th-groove" data-hover="tr">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<p>With <code>data-variant="th-ridge"</code>:</p>
-	<table data-variant="th-ridge" data-hover="tr">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="th-ridge" data-hover="tr">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<h2>Grouped column headers</h2>
-	<p>Multi-row <code>&lt;thead&gt;</code> — use <code>colspan</code> for group headings on the top row and regular cells on the bottom row. A <code>rowspan</code> cell can span both levels. The table's corner radii apply only to the topmost header row, so rounded tables stay clean.</p>
-	<table data-variant="rounded th-light th-divide-lg" data-hover="tr" data-c4="end tabular">
-		<colgroup><col><col><col><col><col></colgroup>
-		<thead>
-			<tr>
-				<th rowspan="2">Hero</th>
-				<th colspan="2">Identity</th>
-				<th colspan="2">First Appearance</th>
-			</tr>
-			<tr>
-				<th>Real Name</th>
-				<th>Location</th>
-				<th>Publisher</th>
-				<th>Year</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr><td>Batman</td><td>Bruce Wayne</td><td>Gotham City</td><td>DC</td><td>1939</td></tr>
-			<tr><td>Superman</td><td>Clark Kent</td><td>Metropolis</td><td>DC</td><td>1938</td></tr>
-			<tr><td>Iron Man</td><td>Tony Stark</td><td>Malibu</td><td>Marvel</td><td>1963</td></tr>
-			<tr><td>Spider-Man</td><td>Peter Parker</td><td>New York City</td><td>Marvel</td><td>1962</td></tr>
-		</tbody>
-	</table>
+	<p>Multi-row <code>&lt;thead&gt;</code> via <code>colspan</code> and <code>rowspan</code>. Corner radii apply only to the topmost row.</p>
+	<ui-table frame variant="rounded">
+		<table data-variant="rounded th-light th-divide-lg" data-hover="tr" data-c4="end tabular">
+			<colgroup><col><col><col><col><col></colgroup>
+			<thead>
+				<tr>
+					<th rowspan="2">Hero</th>
+					<th colspan="2">Identity</th>
+					<th colspan="2">First Appearance</th>
+				</tr>
+				<tr>
+					<th>Real Name</th>
+					<th>Location</th>
+					<th>Publisher</th>
+					<th>Year</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr><td>Batman</td><td>Bruce Wayne</td><td>Gotham City</td><td>DC</td><td>1939</td></tr>
+				<tr><td>Superman</td><td>Clark Kent</td><td>Metropolis</td><td>DC</td><td>1938</td></tr>
+				<tr><td>Iron Man</td><td>Tony Stark</td><td>Malibu</td><td>Marvel</td><td>1963</td></tr>
+				<tr><td>Spider-Man</td><td>Peter Parker</td><td>New York City</td><td>Marvel</td><td>1962</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<h2>Column alignment</h2>
 	<p>Per-column text alignment via <code>data-c<em>N</em></code> attributes on the table. Values: <code>start</code>, <code>center</code>, <code>end</code>.</p>
 
 	<p>With <code>data-variant="block-border"</code>, <code>data-hover="col"</code>, <code>data-c2="center"</code> and <code>data-c4="end"</code>:</p>
-	<table data-variant="block-border" data-hover="col" data-c2="center" data-c4="end">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="block-border" data-hover="col" data-c2="center" data-c4="end">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<h2>Tabular figures</h2>
-	<p>Add <code>tabular</code> to the <code>data-c<em>N</em></code> attribute to use <code>font-variant-numeric: tabular-nums</code> on that column — digits align vertically at the same advance width, critical for comparing numbers. Composes with alignment keywords (e.g. <code>data-c3="end tabular"</code>).</p>
-	<table data-variant data-c2="end tabular" data-c3="end tabular" data-c4="end tabular">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>Ticker</th><th>Open</th><th>Close</th><th>Change</th></tr></thead>
-		<tbody>
-			<tr><td>WAYNE</td><td>114.29</td><td>118.85</td><td>+3.99%</td></tr>
-			<tr><td>LEX</td><td>47.10</td><td>44.02</td><td>-6.54%</td></tr>
-			<tr><td>STARK</td><td>209.00</td><td>211.47</td><td>+1.18%</td></tr>
-		</tbody>
-	</table>
+	<p>Add <code>tabular</code> to <code>data-c<em>N</em></code> for <code>font-variant-numeric: tabular-nums</code>. Composes with alignment (e.g. <code>data-c3="end tabular"</code>).</p>
+	<ui-table>
+		<table data-variant data-c2="end tabular" data-c3="end tabular" data-c4="end tabular">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>Ticker</th><th>Open</th><th>Close</th><th>Change</th></tr></thead>
+			<tbody>
+				<tr><td>WAYNE</td><td>114.29</td><td>118.85</td><td>+3.99%</td></tr>
+				<tr><td>LEX</td><td>47.10</td><td>44.02</td><td>-6.54%</td></tr>
+				<tr><td>STARK</td><td>209.00</td><td>211.47</td><td>+1.18%</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<h2>Split layouts</h2>
-	<p>Break the table into card-like cells via <code>data-variant="split-cols"</code> (horizontal spacing between columns) or <code>data-variant="split-rows"</code> (vertical spacing between rows). Each becomes its own visually-separated shape. Compose with <code>rounded</code>, <code>th-dark</code>, <code>th-light</code>.</p>
+	<p>Card-like cells via <code>split-cols</code> (horizontal) or <code>split-rows</code> (vertical). Composes with <code>rounded</code>, <code>th-dark</code>, <code>th-light</code>.</p>
 
 	<p>With <code>data-variant="split-cols th-dark"</code> and <code>data-hover="tr td"</code>:</p>
-	<table data-variant="split-cols th-dark" data-hover="tr td">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="split-cols th-dark" data-hover="tr td">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<p>With <code>rounded</code> added:</p>
-	<table data-variant="split-cols th-dark rounded" data-hover="tr td">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="split-cols th-dark rounded" data-hover="tr td">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<p>With <code>data-variant="split-rows th-light"</code> and <code>data-hover="tr td-outline"</code>:</p>
-	<table data-variant="split-rows th-light" data-hover="tr td-outline">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="split-rows th-light" data-hover="tr td-outline">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<p>With <code>rounded</code> added:</p>
-	<table data-variant="split-rows th-light rounded" data-hover="tr td-outline">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="split-rows th-light rounded" data-hover="tr td-outline">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<h2>Zebra striping</h2>
-	<p>Alternating stripes on columns (<code>zebracol-even</code> / <code>zebracol-odd</code>) or rows (<code>zebrarow-even</code> / <code>zebrarow-odd</code>). Column striping requires a <code>&lt;colgroup&gt;</code> with matching <code>&lt;col&gt;</code> elements; row striping doesn't. <code>zebrarow-even</code> also tints the header to match.</p>
+	<p>Alternating stripes via <code>zebracol-even/odd</code> or <code>zebrarow-even/odd</code>. Column striping requires a matching <code>&lt;colgroup&gt;</code>.</p>
 
 	<p>With <code>data-variant="zebracol-even"</code> and <code>data-hover="tr-outline"</code>:</p>
-	<table data-variant="zebracol-even" data-hover="tr-outline">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="zebracol-even" data-hover="tr-outline">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<p>With <code>data-variant="zebracol-odd rounded"</code> and <code>data-hover="col-outline"</code> (requires collapsed borders; not compatible with split-cols/rows):</p>
-	<table data-variant="zebracol-odd rounded" data-hover="col-outline">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="zebracol-odd rounded" data-hover="col-outline">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<p>With <code>data-variant="zebrarow-even"</code> and <code>data-hover="td-outline"</code>:</p>
-	<table data-variant="zebrarow-even" data-hover="td-outline">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="zebrarow-even" data-hover="td-outline">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<p>With <code>data-variant="zebrarow-odd"</code> and <code>data-hover="col-outline"</code>:</p>
-	<table data-variant="zebrarow-odd" data-hover="col-outline">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="zebrarow-odd" data-hover="col-outline">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<p>With <code>data-variant="zebrarow-even no-border"</code> and <code>data-hover="tr-outline"</code>:</p>
-	<table data-variant="zebrarow-even no-border" data-hover="tr-outline">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="zebrarow-even no-border" data-hover="tr-outline">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<h2>Row states</h2>
-	<p>Per-row state on <code>&lt;tr&gt;</code> via <code>data-row</code>. Values are space-separated and compose: <code>active</code> / <code>selected</code> apply solid accent/highlight colors; the semantic tints <code>success</code> / <code>warning</code> / <code>error</code> / <code>info</code> use <code>color-mix()</code> over <code>--color-surface</code> for softer emphasis.</p>
-	<table data-variant data-hover="all">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr data-row="selected"><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr data-row="selected"><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr data-row="active"><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<p>Per-row state via <code>data-row</code> on <code>&lt;tr&gt;</code>. Values compose: <code>active</code>/<code>selected</code> (solid), <code>success</code>/<code>warning</code>/<code>error</code>/<code>info</code> (tinted).</p>
+	<ui-table>
+		<table data-variant data-hover="all">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr data-row="selected"><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr data-row="selected"><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr data-row="active"><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
-	<p>Semantic status variants: <code>data-row="success|warning|error|info"</code>. Tinted via <code>color-mix()</code> from the global status tokens. Status rows have built-in hover states — add <code>data-hover</code> to see them.</p>
-	<table data-variant>
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>ID</th><th>Order</th><th>Status</th><th>Note</th></tr></thead>
-		<tbody>
-			<tr data-row="success"><td>1001</td><td>Shipped</td><td>Delivered</td><td>On time</td></tr>
-			<tr data-row="info"><td>1002</td><td>Processing</td><td>In transit</td><td>Expected tomorrow</td></tr>
-			<tr data-row="warning"><td>1003</td><td>Backorder</td><td>Delayed</td><td>Awaiting stock</td></tr>
-			<tr data-row="error"><td>1004</td><td>Refunded</td><td>Cancelled</td><td>Customer request</td></tr>
-		</tbody>
-	</table>
-
-	<br>
-	<p>With <code>data-hover="td"</code> — hovered cell jumps to the unmixed status color:</p>
-	<table data-variant data-hover="td">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>ID</th><th>Order</th><th>Status</th><th>Note</th></tr></thead>
-		<tbody>
-			<tr data-row="success"><td>1001</td><td>Shipped</td><td>Delivered</td><td>On time</td></tr>
-			<tr data-row="info"><td>1002</td><td>Processing</td><td>In transit</td><td>Expected tomorrow</td></tr>
-			<tr data-row="warning"><td>1003</td><td>Backorder</td><td>Delayed</td><td>Awaiting stock</td></tr>
-			<tr data-row="error"><td>1004</td><td>Refunded</td><td>Cancelled</td><td>Customer request</td></tr>
-		</tbody>
-	</table>
+	<p>Status variants: <code>data-row="success|warning|error|info"</code>. Add <code>data-hover</code> for built-in hover states.</p>
+	<ui-table>
+		<table data-variant data-hover="td">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>ID</th><th>Order</th><th>Status</th><th>Note</th></tr></thead>
+			<tbody>
+				<tr data-row="success"><td>1001</td><td>Shipped</td><td>Delivered</td><td>On time</td></tr>
+				<tr data-row="info"><td>1002</td><td>Processing</td><td>In transit</td><td>Expected tomorrow</td></tr>
+				<tr data-row="warning"><td>1003</td><td>Backorder</td><td>Delayed</td><td>Awaiting stock</td></tr>
+				<tr data-row="error"><td>1004</td><td>Refunded</td><td>Cancelled</td><td>Customer request</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<p>With <code>data-hover="tr"</code> — whole row jumps to the unmixed status color:</p>
-	<table data-variant data-hover="tr">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>ID</th><th>Order</th><th>Status</th><th>Note</th></tr></thead>
-		<tbody>
-			<tr data-row="success"><td>1001</td><td>Shipped</td><td>Delivered</td><td>On time</td></tr>
-			<tr data-row="info"><td>1002</td><td>Processing</td><td>In transit</td><td>Expected tomorrow</td></tr>
-			<tr data-row="warning"><td>1003</td><td>Backorder</td><td>Delayed</td><td>Awaiting stock</td></tr>
-			<tr data-row="error"><td>1004</td><td>Refunded</td><td>Cancelled</td><td>Customer request</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant data-hover="tr">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>ID</th><th>Order</th><th>Status</th><th>Note</th></tr></thead>
+			<tbody>
+				<tr data-row="success"><td>1001</td><td>Shipped</td><td>Delivered</td><td>On time</td></tr>
+				<tr data-row="info"><td>1002</td><td>Processing</td><td>In transit</td><td>Expected tomorrow</td></tr>
+				<tr data-row="warning"><td>1003</td><td>Backorder</td><td>Delayed</td><td>Awaiting stock</td></tr>
+				<tr data-row="error"><td>1004</td><td>Refunded</td><td>Cancelled</td><td>Customer request</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<h2>Graduated tint</h2>
-	<p>Wire up <code>@browser.style/base</code>'s generic tint system. <code>data-tint</code> on the table sets the ramp's <em>start</em> color; <code>data-tint-end</code> (optional) sets the end color (defaults to white). Where you put <code>tinted</code> — and what value it carries — chooses the <em>direction</em>:</p>
-	<ul>
-		<li><code>&lt;tbody tinted&gt;</code> — <strong>vertical</strong> ramp across rows</li>
-		<li><code>&lt;colgroup tinted&gt;</code> — <strong>horizontal</strong> ramp across columns</li>
-		<li><code>&lt;tbody tinted="2d"&gt;</code> — <strong>bilinear 2D</strong> ramp across cells; opt into the extra corners with <code>data-tint-tr</code> (top-right) and <code>data-tint-bl</code> (bottom-left), or omit them and get a clean diagonal mid-mix</li>
-	</ul>
-	<p>When the table carries <code>data-tint</code> and has a <code>tinted</code> descendant, two extras kick in: the <code>&lt;thead&gt;</code> is painted with the start color (in 2D mode it ramps horizontally with the top edge), and the cell borders adopt a tint-blended color instead of the default gray. Text contrast on every row/column/cell is automatic via <code>contrast-color()</code>.</p>
+	<p><code>data-tint</code> sets a start color, <code>data-tint-end</code> the end (default white). Direction comes from where <code>tinted</code> is placed: <code>&lt;tbody tinted&gt;</code> vertical, <code>&lt;colgroup tinted&gt;</code> horizontal, <code>&lt;tbody tinted="2d"&gt;</code> bilinear (with optional <code>data-tint-tr</code>/<code>data-tint-bl</code>). See the <a href="readme.md">readme</a>.</p>
 
 	<p>Vertical ramp, default accent, end = white (thead = accent, borders = tint-blended):</p>
-	<table data-variant="rounded" data-hover="tr" data-tint>
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody tinted>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="no-border rounded" data-hover="tr" data-tint>
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody tinted>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
-	<p>2D bilinear ramp across an 8-column table — <code>data-tint="aqua" data-tint-end="hotpink"</code> with <code>&lt;tbody tinted="2d"&gt;</code>. Top-left = aqua, bottom-right = hotpink, the two off-diagonal corners default to the aqua↔hotpink mid-mix so the ramp reads as a smooth diagonal. The <code>&lt;thead&gt;</code> picks up the top-edge ramp automatically:</p>
-	<table data-variant="no-border rounded" data-hover="tr" data-tint="aqua" data-tint-end="hotpink">
-		<colgroup><col><col><col><col><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th><th>Affiliation</th><th>First Appearance</th><th>Creator</th><th>Powers</th></tr></thead>
-		<tbody tinted="2d">
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td><td>Justice League</td><td>Detective Comics #27 (1939)</td><td>Bob Kane, Bill Finger</td><td>Martial arts, gadgets</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td><td>Justice League</td><td>Action Comics #1 (1938)</td><td>Jerry Siegel, Joe Shuster</td><td>Flight, super strength</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td><td>Avengers</td><td>Tales of Suspense #39 (1963)</td><td>Stan Lee, Larry Lieber</td><td>Powered armor suit</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td><td>Avengers</td><td>Amazing Fantasy #15 (1962)</td><td>Stan Lee, Steve Ditko</td><td>Wall-crawling, spider sense</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td><td>Defenders</td><td>Daredevil #1 (1964)</td><td>Stan Lee, Bill Everett</td><td>Radar sense, acrobatics</td></tr>
-		</tbody>
-	</table>
+	<p>2D bilinear ramp — <code>data-tint="aqua" data-tint-end="hotpink"</code>, corners default to a diagonal mid-mix:</p>
+	<ui-table variant="rounded">
+		<table data-variant="no-border rounded" data-hover="tr" data-tint="aqua" data-tint-end="hotpink">
+			<colgroup><col><col><col><col><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th><th>Affiliation</th><th>First Appearance</th><th>Creator</th><th>Powers</th></tr></thead>
+			<tbody tinted="2d">
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td><td>Justice League</td><td>Detective Comics #27 (1939)</td><td>Bob Kane, Bill Finger</td><td>Martial arts, gadgets</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td><td>Justice League</td><td>Action Comics #1 (1938)</td><td>Jerry Siegel, Joe Shuster</td><td>Flight, super strength</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td><td>Avengers</td><td>Tales of Suspense #39 (1963)</td><td>Stan Lee, Larry Lieber</td><td>Powered armor suit</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td><td>Avengers</td><td>Amazing Fantasy #15 (1962)</td><td>Stan Lee, Steve Ditko</td><td>Wall-crawling, spider sense</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td><td>Defenders</td><td>Daredevil #1 (1964)</td><td>Stan Lee, Bill Everett</td><td>Radar sense, acrobatics</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
-	<p>Same data with the two extra corners specified — <code>data-tint-tr="yellow" data-tint-bl="lime"</code>. Now every corner is independent and the field is a true bilinear blend across four colors:</p>
-	<table data-variant="no-border rounded" data-hover="tr" data-tint="aqua" data-tint-end="hotpink" data-tint-tr="yellow" data-tint-bl="lime">
-		<colgroup><col><col><col><col><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th><th>Affiliation</th><th>First Appearance</th><th>Creator</th><th>Powers</th></tr></thead>
-		<tbody tinted="2d">
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td><td>Justice League</td><td>Detective Comics #27 (1939)</td><td>Bob Kane, Bill Finger</td><td>Martial arts, gadgets</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td><td>Justice League</td><td>Action Comics #1 (1938)</td><td>Jerry Siegel, Joe Shuster</td><td>Flight, super strength</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td><td>Avengers</td><td>Tales of Suspense #39 (1963)</td><td>Stan Lee, Larry Lieber</td><td>Powered armor suit</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td><td>Avengers</td><td>Amazing Fantasy #15 (1962)</td><td>Stan Lee, Steve Ditko</td><td>Wall-crawling, spider sense</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td><td>Defenders</td><td>Daredevil #1 (1964)</td><td>Stan Lee, Bill Everett</td><td>Radar sense, acrobatics</td></tr>
-		</tbody>
-	</table>
+	<p>With all four corners specified — <code>data-tint-tr="yellow" data-tint-bl="lime"</code>:</p>
+	<ui-table variant="rounded">
+		<table data-variant="no-border rounded" data-hover="tr" data-tint="aqua" data-tint-end="hotpink" data-tint-tr="yellow" data-tint-bl="lime">
+			<colgroup><col><col><col><col><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th><th>Affiliation</th><th>First Appearance</th><th>Creator</th><th>Powers</th></tr></thead>
+			<tbody tinted="2d">
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td><td>Justice League</td><td>Detective Comics #27 (1939)</td><td>Bob Kane, Bill Finger</td><td>Martial arts, gadgets</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td><td>Justice League</td><td>Action Comics #1 (1938)</td><td>Jerry Siegel, Joe Shuster</td><td>Flight, super strength</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td><td>Avengers</td><td>Tales of Suspense #39 (1963)</td><td>Stan Lee, Larry Lieber</td><td>Powered armor suit</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td><td>Avengers</td><td>Amazing Fantasy #15 (1962)</td><td>Stan Lee, Steve Ditko</td><td>Wall-crawling, spider sense</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td><td>Defenders</td><td>Daredevil #1 (1964)</td><td>Stan Lee, Bill Everett</td><td>Radar sense, acrobatics</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<p>Horizontal ramp — <code>&lt;colgroup tinted&gt;</code> with a green start:</p>
-	<table data-variant="rounded" data-hover="td" data-tint="oklch(0.6 0.18 160)">
-		<colgroup tinted><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="rounded" data-hover="td" data-tint="oklch(0.6 0.18 160)">
+			<colgroup tinted><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<h2>Section / group headers</h2>
-	<p>Add <code>data-row="group"</code> to a <code>&lt;tr&gt;</code> containing a single <code>&lt;td colspan="<em>N</em>"&gt;</code> to turn it into a section heading: semibold text on a tinted background, drawn inside <code>&lt;tbody&gt;</code> like any other row. Compose with a status variant (<code>data-row="group error"</code>, <code>data-row="group info"</code>, …) to tint the heading with a semantic color. Because <code>data-row</code> uses <code>~=</code> word-matching, the values compose freely.</p>
+	<p><code>data-row="group"</code> on a <code>&lt;tr&gt;</code> with a single <code>&lt;td colspan="<em>N</em>"&gt;</code>. Composes with status variants (e.g. <code>data-row="group error"</code>).</p>
 
-	<table data-variant="rounded th-light" data-hover="tr">
-		<colgroup><col><col><col><col></colgroup>
-		<thead>
-			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
-		</thead>
-		<tbody>
-			<tr data-row="group error"><td colspan="4">DC</td></tr>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Themyscira</td></tr>
-			<tr><td>Barry</td><td>Allen</td><td>The Flash</td><td>Central City</td></tr>
-			<tr data-row="group info"><td colspan="4">Marvel</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Steve</td><td>Rogers</td><td>Captain America</td><td>Brooklyn</td></tr>
-			<tr><td>Natasha</td><td>Romanoff</td><td>Black Widow</td><td>Moscow</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="rounded th-light" data-hover="tr">
+			<colgroup><col><col><col><col></colgroup>
+			<thead>
+				<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+			</thead>
+			<tbody>
+				<tr data-row="group error"><td colspan="4">DC</td></tr>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Themyscira</td></tr>
+				<tr><td>Barry</td><td>Allen</td><td>The Flash</td><td>Central City</td></tr>
+				<tr data-row="group info"><td colspan="4">Marvel</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Steve</td><td>Rogers</td><td>Captain America</td><td>Brooklyn</td></tr>
+				<tr><td>Natasha</td><td>Romanoff</td><td>Black Widow</td><td>Moscow</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<br>
 	<h2>Overflow wrapper</h2>
-	<p>Wrap a table in <code>&lt;ui-table-wrapper&gt;</code> — scrollable container, sticky <code>&lt;thead&gt;</code>. Opt into sticky columns with <code>data-sticky="c0 c2 c4"</code> (0-indexed) and pin each one via <code>--c0</code>, <code>--c2</code>, <code>--c4</code>. Each value is the sum of the <em>sticky</em> column widths before it — non-sticky columns scroll away, so they don't count. Here col 0 pins at 0, col 2 at col 0's width (100.59px), and col 4 at col 0 + col 2 (234.79px). See the <a href="readme.md#advanced-how-the-css-only-overflow-detection-works">readme</a> for details.</p>
+	<p>Bare <code>&lt;ui-table&gt;</code> is a passive scroll container. Add <code>frame</code> for border, rounded corners, sticky <code>&lt;thead&gt;</code>, sticky group rows, and sticky columns via <code>data-sticky</code> (0-indexed, with <code>--c<em>N</em></code> offsets). See the <a href="readme.md">readme</a>.</p>
 
-	<ui-table-wrapper data-variant="rounded" data-sticky="c0 c2 c4" style="--c0: 0px; --c2: 100.59px; --c4: 234.79px">
+	<ui-table frame data-variant="rounded" data-sticky="c0 c2 c4" style="--c0: 0px; --c2: 100.59px; --c4: 234.79px">
 		<table data-variant="rounded no-wrap th-light th-divide-xl" data-hover="tr">
 			<colgroup><col><col><col><col><col><col><col><col></colgroup>
 			<thead>
@@ -552,12 +603,12 @@
 				<tr><td>Natasha</td><td>Romanoff</td><td>Black Widow</td><td>Moscow</td><td>Avengers</td><td>Tales of Suspense #52 (1964)</td><td>Stan Lee, Don Rico</td><td>Espionage, martial arts</td></tr>
 			</tbody>
 		</table>
-	</ui-table-wrapper>
+	</ui-table>
 
-	<p>Vertical scrolling with sticky header — constrain the wrapper via <code>max-block-size</code>. The <code>&lt;thead&gt;</code> uses <code>position: sticky</code> always (no-op without scroll) and pins to the top as rows scroll under it. A scroll-driven shadow (<code>animation-timeline: scroll()</code>) appears on the header once you start scrolling:</p>
+	<p>Vertical scrolling with sticky header — cap the wrapper with <code>max-block-size</code>:</p>
 
-	<ui-table-wrapper data-variant="rounded" style="inline-size: fit-content; max-block-size: 240px;">
-		<table data-variant="rounded th-light" data-hover="tr">
+	<ui-table frame data-variant="rounded" style="max-block-size: 240px;">
+		<table data-variant="rounded th-light no-wrap" data-hover="tr">
 			<colgroup><col><col><col><col></colgroup>
 			<thead>
 				<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
@@ -582,13 +633,13 @@
 				<tr><td>T'Challa</td><td>Challa</td><td>Black Panther</td><td>Wakanda</td></tr>
 			</tbody>
 		</table>
-	</ui-table-wrapper>
+	</ui-table>
 
 	<br>
-	<p>Sticky group headers — contact-scroller style. Each <code>&lt;tr data-row="group"&gt;</code> inside the overflow wrapper pins just below the sticky <code>&lt;thead&gt;</code> and gets displaced when the next one scrolls up to meet it. The offset defaults to <code>--ui-table-group-offset: 33.6px</code> (thead height); override per-table for different densities.</p>
+	<p>Sticky group headers — iOS contact-scroller style. Each <code>&lt;tr data-row="group"&gt;</code> pins below the thead and displaces the previous as you scroll.</p>
 
-	<ui-table-wrapper data-variant="rounded" style="inline-size: fit-content; max-block-size: 280px;">
-		<table data-variant="rounded th-light" data-hover="tr">
+	<ui-table frame data-variant="rounded" style="max-block-size: 280px;">
+		<table data-variant="rounded th-light no-wrap" data-hover="tr">
 			<colgroup><col><col><col><col></colgroup>
 			<thead>
 				<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
@@ -623,128 +674,146 @@
 				<tr><td>Wanda</td><td>Maximoff</td><td>Scarlet Witch</td><td>Transia</td></tr>
 			</tbody>
 		</table>
-	</ui-table-wrapper>
+	</ui-table>
 
 	<br>
 	<h2>Hover effects</h2>
-	<p>Interactive hover via the separate <code>data-hover</code> attribute. Values are space-separated and compose: <code>col</code>, <code>td</code>, <code>tr</code>, their <code>-outline</code> variants, <code>th-outline</code>, or <code>all</code> as a shorthand. All effects are wrapped in <code>@media (hover: hover)</code> so they don't stick on touch devices.</p>
+	<p>Compose <code>col</code>, <code>td</code>, <code>tr</code>, their <code>-outline</code> variants, <code>th-outline</code>, or <code>all</code> via <code>data-hover</code>. Wrapped in <code>@media (hover: hover)</code>.</p>
 
 	<p>With <code>data-hover="col"</code> — column background highlight (requires <code>&lt;colgroup&gt;</code>):</p>
-	<table data-variant data-hover="col">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant data-hover="col">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<p>With <code>data-hover="col-outline"</code> — column outline on hover (incompatible with <code>split-cols</code>/<code>split-rows</code>):</p>
-	<table data-variant="rounded" data-hover="col-outline">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="rounded" data-hover="col-outline">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<p>With <code>data-hover="td"</code> — individual cell fill on hover:</p>
-	<table data-variant data-hover="td">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant data-hover="td">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<p>With <code>data-hover="td-outline"</code> — cell outline on hover:</p>
-	<table data-variant="rounded" data-hover="td-outline">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="rounded" data-hover="td-outline">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<p>With <code>data-hover="tr"</code> — row background highlight:</p>
-	<table data-variant="block-border th-light" data-hover="tr">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="block-border th-light" data-hover="tr">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<p>With <code>data-hover="tr-outline"</code> — row outline on hover:</p>
-	<table data-variant="rounded" data-hover="tr-outline">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="rounded" data-hover="tr-outline">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<p>With <code>data-hover="th-outline"</code> — header-cell outline on hover (signals sortable):</p>
-	<table data-variant data-hover="th-outline">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant data-hover="th-outline">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<p>Composed: <code>data-variant="rounded"</code> with <code>data-hover="col td"</code> — column highlight + cell fill together:</p>
-	<table data-variant="rounded" data-hover="col td">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant="rounded" data-hover="col td">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 	<p>Shorthand: <code>data-hover="all"</code> — enables <code>col</code> + <code>td</code> + <code>tr</code> + <code>th-outline</code> simultaneously:</p>
-	<table data-variant data-hover="all">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-		</tbody>
-	</table>
+	<ui-table>
+		<table data-variant data-hover="all">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
 
 
 </body>

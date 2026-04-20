@@ -98,7 +98,7 @@ import '@browser.style/table';
 </ui-table>
 ```
 
-`<ui-table>` is a light-DOM wrapper that forwards `variant`, `hover`, and `sticky` to the child `<table>` as `data-*` attributes. When `overflow` is set, a `ResizeObserver` toggles the `overflowing` attribute based on actual scroll width and writes cumulative widths for sticky columns as CSS custom properties (e.g. `style="--c0: 0px; --c2: 36px;"`).
+`<ui-table>` is a light-DOM wrapper that forwards `variant`, `hover`, `size`, and `sticky` to the child `<table>` as `data-*` attributes. When `frame` is set, a `ResizeObserver` also toggles the `overflowing` attribute based on actual scroll width (Safari ≤ 18 fallback) and writes cumulative widths for sticky columns as CSS custom properties (e.g. `style="--c0: 0px; --c2: 36px;"`).
 
 #### Attributes
 
@@ -107,8 +107,8 @@ import '@browser.style/table';
 | `variant` | string | Space-separated layout variants (forwarded as `data-variant`) |
 | `hover` | string | Space-separated hover effects (forwarded as `data-hover`) |
 | `size` | `sm` \| `lg` | Density — smaller or larger font/padding (forwarded as `data-size`) |
-| `overflow` | boolean | Enables scrollable wrapper with sticky header and auto overflow detection |
-| `sticky` | string | Space-separated sticky column indices (e.g. `"c0 c2"`) — pins columns 1 and 3 |
+| `frame` | boolean | Upgrades bare scroll container to full framed mode: border, rounded, sticky thead + group rows, sticky columns, focus-ring surfacing, `ResizeObserver`-driven offset computation |
+| `sticky` | string | Space-separated sticky column indices (e.g. `"c0 c2"`) — pins columns 1 and 3. Requires `frame`. |
 
 ---
 
@@ -367,26 +367,37 @@ Two things the CSS handles for you on row 2+ of the thead:
 
 ### Overflow wrapper
 
-Scrollable container with sticky header, optional sticky columns, and a scroll-driven shadow. How overflow is detected depends on which mode you use.
+`<ui-table>` has two modes:
 
-**CSS-only** — wrap the table in `<ui-table-wrapper>` (an un-registered custom element — just styled via CSS, no JS dependency). Two scroll-driven animations (`animation-timeline: scroll(self inline)` + `scroll(self block)`) detect overflow on either axis and toggle an internal `--_has-overflow` flag (0 or 1), which gates the wrapper frame and edge-border collapse via `calc()`:
+- **Bare** (`<ui-table>`) — passive scroll container. `display: block; overflow: auto` plus a styled scrollbar. Scrollbars only appear when the inner table overflows. No border, no sticky thead, no cell-background override. Use this for wide tables that should scroll horizontally on narrow viewports without any other visual change.
+
+  ```html
+  <ui-table>
+    <table data-variant="no-border">
+      <colgroup><col><col><col><col><col><col><col><col></colgroup>
+      ...
+    </table>
+  </ui-table>
+  ```
+
+- **Framed** (`<ui-table frame>`) — full iOS-style framed scroll container. Adds border (appears only when actually overflowing), rounded corners, scroll-driven overflow detection via `animation-timeline: scroll()`, sticky `<thead>`, sticky group rows, opt-in sticky columns via `data-sticky`, and focus-ring surfacing on the wrapper.
+
+  ```html
+  <ui-table frame data-variant="rounded" data-sticky="c0 c2" style="--c0: 0; --c2: 101px;">
+    <table data-variant="rounded no-wrap" data-hover="tr">
+      <colgroup>...</colgroup>
+      <thead>...</thead>
+      <tbody>...</tbody>
+    </table>
+  </ui-table>
+  ```
+
+  For sticky columns, measure pin positions once in devtools and hard-code them as `--c0`, `--c1`, … `--c8`. Each value is the scroll-x offset at which that column should lock — effectively the cumulative width of sticky columns *before* it (non-sticky columns scroll away and don't contribute).
+
+**Web component path** — import `index.js` to register `<ui-table>`. Attributes on `<ui-table>` (`variant`, `hover`, `size`, `sticky`) are forwarded to the child `<table>` as `data-*`. When `frame` is set, a `ResizeObserver` additionally toggles the `overflowing` attribute (Safari ≤ 18 fallback for browsers without scroll-driven animations) and walks the `sticky` attribute to write the correct `--cN` values on the host — so framework code can bind to the wrapper directly without computing offsets:
 
 ```html
-<ui-table-wrapper data-variant="rounded" data-sticky="c0 c2" style="--c0: 0; --c2: 101px;">
-  <table data-variant="rounded no-wrap" data-hover="tr">
-    <colgroup>...</colgroup>
-    <thead>...</thead>
-    <tbody>...</tbody>
-  </table>
-</ui-table-wrapper>
-```
-
-For sticky columns you measure the pin positions once in devtools and hard-code them as `--c0`, `--c1`, … `--c8`. Each value is the scroll-x offset at which that column should lock — effectively the cumulative width of sticky columns *before* it (non-sticky columns scroll away and don't contribute). In the snippet above, "First Name" renders at ~101px, so "Known As" pins at `--c2: 101px`.
-
-**Web component** — `<ui-table overflow>` does the measuring for you. A `ResizeObserver` toggles the `overflowing` attribute when the table is wider than the wrapper, and walks the `sticky` attribute to write the correct `--cN` values on the host. This is also the fallback path on browsers without scroll-driven animations (Safari ≤ 18):
-
-```html
-<ui-table overflow sticky="c0 c2" variant="rounded th-light no-wrap" hover="tr">
+<ui-table frame sticky="c0 c2" variant="rounded th-light no-wrap" hover="tr">
   <table>
     <colgroup><col><col><col><col><col><col></colgroup>
     <thead>...</thead>
@@ -487,7 +498,7 @@ The wrapper needs two visual states: a plain scroll container when the table fit
   from, to { --_has-overflow: 1; }
 }
 
-ui-table-wrapper {
+ui-table[frame] {
   --_has-overflow: 0;                             /* baseline */
   animation: table-overflow-mark linear, table-overflow-mark linear;
   animation-timeline: scroll(self inline), scroll(self block);
@@ -502,11 +513,11 @@ Two animations, same keyframe, one per axis — so the flag flips when the eleme
 It's an overflow *presence* detector, not a scroll-progress animator. `@property` declares the type as `<number>` so `calc()` can use it:
 
 ```css
-ui-table-wrapper {
+ui-table[frame] {
   border-width: calc(var(--_has-overflow) * var(--border-width));
   border-radius: calc(var(--_has-overflow) * var(--ui-table-border-radius, 0));
 }
-ui-table-wrapper :is(td,th):first-of-type {
+ui-table[frame] :is(td,th):first-of-type {
   border-inline-start-width: calc((1 - var(--_has-overflow)) * var(--ui-table-border-width));
 }
 ```
@@ -515,10 +526,10 @@ When `--_has-overflow` is `0`, multiply-by-zero turns frame styles off; when `1`
 
 ### JS fallback path
 
-Safari ≤ 18 (and any browser without scroll-driven animations) fails the `@supports (animation-timeline: scroll())` guard. The `<ui-table overflow>` web component covers those: a `ResizeObserver` checks `scrollWidth > clientWidth` and toggles the `overflowing` attribute, which a separate rule converts to the same flag:
+Safari ≤ 18 (and any browser without scroll-driven animations) fails the `@supports (animation-timeline: scroll())` guard. Importing `index.js` covers those: for `<ui-table frame>`, the registered component uses a `ResizeObserver` to check `scrollWidth > clientWidth` and toggles the `overflowing` attribute, which a separate rule converts to the same flag:
 
 ```css
-ui-table-wrapper[overflowing] { --_has-overflow: 1; }
+ui-table[frame][overflowing] { --_has-overflow: 1; }
 ```
 
 Both paths flip the same flag → the same `calc()`-gated styles render. The only difference is who flips it.
@@ -545,5 +556,5 @@ Both paths flip the same flag → the same `calc()`-gated styles render. The onl
 - `:has()` selector (required for column/row hover): Chrome 105+, Firefox 121+, Safari 15.4+
 - CSS nesting: Chrome 120+, Firefox 117+, Safari 16.5+
 - `animation-timeline: scroll()` (scroll shadow on sticky header): Chrome 115+, degrades gracefully
-- `ResizeObserver` (used by `<ui-table overflow>`): all modern browsers
+- `ResizeObserver` (used by the registered `<ui-table>` web component): all modern browsers
 - Column hover and sticky columns support up to 9 columns via explicit selectors (extend in the CSS if you need more)

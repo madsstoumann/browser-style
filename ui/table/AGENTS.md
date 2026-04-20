@@ -5,22 +5,26 @@ CSS-first styling for native `<table>` elements. An optional `<ui-table>` light-
 ## Root selector
 
 ```css
-:where(table:is([data-variant], [data-hover], [data-size]), ui-table > table)
+:where(table:is([data-variant], [data-hover], [data-size]))
 ```
 
-Two branches:
-1. Any `<table>` that opts in via `data-variant`, `data-hover`, or `data-size`.
-2. Any `<table>` directly inside `<ui-table>` — the web component forwards its attributes as `data-*` on the child, so this branch is mostly a safety net.
+Any `<table>` that opts in via `data-variant`, `data-hover`, or `data-size`. `:where()` keeps specificity at 0. Layout variants and hover modifiers nest under this root as `&[data-variant~="…"]` / `&[data-hover~="…"]` — avoids repeating `table[…]` on every rule.
 
-`:where()` keeps specificity at 0. Layout variants and hover modifiers nest under this root as `&[data-variant~="…"]` / `&[data-hover~="…"]` — avoids repeating `table[…]` on every rule.
-
-The overflow wrapper has its own root:
+The wrapper `<ui-table>` has two modes, selected by whether the `frame` attribute is present:
 
 ```css
-:where(ui-table[overflow], ui-table-wrapper)
+:where(ui-table)         /* bare: passive scroll container */
+:where(ui-table[frame])  /* framed: sticky thead + columns + border frame */
 ```
 
-Two wrapper options, same styles: the `<ui-table>` web component (JS-driven, auto-detects overflow and computes sticky offsets) or the bare `<ui-table-wrapper>` custom element (CSS-only, author hard-codes sticky offsets). `<ui-table-wrapper>` is not registered via `customElements.define` — it's just a tag with a hyphen, valid HTML, styled purely in CSS, zero JS required.
+**Bare** (`<ui-table>`) is a pure scroll container — `display: block; overflow: auto` and a styled scrollbar. Scrollbars appear only when the inner `<table>` overflows. No border, no sticky thead, no `--ui-table-cell-bg` override, so `<col>`-based features (zebracol, col hover, colgroup tint) keep working. Use this to let wide tables scroll horizontally on narrow viewports without any other visual change.
+
+**Framed** (`<ui-table frame>`) adds the full treatment: a border frame gated by `--_has-overflow` (appears only when actually overflowing), rounded corners, scroll-driven overflow detection, sticky `<thead>`, sticky group rows (`<tr data-row="group">`), sticky columns via `data-sticky`, opaque cell backgrounds (so sticky cells don't bleed through during scroll), focus-ring surfacing on the wrapper. Use for data tables that benefit from a framed, iOS-style scroll container.
+
+Independently, `<ui-table>` works in two JS modes:
+
+- **CSS-only** (no JS imported): `<ui-table>` is an unregistered custom element — just a tag with a hyphen, valid HTML, styled purely via CSS. Author writes `data-variant` on the inner `<table>` and (in frame mode) hard-codes sticky offsets (`style="--c0: 0; --c2: 101px"`). Scroll-driven animations handle overflow detection.
+- **Registered web component** (JS imported): `customElements.define('ui-table', UiTable)` upgrades the element. Attributes on `<ui-table>` (`variant`, `hover`, `size`, `sticky`) are forwarded to the child `<table>` as `data-*`. When `frame` is set, a `ResizeObserver` auto-computes sticky column offsets and toggles an `[overflowing]` attribute as a Safari ≤ 18 fallback for browsers without `animation-timeline` support.
 
 ## Attribute surface
 
@@ -31,8 +35,9 @@ Two wrapper options, same styles: the `<ui-table>` web component (JS-driven, aut
 | `data-size` | table | Density: `sm` / `lg` (no value = medium). Separate from `data-variant` so density composes orthogonally with layout tokens. |
 | `data-row` | `<tr>` | Space-separated list of states — selector uses `~=` so values compose. `active` / `selected` apply solid accent/highlight; `success` / `warning` / `error` / `info` apply a tint (see *Status tints* below); `group` turns the row into a section heading (semibold + `--color-surface-alt` tint) and pairs naturally with a single `<td colspan="N">`. Tint rules are ordered after `group` in the CSS, so e.g. `data-row="group info"` gives a semibold section heading with the info tint. When inside the overflow wrapper, `group` rows are also `position: sticky` and displace each other on vertical scroll (iOS contact-list pattern). |
 | `data-c1`…`data-c8` | table | Per-column formatting — composable values: `start` / `center` / `end` (text alignment) + `tabular` (`font-variant-numeric: tabular-nums`). Defined in a top-level `:where(table) { … }` block so it works on any `<table>`, not just tables that opt into this component. |
-| `<ui-table-wrapper>` | wrapper | CSS-only overflow-wrapper element (an un-registered custom element, styled purely via CSS — no JS dependency) |
-| `data-sticky` | wrapper | Sticky column indices (e.g. `c0 c2`, 0-indexed) |
+| `<ui-table>` | wrapper | Passive scroll container (`display: block; overflow: auto` + styled scrollbar). No other visual change. |
+| `<ui-table frame>` | wrapper | Framed scroll container: adds border (gated by `--_has-overflow`), radius, sticky `<thead>` + group rows, opaque cell bg, focus-ring surfacing. Enables `data-sticky` and the scroll-driven overflow detection. |
+| `data-sticky` | wrapper | Sticky column indices (e.g. `c0 c2`, 0-indexed) on `<ui-table frame>`. No-op in bare mode. |
 
 ## Column hover via `:has()` + `<colgroup>`
 
@@ -70,9 +75,9 @@ Two independent mechanisms converge on the same `--_has-overflow` custom propert
 
 Two scroll-driven animations, same keyframe, one per axis. When either timeline has scrollable content, that animation activates and the keyframe (`from, to { --_has-overflow: 1 }`) clamps the value to 1 regardless of scroll position. When neither axis overflows, both timelines are inactive, the animations produce no output, and `--_has-overflow` keeps its un-animated value of 0. Detects *presence* of overflow on either axis, not scroll progress.
 
-### JS fallback (`<ui-table overflow>`)
+### JS fallback (registered `<ui-table>`)
 
-`ResizeObserver` toggles `[overflowing]` based on `scrollWidth > clientWidth`. A CSS rule `&[overflowing] { --_has-overflow: 1 }` flips the same flag. Needed for Safari ≤ 18 and any browser without scroll-driven animations.
+When `index.js` is imported and the element upgrades, a `ResizeObserver` toggles `[overflowing]` based on `scrollWidth > clientWidth`. A CSS rule `&[overflowing] { --_has-overflow: 1 }` flips the same flag. Needed for Safari ≤ 18 and any browser without scroll-driven animations.
 
 ### Why not `@container scroll-state()`
 
@@ -177,10 +182,10 @@ Ten previous variant-specific hover rules (plain, active, selected, status, vert
 
 ## Focus ring
 
-The overflow wrapper surfaces its inner focus state on itself:
+The framed wrapper surfaces its inner focus state on itself:
 
 ```css
-:where(ui-table[overflow], ui-table-wrapper) {
+:where(ui-table[frame]) {
   &:focus-within {
     outline: var(--ring-width) solid var(--ring-color);
     outline-offset: var(--ring-offset);
@@ -261,11 +266,12 @@ Third scroll-driven animation on the overflow wrapper (alongside the two `--_has
 
 ## Critical gotchas
 
-1. **Sticky cells need opaque backgrounds.** Without `--ui-table-cell-bg` and `--ui-table-header-bg` set on the wrapper, sticky cells are transparent and scrolling content bleeds through them. `th-light`/`th-dark` variants override `--ui-table-header-bg` independently.
+1. **Sticky cells need opaque backgrounds (framed mode only).** In `<ui-table frame>`, the wrapper forces `--ui-table-cell-bg` and `--ui-table-header-bg` to `var(--color-surface)` so sticky cells stay opaque during scroll. In bare `<ui-table>` these stay at their `@property` default (`transparent`) so `<col>` backgrounds (zebracol, col hover, colgroup tint) paint through correctly. `th-light`/`th-dark` variants override `--ui-table-header-bg` independently.
 2. **Column hover requires `<colgroup>`.** `data-hover~="col"`, `data-hover~="col-outline"`, and `zebracol-*` only work when `<col>` elements exist in matching count.
 3. **`table-layout: fixed` reads widths from the first row or `<col>`**, never from body rows. Widths on arbitrary `<td>` elements are ignored.
 4. **`box-sizing: border-box` matters.** Comes from `@browser.style/base`'s global reset. Without it, cell borders add to specified widths and sticky offsets drift.
 5. **`@property --_has-overflow { inherits: true }`.** The inner table reads the flag for its edge-border `calc()` — inheritance is required. Similarly `--cN` is declared on the wrapper and inherited to cells.
+6. **Split-cols / split-rows inside `<ui-table>`.** These variants use negative inline/block margins to align outer cells with surrounding page content. Inside a scroll container, `overflow: auto` clips the outermost 1px border of the first cell because it sits exactly on the clip edge. The wrapper adds `padding-inline-start: var(--ui-table-border-width)` (and the block equivalent) to the inner split-layout table to nudge the outer border inside the clip edge. The alignment trick is preserved.
 
 ## Version
 

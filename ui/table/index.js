@@ -2,11 +2,12 @@
  * <ui-table>
  * Light DOM web component wrapper for the CSS-first table.
  * Forwards variant/hover/sticky attributes to child <table> as data-attributes.
- * When `overflow` is set, toggles an `overflowing` attribute based on wrapper
- * width and outputs cumulative widths for sticky columns as CSS custom
- * properties (e.g. style="--c0: 0px; --c2: 36px;").
+ * When `frame` is set (framed scroll-container mode), toggles an `overflowing`
+ * attribute based on wrapper width (Safari ≤ 18 fallback for scroll-driven
+ * overflow detection) and outputs cumulative widths for sticky columns as
+ * CSS custom properties (e.g. style="--c0: 0px; --c2: 36px;").
  * No Shadow DOM.
- * @version 4.1.0
+ * @version 4.2.0
  */
 
 class UiTable extends HTMLElement {
@@ -14,7 +15,7 @@ class UiTable extends HTMLElement {
 
 	connectedCallback() {
 		this.propagateAttributes();
-		if (this.hasAttribute('overflow')) {
+		if (this.hasAttribute('frame')) {
 			this.observer = new ResizeObserver(() => this.update());
 			this.observer.observe(this);
 			this.update();

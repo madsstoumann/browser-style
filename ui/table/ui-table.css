@@ -40,10 +40,9 @@
 @layer bs-component {
 
 	/* === Core table ===
-	 * Root selector matches any <table> that opts in via data-variant/hover/size,
-	 * plus any <table> directly inside <ui-table>.
+	 * Root selector matches any <table> that opts in via data-variant/hover/size.
 	 */
-	:where(table:is([data-variant], [data-hover], [data-size]), ui-table > table) {
+	:where(table:is([data-variant], [data-hover], [data-size])) {
 
 		/* --- Tokens --- */
 		--ui-table-border-color: var(--color-border);
@@ -257,9 +256,16 @@
 		   just binds those outputs to its own cell-bg/color tokens and derives the
 		   hover bg from the cell color. */
 		& tbody:is([tinted~="2d"], [data-tinted~="2d"]) > tr > td {
-			--ui-table-cell-bg: var(--tint-bg);
+			/* Funnel tint.css's --tint-bg through --_tm (registered as <color>) so it
+			   eagerly resolves to a concrete oklab on the cell. Referencing --tint-bg
+			   directly inside --_hb left a deep var() chain that Chrome dropped to
+			   IACVT when the hover rule consumed it via `--ui-table-cell-bg: var(--_hb)`,
+			   blanking the cell on hover. The 1D row-tint rule above uses the same
+			   --_tm trick. */
+			--_tm: var(--tint-bg);
+			--ui-table-cell-bg: var(--_tm);
 			color: var(--tint-fg);
-			--_hb: color-mix(in oklab, var(--ui-table-cell-bg), light-dark(#000, #FFF) 20%);
+			--_hb: color-mix(in oklab, var(--_tm), light-dark(#000, #FFF) 20%);
 			--_rb: var(--_hb);
 		}
 
@@ -416,22 +422,50 @@
 		&[data-c8~="tabular"] tr > *:nth-of-type(8) { font-variant-numeric: tabular-nums; }
 	}
 
-	/* === Overflow wrapper ===
-	 * Overflow state is tracked by the custom property --_has-overflow (0 or 1).
-	 * It is set to 1 by two independent mechanisms:
-	 *   1. CSS-only: scroll-driven animations on inline + block axes flip the flag
-	 *      when the element has scrollable overflow on either axis.
-	 *   2. JS fallback: `[overflowing]` attribute (for browsers without scroll-timeline
-	 *      support, e.g. Safari ≤ 18). The <ui-table> component toggles this.
-	 * Wrapper styles (frame, edge border removal) are gated via calc() on the flag.
+	/* === Scroll wrapper (bare) ===
+	 * <ui-table> is a passive scroll container — scrollbars appear only when the
+	 * inner <table> overflows. No border, no sticky behaviour, no cell-bg override,
+	 * so <col>-based features (zebracol, col hover, colgroup tint) keep working.
 	 */
-	:where(ui-table[overflow], ui-table-wrapper) {
-		--_has-overflow: 0;
+	:where(ui-table) {
 		display: block;
 		max-block-size: 100%;
-		overflow: auto;
+		overflow-x: auto;
+		overflow-y: hidden;
 		scrollbar-color: var(--color-border) #0000;
-		scrollbar-width: thin;
+
+		/* Split layouts use negative margins to align outer cells flush with page
+		   content; a 1px pad on the near side nudges the outer border off the
+		   overflow:auto / overflow:hidden clip edge so it actually renders. */
+		& > table[data-variant~="split-cols"] { padding-inline: var(--ui-table-border-width, var(--border-width)); }
+		& > table[data-variant~="split-rows"] { padding-block: var(--ui-table-border-width, var(--border-width)); }
+	}
+
+	/* === Framed scroll wrapper ===
+	 * <ui-table frame> adds the full treatment: border frame that appears when
+	 * actually overflowing, rounded corners, scroll-driven detection, sticky thead
+	 * + sticky group rows, sticky columns (data-sticky), opaque cell backgrounds
+	 * (so sticky cells aren't transparent during scroll), focus-ring surfacing.
+	 *
+	 * Overflow state is tracked by --_has-overflow (0 or 1). It is set to 1 by
+	 * two independent mechanisms:
+	 *   1. CSS-only: scroll-driven animations on inline + block axes.
+	 *   2. JS fallback: `[overflowing]` toggled by ResizeObserver (for Safari ≤ 18
+	 *      and any browser without scroll-timeline support).
+	 * Frame styles (border, radius) are gated via calc() on the flag.
+	 */
+	:where(ui-table[frame]) {
+		--_has-overflow: 0;
+
+		/* Hug the inner table on wide viewports (block auto-width fills the
+		   container up to fit-content), let it fill and scroll on narrow ones. */
+		max-inline-size: fit-content;
+
+		/* Re-open vertical overflow — bare mode pins overflow-y: hidden to avoid
+		   unwanted y-scrollbars (split-rows negative margin, auto-promotion from
+		   overflow-x: auto). Frame mode is used with max-block-size for intentional
+		   vertical scrolling, so it needs overflow-y: auto back. */
+		overflow-y: auto;
 
 		/* --- Scroll-driven detection (flips --_has-overflow) + thead scroll shadow --- */
 		@supports (animation-timeline: scroll()) {
