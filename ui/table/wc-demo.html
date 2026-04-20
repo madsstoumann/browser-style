@@ -18,7 +18,7 @@
 		JS behaviour gates on two opt-in attributes:
 	</p>
 	<ul>
-		<li><code>mount</code> — attribute forwarding only. Forwards <code>variant</code>, <code>hover</code>, <code>size</code>, <code>sticky</code>, the <code>tint*</code> family (<code>tint</code>, <code>tint-end</code>, <code>tint-tr</code>, <code>tint-bl</code>), and <code>c1</code>…<code>c8</code> to the inner <code>&lt;table&gt;</code> as <code>data-*</code>. Use for framework-binding on a visually plain scroll container.</li>
+		<li><code>mount</code> — attribute forwarding only. Forwards <code>variant</code>, <code>hover</code>, <code>size</code>, the <code>tint*</code> family (<code>tint</code>, <code>tint-end</code>, <code>tint-tr</code>, <code>tint-bl</code>), and <code>c1</code>…<code>c8</code> to the inner <code>&lt;table&gt;</code> as <code>data-*</code>; routes <code>tint-axis</code> ("vertical"/"horizontal"/"2d") to <code>tinted</code> on the right grandchild. Use for framework-binding on a visually plain scroll container.</li>
 		<li><code>frame</code> — framed scroll-container mode. Implies <code>mount</code>, plus runs a <code>ResizeObserver</code> that toggles <code>overflowing</code> (Safari ≤ 18 fallback) and walks <code>sticky</code> to compute cumulative column widths as <code>--c<em>N</em></code> custom properties.</li>
 	</ul>
 	<p>
@@ -114,13 +114,15 @@
 	</ui-table>
 
 	<br>
-	<h2>Graduated tint (vertical)</h2>
-	<p>Forward <code>tint</code> to the inner <code>&lt;table&gt;</code> and place <code>tinted</code> on the <code>&lt;tbody&gt;</code> for a vertical ramp. <code>tint</code> with no value uses <code>--color-accent</code>:</p>
-	<ui-table frame variant="rounded" hover="tr" tint>
+	<h2>Graduated tint via <code>tint-axis</code></h2>
+	<p>Framework-binding form — all tint configuration on the wrapper via <code>tint</code>, <code>tint-end</code> (and, for 2D, <code>tint-tr</code>/<code>tint-bl</code>) plus <code>tint-axis</code>. The component reads <code>tint-axis</code> and places <code>tinted</code> on the right grandchild at mount. The inner <code>&lt;tbody&gt;</code> and <code>&lt;colgroup&gt;</code> stay unadorned.</p>
+
+	<p>Vertical — <code>tint-axis="vertical"</code> on a ramp from accent to white:</p>
+	<ui-table frame variant="rounded" hover="tr" tint tint-axis="vertical">
 		<table>
 			<colgroup><col><col><col><col></colgroup>
 			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-			<tbody tinted>
+			<tbody>
 				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
 				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
 				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
@@ -131,13 +133,28 @@
 	</ui-table>
 
 	<br>
-	<h2>2D bilinear tint (four corners)</h2>
-	<p>All four corner colors bind to <code>&lt;ui-table&gt;</code> as <code>tint</code>, <code>tint-end</code>, <code>tint-tr</code>, <code>tint-bl</code>. The component forwards them as <code>data-*</code> and the <code>&lt;tbody tinted="2d"&gt;</code> ramps across the cells:</p>
-	<ui-table frame variant="no-border rounded" hover="tr" tint="aqua" tint-end="hotpink" tint-tr="yellow" tint-bl="lime">
+	<p>Horizontal — <code>tint-axis="horizontal"</code>, green ramp across columns. Uses <code>mount</code> (not <code>frame</code>) because horizontal tint paints through transparent cells via <code>&lt;col&gt;</code> backgrounds — the opaque cell bg that <code>frame</code> mode sets for sticky-column integrity would hide it:</p>
+	<ui-table mount variant="rounded" hover="td" tint="oklch(0.6 0.18 160)" tint-axis="horizontal">
+		<table>
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
+
+	<br>
+	<p>2D bilinear — <code>tint-axis="2d"</code> with four corner colors:</p>
+	<ui-table frame variant="no-border rounded" hover="tr" tint="aqua" tint-end="hotpink" tint-tr="yellow" tint-bl="lime" tint-axis="2d">
 		<table>
 			<colgroup><col><col><col><col><col><col><col><col></colgroup>
 			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th><th>Affiliation</th><th>First Appearance</th><th>Creator</th><th>Powers</th></tr></thead>
-			<tbody tinted="2d">
+			<tbody>
 				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td><td>Justice League</td><td>Detective Comics #27 (1939)</td><td>Bob Kane, Bill Finger</td><td>Martial arts, gadgets</td></tr>
 				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td><td>Justice League</td><td>Action Comics #1 (1938)</td><td>Jerry Siegel, Joe Shuster</td><td>Flight, super strength</td></tr>
 				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td><td>Avengers</td><td>Tales of Suspense #39 (1963)</td><td>Stan Lee, Larry Lieber</td><td>Powered armor suit</td></tr>

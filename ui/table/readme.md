@@ -5,7 +5,7 @@ A CSS-first styling system for native HTML `<table>` elements, with composable l
 ## Features
 
 - Native `<table>` — accessible, screen-reader friendly, works without JS
-- Composable layout variants: `rounded`, `split-cols`, `split-rows`, `block-border`, `th-dark`, `th-light`, thead-divider family (`th-divide-lg/xl` widths, `th-dotted/dashed/double/groove/ridge` styles), `caption-bottom`, `fixed`, `no-border`, `no-wrap`
+- Composable layout variants: `rounded`, `split-cols`, `split-rows`, `block-border`, `th-dark`, `th-light`, thead-divider family (`th-divide-lg/xl` widths, `th-dotted/dashed/double/groove/ridge` styles), cell-border style (`td-dotted`, `td-dashed`), `caption-bottom`, `fixed`, `no-border`, `no-wrap`
 - Three density sizes via `data-size` (`sm`, default, `lg`)
 - Zebra striping: rows *and* columns, even/odd
 - 8 hover effects via separate `data-hover` attribute: `col`, `col-outline`, `td`, `td-outline`, `tr`, `tr-outline`, `th-outline`, `all`
@@ -112,6 +112,7 @@ import '@browser.style/table';
 | `tint` | string | Graduated-tint start color (forwarded as `data-tint`). Pair with `tinted` on `<tbody>`/`<colgroup>`. Requires `mount` or `frame`. |
 | `tint-end` | string | Graduated-tint end color (default white). Requires `mount` or `frame`. |
 | `tint-tr` / `tint-bl` | string | 2D-tint top-right / bottom-left corner colors. Requires `mount` or `frame`. |
+| `tint-axis` | `vertical` \| `horizontal` \| `2d` | Places `tinted` on the right grandchild: first `<tbody>` for vertical/2d, first `<colgroup>` for horizontal. Idempotent across axis changes (clears the old target before setting the new). Horizontal paints through `<col>` backgrounds, which requires transparent cells — pair it with `mount`, not `frame` (frame forces opaque cell bg for sticky integrity). CSS-only authors can set `tinted` directly on `<tbody>`/`<colgroup>` instead. Requires `mount` or `frame`. |
 | `c1` … `c8` | string | Per-column formatting — `start`/`center`/`end` for text alignment, or `tabular` for `font-variant-numeric: tabular-nums`. Composable: `c3="end tabular"`. Requires `mount` or `frame`. |
 | `sticky` | string | Space-separated sticky column indices (e.g. `"c0 c2"`). Requires `frame`. |
 
@@ -246,6 +247,8 @@ Combine variants via space-separated values. They only override custom propertie
 | `th-double` | Thead/tbody divider, double-line (auto-forces xl width — CSS `double` needs ≥3px) |
 | `th-groove` | Thead/tbody divider, groove 3D style (auto-forces 6px width for visible 3D effect) |
 | `th-ridge` | Thead/tbody divider, ridge 3D style (auto-forces 6px width for visible 3D effect) |
+| `td-dotted` | Dotted style on every cell border |
+| `td-dashed` | Dashed style on every cell border |
 | `zebracol-even` | Stripe even columns (requires `<colgroup>`) |
 | `zebracol-odd` | Stripe odd columns (requires `<colgroup>`) |
 | `zebrarow-even` | Stripe even rows |

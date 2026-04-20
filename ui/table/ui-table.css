@@ -158,6 +158,8 @@
 		&[data-variant~="block-border"] :is(td, th) { border-width: 0 0 var(--ui-table-border-width) 0; }
 		&[data-variant~="no-border"] :is(td, th) { border: 0; }
 		&[data-variant~="rounded"] { --ui-table-border-radius: var(--radius-md); }
+		&[data-variant~="td-dotted"] :is(td, th) { border-style: dotted; }
+		&[data-variant~="td-dashed"] :is(td, th) { border-style: dashed; }
 
 		/* --- Layout --- */
 		&[data-variant~="caption-bottom"] { caption-side: bottom; }

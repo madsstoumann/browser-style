@@ -12,6 +12,10 @@
  *         c1 … c8 (per-column alignment / tabular).
  *       Forwarded to self as data-*:
  *         variant (mirror — wrapper uses data-variant~="rounded").
+ *       Routed to grandchildren of <ui-table>:
+ *         tint-axis: "vertical" → sets `tinted` on first <tbody>;
+ *                    "horizontal" → sets `tinted` on first <colgroup>;
+ *                    "2d" → sets `tinted="2d"` on first <tbody>.
  *       `sticky` stays a plain attribute on <ui-table>; CSS reads it directly
  *       via [sticky~="cN"].
  *
@@ -25,7 +29,7 @@
  * container, no JS behaviour even when this module is imported.
  *
  * No Shadow DOM.
- * @version 4.5.0
+ * @version 4.6.0
  */
 
 const FORWARD_TO_TABLE = [
@@ -34,10 +38,11 @@ const FORWARD_TO_TABLE = [
 	'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8',
 ];
 const FORWARD_TO_SELF = ['variant'];
+const CHILD_ROUTING = ['tint-axis'];
 
 class UiTable extends HTMLElement {
 	static observedAttributes = [
-		...new Set([...FORWARD_TO_TABLE, ...FORWARD_TO_SELF]),
+		...new Set([...FORWARD_TO_TABLE, ...FORWARD_TO_SELF, ...CHILD_ROUTING]),
 	];
 
 	get #active() {
@@ -88,6 +93,30 @@ class UiTable extends HTMLElement {
 			const value = this.getAttribute(attr);
 			if (value !== null) this.setAttribute(`data-${attr}`, value);
 		}
+
+		this.applyTintAxis(table);
+	}
+
+	/**
+	 * Route `tint-axis` on <ui-table> to the `tinted` attribute on the right
+	 * grandchild. Takes ownership of `tinted` placement whenever tint-axis is
+	 * set — old target is cleared before the new one is set, so flipping
+	 * axes is idempotent.
+	 *   tint-axis="vertical"   → <tbody tinted>
+	 *   tint-axis="horizontal" → <colgroup tinted>
+	 *   tint-axis="2d"         → <tbody tinted="2d">
+	 * No-op if tint-axis is not present (author's direct `tinted` markup wins).
+	 */
+	applyTintAxis(table) {
+		if (!this.hasAttribute('tint-axis')) return;
+		const axis = this.getAttribute('tint-axis');
+		const tbody = table.tBodies[0];
+		const colgroup = table.querySelector(':scope > colgroup');
+		tbody?.removeAttribute('tinted');
+		colgroup?.removeAttribute('tinted');
+		if (axis === 'vertical' && tbody) tbody.setAttribute('tinted', '');
+		else if (axis === '2d' && tbody) tbody.setAttribute('tinted', '2d');
+		else if (axis === 'horizontal' && colgroup) colgroup.setAttribute('tinted', '');
 	}
 
 	update() {

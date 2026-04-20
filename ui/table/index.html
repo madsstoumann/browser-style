@@ -15,7 +15,7 @@
 
 	<h2>CSS</h2>
 	<p>
-		<code>&lt;ui-table&gt;</code> is a CSS-first scroll wrapper for native <code>&lt;table&gt;</code>. Compose layout via <code>data-variant</code> (<code>rounded</code>, <code>split-cols</code>, <code>split-rows</code>, <code>th-dark</code>, <code>th-light</code>, thead-divider family, <code>zebracol-*</code>, <code>zebrarow-*</code>, <code>no-border</code>, <code>no-wrap</code>, <code>fixed</code>); density via <code>data-size</code>; per-row state via <code>data-row</code>; per-column alignment / tabular figures via <code>data-c<em>N</em></code>; hover effects via <code>data-hover</code>; graduated tints via <code>data-tint</code> + <code>tinted</code>. Add <code>frame</code> to the wrapper for a framed scroll container with sticky thead, sticky group rows, and opt-in sticky columns via <code>sticky</code>.
+		<code>&lt;ui-table&gt;</code> is a CSS-first scroll wrapper for native <code>&lt;table&gt;</code>. Compose layout via <code>data-variant</code> (<code>rounded</code>, <code>split-cols</code>, <code>split-rows</code>, <code>th-dark</code>, <code>th-light</code>, thead-divider family, <code>td-dotted</code>, <code>td-dashed</code>, <code>zebracol-*</code>, <code>zebrarow-*</code>, <code>no-border</code>, <code>no-wrap</code>, <code>fixed</code>); density via <code>data-size</code>; per-row state via <code>data-row</code>; per-column alignment / tabular figures via <code>data-c<em>N</em></code>; hover effects via <code>data-hover</code>; graduated tints via <code>data-tint</code> + <code>tinted</code>. Add <code>frame</code> to the wrapper for a framed scroll container with sticky thead, sticky group rows, and opt-in sticky columns via <code>sticky</code>.
 	</p>
 	<p>
 		This page demonstrates the <strong>CSS-only</strong> approach.
@@ -221,6 +221,37 @@
 	<p>With <code>data-variant="th-ridge"</code>:</p>
 	<ui-table>
 		<table data-variant="th-ridge" data-hover="tr">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
+
+	<br>
+	<h2>Cell border style</h2>
+	<p>Change the stroke style of all cell borders (not just the thead divider) via <code>td-dotted</code> or <code>td-dashed</code>. Composes with other variants.</p>
+
+	<p>With <code>data-variant="td-dotted"</code>:</p>
+	<ui-table>
+		<table data-variant="td-dotted" data-hover="tr">
+			<colgroup><col><col><col><col></colgroup>
+			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			</tbody>
+		</table>
+	</ui-table>
+
+	<br>
+	<p>With <code>data-variant="td-dashed rounded th-light"</code>:</p>
+	<ui-table>
+		<table data-variant="td-dashed rounded th-light" data-hover="tr">
 			<colgroup><col><col><col><col></colgroup>
 			<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
 			<tbody>
