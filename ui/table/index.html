@@ -436,12 +436,13 @@
 
 	<br>
 	<h2>Graduated tint</h2>
-	<p>Wire up <code>@browser.style/base</code>'s generic tint system. <code>data-tint</code> on the table sets the ramp's <em>start</em> color; <code>data-tint-end</code> (optional) sets the end color (defaults to white). Where you put <code>tinted</code> chooses the <em>direction</em>:</p>
+	<p>Wire up <code>@browser.style/base</code>'s generic tint system. <code>data-tint</code> on the table sets the ramp's <em>start</em> color; <code>data-tint-end</code> (optional) sets the end color (defaults to white). Where you put <code>tinted</code> — and what value it carries — chooses the <em>direction</em>:</p>
 	<ul>
 		<li><code>&lt;tbody tinted&gt;</code> — <strong>vertical</strong> ramp across rows</li>
 		<li><code>&lt;colgroup tinted&gt;</code> — <strong>horizontal</strong> ramp across columns</li>
+		<li><code>&lt;tbody tinted="2d"&gt;</code> — <strong>bilinear 2D</strong> ramp across cells; opt into the extra corners with <code>data-tint-tr</code> (top-right) and <code>data-tint-bl</code> (bottom-left), or omit them and get a clean diagonal mid-mix</li>
 	</ul>
-	<p>When the table carries <code>data-tint</code> and has a <code>tinted</code> descendant, two extras kick in: the <code>&lt;thead&gt;</code> is painted with the start color (acting as "step 0" of the ramp), and the cell borders adopt a tint-blended color instead of the default gray. Text contrast on every row/column is automatic via <code>contrast-color()</code>.</p>
+	<p>When the table carries <code>data-tint</code> and has a <code>tinted</code> descendant, two extras kick in: the <code>&lt;thead&gt;</code> is painted with the start color (in 2D mode it ramps horizontally with the top edge), and the cell borders adopt a tint-blended color instead of the default gray. Text contrast on every row/column/cell is automatic via <code>contrast-color()</code>.</p>
 
 	<p>Vertical ramp, default accent, end = white (thead = accent, borders = tint-blended):</p>
 	<table data-variant="rounded" data-hover="tr" data-tint>
@@ -457,16 +458,30 @@
 	</table>
 
 	<br>
-	<p>Vertical ramp with a custom end color — <code>data-tint="aqua" data-tint-end="hotpink"</code>:</p>
-	<table data-variant="rounded" data-hover="tr" data-tint="aqua" data-tint-end="hotpink">
-		<colgroup><col><col><col><col></colgroup>
-		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr></thead>
-		<tbody tinted>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+	<p>2D bilinear ramp across an 8-column table — <code>data-tint="aqua" data-tint-end="hotpink"</code> with <code>&lt;tbody tinted="2d"&gt;</code>. Top-left = aqua, bottom-right = hotpink, the two off-diagonal corners default to the aqua↔hotpink mid-mix so the ramp reads as a smooth diagonal. The <code>&lt;thead&gt;</code> picks up the top-edge ramp automatically:</p>
+	<table data-variant="no-border rounded" data-hover="tr" data-tint="aqua" data-tint-end="hotpink">
+		<colgroup><col><col><col><col><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th><th>Affiliation</th><th>First Appearance</th><th>Creator</th><th>Powers</th></tr></thead>
+		<tbody tinted="2d">
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td><td>Justice League</td><td>Detective Comics #27 (1939)</td><td>Bob Kane, Bill Finger</td><td>Martial arts, gadgets</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td><td>Justice League</td><td>Action Comics #1 (1938)</td><td>Jerry Siegel, Joe Shuster</td><td>Flight, super strength</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td><td>Avengers</td><td>Tales of Suspense #39 (1963)</td><td>Stan Lee, Larry Lieber</td><td>Powered armor suit</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td><td>Avengers</td><td>Amazing Fantasy #15 (1962)</td><td>Stan Lee, Steve Ditko</td><td>Wall-crawling, spider sense</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td><td>Defenders</td><td>Daredevil #1 (1964)</td><td>Stan Lee, Bill Everett</td><td>Radar sense, acrobatics</td></tr>
+		</tbody>
+	</table>
+
+	<br>
+	<p>Same data with the two extra corners specified — <code>data-tint-tr="yellow" data-tint-bl="lime"</code>. Now every corner is independent and the field is a true bilinear blend across four colors:</p>
+	<table data-variant="no-border rounded" data-hover="tr" data-tint="aqua" data-tint-end="hotpink" data-tint-tr="yellow" data-tint-bl="lime">
+		<colgroup><col><col><col><col><col><col><col><col></colgroup>
+		<thead><tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th><th>Affiliation</th><th>First Appearance</th><th>Creator</th><th>Powers</th></tr></thead>
+		<tbody tinted="2d">
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td><td>Justice League</td><td>Detective Comics #27 (1939)</td><td>Bob Kane, Bill Finger</td><td>Martial arts, gadgets</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td><td>Justice League</td><td>Action Comics #1 (1938)</td><td>Jerry Siegel, Joe Shuster</td><td>Flight, super strength</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td><td>Avengers</td><td>Tales of Suspense #39 (1963)</td><td>Stan Lee, Larry Lieber</td><td>Powered armor suit</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td><td>Avengers</td><td>Amazing Fantasy #15 (1962)</td><td>Stan Lee, Steve Ditko</td><td>Wall-crawling, spider sense</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td><td>Defenders</td><td>Daredevil #1 (1964)</td><td>Stan Lee, Bill Everett</td><td>Radar sense, acrobatics</td></tr>
 		</tbody>
 	</table>
 
