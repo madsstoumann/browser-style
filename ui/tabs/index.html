@@ -7,17 +7,22 @@
 	<meta name="description" content="Tabs component: A tabbed interface built on native details/summary elements with a sliding indicator.">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-tabs.css">
+	<style>
+		/* Reserve scrollbar space so 100vw excludes it (Chrome 145+),
+		   preventing variant="bleed" from triggering a horizontal scrollbar */
+		html { scrollbar-gutter: stable; }
+	</style>
 </head>
 <body>
 	<h1>UI: Tabs</h1>
 
 	<p>
-		<code>&lt;ui-tabs&gt;</code> is a CSS-only tabbed interface built on native <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> elements. Use the <code>name</code> attribute on each <code>&lt;details&gt;</code> for exclusive open behavior, and compose the look with space-separated tokens on the <code>variant</code> attribute.
+		<code>&lt;ui-tabs&gt;</code> is a CSS-only tabbed interface built on native <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> elements. Use the <code>name</code> attribute on each <code>&lt;details&gt;</code> for exclusive open behavior, and compose the look with space-separated tokens on the <code>variant</code> attribute plus optional standalone attributes (<code>indicator</code>, <code>no-background</code>, <code>no-collapse</code>).
 	</p>
 
 	<h2>Default</h2>
-	<p>Default indicator is an underline tracking the active tab via CSS anchor positioning.</p>
-	<ui-tabs variant="bordered compact" indicator="line">
+	<p>No variant. Indicator is a bottom border following the active tab.</p>
+	<ui-tabs>
 		<cq-box>
 			<details name="tabs-default" open>
 				<summary>Shipping</summary>
@@ -45,6 +50,186 @@
 			</details>
 		</cq-box>
 	</ui-tabs>
+
+	<p>With <code>variant="pill"</code> and  <code>indicator="background offset"</code></p>
+	<ui-tabs variant="pill" indicator="background offset">
+		<cq-box>
+			<details name="tabs-pill" open>
+				<summary>Shipping</summary>
+				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+			</details>
+			<details name="tabs-pill">
+				<summary>Payment</summary>
+				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+			</details>
+			<details name="tabs-pill">
+				<summary>Returns</summary>
+				<div>Return within 30 days for a full refund.</div>
+			</details>
+			<details name="tabs-pill">
+				<summary>Support</summary>
+				<div>Support via phone, email, or live chat.</div>
+			</details>
+		</cq-box>
+	</ui-tabs>
+
+	<p>With <code>variant="squircle"</code> and <code>indicator="background offset"</code></p>
+	<ui-tabs variant="squircle" indicator="background offset">
+		<cq-box>
+			<details name="tabs-squircle" open>
+				<summary>Shipping</summary>
+				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+			</details>
+			<details name="tabs-squircle">
+				<summary>Payment</summary>
+				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+			</details>
+			<details name="tabs-squircle">
+				<summary>Returns</summary>
+				<div>Return within 30 days for a full refund.</div>
+			</details>
+			<details name="tabs-squircle">
+				<summary>Support</summary>
+				<div>Support via phone, email, or live chat.</div>
+			</details>
+		</cq-box>
+	</ui-tabs>
+
+	<br>
+	<h2>Bordered</h2>
+	<ui-tabs variant="rounded bordered">
+		<cq-box>
+			<details name="tabs-rounded" open>
+				<summary>Shipping</summary>
+				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+			</details>
+			<details name="tabs-rounded">
+				<summary>Payment</summary>
+				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+			</details>
+			<details name="tabs-rounded">
+				<summary>Returns</summary>
+				<div>Return within 30 days for a full refund.</div>
+			</details>
+			<details name="tabs-rounded">
+				<summary>Support</summary>
+				<div>Support via phone, email, or live chat.</div>
+			</details>
+		</cq-box>
+	</ui-tabs>
+
+	<p>With <code>variant="compact"</code> added</p>
+	<ui-tabs variant="bordered compact rounded">
+		<cq-box>
+			<details name="tabs-compact" open>
+				<summary>Shipping</summary>
+				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+			</details>
+			<details name="tabs-compact">
+				<summary>Payment</summary>
+				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+			</details>
+			<details name="tabs-compact">
+				<summary>Returns</summary>
+				<div>Return within 30 days for a full refund.</div>
+			</details>
+		</cq-box>
+	</ui-tabs>
+
+	<p>When <code>variant="compact"</code> is used with <code>no-background</code>, inline padding is removed as well</p>
+	<ui-tabs variant="compact" indicator="line" no-background no-collapse>
+		<cq-box>
+			<details name="tabs-minimal" open>
+				<summary>Overview</summary>
+				<div>A clean, minimal tab strip — just text labels with a sliding underline to mark the active section.</div>
+			</details>
+			<details name="tabs-minimal">
+				<summary>Features</summary>
+				<div>Built on native <code>&lt;details&gt;</code> + <code>&lt;summary&gt;</code>, enhanced with CSS anchor positioning for the indicator.</div>
+			</details>
+			<details name="tabs-minimal">
+				<summary>Pricing</summary>
+				<div>Free and open source under MIT.</div>
+			</details>
+			<details name="tabs-minimal">
+				<summary>FAQ</summary>
+				<div>Frequently asked questions go here.</div>
+			</details>
+		</cq-box>
+	</ui-tabs>
+
+	<br>
+	<h2>Bleed</h2>
+	<p>Header background extends to the viewport edges, breaking out of the centered cq-box.</p>
+	<ui-tabs variant="bleed">
+		<cq-box>
+			<details name="tabs-bleed" open>
+				<summary>Shipping</summary>
+				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+			</details>
+			<details name="tabs-bleed">
+				<summary>Payment</summary>
+				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+			</details>
+			<details name="tabs-bleed">
+				<summary>Returns</summary>
+				<div>Return within 30 days for a full refund.</div>
+			</details>
+			<details name="tabs-bleed">
+				<summary>Support</summary>
+				<div>Support via phone, email, or live chat.</div>
+			</details>
+		</cq-box>
+	</ui-tabs>
+
+	<p>With <code>variant="bleed panel"</code></p>
+	<p>Both header and panel backgrounds bleed edge-to-edge; text stays within the original column.</p>
+	<ui-tabs variant="bleed panel">
+		<cq-box>
+			<details name="tabs-bleed-panel" open>
+				<summary>Shipping</summary>
+				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+			</details>
+			<details name="tabs-bleed-panel">
+				<summary>Payment</summary>
+				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+			</details>
+			<details name="tabs-bleed-panel">
+				<summary>Returns</summary>
+				<div>Return within 30 days for a full refund.</div>
+			</details>
+			<details name="tabs-bleed-panel">
+				<summary>Support</summary>
+				<div>Support via phone, email, or live chat.</div>
+			</details>
+		</cq-box>
+	</ui-tabs>
+
+	<br>
+	<h2>Right-to-left</h2>
+	<p>All variants support <code>dir="rtl"</code>.</p>
+	<div dir="rtl">
+		<ui-tabs variant="pill" indicator="background offset">
+			<cq-box>
+				<details name="tabs-rtl" open>
+					<summary>الشحن</summary>
+					<div>محتوى الشحن.</div>
+				</details>
+				<details name="tabs-rtl">
+					<summary>الدفع</summary>
+					<div>محتوى الدفع.</div>
+				</details>
+				<details name="tabs-rtl">
+					<summary>الإرجاع</summary>
+					<div>محتوى الإرجاع.</div>
+				</details>
+				<details name="tabs-rtl">
+					<summary>الدعم</summary>
+					<div>محتوى الدعم.</div>
+				</details>
+			</cq-box>
+		</ui-tabs>
+	</div>
 
 </body>
 </html>

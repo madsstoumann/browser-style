@@ -136,7 +136,14 @@
 
 	/* === Variants === */
 
-	/* bleed — header background extends past cq-box to the viewport edges */
+	/* bleed — header background extends past cq-box to the viewport edges.
+	   Note: 100vw historically includes scrollbar width, which can cause horizontal
+	   overflow when a vertical scrollbar is present. To avoid the cascading
+	   scrollbar issue, set one of these on html at page level:
+	     html { scrollbar-gutter: stable; }   (preferred — reserves scrollbar space)
+	     html { overflow-y: scroll; }         (forces persistent scrollbar)
+	   Chrome 145+ will then exclude scrollbar width from 100vw automatically.
+	   Older browsers: also add `html { overflow-x: clip; }` */
 	ui-tabs[variant~="bleed"] cq-box::before {
 		inset-inline: calc(50% - 50vw);
 	}
@@ -285,6 +292,18 @@
 	/* offset + squircle — same concentric-corners compensation for squircle */
 	ui-tabs[variant~="squircle"][indicator~="offset"] cq-box::after {
 		corners: calc(var(--ui-tabs-squircle-radius) - var(--ui-tabs-indicator-offset)) superellipse(var(--ui-tabs-squircle-exp));
+	}
+
+	/* === no-background attribute — removes the header ::before background.
+	   Combined with `variant="compact"`, drops inline padding on tab summaries
+	   and panel content so the layout flows flush to cq-box edges */
+	ui-tabs[no-background] cq-box::before {
+		background: none;
+	}
+
+	ui-tabs[no-background][variant~="compact"] {
+		summary { padding-inline: 0; }
+		details > :not(summary) { padding-inline: 0; }
 	}
 
 	/* === no-collapse attribute — keeps the current tab open; clicking it does nothing ===
