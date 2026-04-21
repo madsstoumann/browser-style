@@ -33,6 +33,7 @@
 		--ui-tabs-indicator-bg: var(--color-surface);
 		--ui-tabs-indicator-color: var(--color-accent);
 		--ui-tabs-indicator-offset: var(--spacing-sm);
+		--ui-tabs-indicator-shadow: var(--shadow-md);
 		--ui-tabs-indicator-width: var(--border-width-heavy);
 		--ui-tabs-max-width: var(--width-5xl);
 		--ui-tabs-padding-block: 1.25ch;
@@ -199,9 +200,14 @@
 		}
 	}
 
-	/* bordered — border around the ui-tabs element itself */
+	/* bordered — border around the ui-tabs element itself, plus a bottom border
+	   on the header bar to separate it from the panel area */
 	ui-tabs[variant~="bordered"] {
 		border: var(--ui-tabs-border-width) solid var(--ui-tabs-border-color);
+
+		cq-box::before {
+			border-block-end: var(--ui-tabs-border-width) solid var(--ui-tabs-border-color);
+		}
 	}
 
 	/* pill / rounded — shared rounding rules. Header bg + indicator both get the
@@ -270,6 +276,17 @@
 
 	ui-tabs[indicator~="background"] cq-box::after {
 		background: var(--ui-tabs-indicator-bg);
+	}
+
+	/* accent — active tab's summary text uses the accent color */
+	ui-tabs[indicator~="accent"] details[open] summary {
+		color: var(--ui-tabs-indicator-color);
+	}
+
+	/* shadow — subtle box-shadow on the indicator. Only renders when combined
+	   with `background` (a bare line/underline would look weird with a shadow) */
+	ui-tabs[indicator~="background"][indicator~="shadow"] cq-box::after {
+		box-shadow: var(--ui-tabs-indicator-shadow);
 	}
 
 	/* offset — inset the indicator from the header edge on all four sides */
