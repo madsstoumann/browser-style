@@ -20,9 +20,10 @@
 		<code>&lt;ui-tabs&gt;</code> is a CSS-only tabbed interface built on native <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> elements. Use the <code>name</code> attribute on each <code>&lt;details&gt;</code> for exclusive open behavior, and compose the look with space-separated tokens on the <code>variant</code> attribute plus optional standalone attributes (<code>indicator</code>, <code>no-background</code>, <code>no-collapse</code>).
 	</p>
 
-	<h2>Default</h2>
-	<p>No variant. Indicator is a bottom border following the active tab.</p>
-	<ui-tabs>
+	<h2>Header bar</h2>
+	<p>Tabs sit inside a tinted horizontal bar (the <code>::before</code> header background). Shape comes from <code>variant</code>, the active indicator comes from <code>indicator</code>.</p>
+	<p>With <code>indicator="line"</code></p>
+	<ui-tabs no-collapse>
 		<cq-box>
 			<details name="tabs-default" open>
 				<summary>Shipping</summary>
@@ -52,7 +53,7 @@
 	</ui-tabs>
 
 	<p>With <code>variant="pill"</code> and  <code>indicator="background offset"</code></p>
-	<ui-tabs variant="pill" indicator="background offset">
+	<ui-tabs variant="pill" indicator="background offset" no-collapse>
 		<cq-box>
 			<details name="tabs-pill" open>
 				<summary>Shipping</summary>
@@ -74,7 +75,7 @@
 	</ui-tabs>
 
 	<p>With <code>variant="squircle"</code> and <code>indicator="background offset"</code></p>
-	<ui-tabs variant="squircle" indicator="background offset">
+	<ui-tabs variant="squircle" indicator="background offset" no-collapse>
 		<cq-box>
 			<details name="tabs-squircle" open>
 				<summary>Shipping</summary>
@@ -97,7 +98,7 @@
 
 	<br>
 	<h2>Bordered</h2>
-	<ui-tabs variant="rounded bordered">
+	<ui-tabs variant="rounded bordered" no-collapse>
 		<cq-box>
 			<details name="tabs-rounded" open>
 				<summary>Shipping</summary>
@@ -119,7 +120,7 @@
 	</ui-tabs>
 
 	<p>With <code>variant="compact"</code> added</p>
-	<ui-tabs variant="bordered compact rounded">
+	<ui-tabs variant="bordered compact rounded" no-collapse>
 		<cq-box>
 			<details name="tabs-compact" open>
 				<summary>Shipping</summary>
@@ -154,6 +155,30 @@
 			<details name="tabs-minimal">
 				<summary>FAQ</summary>
 				<div>Frequently asked questions go here.</div>
+			</details>
+		</cq-box>
+	</ui-tabs>
+
+	<br><hr>
+	<h2>Panel</h2>
+	<p>With <code>variant="panel"</code>, the active tab's content sits on a surface with a subtle shadow — visually lifted from the header bar.</p>
+	<ui-tabs variant="panel">
+		<cq-box>
+			<details name="tabs-panel" open>
+				<summary>Shipping</summary>
+				<div>The shipping time depends on your location, the method chosen, and product availability. We aim to process and ship orders within 1–2 business days.</div>
+			</details>
+			<details name="tabs-panel">
+				<summary>Payment</summary>
+				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+			</details>
+			<details name="tabs-panel">
+				<summary>Returns</summary>
+				<div>Return within 30 days for a full refund.</div>
+			</details>
+			<details name="tabs-panel">
+				<summary>Support</summary>
+				<div>Support via phone, email, or live chat.</div>
 			</details>
 		</cq-box>
 	</ui-tabs>
@@ -209,7 +234,7 @@
 	<h2>Right-to-left</h2>
 	<p>All variants support <code>dir="rtl"</code>.</p>
 	<div dir="rtl">
-		<ui-tabs variant="pill" indicator="background offset">
+		<ui-tabs variant="pill" indicator="background offset" no-collapse>
 			<cq-box>
 				<details name="tabs-rtl" open>
 					<summary>الشحن</summary>

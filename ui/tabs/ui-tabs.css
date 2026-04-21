@@ -37,9 +37,10 @@
 		--ui-tabs-max-width: var(--width-5xl);
 		--ui-tabs-padding-block: 1.25ch;
 		--ui-tabs-padding-inline: 1.5ch;
-		--ui-tabs-panel-bg: lightgrey;
+		--ui-tabs-panel-bg: var(--color-surface);
 		--ui-tabs-panel-padding-block: 2ch;
 		--ui-tabs-panel-padding-inline: 1.5ch;
+		--ui-tabs-panel-shadow: var(--shadow-md);
 		--ui-tabs-pill-radius: var(--radius-pill);
 		--ui-tabs-rounded-radius: var(--radius-lg);
 		--ui-tabs-squircle-exp: 2;
@@ -75,7 +76,7 @@
 				content: "";
 				inline-size: anchor-size(--tab-active width, 0);
 				inset-block-start: 0;
-				inset-inline-start: anchor(--tab-active left, 0);
+				inset-inline-start: anchor(--tab-active start, 0);
 				position: absolute;
 				transition: inset-inline-start var(--ui-tabs-duration) ease, inline-size var(--ui-tabs-duration) ease;
 				z-index: var(--z-index-1);
@@ -148,10 +149,12 @@
 		inset-inline: calc(50% - 50vw);
 	}
 
-	/* panel — background on the actual content element (bypasses ::details-content
-	   render quirks in Chrome that hide text when the pseudo has a background) */
+	/* panel — background + shadow on the actual content element (bypasses
+	   ::details-content render quirks in Chrome that hide text when the pseudo
+	   has a background) */
 	ui-tabs[variant~="panel"] details > :not(summary) {
 		background: var(--ui-tabs-panel-bg);
+		box-shadow: var(--ui-tabs-panel-shadow);
 	}
 
 	/* bleed + panel — panel bg extends to viewport edges; padding compensates so text stays put */
@@ -275,7 +278,7 @@
 		block-size: calc(anchor-size(--tab-active height, var(--ui-tabs-header-height)) - 2 * var(--_o));
 		inline-size: calc(anchor-size(--tab-active width, 0) - 2 * var(--_o));
 		inset-block-start: var(--_o);
-		inset-inline-start: calc(anchor(--tab-active left, 0) + var(--_o));
+		inset-inline-start: calc(anchor(--tab-active start, 0) + var(--_o));
 	}
 
 	/* offset + pill — all 4 corners compensated for the inset */
