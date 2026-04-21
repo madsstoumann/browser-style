@@ -1,59 +1,267 @@
-@import '../scroll/ui-scroll.css';
+/**
+ * ui-tabs
+ * @version 1.0.0
+ * @date 2026-04-21
+ * @author Mads Stoumann
+ *
+ * Private custom properties (--_*)
+ *   --_tc   tab-count     total <details> siblings; drives subgrid span
+ *   --_ti   tab-index     current <details> position; drives summary grid-column
+ *   --_sr   shape-radius  pill/rounded radius used by shared shape rules
+ *   --_o    offset        indicator inset distance (offset indicator)
+ */
 @layer bs-component {
-	:where(.ui-tabs) {
-		& [role=tab] {
-			background: var(--ui-tabs-tab-bg, inherit);
-			border-block-end: var(--ui-tabs-bdw, 3px) solid transparent;
-			border-radius: var(--ui-tabs-tab-bdrs, 0);
-			color: currentColor;
-			font-size: var(--ui-tabs-tab-fs, inherit);
-			font-weight: 500;
-			padding: var(--ui-tabs-tab-p, .5ch);
-			text-decoration: none;
-			white-space: nowrap;
-			&[aria-selected=true] { border-color: var(--AccentColor); }
-			&:focus-visible { outline-offset: -2px; }
-			&:hover:not([aria-selected=true]) { border-color: var(--ButtonBorder); }
+
+	@property --_tc {
+		syntax: "<integer>";
+		inherits: true;
+		initial-value: 1;
+	}
+	@property --_ti {
+		syntax: "<integer>";
+		inherits: true;
+		initial-value: 1;
+	}
+
+	:where(ui-tabs) {
+		--ui-tabs-border-color: var(--color-border);
+		--ui-tabs-border-width: var(--border-width);
+		--ui-tabs-compact-gap: 2ch;
+		--ui-tabs-duration: var(--duration-normal);
+		--ui-tabs-header-bg: var(--color-surface-alt);
+		--ui-tabs-header-height: 3em;
+		--ui-tabs-indicator-bg: var(--color-surface);
+		--ui-tabs-indicator-color: var(--color-accent);
+		--ui-tabs-indicator-offset: var(--spacing-sm);
+		--ui-tabs-indicator-width: var(--border-width-heavy);
+		--ui-tabs-max-width: var(--width-5xl);
+		--ui-tabs-padding-block: 1.25ch;
+		--ui-tabs-padding-inline: 1.5ch;
+		--ui-tabs-panel-bg: lightgrey;
+		--ui-tabs-panel-padding-block: 2ch;
+		--ui-tabs-panel-padding-inline: 1.5ch;
+		--ui-tabs-pill-radius: var(--radius-pill);
+		--ui-tabs-rounded-radius: var(--radius-lg);
+		--ui-tabs-squircle-exp: 2;
+		--ui-tabs-squircle-radius: 1em;
+		--ui-tabs-tab-gap: 1ch;
+
+		display: block;
+
+		cq-box {
+			display: grid;
+			grid-auto-columns: minmax(0, 1fr);
+			grid-template-rows: auto 1fr;
+			isolation: isolate;
+			margin-inline: auto;
+			max-width: var(--ui-tabs-max-width);
+			position: relative;
+
+			/* Header row background */
+			&::before {
+				background: var(--ui-tabs-header-bg);
+				block-size: anchor-size(--tab-active height, var(--ui-tabs-header-height));
+				content: "";
+				inset-block-start: 0;
+				inset-inline: 0;
+				position: absolute;
+				z-index: 0;
+			}
+
+			/* Sliding tab indicator — geometry only; styling comes from `indicator` attr */
+			&::after {
+				block-size: anchor-size(--tab-active height, var(--ui-tabs-header-height));
+				content: "";
+				inline-size: anchor-size(--tab-active width, 0);
+				inset-block-start: 0;
+				inset-inline-start: anchor(--tab-active left, 0);
+				position: absolute;
+				transition: inset-inline-start var(--ui-tabs-duration) ease, inline-size var(--ui-tabs-duration) ease;
+				z-index: var(--z-index-1);
+			}
 		}
-		& [role=tablist] {
-			background: var(--ui-tabs-bg, inherit);
-			border-radius: var(--ui-tabs-bdrs, 0);
+
+		details {
+			--_tc: sibling-count();
+			--_ti: sibling-index();
+
+			display: grid;
+			grid-column: 1 / span var(--_tc);
+			grid-row: 1 / span 2;
+			grid-template-columns: subgrid;
+			grid-template-rows: subgrid;
+			pointer-events: none;
+
+			&[open] summary {
+				anchor-name: --tab-active;
+			}
+
+			&::details-content {
+				grid-column: 1 / -1;
+				grid-row: 2;
+				pointer-events: auto;
+			}
+
+			&[open]::details-content {
+				block-size: auto;
+				content-visibility: visible;
+			}
+
+			& > :not(summary) {
+				padding: var(--ui-tabs-panel-padding-block) var(--ui-tabs-panel-padding-inline);
+			}
+		}
+
+		summary {
+			align-items: center;
+			cursor: pointer;
 			display: flex;
-			gap: var(--ui-tabs-gap, 3ch);
-			justify-content: var(--ui-tabs-jc, start);
-			overflow-x: auto;
-			padding: var(--ui-tabs-p, initial);
-			width: var(--ui-tabs-w, initial);
-		}
-		& [role=tabpanel] {
-			background: var(--CanvasGray);
-			border-radius: var(--input-bdrs);
-			flex: 0 0 100%;
-			margin: var(--ui-tabs-panel-m, 2ch 0 0);
-			padding: var(--ui-tabs-panel-p, 1ch 2ch);
-			scroll-snap-align: start;
-			& img {
-				border-radius: inherit;
-				width: 100%;
-			}
-		}
-		&.--group {
-			--ui-tabs-bdrs: calc(var(--input-bdrs) + var(--ui-tabs-p));
-			--ui-tabs-bdw: 0;
-			--ui-tabs-bg: var(--CanvasGray);
-			--ui-tabs-tab-fs: smaller;
-			--ui-tabs-gap: 0;
-			--ui-tabs-jc: space-between;
-			--ui-tabs-p: .25em;
-			--ui-tabs-tab-p: .5ch 1ch;
-			--ui-tabs-w: fit-content;
-			& [aria-selected=false] + [aria-selected=false] {
-				border-inline-start: 1px solid var(--ButtonBorder);
-			}
-			& [aria-selected=true] {
-				--ui-tabs-tab-bdrs: var(--input-bdrs);
-				--ui-tabs-tab-bg: Canvas;
-			}
+			gap: var(--ui-tabs-tab-gap);
+			grid-column: var(--_ti);
+			grid-row: 1;
+			justify-content: center;
+			min-inline-size: 0;
+			overflow: hidden;
+			padding: var(--ui-tabs-padding-block) var(--ui-tabs-padding-inline);
+			pointer-events: auto;
+			text-align: center;
+			user-select: none;
+			z-index: var(--z-index-2);
+
+			&::-webkit-details-marker,
+			&::marker { display: none; }
 		}
 	}
+
+	/* === Variants === */
+
+	/* bleed — header background extends past cq-box to the viewport edges */
+	ui-tabs[variant~="bleed"] cq-box::before {
+		inset-inline: calc(50% - 50vw);
+	}
+
+	/* panel — background on the actual content element (bypasses ::details-content
+	   render quirks in Chrome that hide text when the pseudo has a background) */
+	ui-tabs[variant~="panel"] details > :not(summary) {
+		background: var(--ui-tabs-panel-bg);
+	}
+
+	/* bleed + panel — panel bg extends to viewport edges; padding compensates so text stays put */
+	ui-tabs[variant~="bleed"][variant~="panel"] details > :not(summary) {
+		margin-inline: calc(50% - 50vw);
+		padding-inline: calc(var(--ui-tabs-panel-padding-inline) + 50vw - 50%);
+	}
+
+	/* compact — tabs take their natural (min-content) width, grouped at the start
+	   of the header. Remaining header area is just the ::before background */
+	ui-tabs[variant~="compact"] cq-box {
+		column-gap: var(--ui-tabs-compact-gap);
+		grid-auto-columns: min-content;
+		justify-content: start;
+	}
+
+	/* bordered — border around the ui-tabs element itself */
+	ui-tabs[variant~="bordered"] {
+		border: var(--ui-tabs-border-width) solid var(--ui-tabs-border-color);
+	}
+
+	/* pill / rounded — shared rounding rules. Header bg + indicator both get the
+	   full shape radius; edge summaries match on their outer corners */
+	ui-tabs:is([variant~="pill"], [variant~="rounded"]) {
+		cq-box::before,
+		cq-box::after {
+			border-radius: var(--_sr);
+		}
+		details:first-of-type summary {
+			border-start-start-radius: var(--_sr);
+			border-end-start-radius: var(--_sr);
+		}
+		details:last-of-type summary {
+			border-start-end-radius: var(--_sr);
+			border-end-end-radius: var(--_sr);
+		}
+	}
+
+	/* pill — fully rounded ends */
+	ui-tabs[variant~="pill"] { --_sr: var(--ui-tabs-pill-radius); }
+
+	/* rounded — slightly rounded corners; rounds ui-tabs itself so
+	   `bordered + rounded` gives a rounded outer border. Header bg, indicator,
+	   and edge summaries only round their TOP corners so they flow straight
+	   into the panel below */
+	ui-tabs[variant~="rounded"] {
+		--_sr: var(--ui-tabs-rounded-radius);
+		border-radius: var(--_sr);
+
+		cq-box::before,
+		cq-box::after {
+			border-end-start-radius: 0;
+			border-end-end-radius: 0;
+		}
+		details:first-of-type summary {
+			border-end-start-radius: 0;
+		}
+		details:last-of-type summary {
+			border-end-end-radius: 0;
+		}
+	}
+
+	/* squircle — superellipse corners via the CSS `corners` shorthand (Chrome 135+).
+	   Falls back to no rounding in unsupported browsers */
+	ui-tabs[variant~="squircle"] {
+		cq-box::before,
+		cq-box::after {
+			corners: var(--ui-tabs-squircle-radius) superellipse(var(--ui-tabs-squircle-exp));
+		}
+		details:first-of-type summary {
+			corners: var(--ui-tabs-squircle-radius) 0 0 var(--ui-tabs-squircle-radius) superellipse(var(--ui-tabs-squircle-exp));
+		}
+		details:last-of-type summary {
+			corners: 0 var(--ui-tabs-squircle-radius) var(--ui-tabs-squircle-radius) 0 superellipse(var(--ui-tabs-squircle-exp));
+		}
+	}
+
+	/* === Indicator (attribute, not variant) ===
+	   Combinable tokens on a dedicated `indicator` attribute.
+	   Default (no attr) == line. */
+
+	:is(ui-tabs:not([indicator]), ui-tabs[indicator~="line"]) cq-box::after {
+		border-block-end: var(--ui-tabs-indicator-width) solid var(--ui-tabs-indicator-color);
+	}
+
+	ui-tabs[indicator~="background"] cq-box::after {
+		background: var(--ui-tabs-indicator-bg);
+	}
+
+	/* offset — inset the indicator from the header edge on all four sides */
+	ui-tabs[indicator~="offset"] cq-box::after {
+		--_o: var(--ui-tabs-indicator-offset);
+		block-size: calc(anchor-size(--tab-active height, var(--ui-tabs-header-height)) - 2 * var(--_o));
+		inline-size: calc(anchor-size(--tab-active width, 0) - 2 * var(--_o));
+		inset-block-start: var(--_o);
+		inset-inline-start: calc(anchor(--tab-active left, 0) + var(--_o));
+	}
+
+	/* offset + pill — all 4 corners compensated for the inset */
+	ui-tabs[variant~="pill"][indicator~="offset"] cq-box::after {
+		border-radius: calc(var(--ui-tabs-pill-radius) - var(--ui-tabs-indicator-offset));
+	}
+
+	/* offset + rounded — only top corners compensated; bottom stays flat */
+	ui-tabs[variant~="rounded"][indicator~="offset"] cq-box::after {
+		border-start-start-radius: calc(var(--ui-tabs-rounded-radius) - var(--ui-tabs-indicator-offset));
+		border-start-end-radius: calc(var(--ui-tabs-rounded-radius) - var(--ui-tabs-indicator-offset));
+	}
+
+	/* offset + squircle — same concentric-corners compensation for squircle */
+	ui-tabs[variant~="squircle"][indicator~="offset"] cq-box::after {
+		corners: calc(var(--ui-tabs-squircle-radius) - var(--ui-tabs-indicator-offset)) superellipse(var(--ui-tabs-squircle-exp));
+	}
+
+	/* === no-collapse attribute — keeps the current tab open; clicking it does nothing ===
+	   Matches ui-accordion's `no-collapse` convention */
+	ui-tabs[no-collapse] details[open] summary {
+		pointer-events: none;
+	}
+
 }
