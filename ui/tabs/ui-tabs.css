@@ -46,6 +46,7 @@
 		--ui-tabs-squircle-radius: 1em;
 		--ui-tabs-tab-gap: 1ch;
 
+		container-type: inline-size;
 		display: block;
 
 		cq-box {
@@ -113,7 +114,7 @@
 		}
 
 		summary {
-			align-items: center;
+			/* align-items: center; */
 			cursor: pointer;
 			display: flex;
 			gap: var(--ui-tabs-tab-gap);
@@ -124,7 +125,7 @@
 			overflow: hidden;
 			padding: var(--ui-tabs-padding-block) var(--ui-tabs-padding-inline);
 			pointer-events: auto;
-			text-align: center;
+			/* text-align: center; */
 			user-select: none;
 			z-index: var(--z-index-2);
 
@@ -152,12 +153,40 @@
 		padding-inline: calc(var(--ui-tabs-panel-padding-inline) + 50vw - 50%);
 	}
 
-	/* compact — tabs take their natural (min-content) width, grouped at the start
-	   of the header. Remaining header area is just the ::before background */
+	/* compact — tabs take their natural (min-content) width, grouped at the start.
+	   Explicit template with a hardcoded max of 12 tab tracks + a trailing 1fr.
+	   Unused min-content tracks collapse to 0 (no content). Gap is done via
+	   margin-inline-end on summaries so empty tracks don't introduce spacing.
+	   details spans 1 / -1 so ::details-content fills cq-box's full width */
 	ui-tabs[variant~="compact"] cq-box {
-		column-gap: var(--ui-tabs-compact-gap);
-		grid-auto-columns: min-content;
-		justify-content: start;
+		grid-template-columns: repeat(12, min-content) 1fr;
+	}
+
+	ui-tabs[variant~="compact"] details {
+		grid-column: 1 / -1;
+	}
+
+	ui-tabs[variant~="compact"] summary {
+		margin-inline-end: var(--ui-tabs-compact-gap);
+	}
+
+	ui-tabs[variant~="compact"] details:last-of-type summary {
+		margin-inline-end: 0;
+	}
+
+	/* compact on narrow containers — fall back to equal-share tracks so tabs don't
+	   overflow. Reset explicit template + restore details' per-tab span */
+	@container (inline-size < 400px) {
+		ui-tabs[variant~="compact"] cq-box {
+			grid-auto-columns: minmax(0, 1fr);
+			grid-template-columns: none;
+		}
+		ui-tabs[variant~="compact"] details {
+			grid-column: 1 / span var(--_tc);
+		}
+		ui-tabs[variant~="compact"] summary {
+			margin-inline-end: 0;
+		}
 	}
 
 	/* bordered — border around the ui-tabs element itself */
