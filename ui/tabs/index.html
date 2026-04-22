@@ -11,18 +11,51 @@
 		/* Reserve scrollbar space so 100vw excludes it (Chrome 145+),
 		   preventing variant="bleed" from triggering a horizontal scrollbar */
 		html { scrollbar-gutter: stable; }
+
+		/* Demo classes — consumers customize decoration by flipping tokens.
+		   Structural behavior (shape, layout, animation) still comes from `variant`. */
+		.tabs-fill-accent {
+			--ui-tabs-indicator-bg: var(--color-accent);
+			--ui-tabs-indicator-text: var(--color-accent-text);
+		}
+
+		.tabs-fill-surface {
+			--ui-tabs-indicator-bg: var(--color-surface);
+			--ui-tabs-indicator-offset: var(--spacing-sm);
+			--ui-tabs-indicator-shadow: var(--shadow-md);
+			--ui-tabs-indicator-text: var(--color-text);
+		}
+
+		.tabs-line {
+			--ui-tabs-indicator-width: var(--border-width-heavy);
+		}
+
+		.tabs-line-above {
+			--ui-tabs-indicator-width-start: var(--border-width-heavy);
+		}
+
+		.tabs-offset {
+			--ui-tabs-indicator-offset: var(--spacing-sm);
+		}
+
+		.tabs-muted {
+			--ui-tabs-indicator-text: var(--color-text);
+		}
+
+		.tabs-outline {
+			--ui-tabs-outline-width: var(--border-width-thick);
+		}
 	</style>
 </head>
 <body>
 	<h1>UI: Tabs</h1>
 
 	<p>
-		<code>&lt;ui-tabs&gt;</code> is a CSS-only tabbed interface built on native <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> elements. Use the <code>name</code> attribute on each <code>&lt;details&gt;</code> for exclusive open behavior, and compose the look with space-separated tokens on the <code>variant</code> attribute plus optional standalone attributes (<code>indicator</code>, <code>no-background</code>, <code>no-collapse</code>).
+		<code>&lt;ui-tabs&gt;</code> is a CSS-only tabbed interface built on native <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> elements. Use the <code>name</code> attribute on each <code>&lt;details&gt;</code> for exclusive open behavior. Structural behavior (shape, layout, animation) comes from the <code>variant</code> attribute. Decoration (indicator style, active-tab color, etc.) is driven entirely by CSS tokens — add your own classes that flip token values.
 	</p>
 
 	<h2>Header bar</h2>
-	<p>Tabs sit inside a tinted horizontal bar (the <code>::before</code> header background). Shape comes from <code>variant</code>, the active indicator comes from <code>indicator</code>.</p>
-	<p>With <code>indicator="line"</code></p>
+	<p>Tabs sit inside a tinted horizontal bar (the <code>::before</code> header background). By default the active tab label picks up the accent color (via <code>--ui-tabs-indicator-text</code>); no underline unless you opt in.</p>
 	<ui-tabs no-collapse>
 		<cq-box>
 			<details name="tabs-default" open>
@@ -52,14 +85,14 @@
 		</cq-box>
 	</ui-tabs>
 
-	<p>With <code>indicator="line accent"</code> — active tab text picks up the accent color:</p>
-	<ui-tabs indicator="line accent" no-collapse>
+	<p>With <code>class="tabs-line"</code> — adds the sliding underline beneath the active tab:</p>
+	<ui-tabs class="tabs-line" no-collapse>
 		<cq-box>
-			<details name="tabs-accent" open>
+			<details name="tabs-accent">
 				<summary>Shipping</summary>
 				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
 			</details>
-			<details name="tabs-accent">
+			<details name="tabs-accent" open>
 				<summary>Payment</summary>
 				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
 			</details>
@@ -74,8 +107,74 @@
 		</cq-box>
 	</ui-tabs>
 
-	<p>With <code>variant="pill"</code> and  <code>indicator="background offset"</code></p>
-	<ui-tabs variant="pill" indicator="background offset" no-collapse>
+	<p>With <code>class="tabs-line-above"</code> — puts the line at the top of the active tab instead:</p>
+	<ui-tabs class="tabs-line-above" no-collapse>
+		<cq-box>
+			<details name="tabs-line-above">
+				<summary>Shipping</summary>
+				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+			</details>
+			<details name="tabs-line-above">
+				<summary>Payment</summary>
+				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+			</details>
+			<details name="tabs-line-above" open>
+				<summary>Returns</summary>
+				<div>Return within 30 days for a full refund.</div>
+			</details>
+			<details name="tabs-line-above">
+				<summary>Support</summary>
+				<div>Support via phone, email, or live chat.</div>
+			</details>
+		</cq-box>
+	</ui-tabs>
+
+	<p>With <code>class="tabs-fill-accent"</code> — sets the background of the active tab to accent-color:</p>
+	<ui-tabs class="tabs-fill-accent" no-collapse>
+		<cq-box>
+			<details name="tabs-fill-accent" open>
+				<summary>Shipping</summary>
+				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+			</details>
+			<details name="tabs-fill-accent">
+				<summary>Payment</summary>
+				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+			</details>
+			<details name="tabs-fill-accent">
+				<summary>Returns</summary>
+				<div>Return within 30 days for a full refund.</div>
+			</details>
+			<details name="tabs-fill-accent">
+				<summary>Support</summary>
+				<div>Support via phone, email, or live chat.</div>
+			</details>
+		</cq-box>
+	</ui-tabs>
+
+	<p>Combined <code>class="tabs-fill-accent tabs-offset"</code> with <code>variant="pill"</code> — the accent fill becomes an inset pill indicator:</p>
+	<ui-tabs variant="pill" class="tabs-fill-accent tabs-offset" no-collapse>
+		<cq-box>
+			<details name="tabs-fill-accent-pill" open>
+				<summary>Shipping</summary>
+				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+			</details>
+			<details name="tabs-fill-accent-pill">
+				<summary>Payment</summary>
+				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+			</details>
+			<details name="tabs-fill-accent-pill">
+				<summary>Returns</summary>
+				<div>Return within 30 days for a full refund.</div>
+			</details>
+			<details name="tabs-fill-accent-pill">
+				<summary>Support</summary>
+				<div>Support via phone, email, or live chat.</div>
+			</details>
+		</cq-box>
+	</ui-tabs>
+
+	<p>With <code>variant="pill"</code> and <code>class="tabs-fill-surface"</code> — the class sets indicator bg, offset, shadow, and colors the active text:</p>
+	<ui-tabs variant="pill" class="tabs-fill-surface" no-collapse>
 		<cq-box>
 			<details name="tabs-pill" open>
 				<summary>Shipping</summary>
@@ -96,10 +195,10 @@
 		</cq-box>
 	</ui-tabs>
 
-	<p>With <code>variant="squircle"</code> and <code>indicator="background offset shadow"</code></p>
-	<ui-tabs variant="squircle" indicator="background offset shadow" no-collapse>
+	<p>With <code>variant="squircle"</code> and the same <code>class="tabs-fill-surface"</code> — structure differs, decoration is the same:</p>
+	<ui-tabs variant="squircle" class="tabs-fill-surface" no-collapse>
 		<cq-box>
-			<details name="tabs-squircle" open>
+			<details name="tabs-squircle">
 				<summary>Shipping</summary>
 				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
 			</details>
@@ -111,7 +210,31 @@
 				<summary>Returns</summary>
 				<div>Return within 30 days for a full refund.</div>
 			</details>
-			<details name="tabs-squircle">
+			<details name="tabs-squircle" open>
+				<summary>Support</summary>
+				<div>Support via phone, email, or live chat.</div>
+			</details>
+		</cq-box>
+	</ui-tabs>
+
+	<br>
+	<h2>Outline</h2>
+	<p>With <code>class="tabs-outline"</code> — inactive tabs share a baseline, the active tab gets a frame open at the bottom so it "sticks out" like a classic desktop tab.</p>
+	<ui-tabs class="tabs-outline tabs-muted" no-background no-collapse>
+		<cq-box>
+			<details name="tabs-outline">
+				<summary>Shipping</summary>
+				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+			</details>
+			<details name="tabs-outline" open>
+				<summary>Payment</summary>
+				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+			</details>
+			<details name="tabs-outline">
+				<summary>Returns</summary>
+				<div>Return within 30 days for a full refund.</div>
+			</details>
+			<details name="tabs-outline">
 				<summary>Support</summary>
 				<div>Support via phone, email, or live chat.</div>
 			</details>
@@ -120,7 +243,7 @@
 
 	<br>
 	<h2>Bordered</h2>
-	<ui-tabs variant="rounded bordered" no-collapse>
+	<ui-tabs variant="rounded bordered" class="tabs-line" no-collapse>
 		<cq-box>
 			<details name="tabs-rounded" open>
 				<summary>Shipping</summary>
@@ -141,8 +264,8 @@
 		</cq-box>
 	</ui-tabs>
 
-	<p>With <code>variant="compact"</code> added</p>
-	<ui-tabs variant="bordered compact rounded" no-collapse>
+	<p>With <code>variant="compact"</code> added, plus <code>class="tabs-muted"</code> to swap the accent color (line + active text) for the regular text color:</p>
+	<ui-tabs variant="bordered compact rounded" class="tabs-line tabs-muted" no-collapse>
 		<cq-box>
 			<details name="tabs-compact" open>
 				<summary>Shipping</summary>
@@ -159,8 +282,8 @@
 		</cq-box>
 	</ui-tabs>
 
-	<p>When <code>variant="compact"</code> is used with <code>no-background</code>, inline padding is removed as well</p>
-	<ui-tabs variant="compact" indicator="line" no-background no-collapse>
+	<p>When <code>variant="compact"</code> is used with <code>no-background</code>, inline padding is removed as well (edges flush). Adding <code>class="tabs-line"</code> opts into the underline indicator:</p>
+	<ui-tabs variant="compact" class="tabs-line" no-background no-collapse>
 		<cq-box>
 			<details name="tabs-minimal" open>
 				<summary>Overview</summary>
@@ -210,7 +333,7 @@
 	<p>Header background extends to the viewport edges, breaking out of the centered cq-box.</p>
 	<ui-tabs variant="bleed">
 		<cq-box>
-			<details name="tabs-bleed" open>
+			<details name="tabs-bleed">
 				<summary>Shipping</summary>
 				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
 			</details>
@@ -233,7 +356,7 @@
 	<p>Both header and panel backgrounds bleed edge-to-edge; text stays within the original column.</p>
 	<ui-tabs variant="bleed panel">
 		<cq-box>
-			<details name="tabs-bleed-panel" open>
+			<details name="tabs-bleed-panel">
 				<summary>Shipping</summary>
 				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
 			</details>
@@ -256,7 +379,7 @@
 	<h2>Right-to-left</h2>
 	<p>All variants support <code>dir="rtl"</code>.</p>
 	<div dir="rtl">
-		<ui-tabs variant="pill" indicator="background offset" no-collapse>
+		<ui-tabs variant="pill" class="tabs-fill-surface" no-collapse>
 			<cq-box>
 				<details name="tabs-rtl" open>
 					<summary>الشحن</summary>

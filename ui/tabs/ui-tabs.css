@@ -8,7 +8,6 @@
  *   --_tc   tab-count     total <details> siblings; drives subgrid span
  *   --_ti   tab-index     current <details> position; drives summary grid-column
  *   --_sr   shape-radius  pill/rounded radius used by shared shape rules
- *   --_o    offset        indicator inset distance (offset indicator)
  */
 @layer bs-component {
 
@@ -22,6 +21,11 @@
 		inherits: true;
 		initial-value: 1;
 	}
+	@property --ui-tabs-indicator-offset {
+		syntax: "<length>";
+		inherits: true;
+		initial-value: 0px;
+	}
 
 	:where(ui-tabs) {
 		--ui-tabs-border-color: var(--color-border);
@@ -30,11 +34,15 @@
 		--ui-tabs-duration: var(--duration-normal);
 		--ui-tabs-header-bg: var(--color-surface-alt);
 		--ui-tabs-header-height: 3em;
-		--ui-tabs-indicator-bg: var(--color-surface);
+		--ui-tabs-indicator-bg: transparent;
 		--ui-tabs-indicator-color: var(--color-accent);
-		--ui-tabs-indicator-offset: var(--spacing-sm);
-		--ui-tabs-indicator-shadow: var(--shadow-md);
-		--ui-tabs-indicator-width: var(--border-width-heavy);
+		--ui-tabs-indicator-offset: 0px;
+		--ui-tabs-indicator-shadow: none;
+		--ui-tabs-indicator-text: var(--color-accent);
+		--ui-tabs-indicator-width: 0px;
+		--ui-tabs-indicator-width-start: 0px;
+		--ui-tabs-outline-color: var(--color-text-muted);
+		--ui-tabs-outline-width: 0px;
 		--ui-tabs-max-width: var(--width-5xl);
 		--ui-tabs-padding-block: 1.25ch;
 		--ui-tabs-padding-inline: 1.5ch;
@@ -60,7 +68,7 @@
 			max-width: var(--ui-tabs-max-width);
 			position: relative;
 
-			/* Header row background */
+			/* Header row background. */
 			&::before {
 				background: var(--ui-tabs-header-bg);
 				block-size: anchor-size(--tab-active height, var(--ui-tabs-header-height));
@@ -71,13 +79,18 @@
 				z-index: 0;
 			}
 
-			/* Sliding tab indicator — geometry only; styling comes from `indicator` attr */
+			/* Sliding tab indicator. Decoration via tokens (see readme). */
 			&::after {
-				block-size: anchor-size(--tab-active height, var(--ui-tabs-header-height));
+				background: var(--ui-tabs-indicator-bg);
+				block-size: calc(anchor-size(--tab-active height, var(--ui-tabs-header-height)) - 2 * var(--ui-tabs-indicator-offset));
+				border-block-end: var(--ui-tabs-indicator-width) solid var(--ui-tabs-indicator-color);
+				border-block-start: var(--ui-tabs-indicator-width-start) solid var(--ui-tabs-indicator-color);
+				box-shadow: var(--ui-tabs-indicator-shadow);
+				box-sizing: border-box;
 				content: "";
-				inline-size: anchor-size(--tab-active width, 0);
-				inset-block-start: 0;
-				inset-inline-start: anchor(--tab-active start, 0);
+				inline-size: calc(anchor-size(--tab-active width, 0) - 2 * var(--ui-tabs-indicator-offset));
+				inset-block-start: var(--ui-tabs-indicator-offset);
+				inset-inline-start: calc(anchor(--tab-active start, 0) + var(--ui-tabs-indicator-offset));
 				position: absolute;
 				transition: inset-inline-start var(--ui-tabs-duration) ease, inline-size var(--ui-tabs-duration) ease;
 				z-index: var(--z-index-1);
@@ -95,9 +108,7 @@
 			grid-template-rows: subgrid;
 			pointer-events: none;
 
-			&[open] summary {
-				anchor-name: --tab-active;
-			}
+			& > :not(summary) { padding: var(--ui-tabs-panel-padding-block) var(--ui-tabs-panel-padding-inline); }
 
 			&::details-content {
 				grid-column: 1 / -1;
@@ -105,18 +116,23 @@
 				pointer-events: auto;
 			}
 
+			&[open] summary {
+				anchor-name: --tab-active;
+				border-block-end: 0;
+				border-block-start: var(--ui-tabs-outline-width) solid var(--ui-tabs-outline-color);
+				border-inline: var(--ui-tabs-outline-width) solid var(--ui-tabs-outline-color);
+				color: var(--ui-tabs-indicator-text);
+			}
+
 			&[open]::details-content {
 				block-size: auto;
 				content-visibility: visible;
 			}
-
-			& > :not(summary) {
-				padding: var(--ui-tabs-panel-padding-block) var(--ui-tabs-panel-padding-inline);
-			}
 		}
 
 		summary {
-			/* align-items: center; */
+			border-block-end: var(--ui-tabs-outline-width) solid var(--ui-tabs-outline-color);
+			box-sizing: border-box;
 			cursor: pointer;
 			display: flex;
 			gap: var(--ui-tabs-tab-gap);
@@ -127,7 +143,6 @@
 			overflow: hidden;
 			padding: var(--ui-tabs-padding-block) var(--ui-tabs-padding-inline);
 			pointer-events: auto;
-			/* text-align: center; */
 			user-select: none;
 			z-index: var(--z-index-2);
 
@@ -136,87 +151,71 @@
 		}
 	}
 
-	/* === Variants === */
+	/* === Variants (structural) === */
 
-	/* bleed — header background extends past cq-box to the viewport edges.
-	   Note: 100vw historically includes scrollbar width, which can cause horizontal
-	   overflow when a vertical scrollbar is present. To avoid the cascading
-	   scrollbar issue, set one of these on html at page level:
-	     html { scrollbar-gutter: stable; }   (preferred — reserves scrollbar space)
-	     html { overflow-y: scroll; }         (forces persistent scrollbar)
-	   Chrome 145+ will then exclude scrollbar width from 100vw automatically.
-	   Older browsers: also add `html { overflow-x: clip; }` */
-	ui-tabs[variant~="bleed"] cq-box::before {
-		inset-inline: calc(50% - 50vw);
-	}
+	/* bleed — header bg reaches viewport edges. See readme for scrollbar notes. */
+	ui-tabs[variant~="bleed"] cq-box::before { inset-inline: calc(50% - 50vw); }
 
-	/* panel — background + shadow on the actual content element (bypasses
-	   ::details-content render quirks in Chrome that hide text when the pseudo
-	   has a background) */
-	ui-tabs[variant~="panel"] details > :not(summary) {
-		background: var(--ui-tabs-panel-bg);
-		box-shadow: var(--ui-tabs-panel-shadow);
-	}
-
-	/* bleed + panel — panel bg extends to viewport edges; padding compensates so text stays put */
+	/* bleed + panel — panel bg also bleeds; padding keeps text in column. */
 	ui-tabs[variant~="bleed"][variant~="panel"] details > :not(summary) {
 		margin-inline: calc(50% - 50vw);
 		padding-inline: calc(var(--ui-tabs-panel-padding-inline) + 50vw - 50%);
 	}
 
-	/* compact — tabs take their natural (min-content) width, grouped at the start.
-	   Explicit template with a hardcoded max of 12 tab tracks + a trailing 1fr.
-	   Unused min-content tracks collapse to 0 (no content). Gap is done via
-	   margin-inline-end on summaries so empty tracks don't introduce spacing.
-	   details spans 1 / -1 so ::details-content fills cq-box's full width */
-	ui-tabs[variant~="compact"] cq-box {
-		grid-template-columns: repeat(12, min-content) 1fr;
-	}
-
-	ui-tabs[variant~="compact"] details {
-		grid-column: 1 / -1;
-	}
-
-	ui-tabs[variant~="compact"] summary {
-		margin-inline-end: var(--ui-tabs-compact-gap);
-	}
-
-	ui-tabs[variant~="compact"] details:last-of-type summary {
-		margin-inline-end: 0;
-	}
-
-	/* compact on narrow containers — fall back to equal-share tracks so tabs don't
-	   overflow. Reset explicit template + restore details' per-tab span */
-	@container (inline-size < 400px) {
-		ui-tabs[variant~="compact"] cq-box {
-			grid-auto-columns: minmax(0, 1fr);
-			grid-template-columns: none;
-		}
-		ui-tabs[variant~="compact"] details {
-			grid-column: 1 / span var(--_tc);
-		}
-		ui-tabs[variant~="compact"] summary {
-			margin-inline-end: 0;
-		}
-	}
-
-	/* bordered — border around the ui-tabs element itself, plus a bottom border
-	   on the header bar to separate it from the panel area */
+	/* bordered — outer frame + divider between header and panel. */
 	ui-tabs[variant~="bordered"] {
 		border: var(--ui-tabs-border-width) solid var(--ui-tabs-border-color);
 
-		cq-box::before {
-			border-block-end: var(--ui-tabs-border-width) solid var(--ui-tabs-border-color);
+		cq-box::before { border-block-end: var(--ui-tabs-border-width) solid var(--ui-tabs-border-color); }
+	}
+
+	/* compact — tabs at min-content, grouped left, trailing 1fr fills. */
+	ui-tabs[variant~="compact"] {
+		cq-box { grid-template-columns: repeat(12, min-content) 1fr; }
+		details { grid-column: 1 / -1; }
+		details:last-of-type summary { margin-inline-end: 0; }
+		summary { margin-inline-end: var(--ui-tabs-compact-gap); }
+	}
+
+	/* compact narrow fallback — equal-share tracks below 400px. */
+	@container (inline-size < 400px) {
+		ui-tabs[variant~="compact"] {
+			cq-box {
+				grid-auto-columns: minmax(0, 1fr);
+				grid-template-columns: none;
+			}
+			details { grid-column: 1 / span var(--_tc); }
+			summary { margin-inline-end: 0; }
 		}
 	}
 
-	/* pill / rounded — shared rounding rules. Header bg + indicator both get the
-	   full shape radius; edge summaries match on their outer corners */
-	ui-tabs:is([variant~="pill"], [variant~="rounded"]) {
-		cq-box::before,
-		cq-box::after {
-			border-radius: var(--_sr);
+	/* panel — bg + shadow on content; slide in/out via display:allow-discrete. */
+	ui-tabs[variant~="panel"] {
+		details > :not(summary) {
+			background: var(--ui-tabs-panel-bg);
+			box-shadow: var(--ui-tabs-panel-shadow);
+			transition:
+				opacity var(--ui-tabs-duration),
+				translate var(--ui-tabs-duration),
+				display var(--ui-tabs-duration) allow-discrete;
 		}
+		details:not([open]) > :not(summary) {
+			display: none;
+			opacity: 0;
+			translate: 0 calc(-1 * var(--ui-tabs-panel-padding-block));
+		}
+		details[open] > :not(summary) {
+			@starting-style {
+				opacity: 0;
+				translate: 0 calc(-1 * var(--ui-tabs-panel-padding-block));
+			}
+		}
+	}
+
+	/* pill / rounded — shared shape; indicator radius compensates for offset. */
+	ui-tabs:is([variant~="pill"], [variant~="rounded"]) {
+		cq-box::after { border-radius: calc(var(--_sr) - var(--ui-tabs-indicator-offset)); }
+		cq-box::before { border-radius: var(--_sr); }
 		details:first-of-type summary {
 			border-start-start-radius: var(--_sr);
 			border-end-start-radius: var(--_sr);
@@ -227,13 +226,10 @@
 		}
 	}
 
-	/* pill — fully rounded ends */
+	/* pill — fully rounded ends. */
 	ui-tabs[variant~="pill"] { --_sr: var(--ui-tabs-pill-radius); }
 
-	/* rounded — slightly rounded corners; rounds ui-tabs itself so
-	   `bordered + rounded` gives a rounded outer border. Header bg, indicator,
-	   and edge summaries only round their TOP corners so they flow straight
-	   into the panel below */
+	/* rounded — top corners only; bottom flows into panel. */
 	ui-tabs[variant~="rounded"] {
 		--_sr: var(--ui-tabs-rounded-radius);
 		border-radius: var(--_sr);
@@ -243,93 +239,31 @@
 			border-end-start-radius: 0;
 			border-end-end-radius: 0;
 		}
-		details:first-of-type summary {
-			border-end-start-radius: 0;
-		}
-		details:last-of-type summary {
-			border-end-end-radius: 0;
-		}
+		details:first-of-type summary { border-end-start-radius: 0; }
+		details:last-of-type summary { border-end-end-radius: 0; }
 	}
 
-	/* squircle — superellipse corners via the CSS `corners` shorthand (Chrome 135+).
-	   Falls back to no rounding in unsupported browsers */
+	/* squircle — superellipse corners (Chrome 135+). */
 	ui-tabs[variant~="squircle"] {
-		cq-box::before,
-		cq-box::after {
-			corners: var(--ui-tabs-squircle-radius) superellipse(var(--ui-tabs-squircle-exp));
+		cq-box::after { corners: calc(var(--ui-tabs-squircle-radius) - var(--ui-tabs-indicator-offset)) superellipse(var(--ui-tabs-squircle-exp)); }
+		cq-box::before { corners: var(--ui-tabs-squircle-radius) superellipse(var(--ui-tabs-squircle-exp)); }
+		details:first-of-type summary { corners: var(--ui-tabs-squircle-radius) 0 0 var(--ui-tabs-squircle-radius) superellipse(var(--ui-tabs-squircle-exp)); }
+		details:last-of-type summary { corners: 0 var(--ui-tabs-squircle-radius) var(--ui-tabs-squircle-radius) 0 superellipse(var(--ui-tabs-squircle-exp)); }
+	}
+
+	/* === Attributes === */
+
+	/* no-background — drops header bg; flushes padding when combined with compact. */
+	ui-tabs[no-background] {
+		cq-box::before { background: none; }
+
+		&[variant~="compact"] {
+			details > :not(summary) { padding-inline: 0; }
+			summary { padding-inline: 0; }
 		}
-		details:first-of-type summary {
-			corners: var(--ui-tabs-squircle-radius) 0 0 var(--ui-tabs-squircle-radius) superellipse(var(--ui-tabs-squircle-exp));
-		}
-		details:last-of-type summary {
-			corners: 0 var(--ui-tabs-squircle-radius) var(--ui-tabs-squircle-radius) 0 superellipse(var(--ui-tabs-squircle-exp));
-		}
 	}
 
-	/* === Indicator (attribute, not variant) ===
-	   Combinable tokens on a dedicated `indicator` attribute.
-	   Default (no attr) == line. */
-
-	:is(ui-tabs:not([indicator]), ui-tabs[indicator~="line"]) cq-box::after {
-		border-block-end: var(--ui-tabs-indicator-width) solid var(--ui-tabs-indicator-color);
-	}
-
-	ui-tabs[indicator~="background"] cq-box::after {
-		background: var(--ui-tabs-indicator-bg);
-	}
-
-	/* accent — active tab's summary text uses the accent color */
-	ui-tabs[indicator~="accent"] details[open] summary {
-		color: var(--ui-tabs-indicator-color);
-	}
-
-	/* shadow — subtle box-shadow on the indicator. Only renders when combined
-	   with `background` (a bare line/underline would look weird with a shadow) */
-	ui-tabs[indicator~="background"][indicator~="shadow"] cq-box::after {
-		box-shadow: var(--ui-tabs-indicator-shadow);
-	}
-
-	/* offset — inset the indicator from the header edge on all four sides */
-	ui-tabs[indicator~="offset"] cq-box::after {
-		--_o: var(--ui-tabs-indicator-offset);
-		block-size: calc(anchor-size(--tab-active height, var(--ui-tabs-header-height)) - 2 * var(--_o));
-		inline-size: calc(anchor-size(--tab-active width, 0) - 2 * var(--_o));
-		inset-block-start: var(--_o);
-		inset-inline-start: calc(anchor(--tab-active start, 0) + var(--_o));
-	}
-
-	/* offset + pill — all 4 corners compensated for the inset */
-	ui-tabs[variant~="pill"][indicator~="offset"] cq-box::after {
-		border-radius: calc(var(--ui-tabs-pill-radius) - var(--ui-tabs-indicator-offset));
-	}
-
-	/* offset + rounded — only top corners compensated; bottom stays flat */
-	ui-tabs[variant~="rounded"][indicator~="offset"] cq-box::after {
-		border-start-start-radius: calc(var(--ui-tabs-rounded-radius) - var(--ui-tabs-indicator-offset));
-		border-start-end-radius: calc(var(--ui-tabs-rounded-radius) - var(--ui-tabs-indicator-offset));
-	}
-
-	/* offset + squircle — same concentric-corners compensation for squircle */
-	ui-tabs[variant~="squircle"][indicator~="offset"] cq-box::after {
-		corners: calc(var(--ui-tabs-squircle-radius) - var(--ui-tabs-indicator-offset)) superellipse(var(--ui-tabs-squircle-exp));
-	}
-
-	/* === no-background attribute — removes the header ::before background.
-	   Combined with `variant="compact"`, drops inline padding on tab summaries
-	   and panel content so the layout flows flush to cq-box edges */
-	ui-tabs[no-background] cq-box::before {
-		background: none;
-	}
-
-	ui-tabs[no-background][variant~="compact"] {
-		summary { padding-inline: 0; }
-		details > :not(summary) { padding-inline: 0; }
-	}
-
-	/* === no-collapse attribute — keeps the current tab open; clicking it does nothing ===
-	   Matches ui-accordion's `no-collapse` convention */
-	ui-tabs[no-collapse] details[open] summary {
-		pointer-events: none;
-	}
+	/* no-collapse — one tab stays open. */
+	ui-tabs[no-collapse] details[open] summary { pointer-events: none; }
 
 }
