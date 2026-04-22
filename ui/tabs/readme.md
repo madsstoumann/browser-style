@@ -9,7 +9,7 @@ A CSS-only tab interface built on native `<details>` and `<summary>` elements. N
 - Sliding tab indicator via CSS Anchor Positioning.
 - Subgrid-based layout so the panel aligns with the tab row across all children.
 - Slide-down / slide-up panel transitions via `@starting-style` + `display: allow-discrete`.
-- Structural variants for shape and layout: `bleed`, `bordered`, `compact`, `panel`, `pill`, `rounded`, `squircle`.
+- Structural variants for shape and layout: `bleed`, `bordered`, `compact`, `ellipse`, `panel`, `pill`, `rounded`.
 - Decoration driven entirely by CSS tokens — define your own classes, no `indicator=` attribute needed.
 - RTL-safe (indicator uses logical `start` anchor edge, bleed uses symmetric `inset-inline`).
 - Light/dark mode via design tokens.
@@ -86,7 +86,7 @@ Space-separated tokens. Combinable.
 | `panel` | Active panel gets `--ui-tabs-panel-bg` + `--ui-tabs-panel-shadow`, and slides in/out on tab switch. |
 | `pill` | Fully rounded header bar and indicator (`--ui-tabs-pill-radius`). |
 | `rounded` | Slightly rounded outer corners + rounded top of header bar (`--ui-tabs-rounded-radius`). |
-| `squircle` | iOS-style superellipse corners via the CSS `corners` property (Chrome 135+). |
+| `ellipse` | Corners drawn via the CSS `corners` property (Chrome 135+). Default `--ui-tabs-squircle-exp: 2` is a true ellipse; bump to `3+` for an iOS-style squircle. |
 
 ### Standalone attributes
 
@@ -95,7 +95,7 @@ Space-separated tokens. Combinable.
 | `no-background` | Removes the header background. When combined with `variant="compact"`, also removes inline padding on summaries and panel content so edges flush to cq-box. |
 | `no-collapse` | Clicking the active tab does nothing — one tab is always open. |
 
-### Decoration tokens
+### Decoration via classes
 
 All decoration is token-driven — no `indicator="…"` attribute. Add your own class and flip tokens:
 
@@ -105,13 +105,14 @@ All decoration is token-driven — no `indicator="…"` attribute. Add your own 
   --ui-tabs-indicator-shadow: var(--shadow-md);
   --ui-tabs-indicator-offset: var(--spacing-sm);
   --ui-tabs-indicator-text: var(--color-accent);
-  --ui-tabs-indicator-width: 0;
 }
 ```
 
 ```html
 <ui-tabs variant="pill" class="my-tabs">…</ui-tabs>
 ```
+
+Compose multiple classes for orthogonal effects — e.g., `class="tabs-line tabs-muted"` adds an underline and swaps the accent text color, each controlled by a different token.
 
 ---
 
@@ -125,10 +126,14 @@ All tokens are scoped to `:where(ui-tabs)` — low specificity, easy to override
 |---|---|---|
 | `--ui-tabs-indicator-bg` | `transparent` | Filled background behind the active tab. |
 | `--ui-tabs-indicator-color` | `var(--color-accent)` | Underline color and default indicator accent. |
+| `--ui-tabs-indicator-font-weight` | `inherit` | Font weight of the active tab's label. Set to `var(--font-weight-medium)` / `-semibold` / `-bold` for emphasis. |
 | `--ui-tabs-indicator-offset` | `0px` | Inset distance of the indicator from the header edge. `<length>`. |
 | `--ui-tabs-indicator-shadow` | `none` | Box-shadow on the indicator. |
 | `--ui-tabs-indicator-text` | `var(--color-accent)` | Color of the active tab's label text. |
-| `--ui-tabs-indicator-width` | `0px` | Underline thickness. Set to `var(--border-width-heavy)` (or any `<length>`) to show the indicator line. |
+| `--ui-tabs-indicator-width` | `0px` | Bottom underline thickness. Set to `var(--border-width-heavy)` (or any `<length>`) to show the indicator line. |
+| `--ui-tabs-indicator-width-start` | `0px` | Top underline thickness (line *above* the active tab). Independent of `-width`. |
+| `--ui-tabs-outline-color` | `var(--color-text-muted)` | Color of the classic tab-outline stroke (see `.tabs-outline` recipe). |
+| `--ui-tabs-outline-width` | `0px` | Width of the tab-outline stroke. Set to a length to enable the "tab sticking out of a baseline" look. |
 
 ### Structure
 
@@ -149,18 +154,24 @@ All tokens are scoped to `:where(ui-tabs)` — low specificity, easy to override
 | `--ui-tabs-panel-shadow` | `var(--shadow-md)` | Panel surface shadow. |
 | `--ui-tabs-pill-radius` | `var(--radius-pill)` | Radius used by `variant="pill"`. |
 | `--ui-tabs-rounded-radius` | `var(--radius-lg)` | Radius used by `variant="rounded"`. |
-| `--ui-tabs-squircle-exp` | `2` | Superellipse exponent for `variant="squircle"`. Higher = squarer corners. |
-| `--ui-tabs-squircle-radius` | `1em` | Corner radius for `variant="squircle"`. |
+| `--ui-tabs-squircle-exp` | `2` | Superellipse exponent for `variant="ellipse"`. `2` = a true ellipse; `3+` = squircle; higher = squarer corners. |
+| `--ui-tabs-squircle-radius` | `1em` | Corner radius for `variant="ellipse"`. |
 | `--ui-tabs-tab-gap` | `1ch` | Gap between tab label and any inline icon. |
 
 ---
 
 ## Recipes
 
+### Default — accent-colored active label
+
+With no classes or variants, the active tab's label picks up `--color-accent`. Nothing else.
+```html
+<ui-tabs>…</ui-tabs>
+```
+
 ### Underline indicator
 
-The default places an accent color on the active tab's label but draws no underline. Opt in to the classic sliding underline:
-
+Opt into the sliding underline:
 ```css
 .tabs-line { --ui-tabs-indicator-width: var(--border-width-heavy); }
 ```
@@ -168,28 +179,73 @@ The default places an accent color on the active tab's label but draws no underl
 <ui-tabs class="tabs-line">…</ui-tabs>
 ```
 
-### Filled pill / squircle indicator
+### Line above the active tab
+
+Same pattern, different edge:
+```css
+.tabs-line-above { --ui-tabs-indicator-width-start: var(--border-width-heavy); }
+```
+
+### Muted label color
+
+Swap the accent for any other color via `--ui-tabs-indicator-text`:
+```css
+.tabs-muted { --ui-tabs-indicator-text: var(--color-text); }
+```
+
+### Weight + muted label
+
+Emphasize via font-weight instead of (or alongside) color:
+```css
+.tabs-subtle {
+  --ui-tabs-indicator-font-weight: var(--font-weight-semibold);
+  --ui-tabs-indicator-text: var(--color-text);
+}
+```
+
+### Filled pill / ellipse indicator
 
 ```css
 .tabs-filled {
   --ui-tabs-indicator-bg: var(--color-surface);
   --ui-tabs-indicator-offset: var(--spacing-sm);
   --ui-tabs-indicator-shadow: var(--shadow-md);
+  --ui-tabs-indicator-text: var(--color-text);
 }
 ```
 ```html
 <ui-tabs variant="pill" class="tabs-filled">…</ui-tabs>
-<ui-tabs variant="squircle" class="tabs-filled">…</ui-tabs>
+<ui-tabs variant="ellipse" class="tabs-filled">…</ui-tabs>
 ```
+Same class on either shape — decoration is orthogonal to structure.
 
-The same class works with either shape — decoration is orthogonal to structure.
+### Classic desktop-tab outline
+
+Inactive tabs share a baseline; the active tab gets a frame open at the bottom, "sticking out" of the row:
+```css
+.tabs-outline { --ui-tabs-outline-width: var(--border-width-thick); }
+```
+```html
+<ui-tabs class="tabs-outline" no-background>…</ui-tabs>
+```
+`no-background` typically reads cleaner — the outlines become the only horizontal structure.
+
+### Rounder ellipse corners
+
+Bump the superellipse exponent:
+```css
+.tabs-rounded { --ui-tabs-squircle-exp: 3; }
+```
+```html
+<ui-tabs variant="ellipse" class="tabs-rounded">…</ui-tabs>
+```
+Exponent `2` (default) = a true ellipse (same shape as border-radius). Exponent `3+` = iOS-style squircle. Higher = progressively squarer corners.
 
 ### Minimal compact strip
 
 ```html
 <ui-tabs variant="compact" class="tabs-line" no-background no-collapse>…</ui-tabs>
 ```
-`no-background` drops the tinted header bar, `class="tabs-line"` adds the underline, and `no-collapse` ensures one tab is always active.
 
 ### Full-bleed header with contained panel
 
@@ -221,7 +277,7 @@ The indicator anchors to `anchor(--tab-active start, 0)` — `start` is the logi
 
 ### Compact tab count limit
 
-`variant="compact"` uses `grid-template-columns: repeat(12, min-content) 1fr` — up to 12 tabs fit. Beyond that, the trailing `1fr` starts to absorb extra tabs. If you need more, override `--ui-tabs` doesn't expose a token for this — edit the component CSS or wrap in a `@scope` rule.
+`variant="compact"` uses `grid-template-columns: repeat(12, min-content) 1fr` — up to 12 tabs fit before the trailing `1fr` absorbs extras. There's no token for the `12` — if you need more, edit the value in `ui-tabs.css` or override the `grid-template-columns` rule in a scoped stylesheet.
 
 ### `no-background` vs tokens
 
@@ -241,9 +297,9 @@ Required features and their minimum browser versions:
 | `@starting-style` | panel enter animation | Chrome 117+, Safari 17.4+, Firefox 129+ |
 | `transition-behavior: allow-discrete` | panel enter/exit animation | Chrome 117+, Safari 17.4+, Firefox 129+ |
 | `@property` with `<integer>` in `repeat()` | compact + panel animations | Chrome 126+, Safari 16.4+, Firefox 128+ |
-| `corners: superellipse(…)` | `variant="squircle"` only | Chrome 135+ |
+| `corners: superellipse(…)` | `variant="ellipse"` only | Chrome 135+ |
 
-Without `corners` support, `variant="squircle"` falls back to no rounding. Without `::details-content` support, the component is not usable.
+Without `corners` support, `variant="ellipse"` falls back to no rounding. Without `::details-content` support, the component is not usable.
 
 ---
 

@@ -36,6 +36,7 @@
 		--ui-tabs-header-height: 3em;
 		--ui-tabs-indicator-bg: transparent;
 		--ui-tabs-indicator-color: var(--color-accent);
+		--ui-tabs-indicator-font-weight: inherit;
 		--ui-tabs-indicator-offset: 0px;
 		--ui-tabs-indicator-shadow: none;
 		--ui-tabs-indicator-text: var(--color-accent);
@@ -122,6 +123,7 @@
 				border-block-start: var(--ui-tabs-outline-width) solid var(--ui-tabs-outline-color);
 				border-inline: var(--ui-tabs-outline-width) solid var(--ui-tabs-outline-color);
 				color: var(--ui-tabs-indicator-text);
+				font-weight: var(--ui-tabs-indicator-font-weight);
 			}
 
 			&[open]::details-content {
@@ -243,8 +245,10 @@
 		details:last-of-type summary { border-end-end-radius: 0; }
 	}
 
-	/* squircle — superellipse corners (Chrome 135+). */
-	ui-tabs[variant~="squircle"] {
+	/* ellipse — uses the CSS `corners` property (Chrome 135+). Default exp 2 is
+	   a true ellipse (same shape as border-radius); bump --ui-tabs-squircle-exp
+	   to 3+ for a squircle. */
+	ui-tabs[variant~="ellipse"] {
 		cq-box::after { corners: calc(var(--ui-tabs-squircle-radius) - var(--ui-tabs-indicator-offset)) superellipse(var(--ui-tabs-squircle-exp)); }
 		cq-box::before { corners: var(--ui-tabs-squircle-radius) superellipse(var(--ui-tabs-squircle-exp)); }
 		details:first-of-type summary { corners: var(--ui-tabs-squircle-radius) 0 0 var(--ui-tabs-squircle-radius) superellipse(var(--ui-tabs-squircle-exp)); }

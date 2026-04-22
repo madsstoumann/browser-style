@@ -13,38 +13,29 @@
 		html { scrollbar-gutter: stable; }
 
 		/* Demo classes — consumers customize decoration by flipping tokens.
-		   Structural behavior (shape, layout, animation) still comes from `variant`. */
+		   Structural behavior (shape, layout, animation) still comes from `variant`.
+		   Tightly-coupled pairs keep the bg + matched text color together; everything
+		   else is a single-token atom, composable freely. */
+
+		/* Coupled bg + contrast text */
 		.tabs-fill-accent {
 			--ui-tabs-indicator-bg: var(--color-accent);
 			--ui-tabs-indicator-text: var(--color-accent-text);
 		}
-
 		.tabs-fill-surface {
 			--ui-tabs-indicator-bg: var(--color-surface);
-			--ui-tabs-indicator-offset: var(--spacing-sm);
 			--ui-tabs-indicator-shadow: var(--shadow-md);
 			--ui-tabs-indicator-text: var(--color-text);
 		}
 
-		.tabs-line {
-			--ui-tabs-indicator-width: var(--border-width-heavy);
-		}
-
-		.tabs-line-above {
-			--ui-tabs-indicator-width-start: var(--border-width-heavy);
-		}
-
-		.tabs-offset {
-			--ui-tabs-indicator-offset: var(--spacing-sm);
-		}
-
-		.tabs-muted {
-			--ui-tabs-indicator-text: var(--color-text);
-		}
-
-		.tabs-outline {
-			--ui-tabs-outline-width: var(--border-width-thick);
-		}
+		/* Atoms */
+		.tabs-line        { --ui-tabs-indicator-width:       var(--border-width-heavy); }
+		.tabs-line-above  { --ui-tabs-indicator-width-start: var(--border-width-heavy); }
+		.tabs-offset      { --ui-tabs-indicator-offset:      var(--spacing-sm); }
+		.tabs-outline     { --ui-tabs-outline-width:         var(--border-width-thick); }
+		.tabs-rounded     { --ui-tabs-squircle-exp:          3; }
+		.tabs-semibold    { --ui-tabs-indicator-font-weight: var(--font-weight-semibold); }
+		.tabs-text        { --ui-tabs-indicator-text:        var(--color-text); }
 	</style>
 </head>
 <body>
@@ -55,7 +46,7 @@
 	</p>
 
 	<h2>Header bar</h2>
-	<p>Tabs sit inside a tinted horizontal bar (the <code>::before</code> header background). By default the active tab label picks up the accent color (via <code>--ui-tabs-indicator-text</code>); no underline unless you opt in.</p>
+	<p>Default — active tab label picks up the accent color, no other decoration:</p>
 	<ui-tabs no-collapse>
 		<cq-box>
 			<details name="tabs-default" open>
@@ -85,7 +76,29 @@
 		</cq-box>
 	</ui-tabs>
 
-	<p>With <code>class="tabs-line"</code> — adds the sliding underline beneath the active tab:</p>
+	<p>With a semibold, text-colored active tab:</p>
+	<ui-tabs class="tabs-semibold tabs-text" no-collapse>
+		<cq-box>
+			<details name="tabs-subtle">
+				<summary>Shipping</summary>
+				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+			</details>
+			<details name="tabs-subtle" open>
+				<summary>Payment</summary>
+				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+			</details>
+			<details name="tabs-subtle">
+				<summary>Returns</summary>
+				<div>Return within 30 days for a full refund.</div>
+			</details>
+			<details name="tabs-subtle">
+				<summary>Support</summary>
+				<div>Support via phone, email, or live chat.</div>
+			</details>
+		</cq-box>
+	</ui-tabs>
+
+	<p>With an underline under the active tab:</p>
 	<ui-tabs class="tabs-line" no-collapse>
 		<cq-box>
 			<details name="tabs-accent">
@@ -107,7 +120,7 @@
 		</cq-box>
 	</ui-tabs>
 
-	<p>With <code>class="tabs-line-above"</code> — puts the line at the top of the active tab instead:</p>
+	<p>With a line above the active tab instead:</p>
 	<ui-tabs class="tabs-line-above" no-collapse>
 		<cq-box>
 			<details name="tabs-line-above">
@@ -129,14 +142,14 @@
 		</cq-box>
 	</ui-tabs>
 
-	<p>With <code>class="tabs-fill-accent"</code> — sets the background of the active tab to accent-color:</p>
+	<p>Active tab filled with the accent color:</p>
 	<ui-tabs class="tabs-fill-accent" no-collapse>
 		<cq-box>
-			<details name="tabs-fill-accent" open>
+			<details name="tabs-fill-accent">
 				<summary>Shipping</summary>
 				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
 			</details>
-			<details name="tabs-fill-accent">
+			<details name="tabs-fill-accent" open>
 				<summary>Payment</summary>
 				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
 			</details>
@@ -151,7 +164,29 @@
 		</cq-box>
 	</ui-tabs>
 
-	<p>Combined <code>class="tabs-fill-accent tabs-offset"</code> with <code>variant="pill"</code> — the accent fill becomes an inset pill indicator:</p>
+	<p>Same fill, but with an ellipse-shaped indicator — corner radius is set via the CSS <code>corners</code> property instead of <code>border-radius</code>, with the superellipse exponent bumped to <code>3</code> for a tighter, more rounded curve:</p>
+	<ui-tabs variant="ellipse" class="tabs-fill-accent tabs-rounded" no-collapse>
+		<cq-box>
+			<details name="tabs-fill-accent-ellipse" open>
+				<summary>Shipping</summary>
+				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+			</details>
+			<details name="tabs-fill-accent-ellipse">
+				<summary>Payment</summary>
+				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+			</details>
+			<details name="tabs-fill-accent-ellipse">
+				<summary>Returns</summary>
+				<div>Return within 30 days for a full refund.</div>
+			</details>
+			<details name="tabs-fill-accent-ellipse">
+				<summary>Support</summary>
+				<div>Support via phone, email, or live chat.</div>
+			</details>
+		</cq-box>
+	</ui-tabs>
+
+	<p>Pill-shaped accent fill, inset from the header edges:</p>
 	<ui-tabs variant="pill" class="tabs-fill-accent tabs-offset" no-collapse>
 		<cq-box>
 			<details name="tabs-fill-accent-pill" open>
@@ -173,8 +208,8 @@
 		</cq-box>
 	</ui-tabs>
 
-	<p>With <code>variant="pill"</code> and <code>class="tabs-fill-surface"</code> — the class sets indicator bg, offset, shadow, and colors the active text:</p>
-	<ui-tabs variant="pill" class="tabs-fill-surface" no-collapse>
+	<p>Elevated surface indicator — pill-shaped, inset, with shadow:</p>
+	<ui-tabs variant="pill" class="tabs-fill-surface tabs-offset" no-collapse>
 		<cq-box>
 			<details name="tabs-pill" open>
 				<summary>Shipping</summary>
@@ -195,8 +230,8 @@
 		</cq-box>
 	</ui-tabs>
 
-	<p>With <code>variant="squircle"</code> and the same <code>class="tabs-fill-surface"</code> — structure differs, decoration is the same:</p>
-	<ui-tabs variant="squircle" class="tabs-fill-surface" no-collapse>
+	<p>Same decoration, ellipse-shaped:</p>
+	<ui-tabs variant="ellipse" class="tabs-fill-surface tabs-offset" no-collapse>
 		<cq-box>
 			<details name="tabs-squircle">
 				<summary>Shipping</summary>
@@ -219,8 +254,8 @@
 
 	<br>
 	<h2>Outline</h2>
-	<p>With <code>class="tabs-outline"</code> — inactive tabs share a baseline, the active tab gets a frame open at the bottom so it "sticks out" like a classic desktop tab.</p>
-	<ui-tabs class="tabs-outline tabs-muted" no-background no-collapse>
+	<p>Inactive tabs share a baseline; the active tab "sticks out" with a frame open at the bottom — classic desktop-tab look:</p>
+	<ui-tabs class="tabs-outline tabs-text" no-background no-collapse>
 		<cq-box>
 			<details name="tabs-outline">
 				<summary>Shipping</summary>
@@ -264,8 +299,8 @@
 		</cq-box>
 	</ui-tabs>
 
-	<p>With <code>variant="compact"</code> added, plus <code>class="tabs-muted"</code> to swap the accent color (line + active text) for the regular text color:</p>
-	<ui-tabs variant="bordered compact rounded" class="tabs-line tabs-muted" no-collapse>
+	<p>Compact tabs, with the accent swapped for plain text color on the underline and label:</p>
+	<ui-tabs variant="bordered compact rounded" class="tabs-line tabs-text" no-collapse>
 		<cq-box>
 			<details name="tabs-compact" open>
 				<summary>Shipping</summary>
@@ -282,7 +317,7 @@
 		</cq-box>
 	</ui-tabs>
 
-	<p>When <code>variant="compact"</code> is used with <code>no-background</code>, inline padding is removed as well (edges flush). Adding <code>class="tabs-line"</code> opts into the underline indicator:</p>
+	<p>Compact with a transparent header and flush edges, plus an underline:</p>
 	<ui-tabs variant="compact" class="tabs-line" no-background no-collapse>
 		<cq-box>
 			<details name="tabs-minimal" open>
@@ -306,7 +341,7 @@
 
 	<br><hr>
 	<h2>Panel</h2>
-	<p>With <code>variant="panel"</code>, the active tab's content sits on a surface with a subtle shadow — visually lifted from the header bar.</p>
+	<p>Active tab's content lifted onto a surface with shadow; slides in/out on tab switch:</p>
 	<ui-tabs variant="panel">
 		<cq-box>
 			<details name="tabs-panel" open>
@@ -330,7 +365,7 @@
 
 	<br>
 	<h2>Bleed</h2>
-	<p>Header background extends to the viewport edges, breaking out of the centered cq-box.</p>
+	<p>Header background extends to the viewport edges, escaping the centered column:</p>
 	<ui-tabs variant="bleed">
 		<cq-box>
 			<details name="tabs-bleed">
@@ -352,8 +387,7 @@
 		</cq-box>
 	</ui-tabs>
 
-	<p>With <code>variant="bleed panel"</code></p>
-	<p>Both header and panel backgrounds bleed edge-to-edge; text stays within the original column.</p>
+	<p>Both header and panel bleed; text stays columned:</p>
 	<ui-tabs variant="bleed panel">
 		<cq-box>
 			<details name="tabs-bleed-panel">
@@ -379,7 +413,7 @@
 	<h2>Right-to-left</h2>
 	<p>All variants support <code>dir="rtl"</code>.</p>
 	<div dir="rtl">
-		<ui-tabs variant="pill" class="tabs-fill-surface" no-collapse>
+		<ui-tabs variant="pill" class="tabs-fill-surface tabs-offset" no-collapse>
 			<cq-box>
 				<details name="tabs-rtl" open>
 					<summary>الشحن</summary>
