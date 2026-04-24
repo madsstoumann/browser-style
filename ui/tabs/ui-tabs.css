@@ -266,7 +266,7 @@
 		/* === Attributes === */
 
 		/* no-background — drops header bg; flushes padding when combined with compact. */
-		:is(ui-tabs[no-background], [tabs][no-background]) {
+		:is(ui-tabs[variant~="no-background"], [tabs~="no-background"]) {
 			cq-box::before { background: none; }
 
 			&:is([variant~="compact"], [tabs~="compact"]) {

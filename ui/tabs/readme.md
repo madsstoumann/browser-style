@@ -83,6 +83,7 @@ Space-separated tokens. Combinable.
 | `bleed` | Header background extends past `cq-box` to the viewport edges. |
 | `bordered` | Border around the component + divider between header and panel. Uses `--ui-tabs-border-width` / `--ui-tabs-border-color`. |
 | `compact` | Tabs use their natural min-content width, grouped at the start; remaining header area is filled by the header background. |
+| `no-background` | Removes the header background. When combined with `compact`, also removes inline padding on summaries and panel content so edges flush to cq-box. |
 | `panel` | Active panel gets `--ui-tabs-panel-bg` + `--ui-tabs-panel-shadow`, and slides in/out on tab switch. |
 | `pill` | Fully rounded header bar and indicator (`--ui-tabs-pill-radius`). |
 | `rounded` | Slightly rounded outer corners + rounded top of header bar (`--ui-tabs-rounded-radius`). |
@@ -92,7 +93,6 @@ Space-separated tokens. Combinable.
 
 | Attribute | Effect |
 |---|---|
-| `no-background` | Removes the header background. When combined with `variant="compact"`, also removes inline padding on summaries and panel content so edges flush to cq-box. |
 | `no-collapse` | Clicking the active tab does nothing — one tab is always open. |
 
 ### Decoration via classes
@@ -226,7 +226,7 @@ Inactive tabs share a baseline; the active tab gets a frame open at the bottom, 
 .tabs-outline { --ui-tabs-outline-width: var(--border-width-thick); }
 ```
 ```html
-<ui-tabs class="tabs-outline" no-background>…</ui-tabs>
+<ui-tabs variant="no-background" class="tabs-outline">…</ui-tabs>
 ```
 `no-background` typically reads cleaner — the outlines become the only horizontal structure.
 
@@ -244,7 +244,7 @@ Exponent `2` (default) = a true ellipse (same shape as border-radius). Exponent 
 ### Minimal compact strip
 
 ```html
-<ui-tabs variant="compact" class="tabs-line" no-background no-collapse>…</ui-tabs>
+<ui-tabs variant="compact no-background" class="tabs-line" no-collapse>…</ui-tabs>
 ```
 
 ### Full-bleed header with contained panel
@@ -340,10 +340,6 @@ The indicator anchors to `anchor(--tab-active start, 0)` — `start` is the logi
 ### Compact tab count limit
 
 `variant="compact"` uses `grid-template-columns: repeat(12, min-content) 1fr` — up to 12 tabs fit before the trailing `1fr` absorbs extras. There's no token for the `12` — if you need more, edit the value in `ui-tabs.css` or override the `grid-template-columns` rule in a scoped stylesheet.
-
-### `no-background` vs tokens
-
-`no-background` is kept as an attribute (not a token) because it has a structural side-effect: when combined with `variant="compact"`, it also collapses `padding-inline` on summaries and panel content. That's nested logic, not a pure token flip.
 
 ---
 
