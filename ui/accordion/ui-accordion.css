@@ -1,8 +1,12 @@
 /**
  * ui-accordion
- * @version 4.0.7
- * @date 2026-04-23
+ * @version 4.0.8
+ * @date 2026-04-24
  * @author Mads Stoumann
+ *
+ * Private custom properties (--_*)
+ *   --_bd   border           standard border grouping
+ *   --_bb   border-breakout  breakout variant border grouping
  */
 @import '../icon/index.css';
 @layer bs-component {
@@ -18,8 +22,8 @@
 		--ui-accordion-padding-block: 1.5ch;
 		--ui-accordion-padding-inline: 1.5ch;
 		
-		--_border: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
-		--_border-breakout: var(--ui-accordion-breakout-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+		--_bd: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+		--_bb: var(--ui-accordion-breakout-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
 
 		container-type: inline-size;
 		display: grid;
@@ -75,7 +79,7 @@
 
 	/* bordered */
 	ui-accordion[variant~="bordered"] {
-		border: var(--_border);
+		border: var(--_bd);
 		details {
 			padding-inline: var(--ui-accordion-padding-inline);
 		}
@@ -87,18 +91,18 @@
 			margin-block-end: calc(2 * var(--ui-accordion-breakout-unit));
 		}
 		details {
-			border-inline: var(--_border);
+			border-inline: var(--_bd);
 			padding-inline: var(--ui-accordion-padding-inline);
 			translate: 0 calc(var(--_y, 0) * var(--ui-accordion-breakout-unit));
 			transition: translate var(--ui-accordion-duration) ease;
-			&:first-of-type { border-block-start: var(--_border); }
-			&:last-of-type { border-block-end: var(--_border); }
+			&:first-of-type { border-block-start: var(--_bd); }
+			&:last-of-type { border-block-end: var(--_bd); }
 		}
 		details[open] {
-			border: var(--_border-breakout);
+			border: var(--_bb);
 		}
 		details[open] + details {
-			border-block-start: var(--_border);
+			border-block-start: var(--_bd);
 		}
 		details[open]:not(:first-of-type),
 		details[open]:first-of-type ~ details {
@@ -128,10 +132,10 @@
 
 	/* divided */
 	ui-accordion:is([variant~="bordered"], [variant~="breakout"], [variant~="divided"]) details:not(:last-of-type) {
-		border-block-end: var(--_border);
+		border-block-end: var(--_bd);
 	}
 	ui-accordion[variant~="breakout"] details[open]:not(:last-of-type) {
-		border-block-end: var(--_border-breakout);
+		border-block-end: var(--_bb);
 	}
 
 	/* rounded */
@@ -159,7 +163,7 @@
 		/* bordered + separate: border moves from group to each item */
 		&[variant~="bordered"] {
 			border: 0;
-			details { border: var(--_border); }
+			details { border: var(--_bd); }
 		}
 	}
 
@@ -254,7 +258,7 @@
 			}
 			&:where([variant~="divided"], [variant~="bordered"]) details:not(:last-of-type) {
 				border-block-end: 0;
-				border-inline-end: var(--_border);
+				border-inline-end: var(--_bd);
 			}
 			&[variant~="rounded"]:not([variant~="separate"]) cq-box {
 				details:first-of-type {
