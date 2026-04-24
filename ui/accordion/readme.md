@@ -360,6 +360,75 @@ Variants adapt: `divided` draws vertical lines, `bordered` frames the group, `ro
 
 ---
 
+## Morph into tabs
+
+`<ui-accordion>` shares its inner structure (`cq-box > details`) with `<ui-tabs>` from `@browser.style/tabs`. A single registered custom property — `--_tabs-mode` — decides which component's rendering engine wins:
+
+- `--_tabs-mode: 0` → accordion styles apply
+- `--_tabs-mode: 1` → tabs styles apply
+
+Every rendering rule in both components lives inside `@container style(--_tabs-mode: N)`. Flip the value, and the element re-renders on the same markup with no JS and no DOM change.
+
+### Opt-in: `tabs` attribute
+
+Load `@browser.style/tabs` alongside `@browser.style/accordion` and add a `tabs` attribute to the accordion. The tabs stylesheet sets `--_tabs-mode: 1` on any element with `[tabs]`, so the accordion renders as tabs from first paint:
+
+```html
+<link rel="stylesheet" href="@browser.style/base/index.css">
+<link rel="stylesheet" href="@browser.style/accordion/index.css">
+<link rel="stylesheet" href="@browser.style/tabs/index.css">
+
+<ui-accordion tabs="pill" variant="bordered rounded" name="faq">
+  <cq-box>
+    <details name="faq" open>
+      <summary>Shipping</summary>
+      <div>…</div>
+    </details>
+    <details name="faq">
+      <summary>Returns</summary>
+      <div>…</div>
+    </details>
+  </cq-box>
+</ui-accordion>
+```
+
+Any value the tabs component accepts (`pill`, `rounded`, `bordered`, `compact`, `ellipse`, `panel`, `bleed`) works on the `tabs="…"` attribute — see the tabs readme.
+
+### Auto-morph with `<auto-morph>`
+
+For responsive morph — accordion on narrow, tabs on wide — wrap the element in `<auto-morph tabs-mode>` and scope a single `@container` rule to flip the mode below a breakpoint. `<auto-morph>` is an unregistered host element; all it needs is `container-type: inline-size` and `display: block`:
+
+```html
+<style>
+  auto-morph {
+    container-type: inline-size;
+    display: block;
+  }
+  @container (inline-size <= 650px) {
+    auto-morph[tabs-mode] [tabs] { --_tabs-mode: 0; }
+  }
+</style>
+
+<auto-morph tabs-mode>
+  <ui-accordion tabs="pill" variant="bordered rounded" name="faq">
+    <cq-box>
+      <details name="faq" open><summary>Shipping</summary><div>…</div></details>
+      <details name="faq"><summary>Returns</summary><div>…</div></details>
+    </cq-box>
+  </ui-accordion>
+</auto-morph>
+```
+
+Above 650px wrapper width → tabs. Below → accordion. Per-instance: a narrow sidebar can stay accordion while a wide main column morphs to tabs, with no viewport media queries in sight.
+
+The attribute (`tabs-mode`) names the property that the rule flips, so the same `<auto-morph>` wrapper can drive other mode switches in the future — a density mode, a list/grid mode, anything a component exposes as a registered integer custom property.
+
+### Why not query `<ui-accordion>` directly?
+
+A CSS container can't query its own size; `@container` resolves against the *nearest ancestor* container. Since `<ui-accordion>` sets its own `container-type`, it can't react to its own width. The `<auto-morph>` wrapper is that ancestor — one element above the accordion, it gives the `@container` rule something to resolve against. You can use any ancestor with `container-type` (a grid cell, a section, a `<main>`); `<auto-morph>` is just a semantic shorthand.
+
+---
+
 ## Customization
 
 ### Design tokens

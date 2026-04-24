@@ -255,6 +255,68 @@ Exponent `2` (default) = a true ellipse (same shape as border-radius). Exponent 
 
 ---
 
+## Pairing with `<ui-accordion>` — the `--_tabs-mode` gate
+
+`@browser.style/tabs` and `@browser.style/accordion` share the same inner structure (`cq-box > details`) and cooperate through a single registered integer custom property: `--_tabs-mode`.
+
+- `--_tabs-mode: 0` → accordion renders
+- `--_tabs-mode: 1` → tabs renders
+
+Both components wrap every rendering rule in `@container style(--_tabs-mode: N)`. Flip the value and the same markup re-renders in the other mode — no JS, no DOM swap.
+
+### How the `[tabs]` attribute works
+
+`ui-tabs.css` owns the flip. Its host rule is `:where(ui-tabs, [tabs])`, which means **any** element with a `tabs` attribute becomes a tabs host — including an `<ui-accordion tabs="pill">`. The host selector sets `--_tabs-mode: 1`, `container-type: inline-size`, and `display: block`, so the tabs rendering kicks in and (because accordion's gate is `style(--_tabs-mode: 0)`) accordion rendering drops out.
+
+```html
+<link rel="stylesheet" href="@browser.style/base/index.css">
+<link rel="stylesheet" href="@browser.style/accordion/index.css">
+<link rel="stylesheet" href="@browser.style/tabs/index.css">
+
+<ui-accordion tabs="pill" variant="bordered rounded" name="faq">
+  <cq-box>
+    <details name="faq" open><summary>Shipping</summary><div>…</div></details>
+    <details name="faq"><summary>Returns</summary><div>…</div></details>
+  </cq-box>
+</ui-accordion>
+```
+
+The value assigned to `tabs="…"` is the variant list — `pill`, `rounded`, `bordered`, `compact`, `ellipse`, `panel`, `bleed`, in any combination, same rules as the `variant` attribute on `<ui-tabs>` itself.
+
+### Responsive morph — `<auto-morph>`
+
+Wrap the element in `<auto-morph tabs-mode>` and scope a single `@container` rule to flip the mode below a breakpoint. `<auto-morph>` is an unregistered host — all it needs is `container-type: inline-size` and `display: block`:
+
+```html
+<style>
+  auto-morph {
+    container-type: inline-size;
+    display: block;
+  }
+  @container (inline-size <= 650px) {
+    auto-morph[tabs-mode] [tabs] { --_tabs-mode: 0; }
+  }
+</style>
+
+<auto-morph tabs-mode>
+  <ui-accordion tabs="pill" variant="bordered rounded" name="faq">
+    <cq-box>…</cq-box>
+  </ui-accordion>
+</auto-morph>
+```
+
+Above 650px wrapper width → tabs. Below → accordion. Because the query is container-based, a narrow sidebar and a wide main column can render the same element as accordion and tabs respectively — no viewport media queries involved.
+
+The attribute (`tabs-mode`) names the custom property being flipped, so the same `<auto-morph>` wrapper can drive any component mode switch that's modeled as a registered integer custom property.
+
+### Why a wrapper?
+
+A CSS container can't query its own size — `@container` resolves against the *nearest ancestor* container. Since `<ui-tabs>` / `<ui-accordion tabs>` sets its own `container-type`, it can't react to its own width. The `<auto-morph>` wrapper is that ancestor. Any ancestor with `container-type` works (grid cell, `<main>`, a layout wrapper); `<auto-morph>` is the semantic shorthand for "I exist to flip a mode."
+
+Setting `container-type` on `body` technically works but applies size containment to the page root — fragile, can strand sticky/fixed children. Don't.
+
+---
+
 ## Notes
 
 ### Scrollbar + `variant="bleed"`

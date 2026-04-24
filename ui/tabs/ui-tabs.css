@@ -1,7 +1,7 @@
 /**
  * ui-tabs
- * @version 1.0.1
- * @date 2026-04-23
+ * @version 1.0.2
+ * @date 2026-04-24
  * @author Mads Stoumann
  *
  * Private custom properties (--_*)
@@ -191,18 +191,6 @@
 			summary { margin-inline-end: var(--ui-tabs-compact-gap); }
 		}
 
-		/* compact narrow fallback — equal-share tracks below 400px. */
-		@container (inline-size < 400px) {
-			:is(ui-tabs[variant~="compact"], [tabs~="compact"]) {
-				cq-box {
-					grid-auto-columns: minmax(0, 1fr);
-					grid-template-columns: none;
-				}
-				details { grid-column: 1 / span var(--_tc); }
-				summary { margin-inline-end: 0; }
-			}
-		}
-
 		/* panel — bg + shadow on content; slide in/out via display:allow-discrete. */
 		:is(ui-tabs[variant~="panel"], [tabs~="panel"]) {
 			details > :not(summary) {
@@ -289,5 +277,17 @@
 
 		/* no-collapse — one tab stays open. */
 		:is(ui-tabs[no-collapse], [tabs][no-collapse]) details[open] summary { pointer-events: none; }
+	}
+
+	/* compact narrow fallback — equal-share tracks below 400px. */
+	@container (inline-size < 400px) and style(--_tabs-mode: 1) {
+		:is(ui-tabs[variant~="compact"], [tabs~="compact"]) {
+			cq-box {
+				grid-auto-columns: minmax(0, 1fr);
+				grid-template-columns: none;
+			}
+			details { grid-column: 1 / span var(--_tc); }
+			summary { margin-inline-end: 0; }
+		}
 	}
 }

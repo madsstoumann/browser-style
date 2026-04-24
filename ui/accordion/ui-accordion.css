@@ -306,6 +306,12 @@
 				}
 			}
 		}
+
+		@container (inline-size > 650px) and style(--_tabs-mode: 1) {
+			:where(ui-accordion[tabs]) cq-box {
+				details > summary > ui-icon { display: none; }
+			}
+		}
 	/* Web component item — renders inline (light DOM) */
 	:where(ui-accordion-item) {
 		display: contents;

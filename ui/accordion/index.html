@@ -565,36 +565,48 @@
 
 	<br>
 	<h2>With <code>tabs</code> attribute</h2>
-	<p>Morphs into tabs when the container is wider than 650px.</p>
+	<p>Morphs into tabs when the wrapping container is wider than 650px. The <code>&lt;ui-accordion tabs="pill"&gt;</code> is wrapped in a generic <code>&lt;auto-morph tabs-mode&gt;</code> element that owns a <code>container-type: inline-size</code>; a single <code>@container</code> rule flips <code>--_tabs-mode</code> when the wrapper's width falls below 650px. The attribute names the custom property to flip, so the same <code>&lt;auto-morph&gt;</code> wrapper can drive other component-mode switches later.</p>
 
-	<ui-accordion name="accordion-tabs" class="tabs-fill-accent tabs-offset tabs-rounded" variant="bordered divided rounded" tabs="pill">
-		<cq-box>
-			<details name="accordion-tabs" open>
-				<summary>Shipping<ui-icon type="plus-minus"></ui-icon></summary>
-				<div>
-					The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days.
-				</div>
-			</details>
-			<details name="accordion-tabs">
-				<summary>Payment<ui-icon type="plus-minus"></ui-icon></summary>
-				<div>
-					We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express.
-				</div>
-			</details>
-			<details name="accordion-tabs">
-				<summary>Returns<ui-icon type="plus-minus"></ui-icon></summary>
-				<div>
-					If you're not completely satisfied with your purchase, you can return it within 30 days for a full refund. Items must be in their original condition and packaging.
-				</div>
-			</details>
-			<details name="accordion-tabs">
-				<summary>Support<ui-icon type="plus-minus"></ui-icon></summary>
-				<div>
-					Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat during business hours.
-				</div>
-			</details>
-		</cq-box>
-	</ui-accordion>
+	<style>
+		auto-morph {
+			container-type: inline-size;
+			display: block;
+		}
+		@container (inline-size <= 650px) {
+			auto-morph[tabs-mode] [tabs] { --_tabs-mode: 0; }
+		}
+	</style>
+
+	<auto-morph tabs-mode>
+		<ui-accordion name="accordion-tabs" class="tabs-fill-accent tabs-offset tabs-rounded" variant="bordered divided rounded" tabs="pill">
+			<cq-box>
+				<details name="accordion-tabs" open>
+					<summary>Shipping<ui-icon type="plus-minus"></ui-icon></summary>
+					<div>
+						The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days.
+					</div>
+				</details>
+				<details name="accordion-tabs">
+					<summary>Payment<ui-icon type="plus-minus"></ui-icon></summary>
+					<div>
+						We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express.
+					</div>
+				</details>
+				<details name="accordion-tabs">
+					<summary>Returns<ui-icon type="plus-minus"></ui-icon></summary>
+					<div>
+						If you're not completely satisfied with your purchase, you can return it within 30 days for a full refund. Items must be in their original condition and packaging.
+					</div>
+				</details>
+				<details name="accordion-tabs">
+					<summary>Support<ui-icon type="plus-minus"></ui-icon></summary>
+					<div>
+						Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat during business hours.
+					</div>
+				</details>
+			</cq-box>
+		</ui-accordion>
+	</auto-morph>
 
 	<br>
 	<h2>Icon Variants</h2>
