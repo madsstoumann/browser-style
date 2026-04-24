@@ -7,6 +7,8 @@
 	<meta name="description" content="Accordion component: A collapsible content panel that allows users to toggle the visibility of sections of content.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<!-- <link rel="stylesheet" href="../tabs/ui-tabs.css">
+	<link rel="stylesheet" href="../tabs/tabs-demo.css"> -->
 	<link rel="stylesheet" href="ui-accordion.css">
 </head>
 <body>
@@ -55,30 +57,32 @@
 	<br>
 	<p>With <code>variant="divided"</code>:</p>
 	<ui-accordion variant="divided" name="accordion-divided">
-		<details name="accordion-divided">
-			<summary>How do I reset my password?<ui-icon type="plus-minus"></ui-icon></summary>
-			<div>
-				To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
-			</div>
-		</details>
-		<details name="accordion-divided">
-			<summary>How long does shipping take?<ui-icon type="plus-minus"></ui-icon></summary>
-			<div>
-				The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
-			</div>
-		</details>
-		<details name="accordion-divided">
-			<summary>What payment methods do you accept?<ui-icon type="plus-minus"></ui-icon></summary>
-			<div>
-				We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
-			</div>
-		</details>
-		<details name="accordion-divided">
-			<summary>How can I contact customer support?<ui-icon type="plus-minus"></ui-icon></summary>
-			<div>
-				Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
-			</div>
-		</details>
+		<cq-box>
+			<details name="accordion-divided">
+				<summary>How do I reset my password?<ui-icon type="plus-minus"></ui-icon></summary>
+				<div>
+					To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
+				</div>
+			</details>
+			<details name="accordion-divided">
+				<summary>How long does shipping take?<ui-icon type="plus-minus"></ui-icon></summary>
+				<div>
+					The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
+				</div>
+			</details>
+			<details name="accordion-divided">
+				<summary>What payment methods do you accept?<ui-icon type="plus-minus"></ui-icon></summary>
+				<div>
+					We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
+				</div>
+			</details>
+			<details name="accordion-divided">
+				<summary>How can I contact customer support?<ui-icon type="plus-minus"></ui-icon></summary>
+				<div>
+					Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
+				</div>
+			</details>
+		</cq-box>
 	</ui-accordion>
 
 	<p><small>All following demos include <code>variant="divided"</code>.</small></p>
@@ -87,30 +91,32 @@
 	<h2>With opposite color-scheme</h2>
 	<div class="bdrs-md cs-opposite pi-3">
 		<ui-accordion variant="divided">
-			<details name="accordion-cs">
-				<summary>How do I reset my password?<ui-icon type="plus-minus"></ui-icon></summary>
-				<div>
-					To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
-				</div>
-			</details>
-			<details name="accordion-cs">
-				<summary>How long does shipping take?<ui-icon type="plus-minus"></ui-icon></summary>
-				<div>
-					The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
-				</div>
-			</details>
-			<details name="accordion-cs">
-				<summary>What payment methods do you accept?<ui-icon type="plus-minus"></ui-icon></summary>
-				<div>
-					We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
-				</div>
-			</details>
-			<details name="accordion-cs">
-				<summary>How can I contact customer support?<ui-icon type="plus-minus"></ui-icon></summary>
-				<div>
-					Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
-				</div>
-			</details>
+			<cq-box>
+				<details name="accordion-cs">
+					<summary>How do I reset my password?<ui-icon type="plus-minus"></ui-icon></summary>
+					<div>
+						To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
+					</div>
+				</details>
+				<details name="accordion-cs">
+					<summary>How long does shipping take?<ui-icon type="plus-minus"></ui-icon></summary>
+					<div>
+						The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
+					</div>
+				</details>
+				<details name="accordion-cs">
+					<summary>What payment methods do you accept?<ui-icon type="plus-minus"></ui-icon></summary>
+					<div>
+						We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
+					</div>
+				</details>
+				<details name="accordion-cs">
+					<summary>How can I contact customer support?<ui-icon type="plus-minus"></ui-icon></summary>
+					<div>
+						Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
+					</div>
+				</details>
+			</cq-box>
 		</ui-accordion>
 	</div>
 
@@ -118,30 +124,32 @@
 	<h2>With right-to-left</h2>
 	<div dir="rtl">
 		<ui-accordion variant="divided">
-			<details name="accordion-rtl">
-				<summary>How do I reset my password?<ui-icon type="plus-minus"></ui-icon></summary>
-				<div>
-					To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
-				</div>
-			</details>
-			<details name="accordion-rtl">
-				<summary>How long does shipping take?<ui-icon type="plus-minus"></ui-icon></summary>
-				<div>
-					The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
-				</div>
-			</details>
-			<details name="accordion-rtl">
-				<summary>What payment methods do you accept?<ui-icon type="plus-minus"></ui-icon></summary>
-				<div>
-					We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
-				</div>
-			</details>
-			<details name="accordion-rtl">
-				<summary>How can I contact customer support?<ui-icon type="plus-minus"></ui-icon></summary>
-				<div>
-					Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
-				</div>
-			</details>
+			<cq-box>
+				<details name="accordion-rtl">
+					<summary>How do I reset my password?<ui-icon type="plus-minus"></ui-icon></summary>
+					<div>
+						To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
+					</div>
+				</details>
+				<details name="accordion-rtl">
+					<summary>How long does shipping take?<ui-icon type="plus-minus"></ui-icon></summary>
+					<div>
+						The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
+					</div>
+				</details>
+				<details name="accordion-rtl">
+					<summary>What payment methods do you accept?<ui-icon type="plus-minus"></ui-icon></summary>
+					<div>
+						We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
+					</div>
+				</details>
+				<details name="accordion-rtl">
+					<summary>How can I contact customer support?<ui-icon type="plus-minus"></ui-icon></summary>
+					<div>
+						Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
+					</div>
+				</details>
+			</cq-box>
 		</ui-accordion>
 	</div>
 
@@ -150,205 +158,219 @@
 	
 	<p>With <code>variant="bordered"</code>:</p>
 	<ui-accordion variant="bordered" name="accordion-border">
-		<details name="accordion-border" open>
-			<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
-			</div>
-		</details>
-		<details name="accordion-border">
-			<summary>How long does shipping take?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
-			</div>
-		</details>
-		<details name="accordion-border">
-			<summary>What payment methods do you accept?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
-			</div>
-		</details>
-		<details name="accordion-border">
-			<summary>How can I contact customer support?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
-			</div>
-		</details>
+		<cq-box>
+			<details name="accordion-border" open>
+				<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
+				</div>
+			</details>
+			<details name="accordion-border">
+				<summary>How long does shipping take?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
+				</div>
+			</details>
+			<details name="accordion-border">
+				<summary>What payment methods do you accept?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
+				</div>
+			</details>
+			<details name="accordion-border">
+				<summary>How can I contact customer support?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
+				</div>
+			</details>
+		</cq-box>
 	</ui-accordion>
 
 	<br>
 	<p>With <code>variant="bordered rounded"</code>:</p>
 	<ui-accordion variant="bordered rounded" name="accordion-border-rounded">
-		<details name="accordion-border-rounded" open>
-			<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
-			</div>
-		</details>
-		<details name="accordion-border-rounded">
-			<summary>How long does shipping take?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
-			</div>
-		</details>
-		<details name="accordion-border-rounded">
-			<summary>What payment methods do you accept?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
-			</div>
-		</details>
-		<details name="accordion-border-rounded">
-			<summary>How can I contact customer support?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
-			</div>
-		</details>
+		<cq-box>
+			<details name="accordion-border-rounded" open>
+				<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
+				</div>
+			</details>
+			<details name="accordion-border-rounded">
+				<summary>How long does shipping take?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
+				</div>
+			</details>
+			<details name="accordion-border-rounded">
+				<summary>What payment methods do you accept?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
+				</div>
+			</details>
+			<details name="accordion-border-rounded">
+				<summary>How can I contact customer support?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
+				</div>
+			</details>
+		</cq-box>
 	</ui-accordion>
 
 	<br>
 	<p>With <code>variant="breakout"</code>:</p>
 	<ui-accordion variant="breakout" name="accordion-breakout">
-		<details name="accordion-breakout">
-			<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
-			</div>
-		</details>
-		<details name="accordion-breakout" open>
-			<summary>How long does shipping take?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
-			</div>
-		</details>
-		<details name="accordion-breakout">
-			<summary>What payment methods do you accept?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
-			</div>
-		</details>
-		<details name="accordion-breakout">
-			<summary>How can I contact customer support?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
-			</div>
-		</details>
+		<cq-box>
+			<details name="accordion-breakout">
+				<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
+				</div>
+			</details>
+			<details name="accordion-breakout" open>
+				<summary>How long does shipping take?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
+				</div>
+			</details>
+			<details name="accordion-breakout">
+				<summary>What payment methods do you accept?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
+				</div>
+			</details>
+			<details name="accordion-breakout">
+				<summary>How can I contact customer support?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
+				</div>
+			</details>
+		</cq-box>
 	</ui-accordion>
 
 	<br>
 	<p>With <code>variant="breakout rounded"</code>:</p>
 	<ui-accordion variant="breakout rounded" name="accordion-breakout-rounded">
-		<details name="accordion-breakout-rounded">
-			<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
-			</div>
-		</details>
-		<details name="accordion-breakout-rounded" open>
-			<summary>How long does shipping take?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
-			</div>
-		</details>
-		<details name="accordion-breakout-rounded">
-			<summary>What payment methods do you accept?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
-			</div>
-		</details>
-		<details name="accordion-breakout-rounded">
-			<summary>How can I contact customer support?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
-			</div>
-		</details>
+		<cq-box>
+			<details name="accordion-breakout-rounded">
+				<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
+				</div>
+			</details>
+			<details name="accordion-breakout-rounded" open>
+				<summary>How long does shipping take?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
+				</div>
+			</details>
+			<details name="accordion-breakout-rounded">
+				<summary>What payment methods do you accept?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
+				</div>
+			</details>
+			<details name="accordion-breakout-rounded">
+				<summary>How can I contact customer support?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
+				</div>
+			</details>
+		</cq-box>
 	</ui-accordion>
 
 	<br>
 	<p>With <code>variant="bordered separate rounded"</code>:</p>
 	<ui-accordion variant="bordered separate rounded" name="accordion-separate">
-		<details name="accordion-separate">
-			<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
-			</div>
-		</details>
-		<details name="accordion-separate" open>
-			<summary>How long does shipping take?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
-			</div>
-		</details>
-		<details name="accordion-separate">
-			<summary>What payment methods do you accept?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
-			</div>
-		</details>
-		<details name="accordion-separate">
-			<summary>How can I contact customer support?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
-			</div>
-		</details>
+		<cq-box>
+			<details name="accordion-separate">
+				<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
+				</div>
+			</details>
+			<details name="accordion-separate" open>
+				<summary>How long does shipping take?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
+				</div>
+			</details>
+			<details name="accordion-separate">
+				<summary>What payment methods do you accept?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
+				</div>
+			</details>
+			<details name="accordion-separate">
+				<summary>How can I contact customer support?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
+				</div>
+			</details>
+		</cq-box>
 	</ui-accordion>
 
 	<br>
 	<p>With <code>variant="separate rounded"</code> and box-shadow set through a utility class:</p>
 	<ui-accordion variant="separate rounded" name="accordion-shadow">
-		<details name="accordion-shadow" class="shadow-2xl">
-			<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
-			</div>
-		</details>
-		<details name="accordion-shadow" class="shadow-2xl" open>
-			<summary>How long does shipping take?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
-			</div>
-		</details>
-		<details name="accordion-shadow" class="shadow-2xl">
-			<summary>What payment methods do you accept?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
-			</div>
-		</details>
-		<details name="accordion-shadow" class="shadow-2xl">
-			<summary>How can I contact customer support?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
-			</div>
-		</details>
+		<cq-box>
+			<details name="accordion-shadow" class="shadow-2xl">
+				<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
+				</div>
+			</details>
+			<details name="accordion-shadow" class="shadow-2xl" open>
+				<summary>How long does shipping take?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
+				</div>
+			</details>
+			<details name="accordion-shadow" class="shadow-2xl">
+				<summary>What payment methods do you accept?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
+				</div>
+			</details>
+			<details name="accordion-shadow" class="shadow-2xl">
+				<summary>How can I contact customer support?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
+				</div>
+			</details>
+		</cq-box>
 	</ui-accordion>
 
 	<br>
 	<p>With <code>variant="bordered rounded"</code>, <code>tint="oklch(0.35 0 0)"</code> and <code>tinted</code></p>
 
 	<ui-accordion variant="bordered rounded" tinted name="accordion-tinted" tint="oklch(0.35 0 0)" style="--ui-accordion-border-color: Canvas">
-		<details name="accordion-tinted">
-			<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
-			</div>
-		</details>
-		<details name="accordion-tinted">
-			<summary>How long does shipping take?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
-			</div>
-		</details>
-		<details name="accordion-tinted">
-			<summary>What payment methods do you accept?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
-			</div>
-		</details>
-		<details name="accordion-tinted" open>
-			<summary>How can I contact customer support?<ui-icon type="chevron down"></ui-icon></summary>
-			<div>
-				Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
-			</div>
-		</details>
+		<cq-box>
+			<details name="accordion-tinted">
+				<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
+				</div>
+			</details>
+			<details name="accordion-tinted">
+				<summary>How long does shipping take?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
+				</div>
+			</details>
+			<details name="accordion-tinted">
+				<summary>What payment methods do you accept?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
+				</div>
+			</details>
+			<details name="accordion-tinted" open>
+				<summary>How can I contact customer support?<ui-icon type="chevron down"></ui-icon></summary>
+				<div>
+					Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
+				</div>
+			</details>
+		</cq-box>
 	</ui-accordion>
 
 	<br>
@@ -489,24 +511,26 @@
 	<p>Also using <code>variant="bordered rounded"</code>. The <code>open</code> item slides in over the entire accordion.</p>
 
 	<ui-accordion variant="bordered rounded" name="accordion-slide" type="slide">
-		<details name="accordion-slide">
-			<summary><span>How do I reset my password?</span><ui-icon type="chevron right"></ui-icon><ui-icon type="cross" class="icon-close"></ui-icon></summary>
-			<div>
-				To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
-			</div>
-		</details>
-		<details name="accordion-slide">
-			<summary><span>How long does shipping take?</span><ui-icon type="chevron right"></ui-icon><ui-icon type="cross" class="icon-close"></ui-icon></summary>
-			<div>
-				The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
-			</div>
-		</details>
-		<details name="accordion-slide">
-			<summary><span>What payment methods do you accept?</span><ui-icon type="chevron right"></ui-icon><ui-icon type="cross" class="icon-close"></ui-icon></summary>
-			<div>
-				We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
-			</div>
-		</details>
+		<cq-box>
+			<details name="accordion-slide">
+				<summary><span>How do I reset my password?</span><ui-icon type="chevron right"></ui-icon><ui-icon type="cross" class="icon-close"></ui-icon></summary>
+				<div>
+					To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.
+				</div>
+			</details>
+			<details name="accordion-slide">
+				<summary><span>How long does shipping take?</span><ui-icon type="chevron right"></ui-icon><ui-icon type="cross" class="icon-close"></ui-icon></summary>
+				<div>
+					The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
+				</div>
+			</details>
+			<details name="accordion-slide">
+				<summary><span>What payment methods do you accept?</span><ui-icon type="chevron right"></ui-icon><ui-icon type="cross" class="icon-close"></ui-icon></summary>
+				<div>
+					We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
+				</div>
+			</details>
+		</cq-box>
 	</ui-accordion>
 
 	<br>
@@ -540,10 +564,10 @@
 	</ui-accordion>
 
 	<br>
-	<h2>With <code>type="tabs"</code></h2>
+	<h2>With <code>tabs</code> attribute</h2>
 	<p>Morphs into tabs when the container is wider than 650px.</p>
 
-	<ui-accordion name="accordion-tabs" type="tabs" variant="bordered divided rounded">
+	<ui-accordion name="accordion-tabs" class="tabs-fill-accent tabs-offset tabs-rounded" variant="bordered divided rounded" tabs="pill">
 		<cq-box>
 			<details name="accordion-tabs" open>
 				<summary>Shipping<ui-icon type="plus-minus"></ui-icon></summary>
@@ -572,35 +596,37 @@
 		</cq-box>
 	</ui-accordion>
 
-	<br><hr><br>
+	<br>
 	<h2>Icon Variants</h2>
 	<p>With various <code>ui-icon</code> variants:</p>
 
 	<ui-accordion variant="divided" name="accordion-icons">
-		<details name="accordion-icons">
-			<summary>With chevron-right icon<ui-icon type="chevron right"></ui-icon></summary>
-			<div>
-				The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
-			</div>
-		</details>
-		<details name="accordion-icons">
-			<summary>With arrow-right icon<ui-icon type="arrow right"></ui-icon></summary>
-			<div>
-				The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
-			</div>
-		</details>
-		<details name="accordion-icons">
-			<summary>With plus-to-cross icon<ui-icon type="plus-cross"></ui-icon></summary>
-			<div>
-				We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
-			</div>
-		</details>
-		<details name="accordion-icons">
-			<summary>With arrow-down icon<ui-icon type="arrow down"></ui-icon></summary>
-			<div>
-				Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
-			</div>
-		</details>
+		<cq-box>
+			<details name="accordion-icons">
+				<summary>With chevron-right icon<ui-icon type="chevron right"></ui-icon></summary>
+				<div>
+					The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
+				</div>
+			</details>
+			<details name="accordion-icons">
+				<summary>With arrow-right icon<ui-icon type="arrow right"></ui-icon></summary>
+				<div>
+					The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.
+				</div>
+			</details>
+			<details name="accordion-icons">
+				<summary>With plus-to-cross icon<ui-icon type="plus-cross"></ui-icon></summary>
+				<div>
+					We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.
+				</div>
+			</details>
+			<details name="accordion-icons">
+				<summary>With arrow-down icon<ui-icon type="arrow down"></ui-icon></summary>
+				<div>
+					Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.
+				</div>
+			</details>
+		</cq-box>
 	</ui-accordion>
 
 	

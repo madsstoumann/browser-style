@@ -1,0 +1,29 @@
+
+/* Reserve scrollbar space so 100vw excludes it (Chrome 145+),
+		preventing variant="bleed" from triggering a horizontal scrollbar */
+html { scrollbar-gutter: stable; }
+
+/* Demo classes — consumers customize decoration by flipping tokens.
+		Structural behavior (shape, layout, animation) still comes from `variant`.
+		Tightly-coupled pairs keep the bg + matched text color together; everything
+		else is a single-token atom, composable freely. */
+
+/* Coupled bg + contrast text */
+.tabs-fill-accent {
+	--ui-tabs-indicator-bg: var(--color-accent);
+	--ui-tabs-indicator-text: var(--color-accent-text);
+}
+.tabs-fill-surface {
+	--ui-tabs-indicator-bg: var(--color-surface);
+	--ui-tabs-indicator-shadow: var(--shadow-md);
+	--ui-tabs-indicator-text: var(--color-text);
+}
+
+/* Atoms */
+.tabs-line        { --ui-tabs-indicator-width:       var(--border-width-heavy); }
+.tabs-line-above  { --ui-tabs-indicator-width-start: var(--border-width-heavy); }
+.tabs-offset      { --ui-tabs-indicator-offset:      var(--spacing-sm); }
+.tabs-outline     { --ui-tabs-outline-width:         var(--border-width-thick); }
+.tabs-rounded     { --ui-tabs-squircle-exp:          3; }
+.tabs-semibold    { --ui-tabs-indicator-font-weight: var(--font-weight-semibold); }
+.tabs-text        { --ui-tabs-indicator-text:        var(--color-text); }

@@ -1,23 +1,11 @@
 /**
  * ui-accordion
- * @version 4.0.6
- * @date 2026-04-15
+ * @version 4.0.7
+ * @date 2026-04-23
  * @author Mads Stoumann
  */
 @import '../icon/index.css';
 @layer bs-component {
-
-	@property --_tabcount { 
-		syntax: "<integer>"; 
-		inherits: true; 
-		initial-value: 1; 
-	}
-	@property --_tabindex {
-		syntax: "<integer>";
-		inherits: true;
-		initial-value: 1;
-	}
-
 	:where(ui-accordion) {
 		--ui-accordion-bg-hover: linear-gradient(90deg, #0000, light-dark(var(--color-field), var(--color-surface-alt)) 10% 90%, #0000);
 		--ui-accordion-border-color: var(--color-border);
@@ -36,6 +24,8 @@
 		container-type: inline-size;
 		display: grid;
 		interpolate-size: allow-keywords;
+		
+		cq-box { --_tabs-mode: 0; }
 
 		details {
 			background: var(--ui-accordion-background, inherit);
@@ -306,72 +296,10 @@
 			}
 		}
 
-		/* === type: tabs === */
-		ui-accordion[type="tabs"] {
-			cq-box {
-				display: grid;
-				grid-auto-columns: 1fr;
-				grid-template-rows: auto 1fr;
-
-				/* --- tab indicator --- */
-				&::after { 
-					block-size: anchor-size(--tab-active height);
-					border-block-end: var(--ui-accordion-tab-active-border-width, var(--border-width-heavy)) solid var(--ui-accordion-tab-active-border-color, var(--color-accent));
-					content: "";
-					display: block;
-					grid-row: 1;
-					inline-size: anchor-size(--tab-active width);
-					inset-inline-start: anchor(--tab-active left);
-					position: absolute;
-					transition: inset-inline-start var(--ui-accordion-duration) ease, inline-size var(--ui-accordion-duration) ease;
-				}
-			}
-			&[variant~="rounded"] cq-box {
-				details:first-of-type summary {
-					border-start-start-radius: var(--ui-accordion-border-radius);
-				}
-				details:last-of-type summary {
-					border-start-end-radius: var(--ui-accordion-border-radius);
-				}
-			}
-
-			details {
-				--_tabcount: sibling-count();
-				--_tabindex: sibling-index();
-
-				border: 0 !important;
-				box-shadow: none;
-				display: grid;
-				grid-column: 1 / span var(--_tabcount);
-				grid-row: 1 / span 2;
-				grid-template-columns: subgrid;
-				grid-template-rows: subgrid;
-				padding-inline: 0;
-				pointer-events: none;
-				&[open] summary {
-					anchor-name: --tab-active;
-					/* background: var(--ui-accordion-tab-active-background, color-mix(in srgb, var(--color-surface) 20%, transparent)); */
-					/* background: var(--ui-accordion-tab-active-background, var(--color-surface)); */
-				}
-			}
-
-			details::details-content {
-				grid-column: 1 / span var(--_tabcount);
-				grid-row: 2;
-				padding: var(--ui-accordion-padding-inline);
-				pointer-events: auto;
-				transition: none;
-			}
-
-			summary {
-				background: var(--ui-accordion-tab-background, var(--color-surface-alt));
-				display: flex;
-				grid-column: var(--_tabindex);
-				justify-content: center;
-				pointer-events: auto;
-				transition: background var(--ui-accordion-duration) ease;
-				ui-icon { display: none; }
-			} 
+		/* === attribute: tabs === */
+		ui-accordion[tabs] cq-box { 
+			--_tabs-mode: 1;
+			ui-icon { display: none; }
 		}
 	}
 

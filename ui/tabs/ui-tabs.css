@@ -1,7 +1,7 @@
 /**
  * ui-tabs
- * @version 1.0.0
- * @date 2026-04-21
+ * @version 1.0.1
+ * @date 2026-04-23
  * @author Mads Stoumann
  *
  * Private custom properties (--_*)
@@ -10,7 +10,11 @@
  *   --_sr   shape-radius  pill/rounded radius used by shared shape rules
  */
 @layer bs-component {
-
+	@property --_tabs-mode {
+		syntax: "<integer>";
+		inherits: true;
+		initial-value: 0;
+	}
 	@property --_tc {
 		syntax: "<integer>";
 		inherits: true;
@@ -27,7 +31,12 @@
 		initial-value: 0px;
 	}
 
-	:where(ui-tabs) {
+	/* Host opt-in: ui-tabs is always in tabs mode. */
+	:where(ui-tabs, [tabs]) {
+		--_tabs-mode: 1;
+		container-type: inline-size;
+		display: block;
+
 		--ui-tabs-border-color: var(--color-border);
 		--ui-tabs-border-width: var(--border-width);
 		--ui-tabs-compact-gap: 2ch;
@@ -56,218 +65,229 @@
 		--ui-tabs-squircle-exp: 2;
 		--ui-tabs-squircle-radius: 1em;
 		--ui-tabs-tab-gap: 1ch;
-
-		container-type: inline-size;
-		display: block;
-
-		cq-box {
-			display: grid;
-			grid-auto-columns: minmax(0, 1fr);
-			grid-template-rows: auto 1fr;
-			isolation: isolate;
-			margin-inline: auto;
-			max-width: var(--ui-tabs-max-width);
-			position: relative;
-
-			/* Header row background. */
-			&::before {
-				background: var(--ui-tabs-header-bg);
-				block-size: anchor-size(--tab-active height, var(--ui-tabs-header-height));
-				content: "";
-				inset-block-start: 0;
-				inset-inline: 0;
-				position: absolute;
-				z-index: 0;
-			}
-
-			/* Sliding tab indicator. Decoration via tokens (see readme). */
-			&::after {
-				background: var(--ui-tabs-indicator-bg);
-				block-size: calc(anchor-size(--tab-active height, var(--ui-tabs-header-height)) - 2 * var(--ui-tabs-indicator-offset));
-				border-block-end: var(--ui-tabs-indicator-width) solid var(--ui-tabs-indicator-color);
-				border-block-start: var(--ui-tabs-indicator-width-start) solid var(--ui-tabs-indicator-color);
-				box-shadow: var(--ui-tabs-indicator-shadow);
-				box-sizing: border-box;
-				content: "";
-				inline-size: calc(anchor-size(--tab-active width, 0) - 2 * var(--ui-tabs-indicator-offset));
-				inset-block-start: var(--ui-tabs-indicator-offset);
-				inset-inline-start: calc(anchor(--tab-active start, 0) + var(--ui-tabs-indicator-offset));
-				position: absolute;
-				transition: inset-inline-start var(--ui-tabs-duration) ease, inline-size var(--ui-tabs-duration) ease;
-				z-index: var(--z-index-1);
-			}
-		}
-
-		details {
-			--_tc: sibling-count();
-			--_ti: sibling-index();
-
-			display: grid;
-			grid-column: 1 / span var(--_tc);
-			grid-row: 1 / span 2;
-			grid-template-columns: subgrid;
-			grid-template-rows: subgrid;
-			pointer-events: none;
-
-			& > :not(summary) { padding: var(--ui-tabs-panel-padding-block) var(--ui-tabs-panel-padding-inline); }
-
-			&::details-content {
-				grid-column: 1 / -1;
-				grid-row: 2;
-				pointer-events: auto;
-			}
-
-			&[open] summary {
-				anchor-name: --tab-active;
-				border-block-end: 0;
-				border-block-start: var(--ui-tabs-outline-width) solid var(--ui-tabs-outline-color);
-				border-inline: var(--ui-tabs-outline-width) solid var(--ui-tabs-outline-color);
-				color: var(--ui-tabs-indicator-text);
-				font-weight: var(--ui-tabs-indicator-font-weight);
-			}
-
-			&[open]::details-content {
-				block-size: auto;
-				content-visibility: visible;
-			}
-		}
-
-		summary {
-			border-block-end: var(--ui-tabs-outline-width) solid var(--ui-tabs-outline-color);
-			box-sizing: border-box;
-			cursor: pointer;
-			display: flex;
-			gap: var(--ui-tabs-tab-gap);
-			grid-column: var(--_ti);
-			grid-row: 1;
-			justify-content: center;
-			min-inline-size: 0;
-			overflow: hidden;
-			padding: var(--ui-tabs-padding-block) var(--ui-tabs-padding-inline);
-			pointer-events: auto;
-			user-select: none;
-			z-index: var(--z-index-2);
-
-			&::-webkit-details-marker,
-			&::marker { display: none; }
-		}
 	}
 
-	/* === Variants (structural) === */
-
-	/* bleed — header bg reaches viewport edges. See readme for scrollbar notes. */
-	ui-tabs[variant~="bleed"] cq-box::before { inset-inline: calc(50% - 50vw); }
-
-	/* bleed + panel — panel bg also bleeds; padding keeps text in column. */
-	ui-tabs[variant~="bleed"][variant~="panel"] details > :not(summary) {
-		margin-inline: calc(50% - 50vw);
-		padding-inline: calc(var(--ui-tabs-panel-padding-inline) + 50vw - 50%);
-	}
-
-	/* bordered — outer frame + divider between header and panel. */
-	ui-tabs[variant~="bordered"] {
-		border: var(--ui-tabs-border-width) solid var(--ui-tabs-border-color);
-
-		cq-box::before { border-block-end: var(--ui-tabs-border-width) solid var(--ui-tabs-border-color); }
-	}
-
-	/* compact — tabs at min-content, grouped left, trailing 1fr fills. */
-	ui-tabs[variant~="compact"] {
-		cq-box { grid-template-columns: repeat(12, min-content) 1fr; }
-		details { grid-column: 1 / -1; }
-		details:last-of-type summary { margin-inline-end: 0; }
-		summary { margin-inline-end: var(--ui-tabs-compact-gap); }
-	}
-
-	/* compact narrow fallback — equal-share tracks below 400px. */
-	@container (inline-size < 400px) {
-		ui-tabs[variant~="compact"] {
+	@container style(--_tabs-mode: 1) {
+		:where(ui-tabs, [tabs]) {
 			cq-box {
+				display: grid;
 				grid-auto-columns: minmax(0, 1fr);
-				grid-template-columns: none;
-			}
-			details { grid-column: 1 / span var(--_tc); }
-			summary { margin-inline-end: 0; }
-		}
-	}
+				grid-template-rows: auto 1fr;
+				isolation: isolate;
+				margin-inline: auto;
+				max-width: var(--ui-tabs-max-width);
+				position: relative;
 
-	/* panel — bg + shadow on content; slide in/out via display:allow-discrete. */
-	ui-tabs[variant~="panel"] {
-		details > :not(summary) {
-			background: var(--ui-tabs-panel-bg);
-			box-shadow: var(--ui-tabs-panel-shadow);
-			transition:
-				opacity var(--ui-tabs-duration),
-				translate var(--ui-tabs-duration),
-				display var(--ui-tabs-duration) allow-discrete;
+				/* Header row background. */
+				&::before {
+					background: var(--ui-tabs-header-bg);
+					block-size: anchor-size(--tab-active height, var(--ui-tabs-header-height));
+					content: "";
+					inset-block-start: 0;
+					inset-inline: 0;
+					position: absolute;
+					z-index: 0;
+				}
+
+				/* Sliding tab indicator. Decoration via tokens (see readme). */
+				&::after {
+					background: var(--ui-tabs-indicator-bg);
+					block-size: calc(anchor-size(--tab-active height, var(--ui-tabs-header-height)) - 2 * var(--ui-tabs-indicator-offset));
+					border-block-end: var(--ui-tabs-indicator-width) solid var(--ui-tabs-indicator-color);
+					border-block-start: var(--ui-tabs-indicator-width-start) solid var(--ui-tabs-indicator-color);
+					box-shadow: var(--ui-tabs-indicator-shadow);
+					box-sizing: border-box;
+					content: "";
+					inline-size: calc(anchor-size(--tab-active width, 0) - 2 * var(--ui-tabs-indicator-offset));
+					inset-block-start: var(--ui-tabs-indicator-offset);
+					inset-inline-start: calc(anchor(--tab-active start, 0) + var(--ui-tabs-indicator-offset));
+					position: absolute;
+					transition: inset-inline-start var(--ui-tabs-duration) ease, inline-size var(--ui-tabs-duration) ease;
+					z-index: var(--z-index-1);
+				}
+			}
+
+			details {
+				--_tc: sibling-count();
+				--_ti: sibling-index();
+
+				display: grid;
+				grid-column: 1 / span var(--_tc);
+				grid-row: 1 / span 2;
+				grid-template-columns: subgrid;
+				grid-template-rows: subgrid;
+				pointer-events: none;
+
+				& > :not(summary) { padding: var(--ui-tabs-panel-padding-block) var(--ui-tabs-panel-padding-inline); }
+
+				&::details-content {
+					grid-column: 1 / -1;
+					grid-row: 2;
+					pointer-events: auto;
+				}
+
+				&[open] summary {
+					anchor-name: --tab-active;
+					border-block-end: 0;
+					border-block-start: var(--ui-tabs-outline-width) solid var(--ui-tabs-outline-color);
+					border-inline: var(--ui-tabs-outline-width) solid var(--ui-tabs-outline-color);
+					color: var(--ui-tabs-indicator-text);
+					font-weight: var(--ui-tabs-indicator-font-weight);
+				}
+
+				&[open]::details-content {
+					block-size: auto;
+					content-visibility: visible;
+				}
+			}
+
+			summary {
+				border-block-end: var(--ui-tabs-outline-width) solid var(--ui-tabs-outline-color);
+				box-sizing: border-box;
+				cursor: pointer;
+				display: flex;
+				gap: var(--ui-tabs-tab-gap);
+				grid-column: var(--_ti);
+				grid-row: 1;
+				justify-content: center;
+				min-inline-size: 0;
+				overflow: hidden;
+				padding: var(--ui-tabs-padding-block) var(--ui-tabs-padding-inline);
+				pointer-events: auto;
+				user-select: none;
+				z-index: var(--z-index-2);
+
+				&::-webkit-details-marker,
+				&::marker { display: none; }
+			}
 		}
-		details:not([open]) > :not(summary) {
-			display: none;
-			opacity: 0;
-			translate: 0 calc(-1 * var(--ui-tabs-panel-padding-block));
+
+		/* === Variants (structural) === */
+
+		/* bleed — header bg reaches viewport edges. See readme for scrollbar notes. */
+		:is(ui-tabs[variant~="bleed"], [tabs~="bleed"]) cq-box::before { inset-inline: calc(50% - 50vw); }
+
+		/* bleed + panel — panel bg also bleeds; padding keeps text in column. */
+		:is(
+			ui-tabs[variant~="bleed"][variant~="panel"],
+			[tabs~="bleed"][tabs~="panel"]
+		) details > :not(summary) {
+			margin-inline: calc(50% - 50vw);
+			padding-inline: calc(var(--ui-tabs-panel-padding-inline) + 50vw - 50%);
 		}
-		details[open] > :not(summary) {
-			@starting-style {
+
+		/* bordered — outer frame + divider between header and panel. */
+		:is(ui-tabs[variant~="bordered"], [tabs~="bordered"]) cq-box {
+			border: var(--ui-tabs-border-width) solid var(--ui-tabs-border-color);
+
+			&::before { border-block-end: var(--ui-tabs-border-width) solid var(--ui-tabs-border-color); }
+		}
+
+		/* compact — tabs at min-content, grouped left, trailing 1fr fills. */
+		:is(ui-tabs[variant~="compact"], [tabs~="compact"]) {
+			cq-box { grid-template-columns: repeat(12, min-content) 1fr; }
+			details { grid-column: 1 / -1; }
+			details:last-of-type summary { margin-inline-end: 0; }
+			summary { margin-inline-end: var(--ui-tabs-compact-gap); }
+		}
+
+		/* compact narrow fallback — equal-share tracks below 400px. */
+		@container (inline-size < 400px) {
+			:is(ui-tabs[variant~="compact"], [tabs~="compact"]) {
+				cq-box {
+					grid-auto-columns: minmax(0, 1fr);
+					grid-template-columns: none;
+				}
+				details { grid-column: 1 / span var(--_tc); }
+				summary { margin-inline-end: 0; }
+			}
+		}
+
+		/* panel — bg + shadow on content; slide in/out via display:allow-discrete. */
+		:is(ui-tabs[variant~="panel"], [tabs~="panel"]) {
+			details > :not(summary) {
+				background: var(--ui-tabs-panel-bg);
+				box-shadow: var(--ui-tabs-panel-shadow);
+				transition:
+					opacity var(--ui-tabs-duration),
+					translate var(--ui-tabs-duration),
+					display var(--ui-tabs-duration) allow-discrete;
+			}
+			details:not([open]) > :not(summary) {
+				display: none;
 				opacity: 0;
 				translate: 0 calc(-1 * var(--ui-tabs-panel-padding-block));
 			}
+			details[open] > :not(summary) {
+				@starting-style {
+					opacity: 0;
+					translate: 0 calc(-1 * var(--ui-tabs-panel-padding-block));
+				}
+			}
 		}
-	}
 
-	/* pill / rounded — shared shape; indicator radius compensates for offset. */
-	ui-tabs:is([variant~="pill"], [variant~="rounded"]) {
-		cq-box::after { border-radius: calc(var(--_sr) - var(--ui-tabs-indicator-offset)); }
-		cq-box::before { border-radius: var(--_sr); }
-		details:first-of-type summary {
-			border-start-start-radius: var(--_sr);
-			border-end-start-radius: var(--_sr);
+		/* pill / rounded — shared shape; indicator radius compensates for offset. */
+		:is(
+			ui-tabs[variant~="pill"],
+			ui-tabs[variant~="rounded"],
+			[tabs~="pill"],
+			[tabs~="rounded"]
+		) cq-box {
+			border-radius: var(--_sr);
+
+			&::after { border-radius: calc(var(--_sr) - var(--ui-tabs-indicator-offset)); }
+			&::before { border-radius: var(--_sr); }
+			details:first-of-type summary {
+				border-start-start-radius: var(--_sr);
+				border-end-start-radius: var(--_sr);
+			}
+			details:last-of-type summary {
+				border-start-end-radius: var(--_sr);
+				border-end-end-radius: var(--_sr);
+			}
 		}
-		details:last-of-type summary {
-			border-start-end-radius: var(--_sr);
-			border-end-end-radius: var(--_sr);
-		}
-	}
 
-	/* pill — fully rounded ends. */
-	ui-tabs[variant~="pill"] { --_sr: var(--ui-tabs-pill-radius); }
+		/* pill — fully rounded ends. */
+		:is(ui-tabs[variant~="pill"], [tabs~="pill"]) cq-box { --_sr: var(--ui-tabs-pill-radius); }
 
-	/* rounded — top corners only; bottom flows into panel. */
-	ui-tabs[variant~="rounded"] {
-		--_sr: var(--ui-tabs-rounded-radius);
-		border-radius: var(--_sr);
-
-		cq-box::before,
-		cq-box::after {
+		/* rounded — top corners only; bottom flows into panel. */
+		:is(ui-tabs[variant~="rounded"], [tabs~="rounded"]) cq-box {
+			--_sr: var(--ui-tabs-rounded-radius);
 			border-end-start-radius: 0;
 			border-end-end-radius: 0;
+
+			&::before,
+			&::after {
+				border-end-start-radius: 0;
+				border-end-end-radius: 0;
+			}
+			details:first-of-type summary { border-end-start-radius: 0; }
+			details:last-of-type summary { border-end-end-radius: 0; }
 		}
-		details:first-of-type summary { border-end-start-radius: 0; }
-		details:last-of-type summary { border-end-end-radius: 0; }
-	}
 
-	/* ellipse — uses the CSS `corners` property (Chrome 135+). Default exp 2 is
-	   a true ellipse (same shape as border-radius); bump --ui-tabs-squircle-exp
-	   to 3+ for a squircle. */
-	ui-tabs[variant~="ellipse"] {
-		cq-box::after { corners: calc(var(--ui-tabs-squircle-radius) - var(--ui-tabs-indicator-offset)) superellipse(var(--ui-tabs-squircle-exp)); }
-		cq-box::before { corners: var(--ui-tabs-squircle-radius) superellipse(var(--ui-tabs-squircle-exp)); }
-		details:first-of-type summary { corners: var(--ui-tabs-squircle-radius) 0 0 var(--ui-tabs-squircle-radius) superellipse(var(--ui-tabs-squircle-exp)); }
-		details:last-of-type summary { corners: 0 var(--ui-tabs-squircle-radius) var(--ui-tabs-squircle-radius) 0 superellipse(var(--ui-tabs-squircle-exp)); }
-	}
-
-	/* === Attributes === */
-
-	/* no-background — drops header bg; flushes padding when combined with compact. */
-	ui-tabs[no-background] {
-		cq-box::before { background: none; }
-
-		&[variant~="compact"] {
-			details > :not(summary) { padding-inline: 0; }
-			summary { padding-inline: 0; }
+		/* ellipse — uses the CSS `corners` property (Chrome 135+). Default exp 2 is
+			a true ellipse (same shape as border-radius); bump --ui-tabs-squircle-exp
+			to 3+ for a squircle. */
+		:is(ui-tabs[variant~="ellipse"], [tabs~="ellipse"]) {
+			cq-box::after { corners: calc(var(--ui-tabs-squircle-radius) - var(--ui-tabs-indicator-offset)) superellipse(var(--ui-tabs-squircle-exp)); }
+			cq-box::before { corners: var(--ui-tabs-squircle-radius) superellipse(var(--ui-tabs-squircle-exp)); }
+			details:first-of-type summary { corners: var(--ui-tabs-squircle-radius) 0 0 var(--ui-tabs-squircle-radius) superellipse(var(--ui-tabs-squircle-exp)); }
+			details:last-of-type summary { corners: 0 var(--ui-tabs-squircle-radius) var(--ui-tabs-squircle-radius) 0 superellipse(var(--ui-tabs-squircle-exp)); }
 		}
+
+		/* === Attributes === */
+
+		/* no-background — drops header bg; flushes padding when combined with compact. */
+		:is(ui-tabs[no-background], [tabs][no-background]) {
+			cq-box::before { background: none; }
+
+			&:is([variant~="compact"], [tabs~="compact"]) {
+				details > :not(summary) { padding-inline: 0; }
+				summary { padding-inline: 0; }
+			}
+		}
+
+		/* no-collapse — one tab stays open. */
+		:is(ui-tabs[no-collapse], [tabs][no-collapse]) details[open] summary { pointer-events: none; }
 	}
-
-	/* no-collapse — one tab stays open. */
-	ui-tabs[no-collapse] details[open] summary { pointer-events: none; }
-
 }
