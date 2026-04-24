@@ -1,0 +1,324 @@
+/**
+ * ui-accordion
+ * @version 4.0.8
+ * @date 2026-04-24
+ * @author Mads Stoumann
+ *
+ * Private custom properties (--_*)
+ *   --_bd   border           standard border grouping
+ *   --_bb   border-breakout  breakout variant border grouping
+ */
+@import '../icon/index.css';
+@layer bs-component {
+	:where(ui-accordion) {
+		--ui-accordion-bg-hover: linear-gradient(90deg, #0000, light-dark(var(--color-field), var(--color-surface-alt)) 10% 90%, #0000);
+		--ui-accordion-border-color: var(--color-border);
+		--ui-accordion-border-radius: 1ch;
+		--ui-accordion-border-style: solid;
+		--ui-accordion-border-width: var(--input-border-width, var(--border-width));
+		--ui-accordion-breakout-border-width: var(--border-width);
+		--ui-accordion-breakout-unit: var(--spacing-md);
+		--ui-accordion-duration: var(--duration-slow);
+		--ui-accordion-padding-block: 1.5ch;
+		--ui-accordion-padding-inline: 1.5ch;
+		
+		--_bd: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+		--_bb: var(--ui-accordion-breakout-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
+
+		container-type: inline-size;
+		display: block;
+		interpolate-size: allow-keywords;
+		
+		cq-box { 
+			--_tabs-mode: 0; 
+			display: grid;
+		}
+
+		details {
+			background: var(--ui-accordion-background, inherit);
+			color: var(--ui-accordion-color, inherit);
+			&::details-content {
+				block-size: 0;
+				content-visibility: hidden;
+				overflow: hidden;
+				transition: block-size var(--ui-accordion-duration), content-visibility var(--ui-accordion-duration), padding-block var(--ui-accordion-duration);
+				transition-behavior: allow-discrete;
+			}
+			&[open]::details-content {
+				block-size: auto;
+				content-visibility: visible;
+				padding-block: var(--ui-accordion-padding-block);
+			}
+			&:has(:focus-visible) {
+				outline: var(--ring-width) solid var(--ring-color);
+				summary { outline: none; }
+			}
+			& summary {
+				align-items: center;
+				color: inherit;
+				cursor: pointer;
+				display: flex;
+				font-size: var(--ui-accordion-summary-font-size, 1em);
+				font-weight: var(--ui-accordion-summary-font-weight, 500);
+				justify-content: space-between;
+				padding-block: var(--ui-accordion-padding-block);
+				text-decoration: none;
+				transition: background var(--duration-normal) var(--ease-in-out);
+				user-select: none;
+				&::-webkit-details-marker { display: none; }
+			}			
+			&:not([open]) summary:hover { background: var(--ui-accordion-bg-hover); }
+			&[open] summary { text-decoration: var(--ui-accordion-open-decoration, underline) #0000 var(--ui-accordion-open-decoration-width, var(--border-width-thick)); text-decoration-skip-ink: auto; text-underline-offset: var(--ui-accordion-open-decoration-offset, 0.3ch); transition: text-decoration-color var(--duration-normal) var(--ease-in-out); }
+			&[open] summary:hover { text-decoration-color: currentColor; }
+		}
+		&[no-collapse] {
+			details[open] summary {
+				pointer-events: none;
+			}
+		}
+	}
+
+	/* === Variants === */
+
+	/* bordered */
+	ui-accordion[variant~="bordered"] {
+		cq-box { border: var(--_bd); }
+		details {
+			padding-inline: var(--ui-accordion-padding-inline);
+		}
+	}
+
+	/* breakout */
+	ui-accordion[variant~="breakout"] {
+		&:has(details[open]) {
+			margin-block-end: calc(2 * var(--ui-accordion-breakout-unit));
+		}
+		details {
+			border-inline: var(--_bd);
+			padding-inline: var(--ui-accordion-padding-inline);
+			translate: 0 calc(var(--_y, 0) * var(--ui-accordion-breakout-unit));
+			transition: translate var(--ui-accordion-duration) ease;
+			&:first-of-type { border-block-start: var(--_bd); }
+			&:last-of-type { border-block-end: var(--_bd); }
+		}
+		details[open] {
+			border: var(--_bb);
+		}
+		details[open] + details {
+			border-block-start: var(--_bd);
+		}
+		details[open]:not(:first-of-type),
+		details[open]:first-of-type ~ details {
+			--_y: 1;
+		}
+		details[open] ~ details {
+			--_y: 2;
+		}
+		&[variant~="rounded"] {
+			details[open] {
+				border-radius: var(--ui-accordion-border-radius);
+			}
+			/* Top of group: first item, or first after open */
+			details:first-of-type:not([open]),
+			details[open] + details {
+				border-start-start-radius: var(--ui-accordion-border-radius);
+				border-start-end-radius: var(--ui-accordion-border-radius);
+			}
+			/* Bottom of group: last item, or right before open */
+			details:last-of-type:not([open]),
+			details:has(+ details[open]) {
+				border-end-start-radius: var(--ui-accordion-border-radius);
+				border-end-end-radius: var(--ui-accordion-border-radius);
+			}
+		}
+	}
+
+	/* divided */
+	ui-accordion:is([variant~="bordered"], [variant~="breakout"], [variant~="divided"]) details:not(:last-of-type) {
+		border-block-end: var(--_bd);
+	}
+	ui-accordion[variant~="breakout"] details[open]:not(:last-of-type) {
+		border-block-end: var(--_bb);
+	}
+
+	/* rounded */
+	ui-accordion[variant~="rounded"] {
+		cq-box {
+			border-radius: var(--ui-accordion-border-radius);
+		}
+		&[variant~="separate"] details {
+			border-radius: var(--ui-accordion-border-radius);
+		}
+		details:first-of-type {
+			border-start-start-radius: var(--ui-accordion-border-radius);
+			border-start-end-radius: var(--ui-accordion-border-radius);
+		}
+		details:last-of-type {
+			border-end-start-radius: var(--ui-accordion-border-radius);
+			border-end-end-radius: var(--ui-accordion-border-radius);
+		}
+	}
+
+	/* separate */
+	ui-accordion[variant~="separate"] {
+		cq-box {
+			gap: var(--ui-accordion-gap, var(--spacing-xl));
+		}
+		details {
+			padding-inline: var(--ui-accordion-padding-inline-separate, 2.25ch);
+		}
+		/* bordered + separate: border moves from group to each item */
+		&[variant~="bordered"] {
+			cq-box { border: 0; }
+			details { border: var(--_bd); }
+		}
+	}
+
+	/* tint / tinted — consumes generic --_tint / --tint-bg / --tint-fg from base/tint.css */
+	ui-accordion:is([tint], [data-tint]) details {
+		--_hover: #FFF3;
+		--ui-accordion-bg-hover: linear-gradient(90deg, #0000, var(--_hover) 10% 90%, #0000);
+		background: var(--tint-bg, var(--_tint));
+		color: var(--tint-fg, contrast-color(var(--_tint)));
+	}
+
+	/* === type: slide === */
+	ui-accordion[type="slide"] {
+		overflow: hidden;
+		position: relative;
+
+		details:has(:focus-visible) {
+			outline-offset: calc(-1 * var(--ring-width, 2px));
+			&[open] {
+				outline: none;
+				summary ui-icon:last-of-type {
+					outline: var(--ring-width) solid var(--ring-color);
+					outline-offset: var(--ring-offset);
+				}
+			}
+		}
+		&:has(details[open]) details:not([open]) {
+			opacity: 0;
+			pointer-events: none;
+			position: absolute;
+			visibility: hidden;
+		}
+		details[open] {
+			border-block-end: 0;
+			&::details-content { translate: 0; }
+		}
+		details::details-content {
+			background: var(--ui-accordion-slide-bg, var(--ui-accordion-background, Canvas));
+			box-sizing: border-box;
+			padding-inline: var(--ui-accordion-padding-inline);
+			translate: calc(100% * var(--_slidedir, 1)) 0;
+			transition: block-size var(--ui-accordion-duration), content-visibility var(--ui-accordion-duration) allow-discrete, padding-block var(--ui-accordion-duration), translate var(--ui-accordion-duration) var(--ease-in-out, ease);
+			z-index: var(--z-index-2, 10);
+		}
+		details summary ui-icon:last-of-type,
+		details[open] summary ui-icon:first-of-type { display: none; }
+		details[open] summary ui-icon:last-of-type { display: grid; }
+	}
+	:where([dir="rtl"]) ui-accordion[type="slide"] { --_slidedir: -1; }
+
+	@container (inline-size > 650px) {
+		/* === type: horizontal === */
+		ui-accordion[type="horizontal"] {
+			cq-box {
+				display: flex;
+
+				details {
+					display: flex;
+					flex-basis: calc(100% / sibling-count() / sibling-count() + 2 * var(--ui-accordion-padding-inline));
+					flex-grow: 1;
+					flex-shrink: 0;
+					overflow: hidden;
+					transition: flex-grow var(--ui-accordion-duration) ease;
+					&[open] {
+						flex-grow: calc(sibling-count() * sibling-count());
+						flex-direction: column;
+					}
+					&::details-content {
+						opacity: 0;
+						transition: block-size 0s, content-visibility 0s, opacity 0s;
+					}
+					&[open]::details-content {
+						opacity: 1;
+						transition:
+							block-size var(--ui-accordion-duration) ease var(--ui-accordion-delay, calc(var(--ui-accordion-duration) * 0.5)),
+							content-visibility 0s var(--ui-accordion-delay, calc(var(--ui-accordion-duration) * 0.5)),
+							opacity var(--ui-accordion-duration) ease var(--ui-accordion-delay, calc(var(--ui-accordion-duration) * 0.5));
+					}
+					&:not([open]) {
+						padding-inline: 0;
+						summary {
+							--ui-accordion-bg-hover: linear-gradient(180deg, #0000, var(--_hover, light-dark(var(--color-field), var(--color-surface-alt))) 10% 90%, #0000);
+							block-size: 100%;
+							padding-inline: var(--ui-accordion-horizontal-padding-inline, 2ch);
+							writing-mode: vertical-lr;
+						}
+					}
+				}
+				
+				ui-icon { display: none; }
+			}
+			&:where([variant~="divided"], [variant~="bordered"]) details:not(:last-of-type) {
+				border-block-end: 0;
+				border-inline-end: var(--_bd);
+			}
+			&[variant~="rounded"]:not([variant~="separate"]) cq-box {
+				details:first-of-type {
+					border-start-end-radius: 0;
+					border-end-start-radius: var(--ui-accordion-border-radius);
+				}
+				details:last-of-type {
+					border-start-end-radius: var(--ui-accordion-border-radius);
+					border-end-start-radius: 0;
+				}
+			}
+		}
+
+		/* === type: split === */
+		ui-accordion[type="split"] {
+			cq-box {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				position: relative;
+				& > details {
+					grid-column: 1;
+					& [data-split] { opacity: 0; }
+					&[open]::details-content {
+						display: contents;
+					}
+					&[open] [data-split]{
+						block-size: auto;
+						inline-size: calc(50% - var(--ui-accordion-gap, var(--spacing-xl)));
+						inset-block: 0 auto;
+						inset-inline: auto 0;
+						opacity: 1;
+						position: absolute;
+						&:is(img, video, picture) {
+							animation: accordion-media-in var(--ui-accordion-media-duration, 0.6s) ease;
+							object-fit: cover;
+						}
+					}
+				}
+			}
+		}
+
+		/* === attribute: tabs === */
+		ui-accordion[tabs] cq-box { 
+			--_tabs-mode: 1;
+			ui-icon { display: none; }
+		}
+	}
+
+	/* Web component item — renders inline (light DOM) */
+	:where(ui-accordion-item) {
+		display: contents;
+	}
+
+	@keyframes accordion-media-in {
+		from { opacity: 0; scale: 1.02; }
+	}
+}
