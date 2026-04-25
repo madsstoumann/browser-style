@@ -10,11 +10,6 @@
  *   --_sr   shape-radius  pill/rounded radius used by shared shape rules
  */
 @layer bs-component {
-	@property --_tabs-mode {
-		syntax: "<integer>";
-		inherits: true;
-		initial-value: 0;
-	}
 	@property --_tc {
 		syntax: "<integer>";
 		inherits: true;
@@ -33,7 +28,7 @@
 
 	/* Host opt-in: ui-tabs is always in tabs mode. */
 	:where(ui-tabs, [tabs]) {
-		--_tabs-mode: 1;
+		--_render: tabs;
 		container-type: inline-size;
 		display: block;
 
@@ -67,7 +62,7 @@
 		--ui-tabs-tab-gap: 1ch;
 	}
 
-	@container style(--_tabs-mode: 1) {
+	@container style(--_render: tabs) {
 		:where(ui-tabs, [tabs]) {
 			cq-box {
 				display: grid;
@@ -280,7 +275,7 @@
 	}
 
 	/* compact narrow fallback — equal-share tracks below 400px. */
-	@container (inline-size < 400px) and style(--_tabs-mode: 1) {
+	@container (inline-size < 400px) and style(--_render: tabs) {
 		:is(ui-tabs[variant~="compact"], [tabs~="compact"]) {
 			cq-box {
 				grid-auto-columns: minmax(0, 1fr);

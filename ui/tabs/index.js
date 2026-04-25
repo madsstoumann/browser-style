@@ -1,30 +1,24 @@
 /**
- * <ui-accordion> and <ui-accordion-item>
- * Light DOM web component wrappers for the CSS-first accordion.
+ * <ui-tabs> and <ui-tab>
+ * Light DOM web component wrappers for the CSS-first tabs.
  * Renders native <details>/<summary> elements — no Shadow DOM.
- * @version 4.1.0
+ * @version 1.0.0
  */
 
-class UiAccordionItem extends HTMLElement {
+class UiTab extends HTMLElement {
 	connectedCallback() {
 		this.render();
 	}
 
 	render() {
 		const label = this.getAttribute('label') || '';
-		const icon = this.getAttribute('icon') || 'plus-minus';
 		const isOpen = this.hasAttribute('open');
 
 		const details = document.createElement('details');
 		if (isOpen) details.open = true;
 
 		const summary = document.createElement('summary');
-		const span = document.createElement('span');
-		span.textContent = label;
-		const iconEl = document.createElement('ui-icon');
-		iconEl.setAttribute('type', icon);
-		summary.appendChild(span);
-		summary.appendChild(iconEl);
+		summary.textContent = label;
 
 		const content = document.createElement('div');
 		while (this.firstChild) {
@@ -37,7 +31,7 @@ class UiAccordionItem extends HTMLElement {
 	}
 }
 
-class UiAccordion extends HTMLElement {
+class UiTabs extends HTMLElement {
 	static observedAttributes = ['name'];
 
 	connectedCallback() {
@@ -68,7 +62,7 @@ class UiAccordion extends HTMLElement {
 	}
 }
 
-customElements.define('ui-accordion-item', UiAccordionItem);
-customElements.define('ui-accordion', UiAccordion);
+customElements.define('ui-tab', UiTab);
+customElements.define('ui-tabs', UiTabs);
 
-export { UiAccordion, UiAccordionItem };
+export { UiTabs, UiTab };

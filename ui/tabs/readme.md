@@ -255,18 +255,18 @@ Exponent `2` (default) = a true ellipse (same shape as border-radius). Exponent 
 
 ---
 
-## Pairing with `<ui-accordion>` — the `--_tabs-mode` gate
+## Pairing with `<ui-accordion>` — the `--_render` gate
 
-`@browser.style/tabs` and `@browser.style/accordion` share the same inner structure (`cq-box > details`) and cooperate through a single registered integer custom property: `--_tabs-mode`.
+`@browser.style/tabs` and `@browser.style/accordion` share the same inner structure (`cq-box > details`) and cooperate through a single inherited custom property: `--_render`. No `@property` registration needed — it's a plain string-keyword property and string-equality style queries work without it.
 
-- `--_tabs-mode: 0` → accordion renders
-- `--_tabs-mode: 1` → tabs renders
+- `--_render: accordion` → accordion renders
+- `--_render: tabs` → tabs renders
 
-Both components wrap every rendering rule in `@container style(--_tabs-mode: N)`. Flip the value and the same markup re-renders in the other mode — no JS, no DOM swap.
+Both components wrap every rendering rule in `@container style(--_render: …)`. Flip the value and the same markup re-renders in the other mode — no JS, no DOM swap.
 
 ### How the `[tabs]` attribute works
 
-`ui-tabs.css` owns the flip. Its host rule is `:where(ui-tabs, [tabs])`, which means **any** element with a `tabs` attribute becomes a tabs host — including an `<ui-accordion tabs="pill">`. The host selector sets `--_tabs-mode: 1`, `container-type: inline-size`, and `display: block`, so the tabs rendering kicks in and (because accordion's gate is `style(--_tabs-mode: 0)`) accordion rendering drops out.
+`ui-tabs.css` owns the flip. Its host rule is `:where(ui-tabs, [tabs])`, which means **any** element with a `tabs` attribute becomes a tabs host — including an `<ui-accordion tabs="pill">`. The host selector sets `--_render: tabs`, `container-type: inline-size`, and `display: block`, so the tabs rendering kicks in and (because accordion's gate is `style(--_render: accordion)`) accordion rendering drops out.
 
 ```html
 <link rel="stylesheet" href="@browser.style/base/index.css">
@@ -285,7 +285,7 @@ The value assigned to `tabs="…"` is the variant list — `pill`, `rounded`, `b
 
 ### Responsive morph — `<auto-morph>`
 
-Wrap the element in `<auto-morph tabs-mode>` and scope a single `@container` rule to flip the mode below a breakpoint. `<auto-morph>` is an unregistered host — all it needs is `container-type: inline-size` and `display: block`:
+Wrap the element in `<auto-morph render>` and scope a single `@container` rule to flip the mode below a breakpoint. `<auto-morph>` is an unregistered host — all it needs is `container-type: inline-size` and `display: block`:
 
 ```html
 <style>
@@ -294,11 +294,11 @@ Wrap the element in `<auto-morph tabs-mode>` and scope a single `@container` rul
     display: block;
   }
   @container (inline-size <= 650px) {
-    auto-morph[tabs-mode] [tabs] { --_tabs-mode: 0; }
+    auto-morph[render] [tabs] { --_render: accordion; }
   }
 </style>
 
-<auto-morph tabs-mode>
+<auto-morph render>
   <ui-accordion tabs="pill" variant="bordered rounded" name="faq">
     <cq-box>…</cq-box>
   </ui-accordion>
@@ -307,7 +307,7 @@ Wrap the element in `<auto-morph tabs-mode>` and scope a single `@container` rul
 
 Above 650px wrapper width → tabs. Below → accordion. Because the query is container-based, a narrow sidebar and a wide main column can render the same element as accordion and tabs respectively — no viewport media queries involved.
 
-The attribute (`tabs-mode`) names the custom property being flipped, so the same `<auto-morph>` wrapper can drive any component mode switch that's modeled as a registered integer custom property.
+The attribute (`render`) names the custom property being flipped, so the same `<auto-morph>` wrapper can drive any component mode switch that's modeled as an inherited string-keyword property.
 
 ### Why a wrapper?
 

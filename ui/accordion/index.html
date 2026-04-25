@@ -565,7 +565,7 @@
 
 	<br>
 	<h2>With <code>tabs</code> attribute</h2>
-	<p>Morphs into tabs when the wrapping container is wider than 650px. The <code>&lt;ui-accordion tabs="pill"&gt;</code> is wrapped in a generic <code>&lt;auto-morph tabs-mode&gt;</code> element that owns a <code>container-type: inline-size</code>; a single <code>@container</code> rule flips <code>--_tabs-mode</code> when the wrapper's width falls below 650px. The attribute names the custom property to flip, so the same <code>&lt;auto-morph&gt;</code> wrapper can drive other component-mode switches later.</p>
+	<p>Morphs into tabs when the wrapping container is wider than 650px. The <code>&lt;ui-accordion tabs="pill"&gt;</code> is wrapped in a generic <code>&lt;auto-morph render&gt;</code> element that owns a <code>container-type: inline-size</code>; a single <code>@container</code> rule flips <code>--_render</code> from <code>tabs</code> back to <code>accordion</code> when the wrapper's width falls below 650px. The attribute names the custom property the wrapper drives, so the same <code>&lt;auto-morph&gt;</code> can power other render-mode switches later.</p>
 
 	<style>
 		auto-morph {
@@ -573,11 +573,11 @@
 			display: block;
 		}
 		@container (inline-size <= 650px) {
-			auto-morph[tabs-mode] [tabs] { --_tabs-mode: 0; }
+			auto-morph[render] [tabs] { --_render: accordion; }
 		}
 	</style>
 
-	<auto-morph tabs-mode>
+	<auto-morph render>
 		<ui-accordion name="accordion-tabs" class="tabs-fill-accent tabs-offset tabs-rounded" variant="bordered divided rounded" tabs="pill">
 			<cq-box>
 				<details name="accordion-tabs" open>
@@ -610,7 +610,7 @@
 
 	<br>
 	<p>With <code>tabs="ellipse"</code> and classes <code>tabs-fill-surface tabs-offset</code>:</p>
-	<auto-morph tabs-mode>
+	<auto-morph render>
 		<ui-accordion name="accordion-tabs-ellipse" class="tabs-fill-surface tabs-offset" variant="bordered divided rounded" tabs="ellipse">
 			<cq-box>
 				<details name="accordion-tabs-ellipse" open>
@@ -643,7 +643,7 @@
 
 	<br>
 	<p>With <code>tabs="no-background"</code> and classes <code>tabs-outline tabs-text</code> — classic desktop-tab outline:</p>
-	<auto-morph tabs-mode>
+	<auto-morph render>
 		<ui-accordion name="accordion-tabs-outline" class="tabs-outline tabs-text" variant="bordered divided rounded" tabs="no-background">
 			<cq-box>
 				<details name="accordion-tabs-outline" open>
@@ -676,7 +676,7 @@
 
 	<br>
 	<p>With <code>tabs="rounded bordered"</code> and class <code>tabs-line</code> — bordered frame with sliding underline:</p>
-	<auto-morph tabs-mode>
+	<auto-morph render>
 		<ui-accordion name="accordion-tabs-bordered" class="tabs-line" variant="bordered divided rounded" tabs="rounded bordered">
 			<cq-box>
 				<details name="accordion-tabs-bordered" open>
@@ -709,7 +709,7 @@
 
 	<br>
 	<p>With <code>tabs="compact no-background"</code> and class <code>tabs-line</code> — compact with a transparent header, flush edges, and an underline:</p>
-	<auto-morph tabs-mode>
+	<auto-morph render>
 		<ui-accordion name="accordion-tabs-compact" class="tabs-line" variant="bordered divided rounded" tabs="compact no-background">
 			<cq-box>
 				<details name="accordion-tabs-compact" open>

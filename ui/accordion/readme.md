@@ -362,16 +362,16 @@ Variants adapt: `divided` draws vertical lines, `bordered` frames the group, `ro
 
 ## Morph into tabs
 
-`<ui-accordion>` shares its inner structure (`cq-box > details`) with `<ui-tabs>` from `@browser.style/tabs`. A single registered custom property — `--_tabs-mode` — decides which component's rendering engine wins:
+`<ui-accordion>` shares its inner structure (`cq-box > details`) with `<ui-tabs>` from `@browser.style/tabs`. A single inherited custom property — `--_render` — decides which component's rendering engine wins:
 
-- `--_tabs-mode: 0` → accordion styles apply
-- `--_tabs-mode: 1` → tabs styles apply
+- `--_render: accordion` → accordion styles apply
+- `--_render: tabs` → tabs styles apply
 
-Every rendering rule in both components lives inside `@container style(--_tabs-mode: N)`. Flip the value, and the element re-renders on the same markup with no JS and no DOM change.
+Every rendering rule in both components lives inside `@container style(--_render: …)`. Flip the value, and the element re-renders on the same markup with no JS and no DOM change.
 
 ### Opt-in: `tabs` attribute
 
-Load `@browser.style/tabs` alongside `@browser.style/accordion` and add a `tabs` attribute to the accordion. The tabs stylesheet sets `--_tabs-mode: 1` on any element with `[tabs]`, so the accordion renders as tabs from first paint:
+Load `@browser.style/tabs` alongside `@browser.style/accordion` and add a `tabs` attribute to the accordion. The tabs stylesheet sets `--_render: tabs` on any element with `[tabs]`, so the accordion renders as tabs from first paint:
 
 ```html
 <link rel="stylesheet" href="@browser.style/base/index.css">
@@ -396,7 +396,7 @@ Any value the tabs component accepts (`pill`, `rounded`, `bordered`, `compact`, 
 
 ### Auto-morph with `<auto-morph>`
 
-For responsive morph — accordion on narrow, tabs on wide — wrap the element in `<auto-morph tabs-mode>` and scope a single `@container` rule to flip the mode below a breakpoint. `<auto-morph>` is an unregistered host element; all it needs is `container-type: inline-size` and `display: block`:
+For responsive morph — accordion on narrow, tabs on wide — wrap the element in `<auto-morph render>` and scope a single `@container` rule to flip the mode below a breakpoint. `<auto-morph>` is an unregistered host element; all it needs is `container-type: inline-size` and `display: block`:
 
 ```html
 <style>
@@ -405,11 +405,11 @@ For responsive morph — accordion on narrow, tabs on wide — wrap the element 
     display: block;
   }
   @container (inline-size <= 650px) {
-    auto-morph[tabs-mode] [tabs] { --_tabs-mode: 0; }
+    auto-morph[render] [tabs] { --_render: accordion; }
   }
 </style>
 
-<auto-morph tabs-mode>
+<auto-morph render>
   <ui-accordion tabs="pill" variant="bordered rounded" name="faq">
     <cq-box>
       <details name="faq" open><summary>Shipping</summary><div>…</div></details>
@@ -421,7 +421,7 @@ For responsive morph — accordion on narrow, tabs on wide — wrap the element 
 
 Above 650px wrapper width → tabs. Below → accordion. Per-instance: a narrow sidebar can stay accordion while a wide main column morphs to tabs, with no viewport media queries in sight.
 
-The attribute (`tabs-mode`) names the property that the rule flips, so the same `<auto-morph>` wrapper can drive other mode switches in the future — a density mode, a list/grid mode, anything a component exposes as a registered integer custom property.
+The attribute (`render`) names the property that the rule flips, so the same `<auto-morph>` wrapper can drive other mode switches in the future — a density mode, a list/grid mode, anything a component exposes as an inherited string-keyword property. No `@property` registration required: string-equality style queries work on plain custom properties.
 
 ### Why not query `<ui-accordion>` directly?
 

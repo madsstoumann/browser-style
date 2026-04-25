@@ -7,18 +7,12 @@
  * Private custom properties (--_*)
  *   --_bd         border           standard border grouping
  *   --_bb         border-breakout  breakout variant border grouping
- *   --_tabs-mode  logic gate       0 = accordion renders, 1 = tabs render (set by ui-tabs.css)
+ *   --_render     render mode      'accordion' or 'tabs' — picks which renderer engages (set to 'tabs' by ui-tabs.css)
  */
 @import '../icon/index.css';
 @layer bs-component {
-	@property --_tabs-mode {
-		syntax: "<integer>";
-		inherits: true;
-		initial-value: 0;
-	}
-
 	:where(ui-accordion) {
-		--_tabs-mode: 0;
+		--_render: accordion;
 
 		--ui-accordion-bg-hover: linear-gradient(90deg, #0000, light-dark(var(--color-field), var(--color-surface-alt)) 10% 90%, #0000);
 		--ui-accordion-border-color: var(--color-border);
@@ -38,7 +32,7 @@
 		display: block;
 	}
 
-	@container style(--_tabs-mode: 0) {
+	@container style(--_render: accordion) {
 		:where(ui-accordion) cq-box {
 			display: grid;
 			interpolate-size: allow-keywords;
@@ -225,7 +219,7 @@
 		:where([dir="rtl"]) ui-accordion[type="slide"] cq-box { --_slidedir: -1; }
 	}
 
-	@container (inline-size > 650px) and style(--_tabs-mode: 0) {
+	@container (inline-size > 650px) and style(--_render: accordion) {
 		/* === type: horizontal === */
 		ui-accordion[type="horizontal"] cq-box {
 			display: flex;
@@ -307,7 +301,7 @@
 			}
 		}
 
-		@container (inline-size > 650px) and style(--_tabs-mode: 1) {
+		@container (inline-size > 650px) and style(--_render: tabs) {
 			:where(ui-accordion[tabs]) cq-box {
 				details > summary > ui-icon { display: none; }
 			}
