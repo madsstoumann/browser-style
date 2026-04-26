@@ -1,0 +1,37 @@
+{
+  "name": "@browser.style/auto-morph",
+  "version": "1.0.0",
+  "description": "Generic container-query wrapper that morphs descendants between renderer modes (tabs ↔ accordion, etc.) at a breakpoint",
+  "type": "module",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css"
+  },
+  "files": [
+    "index.css",
+    "auto-morph.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "auto-morph",
+    "container-query",
+    "responsive",
+    "css-only"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/auto-morph"
+  },
+  "homepage": "https://browser.style/ui/auto-morph"
+}

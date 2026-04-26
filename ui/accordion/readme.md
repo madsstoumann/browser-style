@@ -394,22 +394,20 @@ Load `@browser.style/tabs` alongside `@browser.style/accordion` and add a `tabs`
 
 Any value the tabs component accepts (`pill`, `rounded`, `bordered`, `compact`, `ellipse`, `panel`, `bleed`) works on the `tabs="…"` attribute — see the tabs readme.
 
-### Auto-morph with `<auto-morph>`
+### Auto-morph with `<auto-morph render="tabs">`
 
-For responsive morph — accordion on narrow, tabs on wide — wrap the element in `<auto-morph render>` and scope a single `@container` rule to flip the mode below a breakpoint. `<auto-morph>` is an unregistered host element; all it needs is `container-type: inline-size` and `display: block`:
+For responsive morph — accordion on narrow, tabs on wide — install [`@browser.style/auto-morph`](../auto-morph/readme.md) and wrap the element. The package ships the wrapper styles and the size-gated rule that flips `--_render: accordion` below 650px:
+
+```bash
+npm install @browser.style/auto-morph
+```
+
+```css
+@import '@browser.style/auto-morph';
+```
 
 ```html
-<style>
-  auto-morph {
-    container-type: inline-size;
-    display: block;
-  }
-  @container (inline-size <= 650px) {
-    auto-morph[render] [tabs] { --_render: accordion; }
-  }
-</style>
-
-<auto-morph render>
+<auto-morph render="tabs">
   <ui-accordion tabs="pill" variant="bordered rounded" name="faq">
     <cq-box>
       <details name="faq" open><summary>Shipping</summary><div>…</div></details>
@@ -421,11 +419,11 @@ For responsive morph — accordion on narrow, tabs on wide — wrap the element 
 
 Above 650px wrapper width → tabs. Below → accordion. Per-instance: a narrow sidebar can stay accordion while a wide main column morphs to tabs, with no viewport media queries in sight.
 
-The attribute (`render`) names the property that the rule flips, so the same `<auto-morph>` wrapper can drive other mode switches in the future — a density mode, a list/grid mode, anything a component exposes as an inherited string-keyword property. No `@property` registration required: string-equality style queries work on plain custom properties.
+The attribute *value* (`tabs`) names the morph target. Future modes (`render="nav"`, `render="menu"`, …) plug in by adding paired rules. `--_render` itself is a plain inherited custom property — no `@property` registration needed; string-equality style queries work on plain custom properties.
 
 ### Why not query `<ui-accordion>` directly?
 
-A CSS container can't query its own size; `@container` resolves against the *nearest ancestor* container. Since `<ui-accordion>` sets its own `container-type`, it can't react to its own width. The `<auto-morph>` wrapper is that ancestor — one element above the accordion, it gives the `@container` rule something to resolve against. You can use any ancestor with `container-type` (a grid cell, a section, a `<main>`); `<auto-morph>` is just a semantic shorthand.
+A CSS container can't query its own size; `@container` resolves against the *nearest ancestor* container. Since `<ui-accordion>` sets its own `container-type`, it can't react to its own width. The `<auto-morph>` wrapper is that ancestor — one element above the accordion, it gives the `@container` rule something to resolve against. You can use any ancestor with `container-type` (a grid cell, a section, a `<main>`); `@browser.style/auto-morph` is just the packaged shorthand.
 
 ---
 

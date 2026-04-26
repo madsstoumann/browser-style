@@ -283,22 +283,20 @@ Both components wrap every rendering rule in `@container style(--_render: …)`.
 
 The value assigned to `tabs="…"` is the variant list — `pill`, `rounded`, `bordered`, `compact`, `ellipse`, `panel`, `bleed`, in any combination, same rules as the `variant` attribute on `<ui-tabs>` itself.
 
-### Responsive morph — `<auto-morph>`
+### Responsive morph — `<auto-morph render="tabs">`
 
-Wrap the element in `<auto-morph render>` and scope a single `@container` rule to flip the mode below a breakpoint. `<auto-morph>` is an unregistered host — all it needs is `container-type: inline-size` and `display: block`:
+Install [`@browser.style/auto-morph`](../auto-morph/readme.md) for the responsive wrapper. It owns the `container-type` and a single size-gated rule that flips `--_render: accordion` below 650px:
+
+```bash
+npm install @browser.style/auto-morph
+```
+
+```css
+@import '@browser.style/auto-morph';
+```
 
 ```html
-<style>
-  auto-morph {
-    container-type: inline-size;
-    display: block;
-  }
-  @container (inline-size <= 650px) {
-    auto-morph[render] [tabs] { --_render: accordion; }
-  }
-</style>
-
-<auto-morph render>
+<auto-morph render="tabs">
   <ui-accordion tabs="pill" variant="bordered rounded" name="faq">
     <cq-box>…</cq-box>
   </ui-accordion>
@@ -307,11 +305,11 @@ Wrap the element in `<auto-morph render>` and scope a single `@container` rule t
 
 Above 650px wrapper width → tabs. Below → accordion. Because the query is container-based, a narrow sidebar and a wide main column can render the same element as accordion and tabs respectively — no viewport media queries involved.
 
-The attribute (`render`) names the custom property being flipped, so the same `<auto-morph>` wrapper can drive any component mode switch that's modeled as an inherited string-keyword property.
+The attribute *value* (`tabs`) names the morph target. Future modes (`render="nav"`, `render="menu"`, …) plug in by adding paired rules in the auto-morph package or your own stylesheet.
 
 ### Why a wrapper?
 
-A CSS container can't query its own size — `@container` resolves against the *nearest ancestor* container. Since `<ui-tabs>` / `<ui-accordion tabs>` sets its own `container-type`, it can't react to its own width. The `<auto-morph>` wrapper is that ancestor. Any ancestor with `container-type` works (grid cell, `<main>`, a layout wrapper); `<auto-morph>` is the semantic shorthand for "I exist to flip a mode."
+A CSS container can't query its own size — `@container` resolves against the *nearest ancestor* container. Since `<ui-tabs>` / `<ui-accordion tabs>` sets its own `container-type`, it can't react to its own width. The `<auto-morph>` wrapper is that ancestor. Any ancestor with `container-type` works (grid cell, `<main>`, a layout wrapper); `@browser.style/auto-morph` is the packaged shorthand.
 
 Setting `container-type` on `body` technically works but applies size containment to the page root — fragile, can strand sticky/fixed children. Don't.
 

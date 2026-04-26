@@ -1,0 +1,32 @@
+/**
+ * <auto-morph>
+ * Generic container-query wrapper that flips a renderer-mode custom property
+ * on a descendant when the wrapper's inline-size crosses a breakpoint.
+ *
+ * @version 1.0.0
+ * @date 2026-04-26
+ * @author Mads Stoumann
+ *
+ * Usage:
+ *   <auto-morph render="tabs">
+ *     <ui-accordion tabs="pill">…</ui-accordion>
+ *   </auto-morph>
+ *
+ * Below 650px wrapper width, --_render is flipped from "tabs" to "accordion"
+ * on the [tabs] descendant — the accordion renderer engages.
+ *
+ * For other render modes (nav, menu, …) add a paired rule:
+ *   @container (inline-size <= 650px) {
+ *     auto-morph[render="nav"] [tabs] { --_render: <fallback>; }
+ *   }
+ */
+@layer bs-component {
+	auto-morph {
+		container-type: inline-size;
+		display: block;
+	}
+
+	@container (inline-size <= 650px) {
+		auto-morph[render="tabs"] [tabs] { --_render: accordion; }
+	}
+}

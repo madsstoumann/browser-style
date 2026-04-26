@@ -40,9 +40,11 @@ Where we need both size and style conditions (horizontal + split, and the render
 
 Not nested `@container` inside `@container` — nested queries have uneven support across browsers; compound queries resolve both conditions against the same ancestor container and work more reliably.
 
-## `<auto-morph>` wrapper
+## `<auto-morph render="tabs">` wrapper
 
-Pattern lives in the page stylesheet, not in the component. The accordion is agnostic — it only reacts to `--_render` being flipped.
+The responsive morph wrapper is its own package — [`@browser.style/auto-morph`](../auto-morph/readme.md). The accordion stays agnostic; it only reacts to `--_render` being flipped from above.
+
+The package ships:
 
 ```css
 auto-morph {
@@ -50,16 +52,16 @@ auto-morph {
   display: block;
 }
 @container (inline-size <= 650px) {
-  auto-morph[render] [tabs] { --_render: accordion; }
+  auto-morph[render="tabs"] [tabs] { --_render: accordion; }
 }
 ```
 
 Design notes:
 
 - `<auto-morph>` is a **generic unregistered element** — no JS, no customElement registration. Browsers treat it as `HTMLUnknownElement` and render inline by default; the stylesheet reclaims it as a block container.
-- The **attribute `render` names the property being controlled**, not the component type. A future density morph could be `<auto-morph density-mode>`, driving `--_density-mode`. Keeps the wrapper reusable.
+- The **attribute *value*** (`render="tabs"`) names the morph target — the renderer that should engage above the breakpoint. Future modes (`render="nav"`, `render="menu"`, `render="density"`, …) plug in by adding paired rules.
 - The **target selector is `[tabs]`**, not `ui-accordion`. Any host with the `tabs` attribute auto-morphs inside the wrapper — including a future `<ui-nav tabs>` or similar.
-- The wrapper only needs **`container-type` one level above** `<ui-accordion>`. Any existing ancestor container (a grid cell, a `<main>`, a layout wrapper) works equally well; `<auto-morph>` is a convenience shorthand.
+- The wrapper only needs **`container-type` one level above** `<ui-accordion>`. Any existing ancestor container (a grid cell, a `<main>`, a layout wrapper) works equally well; the auto-morph package is the convenience shorthand.
 
 ### Why a wrapper at all
 

@@ -49,9 +49,11 @@ Variants and attributes appear twice in each selector:
 
 The first arm matches dedicated `<ui-tabs variant="bordered">`. The second matches `<ui-accordion tabs="bordered">` — here the variant list is packed into the `tabs` attribute's value, so `~="bordered"` does a whitespace-separated-word match on that attribute. Unavoidable duplication: the two hosts use different attributes to carry their variant lists.
 
-## `<auto-morph>` wrapper
+## `<auto-morph render="tabs">` wrapper
 
-The morph pattern lives in the consumer stylesheet, not in ui-tabs.css. The tabs component is agnostic — it only reacts to `--_render: tabs` being set on (or above) the host.
+The responsive morph wrapper is its own package — [`@browser.style/auto-morph`](../auto-morph/readme.md). The tabs component is agnostic — it only reacts to `--_render: tabs` being set on (or above) the host.
+
+The package ships:
 
 ```css
 auto-morph {
@@ -59,16 +61,16 @@ auto-morph {
   display: block;
 }
 @container (inline-size <= 650px) {
-  auto-morph[render] [tabs] { --_render: accordion; }
+  auto-morph[render="tabs"] [tabs] { --_render: accordion; }
 }
 ```
 
 Design notes:
 
 - `<auto-morph>` is a **generic unregistered element** — no JS, no customElement registration. Any element the browser treats as `HTMLUnknownElement` works; `<auto-morph>` is chosen for semantic self-documentation.
-- The **attribute `render` names the property** being controlled, not the component type. A future density morph could be `<auto-morph density-mode>`.
+- The **attribute *value*** (`render="tabs"`) names the morph target. Future modes (`render="nav"`, `render="menu"`, `render="density"`, …) plug in by adding paired rules.
 - The **target selector is `[tabs]`**, matching any host with the `tabs` attribute — `<ui-accordion tabs>`, `<ui-tabs tabs>` (redundant but valid), or a future `<ui-nav tabs>`.
-- Any existing ancestor container works — a grid cell, `<main>`, a layout wrapper. `<auto-morph>` is a convenience shorthand.
+- Any existing ancestor container works — a grid cell, `<main>`, a layout wrapper. The auto-morph package is the convenience shorthand.
 
 ### Why a wrapper at all
 
@@ -92,6 +94,6 @@ This package has no JS entry point. The component is pure CSS; `<ui-tabs>` is an
 ## Gotchas to preserve
 
 - `display: block` on `:where(ui-tabs, [tabs])` — removing it silently breaks container queries. See header note.
-- `--_render: tabs` is set unconditionally on any `[tabs]` element — this is the **automatic** mode switch. A consumer *can* manually override to `accordion` (e.g., inside an `@container` rule) to revert to accordion rendering when both stylesheets are loaded; that's what `<auto-morph render>` relies on.
+- `--_render: tabs` is set unconditionally on any `[tabs]` element — this is the **automatic** mode switch. A consumer *can* manually override to `accordion` (e.g., inside an `@container` rule) to revert to accordion rendering when both stylesheets are loaded; that's what `<auto-morph render="tabs">` relies on.
 - `@property --ui-tabs-indicator-offset` is registered as `<length>` so the indicator offset can animate smoothly through `calc()` / `transition`. Keep the registration.
 - The `cq-box` rule inside `@container style(--_render: tabs)` targets the `cq-box` child specifically — all structural positioning (`display: grid`, `isolation`, `max-width`, `position: relative`) lives there, not on the host. The host stays a neutral block so the wrapper-morph pattern works.
