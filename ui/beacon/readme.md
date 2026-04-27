@@ -1,15 +1,19 @@
 # @browser.style/beacon
 
-A CSS-first live indicator component combining two animation modes: a **live ticker** (sliding text with animated dots) and a **classic blink** (with click-to-pause toggle). Supports semantic colors like badge. No JavaScript required for the base experience.
+A CSS-first status indicator. Four layout variants (bare dot, pill, solid, ticker) and three animation modes (blink, pulse, breathe). Visually aligned with `@browser.style/badge` and `@browser.style/chip` — same semantic colors, same size scale, same shape tokens.
 
 ## Features
 
-- Default mode: live ticker with dot animation and slide-out/in effect
-- Blink variant: classic blinking text with click-to-pause toggle
-- Semantic `color` attribute: `info`, `success`, `warning`, `error`
-- Light/dark mode support via design tokens
-- Works as plain CSS or as a `<ui-beacon>` web component
-- Web component auto-generates inner structure (dots, toggle checkbox)
+- **Bare dot** by default — colored circle with optional inline label
+- **Three distinct animations**: `blink` (broadcast LIVE/REC), `pulse` (outward ripple, attention), `breathe` (gentle scale)
+- **Pill variant** — chip-style tinted background with inner dot
+- **Solid variant** — original `<blink>`-style filled label, defaults to blink
+- **Ticker variant** — sliding marquee with trailing 3-dot loader
+- **Three pause mechanisms**: `prefers-reduced-motion`, `paused` attribute, click-to-pause via inner checkbox
+- **Sizes**: `xs`, `sm`, `md`, `lg`
+- **Semantic colors**: `info`, `success`, `warning`, `error`
+- Light/dark mode via design tokens
+- Works as plain CSS or as a `<ui-beacon>` web component (light DOM, no Shadow DOM)
 
 ---
 
@@ -25,81 +29,184 @@ Peer dependency:
 npm install @browser.style/base
 ```
 
-> `@browser.style/base` provides the design token system and the `data-sr` utility for visually hidden elements.
-
 ---
 
 ## Usage
 
 ### CSS-only (vanilla HTML)
 
-Import the styles:
-
 ```html
 <link rel="stylesheet" href="@browser.style/base/index.css">
 <link rel="stylesheet" href="@browser.style/beacon/index.css">
 ```
 
-Or via CSS `@import`:
-
-```css
-@import '@browser.style/base';
-@import '@browser.style/beacon/style';
-```
-
-**Live ticker** (default):
+Bare dots need no inner markup:
 
 ```html
-<ui-beacon>
+<ui-beacon color="success"></ui-beacon>
+<ui-beacon color="error" animation="blink">Recording</ui-beacon>
+```
+
+Solid / pill with click-to-pause needs a manual `<label>`:
+
+```html
+<ui-beacon variant="solid" color="error">
+  <label><input type="checkbox" data-sr><span>LIVE</span></label>
+</ui-beacon>
+```
+
+Ticker needs a manual `<span>` and `<i>`:
+
+```html
+<ui-beacon variant="ticker" color="error">
   <span>Live <i></i></span>
 </ui-beacon>
 ```
 
-> The `<i>` element renders the animated dots. It's required in CSS-only mode.
-
-**Blink** (with click-to-pause):
-
-```html
-<ui-beacon variant="blink">
-  <label>
-    <input type="checkbox" data-sr>
-    <span>Live now</span>
-  </label>
-</ui-beacon>
-```
-
-> Click to pause/resume the blink. The `data-sr` class visually hides the checkbox.
-
----
-
-### Web Component
-
-Import the module to register `<ui-beacon>`:
+### Web component
 
 ```js
 import '@browser.style/beacon';
 ```
 
-**Live ticker** — the web component wraps content in `<span>` and appends the `<i>` dots automatically:
+The component auto-renders the inner structure for `solid`, `pill`, animated labels, and `ticker`:
 
 ```html
-<ui-beacon>Live</ui-beacon>
+<ui-beacon color="error" animation="blink">Recording</ui-beacon>
+<ui-beacon variant="solid" color="error">LIVE</ui-beacon>
+<ui-beacon variant="ticker" color="error">Live</ui-beacon>
 ```
-
-**Blink** — the web component creates the `<label>`, hidden checkbox, and `<span>` automatically:
-
-```html
-<ui-beacon variant="blink">Live now</ui-beacon>
-```
-
-#### Attributes
-
-| Attribute | Type | Description |
-|-----------|------|-------------|
-| `variant` | string | `"blink"` for classic blink mode. Omit for live ticker. |
-| `color` | string | Semantic color: `info`, `success`, `warning`, `error` |
 
 ---
+
+## Variants
+
+### Bare dot (default)
+
+A colored circle. Optionally followed by an inline label.
+
+```html
+<ui-beacon color="success"></ui-beacon>           <!-- presence dot -->
+<ui-beacon color="success">Online</ui-beacon>     <!-- dot + label -->
+```
+
+Use cases: presence (online / away / busy), notification dots, inline status.
+
+### Pill — `variant="pill"`
+
+Chip-style tinted background with a colored dot inside.
+
+```html
+<ui-beacon variant="pill" color="info">Beta</ui-beacon>
+<ui-beacon variant="pill" color="error" animation="blink">Live</ui-beacon>
+```
+
+### Solid — `variant="solid"`
+
+A solid-coloured pill whose whole face flashes. Defaults to `blink` animation. The classic LIVE / REC label.
+
+```html
+<ui-beacon variant="solid" color="error">LIVE</ui-beacon>
+<ui-beacon variant="solid" color="info">News</ui-beacon>
+<ui-beacon variant="solid" color="error" animation="none">Static</ui-beacon>
+```
+
+### Ticker — `variant="ticker"`
+
+Slide-out / slide-in compound animation with a trailing 3-dot loader.
+
+```html
+<ui-beacon variant="ticker" color="error">Live</ui-beacon>
+```
+
+---
+
+## Animations
+
+| Value | Motion | Use case |
+|---|---|---|
+| `blink` | Opacity 1 → 0 → 1 (1.5 s) | LIVE, REC, broadcast |
+| `pulse` | Box-shadow ring expanding outward + fading (1.5 s, ease-out) | Attention, onboarding, "new feature" |
+| `breathe` | Scale 1 ↔ 0.8 + opacity 1 ↔ 0.6 (2 s, ease-in-out) | Ambient, processing, idle |
+| _(omitted)_ | none | Presence dot, notification dot |
+
+In default + pill variants the animation targets the dot. In solid the whole pill animates. The ticker variant has a built-in slide animation regardless of the `animation` attribute.
+
+---
+
+## Sizes
+
+`xs`, `sm`, `md` (default), `lg`. Same scale as `<ui-badge>`.
+
+```html
+<ui-beacon size="xs" color="success"></ui-beacon>
+<ui-beacon size="sm" color="success"></ui-beacon>
+<ui-beacon size="md" color="success"></ui-beacon>
+<ui-beacon size="lg" color="success"></ui-beacon>
+```
+
+---
+
+## Colors
+
+`info`, `success`, `warning`, `error`. Same semantic palette as `<ui-badge>` and `<ui-chip>`.
+
+```html
+<ui-beacon color="info">Info</ui-beacon>
+<ui-beacon color="success">Success</ui-beacon>
+<ui-beacon color="warning">Warning</ui-beacon>
+<ui-beacon color="error">Error</ui-beacon>
+```
+
+Without `color`, the dot uses the current text color.
+
+---
+
+## Pause behavior
+
+Three mechanisms, ordered from most to least automatic:
+
+1. **`prefers-reduced-motion: reduce`** — every beacon animation stops automatically (WCAG 2.3.1).
+2. **`paused` attribute** — declarative pause; toggleable from JS.
+   ```html
+   <ui-beacon variant="solid" color="error" paused>Paused</ui-beacon>
+   ```
+   ```js
+   beacon.toggleAttribute('paused');
+   ```
+3. **Click-to-pause** — animated labelled beacons render an inner `<label><input type="checkbox" data-sr><span>…</span></label>` so users can click to pause / resume. No JS handler needed; it relies on native label-click → checkbox-toggle → CSS `:has(input:checked)`.
+
+---
+
+## Attributes
+
+| Attribute | Type | Description |
+|---|---|---|
+| `color` | `info \| success \| warning \| error` | Semantic color (defaults to text color) |
+| `size` | `xs \| sm \| md \| lg` | Size scale (defaults to `md`) |
+| `animation` | `blink \| pulse \| breathe \| none` | Animation mode (defaults to none, except `solid` defaults to `blink`) |
+| `variant` | `pill \| solid \| ticker` | Layout variant (defaults to bare dot) |
+| `paused` | _(boolean)_ | Pause any active animation |
+
+---
+
+## Component tokens
+
+| Token | Default | Description |
+|---|---|---|
+| `--ui-beacon-bg` | `var(--color-text)` (or semantic color) | Dot / pill / solid background |
+| `--ui-beacon-size` | `var(--size-3)` | Dot diameter |
+| `--ui-beacon-font-size` | `var(--font-size-sm)` | Label font size |
+| `--ui-beacon-font-weight` | `var(--font-weight-medium)` | Label font weight |
+| `--ui-beacon-track-bg` | `var(--color-highlight)` | Ticker track background |
+| `--ui-beacon-blink-duration` | `1.5s` | Blink cycle |
+| `--ui-beacon-pulse-duration` | `1.5s` | Pulse cycle |
+| `--ui-beacon-breathe-duration` | `2s` | Breathe cycle |
+| `--ui-beacon-slide-duration` | `5s` | Ticker slide cycle |
+
+---
+
+## Framework integration
 
 ### React
 
@@ -108,16 +215,9 @@ import '@browser.style/beacon';
 import '@browser.style/base';
 import '@browser.style/beacon/style';
 
-function LiveIndicator() {
-  return <ui-beacon color="error">Live</ui-beacon>;
-}
-
-function BlinkIndicator() {
-  return <ui-beacon variant="blink" color="success">On Air</ui-beacon>;
-}
+<ui-beacon color="success">Online</ui-beacon>
+<ui-beacon variant="solid" color="error">LIVE</ui-beacon>
 ```
-
----
 
 ### Vue
 
@@ -129,17 +229,15 @@ import '@browser.style/beacon/style';
 </script>
 
 <template>
-  <ui-beacon color="error">Live</ui-beacon>
-  <ui-beacon variant="blink" color="success">On Air</ui-beacon>
+  <ui-beacon color="success">Online</ui-beacon>
+  <ui-beacon variant="solid" color="error">LIVE</ui-beacon>
 </template>
 ```
 
-> Tell Vue to skip custom element resolution in `vite.config.js`:
+> Tell Vue to skip custom-element resolution in `vite.config.js`:
 > ```js
 > vue({ template: { compilerOptions: { isCustomElement: tag => tag.startsWith('ui-') } } })
 > ```
-
----
 
 ### Svelte
 
@@ -150,138 +248,34 @@ import '@browser.style/beacon/style';
   import '@browser.style/beacon/style';
 </script>
 
-<ui-beacon color="error">Live</ui-beacon>
-<ui-beacon variant="blink" color="success">On Air</ui-beacon>
+<ui-beacon color="success">Online</ui-beacon>
+<ui-beacon variant="solid" color="error">LIVE</ui-beacon>
 ```
 
----
-
-### Astro / Server-rendered HTML
-
-Use the CSS-only approach:
+### Astro / server-rendered HTML
 
 ```html
 <link rel="stylesheet" href="@browser.style/base/index.css">
 <link rel="stylesheet" href="@browser.style/beacon/index.css">
 
-<ui-beacon>
-  <span>Live <i></i></span>
-</ui-beacon>
-```
-
-Add the web component script for the declarative API:
-
-```html
-<script type="module">
-  import '@browser.style/beacon';
-</script>
-```
-
----
-
-## Variants
-
-### Default (live ticker)
-
-Sliding text with animated dots. The text periodically slides out and back in.
-
-```html
-<ui-beacon>
-  <span>Live <i></i></span>
-</ui-beacon>
-```
-
-### Blink
-
-Classic blinking text. Click to pause/resume.
-
-```html
-<ui-beacon variant="blink">
-  <label>
-    <input type="checkbox" data-sr>
-    <span>Live now</span>
-  </label>
-</ui-beacon>
-```
-
----
-
-## Colors
-
-Use the `color` attribute for semantic coloring (same pattern as `ui-badge`):
-
-```html
-<ui-beacon color="info">Info</ui-beacon>
-<ui-beacon color="success">Active</ui-beacon>
-<ui-beacon color="warning">Caution</ui-beacon>
-<ui-beacon color="error">Live</ui-beacon>
-```
-
-Works with both default and blink variants:
-
-```html
-<ui-beacon variant="blink" color="error">
+<ui-beacon color="success">Online</ui-beacon>
+<ui-beacon variant="solid" color="error">
   <label><input type="checkbox" data-sr><span>LIVE</span></label>
 </ui-beacon>
 ```
 
 ---
 
-## Customization
-
-### Design tokens
-
-Override global tokens to theme all beacons:
-
-```css
-:root {
-  --color-accent: hsl(0, 80%, 50%);
-  --color-accent-text: white;
-}
-```
-
-### Component tokens
-
-```css
-ui-beacon {
-  --ui-beacon-bg: crimson;
-  --ui-beacon-slide-duration: 8s;
-}
-```
-
-### All component tokens
-
-| Token | Default | Description |
-|-------|---------|-------------|
-| `--ui-beacon-bg` | `var(--color-accent)` | Background color |
-| `--ui-beacon-color` | `var(--color-accent-text)` | Text color |
-| `--ui-beacon-track-bg` | `var(--color-highlight)` | Track background visible during slide (live mode) |
-| `--ui-beacon-font-size` | `smaller` | Font size |
-| `--ui-beacon-font-weight` | `var(--font-weight-medium)` | Font weight (live mode) |
-| `--ui-beacon-padding` | `0.25ch 1.5ch` (live) / `.33ch 1ch` (blink) | Inner padding |
-| `--ui-beacon-slide-duration` | `5s` | Duration of the slide animation cycle (live mode) |
-| `--ui-beacon-blink-duration` | `2s` | Duration of the blink animation cycle (blink mode) |
-
----
-
 ## Accessibility
 
-- Blink variant uses a native `<label>` + `<input type="checkbox">` — keyboard accessible via `Space`/`Enter`
-- Focus ring shown on keyboard focus (`focus-visible`)
-- Click or keyboard toggle pauses the animation (reduces motion for users who find it distracting)
-- Consider `prefers-reduced-motion` media query for users who need it:
-  ```css
-  @media (prefers-reduced-motion: reduce) {
-    ui-beacon span, ui-beacon i { animation: none; }
-  }
-  ```
-- Works with JavaScript disabled (CSS-only mode)
+- All animations honour `prefers-reduced-motion: reduce` — no opt-in or media query authoring required.
+- Click-to-pause is keyboard accessible via the native `<label>` + `<input type="checkbox">` pattern (Space / Enter).
+- Focus ring shown on keyboard focus via `--ring-*` tokens.
+- The dot is decorative; expose status via the text label inside the beacon.
+- Works without JavaScript (CSS-only mode).
 
 ---
 
 ## Browser support
 
-- All modern browsers (Chrome, Firefox, Safari, Edge)
-- CSS animations: universally supported
-- `translate` property: Chrome 104+, Firefox 72+, Safari 14.1+
-- Graceful degradation: animations degrade cleanly in older browsers
+All modern browsers (Chrome, Firefox, Safari, Edge). `:has()`, `color-mix()`, and `@container` are widely supported as of 2024.

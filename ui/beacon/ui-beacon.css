@@ -1,77 +1,181 @@
 /**
  * ui-beacon
- * @version 4.0.0
- * @date 2026-04-12
+ * @version 4.1.0
+ * @date 2026-04-27
  * @author Mads Stoumann
  */
 @layer bs-component {
 	:where(ui-beacon) {
-		--ui-beacon-bg: var(--color-accent);
-		--ui-beacon-color: var(--color-accent-text);
+		--ui-beacon-bg: var(--color-text);
+		--ui-beacon-blink-duration: 1.5s;
+		--ui-beacon-breathe-duration: 2s;
+		--ui-beacon-font-size: var(--font-size-sm);
+		--ui-beacon-font-weight: var(--font-weight-medium);
+		--ui-beacon-pulse-duration: 1.5s;
+		--ui-beacon-size: var(--size-3);
+		--ui-beacon-slide-duration: 5s;
 
-		display: block;
-		overflow: hidden;
+		align-items: center;
+		color: var(--ui-beacon-bg);
+		column-gap: 0.6ch;
+		display: inline-flex;
+		font-family: var(--font-form);
+		font-size: var(--ui-beacon-font-size);
+		font-weight: var(--ui-beacon-font-weight);
+		line-height: var(--line-height-snug);
+		text-box: cap alphabetic;
+		vertical-align: middle;
 		width: fit-content;
 
-		/* default: live ticker */
-		background: var(--ui-beacon-track-bg, var(--color-highlight));
-
-		& > span {
-			align-items: center;
-			animation: beacon-slide var(--ui-beacon-slide-duration, 5s) infinite linear;
+		/* the dot */
+		&::before {
 			background: var(--ui-beacon-bg);
-			color: var(--ui-beacon-color);
-			display: flex;
-			font-size: var(--ui-beacon-font-size, smaller);
-			font-weight: var(--ui-beacon-font-weight, var(--font-weight-medium));
-			gap: 1ch;
-			padding: var(--ui-beacon-padding, 0.25ch 1.5ch);
+			border-radius: var(--radius-circle);
+			content: '';
+			display: inline-block;
+			flex: 0 0 auto;
+			height: var(--ui-beacon-size);
+			width: var(--ui-beacon-size);
 		}
 
-		/* animated dots */
-		& i {
-			--_g: no-repeat radial-gradient(circle closest-side, currentColor 90%, #0000);
-			animation: beacon-dots 1.5s infinite linear;
-			aspect-ratio: 4 / 1;
-			background: var(--_g) 0% 50%, var(--_g) 50% 50%, var(--_g) 100% 50%;
-			background-size: calc(100%/3) 100%;
-			display: block;
-			width: 1.4em;
-		}
-
-		/* colors */
-		&[color]           { --ui-beacon-color: hsl(0, 0%, 100%); }
+		/* colors — same palette as badge/chip */
 		&[color="info"]    { --ui-beacon-bg: var(--color-info); }
 		&[color="success"] { --ui-beacon-bg: var(--color-success); }
 		&[color="warning"] { --ui-beacon-bg: var(--color-warning); }
 		&[color="error"]   { --ui-beacon-bg: var(--color-error); }
 	}
 
-	/* === Blink variant === */
-	ui-beacon[variant~="blink"] {
-		background: var(--ui-beacon-bg);
-		color: var(--ui-beacon-color);
-		cursor: pointer;
-		font-size: var(--ui-beacon-font-size, smaller);
-		overflow: visible;
-		padding: var(--ui-beacon-padding, .33ch 1ch);
-		user-select: none;
+	/* sizes — mirror badge scale */
+	:where(ui-beacon[size="xs"]) {
+		--ui-beacon-size: 0.5rem;
+		--ui-beacon-font-size: var(--font-size-3xs);
+	}
+	:where(ui-beacon[size="sm"]) {
+		--ui-beacon-size: 0.625rem;
+		--ui-beacon-font-size: var(--font-size-2xs);
+	}
+	:where(ui-beacon[size="md"]) {
+		--ui-beacon-size: var(--size-3);
+		--ui-beacon-font-size: var(--font-size-sm);
+	}
+	:where(ui-beacon[size="lg"]) {
+		--ui-beacon-size: var(--size-4);
+		--ui-beacon-font-size: var(--font-size-base);
+	}
 
-		& span {
-			animation: beacon-blink var(--ui-beacon-blink-duration, 2s) infinite;
+	/* === Animations target the dot (::before) for default + pill variants === */
+	:where(ui-beacon[animation="blink"])::before {
+		animation: beacon-blink var(--ui-beacon-blink-duration) infinite;
+	}
+	:where(ui-beacon[animation="pulse"])::before {
+		animation: beacon-pulse var(--ui-beacon-pulse-duration) ease-out infinite;
+	}
+	:where(ui-beacon[animation="breathe"])::before {
+		animation: beacon-breathe var(--ui-beacon-breathe-duration) ease-in-out infinite;
+	}
+
+	/* === Pill variant — chip-like, tinted bg + accent dot === */
+	:where(ui-beacon[variant~="pill"]) {
+		background: color-mix(in oklch, var(--ui-beacon-bg) 15%, var(--color-surface));
+		border-radius: var(--radius-pill);
+		padding: 0.4em 0.9em 0.4em 0.7em;
+	}
+
+	/* === Solid variant — original ui-blink: filled pill, no inner dot === */
+	:where(ui-beacon[variant~="solid"]) {
+		background: var(--ui-beacon-bg);
+		border-radius: var(--radius-sm);
+		color: hsl(0, 0%, 100%);
+		padding: 0.33em 0.8em;
+
+		&::before { display: none; }
+
+		/* default to blink (matches original ui-blink) */
+		&,
+		&[animation="blink"] {
+			animation: beacon-blink var(--ui-beacon-blink-duration) infinite;
 		}
-		& input:checked + span {
-			animation-play-state: paused;
-			opacity: 1;
+		&[animation="pulse"] {
+			animation: beacon-pulse var(--ui-beacon-pulse-duration) ease-out infinite;
 		}
-		&:has(input:focus-visible) {
-			outline: var(--ring-width) solid var(--ring-color);
-			outline-offset: var(--ring-offset);
+		&[animation="breathe"] {
+			animation: beacon-breathe var(--ui-beacon-breathe-duration) ease-in-out infinite;
+		}
+		&[animation="none"] { animation: none; }
+	}
+
+	/* === Ticker variant — original ui-live === */
+	:where(ui-beacon[variant~="ticker"]) {
+		background: var(--ui-beacon-track-bg, var(--color-highlight));
+		overflow: hidden;
+		padding: 0;
+
+		&::before { display: none; }
+
+		& > span {
+			align-items: center;
+			animation: beacon-slide var(--ui-beacon-slide-duration) infinite linear;
+			background: var(--ui-beacon-bg);
+			color: hsl(0, 0%, 100%);
+			display: flex;
+			gap: 1ch;
+			padding: 0.25ch 1.5ch;
+		}
+
+		& i {
+			--_g: no-repeat radial-gradient(circle closest-side, currentColor 90%, transparent);
+			animation: beacon-dots 1.5s infinite linear;
+			aspect-ratio: 4 / 1;
+			background:
+				var(--_g) 0% 50%,
+				var(--_g) 50% 50%,
+				var(--_g) 100% 50%;
+			background-size: calc(100%/3) 100%;
+			display: block;
+			width: 1.4em;
 		}
 	}
 
+	/* === Pause hooks (declarative + checkbox + reduced-motion) === */
+	:where(ui-beacon[paused]),
+	:where(ui-beacon[paused])::before,
+	:where(ui-beacon[paused]) > span,
+	:where(ui-beacon):has(> label > input:checked),
+	:where(ui-beacon):has(> label > input:checked)::before,
+	:where(ui-beacon):has(> label > input:checked) > span {
+		animation-play-state: paused;
+		opacity: 1;
+	}
+
+	/* clickable label preserves cursor + keyboard focus ring */
+	:where(ui-beacon) > label {
+		cursor: pointer;
+		user-select: none;
+	}
+	:where(ui-beacon):has(> label > input:focus-visible) {
+		outline: var(--ring-width) solid var(--ring-color);
+		outline-offset: var(--ring-offset);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:where(ui-beacon),
+		:where(ui-beacon)::before,
+		:where(ui-beacon) > span,
+		:where(ui-beacon) i {
+			animation: none;
+		}
+	}
+
+	/* === Keyframes === */
 	@keyframes beacon-blink {
 		50% { opacity: 0; }
+	}
+	@keyframes beacon-pulse {
+		0%   { box-shadow: 0 0 0 0 var(--ui-beacon-bg); }
+		100% { box-shadow: 0 0 0 1em transparent; }
+	}
+	@keyframes beacon-breathe {
+		50% { transform: scale(0.8); opacity: 0.6; }
 	}
 	@keyframes beacon-slide {
 		70%  { opacity: 1; translate: 0 0; }
@@ -82,8 +186,8 @@
 		100% { translate: 0 0; }
 	}
 	@keyframes beacon-dots {
-		33% { background-size: calc(100%/3) 0%, calc(100%/3) 100%, calc(100%/3) 100%; }
-		50% { background-size: calc(100%/3) 100%, calc(100%/3) 0%, calc(100%/3) 100%; }
+		33% { background-size: calc(100%/3) 0%,   calc(100%/3) 100%, calc(100%/3) 100%; }
+		50% { background-size: calc(100%/3) 100%, calc(100%/3) 0%,   calc(100%/3) 100%; }
 		66% { background-size: calc(100%/3) 100%, calc(100%/3) 100%, calc(100%/3) 0%; }
 	}
 }

@@ -1,46 +1,75 @@
 /**
  * <ui-beacon>
  * Light DOM web component for the CSS-first beacon indicator.
- * Default mode: live ticker with dot animation and slide.
- * Blink variant: classic blink with click-to-pause toggle.
+ * Variants: bare dot (default), pill, solid, ticker.
+ * Animations: blink, pulse, breathe (or static).
+ * Pause: prefers-reduced-motion, [paused] attribute, or click-to-pause via inner checkbox.
  * No Shadow DOM.
- * @version 4.0.0
+ * @version 4.1.0
  */
 
 class UiBeacon extends HTMLElement {
-	static observedAttributes = ['variant', 'color'];
+	static observedAttributes = ['variant'];
 
 	connectedCallback() {
 		const variant = this.getAttribute('variant') || '';
-		if (variant.includes('blink')) {
-			if (!this.querySelector(':scope > label')) this.renderBlink();
-		} else {
-			if (!this.querySelector(':scope > span')) this.renderLive();
+		if (variant.includes('ticker')) {
+			this.renderTicker();
+		} else if (this.hasText() && this.shouldHavePauseToggle()) {
+			this.renderLabel();
 		}
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (oldValue === newValue || !this.isConnected) return;
+		if (name === 'variant') {
+			const wasTicker = (oldValue || '').includes('ticker');
+			const isTicker = (newValue || '').includes('ticker');
+			if (wasTicker !== isTicker) {
+				this.unwrap();
+				this.connectedCallback();
+			}
+		}
 	}
 
-	renderLive() {
+	hasText() {
+		return this.textContent.trim().length > 0;
+	}
+
+	shouldHavePauseToggle() {
+		const variant = this.getAttribute('variant') || '';
+		if (variant.includes('solid')) return true;
+		const animation = this.getAttribute('animation');
+		return !!animation && animation !== 'none';
+	}
+
+	renderTicker() {
+		if (this.querySelector(':scope > span')) return;
 		const span = document.createElement('span');
 		while (this.firstChild) span.appendChild(this.firstChild);
-		const dots = document.createElement('i');
-		span.appendChild(dots);
+		span.appendChild(document.createElement('i'));
 		this.appendChild(span);
 	}
 
-	renderBlink() {
+	renderLabel() {
+		if (this.querySelector(':scope > label')) return;
 		const label = document.createElement('label');
 		const input = document.createElement('input');
 		input.type = 'checkbox';
 		input.setAttribute('data-sr', '');
 		const span = document.createElement('span');
 		while (this.firstChild) span.appendChild(this.firstChild);
-		label.appendChild(input);
-		label.appendChild(span);
+		label.append(input, span);
 		this.appendChild(label);
+	}
+
+	unwrap() {
+		const wrapper = this.querySelector(':scope > label, :scope > span');
+		if (!wrapper) return;
+		wrapper.querySelectorAll(':scope > input, :scope > i').forEach(el => el.remove());
+		const inner = wrapper.querySelector(':scope > span') || wrapper;
+		while (inner.firstChild) this.appendChild(inner.firstChild);
+		wrapper.remove();
 	}
 }
 

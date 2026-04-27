@@ -4,141 +4,175 @@
 	<title>Beacon</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="CSS-first live indicator with blink and ticker modes.">
+	<meta name="description" content="CSS-first status indicator with dot, pill, solid, and ticker variants.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-beacon.css">
 	<script type="module" src="index.js"></script>
+	<style>
+		.row { align-items: center; display: flex; flex-wrap: wrap; gap: 1.25rem; margin-block-end: 0.75rem; }
+		.row > span { color: var(--color-text-light); font-size: var(--font-size-xs); min-width: 5ch; }
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Beacon</h2>
 	<p>
-		A live indicator combining two animation modes: a <strong>live ticker</strong> (default) with sliding text and animated dots, and a <strong>classic blink</strong> variant with click-to-pause toggle.
+		A status indicator with four layouts (bare dot, pill, solid, ticker) and three animation modes (blink, pulse, breathe).
+		Aligns visually with <code>&lt;ui-badge&gt;</code> and <code>&lt;ui-chip&gt;</code>: same colors, same size scale, same shape tokens.
 	</p>
 
 	<hr>
-	<h2>CSS-only</h2>
+	<h2>Bare dot (default)</h2>
+	<p>The atomic primitive — a colored circle. Optional inline label.</p>
 
-	<h3>Default (live ticker)</h3>
-	<ui-beacon>
+	<h3>Static dot, all colors</h3>
+	<div class="row">
+		<ui-beacon></ui-beacon>
+		<ui-beacon color="info"></ui-beacon>
+		<ui-beacon color="success"></ui-beacon>
+		<ui-beacon color="warning"></ui-beacon>
+		<ui-beacon color="error"></ui-beacon>
+	</div>
+
+	<h3>Sizes (xs, sm, md, lg)</h3>
+	<div class="row">
+		<ui-beacon size="xs" color="success"></ui-beacon>
+		<ui-beacon size="sm" color="success"></ui-beacon>
+		<ui-beacon size="md" color="success"></ui-beacon>
+		<ui-beacon size="lg" color="success"></ui-beacon>
+	</div>
+
+	<h3>With inline label</h3>
+	<div class="row">
+		<ui-beacon color="success">Online</ui-beacon>
+		<ui-beacon color="warning">Away</ui-beacon>
+		<ui-beacon color="error">Busy</ui-beacon>
+		<ui-beacon>Offline</ui-beacon>
+	</div>
+
+	<hr>
+	<h2>Animations</h2>
+
+	<h3>Blink — broadcast feel (LIVE / REC)</h3>
+	<div class="row">
+		<ui-beacon animation="blink" color="error"></ui-beacon>
+		<ui-beacon animation="blink" color="error">Recording</ui-beacon>
+		<ui-beacon animation="blink" color="success">Active stream</ui-beacon>
+	</div>
+
+	<h3>Pulse — outward ripple (attention / onboarding)</h3>
+	<div class="row">
+		<ui-beacon animation="pulse" color="info"></ui-beacon>
+		<ui-beacon animation="pulse" color="info">New feature</ui-beacon>
+		<ui-beacon animation="pulse" color="success">Connected</ui-beacon>
+	</div>
+
+	<h3>Breathe — gentle scale (ambient / processing)</h3>
+	<div class="row">
+		<ui-beacon animation="breathe" color="warning"></ui-beacon>
+		<ui-beacon animation="breathe" color="warning">Syncing</ui-beacon>
+		<ui-beacon animation="breathe" color="info">Loading</ui-beacon>
+	</div>
+
+	<hr>
+	<h2>Pill variant</h2>
+	<p>Chip-style tinted background with a colored dot inside. Click to pause animation.</p>
+	<div class="row">
+		<ui-beacon variant="pill" color="error" animation="blink">Live</ui-beacon>
+		<ui-beacon variant="pill" color="success" animation="pulse">Online</ui-beacon>
+		<ui-beacon variant="pill" color="warning" animation="breathe">Idle</ui-beacon>
+		<ui-beacon variant="pill" color="info">Beta</ui-beacon>
+	</div>
+
+	<hr>
+	<h2>Solid variant</h2>
+	<p>The classic blinking pill — solid colored background with white text. Defaults to blink animation. Click to pause.</p>
+	<div class="row">
+		<ui-beacon variant="solid">Live now</ui-beacon>
+		<ui-beacon variant="solid" color="info">News</ui-beacon>
+		<ui-beacon variant="solid" color="success">On Air</ui-beacon>
+		<ui-beacon variant="solid" color="warning">Caution</ui-beacon>
+		<ui-beacon variant="solid" color="error">LIVE</ui-beacon>
+	</div>
+
+	<h3>Solid with alternative animation</h3>
+	<div class="row">
+		<ui-beacon variant="solid" color="error" animation="pulse">Alert</ui-beacon>
+		<ui-beacon variant="solid" color="info" animation="breathe">Loading</ui-beacon>
+		<ui-beacon variant="solid" color="success" animation="none">Static</ui-beacon>
+	</div>
+
+	<hr>
+	<h2>Ticker variant</h2>
+	<p>Slide-out / slide-in compound animation with a trailing dot loader — for streaming-style tickers.</p>
+	<div class="row">
+		<ui-beacon variant="ticker">Live</ui-beacon>
+		<ui-beacon variant="ticker" color="info">Breaking</ui-beacon>
+		<ui-beacon variant="ticker" color="success">Update</ui-beacon>
+		<ui-beacon variant="ticker" color="error">Live</ui-beacon>
+	</div>
+
+	<hr>
+	<h2>Pause behavior</h2>
+
+	<h3>1. <code>prefers-reduced-motion: reduce</code> (system-level)</h3>
+	<p>Toggle DevTools → Rendering → "Emulate CSS media feature prefers-reduced-motion: reduce" — every animation above stops automatically.</p>
+
+	<h3>2. Declarative <code>paused</code> attribute</h3>
+	<div class="row">
+		<ui-beacon variant="solid" color="error">Running</ui-beacon>
+		<ui-beacon variant="solid" color="error" paused>Paused</ui-beacon>
+	</div>
+
+	<h3>3. Click-to-pause (legacy checkbox)</h3>
+	<p>Click any animated label to pause / resume. The component renders an inner label + hidden checkbox automatically.</p>
+	<div class="row">
+		<ui-beacon variant="solid" color="error">Click me</ui-beacon>
+		<ui-beacon variant="pill" color="info" animation="pulse">Click me</ui-beacon>
+		<ui-beacon color="success" animation="blink">Click me</ui-beacon>
+	</div>
+
+	<hr>
+	<h2>Opposite color scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+		<ui-beacon color="success">Online</ui-beacon>
+		<ui-beacon animation="pulse" color="info">Pulse</ui-beacon>
+		<ui-beacon variant="pill" color="warning" animation="breathe">Idle</ui-beacon>
+		<ui-beacon variant="solid" color="error">LIVE</ui-beacon>
+		<ui-beacon variant="ticker" color="error">Live</ui-beacon>
+	</div>
+
+	<br>
+	<h2>Right-to-left</h2>
+	<div dir="rtl" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+		<ui-beacon color="success">متصل</ui-beacon>
+		<ui-beacon variant="pill" color="error" animation="blink">مباشر</ui-beacon>
+		<ui-beacon variant="solid" color="error">LIVE</ui-beacon>
+		<ui-beacon variant="ticker" color="error">Live</ui-beacon>
+	</div>
+
+	<hr>
+	<h2>CSS-only authoring</h2>
+	<p>Without the JS module, author the markup directly. Bare dots need no inner markup; labelled / ticker variants do.</p>
+
+	<h3>Bare dot</h3>
+	<ui-beacon animation="blink" color="error"></ui-beacon>
+
+	<h3>Solid with click-to-pause</h3>
+	<ui-beacon variant="solid" color="error">
+		<label><input type="checkbox" data-sr><span>LIVE</span></label>
+	</ui-beacon>
+
+	<h3>Ticker</h3>
+	<ui-beacon variant="ticker" color="error">
 		<span>Live <i></i></span>
 	</ui-beacon>
 
-	<br>
-	<h3>With opposite color-scheme</h3>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<ui-beacon>
-			<span>Live <i></i></span>
-		</ui-beacon>
-	</div>
-
-	<br>
-	<h3>With right-to-left</h3>
-	<div dir="rtl">
-		<ui-beacon>
-			<span>Live <i></i></span>
-		</ui-beacon>
-	</div>
-
-	<br>
-	<h3>Blink variant</h3>
-	<p>Click to pause/resume.</p>
-	<ui-beacon variant="blink">
-		<label>
-			<input type="checkbox" data-sr>
-			<span>Live now</span>
-		</label>
-	</ui-beacon>
-
-	<br><br>
-	<h3>Blink with opposite color-scheme</h3>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<ui-beacon variant="blink">
-			<label>
-				<input type="checkbox" data-sr>
-				<span>Live now</span>
-			</label>
-		</ui-beacon>
-	</div>
-
 	<hr>
-	<h2>Semantic Colors</h2>
-
-	<h3>Live ticker</h3>
-	<div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: start;">
-		<ui-beacon>
-			<span>Default <i></i></span>
-		</ui-beacon>
-		<ui-beacon color="info">
-			<span>Info <i></i></span>
-		</ui-beacon>
-		<ui-beacon color="success">
-			<span>Active <i></i></span>
-		</ui-beacon>
-		<ui-beacon color="warning">
-			<span>Caution <i></i></span>
-		</ui-beacon>
-		<ui-beacon color="error">
-			<span>Live <i></i></span>
-		</ui-beacon>
-	</div>
-
-	<br>
-	<h3>Blink variant</h3>
-	<div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: start;">
-		<ui-beacon variant="blink">
-			<label><input type="checkbox" data-sr><span>Default</span></label>
-		</ui-beacon>
-		<ui-beacon variant="blink" color="info">
-			<label><input type="checkbox" data-sr><span>Info</span></label>
-		</ui-beacon>
-		<ui-beacon variant="blink" color="success">
-			<label><input type="checkbox" data-sr><span>Active</span></label>
-		</ui-beacon>
-		<ui-beacon variant="blink" color="warning">
-			<label><input type="checkbox" data-sr><span>Caution</span></label>
-		</ui-beacon>
-		<ui-beacon variant="blink" color="error">
-			<label><input type="checkbox" data-sr><span>LIVE</span></label>
-		</ui-beacon>
-	</div>
-
-	<hr>
-	<h2>Web Component</h2>
-	<p>The web component auto-generates the inner structure (dots for live, label+checkbox for blink).</p>
-
-	<h3>Live ticker</h3>
-	<ui-beacon>Live</ui-beacon>
-
-	<br>
-	<h3>Live ticker with color</h3>
-	<div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: start;">
-		<ui-beacon color="info">Info</ui-beacon>
-		<ui-beacon color="success">Active</ui-beacon>
-		<ui-beacon color="warning">Caution</ui-beacon>
-		<ui-beacon color="error">Live</ui-beacon>
-	</div>
-
-	<br>
-	<h3>Blink</h3>
-	<ui-beacon variant="blink">Live now</ui-beacon>
-
-	<br><br>
-	<h3>Blink with color</h3>
-	<div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: start;">
-		<ui-beacon variant="blink" color="info">Info</ui-beacon>
-		<ui-beacon variant="blink" color="success">On Air</ui-beacon>
-		<ui-beacon variant="blink" color="warning">Caution</ui-beacon>
-		<ui-beacon variant="blink" color="error">LIVE</ui-beacon>
-	</div>
-
-	<hr>
-	<h2>Token Customization</h2>
-	<ui-beacon style="--ui-beacon-bg: crimson; --ui-beacon-color: white; --ui-beacon-slide-duration: 8s;">
-		<span>Custom <i></i></span>
-	</ui-beacon>
+	<h2>Token customization</h2>
+	<ui-beacon style="--ui-beacon-bg: crimson; --ui-beacon-size: 1rem; --ui-beacon-pulse-duration: 2.5s;" animation="pulse">Custom</ui-beacon>
 
 </body>
 </html>
