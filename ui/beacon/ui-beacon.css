@@ -25,6 +25,7 @@
 		line-height: var(--line-height-snug);
 		text-box: cap alphabetic;
 		vertical-align: middle;
+		white-space: nowrap;
 		width: fit-content;
 
 		/* the dot */
@@ -66,6 +67,10 @@
 	/* === Animations target the dot (::before) for default + pill variants === */
 	:where(ui-beacon[animation="blink"])::before {
 		animation: beacon-blink var(--ui-beacon-blink-duration) infinite;
+	}
+	:where(ui-beacon[animation="pulse"]) {
+		/* pulse looks best with a small inner dot — the box-shadow ring expands outward */
+		--ui-beacon-size: 0.5rem;
 	}
 	:where(ui-beacon[animation="pulse"])::before {
 		animation: beacon-pulse var(--ui-beacon-pulse-duration) ease-out infinite;
