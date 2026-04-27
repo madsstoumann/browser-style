@@ -15,7 +15,6 @@
 		--ui-beacon-size: var(--size-3);
 		--ui-beacon-slide-duration: 5s;
 
-		align-items: center;
 		color: var(--ui-beacon-bg);
 		column-gap: 0.6ch;
 		display: inline-flex;
@@ -23,8 +22,8 @@
 		font-size: var(--ui-beacon-font-size);
 		font-weight: var(--ui-beacon-font-weight);
 		line-height: var(--line-height-snug);
+		place-items: center;
 		text-box: cap alphabetic;
-		vertical-align: middle;
 		white-space: nowrap;
 		width: fit-content;
 
@@ -152,9 +151,12 @@
 		opacity: 1;
 	}
 
-	/* clickable label preserves cursor + keyboard focus ring */
+	/* label inside ui-beacon — undo form.css grid layout, keep clickable */
 	:where(ui-beacon) > label {
+		column-gap: 0;
 		cursor: pointer;
+		display: inline-flex;
+		place-items: center;
 		user-select: none;
 	}
 	:where(ui-beacon):has(> label > input:focus-visible) {
