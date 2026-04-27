@@ -111,7 +111,7 @@
 
 	/* === Ticker variant — original ui-live === */
 	:where(ui-beacon[variant~="ticker"]) {
-		background: var(--ui-beacon-track-bg, var(--color-highlight));
+		background: var(--ui-beacon-track-bg, color-mix(in oklch, var(--ui-beacon-bg) 15%, var(--color-surface)));
 		overflow: hidden;
 		padding: 0;
 

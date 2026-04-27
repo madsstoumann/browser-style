@@ -198,7 +198,7 @@ Three mechanisms, ordered from most to least automatic:
 | `--ui-beacon-size` | `var(--size-3)` | Dot diameter |
 | `--ui-beacon-font-size` | `var(--font-size-sm)` | Label font size |
 | `--ui-beacon-font-weight` | `var(--font-weight-medium)` | Label font weight |
-| `--ui-beacon-track-bg` | `var(--color-highlight)` | Ticker track background |
+| `--ui-beacon-track-bg` | `color-mix(--ui-beacon-bg 15%, --color-surface)` | Ticker track background (light tint of beacon color) |
 | `--ui-beacon-blink-duration` | `1.5s` | Blink cycle |
 | `--ui-beacon-pulse-duration` | `1.5s` | Pulse cycle |
 | `--ui-beacon-breathe-duration` | `2s` | Breathe cycle |
