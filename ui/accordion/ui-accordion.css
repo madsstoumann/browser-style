@@ -1,13 +1,17 @@
 /**
  * ui-accordion
- * @version 4.1.0
+ * @version 4.2.0
  * @date 2026-04-26
  * @author Mads Stoumann
  *
  * Private custom properties (--_*)
- *   --_bd         border           standard border grouping
- *   --_bb         border-breakout  breakout variant border grouping
- *   --_render     render mode      'accordion' or 'tabs' — picks which renderer engages (set to 'tabs' by ui-tabs.css)
+ *   --_bd            border             standard border grouping
+ *   --_bb            border-breakout    breakout variant border grouping
+ *   --_render        render mode        'accordion' or 'tabs' — picks which renderer engages
+ *   --_y             breakout offset    multiplier for translate-Y on items adjacent to the open one
+ *   --_slidedir      slide direction    -1 in RTL, 1 in LTR; flips ::details-content translate
+ *   --_hover         tint hover         hover-overlay color used by the tinted variant
+ *   --_indent-depth  indent level       set per nesting level on <ui-accordion>; drives the indent multiplier
  */
 @import '../icon/index.css';
 @layer bs-component {
@@ -372,11 +376,11 @@
 			}
 		}
 
-		@container (inline-size > 650px) and style(--_render: tabs) {
-			:where(ui-accordion[tabs]) cq-box {
-				details > summary > ui-icon { display: none; }
-			}
+	@container style(--_render: tabs) {
+		:where(ui-accordion[tabs]) cq-box details > summary > ui-icon {
+			display: none;
 		}
+	}
 	/* Web component item — renders inline (light DOM) */
 	:where(ui-accordion-item) {
 		display: contents;
