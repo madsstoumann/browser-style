@@ -118,6 +118,8 @@ The `name` attribute on `<ui-accordion>` automatically propagates to all child `
 | `tint` | color | Base color for tinting items (e.g. `oklch(0.35 0.18 210)`) |
 | `tinted` | boolean | Enables a graduated color ramp across items (requires `tint`) |
 | `no-collapse` | boolean | Ensures one item always stays open |
+| `indent` | boolean | On the outermost accordion, enables a depth-based staircase: each nested level adds `--ui-accordion-padding-inline` to the inline-start of summaries and leaf panel content |
+| `tabs` | string | Morph into tabs. Value is the tab variant list (`pill`, `bordered`, `compact no-background`, …). Loads `@browser.style/tabs` |
 
 **`<ui-accordion-item>`**
 
@@ -360,6 +362,73 @@ Variants adapt: `divided` draws vertical lines, `bordered` frames the group, `ro
 
 ---
 
+## Nested accordions
+
+Accordions can be nested arbitrarily deep — drop a `<ui-accordion>` directly inside a parent `<details>`:
+
+```html
+<ui-accordion variant="bordered divided rounded" name="outer">
+  <cq-box>
+    <details name="outer" open>
+      <summary>Account</summary>
+      <ui-accordion variant="divided" name="inner">
+        <cq-box>
+          <details name="inner"><summary>Profile</summary><div>…</div></details>
+          <details name="inner"><summary>Security</summary><div>…</div></details>
+        </cq-box>
+      </ui-accordion>
+    </details>
+    <details name="outer"><summary>Billing</summary><div>…</div></details>
+  </cq-box>
+</ui-accordion>
+```
+
+Each level needs its own `name` so open-state groups stay independent.
+
+### Auto-adjust when nested
+
+When a `<ui-accordion>` is the direct child of a parent `<details>`, three visual conflicts are auto-resolved:
+
+- **Border-radius zeroed on inner accordions** — `--ui-accordion-border-radius` is reset to `0` via inheritance, so a nested `bordered rounded` accordion sits flush with its parent's edges.
+- **Inner bottom edge stripped** — for nested `bordered` accordions, the inner `cq-box`'s `border-block-end` is removed; for nested `breakout`, the last details' `border-block-end` is removed. No double lines against the parent's content edge.
+- **Parent details `padding-inline` zeroed, summary compensates** — `bordered`/`breakout` variants normally pad the details content area inline. When a parent details holds a nested accordion, its inline padding drops to zero (so the nested accordion sits flush) but the parent's own summary keeps its inline padding so the title stays correctly indented.
+
+These are unconditional — no opt-in attribute, just write the nesting and the rules engage.
+
+### Indent attribute (`indent`)
+
+For tree-style indentation, set `indent` on the **outermost** accordion:
+
+```html
+<ui-accordion variant="bordered divided rounded" name="outer" indent>
+  …
+</ui-accordion>
+```
+
+Indent is depth-based and uses `--ui-accordion-padding-inline` as the unit. Each nesting level adds one step:
+
+- L1 summary text: `1 × --ui-accordion-padding-inline` (already from the variant rules)
+- L2 nested summary: `2 × --ui-accordion-padding-inline`
+- L3 nested summary: `3 × --ui-accordion-padding-inline`
+
+The padding sits on the **summary** and on **leaf details' panel content** inside every nested `<ui-accordion>`. The `<details>` element itself stays full-width, so dividers and borders span the full inline axis without shifting. Only the textual content moves; parent details that contain a nested accordion as their content (rather than text) do not get extra padding so the nested accordion stays flush.
+
+`[indent]` only goes on the outermost accordion — a depth-counter inherits down through every nested level. To stop the indent at a particular level, override `--ui-accordion-padding-inline` on that accordion (inline style or class).
+
+To customise the indent step (which is just `--ui-accordion-padding-inline`):
+
+```css
+:root { --ui-accordion-padding-inline: 2ch; }
+```
+
+or per-instance:
+
+```html
+<ui-accordion indent style="--ui-accordion-padding-inline: 0.5rem">…</ui-accordion>
+```
+
+---
+
 ## Morph into tabs
 
 `<ui-accordion>` shares its inner structure (`cq-box > details`) with `<ui-tabs>` from `@browser.style/tabs`. A single inherited custom property — `--_render` — decides which component's rendering engine wins:
@@ -471,7 +540,7 @@ Override accordion-specific tokens for targeted changes:
 | `--ui-accordion-row-gap` | `var(--spacing-md, 1em)` | Gap between items (`separate`) |
 | `--ui-accordion-margin-end` | `0` | Bottom margin |
 | `--ui-accordion-padding-block` | `1.5ch` | Vertical padding |
-| `--ui-accordion-padding-inline` | `0` | Horizontal padding |
+| `--ui-accordion-padding-inline` | `0` | Horizontal padding (the `indent` attribute multiplies this value by nesting depth) |
 | `--ui-accordion-summary-font-size` | `1em` | Summary heading font size |
 | `--ui-accordion-summary-font-weight` | `var(--font-weight-medium, 500)` | Summary heading font weight |
 | `--ui-accordion-duration` | `var(--duration-slow, .3s)` | Open/close animation speed |

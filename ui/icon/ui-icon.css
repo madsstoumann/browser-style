@@ -154,8 +154,9 @@
 	:is([open] >* > ui-icon, :checked + ui-icon)[type*=plus-minus]::after { rotate: 0deg; }
 	[open] >* >ui-icon[type~=right] { rotate: 90deg; }
 
-	/* re-visit */
-	[open] >* * ui-icon[type~=right] { rotate: 90deg; }
+	/* Scoped to `summary` so [open] state only rotates icons in the same details' header,
+	   not in nested <details> further inside the panel content. */
+	[open] > summary * ui-icon[type~=right] { rotate: 90deg; }
 
 	/* Variant: rounded — rounds line caps on line-based icons */
 	ui-icon[variant~=rounded]:is([type*=arrow],[type=cross],[type*=menu],[type*=plus])::before,

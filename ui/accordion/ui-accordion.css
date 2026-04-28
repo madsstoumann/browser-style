@@ -1,7 +1,7 @@
 /**
  * ui-accordion
- * @version 4.0.9
- * @date 2026-04-24
+ * @version 4.1.0
+ * @date 2026-04-26
  * @author Mads Stoumann
  *
  * Private custom properties (--_*)
@@ -11,6 +11,12 @@
  */
 @import '../icon/index.css';
 @layer bs-component {
+	@property --_indent-depth {
+		syntax: "<integer>";
+		inherits: true;
+		initial-value: 0;
+	}
+
 	:where(ui-accordion) {
 		--_render: accordion;
 
@@ -52,7 +58,7 @@
 					content-visibility: visible;
 					padding-block: var(--ui-accordion-padding-block);
 				}
-				&:has(:focus-visible) {
+				&:has(> summary:focus-visible) {
 					outline: var(--ring-width) solid var(--ring-color);
 					summary { outline: none; }
 				}
@@ -217,6 +223,71 @@
 			details[open] summary ui-icon:last-of-type { display: grid; }
 		}
 		:where([dir="rtl"]) ui-accordion[type="slide"] cq-box { --_slidedir: -1; }
+
+		/* === Nested accordions — auto-adjust when a <ui-accordion> sits inside a parent <details> === */
+
+		/* Strip border-radius on inner accordions (overrides --ui-accordion-border-radius via inheritance) */
+		ui-accordion cq-box ui-accordion {
+			--ui-accordion-border-radius: 0;
+		}
+
+		/* Strip ALL borders on inner cq-boxes — outer's bordered frame paints onto every
+		   descendant cq-box (including nested non-bordered ones), so unconditionally drop them. */
+		ui-accordion[variant] cq-box ui-accordion cq-box {
+			border: 0;
+		}
+
+		/* Parent details containing a nested accordion: zero its inline padding,
+		   restore equivalent padding on its own summary so the title stays indented. */
+		ui-accordion[variant] cq-box details:has(> ui-accordion) {
+			padding-inline: 0;
+		}
+		ui-accordion[variant] cq-box details:has(> ui-accordion) > summary {
+			padding-inline: var(--ui-accordion-padding-inline);
+		}
+		/* And zero the open-state block padding so the nested accordion butts against the parent's summary */
+		:where(ui-accordion) cq-box details:has(> ui-accordion)[open]::details-content {
+			padding-block: 0;
+		}
+		/* Nested divided accordion: when the parent is open, draw the top divider on its summary.
+		   Gated on [open] so it doesn't double up with the parent details' own border-block-end
+		   (from divided/bordered) when the panel is closed. */
+		ui-accordion[variant] cq-box details:has(> ui-accordion[variant~="divided"])[open] > summary {
+			border-block-end: var(--_bd);
+		}
+
+		/* === Indent ([indent] on outer; depth-based) ===
+		   Padding sits on summary text and on leaf-details' panel content. The details element
+		   (and its border-block-end divider) stays full-width — borders never shift inline. */
+
+		/* Set depth per nesting level. Manual selectors (instead of an inheritance counter) because
+		   `--_indent-depth: calc(var(--_indent-parent) + 1); --_indent-parent: var(--_indent-depth);`
+		   creates a CSS variable cycle on the same element — both properties end up invalid.
+		   Specificity rises with each `cq-box ui-accordion` step, so deeper rules win for deeper elements. */
+		ui-accordion[indent] cq-box ui-accordion {
+			--_indent-depth: 1;
+		}
+		ui-accordion[indent] cq-box ui-accordion cq-box ui-accordion {
+			--_indent-depth: 2;
+		}
+		ui-accordion[indent] cq-box ui-accordion cq-box ui-accordion cq-box ui-accordion {
+			--_indent-depth: 3;
+		}
+		ui-accordion[indent] cq-box ui-accordion cq-box ui-accordion cq-box ui-accordion cq-box ui-accordion {
+			--_indent-depth: 4;
+		}
+
+		/* Zero details' inline-start padding in nested levels so summary owns the offset directly */
+		ui-accordion[indent] cq-box ui-accordion details {
+			padding-inline-start: 0;
+		}
+
+		/* Indent: applied to summary, and to leaf details' non-summary content
+		   (parent-of-nested details' non-summary is the next ui-accordion, which must stay flush). */
+		ui-accordion[indent] cq-box ui-accordion details > summary,
+		ui-accordion[indent] cq-box ui-accordion details:not(:has(> ui-accordion)) > :not(summary) {
+			padding-inline-start: calc((var(--_indent-depth) + 1) * var(--ui-accordion-padding-inline));
+		}
 	}
 
 	@container (inline-size > 650px) and style(--_render: accordion) {
