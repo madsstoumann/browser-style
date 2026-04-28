@@ -22,7 +22,50 @@ Every non-setup rule sits inside one of two `@container` blocks:
 @container (inline-size > 650px) and style(--_render: accordion) { /* horizontal + split */ }
 ```
 
-Plus one asymmetric rule at `style(--_render: tabs)` that hides accordion-specific icons when the host is in tabs mode.
+Plus one `@container style(--_render: tabs)` block that handles tabs-only adjustments: hiding the accordion's expand/collapse icons (irrelevant in tabs mode), and the **mega-menu mode** opt-in (see below).
+
+### Mega-menu mode (`tabs="… expanded"`)
+
+The `expanded` token in the `tabs` attribute list (e.g. `tabs="pill panel expanded"`) flips the active tab panel into a mega-menu: every nested `<ui-accordion>` inside it renders fully expanded, with summaries frozen as labels.
+
+```css
+/* Name the expanded outer so deep descendants can query its --_render past the nested
+   ui-accordion containers (each nested host re-declares --_render: accordion). */
+:where(ui-accordion[tabs~="expanded"]) {
+  container-name: tabs-expanded;
+}
+
+@container tabs-expanded style(--_render: tabs) {
+  /* Lift nested accordions into a NEUTRAL render mode (`none`) — neither accordion rules
+     (gated on `style(--_render: accordion)`) nor tabs rules (gated on `style(--_render: tabs)`)
+     match against the nested container, so both rule sets disable themselves. */
+  :where(ui-accordion[tabs~="expanded"]) cq-box ui-accordion {
+    --_render: none;
+  }
+  :where(ui-accordion[tabs~="expanded"]) cq-box ui-accordion details::details-content {
+    block-size: auto;
+    content-visibility: visible;
+    padding-block: var(--ui-accordion-padding-block);
+  }
+  :where(ui-accordion[tabs~="expanded"]) cq-box ui-accordion details > summary {
+    cursor: default;
+    pointer-events: none;
+  }
+  :where(ui-accordion[tabs~="expanded"]) cq-box ui-accordion details > summary > ui-icon {
+    display: none;
+  }
+}
+```
+
+Six properties of the design:
+
+- **Nested accordions are lifted to `--_render: none`** — a neutral sentinel that disables BOTH rule sets on the nested subtree. Every accordion rule in the file is gated on `style(--_render: accordion)`, and ui-tabs.css gates its rules on `style(--_render: tabs)`. Each nested ui-accordion is its own container with its own host rule setting `--_render: accordion`. Inside `tabs-expanded`, our override beats that host rule by specificity (the `[tabs~="expanded"]` ancestor selector wins over `:where(ui-accordion)`) and writes `none`. Both gates miss against the nested container — accordion rules and tabs rules silently do nothing. The mega-menu rules survive because they use the named `tabs-expanded` query, which resolves against the *outer* (still `--_render: tabs`), not the nested container. **Crucial:** `none` cannot be `tabs`, because ui-tabs.css's selectors like `:where(ui-tabs, [tabs]) cq-box details` would otherwise still match the nested details (they ARE descendants of the outer `[tabs]`) and apply tab-grid styling there. The neutral keyword keeps tabs styling contained to the outer host.
+
+- **Named container query (`@container tabs-expanded …`)** is required because every nested `<ui-accordion>` is itself a container that re-declares `--_render: accordion` on its host rule. A plain `@container style(--_render: tabs)` would resolve against the *nearest* ancestor container — i.e. the nested ui-accordion at L2/L3 — and the gate would never match at the deep levels. Naming the expanded outer with `container-name: tabs-expanded` and querying `@container tabs-expanded style(--_render: tabs)` skips past the nested unnamed containers and resolves against the outer's render state directly.
+- **Scoped to tabs mode** via the named container's `--_render: tabs`. When the auto-morph flips the outer back to `--_render: accordion` below 650px, the gate stops matching — normal collapse semantics return for the mobile path.
+- **Selector chain hits nested only.** `cq-box ui-accordion …` requires the matched details to live inside *another* ui-accordion under the [tabs~="expanded"] outer. The outer's own summaries (the actual tab labels) keep their tabs-renderer behaviour from the unnamed `@container style(--_render: tabs)` block above.
+- **`expanded` is a tabs-attribute token, not a standalone attribute.** Same precedent as `no-background` — anything that's only meaningful in tabs mode lives inside the `tabs="…"` token list, keeping the attribute surface minimal.
+- **Compatible with `:has(> ui-accordion)[open]::details-content { padding-block: 0 }`.** That earlier rule strips the open-state block padding on parent-of-nested details so the nested accordion butts against the parent summary; in mega-menu mode that still applies — the `padding-block` we add via the new rule lands on *leaf* details only (whose `::details-content` is plain text, not another accordion).
 
 ### Why no `@property` registration
 

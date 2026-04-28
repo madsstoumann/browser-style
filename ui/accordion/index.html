@@ -867,6 +867,143 @@
 	</ui-accordion>
 
 	<br>
+	<h2>Nested as mega-menu (tabs morph)</h2>
+	<p>Same nested structure, wrapped in <code>&lt;auto-morph render="tabs"&gt;</code> with <code>tabs="pill panel expanded"</code>. Above 650px the outer renders as a panel-style tabs interface — clicking a tab opens its panel with every nested accordion fully expanded, mega-menu style. Below 650px it falls back to the regular collapsible nested accordion.</p>
+
+	<auto-morph render="tabs">
+		<ui-accordion variant="bordered divided rounded" name="mega-outer" indent tabs="panel expanded">
+			<cq-box>
+				<details name="mega-outer" open>
+					<summary>Account<ui-icon type="chevron down"></ui-icon></summary>
+					<ui-accordion variant="divided" name="mega-account">
+						<cq-box>
+							<details name="mega-account">
+								<summary>Profile<ui-icon type="arrow right"></ui-icon></summary>
+								<ui-accordion variant="divided" name="mega-profile">
+									<cq-box>
+										<details name="mega-profile">
+											<summary>Display name<ui-icon type="plus-cross"></ui-icon></summary>
+											<div>The name shown next to your activity. Visible to anyone who can see your content.</div>
+										</details>
+										<details name="mega-profile">
+											<summary>Avatar<ui-icon type="plus-cross"></ui-icon></summary>
+											<div>Square image, at least 256×256. Falls back to initials if unset.</div>
+										</details>
+									</cq-box>
+								</ui-accordion>
+							</details>
+							<details name="mega-account">
+								<summary>Security<ui-icon type="arrow right"></ui-icon></summary>
+								<ui-accordion variant="divided" name="mega-security">
+									<cq-box>
+										<details name="mega-security">
+											<summary>Two-factor authentication<ui-icon type="plus-cross"></ui-icon></summary>
+											<div>Add a second step at sign-in via authenticator app or hardware key.</div>
+										</details>
+										<details name="mega-security">
+											<summary>Active sessions<ui-icon type="plus-cross"></ui-icon></summary>
+											<div>Devices currently signed in. Revoke any session you don't recognise.</div>
+										</details>
+									</cq-box>
+								</ui-accordion>
+							</details>
+						</cq-box>
+					</ui-accordion>
+				</details>
+				<details name="mega-outer">
+					<summary>Notifications<ui-icon type="chevron down"></ui-icon></summary>
+					<ui-accordion variant="divided" name="mega-notifications">
+						<cq-box>
+							<details name="mega-notifications">
+								<summary>Email<ui-icon type="arrow right"></ui-icon></summary>
+								<ui-accordion variant="divided" name="mega-email">
+									<cq-box>
+										<details name="mega-email">
+											<summary>Daily digest<ui-icon type="plus-cross"></ui-icon></summary>
+											<div>One email per day summarising new activity in your subscriptions.</div>
+										</details>
+										<details name="mega-email">
+											<summary>Weekly summary<ui-icon type="plus-cross"></ui-icon></summary>
+											<div>A roll-up sent every Monday morning.</div>
+										</details>
+									</cq-box>
+								</ui-accordion>
+							</details>
+							<details name="mega-notifications">
+								<summary>Push<ui-icon type="arrow right"></ui-icon></summary>
+								<ui-accordion variant="divided" name="mega-push">
+									<cq-box>
+										<details name="mega-push">
+											<summary>Mentions<ui-icon type="plus-cross"></ui-icon></summary>
+											<div>Native notifications when someone replies or @-mentions you.</div>
+										</details>
+										<details name="mega-push">
+											<summary>Direct messages<ui-icon type="plus-cross"></ui-icon></summary>
+											<div>Native notifications for new direct messages.</div>
+										</details>
+									</cq-box>
+								</ui-accordion>
+							</details>
+						</cq-box>
+					</ui-accordion>
+				</details>
+				<details name="mega-outer">
+					<summary>Billing<ui-icon type="chevron down"></ui-icon></summary>
+					<ui-accordion variant="divided" name="mega-billing">
+						<cq-box>
+							<details name="mega-billing">
+								<summary>Subscription<ui-icon type="arrow right"></ui-icon></summary>
+								<ui-accordion variant="divided" name="mega-subscription">
+									<cq-box>
+										<details name="mega-subscription">
+											<summary>Plan<ui-icon type="plus-cross"></ui-icon></summary>
+											<div>Current tier, included seats, and feature flags.</div>
+										</details>
+										<details name="mega-subscription">
+											<summary>Renewal date<ui-icon type="plus-cross"></ui-icon></summary>
+											<div>Next charge date and how to change the renewal cadence.</div>
+										</details>
+									</cq-box>
+								</ui-accordion>
+							</details>
+							<details name="mega-billing">
+								<summary>Invoices<ui-icon type="arrow right"></ui-icon></summary>
+								<ui-accordion variant="divided" name="mega-invoices">
+									<cq-box>
+										<details name="mega-invoices">
+											<summary>Recent<ui-icon type="plus-cross"></ui-icon></summary>
+											<div>Invoices from the last 90 days, available as PDF.</div>
+										</details>
+										<details name="mega-invoices">
+											<summary>Tax details<ui-icon type="plus-cross"></ui-icon></summary>
+											<div>VAT number, billing address, and tax-exempt status.</div>
+										</details>
+									</cq-box>
+								</ui-accordion>
+							</details>
+							<details name="mega-billing">
+								<summary>Payment methods<ui-icon type="arrow right"></ui-icon></summary>
+								<ui-accordion variant="divided" name="mega-payment">
+									<cq-box>
+										<details name="mega-payment">
+											<summary>Cards<ui-icon type="plus-cross"></ui-icon></summary>
+											<div>Visa, Mastercard, American Express. Add, remove, or set a default.</div>
+										</details>
+										<details name="mega-payment">
+											<summary>Wallets<ui-icon type="plus-cross"></ui-icon></summary>
+											<div>PayPal, Apple Pay, Google Pay.</div>
+										</details>
+									</cq-box>
+								</ui-accordion>
+							</details>
+						</cq-box>
+					</ui-accordion>
+				</details>
+			</cq-box>
+		</ui-accordion>
+	</auto-morph>
+
+	<br>
 	<h2>Icon Variants</h2>
 	<p>With various <code>ui-icon</code> variants:</p>
 

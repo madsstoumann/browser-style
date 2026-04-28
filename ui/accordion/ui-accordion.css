@@ -377,7 +377,42 @@
 		}
 
 	@container style(--_render: tabs) {
+		/* Hide expand/collapse icons on the tabs-rendered host's own summaries (the tab labels). */
 		:where(ui-accordion[tabs]) cq-box details > summary > ui-icon {
+			display: none;
+		}
+	}
+
+	/* Name the expanded outer so deep descendants can query its render state past the nested
+	   ui-accordion containers (each nested host re-declares --_render: accordion). */
+	:where(ui-accordion[tabs~="expanded"]) {
+		container-name: tabs-expanded;
+	}
+
+	@container tabs-expanded style(--_render: tabs) {
+		/* Lift nested accordions into a neutral render mode so neither accordion rules
+		   (gated on `style(--_render: accordion)`) NOR tabs rules (gated on `style(--_render: tabs)`)
+		   match against the nested container. `none` is a sentinel value that no gate looks for —
+		   accordion variants/dividers/padding/indent disable themselves AND ui-tabs.css selectors
+		   like `:where(ui-tabs, [tabs]) cq-box details` no longer get a matching @container gate
+		   on nested details, so tab-grid styling doesn't leak into the nested subtree. The
+		   mega-menu rules below add back only what's needed; the named `tabs-expanded` query still
+		   resolves against the outer (which has `--_render: tabs`), so they fire. */
+		:where(ui-accordion[tabs~="expanded"]) cq-box ui-accordion {
+			--_render: none;
+		}
+
+		/* Force every nested panel open, freeze summaries as static labels, hide their icons. */
+		:where(ui-accordion[tabs~="expanded"]) cq-box ui-accordion details::details-content {
+			block-size: auto;
+			content-visibility: visible;
+			padding-block: var(--ui-accordion-padding-block);
+		}
+		:where(ui-accordion[tabs~="expanded"]) cq-box ui-accordion details > summary {
+			cursor: default;
+			pointer-events: none;
+		}
+		:where(ui-accordion[tabs~="expanded"]) cq-box ui-accordion details > summary > ui-icon {
 			display: none;
 		}
 	}

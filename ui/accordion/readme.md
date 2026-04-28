@@ -119,7 +119,7 @@ The `name` attribute on `<ui-accordion>` automatically propagates to all child `
 | `tinted` | boolean | Enables a graduated color ramp across items (requires `tint`) |
 | `no-collapse` | boolean | Ensures one item always stays open |
 | `indent` | boolean | On the outermost accordion, enables a depth-based staircase: each nested level adds `--ui-accordion-padding-inline` to the inline-start of summaries and leaf panel content |
-| `tabs` | string | Morph into tabs. Value is the tab variant list (`pill`, `bordered`, `compact no-background`, …). Loads `@browser.style/tabs` |
+| `tabs` | string | Morph into tabs. Value is a token list — variants (`pill`, `rounded`, `bordered`, `compact`, `ellipse`, `panel`, `bleed`, `no-background`) plus the accordion-specific `expanded` for mega-menu mode. Loads `@browser.style/tabs` |
 
 **`<ui-accordion-item>`**
 
@@ -461,7 +461,33 @@ Load `@browser.style/tabs` alongside `@browser.style/accordion` and add a `tabs`
 </ui-accordion>
 ```
 
-Any value the tabs component accepts (`pill`, `rounded`, `bordered`, `compact`, `ellipse`, `panel`, `bleed`) works on the `tabs="…"` attribute — see the tabs readme.
+Any value the tabs component accepts (`pill`, `rounded`, `bordered`, `compact`, `ellipse`, `panel`, `bleed`) works on the `tabs="…"` attribute — see the tabs readme. One additional accordion-specific token is also recognised: `expanded`, which turns the tabs renderer into a mega-menu (see below).
+
+### Mega-menu with `tabs="… expanded"`
+
+Add `expanded` to the `tabs="…"` token list to turn the active tab panel into a mega-menu: every nested `<ui-accordion>` inside the panel renders fully expanded (all `::details-content` visible), nested summaries become static labels (no cursor, no clicks, no expand/collapse icons), and the whole subtree of the active tab is shown at once.
+
+```html
+<auto-morph render="tabs">
+  <ui-accordion tabs="pill panel expanded" variant="bordered divided rounded" name="mega" indent>
+    <cq-box>
+      <details name="mega"><summary>Account</summary>
+        <ui-accordion variant="divided" name="account">
+          <cq-box>
+            <details name="account"><summary>Profile</summary>
+              <ui-accordion variant="divided" name="profile">…</ui-accordion>
+            </details>
+            …
+          </cq-box>
+        </ui-accordion>
+      </details>
+      …
+    </cq-box>
+  </ui-accordion>
+</auto-morph>
+```
+
+`expanded` is **scoped to tabs mode** — when the auto-morph flips back to accordion below 650px, normal collapse semantics return (summaries clickable, panels collapsible, icons visible). It only takes effect on nested accordions; the outer's own summaries (the actual tab labels) keep their tabs-renderer behaviour.
 
 ### Auto-morph with `<auto-morph render="tabs">`
 

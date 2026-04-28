@@ -27,3 +27,23 @@ html { scrollbar-gutter: stable; }
 .tabs-rounded     { --ui-tabs-squircle-exp:          3; }
 .tabs-semibold    { --ui-tabs-indicator-font-weight: var(--font-weight-semibold); }
 .tabs-text        { --ui-tabs-indicator-text:        var(--color-text); }
+
+/* Mega-menu (tabs="… expanded") — split each tab's panel content into a 3-column grid.
+   Targets the L2 cq-box specifically (4 chained direct children from the [tabs~="expanded"]
+   host) so the column layout doesn't leak into deeper nested ui-accordions. */
+[tabs~="expanded"] > cq-box > details > ui-accordion > cq-box {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: var(--spacing-xl, 2rem);
+}
+
+/* Hide native disclosure markers on summaries inside the mega-menu. The accordion's own
+   marker-hide rule (`summary::-webkit-details-marker { display: none }`) is gated to
+   accordion-render mode, so it doesn't fire on the nested subtree (which sits at
+   --_render: none in mega-menu). Re-add the hide here, in both modern and legacy form. */
+[tabs~="expanded"] cq-box summary {
+	list-style: none;
+}
+[tabs~="expanded"] cq-box summary::-webkit-details-marker {
+	display: none;
+}
