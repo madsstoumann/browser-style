@@ -31,7 +31,7 @@
 		--ui-accordion-breakout-border-width: var(--border-width);
 		--ui-accordion-breakout-unit: var(--spacing-md);
 		--ui-accordion-duration: var(--duration-slow);
-		--ui-accordion-padding-block: 1.5ch;
+		--ui-accordion-padding-block: 1.25ch;
 		--ui-accordion-padding-inline: 1.5ch;
 
 		--_bd: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
