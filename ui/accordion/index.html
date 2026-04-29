@@ -375,6 +375,141 @@
 	</ui-accordion>
 
 	<br>
+	<h2>Nested accordions</h2>
+	<p>An accordion can contain another <code>&lt;ui-accordion&gt;</code> inside any panel. Each level keeps its own <code>name</code> so the open-state groups stay independent. The <code>indent</code> attribute on the outer accordion turns on a per-details staircase using <code>sibling-index()</code> times <code>--ui-accordion-indent</code>; inner accordions pick it up via inheritance.</p>
+
+	<ui-accordion variant="bordered divided rounded" name="nested-outer" indent>
+		<cq-box>
+			<details name="nested-outer">
+				<summary>Account<ui-icon type="chevron down"></ui-icon></summary>
+				<ui-accordion variant="divided" name="nested-account">
+					<cq-box>
+						<details name="nested-account">
+							<summary>Profile<ui-icon type="arrow right"></ui-icon></summary>
+							<ui-accordion variant="divided" name="nested-profile">
+								<cq-box>
+									<details name="nested-profile">
+										<summary>Display name<ui-icon type="plus-cross"></ui-icon></summary>
+										<div>The name shown next to your activity. Visible to anyone who can see your content.</div>
+									</details>
+									<details name="nested-profile">
+										<summary>Avatar<ui-icon type="plus-cross"></ui-icon></summary>
+										<div>Square image, at least 256×256. Falls back to initials if unset.</div>
+									</details>
+								</cq-box>
+							</ui-accordion>
+						</details>
+						<details name="nested-account">
+							<summary>Security<ui-icon type="arrow right"></ui-icon></summary>
+							<ui-accordion variant="divided" name="nested-security">
+								<cq-box>
+									<details name="nested-security">
+										<summary>Two-factor authentication<ui-icon type="plus-cross"></ui-icon></summary>
+										<div>Add a second step at sign-in via authenticator app or hardware key.</div>
+									</details>
+									<details name="nested-security">
+										<summary>Active sessions<ui-icon type="plus-cross"></ui-icon></summary>
+										<div>Devices currently signed in. Revoke any session you don't recognise.</div>
+									</details>
+								</cq-box>
+							</ui-accordion>
+						</details>
+					</cq-box>
+				</ui-accordion>
+			</details>
+			<details name="nested-outer">
+				<summary>Notifications<ui-icon type="chevron down"></ui-icon></summary>
+				<ui-accordion variant="divided" name="nested-notifications">
+					<cq-box>
+						<details name="nested-notifications">
+							<summary>Email<ui-icon type="arrow right"></ui-icon></summary>
+							<ui-accordion variant="divided" name="nested-email">
+								<cq-box>
+									<details name="nested-email">
+										<summary>Daily digest<ui-icon type="plus-cross"></ui-icon></summary>
+										<div>One email per day summarising new activity in your subscriptions.</div>
+									</details>
+									<details name="nested-email">
+										<summary>Weekly summary<ui-icon type="plus-cross"></ui-icon></summary>
+										<div>A roll-up sent every Monday morning.</div>
+									</details>
+								</cq-box>
+							</ui-accordion>
+						</details>
+						<details name="nested-notifications">
+							<summary>Push<ui-icon type="arrow right"></ui-icon></summary>
+							<ui-accordion variant="divided" name="nested-push">
+								<cq-box>
+									<details name="nested-push">
+										<summary>Mentions<ui-icon type="plus-cross"></ui-icon></summary>
+										<div>Native notifications when someone replies or @-mentions you.</div>
+									</details>
+									<details name="nested-push">
+										<summary>Direct messages<ui-icon type="plus-cross"></ui-icon></summary>
+										<div>Native notifications for new direct messages.</div>
+									</details>
+								</cq-box>
+							</ui-accordion>
+						</details>
+					</cq-box>
+				</ui-accordion>
+			</details>
+			<details name="nested-outer">
+				<summary>Billing<ui-icon type="chevron down"></ui-icon></summary>
+				<ui-accordion variant="divided" name="nested-billing">
+					<cq-box>
+						<details name="nested-billing">
+							<summary>Subscription<ui-icon type="arrow right"></ui-icon></summary>
+							<ui-accordion variant="divided" name="nested-subscription">
+								<cq-box>
+									<details name="nested-subscription">
+										<summary>Plan<ui-icon type="plus-cross"></ui-icon></summary>
+										<div>Current tier, included seats, and feature flags.</div>
+									</details>
+									<details name="nested-subscription">
+										<summary>Renewal date<ui-icon type="plus-cross"></ui-icon></summary>
+										<div>Next charge date and how to change the renewal cadence.</div>
+									</details>
+								</cq-box>
+							</ui-accordion>
+						</details>
+						<details name="nested-billing">
+							<summary>Invoices<ui-icon type="arrow right"></ui-icon></summary>
+							<ui-accordion variant="bordered rounded" name="nested-invoices">
+								<cq-box>
+									<details name="nested-invoices">
+										<summary>Recent<ui-icon type="plus-cross"></ui-icon></summary>
+										<div>Invoices from the last 90 days, available as PDF.</div>
+									</details>
+									<details name="nested-invoices">
+										<summary>Tax details<ui-icon type="plus-cross"></ui-icon></summary>
+										<div>VAT number, billing address, and tax-exempt status.</div>
+									</details>
+								</cq-box>
+							</ui-accordion>
+						</details>
+						<details name="nested-billing">
+							<summary>Payment methods<ui-icon type="arrow right"></ui-icon></summary>
+							<ui-accordion variant="divided" name="nested-payment">
+								<cq-box>
+									<details name="nested-payment">
+										<summary>Cards<ui-icon type="plus-cross"></ui-icon></summary>
+										<div>Visa, Mastercard, American Express. Add, remove, or set a default.</div>
+									</details>
+									<details name="nested-payment">
+										<summary>Wallets<ui-icon type="plus-cross"></ui-icon></summary>
+										<div>PayPal, Apple Pay, Google Pay.</div>
+									</details>
+								</cq-box>
+							</ui-accordion>
+						</details>
+					</cq-box>
+				</ui-accordion>
+			</details>
+		</cq-box>
+	</ui-accordion>
+
+	<br>
 	<h2>With <code>type="horizontal"</code></h2>
 	<p>Also using <code>variant="bordered rounded"</code>. You can only see this effect when container-width is minium 650px</p>
 
@@ -732,269 +867,151 @@
 	</auto-morph>
 
 	<br>
-	<h2>Nested accordions</h2>
-	<p>An accordion can contain another <code>&lt;ui-accordion&gt;</code> inside any panel. Each level keeps its own <code>name</code> so the open-state groups stay independent. The <code>indent</code> attribute on the outer accordion turns on a per-details staircase using <code>sibling-index()</code> times <code>--ui-accordion-indent</code>; inner accordions pick it up via inheritance.</p>
-
-	<ui-accordion variant="bordered divided rounded" name="nested-outer" indent>
-		<cq-box>
-			<details name="nested-outer">
-				<summary>Account<ui-icon type="chevron down"></ui-icon></summary>
-				<ui-accordion variant="divided" name="nested-account">
-					<cq-box>
-						<details name="nested-account">
-							<summary>Profile<ui-icon type="arrow right"></ui-icon></summary>
-							<ui-accordion variant="divided" name="nested-profile">
-								<cq-box>
-									<details name="nested-profile">
-										<summary>Display name<ui-icon type="plus-cross"></ui-icon></summary>
-										<div>The name shown next to your activity. Visible to anyone who can see your content.</div>
-									</details>
-									<details name="nested-profile">
-										<summary>Avatar<ui-icon type="plus-cross"></ui-icon></summary>
-										<div>Square image, at least 256×256. Falls back to initials if unset.</div>
-									</details>
-								</cq-box>
-							</ui-accordion>
-						</details>
-						<details name="nested-account">
-							<summary>Security<ui-icon type="arrow right"></ui-icon></summary>
-							<ui-accordion variant="divided" name="nested-security">
-								<cq-box>
-									<details name="nested-security">
-										<summary>Two-factor authentication<ui-icon type="plus-cross"></ui-icon></summary>
-										<div>Add a second step at sign-in via authenticator app or hardware key.</div>
-									</details>
-									<details name="nested-security">
-										<summary>Active sessions<ui-icon type="plus-cross"></ui-icon></summary>
-										<div>Devices currently signed in. Revoke any session you don't recognise.</div>
-									</details>
-								</cq-box>
-							</ui-accordion>
-						</details>
-					</cq-box>
-				</ui-accordion>
-			</details>
-			<details name="nested-outer">
-				<summary>Notifications<ui-icon type="chevron down"></ui-icon></summary>
-				<ui-accordion variant="divided" name="nested-notifications">
-					<cq-box>
-						<details name="nested-notifications">
-							<summary>Email<ui-icon type="arrow right"></ui-icon></summary>
-							<ui-accordion variant="divided" name="nested-email">
-								<cq-box>
-									<details name="nested-email">
-										<summary>Daily digest<ui-icon type="plus-cross"></ui-icon></summary>
-										<div>One email per day summarising new activity in your subscriptions.</div>
-									</details>
-									<details name="nested-email">
-										<summary>Weekly summary<ui-icon type="plus-cross"></ui-icon></summary>
-										<div>A roll-up sent every Monday morning.</div>
-									</details>
-								</cq-box>
-							</ui-accordion>
-						</details>
-						<details name="nested-notifications">
-							<summary>Push<ui-icon type="arrow right"></ui-icon></summary>
-							<ui-accordion variant="divided" name="nested-push">
-								<cq-box>
-									<details name="nested-push">
-										<summary>Mentions<ui-icon type="plus-cross"></ui-icon></summary>
-										<div>Native notifications when someone replies or @-mentions you.</div>
-									</details>
-									<details name="nested-push">
-										<summary>Direct messages<ui-icon type="plus-cross"></ui-icon></summary>
-										<div>Native notifications for new direct messages.</div>
-									</details>
-								</cq-box>
-							</ui-accordion>
-						</details>
-					</cq-box>
-				</ui-accordion>
-			</details>
-			<details name="nested-outer">
-				<summary>Billing<ui-icon type="chevron down"></ui-icon></summary>
-				<ui-accordion variant="divided" name="nested-billing">
-					<cq-box>
-						<details name="nested-billing">
-							<summary>Subscription<ui-icon type="arrow right"></ui-icon></summary>
-							<ui-accordion variant="divided" name="nested-subscription">
-								<cq-box>
-									<details name="nested-subscription">
-										<summary>Plan<ui-icon type="plus-cross"></ui-icon></summary>
-										<div>Current tier, included seats, and feature flags.</div>
-									</details>
-									<details name="nested-subscription">
-										<summary>Renewal date<ui-icon type="plus-cross"></ui-icon></summary>
-										<div>Next charge date and how to change the renewal cadence.</div>
-									</details>
-								</cq-box>
-							</ui-accordion>
-						</details>
-						<details name="nested-billing">
-							<summary>Invoices<ui-icon type="arrow right"></ui-icon></summary>
-							<ui-accordion variant="bordered rounded" name="nested-invoices">
-								<cq-box>
-									<details name="nested-invoices">
-										<summary>Recent<ui-icon type="plus-cross"></ui-icon></summary>
-										<div>Invoices from the last 90 days, available as PDF.</div>
-									</details>
-									<details name="nested-invoices">
-										<summary>Tax details<ui-icon type="plus-cross"></ui-icon></summary>
-										<div>VAT number, billing address, and tax-exempt status.</div>
-									</details>
-								</cq-box>
-							</ui-accordion>
-						</details>
-						<details name="nested-billing">
-							<summary>Payment methods<ui-icon type="arrow right"></ui-icon></summary>
-							<ui-accordion variant="divided" name="nested-payment">
-								<cq-box>
-									<details name="nested-payment">
-										<summary>Cards<ui-icon type="plus-cross"></ui-icon></summary>
-										<div>Visa, Mastercard, American Express. Add, remove, or set a default.</div>
-									</details>
-									<details name="nested-payment">
-										<summary>Wallets<ui-icon type="plus-cross"></ui-icon></summary>
-										<div>PayPal, Apple Pay, Google Pay.</div>
-									</details>
-								</cq-box>
-							</ui-accordion>
-						</details>
-					</cq-box>
-				</ui-accordion>
-			</details>
-		</cq-box>
-	</ui-accordion>
-
-	<br>
 	<h2>Nested as mega-menu (tabs morph)</h2>
-	<p>Same nested structure, wrapped in <code>&lt;auto-morph render="tabs"&gt;</code> with <code>tabs="pill panel expanded"</code>. Above 650px the outer renders as a panel-style tabs interface — clicking a tab opens its panel with every nested accordion fully expanded, mega-menu style. Below 650px it falls back to the regular collapsible nested accordion.</p>
+	<p>A two-level nested structure wrapped in <code>&lt;auto-morph render="tabs"&gt;</code> with <code>tabs="panel expanded"</code>. Above 650px the outer renders as a panel-style tabs interface — clicking a tab opens its panel with every nested section fully expanded, mega-menu style. Below 650px it falls back to a collapsible nested accordion.</p>
 
 	<auto-morph render="tabs">
-		<ui-accordion variant="bordered divided rounded" name="mega-outer" indent tabs="panel expanded">
+		<ui-accordion variant="bordered divided rounded" name="mega-outer" indent tabs=" expanded panel">
 			<cq-box>
 				<details name="mega-outer" open>
-					<summary>Account<ui-icon type="chevron down"></ui-icon></summary>
-					<ui-accordion variant="divided" name="mega-account">
+					<summary>Products<ui-icon type="chevron down"></ui-icon></summary>
+					<ui-accordion variant="divided" name="mega-products">
 						<cq-box>
-							<details name="mega-account">
-								<summary>Profile<ui-icon type="arrow right"></ui-icon></summary>
-								<ui-accordion variant="divided" name="mega-profile">
-									<cq-box>
-										<details name="mega-profile">
-											<summary>Display name<ui-icon type="plus-cross"></ui-icon></summary>
-											<div>The name shown next to your activity. Visible to anyone who can see your content.</div>
-										</details>
-										<details name="mega-profile">
-											<summary>Avatar<ui-icon type="plus-cross"></ui-icon></summary>
-											<div>Square image, at least 256×256. Falls back to initials if unset.</div>
-										</details>
-									</cq-box>
-								</ui-accordion>
+							<details name="mega-products">
+								<summary>Smartphones<ui-icon type="arrow right"></ui-icon></summary>
+								<div role="group">
+									<a href="#">iPhone</a>
+									<a href="#">Android</a>
+									<a href="#">Google Pixel</a>
+									<a href="#">Samsung Galaxy</a>
+								</div>
 							</details>
-							<details name="mega-account">
-								<summary>Security<ui-icon type="arrow right"></ui-icon></summary>
-								<ui-accordion variant="divided" name="mega-security">
-									<cq-box>
-										<details name="mega-security">
-											<summary>Two-factor authentication<ui-icon type="plus-cross"></ui-icon></summary>
-											<div>Add a second step at sign-in via authenticator app or hardware key.</div>
-										</details>
-										<details name="mega-security">
-											<summary>Active sessions<ui-icon type="plus-cross"></ui-icon></summary>
-											<div>Devices currently signed in. Revoke any session you don't recognise.</div>
-										</details>
-									</cq-box>
-								</ui-accordion>
+							<details name="mega-products">
+								<summary>Laptops<ui-icon type="arrow right"></ui-icon></summary>
+								<div role="group">
+									<a href="#">MacBook</a>
+									<a href="#">Surface</a>
+									<a href="#">ThinkPad</a>
+									<a href="#">Chromebook</a>
+								</div>
+							</details>
+							<details name="mega-products">
+								<summary>Tablets<ui-icon type="arrow right"></ui-icon></summary>
+								<div role="group">
+									<a href="#">iPad</a>
+									<a href="#">Surface Pro</a>
+									<a href="#">Galaxy Tab</a>
+								</div>
+							</details>
+							<details name="mega-products">
+								<summary>Audio<ui-icon type="arrow right"></ui-icon></summary>
+								<div role="group">
+									<a href="#">Headphones</a>
+									<a href="#">Earbuds</a>
+									<a href="#">Speakers</a>
+								</div>
+							</details>
+							<details name="mega-products">
+								<summary>Charging<ui-icon type="arrow right"></ui-icon></summary>
+								<div role="group">
+									<a href="#">Cables</a>
+									<a href="#">Wireless Chargers</a>
+									<a href="#">Power Banks</a>
+								</div>
 							</details>
 						</cq-box>
 					</ui-accordion>
 				</details>
 				<details name="mega-outer">
-					<summary>Notifications<ui-icon type="chevron down"></ui-icon></summary>
-					<ui-accordion variant="divided" name="mega-notifications">
+					<summary>Services<ui-icon type="chevron down"></ui-icon></summary>
+					<ui-accordion variant="divided" name="mega-services">
 						<cq-box>
-							<details name="mega-notifications">
-								<summary>Email<ui-icon type="arrow right"></ui-icon></summary>
-								<ui-accordion variant="divided" name="mega-email">
-									<cq-box>
-										<details name="mega-email">
-											<summary>Daily digest<ui-icon type="plus-cross"></ui-icon></summary>
-											<div>One email per day summarising new activity in your subscriptions.</div>
-										</details>
-										<details name="mega-email">
-											<summary>Weekly summary<ui-icon type="plus-cross"></ui-icon></summary>
-											<div>A roll-up sent every Monday morning.</div>
-										</details>
-									</cq-box>
-								</ui-accordion>
+							<details name="mega-services">
+								<summary>Support<ui-icon type="arrow right"></ui-icon></summary>
+								<div role="group">
+									<a href="#">Technical Support</a>
+									<a href="#">Warranty</a>
+									<a href="#">Repairs</a>
+								</div>
 							</details>
-							<details name="mega-notifications">
-								<summary>Push<ui-icon type="arrow right"></ui-icon></summary>
-								<ui-accordion variant="divided" name="mega-push">
-									<cq-box>
-										<details name="mega-push">
-											<summary>Mentions<ui-icon type="plus-cross"></ui-icon></summary>
-											<div>Native notifications when someone replies or @-mentions you.</div>
-										</details>
-										<details name="mega-push">
-											<summary>Direct messages<ui-icon type="plus-cross"></ui-icon></summary>
-											<div>Native notifications for new direct messages.</div>
-										</details>
-									</cq-box>
-								</ui-accordion>
+							<details name="mega-services">
+								<summary>Business<ui-icon type="arrow right"></ui-icon></summary>
+								<div role="group">
+									<a href="#">Enterprise Solutions</a>
+									<a href="#">Bulk Orders</a>
+									<a href="#">Consultation</a>
+								</div>
+							</details>
+							<details name="mega-services">
+								<summary>Training<ui-icon type="arrow right"></ui-icon></summary>
+								<div role="group">
+									<a href="#">Workshops</a>
+									<a href="#">Certifications</a>
+									<a href="#">Tutorials</a>
+								</div>
+							</details>
+							<details name="mega-services">
+								<summary>Cloud<ui-icon type="arrow right"></ui-icon></summary>
+								<div role="group">
+									<a href="#">Storage</a>
+									<a href="#">Backup</a>
+									<a href="#">Sync</a>
+								</div>
+							</details>
+							<details name="mega-services">
+								<summary>Subscriptions<ui-icon type="arrow right"></ui-icon></summary>
+								<div role="group">
+									<a href="#">Plans</a>
+									<a href="#">Billing</a>
+									<a href="#">Renewals</a>
+								</div>
 							</details>
 						</cq-box>
 					</ui-accordion>
 				</details>
 				<details name="mega-outer">
-					<summary>Billing<ui-icon type="chevron down"></ui-icon></summary>
-					<ui-accordion variant="divided" name="mega-billing">
+					<summary>Company<ui-icon type="chevron down"></ui-icon></summary>
+					<ui-accordion variant="divided" name="mega-company">
 						<cq-box>
-							<details name="mega-billing">
-								<summary>Subscription<ui-icon type="arrow right"></ui-icon></summary>
-								<ui-accordion variant="divided" name="mega-subscription">
-									<cq-box>
-										<details name="mega-subscription">
-											<summary>Plan<ui-icon type="plus-cross"></ui-icon></summary>
-											<div>Current tier, included seats, and feature flags.</div>
-										</details>
-										<details name="mega-subscription">
-											<summary>Renewal date<ui-icon type="plus-cross"></ui-icon></summary>
-											<div>Next charge date and how to change the renewal cadence.</div>
-										</details>
-									</cq-box>
-								</ui-accordion>
+							<details name="mega-company">
+								<summary>About<ui-icon type="arrow right"></ui-icon></summary>
+								<div role="group">
+									<a href="#">Our Story</a>
+									<a href="#">Team</a>
+									<a href="#">Mission</a>
+								</div>
 							</details>
-							<details name="mega-billing">
-								<summary>Invoices<ui-icon type="arrow right"></ui-icon></summary>
-								<ui-accordion variant="divided" name="mega-invoices">
-									<cq-box>
-										<details name="mega-invoices">
-											<summary>Recent<ui-icon type="plus-cross"></ui-icon></summary>
-											<div>Invoices from the last 90 days, available as PDF.</div>
-										</details>
-										<details name="mega-invoices">
-											<summary>Tax details<ui-icon type="plus-cross"></ui-icon></summary>
-											<div>VAT number, billing address, and tax-exempt status.</div>
-										</details>
-									</cq-box>
-								</ui-accordion>
+							<details name="mega-company">
+								<summary>Careers<ui-icon type="arrow right"></ui-icon></summary>
+								<div role="group">
+									<a href="#">Open Roles</a>
+									<a href="#">Internships</a>
+									<a href="#">Benefits</a>
+								</div>
 							</details>
-							<details name="mega-billing">
-								<summary>Payment methods<ui-icon type="arrow right"></ui-icon></summary>
-								<ui-accordion variant="divided" name="mega-payment">
-									<cq-box>
-										<details name="mega-payment">
-											<summary>Cards<ui-icon type="plus-cross"></ui-icon></summary>
-											<div>Visa, Mastercard, American Express. Add, remove, or set a default.</div>
-										</details>
-										<details name="mega-payment">
-											<summary>Wallets<ui-icon type="plus-cross"></ui-icon></summary>
-											<div>PayPal, Apple Pay, Google Pay.</div>
-										</details>
-									</cq-box>
-								</ui-accordion>
+							<details name="mega-company">
+								<summary>News<ui-icon type="arrow right"></ui-icon></summary>
+								<div role="group">
+									<a href="#">Press Releases</a>
+									<a href="#">Blog</a>
+									<a href="#">Events</a>
+								</div>
+							</details>
+							<details name="mega-company">
+								<summary>Investors<ui-icon type="arrow right"></ui-icon></summary>
+								<div role="group">
+									<a href="#">Reports</a>
+									<a href="#">Earnings</a>
+									<a href="#">Stock</a>
+								</div>
+							</details>
+							<details name="mega-company">
+								<summary>Contact<ui-icon type="arrow right"></ui-icon></summary>
+								<div role="group">
+									<a href="#">Offices</a>
+									<a href="#">Email</a>
+									<a href="#">Phone</a>
+								</div>
 							</details>
 						</cq-box>
 					</ui-accordion>
