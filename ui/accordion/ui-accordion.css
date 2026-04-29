@@ -181,6 +181,33 @@
 			details { border: var(--_bd); }
 		}
 
+		/* tree — file-tree styling: tight rows, role-aware markers
+		   • folder (details containing a nested ui-accordion): ▸ closed / ▾ open
+		   • file   (leaf details, no nested ui-accordion):     ▤ */
+		ui-accordion[variant~="tree"] cq-box {
+			--ui-accordion-padding-block: 0;
+			--ui-accordion-padding-inline: 1ch;
+			--ui-accordion-summary-padding-inline: 0;
+			--ui-accordion-tree-leaf-color: var(--color-text-muted);
+			--ui-accordion-tree-leaf-font-size: var(--font-size-xs);
+			details {
+				summary {
+					display: list-item;
+					&::marker {
+						color: var(--ui-accordion-tree-marker-color, color-mix(in oklab, currentColor 50%, #0000));
+						content: "\25A4  ";
+					}
+				}
+				&:has(> ui-accordion) > summary::marker { content: "\25B8  "; }
+				&[open]:has(> ui-accordion) > summary::marker { content: "\25BE  "; }
+				&[open]::details-content { padding-block: 0; }
+				&:not(:has(> ui-accordion)) > :not(summary) {
+					color: var(--ui-accordion-tree-leaf-color);
+					font-size: var(--ui-accordion-tree-leaf-font-size);
+				}
+			}
+		}
+
 		/* tint / tinted — consumes generic --_tint / --tint-bg / --tint-fg from base/tint.css */
 		ui-accordion:is([tint], [data-tint]) cq-box details {
 			--_hover: #FFF3;
@@ -247,7 +274,7 @@
 			padding-inline: 0;
 		}
 		ui-accordion[variant] cq-box details:has(> ui-accordion) > summary {
-			padding-inline: var(--ui-accordion-padding-inline);
+			padding-inline: var(--ui-accordion-summary-padding-inline, var(--ui-accordion-padding-inline));
 		}
 		/* And zero the open-state block padding so the nested accordion butts against the parent's summary */
 		:where(ui-accordion) cq-box details:has(> ui-accordion)[open]::details-content {

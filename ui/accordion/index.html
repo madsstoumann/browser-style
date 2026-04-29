@@ -376,7 +376,7 @@
 
 	<br>
 	<h2>Nested accordions</h2>
-	<p>An accordion can contain another <code>&lt;ui-accordion&gt;</code> inside any panel. Each level keeps its own <code>name</code> so the open-state groups stay independent. The <code>indent</code> attribute on the outer accordion turns on a per-details staircase using <code>sibling-index()</code> times <code>--ui-accordion-indent</code>; inner accordions pick it up via inheritance.</p>
+	<p>An accordion can contain another <code>&lt;ui-accordion&gt;</code> inside any panel. Add <code>indent</code> on the outer to stagger nested levels.</p>
 
 	<ui-accordion variant="bordered divided rounded" name="nested-outer" indent>
 		<cq-box>
@@ -505,6 +505,92 @@
 						</details>
 					</cq-box>
 				</ui-accordion>
+			</details>
+		</cq-box>
+	</ui-accordion>
+
+	<br>
+	<p>With <code>variant="tree"</code> and <code>indent</code> — file-tree style with native disclosure markers; leaves render without a marker:</p>
+	<ui-accordion variant="tree" name="tree-outer" indent>
+		<cq-box>
+			<details name="tree-outer" open>
+				<summary>src</summary>
+				<ui-accordion name="tree-src">
+					<cq-box>
+						<details name="tree-src" open>
+							<summary>components</summary>
+							<ui-accordion name="tree-components">
+								<cq-box>
+									<details name="tree-components">
+										<summary>Button.tsx</summary>
+										<div>Primary action element with variants.</div>
+									</details>
+									<details name="tree-components">
+										<summary>Card.tsx</summary>
+										<div>Container with optional header and footer slots.</div>
+									</details>
+									<details name="tree-components">
+										<summary>Modal.tsx</summary>
+										<div>Dialog with focus trap and backdrop dismissal.</div>
+									</details>
+								</cq-box>
+							</ui-accordion>
+						</details>
+						<details name="tree-src">
+							<summary>hooks</summary>
+							<ui-accordion name="tree-hooks">
+								<cq-box>
+									<details name="tree-hooks">
+										<summary>useFetch.ts</summary>
+										<div>Cached fetch wrapper with abort support.</div>
+									</details>
+									<details name="tree-hooks">
+										<summary>useMedia.ts</summary>
+										<div>Subscribe to a media query.</div>
+									</details>
+								</cq-box>
+							</ui-accordion>
+						</details>
+						<details name="tree-src">
+							<summary>utils</summary>
+							<ui-accordion name="tree-utils">
+								<cq-box>
+									<details name="tree-utils">
+										<summary>format.ts</summary>
+										<div>Locale-aware date and number formatters.</div>
+									</details>
+									<details name="tree-utils">
+										<summary>storage.ts</summary>
+										<div>Type-safe wrapper around localStorage.</div>
+									</details>
+								</cq-box>
+							</ui-accordion>
+						</details>
+					</cq-box>
+				</ui-accordion>
+			</details>
+			<details name="tree-outer">
+				<summary>tests</summary>
+				<ui-accordion name="tree-tests">
+					<cq-box>
+						<details name="tree-tests">
+							<summary>unit</summary>
+							<div>Vitest specs co-located with source files.</div>
+						</details>
+						<details name="tree-tests">
+							<summary>e2e</summary>
+							<div>Playwright flows covering the critical paths.</div>
+						</details>
+					</cq-box>
+				</ui-accordion>
+			</details>
+			<details name="tree-outer">
+				<summary>package.json</summary>
+				<div>Workspace manifest and scripts.</div>
+			</details>
+			<details name="tree-outer">
+				<summary>readme.md</summary>
+				<div>Project overview and setup instructions.</div>
 			</details>
 		</cq-box>
 	</ui-accordion>
@@ -868,7 +954,7 @@
 
 	<br>
 	<h2>Nested as mega-menu (tabs morph)</h2>
-	<p>A two-level nested structure wrapped in <code>&lt;auto-morph render="tabs"&gt;</code> with <code>tabs="panel expanded"</code>. Above 650px the outer renders as a panel-style tabs interface — clicking a tab opens its panel with every nested section fully expanded, mega-menu style. Below 650px it falls back to a collapsible nested accordion.</p>
+	<p>Wrapped in <code>&lt;auto-morph render="tabs"&gt;</code> with <code>tabs="panel expanded"</code>. Above 650px the outer renders as panel-style tabs with every nested section expanded; below 650px it falls back to a nested accordion.</p>
 
 	<auto-morph render="tabs">
 		<ui-accordion variant="bordered divided rounded" name="mega-outer" indent tabs=" expanded panel">
