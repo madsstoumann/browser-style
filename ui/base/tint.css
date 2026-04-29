@@ -13,12 +13,18 @@
                                    (none|other) → 1D ramp via sibling-index() on `> *`
                                    "2d"         → bilinear ramp on `> * > *`
 
- Outputs (read by components on the leaf children, registered as <color> so they
- resolve eagerly on the element where authored — safe to inherit downward):
-   --tint-bg                     — base background
-   --tint-fg                     — contrast-color of --tint-bg
-   --tint-bg-hover               — derived hover background (replacement pattern)
-   --tint-fg-hover               — contrast-color of --tint-bg-hover
+ Outputs (read by components on the leaf children):
+   --tint-bg                     — base background (UNregistered → lazy substitution;
+                                    sibling-index() inside re-evaluates at the consumer,
+                                    enabling grandchild-level ramping when `tinted` sits
+                                    on a wrapper with a single child, e.g. accordion's
+                                    <ui-accordion tinted> > <cq-box> > <details>)
+   --tint-fg                     — contrast-color of --tint-bg (also lazy)
+   --tint-bg-hover               — derived hover background (registered <color>, eager;
+                                    safe to inherit across element boundaries — needed
+                                    for hover rules that read it from a different element
+                                    than where it was computed, e.g. table <tr> → <td>)
+   --tint-fg-hover               — contrast-color of --tint-bg-hover (registered)
    --tint-overlay                — translucent overlay color (gradient/overlay pattern)
 
  Theme knobs (override on the tint root or any ancestor):
@@ -31,16 +37,6 @@
 	syntax: '<number>';
 	inherits: true;
 	initial-value: 0;
-}
-@property --tint-bg {
-	syntax: '<color>';
-	inherits: true;
-	initial-value: transparent;
-}
-@property --tint-fg {
-	syntax: '<color>';
-	inherits: true;
-	initial-value: transparent;
 }
 @property --tint-bg-hover {
 	syntax: '<color>';

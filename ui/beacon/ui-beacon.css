@@ -9,10 +9,10 @@
 		--ui-beacon-bg: var(--color-text);
 		--ui-beacon-blink-duration: 1.5s;
 		--ui-beacon-breathe-duration: 2s;
-		--ui-beacon-font-size: var(--font-size-sm);
+		--ui-beacon-font-size: 0.75em;
 		--ui-beacon-font-weight: var(--font-weight-medium);
 		--ui-beacon-pulse-duration: 1.5s;
-		--ui-beacon-size: var(--size-3);
+		--ui-beacon-size: 0.75em;
 		--ui-beacon-slide-duration: 5s;
 
 		color: var(--ui-beacon-bg);
@@ -32,8 +32,6 @@
 			background: var(--ui-beacon-bg);
 			border-radius: var(--radius-circle);
 			content: '';
-			display: inline-block;
-			flex: 0 0 auto;
 			height: var(--ui-beacon-size);
 			width: var(--ui-beacon-size);
 		}
@@ -45,23 +43,11 @@
 		&[color="error"]   { --ui-beacon-bg: var(--color-error); }
 	}
 
-	/* sizes — mirror badge scale */
-	:where(ui-beacon[size="xs"]) {
-		--ui-beacon-size: 0.5rem;
-		--ui-beacon-font-size: var(--font-size-3xs);
-	}
-	:where(ui-beacon[size="sm"]) {
-		--ui-beacon-size: 0.625rem;
-		--ui-beacon-font-size: var(--font-size-2xs);
-	}
-	:where(ui-beacon[size="md"]) {
-		--ui-beacon-size: var(--size-3);
-		--ui-beacon-font-size: var(--font-size-sm);
-	}
-	:where(ui-beacon[size="lg"]) {
-		--ui-beacon-size: var(--size-4);
-		--ui-beacon-font-size: var(--font-size-base);
-	}
+	/* sizes — em-based, aligned 1:1 with ui-chip; dot tracks font-size */
+	:where(ui-beacon[size="xs"]) { --ui-beacon-font-size: 0.5em; }
+	:where(ui-beacon[size="sm"]) { --ui-beacon-font-size: 0.625em; }
+	:where(ui-beacon[size="md"]) { --ui-beacon-font-size: 0.875em; }
+	:where(ui-beacon[size="lg"]) { --ui-beacon-font-size: 1em; }
 
 	/* === Animations target the dot (::before) for default + pill variants === */
 	:where(ui-beacon[animation="blink"])::before {
@@ -69,7 +55,7 @@
 	}
 	:where(ui-beacon[animation="pulse"]) {
 		/* pulse looks best with a small inner dot — the box-shadow ring expands outward */
-		--ui-beacon-size: 0.5rem;
+		--ui-beacon-size: 0.5em;
 	}
 	:where(ui-beacon[animation="pulse"])::before {
 		animation: beacon-pulse var(--ui-beacon-pulse-duration) ease-out infinite;

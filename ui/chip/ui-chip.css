@@ -8,8 +8,8 @@
 	:where(ui-chip) {
 		--ui-chip-border-color: transparent;
 		--ui-chip-border-width: var(--border-width, 1px);
-		--ui-chip-padding-block: 0.5em;
-		--ui-chip-padding-inline: 1.125em;
+		--ui-chip-padding-block: 0.25em;
+		--ui-chip-padding-inline: 0.95em;
 		--ui-chip-padding-inline-end: var(--ui-chip-padding-inline);
 		align-items: center;
 		background: var(--ui-chip-background, var(--color-button));
@@ -19,12 +19,12 @@
 		column-gap: var(--ui-chip-column-gap, 0);
 		display: inline-flex;
 		font-family: var(--ui-chip-font-family, var(--font-form));
-		font-size: var(--ui-chip-font-size, var(--font-size-sm));
+		font-size: var(--ui-chip-font-size, 0.75em);
 		font-weight: var(--ui-chip-font-weight, var(--font-weight-medium));
 		line-height: var(--ui-chip-line-height, var(--line-height-snug));
 		padding-block: var(--ui-chip-padding-block);
 		padding-inline: var(--ui-chip-padding-inline) var(--ui-chip-padding-inline-end);
-		text-box: cap alphabetic;
+		text-box: text;
 		user-select: none;
 
 		/* colors — single accent token drives solid, light, and outline */
@@ -57,10 +57,10 @@
 		}
 	}
 
-	/* sizes — only font-size changes; padding and square radius scale via em */
-	:where(ui-chip[size="sm"]) { --ui-chip-font-size: var(--font-size-2xs); }
-	:where(ui-chip[size="md"]) { --ui-chip-font-size: var(--font-size-sm); }
-	:where(ui-chip[size="lg"]) { --ui-chip-font-size: var(--font-size-base); }
+	/* sizes — em-based, so chip scales with parent font-size */
+	:where(ui-chip[size="sm"]) { --ui-chip-font-size: 0.625em; }
+	:where(ui-chip[size="md"]) { --ui-chip-font-size: 0.875em; }
+	:where(ui-chip[size="lg"]) { --ui-chip-font-size: 1em; }
 
 	/* `variant="inline"` badge — auto-push to inline end with a minimum gap */
 	:where(ui-chip):has(> ui-badge[variant~="inline"]) {
