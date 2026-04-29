@@ -5,17 +5,17 @@
  * @author Mads Stoumann
  *
  * Private custom properties (--_*)
- *   --_bd            border             standard border grouping
- *   --_bb            border-breakout    breakout variant border grouping
- *   --_render        render mode        'accordion' or 'tabs' — picks which renderer engages
- *   --_y             breakout offset    multiplier for translate-Y on items adjacent to the open one
- *   --_slidedir      slide direction    -1 in RTL, 1 in LTR; flips ::details-content translate
- *   --_hover         tint hover         hover-overlay color used by the tinted variant
- *   --_indent-depth  indent level       set per nesting level on <ui-accordion>; drives the indent multiplier
+ *   --_bd      border             standard border grouping
+ *   --_bb      border-breakout    breakout variant border grouping
+ *   --_render  render mode        'accordion' or 'tabs' — picks which renderer engages
+ *   --_y       breakout offset    multiplier for translate-Y on items adjacent to the open one
+ *   --_sd      slide direction    -1 in RTL, 1 in LTR; flips ::details-content translate
+ *   --_h       tint hover         hover-overlay color used by the tinted variant
+ *   --_id      indent level       set per nesting level on <ui-accordion>; drives the indent multiplier
  */
 @import '../icon/index.css';
 @layer bs-component {
-	@property --_indent-depth {
+	@property --_id {
 		syntax: "<integer>";
 		inherits: true;
 		initial-value: 0;
@@ -181,37 +181,31 @@
 			details { border: var(--_bd); }
 		}
 
-		/* tree — file-tree styling: tight rows, role-aware markers
-		   • folder (details containing a nested ui-accordion): ▸ closed / ▾ open
-		   • file   (leaf details, no nested ui-accordion):     ▤ */
-		ui-accordion[variant~="tree"] cq-box {
+		/* filetree — tight rows, role-aware markers (▤ leaf, ▸/▾ folder closed/open) */
+		ui-accordion[variant~="filetree"] cq-box {
 			--ui-accordion-padding-block: 0;
 			--ui-accordion-padding-inline: 1ch;
 			--ui-accordion-summary-padding-inline: 0;
-			--ui-accordion-tree-leaf-color: var(--color-text-muted);
-			--ui-accordion-tree-leaf-font-size: var(--font-size-xs);
 			details {
-				summary {
-					display: list-item;
-					&::marker {
-						color: var(--ui-accordion-tree-marker-color, color-mix(in oklab, currentColor 50%, #0000));
-						content: "\25A4  ";
-					}
+				summary { display: list-item; }
+				summary::marker {
+					color: color-mix(in oklab, currentColor 50%, transparent);
+					content: "\25A4  ";
 				}
 				&:has(> ui-accordion) > summary::marker { content: "\25B8  "; }
 				&[open]:has(> ui-accordion) > summary::marker { content: "\25BE  "; }
 				&[open]::details-content { padding-block: 0; }
 				&:not(:has(> ui-accordion)) > :not(summary) {
-					color: var(--ui-accordion-tree-leaf-color);
-					font-size: var(--ui-accordion-tree-leaf-font-size);
+					color: var(--color-text-muted);
+					font-size: var(--font-size-xs);
 				}
 			}
 		}
 
 		/* tint / tinted — consumes generic --_tint / --tint-bg / --tint-fg from base/tint.css */
 		ui-accordion:is([tint], [data-tint]) cq-box details {
-			--_hover: #FFF3;
-			--ui-accordion-bg-hover: linear-gradient(90deg, #0000, var(--_hover) 10% 90%, #0000);
+			--_h: #FFF3;
+			--ui-accordion-bg-hover: linear-gradient(90deg, #0000, var(--_h) 10% 90%, #0000);
 			background: var(--tint-bg, var(--_tint));
 			color: var(--tint-fg, contrast-color(var(--_tint)));
 		}
@@ -245,7 +239,7 @@
 				background: var(--ui-accordion-slide-bg, var(--ui-accordion-background, Canvas));
 				box-sizing: border-box;
 				padding-inline: var(--ui-accordion-padding-inline);
-				translate: calc(100% * var(--_slidedir, 1)) 0;
+				translate: calc(100% * var(--_sd, 1)) 0;
 				transition: block-size var(--ui-accordion-duration), content-visibility var(--ui-accordion-duration) allow-discrete, padding-block var(--ui-accordion-duration), translate var(--ui-accordion-duration) var(--ease-in-out, ease);
 				z-index: var(--z-index-2, 10);
 			}
@@ -253,7 +247,7 @@
 			details[open] summary ui-icon:first-of-type { display: none; }
 			details[open] summary ui-icon:last-of-type { display: grid; }
 		}
-		:where([dir="rtl"]) ui-accordion[type="slide"] cq-box { --_slidedir: -1; }
+		:where([dir="rtl"]) ui-accordion[type="slide"] cq-box { --_sd: -1; }
 
 		/* === Nested accordions — auto-adjust when a <ui-accordion> sits inside a parent <details> === */
 
@@ -292,20 +286,20 @@
 		   (and its border-block-end divider) stays full-width — borders never shift inline. */
 
 		/* Set depth per nesting level. Manual selectors (instead of an inheritance counter) because
-		   `--_indent-depth: calc(var(--_indent-parent) + 1); --_indent-parent: var(--_indent-depth);`
+		   `--_id: calc(var(--_idp) + 1); --_idp: var(--_id);`
 		   creates a CSS variable cycle on the same element — both properties end up invalid.
 		   Specificity rises with each `cq-box ui-accordion` step, so deeper rules win for deeper elements. */
 		ui-accordion[indent] cq-box ui-accordion {
-			--_indent-depth: 1;
+			--_id: 1;
 		}
 		ui-accordion[indent] cq-box ui-accordion cq-box ui-accordion {
-			--_indent-depth: 2;
+			--_id: 2;
 		}
 		ui-accordion[indent] cq-box ui-accordion cq-box ui-accordion cq-box ui-accordion {
-			--_indent-depth: 3;
+			--_id: 3;
 		}
 		ui-accordion[indent] cq-box ui-accordion cq-box ui-accordion cq-box ui-accordion cq-box ui-accordion {
-			--_indent-depth: 4;
+			--_id: 4;
 		}
 
 		/* Zero details' inline-start padding in nested levels so summary owns the offset directly */
@@ -317,7 +311,7 @@
 		   (parent-of-nested details' non-summary is the next ui-accordion, which must stay flush). */
 		ui-accordion[indent] cq-box ui-accordion details > summary,
 		ui-accordion[indent] cq-box ui-accordion details:not(:has(> ui-accordion)) > :not(summary) {
-			padding-inline-start: calc((var(--_indent-depth) + 1) * var(--ui-accordion-padding-inline));
+			padding-inline-start: calc((var(--_id) + 1) * var(--ui-accordion-padding-inline));
 		}
 	}
 
@@ -351,7 +345,7 @@
 					&:not([open]) {
 						padding-inline: 0;
 						summary {
-							--ui-accordion-bg-hover: linear-gradient(180deg, #0000, var(--_hover, light-dark(var(--color-field), var(--color-surface-alt))) 10% 90%, #0000);
+							--ui-accordion-bg-hover: linear-gradient(180deg, #0000, var(--_h, light-dark(var(--color-field), var(--color-surface-alt))) 10% 90%, #0000);
 							block-size: 100%;
 							padding-inline: var(--ui-accordion-horizontal-padding-inline, 2ch);
 							writing-mode: vertical-lr;

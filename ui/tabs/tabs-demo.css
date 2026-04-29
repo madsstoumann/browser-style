@@ -36,7 +36,7 @@ html { scrollbar-gutter: stable; }
 	auto-morph[render="tabs"] [tabs~="expanded"] > cq-box > details > ui-accordion > cq-box {
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: var(--spacing-xl, 2rem);
+		gap: var(--spacing-xl);
 	}
 	auto-morph[render="tabs"] [tabs~="expanded"] cq-box summary {
 		list-style: none;

@@ -510,8 +510,8 @@
 	</ui-accordion>
 
 	<br>
-	<p>With <code>variant="tree"</code> and <code>indent</code> — file-tree style with native disclosure markers; leaves render without a marker:</p>
-	<ui-accordion variant="tree" name="tree-outer" indent>
+	<p>With <code>variant="filetree"</code> and <code>indent</code> — file-tree style with role-aware markers (folder / file):</p>
+	<ui-accordion variant="filetree" name="tree-outer" indent>
 		<cq-box>
 			<details name="tree-outer" open>
 				<summary>src</summary>
@@ -957,9 +957,9 @@
 	<p>Wrapped in <code>&lt;auto-morph render="tabs"&gt;</code> with <code>tabs="panel expanded"</code>. Above 650px the outer renders as panel-style tabs with every nested section expanded; below 650px it falls back to a nested accordion.</p>
 
 	<auto-morph render="tabs">
-		<ui-accordion variant="bordered divided rounded" name="mega-outer" indent tabs=" expanded panel">
+		<ui-accordion variant="bordered divided rounded" name="mega-outer" indent tabs="bleed compact expanded panel">
 			<cq-box>
-				<details name="mega-outer" open>
+				<details name="mega-outer">
 					<summary>Products<ui-icon type="chevron down"></ui-icon></summary>
 					<ui-accordion variant="divided" name="mega-products">
 						<cq-box>
