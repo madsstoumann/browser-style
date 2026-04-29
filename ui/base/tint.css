@@ -2,23 +2,55 @@
 -----
  Tint
 -----
- Generic color-tinting system. Five primitives:
+ Generic color-tinting system.
 
- - `tint` / `data-tint` — start color, top-left corner in 2D (falls back to --color-accent)
- - `tint-end` / `data-tint-end` — end color, bottom-right corner in 2D (falls back to light-dark(#fff, #000))
- - `tint-tr` / `data-tint-tr` — top-right corner, 2D only (defaults to mid-mix of tint and tint-end)
- - `tint-bl` / `data-tint-bl` — bottom-left corner, 2D only (defaults to mid-mix of tint and tint-end)
- - `tinted` / `data-tinted` — graduates across direct children:
-       (no value or any value other than "2d") → 1D ramp, sibling-index() across `> *`
-       `2d` → bilinear 2D ramp across `> * > *` (e.g. <tr> rows containing <td> cells)
+ Inputs (attribute-driven corner colors):
+   tint / data-tint              — start color, top-left in 2D (default: --color-accent)
+   tint-end / data-tint-end      — end color, bottom-right in 2D (default: light-dark(#fff, #000))
+   tint-tr / data-tint-tr        — top-right corner, 2D only (default: mid-mix)
+   tint-bl / data-tint-bl        — bottom-left corner, 2D only (default: mid-mix)
+   tinted / data-tinted          — opt-in to graduation across direct children:
+                                   (none|other) → 1D ramp via sibling-index() on `> *`
+                                   "2d"         → bilinear ramp on `> * > *`
 
- Components consume `--tint-bg` and `--tint-fg` on the leaf children,
- falling back to the solid `--_tint` when not graduated.
+ Outputs (read by components on the leaf children, registered as <color> so they
+ resolve eagerly on the element where authored — safe to inherit downward):
+   --tint-bg                     — base background
+   --tint-fg                     — contrast-color of --tint-bg
+   --tint-bg-hover               — derived hover background (replacement pattern)
+   --tint-fg-hover               — contrast-color of --tint-bg-hover
+   --tint-overlay                — translucent overlay color (gradient/overlay pattern)
+
+ Theme knobs (override on the tint root or any ancestor):
+   --tint-hover-mix-amount       — default 8%
+   --tint-hover-mix-color        — default light-dark(#000, #FFF)
+   --tint-overlay-amount         — default 20%
+   --tint-overlay-color          — default light-dark(#FFF, #000)
 */
 @property --_row-step {
 	syntax: '<number>';
 	inherits: true;
 	initial-value: 0;
+}
+@property --tint-bg {
+	syntax: '<color>';
+	inherits: true;
+	initial-value: transparent;
+}
+@property --tint-fg {
+	syntax: '<color>';
+	inherits: true;
+	initial-value: transparent;
+}
+@property --tint-bg-hover {
+	syntax: '<color>';
+	inherits: true;
+	initial-value: transparent;
+}
+@property --tint-fg-hover {
+	syntax: '<color>';
+	inherits: true;
+	initial-value: transparent;
 }
 @layer bs-core {
 	:where([tint]) {
@@ -46,6 +78,13 @@
 		--_tint-bl: attr(data-tint-bl type(<color>));
 	}
 
+	/* Overlay primitive — translucent veil for components that paint hover as a
+	   gradient/overlay on top of the base bg (e.g. accordion). Lives on the tint
+	   root so it's available even when --tint-bg isn't graduated. */
+	:where([tint], [data-tint]) {
+		--tint-overlay: color-mix(in oklab, transparent, var(--tint-overlay-color, light-dark(#FFF, #000)) var(--tint-overlay-amount, 20%));
+	}
+
 	/* 1D ramp — single axis, direct children. Excludes the 2D mode. */
 	:where(
 		[tinted]:not([tinted~="2d"]),
@@ -55,6 +94,8 @@
 		--tint-step: calc((sibling-index() - 1) / max(sibling-count() - 1, 1) * var(--tint-mix));
 		--tint-bg: color-mix(in oklab, var(--_tint), var(--_tint-end, light-dark(#fff, #000)) var(--tint-step));
 		--tint-fg: contrast-color(var(--tint-bg));
+		--tint-bg-hover: color-mix(in oklab, var(--tint-bg), var(--tint-hover-mix-color, light-dark(#000, #FFF)) var(--tint-hover-mix-amount, 8%));
+		--tint-fg-hover: contrast-color(var(--tint-bg-hover));
 	}
 
 	/* 2D ramp — bilinear across a grid (children of children). Row step lives on
@@ -72,5 +113,7 @@
 		--_tint-bot: color-mix(in oklab, var(--_tint-bl-fb), var(--_tint-end, light-dark(#fff, #000)) calc(var(--_col-step) * var(--tint-mix)));
 		--tint-bg: color-mix(in oklab, var(--_tint-top), var(--_tint-bot) calc(var(--_row-step) * var(--tint-mix)));
 		--tint-fg: contrast-color(var(--tint-bg));
+		--tint-bg-hover: color-mix(in oklab, var(--tint-bg), var(--tint-hover-mix-color, light-dark(#000, #FFF)) var(--tint-hover-mix-amount, 8%));
+		--tint-fg-hover: contrast-color(var(--tint-bg-hover));
 	}
 }

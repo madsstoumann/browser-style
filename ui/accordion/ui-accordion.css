@@ -10,7 +10,6 @@
  *   --_render  render mode        'accordion' or 'tabs' — picks which renderer engages
  *   --_y       breakout offset    multiplier for translate-Y on items adjacent to the open one
  *   --_sd      slide direction    -1 in RTL, 1 in LTR; flips ::details-content translate
- *   --_h       tint hover         hover-overlay color used by the tinted variant
  *   --_id      indent level       set per nesting level on <ui-accordion>; drives the indent multiplier
  */
 @import '../icon/index.css';
@@ -202,10 +201,9 @@
 			}
 		}
 
-		/* tint / tinted — consumes generic --_tint / --tint-bg / --tint-fg from base/tint.css */
+		/* tint / tinted — consumes generic --_tint / --tint-bg / --tint-fg / --tint-overlay from base/tint.css */
 		ui-accordion:is([tint], [data-tint]) cq-box details {
-			--_h: #FFF3;
-			--ui-accordion-bg-hover: linear-gradient(90deg, #0000, var(--_h) 10% 90%, #0000);
+			--ui-accordion-bg-hover: linear-gradient(90deg, #0000, var(--tint-overlay) 10% 90%, #0000);
 			background: var(--tint-bg, var(--_tint));
 			color: var(--tint-fg, contrast-color(var(--_tint)));
 		}
@@ -345,7 +343,7 @@
 					&:not([open]) {
 						padding-inline: 0;
 						summary {
-							--ui-accordion-bg-hover: linear-gradient(180deg, #0000, var(--_h, light-dark(var(--color-field), var(--color-surface-alt))) 10% 90%, #0000);
+							--ui-accordion-bg-hover: linear-gradient(180deg, #0000, var(--tint-overlay, light-dark(var(--color-field), var(--color-surface-alt))) 10% 90%, #0000);
 							block-size: 100%;
 							padding-inline: var(--ui-accordion-horizontal-padding-inline, 2ch);
 							writing-mode: vertical-lr;

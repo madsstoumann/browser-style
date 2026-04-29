@@ -8,30 +8,27 @@
  *   --_rb  row-bg         tr-hover background (one per row variant)
  *   --_hb  hover-bg       td-hover background (one per row variant)
  *   --_tc  tint-color     row tint (active/selected/status)
- *   --_tm  tint-mix       computed graduated-tint ramp color at this row/column
+ *   --_tm  tint-mix       computed graduated-tint ramp color (horizontal-colgroup + 2D-thead manual paths only)
  *   --_thd th-dark        background used by the th-dark header variant
  *   --_dw  divider-width  thead/tbody divider width (th-divide-lg/xl family)
  *   --_ds  divider-style  thead/tbody divider style (th-dotted/dashed/double/groove/ridge)
  *   --_iis inset-start    inset-inline-start for sticky columns
  *   --_has-overflow       overflow flag (0 or 1) gating the wrapper frame
+ *
+ * Vertical-1D and 2D-bilinear tint paths consume --tint-bg / --tint-bg-hover
+ * directly from base/tint.css (registered <color> there, eagerly resolved).
  */
 
 /* Registered custom properties — declared up front so the browser knows their syntax
-   before any rule sets them. `--ui-table-cell-bg` and `--_tm` are typed <color> so
-   sibling-index()/color-mix() inside their values evaluate eagerly in the element
-   where they're authored (otherwise substitution is lazy and sibling-index() would
-   re-run in whatever context reads the var — wrong axis for tinted rows). */
+   before any rule sets them. `--ui-table-cell-bg` is typed <color> so color values
+   resolve eagerly when authored (otherwise substitution is lazy and downstream reads
+   would re-evaluate in the wrong context). */
 @property --_has-overflow {
 	syntax: '<number>';
 	inherits: true;
 	initial-value: 0;
 }
 @property --ui-table-cell-bg {
-	syntax: '<color>';
-	inherits: true;
-	initial-value: transparent;
-}
-@property --_tm {
 	syntax: '<color>';
 	inherits: true;
 	initial-value: transparent;
@@ -229,23 +226,20 @@
 		}
 
 		/* --- Graduated tint — direction is driven by where `tinted` is placed:
-		   `tinted` on <tbody>          → vertical ramp (across tr children)
-		   `tinted="2d"` on <tbody>     → bilinear 2D ramp (across td cells), four-corner
-		                                  controlled via --_tint (top-left), --_tint-end
-		                                  (bottom-right), --_tint-tr, --_tint-bl
-		   `tinted` on <colgroup>       → horizontal ramp (across col children)
-		   Start color = --_tint (from data-tint), end color = --_tint-end (from data-tint-end, default #FFF).
-		   Hover = ramp color mixed with light-dark(#000, #FFF) at 20%. Hover vars are authored in
-		   the element whose sibling-index() resolves to the right axis (tr for vertical, td for horizontal/2D). */
+		   `tinted` on <tbody>          → vertical ramp (across tr children) — tint.css writes --tint-bg on <tr>
+		   `tinted="2d"` on <tbody>     → bilinear 2D ramp (across td cells) — tint.css writes --tint-bg on <td>
+		   `tinted` on <colgroup>       → horizontal ramp (across col children + manual <td> ramp via --_tm)
+		   Vertical and 2D paths consume tint.css outputs directly. Horizontal-colgroup writes
+		   to <col> (covered by tint.css) but the <td> ramp must be re-derived manually since
+		   <td>s aren't direct children of <colgroup>. */
 		& tbody:is([tinted]:not([tinted~="2d"]), [data-tinted]:not([data-tinted~="2d"])) > tr {
-			--_tm: color-mix(in oklab, var(--_tint), var(--_tint-end, #FFF) calc(sibling-index() / sibling-count() * 80%));
-			--ui-table-cell-bg: var(--_tm);
-			color: contrast-color(var(--_tm));
-			--_rb: color-mix(in oklab, var(--_tm), light-dark(#000, #FFF) 20%);
+			--ui-table-cell-bg: var(--tint-bg);
+			color: var(--tint-fg);
+			--_rb: var(--tint-bg-hover);
 			--_hb: var(--_rb);
 		}
 		& colgroup:is([tinted], [data-tinted]) > col {
-			background-color: color-mix(in oklab, var(--_tint), var(--_tint-end, #FFF) calc(sibling-index() / sibling-count() * 80%));
+			background-color: var(--tint-bg);
 		}
 		& colgroup:is([tinted], [data-tinted]) ~ tbody > tr > td {
 			--_tm: color-mix(in oklab, var(--_tint), var(--_tint-end, #FFF) calc(sibling-index() / sibling-count() * 80%));
@@ -253,21 +247,13 @@
 			--_hb: color-mix(in oklab, var(--_tm), light-dark(#000, #FFF) 20%);
 		}
 
-		/* 2D bilinear ramp on <tbody tinted="2d">. The bilinear math (and --_row-step
-		   on the tr, --tint-bg/--tint-fg on the td) all lives in tint.css. The table
-		   just binds those outputs to its own cell-bg/color tokens and derives the
-		   hover bg from the cell color. */
+		/* 2D bilinear ramp on <tbody tinted="2d">. tint.css writes --tint-bg / --tint-bg-hover
+		   directly on the <td> (registered <color>, eagerly resolved). The table just binds
+		   those outputs to its cell-bg/color and hover tokens. */
 		& tbody:is([tinted~="2d"], [data-tinted~="2d"]) > tr > td {
-			/* Funnel tint.css's --tint-bg through --_tm (registered as <color>) so it
-			   eagerly resolves to a concrete oklab on the cell. Referencing --tint-bg
-			   directly inside --_hb left a deep var() chain that Chrome dropped to
-			   IACVT when the hover rule consumed it via `--ui-table-cell-bg: var(--_hb)`,
-			   blanking the cell on hover. The 1D row-tint rule above uses the same
-			   --_tm trick. */
-			--_tm: var(--tint-bg);
-			--ui-table-cell-bg: var(--_tm);
+			--ui-table-cell-bg: var(--tint-bg);
 			color: var(--tint-fg);
-			--_hb: color-mix(in oklab, var(--_tm), light-dark(#000, #FFF) 20%);
+			--_hb: var(--tint-bg-hover);
 			--_rb: var(--_hb);
 		}
 
