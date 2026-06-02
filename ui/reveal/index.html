@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Reveal Card</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="CSS-only reveal card built on details/summary with cover, flip, slide, and scale animations.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="ui-reveal.css">
+	<style>
+		.grid {
+			display: grid;
+			gap: var(--spacing-lg);
+			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			max-inline-size: var(--width-7xl);
+		}
+	</style>
+</head>
+<body>
+	<h1>UI: Reveal Card</h1>
+	<p>
+		<code>&lt;ui-reveal&gt;</code> is a CSS-only reveal card built on native <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code>.
+		The front face lives in <code>&lt;summary&gt;</code>, revealed content in <code>::details-content</code>.
+	</p>
+
+	<!-- ============================================
+	     Default (accordion-style expand)
+	     ============================================ -->
+	<h2>Default (expand)</h2>
+	<p>No <code>reveal</code> attribute — content expands below the front face.</p>
+	<div class="grid">
+		<ui-reveal>
+			<details>
+				<summary>
+					<small>Alternative</small>
+					<h3>New wave sounds.</h3>
+					<p>Discover the latest in alternative music, from indie rock to shoegaze.</p>
+					<img src="band_alternative.png" alt="Alternative band" loading="lazy">
+					<ui-icon type="plus-cross"></ui-icon>
+				</summary>
+				<div>
+					<h4>What you get</h4>
+					<p>Curated playlists, exclusive interviews, and behind-the-scenes content from your favorite alternative artists. Updated weekly with fresh discoveries.</p>
+					<p><a href="#">Explore now &rarr;</a></p>
+				</div>
+			</details>
+		</ui-reveal>
+
+		<ui-reveal>
+			<details>
+				<summary>
+					<small>Boy Band</small>
+					<h3>Harmony in motion.</h3>
+					<p>The ultimate collection of boy band anthems and deep cuts.</p>
+					<img src="band_boys.png" alt="Boy band" loading="lazy">
+					<ui-icon type="plus-cross"></ui-icon>
+				</summary>
+				<div>
+					<h4>What you get</h4>
+					<p>Throwback playlists, choreography breakdowns, and fan community access. From classic 90s groups to today's chart-toppers.</p>
+					<p><a href="#">Explore now &rarr;</a></p>
+				</div>
+			</details>
+		</ui-reveal>
+	</div>
+
+	<!-- ============================================
+	     Inset variant
+	     ============================================ -->
+	<h2>Inset</h2>
+	<p>Image padded from card edges with <code>variant="inset"</code>.</p>
+	<div class="grid">
+		<ui-reveal variant="inset">
+			<details>
+				<summary>
+					<small>Girl Group</small>
+					<h3>Power in numbers.</h3>
+					<p>Celebrating the fierce sounds of girl groups across every decade.</p>
+					<img src="band_girls.png" alt="Girl group" loading="lazy">
+					<ui-icon type="plus-cross"></ui-icon>
+				</summary>
+				<div>
+					<h4>What you get</h4>
+					<p>Empowering anthems, concert highlights, and exclusive merch drops. Join the movement.</p>
+					<p><a href="#">Explore now &rarr;</a></p>
+				</div>
+			</details>
+		</ui-reveal>
+
+		<ui-reveal variant="inset">
+			<details>
+				<summary>
+					<small>Gothic</small>
+					<h3>Dark elegance.</h3>
+					<p>Post-punk, darkwave, and gothic rock for the creatures of the night.</p>
+					<img src="band_goth.png" alt="Goth band" loading="lazy">
+					<ui-icon type="plus-cross"></ui-icon>
+				</summary>
+				<div>
+					<h4>What you get</h4>
+					<p>Atmospheric soundscapes, underground scene guides, and exclusive vinyl releases. Embrace the dark side.</p>
+					<p><a href="#">Explore now &rarr;</a></p>
+				</div>
+			</details>
+		</ui-reveal>
+	</div>
+
+	<!-- ============================================
+	     Cover + Slide from top
+	     ============================================ -->
+	<h2>Cover + Slide Top</h2>
+	<p><code>variant="cover"</code> with <code>reveal="top"</code> — image fills the front, content slides down from top.</p>
+	<div class="grid">
+		<ui-reveal variant="cover" reveal="top" style="--ui-reveal-aspect: 3 / 4">
+			<details name="slide-top">
+				<summary>
+					<img src="band_alternative.png" alt="Alternative band" loading="lazy">
+					<ui-icon type="plus-cross"></ui-icon>
+				</summary>
+				<div>
+					<h3>Alternative</h3>
+					<p>New wave sounds from the underground. Indie rock, shoegaze, dream pop, and everything in between.</p>
+					<p><a href="#">Listen now &rarr;</a></p>
+				</div>
+			</details>
+		</ui-reveal>
+
+		<ui-reveal variant="cover" reveal="top" style="--ui-reveal-aspect: 3 / 4">
+			<details name="slide-top">
+				<summary>
+					<img src="band_boys.png" alt="Boy band" loading="lazy">
+					<ui-icon type="plus-cross"></ui-icon>
+				</summary>
+				<div>
+					<h3>Boy Bands</h3>
+					<p>Synchronized moves and perfect harmonies. From Backstreet to BTS, the legacy continues.</p>
+					<p><a href="#">Listen now &rarr;</a></p>
+				</div>
+			</details>
+		</ui-reveal>
+	</div>
+
+	<!-- ============================================
+	     Cover + Slide from left
+	     ============================================ -->
+	<h2>Cover + Slide Left</h2>
+	<p><code>variant="cover"</code> with <code>reveal="left"</code> — content slides in from the left.</p>
+	<div class="grid">
+		<ui-reveal variant="cover" reveal="left" style="--ui-reveal-aspect: 4 / 3">
+			<details name="slide-left">
+				<summary>
+					<img src="band_girls.png" alt="Girl group" loading="lazy">
+					<ui-icon type="plus-cross"></ui-icon>
+				</summary>
+				<div>
+					<h3>Girl Groups</h3>
+					<p>Fierce vocals, iconic choreography, and anthems that defined generations. Spice up your playlist.</p>
+					<p><a href="#">Listen now &rarr;</a></p>
+				</div>
+			</details>
+		</ui-reveal>
+
+		<ui-reveal variant="cover" reveal="left" style="--ui-reveal-aspect: 4 / 3">
+			<details name="slide-left">
+				<summary>
+					<img src="band_goth.png" alt="Goth band" loading="lazy">
+					<ui-icon type="plus-cross"></ui-icon>
+				</summary>
+				<div>
+					<h3>Gothic</h3>
+					<p>Dark, brooding, beautiful. Post-punk pioneers and modern darkwave artists in one collection.</p>
+					<p><a href="#">Listen now &rarr;</a></p>
+				</div>
+			</details>
+		</ui-reveal>
+	</div>
+
+	<!-- ============================================
+	     Cover + Flip
+	     ============================================ -->
+	<h2>Cover + Flip</h2>
+	<p><code>variant="cover"</code> with <code>reveal="flip"</code> — 3D card flip to reveal back face.</p>
+	<div class="grid">
+		<ui-reveal variant="cover" reveal="flip" style="--ui-reveal-aspect: 3 / 4">
+			<details name="flip">
+				<summary>
+					<img src="band_alternative.png" alt="Alternative band" loading="lazy">
+					<ui-icon type="plus-cross"></ui-icon>
+				</summary>
+				<div>
+					<h3>Alternative</h3>
+					<p>From The Smiths to Radiohead to Tame Impala — the evolution of alternative music.</p>
+					<p><a href="#">Discover &rarr;</a></p>
+				</div>
+			</details>
+		</ui-reveal>
+
+		<ui-reveal variant="cover" reveal="flip" style="--ui-reveal-aspect: 3 / 4">
+			<details name="flip">
+				<summary>
+					<img src="band_goth.png" alt="Goth band" loading="lazy">
+					<ui-icon type="plus-cross"></ui-icon>
+				</summary>
+				<div>
+					<h3>Gothic</h3>
+					<p>Bauhaus, Siouxsie, Sisters of Mercy. The dark cathedral of sound awaits.</p>
+					<p><a href="#">Discover &rarr;</a></p>
+				</div>
+			</details>
+		</ui-reveal>
+	</div>
+
+	<!-- ============================================
+	     Cover + Scale (AIM)
+	     ============================================ -->
+	<h2>Cover + Scale (AIM)</h2>
+	<p><code>variant="cover"</code> with <code>reveal="scale"</code> — content morphs from the + button position.</p>
+	<div class="grid">
+		<ui-reveal variant="cover" reveal="scale" style="--ui-reveal-aspect: 1 / 1">
+			<details name="scale">
+				<summary>
+					<img src="band_boys.png" alt="Boy band" loading="lazy">
+					<ui-icon type="plus-cross"></ui-icon>
+				</summary>
+				<div>
+					<h3>Boy Bands</h3>
+					<p>Every era has its icons. Relive the magic of choreographed perfection and vocal harmony.</p>
+					<p><a href="#">Start listening &rarr;</a></p>
+				</div>
+			</details>
+		</ui-reveal>
+
+		<ui-reveal variant="cover" reveal="scale" style="--ui-reveal-aspect: 1 / 1">
+			<details name="scale">
+				<summary>
+					<img src="band_girls.png" alt="Girl group" loading="lazy">
+					<ui-icon type="plus-cross"></ui-icon>
+				</summary>
+				<div>
+					<h3>Girl Groups</h3>
+					<p>From Destiny's Child to BLACKPINK — the sound of unstoppable energy.</p>
+					<p><a href="#">Start listening &rarr;</a></p>
+				</div>
+			</details>
+		</ui-reveal>
+	</div>
+
+	<!-- ============================================
+	     Cover with text overlay
+	     ============================================ -->
+	<h2>Cover + Text Overlay</h2>
+	<p>Cover variant with text on top of image (Apple-style). Uses <code>reveal="bottom"</code>.</p>
+	<div class="grid">
+		<ui-reveal variant="cover" reveal="bottom" style="--ui-reveal-aspect: 3 / 4">
+			<details name="overlay">
+				<summary>
+					<small>Alternative</small>
+					<h3>New wave sounds.</h3>
+					<p>Discover the latest in alternative music.</p>
+					<img src="band_alternative.png" alt="Alternative band" loading="lazy">
+					<ui-icon type="plus-cross"></ui-icon>
+				</summary>
+				<div>
+					<h3>Inside the scene</h3>
+					<p>Go behind the music with exclusive interviews, rare B-sides, and curated playlists that trace the roots of alternative.</p>
+					<p><a href="#">Explore &rarr;</a></p>
+				</div>
+			</details>
+		</ui-reveal>
+
+		<ui-reveal variant="cover" reveal="bottom" style="--ui-reveal-aspect: 3 / 4">
+			<details name="overlay">
+				<summary>
+					<small>Gothic</small>
+					<h3>Dark elegance.</h3>
+					<p>Post-punk and darkwave for creatures of the night.</p>
+					<img src="band_goth.png" alt="Goth band" loading="lazy">
+					<ui-icon type="plus-cross"></ui-icon>
+				</summary>
+				<div>
+					<h3>Enter the crypt</h3>
+					<p>Curated by scene veterans. Rare vinyl, underground gig guides, and atmospheric playlists for every mood.</p>
+					<p><a href="#">Explore &rarr;</a></p>
+				</div>
+			</details>
+		</ui-reveal>
+	</div>
+
+	<script type="module">
+		import { common } from './../../assets/js/common.js';
+		common();
+	</script>
+</body>
+</html>

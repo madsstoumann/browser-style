@@ -1,0 +1,43 @@
+{
+  "name": "@browser.style/reveal",
+  "version": "4.0.0",
+  "description": "CSS-only reveal card built on details/summary with cover, flip, slide, and scale animations",
+  "type": "module",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css"
+  },
+  "files": [
+    "index.css",
+    "ui-reveal.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "reveal",
+    "card",
+    "css-first",
+    "details-summary",
+    "flip",
+    "animation"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/reveal"
+  },
+  "homepage": "https://browser.style/ui/reveal",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11",
+    "@browser.style/icon": "^1.0.11"
+  }
+}
