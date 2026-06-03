@@ -28,9 +28,9 @@
 	     Default (accordion-style expand)
 	     ============================================ -->
 	<h2>Default (expand)</h2>
-	<p>No <code>reveal</code> attribute — content expands below the front face.</p>
+	
 	<div class="grid">
-		<ui-reveal>
+		<ui-reveal icon="dark start end">
 			<details>
 				<summary>
 					<small>Alternative</small>
@@ -68,7 +68,7 @@
 	<!-- ============================================
 	     Inset variant
 	     ============================================ -->
-	<h2>Inset</h2>
+	<!-- <h2>Inset</h2>
 	<p>Image padded from card edges with <code>variant="inset"</code>.</p>
 	<div class="grid">
 		<ui-reveal variant="inset">
@@ -104,7 +104,7 @@
 				</div>
 			</details>
 		</ui-reveal>
-	</div>
+	</div> -->
 
 	<!-- ============================================
 	     Cover + Slide from top
@@ -112,10 +112,11 @@
 	<h2>Cover + Slide Top</h2>
 	<p><code>variant="cover"</code> with <code>reveal="top"</code> — image fills the front, content slides down from top.</p>
 	<div class="grid">
-		<ui-reveal variant="cover" reveal="top" style="--ui-reveal-aspect: 3 / 4">
+
+		<ui-reveal variant="cover" reveal="right" style="--ui-reveal-aspect: 3 / 4">
 			<details name="slide-top">
 				<summary>
-					<img src="band_alternative.png" alt="Alternative band" loading="lazy">
+					<img src="band_alternative.png" alt="Alternative band" loading="lazy" draggable="false">
 					<ui-icon type="plus-cross"></ui-icon>
 				</summary>
 				<div>
@@ -126,10 +127,10 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal variant="cover" reveal="top" style="--ui-reveal-aspect: 3 / 4">
+		<ui-reveal variant="cover" reveal="right" style="--ui-reveal-aspect: 3 / 4">
 			<details name="slide-top">
 				<summary>
-					<img src="band_boys.png" alt="Boy band" loading="lazy">
+					<img src="band_boys.png" alt="Boy band" loading="lazy" draggable="false">
 					<ui-icon type="plus-cross"></ui-icon>
 				</summary>
 				<div>
@@ -139,6 +140,7 @@
 				</div>
 			</details>
 		</ui-reveal>
+
 	</div>
 
 	<!-- ============================================
@@ -147,7 +149,7 @@
 	<h2>Cover + Slide Left</h2>
 	<p><code>variant="cover"</code> with <code>reveal="left"</code> — content slides in from the left.</p>
 	<div class="grid">
-		<ui-reveal variant="cover" reveal="left" style="--ui-reveal-aspect: 4 / 3">
+		<ui-reveal variant="cover" reveal="flip" style="--ui-reveal-aspect: 4 / 3">
 			<details name="slide-left">
 				<summary>
 					<img src="band_girls.png" alt="Girl group" loading="lazy">
@@ -161,7 +163,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal variant="cover" reveal="left" style="--ui-reveal-aspect: 4 / 3">
+		<ui-reveal variant="cover" reveal="flip" style="--ui-reveal-aspect: 4 / 3">
 			<details name="slide-left">
 				<summary>
 					<img src="band_goth.png" alt="Goth band" loading="lazy">
@@ -179,7 +181,7 @@
 	<!-- ============================================
 	     Cover + Flip
 	     ============================================ -->
-	<h2>Cover + Flip</h2>
+	<!-- <h2>Cover + Flip</h2>
 	<p><code>variant="cover"</code> with <code>reveal="flip"</code> — 3D card flip to reveal back face.</p>
 	<div class="grid">
 		<ui-reveal variant="cover" reveal="flip" style="--ui-reveal-aspect: 3 / 4">
@@ -209,12 +211,12 @@
 				</div>
 			</details>
 		</ui-reveal>
-	</div>
+	</div> -->
 
 	<!-- ============================================
 	     Cover + Scale (AIM)
 	     ============================================ -->
-	<h2>Cover + Scale (AIM)</h2>
+	<!-- <h2>Cover + Scale (AIM)</h2>
 	<p><code>variant="cover"</code> with <code>reveal="scale"</code> — content morphs from the + button position.</p>
 	<div class="grid">
 		<ui-reveal variant="cover" reveal="scale" style="--ui-reveal-aspect: 1 / 1">
@@ -244,12 +246,12 @@
 				</div>
 			</details>
 		</ui-reveal>
-	</div>
+	</div> -->
 
 	<!-- ============================================
 	     Cover with text overlay
 	     ============================================ -->
-	<h2>Cover + Text Overlay</h2>
+	<!-- <h2>Cover + Text Overlay</h2>
 	<p>Cover variant with text on top of image (Apple-style). Uses <code>reveal="bottom"</code>.</p>
 	<div class="grid">
 		<ui-reveal variant="cover" reveal="bottom" style="--ui-reveal-aspect: 3 / 4">
@@ -257,7 +259,7 @@
 				<summary>
 					<small>Alternative</small>
 					<h3>New wave sounds.</h3>
-					<p>Discover the latest in alternative music.</p>
+					<span>Discover the latest in alternative music.</span>
 					<img src="band_alternative.png" alt="Alternative band" loading="lazy">
 					<ui-icon type="plus-cross"></ui-icon>
 				</summary>
@@ -274,7 +276,7 @@
 				<summary>
 					<small>Gothic</small>
 					<h3>Dark elegance.</h3>
-					<p>Post-punk and darkwave for creatures of the night.</p>
+					<span>Post-punk and darkwave for creatures of the night.</span>
 					<img src="band_goth.png" alt="Goth band" loading="lazy">
 					<ui-icon type="plus-cross"></ui-icon>
 				</summary>
@@ -285,11 +287,11 @@
 				</div>
 			</details>
 		</ui-reveal>
-	</div>
+	</div> -->
 
-	<script type="module">
+	<!-- <script type="module">
 		import { common } from './../../assets/js/common.js';
 		common();
-	</script>
+	</script> -->
 </body>
 </html>

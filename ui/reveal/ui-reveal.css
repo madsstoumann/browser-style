@@ -1,136 +1,103 @@
 /**
  * ui-reveal
  * CSS-only reveal card built on <details>/<summary>.
- * Front face = <summary>, revealed content = ::details-content.
- * Content always replaces front face (slide/flip/scale).
- * @version 4.0.0
+ * @version 1.0.0
  * @author Mads Stoumann
  */
 @import '../icon/index.css';
 @layer bs-component {
 	:where(ui-reveal) {
 		--ui-reveal-bg: var(--color-surface);
-		--ui-reveal-border-color: var(--color-border);
 		--ui-reveal-border-radius: var(--radius-2xl);
-		--ui-reveal-duration: var(--duration-slow);
-		--ui-reveal-easing: var(--ease-in-out);
-		--ui-reveal-icon-bg: light-dark(hsl(0, 0%, 20%), hsl(0, 0%, 80%));
-		--ui-reveal-icon-color: light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%));
-		--ui-reveal-icon-size: var(--size-7);
-		--ui-reveal-padding: var(--spacing-lg);
-		--ui-reveal-shadow: var(--shadow-sm);
+		
+		--ui-reveal-icon-size: var(--size-8);
+		--ui-reveal-padding: var(--spacing-md);
+		--ui-reveal-shadow: var(--shadow-lg);
+		
+		/* --_rh: calc(var(--ui-reveal-icon-size) + var(--ui-reveal-padding)); */
 
 		display: block;
 		interpolate-size: allow-keywords;
 	}
 
-	/* === Card container === */
-	:where(ui-reveal) details {
-		background: var(--ui-reveal-bg);
-		border-radius: var(--ui-reveal-border-radius);
-		box-shadow: var(--ui-reveal-shadow);
-		overflow: hidden;
-		position: relative;
+	:where(ui-reveal) {
+		details {
+			/* aspect-ratio: var(--ui-reveal-aspect, none); */
+			/* background: var(--ui-reveal-bg); */
+			background: pink;
+			border-radius: var(--ui-reveal-border-radius);
+			box-shadow: var(--ui-reveal-shadow, var(--shadow-xl));
+			display: grid;
+
+			overflow: hidden;
+			position: relative;
+		}
 	}
 
-	/* === Summary: front face — sets card dimensions === */
 	:where(ui-reveal) summary {
-		cursor: pointer;
-		display: flex;
-		flex-direction: column;
+		/* border-radius: inherit; */
+		display: grid;
+		grid-area: 1 / -1;
+		/* grid-template-rows: var(--_rh) 1fr; */
 		list-style: none;
 		padding: var(--ui-reveal-padding);
-		&::-webkit-details-marker { display: none; }
+		row-gap: 1ch;
+
+		& :is(h1,h2,h3,h4,h5,h6,p) {
+			margin: 0;
+		}
+
+		img {
+			aspect-ratio: 16 / 9;
+			/* border-radius: calc(var(--ui-reveal-border-radius) - 4px); */
+			/* height: auto; */
+			/* grid-column: 1 / -1;
+			grid-row: 1 / 2; */
+			grid-area: 1 / -1;
+			object-fit: cover;
+			width: 100%;
+		}
+
+		ui-icon {
+			background: var(--ui-reveal-icon-bg, var(--color-button));
+			border-radius: var(--ui-reveal-icon-bdrs, var(--radius-circle));
+			cursor: pointer;
+			/* grid-area: var(--ui-reveal-icon-ga, 1 / 1); */
+			height: var(--ui-reveal-icon-size);
+			/* margin-inline: var(--ui-reveal-padding); */
+			justify-self: var(--ui-reveal-icon-js, end);
+			width: var(--ui-reveal-icon-size);
+			/* z-index: 1; */
+		}
 	}
 
-	:where(ui-reveal) summary small {
-		font-size: var(--font-size-xs);
-		font-weight: var(--font-weight-semibold);
-		letter-spacing: var(--tracking-wide);
-		text-transform: uppercase;
-	}
-
-	:where(ui-reveal) summary :is(h1, h2, h3, h4) {
-		font-size: var(--font-size-fluid-xl);
-		font-weight: var(--font-weight-bold);
-		line-height: var(--line-height-tight);
-		margin-block: var(--spacing-sm) var(--spacing-xs);
-	}
-
-	:where(ui-reveal) summary p {
-		color: var(--color-text-muted);
-		font-size: var(--font-size-sm);
-		line-height: var(--line-height-normal);
-		max-inline-size: 30ch;
-	}
-
-	:where(ui-reveal) summary > img {
-		display: block;
-		margin-block-start: auto;
-		max-inline-size: 100%;
-		object-fit: contain;
-		padding-block-start: var(--ui-reveal-padding);
-	}
-
-	/* === Icon (+ button) === */
-	:where(ui-reveal) summary ui-icon {
-		align-items: center;
-		aspect-ratio: 1;
-		background: var(--ui-reveal-icon-bg);
-		border-radius: var(--radius-circle);
-		color: var(--ui-reveal-icon-color);
-		display: inline-flex;
-		font-size: calc(var(--ui-reveal-icon-size) * 0.45);
-		height: var(--ui-reveal-icon-size);
-		justify-content: center;
-		position: absolute;
-		inset-block-end: var(--ui-reveal-padding);
-		inset-inline-end: var(--ui-reveal-padding);
-		width: var(--ui-reveal-icon-size);
-		z-index: 3;
-	}
-
-	/* === Focus ring === */
-	:where(ui-reveal) details:has(> summary:focus-visible) {
-		outline: var(--ring-width) solid var(--ring-color);
-		outline-offset: var(--ring-offset);
-	}
-	:where(ui-reveal) summary:focus-visible {
-		outline: none;
-	}
-
-	/* =============================================
-	   ::details-content — overlays summary absolutely
-	   ============================================= */
-	:where(ui-reveal) details::details-content {
+	:where(ui-reveal details::details-content) {
 		background: var(--ui-reveal-bg);
-		box-sizing: border-box;
-		content-visibility: hidden;
-		inset: 0;
-		overflow: hidden;
+		/* content-visibility: hidden; */
+		display: grid;
+		grid-area: 1 / -1;
+		/* overflow: hidden; */
 		padding: var(--ui-reveal-padding);
-		position: absolute;
 		transition-behavior: allow-discrete;
-		transition-duration: var(--ui-reveal-duration);
-		transition-timing-function: var(--ui-reveal-easing);
-		z-index: 2;
+		transition-duration: var(--ui-reveal-duration, var(--duration-slower));
+		transition-timing-function: var(--ui-reveal-easing, var(--ease-in-out));
 	}
-	:where(ui-reveal) details[open]::details-content {
+	/* :where(ui-reveal) details[open]::details-content {
 		content-visibility: visible;
-	}
+	} */
 
 	/* === Default reveal (no attribute): slide from right === */
-	:where(ui-reveal:not([reveal])) details::details-content {
+	/* :where(ui-reveal[reveal]) details::details-content {
 		translate: 100% 0;
 		transition-property: translate, content-visibility;
 	}
-	:where(ui-reveal:not([reveal])) details[open]::details-content {
+	:where(ui-reveal[reveal]) details[open]::details-content {
 		translate: 0 0;
-	}
+	} */
 
 	/* === Slide === */
-	:where(ui-reveal[reveal="top"]) details::details-content    { translate: 0 -100%; }
-	:where(ui-reveal[reveal="right"]) details::details-content  { translate: 100% 0; }
+	/* :where(ui-reveal[reveal="top"]) details::details-content    { translate: 0 -100%; } */
+	/* :where(ui-reveal[reveal="right"]) details::details-content  { translate: 100% 0; }
 	:where(ui-reveal[reveal="bottom"]) details::details-content { translate: 0 100%; }
 	:where(ui-reveal[reveal="left"]) details::details-content   { translate: -100% 0; }
 
@@ -144,10 +111,10 @@
 		& details[open]::details-content {
 			translate: 0 0;
 		}
-	}
+	} */
 
 	/* === Flip === */
-	:where(ui-reveal[reveal="flip"]) details {
+	/* :where(ui-reveal[reveal="flip"]) details {
 		perspective: 1000px;
 	}
 
@@ -158,7 +125,6 @@
 
 	:where(ui-reveal[reveal="flip"]) details[open] summary {
 		rotate: y 180deg;
-		pointer-events: none;
 	}
 
 	:where(ui-reveal[reveal="flip"]) details::details-content {
@@ -169,10 +135,10 @@
 
 	:where(ui-reveal[reveal="flip"]) details[open]::details-content {
 		rotate: y 0deg;
-	}
+	} */
 
 	/* === Scale (AIM — morph from icon) === */
-	:where(ui-reveal[reveal="scale"]) details::details-content {
+	/* :where(ui-reveal[reveal="scale"]) details::details-content {
 		border-radius: var(--radius-circle);
 		opacity: 0;
 		scale: 0;
@@ -184,59 +150,19 @@
 		border-radius: 0;
 		opacity: 1;
 		scale: 1;
-	}
+	} */
 
 	/* =============================================
 	   Cover variant — image fills front face
 	   ============================================= */
-	:where(ui-reveal[variant~="cover"]) details {
-		aspect-ratio: var(--ui-reveal-aspect, 3 / 4);
-	}
-
-	:where(ui-reveal[variant~="cover"]) summary {
-		block-size: 100%;
-		overflow: hidden;
-	}
 
 	:where(ui-reveal[variant~="cover"]) summary > img {
-		block-size: 100%;
-		inline-size: 100%;
-		inset: 0;
-		object-fit: cover;
-		padding-block-start: 0;
-		position: absolute;
-		z-index: 0;
+		/* grid-area: 1 / 1;
+		object-fit: cover; */
 	}
 
-	:where(ui-reveal[variant~="cover"]) summary > :not(img):not(ui-icon) {
-		position: relative;
-		z-index: 1;
-	}
-
-	/* Cover: open — summary collapses to icon only */
-	:where(ui-reveal[variant~="cover"]) details[open] summary {
-		block-size: auto;
-		padding: var(--spacing-sm);
-		position: absolute;
-		inset-block-start: 0;
-		inset-inline-end: 0;
-		z-index: 4;
-	}
-
-	:where(ui-reveal[variant~="cover"]) details[open] summary > :not(ui-icon) {
+	/* :where(ui-reveal[variant~="cover"]) details[open] summary > :not(ui-icon) {
 		display: none;
-	}
-
-	:where(ui-reveal[variant~="cover"]) details[open] summary ui-icon {
-		position: static;
-	}
-
-	/* =============================================
-	   Variant: inset — image has padding from edges
-	   ============================================= */
-	:where(ui-reveal[variant~="inset"]) summary > img {
-		border-radius: var(--radius-lg);
-		margin-inline: auto;
-		max-inline-size: 85%;
-	}
+		pointer-events: none;
+	} */
 }

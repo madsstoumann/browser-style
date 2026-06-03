@@ -128,7 +128,7 @@
 		--duration-fast: 100ms;
 		--duration-normal: 200ms;
 		--duration-slow: 300ms;
-		--duration-slower: 400ms;
+		--duration-slower: 500ms;
 
 		/* Easing */
 		--ease-default: cubic-bezier(0.4, 0, 0.2, 1);
