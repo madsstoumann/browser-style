@@ -7,162 +7,65 @@
 @import '../icon/index.css';
 @layer bs-component {
 	:where(ui-reveal) {
-		--ui-reveal-bg: var(--color-surface);
+		--ui-reveal-aspect: attr(ratio type(*), auto);
+		--ui-reveal-bg: pink; /*var(--color-surface);*/
 		--ui-reveal-border-radius: var(--radius-2xl);
-		
 		--ui-reveal-icon-size: var(--size-8);
 		--ui-reveal-padding: var(--spacing-md);
 		--ui-reveal-shadow: var(--shadow-lg);
-		
-		/* --_rh: calc(var(--ui-reveal-icon-size) + var(--ui-reveal-padding)); */
 
 		display: block;
 		interpolate-size: allow-keywords;
-	}
 
-	:where(ui-reveal) {
 		details {
-			/* aspect-ratio: var(--ui-reveal-aspect, none); */
-			/* background: var(--ui-reveal-bg); */
-			background: pink;
+			background: var(--ui-reveal-bg);
 			border-radius: var(--ui-reveal-border-radius);
 			box-shadow: var(--ui-reveal-shadow, var(--shadow-xl));
 			display: grid;
-
 			overflow: hidden;
 			position: relative;
-		}
-	}
-
-	:where(ui-reveal) summary {
-		/* border-radius: inherit; */
-		display: grid;
-		grid-area: 1 / -1;
-		/* grid-template-rows: var(--_rh) 1fr; */
-		list-style: none;
-		padding: var(--ui-reveal-padding);
-		row-gap: 1ch;
-
-		& :is(h1,h2,h3,h4,h5,h6,p) {
-			margin: 0;
+			&::details-content {
+				background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
+				color: var(--ui-reveal-content-color, inherit);
+				padding: var(--ui-reveal-padding);
+			}
 		}
 
-		img {
-			aspect-ratio: 16 / 9;
-			/* border-radius: calc(var(--ui-reveal-border-radius) - 4px); */
-			/* height: auto; */
-			/* grid-column: 1 / -1;
-			grid-row: 1 / 2; */
+		summary {
+			display: grid;
 			grid-area: 1 / -1;
-			object-fit: cover;
-			width: 100%;
+			list-style: none;
+			padding: var(--ui-reveal-padding);
+			row-gap: 1ch;
+
+			& :is(h1,h2,h3,h4,h5,h6,p) {
+				margin: 0;
+			}
+
+			img {
+				aspect-ratio: var(--ui-reveal-aspect);
+				grid-area: 1 / -1;
+				object-fit: cover;
+				width: 100%;
+			}
+
+			ui-icon {
+				background: var(--ui-reveal-icon-bg, var(--color-button));
+				border-radius: var(--ui-reveal-icon-bdrs, var(--radius-circle));
+				cursor: pointer;
+				height: var(--ui-reveal-icon-size);
+				justify-self: var(--ui-reveal-icon-js, end);
+				width: var(--ui-reveal-icon-size);
+			}
 		}
 
-		ui-icon {
-			background: var(--ui-reveal-icon-bg, var(--color-button));
-			border-radius: var(--ui-reveal-icon-bdrs, var(--radius-circle));
-			cursor: pointer;
-			/* grid-area: var(--ui-reveal-icon-ga, 1 / 1); */
-			height: var(--ui-reveal-icon-size);
-			/* margin-inline: var(--ui-reveal-padding); */
-			justify-self: var(--ui-reveal-icon-js, end);
-			width: var(--ui-reveal-icon-size);
-			/* z-index: 1; */
+		:where(details::details-content) {
+
+			display: grid;
+			grid-area: 1 / -1;
+			transition-behavior: allow-discrete;
+			transition-duration: var(--ui-reveal-duration, var(--duration-slower));
+			transition-timing-function: var(--ui-reveal-easing, var(--ease-in-out));
 		}
 	}
-
-	:where(ui-reveal details::details-content) {
-		background: var(--ui-reveal-bg);
-		/* content-visibility: hidden; */
-		display: grid;
-		grid-area: 1 / -1;
-		/* overflow: hidden; */
-		padding: var(--ui-reveal-padding);
-		transition-behavior: allow-discrete;
-		transition-duration: var(--ui-reveal-duration, var(--duration-slower));
-		transition-timing-function: var(--ui-reveal-easing, var(--ease-in-out));
-	}
-	/* :where(ui-reveal) details[open]::details-content {
-		content-visibility: visible;
-	} */
-
-	/* === Default reveal (no attribute): slide from right === */
-	/* :where(ui-reveal[reveal]) details::details-content {
-		translate: 100% 0;
-		transition-property: translate, content-visibility;
-	}
-	:where(ui-reveal[reveal]) details[open]::details-content {
-		translate: 0 0;
-	} */
-
-	/* === Slide === */
-	/* :where(ui-reveal[reveal="top"]) details::details-content    { translate: 0 -100%; } */
-	/* :where(ui-reveal[reveal="right"]) details::details-content  { translate: 100% 0; }
-	:where(ui-reveal[reveal="bottom"]) details::details-content { translate: 0 100%; }
-	:where(ui-reveal[reveal="left"]) details::details-content   { translate: -100% 0; }
-
-	:where(ui-reveal[reveal="top"]),
-	:where(ui-reveal[reveal="right"]),
-	:where(ui-reveal[reveal="bottom"]),
-	:where(ui-reveal[reveal="left"]) {
-		& details::details-content {
-			transition-property: translate, content-visibility;
-		}
-		& details[open]::details-content {
-			translate: 0 0;
-		}
-	} */
-
-	/* === Flip === */
-	/* :where(ui-reveal[reveal="flip"]) details {
-		perspective: 1000px;
-	}
-
-	:where(ui-reveal[reveal="flip"]) summary {
-		backface-visibility: hidden;
-		transition: rotate var(--ui-reveal-duration) var(--ui-reveal-easing);
-	}
-
-	:where(ui-reveal[reveal="flip"]) details[open] summary {
-		rotate: y 180deg;
-	}
-
-	:where(ui-reveal[reveal="flip"]) details::details-content {
-		backface-visibility: hidden;
-		rotate: y -180deg;
-		transition-property: rotate, content-visibility;
-	}
-
-	:where(ui-reveal[reveal="flip"]) details[open]::details-content {
-		rotate: y 0deg;
-	} */
-
-	/* === Scale (AIM — morph from icon) === */
-	/* :where(ui-reveal[reveal="scale"]) details::details-content {
-		border-radius: var(--radius-circle);
-		opacity: 0;
-		scale: 0;
-		transform-origin: calc(100% - var(--ui-reveal-padding)) calc(100% - var(--ui-reveal-padding));
-		transition-property: scale, opacity, border-radius, content-visibility;
-	}
-
-	:where(ui-reveal[reveal="scale"]) details[open]::details-content {
-		border-radius: 0;
-		opacity: 1;
-		scale: 1;
-	} */
-
-	/* =============================================
-	   Cover variant — image fills front face
-	   ============================================= */
-
-	:where(ui-reveal[variant~="cover"]) summary > img {
-		/* grid-area: 1 / 1;
-		object-fit: cover; */
-	}
-
-	/* :where(ui-reveal[variant~="cover"]) details[open] summary > :not(ui-icon) {
-		display: none;
-		pointer-events: none;
-	} */
 }
