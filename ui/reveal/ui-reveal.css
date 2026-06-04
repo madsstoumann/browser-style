@@ -8,11 +8,11 @@
 @layer bs-component {
 	:where(ui-reveal) {
 		--ui-reveal-aspect: attr(ratio type(*), auto);
-		--ui-reveal-bg: pink; /*var(--color-surface);*/
+		--ui-reveal-bg: rgb(245, 245, 240); /*var(--color-surface);*/
 		--ui-reveal-border-radius: var(--radius-2xl);
 		--ui-reveal-icon-size: var(--size-8);
 		--ui-reveal-padding: var(--spacing-md);
-		--ui-reveal-shadow: var(--shadow-lg);
+		
 
 		display: block;
 		interpolate-size: allow-keywords;
@@ -23,11 +23,11 @@
 			box-shadow: var(--ui-reveal-shadow, var(--shadow-xl));
 			display: grid;
 			overflow: hidden;
-			position: relative;
-			&::details-content {
+
+			&[open]::details-content {
 				background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
 				color: var(--ui-reveal-content-color, inherit);
-				padding: var(--ui-reveal-padding);
+				padding: var(--ui-reveal-content-padding, var(--ui-reveal-padding));
 			}
 		}
 
@@ -35,17 +35,16 @@
 			display: grid;
 			grid-area: 1 / -1;
 			list-style: none;
-			padding: var(--ui-reveal-padding);
-			row-gap: 1ch;
+			row-gap: var(--ui-reveal-rowgap, var(--spacing-sm));
 
-			& :is(h1,h2,h3,h4,h5,h6,p) {
+			& > :not(img):not(ui-icon) {
 				margin: 0;
+				padding-inline: var(--ui-reveal-padding);
 			}
 
-			img {
+			& > img {
 				aspect-ratio: var(--ui-reveal-aspect);
-				grid-area: 1 / -1;
-				object-fit: cover;
+				object-fit: var(--ui-reveal-of, cover);
 				width: 100%;
 			}
 
@@ -54,18 +53,36 @@
 				border-radius: var(--ui-reveal-icon-bdrs, var(--radius-circle));
 				cursor: pointer;
 				height: var(--ui-reveal-icon-size);
-				justify-self: var(--ui-reveal-icon-js, end);
+				justify-self: end;
 				width: var(--ui-reveal-icon-size);
 			}
 		}
 
 		:where(details::details-content) {
-
-			display: grid;
-			grid-area: 1 / -1;
 			transition-behavior: allow-discrete;
 			transition-duration: var(--ui-reveal-duration, var(--duration-slower));
 			transition-timing-function: var(--ui-reveal-easing, var(--ease-in-out));
 		}
+
+		/* --- card: vertical padding based on image position --- */
+		summary:has(> img:first-child) { padding-block: 0 var(--ui-reveal-padding); }
+		summary:not(:has(> img:first-child)) { padding-block: var(--ui-reveal-padding) 0; }
+
+		/* --- icon placement on image --- */
+		/* image first: stack via shared grid-area */
+		&:is([icon~="top"],[icon~="bottom"],[icon~="left"],[icon~="right"]) summary:has(> img:first-child) > :is(img, ui-icon) {
+			grid-area: 1 / 1;
+		}
+		/* image last: pull icon up over image via negative margin */
+		&:is([icon~="top"],[icon~="bottom"],[icon~="left"],[icon~="right"]) summary:not(:has(> img:first-child)) > ui-icon {
+			margin-block-start: calc(-1 * var(--ui-reveal-icon-size) - var(--ui-reveal-padding));
+		}
+		/* shared icon styles */
+		&:is([icon~="top"],[icon~="bottom"],[icon~="left"],[icon~="right"]) summary > ui-icon {
+			margin: var(--ui-reveal-padding);
+		}
+		&[icon~="bottom"] summary > ui-icon { align-self: end; }
+		&[icon~="right"] summary > ui-icon { justify-self: end; }
+		&[icon~="left"] summary > ui-icon { justify-self: start; }
 	}
 }

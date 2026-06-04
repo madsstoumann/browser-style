@@ -110,7 +110,7 @@ grid-template-columns: [full-start] var(--pad) [content-start] 1fr [content-end]
 ├─────┼─────────────────────┼─────┤
 │ pad │  span (description) │ pad │
 ├─────┼─────────────────────┼─────┤
-│ img   img   img   img   img   img │  ← full bleed
+│ img  img  img     img  img  img │  ← full bleed
 ├─────┼─────────────────────┼─────┤
 │ pad │              icon   │ pad │  ← natural flow position
 └─────┴─────────────────────┴─────┘
