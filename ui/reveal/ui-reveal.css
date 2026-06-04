@@ -73,10 +73,6 @@
 		&:is([icon~="top"],[icon~="bottom"],[icon~="left"],[icon~="right"]) summary:has(> img:first-child) > :is(img, ui-icon) {
 			grid-area: 1 / 1;
 		}
-		/* image last: pull icon up over image via negative margin */
-		&:is([icon~="top"],[icon~="bottom"],[icon~="left"],[icon~="right"]) summary:not(:has(> img:first-child)) > ui-icon {
-			margin-block-start: calc(-1 * var(--ui-reveal-icon-size) - var(--ui-reveal-padding));
-		}
 		/* shared icon styles */
 		&:is([icon~="top"],[icon~="bottom"],[icon~="left"],[icon~="right"]) summary > ui-icon {
 			margin: var(--ui-reveal-padding);
