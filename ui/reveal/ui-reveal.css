@@ -9,24 +9,24 @@
 	:where(ui-reveal) {
 		--ui-reveal-aspect: attr(ratio type(*), auto);
 		--ui-reveal-bg: rgb(245, 245, 240); /*var(--color-surface);*/
-		--ui-reveal-border-radius: var(--radius-2xl);
-		--ui-reveal-icon-size: var(--size-8);
-		--ui-reveal-padding: var(--spacing-md);
+		--ui-reveal-radius: var(--radius-2xl);
+		--ui-reveal-icon-sz: var(--size-8);
+		--ui-reveal-p: var(--spacing-md);
 
 		display: block;
 		interpolate-size: allow-keywords;
 
 		details {
 			background: var(--ui-reveal-bg);
-			border-radius: var(--ui-reveal-border-radius);
+			border-radius: var(--ui-reveal-radius);
 			box-shadow: var(--ui-reveal-shadow, var(--shadow-xl));
 			display: grid;
 			overflow: hidden;
 
 			&[open]::details-content {
 				background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
-				color: var(--ui-reveal-content-color, inherit);
-				padding: var(--ui-reveal-content-padding, var(--ui-reveal-padding));
+				color: var(--ui-reveal-content-c, inherit);
+				padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
 			}
 		}
 
@@ -34,38 +34,38 @@
 			display: grid;
 			grid-area: 1 / -1;
 			list-style: none;
-			row-gap: var(--ui-reveal-rowgap, var(--spacing-sm));
+			row-gap: var(--ui-reveal-row-gap, var(--spacing-sm));
 
 			& > :not(img):not(ui-icon) {
 				margin: 0;
-				padding-inline: var(--ui-reveal-padding);
+				padding-inline: var(--ui-reveal-p);
 			}
 
 			& > img {
 				aspect-ratio: var(--ui-reveal-aspect);
-				object-fit: var(--ui-reveal-of, cover);
+				object-fit: var(--ui-reveal-object-fit, cover);
 				width: 100%;
 			}
 
 			ui-icon {
 				background: var(--ui-reveal-icon-bg, var(--color-button));
-				border-radius: var(--ui-reveal-icon-bdrs, var(--radius-circle));
+				border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
 				cursor: pointer;
-				height: var(--ui-reveal-icon-size);
+				height: var(--ui-reveal-icon-sz);
 				justify-self: end;
-				width: var(--ui-reveal-icon-size);
+				width: var(--ui-reveal-icon-sz);
 			}
 		}
 
 		:where(details::details-content) {
 			transition-behavior: allow-discrete;
 			transition-duration: var(--ui-reveal-duration, var(--duration-slower));
-			transition-timing-function: var(--ui-reveal-easing, var(--ease-in-out));
+			transition-timing-function: var(--ui-reveal-ease, var(--ease-in-out));
 		}
 
 		/* --- card: vertical padding based on image position --- */
-		summary:has(> img:first-child) { padding-block: 0 var(--ui-reveal-padding); }
-		summary:not(:has(> img:first-child)) { padding-block: var(--ui-reveal-padding) 0; }
+		summary:has(> img:first-child) { padding-block: 0 var(--ui-reveal-p); }
+		summary:not(:has(> img:first-child)) { padding-block: var(--ui-reveal-p) 0; }
 
 		/* --- icon placement on image --- */
 		/* image first: stack via shared grid-area */
@@ -74,7 +74,7 @@
 		}
 		/* shared icon styles */
 		&:is([icon~="top"],[icon~="bottom"],[icon~="left"],[icon~="right"]) summary > ui-icon {
-			margin: var(--ui-reveal-padding);
+			margin: var(--ui-reveal-p);
 		}
 		&[icon~="bottom"] summary > ui-icon { align-self: end; }
 		&[icon~="right"] summary > ui-icon { justify-self: end; }
