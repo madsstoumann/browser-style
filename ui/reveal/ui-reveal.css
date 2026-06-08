@@ -25,7 +25,9 @@
 
 			&[open]::details-content {
 				background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
+				block-size: auto;
 				color: var(--ui-reveal-content-c, inherit);
+				content-visibility: visible;
 				padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
 			}
 		}
@@ -57,10 +59,12 @@
 			}
 		}
 
-		:where(details::details-content) {
+		:where(details)::details-content {
+			block-size: 0;
+			content-visibility: hidden;
+			overflow: hidden;
+			transition: block-size var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-ease, var(--ease-in-out)), content-visibility var(--ui-reveal-duration, var(--duration-slower)), padding var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-ease, var(--ease-in-out));
 			transition-behavior: allow-discrete;
-			transition-duration: var(--ui-reveal-duration, var(--duration-slower));
-			transition-timing-function: var(--ui-reveal-ease, var(--ease-in-out));
 		}
 
 		/* --- card: vertical padding based on image position --- */
