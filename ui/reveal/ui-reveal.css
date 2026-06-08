@@ -12,7 +12,6 @@
 		--ui-reveal-border-radius: var(--radius-2xl);
 		--ui-reveal-icon-size: var(--size-8);
 		--ui-reveal-padding: var(--spacing-md);
-		
 
 		display: block;
 		interpolate-size: allow-keywords;
