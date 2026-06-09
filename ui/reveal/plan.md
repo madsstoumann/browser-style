@@ -440,6 +440,69 @@ ui-reveal[type="popup"] details[open]::details-content {
 
 ---
 
+## Future: Popup via Same-Document View Transitions
+
+Idea: morph the `type="popup"` card from its grid cell straight to a full-bleed
+`position: fixed` overlay using the View Transitions API — the "expand thumbnail
+into hero" pattern. Browser snapshots old rect (grid cell) + new rect (fixed
+`inset: 0`) and morphs size/position automatically, in the top layer above any
+`z-index`.
+
+**Not CSS-only.** Same-document VT only fires via `document.startViewTransition()`.
+This requires a light-DOM `index.js` web component (fits v4 dual-mode pattern).
+Progressive enhancement: no `startViewTransition` support → native toggle, no anim.
+
+Baseline: View transitions newly available 2025-10-14 (Chrome 111, Safari 18,
+Firefox 144).
+
+### Blockers / gotchas
+
+1. **Native `<details>` snapshots too late.** The `toggle` event fires *after*
+   `open` flips, so "before" state is already gone. Must intercept the `summary`
+   `click`, `preventDefault()`, then flip `open` inside `startViewTransition`.
+2. **Unique `view-transition-name` per instance.** Two+ elements sharing a name =
+   no transition. Each card in the grid needs its own name; apply only during the
+   transition and clean up on `finished`.
+3. **Existing `block-size` transition fights VT.** The `::details-content` height
+   animation must be gated off for popup when JS is active, else double effect.
+4. **`prefers-reduced-motion`** — disable VT animations (mandatory).
+5. **A11y** — route focus into the opened popup after `transition.finished`.
+6. **Aspect-ratio stretch.** Card changes aspect ratio (cell → fullscreen);
+   counter with `::view-transition-old/new { height: 100%; object-fit: cover }`.
+   Name selectors don't take wildcards — use `view-transition-class` to target all
+   reveal cards with one rule.
+
+### Sketch
+
+```css
+:where(ui-reveal[type="popup"]) details {
+  view-transition-name: var(--ui-reveal-vt, none); /* JS sets unique name */
+}
+:where(ui-reveal[type="popup"]) details[open] {
+  inset: 0; position: fixed; z-index: 100; overflow-y: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+}
+```
+
+```js
+summary.addEventListener('click', (e) => {
+  if (!document.startViewTransition) return; // native toggle, no anim
+  e.preventDefault();
+  details.style.setProperty('--ui-reveal-vt', `reveal-${this._id}`);
+  const t = document.startViewTransition(() => { details.open = !details.open; });
+  t.finished.finally(() => {
+    if (!details.open) details.style.removeProperty('--ui-reveal-vt');
+    (details.open ? details.querySelector('h4,[tabindex]') : summary)?.focus?.();
+  });
+});
+```
+
+---
+
 ## Selector Pattern (CSS structure outline)
 
 ```
