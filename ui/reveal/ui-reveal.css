@@ -25,9 +25,7 @@
 
 			&[open]::details-content {
 				background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
-				block-size: auto;
 				color: var(--ui-reveal-content-c, inherit);
-				content-visibility: visible;
 				padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
 			}
 		}
@@ -59,14 +57,6 @@
 			}
 		}
 
-		:where(details)::details-content {
-			block-size: 0;
-			content-visibility: hidden;
-			overflow: hidden;
-			transition: block-size var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-ease, var(--ease-in-out)), content-visibility var(--ui-reveal-duration, var(--duration-slower)), padding var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-ease, var(--ease-in-out));
-			transition-behavior: allow-discrete;
-		}
-
 		/* --- card: vertical padding based on image position --- */
 		summary:has(> img:first-child) { padding-block: 0 var(--ui-reveal-p); }
 		summary:not(:has(> img:first-child)) { padding-block: var(--ui-reveal-p) 0; }
@@ -83,5 +73,31 @@
 		&[icon~="bottom"] summary > ui-icon { align-self: end; }
 		&[icon~="right"] summary > ui-icon { justify-self: end; }
 		&[icon~="left"] summary > ui-icon { justify-self: start; }
+	}
+
+	/* === Types === */
+
+	/* expand + popup */
+	:where(ui-reveal[type="expand"], ui-reveal[type="popup"]) {
+		details[open]::details-content {
+			block-size: auto;
+			content-visibility: visible;
+		}
+		:where(details)::details-content {
+			block-size: 0;
+			content-visibility: hidden;
+			overflow: hidden;
+			transition: block-size var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-ease, var(--ease-in-out)), content-visibility var(--ui-reveal-duration, var(--duration-slower)), padding var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-ease, var(--ease-in-out));
+			transition-behavior: allow-discrete;
+		}
+	}
+
+	:where(ui-reveal[type="popup"]) {
+		details[open] {
+			inset: 0;
+			overflow-y: auto;
+			position: fixed;
+			z-index: 100;
+		}
 	}
 }
