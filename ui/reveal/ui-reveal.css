@@ -75,6 +75,16 @@
 		&[icon~="left"] summary > ui-icon { justify-self: start; }
 	}
 
+	/* === Variants === */
+	
+	:where(ui-reveal[variant="cover"]) {
+		summary { padding: 0; }
+		summary > :is(img, ui-icon) { grid-area: 1 / 1; }
+		/* summary > ui-icon {
+			margin: var(--ui-reveal-p);
+		} */
+	}
+	
 	/* === Types === */
 
 	/* expand + popup */
