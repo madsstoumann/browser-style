@@ -61,6 +61,8 @@
 		summary:has(> img:first-child) { padding-block: 0 var(--ui-reveal-p); }
 		summary:not(:has(> img:first-child)) { padding-block: var(--ui-reveal-p) 0; }
 
+		/* TODO: ABOVE: Only add if variant is "card"? */
+
 		/* --- icon placement on image --- */
 		/* image first: stack via shared grid-area */
 		&:is([icon~="top"],[icon~="bottom"],[icon~="left"],[icon~="right"]) summary:has(> img:first-child) > :is(img, ui-icon) {
