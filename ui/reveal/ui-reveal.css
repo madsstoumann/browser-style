@@ -31,6 +31,14 @@
 			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
 		}
 
+		details::details-content { transition-behavior: allow-discrete; }
+
+		&:is([type="flip"], [type="scale"], [type="slide"]) details::details-content {
+			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
+			color: var(--ui-reveal-content-c, inherit);
+			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
+		}
+
 		summary {
 			cursor: pointer;
 			display: grid;
@@ -38,25 +46,6 @@
 			list-style: none;
 			position: relative;
 
-			/* media-area: full-bleed, aspect-ratio host, img fills it */
-			ui-media {
-				aspect-ratio: var(--ui-reveal-aspect);
-				display: grid;
-				overflow: hidden;
-				place-items: center;
-				position: relative;
-
-				img {
-					block-size: 100%;
-					inline-size: 100%;
-					inset: 0;
-					object-fit: var(--ui-reveal-object-fit, cover);
-					object-position: var(--ui-reveal-op, center);
-					position: absolute;
-				}
-			}
-
-			/* content-area: padded text stack */
 			ui-content {
 				display: flex;
 				flex-direction: column;
@@ -73,7 +62,23 @@
 				width: var(--ui-reveal-icon-sz);
 			}
 
-			/* focus ring rides the icon, not the whole summary */
+			ui-media {
+				aspect-ratio: var(--ui-reveal-aspect);
+				display: grid;
+				min-block-size: var(--ui-reveal-media-min, 12.5rem);
+				overflow: hidden;
+				position: relative;
+
+				img {
+					block-size: 100%;
+					inline-size: 100%;
+					inset: 0;
+					object-fit: var(--ui-reveal-object-fit, cover);
+					object-position: var(--ui-reveal-op, center);
+					position: absolute;
+				}
+			}
+
 			&:focus-visible { outline: none; }
 			&:focus-visible ui-icon {
 				box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-bg), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ring-color);
@@ -124,7 +129,7 @@
 
 		/* === icon: position tokens pin icon to a summary corner (absolute) === */
 		&:is([icon~="top"],[icon~="bottom"],[icon~="left"],[icon~="right"]) summary > ui-icon {
-			margin: var(--ui-reveal-p);
+			margin: var(--ui-reveal-icon-m, var(--ui-reveal-p));
 			position: absolute;
 			z-index: 2;
 		}
@@ -146,12 +151,23 @@
 		/* === icon style: dark (default is light) + semi (opacity) — both === */
 		&[icon~="dark"] summary > ui-icon,
 		&[icon-close~="dark"] details[open] summary > ui-icon {
-			--ui-reveal-icon-bg: #000;
+			--ui-reveal-icon-bg: #000; /* TODO! */
 			color: #fff;
 		}
 		&[icon~="semi"] summary > ui-icon,
 		&[icon-close~="semi"] details[open] summary > ui-icon {
 			opacity: var(--ui-reveal-icon-opacity, 0.6);
+		}
+
+		/* === icon size: sm / md (lg = default --size-8) — both. Smaller icons get
+		   a touch more corner inset so they don't crowd the edge. === */
+		&[icon~="sm"] summary > ui-icon,
+		&[icon-close~="sm"] details[open] summary > ui-icon {
+			--ui-reveal-icon-sz: var(--size-5);
+		}
+		&[icon~="md"] summary > ui-icon,
+		&[icon-close~="md"] details[open] summary > ui-icon { 
+			--ui-reveal-icon-sz: var(--size-7);
 		}
 
 		/* === aspect-ratio: variant ar() token (mirrors content-card) === */
@@ -166,6 +182,7 @@
 		&[variant*="ar(2/3)"]       { --ui-reveal-aspect: 2 / 3; }
 		&[variant*="ar(3/2)"]       { --ui-reveal-aspect: 3 / 2; }
 		&[variant*="ar(21/9)"]      { --ui-reveal-aspect: 21 / 9; }
+			&[variant*="ar("] ui-media  { min-block-size: 0; } /* aspect-ratio sets height */
 
 		/* === object-position: variant op() token (9 positions) === */
 		&[variant*="op(tl)"] { --ui-reveal-op: left top; }
@@ -186,7 +203,6 @@
 			content-visibility: hidden;
 			overflow: hidden;
 			transition: block-size var(--_trs), content-visibility var(--_trs), padding var(--_trs);
-			transition-behavior: allow-discrete;
 		}
 		details[open]::details-content {
 			block-size: auto;
@@ -209,7 +225,6 @@
 			grid-area: 1 / -1;
 			rotate: y -180deg;
 			transition: rotate var(--_trs), content-visibility var(--_trs);
-			transition-behavior: allow-discrete;
 		}
 		details[open]::details-content { rotate: y 0deg; }
 	}
@@ -221,7 +236,6 @@
 			translate: 100% 0;
 			z-index: 1;
 			transition: translate var(--_trs), content-visibility var(--_trs);
-			transition-behavior: allow-discrete;
 		}
 
 		&[from="top"]    details::details-content { translate: 0 -100%; }
@@ -240,11 +254,9 @@
 		details { position: relative; }
 
 		details::details-content {
-			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
 			block-size: var(--ui-reveal-icon-sz);
 			border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
 			box-sizing: border-box;
-			color: var(--ui-reveal-content-c, inherit);
 			content-visibility: hidden;
 			inline-size: var(--ui-reveal-icon-sz);
 			inset-block: var(--_scale-bs, auto) var(--_scale-be, 0);
@@ -252,9 +264,7 @@
 			margin: var(--ui-reveal-p);
 			opacity: 0;
 			overflow: hidden;
-			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
 			position: absolute;
-			transition-behavior: allow-discrete;
 			transition: block-size var(--_trs), inline-size var(--_trs), border-radius var(--_trs), margin var(--_trs), opacity var(--_trs), content-visibility var(--_trs);
 			z-index: 1;
 		}
