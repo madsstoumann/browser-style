@@ -7,11 +7,12 @@
 @import '../icon/index.css';
 @layer bs-component {
 	:where(ui-reveal) {
-		--ui-reveal-aspect: attr(ratio type(*), auto);
-		--ui-reveal-bg: rgb(245, 245, 240); /*var(--color-surface);*/
+		--ui-reveal-aspect: auto;
+		--ui-reveal-bg: var(--color-surface);
 		--ui-reveal-radius: var(--radius-2xl);
 		--ui-reveal-icon-sz: var(--size-8);
 		--ui-reveal-p: var(--spacing-md);
+		--_trs: var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
 
 		display: block;
 		interpolate-size: allow-keywords;
@@ -22,94 +23,256 @@
 			box-shadow: var(--ui-reveal-shadow, var(--shadow-xl));
 			display: grid;
 			overflow: hidden;
+		}
 
-			&[open]::details-content {
-				background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
-				color: var(--ui-reveal-content-c, inherit);
-				padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
-			}
+		details[open]::details-content {
+			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
+			color: var(--ui-reveal-content-c, inherit);
+			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
 		}
 
 		summary {
+			cursor: pointer;
 			display: grid;
 			grid-area: 1 / -1;
 			list-style: none;
-			row-gap: var(--ui-reveal-row-gap, var(--spacing-sm));
+			position: relative;
 
-			& > :not(img):not(ui-icon) {
-				margin: 0;
-				padding-inline: var(--ui-reveal-p);
+			/* media-area: full-bleed, aspect-ratio host, img fills it */
+			ui-media {
+				aspect-ratio: var(--ui-reveal-aspect);
+				display: grid;
+				overflow: hidden;
+				place-items: center;
+
+				img {
+					block-size: 100%;
+					inline-size: 100%;
+					object-fit: var(--ui-reveal-object-fit, cover);
+					object-position: var(--ui-reveal-op, center);
+				}
 			}
 
-			& > img {
-				aspect-ratio: var(--ui-reveal-aspect);
-				object-fit: var(--ui-reveal-object-fit, cover);
-				width: 100%;
+			/* content-area: padded text stack */
+			ui-content {
+				display: flex;
+				flex-direction: column;
+				padding: var(--ui-reveal-p);
+				row-gap: var(--ui-reveal-row-gap, var(--spacing-sm));
+				& > * { margin: 0; }
 			}
 
 			ui-icon {
 				background: var(--ui-reveal-icon-bg, var(--color-button));
 				border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
-				cursor: pointer;
 				height: var(--ui-reveal-icon-sz);
 				justify-self: end;
 				width: var(--ui-reveal-icon-sz);
 			}
 		}
 
-		/* --- card: vertical padding based on image position --- */
-		summary:has(> img:first-child) { padding-block: 0 var(--ui-reveal-p); }
-		summary:not(:has(> img:first-child)) { padding-block: var(--ui-reveal-p) 0; }
+		/* === variants === */
+		&[variant~="vertical-r"] ui-content { order: -1; }
 
-		/* TODO: ABOVE: Only add if variant is "card"? */
-
-		/* --- icon placement on image --- */
-		/* image first: stack via shared grid-area */
-		&:is([icon~="top"],[icon~="bottom"],[icon~="left"],[icon~="right"]) summary:has(> img:first-child) > :is(img, ui-icon) {
-			grid-area: 1 / 1;
+		&:is([variant~="horizontal"], [variant~="horizontal-r"]) summary {
+			align-items: stretch;
+			grid-template-columns: var(--ui-reveal-split, 1fr 1fr);
 		}
-		/* shared icon styles */
+		&:is([variant~="horizontal"], [variant~="horizontal-r"]) ui-media { block-size: 100%; }
+		&[variant~="horizontal-r"] ui-content { order: -1; }
+
+		&[variant~="media-only"] ui-content { display: none; }
+
+		/* === variant: overlay(pos) === */
+		&[variant*="overlay("] {
+			& :is(ui-media, ui-content) { grid-area: 1 / 1; }
+
+			& ui-content {
+				background: var(--ui-reveal-overlay-gradient, linear-gradient(to top, rgb(0 0 0 / 0.7) 0%, rgb(0 0 0 / 0) 100%));
+				color: var(--ui-reveal-overlay-ink, #fff);
+				z-index: 1;
+			}
+
+			/* 9 positions: justify-content (block) · align-items (inline) · text-align */
+			&[variant*="overlay(tl)"] ui-content { justify-content: start;  align-items: start;  text-align: start;  }
+			&[variant*="overlay(tc)"] ui-content { justify-content: start;  align-items: center; text-align: center; }
+			&[variant*="overlay(tr)"] ui-content { justify-content: start;  align-items: end;    text-align: end;    }
+			&[variant*="overlay(cl)"] ui-content { justify-content: center; align-items: start;  text-align: start;  }
+			&[variant*="overlay(cc)"] ui-content { justify-content: center; align-items: center; text-align: center; }
+			&[variant*="overlay(cr)"] ui-content { justify-content: center; align-items: end;    text-align: end;    }
+			&[variant*="overlay(bl)"] ui-content { justify-content: end;    align-items: start;  text-align: start;  }
+			&[variant*="overlay(bc)"] ui-content { justify-content: end;    align-items: center; text-align: center; }
+			&[variant*="overlay(br)"] ui-content { justify-content: end;    align-items: end;    text-align: end;    }
+
+			/* gradient direction follows vertical placement */
+			&[variant*="overlay(t"] ui-content {
+				background: var(--ui-reveal-overlay-gradient, linear-gradient(to bottom, rgb(0 0 0 / 0.7) 0%, rgb(0 0 0 / 0) 100%));
+			}
+			&[variant*="overlay(c"] ui-content {
+				background: var(--ui-reveal-overlay-gradient, radial-gradient(ellipse at center, rgb(0 0 0 / 0.6) 0%, rgb(0 0 0 / 0.05) 100%));
+			}
+		}
+
+		/* === icon: position tokens pin icon to a summary corner (absolute) === */
 		&:is([icon~="top"],[icon~="bottom"],[icon~="left"],[icon~="right"]) summary > ui-icon {
 			margin: var(--ui-reveal-p);
+			position: absolute;
+			z-index: 2;
 		}
-		&[icon~="bottom"] summary > ui-icon { align-self: end; }
-		&[icon~="right"] summary > ui-icon { justify-self: end; }
-		&[icon~="left"] summary > ui-icon { justify-self: start; }
+		&[icon~="top"]    summary > ui-icon { inset-block: 0 auto; }
+		&[icon~="bottom"] summary > ui-icon { inset-block: auto 0; }
+		&[icon~="left"]   summary > ui-icon { inset-inline: 0 auto; }
+		&[icon~="right"]  summary > ui-icon { inset-inline: auto 0; }
+
+		/* === icon-close: reposition icon while open (defaults to `icon`) === */
+		&:is([icon-close~="top"],[icon-close~="bottom"],[icon-close~="left"],[icon-close~="right"]) details[open] summary > ui-icon {
+			position: absolute;
+			z-index: 2;
+		}
+		&[icon-close~="top"]    details[open] summary > ui-icon { inset-block: 0 auto; }
+		&[icon-close~="bottom"] details[open] summary > ui-icon { inset-block: auto 0; }
+		&[icon-close~="left"]   details[open] summary > ui-icon { inset-inline: 0 auto; }
+		&[icon-close~="right"]  details[open] summary > ui-icon { inset-inline: auto 0; }
+
+		/* === icon style: dark (default is light) + semi (opacity) — both === */
+		&[icon~="dark"] summary > ui-icon,
+		&[icon-close~="dark"] details[open] summary > ui-icon {
+			--ui-reveal-icon-bg: #000;
+			color: #fff;
+		}
+		&[icon~="semi"] summary > ui-icon,
+		&[icon-close~="semi"] details[open] summary > ui-icon {
+			opacity: var(--ui-reveal-icon-opacity, 0.6);
+		}
+
+		/* === aspect-ratio: variant ar() token (mirrors content-card) === */
+		&[variant*="ar(square)"]    { --ui-reveal-aspect: 1 / 1; }
+		&[variant*="ar(portrait)"]  { --ui-reveal-aspect: 3 / 4; }
+		&[variant*="ar(landscape)"] { --ui-reveal-aspect: 4 / 3; }
+		&[variant*="ar(panorama)"]  { --ui-reveal-aspect: 21 / 9; }
+		&[variant*="ar(1/1)"]       { --ui-reveal-aspect: 1 / 1; }
+		&[variant*="ar(3/4)"]       { --ui-reveal-aspect: 3 / 4; }
+		&[variant*="ar(4/3)"]       { --ui-reveal-aspect: 4 / 3; }
+		&[variant*="ar(16/9)"]      { --ui-reveal-aspect: 16 / 9; }
+		&[variant*="ar(2/3)"]       { --ui-reveal-aspect: 2 / 3; }
+		&[variant*="ar(3/2)"]       { --ui-reveal-aspect: 3 / 2; }
+		&[variant*="ar(21/9)"]      { --ui-reveal-aspect: 21 / 9; }
+
+		/* === object-position: variant op() token (9 positions) === */
+		&[variant*="op(tl)"] { --ui-reveal-op: left top; }
+		&[variant*="op(tc)"] { --ui-reveal-op: center top; }
+		&[variant*="op(tr)"] { --ui-reveal-op: right top; }
+		&[variant*="op(cl)"] { --ui-reveal-op: left center; }
+		&[variant*="op(cc)"] { --ui-reveal-op: center center; }
+		&[variant*="op(cr)"] { --ui-reveal-op: right center; }
+		&[variant*="op(bl)"] { --ui-reveal-op: left bottom; }
+		&[variant*="op(bc)"] { --ui-reveal-op: center bottom; }
+		&[variant*="op(br)"] { --ui-reveal-op: right bottom; }
 	}
 
-	/* === Variants === */
-	
-	:where(ui-reveal[variant="cover"]) {
-		summary { padding: 0; }
-		summary > :is(img, ui-icon) { grid-area: 1 / 1; }
-		/* summary > ui-icon {
-			margin: var(--ui-reveal-p);
-		} */
-	}
-	
-	/* === Types === */
-
-	/* expand + popup */
-	:where(ui-reveal[type="expand"], ui-reveal[type="popup"]) {
+	/* === type: expand === */
+	/* classic accordion: animate ::details-content block-size 0 → auto */
+	:where(ui-reveal[type="expand"]) {
+		details::details-content {
+			block-size: 0;
+			content-visibility: hidden;
+			overflow: hidden;
+			transition: block-size var(--_trs), content-visibility var(--_trs), padding var(--_trs);
+			transition-behavior: allow-discrete;
+		}
 		details[open]::details-content {
 			block-size: auto;
 			content-visibility: visible;
 		}
-		:where(details)::details-content {
-			block-size: 0;
-			content-visibility: hidden;
-			overflow: hidden;
-			transition: block-size var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-ease, var(--ease-in-out)), content-visibility var(--ui-reveal-duration, var(--duration-slower)), padding var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-ease, var(--ease-in-out));
-			transition-behavior: allow-discrete;
-		}
 	}
 
-	:where(ui-reveal[type="popup"]) {
-		details[open] {
-			inset: 0;
-			overflow-y: auto;
-			position: fixed;
-			z-index: 100;
+	/* === type: flip === */
+	/* summary rotates away, content counter-rotates in (shared cell) */
+	:where(ui-reveal[type="flip"]) {
+		details { perspective: var(--ui-reveal-perspective, 1000px); }
+
+		summary {
+			backface-visibility: hidden;
+			transition: rotate var(--_trs);
 		}
+		details[open] summary { rotate: y 180deg; }
+
+		details::details-content {
+			backface-visibility: hidden;
+			grid-area: 1 / -1;
+			rotate: y -180deg;
+			transition: rotate var(--_trs), content-visibility var(--_trs);
+			transition-behavior: allow-discrete;
+		}
+		details[open]::details-content { rotate: y 0deg; }
+	}
+
+	/* === type: slide === */
+	/* panel slides in over the summary from the `from` edge (default: right) */
+	:where(ui-reveal[type="slide"]) {
+		details::details-content {
+			grid-area: 1 / -1;
+			translate: 100% 0;
+			z-index: 1;
+			transition: translate var(--_trs), content-visibility var(--_trs);
+			transition-behavior: allow-discrete;
+		}
+
+		&[from="top"]    details::details-content { translate: 0 -100%; }
+		&[from="bottom"] details::details-content { translate: 0 100%; }
+		&[from="left"]   details::details-content { translate: -100% 0; }
+		&[from="right"]  details::details-content { translate: 100% 0; }
+		details[open]::details-content { translate: 0 0; }
+
+		/* panel + its links take clicks; icon stays the toggle */
+		details[open] summary { pointer-events: none; }
+		details[open] summary > ui-icon { pointer-events: auto; }
+	}
+
+	/* === type: scale === */
+	/* panel morphs from the icon corner to cover the card. It is positioned
+	   (out of flow) so the size morph never reflows the card — same idea as the
+	   search-bot dialog, minus the popover/anchor. */
+	:where(ui-reveal[type="scale"]) {
+		details { position: relative; }
+
+		details::details-content {
+			position: absolute;
+			inset-block: var(--_scale-bs, auto) var(--_scale-be, 0);
+			inset-inline: var(--_scale-is, auto) var(--_scale-ie, 0);
+			/* surface set here (not just [open]) so it persists through the exit shrink */
+			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
+			color: var(--ui-reveal-content-c, inherit);
+			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
+			block-size: var(--ui-reveal-icon-sz);
+			border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
+			box-sizing: border-box; /* padding inside 100% so content isn't clipped */
+			content-visibility: hidden;
+			inline-size: var(--ui-reveal-icon-sz);
+			margin: var(--ui-reveal-p);
+			opacity: 0;
+			overflow: hidden;
+			z-index: 1;
+			transition: block-size var(--_trs), inline-size var(--_trs), border-radius var(--_trs), margin var(--_trs), opacity var(--_trs), content-visibility var(--_trs);
+			transition-behavior: allow-discrete;
+		}
+		details[open]::details-content {
+			block-size: 100%;
+			border-radius: 0;
+			content-visibility: visible;
+			inline-size: 100%;
+			margin: 0;
+			opacity: 1;
+		}
+
+		/* morph origin (anchored corner) follows icon position */
+		&[icon~="top"]    { --_scale-bs: 0; --_scale-be: auto; }
+		&[icon~="bottom"] { --_scale-bs: auto; --_scale-be: 0; }
+		&[icon~="left"]   { --_scale-is: 0; --_scale-ie: auto; }
+		&[icon~="right"]  { --_scale-is: auto; --_scale-ie: 0; }
+
+		/* panel takes clicks; icon stays the toggle */
+		details[open] summary { pointer-events: none; }
+		details[open] summary > ui-icon { pointer-events: auto; }
 	}
 }

@@ -23,12 +23,33 @@
 
 ### `variant` — summary card layout (space-separated, composable)
 
+The summary IS always a card — so no `card` token. `variant` holds layout tokens
+borrowed **verbatim from `content-card`** (same author mental model across both
+components). Trimmed subset — reveal carries a trigger, not a full content page.
+
 | Value | Layout |
 |-------|--------|
-| *(none)* | **Card** — image in document flow, text padded, image bleeds to edges |
-| `cover` | Image fills entire card face |
-| `overlay` | Cover + text content positioned on top of image |
-| `inset` | Image gets same padding as text (no bleed) |
+| *(none)* | `vertical` — media above content (default) |
+| `vertical-r` | media below content |
+| `horizontal` | media left, content right |
+| `horizontal-r` | media right, content left |
+| `media-only` | media fills entire face (was `cover`) |
+| `overlay(pos)` | content stacked on media, 9 positions (was `overlay`) |
+| `inset` | media gets same padding as text, no bleed (reveal extra) — Apple-Store-card look |
+
+`overlay(pos)` positions = `tl tc tr · cl cc cr · bl bc br` (same 2-char grid as
+content-card). `overlay(pos)` + `media-only` together cover the old `cover`/`overlay`
+pair the request describes.
+
+**Modifiers kept:** `ar()` aspect ratio (drives `--ui-reveal-aspect`).
+
+**`inset` — Apple-Store pattern** (`inspiration/41030.jpg`): content-area on top
+(eyebrow + large headline + summary), media-area below as a padded "floating" image
+that does not bleed to card edges, plus-icon `bottom right dark`. Usually paired with
+`vertical`. This is the reason `inset` stays — no content-card equivalent.
+
+**Dropped from content-card** (page-level, imply links/actions/rich content reveal
+doesn't carry): `content-only`, `split()`, `hs()`, `eyebrow()`, `rg()`, `subgrid`.
 
 ### `icon` — toggle icon placement (space-separated tokens)
 
@@ -49,41 +70,71 @@ No position tokens = icon stays in natural flow within card grid.
 
 ## HTML Structure
 
+> **`<summary>` content model = phrasing content + optional heading content only.**
+> Flow elements (`<figure>`, `<div>`, `<p>`, `<section>`) are **invalid** inside a
+> summary. The two-box wrappers must be phrasing content — autonomous custom elements
+> qualify, so use `<ui-media>` / `<ui-content>`. The revealed panel
+> (`::details-content`) has no such restriction — `<figure>`/`<div>`/`<p>` are fine
+> there.
+
+**No `class` attributes in component markup** — classes belong to clients consuming the
+system. Structural hooks are custom elements (`<ui-media>`, `<ui-content>`) styled in
+CSS, same approach as `<cq-box>`. They need no JS registration; unknown/undefined
+elements still style and are valid phrasing content.
+
+Two-box model — `<ui-media>` + `<ui-content>` — mirrors content-card's `.cc-media` /
+`.cc-content` so layout CSS (vertical/horizontal/overlay) is **shared, not reinvented**.
+Icon is a sibling of the two boxes. Both are `display` re-typed (block/grid) via CSS.
+
+Summary is lean: it becomes a single `role="button"` accessible name, so keep it to
+headline (+ optional brow). The headline in the summary is a **`<b>`, not a heading** —
+summary swallows heading role anyway, and `<b>` is a classless stylistic hook.
+Description and the real heading live in the revealed panel. See **Accessibility**.
+
 ```html
-<!-- Card (default) + expand -->
+<!-- vertical (default) + expand -->
 <ui-reveal>
   <details>
     <summary>
-      <small>Brow</small>
-      <h3>Headline</h3>
-      <span>Description</span>
-      <img src="..." alt="...">
-      <ui-icon type="plus-cross"></ui-icon>
+      <ui-media><img src="..." alt=""></ui-media>
+      <ui-content>
+        <small>Brow</small>
+        <b>Headline</b>
+      </ui-content>
+      <ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+    </summary>
+    <div>
+      <h3>Real heading for outline</h3>
+      <p>Description + body live here.</p>
+    </div>
+  </details>
+</ui-reveal>
+
+<!-- Panel heading level follows the surrounding outline (one below the section
+     heading) — under an <h2> section, the card heading is <h3>. The summary <b>
+     is NOT a heading, so the panel heading is the card's first real heading. -->
+
+<!-- media-only + slide from right + icon top-right dark -->
+<ui-reveal type="slide" from="right" variant="media-only" icon="top right dark">
+  <details>
+    <summary>
+      <ui-media><img src="..." alt="Meaningful alt — this is the button name"></ui-media>
+      <ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
     </summary>
     <div>Revealed content</div>
   </details>
 </ui-reveal>
 
-<!-- Cover + slide from right + icon top-right dark -->
-<ui-reveal type="slide" from="right" variant="cover" icon="top right dark">
+<!-- overlay, text bottom-left + flip -->
+<ui-reveal type="flip" variant="overlay(bl)" icon="bottom right">
   <details>
     <summary>
-      <img src="..." alt="...">
-      <ui-icon type="plus-cross"></ui-icon>
-    </summary>
-    <div>Revealed content</div>
-  </details>
-</ui-reveal>
-
-<!-- Overlay (cover + text on top) + flip -->
-<ui-reveal type="flip" variant="overlay" icon="bottom right">
-  <details>
-    <summary>
-      <small>Brow</small>
-      <h3>Headline</h3>
-      <span>Description</span>
-      <img src="..." alt="...">
-      <ui-icon type="plus-cross"></ui-icon>
+      <ui-media><img src="..." alt=""></ui-media>
+      <ui-content>
+        <small>Brow</small>
+        <b>Headline</b>
+      </ui-content>
+      <ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
     </summary>
     <div>Revealed content</div>
   </details>
@@ -93,6 +144,13 @@ No position tokens = icon stays in natural flow within card grid.
 ---
 
 ## Grid Strategy — Summary Layout
+
+> **NEEDS REVISION for two-box model.** The CSS below assumes flat summary children
+> (img + text + icon in one grid). With the `<figure>`/`<div>` two-box structure, the
+> summary grid places media-area + content-area + icon instead, and layout variants
+> (`vertical` / `horizontal` / `overlay`) port directly from content-card's
+> `layouts.css` / `overlay.css`. Reuse those rules rather than the flat ones here.
+> Kept below as reference for the icon-placement logic.
 
 No `padding` on `summary` itself. Use full-bleed grid pattern so image bleeds to edges while text stays padded:
 
@@ -434,6 +492,27 @@ ui-reveal[type="popup"] details[open]::details-content {
 
 ---
 
+## Accessibility
+
+`<summary>` is exposed as `role="button"`. Consequences drive the structure above:
+
+1. **Whole summary = one accessible name.** All summary text concatenates into the
+   button label. Keep summary lean (headline, optional brow). Push description + body
+   into the revealed `<div>`.
+2. **Headings lose role inside summary** in many AT (swallowed by the button). Don't
+   put `<h3>` in summary — style a `<b>` instead, and put the real heading (`<h4>`) in
+   the revealed panel for the document outline.
+3. **No interactive content in summary** — spec forbids nested `<a>`, `<button>`,
+   controls. Matches the "no links/actions in summary" requirement. Web component
+   should warn (dev) if it finds interactive descendants in `summary`.
+4. **Summary content model = phrasing + heading only.** No `<figure>`/`<div>`/`<p>`/
+   `<section>` (flow content) inside summary — use `<span>` wrappers. The revealed
+   panel has no such restriction.
+5. **Icon is decorative** — `aria-hidden="true"`. Open/closed state already announced
+   by the summary button + native `<details>` semantics.
+6. **`media-only` face** is named only by `img` `alt`. Require a meaningful `alt`, or
+   add a visually-hidden label.
+
 ## Reduced Motion
 
 > All transition/animation declarations should be wrapped in `@media (prefers-reduced-motion: no-preference)`, or use `transition-duration: 0s` as override. Expand (block-size) transitions can stay — they are non-vestibular. Slide, flip, scale, and popup elevation should be disabled.
@@ -535,14 +614,21 @@ summary.addEventListener('click', (e) => {
   /* === type: popup === */
   ui-reveal[type="popup"] details[open]      /* position: sticky */
 
-  /* === variant: cover === */
-  ui-reveal[variant~="cover"] summary > *    /* grid-area: 1/1/-1/-1 (stack) */
+  /* === variant: layout (ported from content-card layouts.css) === */
+  ui-reveal[variant~="vertical-r"]   summary   /* media below content */
+  ui-reveal[variant~="horizontal"]   summary   /* media left, content right */
+  ui-reveal[variant~="horizontal-r"] summary   /* reversed */
 
-  /* === variant: overlay === */
-  ui-reveal[variant~="overlay"] summary      /* gradient scrim, text aligned to end */
+  /* === variant: media-only (was cover) === */
+  ui-reveal[variant~="media-only"] summary > ui-media    /* media fills face */
+  ui-reveal[variant~="media-only"] summary > ui-content  /* content-area hidden */
+
+  /* === variant: overlay(pos) (was overlay; ported from overlay.css) === */
+  ui-reveal[variant*="overlay("] summary                 /* stack media + content, scrim */
+  ui-reveal[variant*="overlay(bl)"] summary > ui-content /* 9-position align */
 
   /* === variant: inset === */
-  ui-reveal[variant~="inset"] summary > img  /* grid-column: 2 (content column) */
+  ui-reveal[variant~="inset"] summary > ui-media /* media padded, no bleed */
 
   /* === icon placement === */
   ui-reveal[icon~="top"]    summary > ui-icon
