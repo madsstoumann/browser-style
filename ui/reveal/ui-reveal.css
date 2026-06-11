@@ -57,7 +57,7 @@
 			ui-icon {
 				background: var(--ui-reveal-icon-bg, var(--color-button));
 				border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
-				font-size: calc(var(--ui-reveal-icon-sz) / 2);
+				font-size: calc(var(--ui-reveal-icon-sz) / 2); /* padding between icon and circle */
 				height: var(--ui-reveal-icon-sz);
 				justify-self: end;
 				width: var(--ui-reveal-icon-sz);
@@ -120,15 +120,16 @@
 			&[variant*="overlay(br)"] ui-content { justify-content: end;    align-items: end;    text-align: end;    }
 
 			/* gradient direction follows vertical placement */
+			/* TODO! */
 			&[variant*="overlay(t"] ui-content {
-				background: var(--ui-reveal-overlay-gradient, linear-gradient(to bottom, rgb(0 0 0 / 0.7) 0%, rgb(0 0 0 / 0) 100%));
+				/* background: var(--ui-reveal-overlay-gradient, linear-gradient(to bottom, rgb(0 0 0 / 0.7) 0%, rgb(0 0 0 / 0) 100%)); */
 			}
 			&[variant*="overlay(c"] ui-content {
-				background: var(--ui-reveal-overlay-gradient, radial-gradient(ellipse at center, rgb(0 0 0 / 0.6) 0%, rgb(0 0 0 / 0.05) 100%));
+				/* background: var(--ui-reveal-overlay-gradient, radial-gradient(ellipse at center, rgb(0 0 0 / 0.6) 0%, rgb(0 0 0 / 0.05) 100%)); */
 			}
 		}
 
-		/* === icon: position tokens pin icon to a summary corner (absolute) === */
+		/* === icon === */
 		&:is([icon~="top"],[icon~="bottom"],[icon~="left"],[icon~="right"]) summary > ui-icon {
 			margin: var(--ui-reveal-icon-m, var(--ui-reveal-p));
 			position: absolute;
@@ -139,7 +140,7 @@
 		&[icon~="left"]   summary > ui-icon { inset-inline: 0 auto; }
 		&[icon~="right"]  summary > ui-icon { inset-inline: auto 0; }
 
-		/* === icon-close: reposition icon while open (defaults to `icon`) === */
+		/* === icon-close === */
 		&:is([icon-close~="top"],[icon-close~="bottom"],[icon-close~="left"],[icon-close~="right"]) details[open] summary > ui-icon {
 			position: absolute;
 			z-index: 2;
