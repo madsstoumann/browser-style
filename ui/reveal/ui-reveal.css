@@ -44,12 +44,15 @@
 				display: grid;
 				overflow: hidden;
 				place-items: center;
+				position: relative;
 
 				img {
 					block-size: 100%;
 					inline-size: 100%;
+					inset: 0;
 					object-fit: var(--ui-reveal-object-fit, cover);
 					object-position: var(--ui-reveal-op, center);
+					position: absolute;
 				}
 			}
 
