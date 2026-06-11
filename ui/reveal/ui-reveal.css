@@ -69,6 +69,12 @@
 				justify-self: end;
 				width: var(--ui-reveal-icon-sz);
 			}
+
+			/* focus ring rides the icon, not the whole summary */
+			&:focus-visible { outline: none; }
+			&:focus-visible ui-icon {
+				box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-bg), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ring-color);
+			}
 		}
 
 		/* === variants === */
@@ -171,7 +177,6 @@
 	}
 
 	/* === type: expand === */
-	/* classic accordion: animate ::details-content block-size 0 → auto */
 	:where(ui-reveal[type="expand"]) {
 		details::details-content {
 			block-size: 0;
@@ -187,7 +192,6 @@
 	}
 
 	/* === type: flip === */
-	/* summary rotates away, content counter-rotates in (shared cell) */
 	:where(ui-reveal[type="flip"]) {
 		details { perspective: var(--ui-reveal-perspective, 1000px); }
 
@@ -208,7 +212,6 @@
 	}
 
 	/* === type: slide === */
-	/* panel slides in over the summary from the `from` edge (default: right) */
 	:where(ui-reveal[type="slide"]) {
 		details::details-content {
 			grid-area: 1 / -1;
@@ -230,31 +233,27 @@
 	}
 
 	/* === type: scale === */
-	/* panel morphs from the icon corner to cover the card. It is positioned
-	   (out of flow) so the size morph never reflows the card — same idea as the
-	   search-bot dialog, minus the popover/anchor. */
 	:where(ui-reveal[type="scale"]) {
 		details { position: relative; }
 
 		details::details-content {
-			position: absolute;
-			inset-block: var(--_scale-bs, auto) var(--_scale-be, 0);
-			inset-inline: var(--_scale-is, auto) var(--_scale-ie, 0);
-			/* surface set here (not just [open]) so it persists through the exit shrink */
 			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
-			color: var(--ui-reveal-content-c, inherit);
-			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
 			block-size: var(--ui-reveal-icon-sz);
 			border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
-			box-sizing: border-box; /* padding inside 100% so content isn't clipped */
+			box-sizing: border-box;
+			color: var(--ui-reveal-content-c, inherit);
 			content-visibility: hidden;
 			inline-size: var(--ui-reveal-icon-sz);
+			inset-block: var(--_scale-bs, auto) var(--_scale-be, 0);
+			inset-inline: var(--_scale-is, auto) var(--_scale-ie, 0);
 			margin: var(--ui-reveal-p);
 			opacity: 0;
 			overflow: hidden;
-			z-index: 1;
-			transition: block-size var(--_trs), inline-size var(--_trs), border-radius var(--_trs), margin var(--_trs), opacity var(--_trs), content-visibility var(--_trs);
+			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
+			position: absolute;
 			transition-behavior: allow-discrete;
+			transition: block-size var(--_trs), inline-size var(--_trs), border-radius var(--_trs), margin var(--_trs), opacity var(--_trs), content-visibility var(--_trs);
+			z-index: 1;
 		}
 		details[open]::details-content {
 			block-size: 100%;
