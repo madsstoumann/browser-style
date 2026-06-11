@@ -57,6 +57,7 @@
 			ui-icon {
 				background: var(--ui-reveal-icon-bg, var(--color-button));
 				border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
+				font-size: calc(var(--ui-reveal-icon-sz) / 2);
 				height: var(--ui-reveal-icon-sz);
 				justify-self: end;
 				width: var(--ui-reveal-icon-sz);
