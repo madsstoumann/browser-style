@@ -87,7 +87,7 @@ Space-separated tokens. Combinable.
 | `panel` | Active panel gets `--ui-tabs-panel-bg` + `--ui-tabs-panel-shadow`, and slides in/out on tab switch. |
 | `pill` | Fully rounded header bar and indicator (`--ui-tabs-pill-radius`). |
 | `rounded` | Slightly rounded outer corners + rounded top of header bar (`--ui-tabs-rounded-radius`). |
-| `ellipse` | Corners drawn via the CSS `corners` property (Chrome 135+). Default `--ui-tabs-squircle-exp: 2` is a true ellipse; bump to `3+` for an iOS-style squircle. |
+| `ellipse` | Corners drawn via the CSS `corner` shorthand / `corner-shape` (Chrome Canary 151+). Default `--ui-tabs-squircle-exp: 2` is an iOS-style squircle; `1` = plain round, higher = squarer. |
 
 ### Standalone attributes
 
@@ -154,7 +154,7 @@ All tokens are scoped to `:where(ui-tabs)` — low specificity, easy to override
 | `--ui-tabs-panel-shadow` | `var(--shadow-md)` | Panel surface shadow. |
 | `--ui-tabs-pill-radius` | `var(--radius-pill)` | Radius used by `variant="pill"`. |
 | `--ui-tabs-rounded-radius` | `var(--radius-lg)` | Radius used by `variant="rounded"`. |
-| `--ui-tabs-squircle-exp` | `2` | Superellipse exponent for `variant="ellipse"`. `2` = a true ellipse; `3+` = squircle; higher = squarer corners. |
+| `--ui-tabs-squircle-exp` | `2` | Superellipse curvature (log2 scale) for `variant="ellipse"`. `1` = round; `2` = squircle; higher = squarer corners. |
 | `--ui-tabs-squircle-radius` | `1em` | Corner radius for `variant="ellipse"`. |
 | `--ui-tabs-tab-gap` | `1ch` | Gap between tab label and any inline icon. |
 
@@ -239,7 +239,7 @@ Bump the superellipse exponent:
 ```html
 <ui-tabs variant="ellipse" class="tabs-rounded">…</ui-tabs>
 ```
-Exponent `2` (default) = a true ellipse (same shape as border-radius). Exponent `3+` = iOS-style squircle. Higher = progressively squarer corners.
+The value is a log2 curvature scale: `1` = round (same shape as border-radius), `2` (default) = iOS-style squircle, higher = progressively squarer corners.
 
 ### Minimal compact strip
 
@@ -353,9 +353,9 @@ Required features and their minimum browser versions:
 | `@starting-style` | panel enter animation | Chrome 117+, Safari 17.4+, Firefox 129+ |
 | `transition-behavior: allow-discrete` | panel enter/exit animation | Chrome 117+, Safari 17.4+, Firefox 129+ |
 | `@property` with `<integer>` in `repeat()` | compact + panel animations | Chrome 126+, Safari 16.4+, Firefox 128+ |
-| `corners: superellipse(…)` | `variant="ellipse"` only | Chrome 135+ |
+| `corner` / `corner-shape: superellipse(…)` | `variant="ellipse"` only | Chrome Canary 151+ |
 
-Without `corners` support, `variant="ellipse"` falls back to no rounding. Without `::details-content` support, the component is not usable.
+Without `corner` / `corner-shape` support, `variant="ellipse"` falls back to no rounding. Without `::details-content` support, the component is not usable.
 
 ---
 

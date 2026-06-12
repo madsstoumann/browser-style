@@ -201,6 +201,15 @@
 		&[variant*="op(bl)"] { --ui-reveal-op: left bottom; }
 		&[variant*="op(bc)"] { --ui-reveal-op: center bottom; }
 		&[variant*="op(br)"] { --ui-reveal-op: right bottom; }
+
+		/* === squircle — superellipse card corners via CSS corner-shape (Chrome
+		   Canary 151+; unsupported browsers drop it and keep regular rounding).
+		   Shape layers onto the existing --ui-reveal-radius; icons stay circles.
+		   superellipse() uses a log2 curvature scale: 1 = round, 2 = squircle
+		   (default), higher = squarer. === */
+		&[variant~="squircle"] details {
+			corner-shape: superellipse(var(--ui-reveal-squircle-exp, 2));
+		}
 	}
 
 	/* === type: expand === */

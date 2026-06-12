@@ -248,14 +248,15 @@
 			details:last-of-type summary { border-end-end-radius: 0; }
 		}
 
-		/* ellipse — uses the CSS `corners` property (Chrome 135+). Default exp 2 is
-			a true ellipse (same shape as border-radius); bump --ui-tabs-squircle-exp
-			to 3+ for a squircle. */
+		/* ellipse — uses the CSS `corner` shorthand (Chrome Canary 151+; renamed
+			from `corners`). superellipse() is a log2 curvature scale: 1 = round
+			(same shape as border-radius), 2 = squircle (default --ui-tabs-squircle-exp),
+			higher = squarer. */
 		:is(ui-tabs[variant~="ellipse"], [tabs~="ellipse"]) {
-			cq-box::after { corners: calc(var(--ui-tabs-squircle-radius) - var(--ui-tabs-indicator-offset)) superellipse(var(--ui-tabs-squircle-exp)); }
-			cq-box::before { corners: var(--ui-tabs-squircle-radius) superellipse(var(--ui-tabs-squircle-exp)); }
-			details:first-of-type summary { corners: var(--ui-tabs-squircle-radius) 0 0 var(--ui-tabs-squircle-radius) superellipse(var(--ui-tabs-squircle-exp)); }
-			details:last-of-type summary { corners: 0 var(--ui-tabs-squircle-radius) var(--ui-tabs-squircle-radius) 0 superellipse(var(--ui-tabs-squircle-exp)); }
+			cq-box::after { corner: calc(var(--ui-tabs-squircle-radius) - var(--ui-tabs-indicator-offset)) superellipse(var(--ui-tabs-squircle-exp)); }
+			cq-box::before { corner: var(--ui-tabs-squircle-radius) superellipse(var(--ui-tabs-squircle-exp)); }
+			details:first-of-type summary { border-radius: var(--ui-tabs-squircle-radius) 0 0 var(--ui-tabs-squircle-radius); corner-shape: superellipse(var(--ui-tabs-squircle-exp)); }
+			details:last-of-type summary { border-radius: 0 var(--ui-tabs-squircle-radius) var(--ui-tabs-squircle-radius) 0; corner-shape: superellipse(var(--ui-tabs-squircle-exp)); }
 		}
 
 		/* === Attributes === */

@@ -103,14 +103,11 @@
 		</ui-reveal>
 	</div>
 
-	<!-- ============================================
-	     overlay — all 9 positions, ar 1/1
-	     ============================================ -->
 	<h2>Flip</h2>
 
 	<div class="grid">
 		<ui-reveal icon="bottom right sm" type="flip" variant="overlay(tl) ar(1/1)">
-			<details>
+			<details name="flip">
 				<summary>
 					<ui-face>
 						<ui-media><img src="band_goth.png" alt="" loading="lazy"></ui-media>
@@ -123,7 +120,7 @@
 		</ui-reveal>
 
 		<ui-reveal icon="bottom right sm" type="flip" variant="overlay(tc) ar(1/1)">
-			<details>
+			<details name="flip">
 				<summary>
 					<ui-face>
 						<ui-media><img src="band_alternative.png" alt="" loading="lazy"></ui-media>
@@ -136,7 +133,7 @@
 		</ui-reveal>
 
 		<ui-reveal icon="bottom left sm" type="flip" variant="overlay(tr) ar(1/1)">
-			<details>
+			<details name="flip">
 				<summary>
 					<ui-face>
 						<ui-media><img src="band_boys.png" alt="" loading="lazy"></ui-media>
@@ -149,7 +146,7 @@
 		</ui-reveal>
 
 		<ui-reveal icon="bottom right sm" type="flip" variant="overlay(cl) ar(1/1)">
-			<details>
+			<details name="flip">
 				<summary>
 					<ui-face>
 						<ui-media><img src="band_girls.png" alt="" loading="lazy"></ui-media>
@@ -162,7 +159,7 @@
 		</ui-reveal>
 
 		<ui-reveal icon="bottom right sm" type="flip" variant="overlay(cc) ar(1/1)">
-			<details>
+			<details name="flip">
 				<summary>
 					<ui-face>
 						<ui-media><img src="band_goth.png" alt="" loading="lazy"></ui-media>
@@ -175,7 +172,7 @@
 		</ui-reveal>
 
 		<ui-reveal icon="bottom left sm" type="flip" variant="overlay(cr) ar(1/1)">
-			<details>
+			<details name="flip">
 				<summary>
 					<ui-face>
 						<ui-media><img src="band_alternative.png" alt="" loading="lazy"></ui-media>
@@ -188,7 +185,7 @@
 		</ui-reveal>
 
 		<ui-reveal icon="top right sm" type="flip" variant="overlay(bl) ar(1/1)">
-			<details>
+			<details name="flip">
 				<summary>
 					<ui-face>
 						<ui-media><img src="band_boys.png" alt="" loading="lazy"></ui-media>
@@ -201,7 +198,7 @@
 		</ui-reveal>
 
 		<ui-reveal icon="top right sm" type="flip" variant="overlay(bc) ar(1/1)">
-			<details>
+			<details name="flip">
 				<summary>
 					<ui-face>
 						<ui-media><img src="band_girls.png" alt="" loading="lazy"></ui-media>
@@ -214,7 +211,7 @@
 		</ui-reveal>
 
 		<ui-reveal icon="top left sm" type="flip" variant="overlay(br) ar(1/1)">
-			<details>
+			<details name="flip">
 				<summary>
 					<ui-face>
 						<ui-media><img src="band_goth.png" alt="" loading="lazy"></ui-media>
@@ -345,6 +342,57 @@
 				<div>
 					<h3>horizontal-r</h3>
 					<p>Content left, media right.</p>
+				</div>
+			</details>
+		</ui-reveal>
+	</div>
+
+	<!-- ============================================
+	     squircle — superellipse corners (Chrome Canary 151+)
+	     ============================================ -->
+	<h2>squircle — superellipse corners</h2>
+	<p>The card gets iOS-style squircle corners via CSS <code>corner-shape</code> (icons stay circles). Tweak with <code>--ui-reveal-squircle-exp</code> — a log<sub>2</sub> curvature scale where <code>1</code> = round, <code>2</code> = squircle (default), higher = squarer. Unsupported browsers fall back to regular rounding.</p>
+
+	<div class="grid">
+		<ui-reveal icon="bottom right" type="expand" variant="squircle media-only ar(1/1)">
+			<details>
+				<summary>
+					<ui-media><img src="band_alternative.png" alt="Alternative band" loading="lazy"></ui-media>
+					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+				</summary>
+				<div>
+					<h3>squircle</h3>
+					<p>Default exponent 2 (the <code>squircle</code> keyword).</p>
+				</div>
+			</details>
+		</ui-reveal>
+
+		<ui-reveal icon="top right" type="scale" variant="squircle overlay(bl) ar(1/1)">
+			<details>
+				<summary>
+					<ui-media><img src="band_goth.png" alt="" loading="lazy"></ui-media>
+					<ui-content>
+						<small>Gothic</small>
+						<b>Squircle + scale.</b>
+					</ui-content>
+					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+				</summary>
+				<div>
+					<h3>squircle + scale</h3>
+					<p>The morph panel grows into the squircle card shape.</p>
+				</div>
+			</details>
+		</ui-reveal>
+
+		<ui-reveal icon="bottom right" type="expand" variant="squircle media-only ar(1/1)" style="--ui-reveal-squircle-exp: 3">
+			<details>
+				<summary>
+					<ui-media><img src="band_boys.png" alt="Boy band" loading="lazy"></ui-media>
+					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+				</summary>
+				<div>
+					<h3>exp 3</h3>
+					<p>Higher exponent — squarer corners.</p>
 				</div>
 			</details>
 		</ui-reveal>
