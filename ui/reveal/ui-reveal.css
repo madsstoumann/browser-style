@@ -18,7 +18,7 @@
 		interpolate-size: allow-keywords;
 
 		details {
-			background: var(--ui-reveal-bg);
+			/* background: var(--ui-reveal-bg); */
 			border-radius: var(--ui-reveal-radius);
 			box-shadow: var(--ui-reveal-shadow, var(--shadow-xl));
 			display: grid;
@@ -51,7 +51,12 @@
 				flex-direction: column;
 				padding: var(--ui-reveal-p);
 				row-gap: var(--ui-reveal-row-gap, var(--spacing-sm));
-				& > * { margin: 0; }
+				& > * { margin: 0; text-box: cap alphabetic; }
+			}
+
+			ui-face {
+				display: grid;
+				grid-column: 1 / -1;
 			}
 
 			ui-icon {
@@ -89,7 +94,7 @@
 		/* === variants === */
 		&[variant~="vertical-r"] ui-content { order: -1; }
 
-		&:is([variant~="horizontal"], [variant~="horizontal-r"]) summary {
+		&:is([variant~="horizontal"], [variant~="horizontal-r"]) :is(summary, summary > ui-face) {
 			align-items: stretch;
 			grid-template-columns: var(--ui-reveal-split, 1fr 1fr);
 		}
@@ -212,23 +217,31 @@
 		}
 	}
 
-	/* === type: flip === */
+	/* === type: flip ===
+	   Front face content must be wrapped in <ui-face> — only the face and the
+	   panel rotate, never <summary>, so the toggle icon stays put on both sides.
+	   Each face carries its own perspective(); identical boxes → identical
+	   vanishing points, and stacking stays plain 2D (no 3D rendering context). */
 	:where(ui-reveal[type="flip"]) {
-		details { perspective: var(--ui-reveal-perspective, 1000px); }
+		--_persp: perspective(var(--ui-reveal-perspective, 1000px));
 
-		summary {
+		summary > ui-face {
 			backface-visibility: hidden;
-			transition: rotate var(--_trs);
+			transform: var(--_persp) rotateY(0deg);
+			transition: transform var(--_trs);
 		}
-		details[open] summary { rotate: y 180deg; }
+		details[open] summary > ui-face { transform: var(--_persp) rotateY(180deg); }
+
+		/* icon paints (and hit-tests) above the open panel */
+		summary > ui-icon { z-index: 2; }
 
 		details::details-content {
 			backface-visibility: hidden;
 			grid-area: 1 / -1;
-			rotate: y -180deg;
-			transition: rotate var(--_trs), content-visibility var(--_trs);
+			transform: var(--_persp) rotateY(-180deg);
+			transition: transform var(--_trs), content-visibility var(--_trs);
 		}
-		details[open]::details-content { rotate: y 0deg; }
+		details[open]::details-content { transform: var(--_persp) rotateY(0deg); }
 	}
 
 	/* === type: slide === */
@@ -247,7 +260,7 @@
 		details[open]::details-content { translate: 0 0; }
 
 		/* panel + its links take clicks; icon stays the toggle */
-		details[open] summary { pointer-events: none; }
+		&:not([trigger="card"]) details[open] summary { pointer-events: none; }
 		details[open] summary > ui-icon { pointer-events: auto; }
 	}
 
@@ -286,7 +299,20 @@
 		&[icon~="right"]  { --_scale-is: auto; --_scale-ie: 0; }
 
 		/* panel takes clicks; icon stays the toggle */
-		details[open] summary { pointer-events: none; }
+		&:not([trigger="card"]) details[open] summary { pointer-events: none; }
 		details[open] summary > ui-icon { pointer-events: auto; }
+	}
+
+	/* === trigger: card — the whole card toggles (no ui-icon required) ===
+	   Clicks fall through the open panel to the <summary> beneath; interactive
+	   panel content opts back in. With no icon to carry the focus ring, it
+	   moves to the card itself. */
+	:where(ui-reveal[trigger="card"]) {
+		details[open]::details-content { pointer-events: none; }
+		details[open] :is(a, button, input, select, textarea, [tabindex]) { pointer-events: auto; }
+
+		details:has(summary:focus-visible) {
+			box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-bg), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ring-color), var(--ui-reveal-shadow, var(--shadow-xl));
+		}
 	}
 }

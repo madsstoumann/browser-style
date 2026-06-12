@@ -8,7 +8,7 @@
 |-------|----------|
 | *(none)* | Expand below (accordion-style transition) |
 | `slide` | Panel slides in; direction via `from` |
-| `flip` | 3D card flip — summary AND content flip together |
+| `flip` | 3D card flip — `<ui-face>` (front) and content flip; summary + icon stay static |
 | `scale` | Morph/grow from icon position |
 | `popup` | Expand below + `position: sticky` on card |
 
@@ -20,6 +20,25 @@
 | `right` | Right edge *(default if omitted)* |
 | `bottom` | Bottom edge |
 | `left` | Left edge |
+
+### `trigger` — toggle hit target
+
+| Value | Behavior |
+|-------|----------|
+| *(none)* | Closed: whole summary face toggles. Open: only the `<ui-icon>` toggles |
+| `card` | Entire card toggles, front AND back — no `<ui-icon>` required |
+
+`trigger="card"` works by letting clicks fall through the open panel to the
+`<summary>` beneath (`pointer-events: none` on `::details-content`); interactive
+panel content (`a`, `button`, form controls, `[tabindex]`) opts back in with
+`pointer-events: auto`, so links keep working while everything else closes the
+card. Clicking panel *text* also closes — text is not interactive.
+
+With no icon to carry the focus ring, it moves to the card itself via
+`details:has(summary:focus-visible)` (box-shadow ring — `outline` would be
+clipped by the card's `overflow: hidden`). The slide/scale rule
+`details[open] summary { pointer-events: none }` is guarded with
+`:not([trigger="card"])` so the attribute composes with those types too.
 
 ### `variant` — summary card layout (space-separated, composable)
 
@@ -125,15 +144,18 @@ Description and the real heading live in the revealed panel. See **Accessibility
   </details>
 </ui-reveal>
 
-<!-- overlay, text bottom-left + flip -->
+<!-- overlay, text bottom-left + flip — front face wrapped in <ui-face> so the
+     icon (outside the wrapper) never rotates and stays the toggle on both sides -->
 <ui-reveal type="flip" variant="overlay(bl)" icon="bottom right">
   <details>
     <summary>
-      <ui-media><img src="..." alt=""></ui-media>
-      <ui-content>
-        <small>Brow</small>
-        <b>Headline</b>
-      </ui-content>
+      <ui-face>
+        <ui-media><img src="..." alt=""></ui-media>
+        <ui-content>
+          <small>Brow</small>
+          <b>Headline</b>
+        </ui-content>
+      </ui-face>
       <ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
     </summary>
     <div>Revealed content</div>
@@ -427,34 +449,48 @@ ui-reveal[type="scale"] details[open]::details-content > * {
 
 ## Flip (type="flip")
 
-Both summary and `::details-content` must occupy the same grid cell for the card-flip illusion. `details` is the 3D space (perspective). Both faces hide their backface; summary rotates away, content counter-rotates in.
+Both faces must occupy the same grid cell for the card-flip illusion. The front
+face is the **`<ui-face>` wrapper** (around `<ui-media>` + `<ui-content>`), NOT
+`<summary>` — summary never transforms, so the `<ui-icon>` sitting outside the
+wrapper stays static, unmirrored, and clickable in both states.
+
+Rotating `summary` itself doesn't work: `backface-visibility: hidden` culls the
+whole flattened subtree, icon included, leaving no toggle on the back side.
+
+Each face carries its **own** `perspective()` inside `transform` (no shared 3D
+rendering context on `details`). Since both faces fill the same box, the
+vanishing points coincide — visually identical to shared perspective — and
+stacking stays plain 2D, so the icon's `z-index` paints/hit-tests it above the
+open panel. Note: `perspective()` must live inside `transform`; the standalone
+`rotate` property composes before `transform`, putting perspective in the wrong
+matrix position.
 
 ```css
-ui-reveal[type="flip"] details {
-  perspective: 1000px;
-}
-
-ui-reveal[type="flip"] summary {
+ui-reveal[type="flip"] summary > ui-face {
   backface-visibility: hidden;
-  transition: rotate var(--ui-reveal-duration) var(--ui-reveal-easing);
+  transform: perspective(1000px) rotateY(0deg);
+  transition: transform var(--ui-reveal-duration) var(--ui-reveal-easing);
 }
 
-ui-reveal[type="flip"] details[open] summary {
-  rotate: y 180deg;
+ui-reveal[type="flip"] details[open] summary > ui-face {
+  transform: perspective(1000px) rotateY(180deg);
 }
+
+/* icon paints (and hit-tests) above the open panel */
+ui-reveal[type="flip"] summary > ui-icon { z-index: 2; }
 
 ui-reveal[type="flip"] details::details-content {
   backface-visibility: hidden;
   grid-area: 1 / 1 / -1 / -1;   /* stack on top of summary */
-  rotate: y -180deg;
-  transition-property: rotate, content-visibility;
+  transform: perspective(1000px) rotateY(-180deg);
+  transition-property: transform, content-visibility;
   transition-duration: var(--ui-reveal-duration);
   transition-timing-function: var(--ui-reveal-easing);
   transition-behavior: allow-discrete;
 }
 
 ui-reveal[type="flip"] details[open]::details-content {
-  rotate: y 0deg;
+  transform: perspective(1000px) rotateY(0deg);
 }
 ```
 
