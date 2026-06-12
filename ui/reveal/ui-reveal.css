@@ -18,7 +18,7 @@
 		interpolate-size: allow-keywords;
 
 		details {
-			/* background: var(--ui-reveal-bg); */
+			background: var(--ui-reveal-bg);
 			border-radius: var(--ui-reveal-radius);
 			box-shadow: var(--ui-reveal-shadow, var(--shadow-xl));
 			display: grid;
