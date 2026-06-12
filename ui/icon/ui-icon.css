@@ -94,14 +94,16 @@
 	ui-icon[type=veggie-menu] { gap: .33em; }
 
 	/* Angle */
-	ui-icon[type~=down] { rotate: 90deg; }
+	ui-icon[type~=down], ui-icon[type~=down-arrow-cross] { rotate: 90deg; }
 	ui-icon[type=cross], ui-icon[type~=downleft] { rotate: 135deg; }
 	ui-icon[type~=downright] { rotate: 45deg; }
-	ui-icon[type~=left], ui-icon[type~=left-right] { rotate: -180deg; }
+	ui-icon[type~=left], ui-icon[type~=left-right], ui-icon[type~=left-arrow-cross] { rotate: -180deg; }
 	ui-icon:is([type*=cross],[type*=plus])::after,
-	ui-icon[type~=up] { rotate: -90deg; }
+	ui-icon[type~=up], ui-icon[type~=up-arrow-cross] { rotate: -90deg; }
 	ui-icon[type~=upleft] { rotate: -135deg; }
 	ui-icon[type~=upright] { rotate: -45deg; }
+	/* *-arrow-cross contains "cross" — restore the arrowhead the rule above rotated away */
+	ui-icon[type*=arrow-cross]::after { rotate: 45deg; }
 
 	/* Play, Pause, Stop, First, Last */
 	ui-icon[type*=pause], ui-icon[type*=play], ui-icon[type*=stop], ui-icon[type*=triangle] {
@@ -154,6 +156,23 @@
 	:is([open] >* > ui-icon, :checked + ui-icon)[type*=plus-minus]::after { rotate: 0deg; }
 	:is([open] >* > ui-icon, :checked + ui-icon)[type~=left-right] { rotate: 0deg; }
 	:is([open] >* > ui-icon, :checked + ui-icon)[type~=right-left] { rotate: -180deg; }
+	/* *-arrow-cross: arrow morphs into a cross; host angles land on the nearest
+	   ×-equivalent for a consistent +135deg sweep from each direction */
+	:is([open] >* > ui-icon, :checked + ui-icon)[type*=arrow-cross] {
+		&::before { translate: 0; width: 1em; }
+		&::after {
+			background: currentColor;
+			border-width: 0;
+			height: var(--_s);
+			rotate: -90deg;
+			translate: 0;
+			width: 1em;
+		}
+	}
+	:is([open] >* > ui-icon, :checked + ui-icon)[type~=right-arrow-cross] { rotate: 135deg; }
+	:is([open] >* > ui-icon, :checked + ui-icon)[type~=left-arrow-cross] { rotate: -45deg; }
+	:is([open] >* > ui-icon, :checked + ui-icon)[type~=up-arrow-cross] { rotate: 45deg; }
+	:is([open] >* > ui-icon, :checked + ui-icon)[type~=down-arrow-cross] { rotate: 225deg; }
 	[open] >* >ui-icon[type~=right] { rotate: 90deg; }
 
 	/* Scoped to `summary` so [open] state only rotates icons in the same details' header,
