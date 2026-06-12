@@ -97,7 +97,7 @@
 	ui-icon[type~=down] { rotate: 90deg; }
 	ui-icon[type=cross], ui-icon[type~=downleft] { rotate: 135deg; }
 	ui-icon[type~=downright] { rotate: 45deg; }
-	ui-icon[type~=left] { rotate: -180deg; }
+	ui-icon[type~=left], ui-icon[type~=left-right] { rotate: -180deg; }
 	ui-icon:is([type*=cross],[type*=plus])::after,
 	ui-icon[type~=up] { rotate: -90deg; }
 	ui-icon[type~=upleft] { rotate: -135deg; }
@@ -152,6 +152,8 @@
 	:is([open] >* > ui-icon, :checked + ui-icon)[type=grid] { rotate: 135deg; }
 	:is([open] >* > ui-icon, :checked + ui-icon):is([type=grid],[type=kebab],[type=meatball])::after { box-shadow: -.3em 0 0, 0 .3em 0, 0 -.3em 0, .3em 0 0; }
 	:is([open] >* > ui-icon, :checked + ui-icon)[type*=plus-minus]::after { rotate: 0deg; }
+	:is([open] >* > ui-icon, :checked + ui-icon)[type~=left-right] { rotate: 0deg; }
+	:is([open] >* > ui-icon, :checked + ui-icon)[type~=right-left] { rotate: -180deg; }
 	[open] >* >ui-icon[type~=right] { rotate: 90deg; }
 
 	/* Scoped to `summary` so [open] state only rotates icons in the same details' header,

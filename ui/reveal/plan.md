@@ -12,7 +12,7 @@
 | `scale` | Morph/grow from icon position |
 | `popup` | Expand below + `position: sticky` on card |
 
-### `from` — slide direction (only with `type="slide"`)
+### `from` — reveal direction (with `type="slide"` and `type="flip"`)
 
 | Value | Panel enters from... |
 |-------|---------------------|
@@ -20,6 +20,13 @@
 | `right` | Right edge *(default if omitted)* |
 | `bottom` | Bottom edge |
 | `left` | Left edge |
+
+For `slide` the panel translates in from that edge; for `flip` the panel flips
+in over it — `left`/`right` rotate around the Y axis, `top`/`bottom` around X.
+Implementation note: closed/open transform pairs must stay on the same rotation
+axis (`rotateY(0)` ↔ `rotateY(180deg)`, never `rotateY(0)` ↔ `rotateX(180deg)`)
+so transitions interpolate as rotations — mixed function lists fall back to
+matrix interpolation, which is degenerate at 180°.
 
 ### `trigger` — toggle hit target
 

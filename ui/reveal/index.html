@@ -39,7 +39,7 @@
 	     ============================================ -->
 	<h2>hero — full-width (ar 21/9)</h2>
 
-	<ui-reveal class="hero" icon="top right" type="scale" variant="overlay(bl) ar(21/9) op(cc)">
+	<ui-reveal class="hero" icon="top right lg" type="scale" variant="overlay(bl) ar(21/9) op(cc)">
 		<details>
 			<summary>
 				<ui-media><img src="band_girls.png" alt="" loading="lazy"></ui-media>
@@ -63,7 +63,7 @@
 	<h2>media-only — aspect ratios</h2>
 
 	<div class="grid">
-		<ui-reveal icon="bottom right semi md" type="expand" variant="media-only ar(1/1)">
+		<ui-reveal icon="bottom right semi" type="expand" variant="media-only ar(1/1)">
 			<details>
 				<summary>
 					<ui-media><img src="band_alternative.png" alt="Alternative band" loading="lazy"></ui-media>
@@ -76,7 +76,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal icon="bottom right md" type="expand" variant="media-only ar(3/4)">
+		<ui-reveal icon="bottom right" type="expand" variant="media-only ar(3/4)">
 			<details>
 				<summary>
 					<ui-media><img src="band_boys.png" alt="Boy band" loading="lazy"></ui-media>
@@ -89,7 +89,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal icon="bottom right md" type="expand" variant="media-only ar(16/9)">
+		<ui-reveal icon="bottom right" type="expand" variant="media-only ar(16/9)">
 			<details>
 				<summary>
 					<ui-media><img src="band_girls.png" alt="Girl group" loading="lazy"></ui-media>
@@ -231,10 +231,11 @@
 	     full-card flip — trigger="card" (ar 2/3)
 	     ============================================ -->
 	<h2>full-card flip — trigger="card" (ar 2/3)</h2>
-	<p>No <code>&lt;ui-icon&gt;</code> — the entire card is the toggle, front <em>and</em> back. Interactive content in the panel (links, buttons) still works.</p>
+	<p>No <code>&lt;ui-icon&gt;</code> — the entire card is the toggle, front <em>and</em> back. Interactive content in the panel (links, buttons) still works.
+	Flip direction follows <code>from</code>: these three flip in from <code>left</code>, <code>top</code> and <code>bottom</code> (default is <code>right</code>).</p>
 
 	<div class="grid">
-		<ui-reveal type="flip" trigger="card" variant="overlay(bl) ar(2/3)">
+		<ui-reveal type="flip" trigger="card" from="left" variant="overlay(bl) ar(2/3)">
 			<details>
 				<summary>
 					<ui-face>
@@ -246,7 +247,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="flip" trigger="card" variant="overlay(cc) ar(2/3)">
+		<ui-reveal type="flip" trigger="card" from="top" variant="overlay(cc) ar(2/3)">
 			<details>
 				<summary>
 					<ui-face>
@@ -258,7 +259,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="flip" trigger="card" variant="media-only ar(2/3)">
+		<ui-reveal type="flip" trigger="card" from="bottom" variant="media-only ar(2/3)">
 			<details>
 				<summary>
 					<ui-face>
