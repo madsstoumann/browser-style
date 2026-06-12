@@ -31,7 +31,13 @@
 			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
 		}
 
-		details::details-content { transition-behavior: allow-discrete; }
+		details::details-content {
+			display: grid;
+			font-size: small;
+			text-box: cap alphabetic;
+			transition-behavior: allow-discrete;
+			& > * { margin: 0;  }
+		}
 
 		&:is([type="flip"], [type="scale"], [type="slide"]) details::details-content {
 			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
@@ -202,12 +208,7 @@
 		&[variant*="op(bc)"] { --ui-reveal-op: center bottom; }
 		&[variant*="op(br)"] { --ui-reveal-op: right bottom; }
 
-		/* === squircle — sq() sets corner curvature + matching radius together.
-		   superellipse() uses a log2 curvature scale: 1 = round, higher = squarer;
-		   exponent climbs with size so larger corners keep a squircle look, not a
-		   blob. Radius is a component-level squircle scale (intentionally larger
-		   than --radius-* tokens). Chrome Canary 151+; unsupported browsers drop
-		   corner-shape and keep the rounded radius. Icons stay circles. === */
+		/* === squircle — sq() === */
 		&[variant*="sq(sm)"] { --ui-reveal-squircle-exp: 1.5; --ui-reveal-radius: 1.25rem; } /* 20px */
 		&[variant*="sq(md)"] { --ui-reveal-squircle-exp: 1.7; --ui-reveal-radius: 2rem;    } /* 32px */
 		&[variant*="sq(lg)"] { --ui-reveal-squircle-exp: 1.8; --ui-reveal-radius: 2.8rem;  } /* ~45px */
