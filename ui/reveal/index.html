@@ -106,12 +106,12 @@
 	<h2>Flip</h2>
 
 	<div class="grid">
-		<ui-reveal icon="bottom right sm" type="flip" variant="overlay(tl) ar(1/1)">
+		<ui-reveal icon="top right sm" type="flip" variant="overlay(tl) ar(1/1) op(tc) sq(lg)">
 			<details name="flip">
 				<summary>
 					<ui-face>
 						<ui-media><img src="band_goth.png" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Gothic</small><b>Top left.</b></ui-content>
+						<ui-content><small>Gothic</small><b>The Lure</b></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
@@ -119,7 +119,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal icon="bottom right sm" type="flip" variant="overlay(tc) ar(1/1)">
+		<ui-reveal icon="top right sm" type="flip" variant="overlay(tc) ar(1/1)">
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -351,23 +351,23 @@
 	     squircle — superellipse corners (Chrome Canary 151+)
 	     ============================================ -->
 	<h2>squircle — superellipse corners</h2>
-	<p>The card gets iOS-style squircle corners via CSS <code>corner-shape</code> (icons stay circles). Tweak with <code>--ui-reveal-squircle-exp</code> — a log<sub>2</sub> curvature scale where <code>1</code> = round, <code>2</code> = squircle (default), higher = squarer. Unsupported browsers fall back to regular rounding.</p>
+	<p>The card gets iOS-style squircle corners via CSS <code>corner-shape</code> (icons stay circles). Pick a size with <code>sq(sm)</code>, <code>sq(md)</code>, <code>sq(lg)</code> or <code>sq(xl)</code> — each sets a matching radius and curvature together (exponent climbs with size so larger corners stay squircle, not blob). Unsupported browsers fall back to regular rounding.</p>
 
 	<div class="grid">
-		<ui-reveal icon="bottom right" type="expand" variant="squircle media-only ar(1/1)">
+		<ui-reveal icon="bottom right" type="expand" variant="sq(sm) media-only ar(1/1)">
 			<details>
 				<summary>
 					<ui-media><img src="band_alternative.png" alt="Alternative band" loading="lazy"></ui-media>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
 				<div>
-					<h3>squircle</h3>
-					<p>Default exponent 2 (the <code>squircle</code> keyword).</p>
+					<h3>sq(sm)</h3>
+					<p>20px radius, exponent 1.5.</p>
 				</div>
 			</details>
 		</ui-reveal>
 
-		<ui-reveal icon="top right" type="scale" variant="squircle overlay(bl) ar(1/1)">
+		<ui-reveal icon="top right" type="scale" variant="sq(lg) overlay(bl) ar(1/1)">
 			<details>
 				<summary>
 					<ui-media><img src="band_goth.png" alt="" loading="lazy"></ui-media>
@@ -378,21 +378,21 @@
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
 				<div>
-					<h3>squircle + scale</h3>
+					<h3>sq(lg) + scale</h3>
 					<p>The morph panel grows into the squircle card shape.</p>
 				</div>
 			</details>
 		</ui-reveal>
 
-		<ui-reveal icon="bottom right" type="expand" variant="squircle media-only ar(1/1)" style="--ui-reveal-squircle-exp: 3">
+		<ui-reveal icon="bottom right" type="expand" variant="sq(xl) media-only ar(1/1)">
 			<details>
 				<summary>
 					<ui-media><img src="band_boys.png" alt="Boy band" loading="lazy"></ui-media>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
 				<div>
-					<h3>exp 3</h3>
-					<p>Higher exponent — squarer corners.</p>
+					<h3>sq(xl)</h3>
+					<p>56px radius, exponent 2 — largest squircle.</p>
 				</div>
 			</details>
 		</ui-reveal>

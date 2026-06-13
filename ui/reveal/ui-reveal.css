@@ -31,7 +31,13 @@
 			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
 		}
 
-		details::details-content { transition-behavior: allow-discrete; }
+		details::details-content {
+			display: grid;
+			font-size: small;
+			text-box: cap alphabetic;
+			transition-behavior: allow-discrete;
+			& > * { margin: 0;  }
+		}
 
 		&:is([type="flip"], [type="scale"], [type="slide"]) details::details-content {
 			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
@@ -202,13 +208,13 @@
 		&[variant*="op(bc)"] { --ui-reveal-op: center bottom; }
 		&[variant*="op(br)"] { --ui-reveal-op: right bottom; }
 
-		/* === squircle — superellipse card corners via CSS corner-shape (Chrome
-		   Canary 151+; unsupported browsers drop it and keep regular rounding).
-		   Shape layers onto the existing --ui-reveal-radius; icons stay circles.
-		   superellipse() uses a log2 curvature scale: 1 = round, 2 = squircle
-		   (default), higher = squarer. === */
-		&[variant~="squircle"] details {
-			corner-shape: superellipse(var(--ui-reveal-squircle-exp, 2));
+		/* === squircle — sq() === */
+		&[variant*="sq(sm)"] { --ui-reveal-squircle-exp: 1.5; --ui-reveal-radius: 1.25rem; } /* 20px */
+		&[variant*="sq(md)"] { --ui-reveal-squircle-exp: 1.7; --ui-reveal-radius: 2rem;    } /* 32px */
+		&[variant*="sq(lg)"] { --ui-reveal-squircle-exp: 1.8; --ui-reveal-radius: 2.8rem;  } /* ~45px */
+		&[variant*="sq(xl)"] { --ui-reveal-squircle-exp: 2;   --ui-reveal-radius: 3.5rem;  } /* 56px */
+		&[variant*="sq("] details {
+			corner-shape: superellipse(var(--ui-reveal-squircle-exp, 1.8));
 		}
 	}
 
