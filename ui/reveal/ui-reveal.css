@@ -38,7 +38,7 @@
 		   single non-summary child of <details>. Disclosed content MUST be wrapped
 		   in one element (e.g. <div>). */
 		details::details-content {
-			font-size: var(--ui-reveal-content-fs, small);
+			font-size: var(--ui-reveal-content-fs, inherit);
 			transition-behavior: allow-discrete;
 		}
 
