@@ -231,17 +231,26 @@
 			content-visibility: visible;
 		}
 
+		/* popup mode: animate on OPEN only. Transition lives on the [open] state,
+		   so closing falls back to the no-transition base rule and snaps shut —
+		   no block-size drift back into the main grid when the fixed chrome drops. */
+		&[to] details::details-content { transition: none; }
+		&[to] details[open]::details-content { transition: block-size var(--_trs), content-visibility var(--_trs), padding var(--_trs); }
+
 		&[to]:has([open]) {
-			--ui-reveal-aspect: 16/9;
-			background: #FFFFFFAA;
+			--ui-reveal-aspect: var(--ui-reveal-expand-aspect, 16/9);
+			--ui-reveal-expand-m: 2ch;
+
+			background: var(--ui-reveal-expand-backdrop, color-mix(in srgb, var(--color-surface) 67%, transparent));
 			backdrop-filter: blur(8px);
 			inset: 0;
 			position: fixed;
 			z-index: 10;
 
 			details {
-				height: calc(100dvh - 4ch);
-				margin: 2ch auto;
+				align-content: start; /* size summary to media; stops overlay drifting in tall popup */
+				height: calc(100dvh - calc(var(--ui-reveal-expand-m) * 2));
+				margin: var(--ui-reveal-expand-m) auto;
 				max-inline-size: var(--ui-reveal-expand-max-is, 65ch);
 				overflow-y: auto;
 				scrollbar-gutter: auto;
