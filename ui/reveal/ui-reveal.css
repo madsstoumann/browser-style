@@ -31,12 +31,24 @@
 			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
 		}
 
+		/* ::details-content is a slot-like pseudo: you can't add a combinator after
+		   it, so its children are unreachable and display/grid on it is unreliable.
+		   It only carries inherited (font-size) + box props (padding, bg, block-size
+		   animation). Lay out the panel on the REAL wrapper element instead — the
+		   single non-summary child of <details>. Disclosed content MUST be wrapped
+		   in one element (e.g. <div>). */
 		details::details-content {
-			display: grid;
-			font-size: small;
-			text-box: cap alphabetic;
+			font-size: var(--ui-reveal-content-fs, small);
 			transition-behavior: allow-discrete;
-			& > * { margin: 0;  }
+		}
+
+		details > :where(:not(summary)) {
+			display: grid;
+			row-gap: var(--ui-reveal-row-gap, var(--spacing-md));
+			& > * {
+				margin: 0;
+				/* text-box: cap alphabetic; */
+			}
 		}
 
 		&:is([type="flip"], [type="scale"], [type="slide"]) details::details-content {
@@ -241,26 +253,22 @@
 			--ui-reveal-aspect: var(--ui-reveal-expand-aspect, 16/9);
 			--ui-reveal-expand-m: 2ch;
 
-			background: var(--ui-reveal-expand-backdrop, color-mix(in srgb, var(--color-surface) 67%, transparent));
+			animation: ui-reveal-backdrop var(--_trs) both;
 			backdrop-filter: blur(8px);
+			background: var(--ui-reveal-expand-backdrop, color-mix(in srgb, var(--color-surface) 67%, transparent));
 			inset: 0;
 			position: fixed;
-			z-index: 10;
-
-			/* backdrop fades in as the fixed chrome appears. Keyframe animation
-			   (not transition) — fires whenever :has([open]) starts matching. */
-			animation: ui-reveal-backdrop var(--_trs) both;
+			z-index: var(--z-index-2);
 
 			details {
-				align-content: start; /* size summary to media; stops overlay drifting in tall popup */
+				--ui-reveal-content-fs: var(--ui-reveal-expand-content-fs, var(--font-size-base));
+				align-content: start;
+				animation: ui-reveal-pop var(--_trs) both;
 				height: calc(100dvh - calc(var(--ui-reveal-expand-m) * 2));
 				margin: var(--ui-reveal-expand-m) auto;
 				max-inline-size: var(--ui-reveal-expand-max-is, 65ch);
 				overflow-y: auto;
 				scrollbar-gutter: auto;
-				/* box + image scale up into the popup */
-				animation: ui-reveal-pop var(--_trs) both;
-				&::details-content { font-size: 1rem; }
 			}
 		}
 	}
