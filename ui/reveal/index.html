@@ -35,6 +35,74 @@
 	</p>
 
 	<!-- ============================================
+	     expand → popup — type="expand" to="viewport"|"page"
+	     Optional <ui-reveal> web component morphs the card from its grid cell
+	     into a fixed popup with an element-scoped View Transition (Chrome 147+).
+	     Without it (or under reduced-motion) the card still opens — instantly.
+	     ============================================ -->
+	<h2>expand → popup — <code>to="viewport"</code></h2>
+	<p>Tap a game to expand the card from its tile into a full-screen page, with a bouncy morph where supported. Tap the icon to close.</p>
+
+	<div class="grid">
+		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="overlay(bl) ar(3/4) op(cc)">
+			<details>
+				<summary>
+					<ui-media><img src="game_01.png" alt="" loading="lazy"></ui-media>
+					<ui-content>
+						<small>Fantasy RPG</small>
+						<b>Starfall Legends</b>
+					</ui-content>
+					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+				</summary>
+				<div>
+					<h3>Starfall Legends</h3>
+					<p><strong>Gather your party and chase the falling stars.</strong> A hand-drawn action-RPG set across the floating isles of Auralis, where every comet leaves behind a creature to befriend — or battle.</p>
+					<p>Master the Starbind combat system, evolve your companions through dozens of forms, and uncover who shattered the night sky. Couch co-op for up to four heroes.</p>
+					<p><a href="#">Get &mdash; Free with in-app purchases</a></p>
+				</div>
+			</details>
+		</ui-reveal>
+
+		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="overlay(bl) ar(3/4) op(cc)">
+			<details>
+				<summary>
+					<ui-media><img src="game_02.png" alt="" loading="lazy"></ui-media>
+					<ui-content>
+						<small>Open-World Western</small>
+						<b>Frontier Outlaws</b>
+					</ui-content>
+					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+				</summary>
+				<div>
+					<h3>Frontier Outlaws</h3>
+					<p><strong>Ride into a frontier that remembers everything you do.</strong> Rob the noon stage or marshal the town that hangs you for it — every choice ripples through a living West of dust, debt and gunsmoke.</p>
+					<p>Tame wild horses, build your gang, and survive a dynamic bounty system where your reputation precedes you into every saloon. Online posses or solo drifter.</p>
+					<p><a href="#">Get &mdash; $39.99</a></p>
+				</div>
+			</details>
+		</ui-reveal>
+
+		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="overlay(bl) ar(3/4) op(cc)">
+			<details>
+				<summary>
+					<ui-media><img src="game_03.png" alt="" loading="lazy"></ui-media>
+					<ui-content>
+						<small>Historical Epic</small>
+						<b>Imperium: Legions</b>
+					</ui-content>
+					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+				</summary>
+				<div>
+					<h3>Imperium: Legions</h3>
+					<p><strong>From a single cohort to the eternal city.</strong> Command Rome's legions across a campaign that spans the Republic to the Empire — march, besiege and intrigue your way to a throne history won't forget.</p>
+					<p>Real-time battles of thousands, a Senate that schemes behind your back, and city-building that turns marble quarries into wonders. Cross-play campaigns for up to eight consuls.</p>
+					<p><a href="#">Get &mdash; $49.99</a></p>
+				</div>
+			</details>
+		</ui-reveal>
+	</div>
+
+	<!-- ============================================
 	     hero — full-width, 21:9
 	     ============================================ -->
 	<h2>hero — full-width (ar 21/9)</h2>
@@ -398,5 +466,6 @@
 		</ui-reveal>
 	</div>
 
+	<script type="module" src="index.js"></script>
 </body>
 </html>
