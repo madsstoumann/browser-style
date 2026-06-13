@@ -247,6 +247,10 @@
 			position: fixed;
 			z-index: 10;
 
+			/* backdrop fades in as the fixed chrome appears. Keyframe animation
+			   (not transition) — fires whenever :has([open]) starts matching. */
+			animation: ui-reveal-backdrop var(--_trs) both;
+
 			details {
 				align-content: start; /* size summary to media; stops overlay drifting in tall popup */
 				height: calc(100dvh - calc(var(--ui-reveal-expand-m) * 2));
@@ -254,9 +258,21 @@
 				max-inline-size: var(--ui-reveal-expand-max-is, 65ch);
 				overflow-y: auto;
 				scrollbar-gutter: auto;
+				/* box + image scale up into the popup */
+				animation: ui-reveal-pop var(--_trs) both;
 				&::details-content { font-size: 1rem; }
 			}
 		}
+	}
+
+	/* === type: expand [to] popup entry animations === */
+	@keyframes ui-reveal-backdrop {
+		from { opacity: 0; }
+		to   { opacity: 1; }
+	}
+	@keyframes ui-reveal-pop {
+		from { opacity: 0; scale: var(--ui-reveal-pop-scale, 0.92); }
+		to   { opacity: 1; scale: 1; }
 	}
 
 	/* === type: flip === */
