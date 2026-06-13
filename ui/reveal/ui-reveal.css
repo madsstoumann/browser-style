@@ -230,13 +230,27 @@
 			block-size: auto;
 			content-visibility: visible;
 		}
+
+		&[to]:has([open]) {
+			--ui-reveal-aspect: 16/9;
+			background: #FFFFFFAA;
+			backdrop-filter: blur(8px);
+			inset: 0;
+			position: fixed;
+			z-index: 10;
+
+			details {
+				height: calc(100dvh - 4ch);
+				margin: 2ch auto;
+				max-inline-size: var(--ui-reveal-expand-max-is, 65ch);
+				overflow-y: auto;
+				scrollbar-gutter: auto;
+				&::details-content { font-size: 1rem; }
+			}
+		}
 	}
 
-	/* === type: flip ===
-	   Front face content must be wrapped in <ui-face> — only the face and the
-	   panel rotate, never <summary>, so the toggle icon stays put on both sides.
-	   Each face carries its own perspective(); identical boxes → identical
-	   vanishing points, and stacking stays plain 2D (no 3D rendering context). */
+	/* === type: flip === */
 	:where(ui-reveal[type="flip"]) {
 		--_persp: perspective(var(--ui-reveal-perspective, 1000px));
 		/* flip direction via from="left|right|top|bottom" — the panel flips in
