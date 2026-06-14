@@ -48,8 +48,11 @@
 	}
 
 	/* ============================================================
-	   Font-size scale — fs(sm|md|lg|xl), container-driven (cqi)
-	   One root (--ui-card-fs); every part derives from it by ratio.
+	   Font-size scale — fs(sm|md|lg|xl), container-driven (cqi).
+	   TWO scales: a moderate BODY scale (--ui-card-fs, used by eyebrow /
+	   summary / meta / tags) and a separate, more aggressive HEADLINE scale
+	   (--ui-card-headline). Decoupling them means a big card gets a big title
+	   without blowing up the body copy.
 	   ============================================================ */
 	:where([variant]) {
 		/* spacing defaults live here (not only on ui-card) so any variant host
@@ -57,22 +60,26 @@
 		--ui-card-p: var(--spacing-md);
 		/* --ui-card-row-gap: var(--spacing-sm); */
 
+		/* body scale — stays readable even at xl */
 		--ui-card-fs: var(--ui-card-fs-md);
+		--ui-card-fs-sm: clamp(0.80rem, 0.74rem + 0.4cqi, 0.90rem);
+		--ui-card-fs-md: clamp(0.88rem, 0.80rem + 0.6cqi, 1.00rem);
+		--ui-card-fs-lg: clamp(0.95rem, 0.86rem + 0.8cqi, 1.10rem);
+		--ui-card-fs-xl: clamp(1.00rem, 0.92rem + 0.9cqi, 1.20rem);
 
-		--ui-card-fs-sm: clamp(0.80rem, 0.72rem + 0.8cqi, 0.95rem);
-		--ui-card-fs-md: clamp(0.90rem, 0.80rem + 1.2cqi, 1.10rem);
-		--ui-card-fs-lg: clamp(1.00rem, 0.84rem + 2.0cqi, 1.35rem);
-		--ui-card-fs-xl: clamp(1.15rem, 0.90rem + 4.0cqi, 2.25rem);
+		/* headline scale — grows far more; big cards get display-size titles */
+		--ui-card-headline: var(--ui-card-headline-md);
+		--ui-card-headline-sm: clamp(1.05rem, 0.90rem + 1.0cqi, 1.35rem);
+		--ui-card-headline-md: clamp(1.20rem, 1.00rem + 1.6cqi, 1.75rem);
+		--ui-card-headline-lg: clamp(1.45rem, 1.05rem + 3.0cqi, 2.50rem);
+		--ui-card-headline-xl: clamp(1.90rem, 1.10rem + 5.5cqi, 4.50rem);
 
 		--ui-card-muted: color-mix(in oklab, currentColor 65%, transparent);
 	}
-	:where([variant~="fs(sm)"]) { --ui-card-fs: var(--ui-card-fs-sm); }
-	:where([variant~="fs(md)"]) { --ui-card-fs: var(--ui-card-fs-md); }
-	:where([variant~="fs(lg)"]) { --ui-card-fs: var(--ui-card-fs-lg); }
-	:where([variant~="fs(xl)"]) {
-		--ui-card-fs: var(--ui-card-fs-xl);
-		--ui-card-headline-ratio: 2.2; /* hero/display headline */
-	}
+	:where([variant~="fs(sm)"]) { --ui-card-fs: var(--ui-card-fs-sm); --ui-card-headline: var(--ui-card-headline-sm); }
+	:where([variant~="fs(md)"]) { --ui-card-fs: var(--ui-card-fs-md); --ui-card-headline: var(--ui-card-headline-md); }
+	:where([variant~="fs(lg)"]) { --ui-card-fs: var(--ui-card-fs-lg); --ui-card-headline: var(--ui-card-headline-lg); }
+	:where([variant~="fs(xl)"]) { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline: var(--ui-card-headline-xl); }
 
 	/* ============================================================
 	   <ui-media> — the visual box
@@ -208,9 +215,10 @@
 		text-transform: uppercase;
 	}
 
-	/* headline — [data-part] or any heading inside content */
+	/* headline — [data-part] or any heading inside content. Uses the dedicated
+	   headline scale (not the body scale), so it grows independently. */
 	:where(ui-content) :is([data-part="headline"], h2, h3, h4, h5, h6) {
-		font-size: calc(var(--ui-card-fs) * var(--ui-card-headline-ratio, 1.6));
+		font-size: var(--ui-card-headline);
 		font-weight: var(--ui-card-headline-weight, var(--font-weight-bold, 700));
 		letter-spacing: var(--tracking-tight, -0.01em);
 		line-height: var(--line-height-tight, 1.15);
@@ -289,6 +297,27 @@
 	}
 
 	/* ============================================================
+	   Theme — th() combinator. Remaps the card's colour tokens + ink.
+	   th(dark)  — dark surface, light ink
+	   th(brand) — accent-filled surface, white ink
+	   Each value is overridable (e.g. --ui-card-dark-bg).
+	   ============================================================ */
+	:where([variant*="th(dark)"]) {
+		--ui-card-bg: var(--ui-card-dark-bg, #1f2937);
+		--ui-card-muted: color-mix(in oklab, currentColor 60%, transparent);
+		--ui-card-eyebrow-color: var(--ui-card-dark-accent, #93c5fd);
+		--ui-card-tag-bg: rgb(255 255 255 / 0.12);
+		color: var(--ui-card-dark-ink, #f9fafb);
+	}
+	:where([variant*="th(brand)"]) {
+		--ui-card-bg: var(--ui-card-brand-bg, var(--color-accent));
+		--ui-card-muted: rgb(255 255 255 / 0.8);
+		--ui-card-eyebrow-color: rgb(255 255 255 / 0.75);
+		--ui-card-tag-bg: rgb(255 255 255 / 0.2);
+		color: var(--ui-card-brand-ink, #fff);
+	}
+
+	/* ============================================================
 	   Responsive tiers — variant-md (>=25rem) / variant-lg (>=44rem)
 	   Now possible: the host is the container, the grid is on <cq-box>,
 	   so each breakpoint re-applies arrangement / ar() / fs() / split()
@@ -315,10 +344,10 @@
 		:where(ui-card[variant-md*="split(1/3)"]) > cq-box { --ui-card-split: 1fr 3fr; }
 		:where(ui-card[variant-md*="split(3/1)"]) > cq-box { --ui-card-split: 3fr 1fr; }
 
-		:where(ui-card[variant-md~="fs(sm)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-sm); }
-		:where(ui-card[variant-md~="fs(md)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-md); }
-		:where(ui-card[variant-md~="fs(lg)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-lg); }
-		:where(ui-card[variant-md~="fs(xl)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline-ratio: 2.2; }
+		:where(ui-card[variant-md~="fs(sm)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-sm); --ui-card-headline: var(--ui-card-headline-sm); }
+		:where(ui-card[variant-md~="fs(md)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-md); --ui-card-headline: var(--ui-card-headline-md); }
+		:where(ui-card[variant-md~="fs(lg)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-lg); --ui-card-headline: var(--ui-card-headline-lg); }
+		:where(ui-card[variant-md~="fs(xl)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline: var(--ui-card-headline-xl); }
 
 		:where(ui-card[variant-md*="ar("]) > cq-box > ui-media { min-block-size: 0; }
 		:where(ui-card[variant-md*="ar(1/1)"]) > cq-box   { --ui-card-ar: 1 / 1; }
@@ -350,10 +379,10 @@
 		:where(ui-card[variant-lg*="split(1/3)"]) > cq-box { --ui-card-split: 1fr 3fr; }
 		:where(ui-card[variant-lg*="split(3/1)"]) > cq-box { --ui-card-split: 3fr 1fr; }
 
-		:where(ui-card[variant-lg~="fs(sm)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-sm); }
-		:where(ui-card[variant-lg~="fs(md)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-md); }
-		:where(ui-card[variant-lg~="fs(lg)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-lg); }
-		:where(ui-card[variant-lg~="fs(xl)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline-ratio: 2.2; }
+		:where(ui-card[variant-lg~="fs(sm)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-sm); --ui-card-headline: var(--ui-card-headline-sm); }
+		:where(ui-card[variant-lg~="fs(md)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-md); --ui-card-headline: var(--ui-card-headline-md); }
+		:where(ui-card[variant-lg~="fs(lg)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-lg); --ui-card-headline: var(--ui-card-headline-lg); }
+		:where(ui-card[variant-lg~="fs(xl)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline: var(--ui-card-headline-xl); }
 
 		:where(ui-card[variant-lg*="ar("]) > cq-box > ui-media { min-block-size: 0; }
 		:where(ui-card[variant-lg*="ar(1/1)"]) > cq-box   { --ui-card-ar: 1 / 1; }

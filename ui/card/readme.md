@@ -85,20 +85,37 @@ Put them all in one space-separated `variant` attribute.
 | `fs(sm \| md \| lg \| xl)` | font-size tier (see below) |
 | `split(1/1 \| 1/2 \| 2/1 \| 1/3 \| 3/1)` | column ratio for `horizontal` |
 | `sq(sm \| md \| lg \| xl)` | superellipse (squircle) corners |
+| `th(dark \| brand)` | colour theme (see below) |
 
 ## Font scale — `fs()`
 
-One root token, `--ui-card-fs`, drives every part by ratio. Each tier is a
-`clamp()` using container-query units (`cqi`), so a card **grows in wide
-containers and shrinks in narrow ones** — bounded between a min and max.
+`fs(sm | md | lg | xl)` (default `md`) sets **two** container-driven (`cqi`)
+`clamp()` scales: a **body** scale (`--ui-card-fs`, used by eyebrow / summary /
+meta / tags) and a separate, more aggressive **headline** scale
+(`--ui-card-headline`). Decoupling them means a big card gets a display-size
+title while the body copy stays readable — e.g. on a wide `fs(xl)` hero the
+headline lands around 4.5rem but the summary stays ~1.2rem.
 
 ```html
-<!-- identical markup; renders larger in a wide hero than in a 3-up grid -->
+<!-- identical markup; the headline scales hard, the body gently -->
 <ui-card variant="overlay(bl) ar(21/9) fs(xl)"> … </ui-card>
 ```
 
-`fs(xl)` is a hero/display tier (larger clamp + bigger headline ratio).
-`fs(md)` is the default.
+Both scales also grow/shrink with the card's own width (bounded). `fs(xl)` is the
+hero/display tier.
+
+## Themes — `th()`
+
+`th(dark)` and `th(brand)` remap the card's colour tokens (surface, ink, eyebrow,
+tags). Add as a `variant` token:
+
+```html
+<ui-card variant="vertical ar(16/9) th(dark)"> … </ui-card>
+<ui-card variant="vertical ar(16/9) th(brand)"> … </ui-card>
+```
+
+Each theme value is overridable — e.g. `--ui-card-dark-bg`, `--ui-card-dark-ink`,
+`--ui-card-dark-accent`, `--ui-card-brand-bg`, `--ui-card-brand-ink`.
 
 ## Responsive tiers — `variant-md` / `variant-lg`
 
@@ -121,7 +138,7 @@ The same markup renders differently in a hero slot vs. a 3-up grid — no media
 queries, no JS. (`overlay(pos)` is not yet responsive; it can be layered on the
 same pattern.)
 
-## Theming
+## Custom tokens
 
 Override any component token, globally or per instance:
 
@@ -130,11 +147,11 @@ ui-card { --ui-card-radius: 0; --ui-card-shadow: none; }
 ```
 
 ```html
-<ui-card variant="vertical" style="--ui-card-headline-ratio: 2.4;"> … </ui-card>
+<ui-card variant="vertical" style="--ui-card-headline: clamp(1.5rem, 4cqi, 3rem);"> … </ui-card>
 ```
 
 Key tokens: `--ui-card-bg`, `--ui-card-radius`, `--ui-card-shadow`, `--ui-card-p`,
-`--ui-card-row-gap`, `--ui-card-fs`, `--ui-card-headline-ratio`,
+`--ui-card-row-gap`, `--ui-card-fs`, `--ui-card-headline`,
 `--ui-card-eyebrow-color`, `--ui-card-overlay-gradient`, `--ui-card-overlay-ink`.
 
 ## Notes
