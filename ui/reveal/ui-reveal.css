@@ -9,9 +9,11 @@
 @layer bs-component {
 	/* ui-reveal inherits the host-agnostic layout/typography engine from
 	   ui-card.css (variants, ar()/op()/fs()/sq(), overlay, <ui-media> and
-	   <ui-content>). This file adds only what is reveal-specific:
-	   <details>/<summary> wiring, <ui-icon>, <ui-face>, and the reveal
-	   animation types (expand/flip/slide/scale). */
+	   <ui-content>). The face is <ui-media> + <ui-content> inside <summary>
+	   (wrapped in <ui-face> for flip); the revealed panel is a SECOND
+	   <ui-content> after <summary>, reusing the shared content styling. This
+	   file adds only what is reveal-specific: <details>/<summary> wiring,
+	   <ui-icon>, <ui-face>, the panel surface, and the animation types. */
 	:where(ui-reveal) {
 		--ui-reveal-bg: var(--color-surface);
 		--ui-reveal-radius: var(--radius-2xl);
@@ -36,41 +38,31 @@
 			overflow: hidden;
 		}
 
-		/* reveal's grid container(s) consume the shared --ui-card-cols set by
-		   horizontal/split tokens in ui-card.css */
+		/* the face grid root — <summary> (non-flip) or <ui-face> (flip) — consumes
+		   the shared --ui-card-cols set by horizontal/split tokens in ui-card.css */
 		:is(summary, ui-face) { grid-template-columns: var(--ui-card-cols, 1fr); }
 
-		details[open]::details-content {
+		/* revealed panel — a SECOND <ui-content>, the single non-summary child of
+		   <details>. Layout/padding/font come from the shared ui-content rule;
+		   reveal adds the panel surface (and an optional font-size override hook).
+		   It lives OUTSIDE <summary>, so overlay scrims / media-only hiding (scoped
+		   to the summary face in ui-card.css) never reach it. */
+		details > ui-content {
 			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
+			block-size: 100%; /* fill ::details-content — for flip/slide/scale it
+			                     spans the whole card; for expand it resolves to
+			                     content height (auto parent), so the panel still
+			                     grows to fit. */
+			box-sizing: border-box;
 			color: var(--ui-reveal-content-c, inherit);
-			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
+			font-size: var(--ui-reveal-content-fs, var(--ui-card-fs));
+			padding: var(--ui-reveal-content-p, var(--ui-card-p));
 		}
 
-		/* ::details-content is a slot-like pseudo: you can't add a combinator after
-		   it, so its children are unreachable and display/grid on it is unreliable.
-		   It only carries inherited (font-size) + box props (padding, bg, block-size
-		   animation). Lay out the panel on the REAL wrapper element instead — the
-		   single non-summary child of <details>. Disclosed content MUST be wrapped
-		   in one element (e.g. <div>). */
-		details::details-content {
-			font-size: var(--ui-reveal-content-fs, inherit);
-			transition-behavior: allow-discrete;
-		}
-
-		details > :where(:not(summary)) {
-			display: grid;
-			row-gap: var(--ui-reveal-row-gap, var(--spacing-md));
-			& > * {
-				margin: 0;
-				/* text-box: cap alphabetic; */
-			}
-		}
-
-		&:is([type="flip"], [type="scale"], [type="slide"]) details::details-content {
-			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
-			color: var(--ui-reveal-content-c, inherit);
-			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
-		}
+		/* ::details-content is the slot-like pseudo wrapping the panel. It carries
+		   only the animation box (block-size / content-visibility / transform per
+		   type); the real layout lives on the <ui-content> above. */
+		details::details-content { transition-behavior: allow-discrete; }
 
 		summary {
 			cursor: pointer;
@@ -79,8 +71,9 @@
 			list-style: none;
 			position: relative;
 
-			/* <ui-content> styling (flex column, padding, row-gap) comes from ui-card */
-
+			/* flip wrapper: groups <ui-media> + <ui-content> so the face rotates
+			   as a unit while <ui-icon> (its sibling) stays put. Harmless for
+			   non-flip cards. */
 			ui-face {
 				display: grid;
 				grid-column: 1 / -1;
@@ -250,6 +243,7 @@
 
 		/* icon paints (and hit-tests) above the open panel */
 		summary > ui-icon { z-index: 2; }
+		/* icon dip on flip — see the @media block after this rule */
 
 		details::details-content {
 			backface-visibility: hidden;
@@ -259,6 +253,21 @@
 		}
 		details[open]::details-content { transform: var(--_persp) var(--_panel-open); }
 	}
+
+	/* flip icon dip — fades out as the card turns edge-on, then back in once the
+	   new face lands. Runs on OPEN and CLOSE: the two states carry identical
+	   keyframes under different names, so toggling restarts the animation.
+	   Top-level @media (not nested) for broad engine compatibility. */
+	@media (prefers-reduced-motion: no-preference) {
+		:where(ui-reveal[type="flip"]) summary > ui-icon {
+			animation: ui-reveal-icon-dip var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
+		}
+		:where(ui-reveal[type="flip"]) details[open] summary > ui-icon { animation-name: ui-reveal-icon-dip-open; }
+	}
+
+	/* asymmetric: quick fade-out (to 40%), slower fade back in (remaining 60%) */
+	@keyframes ui-reveal-icon-dip      { 0% { opacity: 1; } 40% { opacity: 0; } 100% { opacity: 1; } }
+	@keyframes ui-reveal-icon-dip-open { 0% { opacity: 1; } 40% { opacity: 0; } 100% { opacity: 1; } }
 
 	/* === type: slide === */
 	:where(ui-reveal[type="slide"]) {

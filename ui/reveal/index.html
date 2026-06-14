@@ -31,7 +31,7 @@
 	<h1>UI: Reveal Card</h1>
 	<p>
 		<code>&lt;ui-reveal&gt;</code> is a CSS-only reveal card built on native <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code>.
-		The front face lives in <code>&lt;summary&gt;</code>, revealed content in <code>::details-content</code>.
+		The front face lives in <code>&lt;summary&gt;</code>; the revealed panel is a second <code>&lt;ui-content&gt;</code>.
 	</p>
 
 	<!-- ============================================
@@ -54,12 +54,12 @@
 					</ui-content>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>Starfall Legends</h3>
 					<p><strong>Gather your party and chase the falling stars.</strong> A hand-drawn action-RPG set across the floating isles of Auralis, where every comet leaves behind a creature to befriend — or battle.</p>
 					<p>Master the Starbind combat system, evolve your companions through dozens of forms, and uncover who shattered the night sky. Couch co-op for up to four heroes.</p>
 					<p><a href="#">Get &mdash; Free with in-app purchases</a></p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -73,12 +73,12 @@
 					</ui-content>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>Frontier Outlaws</h3>
 					<p><strong>Ride into a frontier that remembers everything you do.</strong> Rob the noon stage or marshal the town that hangs you for it — every choice ripples through a living West of dust, debt and gunsmoke.</p>
 					<p>Tame wild horses, build your gang, and survive a dynamic bounty system where your reputation precedes you into every saloon. Online posses or solo drifter.</p>
 					<p><a href="#">Get &mdash; $39.99</a></p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -92,12 +92,12 @@
 					</ui-content>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>Imperium: Legions</h3>
 					<p><strong>From a single cohort to the eternal city.</strong> Command Rome's legions across a campaign that spans the Republic to the Empire — march, besiege and intrigue your way to a throne history won't forget.</p>
 					<p>Real-time battles of thousands, a Senate that schemes behind your back, and city-building that turns marble quarries into wonders. Cross-play campaigns for up to eight consuls.</p>
 					<p><a href="#">Get &mdash; $49.99</a></p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 	</div>
@@ -117,11 +117,11 @@
 				</ui-content>
 				<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 			</summary>
-			<div>
+			<ui-content>
 				<h3>Full-width hero</h3>
 				<p>A panoramic 21:9 reveal card spanning the full content width, outside any grid.</p>
 				<p><a href="#">Explore now &rarr;</a></p>
-			</div>
+			</ui-content>
 		</details>
 	</ui-reveal>
 
@@ -137,10 +137,10 @@
 					<ui-media><img src="band_alternative.png" alt="Alternative band" loading="lazy"></ui-media>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>ar(1/1)</h3>
 					<p>Square media, no content-area in the summary.</p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -150,10 +150,10 @@
 					<ui-media><img src="band_boys.png" alt="Boy band" loading="lazy"></ui-media>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>ar(3/4)</h3>
 					<p>Portrait media.</p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -163,10 +163,10 @@
 					<ui-media><img src="band_girls.png" alt="Girl group" loading="lazy"></ui-media>
 					<ui-icon type="arrow down" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>ar(16/9)</h3>
 					<p>Widescreen media.</p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 	</div>
@@ -183,7 +183,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(tl)</h3><p>Content top-left over media.</p></div>
+				<ui-content><h3>overlay(tl)</h3><p>Content top-left over media.</p></ui-content>
 			</details>
 		</ui-reveal>
 
@@ -196,7 +196,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(tc)</h3><p>Content top-center over media.</p></div>
+				<ui-content><h3>overlay(tc)</h3><p>Content top-center over media.</p></ui-content>
 			</details>
 		</ui-reveal>
 
@@ -209,7 +209,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(tr)</h3><p>Content top-right over media.</p></div>
+				<ui-content><h3>overlay(tr)</h3><p>Content top-right over media.</p></ui-content>
 			</details>
 		</ui-reveal>
 
@@ -222,7 +222,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(cl)</h3><p>Content center-left over media.</p></div>
+				<ui-content><h3>overlay(cl)</h3><p>Content center-left over media.</p></ui-content>
 			</details>
 		</ui-reveal>
 
@@ -235,7 +235,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(cc)</h3><p>Content centered over media, radial scrim.</p></div>
+				<ui-content><h3>overlay(cc)</h3><p>Content centered over media, radial scrim.</p></ui-content>
 			</details>
 		</ui-reveal>
 
@@ -248,7 +248,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(cr)</h3><p>Content center-right over media.</p></div>
+				<ui-content><h3>overlay(cr)</h3><p>Content center-right over media.</p></ui-content>
 			</details>
 		</ui-reveal>
 
@@ -261,7 +261,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(bl)</h3><p>Content bottom-left over media.</p></div>
+				<ui-content><h3>overlay(bl)</h3><p>Content bottom-left over media.</p></ui-content>
 			</details>
 		</ui-reveal>
 
@@ -274,7 +274,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(bc)</h3><p>Content bottom-center over media.</p></div>
+				<ui-content><h3>overlay(bc)</h3><p>Content bottom-center over media.</p></ui-content>
 			</details>
 		</ui-reveal>
 
@@ -287,7 +287,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(br)</h3><p>Content bottom-right over media.</p></div>
+				<ui-content><h3>overlay(br)</h3><p>Content bottom-right over media.</p></ui-content>
 			</details>
 		</ui-reveal>
 	</div>
@@ -308,7 +308,7 @@
 						<ui-content><small>Gothic</small><b>Tap anywhere.</b></ui-content>
 					</ui-face>
 				</summary>
-				<div><h3>trigger="card"</h3><p>Click anywhere on the back to flip home.</p></div>
+				<ui-content><h3>trigger="card"</h3><p>Click anywhere on the back to flip home.</p></ui-content>
 			</details>
 		</ui-reveal>
 
@@ -320,7 +320,7 @@
 						<ui-content><small>Girl Group</small><b>Whole card toggles.</b></ui-content>
 					</ui-face>
 				</summary>
-				<div><h3>With a link</h3><p>Interactive content opts back in, so this stays clickable:</p><p><a href="#">Follow this link &rarr;</a></p></div>
+				<ui-content><h3>With a link</h3><p>Interactive content opts back in, so this stays clickable:</p><p><a href="#">Follow this link &rarr;</a></p></ui-content>
 			</details>
 		</ui-reveal>
 
@@ -331,7 +331,7 @@
 						<ui-media><img src="band_boys.png" alt="Boy band" loading="lazy"></ui-media>
 					</ui-face>
 				</summary>
-				<div><h3>media-only</h3><p>Media-only face — the image alt is the accessible name.</p></div>
+				<ui-content><h3>media-only</h3><p>Media-only face — the image alt is the accessible name.</p></ui-content>
 			</details>
 		</ui-reveal>
 	</div>
@@ -353,10 +353,10 @@
 					</ui-content>
 					<ui-icon type="down-arrow-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>vertical</h3>
 					<p>Media above content (default).</p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -371,10 +371,10 @@
 					</ui-content>
 					<ui-icon type="up-arrow-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>vertical-r</h3>
 					<p>Content above media.</p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -389,10 +389,10 @@
 					</ui-content>
 					<ui-icon type="right-arrow-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>horizontal</h3>
 					<p>Media left, content right.</p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -407,10 +407,10 @@
 					</ui-content>
 					<ui-icon type="left-arrow-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>horizontal-r</h3>
 					<p>Content left, media right.</p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 	</div>
@@ -428,10 +428,10 @@
 					<ui-media><img src="band_alternative.png" alt="Alternative band" loading="lazy"></ui-media>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>sq(sm)</h3>
 					<p>20px radius, exponent 1.5.</p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -445,10 +445,10 @@
 					</ui-content>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>sq(lg) + scale</h3>
 					<p>The morph panel grows into the squircle card shape.</p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -458,10 +458,10 @@
 					<ui-media><img src="band_boys.png" alt="Boy band" loading="lazy"></ui-media>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>sq(xl)</h3>
 					<p>56px radius, exponent 2 — largest squircle.</p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 	</div>
