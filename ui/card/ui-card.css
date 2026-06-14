@@ -15,23 +15,31 @@
 @layer bs-component {
 
 	/* ============================================================
-	   Host surface + grid container (ui-card only)
+	   Host surface + container (ui-card only). The host is the size
+	   container; the layout grid lives on a <cq-box> descendant — a
+	   container can't query its own size. Same inner-wrapper pattern
+	   as accordion/tabs (<cq-box>) and content-card (.cc-inner).
 	   ============================================================ */
 	:where(ui-card) {
 		--ui-card-bg: var(--color-surface);
 		--ui-card-radius: var(--radius-2xl);
 		--ui-card-shadow: var(--shadow-xl);
 		--ui-card-p: var(--spacing-md);
-		--ui-card-row-gap: var(--spacing-sm);
+		--ui-card-row-gap: 1em;
 
 		background: var(--ui-card-bg);
 		border-radius: var(--ui-card-radius);
 		box-shadow: var(--ui-card-shadow);
 		container-type: inline-size;
+		display: grid; /* single child; <cq-box> carries the real layout grid */
+		overflow: hidden;
+	}
+
+	/* the layout grid layer */
+	:where(ui-card) > cq-box {
 		display: grid;
 		gap: 0; /* media bleeds to content; inner spacing lives on <ui-content> */
 		grid-template-columns: var(--ui-card-cols, 1fr);
-		overflow: hidden;
 	}
 
 	/* superellipse corners — the host carries the radius + overflow */
@@ -47,7 +55,7 @@
 		/* spacing defaults live here (not only on ui-card) so any variant host
 		   — e.g. <ui-reveal> — resolves the shared <ui-content> rule */
 		--ui-card-p: var(--spacing-md);
-		--ui-card-row-gap: var(--spacing-sm);
+		/* --ui-card-row-gap: var(--spacing-sm); */
 
 		--ui-card-fs: var(--ui-card-fs-md);
 
@@ -281,9 +289,79 @@
 	}
 
 	/* ============================================================
-	   Responsive tiers (variant-md / variant-lg)
-	   A container can't query itself, so these require a <cq-box>
-	   wrapper around the items. Deferred to the JS component / a
-	   later pass — documented in the readme.
+	   Responsive tiers — variant-md (>=25rem) / variant-lg (>=44rem)
+	   Now possible: the host is the container, the grid is on <cq-box>,
+	   so each breakpoint re-applies arrangement / ar() / fs() / split()
+	   tokens to the <cq-box> descendant. (overlay(pos) responsive can
+	   be layered on the same pattern later.)
 	   ============================================================ */
+	@container (inline-size >= 25rem) {
+		:where(ui-card[variant-md~="vertical"]) > cq-box,
+		:where(ui-card[variant-md~="vertical-r"]) > cq-box   { --ui-card-cols: 1fr; }
+		:where(ui-card[variant-md~="horizontal"]) > cq-box,
+		:where(ui-card[variant-md~="horizontal-r"]) > cq-box { --ui-card-cols: var(--ui-card-split, 1fr 1fr); }
+		:where(ui-card[variant-md~="horizontal"]) > cq-box > ui-media,
+		:where(ui-card[variant-md~="horizontal-r"]) > cq-box > ui-media { block-size: 100%; inline-size: 100%; min-block-size: 0; }
+		:where(ui-card[variant-md~="vertical"]) > cq-box > ui-content,
+		:where(ui-card[variant-md~="horizontal"]) > cq-box > ui-content { order: 0; }
+		:where(ui-card[variant-md~="vertical-r"]) > cq-box > ui-content,
+		:where(ui-card[variant-md~="horizontal-r"]) > cq-box > ui-content { order: -1; }
+		:where(ui-card[variant-md~="media-only"]) > cq-box > ui-content { display: none; }
+		:where(ui-card[variant-md~="content-only"]) > cq-box > ui-media { display: none; }
+
+		:where(ui-card[variant-md*="split(1/1)"]) > cq-box { --ui-card-split: 1fr 1fr; }
+		:where(ui-card[variant-md*="split(1/2)"]) > cq-box { --ui-card-split: 1fr 2fr; }
+		:where(ui-card[variant-md*="split(2/1)"]) > cq-box { --ui-card-split: 2fr 1fr; }
+		:where(ui-card[variant-md*="split(1/3)"]) > cq-box { --ui-card-split: 1fr 3fr; }
+		:where(ui-card[variant-md*="split(3/1)"]) > cq-box { --ui-card-split: 3fr 1fr; }
+
+		:where(ui-card[variant-md~="fs(sm)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-sm); }
+		:where(ui-card[variant-md~="fs(md)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-md); }
+		:where(ui-card[variant-md~="fs(lg)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-lg); }
+		:where(ui-card[variant-md~="fs(xl)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline-ratio: 2.2; }
+
+		:where(ui-card[variant-md*="ar("]) > cq-box > ui-media { min-block-size: 0; }
+		:where(ui-card[variant-md*="ar(1/1)"]) > cq-box   { --ui-card-ar: 1 / 1; }
+		:where(ui-card[variant-md*="ar(3/4)"]) > cq-box   { --ui-card-ar: 3 / 4; }
+		:where(ui-card[variant-md*="ar(4/3)"]) > cq-box   { --ui-card-ar: 4 / 3; }
+		:where(ui-card[variant-md*="ar(3/2)"]) > cq-box   { --ui-card-ar: 3 / 2; }
+		:where(ui-card[variant-md*="ar(2/3)"]) > cq-box   { --ui-card-ar: 2 / 3; }
+		:where(ui-card[variant-md*="ar(16/9)"]) > cq-box  { --ui-card-ar: 16 / 9; }
+		:where(ui-card[variant-md*="ar(21/9)"]) > cq-box  { --ui-card-ar: 21 / 9; }
+	}
+
+	@container (inline-size >= 44rem) {
+		:where(ui-card[variant-lg~="vertical"]) > cq-box,
+		:where(ui-card[variant-lg~="vertical-r"]) > cq-box   { --ui-card-cols: 1fr; }
+		:where(ui-card[variant-lg~="horizontal"]) > cq-box,
+		:where(ui-card[variant-lg~="horizontal-r"]) > cq-box { --ui-card-cols: var(--ui-card-split, 1fr 1fr); }
+		:where(ui-card[variant-lg~="horizontal"]) > cq-box > ui-media,
+		:where(ui-card[variant-lg~="horizontal-r"]) > cq-box > ui-media { block-size: 100%; inline-size: 100%; min-block-size: 0; }
+		:where(ui-card[variant-lg~="vertical"]) > cq-box > ui-content,
+		:where(ui-card[variant-lg~="horizontal"]) > cq-box > ui-content { order: 0; }
+		:where(ui-card[variant-lg~="vertical-r"]) > cq-box > ui-content,
+		:where(ui-card[variant-lg~="horizontal-r"]) > cq-box > ui-content { order: -1; }
+		:where(ui-card[variant-lg~="media-only"]) > cq-box > ui-content { display: none; }
+		:where(ui-card[variant-lg~="content-only"]) > cq-box > ui-media { display: none; }
+
+		:where(ui-card[variant-lg*="split(1/1)"]) > cq-box { --ui-card-split: 1fr 1fr; }
+		:where(ui-card[variant-lg*="split(1/2)"]) > cq-box { --ui-card-split: 1fr 2fr; }
+		:where(ui-card[variant-lg*="split(2/1)"]) > cq-box { --ui-card-split: 2fr 1fr; }
+		:where(ui-card[variant-lg*="split(1/3)"]) > cq-box { --ui-card-split: 1fr 3fr; }
+		:where(ui-card[variant-lg*="split(3/1)"]) > cq-box { --ui-card-split: 3fr 1fr; }
+
+		:where(ui-card[variant-lg~="fs(sm)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-sm); }
+		:where(ui-card[variant-lg~="fs(md)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-md); }
+		:where(ui-card[variant-lg~="fs(lg)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-lg); }
+		:where(ui-card[variant-lg~="fs(xl)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline-ratio: 2.2; }
+
+		:where(ui-card[variant-lg*="ar("]) > cq-box > ui-media { min-block-size: 0; }
+		:where(ui-card[variant-lg*="ar(1/1)"]) > cq-box   { --ui-card-ar: 1 / 1; }
+		:where(ui-card[variant-lg*="ar(3/4)"]) > cq-box   { --ui-card-ar: 3 / 4; }
+		:where(ui-card[variant-lg*="ar(4/3)"]) > cq-box   { --ui-card-ar: 4 / 3; }
+		:where(ui-card[variant-lg*="ar(3/2)"]) > cq-box   { --ui-card-ar: 3 / 2; }
+		:where(ui-card[variant-lg*="ar(2/3)"]) > cq-box   { --ui-card-ar: 2 / 3; }
+		:where(ui-card[variant-lg*="ar(16/9)"]) > cq-box  { --ui-card-ar: 16 / 9; }
+		:where(ui-card[variant-lg*="ar(21/9)"]) > cq-box  { --ui-card-ar: 21 / 9; }
+	}
 }

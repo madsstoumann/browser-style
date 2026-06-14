@@ -24,7 +24,7 @@
 </head>
 <body>
 	<h1>UI: Card</h1>
-	<p>Every card is an arrangement of <code>&lt;ui-media&gt;</code> and <code>&lt;ui-content&gt;</code>. Layout, aspect-ratio, object-position and font-size are set with <code>variant</code> tokens. No JavaScript.</p>
+	<p>Every card is an arrangement of <code>&lt;ui-media&gt;</code> and <code>&lt;ui-content&gt;</code> inside a <code>&lt;cq-box&gt;</code> grid layer. Layout, aspect-ratio, object-position and font-size are set with <code>variant</code> tokens. No JavaScript.</p>
 
 	<!-- ============================================================
 	     media position — vertical / vertical-r / horizontal / horizontal-r
@@ -32,39 +32,47 @@
 	<h2>media position</h2>
 	<div class="grid grid-2">
 		<ui-card variant="vertical ar(16/9)">
-			<ui-media><img src="../reveal/band_alternative.png" alt="" loading="lazy"></ui-media>
-			<ui-content>
-				<small data-part="eyebrow">Alternative</small>
-				<h2 data-part="headline">Media top</h2>
-				<p data-part="summary">Media above content — the default vertical arrangement.</p>
-			</ui-content>
+			<cq-box>
+				<ui-media><img src="../reveal/band_alternative.png" alt="" loading="lazy"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Alternative</small>
+					<h2 data-part="headline">Media top</h2>
+					<p data-part="summary">Media above content — the default vertical arrangement.</p>
+				</ui-content>
+			</cq-box>
 		</ui-card>
 
 		<ui-card variant="vertical-r ar(16/9)">
-			<ui-media><img src="../reveal/band_boys.png" alt="" loading="lazy"></ui-media>
-			<ui-content>
-				<small data-part="eyebrow">Boy Band</small>
-				<h2 data-part="headline">Media bottom</h2>
-				<p data-part="summary">Content above media — <code>vertical-r</code>.</p>
-			</ui-content>
+			<cq-box>
+				<ui-media><img src="../reveal/band_boys.png" alt="" loading="lazy"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Boy Band</small>
+					<h2 data-part="headline">Media bottom</h2>
+					<p data-part="summary">Content above media — <code>vertical-r</code>.</p>
+				</ui-content>
+			</cq-box>
 		</ui-card>
 
 		<ui-card variant="horizontal ar(2/3)">
-			<ui-media><img src="../reveal/band_girls.png" alt="" loading="lazy"></ui-media>
-			<ui-content>
-				<small data-part="eyebrow">Girl Group</small>
-				<h2 data-part="headline">Media left</h2>
-				<p data-part="summary">Media left, content right — <code>horizontal</code>.</p>
-			</ui-content>
+			<cq-box>
+				<ui-media><img src="../reveal/band_girls.png" alt="" loading="lazy"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Girl Group</small>
+					<h2 data-part="headline">Media left</h2>
+					<p data-part="summary">Media left, content right — <code>horizontal</code>.</p>
+				</ui-content>
+			</cq-box>
 		</ui-card>
 
 		<ui-card variant="horizontal-r ar(2/3)">
-			<ui-media><img src="../reveal/band_goth.png" alt="" loading="lazy"></ui-media>
-			<ui-content>
-				<small data-part="eyebrow">Gothic</small>
-				<h2 data-part="headline">Media right</h2>
-				<p data-part="summary">Content left, media right — <code>horizontal-r</code>.</p>
-			</ui-content>
+			<cq-box>
+				<ui-media><img src="../reveal/band_goth.png" alt="" loading="lazy"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Gothic</small>
+					<h2 data-part="headline">Media right</h2>
+					<p data-part="summary">Content left, media right — <code>horizontal-r</code>.</p>
+				</ui-content>
+			</cq-box>
 		</ui-card>
 	</div>
 
@@ -74,23 +82,29 @@
 	<h2>media-only &amp; content-only</h2>
 	<div class="grid grid-3">
 		<ui-card variant="media-only ar(1/1)">
-			<ui-media><img src="../reveal/band_goth.png" alt="Gothic band" loading="lazy"></ui-media>
-			<ui-content><h2 data-part="headline">Hidden</h2></ui-content>
+			<cq-box>
+				<ui-media><img src="../reveal/band_goth.png" alt="Gothic band" loading="lazy"></ui-media>
+				<ui-content><h2 data-part="headline">Hidden</h2></ui-content>
+			</cq-box>
 		</ui-card>
 
 		<ui-card variant="content-only">
-			<ui-media><img src="../reveal/band_girls.png" alt="" loading="lazy"></ui-media>
-			<ui-content>
-				<small data-part="eyebrow">No media</small>
-				<h2 data-part="headline">Content only</h2>
-				<p data-part="summary">The media box is hidden; only the content area renders.</p>
-				<nav data-part="actions"><a class="ui-button" href="#">Read more</a></nav>
-			</ui-content>
+			<cq-box>
+				<ui-media><img src="../reveal/band_girls.png" alt="" loading="lazy"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">No media</small>
+					<h2 data-part="headline">Content only</h2>
+					<p data-part="summary">The media box is hidden; only the content area renders.</p>
+					<nav data-part="actions"><a class="ui-button" href="#">Read more</a></nav>
+				</ui-content>
+			</cq-box>
 		</ui-card>
 
 		<ui-card variant="media-only ar(1/1) sq(lg)">
-			<ui-media><img src="../reveal/band_boys.png" alt="Boy band" loading="lazy"></ui-media>
-			<ui-content><h2 data-part="headline">Hidden</h2></ui-content>
+			<cq-box>
+				<ui-media><img src="../reveal/band_boys.png" alt="Boy band" loading="lazy"></ui-media>
+				<ui-content><h2 data-part="headline">Hidden</h2></ui-content>
+			</cq-box>
 		</ui-card>
 	</div>
 
@@ -100,40 +114,40 @@
 	<h2>overlay — 9 positions</h2>
 	<div class="grid grid-3">
 		<ui-card variant="overlay(tl) ar(1/1) op(cc)">
-			<ui-media><img src="../reveal/band_goth.png" alt="" loading="lazy"></ui-media>
-			<ui-content><small data-part="eyebrow">Gothic</small><b data-part="headline">overlay(tl)</b></ui-content>
+			<cq-box><ui-media><img src="../reveal/band_goth.png" alt="" loading="lazy"></ui-media>
+			<ui-content><small data-part="eyebrow">Gothic</small><b data-part="headline">overlay(tl)</b></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="overlay(tc) ar(1/1) op(cc)">
-			<ui-media><img src="../reveal/band_alternative.png" alt="" loading="lazy"></ui-media>
-			<ui-content><small data-part="eyebrow">Alternative</small><b data-part="headline">overlay(tc)</b></ui-content>
+			<cq-box><ui-media><img src="../reveal/band_alternative.png" alt="" loading="lazy"></ui-media>
+			<ui-content><small data-part="eyebrow">Alternative</small><b data-part="headline">overlay(tc)</b></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="overlay(tr) ar(1/1) op(cc)">
-			<ui-media><img src="../reveal/band_boys.png" alt="" loading="lazy"></ui-media>
-			<ui-content><small data-part="eyebrow">Boy Band</small><b data-part="headline">overlay(tr)</b></ui-content>
+			<cq-box><ui-media><img src="../reveal/band_boys.png" alt="" loading="lazy"></ui-media>
+			<ui-content><small data-part="eyebrow">Boy Band</small><b data-part="headline">overlay(tr)</b></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="overlay(cl) ar(1/1) op(cc)">
-			<ui-media><img src="../reveal/band_girls.png" alt="" loading="lazy"></ui-media>
-			<ui-content><small data-part="eyebrow">Girl Group</small><b data-part="headline">overlay(cl)</b></ui-content>
+			<cq-box><ui-media><img src="../reveal/band_girls.png" alt="" loading="lazy"></ui-media>
+			<ui-content><small data-part="eyebrow">Girl Group</small><b data-part="headline">overlay(cl)</b></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="overlay(cc) ar(1/1) op(cc)">
-			<ui-media><img src="../reveal/band_goth.png" alt="" loading="lazy"></ui-media>
-			<ui-content><small data-part="eyebrow">Gothic</small><b data-part="headline">overlay(cc)</b></ui-content>
+			<cq-box><ui-media><img src="../reveal/band_goth.png" alt="" loading="lazy"></ui-media>
+			<ui-content><small data-part="eyebrow">Gothic</small><b data-part="headline">overlay(cc)</b></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="overlay(cr) ar(1/1) op(cc)">
-			<ui-media><img src="../reveal/band_alternative.png" alt="" loading="lazy"></ui-media>
-			<ui-content><small data-part="eyebrow">Alternative</small><b data-part="headline">overlay(cr)</b></ui-content>
+			<cq-box><ui-media><img src="../reveal/band_alternative.png" alt="" loading="lazy"></ui-media>
+			<ui-content><small data-part="eyebrow">Alternative</small><b data-part="headline">overlay(cr)</b></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="overlay(bl) ar(1/1) op(cc)">
-			<ui-media><img src="../reveal/band_boys.png" alt="" loading="lazy"></ui-media>
-			<ui-content><small data-part="eyebrow">Boy Band</small><b data-part="headline">overlay(bl)</b></ui-content>
+			<cq-box><ui-media><img src="../reveal/band_boys.png" alt="" loading="lazy"></ui-media>
+			<ui-content><small data-part="eyebrow">Boy Band</small><b data-part="headline">overlay(bl)</b></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="overlay(bc) ar(1/1) op(cc)">
-			<ui-media><img src="../reveal/band_girls.png" alt="" loading="lazy"></ui-media>
-			<ui-content><small data-part="eyebrow">Girl Group</small><b data-part="headline">overlay(bc)</b></ui-content>
+			<cq-box><ui-media><img src="../reveal/band_girls.png" alt="" loading="lazy"></ui-media>
+			<ui-content><small data-part="eyebrow">Girl Group</small><b data-part="headline">overlay(bc)</b></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="overlay(br) ar(1/1) op(cc)">
-			<ui-media><img src="../reveal/band_goth.png" alt="" loading="lazy"></ui-media>
-			<ui-content><small data-part="eyebrow">Gothic</small><b data-part="headline">overlay(br)</b></ui-content>
+			<cq-box><ui-media><img src="../reveal/band_goth.png" alt="" loading="lazy"></ui-media>
+			<ui-content><small data-part="eyebrow">Gothic</small><b data-part="headline">overlay(br)</b></ui-content></cq-box>
 		</ui-card>
 	</div>
 
@@ -143,12 +157,12 @@
 	<h2>font scale — fs()</h2>
 	<div class="grid grid-2">
 		<ui-card variant="vertical ar(16/9) fs(sm)">
-			<ui-media><img src="../reveal/band_alternative.png" alt="" loading="lazy"></ui-media>
-			<ui-content><small data-part="eyebrow">fs(sm)</small><h2 data-part="headline">Small scale</h2><p data-part="summary">Body-tight tier for dense grids.</p></ui-content>
+			<cq-box><ui-media><img src="../reveal/band_alternative.png" alt="" loading="lazy"></ui-media>
+			<ui-content><small data-part="eyebrow">fs(sm)</small><h2 data-part="headline">Small scale</h2><p data-part="summary">Body-tight tier for dense grids.</p></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="vertical ar(16/9) fs(lg)">
-			<ui-media><img src="../reveal/band_boys.png" alt="" loading="lazy"></ui-media>
-			<ui-content><small data-part="eyebrow">fs(lg)</small><h2 data-part="headline">Large scale</h2><p data-part="summary">Bigger headline, roomier copy.</p></ui-content>
+			<cq-box><ui-media><img src="../reveal/band_boys.png" alt="" loading="lazy"></ui-media>
+			<ui-content><small data-part="eyebrow">fs(lg)</small><h2 data-part="headline">Large scale</h2><p data-part="summary">Bigger headline, roomier copy.</p></ui-content></cq-box>
 		</ui-card>
 	</div>
 
@@ -157,13 +171,68 @@
 	     ============================================================ -->
 	<h2>hero — overlay + fs(xl)</h2>
 	<ui-card class="hero" variant="overlay(bl) ar(21/9) op(cc) fs(xl)">
-		<ui-media><img src="../reveal/band_girls.png" alt="" loading="lazy"></ui-media>
-		<ui-content>
-			<small data-part="eyebrow">Featured</small>
-			<b data-part="headline">A full-width hero headline</b>
-			<p data-part="summary">Same markup as the grid cards — <code>fs(xl)</code> renders larger here because the container is wider.</p>
-		</ui-content>
+		<cq-box>
+			<ui-media><img src="../reveal/band_girls.png" alt="" loading="lazy"></ui-media>
+			<ui-content>
+				<small data-part="eyebrow">Featured</small>
+				<b data-part="headline">A full-width hero headline</b>
+				<p data-part="summary">Same markup as the grid cards — <code>fs(xl)</code> renders larger here because the container is wider.</p>
+			</ui-content>
+		</cq-box>
 	</ui-card>
+
+	<!-- ============================================================
+	     responsive tiers — variant-md / variant-lg (container-driven)
+	     SAME markup shown full-width (wide → horizontal) and in a 3-up
+	     grid (narrow → vertical). The card reacts to its OWN width.
+	     ============================================================ -->
+	<h2>responsive — <code>variant-md</code> / <code>variant-lg</code></h2>
+	<p>Identical markup. Full-width it goes <code>horizontal</code> with a larger font; in the narrow grid it stays <code>vertical</code> — driven by each card's own container width.</p>
+
+	<ui-card class="hero" variant="vertical ar(16/9) fs(sm)" variant-md="horizontal split(1/2) fs(md)" variant-lg="horizontal split(1/3) fs(lg)">
+		<cq-box>
+			<ui-media><img src="../reveal/band_goth.png" alt="" loading="lazy"></ui-media>
+			<ui-content>
+				<small data-part="eyebrow">Responsive</small>
+				<h2 data-part="headline">Reacts to its own width</h2>
+				<p data-part="summary">Wide container → horizontal, larger scale. Narrow container → vertical, small scale.</p>
+				<nav data-part="actions"><a class="ui-button" href="#">Open</a></nav>
+			</ui-content>
+		</cq-box>
+	</ui-card>
+
+	<div class="grid grid-3">
+		<ui-card variant="vertical ar(16/9) fs(sm)" variant-md="horizontal split(1/2) fs(md)" variant-lg="horizontal split(1/3) fs(lg)">
+			<cq-box>
+				<ui-media><img src="../reveal/band_goth.png" alt="" loading="lazy"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Responsive</small>
+					<h2 data-part="headline">Same card, narrow</h2>
+					<p data-part="summary">Too narrow to trigger md/lg, so it stays vertical.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="vertical ar(16/9) fs(sm)" variant-md="horizontal split(1/2) fs(md)" variant-lg="horizontal split(1/3) fs(lg)">
+			<cq-box>
+				<ui-media><img src="../reveal/band_boys.png" alt="" loading="lazy"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Responsive</small>
+					<h2 data-part="headline">Same card, narrow</h2>
+					<p data-part="summary">Too narrow to trigger md/lg, so it stays vertical.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="vertical ar(16/9) fs(sm)" variant-md="horizontal split(1/2) fs(md)" variant-lg="horizontal split(1/3) fs(lg)">
+			<cq-box>
+				<ui-media><img src="../reveal/band_girls.png" alt="" loading="lazy"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Responsive</small>
+					<h2 data-part="headline">Same card, narrow</h2>
+					<p data-part="summary">Too narrow to trigger md/lg, so it stays vertical.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
 
 	<!-- ============================================================
 	     all common parts on one card
@@ -171,39 +240,43 @@
 	<h2>all common parts</h2>
 	<div class="grid grid-2">
 		<ui-card variant="vertical ar(16/9) fs(md)">
-			<ui-media>
-				<img src="../reveal/band_goth.png" alt="" loading="lazy">
-			</ui-media>
-			<ui-content>
-				<small data-part="eyebrow">Interview</small>
-				<h2 data-part="headline">Every common part</h2>
-				<p data-part="subheadline">eyebrow · headline · subheadline · summary · byline · tags · actions · footer</p>
-				<p data-part="summary">A single card exercising the full common-parts taxonomy that ui-card v1 styles generically.</p>
-				<address data-part="byline">
-					<img src="../reveal/band_boys.png" alt="">
-					<span>Sarah Chen · <span data-part="meta">8 min read</span></span>
-				</address>
-				<ul data-part="tags">
-					<li><a href="#">CSS</a></li>
-					<li><a href="#">Components</a></li>
-					<li><a href="#">Design systems</a></li>
-				</ul>
-				<nav data-part="actions">
-					<a class="ui-button" href="#">Read</a>
-					<a class="ui-button --ghost" href="#">Share</a>
-				</nav>
-				<footer data-part="footer">Published 14 Jun 2026</footer>
-			</ui-content>
+			<cq-box>
+				<ui-media>
+					<img src="../reveal/band_goth.png" alt="" loading="lazy">
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Interview</small>
+					<h2 data-part="headline">Every common part</h2>
+					<p data-part="subheadline">eyebrow · headline · subheadline · summary · byline · tags · actions · footer</p>
+					<p data-part="summary">A single card exercising the full common-parts taxonomy that ui-card v1 styles generically.</p>
+					<address data-part="byline">
+						<img src="../reveal/band_boys.png" alt="">
+						<span>Sarah Chen · <span data-part="meta">8 min read</span></span>
+					</address>
+					<ul data-part="tags">
+						<li><a href="#">CSS</a></li>
+						<li><a href="#">Components</a></li>
+						<li><a href="#">Design systems</a></li>
+					</ul>
+					<nav data-part="actions">
+						<a class="ui-button" href="#">Read</a>
+						<a class="ui-button --ghost" href="#">Share</a>
+					</nav>
+					<footer data-part="footer">Published 14 Jun 2026</footer>
+				</ui-content>
+			</cq-box>
 		</ui-card>
 
 		<ui-card variant="horizontal split(1/2) ar(1/1) fs(md)">
-			<ui-media><img src="../reveal/band_alternative.png" alt="" loading="lazy"></ui-media>
-			<ui-content>
-				<small data-part="eyebrow">split(1/2)</small>
-				<h2 data-part="headline">Custom column split</h2>
-				<p data-part="summary">Horizontal cards take a <code>split()</code> token to set the media/content ratio.</p>
-				<nav data-part="actions"><a class="ui-button" href="#">Open</a></nav>
-			</ui-content>
+			<cq-box>
+				<ui-media><img src="../reveal/band_alternative.png" alt="" loading="lazy"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">split(1/2)</small>
+					<h2 data-part="headline">Custom column split</h2>
+					<p data-part="summary">Horizontal cards take a <code>split()</code> token to set the media/content ratio.</p>
+					<nav data-part="actions"><a class="ui-button" href="#">Open</a></nav>
+				</ui-content>
+			</cq-box>
 		</ui-card>
 	</div>
 </body>
