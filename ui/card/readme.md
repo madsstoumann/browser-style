@@ -54,9 +54,23 @@ design tokens (`--color-*`, `--spacing-*`, `--radius-*`, …).
 
 Common parts are styled by the **`data-part`** attribute, not by tag name, so you
 pick the semantically correct element for the context (a `<p>` in a card body, a
-`<span>` inside a `<summary>`). Recognised parts: `eyebrow`, `headline`,
-`subheadline`, `summary`, `byline`, `meta`, `caption`, `tags`, `actions`, `footer`.
-Headings (`h2`–`h6`) inside `<ui-content>` also get the headline ramp by default.
+`<span>` inside a `<summary>`).
+
+| `data-part` | Suggested element | Notes |
+|-------------|-------------------|-------|
+| `eyebrow` | `<small>` | category/kicker — uppercase, accent colour |
+| `headline` | `<h2>`–`<h6>` or `<b>` | uses the headline scale; headings get it automatically |
+| `subheadline` | `<p>` / `<span>` | muted secondary line |
+| `summary` | `<p>` | body copy |
+| `byline` | `<address>` | author row; an `<img>` inside becomes a round avatar |
+| `meta` | `<small>` | date, reading time |
+| `caption` | `<small>` | media caption (place inside `<ui-media>`) |
+| `tags` | `<ul>` | pill list (style applies to `<a>` / `<li>`) |
+| `actions` | `<nav>` | button / link row |
+| `footer` | `<footer>` | trailing meta |
+
+Headings (`h2`–`h6`) inside `<ui-content>` get the headline ramp without a
+`data-part`. Everything not listed just inherits the body scale.
 
 ## Variant tokens
 
@@ -153,6 +167,13 @@ ui-card { --ui-card-radius: 0; --ui-card-shadow: none; }
 Key tokens: `--ui-card-bg`, `--ui-card-radius`, `--ui-card-shadow`, `--ui-card-p`,
 `--ui-card-row-gap`, `--ui-card-fs`, `--ui-card-headline`,
 `--ui-card-eyebrow-color`, `--ui-card-overlay-gradient`, `--ui-card-overlay-ink`.
+
+## Demo
+
+`index.html` shows the engine end to end: article cards, responsive layout
+switching (`variant-lg`), the `fs(xl)` hero, overlay-featured cards, the three
+themes, and profile/product cards — with realistic content and images under
+`assets/`.
 
 ## Notes
 
