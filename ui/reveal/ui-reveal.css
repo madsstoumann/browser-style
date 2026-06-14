@@ -4,26 +4,41 @@
  * @version 1.0.0
  * @author Mads Stoumann
  */
+@import '../card/ui-card.css';
 @import '../icon/index.css';
 @layer bs-component {
+	/* ui-reveal inherits the host-agnostic layout/typography engine from
+	   ui-card.css (variants, ar()/op()/fs()/sq(), overlay, <ui-media> and
+	   <ui-content>). This file adds only what is reveal-specific:
+	   <details>/<summary> wiring, <ui-icon>, <ui-face>, and the reveal
+	   animation types (expand/flip/slide/scale). */
 	:where(ui-reveal) {
-		--ui-reveal-aspect: auto;
 		--ui-reveal-bg: var(--color-surface);
 		--ui-reveal-radius: var(--radius-2xl);
 		--ui-reveal-icon-sz: var(--size-7);
 		--ui-reveal-p: var(--spacing-md);
 		--_trs: var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
 
+		/* feed reveal's tokens into the shared ui-card engine so its
+		   <ui-content> rules pick up reveal's spacing */
+		--ui-card-p: var(--ui-reveal-p);
+		--ui-card-row-gap: var(--ui-reveal-row-gap, var(--spacing-sm));
+
 		display: block;
 		interpolate-size: allow-keywords;
 
 		details {
 			background: var(--ui-reveal-bg);
-			border-radius: var(--ui-reveal-radius);
+			/* sq() sets --ui-card-radius; otherwise reveal's own radius */
+			border-radius: var(--ui-card-radius, var(--ui-reveal-radius));
 			box-shadow: var(--ui-reveal-shadow, var(--shadow-xl));
 			display: grid;
 			overflow: hidden;
 		}
+
+		/* reveal's grid container(s) consume the shared --ui-card-cols set by
+		   horizontal/split tokens in ui-card.css */
+		:is(summary, ui-face) { grid-template-columns: var(--ui-card-cols, 1fr); }
 
 		details[open]::details-content {
 			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
@@ -64,13 +79,7 @@
 			list-style: none;
 			position: relative;
 
-			ui-content {
-				display: flex;
-				flex-direction: column;
-				padding: var(--ui-reveal-p);
-				row-gap: var(--ui-reveal-row-gap, var(--spacing-sm));
-				& > * { margin: 0; text-box: cap alphabetic; }
-			}
+			/* <ui-content> styling (flex column, padding, row-gap) comes from ui-card */
 
 			ui-face {
 				display: grid;
@@ -86,22 +95,7 @@
 				width: var(--ui-reveal-icon-sz);
 			}
 
-			ui-media {
-				aspect-ratio: var(--ui-reveal-aspect);
-				display: grid;
-				min-block-size: var(--ui-reveal-media-min, 12.5rem);
-				overflow: hidden;
-				position: relative;
-
-				img {
-					block-size: 100%;
-					inline-size: 100%;
-					inset: 0;
-					object-fit: var(--ui-reveal-object-fit, cover);
-					object-position: var(--ui-reveal-op, center);
-					position: absolute;
-				}
-			}
+			/* <ui-media> (aspect-ratio, fill img, object-position) comes from ui-card */
 
 			&:focus-visible { outline: none; }
 			&:focus-visible ui-icon {
@@ -109,48 +103,8 @@
 			}
 		}
 
-		/* === variants === */
-		&[variant~="vertical-r"] ui-content { order: -1; }
-
-		&:is([variant~="horizontal"], [variant~="horizontal-r"]) :is(summary, summary > ui-face) {
-			align-items: stretch;
-			grid-template-columns: var(--ui-reveal-split, 1fr 1fr);
-		}
-		&:is([variant~="horizontal"], [variant~="horizontal-r"]) ui-media { block-size: 100%; }
-		&[variant~="horizontal-r"] ui-content { order: -1; }
-
-		&[variant~="media-only"] ui-content { display: none; }
-
-		/* === variant: overlay(pos) === */
-		&[variant*="overlay("] {
-			& :is(ui-media, ui-content) { grid-area: 1 / 1; }
-
-			& ui-content {
-				background: var(--ui-reveal-overlay-gradient, linear-gradient(to top, rgb(0 0 0 / 0.7) 0%, rgb(0 0 0 / 0) 100%));
-				color: var(--ui-reveal-overlay-ink, #fff);
-				z-index: 1;
-			}
-
-			/* 9 positions: justify-content (block) · align-items (inline) · text-align */
-			&[variant*="overlay(tl)"] ui-content { justify-content: start;  align-items: start;  text-align: start;  }
-			&[variant*="overlay(tc)"] ui-content { justify-content: start;  align-items: center; text-align: center; }
-			&[variant*="overlay(tr)"] ui-content { justify-content: start;  align-items: end;    text-align: end;    }
-			&[variant*="overlay(cl)"] ui-content { justify-content: center; align-items: start;  text-align: start;  }
-			&[variant*="overlay(cc)"] ui-content { justify-content: center; align-items: center; text-align: center; }
-			&[variant*="overlay(cr)"] ui-content { justify-content: center; align-items: end;    text-align: end;    }
-			&[variant*="overlay(bl)"] ui-content { justify-content: end;    align-items: start;  text-align: start;  }
-			&[variant*="overlay(bc)"] ui-content { justify-content: end;    align-items: center; text-align: center; }
-			&[variant*="overlay(br)"] ui-content { justify-content: end;    align-items: end;    text-align: end;    }
-
-			/* gradient direction follows vertical placement */
-			/* TODO! */
-			&[variant*="overlay(t"] ui-content {
-				/* background: var(--ui-reveal-overlay-gradient, linear-gradient(to bottom, rgb(0 0 0 / 0.7) 0%, rgb(0 0 0 / 0) 100%)); */
-			}
-			&[variant*="overlay(c"] ui-content {
-				/* background: var(--ui-reveal-overlay-gradient, radial-gradient(ellipse at center, rgb(0 0 0 / 0.6) 0%, rgb(0 0 0 / 0.05) 100%)); */
-			}
-		}
+		/* === variants (vertical-r / horizontal / media-only / overlay(pos))
+		   and ar() / op() are inherited from ui-card.css === */
 
 		/* === icon === */
 		&:is([icon~="top"],[icon~="bottom"],[icon~="left"],[icon~="right"]) summary > ui-icon {
@@ -195,38 +149,13 @@
 			--ui-reveal-icon-sz: var(--size-8);
 		}
 
-		/* === aspect-ratio: variant ar() token (mirrors content-card) === */
-		&[variant*="ar(square)"]    { --ui-reveal-aspect: 1 / 1; }
-		&[variant*="ar(portrait)"]  { --ui-reveal-aspect: 3 / 4; }
-		&[variant*="ar(landscape)"] { --ui-reveal-aspect: 4 / 3; }
-		&[variant*="ar(panorama)"]  { --ui-reveal-aspect: 21 / 9; }
-		&[variant*="ar(1/1)"]       { --ui-reveal-aspect: 1 / 1; }
-		&[variant*="ar(3/4)"]       { --ui-reveal-aspect: 3 / 4; }
-		&[variant*="ar(4/3)"]       { --ui-reveal-aspect: 4 / 3; }
-		&[variant*="ar(16/9)"]      { --ui-reveal-aspect: 16 / 9; }
-		&[variant*="ar(2/3)"]       { --ui-reveal-aspect: 2 / 3; }
-		&[variant*="ar(3/2)"]       { --ui-reveal-aspect: 3 / 2; }
-		&[variant*="ar(21/9)"]      { --ui-reveal-aspect: 21 / 9; }
-			&[variant*="ar("] ui-media  { min-block-size: 0; } /* aspect-ratio sets height */
+		/* === ar() aspect-ratio and op() object-position tokens are inherited
+		   from ui-card.css === */
 
-		/* === object-position: variant op() token (9 positions) === */
-		&[variant*="op(tl)"] { --ui-reveal-op: left top; }
-		&[variant*="op(tc)"] { --ui-reveal-op: center top; }
-		&[variant*="op(tr)"] { --ui-reveal-op: right top; }
-		&[variant*="op(cl)"] { --ui-reveal-op: left center; }
-		&[variant*="op(cc)"] { --ui-reveal-op: center center; }
-		&[variant*="op(cr)"] { --ui-reveal-op: right center; }
-		&[variant*="op(bl)"] { --ui-reveal-op: left bottom; }
-		&[variant*="op(bc)"] { --ui-reveal-op: center bottom; }
-		&[variant*="op(br)"] { --ui-reveal-op: right bottom; }
-
-		/* === squircle — sq() === */
-		&[variant*="sq(sm)"] { --ui-reveal-squircle-exp: 1.5; --ui-reveal-radius: 1.25rem; } /* 20px */
-		&[variant*="sq(md)"] { --ui-reveal-squircle-exp: 1.7; --ui-reveal-radius: 2rem;    } /* 32px */
-		&[variant*="sq(lg)"] { --ui-reveal-squircle-exp: 1.8; --ui-reveal-radius: 2.8rem;  } /* ~45px */
-		&[variant*="sq(xl)"] { --ui-reveal-squircle-exp: 2;   --ui-reveal-radius: 3.5rem;  } /* 56px */
+		/* === squircle — sq() value mapping (exponent + radius) comes from
+		   ui-card; reveal only applies corner-shape to its <details> === */
 		&[variant*="sq("] details {
-			corner-shape: superellipse(var(--ui-reveal-squircle-exp, 1.8));
+			corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8));
 		}
 	}
 
@@ -250,7 +179,7 @@
 		&[to] details[open]::details-content { transition: block-size var(--_trs), content-visibility var(--_trs), padding var(--_trs); }
 
 		&[to]:has([open]) {
-			--ui-reveal-aspect: var(--ui-reveal-expand-aspect, 16/9);
+			--ui-card-ar: var(--ui-reveal-expand-aspect, 16/9);
 			--ui-reveal-expand-m: 2ch;
 
 			animation: ui-reveal-backdrop var(--_trs) both;

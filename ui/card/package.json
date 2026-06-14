@@ -1,7 +1,7 @@
 {
-  "name": "@browser.style/reveal",
+  "name": "@browser.style/card",
   "version": "4.0.0",
-  "description": "CSS-only reveal card built on details/summary with cover, flip, slide, and scale animations",
+  "description": "CSS-first card engine built on <ui-media> + <ui-content>, with variant tokens and a container-driven font scale. Shared base for ui-reveal.",
   "type": "module",
   "style": "index.css",
   "exports": {
@@ -9,11 +9,12 @@
       "style": "./index.css"
     },
     "./style": "./index.css",
-    "./index.css": "./index.css"
+    "./index.css": "./index.css",
+    "./ui-card.css": "./ui-card.css"
   },
   "files": [
     "index.css",
-    "ui-reveal.css"
+    "ui-card.css"
   ],
   "publishConfig": {
     "access": "public",
@@ -21,24 +22,22 @@
   },
   "keywords": [
     "browser.style",
-    "reveal",
     "card",
     "css-first",
-    "details-summary",
-    "flip",
-    "animation"
+    "ui-media",
+    "ui-content",
+    "container-queries",
+    "design-system"
   ],
   "author": "Mads Stoumann",
   "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madsstoumann/browser-style.git",
-    "directory": "ui/reveal"
+    "directory": "ui/card"
   },
-  "homepage": "https://browser.style/ui/reveal",
+  "homepage": "https://browser.style/ui/card",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.11",
-    "@browser.style/card": "^4.0.0",
-    "@browser.style/icon": "^1.0.11"
+    "@browser.style/base": "^1.0.11"
   }
 }

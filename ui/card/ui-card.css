@@ -1,0 +1,289 @@
+/**
+ * ui-card
+ * CSS-first card engine built on two structural elements: <ui-media> + <ui-content>.
+ * Every card is an arrangement of media and content — media-only, content-only,
+ * media above/below content, or content over media (overlay).
+ *
+ * The layout/typography engine is HOST-AGNOSTIC: it keys off the `variant`
+ * attribute and the <ui-media>/<ui-content> elements, never the `ui-card` tag.
+ * That lets other hosts (e.g. <ui-reveal>) `@import` this file and inherit the
+ * whole engine — they only declare which element is their grid container.
+ *
+ * @version 1.0.0
+ * @author Mads Stoumann
+ */
+@layer bs-component {
+
+	/* ============================================================
+	   Host surface + grid container (ui-card only)
+	   ============================================================ */
+	:where(ui-card) {
+		--ui-card-bg: var(--color-surface);
+		--ui-card-radius: var(--radius-2xl);
+		--ui-card-shadow: var(--shadow-xl);
+		--ui-card-p: var(--spacing-md);
+		--ui-card-row-gap: var(--spacing-sm);
+
+		background: var(--ui-card-bg);
+		border-radius: var(--ui-card-radius);
+		box-shadow: var(--ui-card-shadow);
+		container-type: inline-size;
+		display: grid;
+		gap: 0; /* media bleeds to content; inner spacing lives on <ui-content> */
+		grid-template-columns: var(--ui-card-cols, 1fr);
+		overflow: hidden;
+	}
+
+	/* superellipse corners — the host carries the radius + overflow */
+	:where(ui-card[variant*="sq("]) {
+		corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8));
+	}
+
+	/* ============================================================
+	   Font-size scale — fs(sm|md|lg|xl), container-driven (cqi)
+	   One root (--ui-card-fs); every part derives from it by ratio.
+	   ============================================================ */
+	:where([variant]) {
+		/* spacing defaults live here (not only on ui-card) so any variant host
+		   — e.g. <ui-reveal> — resolves the shared <ui-content> rule */
+		--ui-card-p: var(--spacing-md);
+		--ui-card-row-gap: var(--spacing-sm);
+
+		--ui-card-fs: var(--ui-card-fs-md);
+
+		--ui-card-fs-sm: clamp(0.80rem, 0.72rem + 0.8cqi, 0.95rem);
+		--ui-card-fs-md: clamp(0.90rem, 0.80rem + 1.2cqi, 1.10rem);
+		--ui-card-fs-lg: clamp(1.00rem, 0.84rem + 2.0cqi, 1.35rem);
+		--ui-card-fs-xl: clamp(1.15rem, 0.90rem + 4.0cqi, 2.25rem);
+
+		--ui-card-muted: color-mix(in oklab, currentColor 65%, transparent);
+	}
+	:where([variant~="fs(sm)"]) { --ui-card-fs: var(--ui-card-fs-sm); }
+	:where([variant~="fs(md)"]) { --ui-card-fs: var(--ui-card-fs-md); }
+	:where([variant~="fs(lg)"]) { --ui-card-fs: var(--ui-card-fs-lg); }
+	:where([variant~="fs(xl)"]) {
+		--ui-card-fs: var(--ui-card-fs-xl);
+		--ui-card-headline-ratio: 2.2; /* hero/display headline */
+	}
+
+	/* ============================================================
+	   <ui-media> — the visual box
+	   img is absolutely-filled so aspect-ratio + object-position win.
+	   ============================================================ */
+	:where([variant]) ui-media {
+		aspect-ratio: var(--ui-card-ar, auto);
+		background: var(--ui-card-media-bg, var(--color-overlay-light, transparent));
+		display: grid;
+		min-block-size: var(--ui-card-media-min, 12.5rem);
+		overflow: hidden;
+		position: relative;
+
+		& img {
+			block-size: 100%;
+			inline-size: 100%;
+			inset: 0;
+			object-fit: var(--ui-card-object-fit, cover);
+			object-position: var(--ui-card-op, center);
+			position: absolute;
+		}
+	}
+	/* once an aspect-ratio is set it dictates height — drop the min */
+	:where([variant*="ar("]) ui-media { min-block-size: 0; }
+
+	/* === aspect-ratio: ar() token === */
+	:where([variant*="ar(square)"])    { --ui-card-ar: 1 / 1; }
+	:where([variant*="ar(portrait)"])  { --ui-card-ar: 3 / 4; }
+	:where([variant*="ar(landscape)"]) { --ui-card-ar: 4 / 3; }
+	:where([variant*="ar(panorama)"])  { --ui-card-ar: 21 / 9; }
+	:where([variant*="ar(1/1)"])       { --ui-card-ar: 1 / 1; }
+	:where([variant*="ar(3/4)"])       { --ui-card-ar: 3 / 4; }
+	:where([variant*="ar(4/3)"])       { --ui-card-ar: 4 / 3; }
+	:where([variant*="ar(3/2)"])       { --ui-card-ar: 3 / 2; }
+	:where([variant*="ar(2/3)"])       { --ui-card-ar: 2 / 3; }
+	:where([variant*="ar(16/9)"])      { --ui-card-ar: 16 / 9; }
+	:where([variant*="ar(21/9)"])      { --ui-card-ar: 21 / 9; }
+
+	/* === object-position: op() token (9 positions) === */
+	:where([variant*="op(tl)"]) { --ui-card-op: left top; }
+	:where([variant*="op(tc)"]) { --ui-card-op: center top; }
+	:where([variant*="op(tr)"]) { --ui-card-op: right top; }
+	:where([variant*="op(cl)"]) { --ui-card-op: left center; }
+	:where([variant*="op(cc)"]) { --ui-card-op: center center; }
+	:where([variant*="op(cr)"]) { --ui-card-op: right center; }
+	:where([variant*="op(bl)"]) { --ui-card-op: left bottom; }
+	:where([variant*="op(bc)"]) { --ui-card-op: center bottom; }
+	:where([variant*="op(br)"]) { --ui-card-op: right bottom; }
+
+	/* === squircle: sq() token — exponent + radius pair === */
+	:where([variant*="sq(sm)"]) { --ui-card-squircle-exp: 1.5; --ui-card-radius: 1.25rem; }
+	:where([variant*="sq(md)"]) { --ui-card-squircle-exp: 1.7; --ui-card-radius: 2rem;    }
+	:where([variant*="sq(lg)"]) { --ui-card-squircle-exp: 1.8; --ui-card-radius: 2.8rem;  }
+	:where([variant*="sq(xl)"]) { --ui-card-squircle-exp: 2;   --ui-card-radius: 3.5rem;  }
+
+	/* ============================================================
+	   <ui-content> — the text box (flex column so overlay alignment
+	   via justify-content/align-items works identically everywhere)
+	   ============================================================ */
+	:where([variant]) ui-content {
+		display: flex;
+		flex-direction: column;
+		font-size: var(--ui-card-fs);
+		gap: var(--ui-card-row-gap, var(--spacing-sm));
+		padding: var(--ui-card-p);
+
+		& > * { margin: 0; text-box: cap alphabetic; }
+	}
+
+	/* ============================================================
+	   Layout arrangement (variant tokens)
+	   --ui-card-cols inherits down; each host applies it to its grid.
+	   ============================================================ */
+
+	/* horizontal: two columns (split() overrides the ratio) */
+	:where([variant~="horizontal"], [variant~="horizontal-r"]) {
+		--ui-card-cols: var(--ui-card-split, 1fr 1fr);
+	}
+	/* preset column ratios — set --ui-card-split inline for any other value */
+	:where([variant*="split(1/1)"]) { --ui-card-split: 1fr 1fr; }
+	:where([variant*="split(1/2)"]) { --ui-card-split: 1fr 2fr; }
+	:where([variant*="split(2/1)"]) { --ui-card-split: 2fr 1fr; }
+	:where([variant*="split(1/3)"]) { --ui-card-split: 1fr 3fr; }
+	:where([variant*="split(3/1)"]) { --ui-card-split: 3fr 1fr; }
+	/* media fills its cell — both dimensions definite, so ar() is ignored here
+	   (ar() shapes media in vertical/overlay, not when it fills a column) */
+	:where([variant~="horizontal"], [variant~="horizontal-r"]) ui-media {
+		block-size: 100%;
+		inline-size: 100%;
+		min-block-size: 0;
+	}
+
+	/* reversed orders: content first */
+	:where([variant~="vertical-r"], [variant~="horizontal-r"]) ui-content { order: -1; }
+
+	/* media-only / content-only */
+	:where([variant~="media-only"]) ui-content { display: none; }
+	:where([variant~="content-only"]) ui-media { display: none; }
+
+	/* ============================================================
+	   overlay(pos) — content stacked on media, 9 positions + scrim
+	   ============================================================ */
+	:where([variant*="overlay("]) :is(ui-media, ui-content) { grid-area: 1 / 1; }
+	:where([variant*="overlay("]) ui-content {
+		background: var(--ui-card-overlay-gradient, linear-gradient(to top, rgb(0 0 0 / 0.7) 0%, rgb(0 0 0 / 0) 100%));
+		color: var(--ui-card-overlay-ink, #fff);
+		z-index: 1;
+	}
+	/* justify-content (block) · align-items (inline) · text-align */
+	:where([variant*="overlay(tl)"]) ui-content { justify-content: start;  align-items: start;  text-align: start;  }
+	:where([variant*="overlay(tc)"]) ui-content { justify-content: start;  align-items: center; text-align: center; }
+	:where([variant*="overlay(tr)"]) ui-content { justify-content: start;  align-items: end;    text-align: end;    }
+	:where([variant*="overlay(cl)"]) ui-content { justify-content: center; align-items: start;  text-align: start;  }
+	:where([variant*="overlay(cc)"]) ui-content { justify-content: center; align-items: center; text-align: center; }
+	:where([variant*="overlay(cr)"]) ui-content { justify-content: center; align-items: end;    text-align: end;    }
+	:where([variant*="overlay(bl)"]) ui-content { justify-content: end;    align-items: start;  text-align: start;  }
+	:where([variant*="overlay(bc)"]) ui-content { justify-content: end;    align-items: center; text-align: center; }
+	:where([variant*="overlay(br)"]) ui-content { justify-content: end;    align-items: end;    text-align: end;    }
+
+	/* ============================================================
+	   Common content parts — styled by [data-part], not by tag, so
+	   consumers pick a semantically valid element per context
+	   (flow in a card body; phrasing inside a <summary>).
+	   Sizes derive from --ui-card-fs.
+	   ============================================================ */
+
+	/* eyebrow / category */
+	:where(ui-content) [data-part="eyebrow"] {
+		color: var(--ui-card-eyebrow-color, var(--color-accent));
+		font-size: calc(var(--ui-card-fs) * 0.78);
+		font-weight: var(--font-weight-medium, 500);
+		letter-spacing: var(--tracking-wide, 0.05em);
+		text-transform: uppercase;
+	}
+
+	/* headline — [data-part] or any heading inside content */
+	:where(ui-content) :is([data-part="headline"], h2, h3, h4, h5, h6) {
+		font-size: calc(var(--ui-card-fs) * var(--ui-card-headline-ratio, 1.6));
+		font-weight: var(--ui-card-headline-weight, var(--font-weight-bold, 700));
+		letter-spacing: var(--tracking-tight, -0.01em);
+		line-height: var(--line-height-tight, 1.15);
+	}
+
+	/* subheadline / subheader */
+	:where(ui-content) [data-part="subheadline"] {
+		color: var(--ui-card-subheadline-color, var(--ui-card-muted));
+		font-size: calc(var(--ui-card-fs) * 0.88);
+		font-weight: var(--font-weight-normal, 400);
+	}
+
+	/* summary / description */
+	:where(ui-content) [data-part="summary"] {
+		color: var(--ui-card-summary-color, inherit);
+		font-size: var(--ui-card-fs);
+		line-height: var(--line-height-normal, 1.5);
+	}
+
+	/* meta (date, reading-time) + caption */
+	:where([variant]) :is([data-part="meta"], [data-part="caption"]) {
+		color: var(--ui-card-muted);
+		font-size: calc(var(--ui-card-fs) * 0.75);
+	}
+
+	/* byline / author */
+	:where(ui-content) [data-part="byline"] {
+		align-items: center;
+		display: flex;
+		font-size: calc(var(--ui-card-fs) * 0.82);
+		font-style: normal;
+		gap: var(--spacing-sm);
+
+		& img {
+			aspect-ratio: 1;
+			border-radius: var(--radius-circle);
+			inline-size: var(--ui-card-avatar-size, 2.25em);
+			object-fit: cover;
+		}
+	}
+
+	/* tags */
+	:where(ui-content) [data-part="tags"] {
+		display: flex;
+		flex-wrap: wrap;
+		font-size: calc(var(--ui-card-fs) * 0.72);
+		gap: var(--ui-card-tags-gap, var(--spacing-xs, 0.35rem));
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		& > * { display: contents; }
+		& a, & li {
+			background: var(--ui-card-tag-bg, var(--color-overlay-light, color-mix(in oklab, currentColor 10%, transparent)));
+			border-radius: var(--radius-pill, 100px);
+			color: inherit;
+			padding: 0.2em 0.7em;
+			text-decoration: none;
+		}
+	}
+
+	/* actions */
+	:where(ui-content) [data-part="actions"] {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--ui-card-actions-gap, var(--spacing-sm));
+	}
+
+	/* footer */
+	:where(ui-content) [data-part="footer"] {
+		color: var(--ui-card-muted);
+		display: flex;
+		flex-wrap: wrap;
+		font-size: calc(var(--ui-card-fs) * 0.78);
+		gap: var(--spacing-sm);
+	}
+
+	/* ============================================================
+	   Responsive tiers (variant-md / variant-lg)
+	   A container can't query itself, so these require a <cq-box>
+	   wrapper around the items. Deferred to the JS component / a
+	   later pass — documented in the readme.
+	   ============================================================ */
+}
