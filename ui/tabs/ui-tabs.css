@@ -64,7 +64,12 @@
 
 	@container style(--_render: tabs) {
 		:where(ui-tabs, [tabs]) {
-			cq-box {
+			/* Direct-child scoping (> cq-box > details > summary): the tab DOM is
+			   always ui-tabs > cq-box > details > summary, so these structural rules
+			   must NOT reach descendant <details>/<summary>/<cq-box> belonging to
+			   nested components (e.g. <ui-reveal> cards in a panel), which would
+			   otherwise steal --tab-active and inherit the grid/header chrome. */
+			> cq-box {
 				display: grid;
 				grid-auto-columns: minmax(0, 1fr);
 				grid-template-rows: auto 1fr;
@@ -102,7 +107,7 @@
 				}
 			}
 
-			details {
+			> cq-box > details {
 				--_tc: sibling-count();
 				--_ti: sibling-index();
 
@@ -121,7 +126,7 @@
 					pointer-events: auto;
 				}
 
-				&[open] summary {
+				&[open] > summary {
 					anchor-name: --tab-active;
 					border-block-end: 0;
 					border-block-start: var(--ui-tabs-outline-width) solid var(--ui-tabs-outline-color);
@@ -136,7 +141,7 @@
 				}
 			}
 
-			summary {
+			> cq-box > details > summary {
 				border-block-end: var(--ui-tabs-outline-width) solid var(--ui-tabs-outline-color);
 				box-sizing: border-box;
 				cursor: pointer;
@@ -271,8 +276,9 @@
 			}
 		}
 
-		/* no-collapse — one tab stays open. */
-		:is(ui-tabs[no-collapse], [tabs][no-collapse]) details[open] summary { pointer-events: none; }
+		/* no-collapse — one tab stays open. Scoped to the tab's own summary so it
+		   never disables pointer-events on nested <details>-based content. */
+		:is(ui-tabs[no-collapse], [tabs][no-collapse]) > cq-box > details[open] > summary { pointer-events: none; }
 	}
 
 	/* compact narrow fallback — equal-share tracks below 400px. */

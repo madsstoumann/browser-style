@@ -19,6 +19,30 @@ html { scrollbar-gutter: stable; }
 	--ui-tabs-indicator-text: var(--color-text);
 }
 
+/* Staggered panel content — direct children of [data-stagger] fade/rise into
+   place when their tab opens. The [open] selector switch adds animation-name,
+   which (re)starts the animation, so it replays every time the tab activates
+   (incl. switching back to it). Per-child offset via sibling-index(); a reverse
+   stagger would use calc((sibling-count() - sibling-index()) * step).
+   sibling-index/count: Chrome 138+/Safari 26.2+ (no Firefox) — without it the
+   delay is dropped and all children animate together, which is a fine fallback. */
+.tabs-stagger {
+	--stagger-step: 0.07s;
+	--stagger-dur: 0.5s;
+}
+.tabs-stagger details[open] [data-stagger] > * {
+	animation: tabs-stagger-in var(--stagger-dur) cubic-bezier(0.16, 1, 0.3, 1) both;
+	animation-delay: calc((sibling-index() - 1) * var(--stagger-step));
+}
+@keyframes tabs-stagger-in {
+	from { opacity: 0; translate: 0 2rem; }
+	to   { opacity: 1; translate: 0; }
+}
+/* MANDATORY: respect reduced-motion — show instantly, no slide/fade. */
+@media (prefers-reduced-motion: reduce) {
+	.tabs-stagger details[open] [data-stagger] > * { animation: none; }
+}
+
 /* Atoms */
 .tabs-line        { --ui-tabs-indicator-width:       var(--border-width-heavy); }
 .tabs-line-above  { --ui-tabs-indicator-width-start: var(--border-width-heavy); }
