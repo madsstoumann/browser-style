@@ -264,8 +264,8 @@
 				--ui-reveal-content-fs: var(--ui-reveal-expand-content-fs, var(--font-size-base));
 				align-content: start;
 				animation: ui-reveal-pop var(--_trs) both;
-				height: calc(100dvh - calc(var(--ui-reveal-expand-m) * 2));
 				margin: var(--ui-reveal-expand-m) auto;
+				max-height: calc(100dvh - calc(var(--ui-reveal-expand-m) * 2));
 				max-inline-size: var(--ui-reveal-expand-max-is, 65ch);
 				overflow-y: auto;
 				scrollbar-gutter: auto;
