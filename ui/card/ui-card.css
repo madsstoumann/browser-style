@@ -157,46 +157,40 @@
 	:where([variant*="split(2/1)"]) { --ui-card-split: 2fr 1fr; }
 	:where([variant*="split(1/3)"]) { --ui-card-split: 1fr 3fr; }
 	:where([variant*="split(3/1)"]) { --ui-card-split: 3fr 1fr; }
-	/* Layout-variant rules target the FACE grid root — `cq-box` for <ui-card>,
-	   `summary` (and its `ui-face`) for reveal-style hosts. A SECOND ui-content
-	   placed OUTSIDE that root — e.g. ui-reveal's revealed panel — therefore does
-	   NOT inherit overlay scrims, media-only hiding, or ordering. The base
-	   ui-content rule above stays generic (face AND panel get it). */
-
 	/* media fills its cell — both dimensions definite, so ar() is ignored here
 	   (ar() shapes media in vertical/overlay, not when it fills a column) */
-	:where([variant~="horizontal"], [variant~="horizontal-r"]) :where(summary, cq-box) ui-media {
+	:where([variant~="horizontal"], [variant~="horizontal-r"]) ui-media {
 		block-size: 100%;
 		inline-size: 100%;
 		min-block-size: 0;
 	}
 
 	/* reversed orders: content first */
-	:where([variant~="vertical-r"], [variant~="horizontal-r"]) :where(summary, cq-box) ui-content { order: -1; }
+	:where([variant~="vertical-r"], [variant~="horizontal-r"]) ui-content { order: -1; }
 
 	/* media-only / content-only */
-	:where([variant~="media-only"]) :where(summary, cq-box) ui-content { display: none; }
-	:where([variant~="content-only"]) :where(summary, cq-box) ui-media { display: none; }
+	:where([variant~="media-only"]) ui-content { display: none; }
+	:where([variant~="content-only"]) ui-media { display: none; }
 
 	/* ============================================================
 	   overlay(pos) — content stacked on media, 9 positions + scrim
 	   ============================================================ */
-	:where([variant*="overlay("]) :where(summary, cq-box) :is(ui-media, ui-content) { grid-area: 1 / 1; }
-	:where([variant*="overlay("]) :where(summary, cq-box) ui-content {
+	:where([variant*="overlay("]) :is(ui-media, ui-content) { grid-area: 1 / 1; }
+	:where([variant*="overlay("]) ui-content {
 		background: var(--ui-card-overlay-gradient, linear-gradient(to top, rgb(0 0 0 / 0.7) 0%, rgb(0 0 0 / 0) 100%));
 		color: var(--ui-card-overlay-ink, #fff);
 		z-index: 1;
 	}
 	/* justify-content (block) · align-items (inline) · text-align */
-	:where([variant*="overlay(tl)"]) :where(summary, cq-box) ui-content { justify-content: start;  align-items: start;  text-align: start;  }
-	:where([variant*="overlay(tc)"]) :where(summary, cq-box) ui-content { justify-content: start;  align-items: center; text-align: center; }
-	:where([variant*="overlay(tr)"]) :where(summary, cq-box) ui-content { justify-content: start;  align-items: end;    text-align: end;    }
-	:where([variant*="overlay(cl)"]) :where(summary, cq-box) ui-content { justify-content: center; align-items: start;  text-align: start;  }
-	:where([variant*="overlay(cc)"]) :where(summary, cq-box) ui-content { justify-content: center; align-items: center; text-align: center; }
-	:where([variant*="overlay(cr)"]) :where(summary, cq-box) ui-content { justify-content: center; align-items: end;    text-align: end;    }
-	:where([variant*="overlay(bl)"]) :where(summary, cq-box) ui-content { justify-content: end;    align-items: start;  text-align: start;  }
-	:where([variant*="overlay(bc)"]) :where(summary, cq-box) ui-content { justify-content: end;    align-items: center; text-align: center; }
-	:where([variant*="overlay(br)"]) :where(summary, cq-box) ui-content { justify-content: end;    align-items: end;    text-align: end;    }
+	:where([variant*="overlay(tl)"]) ui-content { justify-content: start;  align-items: start;  text-align: start;  }
+	:where([variant*="overlay(tc)"]) ui-content { justify-content: start;  align-items: center; text-align: center; }
+	:where([variant*="overlay(tr)"]) ui-content { justify-content: start;  align-items: end;    text-align: end;    }
+	:where([variant*="overlay(cl)"]) ui-content { justify-content: center; align-items: start;  text-align: start;  }
+	:where([variant*="overlay(cc)"]) ui-content { justify-content: center; align-items: center; text-align: center; }
+	:where([variant*="overlay(cr)"]) ui-content { justify-content: center; align-items: end;    text-align: end;    }
+	:where([variant*="overlay(bl)"]) ui-content { justify-content: end;    align-items: start;  text-align: start;  }
+	:where([variant*="overlay(bc)"]) ui-content { justify-content: end;    align-items: center; text-align: center; }
+	:where([variant*="overlay(br)"]) ui-content { justify-content: end;    align-items: end;    text-align: end;    }
 
 	/* ============================================================
 	   Common content parts — styled by [data-part], not by tag, so
