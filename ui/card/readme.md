@@ -1,5 +1,9 @@
 # @browser.style/card
 
+> **NOTE (for later):** Responsive tiers (`variant-md` / `variant-lg`) are
+> scaffolded but deferred — they need a `<cq-box>` (a container can't query
+> itself), which fits naturally when you add the optional JS component.
+
 A CSS-first card engine. Every card is an arrangement of two structural
 elements — `<ui-media>` and `<ui-content>` — so a card can be media-only,
 content-only, media above/below content, or content over media (overlay).
@@ -113,8 +117,7 @@ Key tokens: `--ui-card-bg`, `--ui-card-radius`, `--ui-card-shadow`, `--ui-card-p
 - **CSS-only.** No web component ships in this version.
 - **Schema.org** microdata and the 25 type-specific parts (price, rating,
   recipe steps, …) live at a higher layer and are not part of this engine.
-- **Responsive tiers** (`variant-md` / `variant-lg`) need a queryable descendant
-  (`<cq-box>`) since a container can't query itself; deferred to a future pass.
+- **Responsive tiers** — see the note at the top of this file.
 
 ## Used by
 
