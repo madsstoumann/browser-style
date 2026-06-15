@@ -68,11 +68,8 @@
 
 	@container style(--_render: tabs) {
 		:where(ui-tabs, [tabs]) {
-			/* Direct-child scoping (> cq-box > details > summary): the tab DOM is
-			   always ui-tabs > cq-box > details > summary, so these structural rules
-			   must NOT reach descendant <details>/<summary>/<cq-box> belonging to
-			   nested components (e.g. <ui-reveal> cards in a panel), which would
-			   otherwise steal --tab-active and inherit the grid/header chrome. */
+			/* Direct-child scoped (> cq-box > details > summary) so structural rules
+			   don't reach nested <details>/<summary> in panel content. */
 			> cq-box {
 				display: grid;
 				grid-auto-columns: minmax(0, 1fr);
@@ -138,10 +135,8 @@
 					font-weight: var(--ui-tabs-indicator-font-weight);
 				}
 
-				/* Only the open tab's panel is interactive; closed tabs overlap the
-				   same grid cell, so leaving them pointer-events:auto would let a
-				   later-painted closed tab swallow clicks (incl. nested <details>)
-				   over the open panel. */
+				/* Only the open panel is interactive — closed tabs overlap the same
+				   grid cell and would otherwise swallow clicks. */
 				&[open]::details-content {
 					block-size: auto;
 					content-visibility: visible;
@@ -169,18 +164,8 @@
 				&::marker { display: none; }
 			}
 
-			/* === Staggered panel entry (opt-in via [data-stagger]) ===
-			   Add [data-stagger] to the panel wrapper (the element after
-			   <summary>) and its direct children cascade in — any number — each
-			   time the tab is (re)activated. Implemented as a transition + entry
-			   @starting-style (not @keyframes): @keyframes runs freeze under the
-			   content-visibility used to hide closed panels and never replay. The
-			   :has() guard limits the content-visibility override to staggered
-			   panels — closed ones are hidden with display:none instead, so each
-			   reopen is a real render that re-fires @starting-style. Per-child
-			   offset via sibling-index() (Chrome 138+/Safari 26.2+); without it
-			   all children animate together, a fine fallback. @starting-style:
-			   Baseline 2024. */
+			/* Staggered panel entry (opt-in via [data-stagger]) — transition +
+			   @starting-style replays on every tab activation. See readme.md. */
 			> cq-box > details:has(> [data-stagger])::details-content { content-visibility: visible; }
 			> cq-box > details:not([open]) > [data-stagger] > * { display: none; }
 			> cq-box > details[open] > [data-stagger] > * {
@@ -296,10 +281,8 @@
 			details:last-of-type summary { border-end-end-radius: 0; }
 		}
 
-		/* ellipse — uses the CSS `corner` shorthand (Chrome Canary 151+; renamed
-			from `corners`). superellipse() is a log2 curvature scale: 1 = round
-			(same shape as border-radius), 2 = squircle (default --ui-tabs-squircle-exp),
-			higher = squarer. */
+		/* ellipse — CSS `corner` shorthand (Chrome Canary 151+); superellipse()
+			is a log2 curvature scale: 1 = round, 2 = squircle, higher = squarer. */
 		:is(ui-tabs[variant~="ellipse"], [tabs~="ellipse"]) {
 			cq-box::after { corner: calc(var(--ui-tabs-squircle-radius) - var(--ui-tabs-indicator-offset)) superellipse(var(--ui-tabs-squircle-exp)); }
 			cq-box::before { corner: var(--ui-tabs-squircle-radius) superellipse(var(--ui-tabs-squircle-exp)); }
@@ -319,8 +302,7 @@
 			}
 		}
 
-		/* no-collapse — one tab stays open. Scoped to the tab's own summary so it
-		   never disables pointer-events on nested <details>-based content. */
+		/* no-collapse — one tab stays open; scoped to the tab's own summary. */
 		:is(ui-tabs[no-collapse], [tabs][no-collapse]) > cq-box > details[open] > summary { pointer-events: none; }
 	}
 
