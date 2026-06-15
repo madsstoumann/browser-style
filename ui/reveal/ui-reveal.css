@@ -330,4 +330,37 @@
 			box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-bg), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ring-color), var(--ui-reveal-shadow, var(--shadow-xl));
 		}
 	}
+
+	/* === scroll — lock panel to the closed-card frame, scroll overflow ===
+	   Opt-in. Panel goes absolute (out of grid track sizing) so a long
+	   flipside can't grow the card. Default height = closed face (inset:0);
+	   override with --ui-reveal-content-bs. flip only for now. */
+	:where(ui-reveal[scroll][type="flip"]) {
+		> details { position: relative; }
+		> details::details-content {
+			block-size: var(--ui-reveal-content-bs, auto);
+			inset: 0;
+			overflow-y: auto;
+			overscroll-behavior: contain;
+			position: absolute;
+			scrollbar-color: var(--ui-reveal-scrollbar-color, color-mix(in oklab, currentColor 40%, transparent)) transparent;
+			scrollbar-gutter: auto;
+			scrollbar-width: thin;
+		}
+	}
+
+	/* === icon-close clearance — keep the panel's first element out from under
+	   a top close-icon. Logical padding tracks the icon's logical side, so it
+	   flips automatically in rtl. Only the first child is indented; the rest of
+	   the panel stays full-width. */
+	:where(ui-reveal[type="flip"]) {
+		--ui-reveal-icon-clear: calc(var(--ui-reveal-icon-sz) + var(--ui-reveal-p));
+		/* open-state icon side = icon-close if set, else icon */
+		&:is([icon~="top"][icon~="right"], [icon-close~="top"][icon-close~="right"]) > details[open]::details-content > * > :first-child {
+			padding-inline-end: var(--ui-reveal-icon-clear);
+		}
+		&:is([icon~="top"][icon~="left"], [icon-close~="top"][icon-close~="left"]) > details[open]::details-content > * > :first-child {
+			padding-inline-start: var(--ui-reveal-icon-clear);
+		}
+	}
 }

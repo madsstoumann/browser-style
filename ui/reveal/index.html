@@ -174,7 +174,7 @@
 	<h2>Flip</h2>
 
 	<div class="grid">
-		<ui-reveal icon="top right sm" type="flip" variant="overlay(tl) ar(1/1) op(tc) sq(lg)">
+		<ui-reveal icon="top right sm" type="flip" variant="overlay(tl) ar(1/1) op(tc) sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -183,7 +183,14 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(tl)</h3><p>Content top-left over media.</p></div>
+				<div>
+					<h3>overlay(tl)</h3>
+					<p>Content top-left over media. This panel has <code>scroll</code> set, so its height is locked to the closed card and a longer text scrolls inside instead of growing the card.</p>
+					<p>The Lure formed in the long shadow of post-punk, trading jangle for reverb and dread. Their early demos circulated on hand-dubbed cassettes passed between basement shows.</p>
+					<p>By the second record the sound had thickened — drum machines under live toms, a baritone guitar tuned down until the strings flapped, vocals buried like a confession you weren't meant to hear.</p>
+					<p>Critics called it funereal. The band called it honest. Either way the room went quiet when the first chord landed, and stayed that way until the lights came up.</p>
+					<p>This paragraph exists only to overflow the frame, proving the scrollbar appears and the card keeps its 1/1 aspect-ratio regardless of content length.</p>
+				</div>
 			</details>
 		</ui-reveal>
 
