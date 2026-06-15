@@ -20,27 +20,49 @@ html { scrollbar-gutter: stable; }
 }
 
 /* Staggered panel content — direct children of [data-stagger] fade/rise into
-   place when their tab opens. The [open] selector switch adds animation-name,
-   which (re)starts the animation, so it replays every time the tab activates
-   (incl. switching back to it). Per-child offset via sibling-index(); a reverse
+   place when their tab opens. Implemented as a TRANSITION (not @keyframes): the
+   open panel is the visible end-state, and @starting-style supplies the hidden
+   from-state. <ui-tabs> overlaps all panels in one grid cell and hides closed
+   ones with content-visibility, which freezes a @keyframes run so it never
+   replays on reopen. A transition + @starting-style re-fires every time the
+   panel re-renders (same mechanism <ui-reveal> uses), so the stagger replays on
+   every tab activation — no JS. Per-child offset via sibling-index(); a reverse
    stagger would use calc((sibling-count() - sibling-index()) * step).
    sibling-index/count: Chrome 138+/Safari 26.2+ (no Firefox) — without it the
-   delay is dropped and all children animate together, which is a fine fallback. */
+   delay is dropped and all children animate together, which is a fine fallback.
+   @starting-style: Baseline 2024. */
 .tabs-stagger {
 	--stagger-step: 0.07s;
 	--stagger-dur: 0.5s;
 }
 .tabs-stagger details[open] [data-stagger] > * {
-	animation: tabs-stagger-in var(--stagger-dur) cubic-bezier(0.16, 1, 0.3, 1) both;
-	animation-delay: calc((sibling-index() - 1) * var(--stagger-step));
+	opacity: 1;
+	translate: 0;
+	transition:
+		opacity var(--stagger-dur) cubic-bezier(0.16, 1, 0.3, 1),
+		translate var(--stagger-dur) cubic-bezier(0.16, 1, 0.3, 1);
+	transition-delay: calc((sibling-index() - 1) * var(--stagger-step));
+
+	@starting-style {
+		opacity: 0;
+		translate: 0 2rem;
+	}
 }
-@keyframes tabs-stagger-in {
-	from { opacity: 0; translate: 0 2rem; }
-	to   { opacity: 1; translate: 0; }
-}
+/* Replay-on-reopen, CSS-only. <ui-tabs> hides closed panels with
+   content-visibility, which caches the panel's rendered state — so reopening
+   resumes the cache instead of doing a fresh render, and @starting-style never
+   re-fires (the stagger would play only the first time). Neutralise it here:
+   keep closed panels content-visibility:visible (no cache) and hide them with
+   display:none instead. Now each reopen is a genuine display change, which
+   re-triggers @starting-style and replays the stagger every time. */
+.tabs-stagger details::details-content { content-visibility: visible; }
+.tabs-stagger details:not([open]) > :not(summary) { display: none; }
 /* MANDATORY: respect reduced-motion — show instantly, no slide/fade. */
 @media (prefers-reduced-motion: reduce) {
-	.tabs-stagger details[open] [data-stagger] > * { animation: none; }
+	.tabs-stagger details[open] [data-stagger] > * {
+		transition: none;
+		@starting-style { opacity: 1; translate: 0; }
+	}
 }
 
 /* Atoms */
