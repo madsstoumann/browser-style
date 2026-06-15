@@ -7,18 +7,8 @@
 @import '../card/ui-card.css';
 @import '../icon/index.css';
 @layer bs-component {
-	/* ui-reveal inherits the host-agnostic layout/typography engine from
-	   ui-card.css (variants, ar()/op()/fs()/sq(), overlay, <ui-media> and
-	   <ui-content>). This file adds only what is reveal-specific:
-	   <details>/<summary> wiring, <ui-icon>, <ui-face>, and the reveal
-	   animation types (expand/flip/slide/scale).
-
-	   Direct-child scoping (> details, > details > summary): a reveal card is
-	   always ui-reveal > details > summary, so these rules must NOT reach
-	   descendant <details>/<summary> belonging to nested components placed in
-	   the panel (e.g. a <ui-accordion> of FAQs on a flip card's back), which
-	   would otherwise inherit the card chrome (bg/radius/shadow), the
-	   floating-circle <ui-icon>, and the flip/slide/scale transforms. */
+	/* Reveal-specific layer over ui-card. Direct-child scoped (> details,
+	   > details > summary) so nested panel components are untouched. See readme.md. */
 	:where(ui-reveal) {
 		--ui-reveal-bg: var(--color-surface);
 		--ui-reveal-radius: var(--radius-2xl);
@@ -26,8 +16,7 @@
 		--ui-reveal-p: var(--spacing-md);
 		--_trs: var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
 
-		/* feed reveal's tokens into the shared ui-card engine so its
-		   <ui-content> rules pick up reveal's spacing */
+		/* feed reveal's spacing into the shared ui-card engine */
 		--ui-card-p: var(--ui-reveal-p);
 		--ui-card-row-gap: var(--ui-reveal-row-gap, var(--spacing-sm));
 
@@ -43,8 +32,7 @@
 			overflow: hidden;
 		}
 
-		/* reveal's grid container(s) consume the shared --ui-card-cols set by
-		   horizontal/split tokens in ui-card.css */
+		/* consume shared --ui-card-cols (horizontal/split tokens) */
 		> details > summary,
 		> details > summary > ui-face { grid-template-columns: var(--ui-card-cols, 1fr); }
 
@@ -54,12 +42,8 @@
 			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
 		}
 
-		/* ::details-content is a slot-like pseudo: you can't add a combinator after
-		   it, so its children are unreachable and display/grid on it is unreliable.
-		   It only carries inherited (font-size) + box props (padding, bg, block-size
-		   animation). Lay out the panel on the REAL wrapper element instead — the
-		   single non-summary child of <details>. Disclosed content MUST be wrapped
-		   in one element (e.g. <div>). */
+		/* ::details-content is a slot-like pseudo — only carries inherited +
+		   box props; lay out panel on the single wrapper child. See readme.md. */
 		> details::details-content {
 			font-size: var(--ui-reveal-content-fs, inherit);
 			transition-behavior: allow-discrete;
@@ -146,8 +130,7 @@
 			opacity: var(--ui-reveal-icon-opacity, 0.6);
 		}
 
-		/* === icon size: sm / lg (md = default --size-7) — both. Smaller icons get
-		   a touch more corner inset so they don't crowd the edge. === */
+		/* === icon size: sm / lg (md = default --size-7) — both === */
 		&[icon~="sm"] > details > summary > ui-icon,
 		&[icon-close~="sm"] > details[open] > summary > ui-icon {
 			--ui-reveal-icon-sz: var(--size-5);
@@ -180,9 +163,8 @@
 			content-visibility: visible;
 		}
 
-		/* popup mode: animate on OPEN only. Transition lives on the [open] state,
-		   so closing falls back to the no-transition base rule and snaps shut —
-		   no block-size drift back into the main grid when the fixed chrome drops. */
+		/* popup mode: animate on OPEN only (transition on [open]); close snaps
+		   shut so block-size doesn't drift back into the grid. See readme.md. */
 		&[to] > details::details-content { transition: none; }
 		&[to] > details[open]::details-content { transition: block-size var(--_trs), content-visibility var(--_trs), padding var(--_trs); }
 
@@ -223,10 +205,8 @@
 	/* === type: flip === */
 	:where(ui-reveal[type="flip"]) {
 		--_persp: perspective(var(--ui-reveal-perspective, 1000px));
-		/* flip direction via from="left|right|top|bottom" — the panel flips in
-		   over that edge (right = default). Closed/open pairs stay on the SAME
-		   rotation axis so transforms interpolate as rotations; mixed axes
-		   would fall back to matrix interpolation, degenerate at 180°. */
+		/* flip direction via from=; closed/open pairs share one rotation axis so
+		   transforms interpolate as rotations (no 180° matrix degeneracy). */
 		--_face-closed: rotateY(0deg);
 		--_face-open: rotateY(180deg);
 		--_panel-closed: rotateY(-180deg);
@@ -268,10 +248,8 @@
 		> details[open]::details-content { transform: var(--_persp) var(--_panel-open); }
 	}
 
-	/* flip icon dip — <ui-icon> fades out as the card turns edge-on, then back
-	   in once the new face lands. Runs on OPEN and CLOSE: the two states carry
-	   identical keyframes under different names, so toggling restarts the
-	   animation. Top-level @media (not nested) for broad engine compatibility. */
+	/* flip icon dip — icon fades out edge-on, back in once the new face lands;
+	   open/close use twin keyframes so toggling restarts it. See readme.md. */
 	@media (prefers-reduced-motion: no-preference) {
 		:where(ui-reveal[type="flip"]) > details > summary > ui-icon {
 			animation: ui-reveal-icon-dip var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
@@ -342,10 +320,8 @@
 		> details[open] > summary > ui-icon { pointer-events: auto; }
 	}
 
-	/* === trigger: card — the whole card toggles (no ui-icon required) ===
-	   Clicks fall through the open panel to the <summary> beneath; interactive
-	   panel content opts back in. With no icon to carry the focus ring, it
-	   moves to the card itself. */
+	/* === trigger: card — whole card toggles (no ui-icon). Clicks fall through
+	   to <summary>; interactive panel content opts back in. See readme.md. */
 	:where(ui-reveal[trigger="card"]) {
 		> details[open]::details-content { pointer-events: none; }
 		> details[open] :is(a, button, input, select, textarea, [tabindex]) { pointer-events: auto; }
