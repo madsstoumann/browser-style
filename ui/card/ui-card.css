@@ -108,6 +108,46 @@
 	:where([variant*="sq(lg)"]) { --ui-card-squircle-exp: 1.8; --ui-card-radius: 2.8rem;  }
 	:where([variant*="sq(xl)"]) { --ui-card-squircle-exp: 2;   --ui-card-radius: 3.5rem;  }
 
+	/* === hover effect: hv() token ===
+	   zoom/pan move the image inside its clipped ui-media frame (card stays
+	   put); lift/shrink/tilt transform the card host. Individual transform
+	   props (scale/translate/rotate) so they compose without clobbering. */
+	@media (hover: hover) {
+		:where([variant*="hv("]) {
+			--_hv-dur: var(--ui-card-hover-duration, var(--duration-slower));
+			--_hv-ease: var(--ui-card-hover-easing, var(--ease-out));
+		}
+
+		/* --- image-only (frame fixed) --- */
+		:where([variant*="hv(zoom)"], [variant*="hv(pan)"]) ui-media img {
+			transition: scale var(--_hv-dur) var(--_hv-ease), translate var(--_hv-dur) var(--_hv-ease);
+		}
+		:where([variant*="hv(zoom)"]:hover) ui-media img {
+			scale: var(--ui-card-hv-zoom, 1.08);
+		}
+		:where([variant*="hv(pan)"]:hover) ui-media img {
+			scale: var(--ui-card-hv-zoom, 1.12);
+			translate: var(--ui-card-hv-pan-x, -2%) var(--ui-card-hv-pan-y, -2%);
+		}
+
+		/* --- card-level --- */
+		:where([variant*="hv(lift)"], [variant*="hv(shrink)"], [variant*="hv(tilt)"]) {
+			transition: scale var(--_hv-dur) var(--_hv-ease), translate var(--_hv-dur) var(--_hv-ease), rotate var(--_hv-dur) var(--_hv-ease), box-shadow var(--_hv-dur) var(--_hv-ease);
+		}
+		:where([variant*="hv(lift)"]:hover) {
+			translate: 0 calc(-1 * var(--ui-card-hv-lift, 0.5rem));
+			box-shadow: var(--shadow-2xl, var(--shadow-xl));
+		}
+		:where([variant*="hv(shrink)"]:hover) { scale: var(--ui-card-hv-shrink, 0.97); }
+		:where([variant*="hv(tilt)"]:hover)   { rotate: var(--ui-card-hv-tilt, -1.5deg); }
+	}
+
+	/* a11y: kill hover motion */
+	@media (prefers-reduced-motion: reduce) {
+		:where([variant*="hv("]) ui-media img,
+		:where([variant*="hv("]) { transition: none; }
+	}
+
 	/* === ui-content === */
 	:where([variant]) ui-content {
 		display: flex;

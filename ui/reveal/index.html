@@ -184,7 +184,7 @@
 	<h2>Flip</h2>
 
 	<div class="grid">
-		<ui-reveal class="thelure" icon="top right sm" type="flip" variant="overlay(tl) ar(1/1) op(tc) sq(lg)" scroll>
+		<ui-reveal class="thelure" icon="top right sm" type="flip" variant="overlay(tl) ar(1/1) op(tc) sq(lg) hv(zoom)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -202,7 +202,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="papermirror" icon="top right sm" type="flip" variant="overlay(tc) ar(1/1) sq(lg) op(tc)" scroll>
+		<ui-reveal class="papermirror" icon="top right sm" type="flip" variant="overlay(tc) ar(1/1) sq(lg) op(tc) hv(pan)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -215,7 +215,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="skylinefive" icon="top left sm" icon-close="top right" type="flip" variant="overlay(tr) ar(1/1) op(tc) sq(lg)" scroll>
+		<ui-reveal class="skylinefive" icon="top left sm" icon-close="top right" type="flip" variant="overlay(tr) ar(1/1) op(tc) sq(lg) hv(zoom)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -228,7 +228,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="neonavenue" icon="top right sm" type="flip" variant="overlay(cl) ar(1/1) op(tc) sq(lg)" scroll>
+		<ui-reveal class="neonavenue" icon="top right sm" type="flip" variant="overlay(cl) ar(1/1) op(tc) sq(lg) hv(pan)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -241,7 +241,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="camdencourt" icon="top right sm" type="flip" variant="overlay(cc) ar(1/1) sq(lg)" scroll>
+		<ui-reveal class="camdencourt" icon="top right sm" type="flip" variant="overlay(cc) ar(1/1) sq(lg) hv(zoom)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -254,7 +254,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="reddirtroad" icon="top right sm" type="flip" variant="overlay(cr) ar(1/1) sq(lg)" scroll>
+		<ui-reveal class="reddirtroad" icon="top right sm" type="flip" variant="overlay(cr) ar(1/1) sq(lg) hv(pan)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -267,7 +267,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="glitterthrone" icon="top right sm" type="flip" variant="overlay(bl) ar(1/1) sq(lg)" scroll>
+		<ui-reveal class="glitterthrone" icon="top right sm" type="flip" variant="overlay(bl) ar(1/1) sq(lg) hv(zoom)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -280,7 +280,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="pulsetheory" icon="top right sm" type="flip" variant="overlay(bc) ar(1/1) sq(lg)" scroll>
+		<ui-reveal class="pulsetheory" icon="top right sm" type="flip" variant="overlay(bc) ar(1/1) sq(lg) hv(pan)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -293,7 +293,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="thelure" icon="top right sm" type="flip" variant="overlay(br) ar(1/1) sq(lg)" scroll>
+		<ui-reveal class="thelure" icon="top right sm" type="flip" variant="overlay(br) ar(1/1) sq(lg) hv(zoom)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -315,7 +315,7 @@
 	Flip direction follows <code>from</code>: these three flip in from <code>left</code>, <code>top</code> and <code>bottom</code> (default is <code>right</code>).</p>
 
 	<div class="grid">
-		<ui-reveal type="flip" trigger="card" from="left" variant="overlay(bl) ar(2/3)">
+		<ui-reveal type="flip" trigger="card" from="left" variant="overlay(bl) ar(2/3) hv(zoom)">
 			<details>
 				<summary>
 					<ui-face>
@@ -327,7 +327,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="flip" trigger="card" from="top" variant="overlay(cc) ar(2/3)">
+		<ui-reveal type="flip" trigger="card" from="top" variant="overlay(cc) ar(2/3) hv(pan)">
 			<details>
 				<summary>
 					<ui-face>
@@ -339,7 +339,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="flip" trigger="card" from="bottom" variant="media-only ar(2/3)">
+		<ui-reveal type="flip" trigger="card" from="bottom" variant="media-only ar(2/3) hv(zoom)">
 			<details>
 				<summary>
 					<ui-face>
@@ -358,7 +358,7 @@
 
 	<div class="grid grid-2">
 		<!-- media top (vertical, default) — icon moves to top-right + goes solid dark when open -->
-		<ui-reveal icon="bottom right dark" type="slide" from="top" variant="ar(16/9)" style="--ui-reveal-bg:#f49d98;">
+		<ui-reveal icon="bottom right dark" type="slide" from="top" variant="ar(16/9) hv(zoom)" style="--ui-reveal-bg:#f49d98;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/band_alternative.jpg" alt="" loading="lazy"></ui-media>
@@ -376,7 +376,7 @@
 		</ui-reveal>
 
 		<!-- media bottom (vertical-r) -->
-		<ui-reveal icon="top right dark" type="slide" from="bottom" variant="vertical-r ar(16/9)" style="--ui-reveal-bg:#e1d4ca;">
+		<ui-reveal icon="top right dark" type="slide" from="bottom" variant="vertical-r ar(16/9) hv(pan)" style="--ui-reveal-bg:#e1d4ca;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/band_boys.jpg" alt="" loading="lazy"></ui-media>
@@ -394,7 +394,7 @@
 		</ui-reveal>
 
 		<!-- media left (horizontal) -->
-		<ui-reveal icon="bottom right dark" type="slide" from="left" variant="horizontal ar(2/3)" style="--ui-reveal-bg:#d4e7f2;">
+		<ui-reveal icon="bottom right dark" type="slide" from="left" variant="horizontal ar(2/3) hv(zoom)" style="--ui-reveal-bg:#d4e7f2;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/band_girls.jpg" alt="" loading="lazy"></ui-media>
@@ -412,7 +412,7 @@
 		</ui-reveal>
 
 		<!-- media right (horizontal-r) -->
-		<ui-reveal icon="bottom left dark" type="slide" from="right" variant="horizontal-r ar(2/3)" style="--ui-reveal-bg:#dadada;">
+		<ui-reveal icon="bottom left dark" type="slide" from="right" variant="horizontal-r ar(2/3) hv(pan)" style="--ui-reveal-bg:#dadada;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/band_goth.jpg" alt="" loading="lazy"></ui-media>
