@@ -9,6 +9,7 @@ A CSS-only tab interface built on native `<details>` and `<summary>` elements. N
 - Sliding tab indicator via CSS Anchor Positioning.
 - Subgrid-based layout so the panel aligns with the tab row across all children.
 - Slide-down / slide-up panel transitions via `@starting-style` + `display: allow-discrete`.
+- Opt-in staggered panel content via `data-stagger` — children cascade in and **replay on every tab activation**, no JS.
 - Structural variants for shape and layout: `bleed`, `bordered`, `compact`, `ellipse`, `panel`, `pill`, `rounded`.
 - Decoration driven entirely by CSS tokens — define your own classes, no `indicator=` attribute needed.
 - RTL-safe (indicator uses logical `start` anchor edge, bleed uses symmetric `inset-inline`).
@@ -156,6 +157,10 @@ All tokens are scoped to `:where(ui-tabs)` — low specificity, easy to override
 | `--ui-tabs-rounded-radius` | `var(--radius-lg)` | Radius used by `variant="rounded"`. |
 | `--ui-tabs-squircle-exp` | `2` | Superellipse curvature (log2 scale) for `variant="ellipse"`. `1` = round; `2` = squircle; higher = squarer corners. |
 | `--ui-tabs-squircle-radius` | `1em` | Corner radius for `variant="ellipse"`. |
+| `--ui-tabs-stagger-distance` | `2rem` | How far staggered children rise from on entry (`translate`). |
+| `--ui-tabs-stagger-duration` | `0.5s` | Per-child enter transition duration. |
+| `--ui-tabs-stagger-easing` | `cubic-bezier(0.16, 1, 0.3, 1)` | Per-child enter easing. |
+| `--ui-tabs-stagger-step` | `0.07s` | Delay added per child (child *n* starts at `(n − 1) × step`). |
 | `--ui-tabs-tab-gap` | `1ch` | Gap between tab label and any inline icon. |
 
 ---
@@ -252,6 +257,59 @@ The value is a log2 curvature scale: `1` = round (same shape as border-radius), 
 ```html
 <ui-tabs variant="bleed panel">…</ui-tabs>
 ```
+
+---
+
+## Staggered panel content — `data-stagger`
+
+Opt in by adding `data-stagger` to the panel wrapper (the element after `<summary>`). Its **direct children** fade and rise into place one after another, and the animation **replays every time the tab is (re)activated** — not just the first time.
+
+```html
+<ui-tabs class="tabs-line" no-collapse>
+  <cq-box>
+    <details name="cat" open>
+      <summary>Games</summary>
+      <div class="grid" data-stagger>
+        <article>…</article>
+        <article>…</article>
+        <article>…</article>
+      </div>
+    </details>
+    <details name="cat">
+      <summary>Movies</summary>
+      <div class="grid" data-stagger>
+        <article>…</article>
+        <article>…</article>
+      </div>
+    </details>
+  </cq-box>
+</ui-tabs>
+```
+
+- **Any number of children** — each child is offset from the previous by `--ui-tabs-stagger-step`, computed with `sibling-index()`.
+- **`data-stagger` is the wrapper, not the items** — it goes on the single element after `<summary>`; the things that animate are that element's direct children.
+- **Layout is yours** — `data-stagger` only drives the entry animation. Make the wrapper a grid/flex container yourself (e.g. a `.grid` class). The stagger doesn't impose layout.
+
+### Tuning
+
+```css
+.my-tabs {
+  --ui-tabs-stagger-step: 0.05s;     /* tighter cascade            */
+  --ui-tabs-stagger-duration: 0.6s;  /* slower per-child move       */
+  --ui-tabs-stagger-distance: 1rem;  /* shorter rise                */
+  --ui-tabs-stagger-easing: ease-out;
+}
+```
+
+### How it works (and why)
+
+The entry is a **transition + `@starting-style`**, not a `@keyframes` animation. `<ui-tabs>` overlaps all panels in one grid cell and hides the inactive ones with `content-visibility`, which **caches a panel's rendered state** — a `@keyframes` run would freeze on close and never replay. For staggered panels the component instead keeps the panel `content-visibility: visible` and hides the inactive children with `display: none`, so each reopen is a genuine render that re-fires `@starting-style`. The override is scoped with `:has(> [data-stagger])`, so plain tabs keep their content-visibility optimization untouched.
+
+### Reduced motion
+
+Honoured automatically: under `prefers-reduced-motion: reduce` the children appear instantly (no fade, no movement). Nothing to configure.
+
+> **Specificity note:** the inactive-child `display: none` lives in `@layer bs-component`, so it loses to *unlayered* author rules. If you set `display` on the **children** themselves with an unlayered rule, the cache-bust breaks and the replay stops. Style the **wrapper's** layout instead (or put your child rule in a cascade layer).
 
 ---
 
@@ -354,8 +412,9 @@ Required features and their minimum browser versions:
 | `transition-behavior: allow-discrete` | panel enter/exit animation | Chrome 117+, Safari 17.4+, Firefox 129+ |
 | `@property` with `<integer>` in `repeat()` | compact + panel animations | Chrome 126+, Safari 16.4+, Firefox 128+ |
 | `corner` / `corner-shape: superellipse(…)` | `variant="ellipse"` only | Chrome Canary 151+ |
+| `sibling-index()` | per-child `data-stagger` delay | Chrome 138+, Safari 26.2+ (no Firefox) |
 
-Without `corner` / `corner-shape` support, `variant="ellipse"` falls back to no rounding. Without `::details-content` support, the component is not usable.
+Without `corner` / `corner-shape` support, `variant="ellipse"` falls back to no rounding. Without `::details-content` support, the component is not usable. Without `sibling-index()`, `data-stagger` children still animate in — they just all start together (no cascade) instead of one-by-one.
 
 ---
 

@@ -59,6 +59,10 @@
 		--ui-tabs-rounded-radius: var(--radius-lg);
 		--ui-tabs-squircle-exp: 2;
 		--ui-tabs-squircle-radius: 1em;
+		--ui-tabs-stagger-distance: 2rem;
+		--ui-tabs-stagger-duration: 0.5s;
+		--ui-tabs-stagger-easing: cubic-bezier(0.16, 1, 0.3, 1);
+		--ui-tabs-stagger-step: 0.07s;
 		--ui-tabs-tab-gap: 1ch;
 	}
 
@@ -163,6 +167,41 @@
 
 				&::-webkit-details-marker,
 				&::marker { display: none; }
+			}
+
+			/* === Staggered panel entry (opt-in via [data-stagger]) ===
+			   Add [data-stagger] to the panel wrapper (the element after
+			   <summary>) and its direct children cascade in — any number — each
+			   time the tab is (re)activated. Implemented as a transition + entry
+			   @starting-style (not @keyframes): @keyframes runs freeze under the
+			   content-visibility used to hide closed panels and never replay. The
+			   :has() guard limits the content-visibility override to staggered
+			   panels — closed ones are hidden with display:none instead, so each
+			   reopen is a real render that re-fires @starting-style. Per-child
+			   offset via sibling-index() (Chrome 138+/Safari 26.2+); without it
+			   all children animate together, a fine fallback. @starting-style:
+			   Baseline 2024. */
+			> cq-box > details:has(> [data-stagger])::details-content { content-visibility: visible; }
+			> cq-box > details:not([open]) > [data-stagger] > * { display: none; }
+			> cq-box > details[open] > [data-stagger] > * {
+				opacity: 1;
+				translate: 0;
+				transition:
+					opacity var(--ui-tabs-stagger-duration) var(--ui-tabs-stagger-easing),
+					translate var(--ui-tabs-stagger-duration) var(--ui-tabs-stagger-easing);
+				transition-delay: calc((sibling-index() - 1) * var(--ui-tabs-stagger-step));
+
+				@starting-style {
+					opacity: 0;
+					translate: 0 var(--ui-tabs-stagger-distance);
+				}
+			}
+			/* MANDATORY: respect reduced-motion — show instantly, no slide/fade. */
+			@media (prefers-reduced-motion: reduce) {
+				> cq-box > details[open] > [data-stagger] > * {
+					transition: none;
+					@starting-style { opacity: 1; translate: 0; }
+				}
 			}
 		}
 
