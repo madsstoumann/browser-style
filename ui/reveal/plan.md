@@ -682,3 +682,69 @@ summary.addEventListener('click', (e) => {
   ui-reveal[icon~="light"]  summary > ui-icon
 }
 ```
+
+---
+
+## TODO — dedupe scroll fade-shadow CSS
+
+The vertical scroll fade-mask (`scroll` attribute) currently lives in **two**
+places: `ui/card/ui-card.css` (generic `ui-card[scroll] ui-content`) and
+`ui/reveal/ui-reveal.css` (`ui-reveal[scroll][type="flip"] > details[open]::details-content`).
+
+**Already shared:** `@property --ui-scroll-fade-start/-end` + `@keyframes
+ui-scroll-fade` live only in `ui-card.css`; reveal reuses them.
+
+**Still duplicated:** the application block — `mask`, `animation`,
+`animation-timeline`, `scroll-timeline` — plus the `@supports (animation-timeline:
+scroll())` / `prefers-reduced-motion` guards.
+
+**Blocker:** CSS has no mixins/`@apply`. The two scrollers differ in kind —
+card scrolls a real element (`ui-content`); reveal scrolls a **pseudo**
+(`::details-content`), which can't carry a class, attribute, or `part`. That
+pseudo rules out a clean shared `[data-scroll-fade]` hook.
+
+**Options (ranked):**
+
+1. **Tier 1 — extract primitives to base (recommended).** New
+   `ui/base/scroll.css` (imported by `index.css`) holds the two `@property`
+   decls, the `@keyframes`, and a gradient var:
+   ```css
+   --ui-scroll-fade-mask: linear-gradient(to bottom, #0000,
+     #000 var(--ui-scroll-fade-start) calc(100% - var(--ui-scroll-fade-end)), #0000);
+   ```
+   Each component shrinks to a 4-line block:
+   ```css
+   @supports (animation-timeline: scroll()) {
+     @media (prefers-reduced-motion: no-preference) {
+       <scroller> {
+         animation: ui-scroll-fade linear;
+         animation-timeline: --ui-scroll;
+         mask: var(--ui-scroll-fade-mask);
+         scroll-timeline: --ui-scroll block;
+       }
+     }
+   }
+   ```
+   Kills the gradient-string + keyframes dupe (~80%). Selectors + guards stay
+   per-component (they genuinely differ). No coupling. Timeline name `--ui-scroll`
+   is reusable — scoped per scroller. Pairs well with future consumers (drawer,
+   dialog, long lists).
+
+2. **Tier 2 — single canonical rule in base.** One selector list naming both
+   scrollers:
+   ```css
+   :where(ui-card[scroll] ui-content,
+          ui-reveal[scroll][type="flip"] > details[open]::details-content) { … }
+   ```
+   Full dedup, but base now references component internals → brittle when a
+   selector changes. Only if that coupling is acceptable.
+
+3. **Tier 3 — make reveal scroller a real element.** Web-component JS wraps the
+   panel in `<div class="ui-scroll">` instead of scrolling the pseudo; a generic
+   `[scroll] .ui-scroll` rule then covers everything. Cleanest hook, but bigger
+   refactor and CSS-only reveal (no JS) loses the effect.
+
+4. **Tier 0 — build-time PostCSS mixin.** Rejected: adds a build step, against
+   the ship-raw-CSS ethos.
+
+**Decision:** do Tier 1 when next touching scroll-fade.

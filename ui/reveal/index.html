@@ -315,7 +315,7 @@
 	Flip direction follows <code>from</code>: these three flip in from <code>left</code>, <code>top</code> and <code>bottom</code> (default is <code>right</code>).</p>
 
 	<div class="grid">
-		<ui-reveal type="flip" trigger="card" from="left" variant="overlay(bl) ar(2/3) hv(zoom)">
+		<ui-reveal type="flip" trigger="card" from="left" variant="overlay(bl) ar(2/3) hv(track)">
 			<details>
 				<summary>
 					<ui-face>
@@ -327,7 +327,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="flip" trigger="card" from="top" variant="overlay(cc) ar(2/3) hv(pan)">
+		<ui-reveal type="flip" trigger="card" from="top" variant="overlay(cc) ar(2/3) hv(track)">
 			<details>
 				<summary>
 					<ui-face>
@@ -339,7 +339,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="flip" trigger="card" from="bottom" variant="media-only ar(2/3) hv(zoom)">
+		<ui-reveal type="flip" trigger="card" from="bottom" variant="media-only ar(2/3) hv(track)">
 			<details>
 				<summary>
 					<ui-face>
@@ -482,5 +482,32 @@
 	</div>
 
 	<!-- <script type="module" src="index.js"></script> -->
+
+	<!-- hv(track): cursor-tracked image pan, no component JS. Writes normalized
+	     --ui-card-mx / --ui-card-my (-1..1) on the card; the CSS does the rest.
+	     rAF-throttled, rect cached on enter, reset to centre on leave. -->
+	<script type="module">
+		for (const card of document.querySelectorAll('[variant*="hv(track)"]')) {
+			const media = card.querySelector('ui-media');
+			if (!media) continue;
+			let raf = 0, rect = null;
+			const set = (x, y) => {
+				card.style.setProperty('--ui-card-mx', x);
+				card.style.setProperty('--ui-card-my', y);
+			};
+			card.addEventListener('pointerenter', () => { rect = media.getBoundingClientRect(); });
+			card.addEventListener('pointermove', (e) => {
+				if (raf) return;
+				raf = requestAnimationFrame(() => {
+					raf = 0;
+					rect ??= media.getBoundingClientRect();
+					const mx = (e.clientX - rect.left) / rect.width  * 2 - 1;
+					const my = (e.clientY - rect.top)  / rect.height * 2 - 1;
+					set(Math.max(-1, Math.min(1, mx)).toFixed(3), Math.max(-1, Math.min(1, my)).toFixed(3));
+				});
+			});
+			card.addEventListener('pointerleave', () => set('0', '0'));
+		}
+	</script>
 </body>
 </html>
