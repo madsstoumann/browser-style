@@ -148,6 +148,39 @@
 		:where([variant*="hv("]) { transition: none; }
 	}
 
+	/* === scroll fade-shadow: [scroll] ===
+	   Vertical edge mask driven by scroll position. The transparent top/bottom
+	   edges reveal whatever sits behind the scroller, so the fade adopts the
+	   card/panel background color automatically. Reusable: ui-reveal applies
+	   the same mask + timeline to its scrolling flip panel. */
+	@property --ui-scroll-fade-start { syntax: "<length>"; inherits: false; initial-value: 0px; }
+	@property --ui-scroll-fade-end   { syntax: "<length>"; inherits: false; initial-value: 0px; }
+
+	@keyframes ui-scroll-fade {
+		0%        { --ui-scroll-fade-start: 0px; }
+		10%, 100% { --ui-scroll-fade-start: var(--ui-scroll-fade-size, 3rem); }
+		0%, 90%   { --ui-scroll-fade-end: var(--ui-scroll-fade-size, 3rem); }
+		100%      { --ui-scroll-fade-end: 0px; }
+	}
+
+	:where(ui-card[scroll]) ui-content {
+		max-block-size: var(--ui-card-scroll-bs, 100%);
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		scrollbar-width: thin;
+	}
+
+	@supports (animation-timeline: scroll()) {
+		@media (prefers-reduced-motion: no-preference) {
+			:where(ui-card[scroll]) ui-content {
+				animation: ui-scroll-fade linear;
+				animation-timeline: --ui-scroll;
+				mask: linear-gradient(to bottom, #0000, #000 var(--ui-scroll-fade-start) calc(100% - var(--ui-scroll-fade-end)), #0000);
+				scroll-timeline: --ui-scroll block;
+			}
+		}
+	}
+
 	/* === ui-content === */
 	:where([variant]) ui-content {
 		display: flex;

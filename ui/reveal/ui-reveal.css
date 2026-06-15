@@ -327,6 +327,21 @@
 		}
 	}
 
+	/* scroll fade-shadow — vertical edge mask driven by scroll position. The
+	   masked edges reveal the panel background behind, so the fade adopts
+	   --ui-reveal-content-bg. Shared @property/@keyframes (ui-scroll-fade)
+	   come from ui-card.css. */
+	@supports (animation-timeline: scroll()) {
+		@media (prefers-reduced-motion: no-preference) {
+			:where(ui-reveal[scroll][type="flip"]) > details[open]::details-content {
+				animation: ui-scroll-fade linear;
+				animation-timeline: --ui-reveal-scroll;
+				mask: linear-gradient(to bottom, #0000, #000 var(--ui-scroll-fade-start) calc(100% - var(--ui-scroll-fade-end)), #0000);
+				scroll-timeline: --ui-reveal-scroll block;
+			}
+		}
+	}
+
 	/* === icon-close clearance — keep the panel's first element out from under
 	   a top close-icon. Logical padding tracks the icon's logical side, so it
 	   flips automatically in rtl. Only the first child is indented; the rest of
