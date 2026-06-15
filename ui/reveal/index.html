@@ -25,6 +25,16 @@
 			margin-block-end: var(--spacing-2xl);
 			max-inline-size: var(--width-7xl);
 		}
+		/* Flip-card back-face palettes — a light shade pulled from each band photo,
+		   paired with an AA-contrast text colour. */
+		.thelure       { --ui-reveal-content-bg: #d8d6dc; --ui-reveal-content-c: #2a2730; }
+		.papermirror   { --ui-reveal-content-bg: #e6d8ec; --ui-reveal-content-c: #3d2747; }
+		.skylinefive   { --ui-reveal-content-bg: #ddd9d1; --ui-reveal-content-c: #34322b; }
+		.neonavenue    { --ui-reveal-content-bg: #f1dde3; --ui-reveal-content-c: #5a2f3d; }
+		.camdencourt   { --ui-reveal-content-bg: #e8dac4; --ui-reveal-content-c: #58361f; }
+		.reddirtroad   { --ui-reveal-content-bg: #ddd6c6; --ui-reveal-content-c: #43392a; }
+		.glitterthrone { --ui-reveal-content-bg: #f0e3bf; --ui-reveal-content-c: #4a2d6e; }
+		.pulsetheory   { --ui-reveal-content-bg: #dbdee1; --ui-reveal-content-c: #2b3037; }
 	</style>
 </head>
 <body>
@@ -47,7 +57,7 @@
 		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="overlay(bl) ar(3/4) op(cc)">
 			<details>
 				<summary>
-					<ui-media><img src="game_01.png" alt="" loading="lazy"></ui-media>
+					<ui-media><img src="assets/game_01.jpg" alt="" loading="lazy"></ui-media>
 					<ui-content>
 						<small>Fantasy RPG</small>
 						<b>Starfall Legends</b>
@@ -66,7 +76,7 @@
 		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="overlay(bl) ar(3/4) op(cc)">
 			<details>
 				<summary>
-					<ui-media><img src="game_02.png" alt="" loading="lazy"></ui-media>
+					<ui-media><img src="assets/game_02.jpg" alt="" loading="lazy"></ui-media>
 					<ui-content>
 						<small>Open-World Western</small>
 						<b>Frontier Outlaws</b>
@@ -85,7 +95,7 @@
 		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="overlay(bl) ar(3/4) op(cc)">
 			<details>
 				<summary>
-					<ui-media><img src="game_03.png" alt="" loading="lazy"></ui-media>
+					<ui-media><img src="assets/game_03.jpg" alt="" loading="lazy"></ui-media>
 					<ui-content>
 						<small>Historical Epic</small>
 						<b>Imperium: Legions</b>
@@ -110,7 +120,7 @@
 	<ui-reveal class="hero" icon="top right lg" type="scale" variant="overlay(bl) ar(21/9) op(cc)">
 		<details>
 			<summary>
-				<ui-media><img src="band_girls.png" alt="" loading="lazy"></ui-media>
+				<ui-media><img src="assets/band_girls.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
 					<small>Featured</small>
 					<b>Hero reveal card.</b>
@@ -134,7 +144,7 @@
 		<ui-reveal icon="bottom right semi" type="expand" variant="media-only ar(1/1)">
 			<details>
 				<summary>
-					<ui-media><img src="band_alternative.png" alt="Alternative band" loading="lazy"></ui-media>
+					<ui-media><img src="assets/band_alternative.jpg" alt="Alternative band" loading="lazy"></ui-media>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
 				<div>
@@ -147,7 +157,7 @@
 		<ui-reveal icon="bottom right" type="expand" variant="media-only ar(3/4)">
 			<details>
 				<summary>
-					<ui-media><img src="band_boys.png" alt="Boy band" loading="lazy"></ui-media>
+					<ui-media><img src="assets/band_boys.jpg" alt="Boy band" loading="lazy"></ui-media>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
 				<div>
@@ -160,7 +170,7 @@
 		<ui-reveal icon="bottom right" type="expand" variant="media-only ar(16/9)">
 			<details>
 				<summary>
-					<ui-media><img src="band_girls.png" alt="Girl group" loading="lazy"></ui-media>
+					<ui-media><img src="assets/band_girls.jpg" alt="Girl group" loading="lazy"></ui-media>
 					<ui-icon type="arrow down" aria-hidden="true"></ui-icon>
 				</summary>
 				<div>
@@ -174,127 +184,125 @@
 	<h2>Flip</h2>
 
 	<div class="grid">
-		<ui-reveal icon="top right sm" type="flip" variant="overlay(tl) ar(1/1) op(tc) sq(lg)" scroll>
+		<ui-reveal class="thelure" icon="top right sm" type="flip" variant="overlay(tl) ar(1/1) op(tc) sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
-						<ui-media><img src="band_goth.png" alt="" loading="lazy"></ui-media>
+						<ui-media><img src="assets/band_goth.jpg" alt="" loading="lazy"></ui-media>
 						<ui-content><small>Gothic</small><b>The Lure</b></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
 				<div>
-					<h3>overlay(tl)</h3>
-					<p>Content top-left over media. This panel has <code>scroll</code> set, so its height is locked to the closed card and a longer text scrolls inside instead of growing the card.</p>
-					<p>The Lure formed in the long shadow of post-punk, trading jangle for reverb and dread. Their early demos circulated on hand-dubbed cassettes passed between basement shows.</p>
+					<h3>The Lure</h3>
+					<p>Darkwave from the old quarter. The Lure formed in the long shadow of post-punk, trading jangle for reverb and dread, their early demos circulating on hand-dubbed cassettes passed between basement shows.</p>
 					<p>By the second record the sound had thickened — drum machines under live toms, a baritone guitar tuned down until the strings flapped, vocals buried like a confession you weren't meant to hear.</p>
 					<p>Critics called it funereal. The band called it honest. Either way the room went quiet when the first chord landed, and stayed that way until the lights came up.</p>
-					<p>This paragraph exists only to overflow the frame, proving the scrollbar appears and the card keeps its 1/1 aspect-ratio regardless of content length.</p>
 				</div>
 			</details>
 		</ui-reveal>
 
-		<ui-reveal icon="top right sm" type="flip" variant="overlay(tc) ar(1/1)">
+		<ui-reveal class="papermirror" icon="top right sm" type="flip" variant="overlay(tc) ar(1/1) sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
-						<ui-media><img src="band_alternative.png" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Alternative</small><b>Top center.</b></ui-content>
+						<ui-media><img src="assets/band_alternative.jpg" alt="" loading="lazy"></ui-media>
+						<ui-content><small>Alternative</small><b>Paper Mirror</b></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(tc)</h3><p>Content top-center over media.</p></div>
+				<div><h3>Paper Mirror</h3><p>Reverb-soaked guitars and bittersweet hooks. Built a following on hand-dubbed cassettes passed between basement shows, and turned down every label that came calling.</p></div>
 			</details>
 		</ui-reveal>
 
-		<ui-reveal icon="bottom left sm" type="flip" variant="overlay(tr) ar(1/1)">
+		<ui-reveal class="skylinefive" icon="top left sm" type="flip" variant="overlay(tr) ar(1/1) sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
-						<ui-media><img src="band_boys.png" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Boy Band</small><b>Top right.</b></ui-content>
+						<ui-media><img src="assets/band_boys.jpg" alt="" loading="lazy"></ui-media>
+						<ui-content><small>Pop</small><b>Skyline Five</b></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(tr)</h3><p>Content top-right over media.</p></div>
+				<div><h3>Skyline Five</h3><p>Five voices, one harmony. Assembled for the arenas but secretly writing their own songs, they broke from their handlers to chase a sound that was finally theirs.</p></div>
 			</details>
 		</ui-reveal>
 
-		<ui-reveal icon="bottom right sm" type="flip" variant="overlay(cl) ar(1/1)">
+		<ui-reveal class="neonavenue" icon="top right sm" type="flip" variant="overlay(cl) ar(1/1) sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
-						<ui-media><img src="band_girls.png" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Girl Group</small><b>Center left.</b></ui-content>
+						<ui-media><img src="assets/band_girls.jpg" alt="" loading="lazy"></ui-media>
+						<ui-content><small>Synth-Pop</small><b>Neon Avenue</b></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(cl)</h3><p>Content center-left over media.</p></div>
+				<div><h3>Neon Avenue</h3><p>Synth-pop with a midnight sheen. Traded bedroom demos for stadium choruses — all glitter and heartbreak under sodium streetlights.</p></div>
 			</details>
 		</ui-reveal>
 
-		<ui-reveal icon="bottom right sm" type="flip" variant="overlay(cc) ar(1/1)">
+		<ui-reveal class="camdencourt" icon="top right sm" type="flip" variant="overlay(cc) ar(1/1) sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
-						<ui-media><img src="band_goth.png" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Gothic</small><b>Center.</b></ui-content>
+						<ui-media><img src="assets/band_britpop.jpg" alt="" loading="lazy"></ui-media>
+						<ui-content><small>Britpop</small><b>Camden Court</b></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(cc)</h3><p>Content centered over media, radial scrim.</p></div>
+				<div><h3>Camden Court</h3><p>Swaggering guitars and singalong choruses. Kings of the back-room pub circuit, they soundtracked a summer of cheap lager and outsized dreams.</p></div>
 			</details>
 		</ui-reveal>
 
-		<ui-reveal icon="bottom left sm" type="flip" variant="overlay(cr) ar(1/1)">
+		<ui-reveal class="reddirtroad" icon="top right sm" type="flip" variant="overlay(cr) ar(1/1) sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
-						<ui-media><img src="band_alternative.png" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Alternative</small><b>Center right.</b></ui-content>
+						<ui-media><img src="assets/band_country.jpg" alt="" loading="lazy"></ui-media>
+						<ui-content><small>Country</small><b>Red Dirt Road</b></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(cr)</h3><p>Content center-right over media.</p></div>
+				<div><h3>Red Dirt Road</h3><p>Steel strings and long highways. Recorded live in a barn with the doors thrown open, singing about towns that never quite let you leave.</p></div>
 			</details>
 		</ui-reveal>
 
-		<ui-reveal icon="top right sm" type="flip" variant="overlay(bl) ar(1/1)">
+		<ui-reveal class="glitterthrone" icon="top right sm" type="flip" variant="overlay(bl) ar(1/1) sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
-						<ui-media><img src="band_boys.png" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Boy Band</small><b>Bottom left.</b></ui-content>
+						<ui-media><img src="assets/band_glamrock.jpg" alt="" loading="lazy"></ui-media>
+						<ui-content><small>Glam Rock</small><b>Glitter Throne</b></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(bl)</h3><p>Content bottom-left over media.</p></div>
+				<div><h3>Glitter Throne</h3><p>Platform boots and pyrotechnics. Every gig became a coronation — feathers, fireworks, and a guitar solo that refused to end.</p></div>
 			</details>
 		</ui-reveal>
 
-		<ui-reveal icon="top right sm" type="flip" variant="overlay(bc) ar(1/1)">
+		<ui-reveal class="pulsetheory" icon="top right sm" type="flip" variant="overlay(bc) ar(1/1) sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
-						<ui-media><img src="band_girls.png" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Girl Group</small><b>Bottom center.</b></ui-content>
+						<ui-media><img src="assets/band_techno.jpg" alt="" loading="lazy"></ui-media>
+						<ui-content><small>Techno</small><b>Pulse Theory</b></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(bc)</h3><p>Content bottom-center over media.</p></div>
+				<div><h3>Pulse Theory</h3><p>Concrete basements and four-to-the-floor. A reputation built on warehouse sets that ran till sunrise, the machines doing all the talking.</p></div>
 			</details>
 		</ui-reveal>
 
-		<ui-reveal icon="top left sm" type="flip" variant="overlay(br) ar(1/1)">
+		<ui-reveal class="thelure" icon="top right sm" type="flip" variant="overlay(br) ar(1/1) sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
-						<ui-media><img src="band_goth.png" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Gothic</small><b>Bottom right.</b></ui-content>
+						<ui-media><img src="assets/band_goth.jpg" alt="" loading="lazy"></ui-media>
+						<ui-content><small>Gothic</small><b>The Lure</b></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div><h3>overlay(br)</h3><p>Content bottom-right over media.</p></div>
+				<div><h3>The Lure</h3><p>Darkwave from the old quarter. Baritone guitars tuned down until the strings flap, drum machines under live toms, vocals buried like a confession you weren't meant to hear.</p></div>
 			</details>
 		</ui-reveal>
 	</div>
@@ -311,7 +319,7 @@
 			<details>
 				<summary>
 					<ui-face>
-						<ui-media><img src="band_goth.png" alt="" loading="lazy"></ui-media>
+						<ui-media><img src="assets/band_goth.jpg" alt="" loading="lazy"></ui-media>
 						<ui-content><small>Gothic</small><b>Tap anywhere.</b></ui-content>
 					</ui-face>
 				</summary>
@@ -323,8 +331,8 @@
 			<details>
 				<summary>
 					<ui-face>
-						<ui-media><img src="band_girls.png" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Girl Group</small><b>Whole card toggles.</b></ui-content>
+						<ui-media><img src="assets/band_girls.jpg" alt="" loading="lazy"></ui-media>
+						<ui-content><small>Synth-Pop</small><b>Whole card toggles.</b></ui-content>
 					</ui-face>
 				</summary>
 				<div><h3>With a link</h3><p>Interactive content opts back in, so this stays clickable:</p><p><a href="#">Follow this link &rarr;</a></p></div>
@@ -335,7 +343,7 @@
 			<details>
 				<summary>
 					<ui-face>
-						<ui-media><img src="band_boys.png" alt="Boy band" loading="lazy"></ui-media>
+						<ui-media><img src="assets/band_boys.jpg" alt="Boy band" loading="lazy"></ui-media>
 					</ui-face>
 				</summary>
 				<div><h3>media-only</h3><p>Media-only face — the image alt is the accessible name.</p></div>
@@ -353,7 +361,7 @@
 		<ui-reveal icon="bottom right dark" type="slide" from="top" variant="ar(16/9)" style="--ui-reveal-bg:#f49d98;">
 			<details>
 				<summary>
-					<ui-media><img src="band_alternative.png" alt="" loading="lazy"></ui-media>
+					<ui-media><img src="assets/band_alternative.jpg" alt="" loading="lazy"></ui-media>
 					<ui-content>
 						<small>Alternative</small>
 						<b>Media top.</b>
@@ -371,9 +379,9 @@
 		<ui-reveal icon="top right dark" type="slide" from="bottom" variant="vertical-r ar(16/9)" style="--ui-reveal-bg:#e1d4ca;">
 			<details>
 				<summary>
-					<ui-media><img src="band_boys.png" alt="" loading="lazy"></ui-media>
+					<ui-media><img src="assets/band_boys.jpg" alt="" loading="lazy"></ui-media>
 					<ui-content>
-						<small>Boy Band</small>
+						<small>Pop</small>
 						<b>Media bottom.</b>
 					</ui-content>
 					<ui-icon type="up-arrow-cross" aria-hidden="true"></ui-icon>
@@ -389,9 +397,9 @@
 		<ui-reveal icon="bottom right dark" type="slide" from="left" variant="horizontal ar(2/3)" style="--ui-reveal-bg:#d4e7f2;">
 			<details>
 				<summary>
-					<ui-media><img src="band_girls.png" alt="" loading="lazy"></ui-media>
+					<ui-media><img src="assets/band_girls.jpg" alt="" loading="lazy"></ui-media>
 					<ui-content>
-						<small>Girl Group</small>
+						<small>Synth-Pop</small>
 						<b>Media left.</b>
 					</ui-content>
 					<ui-icon type="right-arrow-cross" aria-hidden="true"></ui-icon>
@@ -407,7 +415,7 @@
 		<ui-reveal icon="bottom left dark" type="slide" from="right" variant="horizontal-r ar(2/3)" style="--ui-reveal-bg:#dadada;">
 			<details>
 				<summary>
-					<ui-media><img src="band_goth.png" alt="" loading="lazy"></ui-media>
+					<ui-media><img src="assets/band_goth.jpg" alt="" loading="lazy"></ui-media>
 					<ui-content>
 						<small>Gothic</small>
 						<b>Media right.</b>
@@ -432,7 +440,7 @@
 		<ui-reveal icon="bottom right" type="expand" variant="sq(sm) media-only ar(1/1)">
 			<details>
 				<summary>
-					<ui-media><img src="band_alternative.png" alt="Alternative band" loading="lazy"></ui-media>
+					<ui-media><img src="assets/band_alternative.jpg" alt="Alternative band" loading="lazy"></ui-media>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
 				<div>
@@ -445,7 +453,7 @@
 		<ui-reveal icon="top right" type="scale" variant="sq(lg) overlay(bl) ar(1/1)">
 			<details>
 				<summary>
-					<ui-media><img src="band_goth.png" alt="" loading="lazy"></ui-media>
+					<ui-media><img src="assets/band_goth.jpg" alt="" loading="lazy"></ui-media>
 					<ui-content>
 						<small>Gothic</small>
 						<b>Squircle + scale.</b>
@@ -462,7 +470,7 @@
 		<ui-reveal icon="bottom right" type="expand" variant="sq(xl) media-only ar(1/1)">
 			<details>
 				<summary>
-					<ui-media><img src="band_boys.png" alt="Boy band" loading="lazy"></ui-media>
+					<ui-media><img src="assets/band_boys.jpg" alt="Boy band" loading="lazy"></ui-media>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
 				<div>

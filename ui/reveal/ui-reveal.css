@@ -7,25 +7,19 @@
 @import '../card/ui-card.css';
 @import '../icon/index.css';
 @layer bs-component {
-	/* Reveal-specific layer over ui-card. Direct-child scoped (> details,
-	   > details > summary) so nested panel components are untouched. See readme.md. */
 	:where(ui-reveal) {
-		--ui-reveal-bg: var(--color-surface);
-		--ui-reveal-radius: var(--radius-2xl);
-		--ui-reveal-icon-sz: var(--size-7);
-		--ui-reveal-p: var(--spacing-md);
-		--_trs: var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
-
-		/* feed reveal's spacing into the shared ui-card engine */
-		--ui-card-p: var(--ui-reveal-p);
 		--ui-card-row-gap: var(--ui-reveal-row-gap, var(--spacing-sm));
+		--ui-reveal-bg: var(--color-surface);
+		--ui-reveal-icon-sz: var(--size-7);
+		--ui-reveal-p: var(--ui-card-p, var(--spacing-md));
+		--ui-reveal-radius: var(--radius-2xl);
+		--_trs: var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
 
 		display: block;
 		interpolate-size: allow-keywords;
 
 		> details {
 			background: var(--ui-reveal-bg);
-			/* sq() sets --ui-card-radius; otherwise reveal's own radius */
 			border-radius: var(--ui-card-radius, var(--ui-reveal-radius));
 			box-shadow: var(--ui-reveal-shadow, var(--shadow-xl));
 			display: grid;
@@ -42,26 +36,14 @@
 			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
 		}
 
-		/* ::details-content is a slot-like pseudo — only carries inherited +
-		   box props; lay out panel on the single wrapper child. See readme.md. */
 		> details::details-content {
 			font-size: var(--ui-reveal-content-fs, inherit);
 			transition-behavior: allow-discrete;
 		}
 
-		> details > :where(:not(summary)) {
-			display: grid;
-			row-gap: var(--ui-reveal-row-gap, var(--spacing-md));
-			& > * {
-				margin: 0;
-				/* text-box: cap alphabetic; */
-			}
-		}
-
 		&:is([type="flip"], [type="scale"], [type="slide"]) > details::details-content {
 			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
 			color: var(--ui-reveal-content-c, inherit);
-			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
 		}
 
 		> details > summary {
@@ -70,8 +52,6 @@
 			grid-area: 1 / -1;
 			list-style: none;
 			position: relative;
-
-			/* <ui-content> styling (flex column, padding, row-gap) comes from ui-card */
 
 			ui-face {
 				display: grid;
@@ -86,8 +66,6 @@
 				justify-self: end;
 				width: var(--ui-reveal-icon-sz);
 			}
-
-			/* <ui-media> (aspect-ratio, fill img, object-position) comes from ui-card */
 
 			&:focus-visible { outline: none; }
 			&:focus-visible ui-icon {
