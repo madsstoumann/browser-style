@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-tabs.css">
 	<link rel="stylesheet" href="/ui/reveal/ui-reveal.css">
+	<link rel="stylesheet" href="/ui/accordion/ui-accordion.css">
 	<link rel="stylesheet" href="tabs-demo.css">
 	<style>
 		.stagger-grid {
@@ -18,6 +19,7 @@
 		@media (min-width: 600px) {
 			.stagger-grid { grid-template-columns: repeat(3, 1fr); }
 		}
+		.stagger-grid ui-accordion { font-size: var(--font-size-sm); }
 	</style>
 </head>
 <body>
@@ -434,6 +436,101 @@
 								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 							</summary>
 							<div><h3>Neon Avenue</h3><p>Synth-pop with a midnight sheen.</p></div>
+						</details>
+					</ui-reveal>
+				</div>
+			</details>
+			<details name="tabs-stagger">
+				<summary>Movies</summary>
+				<div class="stagger-grid" data-stagger>
+					<ui-reveal type="flip" icon="top right sm" variant="overlay(bl) ar(3/4) op(cc)">
+						<details name="stagger-movies-1">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/ui/reveal/movie_01.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Action Thriller</small><b>Vault Zero</b></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<div>
+								<h3>Vault Zero</h3>
+								<ui-accordion variant="divided">
+									<cq-box>
+										<details name="faq-movies-1">
+											<summary>Is it based on a true story?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>No. The screenplay is original, though the production hired a former vault engineer to keep the heist mechanics plausible.</div>
+										</details>
+										<details name="faq-movies-1">
+											<summary>What's the runtime?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>118 minutes, including a mid-credits scene that sets up the sequel.</div>
+										</details>
+										<details name="faq-movies-1">
+											<summary>Any age rating?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>Rated 15 for sustained action violence and strong language.</div>
+										</details>
+									</cq-box>
+								</ui-accordion>
+							</div>
+						</details>
+					</ui-reveal>
+					<ui-reveal type="flip" icon="top right sm" variant="overlay(bl) ar(3/4) op(cc)">
+						<details name="stagger-movies-2">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/ui/reveal/movie_02.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Fantasy Epic</small><b>Realms of Eldarin</b></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<div>
+								<h3>Realms of Eldarin</h3>
+								<ui-accordion variant="divided">
+									<cq-box>
+										<details name="faq-movies-2">
+											<summary>Is it part of a series?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>Yes. It opens a planned trilogy adapted from the bestselling Eldarin novels.</div>
+										</details>
+										<details name="faq-movies-2">
+											<summary>Were the landscapes real?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>A mix. Practical locations in New Zealand and Iceland were extended with digital matte work.</div>
+										</details>
+										<details name="faq-movies-2">
+											<summary>How long was the shoot?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>Principal photography ran 214 days across two continents.</div>
+										</details>
+									</cq-box>
+								</ui-accordion>
+							</div>
+						</details>
+					</ui-reveal>
+					<ui-reveal type="flip" icon="top right sm" variant="overlay(bl) ar(3/4) op(cc)">
+						<details name="stagger-movies-3">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/ui/reveal/movie_03.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Romantic Comedy</small><b>Two Left Feet</b></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<div>
+								<h3>Two Left Feet</h3>
+								<ui-accordion variant="divided">
+									<cq-box>
+										<details name="faq-movies-3">
+											<summary>Where was it filmed?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>On location across Brooklyn and Manhattan over one autumn.</div>
+										</details>
+										<details name="faq-movies-3">
+											<summary>Do the leads really dance?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>Both actors trained for three months; only the final tango uses a double for one lift.</div>
+										</details>
+										<details name="faq-movies-3">
+											<summary>Is there a soundtrack album?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>Yes, featuring twelve original songs plus the closing-credits duet.</div>
+										</details>
+									</cq-box>
+								</ui-accordion>
+							</div>
 						</details>
 					</ui-reveal>
 				</div>

@@ -123,7 +123,6 @@
 				&::details-content {
 					grid-column: 1 / -1;
 					grid-row: 2;
-					pointer-events: auto;
 				}
 
 				&[open] > summary {
@@ -135,9 +134,14 @@
 					font-weight: var(--ui-tabs-indicator-font-weight);
 				}
 
+				/* Only the open tab's panel is interactive; closed tabs overlap the
+				   same grid cell, so leaving them pointer-events:auto would let a
+				   later-painted closed tab swallow clicks (incl. nested <details>)
+				   over the open panel. */
 				&[open]::details-content {
 					block-size: auto;
 					content-visibility: visible;
+					pointer-events: auto;
 				}
 			}
 

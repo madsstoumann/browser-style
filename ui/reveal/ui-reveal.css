@@ -11,7 +11,14 @@
 	   ui-card.css (variants, ar()/op()/fs()/sq(), overlay, <ui-media> and
 	   <ui-content>). This file adds only what is reveal-specific:
 	   <details>/<summary> wiring, <ui-icon>, <ui-face>, and the reveal
-	   animation types (expand/flip/slide/scale). */
+	   animation types (expand/flip/slide/scale).
+
+	   Direct-child scoping (> details, > details > summary): a reveal card is
+	   always ui-reveal > details > summary, so these rules must NOT reach
+	   descendant <details>/<summary> belonging to nested components placed in
+	   the panel (e.g. a <ui-accordion> of FAQs on a flip card's back), which
+	   would otherwise inherit the card chrome (bg/radius/shadow), the
+	   floating-circle <ui-icon>, and the flip/slide/scale transforms. */
 	:where(ui-reveal) {
 		--ui-reveal-bg: var(--color-surface);
 		--ui-reveal-radius: var(--radius-2xl);
@@ -27,7 +34,7 @@
 		display: block;
 		interpolate-size: allow-keywords;
 
-		details {
+		> details {
 			background: var(--ui-reveal-bg);
 			/* sq() sets --ui-card-radius; otherwise reveal's own radius */
 			border-radius: var(--ui-card-radius, var(--ui-reveal-radius));
@@ -38,9 +45,10 @@
 
 		/* reveal's grid container(s) consume the shared --ui-card-cols set by
 		   horizontal/split tokens in ui-card.css */
-		:is(summary, ui-face) { grid-template-columns: var(--ui-card-cols, 1fr); }
+		> details > summary,
+		> details > summary > ui-face { grid-template-columns: var(--ui-card-cols, 1fr); }
 
-		details[open]::details-content {
+		> details[open]::details-content {
 			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
 			color: var(--ui-reveal-content-c, inherit);
 			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
@@ -52,12 +60,12 @@
 		   animation). Lay out the panel on the REAL wrapper element instead — the
 		   single non-summary child of <details>. Disclosed content MUST be wrapped
 		   in one element (e.g. <div>). */
-		details::details-content {
+		> details::details-content {
 			font-size: var(--ui-reveal-content-fs, inherit);
 			transition-behavior: allow-discrete;
 		}
 
-		details > :where(:not(summary)) {
+		> details > :where(:not(summary)) {
 			display: grid;
 			row-gap: var(--ui-reveal-row-gap, var(--spacing-md));
 			& > * {
@@ -66,13 +74,13 @@
 			}
 		}
 
-		&:is([type="flip"], [type="scale"], [type="slide"]) details::details-content {
+		&:is([type="flip"], [type="scale"], [type="slide"]) > details::details-content {
 			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
 			color: var(--ui-reveal-content-c, inherit);
 			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
 		}
 
-		summary {
+		> details > summary {
 			cursor: pointer;
 			display: grid;
 			grid-area: 1 / -1;
@@ -107,45 +115,45 @@
 		   and ar() / op() are inherited from ui-card.css === */
 
 		/* === icon === */
-		&:is([icon~="top"],[icon~="bottom"],[icon~="left"],[icon~="right"]) summary > ui-icon {
+		&:is([icon~="top"],[icon~="bottom"],[icon~="left"],[icon~="right"]) > details > summary > ui-icon {
 			margin: var(--ui-reveal-icon-m, var(--ui-reveal-p));
 			position: absolute;
 			z-index: 2;
 		}
-		&[icon~="top"]    summary > ui-icon { inset-block: 0 auto; }
-		&[icon~="bottom"] summary > ui-icon { inset-block: auto 0; }
-		&[icon~="left"]   summary > ui-icon { inset-inline: 0 auto; }
-		&[icon~="right"]  summary > ui-icon { inset-inline: auto 0; }
+		&[icon~="top"]    > details > summary > ui-icon { inset-block: 0 auto; }
+		&[icon~="bottom"] > details > summary > ui-icon { inset-block: auto 0; }
+		&[icon~="left"]   > details > summary > ui-icon { inset-inline: 0 auto; }
+		&[icon~="right"]  > details > summary > ui-icon { inset-inline: auto 0; }
 
 		/* === icon-close === */
-		&:is([icon-close~="top"],[icon-close~="bottom"],[icon-close~="left"],[icon-close~="right"]) details[open] summary > ui-icon {
+		&:is([icon-close~="top"],[icon-close~="bottom"],[icon-close~="left"],[icon-close~="right"]) > details[open] > summary > ui-icon {
 			position: absolute;
 			z-index: 2;
 		}
-		&[icon-close~="top"]    details[open] summary > ui-icon { inset-block: 0 auto; }
-		&[icon-close~="bottom"] details[open] summary > ui-icon { inset-block: auto 0; }
-		&[icon-close~="left"]   details[open] summary > ui-icon { inset-inline: 0 auto; }
-		&[icon-close~="right"]  details[open] summary > ui-icon { inset-inline: auto 0; }
+		&[icon-close~="top"]    > details[open] > summary > ui-icon { inset-block: 0 auto; }
+		&[icon-close~="bottom"] > details[open] > summary > ui-icon { inset-block: auto 0; }
+		&[icon-close~="left"]   > details[open] > summary > ui-icon { inset-inline: 0 auto; }
+		&[icon-close~="right"]  > details[open] > summary > ui-icon { inset-inline: auto 0; }
 
 		/* === icon style: dark (default is light) + semi (opacity) — both === */
-		&[icon~="dark"] summary > ui-icon,
-		&[icon-close~="dark"] details[open] summary > ui-icon {
+		&[icon~="dark"] > details > summary > ui-icon,
+		&[icon-close~="dark"] > details[open] > summary > ui-icon {
 			--ui-reveal-icon-bg: #000; /* TODO! */
 			color: #fff;
 		}
-		&[icon~="semi"] summary > ui-icon,
-		&[icon-close~="semi"] details[open] summary > ui-icon {
+		&[icon~="semi"] > details > summary > ui-icon,
+		&[icon-close~="semi"] > details[open] > summary > ui-icon {
 			opacity: var(--ui-reveal-icon-opacity, 0.6);
 		}
 
 		/* === icon size: sm / lg (md = default --size-7) — both. Smaller icons get
 		   a touch more corner inset so they don't crowd the edge. === */
-		&[icon~="sm"] summary > ui-icon,
-		&[icon-close~="sm"] details[open] summary > ui-icon {
+		&[icon~="sm"] > details > summary > ui-icon,
+		&[icon-close~="sm"] > details[open] > summary > ui-icon {
 			--ui-reveal-icon-sz: var(--size-5);
 		}
-		&[icon~="lg"] summary > ui-icon,
-		&[icon-close~="lg"] details[open] summary > ui-icon {
+		&[icon~="lg"] > details > summary > ui-icon,
+		&[icon-close~="lg"] > details[open] > summary > ui-icon {
 			--ui-reveal-icon-sz: var(--size-8);
 		}
 
@@ -154,20 +162,20 @@
 
 		/* === squircle — sq() value mapping (exponent + radius) comes from
 		   ui-card; reveal only applies corner-shape to its <details> === */
-		&[variant*="sq("] details {
+		&[variant*="sq("] > details {
 			corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8));
 		}
 	}
 
 	/* === type: expand === */
 	:where(ui-reveal[type="expand"]) {
-		details::details-content {
+		> details::details-content {
 			block-size: 0;
 			content-visibility: hidden;
 			overflow: hidden;
 			transition: block-size var(--_trs), content-visibility var(--_trs), padding var(--_trs);
 		}
-		details[open]::details-content {
+		> details[open]::details-content {
 			block-size: auto;
 			content-visibility: visible;
 		}
@@ -175,10 +183,10 @@
 		/* popup mode: animate on OPEN only. Transition lives on the [open] state,
 		   so closing falls back to the no-transition base rule and snaps shut —
 		   no block-size drift back into the main grid when the fixed chrome drops. */
-		&[to] details::details-content { transition: none; }
-		&[to] details[open]::details-content { transition: block-size var(--_trs), content-visibility var(--_trs), padding var(--_trs); }
+		&[to] > details::details-content { transition: none; }
+		&[to] > details[open]::details-content { transition: block-size var(--_trs), content-visibility var(--_trs), padding var(--_trs); }
 
-		&[to]:has([open]) {
+		&[to]:has(> details[open]) {
 			--ui-card-ar: var(--ui-reveal-expand-aspect, 16/9);
 			--ui-reveal-expand-m: 2ch;
 
@@ -189,7 +197,7 @@
 			position: fixed;
 			z-index: var(--z-index-2);
 
-			details {
+			> details {
 				--ui-reveal-content-fs: var(--ui-reveal-expand-content-fs, var(--font-size-base));
 				align-content: start;
 				animation: ui-reveal-pop var(--_trs) both;
@@ -241,23 +249,23 @@
 			--_panel-open: rotateX(0deg);
 		}
 
-		summary > ui-face {
+		> details > summary > ui-face {
 			backface-visibility: hidden;
 			transform: var(--_persp) var(--_face-closed);
 			transition: transform var(--_trs);
 		}
-		details[open] summary > ui-face { transform: var(--_persp) var(--_face-open); }
+		> details[open] > summary > ui-face { transform: var(--_persp) var(--_face-open); }
 
 		/* icon paints (and hit-tests) above the open panel */
-		summary > ui-icon { z-index: 2; }
+		> details > summary > ui-icon { z-index: 2; }
 
-		details::details-content {
+		> details::details-content {
 			backface-visibility: hidden;
 			grid-area: 1 / -1;
 			transform: var(--_persp) var(--_panel-closed);
 			transition: transform var(--_trs), content-visibility var(--_trs);
 		}
-		details[open]::details-content { transform: var(--_persp) var(--_panel-open); }
+		> details[open]::details-content { transform: var(--_persp) var(--_panel-open); }
 	}
 
 	/* flip icon dip — <ui-icon> fades out as the card turns edge-on, then back
@@ -265,10 +273,10 @@
 	   identical keyframes under different names, so toggling restarts the
 	   animation. Top-level @media (not nested) for broad engine compatibility. */
 	@media (prefers-reduced-motion: no-preference) {
-		:where(ui-reveal[type="flip"]) summary > ui-icon {
+		:where(ui-reveal[type="flip"]) > details > summary > ui-icon {
 			animation: ui-reveal-icon-dip var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
 		}
-		:where(ui-reveal[type="flip"]) details[open] summary > ui-icon { animation-name: ui-reveal-icon-dip-open; }
+		:where(ui-reveal[type="flip"]) > details[open] > summary > ui-icon { animation-name: ui-reveal-icon-dip-open; }
 	}
 
 	/* asymmetric: quick fade-out (to 40%), slower fade back in (remaining 60%) */
@@ -277,29 +285,29 @@
 
 	/* === type: slide === */
 	:where(ui-reveal[type="slide"]) {
-		details::details-content {
+		> details::details-content {
 			grid-area: 1 / -1;
 			translate: 100% 0;
 			z-index: 1;
 			transition: translate var(--_trs), content-visibility var(--_trs);
 		}
 
-		&[from="top"]    details::details-content { translate: 0 -100%; }
-		&[from="bottom"] details::details-content { translate: 0 100%; }
-		&[from="left"]   details::details-content { translate: -100% 0; }
-		&[from="right"]  details::details-content { translate: 100% 0; }
-		details[open]::details-content { translate: 0 0; }
+		&[from="top"]    > details::details-content { translate: 0 -100%; }
+		&[from="bottom"] > details::details-content { translate: 0 100%; }
+		&[from="left"]   > details::details-content { translate: -100% 0; }
+		&[from="right"]  > details::details-content { translate: 100% 0; }
+		> details[open]::details-content { translate: 0 0; }
 
 		/* panel + its links take clicks; icon stays the toggle */
-		&:not([trigger="card"]) details[open] summary { pointer-events: none; }
-		details[open] summary > ui-icon { pointer-events: auto; }
+		&:not([trigger="card"]) > details[open] > summary { pointer-events: none; }
+		> details[open] > summary > ui-icon { pointer-events: auto; }
 	}
 
 	/* === type: scale === */
 	:where(ui-reveal[type="scale"]) {
-		details { position: relative; }
+		> details { position: relative; }
 
-		details::details-content {
+		> details::details-content {
 			block-size: var(--ui-reveal-icon-sz);
 			border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
 			box-sizing: border-box;
@@ -314,7 +322,7 @@
 			transition: block-size var(--_trs), inline-size var(--_trs), border-radius var(--_trs), margin var(--_trs), opacity var(--_trs), content-visibility var(--_trs);
 			z-index: 1;
 		}
-		details[open]::details-content {
+		> details[open]::details-content {
 			block-size: 100%;
 			border-radius: 0;
 			content-visibility: visible;
@@ -330,8 +338,8 @@
 		&[icon~="right"]  { --_scale-is: auto; --_scale-ie: 0; }
 
 		/* panel takes clicks; icon stays the toggle */
-		&:not([trigger="card"]) details[open] summary { pointer-events: none; }
-		details[open] summary > ui-icon { pointer-events: auto; }
+		&:not([trigger="card"]) > details[open] > summary { pointer-events: none; }
+		> details[open] > summary > ui-icon { pointer-events: auto; }
 	}
 
 	/* === trigger: card — the whole card toggles (no ui-icon required) ===
@@ -339,10 +347,10 @@
 	   panel content opts back in. With no icon to carry the focus ring, it
 	   moves to the card itself. */
 	:where(ui-reveal[trigger="card"]) {
-		details[open]::details-content { pointer-events: none; }
-		details[open] :is(a, button, input, select, textarea, [tabindex]) { pointer-events: auto; }
+		> details[open]::details-content { pointer-events: none; }
+		> details[open] :is(a, button, input, select, textarea, [tabindex]) { pointer-events: auto; }
 
-		details:has(summary:focus-visible) {
+		> details:has(> summary:focus-visible) {
 			box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-bg), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ring-color), var(--ui-reveal-shadow, var(--shadow-xl));
 		}
 	}
