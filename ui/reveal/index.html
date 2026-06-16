@@ -35,6 +35,7 @@
 		.reddirtroad   { --ui-reveal-content-bg: #ddd6c6; --ui-reveal-content-c: #43392a; }
 		.glitterthrone { --ui-reveal-content-bg: #f0e3bf; --ui-reveal-content-c: #4a2d6e; }
 		.pulsetheory   { --ui-reveal-content-bg: #dbdee1; --ui-reveal-content-c: #2b3037; }
+		.halcyonwash   { --ui-reveal-content-bg: #dcd8e0; --ui-reveal-content-c: #2b2733; }
 	</style>
 </head>
 <body>
@@ -54,7 +55,7 @@
 	<p>Tap a game to expand the card from its tile into a full-screen page, with a bouncy morph where supported. Tap the icon to close.</p>
 
 	<div class="grid">
-		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="overlay(bl) ar(3/4) op(cc)">
+		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ov(bl) sc ar(3/4) op(cc)">
 			<details>
 				<summary>
 					<ui-media><img src="assets/game_01.jpg" alt="" loading="lazy"></ui-media>
@@ -73,7 +74,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="overlay(bl) ar(3/4) op(cc)">
+		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ov(bl) sc ar(3/4) op(cc)">
 			<details>
 				<summary>
 					<ui-media><img src="assets/game_02.jpg" alt="" loading="lazy"></ui-media>
@@ -92,7 +93,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="overlay(bl) ar(3/4) op(cc)">
+		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ov(bl) sc ar(3/4) op(cc)">
 			<details>
 				<summary>
 					<ui-media><img src="assets/game_03.jpg" alt="" loading="lazy"></ui-media>
@@ -117,10 +118,10 @@
 	     ============================================ -->
 	<h2>hero — full-width (ar 21/9)</h2>
 
-	<ui-reveal class="hero" icon="top right lg" type="scale" variant="overlay(bl) ar(21/9) op(cc)">
+	<ui-reveal class="hero" icon="top right lg" type="scale" variant="ov(bl) sc ar(21/9) op(cc)" style="--ui-reveal-content-bg:#93a5b1;--ui-reveal-content-c:#0a1014;">
 		<details>
 			<summary>
-				<ui-media><img src="assets/band_girls.jpg" alt="" loading="lazy"></ui-media>
+				<ui-media><img src="assets/band_girl_hero.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
 					<small>Featured</small>
 					<b>Hero reveal card.</b>
@@ -184,7 +185,7 @@
 	<h2>Flip</h2>
 
 	<div class="grid">
-		<ui-reveal class="thelure" icon="top right sm" icon-close="dark" type="flip" variant="overlay(tl) ar(1/1) op(tc) sq(lg) hv(zoom)" scroll>
+		<ui-reveal class="thelure" icon="top right sm" icon-close="dark" type="flip" variant="ov(tl) sc ar(1/1) op(tc) sq(lg) hv(zoom)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -201,7 +202,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="papermirror" icon="top right sm" icon-close="dark" type="flip" variant="overlay(tc) ar(1/1) sq(lg) op(tc) hv(pan)" scroll>
+		<ui-reveal class="papermirror" icon="top right sm" icon-close="dark" type="flip" variant="ov(tc) sc ar(1/1) sq(lg) op(tc) hv(pan)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -218,7 +219,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="skylinefive" icon="top left sm" icon-close="dark top right" type="flip" variant="overlay(tr) ar(1/1) op(tc) sq(lg) hv(zoom)" scroll>
+		<ui-reveal class="skylinefive" icon="top left sm" icon-close="dark top right" type="flip" variant="ov(tr) sc ar(1/1) op(tc) sq(lg) hv(zoom)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -235,7 +236,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="neonavenue" icon="top right sm" icon-close="dark" type="flip" variant="overlay(cl) ar(1/1) op(tc) sq(lg) hv(pan)" scroll>
+		<ui-reveal class="neonavenue" icon="top right sm" icon-close="dark" type="flip" variant="ov(cl) sc ar(1/1) op(tc) sq(lg) hv(pan)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -252,7 +253,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="camdencourt" icon="top right sm" icon-close="dark" type="flip" variant="overlay(cc) ar(1/1) sq(lg) hv(zoom)" scroll>
+		<ui-reveal class="camdencourt" icon="top right sm" icon-close="dark" type="flip" variant="ov(cc) sc ar(1/1) sq(lg) hv(zoom)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -269,7 +270,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="reddirtroad" icon="top right sm" icon-close="dark" type="flip" variant="overlay(cr) ar(1/1) sq(lg) hv(pan)" scroll>
+		<ui-reveal class="reddirtroad" icon="top right sm" icon-close="dark" type="flip" variant="ov(cr) sc ar(1/1) sq(lg) hv(pan)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -286,7 +287,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="glitterthrone" icon="top right sm" icon-close="dark" type="flip" variant="overlay(bl) ar(1/1) sq(lg) hv(zoom)" scroll>
+		<ui-reveal class="glitterthrone" icon="top right sm" icon-close="dark" type="flip" variant="ov(bl) sc ar(1/1) sq(lg) hv(zoom)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -303,7 +304,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="pulsetheory" icon="top right sm" icon-close="dark" type="flip" variant="overlay(bc) ar(1/1) sq(lg) hv(pan)" scroll>
+		<ui-reveal class="pulsetheory" icon="top right sm" icon-close="dark" type="flip" variant="ov(bc) sc ar(1/1) sq(lg) hv(pan)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -320,19 +321,19 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="thelure" icon="top right sm" icon-close="dark" type="flip" variant="overlay(br) ar(1/1) sq(lg) hv(zoom)" scroll>
+		<ui-reveal class="halcyonwash" icon="top right sm" icon-close="dark" type="flip" variant="ov(br) sc ar(1/1) sq(lg) hv(zoom)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
-						<ui-media><img src="assets/band_goth.jpg" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Gothic</small><b>The Lure</b></ui-content>
+						<ui-media><img src="assets/band_dreampop.jpg" alt="" loading="lazy"></ui-media>
+						<ui-content><small>Dream-Pop</small><b>Halcyon Wash</b></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
 				<div>
-					<h3>The Lure</h3>
-					<p>Darkwave from the old quarter. Baritone guitars tuned down until the strings flap, drum machines under live toms, vocals buried like a confession you weren't meant to hear.</p>
-					<p>Critics called it funereal; the band called it honest. Either way the room went quiet when the first chord landed and stayed that way until the lights came up.</p>
+					<h3>Halcyon Wash</h3>
+					<p>Guitars drowned in reverb and a voice half-dissolved in the mix. Halcyon Wash make songs that feel remembered rather than heard — bright, blurred, and always slipping just out of reach.</p>
+					<p>They record at dusk with the tape hiss left in, chasing the exact moment a melody starts to fade. Live, the stage vanishes behind haze and slow light, the band more felt than seen.</p>
 				</div>
 			</details>
 		</ui-reveal>
@@ -346,7 +347,7 @@
 	Flip direction follows <code>from</code>: these three flip in from <code>left</code>, <code>top</code> and <code>bottom</code> (default is <code>right</code>).</p>
 
 	<div class="grid">
-		<ui-reveal type="flip" trigger="card" from="left" variant="overlay(bl) ar(2/3) hv(track)">
+		<ui-reveal type="flip" trigger="card" from="left" variant="ov(bl) sc ar(2/3) hv(track)">
 			<details>
 				<summary>
 					<ui-face>
@@ -358,7 +359,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="flip" trigger="card" from="top" variant="overlay(cc) ar(2/3) hv(track)">
+		<ui-reveal type="flip" trigger="card" from="top" variant="ov(cc) sc ar(2/3) hv(track)">
 			<details>
 				<summary>
 					<ui-face>
@@ -481,7 +482,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal icon="top right" type="scale" variant="sq(lg) overlay(bl) ar(1/1)">
+		<ui-reveal icon="top right" type="scale" variant="sq(lg) ov(bl) ar(1/1)">
 			<details>
 				<summary>
 					<ui-media><img src="assets/band_goth.jpg" alt="" loading="lazy"></ui-media>

@@ -86,9 +86,13 @@ Put them all in one space-separated `variant` attribute.
 | `horizontal-r` | content left, media right |
 | `media-only` | media fills; content hidden |
 | `content-only` | no media box |
-| `overlay(pos)` | content stacked on media — 9 positions |
+| `ov(pos)` | content stacked on media — 9 positions |
 
-`overlay(pos)` positions: `tl tc tr · cl cc cr · bl bc br`.
+`ov(pos)` positions: `tl tc tr · cl cc cr · bl bc br`.
+
+`ov()` only **stacks and places** the content over the media — it does *not*
+darken the image. For legible text over a busy photo, add a **scrim** with
+`sc()` (see below).
 
 ### Modifiers
 
@@ -97,8 +101,9 @@ Put them all in one space-separated `variant` attribute.
 | `ar(16/9 \| 1/1 \| 4/3 \| 3/4 \| 3/2 \| 2/3 \| 21/9 \| square \| portrait \| landscape \| panorama)` | media aspect-ratio |
 | `op(tl…br)` | image object-position (9 positions) |
 | `fs(sm \| md \| lg \| xl)` | font-size tier (see below) |
-| `split(1/1 \| 1/2 \| 2/1 \| 1/3 \| 3/1)` | column ratio for `horizontal` |
+| `sp(1/1 \| 1/2 \| 2/1 \| 1/3 \| 3/1)` | column ratio for `horizontal` |
 | `sq(sm \| md \| lg \| xl)` | superellipse (squircle) corners |
+| `sc` / `sc(pos)` | scrim over media for overlaid text (see below) |
 | `th(dark \| brand)` | colour theme (see below) |
 
 ## Font scale — `fs()`
@@ -112,11 +117,55 @@ headline lands around 4.5rem but the summary stays ~1.2rem.
 
 ```html
 <!-- identical markup; the headline scales hard, the body gently -->
-<ui-card variant="overlay(bl) ar(21/9) fs(xl)"> … </ui-card>
+<ui-card variant="ov(bl) sc(bl) ar(21/9) fs(xl)"> … </ui-card>
 ```
 
 Both scales also grow/shrink with the card's own width (bounded). `fs(xl)` is the
 hero/display tier.
+
+## Scrim — `sc()`
+
+A **scrim** is a film/photography term: a translucent sheet placed in front of a
+light to dim and diffuse it. In UI it's the semi-opaque gradient laid over an
+image so overlaid text stays readable against a bright or busy photo. `sc` is the
+two-letter token for it — pairing with `ov()` the same way `op()`/`ar()` do.
+
+`ov()` and `sc()` are **two separate jobs**:
+
+- `ov(pos)` — *places* the content over the media (stack + 9 positions). No
+  darkening. Use it alone when the image is already dark or you want the card's
+  own text colour.
+- `sc` / `sc(pos)` — *paints* the darkening gradient and flips the overlaid text
+  to light. Opt in only when you need the legibility boost.
+
+```html
+<!-- placed text, NO scrim -->          <ui-card variant="ov(bl) ar(16/9)"> … </ui-card>
+<!-- placed text WITH bottom scrim -->  <ui-card variant="ov(bl) sc(bl) ar(16/9)"> … </ui-card>
+```
+
+Bare `sc` **auto-matches** the `ov()` position, so `ov(bl) sc` gives a
+bottom-anchored scrim, `ov(tr) sc` a top-right diagonal one. Pass an explicit
+`sc(pos)` to override the direction independently of the text placement.
+
+`sc(pos)` directions use the same 9 codes as `ov()` — `tl tc tr · cl cc cr · bl
+bc br`:
+
+| code | gradient |
+|------|----------|
+| `bc` `tc` `cl` `cr` | linear from that edge, fading to transparent |
+| `tl` `tr` `bl` `br` | diagonal from that corner |
+| `cc` | a centred **band** (`transparent → colour → transparent`) that only covers text sitting in the middle |
+
+Overlaid text defaults to **white** for both `ov()` and `sc()` (overlay-on-photo
+is almost always dark imagery). Set `--ui-card-overlay-ink` when an image is light
+and the text needs to go dark. Tune the scrim itself with `--ui-card-scrim-color`
+(gradient colour, defaults to a fixed `rgb(0 0 0 / 0.65)` — intentionally *not* a
+`CanvasText`-based token, so the scrim stays dark in dark mode instead of flipping
+white).
+
+```html
+<ui-card variant="ov(cc) sc(cc)" style="--ui-card-scrim-color: rgb(20 0 40 / 0.7);"> … </ui-card>
+```
 
 ## Themes — `th()`
 
@@ -136,21 +185,21 @@ Each theme value is overridable — e.g. `--ui-card-dark-bg`, `--ui-card-dark-in
 Because the grid lives on `<cq-box>`, a card can react to **its own width**. Add
 `variant-md` (applies at container width ≥ 25rem) and/or `variant-lg` (≥ 44rem)
 alongside the base `variant`; they re-apply arrangement, `ar()`, `fs()` and
-`split()` tokens at those breakpoints.
+`sp()` tokens at those breakpoints.
 
 ```html
 <!-- vertical + small in a narrow grid cell; horizontal + larger when wide -->
 <ui-card
   variant="vertical ar(16/9) fs(sm)"
-  variant-md="horizontal split(1/2) fs(md)"
-  variant-lg="horizontal split(1/3) fs(lg)">
+  variant-md="horizontal sp(1/2) fs(md)"
+  variant-lg="horizontal sp(1/3) fs(lg)">
   <cq-box> … </cq-box>
 </ui-card>
 ```
 
 The same markup renders differently in a hero slot vs. a 3-up grid — no media
-queries, no JS. (`overlay(pos)` is not yet responsive; it can be layered on the
-same pattern.)
+queries, no JS. (`ov(pos)` / `sc(pos)` are not yet responsive; they can be
+layered on the same pattern.)
 
 ## Custom tokens
 
@@ -166,12 +215,12 @@ ui-card { --ui-card-radius: 0; --ui-card-shadow: none; }
 
 Key tokens: `--ui-card-bg`, `--ui-card-radius`, `--ui-card-shadow`, `--ui-card-p`,
 `--ui-card-row-gap`, `--ui-card-fs`, `--ui-card-headline`,
-`--ui-card-eyebrow-color`, `--ui-card-overlay-gradient`, `--ui-card-overlay-ink`.
+`--ui-card-eyebrow-color`, `--ui-card-overlay-ink`, `--ui-card-scrim-color`.
 
 ## Demo
 
 `index.html` shows the engine end to end: article cards, responsive layout
-switching (`variant-lg`), the `fs(xl)` hero, overlay-featured cards, the three
+switching (`variant-lg`), the `fs(xl)` hero, scrim overlay cards, the three
 themes, and profile/product cards — with realistic content and images under
 `assets/`.
 
