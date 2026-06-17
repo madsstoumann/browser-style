@@ -65,6 +65,8 @@ pick the semantically correct element for the context (a `<p>` in a card body, a
 | `byline` | `<address>` | author row; an `<img>` inside becomes a round avatar |
 | `meta` | `<small>` | date, reading time |
 | `caption` | `<small>` | media caption (place inside `<ui-media>`) |
+| `ribbon` | `<span>` | media banner (place inside `<ui-media>`) — see [Media](#media--overlays-video-gallery) |
+| `badge` | `<span>` | media sticker/pill (place inside `<ui-media>`) |
 | `tags` | `<ul>` | pill list (style applies to `<a>` / `<li>`) |
 | `actions` | `<nav>` | button / link row |
 | `footer` | `<footer>` | trailing meta |
@@ -105,6 +107,215 @@ darken the image. For legible text over a busy photo, add a **scrim** with
 | `sq(sm \| md \| lg \| xl)` | superellipse (squircle) corners |
 | `sc` / `sc(pos)` | scrim over media for overlaid text (see below) |
 | `th(dark \| brand)` | colour theme (see below) |
+
+## Media — overlays, video, gallery
+
+`<ui-media>` is the media frame. By default it stacks a single `<img>` (or
+`<video>`) edge-to-edge with `object-fit: cover`. It also takes overlays and a
+multi-source gallery mode.
+
+### Ribbon &amp; badge
+
+Place a `data-part="ribbon"` or `data-part="badge"` **inside `<ui-media>`**. Both
+are positioned with the same 9-code `pos()` system as `ov()` — `pos="tl tc tr ·
+cl cc cr · bl bc br"` (default `tl`). `color="info | success | warning | error"`
+maps the semantic palette.
+
+```html
+<ui-media>
+  <img src="…" alt="">
+  <span data-part="ribbon" pos="tl" color="error">Featured</span>
+  <span data-part="badge"  pos="br" color="success">New</span>
+</ui-media>
+```
+
+- **ribbon** — straight uppercase banner. Add `variant="diagonal"` for a 45°
+  corner banner (corner positions `tl tr bl br` only; `ui-media`'s
+  `overflow:hidden` clips the tails).
+- **badge** — small pill sticker.
+
+Tune with `--ui-card-ribbon-bg` / `--ui-card-ribbon-ink`, `--ui-card-badge-bg` /
+`--ui-card-badge-ink`, and the shared `--ui-card-overlay-gap` (edge inset).
+Diagonal ribbon: `--ui-card-ribbon-diag-width`, `--ui-card-ribbon-diag-offset`,
+`--ui-card-ribbon-diag-pull`.
+
+### Video
+
+A `<video>` fills the frame exactly like an image (same `object-fit: cover`).
+Use native attributes — no JS:
+
+```html
+<ui-media>
+  <video src="clip.mp4" poster="poster.jpg" controls muted loop playsinline></video>
+</ui-media>
+```
+
+### Gallery — `variant="gallery"`
+
+Add the `gallery` token to put **multiple sources** in a horizontal
+scroll-snap row (CSS scroller, no JS). Each child image/video snaps to the
+frame:
+
+```html
+<ui-card variant="gallery vertical ar(16/9)">
+  <cq-box>
+    <ui-media>
+      <img src="1.jpg" alt=""><img src="2.jpg" alt=""><img src="3.jpg" alt="">
+    </ui-media>
+    <ui-content> … </ui-content>
+  </cq-box>
+</ui-card>
+```
+
+Overlays (`ribbon` / `badge`) stay pinned over the scroller. There is no
+live "1 / N" counter — that would need JS.
+
+### Carousel — `variant="carousel"`
+
+Same scroll-snap row as `gallery`, **plus** CSS-only navigation: a row of
+dots and prev/next arrows — no JavaScript, no extra markup.
+
+```html
+<ui-card variant="carousel vertical ar(16/9)">
+  <cq-box>
+    <ui-media>
+      <img src="1.jpg" alt=""><img src="2.jpg" alt=""><img src="3.jpg" alt="">
+    </ui-media>
+    <ui-content> … </ui-content>
+  </cq-box>
+</ui-card>
+```
+
+### How it works — the scroll pseudo-elements
+
+The carousel is built entirely from the CSS Overflow Level 5 scroll
+pseudo-elements. The browser generates and wires them up; there is no
+JavaScript and no extra markup. Four pieces are involved:
+
+**1. `scroll-marker-group` (property) → `::scroll-marker-group` (pseudo).**
+Set `scroll-marker-group: after` (or `before`) on the scroll container
+(`<ui-media>`). The browser generates a `::scroll-marker-group` element — a
+container that holds one marker per item and exposes itself to assistive tech
+as a **tab list**. `after` puts it after the scroller in the DOM/a11y order.
+
+**2. `::scroll-marker` (pseudo, on each item) → the dots.**
+Every scroll-snap child that has `::scroll-marker { content: "" }` contributes
+one marker to the group. Activating a marker (click, or ←/→ when the group has
+focus) scrolls its item into view — that's the dot-to-slide jump, for free.
+Markers also work on replaced elements, so bare `<img>` children get dots with
+no wrapper.
+
+**3. `:target-current` (pseudo-class) → the active dot.**
+The browser sets `:target-current` on the marker whose item is currently
+snapped. We use it to highlight the active dot:
+`…::scroll-marker:target-current { background: … }`. (Siblings can be matched
+with `:target-before` / `:target-after` if you want directional styling.)
+
+**4. `::scroll-button()` (pseudo, on the scroller) → the arrows.**
+`::scroll-button(left)` / `(right)` (also `up`/`down`/`block-start`/
+`inline-end`/… or `*` for all) generate real `<button>`s that scroll the
+container by one "page". Each one **only exists if its `content` is not
+`none`** — that's why we set `content: "" / "Next"` (the empty string generates
+the box; the `/ "Next"` part is the accessible name). The browser automatically
+adds `:disabled` to a button when the scroller can't move further that way, so
+the arrow hides itself at the first / last slide.
+
+#### Positioning with `anchor()`
+
+The marker group and buttons are children of the *scroll container*, so by
+default an absolutely-positioned one is laid out against the scroller's
+**content box** — i.e. the full, multi-page-wide scrollable area. Position them
+with plain `inset` and they drift off-screen as you page.
+
+The fix is anchor positioning: these scroll pseudos are **implicitly anchored
+to their own scroll container's frame**. With `position-anchor: auto` you can
+then use `anchor(left | right | center | top | bottom)` to pin them to the
+*visible* media frame instead of the scrolled content:
+
+```css
+ui-media::scroll-button(left)  { left:  calc(anchor(left)  + 0.75rem); top: anchor(center); }
+ui-media::scroll-button(right) { right: calc(anchor(right) + 0.75rem); top: anchor(center); }
+ui-media::scroll-marker-group  { top: calc(anchor(bottom) - …); justify-self: anchor-center; }
+```
+
+Because the anchor is each pseudo's *own* scroller (not a named anchor),
+**any number of carousels coexist on one page** with no `anchor-name`
+collisions — nothing to declare or keep unique.
+
+#### Smooth slide animation
+
+The scroller sets `scroll-behavior: smooth`, so clicking an arrow or a dot
+**slides** the next image in instead of jumping. It's wrapped in
+`@media (prefers-reduced-motion: no-preference)`, so users who ask for less
+motion get an instant jump. Native touch/trackpad swiping is unaffected either
+way.
+
+#### Why the arrow glyph is a background SVG
+
+A font glyph (`‹`, `❮`, …) sits on the text baseline, not the box's geometric
+centre, so it always looks slightly high even with `place-content: center`. The
+chevron is instead a `background-image` SVG centred with
+`background-position: center` — pure geometry, perfectly centred, typeface-
+independent. `content: ""` keeps generating the button; the icon lives in the
+background.
+
+### Picking controls — the `controls` attribute
+
+`variant="carousel"` shows **both** dots and arrows. To choose pieces — or to
+add controls to a plain `gallery` — use the **`controls`** attribute (a
+space-separated list of `dots` / `arrows`):
+
+```html
+<ui-card variant="gallery" controls="dots">…</ui-card>          <!-- dots only -->
+<ui-card variant="gallery" controls="arrows">…</ui-card>        <!-- arrows only -->
+<ui-card variant="gallery" controls="dots arrows">…</ui-card>   <!-- both -->
+<ui-card variant="carousel" controls="arrows">…</ui-card>       <!-- override: carousel, arrows only -->
+```
+
+`gallery` with no `controls` is the bare swipe scroller. A `controls` attribute
+on a `carousel` overrides its default "both".
+
+### Theming the controls
+
+Every colour, size and glyph is a token (override globally or per instance):
+
+| Token | Default | Controls |
+|-------|---------|----------|
+| `--ui-card-dot-size` | `0.6rem` | dot diameter |
+| `--ui-card-dot-bg` | `rgb(255 255 255 / 0.5)` | inactive dot |
+| `--ui-card-dot-active` | `#fff` | active dot |
+| `--ui-card-dot-border` | `0` | dot border |
+| `--ui-card-dots-gap` | `0.5rem` | gap between dots |
+| `--ui-card-arrow-size` | `2rem` | button diameter |
+| `--ui-card-arrow-bg` / `--ui-card-arrow-bg-hover` | `rgb(255 255 255 / 0.75)` / `0.95` | button fill |
+| `--ui-card-arrow-radius` | `50%` | button corner |
+| `--ui-card-arrow-glyph-size` | `45%` | chevron size (`background-size`) |
+| `--ui-card-arrow-prev` / `--ui-card-arrow-next` | `url(…chevron…)` | the chevron icon — a `url()` SVG |
+
+The chevron is a centred **`background-image` SVG** (geometry, not a font
+glyph), so it's pixel-centred regardless of typeface. Override the icon by
+pointing `--ui-card-arrow-prev/-next` at your own `url()` — set the stroke/fill
+*inside* the SVG (it's a background, so there's no `ink` token to tint it):
+
+```html
+<style>
+  .svg-arrows {
+    --ui-card-arrow-prev: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 18l-6-6 6-6'/%3E%3C/svg%3E");
+    --ui-card-arrow-next: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+  }
+</style>
+<ui-card class="svg-arrows" variant="gallery" controls="dots arrows">…</ui-card>
+```
+
+**Browser support:** the scroll-marker / scroll-button pseudo-elements are
+Chromium-only (Chrome/Edge 135+) and **not** Baseline. This is progressive
+enhancement: in Firefox/Safari `carousel` degrades to the plain `gallery`
+swipe scroller (dots/arrows simply don't appear). Everything is wrapped in
+`@supports (scroll-marker-group: after)`.
+
+> Avoid combining `carousel` with `ov()` overlay content — the flex scroller
+> and the overlay grid-stack conflict. Use `carousel` with `vertical` /
+> `horizontal` arrangements.
 
 ## Font scale — `fs()`
 

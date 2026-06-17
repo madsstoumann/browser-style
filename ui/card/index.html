@@ -21,6 +21,11 @@
 		}
 		.hero { margin-block-end: var(--spacing-2xl); }
 		.note { color: var(--color-text-secondary, #666); }
+		/* carousel arrows as inline-SVG chevrons via url() (stroke baked into the SVG) */
+		.svg-arrows {
+			--ui-card-arrow-prev: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 18l-6-6 6-6'/%3E%3C/svg%3E");
+			--ui-card-arrow-next: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+		}
 	</style>
 </head>
 <body>
@@ -39,12 +44,11 @@
 					<small data-part="eyebrow">Web Development</small>
 					<h2 data-part="headline">Mastering Interactive Popovers in Modern Web Design</h2>
 					<p data-part="summary">Learn how to implement interactive popovers that enhance UX without compromising accessibility — best practices, patterns and real-world examples.</p>
-					<address data-part="byline"><span>Sarah Chen · <span data-part="meta">8 min read</span></span></address>
+					<address data-part="byline"><span>Sarah Chen · <span data-part="meta">Dec 15, 2024 · 8 min read</span></span></address>
 					<ul data-part="tags">
 						<li><a href="#">UX Design</a></li>
 						<li><a href="#">Accessibility</a></li>
 					</ul>
-					<footer data-part="footer">December 15, 2024</footer>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -56,12 +60,11 @@
 					<small data-part="eyebrow">Technology</small>
 					<h2 data-part="headline">The Future of Quantum Computing Takes a Major Leap Forward</h2>
 					<p data-part="summary">Scientists have made a breakthrough in quantum computing that could change everything we know about processing power.</p>
-					<address data-part="byline"><span>James Okoro · <span data-part="meta">4 min read</span></span></address>
+					<address data-part="byline"><span>James Okoro · <span data-part="meta">Jul 16, 2025 · 4 min read</span></span></address>
 					<ul data-part="tags">
 						<li><a href="#">Quantum</a></li>
 						<li><a href="#">Research</a></li>
 					</ul>
-					<footer data-part="footer">July 16, 2025</footer>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -75,13 +78,12 @@
 					<p data-part="summary">The recently signed trade agreement is set to reshape global commerce, affecting everything from local businesses to multinational corporations.</p>
 					<address data-part="byline">
 						<img src="assets/janesmith.jpg" alt="">
-						<span>Jane Smith · <span data-part="meta">12 min read</span></span>
+						<span>Jane Smith · <span data-part="meta">Jul 16, 2025 · 12 min read</span></span>
 					</address>
 					<ul data-part="tags">
 						<li><a href="#">Trade</a></li>
 						<li><a href="#">Economy</a></li>
 					</ul>
-					<footer data-part="footer">July 16, 2025</footer>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -185,6 +187,169 @@
 					<small data-part="eyebrow">Food &amp; Drink</small>
 					<b data-part="headline">The perfect pour-over</b>
 				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Media — ribbon, badge, video, gallery (inside <ui-media>)
+	     ============================================================ -->
+	<h2>Media overlays — ribbon &amp; badge</h2>
+	<p class="note">Overlays live inside <code>&lt;ui-media&gt;</code>, placed with the same 9-code <code>pos()</code> system (<code>pos="tl…br"</code>). <code>color=""</code> maps the semantic palette. Ribbons can be straight (default) or <code>variant="diagonal"</code>.</p>
+	<div class="grid grid-3">
+		<ui-card variant="vertical ar(4/3)">
+			<cq-box>
+				<ui-media>
+					<img src="https://browser.style/assets/images/aurasoundpro.png" alt="" loading="lazy">
+					<span data-part="ribbon" pos="tl" color="error">Featured</span>
+					<span data-part="badge" pos="br" color="success">New</span>
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Audio</small>
+					<h2 data-part="headline">AuraSound Pro</h2>
+					<p data-part="summary">Straight ribbon top-left, badge bottom-right.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+
+		<ui-card variant="vertical ar(4/3)">
+			<cq-box>
+				<ui-media>
+					<img src="https://browser.style/assets/images/soundwavemini.png" alt="" loading="lazy">
+					<span data-part="ribbon" pos="tr" variant="diagonal" color="error">-28%</span>
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Speakers</small>
+					<h2 data-part="headline">SoundWave Mini</h2>
+					<p data-part="summary">Diagonal corner ribbon, top-right.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+
+		<ui-card variant="vertical ar(4/3)">
+			<cq-box>
+				<ui-media>
+					<img src="https://browser.style/assets/images/quickboil.png" alt="" loading="lazy">
+					<span data-part="ribbon" pos="bl">Editor's pick</span>
+					<span data-part="badge" pos="tr" color="warning">Sale</span>
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Kitchen</small>
+					<h2 data-part="headline">QuickBoil Kettle</h2>
+					<p data-part="summary">Ribbon bottom-left (accent default), warning badge top-right.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- Video + gallery -->
+	<h2>Video &amp; gallery</h2>
+	<p class="note"><code>&lt;ui-media&gt;</code> accepts a <code>&lt;video&gt;</code> (native controls/poster) just like an image. Add <code>variant="gallery"</code> for multiple sources — a flex scroll-snap row, no JS.</p>
+	<div class="grid grid-2">
+		<ui-card variant="vertical ar(16/9)">
+			<cq-box>
+				<ui-media>
+					<video src="https://assets.stoumann.dk/video/river.mp4" poster="https://browser.style/assets/images/river.png" controls muted loop playsinline></video>
+					<span data-part="badge" pos="tl" color="info">Video</span>
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Nature</small>
+					<h2 data-part="headline">A quieter river</h2>
+					<p data-part="summary">Native <code>&lt;video&gt;</code> fills the media frame with the same <code>object-fit: cover</code> as an image.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+
+		<ui-card variant="gallery vertical ar(16/9)">
+			<cq-box>
+				<ui-media>
+					<img src="https://browser.style/assets/images/destinations.png" alt="" loading="lazy">
+					<img src="https://browser.style/assets/images/river.png" alt="" loading="lazy">
+					<img src="https://browser.style/assets/images/mindfulness.png" alt="" loading="lazy">
+					<img src="https://browser.style/assets/images/gastronomy.png" alt="" loading="lazy">
+					<span data-part="badge" pos="tr">4 photos</span>
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Travel</small>
+					<h2 data-part="headline">Slow-travel gallery</h2>
+					<p data-part="summary">Swipe the media — four sources in a scroll-snap row.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- Carousel — CSS-only dots + arrows -->
+	<h2>Carousel — <code>variant="carousel"</code></h2>
+	<p class="note">Same scroll-snap row as <code>gallery</code>, plus CSS-only navigation dots (<code>::scroll-marker</code>) and prev/next arrows (<code>::scroll-button()</code>). No JavaScript. Chromium-only for now — elsewhere it degrades to the plain swipe scroller.</p>
+	<div class="grid grid-2">
+		<ui-card variant="carousel vertical ar(16/9) fs(lg)">
+			<cq-box>
+				<ui-media>
+					<img src="https://browser.style/assets/images/destinations.png" alt="" loading="lazy">
+					<img src="https://browser.style/assets/images/river.png" alt="" loading="lazy">
+					<img src="https://browser.style/assets/images/mindfulness.png" alt="" loading="lazy">
+					<img src="https://browser.style/assets/images/gastronomy.png" alt="" loading="lazy">
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Travel</small>
+					<h2 data-part="headline">Slow-travel carousel</h2>
+					<p data-part="summary">Swipe, click an arrow or tap a dot — pure CSS scroll-markers.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+
+		<ui-card variant="carousel horizontal sp(1/1) ar(1/1) fs(md)">
+			<cq-box>
+				<ui-media>
+					<img src="https://browser.style/assets/images/hubble.png" alt="" loading="lazy">
+					<img src="https://browser.style/assets/images/quantum.png" alt="" loading="lazy">
+					<img src="https://browser.style/assets/images/websummit.png" alt="" loading="lazy">
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Science</small>
+					<h2 data-part="headline">Carousel beside content</h2>
+					<p data-part="summary">A carousel works in any arrangement — here it's the media half of a <code>horizontal</code> card.</p>
+					<nav data-part="actions"><a class="ui-button" href="#">Explore</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- Carousel controls — pick pieces + theme them -->
+	<h2>Carousel controls &amp; theming</h2>
+	<p class="note">Use a <code>controls</code> attribute on a <code>gallery</code> to opt into <code>dots</code>, <code>arrows</code>, or both. Colours, dot size and the arrow glyphs are all tokens.</p>
+	<div class="grid grid-3">
+		<ui-card variant="gallery vertical ar(4/3) fs(sm)" controls="dots">
+			<cq-box>
+				<ui-media>
+					<img src="https://browser.style/assets/images/destinations.png" alt="" loading="lazy">
+					<img src="https://browser.style/assets/images/river.png" alt="" loading="lazy">
+					<img src="https://browser.style/assets/images/mindfulness.png" alt="" loading="lazy">
+				</ui-media>
+				<ui-content><small data-part="eyebrow">controls="dots"</small><h2 data-part="headline">Dots only</h2></ui-content>
+			</cq-box>
+		</ui-card>
+
+		<ui-card variant="gallery vertical ar(4/3) fs(sm)" controls="arrows">
+			<cq-box>
+				<ui-media>
+					<img src="https://browser.style/assets/images/gastronomy.png" alt="" loading="lazy">
+					<img src="https://browser.style/assets/images/brewandbean.png" alt="" loading="lazy">
+					<img src="https://browser.style/assets/images/quickboil.png" alt="" loading="lazy">
+				</ui-media>
+				<ui-content><small data-part="eyebrow">controls="arrows"</small><h2 data-part="headline">Arrows only</h2></ui-content>
+			</cq-box>
+		</ui-card>
+
+		<ui-card class="svg-arrows" variant="gallery vertical ar(4/3) fs(sm)" controls="dots arrows"
+			style="--ui-card-dot-bg: rgb(0 0 0 / 0.25); --ui-card-dot-active: var(--color-accent); --ui-card-arrow-bg: var(--color-accent);">
+			<cq-box>
+				<ui-media>
+					<img src="https://browser.style/assets/images/hubble.png" alt="" loading="lazy">
+					<img src="https://browser.style/assets/images/quantum.png" alt="" loading="lazy">
+					<img src="https://browser.style/assets/images/websummit.png" alt="" loading="lazy">
+				</ui-media>
+				<ui-content><small data-part="eyebrow">themed</small><h2 data-part="headline">SVG arrows via <code>url()</code></h2></ui-content>
 			</cq-box>
 		</ui-card>
 	</div>

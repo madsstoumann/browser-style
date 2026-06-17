@@ -67,7 +67,7 @@
 		overflow: hidden;
 		position: relative;
 
-		& img {
+		& :is(img, video) {
 			block-size: 100%;
 			inline-size: 100%;
 			inset: 0;
@@ -282,6 +282,175 @@
 	}
 	:where([variant*="sc"]) ui-media [data-part="caption"] { position: relative; z-index: 1; }
 
+	/* gallery + carousel: flex scroll-snap row (overrides the absolute
+	   image stack). gallery = bare scroller; carousel adds controls below. */
+	:where([variant~="gallery"], [variant~="carousel"]) ui-media {
+		display: flex;
+		overflow-x: auto;
+		overscroll-behavior-x: contain;
+		scroll-snap-type: x mandatory;
+		scrollbar-width: thin;
+	}
+	:where([variant~="gallery"], [variant~="carousel"]) ui-media > :is(img, video) {
+		block-size: 100%;
+		flex: 0 0 100%;
+		inline-size: 100%;
+		inset: auto;
+		position: static;
+		scroll-snap-align: start;
+	}
+	/* slide animation for button/marker nav (swipe is native) */
+	@media (prefers-reduced-motion: no-preference) {
+		:where([variant~="gallery"], [variant~="carousel"]) ui-media { scroll-behavior: smooth; }
+	}
+
+	/* carousel controls — CSS-only dots + arrows. Chromium-only; elsewhere
+	   `carousel` is just the scroller above. Positioned with anchor()
+	   against each pseudo's own scroller, so many coexist with no anchor-name. */
+	@supports (scroll-marker-group: after) {
+		/* hide the scrollbar when controls are shown */
+		:where([variant~="carousel"], [variant~="gallery"][controls]) ui-media { scrollbar-width: none; }
+
+		/* dots — for `carousel`, or controls~="dots" (union written once via nesting) */
+		:where(
+			[variant~="carousel"]:not([controls]),
+			[variant~="carousel"][controls~="dots"],
+			[variant~="gallery"][controls~="dots"]
+		) {
+			& ui-media { scroll-marker-group: after; }
+
+			/* marker group: anchored bottom-centre of the frame */
+			& ui-media::scroll-marker-group {
+				display: flex;
+				gap: var(--ui-card-dots-gap, 0.5rem);
+				justify-self: anchor-center;
+				position: absolute;
+				position-anchor: auto;
+				top: calc(anchor(bottom) - var(--ui-card-overlay-gap, 0.75rem) - var(--ui-card-dot-size, 0.6rem));
+				z-index: 3;
+			}
+			& ui-media > :is(img, video)::scroll-marker {
+				background: var(--ui-card-dot-bg, rgb(255 255 255 / 0.5));
+				block-size: var(--ui-card-dot-size, 0.6rem);
+				border: var(--ui-card-dot-border, 0);
+				border-radius: var(--radius-circle, 50%);
+				content: "";
+				cursor: pointer;
+				inline-size: var(--ui-card-dot-size, 0.6rem);
+			}
+			& ui-media > :is(img, video)::scroll-marker:target-current {
+				background: var(--ui-card-dot-active, #fff);
+			}
+		}
+
+		/* arrows — for `carousel`, or controls~="arrows" */
+		:where(
+			[variant~="carousel"]:not([controls]),
+			[variant~="carousel"][controls~="arrows"],
+			[variant~="gallery"][controls~="arrows"]
+		) {
+			/* chevron = centred background SVG (font glyphs sit off-baseline).
+			   content:"" generates the button; override icon via the url() tokens. */
+			& ui-media::scroll-button(*) {
+				aspect-ratio: 1;
+				background-color: var(--ui-card-arrow-bg, rgb(255 255 255 / 0.75));
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size: var(--ui-card-arrow-glyph-size, 45%);
+				border: var(--ui-card-arrow-border, 0);
+				border-radius: var(--ui-card-arrow-radius, var(--radius-circle, 50%));
+				content: "" / "";
+				cursor: pointer;
+				inline-size: var(--ui-card-arrow-size, 2rem);
+				position: absolute;
+				position-anchor: auto;
+				/* centre via calc, NOT translate — a transform offsets the paint
+				   box from the hit box on anchored scroll-buttons, so clicks on
+				   the visible glyph miss. */
+				top: calc(anchor(center) - var(--ui-card-arrow-size, 2rem) / 2);
+				z-index: 3;
+			}
+			& ui-media::scroll-button(*):hover { background-color: var(--ui-card-arrow-bg-hover, rgb(255 255 255 / 0.95)); }
+			& ui-media::scroll-button(*):disabled { cursor: default; opacity: 0; pointer-events: none; }
+			& ui-media::scroll-button(left) {
+				background-image: var(--ui-card-arrow-prev, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 18l-6-6 6-6'/%3E%3C/svg%3E"));
+				content: "" / "Previous";
+				left: calc(anchor(left) + var(--ui-card-overlay-gap, 0.75rem));
+			}
+			& ui-media::scroll-button(right) {
+				background-image: var(--ui-card-arrow-next, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E"));
+				content: "" / "Next";
+				right: calc(anchor(right) + var(--ui-card-overlay-gap, 0.75rem));
+			}
+		}
+	}
+
+	/* === media overlays: ribbon + badge ===
+	   absolute over the media, placed with the 9-code pos() system
+	   (shared with ov()/sc()/op()). color="" maps semantic palettes. */
+	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"]) {
+		--_ov-gap: var(--ui-card-overlay-gap, 0.75rem);
+		font-size: calc(var(--ui-card-fs, 1rem) * 0.72);
+		font-weight: var(--font-weight-bold, 700);
+		line-height: 1;
+		margin: 0;
+		position: absolute;
+		width: max-content;
+		z-index: 2;
+	}
+
+	/* 9-position placement (default = tl) */
+	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"]):not([pos]),
+	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="tl"] { inset-block-start: var(--_ov-gap); inset-inline-start: var(--_ov-gap); }
+	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="tc"] { inset-block-start: var(--_ov-gap); inset-inline-start: 50%; translate: -50% 0; }
+	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="tr"] { inset-block-start: var(--_ov-gap); inset-inline-end: var(--_ov-gap); }
+	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="cl"] { inset-block-start: 50%; inset-inline-start: var(--_ov-gap); translate: 0 -50%; }
+	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="cc"] { inset-block-start: 50%; inset-inline-start: 50%; translate: -50% -50%; }
+	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="cr"] { inset-block-start: 50%; inset-inline-end: var(--_ov-gap); translate: 0 -50%; }
+	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="bl"] { inset-block-end: var(--_ov-gap); inset-inline-start: var(--_ov-gap); }
+	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="bc"] { inset-block-end: var(--_ov-gap); inset-inline-start: 50%; translate: -50% 0; }
+	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="br"] { inset-block-end: var(--_ov-gap); inset-inline-end: var(--_ov-gap); }
+
+	/* ribbon — straight banner */
+	:where(ui-media) [data-part="ribbon"] {
+		background: var(--ui-card-ribbon-bg, var(--color-accent));
+		color: var(--ui-card-ribbon-ink, #fff);
+		letter-spacing: var(--tracking-wide, 0.05em);
+		padding: 0.3em 0.8em;
+		text-transform: uppercase;
+	}
+
+	/* badge — pill */
+	:where(ui-media) [data-part="badge"] {
+		background: var(--ui-card-badge-bg, var(--color-accent));
+		border-radius: var(--radius-pill, 100px);
+		color: var(--ui-card-badge-ink, #fff);
+		font-weight: var(--font-weight-medium, 500);
+		padding: 0.4em 0.7em;
+	}
+
+	/* ribbon variant="diagonal" — 45° corner banner (corners only).
+	   ui-media's overflow:hidden clips the tails. */
+	:where(ui-media) [data-part="ribbon"][variant~="diagonal"] {
+		--_ov-gap: 0;
+		inline-size: var(--ui-card-ribbon-diag-width, 11rem);
+		inset-block: var(--ui-card-ribbon-diag-offset, 1.6rem) auto;
+		padding-block: 0.3em;
+		text-align: center;
+		width: auto;
+	}
+	:where(ui-media) [data-part="ribbon"][variant~="diagonal"]:not([pos]),
+	:where(ui-media) [data-part="ribbon"][variant~="diagonal"][pos="tl"] { inset-inline: calc(-1 * var(--ui-card-ribbon-diag-pull, 3rem)) auto; rotate: -45deg; }
+	:where(ui-media) [data-part="ribbon"][variant~="diagonal"][pos="tr"] { inset-inline: auto calc(-1 * var(--ui-card-ribbon-diag-pull, 3rem)); rotate: 45deg; }
+	:where(ui-media) [data-part="ribbon"][variant~="diagonal"][pos="bl"] { inset-block: auto var(--ui-card-ribbon-diag-offset, 1.6rem); inset-inline: calc(-1 * var(--ui-card-ribbon-diag-pull, 3rem)) auto; rotate: 45deg; }
+	:where(ui-media) [data-part="ribbon"][variant~="diagonal"][pos="br"] { inset-block: auto var(--ui-card-ribbon-diag-offset, 1.6rem); inset-inline: auto calc(-1 * var(--ui-card-ribbon-diag-pull, 3rem)); rotate: -45deg; }
+
+	/* semantic colors for ribbon + badge */
+	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[color="info"]    { --ui-card-ribbon-bg: var(--color-info);    --ui-card-badge-bg: var(--color-info); }
+	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[color="success"] { --ui-card-ribbon-bg: var(--color-success); --ui-card-badge-bg: var(--color-success); }
+	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[color="warning"] { --ui-card-ribbon-bg: var(--color-warning); --ui-card-badge-bg: var(--color-warning); }
+	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[color="error"]   { --ui-card-ribbon-bg: var(--color-error);   --ui-card-badge-bg: var(--color-error); }
+
 	/* === content parts === */
 
 	/* === eyebrow === */
@@ -349,9 +518,9 @@
 
 		& > * { display: contents; }
 		& a, & li {
-			background: var(--ui-card-tag-bg, var(--color-overlay-light, color-mix(in oklab, currentColor 10%, transparent)));
+			background: var(--ui-card-tag-bg, var(--color-button, hsl(0, 0%, 90%)));
 			border-radius: var(--radius-pill, 100px);
-			color: inherit;
+			color: var(--ui-card-tag-color, inherit);
 			padding: 0.2em 0.7em;
 			text-decoration: none;
 		}
