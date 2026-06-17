@@ -5,7 +5,11 @@
  */
 @layer bs-component {
 
-	/* === ui-card host === */
+	/* ============================================================
+	   CARD CORE — host, grid, corners, font scale
+	   ============================================================ */
+
+	/* host */
 	:where(ui-card) {
 		--ui-card-bg: var(--color-surface);
 		--ui-card-radius: var(--radius-2xl);
@@ -21,19 +25,23 @@
 		overflow: hidden;
 	}
 
-	/* === layout grid === */
+	/* layout grid layer (queryable descendant for container queries) */
 	:where(ui-card) > cq-box {
 		display: grid;
 		gap: 0;
 		grid-template-columns: var(--ui-card-cols, 1fr);
 	}
 
-	/* === squircle corners === */
+	/* squircle corners — host corner-shape + sq() size tokens */
 	:where(ui-card[variant*="sq("]) {
 		corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8));
 	}
+	:where([variant*="sq(sm)"]) { --ui-card-squircle-exp: 1.5; --ui-card-radius: 1.25rem; }
+	:where([variant*="sq(md)"]) { --ui-card-squircle-exp: 1.7; --ui-card-radius: 2rem;    }
+	:where([variant*="sq(lg)"]) { --ui-card-squircle-exp: 1.8; --ui-card-radius: 2.8rem;  }
+	:where([variant*="sq(xl)"]) { --ui-card-squircle-exp: 2;   --ui-card-radius: 3.5rem;  }
 
-	/* === font-size scale: fs() token === */
+	/* font-size scale: fs() — decoupled body + headline cqi clamps */
 	:where([variant]) {
 		--ui-card-p: var(--spacing-md);
 
@@ -58,7 +66,12 @@
 	:where([variant~="fs(lg)"]) { --ui-card-fs: var(--ui-card-fs-lg); --ui-card-headline: var(--ui-card-headline-lg); }
 	:where([variant~="fs(xl)"]) { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline: var(--ui-card-headline-xl); }
 
-	/* === ui-media === */
+
+	/* ============================================================
+	   UI-MEDIA — frame, ratio, position, hover, carousel, overlays
+	   ============================================================ */
+
+	/* media frame — single image/video fills it (absolute stack) */
 	:where([variant]) ui-media {
 		aspect-ratio: var(--ui-card-ar, auto);
 		background: var(--ui-card-media-bg, var(--color-overlay-light, transparent));
@@ -78,7 +91,7 @@
 	}
 	:where([variant*="ar("]) ui-media { min-block-size: 0; }
 
-	/* === aspect-ratio: ar() token === */
+	/* aspect-ratio: ar() token */
 	:where([variant*="ar(square)"])    { --ui-card-ar: 1 / 1; }
 	:where([variant*="ar(portrait)"])  { --ui-card-ar: 3 / 4; }
 	:where([variant*="ar(landscape)"]) { --ui-card-ar: 4 / 3; }
@@ -91,7 +104,7 @@
 	:where([variant*="ar(16/9)"])      { --ui-card-ar: 16 / 9; }
 	:where([variant*="ar(21/9)"])      { --ui-card-ar: 21 / 9; }
 
-	/* === object-position: op() token === */
+	/* object-position: op() token */
 	:where([variant*="op(tl)"]) { --ui-card-op: left top; }
 	:where([variant*="op(tc)"]) { --ui-card-op: center top; }
 	:where([variant*="op(tr)"]) { --ui-card-op: right top; }
@@ -102,23 +115,14 @@
 	:where([variant*="op(bc)"]) { --ui-card-op: center bottom; }
 	:where([variant*="op(br)"]) { --ui-card-op: right bottom; }
 
-	/* === squircle: sq() token === */
-	:where([variant*="sq(sm)"]) { --ui-card-squircle-exp: 1.5; --ui-card-radius: 1.25rem; }
-	:where([variant*="sq(md)"]) { --ui-card-squircle-exp: 1.7; --ui-card-radius: 2rem;    }
-	:where([variant*="sq(lg)"]) { --ui-card-squircle-exp: 1.8; --ui-card-radius: 2.8rem;  }
-	:where([variant*="sq(xl)"]) { --ui-card-squircle-exp: 2;   --ui-card-radius: 3.5rem;  }
-
-	/* === hover effect: hv() token ===
-	   zoom/pan move the image inside its clipped ui-media frame (card stays
-	   put); lift/shrink/tilt transform the card host. Individual transform
-	   props (scale/translate/rotate) so they compose without clobbering. */
+	/* hover: hv() — zoom/pan move the image; lift/shrink/tilt transform the host */
 	@media (hover: hover) {
 		:where([variant*="hv("]) {
 			--_hv-dur: var(--ui-card-hover-duration, var(--duration-slower));
 			--_hv-ease: var(--ui-card-hover-easing, var(--ease-out));
 		}
 
-		/* --- image-only (frame fixed) --- */
+		/* image-only (frame fixed) */
 		:where([variant*="hv(zoom)"], [variant*="hv(pan)"]) ui-media img {
 			transition: scale var(--_hv-dur) var(--_hv-ease), translate var(--_hv-dur) var(--_hv-ease);
 		}
@@ -130,16 +134,14 @@
 			translate: var(--ui-card-hv-pan-x, -2%) var(--ui-card-hv-pan-y, -2%);
 		}
 
-		/* cursor-tracked pan — --ui-card-mx / --ui-card-my (range -1..1) are
-		   written by a pointermove handler; the zoom overscan hides the edges
-		   as the image follows the cursor. See the demo's inline script. */
+		/* cursor-tracked pan — --ui-card-mx/my (-1..1) set by a pointermove handler */
 		:where([variant*="hv(track)"]) ui-media img {
 			scale: var(--ui-card-hv-zoom, 1.12);
 			transition: translate var(--ui-card-hv-track-dur, var(--duration-normal)) var(--_hv-ease), scale var(--_hv-dur) var(--_hv-ease);
 			translate: calc(var(--ui-card-mx, 0) * var(--ui-card-hv-track, 4%)) calc(var(--ui-card-my, 0) * var(--ui-card-hv-track, 4%));
 		}
 
-		/* --- card-level --- */
+		/* card-level */
 		:where([variant*="hv(lift)"], [variant*="hv(shrink)"], [variant*="hv(tilt)"]) {
 			transition: scale var(--_hv-dur) var(--_hv-ease), translate var(--_hv-dur) var(--_hv-ease), rotate var(--_hv-dur) var(--_hv-ease), box-shadow var(--_hv-dur) var(--_hv-ease);
 		}
@@ -150,59 +152,181 @@
 		:where([variant*="hv(shrink)"]:hover) { scale: var(--ui-card-hv-shrink, 0.97); }
 		:where([variant*="hv(tilt)"]:hover)   { rotate: var(--ui-card-hv-tilt, -1.5deg); }
 	}
-
-	/* a11y: kill hover motion */
 	@media (prefers-reduced-motion: reduce) {
 		:where([variant*="hv("]) ui-media img,
 		:where([variant*="hv("]) { transition: none; }
 		:where([variant*="hv(track)"]) ui-media img { translate: 0; }
 	}
 
-	/* === scroll fade-shadow: [scroll] === */
-	@property --ui-scroll-fade-start { syntax: "<length>"; inherits: false; initial-value: 0px; }
-	@property --ui-scroll-fade-end   { syntax: "<length>"; inherits: false; initial-value: 0px; }
-
-	@keyframes ui-scroll-fade {
-		0%        { --ui-scroll-fade-start: 0px; }
-		10%, 100% { --ui-scroll-fade-start: var(--ui-scroll-fade-size, 3rem); }
-		0%, 90%   { --ui-scroll-fade-end: var(--ui-scroll-fade-size, 3rem); }
-		100%      { --ui-scroll-fade-end: 0px; }
-	}
-
-	:where(ui-card[scroll]) ui-content {
-		max-block-size: var(--ui-card-scroll-bs, 100%);
-		overflow-y: auto;
-		overscroll-behavior: contain;
+	/* carousel: flex scroll-snap row (overrides the absolute image stack) */
+	:where([variant~="carousel"]) ui-media {
+		display: flex;
+		overflow-x: auto;
+		overscroll-behavior-x: contain;
+		scroll-snap-type: x mandatory;
 		scrollbar-width: thin;
 	}
+	:where([variant~="carousel"]) ui-media > :is(img, video) {
+		block-size: 100%;
+		flex: 0 0 100%;
+		inline-size: 100%;
+		inset: auto;
+		position: static;
+		scroll-snap-align: start;
+	}
+	/* slide animation for button/marker nav (swipe is native) */
+	@media (prefers-reduced-motion: no-preference) {
+		:where([variant~="carousel"]) ui-media { scroll-behavior: smooth; }
+	}
 
-	@supports (animation-timeline: scroll()) {
-		@media (prefers-reduced-motion: no-preference) {
-			:where(ui-card[scroll]) ui-content {
-				animation: ui-scroll-fade linear;
-				animation-timeline: --ui-scroll;
-				mask: linear-gradient(to bottom, #0000, #000 var(--ui-scroll-fade-start) calc(100% - var(--ui-scroll-fade-end)), #0000);
-				scroll-timeline: --ui-scroll block;
+	/* carousel controls — CSS-only dots + arrows (Chromium-only). Default both;
+	   `controls` picks dots/arrows/none. anchor()-positioned to each own scroller. */
+	@supports (scroll-marker-group: after) {
+		/* hide the scrollbar when any control is shown */
+		:where(
+			[variant~="carousel"]:not([controls]),
+			[variant~="carousel"][controls~="dots"],
+			[variant~="carousel"][controls~="arrows"]
+		) ui-media { scrollbar-width: none; }
+
+		/* dots — default (no controls attr), or controls~="dots" */
+		:where(
+			[variant~="carousel"]:not([controls]),
+			[variant~="carousel"][controls~="dots"]
+		) {
+			& ui-media { scroll-marker-group: after; }
+
+			/* marker group: anchored bottom-centre of the frame */
+			& ui-media::scroll-marker-group {
+				display: flex;
+				gap: var(--ui-card-dots-gap, 0.5rem);
+				justify-self: anchor-center;
+				position: absolute;
+				position-anchor: auto;
+				top: calc(anchor(bottom) - var(--ui-card-overlay-gap, 0.75rem) - var(--ui-card-dot-size, 0.6rem));
+				z-index: 3;
+			}
+			& ui-media > :is(img, video)::scroll-marker {
+				background: var(--ui-card-dot-bg, rgb(255 255 255 / 0.5));
+				block-size: var(--ui-card-dot-size, 0.6rem);
+				border: var(--ui-card-dot-border, 0);
+				border-radius: var(--radius-circle, 50%);
+				content: "";
+				cursor: pointer;
+				inline-size: var(--ui-card-dot-size, 0.6rem);
+			}
+			& ui-media > :is(img, video)::scroll-marker:target-current {
+				background: var(--ui-card-dot-active, #fff);
+			}
+		}
+
+		/* arrows — default (no controls attr), or controls~="arrows" */
+		:where(
+			[variant~="carousel"]:not([controls]),
+			[variant~="carousel"][controls~="arrows"]
+		) {
+			/* chevron = centred background SVG; content:"" generates the button */
+			& ui-media::scroll-button(*) {
+				aspect-ratio: 1;
+				background-color: var(--ui-card-arrow-bg, rgb(255 255 255 / 0.75));
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size: var(--ui-card-arrow-glyph-size, 45%);
+				border: var(--ui-card-arrow-border, 0);
+				border-radius: var(--ui-card-arrow-radius, var(--radius-circle, 50%));
+				content: "" / "";
+				cursor: pointer;
+				inline-size: var(--ui-card-arrow-size, 2rem);
+				position: absolute;
+				position-anchor: auto;
+				/* centre via calc, not translate (a transform desyncs paint/hit box) */
+				top: calc(anchor(center) - var(--ui-card-arrow-size, 2rem) / 2);
+				z-index: 3;
+			}
+			& ui-media::scroll-button(*):hover { background-color: var(--ui-card-arrow-bg-hover, rgb(255 255 255 / 0.95)); }
+			& ui-media::scroll-button(*):disabled { cursor: default; opacity: 0; pointer-events: none; }
+			& ui-media::scroll-button(left) {
+				background-image: var(--ui-card-arrow-prev, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 18l-6-6 6-6'/%3E%3C/svg%3E"));
+				content: "" / "Previous";
+				left: calc(anchor(left) + var(--ui-card-overlay-gap, 0.75rem));
+			}
+			& ui-media::scroll-button(right) {
+				background-image: var(--ui-card-arrow-next, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E"));
+				content: "" / "Next";
+				right: calc(anchor(right) + var(--ui-card-overlay-gap, 0.75rem));
 			}
 		}
 	}
 
-	/* === ui-content === */
-	:where([variant]) ui-content {
-		display: flex;
-		flex-direction: column;
-		font-size: var(--ui-card-fs);
-		gap: var(--ui-card-row-gap, var(--spacing-sm));
-		padding: var(--ui-card-p);
+	/* media overlays: ribbon + badge — placed with the 9-code pos() system */
+	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"]) {
+		--_ov-gap: var(--ui-card-overlay-gap, 0.75rem);
+		font-size: calc(var(--ui-card-fs, 1rem) * 0.72);
+		font-weight: var(--font-weight-bold, 700);
+		line-height: 1;
+		margin: 0;
+		position: absolute;
+		width: max-content;
+		z-index: 2;
 
-		& > * { margin: 0; text-box: cap alphabetic; }
+		/* 9-position placement (default = tl) */
+		&:not([pos]), &[pos="tl"] { inset-block-start: var(--_ov-gap); inset-inline-start: var(--_ov-gap); }
+		&[pos="tc"] { inset-block-start: var(--_ov-gap); inset-inline-start: 50%; translate: -50% 0; }
+		&[pos="tr"] { inset-block-start: var(--_ov-gap); inset-inline-end: var(--_ov-gap); }
+		&[pos="cl"] { inset-block-start: 50%; inset-inline-start: var(--_ov-gap); translate: 0 -50%; }
+		&[pos="cc"] { inset-block-start: 50%; inset-inline-start: 50%; translate: -50% -50%; }
+		&[pos="cr"] { inset-block-start: 50%; inset-inline-end: var(--_ov-gap); translate: 0 -50%; }
+		&[pos="bl"] { inset-block-end: var(--_ov-gap); inset-inline-start: var(--_ov-gap); }
+		&[pos="bc"] { inset-block-end: var(--_ov-gap); inset-inline-start: 50%; translate: -50% 0; }
+		&[pos="br"] { inset-block-end: var(--_ov-gap); inset-inline-end: var(--_ov-gap); }
+
+		/* color="" maps the semantic palette */
+		&[color="info"]    { --ui-card-ribbon-bg: var(--color-info);    --ui-card-badge-bg: var(--color-info); }
+		&[color="success"] { --ui-card-ribbon-bg: var(--color-success); --ui-card-badge-bg: var(--color-success); }
+		&[color="warning"] { --ui-card-ribbon-bg: var(--color-warning); --ui-card-badge-bg: var(--color-warning); }
+		&[color="error"]   { --ui-card-ribbon-bg: var(--color-error);   --ui-card-badge-bg: var(--color-error); }
 	}
 
-	/* === layout arrangement === */
+	/* ribbon — straight banner; variant="diagonal" = 45° corner banner (clipped) */
+	:where(ui-media) [data-part="ribbon"] {
+		background: var(--ui-card-ribbon-bg, var(--color-accent));
+		color: var(--ui-card-ribbon-ink, #fff);
+		letter-spacing: var(--tracking-wide, 0.05em);
+		padding: 0.3em 0.8em;
+		text-transform: uppercase;
+
+		&[variant~="diagonal"] {
+			--_ov-gap: 0;
+			inline-size: var(--ui-card-ribbon-diag-width, 11rem);
+			inset-block: var(--ui-card-ribbon-diag-offset, 1.6rem) auto;
+			padding-block: 0.3em;
+			text-align: center;
+
+			&:not([pos]), &[pos="tl"] { inset-inline: calc(-1 * var(--ui-card-ribbon-diag-pull, 3rem)) auto; rotate: -45deg; }
+			&[pos="tr"] { inset-inline: auto calc(-1 * var(--ui-card-ribbon-diag-pull, 3rem)); rotate: 45deg; }
+			&[pos="bl"] { inset-block: auto var(--ui-card-ribbon-diag-offset, 1.6rem); inset-inline: calc(-1 * var(--ui-card-ribbon-diag-pull, 3rem)) auto; rotate: 45deg; }
+			&[pos="br"] { inset-block: auto var(--ui-card-ribbon-diag-offset, 1.6rem); inset-inline: auto calc(-1 * var(--ui-card-ribbon-diag-pull, 3rem)); rotate: -45deg; }
+		}
+	}
+
+	/* badge — pill */
+	:where(ui-media) [data-part="badge"] {
+		background: var(--ui-card-badge-bg, var(--color-accent));
+		border-radius: var(--radius-pill, 100px);
+		color: var(--ui-card-badge-ink, #fff);
+		font-weight: var(--font-weight-medium, 500);
+		padding: 0.4em 0.7em;
+	}
+
+
+	/* ============================================================
+	   LAYOUT — arrangement, split, overlay, scrim
+	   ============================================================ */
+
+	/* horizontal arrangement + sp() column split */
 	:where([variant~="horizontal"], [variant~="horizontal-r"]) {
 		--ui-card-cols: var(--ui-card-split, 1fr 1fr);
 	}
-	/* === sp() token === */
 	:where([variant*="sp(1/1)"]) { --ui-card-split: 1fr 1fr; }
 	:where([variant*="sp(1/2)"]) { --ui-card-split: 1fr 2fr; }
 	:where([variant*="sp(2/1)"]) { --ui-card-split: 2fr 1fr; }
@@ -214,14 +338,10 @@
 		min-block-size: 0;
 	}
 
-	/* === reversed order === */
+	/* reversed order (content first) */
 	:where([variant~="vertical-r"], [variant~="horizontal-r"]) ui-content { order: -1; }
 
-	/* === media-only / content-only === */
-	:where([variant~="media-only"]) ui-content { display: none; }
-	:where([variant~="content-only"]) ui-media { display: none; }
-
-	/* === ov() — stack + place content over media (no scrim) === */
+	/* ov() — stack + place content over media (no scrim) */
 	:where([variant*="ov("]) :is(ui-media, ui-content) { grid-area: 1 / 1; }
 	:where([variant*="ov("]) ui-content {
 		color: var(--ui-card-overlay-ink, #fff);
@@ -237,8 +357,7 @@
 	:where([variant*="ov(bc)"]) ui-content { justify-content: end;    align-items: center; text-align: center; }
 	:where([variant*="ov(br)"]) ui-content { justify-content: end;    align-items: end;    text-align: end;    }
 
-	/* === sc() — scrim: darkening gradient over media for legible overlaid text === */
-	/* shared scrim color + 9 directional gradients (defined once) */
+	/* sc() — scrim: darkening gradient over media. Colour + 9 gradients (once) */
 	:where([variant*="ov("], [variant*="sc"]) {
 		--ui-card-scrim-c: var(--ui-card-scrim-color, rgb(0 0 0 / 0.65));
 		--ui-card-scrim-tl: linear-gradient(to bottom right, var(--ui-card-scrim-c), #0000 60%);
@@ -271,7 +390,7 @@
 	:where([variant*="sc(bl)"]) { --ui-card-scrim: var(--ui-card-scrim-bl); }
 	:where([variant*="sc(bc)"]) { --ui-card-scrim: var(--ui-card-scrim-bc); }
 	:where([variant*="sc(br)"]) { --ui-card-scrim: var(--ui-card-scrim-br); }
-	/* paint the scrim only when the `sc` keyword is present; flip ink to light */
+	/* paint the scrim only when the `sc` keyword is present */
 	:where([variant*="sc"]) ui-media { position: relative; }
 	:where([variant*="sc"]) ui-media::after {
 		background: var(--ui-card-scrim, var(--ui-card-scrim-default, var(--ui-card-scrim-bc)));
@@ -282,187 +401,67 @@
 	}
 	:where([variant*="sc"]) ui-media [data-part="caption"] { position: relative; z-index: 1; }
 
-	/* gallery + carousel: flex scroll-snap row (overrides the absolute
-	   image stack). gallery = bare scroller; carousel adds controls below. */
-	:where([variant~="gallery"], [variant~="carousel"]) ui-media {
+
+	/* ============================================================
+	   UI-CONTENT — container, visibility, parts
+	   ============================================================ */
+
+	/* content column */
+	:where([variant]) ui-content {
 		display: flex;
-		overflow-x: auto;
-		overscroll-behavior-x: contain;
-		scroll-snap-type: x mandatory;
+		flex-direction: column;
+		font-size: var(--ui-card-fs);
+		gap: var(--ui-card-row-gap, var(--spacing-sm));
+		padding: var(--ui-card-p);
+
+		& > * { margin: 0; text-box: cap alphabetic; }
+	}
+
+	/* media-only / content-only visibility (must follow the display:flex above) */
+	:where([variant~="media-only"]) ui-content { display: none; }
+	:where([variant~="content-only"]) ui-media { display: none; }
+
+	/* scroll fade-shadow: [scroll] — scrollable content with masked edges */
+	@property --ui-scroll-fade-start { syntax: "<length>"; inherits: false; initial-value: 0px; }
+	@property --ui-scroll-fade-end   { syntax: "<length>"; inherits: false; initial-value: 0px; }
+
+	@keyframes ui-scroll-fade {
+		0%        { --ui-scroll-fade-start: 0px; }
+		10%, 100% { --ui-scroll-fade-start: var(--ui-scroll-fade-size, 3rem); }
+		0%, 90%   { --ui-scroll-fade-end: var(--ui-scroll-fade-size, 3rem); }
+		100%      { --ui-scroll-fade-end: 0px; }
+	}
+
+	:where(ui-card[scroll]) ui-content {
+		max-block-size: var(--ui-card-scroll-bs, 100%);
+		overflow-y: auto;
+		overscroll-behavior: contain;
 		scrollbar-width: thin;
 	}
-	:where([variant~="gallery"], [variant~="carousel"]) ui-media > :is(img, video) {
-		block-size: 100%;
-		flex: 0 0 100%;
-		inline-size: 100%;
-		inset: auto;
-		position: static;
-		scroll-snap-align: start;
-	}
-	/* slide animation for button/marker nav (swipe is native) */
-	@media (prefers-reduced-motion: no-preference) {
-		:where([variant~="gallery"], [variant~="carousel"]) ui-media { scroll-behavior: smooth; }
-	}
 
-	/* carousel controls — CSS-only dots + arrows. Chromium-only; elsewhere
-	   `carousel` is just the scroller above. Positioned with anchor()
-	   against each pseudo's own scroller, so many coexist with no anchor-name. */
-	@supports (scroll-marker-group: after) {
-		/* hide the scrollbar when controls are shown */
-		:where([variant~="carousel"], [variant~="gallery"][controls]) ui-media { scrollbar-width: none; }
-
-		/* dots — for `carousel`, or controls~="dots" (union written once via nesting) */
-		:where(
-			[variant~="carousel"]:not([controls]),
-			[variant~="carousel"][controls~="dots"],
-			[variant~="gallery"][controls~="dots"]
-		) {
-			& ui-media { scroll-marker-group: after; }
-
-			/* marker group: anchored bottom-centre of the frame */
-			& ui-media::scroll-marker-group {
-				display: flex;
-				gap: var(--ui-card-dots-gap, 0.5rem);
-				justify-self: anchor-center;
-				position: absolute;
-				position-anchor: auto;
-				top: calc(anchor(bottom) - var(--ui-card-overlay-gap, 0.75rem) - var(--ui-card-dot-size, 0.6rem));
-				z-index: 3;
-			}
-			& ui-media > :is(img, video)::scroll-marker {
-				background: var(--ui-card-dot-bg, rgb(255 255 255 / 0.5));
-				block-size: var(--ui-card-dot-size, 0.6rem);
-				border: var(--ui-card-dot-border, 0);
-				border-radius: var(--radius-circle, 50%);
-				content: "";
-				cursor: pointer;
-				inline-size: var(--ui-card-dot-size, 0.6rem);
-			}
-			& ui-media > :is(img, video)::scroll-marker:target-current {
-				background: var(--ui-card-dot-active, #fff);
-			}
-		}
-
-		/* arrows — for `carousel`, or controls~="arrows" */
-		:where(
-			[variant~="carousel"]:not([controls]),
-			[variant~="carousel"][controls~="arrows"],
-			[variant~="gallery"][controls~="arrows"]
-		) {
-			/* chevron = centred background SVG (font glyphs sit off-baseline).
-			   content:"" generates the button; override icon via the url() tokens. */
-			& ui-media::scroll-button(*) {
-				aspect-ratio: 1;
-				background-color: var(--ui-card-arrow-bg, rgb(255 255 255 / 0.75));
-				background-position: center;
-				background-repeat: no-repeat;
-				background-size: var(--ui-card-arrow-glyph-size, 45%);
-				border: var(--ui-card-arrow-border, 0);
-				border-radius: var(--ui-card-arrow-radius, var(--radius-circle, 50%));
-				content: "" / "";
-				cursor: pointer;
-				inline-size: var(--ui-card-arrow-size, 2rem);
-				position: absolute;
-				position-anchor: auto;
-				/* centre via calc, NOT translate — a transform offsets the paint
-				   box from the hit box on anchored scroll-buttons, so clicks on
-				   the visible glyph miss. */
-				top: calc(anchor(center) - var(--ui-card-arrow-size, 2rem) / 2);
-				z-index: 3;
-			}
-			& ui-media::scroll-button(*):hover { background-color: var(--ui-card-arrow-bg-hover, rgb(255 255 255 / 0.95)); }
-			& ui-media::scroll-button(*):disabled { cursor: default; opacity: 0; pointer-events: none; }
-			& ui-media::scroll-button(left) {
-				background-image: var(--ui-card-arrow-prev, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 18l-6-6 6-6'/%3E%3C/svg%3E"));
-				content: "" / "Previous";
-				left: calc(anchor(left) + var(--ui-card-overlay-gap, 0.75rem));
-			}
-			& ui-media::scroll-button(right) {
-				background-image: var(--ui-card-arrow-next, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E"));
-				content: "" / "Next";
-				right: calc(anchor(right) + var(--ui-card-overlay-gap, 0.75rem));
+	@supports (animation-timeline: scroll()) {
+		@media (prefers-reduced-motion: no-preference) {
+			:where(ui-card[scroll]) ui-content {
+				animation: ui-scroll-fade linear;
+				animation-timeline: --ui-scroll;
+				mask: linear-gradient(to bottom, #0000, #000 var(--ui-scroll-fade-start) calc(100% - var(--ui-scroll-fade-end)), #0000);
+				scroll-timeline: --ui-scroll block;
 			}
 		}
 	}
 
-	/* === media overlays: ribbon + badge ===
-	   absolute over the media, placed with the 9-code pos() system
-	   (shared with ov()/sc()/op()). color="" maps semantic palettes. */
-	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"]) {
-		--_ov-gap: var(--ui-card-overlay-gap, 0.75rem);
-		font-size: calc(var(--ui-card-fs, 1rem) * 0.72);
-		font-weight: var(--font-weight-bold, 700);
-		line-height: 1;
-		margin: 0;
-		position: absolute;
-		width: max-content;
-		z-index: 2;
-	}
+	/* --- content parts (styled by data-part, not tag name) --- */
 
-	/* 9-position placement (default = tl) */
-	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"]):not([pos]),
-	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="tl"] { inset-block-start: var(--_ov-gap); inset-inline-start: var(--_ov-gap); }
-	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="tc"] { inset-block-start: var(--_ov-gap); inset-inline-start: 50%; translate: -50% 0; }
-	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="tr"] { inset-block-start: var(--_ov-gap); inset-inline-end: var(--_ov-gap); }
-	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="cl"] { inset-block-start: 50%; inset-inline-start: var(--_ov-gap); translate: 0 -50%; }
-	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="cc"] { inset-block-start: 50%; inset-inline-start: 50%; translate: -50% -50%; }
-	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="cr"] { inset-block-start: 50%; inset-inline-end: var(--_ov-gap); translate: 0 -50%; }
-	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="bl"] { inset-block-end: var(--_ov-gap); inset-inline-start: var(--_ov-gap); }
-	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="bc"] { inset-block-end: var(--_ov-gap); inset-inline-start: 50%; translate: -50% 0; }
-	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[pos="br"] { inset-block-end: var(--_ov-gap); inset-inline-end: var(--_ov-gap); }
-
-	/* ribbon — straight banner */
-	:where(ui-media) [data-part="ribbon"] {
-		background: var(--ui-card-ribbon-bg, var(--color-accent));
-		color: var(--ui-card-ribbon-ink, #fff);
-		letter-spacing: var(--tracking-wide, 0.05em);
-		padding: 0.3em 0.8em;
-		text-transform: uppercase;
-	}
-
-	/* badge — pill */
-	:where(ui-media) [data-part="badge"] {
-		background: var(--ui-card-badge-bg, var(--color-accent));
-		border-radius: var(--radius-pill, 100px);
-		color: var(--ui-card-badge-ink, #fff);
-		font-weight: var(--font-weight-medium, 500);
-		padding: 0.4em 0.7em;
-	}
-
-	/* ribbon variant="diagonal" — 45° corner banner (corners only).
-	   ui-media's overflow:hidden clips the tails. */
-	:where(ui-media) [data-part="ribbon"][variant~="diagonal"] {
-		--_ov-gap: 0;
-		inline-size: var(--ui-card-ribbon-diag-width, 11rem);
-		inset-block: var(--ui-card-ribbon-diag-offset, 1.6rem) auto;
-		padding-block: 0.3em;
-		text-align: center;
-		width: auto;
-	}
-	:where(ui-media) [data-part="ribbon"][variant~="diagonal"]:not([pos]),
-	:where(ui-media) [data-part="ribbon"][variant~="diagonal"][pos="tl"] { inset-inline: calc(-1 * var(--ui-card-ribbon-diag-pull, 3rem)) auto; rotate: -45deg; }
-	:where(ui-media) [data-part="ribbon"][variant~="diagonal"][pos="tr"] { inset-inline: auto calc(-1 * var(--ui-card-ribbon-diag-pull, 3rem)); rotate: 45deg; }
-	:where(ui-media) [data-part="ribbon"][variant~="diagonal"][pos="bl"] { inset-block: auto var(--ui-card-ribbon-diag-offset, 1.6rem); inset-inline: calc(-1 * var(--ui-card-ribbon-diag-pull, 3rem)) auto; rotate: 45deg; }
-	:where(ui-media) [data-part="ribbon"][variant~="diagonal"][pos="br"] { inset-block: auto var(--ui-card-ribbon-diag-offset, 1.6rem); inset-inline: auto calc(-1 * var(--ui-card-ribbon-diag-pull, 3rem)); rotate: -45deg; }
-
-	/* semantic colors for ribbon + badge */
-	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[color="info"]    { --ui-card-ribbon-bg: var(--color-info);    --ui-card-badge-bg: var(--color-info); }
-	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[color="success"] { --ui-card-ribbon-bg: var(--color-success); --ui-card-badge-bg: var(--color-success); }
-	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[color="warning"] { --ui-card-ribbon-bg: var(--color-warning); --ui-card-badge-bg: var(--color-warning); }
-	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"])[color="error"]   { --ui-card-ribbon-bg: var(--color-error);   --ui-card-badge-bg: var(--color-error); }
-
-	/* === content parts === */
-
-	/* === eyebrow === */
+	/* eyebrow */
 	:where(ui-content) [data-part="eyebrow"] {
 		color: var(--ui-card-eyebrow-color, var(--color-accent));
-		font-size: calc(var(--ui-card-fs) * 0.78);
+		font-size: var(--ui-card-eyebrow-fs, calc(var(--ui-card-fs) * 0.78));
 		font-weight: var(--font-weight-medium, 500);
 		letter-spacing: var(--tracking-wide, 0.05em);
 		text-transform: uppercase;
 	}
 
-	/* === headline === */
+	/* headline (and bare h2–h6) */
 	:where(ui-content) :is([data-part="headline"], h2, h3, h4, h5, h6) {
 		font-size: var(--ui-card-headline);
 		font-weight: var(--ui-card-headline-weight, var(--font-weight-bold, 700));
@@ -470,33 +469,33 @@
 		line-height: var(--line-height-tight, 1.15);
 	}
 
-	/* === subheadline === */
+	/* subheadline */
 	:where(ui-content) [data-part="subheadline"] {
 		color: var(--ui-card-subheadline-color, var(--ui-card-muted));
-		font-size: calc(var(--ui-card-fs) * 0.88);
+		font-size: var(--ui-card-subheadline-fs, calc(var(--ui-card-fs) * 0.88));
 		font-weight: var(--font-weight-normal, 400);
 	}
 
-	/* === summary === */
+	/* summary */
 	:where(ui-content) [data-part="summary"] {
 		color: var(--ui-card-summary-color, inherit);
-		font-size: var(--ui-card-fs);
+		font-size: var(--ui-card-summary-fs, var(--ui-card-fs));
 		line-height: var(--line-height-normal, 1.5);
 	}
 
-	/* === meta / caption === */
+	/* meta / caption */
 	:where([variant]) :is([data-part="meta"], [data-part="caption"]) {
-		color: var(--ui-card-muted);
-		font-size: calc(var(--ui-card-fs) * 0.75);
+		color: var(--ui-card-meta-color, var(--ui-card-muted));
+		font-size: var(--ui-card-meta-fs, calc(var(--ui-card-fs) * 0.75));
 	}
 
-	/* === byline === */
+	/* byline (author row; inner <img> becomes a round avatar) */
 	:where(ui-content) [data-part="byline"] {
 		align-items: center;
 		display: flex;
-		font-size: calc(var(--ui-card-fs) * 0.82);
+		font-size: var(--ui-card-byline-fs, calc(var(--ui-card-fs) * 0.82));
 		font-style: normal;
-		gap: var(--spacing-sm);
+		gap: var(--ui-card-byline-gap, var(--spacing-sm));
 
 		& img {
 			aspect-ratio: 1;
@@ -506,11 +505,11 @@
 		}
 	}
 
-	/* === tags === */
+	/* tags (pill list) */
 	:where(ui-content) [data-part="tags"] {
 		display: flex;
 		flex-wrap: wrap;
-		font-size: calc(var(--ui-card-fs) * 0.72);
+		font-size: var(--ui-card-tags-fs, calc(var(--ui-card-fs) * 0.72));
 		gap: var(--ui-card-tags-gap, var(--spacing-xs, 0.35rem));
 		list-style: none;
 		margin: 0;
@@ -521,28 +520,31 @@
 			background: var(--ui-card-tag-bg, var(--color-button, hsl(0, 0%, 90%)));
 			border-radius: var(--radius-pill, 100px);
 			color: var(--ui-card-tag-color, inherit);
-			padding: 0.2em 0.7em;
+			padding: var(--ui-card-tag-padding, 0.2em 0.7em);
 			text-decoration: none;
 		}
 	}
 
-	/* === actions === */
+	/* actions (button / link row) */
 	:where(ui-content) [data-part="actions"] {
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--ui-card-actions-gap, var(--spacing-sm));
 	}
 
-	/* === footer === */
+	/* footer (trailing meta) */
 	:where(ui-content) [data-part="footer"] {
-		color: var(--ui-card-muted);
+		color: var(--ui-card-footer-color, var(--ui-card-muted));
 		display: flex;
 		flex-wrap: wrap;
-		font-size: calc(var(--ui-card-fs) * 0.78);
-		gap: var(--spacing-sm);
+		font-size: var(--ui-card-footer-fs, calc(var(--ui-card-fs) * 0.78));
+		gap: var(--ui-card-footer-gap, var(--spacing-sm));
 	}
 
-	/* === theme: th() token === */
+
+	/* ============================================================
+	   THEMES — th()
+	   ============================================================ */
 	:where([variant*="th(dark)"]) {
 		--ui-card-bg: var(--ui-card-dark-bg, #1f2937);
 		--ui-card-muted: color-mix(in oklab, currentColor 60%, transparent);
@@ -558,7 +560,13 @@
 		color: var(--ui-card-brand-ink, #fff);
 	}
 
-	/* === responsive: variant-md (>=25rem) === */
+
+	/* ============================================================
+	   RESPONSIVE — container tiers (variant-md / variant-lg)
+	   re-apply arrangement / ar() / fs() / sp() at the card's own width
+	   ============================================================ */
+
+	/* variant-md (>= 25rem) */
 	@container (inline-size >= 25rem) {
 		:where(ui-card[variant-md~="vertical"]) > cq-box,
 		:where(ui-card[variant-md~="vertical-r"]) > cq-box   { --ui-card-cols: 1fr; }
@@ -594,7 +602,7 @@
 		:where(ui-card[variant-md*="ar(21/9)"]) > cq-box  { --ui-card-ar: 21 / 9; }
 	}
 
-	/* === responsive: variant-lg (>=44rem) === */
+	/* variant-lg (>= 44rem) */
 	@container (inline-size >= 44rem) {
 		:where(ui-card[variant-lg~="vertical"]) > cq-box,
 		:where(ui-card[variant-lg~="vertical-r"]) > cq-box   { --ui-card-cols: 1fr; }

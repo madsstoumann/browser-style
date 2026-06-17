@@ -192,7 +192,7 @@
 	</div>
 
 	<!-- ============================================================
-	     Media — ribbon, badge, video, gallery (inside <ui-media>)
+	     Media — ribbon, badge, video, carousel (inside <ui-media>)
 	     ============================================================ -->
 	<h2>Media overlays — ribbon &amp; badge</h2>
 	<p class="note">Overlays live inside <code>&lt;ui-media&gt;</code>, placed with the same 9-code <code>pos()</code> system (<code>pos="tl…br"</code>). <code>color=""</code> maps the semantic palette. Ribbons can be straight (default) or <code>variant="diagonal"</code>.</p>
@@ -242,9 +242,9 @@
 		</ui-card>
 	</div>
 
-	<!-- Video + gallery -->
-	<h2>Video &amp; gallery</h2>
-	<p class="note"><code>&lt;ui-media&gt;</code> accepts a <code>&lt;video&gt;</code> (native controls/poster) just like an image. Add <code>variant="gallery"</code> for multiple sources — a flex scroll-snap row, no JS.</p>
+	<!-- Video + bare scroller -->
+	<h2>Video &amp; multi-source scroller</h2>
+	<p class="note"><code>&lt;ui-media&gt;</code> accepts a <code>&lt;video&gt;</code> (native controls/poster) just like an image. Add <code>variant="carousel"</code> for multiple sources — a flex scroll-snap row. <code>controls="none"</code> leaves it a bare swipe scroller, no JS.</p>
 	<div class="grid grid-2">
 		<ui-card variant="vertical ar(16/9)">
 			<cq-box>
@@ -260,7 +260,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="gallery vertical ar(16/9)">
+		<ui-card variant="carousel vertical ar(16/9)" controls="none">
 			<cq-box>
 				<ui-media>
 					<img src="https://browser.style/assets/images/destinations.png" alt="" loading="lazy">
@@ -271,8 +271,8 @@
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Travel</small>
-					<h2 data-part="headline">Slow-travel gallery</h2>
-					<p data-part="summary">Swipe the media — four sources in a scroll-snap row.</p>
+					<h2 data-part="headline">Bare swipe scroller</h2>
+					<p data-part="summary">Four sources in a scroll-snap row — <code>controls="none"</code>, swipe only.</p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -280,7 +280,7 @@
 
 	<!-- Carousel — CSS-only dots + arrows -->
 	<h2>Carousel — <code>variant="carousel"</code></h2>
-	<p class="note">Same scroll-snap row as <code>gallery</code>, plus CSS-only navigation dots (<code>::scroll-marker</code>) and prev/next arrows (<code>::scroll-button()</code>). No JavaScript. Chromium-only for now — elsewhere it degrades to the plain swipe scroller.</p>
+	<p class="note">A scroll-snap row of sources, plus CSS-only navigation dots (<code>::scroll-marker</code>) and prev/next arrows (<code>::scroll-button()</code>) shown by default. No JavaScript. Chromium-only for now — elsewhere it degrades to the plain swipe scroller.</p>
 	<div class="grid grid-2">
 		<ui-card variant="carousel vertical ar(16/9) fs(lg)">
 			<cq-box>
@@ -317,9 +317,9 @@
 
 	<!-- Carousel controls — pick pieces + theme them -->
 	<h2>Carousel controls &amp; theming</h2>
-	<p class="note">Use a <code>controls</code> attribute on a <code>gallery</code> to opt into <code>dots</code>, <code>arrows</code>, or both. Colours, dot size and the arrow glyphs are all tokens.</p>
+	<p class="note">Use the <code>controls</code> attribute to pick <code>dots</code>, <code>arrows</code>, both, or <code>none</code>. Colours, dot size and the arrow glyphs are all tokens.</p>
 	<div class="grid grid-3">
-		<ui-card variant="gallery vertical ar(4/3) fs(sm)" controls="dots">
+		<ui-card variant="carousel vertical ar(4/3) fs(sm)" controls="dots">
 			<cq-box>
 				<ui-media>
 					<img src="https://browser.style/assets/images/destinations.png" alt="" loading="lazy">
@@ -330,7 +330,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="gallery vertical ar(4/3) fs(sm)" controls="arrows">
+		<ui-card variant="carousel vertical ar(4/3) fs(sm)" controls="arrows">
 			<cq-box>
 				<ui-media>
 					<img src="https://browser.style/assets/images/gastronomy.png" alt="" loading="lazy">
@@ -341,7 +341,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card class="svg-arrows" variant="gallery vertical ar(4/3) fs(sm)" controls="dots arrows"
+		<ui-card class="svg-arrows" variant="carousel vertical ar(4/3) fs(sm)" controls="dots arrows"
 			style="--ui-card-dot-bg: rgb(0 0 0 / 0.25); --ui-card-dot-active: var(--color-accent); --ui-card-arrow-bg: var(--color-accent);">
 			<cq-box>
 				<ui-media>

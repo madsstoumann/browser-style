@@ -65,7 +65,7 @@ pick the semantically correct element for the context (a `<p>` in a card body, a
 | `byline` | `<address>` | author row; an `<img>` inside becomes a round avatar |
 | `meta` | `<small>` | date, reading time |
 | `caption` | `<small>` | media caption (place inside `<ui-media>`) |
-| `ribbon` | `<span>` | media banner (place inside `<ui-media>`) — see [Media](#media--overlays-video-gallery) |
+| `ribbon` | `<span>` | media banner (place inside `<ui-media>`) — see [Media](#media--overlays-video-carousel) |
 | `badge` | `<span>` | media sticker/pill (place inside `<ui-media>`) |
 | `tags` | `<ul>` | pill list (style applies to `<a>` / `<li>`) |
 | `actions` | `<nav>` | button / link row |
@@ -108,11 +108,11 @@ darken the image. For legible text over a busy photo, add a **scrim** with
 | `sc` / `sc(pos)` | scrim over media for overlaid text (see below) |
 | `th(dark \| brand)` | colour theme (see below) |
 
-## Media — overlays, video, gallery
+## Media — overlays, video, carousel
 
 `<ui-media>` is the media frame. By default it stacks a single `<img>` (or
 `<video>`) edge-to-edge with `object-fit: cover`. It also takes overlays and a
-multi-source gallery mode.
+multi-source carousel mode.
 
 ### Ribbon &amp; badge
 
@@ -150,30 +150,12 @@ Use native attributes — no JS:
 </ui-media>
 ```
 
-### Gallery — `variant="gallery"`
-
-Add the `gallery` token to put **multiple sources** in a horizontal
-scroll-snap row (CSS scroller, no JS). Each child image/video snaps to the
-frame:
-
-```html
-<ui-card variant="gallery vertical ar(16/9)">
-  <cq-box>
-    <ui-media>
-      <img src="1.jpg" alt=""><img src="2.jpg" alt=""><img src="3.jpg" alt="">
-    </ui-media>
-    <ui-content> … </ui-content>
-  </cq-box>
-</ui-card>
-```
-
-Overlays (`ribbon` / `badge`) stay pinned over the scroller. There is no
-live "1 / N" counter — that would need JS.
-
 ### Carousel — `variant="carousel"`
 
-Same scroll-snap row as `gallery`, **plus** CSS-only navigation: a row of
-dots and prev/next arrows — no JavaScript, no extra markup.
+Add the `carousel` token to put **multiple sources** in a horizontal
+scroll-snap row (CSS scroller, no JS). Each child image/video snaps to the
+frame. By default it also shows CSS-only navigation — a row of dots and
+prev/next arrows — with no extra markup:
 
 ```html
 <ui-card variant="carousel vertical ar(16/9)">
@@ -185,6 +167,11 @@ dots and prev/next arrows — no JavaScript, no extra markup.
   </cq-box>
 </ui-card>
 ```
+
+Use the [`controls`](#picking-controls--the-controls-attribute) attribute to
+pick which controls show — including **`controls="none"`** for a bare swipe
+scroller (no dots, no arrows). Overlays (`ribbon` / `badge`) stay pinned over
+the scroller. There is no live "1 / N" counter — that would need JS.
 
 ### How it works — the scroll pseudo-elements
 
@@ -261,19 +248,21 @@ background.
 
 ### Picking controls — the `controls` attribute
 
-`variant="carousel"` shows **both** dots and arrows. To choose pieces — or to
-add controls to a plain `gallery` — use the **`controls`** attribute (a
-space-separated list of `dots` / `arrows`):
+`variant="carousel"` shows **both** dots and arrows by default. Use the
+**`controls`** attribute (a space-separated list of `dots` / `arrows`) to choose
+which appear:
 
 ```html
-<ui-card variant="gallery" controls="dots">…</ui-card>          <!-- dots only -->
-<ui-card variant="gallery" controls="arrows">…</ui-card>        <!-- arrows only -->
-<ui-card variant="gallery" controls="dots arrows">…</ui-card>   <!-- both -->
-<ui-card variant="carousel" controls="arrows">…</ui-card>       <!-- override: carousel, arrows only -->
+<ui-card variant="carousel">…</ui-card>                          <!-- both (default) -->
+<ui-card variant="carousel" controls="dots">…</ui-card>          <!-- dots only -->
+<ui-card variant="carousel" controls="arrows">…</ui-card>        <!-- arrows only -->
+<ui-card variant="carousel" controls="dots arrows">…</ui-card>   <!-- both -->
+<ui-card variant="carousel" controls="none">…</ui-card>          <!-- bare swipe scroller -->
 ```
 
-`gallery` with no `controls` is the bare swipe scroller. A `controls` attribute
-on a `carousel` overrides its default "both".
+Any `controls` value without `dots`/`arrows` (e.g. `none`) yields a bare
+scroller — there is no separate `gallery` variant; a carousel with its controls
+turned off *is* the gallery.
 
 ### Theming the controls
 
@@ -304,13 +293,13 @@ pointing `--ui-card-arrow-prev/-next` at your own `url()` — set the stroke/fil
     --ui-card-arrow-next: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
   }
 </style>
-<ui-card class="svg-arrows" variant="gallery" controls="dots arrows">…</ui-card>
+<ui-card class="svg-arrows" variant="carousel" controls="dots arrows">…</ui-card>
 ```
 
 **Browser support:** the scroll-marker / scroll-button pseudo-elements are
 Chromium-only (Chrome/Edge 135+) and **not** Baseline. This is progressive
-enhancement: in Firefox/Safari `carousel` degrades to the plain `gallery`
-swipe scroller (dots/arrows simply don't appear). Everything is wrapped in
+enhancement: in Firefox/Safari `carousel` degrades to the plain swipe
+scroller (dots/arrows simply don't appear). Everything is wrapped in
 `@supports (scroll-marker-group: after)`.
 
 > Avoid combining `carousel` with `ov()` overlay content — the flex scroller
@@ -424,9 +413,18 @@ ui-card { --ui-card-radius: 0; --ui-card-shadow: none; }
 <ui-card variant="vertical" style="--ui-card-headline: clamp(1.5rem, 4cqi, 3rem);"> … </ui-card>
 ```
 
-Key tokens: `--ui-card-bg`, `--ui-card-radius`, `--ui-card-shadow`, `--ui-card-p`,
-`--ui-card-row-gap`, `--ui-card-fs`, `--ui-card-headline`,
-`--ui-card-eyebrow-color`, `--ui-card-overlay-ink`, `--ui-card-scrim-color`.
+Common ones: `--ui-card-bg`, `--ui-card-radius`, `--ui-card-shadow`,
+`--ui-card-p`, `--ui-card-fs`, `--ui-card-headline`. Every content part also
+exposes a font-size / colour / gap token (e.g. `--ui-card-eyebrow-fs`,
+`--ui-card-byline-gap`).
+
+```css
+/* e.g. bump the eyebrow and tighten the byline */
+ui-card { --ui-card-eyebrow-fs: 0.8rem; --ui-card-byline-gap: 0.25rem; }
+```
+
+**See [`ui-card-tokens.md`](ui-card-tokens.md) for the complete token reference**
+— every knob, grouped by section, with defaults.
 
 ## Demo
 
