@@ -98,8 +98,10 @@ degrade to a bare scroller elsewhere.
 |-------|---------|----------|
 | `--ui-card-ribbon-bg` | `var(--color-accent)` | ribbon background (also set by `color=""`) |
 | `--ui-card-ribbon-ink` | `#fff` | ribbon text |
+| `--ui-card-ribbon-weight` | `var(--font-weight-bold, 700)` | ribbon weight |
 | `--ui-card-badge-bg` | `var(--color-accent)` | badge background (also set by `color=""`) |
 | `--ui-card-badge-ink` | `#fff` | badge text |
+| `--ui-card-badge-weight` | `var(--font-weight-medium, 500)` | badge weight |
 | `--ui-card-ribbon-diag-width` | `11rem` | diagonal ribbon length |
 | `--ui-card-ribbon-diag-offset` | `1.6rem` | diagonal ribbon distance from corner |
 | `--ui-card-ribbon-diag-pull` | `3rem` | diagonal ribbon outward pull |
@@ -120,19 +122,19 @@ degrade to a bare scroller elsewhere.
 ## Content parts
 
 Each part takes a font-size token (falling back to a multiple of
-`--ui-card-fs`), plus colour / gap where relevant.
+`--ui-card-fs`), plus colour / weight / gap where relevant.
 
-| Part | font-size | colour | gap / spacing |
-|------|-----------|--------|---------------|
-| eyebrow | `--ui-card-eyebrow-fs` *(`fs × 0.78`)* | `--ui-card-eyebrow-color` *(`--color-accent`)* | — |
-| headline | `--ui-card-headline` | inherits | — |
-| subheadline | `--ui-card-subheadline-fs` *(`fs × 0.88`)* | `--ui-card-subheadline-color` *(`--ui-card-muted`)* | — |
-| summary | `--ui-card-summary-fs` *(`fs`)* | `--ui-card-summary-color` *(`inherit`)* | — |
-| meta / caption | `--ui-card-meta-fs` *(`fs × 0.75`)* | `--ui-card-meta-color` *(`--ui-card-muted`)* | — |
-| byline | `--ui-card-byline-fs` *(`fs × 0.82`)* | — | `--ui-card-byline-gap` *(`--spacing-sm`)*, `--ui-card-avatar-size` *(`2.25em`)* |
-| tags | `--ui-card-tags-fs` *(`fs × 0.72`)* | `--ui-card-tag-bg` *(`--color-button`)* / `--ui-card-tag-color` *(`inherit`)* | `--ui-card-tags-gap` *(`--spacing-xs`)*, `--ui-card-tag-padding` *(`0.2em 0.7em`)* |
-| actions | — | — | `--ui-card-actions-gap` *(`--spacing-sm`)* |
-| footer | `--ui-card-footer-fs` *(`fs × 0.78`)* | `--ui-card-footer-color` *(`--ui-card-muted`)* | `--ui-card-footer-gap` *(`--spacing-sm`)* |
+| Part | font-size | weight | colour | gap / spacing |
+|------|-----------|--------|--------|---------------|
+| eyebrow | `--ui-card-eyebrow-fs` *(`fs × 0.78`)* | `--ui-card-eyebrow-weight` *(medium)* | `--ui-card-eyebrow-color` *(`--color-accent`)* | — |
+| headline | `--ui-card-headline` | `--ui-card-headline-weight` *(bold)* | inherits | — |
+| subheadline | `--ui-card-subheadline-fs` *(`fs × 0.88`)* | `--ui-card-subheadline-weight` *(normal)* | `--ui-card-subheadline-color` *(`--ui-card-muted`)* | — |
+| summary | `--ui-card-summary-fs` *(`fs`)* | inherits | `--ui-card-summary-color` *(`inherit`)* | — |
+| meta / caption | `--ui-card-meta-fs` *(`fs × 0.75`)* | inherits | `--ui-card-meta-color` *(`--ui-card-muted`)* | — |
+| byline | `--ui-card-byline-fs` *(`fs × 0.82`)* | inherits | — | `--ui-card-byline-gap` *(`--spacing-sm`)*, `--ui-card-avatar-size` *(`2.25em`)* |
+| tags | `--ui-card-tags-fs` *(`fs × 0.72`)* | inherits | `--ui-card-tag-bg` *(`--color-button`)* / `--ui-card-tag-color` *(`inherit`)* | `--ui-card-tags-gap` *(`--spacing-xs`)*, `--ui-card-tag-padding` *(`0.2em 0.7em`)* |
+| actions | — | inherits | — | `--ui-card-actions-gap` *(`--spacing-sm`)* |
+| footer | `--ui-card-footer-fs` *(`fs × 0.78`)* | inherits | `--ui-card-footer-color` *(`--ui-card-muted`)* | `--ui-card-footer-gap` *(`--spacing-sm`)* |
 
 ## Themes — `th()`
 

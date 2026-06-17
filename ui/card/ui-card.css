@@ -262,7 +262,7 @@
 	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"]) {
 		--_ov-gap: var(--ui-card-overlay-gap, 0.75rem);
 		font-size: calc(var(--ui-card-fs, 1rem) * 0.72);
-		font-weight: var(--font-weight-bold, 700);
+		font-weight: var(--ui-card-ribbon-weight, var(--font-weight-bold, 700));
 		line-height: 1;
 		margin: 0;
 		position: absolute;
@@ -314,7 +314,7 @@
 		background: var(--ui-card-badge-bg, var(--color-accent));
 		border-radius: var(--radius-pill, 100px);
 		color: var(--ui-card-badge-ink, #fff);
-		font-weight: var(--font-weight-medium, 500);
+		font-weight: var(--ui-card-badge-weight, var(--font-weight-medium, 500));
 		padding: 0.4em 0.7em;
 	}
 
@@ -456,7 +456,7 @@
 	:where(ui-content) [data-part="eyebrow"] {
 		color: var(--ui-card-eyebrow-color, var(--color-accent));
 		font-size: var(--ui-card-eyebrow-fs, calc(var(--ui-card-fs) * 0.78));
-		font-weight: var(--font-weight-medium, 500);
+		font-weight: var(--ui-card-eyebrow-weight, var(--font-weight-medium, 500));
 		letter-spacing: var(--tracking-wide, 0.05em);
 		text-transform: uppercase;
 	}
@@ -473,7 +473,7 @@
 	:where(ui-content) [data-part="subheadline"] {
 		color: var(--ui-card-subheadline-color, var(--ui-card-muted));
 		font-size: var(--ui-card-subheadline-fs, calc(var(--ui-card-fs) * 0.88));
-		font-weight: var(--font-weight-normal, 400);
+		font-weight: var(--ui-card-subheadline-weight, var(--font-weight-normal, 400));
 	}
 
 	/* summary */
