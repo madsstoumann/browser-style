@@ -100,7 +100,7 @@ darken the image. For legible text over a busy photo, add a **scrim** with
 
 | Token | Effect |
 |-------|--------|
-| `ar(16/9 \| 1/1 \| 4/3 \| 3/4 \| 3/2 \| 2/3 \| 21/9 \| square \| portrait \| landscape \| panorama)` | media aspect-ratio |
+| `ar(1/1 \| 6/7 \| 3/4 \| 4/3 \| 3/2 \| 2/3 \| 16/9 \| 21/9)` | media aspect-ratio |
 | `op(tl…br)` | image object-position (9 positions) |
 | `fs(sm \| md \| lg \| xl)` | font-size tier (see below) |
 | `p(none \| xs \| sm \| md \| lg \| xl \| 2xl)` | content padding (maps to `--spacing-*`) |
@@ -370,23 +370,29 @@ white).
 
 ## Themes — `th()`
 
-`th(dark)` and `th(brand)` remap the card's colour tokens (surface, ink, eyebrow,
-tags). Add as a `variant` token:
+`th(dark)`, `th(brand)` and `th(subtle)` remap the card's colour tokens (surface,
+ink, eyebrow, tags). Add as a `variant` token:
 
 ```html
 <ui-card variant="vertical ar(16/9) th(dark)"> … </ui-card>
 <ui-card variant="vertical ar(16/9) th(brand)"> … </ui-card>
+<ui-card variant="vertical ar(16/9) th(subtle)"> … </ui-card>
 ```
 
+`th(subtle)` is a light, off-white surface (`--color-surface-alt`, not pure
+white) that keeps the default dark ink — useful for a card that sits one step
+off the page background. It flips with the surface token in dark mode.
+
 Each theme value is overridable — e.g. `--ui-card-dark-bg`, `--ui-card-dark-ink`,
-`--ui-card-dark-accent`, `--ui-card-brand-bg`, `--ui-card-brand-ink`.
+`--ui-card-dark-accent`, `--ui-card-brand-bg`, `--ui-card-brand-ink`,
+`--ui-card-subtle-bg`, `--ui-card-subtle-ink`.
 
 ## Responsive tiers — `variant-md` / `variant-lg`
 
 Because the grid lives on `<cq-box>`, a card can react to **its own width**. Add
 `variant-md` (applies at container width ≥ 25rem) and/or `variant-lg` (≥ 44rem)
 alongside the base `variant`; they re-apply **arrangement, `ar()`, `fs()`,
-`sp()`, `ov()`, `op()` and `sc`** at those breakpoints.
+`sp()`, `ov()`, `op()`, `p()` and `sc`** at those breakpoints.
 
 ```html
 <!-- vertical + small in a narrow grid cell; horizontal + larger when wide -->

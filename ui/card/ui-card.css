@@ -101,11 +101,8 @@
 	:where([variant*="ar("]) ui-media { min-block-size: 0; }
 
 	/* aspect-ratio: ar() token */
-	:where([variant*="ar(square)"])    { --ui-card-ar: 1 / 1; }
-	:where([variant*="ar(portrait)"])  { --ui-card-ar: 3 / 4; }
-	:where([variant*="ar(landscape)"]) { --ui-card-ar: 4 / 3; }
-	:where([variant*="ar(panorama)"])  { --ui-card-ar: 21 / 9; }
 	:where([variant*="ar(1/1)"])       { --ui-card-ar: 1 / 1; }
+	:where([variant*="ar(6/7)"])       { --ui-card-ar: 6 / 7; }
 	:where([variant*="ar(3/4)"])       { --ui-card-ar: 3 / 4; }
 	:where([variant*="ar(4/3)"])       { --ui-card-ar: 4 / 3; }
 	:where([variant*="ar(3/2)"])       { --ui-card-ar: 3 / 2; }
@@ -357,6 +354,21 @@
 	/* reversed order (content first) */
 	:where([variant~="vertical-r"], [variant~="horizontal-r"]) ui-content { order: -1; }
 
+	/* Equal-height grid rows stretch the card to its tallest sibling. For stacked
+	   layouts, don't stretch the tracks (which grows the media and floats the
+	   content) — keep media at its natural/aspect size and let the trailing slack
+	   collect at the outer edge: below content (vertical). For vertical-r the
+	   content stays at the top and the media sits flush at the bottom, slack
+	   between them (space-between).
+	   Overlay / horizontal / media-only / content-only still fill (stretch). */
+	:where([variant]) > cq-box { align-content: start; }
+	:where([variant~="vertical-r"]) > cq-box { align-content: space-between; }
+	:where(
+		[variant~="horizontal"], [variant~="horizontal-r"], [variant~="media-only"], [variant~="content-only"], [variant*="ov("],
+		[variant-md~="horizontal"], [variant-md~="horizontal-r"], [variant-md~="media-only"], [variant-md*="ov("],
+		[variant-lg~="horizontal"], [variant-lg~="horizontal-r"], [variant-lg~="media-only"], [variant-lg*="ov("]
+	) > cq-box { align-content: stretch; }
+
 	/* ov() — stack content over media + place it. Prop-driven so the responsive
 	   tiers (variant-md/-lg) can toggle the overlay at a breakpoint, and so any
 	   host (e.g. ui-reveal) gets the same behaviour. Defaults = no overlay. */
@@ -575,6 +587,12 @@
 		--ui-card-tag-bg: rgb(255 255 255 / 0.2);
 		color: var(--ui-card-brand-ink, #fff);
 	}
+	/* subtle — a light, off-white surface (not pure white). Keeps the default
+	   dark ink, so eyebrow/tags need no remap. Flips with the surface in dark mode. */
+	:where([variant*="th(subtle)"]) {
+		--ui-card-bg: var(--ui-card-subtle-bg, var(--color-surface-alt, #f1f1f1));
+		color: var(--ui-card-subtle-ink, var(--color-text, inherit));
+	}
 
 
 	/* ============================================================
@@ -608,8 +626,17 @@
 		:where([variant-md~="fs(lg)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-lg); --ui-card-headline: var(--ui-card-headline-lg); }
 		:where([variant-md~="fs(xl)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline: var(--ui-card-headline-xl); }
 
+		:where([variant-md~="p(none)"]) :is(cq-box, summary) { --ui-card-p: 0; }
+		:where([variant-md~="p(xs)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-xs); }
+		:where([variant-md~="p(sm)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-sm); }
+		:where([variant-md~="p(md)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-md); }
+		:where([variant-md~="p(lg)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-lg); }
+		:where([variant-md~="p(xl)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-xl); }
+		:where([variant-md~="p(2xl)"])  :is(cq-box, summary) { --ui-card-p: var(--spacing-2xl); }
+
 		:where([variant-md*="ar("]) :is(cq-box, summary) ui-media { min-block-size: 0; }
 		:where([variant-md*="ar(1/1)"]) :is(cq-box, summary)   { --ui-card-ar: 1 / 1; }
+		:where([variant-md*="ar(6/7)"]) :is(cq-box, summary)   { --ui-card-ar: 6 / 7; }
 		:where([variant-md*="ar(3/4)"]) :is(cq-box, summary)   { --ui-card-ar: 3 / 4; }
 		:where([variant-md*="ar(4/3)"]) :is(cq-box, summary)   { --ui-card-ar: 4 / 3; }
 		:where([variant-md*="ar(3/2)"]) :is(cq-box, summary)   { --ui-card-ar: 3 / 2; }
@@ -667,8 +694,17 @@
 		:where([variant-lg~="fs(lg)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-lg); --ui-card-headline: var(--ui-card-headline-lg); }
 		:where([variant-lg~="fs(xl)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline: var(--ui-card-headline-xl); }
 
+		:where([variant-lg~="p(none)"]) :is(cq-box, summary) { --ui-card-p: 0; }
+		:where([variant-lg~="p(xs)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-xs); }
+		:where([variant-lg~="p(sm)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-sm); }
+		:where([variant-lg~="p(md)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-md); }
+		:where([variant-lg~="p(lg)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-lg); }
+		:where([variant-lg~="p(xl)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-xl); }
+		:where([variant-lg~="p(2xl)"])  :is(cq-box, summary) { --ui-card-p: var(--spacing-2xl); }
+
 		:where([variant-lg*="ar("]) :is(cq-box, summary) ui-media { min-block-size: 0; }
 		:where([variant-lg*="ar(1/1)"]) :is(cq-box, summary)   { --ui-card-ar: 1 / 1; }
+		:where([variant-lg*="ar(6/7)"]) :is(cq-box, summary)   { --ui-card-ar: 6 / 7; }
 		:where([variant-lg*="ar(3/4)"]) :is(cq-box, summary)   { --ui-card-ar: 3 / 4; }
 		:where([variant-lg*="ar(4/3)"]) :is(cq-box, summary)   { --ui-card-ar: 4 / 3; }
 		:where([variant-lg*="ar(3/2)"]) :is(cq-box, summary)   { --ui-card-ar: 3 / 2; }

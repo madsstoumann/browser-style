@@ -121,7 +121,7 @@ Space-separated, combinable. Common ones:
 
 | Variant | Effect |
 |---|---|
-| `ar(…)` | Aspect ratio: `1/1` `3/4` `4/3` `3/2` `2/3` `16/9` `21/9`, or named `square` `portrait` `landscape` `panorama`. |
+| `ar(…)` | Aspect ratio: `1/1` `6/7` `3/4` `4/3` `3/2` `2/3` `16/9` `21/9`. |
 | `op(…)` | Image object-position: `tl tc tr cl cc cr bl bc br`. |
 | `overlay(…)` | Place `<ui-content>` over the media with a scrim: `tl tc tr cl cc cr bl bc br`. |
 | `fs(…)` | Font-size scale: `sm` `md` `lg` `xl`. |

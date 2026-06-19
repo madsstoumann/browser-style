@@ -150,6 +150,8 @@ Each part takes a font-size token (falling back to a multiple of
 | `--ui-card-dark-accent` | `#93c5fd` | `th(dark)` eyebrow |
 | `--ui-card-brand-bg` | `var(--color-accent)` | `th(brand)` background |
 | `--ui-card-brand-ink` | `#fff` | `th(brand)` text |
+| `--ui-card-subtle-bg` | `var(--color-surface-alt)` | `th(subtle)` background (off-white, not pure white) |
+| `--ui-card-subtle-ink` | `var(--color-text)` | `th(subtle)` text |
 
 ---
 

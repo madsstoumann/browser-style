@@ -154,7 +154,7 @@
 	     ============================================ -->
 	<h2>Cover story</h2>
 
-	<ui-card class="hero" variant="ar(16/9) fl(h) sq(md) vertical" variant-lg="ar(21/9) fs(xl) op(cc) ov(br) sc" style="--ui-card-headline-line-height:0.9;">
+	<ui-card class="hero" variant="ar(16/9) fl(h) sq(md) vertical" variant-lg="ar(21/9) fs(xl) op(cc) ov(br) p(lg) sc" style="--ui-card-headline-line-height:0.9;">
 		<cq-box>
 			<ui-media><img src="assets/band_girl_hero.jpg" alt="" loading="lazy"></ui-media>
 			<ui-content>
@@ -169,7 +169,7 @@
 	     ============================================ -->
 	<h2>Cover story — <code>&lt;ui-reveal&gt;</code> </h2>
 
-	<ui-reveal class="hero" icon="top right" type="expand" type-lg="scale" scroll variant="ar(16/9) sq(md) vertical" variant-lg="ar(21/9) fs(xl) op(cc) ov(bl) sc" style="--ui-reveal-content-bg:#1f2937;--ui-reveal-content-c:#f9fafb;--ui-card-headline-line-height:0.9;--ui-reveal-content-gap:1.25em;">
+	<ui-reveal class="hero" icon="top right" type="expand" type-lg="scale" scroll variant="ar(16/9) sq(md) vertical" variant-lg="ar(21/9) fs(xl) op(cc) ov(bl) p(lg) sc" style="--ui-reveal-content-bg:#1f2937;--ui-reveal-content-c:#f9fafb;--ui-card-headline-line-height:0.9;--ui-reveal-content-gap:1.25em;">
 		<details>
 			<summary>
 				<ui-media><img src="assets/band_girl_hero.jpg" alt="" loading="lazy"></ui-media>
@@ -179,7 +179,7 @@
 				</ui-content>
 				<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 			</summary>
-			<ui-content variant="fs(lg) th(dark) p(xl)">
+			<ui-content variant="fs(lg) p(xl) th(dark)">
 				<small data-part="eyebrow">Cover Story</small>
 				<h3 data-part="headline">The new sound of the small hours</h3>
 				<p data-part="summary">Nine bands, one late-night frequency. From darkwave basements to glitter-soaked arenas, this is the music our editors had on repeat all month — and the people making it.</p>
@@ -190,55 +190,53 @@
 	</ui-reveal>
 
 	<!-- ============================================
-	     media-only — 3 aspect ratios
+	     Quick info — plain <ui-card>s; the middle one reverses the
+	     media/content order with vertical-r.
 	     ============================================ -->
-	<h2>media-only — aspect ratios</h2>
+	<h2>Quick info</h2>
 
 	<div class="grid">
-		<ui-reveal icon="bottom right semi" type="expand" variant="media-only ar(1/1)">
-			<details>
-				<summary>
-					<ui-media><img src="assets/band_alternative.jpg" alt="Alternative band" loading="lazy"></ui-media>
-					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
-				</summary>
+		<ui-card variant="ar(6/7) op(tc)">
+			<cq-box>
+				<ui-media><img src="assets/band_britpop.jpg" alt="Camden Court" loading="lazy"></ui-media>
 				<ui-content>
-					<h3>ar(1/1)</h3>
-					<p>Square media, no content-area in the summary.</p>
+					<small data-part="eyebrow">Britpop</small>
+					<h3 data-part="headline">Camden Court</h3>
+					<p data-part="summary">Swaggering guitars and singalong choruses — kings of the back-room pub circuit.</p>
+					<small data-part="meta">Camden, London · Formed 1994 · For fans of a cheap-lager summer</small>
 				</ui-content>
-			</details>
-		</ui-reveal>
+			</cq-box>
+		</ui-card>
 
-		<ui-reveal icon="bottom right" type="expand" variant="media-only ar(3/4)">
-			<details>
-				<summary>
-					<ui-media><img src="assets/band_boys.jpg" alt="Boy band" loading="lazy"></ui-media>
-					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
-				</summary>
+		<ui-card variant="ar(3/4) op(cc) th(subtle) vertical-r">
+			<cq-box>
+				<ui-media><img src="assets/band_country.jpg" alt="Red Dirt Road" loading="lazy"></ui-media>
 				<ui-content>
-					<h3>ar(3/4)</h3>
-					<p>Portrait media.</p>
+					<small data-part="eyebrow">Country</small>
+					<h3 data-part="headline">Red Dirt Road</h3>
+					<p data-part="summary">Steel strings and long highways, recorded live in a barn with the doors thrown open.</p>
+					<small data-part="meta">Tennessee · Formed 2009 · For fans of towns that never let you leave</small>
 				</ui-content>
-			</details>
-		</ui-reveal>
+			</cq-box>
+		</ui-card>
 
-		<ui-reveal icon="bottom right" type="expand" variant="media-only ar(16/9)">
-			<details>
-				<summary>
-					<ui-media><img src="assets/band_girls.jpg" alt="Girl group" loading="lazy"></ui-media>
-					<ui-icon type="arrow down" aria-hidden="true"></ui-icon>
-				</summary>
+		<ui-card variant="ar(1/1) op(tc)">
+			<cq-box>
+				<ui-media><img src="assets/band_techno.jpg" alt="Pulse Theory" loading="lazy"></ui-media>
 				<ui-content>
-					<h3>ar(16/9)</h3>
-					<p>Widescreen media.</p>
+					<small data-part="eyebrow">Techno</small>
+					<h3 data-part="headline">Pulse Theory</h3>
+					<p data-part="summary">Concrete basements and four-to-the-floor — warehouse sets that run till sunrise. No faces, no interviews, just white-label twelve-inches that turn up in the right bags at the right hour, the machines doing all the talking.</p>
+					<small data-part="meta">Berlin · Anonymous by design · For fans of the hours nobody else wants</small>
 				</ui-content>
-			</details>
-		</ui-reveal>
+			</cq-box>
+		</ui-card>
 	</div>
 
 	<h2>What we're listening to</h2>
 
 	<div class="grid">
-		<ui-reveal class="thelure" icon="top right sm" icon-close="dark" type="flip" variant="ov(tl) ar(1/1) op(tc) sq(lg) hv(zoom)" scroll>
+		<ui-reveal class="thelure" icon="top right sm" icon-close="dark" type="flip" variant="ar(1/1) hv(zoom) op(tc) ov(tl) sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -258,7 +256,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="papermirror" icon="top right sm" icon-close="dark" type="flip" variant="ov(tc) ar(1/1) sq(lg) op(tc) hv(pan)" scroll>
+		<ui-reveal class="papermirror" icon="top right sm" icon-close="dark" type="flip" variant="ar(1/1) hv(pan) op(tc) ov(tc) sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -278,7 +276,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="skylinefive" icon="top left sm" icon-close="dark top right" type="flip" variant="ov(tr) ar(1/1) op(tc) sq(lg) hv(zoom)" scroll>
+		<ui-reveal class="skylinefive" icon="top left sm" icon-close="dark top right" type="flip" variant="ar(1/1) hv(zoom) op(tc) ov(tr) sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -298,7 +296,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="neonavenue" icon="top right sm" icon-close="dark" type="flip" variant="ov(cl) sc ar(1/1) op(tc) sq(lg) hv(pan)" scroll>
+		<ui-reveal class="neonavenue" icon="top right sm" icon-close="dark" type="flip" variant="ar(1/1) hv(pan) op(tc) ov(cl) sc sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -318,7 +316,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="camdencourt" icon="top right sm" icon-close="dark" type="flip" variant="ov(cc) sc ar(1/1) sq(lg) hv(zoom)" scroll>
+		<ui-reveal class="camdencourt" icon="top right sm" icon-close="dark" type="flip" variant="ar(1/1) hv(zoom) ov(cc) sc sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -338,7 +336,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="reddirtroad" icon="top right sm" icon-close="dark" type="flip" variant="ov(cr) sc ar(1/1) sq(lg) hv(pan)" scroll>
+		<ui-reveal class="reddirtroad" icon="top right sm" icon-close="dark" type="flip" variant="ar(1/1) hv(pan) ov(cr) sc sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -358,7 +356,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="glitterthrone" icon="top right sm" icon-close="dark" type="flip" variant="ov(bl) sc ar(1/1) sq(lg) hv(zoom)" scroll>
+		<ui-reveal class="glitterthrone" icon="top right sm" icon-close="dark" type="flip" variant="ar(1/1) hv(zoom) ov(bl) sc sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -378,7 +376,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="pulsetheory" icon="top right sm" icon-close="dark" type="flip" variant="ov(bc) ar(1/1) sq(lg) hv(pan)" scroll>
+		<ui-reveal class="pulsetheory" icon="top right sm" icon-close="dark" type="flip" variant="ar(1/1) hv(pan) ov(bc) sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -398,7 +396,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="halcyonwash" icon="top right sm" icon-close="dark" type="flip" variant="ov(br) ar(1/1) sq(lg) hv(zoom)" scroll>
+		<ui-reveal class="halcyonwash" icon="top right sm" icon-close="dark" type="flip" variant="ar(1/1) hv(zoom) ov(br) sq(lg)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -426,7 +424,7 @@
 	<p>Three from the lineup, up close — tap anywhere, front <em>or</em> back, to turn the card over. Links on the back still work.</p>
 
 	<div class="grid">
-		<ui-reveal type="flip" trigger="card" from="left" variant="ov(bl) sc ar(2/3) hv(track)">
+		<ui-reveal type="flip" trigger="card" from="left" variant="ar(2/3) hv(track) ov(bl) sc">
 			<details>
 				<summary>
 					<ui-face>
@@ -442,7 +440,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="flip" trigger="card" from="top" variant="ov(cc) sc ar(2/3) hv(track)">
+		<ui-reveal type="flip" trigger="card" from="top" variant="ar(2/3) hv(track) ov(cc) sc">
 			<details>
 				<summary>
 					<ui-face>
@@ -459,7 +457,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="flip" trigger="card" from="bottom" variant="media-only ar(2/3) hv(track)">
+		<ui-reveal type="flip" trigger="card" from="bottom" variant="ar(2/3) hv(track) media-only">
 			<details>
 				<summary>
 					<ui-face>
@@ -502,7 +500,7 @@
 		</ui-reveal>
 
 		<!-- media bottom (vertical-r) -->
-		<ui-reveal icon="top right dark" type="slide" from="bottom" variant="vertical-r ar(16/9) hv(pan)" style="--ui-reveal-bg:#e1d4ca;">
+		<ui-reveal icon="top right dark" type="slide" from="bottom" variant="ar(16/9) hv(pan) vertical-r" style="--ui-reveal-bg:#e1d4ca;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/band_boys.jpg" alt="" loading="lazy"></ui-media>
@@ -521,7 +519,7 @@
 		</ui-reveal>
 
 		<!-- media left (horizontal) -->
-		<ui-reveal icon="bottom right dark" type="slide" from="left" variant="horizontal ar(2/3) hv(zoom)" style="--ui-reveal-bg:#d4e7f2;">
+		<ui-reveal icon="bottom right dark" type="slide" from="left" variant="ar(2/3) horizontal hv(zoom)" style="--ui-reveal-bg:#d4e7f2;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/band_girls.jpg" alt="" loading="lazy"></ui-media>
@@ -540,7 +538,7 @@
 		</ui-reveal>
 
 		<!-- media right (horizontal-r) -->
-		<ui-reveal icon="bottom left dark" type="slide" from="right" variant="horizontal-r ar(2/3) hv(pan)" style="--ui-reveal-bg:#dadada;">
+		<ui-reveal icon="bottom left dark" type="slide" from="right" variant="ar(2/3) horizontal-r hv(pan)" style="--ui-reveal-bg:#dadada;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/band_goth.jpg" alt="" loading="lazy"></ui-media>
