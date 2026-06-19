@@ -475,6 +475,7 @@
 		font-weight: var(--ui-card-headline-weight, var(--font-weight-bold, 700));
 		letter-spacing: var(--tracking-tight, -0.01em);
 		line-height: var(--ui-card-headline-line-height, var(--line-height-tight, 1.15));
+		text-wrap: pretty;
 	}
 
 	/* subheadline */
