@@ -8,7 +8,7 @@
 @import '../icon/index.css';
 @layer bs-component {
 	:where(ui-reveal) {
-		--ui-card-row-gap: var(--ui-reveal-row-gap, var(--spacing-sm));
+		--ui-card-row-gap: var(--ui-reveal-row-gap, 1em);
 		--ui-reveal-bg: var(--color-surface);
 		--ui-reveal-icon-sz: var(--size-7);
 		--ui-reveal-p: var(--ui-card-p, var(--spacing-md));

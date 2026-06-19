@@ -44,16 +44,53 @@
 	</p>
 
 	<!-- ============================================
+	     Plain <ui-card> baseline — the static front face, no reveal.
+	     ============================================ -->
+	<h2>New releases</h2>
+
+	<div class="grid">
+		<ui-card variant="ar(3/4) op(cc) ov(bl) sc sq(md)">
+			<cq-box>
+				<ui-media><img src="assets/game_01.jpg" alt="" loading="lazy"></ui-media>
+				<ui-content>
+					<small>Fantasy RPG</small>
+					<strong>Starfall Legends</strong>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+
+		<ui-card variant="ar(3/4) op(cc) ov(bl) sc sq(md)">
+			<cq-box>
+				<ui-media><img src="assets/game_02.jpg" alt="" loading="lazy"></ui-media>
+				<ui-content>
+					<small>Open-World Western</small>
+					<strong>Frontier Outlaws</strong>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+
+		<ui-card variant="ar(3/4) op(cc) ov(bl) sc sq(md)">
+			<cq-box>
+				<ui-media><img src="assets/game_03.jpg" alt="" loading="lazy"></ui-media>
+				<ui-content>
+					<small>Historical Epic</small>
+					<strong>Imperium: Legions</strong>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================
+	     The same three cards as <ui-reveal> — adds the reveal behaviour.
 	     expand → popup — type="expand" to="viewport"|"page"
 	     Optional <ui-reveal> web component morphs the card from its grid cell
 	     into a fixed popup with an element-scoped View Transition (Chrome 147+).
 	     Without it (or under reduced-motion) the card still opens — instantly.
 	     ============================================ -->
-	<h2>expand → popup — <code>to="viewport"</code></h2>
-	<p>Tap a game to expand the card from its tile into a full-screen page, with a bouncy morph where supported. Tap the icon to close.</p>
+	<h2>New releases <code>&lt;ui-reveal&gt;</code></h2>
 
 	<div class="grid">
-		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ov(bl) sc ar(3/4) op(cc)" style="--ui-reveal-expand-fixed-bg:#6a69ab;">
+		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ar(3/4) op(cc) ov(bl) sc sq(md)" style="--ui-reveal-expand-fixed-bg:#6a69ab;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/game_01.jpg" alt="" loading="lazy"></ui-media>
@@ -72,7 +109,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ov(bl) sc ar(3/4) op(cc)" style="--ui-reveal-expand-fixed-bg:#664a31;">
+		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ar(3/4) op(cc) ov(bl) sc sq(md)" style="--ui-reveal-expand-fixed-bg:#664a31;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/game_02.jpg" alt="" loading="lazy"></ui-media>
@@ -91,7 +128,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ov(bl) sc ar(3/4) op(cc)" style="--ui-reveal-expand-fixed-bg:#6d6358;">
+		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ar(3/4) op(cc) ov(bl) sc sq(md)" style="--ui-reveal-expand-fixed-bg:#6d6358;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/game_03.jpg" alt="" loading="lazy"></ui-media>
@@ -112,11 +149,27 @@
 	</div>
 
 	<!-- ============================================
+	     Cover story as a plain <ui-card> — mirrored media via fl(h),
+	     text placed bottom-right (ov(br)) instead of bottom-left.
+	     ============================================ -->
+	<h2>Cover story</h2>
+
+	<ui-card class="hero" variant="ar(16/9) fl(h) sq(md) vertical" variant-lg="ar(21/9) fs(xl) op(cc) ov(br) sc" style="--ui-card-headline-line-height:0.9;">
+		<cq-box>
+			<ui-media><img src="assets/band_girl_hero.jpg" alt="" loading="lazy"></ui-media>
+			<ui-content>
+				<small data-part="eyebrow">Cover Story</small>
+				<strong data-part="headline">The new sound of the small hours</strong>
+			</ui-content>
+		</cq-box>
+	</ui-card>
+
+	<!-- ============================================
 	     Cover story — responsive: classic card when narrow, overlay hero when wide
 	     ============================================ -->
-	<h2>Cover story — responsive hero</h2>
+	<h2>Cover story — <code>&lt;ui-reveal&gt;</code> </h2>
 
-	<ui-reveal class="hero" icon="top right lg" type="expand" type-lg="scale" scroll variant="vertical ar(16/9)" variant-lg="ov(bl) sc ar(21/9) op(cc) fs(xl)" style="--ui-reveal-content-bg:#1f2937;--ui-reveal-content-c:#f9fafb;--ui-card-headline-line-height:0.9;--ui-reveal-content-gap:1.25em;">
+	<ui-reveal class="hero" icon="top right" type="expand" type-lg="scale" scroll variant="ar(16/9) sq(md) vertical" variant-lg="ar(21/9) fs(xl) op(cc) ov(bl) sc" style="--ui-reveal-content-bg:#1f2937;--ui-reveal-content-c:#f9fafb;--ui-card-headline-line-height:0.9;--ui-reveal-content-gap:1.25em;">
 		<details>
 			<summary>
 				<ui-media><img src="assets/band_girl_hero.jpg" alt="" loading="lazy"></ui-media>
@@ -131,7 +184,6 @@
 				<h3 data-part="headline">The new sound of the small hours</h3>
 				<p data-part="summary">Nine bands, one late-night frequency. From darkwave basements to glitter-soaked arenas, this is the music our editors had on repeat all month — and the people making it.</p>
 				<p>We sent writers to the warehouses, the back-room pubs and the bedroom studios where these records were cut, and came back with a portrait of a scene that refuses to sit still. No two of these acts sound alike, yet they share a stubborn refusal to wait for permission.</p>
-				<p>Tap any card to meet the band behind the cover. Then make up your own mind about who owns the small hours.</p>
 				<p><a href="#">Read the full feature &rarr;</a></p>
 			</ui-content>
 		</details>

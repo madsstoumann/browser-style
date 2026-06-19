@@ -124,6 +124,13 @@
 	:where([variant*="op(bc)"]) { --ui-card-op: center bottom; }
 	:where([variant*="op(br)"]) { --ui-card-op: right bottom; }
 
+	/* image flip: fl() token — mirror the media. h = horizontal, v = vertical, hv = both.
+	   Uses transform (separate from the scale/translate hv() uses), so the two compose. */
+	:where([variant*="fl("]) ui-media :is(img, video) { transform: scale(var(--ui-card-fl-x, 1), var(--ui-card-fl-y, 1)); }
+	:where([variant*="fl(h)"])  { --ui-card-fl-x: -1; }
+	:where([variant*="fl(v)"])  { --ui-card-fl-y: -1; }
+	:where([variant*="fl(hv)"]) { --ui-card-fl-x: -1; --ui-card-fl-y: -1; }
+
 	/* hover: hv() — zoom/pan move the image; lift/shrink/tilt transform the host */
 	@media (hover: hover) {
 		:where([variant*="hv("]) {
@@ -416,7 +423,7 @@
 		display: flex;
 		flex-direction: column;
 		font-size: var(--ui-card-fs);
-		gap: var(--ui-card-row-gap, var(--spacing-sm));
+		gap: var(--ui-card-row-gap, 1em);
 		justify-content: var(--ui-card-ov-justify, normal);
 		padding: var(--ui-card-p);
 		text-align: var(--ui-card-ov-text, start);

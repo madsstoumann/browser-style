@@ -14,9 +14,9 @@ ui-card { --ui-card-radius: 0; --ui-card-shadow: none; }
 Tokens fall into two kinds:
 
 - **Knobs** — meant for you to set. Listed with their default.
-- **Internal** — written by the `variant` tokens (`ar()`, `op()`, `sp()`,
-  `sq()`, `fs()`, `sc()`) or by JS. Don't set these directly; use the variant
-  token instead. Collected at the end for reference.
+- **Internal** — written by the `variant` tokens (`ar()`, `op()`, `fl()`,
+  `sp()`, `sq()`, `fs()`, `sc()`) or by JS. Don't set these directly; use the
+  variant token instead. Collected at the end for reference.
 
 All global tokens referenced as fallbacks (`--color-*`, `--spacing-*`,
 `--radius-*`, `--shadow-*`, `--font-weight-*`, …) come from the required
@@ -57,6 +57,10 @@ are overridable too, but you normally pick a stop with `fs()`.
 | `--ui-card-media-bg` | `var(--color-overlay-light, transparent)` | media placeholder background |
 | `--ui-card-media-min` | `12.5rem` | min media height when no `ar()` is set |
 | `--ui-card-object-fit` | `cover` | image/video fit |
+
+Mirror the media with the **`fl()`** variant: `fl(h)` flips horizontally,
+`fl(v)` vertically, `fl(hv)` both. It uses `transform` on the image, separate
+from the `scale`/`translate` that `hv()` drives, so flip and hover compose.
 
 ## Hover effects — `hv()`
 
@@ -155,6 +159,7 @@ Each part takes a font-size token (falling back to a multiple of
 |-------|--------|-------|
 | `--ui-card-ar` | `ar()` | media `aspect-ratio` |
 | `--ui-card-op` | `op()` | image `object-position` |
+| `--ui-card-fl-x` / `--ui-card-fl-y` | `fl()` | image mirror scale (`-1` flips that axis) |
 | `--ui-card-cols` | arrangement | grid columns |
 | `--ui-card-split` | `sp()` | `horizontal` column ratio |
 | `--ui-card-squircle-exp` | `sq()` | superellipse exponent |
