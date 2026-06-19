@@ -66,6 +66,15 @@
 	:where([variant~="fs(lg)"]) { --ui-card-fs: var(--ui-card-fs-lg); --ui-card-headline: var(--ui-card-headline-lg); }
 	:where([variant~="fs(xl)"]) { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline: var(--ui-card-headline-xl); }
 
+	/* content padding: p() token */
+	:where([variant~="p(none)"]) { --ui-card-p: 0; }
+	:where([variant~="p(xs)"])   { --ui-card-p: var(--spacing-xs); }
+	:where([variant~="p(sm)"])   { --ui-card-p: var(--spacing-sm); }
+	:where([variant~="p(md)"])   { --ui-card-p: var(--spacing-md); }
+	:where([variant~="p(lg)"])   { --ui-card-p: var(--spacing-lg); }
+	:where([variant~="p(xl)"])   { --ui-card-p: var(--spacing-xl); }
+	:where([variant~="p(2xl)"])  { --ui-card-p: var(--spacing-2xl); }
+
 
 	/* ============================================================
 	   UI-MEDIA — frame, ratio, position, hover, carousel, overlays
@@ -341,24 +350,28 @@
 	/* reversed order (content first) */
 	:where([variant~="vertical-r"], [variant~="horizontal-r"]) ui-content { order: -1; }
 
-	/* ov() — stack + place content over media (no scrim) */
-	:where([variant*="ov("]) :is(ui-media, ui-content) { grid-area: 1 / 1; }
-	:where([variant*="ov("]) ui-content {
-		color: var(--ui-card-overlay-ink, #fff);
-		z-index: 1;
+	/* ov() — stack content over media + place it. Prop-driven so the responsive
+	   tiers (variant-md/-lg) can toggle the overlay at a breakpoint, and so any
+	   host (e.g. ui-reveal) gets the same behaviour. Defaults = no overlay. */
+	:where([variant]) :is(ui-media, ui-content) { grid-area: var(--ui-card-stack, auto); }
+	:where([variant*="ov("]) {
+		--ui-card-stack: 1 / 1;
+		--ui-card-ov-ink: var(--ui-card-overlay-ink, #fff);
+		--ui-card-ov-z: 1;
 	}
-	:where([variant*="ov(tl)"]) ui-content { justify-content: start;  align-items: start;  text-align: start;  }
-	:where([variant*="ov(tc)"]) ui-content { justify-content: start;  align-items: center; text-align: center; }
-	:where([variant*="ov(tr)"]) ui-content { justify-content: start;  align-items: end;    text-align: end;    }
-	:where([variant*="ov(cl)"]) ui-content { justify-content: center; align-items: start;  text-align: start;  }
-	:where([variant*="ov(cc)"]) ui-content { justify-content: center; align-items: center; text-align: center; }
-	:where([variant*="ov(cr)"]) ui-content { justify-content: center; align-items: end;    text-align: end;    }
-	:where([variant*="ov(bl)"]) ui-content { justify-content: end;    align-items: start;  text-align: start;  }
-	:where([variant*="ov(bc)"]) ui-content { justify-content: end;    align-items: center; text-align: center; }
-	:where([variant*="ov(br)"]) ui-content { justify-content: end;    align-items: end;    text-align: end;    }
+	:where([variant*="ov(tl)"]) { --ui-card-ov-justify: start;  --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-tl); }
+	:where([variant*="ov(tc)"]) { --ui-card-ov-justify: start;  --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-tc); }
+	:where([variant*="ov(tr)"]) { --ui-card-ov-justify: start;  --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-tr); }
+	:where([variant*="ov(cl)"]) { --ui-card-ov-justify: center; --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-cl); }
+	:where([variant*="ov(cc)"]) { --ui-card-ov-justify: center; --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-cc); }
+	:where([variant*="ov(cr)"]) { --ui-card-ov-justify: center; --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-cr); }
+	:where([variant*="ov(bl)"]) { --ui-card-ov-justify: end;    --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-bl); }
+	:where([variant*="ov(bc)"]) { --ui-card-ov-justify: end;    --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-bc); }
+	:where([variant*="ov(br)"]) { --ui-card-ov-justify: end;    --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-br); }
 
-	/* sc() — scrim: darkening gradient over media. Colour + 9 gradients (once) */
-	:where([variant*="ov("], [variant*="sc"]) {
+	/* sc() — scrim. Gradients always defined; `sc` selects which to paint via
+	   --ui-card-scrim-paint (default transparent → no scrim). */
+	:where([variant]) {
 		--ui-card-scrim-c: var(--ui-card-scrim-color, rgb(0 0 0 / 0.65));
 		--ui-card-scrim-tl: linear-gradient(to bottom right, var(--ui-card-scrim-c), #0000 60%);
 		--ui-card-scrim-tc: linear-gradient(to bottom,       var(--ui-card-scrim-c), #0000 60%);
@@ -370,17 +383,7 @@
 		--ui-card-scrim-bc: linear-gradient(to top,          var(--ui-card-scrim-c), #0000 60%);
 		--ui-card-scrim-br: linear-gradient(to top left,     var(--ui-card-scrim-c), #0000 60%);
 	}
-	/* bare `sc` auto-matches the ov() position via --ui-card-scrim-default */
-	:where([variant*="ov(tl)"]) { --ui-card-scrim-default: var(--ui-card-scrim-tl); }
-	:where([variant*="ov(tc)"]) { --ui-card-scrim-default: var(--ui-card-scrim-tc); }
-	:where([variant*="ov(tr)"]) { --ui-card-scrim-default: var(--ui-card-scrim-tr); }
-	:where([variant*="ov(cl)"]) { --ui-card-scrim-default: var(--ui-card-scrim-cl); }
-	:where([variant*="ov(cc)"]) { --ui-card-scrim-default: var(--ui-card-scrim-cc); }
-	:where([variant*="ov(cr)"]) { --ui-card-scrim-default: var(--ui-card-scrim-cr); }
-	:where([variant*="ov(bl)"]) { --ui-card-scrim-default: var(--ui-card-scrim-bl); }
-	:where([variant*="ov(bc)"]) { --ui-card-scrim-default: var(--ui-card-scrim-bc); }
-	:where([variant*="ov(br)"]) { --ui-card-scrim-default: var(--ui-card-scrim-br); }
-	/* explicit sc(pos) overrides the default */
+	/* explicit sc(pos) overrides the ov-matched default */
 	:where([variant*="sc(tl)"]) { --ui-card-scrim: var(--ui-card-scrim-tl); }
 	:where([variant*="sc(tc)"]) { --ui-card-scrim: var(--ui-card-scrim-tc); }
 	:where([variant*="sc(tr)"]) { --ui-card-scrim: var(--ui-card-scrim-tr); }
@@ -390,10 +393,10 @@
 	:where([variant*="sc(bl)"]) { --ui-card-scrim: var(--ui-card-scrim-bl); }
 	:where([variant*="sc(bc)"]) { --ui-card-scrim: var(--ui-card-scrim-bc); }
 	:where([variant*="sc(br)"]) { --ui-card-scrim: var(--ui-card-scrim-br); }
-	/* paint the scrim only when the `sc` keyword is present */
-	:where([variant*="sc"]) ui-media { position: relative; }
-	:where([variant*="sc"]) ui-media::after {
-		background: var(--ui-card-scrim, var(--ui-card-scrim-default, var(--ui-card-scrim-bc)));
+	/* `sc` keyword paints; bare sc auto-matches the ov() position */
+	:where([variant*="sc"]) { --ui-card-scrim-paint: var(--ui-card-scrim, var(--ui-card-scrim-default, var(--ui-card-scrim-bc))); }
+	:where([variant]) ui-media::after {
+		background: var(--ui-card-scrim-paint, #0000);
 		content: "";
 		inset: 0;
 		pointer-events: none;
@@ -406,13 +409,18 @@
 	   UI-CONTENT — container, visibility, parts
 	   ============================================================ */
 
-	/* content column */
+	/* content column — ov() placement/ink read from props (default = no overlay) */
 	:where([variant]) ui-content {
+		align-items: var(--ui-card-ov-align, normal);
+		color: var(--ui-card-ov-ink, inherit);
 		display: flex;
 		flex-direction: column;
 		font-size: var(--ui-card-fs);
 		gap: var(--ui-card-row-gap, var(--spacing-sm));
+		justify-content: var(--ui-card-ov-justify, normal);
 		padding: var(--ui-card-p);
+		text-align: var(--ui-card-ov-text, start);
+		z-index: var(--ui-card-ov-z, auto);
 
 		& > * { margin: 0; text-box: cap alphabetic; }
 	}
@@ -466,7 +474,7 @@
 		font-size: var(--ui-card-headline);
 		font-weight: var(--ui-card-headline-weight, var(--font-weight-bold, 700));
 		letter-spacing: var(--tracking-tight, -0.01em);
-		line-height: var(--line-height-tight, 1.15);
+		line-height: var(--ui-card-headline-line-height, var(--line-height-tight, 1.15));
 	}
 
 	/* subheadline */
@@ -568,73 +576,119 @@
 
 	/* variant-md (>= 25rem) */
 	@container (inline-size >= 25rem) {
-		:where(ui-card[variant-md~="vertical"]) > cq-box,
-		:where(ui-card[variant-md~="vertical-r"]) > cq-box   { --ui-card-cols: 1fr; }
-		:where(ui-card[variant-md~="horizontal"]) > cq-box,
-		:where(ui-card[variant-md~="horizontal-r"]) > cq-box { --ui-card-cols: var(--ui-card-split, 1fr 1fr); }
-		:where(ui-card[variant-md~="horizontal"]) > cq-box > ui-media,
-		:where(ui-card[variant-md~="horizontal-r"]) > cq-box > ui-media { block-size: 100%; inline-size: 100%; min-block-size: 0; }
-		:where(ui-card[variant-md~="vertical"]) > cq-box > ui-content,
-		:where(ui-card[variant-md~="horizontal"]) > cq-box > ui-content { order: 0; }
-		:where(ui-card[variant-md~="vertical-r"]) > cq-box > ui-content,
-		:where(ui-card[variant-md~="horizontal-r"]) > cq-box > ui-content { order: -1; }
-		:where(ui-card[variant-md~="media-only"]) > cq-box > ui-content { display: none; }
-		:where(ui-card[variant-md~="content-only"]) > cq-box > ui-media { display: none; }
+		:where([variant-md~="vertical"]) :is(cq-box, summary),
+		:where([variant-md~="vertical-r"]) :is(cq-box, summary)   { --ui-card-cols: 1fr; }
+		:where([variant-md~="horizontal"]) :is(cq-box, summary),
+		:where([variant-md~="horizontal-r"]) :is(cq-box, summary) { --ui-card-cols: var(--ui-card-split, 1fr 1fr); }
+		:where([variant-md~="horizontal"]) :is(cq-box, summary) ui-media,
+		:where([variant-md~="horizontal-r"]) :is(cq-box, summary) ui-media { block-size: 100%; inline-size: 100%; min-block-size: 0; }
+		:where([variant-md~="vertical"]) :is(cq-box, summary) ui-content,
+		:where([variant-md~="horizontal"]) :is(cq-box, summary) ui-content { order: 0; }
+		:where([variant-md~="vertical-r"]) :is(cq-box, summary) ui-content,
+		:where([variant-md~="horizontal-r"]) :is(cq-box, summary) ui-content { order: -1; }
+		:where([variant-md~="media-only"]) :is(cq-box, summary) ui-content { display: none; }
+		:where([variant-md~="content-only"]) :is(cq-box, summary) ui-media { display: none; }
 
-		:where(ui-card[variant-md*="sp(1/1)"]) > cq-box { --ui-card-split: 1fr 1fr; }
-		:where(ui-card[variant-md*="sp(1/2)"]) > cq-box { --ui-card-split: 1fr 2fr; }
-		:where(ui-card[variant-md*="sp(2/1)"]) > cq-box { --ui-card-split: 2fr 1fr; }
-		:where(ui-card[variant-md*="sp(1/3)"]) > cq-box { --ui-card-split: 1fr 3fr; }
-		:where(ui-card[variant-md*="sp(3/1)"]) > cq-box { --ui-card-split: 3fr 1fr; }
+		:where([variant-md*="sp(1/1)"]) :is(cq-box, summary) { --ui-card-split: 1fr 1fr; }
+		:where([variant-md*="sp(1/2)"]) :is(cq-box, summary) { --ui-card-split: 1fr 2fr; }
+		:where([variant-md*="sp(2/1)"]) :is(cq-box, summary) { --ui-card-split: 2fr 1fr; }
+		:where([variant-md*="sp(1/3)"]) :is(cq-box, summary) { --ui-card-split: 1fr 3fr; }
+		:where([variant-md*="sp(3/1)"]) :is(cq-box, summary) { --ui-card-split: 3fr 1fr; }
 
-		:where(ui-card[variant-md~="fs(sm)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-sm); --ui-card-headline: var(--ui-card-headline-sm); }
-		:where(ui-card[variant-md~="fs(md)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-md); --ui-card-headline: var(--ui-card-headline-md); }
-		:where(ui-card[variant-md~="fs(lg)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-lg); --ui-card-headline: var(--ui-card-headline-lg); }
-		:where(ui-card[variant-md~="fs(xl)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline: var(--ui-card-headline-xl); }
+		:where([variant-md~="fs(sm)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-sm); --ui-card-headline: var(--ui-card-headline-sm); }
+		:where([variant-md~="fs(md)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-md); --ui-card-headline: var(--ui-card-headline-md); }
+		:where([variant-md~="fs(lg)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-lg); --ui-card-headline: var(--ui-card-headline-lg); }
+		:where([variant-md~="fs(xl)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline: var(--ui-card-headline-xl); }
 
-		:where(ui-card[variant-md*="ar("]) > cq-box > ui-media { min-block-size: 0; }
-		:where(ui-card[variant-md*="ar(1/1)"]) > cq-box   { --ui-card-ar: 1 / 1; }
-		:where(ui-card[variant-md*="ar(3/4)"]) > cq-box   { --ui-card-ar: 3 / 4; }
-		:where(ui-card[variant-md*="ar(4/3)"]) > cq-box   { --ui-card-ar: 4 / 3; }
-		:where(ui-card[variant-md*="ar(3/2)"]) > cq-box   { --ui-card-ar: 3 / 2; }
-		:where(ui-card[variant-md*="ar(2/3)"]) > cq-box   { --ui-card-ar: 2 / 3; }
-		:where(ui-card[variant-md*="ar(16/9)"]) > cq-box  { --ui-card-ar: 16 / 9; }
-		:where(ui-card[variant-md*="ar(21/9)"]) > cq-box  { --ui-card-ar: 21 / 9; }
+		:where([variant-md*="ar("]) :is(cq-box, summary) ui-media { min-block-size: 0; }
+		:where([variant-md*="ar(1/1)"]) :is(cq-box, summary)   { --ui-card-ar: 1 / 1; }
+		:where([variant-md*="ar(3/4)"]) :is(cq-box, summary)   { --ui-card-ar: 3 / 4; }
+		:where([variant-md*="ar(4/3)"]) :is(cq-box, summary)   { --ui-card-ar: 4 / 3; }
+		:where([variant-md*="ar(3/2)"]) :is(cq-box, summary)   { --ui-card-ar: 3 / 2; }
+		:where([variant-md*="ar(2/3)"]) :is(cq-box, summary)   { --ui-card-ar: 2 / 3; }
+		:where([variant-md*="ar(16/9)"]) :is(cq-box, summary)  { --ui-card-ar: 16 / 9; }
+		:where([variant-md*="ar(21/9)"]) :is(cq-box, summary)  { --ui-card-ar: 21 / 9; }
+
+		/* overlay ov() (props inherit to cq-box children); bare sc auto-matches */
+		:where([variant-md*="ov("]) :is(cq-box, summary) { --ui-card-stack: 1 / 1; --ui-card-ov-ink: var(--ui-card-overlay-ink, #fff); --ui-card-ov-z: 1; }
+		:where([variant-md*="ov(tl)"]) :is(cq-box, summary) { --ui-card-ov-justify: start;  --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-tl); }
+		:where([variant-md*="ov(tc)"]) :is(cq-box, summary) { --ui-card-ov-justify: start;  --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-tc); }
+		:where([variant-md*="ov(tr)"]) :is(cq-box, summary) { --ui-card-ov-justify: start;  --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-tr); }
+		:where([variant-md*="ov(cl)"]) :is(cq-box, summary) { --ui-card-ov-justify: center; --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-cl); }
+		:where([variant-md*="ov(cc)"]) :is(cq-box, summary) { --ui-card-ov-justify: center; --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-cc); }
+		:where([variant-md*="ov(cr)"]) :is(cq-box, summary) { --ui-card-ov-justify: center; --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-cr); }
+		:where([variant-md*="ov(bl)"]) :is(cq-box, summary) { --ui-card-ov-justify: end;    --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-bl); }
+		:where([variant-md*="ov(bc)"]) :is(cq-box, summary) { --ui-card-ov-justify: end;    --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-bc); }
+		:where([variant-md*="ov(br)"]) :is(cq-box, summary) { --ui-card-ov-justify: end;    --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-br); }
+		:where([variant-md*="sc"]) :is(cq-box, summary) { --ui-card-scrim-paint: var(--ui-card-scrim, var(--ui-card-scrim-default, var(--ui-card-scrim-bc))); }
+
+		:where([variant-md*="op(tl)"]) :is(cq-box, summary) { --ui-card-op: left top; }
+		:where([variant-md*="op(tc)"]) :is(cq-box, summary) { --ui-card-op: center top; }
+		:where([variant-md*="op(tr)"]) :is(cq-box, summary) { --ui-card-op: right top; }
+		:where([variant-md*="op(cl)"]) :is(cq-box, summary) { --ui-card-op: left center; }
+		:where([variant-md*="op(cc)"]) :is(cq-box, summary) { --ui-card-op: center center; }
+		:where([variant-md*="op(cr)"]) :is(cq-box, summary) { --ui-card-op: right center; }
+		:where([variant-md*="op(bl)"]) :is(cq-box, summary) { --ui-card-op: left bottom; }
+		:where([variant-md*="op(bc)"]) :is(cq-box, summary) { --ui-card-op: center bottom; }
+		:where([variant-md*="op(br)"]) :is(cq-box, summary) { --ui-card-op: right bottom; }
 	}
 
 	/* variant-lg (>= 44rem) */
 	@container (inline-size >= 44rem) {
-		:where(ui-card[variant-lg~="vertical"]) > cq-box,
-		:where(ui-card[variant-lg~="vertical-r"]) > cq-box   { --ui-card-cols: 1fr; }
-		:where(ui-card[variant-lg~="horizontal"]) > cq-box,
-		:where(ui-card[variant-lg~="horizontal-r"]) > cq-box { --ui-card-cols: var(--ui-card-split, 1fr 1fr); }
-		:where(ui-card[variant-lg~="horizontal"]) > cq-box > ui-media,
-		:where(ui-card[variant-lg~="horizontal-r"]) > cq-box > ui-media { block-size: 100%; inline-size: 100%; min-block-size: 0; }
-		:where(ui-card[variant-lg~="vertical"]) > cq-box > ui-content,
-		:where(ui-card[variant-lg~="horizontal"]) > cq-box > ui-content { order: 0; }
-		:where(ui-card[variant-lg~="vertical-r"]) > cq-box > ui-content,
-		:where(ui-card[variant-lg~="horizontal-r"]) > cq-box > ui-content { order: -1; }
-		:where(ui-card[variant-lg~="media-only"]) > cq-box > ui-content { display: none; }
-		:where(ui-card[variant-lg~="content-only"]) > cq-box > ui-media { display: none; }
+		:where([variant-lg~="vertical"]) :is(cq-box, summary),
+		:where([variant-lg~="vertical-r"]) :is(cq-box, summary)   { --ui-card-cols: 1fr; }
+		:where([variant-lg~="horizontal"]) :is(cq-box, summary),
+		:where([variant-lg~="horizontal-r"]) :is(cq-box, summary) { --ui-card-cols: var(--ui-card-split, 1fr 1fr); }
+		:where([variant-lg~="horizontal"]) :is(cq-box, summary) ui-media,
+		:where([variant-lg~="horizontal-r"]) :is(cq-box, summary) ui-media { block-size: 100%; inline-size: 100%; min-block-size: 0; }
+		:where([variant-lg~="vertical"]) :is(cq-box, summary) ui-content,
+		:where([variant-lg~="horizontal"]) :is(cq-box, summary) ui-content { order: 0; }
+		:where([variant-lg~="vertical-r"]) :is(cq-box, summary) ui-content,
+		:where([variant-lg~="horizontal-r"]) :is(cq-box, summary) ui-content { order: -1; }
+		:where([variant-lg~="media-only"]) :is(cq-box, summary) ui-content { display: none; }
+		:where([variant-lg~="content-only"]) :is(cq-box, summary) ui-media { display: none; }
 
-		:where(ui-card[variant-lg*="sp(1/1)"]) > cq-box { --ui-card-split: 1fr 1fr; }
-		:where(ui-card[variant-lg*="sp(1/2)"]) > cq-box { --ui-card-split: 1fr 2fr; }
-		:where(ui-card[variant-lg*="sp(2/1)"]) > cq-box { --ui-card-split: 2fr 1fr; }
-		:where(ui-card[variant-lg*="sp(1/3)"]) > cq-box { --ui-card-split: 1fr 3fr; }
-		:where(ui-card[variant-lg*="sp(3/1)"]) > cq-box { --ui-card-split: 3fr 1fr; }
+		:where([variant-lg*="sp(1/1)"]) :is(cq-box, summary) { --ui-card-split: 1fr 1fr; }
+		:where([variant-lg*="sp(1/2)"]) :is(cq-box, summary) { --ui-card-split: 1fr 2fr; }
+		:where([variant-lg*="sp(2/1)"]) :is(cq-box, summary) { --ui-card-split: 2fr 1fr; }
+		:where([variant-lg*="sp(1/3)"]) :is(cq-box, summary) { --ui-card-split: 1fr 3fr; }
+		:where([variant-lg*="sp(3/1)"]) :is(cq-box, summary) { --ui-card-split: 3fr 1fr; }
 
-		:where(ui-card[variant-lg~="fs(sm)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-sm); --ui-card-headline: var(--ui-card-headline-sm); }
-		:where(ui-card[variant-lg~="fs(md)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-md); --ui-card-headline: var(--ui-card-headline-md); }
-		:where(ui-card[variant-lg~="fs(lg)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-lg); --ui-card-headline: var(--ui-card-headline-lg); }
-		:where(ui-card[variant-lg~="fs(xl)"]) > cq-box { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline: var(--ui-card-headline-xl); }
+		:where([variant-lg~="fs(sm)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-sm); --ui-card-headline: var(--ui-card-headline-sm); }
+		:where([variant-lg~="fs(md)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-md); --ui-card-headline: var(--ui-card-headline-md); }
+		:where([variant-lg~="fs(lg)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-lg); --ui-card-headline: var(--ui-card-headline-lg); }
+		:where([variant-lg~="fs(xl)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline: var(--ui-card-headline-xl); }
 
-		:where(ui-card[variant-lg*="ar("]) > cq-box > ui-media { min-block-size: 0; }
-		:where(ui-card[variant-lg*="ar(1/1)"]) > cq-box   { --ui-card-ar: 1 / 1; }
-		:where(ui-card[variant-lg*="ar(3/4)"]) > cq-box   { --ui-card-ar: 3 / 4; }
-		:where(ui-card[variant-lg*="ar(4/3)"]) > cq-box   { --ui-card-ar: 4 / 3; }
-		:where(ui-card[variant-lg*="ar(3/2)"]) > cq-box   { --ui-card-ar: 3 / 2; }
-		:where(ui-card[variant-lg*="ar(2/3)"]) > cq-box   { --ui-card-ar: 2 / 3; }
-		:where(ui-card[variant-lg*="ar(16/9)"]) > cq-box  { --ui-card-ar: 16 / 9; }
-		:where(ui-card[variant-lg*="ar(21/9)"]) > cq-box  { --ui-card-ar: 21 / 9; }
+		:where([variant-lg*="ar("]) :is(cq-box, summary) ui-media { min-block-size: 0; }
+		:where([variant-lg*="ar(1/1)"]) :is(cq-box, summary)   { --ui-card-ar: 1 / 1; }
+		:where([variant-lg*="ar(3/4)"]) :is(cq-box, summary)   { --ui-card-ar: 3 / 4; }
+		:where([variant-lg*="ar(4/3)"]) :is(cq-box, summary)   { --ui-card-ar: 4 / 3; }
+		:where([variant-lg*="ar(3/2)"]) :is(cq-box, summary)   { --ui-card-ar: 3 / 2; }
+		:where([variant-lg*="ar(2/3)"]) :is(cq-box, summary)   { --ui-card-ar: 2 / 3; }
+		:where([variant-lg*="ar(16/9)"]) :is(cq-box, summary)  { --ui-card-ar: 16 / 9; }
+		:where([variant-lg*="ar(21/9)"]) :is(cq-box, summary)  { --ui-card-ar: 21 / 9; }
+
+		/* overlay ov() (props inherit to cq-box children); bare sc auto-matches */
+		:where([variant-lg*="ov("]) :is(cq-box, summary) { --ui-card-stack: 1 / 1; --ui-card-ov-ink: var(--ui-card-overlay-ink, #fff); --ui-card-ov-z: 1; }
+		:where([variant-lg*="ov(tl)"]) :is(cq-box, summary) { --ui-card-ov-justify: start;  --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-tl); }
+		:where([variant-lg*="ov(tc)"]) :is(cq-box, summary) { --ui-card-ov-justify: start;  --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-tc); }
+		:where([variant-lg*="ov(tr)"]) :is(cq-box, summary) { --ui-card-ov-justify: start;  --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-tr); }
+		:where([variant-lg*="ov(cl)"]) :is(cq-box, summary) { --ui-card-ov-justify: center; --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-cl); }
+		:where([variant-lg*="ov(cc)"]) :is(cq-box, summary) { --ui-card-ov-justify: center; --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-cc); }
+		:where([variant-lg*="ov(cr)"]) :is(cq-box, summary) { --ui-card-ov-justify: center; --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-cr); }
+		:where([variant-lg*="ov(bl)"]) :is(cq-box, summary) { --ui-card-ov-justify: end;    --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-bl); }
+		:where([variant-lg*="ov(bc)"]) :is(cq-box, summary) { --ui-card-ov-justify: end;    --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-bc); }
+		:where([variant-lg*="ov(br)"]) :is(cq-box, summary) { --ui-card-ov-justify: end;    --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-br); }
+		:where([variant-lg*="sc"]) :is(cq-box, summary) { --ui-card-scrim-paint: var(--ui-card-scrim, var(--ui-card-scrim-default, var(--ui-card-scrim-bc))); }
+
+		:where([variant-lg*="op(tl)"]) :is(cq-box, summary) { --ui-card-op: left top; }
+		:where([variant-lg*="op(tc)"]) :is(cq-box, summary) { --ui-card-op: center top; }
+		:where([variant-lg*="op(tr)"]) :is(cq-box, summary) { --ui-card-op: right top; }
+		:where([variant-lg*="op(cl)"]) :is(cq-box, summary) { --ui-card-op: left center; }
+		:where([variant-lg*="op(cc)"]) :is(cq-box, summary) { --ui-card-op: center center; }
+		:where([variant-lg*="op(cr)"]) :is(cq-box, summary) { --ui-card-op: right center; }
+		:where([variant-lg*="op(bl)"]) :is(cq-box, summary) { --ui-card-op: left bottom; }
+		:where([variant-lg*="op(bc)"]) :is(cq-box, summary) { --ui-card-op: center bottom; }
+		:where([variant-lg*="op(br)"]) :is(cq-box, summary) { --ui-card-op: right bottom; }
 	}
 }

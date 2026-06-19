@@ -31,7 +31,7 @@ All global tokens referenced as fallbacks (`--color-*`, `--spacing-*`,
 | `--ui-card-bg` | `var(--color-surface)` | card background |
 | `--ui-card-radius` | `var(--radius-2xl)` | corner radius |
 | `--ui-card-shadow` | `var(--shadow-xl)` | card shadow |
-| `--ui-card-p` | `var(--spacing-md)` | content padding |
+| `--ui-card-p` | `var(--spacing-md)` | content padding (or set with the `p()` variant) |
 | `--ui-card-row-gap` | `1em` | gap between content rows |
 | `--ui-card-muted` | `color-mix(in oklab, currentColor 65%, transparent)` | muted text colour (meta, footer, subheadline) |
 
@@ -45,6 +45,7 @@ aggressive headline scale. `fs(sm|md|lg|xl)` swaps which stop is active.
 | `--ui-card-fs` | `var(--ui-card-fs-md)` | active body font-size |
 | `--ui-card-headline` | `var(--ui-card-headline-md)` | active headline font-size |
 | `--ui-card-headline-weight` | `var(--font-weight-bold, 700)` | headline weight |
+| `--ui-card-headline-line-height` | `var(--line-height-tight)` | headline line-height (e.g. `0.9` for a tight display hero) |
 
 The scale stops `--ui-card-fs-sm/md/lg/xl` and `--ui-card-headline-sm/md/lg/xl`
 are overridable too, but you normally pick a stop with `fs()`.

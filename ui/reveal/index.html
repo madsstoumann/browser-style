@@ -61,16 +61,16 @@
 					<ui-media><img src="assets/game_01.jpg" alt="" loading="lazy"></ui-media>
 					<ui-content>
 						<small>Fantasy RPG</small>
-						<b>Starfall Legends</b>
+						<strong>Starfall Legends</strong>
 					</ui-content>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>Starfall Legends</h3>
 					<p><strong>Gather your party and chase the falling stars.</strong> A hand-drawn action-RPG set across the floating isles of Auralis, where every comet leaves behind a creature to befriend — or battle.</p>
 					<p>Master the Starbind combat system, evolve your companions through dozens of forms, and uncover who shattered the night sky. Couch co-op for up to four heroes.</p>
 					<p><a href="#">Get &mdash; Free with in-app purchases</a></p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -80,16 +80,16 @@
 					<ui-media><img src="assets/game_02.jpg" alt="" loading="lazy"></ui-media>
 					<ui-content>
 						<small>Open-World Western</small>
-						<b>Frontier Outlaws</b>
+						<strong>Frontier Outlaws</strong>
 					</ui-content>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>Frontier Outlaws</h3>
 					<p><strong>Ride into a frontier that remembers everything you do.</strong> Rob the noon stage or marshal the town that hangs you for it — every choice ripples through a living West of dust, debt and gunsmoke.</p>
 					<p>Tame wild horses, build your gang, and survive a dynamic bounty system where your reputation precedes you into every saloon. Online posses or solo drifter.</p>
 					<p><a href="#">Get &mdash; $39.99</a></p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -99,40 +99,43 @@
 					<ui-media><img src="assets/game_03.jpg" alt="" loading="lazy"></ui-media>
 					<ui-content>
 						<small>Historical Epic</small>
-						<b>Imperium: Legions</b>
+						<strong>Imperium: Legions</strong>
 					</ui-content>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>Imperium: Legions</h3>
 					<p><strong>From a single cohort to the eternal city.</strong> Command Rome's legions across a campaign that spans the Republic to the Empire — march, besiege and intrigue your way to a throne history won't forget.</p>
 					<p>Real-time battles of thousands, a Senate that schemes behind your back, and city-building that turns marble quarries into wonders. Cross-play campaigns for up to eight consuls.</p>
 					<p><a href="#">Get &mdash; $49.99</a></p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 	</div>
 
 	<!-- ============================================
-	     hero — full-width, 21:9
+	     Cover story — responsive: classic card when narrow, overlay hero when wide
 	     ============================================ -->
-	<h2>hero — full-width (ar 21/9)</h2>
+	<h2>Cover story — responsive hero</h2>
 
-	<ui-reveal class="hero" icon="top right lg" type="scale" variant="ov(bl) sc ar(21/9) op(cc)" style="--ui-reveal-content-bg:#93a5b1;--ui-reveal-content-c:#0a1014;">
+	<ui-reveal class="hero" icon="top right lg" type="expand" type-lg="scale" scroll variant="vertical ar(16/9)" variant-lg="ov(bl) sc ar(21/9) op(cc) fs(xl)" style="--ui-reveal-content-bg:#1f2937;--ui-reveal-content-c:#f9fafb;--ui-card-headline-line-height:0.9;--ui-reveal-content-gap:1.25em;">
 		<details>
 			<summary>
 				<ui-media><img src="assets/band_girl_hero.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
-					<small>Featured</small>
-					<b>Hero reveal card.</b>
+					<small data-part="eyebrow">Cover Story</small>
+					<strong data-part="headline">The new sound of the small hours</strong>
 				</ui-content>
 				<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 			</summary>
-			<div>
-				<h3>Full-width hero</h3>
-				<p>A panoramic 21:9 reveal card spanning the full content width, outside any grid.</p>
-				<p><a href="#">Explore now &rarr;</a></p>
-			</div>
+			<ui-content variant="fs(lg) th(dark) p(xl)">
+				<small data-part="eyebrow">Cover Story</small>
+				<h3 data-part="headline">The new sound of the small hours</h3>
+				<p data-part="summary">Nine bands, one late-night frequency. From darkwave basements to glitter-soaked arenas, this is the music our editors had on repeat all month — and the people making it.</p>
+				<p>We sent writers to the warehouses, the back-room pubs and the bedroom studios where these records were cut, and came back with a portrait of a scene that refuses to sit still. No two of these acts sound alike, yet they share a stubborn refusal to wait for permission.</p>
+				<p>Tap any card to meet the band behind the cover. Then make up your own mind about who owns the small hours.</p>
+				<p><a href="#">Read the full feature &rarr;</a></p>
+			</ui-content>
 		</details>
 	</ui-reveal>
 
@@ -148,10 +151,10 @@
 					<ui-media><img src="assets/band_alternative.jpg" alt="Alternative band" loading="lazy"></ui-media>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>ar(1/1)</h3>
 					<p>Square media, no content-area in the summary.</p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -161,10 +164,10 @@
 					<ui-media><img src="assets/band_boys.jpg" alt="Boy band" loading="lazy"></ui-media>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>ar(3/4)</h3>
 					<p>Portrait media.</p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -174,15 +177,15 @@
 					<ui-media><img src="assets/band_girls.jpg" alt="Girl group" loading="lazy"></ui-media>
 					<ui-icon type="arrow down" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
+				<ui-content>
 					<h3>ar(16/9)</h3>
 					<p>Widescreen media.</p>
-				</div>
+				</ui-content>
 			</details>
 		</ui-reveal>
 	</div>
 
-	<h2>Flip</h2>
+	<h2>What we're listening to</h2>
 
 	<div class="grid">
 		<ui-reveal class="thelure" icon="top right sm" icon-close="dark" type="flip" variant="ov(tl) ar(1/1) op(tc) sq(lg) hv(zoom)" scroll>
@@ -190,15 +193,18 @@
 				<summary>
 					<ui-face>
 						<ui-media><img src="assets/band_goth.jpg" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Gothic</small><b>The Lure</b></ui-content>
+						<ui-content><small>Gothic</small><strong>The Lure</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
-					<h3>The Lure</h3>
-					<p>Darkwave from the old quarter. The Lure formed in the long shadow of post-punk, trading jangle for reverb and dread, their early demos circulating on hand-dubbed cassettes passed between basement shows.</p>
+				<ui-content>
+					<small data-part="eyebrow">Gothic</small>
+					<h3 data-part="headline">The Lure</h3>
+					<p data-part="summary">Darkwave from the old quarter. The Lure formed in the long shadow of post-punk, trading jangle for reverb and dread, their early demos circulating on hand-dubbed cassettes passed between basement shows.</p>
 					<p>By the second record the sound had thickened — drum machines under live toms, a baritone guitar tuned down until the strings flapped, vocals buried like a confession you weren't meant to hear.</p>
-				</div>
+					<p>They almost split after the tour: three of them stopped speaking, the singer moved abroad, and for two years the band existed only as a rumour and a few warped bootlegs. Then a remastered single found a second life online, and a generation that had never seen them live decided The Lure belonged to them.</p>
+					<p>The reunion record, when it finally came, sounded nothing like nostalgia. It was colder, slower, and somehow more alive — proof that the old quarter still had one more song left in it.</p>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -207,15 +213,18 @@
 				<summary>
 					<ui-face>
 						<ui-media><img src="assets/band_alternative.jpg" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Alternative</small><b>Paper Mirror</b></ui-content>
+						<ui-content><small>Alternative</small><strong>Paper Mirror</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
-					<h3>Paper Mirror</h3>
-					<p>Reverb-soaked guitars and bittersweet hooks. Built a following on hand-dubbed cassettes passed between basement shows, and turned down every label that came calling.</p>
-					<p>Their debut arrived without warning, mastered in a friend's bedroom and pressed in a run of three hundred — every copy sold before the second week was out.</p>
-				</div>
+				<ui-content>
+					<small data-part="eyebrow">Alternative</small>
+					<h3 data-part="headline">Paper Mirror</h3>
+					<p data-part="summary">Reverb-soaked guitars and bittersweet hooks. Built a following on hand-dubbed cassettes passed between basement shows, and turned down every label that came calling.</p>
+					<p>Their debut arrived without warning, mastered in a friend's bedroom and pressed in a run of three hundred — every copy sold before the second week was out. By the time the reissue landed, the original was changing hands for the price of a month's rent.</p>
+					<p>The songs work like that too: small at first, then suddenly enormous. A verse mumbled into a four-track becomes, by the final chorus, the loudest thing in the room. The band swear they don't plan it; it just happens whenever they stop trying to sound clever.</p>
+					<p>They still refuse the big rooms, still book the venues with bad sightlines and worse PAs, still treat every show like the first one. Ask them why and they shrug — the cassettes worked, so why change now.</p>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -224,15 +233,18 @@
 				<summary>
 					<ui-face>
 						<ui-media><img src="assets/band_boys.jpg" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Pop</small><b>Skyline Five</b></ui-content>
+						<ui-content><small>Pop</small><strong>Skyline Five</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
-					<h3>Skyline Five</h3>
-					<p>Five voices, one harmony. Assembled for the arenas but secretly writing their own songs, they broke from their handlers to chase a sound that was finally theirs.</p>
-					<p>The split cost them a label and half their fanbase, but the songs that followed were the first anyone could honestly call their own.</p>
-				</div>
+				<ui-content>
+					<small data-part="eyebrow">Pop</small>
+					<h3 data-part="headline">Skyline Five</h3>
+					<p data-part="summary">Five voices, one harmony. Assembled for the arenas but secretly writing their own songs, they broke from their handlers to chase a sound that was finally theirs.</p>
+					<p>The split cost them a label and half their fanbase, but the songs that followed were the first anyone could honestly call their own. They financed the record themselves, rehearsing in a rented unit above a tyre shop and tracking vocals after midnight when the rates dropped.</p>
+					<p>What surprised everyone — including them — was how good it was. The harmonies they'd been drilled on for years suddenly had something to say, and the songs landed with a warmth no focus group had ever managed to manufacture.</p>
+					<p>They're smaller now, playing theatres instead of arenas, and they'll tell you they've never been happier. The screaming is quieter; the listening is louder.</p>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -241,15 +253,18 @@
 				<summary>
 					<ui-face>
 						<ui-media><img src="assets/band_girls.jpg" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Synth-Pop</small><b>Neon Avenue</b></ui-content>
+						<ui-content><small>Synth-Pop</small><strong>Neon Avenue</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
-					<h3>Neon Avenue</h3>
-					<p>Synth-pop with a midnight sheen. Traded bedroom demos for stadium choruses — all glitter and heartbreak under sodium streetlights.</p>
-					<p>Every track sounds like the last song at a club you never wanted to leave, the kind that follows you home and won't let go till morning.</p>
-				</div>
+				<ui-content>
+					<small data-part="eyebrow">Synth-Pop</small>
+					<h3 data-part="headline">Neon Avenue</h3>
+					<p data-part="summary">Synth-pop with a midnight sheen. Traded bedroom demos for stadium choruses — all glitter and heartbreak under sodium streetlights.</p>
+					<p>Every track sounds like the last song at a club you never wanted to leave, the kind that follows you home and won't let go till morning. They built it all on a single second-hand synth and a drum machine held together with tape.</p>
+					<p>The breakthrough came sideways: a track buried on the B-side of a forgotten single soundtracked a film's closing credits, and within a month the band were playing to crowds who knew every word to a song they'd nearly thrown away.</p>
+					<p>They've leaned into the lights ever since — bigger rooms, brighter neon, the same broken heart at the centre of it all. Underneath the gloss, they insist, it's still just two kids and a borrowed keyboard.</p>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -258,15 +273,18 @@
 				<summary>
 					<ui-face>
 						<ui-media><img src="assets/band_britpop.jpg" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Britpop</small><b>Camden Court</b></ui-content>
+						<ui-content><small>Britpop</small><strong>Camden Court</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
-					<h3>Camden Court</h3>
-					<p>Swaggering guitars and singalong choruses. Kings of the back-room pub circuit, they soundtracked a summer of cheap lager and outsized dreams.</p>
-					<p>The press anointed them the next big thing before the ink dried on their first single, and for one long hot July they almost believed it.</p>
-				</div>
+				<ui-content>
+					<small data-part="eyebrow">Britpop</small>
+					<h3 data-part="headline">Camden Court</h3>
+					<p data-part="summary">Swaggering guitars and singalong choruses. Kings of the back-room pub circuit, they soundtracked a summer of cheap lager and outsized dreams.</p>
+					<p>The press anointed them the next big thing before the ink dried on their first single, and for one long hot July they almost believed it. The covers, the radio sessions, the rivalries invented by bored journalists — they rode all of it with a grin.</p>
+					<p>Then the summer ended, as summers do. The second single stalled, the hype machine moved on, and the band were left holding a sound that had briefly defined a city and now belonged to no one in particular.</p>
+					<p>They never quite went away. Every few years they regroup, play the old songs to people who've grown up alongside them, and remind everyone that for one perfect July, Camden Court really were the best band in the country.</p>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -275,15 +293,18 @@
 				<summary>
 					<ui-face>
 						<ui-media><img src="assets/band_country.jpg" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Country</small><b>Red Dirt Road</b></ui-content>
+						<ui-content><small>Country</small><strong>Red Dirt Road</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
-					<h3>Red Dirt Road</h3>
-					<p>Steel strings and long highways. Recorded live in a barn with the doors thrown open, singing about towns that never quite let you leave.</p>
-					<p>No click track, no second takes — just four players in a circle and whatever the night gave them before the coffee ran out.</p>
-				</div>
+				<ui-content>
+					<small data-part="eyebrow">Country</small>
+					<h3 data-part="headline">Red Dirt Road</h3>
+					<p data-part="summary">Steel strings and long highways. Recorded live in a barn with the doors thrown open, singing about towns that never quite let you leave.</p>
+					<p>No click track, no second takes — just four players in a circle and whatever the night gave them before the coffee ran out. You can hear the room on every track: the creak of the boards, a dog barking somewhere past the third verse.</p>
+					<p>They tour in a single van, play county fairs and roadhouse bars, and treat a half-empty room the same as a sold-out one. The songs are about staying when leaving would be easier, and they mean every word.</p>
+					<p>A bigger label came sniffing once, talked about studios and string sections. The band thanked them, drove home, and cut the next record in the same barn with the same broken microphone. Some things, they reckon, you don't fix.</p>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -292,15 +313,18 @@
 				<summary>
 					<ui-face>
 						<ui-media><img src="assets/band_glamrock.jpg" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Glam Rock</small><b>Glitter Throne</b></ui-content>
+						<ui-content><small>Glam Rock</small><strong>Glitter Throne</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
-					<h3>Glitter Throne</h3>
-					<p>Platform boots and pyrotechnics. Every gig became a coronation — feathers, fireworks, and a guitar solo that refused to end.</p>
-					<p>Behind the spectacle sat real songs, sharp enough that even the cynics in the back row were singing along by the encore.</p>
-				</div>
+				<ui-content>
+					<small data-part="eyebrow">Glam Rock</small>
+					<h3 data-part="headline">Glitter Throne</h3>
+					<p data-part="summary">Platform boots and pyrotechnics. Every gig became a coronation — feathers, fireworks, and a guitar solo that refused to end.</p>
+					<p>Behind the spectacle sat real songs, sharp enough that even the cynics in the back row were singing along by the encore. The costumes cost more than the recording budget, and the band considered that money well spent.</p>
+					<p>They understood something their rivals never did: that a show is a promise, and a crowd that's travelled across the country deserves to leave dazzled. So they gave them everything — the smoke, the capes, the impossible high note held a beat too long.</p>
+					<p>The look dated, of course; the songs didn't. Strip away the glitter and what's left is a run of singles built like cathedrals, still loud enough to fill a room thirty years on.</p>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -309,15 +333,18 @@
 				<summary>
 					<ui-face>
 						<ui-media><img src="assets/band_techno.jpg" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Techno</small><b>Pulse Theory</b></ui-content>
+						<ui-content><small>Techno</small><strong>Pulse Theory</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
-					<h3>Pulse Theory</h3>
-					<p>Concrete basements and four-to-the-floor. A reputation built on warehouse sets that ran till sunrise, the machines doing all the talking.</p>
-					<p>They never released a face, never an interview — just white-label twelve-inches that turned up in the right bags at the right hour.</p>
-				</div>
+				<ui-content>
+					<small data-part="eyebrow">Techno</small>
+					<h3 data-part="headline">Pulse Theory</h3>
+					<p data-part="summary">Concrete basements and four-to-the-floor. A reputation built on warehouse sets that ran till sunrise, the machines doing all the talking.</p>
+					<p>They never released a face, never an interview — just white-label twelve-inches that turned up in the right bags at the right hour. For years nobody knew if Pulse Theory was one person or a collective, and the mystery only made the records travel further.</p>
+					<p>The sets were less performances than endurance rituals: six, seven hours of tracks that breathed and built and never quite resolved, a crowd held in suspension until the first grey light leaked through the loading-bay doors.</p>
+					<p>Promoters begged them to tour, to play the festivals, to step into the light. They declined every time. The work was the warehouse, the dark, the hours nobody else wanted — and they had no intention of taking it anywhere a clock could find them.</p>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -326,25 +353,27 @@
 				<summary>
 					<ui-face>
 						<ui-media><img src="assets/band_dreampop.jpg" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Dream-Pop</small><b>Halcyon Wash</b></ui-content>
+						<ui-content><small>Dream-Pop</small><strong>Halcyon Wash</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
-					<h3>Halcyon Wash</h3>
-					<p>Guitars drowned in reverb and a voice half-dissolved in the mix. Halcyon Wash make songs that feel remembered rather than heard — bright, blurred, and always slipping just out of reach.</p>
+				<ui-content>
+					<small data-part="eyebrow">Dream-Pop</small>
+					<h3 data-part="headline">Halcyon Wash</h3>
+					<p data-part="summary">Guitars drowned in reverb and a voice half-dissolved in the mix. Halcyon Wash make songs that feel remembered rather than heard — bright, blurred, and always slipping just out of reach.</p>
 					<p>They record at dusk with the tape hiss left in, chasing the exact moment a melody starts to fade. Live, the stage vanishes behind haze and slow light, the band more felt than seen.</p>
-				</div>
+					<p>It's deliberate, all of it. The singer mixes her own vocals down until the words blur, because the feeling, she says, was always more honest than the sentence. Fans trade lyric sheets like rumours, half-sure they've invented the lines themselves.</p>
+					<p>Their records don't so much end as evaporate, each one a little further from solid ground than the last. Critics call it escapism; the band call it the truth, just softened enough to live with.</p>
+				</ui-content>
 			</details>
 		</ui-reveal>
 	</div>
 
 	<!-- ============================================
-	     full-card flip — trigger="card" (ar 2/3)
+	     Tap the whole card — trigger="card" (ar 2/3)
 	     ============================================ -->
-	<h2>full-card flip — trigger="card" (ar 2/3)</h2>
-	<p>No <code>&lt;ui-icon&gt;</code> — the entire card is the toggle, front <em>and</em> back. Interactive content in the panel (links, buttons) still works.
-	Flip direction follows <code>from</code>: these three flip in from <code>left</code>, <code>top</code> and <code>bottom</code> (default is <code>right</code>).</p>
+	<h2>Tap the whole card</h2>
+	<p>Three from the lineup, up close — tap anywhere, front <em>or</em> back, to turn the card over. Links on the back still work.</p>
 
 	<div class="grid">
 		<ui-reveal type="flip" trigger="card" from="left" variant="ov(bl) sc ar(2/3) hv(track)">
@@ -352,10 +381,14 @@
 				<summary>
 					<ui-face>
 						<ui-media><img src="assets/band_goth.jpg" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Gothic</small><b>Tap anywhere.</b></ui-content>
+						<ui-content><small>Gothic</small><strong>The Lure</strong></ui-content>
 					</ui-face>
 				</summary>
-				<div><h3>trigger="card"</h3><p>Click anywhere on the back to flip home.</p></div>
+				<ui-content>
+					<small data-part="eyebrow">Gothic</small>
+					<h3 data-part="headline">The Lure</h3>
+					<p data-part="summary">Darkwave from the old quarter — reverb, dread, and a baritone tuned until the strings flap.</p>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -364,10 +397,15 @@
 				<summary>
 					<ui-face>
 						<ui-media><img src="assets/band_girls.jpg" alt="" loading="lazy"></ui-media>
-						<ui-content><small>Synth-Pop</small><b>Whole card toggles.</b></ui-content>
+						<ui-content><small>Synth-Pop</small><strong>Neon Avenue</strong></ui-content>
 					</ui-face>
 				</summary>
-				<div><h3>With a link</h3><p>Interactive content opts back in, so this stays clickable:</p><p><a href="#">Follow this link &rarr;</a></p></div>
+				<ui-content>
+					<small data-part="eyebrow">Synth-Pop</small>
+					<h3 data-part="headline">Neon Avenue</h3>
+					<p data-part="summary">All glitter and heartbreak under sodium streetlights.</p>
+					<p><a href="#">Listen on repeat &rarr;</a></p>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -375,35 +413,41 @@
 			<details>
 				<summary>
 					<ui-face>
-						<ui-media><img src="assets/band_boys.jpg" alt="Boy band" loading="lazy"></ui-media>
+						<ui-media><img src="assets/band_boys.jpg" alt="Skyline Five" loading="lazy"></ui-media>
 					</ui-face>
 				</summary>
-				<div><h3>media-only</h3><p>Media-only face — the image alt is the accessible name.</p></div>
+				<ui-content>
+					<small data-part="eyebrow">Pop</small>
+					<h3 data-part="headline">Skyline Five</h3>
+					<p data-part="summary">Five voices, one harmony — the boy band that broke free to write its own songs.</p>
+				</ui-content>
 			</details>
 		</ui-reveal>
 	</div>
 
 	<!-- ============================================
-	     card — media position
+	     However you frame it — media position
 	     ============================================ -->
-	<h2>card — media position</h2>
+	<h2>However you frame it</h2>
+	<p>The same lineup, framed four ways — image above, below, left or right of the words.</p>
 
 	<div class="grid grid-2">
-		<!-- media top (vertical, default) — icon moves to top-right + goes solid dark when open -->
+		<!-- media top (vertical, default) -->
 		<ui-reveal icon="bottom right dark" type="slide" from="top" variant="ar(16/9) hv(zoom)" style="--ui-reveal-bg:#f49d98;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/band_alternative.jpg" alt="" loading="lazy"></ui-media>
 					<ui-content>
 						<small>Alternative</small>
-						<b>Media top.</b>
+						<strong>Paper Mirror</strong>
 					</ui-content>
 					<ui-icon type="down-arrow-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
-					<h3>vertical</h3>
-					<p>Media above content (default).</p>
-				</div>
+				<ui-content>
+					<small data-part="eyebrow">Alternative</small>
+					<h3 data-part="headline">Paper Mirror</h3>
+					<p data-part="summary">Reverb-soaked guitars and bittersweet hooks, built on hand-dubbed cassettes.</p>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -414,14 +458,15 @@
 					<ui-media><img src="assets/band_boys.jpg" alt="" loading="lazy"></ui-media>
 					<ui-content>
 						<small>Pop</small>
-						<b>Media bottom.</b>
+						<strong>Skyline Five</strong>
 					</ui-content>
 					<ui-icon type="up-arrow-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
-					<h3>vertical-r</h3>
-					<p>Content above media.</p>
-				</div>
+				<ui-content>
+					<small data-part="eyebrow">Pop</small>
+					<h3 data-part="headline">Skyline Five</h3>
+					<p data-part="summary">Arena-sized harmonies, written in a unit above a tyre shop.</p>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -432,14 +477,15 @@
 					<ui-media><img src="assets/band_girls.jpg" alt="" loading="lazy"></ui-media>
 					<ui-content>
 						<small>Synth-Pop</small>
-						<b>Media left.</b>
+						<strong>Neon Avenue</strong>
 					</ui-content>
 					<ui-icon type="right-arrow-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
-					<h3>horizontal</h3>
-					<p>Media left, content right.</p>
-				</div>
+				<ui-content>
+					<small data-part="eyebrow">Synth-Pop</small>
+					<h3 data-part="headline">Neon Avenue</h3>
+					<p data-part="summary">Bedroom demos turned stadium choruses, one second-hand synth at a time.</p>
+				</ui-content>
 			</details>
 		</ui-reveal>
 
@@ -450,74 +496,19 @@
 					<ui-media><img src="assets/band_goth.jpg" alt="" loading="lazy"></ui-media>
 					<ui-content>
 						<small>Gothic</small>
-						<b>Media right.</b>
+						<strong>The Lure</strong>
 					</ui-content>
 					<ui-icon type="left-arrow-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<div>
-					<h3>horizontal-r</h3>
-					<p>Content left, media right.</p>
-				</div>
+				<ui-content>
+					<small data-part="eyebrow">Gothic</small>
+					<h3 data-part="headline">The Lure</h3>
+					<p data-part="summary">Cold, slow darkwave conjured in a basement full of smoke.</p>
+				</ui-content>
 			</details>
 		</ui-reveal>
 	</div>
 
-	<!-- ============================================
-	     squircle — superellipse corners (Chrome Canary 151+)
-	     ============================================ -->
-	<h2>squircle — superellipse corners</h2>
-	<p>The card gets iOS-style squircle corners via CSS <code>corner-shape</code> (icons stay circles). Pick a size with <code>sq(sm)</code>, <code>sq(md)</code>, <code>sq(lg)</code> or <code>sq(xl)</code> — each sets a matching radius and curvature together (exponent climbs with size so larger corners stay squircle, not blob). Unsupported browsers fall back to regular rounding.</p>
-
-	<div class="grid">
-		<ui-reveal icon="bottom right" type="expand" variant="sq(sm) media-only ar(1/1)">
-			<details>
-				<summary>
-					<ui-media><img src="assets/band_alternative.jpg" alt="Alternative band" loading="lazy"></ui-media>
-					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
-				</summary>
-				<div>
-					<h3>sq(sm)</h3>
-					<p>20px radius, exponent 1.5.</p>
-				</div>
-			</details>
-		</ui-reveal>
-
-		<ui-reveal icon="top right" type="scale" variant="sq(lg) ov(bl) ar(1/1)">
-			<details>
-				<summary>
-					<ui-media><img src="assets/band_goth.jpg" alt="" loading="lazy"></ui-media>
-					<ui-content>
-						<small>Gothic</small>
-						<b>Squircle + scale.</b>
-					</ui-content>
-					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
-				</summary>
-				<div>
-					<h3>sq(lg) + scale</h3>
-					<p>The morph panel grows into the squircle card shape.</p>
-				</div>
-			</details>
-		</ui-reveal>
-
-		<ui-reveal icon="bottom right" type="expand" variant="sq(xl) media-only ar(1/1)">
-			<details>
-				<summary>
-					<ui-media><img src="assets/band_boys.jpg" alt="Boy band" loading="lazy"></ui-media>
-					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
-				</summary>
-				<div>
-					<h3>sq(xl)</h3>
-					<p>56px radius, exponent 2 — largest squircle.</p>
-				</div>
-			</details>
-		</ui-reveal>
-	</div>
-
-	<!-- <script type="module" src="index.js"></script> -->
-
-	<!-- hv(track): cursor-tracked image pan, no component JS. Writes normalized
-	     --ui-card-mx / --ui-card-my (-1..1) on the card; the CSS does the rest.
-	     rAF-throttled, rect cached on enter, reset to centre on leave. -->
 	<script type="module">
 		for (const card of document.querySelectorAll('[variant*="hv(track)"]')) {
 			const media = card.querySelector('ui-media');

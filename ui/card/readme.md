@@ -59,7 +59,7 @@ pick the semantically correct element for the context (a `<p>` in a card body, a
 | `data-part` | Suggested element | Notes |
 |-------------|-------------------|-------|
 | `eyebrow` | `<small>` | category/kicker — uppercase, accent colour |
-| `headline` | `<h2>`–`<h6>` or `<b>` | uses the headline scale; headings get it automatically |
+| `headline` | `<h2>`–`<h6>` (or any element with `data-part="headline"`) | uses the headline scale; headings get it automatically |
 | `subheadline` | `<p>` / `<span>` | muted secondary line |
 | `summary` | `<p>` | body copy |
 | `byline` | `<address>` | author row; an `<img>` inside becomes a round avatar |
@@ -103,6 +103,7 @@ darken the image. For legible text over a busy photo, add a **scrim** with
 | `ar(16/9 \| 1/1 \| 4/3 \| 3/4 \| 3/2 \| 2/3 \| 21/9 \| square \| portrait \| landscape \| panorama)` | media aspect-ratio |
 | `op(tl…br)` | image object-position (9 positions) |
 | `fs(sm \| md \| lg \| xl)` | font-size tier (see below) |
+| `p(none \| xs \| sm \| md \| lg \| xl \| 2xl)` | content padding (maps to `--spacing-*`) |
 | `sp(1/1 \| 1/2 \| 2/1 \| 1/3 \| 3/1)` | column ratio for `horizontal` |
 | `sq(sm \| md \| lg \| xl)` | superellipse (squircle) corners |
 | `sc` / `sc(pos)` | scrim over media for overlaid text (see below) |
@@ -384,8 +385,8 @@ Each theme value is overridable — e.g. `--ui-card-dark-bg`, `--ui-card-dark-in
 
 Because the grid lives on `<cq-box>`, a card can react to **its own width**. Add
 `variant-md` (applies at container width ≥ 25rem) and/or `variant-lg` (≥ 44rem)
-alongside the base `variant`; they re-apply arrangement, `ar()`, `fs()` and
-`sp()` tokens at those breakpoints.
+alongside the base `variant`; they re-apply **arrangement, `ar()`, `fs()`,
+`sp()`, `ov()`, `op()` and `sc`** at those breakpoints.
 
 ```html
 <!-- vertical + small in a narrow grid cell; horizontal + larger when wide -->
@@ -398,8 +399,27 @@ alongside the base `variant`; they re-apply arrangement, `ar()`, `fs()` and
 ```
 
 The same markup renders differently in a hero slot vs. a 3-up grid — no media
-queries, no JS. (`ov(pos)` / `sc(pos)` are not yet responsive; they can be
-layered on the same pattern.)
+queries, no JS.
+
+### Responsive overlay hero
+
+A card can be a **regular vertical card when narrow** and flip into an **overlay
+hero when wide** — same markup:
+
+```html
+<ui-card variant="vertical ar(16/9)"
+         variant-lg="ov(bl) sc ar(21/9) op(cc) fs(xl)">
+  <cq-box>
+    <ui-media><img src="…" alt=""></ui-media>
+    <ui-content> … </ui-content>
+  </cq-box>
+</ui-card>
+```
+
+Below 44rem it's media-above-content with dark body text; at/above 44rem the
+content stacks over the media with a scrim and a display-size headline. (`ov()`,
+`op()` and bare `sc` are responsive; explicit `sc(pos)` per tier is not — bare
+`sc` auto-matches the tier's `ov()` position.)
 
 ## Custom tokens
 

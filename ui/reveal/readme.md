@@ -47,7 +47,7 @@ npm install @browser.style/base @browser.style/card @browser.style/icon
     <summary>
       <ui-face>
         <ui-media><img src="card.jpg" alt="" loading="lazy"></ui-media>
-        <ui-content><small>Category</small><b>Title</b></ui-content>
+        <ui-content><small>Category</small><strong>Title</strong></ui-content>
       </ui-face>
       <ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
     </summary>
@@ -68,6 +68,7 @@ npm install @browser.style/base @browser.style/card @browser.style/icon
   - `<ui-media>` / `<ui-content>` inside come from ui-card.
 - `<ui-icon>` — the toggle (optional with `trigger="card"`).
 - **One** non-summary element after `<summary>` — the panel content. **Wrap multiple elements in a single `<div>`** (or `<article>`). `::details-content` is a slot-like pseudo: you can't add a combinator after it, so panel layout is applied to that single wrapper, not to `::details-content` itself. (See [Technical notes](#technical-notes).)
+  - Use **`<ui-content>`** as that wrapper to give the back the same card typography + `data-part` parts (eyebrow / headline / summary / tags…) as the front. The front-only `ov()` overlay (which leaks via descendant selectors) is reset on the back, so it renders as a normal flow column on the panel background — dark-on-light, left-aligned, base font-size. Override the back scale with `--ui-reveal-content-fs`.
 
 > Everything in `<ui-reveal>` is **direct-child scoped** (`> details`, `> details > summary`). You can safely nest other `<details>`-based components (e.g. a `<ui-accordion>` of FAQs on a flip card's back) in the panel — they won't inherit the card chrome, the floating icon, or the flip/slide/scale transforms.
 
@@ -129,6 +130,22 @@ Space-separated, combinable. Common ones:
 
 See the [card readme](../card/readme.md) for the full list.
 
+### Responsive front — `variant-md` / `variant-lg`
+
+`<ui-reveal>` is a container, so the card engine's responsive tiers apply to the
+**front face** too. Give the front a base `variant` and a wider-width override —
+e.g. a classic stacked card when narrow that becomes an overlay hero when wide:
+
+```html
+<ui-reveal type="expand" variant="vertical ar(16/9)"
+           variant-lg="ov(bl) sc ar(21/9) op(cc) fs(xl)"> … </ui-reveal>
+```
+
+Below 44rem the front is media-above-content; at/above 44rem the content stacks
+over the media with a scrim and a display headline. (`type="expand"` lets the
+revealed panel grow to fit a long flipside; `scale`/`flip` lock it to the card
+frame.)
+
 ---
 
 ## Tokens
@@ -154,7 +171,19 @@ Scoped to `:where(ui-reveal)` — low specificity, easy to override.
 | `--ui-reveal-content-bg` | `var(--ui-reveal-bg)` | Panel background. |
 | `--ui-reveal-content-c` | `inherit` | Panel text color. |
 | `--ui-reveal-content-p` | `var(--ui-reveal-p)` | Panel padding. |
-| `--ui-reveal-content-fs` | `inherit` | Panel font-size. |
+| `--ui-reveal-content-fs` | `inherit` / `base` | Panel font-size; also the body scale of a `<ui-content>` back. |
+| `--ui-reveal-content-bs` | `auto` | Panel block-size in `scroll` mode (locks the flip back to the closed-card frame). |
+| `--ui-reveal-scrollbar-color` | `currentColor 40%` | Scrollbar thumb colour in `scroll` mode. |
+
+#### `<ui-content>` back overrides
+
+When the panel is a `<ui-content>` (see [Required structure](#required-structure)), it inherits the card typography but the front-only `ov()` overlay is reset. These tune the back's own scale, decoupled from the front face's `fs()`:
+
+| Token | Default | Purpose |
+|---|---|---|
+| `--ui-reveal-content-gap` | `1em` | Row gap between back blocks (roomier than the tight overlay-face gap). |
+| `--ui-reveal-content-headline` | `var(--ui-card-headline-md)` | Back headline scale (won't grow with a `fs(xl)` face). |
+| `--ui-reveal-content-headline-line-height` | `var(--line-height-tight)` | Back headline line-height (stays readable if the face uses a tight display value). |
 
 ### Icon
 

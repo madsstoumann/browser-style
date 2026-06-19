@@ -142,15 +142,17 @@
 	</div>
 
 	<!-- ============================================================
-	     Hero — overlay + fs(xl). Decoupled scale: big headline, normal body.
+	     Hero — responsive: regular vertical card when narrow, overlay hero
+	     when wide (variant-lg). Same markup; the container query does the rest.
 	     ============================================================ -->
-	<h2>Hero — overlay + <code>fs(xl)</code></h2>
-	<ui-card class="hero" variant="ov(bl) ar(21/9) op(cc) fs(xl)">
+	<h2>Hero — responsive overlay (<code>variant-lg</code>)</h2>
+	<p class="note">Narrow → a regular <code>vertical</code> card (media above content). Wide (≥ 44rem) → the overlay hero (<code>ov(bl) sc … fs(xl)</code>). Resize to see it switch.</p>
+	<ui-card class="hero" variant="vertical ar(16/9)" variant-lg="ov(bl) sc ar(21/9) op(cc) fs(xl)">
 		<cq-box>
 			<ui-media><img src="assets/websummit.jpg" alt="" loading="lazy"></ui-media>
 			<ui-content>
 				<small data-part="eyebrow">Featured</small>
-				<b data-part="headline">Web Innovators Summit 2025</b>
+				<strong data-part="headline">Web Innovators Summit 2025</strong>
 				<p data-part="summary">Two days exploring the future of web development and design — October 25–26, San Francisco Convention Center. Only the headline scales to display size; the eyebrow and summary stay readable.</p>
 				<nav data-part="actions"><a class="ui-button" href="#">View agenda</a></nav>
 			</ui-content>
@@ -167,7 +169,7 @@
 				<ui-media><img src="assets/mindfulness.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Wellbeing</small>
-					<b data-part="headline">Small habits, calmer days</b>
+					<strong data-part="headline">Small habits, calmer days</strong>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -176,7 +178,7 @@
 				<ui-media><img src="assets/hubble.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Science</small>
-					<b data-part="headline">What Hubble still teaches us</b>
+					<strong data-part="headline">What Hubble still teaches us</strong>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -185,7 +187,7 @@
 				<ui-media><img src="assets/brewandbean.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Food &amp; Drink</small>
-					<b data-part="headline">The perfect pour-over</b>
+					<strong data-part="headline">The perfect pour-over</strong>
 				</ui-content>
 			</cq-box>
 		</ui-card>

@@ -15,6 +15,7 @@
 		--ui-reveal-radius: var(--radius-2xl);
 		--_trs: var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
 
+		container-type: inline-size; /* enable ui-card's responsive tiers (variant-md/-lg) on the front face */
 		display: block;
 		interpolate-size: allow-keywords;
 
@@ -41,7 +42,35 @@
 			transition-behavior: allow-discrete;
 		}
 
-		&:is([type="flip"], [type="scale"], [type="slide"]) > details::details-content {
+		/* back content — an optional generic <ui-content> placed AFTER <summary>.
+		   It inherits the card typography + data-part engine, but the front-only
+		   ov() overlay leaks via descendant selectors, so neutralise it here:
+		   render as a normal flow column on the panel background. The back keeps
+		   its own card padding (--ui-card-p, settable with p()), and the panel
+		   padding is zeroed below so they don't double. color resets the ov()
+		   white to the panel ink (--ui-reveal-content-c) or inherited dark. */
+		> details > ui-content {
+			color: var(--ui-reveal-content-c, inherit); /* neutralise the ov() white; palette or inherit (dark) */
+			align-items: normal;
+			display: flex; /* media-only's ui-content{display:none} leaks via descendant match */
+			gap: var(--ui-reveal-content-gap, 1em); /* roomier than the tight overlay-face row-gap */
+			grid-area: auto;
+			justify-content: normal;
+			text-align: start;
+			z-index: auto;
+		}
+		/* a ui-content back self-pads — drop the panel padding so it isn't doubled */
+		> details[open]:has(> ui-content)::details-content { padding: 0; }
+		/* scale decoupling ONLY when the back has no variant of its own — a
+		   variant (fs(), th(), …) on the back lets it self-scale/theme via the
+		   card engine instead (the reset would otherwise out-specify it). */
+		> details > ui-content:not([variant]) {
+			--ui-card-fs: var(--ui-reveal-content-fs, var(--font-size-base));
+			--ui-card-headline: var(--ui-reveal-content-headline, var(--ui-card-headline-md));
+			--ui-card-headline-line-height: var(--ui-reveal-content-headline-line-height, var(--line-height-tight, 1.15));
+		}
+
+		&:is([type="flip"], [type="scale"], [type="slide"], [type-lg="scale"]) > details::details-content {
 			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
 			color: var(--ui-reveal-content-c, inherit);
 		}
@@ -135,6 +164,7 @@
 			content-visibility: hidden;
 			overflow: hidden;
 			transition: block-size var(--_trs), content-visibility var(--_trs), padding var(--_trs);
+			transition-behavior: allow-discrete; /* keep content rendered while closing so block-size animates auto→0 (shorthand above resets it) */
 		}
 		> details[open]::details-content {
 			block-size: auto;
@@ -296,6 +326,56 @@
 		/* panel takes clicks; icon stays the toggle */
 		&:not([trigger="card"]) > details[open] > summary { pointer-events: none; }
 		> details[open] > summary > ui-icon { pointer-events: auto; }
+	}
+
+	/* === type-lg — swap the reveal animation at a width (mirrors variant-lg).
+	   e.g. type="expand" type-lg="scale": grows below when narrow, morphs/scales
+	   when wide. The @container re-applies the scale rules to the DESCENDANTS so
+	   they override the base type; the morph-origin vars (set on the host) live
+	   OUTSIDE it — a @container can't style its own container element. === */
+	:where(ui-reveal[type-lg="scale"]) {
+		&[icon~="top"]    { --_scale-bs: 0; --_scale-be: auto; }
+		&[icon~="bottom"] { --_scale-bs: auto; --_scale-be: 0; }
+		&[icon~="left"]   { --_scale-is: 0; --_scale-ie: auto; }
+		&[icon~="right"]  { --_scale-is: auto; --_scale-ie: 0; }
+	}
+	@container (inline-size >= 44rem) {
+		:where(ui-reveal[type-lg="scale"]) {
+			> details { position: relative; }
+			> details::details-content {
+				block-size: var(--ui-reveal-icon-sz);
+				border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
+				box-sizing: border-box;
+				content-visibility: hidden;
+				inline-size: var(--ui-reveal-icon-sz);
+				inset-block: var(--_scale-bs, auto) var(--_scale-be, 0);
+				inset-inline: var(--_scale-is, auto) var(--_scale-ie, 0);
+				margin: var(--ui-reveal-p);
+				opacity: 0;
+				overflow: hidden;
+				position: absolute;
+				transition: block-size var(--_trs), inline-size var(--_trs), border-radius var(--_trs), margin var(--_trs), opacity var(--_trs), content-visibility var(--_trs);
+				z-index: 1;
+			}
+			> details[open]::details-content {
+				block-size: 100%;
+				border-radius: 0;
+				content-visibility: visible;
+				inline-size: 100%;
+				margin: 0;
+				opacity: 1;
+			}
+			&:not([trigger="card"]) > details[open] > summary { pointer-events: none; }
+			> details[open] > summary > ui-icon { pointer-events: auto; }
+
+			/* scrollable morphed panel — long flipside doesn't clip. Bar hidden
+			   for the clean morph look; content still scrolls (wheel/drag). */
+			&[scroll] > details[open]::details-content {
+				overflow-y: auto;
+				overscroll-behavior: contain;
+				scrollbar-width: none;
+			}
+		}
 	}
 
 	/* === trigger: card — whole card toggles (no ui-icon). Clicks fall through
