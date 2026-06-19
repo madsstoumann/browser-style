@@ -9,7 +9,7 @@ A CSS-only reveal card built on native `<details>` and `<summary>`. The front fa
 - Native `<details>` / `<summary>` — accessible, keyboard-navigable, works without JS.
 - Four reveal animations: `expand`, `flip`, `slide`, `scale`.
 - `trigger="card"` — the whole card toggles, front and back; interactive panel content still works.
-- `expand` + `to="viewport"` morphs the card into a fixed popup (progressive enhancement via an optional web component + View Transitions).
+- `expand` + `to="viewport"` opens the card as a fixed, centered popup — CSS-only, with an in-flow placeholder so the surrounding grid doesn't shift.
 - Toggle icon with position / style / size modifiers, plus a separate open-state icon (`icon-close`).
 - Full ui-card variant vocabulary (aspect ratio, object position, overlay placement, squircle corners, media layout).
 - Light/dark mode and full theming via design tokens.
@@ -96,7 +96,9 @@ The entire card is the toggle — front *and* back — no `<ui-icon>` needed. Cl
 
 ### `to` — expand to popup (`type="expand"` only)
 
-`to="viewport"` morphs the card from its grid cell into a fixed, centered popup. This is **progressive enhancement**: an optional `<ui-reveal>` web component drives an element-scoped View Transition (Chrome 147+). Without the script — or under reduced-motion — the card still opens, just instantly.
+`to="viewport"` opens the card as a fixed, centered popup with a backdrop and a pop-in (scale + fade). **Pure CSS, no JavaScript** — driven entirely by the native `<details>` `[open]` state.
+
+The outer `<ui-reveal>` stays in normal flow as a **placeholder** (it reserves the closed tile's cell via its `aspect-ratio`), and only the inner `<details>` goes `position: fixed`. So the surrounding grid never reflows — **no background layout shift**. The backdrop lives on `ui-reveal::before` (not `details::before`), because `details` runs a scale transform during the pop animation, which would otherwise become the containing block for — and clip — a fixed pseudo.
 
 ### `icon` / `icon-close`
 
@@ -240,7 +242,7 @@ For `type="flip"`, the `<ui-icon>` fades out as the card turns edge-on, then fad
 | `@starting-style` / `transition-behavior: allow-discrete` | enter/exit animation | Chrome 117+, Safari 17.4+, Firefox 129+ |
 | `interpolate-size: allow-keywords` | height animation to `auto` | Chrome 129+ |
 | `corner-shape: superellipse(…)` | `sq()` squircle corners | Chrome Canary 151+ (falls back to normal rounding) |
-| Element-scoped View Transitions | `to="viewport"` popup morph | Chrome 147+ (falls back to instant open) |
+| `:has()` | `to="viewport"` popup state, full-card trigger | Chrome 105+, Safari 15.4+, Firefox 121+ |
 
 Without `::details-content`, the component is not usable.
 

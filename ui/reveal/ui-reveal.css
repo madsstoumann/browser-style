@@ -176,27 +176,50 @@
 		&[to] > details::details-content { transition: none; }
 		&[to] > details[open]::details-content { transition: block-size var(--_trs), content-visibility var(--_trs), padding var(--_trs); }
 
+		/* popup: keep the OUTER ui-reveal in normal flow as a placeholder —
+		   reserve the closed tile's cell via its ar so siblings don't reflow (no
+		   background layout shift). Only the INNER <details> goes fixed. Backdrop
+		   sits on ui-reveal::before, NOT details::before: details runs a scale
+		   transform (ui-reveal-pop) which makes it the containing block for fixed
+		   descendants + clips them via overflow:hidden. ui-reveal has no transform,
+		   so its fixed ::before fills the viewport. */
 		&[to]:has(> details[open]) {
-			--ui-card-ar: var(--ui-reveal-expand-aspect, 16/9);
 			--ui-reveal-expand-m: 2ch;
+			aspect-ratio: var(--ui-card-ar, 3/4);
+			background: var(--ui-reveal-expand-fixed-bg, transparent); /* solid fill on the in-flow placeholder — the cell the card lifted out of */
+			border-radius: var(--ui-card-radius, var(--ui-reveal-radius)); /* match the card so the placeholder keeps the same corners (bg clips to radius) */
 
-			animation: ui-reveal-backdrop var(--_trs) both;
-			backdrop-filter: blur(8px);
-			background: var(--ui-reveal-expand-backdrop, color-mix(in srgb, var(--color-surface) 67%, transparent));
-			inset: 0;
-			position: fixed;
-			z-index: var(--z-index-2);
+			/* squircle: same corner-shape as the card when sq() is used */
+			&[variant*="sq("] { corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8)); }
+
+			&::before {
+				animation: ui-reveal-backdrop var(--_trs) both;
+				backdrop-filter: blur(8px);
+				background: var(--ui-reveal-expand-backdrop, color-mix(in srgb, var(--color-surface) 67%, transparent));
+				content: "";
+				inset: 0;
+				position: fixed;
+				z-index: var(--z-index-2);
+			}
 
 			> details {
+				--ui-card-ar: var(--ui-reveal-expand-aspect, 16/9);
 				--ui-reveal-content-fs: var(--ui-reveal-expand-content-fs, var(--font-size-base));
 				align-content: start;
 				animation: ui-reveal-pop var(--_trs) both;
-				margin: var(--ui-reveal-expand-m) auto;
+				background: var(--ui-reveal-expand-bg, var(--ui-reveal-bg)); /* popup card panel bg — dedicated prop, doesn't touch the closed card's --ui-reveal-bg */
+				inset: var(--ui-reveal-expand-m) 0 auto; /* top margin + inline 0; bottom auto so height = content (capped by max-height), not stretched full */
+				margin-inline: auto;
 				max-height: calc(100dvh - calc(var(--ui-reveal-expand-m) * 2));
 				max-inline-size: var(--ui-reveal-expand-max-is, 65ch);
 				overflow-y: auto;
+				position: fixed;
 				scrollbar-gutter: auto;
+				z-index: var(--z-index-3);
 			}
+
+			/* back panel transparent so the popup card bg (--ui-reveal-expand-bg) shows behind the text */
+			> details[open]::details-content { background: transparent; }
 		}
 	}
 

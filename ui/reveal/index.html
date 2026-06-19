@@ -14,7 +14,6 @@
 			gap: var(--spacing-lg);
 			grid-template-columns: 1fr;
 			margin-block-end: var(--spacing-2xl);
-			max-inline-size: var(--width-7xl);
 		}
 		@media (min-width: 720px) {
 			.grid { grid-template-columns: repeat(3, 1fr); }
@@ -23,7 +22,6 @@
 		.hero {
 			display: block;
 			margin-block-end: var(--spacing-2xl);
-			max-inline-size: var(--width-7xl);
 		}
 		/* Flip-card back-face palettes — a light shade pulled from each band photo,
 		   paired with an AA-contrast text colour. */
@@ -55,7 +53,7 @@
 	<p>Tap a game to expand the card from its tile into a full-screen page, with a bouncy morph where supported. Tap the icon to close.</p>
 
 	<div class="grid">
-		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ov(bl) sc ar(3/4) op(cc)">
+		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ov(bl) sc ar(3/4) op(cc)" style="--ui-reveal-expand-fixed-bg:#6a69ab;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/game_01.jpg" alt="" loading="lazy"></ui-media>
@@ -74,7 +72,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ov(bl) sc ar(3/4) op(cc)">
+		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ov(bl) sc ar(3/4) op(cc)" style="--ui-reveal-expand-fixed-bg:#664a31;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/game_02.jpg" alt="" loading="lazy"></ui-media>
@@ -93,7 +91,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ov(bl) sc ar(3/4) op(cc)">
+		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ov(bl) sc ar(3/4) op(cc)" style="--ui-reveal-expand-fixed-bg:#6d6358;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/game_03.jpg" alt="" loading="lazy"></ui-media>
