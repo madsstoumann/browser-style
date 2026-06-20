@@ -232,6 +232,20 @@ to start.
 `--ui-card-cols` / `--ui-media-*` / `--ui-content-*` by inheritance through
 `summary`/`ui-face`. `type=`/`icon=`/`from=`/`trigger=` stay reveal-specific.
 
+**Reveal chrome spacing is decoupled from content `p()`.** The `ui-icon` lives
+in `<summary>`, outside `<ui-content>`, so its edge gap gets its own chrome token
+rather than tracking the content padding:
+
+```css
+:where(ui-reveal) { --ui-reveal-icon-m: var(--spacing-md); }
+… > summary > ui-icon { margin: var(--ui-reveal-icon-m); }
+```
+
+This fixes a latent bug in the old coupling (`--ui-reveal-icon-m` → `--ui-reveal-p`
+→ `--ui-card-p`): `p(none)` on a media-only reveal used to slam the overlaid icon
+into the corner. Now `content="p(none)"` zeroes only the content padding; the icon
+keeps its inset unless `--ui-reveal-icon-m` is set explicitly.
+
 ---
 
 ## 6. Token rename map (clean v4 break — no alias shim)
