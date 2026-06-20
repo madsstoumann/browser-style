@@ -459,6 +459,16 @@ switching (`variant-lg`), the `fs(xl)` hero, scrim overlay cards, the three
 themes, and profile/product cards — with realistic content and images under
 `assets/`.
 
+Two focused demos break the tokens out by structural element:
+
+- **[`media.html`](media.html)** — every `<ui-media>` token: `ar()`
+  aspect-ratios, `op()` object-position, `fl()` flip, `hv()` hover effects, the
+  `sc()` scrim, ribbon/badge overlays, `<video>` and the `carousel` (controls
+  and theming).
+- **[`content.html`](content.html)** — every `<ui-content>` token: the `fs()`
+  typographic scale, `th()` themes, the content parts, `p()` padding, `sp()`
+  splits, `sq()` corners, scrollable content and the core surface tokens.
+
 ## Notes
 
 - **CSS-only.** No web component ships in this version — add `<cq-box>` by hand.

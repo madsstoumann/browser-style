@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Card — Media</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Every <ui-media> token in one place: ar() aspect-ratios, op() object-position, fl() flip, hv() hover effects, scrim, ribbon/badge overlays, video and carousels.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="ui-card.css">
+	<style>
+		.grid {
+			display: grid;
+			gap: var(--spacing-lg);
+			grid-template-columns: 1fr;
+			margin-block-end: var(--spacing-2xl);
+		}
+		@media (min-width: 540px) {
+			.grid-2 { grid-template-columns: repeat(2, 1fr); }
+			.grid-3 { grid-template-columns: repeat(3, 1fr); }
+			.grid-4 { grid-template-columns: repeat(2, 1fr); }
+		}
+		@media (min-width: 900px) {
+			.grid-4 { grid-template-columns: repeat(4, 1fr); }
+		}
+		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
+		.hero { margin-block-end: var(--spacing-2xl); }
+		code { font-size: 0.9em; }
+		/* carousel arrows as inline-SVG chevrons via url() (stroke baked into the SVG) */
+		.svg-arrows {
+			--ui-card-arrow-prev: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 18l-6-6 6-6'/%3E%3C/svg%3E");
+			--ui-card-arrow-next: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+		}
+	</style>
+</head>
+<body>
+	<h1>UI: Card — <code>&lt;ui-media&gt;</code></h1>
+	<p class="note">Everything that controls the media frame: the <code>ar()</code> aspect-ratios, <code>op()</code> object-position, <code>fl()</code> flip, <code>hv()</code> hover effects, the <code>sc()</code> scrim, ribbon/badge overlays, <code>&lt;video&gt;</code> and the CSS-only <code>carousel</code>. All driven by <code>variant</code> tokens — no JavaScript (the one exception, cursor-tracked <code>hv(track)</code>, is noted inline).</p>
+	<p class="note">See also: <a href="index.html">index.html</a> (the full engine) · <a href="content.html">content.html</a> (the <code>&lt;ui-content&gt;</code> side) · <a href="ui-card-tokens.md">ui-card-tokens.md</a> (token reference).</p>
+
+	<!-- ============================================================
+	     ar() — aspect-ratio
+	     ============================================================ -->
+	<h2>Aspect-ratio — <code>ar()</code></h2>
+	<p class="note">Sets the media frame's <code>aspect-ratio</code> (and drops its <code>min-block-size</code> so the ratio wins). Eight stops cover the common print/screen ratios. Same image, same width — only the crop changes.</p>
+	<div class="grid grid-4">
+		<ui-card variant="media-only ar(1/1)">
+			<cq-box><ui-media><img src="assets/destinations.jpg" alt=""><span data-part="badge" pos="bl">ar(1/1)</span></ui-media></cq-box>
+		</ui-card>
+		<ui-card variant="media-only ar(6/7)">
+			<cq-box><ui-media><img src="assets/destinations.jpg" alt=""><span data-part="badge" pos="bl">ar(6/7)</span></ui-media></cq-box>
+		</ui-card>
+		<ui-card variant="media-only ar(3/4)">
+			<cq-box><ui-media><img src="assets/destinations.jpg" alt=""><span data-part="badge" pos="bl">ar(3/4)</span></ui-media></cq-box>
+		</ui-card>
+		<ui-card variant="media-only ar(2/3)">
+			<cq-box><ui-media><img src="assets/destinations.jpg" alt=""><span data-part="badge" pos="bl">ar(2/3)</span></ui-media></cq-box>
+		</ui-card>
+		<ui-card variant="media-only ar(4/3)">
+			<cq-box><ui-media><img src="assets/destinations.jpg" alt=""><span data-part="badge" pos="bl">ar(4/3)</span></ui-media></cq-box>
+		</ui-card>
+		<ui-card variant="media-only ar(3/2)">
+			<cq-box><ui-media><img src="assets/destinations.jpg" alt=""><span data-part="badge" pos="bl">ar(3/2)</span></ui-media></cq-box>
+		</ui-card>
+		<ui-card variant="media-only ar(16/9)">
+			<cq-box><ui-media><img src="assets/destinations.jpg" alt=""><span data-part="badge" pos="bl">ar(16/9)</span></ui-media></cq-box>
+		</ui-card>
+		<ui-card variant="media-only ar(21/9)">
+			<cq-box><ui-media><img src="assets/destinations.jpg" alt=""><span data-part="badge" pos="bl">ar(21/9)</span></ui-media></cq-box>
+		</ui-card>
+	</div>
+	<p class="note">Without an <code>ar()</code>, the frame falls back to its natural image height (bounded by <code>--ui-card-media-min</code>, default <code>12.5rem</code>).</p>
+
+	<!-- ============================================================
+	     op() — object-position
+	     ============================================================ -->
+	<h2>Object-position — <code>op()</code></h2>
+	<p class="note">When the frame's ratio crops the image, <code>op()</code> picks <em>which</em> part stays in view — the same 9-code grid used everywhere else: <code>tl tc tr · cl cc cr · bl bc br</code>. All nine below share one square frame and one wide image.</p>
+	<div class="grid grid-3">
+		<ui-card variant="media-only ar(1/1) op(tl)"><cq-box><ui-media><img src="assets/government.jpg" alt=""><span data-part="badge" pos="tc">op(tl)</span></ui-media></cq-box></ui-card>
+		<ui-card variant="media-only ar(1/1) op(tc)"><cq-box><ui-media><img src="assets/government.jpg" alt=""><span data-part="badge" pos="tc">op(tc)</span></ui-media></cq-box></ui-card>
+		<ui-card variant="media-only ar(1/1) op(tr)"><cq-box><ui-media><img src="assets/government.jpg" alt=""><span data-part="badge" pos="tc">op(tr)</span></ui-media></cq-box></ui-card>
+		<ui-card variant="media-only ar(1/1) op(cl)"><cq-box><ui-media><img src="assets/government.jpg" alt=""><span data-part="badge" pos="tc">op(cl)</span></ui-media></cq-box></ui-card>
+		<ui-card variant="media-only ar(1/1) op(cc)"><cq-box><ui-media><img src="assets/government.jpg" alt=""><span data-part="badge" pos="tc">op(cc)</span></ui-media></cq-box></ui-card>
+		<ui-card variant="media-only ar(1/1) op(cr)"><cq-box><ui-media><img src="assets/government.jpg" alt=""><span data-part="badge" pos="tc">op(cr)</span></ui-media></cq-box></ui-card>
+		<ui-card variant="media-only ar(1/1) op(bl)"><cq-box><ui-media><img src="assets/government.jpg" alt=""><span data-part="badge" pos="tc">op(bl)</span></ui-media></cq-box></ui-card>
+		<ui-card variant="media-only ar(1/1) op(bc)"><cq-box><ui-media><img src="assets/government.jpg" alt=""><span data-part="badge" pos="tc">op(bc)</span></ui-media></cq-box></ui-card>
+		<ui-card variant="media-only ar(1/1) op(br)"><cq-box><ui-media><img src="assets/government.jpg" alt=""><span data-part="badge" pos="tc">op(br)</span></ui-media></cq-box></ui-card>
+	</div>
+
+	<!-- ============================================================
+	     object-fit token
+	     ============================================================ -->
+	<h2>Object-fit — <code>--ui-card-object-fit</code></h2>
+	<p class="note">The frame defaults to <code>object-fit: cover</code> (fill &amp; crop). Override the token per instance for <code>contain</code> (letterbox, whole image visible) — handy for logos and product shots that must not crop.</p>
+	<div class="grid grid-3">
+		<ui-card variant="media-only ar(1/1)"><cq-box><ui-media><img src="assets/ergochair.jpg" alt=""><span data-part="badge" pos="bl">cover (default)</span></ui-media></cq-box></ui-card>
+		<ui-card variant="media-only ar(1/1)" style="--ui-card-object-fit: contain; --ui-card-media-bg: var(--color-surface-alt, #f1f1f1);"><cq-box><ui-media><img src="assets/ergochair.jpg" alt=""><span data-part="badge" pos="bl">contain</span></ui-media></cq-box></ui-card>
+		<ui-card variant="media-only ar(1/1)" style="--ui-card-object-fit: fill;"><cq-box><ui-media><img src="assets/ergochair.jpg" alt=""><span data-part="badge" pos="bl">fill</span></ui-media></cq-box></ui-card>
+	</div>
+
+	<!-- ============================================================
+	     fl() — flip / mirror
+	     ============================================================ -->
+	<h2>Flip — <code>fl()</code></h2>
+	<p class="note">Mirror the media without editing the asset. <code>fl(h)</code> flips horizontally, <code>fl(v)</code> vertically, <code>fl(hv)</code> both. It uses <code>transform</code> on the image, separate from the scale/translate that <code>hv()</code> drives, so flip and hover compose.</p>
+	<div class="grid grid-4">
+		<ui-card variant="media-only ar(4/3)"><cq-box><ui-media><img src="assets/river.jpg" alt=""><span data-part="badge" pos="bl">original</span></ui-media></cq-box></ui-card>
+		<ui-card variant="media-only ar(4/3) fl(h)"><cq-box><ui-media><img src="assets/river.jpg" alt=""><span data-part="badge" pos="bl">fl(h)</span></ui-media></cq-box></ui-card>
+		<ui-card variant="media-only ar(4/3) fl(v)"><cq-box><ui-media><img src="assets/river.jpg" alt=""><span data-part="badge" pos="bl">fl(v)</span></ui-media></cq-box></ui-card>
+		<ui-card variant="media-only ar(4/3) fl(hv)"><cq-box><ui-media><img src="assets/river.jpg" alt=""><span data-part="badge" pos="bl">fl(hv)</span></ui-media></cq-box></ui-card>
+	</div>
+
+	<!-- ============================================================
+	     hv() — hover effects
+	     ============================================================ -->
+	<h2>Hover effects — <code>hv()</code></h2>
+	<p class="note">Hover (or focus) a card. <code>zoom</code> / <code>pan</code> / <code>track</code> move the <em>image</em> inside a fixed frame; <code>lift</code> / <code>shrink</code> / <code>tilt</code> transform the whole <em>card</em>. Tune with <code>--ui-card-hv-*</code> and <code>--ui-card-hover-duration</code>. All respect <code>prefers-reduced-motion</code>.</p>
+	<div class="grid grid-3">
+		<ui-card variant="vertical ar(16/9) hv(zoom)">
+			<cq-box>
+				<ui-media><img src="assets/mindfulness.jpg" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">image</small><h2 data-part="headline">hv(zoom)</h2><p data-part="summary">The image scales up inside the frame.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="vertical ar(16/9) hv(pan)">
+			<cq-box>
+				<ui-media><img src="assets/hubble.jpg" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">image</small><h2 data-part="headline">hv(pan)</h2><p data-part="summary">Zooms and drifts in a fixed direction.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card class="track" variant="vertical ar(16/9) hv(track)">
+			<cq-box>
+				<ui-media><img src="assets/quantum.jpg" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">image · needs JS</small><h2 data-part="headline">hv(track)</h2><p data-part="summary">The image follows the cursor — the only effect that needs a tiny pointer handler (below).</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="vertical ar(16/9) hv(lift)">
+			<cq-box>
+				<ui-media><img src="assets/websummit.jpg" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">card</small><h2 data-part="headline">hv(lift)</h2><p data-part="summary">The card rises with a deeper shadow.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="vertical ar(16/9) hv(shrink)">
+			<cq-box>
+				<ui-media><img src="assets/gastronomy.jpg" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">card</small><h2 data-part="headline">hv(shrink)</h2><p data-part="summary">The card scales down slightly — a press-in feel.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="vertical ar(16/9) hv(tilt)">
+			<cq-box>
+				<ui-media><img src="assets/brewandbean.jpg" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">card</small><h2 data-part="headline">hv(tilt)</h2><p data-part="summary">The card rotates a degree or two.</p></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     sc() / ov() — scrim over media
+	     ============================================================ -->
+	<h2>Scrim — <code>sc()</code> over media</h2>
+	<p class="note">A <strong>scrim</strong> is the darkening gradient painted over the image (via <code>ui-media::after</code>) so overlaid text stays legible. <code>ov(pos)</code> places the content over the media; bare <code>sc</code> auto-matches that position, or pass an explicit <code>sc(pos)</code>. The colour is the <code>--ui-card-scrim-color</code> token.</p>
+	<div class="grid grid-3">
+		<ui-card variant="ov(bl) ar(3/4) op(cc) fs(lg)">
+			<cq-box>
+				<ui-media><img src="assets/mindfulness.jpg" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">ov(bl) — no scrim</small><strong data-part="headline">Placed, undimmed</strong></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="ov(bl) sc ar(3/4) op(cc) fs(lg)">
+			<cq-box>
+				<ui-media><img src="assets/mindfulness.jpg" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">ov(bl) sc — auto-match</small><strong data-part="headline">Bottom scrim</strong></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="ov(cc) sc(cc) ar(3/4) op(cc) fs(lg)" style="--ui-card-scrim-color: rgb(20 0 40 / 0.7);">
+			<cq-box>
+				<ui-media><img src="assets/hubble.jpg" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">sc(cc) + custom colour</small><strong data-part="headline">Centre band</strong></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Ribbon & badge overlays
+	     ============================================================ -->
+	<h2>Media overlays — ribbon &amp; badge</h2>
+	<p class="note">Place <code>data-part="ribbon"</code> or <code>data-part="badge"</code> <strong>inside <code>&lt;ui-media&gt;</code></strong>. Both use the same 9-code <code>pos()</code> placement and <code>color="info|success|warning|error"</code> for the semantic palette. A ribbon can also be <code>variant="diagonal"</code> (corner positions only).</p>
+	<div class="grid grid-3">
+		<ui-card variant="vertical ar(4/3)">
+			<cq-box>
+				<ui-media>
+					<img src="assets/aurasoundpro.jpg" alt="">
+					<span data-part="ribbon" pos="tl" color="error">Featured</span>
+					<span data-part="badge" pos="br" color="success">New</span>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">Straight ribbon + badge</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="vertical ar(4/3)">
+			<cq-box>
+				<ui-media>
+					<img src="assets/ergochair.jpg" alt="">
+					<span data-part="ribbon" pos="tr" variant="diagonal" color="error">-28%</span>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">Diagonal ribbon</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="vertical ar(4/3)">
+			<cq-box>
+				<ui-media>
+					<img src="assets/brewandbean.jpg" alt="">
+					<span data-part="ribbon" pos="bl">Editor's pick</span>
+					<span data-part="badge" pos="tr" color="warning">Sale</span>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">Accent ribbon + warning badge</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+	<p class="note">The four diagonal-ribbon corners (<code>tl tr bl br</code>):</p>
+	<div class="grid grid-4">
+		<ui-card variant="media-only ar(1/1)"><cq-box><ui-media><img src="assets/popovers.jpg" alt=""><span data-part="ribbon" pos="tl" variant="diagonal" color="info">tl</span></ui-media></cq-box></ui-card>
+		<ui-card variant="media-only ar(1/1)"><cq-box><ui-media><img src="assets/popovers.jpg" alt=""><span data-part="ribbon" pos="tr" variant="diagonal" color="success">tr</span></ui-media></cq-box></ui-card>
+		<ui-card variant="media-only ar(1/1)"><cq-box><ui-media><img src="assets/popovers.jpg" alt=""><span data-part="ribbon" pos="bl" variant="diagonal" color="warning">bl</span></ui-media></cq-box></ui-card>
+		<ui-card variant="media-only ar(1/1)"><cq-box><ui-media><img src="assets/popovers.jpg" alt=""><span data-part="ribbon" pos="br" variant="diagonal" color="error">br</span></ui-media></cq-box></ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Video
+	     ============================================================ -->
+	<h2>Video</h2>
+	<p class="note">A native <code>&lt;video&gt;</code> fills the frame exactly like an image — same <code>object-fit: cover</code>, same <code>ar()</code>. Use native attributes (controls, poster, muted, loop); no JS.</p>
+	<div class="grid grid-2">
+		<ui-card variant="vertical ar(16/9)">
+			<cq-box>
+				<ui-media>
+					<video src="https://assets.stoumann.dk/video/river.mp4" poster="assets/river.jpg" controls muted loop playsinline></video>
+					<span data-part="badge" pos="tl" color="info">Video</span>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">Nature</small><h2 data-part="headline">A quieter river</h2><p data-part="summary">Native <code>&lt;video&gt;</code> with the same cover-fit as an image.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="media-only ar(16/9)">
+			<cq-box>
+				<ui-media>
+					<video src="https://assets.stoumann.dk/video/river.mp4" poster="assets/river.jpg" autoplay muted loop playsinline></video>
+					<span data-part="ribbon" pos="bl">media-only · autoplay loop</span>
+				</ui-media>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Carousel — default
+	     ============================================================ -->
+	<h2>Carousel — <code>variant="carousel"</code></h2>
+	<p class="note">Add the <code>carousel</code> token to put <strong>multiple sources</strong> in a scroll-snap row. By default it shows CSS-only navigation — dots (<code>::scroll-marker</code>) and prev/next arrows (<code>::scroll-button()</code>) — with no extra markup and no JS. Chromium-only for now; elsewhere it degrades to a plain swipe scroller.</p>
+	<div class="grid grid-2">
+		<ui-card variant="carousel vertical ar(16/9) fs(lg)">
+			<cq-box>
+				<ui-media>
+					<img src="assets/destinations.jpg" alt="">
+					<img src="assets/river.jpg" alt="">
+					<img src="assets/mindfulness.jpg" alt="">
+					<img src="assets/gastronomy.jpg" alt="">
+				</ui-media>
+				<ui-content><small data-part="eyebrow">Travel</small><h2 data-part="headline">Dots + arrows (default)</h2><p data-part="summary">Swipe, tap a dot, or click an arrow.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="carousel horizontal sp(1/1) ar(1/1) fs(md)">
+			<cq-box>
+				<ui-media>
+					<img src="assets/hubble.jpg" alt="">
+					<img src="assets/quantum.jpg" alt="">
+					<img src="assets/websummit.jpg" alt="">
+				</ui-media>
+				<ui-content><small data-part="eyebrow">Science</small><h2 data-part="headline">Carousel beside content</h2><p data-part="summary">A carousel works in any arrangement — here it is the media half of a <code>horizontal</code> card.</p><nav data-part="actions"><a class="ui-button" href="#">Explore</a></nav></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Carousel controls
+	     ============================================================ -->
+	<h2>Carousel controls — the <code>controls</code> attribute</h2>
+	<p class="note">Pick which controls show with <code>controls="dots arrows none"</code> (space-separated). <code>controls="none"</code> leaves a bare swipe scroller — there is no separate gallery variant; a carousel with its controls off <em>is</em> the gallery.</p>
+	<div class="grid grid-4">
+		<ui-card variant="carousel vertical ar(4/3) fs(sm)" controls="dots">
+			<cq-box>
+				<ui-media><img src="assets/destinations.jpg" alt=""><img src="assets/river.jpg" alt=""><img src="assets/mindfulness.jpg" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">controls="dots"</small><h2 data-part="headline">Dots only</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="carousel vertical ar(4/3) fs(sm)" controls="arrows">
+			<cq-box>
+				<ui-media><img src="assets/gastronomy.jpg" alt=""><img src="assets/brewandbean.jpg" alt=""><img src="assets/aurasoundpro.jpg" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">controls="arrows"</small><h2 data-part="headline">Arrows only</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="carousel vertical ar(4/3) fs(sm)" controls="dots arrows">
+			<cq-box>
+				<ui-media><img src="assets/hubble.jpg" alt=""><img src="assets/quantum.jpg" alt=""><img src="assets/websummit.jpg" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">controls="dots arrows"</small><h2 data-part="headline">Both</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="carousel vertical ar(4/3) fs(sm)" controls="none">
+			<cq-box>
+				<ui-media><img src="assets/popovers.jpg" alt=""><img src="assets/government.jpg" alt=""><img src="assets/fittrackpro.jpg" alt=""><span data-part="badge" pos="tr">3 photos</span></ui-media>
+				<ui-content><small data-part="eyebrow">controls="none"</small><h2 data-part="headline">Bare swipe scroller</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Carousel theming
+	     ============================================================ -->
+	<h2>Carousel theming</h2>
+	<p class="note">Every colour, size and glyph is a token. Recolour the dots and arrows with <code>--ui-card-dot-*</code> / <code>--ui-card-arrow-*</code>, resize them, or swap the chevron for your own <code>url()</code> SVG.</p>
+	<div class="grid grid-3">
+		<ui-card variant="carousel vertical ar(4/3) fs(sm)" controls="dots arrows"
+			style="--ui-card-dot-bg: rgb(0 0 0 / 0.25); --ui-card-dot-active: var(--color-accent); --ui-card-dot-size: 0.8rem;">
+			<cq-box>
+				<ui-media><img src="assets/destinations.jpg" alt=""><img src="assets/river.jpg" alt=""><img src="assets/mindfulness.jpg" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">themed dots</small><h2 data-part="headline">Bigger accent dots</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card class="svg-arrows" variant="carousel vertical ar(4/3) fs(sm)" controls="dots arrows"
+			style="--ui-card-arrow-bg: var(--color-accent); --ui-card-arrow-bg-hover: var(--color-accent); --ui-card-dot-active: var(--color-accent);">
+			<cq-box>
+				<ui-media><img src="assets/hubble.jpg" alt=""><img src="assets/quantum.jpg" alt=""><img src="assets/websummit.jpg" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">themed arrows</small><h2 data-part="headline">SVG chevrons via <code>url()</code></h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="carousel vertical ar(4/3) fs(sm)" controls="arrows"
+			style="--ui-card-arrow-radius: var(--radius-md, 0.5rem); --ui-card-arrow-size: 2.5rem; --ui-card-arrow-bg: rgb(0 0 0 / 0.6); --ui-card-arrow-bg-hover: rgb(0 0 0 / 0.85);">
+			<cq-box>
+				<ui-media><img src="assets/gastronomy.jpg" alt=""><img src="assets/brewandbean.jpg" alt=""><img src="assets/aurasoundpro.jpg" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">squared arrows</small><h2 data-part="headline">Bigger, rounded-rect buttons</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- cursor-tracked hover needs a tiny pointer handler -->
+	<script type="module">
+		// hv(track): the only media effect that needs JS — map the pointer to
+		// --ui-card-mx / --ui-card-my (-1..1), which the CSS reads to translate the image.
+		for (const card of document.querySelectorAll('.track')) {
+			card.addEventListener('pointermove', (e) => {
+				const r = card.getBoundingClientRect();
+				card.style.setProperty('--ui-card-mx', ((e.clientX - r.left) / r.width * 2 - 1).toFixed(3));
+				card.style.setProperty('--ui-card-my', ((e.clientY - r.top) / r.height * 2 - 1).toFixed(3));
+			});
+			card.addEventListener('pointerleave', () => {
+				card.style.removeProperty('--ui-card-mx');
+				card.style.removeProperty('--ui-card-my');
+			});
+		}
+	</script>
+</body>
+</html>
