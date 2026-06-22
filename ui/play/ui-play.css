@@ -1,0 +1,61 @@
+/**
+ * ui-play
+ * @version 4.0.0
+ * @date 2026-06-22
+ * @author Mads Stoumann
+ *
+ * Interactive media play affordance — a round button wrapping a <ui-icon>:
+ *   <ui-play><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+ * The web component swaps the icon type play<->pause and toggles aria-pressed.
+ * Requires @browser.style/icon for the glyph.
+ */
+@layer bs-component {
+	:where(ui-play) button {
+		aspect-ratio: 1;
+		/* dark translucent disc + light glyph — visible over any media or page bg */
+		background: var(--ui-play-bg, rgb(0 0 0 / 0.55));
+		border: 0;
+		border-radius: var(--ui-play-radius, var(--radius-circle, 50%));
+		color: var(--ui-play-c, hsl(0 0% 100%));
+		cursor: pointer;
+		display: grid;
+		inline-size: var(--ui-play-sz, 3em);
+		padding: 0;
+		place-content: center;
+		transition:
+			background var(--ui-play-trsdu, .2s),
+			opacity var(--ui-play-trsdu, .2s),
+			color var(--ui-play-trsdu, .2s);
+
+		&:is(:hover, :focus-visible) {
+			background: var(--ui-play-bg-hover, rgb(0 0 0 / 0.78));
+		}
+	}
+
+	/* glyph = <ui-icon> sub-element (type="play" | "pause"); clicks pass through to the button */
+	:where(ui-play) ui-icon {
+		font-size: var(--ui-play-icon-sz, 1.5em);
+		pointer-events: none;
+	}
+
+	/* reveal variant — hidden until the parent container is hovered/focused */
+	:where(ui-play[variant~="reveal"]) {
+		opacity: 0;
+		transition: opacity var(--ui-play-trsdu, .2s);
+	}
+	:where(:hover) > :where(ui-play[variant~="reveal"]),
+	:where(ui-play[variant~="reveal"]):focus-within {
+		opacity: 1;
+	}
+
+	/* sizes — em-based; disc + glyph scale together (glyph stays ~half the disc) */
+	:where(ui-play[size="sm"]) button { --ui-play-sz: 2.25em; --ui-play-icon-sz: 1em; }
+	:where(ui-play[size="md"]) button { --ui-play-sz: 3em;    --ui-play-icon-sz: 1.5em; }
+	:where(ui-play[size="lg"]) button { --ui-play-sz: 4em;    --ui-play-icon-sz: 2em; }
+
+	/* theme — decorative color bundle (bg + ink). After color rules so theme= wins. */
+	:where(ui-play[theme]) button {
+		background: var(--_theme-bg);
+		color: var(--_theme-c);
+	}
+}

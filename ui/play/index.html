@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Play</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="CSS-first media play button component with optional web component wrapper.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../icon/index.css">
+	<link rel="stylesheet" href="ui-play.css">
+</head>
+<body>
+	<h1>UI: Play</h1>
+
+	<h2>CSS</h2>
+	<p>
+		<code>&lt;ui-play&gt;</code> is a CSS-first media play button. Wrap a single <code>&lt;button&gt;</code> that contains a <code>&lt;ui-icon type="play"&gt;</code> glyph. Use <code>variant="reveal"</code> to hide it until the parent media frame is hovered/focused, and <code>size</code> for scale. The glyph is a <code>&lt;ui-icon&gt;</code> from <code>@browser.style/icon</code> — author <code>type="play"</code> or <code>type="pause"</code>; the web component swaps it at runtime.
+	</p>
+	<p>
+		This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript).
+	</p>
+	<p>
+		See the <a href="wc-demo.html">web component demo</a> for the registered-element version (toggle, event, and <code>for</code> video control).
+	</p>
+
+	<h3>Solid (default)</h3>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-play><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+	</div>
+
+	<h3>Playing state (pause glyph)</h3>
+	<p>Author <code>&lt;ui-icon type="pause"&gt;</code> to show the pause glyph. (CSS-only here; the web component swaps the icon type and toggles <code>aria-pressed</code> for you.)</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-play><button type="button" aria-label="Pause" aria-pressed="true"><ui-icon type="pause"></ui-icon></button></ui-play>
+	</div>
+
+	<h3>Always visible vs. reveal on hover</h3>
+	<p>The <code>reveal</code> variant stays hidden until the parent media frame is hovered or focused.</p>
+	<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+		<figure style="position: relative; margin: 0; inline-size: 16rem; aspect-ratio: 16/9; border-radius: .5rem; overflow: hidden;">
+			<img src="../card/assets/destinations.jpg" alt="" style="inline-size: 100%; block-size: 100%; object-fit: cover;">
+			<ui-play style="position: absolute; inset: 0; margin: auto; inline-size: max-content; block-size: max-content;"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		</figure>
+		<figure style="position: relative; margin: 0; inline-size: 16rem; aspect-ratio: 16/9; border-radius: .5rem; overflow: hidden;">
+			<img src="../card/assets/hubble.jpg" alt="" style="inline-size: 100%; block-size: 100%; object-fit: cover;">
+			<ui-play variant="reveal" style="position: absolute; inset: 0; margin: auto; inline-size: max-content; block-size: max-content;"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		</figure>
+	</div>
+
+	<h3>Sizes</h3>
+	<p>Use the <code>size</code> attribute: <code>sm</code>, <code>md</code> (default), <code>lg</code>.</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-play size="sm"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play size="md"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play size="lg"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+	</div>
+
+	<h3>Theme</h3>
+	<p>Use <code>theme</code> for a decorative color bundle (bg + ink).</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-play theme="dark"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play theme="accent"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play theme="subtle"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+	</div>
+
+	<h3>Custom tokens</h3>
+	<p>Override <code>--ui-play-bg</code>, <code>--ui-play-c</code>, <code>--ui-play-sz</code>, and <code>--ui-play-icon-sz</code>.</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-play style="--ui-play-bg: black; --ui-play-c: white; --ui-play-sz: 4.5em;"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play style="--ui-play-bg: hotpink; --ui-play-c: white;"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+	</div>
+
+	<h3>With opposite color-scheme</h3>
+	<div class="bdrs-md cs-opposite pb-3 pi-3" style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-play><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play><button type="button" aria-label="Pause" aria-pressed="true"><ui-icon type="pause"></ui-icon></button></ui-play>
+	</div>
+</body>
+</html>

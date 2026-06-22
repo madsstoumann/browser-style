@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Play — Web Component</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Web component demo for ui-play">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../icon/index.css">
+	<link rel="stylesheet" href="ui-play.css">
+</head>
+<body>
+	<h1>UI: Play</h1>
+
+	<h2>Web Component</h2>
+	<p>
+		Using <code>&lt;ui-play&gt;</code> as a registered custom element. Clicking the button toggles the <strong>is-playing</strong> state (<code>aria-pressed</code> on the inner button), swaps the inner <code>&lt;ui-icon&gt;</code> between <code>type="play"</code> and <code>type="pause"</code>, and dispatches a bubbling <code>ui-play-toggle</code> event. With <code>for</code>, it also controls a <code>&lt;video&gt;</code>.
+	</p>
+
+	<h3>Toggle</h3>
+	<p>Click to toggle play/pause. Watch the glyph swap and the event log below.</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-play><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play size="lg" theme="dark"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+	</div>
+	<p><output id="log" style="font: 500 .875rem/1.4 monospace;">No events yet.</output></p>
+
+	<h3>Reveal on hover</h3>
+	<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+		<figure style="position: relative; margin: 0; inline-size: 16rem; aspect-ratio: 16/9; border-radius: .5rem; overflow: hidden;">
+			<img src="../card/assets/gastronomy.jpg" alt="" style="inline-size: 100%; block-size: 100%; object-fit: cover;">
+			<ui-play variant="reveal" style="position: absolute; inset: 0; margin: auto; inline-size: max-content; block-size: max-content;"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		</figure>
+	</div>
+
+	<h3>Controlling a &lt;video&gt; with <code>for</code></h3>
+	<p>The play button plays/pauses the video and stays in sync with its real state (try the native controls too). The inner <code>&lt;ui-icon&gt;</code> swaps to <code>pause</code> while playing.</p>
+	<figure style="position: relative; margin: 0; inline-size: 24rem; max-inline-size: 100%; border-radius: .5rem; overflow: hidden;">
+		<video id="demo-video" controls playsinline style="inline-size: 100%; display: block;"
+			src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4"></video>
+		<ui-play for="demo-video" size="lg" theme="dark" style="position: absolute; inset: 0; margin: auto; inline-size: max-content; block-size: max-content;"><button type="button" aria-label="Play video"><ui-icon type="play"></ui-icon></button></ui-play>
+	</figure>
+
+	<script type="module">
+		import './index.js';
+
+		const log = document.getElementById('log');
+		document.addEventListener('ui-play-toggle', (e) => {
+			log.textContent = `ui-play-toggle → playing: ${e.detail.playing}`;
+		});
+	</script>
+</body>
+</html>

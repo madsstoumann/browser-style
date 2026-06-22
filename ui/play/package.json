@@ -1,0 +1,46 @@
+{
+  "name": "@browser.style/play",
+  "version": "4.0.0",
+  "description": "CSS-first media play button component with optional web component wrapper",
+  "type": "module",
+  "module": "index.js",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css"
+  },
+  "files": [
+    "index.js",
+    "index.css",
+    "ui-play.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "play",
+    "play-button",
+    "media",
+    "video",
+    "css-first",
+    "web-components"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/play"
+  },
+  "homepage": "https://browser.style/ui/play",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11",
+    "@browser.style/icon": "^4.0.0"
+  }
+}

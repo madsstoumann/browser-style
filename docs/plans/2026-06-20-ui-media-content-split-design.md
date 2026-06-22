@@ -41,10 +41,16 @@ name, same parse rules, inheritance does the wiring.
 
 ## 2. Naming convention — the token DSL
 
-The attribute DSL (`media=`/`content=`/`variant=` token-strings) is a **separate
-layer** from custom-property naming. `emmet.md` governs *custom-property* names
-(the readable *Token* column) and is independent of how the DSL spells its
-tokens. The DSL has one rule:
+**DSL = Domain-Specific Language** — a small, purpose-built mini-syntax for one job
+(here: configuring a card's layout/media/content), not a general language. The
+"token DSL" is the compact attribute language carried by `media=` / `content=` /
+`variant=` — e.g. `media="asr(16/9) chip(red)"`. Its grammar: 3-letter modifier
+codes with `()` args (`asr(16/9)`, `spl(1/2)`), bare flags (`scm`, `col`), readable
+element/slot names (`chip()`, `eyebrow`), and `md:`/`lg:` breakpoint prefixes.
+
+The attribute DSL is a **separate layer** from custom-property naming. `emmet.md`
+governs *custom-property* names (the readable *Token* column, e.g. `--ui-chip-bg`)
+and is independent of how the DSL spells its tokens. The DSL has one rule:
 
 > **Every modifier is a 3-letter code, verified collision-free against
 > `emmet.md`'s Abbr column. Slot/part names stay readable nouns** (`eyebrow`,
@@ -54,8 +60,8 @@ tokens. The DSL has one rule:
 Uniform 3-letter codes give the attribute strings a steady rhythm and one
 trivial rule to remember. This trades away Emmet *muscle-memory* for `ar`/`op`/
 `of`/`p` — but that only ever applied to custom-property names (still
-`emmet.md`-governed), not this DSL. That answers "why `asr` but `badge`": `asr`
-is a modifier (3-letter code); `badge` is a sub-element slot (readable noun).
+`emmet.md`-governed), not this DSL. That answers "why `asr` but `chip`": `asr`
+is a modifier (3-letter code); `chip` is a sub-element/slot name (readable noun).
 
 ### Token reference — grouped by attribute
 
@@ -73,12 +79,12 @@ flags per owning attribute:
 | `hov()` | `zoom pan track` | hover effect (image only) |
 | `scm()` | *(bare, or `tl … br`)* | scrim — auto-matches `ovr()`, or explicit direction |
 | `nav()` | *(bare, or `dots arrows none`)* | carousel — bare = dots+arrows; the token itself triggers the scroller |
-| `chip()` `sticker()` `save()` | `ts … be` *(position)* / `red orange green blue accent dark light subtle` *(sub-theme)* | place + theme the overlay element |
+| `chip()` `sticker()` `save()` `play()` | `ts … be` *(position)* / `red orange green blue accent dark light subtle` *(sub-theme)* | place + theme the overlay element |
 
 Overlay furniture: `<ui-chip>` (reused `ui/chip` component), `<ui-sticker>`,
-`<ui-save>` — configured **entirely from the parent** `media=`; the elements carry
-only their text. Two per-element axes, atomic `el(value)` tokens (position and theme
-vocabs are disjoint, so they don't clash):
+`<ui-save>`, `<ui-play>` — configured **entirely from the parent** `media=`; the
+elements carry only their text/glyph. Two per-element axes, atomic `el(value)` tokens
+(position and theme vocabs are disjoint, so they don't clash):
 - **Position** → `chip(ts)` … `sticker(cc)`. `<ui-media>` is a 3×3 positioning grid;
   the geometry is defined **once** and an element just picks an area (RTL-aware).
   Default area by role needs no token. See §4.
@@ -126,11 +132,11 @@ scale; a `-sq` suffix on the finite sizes makes the corners superelliptical
 custom elements).
 
 **Media overlay** furniture is **custom elements** instead — `<ui-chip>` (the
-reused `ui/chip` component), `<ui-sticker>`, `<ui-save>` — positioned and themed from
-parent `media=` tokens (`chip(ts)`, `sticker(cc)`, `chip(dark)`) on a 3×3 grid
-(RTL-aware, geometry defined once). They split into **markers** (non-interactive:
-`<ui-chip>`, `<ui-sticker>`) and one **control** (interactive, card-only:
-`<ui-save>`) — see §4. Argument vocabularies (`media`/`content`, `dots`/`arrows`)
+reused `ui/chip` component), `<ui-sticker>`, `<ui-save>`, `<ui-play>` — positioned and
+themed from parent `media=` tokens (`chip(ts)`, `sticker(cc)`, `chip(dark)`) on a 3×3
+grid (RTL-aware, geometry defined once). They split into **markers** (non-interactive:
+`<ui-chip>`, `<ui-sticker>`) and **controls** (interactive, card-only: `<ui-save>`,
+`<ui-play>`) — see §4. Argument vocabularies (`media`/`content`, `dots`/`arrows`)
 stay readable too.
 
 ### Collision audit vs `emmet.md`
@@ -169,8 +175,8 @@ Two tiers:
   spacing (`gap()`/`pad()`)** for now (cost); the rest (`media=`, `content="scl()"`)
   is deferred.
 - **Content parts** are `data-part` children (semantic tags). **Media overlays** are
-  custom elements (`<ui-chip>` reused, `<ui-sticker>`, `<ui-save>`) carrying only
-  their text — no positioning/styling attributes. Overlay **position and theme** are
+  custom elements (`<ui-chip>` reused, `<ui-sticker>`, `<ui-save>`, `<ui-play>`)
+  carrying only their text/glyph — no positioning/styling attributes. Overlay **position and theme** are
   both set from the parent `media=` per-element tokens (`chip(cc)`, `chip(dark)`) so
   they work on `<ui-card>` and inherit down; the theme routes into the element's own
   tokens (chip → `--ui-chip-*`). No `color=` attribute, nothing on the element
@@ -198,9 +204,9 @@ Decisions baked in:
   values — no exhaustive token list required.
 - **Media overlays split marker vs control.** Markers (`<ui-chip>`, `<ui-sticker>`)
   are non-interactive autonomous custom elements = valid **phrasing content**, so
-  they parse in a card *and* inside a reveal `<summary>`. The one control
-  (`<ui-save>`) is interactive → **card-only** (clicks inside `<summary>` toggle the
-  `<details>`; interactive content is invalid there). See §4.
+  they parse in a card *and* inside a reveal `<summary>`. The controls
+  (`<ui-save>`, `<ui-play>`) are interactive → **card-only** (clicks inside
+  `<summary>` toggle the `<details>`; interactive content is invalid there). See §4.
 
 ---
 
@@ -247,10 +253,10 @@ Decisions baked in:
 `::scroll-marker`/`::scroll-button` controls are `@supports`-gated and degrade to
 a bare scroller.
 
-**Overlays** — the media-area "furniture" is three elements: **`<ui-chip>`** (the
+**Overlays** — the media-area "furniture" is four elements: **`<ui-chip>`** (the
 label — **reuses the existing `ui/chip` component**, not a new element; `<ui-badge>`
-stays this project's cart-number badge, unrelated), **`<ui-sticker>`**, and
-**`<ui-save>`**. All are autonomous custom elements = valid **phrasing content**, so
+stays this project's cart-number badge, unrelated), **`<ui-sticker>`**, **`<ui-save>`**,
+and **`<ui-play>`**. All are autonomous custom elements = valid **phrasing content**, so
 the markers parse inside a reveal `<summary>`; markers need **no JS** (pure CSS).
 **All configuration is on the parent** `media=` (so it sits on `<ui-card>` and
 inherits down); the elements carry only their text. Two per-element axes, atomic
@@ -313,12 +319,21 @@ A single text node (`<ui-sticker>-20%</ui-sticker>`) still works — one line.
 **Removed:** `ribbon`, `counter`. **Deferred:** a sold-out / `cover` state (later as a
 full-bleed chip/`<ui-sticker>` variant or scrim + text).
 
-*Control* (interactive → **card-only, never inside `<summary>`**: a click there
+*Controls* (interactive → **card-only, never inside `<summary>`**: a click there
 toggles the `<details>`, and interactive content is invalid in summary):
 
 | Element | Markup | Use |
 |---------|--------|-----|
 | `<ui-save>` | `<ui-save><input type="checkbox" aria-label="Save"></ui-save>` | favorite ≈ wishlist ≈ bookmark toggle. State + a11y + keyboard from the checkbox, zero JS. Icon swappable via `--ui-save-icon` (heart default; bookmark/star). |
+| `<ui-play>` | `<ui-play><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>` | media play affordance (default center, `cc`). Glyph = a **`<ui-icon>` sub-element** (`type="play"`), not a pseudo-element — so `ui/play` peer-deps `@browser.style/icon`. **Visibility:** *(default)* always visible w/ subtle hover/focus color change, or `variant="reveal"` hidden until media hover/focus. **State:** the JS web component swaps the `<ui-icon type>` play↔pause and toggles `aria-pressed` (is-playing); emits `ui-play-toggle`; optional `for="videoId"` drives a `<video>` and syncs to its play/pause/ended. CSS-only fallback = plain styled button showing the authored icon. Themeable via `--ui-play-*` + `theme=`. |
+
+**Future (deferred):** enrich `<ui-play>` with **Popover-API video overlay** — a
+play button (`popovertarget`) that opens a `<video controls>` in a `[popover]`
+lightbox, lifting the pattern from `ui/video-list` (`::backdrop` blur,
+`@starting-style` scale-in, + a ~6-line `toggle`→`play()/pause()` script with
+`data-autoplay`/`data-reset` hooks). Inline native play (a bare `<video controls>`
+child of `<ui-media>`) needs no control element at all. This round ships only the
+play **button** (visual affordance); the popover/inline wiring comes later.
 
 ```css
 /* ui-media is a 3×3 positioning grid; img/video sit underneath (out of grid flow) */
@@ -333,7 +348,7 @@ toggles the `<details>`, and interactive content is invalid in summary):
 
 /* every overlay element: placed in its area (centered in the auto-sized cell), inset by margin.
    --_area = default-by-role, overridable from the parent media= token */
-:where(ui-media) :is(ui-chip, ui-sticker, ui-save) {
+:where(ui-media) :is(ui-chip, ui-sticker, ui-save, ui-play) {
   grid-area: var(--_area, ts);
   margin: var(--ui-media-overlay-gap, 0.75rem);
   place-self: center;
@@ -342,6 +357,7 @@ toggles the `<details>`, and interactive content is invalid in summary):
 :where(ui-media) ui-chip    { --_area: var(--ui-media-chip-area, ts); }
 :where(ui-media) ui-sticker { --_area: var(--ui-media-sticker-area, te); }
 :where(ui-media) ui-save    { --_area: var(--ui-media-save-area, te); }
+:where(ui-media) ui-play    { --_area: var(--ui-media-play-area, cc); }   /* center */
 
 /* position override: parent token → the element's area name. Trivial per (element, area); generatable */
 :where([media*="sticker(cc)"]) { --ui-media-sticker-area: cc; }
@@ -390,6 +406,7 @@ so `theme=` wins). Self-service `theme=` reads the resolver's private vars:
 :where(ui-chip[theme])    { --ui-chip-bg: var(--_theme-bg); --ui-chip-c: var(--_theme-c); }
 :where(ui-sticker[theme]) { --ui-sticker-bg: var(--_theme-bg); --ui-sticker-c: var(--_theme-c); }
 :where(ui-save[theme])    { --ui-save-c: var(--_theme-c); }   /* icon color only */
+:where(ui-play[theme])    { --ui-play-bg: var(--_theme-bg); --ui-play-c: var(--_theme-c); }
 ```
 
 **`media=` routing** uses the *same* `:root` bundles, but targets a *specific*
@@ -414,8 +431,9 @@ warning/error`) each component also supports — decorative bundle vs status acc
 if both set, `theme=` wins.
 
 **Overlay element packages** — the three overlay elements are standalone components
-(`ui/chip` reused; `ui/sticker` + `ui/save` added, scaffolded from chip's template,
-peer-dep `@browser.style/base`). Each defines its own appearance; the media layer
+(`ui/chip` reused; `ui/sticker` + `ui/save` + `ui/play` added, scaffolded from
+chip's template, peer-dep `@browser.style/base`). Each defines its own appearance;
+the media layer
 only *positions* them (grid-area) and *themes* them by writing the element's own
 tokens. The tokens the media `media=` mapping targets (same tokens the self-service
 `theme=` writes):
@@ -425,6 +443,7 @@ tokens. The tokens the media `media=` mapping targets (same tokens the self-serv
 | `<ui-chip>` | `ui/chip` | `--ui-chip-bg`, `--ui-chip-c` | `-border-*`, `-font-*`, `-padding-*`; `variant` light/outline/square/squircle, `size`, `theme`, `color` |
 | `<ui-sticker>` | `ui/sticker` | `--ui-sticker-bg`, `--ui-sticker-c` | `--ui-sticker-font-size`, `-font-weight`, `-sz`, `-radius`, `-gap` (line-spacing), `--ui-sticker-clip-path`; `variant="burst"`, `size`, `theme`, `color`; multi-line segments |
 | `<ui-save>` | `ui/save` | `--ui-save-c`, `--ui-save-c-active` | `--ui-save-icon` (`icon="heart\|bookmark\|star"`), `--ui-save-sz`, `--ui-save-opacity`; `size`, `theme` |
+| `<ui-play>` | `ui/play` (peer-dep `ui/icon`) | `--ui-play-bg`, `--ui-play-c` | `--ui-play-bg-hover`, `--ui-play-sz`, `--ui-play-radius`, `--ui-play-icon-sz`, `--ui-play-trsdu`; glyph via `<ui-icon>`; `variant="reveal"` (hover-show), `size`, `theme`, `for`; JS swaps `<ui-icon type>` + toggles `aria-pressed` + `ui-play-toggle` event (interactive → card-only) |
 
 Each element supports the **`theme=`** attribute (the 8 sub-theme keys, self-applied)
 and a standalone **`color=`** semantic convenience (`info/success/warning/error` —
@@ -445,8 +464,8 @@ chip + sticker), both independent of `media=` parent theming; `theme=` wins if c
 </ui-card>
 ```
 
-In a reveal `<summary>`, drop the `<ui-save>` block (interactive → card-only);
-`<ui-chip>` / `<ui-sticker>` stay valid. RTL: everything mirrors automatically.
+In a reveal `<summary>`, drop the `<ui-save>` / `<ui-play>` blocks (interactive →
+card-only); `<ui-chip>` / `<ui-sticker>` stay valid. RTL: everything mirrors automatically.
 
 **Scrim** (`scm`) — a `media=` token (scrim is painted on the media, so it lives
 with the media). It covers the **whole frame**, layered between the image and the
@@ -507,6 +526,20 @@ active stop.
 **Parts** (`data-part`, auto-styled): eyebrow, headline (+ bare `h2–h6`),
 subheadline, summary, meta/caption, byline, tags, actions, footer. Each keeps a
 `--ui-content-{part}-*` token (future per-part typography knobs).
+
+**Tag choice depends on context (the reason parts are styled by `data-part`, not by
+tag).** A `<ui-content>` can appear in two places inside `<ui-reveal>`, with opposite
+content-model rules:
+
+| Context | Content model | Use |
+|---------|---------------|-----|
+| inside `<summary>` (the trigger face) | **phrasing content only** — `<p>`, `<h2>`, `<address>`, `<ul>`, etc. are invalid | phrasing elements with `data-part`: `<b data-part="headline">`, `<span data-part="summary">`, `<small data-part="eyebrow">` |
+| the revealed panel — `::details-content`, **after** `</summary>` | flow content allowed | real **semantic tags**: `<h2 data-part="headline">`, `<p data-part="summary">`, `<address data-part="byline">` |
+
+Because the styling keys off `[data-part]` (never the tag), the **same part token
+renders identically in both** — the author just swaps a phrasing element inside the
+summary for a flow/semantic element in the revealed panel. (This is also why parts
+stay `data-part` rather than becoming custom elements — see §2/§3.)
 
 **Scroll** — `content="scr"` (was `[scroll]`): scrollable column with the shared
 `ui-scroll-fade` mask.
@@ -628,7 +661,7 @@ CSS custom properties keep `emmet.md`'s readable *Token* form; only the DSL
 | `object-fit` knob | `obf()` | `media=` |
 | `carousel` + `controls=` | `nav()` (bare = both; `nav(dots\|arrows\|none)`) — token *is* the trigger | `media=` |
 | `sc()` | `scm()` (scrim is a media paint) | `media=` |
-| overlay `pos=` on `data-part` spans (9-grid) | overlay elements `<ui-chip>` (reused `ui/chip`) / `<ui-sticker>` / `<ui-save>`, configured via parent `media=` tokens: position `chip(ts…be)` on a 3×3 grid (sticker = full 9; default by role) + sub-theme `chip(red…subtle)`; `ribbon`+`counter` removed, `cover` deferred; old media `badge`→`<ui-chip>` (`<ui-badge>` = cart-number, untouched) | `media=` |
+| overlay `pos=` on `data-part` spans (9-grid) | overlay elements `<ui-chip>` (reused `ui/chip`) / `<ui-sticker>` / `<ui-save>` / `<ui-play>`, configured via parent `media=` tokens: position `chip(ts…be)` on a 3×3 grid (sticker = full 9; `play` defaults `cc`; default by role) + sub-theme `chip(red…subtle)`; `ribbon`+`counter` removed, `cover` deferred; old media `badge`→`<ui-chip>` (`<ui-badge>` = cart-number, untouched) | `media=` |
 | `fs()` | `scl()` | `content=` |
 | `p()` | `pad()` | `content=` |
 | `[scroll]` | `scr` | `content=` |
