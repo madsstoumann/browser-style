@@ -40,32 +40,16 @@
 	     asr() — aspect-ratio
 	     ============================================================ -->
 	<h2>Aspect-ratio — <code>asr()</code></h2>
-	<p class="note">Sets the media frame's <code>aspect-ratio</code> (and drops its <code>min-block-size</code> so the ratio wins). Eight stops cover the common print/screen ratios. Same image, same width — only the crop changes.</p>
+	<p class="note">Sets the media frame's <code>aspect-ratio</code> (and drops its <code>min-block-size</code> so the ratio wins). Eight stops cover the common print/screen ratios. Same image, same width — only the crop changes. <strong>These are standalone <code>&lt;ui-media&gt;</code></strong> — no <code>&lt;ui-card&gt;</code> wrapper — with <code>media=</code> on the element itself (overlay furniture works the same).</p>
 	<div class="grid grid-4">
-		<ui-card variant="vis(media)" media="asr(1/1) chip(bs)">
-			<cq-box><ui-media><img src="assets/destinations.jpg" alt=""><ui-chip>asr(1/1)</ui-chip></ui-media></cq-box>
-		</ui-card>
-		<ui-card variant="vis(media)" media="asr(6/7) chip(bs)">
-			<cq-box><ui-media><img src="assets/destinations.jpg" alt=""><ui-chip>asr(6/7)</ui-chip></ui-media></cq-box>
-		</ui-card>
-		<ui-card variant="vis(media)" media="asr(3/4) chip(bs)">
-			<cq-box><ui-media><img src="assets/destinations.jpg" alt=""><ui-chip>asr(3/4)</ui-chip></ui-media></cq-box>
-		</ui-card>
-		<ui-card variant="vis(media)" media="asr(2/3) chip(bs)">
-			<cq-box><ui-media><img src="assets/destinations.jpg" alt=""><ui-chip>asr(2/3)</ui-chip></ui-media></cq-box>
-		</ui-card>
-		<ui-card variant="vis(media)" media="asr(4/3) chip(bs)">
-			<cq-box><ui-media><img src="assets/destinations.jpg" alt=""><ui-chip>asr(4/3)</ui-chip></ui-media></cq-box>
-		</ui-card>
-		<ui-card variant="vis(media)" media="asr(3/2) chip(bs)">
-			<cq-box><ui-media><img src="assets/destinations.jpg" alt=""><ui-chip>asr(3/2)</ui-chip></ui-media></cq-box>
-		</ui-card>
-		<ui-card variant="vis(media)" media="asr(16/9) chip(bs)">
-			<cq-box><ui-media><img src="assets/destinations.jpg" alt=""><ui-chip>asr(16/9)</ui-chip></ui-media></cq-box>
-		</ui-card>
-		<ui-card variant="vis(media)" media="asr(21/9) chip(bs)">
-			<cq-box><ui-media><img src="assets/destinations.jpg" alt=""><ui-chip>asr(21/9)</ui-chip></ui-media></cq-box>
-		</ui-card>
+		<ui-media media="asr(1/1) chip(bs)"><img src="assets/destinations.jpg" alt=""><ui-chip>asr(1/1)</ui-chip></ui-media>
+		<ui-media media="asr(6/7) chip(bs)"><img src="assets/destinations.jpg" alt=""><ui-chip>asr(6/7)</ui-chip></ui-media>
+		<ui-media media="asr(3/4) chip(bs)"><img src="assets/destinations.jpg" alt=""><ui-chip>asr(3/4)</ui-chip></ui-media>
+		<ui-media media="asr(2/3) chip(bs)"><img src="assets/destinations.jpg" alt=""><ui-chip>asr(2/3)</ui-chip></ui-media>
+		<ui-media media="asr(4/3) chip(bs)"><img src="assets/destinations.jpg" alt=""><ui-chip>asr(4/3)</ui-chip></ui-media>
+		<ui-media media="asr(3/2) chip(bs)"><img src="assets/destinations.jpg" alt=""><ui-chip>asr(3/2)</ui-chip></ui-media>
+		<ui-media media="asr(16/9) chip(bs)"><img src="assets/destinations.jpg" alt=""><ui-chip>asr(16/9)</ui-chip></ui-media>
+		<ui-media media="asr(21/9) chip(bs)"><img src="assets/destinations.jpg" alt=""><ui-chip>asr(21/9)</ui-chip></ui-media>
 	</div>
 	<p class="note">Without an <code>asr()</code>, the frame falls back to its natural image height (bounded by <code>--ui-media-min</code>, default <code>12.5rem</code>).</p>
 

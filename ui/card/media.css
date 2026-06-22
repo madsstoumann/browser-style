@@ -78,7 +78,8 @@
 			--_hv-dur: var(--ui-media-hover-duration, var(--duration-slower));
 			--_hv-ease: var(--ui-media-hover-easing, var(--ease-out));
 		}
-		:where([media*="hov(zoom)"], [media*="hov(pan)"]) ui-media img {
+		:where([media*="hov(zoom)"], [media*="hov(pan)"]) ui-media img,
+		ui-media:where([media*="hov(zoom)"], [media*="hov(pan)"]) img {
 			transition: scale var(--_hv-dur) var(--_hv-ease), translate var(--_hv-dur) var(--_hv-ease);
 		}
 		:where([media*="hov(zoom)"]:hover) ui-media img,
@@ -91,28 +92,33 @@
 			translate: var(--ui-media-hv-pan-x, -2%) var(--ui-media-hv-pan-y, -2%);
 		}
 		/* cursor-tracked pan — --ui-media-mx/my (-1..1) set by a pointermove handler */
-		:where([media*="hov(track)"]) ui-media img {
+		:where([media*="hov(track)"]) ui-media img,
+		ui-media:where([media*="hov(track)"]) img {
 			scale: var(--ui-media-hv-zoom, 1.12);
 			transition: translate var(--ui-media-hv-track-dur, var(--duration-normal)) var(--_hv-ease), scale var(--_hv-dur) var(--_hv-ease);
 			translate: calc(var(--ui-media-mx, 0) * var(--ui-media-hv-track, 4%)) calc(var(--ui-media-my, 0) * var(--ui-media-hv-track, 4%));
 		}
 	}
 	@media (prefers-reduced-motion: reduce) {
-		:where([media*="hov("]) ui-media img { transition: none; }
-		:where([media*="hov(track)"]) ui-media img { translate: 0; }
+		:where([media*="hov("]) ui-media img,
+		ui-media:where([media*="hov("]) img { transition: none; }
+		:where([media*="hov(track)"]) ui-media img,
+		ui-media:where([media*="hov(track)"]) img { translate: 0; }
 	}
 
 	/* ============================================================
 	   CAROUSEL — nav(). The token IS the trigger (flex scroll-snap row).
 	   ============================================================ */
-	:where([media*="nav"]) ui-media {
+	:where([media*="nav"]) ui-media,
+	ui-media:where([media*="nav"]) {
 		display: flex;
 		overflow-x: auto;
 		overscroll-behavior-x: contain;
 		scroll-snap-type: x mandatory;
 		scrollbar-width: thin;
 	}
-	:where([media*="nav"]) ui-media > :is(img, video) {
+	:where([media*="nav"]) ui-media > :is(img, video),
+	ui-media:where([media*="nav"]) > :is(img, video) {
 		block-size: 100%;
 		flex: 0 0 100%;
 		inline-size: 100%;
@@ -121,89 +127,94 @@
 		scroll-snap-align: start;
 	}
 	@media (prefers-reduced-motion: no-preference) {
-		:where([media*="nav"]) ui-media { scroll-behavior: smooth; }
+		:where([media*="nav"]) ui-media,
+		ui-media:where([media*="nav"]) { scroll-behavior: smooth; }
 	}
 
 	/* controls — CSS-only dots + arrows (Chromium-only). Bare nav = both;
 	   nav(dots) / nav(arrows) / nav(none) pick the controls. */
 	@supports (scroll-marker-group: after) {
-		:where(
-			[media*="nav"]:not([media*="nav("]),
-			[media*="nav(dots)"],
-			[media*="nav(arrows)"]
-		) ui-media { scrollbar-width: none; }
+		/* Each control rule matches the scroller ui-media in BOTH holders: nested
+		   under a media= ancestor (<ui-card>), or standalone (media= on <ui-media>
+		   itself). The descendant form + the `ui-media:where(...)` self form. */
+
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(arrows)"]) ui-media,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(arrows)"]) { scrollbar-width: none; }
 
 		/* dots — bare nav or nav(dots) */
-		:where(
-			[media*="nav"]:not([media*="nav("]),
-			[media*="nav(dots)"]
-		) {
-			& ui-media { scroll-marker-group: after; }
-			& ui-media::scroll-marker-group {
-				display: flex;
-				gap: var(--ui-media-dot-gap, 0.5rem);
-				justify-self: anchor-center;
-				position: absolute;
-				position-anchor: auto;
-				top: calc(anchor(bottom) - var(--ui-media-overlay-gap, 0.75rem) - var(--ui-media-dot-size, 0.6rem));
-				z-index: 3;
-			}
-			& ui-media > :is(img, video)::scroll-marker {
-				background: var(--ui-media-dot-bg, rgb(255 255 255 / 0.5));
-				block-size: var(--ui-media-dot-size, 0.6rem);
-				border: var(--ui-media-dot-border, 0);
-				border-radius: var(--radius-circle, 50%);
-				content: "";
-				cursor: pointer;
-				inline-size: var(--ui-media-dot-size, 0.6rem);
-			}
-			& ui-media > :is(img, video)::scroll-marker:target-current {
-				background: var(--ui-media-dot-active, #fff);
-			}
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"]) ui-media,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"]) { scroll-marker-group: after; }
+
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"])::scroll-marker-group {
+			display: flex;
+			gap: var(--ui-media-dot-gap, 0.5rem);
+			justify-self: anchor-center;
+			position: absolute;
+			position-anchor: auto;
+			top: calc(anchor(bottom) - var(--ui-media-overlay-gap, 0.75rem) - var(--ui-media-dot-size, 0.6rem));
+			z-index: 3;
+		}
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"]) ui-media > :is(img, video)::scroll-marker,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"]) > :is(img, video)::scroll-marker {
+			background: var(--ui-media-dot-bg, rgb(255 255 255 / 0.5));
+			block-size: var(--ui-media-dot-size, 0.6rem);
+			border: var(--ui-media-dot-border, 0);
+			border-radius: var(--radius-circle, 50%);
+			content: "";
+			cursor: pointer;
+			inline-size: var(--ui-media-dot-size, 0.6rem);
+		}
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"]) ui-media > :is(img, video)::scroll-marker:target-current,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"]) > :is(img, video)::scroll-marker:target-current {
+			background: var(--ui-media-dot-active, #fff);
 		}
 
 		/* arrows — bare nav or nav(arrows). A circular button: themeable circle
 		   (--ui-media-arrow-bg, default semi-transparent black) + a chevron image.
 		   Two built-in chevron sets — white (default, for the dark circle) and dark;
 		   switch with --ui-media-arrow-prev/-next = var(--ui-media-arrow-*-dark).
-		   No SVG pasting needed. */
-		:where(
-			[media*="nav"]:not([media*="nav("]),
-			[media*="nav(arrows)"]
-		) {
+		   No SVG pasting needed. The glyph vars below are set on the media= holder
+		   (ancestor or self) and inherit down, so both holders work. */
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"]) {
 			--ui-media-arrow-prev-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 18l-6-6 6-6'/%3E%3C/svg%3E");
 			--ui-media-arrow-next-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
 			--ui-media-arrow-prev-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 18l-6-6 6-6'/%3E%3C/svg%3E");
 			--ui-media-arrow-next-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+		}
 
-			& ui-media::scroll-button(*) {
-				aspect-ratio: 1;
-				background-color: var(--ui-media-arrow-bg, rgb(0 0 0 / 0.5));
-				background-position: center;
-				background-repeat: no-repeat;
-				background-size: var(--ui-media-arrow-glyph-size, 45%);
-				border: var(--ui-media-arrow-border, 0);
-				border-radius: var(--ui-media-arrow-radius, var(--radius-circle, 50%));
-				content: "" / "";
-				cursor: pointer;
-				inline-size: var(--ui-media-arrow-size, 2.25rem);
-				position: absolute;
-				position-anchor: auto;
-				top: calc(anchor(center) - var(--ui-media-arrow-size, 2.25rem) / 2);
-				z-index: 3;
-			}
-			& ui-media::scroll-button(*):hover { background-color: var(--ui-media-arrow-bg-hover, rgb(0 0 0 / 0.7)); }
-			& ui-media::scroll-button(*):disabled { cursor: default; opacity: 0; pointer-events: none; }
-			& ui-media::scroll-button(left) {
-				background-image: var(--ui-media-arrow-prev, var(--ui-media-arrow-prev-light));
-				content: "" / "Previous";
-				left: calc(anchor(left) + var(--ui-media-overlay-gap, 0.75rem));
-			}
-			& ui-media::scroll-button(right) {
-				background-image: var(--ui-media-arrow-next, var(--ui-media-arrow-next-light));
-				content: "" / "Next";
-				right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem));
-			}
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"]) ui-media::scroll-button(*),
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"])::scroll-button(*) {
+			aspect-ratio: 1;
+			background-color: var(--ui-media-arrow-bg, rgb(0 0 0 / 0.5));
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: var(--ui-media-arrow-glyph-size, 45%);
+			border: var(--ui-media-arrow-border, 0);
+			border-radius: var(--ui-media-arrow-radius, var(--radius-circle, 50%));
+			content: "" / "";
+			cursor: pointer;
+			inline-size: var(--ui-media-arrow-size, 2.25rem);
+			position: absolute;
+			position-anchor: auto;
+			top: calc(anchor(center) - var(--ui-media-arrow-size, 2.25rem) / 2);
+			z-index: 3;
+		}
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"]) ui-media::scroll-button(*):hover,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"])::scroll-button(*):hover { background-color: var(--ui-media-arrow-bg-hover, rgb(0 0 0 / 0.7)); }
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"]) ui-media::scroll-button(*):disabled,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"])::scroll-button(*):disabled { cursor: default; opacity: 0; pointer-events: none; }
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"]) ui-media::scroll-button(left),
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"])::scroll-button(left) {
+			background-image: var(--ui-media-arrow-prev, var(--ui-media-arrow-prev-light));
+			content: "" / "Previous";
+			left: calc(anchor(left) + var(--ui-media-overlay-gap, 0.75rem));
+		}
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"]) ui-media::scroll-button(right),
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"])::scroll-button(right) {
+			background-image: var(--ui-media-arrow-next, var(--ui-media-arrow-next-light));
+			content: "" / "Next";
+			right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem));
 		}
 	}
 
@@ -305,5 +316,6 @@
 		z-index: 1;
 	}
 	/* a caption inside the media sits above the scrim */
-	:where([media*="scm"]) ui-media [data-part="caption"] { position: relative; z-index: 2; }
+	:where([media*="scm"]) ui-media [data-part="caption"],
+	ui-media:where([media*="scm"]) [data-part="caption"] { position: relative; z-index: 2; }
 }
