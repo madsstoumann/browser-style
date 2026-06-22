@@ -1,0 +1,309 @@
+/**
+ * ui-media
+ * @version 4.0.0
+ * @author Mads Stoumann
+ *
+ * Media primitive — image/video frame + overlay furniture. Works standalone or
+ * nested in <ui-card>/<ui-reveal>. Configured by the `media=` token string on the
+ * element itself OR any ancestor (custom properties inherit down). See media.md.
+ */
+@layer bs-component {
+
+	/* ============================================================
+	   FRAME — single image/video fills it (absolute stack)
+	   ============================================================ */
+	:where(ui-media) {
+		aspect-ratio: var(--ui-media-ar, auto);
+		background: var(--ui-media-bg, var(--color-overlay-light, transparent));
+		display: grid;
+		min-block-size: var(--ui-media-min, 12.5rem);
+		overflow: hidden;
+		position: relative;
+
+		& :is(img, video) {
+			block-size: 100%;
+			inline-size: 100%;
+			inset: 0;
+			object-fit: var(--ui-media-fit, cover);
+			object-position: var(--ui-media-op, center);
+			position: absolute;
+			transform: scale(var(--ui-media-fl-x, 1), var(--ui-media-fl-y, 1));
+		}
+	}
+	/* an explicit aspect-ratio drops the min-height floor (frame follows the ratio) */
+	:where([media*="asr("]) ui-media,
+	:where(ui-media[media*="asr("]) { min-block-size: 0; }
+
+	/* ============================================================
+	   media= PARSE LAYER — tokens set props that inherit to <ui-media>
+	   ============================================================ */
+
+	/* asr() — aspect-ratio */
+	:where([media*="asr(1/1)"])   { --ui-media-ar: 1 / 1; }
+	:where([media*="asr(6/7)"])   { --ui-media-ar: 6 / 7; }
+	:where([media*="asr(3/4)"])   { --ui-media-ar: 3 / 4; }
+	:where([media*="asr(4/3)"])   { --ui-media-ar: 4 / 3; }
+	:where([media*="asr(3/2)"])   { --ui-media-ar: 3 / 2; }
+	:where([media*="asr(2/3)"])   { --ui-media-ar: 2 / 3; }
+	:where([media*="asr(16/9)"])  { --ui-media-ar: 16 / 9; }
+	:where([media*="asr(21/9)"])  { --ui-media-ar: 21 / 9; }
+
+	/* obp() — object-position (9-grid) */
+	:where([media*="obp(tl)"]) { --ui-media-op: left top; }
+	:where([media*="obp(tc)"]) { --ui-media-op: center top; }
+	:where([media*="obp(tr)"]) { --ui-media-op: right top; }
+	:where([media*="obp(cl)"]) { --ui-media-op: left center; }
+	:where([media*="obp(cc)"]) { --ui-media-op: center center; }
+	:where([media*="obp(cr)"]) { --ui-media-op: right center; }
+	:where([media*="obp(bl)"]) { --ui-media-op: left bottom; }
+	:where([media*="obp(bc)"]) { --ui-media-op: center bottom; }
+	:where([media*="obp(br)"]) { --ui-media-op: right bottom; }
+
+	/* obf() — object-fit */
+	:where([media*="obf(cover)"])   { --ui-media-fit: cover; }
+	:where([media*="obf(contain)"]) { --ui-media-fit: contain; }
+	:where([media*="obf(fill)"])    { --ui-media-fit: fill; }
+	:where([media*="obf(none)"])    { --ui-media-fit: none; }
+
+	/* flp() — mirror the image (composes with the hover scale/translate) */
+	:where([media*="flp(h)"])  { --ui-media-fl-x: -1; }
+	:where([media*="flp(v)"])  { --ui-media-fl-y: -1; }
+	:where([media*="flp(hv)"]) { --ui-media-fl-x: -1; --ui-media-fl-y: -1; }
+
+	/* ============================================================
+	   HOVER — hov(zoom|pan|track). Image-only (card-level hovers removed).
+	   ============================================================ */
+	@media (hover: hover) {
+		:where([media*="hov("]) {
+			--_hv-dur: var(--ui-media-hover-duration, var(--duration-slower));
+			--_hv-ease: var(--ui-media-hover-easing, var(--ease-out));
+		}
+		:where([media*="hov(zoom)"], [media*="hov(pan)"]) ui-media img {
+			transition: scale var(--_hv-dur) var(--_hv-ease), translate var(--_hv-dur) var(--_hv-ease);
+		}
+		:where([media*="hov(zoom)"]:hover) ui-media img,
+		:where(ui-media[media*="hov(zoom)"]:hover) img {
+			scale: var(--ui-media-hv-zoom, 1.08);
+		}
+		:where([media*="hov(pan)"]:hover) ui-media img,
+		:where(ui-media[media*="hov(pan)"]:hover) img {
+			scale: var(--ui-media-hv-zoom, 1.12);
+			translate: var(--ui-media-hv-pan-x, -2%) var(--ui-media-hv-pan-y, -2%);
+		}
+		/* cursor-tracked pan — --ui-media-mx/my (-1..1) set by a pointermove handler */
+		:where([media*="hov(track)"]) ui-media img {
+			scale: var(--ui-media-hv-zoom, 1.12);
+			transition: translate var(--ui-media-hv-track-dur, var(--duration-normal)) var(--_hv-ease), scale var(--_hv-dur) var(--_hv-ease);
+			translate: calc(var(--ui-media-mx, 0) * var(--ui-media-hv-track, 4%)) calc(var(--ui-media-my, 0) * var(--ui-media-hv-track, 4%));
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		:where([media*="hov("]) ui-media img { transition: none; }
+		:where([media*="hov(track)"]) ui-media img { translate: 0; }
+	}
+
+	/* ============================================================
+	   CAROUSEL — nav(). The token IS the trigger (flex scroll-snap row).
+	   ============================================================ */
+	:where([media*="nav"]) ui-media {
+		display: flex;
+		overflow-x: auto;
+		overscroll-behavior-x: contain;
+		scroll-snap-type: x mandatory;
+		scrollbar-width: thin;
+	}
+	:where([media*="nav"]) ui-media > :is(img, video) {
+		block-size: 100%;
+		flex: 0 0 100%;
+		inline-size: 100%;
+		inset: auto;
+		position: static;
+		scroll-snap-align: start;
+	}
+	@media (prefers-reduced-motion: no-preference) {
+		:where([media*="nav"]) ui-media { scroll-behavior: smooth; }
+	}
+
+	/* controls — CSS-only dots + arrows (Chromium-only). Bare nav = both;
+	   nav(dots) / nav(arrows) / nav(none) pick the controls. */
+	@supports (scroll-marker-group: after) {
+		:where(
+			[media*="nav"]:not([media*="nav("]),
+			[media*="nav(dots)"],
+			[media*="nav(arrows)"]
+		) ui-media { scrollbar-width: none; }
+
+		/* dots — bare nav or nav(dots) */
+		:where(
+			[media*="nav"]:not([media*="nav("]),
+			[media*="nav(dots)"]
+		) {
+			& ui-media { scroll-marker-group: after; }
+			& ui-media::scroll-marker-group {
+				display: flex;
+				gap: var(--ui-media-dot-gap, 0.5rem);
+				justify-self: anchor-center;
+				position: absolute;
+				position-anchor: auto;
+				top: calc(anchor(bottom) - var(--ui-media-overlay-gap, 0.75rem) - var(--ui-media-dot-size, 0.6rem));
+				z-index: 3;
+			}
+			& ui-media > :is(img, video)::scroll-marker {
+				background: var(--ui-media-dot-bg, rgb(255 255 255 / 0.5));
+				block-size: var(--ui-media-dot-size, 0.6rem);
+				border: var(--ui-media-dot-border, 0);
+				border-radius: var(--radius-circle, 50%);
+				content: "";
+				cursor: pointer;
+				inline-size: var(--ui-media-dot-size, 0.6rem);
+			}
+			& ui-media > :is(img, video)::scroll-marker:target-current {
+				background: var(--ui-media-dot-active, #fff);
+			}
+		}
+
+		/* arrows — bare nav or nav(arrows). A circular button: themeable circle
+		   (--ui-media-arrow-bg, default semi-transparent black) + a chevron image.
+		   Two built-in chevron sets — white (default, for the dark circle) and dark;
+		   switch with --ui-media-arrow-prev/-next = var(--ui-media-arrow-*-dark).
+		   No SVG pasting needed. */
+		:where(
+			[media*="nav"]:not([media*="nav("]),
+			[media*="nav(arrows)"]
+		) {
+			--ui-media-arrow-prev-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 18l-6-6 6-6'/%3E%3C/svg%3E");
+			--ui-media-arrow-next-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+			--ui-media-arrow-prev-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 18l-6-6 6-6'/%3E%3C/svg%3E");
+			--ui-media-arrow-next-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+
+			& ui-media::scroll-button(*) {
+				aspect-ratio: 1;
+				background-color: var(--ui-media-arrow-bg, rgb(0 0 0 / 0.5));
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size: var(--ui-media-arrow-glyph-size, 45%);
+				border: var(--ui-media-arrow-border, 0);
+				border-radius: var(--ui-media-arrow-radius, var(--radius-circle, 50%));
+				content: "" / "";
+				cursor: pointer;
+				inline-size: var(--ui-media-arrow-size, 2.25rem);
+				position: absolute;
+				position-anchor: auto;
+				top: calc(anchor(center) - var(--ui-media-arrow-size, 2.25rem) / 2);
+				z-index: 3;
+			}
+			& ui-media::scroll-button(*):hover { background-color: var(--ui-media-arrow-bg-hover, rgb(0 0 0 / 0.7)); }
+			& ui-media::scroll-button(*):disabled { cursor: default; opacity: 0; pointer-events: none; }
+			& ui-media::scroll-button(left) {
+				background-image: var(--ui-media-arrow-prev, var(--ui-media-arrow-prev-light));
+				content: "" / "Previous";
+				left: calc(anchor(left) + var(--ui-media-overlay-gap, 0.75rem));
+			}
+			& ui-media::scroll-button(right) {
+				background-image: var(--ui-media-arrow-next, var(--ui-media-arrow-next-light));
+				content: "" / "Next";
+				right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem));
+			}
+		}
+	}
+
+	/* ============================================================
+	   OVERLAY FURNITURE — <ui-chip> <ui-sticker> <ui-save> <ui-play>
+	   Absolute-positioned (carousel-safe). Default area by role; override +
+	   theme come from the parent media= token. Elements carry only text/glyph.
+	   ============================================================ */
+	:where(ui-media) :is(ui-chip, ui-sticker, ui-save, ui-play) {
+		--_g: var(--ui-media-overlay-gap, 0.75rem);
+		position: absolute;
+		z-index: 2;
+	}
+
+	/* default area by role */
+	:where(ui-media) ui-chip                     { inset-block-start: var(--_g); inset-inline-start: var(--_g); }   /* ts */
+	:where(ui-media) :is(ui-sticker, ui-save)    { inset-block-start: var(--_g); inset-inline-end:   var(--_g); }   /* te */
+	:where(ui-media) ui-play                      { inset-block-start: 50%; inset-inline-start: 50%; translate: -50% -50%; } /* cc */
+
+	/* position override — parent media="el(pos)" (or self). 9 logical positions,
+	   grouped by position; each lists the elements that accept it. */
+	:where([media*="chip(ts)"]) ui-chip, :where([media*="sticker(ts)"]) ui-sticker, :where([media*="save(ts)"]) ui-save, :where([media*="play(ts)"]) ui-play { inset-block: var(--_g) auto; inset-inline: var(--_g) auto; translate: none; }
+	:where([media*="chip(tc)"]) ui-chip, :where([media*="sticker(tc)"]) ui-sticker, :where([media*="save(tc)"]) ui-save, :where([media*="play(tc)"]) ui-play { inset-block: var(--_g) auto; inset-inline: 50%; translate: -50% 0; }
+	:where([media*="chip(te)"]) ui-chip, :where([media*="sticker(te)"]) ui-sticker, :where([media*="save(te)"]) ui-save, :where([media*="play(te)"]) ui-play { inset-block: var(--_g) auto; inset-inline: auto var(--_g); translate: none; }
+	:where([media*="chip(cs)"]) ui-chip, :where([media*="sticker(cs)"]) ui-sticker, :where([media*="save(cs)"]) ui-save, :where([media*="play(cs)"]) ui-play { inset-block: 50%; inset-inline: var(--_g) auto; translate: 0 -50%; }
+	:where([media*="chip(cc)"]) ui-chip, :where([media*="sticker(cc)"]) ui-sticker, :where([media*="save(cc)"]) ui-save, :where([media*="play(cc)"]) ui-play { inset-block: 50%; inset-inline: 50%; translate: -50% -50%; }
+	:where([media*="chip(ce)"]) ui-chip, :where([media*="sticker(ce)"]) ui-sticker, :where([media*="save(ce)"]) ui-save, :where([media*="play(ce)"]) ui-play { inset-block: 50%; inset-inline: auto var(--_g); translate: 0 -50%; }
+	:where([media*="chip(bs)"]) ui-chip, :where([media*="sticker(bs)"]) ui-sticker, :where([media*="save(bs)"]) ui-save, :where([media*="play(bs)"]) ui-play { inset-block: auto var(--_g); inset-inline: var(--_g) auto; translate: none; }
+	:where([media*="chip(bc)"]) ui-chip, :where([media*="sticker(bc)"]) ui-sticker, :where([media*="save(bc)"]) ui-save, :where([media*="play(bc)"]) ui-play { inset-block: auto var(--_g); inset-inline: 50%; translate: -50% 0; }
+	:where([media*="chip(be)"]) ui-chip, :where([media*="sticker(be)"]) ui-sticker, :where([media*="save(be)"]) ui-save, :where([media*="play(be)"]) ui-play { inset-block: auto var(--_g); inset-inline: auto var(--_g); translate: none; }
+
+	/* ============================================================
+	   SUB-THEME ROUTING — parent media="el(<key>)" → element's own tokens.
+	   8 keys: red orange green blue · accent dark light subtle (from base
+	   --ui-theme-*). chip uses --ui-chip-*, sticker --ui-sticker-*, save/play ink.
+	   ============================================================ */
+	:where([media*="chip(red)"])      { --ui-chip-bg: var(--ui-theme-red-bg);    --ui-chip-c: var(--ui-theme-red-c); }
+	:where([media*="chip(orange)"])   { --ui-chip-bg: var(--ui-theme-orange-bg); --ui-chip-c: var(--ui-theme-orange-c); }
+	:where([media*="chip(green)"])    { --ui-chip-bg: var(--ui-theme-green-bg);  --ui-chip-c: var(--ui-theme-green-c); }
+	:where([media*="chip(blue)"])     { --ui-chip-bg: var(--ui-theme-blue-bg);   --ui-chip-c: var(--ui-theme-blue-c); }
+	:where([media*="chip(accent)"])   { --ui-chip-bg: var(--ui-theme-accent-bg); --ui-chip-c: var(--ui-theme-accent-c); }
+	:where([media*="chip(dark)"])     { --ui-chip-bg: var(--ui-theme-dark-bg);   --ui-chip-c: var(--ui-theme-dark-c); }
+	:where([media*="chip(light)"])    { --ui-chip-bg: var(--ui-theme-light-bg);  --ui-chip-c: var(--ui-theme-light-c); }
+	:where([media*="chip(subtle)"])   { --ui-chip-bg: var(--ui-theme-subtle-bg); --ui-chip-c: var(--ui-theme-subtle-c); }
+
+	:where([media*="sticker(red)"])    { --ui-sticker-bg: var(--ui-theme-red-bg);    --ui-sticker-c: var(--ui-theme-red-c); }
+	:where([media*="sticker(orange)"]) { --ui-sticker-bg: var(--ui-theme-orange-bg); --ui-sticker-c: var(--ui-theme-orange-c); }
+	:where([media*="sticker(green)"])  { --ui-sticker-bg: var(--ui-theme-green-bg);  --ui-sticker-c: var(--ui-theme-green-c); }
+	:where([media*="sticker(blue)"])   { --ui-sticker-bg: var(--ui-theme-blue-bg);   --ui-sticker-c: var(--ui-theme-blue-c); }
+	:where([media*="sticker(accent)"]) { --ui-sticker-bg: var(--ui-theme-accent-bg); --ui-sticker-c: var(--ui-theme-accent-c); }
+	:where([media*="sticker(dark)"])   { --ui-sticker-bg: var(--ui-theme-dark-bg);   --ui-sticker-c: var(--ui-theme-dark-c); }
+	:where([media*="sticker(light)"])  { --ui-sticker-bg: var(--ui-theme-light-bg);  --ui-sticker-c: var(--ui-theme-light-c); }
+	:where([media*="sticker(subtle)"]) { --ui-sticker-bg: var(--ui-theme-subtle-bg); --ui-sticker-c: var(--ui-theme-subtle-c); }
+
+	/* ============================================================
+	   SCRIM — scm(). All 9 directional gradients kept (edges + diagonals + cc).
+	   The directional default is set by the host ovr() (ui-card.css) to match the
+	   overlay corner; scm(<pos>) overrides; bare scm paints the default.
+	   ============================================================ */
+	/* gradients defined on the host too ([variant]) so ovr() can resolve a default */
+	:where(ui-media), :where([media]), :where([variant]) {
+		--ui-media-scrim-c: var(--ui-media-scrim-color, rgb(0 0 0 / 0.78));
+		/* a mid stop holds the dark near the edge/corner before fading, so spanning
+		   text stays legible over bright images (not just at the very corner) */
+		--ui-media-scrim-m: color-mix(in srgb, var(--ui-media-scrim-c), transparent 55%);
+		--ui-media-scrim-tl: linear-gradient(to bottom right, var(--ui-media-scrim-c), var(--ui-media-scrim-m) 40%, #0000 80%);
+		--ui-media-scrim-tc: linear-gradient(to bottom,       var(--ui-media-scrim-c), var(--ui-media-scrim-m) 40%, #0000 80%);
+		--ui-media-scrim-tr: linear-gradient(to bottom left,  var(--ui-media-scrim-c), var(--ui-media-scrim-m) 40%, #0000 80%);
+		--ui-media-scrim-cl: linear-gradient(to right,        var(--ui-media-scrim-c), var(--ui-media-scrim-m) 40%, #0000 80%);
+		--ui-media-scrim-cc: linear-gradient(to bottom, #0000, var(--ui-media-scrim-c) 50%, #0000);
+		--ui-media-scrim-cr: linear-gradient(to left,         var(--ui-media-scrim-c), var(--ui-media-scrim-m) 40%, #0000 80%);
+		--ui-media-scrim-bl: linear-gradient(to top right,    var(--ui-media-scrim-c), var(--ui-media-scrim-m) 40%, #0000 80%);
+		--ui-media-scrim-bc: linear-gradient(to top,          var(--ui-media-scrim-c), var(--ui-media-scrim-m) 40%, #0000 80%);
+		--ui-media-scrim-br: linear-gradient(to top left,     var(--ui-media-scrim-c), var(--ui-media-scrim-m) 40%, #0000 80%);
+	}
+	/* explicit scm(pos) overrides the ov-matched default */
+	:where([media*="scm(tl)"]) { --ui-media-scrim: var(--ui-media-scrim-tl); }
+	:where([media*="scm(tc)"]) { --ui-media-scrim: var(--ui-media-scrim-tc); }
+	:where([media*="scm(tr)"]) { --ui-media-scrim: var(--ui-media-scrim-tr); }
+	:where([media*="scm(cl)"]) { --ui-media-scrim: var(--ui-media-scrim-cl); }
+	:where([media*="scm(cc)"]) { --ui-media-scrim: var(--ui-media-scrim-cc); }
+	:where([media*="scm(cr)"]) { --ui-media-scrim: var(--ui-media-scrim-cr); }
+	:where([media*="scm(bl)"]) { --ui-media-scrim: var(--ui-media-scrim-bl); }
+	:where([media*="scm(bc)"]) { --ui-media-scrim: var(--ui-media-scrim-bc); }
+	:where([media*="scm(br)"]) { --ui-media-scrim: var(--ui-media-scrim-br); }
+	/* scm() intensity — a second atomic token (disjoint vocab from the positions);
+	   sets the scrim colour the gradients read. Default (no intensity) = med. */
+	:where([media*="scm(lgt)"]) { --ui-media-scrim-color: rgb(0 0 0 / 0.55); }
+	:where([media*="scm(med)"]) { --ui-media-scrim-color: rgb(0 0 0 / 0.78); }
+	:where([media*="scm(drk)"]) { --ui-media-scrim-color: rgb(0 0 0 / 0.92); }
+	/* bare scm paints; auto-matches the ovr() position via --ui-media-scrim-default */
+	:where([media*="scm"]) { --ui-media-scrim-paint: var(--ui-media-scrim, var(--ui-media-scrim-default, var(--ui-media-scrim-bc))); }
+	:where(ui-media)::after {
+		background: var(--ui-media-scrim-paint, #0000);
+		content: "";
+		inset: 0;
+		pointer-events: none;
+		position: absolute;
+		z-index: 1;
+	}
+	/* a caption inside the media sits above the scrim */
+	:where([media*="scm"]) ui-media [data-part="caption"] { position: relative; z-index: 2; }
+}

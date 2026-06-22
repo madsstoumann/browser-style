@@ -1,0 +1,199 @@
+/**
+ * ui-content
+ * @version 4.0.0
+ * @author Mads Stoumann
+ *
+ * Content primitive — the text column. Works standalone or nested in
+ * <ui-card>/<ui-reveal>. Configured by the `content=` token string on the element
+ * itself OR any ancestor (custom properties inherit down). Parts are styled by
+ * [data-part], never by tag — so the same part renders in a <summary> (phrasing)
+ * and a revealed panel (flow). See content.md.
+ */
+@layer bs-component {
+
+	/* ============================================================
+	   TYPE SCALE — decoupled body + headline cqi clamps (scl() swaps the stop)
+	   ============================================================ */
+	:where(ui-content), :where([content]) {
+		/* body — active --ui-content-fs/-headline are set by scl() on the host (or a
+		   self content=) and inherit down; consumers fall back to -md. Defining the
+		   active value here on ui-content would block that inheritance. */
+		--ui-content-fs-sm: clamp(0.80rem, 0.74rem + 0.4cqi, 0.90rem);
+		--ui-content-fs-md: clamp(0.88rem, 0.80rem + 0.6cqi, 1.00rem);
+		--ui-content-fs-lg: clamp(0.95rem, 0.86rem + 0.8cqi, 1.10rem);
+		--ui-content-fs-xl: clamp(1.00rem, 0.92rem + 0.9cqi, 1.20rem);
+		/* headline */
+		--ui-content-headline-sm: clamp(1.05rem, 0.90rem + 1.0cqi, 1.35rem);
+		--ui-content-headline-md: clamp(1.20rem, 1.00rem + 1.6cqi, 1.75rem);
+		--ui-content-headline-lg: clamp(1.45rem, 1.05rem + 3.0cqi, 2.50rem);
+		--ui-content-headline-xl: clamp(1.90rem, 1.10rem + 5.5cqi, 4.50rem);
+
+		--ui-content-muted: color-mix(in oklab, currentColor 65%, transparent);
+	}
+
+	/* scl() — type-scale step */
+	:where([content*="scl(sm)"]) { --ui-content-fs: var(--ui-content-fs-sm); --ui-content-headline: var(--ui-content-headline-sm); }
+	:where([content*="scl(md)"]) { --ui-content-fs: var(--ui-content-fs-md); --ui-content-headline: var(--ui-content-headline-md); }
+	:where([content*="scl(lg)"]) { --ui-content-fs: var(--ui-content-fs-lg); --ui-content-headline: var(--ui-content-headline-lg); }
+	:where([content*="scl(xl)"]) { --ui-content-fs: var(--ui-content-fs-xl); --ui-content-headline: var(--ui-content-headline-xl); }
+
+	/* pad() — content padding. ~= (whole token) so base doesn't match md:/lg: forms */
+	:where([content~="pad(none)"]) { --ui-content-p: 0; }
+	:where([content~="pad(xs)"])   { --ui-content-p: var(--spacing-xs); }
+	:where([content~="pad(sm)"])   { --ui-content-p: var(--spacing-sm); }
+	:where([content~="pad(md)"])   { --ui-content-p: var(--spacing-md); }
+	:where([content~="pad(lg)"])   { --ui-content-p: var(--spacing-lg); }
+	:where([content~="pad(xl)"])   { --ui-content-p: var(--spacing-xl); }
+	:where([content~="pad(2xl)"])  { --ui-content-p: var(--spacing-2xl); }
+
+	/* gap() — row gap. ~= so base doesn't match md:/lg: forms */
+	:where([content~="gap(none)"]) { --ui-content-gap: 0; }
+	:where([content~="gap(xs)"])   { --ui-content-gap: var(--spacing-xs); }
+	:where([content~="gap(sm)"])   { --ui-content-gap: var(--spacing-sm); }
+	:where([content~="gap(md)"])   { --ui-content-gap: var(--spacing-md); }
+	:where([content~="gap(lg)"])   { --ui-content-gap: var(--spacing-lg); }
+
+	/* ============================================================
+	   CONTAINER — flex column; ov() placement/ink read from props
+	   ============================================================ */
+	:where(ui-content) {
+		align-items: var(--ui-content-ov-align, normal);
+		color: var(--ui-content-ov-ink, inherit);
+		display: flex;
+		flex-direction: column;
+		font-size: var(--ui-content-fs, var(--ui-content-fs-md));
+		gap: var(--ui-content-gap, 1em);
+		justify-content: var(--ui-content-ov-justify, normal);
+		padding: var(--ui-content-p, var(--spacing-md));
+		text-align: var(--ui-content-ov-text, start);
+		z-index: var(--ui-content-ov-z, auto);
+
+		& > * { margin: 0; text-box: cap alphabetic; }
+	}
+
+	/* ============================================================
+	   SCROLL — content="scr": scrollable column with masked edges
+	   ============================================================ */
+	@property --ui-scroll-fade-start { syntax: "<length>"; inherits: false; initial-value: 0px; }
+	@property --ui-scroll-fade-end   { syntax: "<length>"; inherits: false; initial-value: 0px; }
+
+	@keyframes ui-scroll-fade {
+		0%        { --ui-scroll-fade-start: 0px; }
+		10%, 100% { --ui-scroll-fade-start: var(--ui-scroll-fade-size, 3rem); }
+		0%, 90%   { --ui-scroll-fade-end: var(--ui-scroll-fade-size, 3rem); }
+		100%      { --ui-scroll-fade-end: 0px; }
+	}
+
+	:where([content*="scr"]) ui-content,
+	:where(ui-content[content*="scr"]) {
+		max-block-size: var(--ui-content-scroll-bs, 100%);
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		scrollbar-width: thin;
+	}
+	@supports (animation-timeline: scroll()) {
+		@media (prefers-reduced-motion: no-preference) {
+			:where([content*="scr"]) ui-content,
+			:where(ui-content[content*="scr"]) {
+				animation: ui-scroll-fade linear;
+				animation-timeline: --ui-scroll;
+				mask: linear-gradient(to bottom, #0000, #000 var(--ui-scroll-fade-start) calc(100% - var(--ui-scroll-fade-end)), #0000);
+				scroll-timeline: --ui-scroll block;
+			}
+		}
+	}
+
+	/* ============================================================
+	   PARTS — styled by [data-part], never by tag
+	   ============================================================ */
+
+	/* eyebrow */
+	:where(ui-content) [data-part="eyebrow"] {
+		color: var(--ui-content-eyebrow-color, var(--color-accent));
+		font-size: var(--ui-content-eyebrow-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.78));
+		font-weight: var(--ui-content-eyebrow-weight, var(--font-weight-medium, 500));
+		letter-spacing: var(--tracking-wide, 0.05em);
+		text-transform: uppercase;
+	}
+
+	/* headline (and bare h2–h6) */
+	:where(ui-content) :is([data-part="headline"], h2, h3, h4, h5, h6) {
+		font-size: var(--ui-content-headline, var(--ui-content-headline-md));
+		font-weight: var(--ui-content-headline-weight, var(--font-weight-bold, 700));
+		letter-spacing: var(--tracking-tight, -0.01em);
+		line-height: var(--ui-content-headline-line-height, var(--line-height-tight, 1.15));
+		text-wrap: pretty;
+	}
+
+	/* subheadline */
+	:where(ui-content) [data-part="subheadline"] {
+		color: var(--ui-content-subheadline-color, var(--ui-content-muted));
+		font-size: var(--ui-content-subheadline-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.88));
+		font-weight: var(--ui-content-subheadline-weight, var(--font-weight-normal, 400));
+	}
+
+	/* summary */
+	:where(ui-content) [data-part="summary"] {
+		color: var(--ui-content-summary-color, inherit);
+		font-size: var(--ui-content-summary-fs, var(--ui-content-fs, var(--ui-content-fs-md)));
+		line-height: var(--line-height-normal, 1.5);
+	}
+
+	/* meta / caption (caption may also sit inside <ui-media>) */
+	:where(ui-content, ui-media) :is([data-part="meta"], [data-part="caption"]) {
+		color: var(--ui-content-meta-color, var(--ui-content-muted));
+		font-size: var(--ui-content-meta-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.75));
+	}
+
+	/* byline (author row; inner <img> becomes a round avatar) */
+	:where(ui-content) [data-part="byline"] {
+		align-items: center;
+		display: flex;
+		font-size: var(--ui-content-byline-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.82));
+		font-style: normal;
+		gap: var(--ui-content-byline-gap, var(--spacing-sm));
+
+		& img {
+			aspect-ratio: 1;
+			border-radius: var(--radius-circle);
+			inline-size: var(--ui-content-avatar-size, 2.25em);
+			object-fit: cover;
+		}
+	}
+
+	/* tags (pill list) */
+	:where(ui-content) [data-part="tags"] {
+		display: flex;
+		flex-wrap: wrap;
+		font-size: var(--ui-content-tags-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.72));
+		gap: var(--ui-content-tags-gap, var(--spacing-xs, 0.35rem));
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		& > * { display: contents; }
+		& a, & li {
+			background: var(--ui-content-tag-bg, var(--color-button, hsl(0, 0%, 90%)));
+			border-radius: var(--radius-pill, 100px);
+			color: var(--ui-content-tag-color, inherit);
+			padding: var(--ui-content-tag-padding, 0.2em 0.7em);
+			text-decoration: none;
+		}
+	}
+
+	/* actions (button / link row) */
+	:where(ui-content) [data-part="actions"] {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--ui-content-actions-gap, var(--spacing-sm));
+	}
+
+	/* footer (trailing meta) */
+	:where(ui-content) [data-part="footer"] {
+		color: var(--ui-content-footer-color, var(--ui-content-muted));
+		display: flex;
+		flex-wrap: wrap;
+		font-size: var(--ui-content-footer-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.78));
+		gap: var(--ui-content-footer-gap, var(--spacing-sm));
+	}
+}

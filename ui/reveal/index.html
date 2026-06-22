@@ -49,7 +49,7 @@
 	<h2>New releases</h2>
 
 	<div class="grid">
-		<ui-card variant="ar(3/4) op(cc) ov(bl) sc sq(md)">
+		<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm">
 			<cq-box>
 				<ui-media><img src="assets/game_01.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
@@ -59,7 +59,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="ar(3/4) op(cc) ov(bl) sc sq(md)">
+		<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm">
 			<cq-box>
 				<ui-media><img src="assets/game_02.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
@@ -69,7 +69,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="ar(3/4) op(cc) ov(bl) sc sq(md)">
+		<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm">
 			<cq-box>
 				<ui-media><img src="assets/game_03.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
@@ -90,7 +90,7 @@
 	<h2>New releases <code>&lt;ui-reveal&gt;</code></h2>
 
 	<div class="grid">
-		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ar(3/4) op(cc) ov(bl) sc sq(md)" style="--ui-reveal-expand-fixed-bg:#6a69ab;">
+		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" style="--ui-reveal-expand-fixed-bg:#6a69ab;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/game_01.jpg" alt="" loading="lazy"></ui-media>
@@ -109,7 +109,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ar(3/4) op(cc) ov(bl) sc sq(md)" style="--ui-reveal-expand-fixed-bg:#664a31;">
+		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" style="--ui-reveal-expand-fixed-bg:#664a31;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/game_02.jpg" alt="" loading="lazy"></ui-media>
@@ -128,7 +128,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ar(3/4) op(cc) ov(bl) sc sq(md)" style="--ui-reveal-expand-fixed-bg:#6d6358;">
+		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" style="--ui-reveal-expand-fixed-bg:#6d6358;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/game_03.jpg" alt="" loading="lazy"></ui-media>
@@ -149,12 +149,13 @@
 	</div>
 
 	<!-- ============================================
-	     Cover story as a plain <ui-card> — mirrored media via fl(h),
-	     text placed bottom-right (ov(br)) instead of bottom-left.
+	     Cover story as a plain <ui-card> — mirrored media via flp(h),
+	     text placed bottom-right (ovr(br)) over a scrim. Static overlay
+	     treatment at all widths (per-breakpoint media/scale aren't responsive).
 	     ============================================ -->
 	<h2>Cover story</h2>
 
-	<ui-card class="hero" variant="ar(16/9) fl(h) sq(md) vertical" variant-lg="ar(21/9) fs(xl) op(cc) ov(br) p(lg) sc" style="--ui-card-headline-line-height:0.9;">
+	<ui-card class="hero" variant="ovr(br) rds(md-sq)" media="asr(21/9) flp(h) obp(cc) scm" content="scl(xl) pad(lg)" style="--ui-content-headline-line-height:0.9;">
 		<cq-box>
 			<ui-media><img src="assets/band_girl_hero.jpg" alt="" loading="lazy"></ui-media>
 			<ui-content>
@@ -165,11 +166,13 @@
 	</ui-card>
 
 	<!-- ============================================
-	     Cover story — responsive: classic card when narrow, overlay hero when wide
+	     Cover story — <ui-reveal>: a static overlay hero. type-lg="scale"
+	     still swaps the reveal animation (grows below when narrow, morphs when
+	     wide); the front-face media/scale treatment is the same at all widths.
 	     ============================================ -->
 	<h2>Cover story — <code>&lt;ui-reveal&gt;</code> </h2>
 
-	<ui-reveal class="hero" icon="top right" type="expand" type-lg="scale" scroll variant="ar(16/9) sq(md) vertical" variant-lg="ar(21/9) fs(xl) op(cc) ov(bl) p(lg) sc" style="--ui-reveal-content-bg:#1f2937;--ui-reveal-content-c:#f9fafb;--ui-card-headline-line-height:0.9;--ui-reveal-content-gap:1.25em;">
+	<ui-reveal class="hero" icon="top right" type="expand" type-lg="scale" scroll variant="ovr(bl) rds(md-sq)" media="asr(21/9) obp(cc) scm" content="scl(xl) pad(lg)" style="--ui-reveal-content-bg:#1f2937;--ui-reveal-content-c:#f9fafb;--ui-content-headline-line-height:0.9;--ui-reveal-content-gap:1.25em;">
 		<details>
 			<summary>
 				<ui-media><img src="assets/band_girl_hero.jpg" alt="" loading="lazy"></ui-media>
@@ -179,7 +182,7 @@
 				</ui-content>
 				<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 			</summary>
-			<ui-content variant="fs(lg) p(xl) th(dark)">
+			<ui-content variant="thm(dark)" content="scl(lg) pad(xl)">
 				<small data-part="eyebrow">Cover Story</small>
 				<h3 data-part="headline">The new sound of the small hours</h3>
 				<p data-part="summary">Nine bands, one late-night frequency. From darkwave basements to glitter-soaked arenas, this is the music our editors had on repeat all month — and the people making it.</p>
@@ -191,12 +194,12 @@
 
 	<!-- ============================================
 	     Quick info — plain <ui-card>s; the middle one reverses the
-	     media/content order with vertical-r.
+	     media/content order with col-r.
 	     ============================================ -->
 	<h2>Quick info</h2>
 
 	<div class="grid">
-		<ui-card variant="ar(6/7) op(tc)">
+		<ui-card media="asr(6/7) obp(tc)">
 			<cq-box>
 				<ui-media><img src="assets/band_britpop.jpg" alt="Camden Court" loading="lazy"></ui-media>
 				<ui-content>
@@ -208,7 +211,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="ar(3/4) op(cc) th(subtle) vertical-r">
+		<ui-card variant="thm(subtle) col-r" media="asr(3/4) obp(cc)">
 			<cq-box>
 				<ui-media><img src="assets/band_country.jpg" alt="Red Dirt Road" loading="lazy"></ui-media>
 				<ui-content>
@@ -220,7 +223,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="ar(1/1) op(tc)">
+		<ui-card media="asr(1/1) obp(tc)">
 			<cq-box>
 				<ui-media><img src="assets/band_techno.jpg" alt="Pulse Theory" loading="lazy"></ui-media>
 				<ui-content>
@@ -236,7 +239,7 @@
 	<h2>What we're listening to</h2>
 
 	<div class="grid">
-		<ui-reveal class="thelure" icon="top right sm" icon-close="dark" type="flip" variant="ar(1/1) hv(zoom) op(tc) ov(tl) sq(lg)" scroll>
+		<ui-reveal class="thelure" icon="top right sm" icon-close="dark" type="flip" variant="ovr(tl) rds(lg-sq)" media="asr(1/1) hov(zoom) obp(tc)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -256,7 +259,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="papermirror" icon="top right sm" icon-close="dark" type="flip" variant="ar(1/1) hv(pan) op(tc) ov(tc) sq(lg)" scroll>
+		<ui-reveal class="papermirror" icon="top right sm" icon-close="dark" type="flip" variant="ovr(tc) rds(lg-sq)" media="asr(1/1) hov(pan) obp(tc)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -276,7 +279,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="skylinefive" icon="top left sm" icon-close="dark top right" type="flip" variant="ar(1/1) hv(zoom) op(tc) ov(tr) sq(lg)" scroll>
+		<ui-reveal class="skylinefive" icon="top left sm" icon-close="dark top right" type="flip" variant="ovr(tr) rds(lg-sq)" media="asr(1/1) hov(zoom) obp(tc)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -296,7 +299,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="neonavenue" icon="top right sm" icon-close="dark" type="flip" variant="ar(1/1) hv(pan) op(tc) ov(cl) sc sq(lg)" scroll>
+		<ui-reveal class="neonavenue" icon="top right sm" icon-close="dark" type="flip" variant="ovr(cl) rds(lg-sq)" media="asr(1/1) hov(pan) obp(tc) scm" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -316,7 +319,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="camdencourt" icon="top right sm" icon-close="dark" type="flip" variant="ar(1/1) hv(zoom) ov(cc) sc sq(lg)" scroll>
+		<ui-reveal class="camdencourt" icon="top right sm" icon-close="dark" type="flip" variant="ovr(cc) rds(lg-sq)" media="asr(1/1) hov(zoom) scm" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -336,7 +339,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="reddirtroad" icon="top right sm" icon-close="dark" type="flip" variant="ar(1/1) hv(pan) ov(cr) sc sq(lg)" scroll>
+		<ui-reveal class="reddirtroad" icon="top right sm" icon-close="dark" type="flip" variant="ovr(cr) rds(lg-sq)" media="asr(1/1) hov(pan) scm" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -356,7 +359,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="glitterthrone" icon="top right sm" icon-close="dark" type="flip" variant="ar(1/1) hv(zoom) ov(bl) sc sq(lg)" scroll>
+		<ui-reveal class="glitterthrone" icon="top right sm" icon-close="dark" type="flip" variant="ovr(bl) rds(lg-sq)" media="asr(1/1) hov(zoom) scm" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -376,7 +379,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="pulsetheory" icon="top right sm" icon-close="dark" type="flip" variant="ar(1/1) hv(pan) ov(bc) sq(lg)" scroll>
+		<ui-reveal class="pulsetheory" icon="top right sm" icon-close="dark" type="flip" variant="ovr(bc) rds(lg-sq)" media="asr(1/1) hov(pan)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -396,7 +399,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="halcyonwash" icon="top right sm" icon-close="dark" type="flip" variant="ar(1/1) hv(zoom) ov(br) sq(lg)" scroll>
+		<ui-reveal class="halcyonwash" icon="top right sm" icon-close="dark" type="flip" variant="ovr(br) rds(lg-sq)" media="asr(1/1) hov(zoom)" scroll>
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -424,7 +427,7 @@
 	<p>Three from the lineup, up close — tap anywhere, front <em>or</em> back, to turn the card over. Links on the back still work.</p>
 
 	<div class="grid">
-		<ui-reveal type="flip" trigger="card" from="left" variant="ar(2/3) hv(track) ov(bl) sc">
+		<ui-reveal type="flip" trigger="card" from="left" variant="ovr(bl)" media="asr(2/3) hov(track) scm">
 			<details>
 				<summary>
 					<ui-face>
@@ -440,7 +443,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="flip" trigger="card" from="top" variant="ar(2/3) hv(track) ov(cc) sc">
+		<ui-reveal type="flip" trigger="card" from="top" variant="ovr(cc)" media="asr(2/3) hov(track) scm">
 			<details>
 				<summary>
 					<ui-face>
@@ -457,7 +460,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal type="flip" trigger="card" from="bottom" variant="ar(2/3) hv(track) media-only">
+		<ui-reveal type="flip" trigger="card" from="bottom" variant="vis(media)" media="asr(2/3) hov(track)">
 			<details>
 				<summary>
 					<ui-face>
@@ -480,8 +483,8 @@
 	<p>The same lineup, framed four ways — image above, below, left or right of the words.</p>
 
 	<div class="grid grid-2">
-		<!-- media top (vertical, default) -->
-		<ui-reveal icon="bottom right dark" type="slide" from="top" variant="ar(16/9) hv(zoom)" style="--ui-reveal-bg:#f49d98;">
+		<!-- media top (col, default) -->
+		<ui-reveal icon="bottom right dark" type="slide" from="top" media="asr(16/9) hov(zoom)" style="--ui-reveal-bg:#f49d98;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/band_alternative.jpg" alt="" loading="lazy"></ui-media>
@@ -499,8 +502,8 @@
 			</details>
 		</ui-reveal>
 
-		<!-- media bottom (vertical-r) -->
-		<ui-reveal icon="top right dark" type="slide" from="bottom" variant="ar(16/9) hv(pan) vertical-r" style="--ui-reveal-bg:#e1d4ca;">
+		<!-- media bottom (col-r) -->
+		<ui-reveal icon="top right dark" type="slide" from="bottom" variant="col-r" media="asr(16/9) hov(pan)" style="--ui-reveal-bg:#e1d4ca;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/band_boys.jpg" alt="" loading="lazy"></ui-media>
@@ -518,8 +521,8 @@
 			</details>
 		</ui-reveal>
 
-		<!-- media left (horizontal) -->
-		<ui-reveal icon="bottom right dark" type="slide" from="left" variant="ar(2/3) horizontal hv(zoom)" style="--ui-reveal-bg:#d4e7f2;">
+		<!-- media left (row) -->
+		<ui-reveal icon="bottom right dark" type="slide" from="left" variant="row" media="asr(2/3) hov(zoom)" style="--ui-reveal-bg:#d4e7f2;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/band_girls.jpg" alt="" loading="lazy"></ui-media>
@@ -537,8 +540,8 @@
 			</details>
 		</ui-reveal>
 
-		<!-- media right (horizontal-r) -->
-		<ui-reveal icon="bottom left dark" type="slide" from="right" variant="ar(2/3) horizontal-r hv(pan)" style="--ui-reveal-bg:#dadada;">
+		<!-- media right (row-r) -->
+		<ui-reveal icon="bottom left dark" type="slide" from="right" variant="row-r" media="asr(2/3) hov(pan)" style="--ui-reveal-bg:#dadada;">
 			<details>
 				<summary>
 					<ui-media><img src="assets/band_goth.jpg" alt="" loading="lazy"></ui-media>
@@ -558,13 +561,13 @@
 	</div>
 
 	<script type="module">
-		for (const card of document.querySelectorAll('[variant*="hv(track)"]')) {
+		for (const card of document.querySelectorAll('[media*="hov(track)"]')) {
 			const media = card.querySelector('ui-media');
 			if (!media) continue;
 			let raf = 0, rect = null;
 			const set = (x, y) => {
-				card.style.setProperty('--ui-card-mx', x);
-				card.style.setProperty('--ui-card-my', y);
+				card.style.setProperty('--ui-media-mx', x);
+				card.style.setProperty('--ui-media-my', y);
 			};
 			card.addEventListener('pointerenter', () => { rect = media.getBoundingClientRect(); });
 			card.addEventListener('pointermove', (e) => {

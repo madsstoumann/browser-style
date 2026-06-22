@@ -15,7 +15,7 @@
 			25.3% 74.7%, 6.7% 75.0%, 16.2% 59.1%, 0.0% 50.0%, 16.2% 40.9%,
 			6.7% 25.0%, 25.3% 25.3%, 25.0% 6.7%, 40.9% 16.2%
 		);
-		aspect-ratio: 1;
+		aspect-ratio: 1 / 1;
 		background: var(--ui-sticker-bg, var(--color-accent));
 		border-radius: var(--ui-sticker-radius, var(--radius-circle, 50%));
 		color: var(--ui-sticker-c, hsl(0, 0%, 100%));
@@ -24,7 +24,10 @@
 		font-weight: var(--ui-sticker-font-weight, var(--font-weight-bold, 700));
 		gap: var(--ui-sticker-gap);
 		line-height: 1;
-		min-width: var(--ui-sticker-sz, 4em);
+		/* floor BOTH axes so a short callout stays square — aspect-ratio alone can't,
+		   because min-width is only a floor (no definite axis to derive height from) */
+		min-block-size: var(--ui-sticker-sz, 4em);
+		min-inline-size: var(--ui-sticker-sz, 4em);
 		padding: var(--ui-sticker-padding);
 		place-content: center;
 		text-align: center;

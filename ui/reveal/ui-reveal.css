@@ -8,14 +8,15 @@
 @import '../icon/index.css';
 @layer bs-component {
 	:where(ui-reveal) {
-		--ui-card-row-gap: var(--ui-reveal-row-gap, 1em);
+		--ui-content-gap: var(--ui-reveal-row-gap, 1em);
 		--ui-reveal-bg: var(--color-surface);
 		--ui-reveal-icon-sz: var(--size-7);
-		--ui-reveal-p: var(--ui-card-p, var(--spacing-md));
+		--ui-reveal-p: var(--ui-content-p, var(--spacing-md));
+		--ui-reveal-icon-m: var(--spacing-md); /* icon chrome — decoupled from content padding */
 		--ui-reveal-radius: var(--radius-2xl);
 		--_trs: var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
 
-		container-type: inline-size; /* enable ui-card's responsive tiers (variant-md/-lg) on the front face */
+		container-type: inline-size; /* enable ui-card's responsive tiers (md:/lg:) on the front face */
 		display: block;
 		interpolate-size: allow-keywords;
 
@@ -46,7 +47,7 @@
 		   It inherits the card typography + data-part engine, but the front-only
 		   ov() overlay leaks via descendant selectors, so neutralise it here:
 		   render as a normal flow column on the panel background. The back keeps
-		   its own card padding (--ui-card-p, settable with p()), and the panel
+		   its own content padding (--ui-content-p, settable with pad()), and the panel
 		   padding is zeroed below so they don't double. color resets the ov()
 		   white to the panel ink (--ui-reveal-content-c) or inherited dark. */
 		> details > ui-content {
@@ -64,10 +65,10 @@
 		/* scale decoupling ONLY when the back has no variant of its own — a
 		   variant (fs(), th(), …) on the back lets it self-scale/theme via the
 		   card engine instead (the reset would otherwise out-specify it). */
-		> details > ui-content:not([variant]) {
-			--ui-card-fs: var(--ui-reveal-content-fs, var(--font-size-base));
-			--ui-card-headline: var(--ui-reveal-content-headline, var(--ui-card-headline-md));
-			--ui-card-headline-line-height: var(--ui-reveal-content-headline-line-height, var(--line-height-tight, 1.15));
+		> details > ui-content:not([content]) {
+			--ui-content-fs: var(--ui-reveal-content-fs, var(--font-size-base));
+			--ui-content-headline: var(--ui-reveal-content-headline, var(--ui-content-headline-md));
+			--ui-content-headline-line-height: var(--ui-reveal-content-headline-line-height, var(--line-height-tight, 1.15));
 		}
 
 		&:is([type="flip"], [type="scale"], [type="slide"], [type-lg="scale"]) > details::details-content {
@@ -107,7 +108,7 @@
 
 		/* === icon === */
 		&:is([icon~="top"],[icon~="bottom"],[icon~="left"],[icon~="right"]) > details > summary > ui-icon {
-			margin: var(--ui-reveal-icon-m, var(--ui-reveal-p));
+			margin: var(--ui-reveal-icon-m);
 			position: absolute;
 			z-index: 2;
 		}
@@ -150,9 +151,9 @@
 		/* === ar() aspect-ratio and op() object-position tokens are inherited
 		   from ui-card.css === */
 
-		/* === squircle — sq() value mapping (exponent + radius) comes from
+		/* === squircle — rds(<size>-sq) radius/exponent mapping comes from
 		   ui-card; reveal only applies corner-shape to its <details> === */
-		&[variant*="sq("] > details {
+		&[variant*="-sq)"] > details {
 			corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8));
 		}
 	}
@@ -185,12 +186,12 @@
 		   so its fixed ::before fills the viewport. */
 		&[to]:has(> details[open]) {
 			--ui-reveal-expand-m: 2ch;
-			aspect-ratio: var(--ui-card-ar, 3/4);
+			aspect-ratio: var(--ui-media-ar, 3/4);
 			background: var(--ui-reveal-expand-fixed-bg, transparent); /* solid fill on the in-flow placeholder — the cell the card lifted out of */
 			border-radius: var(--ui-card-radius, var(--ui-reveal-radius)); /* match the card so the placeholder keeps the same corners (bg clips to radius) */
 
-			/* squircle: same corner-shape as the card when sq() is used */
-			&[variant*="sq("] { corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8)); }
+			/* squircle: same corner-shape as the card when rds(-sq) is used */
+			&[variant*="-sq)"] { corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8)); }
 
 			&::before {
 				animation: ui-reveal-backdrop var(--_trs) both;
@@ -203,7 +204,7 @@
 			}
 
 			> details {
-				--ui-card-ar: var(--ui-reveal-expand-aspect, 16/9);
+				--ui-media-ar: var(--ui-reveal-expand-aspect, 16/9);
 				--ui-reveal-content-fs: var(--ui-reveal-expand-content-fs, var(--font-size-base));
 				align-content: start;
 				animation: ui-reveal-pop var(--_trs) both;
@@ -351,7 +352,7 @@
 		> details[open] > summary > ui-icon { pointer-events: auto; }
 	}
 
-	/* === type-lg — swap the reveal animation at a width (mirrors variant-lg).
+	/* === type-lg — swap the reveal animation at a width (mirrors lg:).
 	   e.g. type="expand" type-lg="scale": grows below when narrow, morphs/scales
 	   when wide. The @container re-applies the scale rules to the DESCENDANTS so
 	   they override the base type; the morph-origin vars (set on the host) live
@@ -450,7 +451,7 @@
 	   flips automatically in rtl. Only the first child is indented; the rest of
 	   the panel stays full-width. */
 	:where(ui-reveal[type="flip"]) {
-		--ui-reveal-icon-clear: calc(var(--ui-reveal-icon-sz) + var(--ui-reveal-p));
+		--ui-reveal-icon-clear: calc(var(--ui-reveal-icon-sz) + var(--ui-reveal-icon-m));
 		/* open-state icon side = icon-close if set, else icon */
 		&:is([icon~="top"][icon~="right"], [icon-close~="top"][icon-close~="right"]) > details[open]::details-content > * > :first-child {
 			padding-inline-end: var(--ui-reveal-icon-clear);

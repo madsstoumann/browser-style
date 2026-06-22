@@ -2,8 +2,7 @@
 
 A CSS-first **media primitive** — an image/video frame with overlay furniture (label, sticker, favorite, play). It works **standalone** or **nested inside** `<ui-card>` / `<ui-reveal>`, and it is configured entirely through a compact `media=` token string that can sit on the element *itself* or on **any ancestor** (the configuration inherits down through custom properties).
 
-> **Status:** this documents the **planned** v4 API from
-> `docs/plans/2026-06-20-ui-media-content-split-design.md`. `<ui-media>` is extracted from the current `ui-card.css`; the API below is the target the extraction reproduces (parity intent noted where the plan and shipped CSS differ).
+> **Status:** shipped (v4). `<ui-media>` is the media primitive extracted from `ui-card.css` into `ui/card/media.css`, per `docs/plans/2026-06-20-ui-media-content-split-design.md`. This documents the implemented API.
 
 ## Features
 
@@ -107,7 +106,7 @@ Because custom properties inherit, **one rule set serves both placement cases**:
 | `hov()` | `zoom` `pan` `track` | hover effect (image only) | `--ui-media-hv-*` |
 | `scm()` | *(bare, or `tl … br`)* | scrim — bare matches the host `ovr()`; explicit picks a direction | `--ui-media-scrim-paint` |
 | `nav()` | *(bare, or `dots` `arrows` `none`)* | carousel — **the token IS the trigger**; bare = dots + arrows | carousel layout + controls |
-| `chip()` `sticker()` `save()` `play()` | `ts … be` *(position)* **or** `red orange green blue accent dark light subtle` *(sub-theme)* | place + theme an overlay element | `--ui-media-{el}-area` / element `--ui-{el}-*` tokens |
+| `chip()` `sticker()` `save()` `play()` | `ts … be` *(position)* **or** `red orange green blue accent dark light subtle` *(sub-theme)* | place + theme an overlay element | element inset (absolute) / element `--ui-{el}-*` tokens |
 
 #### `asr()` — the 8 numeric aspect ratios
 
@@ -156,7 +155,7 @@ The media area hosts four overlay elements. They carry **only their text/glyph**
 
 ### The 3×3 positioning grid
 
-`<ui-media>` is a 3×3 grid (`auto 1fr auto` tracks). Its nine areas are logical codes, defined **once**:
+Overlays are **absolutely positioned** (not grid items — that survives the carousel's flex scroller). Each element is placed at one of nine **logical** positions via `inset-block` / `inset-inline` + `translate`, the inset driven by `--ui-media-overlay-gap`:
 
 ```
 ts   tc   te        top-start    top-center    top-end
@@ -164,7 +163,7 @@ cs   cc   ce   →    center-start center-center center-end
 bs   bc   be        bottom-start bottom-center bottom-end
 ```
 
-Columns follow the **inline axis**, so the grid **mirrors automatically in RTL** — `ts` renders top-right in Arabic. An overlay element just *picks an area*; the geometry is never duplicated per element type. The `img` / `video` sit underneath, out of grid flow (`position: absolute; inset: 0`).
+Positions use **logical** insets (`inset-inline-start/-end`), so they **mirror automatically in RTL** — `ts` renders top-right in Arabic. An overlay element just *picks a position*; the geometry is keyed on the parent `media="el(pos)"` token, never duplicated per element instance. The `img` / `video` sit underneath (`position: absolute; inset: 0`).
 
 ### The four elements & their default areas
 
@@ -261,7 +260,7 @@ The `nav()` token **is the trigger** — there is no separate `crs` flag. Any `n
 
 Controls use native `::scroll-marker` (dots) and `::scroll-button(left|right)` (arrows), `@supports`-gated and anchor-positioned to each scroller — they **degrade to a bare swipeable scroller** where unsupported. Smooth scroll is enabled under `prefers-reduced-motion: no-preference`.
 
-The full dot/arrow token surface is preserved from the current card (see *Tokens* — `--ui-media-dot-*`, `--ui-media-arrow-*`, and `--ui-media-overlay-gap` which drives the control inset). The custom SVG-arrow swap (`--ui-media-arrow-prev` / `-next`) is load-bearing for demos.
+The full dot/arrow token surface is token-driven (see *Tokens* — `--ui-media-dot-*`, `--ui-media-arrow-*`, and `--ui-media-overlay-gap` which drives the control inset). Arrows ship with **built-in chevron glyphs** (white default + a `*-dark` set for light circles); colour the circle with `--ui-media-arrow-bg`, or override `--ui-media-arrow-prev/-next` with your own `url()` to fully customise.
 
 ---
 
@@ -283,6 +282,7 @@ The scrim `::after` stays out of grid flow (`position: absolute; inset: 0`).
 |------|----------|
 | `scm` *(bare)* | reads `--ui-media-scrim-default` — set by the host `ovr()` to match the overlay corner; falls back to `bc` |
 | `scm(tl)` … `scm(br)` | explicit direction (overrides the default) |
+| `scm(lgt)` `scm(med)` `scm(drk)` | **intensity** — a second, disjoint `scm()` token; sets `--ui-media-scrim-color` (`0.55` / `0.78` default / `0.92`). Combine with a position, e.g. `scm scm(drk)` |
 
 `scm` works **standalone** too (a darkened image, no overlay content needed).
 
@@ -330,20 +330,25 @@ Every token lives in the `--ui-media-*` namespace and inherits down from whereve
 
 | Token | Default | Description |
 |-------|---------|-------------|
-| `--ui-media-arrow-bg` | `rgb(255 255 255 / 0.75)` | arrow button background |
-| `--ui-media-arrow-bg-hover` | `rgb(255 255 255 / 0.95)` | arrow hover background |
-| `--ui-media-arrow-size` | `2rem` | arrow button size |
-| `--ui-media-arrow-radius` | `var(--radius-circle, 50%)` | arrow corner radius |
+| `--ui-media-arrow-bg` | `rgb(0 0 0 / 0.5)` | arrow button circle (semi-transparent black) |
+| `--ui-media-arrow-bg-hover` | `rgb(0 0 0 / 0.7)` | arrow hover circle |
+| `--ui-media-arrow-size` | `2.25rem` | arrow button size |
+| `--ui-media-arrow-radius` | `var(--radius-circle, 50%)` | arrow corner radius (square it off for rounded-rect) |
 | `--ui-media-arrow-border` | `0` | arrow border |
 | `--ui-media-arrow-glyph-size` | `45%` | chevron glyph size |
-| `--ui-media-arrow-prev` | chevron-left SVG | previous-arrow glyph (`url(...)`) |
-| `--ui-media-arrow-next` | chevron-right SVG | next-arrow glyph (`url(...)`) |
+| `--ui-media-arrow-prev` | `var(--ui-media-arrow-prev-light)` | previous-arrow glyph (`url(...)`) |
+| `--ui-media-arrow-next` | `var(--ui-media-arrow-next-light)` | next-arrow glyph (`url(...)`) |
+| `--ui-media-arrow-prev-light` / `-next-light` | white chevron SVG | built-in glyphs for the dark default circle |
+| `--ui-media-arrow-prev-dark` / `-next-dark` | black chevron SVG | built-in glyphs for a light circle — switch via `--ui-media-arrow-prev/-next: var(--ui-media-arrow-*-dark)` |
+
+The arrow is a **circular button**: a themeable circle (`--ui-media-arrow-bg`) + a chevron image. The chevron is **white by default** (for the dark circle); for a light circle, point `--ui-media-arrow-prev/-next` at the built-in `*-dark` glyphs — no SVG pasting. Square off the circle with `--ui-media-arrow-radius`.
 
 ### Scrim
 
 | Token | Default | Description |
 |-------|---------|-------------|
-| `--ui-media-scrim-color` | `rgb(0 0 0 / 0.65)` | base scrim color |
+| `--ui-media-scrim-color` | `rgb(0 0 0 / 0.78)` | base scrim color (the `scm()` intensity tokens set this) |
+| `--ui-media-scrim-m` | `color-mix(scrim-color, transparent 55%)` | mid stop — holds the dark near the edge before fading, so spanning text stays legible over bright images |
 | `--ui-media-scrim-tl` … `-br` | per-direction `linear-gradient()` | the 9 directional gradients (4 edges + 4 diagonals + `cc` double-stop) |
 | `--ui-media-scrim-default` | (set by host `ovr()`) | the bare-`scm` direction; matches the overlay corner |
 | `--ui-media-scrim-paint` | `#0000` (none) | the selected gradient that gets painted |
@@ -352,11 +357,9 @@ Every token lives in the `--ui-media-*` namespace and inherits down from whereve
 
 | Token | Default | Description |
 |-------|---------|-------------|
-| `--ui-media-overlay-gap` | `0.75rem` | inset (margin) of every overlay element; also drives dot/arrow inset |
-| `--ui-media-chip-area` | `ts` | grid-area for `<ui-chip>` (override via `chip(<area>)`) |
-| `--ui-media-sticker-area` | `te` | grid-area for `<ui-sticker>` |
-| `--ui-media-save-area` | `te` | grid-area for `<ui-save>` |
-| `--ui-media-play-area` | `cc` | grid-area for `<ui-play>` |
+| `--ui-media-overlay-gap` | `0.75rem` | inset of every overlay element; also drives dot/arrow inset |
+
+Overlay positions are **not tokens** — each element has a default position by role (`<ui-chip>` `ts`, `<ui-sticker>`/`<ui-save>` `te`, `<ui-play>` `cc`) and is repositioned via the parent `media="el(<pos>)"` token, where `<pos>` is one of the nine logical codes.
 
 > Each overlay element also exposes its own token namespace (`--ui-chip-*`, `--ui-sticker-*`, `--ui-save-*`, `--ui-play-*`) — see the element's own README. The `media="chip(<theme>)"` routing and the element's own `theme=` both write the same target tokens.
 

@@ -4,8 +4,10 @@
 	<title>UI: Card</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="CSS-first card built on <ui-media> + <ui-content>, with variant tokens, a container-driven font scale, responsive layout tiers and themes.">
+	<meta name="description" content="CSS-first card composing <ui-media> + <ui-content>, configured with media=/content=/variant= token DSLs, a container-driven font scale, responsive layout tiers and themes.">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../chip/ui-chip.css">
+	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
 		.grid {
@@ -20,23 +22,18 @@
 		}
 		.hero { margin-block-end: var(--spacing-2xl); }
 		.note { color: var(--color-text-secondary, #666); }
-		/* carousel arrows as inline-SVG chevrons via url() (stroke baked into the SVG) */
-		.svg-arrows {
-			--ui-card-arrow-prev: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 18l-6-6 6-6'/%3E%3C/svg%3E");
-			--ui-card-arrow-next: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
-		}
 	</style>
 </head>
 <body>
 	<h1>UI: Card</h1>
-	<p class="note">Every card is <code>&lt;ui-media&gt;</code> + <code>&lt;ui-content&gt;</code> inside a <code>&lt;cq-box&gt;</code> grid layer. Layout, aspect-ratio, font-size, responsive tiers and themes are all <code>variant</code> tokens. No JavaScript.</p>
+	<p class="note">Every card composes <code>&lt;ui-media&gt;</code> + <code>&lt;ui-content&gt;</code> inside a <code>&lt;cq-box&gt;</code> grid layer. The media frame is configured with <code>media=</code>, the text column with <code>content=</code>, and the composition (arrangement, overlay, theme, corners) with <code>variant=</code>. No JavaScript.</p>
 
 	<!-- ============================================================
-	     Article cards — realistic content, vertical
+	     Article cards — realistic content, stacked (col)
 	     ============================================================ -->
 	<h2>Article cards</h2>
 	<div class="grid grid-3">
-		<ui-card variant="vertical ar(16/9)">
+		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
 				<ui-media><img src="assets/popovers.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
@@ -52,7 +49,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="vertical ar(16/9)">
+		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
 				<ui-media><img src="assets/quantum.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
@@ -68,7 +65,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="vertical ar(16/9)">
+		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
 				<ui-media><img src="assets/government.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
@@ -89,13 +86,13 @@
 	</div>
 
 	<!-- ============================================================
-	     Responsive layout — horizontal when wide, vertical when narrow.
-	     SAME markup: variant="vertical …" variant-lg="horizontal …".
+	     Responsive layout — row when wide, col when narrow (lg: prefix).
+	     SAME markup: variant="col lg:row lg:spl(1/1)".
 	     ============================================================ -->
-	<h2>Responsive layout — <code>variant-lg</code></h2>
-	<p class="note">Identical markup. Wide container → <code>horizontal</code> (media beside content); narrow grid cell → classic <code>vertical</code> (media above content). Driven by each card's own width.</p>
+	<h2>Responsive layout — <code>lg:</code></h2>
+	<p class="note">Identical markup. Wide container → <code>lg:row</code> (media beside content); narrow grid cell → the default <code>col</code> (media above content). Driven by each card's own width.</p>
 
-	<ui-card class="hero" variant="vertical ar(16/9)" variant-lg="horizontal sp(1/1)">
+	<ui-card class="hero" variant="col lg:row lg:spl(1/1)" media="asr(16/9)">
 		<cq-box>
 			<ui-media><img src="assets/aurasoundpro.jpg" alt="" loading="lazy"></ui-media>
 			<ui-content>
@@ -108,45 +105,44 @@
 	</ui-card>
 
 	<div class="grid grid-3">
-		<ui-card variant="vertical ar(16/9)" variant-lg="horizontal sp(1/1)">
+		<ui-card variant="col lg:row lg:spl(1/1)" media="asr(16/9)">
 			<cq-box>
 				<ui-media><img src="assets/destinations.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Travel</small>
 					<h2 data-part="headline">12 destinations redefining slow travel</h2>
-					<p data-part="summary">Same responsive card — too narrow here, so it stays vertical.</p>
+					<p data-part="summary">Same responsive card — too narrow here, so it stays stacked.</p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="vertical ar(16/9)" variant-lg="horizontal sp(1/1)">
+		<ui-card variant="col lg:row lg:spl(1/1)" media="asr(16/9)">
 			<cq-box>
 				<ui-media><img src="assets/river.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Nature</small>
 					<h2 data-part="headline">Why the world's rivers are running quieter</h2>
-					<p data-part="summary">Same responsive card — too narrow here, so it stays vertical.</p>
+					<p data-part="summary">Same responsive card — too narrow here, so it stays stacked.</p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="vertical ar(16/9)" variant-lg="horizontal sp(1/1)">
+		<ui-card variant="col lg:row lg:spl(1/1)" media="asr(16/9)">
 			<cq-box>
 				<ui-media><img src="assets/gastronomy.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Dining</small>
 					<h2 data-part="headline">The new wave of farm-to-table kitchens</h2>
-					<p data-part="summary">Same responsive card — too narrow here, so it stays vertical.</p>
+					<p data-part="summary">Same responsive card — too narrow here, so it stays stacked.</p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
 	</div>
 
 	<!-- ============================================================
-	     Hero — responsive: regular vertical card when narrow, overlay hero
-	     when wide (variant-lg). Same markup; the container query does the rest.
+	     Hero — overlay (static). Content stacked over media with a scrim.
 	     ============================================================ -->
-	<h2>Hero — responsive overlay (<code>variant-lg</code>)</h2>
-	<p class="note">Narrow → a regular <code>vertical</code> card (media above content). Wide (≥ 44rem) → the overlay hero (<code>ov(bl) sc … fs(xl)</code>). Resize to see it switch.</p>
-	<ui-card class="hero" variant="vertical ar(16/9)" variant-lg="ov(bl) sc ar(21/9) op(cc) fs(xl)">
+	<h2>Hero — overlay</h2>
+	<p class="note">Content stacked over the media (<code>ovr(bl)</code>) with a scrim (<code>scm</code>); the headline scales to display size with <code>scl(xl)</code>. (Per-breakpoint media changes aren't responsive this round, so the overlay is applied at all widths.)</p>
+	<ui-card class="hero" variant="ovr(bl)" media="asr(16/9) obp(cc) scm" content="scl(xl)">
 		<cq-box>
 			<ui-media><img src="assets/websummit.jpg" alt="" loading="lazy"></ui-media>
 			<ui-content>
@@ -163,7 +159,7 @@
 	     ============================================================ -->
 	<h2>Overlay — featured</h2>
 	<div class="grid grid-3">
-		<ui-card variant="ov(bl) ar(3/4) op(cc) fs(lg)">
+		<ui-card variant="ovr(bl)" media="asr(3/4) obp(cc)" content="scl(lg)">
 			<cq-box>
 				<ui-media><img src="assets/mindfulness.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
@@ -172,7 +168,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="ov(cc) ar(3/4) op(cc) fs(lg)">
+		<ui-card variant="ovr(cc)" media="asr(3/4) obp(cc)" content="scl(lg)">
 			<cq-box>
 				<ui-media><img src="assets/hubble.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
@@ -181,7 +177,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="ov(br) ar(3/4) op(cc) fs(lg)">
+		<ui-card variant="ovr(br)" media="asr(3/4) obp(cc)" content="scl(lg)">
 			<cq-box>
 				<ui-media><img src="assets/brewandbean.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
@@ -193,51 +189,51 @@
 	</div>
 
 	<!-- ============================================================
-	     Media — ribbon, badge, video, carousel (inside <ui-media>)
+	     Media overlays — <ui-chip> label + <ui-sticker> callout
 	     ============================================================ -->
-	<h2>Media overlays — ribbon &amp; badge</h2>
-	<p class="note">Overlays live inside <code>&lt;ui-media&gt;</code>, placed with the same 9-code <code>pos()</code> system (<code>pos="tl…br"</code>). <code>color=""</code> maps the semantic palette. Ribbons can be straight (default) or <code>variant="diagonal"</code>.</p>
+	<h2>Media overlays — chip &amp; sticker</h2>
+	<p class="note">Overlay furniture lives inside <code>&lt;ui-media&gt;</code>; position and sub-theme come from the parent <code>media=</code> token (<code>chip(&lt;pos&gt;)</code> / <code>sticker(&lt;pos&gt;)</code>, <code>chip(&lt;hue&gt;)</code>). <code>&lt;ui-chip&gt;</code> is a pill label; <code>&lt;ui-sticker&gt;</code> is a disc, or a starburst with <code>variant="burst"</code>.</p>
 	<div class="grid grid-3">
-		<ui-card variant="vertical ar(4/3)">
+		<ui-card variant="col" media="asr(4/3) chip(be) chip(green) sticker(ts) sticker(red)">
 			<cq-box>
 				<ui-media>
 					<img src="https://browser.style/assets/images/aurasoundpro.png" alt="" loading="lazy">
-					<span data-part="ribbon" pos="tl" color="error">Featured</span>
-					<span data-part="badge" pos="br" color="success">New</span>
+					<ui-sticker>Featured</ui-sticker>
+					<ui-chip>New</ui-chip>
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Audio</small>
 					<h2 data-part="headline">AuraSound Pro</h2>
-					<p data-part="summary">Straight ribbon top-left, badge bottom-right.</p>
+					<p data-part="summary">Sticker top-left, chip bottom-right.</p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="vertical ar(4/3)">
+		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(red)">
 			<cq-box>
 				<ui-media>
 					<img src="https://browser.style/assets/images/soundwavemini.png" alt="" loading="lazy">
-					<span data-part="ribbon" pos="tr" variant="diagonal" color="error">-28%</span>
+					<ui-sticker variant="burst">-28%</ui-sticker>
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Speakers</small>
 					<h2 data-part="headline">SoundWave Mini</h2>
-					<p data-part="summary">Diagonal corner ribbon, top-right.</p>
+					<p data-part="summary">Starburst discount sticker, top-right.</p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="vertical ar(4/3)">
+		<ui-card variant="col" media="asr(4/3) chip(bs) chip(accent) sticker(te) sticker(orange)">
 			<cq-box>
 				<ui-media>
 					<img src="https://browser.style/assets/images/quickboil.png" alt="" loading="lazy">
-					<span data-part="ribbon" pos="bl">Editor's pick</span>
-					<span data-part="badge" pos="tr" color="warning">Sale</span>
+					<ui-chip>Editor's pick</ui-chip>
+					<ui-sticker>Sale</ui-sticker>
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Kitchen</small>
 					<h2 data-part="headline">QuickBoil Kettle</h2>
-					<p data-part="summary">Ribbon bottom-left (accent default), warning badge top-right.</p>
+					<p data-part="summary">Chip bottom-left (accent), sticker top-right (orange).</p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -245,13 +241,13 @@
 
 	<!-- Video + bare scroller -->
 	<h2>Video &amp; multi-source scroller</h2>
-	<p class="note"><code>&lt;ui-media&gt;</code> accepts a <code>&lt;video&gt;</code> (native controls/poster) just like an image. Add <code>variant="carousel"</code> for multiple sources — a flex scroll-snap row. <code>controls="none"</code> leaves it a bare swipe scroller, no JS.</p>
+	<p class="note"><code>&lt;ui-media&gt;</code> accepts a <code>&lt;video&gt;</code> (native controls/poster) just like an image. Add <code>media="nav"</code> for multiple sources — a flex scroll-snap row. <code>nav(none)</code> leaves it a bare swipe scroller, no JS.</p>
 	<div class="grid grid-2">
-		<ui-card variant="vertical ar(16/9)">
+		<ui-card variant="col" media="asr(16/9) chip(ts) chip(blue)">
 			<cq-box>
 				<ui-media>
 					<video src="https://assets.stoumann.dk/video/river.mp4" poster="https://browser.style/assets/images/river.png" controls muted loop playsinline></video>
-					<span data-part="badge" pos="tl" color="info">Video</span>
+					<ui-chip>Video</ui-chip>
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Nature</small>
@@ -261,29 +257,29 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="carousel vertical ar(16/9)" controls="none">
+		<ui-card variant="col" media="asr(16/9) nav(none) chip(te) chip(accent)">
 			<cq-box>
 				<ui-media>
 					<img src="https://browser.style/assets/images/destinations.png" alt="" loading="lazy">
 					<img src="https://browser.style/assets/images/river.png" alt="" loading="lazy">
 					<img src="https://browser.style/assets/images/mindfulness.png" alt="" loading="lazy">
 					<img src="https://browser.style/assets/images/gastronomy.png" alt="" loading="lazy">
-					<span data-part="badge" pos="tr">4 photos</span>
+					<ui-chip>4 photos</ui-chip>
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Travel</small>
 					<h2 data-part="headline">Bare swipe scroller</h2>
-					<p data-part="summary">Four sources in a scroll-snap row — <code>controls="none"</code>, swipe only.</p>
+					<p data-part="summary">Four sources in a scroll-snap row — <code>nav(none)</code>, swipe only.</p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
 	</div>
 
 	<!-- Carousel — CSS-only dots + arrows -->
-	<h2>Carousel — <code>variant="carousel"</code></h2>
+	<h2>Carousel — <code>media="nav"</code></h2>
 	<p class="note">A scroll-snap row of sources, plus CSS-only navigation dots (<code>::scroll-marker</code>) and prev/next arrows (<code>::scroll-button()</code>) shown by default. No JavaScript. Chromium-only for now — elsewhere it degrades to the plain swipe scroller.</p>
 	<div class="grid grid-2">
-		<ui-card variant="carousel vertical ar(16/9) fs(lg)">
+		<ui-card variant="col" media="asr(16/9) nav" content="scl(lg)">
 			<cq-box>
 				<ui-media>
 					<img src="https://browser.style/assets/images/destinations.png" alt="" loading="lazy">
@@ -299,7 +295,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="carousel horizontal sp(1/1) ar(1/1) fs(md)">
+		<ui-card variant="row spl(1/1)" media="asr(1/1) nav" content="scl(md)">
 			<cq-box>
 				<ui-media>
 					<img src="https://browser.style/assets/images/hubble.png" alt="" loading="lazy">
@@ -309,7 +305,7 @@
 				<ui-content>
 					<small data-part="eyebrow">Science</small>
 					<h2 data-part="headline">Carousel beside content</h2>
-					<p data-part="summary">A carousel works in any arrangement — here it's the media half of a <code>horizontal</code> card.</p>
+					<p data-part="summary">A carousel works in any arrangement — here it's the media half of a <code>row</code> card.</p>
 					<nav data-part="actions"><a class="ui-button" href="#">Explore</a></nav>
 				</ui-content>
 			</cq-box>
@@ -318,50 +314,50 @@
 
 	<!-- Carousel controls — pick pieces + theme them -->
 	<h2>Carousel controls &amp; theming</h2>
-	<p class="note">Use the <code>controls</code> attribute to pick <code>dots</code>, <code>arrows</code>, both, or <code>none</code>. Colours, dot size and the arrow glyphs are all tokens.</p>
+	<p class="note">Pick controls with <code>nav(dots)</code>, <code>nav(arrows)</code>, bare <code>nav</code> (both), or <code>nav(none)</code>. Colours, dot size and the arrow glyphs are all tokens.</p>
 	<div class="grid grid-3">
-		<ui-card variant="carousel vertical ar(4/3) fs(sm)" controls="dots">
+		<ui-card variant="col" media="asr(4/3) nav(dots)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="https://browser.style/assets/images/destinations.png" alt="" loading="lazy">
 					<img src="https://browser.style/assets/images/river.png" alt="" loading="lazy">
 					<img src="https://browser.style/assets/images/mindfulness.png" alt="" loading="lazy">
 				</ui-media>
-				<ui-content><small data-part="eyebrow">controls="dots"</small><h2 data-part="headline">Dots only</h2></ui-content>
+				<ui-content><small data-part="eyebrow">nav(dots)</small><h2 data-part="headline">Dots only</h2></ui-content>
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="carousel vertical ar(4/3) fs(sm)" controls="arrows">
+		<ui-card variant="col" media="asr(4/3) nav(arrows)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="https://browser.style/assets/images/gastronomy.png" alt="" loading="lazy">
 					<img src="https://browser.style/assets/images/brewandbean.png" alt="" loading="lazy">
 					<img src="https://browser.style/assets/images/quickboil.png" alt="" loading="lazy">
 				</ui-media>
-				<ui-content><small data-part="eyebrow">controls="arrows"</small><h2 data-part="headline">Arrows only</h2></ui-content>
+				<ui-content><small data-part="eyebrow">nav(arrows)</small><h2 data-part="headline">Arrows only</h2></ui-content>
 			</cq-box>
 		</ui-card>
 
-		<ui-card class="svg-arrows" variant="carousel vertical ar(4/3) fs(sm)" controls="dots arrows"
-			style="--ui-card-dot-bg: rgb(0 0 0 / 0.25); --ui-card-dot-active: var(--color-accent); --ui-card-arrow-bg: var(--color-accent);">
+		<ui-card variant="col" media="asr(4/3) nav" content="scl(sm)"
+			style="--ui-media-dot-bg: rgb(0 0 0 / 0.25); --ui-media-dot-active: var(--color-accent); --ui-media-arrow-bg: var(--color-accent);">
 			<cq-box>
 				<ui-media>
 					<img src="https://browser.style/assets/images/hubble.png" alt="" loading="lazy">
 					<img src="https://browser.style/assets/images/quantum.png" alt="" loading="lazy">
 					<img src="https://browser.style/assets/images/websummit.png" alt="" loading="lazy">
 				</ui-media>
-				<ui-content><small data-part="eyebrow">themed</small><h2 data-part="headline">SVG arrows via <code>url()</code></h2></ui-content>
+				<ui-content><small data-part="eyebrow">themed</small><h2 data-part="headline">Accent circle via <code>--ui-media-arrow-bg</code></h2></ui-content>
 			</cq-box>
 		</ui-card>
 	</div>
 
 	<!-- ============================================================
-	     Themes — th()
+	     Themes — thm()
 	     ============================================================ -->
-	<h2>Themes — <code>th()</code></h2>
-	<p class="note">The same card in default, <code>th(dark)</code> and <code>th(brand)</code>. Theme tokens remap surface, ink, eyebrow and tag colours.</p>
+	<h2>Themes — <code>thm()</code></h2>
+	<p class="note">The same card in default, <code>thm(dark)</code> and <code>thm(brand)</code>. Theme tokens remap surface, ink, eyebrow and tag colours.</p>
 	<div class="grid grid-3">
-		<ui-card variant="vertical ar(16/9)">
+		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
 				<ui-media><img src="assets/fittrackpro.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
@@ -374,7 +370,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="vertical ar(16/9) th(dark)">
+		<ui-card variant="col thm(dark)" media="asr(16/9)">
 			<cq-box>
 				<ui-media><img src="assets/fittrackpro.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
@@ -387,7 +383,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="vertical ar(16/9) th(brand)">
+		<ui-card variant="col thm(brand)" media="asr(16/9)">
 			<cq-box>
 				<ui-media><img src="assets/fittrackpro.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
@@ -402,11 +398,11 @@
 	</div>
 
 	<!-- ============================================================
-	     Profile + product — horizontal, realistic
+	     Profile + product — row, realistic
 	     ============================================================ -->
 	<h2>Profile &amp; product</h2>
 	<div class="grid grid-2">
-		<ui-card variant="horizontal sp(1/2) ar(1/1)">
+		<ui-card variant="row spl(1/2)" media="asr(1/1)">
 			<cq-box>
 				<ui-media><img src="assets/janesmith.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>
@@ -419,7 +415,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="horizontal sp(1/2) ar(1/1)">
+		<ui-card variant="row spl(1/2)" media="asr(1/1)">
 			<cq-box>
 				<ui-media><img src="assets/ergochair.jpg" alt="" loading="lazy"></ui-media>
 				<ui-content>

@@ -1,6 +1,6 @@
 # @browser.style/content
 
-> **Status:** planned API (v4). `<ui-content>` is a CSS-first primitive being extracted from the `ui-card` monolith. This document describes the target design from `docs/plans/2026-06-20-ui-media-content-split-design.md` (§5). It is not yet shipped.
+> **Status:** shipped (v4). `<ui-content>` is the CSS-first content primitive extracted from the `ui-card` monolith into `ui/card/content.css`, per `docs/plans/2026-06-20-ui-media-content-split-design.md` (§5). This documents the implemented API.
 
 A CSS-first **content (text) primitive** — a vertical flex column that styles a card's textual parts (eyebrow, headline, summary, byline, tags, actions, …) from a single inherited token namespace. It works **standalone** or **nested inside any host** (`<ui-card>`, `<ui-reveal>`, or your own layout), with no descendant-selector coupling to a parent.
 

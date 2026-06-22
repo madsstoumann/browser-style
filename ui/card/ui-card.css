@@ -1,21 +1,25 @@
 /**
  * ui-card
- * @version 1.0.0
+ * @version 4.0.0
  * @author Mads Stoumann
+ *
+ * Composition layer over the <ui-media> + <ui-content> primitives. Owns the host
+ * surface, the media↔content arrangement (variant=), the overlay bridge (ovr()),
+ * themes (thm()), corners (rds()), and the responsive layout/spacing tiers.
+ * The media (media=) and content (content=) DSLs live in the imported primitives.
  */
+@import './media.css';
+@import './content.css';
+
 @layer bs-component {
 
 	/* ============================================================
-	   CARD CORE — host, grid, corners, font scale
+	   HOST + GRID
 	   ============================================================ */
-
-	/* host */
 	:where(ui-card) {
 		--ui-card-bg: var(--color-surface);
 		--ui-card-radius: var(--radius-2xl);
 		--ui-card-shadow: var(--shadow-xl);
-		--ui-card-p: var(--spacing-md);
-		--ui-card-row-gap: 1em;
 
 		background: var(--ui-card-bg);
 		border-radius: var(--ui-card-radius);
@@ -32,707 +36,178 @@
 		grid-template-columns: var(--ui-card-cols, 1fr);
 	}
 
-	/* squircle corners — host corner-shape + sq() size tokens */
-	:where(ui-card[variant*="sq("]) {
-		corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8));
-	}
-	:where([variant*="sq(sm)"]) { --ui-card-squircle-exp: 1.5; --ui-card-radius: 1.25rem; }
-	:where([variant*="sq(md)"]) { --ui-card-squircle-exp: 1.7; --ui-card-radius: 2rem;    }
-	:where([variant*="sq(lg)"]) { --ui-card-squircle-exp: 1.8; --ui-card-radius: 2.8rem;  }
-	:where([variant*="sq(xl)"]) { --ui-card-squircle-exp: 2;   --ui-card-radius: 3.5rem;  }
-
-	/* font-size scale: fs() — decoupled body + headline cqi clamps */
-	:where([variant]) {
-		--ui-card-p: var(--spacing-md);
-
-		/* body scale */
-		--ui-card-fs: var(--ui-card-fs-md);
-		--ui-card-fs-sm: clamp(0.80rem, 0.74rem + 0.4cqi, 0.90rem);
-		--ui-card-fs-md: clamp(0.88rem, 0.80rem + 0.6cqi, 1.00rem);
-		--ui-card-fs-lg: clamp(0.95rem, 0.86rem + 0.8cqi, 1.10rem);
-		--ui-card-fs-xl: clamp(1.00rem, 0.92rem + 0.9cqi, 1.20rem);
-
-		/* headline scale */
-		--ui-card-headline: var(--ui-card-headline-md);
-		--ui-card-headline-sm: clamp(1.05rem, 0.90rem + 1.0cqi, 1.35rem);
-		--ui-card-headline-md: clamp(1.20rem, 1.00rem + 1.6cqi, 1.75rem);
-		--ui-card-headline-lg: clamp(1.45rem, 1.05rem + 3.0cqi, 2.50rem);
-		--ui-card-headline-xl: clamp(1.90rem, 1.10rem + 5.5cqi, 4.50rem);
-
-		--ui-card-muted: color-mix(in oklab, currentColor 65%, transparent);
-	}
-	:where([variant~="fs(sm)"]) { --ui-card-fs: var(--ui-card-fs-sm); --ui-card-headline: var(--ui-card-headline-sm); }
-	:where([variant~="fs(md)"]) { --ui-card-fs: var(--ui-card-fs-md); --ui-card-headline: var(--ui-card-headline-md); }
-	:where([variant~="fs(lg)"]) { --ui-card-fs: var(--ui-card-fs-lg); --ui-card-headline: var(--ui-card-headline-lg); }
-	:where([variant~="fs(xl)"]) { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline: var(--ui-card-headline-xl); }
-
-	/* content padding: p() token */
-	:where([variant~="p(none)"]) { --ui-card-p: 0; }
-	:where([variant~="p(xs)"])   { --ui-card-p: var(--spacing-xs); }
-	:where([variant~="p(sm)"])   { --ui-card-p: var(--spacing-sm); }
-	:where([variant~="p(md)"])   { --ui-card-p: var(--spacing-md); }
-	:where([variant~="p(lg)"])   { --ui-card-p: var(--spacing-lg); }
-	:where([variant~="p(xl)"])   { --ui-card-p: var(--spacing-xl); }
-	:where([variant~="p(2xl)"])  { --ui-card-p: var(--spacing-2xl); }
-
+	/* ============================================================
+	   CORNERS — rds(): round (global scale) or -sq (bespoke squircle)
+	   ============================================================ */
+	/* round */
+	:where([variant~="rds(none)"]) { --ui-card-radius: 0; }
+	:where([variant~="rds(sm)"])   { --ui-card-radius: var(--radius-sm); }
+	:where([variant~="rds(md)"])   { --ui-card-radius: var(--radius-md); }
+	:where([variant~="rds(lg)"])   { --ui-card-radius: var(--radius-lg); }
+	:where([variant~="rds(xl)"])   { --ui-card-radius: var(--radius-xl); }
+	:where([variant~="rds(2xl)"])  { --ui-card-radius: var(--radius-2xl); }
+	:where([variant~="rds(full)"]) { --ui-card-radius: var(--radius-circle, 50%); }
+	:where([variant~="rds(pill)"]) { --ui-card-radius: var(--radius-pill, 100px); }
+	/* squircle — bespoke radius + per-size exponent (reproduces the old sq()).
+	   Sets --ui-card-squircle-exp so ui-reveal can apply corner-shape to its <details>. */
+	:where([variant~="rds(sm-sq)"]) { --ui-card-radius: 1.25rem; --ui-card-squircle-exp: 1.5; }
+	:where([variant~="rds(md-sq)"]) { --ui-card-radius: 2rem;    --ui-card-squircle-exp: 1.7; }
+	:where([variant~="rds(lg-sq)"]) { --ui-card-radius: 2.8rem;  --ui-card-squircle-exp: 1.8; }
+	:where([variant~="rds(xl-sq)"]) { --ui-card-radius: 3.5rem;  --ui-card-squircle-exp: 2; }
+	:where(ui-card[variant*="-sq)"]) { corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8)); }
 
 	/* ============================================================
-	   UI-MEDIA — frame, ratio, position, hover, carousel, overlays
+	   ARRANGEMENT — col (default) / row / col-r / row-r + spl()
 	   ============================================================ */
-
-	/* media frame — single image/video fills it (absolute stack) */
-	:where([variant]) ui-media {
-		aspect-ratio: var(--ui-card-ar, auto);
-		background: var(--ui-card-media-bg, var(--color-overlay-light, transparent));
-		display: grid;
-		min-block-size: var(--ui-card-media-min, 12.5rem);
-		overflow: hidden;
-		position: relative;
-
-		& :is(img, video) {
-			block-size: 100%;
-			inline-size: 100%;
-			inset: 0;
-			object-fit: var(--ui-card-object-fit, cover);
-			object-position: var(--ui-card-op, center);
-			position: absolute;
-		}
-	}
-	:where([variant*="ar("]) ui-media { min-block-size: 0; }
-
-	/* aspect-ratio: ar() token */
-	:where([variant*="ar(1/1)"])       { --ui-card-ar: 1 / 1; }
-	:where([variant*="ar(6/7)"])       { --ui-card-ar: 6 / 7; }
-	:where([variant*="ar(3/4)"])       { --ui-card-ar: 3 / 4; }
-	:where([variant*="ar(4/3)"])       { --ui-card-ar: 4 / 3; }
-	:where([variant*="ar(3/2)"])       { --ui-card-ar: 3 / 2; }
-	:where([variant*="ar(2/3)"])       { --ui-card-ar: 2 / 3; }
-	:where([variant*="ar(16/9)"])      { --ui-card-ar: 16 / 9; }
-	:where([variant*="ar(21/9)"])      { --ui-card-ar: 21 / 9; }
-
-	/* object-position: op() token */
-	:where([variant*="op(tl)"]) { --ui-card-op: left top; }
-	:where([variant*="op(tc)"]) { --ui-card-op: center top; }
-	:where([variant*="op(tr)"]) { --ui-card-op: right top; }
-	:where([variant*="op(cl)"]) { --ui-card-op: left center; }
-	:where([variant*="op(cc)"]) { --ui-card-op: center center; }
-	:where([variant*="op(cr)"]) { --ui-card-op: right center; }
-	:where([variant*="op(bl)"]) { --ui-card-op: left bottom; }
-	:where([variant*="op(bc)"]) { --ui-card-op: center bottom; }
-	:where([variant*="op(br)"]) { --ui-card-op: right bottom; }
-
-	/* image flip: fl() token — mirror the media. h = horizontal, v = vertical, hv = both.
-	   Uses transform (separate from the scale/translate hv() uses), so the two compose. */
-	:where([variant*="fl("]) ui-media :is(img, video) { transform: scale(var(--ui-card-fl-x, 1), var(--ui-card-fl-y, 1)); }
-	:where([variant*="fl(h)"])  { --ui-card-fl-x: -1; }
-	:where([variant*="fl(v)"])  { --ui-card-fl-y: -1; }
-	:where([variant*="fl(hv)"]) { --ui-card-fl-x: -1; --ui-card-fl-y: -1; }
-
-	/* hover: hv() — zoom/pan move the image; lift/shrink/tilt transform the host */
-	@media (hover: hover) {
-		:where([variant*="hv("]) {
-			--_hv-dur: var(--ui-card-hover-duration, var(--duration-slower));
-			--_hv-ease: var(--ui-card-hover-easing, var(--ease-out));
-		}
-
-		/* image-only (frame fixed) */
-		:where([variant*="hv(zoom)"], [variant*="hv(pan)"]) ui-media img {
-			transition: scale var(--_hv-dur) var(--_hv-ease), translate var(--_hv-dur) var(--_hv-ease);
-		}
-		:where([variant*="hv(zoom)"]:hover) ui-media img {
-			scale: var(--ui-card-hv-zoom, 1.08);
-		}
-		:where([variant*="hv(pan)"]:hover) ui-media img {
-			scale: var(--ui-card-hv-zoom, 1.12);
-			translate: var(--ui-card-hv-pan-x, -2%) var(--ui-card-hv-pan-y, -2%);
-		}
-
-		/* cursor-tracked pan — --ui-card-mx/my (-1..1) set by a pointermove handler */
-		:where([variant*="hv(track)"]) ui-media img {
-			scale: var(--ui-card-hv-zoom, 1.12);
-			transition: translate var(--ui-card-hv-track-dur, var(--duration-normal)) var(--_hv-ease), scale var(--_hv-dur) var(--_hv-ease);
-			translate: calc(var(--ui-card-mx, 0) * var(--ui-card-hv-track, 4%)) calc(var(--ui-card-my, 0) * var(--ui-card-hv-track, 4%));
-		}
-
-		/* card-level */
-		:where([variant*="hv(lift)"], [variant*="hv(shrink)"], [variant*="hv(tilt)"]) {
-			transition: scale var(--_hv-dur) var(--_hv-ease), translate var(--_hv-dur) var(--_hv-ease), rotate var(--_hv-dur) var(--_hv-ease), box-shadow var(--_hv-dur) var(--_hv-ease);
-		}
-		:where([variant*="hv(lift)"]:hover) {
-			translate: 0 calc(-1 * var(--ui-card-hv-lift, 0.5rem));
-			box-shadow: var(--shadow-2xl, var(--shadow-xl));
-		}
-		:where([variant*="hv(shrink)"]:hover) { scale: var(--ui-card-hv-shrink, 0.97); }
-		:where([variant*="hv(tilt)"]:hover)   { rotate: var(--ui-card-hv-tilt, -1.5deg); }
-	}
-	@media (prefers-reduced-motion: reduce) {
-		:where([variant*="hv("]) ui-media img,
-		:where([variant*="hv("]) { transition: none; }
-		:where([variant*="hv(track)"]) ui-media img { translate: 0; }
-	}
-
-	/* carousel: flex scroll-snap row (overrides the absolute image stack) */
-	:where([variant~="carousel"]) ui-media {
-		display: flex;
-		overflow-x: auto;
-		overscroll-behavior-x: contain;
-		scroll-snap-type: x mandatory;
-		scrollbar-width: thin;
-	}
-	:where([variant~="carousel"]) ui-media > :is(img, video) {
-		block-size: 100%;
-		flex: 0 0 100%;
-		inline-size: 100%;
-		inset: auto;
-		position: static;
-		scroll-snap-align: start;
-	}
-	/* slide animation for button/marker nav (swipe is native) */
-	@media (prefers-reduced-motion: no-preference) {
-		:where([variant~="carousel"]) ui-media { scroll-behavior: smooth; }
-	}
-
-	/* carousel controls — CSS-only dots + arrows (Chromium-only). Default both;
-	   `controls` picks dots/arrows/none. anchor()-positioned to each own scroller. */
-	@supports (scroll-marker-group: after) {
-		/* hide the scrollbar when any control is shown */
-		:where(
-			[variant~="carousel"]:not([controls]),
-			[variant~="carousel"][controls~="dots"],
-			[variant~="carousel"][controls~="arrows"]
-		) ui-media { scrollbar-width: none; }
-
-		/* dots — default (no controls attr), or controls~="dots" */
-		:where(
-			[variant~="carousel"]:not([controls]),
-			[variant~="carousel"][controls~="dots"]
-		) {
-			& ui-media { scroll-marker-group: after; }
-
-			/* marker group: anchored bottom-centre of the frame */
-			& ui-media::scroll-marker-group {
-				display: flex;
-				gap: var(--ui-card-dots-gap, 0.5rem);
-				justify-self: anchor-center;
-				position: absolute;
-				position-anchor: auto;
-				top: calc(anchor(bottom) - var(--ui-card-overlay-gap, 0.75rem) - var(--ui-card-dot-size, 0.6rem));
-				z-index: 3;
-			}
-			& ui-media > :is(img, video)::scroll-marker {
-				background: var(--ui-card-dot-bg, rgb(255 255 255 / 0.5));
-				block-size: var(--ui-card-dot-size, 0.6rem);
-				border: var(--ui-card-dot-border, 0);
-				border-radius: var(--radius-circle, 50%);
-				content: "";
-				cursor: pointer;
-				inline-size: var(--ui-card-dot-size, 0.6rem);
-			}
-			& ui-media > :is(img, video)::scroll-marker:target-current {
-				background: var(--ui-card-dot-active, #fff);
-			}
-		}
-
-		/* arrows — default (no controls attr), or controls~="arrows" */
-		:where(
-			[variant~="carousel"]:not([controls]),
-			[variant~="carousel"][controls~="arrows"]
-		) {
-			/* chevron = centred background SVG; content:"" generates the button */
-			& ui-media::scroll-button(*) {
-				aspect-ratio: 1;
-				background-color: var(--ui-card-arrow-bg, rgb(255 255 255 / 0.75));
-				background-position: center;
-				background-repeat: no-repeat;
-				background-size: var(--ui-card-arrow-glyph-size, 45%);
-				border: var(--ui-card-arrow-border, 0);
-				border-radius: var(--ui-card-arrow-radius, var(--radius-circle, 50%));
-				content: "" / "";
-				cursor: pointer;
-				inline-size: var(--ui-card-arrow-size, 2rem);
-				position: absolute;
-				position-anchor: auto;
-				/* centre via calc, not translate (a transform desyncs paint/hit box) */
-				top: calc(anchor(center) - var(--ui-card-arrow-size, 2rem) / 2);
-				z-index: 3;
-			}
-			& ui-media::scroll-button(*):hover { background-color: var(--ui-card-arrow-bg-hover, rgb(255 255 255 / 0.95)); }
-			& ui-media::scroll-button(*):disabled { cursor: default; opacity: 0; pointer-events: none; }
-			& ui-media::scroll-button(left) {
-				background-image: var(--ui-card-arrow-prev, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 18l-6-6 6-6'/%3E%3C/svg%3E"));
-				content: "" / "Previous";
-				left: calc(anchor(left) + var(--ui-card-overlay-gap, 0.75rem));
-			}
-			& ui-media::scroll-button(right) {
-				background-image: var(--ui-card-arrow-next, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E"));
-				content: "" / "Next";
-				right: calc(anchor(right) + var(--ui-card-overlay-gap, 0.75rem));
-			}
-		}
-	}
-
-	/* media overlays: ribbon + badge — placed with the 9-code pos() system */
-	:where(ui-media) :is([data-part="ribbon"], [data-part="badge"]) {
-		--_ov-gap: var(--ui-card-overlay-gap, 0.75rem);
-		font-size: calc(var(--ui-card-fs, 1rem) * 0.72);
-		font-weight: var(--ui-card-ribbon-weight, var(--font-weight-bold, 700));
-		line-height: 1;
-		margin: 0;
-		position: absolute;
-		width: max-content;
-		z-index: 2;
-
-		/* 9-position placement (default = tl) */
-		&:not([pos]), &[pos="tl"] { inset-block-start: var(--_ov-gap); inset-inline-start: var(--_ov-gap); }
-		&[pos="tc"] { inset-block-start: var(--_ov-gap); inset-inline-start: 50%; translate: -50% 0; }
-		&[pos="tr"] { inset-block-start: var(--_ov-gap); inset-inline-end: var(--_ov-gap); }
-		&[pos="cl"] { inset-block-start: 50%; inset-inline-start: var(--_ov-gap); translate: 0 -50%; }
-		&[pos="cc"] { inset-block-start: 50%; inset-inline-start: 50%; translate: -50% -50%; }
-		&[pos="cr"] { inset-block-start: 50%; inset-inline-end: var(--_ov-gap); translate: 0 -50%; }
-		&[pos="bl"] { inset-block-end: var(--_ov-gap); inset-inline-start: var(--_ov-gap); }
-		&[pos="bc"] { inset-block-end: var(--_ov-gap); inset-inline-start: 50%; translate: -50% 0; }
-		&[pos="br"] { inset-block-end: var(--_ov-gap); inset-inline-end: var(--_ov-gap); }
-
-		/* color="" maps the semantic palette */
-		&[color="info"]    { --ui-card-ribbon-bg: var(--color-info);    --ui-card-badge-bg: var(--color-info); }
-		&[color="success"] { --ui-card-ribbon-bg: var(--color-success); --ui-card-badge-bg: var(--color-success); }
-		&[color="warning"] { --ui-card-ribbon-bg: var(--color-warning); --ui-card-badge-bg: var(--color-warning); }
-		&[color="error"]   { --ui-card-ribbon-bg: var(--color-error);   --ui-card-badge-bg: var(--color-error); }
-	}
-
-	/* ribbon — straight banner; variant="diagonal" = 45° corner banner (clipped) */
-	:where(ui-media) [data-part="ribbon"] {
-		background: var(--ui-card-ribbon-bg, var(--color-accent));
-		color: var(--ui-card-ribbon-ink, #fff);
-		letter-spacing: var(--tracking-wide, 0.05em);
-		padding: 0.3em 0.8em;
-		text-transform: uppercase;
-
-		&[variant~="diagonal"] {
-			--_ov-gap: 0;
-			inline-size: var(--ui-card-ribbon-diag-width, 11rem);
-			inset-block: var(--ui-card-ribbon-diag-offset, 1.6rem) auto;
-			padding-block: 0.3em;
-			text-align: center;
-
-			&:not([pos]), &[pos="tl"] { inset-inline: calc(-1 * var(--ui-card-ribbon-diag-pull, 3rem)) auto; rotate: -45deg; }
-			&[pos="tr"] { inset-inline: auto calc(-1 * var(--ui-card-ribbon-diag-pull, 3rem)); rotate: 45deg; }
-			&[pos="bl"] { inset-block: auto var(--ui-card-ribbon-diag-offset, 1.6rem); inset-inline: calc(-1 * var(--ui-card-ribbon-diag-pull, 3rem)) auto; rotate: 45deg; }
-			&[pos="br"] { inset-block: auto var(--ui-card-ribbon-diag-offset, 1.6rem); inset-inline: auto calc(-1 * var(--ui-card-ribbon-diag-pull, 3rem)); rotate: -45deg; }
-		}
-	}
-
-	/* badge — pill */
-	:where(ui-media) [data-part="badge"] {
-		background: var(--ui-card-badge-bg, var(--color-accent));
-		border-radius: var(--radius-pill, 100px);
-		color: var(--ui-card-badge-ink, #fff);
-		font-weight: var(--ui-card-badge-weight, var(--font-weight-medium, 500));
-		padding: 0.4em 0.7em;
-	}
-
-
-	/* ============================================================
-	   LAYOUT — arrangement, split, overlay, scrim
-	   ============================================================ */
-
-	/* horizontal arrangement + sp() column split */
-	:where([variant~="horizontal"], [variant~="horizontal-r"]) {
+	:where([variant~="row"], [variant~="row-r"]) {
 		--ui-card-cols: var(--ui-card-split, 1fr 1fr);
 	}
-	:where([variant*="sp(1/1)"]) { --ui-card-split: 1fr 1fr; }
-	:where([variant*="sp(1/2)"]) { --ui-card-split: 1fr 2fr; }
-	:where([variant*="sp(2/1)"]) { --ui-card-split: 2fr 1fr; }
-	:where([variant*="sp(1/3)"]) { --ui-card-split: 1fr 3fr; }
-	:where([variant*="sp(3/1)"]) { --ui-card-split: 3fr 1fr; }
-	:where([variant~="horizontal"], [variant~="horizontal-r"]) ui-media {
+	:where([variant~="row"], [variant~="row-r"]) ui-media {
 		block-size: 100%;
 		inline-size: 100%;
 		min-block-size: 0;
 	}
+	:where([variant~="col-r"], [variant~="row-r"]) ui-content { order: -1; }
 
-	/* reversed order (content first) */
-	:where([variant~="vertical-r"], [variant~="horizontal-r"]) ui-content { order: -1; }
+	:where([variant~="spl(1/1)"]) { --ui-card-split: 1fr 1fr; }
+	:where([variant~="spl(1/2)"]) { --ui-card-split: 1fr 2fr; }
+	:where([variant~="spl(2/1)"]) { --ui-card-split: 2fr 1fr; }
+	:where([variant~="spl(1/3)"]) { --ui-card-split: 1fr 3fr; }
+	:where([variant~="spl(3/1)"]) { --ui-card-split: 3fr 1fr; }
 
-	/* Equal-height grid rows stretch the card to its tallest sibling. For stacked
-	   layouts, don't stretch the tracks (which grows the media and floats the
-	   content) — keep media at its natural/aspect size and let the trailing slack
-	   collect at the outer edge: below content (vertical). For vertical-r the
-	   content stays at the top and the media sits flush at the bottom, slack
-	   between them (space-between).
-	   Overlay / horizontal / media-only / content-only still fill (stretch). */
+	/* vis() — show only one part */
+	:where([variant~="vis(media)"]) ui-content { display: none; }
+	:where([variant~="vis(content)"]) ui-media { display: none; }
+
+	/* ============================================================
+	   ALIGN-CONTENT — stacked layouts collect slack at the edge; row /
+	   overlay / single-part layouts stretch.
+	   ============================================================ */
 	:where([variant]) > cq-box { align-content: start; }
-	:where([variant~="vertical-r"]) > cq-box { align-content: space-between; }
+	:where([variant~="col-r"]) > cq-box { align-content: space-between; }
 	:where(
-		[variant~="horizontal"], [variant~="horizontal-r"], [variant~="media-only"], [variant~="content-only"], [variant*="ov("],
-		[variant-md~="horizontal"], [variant-md~="horizontal-r"], [variant-md~="media-only"], [variant-md*="ov("],
-		[variant-lg~="horizontal"], [variant-lg~="horizontal-r"], [variant-lg~="media-only"], [variant-lg*="ov("]
+		[variant~="row"], [variant~="row-r"], [variant~="vis(media)"], [variant~="vis(content)"], [variant*="ovr("],
+		[variant~="md:row"], [variant~="md:row-r"], [variant~="md:vis(media)"], [variant~="md:vis(content)"],
+		[variant~="lg:row"], [variant~="lg:row-r"], [variant~="lg:vis(media)"], [variant~="lg:vis(content)"]
 	) > cq-box { align-content: stretch; }
 
-	/* ov() — stack content over media + place it. Prop-driven so the responsive
-	   tiers (variant-md/-lg) can toggle the overlay at a breakpoint, and so any
-	   host (e.g. ui-reveal) gets the same behaviour. Defaults = no overlay. */
+	/* ============================================================
+	   ovr() — stack content over media + place it. Writes into the
+	   primitive namespaces so they stay self-contained.
+	   ============================================================ */
 	:where([variant]) :is(ui-media, ui-content) { grid-area: var(--ui-card-stack, auto); }
-	:where([variant*="ov("]) {
+	:where([variant*="ovr("]) {
 		--ui-card-stack: 1 / 1;
-		--ui-card-ov-ink: var(--ui-card-overlay-ink, #fff);
-		--ui-card-ov-z: 1;
+		--ui-content-ov-ink: var(--ui-card-overlay-ink, #fff);
+		--ui-content-ov-z: 1;
 	}
-	:where([variant*="ov(tl)"]) { --ui-card-ov-justify: start;  --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-tl); }
-	:where([variant*="ov(tc)"]) { --ui-card-ov-justify: start;  --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-tc); }
-	:where([variant*="ov(tr)"]) { --ui-card-ov-justify: start;  --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-tr); }
-	:where([variant*="ov(cl)"]) { --ui-card-ov-justify: center; --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-cl); }
-	:where([variant*="ov(cc)"]) { --ui-card-ov-justify: center; --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-cc); }
-	:where([variant*="ov(cr)"]) { --ui-card-ov-justify: center; --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-cr); }
-	:where([variant*="ov(bl)"]) { --ui-card-ov-justify: end;    --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-bl); }
-	:where([variant*="ov(bc)"]) { --ui-card-ov-justify: end;    --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-bc); }
-	:where([variant*="ov(br)"]) { --ui-card-ov-justify: end;    --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-br); }
-
-	/* sc() — scrim. Gradients always defined; `sc` selects which to paint via
-	   --ui-card-scrim-paint (default transparent → no scrim). */
-	:where([variant]) {
-		--ui-card-scrim-c: var(--ui-card-scrim-color, rgb(0 0 0 / 0.65));
-		--ui-card-scrim-tl: linear-gradient(to bottom right, var(--ui-card-scrim-c), #0000 60%);
-		--ui-card-scrim-tc: linear-gradient(to bottom,       var(--ui-card-scrim-c), #0000 60%);
-		--ui-card-scrim-tr: linear-gradient(to bottom left,  var(--ui-card-scrim-c), #0000 60%);
-		--ui-card-scrim-cl: linear-gradient(to right,        var(--ui-card-scrim-c), #0000 60%);
-		--ui-card-scrim-cc: linear-gradient(to bottom, #0000, var(--ui-card-scrim-c) 50%, #0000);
-		--ui-card-scrim-cr: linear-gradient(to left,         var(--ui-card-scrim-c), #0000 60%);
-		--ui-card-scrim-bl: linear-gradient(to top right,    var(--ui-card-scrim-c), #0000 60%);
-		--ui-card-scrim-bc: linear-gradient(to top,          var(--ui-card-scrim-c), #0000 60%);
-		--ui-card-scrim-br: linear-gradient(to top left,     var(--ui-card-scrim-c), #0000 60%);
-	}
-	/* explicit sc(pos) overrides the ov-matched default */
-	:where([variant*="sc(tl)"]) { --ui-card-scrim: var(--ui-card-scrim-tl); }
-	:where([variant*="sc(tc)"]) { --ui-card-scrim: var(--ui-card-scrim-tc); }
-	:where([variant*="sc(tr)"]) { --ui-card-scrim: var(--ui-card-scrim-tr); }
-	:where([variant*="sc(cl)"]) { --ui-card-scrim: var(--ui-card-scrim-cl); }
-	:where([variant*="sc(cc)"]) { --ui-card-scrim: var(--ui-card-scrim-cc); }
-	:where([variant*="sc(cr)"]) { --ui-card-scrim: var(--ui-card-scrim-cr); }
-	:where([variant*="sc(bl)"]) { --ui-card-scrim: var(--ui-card-scrim-bl); }
-	:where([variant*="sc(bc)"]) { --ui-card-scrim: var(--ui-card-scrim-bc); }
-	:where([variant*="sc(br)"]) { --ui-card-scrim: var(--ui-card-scrim-br); }
-	/* `sc` keyword paints; bare sc auto-matches the ov() position */
-	:where([variant*="sc"]) { --ui-card-scrim-paint: var(--ui-card-scrim, var(--ui-card-scrim-default, var(--ui-card-scrim-bc))); }
-	:where([variant]) ui-media::after {
-		background: var(--ui-card-scrim-paint, #0000);
-		content: "";
-		inset: 0;
-		pointer-events: none;
-		position: absolute;
-	}
-	:where([variant*="sc"]) ui-media [data-part="caption"] { position: relative; z-index: 1; }
-
+	:where([variant*="ovr(tl)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-tl); }
+	:where([variant*="ovr(tc)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: center; --ui-content-ov-text: center; --ui-media-scrim-default: var(--ui-media-scrim-tc); }
+	:where([variant*="ovr(tr)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-tr); }
+	:where([variant*="ovr(cl)"]) { --ui-content-ov-justify: center; --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-cl); }
+	:where([variant*="ovr(cc)"]) { --ui-content-ov-justify: center; --ui-content-ov-align: center; --ui-content-ov-text: center; --ui-media-scrim-default: var(--ui-media-scrim-cc); }
+	:where([variant*="ovr(cr)"]) { --ui-content-ov-justify: center; --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-cr); }
+	:where([variant*="ovr(bl)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-bl); }
+	:where([variant*="ovr(bc)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: center; --ui-content-ov-text: center; --ui-media-scrim-default: var(--ui-media-scrim-bc); }
+	:where([variant*="ovr(br)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-br); }
 
 	/* ============================================================
-	   UI-CONTENT — container, visibility, parts
+	   THEMES — thm(). Ink tokens cross into the content namespace.
 	   ============================================================ */
-
-	/* content column — ov() placement/ink read from props (default = no overlay) */
-	:where([variant]) ui-content {
-		align-items: var(--ui-card-ov-align, normal);
-		color: var(--ui-card-ov-ink, inherit);
-		display: flex;
-		flex-direction: column;
-		font-size: var(--ui-card-fs);
-		gap: var(--ui-card-row-gap, 1em);
-		justify-content: var(--ui-card-ov-justify, normal);
-		padding: var(--ui-card-p);
-		text-align: var(--ui-card-ov-text, start);
-		z-index: var(--ui-card-ov-z, auto);
-
-		& > * { margin: 0; text-box: cap alphabetic; }
-	}
-
-	/* media-only / content-only visibility (must follow the display:flex above) */
-	:where([variant~="media-only"]) ui-content { display: none; }
-	:where([variant~="content-only"]) ui-media { display: none; }
-
-	/* scroll fade-shadow: [scroll] — scrollable content with masked edges */
-	@property --ui-scroll-fade-start { syntax: "<length>"; inherits: false; initial-value: 0px; }
-	@property --ui-scroll-fade-end   { syntax: "<length>"; inherits: false; initial-value: 0px; }
-
-	@keyframes ui-scroll-fade {
-		0%        { --ui-scroll-fade-start: 0px; }
-		10%, 100% { --ui-scroll-fade-start: var(--ui-scroll-fade-size, 3rem); }
-		0%, 90%   { --ui-scroll-fade-end: var(--ui-scroll-fade-size, 3rem); }
-		100%      { --ui-scroll-fade-end: 0px; }
-	}
-
-	:where(ui-card[scroll]) ui-content {
-		max-block-size: var(--ui-card-scroll-bs, 100%);
-		overflow-y: auto;
-		overscroll-behavior: contain;
-		scrollbar-width: thin;
-	}
-
-	@supports (animation-timeline: scroll()) {
-		@media (prefers-reduced-motion: no-preference) {
-			:where(ui-card[scroll]) ui-content {
-				animation: ui-scroll-fade linear;
-				animation-timeline: --ui-scroll;
-				mask: linear-gradient(to bottom, #0000, #000 var(--ui-scroll-fade-start) calc(100% - var(--ui-scroll-fade-end)), #0000);
-				scroll-timeline: --ui-scroll block;
-			}
-		}
-	}
-
-	/* --- content parts (styled by data-part, not tag name) --- */
-
-	/* eyebrow */
-	:where(ui-content) [data-part="eyebrow"] {
-		color: var(--ui-card-eyebrow-color, var(--color-accent));
-		font-size: var(--ui-card-eyebrow-fs, calc(var(--ui-card-fs) * 0.78));
-		font-weight: var(--ui-card-eyebrow-weight, var(--font-weight-medium, 500));
-		letter-spacing: var(--tracking-wide, 0.05em);
-		text-transform: uppercase;
-	}
-
-	/* headline (and bare h2–h6) */
-	:where(ui-content) :is([data-part="headline"], h2, h3, h4, h5, h6) {
-		font-size: var(--ui-card-headline);
-		font-weight: var(--ui-card-headline-weight, var(--font-weight-bold, 700));
-		letter-spacing: var(--tracking-tight, -0.01em);
-		line-height: var(--ui-card-headline-line-height, var(--line-height-tight, 1.15));
-		text-wrap: pretty;
-	}
-
-	/* subheadline */
-	:where(ui-content) [data-part="subheadline"] {
-		color: var(--ui-card-subheadline-color, var(--ui-card-muted));
-		font-size: var(--ui-card-subheadline-fs, calc(var(--ui-card-fs) * 0.88));
-		font-weight: var(--ui-card-subheadline-weight, var(--font-weight-normal, 400));
-	}
-
-	/* summary */
-	:where(ui-content) [data-part="summary"] {
-		color: var(--ui-card-summary-color, inherit);
-		font-size: var(--ui-card-summary-fs, var(--ui-card-fs));
-		line-height: var(--line-height-normal, 1.5);
-	}
-
-	/* meta / caption */
-	:where([variant]) :is([data-part="meta"], [data-part="caption"]) {
-		color: var(--ui-card-meta-color, var(--ui-card-muted));
-		font-size: var(--ui-card-meta-fs, calc(var(--ui-card-fs) * 0.75));
-	}
-
-	/* byline (author row; inner <img> becomes a round avatar) */
-	:where(ui-content) [data-part="byline"] {
-		align-items: center;
-		display: flex;
-		font-size: var(--ui-card-byline-fs, calc(var(--ui-card-fs) * 0.82));
-		font-style: normal;
-		gap: var(--ui-card-byline-gap, var(--spacing-sm));
-
-		& img {
-			aspect-ratio: 1;
-			border-radius: var(--radius-circle);
-			inline-size: var(--ui-card-avatar-size, 2.25em);
-			object-fit: cover;
-		}
-	}
-
-	/* tags (pill list) */
-	:where(ui-content) [data-part="tags"] {
-		display: flex;
-		flex-wrap: wrap;
-		font-size: var(--ui-card-tags-fs, calc(var(--ui-card-fs) * 0.72));
-		gap: var(--ui-card-tags-gap, var(--spacing-xs, 0.35rem));
-		list-style: none;
-		margin: 0;
-		padding: 0;
-
-		& > * { display: contents; }
-		& a, & li {
-			background: var(--ui-card-tag-bg, var(--color-button, hsl(0, 0%, 90%)));
-			border-radius: var(--radius-pill, 100px);
-			color: var(--ui-card-tag-color, inherit);
-			padding: var(--ui-card-tag-padding, 0.2em 0.7em);
-			text-decoration: none;
-		}
-	}
-
-	/* actions (button / link row) */
-	:where(ui-content) [data-part="actions"] {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--ui-card-actions-gap, var(--spacing-sm));
-	}
-
-	/* footer (trailing meta) */
-	:where(ui-content) [data-part="footer"] {
-		color: var(--ui-card-footer-color, var(--ui-card-muted));
-		display: flex;
-		flex-wrap: wrap;
-		font-size: var(--ui-card-footer-fs, calc(var(--ui-card-fs) * 0.78));
-		gap: var(--ui-card-footer-gap, var(--spacing-sm));
-	}
-
-
-	/* ============================================================
-	   THEMES — th()
-	   ============================================================ */
-	:where([variant*="th(dark)"]) {
+	:where([variant*="thm(dark)"]) {
 		--ui-card-bg: var(--ui-card-dark-bg, #1f2937);
-		--ui-card-muted: color-mix(in oklab, currentColor 60%, transparent);
-		--ui-card-eyebrow-color: var(--ui-card-dark-accent, #93c5fd);
-		--ui-card-tag-bg: rgb(255 255 255 / 0.12);
+		--ui-content-muted: color-mix(in oklab, currentColor 60%, transparent);
+		--ui-content-eyebrow-color: var(--ui-card-dark-accent, #93c5fd);
+		--ui-content-tag-bg: rgb(255 255 255 / 0.12);
 		color: var(--ui-card-dark-ink, #f9fafb);
 	}
-	:where([variant*="th(brand)"]) {
+	:where([variant*="thm(brand)"]) {
 		--ui-card-bg: var(--ui-card-brand-bg, var(--color-accent));
-		--ui-card-muted: rgb(255 255 255 / 0.8);
-		--ui-card-eyebrow-color: rgb(255 255 255 / 0.75);
-		--ui-card-tag-bg: rgb(255 255 255 / 0.2);
+		--ui-content-muted: rgb(255 255 255 / 0.8);
+		--ui-content-eyebrow-color: rgb(255 255 255 / 0.75);
+		--ui-content-tag-bg: rgb(255 255 255 / 0.2);
 		color: var(--ui-card-brand-ink, #fff);
 	}
-	/* subtle — a light, off-white surface (not pure white). Keeps the default
-	   dark ink, so eyebrow/tags need no remap. Flips with the surface in dark mode. */
-	:where([variant*="th(subtle)"]) {
+	:where([variant*="thm(subtle)"]) {
 		--ui-card-bg: var(--ui-card-subtle-bg, var(--color-surface-alt, #f1f1f1));
 		color: var(--ui-card-subtle-ink, var(--color-text, inherit));
 	}
 
-
 	/* ============================================================
-	   RESPONSIVE — container tiers (variant-md / variant-lg)
-	   re-apply arrangement / ar() / fs() / sp() at the card's own width
+	   RESPONSIVE — md:/lg: prefixes on variant= layout + content= spacing.
+	   (media= and content="scl()" are NOT breakpoint-prefixed this round.)
+	   Targets the queryable descendant (cq-box for card, summary for reveal).
 	   ============================================================ */
 
-	/* variant-md (>= 25rem) */
+	/* md (>= 25rem) */
 	@container (inline-size >= 25rem) {
-		:where([variant-md~="vertical"]) :is(cq-box, summary),
-		:where([variant-md~="vertical-r"]) :is(cq-box, summary)   { --ui-card-cols: 1fr; }
-		:where([variant-md~="horizontal"]) :is(cq-box, summary),
-		:where([variant-md~="horizontal-r"]) :is(cq-box, summary) { --ui-card-cols: var(--ui-card-split, 1fr 1fr); }
-		:where([variant-md~="horizontal"]) :is(cq-box, summary) ui-media,
-		:where([variant-md~="horizontal-r"]) :is(cq-box, summary) ui-media { block-size: 100%; inline-size: 100%; min-block-size: 0; }
-		:where([variant-md~="vertical"]) :is(cq-box, summary) ui-content,
-		:where([variant-md~="horizontal"]) :is(cq-box, summary) ui-content { order: 0; }
-		:where([variant-md~="vertical-r"]) :is(cq-box, summary) ui-content,
-		:where([variant-md~="horizontal-r"]) :is(cq-box, summary) ui-content { order: -1; }
-		:where([variant-md~="media-only"]) :is(cq-box, summary) ui-content { display: none; }
-		:where([variant-md~="content-only"]) :is(cq-box, summary) ui-media { display: none; }
+		:where([variant~="md:col"]) :is(cq-box, summary),
+		:where([variant~="md:col-r"]) :is(cq-box, summary)   { --ui-card-cols: 1fr; }
+		:where([variant~="md:row"]) :is(cq-box, summary),
+		:where([variant~="md:row-r"]) :is(cq-box, summary)   { --ui-card-cols: var(--ui-card-split, 1fr 1fr); }
+		:where([variant~="md:row"]) :is(cq-box, summary) ui-media,
+		:where([variant~="md:row-r"]) :is(cq-box, summary) ui-media { block-size: 100%; inline-size: 100%; min-block-size: 0; }
+		:where([variant~="md:col"]) :is(cq-box, summary) ui-content,
+		:where([variant~="md:row"]) :is(cq-box, summary) ui-content { order: 0; }
+		:where([variant~="md:col-r"]) :is(cq-box, summary) ui-content,
+		:where([variant~="md:row-r"]) :is(cq-box, summary) ui-content { order: -1; }
+		:where([variant~="md:vis(media)"]) :is(cq-box, summary) ui-content { display: none; }
+		:where([variant~="md:vis(content)"]) :is(cq-box, summary) ui-media { display: none; }
 
-		:where([variant-md*="sp(1/1)"]) :is(cq-box, summary) { --ui-card-split: 1fr 1fr; }
-		:where([variant-md*="sp(1/2)"]) :is(cq-box, summary) { --ui-card-split: 1fr 2fr; }
-		:where([variant-md*="sp(2/1)"]) :is(cq-box, summary) { --ui-card-split: 2fr 1fr; }
-		:where([variant-md*="sp(1/3)"]) :is(cq-box, summary) { --ui-card-split: 1fr 3fr; }
-		:where([variant-md*="sp(3/1)"]) :is(cq-box, summary) { --ui-card-split: 3fr 1fr; }
+		:where([variant~="md:spl(1/1)"]) :is(cq-box, summary) { --ui-card-split: 1fr 1fr; }
+		:where([variant~="md:spl(1/2)"]) :is(cq-box, summary) { --ui-card-split: 1fr 2fr; }
+		:where([variant~="md:spl(2/1)"]) :is(cq-box, summary) { --ui-card-split: 2fr 1fr; }
+		:where([variant~="md:spl(1/3)"]) :is(cq-box, summary) { --ui-card-split: 1fr 3fr; }
+		:where([variant~="md:spl(3/1)"]) :is(cq-box, summary) { --ui-card-split: 3fr 1fr; }
 
-		:where([variant-md~="fs(sm)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-sm); --ui-card-headline: var(--ui-card-headline-sm); }
-		:where([variant-md~="fs(md)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-md); --ui-card-headline: var(--ui-card-headline-md); }
-		:where([variant-md~="fs(lg)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-lg); --ui-card-headline: var(--ui-card-headline-lg); }
-		:where([variant-md~="fs(xl)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline: var(--ui-card-headline-xl); }
+		:where([content~="md:gap(none)"]) :is(cq-box, summary) { --ui-content-gap: 0; }
+		:where([content~="md:gap(xs)"])   :is(cq-box, summary) { --ui-content-gap: var(--spacing-xs); }
+		:where([content~="md:gap(sm)"])   :is(cq-box, summary) { --ui-content-gap: var(--spacing-sm); }
+		:where([content~="md:gap(md)"])   :is(cq-box, summary) { --ui-content-gap: var(--spacing-md); }
+		:where([content~="md:gap(lg)"])   :is(cq-box, summary) { --ui-content-gap: var(--spacing-lg); }
 
-		:where([variant-md~="p(none)"]) :is(cq-box, summary) { --ui-card-p: 0; }
-		:where([variant-md~="p(xs)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-xs); }
-		:where([variant-md~="p(sm)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-sm); }
-		:where([variant-md~="p(md)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-md); }
-		:where([variant-md~="p(lg)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-lg); }
-		:where([variant-md~="p(xl)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-xl); }
-		:where([variant-md~="p(2xl)"])  :is(cq-box, summary) { --ui-card-p: var(--spacing-2xl); }
-
-		:where([variant-md*="ar("]) :is(cq-box, summary) ui-media { min-block-size: 0; }
-		:where([variant-md*="ar(1/1)"]) :is(cq-box, summary)   { --ui-card-ar: 1 / 1; }
-		:where([variant-md*="ar(6/7)"]) :is(cq-box, summary)   { --ui-card-ar: 6 / 7; }
-		:where([variant-md*="ar(3/4)"]) :is(cq-box, summary)   { --ui-card-ar: 3 / 4; }
-		:where([variant-md*="ar(4/3)"]) :is(cq-box, summary)   { --ui-card-ar: 4 / 3; }
-		:where([variant-md*="ar(3/2)"]) :is(cq-box, summary)   { --ui-card-ar: 3 / 2; }
-		:where([variant-md*="ar(2/3)"]) :is(cq-box, summary)   { --ui-card-ar: 2 / 3; }
-		:where([variant-md*="ar(16/9)"]) :is(cq-box, summary)  { --ui-card-ar: 16 / 9; }
-		:where([variant-md*="ar(21/9)"]) :is(cq-box, summary)  { --ui-card-ar: 21 / 9; }
-
-		/* overlay ov() (props inherit to cq-box children); bare sc auto-matches */
-		:where([variant-md*="ov("]) :is(cq-box, summary) { --ui-card-stack: 1 / 1; --ui-card-ov-ink: var(--ui-card-overlay-ink, #fff); --ui-card-ov-z: 1; }
-		:where([variant-md*="ov(tl)"]) :is(cq-box, summary) { --ui-card-ov-justify: start;  --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-tl); }
-		:where([variant-md*="ov(tc)"]) :is(cq-box, summary) { --ui-card-ov-justify: start;  --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-tc); }
-		:where([variant-md*="ov(tr)"]) :is(cq-box, summary) { --ui-card-ov-justify: start;  --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-tr); }
-		:where([variant-md*="ov(cl)"]) :is(cq-box, summary) { --ui-card-ov-justify: center; --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-cl); }
-		:where([variant-md*="ov(cc)"]) :is(cq-box, summary) { --ui-card-ov-justify: center; --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-cc); }
-		:where([variant-md*="ov(cr)"]) :is(cq-box, summary) { --ui-card-ov-justify: center; --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-cr); }
-		:where([variant-md*="ov(bl)"]) :is(cq-box, summary) { --ui-card-ov-justify: end;    --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-bl); }
-		:where([variant-md*="ov(bc)"]) :is(cq-box, summary) { --ui-card-ov-justify: end;    --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-bc); }
-		:where([variant-md*="ov(br)"]) :is(cq-box, summary) { --ui-card-ov-justify: end;    --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-br); }
-		:where([variant-md*="sc"]) :is(cq-box, summary) { --ui-card-scrim-paint: var(--ui-card-scrim, var(--ui-card-scrim-default, var(--ui-card-scrim-bc))); }
-
-		:where([variant-md*="op(tl)"]) :is(cq-box, summary) { --ui-card-op: left top; }
-		:where([variant-md*="op(tc)"]) :is(cq-box, summary) { --ui-card-op: center top; }
-		:where([variant-md*="op(tr)"]) :is(cq-box, summary) { --ui-card-op: right top; }
-		:where([variant-md*="op(cl)"]) :is(cq-box, summary) { --ui-card-op: left center; }
-		:where([variant-md*="op(cc)"]) :is(cq-box, summary) { --ui-card-op: center center; }
-		:where([variant-md*="op(cr)"]) :is(cq-box, summary) { --ui-card-op: right center; }
-		:where([variant-md*="op(bl)"]) :is(cq-box, summary) { --ui-card-op: left bottom; }
-		:where([variant-md*="op(bc)"]) :is(cq-box, summary) { --ui-card-op: center bottom; }
-		:where([variant-md*="op(br)"]) :is(cq-box, summary) { --ui-card-op: right bottom; }
+		:where([content~="md:pad(none)"]) :is(cq-box, summary) { --ui-content-p: 0; }
+		:where([content~="md:pad(xs)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-xs); }
+		:where([content~="md:pad(sm)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-sm); }
+		:where([content~="md:pad(md)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-md); }
+		:where([content~="md:pad(lg)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-lg); }
+		:where([content~="md:pad(xl)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-xl); }
+		:where([content~="md:pad(2xl)"])  :is(cq-box, summary) { --ui-content-p: var(--spacing-2xl); }
 	}
 
-	/* variant-lg (>= 44rem) */
+	/* lg (>= 44rem) */
 	@container (inline-size >= 44rem) {
-		:where([variant-lg~="vertical"]) :is(cq-box, summary),
-		:where([variant-lg~="vertical-r"]) :is(cq-box, summary)   { --ui-card-cols: 1fr; }
-		:where([variant-lg~="horizontal"]) :is(cq-box, summary),
-		:where([variant-lg~="horizontal-r"]) :is(cq-box, summary) { --ui-card-cols: var(--ui-card-split, 1fr 1fr); }
-		:where([variant-lg~="horizontal"]) :is(cq-box, summary) ui-media,
-		:where([variant-lg~="horizontal-r"]) :is(cq-box, summary) ui-media { block-size: 100%; inline-size: 100%; min-block-size: 0; }
-		:where([variant-lg~="vertical"]) :is(cq-box, summary) ui-content,
-		:where([variant-lg~="horizontal"]) :is(cq-box, summary) ui-content { order: 0; }
-		:where([variant-lg~="vertical-r"]) :is(cq-box, summary) ui-content,
-		:where([variant-lg~="horizontal-r"]) :is(cq-box, summary) ui-content { order: -1; }
-		:where([variant-lg~="media-only"]) :is(cq-box, summary) ui-content { display: none; }
-		:where([variant-lg~="content-only"]) :is(cq-box, summary) ui-media { display: none; }
+		:where([variant~="lg:col"]) :is(cq-box, summary),
+		:where([variant~="lg:col-r"]) :is(cq-box, summary)   { --ui-card-cols: 1fr; }
+		:where([variant~="lg:row"]) :is(cq-box, summary),
+		:where([variant~="lg:row-r"]) :is(cq-box, summary)   { --ui-card-cols: var(--ui-card-split, 1fr 1fr); }
+		:where([variant~="lg:row"]) :is(cq-box, summary) ui-media,
+		:where([variant~="lg:row-r"]) :is(cq-box, summary) ui-media { block-size: 100%; inline-size: 100%; min-block-size: 0; }
+		:where([variant~="lg:col"]) :is(cq-box, summary) ui-content,
+		:where([variant~="lg:row"]) :is(cq-box, summary) ui-content { order: 0; }
+		:where([variant~="lg:col-r"]) :is(cq-box, summary) ui-content,
+		:where([variant~="lg:row-r"]) :is(cq-box, summary) ui-content { order: -1; }
+		:where([variant~="lg:vis(media)"]) :is(cq-box, summary) ui-content { display: none; }
+		:where([variant~="lg:vis(content)"]) :is(cq-box, summary) ui-media { display: none; }
 
-		:where([variant-lg*="sp(1/1)"]) :is(cq-box, summary) { --ui-card-split: 1fr 1fr; }
-		:where([variant-lg*="sp(1/2)"]) :is(cq-box, summary) { --ui-card-split: 1fr 2fr; }
-		:where([variant-lg*="sp(2/1)"]) :is(cq-box, summary) { --ui-card-split: 2fr 1fr; }
-		:where([variant-lg*="sp(1/3)"]) :is(cq-box, summary) { --ui-card-split: 1fr 3fr; }
-		:where([variant-lg*="sp(3/1)"]) :is(cq-box, summary) { --ui-card-split: 3fr 1fr; }
+		:where([variant~="lg:spl(1/1)"]) :is(cq-box, summary) { --ui-card-split: 1fr 1fr; }
+		:where([variant~="lg:spl(1/2)"]) :is(cq-box, summary) { --ui-card-split: 1fr 2fr; }
+		:where([variant~="lg:spl(2/1)"]) :is(cq-box, summary) { --ui-card-split: 2fr 1fr; }
+		:where([variant~="lg:spl(1/3)"]) :is(cq-box, summary) { --ui-card-split: 1fr 3fr; }
+		:where([variant~="lg:spl(3/1)"]) :is(cq-box, summary) { --ui-card-split: 3fr 1fr; }
 
-		:where([variant-lg~="fs(sm)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-sm); --ui-card-headline: var(--ui-card-headline-sm); }
-		:where([variant-lg~="fs(md)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-md); --ui-card-headline: var(--ui-card-headline-md); }
-		:where([variant-lg~="fs(lg)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-lg); --ui-card-headline: var(--ui-card-headline-lg); }
-		:where([variant-lg~="fs(xl)"]) :is(cq-box, summary) { --ui-card-fs: var(--ui-card-fs-xl); --ui-card-headline: var(--ui-card-headline-xl); }
+		:where([content~="lg:gap(none)"]) :is(cq-box, summary) { --ui-content-gap: 0; }
+		:where([content~="lg:gap(xs)"])   :is(cq-box, summary) { --ui-content-gap: var(--spacing-xs); }
+		:where([content~="lg:gap(sm)"])   :is(cq-box, summary) { --ui-content-gap: var(--spacing-sm); }
+		:where([content~="lg:gap(md)"])   :is(cq-box, summary) { --ui-content-gap: var(--spacing-md); }
+		:where([content~="lg:gap(lg)"])   :is(cq-box, summary) { --ui-content-gap: var(--spacing-lg); }
 
-		:where([variant-lg~="p(none)"]) :is(cq-box, summary) { --ui-card-p: 0; }
-		:where([variant-lg~="p(xs)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-xs); }
-		:where([variant-lg~="p(sm)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-sm); }
-		:where([variant-lg~="p(md)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-md); }
-		:where([variant-lg~="p(lg)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-lg); }
-		:where([variant-lg~="p(xl)"])   :is(cq-box, summary) { --ui-card-p: var(--spacing-xl); }
-		:where([variant-lg~="p(2xl)"])  :is(cq-box, summary) { --ui-card-p: var(--spacing-2xl); }
-
-		:where([variant-lg*="ar("]) :is(cq-box, summary) ui-media { min-block-size: 0; }
-		:where([variant-lg*="ar(1/1)"]) :is(cq-box, summary)   { --ui-card-ar: 1 / 1; }
-		:where([variant-lg*="ar(6/7)"]) :is(cq-box, summary)   { --ui-card-ar: 6 / 7; }
-		:where([variant-lg*="ar(3/4)"]) :is(cq-box, summary)   { --ui-card-ar: 3 / 4; }
-		:where([variant-lg*="ar(4/3)"]) :is(cq-box, summary)   { --ui-card-ar: 4 / 3; }
-		:where([variant-lg*="ar(3/2)"]) :is(cq-box, summary)   { --ui-card-ar: 3 / 2; }
-		:where([variant-lg*="ar(2/3)"]) :is(cq-box, summary)   { --ui-card-ar: 2 / 3; }
-		:where([variant-lg*="ar(16/9)"]) :is(cq-box, summary)  { --ui-card-ar: 16 / 9; }
-		:where([variant-lg*="ar(21/9)"]) :is(cq-box, summary)  { --ui-card-ar: 21 / 9; }
-
-		/* overlay ov() (props inherit to cq-box children); bare sc auto-matches */
-		:where([variant-lg*="ov("]) :is(cq-box, summary) { --ui-card-stack: 1 / 1; --ui-card-ov-ink: var(--ui-card-overlay-ink, #fff); --ui-card-ov-z: 1; }
-		:where([variant-lg*="ov(tl)"]) :is(cq-box, summary) { --ui-card-ov-justify: start;  --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-tl); }
-		:where([variant-lg*="ov(tc)"]) :is(cq-box, summary) { --ui-card-ov-justify: start;  --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-tc); }
-		:where([variant-lg*="ov(tr)"]) :is(cq-box, summary) { --ui-card-ov-justify: start;  --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-tr); }
-		:where([variant-lg*="ov(cl)"]) :is(cq-box, summary) { --ui-card-ov-justify: center; --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-cl); }
-		:where([variant-lg*="ov(cc)"]) :is(cq-box, summary) { --ui-card-ov-justify: center; --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-cc); }
-		:where([variant-lg*="ov(cr)"]) :is(cq-box, summary) { --ui-card-ov-justify: center; --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-cr); }
-		:where([variant-lg*="ov(bl)"]) :is(cq-box, summary) { --ui-card-ov-justify: end;    --ui-card-ov-align: start;  --ui-card-ov-text: start;  --ui-card-scrim-default: var(--ui-card-scrim-bl); }
-		:where([variant-lg*="ov(bc)"]) :is(cq-box, summary) { --ui-card-ov-justify: end;    --ui-card-ov-align: center; --ui-card-ov-text: center; --ui-card-scrim-default: var(--ui-card-scrim-bc); }
-		:where([variant-lg*="ov(br)"]) :is(cq-box, summary) { --ui-card-ov-justify: end;    --ui-card-ov-align: end;    --ui-card-ov-text: end;    --ui-card-scrim-default: var(--ui-card-scrim-br); }
-		:where([variant-lg*="sc"]) :is(cq-box, summary) { --ui-card-scrim-paint: var(--ui-card-scrim, var(--ui-card-scrim-default, var(--ui-card-scrim-bc))); }
-
-		:where([variant-lg*="op(tl)"]) :is(cq-box, summary) { --ui-card-op: left top; }
-		:where([variant-lg*="op(tc)"]) :is(cq-box, summary) { --ui-card-op: center top; }
-		:where([variant-lg*="op(tr)"]) :is(cq-box, summary) { --ui-card-op: right top; }
-		:where([variant-lg*="op(cl)"]) :is(cq-box, summary) { --ui-card-op: left center; }
-		:where([variant-lg*="op(cc)"]) :is(cq-box, summary) { --ui-card-op: center center; }
-		:where([variant-lg*="op(cr)"]) :is(cq-box, summary) { --ui-card-op: right center; }
-		:where([variant-lg*="op(bl)"]) :is(cq-box, summary) { --ui-card-op: left bottom; }
-		:where([variant-lg*="op(bc)"]) :is(cq-box, summary) { --ui-card-op: center bottom; }
-		:where([variant-lg*="op(br)"]) :is(cq-box, summary) { --ui-card-op: right bottom; }
+		:where([content~="lg:pad(none)"]) :is(cq-box, summary) { --ui-content-p: 0; }
+		:where([content~="lg:pad(xs)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-xs); }
+		:where([content~="lg:pad(sm)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-sm); }
+		:where([content~="lg:pad(md)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-md); }
+		:where([content~="lg:pad(lg)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-lg); }
+		:where([content~="lg:pad(xl)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-xl); }
+		:where([content~="lg:pad(2xl)"])  :is(cq-box, summary) { --ui-content-p: var(--spacing-2xl); }
 	}
 }
