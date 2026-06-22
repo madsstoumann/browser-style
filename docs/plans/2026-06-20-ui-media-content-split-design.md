@@ -115,13 +115,26 @@ elements carry only their text/glyph. Two per-element axes, atomic `el(value)` t
 | `rds()` | `none sm md lg xl 2xl full pill` (+ `-sq`) | corner radius (+ squircle) |
 | `thm()` | `dark brand subtle` | theme |
 
-`rds()` replaces the old `sq()`: it sets real `border-radius` from the global
-scale; a `-sq` suffix on the finite sizes makes the corners superelliptical
-(`rds(lg-sq)`). Size is a shared prefix, so one rule set serves both shapes:
+`rds()` replaces the old `sq()`. **Round** sizes set `border-radius` from the global
+`--radius-*` scale. **`-sq` (squircle)** must keep **pixel-parity with the current
+`sq()`**, which used bespoke radii + a per-size exponent — so the `-sq` steps are a
+**dedicated mapping, NOT the global radius scale** (changing the global scale would
+distort every other component):
+
+| token | radius | `corner-shape` exponent |
+|-------|--------|--------|
+| `rds(sm-sq)` | 1.25rem | `superellipse(1.5)` |
+| `rds(md-sq)` | 2rem | `superellipse(1.7)` |
+| `rds(lg-sq)` | 2.8rem | `superellipse(1.8)` |
+| `rds(xl-sq)` | 3.5rem | `superellipse(2)` |
 
 ```css
-:where([variant*="rds(lg"]) { --ui-card-radius: var(--radius-lg); }   /* round AND squircle */
-:where([variant*="-sq)"])   { corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8)); }
+/* round: global scale */
+:where([variant*="rds(lg)"]) { --ui-card-radius: var(--radius-lg); }
+/* squircle: bespoke radius + per-size exponent (reproduces old sq()) */
+:where([variant*="rds(md-sq)"]) { --ui-card-radius: 2rem;   corner-shape: superellipse(1.7); }
+:where([variant*="rds(lg-sq)"]) { --ui-card-radius: 2.8rem; corner-shape: superellipse(1.8); }
+/* …sm-sq / xl-sq likewise */
 ```
 
 ### Slot/part names — readable (never abbreviated)
@@ -189,9 +202,9 @@ Two tiers:
 | `variant=` | composition + host cosmetics | `--ui-card-*` |
 
 `ovr()` (composition) writes *into* the primitive namespaces — content overlay
-placement plus `--ui-media-scrim-dir-default` — so the primitives stay
-self-contained. `scm()` is a `media=` token that paints the scrim and reads that
-default direction (or its own `scm(tl…br)`), so it also works standalone with no
+placement plus `--ui-media-scrim-default` (the matched directional gradient) — so the
+primitives stay self-contained. `scm()` is a `media=` token that paints the scrim and
+reads that default (or its own `scm(tl…br)`), so it also works standalone with no
 overlay.
 
 Decisions baked in:
@@ -454,15 +467,19 @@ chip + sticker), both independent of `media=` parent theming; `theme=` wins if c
 
 ```html
 <ui-card media="asr(4/3) sticker(cc) chip(red) sticker(green)">
-  <img src="https://picsum.photos/600/450" alt="Product name">
-
-  <ui-chip>Sale</ui-chip>           <!-- ts (default), red sub-theme -->
-  <ui-sticker>-20%</ui-sticker>     <!-- cc (override), green sub-theme -->
-  <ui-save>                         <!-- te (default); card-only -->
-    <input type="checkbox" aria-label="Save to wishlist">
-  </ui-save>
+  <ui-media>                        <!-- overlays live in the media grid -->
+    <img src="product.jpg" alt="Product name">
+    <ui-chip>Sale</ui-chip>         <!-- ts (default), red sub-theme -->
+    <ui-sticker>-20%</ui-sticker>   <!-- cc (override), green sub-theme -->
+    <ui-save>                       <!-- te (default); card-only -->
+      <input type="checkbox" aria-label="Save to wishlist">
+    </ui-save>
+  </ui-media>
 </ui-card>
 ```
+(`media=` may sit on `<ui-card>` and inherit down, but the overlay elements are always
+children of `<ui-media>` — the grid that positions them. Standalone `<ui-media media="…">`
+works the same.)
 
 In a reveal `<summary>`, drop the `<ui-save>` / `<ui-play>` blocks (interactive →
 card-only); `<ui-chip>` / `<ui-sticker>` stay valid. RTL: everything mirrors automatically.
@@ -471,19 +488,25 @@ card-only); `<ui-chip>` / `<ui-sticker>` stay valid. RTL: everything mirrors aut
 with the media). It covers the **whole frame**, layered between the image and the
 overlays. Because `<ui-media>` is now a grid, the scrim `::after` must stay out of
 grid flow — `position: absolute; inset: 0; z-index: 1` (same approach as
-`img`/`video`; overlays sit at `z-index: 2`, image at `0`). `ui-media::after` paints
-`linear-gradient(var(--ui-media-scrim-dir, …), var(--ui-media-scrim-c), #0000 60%)`.
-Bare `scm` reads
-`--ui-media-scrim-dir-default` (set by the host `ovr()` to match the overlay
-position); `scm(tl…br)` sets an explicit direction. Works standalone (darkened
-image, no overlay).
+`img`/`video`; overlays sit at `z-index: 2`, image at `0`).
+
+**Keep all 9 directional gradients** (parity with current `ui-card.css`): the four
+edges, the four **diagonals** (`to bottom right` / `to bottom left` / `to top right`
+/ `to top left`) for corner `ov()`, and the **`cc` center double-stop**
+(`linear-gradient(to bottom, #0000, c 50%, #0000)`). A single direction token can't
+reproduce the diagonals, so `--ui-media-scrim-{tl…br}` carry the full gradient per
+position (as today), and `--ui-media-scrim-paint` selects one. Bare `scm` reads the
+`--ui-media-scrim-default` set by the host `ovr()` (matched to the overlay corner);
+`scm(tl…br)` overrides. Works standalone (darkened image, no overlay).
 
 **Smart simplifications adopted:**
 1. Overlay accent collapsed to one shared default token across the overlay elements.
-2. Scrim = one gradient + a `--ui-media-scrim-dir` direction token, replacing nine
-   fully-spelled gradient definitions; `cc` center stays a one-off override.
-3. Arbitrary values via `style="--ui-media-*"` documented instead of chasing
+2. Arbitrary values via `style="--ui-media-*"` documented instead of chasing
    exhaustive token lists.
+
+*(Note: the earlier idea of collapsing the scrim to a single direction token was
+dropped — it could not reproduce the 4 diagonal gradients + the `cc` double-stop the
+demos use. All 9 directional gradients are preserved, see Scrim above.)*
 
 ---
 
@@ -541,8 +564,11 @@ renders identically in both** — the author just swaps a phrasing element insid
 summary for a flow/semantic element in the revealed panel. (This is also why parts
 stay `data-part` rather than becoming custom elements — see §2/§3.)
 
-**Scroll** — `content="scr"` (was `[scroll]`): scrollable column with the shared
-`ui-scroll-fade` mask.
+**Scroll** — `content="scr"` (was the card `[scroll]`): scrollable content column
+with the shared `ui-scroll-fade` mask. **Note:** this is only the *content*-column
+scroll. `<ui-reveal>` has its **own** `[scroll]` host attribute (the flip-panel /
+`type-lg="scale"` panel scroll, `ui-reveal.css`) — that is a **different mechanism
+and stays as `[scroll]` on the reveal host**; do not fold it into `content="scr"`.
 
 **Extensibility** (flagged for later): `scl()` and per-part tokens flow through the
 same parse layer, so making them responsive later is purely additive — generate the
@@ -582,7 +608,7 @@ namespaces (content overlay placement + the default scrim direction the media's
 :where([variant*="ovr(bc)"]) {
   --ui-content-ov-justify: end; --ui-content-ov-align: center; --ui-content-ov-text: center;
   --ui-content-ov-ink: var(--ui-card-overlay-ink, #fff); --ui-content-ov-z: 1;
-  --ui-media-scrim-dir-default: to top;
+  --ui-media-scrim-default: var(--ui-media-scrim-bc);   /* matched directional gradient */
   --ui-card-stack: 1 / 1;
 }
 ```
@@ -664,12 +690,13 @@ CSS custom properties keep `emmet.md`'s readable *Token* form; only the DSL
 | overlay `pos=` on `data-part` spans (9-grid) | overlay elements `<ui-chip>` (reused `ui/chip`) / `<ui-sticker>` / `<ui-save>` / `<ui-play>`, configured via parent `media=` tokens: position `chip(ts…be)` on a 3×3 grid (sticker = full 9; `play` defaults `cc`; default by role) + sub-theme `chip(red…subtle)`; `ribbon`+`counter` removed, `cover` deferred; old media `badge`→`<ui-chip>` (`<ui-badge>` = cart-number, untouched) | `media=` |
 | `fs()` | `scl()` | `content=` |
 | `p()` | `pad()` | `content=` |
-| `[scroll]` | `scr` | `content=` |
+| `[scroll]` (card) | `scr` | `content=` |
+| `[scroll]` (reveal panel) | **stays `[scroll]`** on the `<ui-reveal>` host (distinct from content `scr`) | `ui-reveal` host |
 | `vertical`/`horizontal`/`-r` | `col`/`row`/`col-r`/`row-r` | `variant=` |
 | `sp()` | `spl()` | `variant=` |
 | `ov()` | `ovr()` | `variant=` |
 | `th()` | `thm()` | `variant=` |
-| `sq(sm\|md\|lg\|xl)` (radius+squircle coupled) | `rds(<size>)` / `rds(<size>-sq)` (radius decoupled, real scale) | `variant=` |
+| `sq(sm\|md\|lg\|xl)` (radius+squircle coupled) | round `rds(<size>)` (global scale) / squircle `rds(<size>-sq)` (**bespoke radius+exponent table reproducing old `sq()` — see §2**) | `variant=` |
 | `media-only`/`content-only` | `vis(media)`/`vis(content)` | `variant=` |
 | `variant-md`/`variant-lg` | `md:`/`lg:` prefixes on `variant=` **layout** + `content=` **spacing** (`gap()`/`pad()`) for now (`media=`, `content="scl()"` deferred) | `variant=` / `content=` |
 
@@ -677,12 +704,90 @@ CSS custom properties keep `emmet.md`'s readable *Token* form; only the DSL
 
 ## 8. Rollout phases
 
-1. **Extract** `media.css` + `content.css` (rename + 3 smart simplifications).
+1. **Extract** `media.css` + `content.css` (rename + 2 smart simplifications).
    `ui-card.css` slims to host + composition + responsive, `@import`ing both.
+   **Honor the §9 parity addendum** (carousel tokens, scrim directions, theme→content
+   ink namespace, align-content, reveal fallbacks/icon-clear/type-lg).
 2. ~~Compat shim~~ — **skipped** (clean v4 break).
-3. **Demos** — update `ui/card/{index,media,content}.html` to the new attribute
-   split; verify `ui-reveal` + its demos.
+3. **Demos** — update `ui/card/{index,media,content}.html` + `ui/reveal/index.html`
+   to the new DSL; rewrite the parity-affected demo sections (§9).
 4. **Docs** — split `ui-card-tokens.md` into media / content / card-composition
    sections; refresh both `readme.md`s.
 5. **Verify** — open each demo in the browser, confirm visual parity against a
-   `git stash` baseline.
+   `git stash` baseline (the §9 checklist).
+
+---
+
+## 9. Migration parity addendum (gap audit vs current `ui-card`/`ui-reveal`)
+
+Audit of the shipped CSS + demos against this plan. The split must be visually
+identical except where a change is explicitly accepted below.
+
+### Must-preserve (port verbatim into the new layer)
+
+- **Carousel token surface.** `§7` renames `--ui-card-{dot,arrow}-* → --ui-media-*`
+  but the demos theme the *full* set — map each: dot `bg`/`active`/`size`/`gap`/`border`,
+  arrow `bg`/`bg-hover`/`size`/`radius`/`border`/`glyph-size`/`prev`/`next`, plus
+  `--ui-media-overlay-gap` (drives dot/arrow inset). The `.svg-arrows` demo
+  (`--ui-card-arrow-prev/next`) is load-bearing.
+- **Scrim — keep all 9 directional gradients** (4 edges + 4 diagonals + `cc`
+  double-stop). See §4 Scrim. Per-position `--ui-media-scrim-{tl…br}`; `ovr()` sets the
+  matched `--ui-media-scrim-default`.
+- **`align-content` rules** (`ui-card.css` `> cq-box`): `start` default,
+  `space-between` for `col-r` (reversed), `stretch` for row/overlay/`vis()` — including
+  the responsive-tier list. Omitting these changes vertical slack. Port to the
+  composition layer.
+- **Reveal token fall-back chains.** The back-face reset reads `--ui-card-fs` /
+  `--ui-card-headline` / `--ui-card-headline-line-height` → repoint to `--ui-content-*`.
+  Audit every `--ui-reveal-*` that falls back to a renamed `--ui-card-*`
+  (`content-fs`/`content-headline`/`bg`/`p`).
+- **`--ui-reveal-icon-clear`** (flip close-icon text indent) — keep; rebase on
+  `--ui-reveal-icon-m` (not `--ui-reveal-p`, per the icon-margin decoupling in §6).
+- **`type-lg`** (responsive reveal type swap, e.g. `type-lg="scale"`) — add to the
+  preserved reveal-specific attributes alongside `type`/`from`/`trigger`/`icon`.
+- **Reveal `[scroll]`** stays a reveal-host attribute (≠ content `scr`). Native
+  `<details name>` grouping + `view-transition` unaffected.
+- **`<ui-face>`** (flip front face) reads `--ui-card-cols` (unchanged) — keep.
+
+### Namespace trap (subtle, will silently break themes)
+
+- **`thm()` ink tokens cross into `content`.** Themes currently write
+  `--ui-card-muted` / `--ui-card-eyebrow-color` / `--ui-card-tag-bg`, but the content
+  parts that read them rename to `--ui-content-muted` / `-eyebrow-color` / `-tag-bg`.
+  The `thm()` rules (which stay `variant=`-owned) **must write the `--ui-content-*`
+  spellings**, or dark/brand/subtle themes lose their muted/eyebrow/tag remap.
+
+### Accepted visual changes (decided)
+
+- **Card hovers `hv(lift|shrink|tilt)` removed** — the three dedicated `media.html`
+  hover cards are dropped/rewritten. `hov(zoom|pan|track)` survive.
+- **Diagonal ribbon dropped** — no replacement (`<ui-sticker>` is a disc/burst).
+  Remove the diagonal-ribbon demo examples.
+- **Overlay furniture → custom elements** — `media.html` uses ~30 `data-part="badge"`
+  *as position labels*; rewrite each to `<ui-chip>` + parent `media="chip(<pos>)"`.
+  `<ui-chip>` defaults differ slightly from the old badge pill (accepted).
+- **Responsive scope restricted** — `md:`/`lg:` covers only `variant=` layout +
+  `content=` `gap()`/`pad()`. The two responsive **hero** demos (card "Hero responsive
+  overlay" `variant-lg="ov(bl) sc ar(21/9) op(cc) fs(xl)"`; reveal "Cover story") rely
+  on responsive `ov/sc/ar/op/fs` — **rewrite those heroes** (static overlay, or a
+  single non-responsive treatment); they will not transform at the breakpoint.
+- **Icon-margin decoupled** (§6) — verify the `p(lg)` hero's icon inset is acceptable
+  (was `--ui-card-p`, now fixed `--spacing-md`).
+
+### Demo migration notes
+
+- Demos use raw renamed props directly — update: `--ui-card-row-gap`→`--ui-content-gap`,
+  `--ui-card-object-fit`→`--ui-media-fit`, `--ui-card-media-min/-bg`→`--ui-media-min/-bg`,
+  and the hover-pan scripts `--ui-card-mx/my`→`--ui-media-mx/my`.
+- Confirm `obf()` ships all four values (`cover contain fill none`) — demo uses `fill`.
+- A `data-part="caption"` placed *inside* `<ui-media>` must still sit above the scrim
+  (z-index: image 0, scrim 1, overlays/caption 2).
+
+### Verified covered (no action)
+
+Arrangement + reversed `order`, `spl()` (5 ratios), `asr()` (all 8 numeric ratios,
+exact — no named keywords ever existed), `obp()` 9-grid, `flp()`, `hov(zoom|pan|track)`,
+`pad()`/`scl()` (base), `ovr()` base placement, `thm()` (modulo the namespace trap),
+typography ramp → `--ui-content-{part}-*`, carousel mechanics (`nav()`), reveal types
+`expand`/`flip`/`slide`/`scale`. The `inset`/`cover` reveal *types* do **not** exist in
+the shipped CSS (no action).
