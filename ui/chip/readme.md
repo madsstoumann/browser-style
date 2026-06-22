@@ -68,6 +68,7 @@ The web component uses the **exact same** HTML structure as CSS-only — the JS 
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `color` | string | Semantic color: `info`, `success`, `warning`, `error` |
+| `theme` | string | Decorative color bundle (bg + ink): `red`, `orange`, `green`, `blue`, `accent`, `dark`, `light`, `subtle` |
 | `size` | string | Predefined size: `sm`, `md` (default), `lg` |
 | `variant` | string | Space-separated: `light`, `outline`, `square`, `squircle` |
 
@@ -145,6 +146,32 @@ Use the `color` attribute for semantic colors:
 | `warning` | Orange — `--color-warning` |
 | `error` | Red — `--color-error` |
 
+## Theme
+
+The `theme` attribute applies a decorative color **bundle** — a background and a paired ink color in one keyword. This is distinct from the semantic `color` axis (`info` / `success` / `warning` / `error`), which carries meaning. Use `theme` purely for looks. If both `color` and `theme` are set, **`theme` wins**.
+
+```html
+<ui-chip theme="accent">Accent</ui-chip>
+<ui-chip theme="dark">Dark</ui-chip>
+<ui-chip theme="subtle">Subtle</ui-chip>
+```
+
+8 keys:
+
+```
+red   orange  green   blue
+accent  dark  light  subtle
+```
+
+The bundles are defined as `--ui-theme-*` tokens in `@browser.style/base` and are retunable globally:
+
+```css
+:root {
+  --ui-theme-accent-bg: hsl(280, 80%, 55%);
+  --ui-theme-accent-c: hsl(0, 0%, 100%);
+}
+```
+
 ## Sizes
 
 ```html
@@ -213,11 +240,11 @@ Add `variant="inline"` to the badge to automatically push it to the inline end i
 
 | Token | Default | Description |
 |-------|---------|-------------|
-| `--ui-chip-background` | `var(--color-button)` | Background color |
-| `--ui-chip-color` | `var(--color-text)` | Text color |
+| `--ui-chip-bg` | `var(--color-button)` | Background color |
+| `--ui-chip-c` | `var(--color-text)` | Text color |
 | `--ui-chip-border-color` | `transparent` | Border color |
 | `--ui-chip-border-width` | `var(--border-width, 1px)` | Border width |
-| `--ui-chip-border-radius` | `var(--radius-pill)` | Corner radius |
+| `--ui-chip-radius` | `var(--radius-pill)` | Corner radius |
 | `--ui-chip-font-family` | `var(--font-form)` | Font family |
 | `--ui-chip-font-size` | `var(--font-size-sm, 0.875rem)` | Font size |
 | `--ui-chip-font-weight` | `var(--font-weight-medium, 500)` | Font weight |
@@ -258,4 +285,4 @@ All modern browsers.
 | `corner-shape: squircle` | Chrome 135+, requires CSS Backgrounds Level 4 |
 | `light-dark()` | Chrome 123+, Firefox 120+, Safari 17.5+ |
 
-Graceful degradation: without `color-mix()`, set `--ui-chip-background` explicitly for the light variant. Without `corner-shape`, squircle falls back to the default pill shape.
+Graceful degradation: without `color-mix()`, set `--ui-chip-bg` explicitly for the light variant. Without `corner-shape`, squircle falls back to the default pill shape.

@@ -1,0 +1,49 @@
+/**
+ * ui-save
+ * @version 4.0.0
+ * @date 2026-06-22
+ * @author Mads Stoumann
+ *
+ * Favorite / wishlist / bookmark toggle. CSS-only state via a wrapped checkbox:
+ *   <ui-save><input type="checkbox" aria-label="Save"></ui-save>
+ */
+@layer bs-component {
+	:where(ui-save) {
+		--_heart: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>');
+		--_bookmark: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>');
+		--_star: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27l6.18 3.73-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>');
+		--ui-save-icon: var(--_heart);
+		color: var(--ui-save-c, var(--color-text));
+		display: inline-grid;
+		place-content: center;
+
+		&[icon="bookmark"] { --ui-save-icon: var(--_bookmark); }
+		&[icon="star"]     { --ui-save-icon: var(--_star); }
+
+		/* theme — save is icon color only, so only the ink (c) is mapped */
+		&[theme] { --ui-save-c: var(--_theme-c); }
+
+		& input {
+			appearance: none;
+			aspect-ratio: 1;
+			background: currentColor;
+			block-size: var(--ui-save-sz, 1.6em);
+			cursor: pointer;
+			margin: 0;
+			mask: var(--ui-save-icon) center / contain no-repeat;
+			opacity: var(--ui-save-opacity, 0.85);
+
+			&:hover { opacity: 1; }
+
+			&:checked {
+				color: var(--ui-save-c-active, var(--color-error));
+				opacity: 1;
+			}
+		}
+	}
+
+	/* sizes — em-based, so the toggle scales with parent font-size */
+	:where(ui-save[size="sm"]) { --ui-save-sz: 1.2em; }
+	:where(ui-save[size="md"]) { --ui-save-sz: 1.6em; }
+	:where(ui-save[size="lg"]) { --ui-save-sz: 2.2em; }
+}

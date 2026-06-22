@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Save</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="CSS-first save/favorite toggle component with optional web component wrapper.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="ui-save.css">
+</head>
+<body>
+	<h1>UI: Save</h1>
+
+	<h2>CSS</h2>
+	<p>
+		<code>&lt;ui-save&gt;</code> is a CSS-first favorite / wishlist / bookmark toggle. State is handled entirely by a wrapped checkbox — no JavaScript needed. Use <code>icon</code> for the glyph and <code>size</code> for scale.
+	</p>
+	<p>
+		This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript).
+	</p>
+	<p>
+		See the <a href="wc-demo.html">web component demo</a> for the registered-element version.
+	</p>
+
+	<h3>Basic — heart (default)</h3>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-save><input type="checkbox" aria-label="Add to favorites"></ui-save>
+		<ui-save><input type="checkbox" aria-label="Add to favorites" checked></ui-save>
+	</div>
+
+	<h3>Icons</h3>
+	<p>Use the <code>icon</code> attribute: heart (default), <code>bookmark</code>, <code>star</code>.</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-save><input type="checkbox" aria-label="Favorite"></ui-save>
+		<ui-save icon="bookmark"><input type="checkbox" aria-label="Bookmark"></ui-save>
+		<ui-save icon="star"><input type="checkbox" aria-label="Wishlist"></ui-save>
+	</div>
+
+	<h3>Sizes</h3>
+	<p>Use the <code>size</code> attribute: <code>sm</code>, <code>md</code> (default), <code>lg</code>.</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-save size="sm"><input type="checkbox" aria-label="Favorite" checked></ui-save>
+		<ui-save size="md"><input type="checkbox" aria-label="Favorite" checked></ui-save>
+		<ui-save size="lg"><input type="checkbox" aria-label="Favorite" checked></ui-save>
+	</div>
+
+	<h3>Theme</h3>
+	<p>Use <code>theme</code> for a decorative ink color from a bundle. Save is icon-only, so only the bundle's ink (<code>c</code>) tints the idle glyph.</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-save theme="accent"><input type="checkbox" aria-label="Favorite"></ui-save>
+		<ui-save icon="star" theme="orange"><input type="checkbox" aria-label="Wishlist"></ui-save>
+		<ui-save icon="bookmark" theme="blue"><input type="checkbox" aria-label="Bookmark"></ui-save>
+	</div>
+
+	<h3>Custom tokens</h3>
+	<p>Override <code>--ui-save-c-active</code> and <code>--ui-save-sz</code>.</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-save icon="star" style="--ui-save-c-active: gold; --ui-save-sz: 2.4em;"><input type="checkbox" aria-label="Wishlist" checked></ui-save>
+		<ui-save style="--ui-save-c-active: hotpink;"><input type="checkbox" aria-label="Favorite" checked></ui-save>
+	</div>
+
+	<h3>With opposite color-scheme</h3>
+	<div class="bdrs-md cs-opposite pb-3 pi-3" style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-save><input type="checkbox" aria-label="Favorite"></ui-save>
+		<ui-save icon="bookmark"><input type="checkbox" aria-label="Bookmark" checked></ui-save>
+		<ui-save icon="star"><input type="checkbox" aria-label="Wishlist" checked></ui-save>
+	</div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Save — Web Component</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Web component demo for ui-save">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="ui-save.css">
+</head>
+<body>
+	<h1>UI: Save</h1>
+
+	<h2>Web Component</h2>
+	<p>
+		Using <code>&lt;ui-save&gt;</code> as a registered custom element. The JS only registers the element — the toggle state is carried by the wrapped checkbox and styled with CSS.
+	</p>
+
+	<h3>Basic — heart (default)</h3>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-save><input type="checkbox" aria-label="Add to favorites"></ui-save>
+		<ui-save><input type="checkbox" aria-label="Add to favorites" checked></ui-save>
+	</div>
+
+	<h3>Icons</h3>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-save><input type="checkbox" aria-label="Favorite"></ui-save>
+		<ui-save icon="bookmark"><input type="checkbox" aria-label="Bookmark"></ui-save>
+		<ui-save icon="star"><input type="checkbox" aria-label="Wishlist"></ui-save>
+	</div>
+
+	<h3>Sizes</h3>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-save size="sm"><input type="checkbox" aria-label="Favorite" checked></ui-save>
+		<ui-save size="md"><input type="checkbox" aria-label="Favorite" checked></ui-save>
+		<ui-save size="lg"><input type="checkbox" aria-label="Favorite" checked></ui-save>
+	</div>
+
+	<h3>Custom tokens</h3>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-save icon="star" style="--ui-save-c-active: gold; --ui-save-sz: 2.4em;"><input type="checkbox" aria-label="Wishlist" checked></ui-save>
+		<ui-save style="--ui-save-c-active: hotpink;"><input type="checkbox" aria-label="Favorite" checked></ui-save>
+	</div>
+
+	<script type="module">
+		import './index.js';
+	</script>
+</body>
+</html>

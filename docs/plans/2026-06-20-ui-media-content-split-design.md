@@ -47,9 +47,9 @@ layer** from custom-property naming. `emmet.md` governs *custom-property* names
 tokens. The DSL has one rule:
 
 > **Every modifier is a 3-letter code, verified collision-free against
-> `emmet.md`'s Abbr column. Slot/part names stay readable nouns** (`badge`,
-> `ribbon`, `eyebrow`, `headline`, …) — exactly as `emmet.md` already requires
-> for sub-elements.
+> `emmet.md`'s Abbr column. Slot/part names stay readable nouns** (`eyebrow`,
+> `headline`, `summary`, …) — exactly as `emmet.md` already requires for
+> sub-elements. (Media overlays are readable custom elements — `<ui-chip>` etc.)
 
 Uniform 3-letter codes give the attribute strings a steady rhythm and one
 trivial rule to remember. This trades away Emmet *muscle-memory* for `ar`/`op`/
@@ -73,8 +73,20 @@ flags per owning attribute:
 | `hov()` | `zoom pan track` | hover effect (image only) |
 | `scm()` | *(bare, or `tl … br`)* | scrim — auto-matches `ovr()`, or explicit direction |
 | `nav()` | *(bare, or `dots arrows none`)* | carousel — bare = dots+arrows; the token itself triggers the scroller |
-| `ribbon()` | `tl … br` | place the `ribbon` overlay slot |
-| `badge()` | `tl … br` | place the `badge` overlay slot |
+| `chip()` `sticker()` `save()` | `ts … be` *(position)* / `red orange green blue accent dark light subtle` *(sub-theme)* | place + theme the overlay element |
+
+Overlay furniture: `<ui-chip>` (reused `ui/chip` component), `<ui-sticker>`,
+`<ui-save>` — configured **entirely from the parent** `media=`; the elements carry
+only their text. Two per-element axes, atomic `el(value)` tokens (position and theme
+vocabs are disjoint, so they don't clash):
+- **Position** → `chip(ts)` … `sticker(cc)`. `<ui-media>` is a 3×3 positioning grid;
+  the geometry is defined **once** and an element just picks an area (RTL-aware).
+  Default area by role needs no token. See §4.
+- **Theme** → `chip(red) sticker(green)`. Sub-theme keys: `red orange green blue ·
+  accent dark light subtle` (hues + neutrals; decorative, not status). Routes into the
+  element's own tokens (`--ui-chip-bg/-c`, …). The *same* sub-themes are also a
+  self-service attribute on the elements — `<ui-chip theme="red">` — sharing one
+  `:root --ui-theme-*` palette (see §4 "Sub-themes / the `theme=` axis").
 
 #### `content=` — content column typography & spacing → `--ui-content-*`
 
@@ -108,11 +120,18 @@ scale; a `-sq` suffix on the finite sizes makes the corners superelliptical
 
 ### Slot/part names — readable (never abbreviated)
 
-`data-part` values: `ribbon`, `badge`, `eyebrow`, `headline`, `subheadline`,
-`summary`, `meta`, `caption`, `byline`, `tags`, `actions`, `footer`. Parent
-placement tokens reference the slot by its readable name (`ribbon(tl)`,
-`badge(bc)`); argument vocabularies (`media`/`content`, `dots`/`arrows`) stay
-readable too.
+**Content** parts use readable `data-part` values: `eyebrow`, `headline`,
+`subheadline`, `summary`, `meta`, `caption`, `byline`, `tags`, `actions`, `footer`
+(they need real semantic tags — `h2`, `address`, … — so they stay `data-part`, not
+custom elements).
+
+**Media overlay** furniture is **custom elements** instead — `<ui-chip>` (the
+reused `ui/chip` component), `<ui-sticker>`, `<ui-save>` — positioned and themed from
+parent `media=` tokens (`chip(ts)`, `sticker(cc)`, `chip(dark)`) on a 3×3 grid
+(RTL-aware, geometry defined once). They split into **markers** (non-interactive:
+`<ui-chip>`, `<ui-sticker>`) and one **control** (interactive, card-only:
+`<ui-save>`) — see §4. Argument vocabularies (`media`/`content`, `dots`/`arrows`)
+stay readable too.
 
 ### Collision audit vs `emmet.md`
 
@@ -132,8 +151,12 @@ collided with in parens):
          variant="row spl(1/2) ovr(bc) thm(dark) rds(lg-sq)">
 ```
 
-`md:`/`lg:` breakpoint prefixes apply to any token:
-`media="asr(4/3) md:asr(16/9)"`, `variant="col md:row"`.
+`md:`/`lg:` breakpoint prefixes apply to **layout + spacing tokens for now**:
+`variant=` arrangement (`col`/`row`/`col-r`/`row-r`, `spl()`, `vis()`) and
+`content=` spacing (`gap()`, `pad()`). E.g. `variant="col md:row"`,
+`content="gap(sm) md:gap(lg)"`. Making *every* token responsive is too costly (a
+rule per token × breakpoint); the rest (`media=`, `content="scl()"`) get prefixes
+later if needed.
 
 ---
 
@@ -141,10 +164,17 @@ collided with in parens):
 
 Two tiers:
 
-- **Host modifiers are token-strings**, all `md:`/`lg:`-prefixable:
-  `media=`, `content=`, `variant=` (full token lists in §2).
-- **Slotted children take plain attributes**: `data-part`. Overlay
-  placement/color is driven from the *parent* token-string, not the child.
+- **Host modifiers are token-strings**: `media=`, `content=`, `variant=` (full token
+  lists in §2). `md:`/`lg:` prefixes apply to **`variant=` layout + `content=`
+  spacing (`gap()`/`pad()`)** for now (cost); the rest (`media=`, `content="scl()"`)
+  is deferred.
+- **Content parts** are `data-part` children (semantic tags). **Media overlays** are
+  custom elements (`<ui-chip>` reused, `<ui-sticker>`, `<ui-save>`) carrying only
+  their text — no positioning/styling attributes. Overlay **position and theme** are
+  both set from the parent `media=` per-element tokens (`chip(cc)`, `chip(dark)`) so
+  they work on `<ui-card>` and inherit down; the theme routes into the element's own
+  tokens (chip → `--ui-chip-*`). No `color=` attribute, nothing on the element
+  itself.
 
 | Attribute | Owns | Namespace |
 |-----------|------|-----------|
@@ -160,12 +190,17 @@ overlay.
 
 Decisions baked in:
 - `scl()` lives on `content=` (primary typography); media overlays read the
-  inherited `--ui-content-fs` for ribbon/badge sizing.
+  inherited `--ui-content-fs` for chip/sticker sizing.
 - **Card-level hovers (lift/shrink/tilt) are removed for now** — hover is
   media-only (`hov(zoom|pan|track)`).
 - `()` tokens are *sugar*: every rule just writes a custom property, so
   `style="--ui-media-ar: 5/4"` is the automatic escape hatch for arbitrary
   values — no exhaustive token list required.
+- **Media overlays split marker vs control.** Markers (`<ui-chip>`, `<ui-sticker>`)
+  are non-interactive autonomous custom elements = valid **phrasing content**, so
+  they parse in a card *and* inside a reveal `<summary>`. The one control
+  (`<ui-save>`) is interactive → **card-only** (clicks inside `<summary>` toggle the
+  `<details>`; interactive content is invalid there). See §4.
 
 ---
 
@@ -212,20 +247,220 @@ Decisions baked in:
 `::scroll-marker`/`::scroll-button` controls are `@supports`-gated and degrade to
 a bare scroller.
 
-**Overlays** — spans with `data-part="ribbon"|"badge"` (text only). Placement
-comes from parent tokens `ribbon(<pos>)` / `badge(<pos>)` (9-grid), written as
-per-overlay inset props read by each span. Colors deferred (single
-`--ui-media-overlay-accent` default for now).
+**Overlays** — the media-area "furniture" is three elements: **`<ui-chip>`** (the
+label — **reuses the existing `ui/chip` component**, not a new element; `<ui-badge>`
+stays this project's cart-number badge, unrelated), **`<ui-sticker>`**, and
+**`<ui-save>`**. All are autonomous custom elements = valid **phrasing content**, so
+the markers parse inside a reveal `<summary>`; markers need **no JS** (pure CSS).
+**All configuration is on the parent** `media=` (so it sits on `<ui-card>` and
+inherits down); the elements carry only their text. Two per-element axes, atomic
+`el(value)` tokens (`chip(cc)`, `chip(red)`):
+
+- **Position** — `<ui-media>` is a **3×3 positioning grid** (`auto 1fr auto`
+  tracks). Its 9 areas are logical codes — `ts tc te · cs cc ce · bs bc be` (rows
+  top/center/bottom × columns start/center/end) — defined **once**; an element just
+  picks an area, so the position geometry is never duplicated per type. Grid columns
+  follow the inline axis, so **RTL mirrors automatically** (`ts` renders top-right
+  in Arabic). Each element has a **default area by role** (no token needed):
+
+  | Default | Element | |
+  |---------|---------|--|
+  | `ts` (top-start) | `<ui-chip>` | primary promo label |
+  | `te` (top-end) | `<ui-sticker>`, `<ui-save>` | callout / favorite |
+
+  Sticker uses the full grid (e.g. `sticker(cc)`); chip typically the corners.
+  Override the default with `media="chip(be)"`.
+
+- **Theme** — `media="chip(dark)"` maps the element to a named **sub-theme** that
+  reuses the global color tokens: `accent`, `success`, `error`, `dark`, `light`,
+  `subtle` (defined once, see below). For `<ui-chip>` the sub-theme writes chip's
+  **own** tokens (`--ui-chip-bg` / `--ui-chip-c`) on the parent, which
+  inherit down — so chip stays generic and the card themes it from above (no
+  `color=` on the chip). Sticker/save get their own element tokens
+  (`--ui-sticker-bg/-c`, `--ui-save-icon/-c`).
+
+Position args (`ts…be`) and theme args (`accent…subtle`) are disjoint vocabularies,
+so `chip(cc)` vs `chip(dark)` parse unambiguously. **Syntax: two atomic tokens** —
+e.g. `media="chip(tl) chip(dark)"` — **decided, not combined `chip(tl dark)`.**
+Why: the pure-CSS parse layer is attribute-substring matching. A combined token's
+*second* arg cannot be scoped to its element — matching the theme would need
+`[media*=" dark)"]`, which also fires for `sticker(cc dark)` etc., leaking the theme
+across elements. Robust combined support would require either ~144 enumerated
+position×theme×element combo rules or a JS/build parse step — both rejected to keep
+the layer pure-CSS. In practice position defaults by role, so the common case is a
+single token (`chip(dark)`); the second token appears only when you override *both*
+position and theme on one element.
+
+*Markers* (non-interactive — valid in a card **and** inside a reveal `<summary>`):
+
+| Element | Shape | Typical use |
+|---------|-------|-------------|
+| `<ui-chip>` | pill label (reused `ui/chip`: pill default, `variant` light/outline/square/squircle, `size` sm/md/lg) | "New", "Bestseller", "Sale" |
+| `<ui-sticker>` | round disc; opt-in starburst via `--ui-sticker-clip-path` (`clip-path`); **multi-line** (see below) | "Save 20%", "Best value" |
+
+**`<ui-sticker>` is a centered grid of text-line segments.** Each direct child is a
+line; `--ui-sticker-gap` controls line-spacing and `text-box: cap alphabetic` trims
+each line's leading so the gap is exact; every line sets its own `font-size` /
+`font-weight` (via element/class). So "SAVE / 20%" is two children at different
+scales:
+
+```html
+<ui-sticker variant="burst"><span style="font-size:.7em">SAVE</span><b style="font-size:1.6em">20%</b></ui-sticker>
+```
+
+A single text node (`<ui-sticker>-20%</ui-sticker>`) still works — one line.
+
+**Removed:** `ribbon`, `counter`. **Deferred:** a sold-out / `cover` state (later as a
+full-bleed chip/`<ui-sticker>` variant or scrim + text).
+
+*Control* (interactive → **card-only, never inside `<summary>`**: a click there
+toggles the `<details>`, and interactive content is invalid in summary):
+
+| Element | Markup | Use |
+|---------|--------|-----|
+| `<ui-save>` | `<ui-save><input type="checkbox" aria-label="Save"></ui-save>` | favorite ≈ wishlist ≈ bookmark toggle. State + a11y + keyboard from the checkbox, zero JS. Icon swappable via `--ui-save-icon` (heart default; bookmark/star). |
+
+```css
+/* ui-media is a 3×3 positioning grid; img/video sit underneath (out of grid flow) */
+:where(ui-media) {
+  display: grid;
+  grid-template:
+    "ts tc te" auto
+    "cs cc ce" 1fr
+    "bs bc be" auto / auto 1fr auto;
+}
+:where(ui-media) > :is(img, video) { position: absolute; inset: 0; }
+
+/* every overlay element: placed in its area (centered in the auto-sized cell), inset by margin.
+   --_area = default-by-role, overridable from the parent media= token */
+:where(ui-media) :is(ui-chip, ui-sticker, ui-save) {
+  grid-area: var(--_area, ts);
+  margin: var(--ui-media-overlay-gap, 0.75rem);
+  place-self: center;
+  z-index: 2;
+}
+:where(ui-media) ui-chip    { --_area: var(--ui-media-chip-area, ts); }
+:where(ui-media) ui-sticker { --_area: var(--ui-media-sticker-area, te); }
+:where(ui-media) ui-save    { --_area: var(--ui-media-save-area, te); }
+
+/* position override: parent token → the element's area name. Trivial per (element, area); generatable */
+:where([media*="sticker(cc)"]) { --ui-media-sticker-area: cc; }
+:where([media*="chip(be)"])    { --ui-media-chip-area:    be; }
+/* …one line per (element, area) shipped */
+```
+
+**Sub-themes (the `theme=` axis)** — the theme arg is a named **sub-theme** from a
+hue + neutral vocabulary (`red orange green blue` · `accent dark light subtle`),
+chosen because media splashes are *decorative*, not status — so `chip(red)` reads
+better than `chip(error)` for a "Sale" (status names stay on each element's own
+`color=`). These sub-themes are a **library-wide axis**, not media-only: the same
+bundles power both the parent `media=` routing here **and** a self-service
+`theme=` attribute on the elements (`<ui-chip theme="red">`, see §5/components).
+
+**Tier 1 — bundles at `:root`** (`ui/base/tokens.css`). Each is a `bg`/`c` pair,
+defaulting to global tokens (themeable, dark-mode-aware, decoupled from status):
+
+```css
+:root {                                         /* project may override */
+  --ui-theme-red-bg:    var(--color-error);       --ui-theme-red-c:    hsl(0 0% 100%);
+  --ui-theme-orange-bg: var(--color-warning);     --ui-theme-orange-c: var(--color-text);
+  --ui-theme-green-bg:  var(--color-success);     --ui-theme-green-c:  hsl(0 0% 100%);
+  --ui-theme-blue-bg:   var(--color-info);        --ui-theme-blue-c:   hsl(0 0% 100%);
+  --ui-theme-accent-bg: var(--color-accent);      --ui-theme-accent-c: var(--color-accent-text);
+  --ui-theme-dark-bg:   var(--color-text);        --ui-theme-dark-c:   var(--color-surface);
+  --ui-theme-light-bg:  var(--color-surface);     --ui-theme-light-c:  var(--color-text);
+  --ui-theme-subtle-bg: var(--color-surface-alt); --ui-theme-subtle-c: var(--color-text-muted);
+}
+```
+
+**Tier 2 — generic `[theme]` resolver** (`ui/base/webcomponents.css`, 8 lines,
+written ONCE, reusable by any component). It funnels the chosen bundle into two
+private vars that inherit down:
+
+```css
+:where([theme="red"])    { --_theme-bg: var(--ui-theme-red-bg);    --_theme-c: var(--ui-theme-red-c); }
+:where([theme="dark"])   { --_theme-bg: var(--ui-theme-dark-bg);   --_theme-c: var(--ui-theme-dark-c); }
+/* …orange green blue accent light subtle */
+```
+
+**Tier 3 — element mapping** (one rule per element; place AFTER its `color=` rules
+so `theme=` wins). Self-service `theme=` reads the resolver's private vars:
+
+```css
+:where(ui-chip[theme])    { --ui-chip-bg: var(--_theme-bg); --ui-chip-c: var(--_theme-c); }
+:where(ui-sticker[theme]) { --ui-sticker-bg: var(--_theme-bg); --ui-sticker-c: var(--_theme-c); }
+:where(ui-save[theme])    { --ui-save-c: var(--_theme-c); }   /* icon color only */
+```
+
+**`media=` routing** uses the *same* `:root` bundles, but targets a *specific*
+element's tokens (so a card can theme its chip and sticker differently). One line
+per (element, key) — trivial, generatable:
+
+```css
+:where([media*="chip(red)"])      { --ui-chip-bg: var(--ui-theme-red-bg);    --ui-chip-c: var(--ui-theme-red-c); }
+:where([media*="sticker(green)"]) { --ui-sticker-bg: var(--ui-theme-green-bg); --ui-sticker-c: var(--ui-theme-green-c); }
+/* …chip × 8, sticker × 8 */
+```
+
+`<ui-chip theme="red">` and `media="chip(red)"` resolve to the **same** colors.
+Difference: `theme=` is per-element & self-applied (no position); `media=` is
+parent-set, inherits to all matching children, and also carries position. **If both
+apply, the element's own `theme=` wins** (its rule sets the token directly on
+itself, beating the inherited `media=` value). Pick one.
+
+The eight sub-theme keys: **`red` `orange` `green` `blue` · `accent` `dark` `light`
+`subtle`**. They are a separate axis from the semantic `color=` (`info/success/
+warning/error`) each component also supports — decorative bundle vs status accent;
+if both set, `theme=` wins.
+
+**Overlay element packages** — the three overlay elements are standalone components
+(`ui/chip` reused; `ui/sticker` + `ui/save` added, scaffolded from chip's template,
+peer-dep `@browser.style/base`). Each defines its own appearance; the media layer
+only *positions* them (grid-area) and *themes* them by writing the element's own
+tokens. The tokens the media `media=` mapping targets (same tokens the self-service
+`theme=` writes):
+
+| Element | Pkg | Theme target tokens | Other element tokens & attrs |
+|---------|-----|---------------------|----------------------|
+| `<ui-chip>` | `ui/chip` | `--ui-chip-bg`, `--ui-chip-c` | `-border-*`, `-font-*`, `-padding-*`; `variant` light/outline/square/squircle, `size`, `theme`, `color` |
+| `<ui-sticker>` | `ui/sticker` | `--ui-sticker-bg`, `--ui-sticker-c` | `--ui-sticker-font-size`, `-font-weight`, `-sz`, `-radius`, `-gap` (line-spacing), `--ui-sticker-clip-path`; `variant="burst"`, `size`, `theme`, `color`; multi-line segments |
+| `<ui-save>` | `ui/save` | `--ui-save-c`, `--ui-save-c-active` | `--ui-save-icon` (`icon="heart\|bookmark\|star"`), `--ui-save-sz`, `--ui-save-opacity`; `size`, `theme` |
+
+Each element supports the **`theme=`** attribute (the 8 sub-theme keys, self-applied)
+and a standalone **`color=`** semantic convenience (`info/success/warning/error` —
+chip + sticker), both independent of `media=` parent theming; `theme=` wins if combined.
+
+**Example** — everything (aspect, position, sub-theme) on the parent `media=`; the
+(often generated) overlay elements carry only their text:
+
+```html
+<ui-card media="asr(4/3) sticker(cc) chip(red) sticker(green)">
+  <img src="https://picsum.photos/600/450" alt="Product name">
+
+  <ui-chip>Sale</ui-chip>           <!-- ts (default), red sub-theme -->
+  <ui-sticker>-20%</ui-sticker>     <!-- cc (override), green sub-theme -->
+  <ui-save>                         <!-- te (default); card-only -->
+    <input type="checkbox" aria-label="Save to wishlist">
+  </ui-save>
+</ui-card>
+```
+
+In a reveal `<summary>`, drop the `<ui-save>` block (interactive → card-only);
+`<ui-chip>` / `<ui-sticker>` stay valid. RTL: everything mirrors automatically.
 
 **Scrim** (`scm`) — a `media=` token (scrim is painted on the media, so it lives
-with the media). `ui-media::after` paints `linear-gradient(var(--ui-media-scrim-dir,
-…), var(--ui-media-scrim-c), #0000 60%)`. Bare `scm` reads
+with the media). It covers the **whole frame**, layered between the image and the
+overlays. Because `<ui-media>` is now a grid, the scrim `::after` must stay out of
+grid flow — `position: absolute; inset: 0; z-index: 1` (same approach as
+`img`/`video`; overlays sit at `z-index: 2`, image at `0`). `ui-media::after` paints
+`linear-gradient(var(--ui-media-scrim-dir, …), var(--ui-media-scrim-c), #0000 60%)`.
+Bare `scm` reads
 `--ui-media-scrim-dir-default` (set by the host `ovr()` to match the overlay
 position); `scm(tl…br)` sets an explicit direction. Works standalone (darkened
 image, no overlay).
 
 **Smart simplifications adopted:**
-1. Overlay accent collapsed to one token (was duplicated ribbon+badge).
+1. Overlay accent collapsed to one shared default token across the overlay elements.
 2. Scrim = one gradient + a `--ui-media-scrim-dir` direction token, replacing nine
    fully-spelled gradient definitions; `cc` center stays a one-off override.
 3. Arbitrary values via `style="--ui-media-*"` documented instead of chasing
@@ -256,7 +491,8 @@ image, no overlay).
 `--ui-content-ov-*` are written by the host `ovr()`; standalone content gets the
 `normal`/`inherit` defaults (overlay placement inert until a layout asks).
 
-**`content=` parse layer** (all `md:`/`lg:`-prefixable):
+**`content=` parse layer** (`gap()`/`pad()` are `md:`/`lg:`-prefixable; `scl()` is
+not, this round):
 
 ```css
 :where([content*="scl(lg)"]) { --ui-content-fs: var(--ui-content-fs-lg); --ui-content-headline: var(--ui-content-headline-lg); }
@@ -270,15 +506,15 @@ active stop.
 
 **Parts** (`data-part`, auto-styled): eyebrow, headline (+ bare `h2–h6`),
 subheadline, summary, meta/caption, byline, tags, actions, footer. Each keeps a
-`--ui-content-{part}-*` token (future per-part typography knobs), already
-`md:`/`lg:`-overridable through the same parse layer.
+`--ui-content-{part}-*` token (future per-part typography knobs).
 
 **Scroll** — `content="scr"` (was `[scroll]`): scrollable column with the shared
 `ui-scroll-fade` mask.
 
-**Extensibility** (flagged for later): `gap()`, `pad()`, `scl()`, and every
-per-part token flow through one prefixable parse layer — adding `md:gap(lg)`
-needs only the generated rule, no structural change.
+**Extensibility** (flagged for later): `scl()` and per-part tokens flow through the
+same parse layer, so making them responsive later is purely additive — generate the
+breakpoint rule, no structural change. This round, `md:`/`lg:` covers `variant=`
+layout + `content=` `gap()`/`pad()`.
 
 ---
 
@@ -319,15 +555,20 @@ namespaces (content overlay placement + the default scrim direction the media's
 ```
 
 **Responsive** — `cq-box` stays (a container cannot query itself; `@container`
-must target a descendant). `md:`/`lg:` tokens on any of the three attributes,
+must target a descendant). For now `md:`/`lg:` apply to **`variant=` layout**
+(arrangement + split/visibility) and **`content=` spacing** (`gap()`/`pad()`),
 parsed inside `@container` against the queryable descendant (`cq-box` for card,
-`summary` for reveal); props inherit down:
+`summary` for reveal); props inherit down. (`media=` and `content="scl()"`
+breakpoints are deferred — too many rules per token × breakpoint to be worth it
+yet.)
 
 ```css
 @container (inline-size >= 25rem) {            /* md */
-  :where([variant*="md:row"])    :is(cq-box, summary) { --ui-card-cols: var(--ui-card-split, 1fr 1fr); }
-  :where([media*="md:asr(16/9)"]) :is(cq-box, summary) { --ui-media-ar: 16/9; }
-  :where([content*="md:scl(lg)"]) :is(cq-box, summary) { --ui-content-fs: var(--ui-content-fs-lg); }
+  :where([variant*="md:row"])      :is(cq-box, summary) { --ui-card-cols: var(--ui-card-split, 1fr 1fr); }
+  :where([variant*="md:col"])      :is(cq-box, summary) { --ui-card-cols: 1fr; }
+  :where([variant*="md:spl(1/2)"]) :is(cq-box, summary) { --ui-card-split: 1fr 2fr; }
+  :where([content*="md:gap(lg)"])  :is(cq-box, summary) { --ui-content-gap: var(--spacing-lg); }
+  :where([content*="md:pad(lg)"])  :is(cq-box, summary) { --ui-content-p:   var(--spacing-lg); }
 }
 @container (inline-size >= 44rem) { /* lg — same shape */ }
 ```
@@ -370,7 +611,7 @@ CSS custom properties keep `emmet.md`'s readable *Token* form; only the DSL
 | `--ui-card-ar/op/fl-*/object-fit/media-bg/media-min` | `--ui-media-ar/op/fl-*/fit/bg/min` | media |
 | `--ui-card-hv-*`, `--ui-card-hover-*`, `--ui-card-mx/my` | `--ui-media-hv-*`, `--ui-media-hover-*`, `--ui-media-mx/my` | media |
 | `--ui-card-{dot,arrow}-*`, `--ui-card-overlay-gap` | `--ui-media-…` | media |
-| `--ui-card-ribbon-*/badge-*` | `--ui-media-ribbon-*/badge-*` | media |
+| `--ui-card-ribbon-*/badge-*` | reuse `--ui-chip-*` + new `--ui-sticker-*` (element ns); placement via `--ui-media-{el}-area`; ribbon/counter dropped | media |
 | `--ui-card-scrim-*` | `--ui-media-scrim-*` (direction-based) | media |
 | `--ui-card-bg/radius/shadow/cols/split/squircle-exp`, theme tokens, `--ui-card-overlay-ink`, `--ui-card-stack` | unchanged | card |
 
@@ -387,7 +628,7 @@ CSS custom properties keep `emmet.md`'s readable *Token* form; only the DSL
 | `object-fit` knob | `obf()` | `media=` |
 | `carousel` + `controls=` | `nav()` (bare = both; `nav(dots\|arrows\|none)`) — token *is* the trigger | `media=` |
 | `sc()` | `scm()` (scrim is a media paint) | `media=` |
-| overlay `pos=` on spans | parent `ribbon(tl)` / `badge(bc)` | `media=` |
+| overlay `pos=` on `data-part` spans (9-grid) | overlay elements `<ui-chip>` (reused `ui/chip`) / `<ui-sticker>` / `<ui-save>`, configured via parent `media=` tokens: position `chip(ts…be)` on a 3×3 grid (sticker = full 9; default by role) + sub-theme `chip(red…subtle)`; `ribbon`+`counter` removed, `cover` deferred; old media `badge`→`<ui-chip>` (`<ui-badge>` = cart-number, untouched) | `media=` |
 | `fs()` | `scl()` | `content=` |
 | `p()` | `pad()` | `content=` |
 | `[scroll]` | `scr` | `content=` |
@@ -397,7 +638,7 @@ CSS custom properties keep `emmet.md`'s readable *Token* form; only the DSL
 | `th()` | `thm()` | `variant=` |
 | `sq(sm\|md\|lg\|xl)` (radius+squircle coupled) | `rds(<size>)` / `rds(<size>-sq)` (radius decoupled, real scale) | `variant=` |
 | `media-only`/`content-only` | `vis(media)`/`vis(content)` | `variant=` |
-| `variant-md`/`variant-lg` | `md:`/`lg:` prefixes | on each attribute |
+| `variant-md`/`variant-lg` | `md:`/`lg:` prefixes on `variant=` **layout** + `content=` **spacing** (`gap()`/`pad()`) for now (`media=`, `content="scl()"` deferred) | `variant=` / `content=` |
 
 ---
 

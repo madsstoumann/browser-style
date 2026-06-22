@@ -14,6 +14,20 @@
 		display: contents;
 	}
 
+	/* === Theme Resolver ===
+	  Maps the `theme=` attribute to two private vars (--_theme-bg, --_theme-c).
+	  Written once here; any component opts in by mapping --_theme-* into its own
+	  tokens. Bundles are defined as --ui-theme-* in tokens.css and are retunable.
+	*/
+	:where([theme="red"])    { --_theme-bg: var(--ui-theme-red-bg);    --_theme-c: var(--ui-theme-red-c); }
+	:where([theme="orange"]) { --_theme-bg: var(--ui-theme-orange-bg); --_theme-c: var(--ui-theme-orange-c); }
+	:where([theme="green"])  { --_theme-bg: var(--ui-theme-green-bg);  --_theme-c: var(--ui-theme-green-c); }
+	:where([theme="blue"])   { --_theme-bg: var(--ui-theme-blue-bg);   --_theme-c: var(--ui-theme-blue-c); }
+	:where([theme="accent"]) { --_theme-bg: var(--ui-theme-accent-bg); --_theme-c: var(--ui-theme-accent-c); }
+	:where([theme="dark"])   { --_theme-bg: var(--ui-theme-dark-bg);   --_theme-c: var(--ui-theme-dark-c); }
+	:where([theme="light"])  { --_theme-bg: var(--ui-theme-light-bg);  --_theme-c: var(--ui-theme-light-c); }
+	:where([theme="subtle"]) { --_theme-bg: var(--ui-theme-subtle-bg); --_theme-c: var(--ui-theme-subtle-c); }
+
 	/* === Auto-Suggest ===
 	  Only required when using `<auto-suggest list-mode="ul">` 
 	*/

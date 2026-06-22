@@ -1,0 +1,68 @@
+/**
+ * ui-sticker
+ * @version 4.0.0
+ * @date 2026-06-22
+ * @author Mads Stoumann
+ */
+@layer bs-component {
+	:where(ui-sticker) {
+		--ui-sticker-padding: 0.5em;
+		--ui-sticker-gap: 0;
+		--ui-sticker-clip-path: polygon(
+			50.0% 0.0%, 59.1% 16.2%, 75.0% 6.7%, 74.7% 25.3%, 93.3% 25.0%,
+			83.8% 40.9%, 100.0% 50.0%, 83.8% 59.1%, 93.3% 75.0%, 74.7% 74.7%,
+			75.0% 93.3%, 59.1% 83.8%, 50.0% 100.0%, 40.9% 83.8%, 25.0% 93.3%,
+			25.3% 74.7%, 6.7% 75.0%, 16.2% 59.1%, 0.0% 50.0%, 16.2% 40.9%,
+			6.7% 25.0%, 25.3% 25.3%, 25.0% 6.7%, 40.9% 16.2%
+		);
+		aspect-ratio: 1;
+		background: var(--ui-sticker-bg, var(--color-accent));
+		border-radius: var(--ui-sticker-radius, var(--radius-circle, 50%));
+		color: var(--ui-sticker-c, hsl(0, 0%, 100%));
+		display: grid;
+		font-size: var(--ui-sticker-font-size, 0.875em);
+		font-weight: var(--ui-sticker-font-weight, var(--font-weight-bold, 700));
+		gap: var(--ui-sticker-gap);
+		line-height: 1;
+		min-width: var(--ui-sticker-sz, 4em);
+		padding: var(--ui-sticker-padding);
+		place-content: center;
+		text-align: center;
+		text-box: cap alphabetic;
+		user-select: none;
+
+		/* each direct child = one text line. text-box trims the leading so `gap`
+		   alone controls line-spacing; set per-line `font-size`/`font-weight` on
+		   the child (e.g. <b>, <small>, a class, or --ui-sticker-gap for spacing) */
+		& > * {
+			line-height: 1;
+			margin: 0;
+			text-box: cap alphabetic;
+		}
+
+		/* colors — convenience semantic mapping; primary API is --ui-sticker-bg/-c */
+		&[color="info"]    { --ui-sticker-bg: var(--color-info); }
+		&[color="success"] { --ui-sticker-bg: var(--color-success); }
+		&[color="warning"] { --ui-sticker-bg: var(--color-warning); }
+		&[color="error"]   { --ui-sticker-bg: var(--color-error); }
+
+		/* theme — decorative color bundle (bg + ink). Placed after color= so an
+		   explicit theme= wins the cascade (zero-specificity, source order). */
+		&[theme] {
+			--ui-sticker-bg: var(--_theme-bg);
+			--ui-sticker-c: var(--_theme-c);
+		}
+
+		/* starburst variant — square box clipped to a 24-point star */
+		&[variant~="burst"] {
+			border-radius: 0;
+			clip-path: var(--ui-sticker-clip-path);
+			--ui-sticker-padding: 1.25em;
+		}
+	}
+
+	/* sizes — em-based, so the sticker scales with parent font-size */
+	:where(ui-sticker[size="sm"]) { --ui-sticker-font-size: 0.75em; }
+	:where(ui-sticker[size="md"]) { --ui-sticker-font-size: 0.875em; }
+	:where(ui-sticker[size="lg"]) { --ui-sticker-font-size: 1.125em; }
+}

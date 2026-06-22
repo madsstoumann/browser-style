@@ -170,6 +170,17 @@
 		--width-7xl: 80rem;
 		--width-prose: 65ch;
 
+		/* Theme Bundles — decorative bg + paired ink (c). Reusable color axis
+		   via the `theme=` attribute. Distinct from the semantic `color=` axis. */
+		--ui-theme-red-bg:    var(--color-error);       --ui-theme-red-c:    hsl(0 0% 100%);
+		--ui-theme-orange-bg: var(--color-warning);     --ui-theme-orange-c: var(--color-text);
+		--ui-theme-green-bg:  var(--color-success);     --ui-theme-green-c:  hsl(0 0% 100%);
+		--ui-theme-blue-bg:   var(--color-info);        --ui-theme-blue-c:   hsl(0 0% 100%);
+		--ui-theme-accent-bg: var(--color-accent);      --ui-theme-accent-c: var(--color-accent-text);
+		--ui-theme-dark-bg:   var(--color-text);        --ui-theme-dark-c:   var(--color-surface);
+		--ui-theme-light-bg:  var(--color-surface);     --ui-theme-light-c:  var(--color-text);
+		--ui-theme-subtle-bg: var(--color-surface-alt); --ui-theme-subtle-c: var(--color-text-muted);
+
 		/* Fluid Font Size (responsive, no breakpoints) */
 		--font-size-fluid-xs: clamp(0.75rem, 0.65rem + 0.25vw, 0.875rem);
 		--font-size-fluid-sm: clamp(0.875rem, 0.8rem + 0.25vw, 1rem);

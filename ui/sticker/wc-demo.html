@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Sticker — Web Component</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Web component demo for ui-sticker">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="ui-sticker.css">
+</head>
+<body>
+	<h1>UI: Sticker</h1>
+
+	<h2>Web Component</h2>
+	<p>
+		Using <code>&lt;ui-sticker&gt;</code> as a registered custom element. The JS only registers the element — all visual behavior is CSS-driven.
+	</p>
+
+	<h3>Basic</h3>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-sticker>Save 20%</ui-sticker>
+		<ui-sticker color="info">New</ui-sticker>
+		<ui-sticker color="success">Best value</ui-sticker>
+		<ui-sticker color="warning">Hot deal</ui-sticker>
+		<ui-sticker color="error">-20%</ui-sticker>
+	</div>
+
+	<h3>Starburst variant</h3>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-sticker variant="burst">Save 20%</ui-sticker>
+		<ui-sticker variant="burst" color="info">New</ui-sticker>
+		<ui-sticker variant="burst" color="success">Best value</ui-sticker>
+		<ui-sticker variant="burst" color="warning">Hot deal</ui-sticker>
+		<ui-sticker variant="burst" color="error">-20%</ui-sticker>
+	</div>
+
+	<h3>Sizes</h3>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-sticker size="sm" color="error">-10%</ui-sticker>
+		<ui-sticker size="md" color="error">-20%</ui-sticker>
+		<ui-sticker size="lg" color="error">-30%</ui-sticker>
+	</div>
+
+	<h3>Theme</h3>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-sticker theme="accent">accent</ui-sticker>
+		<ui-sticker variant="burst" theme="dark">dark</ui-sticker>
+		<ui-sticker theme="subtle">subtle</ui-sticker>
+	</div>
+
+	<h3>Multi-line</h3>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-sticker variant="burst"><span style="font-size:.7em">SAVE</span><b style="font-size:1.6em">20%</b></ui-sticker>
+		<ui-sticker color="success" style="--ui-sticker-gap:.2em"><small>FROM</small><b style="font-size:1.8em">$9</b><small>/mo</small></ui-sticker>
+	</div>
+
+	<h3>Custom tokens</h3>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-sticker style="--ui-sticker-bg: hotpink; --ui-sticker-c: black;">Sale</ui-sticker>
+		<ui-sticker variant="burst" style="--ui-sticker-bg: gold; --ui-sticker-c: #222; --ui-sticker-sz: 6em;">★ Top pick</ui-sticker>
+	</div>
+
+	<script type="module">
+		import './index.js';
+	</script>
+</body>
+</html>

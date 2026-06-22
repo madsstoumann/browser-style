@@ -12,10 +12,10 @@
 		--ui-chip-padding-inline: 0.95em;
 		--ui-chip-padding-inline-end: var(--ui-chip-padding-inline);
 		align-items: center;
-		background: var(--ui-chip-background, var(--color-button));
+		background: var(--ui-chip-bg, var(--color-button));
 		border: var(--ui-chip-border-width) solid var(--ui-chip-border-color);
-		border-radius: var(--ui-chip-border-radius, var(--radius-pill));
-		color: var(--ui-chip-color, var(--color-text));
+		border-radius: var(--ui-chip-radius, var(--radius-pill));
+		color: var(--ui-chip-c, var(--color-text));
 		column-gap: var(--ui-chip-column-gap, 0);
 		display: inline-flex;
 		font-family: var(--ui-chip-font-family, var(--font-form));
@@ -33,24 +33,31 @@
 		&[color="warning"] { --ui-chip-accent: var(--color-warning); }
 		&[color="error"]   { --ui-chip-accent: var(--color-error); }
 		&[color] {
-			--ui-chip-background: var(--ui-chip-accent);
-			--ui-chip-color: hsl(0, 0%, 100%);
+			--ui-chip-bg: var(--ui-chip-accent);
+			--ui-chip-c: hsl(0, 0%, 100%);
+		}
+
+		/* theme — decorative color bundle (bg + ink). Placed after color= so an
+		   explicit theme= wins the cascade (zero-specificity, source order). */
+		&[theme] {
+			--ui-chip-bg: var(--_theme-bg);
+			--ui-chip-c: var(--_theme-c);
 		}
 
 		/* variants */
 		&[variant~="light"] {
-			--ui-chip-background: color-mix(in oklch, var(--ui-chip-color) 15%, var(--color-surface, hsl(0, 0%, 100%)));
+			--ui-chip-bg: color-mix(in oklch, var(--ui-chip-c) 15%, var(--color-surface, hsl(0, 0%, 100%)));
 		}
-		&[variant~="light"][color] { --ui-chip-color: var(--ui-chip-accent); }
+		&[variant~="light"][color] { --ui-chip-c: var(--ui-chip-accent); }
 
 		&[variant~="outline"] {
-			--ui-chip-background: transparent;
+			--ui-chip-bg: transparent;
 			--ui-chip-border-color: currentColor;
 		}
-		&[variant~="outline"][color] { --ui-chip-color: var(--ui-chip-accent); }
+		&[variant~="outline"][color] { --ui-chip-c: var(--ui-chip-accent); }
 
 		&[variant~="square"] {
-			--ui-chip-border-radius: 0.4em;
+			--ui-chip-radius: 0.4em;
 		}
 		&[variant~="squircle"] {
 			corners: 50% superellipse(2);
