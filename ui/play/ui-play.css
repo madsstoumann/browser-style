@@ -88,27 +88,38 @@
 		background: var(--ui-play-bg-hover, #138fb8);
 	}
 
-	/* rounded — clip the disc into a play triangle. The shape() IS the arrow,
-	   so the <ui-icon> glyph is hidden. Corner rounding scales via
-	   variant="rounded(sm|md|lg)": each rounded corner is a curve whose control
-	   point is the sharp vertex; the endpoints sit further along the edges as the
-	   level grows (lg = edge midpoints = fully round). Plain "rounded" = md. */
+	/* rounded — clip the disc into a right-pointing play triangle. The shape() IS
+	   the arrow, so the <ui-icon> glyph is hidden. Corner rounding is driven by a
+	   single radius (--ui-play-round); the tip backs off further on X and matches
+	   the slope on Y so it stays un-squished. variant="rounded(sm|md|lg)" sets the
+	   radius; plain "rounded" = md. */
 	:where(ui-play[variant*="rounded"]) button {
+		--ui-play-round: 4.5%;
+		--_wf: 0.85;             /* width factor (triangle length) */
+		--_shift: 10%;           /* optical centering nudge */
+		--_left: calc(25% + var(--_shift));
+		--_right: calc((25% + (50% * var(--_wf))) + var(--_shift));
+		--_top: 25%;
+		--_bottom: 75%;
+		--_mid: 50%;
+		--_rtx: calc(var(--ui-play-round) * 1.6);   /* slope-corrected tip X */
+		--_rty: calc(var(--ui-play-round) * 0.94);  /* slope-corrected tip Y */
 		border-radius: 0;
-		clip-path: var(--ui-play-shape,
-			shape(from 43.6% 30.4%, line to 64.4% 41.6%, curve to 64.4% 58.4% with 80% 50%, line to 43.6% 69.6%, curve to 28% 61.2% with 28% 78%, line to 28% 38.8%, curve to 43.6% 30.4% with 28% 22%, close)
-		);
+		clip-path: var(--ui-play-shape, shape(
+			from var(--_left) calc(var(--_bottom) - var(--ui-play-round)),
+			curve to calc(var(--_left) + var(--ui-play-round)) var(--_bottom) with var(--_left) var(--_bottom),
+			line to calc(var(--_right) - var(--_rtx)) calc(var(--_mid) + var(--_rty)),
+			curve to calc(var(--_right) - var(--_rtx)) calc(var(--_mid) - var(--_rty)) with var(--_right) var(--_mid),
+			line to calc(var(--_left) + var(--ui-play-round)) var(--_top),
+			curve to var(--_left) calc(var(--_top) + var(--ui-play-round)) with var(--_left) var(--_top),
+			line to var(--_left) calc(var(--_bottom) - var(--ui-play-round)),
+			close
+		));
 	}
 	:where(ui-play[variant*="rounded"]) ui-icon {
 		display: none;
 	}
-	:where(ui-play[variant~="rounded(sm)"]) button {
-		--ui-play-shape: shape(from 36.32% 26.48%, line to 71.68% 45.52%, curve to 71.68% 54.48% with 80% 50%, line to 36.32% 73.52%, curve to 28% 69.04% with 28% 78%, line to 28% 30.96%, curve to 36.32% 26.48% with 28% 22%, close);
-	}
-	:where(ui-play[variant~="rounded(md)"]) button {
-		--ui-play-shape: shape(from 43.6% 30.4%, line to 64.4% 41.6%, curve to 64.4% 58.4% with 80% 50%, line to 43.6% 69.6%, curve to 28% 61.2% with 28% 78%, line to 28% 38.8%, curve to 43.6% 30.4% with 28% 22%, close);
-	}
-	:where(ui-play[variant~="rounded(lg)"]) button {
-		--ui-play-shape: shape(from 54% 36%, curve to 54% 64% with 80% 50%, curve to 28% 50% with 28% 78%, curve to 54% 36% with 28% 22%);
-	}
+	:where(ui-play[variant~="rounded(sm)"]) button { --ui-play-round: 2.5%; }
+	:where(ui-play[variant~="rounded(md)"]) button { --ui-play-round: 4.5%; }
+	:where(ui-play[variant~="rounded(lg)"]) button { --ui-play-round: 6.5%; }
 }

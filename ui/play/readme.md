@@ -9,7 +9,8 @@ The glyph is a `<ui-icon>` sub-element from `@browser.style/icon`. In CSS-only m
 - Round play button rendered from a single `<button>` wrapping a `<ui-icon>` glyph
 - The play/pause glyph is a `<ui-icon type="play|pause">` (from `@browser.style/icon`) — no icon font, no SVG asset
 - `reveal` variant — hidden until the parent media frame is hovered/focused
-- Three sizes: small, medium (default), large
+- Brand/shape variants — `youtube` (red squircle), `vimeo` (cyan disc), `rounded(sm|md|lg)` (clip-path play triangle)
+- Four sizes: small, medium (default), large, extra-large
 - `theme` bundles for decorative colors
 - Optional web component: toggles `is-playing`, swaps the `<ui-icon type>`, emits an event, and can control a `<video>` via `for`
 - Token-driven colors, radius, size, icon size, and transition duration
@@ -79,8 +80,8 @@ The web component uses the **exact same** HTML structure as CSS-only. The JS add
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
-| `variant` | string | `reveal` (hidden until parent hover/focus) |
-| `size` | string | Predefined size: `sm`, `md` (default), `lg` |
+| `variant` | string | Space-separated: `reveal` (hidden until parent hover/focus), `youtube`, `vimeo`, `rounded(sm)` / `rounded(md)` / `rounded(lg)` |
+| `size` | string | Predefined size: `sm`, `md` (default), `lg`, `xl` |
 | `theme` | string | Decorative color bundle: `red`, `orange`, `green`, `blue`, `accent`, `dark`, `light`, `subtle` |
 | `for` | string | `id` of a `<video>` to control; toggling plays/pauses it and syncs the glyph |
 
@@ -195,7 +196,31 @@ The bundles are defined as `--ui-theme-*` tokens in `@browser.style/base` and ar
 <ui-play size="sm"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
 <ui-play size="md"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
 <ui-play size="lg"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+<ui-play size="xl"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
 ```
+
+Sizes are `em`-based (`sm` 2.25em → `xl` 5em), so the button scales with the surrounding font-size; the glyph scales with it.
+
+## Shape variants
+
+Reshape the disc into a platform badge or a clipped play triangle. These keep the same markup — just add the `variant`.
+
+```html
+<!-- YouTube — red squircle, white arrow -->
+<ui-play variant="youtube"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+
+<!-- Vimeo — cyan disc, white arrow -->
+<ui-play variant="vimeo"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+
+<!-- rounded — clip-path play triangle; sm | md | lg controls corner rounding -->
+<ui-play variant="rounded(md)"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+```
+
+- **`youtube`** — a landscape (`aspect-ratio: 1.422`) red squircle via `corner-shape: superellipse()`; degrades to plain rounded corners where `corner-shape` is unsupported. Keeps the white `<ui-icon>` arrow.
+- **`vimeo`** — a cyan disc; keeps the white arrow.
+- **`rounded(sm|md|lg)`** — clips the button into a right-pointing play triangle with `clip-path: shape()`. The `<ui-icon>` is hidden because the shape *is* the arrow. Corner rounding scales with `--ui-play-round`; plain `rounded` = `md`.
+
+Recolor with `--ui-play-bg` / `--ui-play-bg-hover`, retune the squircle with `--ui-play-radius` / `--ui-play-corner`, the triangle rounding with `--ui-play-round`, or replace the path entirely with `--ui-play-shape`.
 
 ---
 
@@ -266,9 +291,12 @@ Set `for` to the `id` of a `<video>`. On toggle, the component calls `video.play
 | `--ui-play-bg-hover` | `var(--color-surface)` | Hover/focus background (solid) |
 | `--ui-play-c` | `var(--color-text)` | Glyph / ink color |
 | `--ui-play-sz` | `3em` | Button diameter (inline-size, square) |
-| `--ui-play-radius` | `var(--radius-circle, 50%)` | Button corner radius |
+| `--ui-play-radius` | `var(--radius-circle, 50%)` | Button corner radius (also the squircle radius for `youtube`) |
 | `--ui-play-icon-sz` | `1.5em` | Sizes the inner `<ui-icon>` glyph |
 | `--ui-play-trsdu` | `.2s` | Transition duration (background, color, opacity) |
+| `--ui-play-corner` | `squircle` | `corner-shape` for the `youtube` variant |
+| `--ui-play-round` | `4.5%` | Corner rounding of the `rounded` triangle (`sm` 2.5% / `md` 4.5% / `lg` 6.5%) |
+| `--ui-play-shape` | _(per variant)_ | `clip-path` override for the `rounded` triangle |
 
 Override per instance or globally:
 
@@ -301,3 +329,5 @@ All modern browsers.
 | CSS `clip-path: polygon()` (ui-icon glyph) | All modern browsers |
 | `color-mix()` | Chrome 111+, Firefox 113+, Safari 16.2+ |
 | `light-dark()` (via base tokens) | Chrome 123+, Firefox 120+, Safari 17.5+ |
+| `clip-path: shape()` (`rounded` variant) | Chrome 137+, Safari 18.4+, Firefox 139+ — degrades to a plain disc |
+| `corner-shape: superellipse()` (`youtube` squircle) | Chrome 139+ — degrades to plain rounded corners |
