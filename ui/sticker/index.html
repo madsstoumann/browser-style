@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="/ui/card/index.css">
 	<link rel="stylesheet" href="ui-sticker.css">
 	<style>
-		@import url('https://fonts.googleapis.com/css2?family=Freckle+Face&family=Sedgwick+Ave+Display&display=swap');
+		@import url('https://fonts.googleapis.com/css2?family=Freckle+Face&family=Sedgwick+Ave+Display&family=Bagel+Fat+One&display=swap');
 		.row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
 		.cards { display: flex; gap: 1rem; flex-wrap: wrap; }
 		.cards ui-card { inline-size: 240px; }
@@ -18,6 +18,7 @@
 		   built-in text() font tokens) */
 		.font-freckle  { --ui-sticker-text-font: "Freckle Face", system-ui; }
 		.font-sedgwick { --ui-sticker-text-font: "Sedgwick Ave Display", cursive; }
+		.font-bagel    { --ui-sticker-text-font: "Bagel Fat One", system-ui; }
 	</style>
 </head>
 <body>
@@ -87,9 +88,9 @@
 	<div class="row">
 		<ui-sticker variant="fs(sm)" color="#38BC90" color-end="#21A7AE" size="2xl"><small>GRAB A</small><strong>DEAL</strong></ui-sticker>
 		<ui-sticker variant="fs(sm)" color="#FB9C21" color-end="#AD625A" size="2xl"><small>FAMILY</small><strong>DEAL</strong></ui-sticker>
-		<ui-sticker angle="180deg" color="#111111" color-end="purple" size="2xl"><small>HELLO</small><strong>SVG</strong></ui-sticker>
+		<ui-sticker angle="180deg" color="#111111" color-end="purple" size="2xl"><small>FOR</small><strong>YOU</strong></ui-sticker>
 		<ui-sticker variant="sunburst" angle="135deg" color="oklch(0.8 0.18 90)" color-end="oklch(0.6 0.22 30)" size="2xl"><span>HOT</span></ui-sticker>
-		<ui-sticker variant="heart" angle="180deg" color="#d91f26" color-end="#690f12" size="2xl"><span>LOVE</span></ui-sticker>
+		<ui-sticker variant="heart" angle="180deg" color="#d91f26" color-end="#690f12" size="2xl"><strong>LOVE</strong><small>YOU</small></ui-sticker>
 	</div>
 
 	<h3>Speech balloon</h3>
@@ -120,13 +121,13 @@
 	</div>
 
 	<h3>Text sticker</h3>
-	<p>Use <code>variant="text"</code> for puffy "sticker lettering" — no box, just glyphs with a thick white stroke (the puff), a solid colored fill and a colored keyline. The fill comes from <code>color</code>/<code>theme</code>. Pick a font with <code>text(industrial|slab|antique|handwritten)</code> (<a href="https://modernfontstacks.com/">modern font stacks</a>, no webfont). Size via <code>--ui-sticker-text-size</code>.</p>
+	<p>Use <code>variant="text"</code> for puffy "sticker lettering" — no box, just glyphs with a thick white stroke (the puff), a solid colored fill and a colored keyline. The fill comes from <code>color</code>/<code>theme</code>. Set the font with <code>--ui-sticker-text-font</code> (here via the <code>.font-*</code> classes) — a fat, rounded display face holds the puff best. Tilt with <code>angle</code>, size via <code>--ui-sticker-text-size</code>.</p>
 	<div class="row">
-		<ui-sticker variant="text" color="#ffcc33" angle="-4deg" class="font-freckle"><span>Hello World</span></ui-sticker>
-		<ui-sticker variant="text" color="#8fa0f8" angle="3deg" class="font-sedgwick"><span>Hurry Up!</span></ui-sticker>
-		<ui-sticker variant="text(industrial)" color="#7ec27c" angle="-2deg"><span>palette</span></ui-sticker>
-		<ui-sticker variant="text(antique)" color="#f1c1ff" angle="2deg"><span>LILAC</span></ui-sticker>
-		<ui-sticker variant="text(handwritten)" color="#ff9797" angle="-3deg"><span>Friday</span></ui-sticker>
+		<ui-sticker variant="text" color="#ffcc33" angle="-4deg" class="font-freckle"><span>New In!</span></ui-sticker>
+		<ui-sticker variant="text" color="#8fa0f8" angle="3deg" class="font-sedgwick"><span>Flash Sale</span></ui-sticker>
+		<ui-sticker variant="text" color="#7ec27c" angle="-2deg" class="font-bagel"><span>50% Off</span></ui-sticker>
+		<ui-sticker variant="text" color="#f1c1ff" angle="2deg" class="font-freckle"><span>Hot Pick</span></ui-sticker>
+		<ui-sticker variant="text" color="#ff9797" angle="-3deg" class="font-sedgwick"><span>Last Call</span></ui-sticker>
 	</div>
 
 	<h3>Glass (on product images)</h3>

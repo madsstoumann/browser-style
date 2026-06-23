@@ -340,12 +340,11 @@
 		&[variant~="speech(r)"]::after { inset-inline-end: 20%;  clip-path: polygon(0 0, 100% 0, 100% 100%); }
 
 		/* text — puffy "sticker lettering": no box, just the glyphs with a thick white
-		   stroke (the puff), a gradient sheen, and a thin colored keyline. The keyline is
-		   4 drop-shadows in the host's existing shadow slot; the stroke + gradient fill live
-		   on the line elements (background-clip:text — no data-text duplication needed).
-		   text(<stack>) picks a modernfontstacks.com family. Matches both `text` and
-		   `text(industrial)` etc. Uses font-relative sizing (not cqi — the box is gone). */
-		&:is([variant~="text"], [variant*="text("]) {
+		   stroke (the puff), a solid fill, and a thin colored keyline. The keyline is 4
+		   drop-shadows in the host's existing shadow slot; the stroke + fill live on the
+		   line elements. Set the font via --ui-sticker-text-font (e.g. a utility class) —
+		   a fat, rounded display face holds the puff best. Sizes in em (the box is gone). */
+		&[variant~="text"] {
 			--_o: var(--ui-sticker-text-outline-w, 2px);
 			--_oc: var(--ui-sticker-text-outline-c, var(--ui-sticker-bg, var(--color-accent)));
 			--ui-sticker-shadow:
@@ -372,7 +371,7 @@
 			padding: 0.12em;           /* breathing room for the stroke puff */
 			text-box: normal;          /* DON'T trim the line box — the puff needs it */
 		}
-		&:is([variant~="text"], [variant*="text("]) > * {
+		&[variant~="text"] > * {
 			/* solid glyph fill (the "text itself") UNDER a thick white stroke = the puff.
 			   paint-order draws the stroke first so the fill sits on top. (background-clip:text
 			   does NOT composite as fill alongside text-stroke, so we use text-fill-color.) */
@@ -385,11 +384,6 @@
 			text-box: normal;
 			white-space: nowrap;
 		}
-		/* font stacks — modernfontstacks.com (system fonts, no @import needed) */
-		&[variant~="text(industrial)"]  { --ui-sticker-text-font: Bahnschrift, 'DIN Alternate', 'Franklin Gothic Medium', 'Nimbus Sans Narrow', sans-serif-condensed, sans-serif; }
-		&[variant~="text(slab)"]        { --ui-sticker-text-font: Rockwell, 'Rockwell Nova', 'Roboto Slab', 'DejaVu Serif', 'Sitka Small', serif; }
-		&[variant~="text(antique)"]     { --ui-sticker-text-font: Superclarendon, 'Bookman Old Style', 'URW Bookman', 'URW Bookman L', 'Georgia Pro', Georgia, serif; }
-		&[variant~="text(handwritten)"] { --ui-sticker-text-font: 'Segoe Print', 'Bradley Hand', Chilanka, TSCu_Comic, casual, cursive; }
 	}
 
 	/* sizes — scale the BOX (--ui-sticker-sz); element lines size in cqi so their

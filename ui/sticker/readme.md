@@ -74,7 +74,7 @@ The web component uses the **exact same** HTML structure as CSS-only — the JS 
 | `angle` | angle | Gradient direction when `color-end` is set (e.g. `180deg`); default `90deg` |
 | `theme` | string | Decorative color bundle (bg + ink): `red`, `orange`, `green`, `blue`, `accent`, `dark`, `light`, `subtle` |
 | `size` | string | Box size: `sm`, `md`, `lg` (default), `xl`, `2xl`, `3xl` |
-| `variant` | string | Space-separated tokens: shape (`burst`, `spark`, `sunburst`, `heart`, `blob`, `speech(l)`, `speech(r)`) · `text` / `text(industrial\|slab\|antique\|handwritten)` · `glass` · shadow (`sh(sm)`…`sh(2xl)`, `sh(solid)`) · font-scale (`fs(xs)`…`fs(2xl)`) · font-weight (`fw(normal)`…`fw(black)`) · `fit` / `fit(shrink)` · `gap(sm\|md\|lg)` |
+| `variant` | string | Space-separated tokens: shape (`burst`, `spark`, `sunburst`, `heart`, `blob`, `speech(l)`, `speech(r)`) · `text` · `glass` · shadow (`sh(sm)`…`sh(2xl)`, `sh(solid)`) · font-scale (`fs(xs)`…`fs(2xl)`) · font-weight (`fw(normal)`…`fw(black)`) · `fit` / `fit(shrink)` · `gap(sm\|md\|lg)` |
 
 ---
 
@@ -345,19 +345,13 @@ Puffy "sticker lettering" — no box, just the glyphs with a thick white stroke 
 - **fill** → `-webkit-text-fill-color` from `color`/`theme` (note: `background-clip:text` does **not** composite as fill alongside `text-stroke`, so a solid fill is used)
 - **keyline** → 4-way `drop-shadow` in the host's existing shadow slot
 
-The fill color comes from `color`/`theme`. Pick a system font (no webfont) with `text(<stack>)` — the four [modern font stacks](https://modernfontstacks.com/):
+The fill color comes from `color`/`theme`. Set the typeface with `--ui-sticker-text-font` — a **fat, rounded display face** holds the puff best (the white stroke needs thick stems so the fill still shows). Good Google Fonts: **Bagel Fat One**, **Cherry Bomb One**, **Fredoka**, **Titan One**; or a brush/marker like **Sedgwick Ave Display** / **Freckle Face**. Apply it with a utility class:
 
-| `variant` | Font |
-|-----------|------|
-| `text` | handwritten (default) |
-| `text(industrial)` | Bahnschrift / DIN — condensed sans |
-| `text(slab)` | Rockwell / Roboto Slab |
-| `text(antique)` | Superclarendon / Bookman |
-| `text(handwritten)` | Segoe Print / Bradley Hand — casual |
-
+```css
+.font-bagel { --ui-sticker-text-font: "Bagel Fat One", system-ui; }
+```
 ```html
-<ui-sticker variant="text" color="#ffcc33"><span>hello</span></ui-sticker>
-<ui-sticker variant="text(slab)" color="#8fa0f8"><span>blueming</span></ui-sticker>
+<ui-sticker variant="text" color="#7ec27c" class="font-bagel"><span>50% Off</span></ui-sticker>
 ```
 
 Tune with `--ui-sticker-text-size` (default `3.5em`), `--ui-sticker-text-stroke-w`/`-c` (puff), `--ui-sticker-text-outline-w`/`-c` (keyline), and `--ui-sticker-text-fill` (override the fill color). Sizes in `em` (the `cqi` box containment is dropped for this variant).
