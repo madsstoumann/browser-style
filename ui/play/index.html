@@ -49,11 +49,12 @@
 	</div>
 
 	<h3>Sizes</h3>
-	<p>Use the <code>size</code> attribute: <code>sm</code>, <code>md</code> (default), <code>lg</code>.</p>
+	<p>Use the <code>size</code> attribute: <code>sm</code>, <code>md</code> (default), <code>lg</code>, <code>xl</code>.</p>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
 		<ui-play size="sm"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
 		<ui-play size="md"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
 		<ui-play size="lg"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play size="xl"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
 	</div>
 
 	<h3>Theme</h3>
@@ -72,10 +73,13 @@
 	</div>
 
 	<h3>Brand shapes</h3>
-	<p>Use <code>variant="youtube"</code> or <code>variant="vimeo"</code> to reshape the disc into a platform badge, keeping the white play arrow. YouTube is a red squircle via <code>corner-shape: superellipse()</code> (degrades to plain rounded corners where unsupported); Vimeo is a cyan disc. Override color with <code>--ui-play-bg</code> / <code>--ui-play-bg-hover</code>, corners with <code>--ui-play-radius</code> / <code>--ui-play-corner</code>.</p>
+	<p>Use <code>variant="youtube"</code> or <code>variant="vimeo"</code> to reshape the disc into a platform badge, keeping the white play arrow. YouTube is a red squircle via <code>corner-shape: superellipse()</code> (degrades to plain rounded corners where unsupported); Vimeo is a cyan disc; <code>rounded(sm|md|lg)</code> clips the disc into a play triangle with scalable corner rounding via <code>clip-path: shape()</code>. Override color with <code>--ui-play-bg</code> / <code>--ui-play-bg-hover</code>, corners with <code>--ui-play-radius</code> / <code>--ui-play-corner</code>, the path with <code>--ui-play-shape</code>.</p>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
 		<ui-play variant="youtube" size="lg"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
 		<ui-play variant="vimeo" size="lg"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play variant="rounded(sm)" size="lg"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play variant="rounded(md)" size="lg"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play variant="rounded(lg)" size="lg"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
 	</div>
 	<p>Over media:</p>
 	<div style="display: flex; gap: 1rem; flex-wrap: wrap;">

@@ -52,6 +52,7 @@
 	:where(ui-play[size="sm"]) button { --ui-play-sz: 2.25em; --ui-play-icon-sz: 1em; }
 	:where(ui-play[size="md"]) button { --ui-play-sz: 3em;    --ui-play-icon-sz: 1.5em; }
 	:where(ui-play[size="lg"]) button { --ui-play-sz: 4em;    --ui-play-icon-sz: 2em; }
+	:where(ui-play[size="xl"]) button { --ui-play-sz: 5em;    --ui-play-icon-sz: 2.5em; }
 
 	/* theme — decorative color bundle (bg + ink). After color rules so theme= wins. */
 	:where(ui-play[theme]) button {
@@ -85,5 +86,29 @@
 	}
 	:where(ui-play[variant~="vimeo"]) button:is(:hover, :focus-visible) {
 		background: var(--ui-play-bg-hover, #138fb8);
+	}
+
+	/* rounded — clip the disc into a play triangle. The shape() IS the arrow,
+	   so the <ui-icon> glyph is hidden. Corner rounding scales via
+	   variant="rounded(sm|md|lg)": each rounded corner is a curve whose control
+	   point is the sharp vertex; the endpoints sit further along the edges as the
+	   level grows (lg = edge midpoints = fully round). Plain "rounded" = md. */
+	:where(ui-play[variant*="rounded"]) button {
+		border-radius: 0;
+		clip-path: var(--ui-play-shape,
+			shape(from 43.6% 30.4%, line to 64.4% 41.6%, curve to 64.4% 58.4% with 80% 50%, line to 43.6% 69.6%, curve to 28% 61.2% with 28% 78%, line to 28% 38.8%, curve to 43.6% 30.4% with 28% 22%, close)
+		);
+	}
+	:where(ui-play[variant*="rounded"]) ui-icon {
+		display: none;
+	}
+	:where(ui-play[variant~="rounded(sm)"]) button {
+		--ui-play-shape: shape(from 36.32% 26.48%, line to 71.68% 45.52%, curve to 71.68% 54.48% with 80% 50%, line to 36.32% 73.52%, curve to 28% 69.04% with 28% 78%, line to 28% 30.96%, curve to 36.32% 26.48% with 28% 22%, close);
+	}
+	:where(ui-play[variant~="rounded(md)"]) button {
+		--ui-play-shape: shape(from 43.6% 30.4%, line to 64.4% 41.6%, curve to 64.4% 58.4% with 80% 50%, line to 43.6% 69.6%, curve to 28% 61.2% with 28% 78%, line to 28% 38.8%, curve to 43.6% 30.4% with 28% 22%, close);
+	}
+	:where(ui-play[variant~="rounded(lg)"]) button {
+		--ui-play-shape: shape(from 54% 36%, curve to 54% 64% with 80% 50%, curve to 28% 50% with 28% 78%, curve to 54% 36% with 28% 22%);
 	}
 }
