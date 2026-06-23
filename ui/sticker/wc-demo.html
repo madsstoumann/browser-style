@@ -8,6 +8,9 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-sticker.css">
+	<style>
+		.row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+	</style>
 </head>
 <body>
 	<h1>UI: Sticker</h1>
@@ -17,48 +20,52 @@
 		Using <code>&lt;ui-sticker&gt;</code> as a registered custom element. The JS only registers the element — all visual behavior is CSS-driven.
 	</p>
 
-	<h3>Basic</h3>
-	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+	<h3>Color (any value, auto-contrast ink)</h3>
+	<div class="row">
 		<ui-sticker>Save 20%</ui-sticker>
-		<ui-sticker color="info">New</ui-sticker>
-		<ui-sticker color="success">Best value</ui-sticker>
-		<ui-sticker color="warning">Hot deal</ui-sticker>
-		<ui-sticker color="error">-20%</ui-sticker>
+		<ui-sticker color="rebeccapurple"><span>New</span></ui-sticker>
+		<ui-sticker color="gold"><span>Best value</span></ui-sticker>
+		<ui-sticker color="hotpink"><span>Hot deal</span></ui-sticker>
+		<ui-sticker color="oklch(0.7 0.18 150)"><span>Fresh</span></ui-sticker>
+	</div>
+
+	<h3>Gradient (color + color-end)</h3>
+	<div class="row">
+		<ui-sticker variant="fs(sm)" color="#38BC90" color-end="#21A7AE"><small>GRAB A</small><strong>DEAL</strong></ui-sticker>
+		<ui-sticker angle="180deg" color="#111111" color-end="purple"><small>HELLO</small><strong>SVG</strong></ui-sticker>
+		<ui-sticker variant="heart" angle="180deg" color="#d91f26" color-end="#690f12"><strong>♥</strong></ui-sticker>
 	</div>
 
 	<h3>Starburst variant</h3>
-	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+	<div class="row">
 		<ui-sticker variant="burst">Save 20%</ui-sticker>
-		<ui-sticker variant="burst" color="info">New</ui-sticker>
-		<ui-sticker variant="burst" color="success">Best value</ui-sticker>
-		<ui-sticker variant="burst" color="warning">Hot deal</ui-sticker>
-		<ui-sticker variant="burst" color="error">-20%</ui-sticker>
+		<ui-sticker variant="burst" theme="blue">New</ui-sticker>
+		<ui-sticker variant="burst" theme="green">Best value</ui-sticker>
+		<ui-sticker variant="burst" theme="orange">Hot deal</ui-sticker>
+		<ui-sticker variant="burst" theme="red">-20%</ui-sticker>
 	</div>
 
 	<h3>Sizes</h3>
-	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-sticker size="sm" color="error">-10%</ui-sticker>
-		<ui-sticker size="md" color="error">-20%</ui-sticker>
-		<ui-sticker size="lg" color="error">-30%</ui-sticker>
+	<div class="row">
+		<ui-sticker size="sm" theme="red"><span>-20%</span></ui-sticker>
+		<ui-sticker size="md" theme="red"><span>-20%</span></ui-sticker>
+		<ui-sticker size="lg" theme="red"><span>-20%</span></ui-sticker>
+		<ui-sticker size="xl" theme="red"><span>-20%</span></ui-sticker>
+		<ui-sticker size="2xl" theme="red"><span>-20%</span></ui-sticker>
+		<ui-sticker size="3xl" theme="red"><span>-20%</span></ui-sticker>
 	</div>
 
 	<h3>Theme</h3>
-	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+	<div class="row">
 		<ui-sticker theme="accent">accent</ui-sticker>
 		<ui-sticker variant="burst" theme="dark">dark</ui-sticker>
 		<ui-sticker theme="subtle">subtle</ui-sticker>
 	</div>
 
 	<h3>Multi-line</h3>
-	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-sticker variant="burst"><span style="font-size:.7em">SAVE</span><b style="font-size:1.6em">20%</b></ui-sticker>
-		<ui-sticker color="success" style="--ui-sticker-gap:.2em"><small>FROM</small><b style="font-size:1.8em">$9</b><small>/mo</small></ui-sticker>
-	</div>
-
-	<h3>Custom tokens</h3>
-	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-sticker style="--ui-sticker-bg: hotpink; --ui-sticker-c: black;">Sale</ui-sticker>
-		<ui-sticker variant="burst" style="--ui-sticker-bg: gold; --ui-sticker-c: #222; --ui-sticker-sz: 6em;">★ Top pick</ui-sticker>
+	<div class="row">
+		<ui-sticker variant="burst"><small>SAVE</small><strong>20%</strong></ui-sticker>
+		<ui-sticker variant="gap(sm)" theme="green"><small>FROM</small><strong>$9</strong><small>/mo</small></ui-sticker>
 	</div>
 
 	<script type="module">

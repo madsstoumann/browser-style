@@ -7,7 +7,28 @@
 @layer bs-component {
 	:where(ui-sticker) {
 		--ui-sticker-padding: 0.5em;
-		--ui-sticker-gap: 0;
+		/* unitless factor of --ui-sticker-font-size; consumed as a line top-margin below.
+		   Small non-zero default so stacked lines always breathe; gap() tunes it. */
+		--ui-sticker-gap: 0.16;
+		/* Font sizing has two knobs that compose:
+		     --ui-sticker-fs        the BASE line size (40cqi = 40% of the box). Clip
+		                            variants lower this so text fits the inner outline.
+		     --ui-sticker-fs-scale  a multiplier (default 1). The fs() variants set this
+		                            to nudge the whole sticker up/down WITHOUT touching the
+		                            base, so the small/strong/sup ratios stay intact.
+		   --ui-sticker-font-size = base × scale; every line derives from it. cqi resolves
+		   against the CONTENT box; the 10px floor (per line below) guards tiny stickers. */
+		--ui-sticker-fs: 40cqi;
+		--ui-sticker-fs-scale: 1;
+		--ui-sticker-font-size: calc(var(--ui-sticker-fs) * var(--ui-sticker-fs-scale));
+		--ui-sticker-fs-sm: calc(var(--ui-sticker-font-size) * 0.55);
+		--ui-sticker-fs-lg: calc(var(--ui-sticker-font-size) * 1.1);
+		/* solid-shadow knobs (used by sh(solid)): big hard offset + zero blur + solid
+		   black, matching the tactical.html speech-balloon look: drop-shadow(.5em .5em 0 #000).
+		   Override the color for a tinted shadow (e.g. a darker shade of the bg). */
+		--ui-sticker-shadow-x: 0.25em;
+		--ui-sticker-shadow-y: 0.25em;
+		--ui-sticker-shadow-color: #000;
 		--ui-sticker-clip-path: polygon(
 			50.0% 0.0%, 59.1% 16.2%, 75.0% 6.7%, 74.7% 25.3%, 93.3% 25.0%,
 			83.8% 40.9%, 100.0% 50.0%, 83.8% 59.1%, 93.3% 75.0%, 74.7% 74.7%,
@@ -19,35 +40,78 @@
 		background: var(--ui-sticker-bg, var(--color-accent));
 		border-radius: var(--ui-sticker-radius, var(--radius-circle, 50%));
 		color: var(--ui-sticker-c, hsl(0, 0%, 100%));
+		/* the sticker is its own query container so text can size in `cqi` and scale
+		   with the box. cqi resolves against an ANCESTOR container, never self — so the
+		   fluid font-size lives on the inner <cq-box>, not here. */
+		container-type: inline-size;
 		display: grid;
-		font-size: var(--ui-sticker-font-size, 0.875em);
+		/* drop-shadow (not box-shadow) so it follows the clipped star/heart outline —
+		   box-shadow would be cut away by clip-path. Opt in with variant="sh(md)". */
+		filter: var(--ui-sticker-shadow, none);
+		/* host fallback for bare (un-wrapped) text; real scaling is the cqi value on cq-box */
+		font-size: 0.875em;
 		font-weight: var(--ui-sticker-font-weight, var(--font-weight-bold, 700));
-		gap: var(--ui-sticker-gap);
 		line-height: 1;
 		/* floor BOTH axes so a short callout stays square — aspect-ratio alone can't,
 		   because min-width is only a floor (no definite axis to derive height from) */
-		min-block-size: var(--ui-sticker-sz, 4em);
-		min-inline-size: var(--ui-sticker-sz, 4em);
+		min-block-size: var(--ui-sticker-sz, 5em);
+		min-inline-size: var(--ui-sticker-sz, 5em);
 		padding: var(--ui-sticker-padding);
 		place-content: center;
 		text-align: center;
 		text-box: cap alphabetic;
 		user-select: none;
 
-		/* each direct child = one text line. text-box trims the leading so `gap`
-		   alone controls line-spacing; set per-line `font-size`/`font-weight` on
-		   the child (e.g. <b>, <small>, a class, or --ui-sticker-gap for spacing) */
+		/* Each line is ONE element child sized in `cqi`, which resolves against the
+		   sticker's own container (set above) — so lines scale with the box, no wrapper
+		   needed. text-box trims the leading so `gap` alone drives line-spacing. A bare
+		   text node (no element) falls back to the host em above. */
+		/* max(10px, …): the line IS its cqi size, with a 10px floor so it stays legible
+		   when the sticker is very small. */
 		& > * {
+			font-size: max(10px, var(--ui-sticker-font-size));
 			line-height: 1;
 			margin: 0;
 			text-box: cap alphabetic;
 		}
 
-		/* colors — convenience semantic mapping; primary API is --ui-sticker-bg/-c */
-		&[color="info"]    { --ui-sticker-bg: var(--color-info); }
-		&[color="success"] { --ui-sticker-bg: var(--color-success); }
-		&[color="warning"] { --ui-sticker-bg: var(--color-warning); }
-		&[color="error"]   { --ui-sticker-bg: var(--color-error); }
+		/* line gap — a top-margin between stacked lines instead of grid `gap`, because
+		   the host can't resolve cqi against itself. --ui-sticker-gap is a UNITLESS factor
+		   of the base font-size; the cqi inside --ui-sticker-font-size resolves against
+		   the sticker (the child is a descendant), so the gap scales with the box. */
+		& > * + * {
+			margin-block-start: calc(var(--ui-sticker-font-size) * var(--ui-sticker-gap, 0));
+		}
+
+		/* Per-line size from the element TAG — no inline styles needed. <small> = label,
+		   <strong> = headline, <span> = body. Nested <sup>/<sub> use em, so they scale
+		   relative to their line. All derive from --ui-sticker-font-size (one knob). */
+		& > small        { font-size: max(10px, var(--ui-sticker-fs-sm)); font-weight: var(--font-weight-medium, 500); }
+		& > strong       { font-size: max(10px, var(--ui-sticker-fs-lg)); }
+		& :is(sup, sub)  { font-size: 0.5em; }
+
+		/* color="<any css color>" — the attribute value IS the background (read with the
+		   typed attr()), and the ink is auto-picked for contrast. One generic rule, any
+		   color (hex, named, oklch…), legible text for free. Needs attr() type() +
+		   contrast-color() (Chrome 133+/Safari 17.4+). */
+		&[color] {
+			--ui-sticker-bg: attr(color type(<color>), var(--color-accent));
+			--ui-sticker-c: contrast-color(var(--ui-sticker-bg));
+		}
+
+		/* color + color-end="<css color>" → a two-stop linear-gradient background.
+		   Direction comes from the typed `angle` attribute (an <angle>, e.g.
+		   angle="180deg"), defaulting to 90deg = left→right like the original tactical
+		   badges. NB `dir` is reserved for text direction, so the angle gets its own
+		   attribute. The ink is contrasted against the START color. */
+		&[color-end] {
+			--ui-sticker-bg: linear-gradient(
+				var(--ui-sticker-gradient-angle, attr(angle type(<angle>), 90deg)),
+				attr(color type(<color>), var(--color-accent)),
+				attr(color-end type(<color>), var(--color-accent))
+			);
+			--ui-sticker-c: contrast-color(attr(color type(<color>), var(--color-accent)));
+		}
 
 		/* theme — decorative color bundle (bg + ink). Placed after color= so an
 		   explicit theme= wins the cascade (zero-specificity, source order). */
@@ -56,16 +120,230 @@
 			--ui-sticker-c: var(--_theme-c);
 		}
 
+		/* font-size — function-style variant; a SCALE multiplier on the base, so it nudges
+		   every line together (small/strong/sup ratios preserved) and composes with any
+		   shape's base. md/sm/xs step down; lg/xl step up. Default (no fs()) = 1. */
+		&[variant~="fs(xs)"]  { --ui-sticker-fs-scale: 0.6; }
+		&[variant~="fs(sm)"]  { --ui-sticker-fs-scale: 0.75; }
+		&[variant~="fs(md)"]  { --ui-sticker-fs-scale: 0.87; }
+		&[variant~="fs(lg)"]  { --ui-sticker-fs-scale: 1.15; }
+		&[variant~="fs(xl)"]  { --ui-sticker-fs-scale: 1.3; }
+		&[variant~="fs(2xl)"] { --ui-sticker-fs-scale: 1.5; }
+
+		/* fit — native text-fit, no SVG/JS. text-fit fits the text in the box it's set
+		   on, and the host (a grid) has no direct text runs — the lines ARE the child
+		   elements. So it targets the LINES, and the box gives them its full width to
+		   grow into (grid-template-columns:100%). `fit` grows each line to fill the width;
+		   `fit(shrink)` shrinks overlong ones. Gated by @supports → where unsupported,
+		   both the cqi sizing and the centered layout stay (Chrome 150+). */
+		
+			&[variant~="fit"],
+			&[variant~="fit(shrink)"] { grid-template-columns: 100%; }
+			&[variant~="fit"] > *         { text-fit: grow; }
+			&[variant~="fit(shrink)"] > * { text-fit: shrink; }
+		
+
+		/* gradient direction is the typed `angle` attribute — see the &[color-end]
+		   rule above (angle="180deg"). No variant token needed. */
+
+		/* line gap — function-style variant; spacing between stacked lines (em-based). */
+		&[variant~="gap(sm)"] { --ui-sticker-gap: 0.12; }
+		&[variant~="gap(md)"] { --ui-sticker-gap: 0.25; }
+		&[variant~="gap(lg)"] { --ui-sticker-gap: 0.45; }
+
+		/* font-weight — function-style variant, mapped to the global weight tokens. */
+		&[variant~="fw(normal)"]   { --ui-sticker-font-weight: var(--font-weight-normal, 400); }
+		&[variant~="fw(medium)"]   { --ui-sticker-font-weight: var(--font-weight-medium, 500); }
+		&[variant~="fw(semibold)"] { --ui-sticker-font-weight: var(--font-weight-semibold, 600); }
+		&[variant~="fw(bold)"]     { --ui-sticker-font-weight: var(--font-weight-bold, 700); }
+		&[variant~="fw(black)"]    { --ui-sticker-font-weight: var(--font-weight-black, 900); }
+
+		/* shadow — function-style variant aligned with card's rds()/spl(). Uses
+		   drop-shadow so it follows clipped shapes; values mirror the --shadow-* scale. */
+		&[variant~="sh(sm)"]  { --ui-sticker-shadow: drop-shadow(0 1px 1px rgb(0 0 0 / 0.18)); }
+		&[variant~="sh(md)"]  { --ui-sticker-shadow: drop-shadow(0 2px 3px rgb(0 0 0 / 0.22)); }
+		&[variant~="sh(lg)"]  { --ui-sticker-shadow: drop-shadow(0 4px 6px rgb(0 0 0 / 0.28)); }
+		&[variant~="sh(xl)"]  { --ui-sticker-shadow: drop-shadow(0 8px 10px rgb(0 0 0 / 0.32)); }
+		&[variant~="sh(2xl)"] { --ui-sticker-shadow: drop-shadow(0 14px 18px rgb(0 0 0 / 0.36)); }
+		/* solid offset shadow (comic/sticker look) — hard edge, zero blur. Tune offset
+		   with --ui-sticker-shadow-x/-y and the tint with --ui-sticker-shadow-color. */
+		&[variant~="sh(solid)"] {
+			--ui-sticker-shadow: drop-shadow(var(--ui-sticker-shadow-x) var(--ui-sticker-shadow-y) 0 var(--ui-sticker-shadow-color));
+		}
+
+		/* Clipped shapes paint their fill on a ::before LAYER so the HOST stays unclipped
+		   and its drop-shadow can follow the silhouette. (clip-path on the host clips the
+		   filter result, so the shadow — which lives OUTSIDE the shape — gets cut away.)
+		   Each shape variant just sets --ui-sticker-shape. */
+		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"]) {
+			background: none;          /* fill moves to ::before */
+			border-radius: 0;
+			isolation: isolate;        /* stacking context so ::before sits behind the text */
+			position: relative;
+		}
+		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"])::before {
+			background: var(--ui-sticker-bg, var(--color-accent));
+			clip-path: var(--ui-sticker-shape);
+			content: "";
+			inset: 0;
+			position: absolute;
+			z-index: -1;
+		}
+
 		/* starburst variant — square box clipped to a 24-point star */
 		&[variant~="burst"] {
-			border-radius: 0;
-			clip-path: var(--ui-sticker-clip-path);
-			--ui-sticker-padding: 1.25em;
+			--ui-sticker-shape: var(--ui-sticker-clip-path);
+			--ui-sticker-padding: 0.6em;
+			--ui-sticker-fs: 30cqi;
 		}
+
+		/* spark — sharp 10-point star (from the SVG poly-star-10). Tips touch the box;
+		   padding keeps text inside the inner pentagon. */
+		&[variant~="spark"] {
+			--ui-sticker-padding: 0.6em;
+			--ui-sticker-fs: 26cqi;
+			--ui-sticker-shape: polygon(
+				50.0% 0.0%, 62.6% 11.1%, 79.4% 9.5%, 83.1% 26.0%, 97.5% 34.5%,
+				90.9% 50.0%, 97.5% 65.5%, 83.1% 74.0%, 79.4% 90.5%, 62.6% 88.9%,
+				50.0% 100.0%, 37.4% 88.9%, 20.6% 90.5%, 16.9% 74.0%, 2.5% 65.5%,
+				9.1% 50.0%, 2.5% 34.5%, 16.9% 26.0%, 20.6% 9.5%, 37.4% 11.1%
+			);
+		}
+
+		/* sunburst — fine 40-point sawtooth ring (from the SVG poly-star-40). Shallow
+		   teeth, so the inner disc is large — less padding than the sharp spark. */
+		&[variant~="sunburst"] {
+			--ui-sticker-padding: 0.5em;
+			--ui-sticker-fs: 32cqi;
+			--ui-sticker-shape: polygon(
+				50.0% 0.0%, 53.1% 10.2%, 57.8% 0.6%, 59.3% 11.2%, 65.5% 2.5%,
+				65.3% 13.2%, 72.7% 5.5%, 70.8% 16.0%, 79.4% 9.5%, 75.9% 19.7%,
+				85.4% 14.6%, 80.3% 24.1%, 90.5% 20.6%, 84.0% 29.2%, 94.5% 27.3%,
+				86.8% 34.7%, 97.5% 34.5%, 88.8% 40.7%, 99.4% 42.2%, 89.8% 46.9%,
+				100.0% 50.0%, 89.8% 53.1%, 99.4% 57.8%, 88.8% 59.3%, 97.5% 65.5%,
+				86.8% 65.3%, 94.5% 72.7%, 84.0% 70.8%, 90.5% 79.4%, 80.3% 75.9%,
+				85.4% 85.4%, 75.9% 80.3%, 79.4% 90.5%, 70.8% 84.0%, 72.7% 94.5%,
+				65.3% 86.8%, 65.5% 97.5%, 59.3% 88.8%, 57.8% 99.4%, 53.1% 89.8%,
+				50.0% 100.0%, 46.9% 89.8%, 42.2% 99.4%, 40.7% 88.8%, 34.5% 97.5%,
+				34.7% 86.8%, 27.3% 94.5%, 29.2% 84.0%, 20.6% 90.5%, 24.1% 80.3%,
+				14.6% 85.4%, 19.7% 75.9%, 9.5% 79.4%, 16.0% 70.8%, 5.5% 72.7%,
+				13.2% 65.3%, 2.5% 65.5%, 11.2% 59.3%, 0.6% 57.8%, 10.2% 53.1%,
+				0.0% 50.0%, 10.2% 46.9%, 0.6% 42.2%, 11.2% 40.7%, 2.5% 34.5%,
+				13.2% 34.7%, 5.5% 27.3%, 16.0% 29.2%, 9.5% 20.6%, 19.7% 24.1%,
+				14.6% 14.6%, 24.1% 19.7%, 20.6% 9.5%, 29.2% 16.0%, 27.3% 5.5%,
+				34.7% 13.2%, 34.5% 2.5%, 40.7% 11.2%, 42.2% 0.6%, 46.9% 10.2%
+			);
+		}
+
+		/* heart — bezier outline (from SVG poly-heart), converted to shape().
+		   The wide lobes are at the top, point at the bottom: nudge text up so it
+		   sits in the visual centre of mass. Needs Chrome 137+/Safari 18.4+. */
+		&[variant~="heart"] {
+			border-radius: 0;
+			--ui-sticker-padding: 0.8em 0.6em 1.6em;
+			--ui-sticker-fs: 26cqi;
+			--ui-sticker-shape: shape(
+				from 45.738% 84.749%,
+				curve to 33.979% 74.461% with 43.619% 82.374% / 38.327% 77.744%,
+				curve to 14.111% 58.506% with 21.095% 64.731% / 19.342% 63.323%,
+				curve to 0.385% 28.608% with 4.467% 49.626% / 0.371% 40.705%,
+				curve to 2.448% 16.947% with 0.392% 22.703% / 0.795% 20.428%,
+				curve to 14.671% 3.969% with 5.254% 11.041% / 9.387% 6.653%,
+				curve to 26.508% 1.189% with 18.413% 2.068% / 20.259% 1.224%,
+				curve to 38.268% 4.028% with 33.046% 1.153% / 34.422% 1.915%,
+				curve to 48.762% 15.999% with 42.948% 6.599% / 47.766% 12.095%,
+				line to 49.377% 18.410%,
+				line to 50.894% 15.089%,
+				curve to 96.356% 15.556% with 59.466% -3.676% / 86.832% -3.395%,
+				curve to 97.030% 41.635% with 99.377% 21.567% / 99.709% 34.404%,
+				curve to 71.798% 69.277% with 93.535% 51.067% / 86.971% 58.258%,
+				curve to 49.801% 88.974% with 61.847% 76.504% / 50.585% 87.438%,
+				curve to 45.738% 84.749% with 48.891% 90.756% / 49.757% 89.253%
+			);
+		}
+
+		/* speech balloon — rounded rect + a triangular tail (::after). Not a clip shape,
+		   so the corners stay crisp; the tail uses `background: inherit` to match the fill
+		   (solid or gradient) and, being part of the host's render, is included in the
+		   drop-shadow. speech(l) = tail bottom-left, speech(r) = bottom-right. */
+		&[variant~="speech(l)"],
+		&[variant~="speech(r)"] {
+			aspect-ratio: 5 / 4;            /* balloon proportions, not square */
+			border-radius: var(--ui-sticker-radius, var(--radius-lg, 0.75em));
+			min-block-size: auto;           /* let aspect-ratio derive height from width */
+			position: relative;
+			--ui-sticker-padding: 0.6em 0.7em;
+			--ui-sticker-fs: 30cqi;
+		}
+		&[variant~="speech(l)"]::after,
+		&[variant~="speech(r)"]::after {
+			background: inherit;            /* same fill as the balloon */
+			content: "";
+			inline-size: var(--ui-sticker-tail, 0.85em);
+			aspect-ratio: 1;
+			inset-block-start: calc(100% - 1px);   /* hang just below, no seam */
+			position: absolute;
+		}
+		&[variant~="speech(l)"]::after { inset-inline-start: 20%; clip-path: polygon(0 0, 100% 0, 0 100%); }
+		&[variant~="speech(r)"]::after { inset-inline-end: 20%;  clip-path: polygon(0 0, 100% 0, 100% 100%); }
+
+		/* text — puffy "sticker lettering": no box, just the glyphs with a thick white
+		   stroke (the puff), a gradient sheen, and a thin colored keyline. The keyline is
+		   4 drop-shadows in the host's existing shadow slot; the stroke + gradient fill live
+		   on the line elements (background-clip:text — no data-text duplication needed).
+		   text(<stack>) picks a modernfontstacks.com family. Matches both `text` and
+		   `text(industrial)` etc. Uses font-relative sizing (not cqi — the box is gone). */
+		&:is([variant~="text"], [variant*="text("]) {
+			--_o: var(--ui-sticker-text-outline-w, 2px);
+			--_oc: var(--ui-sticker-text-outline-c, var(--ui-sticker-bg, var(--color-accent)));
+			--ui-sticker-shadow:
+				drop-shadow(var(--_o) 0 var(--_oc)) drop-shadow(calc(var(--_o) * -1) 0 var(--_oc))
+				drop-shadow(0 var(--_o) var(--_oc)) drop-shadow(0 calc(var(--_o) * -1) var(--_oc));
+			aspect-ratio: auto;
+			background: none;
+			border-radius: 0;
+			/* flex column: stacks lines, centers them, and sizes to the text (the square
+			   grid box with its min-sizes is gone for text stickers) */
+			align-items: center;
+			/* text stickers size in em, not cqi — drop the container containment, which
+			   otherwise makes the host's inline size independent of its content (collapse) */
+			container-type: normal;
+			display: flex;
+			flex-direction: column;
+			font-family: var(--ui-sticker-text-font, 'Segoe Print', 'Bradley Hand', Chilanka, TSCu_Comic, casual, cursive);
+			inline-size: max-content;  /* size to the text */
+			min-block-size: auto;
+			min-inline-size: auto;
+			padding: 0.12em;           /* breathing room for the stroke puff */
+			text-box: normal;          /* DON'T trim the line box — the puff needs it */
+		}
+		&:is([variant~="text"], [variant*="text("]) > * {
+			/* solid glyph fill (the "text itself") UNDER a thick white stroke = the puff.
+			   paint-order draws the stroke first so the fill sits on top. (background-clip:text
+			   does NOT composite as fill alongside text-stroke, so we use text-fill-color.) */
+			color: var(--ui-sticker-text-fill, var(--ui-sticker-bg, var(--color-accent)));
+			-webkit-text-fill-color: var(--ui-sticker-text-fill, var(--ui-sticker-bg, var(--color-accent)));
+			-webkit-text-stroke: var(--ui-sticker-text-stroke-w, 0.2em) var(--ui-sticker-text-stroke-c, #fff);
+			font-size: var(--ui-sticker-text-size, 3.5em);
+			line-height: 1.2;
+			paint-order: stroke fill;
+			text-box: normal;
+			white-space: nowrap;
+		}
+		/* font stacks — modernfontstacks.com (system fonts, no @import needed) */
+		&[variant~="text(industrial)"]  { --ui-sticker-text-font: Bahnschrift, 'DIN Alternate', 'Franklin Gothic Medium', 'Nimbus Sans Narrow', sans-serif-condensed, sans-serif; }
+		&[variant~="text(slab)"]        { --ui-sticker-text-font: Rockwell, 'Rockwell Nova', 'Roboto Slab', 'DejaVu Serif', 'Sitka Small', serif; }
+		&[variant~="text(antique)"]     { --ui-sticker-text-font: Superclarendon, 'Bookman Old Style', 'URW Bookman', 'URW Bookman L', 'Georgia Pro', Georgia, serif; }
+		&[variant~="text(handwritten)"] { --ui-sticker-text-font: 'Segoe Print', 'Bradley Hand', Chilanka, TSCu_Comic, casual, cursive; }
 	}
 
-	/* sizes — em-based, so the sticker scales with parent font-size */
-	:where(ui-sticker[size="sm"]) { --ui-sticker-font-size: 0.75em; }
-	:where(ui-sticker[size="md"]) { --ui-sticker-font-size: 0.875em; }
-	:where(ui-sticker[size="lg"]) { --ui-sticker-font-size: 1.125em; }
+	/* sizes — scale the BOX (--ui-sticker-sz); element lines size in cqi so their
+	   text scales with it automatically. Override --ui-sticker-font-size for a
+	   different text-fill ratio at any size. */
+	:where(ui-sticker[size="sm"])  { --ui-sticker-sz: 3em; }
+	:where(ui-sticker[size="md"])  { --ui-sticker-sz: 4em; }
+	:where(ui-sticker[size="lg"])  { --ui-sticker-sz: 5em; }
+	:where(ui-sticker[size="xl"])  { --ui-sticker-sz: 6em; }
+	:where(ui-sticker[size="2xl"]) { --ui-sticker-sz: 8em; }
+	:where(ui-sticker[size="3xl"]) { --ui-sticker-sz: 10em; }
 }

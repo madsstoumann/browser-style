@@ -8,13 +8,16 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-sticker.css">
+	<style>
+		.row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+	</style>
 </head>
 <body>
 	<h1>UI: Sticker</h1>
 
 	<h2>CSS</h2>
 	<p>
-		<code>&lt;ui-sticker&gt;</code> is a CSS-first promotional callout — a round disc by default, or a 24-point starburst with <code>variant="burst"</code>. Use <code>color</code> for semantic colors and <code>size</code> for scale.
+		<code>&lt;ui-sticker&gt;</code> is a CSS-first promotional callout — a round disc by default, or a 24-point starburst with <code>variant="burst"</code>. Use <code>color</code> for any single color (auto-contrast ink), <code>theme</code> for preset bundles, and <code>size</code> for scale.
 	</p>
 	<p>
 		This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript).
@@ -23,36 +26,41 @@
 		See the <a href="wc-demo.html">web component demo</a> for the JS-enhanced version.
 	</p>
 
-	<h3>Basic</h3>
-	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-sticker>Save 20%</ui-sticker>
-		<ui-sticker color="info">New</ui-sticker>
-		<ui-sticker color="success">Best value</ui-sticker>
-		<ui-sticker color="warning">Hot deal</ui-sticker>
-		<ui-sticker color="error">-20%</ui-sticker>
-	</div>
-
-	<h3>Starburst variant</h3>
-	<p>Use <code>variant="burst"</code> for a 24-point starburst shape.</p>
-	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-sticker variant="burst">Save 20%</ui-sticker>
-		<ui-sticker variant="burst" color="info">New</ui-sticker>
-		<ui-sticker variant="burst" color="success">Best value</ui-sticker>
-		<ui-sticker variant="burst" color="warning">Hot deal</ui-sticker>
-		<ui-sticker variant="burst" color="error">-20%</ui-sticker>
+	<h3>Shapes</h3>
+	<p>Use variants <code>burst</code>, <code>spark</code>, <code>sunburst</code> and <code>heart</code>.</p>
+	<p>Each line is a semantic element — <code>&lt;small&gt;</code> for a label, <code>&lt;strong&gt;</code> for the headline — with preset <code>cqi</code> sizes, so no inline font-size is needed and the text scales with the box.</p>
+	<div class="row">
+		<ui-sticker variant="burst" size="2xl" theme="green"><small>SAVE</small><strong>20%</strong></ui-sticker>
+		<ui-sticker variant="spark fs(lg)" color="#BC2330" size="2xl"><small>SAVE</small><strong>69<sup>95</sup></strong></ui-sticker>
+		<ui-sticker variant="sunburst" color="#6DB5D5" size="2xl"><small>UP TO</small><strong>40%</strong></ui-sticker>
+		<ui-sticker variant="sunburst" theme="blue" size="2xl"><small>UP TO</small><strong>50%</strong></ui-sticker>
+		<ui-sticker variant="heart gap(md)" color="#BC2330" size="2xl"><small>HOLIDAY</small><strong>$50</strong></ui-sticker>
 	</div>
 
 	<h3>Sizes</h3>
-	<p>Use the <code>size</code> attribute: <code>sm</code>, <code>md</code> (default), <code>lg</code>.</p>
-	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-sticker size="sm" color="error">-10%</ui-sticker>
-		<ui-sticker size="md" color="error">-20%</ui-sticker>
-		<ui-sticker size="lg" color="error">-30%</ui-sticker>
+	<p>The <code>size</code> attribute scales the <strong>box</strong> (<code>sm</code>, <code>md</code>, <code>lg</code> default, <code>xl</code>, <code>2xl</code>, <code>3xl</code>); element lines scale with it via <code>cqi</code>.</p>
+	<div class="row">
+		<ui-sticker size="sm" theme="red"><span>-20%</span></ui-sticker>
+		<ui-sticker size="md" theme="red"><span>-20%</span></ui-sticker>
+		<ui-sticker size="lg" theme="red"><span>-20%</span></ui-sticker>
+		<ui-sticker size="xl" theme="red"><span>-20%</span></ui-sticker>
+		<ui-sticker size="2xl" theme="red"><span>-20%</span></ui-sticker>
+		<ui-sticker size="3xl" theme="red"><span>-20%</span></ui-sticker>
+	</div>
+
+	<h3>Shadow</h3>
+	<p>Use <code>sh(sm)</code>…<code>sh(2xl)</code> in <code>variant</code> (function-style, aligned with card's <code>rds()</code>). Uses <code>filter: drop-shadow()</code> so it follows clipped star/heart shapes too.</p>
+	<div class="row">
+		<ui-sticker variant="sh(sm)" theme="blue"><span>sh(sm)</span></ui-sticker>
+		<ui-sticker variant="sh(md)" theme="blue"><span>sh(md)</span></ui-sticker>
+		<ui-sticker variant="sh(lg)" theme="blue"><span>sh(lg)</span></ui-sticker>
+		<ui-sticker variant="burst sh(lg)" theme="orange"><span>sh(lg)</span></ui-sticker>
+		<ui-sticker variant="heart sh(xl)" theme="red"><span>sh(xl)</span></ui-sticker>
 	</div>
 
 	<h3>Theme</h3>
 	<p>Use <code>theme</code> for a decorative color <strong>bundle</strong> (background + ink), distinct from the semantic <code>color</code> axis. If both are set, <code>theme</code> wins.</p>
-	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+	<div class="row">
 		<ui-sticker theme="accent">accent</ui-sticker>
 		<ui-sticker variant="burst" theme="dark">dark</ui-sticker>
 		<ui-sticker theme="subtle">subtle</ui-sticker>
@@ -60,31 +68,71 @@
 	</div>
 
 	<h3>Multi-line</h3>
-	<p>Each direct child is its own line; <code>--ui-sticker-gap</code> controls line-spacing and each line can set its own <code>font-size</code>/<code>font-weight</code>.</p>
-	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-sticker variant="burst"><span style="font-size:.7em">SAVE</span><b style="font-size:1.6em">20%</b></ui-sticker>
-		<ui-sticker color="success" style="--ui-sticker-gap:.2em"><small>FROM</small><b style="font-size:1.8em">$9</b><small>/mo</small></ui-sticker>
+	<p>Each direct child is its own line; use <code>variant="gap(sm|md|lg)"</code> for line-spacing. <code>&lt;small&gt;</code> (label) and <code>&lt;strong&gt;</code> (headline) give preset, fluid <code>cqi</code> sizes — no inline styles.</p>
+	<div class="row">
+		<ui-sticker variant="burst"><small>SAVE</small><strong>20%</strong></ui-sticker>
+		<ui-sticker variant="gap(sm)" theme="green"><small>FROM</small><strong>$9</strong><small>/mo</small></ui-sticker>
 	</div>
 
-	<h3>Custom tokens</h3>
-	<p>Set <code>--ui-sticker-bg</code>, <code>--ui-sticker-c</code> and <code>--ui-sticker-sz</code> for full control.</p>
-	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-sticker style="--ui-sticker-bg: hotpink; --ui-sticker-c: black;">Sale</ui-sticker>
-		<ui-sticker variant="burst" style="--ui-sticker-bg: gold; --ui-sticker-c: #222; --ui-sticker-sz: 6em;">★ Top pick</ui-sticker>
+	<h3>Gradient (color + color-end)</h3>
+	<p>Add <code>color-end</code> for a two-stop <code>linear-gradient</code> background. Direction is the typed <code>angle="&lt;angle&gt;"</code> attribute (default <code>90deg</code>, left→right). Recreated from the original tactical badges.</p>
+	<div class="row">
+		<ui-sticker variant="fs(sm)" color="#38BC90" color-end="#21A7AE" size="2xl"><small>GRAB A</small><strong>DEAL</strong></ui-sticker>
+		<ui-sticker variant="fs(sm)" color="#FB9C21" color-end="#AD625A" size="2xl"><small>FAMILY</small><strong>DEAL</strong></ui-sticker>
+		<ui-sticker angle="180deg" color="#111111" color-end="purple" size="2xl"><small>HELLO</small><strong>SVG</strong></ui-sticker>
+		<ui-sticker variant="burst" angle="135deg" color="oklch(0.8 0.18 90)" color-end="oklch(0.6 0.22 30)" size="2xl"><span>HOT</span></ui-sticker>
+		<ui-sticker variant="heart" angle="180deg" color="#d91f26" color-end="#690f12" size="2xl"><span>LOVE</span></ui-sticker>
+	</div>
+
+	<h3>Speech balloon</h3>
+	<p>Use <code>variant="speech(l)"</code> or <code>speech(r)"</code> for a rounded balloon with a tail (bottom-left / bottom-right). The tail inherits the fill — solid or gradient — and is included in the shadow.</p>
+	<div class="row">
+		<ui-sticker variant="speech(l)" color="#2980b9"><span>Hi!</span></ui-sticker>
+		<ui-sticker variant="speech(r)" color="gold"><small>NEW</small><strong>Sale</strong></ui-sticker>
+		<ui-sticker variant="speech(l) sh(solid)" color="#CB2647"><small>SPAR</small><strong>50%</strong></ui-sticker>
+		<ui-sticker variant="speech(r)" color="#38BC90" color-end="#21A7AE"><strong>Deal</strong></ui-sticker>
+	</div>
+
+	<h3>Solid shadow</h3>
+	<p>Use <code>variant="sh(solid)"</code> for a hard offset shadow — like the tactical speech balloons (<code>drop-shadow(.5em .5em 0 #000)</code>). Tune with <code>--ui-sticker-shadow-x/-y/-color</code>.</p>
+	<div class="row">
+		<ui-sticker variant="sh(solid)" color="orange"><span>SALE</span></ui-sticker>
+		<ui-sticker variant="burst sh(solid)" color="#CB2647"><span>-20%</span></ui-sticker>
+		<ui-sticker variant="spark sh(solid)" color="#2980b9"><small>UP TO</small><strong>40%</strong></ui-sticker>
+		<ui-sticker variant="heart sh(solid)" color="#d91f26"><strong>♥</strong></ui-sticker>
+	</div>
+
+	<h3>Fit to width (<code>text-fit</code>)</h3>
+	<p>Use <code>variant="fit"</code> to grow each line element to fill the box width with native <code>text-fit</code> — no overflow, no SVG/JS. <code>fit(shrink)</code> shrinks overlong lines. Progressive enhancement (Chrome 150+); elsewhere the <code>cqi</code> sizing is the fallback.</p>
+	<div class="row">
+		<ui-sticker variant="fit" theme="red"><span>DEAL</span></ui-sticker>
+		<ui-sticker variant="fit" theme="blue"><small>UP TO</small><strong>40%</strong></ui-sticker>
+		<ui-sticker variant="fit(shrink)" theme="green"><small>FROM</small><strong>$9</strong><small>/mo</small></ui-sticker>
+		<ui-sticker variant="burst fit" theme="orange"><span>WOW</span></ui-sticker>
+	</div>
+
+	<h3>Text sticker</h3>
+	<p>Use <code>variant="text"</code> for puffy "sticker lettering" — no box, just glyphs with a thick white stroke (the puff), a solid colored fill and a colored keyline. The fill comes from <code>color</code>/<code>theme</code>. Pick a font with <code>text(industrial|slab|antique|handwritten)</code> (<a href="https://modernfontstacks.com/">modern font stacks</a>, no webfont). Size via <code>--ui-sticker-text-size</code>.</p>
+	<div class="row">
+		<ui-sticker variant="text" color="#ffcc33"><span>hello</span></ui-sticker>
+		<ui-sticker variant="text(slab)" color="#8fa0f8"><span>blueming</span></ui-sticker>
+		<ui-sticker variant="text(industrial)" color="#7ec27c"><span>palette</span></ui-sticker>
+		<ui-sticker variant="text(antique)" color="#f1c1ff"><span>LILAC</span></ui-sticker>
+		<ui-sticker variant="text(handwritten)" color="#ff9797"><span>Friday</span></ui-sticker>
 	</div>
 
 	<h3>With opposite color-scheme</h3>
-	<div class="bdrs-md cs-opposite pb-3 pi-3" style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+	<div class="row bdrs-md cs-opposite pb-3 pi-3">
 		<ui-sticker>Save 20%</ui-sticker>
-		<ui-sticker color="success">Best value</ui-sticker>
-		<ui-sticker variant="burst" color="error">-20%</ui-sticker>
+		<ui-sticker theme="green">Best value</ui-sticker>
+		<ui-sticker variant="burst" theme="red">-20%</ui-sticker>
 	</div>
 
 	<br>
 	<h3>With right-to-left</h3>
-	<div dir="rtl" style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+	<div class="row" dir="rtl">
 		<ui-sticker>وفّر ٢٠٪</ui-sticker>
-		<ui-sticker variant="burst" color="error">٪٢٠-</ui-sticker>
+		<ui-sticker variant="burst" theme="red">٪٢٠-</ui-sticker>
 	</div>
 </body>
 </html>
