@@ -171,17 +171,61 @@
 			--ui-sticker-shadow: drop-shadow(var(--ui-sticker-shadow-x) var(--ui-sticker-shadow-y) 0 var(--ui-sticker-shadow-color));
 		}
 
+		/* glass — frosted, semi-transparent badge for overlaying on product images. Tints
+		   with the system Canvas/CanvasText colors, so it auto-flips for light/dark without
+		   a media query. The blur reveals the image behind. Best on the disc/round shapes. */
+		&[variant~="glass"] {
+			--ui-sticker-bg: color-mix(in srgb, Canvas 55%, transparent);
+			--ui-sticker-c: CanvasText;
+			-webkit-backdrop-filter: var(--ui-sticker-glass-filter, blur(8px) saturate(180%));
+			backdrop-filter: var(--ui-sticker-glass-filter, blur(8px) saturate(180%));
+			border: var(--border-width, 1px) solid color-mix(in srgb, #fff 30%, transparent);
+			/* the "liquid glass" tell: a bright specular highlight inset at the top edge,
+			   a soft inset shade at the bottom, and a soft outer drop so the badge lifts off
+			   the photo. (For true refraction, point --ui-sticker-glass-filter at an SVG
+			   feDisplacementMap filter — out of scope for the component itself.) */
+			box-shadow:
+				inset 0 1px 1px color-mix(in srgb, #fff 65%, transparent),
+				inset 0 -2px 4px color-mix(in srgb, #000 18%, transparent),
+				0 3px 10px color-mix(in srgb, #000 20%, transparent);
+		}
+		/* tinted glass: blend the color/theme into the frost (read fresh, no self-ref) */
+		&[variant~="glass"][color] { --ui-sticker-bg: color-mix(in srgb, attr(color type(<color>), Canvas) 60%, transparent); }
+		&[variant~="glass"][theme] { --ui-sticker-bg: color-mix(in srgb, var(--_theme-bg) 60%, transparent); }
+
+		/* glass on a CLIPPED shape (blob/burst/…): the visible shape is the ::before, not
+		   the host — so move the frost there (blur clipped to the silhouette) and drop the
+		   host's square border/rim. Lift comes from a soft drop-shadow on the host filter,
+		   which follows the silhouette. (The crisp inset specular rim can't survive a clip,
+		   so it's traded for the frosted fill + soft shadow.) */
+		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"])[variant~="glass"] {
+			-webkit-backdrop-filter: none;
+			backdrop-filter: none;
+			border: 0;
+			box-shadow: none;
+			--ui-sticker-shadow: drop-shadow(0 3px 8px color-mix(in srgb, #000 28%, transparent));
+		}
+		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"])[variant~="glass"]::before {
+			-webkit-backdrop-filter: var(--ui-sticker-glass-filter, blur(8px) saturate(180%));
+			backdrop-filter: var(--ui-sticker-glass-filter, blur(8px) saturate(180%));
+		}
+
 		/* Clipped shapes paint their fill on a ::before LAYER so the HOST stays unclipped
 		   and its drop-shadow can follow the silhouette. (clip-path on the host clips the
 		   filter result, so the shadow — which lives OUTSIDE the shape — gets cut away.)
 		   Each shape variant just sets --ui-sticker-shape. */
-		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"]) {
+		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"]) {
 			background: none;          /* fill moves to ::before */
 			border-radius: 0;
 			isolation: isolate;        /* stacking context so ::before sits behind the text */
+		}
+		/* positioning context for the ::before, at ZERO specificity (&:where) so an
+		   external placement — e.g. ui-card's sticker(te) `position: absolute` — wins and
+		   the badge still sits in its corner instead of stretching to fill the media. */
+		&:where([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"]) {
 			position: relative;
 		}
-		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"])::before {
+		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"])::before {
 			background: var(--ui-sticker-bg, var(--color-accent));
 			clip-path: var(--ui-sticker-shape);
 			content: "";
@@ -195,6 +239,14 @@
 			--ui-sticker-shape: var(--ui-sticker-clip-path);
 			--ui-sticker-padding: 0.6em;
 			--ui-sticker-fs: 30cqi;
+		}
+
+		/* blob — organic rounded splat (shape() with smooth curves). Roundish, so a
+		   large inner area — light padding, near-default text size. */
+		&[variant~="blob"] {
+			--ui-sticker-padding: 0.7em;
+			--ui-sticker-fs: 34cqi;
+			--ui-sticker-shape: shape(from 90.89% 45.17%, curve to 92.79% 55.28% with 90.99% 50.00%, smooth to 93.61% 65.99%, smooth to 85.76% 72.82%, smooth to 76.90% 78.85%, smooth to 71.48% 87.66%, smooth to 63.31% 95.20%, smooth to 53.19% 93.00%, smooth to 41.81% 92.46%, smooth to 31.96% 92.67%, smooth to 26.69% 82.05%, smooth to 21.44% 73.76%, smooth to 14.78% 67.57%, smooth to 8.98% 59.50%, smooth to 5.96% 49.99%, smooth to 9.52% 40.71%, smooth to 13.81% 31.61%, smooth to 15.79% 20.88%, smooth to 22.18% 12.88%, smooth to 32.83% 10.92%, smooth to 43.10% 11.79%, smooth to 51.97% 13.79%, smooth to 61.90% 12.13%, smooth to 73.63% 9.66%, smooth to 79.98% 17.38%, smooth to 86.16% 26.73%, smooth to 91.37% 34.63%, smooth to 90.89% 45.17%);
 		}
 
 		/* spark — sharp 10-point star (from the SVG poly-star-10). Tips touch the box;
@@ -302,6 +354,9 @@
 			aspect-ratio: auto;
 			background: none;
 			border-radius: 0;
+			/* reuse the `angle` attribute to tilt the lettering (no gradient on text, so
+			   it's free here) — e.g. angle="-4deg" for a casual, hand-placed look */
+			rotate: attr(angle type(<angle>), 0deg);
 			/* flex column: stacks lines, centers them, and sizes to the text (the square
 			   grid box with its min-sizes is gone for text stickers) */
 			align-items: center;

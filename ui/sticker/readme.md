@@ -4,9 +4,10 @@ A CSS-first sticker component for promotional callouts — "Save 20%", "Best val
 
 ## Features
 
-- Disc (default), `burst`, `spark`, `sunburst`, `heart` or `speech` balloon shape (`variant`)
+- Disc (default), `burst`, `spark`, `sunburst`, `heart`, `blob` or `speech` balloon shape (`variant`)
 - `color` = any CSS color with auto-contrast ink, gradients via `color-end`, or `theme` bundles
 - Six box sizes (`sm`–`3xl`) with fluid `cqi` text; `fit` for native `text-fit` fill
+- `glass` frosted badge (auto light/dark) for overlaying on product photos
 - Soft or solid (`sh(solid)`) drop-shadows that follow clipped shapes
 - Token-driven background and ink color
 - Square aspect-ratio with centered content
@@ -73,7 +74,7 @@ The web component uses the **exact same** HTML structure as CSS-only — the JS 
 | `angle` | angle | Gradient direction when `color-end` is set (e.g. `180deg`); default `90deg` |
 | `theme` | string | Decorative color bundle (bg + ink): `red`, `orange`, `green`, `blue`, `accent`, `dark`, `light`, `subtle` |
 | `size` | string | Box size: `sm`, `md`, `lg` (default), `xl`, `2xl`, `3xl` |
-| `variant` | string | Space-separated tokens: shape (`burst`, `spark`, `sunburst`, `heart`, `speech(l)`, `speech(r)`) · `text` / `text(industrial\|slab\|antique\|handwritten)` · shadow (`sh(sm)`…`sh(2xl)`, `sh(solid)`) · font-scale (`fs(xs)`…`fs(2xl)`) · font-weight (`fw(normal)`…`fw(black)`) · `fit` / `fit(shrink)` · `gap(sm\|md\|lg)` |
+| `variant` | string | Space-separated tokens: shape (`burst`, `spark`, `sunburst`, `heart`, `blob`, `speech(l)`, `speech(r)`) · `text` / `text(industrial\|slab\|antique\|handwritten)` · `glass` · shadow (`sh(sm)`…`sh(2xl)`, `sh(solid)`) · font-scale (`fs(xs)`…`fs(2xl)`) · font-weight (`fw(normal)`…`fw(black)`) · `fit` / `fit(shrink)` · `gap(sm\|md\|lg)` |
 
 ---
 
@@ -210,7 +211,7 @@ The sticker is its own query container, so **element** lines size in `cqi` and s
 
 No `cq-box` wrapper is needed — each element line is already a descendant of the sticker container, so its `cqi` resolves against the sticker.
 
-The base line is `max(10px, 40cqi)` — i.e. **40 % of the box**, with a `10px` floor so it stays legible on a very small sticker. `cqi` resolves against the *content* box, so the clipped shapes (`burst`, `spark`, `sunburst`, `heart`) keep their padding small and lower the base a little so the text still fits the inner outline.
+The base line is `max(10px, 40cqi)` — i.e. **40 % of the box**, with a `10px` floor so it stays legible on a very small sticker. `cqi` resolves against the *content* box, so the clipped shapes (`burst`, `spark`, `sunburst`, `heart`, `blob`) keep their padding small and lower the base a little so the text still fits the inner outline.
 
 ### Per-line size from the tag — no inline styles
 
@@ -319,6 +320,7 @@ The default is a disc. Set `variant` for a clipped shape:
 | `spark` | sharp 10-point star (price seal) | `clip-path: polygon()` |
 | `sunburst` | fine 40-point sawtooth ring | `clip-path: polygon()` |
 | `heart` | heart | `clip-path: shape()` |
+| `blob` | organic rounded splat | `clip-path: shape()` |
 | `speech(l)` / `speech(r)` | rounded balloon + tail (bottom-left / -right) | `border-radius` + `::after` tail |
 
 ```html
@@ -327,8 +329,11 @@ The default is a disc. Set `variant` for a clipped shape:
 <ui-sticker variant="spark" theme="red"><span>Spark</span></ui-sticker>
 <ui-sticker variant="sunburst" theme="blue"><span>Sunburst</span></ui-sticker>
 <ui-sticker variant="heart" theme="red">Heart</ui-sticker>
+<ui-sticker variant="blob" theme="accent"><small>NEW</small><strong>2026</strong></ui-sticker>
 <ui-sticker variant="speech(l)" color="#2980b9"><span>Hi!</span></ui-sticker>
 ```
+
+The clipped shapes (`burst`, `spark`, `sunburst`, `heart`, `blob`) draw their fill on a `::before` layer so the host stays unclipped and the `drop-shadow` follows the silhouette.
 
 The balloon isn't square: it uses a `5/4` aspect-ratio and a tail that **inherits the fill** (solid or gradient) and is included in the `drop-shadow`.
 
@@ -356,6 +361,27 @@ The fill color comes from `color`/`theme`. Pick a system font (no webfont) with 
 ```
 
 Tune with `--ui-sticker-text-size` (default `3.5em`), `--ui-sticker-text-stroke-w`/`-c` (puff), `--ui-sticker-text-outline-w`/`-c` (keyline), and `--ui-sticker-text-fill` (override the fill color). Sizes in `em` (the `cqi` box containment is dropped for this variant).
+
+**Slight tilt:** text stickers reuse the `angle` attribute (free here — there's no gradient) to rotate the lettering for a hand-placed look:
+
+```html
+<ui-sticker variant="text(handwritten)" color="#ff9797" angle="-3deg"><span>Friday</span></ui-sticker>
+```
+
+## Glass (`variant="glass"`)
+
+A frosted, semi-transparent badge for overlaying on product photos — the modern alternative to ribbons/price-tags. It tints with the system `Canvas`/`CanvasText` colors, so it **auto-flips for light/dark** with no media query, and the `backdrop-filter` blurs the image behind. A `box-shadow` adds the "liquid glass" specular rim (inset highlight + soft outer lift). Add `color`/`theme` to tint the frost.
+
+```html
+<ui-card variant="vis(media)" media="asr(4/3) sticker(te)">
+  <cq-box><ui-media>
+    <img src="product.jpg" alt="">
+    <ui-sticker variant="glass"><span>NEW</span></ui-sticker>
+  </ui-media></cq-box>
+</ui-card>
+```
+
+Works on the **disc** (default) and the clipped shapes (`blob`, `burst`, …) — on a clipped shape the frost moves to the `::before` (blurred to the silhouette) and the crisp rim is traded for a soft silhouette shadow. Override `--ui-sticker-glass-filter` (default `blur(8px) saturate(180%)`) to tune the blur — or point it at an SVG `feDisplacementMap` filter for true refraction.
 
 ## Fit to width (`text-fit`)
 

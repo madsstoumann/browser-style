@@ -7,9 +7,17 @@
 	<meta name="description" content="CSS-first sticker component with optional web component wrapper.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/ui/card/index.css">
 	<link rel="stylesheet" href="ui-sticker.css">
 	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Freckle+Face&family=Sedgwick+Ave+Display&display=swap');
 		.row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+		.cards { display: flex; gap: 1rem; flex-wrap: wrap; }
+		.cards ui-card { inline-size: 240px; }
+		/* custom webfonts → the text-sticker font token (unlayered, so they beat the
+		   built-in text() font tokens) */
+		.font-freckle  { --ui-sticker-text-font: "Freckle Face", system-ui; }
+		.font-sedgwick { --ui-sticker-text-font: "Sedgwick Ave Display", cursive; }
 	</style>
 </head>
 <body>
@@ -27,25 +35,25 @@
 	</p>
 
 	<h3>Shapes</h3>
-	<p>Use variants <code>burst</code>, <code>spark</code>, <code>sunburst</code> and <code>heart</code>.</p>
+	<p>Use variants <code>burst</code>, <code>spark</code>, <code>sunburst</code>, <code>heart</code> and <code>blob</code>.</p>
 	<p>Each line is a semantic element — <code>&lt;small&gt;</code> for a label, <code>&lt;strong&gt;</code> for the headline — with preset <code>cqi</code> sizes, so no inline font-size is needed and the text scales with the box.</p>
 	<div class="row">
 		<ui-sticker variant="burst" size="2xl" theme="green"><small>SAVE</small><strong>20%</strong></ui-sticker>
 		<ui-sticker variant="spark fs(lg)" color="#BC2330" size="2xl"><small>SAVE</small><strong>69<sup>95</sup></strong></ui-sticker>
-		<ui-sticker variant="sunburst" color="#6DB5D5" size="2xl"><small>UP TO</small><strong>40%</strong></ui-sticker>
 		<ui-sticker variant="sunburst" theme="blue" size="2xl"><small>UP TO</small><strong>50%</strong></ui-sticker>
 		<ui-sticker variant="heart gap(md)" color="#BC2330" size="2xl"><small>HOLIDAY</small><strong>$50</strong></ui-sticker>
+		<ui-sticker variant="blob fs(sm)" color="#7B5EA7" size="2xl"><small>NEW</small><strong>2026</strong></ui-sticker>
 	</div>
 
 	<h3>Sizes</h3>
 	<p>The <code>size</code> attribute scales the <strong>box</strong> (<code>sm</code>, <code>md</code>, <code>lg</code> default, <code>xl</code>, <code>2xl</code>, <code>3xl</code>); element lines scale with it via <code>cqi</code>.</p>
 	<div class="row">
-		<ui-sticker size="sm" theme="red"><span>-20%</span></ui-sticker>
-		<ui-sticker size="md" theme="red"><span>-20%</span></ui-sticker>
-		<ui-sticker size="lg" theme="red"><span>-20%</span></ui-sticker>
-		<ui-sticker size="xl" theme="red"><span>-20%</span></ui-sticker>
-		<ui-sticker size="2xl" theme="red"><span>-20%</span></ui-sticker>
-		<ui-sticker size="3xl" theme="red"><span>-20%</span></ui-sticker>
+		<ui-sticker size="sm" theme="red"><span>20%</span></ui-sticker>
+		<ui-sticker size="md" theme="red"><span>20%</span></ui-sticker>
+		<ui-sticker size="lg" theme="red"><span>20%</span></ui-sticker>
+		<ui-sticker size="xl" theme="red"><span>20%</span></ui-sticker>
+		<ui-sticker size="2xl" theme="red"><span>20%</span></ui-sticker>
+		<ui-sticker size="3xl" theme="red"><span>20%</span></ui-sticker>
 	</div>
 
 	<h3>Shadow</h3>
@@ -80,7 +88,7 @@
 		<ui-sticker variant="fs(sm)" color="#38BC90" color-end="#21A7AE" size="2xl"><small>GRAB A</small><strong>DEAL</strong></ui-sticker>
 		<ui-sticker variant="fs(sm)" color="#FB9C21" color-end="#AD625A" size="2xl"><small>FAMILY</small><strong>DEAL</strong></ui-sticker>
 		<ui-sticker angle="180deg" color="#111111" color-end="purple" size="2xl"><small>HELLO</small><strong>SVG</strong></ui-sticker>
-		<ui-sticker variant="burst" angle="135deg" color="oklch(0.8 0.18 90)" color-end="oklch(0.6 0.22 30)" size="2xl"><span>HOT</span></ui-sticker>
+		<ui-sticker variant="sunburst" angle="135deg" color="oklch(0.8 0.18 90)" color-end="oklch(0.6 0.22 30)" size="2xl"><span>HOT</span></ui-sticker>
 		<ui-sticker variant="heart" angle="180deg" color="#d91f26" color-end="#690f12" size="2xl"><span>LOVE</span></ui-sticker>
 	</div>
 
@@ -114,25 +122,29 @@
 	<h3>Text sticker</h3>
 	<p>Use <code>variant="text"</code> for puffy "sticker lettering" — no box, just glyphs with a thick white stroke (the puff), a solid colored fill and a colored keyline. The fill comes from <code>color</code>/<code>theme</code>. Pick a font with <code>text(industrial|slab|antique|handwritten)</code> (<a href="https://modernfontstacks.com/">modern font stacks</a>, no webfont). Size via <code>--ui-sticker-text-size</code>.</p>
 	<div class="row">
-		<ui-sticker variant="text" color="#ffcc33"><span>hello</span></ui-sticker>
-		<ui-sticker variant="text(slab)" color="#8fa0f8"><span>blueming</span></ui-sticker>
-		<ui-sticker variant="text(industrial)" color="#7ec27c"><span>palette</span></ui-sticker>
-		<ui-sticker variant="text(antique)" color="#f1c1ff"><span>LILAC</span></ui-sticker>
-		<ui-sticker variant="text(handwritten)" color="#ff9797"><span>Friday</span></ui-sticker>
+		<ui-sticker variant="text" color="#ffcc33" angle="-4deg" class="font-freckle"><span>Hello World</span></ui-sticker>
+		<ui-sticker variant="text" color="#8fa0f8" angle="3deg" class="font-sedgwick"><span>Hurry Up!</span></ui-sticker>
+		<ui-sticker variant="text(industrial)" color="#7ec27c" angle="-2deg"><span>palette</span></ui-sticker>
+		<ui-sticker variant="text(antique)" color="#f1c1ff" angle="2deg"><span>LILAC</span></ui-sticker>
+		<ui-sticker variant="text(handwritten)" color="#ff9797" angle="-3deg"><span>Friday</span></ui-sticker>
 	</div>
 
-	<h3>With opposite color-scheme</h3>
-	<div class="row bdrs-md cs-opposite pb-3 pi-3">
-		<ui-sticker>Save 20%</ui-sticker>
-		<ui-sticker theme="green">Best value</ui-sticker>
-		<ui-sticker variant="burst" theme="red">-20%</ui-sticker>
+	<h3>Glass (on product images)</h3>
+	<p>Use <code>variant="glass"</code> for a frosted, semi-transparent badge that reads well over any photo. It tints with the system <code>Canvas</code>/<code>CanvasText</code> colors (auto light/dark) and blurs the image behind. Add <code>color</code>/<code>theme</code> to tint the frost. Shown on image-only <code>&lt;ui-card&gt;</code>s, positioned with the card's <code>sticker(te)</code> token.</p>
+	<div class="cards">
+		<ui-card variant="vis(media)" media="asr(4/3) sticker(te)">
+			<cq-box><ui-media><img src="/ui/card/assets/ergochair.jpg" alt=""><ui-sticker variant="glass"><span>NEW</span></ui-sticker></ui-media></cq-box>
+		</ui-card>
+		<ui-card variant="vis(media)" media="asr(4/3) sticker(ts)">
+			<cq-box><ui-media><img src="/ui/card/assets/aurasoundpro.jpg" alt=""><ui-sticker variant="glass" color="#BC2330"><span>-20%</span></ui-sticker></ui-media></cq-box>
+		</ui-card>
+		<ui-card variant="vis(media)" media="asr(4/3) sticker(te)">
+			<cq-box><ui-media><img src="/ui/card/assets/brewandbean.jpg" alt=""><ui-sticker variant="glass" theme="dark"><small>SALE</small><strong>½</strong></ui-sticker></ui-media></cq-box>
+		</ui-card>
+		<ui-card variant="vis(media)" media="asr(4/3) sticker(te)">
+			<cq-box><ui-media><img src="/ui/card/assets/fittrackpro.jpg" alt=""><ui-sticker variant="blob glass" color="#7B5EA7"><small>NEW</small><strong>26</strong></ui-sticker></ui-media></cq-box>
+		</ui-card>
 	</div>
 
-	<br>
-	<h3>With right-to-left</h3>
-	<div class="row" dir="rtl">
-		<ui-sticker>وفّر ٢٠٪</ui-sticker>
-		<ui-sticker variant="burst" theme="red">٪٢٠-</ui-sticker>
-	</div>
 </body>
 </html>
