@@ -58,4 +58,32 @@
 		background: var(--_theme-bg);
 		color: var(--_theme-c);
 	}
+
+	/* brand shapes — recolor the disc into a platform badge, keeping the
+	   white <ui-icon> arrow on top. corner-shape: superellipse() carves the
+	   YouTube squircle; where unsupported it degrades to plain border-radius. */
+	:where(ui-play[variant~="youtube"]) button {
+		/* full-size radius + squircle = the YouTube badge. Gap comes from a smaller
+		   glyph (NOT padding — padding would overflow the box and break the ratio).
+		   All sz-relative so it scales with `size` and font-size. */
+		/* --ui-play-icon-sz: calc(var(--ui-play-sz, 3em) * 0.42); */
+		aspect-ratio: 1.422;
+		background: var(--ui-play-bg, #ff0033);
+		border-radius: var(--ui-play-radius, var(--ui-play-sz, 3em));
+		corner-shape: var(--ui-play-corner, squircle);
+		width: 80px;
+	}
+	:where(ui-play[variant~="youtube"]) button:is(:hover, :focus-visible) {
+		background: var(--ui-play-bg-hover, #d10029);
+	}
+
+	/* vimeo — cyan disc; keeps the <ui-icon> arrow */
+	:where(ui-play[variant~="vimeo"]) button {
+		aspect-ratio: 1;
+		background: var(--ui-play-bg, #1ab7ea);
+		border-radius: var(--ui-play-radius, var(--radius-circle, 50%));
+	}
+	:where(ui-play[variant~="vimeo"]) button:is(:hover, :focus-visible) {
+		background: var(--ui-play-bg-hover, #138fb8);
+	}
 }

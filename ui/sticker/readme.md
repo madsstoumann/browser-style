@@ -74,7 +74,7 @@ The web component uses the **exact same** HTML structure as CSS-only — the JS 
 | `angle` | angle | Gradient direction when `color-end` is set (e.g. `180deg`); default `90deg` |
 | `theme` | string | Decorative color bundle (bg + ink): `red`, `orange`, `green`, `blue`, `accent`, `dark`, `light`, `subtle` |
 | `size` | string | Box size: `sm`, `md`, `lg` (default), `xl`, `2xl`, `3xl` |
-| `variant` | string | Space-separated tokens: shape (`burst`, `spark`, `sunburst`, `heart`, `blob`, `speech(l)`, `speech(r)`) · `text` · `glass` · shadow (`sh(sm)`…`sh(2xl)`, `sh(solid)`) · font-scale (`fs(xs)`…`fs(2xl)`) · font-weight (`fw(normal)`…`fw(black)`) · `fit` / `fit(shrink)` · `gap(sm\|md\|lg)` |
+| `variant` | string | Space-separated tokens: shape (`burst`, `spark`, `sunburst`, `heart`, `blob`, `speech(l)`, `speech(r)`) · `text` · `glass` · ink (`ink(white)`, `ink(black)`) · shadow (`sh(sm)`…`sh(2xl)`, `sh(solid)`) · text-shadow (`tsh(sm)`…`tsh(xl)`, `tsh(solid)`) · font-scale (`fs(xs)`…`fs(2xl)`) · font-weight (`fw(normal)`…`fw(black)`) · `fit` / `fit(shrink)` · `gap(sm\|md\|lg)` |
 
 ---
 
@@ -215,13 +215,15 @@ The base line is `max(10px, 40cqi)` — i.e. **40 % of the box**, with a `10px` 
 
 ### Per-line size from the tag — no inline styles
 
-`--ui-sticker-font-size` is the single knob; `<small>` and `<strong>` derive from it by a fixed ratio, so changing it (or `fs()`) scales every line together:
+The base line size is `--ui-sticker-fs` (× `--ui-sticker-fs-scale`, which `fs()` sets); `<small>` and `<strong>` derive from it by a fixed ratio, so changing the base (or `fs()`) scales every line together:
 
 | Tag | Role | Size |
 |-----|------|------|
-| `<small>` | label | small (`--ui-sticker-fs-sm`) |
-| `<strong>` | headline | large (`--ui-sticker-fs-lg`) |
-| `<span>` / text node | body | base (`--ui-sticker-font-size`) |
+| `<small>` | label | 0.55 × base |
+| `<strong>` | headline | 1.1 × base |
+| `<span>` / text node | body | base |
+
+> The *computed* per-line size and the two derived sizes are internal (`--_size`, `--_size-sm`, `--_size-lg`) — set `--ui-sticker-fs` / `fs()` rather than overriding them directly.
 
 Nudge the **whole** sticker up or down with the `fs()` variant — it's a *scale multiplier* on the base, so the `small`/`strong`/`sup` ratios stay intact and it composes with any shape's base size. Useful when a long headline (e.g. `DEAL`) runs a touch large:
 
@@ -359,7 +361,7 @@ Tune with `--ui-sticker-text-size` (default `3.5em`), `--ui-sticker-text-stroke-
 **Slight tilt:** text stickers reuse the `angle` attribute (free here — there's no gradient) to rotate the lettering for a hand-placed look:
 
 ```html
-<ui-sticker variant="text(handwritten)" color="#ff9797" angle="-3deg"><span>Friday</span></ui-sticker>
+<ui-sticker variant="text" color="#ff9797" angle="-3deg" class="font-bagel"><span>Last Call</span></ui-sticker>
 ```
 
 ## Glass (`variant="glass"`)
@@ -412,15 +414,24 @@ Override the `burst` star shape via `--ui-sticker-clip-path` with any `polygon()
 | Token | Default | Description |
 |-------|---------|-------------|
 | `--ui-sticker-bg` | `var(--color-accent)` | Background color |
-| `--ui-sticker-c` | `hsl(0 0% 100%)` | Text color |
-| `--ui-sticker-font-size` | `0.875em` | Font size (scales the whole sticker) |
-| `--ui-sticker-font-weight` | `var(--font-weight-bold, 700)` | Font weight |
+| `--ui-sticker-c` | `hsl(0 0% 100%)` | Text/ink color |
+| `--ui-sticker-sz` | `5em` | Box size (disc diameter); also set by `size=` |
+| `--ui-sticker-fs` | `40cqi` | Base line size (clip shapes lower this) |
+| `--ui-sticker-fs-scale` | `1` | Multiplier on the base (set by `fs()`) |
+| `--ui-sticker-font-weight` | `var(--font-weight-bold, 700)` | Font weight (set by `fw()`) |
 | `--ui-sticker-gap` | `0.16` | Line gap as a unitless factor of the font-size (scales with the box) |
-| `--ui-sticker-sz` | `4em` | Minimum width (disc diameter) |
-| `--ui-sticker-radius` | `var(--radius-circle, 50%)` | Corner radius (disc shape) |
-| `--ui-sticker-clip-path` | 24-point star `polygon()` | Clip path for `variant="burst"` |
+| `--ui-sticker-radius` | `var(--radius-circle, 50%)` | Corner radius (disc / speech) |
+| `--ui-sticker-clip-path` | 24-point star `polygon()` | Shape for `variant="burst"` |
+| `--ui-sticker-shadow-x` / `-y` / `-color` | `0.25em` / `0.25em` / `#000` | Offset + tint for `sh(solid)` |
+| `--ui-sticker-text-shadow` | `none` | Text-shadow on the lines (set by `tsh()`, in `cqi`) |
+| `--ui-sticker-text-shadow-color` | `contrast-color(ink)` | `tsh()` tint — auto the **opposite** of the ink (white text → dark shadow) |
+| `--ui-sticker-glass-filter` | `blur(8px) saturate(180%)` | `backdrop-filter` for `glass` |
+| `--ui-sticker-text-size` | `3.5em` | Font size for `variant="text"` |
+| `--ui-sticker-text-font` | handwritten stack | Typeface for `variant="text"` |
+| `--ui-sticker-text-stroke-w` / `-c` | `0.2em` / `#fff` | The puff (white stroke) |
+| `--ui-sticker-text-outline-w` / `-c` | `2px` / the fill | The keyline |
 
-> The sticker is sized in `em`, so changing `--ui-sticker-font-size` (or setting `size="sm\|md\|lg"`) scales padding and diameter proportionally.
+> Lines size in `cqi` so they scale with the box; changing `--ui-sticker-sz` (or `size=`) resizes the box and the text follows.
 
 Override per instance or globally:
 
@@ -432,6 +443,21 @@ ui-sticker {
 ```
 
 ---
+
+## Implementation notes
+
+The non-obvious "why" behind the CSS (kept here so the stylesheet stays terse):
+
+- **`cqi` resolves against an *ancestor* container, never the element itself.** The sticker is its own `container-type: inline-size`, so a line's `cqi` font-size resolves against the sticker — but only because the line is a **child**. The host can't size *itself* in `cqi`.
+- **Line gap is a child `margin`, not `row-gap`.** To make the gap scale with the box it must be a fraction of the `cqi` font-size; `cqi` only resolves correctly on the child (`& > * + *` → `margin-block-start`). `row-gap` on the host would resolve `cqi` against the wrong container, and an `em` `row-gap` wouldn't scale with the box.
+- **Square floor on *both* axes.** `aspect-ratio: 1/1` alone can't keep a short callout square (`min-width` is only a floor with no definite axis to derive height from), so both `min-block-size` and `min-inline-size` are set.
+- **Clipped shapes draw their fill on a `::before`.** `clip-path` on an element clips the *result of its `filter`*, so a host `drop-shadow` would be cut away. Instead the host stays unclipped (shadow follows the silhouette) and the `::before` carries `background` + `clip-path: var(--_shape)`.
+- **Shape positioning is zero-specificity (`&:where(…)`).** The `::before` needs a positioned host, but a normal `position: relative` would out-specify `ui-card`'s `sticker(te)` `position: absolute` and the badge would stretch to fill the media instead of sitting in a corner. `&:where(…)` gives it 0 specificity so an external placement wins.
+- **`text` fill uses `-webkit-text-fill-color`, not `background-clip: text`.** `background-clip: text` does **not** composite as a fill alongside `-webkit-text-stroke`, so the gradient never paints — a solid fill is used (the white stroke is the "puff", a 4-way `drop-shadow` is the keyline).
+- **`fit` targets the line elements.** `text-fit` scales the text in the box it's set on; the host (a grid) has no direct text runs, so `fit` goes on the lines with `grid-template-columns: 100%` to give them the box width. `…per-line` is a no-op on a single-line element (a block's last line isn't scaled), so `grow consistent` is used.
+- **`drop-shadow`, not `box-shadow`.** Only `drop-shadow` follows the clipped star/heart/blob outlines; `box-shadow` would be a rectangle.
+- **`angle` is dual-purpose.** It sets the gradient direction with `color-end`, and (since text stickers have no gradient) rotates the lettering on `variant="text"`.
+- **`tsh()` shadow auto-flips.** The ink is `contrast-color(bg)` (black/white), so the text-shadow tint defaults to `contrast-color(ink)` — i.e. the *opposite* of the ink (white text → dark shadow, black text → light shadow). Sized in `cqi` so it scales with the text.
 
 ## Accessibility
 

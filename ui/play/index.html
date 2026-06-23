@@ -71,6 +71,24 @@
 		<ui-play style="--ui-play-bg: hotpink; --ui-play-c: white;"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
 	</div>
 
+	<h3>Brand shapes</h3>
+	<p>Use <code>variant="youtube"</code> or <code>variant="vimeo"</code> to reshape the disc into a platform badge, keeping the white play arrow. YouTube is a red squircle via <code>corner-shape: superellipse()</code> (degrades to plain rounded corners where unsupported); Vimeo is a cyan disc. Override color with <code>--ui-play-bg</code> / <code>--ui-play-bg-hover</code>, corners with <code>--ui-play-radius</code> / <code>--ui-play-corner</code>.</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-play variant="youtube" size="lg"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play variant="vimeo" size="lg"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+	</div>
+	<p>Over media:</p>
+	<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+		<figure style="position: relative; margin: 0; inline-size: 16rem; aspect-ratio: 16/9; border-radius: .5rem; overflow: hidden;">
+			<img src="../card/assets/destinations.jpg" alt="" style="inline-size: 100%; block-size: 100%; object-fit: cover;">
+			<ui-play variant="youtube" size="lg" style="position: absolute; inset: 0; margin: auto; inline-size: max-content; block-size: max-content;"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		</figure>
+		<figure style="position: relative; margin: 0; inline-size: 16rem; aspect-ratio: 16/9; border-radius: .5rem; overflow: hidden;">
+			<img src="../card/assets/hubble.jpg" alt="" style="inline-size: 100%; block-size: 100%; object-fit: cover;">
+			<ui-play variant="vimeo" size="lg" style="position: absolute; inset: 0; margin: auto; inline-size: max-content; block-size: max-content;"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		</figure>
+	</div>
+
 	<h3>With opposite color-scheme</h3>
 	<div class="bdrs-md cs-opposite pb-3 pi-3" style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
 		<ui-play><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
