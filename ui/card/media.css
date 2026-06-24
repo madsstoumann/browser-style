@@ -98,12 +98,24 @@
 			transition: translate var(--ui-media-hv-track-dur, var(--duration-normal)) var(--_hv-ease), scale var(--_hv-dur) var(--_hv-ease);
 			translate: calc(var(--ui-media-mx, 0) * var(--ui-media-hv-track, 4%)) calc(var(--ui-media-my, 0) * var(--ui-media-hv-track, 4%));
 		}
+		/* cursor-counter drift (ioi.dk-style) — image sits oversized, shrinks on
+		   hover and drifts OPPOSITE the cursor. Needs the same pointer handler. */
+		:where([media*="hov(drift)"]) ui-media img,
+		ui-media:where([media*="hov(drift)"]) img {
+			scale: var(--ui-media-hv-drift-rest, 1.3);
+			transition: translate var(--ui-media-hv-track-dur, var(--duration-normal)) var(--_hv-ease), scale var(--_hv-dur) var(--_hv-ease);
+		}
+		:where([media*="hov(drift)"]:hover) ui-media img,
+		:where(ui-media[media*="hov(drift)"]:hover) img {
+			scale: var(--ui-media-hv-drift-hover, 1.2);
+			translate: calc(var(--ui-media-mx, 0) * -1 * var(--ui-media-hv-drift, 4%)) calc(var(--ui-media-my, 0) * -1 * var(--ui-media-hv-drift, 4%));
+		}
 	}
 	@media (prefers-reduced-motion: reduce) {
 		:where([media*="hov("]) ui-media img,
 		ui-media:where([media*="hov("]) img { transition: none; }
-		:where([media*="hov(track)"]) ui-media img,
-		ui-media:where([media*="hov(track)"]) img { translate: 0; }
+		:where([media*="hov(track)"], [media*="hov(drift)"]) ui-media img,
+		ui-media:where([media*="hov(track)"], [media*="hov(drift)"]) img { translate: 0; }
 	}
 
 	/* ============================================================

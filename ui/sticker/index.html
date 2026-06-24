@@ -33,12 +33,7 @@
 	<h1>UI: Sticker</h1>
 
 	<h2>CSS</h2>
-	<p>
-		<code>&lt;ui-sticker&gt;</code> is a CSS-first promotional callout — a round disc by default, or a shape via <code>variant</code> (<code>burst</code>, <code>spark</code>, <code>sunburst</code>, <code>heart</code>, <code>blob</code>, <code>speech(l|r)</code>, <code>text</code>). Use <code>fill</code> for any single background color (ink auto-contrasts), <code>ink</code> to set the text color explicitly, and <code>size</code> for the box scale.
-	</p>
-	<p>
-		This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript). See the <a href="wc-demo.html">web component demo</a> for the JS-enhanced version.
-	</p>
+	<p>CSS-first promotional callout. <code>fill</code> = background (ink auto-contrasts), <code>ink</code> = text color, <code>size</code> = box scale. CSS-only — see the <a href="wc-demo.html">web component demo</a> for the JS version.</p>
 
 	<h3>Variants</h3>
 	<p>The default is a disc; set <code>variant</code> = <code>burst</code>, <code>spark</code>, <code>sunburst</code>, <code>heart</code>, <code>blob</code>, <code>speech(l|r)</code> or <code>text</code>.</p>
@@ -56,18 +51,18 @@
 	</div>
 
 	<h3>Sizes &amp; shadow</h3>
-	<p>The <code>size</code> attribute scales the <strong>box</strong> (<code>sm</code>, <code>md</code>, <code>lg</code> default, <code>xl</code>, <code>2xl</code>, <code>3xl</code>); element lines follow via <code>cqi</code>. Here each step also takes a matching soft <code>shadow</code> (<code>sm</code>…<code>2xl</code>, via <code>filter: drop-shadow()</code>) so the elevation grows with the sticker. They also carry <code>font="tsh(md)"</code> — a <code>cqi</code> text-shadow that scales with the text.</p>
+	<p><code>size</code> = <code>sm</code>…<code>3xl</code>; lines follow via <code>cqi</code>. Each also takes a matching soft <code>shadow</code> and a <code>cqi</code> text-shadow (<code>font="shadow(md)"</code>).</p>
 	<div class="row">
-		<ui-sticker fill="#BC2F2F" font="medium tsh(md)" font-lead="black tsh(md)" ink="#fff" shadow="sm" size="sm"><small>ONLY</small><strong>$5</strong></ui-sticker>
-		<ui-sticker fill="#BC2F2F" font="medium tsh(md)" font-lead="black tsh(md)" ink="#fff" shadow="md" size="md"><small>ONLY</small><strong>$5</strong></ui-sticker>
-		<ui-sticker fill="#BC2F2F" font="medium tsh(md)" font-lead="black tsh(md)" ink="#fff" shadow="lg" size="lg"><small>ONLY</small><strong>$5</strong></ui-sticker>
-		<ui-sticker fill="#BC2F2F" font="medium tsh(md)" font-lead="black tsh(md)" ink="#fff" shadow="xl" size="xl"><small>ONLY</small><strong>$5</strong></ui-sticker>
-		<ui-sticker fill="#BC2F2F" font="medium tsh(md)" font-lead="black tsh(md)" ink="#fff" shadow="2xl" size="2xl"><small>ONLY</small><strong>$5</strong></ui-sticker>
-		<ui-sticker fill="#BC2F2F" font="medium tsh(md)" font-lead="black tsh(md)" ink="#fff" shadow="2xl" size="3xl"><small>ONLY</small><strong>$5</strong></ui-sticker>
+		<ui-sticker fill="#BC2F2F" font="medium shadow(md)" font-lead="black shadow(md)" ink="#fff" shadow="sm" size="sm"><small>ONLY</small><strong>$5</strong></ui-sticker>
+		<ui-sticker fill="#BC2F2F" font="medium shadow(md)" font-lead="black shadow(md)" ink="#fff" shadow="md" size="md"><small>ONLY</small><strong>$5</strong></ui-sticker>
+		<ui-sticker fill="#BC2F2F" font="medium shadow(md)" font-lead="black shadow(md)" ink="#fff" shadow="lg" size="lg"><small>ONLY</small><strong>$5</strong></ui-sticker>
+		<ui-sticker fill="#BC2F2F" font="medium shadow(md)" font-lead="black shadow(md)" ink="#fff" shadow="xl" size="xl"><small>ONLY</small><strong>$5</strong></ui-sticker>
+		<ui-sticker fill="#BC2F2F" font="medium shadow(md)" font-lead="black shadow(md)" ink="#fff" shadow="2xl" size="2xl"><small>ONLY</small><strong>$5</strong></ui-sticker>
+		<ui-sticker fill="#BC2F2F" font="medium shadow(md)" font-lead="black shadow(md)" ink="#fff" shadow="2xl" size="3xl"><small>ONLY</small><strong>$5</strong></ui-sticker>
 	</div>
 
 	<h3>Solid shadow</h3>
-	<p>Use <code>shadow="solid"</code> for a hard offset shadow — the tactical/comic look. Step the offset with <code>off(sm|md|lg)</code>, or <code>-off(…)</code> to throw the shadow to the <strong>left</strong> (the speech-left balloon below). Here every sticker shares one <code>.sh-tint</code> class that sets <code>--ui-sticker-shadow-color</code> to a near-black <code>color-mix()</code> of its <em>own</em> fill — so each shadow is a dark version of its sticker. The same shape set as above; <code>drop-shadow()</code> follows every clipped outline.</p>
+	<p><code>shadow="solid"</code> = hard offset. Step with <code>off(sm|md|lg)</code>; <code>-off(…)</code> throws it left. The <code>.sh-tint</code> class tints each shadow to a dark version of its own fill.</p>
 	<div class="row">
 		<ui-sticker class="sh-tint" fill="#FEA12F" font-lead="md" ink="#262626" shadow="solid" size="2xl"><small>ONLY</small><strong>$9</strong></ui-sticker>
 		<ui-sticker variant="burst" class="sh-tint" fill="#3E9355" font-lead="md" ink="#fff" shadow="solid -off(lg)" size="2xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
@@ -76,9 +71,16 @@
 		<ui-sticker variant="speech(l)" class="sh-tint" fill="#2980b9" font-lead="xl" ink="#FFF" shadow="solid -off(xl)" size="2xl"><small>NEW</small><strong>SALE</strong></ui-sticker>
 		<ui-sticker variant="speech(r)" class="sh-tint" fill="#27ae60" font-lead="2xl" ink="#d6fce1" shadow="solid off(xl)" size="2xl"><small>UP TO</small><strong>40%</strong></ui-sticker>
 	</div>
+	<p>Same hard offset on the <strong>text</strong>: <code>font="shadow(solid)"</code>. Graded <code>solid-sm</code>…<code>solid-xl</code> (bare <code>solid</code> = <code>md</code>).</p>
+	<div class="row">
+		<ui-sticker fill="#b0b0b0" font="medium shadow(solid-sm)" font-lead="black shadow(solid-sm)" ink="#fff" size="2xl"><small>SOLID</small><strong>sm</strong></ui-sticker>
+		<ui-sticker fill="#b0b0b0" font="medium shadow(solid)" font-lead="black shadow(solid)" ink="#fff" size="2xl"><small>SOLID</small><strong>md</strong></ui-sticker>
+		<ui-sticker fill="#b0b0b0" font="medium shadow(solid-lg)" font-lead="black shadow(solid-lg)" ink="#fff" size="2xl"><small>SOLID</small><strong>lg</strong></ui-sticker>
+		<ui-sticker fill="#b0b0b0" font="medium shadow(solid-xl)" font-lead="black shadow(solid-xl)" ink="#fff" size="2xl"><small>SOLID</small><strong>xl</strong></ui-sticker>
+	</div>
 
 	<h3>Typography</h3>
-	<p>Two typographic attributes, each an order-free shorthand of <code>family · size · weight · tsh()</code>: <code>font</code> styles the "other" lines (<code>&lt;small&gt;</code>, <code>&lt;span&gt;</code>); <code>font-lead</code> styles the <code>&lt;strong&gt;</code> lead line. In <code>SAVE / 10% / Today</code> the two <code>&lt;small&gt;</code> lines share <code>font</code>, the lead uses <code>font-lead</code>.</p>
+	<p><code>font</code> styles the <code>&lt;small&gt;</code>/<code>&lt;span&gt;</code> lines, <code>font-lead</code> the <code>&lt;strong&gt;</code> line. Each: <code>family · size · weight · shadow()</code> (order-free).</p>
 	<div class="row">
 		<ui-sticker fill="#3E9355" font="serif medium" font-lead="heading black" ink="#fff" size="3xl"><small>SAVE</small><strong>10%</strong><small>Today</small></ui-sticker>
 		<ui-sticker fill="#2F75BC" font="mono" font-lead="bold" ink="#fff" size="3xl"><small>FROM</small><strong>$9</strong><small>/mo</small></ui-sticker>
@@ -86,7 +88,7 @@
 	</div>
 
 	<h3>Gradient (custom class)</h3>
-	<p>Gradients are a custom class that sets <code>--ui-sticker-bg</code> (and <code>--ui-sticker-c</code>, since <code>contrast-color()</code> can't read a gradient). Give the lead line its own color with <code>--ui-sticker-lead-c</code> for a two-tone callout. See the <code>.grad-*</code> classes in this page's <code>&lt;style&gt;</code>. Works on discs and clipped shapes alike.</p>
+	<p>A custom class sets <code>--ui-sticker-bg</code> to a gradient (see <code>.grad-*</code> in <code>&lt;style&gt;</code>). <code>--ui-sticker-lead-c</code> colors the lead line for a two-tone look.</p>
 	<div class="row">
 		<ui-sticker class="grad-teal" font-lead="md" size="2xl" style="--ui-sticker-lead-c: #FFE08A"><small>GRAB A</small><strong>DEAL</strong></ui-sticker>
 		<ui-sticker class="grad-amber" font-lead="md" size="2xl" style="--ui-sticker-lead-c: #FFE9C7"><small>FAMILY</small><strong>DEAL</strong></ui-sticker>
@@ -96,7 +98,7 @@
 	</div>
 
 	<h3>Text sticker</h3>
-	<p>Use <code>variant="text"</code> for puffy "sticker lettering" — no box, just glyphs with a thick white stroke (the puff), a solid colored fill and a colored keyline. The fill comes from <code>fill</code>. Set the typeface with the <code>font</code> attribute or a custom class that sets <code>--ui-sticker-font-family</code> (here the <code>.font-*</code> classes) — a fat, rounded display face holds the puff best. Tilt with <code>angle</code>, size via <code>--ui-sticker-text-size</code>.</p>
+	<p><code>variant="text"</code> = puffy lettering, no box. Typeface via <code>font</code> or a class setting <code>--ui-sticker-font-family</code> (a fat display face holds the puff best). Tilt with <code>angle</code>.</p>
 	<div class="row">
 		<ui-sticker variant="text" angle="-4deg" class="font-freckle" fill="#ffcc33"><span>New In!</span></ui-sticker>
 		<ui-sticker variant="text" angle="3deg" class="font-sedgwick" fill="#8fa0f8"><span>Flash Sale</span></ui-sticker>
@@ -106,7 +108,7 @@
 	</div>
 
 	<h3>Hover</h3>
-	<p>Opt-in hover effects via the <code>hover</code> attribute (composable): <code>lift</code>, <code>pop</code>, <code>tilt</code> / <code>-tilt</code> (either direction), <code>spin</code> / <code>-spin</code> (one turn, either direction), <code>press</code> (on click). <strong>Hover the stickers below.</strong> A sticker is <code>pointer-events: none</code> until <code>hover</code> is set, so it never blocks an underlying link. Honors <code>prefers-reduced-motion</code> (movement drops).</p>
+	<p>Opt-in <code>hover</code> effects (composable): <code>lift</code>, <code>pop</code>, <code>tilt</code>/<code>-tilt</code>, <code>spin</code>/<code>-spin</code>, <code>press</code>. Decorative until set (<code>pointer-events:none</code>). Honors <code>prefers-reduced-motion</code>. <strong>Hover below.</strong></p>
 	<div class="row">
 		<ui-sticker hover="lift" fill="#2F75BC" ink="#fff" size="2xl"><small>LIFT</small><strong>OFF</strong></ui-sticker>
 		<ui-sticker variant="burst" hover="pop" fill="#3E9355" ink="#fff" size="2xl"><strong>POP</strong></ui-sticker>
@@ -117,7 +119,7 @@
 		<ui-sticker variant="heart" hover="press" fill="#BC2F2F" ink="#fff" size="2xl"><strong>click</strong><small>ME</small></ui-sticker>
 		<ui-sticker variant="text" angle="3deg" class="font-sedgwick" fill="#8fa0f8" hover="lift"><span>Lift Off</span></ui-sticker>
 	</div>
-	<p>Inside a <code>&lt;ui-card&gt;</code>: hovering the <strong>card</strong> triggers the sticker (and clicks still reach the card). Try hovering each card.</p>
+	<p>Inside a <code>&lt;ui-card&gt;</code>, hovering the card triggers the sticker.</p>
 	<div class="cards">
 		<ui-card variant="vis(media)" media="asr(4/3) sticker(te)">
 			<cq-box><ui-media><img src="/ui/card/assets/ergochair.jpg" alt=""><ui-sticker hover="lift" fill="#BC2F2F" ink="#fff" font="sm"><span>SALE</span></ui-sticker></ui-media></cq-box>
@@ -128,7 +130,7 @@
 	</div>
 
 	<h3>Fit to width (<code>text-fit</code>)</h3>
-	<p>Use <code>font="fit"</code> (and/or <code>font-lead="fit"</code>) to grow each line element to fill the box width with native <code>text-fit</code> — no overflow, no SVG/JS. Each line is its own single-line element, so each fills its column independently. Progressive enhancement (Chrome 150+); elsewhere the <code>cqi</code> sizing is the fallback.</p>
+	<p><code>font="fit"</code> (and/or <code>font-lead="fit"</code>) grows each line to fill the box width via native <code>text-fit</code>.</p>
 	<div class="row">
 		<ui-sticker fill="#BC2F2F" font="fit" ink="#fff"><span>DEAL</span></ui-sticker>
 		<ui-sticker fill="#2F75BC" font="fit" font-lead="fit" ink="#fff"><small>UP TO</small><strong>40%</strong></ui-sticker>

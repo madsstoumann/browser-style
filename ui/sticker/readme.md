@@ -73,14 +73,14 @@ The web component uses the **exact same** HTML structure as CSS-only — the JS 
 | `fill` | color | Any CSS color → background; ink auto-contrasted via `contrast-color()` |
 | `ink` | color | Any CSS color → text color; overrides the auto-contrast |
 | `size` | string | Box size: `sm`, `md`, `lg` (default), `xl`, `2xl`, `3xl` |
-| `font` | string | Typography for the `<small>`/`<span>` lines — order-free tokens: family (`body\|heading\|mono\|serif`) · size (`xs`…`2xl`) · weight (`normal`…`black`) · `tsh(sm\|md\|lg\|xl\|solid)` · `fit` |
+| `font` | string | Typography for the `<small>`/`<span>` lines — order-free tokens: family (`body\|heading\|mono\|serif`) · size (`xs`…`2xl`) · weight (`normal`…`black`) · text-shadow `shadow(sm\|md\|lg\|xl)` soft or `shadow(solid\|solid-sm…solid-xl)` hard · `fit` |
 | `font-lead` | string | Same vocabulary for the `<strong>` lead line |
 | `gap` | string | Line gap: `sm`, `md`, `lg` |
 | `shadow` | string | Box drop-shadow: `sm`…`2xl` or `solid`, plus offset `off(sm\|md\|lg\|xl)` / `-off(…)` (left) |
 | `hover` | string | Opt-in hover effects (composable): `lift`, `pop`, `tilt`, `spin`, `press` (+ `-tilt`/`-spin`) |
 | `angle` | angle | Rotation for `variant="text"` (e.g. `-3deg`) |
 
-> **Migrating from 1.x:** `color` → `fill`; the `color-end`/`angle` gradient → a custom class; `variant`'s `fs()` → `font`/`font-lead` size, `fw()` → weight, `gap()` → `gap`, `sh()` → `shadow`, `tsh()` → `font="tsh()"`, `fit` → `font="fit"`, `ink()` → `ink`. (`glass` was removed.) `--ui-sticker-text-font` → `--ui-sticker-font-family`.
+> **Migrating from 1.x:** `color` → `fill`; the `color-end`/`angle` gradient → a custom class; `variant`'s `fs()` → `font`/`font-lead` size, `fw()` → weight, `gap()` → `gap`, `sh()` → `shadow`, `shadow()` → `font="shadow()"`, `fit` → `font="fit"`, `ink()` → `ink`. (`glass` was removed.) `--ui-sticker-text-font` → `--ui-sticker-font-family`.
 
 ---
 
@@ -178,7 +178,7 @@ For a one-off, set the tokens inline:
 
 ## Typography (`font` + `font-lead`)
 
-Two order-free shorthand attributes, each a space-separated set of tokens — family (`body | heading | mono | serif`) · size (`xs`…`2xl`) · weight (`normal | medium | semibold | bold | black`) · text-shadow (`tsh(sm)`…`tsh(xl)`, `tsh(solid)`):
+Two order-free shorthand attributes, each a space-separated set of tokens — family (`body | heading | mono | serif`) · size (`xs`…`2xl`) · weight (`normal | medium | semibold | bold | black`) · text-shadow — soft `shadow(sm)`…`shadow(xl)` or hard `shadow(solid)` / graded `shadow(solid-sm)`…`shadow(solid-xl)`:
 
 - **`font`** styles the "other" lines — `<small>` and `<span>` (the shared label/body typography).
 - **`font-lead`** styles the `<strong>` lead line.
@@ -385,8 +385,8 @@ The `fit` token uses the native [`text-fit`](https://drafts.csswg.org/css-text-5
 | `--ui-sticker-radius` | `var(--radius-circle, 50%)` | Corner radius (disc / speech) |
 | `--ui-sticker-clip-path` | 24-point star `polygon()` | Shape for `variant="burst"` |
 | `--ui-sticker-shadow-x` / `-y` / `-color` | `0.25em` / `0.25em` / `#000` | Offset + tint for `shadow="solid"` |
-| `--ui-sticker-text-shadow` | `none` | Text-shadow on the lines (set by `tsh()`, in `cqi`) |
-| `--ui-sticker-text-shadow-color` | `contrast-color(ink)` | `tsh()` tint — auto the **opposite** of the ink |
+| `--ui-sticker-text-shadow` | `none` | Text-shadow on the lines (set by `shadow()`, in `cqi`) |
+| `--ui-sticker-text-shadow-color` | `contrast-color(ink)` | `shadow()` tint — auto the **opposite** of the ink |
 | `--ui-sticker-text-size` | `3.5em` | Font size for `variant="text"` |
 | `--ui-sticker-text-stroke-w` / `-c` | `0.2em` / `#fff` | The puff (white stroke) |
 | `--ui-sticker-text-outline-w` / `-c` | `2px` / the fill | The keyline |
@@ -418,7 +418,7 @@ The non-obvious "why" behind the CSS (kept here so the stylesheet stays terse):
 - **`text` fill uses `-webkit-text-fill-color`, not `background-clip: text`** (which doesn't composite as a fill alongside `-webkit-text-stroke`).
 - **`fit` targets the line elements** with `grid-template-columns: 100%`; `…per-line` is a no-op on a single-line element, so `grow consistent` is used.
 - **`drop-shadow`, not `box-shadow`.** Only `drop-shadow` follows the clipped star/heart/blob outlines.
-- **`tsh()` shadow auto-flips.** The ink is `contrast-color(bg)`, so the text-shadow tint defaults to `contrast-color(ink)` — the *opposite* of the ink. Sized in `cqi`.
+- **`shadow()` shadow auto-flips.** The ink is `contrast-color(bg)`, so the text-shadow tint defaults to `contrast-color(ink)` — the *opposite* of the ink. Sized in `cqi`.
 
 ## Accessibility
 

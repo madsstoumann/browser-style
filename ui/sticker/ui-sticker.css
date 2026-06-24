@@ -11,7 +11,7 @@
  *                family  body | heading | mono | serif
  *                size    xs sm md lg xl 2xl
  *                weight  normal medium semibold bold black
- *                tshadow tsh(sm|md|lg|xl|solid)
+ *                shadow  soft shadow(sm|md|lg|xl) · hard shadow(solid|solid-sm|solid-md|solid-lg|solid-xl)
  *                fit     fit  (grow the line to fill the box width)
  *   font-lead  same vocabulary for the <strong> lead line
  *   gap        line gap: sm md lg
@@ -95,7 +95,7 @@
 			--ui-sticker-c: contrast-color(var(--ui-sticker-bg));
 		}
 
-		/* ink="<any css color>" → text color; overrides the auto contrast-color ink (the tsh()
+		/* ink="<any css color>" → text color; overrides the auto contrast-color ink (the shadow()
 		   text-shadow auto-flips to the opposite). After fill so it wins. */
 		&[ink] { --ui-sticker-c: attr(ink type(<color>), hsl(0, 0%, 100%)); }
 
@@ -141,12 +141,16 @@
 		&[font-lead~="black"]    > strong       { font-weight: var(--font-weight-black, 900); }
 
 		/* text-shadow per group (sets --ui-sticker-text-shadow on the line) — cqi, opposite-of-ink */
-		&[font~="tsh(sm)"]    > :not(strong), &[font-lead~="tsh(sm)"]    > strong { --ui-sticker-text-shadow: 0 1cqi 1cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 35%, transparent); }
-		&[font~="tsh(md)"]    > :not(strong), &[font-lead~="tsh(md)"]    > strong { --ui-sticker-text-shadow: 0 1.5cqi 2cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 42%, transparent); }
-		&[font~="tsh(lg)"]    > :not(strong), &[font-lead~="tsh(lg)"]    > strong { --ui-sticker-text-shadow: 0 2cqi 3cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 48%, transparent); }
-		&[font~="tsh(xl)"]    > :not(strong), &[font-lead~="tsh(xl)"]    > strong { --ui-sticker-text-shadow: 0 3cqi 4.5cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 55%, transparent); }
-		/* solid — hard offset, zero blur (retro/comic), full-opacity opposite-of-ink */
-		&[font~="tsh(solid)"] > :not(strong), &[font-lead~="tsh(solid)"] > strong { --ui-sticker-text-shadow: 0.06em 0.06em 0 var(--ui-sticker-text-shadow-color); }
+		&[font~="shadow(sm)"]    > :not(strong), &[font-lead~="shadow(sm)"]    > strong { --ui-sticker-text-shadow: 0 1cqi 1cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 35%, transparent); }
+		&[font~="shadow(md)"]    > :not(strong), &[font-lead~="shadow(md)"]    > strong { --ui-sticker-text-shadow: 0 1.5cqi 2cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 42%, transparent); }
+		&[font~="shadow(lg)"]    > :not(strong), &[font-lead~="shadow(lg)"]    > strong { --ui-sticker-text-shadow: 0 2cqi 3cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 48%, transparent); }
+		&[font~="shadow(xl)"]    > :not(strong), &[font-lead~="shadow(xl)"]    > strong { --ui-sticker-text-shadow: 0 3cqi 4.5cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 55%, transparent); }
+		/* solid — hard offset, zero blur (retro/comic); cqi so it scales with the box. Graded sm…xl; bare `solid` = md */
+		&[font~="shadow(solid-sm)"] > :not(strong), &[font-lead~="shadow(solid-sm)"] > strong { --ui-sticker-text-shadow: 1.5cqi 1.5cqi 0 var(--ui-sticker-text-shadow-color); }
+		&[font~="shadow(solid)"]    > :not(strong), &[font-lead~="shadow(solid)"]    > strong,
+		&[font~="shadow(solid-md)"] > :not(strong), &[font-lead~="shadow(solid-md)"] > strong { --ui-sticker-text-shadow: 2.5cqi 2.5cqi 0 var(--ui-sticker-text-shadow-color); }
+		&[font~="shadow(solid-lg)"] > :not(strong), &[font-lead~="shadow(solid-lg)"] > strong { --ui-sticker-text-shadow: 4cqi   4cqi   0 var(--ui-sticker-text-shadow-color); }
+		&[font~="shadow(solid-xl)"] > :not(strong), &[font-lead~="shadow(solid-xl)"] > strong { --ui-sticker-text-shadow: 6cqi   6cqi   0 var(--ui-sticker-text-shadow-color); }
 
 		/* fit — native text-fit: grow on the line elements (Chrome 150+, @supports-gated).
 		   font → the "other" lines, font-lead → the <strong> line. Each element is its own

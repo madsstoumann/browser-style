@@ -97,7 +97,7 @@
 	     hov() — hover effects
 	     ============================================================ -->
 	<h2>Hover effects — <code>hov()</code></h2>
-	<p class="note">Hover (or focus) a card. <code>zoom</code> / <code>pan</code> / <code>track</code> move the <em>image</em> inside a fixed frame. Tune with <code>--ui-media-hv-*</code> and <code>--ui-media-hover-duration</code>. All respect <code>prefers-reduced-motion</code>.</p>
+	<p class="note">Hover (or focus) a card. <code>zoom</code> / <code>pan</code> / <code>track</code> / <code>drift</code> move the <em>image</em> inside a fixed frame. Tune with <code>--ui-media-hv-*</code> and <code>--ui-media-hover-duration</code>. All respect <code>prefers-reduced-motion</code>.</p>
 	<div class="grid grid-3">
 		<ui-card variant="col" media="asr(16/9) hov(zoom)">
 			<cq-box>
@@ -111,10 +111,16 @@
 				<ui-content><small data-part="eyebrow">image</small><h2 data-part="headline">hov(pan)</h2><p data-part="summary">Zooms and drifts in a fixed direction.</p></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card class="track" variant="col" media="asr(16/9) hov(track)">
+		<ui-card variant="col" media="asr(16/9) hov(track)">
 			<cq-box>
 				<ui-media><img src="assets/quantum.jpg" alt=""></ui-media>
 				<ui-content><small data-part="eyebrow">image · needs JS</small><h2 data-part="headline">hov(track)</h2><p data-part="summary">The image follows the cursor — the only effect that needs a tiny pointer handler (below).</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) hov(drift)">
+			<cq-box>
+				<ui-media><img src="assets/hubble.jpg" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">image · needs JS</small><h2 data-part="headline">hov(drift)</h2><p data-part="summary">Oversized image shrinks slightly and drifts <em>opposite</em> the cursor. Same pointer handler as <code>track</code>.</p></ui-content>
 			</cq-box>
 		</ui-card>
 	</div>
@@ -358,9 +364,9 @@
 
 	<!-- cursor-tracked hover needs a tiny pointer handler -->
 	<script type="module">
-		// hov(track): the only media effect that needs JS — map the pointer to
-		// --ui-media-mx / --ui-media-my (-1..1), which the CSS reads to translate the image.
-		for (const card of document.querySelectorAll('.track')) {
+		// hov(track) / hov(drift): the only media effects that need JS — map the pointer
+		// to --ui-media-mx / --ui-media-my (-1..1), which the CSS reads to translate the image.
+		for (const card of document.querySelectorAll('[media*="hov(track)"], [media*="hov(drift)"]')) {
 			card.addEventListener('pointermove', (e) => {
 				const r = card.getBoundingClientRect();
 				card.style.setProperty('--ui-media-mx', ((e.clientX - r.left) / r.width * 2 - 1).toFixed(3));

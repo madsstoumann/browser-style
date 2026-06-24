@@ -103,7 +103,7 @@ Because custom properties inherit, **one rule set serves both placement cases**:
 | `obp()` | `tl tc tr · cl cc cr · bl bc br` | object-position (9-grid) | `--ui-media-op` |
 | `obf()` | `cover` `contain` `fill` `none` | object-fit | `--ui-media-fit` |
 | `flp()` | `h` `v` `hv` | flip / mirror the image | `--ui-media-fl-x` / `-fl-y` |
-| `hov()` | `zoom` `pan` `track` | hover effect (image only) | `--ui-media-hv-*` |
+| `hov()` | `zoom` `pan` `track` `drift` | hover effect (image only) | `--ui-media-hv-*` |
 | `scm()` | *(bare, or `tl … br`)* | scrim — bare matches the host `ovr()`; explicit picks a direction | `--ui-media-scrim-paint` |
 | `nav()` | *(bare, or `dots` `arrows` `none`)* | carousel — **the token IS the trigger**; bare = dots + arrows | carousel layout + controls |
 | `chip()` `sticker()` `save()` `play()` | `ts … be` *(position)* **or** `red orange green blue accent dark light subtle` *(sub-theme)* | place + theme an overlay element | element inset (absolute) / element `--ui-{el}-*` tokens |
@@ -131,7 +131,8 @@ There were never any named keywords — ratios are always numeric. Any other rat
 |-------|--------|
 | `zoom` | scales the image up on hover |
 | `pan` | scales + translates the image |
-| `track` | cursor-tracked pan — reads `--ui-media-mx` / `--ui-media-my` (−1…1), set by a pointer-move handler (JS, added later; **inert until then**) |
+| `track` | cursor-tracked pan — reads `--ui-media-mx` / `--ui-media-my` (−1…1), set by a pointer-move handler (JS, added later; **inert until then**). Image follows the cursor |
+| `drift` | cursor-**counter** parallax (ioi.dk-style) — oversized image (rest scale `1.3`) shrinks toward `1.2` on hover and drifts **opposite** the cursor. Same `--ui-media-mx` / `--ui-media-my` handler as `track` |
 
 All hover effects are guarded by `@media (hover: hover)` and disabled under `prefers-reduced-motion: reduce`.
 
@@ -311,10 +312,13 @@ Every token lives in the `--ui-media-*` namespace and inherits down from whereve
 | `--ui-media-hv-zoom` | `1.08` (`pan`/`track`: `1.12`) | hover zoom scale |
 | `--ui-media-hv-pan-x` / `-pan-y` | `-2%` | `pan` translate |
 | `--ui-media-hv-track` | `4%` | `track` max translate (× pointer offset) |
-| `--ui-media-hv-track-dur` | `var(--duration-normal)` | `track` translate duration |
+| `--ui-media-hv-track-dur` | `var(--duration-normal)` | `track` / `drift` translate duration |
+| `--ui-media-hv-drift` | `4%` | `drift` max translate (× pointer offset, applied **opposite** the cursor) |
+| `--ui-media-hv-drift-rest` | `1.3` | `drift` resting scale (image overfills the frame) |
+| `--ui-media-hv-drift-hover` | `1.2` | `drift` scale on hover (shrinks from rest) |
 | `--ui-media-hover-duration` | `var(--duration-slower)` | hover transition duration |
 | `--ui-media-hover-easing` | `var(--ease-out)` | hover transition easing |
-| `--ui-media-mx` / `--ui-media-my` | `0` | pointer offset hooks for `hov(track)` (−1…1), set by JS |
+| `--ui-media-mx` / `--ui-media-my` | `0` | pointer offset hooks for `hov(track)` / `hov(drift)` (−1…1), set by JS |
 
 ### Carousel — dots
 
