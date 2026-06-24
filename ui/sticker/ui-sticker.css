@@ -1,27 +1,8 @@
 /**
  * ui-sticker
- * @version 1.0.2
+ * @version 1.0.3
  * @date 2026-06-24
  * @author Mads Stoumann
- * See readme.md → "Implementation notes" for the why behind the non-obvious bits.
- *
- * Attribute taxonomy (leaf component — aligned with badge/chip/avatar conventions):
- *   variant    shape/form ONLY: burst spark sunburst heart blob speech(l|r) text
- *              clip = bring-your-own shape via --ui-sticker-clip-path
- *   font       typography for the "other" lines (<small>, <span>):
- *                family  body | heading | mono | serif
- *                size    xs sm md lg xl 2xl
- *                weight  thin light normal medium semibold bold black
- *                shadow  soft shadow(sm|md|lg|xl) · hard shadow(solid|solid-sm|solid-md|solid-lg|solid-xl)
- *                fit     fit  (grow the line to fill the box width)
- *   font-lead  same vocabulary for the <strong> lead line
- *   gap        line gap: sm md lg
- *   size       box size: sm md lg xl 2xl 3xl
- *   fill       background, any color via attr() (gradients → a custom class on --ui-sticker-bg)
- *   ink        text color, any color via attr() (overrides the auto-contrast)
- *   shadow     box drop-shadow: sm md lg xl 2xl | solid, with offset off(sm|md|lg|xl) (or -off() for a left shadow)
- *   hover      opt-in hover effects (composable): lift pop tilt -tilt spin -spin press
- *              (decorative & pointer-events:none until `hover` is set; also reacts to a hovered parent ui-card)
  */
 @layer bs-component {
 	:where(ui-sticker) {
