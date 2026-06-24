@@ -1,6 +1,6 @@
 /**
  * ui-sticker
- * @version 1.0.2
+ * @version 1.0.3
  * @date 2026-06-24
  * @author Mads Stoumann
  * See readme.md → "Implementation notes" for the why behind the non-obvious bits.
@@ -57,7 +57,7 @@
 		padding: var(--ui-sticker-padding);
 		place-content: center;
 		text-align: center;
-		text-box: cap alphabetic;
+		/* text-box: cap alphabetic; */
 		user-select: none;
 
 		/* one line per element child, sized in cqi (10px floor) */
@@ -76,7 +76,7 @@
 
 		/* per-line size + family defaults by tag; sup/sub inherit family from their parent line */
 		& > small  { font-size: max(10px, var(--_size-sm)); font-weight: var(--font-weight-medium, 500); font-family: var(--ui-sticker-small-font, var(--ui-sticker-font-family)); }
-		& > strong { font-size: max(10px, var(--_size-lg)); font-family: var(--ui-sticker-strong-font, var(--ui-sticker-font-family)); }
+		& > strong { font-size: max(10px, var(--_size-lg)); font-family: var(--ui-sticker-strong-font, var(--ui-sticker-font-family)); color: var(--ui-sticker-lead-c, inherit); }
 		& :is(sup, sub) { font-size: 0.5em; }
 
 		/* fill="<any css color>" → bg via typed attr(), ink auto-contrasted.

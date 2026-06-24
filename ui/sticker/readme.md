@@ -222,7 +222,7 @@ Children inside a line — `<sup>`, `<sub>` — inherit the line's family automa
 
 `font`/`font-lead` only need the tokens you want to change; everything else keeps the tag default. The default ratios are `<small>` = 0.55 × base, `<strong>` = 1.1 × base, `<span>`/text = base, where the base line is `max(10px, 40cqi)` — i.e. 40 % of the box, with a 10px legibility floor.
 
-> Set per-instance escape hatches with `--ui-sticker-small-font` / `--ui-sticker-strong-font` (family), `--ui-sticker-small-scale` / `--ui-sticker-strong-scale` (size ratio), or `--ui-sticker-font-family` (the whole sticker).
+> Set per-instance escape hatches with `--ui-sticker-small-font` / `--ui-sticker-strong-font` (family), `--ui-sticker-small-scale` / `--ui-sticker-strong-scale` (size ratio), `--ui-sticker-font-family` (the whole sticker), or `--ui-sticker-lead-c` to color the `<strong>` lead line independently (two-tone callouts).
 
 ## Fluid text (`cqi`)
 
@@ -380,7 +380,8 @@ The `fit` token uses the native [`text-fit`](https://drafts.csswg.org/css-text-5
 | Token | Default | Description |
 |-------|---------|-------------|
 | `--ui-sticker-bg` | `var(--color-accent)` | Background color (set a `linear-gradient()` here for a gradient) |
-| `--ui-sticker-c` | `hsl(0 0% 100%)` | Text/ink color |
+| `--ui-sticker-c` | `hsl(0 0% 100%)` | Text/ink color (all lines) |
+| `--ui-sticker-lead-c` | `inherit` | Color of the `<strong>` lead line only — a second color for two-tone callouts |
 | `--ui-sticker-font-family` | `var(--font-body)` | Typeface (set by `font`/`font-lead` family tokens) |
 | `--ui-sticker-sz` | `5em` | Box size (disc diameter); also set by `size=` |
 | `--ui-sticker-fs` | `40cqi` | Base line size (clip shapes lower this) |
