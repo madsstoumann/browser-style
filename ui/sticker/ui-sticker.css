@@ -1,9 +1,26 @@
 /**
  * ui-sticker
- * @version 1.0.1
- * @date 2026-06-23
+ * @version 1.0.2
+ * @date 2026-06-24
  * @author Mads Stoumann
  * See readme.md → "Implementation notes" for the why behind the non-obvious bits.
+ *
+ * Attribute taxonomy (leaf component — aligned with badge/chip/avatar conventions):
+ *   variant    shape/form ONLY: burst spark sunburst heart blob speech(l|r) text
+ *   font       typography for the "other" lines (<small>, <span>):
+ *                family  body | heading | mono | serif
+ *                size    xs sm md lg xl 2xl
+ *                weight  normal medium semibold bold black
+ *                tshadow tsh(sm|md|lg|xl|solid)
+ *                fit     fit  (grow the line to fill the box width)
+ *   font-lead  same vocabulary for the <strong> lead line
+ *   gap        line gap: sm md lg
+ *   size       box size: sm md lg xl 2xl 3xl
+ *   fill       background, any color via attr() (gradients → a custom class on --ui-sticker-bg)
+ *   ink        text color, any color via attr() (overrides the auto-contrast)
+ *   theme      named bundle (red…subtle) from @browser.style/base
+ *   glass      boolean — frosted surface (composes with any shape)
+ *   shadow     box drop-shadow: sm md lg xl 2xl | solid, with offset off(sm|md|lg)
  */
 @layer bs-component {
 	:where(ui-sticker) {
@@ -11,15 +28,18 @@
 		--ui-sticker-gap: 0.16;
 		--ui-sticker-fs: 40cqi;
 		--ui-sticker-fs-scale: 1;
+		--ui-sticker-small-scale: 0.55;
+		--ui-sticker-strong-scale: 1.1;
 		--_size: calc(var(--ui-sticker-fs) * var(--ui-sticker-fs-scale));
-		--_size-sm: calc(var(--_size) * 0.55);
-		--_size-lg: calc(var(--_size) * 1.1);
+		--_size-sm: calc(var(--_size) * var(--ui-sticker-small-scale));
+		--_size-lg: calc(var(--_size) * var(--ui-sticker-strong-scale));
 		--ui-sticker-shadow-x: 0.25em;
 		--ui-sticker-shadow-y: 0.25em;
 		--ui-sticker-shadow-color: #000;
 		/* text-shadow tint = the OPPOSITE of the ink (ink is contrast-color(bg) = black/white,
 		   so contrast-color(ink) flips it): white text → dark shadow, black text → light shadow */
 		--ui-sticker-text-shadow-color: contrast-color(var(--ui-sticker-c, hsl(0, 0%, 100%)));
+		--ui-sticker-font-family: var(--font-body);
 		aspect-ratio: 1 / 1;
 		background: var(--ui-sticker-bg, var(--color-accent));
 		border-radius: var(--ui-sticker-radius, var(--radius-circle, 50%));
@@ -27,7 +47,8 @@
 		container-type: inline-size;
 		display: grid;
 		filter: var(--ui-sticker-shadow, none);
-		font-size: 0.875em;
+		font-family: var(--ui-sticker-font-family);
+		font-size: var(--font-size-sm);
 		font-weight: var(--ui-sticker-font-weight, var(--font-weight-bold, 700));
 		line-height: 1;
 		/* floor BOTH axes so a short callout stays square */
@@ -53,86 +74,102 @@
 			margin-block-start: calc(var(--_size) * var(--ui-sticker-gap, 0));
 		}
 
-		/* per-line size by tag */
-		& > small        { font-size: max(10px, var(--_size-sm)); font-weight: var(--font-weight-medium, 500); }
-		& > strong       { font-size: max(10px, var(--_size-lg)); }
-		& :is(sup, sub)  { font-size: 0.5em; }
+		/* per-line size + family defaults by tag; sup/sub inherit family from their parent line */
+		& > small  { font-size: max(10px, var(--_size-sm)); font-weight: var(--font-weight-medium, 500); font-family: var(--ui-sticker-small-font, var(--ui-sticker-font-family)); }
+		& > strong { font-size: max(10px, var(--_size-lg)); font-family: var(--ui-sticker-strong-font, var(--ui-sticker-font-family)); }
+		& :is(sup, sub) { font-size: 0.5em; }
 
-		/* color="<any css color>" → bg via typed attr(), ink auto-contrasted */
-		&[color] {
-			--ui-sticker-bg: attr(color type(<color>), var(--color-accent));
+		/* fill="<any css color>" → bg via typed attr(), ink auto-contrasted.
+		   Gradients: set --ui-sticker-bg to a linear-gradient() in a custom class. */
+		&[fill] {
+			--ui-sticker-bg: attr(fill type(<color>), var(--color-accent));
 			--ui-sticker-c: contrast-color(var(--ui-sticker-bg));
 		}
 
-		/* color + color-end → 2-stop gradient; direction from typed `angle` attr */
-		&[color-end] {
-			--ui-sticker-bg: linear-gradient(
-				var(--ui-sticker-gradient-angle, attr(angle type(<angle>), 90deg)),
-				attr(color type(<color>), var(--color-accent)),
-				attr(color-end type(<color>), var(--color-accent))
-			);
-			--ui-sticker-c: contrast-color(attr(color type(<color>), var(--color-accent)));
-		}
-
-		/* theme bundle — after color= so theme= wins */
+		/* theme bundle — after fill= so theme= wins */
 		&[theme] {
 			--ui-sticker-bg: var(--_theme-bg);
 			--ui-sticker-c: var(--_theme-c);
 		}
 
-		/* force the ink black/white (overrides the auto contrast-color ink; the tsh()
-		   text-shadow auto-flips to the opposite). After color/theme so it wins. */
-		&[variant~="ink(white)"] { --ui-sticker-c: hsl(0, 0%, 100%); }
-		&[variant~="ink(black)"] { --ui-sticker-c: hsl(0, 0%, 0%); }
+		/* ink="<any css color>" → text color; overrides the auto contrast-color ink (the tsh()
+		   text-shadow auto-flips to the opposite). After fill/theme so it wins. */
+		&[ink] { --ui-sticker-c: attr(ink type(<color>), hsl(0, 0%, 100%)); }
 
-		/* font-size — scale multiplier on the base */
-		&[variant~="fs(xs)"]  { --ui-sticker-fs-scale: 0.6; }
-		&[variant~="fs(sm)"]  { --ui-sticker-fs-scale: 0.75; }
-		&[variant~="fs(md)"]  { --ui-sticker-fs-scale: 0.87; }
-		&[variant~="fs(lg)"]  { --ui-sticker-fs-scale: 1.15; }
-		&[variant~="fs(xl)"]  { --ui-sticker-fs-scale: 1.3; }
-		&[variant~="fs(2xl)"] { --ui-sticker-fs-scale: 1.5; }
+		/* ───────── font / font-lead — typography per line group ─────────
+		   font      → the "other" lines (<small>, <span>)  via  > :not(strong)
+		   font-lead → the emphasis line (<strong>)         via  > strong
+		   Both out-specify the tag defaults above, so they win. */
 
-		/* fit — native text-fit on the line elements (Chrome 150+, @supports-gated) */
+		/* family */
+		&[font~="body"]         > :not(strong) { font-family: var(--font-body); }
+		&[font~="heading"]      > :not(strong) { font-family: var(--font-heading); }
+		&[font~="mono"]         > :not(strong) { font-family: var(--font-mono); }
+		&[font~="serif"]        > :not(strong) { font-family: var(--font-serif); }
+		&[font-lead~="body"]    > strong       { font-family: var(--font-body); }
+		&[font-lead~="heading"] > strong       { font-family: var(--font-heading); }
+		&[font-lead~="mono"]    > strong       { font-family: var(--font-mono); }
+		&[font-lead~="serif"]   > strong       { font-family: var(--font-serif); }
+
+		/* size — overrides the tag's default ratio (0.55 small / 1.1 strong) */
+		&[font~="xs"]       > :not(strong) { font-size: max(10px, calc(var(--_size) * 0.6)); }
+		&[font~="sm"]       > :not(strong) { font-size: max(10px, calc(var(--_size) * 0.75)); }
+		&[font~="md"]       > :not(strong) { font-size: max(10px, calc(var(--_size) * 0.87)); }
+		&[font~="lg"]       > :not(strong) { font-size: max(10px, calc(var(--_size) * 1.15)); }
+		&[font~="xl"]       > :not(strong) { font-size: max(10px, calc(var(--_size) * 1.3)); }
+		&[font~="2xl"]      > :not(strong) { font-size: max(10px, calc(var(--_size) * 1.5)); }
+		&[font-lead~="xs"]  > strong       { font-size: max(10px, calc(var(--_size) * 0.6)); }
+		&[font-lead~="sm"]  > strong       { font-size: max(10px, calc(var(--_size) * 0.75)); }
+		&[font-lead~="md"]  > strong       { font-size: max(10px, calc(var(--_size) * 0.87)); }
+		&[font-lead~="lg"]  > strong       { font-size: max(10px, calc(var(--_size) * 1.15)); }
+		&[font-lead~="xl"]  > strong       { font-size: max(10px, calc(var(--_size) * 1.3)); }
+		&[font-lead~="2xl"] > strong       { font-size: max(10px, calc(var(--_size) * 1.5)); }
+
+		/* weight */
+		&[font~="normal"]        > :not(strong) { font-weight: var(--font-weight-normal, 400); }
+		&[font~="medium"]        > :not(strong) { font-weight: var(--font-weight-medium, 500); }
+		&[font~="semibold"]      > :not(strong) { font-weight: var(--font-weight-semibold, 600); }
+		&[font~="bold"]          > :not(strong) { font-weight: var(--font-weight-bold, 700); }
+		&[font~="black"]         > :not(strong) { font-weight: var(--font-weight-black, 900); }
+		&[font-lead~="normal"]   > strong       { font-weight: var(--font-weight-normal, 400); }
+		&[font-lead~="medium"]   > strong       { font-weight: var(--font-weight-medium, 500); }
+		&[font-lead~="semibold"] > strong       { font-weight: var(--font-weight-semibold, 600); }
+		&[font-lead~="bold"]     > strong       { font-weight: var(--font-weight-bold, 700); }
+		&[font-lead~="black"]    > strong       { font-weight: var(--font-weight-black, 900); }
+
+		/* text-shadow per group (sets --ui-sticker-text-shadow on the line) — cqi, opposite-of-ink */
+		&[font~="tsh(sm)"]    > :not(strong), &[font-lead~="tsh(sm)"]    > strong { --ui-sticker-text-shadow: 0 1cqi 1cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 35%, transparent); }
+		&[font~="tsh(md)"]    > :not(strong), &[font-lead~="tsh(md)"]    > strong { --ui-sticker-text-shadow: 0 1.5cqi 2cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 42%, transparent); }
+		&[font~="tsh(lg)"]    > :not(strong), &[font-lead~="tsh(lg)"]    > strong { --ui-sticker-text-shadow: 0 2cqi 3cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 48%, transparent); }
+		&[font~="tsh(xl)"]    > :not(strong), &[font-lead~="tsh(xl)"]    > strong { --ui-sticker-text-shadow: 0 3cqi 4.5cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 55%, transparent); }
+		/* solid — hard offset, zero blur (retro/comic), full-opacity opposite-of-ink */
+		&[font~="tsh(solid)"] > :not(strong), &[font-lead~="tsh(solid)"] > strong { --ui-sticker-text-shadow: 0.06em 0.06em 0 var(--ui-sticker-text-shadow-color); }
+
+		/* fit — native text-fit: grow on the line elements (Chrome 150+, @supports-gated).
+		   font → the "other" lines, font-lead → the <strong> line. Each element is its own
+		   single line, so grow fills its own column width independently. */
 		@supports (text-fit: grow) {
-			&[variant~="fit"],
-			&[variant~="fit(shrink)"] { grid-template-columns: 100%; }
-			&[variant~="fit"] > *         { text-fit: grow; }
-			&[variant~="fit(shrink)"] > * { text-fit: shrink; }
+			&[font~="fit"], &[font-lead~="fit"] { grid-template-columns: 100%; }
+			&[font~="fit"] > :not(strong)       { text-fit: grow; }
+			&[font-lead~="fit"] > strong        { text-fit: grow; }
 		}
 
-		/* line gap steps */
-		&[variant~="gap(sm)"] { --ui-sticker-gap: 0.12; }
-		&[variant~="gap(md)"] { --ui-sticker-gap: 0.25; }
-		&[variant~="gap(lg)"] { --ui-sticker-gap: 0.45; }
-
-		/* font-weight */
-		&[variant~="fw(normal)"]   { --ui-sticker-font-weight: var(--font-weight-normal, 400); }
-		&[variant~="fw(medium)"]   { --ui-sticker-font-weight: var(--font-weight-medium, 500); }
-		&[variant~="fw(semibold)"] { --ui-sticker-font-weight: var(--font-weight-semibold, 600); }
-		&[variant~="fw(bold)"]     { --ui-sticker-font-weight: var(--font-weight-bold, 700); }
-		&[variant~="fw(black)"]    { --ui-sticker-font-weight: var(--font-weight-black, 900); }
-
-		/* shadow — drop-shadow so it follows clipped shapes */
-		&[variant~="sh(sm)"]  { --ui-sticker-shadow: drop-shadow(0 1px 1px rgb(0 0 0 / 0.18)); }
-		&[variant~="sh(md)"]  { --ui-sticker-shadow: drop-shadow(0 2px 3px rgb(0 0 0 / 0.22)); }
-		&[variant~="sh(lg)"]  { --ui-sticker-shadow: drop-shadow(0 4px 6px rgb(0 0 0 / 0.28)); }
-		&[variant~="sh(xl)"]  { --ui-sticker-shadow: drop-shadow(0 8px 10px rgb(0 0 0 / 0.32)); }
-		&[variant~="sh(2xl)"] { --ui-sticker-shadow: drop-shadow(0 14px 18px rgb(0 0 0 / 0.36)); }
-		&[variant~="sh(solid)"] {
+		/* ───────── shadow — box drop-shadow (follows clipped shapes) ───────── */
+		&[shadow~="sm"]  { --ui-sticker-shadow: drop-shadow(0 1px 1px rgb(0 0 0 / 0.18)); }
+		&[shadow~="md"]  { --ui-sticker-shadow: drop-shadow(0 2px 3px rgb(0 0 0 / 0.22)); }
+		&[shadow~="lg"]  { --ui-sticker-shadow: drop-shadow(0 4px 6px rgb(0 0 0 / 0.28)); }
+		&[shadow~="xl"]  { --ui-sticker-shadow: drop-shadow(0 8px 10px rgb(0 0 0 / 0.32)); }
+		&[shadow~="2xl"] { --ui-sticker-shadow: drop-shadow(0 14px 18px rgb(0 0 0 / 0.36)); }
+		&[shadow~="solid"] {
 			--ui-sticker-shadow: drop-shadow(var(--ui-sticker-shadow-x) var(--ui-sticker-shadow-y) 0 var(--ui-sticker-shadow-color));
 		}
+		/* offset steps for the solid shadow */
+		&[shadow~="off(sm)"] { --ui-sticker-shadow-x: 0.15em; --ui-sticker-shadow-y: 0.15em; }
+		&[shadow~="off(md)"] { --ui-sticker-shadow-x: 0.25em; --ui-sticker-shadow-y: 0.25em; }
+		&[shadow~="off(lg)"] { --ui-sticker-shadow-x: 0.4em;  --ui-sticker-shadow-y: 0.4em; }
 
-		/* text-shadow on the lines — cqi (scales with text), tinted the opposite of the ink */
-		&[variant~="tsh(sm)"] { --ui-sticker-text-shadow: 0 1cqi 1cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 35%, transparent); }
-		&[variant~="tsh(md)"] { --ui-sticker-text-shadow: 0 1.5cqi 2cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 42%, transparent); }
-		&[variant~="tsh(lg)"] { --ui-sticker-text-shadow: 0 2cqi 3cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 48%, transparent); }
-		&[variant~="tsh(xl)"] { --ui-sticker-text-shadow: 0 3cqi 4.5cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 55%, transparent); }
-		/* solid — hard offset, zero blur (retro/comic), full-opacity opposite-of-ink */
-		&[variant~="tsh(solid)"] { --ui-sticker-text-shadow: 0.06em 0.06em 0 var(--ui-sticker-text-shadow-color); }
-
-		/* glass — frosted, Canvas/CanvasText tint (auto light/dark) + liquid-glass rim */
-		&[variant~="glass"] {
+		/* ───────── glass — frosted, Canvas/CanvasText tint (auto light/dark) + liquid-glass rim ───────── */
+		&[glass] {
 			--ui-sticker-bg: color-mix(in srgb, Canvas 55%, transparent);
 			--ui-sticker-c: CanvasText;
 			-webkit-backdrop-filter: var(--ui-sticker-glass-filter, blur(8px) saturate(180%));
@@ -143,18 +180,18 @@
 				inset 0 -2px 4px color-mix(in srgb, #000 18%, transparent),
 				0 3px 10px color-mix(in srgb, #000 20%, transparent);
 		}
-		&[variant~="glass"][color] { --ui-sticker-bg: color-mix(in srgb, attr(color type(<color>), Canvas) 60%, transparent); }
-		&[variant~="glass"][theme] { --ui-sticker-bg: color-mix(in srgb, var(--_theme-bg) 60%, transparent); }
+		&[glass][fill]  { --ui-sticker-bg: color-mix(in srgb, attr(fill type(<color>), Canvas) 60%, transparent); }
+		&[glass][theme] { --ui-sticker-bg: color-mix(in srgb, var(--_theme-bg) 60%, transparent); }
 
 		/* glass on a clipped shape: frost the ::before, lift with a silhouette drop-shadow */
-		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"])[variant~="glass"] {
+		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"])[glass] {
 			-webkit-backdrop-filter: none;
 			backdrop-filter: none;
 			border: 0;
 			box-shadow: none;
 			--ui-sticker-shadow: drop-shadow(0 3px 8px color-mix(in srgb, #000 28%, transparent));
 		}
-		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"])[variant~="glass"]::before {
+		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"])[glass]::before {
 			-webkit-backdrop-filter: var(--ui-sticker-glass-filter, blur(8px) saturate(180%));
 			backdrop-filter: var(--ui-sticker-glass-filter, blur(8px) saturate(180%));
 		}
@@ -282,7 +319,8 @@
 		&[variant~="speech(l)"]::after { inset-inline-start: 20%; clip-path: polygon(0 0, 100% 0, 0 100%); }
 		&[variant~="speech(r)"]::after { inset-inline-end: 20%;  clip-path: polygon(0 0, 100% 0, 100% 100%); }
 
-		/* text — puffy lettering: solid fill + thick white stroke (puff) + drop-shadow keyline */
+		/* text — puffy lettering: solid fill + thick white stroke (puff) + drop-shadow keyline.
+		   Family comes from the `font` attribute or a custom class (both set --ui-sticker-font-family). */
 		&[variant~="text"] {
 			--_o: var(--ui-sticker-text-outline-w, 2px);
 			--_oc: var(--ui-sticker-text-outline-c, var(--ui-sticker-bg, var(--color-accent)));
@@ -297,7 +335,7 @@
 			container-type: normal;
 			display: flex;
 			flex-direction: column;
-			font-family: var(--ui-sticker-text-font, 'Segoe Print', 'Bradley Hand', Chilanka, TSCu_Comic, casual, cursive);
+			/* family inherits from the host (font= attribute or a custom class) */
 			inline-size: max-content;
 			min-block-size: auto;
 			min-inline-size: auto;

@@ -1,18 +1,18 @@
 # @browser.style/sticker
 
-A CSS-first sticker component for promotional callouts — "Save 20%", "Best value", "-20%". A round disc by default, with an optional 24-point starburst shape.
+A CSS-first sticker component for promotional callouts — "Save 20%", "Best value", "-20%". A round disc by default, with optional star/heart/blob/speech shapes.
 
 ## Features
 
-- Disc (default), `burst`, `spark`, `sunburst`, `heart`, `blob` or `speech` balloon shape (`variant`)
-- `color` = any CSS color with auto-contrast ink, gradients via `color-end`, or `theme` bundles
-- Six box sizes (`sm`–`3xl`) with fluid `cqi` text; `fit` for native `text-fit` fill
+- Disc (default), `burst`, `spark`, `sunburst`, `heart`, `blob`, `speech` balloon or `text` shape (`variant`)
+- `fill` = any CSS background color with auto-contrast ink; `ink` = any text color; or `theme` bundles
+- Gradients via a custom class (set `--ui-sticker-bg`)
+- Two typographic shorthands: `font` (label/body lines) and `font-lead` (the `<strong>` line)
+- Six box sizes (`sm`–`3xl`) with fluid `cqi` text; `font="fit"` for native `text-fit` fill
 - `glass` frosted badge (auto light/dark) for overlaying on product photos
-- Soft or solid (`sh(solid)`) drop-shadows that follow clipped shapes
-- Token-driven background and ink color
+- Soft or `solid` drop-shadows (with `off()` offset) that follow clipped shapes
 - Square aspect-ratio with centered content
-- Light/dark mode support via design tokens
-- RTL support via logical properties
+- Light/dark mode + RTL support via design tokens / logical properties
 - Works without JavaScript (CSS-only mode)
 
 ---
@@ -69,12 +69,19 @@ The web component uses the **exact same** HTML structure as CSS-only — the JS 
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
-| `color` | string | Any CSS color → background; ink auto-contrasted via `contrast-color()` |
-| `color-end` | string | Second CSS color → background becomes a two-stop `linear-gradient` |
-| `angle` | angle | Gradient direction when `color-end` is set (e.g. `180deg`); default `90deg` |
+| `variant` | string | **Shape only:** `burst`, `spark`, `sunburst`, `heart`, `blob`, `speech(l)`, `speech(r)`, `text` |
+| `fill` | color | Any CSS color → background; ink auto-contrasted via `contrast-color()` |
+| `ink` | color | Any CSS color → text color; overrides the auto-contrast |
 | `theme` | string | Decorative color bundle (bg + ink): `red`, `orange`, `green`, `blue`, `accent`, `dark`, `light`, `subtle` |
 | `size` | string | Box size: `sm`, `md`, `lg` (default), `xl`, `2xl`, `3xl` |
-| `variant` | string | Space-separated tokens: shape (`burst`, `spark`, `sunburst`, `heart`, `blob`, `speech(l)`, `speech(r)`) · `text` · `glass` · ink (`ink(white)`, `ink(black)`) · shadow (`sh(sm)`…`sh(2xl)`, `sh(solid)`) · text-shadow (`tsh(sm)`…`tsh(xl)`, `tsh(solid)`) · font-scale (`fs(xs)`…`fs(2xl)`) · font-weight (`fw(normal)`…`fw(black)`) · `fit` / `fit(shrink)` · `gap(sm\|md\|lg)` |
+| `font` | string | Typography for the `<small>`/`<span>` lines — order-free tokens: family (`body\|heading\|mono\|serif`) · size (`xs`…`2xl`) · weight (`normal`…`black`) · `tsh(sm\|md\|lg\|xl\|solid)` · `fit` |
+| `font-lead` | string | Same vocabulary for the `<strong>` lead line |
+| `gap` | string | Line gap: `sm`, `md`, `lg` |
+| `glass` | boolean | Frosted, semi-transparent surface (auto light/dark) |
+| `shadow` | string | Box drop-shadow: `sm`…`2xl` or `solid`, plus offset `off(sm\|md\|lg)` |
+| `angle` | angle | Rotation for `variant="text"` (e.g. `-3deg`) |
+
+> **Migrating from 1.x:** `color` → `fill`; the `color-end`/`angle` gradient → a custom class; `variant`'s `fs()` → `font`/`font-lead` size, `fw()` → weight, `gap()` → `gap`, `sh()` → `shadow`, `tsh()` → `font="tsh()"`, `glass`/`fit` → the `glass`/`font="fit"` attributes, `ink()` → `ink`. `--ui-sticker-text-font` → `--ui-sticker-font-family`.
 
 ---
 
@@ -131,38 +138,40 @@ Use the CSS-only approach — no JavaScript needed:
 
 ---
 
-## Colors
+## Colors (`fill` + `ink`)
 
-`color` takes **any CSS color**. The value is read with `attr(color type(<color>))` for the background, and the text ink is auto-picked with `contrast-color()` — so any background gets legible text for free. The default background (no `color`) is `--color-accent`.
+Think of it as print: **`fill`** is the stock/background, **`ink`** is what's printed on it.
+
+`fill` takes **any CSS color**, read with `attr(fill type(<color>))` for the background; the text ink is auto-picked with `contrast-color()` — so any background gets legible text for free. The default background (no `fill`) is `--color-accent`.
 
 ```html
 <ui-sticker>Default</ui-sticker>
-<ui-sticker color="rebeccapurple">New</ui-sticker>
-<ui-sticker color="gold">Best value</ui-sticker>   <!-- → black ink -->
-<ui-sticker color="hotpink">Hot deal</ui-sticker>
-<ui-sticker color="oklch(0.7 0.18 150)">Fresh</ui-sticker>
+<ui-sticker fill="rebeccapurple">New</ui-sticker>
+<ui-sticker fill="gold">Best value</ui-sticker>   <!-- → black ink -->
+<ui-sticker fill="oklch(0.7 0.18 150)">Fresh</ui-sticker>
+```
+
+Set `ink` to override the auto-contrast with any color:
+
+```html
+<ui-sticker fill="#1d1d1d" ink="gold">Premium</ui-sticker>
 ```
 
 > **Browser support:** typed `attr()` + `contrast-color()` need Chrome 133+ / Safari 17.4+. For preset semantic bundles that work everywhere, use [`theme`](#theme) (`red`, `green`, `orange`, `blue`, …).
 
-### Gradient (`color` + `color-end`)
+### Gradient (custom class)
 
-Add `color-end` for a two-stop `linear-gradient` background. Direction is the typed `angle="<angle>"` attribute (default `90deg` = left→right). Ink is contrasted against the **start** color.
+Gradients are a custom class that sets `--ui-sticker-bg` (and `--ui-sticker-c`, since `contrast-color()` can't read a gradient). Works on discs and clipped shapes alike — the clip shapes paint `--ui-sticker-bg` on their `::before`, and the speech tail inherits it.
 
-> `angle` is a custom attribute — *not* the reserved HTML `dir`, which stays bound to text direction (RTL).
-
+```css
+.grad-teal { --ui-sticker-bg: linear-gradient(90deg, #38BC90, #21A7AE); --ui-sticker-c: #fff; }
+```
 ```html
-<ui-sticker color="#38BC90" color-end="#21A7AE"><small>GØR ET</small><strong>KUP</strong></ui-sticker>
-
-<!-- top → bottom -->
-<ui-sticker angle="180deg" color="#111" color-end="purple">
-  <small>HELLO</small><strong>SVG</strong>
-</ui-sticker>
+<ui-sticker class="grad-teal"><small>GRAB A</small><strong>DEAL</strong></ui-sticker>
+<ui-sticker variant="heart" class="grad-teal"><strong>LOVE</strong></ui-sticker>
 ```
 
-Works with any shape and any color syntax (the heart/burst clips and `oklch()` all apply).
-
-For full manual control, set the tokens directly:
+For a one-off, set the tokens inline:
 
 ```html
 <ui-sticker style="--ui-sticker-bg: hotpink; --ui-sticker-c: black;">Sale</ui-sticker>
@@ -170,7 +179,7 @@ For full manual control, set the tokens directly:
 
 ## Theme
 
-The `theme` attribute applies a decorative color **bundle** — a background and a paired ink color in one keyword — that works in every browser. The `color` axis takes any CSS color (auto-contrast ink) but needs newer `attr()`/`contrast-color()` support; `theme` is the safe preset alternative. If both `color` and `theme` are set, **`theme` wins**.
+The `theme` attribute applies a decorative color **bundle** — a background and a paired ink color in one keyword — that works in every browser. The `fill`/`ink` axis takes any CSS color but needs newer `attr()`/`contrast-color()` support; `theme` is the safe preset alternative. If both `fill` and `theme` are set, **`theme` wins**.
 
 ```html
 <ui-sticker theme="accent">Accent</ui-sticker>
@@ -194,60 +203,44 @@ The bundles are defined as `--ui-theme-*` tokens in `@browser.style/base` and ar
 }
 ```
 
+## Typography (`font` + `font-lead`)
+
+Two order-free shorthand attributes, each a space-separated set of tokens — family (`body | heading | mono | serif`) · size (`xs`…`2xl`) · weight (`normal | medium | semibold | bold | black`) · text-shadow (`tsh(sm)`…`tsh(xl)`, `tsh(solid)`):
+
+- **`font`** styles the "other" lines — `<small>` and `<span>` (the shared label/body typography).
+- **`font-lead`** styles the `<strong>` lead line.
+
+A typical sticker is `<small>Save</small><strong>10%</strong><small>Today</small>` — the two `<small>` lines share `font`, the lead uses `font-lead`:
+
+```html
+<ui-sticker font="serif medium" font-lead="heading black">
+  <small>Save</small><strong>10%</strong><small>Today</small>
+</ui-sticker>
+```
+
+Children inside a line — `<sup>`, `<sub>` — inherit the line's family automatically.
+
+`font`/`font-lead` only need the tokens you want to change; everything else keeps the tag default. The default ratios are `<small>` = 0.55 × base, `<strong>` = 1.1 × base, `<span>`/text = base, where the base line is `max(10px, 40cqi)` — i.e. 40 % of the box, with a 10px legibility floor.
+
+> Set per-instance escape hatches with `--ui-sticker-small-font` / `--ui-sticker-strong-font` (family), `--ui-sticker-small-scale` / `--ui-sticker-strong-scale` (size ratio), or `--ui-sticker-font-family` (the whole sticker).
+
 ## Fluid text (`cqi`)
 
-The sticker is its own query container, so **element** lines size in `cqi` and scale automatically with the box — no media queries, no per-size font tweaks. The rule:
+The sticker is its own query container, so **element** lines size in `cqi` and scale automatically with the box — no media queries, no per-size font tweaks.
 
 - **A raw text line** (no wrapping element) keeps a fixed `em` size.
 - **Any element line** (`<span>`, `<strong>`, `<small>`, …) sizes in `cqi` and scales with the box.
 
 ```html
-<!-- fixed em size -->
-<ui-sticker>-20%</ui-sticker>
-
-<!-- fluid: scales with --ui-sticker-sz / size= -->
-<ui-sticker><span>-20%</span></ui-sticker>
+<ui-sticker>-20%</ui-sticker>            <!-- fixed em -->
+<ui-sticker><span>-20%</span></ui-sticker> <!-- fluid, scales with size= -->
 ```
 
-No `cq-box` wrapper is needed — each element line is already a descendant of the sticker container, so its `cqi` resolves against the sticker.
-
-The base line is `max(10px, 40cqi)` — i.e. **40 % of the box**, with a `10px` floor so it stays legible on a very small sticker. `cqi` resolves against the *content* box, so the clipped shapes (`burst`, `spark`, `sunburst`, `heart`, `blob`) keep their padding small and lower the base a little so the text still fits the inner outline.
-
-### Per-line size from the tag — no inline styles
-
-The base line size is `--ui-sticker-fs` (× `--ui-sticker-fs-scale`, which `fs()` sets); `<small>` and `<strong>` derive from it by a fixed ratio, so changing the base (or `fs()`) scales every line together:
-
-| Tag | Role | Size |
-|-----|------|------|
-| `<small>` | label | 0.55 × base |
-| `<strong>` | headline | 1.1 × base |
-| `<span>` / text node | body | base |
-
-> The *computed* per-line size and the two derived sizes are internal (`--_size`, `--_size-sm`, `--_size-lg`) — set `--ui-sticker-fs` / `fs()` rather than overriding them directly.
-
-Nudge the **whole** sticker up or down with the `fs()` variant — it's a *scale multiplier* on the base, so the `small`/`strong`/`sup` ratios stay intact and it composes with any shape's base size. Useful when a long headline (e.g. `DEAL`) runs a touch large:
-
-| `variant` | Scale |
-|-----------|-------|
-| `fs(xs)` | ×0.6 |
-| `fs(sm)` | ×0.75 |
-| `fs(md)` | ×0.87 |
-| _(none)_ | ×1 (default) |
-| `fs(lg)` | ×1.15 |
-| `fs(xl)` | ×1.3 |
-| `fs(2xl)` | ×1.5 |
-
-`fw()` sets the weight: `fw(normal | medium | semibold | bold | black)`.
-
-```html
-<ui-sticker variant="fs(md)" color="#38BC90" color-end="#21A7AE">
-  <small>GRAB A</small><strong>DEAL</strong>
-</ui-sticker>
-```
+No `cq-box` wrapper is needed — each element line is already a descendant of the sticker container. `cqi` resolves against the *content* box, so the clipped shapes keep their padding small and lower the base a little so the text still fits the inner outline.
 
 ## Multi-line
 
-A sticker is a centered grid: **each direct child is its own line**. Every child gets `text-box: cap alphabetic`, which trims the font's leading so the visual spacing is driven by the gap alone. Use semantic tags for fluid per-line sizes — no inline styles:
+A sticker is a centered grid: **each direct child is its own line**. Every child gets `text-box: cap alphabetic`, which trims the font's leading so the visual spacing is driven by the gap alone.
 
 ```html
 <ui-sticker variant="burst">
@@ -258,16 +251,16 @@ A sticker is a centered grid: **each direct child is its own line**. Every child
 
 ### Line gap
 
-The gap is a **top-margin on the lines, sized as a fraction of the font** — not grid `gap`, because the host can't resolve `cqi` against itself. So the gap **scales with the box** too. `--ui-sticker-gap` is a unitless factor (default `0.16`); tune it with the `gap()` variant:
+The gap is a **top-margin on the lines, sized as a fraction of the font** — not grid `gap`, because the host can't resolve `cqi` against itself. So the gap **scales with the box** too. `--ui-sticker-gap` is a unitless factor (default `0.16`); tune it with the `gap` attribute:
 
-| `variant` | Factor |
-|-----------|--------|
-| `gap(sm)` | 0.12 |
-| `gap(md)` | 0.25 |
-| `gap(lg)` | 0.45 |
+| `gap` | Factor |
+|-------|--------|
+| `sm` | 0.12 |
+| `md` | 0.25 |
+| `lg` | 0.45 |
 
 ```html
-<ui-sticker variant="gap(md)">
+<ui-sticker gap="md">
   <small>FROM</small>
   <strong>$9</strong>
   <small>/mo</small>
@@ -280,41 +273,33 @@ The `size` attribute scales the **box** (`--ui-sticker-sz`); element lines follo
 
 ```html
 <ui-sticker size="sm" theme="red"><span>-20%</span></ui-sticker>
-<ui-sticker size="md" theme="red"><span>-20%</span></ui-sticker>
-<ui-sticker size="lg" theme="red"><span>-20%</span></ui-sticker>
-<ui-sticker size="xl" theme="red"><span>-20%</span></ui-sticker>
-<ui-sticker size="2xl" theme="red"><span>-20%</span></ui-sticker>
 <ui-sticker size="3xl" theme="red"><span>-20%</span></ui-sticker>
 ```
 
 ## Shadow
 
-Add a drop-shadow with `variant="sh(…)"` — function-style, aligned with card's `rds()`. It uses `filter: drop-shadow()`, so it follows clipped star/heart outlines (a `box-shadow` would be cut off by `clip-path`).
+Add a box drop-shadow with the `shadow` attribute. It uses `filter: drop-shadow()`, so it follows clipped star/heart outlines (a `box-shadow` would be cut off by `clip-path`).
+
+| `shadow` | Shadow |
+|----------|--------|
+| `sm` | subtle (soft) |
+| `md` | small (soft) |
+| `lg` | medium (soft) |
+| `xl` | large (soft) |
+| `2xl` | extra large (soft) |
+| `solid` | hard offset, zero-blur (comic look) |
+
+`solid` is the classic tactical/sticker shadow — a big solid-black offset. Step the offset with `off(sm|md|lg)`, or tune `--ui-sticker-shadow-x` / `-y` / `-color` directly (e.g. a darker shade of the bg for a tinted shadow).
 
 ```html
-<ui-sticker variant="sh(md)">New</ui-sticker>
-<ui-sticker variant="heart sh(lg)" theme="red"><span>Sale</span></ui-sticker>
-```
-
-| `variant` | Shadow |
-|-----------|--------|
-| `sh(sm)` | subtle (soft) |
-| `sh(md)` | small (soft) |
-| `sh(lg)` | medium (soft) |
-| `sh(xl)` | large (soft) |
-| `sh(2xl)` | extra large (soft) |
-| `sh(solid)` | hard offset, zero-blur (comic look) |
-
-`sh(solid)` is the classic tactical/sticker shadow — a big solid-black offset like the original speech balloons (`drop-shadow(.5em .5em 0 #000)`). Tune the offset and color with `--ui-sticker-shadow-x`, `--ui-sticker-shadow-y`, `--ui-sticker-shadow-color` (e.g. set a darker shade of the bg for a tinted shadow).
-
-```html
-<ui-sticker variant="sh(solid)" color="orange"><span>SALE</span></ui-sticker>
-<ui-sticker variant="spark sh(solid)" color="#2980b9"><strong>40%</strong></ui-sticker>
+<ui-sticker shadow="md">New</ui-sticker>
+<ui-sticker variant="heart" shadow="lg" theme="red"><span>Sale</span></ui-sticker>
+<ui-sticker shadow="solid off(lg)" fill="orange"><span>SALE</span></ui-sticker>
 ```
 
 ## Shape variants
 
-The default is a disc. Set `variant` for a clipped shape:
+The default is a disc. Set `variant` for a clipped shape (`variant` carries the shape only):
 
 | `variant` | Shape | Technique |
 |-----------|-------|-----------|
@@ -324,86 +309,67 @@ The default is a disc. Set `variant` for a clipped shape:
 | `heart` | heart | `clip-path: shape()` |
 | `blob` | organic rounded splat | `clip-path: shape()` |
 | `speech(l)` / `speech(r)` | rounded balloon + tail (bottom-left / -right) | `border-radius` + `::after` tail |
+| `text` | puffy lettering, no box | text-stroke + drop-shadow |
 
 ```html
-<ui-sticker>Disc (default)</ui-sticker>
 <ui-sticker variant="burst" theme="orange">Starburst</ui-sticker>
-<ui-sticker variant="spark" theme="red"><span>Spark</span></ui-sticker>
-<ui-sticker variant="sunburst" theme="blue"><span>Sunburst</span></ui-sticker>
 <ui-sticker variant="heart" theme="red">Heart</ui-sticker>
-<ui-sticker variant="blob" theme="accent"><small>NEW</small><strong>2026</strong></ui-sticker>
-<ui-sticker variant="speech(l)" color="#2980b9"><span>Hi!</span></ui-sticker>
+<ui-sticker variant="speech(l)" fill="#2980b9"><span>Hi!</span></ui-sticker>
 ```
 
-The clipped shapes (`burst`, `spark`, `sunburst`, `heart`, `blob`) draw their fill on a `::before` layer so the host stays unclipped and the `drop-shadow` follows the silhouette.
-
-The balloon isn't square: it uses a `5/4` aspect-ratio and a tail that **inherits the fill** (solid or gradient) and is included in the `drop-shadow`.
+The clipped shapes draw their fill on a `::before` layer so the host stays unclipped and the `drop-shadow` follows the silhouette. The balloon isn't square: it uses a `5/4` aspect-ratio and a tail that **inherits the fill** (solid or gradient) and is included in the `drop-shadow`.
 
 ## Text sticker (`variant="text"`)
 
 Puffy "sticker lettering" — no box, just the glyphs with a thick white stroke (the puff), a solid colored fill, and a thin colored keyline. Pure CSS, no `data-text`, no SVG:
 
 - **stroke puff** → `-webkit-text-stroke` + `paint-order: stroke fill` on the line element
-- **fill** → `-webkit-text-fill-color` from `color`/`theme` (note: `background-clip:text` does **not** composite as fill alongside `text-stroke`, so a solid fill is used)
+- **fill** → `-webkit-text-fill-color` from `fill`/`theme`
 - **keyline** → 4-way `drop-shadow` in the host's existing shadow slot
 
-The fill color comes from `color`/`theme`. Set the typeface with `--ui-sticker-text-font` — a **fat, rounded display face** holds the puff best (the white stroke needs thick stems so the fill still shows). Good Google Fonts: **Bagel Fat One**, **Cherry Bomb One**, **Fredoka**, **Titan One**; or a brush/marker like **Sedgwick Ave Display** / **Freckle Face**. Apply it with a utility class:
+The fill color comes from `fill`/`theme`. Set the typeface with the `font` attribute (`font="serif"`, …) or a custom class that sets `--ui-sticker-font-family` — a **fat, rounded display face** holds the puff best. Good Google Fonts: **Bagel Fat One**, **Cherry Bomb One**, **Fredoka**, **Titan One**; or a brush/marker like **Sedgwick Ave Display** / **Freckle Face**:
 
 ```css
-.font-bagel { --ui-sticker-text-font: "Bagel Fat One", system-ui; }
+.font-bagel { --ui-sticker-font-family: "Bagel Fat One", system-ui; }
 ```
 ```html
-<ui-sticker variant="text" color="#7ec27c" class="font-bagel"><span>50% Off</span></ui-sticker>
+<ui-sticker variant="text" fill="#7ec27c" class="font-bagel"><span>50% Off</span></ui-sticker>
 ```
 
 Tune with `--ui-sticker-text-size` (default `3.5em`), `--ui-sticker-text-stroke-w`/`-c` (puff), `--ui-sticker-text-outline-w`/`-c` (keyline), and `--ui-sticker-text-fill` (override the fill color). Sizes in `em` (the `cqi` box containment is dropped for this variant).
 
-**Slight tilt:** text stickers reuse the `angle` attribute (free here — there's no gradient) to rotate the lettering for a hand-placed look:
+**Slight tilt:** text stickers use the `angle` attribute to rotate the lettering for a hand-placed look:
 
 ```html
-<ui-sticker variant="text" color="#ff9797" angle="-3deg" class="font-bagel"><span>Last Call</span></ui-sticker>
+<ui-sticker variant="text" fill="#ff9797" angle="-3deg" class="font-bagel"><span>Last Call</span></ui-sticker>
 ```
 
-## Glass (`variant="glass"`)
+## Glass (`glass`)
 
-A frosted, semi-transparent badge for overlaying on product photos — the modern alternative to ribbons/price-tags. It tints with the system `Canvas`/`CanvasText` colors, so it **auto-flips for light/dark** with no media query, and the `backdrop-filter` blurs the image behind. A `box-shadow` adds the "liquid glass" specular rim (inset highlight + soft outer lift). Add `color`/`theme` to tint the frost.
+A frosted, semi-transparent badge for overlaying on product photos. It tints with the system `Canvas`/`CanvasText` colors, so it **auto-flips for light/dark** with no media query, and the `backdrop-filter` blurs the image behind. A `box-shadow` adds the "liquid glass" specular rim. Add `fill`/`theme` to tint the frost.
 
 ```html
 <ui-card variant="vis(media)" media="asr(4/3) sticker(te)">
   <cq-box><ui-media>
     <img src="product.jpg" alt="">
-    <ui-sticker variant="glass"><span>NEW</span></ui-sticker>
+    <ui-sticker glass><span>NEW</span></ui-sticker>
   </ui-media></cq-box>
 </ui-card>
 ```
 
 Works on the **disc** (default) and the clipped shapes (`blob`, `burst`, …) — on a clipped shape the frost moves to the `::before` (blurred to the silhouette) and the crisp rim is traded for a soft silhouette shadow. Override `--ui-sticker-glass-filter` (default `blur(8px) saturate(180%)`) to tune the blur — or point it at an SVG `feDisplacementMap` filter for true refraction.
 
-## Fit to width (`text-fit`)
+## Fit to width (`font="fit"`)
 
-`variant="fit"` uses the native [`text-fit`](https://drafts.csswg.org/css-text-5/#text-fit-property) property to grow each line to fill the box width — no overflow, no SVG, no JS.
-
-`text-fit` fits text within the box it's set on, and the sticker host (a grid) has no direct text runs — the lines **are** the child elements. So `fit` targets the line elements and gives them the full box width to grow into (`grid-template-columns: 100%`). It's wrapped in `@supports (text-fit: grow)`, so it's a **progressive enhancement** (Chrome 150+); where unsupported, the `cqi` sizing and centered layout both stay.
-
-| `variant` | Effect |
-|-----------|--------|
-| `fit` | each line grows to fill the box width |
-| `fit(shrink)` | overlong lines shrink to fit |
-
-> Each line is a single-line element, i.e. its *last* line — so `text-fit: …per-line` would be a no-op (the spec doesn't scale a block's last line). `fit` uses the default `grow consistent`, which does scale it.
+The `fit` token uses the native [`text-fit`](https://drafts.csswg.org/css-text-5/#text-fit-property) property (`grow`) to scale each line up to fill the box width — no overflow, no SVG, no JS. Put it on `font` (the `<small>`/`<span>` lines), on `font-lead` (the `<strong>` line), or both. Each line is its own single-line element, so each fills its column independently (`grid-template-columns: 100%`). Wrapped in `@supports (text-fit: grow)`, so it's a **progressive enhancement** (Chrome 150+); where unsupported, the `cqi` sizing and centered layout both stay.
 
 ```html
-<ui-sticker variant="fit" theme="blue"><small>UP TO</small><strong>40%</strong></ui-sticker>
+<ui-sticker font="fit" font-lead="fit" theme="blue"><small>UP TO</small><strong>40%</strong></ui-sticker>
 ```
 
-> Safari/Firefox have no signal yet, so keep `fit` as an enhancement on top of a sensible `fs()`/`size` baseline.
+> Safari/Firefox have no signal yet, so keep `fit` as an enhancement on top of a sensible `size` baseline.
 
-`spark`, `sunburst` and `heart` are recreations of classic SVG "tactical element"
-price badges, redrawn as pure CSS clip paths so they scale with `font-size` and need
-no markup. `heart` uses `clip-path: shape()` (Chrome 137+, Safari 18.4+); the polygon
-stars work everywhere `clip-path` is supported.
-
-Override the `burst` star shape via `--ui-sticker-clip-path` with any `polygon()` / `path()`.
+`spark`, `sunburst` and `heart` are recreations of classic SVG "tactical element" price badges, redrawn as pure CSS clip paths so they scale with `font-size` and need no markup. `heart` uses `clip-path: shape()` (Chrome 137+, Safari 18.4+); the polygon stars work everywhere `clip-path` is supported. Override the `burst` star shape via `--ui-sticker-clip-path`.
 
 ---
 
@@ -413,27 +379,24 @@ Override the `burst` star shape via `--ui-sticker-clip-path` with any `polygon()
 
 | Token | Default | Description |
 |-------|---------|-------------|
-| `--ui-sticker-bg` | `var(--color-accent)` | Background color |
+| `--ui-sticker-bg` | `var(--color-accent)` | Background color (set a `linear-gradient()` here for a gradient) |
 | `--ui-sticker-c` | `hsl(0 0% 100%)` | Text/ink color |
+| `--ui-sticker-font-family` | `var(--font-body)` | Typeface (set by `font`/`font-lead` family tokens) |
 | `--ui-sticker-sz` | `5em` | Box size (disc diameter); also set by `size=` |
 | `--ui-sticker-fs` | `40cqi` | Base line size (clip shapes lower this) |
-| `--ui-sticker-fs-scale` | `1` | Multiplier on the base (set by `fs()`) |
-| `--ui-sticker-font-weight` | `var(--font-weight-bold, 700)` | Font weight (set by `fw()`) |
+| `--ui-sticker-small-scale` / `-strong-scale` | `0.55` / `1.1` | `<small>` / `<strong>` size ratio |
+| `--ui-sticker-small-font` / `-strong-font` | inherit family | Per-tag family override |
+| `--ui-sticker-font-weight` | `var(--font-weight-bold, 700)` | Host weight default |
 | `--ui-sticker-gap` | `0.16` | Line gap as a unitless factor of the font-size (scales with the box) |
 | `--ui-sticker-radius` | `var(--radius-circle, 50%)` | Corner radius (disc / speech) |
 | `--ui-sticker-clip-path` | 24-point star `polygon()` | Shape for `variant="burst"` |
-| `--ui-sticker-shadow-x` / `-y` / `-color` | `0.25em` / `0.25em` / `#000` | Offset + tint for `sh(solid)` |
+| `--ui-sticker-shadow-x` / `-y` / `-color` | `0.25em` / `0.25em` / `#000` | Offset + tint for `shadow="solid"` |
 | `--ui-sticker-text-shadow` | `none` | Text-shadow on the lines (set by `tsh()`, in `cqi`) |
-| `--ui-sticker-text-shadow-color` | `contrast-color(ink)` | `tsh()` tint — auto the **opposite** of the ink (white text → dark shadow) |
+| `--ui-sticker-text-shadow-color` | `contrast-color(ink)` | `tsh()` tint — auto the **opposite** of the ink |
 | `--ui-sticker-glass-filter` | `blur(8px) saturate(180%)` | `backdrop-filter` for `glass` |
 | `--ui-sticker-text-size` | `3.5em` | Font size for `variant="text"` |
-| `--ui-sticker-text-font` | handwritten stack | Typeface for `variant="text"` |
 | `--ui-sticker-text-stroke-w` / `-c` | `0.2em` / `#fff` | The puff (white stroke) |
 | `--ui-sticker-text-outline-w` / `-c` | `2px` / the fill | The keyline |
-
-> Lines size in `cqi` so they scale with the box; changing `--ui-sticker-sz` (or `size=`) resizes the box and the text follows.
-
-Override per instance or globally:
 
 ```css
 ui-sticker {
@@ -449,15 +412,15 @@ ui-sticker {
 The non-obvious "why" behind the CSS (kept here so the stylesheet stays terse):
 
 - **`cqi` resolves against an *ancestor* container, never the element itself.** The sticker is its own `container-type: inline-size`, so a line's `cqi` font-size resolves against the sticker — but only because the line is a **child**. The host can't size *itself* in `cqi`.
-- **Line gap is a child `margin`, not `row-gap`.** To make the gap scale with the box it must be a fraction of the `cqi` font-size; `cqi` only resolves correctly on the child (`& > * + *` → `margin-block-start`). `row-gap` on the host would resolve `cqi` against the wrong container, and an `em` `row-gap` wouldn't scale with the box.
-- **Square floor on *both* axes.** `aspect-ratio: 1/1` alone can't keep a short callout square (`min-width` is only a floor with no definite axis to derive height from), so both `min-block-size` and `min-inline-size` are set.
-- **Clipped shapes draw their fill on a `::before`.** `clip-path` on an element clips the *result of its `filter`*, so a host `drop-shadow` would be cut away. Instead the host stays unclipped (shadow follows the silhouette) and the `::before` carries `background` + `clip-path: var(--_shape)`.
-- **Shape positioning is zero-specificity (`&:where(…)`).** The `::before` needs a positioned host, but a normal `position: relative` would out-specify `ui-card`'s `sticker(te)` `position: absolute` and the badge would stretch to fill the media instead of sitting in a corner. `&:where(…)` gives it 0 specificity so an external placement wins.
-- **`text` fill uses `-webkit-text-fill-color`, not `background-clip: text`.** `background-clip: text` does **not** composite as a fill alongside `-webkit-text-stroke`, so the gradient never paints — a solid fill is used (the white stroke is the "puff", a 4-way `drop-shadow` is the keyline).
-- **`fit` targets the line elements.** `text-fit` scales the text in the box it's set on; the host (a grid) has no direct text runs, so `fit` goes on the lines with `grid-template-columns: 100%` to give them the box width. `…per-line` is a no-op on a single-line element (a block's last line isn't scaled), so `grow consistent` is used.
-- **`drop-shadow`, not `box-shadow`.** Only `drop-shadow` follows the clipped star/heart/blob outlines; `box-shadow` would be a rectangle.
-- **`angle` is dual-purpose.** It sets the gradient direction with `color-end`, and (since text stickers have no gradient) rotates the lettering on `variant="text"`.
-- **`tsh()` shadow auto-flips.** The ink is `contrast-color(bg)` (black/white), so the text-shadow tint defaults to `contrast-color(ink)` — i.e. the *opposite* of the ink (white text → dark shadow, black text → light shadow). Sized in `cqi` so it scales with the text.
+- **Line gap is a child `margin`, not `row-gap`.** To make the gap scale with the box it must be a fraction of the `cqi` font-size; `cqi` only resolves correctly on the child (`& > * + *` → `margin-block-start`).
+- **`font` / `font-lead` split by line group.** `font` targets `> :not(strong)` (the `<small>`/`<span>` lines), `font-lead` targets `> strong`. The attribute rules out-specify the tag defaults, so they win; `<sup>`/`<sub>` inherit their line's family.
+- **Square floor on *both* axes.** `aspect-ratio: 1/1` alone can't keep a short callout square, so both `min-block-size` and `min-inline-size` are set.
+- **Clipped shapes draw their fill on a `::before`.** `clip-path` clips the result of an element's `filter`, so a host `drop-shadow` would be cut away. Instead the host stays unclipped and the `::before` carries `background` + `clip-path: var(--_shape)`.
+- **Shape positioning is zero-specificity (`&:where(…)`).** The `::before` needs a positioned host, but `position: relative` at normal specificity would out-specify `ui-card`'s `sticker(te)` `position: absolute`. `&:where(…)` gives it 0 specificity so an external placement wins.
+- **`text` fill uses `-webkit-text-fill-color`, not `background-clip: text`** (which doesn't composite as a fill alongside `-webkit-text-stroke`).
+- **`fit` targets the line elements** with `grid-template-columns: 100%`; `…per-line` is a no-op on a single-line element, so `grow consistent` is used.
+- **`drop-shadow`, not `box-shadow`.** Only `drop-shadow` follows the clipped star/heart/blob outlines.
+- **`tsh()` shadow auto-flips.** The ink is `contrast-color(bg)`, so the text-shadow tint defaults to `contrast-color(ink)` — the *opposite* of the ink. Sized in `cqi`.
 
 ## Accessibility
 
@@ -476,4 +439,5 @@ All modern browsers.
 | Custom elements | All modern browsers |
 | `clip-path: polygon()` | All modern browsers |
 | `aspect-ratio` | Chrome 88+, Firefox 89+, Safari 15+ |
+| typed `attr()` + `contrast-color()` | Chrome 133+, Safari 17.4+ |
 | `light-dark()` (via base tokens) | Chrome 123+, Firefox 120+, Safari 17.5+ |
