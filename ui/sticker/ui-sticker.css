@@ -46,7 +46,7 @@
 		place-content: center;
 		pointer-events: none;
 		text-align: center;
-¨		user-select: none;
+		user-select: none;
 
 		& > * {
 			font-size: max(10px, var(--_size));
@@ -131,23 +131,33 @@
 		&:is([shadow~="off(xl)"], [shadow~="-off(xl)"]) { --_o: 0.6em; }
 		&[shadow*="-off("] { --_ox: calc(var(--_o) * -1); }
 
-		/* ───────── hover — opt-in via the `hover` attribute (motion gated to no-preference) ───────── */
-		&[hover] { pointer-events: auto; }   /* opt-in interactivity — not motion, applies always */
-		@media (prefers-reduced-motion: no-preference) {
-			&[hover] {
-				transition-property: scale, translate, rotate;
-				transition-duration: var(--ui-sticker-hover-duration);
-				transition-timing-function: var(--ui-sticker-hover-ease);
-			}
+		/* ───────── hover — opt-in via the `hover` attribute ───────── */
+		&[hover] {
+			pointer-events: auto;
+			transition:
+				scale     var(--ui-sticker-hover-duration) var(--ui-sticker-hover-ease),
+				translate var(--ui-sticker-hover-duration) var(--ui-sticker-hover-ease),
+				rotate    var(--ui-sticker-hover-duration) var(--ui-sticker-hover-ease);
+		}
+		/* lift */
+		&:is(:hover, :where(ui-card:hover) &) {
+			&[hover~="lift"] { translate: 0 var(--ui-sticker-hover-lift); }
+			&[hover~="pop"]  { scale: var(--ui-sticker-hover-scale); }
+			&[hover~="tilt"] { rotate: var(--ui-sticker-hover-rotate); }
+			&[hover~="-tilt"] { rotate: calc(var(--ui-sticker-hover-rotate) * -1); }
+			&[hover~="spin"] { animation: ui-sticker-spin var(--ui-sticker-hover-spin-duration) var(--ui-sticker-hover-ease); }
+			&[hover~="-spin"] { animation: ui-sticker-spin var(--ui-sticker-hover-spin-duration) var(--ui-sticker-hover-ease) reverse; }
+		}
+		&[hover~="press"]:active { scale: var(--ui-sticker-hover-press); }
+
+		@media (prefers-reduced-motion: reduce) {
+			&[hover] { transition: none; animation: none; }
 			&:is(:hover, :where(ui-card:hover) &) {
-				&[hover~="lift"]  { translate: 0 var(--ui-sticker-hover-lift); }
-				&[hover~="pop"]   { scale: var(--ui-sticker-hover-scale); }
-				&[hover~="tilt"]  { rotate: var(--ui-sticker-hover-rotate); }
-				&[hover~="-tilt"] { rotate: calc(var(--ui-sticker-hover-rotate) * -1); }
-				&[hover~="spin"]  { animation: ui-sticker-spin var(--ui-sticker-hover-spin-duration) var(--ui-sticker-hover-ease); }
-				&[hover~="-spin"] { animation: ui-sticker-spin var(--ui-sticker-hover-spin-duration) var(--ui-sticker-hover-ease) reverse; }
+				&[hover~="lift"] { translate: none; }
+				&[hover~="pop"]  { scale: none; }
+				&:is([hover~="tilt"], [hover~="-tilt"]) { rotate: none; }
+				&:is([hover~="spin"], [hover~="-spin"]) { animation: none; }
 			}
-			&[hover~="press"]:active { scale: var(--ui-sticker-hover-press); }
 		}
 
 		/* clipped shapes — fill on a ::before so the host stays unclipped; each sets
