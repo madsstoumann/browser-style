@@ -69,11 +69,11 @@ The web component uses the **exact same** HTML structure as CSS-only — the JS 
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
-| `variant` | string | **Shape only:** `burst`, `spark`, `sunburst`, `heart`, `blob`, `speech(l)`, `speech(r)`, `text` |
+| `variant` | string | **Shape only:** `burst`, `spark`, `sunburst`, `heart`, `blob`, `speech(l)`, `speech(r)`, `text`, `clip` (bring-your-own via `--ui-sticker-clip-path`) |
 | `fill` | color | Any CSS color → background; ink auto-contrasted via `contrast-color()` |
 | `ink` | color | Any CSS color → text color; overrides the auto-contrast |
 | `size` | string | Box size: `sm`, `md`, `lg` (default), `xl`, `2xl`, `3xl` |
-| `font` | string | Typography for the `<small>`/`<span>` lines — order-free tokens: family (`body\|heading\|mono\|serif`) · size (`xs`…`2xl`) · weight (`normal`…`black`) · text-shadow `shadow(sm\|md\|lg\|xl)` soft or `shadow(solid\|solid-sm…solid-xl)` hard · `fit` |
+| `font` | string | Typography for the `<small>`/`<span>` lines — order-free tokens: family (`body\|heading\|mono\|serif`) · size (`xs`…`2xl`) · weight (`thin`…`black`) · text-shadow `shadow(sm\|md\|lg\|xl)` soft or `shadow(solid\|solid-sm…solid-xl)` hard · `fit` |
 | `font-lead` | string | Same vocabulary for the `<strong>` lead line |
 | `gap` | string | Line gap: `sm`, `md`, `lg` |
 | `shadow` | string | Box drop-shadow: `sm`…`2xl` or `solid`, plus offset `off(sm\|md\|lg\|xl)` / `-off(…)` (left) |
@@ -178,7 +178,7 @@ For a one-off, set the tokens inline:
 
 ## Typography (`font` + `font-lead`)
 
-Two order-free shorthand attributes, each a space-separated set of tokens — family (`body | heading | mono | serif`) · size (`xs`…`2xl`) · weight (`normal | medium | semibold | bold | black`) · text-shadow — soft `shadow(sm)`…`shadow(xl)` or hard `shadow(solid)` / graded `shadow(solid-sm)`…`shadow(solid-xl)`:
+Two order-free shorthand attributes, each a space-separated set of tokens — family (`body | heading | mono | serif`) · size (`xs`…`2xl`) · weight (`thin | light | normal | medium | semibold | bold | black`) · text-shadow — soft `shadow(sm)`…`shadow(xl)` or hard `shadow(solid)` / graded `shadow(solid-sm)`…`shadow(solid-xl)`:
 
 - **`font`** styles the "other" lines — `<small>` and `<span>` (the shared label/body typography).
 - **`font-lead`** styles the `<strong>` lead line.
@@ -316,6 +316,7 @@ The default is a disc. Set `variant` for a clipped shape (`variant` carries the 
 | `sunburst` | fine 40-point sawtooth ring | `clip-path: polygon()` |
 | `heart` | heart | `clip-path: shape()` |
 | `blob` | organic rounded splat | `clip-path: shape()` |
+| `clip` | bring-your-own — set `--ui-sticker-clip-path` to any `polygon()`/`shape()` | custom |
 | `speech(l)` / `speech(r)` | rounded balloon + tail (bottom-left / -right) | `border-radius` + `::after` tail |
 | `text` | puffy lettering, no box | text-stroke + drop-shadow |
 
@@ -362,7 +363,19 @@ The `fit` token uses the native [`text-fit`](https://drafts.csswg.org/css-text-5
 
 > Safari/Firefox have no signal yet, so keep `fit` as an enhancement on top of a sensible `size` baseline.
 
-`spark`, `sunburst` and `heart` are recreations of classic SVG "tactical element" price badges, redrawn as pure CSS clip paths so they scale with `font-size` and need no markup. `heart` uses `clip-path: shape()` (Chrome 137+, Safari 18.4+); the polygon stars work everywhere `clip-path` is supported. Override the `burst` star shape via `--ui-sticker-clip-path`.
+`spark`, `sunburst` and `heart` are recreations of classic SVG "tactical element" price badges, redrawn as pure CSS clip paths so they scale with `font-size` and need no markup. `heart` uses `clip-path: shape()` (Chrome 137+, Safari 18.4+); the polygon stars work everywhere `clip-path` is supported.
+
+Every clipped shape (including each preset) reads `--ui-sticker-clip-path`, so you can override any of them:
+
+```html
+<ui-sticker variant="burst" style="--ui-sticker-clip-path: polygon(50% 0, 100% 100%, 0 100%)">▲</ui-sticker>
+```
+
+Or use `variant="clip"` for a bring-your-own shape with no preset — the `burst`/`spark`/etc. are just named presets of the same mechanism:
+
+```html
+<ui-sticker variant="clip" style="--ui-sticker-clip-path: shape(…)"><strong>SALE</strong></ui-sticker>
+```
 
 ---
 
@@ -383,7 +396,7 @@ The `fit` token uses the native [`text-fit`](https://drafts.csswg.org/css-text-5
 | `--ui-sticker-font-weight` | `var(--font-weight-bold, 700)` | Host weight default |
 | `--ui-sticker-gap` | `0.16` | Line gap as a unitless factor of the font-size (scales with the box) |
 | `--ui-sticker-radius` | `var(--radius-circle, 50%)` | Corner radius (disc / speech) |
-| `--ui-sticker-clip-path` | 24-point star `polygon()` | Shape for `variant="burst"` |
+| `--ui-sticker-clip-path` | per shape (24-point star for `burst`) | The `clip-path` the active clipped shape uses — override any preset, or supply it with `variant="clip"` |
 | `--ui-sticker-shadow-x` / `-y` / `-color` | `0.25em` / `0.25em` / `#000` | Offset + tint for `shadow="solid"` |
 | `--ui-sticker-text-shadow` | `none` | Text-shadow on the lines (set by `shadow()`, in `cqi`) |
 | `--ui-sticker-text-shadow-color` | `contrast-color(ink)` | `shadow()` tint — auto the **opposite** of the ink |
@@ -413,7 +426,7 @@ The non-obvious "why" behind the CSS (kept here so the stylesheet stays terse):
 - **Line gap is a child `margin`, not `row-gap`.** To make the gap scale with the box it must be a fraction of the `cqi` font-size; `cqi` only resolves correctly on the child (`& > * + *` → `margin-block-start`).
 - **`font` / `font-lead` split by line group.** `font` targets `> :not(strong)` (the `<small>`/`<span>` lines), `font-lead` targets `> strong`. The attribute rules out-specify the tag defaults, so they win; `<sup>`/`<sub>` inherit their line's family.
 - **Square floor on *both* axes.** `aspect-ratio: 1/1` alone can't keep a short callout square, so both `min-block-size` and `min-inline-size` are set.
-- **Clipped shapes draw their fill on a `::before`.** `clip-path` clips the result of an element's `filter`, so a host `drop-shadow` would be cut away. Instead the host stays unclipped and the `::before` carries `background` + `clip-path: var(--_shape)`.
+- **Clipped shapes draw their fill on a `::before`.** `clip-path` clips the result of an element's `filter`, so a host `drop-shadow` would be cut away. Instead the host stays unclipped and the `::before` carries `background` + `clip-path: var(--ui-sticker-clip-path)`.
 - **Shape positioning is zero-specificity (`&:where(…)`).** The `::before` needs a positioned host, but `position: relative` at normal specificity would out-specify `ui-card`'s `sticker(te)` `position: absolute`. `&:where(…)` gives it 0 specificity so an external placement wins.
 - **`text` fill uses `-webkit-text-fill-color`, not `background-clip: text`** (which doesn't composite as a fill alongside `-webkit-text-stroke`).
 - **`fit` targets the line elements** with `grid-template-columns: 100%`; `…per-line` is a no-op on a single-line element, so `grow consistent` is used.

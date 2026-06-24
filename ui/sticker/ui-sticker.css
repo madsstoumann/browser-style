@@ -1,16 +1,17 @@
 /**
  * ui-sticker
- * @version 2.0.0
+ * @version 1.0.2
  * @date 2026-06-24
  * @author Mads Stoumann
  * See readme.md → "Implementation notes" for the why behind the non-obvious bits.
  *
  * Attribute taxonomy (leaf component — aligned with badge/chip/avatar conventions):
  *   variant    shape/form ONLY: burst spark sunburst heart blob speech(l|r) text
+ *              clip = bring-your-own shape via --ui-sticker-clip-path
  *   font       typography for the "other" lines (<small>, <span>):
  *                family  body | heading | mono | serif
  *                size    xs sm md lg xl 2xl
- *                weight  normal medium semibold bold black
+ *                weight  thin light normal medium semibold bold black
  *                shadow  soft shadow(sm|md|lg|xl) · hard shadow(solid|solid-sm|solid-md|solid-lg|solid-xl)
  *                fit     fit  (grow the line to fill the box width)
  *   font-lead  same vocabulary for the <strong> lead line
@@ -24,30 +25,29 @@
  */
 @layer bs-component {
 	:where(ui-sticker) {
-		--ui-sticker-padding: 0.5em;
-		--ui-sticker-gap: 0.16;
-		--ui-sticker-fs: 40cqi;
+		--ui-sticker-font-family: var(--font-body);
 		--ui-sticker-fs-scale: 1;
-		--ui-sticker-small-scale: 0.55;
-		--ui-sticker-strong-scale: 1.1;
-		--_size: calc(var(--ui-sticker-fs) * var(--ui-sticker-fs-scale));
-		--_size-sm: calc(var(--_size) * var(--ui-sticker-small-scale));
-		--_size-lg: calc(var(--_size) * var(--ui-sticker-strong-scale));
-		--ui-sticker-shadow-x: 0.25em;
-		--ui-sticker-shadow-y: 0.25em;
-		--ui-sticker-shadow-color: #000;
-		/* hover (opt-in via the `hover` attribute) */
+		--ui-sticker-fs: 40cqi;
+		--ui-sticker-gap: 0.16;
 		--ui-sticker-hover-duration: var(--duration-normal);
 		--ui-sticker-hover-ease: var(--ease-out);
 		--ui-sticker-hover-lift: -0.35em;
-		--ui-sticker-hover-scale: 1.06;
 		--ui-sticker-hover-press: 0.95;
 		--ui-sticker-hover-rotate: -4deg;
+		--ui-sticker-hover-scale: 1.06;
 		--ui-sticker-hover-spin-duration: 0.8s;
-		/* text-shadow tint = the OPPOSITE of the ink (ink is contrast-color(bg) = black/white,
-		   so contrast-color(ink) flips it): white text → dark shadow, black text → light shadow */
+		--ui-sticker-p: 0.5em;
+		--ui-sticker-shadow-color: #000;
+		--ui-sticker-shadow-x: 0.25em;
+		--ui-sticker-shadow-y: 0.25em;
+		--ui-sticker-small-scale: 0.55;
+		--ui-sticker-strong-scale: 1.1;
 		--ui-sticker-text-shadow-color: contrast-color(var(--ui-sticker-c, hsl(0, 0%, 100%)));
-		--ui-sticker-font-family: var(--font-body);
+
+		--_size-lg: calc(var(--_size) * var(--ui-sticker-strong-scale));
+		--_size-sm: calc(var(--_size) * var(--ui-sticker-small-scale));
+		--_size: calc(var(--ui-sticker-fs) * var(--ui-sticker-fs-scale));
+
 		aspect-ratio: 1 / 1;
 		background: var(--ui-sticker-bg, var(--color-accent));
 		border-radius: var(--ui-sticker-radius, var(--radius-circle, 50%));
@@ -59,17 +59,14 @@
 		font-size: var(--font-size-sm);
 		font-weight: var(--ui-sticker-font-weight, var(--font-weight-bold, 700));
 		line-height: 1;
-		/* floor BOTH axes so a short callout stays square */
 		min-block-size: var(--ui-sticker-sz, 5em);
 		min-inline-size: var(--ui-sticker-sz, 5em);
-		padding: var(--ui-sticker-padding);
+		padding: var(--ui-sticker-p);
 		place-content: center;
-		pointer-events: none;   /* decorative by default; `hover` attr opts back in */
+		pointer-events: none;
 		text-align: center;
-		/* text-box: cap alphabetic; */
-		user-select: none;
+¨		user-select: none;
 
-		/* one line per element child, sized in cqi (10px floor) */
 		& > * {
 			font-size: max(10px, var(--_size));
 			line-height: 1;
@@ -78,90 +75,65 @@
 			text-shadow: var(--ui-sticker-text-shadow, none);
 		}
 
-		/* line gap = top-margin (host can't resolve cqi against itself); factor × font */
 		& > * + * {
 			margin-block-start: calc(var(--_size) * var(--ui-sticker-gap, 0));
 		}
 
-		/* per-line size + family defaults by tag; sup/sub inherit family from their parent line */
 		& > small  { font-size: max(10px, var(--_size-sm)); font-weight: var(--font-weight-medium, 500); font-family: var(--ui-sticker-small-font, var(--ui-sticker-font-family)); }
 		& > strong { font-size: max(10px, var(--_size-lg)); font-family: var(--ui-sticker-strong-font, var(--ui-sticker-font-family)); color: var(--ui-sticker-lead-c, inherit); }
 		& :is(sup, sub) { font-size: 0.5em; }
 
-		/* fill="<any css color>" → bg via typed attr(), ink auto-contrasted.
-		   Gradients: set --ui-sticker-bg to a linear-gradient() in a custom class. */
 		&[fill] {
 			--ui-sticker-bg: attr(fill type(<color>), var(--color-accent));
 			--ui-sticker-c: contrast-color(var(--ui-sticker-bg));
 		}
 
-		/* ink="<any css color>" → text color; overrides the auto contrast-color ink (the shadow()
-		   text-shadow auto-flips to the opposite). After fill so it wins. */
 		&[ink] { --ui-sticker-c: attr(ink type(<color>), hsl(0, 0%, 100%)); }
 
-		/* ───────── font / font-lead — typography per line group ─────────
-		   font      → the "other" lines (<small>, <span>)  via  > :not(strong)
-		   font-lead → the emphasis line (<strong>)         via  > strong
-		   Both out-specify the tag defaults above, so they win. */
+		/* ───────── font / font-lead  ───────── */
 
 		/* family */
-		&[font~="body"]         > :not(strong) { font-family: var(--font-body); }
-		&[font~="heading"]      > :not(strong) { font-family: var(--font-heading); }
-		&[font~="mono"]         > :not(strong) { font-family: var(--font-mono); }
-		&[font~="serif"]        > :not(strong) { font-family: var(--font-serif); }
-		&[font-lead~="body"]    > strong       { font-family: var(--font-body); }
-		&[font-lead~="heading"] > strong       { font-family: var(--font-heading); }
-		&[font-lead~="mono"]    > strong       { font-family: var(--font-mono); }
-		&[font-lead~="serif"]   > strong       { font-family: var(--font-serif); }
+		&[font~="body"] > :not(strong), &[font-lead~="body"] > strong       { font-family: var(--font-body); }
+		&[font~="heading"] > :not(strong), &[font-lead~="heading"] > strong { font-family: var(--font-heading); }
+		&[font~="mono"] > :not(strong), &[font-lead~="mono"] > strong       { font-family: var(--font-mono); }
+		&[font~="serif"] > :not(strong), &[font-lead~="serif"] > strong     { font-family: var(--font-serif); }
 
 		/* size — overrides the tag's default ratio (0.55 small / 1.1 strong) */
-		&[font~="xs"]       > :not(strong) { font-size: max(10px, calc(var(--_size) * 0.6)); }
-		&[font~="sm"]       > :not(strong) { font-size: max(10px, calc(var(--_size) * 0.75)); }
-		&[font~="md"]       > :not(strong) { font-size: max(10px, calc(var(--_size) * 0.87)); }
-		&[font~="lg"]       > :not(strong) { font-size: max(10px, calc(var(--_size) * 1.15)); }
-		&[font~="xl"]       > :not(strong) { font-size: max(10px, calc(var(--_size) * 1.3)); }
-		&[font~="2xl"]      > :not(strong) { font-size: max(10px, calc(var(--_size) * 1.5)); }
-		&[font-lead~="xs"]  > strong       { font-size: max(10px, calc(var(--_size) * 0.6)); }
-		&[font-lead~="sm"]  > strong       { font-size: max(10px, calc(var(--_size) * 0.75)); }
-		&[font-lead~="md"]  > strong       { font-size: max(10px, calc(var(--_size) * 0.87)); }
-		&[font-lead~="lg"]  > strong       { font-size: max(10px, calc(var(--_size) * 1.15)); }
-		&[font-lead~="xl"]  > strong       { font-size: max(10px, calc(var(--_size) * 1.3)); }
-		&[font-lead~="2xl"] > strong       { font-size: max(10px, calc(var(--_size) * 1.5)); }
+		&[font~="xs"] > :not(strong), &[font-lead~="xs"] > strong   { font-size: max(10px, calc(var(--_size) * 0.6)); }
+		&[font~="sm"] > :not(strong), &[font-lead~="sm"] > strong   { font-size: max(10px, calc(var(--_size) * 0.75)); }
+		&[font~="md"] > :not(strong), &[font-lead~="md"] > strong   { font-size: max(10px, calc(var(--_size) * 0.87)); }
+		&[font~="lg"] > :not(strong), &[font-lead~="lg"] > strong   { font-size: max(10px, calc(var(--_size) * 1.15)); }
+		&[font~="xl"] > :not(strong), &[font-lead~="xl"] > strong   { font-size: max(10px, calc(var(--_size) * 1.3)); }
+		&[font~="2xl"] > :not(strong), &[font-lead~="2xl"] > strong { font-size: max(10px, calc(var(--_size) * 1.5)); }
 
 		/* weight */
-		&[font~="normal"]        > :not(strong) { font-weight: var(--font-weight-normal, 400); }
-		&[font~="medium"]        > :not(strong) { font-weight: var(--font-weight-medium, 500); }
-		&[font~="semibold"]      > :not(strong) { font-weight: var(--font-weight-semibold, 600); }
-		&[font~="bold"]          > :not(strong) { font-weight: var(--font-weight-bold, 700); }
-		&[font~="black"]         > :not(strong) { font-weight: var(--font-weight-black, 900); }
-		&[font-lead~="normal"]   > strong       { font-weight: var(--font-weight-normal, 400); }
-		&[font-lead~="medium"]   > strong       { font-weight: var(--font-weight-medium, 500); }
-		&[font-lead~="semibold"] > strong       { font-weight: var(--font-weight-semibold, 600); }
-		&[font-lead~="bold"]     > strong       { font-weight: var(--font-weight-bold, 700); }
-		&[font-lead~="black"]    > strong       { font-weight: var(--font-weight-black, 900); }
+		&[font~="thin"] > :not(strong), &[font-lead~="thin"] > strong         { font-weight: var(--font-weight-thin, 100); }
+		&[font~="light"] > :not(strong), &[font-lead~="light"] > strong       { font-weight: var(--font-weight-light, 300); }
+		&[font~="normal"] > :not(strong), &[font-lead~="normal"] > strong     { font-weight: var(--font-weight-normal, 400); }
+		&[font~="medium"] > :not(strong), &[font-lead~="medium"] > strong     { font-weight: var(--font-weight-medium, 500); }
+		&[font~="semibold"] > :not(strong), &[font-lead~="semibold"] > strong { font-weight: var(--font-weight-semibold, 600); }
+		&[font~="bold"] > :not(strong), &[font-lead~="bold"] > strong         { font-weight: var(--font-weight-bold, 700); }
+		&[font~="black"] > :not(strong), &[font-lead~="black"] > strong       { font-weight: var(--font-weight-black, 900); }
 
-		/* text-shadow per group (sets --ui-sticker-text-shadow on the line) — cqi, opposite-of-ink */
-		&[font~="shadow(sm)"]    > :not(strong), &[font-lead~="shadow(sm)"]    > strong { --ui-sticker-text-shadow: 0 1cqi 1cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 35%, transparent); }
-		&[font~="shadow(md)"]    > :not(strong), &[font-lead~="shadow(md)"]    > strong { --ui-sticker-text-shadow: 0 1.5cqi 2cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 42%, transparent); }
-		&[font~="shadow(lg)"]    > :not(strong), &[font-lead~="shadow(lg)"]    > strong { --ui-sticker-text-shadow: 0 2cqi 3cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 48%, transparent); }
-		&[font~="shadow(xl)"]    > :not(strong), &[font-lead~="shadow(xl)"]    > strong { --ui-sticker-text-shadow: 0 3cqi 4.5cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 55%, transparent); }
+		/* text-shadow per group — comma form required (no common subject to :is()-merge) */
+		&[font~="shadow(sm)"] > :not(strong), &[font-lead~="shadow(sm)"] > strong { --ui-sticker-text-shadow: 0 1cqi 1cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 35%, transparent); }
+		&[font~="shadow(md)"] > :not(strong), &[font-lead~="shadow(md)"] > strong { --ui-sticker-text-shadow: 0 1.5cqi 2cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 42%, transparent); }
+		&[font~="shadow(lg)"] > :not(strong), &[font-lead~="shadow(lg)"] > strong { --ui-sticker-text-shadow: 0 2cqi 3cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 48%, transparent); }
+		&[font~="shadow(xl)"] > :not(strong), &[font-lead~="shadow(xl)"] > strong { --ui-sticker-text-shadow: 0 3cqi 4.5cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 55%, transparent); }
 		/* solid — hard offset, zero blur (retro/comic); cqi so it scales with the box. Graded sm…xl; bare `solid` = md */
 		&[font~="shadow(solid-sm)"] > :not(strong), &[font-lead~="shadow(solid-sm)"] > strong { --ui-sticker-text-shadow: 1.5cqi 1.5cqi 0 var(--ui-sticker-text-shadow-color); }
-		&[font~="shadow(solid)"]    > :not(strong), &[font-lead~="shadow(solid)"]    > strong,
+		&[font~="shadow(solid)"] > :not(strong), &[font-lead~="shadow(solid)"] > strong,
 		&[font~="shadow(solid-md)"] > :not(strong), &[font-lead~="shadow(solid-md)"] > strong { --ui-sticker-text-shadow: 2.5cqi 2.5cqi 0 var(--ui-sticker-text-shadow-color); }
 		&[font~="shadow(solid-lg)"] > :not(strong), &[font-lead~="shadow(solid-lg)"] > strong { --ui-sticker-text-shadow: 4cqi   4cqi   0 var(--ui-sticker-text-shadow-color); }
 		&[font~="shadow(solid-xl)"] > :not(strong), &[font-lead~="shadow(solid-xl)"] > strong { --ui-sticker-text-shadow: 6cqi   6cqi   0 var(--ui-sticker-text-shadow-color); }
 
-		/* fit — native text-fit: grow on the line elements (Chrome 150+, @supports-gated).
-		   font → the "other" lines, font-lead → the <strong> line. Each element is its own
-		   single line, so grow fills its own column width independently. */
+		/* fit — native text-fit: grow on the line elements (Chrome 150+) */
 		@supports (text-fit: grow) {
 			&[font~="fit"], &[font-lead~="fit"] { grid-template-columns: 100%; }
-			&[font~="fit"] > :not(strong)       { text-fit: grow; }
-			&[font-lead~="fit"] > strong        { text-fit: grow; }
+			&[font~="fit"] > :not(strong), &[font-lead~="fit"] > strong { text-fit: grow; }
 		}
 
-		/* ───────── shadow — box drop-shadow (follows clipped shapes) ───────── */
+		/* ───────── shadow — box drop-shadow ───────── */
 		&[shadow~="sm"]  { --ui-sticker-shadow: drop-shadow(0 1px 1px rgb(0 0 0 / 0.18)); }
 		&[shadow~="md"]  { --ui-sticker-shadow: drop-shadow(0 2px 3px rgb(0 0 0 / 0.22)); }
 		&[shadow~="lg"]  { --ui-sticker-shadow: drop-shadow(0 4px 6px rgb(0 0 0 / 0.28)); }
@@ -171,20 +143,14 @@
 			--ui-sticker-shadow: drop-shadow(var(--ui-sticker-shadow-x) var(--ui-sticker-shadow-y) 0 var(--ui-sticker-shadow-color));
 		}
 		/* offset steps for the solid shadow; -off() flips x negative → shadow to the left */
-		&[shadow~="off(sm)"]  { --ui-sticker-shadow-x: 0.15em;  --ui-sticker-shadow-y: 0.15em; }
-		&[shadow~="off(md)"]  { --ui-sticker-shadow-x: 0.25em;  --ui-sticker-shadow-y: 0.25em; }
-		&[shadow~="off(lg)"]  { --ui-sticker-shadow-x: 0.4em;   --ui-sticker-shadow-y: 0.4em; }
-		&[shadow~="off(xl)"]  { --ui-sticker-shadow-x: 0.6em;   --ui-sticker-shadow-y: 0.6em; }
-		&[shadow~="-off(sm)"] { --ui-sticker-shadow-x: -0.15em; --ui-sticker-shadow-y: 0.15em; }
-		&[shadow~="-off(md)"] { --ui-sticker-shadow-x: -0.25em; --ui-sticker-shadow-y: 0.25em; }
-		&[shadow~="-off(lg)"] { --ui-sticker-shadow-x: -0.4em;  --ui-sticker-shadow-y: 0.4em; }
-		&[shadow~="-off(xl)"] { --ui-sticker-shadow-x: -0.6em;  --ui-sticker-shadow-y: 0.6em; }
+		&:is([shadow*="off("]) { --ui-sticker-shadow-y: var(--_o); --ui-sticker-shadow-x: var(--_ox, var(--_o)); }
+		&:is([shadow~="off(sm)"], [shadow~="-off(sm)"]) { --_o: 0.15em; }
+		&:is([shadow~="off(md)"], [shadow~="-off(md)"]) { --_o: 0.25em; }
+		&:is([shadow~="off(lg)"], [shadow~="-off(lg)"]) { --_o: 0.4em; }
+		&:is([shadow~="off(xl)"], [shadow~="-off(xl)"]) { --_o: 0.6em; }
+		&[shadow*="-off("] { --_ox: calc(var(--_o) * -1); }
 
-		/* ───────── hover — opt-in via the `hover` attribute ─────────
-		   Effects fire on the sticker's own :hover AND on a hovered ancestor ui-card
-		   (so an overlaid sticker animates even when the card owns the pointer).
-		   Movement uses the independent scale/translate/rotate properties (composable);
-		   tilt & spin both drive rotate → don't combine. The `-` prefix flips direction. */
+		/* ───────── hover — opt-in via the `hover` attribute ───────── */
 		&[hover] {
 			pointer-events: auto;
 			transition:
@@ -192,43 +158,48 @@
 				translate var(--ui-sticker-hover-duration) var(--ui-sticker-hover-ease),
 				rotate    var(--ui-sticker-hover-duration) var(--ui-sticker-hover-ease);
 		}
-		/* lift = rise only; an author-set `shadow` (if any) stays, lift doesn't add one */
-		&[hover~="lift"]:hover,  :where(ui-card:hover) &[hover~="lift"]  { translate: 0 var(--ui-sticker-hover-lift); }
-		&[hover~="pop"]:hover,   :where(ui-card:hover) &[hover~="pop"]   { scale: var(--ui-sticker-hover-scale); }
-		&[hover~="tilt"]:hover,  :where(ui-card:hover) &[hover~="tilt"]  { rotate: var(--ui-sticker-hover-rotate); }
-		&[hover~="-tilt"]:hover, :where(ui-card:hover) &[hover~="-tilt"] { rotate: calc(var(--ui-sticker-hover-rotate) * -1); }
-		&[hover~="spin"]:hover,  :where(ui-card:hover) &[hover~="spin"]  { animation: ui-sticker-spin var(--ui-sticker-hover-spin-duration) var(--ui-sticker-hover-ease); }
-		&[hover~="-spin"]:hover, :where(ui-card:hover) &[hover~="-spin"] { animation: ui-sticker-spin var(--ui-sticker-hover-spin-duration) var(--ui-sticker-hover-ease) reverse; }
+		/* lift */
+		&:is(:hover, :where(ui-card:hover) &) {
+			&[hover~="lift"] { translate: 0 var(--ui-sticker-hover-lift); }
+			&[hover~="pop"]  { scale: var(--ui-sticker-hover-scale); }
+			&[hover~="tilt"] { rotate: var(--ui-sticker-hover-rotate); }
+			&[hover~="-tilt"] { rotate: calc(var(--ui-sticker-hover-rotate) * -1); }
+			&[hover~="spin"] { animation: ui-sticker-spin var(--ui-sticker-hover-spin-duration) var(--ui-sticker-hover-ease); }
+			&[hover~="-spin"] { animation: ui-sticker-spin var(--ui-sticker-hover-spin-duration) var(--ui-sticker-hover-ease) reverse; }
+		}
 		&[hover~="press"]:active { scale: var(--ui-sticker-hover-press); }
 
 		@media (prefers-reduced-motion: reduce) {
 			&[hover] { transition: none; animation: none; }
-			&[hover~="lift"]:hover, :where(ui-card:hover) &[hover~="lift"] { translate: none; }
-			&[hover~="pop"]:hover,  :where(ui-card:hover) &[hover~="pop"]  { scale: none; }
-			&:is([hover~="tilt"], [hover~="-tilt"]):hover, :where(ui-card:hover) &:is([hover~="tilt"], [hover~="-tilt"]) { rotate: none; }
-			&:is([hover~="spin"], [hover~="-spin"]):hover, :where(ui-card:hover) &:is([hover~="spin"], [hover~="-spin"]) { animation: none; }
+			&:is(:hover, :where(ui-card:hover) &) {
+				&[hover~="lift"] { translate: none; }
+				&[hover~="pop"]  { scale: none; }
+				&:is([hover~="tilt"], [hover~="-tilt"]) { rotate: none; }
+				&:is([hover~="spin"], [hover~="-spin"]) { animation: none; }
+			}
 		}
 
-		/* clipped shapes: fill on a ::before so the host stays unclipped (shadow follows) */
-		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"]) {
+		/* clipped shapes — fill on a ::before so the host stays unclipped; each sets
+		   --ui-sticker-clip-path (`clip` = bring your own via the same token) */
+		&:is([variant~="clip"], [variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"]) {
 			background: none;
 			border-radius: 0;
 			isolation: isolate;
+
+			&::before {
+				background: var(--ui-sticker-bg, var(--color-accent));
+				clip-path: var(--ui-sticker-clip-path);
+				content: "";
+				inset: 0;
+				position: absolute;
+				z-index: -1;
+			}
 		}
 		/* zero-specificity position so an external placement (ui-card sticker(te)) wins */
-		&:where([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"]) {
+		&:where([variant~="clip"], [variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"]) {
 			position: relative;
 		}
-		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"])::before {
-			background: var(--ui-sticker-bg, var(--color-accent));
-			clip-path: var(--_shape);
-			content: "";
-			inset: 0;
-			position: absolute;
-			z-index: -1;
-		}
 
-		/* burst — 24-point starburst (override the shape via --ui-sticker-clip-path) */
 		&[variant~="burst"] {
 			--ui-sticker-clip-path: polygon(
 				50.0% 0.0%, 59.1% 16.2%, 75.0% 6.7%, 74.7% 25.3%, 93.3% 25.0%,
@@ -237,35 +208,29 @@
 				25.3% 74.7%, 6.7% 75.0%, 16.2% 59.1%, 0.0% 50.0%, 16.2% 40.9%,
 				6.7% 25.0%, 25.3% 25.3%, 25.0% 6.7%, 40.9% 16.2%
 			);
-			--_shape: var(--ui-sticker-clip-path);
-			--ui-sticker-padding: 0.6em;
 			--ui-sticker-fs: 30cqi;
+			--ui-sticker-p: 0.6em;
 		}
 
-		/* blob — organic rounded splat */
 		&[variant~="blob"] {
-			--ui-sticker-padding: 0.7em;
+			--ui-sticker-clip-path: shape(from 90.89% 45.17%, curve to 92.79% 55.28% with 90.99% 50.00%, smooth to 93.61% 65.99%, smooth to 85.76% 72.82%, smooth to 76.90% 78.85%, smooth to 71.48% 87.66%, smooth to 63.31% 95.20%, smooth to 53.19% 93.00%, smooth to 41.81% 92.46%, smooth to 31.96% 92.67%, smooth to 26.69% 82.05%, smooth to 21.44% 73.76%, smooth to 14.78% 67.57%, smooth to 8.98% 59.50%, smooth to 5.96% 49.99%, smooth to 9.52% 40.71%, smooth to 13.81% 31.61%, smooth to 15.79% 20.88%, smooth to 22.18% 12.88%, smooth to 32.83% 10.92%, smooth to 43.10% 11.79%, smooth to 51.97% 13.79%, smooth to 61.90% 12.13%, smooth to 73.63% 9.66%, smooth to 79.98% 17.38%, smooth to 86.16% 26.73%, smooth to 91.37% 34.63%, smooth to 90.89% 45.17%);
 			--ui-sticker-fs: 34cqi;
-			--_shape: shape(from 90.89% 45.17%, curve to 92.79% 55.28% with 90.99% 50.00%, smooth to 93.61% 65.99%, smooth to 85.76% 72.82%, smooth to 76.90% 78.85%, smooth to 71.48% 87.66%, smooth to 63.31% 95.20%, smooth to 53.19% 93.00%, smooth to 41.81% 92.46%, smooth to 31.96% 92.67%, smooth to 26.69% 82.05%, smooth to 21.44% 73.76%, smooth to 14.78% 67.57%, smooth to 8.98% 59.50%, smooth to 5.96% 49.99%, smooth to 9.52% 40.71%, smooth to 13.81% 31.61%, smooth to 15.79% 20.88%, smooth to 22.18% 12.88%, smooth to 32.83% 10.92%, smooth to 43.10% 11.79%, smooth to 51.97% 13.79%, smooth to 61.90% 12.13%, smooth to 73.63% 9.66%, smooth to 79.98% 17.38%, smooth to 86.16% 26.73%, smooth to 91.37% 34.63%, smooth to 90.89% 45.17%);
+			--ui-sticker-p: 0.7em;
 		}
 
-		/* spark — sharp 10-point star (from SVG poly-star-10) */
 		&[variant~="spark"] {
-			--ui-sticker-padding: 0.6em;
-			--ui-sticker-fs: 26cqi;
-			--_shape: polygon(
+			--ui-sticker-clip-path: polygon(
 				50.0% 0.0%, 62.6% 11.1%, 79.4% 9.5%, 83.1% 26.0%, 97.5% 34.5%,
 				90.9% 50.0%, 97.5% 65.5%, 83.1% 74.0%, 79.4% 90.5%, 62.6% 88.9%,
 				50.0% 100.0%, 37.4% 88.9%, 20.6% 90.5%, 16.9% 74.0%, 2.5% 65.5%,
 				9.1% 50.0%, 2.5% 34.5%, 16.9% 26.0%, 20.6% 9.5%, 37.4% 11.1%
 			);
+			--ui-sticker-fs: 26cqi;
+			--ui-sticker-p: 0.6em;
 		}
 
-		/* sunburst — fine 40-point sawtooth ring (from SVG poly-star-40) */
 		&[variant~="sunburst"] {
-			--ui-sticker-padding: 0.5em;
-			--ui-sticker-fs: 32cqi;
-			--_shape: polygon(
+			--ui-sticker-clip-path: polygon(
 				50.0% 0.0%, 53.1% 10.2%, 57.8% 0.6%, 59.3% 11.2%, 65.5% 2.5%,
 				65.3% 13.2%, 72.7% 5.5%, 70.8% 16.0%, 79.4% 9.5%, 75.9% 19.7%,
 				85.4% 14.6%, 80.3% 24.1%, 90.5% 20.6%, 84.0% 29.2%, 94.5% 27.3%,
@@ -283,14 +248,12 @@
 				14.6% 14.6%, 24.1% 19.7%, 20.6% 9.5%, 29.2% 16.0%, 27.3% 5.5%,
 				34.7% 13.2%, 34.5% 2.5%, 40.7% 11.2%, 42.2% 0.6%, 46.9% 10.2%
 			);
+			--ui-sticker-fs: 32cqi;
+			--ui-sticker-p: 0.5em;
 		}
 
-		/* heart — bezier shape() (from SVG poly-heart); extra bottom padding lifts text */
 		&[variant~="heart"] {
-			border-radius: 0;
-			--ui-sticker-padding: 0.8em 0.6em 1.6em;
-			--ui-sticker-fs: 26cqi;
-			--_shape: shape(
+			--ui-sticker-clip-path: shape(
 				from 45.738% 84.749%,
 				curve to 33.979% 74.461% with 43.619% 82.374% / 38.327% 77.744%,
 				curve to 14.111% 58.506% with 21.095% 64.731% / 19.342% 63.323%,
@@ -308,52 +271,49 @@
 				curve to 49.801% 88.974% with 61.847% 76.504% / 50.585% 87.438%,
 				curve to 45.738% 84.749% with 48.891% 90.756% / 49.757% 89.253%
 			);
+			--ui-sticker-fs: 26cqi;
+			--ui-sticker-p: 0.8em 0.6em 1.6em;
+			border-radius: 0;
 		}
 
-		/* speech — rounded rect + triangular ::after tail (inherits the fill) */
-		&[variant~="speech(l)"],
-		&[variant~="speech(r)"] {
+		&:is([variant~="speech(l)"], [variant~="speech(r)"]) {
+			--ui-sticker-fs: 30cqi;
+			--ui-sticker-p: 0.6em 0.7em;
 			aspect-ratio: 5 / 4;
 			border-radius: var(--ui-sticker-radius, var(--radius-lg, 0.75em));
 			min-block-size: auto;
 			position: relative;
-			--ui-sticker-padding: 0.6em 0.7em;
-			--ui-sticker-fs: 30cqi;
-		}
-		&[variant~="speech(l)"]::after,
-		&[variant~="speech(r)"]::after {
-			background: inherit;
-			content: "";
-			/* cqi (not em) so the tail scales with the box like the rest of the bubble */
-			inline-size: var(--ui-sticker-tail, 17cqi);
-			aspect-ratio: 1;
-			inset-block-start: calc(100% - 1px);
-			position: absolute;
+
+			&::after {
+				aspect-ratio: 1;
+				background: inherit;
+				content: "";
+				inline-size: var(--ui-sticker-tail, 17cqi);
+				inset-block-start: calc(100% - 1px);
+				position: absolute;
+			}
 		}
 		&[variant~="speech(l)"]::after { inset-inline-start: 20%; clip-path: polygon(0 0, 100% 0, 0 100%); }
 		&[variant~="speech(r)"]::after { inset-inline-end: 20%;  clip-path: polygon(0 0, 100% 0, 100% 100%); }
 
-		/* text — puffy lettering: solid fill + thick white stroke (puff) + drop-shadow keyline.
-		   Family comes from the `font` attribute or a custom class (both set --ui-sticker-font-family). */
 		&[variant~="text"] {
-			--_o: var(--ui-sticker-text-outline-w, 2px);
-			--_oc: var(--ui-sticker-text-outline-c, var(--ui-sticker-bg, var(--color-accent)));
 			--ui-sticker-shadow:
 				drop-shadow(var(--_o) 0 var(--_oc)) drop-shadow(calc(var(--_o) * -1) 0 var(--_oc))
 				drop-shadow(0 var(--_o) var(--_oc)) drop-shadow(0 calc(var(--_o) * -1) var(--_oc));
+			--_o: var(--ui-sticker-text-outline-w, 2px);
+			--_oc: var(--ui-sticker-text-outline-c, var(--ui-sticker-bg, var(--color-accent)));
+			align-items: center;
 			aspect-ratio: auto;
 			background: none;
 			border-radius: 0;
-			rotate: attr(angle type(<angle>), 0deg);
-			align-items: center;
 			container-type: normal;
 			display: flex;
 			flex-direction: column;
-			/* family inherits from the host (font= attribute or a custom class) */
 			inline-size: max-content;
 			min-block-size: auto;
 			min-inline-size: auto;
 			padding: 0.12em;
+			rotate: attr(angle type(<angle>), 0deg);
 			text-box: normal;
 		}
 		&[variant~="text"] > * {
@@ -367,16 +327,13 @@
 			text-box: normal;
 			white-space: nowrap;
 		}
+		&:where([size="sm"])  { --ui-sticker-sz: 3em; }
+		&:where([size="md"])  { --ui-sticker-sz: 4em; }
+		&:where([size="lg"])  { --ui-sticker-sz: 5em; }
+		&:where([size="xl"])  { --ui-sticker-sz: 6em; }
+		&:where([size="2xl"]) { --ui-sticker-sz: 8em; }
+		&:where([size="3xl"]) { --ui-sticker-sz: 10em; }
 	}
 
-	/* sizes — scale the BOX; cqi text follows */
-	:where(ui-sticker[size="sm"])  { --ui-sticker-sz: 3em; }
-	:where(ui-sticker[size="md"])  { --ui-sticker-sz: 4em; }
-	:where(ui-sticker[size="lg"])  { --ui-sticker-sz: 5em; }
-	:where(ui-sticker[size="xl"])  { --ui-sticker-sz: 6em; }
-	:where(ui-sticker[size="2xl"]) { --ui-sticker-sz: 8em; }
-	:where(ui-sticker[size="3xl"]) { --ui-sticker-sz: 10em; }
-
-	/* hover="spin" — one full turn on hover (use -spin to reverse) */
 	@keyframes ui-sticker-spin { from { rotate: 0deg; } to { rotate: 360deg; } }
 }
