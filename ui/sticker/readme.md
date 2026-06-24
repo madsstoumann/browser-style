@@ -10,6 +10,7 @@ A CSS-first sticker component for promotional callouts — "Save 20%", "Best val
 - Two typographic shorthands: `font` (label/body lines) and `font-lead` (the `<strong>` line)
 - Six box sizes (`sm`–`3xl`) with fluid `cqi` text; `font="fit"` for native `text-fit` fill
 - Soft or `solid` drop-shadows (with `off()` offset) that follow clipped shapes
+- Opt-in `hover` effects (`lift`, `pop`, `tilt`, `spin`, `press` (+ `-tilt`/`-spin`)) — CSS-only, reduced-motion aware
 - Square aspect-ratio with centered content
 - Light/dark mode + RTL support via design tokens / logical properties
 - Works without JavaScript (CSS-only mode)
@@ -76,6 +77,7 @@ The web component uses the **exact same** HTML structure as CSS-only — the JS 
 | `font-lead` | string | Same vocabulary for the `<strong>` lead line |
 | `gap` | string | Line gap: `sm`, `md`, `lg` |
 | `shadow` | string | Box drop-shadow: `sm`…`2xl` or `solid`, plus offset `off(sm\|md\|lg\|xl)` / `-off(…)` (left) |
+| `hover` | string | Opt-in hover effects (composable): `lift`, `pop`, `tilt`, `spin`, `press` (+ `-tilt`/`-spin`) |
 | `angle` | angle | Rotation for `variant="text"` (e.g. `-3deg`) |
 
 > **Migrating from 1.x:** `color` → `fill`; the `color-end`/`angle` gradient → a custom class; `variant`'s `fs()` → `font`/`font-lead` size, `fw()` → weight, `gap()` → `gap`, `sh()` → `shadow`, `tsh()` → `font="tsh()"`, `fit` → `font="fit"`, `ink()` → `ink`. (`glass` was removed.) `--ui-sticker-text-font` → `--ui-sticker-font-family`.
@@ -268,6 +270,41 @@ Add a box drop-shadow with the `shadow` attribute. It uses `filter: drop-shadow(
 <ui-sticker fill="orange" shadow="solid off(lg)"><span>SALE</span></ui-sticker>
 ```
 
+## Hover (`hover`)
+
+Opt-in, CSS-only hover effects — space-separated and composable (`hover="lift pop"`):
+
+| Token | Effect |
+|-------|--------|
+| `lift` | rise up (keeps any author-set `shadow`) |
+| `pop` | scale up |
+| `tilt` / `-tilt` | small rotate, either direction |
+| `spin` / `-spin` | one full turn, either direction |
+| `press` | scale down on click (`:active`) |
+
+The `-` prefix reverses direction (mirrors `shadow`'s `-off()`).
+
+```html
+<ui-sticker hover="lift" fill="#2F75BC" ink="#fff"><strong>Sale</strong></ui-sticker>
+<ui-sticker variant="sunburst" hover="spin" fill="#7B5EA7" ink="#fff"><strong>New</strong></ui-sticker>
+```
+
+**Interactivity is opt-in.** A sticker is `pointer-events: none` by default — purely decorative, so it never blocks an underlying link or the card's own hover. Setting any `hover` value flips it to `pointer-events: auto` for self-hover.
+
+**Two triggers.** Effects fire on the sticker's own `:hover` **and** on a hovered ancestor `ui-card` — so a sticker overlaid on a product card animates when you hover the card:
+
+```css
+&[hover~="lift"]:hover,
+:where(ui-card:hover) ui-sticker[hover~="lift"] { /* … */ }
+```
+
+**Notes:**
+- `tilt`/`-tilt` and `spin`/`-spin` all drive `rotate` — don't combine them.
+- On `variant="text"` (which uses `rotate` for its tilt), prefer `pop`/`lift`; `tilt`/`spin` override the resting angle on hover.
+- `prefers-reduced-motion: reduce` drops the movement (translate/scale/rotate/spin).
+
+Tune via the `--ui-sticker-hover-*` tokens (see [Customization](#component-tokens)).
+
 ## Shape variants
 
 The default is a disc. Set `variant` for a clipped shape (`variant` carries the shape only):
@@ -353,6 +390,11 @@ The `fit` token uses the native [`text-fit`](https://drafts.csswg.org/css-text-5
 | `--ui-sticker-text-size` | `3.5em` | Font size for `variant="text"` |
 | `--ui-sticker-text-stroke-w` / `-c` | `0.2em` / `#fff` | The puff (white stroke) |
 | `--ui-sticker-text-outline-w` / `-c` | `2px` / the fill | The keyline |
+| `--ui-sticker-hover-duration` / `-ease` | `--duration-normal` / `--ease-out` | Hover transition timing |
+| `--ui-sticker-hover-lift` | `-0.35em` | `hover="lift"` rise distance |
+| `--ui-sticker-hover-scale` / `-press` | `1.06` / `0.95` | `hover="pop"` / `hover="press"` scale |
+| `--ui-sticker-hover-rotate` | `-4deg` | `hover="tilt"` angle |
+| `--ui-sticker-hover-spin-duration` | `0.8s` | `hover="spin"` rotation period |
 
 ```css
 ui-sticker {

@@ -105,6 +105,27 @@
 		<ui-sticker variant="text" angle="-3deg" class="font-sedgwick" fill="#ff9797"><span>Last Call</span></ui-sticker>
 	</div>
 
+	<h3>Hover</h3>
+	<p>Opt-in hover effects via the <code>hover</code> attribute (composable): <code>lift</code>, <code>pop</code>, <code>tilt</code> / <code>-tilt</code> (either direction), <code>spin</code> / <code>-spin</code> (one turn, either direction), <code>press</code> (on click). <strong>Hover the stickers below.</strong> A sticker is <code>pointer-events: none</code> until <code>hover</code> is set, so it never blocks an underlying link. Honors <code>prefers-reduced-motion</code> (movement drops).</p>
+	<div class="row">
+		<ui-sticker hover="lift" fill="#2F75BC" ink="#fff" size="2xl"><small>LIFT</small><strong>OFF</strong></ui-sticker>
+		<ui-sticker variant="burst" hover="pop" fill="#3E9355" ink="#fff" size="2xl"><strong>POP</strong></ui-sticker>
+		<ui-sticker variant="speech(r)" hover="tilt" fill="#FEA12F" ink="#262626" size="2xl"><small>HOVER</small><strong>TILT</strong></ui-sticker>
+		<ui-sticker variant="speech(l)" hover="-tilt" fill="#FEA12F" ink="#262626" size="2xl"><small>HOVER</small><strong>-TILT</strong></ui-sticker>
+		<ui-sticker variant="sunburst" hover="spin" fill="#7B5EA7" ink="#fff" size="2xl"><strong>spin</strong></ui-sticker>
+		<ui-sticker variant="spark" hover="-spin" fill="#BC2330" ink="#fff" size="2xl"><strong>-spin</strong></ui-sticker>
+		<ui-sticker variant="heart" hover="press" fill="#BC2F2F" ink="#fff" size="2xl"><strong>click</strong><small>ME</small></ui-sticker>
+	</div>
+	<p>Inside a <code>&lt;ui-card&gt;</code>: hovering the <strong>card</strong> triggers the sticker (and clicks still reach the card). Try hovering each card.</p>
+	<div class="cards">
+		<ui-card variant="vis(media)" media="asr(4/3) sticker(te)">
+			<cq-box><ui-media><img src="/ui/card/assets/ergochair.jpg" alt=""><ui-sticker hover="lift" fill="#BC2F2F" ink="#fff" font="sm"><span>SALE</span></ui-sticker></ui-media></cq-box>
+		</ui-card>
+		<ui-card variant="vis(media)" media="asr(4/3) sticker(te)">
+			<cq-box><ui-media><img src="/ui/card/assets/aurasoundpro.jpg" alt=""><ui-sticker variant="burst" hover="pop" fill="#3E9355" ink="#fff" font="md"><span>NEW</span></ui-sticker></ui-media></cq-box>
+		</ui-card>
+	</div>
+
 	<h3>Fit to width (<code>text-fit</code>)</h3>
 	<p>Use <code>font="fit"</code> (and/or <code>font-lead="fit"</code>) to grow each line element to fill the box width with native <code>text-fit</code> — no overflow, no SVG/JS. Each line is its own single-line element, so each fills its column independently. Progressive enhancement (Chrome 150+); elsewhere the <code>cqi</code> sizing is the fallback.</p>
 	<div class="row">

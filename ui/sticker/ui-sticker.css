@@ -19,6 +19,8 @@
  *   fill       background, any color via attr() (gradients → a custom class on --ui-sticker-bg)
  *   ink        text color, any color via attr() (overrides the auto-contrast)
  *   shadow     box drop-shadow: sm md lg xl 2xl | solid, with offset off(sm|md|lg|xl) (or -off() for a left shadow)
+ *   hover      opt-in hover effects (composable): lift pop tilt -tilt spin -spin press
+ *              (decorative & pointer-events:none until `hover` is set; also reacts to a hovered parent ui-card)
  */
 @layer bs-component {
 	:where(ui-sticker) {
@@ -34,6 +36,14 @@
 		--ui-sticker-shadow-x: 0.25em;
 		--ui-sticker-shadow-y: 0.25em;
 		--ui-sticker-shadow-color: #000;
+		/* hover (opt-in via the `hover` attribute) */
+		--ui-sticker-hover-duration: var(--duration-normal);
+		--ui-sticker-hover-ease: var(--ease-out);
+		--ui-sticker-hover-lift: -0.35em;
+		--ui-sticker-hover-scale: 1.06;
+		--ui-sticker-hover-press: 0.95;
+		--ui-sticker-hover-rotate: -4deg;
+		--ui-sticker-hover-spin-duration: 0.8s;
 		/* text-shadow tint = the OPPOSITE of the ink (ink is contrast-color(bg) = black/white,
 		   so contrast-color(ink) flips it): white text → dark shadow, black text → light shadow */
 		--ui-sticker-text-shadow-color: contrast-color(var(--ui-sticker-c, hsl(0, 0%, 100%)));
@@ -54,6 +64,7 @@
 		min-inline-size: var(--ui-sticker-sz, 5em);
 		padding: var(--ui-sticker-padding);
 		place-content: center;
+		pointer-events: none;   /* decorative by default; `hover` attr opts back in */
 		text-align: center;
 		/* text-box: cap alphabetic; */
 		user-select: none;
@@ -164,6 +175,35 @@
 		&[shadow~="-off(md)"] { --ui-sticker-shadow-x: -0.25em; --ui-sticker-shadow-y: 0.25em; }
 		&[shadow~="-off(lg)"] { --ui-sticker-shadow-x: -0.4em;  --ui-sticker-shadow-y: 0.4em; }
 		&[shadow~="-off(xl)"] { --ui-sticker-shadow-x: -0.6em;  --ui-sticker-shadow-y: 0.6em; }
+
+		/* ───────── hover — opt-in via the `hover` attribute ─────────
+		   Effects fire on the sticker's own :hover AND on a hovered ancestor ui-card
+		   (so an overlaid sticker animates even when the card owns the pointer).
+		   Movement uses the independent scale/translate/rotate properties (composable);
+		   tilt & spin both drive rotate → don't combine. The `-` prefix flips direction. */
+		&[hover] {
+			pointer-events: auto;
+			transition:
+				scale     var(--ui-sticker-hover-duration) var(--ui-sticker-hover-ease),
+				translate var(--ui-sticker-hover-duration) var(--ui-sticker-hover-ease),
+				rotate    var(--ui-sticker-hover-duration) var(--ui-sticker-hover-ease);
+		}
+		/* lift = rise only; an author-set `shadow` (if any) stays, lift doesn't add one */
+		&[hover~="lift"]:hover,  :where(ui-card:hover) &[hover~="lift"]  { translate: 0 var(--ui-sticker-hover-lift); }
+		&[hover~="pop"]:hover,   :where(ui-card:hover) &[hover~="pop"]   { scale: var(--ui-sticker-hover-scale); }
+		&[hover~="tilt"]:hover,  :where(ui-card:hover) &[hover~="tilt"]  { rotate: var(--ui-sticker-hover-rotate); }
+		&[hover~="-tilt"]:hover, :where(ui-card:hover) &[hover~="-tilt"] { rotate: calc(var(--ui-sticker-hover-rotate) * -1); }
+		&[hover~="spin"]:hover,  :where(ui-card:hover) &[hover~="spin"]  { animation: ui-sticker-spin var(--ui-sticker-hover-spin-duration) var(--ui-sticker-hover-ease); }
+		&[hover~="-spin"]:hover, :where(ui-card:hover) &[hover~="-spin"] { animation: ui-sticker-spin var(--ui-sticker-hover-spin-duration) var(--ui-sticker-hover-ease) reverse; }
+		&[hover~="press"]:active { scale: var(--ui-sticker-hover-press); }
+
+		@media (prefers-reduced-motion: reduce) {
+			&[hover] { transition: none; animation: none; }
+			&[hover~="lift"]:hover, :where(ui-card:hover) &[hover~="lift"] { translate: none; }
+			&[hover~="pop"]:hover,  :where(ui-card:hover) &[hover~="pop"]  { scale: none; }
+			&:is([hover~="tilt"], [hover~="-tilt"]):hover, :where(ui-card:hover) &:is([hover~="tilt"], [hover~="-tilt"]) { rotate: none; }
+			&:is([hover~="spin"], [hover~="-spin"]):hover, :where(ui-card:hover) &:is([hover~="spin"], [hover~="-spin"]) { animation: none; }
+		}
 
 		/* clipped shapes: fill on a ::before so the host stays unclipped (shadow follows) */
 		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"]) {
@@ -332,4 +372,7 @@
 	:where(ui-sticker[size="xl"])  { --ui-sticker-sz: 6em; }
 	:where(ui-sticker[size="2xl"]) { --ui-sticker-sz: 8em; }
 	:where(ui-sticker[size="3xl"]) { --ui-sticker-sz: 10em; }
+
+	/* hover="spin" — one full turn on hover (use -spin to reverse) */
+	@keyframes ui-sticker-spin { from { rotate: 0deg; } to { rotate: 360deg; } }
 }
