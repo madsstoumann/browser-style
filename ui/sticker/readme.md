@@ -9,7 +9,6 @@ A CSS-first sticker component for promotional callouts — "Save 20%", "Best val
 - Gradients via a custom class (set `--ui-sticker-bg`)
 - Two typographic shorthands: `font` (label/body lines) and `font-lead` (the `<strong>` line)
 - Six box sizes (`sm`–`3xl`) with fluid `cqi` text; `font="fit"` for native `text-fit` fill
-- `glass` frosted badge (auto light/dark) for overlaying on product photos
 - Soft or `solid` drop-shadows (with `off()` offset) that follow clipped shapes
 - Square aspect-ratio with centered content
 - Light/dark mode + RTL support via design tokens / logical properties
@@ -76,11 +75,10 @@ The web component uses the **exact same** HTML structure as CSS-only — the JS 
 | `font` | string | Typography for the `<small>`/`<span>` lines — order-free tokens: family (`body\|heading\|mono\|serif`) · size (`xs`…`2xl`) · weight (`normal`…`black`) · `tsh(sm\|md\|lg\|xl\|solid)` · `fit` |
 | `font-lead` | string | Same vocabulary for the `<strong>` lead line |
 | `gap` | string | Line gap: `sm`, `md`, `lg` |
-| `glass` | boolean | Frosted, semi-transparent surface (auto light/dark) |
 | `shadow` | string | Box drop-shadow: `sm`…`2xl` or `solid`, plus offset `off(sm\|md\|lg\|xl)` / `-off(…)` (left) |
 | `angle` | angle | Rotation for `variant="text"` (e.g. `-3deg`) |
 
-> **Migrating from 1.x:** `color` → `fill`; the `color-end`/`angle` gradient → a custom class; `variant`'s `fs()` → `font`/`font-lead` size, `fw()` → weight, `gap()` → `gap`, `sh()` → `shadow`, `tsh()` → `font="tsh()"`, `glass`/`fit` → the `glass`/`font="fit"` attributes, `ink()` → `ink`. `--ui-sticker-text-font` → `--ui-sticker-font-family`.
+> **Migrating from 1.x:** `color` → `fill`; the `color-end`/`angle` gradient → a custom class; `variant`'s `fs()` → `font`/`font-lead` size, `fw()` → weight, `gap()` → `gap`, `sh()` → `shadow`, `tsh()` → `font="tsh()"`, `fit` → `font="fit"`, `ink()` → `ink`. (`glass` was removed.) `--ui-sticker-text-font` → `--ui-sticker-font-family`.
 
 ---
 
@@ -317,21 +315,6 @@ Tune with `--ui-sticker-text-size` (default `3.5em`), `--ui-sticker-text-stroke-
 <ui-sticker variant="text" angle="-3deg" class="font-bagel" fill="#ff9797"><span>Last Call</span></ui-sticker>
 ```
 
-## Glass (`glass`)
-
-A frosted, semi-transparent badge for overlaying on product photos. It tints with the system `Canvas`/`CanvasText` colors, so it **auto-flips for light/dark** with no media query, and the `backdrop-filter` blurs the image behind. A `box-shadow` adds the "liquid glass" specular rim. Add `fill` to tint the frost.
-
-```html
-<ui-card variant="vis(media)" media="asr(4/3) sticker(te)">
-  <cq-box><ui-media>
-    <img src="product.jpg" alt="">
-    <ui-sticker glass><span>NEW</span></ui-sticker>
-  </ui-media></cq-box>
-</ui-card>
-```
-
-Works on the **disc** (default) and the clipped shapes (`blob`, `burst`, …) — on a clipped shape the frost moves to the `::before` (blurred to the silhouette) and the crisp rim is traded for a soft silhouette shadow. Override `--ui-sticker-glass-filter` (default `blur(8px) saturate(180%)`) to tune the blur — or point it at an SVG `feDisplacementMap` filter for true refraction.
-
 ## Fit to width (`font="fit"`)
 
 The `fit` token uses the native [`text-fit`](https://drafts.csswg.org/css-text-5/#text-fit-property) property (`grow`) to scale each line up to fill the box width — no overflow, no SVG, no JS. Put it on `font` (the `<small>`/`<span>` lines), on `font-lead` (the `<strong>` line), or both. Each line is its own single-line element, so each fills its column independently (`grid-template-columns: 100%`). Wrapped in `@supports (text-fit: grow)`, so it's a **progressive enhancement** (Chrome 150+); where unsupported, the `cqi` sizing and centered layout both stay.
@@ -367,7 +350,6 @@ The `fit` token uses the native [`text-fit`](https://drafts.csswg.org/css-text-5
 | `--ui-sticker-shadow-x` / `-y` / `-color` | `0.25em` / `0.25em` / `#000` | Offset + tint for `shadow="solid"` |
 | `--ui-sticker-text-shadow` | `none` | Text-shadow on the lines (set by `tsh()`, in `cqi`) |
 | `--ui-sticker-text-shadow-color` | `contrast-color(ink)` | `tsh()` tint — auto the **opposite** of the ink |
-| `--ui-sticker-glass-filter` | `blur(8px) saturate(180%)` | `backdrop-filter` for `glass` |
 | `--ui-sticker-text-size` | `3.5em` | Font size for `variant="text"` |
 | `--ui-sticker-text-stroke-w` / `-c` | `0.2em` / `#fff` | The puff (white stroke) |
 | `--ui-sticker-text-outline-w` / `-c` | `2px` / the fill | The keyline |

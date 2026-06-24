@@ -18,7 +18,6 @@
  *   size       box size: sm md lg xl 2xl 3xl
  *   fill       background, any color via attr() (gradients → a custom class on --ui-sticker-bg)
  *   ink        text color, any color via attr() (overrides the auto-contrast)
- *   glass      boolean — frosted surface (composes with any shape)
  *   shadow     box drop-shadow: sm md lg xl 2xl | solid, with offset off(sm|md|lg|xl) (or -off() for a left shadow)
  */
 @layer bs-component {
@@ -166,33 +165,6 @@
 		&[shadow~="-off(lg)"] { --ui-sticker-shadow-x: -0.4em;  --ui-sticker-shadow-y: 0.4em; }
 		&[shadow~="-off(xl)"] { --ui-sticker-shadow-x: -0.6em;  --ui-sticker-shadow-y: 0.6em; }
 
-		/* ───────── glass — frosted, Canvas/CanvasText tint (auto light/dark) + liquid-glass rim ───────── */
-		&[glass] {
-			--ui-sticker-bg: color-mix(in srgb, Canvas 55%, transparent);
-			--ui-sticker-c: CanvasText;
-			-webkit-backdrop-filter: var(--ui-sticker-glass-filter, blur(8px) saturate(180%));
-			backdrop-filter: var(--ui-sticker-glass-filter, blur(8px) saturate(180%));
-			border: var(--border-width, 1px) solid color-mix(in srgb, #fff 30%, transparent);
-			box-shadow:
-				inset 0 1px 1px color-mix(in srgb, #fff 65%, transparent),
-				inset 0 -2px 4px color-mix(in srgb, #000 18%, transparent),
-				0 3px 10px color-mix(in srgb, #000 20%, transparent);
-		}
-		&[glass][fill] { --ui-sticker-bg: color-mix(in srgb, attr(fill type(<color>), Canvas) 60%, transparent); }
-
-		/* glass on a clipped shape: frost the ::before, lift with a silhouette drop-shadow */
-		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"])[glass] {
-			-webkit-backdrop-filter: none;
-			backdrop-filter: none;
-			border: 0;
-			box-shadow: none;
-			--ui-sticker-shadow: drop-shadow(0 3px 8px color-mix(in srgb, #000 28%, transparent));
-		}
-		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"])[glass]::before {
-			-webkit-backdrop-filter: var(--ui-sticker-glass-filter, blur(8px) saturate(180%));
-			backdrop-filter: var(--ui-sticker-glass-filter, blur(8px) saturate(180%));
-		}
-
 		/* clipped shapes: fill on a ::before so the host stays unclipped (shadow follows) */
 		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"]) {
 			background: none;
@@ -308,7 +280,8 @@
 		&[variant~="speech(r)"]::after {
 			background: inherit;
 			content: "";
-			inline-size: var(--ui-sticker-tail, 0.85em);
+			/* cqi (not em) so the tail scales with the box like the rest of the bubble */
+			inline-size: var(--ui-sticker-tail, 17cqi);
 			aspect-ratio: 1;
 			inset-block-start: calc(100% - 1px);
 			position: absolute;
