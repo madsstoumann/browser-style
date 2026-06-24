@@ -1,6 +1,6 @@
 /**
  * ui-sticker
- * @version 1.0.3
+ * @version 2.0.0
  * @date 2026-06-24
  * @author Mads Stoumann
  * See readme.md → "Implementation notes" for the why behind the non-obvious bits.
@@ -18,9 +18,8 @@
  *   size       box size: sm md lg xl 2xl 3xl
  *   fill       background, any color via attr() (gradients → a custom class on --ui-sticker-bg)
  *   ink        text color, any color via attr() (overrides the auto-contrast)
- *   theme      named bundle (red…subtle) from @browser.style/base
  *   glass      boolean — frosted surface (composes with any shape)
- *   shadow     box drop-shadow: sm md lg xl 2xl | solid, with offset off(sm|md|lg)
+ *   shadow     box drop-shadow: sm md lg xl 2xl | solid, with offset off(sm|md|lg|xl) (or -off() for a left shadow)
  */
 @layer bs-component {
 	:where(ui-sticker) {
@@ -86,14 +85,8 @@
 			--ui-sticker-c: contrast-color(var(--ui-sticker-bg));
 		}
 
-		/* theme bundle — after fill= so theme= wins */
-		&[theme] {
-			--ui-sticker-bg: var(--_theme-bg);
-			--ui-sticker-c: var(--_theme-c);
-		}
-
 		/* ink="<any css color>" → text color; overrides the auto contrast-color ink (the tsh()
-		   text-shadow auto-flips to the opposite). After fill/theme so it wins. */
+		   text-shadow auto-flips to the opposite). After fill so it wins. */
 		&[ink] { --ui-sticker-c: attr(ink type(<color>), hsl(0, 0%, 100%)); }
 
 		/* ───────── font / font-lead — typography per line group ─────────
@@ -163,10 +156,15 @@
 		&[shadow~="solid"] {
 			--ui-sticker-shadow: drop-shadow(var(--ui-sticker-shadow-x) var(--ui-sticker-shadow-y) 0 var(--ui-sticker-shadow-color));
 		}
-		/* offset steps for the solid shadow */
-		&[shadow~="off(sm)"] { --ui-sticker-shadow-x: 0.15em; --ui-sticker-shadow-y: 0.15em; }
-		&[shadow~="off(md)"] { --ui-sticker-shadow-x: 0.25em; --ui-sticker-shadow-y: 0.25em; }
-		&[shadow~="off(lg)"] { --ui-sticker-shadow-x: 0.4em;  --ui-sticker-shadow-y: 0.4em; }
+		/* offset steps for the solid shadow; -off() flips x negative → shadow to the left */
+		&[shadow~="off(sm)"]  { --ui-sticker-shadow-x: 0.15em;  --ui-sticker-shadow-y: 0.15em; }
+		&[shadow~="off(md)"]  { --ui-sticker-shadow-x: 0.25em;  --ui-sticker-shadow-y: 0.25em; }
+		&[shadow~="off(lg)"]  { --ui-sticker-shadow-x: 0.4em;   --ui-sticker-shadow-y: 0.4em; }
+		&[shadow~="off(xl)"]  { --ui-sticker-shadow-x: 0.6em;   --ui-sticker-shadow-y: 0.6em; }
+		&[shadow~="-off(sm)"] { --ui-sticker-shadow-x: -0.15em; --ui-sticker-shadow-y: 0.15em; }
+		&[shadow~="-off(md)"] { --ui-sticker-shadow-x: -0.25em; --ui-sticker-shadow-y: 0.25em; }
+		&[shadow~="-off(lg)"] { --ui-sticker-shadow-x: -0.4em;  --ui-sticker-shadow-y: 0.4em; }
+		&[shadow~="-off(xl)"] { --ui-sticker-shadow-x: -0.6em;  --ui-sticker-shadow-y: 0.6em; }
 
 		/* ───────── glass — frosted, Canvas/CanvasText tint (auto light/dark) + liquid-glass rim ───────── */
 		&[glass] {
@@ -180,8 +178,7 @@
 				inset 0 -2px 4px color-mix(in srgb, #000 18%, transparent),
 				0 3px 10px color-mix(in srgb, #000 20%, transparent);
 		}
-		&[glass][fill]  { --ui-sticker-bg: color-mix(in srgb, attr(fill type(<color>), Canvas) 60%, transparent); }
-		&[glass][theme] { --ui-sticker-bg: color-mix(in srgb, var(--_theme-bg) 60%, transparent); }
+		&[glass][fill] { --ui-sticker-bg: color-mix(in srgb, attr(fill type(<color>), Canvas) 60%, transparent); }
 
 		/* glass on a clipped shape: frost the ::before, lift with a silhouette drop-shadow */
 		&:is([variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"])[glass] {

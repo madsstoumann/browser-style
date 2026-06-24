@@ -21,6 +21,8 @@
 		.grad-purple { --ui-sticker-bg: linear-gradient(180deg, #111111, purple); --ui-sticker-c: #fff; }
 		.grad-hot    { --ui-sticker-bg: linear-gradient(135deg, oklch(0.8 0.18 90), oklch(0.6 0.22 30)); --ui-sticker-c: #fff; }
 		.grad-love   { --ui-sticker-bg: linear-gradient(180deg, #d91f26, #690f12); --ui-sticker-c: #fff; }
+		/* solid-shadow tint → a dark (near-black) version of the sticker's own fill */
+		.sh-tint { --ui-sticker-shadow-color: color-mix(in srgb, var(--ui-sticker-bg, var(--color-accent)), #000 40%); }
 		/* custom webfonts → the sticker font-family; unlayered so they beat the layered defaults */
 		.font-freckle  { --ui-sticker-font-family: "Freckle Face", system-ui; }
 		.font-sedgwick { --ui-sticker-font-family: "Sedgwick Ave Display", cursive; }
@@ -32,134 +34,102 @@
 
 	<h2>CSS</h2>
 	<p>
-		<code>&lt;ui-sticker&gt;</code> is a CSS-first promotional callout — a round disc by default, or a shape via <code>variant</code> (<code>burst</code>, <code>spark</code>, <code>sunburst</code>, <code>heart</code>, <code>blob</code>, <code>speech(l|r)</code>, <code>text</code>). Use <code>fill</code> for any single background color (ink auto-contrasts), <code>ink</code> to set the text color explicitly, <code>theme</code> for preset bundles, and <code>size</code> for the box scale.
+		<code>&lt;ui-sticker&gt;</code> is a CSS-first promotional callout — a round disc by default, or a shape via <code>variant</code> (<code>burst</code>, <code>spark</code>, <code>sunburst</code>, <code>heart</code>, <code>blob</code>, <code>speech(l|r)</code>, <code>text</code>). Use <code>fill</code> for any single background color (ink auto-contrasts), <code>ink</code> to set the text color explicitly, and <code>size</code> for the box scale.
 	</p>
 	<p>
 		This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript). See the <a href="wc-demo.html">web component demo</a> for the JS-enhanced version.
 	</p>
 
 	<h3>Variants</h3>
-	<p>The default is a disc; set <code>variant</code> = <code>burst</code>, <code>spark</code>, <code>sunburst</code>, <code>heart</code>, <code>blob</code>, <code>speech(l|r)</code> or <code>text</code>. <code>variant</code> carries the shape only — every other knob is its own attribute.</p>
+	<p>The default is a disc; set <code>variant</code> = <code>burst</code>, <code>spark</code>, <code>sunburst</code>, <code>heart</code>, <code>blob</code>, <code>speech(l|r)</code> or <code>text</code>.</p>
 	
 	<div class="row">
-		<ui-sticker size="2xl" theme="orange" font-lead="md"><small>ONLY</small><strong>$9</strong></ui-sticker>
-		<ui-sticker variant="burst" size="2xl" theme="green" font-lead="md"><small>SAVE</small><strong>20%</strong></ui-sticker>
-		<ui-sticker variant="spark" size="2xl" fill="#BC2330" font-lead="2xl"><small>SAVE</small><strong>69<sup>95</sup></strong></ui-sticker>
-		<ui-sticker variant="sunburst" size="2xl" theme="blue" font-lead="md"><small>UP TO</small><strong>50%</strong></ui-sticker>
-		<ui-sticker variant="heart" size="2xl" gap="md" fill="#BC2330"><small>HOLIDAY</small><strong>$50</strong></ui-sticker>
-		<ui-sticker variant="blob" size="2xl" fill="#7B5EA7" font-lead="md"><small>NEW</small><strong>2026</strong></ui-sticker>
-		<ui-sticker variant="speech(l)" size="2xl" fill="#2980b9" ink="#FFF" font-lead="xl"><small>NEW</small><strong>SALE</strong></ui-sticker>
-		<ui-sticker variant="speech(r)" size="2xl" fill="#27ae60" ink="#d6fce1" font-lead="2xl"><small>UP TO</small><strong>40%</strong></ui-sticker>
-		<ui-sticker variant="text" size="2xl" fill="#8fa0f8" angle="3deg" class="font-sedgwick"><span>Flash Sale</span></ui-sticker>
+		<ui-sticker fill="#FEA12F" font-lead="md" ink="#262626" size="2xl"><small>ONLY</small><strong>$9</strong></ui-sticker>
+		<ui-sticker variant="burst" fill="#3E9355" font-lead="md" ink="#fff" size="2xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
+		<ui-sticker variant="spark" fill="#BC2330" font-lead="2xl" size="2xl"><small>SAVE</small><strong>69<sup>95</sup></strong></ui-sticker>
+		<ui-sticker variant="sunburst" fill="#2F75BC" font-lead="md" ink="#fff" size="2xl"><small>UP TO</small><strong>50%</strong></ui-sticker>
+		<ui-sticker variant="heart" fill="#BC2330" gap="md" size="2xl"><small>HOLIDAY</small><strong>$50</strong></ui-sticker>
+		<ui-sticker variant="blob" fill="#7B5EA7" font-lead="md" size="2xl"><small>NEW</small><strong>2026</strong></ui-sticker>
+		<ui-sticker variant="speech(l)" fill="#2980b9" font-lead="xl" ink="#FFF" size="2xl"><small>NEW</small><strong>SALE</strong></ui-sticker>
+		<ui-sticker variant="speech(r)" fill="#27ae60" font-lead="2xl" ink="#d6fce1" size="2xl"><small>UP TO</small><strong>40%</strong></ui-sticker>
+		<ui-sticker variant="text" angle="3deg" class="font-sedgwick" fill="#8fa0f8" size="2xl"><span>Flash Sale</span></ui-sticker>
 	</div>
 
-	<h3>Sizes</h3>
-	<p>The <code>size</code> attribute scales the <strong>box</strong> (<code>sm</code>, <code>md</code>, <code>lg</code> default, <code>xl</code>, <code>2xl</code>, <code>3xl</code>); element lines scale with it via <code>cqi</code>. These also carry <code>font="tsh(md)"</code> — a <code>cqi</code> text-shadow (<code>tsh(sm)</code>…<code>tsh(xl)</code>) that grows with the text.</p>
+	<h3>Sizes &amp; shadow</h3>
+	<p>The <code>size</code> attribute scales the <strong>box</strong> (<code>sm</code>, <code>md</code>, <code>lg</code> default, <code>xl</code>, <code>2xl</code>, <code>3xl</code>); element lines follow via <code>cqi</code>. Here each step also takes a matching soft <code>shadow</code> (<code>sm</code>…<code>2xl</code>, via <code>filter: drop-shadow()</code>) so the elevation grows with the sticker. They also carry <code>font="tsh(md)"</code> — a <code>cqi</code> text-shadow that scales with the text.</p>
 	<div class="row">
-		<ui-sticker size="sm" font="tsh(md)" theme="red"><span>20%</span></ui-sticker>
-		<ui-sticker size="md" font="tsh(md)" theme="red"><span>20%</span></ui-sticker>
-		<ui-sticker size="lg" font="tsh(md)" theme="red"><span>20%</span></ui-sticker>
-		<ui-sticker size="xl" font="tsh(md)" theme="red"><span>20%</span></ui-sticker>
-		<ui-sticker size="2xl" font="tsh(md)" theme="red"><span>20%</span></ui-sticker>
-		<ui-sticker size="3xl" font="tsh(md)" theme="red"><span>20%</span></ui-sticker>
+		<ui-sticker fill="#BC2F2F" font="medium tsh(md)" font-lead="black tsh(md)" ink="#fff" shadow="sm" size="sm"><small>ONLY</small><strong>$5</strong></ui-sticker>
+		<ui-sticker fill="#BC2F2F" font="medium tsh(md)" font-lead="black tsh(md)" ink="#fff" shadow="md" size="md"><small>ONLY</small><strong>$5</strong></ui-sticker>
+		<ui-sticker fill="#BC2F2F" font="medium tsh(md)" font-lead="black tsh(md)" ink="#fff" shadow="lg" size="lg"><small>ONLY</small><strong>$5</strong></ui-sticker>
+		<ui-sticker fill="#BC2F2F" font="medium tsh(md)" font-lead="black tsh(md)" ink="#fff" shadow="xl" size="xl"><small>ONLY</small><strong>$5</strong></ui-sticker>
+		<ui-sticker fill="#BC2F2F" font="medium tsh(md)" font-lead="black tsh(md)" ink="#fff" shadow="2xl" size="2xl"><small>ONLY</small><strong>$5</strong></ui-sticker>
+		<ui-sticker fill="#BC2F2F" font="medium tsh(md)" font-lead="black tsh(md)" ink="#fff" shadow="2xl" size="3xl"><small>ONLY</small><strong>$5</strong></ui-sticker>
+	</div>
+
+	<h3>Solid shadow</h3>
+	<p>Use <code>shadow="solid"</code> for a hard offset shadow — the tactical/comic look. Step the offset with <code>off(sm|md|lg)</code>, or <code>-off(…)</code> to throw the shadow to the <strong>left</strong> (the speech-left balloon below). Here every sticker shares one <code>.sh-tint</code> class that sets <code>--ui-sticker-shadow-color</code> to a near-black <code>color-mix()</code> of its <em>own</em> fill — so each shadow is a dark version of its sticker. The same shape set as above; <code>drop-shadow()</code> follows every clipped outline.</p>
+	<div class="row">
+		<ui-sticker class="sh-tint" fill="#FEA12F" font-lead="md" ink="#262626" shadow="solid" size="2xl"><small>ONLY</small><strong>$9</strong></ui-sticker>
+		<ui-sticker variant="burst" class="sh-tint" fill="#3E9355" font-lead="md" ink="#fff" shadow="solid -off(lg)" size="2xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
+		<ui-sticker variant="heart" class="sh-tint" fill="#BC2330" gap="md" shadow="solid off(lg)" size="2xl"><small>HOLIDAY</small><strong>$50</strong></ui-sticker>
+		<ui-sticker variant="blob" class="sh-tint" fill="#7B5EA7" font-lead="md" shadow="solid off(lg)" size="2xl"><small>NEW</small><strong>2026</strong></ui-sticker>
+		<ui-sticker variant="speech(l)" class="sh-tint" fill="#2980b9" font-lead="xl" ink="#FFF" shadow="solid -off(xl)" size="2xl"><small>NEW</small><strong>SALE</strong></ui-sticker>
+		<ui-sticker variant="speech(r)" class="sh-tint" fill="#27ae60" font-lead="2xl" ink="#d6fce1" shadow="solid off(xl)" size="2xl"><small>UP TO</small><strong>40%</strong></ui-sticker>
 	</div>
 
 	<h3>Typography</h3>
 	<p>Two typographic attributes, each an order-free shorthand of <code>family · size · weight · tsh()</code>: <code>font</code> styles the "other" lines (<code>&lt;small&gt;</code>, <code>&lt;span&gt;</code>); <code>font-lead</code> styles the <code>&lt;strong&gt;</code> lead line. In <code>SAVE / 10% / Today</code> the two <code>&lt;small&gt;</code> lines share <code>font</code>, the lead uses <code>font-lead</code>.</p>
 	<div class="row">
-		<ui-sticker size="3xl" theme="green" font="serif medium" font-lead="heading black"><small>SAVE</small><strong>10%</strong><small>Today</small></ui-sticker>
-		<ui-sticker size="3xl" theme="blue" font="mono" font-lead="bold"><small>FROM</small><strong>$9</strong><small>/mo</small></ui-sticker>
-		<ui-sticker size="3xl" fill="#1d1d1d" ink="gold" font="medium" font-lead="black"><small>ONLY</small><strong>$5</strong></ui-sticker>
-	</div>
-
-	<h3>Shadow</h3>
-	<p>Use the <code>shadow</code> attribute: <code>sm</code>…<code>2xl</code> for soft elevation, or <code>solid</code> for a hard offset (tune the offset with <code>off(sm|md|lg)</code>). It uses <code>filter: drop-shadow()</code> so it follows clipped star/heart shapes too.</p>
-	<div class="row">
-		<ui-sticker shadow="sm" theme="blue"><span>sm</span></ui-sticker>
-		<ui-sticker shadow="md" theme="blue"><span>md</span></ui-sticker>
-		<ui-sticker shadow="lg" theme="blue"><span>lg</span></ui-sticker>
-		<ui-sticker variant="burst" shadow="lg" theme="orange"><span>lg</span></ui-sticker>
-		<ui-sticker variant="heart" shadow="xl" theme="red"><span>xl</span></ui-sticker>
-	</div>
-
-	<h3>Theme</h3>
-	<p>Use <code>theme</code> for a decorative color <strong>bundle</strong> (background + ink), distinct from the <code>fill</code>/<code>ink</code> axis. If both are set, <code>theme</code> wins.</p>
-	<div class="row">
-		<ui-sticker theme="accent">accent</ui-sticker>
-		<ui-sticker variant="burst" theme="dark">dark</ui-sticker>
-		<ui-sticker theme="subtle">subtle</ui-sticker>
-		<ui-sticker variant="burst" theme="green">green</ui-sticker>
-	</div>
-
-	<h3>Multi-line</h3>
-	<p>Each direct child is its own line; use <code>gap="sm|md|lg"</code> for line-spacing. <code>&lt;small&gt;</code> (label) and <code>&lt;strong&gt;</code> (lead) give preset, fluid <code>cqi</code> sizes — no inline styles.</p>
-	<div class="row">
-		<ui-sticker variant="burst"><small>SAVE</small><strong>20%</strong></ui-sticker>
-		<ui-sticker gap="sm" theme="green"><small>FROM</small><strong>$9</strong><small>/mo</small></ui-sticker>
+		<ui-sticker fill="#3E9355" font="serif medium" font-lead="heading black" ink="#fff" size="3xl"><small>SAVE</small><strong>10%</strong><small>Today</small></ui-sticker>
+		<ui-sticker fill="#2F75BC" font="mono" font-lead="bold" ink="#fff" size="3xl"><small>FROM</small><strong>$9</strong><small>/mo</small></ui-sticker>
+		<ui-sticker fill="#1d1d1d" font="medium" font-lead="black" ink="gold" size="3xl"><small>ONLY</small><strong>$5</strong></ui-sticker>
 	</div>
 
 	<h3>Gradient (custom class)</h3>
 	<p>Gradients are a custom class that sets <code>--ui-sticker-bg</code> (and <code>--ui-sticker-c</code>, since <code>contrast-color()</code> can't read a gradient). Give the lead line its own color with <code>--ui-sticker-lead-c</code> for a two-tone callout. See the <code>.grad-*</code> classes in this page's <code>&lt;style&gt;</code>. Works on discs and clipped shapes alike.</p>
 	<div class="row">
-		<ui-sticker class="grad-teal" size="2xl" font-lead="md" style="--ui-sticker-lead-c: #FFE08A"><small>GRAB A</small><strong>DEAL</strong></ui-sticker>
-		<ui-sticker class="grad-amber" size="2xl" font-lead="md" style="--ui-sticker-lead-c: #FFE9C7"><small>FAMILY</small><strong>DEAL</strong></ui-sticker>
+		<ui-sticker class="grad-teal" font-lead="md" size="2xl" style="--ui-sticker-lead-c: #FFE08A"><small>GRAB A</small><strong>DEAL</strong></ui-sticker>
+		<ui-sticker class="grad-amber" font-lead="md" size="2xl" style="--ui-sticker-lead-c: #FFE9C7"><small>FAMILY</small><strong>DEAL</strong></ui-sticker>
 		<ui-sticker class="grad-purple" size="2xl" style="--ui-sticker-lead-c: #D7B3FF"><small>FOR</small><strong>YOU</strong></ui-sticker>
 		<ui-sticker variant="sunburst" class="grad-hot" size="2xl" style="--ui-sticker-c: #FFE600"><span>HOT</span></ui-sticker>
 		<ui-sticker variant="heart" class="grad-love" size="2xl" style="--ui-sticker-lead-c: #FFD1D1"><strong>LOVE</strong><small>YOU</small></ui-sticker>
 	</div>
 
-	<h3>Speech balloon</h3>
-	<p>Use <code>variant="speech(l)"</code> or <code>speech(r)</code> for a rounded balloon with a tail (bottom-left / bottom-right). The tail inherits the fill — solid or gradient — and is included in the shadow.</p>
+	<h3>Text sticker</h3>
+	<p>Use <code>variant="text"</code> for puffy "sticker lettering" — no box, just glyphs with a thick white stroke (the puff), a solid colored fill and a colored keyline. The fill comes from <code>fill</code>. Set the typeface with the <code>font</code> attribute or a custom class that sets <code>--ui-sticker-font-family</code> (here the <code>.font-*</code> classes) — a fat, rounded display face holds the puff best. Tilt with <code>angle</code>, size via <code>--ui-sticker-text-size</code>.</p>
 	<div class="row">
-		<ui-sticker variant="speech(l)" fill="#2980b9"><span>Hi!</span></ui-sticker>
-		<ui-sticker variant="speech(r)" fill="gold"><small>NEW</small><strong>Sale</strong></ui-sticker>
-		<ui-sticker variant="speech(l)" shadow="solid" fill="#CB2647"><small>SPAR</small><strong>50%</strong></ui-sticker>
-		<ui-sticker variant="speech(r)" class="grad-teal"><strong>Deal</strong></ui-sticker>
-	</div>
-
-	<h3>Solid shadow</h3>
-	<p>Use <code>shadow="solid"</code> for a hard offset shadow — like the tactical speech balloons (<code>drop-shadow(.25em .25em 0 #000)</code>). Add <code>off(sm|md|lg)</code> to step the offset, or tune <code>--ui-sticker-shadow-x/-y/-color</code> directly.</p>
-	<div class="row">
-		<ui-sticker shadow="solid" fill="orange"><span>SALE</span></ui-sticker>
-		<ui-sticker shadow="solid off(lg)" fill="orange"><span>SALE</span></ui-sticker>
-		<ui-sticker variant="burst" shadow="solid" fill="#CB2647"><span>-20%</span></ui-sticker>
-		<ui-sticker variant="spark" shadow="solid" fill="#2980b9"><small>UP TO</small><strong>40%</strong></ui-sticker>
-		<ui-sticker variant="heart" shadow="solid" fill="#d91f26"><strong>♥</strong></ui-sticker>
+		<ui-sticker variant="text" angle="-4deg" class="font-freckle" fill="#ffcc33"><span>New In!</span></ui-sticker>
+		<ui-sticker variant="text" angle="3deg" class="font-sedgwick" fill="#8fa0f8"><span>Flash Sale</span></ui-sticker>
+		<ui-sticker variant="text" angle="-2deg" class="font-bagel" fill="#7ec27c"><span>50% Off</span></ui-sticker>
+		<ui-sticker variant="text" angle="2deg" class="font-freckle" fill="#f1c1ff"><span>Hot Pick</span></ui-sticker>
+		<ui-sticker variant="text" angle="-3deg" class="font-sedgwick" fill="#ff9797"><span>Last Call</span></ui-sticker>
 	</div>
 
 	<h3>Fit to width (<code>text-fit</code>)</h3>
 	<p>Use <code>font="fit"</code> (and/or <code>font-lead="fit"</code>) to grow each line element to fill the box width with native <code>text-fit</code> — no overflow, no SVG/JS. Each line is its own single-line element, so each fills its column independently. Progressive enhancement (Chrome 150+); elsewhere the <code>cqi</code> sizing is the fallback.</p>
 	<div class="row">
-		<ui-sticker font="fit" theme="red"><span>DEAL</span></ui-sticker>
-		<ui-sticker font="fit" font-lead="fit" theme="blue"><small>UP TO</small><strong>40%</strong></ui-sticker>
-		<ui-sticker font="fit" font-lead="fit" theme="green"><small>FROM</small><strong>$9</strong><small>/mo</small></ui-sticker>
-		<ui-sticker variant="burst" font="fit" theme="orange"><span>WOW</span></ui-sticker>
+		<ui-sticker fill="#BC2F2F" font="fit" ink="#fff"><span>DEAL</span></ui-sticker>
+		<ui-sticker fill="#2F75BC" font="fit" font-lead="fit" ink="#fff"><small>UP TO</small><strong>40%</strong></ui-sticker>
+		<ui-sticker fill="#3E9355" font="fit" font-lead="fit" ink="#fff"><small>FROM</small><strong>$9</strong><small>/mo</small></ui-sticker>
+		<ui-sticker variant="burst" fill="#FEA12F" font="fit" ink="#262626"><span>WOW</span></ui-sticker>
 	</div>
 
-	<h3>Text sticker</h3>
-	<p>Use <code>variant="text"</code> for puffy "sticker lettering" — no box, just glyphs with a thick white stroke (the puff), a solid colored fill and a colored keyline. The fill comes from <code>fill</code>/<code>theme</code>. Set the typeface with the <code>font</code> attribute or a custom class that sets <code>--ui-sticker-font-family</code> (here the <code>.font-*</code> classes) — a fat, rounded display face holds the puff best. Tilt with <code>angle</code>, size via <code>--ui-sticker-text-size</code>.</p>
-	<div class="row">
-		<ui-sticker variant="text" fill="#ffcc33" angle="-4deg" class="font-freckle"><span>New In!</span></ui-sticker>
-		<ui-sticker variant="text" fill="#8fa0f8" angle="3deg" class="font-sedgwick"><span>Flash Sale</span></ui-sticker>
-		<ui-sticker variant="text" fill="#7ec27c" angle="-2deg" class="font-bagel"><span>50% Off</span></ui-sticker>
-		<ui-sticker variant="text" fill="#f1c1ff" angle="2deg" class="font-freckle"><span>Hot Pick</span></ui-sticker>
-		<ui-sticker variant="text" fill="#ff9797" angle="-3deg" class="font-sedgwick"><span>Last Call</span></ui-sticker>
-	</div>
+
 
 	<h3>Glass (on product images)</h3>
-	<p>Use the <code>glass</code> attribute for a frosted, semi-transparent badge that reads well over any photo. It tints with the system <code>Canvas</code>/<code>CanvasText</code> colors (auto light/dark) and blurs the image behind. Add <code>fill</code>/<code>theme</code> to tint the frost. Shown on image-only <code>&lt;ui-card&gt;</code>s, positioned with the card's <code>sticker(te)</code> token.</p>
+	<p>Use the <code>glass</code> attribute for a frosted, semi-transparent badge that reads well over any photo. It tints with the system <code>Canvas</code>/<code>CanvasText</code> colors (auto light/dark) and blurs the image behind. Add <code>fill</code> to tint the frost. Shown on image-only <code>&lt;ui-card&gt;</code>s, positioned with the card's <code>sticker(te)</code> token.</p>
 	<div class="cards">
 		<ui-card variant="vis(media)" media="asr(4/3) sticker(te)">
 			<cq-box><ui-media><img src="/ui/card/assets/ergochair.jpg" alt=""><ui-sticker glass><span>NEW</span></ui-sticker></ui-media></cq-box>
 		</ui-card>
 		<ui-card variant="vis(media)" media="asr(4/3) sticker(ts)">
-			<cq-box><ui-media><img src="/ui/card/assets/aurasoundpro.jpg" alt=""><ui-sticker glass fill="#BC2330"><span>-20%</span></ui-sticker></ui-media></cq-box>
+			<cq-box><ui-media><img src="/ui/card/assets/aurasoundpro.jpg" alt=""><ui-sticker fill="#BC2330" glass ink="#FFF"><span>-20%</span></ui-sticker></ui-media></cq-box>
 		</ui-card>
 		<ui-card variant="vis(media)" media="asr(4/3) sticker(te)">
-			<cq-box><ui-media><img src="/ui/card/assets/brewandbean.jpg" alt=""><ui-sticker glass theme="dark"><small>SALE</small><strong>½</strong></ui-sticker></ui-media></cq-box>
+			<cq-box><ui-media><img src="/ui/card/assets/brewandbean.jpg" alt=""><ui-sticker fill="#262626" glass><small>SALE</small><strong>½</strong></ui-sticker></ui-media></cq-box>
 		</ui-card>
 		<ui-card variant="vis(media)" media="asr(4/3) sticker(te)">
-			<cq-box><ui-media><img src="/ui/card/assets/fittrackpro.jpg" alt=""><ui-sticker variant="blob" glass fill="#7B5EA7"><small>NEW</small><strong>26</strong></ui-sticker></ui-media></cq-box>
+			<cq-box><ui-media><img src="/ui/card/assets/fittrackpro.jpg" alt=""><ui-sticker variant="blob" fill="#7B5EA7" glass><small>NEW</small><strong>26</strong></ui-sticker></ui-media></cq-box>
 		</ui-card>
 	</div>
 
