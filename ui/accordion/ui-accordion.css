@@ -1,7 +1,7 @@
 /**
  * ui-accordion
- * @version 4.2.0
- * @date 2026-04-26
+ * @version 4.2.1
+ * @date 2026-06-25
  * @author Mads Stoumann
  *
  * Private custom properties (--_*)
@@ -31,14 +31,14 @@
 		--ui-accordion-breakout-border-width: var(--border-width);
 		--ui-accordion-breakout-unit: var(--spacing-md);
 		--ui-accordion-duration: var(--duration-slow);
+		--ui-accordion-media-delay: calc(var(--ui-accordion-media-duration) * 0.4);
 		--ui-accordion-media-duration: var(--duration-slower);
 		--ui-accordion-media-easing: var(--ease-in-out);
 		--ui-accordion-media-shift: 0.75rem;
-		--ui-accordion-media-delay: calc(var(--ui-accordion-media-duration) * 0.4);
-		--ui-accordion-split-gap: var(--ui-accordion-gap, var(--spacing-xl));
 		--ui-accordion-padding-block: 1.25ch;
 		--ui-accordion-padding-inline: 1.5ch;
 		--ui-accordion-pill-open-radius: var(--radius-3xl);
+		--ui-accordion-split-gap: var(--ui-accordion-gap, var(--spacing-xl));
 
 		--_bd: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
 		--_bb: var(--ui-accordion-breakout-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
@@ -48,329 +48,327 @@
 	}
 
 	@container style(--_render: accordion) {
-		:where(ui-accordion) cq-box {
-			display: grid;
-			interpolate-size: allow-keywords;
+		ui-accordion {
+			:where(&) cq-box {
+				display: grid;
+				interpolate-size: allow-keywords;
 
-			details {
-				background: var(--ui-accordion-background, inherit);
-				color: var(--ui-accordion-color, inherit);
-				&::details-content {
-					block-size: 0;
-					content-visibility: hidden;
-					overflow: hidden;
-					transition: block-size var(--ui-accordion-duration), content-visibility var(--ui-accordion-duration), padding-block var(--ui-accordion-duration);
-					transition-behavior: allow-discrete;
+				details {
+					background: var(--ui-accordion-background, inherit);
+					color: var(--ui-accordion-color, inherit);
+					&::details-content {
+						block-size: 0;
+						content-visibility: hidden;
+						overflow: hidden;
+						transition: block-size var(--ui-accordion-duration), content-visibility var(--ui-accordion-duration), padding-block var(--ui-accordion-duration);
+						transition-behavior: allow-discrete;
+					}
+					&[open]::details-content {
+						block-size: auto;
+						content-visibility: visible;
+						padding-block: var(--ui-accordion-padding-block);
+					}
+					&:has(> summary:focus-visible) {
+						outline: var(--ring-width) solid var(--ring-color);
+						summary { outline: none; }
+					}
+					& summary {
+						align-items: center;
+						color: inherit;
+						cursor: pointer;
+						display: flex;
+						font-size: var(--ui-accordion-summary-font-size, 1em);
+						font-weight: var(--ui-accordion-summary-font-weight, 500);
+						justify-content: space-between;
+						padding-block: var(--ui-accordion-padding-block);
+						text-decoration: none;
+						transition: background var(--duration-normal) var(--ease-in-out);
+						user-select: none;
+						&::-webkit-details-marker { display: none; }
+					}
+					&:not([open]) summary:hover { background: var(--ui-accordion-bg-hover); }
+					&[open] summary { text-decoration: var(--ui-accordion-open-decoration, underline) #0000 var(--ui-accordion-open-decoration-width, var(--border-width-thick)); text-decoration-skip-ink: auto; text-underline-offset: var(--ui-accordion-open-decoration-offset, 0.3ch); transition: text-decoration-color var(--duration-normal) var(--ease-in-out); }
+					&[open] summary:hover { text-decoration-color: currentColor; }
 				}
-				&[open]::details-content {
-					block-size: auto;
-					content-visibility: visible;
-					padding-block: var(--ui-accordion-padding-block);
-				}
-				&:has(> summary:focus-visible) {
-					outline: var(--ring-width) solid var(--ring-color);
-					summary { outline: none; }
-				}
-				& summary {
-					align-items: center;
-					color: inherit;
-					cursor: pointer;
-					display: flex;
-					font-size: var(--ui-accordion-summary-font-size, 1em);
-					font-weight: var(--ui-accordion-summary-font-weight, 500);
-					justify-content: space-between;
-					padding-block: var(--ui-accordion-padding-block);
-					text-decoration: none;
-					transition: background var(--duration-normal) var(--ease-in-out);
-					user-select: none;
-					&::-webkit-details-marker { display: none; }
-				}
-				&:not([open]) summary:hover { background: var(--ui-accordion-bg-hover); }
-				&[open] summary { text-decoration: var(--ui-accordion-open-decoration, underline) #0000 var(--ui-accordion-open-decoration-width, var(--border-width-thick)); text-decoration-skip-ink: auto; text-underline-offset: var(--ui-accordion-open-decoration-offset, 0.3ch); transition: text-decoration-color var(--duration-normal) var(--ease-in-out); }
-				&[open] summary:hover { text-decoration-color: currentColor; }
 			}
-		}
-		:where(ui-accordion)[no-collapse] details[open] summary {
-			pointer-events: none;
-		}
+			:where(&)[no-collapse] details[open] summary {
+				pointer-events: none;
+			}
 
-		/* === Variants === */
+			/* === Variants === */
 
-		/* bordered */
-		ui-accordion[variant~="bordered"] cq-box {
-			border: var(--_bd);
-			details {
-				padding-inline: var(--ui-accordion-padding-inline);
+			/* bordered */
+			&[variant~="bordered"] cq-box {
+				border: var(--_bd);
+				details {
+					padding-inline: var(--ui-accordion-padding-inline);
+				}
 			}
-		}
 
-		/* breakout */
-		ui-accordion[variant~="breakout"] cq-box {
-			&:has(details[open]) {
-				margin-block-end: calc(2 * var(--ui-accordion-breakout-unit));
+			/* breakout */
+			&[variant~="breakout"] cq-box {
+				&:has(details[open]) {
+					margin-block-end: calc(2 * var(--ui-accordion-breakout-unit));
+				}
+				details {
+					border-inline: var(--_bd);
+					padding-inline: var(--ui-accordion-padding-inline);
+					translate: 0 calc(var(--_y, 0) * var(--ui-accordion-breakout-unit));
+					transition: translate var(--ui-accordion-duration) ease;
+					&:first-of-type { border-block-start: var(--_bd); }
+					&:last-of-type { border-block-end: var(--_bd); }
+				}
+				details[open] {
+					border: var(--_bb);
+				}
+				details[open] + details {
+					border-block-start: var(--_bd);
+				}
+				details[open]:not(:first-of-type),
+				details[open]:first-of-type ~ details {
+					--_y: 1;
+				}
+				details[open] ~ details {
+					--_y: 2;
+				}
 			}
-			details {
-				border-inline: var(--_bd);
-				padding-inline: var(--ui-accordion-padding-inline);
-				translate: 0 calc(var(--_y, 0) * var(--ui-accordion-breakout-unit));
-				transition: translate var(--ui-accordion-duration) ease;
-				&:first-of-type { border-block-start: var(--_bd); }
-				&:last-of-type { border-block-end: var(--_bd); }
+			&[variant~="breakout"][variant~="rounded"] cq-box {
+				details[open] {
+					border-radius: var(--ui-accordion-border-radius);
+				}
+				/* Top of group: first item, or first after open */
+				details:first-of-type:not([open]),
+				details[open] + details {
+					border-start-start-radius: var(--ui-accordion-border-radius);
+					border-start-end-radius: var(--ui-accordion-border-radius);
+				}
+				/* Bottom of group: last item, or right before open */
+				details:last-of-type:not([open]),
+				details:has(+ details[open]) {
+					border-end-start-radius: var(--ui-accordion-border-radius);
+					border-end-end-radius: var(--ui-accordion-border-radius);
+				}
 			}
-			details[open] {
-				border: var(--_bb);
+
+			/* divided */
+			&:is([variant~="bordered"], [variant~="breakout"], [variant~="divided"]) cq-box details:not(:last-of-type) {
+				border-block-end: var(--_bd);
 			}
-			details[open] + details {
-				border-block-start: var(--_bd);
+			&[variant~="breakout"] cq-box details[open]:not(:last-of-type) {
+				border-block-end: var(--_bb);
 			}
-			details[open]:not(:first-of-type),
-			details[open]:first-of-type ~ details {
-				--_y: 1;
+
+			/* rounded */
+			&[variant~="rounded"] cq-box {
+				border-radius: var(--ui-accordion-border-radius);
+				details:first-of-type {
+					border-start-start-radius: var(--ui-accordion-border-radius);
+					border-start-end-radius: var(--ui-accordion-border-radius);
+				}
+				details:last-of-type {
+					border-end-start-radius: var(--ui-accordion-border-radius);
+					border-end-end-radius: var(--ui-accordion-border-radius);
+				}
 			}
-			details[open] ~ details {
-				--_y: 2;
-			}
-		}
-		ui-accordion[variant~="breakout"][variant~="rounded"] cq-box {
-			details[open] {
+			&[variant~="rounded"][variant~="separate"] cq-box details {
 				border-radius: var(--ui-accordion-border-radius);
 			}
-			/* Top of group: first item, or first after open */
-			details:first-of-type:not([open]),
-			details[open] + details {
-				border-start-start-radius: var(--ui-accordion-border-radius);
-				border-start-end-radius: var(--ui-accordion-border-radius);
+
+			/* pill — fully rounded ends per item; compose with separate/filled */
+			&[variant~="pill"] cq-box details {
+				border-radius: var(--radius-pill);
 			}
-			/* Bottom of group: last item, or right before open */
-			details:last-of-type:not([open]),
-			details:has(+ details[open]) {
-				border-end-start-radius: var(--ui-accordion-border-radius);
-				border-end-end-radius: var(--ui-accordion-border-radius);
+			/* open pill item: card-like radius (full capsule bulges on tall panels) */
+			&[variant~="pill"] cq-box details[open] {
+				border-radius: var(--ui-accordion-pill-open-radius);
 			}
-		}
 
-		/* divided */
-		ui-accordion:is([variant~="bordered"], [variant~="breakout"], [variant~="divided"]) cq-box details:not(:last-of-type) {
-			border-block-end: var(--_bd);
-		}
-		ui-accordion[variant~="breakout"] cq-box details[open]:not(:last-of-type) {
-			border-block-end: var(--_bb);
-		}
-
-		/* rounded */
-		ui-accordion[variant~="rounded"] cq-box {
-			border-radius: var(--ui-accordion-border-radius);
-			details:first-of-type {
-				border-start-start-radius: var(--ui-accordion-border-radius);
-				border-start-end-radius: var(--ui-accordion-border-radius);
+			/* separate */
+			&[variant~="separate"] cq-box {
+				gap: var(--ui-accordion-gap, var(--spacing-xl));
+				details {
+					padding-inline: var(--ui-accordion-padding-inline-separate, 2.25ch);
+				}
 			}
-			details:last-of-type {
-				border-end-start-radius: var(--ui-accordion-border-radius);
-				border-end-end-radius: var(--ui-accordion-border-radius);
+			/* bordered + separate: border moves from group to each item */
+			&[variant~="bordered"][variant~="separate"] cq-box {
+				border: 0;
+				details { border: var(--_bd); }
 			}
-		}
-		ui-accordion[variant~="rounded"][variant~="separate"] cq-box details {
-			border-radius: var(--ui-accordion-border-radius);
-		}
 
-		/* pill — fully rounded ends per item (ui/tabs --radius-pill). Compose with separate/filled. */
-		ui-accordion[variant~="pill"] cq-box details {
-			border-radius: var(--radius-pill);
-		}
-		/* Open pill item: card-like radius (a full capsule would bulge on a tall panel). */
-		ui-accordion[variant~="pill"] cq-box details[open] {
-			border-radius: var(--ui-accordion-pill-open-radius);
-		}
-
-		/* separate */
-		ui-accordion[variant~="separate"] cq-box {
-			gap: var(--ui-accordion-gap, var(--spacing-xl));
-			details {
-				padding-inline: var(--ui-accordion-padding-inline-separate, 2.25ch);
-			}
-		}
-		/* bordered + separate: border moves from group to each item */
-		ui-accordion[variant~="bordered"][variant~="separate"] cq-box {
-			border: 0;
-			details { border: var(--_bd); }
-		}
-
-		/* hide-summary — hide the open item's summary (see readme). Pair with no-collapse + name.
-		   Direct child (> summary) so nested accordions keep theirs. */
-		ui-accordion[variant~="hide-summary"] cq-box details[open] > summary {
-			display: none;
-		}
-		/* Closed items = content-width chips (the summary box); details stays full-width and
-		   never resizes, so toggling crossfades. Definite column keeps the grid stable. */
-		ui-accordion[variant~="hide-summary"] cq-box {
-			grid-template-columns: minmax(0, 1fr);
-		}
-		ui-accordion[variant~="hide-summary"] cq-box details {
-			justify-self: start;
-		}
-		/* Closed: transparent row; chip painted on the summary (reads --ui-accordion-background). */
-		ui-accordion[variant~="hide-summary"] cq-box details:not([open]) {
-			background: none;
-			padding-inline: 0;
-		}
-		ui-accordion[variant~="hide-summary"] cq-box details:not([open]) > summary {
-			background: var(--ui-accordion-background);
-			gap: var(--ui-accordion-summary-gap, 1ch);
-			inline-size: max-content;
-			justify-content: start;
-			padding-inline: var(--ui-accordion-summary-padding-inline, 2.25ch);
-		}
-		/* pill: the chip (closed summary) is the fully-rounded element */
-		ui-accordion[variant~="hide-summary"][variant~="pill"] cq-box details:not([open]) > summary {
-			border-radius: var(--radius-pill);
-		}
-		/* Pill chip: trim padding on the icon's side (:has picks start/end by icon position; see readme). */
-		ui-accordion[variant~="hide-summary"][variant~="pill"] cq-box details:not([open]) > summary:has(> ui-icon:first-child) {
-			padding-inline-start: var(--ui-accordion-summary-padding-icon, 1.5ch);
-		}
-		ui-accordion[variant~="hide-summary"][variant~="pill"] cq-box details:not([open]) > summary:has(> ui-icon:last-child) {
-			padding-inline-end: var(--ui-accordion-summary-padding-icon, 1.5ch);
-		}
-		/* Focus ring follows the chip, not the full-width details box */
-		ui-accordion[variant~="hide-summary"] cq-box details:not([open]):has(> summary:focus-visible) {
-			outline: none;
-		}
-		ui-accordion[variant~="hide-summary"] cq-box details:not([open]) > summary:focus-visible {
-			outline: var(--ring-width) solid var(--ring-color);
-			outline-offset: calc(-1 * var(--ring-width));
-		}
-
-		/* filled — sets --ui-accordion-background; base rule paints it. See readme. */
-		ui-accordion[variant~="filled"] cq-box details {
-			--ui-accordion-background: var(--color-surface-alt);
-		}
-
-		/* tint / tinted — consumes generic --_tint / --tint-bg / --tint-fg / --tint-overlay from base/tint.css */
-		ui-accordion:is([tint], [data-tint]) cq-box details {
-			--ui-accordion-bg-hover: linear-gradient(90deg, #0000, var(--tint-overlay) 10% 90%, #0000);
-			background: var(--tint-bg, var(--_tint));
-			color: var(--tint-fg, contrast-color(var(--_tint)));
-		}
-
-		/* === type: slide === */
-		ui-accordion[type="slide"] cq-box {
-			overflow: hidden;
-			position: relative;
-
-			details:has(:focus-visible) {
-				outline-offset: calc(-1 * var(--ring-width, 2px));
-				&[open] {
-					outline: none;
-					summary ui-icon:last-of-type {
-						outline: var(--ring-width) solid var(--ring-color);
-						outline-offset: var(--ring-offset);
+			/* hide-summary — closed items become content-width chips; see readme */
+			&[variant~="hide-summary"] cq-box {
+				grid-template-columns: minmax(0, 1fr);
+				details[open] > summary {
+					display: none;
+				}
+				details {
+					justify-self: start;
+				}
+				/* closed: transparent row, chip painted on the summary */
+				details:not([open]) {
+					background: none;
+					padding-inline: 0;
+					/* focus ring follows the chip, not the full-width box */
+					&:has(> summary:focus-visible) {
+						outline: none;
+					}
+					> summary {
+						background: var(--ui-accordion-background);
+						gap: var(--ui-accordion-summary-gap, 1ch);
+						inline-size: max-content;
+						justify-content: start;
+						padding-inline: var(--ui-accordion-summary-padding-inline, 2.25ch);
+						&:focus-visible {
+							outline: var(--ring-width) solid var(--ring-color);
+							outline-offset: calc(-1 * var(--ring-width));
+						}
 					}
 				}
 			}
-			&:has(details[open]) details:not([open]) {
-				opacity: 0;
-				pointer-events: none;
-				position: absolute;
-				visibility: hidden;
+			/* pill chip — trim padding on the icon's side; see readme */
+			&[variant~="hide-summary"][variant~="pill"] cq-box details:not([open]) > summary {
+				border-radius: var(--radius-pill);
+				&:has(> ui-icon:first-child) {
+					padding-inline-start: var(--ui-accordion-summary-padding-icon, 1.5ch);
+				}
+				&:has(> ui-icon:last-child) {
+					padding-inline-end: var(--ui-accordion-summary-padding-icon, 1.5ch);
+				}
 			}
-			details[open] {
-				border-block-end: 0;
-				&::details-content { translate: 0; }
+
+			/* filled — sets --ui-accordion-background; base rule paints it */
+			&[variant~="filled"] cq-box details {
+				--ui-accordion-background: var(--color-surface-alt);
 			}
-			details::details-content {
-				background: var(--ui-accordion-slide-bg, var(--ui-accordion-background, Canvas));
-				box-sizing: border-box;
-				padding-inline: var(--ui-accordion-padding-inline);
-				translate: calc(100% * var(--_sd, 1)) 0;
-				transition: block-size var(--ui-accordion-duration), content-visibility var(--ui-accordion-duration) allow-discrete, padding-block var(--ui-accordion-duration), translate var(--ui-accordion-duration) var(--ease-in-out, ease);
-				z-index: var(--z-index-2, 10);
+
+			/* tint / tinted — consumes generic --_tint / --tint-* from base/tint.css */
+			&:is([tint], [data-tint]) cq-box details {
+				--ui-accordion-bg-hover: linear-gradient(90deg, #0000, var(--tint-overlay) 10% 90%, #0000);
+				background: var(--tint-bg, var(--_tint));
+				color: var(--tint-fg, contrast-color(var(--_tint)));
 			}
-			details summary ui-icon:last-of-type,
-			details[open] summary ui-icon:first-of-type { display: none; }
-			details[open] summary ui-icon:last-of-type { display: grid; }
+
+			/* === type: slide === */
+			&[type="slide"] cq-box {
+				overflow: hidden;
+				position: relative;
+
+				details:has(:focus-visible) {
+					outline-offset: calc(-1 * var(--ring-width, 2px));
+					&[open] {
+						outline: none;
+						summary ui-icon:last-of-type {
+							outline: var(--ring-width) solid var(--ring-color);
+							outline-offset: var(--ring-offset);
+						}
+					}
+				}
+				&:has(details[open]) details:not([open]) {
+					opacity: 0;
+					pointer-events: none;
+					position: absolute;
+					visibility: hidden;
+				}
+				details[open] {
+					border-block-end: 0;
+					&::details-content { translate: 0; }
+				}
+				details::details-content {
+					background: var(--ui-accordion-slide-bg, var(--ui-accordion-background, Canvas));
+					box-sizing: border-box;
+					padding-inline: var(--ui-accordion-padding-inline);
+					translate: calc(100% * var(--_sd, 1)) 0;
+					transition: block-size var(--ui-accordion-duration), content-visibility var(--ui-accordion-duration) allow-discrete, padding-block var(--ui-accordion-duration), translate var(--ui-accordion-duration) var(--ease-in-out, ease);
+					z-index: var(--z-index-2, 10);
+				}
+				details summary ui-icon:last-of-type,
+				details[open] summary ui-icon:first-of-type { display: none; }
+				details[open] summary ui-icon:last-of-type { display: grid; }
+			}
+
+			/* === type: tree — tight rows, role-aware markers (▤ leaf, ▸/▾ branch) === */
+			&[type="tree"] cq-box {
+				--ui-accordion-padding-block: 0;
+				--ui-accordion-padding-inline: 1ch;
+				--ui-accordion-summary-padding-inline: 0;
+				details {
+					summary { display: list-item; }
+					summary::marker {
+						color: color-mix(in oklab, currentColor 50%, transparent);
+						content: "\25A4  ";
+					}
+					&:has(> ui-accordion) > summary::marker { content: "\25B8  "; }
+					&[open]:has(> ui-accordion) > summary::marker { content: "\25BE  "; }
+					&[open]::details-content { padding-block: 0; }
+					&:not(:has(> ui-accordion)) > :not(summary) {
+						color: var(--color-text-muted);
+						font-size: var(--font-size-xs);
+					}
+				}
+			}
+
+			/* === Nested accordions — a <ui-accordion> inside a parent <details> === */
+
+			/* strip border-radius on inner accordions */
+			& cq-box ui-accordion {
+				--ui-accordion-border-radius: 0;
+			}
+
+			/* strip borders on inner cq-boxes — outer frame paints onto descendants */
+			&[variant] cq-box ui-accordion cq-box {
+				border: 0;
+			}
+
+			/* parent details with nested accordion: move inline padding to its summary */
+			&[variant] cq-box details:has(> ui-accordion) {
+				padding-inline: 0;
+				> summary {
+					padding-inline: var(--ui-accordion-summary-padding-inline, var(--ui-accordion-padding-inline));
+				}
+			}
+			:where(&) cq-box details:has(> ui-accordion)[open]::details-content {
+				padding-block: 0;
+			}
+			/* nested divided + parent open: draw top divider on summary ([open]-gated) */
+			&[variant] cq-box details:has(> ui-accordion[variant~="divided"])[open] > summary {
+				border-block-end: var(--_bd);
+			}
+
+			/* === Indent ([indent]) — depth via specificity-rising selectors; see readme === */
+			&[indent] cq-box ui-accordion {
+				--_id: 1;
+				& cq-box ui-accordion {
+					--_id: 2;
+					& cq-box ui-accordion {
+						--_id: 3;
+						& cq-box ui-accordion {
+							--_id: 4;
+						}
+					}
+				}
+				/* zero nested details' inline-start padding; summary owns the offset */
+				details {
+					padding-inline-start: 0;
+				}
+				/* indent summary + leaf-details' non-summary content */
+				details > summary,
+				details:not(:has(> ui-accordion)) > :not(summary) {
+					padding-inline-start: calc((var(--_id) + 1) * var(--ui-accordion-padding-inline));
+				}
+			}
 		}
+
 		:where([dir="rtl"]) ui-accordion[type="slide"] cq-box { --_sd: -1; }
-
-		/* === type: tree — tight rows, role-aware markers (▤ leaf, ▸/▾ branch closed/open) === */
-		ui-accordion[type="tree"] cq-box {
-			--ui-accordion-padding-block: 0;
-			--ui-accordion-padding-inline: 1ch;
-			--ui-accordion-summary-padding-inline: 0;
-			details {
-				summary { display: list-item; }
-				summary::marker {
-					color: color-mix(in oklab, currentColor 50%, transparent);
-					content: "\25A4  ";
-				}
-				&:has(> ui-accordion) > summary::marker { content: "\25B8  "; }
-				&[open]:has(> ui-accordion) > summary::marker { content: "\25BE  "; }
-				&[open]::details-content { padding-block: 0; }
-				&:not(:has(> ui-accordion)) > :not(summary) {
-					color: var(--color-text-muted);
-					font-size: var(--font-size-xs);
-				}
-			}
-		}
-
-		/* === Nested accordions — auto-adjust when a <ui-accordion> sits inside a parent <details> === */
-
-		/* Strip border-radius on inner accordions (overrides --ui-accordion-border-radius via inheritance) */
-		ui-accordion cq-box ui-accordion {
-			--ui-accordion-border-radius: 0;
-		}
-
-		/* Strip borders on inner cq-boxes — the outer bordered frame paints onto every descendant. */
-		ui-accordion[variant] cq-box ui-accordion cq-box {
-			border: 0;
-		}
-
-		/* Parent details with a nested accordion: move inline padding from details to its summary. */
-		ui-accordion[variant] cq-box details:has(> ui-accordion) {
-			padding-inline: 0;
-		}
-		ui-accordion[variant] cq-box details:has(> ui-accordion) > summary {
-			padding-inline: var(--ui-accordion-summary-padding-inline, var(--ui-accordion-padding-inline));
-		}
-		:where(ui-accordion) cq-box details:has(> ui-accordion)[open]::details-content {
-			padding-block: 0;
-		}
-		/* Nested divided + parent open: draw the top divider on the summary ([open]-gated to avoid doubling). */
-		ui-accordion[variant] cq-box details:has(> ui-accordion[variant~="divided"])[open] > summary {
-			border-block-end: var(--_bd);
-		}
-
-		/* === Indent ([indent], depth-based) — see readme. Depth via specificity-rising selectors. */
-		ui-accordion[indent] cq-box ui-accordion {
-			--_id: 1;
-		}
-		ui-accordion[indent] cq-box ui-accordion cq-box ui-accordion {
-			--_id: 2;
-		}
-		ui-accordion[indent] cq-box ui-accordion cq-box ui-accordion cq-box ui-accordion {
-			--_id: 3;
-		}
-		ui-accordion[indent] cq-box ui-accordion cq-box ui-accordion cq-box ui-accordion cq-box ui-accordion {
-			--_id: 4;
-		}
-
-		/* Zero nested details' inline-start padding so the summary owns the offset. */
-		ui-accordion[indent] cq-box ui-accordion details {
-			padding-inline-start: 0;
-		}
-
-		/* Indent applied to summary + leaf-details' non-summary content. */
-		ui-accordion[indent] cq-box ui-accordion details > summary,
-		ui-accordion[indent] cq-box ui-accordion details:not(:has(> ui-accordion)) > :not(summary) {
-			padding-inline-start: calc((var(--_id) + 1) * var(--ui-accordion-padding-inline));
-		}
 	}
 
 	@container (inline-size > 650px) and style(--_render: accordion) {
-		/* === type: horizontal === */
-		ui-accordion[type="horizontal"] cq-box {
-			display: flex;
+		ui-accordion {
+			/* === type: horizontal === */
+			&[type="horizontal"] cq-box {
+				display: flex;
 
-			details {
+				details {
 					display: flex;
 					flex-basis: calc(100% / sibling-count() / sibling-count() + 2 * var(--ui-accordion-padding-inline));
 					flex-grow: 1;
@@ -405,11 +403,11 @@
 
 				ui-icon { display: none; }
 			}
-			ui-accordion[type="horizontal"]:where([variant~="divided"], [variant~="bordered"]) cq-box details:not(:last-of-type) {
+			&[type="horizontal"]:where([variant~="divided"], [variant~="bordered"]) cq-box details:not(:last-of-type) {
 				border-block-end: 0;
 				border-inline-end: var(--_bd);
 			}
-			ui-accordion[type="horizontal"][variant~="rounded"]:not([variant~="separate"]) cq-box {
+			&[type="horizontal"][variant~="rounded"]:not([variant~="separate"]) cq-box {
 				details:first-of-type {
 					border-start-end-radius: 0;
 					border-end-start-radius: var(--ui-accordion-border-radius);
@@ -421,15 +419,14 @@
 			}
 
 			/* === type: split === */
-			/* Ratio tokens (content/media), spl(x/y) DSL as ui/card: grid columns + media's
-			   column fraction (the absolute media can't use fr; fraction is of the post-gap space). */
-			ui-accordion[variant~="spl(1/1)"] cq-box { --ui-accordion-split: 1fr 1fr; --ui-accordion-split-media: 0.5; }
-			ui-accordion[variant~="spl(3/2)"] cq-box { --ui-accordion-split: 3fr 2fr; --ui-accordion-split-media: 0.4; }
-			ui-accordion[variant~="spl(2/3)"] cq-box { --ui-accordion-split: 2fr 3fr; --ui-accordion-split-media: 0.6; }
-			ui-accordion[variant~="spl(2/1)"] cq-box { --ui-accordion-split: 2fr 1fr; --ui-accordion-split-media: 0.3333; }
-			ui-accordion[variant~="spl(1/2)"] cq-box { --ui-accordion-split: 1fr 2fr; --ui-accordion-split-media: 0.6667; }
+			/* spl(x/y) ratio tokens — grid columns + media column fraction (post-gap) */
+			&[variant~="spl(1/1)"] cq-box { --ui-accordion-split: 1fr 1fr; --ui-accordion-split-media: 0.5; }
+			&[variant~="spl(3/2)"] cq-box { --ui-accordion-split: 3fr 2fr; --ui-accordion-split-media: 0.4; }
+			&[variant~="spl(2/3)"] cq-box { --ui-accordion-split: 2fr 3fr; --ui-accordion-split-media: 0.6; }
+			&[variant~="spl(2/1)"] cq-box { --ui-accordion-split: 2fr 1fr; --ui-accordion-split-media: 0.3333; }
+			&[variant~="spl(1/2)"] cq-box { --ui-accordion-split: 1fr 2fr; --ui-accordion-split-media: 0.6667; }
 
-			ui-accordion[type="split"] cq-box {
+			&[type="split"] cq-box {
 				column-gap: var(--ui-accordion-split-gap);
 				display: grid;
 				grid-template-columns: var(--ui-accordion-split, 1fr 1fr);
@@ -437,18 +434,17 @@
 				& > details {
 					grid-column: 1;
 					& [data-split] { opacity: 0; }
-					/* display:contents frees the absolute media from the clip box, but kills the
-					   base block-size transition — masked by the fade/rise animations below. */
+					/* display:contents frees absolute media from clip box; kills block-size transition (masked by animations) */
 					&[open]::details-content {
 						display: contents;
 					}
-					/* Text fades in staggered after the media (`both` holds it hidden through the delay). */
+					/* text fades in staggered after the media (`both` holds it hidden through the delay) */
 					&[open] > :not(summary, [data-split]) {
 						animation: accordion-content-in var(--ui-accordion-media-duration) var(--ui-accordion-media-easing) var(--ui-accordion-media-delay) both;
 					}
 					&[open] [data-split]{
 						block-size: auto;
-						/* Fill col2 exactly: media-fraction of the space remaining after the gap. */
+						/* fill col2: media-fraction of space remaining after the gap */
 						inline-size: calc(var(--ui-accordion-split-media, 0.5) * (100% - var(--ui-accordion-split-gap)));
 						inset-block: 0 auto;
 						inset-inline: auto 0;
@@ -462,41 +458,40 @@
 				}
 			}
 		}
+	}
 
 	@container style(--_render: tabs) {
-		/* Hide expand/collapse icons on the tabs-rendered host's own summaries (the tab labels). */
+		/* hide expand/collapse icons on tabs-rendered host's own summaries (tab labels) */
 		:where(ui-accordion[tabs]) cq-box details > summary > ui-icon {
 			display: none;
 		}
 	}
 
-	/* Named so deep descendants can query the outer's render state past nested containers. */
+	/* named so deep descendants can query outer's render state past nested containers */
 	:where(ui-accordion[tabs~="expanded"]) {
 		container-name: tabs-expanded;
 	}
 
 	@container tabs-expanded style(--_render: tabs) {
-		/* Lift nested accordions to the neutral `none` render mode so neither accordion nor
-		   tabs rules match the nested subtree (see AGENTS.md). Mega-menu rules below add back. */
+		/* lift nested accordions to neutral `none` render mode; see AGENTS.md */
 		:where(ui-accordion[tabs~="expanded"]) cq-box ui-accordion {
 			--_render: none;
-		}
-
-		/* Force every nested panel open, freeze summaries as static labels, hide their icons. */
-		:where(ui-accordion[tabs~="expanded"]) cq-box ui-accordion details::details-content {
-			block-size: auto;
-			content-visibility: visible;
-			padding-block: var(--ui-accordion-padding-block);
-		}
-		:where(ui-accordion[tabs~="expanded"]) cq-box ui-accordion details > summary {
-			cursor: default;
-			pointer-events: none;
-		}
-		:where(ui-accordion[tabs~="expanded"]) cq-box ui-accordion details > summary > ui-icon {
-			display: none;
+			/* force nested panels open, freeze summaries as labels, hide icons */
+			details::details-content {
+				block-size: auto;
+				content-visibility: visible;
+				padding-block: var(--ui-accordion-padding-block);
+			}
+			details > summary {
+				cursor: default;
+				pointer-events: none;
+				> ui-icon {
+					display: none;
+				}
+			}
 		}
 	}
-	/* Web component item — renders inline (light DOM) */
+	/* web component item — renders inline (light DOM) */
 	:where(ui-accordion-item) {
 		display: contents;
 	}
@@ -504,7 +499,7 @@
 	@keyframes accordion-media-in {
 		from { opacity: 0; scale: 1.03; translate: 0 var(--ui-accordion-media-shift); }
 	}
-	/* Opacity only — a transform would make this the containing block for the absolute media. */
+	/* opacity only — a transform would make this the containing block for absolute media */
 	@keyframes accordion-content-in {
 		from { opacity: 0; }
 	}
