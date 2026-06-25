@@ -92,7 +92,7 @@ import '@browser.style/accordion';
 ```
 
 ```html
-<ui-accordion name="faq">
+<ui-accordion group="faq">
   <ui-accordion-item label="How do I reset my password?">
     <p>Go to the login page and click "Forgot Password".</p>
   </ui-accordion-item>
@@ -104,7 +104,7 @@ import '@browser.style/accordion';
 
 The web component renders the **exact same** native `<details class="ui-accordion">` + `<summary>` HTML into the light DOM. It's a convenience wrapper, not a replacement — the CSS is identical in both modes.
 
-The `name` attribute on `<ui-accordion>` automatically propagates to all child `<details>` elements.
+The `group` attribute on `<ui-accordion>` automatically propagates as the native `name` attribute to all child `<details>` elements. (`name` is reserved for native elements, so the web component uses `group` to stay valid HTML.)
 
 #### Attributes
 
@@ -112,7 +112,7 @@ The `name` attribute on `<ui-accordion>` automatically propagates to all child `
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
-| `name` | string | Groups items for exclusive open behavior (propagated to `<details>`) |
+| `group` | string | Groups items for exclusive open behavior (propagated to child `<details>` as `name`) |
 | `variant` | string | Space-separated: `bordered`, `divided`, `rounded`, `pill`, `breakout`, `separate`, `filled`, `hide-summary` |
 | `type` | string | Layout mode: `"horizontal"` (blinds-style) or `"split"` (two-column with `data-split` content) |
 | `tint` | color | Base color for tinting items (e.g. `oklch(0.35 0.18 210)`) |
@@ -140,7 +140,7 @@ import '@browser.style/accordion/style';
 
 function FAQ() {
   return (
-    <ui-accordion name="faq">
+    <ui-accordion group="faq">
       <ui-accordion-item label="How do I reset my password?">
         <p>Go to the login page and click "Forgot Password".</p>
       </ui-accordion-item>
@@ -166,7 +166,7 @@ import '@browser.style/accordion/style';
 </script>
 
 <template>
-  <ui-accordion name="faq">
+  <ui-accordion group="faq">
     <ui-accordion-item label="How do I reset my password?">
       <p>Go to the login page and click "Forgot Password".</p>
     </ui-accordion-item>
@@ -193,7 +193,7 @@ import '@browser.style/accordion/style';
   import '@browser.style/accordion/style';
 </script>
 
-<ui-accordion name="faq">
+<ui-accordion group="faq">
   <ui-accordion-item label="How do I reset my password?">
     <p>Go to the login page and click "Forgot Password".</p>
   </ui-accordion-item>
@@ -249,7 +249,7 @@ Add the web component script only if you want the `<ui-accordion-item>` declarat
 Keeps one item always open — the open item's summary becomes non-interactive:
 
 ```html
-<ui-accordion no-collapse name="always-one">
+<ui-accordion no-collapse group="always-one">
   <details class="ui-accordion" open>
     <summary>Always visible</summary>
     <div>This item cannot be closed while others are collapsed.</div>
@@ -269,24 +269,24 @@ Combine variants via space-separated values. These only override custom properti
 
 ```html
 <!-- Framed group with rounded corners -->
-<ui-accordion variant="bordered rounded" name="group">
+<ui-accordion variant="bordered rounded" group="group">
 
 <!-- Separated borderless items (gap only) -->
-<ui-accordion variant="separate rounded" name="group">
+<ui-accordion variant="separate rounded" group="group">
 
 <!-- Separated cards with borders around each item -->
-<ui-accordion variant="bordered separate rounded" name="group">
+<ui-accordion variant="bordered separate rounded" group="group">
 
 <!-- Breakout with rounded corners -->
-<ui-accordion variant="breakout rounded" name="group">
+<ui-accordion variant="breakout rounded" group="group">
 
 <!-- Floating cards (shadow via utility class on each details) -->
-<ui-accordion variant="separate rounded" name="group">
+<ui-accordion variant="separate rounded" group="group">
   <details class="shadow-2xl">...</details>
 </ui-accordion>
 
 <!-- Full treatment -->
-<ui-accordion variant="bordered divided rounded" name="group">
+<ui-accordion variant="bordered divided rounded" group="group">
 ```
 
 | Token | What it does |
@@ -298,18 +298,18 @@ Combine variants via space-separated values. These only override custom properti
 | `pill` | Fully rounded ends per item, matching `ui/tabs` pill radius (`--radius-pill`). Compose with `separate` for discrete pills |
 | `breakout` | Open item shifts out via translate; adjacent items react |
 | `filled` | Light surface background (`--color-surface-alt`) per item. Pairs with `separate rounded` (or `pill`) for a gray pill look |
-| `hide-summary` | Hides the open item's summary so only its content shows. **Requires `no-collapse` + `name`** — without them a hidden summary leaves no way to reopen or close the item (see below) |
+| `hide-summary` | Hides the open item's summary so only its content shows. **Requires `no-collapse` + a group (`group` on `<ui-accordion>`, or `name` on `<details>`)** — without them a hidden summary leaves no way to reopen or close the item (see below) |
 
 ### Hide summary on open (`variant="hide-summary"`)
 
 Collapses the summary of the open item, revealing only its content. Closed items keep their summaries, so the group reads as a list of labels with one expanded panel.
 
-**Required pairing:** `no-collapse` + `name`. Because the open item's summary is hidden, there is no toggle left to close it — you switch panels by opening another item. `no-collapse` keeps one item always open and `name` makes the group exclusive. Omit either and the open item becomes a dead end with no summary to click. The variant is purely visual and composes with any layout, including `type="split"` (hide the summary, keep the media-on-right) and `separate pill filled` (chip column).
+**Required pairing:** `no-collapse` + a group (`group` on `<ui-accordion>`, or native `name` on `<details>`). Because the open item's summary is hidden, there is no toggle left to close it — you switch panels by opening another item. `no-collapse` keeps one item always open and the group makes it exclusive. Omit either and the open item becomes a dead end with no summary to click. The variant is purely visual and composes with any layout, including `type="split"` (hide the summary, keep the media-on-right) and `separate pill filled` (chip column).
 
 Closed items shrink to their label width (left-aligned chips); the open item keeps full width for its revealed content. The summary's icon leads the label — author the `<summary>` with `<ui-icon>` before the text.
 
 ```html
-<ui-accordion type="split" variant="hide-summary separate rounded" name="showcase" no-collapse>
+<ui-accordion type="split" variant="hide-summary separate rounded" group="showcase" no-collapse>
   <cq-box>
     <details name="showcase" open>
       <summary>Sound quality</summary>
@@ -333,7 +333,7 @@ Two-column layout at wider viewports (>650px): summary and text occupy the left 
 **Ratio** — add a `spl(content/media)` token to `variant` to size the columns (same DSL as `ui/card`). Defaults to `spl(1/1)` (50/50). Available: `spl(1/1)`, `spl(3/2)`, `spl(2/3)`, `spl(2/1)`, `spl(1/2)`. Example — wider content, narrower media:
 
 ```html
-<ui-accordion type="split" variant="divided spl(3/2)" name="showcase" no-collapse>
+<ui-accordion type="split" variant="divided spl(3/2)" group="showcase" no-collapse>
 ```
 
 **Entry animation** — opening an item fades/scales the media in (`accordion-media-in`) and staggers the text fade just after (`accordion-content-in`), so switching items reads as a smooth crossfade rather than a hard cut. Tune via `--ui-accordion-media-duration`, `--ui-accordion-media-easing`, `--ui-accordion-media-shift`, and `--ui-accordion-media-delay`. Honors `prefers-reduced-motion` (fade only, no movement).
@@ -341,7 +341,7 @@ Two-column layout at wider viewports (>650px): summary and text occupy the left 
 **RTL** — fully mirrored. Built on logical properties (`inset-inline`, `justify-self: start`), so under `dir="rtl"` the content moves to the inline-start (right) and the media to the inline-end (left) automatically; no extra markup.
 
 ```html
-<ui-accordion type="split" variant="divided" name="showcase" no-collapse>
+<ui-accordion type="split" variant="divided" group="showcase" no-collapse>
   <cq-box>
     <details name="showcase" open>
       <summary>Our Workspace</summary>
@@ -364,7 +364,7 @@ Two-column layout at wider viewports (>650px): summary and text occupy the left 
 Web component (no `<cq-box>` needed — auto-inserted):
 
 ```html
-<ui-accordion type="split" variant="divided" name="showcase" no-collapse>
+<ui-accordion type="split" variant="divided" group="showcase" no-collapse>
   <ui-accordion-item label="Our Workspace" open>
     <p>Description text.</p>
     <img src="photo.jpg" alt="Photo" data-split>
@@ -383,7 +383,7 @@ Web component (no `<cq-box>` needed — auto-inserted):
 Blinds-style layout at wider viewports (>650px). Falls back to vertical accordion below. Requires `<cq-box>` for CSS-only; auto-inserted by web component.
 
 ```html
-<ui-accordion type="horizontal" variant="bordered rounded" name="sections">
+<ui-accordion type="horizontal" variant="bordered rounded" group="sections">
   <cq-box>
     <details class="ui-accordion" name="sections" open>
       <summary>About Us</summary>
@@ -406,11 +406,11 @@ Variants adapt: `divided` draws vertical lines, `bordered` frames the group, `ro
 Accordions can be nested arbitrarily deep — drop a `<ui-accordion>` directly inside a parent `<details>`:
 
 ```html
-<ui-accordion variant="bordered divided rounded" name="outer">
+<ui-accordion variant="bordered divided rounded" group="outer">
   <cq-box>
     <details name="outer" open>
       <summary>Account</summary>
-      <ui-accordion variant="divided" name="inner">
+      <ui-accordion variant="divided" group="inner">
         <cq-box>
           <details name="inner"><summary>Profile</summary><div>…</div></details>
           <details name="inner"><summary>Security</summary><div>…</div></details>
@@ -422,7 +422,7 @@ Accordions can be nested arbitrarily deep — drop a `<ui-accordion>` directly i
 </ui-accordion>
 ```
 
-Each level needs its own `name` so open-state groups stay independent.
+Each level needs its own `group` (and matching child `name`) so open-state groups stay independent.
 
 ### Auto-adjust when nested
 
@@ -439,7 +439,7 @@ These are unconditional — no opt-in attribute, just write the nesting and the 
 For tree-style indentation, set `indent` on the **outermost** accordion:
 
 ```html
-<ui-accordion variant="bordered divided rounded" name="outer" indent>
+<ui-accordion variant="bordered divided rounded" group="outer" indent>
   …
 </ui-accordion>
 ```
@@ -488,7 +488,7 @@ Load `@browser.style/tabs` alongside `@browser.style/accordion` and add a `tabs`
 <link rel="stylesheet" href="@browser.style/accordion/index.css">
 <link rel="stylesheet" href="@browser.style/tabs/index.css">
 
-<ui-accordion tabs="pill" variant="bordered rounded" name="faq">
+<ui-accordion tabs="pill" variant="bordered rounded" group="faq">
   <cq-box>
     <details name="faq" open>
       <summary>Shipping</summary>
@@ -510,13 +510,13 @@ Add `expanded` to the `tabs="…"` token list to turn the active tab panel into 
 
 ```html
 <auto-morph render="tabs">
-  <ui-accordion tabs="pill panel expanded" variant="bordered divided rounded" name="mega" indent>
+  <ui-accordion tabs="pill panel expanded" variant="bordered divided rounded" group="mega" indent>
     <cq-box>
       <details name="mega"><summary>Account</summary>
-        <ui-accordion variant="divided" name="account">
+        <ui-accordion variant="divided" group="account">
           <cq-box>
             <details name="account"><summary>Profile</summary>
-              <ui-accordion variant="divided" name="profile">…</ui-accordion>
+              <ui-accordion variant="divided" group="profile">…</ui-accordion>
             </details>
             …
           </cq-box>
@@ -544,7 +544,7 @@ npm install @browser.style/auto-morph
 
 ```html
 <auto-morph render="tabs">
-  <ui-accordion tabs="pill" variant="bordered rounded" name="faq">
+  <ui-accordion tabs="pill" variant="bordered rounded" group="faq">
     <cq-box>
       <details name="faq" open><summary>Shipping</summary><div>…</div></details>
       <details name="faq"><summary>Returns</summary><div>…</div></details>

@@ -38,7 +38,7 @@ class UiAccordionItem extends HTMLElement {
 }
 
 class UiAccordion extends HTMLElement {
-	static observedAttributes = ['name'];
+	static observedAttributes = ['group'];
 
 	connectedCallback() {
 		this.ensureCqBox();
@@ -47,7 +47,7 @@ class UiAccordion extends HTMLElement {
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (oldValue === newValue || !this.isConnected) return;
-		if (name === 'name') this.propagateName();
+		if (name === 'group') this.propagateName();
 	}
 
 	ensureCqBox() {
@@ -58,7 +58,7 @@ class UiAccordion extends HTMLElement {
 	}
 
 	propagateName() {
-		const name = this.getAttribute('name');
+		const name = this.getAttribute('group');
 		if (!name) return;
 		const box = this.querySelector(':scope > cq-box');
 		if (!box) return;

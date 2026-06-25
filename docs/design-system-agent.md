@@ -127,7 +127,7 @@ for (const child of this.children) { /* iterate direct children only */ }
 
 | Component | Version | Notes |
 |-----------|---------|-------|
-| `accordion` | 4.0.0 | Reference implementation. Parent/item pattern, variant attributes, exclusive open via `name` |
+| `accordion` | 4.0.0 | Reference implementation. Parent/item pattern, variant attributes, exclusive open via `group` (propagated to child `<details>` as `name`) |
 | `badge` | 3.0.0 | Simple single-element. `color` attribute for semantic colors, `variant` for positioning |
 
 ---

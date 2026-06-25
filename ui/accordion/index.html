@@ -57,7 +57,7 @@
 
 	<br>
 	<p>With <code>variant="divided"</code>:</p>
-	<ui-accordion variant="divided" name="accordion-divided">
+	<ui-accordion variant="divided" group="accordion-divided">
 		<cq-box>
 			<details name="accordion-divided">
 				<summary>How do I reset my password?<ui-icon type="plus-minus"></ui-icon></summary>
@@ -158,7 +158,7 @@
 	<h2>Variants</h2>
 	
 	<p>With <code>variant="bordered"</code>:</p>
-	<ui-accordion variant="bordered" name="accordion-border">
+	<ui-accordion variant="bordered" group="accordion-border">
 		<cq-box>
 			<details name="accordion-border" open>
 				<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
@@ -189,7 +189,7 @@
 
 	<br>
 	<p>With <code>variant="bordered rounded"</code>:</p>
-	<ui-accordion variant="bordered rounded" name="accordion-border-rounded">
+	<ui-accordion variant="bordered rounded" group="accordion-border-rounded">
 		<cq-box>
 			<details name="accordion-border-rounded" open>
 				<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
@@ -220,7 +220,7 @@
 
 	<br>
 	<p>With <code>variant="breakout"</code>:</p>
-	<ui-accordion variant="breakout" name="accordion-breakout">
+	<ui-accordion variant="breakout" group="accordion-breakout">
 		<cq-box>
 			<details name="accordion-breakout">
 				<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
@@ -251,7 +251,7 @@
 
 	<br>
 	<p>With <code>variant="breakout rounded"</code>:</p>
-	<ui-accordion variant="breakout rounded" name="accordion-breakout-rounded">
+	<ui-accordion variant="breakout rounded" group="accordion-breakout-rounded">
 		<cq-box>
 			<details name="accordion-breakout-rounded">
 				<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
@@ -282,7 +282,7 @@
 
 	<br>
 	<p>With <code>variant="bordered separate rounded"</code>:</p>
-	<ui-accordion variant="bordered separate rounded" name="accordion-separate">
+	<ui-accordion variant="bordered separate rounded" group="accordion-separate">
 		<cq-box>
 			<details name="accordion-separate">
 				<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
@@ -313,7 +313,7 @@
 
 	<br>
 	<p>With <code>variant="separate rounded"</code> and box-shadow set through a utility class:</p>
-	<ui-accordion variant="separate rounded" name="accordion-shadow">
+	<ui-accordion variant="separate rounded" group="accordion-shadow">
 		<cq-box>
 			<details name="accordion-shadow" class="shadow-2xl">
 				<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
@@ -345,7 +345,7 @@
 	<br>
 	<p>With <code>variant="bordered rounded"</code>, <code>tint="oklch(0.35 0 0)"</code> and <code>tinted</code></p>
 
-	<ui-accordion variant="bordered rounded" tinted name="accordion-tinted" tint="oklch(0.35 0 0)" style="--ui-accordion-border-color: Canvas">
+	<ui-accordion variant="bordered rounded" tinted group="accordion-tinted" tint="oklch(0.35 0 0)" style="--ui-accordion-border-color: Canvas">
 		<cq-box>
 			<details name="accordion-tinted">
 				<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
@@ -378,15 +378,15 @@
 	<h2>Nested accordions</h2>
 	<p>An accordion can contain another <code>&lt;ui-accordion&gt;</code> inside any panel. Add <code>indent</code> on the outer to stagger nested levels.</p>
 
-	<ui-accordion variant="bordered divided rounded" name="nested-outer" indent>
+	<ui-accordion variant="bordered divided rounded" group="nested-outer" indent>
 		<cq-box>
 			<details name="nested-outer">
 				<summary>Account<ui-icon type="chevron down"></ui-icon></summary>
-				<ui-accordion variant="divided" name="nested-account">
+				<ui-accordion variant="divided" group="nested-account">
 					<cq-box>
 						<details name="nested-account">
 							<summary>Profile<ui-icon type="arrow right"></ui-icon></summary>
-							<ui-accordion variant="divided" name="nested-profile">
+							<ui-accordion variant="divided" group="nested-profile">
 								<cq-box>
 									<details name="nested-profile">
 										<summary>Display name<ui-icon type="plus-cross"></ui-icon></summary>
@@ -401,7 +401,7 @@
 						</details>
 						<details name="nested-account">
 							<summary>Security<ui-icon type="arrow right"></ui-icon></summary>
-							<ui-accordion variant="divided" name="nested-security">
+							<ui-accordion variant="divided" group="nested-security">
 								<cq-box>
 									<details name="nested-security">
 										<summary>Two-factor authentication<ui-icon type="plus-cross"></ui-icon></summary>
@@ -419,11 +419,11 @@
 			</details>
 			<details name="nested-outer">
 				<summary>Notifications<ui-icon type="chevron down"></ui-icon></summary>
-				<ui-accordion variant="divided" name="nested-notifications">
+				<ui-accordion variant="divided" group="nested-notifications">
 					<cq-box>
 						<details name="nested-notifications">
 							<summary>Email<ui-icon type="arrow right"></ui-icon></summary>
-							<ui-accordion variant="divided" name="nested-email">
+							<ui-accordion variant="divided" group="nested-email">
 								<cq-box>
 									<details name="nested-email">
 										<summary>Daily digest<ui-icon type="plus-cross"></ui-icon></summary>
@@ -438,7 +438,7 @@
 						</details>
 						<details name="nested-notifications">
 							<summary>Push<ui-icon type="arrow right"></ui-icon></summary>
-							<ui-accordion variant="divided" name="nested-push">
+							<ui-accordion variant="divided" group="nested-push">
 								<cq-box>
 									<details name="nested-push">
 										<summary>Mentions<ui-icon type="plus-cross"></ui-icon></summary>
@@ -456,11 +456,11 @@
 			</details>
 			<details name="nested-outer">
 				<summary>Billing<ui-icon type="chevron down"></ui-icon></summary>
-				<ui-accordion variant="divided" name="nested-billing">
+				<ui-accordion variant="divided" group="nested-billing">
 					<cq-box>
 						<details name="nested-billing">
 							<summary>Subscription<ui-icon type="arrow right"></ui-icon></summary>
-							<ui-accordion variant="divided" name="nested-subscription">
+							<ui-accordion variant="divided" group="nested-subscription">
 								<cq-box>
 									<details name="nested-subscription">
 										<summary>Plan<ui-icon type="plus-cross"></ui-icon></summary>
@@ -475,7 +475,7 @@
 						</details>
 						<details name="nested-billing">
 							<summary>Invoices<ui-icon type="arrow right"></ui-icon></summary>
-							<ui-accordion variant="bordered rounded" name="nested-invoices">
+							<ui-accordion variant="bordered rounded" group="nested-invoices">
 								<cq-box>
 									<details name="nested-invoices">
 										<summary>Recent<ui-icon type="plus-cross"></ui-icon></summary>
@@ -490,7 +490,7 @@
 						</details>
 						<details name="nested-billing">
 							<summary>Payment methods<ui-icon type="arrow right"></ui-icon></summary>
-							<ui-accordion variant="divided" name="nested-payment">
+							<ui-accordion variant="divided" group="nested-payment">
 								<cq-box>
 									<details name="nested-payment">
 										<summary>Cards<ui-icon type="plus-cross"></ui-icon></summary>
@@ -513,7 +513,7 @@
 	<h2>With <code>type="horizontal"</code></h2>
 	<p>Also using <code>variant="bordered rounded"</code>. You can only see this effect when container-width is minium 650px</p>
 
-	<ui-accordion variant="bordered rounded" name="accordion-horizontal" type="horizontal">
+	<ui-accordion variant="bordered rounded" group="accordion-horizontal" type="horizontal">
 		<cq-box>
 		<details name="accordion-horizontal">
 			<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
@@ -557,7 +557,7 @@
 	<br>
 	<p>With <code>tint="oklch(0.35 0.18 210)"</code> and <code>tinted</code></p>
 
-	<ui-accordion variant="bordered rounded" tinted name="accordion-horizontal-tinted" type="horizontal" tint="oklch(0.35 0.18 210)" style="--ui-accordion-border-color: Canvas">
+	<ui-accordion variant="bordered rounded" tinted group="accordion-horizontal-tinted" type="horizontal" tint="oklch(0.35 0.18 210)" style="--ui-accordion-border-color: Canvas">
 		<cq-box>
 		<details name="accordion-horizontal-tinted">
 			<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
@@ -601,7 +601,7 @@
 	<br>
 	<p>With <code>variant="separate"</code> and box-shadow set through a utility class:</p>
 
-	<ui-accordion variant="bordered separate" name="accordion-horizontal-sp" type="horizontal">
+	<ui-accordion variant="bordered separate" group="accordion-horizontal-sp" type="horizontal">
 		<cq-box>
 		<details name="accordion-horizontal-sp" class="shadow-md">
 			<summary>How do I reset my password?<ui-icon type="chevron down"></ui-icon></summary>
@@ -646,7 +646,7 @@
 	<h2>With <code>type="slide"</code></h2>
 	<p>Also using <code>variant="bordered rounded"</code>. The <code>open</code> item slides in over the entire accordion.</p>
 
-	<ui-accordion variant="bordered rounded" name="accordion-slide" type="slide">
+	<ui-accordion variant="bordered rounded" group="accordion-slide" type="slide">
 		<cq-box>
 			<details name="accordion-slide">
 				<summary><span>How do I reset my password?</span><ui-icon type="chevron right"></ui-icon><ui-icon type="cross" class="icon-close"></ui-icon></summary>
@@ -673,7 +673,7 @@
 	<h2>With <code>type="split"</code></h2>
 	 <p>Also has the <code>no-collapse</code> attribute — ensures one item is always open.</p>
 
-	<ui-accordion name="accordion-media" type="split" variant="divided" no-collapse>
+	<ui-accordion group="accordion-media" type="split" variant="divided" no-collapse>
 		<cq-box>
 			<details name="accordion-media" open>
 				<summary>Our Workspace<ui-icon type="plus-minus"></ui-icon></summary>
@@ -703,7 +703,7 @@
 	<h2>With <code>variant="hide-summary"</code> and <code>type="split"</code></h2>
 	<p>The open item hides its summary, showing only content + media. Requires <code>no-collapse</code> + <code>name</code> so the open item can't be closed — you switch by opening another. The <code>spl(3/2)</code> token sets the content/media ratio (same DSL as <code>ui/card</code>): <code>spl(1/1)</code>, <code>spl(3/2)</code>, <code>spl(2/3)</code>, <code>spl(2/1)</code>, <code>spl(1/2)</code>.</p>
 
-	<ui-accordion name="accordion-showcase" type="split" variant="hide-summary filled separate pill spl(3/2)" no-collapse>
+	<ui-accordion group="accordion-showcase" type="split" variant="hide-summary filled separate pill spl(3/2)" no-collapse>
 		<cq-box>
 			<details name="accordion-showcase" open>
 				<summary><ui-icon type="plus-minus"></ui-icon><span>Open roads</span></summary>
@@ -740,7 +740,7 @@
 	<h2><code>variant="hide-summary"</code> without a type (pill column)</h2>
 	<p>The variant composes without <code>type</code> — a plain vertical column of pills where the open item reveals its content in place. Still requires <code>no-collapse</code> + <code>name</code>.</p>
 
-	<ui-accordion name="accordion-pills" variant="hide-summary filled separate pill" no-collapse>
+	<ui-accordion group="accordion-pills" variant="hide-summary filled separate pill" no-collapse>
 		<cq-box>
 			<details name="accordion-pills" open>
 				<summary><ui-icon type="plus-minus" variant="border"></ui-icon><span>Sound quality</span></summary>
@@ -774,7 +774,7 @@
 	<p>Morphs into tabs above 650px, accordion below. Wrapped in <code>&lt;auto-morph render="tabs"&gt;</code>.</p>
 
 	<auto-morph render="tabs">
-		<ui-accordion name="accordion-tabs" class="tabs-fill-accent tabs-offset tabs-rounded" variant="bordered divided rounded" tabs="pill">
+		<ui-accordion group="accordion-tabs" class="tabs-fill-accent tabs-offset tabs-rounded" variant="bordered divided rounded" tabs="pill">
 			<cq-box>
 				<details name="accordion-tabs" open>
 					<summary>Shipping<ui-icon type="plus-minus"></ui-icon></summary>
@@ -807,7 +807,7 @@
 	<br>
 	<p>With <code>tabs="ellipse"</code> and classes <code>tabs-fill-surface tabs-offset</code>:</p>
 	<auto-morph render="tabs">
-		<ui-accordion name="accordion-tabs-ellipse" class="tabs-fill-surface tabs-offset" variant="bordered divided rounded" tabs="ellipse">
+		<ui-accordion group="accordion-tabs-ellipse" class="tabs-fill-surface tabs-offset" variant="bordered divided rounded" tabs="ellipse">
 			<cq-box>
 				<details name="accordion-tabs-ellipse" open>
 					<summary>Shipping<ui-icon type="plus-minus"></ui-icon></summary>
@@ -840,7 +840,7 @@
 	<br>
 	<p>With <code>tabs="no-background"</code> and classes <code>tabs-outline tabs-text</code> — classic desktop-tab outline:</p>
 	<auto-morph render="tabs">
-		<ui-accordion name="accordion-tabs-outline" class="tabs-outline tabs-text" variant="bordered divided rounded" tabs="no-background">
+		<ui-accordion group="accordion-tabs-outline" class="tabs-outline tabs-text" variant="bordered divided rounded" tabs="no-background">
 			<cq-box>
 				<details name="accordion-tabs-outline" open>
 					<summary>Shipping<ui-icon type="plus-minus"></ui-icon></summary>
@@ -873,7 +873,7 @@
 	<br>
 	<p>With <code>tabs="rounded bordered"</code> and class <code>tabs-line</code> — bordered frame with sliding underline:</p>
 	<auto-morph render="tabs">
-		<ui-accordion name="accordion-tabs-bordered" class="tabs-line" variant="bordered divided rounded" tabs="rounded bordered">
+		<ui-accordion group="accordion-tabs-bordered" class="tabs-line" variant="bordered divided rounded" tabs="rounded bordered">
 			<cq-box>
 				<details name="accordion-tabs-bordered" open>
 					<summary>Shipping<ui-icon type="plus-minus"></ui-icon></summary>
@@ -906,7 +906,7 @@
 	<br>
 	<p>With <code>tabs="compact no-background"</code> and class <code>tabs-line</code> — compact with a transparent header, flush edges, and an underline:</p>
 	<auto-morph render="tabs">
-		<ui-accordion name="accordion-tabs-compact" class="tabs-line" variant="bordered divided rounded" tabs="compact no-background">
+		<ui-accordion group="accordion-tabs-compact" class="tabs-line" variant="bordered divided rounded" tabs="compact no-background">
 			<cq-box>
 				<details name="accordion-tabs-compact" open>
 					<summary>Shipping<ui-icon type="plus-minus"></ui-icon></summary>
@@ -941,11 +941,11 @@
 	<p>Wrapped in <code>&lt;auto-morph render="tabs"&gt;</code> with <code>tabs="panel expanded"</code>. Above 650px the outer renders as panel-style tabs with every nested section expanded; below 650px it falls back to a nested accordion.</p>
 
 	<auto-morph render="tabs">
-		<ui-accordion variant="bordered divided rounded" name="mega-outer" indent tabs="bleed compact expanded panel">
+		<ui-accordion variant="bordered divided rounded" group="mega-outer" indent tabs="bleed compact expanded panel">
 			<cq-box>
 				<details name="mega-outer">
 					<summary>Products<ui-icon type="chevron down"></ui-icon></summary>
-					<ui-accordion variant="divided" name="mega-products">
+					<ui-accordion variant="divided" group="mega-products">
 						<cq-box>
 							<details name="mega-products">
 								<summary>Smartphones<ui-icon type="arrow right"></ui-icon></summary>
@@ -994,7 +994,7 @@
 				</details>
 				<details name="mega-outer">
 					<summary>Services<ui-icon type="chevron down"></ui-icon></summary>
-					<ui-accordion variant="divided" name="mega-services">
+					<ui-accordion variant="divided" group="mega-services">
 						<cq-box>
 							<details name="mega-services">
 								<summary>Support<ui-icon type="arrow right"></ui-icon></summary>
@@ -1041,7 +1041,7 @@
 				</details>
 				<details name="mega-outer">
 					<summary>Company<ui-icon type="chevron down"></ui-icon></summary>
-					<ui-accordion variant="divided" name="mega-company">
+					<ui-accordion variant="divided" group="mega-company">
 						<cq-box>
 							<details name="mega-company">
 								<summary>About<ui-icon type="arrow right"></ui-icon></summary>
@@ -1093,15 +1093,15 @@
 	<br>
 	<h2>With <code>type="tree"</code></h2>
 	<p>With <code>type="tree"</code> — tree style with role-aware markers (branch / leaf):</p>
-	<ui-accordion type="tree" name="tree-outer" indent>
+	<ui-accordion type="tree" group="tree-outer" indent>
 		<cq-box>
 			<details name="tree-outer" open>
 				<summary>src</summary>
-				<ui-accordion name="tree-src">
+				<ui-accordion group="tree-src">
 					<cq-box>
 						<details name="tree-src" open>
 							<summary>components</summary>
-							<ui-accordion name="tree-components">
+							<ui-accordion group="tree-components">
 								<cq-box>
 									<details name="tree-components">
 										<summary>Button.tsx</summary>
@@ -1120,7 +1120,7 @@
 						</details>
 						<details name="tree-src">
 							<summary>hooks</summary>
-							<ui-accordion name="tree-hooks">
+							<ui-accordion group="tree-hooks">
 								<cq-box>
 									<details name="tree-hooks">
 										<summary>useFetch.ts</summary>
@@ -1135,7 +1135,7 @@
 						</details>
 						<details name="tree-src">
 							<summary>utils</summary>
-							<ui-accordion name="tree-utils">
+							<ui-accordion group="tree-utils">
 								<cq-box>
 									<details name="tree-utils">
 										<summary>format.ts</summary>
@@ -1153,7 +1153,7 @@
 			</details>
 			<details name="tree-outer">
 				<summary>tests</summary>
-				<ui-accordion name="tree-tests">
+				<ui-accordion group="tree-tests">
 					<cq-box>
 						<details name="tree-tests">
 							<summary>unit</summary>
@@ -1181,7 +1181,7 @@
 	<h2>Icon Variants</h2>
 	<p>With various <code>ui-icon</code> variants:</p>
 
-	<ui-accordion variant="divided" name="accordion-icons">
+	<ui-accordion variant="divided" group="accordion-icons">
 		<cq-box>
 			<details name="accordion-icons">
 				<summary>With chevron-right icon<ui-icon type="chevron right"></ui-icon></summary>
@@ -1212,7 +1212,7 @@
 
 	<p>Same icons with <code>variant="border"</code> — a ring/badge around each glyph:</p>
 
-	<ui-accordion variant="divided" name="accordion-icons-border">
+	<ui-accordion variant="divided" group="accordion-icons-border">
 		<cq-box>
 			<details name="accordion-icons-border">
 				<summary>With chevron-right icon<ui-icon type="chevron right" variant="border"></ui-icon></summary>
