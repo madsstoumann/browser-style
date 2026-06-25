@@ -367,14 +367,15 @@
 		// hov(track) / hov(drift): the only media effects that need JS — map the pointer
 		// to --ui-media-mx / --ui-media-my (-1..1), which the CSS reads to translate the image.
 		for (const card of document.querySelectorAll('[media*="hov(track)"], [media*="hov(drift)"]')) {
-			card.addEventListener('pointermove', (e) => {
-				const r = card.getBoundingClientRect();
-				card.style.setProperty('--ui-media-mx', ((e.clientX - r.left) / r.width * 2 - 1).toFixed(3));
-				card.style.setProperty('--ui-media-my', ((e.clientY - r.top) / r.height * 2 - 1).toFixed(3));
+			const media = card.querySelector('ui-media') || card;
+			media.addEventListener('pointermove', (e) => {
+				const r = media.getBoundingClientRect();
+				media.style.setProperty('--ui-media-mx', ((e.clientX - r.left) / r.width * 2 - 1).toFixed(3));
+				media.style.setProperty('--ui-media-my', ((e.clientY - r.top) / r.height * 2 - 1).toFixed(3));
 			});
-			card.addEventListener('pointerleave', () => {
-				card.style.removeProperty('--ui-media-mx');
-				card.style.removeProperty('--ui-media-my');
+			media.addEventListener('pointerleave', () => {
+				media.style.removeProperty('--ui-media-mx');
+				media.style.removeProperty('--ui-media-my');
 			});
 		}
 	</script>
