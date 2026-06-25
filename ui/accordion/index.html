@@ -510,92 +510,6 @@
 	</ui-accordion>
 
 	<br>
-	<p>With <code>variant="filetree"</code> and <code>indent</code> — file-tree style with role-aware markers (folder / file):</p>
-	<ui-accordion variant="filetree" name="tree-outer" indent>
-		<cq-box>
-			<details name="tree-outer" open>
-				<summary>src</summary>
-				<ui-accordion name="tree-src">
-					<cq-box>
-						<details name="tree-src" open>
-							<summary>components</summary>
-							<ui-accordion name="tree-components">
-								<cq-box>
-									<details name="tree-components">
-										<summary>Button.tsx</summary>
-										<div>Primary action element with variants.</div>
-									</details>
-									<details name="tree-components">
-										<summary>Card.tsx</summary>
-										<div>Container with optional header and footer slots.</div>
-									</details>
-									<details name="tree-components">
-										<summary>Modal.tsx</summary>
-										<div>Dialog with focus trap and backdrop dismissal.</div>
-									</details>
-								</cq-box>
-							</ui-accordion>
-						</details>
-						<details name="tree-src">
-							<summary>hooks</summary>
-							<ui-accordion name="tree-hooks">
-								<cq-box>
-									<details name="tree-hooks">
-										<summary>useFetch.ts</summary>
-										<div>Cached fetch wrapper with abort support.</div>
-									</details>
-									<details name="tree-hooks">
-										<summary>useMedia.ts</summary>
-										<div>Subscribe to a media query.</div>
-									</details>
-								</cq-box>
-							</ui-accordion>
-						</details>
-						<details name="tree-src">
-							<summary>utils</summary>
-							<ui-accordion name="tree-utils">
-								<cq-box>
-									<details name="tree-utils">
-										<summary>format.ts</summary>
-										<div>Locale-aware date and number formatters.</div>
-									</details>
-									<details name="tree-utils">
-										<summary>storage.ts</summary>
-										<div>Type-safe wrapper around localStorage.</div>
-									</details>
-								</cq-box>
-							</ui-accordion>
-						</details>
-					</cq-box>
-				</ui-accordion>
-			</details>
-			<details name="tree-outer">
-				<summary>tests</summary>
-				<ui-accordion name="tree-tests">
-					<cq-box>
-						<details name="tree-tests">
-							<summary>unit</summary>
-							<div>Vitest specs co-located with source files.</div>
-						</details>
-						<details name="tree-tests">
-							<summary>e2e</summary>
-							<div>Playwright flows covering the critical paths.</div>
-						</details>
-					</cq-box>
-				</ui-accordion>
-			</details>
-			<details name="tree-outer">
-				<summary>package.json</summary>
-				<div>Workspace manifest and scripts.</div>
-			</details>
-			<details name="tree-outer">
-				<summary>readme.md</summary>
-				<div>Project overview and setup instructions.</div>
-			</details>
-		</cq-box>
-	</ui-accordion>
-
-	<br>
 	<h2>With <code>type="horizontal"</code></h2>
 	<p>Also using <code>variant="bordered rounded"</code>. You can only see this effect when container-width is minium 650px</p>
 
@@ -792,31 +706,31 @@
 	<ui-accordion name="accordion-showcase" type="split" variant="hide-summary filled separate pill spl(3/2)" no-collapse>
 		<cq-box>
 			<details name="accordion-showcase" open>
-				<summary><ui-icon type="plus-minus"></ui-icon><span>Sound quality</span></summary>
+				<summary><ui-icon type="plus-minus"></ui-icon><span>Open roads</span></summary>
 				<div>
-					<p><strong>Sound quality.</strong> Custom drivers and a high dynamic range amplifier deliver rich, detailed audio across the full frequency range, from deep bass to crisp highs.</p>
-					<img src="https://picsum.photos/seed/sound/800/500" alt="Sound" data-split>
+					<p><strong>Open roads.</strong> Plan a route that takes the long way round. Empty highways, roadside diners, and a soundtrack that fits the miles — the journey is the destination.</p>
+					<img src="https://loremflickr.com/800/500/highway,road?lock=11" alt="A highway winding into the distance" data-split>
 				</div>
 			</details>
 			<details name="accordion-showcase">
-				<summary><ui-icon type="plus-minus"></ui-icon><span>Fit and feel</span></summary>
+				<summary><ui-icon type="plus-minus"></ui-icon><span>City escapes</span></summary>
 				<div>
-					<p><strong>Fit and feel.</strong> Three sizes of soft silicone tips create a secure, comfortable seal that stays put through any workout.</p>
-					<img src="https://picsum.photos/seed/fit/800/500" alt="Fit" data-split>
+					<p><strong>City escapes.</strong> Lose an afternoon in a neighbourhood you've never walked. Independent cafés, hidden courtyards, and street corners that reward looking up.</p>
+					<img src="https://loremflickr.com/800/500/city,street?lock=22" alt="A city street at dusk" data-split>
 				</div>
 			</details>
 			<details name="accordion-showcase">
-				<summary><ui-icon type="plus-minus"></ui-icon><span>Heart rate sensing</span></summary>
+				<summary><ui-icon type="plus-minus"></ui-icon><span>Coastal calm and quiet</span></summary>
 				<div>
-					<p><strong>Heart rate sensing.</strong> Our smallest heart rate sensor ever pulses invisible light to give you accurate workout metrics from the gym to the track.</p>
-					<img src="https://picsum.photos/seed/heart/800/500" alt="Heart rate" data-split>
+					<p><strong>Coastal calm and quiet.</strong> Trade notifications for the sound of the surf. Long stretches of sand, slow mornings, and sunsets worth staying out for.</p>
+					<img src="https://loremflickr.com/800/500/beach,coast?lock=33" alt="Waves meeting a quiet shoreline" data-split>
 				</div>
 			</details>
 			<details name="accordion-showcase">
-				<summary><ui-icon type="plus-minus"></ui-icon><span>Charging case</span></summary>
+				<summary><ui-icon type="plus-minus"></ui-icon><span>Mountain trails</span></summary>
 				<div>
-					<p><strong>Charging case.</strong> The compact case holds multiple full charges and tops up fast over USB-C or wireless charging.</p>
-					<img src="https://picsum.photos/seed/case/800/500" alt="Charging case" data-split>
+					<p><strong>Mountain trails.</strong> Higher ground, clearer air. Pack light, start early, and let the switchbacks do the talking on the way to the ridgeline.</p>
+					<img src="https://loremflickr.com/800/500/mountain,trail?lock=44" alt="A trail leading up a mountain ridge" data-split>
 				</div>
 			</details>
 		</cq-box>
@@ -1175,6 +1089,93 @@
 			</cq-box>
 		</ui-accordion>
 	</auto-morph>
+
+	<br>
+	<h2>With <code>type="tree"</code></h2>
+	<p>With <code>type="tree"</code> — tree style with role-aware markers (branch / leaf):</p>
+	<ui-accordion type="tree" name="tree-outer" indent>
+		<cq-box>
+			<details name="tree-outer" open>
+				<summary>src</summary>
+				<ui-accordion name="tree-src">
+					<cq-box>
+						<details name="tree-src" open>
+							<summary>components</summary>
+							<ui-accordion name="tree-components">
+								<cq-box>
+									<details name="tree-components">
+										<summary>Button.tsx</summary>
+										<div>Primary action element with variants.</div>
+									</details>
+									<details name="tree-components">
+										<summary>Card.tsx</summary>
+										<div>Container with optional header and footer slots.</div>
+									</details>
+									<details name="tree-components">
+										<summary>Modal.tsx</summary>
+										<div>Dialog with focus trap and backdrop dismissal.</div>
+									</details>
+								</cq-box>
+							</ui-accordion>
+						</details>
+						<details name="tree-src">
+							<summary>hooks</summary>
+							<ui-accordion name="tree-hooks">
+								<cq-box>
+									<details name="tree-hooks">
+										<summary>useFetch.ts</summary>
+										<div>Cached fetch wrapper with abort support.</div>
+									</details>
+									<details name="tree-hooks">
+										<summary>useMedia.ts</summary>
+										<div>Subscribe to a media query.</div>
+									</details>
+								</cq-box>
+							</ui-accordion>
+						</details>
+						<details name="tree-src">
+							<summary>utils</summary>
+							<ui-accordion name="tree-utils">
+								<cq-box>
+									<details name="tree-utils">
+										<summary>format.ts</summary>
+										<div>Locale-aware date and number formatters.</div>
+									</details>
+									<details name="tree-utils">
+										<summary>storage.ts</summary>
+										<div>Type-safe wrapper around localStorage.</div>
+									</details>
+								</cq-box>
+							</ui-accordion>
+						</details>
+					</cq-box>
+				</ui-accordion>
+			</details>
+			<details name="tree-outer">
+				<summary>tests</summary>
+				<ui-accordion name="tree-tests">
+					<cq-box>
+						<details name="tree-tests">
+							<summary>unit</summary>
+							<div>Vitest specs co-located with source files.</div>
+						</details>
+						<details name="tree-tests">
+							<summary>e2e</summary>
+							<div>Playwright flows covering the critical paths.</div>
+						</details>
+					</cq-box>
+				</ui-accordion>
+			</details>
+			<details name="tree-outer">
+				<summary>package.json</summary>
+				<div>Workspace manifest and scripts.</div>
+			</details>
+			<details name="tree-outer">
+				<summary>readme.md</summary>
+				<div>Project overview and setup instructions.</div>
+			</details>
+		</cq-box>
+	</ui-accordion>
 
 	<br>
 	<h2>Icon Variants</h2>

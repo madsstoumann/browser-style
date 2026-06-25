@@ -454,6 +454,8 @@ The padding sits on the **summary** and on **leaf details' panel content** insid
 
 `[indent]` only goes on the outermost accordion — a depth-counter inherits down through every nested level. To stop the indent at a particular level, override `--ui-accordion-padding-inline` on that accordion (inline style or class).
 
+**Why depth is set via repeated selectors (and not `sibling-index()`):** depth is computed with specificity-rising selectors (`ui-accordion cq-box ui-accordion`, then `… cq-box ui-accordion cq-box ui-accordion`, …) that set `--_id` per level. An inherited counter (`calc(var(--_id) + 1)`) can't be used — a custom property referencing its own inherited value is a cycle and resolves to invalid. `sibling-index()`/`sibling-count()` don't help either: they measure the **sibling axis** (position among peers), not **ancestor nesting depth**. No pure-CSS depth primitive exists (CSS counters are readable only in `content`). The selector ramp currently caps at 4 levels; add more selectors to go deeper.
+
 To customise the indent step (which is just `--ui-accordion-padding-inline`):
 
 ```css
