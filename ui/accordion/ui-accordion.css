@@ -174,13 +174,10 @@
 				border-radius: var(--ui-accordion-border-radius);
 			}
 
-			/* pill — fully rounded ends per item; compose with separate/filled */
+			/* pill — fully rounded ends; open item gets card-like radius (full capsule bulges on tall panels) */
 			&[variant~="pill"] cq-box details {
 				border-radius: var(--radius-pill);
-			}
-			/* open pill item: card-like radius (full capsule bulges on tall panels) */
-			&[variant~="pill"] cq-box details[open] {
-				border-radius: var(--ui-accordion-pill-open-radius);
+				&[open] { border-radius: var(--ui-accordion-pill-open-radius); }
 			}
 
 			/* separate */
@@ -384,11 +381,12 @@
 						transition: block-size 0s, content-visibility 0s, opacity 0s;
 					}
 					&[open]::details-content {
+						--_dl: var(--ui-accordion-delay, calc(var(--ui-accordion-duration) * 0.5));
 						opacity: 1;
 						transition:
-							block-size var(--ui-accordion-duration) ease var(--ui-accordion-delay, calc(var(--ui-accordion-duration) * 0.5)),
-							content-visibility 0s var(--ui-accordion-delay, calc(var(--ui-accordion-duration) * 0.5)),
-							opacity var(--ui-accordion-duration) ease var(--ui-accordion-delay, calc(var(--ui-accordion-duration) * 0.5));
+							block-size var(--ui-accordion-duration) ease var(--_dl),
+							content-visibility 0s var(--_dl),
+							opacity var(--ui-accordion-duration) ease var(--_dl);
 					}
 					&:not([open]) {
 						padding-inline: 0;
