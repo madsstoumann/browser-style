@@ -8,6 +8,8 @@
 	:where(ui-icon) {
 		/* Component tokens */
 		--ui-icon-border-radius: var(--radius-circle);
+		--ui-icon-border-color: currentColor;
+		--ui-icon-background: transparent;
 		--_d: var(--duration-slow);
 		--_e: var(--ease-default);
 		--_sz: 100%;
@@ -17,6 +19,7 @@
 		--_bdwh: calc(var(--_s) / 2);
 		--_cosh: calc(1em * cos(45deg));
 
+		background: var(--ui-icon-background);
 		border-radius: var(--ui-icon-border-radius);
 		display: inline-grid;
 		font-size: var(--_sz);
@@ -27,6 +30,17 @@
 		place-content: center;
 		transition: var(--_d) var(--_e);
 		width: 1em;
+	}
+	/* variant="border" — ring/badge around the glyph (e.g. a circled "+"). The attribute
+	   selector's specificity survives a reset like `*{ border:0; box-sizing:border-box }`.
+	   Border width defaults to the icon stroke (--_s) and padding to 0.3em; both overridable
+	   via --ui-icon-border-width / --ui-icon-padding. Shape follows --ui-icon-border-radius
+	   (circle by default; set e.g. var(--radius-md) for a slightly-rounded square).
+	   content-box keeps the 1em glyph intact while padding/border grow the box outward. */
+	ui-icon[variant~="border"] {
+		border: var(--ui-icon-border-width, var(--_s)) solid var(--ui-icon-border-color);
+		box-sizing: content-box;
+		padding: var(--ui-icon-padding, 0.3em);
 	}
 	ui-icon::before,
 	ui-icon::after {

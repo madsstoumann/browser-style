@@ -253,6 +253,15 @@
 		ui-accordion[variant~="hide-summary"][variant~="pill"] cq-box details:not([open]) > summary {
 			border-radius: var(--radius-pill);
 		}
+		/* On a pill chip, trim the padding on the icon's side — a bordered ui-icon carries its
+		   own padding/ring, so it needs less room than the text edge. :has() picks the side by
+		   icon position: leading icon → start, trailing icon → end. */
+		ui-accordion[variant~="hide-summary"][variant~="pill"] cq-box details:not([open]) > summary:has(> ui-icon:first-child) {
+			padding-inline-start: var(--ui-accordion-summary-padding-icon, 1.5ch);
+		}
+		ui-accordion[variant~="hide-summary"][variant~="pill"] cq-box details:not([open]) > summary:has(> ui-icon:last-child) {
+			padding-inline-end: var(--ui-accordion-summary-padding-icon, 1.5ch);
+		}
 		/* Focus ring follows the chip, not the full-width details box */
 		ui-accordion[variant~="hide-summary"] cq-box details:not([open]):has(> summary:focus-visible) {
 			outline: none;

@@ -609,6 +609,7 @@ Override accordion-specific tokens for targeted changes:
 | `--ui-accordion-margin-end` | `0` | Bottom margin |
 | `--ui-accordion-padding-block` | `1.5ch` | Vertical padding |
 | `--ui-accordion-padding-inline` | `0` | Horizontal padding (the `indent` attribute multiplies this value by nesting depth) |
+| `--ui-accordion-summary-padding-icon` | `1.5ch` | `hide-summary` + `pill`: padding on the chip's icon side (the opposite end keeps the full padding). `:has()` picks the side from icon position — requires the label to be an element (e.g. `<span>`), since a bare text node makes the lone icon both first and last child |
 | `--ui-accordion-pill-open-radius` | `var(--radius-3xl, 1.5rem)` | Corner radius of the open item, `pill` variant (rounded rectangle, not a full capsule) |
 | `--ui-accordion-summary-font-size` | `1em` | Summary heading font size |
 | `--ui-accordion-summary-font-weight` | `var(--font-weight-medium, 500)` | Summary heading font weight |
