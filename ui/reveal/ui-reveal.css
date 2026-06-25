@@ -71,6 +71,14 @@
 			--ui-content-headline-line-height: var(--ui-reveal-content-headline-line-height, var(--line-height-tight, 1.15));
 		}
 
+		/* focusable back face ([tabindex]) — second tab stop. Suppress its own
+		   (clipped) outline and instead recolor the summary's icon ring so the
+		   two focus stops read differently: blue = toggle, active = panel. */
+		> details > ui-content[tabindex]:focus-visible { outline: none; }
+		> details[open]:has(> ui-content[tabindex]:focus-visible) > summary > ui-icon {
+			box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-bg), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ui-reveal-ring-active, var(--ui-reveal-content-c, currentColor));
+		}
+
 		&:is([type="flip"], [type="scale"], [type="slide"], [type-lg="scale"]) > details::details-content {
 			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
 			color: var(--ui-reveal-content-c, inherit);
