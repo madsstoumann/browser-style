@@ -158,5 +158,51 @@
 		</ui-accordion-item>
 	</ui-accordion>
 
+	<br>
+	<h2>Data-driven FAQ (built from JSON)</h2>
+	<p>An <code>&lt;ui-accordion&gt;</code> built entirely in JS from a JSON model — no markup authored by hand. Exclusive open via <code>group</code>.</p>
+	<div id="faq"></div>
+
+	<script type="module">
+		import './index.js';
+
+		// Plain data model — could come from fetch(), a CMS, etc.
+		const faq = {
+			group: 'faq-data',
+			variant: 'bordered divided rounded',
+			items: [
+				{ q: 'How do I reset my password?', a: 'Go to the login page and click "Forgot Password".', icon: 'chevron down' },
+				{ q: 'How long does shipping take?', a: 'Standard shipping takes 3–5 business days.', icon: 'chevron down' },
+				{ q: 'What payment methods do you accept?', a: 'Visa, Mastercard, PayPal, and Apple Pay.', icon: 'chevron down' },
+				{ q: 'How can I contact support?', a: 'Email support@example.com or use the live chat.', icon: 'chevron down' },
+			],
+		};
+
+		function buildAccordion({ group, variant, items }) {
+			const acc = document.createElement('ui-accordion');
+			if (variant) acc.setAttribute('variant', variant);
+
+			for (const { q, a, icon, open } of items) {
+				const item = document.createElement('ui-accordion-item');
+				item.setAttribute('label', q);          // attributes, never innerHTML
+				if (icon) item.setAttribute('icon', icon);
+				if (open) item.setAttribute('open', '');
+
+				const p = document.createElement('p');
+				p.textContent = a;                       // text content — XSS-safe
+				item.appendChild(p);
+				acc.appendChild(item);
+			}
+
+			// Set `group` last: after the accordion is in the DOM its items have
+			// already rendered to <details>, so propagation finds them.
+			document.getElementById('faq').appendChild(acc);
+			if (group) acc.setAttribute('group', group);
+			return acc;
+		}
+
+		buildAccordion(faq);
+	</script>
+
 </body>
 </html>
