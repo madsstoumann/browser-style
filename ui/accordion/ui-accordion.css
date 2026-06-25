@@ -35,6 +35,7 @@
 		--ui-accordion-media-easing: var(--ease-in-out);
 		--ui-accordion-media-shift: 0.75rem;
 		--ui-accordion-media-delay: calc(var(--ui-accordion-media-duration) * 0.4);
+		--ui-accordion-split-gap: var(--ui-accordion-gap, var(--spacing-xl));
 		--ui-accordion-padding-block: 1.25ch;
 		--ui-accordion-padding-inline: 1.5ch;
 		--ui-accordion-pill-open-radius: var(--radius-3xl);
@@ -437,15 +438,17 @@
 
 			/* === type: split === */
 			/* Ratio tokens (content/media) — same spl(x/y) DSL as ui/card. Each sets the grid
-			   columns AND the media width %, since the media element is absolutely positioned
-			   and can't derive its width from fr units. */
-			ui-accordion[variant~="spl(1/1)"] cq-box { --ui-accordion-split: 1fr 1fr; --ui-accordion-split-media: 50%; }
-			ui-accordion[variant~="spl(3/2)"] cq-box { --ui-accordion-split: 3fr 2fr; --ui-accordion-split-media: 40%; }
-			ui-accordion[variant~="spl(2/3)"] cq-box { --ui-accordion-split: 2fr 3fr; --ui-accordion-split-media: 60%; }
-			ui-accordion[variant~="spl(2/1)"] cq-box { --ui-accordion-split: 2fr 1fr; --ui-accordion-split-media: 33.3333%; }
-			ui-accordion[variant~="spl(1/2)"] cq-box { --ui-accordion-split: 1fr 2fr; --ui-accordion-split-media: 66.6667%; }
+			   columns AND the media's column fraction (unitless), since the media is absolutely
+			   positioned and can't derive its width from fr units. The fraction is of the space
+			   left after the column-gap, so the media fills col2 exactly. */
+			ui-accordion[variant~="spl(1/1)"] cq-box { --ui-accordion-split: 1fr 1fr; --ui-accordion-split-media: 0.5; }
+			ui-accordion[variant~="spl(3/2)"] cq-box { --ui-accordion-split: 3fr 2fr; --ui-accordion-split-media: 0.4; }
+			ui-accordion[variant~="spl(2/3)"] cq-box { --ui-accordion-split: 2fr 3fr; --ui-accordion-split-media: 0.6; }
+			ui-accordion[variant~="spl(2/1)"] cq-box { --ui-accordion-split: 2fr 1fr; --ui-accordion-split-media: 0.3333; }
+			ui-accordion[variant~="spl(1/2)"] cq-box { --ui-accordion-split: 1fr 2fr; --ui-accordion-split-media: 0.6667; }
 
 			ui-accordion[type="split"] cq-box {
+				column-gap: var(--ui-accordion-split-gap);
 				display: grid;
 				grid-template-columns: var(--ui-accordion-split, 1fr 1fr);
 				position: relative;
@@ -466,7 +469,8 @@
 					}
 					&[open] [data-split]{
 						block-size: auto;
-						inline-size: calc(var(--ui-accordion-split-media, 50%) - var(--ui-accordion-gap, var(--spacing-xl)));
+						/* Fill col2 exactly: media-fraction of the space remaining after the gap. */
+						inline-size: calc(var(--ui-accordion-split-media, 0.5) * (100% - var(--ui-accordion-split-gap)));
 						inset-block: 0 auto;
 						inset-inline: auto 0;
 						opacity: 1;

@@ -601,9 +601,10 @@ Override accordion-specific tokens for targeted changes:
 | `--ui-accordion-border-radius-rounded` | `var(--radius-lg, 1em)` | Radius for `rounded` variant |
 | `--ui-accordion-border-radius-separate` | `var(--radius-xl, 1.5em)` | Larger radius for `rounded` + `separate` |
 | `--ui-accordion-bg-hover` | gradient using `--color-field` | Summary hover background |
-| `--ui-accordion-gap` | `var(--spacing-xl, 2rem)` | Split-view / media column gap |
+| `--ui-accordion-gap` | `var(--spacing-xl, 2rem)` | Base gap token (default for `separate` and the split column gap) |
+| `--ui-accordion-split-gap` | `var(--ui-accordion-gap, var(--spacing-xl))` | `type="split"` column gap between content and media |
 | `--ui-accordion-split` | `1fr 1fr` | Split grid columns (set by `spl(x/y)` variant tokens) |
-| `--ui-accordion-split-media` | `50%` | Split media-element width (set by `spl(x/y)` variant tokens) |
+| `--ui-accordion-split-media` | `0.5` | Split media column fraction, unitless; media fills col2 = `fraction × (100% − gap)` (set by `spl(x/y)`) |
 | `--ui-accordion-row-gap` | `var(--spacing-md, 1em)` | Gap between items (`separate`) |
 | `--ui-accordion-margin-end` | `0` | Bottom margin |
 | `--ui-accordion-padding-block` | `1.5ch` | Vertical padding |
