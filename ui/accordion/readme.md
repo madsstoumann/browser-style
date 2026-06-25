@@ -8,7 +8,7 @@ A CSS-first accordion component built on native `<details>` and `<summary>` elem
 - Exclusive open behavior via the HTML `name` attribute (no JS needed)
 - Smooth open/close transitions via `::details-content`
 - Light/dark mode support via design tokens
-- Composable variants: `bordered`, `divided`, `rounded`, `breakout`, `separate`
+- Composable variants: `bordered`, `divided`, `rounded`, `pill`, `breakout`, `separate`, `filled`, `hide-summary`
 - Color tinting via `tint` + `tinted` attributes (from `@browser.style/base`)
 - `type="horizontal"` for blinds-style horizontal layout (responsive via container query)
 - `type="split"` for two-column layout with `data-split` content panels
@@ -113,7 +113,7 @@ The `name` attribute on `<ui-accordion>` automatically propagates to all child `
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `name` | string | Groups items for exclusive open behavior (propagated to `<details>`) |
-| `variant` | string | Space-separated: `bordered`, `divided`, `rounded`, `breakout`, `separate` |
+| `variant` | string | Space-separated: `bordered`, `divided`, `rounded`, `pill`, `breakout`, `separate`, `filled`, `hide-summary` |
 | `type` | string | Layout mode: `"horizontal"` (blinds-style) or `"split"` (two-column with `data-split` content) |
 | `tint` | color | Base color for tinting items (e.g. `oklch(0.35 0.18 210)`) |
 | `tinted` | boolean | Enables a graduated color ramp across items (requires `tint`) |
@@ -295,11 +295,50 @@ Combine variants via space-separated values. These only override custom properti
 | `divided` | Divider line on each item |
 | `separate` | Gap between items (no borders by default — add `bordered` for framed cards, or use a shadow utility for floating cards) |
 | `rounded` | Border-radius on first/last (or all with `separate`, or contextual with `breakout`) |
+| `pill` | Fully rounded ends per item, matching `ui/tabs` pill radius (`--radius-pill`). Compose with `separate` for discrete pills |
 | `breakout` | Open item shifts out via translate; adjacent items react |
+| `filled` | Light surface background (`--color-surface-alt`) per item. Pairs with `separate rounded` (or `pill`) for a gray pill look |
+| `hide-summary` | Hides the open item's summary so only its content shows. **Requires `no-collapse` + `name`** — without them a hidden summary leaves no way to reopen or close the item (see below) |
+
+### Hide summary on open (`variant="hide-summary"`)
+
+Collapses the summary of the open item, revealing only its content. Closed items keep their summaries, so the group reads as a list of labels with one expanded panel.
+
+**Required pairing:** `no-collapse` + `name`. Because the open item's summary is hidden, there is no toggle left to close it — you switch panels by opening another item. `no-collapse` keeps one item always open and `name` makes the group exclusive. Omit either and the open item becomes a dead end with no summary to click. The variant is purely visual and composes with any layout, including `type="split"` (hide the summary, keep the media-on-right) and `separate pill filled` (chip column).
+
+Closed items shrink to their label width (left-aligned chips); the open item keeps full width for its revealed content. The summary's icon leads the label — author the `<summary>` with `<ui-icon>` before the text.
+
+```html
+<ui-accordion type="split" variant="hide-summary separate rounded" name="showcase" no-collapse>
+  <cq-box>
+    <details name="showcase" open>
+      <summary>Sound quality</summary>
+      <div>
+        <p>Detail shown when open; summary is hidden.</p>
+        <img src="photo.jpg" alt="Photo" data-split>
+      </div>
+    </details>
+    <details name="showcase">
+      <summary>Fit and feel</summary>
+      <div><p>…</p><img src="fit.jpg" alt="Fit" data-split></div>
+    </details>
+  </cq-box>
+</ui-accordion>
+```
 
 ### Split layout (`type="split"`)
 
 Two-column layout at wider viewports (>650px): summary and text occupy the left column while any element marked with `data-split` (image, video, or arbitrary content) is pulled into the right panel. Requires `<cq-box>` for CSS-only; auto-inserted by the web component.
+
+**Ratio** — add a `spl(content/media)` token to `variant` to size the columns (same DSL as `ui/card`). Defaults to `spl(1/1)` (50/50). Available: `spl(1/1)`, `spl(3/2)`, `spl(2/3)`, `spl(2/1)`, `spl(1/2)`. Example — wider content, narrower media:
+
+```html
+<ui-accordion type="split" variant="divided spl(3/2)" name="showcase" no-collapse>
+```
+
+**Entry animation** — opening an item fades/scales the media in (`accordion-media-in`) and staggers the text fade just after (`accordion-content-in`), so switching items reads as a smooth crossfade rather than a hard cut. Tune via `--ui-accordion-media-duration`, `--ui-accordion-media-easing`, `--ui-accordion-media-shift`, and `--ui-accordion-media-delay`. Honors `prefers-reduced-motion` (fade only, no movement).
+
+**RTL** — fully mirrored. Built on logical properties (`inset-inline`, `justify-self: start`), so under `dir="rtl"` the content moves to the inline-start (right) and the media to the inline-end (left) automatically; no extra markup.
 
 ```html
 <ui-accordion type="split" variant="divided" name="showcase" no-collapse>
@@ -563,14 +602,20 @@ Override accordion-specific tokens for targeted changes:
 | `--ui-accordion-border-radius-separate` | `var(--radius-xl, 1.5em)` | Larger radius for `rounded` + `separate` |
 | `--ui-accordion-bg-hover` | gradient using `--color-field` | Summary hover background |
 | `--ui-accordion-gap` | `var(--spacing-xl, 2rem)` | Split-view / media column gap |
+| `--ui-accordion-split` | `1fr 1fr` | Split grid columns (set by `spl(x/y)` variant tokens) |
+| `--ui-accordion-split-media` | `50%` | Split media-element width (set by `spl(x/y)` variant tokens) |
 | `--ui-accordion-row-gap` | `var(--spacing-md, 1em)` | Gap between items (`separate`) |
 | `--ui-accordion-margin-end` | `0` | Bottom margin |
 | `--ui-accordion-padding-block` | `1.5ch` | Vertical padding |
 | `--ui-accordion-padding-inline` | `0` | Horizontal padding (the `indent` attribute multiplies this value by nesting depth) |
+| `--ui-accordion-pill-open-radius` | `var(--radius-3xl, 1.5rem)` | Corner radius of the open item, `pill` variant (rounded rectangle, not a full capsule) |
 | `--ui-accordion-summary-font-size` | `1em` | Summary heading font size |
 | `--ui-accordion-summary-font-weight` | `var(--font-weight-medium, 500)` | Summary heading font weight |
 | `--ui-accordion-duration` | `var(--duration-slow, .3s)` | Open/close animation speed |
-| `--ui-accordion-split-view-duration` | `.6s` | Split-view / media transition speed |
+| `--ui-accordion-media-duration` | `var(--duration-slower, .4s)` | `type="split"` content/media entry animation duration |
+| `--ui-accordion-media-easing` | `var(--ease-in-out)` | `type="split"` entry easing |
+| `--ui-accordion-media-shift` | `0.75rem` | `type="split"` media rise distance on entry |
+| `--ui-accordion-media-delay` | `calc(var(--ui-accordion-media-duration) * 0.4)` | Stagger before the text fades in (media leads) |
 | `--ui-accordion-background` | `var(--color-surface-alt, ...)` | Background color (`background` variant) |
 | `--ui-accordion-background-padding` | `1.5ch` | Padding (`background` variant) |
 | `--ui-accordion-breakout-unit` | `1rem` | Translate distance (`breakout`) |

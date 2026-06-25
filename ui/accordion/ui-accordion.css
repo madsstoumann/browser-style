@@ -31,8 +31,13 @@
 		--ui-accordion-breakout-border-width: var(--border-width);
 		--ui-accordion-breakout-unit: var(--spacing-md);
 		--ui-accordion-duration: var(--duration-slow);
+		--ui-accordion-media-duration: var(--duration-slower);
+		--ui-accordion-media-easing: var(--ease-in-out);
+		--ui-accordion-media-shift: 0.75rem;
+		--ui-accordion-media-delay: calc(var(--ui-accordion-media-duration) * 0.4);
 		--ui-accordion-padding-block: 1.25ch;
 		--ui-accordion-padding-inline: 1.5ch;
+		--ui-accordion-pill-open-radius: var(--radius-3xl);
 
 		--_bd: var(--ui-accordion-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
 		--_bb: var(--ui-accordion-breakout-border-width) var(--ui-accordion-border-style) var(--ui-accordion-border-color);
@@ -167,6 +172,17 @@
 			border-radius: var(--ui-accordion-border-radius);
 		}
 
+		/* pill — fully rounded ends per item, matching ui/tabs pill radius (--radius-pill).
+		   Compose with separate (discrete pills) and/or filled. */
+		ui-accordion[variant~="pill"] cq-box details {
+			border-radius: var(--radius-pill);
+		}
+		/* Open pill item is a rounded rectangle, not a full capsule — a tall open panel
+		   with infinite radius would bulge; clamp it to a card-like radius. */
+		ui-accordion[variant~="pill"] cq-box details[open] {
+			border-radius: var(--ui-accordion-pill-open-radius);
+		}
+
 		/* separate */
 		ui-accordion[variant~="separate"] cq-box {
 			gap: var(--ui-accordion-gap, var(--spacing-xl));
@@ -199,6 +215,57 @@
 					font-size: var(--font-size-xs);
 				}
 			}
+		}
+
+		/* hide-summary — collapse the summary of the open item so only its content shows.
+		   Pair with `no-collapse` + `name` (exclusive, non-closable) so a hidden summary
+		   always has a sibling to reopen from. Direct child (> summary) so nested
+		   accordions keep their own summaries. */
+		ui-accordion[variant~="hide-summary"] cq-box details[open] > summary {
+			display: none;
+		}
+		/* Closed items render as content-width chips, the open item as a full-width panel.
+		   The chip is the SUMMARY box itself — `details` stays full-width and never resizes,
+		   so toggling crossfades instead of animating an unstable intrinsic width (a single
+		   box can't smoothly grow chip→full: the moment it opens, its revealed content, not
+		   the chip, defines max-content). A definite column keeps the grid stable. */
+		ui-accordion[variant~="hide-summary"] cq-box {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		ui-accordion[variant~="hide-summary"] cq-box details {
+			justify-self: start;
+		}
+		/* Closed: transparent row, chip painted on the summary (icon-leading, content-width).
+		   Reads --ui-accordion-background (set by `filled`); transparent otherwise. */
+		ui-accordion[variant~="hide-summary"] cq-box details:not([open]) {
+			background: none;
+			padding-inline: 0;
+		}
+		ui-accordion[variant~="hide-summary"] cq-box details:not([open]) > summary {
+			background: var(--ui-accordion-background);
+			gap: var(--ui-accordion-summary-gap, 1ch);
+			inline-size: max-content;
+			justify-content: start;
+			padding-inline: var(--ui-accordion-summary-padding-inline, 2.25ch);
+		}
+		/* pill: the chip (closed summary) is the fully-rounded element */
+		ui-accordion[variant~="hide-summary"][variant~="pill"] cq-box details:not([open]) > summary {
+			border-radius: var(--radius-pill);
+		}
+		/* Focus ring follows the chip, not the full-width details box */
+		ui-accordion[variant~="hide-summary"] cq-box details:not([open]):has(> summary:focus-visible) {
+			outline: none;
+		}
+		ui-accordion[variant~="hide-summary"] cq-box details:not([open]) > summary:focus-visible {
+			outline: var(--ring-width) solid var(--ring-color);
+			outline-offset: calc(-1 * var(--ring-width));
+		}
+
+		/* filled — light surface background per item. Only sets the existing
+		   --ui-accordion-background token; the base `background: var(--ui-accordion-background)`
+		   rule paints it. Pairs with `separate rounded` for a pill look. */
+		ui-accordion[variant~="filled"] cq-box details {
+			--ui-accordion-background: var(--color-surface-alt);
 		}
 
 		/* tint / tinted — consumes generic --_tint / --tint-bg / --tint-fg / --tint-overlay from base/tint.css */
@@ -369,25 +436,43 @@
 			}
 
 			/* === type: split === */
+			/* Ratio tokens (content/media) — same spl(x/y) DSL as ui/card. Each sets the grid
+			   columns AND the media width %, since the media element is absolutely positioned
+			   and can't derive its width from fr units. */
+			ui-accordion[variant~="spl(1/1)"] cq-box { --ui-accordion-split: 1fr 1fr; --ui-accordion-split-media: 50%; }
+			ui-accordion[variant~="spl(3/2)"] cq-box { --ui-accordion-split: 3fr 2fr; --ui-accordion-split-media: 40%; }
+			ui-accordion[variant~="spl(2/3)"] cq-box { --ui-accordion-split: 2fr 3fr; --ui-accordion-split-media: 60%; }
+			ui-accordion[variant~="spl(2/1)"] cq-box { --ui-accordion-split: 2fr 1fr; --ui-accordion-split-media: 33.3333%; }
+			ui-accordion[variant~="spl(1/2)"] cq-box { --ui-accordion-split: 1fr 2fr; --ui-accordion-split-media: 66.6667%; }
+
 			ui-accordion[type="split"] cq-box {
 				display: grid;
-				grid-template-columns: 1fr 1fr;
+				grid-template-columns: var(--ui-accordion-split, 1fr 1fr);
 				position: relative;
 				& > details {
 					grid-column: 1;
 					& [data-split] { opacity: 0; }
+					/* display:contents frees the absolute media from the clip box, but it also
+					   kills the base block-size transition — the panel would pop in. Mask that with
+					   a coordinated fade/rise on the text content and fade/scale on the media,
+					   in the spirit of ui/reveal's unison morph. */
 					&[open]::details-content {
 						display: contents;
 					}
+					/* Text fades in after the media settles (staggered, like the horizontal type's
+					   delayed content opacity). `both` keeps it hidden through the delay. */
+					&[open] > :not(summary, [data-split]) {
+						animation: accordion-content-in var(--ui-accordion-media-duration) var(--ui-accordion-media-easing) var(--ui-accordion-media-delay) both;
+					}
 					&[open] [data-split]{
 						block-size: auto;
-						inline-size: calc(50% - var(--ui-accordion-gap, var(--spacing-xl)));
+						inline-size: calc(var(--ui-accordion-split-media, 50%) - var(--ui-accordion-gap, var(--spacing-xl)));
 						inset-block: 0 auto;
 						inset-inline: auto 0;
 						opacity: 1;
 						position: absolute;
 						&:is(img, video, picture) {
-							animation: accordion-media-in var(--ui-accordion-media-duration, 0.6s) ease;
+							animation: accordion-media-in var(--ui-accordion-media-duration) var(--ui-accordion-media-easing) both;
 							object-fit: cover;
 						}
 					}
@@ -441,6 +526,15 @@
 	}
 
 	@keyframes accordion-media-in {
-		from { opacity: 0; scale: 1.02; }
+		from { opacity: 0; scale: 1.03; translate: 0 var(--ui-accordion-media-shift); }
+	}
+	/* Opacity only — a transform here would make the content the containing block
+	   for the absolutely-positioned [data-split] media and shift it mid-animation. */
+	@keyframes accordion-content-in {
+		from { opacity: 0; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		@keyframes accordion-media-in { from { opacity: 0; } }
+		@keyframes accordion-content-in { from { opacity: 0; } }
 	}
 }

@@ -786,6 +786,76 @@
 	</ui-accordion>
 
 	<br>
+	<h2>With <code>variant="hide-summary"</code> and <code>type="split"</code></h2>
+	<p>The open item hides its summary, showing only content + media. Requires <code>no-collapse</code> + <code>name</code> so the open item can't be closed — you switch by opening another. The <code>spl(3/2)</code> token sets the content/media ratio (same DSL as <code>ui/card</code>): <code>spl(1/1)</code>, <code>spl(3/2)</code>, <code>spl(2/3)</code>, <code>spl(2/1)</code>, <code>spl(1/2)</code>.</p>
+
+	<ui-accordion name="accordion-showcase" type="split" variant="hide-summary filled separate pill spl(3/2)" no-collapse>
+		<cq-box>
+			<details name="accordion-showcase" open>
+				<summary><ui-icon type="plus-minus"></ui-icon>Sound quality</summary>
+				<div>
+					<p><strong>Sound quality.</strong> Custom drivers and a high dynamic range amplifier deliver rich, detailed audio across the full frequency range, from deep bass to crisp highs.</p>
+					<img src="https://picsum.photos/seed/sound/800/500" alt="Sound" data-split>
+				</div>
+			</details>
+			<details name="accordion-showcase">
+				<summary><ui-icon type="plus-minus"></ui-icon>Fit and feel</summary>
+				<div>
+					<p><strong>Fit and feel.</strong> Three sizes of soft silicone tips create a secure, comfortable seal that stays put through any workout.</p>
+					<img src="https://picsum.photos/seed/fit/800/500" alt="Fit" data-split>
+				</div>
+			</details>
+			<details name="accordion-showcase">
+				<summary><ui-icon type="plus-minus"></ui-icon>Heart rate sensing</summary>
+				<div>
+					<p><strong>Heart rate sensing.</strong> Our smallest heart rate sensor ever pulses invisible light to give you accurate workout metrics from the gym to the track.</p>
+					<img src="https://picsum.photos/seed/heart/800/500" alt="Heart rate" data-split>
+				</div>
+			</details>
+			<details name="accordion-showcase">
+				<summary><ui-icon type="plus-minus"></ui-icon>Charging case</summary>
+				<div>
+					<p><strong>Charging case.</strong> The compact case holds multiple full charges and tops up fast over USB-C or wireless charging.</p>
+					<img src="https://picsum.photos/seed/case/800/500" alt="Charging case" data-split>
+				</div>
+			</details>
+		</cq-box>
+	</ui-accordion>
+
+	<br>
+	<h2><code>variant="hide-summary"</code> without a type (pill column)</h2>
+	<p>The variant composes without <code>type</code> — a plain vertical column of pills where the open item reveals its content in place. Still requires <code>no-collapse</code> + <code>name</code>.</p>
+
+	<ui-accordion name="accordion-pills" variant="hide-summary filled separate pill" no-collapse>
+		<cq-box>
+			<details name="accordion-pills" open>
+				<summary><ui-icon type="plus-minus"></ui-icon>Sound quality</summary>
+				<div>
+					<p><strong>Sound quality.</strong> Custom drivers and a high dynamic range amplifier deliver rich, detailed audio across the full frequency range.</p>
+				</div>
+			</details>
+			<details name="accordion-pills">
+				<summary><ui-icon type="plus-minus"></ui-icon>Fit and feel</summary>
+				<div>
+					<p><strong>Fit and feel.</strong> Three sizes of soft silicone tips create a secure, comfortable seal that stays put through any workout.</p>
+				</div>
+			</details>
+			<details name="accordion-pills">
+				<summary><ui-icon type="plus-minus"></ui-icon>Dust, sweat, and water resistance</summary>
+				<div>
+					<p><strong>Dust, sweat, and water resistance.</strong> Rated for the elements so they keep going whether you're caught in the rain or pushing through a hard session.</p>
+				</div>
+			</details>
+			<details name="accordion-pills">
+				<summary><ui-icon type="plus-minus"></ui-icon>Touch controls</summary>
+				<div>
+					<p><strong>Touch controls.</strong> Tap and hold gestures let you manage playback, calls, and noise modes without reaching for your phone.</p>
+				</div>
+			</details>
+		</cq-box>
+	</ui-accordion>
+
+	<br>
 	<h2>With <code>tabs</code> attribute</h2>
 	<p>Morphs into tabs above 650px, accordion below. Wrapped in <code>&lt;auto-morph render="tabs"&gt;</code>.</p>
 
