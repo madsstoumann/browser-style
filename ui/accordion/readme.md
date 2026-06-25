@@ -620,8 +620,8 @@ Override accordion-specific tokens for targeted changes:
 | `--ui-accordion-media-easing` | `var(--ease-in-out)` | `type="split"` entry easing |
 | `--ui-accordion-media-shift` | `0.75rem` | `type="split"` media rise distance on entry |
 | `--ui-accordion-media-delay` | `calc(var(--ui-accordion-media-duration) * 0.4)` | Stagger before the text fades in (media leads) |
-| `--ui-accordion-background` | `var(--color-surface-alt, ...)` | Background color (`background` variant) |
-| `--ui-accordion-background-padding` | `1.5ch` | Padding (`background` variant) |
+| `--ui-accordion-bg` | `var(--color-surface-alt, ...)` | Background color (`filled` variant) |
+| `--ui-accordion-bg-padding` | `1.5ch` | Padding (`filled` variant) |
 | `--ui-accordion-breakout-unit` | `1rem` | Translate distance (`breakout`) |
 | `--ui-accordion-horizontal-border-radius` | `var(--radius-md, 0.5em)` | Clip-path radius (horizontal) |
 

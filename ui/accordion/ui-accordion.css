@@ -54,7 +54,7 @@
 				interpolate-size: allow-keywords;
 
 				details {
-					background: var(--ui-accordion-background, inherit);
+					background: var(--ui-accordion-bg, inherit);
 					color: var(--ui-accordion-color, inherit);
 					&::details-content {
 						block-size: 0;
@@ -211,7 +211,7 @@
 						outline: none;
 					}
 					> summary {
-						background: var(--ui-accordion-background);
+						background: var(--ui-accordion-bg);
 						gap: var(--ui-accordion-summary-gap, 1ch);
 						inline-size: max-content;
 						justify-content: start;
@@ -234,9 +234,9 @@
 				}
 			}
 
-			/* filled — sets --ui-accordion-background; base rule paints it */
+			/* filled — sets --ui-accordion-bg; base rule paints it */
 			&[variant~="filled"] cq-box details {
-				--ui-accordion-background: var(--color-surface-alt);
+				--ui-accordion-bg: var(--color-surface-alt);
 			}
 
 			/* tint / tinted — consumes generic --_tint / --tint-* from base/tint.css */
@@ -272,7 +272,7 @@
 					&::details-content { translate: 0; }
 				}
 				details::details-content {
-					background: var(--ui-accordion-slide-bg, var(--ui-accordion-background, Canvas));
+					background: var(--ui-accordion-slide-bg, var(--ui-accordion-bg, Canvas));
 					box-sizing: border-box;
 					padding-inline: var(--ui-accordion-padding-inline);
 					translate: calc(100% * var(--_sd, 1)) 0;
