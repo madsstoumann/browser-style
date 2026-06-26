@@ -121,16 +121,17 @@
 		&[type*=arrow-cross]::after { rotate: 45deg; }
 
 		/* Play, Pause, Stop, Triangle */
-		&:is([type*=pause],[type*=play],[type*=stop],[type*=triangle])::before {
+		&:is([type=pause],[type=play],[type=stop],[type=triangle],[type=play-pause])::before {
 			background: currentColor;
 			block-size: 1em;
 			inline-size: 1em;
 			place-self: center;
 		}
-		&[type*=pause]::before { clip-path: polygon(40% 0%,0% 0%,0% 100%,40% 100%,40% 0%,60% 0%,100% 0%,100% 100%,60% 100%,60% 0%); }
-		&[type*=play]::before { clip-path: polygon(16% 0%,15% 100%,100% 50%); }
-		&[type*=stop]::before { clip-path: inset(0 0 0 0 round 1px); }
-		&[type*=triangle]::before { clip-path: polygon(15% 0%,85% 50%,15% 100%); }
+		&[type=pause]::before { clip-path: polygon(40% 0%,0% 0%,0% 100%,40% 100%,40% 0%,60% 0%,100% 0%,100% 100%,60% 100%,60% 0%); }
+		&[type=play-pause]::before { clip-path: polygon(16% 0%,100% 50%,100% 50%,15% 100%,16% 0%,16% 0%,100% 50%,100% 50%,15% 100%,16% 0%); }
+		&[type=play]::before { clip-path: polygon(16% 0%,15% 100%,100% 50%); }
+		&[type=stop]::before { clip-path: inset(0 0 0 0 round 1px); }
+		&[type=triangle]::before { clip-path: polygon(15% 0%,85% 50%,15% 100%); }
 
 		/* First, Last */
 		&[type*=first],
@@ -188,6 +189,7 @@
 			&::after { rotate: 45deg; }
 		}
 		&[type~=down] { scale: -1; }
+		&[type~=play-pause]::before { clip-path: polygon(0% 0%,40% 0%,40% 100%,0% 100%,0% 0%,60% 0%,100% 0%,100% 100%,60% 100%,60% 0%); }
 		&[type=grid] { rotate: 135deg; }
 		&:is([type=grid],[type=kebab],[type=meatball])::after { box-shadow: -.3em 0 0, 0 .3em 0, 0 -.3em 0, .3em 0 0; }
 		&[type*=plus-minus]::after { rotate: 0deg; }
