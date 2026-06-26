@@ -288,20 +288,20 @@ Use the CSS-only approach — no client JavaScript needed:
 ui-icon {
   --ui-icon-stroke: 0.1em;
   --ui-icon-size: 150%;
-  --ui-icon-background: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 30%));
+  --ui-icon-bg: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 30%));
   --ui-icon-padding: 0.25em;
-  --ui-icon-border-radius: 5%;
+  --ui-icon-radius: 5%;
 }
 ```
 
 ### Border / badge (`variant="border"`)
 
-Wraps the glyph in a ring — circular by default — for a badge look (e.g. a circled `+`). The border width defaults to the icon stroke and the color to `currentColor`, so it always matches the glyph; padding defaults to `0.3em`. Override any of them, and set `--ui-icon-border-radius` for the shape.
+Wraps the glyph in a ring — circular by default — for a badge look (e.g. a circled `+`). The border width defaults to the icon stroke and the color to `currentColor`, so it always matches the glyph; padding defaults to `0.3em`. Override any of them, and set `--ui-icon-radius` for the shape.
 
 ```html
 <ui-icon type="plus" variant="border"></ui-icon>                 <!-- circled + -->
 <ui-icon type="plus" variant="border"
-  style="--ui-icon-border-radius: var(--radius-md)"></ui-icon>   <!-- slightly-rounded square -->
+  style="--ui-icon-radius: var(--radius-md)"></ui-icon>          <!-- slightly-rounded square -->
 ```
 
 The ring uses `box-sizing: content-box`, so padding/border grow the box outward and leave the `1em` glyph intact.
@@ -310,15 +310,16 @@ The ring uses `box-sizing: content-box`, so padding/border grow the box outward 
 
 | Token | Default | Description |
 |-------|---------|-------------|
-| `--ui-icon-background` | `transparent` | Background color |
+| `--ui-icon-bg` | `transparent` | Background color |
 | `--ui-icon-border-color` | `currentColor` | Ring color (`variant="border"`) |
-| `--ui-icon-border-radius` | `var(--radius-circle, 50%)` | Ring/shape radius — circle by default |
-| `--ui-icon-border-width` | icon stroke (`--_s`) | Ring width (`variant="border"`); override to change |
+| `--ui-icon-border-width` | icon stroke (`--ui-icon-stroke`) | Ring width (`variant="border"`); override to change |
 | `--ui-icon-duration` | `var(--duration-slow, .3s)` | Transition duration |
 | `--ui-icon-easing` | `var(--ease-default, cubic-bezier(0.4, 0, 0.2, 1))` | Transition easing |
 | `--ui-icon-padding` | `0.3em` (under `variant="border"`) | Ring inner padding |
+| `--ui-icon-radius` | `var(--radius-circle, 50%)` | Ring/shape radius — circle by default |
 | `--ui-icon-size` | `100%` | Icon size (relative to parent font-size) |
-| `--ui-icon-stroke` | `0.0625em` | Stroke / line thickness |
+| `--ui-icon-stroke` | `var(--border-width-thick, 2px)` | Stroke / line thickness |
+| `--ui-icon-svg-stroke` | `1.25` | `stroke-width` for SVG children (set by `stroke=*`) |
 
 ---
 

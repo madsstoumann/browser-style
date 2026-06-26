@@ -7,26 +7,32 @@
 @layer bs-component {
 	:where(ui-icon) {
 		/* Component tokens */
-		--ui-icon-border-radius: var(--radius-circle);
+		--ui-icon-bg: transparent;
 		--ui-icon-border-color: currentColor;
-		--ui-icon-background: transparent;
-		--_d: var(--duration-slow);
-		--_e: var(--ease-default);
-		--_sz: 100%;
-		--_s: var(--border-width-thick);
+		--ui-icon-duration: var(--duration-slow);
+		--ui-icon-easing: var(--ease-default);
+		--ui-icon-radius: var(--radius-circle);
+		--ui-icon-size: 100%;
+		--ui-icon-stroke: var(--border-width-thick);
 
 		/* Private */
-		--_bdwh: calc(var(--_s) / 2);
+		--_bdwh: calc(var(--ui-icon-stroke) / 2);
 		--_cosh: calc(1em * cos(45deg));
 
-		background: var(--ui-icon-background);
-		border-radius: var(--ui-icon-border-radius);
+		background: var(--ui-icon-bg);
+		border-radius: var(--ui-icon-radius);
+		/* The glyph is a grid of pseudo-elements tuned in a LTR coordinate system. A grid's
+		   inline axis follows `direction`, so under [dir=rtl] the origin flips and the
+		   differently-sized pseudo-elements shift apart (detached arrowheads, first/last
+		   bars). Pin the icon's internal axis to LTR so it renders identically in any
+		   direction; mirror deliberately at the call site if RTL semantics are needed. */
+		direction: ltr;
 		display: inline-grid;
-		font-size: var(--_sz);
+		font-size: var(--ui-icon-size);
 		grid-template-rows: 0;
 		height: 1em;
 		place-content: center;
-		transition: var(--_d) var(--_e);
+		transition: var(--ui-icon-duration) var(--ui-icon-easing);
 		width: 1em;
 	}
 
@@ -35,12 +41,12 @@
 		&::after {
 			content: "";
 			display: block;
-			transition: var(--_d) var(--_e);
+			transition: var(--ui-icon-duration) var(--ui-icon-easing);
 		}
 
 		/* variant="border" */
 		&[variant~="border"] {
-			border: var(--ui-icon-border-width, var(--_s)) solid var(--ui-icon-border-color);
+			border: var(--ui-icon-border-width, var(--ui-icon-stroke)) solid var(--ui-icon-border-color);
 			box-sizing: content-box;
 			padding: var(--ui-icon-padding, 0.3em);
 		}
@@ -49,7 +55,7 @@
 		&:is([type*=arrow],[type=check],[type*=chevron])::after {
 			border-color: currentColor;
 			border-style: solid;
-			border-width: var(--_s) var(--_s) 0 0;
+			border-width: var(--ui-icon-stroke) var(--ui-icon-stroke) 0 0;
 			height: var(--_cosh);
 			rotate: 45deg;
 			width: var(--_cosh);
@@ -57,18 +63,18 @@
 		&:is([type*=arrow],[type=cross],[type*=menu],[type*=plus])::before,
 		&:is([type=cross],[type*=menu],[type*=minus],[type*=plus])::after {
 			background-color: currentColor;
-			height: var(--_s);
+			height: var(--ui-icon-stroke);
 			width: 1em;
 		}
 		&[type*=arrow] {
-			&::after { translate: calc((.25em - var(--_s)) * cos(45deg)); }
+			&::after { translate: calc((.25em - var(--ui-icon-stroke)) * cos(45deg)); }
 			&::before {
-				width: calc(1em - var(--_s));
+				width: calc(1em - var(--ui-icon-stroke));
 				translate: calc(0px - var(--_bdwh)) calc((.5em * cos(45deg)) - var(--_bdwh));
 			}
 		}
 		&[type=check]::after {
-			border-width: 0 var(--_s) var(--_s) 0;
+			border-width: 0 var(--ui-icon-stroke) var(--ui-icon-stroke) 0;
 			height: calc(1em * cos(22.5deg));
 			translate: 0 calc((.25em - var(--_bdwh)) * cos(45deg) * -1);
 			width: calc(var(--_cosh)* 0.6);
@@ -119,10 +125,7 @@
 		/* *-arrow-cross contains "cross" — restore the arrowhead the rule above rotated away */
 		&[type*=arrow-cross]::after { rotate: 45deg; }
 
-		/* Play, Pause, Stop, Triangle — solid shapes painted on ::before as a centered 1em
-		   pseudo (like every other icon) rather than the host's own background. This keeps
-		   clip-path mapped to a fixed 1em box, so variant="border" grows padding/border
-		   around the glyph instead of inflating it. */
+		/* Play, Pause, Stop, Triangle */
 		&:is([type*=pause],[type*=play],[type*=stop],[type*=triangle])::before {
 			background: currentColor;
 			block-size: 1em;
@@ -141,32 +144,32 @@
 			&::before {
 				background: currentColor;
 				height: 1em;
-				translate: .88em calc(0px - var(--_s));
-				width: var(--_s);
+				translate: .88em calc(0px - var(--ui-icon-stroke));
+				width: var(--ui-icon-stroke);
 			}
 		}
 		&[type*=last] { translate: -.22em 0; }
 
 		/* Size */
-		&[size=xs] { --_sz: 50%; }
-		&[size=sm] { --_sz: 60%; }
-		&[size=md] { --_sz: 80%; }
-		&[size=lg] { --_sz: 120%; }
-		&[size=xl] { --_sz: 140%; }
-		&[size=xxl] { --_sz: 200%; }
+		&[size=xs] { --ui-icon-size: 50%; }
+		&[size=sm] { --ui-icon-size: 60%; }
+		&[size=md] { --ui-icon-size: 80%; }
+		&[size=lg] { --ui-icon-size: 120%; }
+		&[size=xl] { --ui-icon-size: 140%; }
+		&[size=xxl] { --ui-icon-size: 200%; }
 
 		/* Variant: rounded — rounds line caps on line-based icons */
 		&[variant~=rounded]:is([type*=arrow],[type=cross],[type*=menu],[type*=plus])::before,
 		&[variant~=rounded]:is([type=cross],[type*=menu],[type*=minus],[type*=plus])::after {
-			border-radius: var(--_s);
+			border-radius: var(--ui-icon-stroke);
 		}
 
 		/* Stroke */
-		&[stroke=xs] { --_s: 1px; --ui-icon-svg-stroke: 0.5; }
-		&[stroke=sm] { --_s: 1.5px; --ui-icon-svg-stroke: 1; }
-		&[stroke=md] { --_s: 3px; --ui-icon-svg-stroke: 1.5; }
-		&[stroke=lg] { --_s: 4px; --ui-icon-svg-stroke: 2; }
-		&[stroke=xl] { --_s: 6px; --ui-icon-svg-stroke: 2.5; }
+		&[stroke=xs] { --ui-icon-stroke: 1px; --ui-icon-svg-stroke: 0.5; }
+		&[stroke=sm] { --ui-icon-stroke: 1.5px; --ui-icon-svg-stroke: 1; }
+		&[stroke=md] { --ui-icon-stroke: 3px; --ui-icon-svg-stroke: 1.5; }
+		&[stroke=lg] { --ui-icon-stroke: 4px; --ui-icon-svg-stroke: 2; }
+		&[stroke=xl] { --ui-icon-stroke: 6px; --ui-icon-svg-stroke: 2.5; }
 
 		/* SVG inside <ui-icon> */
 		&:has(svg) svg {
@@ -202,7 +205,7 @@
 			&::after {
 				background: currentColor;
 				border-width: 0;
-				height: var(--_s);
+				height: var(--ui-icon-stroke);
 				rotate: -90deg;
 				translate: 0;
 				width: 1em;
@@ -219,31 +222,4 @@
 	   not in nested <details> further inside the panel content. */
 	[open] > summary * ui-icon[type~=right] { rotate: 90deg; }
 
-	/* Dir: rtl */
-	[dir=rtl] ui-icon {
-		&[type~=arrow] {
-			&::before {
-				translate: calc(var(--_bdwh) + var(--_s)) calc((.5em * cos(45deg)) - var(--_bdwh))
-			}
-			&[type~=left] { translate: -.2em 0; }
-			&[type~=right] { translate: .2em 0; }
-			&[type~=down] { translate: 0 -.2em; }
-			&[type~=downleft] { rotate: 45deg; translate: -.11em -.11em; }
-			&[type~=downright] { rotate: 135deg; translate: .11em -.11em; }
-			&[type~=up] { translate: 0 .2em; }
-			&[type~=upleft] { rotate: -45deg; translate: -.11em .11em; }
-			&[type~=upright] { rotate: -135deg; translate: .11em .11em; }
-		}
-		&[type*=first] {
-			translate: -.22em 0;
-			&::before { translate: .33em calc(0px - var(--_s)); }
-		}
-		&[type*=last] {
-			translate: .22em 0;
-			&::before { translate: .33em calc(0px - var(--_s)); }
-		}
-		&[type~=left] { rotate: 0deg; }
-		&[type~=right] { rotate: -180deg; }
-	}
-	[dir=rtl] [open] >* * ui-icon[type~=right] { rotate: -270deg; }
 }
