@@ -125,7 +125,10 @@
 			scale: var(--ui-media-hv-drift-rest, 1.3);
 			transition: translate var(--ui-media-hv-track-dur, var(--duration-normal)) var(--_hv-ease), scale var(--_hv-dur) var(--_hv-ease);
 		}
-		:where([media*="hov(drift)"]:hover) ui-media img,
+		/* hover state scoped to the FRAME (ui-media:hover), not the host card —
+		   so the shrink+drift only fire over the image, matching the JS which
+		   only feeds --ui-media-mx/my while the pointer is over the frame. */
+		:where([media*="hov(drift)"]) ui-media:hover img,
 		:where(ui-media[media*="hov(drift)"]:hover) img {
 			scale: var(--ui-media-hv-drift-hover, 1.2);
 			translate: calc(var(--ui-media-mx, 0) * -1 * var(--ui-media-hv-drift, 4%)) calc(var(--ui-media-my, 0) * -1 * var(--ui-media-hv-drift, 4%));

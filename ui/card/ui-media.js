@@ -7,50 +7,51 @@
  *
  * Implemented as ONE idle set of delegated listeners — it never iterates or
  * mounts <ui-media>. Nothing runs until a pointer actually enters a
- * hov(track)/hov(drift) frame. Pure progressive enhancement: with no JS the
- * CSS-only frame still renders (just without the cursor follow).
+ * hov(track)/hov(drift) frame, and tracking applies ONLY while the pointer is
+ * over the <ui-media> itself (not the surrounding <ui-content> in a card).
+ * Pure progressive enhancement: with no JS the CSS-only frame still renders.
  *
- * hov() can sit on a <ui-card>/<ui-reveal> (inherits to the nested <ui-media>)
- * or on a standalone <ui-media> — the props are set on whichever element
- * carries the token, so they inherit down to the <img> in every case.
+ * The hov() token may sit on the <ui-media> (standalone) or on a host
+ * <ui-card>/<ui-reveal> (it inherits). Either way the props are set on the
+ * <ui-media> frame, so they inherit to its <img>.
  */
 
 const SEL = '[media*="hov(track)"], [media*="hov(drift)"]';
 const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 
-let host = null;   // element carrying hov(track|drift) (card/reveal/standalone)
-let media = null;  // the <ui-media> frame we measure against
+let media = null;  // the active <ui-media> frame (only while the pointer is over it)
 let rect = null;   // cached frame rect for the active hover session
 let raf = 0;
 
-const frame = (h) => (h.matches('ui-media') ? h : h.querySelector('ui-media') || h);
+function clear() {
+	if (!media) return;
+	media.style.removeProperty('--ui-media-mx');
+	media.style.removeProperty('--ui-media-my');
+	media = rect = null;
+}
 
-// closest() runs only on pointerover (rare), not on every move.
+// Activate only when the pointer is over a <ui-media> whose own or host token
+// is track/drift. Entering anything else (e.g. <ui-content>) deactivates.
 addEventListener('pointerover', (e) => {
-	const h = e.target.closest?.(SEL);
-	if (!h || h === host) return;
-	host = h;
-	media = frame(h);
-	rect = null;
+	const m = e.target.closest?.('ui-media');
+	if (m === media) return;                 // unchanged (still inside the same frame)
+	if (m && m.closest(SEL)) { media = m; rect = null; }
+	else clear();
 }, { passive: true });
 
 addEventListener('pointermove', (e) => {
-	if (!host || raf || reduce.matches) return; // instant exit when idle / reduced-motion
+	if (!media || raf || reduce.matches) return; // instant exit when idle / reduced-motion
 	raf = requestAnimationFrame(() => {
 		raf = 0;
 		rect ??= media.getBoundingClientRect();
 		const mx = Math.max(-1, Math.min(1, (e.clientX - rect.left) / rect.width * 2 - 1));
 		const my = Math.max(-1, Math.min(1, (e.clientY - rect.top) / rect.height * 2 - 1));
-		host.style.setProperty('--ui-media-mx', mx.toFixed(3));
-		host.style.setProperty('--ui-media-my', my.toFixed(3));
+		media.style.setProperty('--ui-media-mx', mx.toFixed(3));
+		media.style.setProperty('--ui-media-my', my.toFixed(3));
 	});
 }, { passive: true });
 
+// Backstop: clear when the pointer leaves the document entirely.
 addEventListener('pointerout', (e) => {
-	// reset only when the pointer truly leaves the host (not moving between its children)
-	if (host && !host.contains(e.relatedTarget)) {
-		host.style.removeProperty('--ui-media-mx');
-		host.style.removeProperty('--ui-media-my');
-		host = media = rect = null;
-	}
+	if (media && !e.relatedTarget) clear();
 }, { passive: true });

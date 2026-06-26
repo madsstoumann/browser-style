@@ -222,4 +222,15 @@
 	   not in nested <details> further inside the panel content. */
 	[open] > summary * ui-icon[type~=right] { rotate: 90deg; }
 
+	/* Dir: rtl — mirror horizontally-directional icons so they point with the reading
+	   direction. first/last are excluded: their bar is positioned via the left/right
+	   rotation, so a scale would compose to a vertical flip and detach the bar — they
+	   keep their authored orientation in RTL instead. */
+	[dir=rtl] ui-icon:is([type~=left],[type~=right]):not([type~=first]):not([type~=last]) { scale: -1 1; }
+
+	/* The RTL mirror above flips the chevron to point left, which reverses the sense of the
+	   open-state rotation — a clockwise 90deg would swing it up. Negate it so an open
+	   `chevron right` still animates downwards in RTL, matching LTR. */
+	[dir=rtl] [open] >* > ui-icon[type~=right],
+	[dir=rtl] [open] > summary * ui-icon[type~=right] { rotate: -90deg; }
 }
