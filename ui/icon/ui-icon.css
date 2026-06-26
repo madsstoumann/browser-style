@@ -25,198 +25,199 @@
 		font-size: var(--_sz);
 		grid-template-rows: 0;
 		height: 1em;
-		margin-block: var(--_mb, 0);
-		margin-inline: var(--_mi, var(--_mis, 0) var(--_mie, 0));
 		place-content: center;
 		transition: var(--_d) var(--_e);
 		width: 1em;
 	}
-	/* variant="border" — ring/badge around the glyph (e.g. a circled "+"). The attribute
-	   selector's specificity survives a reset like `*{ border:0; box-sizing:border-box }`.
-	   Border width defaults to the icon stroke (--_s) and padding to 0.3em; both overridable
-	   via --ui-icon-border-width / --ui-icon-padding. Shape follows --ui-icon-border-radius
-	   (circle by default; set e.g. var(--radius-md) for a slightly-rounded square).
-	   content-box keeps the 1em glyph intact while padding/border grow the box outward. */
-	ui-icon[variant~="border"] {
-		border: var(--ui-icon-border-width, var(--_s)) solid var(--ui-icon-border-color);
-		box-sizing: content-box;
-		padding: var(--ui-icon-padding, 0.3em);
-	}
-	ui-icon::before,
-	ui-icon::after {
-		content: "";
-		display: block;
-		transition: var(--_d) var(--_e);
-	}
 
-	/* Arrow, Check, Chevron (Common: Cross, Menu, Plus) */
-	ui-icon:is([type*=arrow],[type=check],[type*=chevron])::after {
-		border-color: currentColor;
-		border-style: solid;
-		border-width: var(--_s) var(--_s) 0 0;
-		height: var(--_cosh);
-		rotate: 45deg;
-		width: var(--_cosh);
-	}
-	ui-icon:is([type*=arrow],[type=cross],[type*=menu],[type*=plus])::before,
-	ui-icon:is([type=cross],[type*=menu],[type*=minus],[type*=plus])::after {
-		background-color: currentColor;
-		height: var(--_s);
-		width: 1em;
-	}
-	ui-icon[type*=arrow]::after {
-		translate: calc((.25em - var(--_s)) * cos(45deg));
-	}
-	ui-icon[type*=arrow]::before {
-		width: calc(1em - var(--_s));
-		translate: calc(0px - var(--_bdwh)) calc((.5em * cos(45deg)) - var(--_bdwh));
-	}
-	ui-icon[type=check]::after {
-		border-width: 0 var(--_s) var(--_s) 0;
-		height: calc(1em * cos(22.5deg));
-		translate: 0 calc((.25em - var(--_bdwh)) * cos(45deg) * -1);
-		width: calc(var(--_cosh)* 0.6);
-	}
-	ui-icon[type*=chevron]::after {
-		translate: calc((.25em - var(--_bdwh)) * cos(45deg) * -1) 0;
-	}
-
-	/* Grid, Kebab, Meatball, Menu */
-	ui-icon:is([type=drag],[type=grid],[type=kebab],[type=meatball])::after {
-		background: currentColor;
-		border-radius: var(--radius-circle);
-		height: .2em;
-		width: .2em;
-	}
-	ui-icon[type=drag] { translate: .2em 0; }
-	ui-icon[type=drag]::after {
-		box-shadow:
-			-.4em -.4em 0, 0 -.4em 0,
-			-.4em 0 0,
-			-.4em .4em 0, 0 .4em 0;
-	}
-	ui-icon[type=grid]::after {
-		box-shadow:
-			-.3em -.3em 0, 0 -.3em 0, .3em -.3em 0,
-			-.3em 0 0, .3em 0 0,
-			-.3em .3em 0, 0 .3em 0, .3em .3em 0;
-	}
-	ui-icon[type=kebab]::after { box-shadow: 0 .3em 0, 0 -.3em 0; }
-	ui-icon[type=meatball]::after { box-shadow: -.3em 0 0, .3em 0 0; }
-	ui-icon[type=burger-menu] { gap: .66em; }
-	ui-icon[type=burger-menu]::before { box-shadow: 0 .33em 0 currentColor; }
-	ui-icon[type=veggie-menu] { gap: .33em; }
-
-	/* Angle */
-	ui-icon[type~=down], ui-icon[type~=down-arrow-cross] { rotate: 90deg; }
-	ui-icon[type=cross], ui-icon[type~=downleft] { rotate: 135deg; }
-	ui-icon[type~=downright] { rotate: 45deg; }
-	ui-icon[type~=left], ui-icon[type~=left-right], ui-icon[type~=left-arrow-cross] { rotate: -180deg; }
-	ui-icon:is([type*=cross],[type*=plus])::after,
-	ui-icon[type~=up], ui-icon[type~=up-arrow-cross] { rotate: -90deg; }
-	ui-icon[type~=upleft] { rotate: -135deg; }
-	ui-icon[type~=upright] { rotate: -45deg; }
-	/* *-arrow-cross contains "cross" — restore the arrowhead the rule above rotated away */
-	ui-icon[type*=arrow-cross]::after { rotate: 45deg; }
-
-	/* Play, Pause, Stop, First, Last */
-	ui-icon[type*=pause], ui-icon[type*=play], ui-icon[type*=stop], ui-icon[type*=triangle] {
-		background: currentColor;
-		border-radius: 0;
-	}
-	ui-icon[type*=pause] { clip-path: polygon(40% 0%,0% 0%,0% 100%,40% 100%,40% 0%,60% 0%,100% 0%,100% 100%,60% 100%,60% 0%); }
-	ui-icon[type*=play] { clip-path: polygon(16% 0%,15% 100%,100% 50%); }
-	ui-icon[type*=stop] { clip-path: inset(0 0 0 0 round 1px); }
-	ui-icon[type*=triangle] { clip-path: polygon(15% 0%,85% 50%,15% 100%);}
-	ui-icon[type*=first],
-	ui-icon[type*=last] {
-		translate: .22em 0;
-		&::before {
-			background: currentColor;
-			height: 1em;
-			translate: .88em calc(0px - var(--_s));
-			width: var(--_s);
-		}
-	}
-	ui-icon[type*=last] { translate: -.22em 0; }
-
-	/* Margin */
-	ui-icon[margin=start] { --_mis: 1ch; }
-	ui-icon[margin=start-auto] { --_mis: auto; }
-	ui-icon[margin=end] { --_mie: 1ch; }
-	ui-icon[margin=end-auto] { --_mie: auto; }
-	ui-icon[margin=xs] { --_mb: .25ch; --_mi: .25ch; }
-	ui-icon[margin=sm] { --_mb: .5ch; --_mi: .5ch; }
-	ui-icon[margin=md] { --_mb: 1ch; --_mi: 1ch; }
-	ui-icon[margin=lg] { --_mb: 1.5ch; --_mi: 1.5ch; }
-	ui-icon[margin=xl] { --_mb: 2ch; --_mi: 2ch; }
-
-	/* Size */
-	ui-icon[size=xs] { --_sz: 50%; }
-	ui-icon[size=sm] { --_sz: 60%; }
-	ui-icon[size=md] { --_sz: 80%; }
-	ui-icon[size=lg] { --_sz: 120%; }
-	ui-icon[size=xl] { --_sz: 140%; }
-	ui-icon[size=xxl] { --_sz: 200%; }
-
-	/* State: [open] and :checked */
-	:is([open] >* > ui-icon, :checked + ui-icon):is([type=kebab],[type=meatball],[type=plus-cross]) { rotate: 45deg; }
-	:is([open] >* > ui-icon, :checked + ui-icon)[type*=menu] { gap: 0; }
-	:is([open] >* > ui-icon, :checked + ui-icon)[type*=menu]::before { box-shadow: none; rotate: -45deg; }
-	:is([open] >* > ui-icon, :checked + ui-icon)[type*=menu]::after { rotate: 45deg; }
-	:is([open] >* > ui-icon, :checked + ui-icon)[type~=down] { scale: -1; }
-	:is([open] >* > ui-icon, :checked + ui-icon)[type=grid] { rotate: 135deg; }
-	:is([open] >* > ui-icon, :checked + ui-icon):is([type=grid],[type=kebab],[type=meatball])::after { box-shadow: -.3em 0 0, 0 .3em 0, 0 -.3em 0, .3em 0 0; }
-	:is([open] >* > ui-icon, :checked + ui-icon)[type*=plus-minus]::after { rotate: 0deg; }
-	:is([open] >* > ui-icon, :checked + ui-icon)[type~=left-right] { rotate: 0deg; }
-	:is([open] >* > ui-icon, :checked + ui-icon)[type~=right-left] { rotate: -180deg; }
-	/* *-arrow-cross: arrow morphs into a cross; host angles land on the nearest
-	   ×-equivalent for a consistent +135deg sweep from each direction */
-	:is([open] >* > ui-icon, :checked + ui-icon)[type*=arrow-cross] {
-		&::before { translate: 0; width: 1em; }
+	ui-icon {
+		&::before,
 		&::after {
-			background: currentColor;
-			border-width: 0;
+			content: "";
+			display: block;
+			transition: var(--_d) var(--_e);
+		}
+
+		/* variant="border" */
+		&[variant~="border"] {
+			border: var(--ui-icon-border-width, var(--_s)) solid var(--ui-icon-border-color);
+			box-sizing: content-box;
+			padding: var(--ui-icon-padding, 0.3em);
+		}
+
+		/* Arrow, Check, Chevron (Common: Cross, Menu, Plus) */
+		&:is([type*=arrow],[type=check],[type*=chevron])::after {
+			border-color: currentColor;
+			border-style: solid;
+			border-width: var(--_s) var(--_s) 0 0;
+			height: var(--_cosh);
+			rotate: 45deg;
+			width: var(--_cosh);
+		}
+		&:is([type*=arrow],[type=cross],[type*=menu],[type*=plus])::before,
+		&:is([type=cross],[type*=menu],[type*=minus],[type*=plus])::after {
+			background-color: currentColor;
 			height: var(--_s);
-			rotate: -90deg;
-			translate: 0;
 			width: 1em;
 		}
+		&[type*=arrow] {
+			&::after { translate: calc((.25em - var(--_s)) * cos(45deg)); }
+			&::before {
+				width: calc(1em - var(--_s));
+				translate: calc(0px - var(--_bdwh)) calc((.5em * cos(45deg)) - var(--_bdwh));
+			}
+		}
+		&[type=check]::after {
+			border-width: 0 var(--_s) var(--_s) 0;
+			height: calc(1em * cos(22.5deg));
+			translate: 0 calc((.25em - var(--_bdwh)) * cos(45deg) * -1);
+			width: calc(var(--_cosh)* 0.6);
+		}
+		&[type*=chevron]::after {
+			translate: calc((.25em - var(--_bdwh)) * cos(45deg) * -1) 0;
+		}
+
+		/* Grid, Kebab, Meatball, Menu */
+		&:is([type=drag],[type=grid],[type=kebab],[type=meatball])::after {
+			background: currentColor;
+			border-radius: var(--radius-circle);
+			height: .2em;
+			width: .2em;
+		}
+		&[type=drag] {
+			translate: .2em 0;
+			&::after {
+				box-shadow:
+					-.4em -.4em 0, 0 -.4em 0,
+					-.4em 0 0,
+					-.4em .4em 0, 0 .4em 0;
+			}
+		}
+		&[type=grid]::after {
+			box-shadow:
+				-.3em -.3em 0, 0 -.3em 0, .3em -.3em 0,
+				-.3em 0 0, .3em 0 0,
+				-.3em .3em 0, 0 .3em 0, .3em .3em 0;
+		}
+		&[type=kebab]::after { box-shadow: 0 .3em 0, 0 -.3em 0; }
+		&[type=meatball]::after { box-shadow: -.3em 0 0, .3em 0 0; }
+		&[type=burger-menu] {
+			gap: .66em;
+			&::before { box-shadow: 0 .33em 0 currentColor; }
+		}
+		&[type=veggie-menu] { gap: .33em; }
+
+		/* Angle */
+		&[type~=down], &[type~=down-arrow-cross] { rotate: 90deg; }
+		&[type=cross], &[type~=downleft] { rotate: 135deg; }
+		&[type~=downright] { rotate: 45deg; }
+		&[type~=left], &[type~=left-right], &[type~=left-arrow-cross] { rotate: -180deg; }
+		&:is([type*=cross],[type*=plus])::after,
+		&[type~=up], &[type~=up-arrow-cross] { rotate: -90deg; }
+		&[type~=upleft] { rotate: -135deg; }
+		&[type~=upright] { rotate: -45deg; }
+		/* *-arrow-cross contains "cross" — restore the arrowhead the rule above rotated away */
+		&[type*=arrow-cross]::after { rotate: 45deg; }
+
+		/* Play, Pause, Stop, Triangle — solid shapes painted on ::before as a centered 1em
+		   pseudo (like every other icon) rather than the host's own background. This keeps
+		   clip-path mapped to a fixed 1em box, so variant="border" grows padding/border
+		   around the glyph instead of inflating it. */
+		&:is([type*=pause],[type*=play],[type*=stop],[type*=triangle])::before {
+			background: currentColor;
+			block-size: 1em;
+			inline-size: 1em;
+			place-self: center;
+		}
+		&[type*=pause]::before { clip-path: polygon(40% 0%,0% 0%,0% 100%,40% 100%,40% 0%,60% 0%,100% 0%,100% 100%,60% 100%,60% 0%); }
+		&[type*=play]::before { clip-path: polygon(16% 0%,15% 100%,100% 50%); }
+		&[type*=stop]::before { clip-path: inset(0 0 0 0 round 1px); }
+		&[type*=triangle]::before { clip-path: polygon(15% 0%,85% 50%,15% 100%); }
+
+		/* First, Last */
+		&[type*=first],
+		&[type*=last] {
+			translate: .22em 0;
+			&::before {
+				background: currentColor;
+				height: 1em;
+				translate: .88em calc(0px - var(--_s));
+				width: var(--_s);
+			}
+		}
+		&[type*=last] { translate: -.22em 0; }
+
+		/* Size */
+		&[size=xs] { --_sz: 50%; }
+		&[size=sm] { --_sz: 60%; }
+		&[size=md] { --_sz: 80%; }
+		&[size=lg] { --_sz: 120%; }
+		&[size=xl] { --_sz: 140%; }
+		&[size=xxl] { --_sz: 200%; }
+
+		/* Variant: rounded — rounds line caps on line-based icons */
+		&[variant~=rounded]:is([type*=arrow],[type=cross],[type*=menu],[type*=plus])::before,
+		&[variant~=rounded]:is([type=cross],[type*=menu],[type*=minus],[type*=plus])::after {
+			border-radius: var(--_s);
+		}
+
+		/* Stroke */
+		&[stroke=xs] { --_s: 1px; --ui-icon-svg-stroke: 0.5; }
+		&[stroke=sm] { --_s: 1.5px; --ui-icon-svg-stroke: 1; }
+		&[stroke=md] { --_s: 3px; --ui-icon-svg-stroke: 1.5; }
+		&[stroke=lg] { --_s: 4px; --ui-icon-svg-stroke: 2; }
+		&[stroke=xl] { --_s: 6px; --ui-icon-svg-stroke: 2.5; }
+
+		/* SVG inside <ui-icon> */
+		&:has(svg) svg {
+			fill: none;
+			height: 100%;
+			pointer-events: none;
+			stroke: currentColor;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			stroke-width: var(--ui-icon-svg-stroke, 1.25);
+			width: 100%;
+		}
 	}
-	:is([open] >* > ui-icon, :checked + ui-icon)[type~=right-arrow-cross] { rotate: 135deg; }
-	:is([open] >* > ui-icon, :checked + ui-icon)[type~=left-arrow-cross] { rotate: -45deg; }
-	:is([open] >* > ui-icon, :checked + ui-icon)[type~=up-arrow-cross] { rotate: 45deg; }
-	:is([open] >* > ui-icon, :checked + ui-icon)[type~=down-arrow-cross] { rotate: 225deg; }
+
+	/* State: [open] and :checked */
+	:is([open] >* > ui-icon, :checked + ui-icon) {
+		&:is([type=kebab],[type=meatball],[type=plus-cross]) { rotate: 45deg; }
+		&[type*=menu] {
+			gap: 0;
+			&::before { box-shadow: none; rotate: -45deg; }
+			&::after { rotate: 45deg; }
+		}
+		&[type~=down] { scale: -1; }
+		&[type=grid] { rotate: 135deg; }
+		&:is([type=grid],[type=kebab],[type=meatball])::after { box-shadow: -.3em 0 0, 0 .3em 0, 0 -.3em 0, .3em 0 0; }
+		&[type*=plus-minus]::after { rotate: 0deg; }
+		&[type~=left-right] { rotate: 0deg; }
+		&[type~=right-left] { rotate: -180deg; }
+		/* *-arrow-cross: arrow morphs into a cross; host angles land on the nearest
+		   ×-equivalent for a consistent +135deg sweep from each direction */
+		&[type*=arrow-cross] {
+			&::before { translate: 0; width: 1em; }
+			&::after {
+				background: currentColor;
+				border-width: 0;
+				height: var(--_s);
+				rotate: -90deg;
+				translate: 0;
+				width: 1em;
+			}
+		}
+		&[type~=right-arrow-cross] { rotate: 135deg; }
+		&[type~=left-arrow-cross] { rotate: -45deg; }
+		&[type~=up-arrow-cross] { rotate: 45deg; }
+		&[type~=down-arrow-cross] { rotate: 225deg; }
+	}
 	[open] >* >ui-icon[type~=right] { rotate: 90deg; }
 
 	/* Scoped to `summary` so [open] state only rotates icons in the same details' header,
 	   not in nested <details> further inside the panel content. */
 	[open] > summary * ui-icon[type~=right] { rotate: 90deg; }
-
-	/* Variant: rounded — rounds line caps on line-based icons */
-	ui-icon[variant~=rounded]:is([type*=arrow],[type=cross],[type*=menu],[type*=plus])::before,
-	ui-icon[variant~=rounded]:is([type=cross],[type*=menu],[type*=minus],[type*=plus])::after {
-		border-radius: var(--_s);
-	}
-
-	/* Stroke */
-	ui-icon[stroke=xs] { --_s: 1px; --ui-icon-svg-stroke: 0.5; }
-	ui-icon[stroke=sm] { --_s: 1.5px; --ui-icon-svg-stroke: 1; }
-	ui-icon[stroke=md] { --_s: 3px; --ui-icon-svg-stroke: 1.5; }
-	ui-icon[stroke=lg] { --_s: 4px; --ui-icon-svg-stroke: 2; }
-	ui-icon[stroke=xl] { --_s: 6px; --ui-icon-svg-stroke: 2.5; }
-
-	/* SVG inside <ui-icon> */
-	ui-icon:has(svg) svg {
-		fill: none;
-		height: 100%;
-		pointer-events: none;
-		stroke: currentColor;
-		stroke-linecap: round;
-		stroke-linejoin: round;
-		stroke-width: var(--ui-icon-svg-stroke, 1.25);
-		width: 100%;
-	}
 
 	/* Dir: rtl */
 	[dir=rtl] ui-icon {
