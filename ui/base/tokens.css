@@ -117,6 +117,17 @@
 		--radius-circle: 50%;
 		--radius-pill: calc(infinity * 1px);
 
+		/* Squircle corners — bespoke radius + superellipse exponent, shared by
+		   every rds(*-sq) variant (ui-card variant=, ui-media media=). */
+		--radius-sm-sq: 1.25rem;
+		--radius-md-sq: 2rem;
+		--radius-lg-sq: 2.8rem;
+		--radius-xl-sq: 3.5rem;
+		--squircle-sm: 1.5;
+		--squircle-md: 1.7;
+		--squircle-lg: 1.8;
+		--squircle-xl: 2;
+
 		/* Shadows */
 		--shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 		--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);

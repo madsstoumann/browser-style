@@ -448,7 +448,7 @@
 						inset-inline: auto 0;
 						opacity: 1;
 						position: absolute;
-						&:is(img, video, picture) {
+						&:is(img, picture, ui-media, video) {
 							animation: accordion-media-in var(--ui-accordion-media-duration) var(--ui-accordion-media-easing) both;
 							object-fit: cover;
 						}

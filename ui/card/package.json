@@ -3,18 +3,24 @@
   "version": "4.0.0",
   "description": "CSS-first card engine built on <ui-media> + <ui-content>, with variant tokens and a container-driven font scale. Shared base for ui-reveal.",
   "type": "module",
+  "main": "ui-media.js",
   "style": "index.css",
   "exports": {
     ".": {
-      "style": "./index.css"
+      "style": "./index.css",
+      "import": "./ui-media.js"
     },
     "./style": "./index.css",
     "./index.css": "./index.css",
-    "./ui-card.css": "./ui-card.css"
+    "./ui-card.css": "./ui-card.css",
+    "./ui-media.js": "./ui-media.js",
+    "./srcset.js": "./srcset.js"
   },
   "files": [
     "index.css",
-    "ui-card.css"
+    "ui-card.css",
+    "ui-media.js",
+    "srcset.js"
   ],
   "publishConfig": {
     "access": "public",

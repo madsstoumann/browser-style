@@ -15,6 +15,7 @@
 	:where(ui-media) {
 		aspect-ratio: var(--ui-media-ar, auto);
 		background: var(--ui-media-bg, var(--color-overlay-light, transparent));
+		border-radius: var(--ui-media-radius, 0);
 		display: grid;
 		min-block-size: var(--ui-media-min, 12.5rem);
 		overflow: hidden;
@@ -58,6 +59,25 @@
 	:where([media*="obp(bl)"]) { --ui-media-op: left bottom; }
 	:where([media*="obp(bc)"]) { --ui-media-op: center bottom; }
 	:where([media*="obp(br)"]) { --ui-media-op: right bottom; }
+
+	/* rds() — corners on a STANDALONE <ui-media>. Inside <ui-card>/<ui-reveal>
+	   the parent clips the frame, so leave rds() off there and let the card own
+	   the radius. Mirrors ui-card's rds() scale; -sq adds a squircle corner. */
+	:where([media*="rds(none)"]) { --ui-media-radius: 0; }
+	:where([media*="rds(sm)"])   { --ui-media-radius: var(--radius-sm); }
+	:where([media*="rds(md)"])   { --ui-media-radius: var(--radius-md); }
+	:where([media*="rds(lg)"])   { --ui-media-radius: var(--radius-lg); }
+	:where([media*="rds(xl)"])   { --ui-media-radius: var(--radius-xl); }
+	:where([media*="rds(2xl)"])  { --ui-media-radius: var(--radius-2xl); }
+	:where([media*="rds(full)"]) { --ui-media-radius: var(--radius-circle, 50%); }
+	:where([media*="rds(pill)"]) { --ui-media-radius: var(--radius-pill, 100px); }
+	/* -sq: bespoke radius + superellipse corner-shape — shared squircle tokens (see tokens.css) */
+	:where([media*="rds(sm-sq)"]) { --ui-media-radius: var(--radius-sm-sq); --ui-media-squircle-exp: var(--squircle-sm); }
+	:where([media*="rds(md-sq)"]) { --ui-media-radius: var(--radius-md-sq); --ui-media-squircle-exp: var(--squircle-md); }
+	:where([media*="rds(lg-sq)"]) { --ui-media-radius: var(--radius-lg-sq); --ui-media-squircle-exp: var(--squircle-lg); }
+	:where([media*="rds(xl-sq)"]) { --ui-media-radius: var(--radius-xl-sq); --ui-media-squircle-exp: var(--squircle-xl); }
+	:where([media*="-sq)"]) ui-media,
+	:where(ui-media[media*="-sq)"]) { corner-shape: superellipse(var(--ui-media-squircle-exp, 1.8)); }
 
 	/* obf() — object-fit */
 	:where([media*="obf(cover)"])   { --ui-media-fit: cover; }

@@ -8,6 +8,7 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-accordion.css">
+	<link rel="stylesheet" href="../card/ui-card.css">
 	<link rel="stylesheet" href="../tabs/ui-tabs.css">
 	<link rel="stylesheet" href="../tabs/tabs-demo.css">
 	<link rel="stylesheet" href="../auto-morph/auto-morph.css">
@@ -676,24 +677,24 @@
 	<ui-accordion group="accordion-media" type="split" variant="divided" no-collapse>
 		<cq-box>
 			<details name="accordion-media" open>
-				<summary>Our Workspace<ui-icon type="plus-minus"></ui-icon></summary>
+				<summary>Far Horizons<ui-icon type="plus-minus"></ui-icon></summary>
 				<div>
-					<p>Our modern workspace is designed to inspire creativity and collaboration. With open floor plans, natural lighting, and dedicated quiet zones, we provide an environment where teams can do their best work.</p>
-					<img src="https://picsum.photos/seed/workspace/800/500" alt="Modern workspace" data-split>
+					<p>From temple steps to mountain ridges, the world rewards the curious. Pick a direction, pack light, and let the map fill itself in as you go — every destination started as a place someone hadn't been yet.</p>
+					<ui-media media="asr(4/3) obp(cc) rds(lg)" data-split><img src="/assets/images/world.png" alt="A world map criss-crossed with travel routes" loading="lazy"></ui-media>
 				</div>
 			</details>
 			<details name="accordion-media">
-				<summary>Meet the Team<ui-icon type="plus-minus"></ui-icon></summary>
+				<summary>Quiet Waters<ui-icon type="plus-minus"></ui-icon></summary>
 				<div>
-					<p>Our diverse team brings together experts from various fields. We believe that great products are built by great people, and we invest heavily in talent development and team culture.</p>
-					<img src="https://picsum.photos/seed/team/800/500" alt="Team photo" data-split>
+					<p>Some of the best stops aren't on any itinerary. A river running through green forest, the sound of moving water, and nowhere in particular to be — the kind of quiet you only find off the main road.</p>
+					<ui-media media="asr(4/3) obp(cc) rds(lg)" data-split><img src="/assets/images/river.png" alt="A river winding through dense green forest" loading="lazy"></ui-media>
 				</div>
 			</details>
 			<details name="accordion-media">
-				<summary>Product Demo<ui-icon type="plus-minus"></ui-icon></summary>
+				<summary>On the Open Road<ui-icon type="plus-minus"></ui-icon></summary>
 				<div>
-					<p>Watch our latest product demo to see the new features in action. This walkthrough covers the key improvements and how they can benefit your workflow.</p>
-					<video src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" controls data-split></video>
+					<p>The drive is half the trip. Empty lanes, a steady horizon, and a soundtrack that fits the miles — sometimes the point is simply to keep moving and see where the road leads.</p>
+					<ui-media media="asr(4/3) obp(cc) rds(lg)" data-split><video src="/assets/video/motorvej.mp4" poster="/assets/poster/motorvej.avif" controls muted loop playsinline></video></ui-media>
 				</div>
 			</details>
 		</cq-box>
@@ -706,31 +707,31 @@
 	<ui-accordion group="accordion-showcase" type="split" variant="hide-summary filled separate pill spl(3/2)" no-collapse>
 		<cq-box>
 			<details name="accordion-showcase" open>
-				<summary><ui-icon type="plus-minus"></ui-icon><span>Open roads</span></summary>
+				<summary><ui-icon type="plus-minus"></ui-icon><span>Spring thaw</span></summary>
 				<div>
-					<p><strong>Open roads.</strong> Plan a route that takes the long way round. Empty highways, roadside diners, and a soundtrack that fits the miles — the journey is the destination.</p>
-					<img src="https://loremflickr.com/800/500/highway,road?lock=11" alt="A highway winding into the distance" data-split>
+					<p><strong>Spring.</strong> The thaw arrives quietly — green returns to the riverbanks, blossom edges the water, and everything feels like a fresh start worth slowing down for.</p>
+					<ui-media media="asr(3/2) obp(cc) rds(lg)" data-split><img src="/assets/images/spring.jpg" alt="A green forest river edged with spring blossom" loading="lazy"></ui-media>
 				</div>
 			</details>
 			<details name="accordion-showcase">
-				<summary><ui-icon type="plus-minus"></ui-icon><span>City escapes</span></summary>
+				<summary><ui-icon type="plus-minus"></ui-icon><span>Long summer days</span></summary>
 				<div>
-					<p><strong>City escapes.</strong> Lose an afternoon in a neighbourhood you've never walked. Independent cafés, hidden courtyards, and street corners that reward looking up.</p>
-					<img src="https://loremflickr.com/800/500/city,street?lock=22" alt="A city street at dusk" data-split>
+					<p><strong>Summer.</strong> Long days that end at the shoreline. Warm sand underfoot, waves catching the last of the light, and sunsets worth staying out for.</p>
+					<ui-media media="asr(3/2) obp(cc) rds(lg)" data-split><img src="/assets/images/summer.jpg" alt="A beach at sunset with waves rolling onto the sand" loading="lazy"></ui-media>
 				</div>
 			</details>
 			<details name="accordion-showcase">
-				<summary><ui-icon type="plus-minus"></ui-icon><span>Coastal calm and quiet</span></summary>
+				<summary><ui-icon type="plus-minus"></ui-icon><span>Autumn colour</span></summary>
 				<div>
-					<p><strong>Coastal calm and quiet.</strong> Trade notifications for the sound of the surf. Long stretches of sand, slow mornings, and sunsets worth staying out for.</p>
-					<img src="https://loremflickr.com/800/500/beach,coast?lock=33" alt="Waves meeting a quiet shoreline" data-split>
+					<p><strong>Autumn.</strong> The colour turns all at once. A carpet of gold and amber leaves, crisp air, and the kind of light that makes an ordinary walk feel cinematic.</p>
+					<ui-media media="asr(3/2) obp(cc) rds(lg)" data-split><img src="/assets/images/autumn.jpg" alt="A carpet of golden autumn maple leaves" loading="lazy"></ui-media>
 				</div>
 			</details>
 			<details name="accordion-showcase">
-				<summary><ui-icon type="plus-minus"></ui-icon><span>Mountain trails</span></summary>
+				<summary><ui-icon type="plus-minus"></ui-icon><span>The depths of winter</span></summary>
 				<div>
-					<p><strong>Mountain trails.</strong> Higher ground, clearer air. Pack light, start early, and let the switchbacks do the talking on the way to the ridgeline.</p>
-					<img src="https://loremflickr.com/800/500/mountain,trail?lock=44" alt="A trail leading up a mountain ridge" data-split>
+					<p><strong>Winter.</strong> Everything slows and softens. Frost on the branches, a hush over the landscape, and the quiet beauty of a world drawn in white.</p>
+					<ui-media media="asr(3/2) obp(cc) rds(lg)" data-split><img src="/assets/images/winter.jpg" alt="Frost-covered branches against a pale winter sky" loading="lazy"></ui-media>
 				</div>
 			</details>
 		</cq-box>
@@ -1242,5 +1243,7 @@
 	</ui-accordion>
 
 
+	<!-- optional responsive-image upgrade (host-gated Cloudflare srcset) -->
+	<script type="module" src="/ui/card/ui-media.js"></script>
 </body>
 </html>

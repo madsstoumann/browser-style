@@ -8,6 +8,7 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-accordion.css">
+	<link rel="stylesheet" href="../card/ui-card.css">
 	<script type="module" src="index.js"></script>
 </head>
 <body>
@@ -124,17 +125,17 @@
 	<h2>With <code>type="split"</code> and <code>no-collapse</code></h2>
 	<p>At wider viewports, shows text in a left column with <code>data-split</code> content in a right panel.</p>
 	<ui-accordion group="wc-split" type="split" variant="divided" no-collapse>
-		<ui-accordion-item label="Our Workspace" open>
-			Our modern workspace is designed to inspire creativity and collaboration. With open floor plans, natural lighting, and dedicated quiet zones, we provide an environment where teams can do their best work.
-			<img src="https://picsum.photos/seed/workspace/800/500" alt="Modern workspace" data-split>
+		<ui-accordion-item label="Far Horizons" open>
+			From temple steps to mountain ridges, the world rewards the curious. Pick a direction, pack light, and let the map fill itself in as you go.
+			<ui-media media="asr(4/3) obp(cc) rds(lg)" data-split><img src="/assets/images/world.png" alt="A world map criss-crossed with travel routes" loading="lazy"></ui-media>
 		</ui-accordion-item>
-		<ui-accordion-item label="Meet the Team">
-			Our diverse team brings together experts from various fields. We believe that great products are built by great people.
-			<img src="https://picsum.photos/seed/team/800/500" alt="Team photo" data-split>
+		<ui-accordion-item label="Quiet Waters">
+			Some of the best stops aren't on any itinerary — a river running through green forest, and nowhere in particular to be.
+			<ui-media media="asr(4/3) obp(cc) rds(lg)" data-split><img src="/assets/images/river.png" alt="A river winding through dense green forest" loading="lazy"></ui-media>
 		</ui-accordion-item>
-		<ui-accordion-item label="Product Demo">
-			Watch our latest product demo to see the new features in action.
-			<video src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" controls data-split></video>
+		<ui-accordion-item label="On the Open Road">
+			The drive is half the trip. Empty lanes, a steady horizon, and a soundtrack that fits the miles.
+			<ui-media media="asr(4/3) obp(cc) rds(lg)" data-split><video src="/assets/video/motorvej.mp4" poster="/assets/poster/motorvej.avif" controls muted loop playsinline></video></ui-media>
 		</ui-accordion-item>
 	</ui-accordion>
 
@@ -204,5 +205,7 @@
 		buildAccordion(faq);
 	</script>
 
+	<!-- optional responsive-image upgrade (host-gated Cloudflare srcset) -->
+	<script type="module" src="/ui/card/ui-media.js"></script>
 </body>
 </html>

@@ -84,7 +84,7 @@
 		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
 				<ui-media>
-					<img src="assets/popovers.jpg" alt="">
+					<img src="/assets/images/popovers.png" alt="">
 					<small data-part="caption" style="position:absolute; inset-block-end:.5rem; inset-inline-start:.5rem; background:rgb(0 0 0/.55); color:#fff; padding:.2em .5em; border-radius:.3em;">caption (inside media)</small>
 				</ui-media>
 				<ui-content>
@@ -92,7 +92,7 @@
 					<h2 data-part="headline">Headline part</h2>
 					<p data-part="subheadline">Subheadline — a muted secondary line</p>
 					<p data-part="summary">Summary is the body copy of the card. It uses the body font-size ramp and a comfortable line-height for reading.</p>
-					<address data-part="byline"><img src="assets/janesmith.jpg" alt=""><span>Byline · <span data-part="meta">Jun 20, 2026 · 5 min</span></span></address>
+					<address data-part="byline"><img src="/assets/images/janesmith.png" alt=""><span>Byline · <span data-part="meta">Jun 20, 2026 · 5 min</span></span></address>
 					<ul data-part="tags"><li><a href="#">tags</a></li><li><a href="#">pill list</a></li></ul>
 					<nav data-part="actions"><a class="ui-button" href="#">Primary action</a></nav>
 					<footer data-part="footer">Footer — trailing meta</footer>
@@ -122,25 +122,25 @@
 	<div class="grid grid-4">
 		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
-				<ui-media><img src="assets/fittrackpro.jpg" alt=""></ui-media>
+				<ui-media><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
 				<ui-content><small data-part="eyebrow">default</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Unlimited workouts, coaching and priority support.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button" href="#">Choose</a></nav></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col thm(subtle)" media="asr(16/9)">
 			<cq-box>
-				<ui-media><img src="assets/fittrackpro.jpg" alt=""></ui-media>
+				<ui-media><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
 				<ui-content><small data-part="eyebrow">thm(subtle)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Off-white surface, default dark ink.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button" href="#">Choose</a></nav></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col thm(dark)" media="asr(16/9)">
 			<cq-box>
-				<ui-media><img src="assets/fittrackpro.jpg" alt=""></ui-media>
+				<ui-media><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
 				<ui-content><small data-part="eyebrow">thm(dark)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Dark surface, light ink, accent eyebrow.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button" href="#">Choose</a></nav></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col thm(brand)" media="asr(16/9)">
 			<cq-box>
-				<ui-media><img src="assets/fittrackpro.jpg" alt=""></ui-media>
+				<ui-media><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
 				<ui-content><small data-part="eyebrow">thm(brand)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Accent surface, white ink.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button" href="#">Choose</a></nav></ui-content>
 			</cq-box>
 		</ui-card>
@@ -172,13 +172,13 @@
 	<div class="stack">
 		<ui-card variant="row spl(1/2)" media="asr(1/1)">
 			<cq-box>
-				<ui-media><img src="assets/ergochair.jpg" alt=""></ui-media>
+				<ui-media><img src="/assets/images/ergochair.png" alt=""></ui-media>
 				<ui-content><small data-part="eyebrow">row spl(1/2)</small><h2 data-part="headline">ErgoChair Pro</h2><p data-part="subheadline">USD 349 · free shipping</p><p data-part="summary">Media takes one third, content two thirds. Adaptive lumbar support and a 12-year warranty.</p><nav data-part="actions"><a class="ui-button" href="#">Add to cart</a></nav></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="row-r spl(2/1)" media="asr(1/1)">
 			<cq-box>
-				<ui-media><img src="assets/janesmith.jpg" alt=""></ui-media>
+				<ui-media><img src="/assets/images/janesmith.png" alt=""></ui-media>
 				<ui-content><small data-part="eyebrow">row-r spl(2/1)</small><h2 data-part="headline">Jane Smith</h2><p data-part="subheadline">Chief Political Correspondent</p><p data-part="summary">Content first, media second (reversed), content twice as wide.</p><nav data-part="actions"><a class="ui-button" href="#">View profile</a></nav></ui-content>
 			</cq-box>
 		</ui-card>
@@ -190,9 +190,9 @@
 	<h2>Overlay content — <code>ovr()</code></h2>
 	<p class="note"><code>ovr(pos)</code> stacks the content <em>over</em> the media and places it with the 9-code grid. Overlaid text defaults to white (set <code>--ui-card-overlay-ink</code> for light images). Pair with <code>scm</code> for a scrim — see <a href="media.html">media.html</a>.</p>
 	<div class="grid grid-3">
-		<ui-card variant="ovr(tl)" media="asr(3/4) obp(cc) scm" content="scl(lg)"><cq-box><ui-media><img src="assets/mindfulness.jpg" alt=""></ui-media><ui-content><small data-part="eyebrow">ovr(tl)</small><strong data-part="headline">Top-left</strong></ui-content></cq-box></ui-card>
-		<ui-card variant="ovr(cc)" media="asr(3/4) obp(cc) scm" content="scl(lg)"><cq-box><ui-media><img src="assets/hubble.jpg" alt=""></ui-media><ui-content><small data-part="eyebrow">ovr(cc)</small><strong data-part="headline">Centre</strong></ui-content></cq-box></ui-card>
-		<ui-card variant="ovr(br)" media="asr(3/4) obp(cc) scm" content="scl(lg)"><cq-box><ui-media><img src="assets/brewandbean.jpg" alt=""></ui-media><ui-content><small data-part="eyebrow">ovr(br)</small><strong data-part="headline">Bottom-right</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(tl)" media="asr(3/4) obp(cc) scm" content="scl(lg)"><cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">ovr(tl)</small><strong data-part="headline">Top-left</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(cc)" media="asr(3/4) obp(cc) scm" content="scl(lg)"><cq-box><ui-media><img src="/assets/images/hubble.png" alt=""></ui-media><ui-content><small data-part="eyebrow">ovr(cc)</small><strong data-part="headline">Centre</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(br)" media="asr(3/4) obp(cc) scm" content="scl(lg)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""></ui-media><ui-content><small data-part="eyebrow">ovr(br)</small><strong data-part="headline">Bottom-right</strong></ui-content></cq-box></ui-card>
 	</div>
 
 	<!-- ============================================================
@@ -201,10 +201,10 @@
 	<h2>Squircle corners — <code>rds(&lt;size&gt;-sq)</code></h2>
 	<p class="note"><code>rds(sm-sq | md-sq | lg-sq | xl-sq)</code> switches the host to a superellipse <code>corner-shape</code> and a matching radius — the smooth "squircle" corner. (Chromium-only; degrades to a normal radius elsewhere.)</p>
 	<div class="grid grid-4">
-		<ui-card variant="col rds(sm-sq)" media="asr(4/3)"><cq-box><ui-media><img src="assets/gastronomy.jpg" alt=""></ui-media><ui-content><small data-part="eyebrow">rds(sm-sq)</small><h2 data-part="headline">Subtle</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col rds(md-sq)" media="asr(4/3)"><cq-box><ui-media><img src="assets/destinations.jpg" alt=""></ui-media><ui-content><small data-part="eyebrow">rds(md-sq)</small><h2 data-part="headline">Medium</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col rds(lg-sq)" media="asr(4/3)"><cq-box><ui-media><img src="assets/river.jpg" alt=""></ui-media><ui-content><small data-part="eyebrow">rds(lg-sq)</small><h2 data-part="headline">Large</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col rds(xl-sq)" media="asr(4/3)"><cq-box><ui-media><img src="assets/websummit.jpg" alt=""></ui-media><ui-content><small data-part="eyebrow">rds(xl-sq)</small><h2 data-part="headline">Extra</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col rds(sm-sq)" media="asr(4/3)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">rds(sm-sq)</small><h2 data-part="headline">Subtle</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col rds(md-sq)" media="asr(4/3)"><cq-box><ui-media><img src="/assets/images/destinations.png" alt=""></ui-media><ui-content><small data-part="eyebrow">rds(md-sq)</small><h2 data-part="headline">Medium</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col rds(lg-sq)" media="asr(4/3)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media><ui-content><small data-part="eyebrow">rds(lg-sq)</small><h2 data-part="headline">Large</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col rds(xl-sq)" media="asr(4/3)"><cq-box><ui-media><img src="/assets/images/websummit.png" alt=""></ui-media><ui-content><small data-part="eyebrow">rds(xl-sq)</small><h2 data-part="headline">Extra</h2></ui-content></cq-box></ui-card>
 	</div>
 
 	<!-- ============================================================
@@ -215,7 +215,7 @@
 	<div class="grid grid-2">
 		<ui-card variant="row spl(1/1)" media="asr(1/1)" content="scr" style="--ui-content-scroll-bs: 18rem;">
 			<cq-box>
-				<ui-media><img src="assets/quantum.jpg" alt=""></ui-media>
+				<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">scr</small>
 					<h2 data-part="headline">A long read</h2>

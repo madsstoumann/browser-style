@@ -6,7 +6,8 @@ A CSS-first **media primitive** — an image/video frame with overlay furniture 
 
 ## Features
 
-- Aspect ratio, object-position (9-grid), object-fit, and image flip — all from one `media=` string
+- Aspect ratio, object-position (9-grid), object-fit, image flip, and **standalone corners** (`rds()`) — all from one `media=` string
+- Optional, **host-gated Cloudflare `srcset`** upgrade for responsive images (root-relative paths, no hardcoded domain) — pure progressive enhancement
 - Hover effects (zoom / pan / cursor-track) — media-only
 - Scrim gradients in **9 directions** (4 edges + 4 diagonals + a centered double-stop)
 - Native carousel via `::scroll-marker` / `::scroll-button` (dots + arrows)
@@ -74,13 +75,18 @@ Import the module to register `<ui-media>`:
 import '@browser.style/media';
 ```
 
-The web component uses the **exact same** HTML as CSS-only. The JS only registers the element (and, when a `nav()` carousel or interactive `<ui-play>`/`track` hover is present, adds the optional progressive-enhancement wiring). The frame, overlays, scrim, and marker controls are all pure CSS.
+The web component uses the **exact same** HTML as CSS-only. The JS registers the element and, as **progressive enhancement**, upgrades its `<img>` children: it always sets `loading`/`decoding`/`sizes="auto"`, and on the deployed **browser.style** host it injects a responsive Cloudflare `srcset` (see *Responsive images* below). The frame, overlays, scrim, and marker controls are all pure CSS — with no JS the element still renders.
 
 #### Attributes
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `media` | token string | Configures the frame + overlays. Valid on `<ui-media>` **or any ancestor** (it inherits). See the DSL below. |
+| `cdn` | `on` \| `off` | Force-enable/disable the Cloudflare `srcset` upgrade regardless of host. Default: auto (on only for `*.browser.style`). |
+| `breakpoints` | CSV of widths | Override srcset widths. Default `240,320,480,720,1200`. |
+| `format` / `quality` / `fit` | string | Cloudflare transform params. Default `avif` / `80` / `cover`. |
+| `sizes` | string | The `sizes` value. Default `auto`. |
+| `eager` | boolean | First `<img>` loads `eager` + `fetchpriority="high"` (hero image). |
 
 There are no per-overlay positioning/theming attributes on the overlay elements themselves — everything is driven from the parent `media=` string. (The overlay elements do expose their own `theme=` / `size=` for self-service use; see *Overlay furniture*.)
 
@@ -100,6 +106,7 @@ Because custom properties inherit, **one rule set serves both placement cases**:
 | Token | Args | Controls | Writes |
 |-------|------|----------|--------|
 | `asr()` | `1/1` `6/7` `3/4` `4/3` `3/2` `2/3` `16/9` `21/9` (or any via `style`) | aspect-ratio | `--ui-media-ar` |
+| `rds()` | `sm md lg xl 2xl full pill` + `sm-sq md-sq lg-sq xl-sq` | corners (**standalone only**) | `--ui-media-radius` (+ `corner-shape`) |
 | `obp()` | `tl tc tr · cl cc cr · bl bc br` | object-position (9-grid) | `--ui-media-op` |
 | `obf()` | `cover` `contain` `fill` `none` | object-fit | `--ui-media-fit` |
 | `flp()` | `h` `v` `hv` | flip / mirror the image | `--ui-media-fl-x` / `-fl-y` |
@@ -116,6 +123,17 @@ asr(3/2)   asr(2/3)   asr(16/9)  asr(21/9)
 ```
 
 There were never any named keywords — ratios are always numeric. Any other ratio goes through the escape hatch: `style="--ui-media-ar: 5/4"`. Setting `asr()` also zeroes the frame's `min-block-size` so the ratio governs height.
+
+#### `rds()` — corners (standalone only)
+
+Inside `<ui-card>`/`<ui-reveal>` the **parent** rounds and clips the frame (via its own `variant="rds(…)"`), so you don't set corners on the media. A **standalone** `<ui-media>` can round its own corners with `rds()` — the same scale as the card:
+
+```
+rds(sm)  rds(md)  rds(lg)  rds(xl)  rds(2xl)  rds(full)  rds(pill)
+rds(sm-sq)  rds(md-sq)  rds(lg-sq)  rds(xl-sq)      ← squircle (superellipse corner-shape)
+```
+
+The plain steps map to the global `--radius-*` tokens; the `-sq` variants add a bespoke radius plus `corner-shape: superellipse()` (Chrome 135+, degrades to the rounded radius). Arbitrary corners via the escape hatch: `style="--ui-media-radius: 1rem"`.
 
 #### `obp()` — object-position 9-grid
 
@@ -465,6 +483,27 @@ No extra markup. The grid columns follow the inline axis, so all overlay positio
 
 The parse layer is purely additive, so adding responsive media tokens later is a non-breaking generation step.
 
+### Responsive images — Cloudflare `srcset` (optional JS)
+
+Loading the web component (`import '@browser.style/media'`) upgrades each `<img>` child as **progressive enhancement**:
+
+- **Always:** sets `loading="lazy"`, `decoding="async"`, and `sizes="auto"` if absent. (`sizes="auto"` needs `loading="lazy"`; the browser then picks the candidate from the image's real rendered width — Chrome 121+/Firefox, graceful elsewhere.) `eager` makes the first image load `eager` + `fetchpriority="high"` for a hero.
+- **On the deployed `*.browser.style` host only:** injects a [Cloudflare Image Resizing](https://developers.cloudflare.com/images/transform-images/) `srcset`, deriving each candidate's height from the element's `asr()` token:
+
+  ```
+  /cdn-cgi/image/format=avif,quality=80,fit=cover,width=480,height=270/assets/images/foo.png 480w, …
+  ```
+
+**Why host-gated + root-relative.** `/cdn-cgi/image/` only resolves on the Cloudflare zone (it 404s on localhost, and a failed `srcset` candidate does *not* fall back to `src`). So author images with **root-relative** paths (`/assets/images/foo.png`): they load straight from disk in dev (no `srcset`), and on production the same markup gains the transformed `srcset` — no hardcoded domain anywhere. Force the upgrade locally for previewing with `cdn="on"` (or `globalThis.uiMedia.cdn = true`).
+
+Config precedence is **attribute → `globalThis.uiMedia` → built-in default**:
+
+```js
+globalThis.uiMedia = { cdn: true, breakpoints: [240,320,480,720,1200], format: 'avif', quality: 80, fit: 'cover', sizes: 'auto' };
+```
+
+Skipped automatically: images that already have a `srcset`, `data:`/`blob:`/absolute-`http(s)` sources, and non-`<img>` children (`<video>`, `<picture>`, nested `<ui-media>`). No `srcset` token (`asr()` absent) → height is omitted so Cloudflare keeps the natural ratio.
+
 ---
 
 ## Accessibility
@@ -487,6 +526,8 @@ All modern browsers for the core frame, overlays, and scrim.
 | Custom elements | All modern browsers |
 | CSS Grid / logical properties (RTL) | All modern browsers |
 | `aspect-ratio` | Chrome 88+, Firefox 89+, Safari 15+ |
+| `sizes="auto"` (responsive `srcset`) | Chrome 121+, Firefox 101+; elsewhere falls back to the default `sizes` |
+| `corner-shape: superellipse` (`rds(*-sq)`) | Chrome 135+; degrades to the rounded radius |
 | Container queries (responsive host) | Chrome 105+, Firefox 110+, Safari 16+ |
 | `::scroll-marker` / `::scroll-button` (carousel controls) | Chromium-only; **degrades to a swipeable scroller** elsewhere |
 | `anchor()` positioning (carousel controls) | Chromium-only (same gate) |

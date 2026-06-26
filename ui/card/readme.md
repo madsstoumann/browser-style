@@ -167,6 +167,7 @@ Configures `<ui-media>`: aspect-ratio, fit/position, hover, scrim, carousel, and
 | `obp()` | `tl tc tr · cl cc cr · bl bc br` | object-position (9-grid) |
 | `flp()` | `h v hv` | mirror the image |
 | `hov()` | `zoom pan track` | hover effect (image-only) |
+| `rds()` | `sm md lg xl 2xl full pill` + `*-sq` | corners on a **standalone** `<ui-media>` (inside a card the card owns the radius) |
 | `scm` / `scm()` | *(bare)* · `tl … br` · `lgt med drk` | scrim — bare matches the host `ovr()`; a position picks a direction; an intensity sets darkness |
 | `nav` / `nav()` | *(bare)* · `dots arrows none` | carousel — the token **is** the trigger; bare = dots + arrows |
 | `chip()` `sticker()` `save()` `play()` | position `ts … be` **or** hue `red orange green blue accent dark light subtle` | place + theme an overlay element |
@@ -267,6 +268,8 @@ Add `md:` (container width ≥ 25rem) and/or `lg:` (≥ 44rem) prefixes to make 
 - `content=` spacing — `gap()` `pad()`
 
 `media=` tokens (`asr()`, `obp()`, `scm()`, …) and `content="scl()"` are **not** breakpoint-prefixed this round.
+
+**Responsive images.** Loading the media module (`import '@browser.style/card'`) makes `<ui-media>` upgrade its `<img>` children — `loading`/`decoding`/`sizes="auto"` always, plus a host-gated Cloudflare `srcset` on `*.browser.style` (heights from `asr()`). Author image `src`s **root-relative** (`/assets/images/foo.png`) so they load from disk in dev and gain the transformed `srcset` in production — no hardcoded domain. Force it locally with `cdn="on"`. Full detail in **[media.md](media.md)**.
 
 ```html
 <!-- stacked in a narrow grid cell; media beside content when the container is wide -->
