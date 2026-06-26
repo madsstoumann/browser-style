@@ -261,8 +261,8 @@ Use the CSS-only approach — no client JavaScript needed:
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `type` | string | Icon shape (see tables above). Space-separated for compound types |
-| `size` | string | Size preset: `xs`, `sm`, `md`, `lg`, `xl`, `xxl` |
-| `stroke` | string | Stroke weight: `xs`, `sm`, `md`, `lg`, `xl`, `xxl` |
+| `size` | string | Size preset: `xs`, `sm`, `md`, `lg`, `xl`, `2xl` |
+| `stroke` | string | Stroke weight: `xs`, `sm`, `md`, `lg`, `xl` |
 | `variant` | string | `border` draws a ring/badge around the glyph (e.g. a circled `+`) |
 | `rounded` | boolean | Rounded line caps on dot-based icons (kebab, grid, etc.) |
 | `state` | string | Explicit open animation: `flip`, `flip-x`, `flip-y` |

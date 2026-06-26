@@ -152,7 +152,7 @@
 		&[size=md] { --ui-icon-size: 80%; }
 		&[size=lg] { --ui-icon-size: 120%; }
 		&[size=xl] { --ui-icon-size: 140%; }
-		&[size=xxl] { --ui-icon-size: 200%; }
+		&[size="2xl"] { --ui-icon-size: 200%; }
 
 		/* Variant: rounded — rounds line caps on line-based icons */
 		&[variant~=rounded]:is([type*=arrow],[type=cross],[type*=menu],[type*=plus])::before,
