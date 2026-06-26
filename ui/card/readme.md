@@ -269,7 +269,7 @@ Add `md:` (container width ≥ 25rem) and/or `lg:` (≥ 44rem) prefixes to make 
 
 `media=` tokens (`asr()`, `obp()`, `scm()`, …) and `content="scl()"` are **not** breakpoint-prefixed this round.
 
-**Responsive images.** Loading the media module (`import '@browser.style/card'`) makes `<ui-media>` upgrade its `<img>` children — `loading`/`decoding`/`sizes="auto"` always, plus a host-gated Cloudflare `srcset` on `*.browser.style` (heights from `asr()`). Author image `src`s **root-relative** (`/assets/images/foo.png`) so they load from disk in dev and gain the transformed `srcset` in production — no hardcoded domain. Force it locally with `cdn="on"`. Full detail in **[media.md](media.md)**.
+**Optional JS — two independent modules.** `import '@browser.style/card/ui-media-srcset.js'` upgrades each `<ui-media>` `<img>` — `loading`/`decoding`/`sizes="auto"` always, plus a host-gated Cloudflare `srcset` on `*.browser.style` (heights from `asr()`). Author `src`s **root-relative** (`/assets/images/foo.png`) so they load from disk in dev and gain the transformed `srcset` in production — no hardcoded domain. Force it locally with `cdn="on"`. (Transitional — drop it once srcset is server-side rendered.) Separately, `import '@browser.style/card/ui-media.js'` wires the cursor-tracked `hov(track)`/`hov(drift)` effects (delegated; idle until a frame is hovered). Full detail in **[media.md](media.md)**.
 
 ```html
 <!-- stacked in a narrow grid cell; media beside content when the container is wide -->

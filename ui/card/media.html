@@ -401,25 +401,9 @@
 	</div>
 	<p class="note">Inspect the <code>&lt;img&gt;</code> in DevTools: each shows a <code>srcset</code> of <code>/cdn-cgi/image/format=avif,quality=80,fit=cover,width=…,height=…/assets/images/… NNNw</code> candidates (they 404 locally — that's expected; the URL strings are what matter). Remove <code>cdn="on"</code> and they stay as plain local images.</p>
 
-	<!-- optional responsive-image upgrade (host-gated Cloudflare srcset) -->
+	<!-- optional responsive-image upgrade (host-gated Cloudflare srcset; transitional until SSR) -->
+	<script type="module" src="ui-media-srcset.js"></script>
+	<!-- cursor-tracked hover for hov(track)/hov(drift) — delegated, idle until hovered -->
 	<script type="module" src="ui-media.js"></script>
-
-	<!-- cursor-tracked hover needs a tiny pointer handler -->
-	<script type="module">
-		// hov(track) / hov(drift): the only media effects that need JS — map the pointer
-		// to --ui-media-mx / --ui-media-my (-1..1), which the CSS reads to translate the image.
-		for (const card of document.querySelectorAll('[media*="hov(track)"], [media*="hov(drift)"]')) {
-			const media = card.querySelector('ui-media') || card;
-			media.addEventListener('pointermove', (e) => {
-				const r = media.getBoundingClientRect();
-				media.style.setProperty('--ui-media-mx', ((e.clientX - r.left) / r.width * 2 - 1).toFixed(3));
-				media.style.setProperty('--ui-media-my', ((e.clientY - r.top) / r.height * 2 - 1).toFixed(3));
-			});
-			media.addEventListener('pointerleave', () => {
-				media.style.removeProperty('--ui-media-mx');
-				media.style.removeProperty('--ui-media-my');
-			});
-		}
-	</script>
 </body>
 </html>

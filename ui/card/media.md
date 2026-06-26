@@ -67,15 +67,19 @@ Or via CSS `@import`:
 </ui-media>
 ```
 
-### Web Component
+### Optional JavaScript — two independent modules
 
-Import the module to register `<ui-media>`:
+The frame, overlays, scrim, and marker controls are **all pure CSS** — `<ui-media>` needs no JS. Two small, independent modules add optional progressive enhancement; load only what a page uses:
 
 ```js
-import '@browser.style/media';
+import '@browser.style/card/ui-media.js';          // cursor-tracked hover: hov(track) / hov(drift)
+import '@browser.style/card/ui-media-srcset.js';   // responsive Cloudflare srcset (transitional, see below)
 ```
 
-The web component uses the **exact same** HTML as CSS-only. The JS registers the element and, as **progressive enhancement**, upgrades its `<img>` children: it always sets `loading`/`decoding`/`sizes="auto"`, and on the deployed **browser.style** host it injects a responsive Cloudflare `srcset` (see *Responsive images* below). The frame, overlays, scrim, and marker controls are all pure CSS — with no JS the element still renders.
+- **`ui-media.js`** — wires the two cursor-tracked hover effects (`hov(track)`, `hov(drift)`). It uses **event delegation**: one idle set of listeners that never iterates or mounts `<ui-media>` — nothing runs until a pointer enters a `track`/`drift` frame. Load it only on pages that use those tokens.
+- **`ui-media-srcset.js`** — registers the `<ui-media>` element and upgrades its `<img>` children (`loading`/`decoding`/`sizes="auto"` + host-gated Cloudflare `srcset`; see *Responsive images*). **Transitional:** once the srcset is server-side rendered, stop loading it.
+
+Both use the **exact same** HTML as CSS-only; with no JS the element still renders.
 
 #### Attributes
 
@@ -149,10 +153,10 @@ The plain steps map to the global `--radius-*` tokens; the `-sq` variants add a 
 |-------|--------|
 | `zoom` | scales the image up on hover |
 | `pan` | scales + translates the image |
-| `track` | cursor-tracked pan — reads `--ui-media-mx` / `--ui-media-my` (−1…1), set by a pointer-move handler (JS, added later; **inert until then**). Image follows the cursor |
-| `drift` | cursor-**counter** parallax (ioi.dk-style) — oversized image (rest scale `1.3`) shrinks toward `1.2` on hover and drifts **opposite** the cursor. Same `--ui-media-mx` / `--ui-media-my` handler as `track` |
+| `track` | cursor-tracked pan — reads `--ui-media-mx` / `--ui-media-my` (−1…1), set by the pointer handler in **`ui-media.js`** (load it; **inert without it**). Image follows the cursor |
+| `drift` | cursor-**counter** parallax (ioi.dk-style) — oversized image (rest scale `1.3`) shrinks toward `1.2` on hover and drifts **opposite** the cursor. Same `--ui-media-mx` / `--ui-media-my` handler in `ui-media.js` |
 
-All hover effects are guarded by `@media (hover: hover)` and disabled under `prefers-reduced-motion: reduce`.
+`track` and `drift` are the **only** hover effects that need JS — load `ui-media.js` (delegated; activates only when a `track`/`drift` frame is hovered). `zoom` and `pan` are pure CSS. All hover effects are guarded by `@media (hover: hover)` and disabled under `prefers-reduced-motion: reduce` (the JS handler skips updates under reduced-motion too). The token can sit on the host `<ui-card>`/`<ui-reveal>` or on a standalone `<ui-media>`.
 
 > **Removed:** the old card-level hovers `hv(lift)` / `hv(shrink)` / `hv(tilt)` are **gone** in v4 — hover is now media-only.
 
@@ -485,7 +489,7 @@ The parse layer is purely additive, so adding responsive media tokens later is a
 
 ### Responsive images — Cloudflare `srcset` (optional JS)
 
-Loading the web component (`import '@browser.style/media'`) upgrades each `<img>` child as **progressive enhancement**:
+Loading the srcset module (`import '@browser.style/card/ui-media-srcset.js'`) upgrades each `<img>` child as **progressive enhancement** (this is the transitional, SSR-replaceable module — separate from `ui-media.js`, which only does cursor hover):
 
 - **Always:** sets `loading="lazy"`, `decoding="async"`, and `sizes="auto"` if absent. (`sizes="auto"` needs `loading="lazy"`; the browser then picks the candidate from the image's real rendered width — Chrome 121+/Firefox, graceful elsewhere.) `eager` makes the first image load `eager` + `fetchpriority="high"` for a hero.
 - **On the deployed `*.browser.style` host only:** injects a [Cloudflare Image Resizing](https://developers.cloudflare.com/images/transform-images/) `srcset`, deriving each candidate's height from the element's `asr()` token:

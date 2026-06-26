@@ -7,6 +7,7 @@
 	<meta name="description" content="CSS-only icon component with animated state transitions, built with pseudo-elements and CSS transforms.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/ui/accordion/ui-accordion.css">
 	<link rel="stylesheet" href="index.css">
 	<style>
 		/* Demo-page only */
@@ -18,21 +19,6 @@
 		}
 		.icon-grid button[data-variant="icon"] {
 			min-width: 2.5em;
-		}
-		.state-demo {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 2ch;
-		}
-		.state-demo details,
-		.state-demo details > div { padding-block: .5ch; }
-		.state-demo summary {
-			align-items: center;
-			cursor: pointer;
-			display: flex;
-			gap: 1ch;
-			list-style: none;
-			&::-webkit-details-marker { display: none; }
 		}
 	</style>
 </head>
@@ -119,44 +105,46 @@
 	<!-- State transitions -->
 	<h3 id="state">State transitions: <code>[open]</code></h3>
 	<p>Icons animate when a parent <code>&lt;details&gt;</code> element is opened. Click to toggle.</p>
-	<div class="state-demo">
-		<details>
-			<summary>plus-minus <ui-icon type="plus-minus"></ui-icon></summary>
-			<div></div>
-		</details>
-		<details>
-			<summary>plus-cross <ui-icon type="plus-cross"></ui-icon></summary>
-			<div></div>
-		</details>
-		<details>
-			<summary>chevron down <ui-icon type="chevron down"></ui-icon></summary>
-			<div></div>
-		</details>
-		<details>
-			<summary>chevron right <ui-icon type="chevron right"></ui-icon></summary>
-			<div></div>
-		</details>
-		<details>
-			<summary>burger-menu <ui-icon type="burger-menu"></ui-icon></summary>
-			<div></div>
-		</details>
-		<details>
-			<summary>veggie-menu <ui-icon type="veggie-menu"></ui-icon></summary>
-			<div></div>
-		</details>
-		<details>
-			<summary>kebab <ui-icon type="kebab"></ui-icon></summary>
-			<div></div>
-		</details>
-		<details>
-			<summary>meatball <ui-icon type="meatball"></ui-icon></summary>
-			<div></div>
-		</details>
-		<details>
-			<summary>grid <ui-icon type="grid"></ui-icon></summary>
-			<div></div>
-		</details>
-	</div>
+	<ui-accordion variant="divided">
+		<cq-box>
+			<details>
+				<summary>plus-minus<ui-icon type="plus-minus"></ui-icon></summary>
+				<div>Plus collapses to a minus.</div>
+			</details>
+			<details>
+				<summary>plus-cross<ui-icon type="plus-cross"></ui-icon></summary>
+				<div>Plus rotates into a cross.</div>
+			</details>
+			<details>
+				<summary>chevron down<ui-icon type="chevron down"></ui-icon></summary>
+				<div>Chevron flips to point up.</div>
+			</details>
+			<details>
+				<summary>chevron right<ui-icon type="chevron right"></ui-icon></summary>
+				<div>Chevron rotates to point down.</div>
+			</details>
+			<details>
+				<summary>burger-menu<ui-icon type="burger-menu"></ui-icon></summary>
+				<div>Bars morph into a cross.</div>
+			</details>
+			<details>
+				<summary>veggie-menu<ui-icon type="veggie-menu"></ui-icon></summary>
+				<div>Bars morph into a cross.</div>
+			</details>
+			<details>
+				<summary>kebab<ui-icon type="kebab"></ui-icon></summary>
+				<div>Dots morph into a cross.</div>
+			</details>
+			<details>
+				<summary>meatball<ui-icon type="meatball"></ui-icon></summary>
+				<div>Dots morph into a cross.</div>
+			</details>
+			<details>
+				<summary>grid<ui-icon type="grid"></ui-icon></summary>
+				<div>Grid morphs into a cross.</div>
+			</details>
+		</cq-box>
+	</ui-accordion>
 
 	<!-- Size -->
 	<h3>Size</h3>
@@ -181,6 +169,25 @@
 		<button type="button" data-variant="icon"><ui-icon type="chevron right" stroke="md"></ui-icon></button>
 		<button type="button" data-variant="icon"><ui-icon type="chevron right" stroke="lg"></ui-icon></button>
 		<button type="button" data-variant="icon"><ui-icon type="chevron right" stroke="xl"></ui-icon></button>
+	</div>
+
+	<!-- Variant: border -->
+	<h3>Variant: <code>border</code></h3>
+	<p>Wraps each glyph in a ring/badge. Shape follows <code>--ui-icon-border-radius</code> (a circle by default).</p>
+	<div class="icon-grid" style="align-items: center;">
+		<ui-icon type="plus" variant="border"></ui-icon>
+		<ui-icon type="minus" variant="border"></ui-icon>
+		<ui-icon type="cross" variant="border"></ui-icon>
+		<ui-icon type="check" variant="border"></ui-icon>
+		<ui-icon type="chevron left" variant="border"></ui-icon>
+		<ui-icon type="chevron right" variant="border"></ui-icon>
+		<ui-icon type="arrow left" variant="border"></ui-icon>
+		<ui-icon type="arrow right" variant="border"></ui-icon>
+		<ui-icon type="burger-menu" variant="border"></ui-icon>
+		<ui-icon type="kebab" variant="border"></ui-icon>
+		<ui-icon type="play" variant="border"></ui-icon>
+		<ui-icon type="pause" variant="border"></ui-icon>
+		<ui-icon type="stop" variant="border"></ui-icon>
 	</div>
 
 	<!-- Opposite color-scheme -->

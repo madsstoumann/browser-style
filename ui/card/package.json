@@ -14,12 +14,14 @@
     "./index.css": "./index.css",
     "./ui-card.css": "./ui-card.css",
     "./ui-media.js": "./ui-media.js",
+    "./ui-media-srcset.js": "./ui-media-srcset.js",
     "./srcset.js": "./srcset.js"
   },
   "files": [
     "index.css",
     "ui-card.css",
     "ui-media.js",
+    "ui-media-srcset.js",
     "srcset.js"
   ],
   "publishConfig": {
