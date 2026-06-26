@@ -306,6 +306,30 @@ Wraps the glyph in a ring — circular by default — for a badge look (e.g. a c
 
 The ring uses `box-sizing: content-box`, so padding/border grow the box outward and leave the `1em` glyph intact.
 
+The solid `clip-path` icons (`play`, `pause`, `stop`, `triangle`, `play-pause`) can look cramped inside the ring. Shrink only the glyph — not the ring — with `--ui-icon-glyph-size`:
+
+```html
+<ui-icon type="play" variant="border" style="--ui-icon-glyph-size: .8em"></ui-icon>
+```
+
+It resizes the glyph's box rather than scaling it with a transform, so the shape stays crisp at any value (a `scale` would rasterize then resample and blur).
+
+### Direction (RTL)
+
+The glyph is built in a fixed `direction: ltr` coordinate space, so every icon renders identically regardless of the document's `dir` — nothing shifts or detaches in RTL.
+
+Horizontally-directional icons mirror automatically under `[dir="rtl"]` so they follow the reading direction:
+
+- `arrow left` ↔ `arrow right` and `chevron left` ↔ `chevron right` flip.
+- `arrow up`/`down`, symbols, menus, dots, and transport controls (`play`, `pause`, `stop`) are **not** flipped.
+- The skip controls (`chevron left first` / `chevron right last`) keep their authored orientation.
+- An open `chevron right` still animates downwards in RTL (the mirror is compensated).
+
+```html
+<html dir="rtl">
+  <ui-icon type="chevron right"></ui-icon>  <!-- visually points left in RTL -->
+```
+
 ### All component tokens
 
 | Token | Default | Description |
@@ -313,6 +337,7 @@ The ring uses `box-sizing: content-box`, so padding/border grow the box outward 
 | `--ui-icon-bg` | `transparent` | Background color |
 | `--ui-icon-border-color` | `currentColor` | Ring color (`variant="border"`) |
 | `--ui-icon-border-width` | icon stroke (`--ui-icon-stroke`) | Ring width (`variant="border"`); override to change |
+| `--ui-icon-glyph-size` | `1em` | Inner glyph box size for the solid `clip-path` icons (`play`, `pause`, `stop`, `triangle`, `play-pause`). Shrink (e.g. `.8em`) to give the glyph breathing room inside `variant="border"` without resizing the ring |
 | `--ui-icon-duration` | `var(--duration-slow, .3s)` | Transition duration |
 | `--ui-icon-easing` | `var(--ease-default, cubic-bezier(0.4, 0, 0.2, 1))` | Transition easing |
 | `--ui-icon-padding` | `0.3em` (under `variant="border"`) | Ring inner padding |
