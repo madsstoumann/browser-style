@@ -272,6 +272,7 @@ The `nav()` token **is the trigger** — there is no separate `crs` flag. Any `n
 | `nav(dots)` | dots only |
 | `nav(arrows)` | arrows only |
 | `nav(none)` | swipe-only (no controls) |
+| `nav(below)` | dots **+** arrows in a reserved bottom **band** (not overlaid) |
 
 ```html
 <ui-media media="nav asr(16/9)">
@@ -284,6 +285,57 @@ The `nav()` token **is the trigger** — there is no separate `crs` flag. Any `n
 Controls use native `::scroll-marker` (dots) and `::scroll-button(left|right)` (arrows), `@supports`-gated and anchor-positioned to each scroller — they **degrade to a bare swipeable scroller** where unsupported. Smooth scroll is enabled under `prefers-reduced-motion: no-preference`.
 
 The full dot/arrow token surface is token-driven (see *Tokens* — `--ui-media-dot-*`, `--ui-media-arrow-*`, and `--ui-media-overlay-gap` which drives the control inset). Arrows ship with **built-in chevron glyphs** (white default + a `*-dark` set for light circles); colour the circle with `--ui-media-arrow-bg`, or override `--ui-media-arrow-prev/-next` with your own `url()` to fully customise.
+
+All carousel CSS lives in **`media.carousel.css`** (imported by `ui-card.css` alongside `media.css`).
+
+### Arrow style & placement — `arw()`
+
+| Token | Effect |
+|-------|--------|
+| `arw(chevron)` *(default)* | chevron glyph (shape) |
+| `arw(arrow)` | full-arrow glyph, shaft + head (shape) |
+| `arw(light)` *(default)* · `arw(dark)` | glyph ink — light/white (for a dark circle) / dark (for a light circle) |
+| `arw(sm)` · `arw(md)` *(default)* · `arw(lg)` · `arw(xl)` | arrow button size (`1.75` / `2.25` / `2.75` / `3.25rem`) |
+| `arw(mid)` *(default)* | edge arrows at vertical center |
+| `arw(top)` | edge arrows at top |
+| `arw(bot)` | edge arrows at bottom |
+| `arw(set)` | both arrows as an adjacent pair at the inline-end |
+| `arw(bare)` | drop the circle — render the glyph itself as a coloured arrow (any colour) |
+| `arw(hide)` | **auto-hide** the dead-end arrow (no slide that way) — opt out of the always-visible default |
+
+`arw()` atoms are **independent** — combine them as separate tokens, e.g. `arw(arrow) arw(dark) arw(lg)` or `arw(set) arw(bot)`, **not** `arw(arrow dark)`. Shape (`arw(arrow)`) and ink (`arw(dark)`) are separate axes and compose. A direct `style="--ui-media-arrow-prev/-next: …"` still overrides as an escape hatch.
+
+#### Theming arrows
+
+Two render modes, both token-driven — no named theme atoms needed:
+
+- **Circle** *(default)* — a frosted-glass button: translucent `--ui-media-arrow-bg`, a `--ui-media-arrow-blur` backdrop-blur, and a `--ui-media-arrow-ring` (1px light ring + soft shadow) so it reads on light *and* dark photos. Colour the circle with `--ui-media-arrow-bg` / `--ui-media-arrow-bg-hover`; for a light circle switch the glyph to dark with `arw(dark)` (composes with `arw(arrow)`). Square it with `--ui-media-arrow-radius`; drop the frost/ring with `--ui-media-arrow-blur: 0` / `--ui-media-arrow-ring: none`.
+- **Bare** (`arw(bare)`) — no circle; the glyph *is* the colour, set with `--ui-media-arrow-color` (and `--ui-media-arrow-color-hover`). Default ink is **white** over an image and **auto-flips dark** under `nav(below)` (light band). Set any colour:
+
+```html
+<!-- black bare arrows -->
+<ui-media media="nav(arrows) arw(bare)" style="--ui-media-arrow-color: #000">…</ui-media>
+<!-- accent bare arrows -->
+<ui-media media="nav(arrows) arw(bare)" style="--ui-media-arrow-color: var(--color-accent)">…</ui-media>
+```
+
+A subtle `--ui-media-arrow-shadow` drop-shadow keeps a white bare glyph legible over bright photos; set it to `none` to remove it. Bare composes with `arw(arrow)` (masked full-arrow) and every placement/`set` atom.
+
+**By default every arrow stays visible** — at the first/last slide the dead-end arrow dims to `--ui-media-arrow-disabled-opacity` (default `0.5`) instead of disappearing. Add `arw(hide)` to auto-hide it instead. (Implementation note: a `:disabled` `::scroll-button` can't carry a mask, so a bare dead-end arrow paints the glyph SVG directly — white over an image, dark under `nav(below)` — tracking the glyph's light/dark shade rather than an arbitrary `--ui-media-arrow-color`.)
+
+### Pill dots with autoplay fill — `dot()`
+
+| Token | Effect |
+|-------|--------|
+| `dot(circle)` *(default)* | round dots |
+| `dot(pill)` | rounded-rect pills; the **active** pill fills left→right over `--ui-media-autoplay` (default `5s`) as a timer hint |
+| `dot(sm)` · `dot(md)` *(default)* · `dot(lg)` · `dot(xl)` | dot / pill size (composes with `dot(pill)`) |
+
+The fill restarts whenever the active slide changes (`:target-current`) and **holds full** when no JS advances the slide — JS-driven autoplay lands later; the indicator is wired now. Under `prefers-reduced-motion: reduce` the active pill shows filled with no animation. Theme with `--ui-media-pill-track` / `--ui-media-pill-fill` / `--ui-media-pill-width` / `--ui-media-pill-height`.
+
+### Controls below the media — `nav(below)`
+
+`nav(below)` shows **both** controls in a reserved, non-scrolling **bottom band** beneath the frame (B2: the band is block-end padding on the flex scroller, so the absolute controls re-anchor into it without overlaying the image). Default layout: dots centered, arrows at the band's left/right ends. Combine with `arw(set)` to pin the dots to the start and pair the arrows at the end, or `dot(pill)` for a timer bar across the band. Size the band with `--ui-media-band` (default `2.75rem`); colour it with `--ui-media-controls-bg`. The `arw(top)/arw(bot)` placement atoms are for the **overlay** variant — `nav(below)` owns its own vertical placement.
 
 ---
 
@@ -351,6 +403,11 @@ Every token lives in the `--ui-media-*` namespace and inherits down from whereve
 | `--ui-media-dot-size` | `0.6rem` | dot diameter |
 | `--ui-media-dots-gap` | `0.5rem` | gap between dots |
 | `--ui-media-dot-border` | `0` | dot border |
+| `--ui-media-pill-width` | `1.5rem` | `dot(pill)` width |
+| `--ui-media-pill-height` | `0.35rem` | `dot(pill)` height |
+| `--ui-media-pill-track` | `rgb(255 255 255 / 0.35)` | `dot(pill)` inactive/track color |
+| `--ui-media-pill-fill` | `#fff` | `dot(pill)` active fill color |
+| `--ui-media-autoplay` | `5s` | `dot(pill)` timer-fill duration (future JS autoplay cadence) |
 
 ### Carousel — arrows
 
@@ -361,11 +418,24 @@ Every token lives in the `--ui-media-*` namespace and inherits down from whereve
 | `--ui-media-arrow-size` | `2.25rem` | arrow button size |
 | `--ui-media-arrow-radius` | `var(--radius-circle, 50%)` | arrow corner radius (square it off for rounded-rect) |
 | `--ui-media-arrow-border` | `0` | arrow border |
-| `--ui-media-arrow-glyph-size` | `45%` | chevron glyph size |
+| `--ui-media-arrow-glyph-size` | `45%` (circle) / `80%` (bare) | glyph size |
+| `--ui-media-arrow-blur` | `4px` | circle backdrop-blur (frosted glass); legibility over busy photos |
+| `--ui-media-arrow-ring` | `0 0 0 1px rgb(255 255 255 / 0.4), 0 2px 6px rgb(0 0 0 / 0.35)` | circle ring + drop-shadow so it reads on any background (`none` to drop) |
+| `--ui-media-arrow-color` | `#fff` (dark under `nav(below)`) | `arw(bare)` glyph ink |
+| `--ui-media-arrow-color-hover` | `var(--ui-media-arrow-color)` | `arw(bare)` glyph ink on hover |
+| `--ui-media-arrow-shadow` | `drop-shadow(0 1px 2px rgb(0 0 0 / 0.5))` | `arw(bare)` legibility shadow (`none` to drop) |
+| `--ui-media-arrow-disabled-opacity` | `0.5` (`0` with `arw(hide)`) | opacity of a dead-end arrow (no slide that way) |
+| `--ui-media-arrow-{prev,next}-dim` | the live glyph (dark under `nav(below)`) | dead-end bare glyph SVG (`:disabled` can't mask, so it's painted directly) |
 | `--ui-media-arrow-prev` | `var(--ui-media-arrow-prev-light)` | previous-arrow glyph (`url(...)`) |
 | `--ui-media-arrow-next` | `var(--ui-media-arrow-next-light)` | next-arrow glyph (`url(...)`) |
-| `--ui-media-arrow-prev-light` / `-next-light` | white chevron SVG | built-in glyphs for the dark default circle |
-| `--ui-media-arrow-prev-dark` / `-next-dark` | black chevron SVG | built-in glyphs for a light circle — switch via `--ui-media-arrow-prev/-next: var(--ui-media-arrow-*-dark)` |
+| `--ui-media-arrow-prev-light` / `-next-light` | white chevron SVG | built-in chevron glyphs for the dark default circle |
+| `--ui-media-arrow-prev-dark` / `-next-dark` | black chevron SVG | built-in chevron glyphs for a light circle — switch via `--ui-media-arrow-prev/-next: var(--ui-media-arrow-*-dark)` |
+| `--ui-media-arrow-prev-arrow-light` / `-next-arrow-light` | white full-arrow SVG | built-in full-arrow glyphs (used by `arw(arrow)`) |
+| `--ui-media-arrow-prev-arrow-dark` / `-next-arrow-dark` | black full-arrow SVG | full-arrow glyphs for a light circle |
+| `--ui-media-arrow-top` | `calc(anchor(center) − size/2)` | vertical-placement hook (set by `arw(top)`/`arw(bot)`/`nav(below)`) |
+| `--ui-media-arrow-gap` | `0.5rem` | spacing between the two arrows in an `arw(set)` pair |
+| `--ui-media-band` | `2.75rem` | `nav(below)` bottom-band height |
+| `--ui-media-controls-bg` | `var(--ui-media-bg)` | `nav(below)` band background |
 
 The arrow is a **circular button**: a themeable circle (`--ui-media-arrow-bg`) + a chevron image. The chevron is **white by default** (for the dark circle); for a light circle, point `--ui-media-arrow-prev/-next` at the built-in `*-dark` glyphs — no SVG pasting. Square off the circle with `--ui-media-arrow-radius`.
 

@@ -1,0 +1,307 @@
+/**
+ * ui-media — carousel
+ * @version 4.0.0
+ * @author Mads Stoumann
+ *
+ * CSS-only carousel for <ui-media>: a flex scroll-snap row with ::scroll-marker
+ * dots and ::scroll-button arrows (Chromium-only, gated by @supports). Driven by
+ * the `media=` token string on <ui-media> OR any ancestor (props inherit down).
+ *
+ * Token families (all disjoint, substring-matched):
+ *   nav · nav(dots) · nav(arrows) · nav(none) · nav(below)   — which controls + below-band layout
+ *   arw(chevron|arrow)                                        — arrow glyph style
+ *   arw(mid|top|bot)                                          — arrow vertical placement (overlay)
+ *   arw(set)                                                  — both arrows as an adjacent pair
+ *   dot(circle|pill)                                          — dot shape; pill shows an autoplay-timer fill
+ */
+@layer bs-component {
+
+	/* ============================================================
+	   CAROUSEL — nav(). The token IS the trigger (flex scroll-snap row).
+	   ============================================================ */
+	:where([media*="nav"]) ui-media,
+	ui-media:where([media*="nav"]) {
+		display: flex;
+		/* snap the scroller to a whole pixel: a fractional width makes the browser
+		   round scrollWidth up + clientWidth down, inventing ~1px of phantom scroll
+		   the dead-end (right) ::scroll-button can never reach — so it never goes
+		   :disabled. Integer width makes the last slide exactly reachable.
+		   round() is ignored where unsupported (which also lacks ::scroll-button). */
+		inline-size: round(down, 100%, 1px);
+		overflow-x: auto;
+		overscroll-behavior-x: contain;
+		scroll-snap-type: x mandatory;
+		scrollbar-width: thin;
+	}
+	:where([media*="nav"]) ui-media > :is(img, video),
+	ui-media:where([media*="nav"]) > :is(img, video) {
+		block-size: 100%;
+		flex: 0 0 100%;
+		inline-size: 100%;
+		inset: auto;
+		position: static;
+		scroll-snap-align: start;
+	}
+	@media (prefers-reduced-motion: no-preference) {
+		:where([media*="nav"]) ui-media,
+		ui-media:where([media*="nav"]) { scroll-behavior: smooth; }
+	}
+
+	/* nav(below) — reserve a non-scrolling bottom band for the controls (B2: the
+	   band is block-end padding on the flex scroller; images keep block-size:100%
+	   so they stay above it, and the absolute controls re-anchor into the band). */
+	:where([media*="nav(below)"]) ui-media,
+	ui-media:where([media*="nav(below)"]) {
+		background: var(--ui-media-controls-bg, var(--ui-media-bg, transparent));
+		padding-block-end: var(--ui-media-band, 2.75rem);
+	}
+
+	/* controls — CSS-only dots + arrows (Chromium-only). Bare nav = both;
+	   nav(dots) / nav(arrows) / nav(none) pick the controls; nav(below) = both,
+	   moved into the reserved bottom band. */
+	@supports (scroll-marker-group: after) {
+		/* Each control rule matches the scroller ui-media in BOTH holders: nested
+		   under a media= ancestor (<ui-card>), or standalone (media= on <ui-media>
+		   itself). The descendant form + the `ui-media:where(...)` self form.
+		   "DOTS present"  = bare nav · nav(dots) · nav(below)
+		   "ARROWS present" = bare nav · nav(arrows) · nav(below) */
+
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(arrows)"], [media*="nav(below)"]) ui-media,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(arrows)"], [media*="nav(below)"]) { scrollbar-width: none; }
+
+		/* ---- dots — bare nav · nav(dots) · nav(below) ---- */
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) ui-media,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) { scroll-marker-group: after; }
+
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"])::scroll-marker-group {
+			display: flex;
+			gap: var(--ui-media-dot-gap, 0.5rem);
+			justify-self: anchor-center;
+			position: absolute;
+			position-anchor: auto;
+			top: calc(anchor(bottom) - var(--ui-media-overlay-gap, 0.75rem) - var(--ui-media-dot-size, 0.6rem));
+			z-index: 3;
+		}
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) ui-media > :is(img, video)::scroll-marker,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) > :is(img, video)::scroll-marker {
+			background: var(--ui-media-dot-bg, rgb(255 255 255 / 0.5));
+			block-size: var(--ui-media-dot-size, 0.6rem);
+			border: var(--ui-media-dot-border, 0);
+			border-radius: var(--radius-circle, 50%);
+			content: "";
+			cursor: pointer;
+			inline-size: var(--ui-media-dot-size, 0.6rem);
+		}
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) ui-media > :is(img, video)::scroll-marker:target-current,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) > :is(img, video)::scroll-marker:target-current {
+			background: var(--ui-media-dot-active, #fff);
+		}
+
+		/* ---- dot(pill) — rounded-rect markers; the active pill fills L→R over the
+		   autoplay duration as a timer hint (JS autoplay advances later). ---- */
+		:where([media*="dot(pill)"]) ui-media > :is(img, video)::scroll-marker,
+		ui-media:where([media*="dot(pill)"]) > :is(img, video)::scroll-marker {
+			background: var(--ui-media-pill-track, rgb(255 255 255 / 0.35));
+			block-size: var(--ui-media-pill-height, 0.35rem);
+			border-radius: var(--radius-pill, 100px);
+			inline-size: var(--ui-media-pill-width, 1.5rem);
+		}
+		@media (prefers-reduced-motion: no-preference) {
+			:where([media*="dot(pill)"]) ui-media > :is(img, video)::scroll-marker:target-current,
+			ui-media:where([media*="dot(pill)"]) > :is(img, video)::scroll-marker:target-current {
+				animation: ui-media-pill-fill var(--ui-media-autoplay, 5s) linear forwards;
+				/* track stays underneath; the fill gradient grows L→R over it */
+				background-color: var(--ui-media-pill-track, rgb(255 255 255 / 0.35));
+				background-image: linear-gradient(var(--ui-media-pill-fill, #fff), var(--ui-media-pill-fill, #fff));
+				background-repeat: no-repeat;
+				background-size: 0% 100%;
+			}
+		}
+		/* reduced motion: skip the timer animation, show the active pill filled */
+		@media (prefers-reduced-motion: reduce) {
+			:where([media*="dot(pill)"]) ui-media > :is(img, video)::scroll-marker:target-current,
+			ui-media:where([media*="dot(pill)"]) > :is(img, video)::scroll-marker:target-current {
+				background-color: var(--ui-media-pill-fill, #fff);
+			}
+		}
+		/* dot / pill size — dot(sm|md|lg|xl); md = the defaults (composes with dot(pill)) */
+		:where([media*="dot(sm)"]) { --ui-media-dot-size: 0.45rem; --ui-media-pill-width: 1.15rem; --ui-media-pill-height: 0.28rem; }
+		:where([media*="dot(md)"]) { --ui-media-dot-size: 0.6rem;  --ui-media-pill-width: 1.5rem;  --ui-media-pill-height: 0.35rem; }
+		:where([media*="dot(lg)"]) { --ui-media-dot-size: 0.8rem;  --ui-media-pill-width: 2rem;    --ui-media-pill-height: 0.45rem; }
+		:where([media*="dot(xl)"]) { --ui-media-dot-size: 1rem;    --ui-media-pill-width: 2.5rem;  --ui-media-pill-height: 0.55rem; }
+
+		/* ---- arrows — bare nav · nav(arrows) · nav(below). A circular button: a
+		   themeable circle (--ui-media-arrow-bg, default semi-transparent black) +
+		   a glyph image. Two glyph STYLES — chevron (default) and full arrow — each
+		   in a white set (default, for the dark circle) and a dark set. Switch style
+		   with arw(arrow); switch colour by repointing --ui-media-arrow-prev/-next to
+		   a -dark var. The glyph vars are set on the media= holder and inherit down. */
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) {
+			--ui-media-arrow-prev-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 18l-6-6 6-6'/%3E%3C/svg%3E");
+			--ui-media-arrow-next-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+			--ui-media-arrow-prev-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 18l-6-6 6-6'/%3E%3C/svg%3E");
+			--ui-media-arrow-next-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+			/* full-arrow set (shaft + head) — switched on via arw(arrow) */
+			--ui-media-arrow-prev-arrow-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 12H5M12 19l-7-7 7-7'/%3E%3C/svg%3E");
+			--ui-media-arrow-next-arrow-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
+			--ui-media-arrow-prev-arrow-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 12H5M12 19l-7-7 7-7'/%3E%3C/svg%3E");
+			--ui-media-arrow-next-arrow-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
+		}
+		/* glyph SHAPE × SHADE — two independent axes, composed:
+		   shape: chevron (default) · arw(arrow)   shade: light/white (default, for a
+		   dark circle) · arw(dark) (for a light circle). The combined rule wins when
+		   both atoms are present. A direct --ui-media-arrow-prev/-next still overrides. */
+		:where([media*="arw(arrow)"]) {
+			--ui-media-arrow-prev: var(--ui-media-arrow-prev-arrow-light);
+			--ui-media-arrow-next: var(--ui-media-arrow-next-arrow-light);
+		}
+		:where([media*="arw(dark)"]) {
+			--ui-media-arrow-prev: var(--ui-media-arrow-prev-dark);
+			--ui-media-arrow-next: var(--ui-media-arrow-next-dark);
+		}
+		:where([media*="arw(arrow)"][media*="arw(dark)"]) {
+			--ui-media-arrow-prev: var(--ui-media-arrow-prev-arrow-dark);
+			--ui-media-arrow-next: var(--ui-media-arrow-next-arrow-dark);
+		}
+		/* arrow button size — arw(sm|md|lg|xl); md = the 2.25rem default */
+		:where([media*="arw(sm)"]) { --ui-media-arrow-size: 1.75rem; }
+		:where([media*="arw(md)"]) { --ui-media-arrow-size: 2.25rem; }
+		:where([media*="arw(lg)"]) { --ui-media-arrow-size: 2.75rem; }
+		:where([media*="arw(xl)"]) { --ui-media-arrow-size: 3.25rem; }
+
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) ui-media::scroll-button(*),
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(*) {
+			aspect-ratio: 1;
+			-webkit-backdrop-filter: blur(var(--ui-media-arrow-blur, 4px));
+			backdrop-filter: blur(var(--ui-media-arrow-blur, 4px));
+			background-color: var(--ui-media-arrow-bg, rgb(0 0 0 / 0.45));
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: var(--ui-media-arrow-glyph-size, 45%);
+			border: var(--ui-media-arrow-border, 0);
+			border-radius: var(--ui-media-arrow-radius, var(--radius-circle, 50%));
+			box-shadow: var(--ui-media-arrow-ring, 0 0 0 1px rgb(255 255 255 / 0.4), 0 2px 6px rgb(0 0 0 / 0.35));
+			content: "" / "";
+			cursor: pointer;
+			inline-size: var(--ui-media-arrow-size, 2.25rem);
+			position: absolute;
+			position-anchor: auto;
+			top: var(--ui-media-arrow-top, calc(anchor(center) - var(--ui-media-arrow-size, 2.25rem) / 2));
+			z-index: 3;
+		}
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) ui-media::scroll-button(*):hover,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(*):hover { background-color: var(--ui-media-arrow-bg-hover, rgb(0 0 0 / 0.7)); }
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) ui-media::scroll-button(*):disabled,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(*):disabled { -webkit-backdrop-filter: none; backdrop-filter: none; background-color: transparent; box-shadow: none; cursor: default; opacity: var(--ui-media-arrow-disabled-opacity, 0.5); pointer-events: none; }
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) ui-media::scroll-button(left),
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(left) {
+			background-image: var(--ui-media-arrow-prev, var(--ui-media-arrow-prev-light));
+			content: "" / "Previous";
+			left: calc(anchor(left) + var(--ui-media-overlay-gap, 0.75rem));
+		}
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) ui-media::scroll-button(right),
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(right) {
+			background-image: var(--ui-media-arrow-next, var(--ui-media-arrow-next-light));
+			content: "" / "Next";
+			right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem));
+		}
+
+		/* ---- arw(top) / arw(bot) — vertical placement of the edge arrows (overlay;
+		   default mid is the fallback baked into the ::scroll-button top: above) ---- */
+		:where([media*="arw(top)"]) { --ui-media-arrow-top: calc(anchor(top) + var(--ui-media-overlay-gap, 0.75rem)); }
+		:where([media*="arw(bot)"]) { --ui-media-arrow-top: calc(anchor(bottom) - var(--ui-media-overlay-gap, 0.75rem) - var(--ui-media-arrow-size, 2.25rem)); }
+
+		/* ---- arw(hide) — opt OUT of the always-visible default: auto-hide the
+		   dead-end arrow (no slide in that direction) instead of dimming it ---- */
+		:where([media*="arw(hide)"]) { --ui-media-arrow-disabled-opacity: 0; }
+
+		/* ---- arw(set) — both arrows as an adjacent pair at the inline-end. Only the
+		   left button moves (next to the right one); pair with arw(bot) for the
+		   classic bottom-end set, or with nav(below) for a set inside the band. ---- */
+		:where([media*="arw(set)"]) ui-media::scroll-button(left),
+		ui-media:where([media*="arw(set)"])::scroll-button(left) {
+			left: auto;
+			right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem) + var(--ui-media-arrow-size, 2.25rem) + var(--ui-media-arrow-gap, 0.5rem));
+		}
+
+		/* ---- arw(bare) — drop the circle; render the glyph itself as a coloured
+		   shape (mask-image of the same SVG + background-color = the ink), so the
+		   arrow can be any colour. Default ink is white (over image); nav(below)
+		   flips it dark. Works everywhere; composes with arw(arrow)/placement/set.
+		   A subtle drop-shadow keeps a white glyph legible over bright photos. ---- */
+		:where([media*="arw(bare)"]) ui-media::scroll-button(*),
+		ui-media:where([media*="arw(bare)"])::scroll-button(*) {
+			-webkit-backdrop-filter: none;
+			backdrop-filter: none;
+			background-color: var(--ui-media-arrow-color, #fff);
+			background-image: none;
+			border: 0;
+			box-shadow: none;
+			filter: var(--ui-media-arrow-shadow, drop-shadow(0 1px 2px rgb(0 0 0 / 0.5)));
+			-webkit-mask: var(--_arw-glyph) center / var(--ui-media-arrow-glyph-size, 80%) no-repeat;
+			mask: var(--_arw-glyph) center / var(--ui-media-arrow-glyph-size, 80%) no-repeat;
+		}
+		:where([media*="arw(bare)"]) ui-media::scroll-button(*):hover,
+		ui-media:where([media*="arw(bare)"])::scroll-button(*):hover { background-color: var(--ui-media-arrow-color-hover, var(--ui-media-arrow-color, #fff)); }
+		:where([media*="arw(bare)"]) ui-media::scroll-button(left),
+		ui-media:where([media*="arw(bare)"])::scroll-button(left) { --_arw-glyph: var(--ui-media-arrow-prev, var(--ui-media-arrow-prev-light)); --_arw-dim: var(--ui-media-arrow-prev-dim, var(--_arw-glyph)); }
+		:where([media*="arw(bare)"]) ui-media::scroll-button(right),
+		ui-media:where([media*="arw(bare)"])::scroll-button(right) { --_arw-glyph: var(--ui-media-arrow-next, var(--ui-media-arrow-next-light)); --_arw-dim: var(--ui-media-arrow-next-dim, var(--_arw-glyph)); }
+
+			/* bare arrows ALWAYS stay visible — a dead-end (disabled) arrow shows the
+			   glyph in grey at reduced opacity, never the auto-hide. A :disabled
+			   ::scroll-button drops its mask, so paint the grey glyph as a
+			   background-image on a transparent box (no circle artifact). */
+			:where([media*="arw(bare)"]) ui-media::scroll-button(*):disabled,
+			ui-media:where([media*="arw(bare)"])::scroll-button(*):disabled {
+				-webkit-mask: none;
+				mask: none;
+				background-color: transparent;
+				background-image: var(--_arw-dim);
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size: var(--ui-media-arrow-glyph-size, 80%);
+				filter: none;
+				opacity: var(--ui-media-arrow-disabled-opacity, 0.5);
+				pointer-events: none;
+			}
+
+		/* ---- nav(below) — reposition the absolute controls into the bottom band.
+		   The band defaults to the (light) card surface, so flip the marker defaults
+		   to dark ink here — the dot/pill rules read these vars, and an inline
+		   style= override on the holder still wins (higher specificity). ---- */
+		:where([media*="nav(below)"]) {
+			--ui-media-arrow-top: calc(anchor(bottom) - var(--ui-media-band, 2.75rem) / 2 - var(--ui-media-arrow-size, 2.25rem) / 2);
+			--ui-media-arrow-color: rgb(0 0 0 / 0.8);
+			/* band is light → the disabled bare glyph (a :disabled button can't mask)
+			   uses the DARK glyph so it dims to grey instead of a faint white */
+			--ui-media-arrow-prev-dim: var(--ui-media-arrow-prev-dark);
+			--ui-media-arrow-next-dim: var(--ui-media-arrow-next-dark);
+			--ui-media-dot-bg: rgb(0 0 0 / 0.25);
+			--ui-media-dot-active: rgb(0 0 0 / 0.7);
+			--ui-media-pill-track: rgb(0 0 0 / 0.2);
+			--ui-media-pill-fill: rgb(0 0 0 / 0.7);
+		}
+		/* below + full-arrow: dim glyph uses the dark full-arrow */
+		:where([media*="nav(below)"][media*="arw(arrow)"]) {
+			--ui-media-arrow-prev-dim: var(--ui-media-arrow-prev-arrow-dark);
+			--ui-media-arrow-next-dim: var(--ui-media-arrow-next-arrow-dark);
+		}
+		:where([media*="nav(below)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav(below)"])::scroll-marker-group {
+			top: calc(anchor(bottom) - var(--ui-media-band, 2.75rem) / 2 - var(--ui-media-dot-size, 0.6rem) / 2);
+		}
+		/* nav(below) + arw(set): pin dots to the start so the arrow pair (end) clears them */
+		:where([media*="nav(below)"][media*="arw(set)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav(below)"][media*="arw(set)"])::scroll-marker-group {
+			justify-self: start;
+			left: calc(anchor(left) + var(--ui-media-overlay-gap, 0.75rem));
+		}
+	}
+
+	@keyframes ui-media-pill-fill {
+		from { background-size: 0% 100%; }
+		to   { background-size: 100% 100%; }
+	}
+}

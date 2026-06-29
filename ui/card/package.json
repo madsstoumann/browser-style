@@ -20,6 +20,9 @@
   "files": [
     "index.css",
     "ui-card.css",
+    "media.css",
+    "media.carousel.css",
+    "content.css",
     "ui-media.js",
     "ui-media-srcset.js",
     "srcset.js"
