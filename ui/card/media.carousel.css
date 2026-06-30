@@ -96,7 +96,7 @@
 				position: absolute;
 				position-anchor: auto;
 				top: calc(anchor(bottom) - var(--ui-media-overlay-gap) - var(--ui-media-dot-size));
-				z-index: 3;
+				z-index: 3; /* above scrim (1) + furniture (2); */
 			}
 			/* one dot per slide — furniture (chip/sticker/play/save) excluded */
 			& > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
@@ -297,12 +297,12 @@
 			&::scroll-button(left),
 			&::scroll-button(right) { display: none; }
 			&::scroll-marker-group {
-				flex-direction: column;
 				align-items: center;
 				align-self: anchor-center;
+				flex-direction: column;
 				inline-size: var(--ui-media-arrow-size);
-				justify-self: end;
 				inset: auto;
+				justify-self: end;
 				margin-inline: var(--ui-media-overlay-gap);
 			}
 			&::scroll-button(up) {
