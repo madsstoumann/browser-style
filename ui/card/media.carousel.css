@@ -68,7 +68,7 @@
 
 	:where([media*="nav(blw)"]) ui-media,
 	ui-media:where([media*="nav(blw)"], [nav~="blw"]) {
-		background: var(--ui-media-controls-bg, var(--ui-media-bg, transparent));
+		background: var(--ui-media-controls-bg, var(--ui-media-bg, #0000));
 		padding-block-end: calc(var(--ui-media-below-gap, var(--spacing-sm, 0.5rem)) + var(--ui-media-band, 2.75rem));
 	}
 
@@ -80,46 +80,32 @@
 
 		/* ---- DOTS present: bare nav · nav(dot) · nav(blw) ---- */
 		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"]) ui-media,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"], [nav]:not([nav~="arw"]):not([nav~="non"]):not([nav~="bar"])) { scroll-marker-group: after; }
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"], [nav]:not([nav~="arw"]):not([nav~="non"]):not([nav~="bar"])) {
+			scroll-marker-group: after;
 
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"], [nav]:not([nav~="arw"]):not([nav~="non"]):not([nav~="bar"]))::scroll-marker-group {
-			display: flex;
-			gap: var(--ui-media-dot-gap, 0.5rem);
-			justify-self: anchor-center;
-			position: absolute;
-			position-anchor: auto;
-			top: calc(anchor(bottom) - var(--ui-media-overlay-gap, 0.75rem) - var(--ui-media-dot-size, 0.6rem));
-			z-index: 3;
-		}
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"]) ui-media > :is(img, video)::scroll-marker,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"], [nav]:not([nav~="arw"]):not([nav~="non"]):not([nav~="bar"])) > :is(img, video)::scroll-marker {
-			background: var(--ui-media-dot-bg, rgb(255 255 255 / 0.5));
-			block-size: var(--ui-media-dot-size, 0.6rem);
-			border: var(--ui-media-dot-border, 0);
-			border-radius: var(--radius-circle, 50%);
-			content: "";
-			cursor: pointer;
-			inline-size: var(--ui-media-dot-size, 0.6rem);
-		}
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"]) ui-media > :is(img, video)::scroll-marker:target-current,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"], [nav]:not([nav~="arw"]):not([nav~="non"]):not([nav~="bar"])) > :is(img, video)::scroll-marker:target-current {
-			background: var(--ui-media-dot-active, #fff);
-		}
-
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"]) ui-media > ui-slide::scroll-marker,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"], [nav]:not([nav~="arw"]):not([nav~="non"]):not([nav~="bar"])) > ui-slide::scroll-marker {
-			background: var(--ui-media-dot-bg, rgb(255 255 255 / 0.5));
-			block-size: var(--ui-media-dot-size, 0.6rem);
-			border: var(--ui-media-dot-border, 0);
-			border-radius: var(--radius-circle, 50%);
-			content: "";
-			cursor: pointer;
-			inline-size: var(--ui-media-dot-size, 0.6rem);
-		}
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"]) ui-media > ui-slide::scroll-marker:target-current,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"], [nav]:not([nav~="arw"]):not([nav~="non"]):not([nav~="bar"])) > ui-slide::scroll-marker:target-current {
-			background: var(--ui-media-dot-active, #fff);
+			&::scroll-marker-group {
+				display: flex;
+				gap: var(--ui-media-dot-gap, 0.5rem);
+				justify-self: anchor-center;
+				position: absolute;
+				position-anchor: auto;
+				top: calc(anchor(bottom) - var(--ui-media-overlay-gap, 0.75rem) - var(--ui-media-dot-size, 0.6rem));
+				z-index: 3;
+			}
+			& > :is(img, video)::scroll-marker,
+			& > ui-slide::scroll-marker {
+				background: var(--ui-media-dot-bg, rgb(255 255 255 / 0.5));
+				block-size: var(--ui-media-dot-size, 0.6rem);
+				border: var(--ui-media-dot-border, 0);
+				border-radius: var(--radius-circle, 50%);
+				content: "";
+				cursor: pointer;
+				inline-size: var(--ui-media-dot-size, 0.6rem);
+			}
+			& > :is(img, video)::scroll-marker:target-current,
+			& > ui-slide::scroll-marker:target-current {
+				background: var(--ui-media-dot-active, #fff);
+			}
 		}
 
 		ui-media ui-media { scroll-marker-group: none; }
@@ -139,10 +125,8 @@
 			:where([media*="dot(pll)"]) ui-media > :is(img, video)::scroll-marker:target-current,
 			ui-media:where([media*="dot(pll)"], [dot~="pll"]) > :is(img, video)::scroll-marker:target-current {
 				animation: ui-media-pill-fill var(--ui-media-autoplay, 5s) linear forwards;
-				background-color: var(--ui-media-pill-track, rgb(255 255 255 / 0.35));
-				background-image: linear-gradient(var(--ui-media-pill-fill, #fff), var(--ui-media-pill-fill, #fff));
-				background-repeat: no-repeat;
-				background-size: 0% 100%;
+				/* track = background-color; gradient (fill) starts at 0% width, keyframes grow background-size */
+				background: linear-gradient(var(--ui-media-pill-fill, #fff), var(--ui-media-pill-fill, #fff)) no-repeat 0 0 / 0% 100% var(--ui-media-pill-track, rgb(255 255 255 / 0.35));
 			}
 		}
 		@media (prefers-reduced-motion: reduce) {
@@ -181,56 +165,46 @@
 		:where([media*="arw(lg)"]), ui-media[arrow~="lg"] { --ui-media-arrow-size: 2.75rem; }
 		:where([media*="arw(xl)"]), ui-media[arrow~="xl"] { --ui-media-arrow-size: 3.25rem; }
 
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]) ui-media::scroll-button(*),
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"]))::scroll-button(*) {
-			aspect-ratio: 1;
-			-webkit-backdrop-filter: blur(var(--ui-media-arrow-blur, 4px));
-			backdrop-filter: blur(var(--ui-media-arrow-blur, 4px));
-			background-color: var(--ui-media-arrow-bg, rgb(0 0 0 / 0.45));
-			background-image: var(--ui-media-arrow-glyph);
-			background-position: center;
-			background-repeat: no-repeat;
-			background-size: var(--ui-media-arrow-glyph-size, 45%);
-			border: var(--ui-media-arrow-border, 0);
-			border-radius: var(--ui-media-arrow-radius, var(--radius-circle, 50%));
-			box-shadow: var(--ui-media-arrow-ring, 0 0 0 1px rgb(255 255 255 / 0.4), 0 2px 6px rgb(0 0 0 / 0.35));
-			content: "" / "";
-			cursor: pointer;
-			inline-size: var(--ui-media-arrow-size, 2.25rem);
-			position: absolute;
-			position-anchor: auto;
-			top: var(--ui-media-arrow-top, calc(anchor(center) - var(--ui-media-arrow-size, 2.25rem) / 2));
-			transform: rotate(var(--_arw-rot, 0deg));
-			z-index: 3;
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]) ui-media,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"])) {
+			&::scroll-button(*) {
+				aspect-ratio: 1;
+				backdrop-filter: blur(var(--ui-media-arrow-blur, 4px));
+				background: var(--ui-media-arrow-glyph) center / var(--ui-media-arrow-glyph-size, 45%) no-repeat var(--ui-media-arrow-bg, rgb(0 0 0 / 0.45));
+				border: var(--ui-media-arrow-border, 0);
+				border-radius: var(--ui-media-arrow-radius, var(--radius-circle, 50%));
+				box-shadow: var(--ui-media-arrow-ring, 0 0 0 1px rgb(255 255 255 / 0.4), 0 2px 6px rgb(0 0 0 / 0.35));
+				content: "" / "";
+				cursor: pointer;
+				inline-size: var(--ui-media-arrow-size, 2.25rem);
+				position: absolute;
+				position-anchor: auto;
+				top: var(--ui-media-arrow-top, calc(anchor(center) - var(--ui-media-arrow-size, 2.25rem) / 2));
+				transform: rotate(var(--_arw-rot, 0deg));
+				z-index: 3;
+			}
+			&::scroll-button(*):hover { background-color: var(--ui-media-arrow-bg-hover, rgb(0 0 0 / 0.7)); }
+			&::scroll-button(*):disabled { backdrop-filter: none; cursor: default; opacity: var(--ui-media-arrow-disabled-opacity, 0.4); pointer-events: none; }
+			&::scroll-button(left) {
+				content: "" / "Previous";
+				left: calc(anchor(left) + var(--ui-media-overlay-gap, 0.75rem));
+				--_arw-rot: 180deg;
+			}
+			&::scroll-button(right) {
+				content: "" / "Next";
+				right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem));
+			}
+			&::scroll-button(up) {
+				content: "" / "Previous";
+				--_arw-rot: -90deg;
+			}
+			&::scroll-button(down) {
+				content: "" / "Next";
+				--_arw-rot: 90deg;
+			}
 		}
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]) ui-media::scroll-button(*):hover,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"]))::scroll-button(*):hover { background-color: var(--ui-media-arrow-bg-hover, rgb(0 0 0 / 0.7)); }
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]) ui-media::scroll-button(*):disabled,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"]))::scroll-button(*):disabled { -webkit-backdrop-filter: none; backdrop-filter: none; cursor: default; opacity: var(--ui-media-arrow-disabled-opacity, 0.4); pointer-events: none; }
 
 		ui-media > [data-clone]::scroll-marker { content: none; }
-
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]) ui-media::scroll-button(left),
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"]))::scroll-button(left) {
-			content: "" / "Previous";
-			left: calc(anchor(left) + var(--ui-media-overlay-gap, 0.75rem));
-			--_arw-rot: 180deg;
-		}
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]) ui-media::scroll-button(right),
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"]))::scroll-button(right) {
-			content: "" / "Next";
-			right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem));
-		}
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]) ui-media::scroll-button(up),
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"]))::scroll-button(up) {
-			content: "" / "Previous";
-			--_arw-rot: -90deg;
-		}
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]) ui-media::scroll-button(down),
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"]))::scroll-button(down) {
-			content: "" / "Next";
-			--_arw-rot: 90deg;
-		}
 
 		/* arrow placement (mid default) */
 		:where([media*="arw(top)"]), ui-media[arrow~="top"] { --ui-media-arrow-top: calc(anchor(top) + var(--ui-media-overlay-gap, 0.75rem)); }
@@ -247,33 +221,23 @@
 		}
 
 		/* arw(bare) — drop the circle, paint the glyph as a recolourable shape */
-		:where([media*="arw(bare)"]) ui-media::scroll-button(*),
-		ui-media:where([media*="arw(bare)"], [arrow~="bare"])::scroll-button(*) {
-			/* -webkit-backdrop-filter: none;
-			backdrop-filter: none; */
-			background-color: var(--ui-media-arrow-color, #fff);
-			background-image: none;
-			border: 0;
-			box-shadow: none;
-			/* filter: var(--ui-media-arrow-shadow, drop-shadow(0 1px 2px rgb(0 0 0 / 0.5))); */
-			/* -webkit-mask: var(--ui-media-arrow-glyph) center / var(--ui-media-arrow-glyph-size, 80%) no-repeat; */
-			mask: var(--ui-media-arrow-glyph) center / var(--ui-media-arrow-glyph-size, 80%) no-repeat;
-		}
-		:where([media*="arw(bare)"]) ui-media::scroll-button(*):hover,
-		ui-media:where([media*="arw(bare)"], [arrow~="bare"])::scroll-button(*):hover { background-color: var(--ui-media-arrow-color-hover, var(--ui-media-arrow-color, #fff)); }
-
-		:where([media*="arw(bare)"]) ui-media::scroll-button(*):disabled,
-		ui-media:where([media*="arw(bare)"], [arrow~="bare"])::scroll-button(*):disabled {
-			/* -webkit-mask: none; */
-			mask: none;
-			background-color: transparent;
-			background-image: var(--ui-media-arrow-glyph-dim, var(--ui-media-arrow-glyph));
-			background-position: center;
-			background-repeat: no-repeat;
-			background-size: var(--ui-media-arrow-glyph-size, 80%);
-			/* filter: none; */
-			opacity: var(--ui-media-arrow-disabled-opacity, 0.5);
-			pointer-events: none;
+		:where([media*="arw(bare)"]) ui-media,
+		ui-media:where([media*="arw(bare)"], [arrow~="bare"]) {
+			&::scroll-button(*) {
+				background-color: var(--ui-media-arrow-color, #fff);
+				background-image: none;
+				border: 0;
+				box-shadow: none;
+				mask: var(--ui-media-arrow-glyph) center / var(--ui-media-arrow-glyph-size, 80%) no-repeat;
+			}
+			&::scroll-button(*):hover { background-color: var(--ui-media-arrow-color-hover, var(--ui-media-arrow-color, #fff)); }
+			/* :disabled can't carry a mask, so paint the glyph SVG directly */
+			&::scroll-button(*):disabled {
+				mask: none;
+				background: var(--ui-media-arrow-glyph-dim, var(--ui-media-arrow-glyph)) center / var(--ui-media-arrow-glyph-size, 80%) no-repeat #0000;
+				opacity: var(--ui-media-arrow-disabled-opacity, 0.5);
+				pointer-events: none;
+			}
 		}
 
 		/* nav(blw) — controls into a bottom band; flip ink to dark for the light band */
@@ -325,35 +289,34 @@
 		}
 
 		/* ---- VERTICAL controls (axis(y) / nav="y") ---- */
-		:where([media*="axis(y)"]) ui-media::scroll-button(left),
-		:where([media*="axis(y)"]) ui-media::scroll-button(right),
-		ui-media:where([media*="axis(y)"], [nav~="y"])::scroll-button(left),
-		ui-media:where([media*="axis(y)"], [nav~="y"])::scroll-button(right) { display: none; }
+		:where([media*="axis(y)"]) ui-media,
+		ui-media:where([media*="axis(y)"], [nav~="y"]) {
+			&::scroll-button(left),
+			&::scroll-button(right) { display: none; }
+			&::scroll-marker-group {
+				flex-direction: column;
+				align-self: anchor-center;
+				justify-self: end;
+				inset: auto;
+				margin-inline: var(--ui-media-overlay-gap, 0.75rem);
+			}
+			&::scroll-button(up) {
+				top: calc(anchor(top) + var(--ui-media-overlay-gap, 0.75rem));
+				right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem));
+				left: auto;
+			}
+			&::scroll-button(down) {
+				top: auto;
+				bottom: calc(anchor(bottom) + var(--ui-media-overlay-gap, 0.75rem));
+				right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem));
+				left: auto;
+			}
+		}
+		/* hide the unused cross-axis buttons on a HORIZONTAL scroller */
 		:where([media*="nav"]:not([media*="axis(y)"])) ui-media::scroll-button(up),
 		:where([media*="nav"]:not([media*="axis(y)"])) ui-media::scroll-button(down),
 		ui-media:where([media*="nav"]:not([media*="axis(y)"]), [nav]:not([nav~="y"]))::scroll-button(up),
 		ui-media:where([media*="nav"]:not([media*="axis(y)"]), [nav]:not([nav~="y"]))::scroll-button(down) { display: none; }
-		:where([media*="axis(y)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="axis(y)"], [nav~="y"])::scroll-marker-group {
-			flex-direction: column;
-			align-self: anchor-center;
-			justify-self: end;
-			inset: auto;
-			margin-inline: var(--ui-media-overlay-gap, 0.75rem);
-		}
-		:where([media*="axis(y)"]) ui-media::scroll-button(up),
-		ui-media:where([media*="axis(y)"], [nav~="y"])::scroll-button(up) {
-			top: calc(anchor(top) + var(--ui-media-overlay-gap, 0.75rem));
-			right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem));
-			left: auto;
-		}
-		:where([media*="axis(y)"]) ui-media::scroll-button(down),
-		ui-media:where([media*="axis(y)"], [nav~="y"])::scroll-button(down) {
-			top: auto;
-			bottom: calc(anchor(bottom) + var(--ui-media-overlay-gap, 0.75rem));
-			right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem));
-			left: auto;
-		}
 		/* axis(y) + arw(sta): arrows + dots on the inline-start edge */
 		:where([media*="axis(y)"][media*="arw(sta)"]) ui-media::scroll-button(up),
 		:where([media*="axis(y)"][media*="arw(sta)"]) ui-media::scroll-button(down),
