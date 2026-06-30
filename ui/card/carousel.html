@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Card — Carousel</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="CSS-only <ui-media> carousel: nav() dots + arrows, arw() glyph/placement/size/bare, dot() pills with autoplay fill, and nav(below) control bands.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../chip/ui-chip.css">
+	<link rel="stylesheet" href="../sticker/ui-sticker.css">
+	<link rel="stylesheet" href="../play/ui-play.css">
+	<link rel="stylesheet" href="../icon/index.css">
+	<link rel="stylesheet" href="ui-card.css">
+	<style>
+		.grid {
+			display: grid;
+			gap: var(--spacing-lg);
+			grid-template-columns: 1fr;
+			margin-block-end: var(--spacing-2xl);
+		}
+		@media (min-width: 540px) {
+			.grid-2 { grid-template-columns: repeat(2, 1fr); }
+			.grid-3 { grid-template-columns: repeat(3, 1fr); }
+			.grid-4 { grid-template-columns: repeat(2, 1fr); }
+		}
+		@media (min-width: 900px) {
+			.grid-4 { grid-template-columns: repeat(4, 1fr); }
+		}
+		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
+		.hero { margin-block-end: var(--spacing-2xl); }
+		code { font-size: 0.9em; }
+		/* bottom-only shadow for the "content below media" card carousel — spread more
+		   negative than blur insets it horizontally, so the column gaps stay clean.
+		   (Set on the cards: ui-card declares --ui-card-shadow on itself, so an
+		   inherited value won't win — a class selector does.) */
+		/* 2 cards per slide, page-sized gap; default card shadow. nav(below) reserves
+		   the dot band, --ui-media-below-gap gives the (default) shadow room to paint
+		   inside the clipped scrollport. */
+		.cards-shadow-below > ui-media { --ui-media-slide-gap: var(--spacing-lg); --ui-media-below-gap: 1.5rem; }
+		/* shared control themes (used by several demos) */
+		.dots-dark    { --ui-media-dot-bg: rgb(0 0 0 / 0.25); --ui-media-dot-active: #000; }
+		.arrow-accent { --ui-media-arrow-color: var(--color-accent); }
+		.pill-accent  { --ui-media-pill-track: rgb(0 0 0 / 0.2); --ui-media-pill-fill: var(--color-accent); }
+	</style>
+</head>
+<body>
+	<h1>UI: Media — Carousel</h1>
+	<p class="note">The CSS-only <code>&lt;ui-media&gt;</code> carousel — a flex scroll-snap row with native <code>::scroll-marker</code> dots and <code>::scroll-button()</code> arrows, no JavaScript. Driven by the <code>media=</code> token string: <code>nav()</code> controls, <code>arw()</code> glyph/placement/size/bare, <code>dot()</code> pills, and <code>nav(below)</code> control bands. Chromium-only; elsewhere it degrades to a plain swipe scroller.</p>
+	<p class="note">See also: <a href="media.html">media.html</a> (the <code>&lt;ui-media&gt;</code> frame) · <a href="index.html">index.html</a> (the full engine) · <a href="content.html">content.html</a> (the <code>&lt;ui-content&gt;</code> side) · <a href="media.md">media.md</a> (token reference).</p>
+
+	<!-- ============================================================
+	     Carousel — default
+	     ============================================================ -->
+	<h2>Carousel — <code>media="nav"</code></h2>
+	<p class="note">Add the <code>nav</code> token to put <strong>multiple sources</strong> in a scroll-snap row. By default it shows CSS-only navigation — dots (<code>::scroll-marker</code>) and prev/next arrows (<code>::scroll-button()</code>) — with no extra markup and no JS. Chromium-only for now; elsewhere it degrades to a plain swipe scroller.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(16/9) nav" content="scl(lg)">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/destinations.png" alt="">
+					<img src="/assets/images/river.png" alt="">
+					<img src="/assets/images/mindfulness.png" alt="">
+					<img src="/assets/images/gastronomy.png" alt="">
+				</ui-media>
+				<ui-content><small data-part="eyebrow">Travel</small><h2 data-part="headline">Dots + arrows (default)</h2><p data-part="summary">Swipe, tap a dot, or click an arrow.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="row spl(1/1)" media="asr(1/1) nav" content="scl(md)">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/hubble.png" alt="">
+					<img src="/assets/images/quantum.png" alt="">
+					<img src="/assets/images/websummit.png" alt="">
+				</ui-media>
+				<ui-content><small data-part="eyebrow">Science</small><h2 data-part="headline">Carousel beside content</h2><p data-part="summary">A carousel works in any arrangement — here it is the media half of a <code>row</code> card.</p><nav data-part="actions"><a class="ui-button" href="#">Explore</a></nav></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Carousel controls
+	     ============================================================ -->
+	<h2>Carousel controls — <code>nav()</code></h2>
+	<p class="note">Pick which controls show by folding them into the token: bare <code>nav</code> (both), <code>nav(dots)</code>, <code>nav(arrows)</code>, or <code>nav(none)</code>. <code>nav(none)</code> leaves a bare swipe scroller — there is no separate gallery variant; a carousel with its controls off <em>is</em> the gallery.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(4/3) nav(dots)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/destinations.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">nav(dots)</small><h2 data-part="headline">Dots only</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(arrows)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">nav(arrows)</small><h2 data-part="headline">Arrows only</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">nav</small><h2 data-part="headline">Both</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(none) chip(te)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/government.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""><ui-chip>3 photos</ui-chip></ui-media>
+				<ui-content><small data-part="eyebrow">nav(none)</small><h2 data-part="headline">Bare swipe scroller</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Carousel theming
+	     ============================================================ -->
+	<h2>Carousel theming</h2>
+	<p class="note">Dots and arrows are token-driven. Recolour dots with <code>--ui-media-dot-*</code>. Each arrow is a circular button — colour the circle with <code>--ui-media-arrow-bg</code> (default semi-transparent black) and size it with <code>--ui-media-arrow-size</code>. The chevron is white by default (for the dark circle); for a light circle switch the glyph to dark with <code>arw(dark)</code>. Square off the circle with <code>--ui-media-arrow-radius</code>.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(4/3) nav" content="scl(sm)"
+			style="--ui-media-dot-bg: rgb(0 0 0 / 0.25); --ui-media-dot-active: var(--color-accent); --ui-media-dot-size: 0.8rem;">
+			<cq-box>
+				<ui-media><img src="/assets/images/destinations.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">themed dots</small><h2 data-part="headline">Bigger accent dots</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav" content="scl(sm)"
+			style="--ui-media-arrow-bg: var(--color-accent); --ui-media-arrow-bg-hover: var(--color-accent-dark, var(--color-accent)); --ui-media-dot-active: var(--color-accent);">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">--ui-media-arrow-bg</small><h2 data-part="headline">Accent circle</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(arrows) arw(arrow) arw(dark) arw(lg)" content="scl(sm)"
+			style="--ui-media-arrow-radius: var(--radius-md, 0.5rem); --ui-media-arrow-bg: rgb(255 255 255 / 0.85); --ui-media-arrow-bg-hover: #fff;">
+			<cq-box>
+				<ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">arw(arrow) arw(dark) arw(lg)</small><h2 data-part="headline">Rounded-rect, inverted</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(arrows) arw(hide)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/government.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">arw(hide)</small><h2 data-part="headline">Auto-hide end arrow (opt-in)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Carousel — arrow glyphs & placement
+	     ============================================================ -->
+	<h2>Carousel arrows — <code>arw()</code></h2>
+	<p class="note">Switch the arrow glyph with <code>arw(arrow)</code> (full arrow, shaft + head) — default is <code>arw(chevron)</code>. Place the edge arrows vertically with <code>arw(top)</code> / <code>arw(bot)</code> (default <code>arw(mid)</code>). Group both into an adjacent pair with <code>arw(set)</code> (pair it with <code>arw(bot)</code> for a bottom-end set).</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(4/3) nav(arrows) arw(arrow)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/destinations.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">arw(arrow)</small><h2 data-part="headline">Full-arrow glyph</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(arrows) arw(top)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">arw(top)</small><h2 data-part="headline">Arrows at top</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(arrows) arw(bot)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">arw(bot)</small><h2 data-part="headline">Arrows at bottom</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(arrows) arw(set) arw(arrow) arw(bot)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/government.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">arw(set) arw(bot)</small><h2 data-part="headline">Bottom-end set</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Carousel — bare arrows (no circle)
+	     ============================================================ -->
+	<h2>Carousel bare arrows — <code>arw(bare)</code></h2>
+	<p class="note"><code>arw(bare)</code> drops the circle and renders the glyph itself as a coloured arrow — set the colour with <code>--ui-media-arrow-color</code> (default white over an image; auto-flips dark under <code>nav(below)</code>). A subtle <code>--ui-media-arrow-shadow</code> keeps a white glyph legible over bright photos. Composes with <code>arw(arrow)</code> and every placement atom.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(4/3) nav(arrows) arw(bare)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">arw(bare) · dark images</small><h2 data-part="headline">White, no circle</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(arrows) arw(bare) arw(arrow)" content="scl(sm)" style="--ui-media-arrow-color: #000; --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark);">
+			<cq-box>
+				<ui-media><img src="/assets/images/ergochair.png" alt=""><img src="/assets/images/slimfold.png" alt=""><img src="/assets/images/cutmaster.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">arw(bare) arw(arrow) · light images</small><h2 data-part="headline">Black full-arrow</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card class="arrow-accent" variant="col" media="asr(4/3) nav(arrows) arw(bare)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/summersalad.png" alt=""><img src="/assets/images/cookies.png" alt=""><img src="/assets/images/carbonara.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">--ui-media-arrow-color</small><h2 data-part="headline">Accent arrows</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(below) arw(bare)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/government.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">nav(below) arw(bare)</small><h2 data-part="headline">Bare in the band (auto-dark)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Carousel — pill dots with autoplay fill
+	     ============================================================ -->
+	<h2>Carousel pills — <code>dot(pill)</code></h2>
+	<p class="note">Swap the round dots for pills with <code>dot(pill)</code>. The active pill fills left→right over <code>--ui-media-autoplay</code> (default <code>5s</code>) as a timer hint — it restarts whenever the active slide changes. JS-driven autoplay (which advances the slide on that cadence) lands later; the indicator is wired now. Under reduced-motion the active pill simply shows filled. Recolour with <code>--ui-media-pill-track</code> / <code>--ui-media-pill-fill</code>.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(4/3) nav(dots) dot(pill)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">dot(pill)</small><h2 data-part="headline">Pill timer (5s)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav dot(pill)" content="scl(sm)" style="--ui-media-autoplay: 3s;">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">--ui-media-autoplay: 3s</small><h2 data-part="headline">Faster fill + arrows</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card class="pill-accent" variant="col" media="asr(4/3) nav(dots) dot(pill)" content="scl(sm)" style="--ui-media-pill-width: 2rem;">
+			<cq-box>
+				<ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">themed pills</small><h2 data-part="headline">Accent fill</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav dot(pill)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/world.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">nav dot(pill)</small><h2 data-part="headline">Pills + arrows</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Carousel — sizes
+	     ============================================================ -->
+	<h2>Carousel sizes — <code>arw()</code> / <code>dot()</code></h2>
+	<p class="note">Size the arrows with <code>arw(sm)</code> / <code>arw(md)</code> <em>(default)</em> / <code>arw(lg)</code> / <code>arw(xl)</code> and the dots/pills with <code>dot(sm)</code> / <code>dot(md)</code> <em>(default)</em> / <code>dot(lg)</code> / <code>dot(xl)</code>. They compose with every other atom.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(16/9) nav arw(sm) dot(sm)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">arw(sm) dot(sm)</small><h2 data-part="headline">Small</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) nav arw(xl) dot(xl)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">arw(xl) dot(xl)</small><h2 data-part="headline">Extra-large</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Carousel — controls below the media
+	     ============================================================ -->
+	<h2>Carousel below the media — <code>nav(below)</code></h2>
+	<p class="note"><code>nav(below)</code> moves both controls off the image into a reserved bottom band (dots centered, arrows at the ends) — the media keeps its full frame above. Size the band with <code>--ui-media-band</code> (default <code>2.75rem</code>) and colour it with <code>--ui-media-controls-bg</code>. Combine with <code>arw(set)</code> to pin the dots to the start and pair the arrows at the end, or <code>dot(pill)</code> for a timer bar. (Arrow placement atoms <code>arw(top/bot)</code> are for the overlay variant; <code>nav(below)</code> owns its own vertical placement.)</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(16/9) nav(below) arw(bare)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/destinations.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">nav(below) arw(bare)</small><h2 data-part="headline">Controls in a band</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) nav(below) arw(bare) arw(set)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">nav(below) arw(bare) arw(set)</small><h2 data-part="headline">Dots left, arrow pair right</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card class="pill-accent" variant="col" media="asr(16/9) nav(below) arw(bare) dot(pill)" content="scl(sm)" style="--ui-media-controls-bg: var(--color-surface, #fff);">
+			<cq-box>
+				<ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">nav(below) dot(pill)</small><h2 data-part="headline">Pill timer bar</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) nav(below) arw(bare) arw(hide)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/government.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">nav(below) arw(hide)</small><h2 data-part="headline">Auto-hide arrows (opt-in)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     nav(below) — dot position: dot(start) · dot(center) · dot(end)
+	     ============================================================ -->
+	<h3>Dot position in the band — <code>dot(start)</code> · <code>dot(center)</code> · <code>dot(end)</code></h3>
+	<p class="note">In a <code>nav(below)</code> band the dots default to <strong>centered</strong>. <code>dot(start)</code> aligns them to the inline-start (after the left control), <code>dot(end)</code> to the inline-end (before the right control or the <code>arw(set)</code> pair). Shown here with <code>arw(set)</code> — the arrow pair stays bottom-right while the dots move left → center → right.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(16/9) nav(below) arw(set) dot(start)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/destinations.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">arw(set) dot(start)</small><h2 data-part="headline">Dots left</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) nav(below) arw(set) dot(center)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/government.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">arw(set) dot(center)</small><h2 data-part="headline">Dots centered (default)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) nav(below) arw(set) dot(end)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""><img src="/assets/images/destinations.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">arw(set) dot(end)</small><h2 data-part="headline">Dots right (next to the pair)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Vertical carousel — axis(y)
+	     ============================================================ -->
+	<h2>Vertical carousel — <code>axis(y)</code></h2>
+	<p class="note"><code>axis(y)</code> turns the carousel vertical — a column scroll-snap row, snapping on the Y axis. The same <code>nav()</code> controls apply: dots become a vertical column on the inline-end edge, the arrows become <strong>up/down</strong> (the single base glyph, rotated) at top &amp; bottom of that edge. <code>arw(start)</code> moves them to the other edge; <code>arw(set)</code> stacks the pair at the bottom; <code>arw(bare)</code> and the sizes all compose. Give the frame a portrait <code>asr()</code> so there's height to scroll.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(1/1) axis(y) nav" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">axis(y) nav</small><h2 data-part="headline">Dots + up/down (right)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(1/1) axis(y) nav arw(start)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">axis(y) arw(start)</small><h2 data-part="headline">Controls on the left</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(1/1) axis(y) nav(arrows) arw(set)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/government.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">axis(y) arw(set)</small><h2 data-part="headline">Arrow pair, bottom-right</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(1/1) axis(y) nav arw(bare) scm(cr)" content="scl(sm)" style="--ui-media-scrim-color: #000;">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">axis(y) arw(bare) scm(cr)</small><h2 data-part="headline">Bare up/down</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(1/1) axis(y) nav(below)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/destinations.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">axis(y) nav(below)</small><h2 data-part="headline">Control band below (rotated)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card class="arrow-accent" variant="col" media="asr(1/1) axis(y) nav(arrows) arw(bare) arw(lg)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">axis(y) arw(bare) arw(lg)</small><h2 data-part="headline">Accent, large</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Plain styled scrollbar — nav(bar)
+	     ============================================================ -->
+	<h2>Plain scrollbar — <code>nav(bar)</code></h2>
+	<p class="note"><code>nav(bar)</code> drops the dots/arrows and shows the <strong>native thin scrollbar</strong> as the only affordance — works on either axis, and looks platform-correct out of the box (<code>scrollbar-color: auto</code>). Override colours with a single <code>--ui-media-scrollbar-color</code> token (<code>"&lt;thumb&gt; &lt;track&gt;"</code>, e.g. <code>#ccc transparent</code>) and width with <code>--ui-media-scrollbar-width</code> (<code>thin</code> default).</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(16/9) nav(bar)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/destinations.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">nav(bar)</small><h2 data-part="headline">Horizontal scrollbar</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(1/1) axis(y) nav(bar)" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">axis(y) nav(bar)</small><h2 data-part="headline">Vertical scrollbar</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Multiple items per slide — cols() + <ui-slide> groups
+	     ============================================================ -->
+	<h2>Multiple items per slide — <code>cols()</code></h2>
+	<p class="note">Wrap a group of items in a <code>&lt;ui-slide&gt;</code> element — that group becomes <strong>one slide</strong> laid out as a grid, and the carousel snaps a whole group at a time (one dot per group). <code>cols(2)</code> / <code>cols(3)</code> / <code>cols(4)</code> set the column count (default 2); gap via <code>--ui-media-slide-gap</code>. Items can be plain <code>&lt;img&gt;</code>/<code>&lt;video&gt;</code>, or full <strong>layered <code>&lt;ui-card&gt;</code>s</strong> (see below). Shown full-width.</p>
+	<div class="grid">
+			<ui-media class="dots-dark" media="asr(21/9) nav cols(3)">
+				<ui-slide><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt=""></ui-slide>
+				<ui-slide><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/government.png" alt=""></ui-slide>
+				<ui-slide><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-slide>
+			</ui-media>
+	</div>
+
+	<!-- ============================================================
+	     Real cards as slides — content BELOW media
+	     ============================================================ -->
+	<h2>Cards as slides — content below media</h2>
+	<p class="note">A <code>&lt;ui-slide&gt;</code> group can hold full <code>&lt;ui-card&gt;</code>s, not just images. Here each card is a standard <code>variant="col"</code> card (image with eyebrow / headline / summary <strong>below</strong>) — a product-grid carousel that snaps a whole row at a time.</p>
+	<div class="grid cards-shadow-below">
+			<ui-media class="dots-dark" media="nav(below) cols(2) arw(bare)">
+				<ui-slide>
+					<ui-card variant="col" media="asr(4/3)" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Space</small><h3 data-part="headline">Hubble</h3><p data-part="summary">Deep-field imaging.</p></ui-content>
+					</cq-box></ui-card>
+					<ui-card variant="col" media="asr(4/3)" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Physics</small><h3 data-part="headline">Quantum</h3><p data-part="summary">Entangled states.</p></ui-content>
+					</cq-box></ui-card>
+				</ui-slide>
+				<ui-slide>
+					<ui-card variant="col" media="asr(4/3)" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Tech</small><h3 data-part="headline">Web Summit</h3><p data-part="summary">Founders meet.</p></ui-content>
+					</cq-box></ui-card>
+					<ui-card variant="col" media="asr(4/3)" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Health</small><h3 data-part="headline">Mindfulness</h3><p data-part="summary">Breathe deep.</p></ui-content>
+					</cq-box></ui-card>
+				</ui-slide>
+				<ui-slide>
+					<ui-card variant="col" media="asr(4/3)" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/world.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Travel</small><h3 data-part="headline">World</h3><p data-part="summary">Go far.</p></ui-content>
+					</cq-box></ui-card>
+					<ui-card variant="col" media="asr(4/3)" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/finance.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Money</small><h3 data-part="headline">Finance</h3><p data-part="summary">Grow it.</p></ui-content>
+					</cq-box></ui-card>
+				</ui-slide>
+			</ui-media>
+	</div>
+
+	<!-- ============================================================
+	     Layered cards as slides — content ON media (ui/reveal pattern)
+	     ============================================================ -->
+	<h2>Layered cards as slides — content on media</h2>
+	<p class="note">For <strong>text overlaid on the media</strong>, give each card the <code>ui/reveal</code> pattern: <code>variant="ovr(bl)"</code> + <code>media="asr(3/4) obp(cc) scm"</code> (aspect + object-position + automatic scrim) on the <em>card</em>. The carousel never leaks into the nested cards' own <code>&lt;ui-media&gt;</code>.</p>
+	<div class="grid">
+			<ui-media media="nav cols(3)">
+				<ui-slide>
+					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Space</small><h3 data-part="headline">Hubble</h3></ui-content>
+					</cq-box></ui-card>
+					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Physics</small><h3 data-part="headline">Quantum</h3></ui-content>
+					</cq-box></ui-card>
+					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Tech</small><h3 data-part="headline">Web Summit</h3></ui-content>
+					</cq-box></ui-card>
+				</ui-slide>
+				<ui-slide>
+					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Health</small><h3 data-part="headline">Mindfulness</h3></ui-content>
+					</cq-box></ui-card>
+					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/world.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Travel</small><h3 data-part="headline">World</h3></ui-content>
+					</cq-box></ui-card>
+					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/finance.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Money</small><h3 data-part="headline">Finance</h3></ui-content>
+					</cq-box></ui-card>
+				</ui-slide>
+			</ui-media>
+	</div>
+
+	<!-- ============================================================
+	     Bare standalone <ui-media> — no <ui-card>, complex configs
+	     ============================================================ -->
+	<h2>Bare <code>&lt;ui-media&gt;</code> — no <code>&lt;ui-card&gt;</code></h2>
+	<p class="note">Every configuration works on a standalone <code>&lt;ui-media media="…"&gt;</code> too — the <code>media=</code> tokens drive it directly, no <code>&lt;ui-card&gt;</code> or <code>&lt;cq-box&gt;</code> needed. Two complex setups below. (If you need <code>border-radius</code>/<code>overflow</code>, put it on a wrapper — never on <code>ui-media</code> itself, that beats the component's <code>:where()</code> rules and breaks the scroller.)</p>
+	<div class="grid grid-2">
+			<ui-media media="asr(16/9) nav(below) arw(bare) arw(arrow) arw(set) dot(end)">
+				<img src="/assets/images/destinations.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt="">
+			</ui-media>
+			<ui-media class="arrow-accent" media="asr(1/1) axis(y) nav arw(arrow) arw(dark) arw(lg) dot(pill)">
+				<img src="/assets/images/popovers.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/government.png" alt=""><img src="/assets/images/gastronomy.png" alt="">
+			</ui-media>
+	</div>
+
+	<!-- cursor-tracked hover + responsive-image upgrade (harmless here; cards are pure CSS) -->
+	<script type="module" src="ui-media-srcset.js"></script>
+	<script type="module" src="ui-media.js"></script>
+</body>
+</html>
