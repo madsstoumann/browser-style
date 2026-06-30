@@ -95,23 +95,25 @@ is respected (no smooth scroll, no pill timer animation).
 > e.g. `arw(arrow) arw(dark)`. One base SVG is **rotated** per direction (left
 > 180°, up −90°, down 90°) — no per-direction SVG duplication.
 
-### `cols()` — items per slide
+### Multiple items per slide — `<ui-slide>` groups
 
 By default each direct child of `<ui-media>` is one slide. To show **multiple items
-per slide**, wrap a group in a `<ui-slide>` element — that group becomes one slide
-(a grid) and the carousel snaps the whole group (one dot per group).
+per slide**, wrap a group in a `<ui-slide>` element — that group becomes one slide and
+the carousel snaps the whole group (one dot per group).
 
-| Token | Result |
-|-------|--------|
-| `cols(2)` | 2 columns per group (**default** for a `<ui-slide>` group) |
-| `cols(3)` | 3 columns |
-| `cols(4)` | 4 columns |
+**The carousel does NOT lay out items inside a slide** — that grid is yours (the
+layout system, or your own class). `<ui-slide>` is just the snap-child container.
 
 ```html
-<ui-media media="asr(21/9) nav cols(3)">
-  <ui-slide><img src="1.jpg"><img src="2.jpg"><img src="3.jpg"></ui-slide>
-  <ui-slide><img src="4.jpg"><img src="5.jpg"><img src="6.jpg"></ui-slide>
+<!-- you own the grid (here a demo class with --cols) -->
+<ui-media media="asr(21/9) nav">
+  <ui-slide class="slide-cols" style="--cols: 3"><img src="1.jpg"><img src="2.jpg"><img src="3.jpg"></ui-slide>
+  <ui-slide class="slide-cols" style="--cols: 3"><img src="4.jpg"><img src="5.jpg"><img src="6.jpg"></ui-slide>
 </ui-media>
+```
+```css
+.slide-cols { display: grid; gap: 1rem; grid-template-columns: repeat(var(--cols, 2), 1fr); }
+.slide-cols > :is(img, video) { aspect-ratio: 1; block-size: 100%; inline-size: 100%; object-fit: cover; position: relative; inset: auto; }
 ```
 
 A group can also hold full **`<ui-card>`s** — standard (content below) or layered
@@ -120,8 +122,8 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 
 ```html
 <!-- standard cards (content below) -->
-<ui-media media="nav cols(3)">
-  <ui-slide>
+<ui-media media="nav">
+  <ui-slide class="slide-cols" style="--cols: 3">
     <ui-card variant="col" media="asr(4/3)"><cq-box>
       <ui-media><img src="1.jpg"></ui-media>
       <ui-content><h3 data-part="headline">Title</h3></ui-content>
@@ -131,8 +133,8 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 </ui-media>
 
 <!-- layered cards (content on media — ui/reveal pattern: media + scm on the CARD) -->
-<ui-media media="nav cols(3)">
-  <ui-slide>
+<ui-media media="nav">
+  <ui-slide class="slide-cols" style="--cols: 3">
     <ui-card variant="ovr(bl)" media="asr(3/4) obp(cc) scm"><cq-box>
       <ui-media><img src="1.jpg"></ui-media>
       <ui-content><h3 data-part="headline">Title</h3></ui-content>
@@ -240,14 +242,8 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-media-scrollbar-color` | `auto` | `"<thumb> <track>"`, e.g. `#ccc transparent` |
 | `--ui-media-scrollbar-width` | `thin` | `auto` · `thin` · `none` |
 
-### Multi-item slides (`<ui-slide>` groups)
-
-| Property | Default | Purpose |
-|----------|---------|---------|
-| `--ui-media-cols` | `2` | Columns per group (or use `cols(2/3/4)`) |
-| `--ui-media-slide-gap` | `0.5rem` | Gap between items in a group |
-| `--ui-media-slide-ar` | `1 / 1` | Aspect ratio of plain `<img>`/`<video>` items in a group |
-| `--ui-media-slide-radius` | `--radius-md` | Corner radius of plain items in a group |
+> **Multi-item slides** (`<ui-slide>` groups) have **no carousel tokens** — the grid
+> inside a slide is your own CSS / the layout system, not the carousel's job.
 
 ### Layout / shared
 

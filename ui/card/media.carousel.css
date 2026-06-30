@@ -1,35 +1,10 @@
-/**
- * ui-media — carousel
- * @version 4.0.0
- * @author Mads Stoumann
- *
- * CSS-only carousel for <ui-media>: a flex scroll-snap row with ::scroll-marker
- * dots and ::scroll-button arrows (Chromium-only, gated by @supports). Driven by
- * the `media=` token string on <ui-media> OR any ancestor (props inherit down).
- *
- * Token families (all disjoint, substring-matched):
- *   nav · nav(dots) · nav(arrows) · nav(none) · nav(below)   — which controls + below-band layout
- *   arw(chevron|arrow)                                        — arrow glyph style
- *   arw(mid|top|bot)                                          — arrow vertical placement (overlay)
- *   arw(set)                                                  — both arrows as an adjacent pair
- *   dot(circle|pill)                                          — dot shape; pill shows an autoplay-timer fill
- */
+/* ui-media carousel — see media.carousel.md (internals) + carousel.md (tokens). */
 @layer bs-component {
 
-	/* ============================================================
-	   CAROUSEL — nav(). The token IS the trigger (flex scroll-snap row).
-	   ============================================================ */
 	:where([media*="nav"]) ui-media,
 	ui-media:where([media*="nav"]) {
-		/* the scroller's own bg shows through the gap between multi-item slides —
-		   default it transparent (the placeholder grey is for single-image frames) */
 		background: var(--ui-media-bg, transparent);
 		display: flex;
-		/* snap the scroller to a whole pixel: a fractional width makes the browser
-		   round scrollWidth up + clientWidth down, inventing ~1px of phantom scroll
-		   the dead-end (right) ::scroll-button can never reach — so it never goes
-		   :disabled. Integer width makes the last slide exactly reachable.
-		   round() is ignored where unsupported (which also lacks ::scroll-button). */
 		inline-size: round(down, 100%, 1px);
 		overflow-x: auto;
 		overscroll-behavior-x: contain;
@@ -46,38 +21,15 @@
 		scroll-snap-align: start;
 	}
 
-	/* ---- multi-item slides — a <ui-slide> group is ONE slide holding a grid of
-	   items (plain <img>/<video>, or layered <ui-card>s). cols(N) = column count
-	   (default 2). One ::scroll-marker per group (defined in the @supports block). */
 	:where([media*="nav"]) ui-media > ui-slide,
 	ui-media:where([media*="nav"]) > ui-slide {
 		block-size: 100%;
 		display: grid;
 		flex: 0 0 100%;
-		gap: var(--ui-media-slide-gap, 0.5rem);
-		grid-template-columns: repeat(var(--ui-media-cols, 2), 1fr);
 		inline-size: 100%;
 		scroll-snap-align: start;
 	}
-	:where([media*="cols(2)"]) { --ui-media-cols: 2; }
-	:where([media*="cols(3)"]) { --ui-media-cols: 3; }
-	:where([media*="cols(4)"]) { --ui-media-cols: 4; }
-	/* plain images in a group are grid items — undo the frame's absolute stacking */
-	:where([media*="nav"]) ui-media > ui-slide > :is(img, video),
-	ui-media:where([media*="nav"]) > ui-slide > :is(img, video) {
-		aspect-ratio: var(--ui-media-slide-ar, 1 / 1);
-		block-size: 100%;
-		border-radius: var(--ui-media-slide-radius, var(--radius-md, 0.375rem));
-		inline-size: 100%;
-		inset: auto;
-		object-fit: cover;
-		position: relative;
-	}
 
-	/* ---- nesting guard — a ui-media INSIDE a layered <ui-card> slide is NOT itself
-	   a scroller. The descendant carousel rules would otherwise cascade into it; pin
-	   it back to the base frame so the carousel never leaks inward. (Controls + leaked
-	   markers are killed in the @supports block.) ---- */
 	ui-media ui-media {
 		display: grid;
 		inline-size: auto;
@@ -97,8 +49,6 @@
 		ui-media:where([media*="nav"]) { scroll-behavior: smooth; }
 	}
 
-	/* axis(y) — VERTICAL carousel: column scroller, snap on Y. Works with or
-	   without ::scroll-marker/button support (degrades to a vertical swipe row). */
 	:where([media*="axis(y)"]) ui-media,
 	ui-media:where([media*="axis(y)"]) {
 		flex-direction: column;
@@ -107,39 +57,23 @@
 		scroll-snap-type: y mandatory;
 	}
 
-	/* nav(bar) — plain scrollbar version (no dots/arrows). Defaults to the native
-	   thin scrollbar (scrollbar-color: auto) — the cleanest, most platform-correct
-	   look. Opt into custom colours with a single --ui-media-scrollbar-color token
-	   ("<thumb> <track>", e.g. "#ccc transparent"); width via --ui-media-scrollbar-width. */
 	:where([media*="nav(bar)"]) ui-media,
 	ui-media:where([media*="nav(bar)"]) {
 		scrollbar-color: var(--ui-media-scrollbar-color, auto);
 		scrollbar-width: var(--ui-media-scrollbar-width, thin);
 	}
 
-	/* nav(below) — reserve a non-scrolling bottom band for the controls (B2: the
-	   band is block-end padding on the flex scroller; images keep block-size:100%
-	   so they stay above it, and the absolute controls re-anchor into the band). */
 	:where([media*="nav(below)"]) ui-media,
 	ui-media:where([media*="nav(below)"]) {
 		background: var(--ui-media-controls-bg, var(--ui-media-bg, transparent));
 		padding-block-end: calc(var(--ui-media-below-gap, var(--spacing-sm, 0.5rem)) + var(--ui-media-band, 2.75rem));
 	}
 
-	/* controls — CSS-only dots + arrows (Chromium-only). Bare nav = both;
-	   nav(dots) / nav(arrows) / nav(none) pick the controls; nav(below) = both,
-	   moved into the reserved bottom band. */
 	@supports (scroll-marker-group: after) {
-		/* Each control rule matches the scroller ui-media in BOTH holders: nested
-		   under a media= ancestor (<ui-card>), or standalone (media= on <ui-media>
-		   itself). The descendant form + the `ui-media:where(...)` self form.
-		   "DOTS present"  = bare nav · nav(dots) · nav(below)
-		   "ARROWS present" = bare nav · nav(arrows) · nav(below) */
 
 		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(arrows)"], [media*="nav(below)"]) ui-media,
 		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(arrows)"], [media*="nav(below)"]) { scrollbar-width: none; }
 
-		/* ---- dots — bare nav · nav(dots) · nav(below) ---- */
 		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) ui-media,
 		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) { scroll-marker-group: after; }
 
@@ -168,7 +102,6 @@
 			background: var(--ui-media-dot-active, #fff);
 		}
 
-		/* ---- multi-item: one ::scroll-marker per <ui-slide> group ---- */
 		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) ui-media > ui-slide::scroll-marker,
 		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) > ui-slide::scroll-marker {
 			background: var(--ui-media-dot-bg, rgb(255 255 255 / 0.5));
@@ -184,14 +117,11 @@
 			background: var(--ui-media-dot-active, #fff);
 		}
 
-		/* nesting guard (controls) — a nested ui-media must not show leaked dots/arrows */
 		ui-media ui-media { scroll-marker-group: none; }
 		ui-media ui-media::scroll-button(*) { display: none; }
 		ui-media ui-media::scroll-marker-group { display: none; }
 		ui-media ui-media > :is(img, video)::scroll-marker { content: none; }
 
-		/* ---- dot(pill) — rounded-rect markers; the active pill fills L→R over the
-		   autoplay duration as a timer hint (JS autoplay advances later). ---- */
 		:where([media*="dot(pill)"]) ui-media > :is(img, video)::scroll-marker,
 		ui-media:where([media*="dot(pill)"]) > :is(img, video)::scroll-marker {
 			background: var(--ui-media-pill-track, rgb(255 255 255 / 0.35));
@@ -203,32 +133,23 @@
 			:where([media*="dot(pill)"]) ui-media > :is(img, video)::scroll-marker:target-current,
 			ui-media:where([media*="dot(pill)"]) > :is(img, video)::scroll-marker:target-current {
 				animation: ui-media-pill-fill var(--ui-media-autoplay, 5s) linear forwards;
-				/* track stays underneath; the fill gradient grows L→R over it */
 				background-color: var(--ui-media-pill-track, rgb(255 255 255 / 0.35));
 				background-image: linear-gradient(var(--ui-media-pill-fill, #fff), var(--ui-media-pill-fill, #fff));
 				background-repeat: no-repeat;
 				background-size: 0% 100%;
 			}
 		}
-		/* reduced motion: skip the timer animation, show the active pill filled */
 		@media (prefers-reduced-motion: reduce) {
 			:where([media*="dot(pill)"]) ui-media > :is(img, video)::scroll-marker:target-current,
 			ui-media:where([media*="dot(pill)"]) > :is(img, video)::scroll-marker:target-current {
 				background-color: var(--ui-media-pill-fill, #fff);
 			}
 		}
-		/* dot / pill size — dot(sm|md|lg|xl); md = the defaults (composes with dot(pill)) */
 		:where([media*="dot(sm)"]) { --ui-media-dot-size: 0.45rem; --ui-media-pill-width: 1.15rem; --ui-media-pill-height: 0.28rem; }
 		:where([media*="dot(md)"]) { --ui-media-dot-size: 0.6rem;  --ui-media-pill-width: 1.5rem;  --ui-media-pill-height: 0.35rem; }
 		:where([media*="dot(lg)"]) { --ui-media-dot-size: 0.8rem;  --ui-media-pill-width: 2rem;    --ui-media-pill-height: 0.45rem; }
 		:where([media*="dot(xl)"]) { --ui-media-dot-size: 1rem;    --ui-media-pill-width: 2.5rem;  --ui-media-pill-height: 0.55rem; }
 
-		/* ---- arrows — bare nav · nav(arrows) · nav(below). A circular button: a
-		   themeable circle (--ui-media-arrow-bg) + a glyph. ONE base glyph — a
-		   RIGHT-pointing chevron (default) or full arrow, in light/dark — is rotated
-		   per direction on the button (left 180°, up −90°, down 90°), so there is no
-		   prev/next/up/down SVG duplication. Set the active glyph with arw(arrow)
-		   (shape) and arw(dark) (ink), or override --ui-media-arrow-glyph directly. */
 		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) {
 			--ui-media-chevron-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
 			--ui-media-chevron-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
@@ -236,13 +157,9 @@
 			--ui-media-arrow-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
 			--ui-media-arrow-glyph: var(--ui-media-chevron-light);
 		}
-		/* glyph SHAPE × SHADE — two independent axes, composed. shape: chevron
-		   (default) · arw(arrow). ink: light/white (default, for a dark circle) ·
-		   arw(dark) (for a light circle). A direct --ui-media-arrow-glyph wins. */
 		:where([media*="arw(arrow)"]) { --ui-media-arrow-glyph: var(--ui-media-arrow-light); }
 		:where([media*="arw(dark)"]) { --ui-media-arrow-glyph: var(--ui-media-chevron-dark); }
 		:where([media*="arw(arrow)"][media*="arw(dark)"]) { --ui-media-arrow-glyph: var(--ui-media-arrow-dark); }
-		/* arrow button size — arw(sm|md|lg|xl); md = the 2.25rem default */
 		:where([media*="arw(sm)"]) { --ui-media-arrow-size: 1.75rem; }
 		:where([media*="arw(md)"]) { --ui-media-arrow-size: 2.25rem; }
 		:where([media*="arw(lg)"]) { --ui-media-arrow-size: 2.75rem; }
@@ -274,10 +191,9 @@
 		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(*):hover { background-color: var(--ui-media-arrow-bg-hover, rgb(0 0 0 / 0.7)); }
 		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) ui-media::scroll-button(*):disabled,
 		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(*):disabled { -webkit-backdrop-filter: none; backdrop-filter: none; cursor: default; opacity: var(--ui-media-arrow-disabled-opacity, 0.4); pointer-events: none; }
-		/* loop clones (ui-media.js prepends/appends a clone slide for seamless wrap) must
-		   not generate their own dots — only the real slides do. */
+
 		ui-media > [data-clone]::scroll-marker { content: none; }
-		/* direction = position + glyph rotation of the single base (right-pointing) glyph */
+
 		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) ui-media::scroll-button(left),
 		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(left) {
 			content: "" / "Previous";
@@ -289,7 +205,6 @@
 			content: "" / "Next";
 			right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem));
 		}
-		/* vertical: up/down reuse the base glyph, rotated −90°/90° (positioned in axis(y)) */
 		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) ui-media::scroll-button(up),
 		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(up) {
 			content: "" / "Previous";
@@ -301,29 +216,17 @@
 			--_arw-rot: 90deg;
 		}
 
-		/* ---- arw(top) / arw(bot) — vertical placement of the edge arrows (overlay;
-		   default mid is the fallback baked into the ::scroll-button top: above) ---- */
 		:where([media*="arw(top)"]) { --ui-media-arrow-top: calc(anchor(top) + var(--ui-media-overlay-gap, 0.75rem)); }
 		:where([media*="arw(bot)"]) { --ui-media-arrow-top: calc(anchor(bottom) - var(--ui-media-overlay-gap, 0.75rem) - var(--ui-media-arrow-size, 2.25rem)); }
 
-		/* ---- arw(hide) — opt OUT of the always-visible default: auto-hide the
-		   dead-end arrow (no slide in that direction) instead of dimming it ---- */
 		:where([media*="arw(hide)"]) { --ui-media-arrow-disabled-opacity: 0; }
 
-		/* ---- arw(set) — both arrows as an adjacent pair at the inline-end. Only the
-		   left button moves (next to the right one); pair with arw(bot) for the
-		   classic bottom-end set, or with nav(below) for a set inside the band. ---- */
 		:where([media*="arw(set)"]) ui-media::scroll-button(left),
 		ui-media:where([media*="arw(set)"])::scroll-button(left) {
 			left: auto;
 			right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem) + var(--ui-media-arrow-size, 2.25rem) + var(--ui-media-arrow-gap, 0.5rem));
 		}
 
-		/* ---- arw(bare) — drop the circle; render the glyph itself as a coloured
-		   shape (mask-image of the same SVG + background-color = the ink), so the
-		   arrow can be any colour. Default ink is white (over image); nav(below)
-		   flips it dark. Works everywhere; composes with arw(arrow)/placement/set.
-		   A subtle drop-shadow keeps a white glyph legible over bright photos. ---- */
 		:where([media*="arw(bare)"]) ui-media::scroll-button(*),
 		ui-media:where([media*="arw(bare)"])::scroll-button(*) {
 			-webkit-backdrop-filter: none;
@@ -339,10 +242,6 @@
 		:where([media*="arw(bare)"]) ui-media::scroll-button(*):hover,
 		ui-media:where([media*="arw(bare)"])::scroll-button(*):hover { background-color: var(--ui-media-arrow-color-hover, var(--ui-media-arrow-color, #fff)); }
 
-		/* bare arrows ALWAYS stay visible — a dead-end (disabled) arrow dims (the
-		   default, opt out with arw(hide)). A :disabled ::scroll-button drops its
-		   mask, so paint the glyph SVG directly (no circle artifact). The dim glyph
-		   defaults to the live glyph; nav(below) flips it dark for the light band. */
 		:where([media*="arw(bare)"]) ui-media::scroll-button(*):disabled,
 		ui-media:where([media*="arw(bare)"])::scroll-button(*):disabled {
 			-webkit-mask: none;
@@ -357,30 +256,20 @@
 			pointer-events: none;
 		}
 
-		/* ---- nav(below) — reposition the absolute controls into the bottom band.
-		   The band defaults to the (light) card surface, so flip the marker defaults
-		   to dark ink here — the dot/pill rules read these vars, and an inline
-		   style= override on the holder still wins (higher specificity). ---- */
 		:where([media*="nav(below)"]) {
 			--ui-media-arrow-top: calc(anchor(bottom) - var(--ui-media-band, 2.75rem) / 2 - var(--ui-media-arrow-size, 2.25rem) / 2);
 			--ui-media-arrow-color: rgb(0 0 0 / 0.8);
-			/* band is light → the disabled bare glyph (a :disabled button can't mask)
-			   uses the DARK glyph so it dims to grey instead of a faint white */
 			--ui-media-arrow-glyph-dim: var(--ui-media-chevron-dark);
 			--ui-media-dot-bg: rgb(0 0 0 / 0.25);
 			--ui-media-dot-active: rgb(0 0 0 / 0.7);
 			--ui-media-pill-track: rgb(0 0 0 / 0.2);
 			--ui-media-pill-fill: rgb(0 0 0 / 0.7);
 		}
-		/* below + full-arrow: dim glyph uses the dark full-arrow */
 		:where([media*="nav(below)"][media*="arw(arrow)"]) { --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
 		:where([media*="nav(below)"]) ui-media::scroll-marker-group,
 		ui-media:where([media*="nav(below)"])::scroll-marker-group {
 			top: calc(anchor(bottom) - var(--ui-media-band, 2.75rem) / 2 - var(--ui-media-dot-size, 0.6rem) / 2);
 		}
-		/* nav(below) dots position — default center; arw(set) defaults to start (clears
-		   the end pair). dot(start|center|end) override: start = after the left arrow,
-		   end = before the right arrow (or the arw(set) pair). */
 		:where([media*="nav(below)"][media*="arw(set)"]) ui-media::scroll-marker-group,
 		ui-media:where([media*="nav(below)"][media*="arw(set)"])::scroll-marker-group {
 			justify-self: start;
@@ -391,8 +280,6 @@
 			justify-self: start; right: auto;
 			left: calc(anchor(left) + 2 * var(--ui-media-overlay-gap, 0.75rem) + var(--ui-media-arrow-size, 2.25rem));
 		}
-		/* arw(set) groups both arrows at the end, so dot(start) has no left arrow to
-		   clear — pin the dots hard to the inline-start. */
 		:where([media*="nav(below)"][media*="dot(start)"][media*="arw(set)"]) ui-media::scroll-marker-group,
 		ui-media:where([media*="nav(below)"][media*="dot(start)"][media*="arw(set)"])::scroll-marker-group {
 			left: calc(anchor(left) + var(--ui-media-overlay-gap, 0.75rem));
@@ -411,14 +298,6 @@
 			right: calc(anchor(right) + 2 * var(--ui-media-overlay-gap, 0.75rem) + 2 * var(--ui-media-arrow-size, 2.25rem) + var(--ui-media-arrow-gap, 0.5rem));
 		}
 
-		/* ============================================================
-		   VERTICAL controls (axis(y)) — up/down arrows + a vertical dot column on
-		   the inline-end edge by default; arw(start) flips to the inline-start edge;
-		   arw(set) stacks the pair at the block-end.
-		   ============================================================ */
-		/* hide the cross-axis buttons (a vertical scroller still generates dead
-		   left/right buttons — and a horizontal one dead up/down — which would show
-		   as always-disabled glyphs; suppress them per axis). */
 		:where([media*="axis(y)"]) ui-media::scroll-button(left),
 		:where([media*="axis(y)"]) ui-media::scroll-button(right),
 		ui-media:where([media*="axis(y)"])::scroll-button(left),
@@ -448,7 +327,6 @@
 			right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem));
 			left: auto;
 		}
-		/* axis(y) + arw(start): arrows + dots on the inline-start (left) edge */
 		:where([media*="axis(y)"][media*="arw(start)"]) ui-media::scroll-button(up),
 		:where([media*="axis(y)"][media*="arw(start)"]) ui-media::scroll-button(down),
 		ui-media:where([media*="axis(y)"][media*="arw(start)"])::scroll-button(up),
@@ -460,18 +338,11 @@
 		ui-media:where([media*="axis(y)"][media*="arw(start)"])::scroll-marker-group {
 			justify-self: start;
 		}
-		/* axis(y) + arw(set): stack the pair at the block-end (up just above down) */
 		:where([media*="axis(y)"][media*="arw(set)"]) ui-media::scroll-button(up),
 		ui-media:where([media*="axis(y)"][media*="arw(set)"])::scroll-button(up) {
 			top: auto;
 			bottom: calc(anchor(bottom) + var(--ui-media-overlay-gap, 0.75rem) + var(--ui-media-arrow-size, 2.25rem) + var(--ui-media-arrow-gap, 0.5rem));
 		}
-		/* axis(y) + nav(below): a horizontal control band UNDER the vertical media.
-		   A vertical scroller's block-end padding is on the SCROLL axis, so it can't
-		   carve a fixed cross-axis band (the next slide just peeks through it). So the
-		   band is a SOLID, full-width overlay (the marker-group) pinned to the bottom
-		   of the scrollport — it covers the peek and the rotated up/down arrows sit on
-		   it. The base padding-block-end still shrinks each slide to fit above it. */
 		:where([media*="nav(below)"][media*="axis(y)"]) ui-media::scroll-marker-group,
 		ui-media:where([media*="nav(below)"][media*="axis(y)"])::scroll-marker-group {
 			align-items: center;
