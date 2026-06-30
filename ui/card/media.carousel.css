@@ -274,6 +274,9 @@
 		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(*):hover { background-color: var(--ui-media-arrow-bg-hover, rgb(0 0 0 / 0.7)); }
 		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) ui-media::scroll-button(*):disabled,
 		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(*):disabled { -webkit-backdrop-filter: none; backdrop-filter: none; cursor: default; opacity: var(--ui-media-arrow-disabled-opacity, 0.4); pointer-events: none; }
+		/* loop clones (ui-media.js prepends/appends a clone slide for seamless wrap) must
+		   not generate their own dots — only the real slides do. */
+		ui-media > [data-clone]::scroll-marker { content: none; }
 		/* direction = position + glyph rotation of the single base (right-pointing) glyph */
 		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) ui-media::scroll-button(left),
 		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(left) {

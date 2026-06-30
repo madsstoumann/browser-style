@@ -44,31 +44,46 @@ export default class UiMedia extends HTMLElement {
 	}
 
 	#upgrade() {
-		const imgs = [...this.children].filter(c => c.tagName === 'IMG');
-		if (!imgs.length) return;
+		// All direct media children get loading/preload; <img> additionally get srcset.
+		const kids = [...this.children].filter(c => c.tagName === 'IMG' || c.tagName === 'VIDEO');
+		if (!kids.length) return;
 
 		const enabled = cdnEnabled(this);
 		const ratio = this.#resolveRatio();
 		const cfg = this.#config();
-		const eager = this.hasAttribute('eager');
 
-		imgs.forEach((img, i) => {
-			// Cheap, host-independent progressive-enhancement defaults.
-			if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
-			const isHero = eager && i === 0;
-			if (!img.hasAttribute('loading')) img.setAttribute('loading', isHero ? 'eager' : 'lazy');
-			if (isHero && !img.hasAttribute('fetchpriority')) img.setAttribute('fetchpriority', 'high');
+		// Loading strategy: the `load(eager|lazy)` media token (on this or an ancestor)
+		// or the legacy `eager` attribute. Default = lazy for every slide (safe without
+		// viewport detection); opt the hero carousel in with `eager` / `load(eager)`.
+		// - load(eager): every slide eager (videos preload=auto)
+		// - load(lazy):  every slide lazy  (videos preload=none)
+		// - eager attr / hero: FIRST slide eager + fetchpriority=high, rest lazy
+		const loadTok = (this.closest('[media]')?.getAttribute('media') || '').match(/load\((eager|lazy)\)/)?.[1];
+		const hero = loadTok === 'eager' || this.hasAttribute('eager');
+
+		kids.forEach((el, i) => {
+			const eager = loadTok === 'eager' || (hero && i === 0 && loadTok !== 'lazy');
+
+			if (el.tagName === 'VIDEO') {
+				if (!el.hasAttribute('preload')) el.setAttribute('preload', eager ? 'auto' : 'none');
+				return; // no srcset/loading for <video>
+			}
+
+			// <img> — cheap, host-independent progressive-enhancement defaults.
+			if (!el.hasAttribute('decoding')) el.setAttribute('decoding', 'async');
+			if (!el.hasAttribute('loading')) el.setAttribute('loading', eager ? 'eager' : 'lazy');
+			if (eager && i === 0 && !el.hasAttribute('fetchpriority')) el.setAttribute('fetchpriority', 'high');
 
 			// CDN srcset only when enabled and the image is eligible.
 			if (!enabled) return;
-			if (img.hasAttribute('srcset')) return; // author override — respect it
-			const src = img.getAttribute('src');
+			if (el.hasAttribute('srcset')) return; // author override — respect it
+			const src = el.getAttribute('src');
 			if (!this.#eligible(src)) return;
 
 			const srcset = buildSrcset(src, { ...cfg, ratio });
 			if (!srcset) return;
-			img.setAttribute('srcset', srcset);
-			if (!img.hasAttribute('sizes')) img.setAttribute('sizes', cfg.sizes);
+			el.setAttribute('srcset', srcset);
+			if (!el.hasAttribute('sizes')) el.setAttribute('sizes', cfg.sizes);
 		});
 	}
 

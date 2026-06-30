@@ -151,6 +151,38 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 | `dot(sm)` `dot(md)` `dot(lg)` `dot(xl)` | Size (`md` = default) |
 | `dot(start)` `dot(center)` `dot(end)` | **Position within a `nav(below)` band** — left / center (default) / right. `start`/`end` clear the arrow on that side (or the `arw(set)` pair). |
 
+### `load()` — image/video loading (JS-applied)
+
+| Token / attr | Result |
+|--------------|--------|
+| *(default)* | Every slide `loading="lazy"`, `decoding="async"`; video `preload="none"` |
+| `eager` (attr) | **First** slide `loading="eager"` + `fetchpriority="high"` (hero); rest lazy |
+| `load(eager)` | **All** slides eager (+ first `fetchpriority="high"`); video `preload="auto"` |
+| `load(lazy)` | All slides lazy |
+
+Applied by `ui-media-srcset.js`. Best practice: add `eager` to the one above-the-fold
+(hero) carousel; leave the rest default-lazy. Author `loading`/`preload`/`srcset`
+attributes are never overwritten.
+
+---
+
+## JavaScript behaviors (`ui-media.js`)
+
+Two things CSS can't do are added by `ui-media.js` as **pure progressive
+enhancement** — with JS off the carousel still scrolls, snaps, and shows
+dots/arrows; these tokens simply no-op.
+
+| Token | Needs JS | Result |
+|-------|:--------:|--------|
+| `auto` · `auto(4s)` · `auto(800ms)` | yes | Autoplay; advances one slide per interval (default 5s), seamlessly wraps. Pauses on hover / focus / drag / hidden tab / reduced-motion. Sets `--ui-media-autoplay` so a `dot(pill)` timer stays in sync. |
+| `loop` | yes | **Seamless** infinite loop — clones the first/last slide so next-past-the-last smooth-scrolls into a clone, then invisibly resets. Works with dots + arrows, both directions. |
+
+**Performance.** The script runs **one** `document.querySelectorAll` at idle for just
+these tokens (`auto`, `loop`) — plain `<ui-media>` and CSS-only carousels never match,
+so a page with hundreds of media items costs nothing. **No IntersectionObserver /
+MutationObserver.** For content injected after load, call `window.uiMedia.scan()` to
+re-run discovery.
+
 ---
 
 ## Custom properties
@@ -191,7 +223,7 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-media-pill-height` | `0.35rem` | Pill height |
 | `--ui-media-pill-track` | `rgb(255 255 255 / 0.35)` | Pill track (unfilled) |
 | `--ui-media-pill-fill` | `#fff` | Pill fill (timer) |
-| `--ui-media-autoplay` | `5s` | Pill timer duration |
+| `--ui-media-autoplay` | `5s` | Pill timer duration (auto-set by `auto(Ns)`) |
 
 ### Below-band (`nav(below)`)
 

@@ -474,6 +474,26 @@
 	</div>
 
 	<!-- ============================================================
+	     JS-enhanced — autoplay · loop (seamless)
+	     ============================================================ -->
+	<h2>JS-enhanced behaviors</h2>
+	<p class="note">Two things CSS can't do are layered on by <code>ui-media.js</code> — strictly progressive enhancement. With JS off the carousels still scroll, snap, show dots/arrows; these tokens just no-op. The script runs <strong>one</strong> <code>querySelectorAll</code> for the JS tokens (<code>auto</code>, <code>loop</code>) — plain <code>&lt;ui-media&gt;</code> are never touched.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(16/9) nav dot(pill) auto(3s) loop" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/destinations.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">auto(3s) loop dot(pill)</small><h2 data-part="headline">Autoplay + pill timer</h2><p data-part="summary">Advances every 3s, seamlessly wraps; pauses on hover/focus. Pill fills in sync.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) nav loop" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">loop</small><h2 data-part="headline">Seamless loop</h2><p data-part="summary">Next past the last smooth-scrolls into a cloned slide, then invisibly resets — no jump. Works with dots + arrows, both directions.</p></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
 	     Bare standalone <ui-media> — no <ui-card>, complex configs
 	     ============================================================ -->
 	<h2>Bare <code>&lt;ui-media&gt;</code> — no <code>&lt;ui-card&gt;</code></h2>
