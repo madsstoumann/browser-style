@@ -86,7 +86,7 @@ const navWords = (el) => (el.getAttribute('nav') || '').split(/\s+/);
 // snap children = the slides: every direct child EXCEPT the overlay furniture
 // (chip/sticker/play/save). A slide is an <img>/<video>, a <ui-slide> group, or any
 // wrapper the layout system emits (<lay-out>, <div>…) — mirrors the CSS :not() list.
-const NOT_SLIDE = /^(UI-CHIP|UI-STICKER|UI-PLAY|UI-SAVE)$/;
+const NOT_SLIDE = /^(UI-CHIP|UI-PLAY|UI-SAVE|UI-STICKER)$/;
 const slidesOf = (el) => [...el.children].filter(c => !NOT_SLIDE.test(c.tagName));
 
 function initCarousel(scroller) {

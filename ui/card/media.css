@@ -162,7 +162,7 @@
 	   Absolute-positioned (carousel-safe). Default area by role; override +
 	   theme come from the parent media= token. Elements carry only text/glyph.
 	   ============================================================ */
-	:where(ui-media) :is(ui-chip, ui-sticker, ui-save, ui-play) {
+	:where(ui-media) :is(ui-chip, ui-play, ui-save, ui-sticker) {
 		--_g: var(--ui-media-overlay-gap, 0.75rem);
 		position: absolute;
 		z-index: 2;
@@ -254,7 +254,4 @@
 		position: absolute;
 		z-index: 1;
 	}
-	/* a caption inside the media sits above the scrim */
-	:where([media*="scm"]) ui-media [data-part="caption"],
-	ui-media:where([media*="scm"]) [data-part="caption"] { position: relative; z-index: 2; }
 }

@@ -234,6 +234,11 @@ defaults to the (light) card surface, so the dot/arrow ink defaults flip to dark
 Up/down arrows + a vertical dot column on the inline-end edge by default; `arw(sta)`
 flips both to the inline-start edge; `arw(set)` stacks the pair at the block-end.
 
+**Dot alignment:** the dot column is given `inline-size: var(--ui-media-arrow-size)` and
+`align-items: center`, so the dots sit centered within the arrow-width band — on the same
+vertical axis as the up/down arrows (rather than flush to the edge). Works on either edge:
+`arw(sta)` only flips `justify-self`, the centering carries over.
+
 **`nav(blw)` + `axis(y)`** is special: a vertical scroller's `padding-block-end` is on
 the SCROLL axis, so it can't carve a fixed cross-axis band (the next slide peeks through).
 So the band is a **solid, full-width overlay** (the marker-group itself) pinned to the
