@@ -4,7 +4,7 @@
    (nav / arrow= / dot=, self-only). Both resolve to the same rules. */
 @layer bs-component {
 
-:where([media*="nav"]) ui-media,
+	:where([media*="nav"]) ui-media,
 	ui-media:where([media*="nav"], [nav]) {
 		background: var(--ui-media-bg, #0000);
 		display: flex;
@@ -14,38 +14,26 @@
 		scroll-snap-type: x mandatory;
 		scrollbar-width: thin;
 	}
+	/* Every direct child is one slide — EXCEPT the overlay furniture (chip/sticker/play/save),
+	   which stays absolutely positioned over the frame (see media.css). A slide can be an
+	   <img>/<video>, a <ui-slide> group, or any wrapper the layout system emits (<lay-out>,
+	   <div>…) — the carousel only makes it a snap child; the wrapper owns its own inner layout. */
+	:where([media*="nav"]) ui-media > :not(ui-chip, ui-sticker, ui-play, ui-save),
+	ui-media:where([media*="nav"], [nav]) > :not(ui-chip, ui-sticker, ui-play, ui-save) {
+		block-size: 100%;
+		flex: 0 0 100%;
+		inline-size: 100%;
+		scroll-snap-align: start;
+	}
+	/* media slides: undo the base frame's absolute stacking so they flow as flex slides */
 	:where([media*="nav"]) ui-media > :is(img, video),
 	ui-media:where([media*="nav"], [nav]) > :is(img, video) {
-		block-size: 100%;
-		flex: 0 0 100%;
-		inline-size: 100%;
 		inset: auto;
 		position: static;
-		scroll-snap-align: start;
 	}
 
-	:where([media*="nav"]) ui-media > ui-slide,
-	ui-media:where([media*="nav"], [nav]) > ui-slide {
-		block-size: 100%;
-		display: grid;
-		flex: 0 0 100%;
-		inline-size: 100%;
-		scroll-snap-align: start;
-	}
-
-	ui-media ui-media {
-		display: grid;
-		inline-size: auto;
-		overflow: hidden;
-		scroll-snap-type: none;
-	}
-	ui-media ui-media > :is(img, video) {
-		block-size: 100%;
-		flex: initial;
-		inline-size: 100%;
-		inset: 0;
-		position: absolute;
-	}
+	/* A nested <ui-media> (layered card used as a slide) is reset to a plain frame in
+	   media.css ("ui-media ui-media"); its carousel control-suppression is in @supports below. */
 
 	@media (prefers-reduced-motion: no-preference) {
 		:where([media*="nav"]) ui-media,
@@ -55,8 +43,7 @@
 	:where([media*="axis(y)"]) ui-media,
 	ui-media:where([media*="axis(y)"], [nav~="y"]) {
 		flex-direction: column;
-		overflow-x: hidden;
-		overflow-y: auto;
+		overflow: hidden auto;
 		scroll-snap-type: y mandatory;
 	}
 
@@ -92,8 +79,8 @@
 				top: calc(anchor(bottom) - var(--ui-media-overlay-gap, 0.75rem) - var(--ui-media-dot-size, 0.6rem));
 				z-index: 3;
 			}
-			& > :is(img, video)::scroll-marker,
-			& > ui-slide::scroll-marker {
+			/* one dot per slide — furniture (chip/sticker/play/save) excluded */
+			& > :not(ui-chip, ui-sticker, ui-play, ui-save)::scroll-marker {
 				background: var(--ui-media-dot-bg, rgb(255 255 255 / 0.5));
 				block-size: var(--ui-media-dot-size, 0.6rem);
 				border: var(--ui-media-dot-border, 0);
@@ -102,8 +89,7 @@
 				cursor: pointer;
 				inline-size: var(--ui-media-dot-size, 0.6rem);
 			}
-			& > :is(img, video)::scroll-marker:target-current,
-			& > ui-slide::scroll-marker:target-current {
+			& > :not(ui-chip, ui-sticker, ui-play, ui-save)::scroll-marker:target-current {
 				background: var(--ui-media-dot-active, #fff);
 			}
 		}
@@ -113,25 +99,25 @@
 		ui-media ui-media::scroll-marker-group { display: none; }
 		ui-media ui-media > :is(img, video)::scroll-marker { content: none; }
 
-		/* dot shape: pill (default circle needs no rule) */
-		:where([media*="dot(pll)"]) ui-media > :is(img, video)::scroll-marker,
-		ui-media:where([media*="dot(pll)"], [dot~="pll"]) > :is(img, video)::scroll-marker {
+		/* dot shape: pill (default circle needs no rule) — applies to every slide marker */
+		:where([media*="dot(pll)"]) ui-media > :not(ui-chip, ui-sticker, ui-play, ui-save)::scroll-marker,
+		ui-media:where([media*="dot(pll)"], [dot~="pll"]) > :not(ui-chip, ui-sticker, ui-play, ui-save)::scroll-marker {
 			background: var(--ui-media-pill-track, rgb(255 255 255 / 0.35));
 			block-size: var(--ui-media-pill-height, 0.35rem);
 			border-radius: var(--radius-pill, 100px);
 			inline-size: var(--ui-media-pill-width, 1.5rem);
 		}
 		@media (prefers-reduced-motion: no-preference) {
-			:where([media*="dot(pll)"]) ui-media > :is(img, video)::scroll-marker:target-current,
-			ui-media:where([media*="dot(pll)"], [dot~="pll"]) > :is(img, video)::scroll-marker:target-current {
+			:where([media*="dot(pll)"]) ui-media > :not(ui-chip, ui-sticker, ui-play, ui-save)::scroll-marker:target-current,
+			ui-media:where([media*="dot(pll)"], [dot~="pll"]) > :not(ui-chip, ui-sticker, ui-play, ui-save)::scroll-marker:target-current {
 				animation: ui-media-pill-fill var(--ui-media-autoplay, 5s) linear forwards;
 				/* track = background-color; gradient (fill) starts at 0% width, keyframes grow background-size */
 				background: linear-gradient(var(--ui-media-pill-fill, #fff), var(--ui-media-pill-fill, #fff)) no-repeat 0 0 / 0% 100% var(--ui-media-pill-track, rgb(255 255 255 / 0.35));
 			}
 		}
 		@media (prefers-reduced-motion: reduce) {
-			:where([media*="dot(pll)"]) ui-media > :is(img, video)::scroll-marker:target-current,
-			ui-media:where([media*="dot(pll)"], [dot~="pll"]) > :is(img, video)::scroll-marker:target-current {
+			:where([media*="dot(pll)"]) ui-media > :not(ui-chip, ui-sticker, ui-play, ui-save)::scroll-marker:target-current,
+			ui-media:where([media*="dot(pll)"], [dot~="pll"]) > :not(ui-chip, ui-sticker, ui-play, ui-save)::scroll-marker:target-current {
 				background-color: var(--ui-media-pill-fill, #fff);
 			}
 		}
@@ -295,7 +281,9 @@
 			&::scroll-button(right) { display: none; }
 			&::scroll-marker-group {
 				flex-direction: column;
+				align-items: center;                                  /* center dots within the arrow-width band */
 				align-self: anchor-center;
+				inline-size: var(--ui-media-arrow-size, 2.25rem);     /* band = arrow width → dots align to arrow center */
 				justify-self: end;
 				inset: auto;
 				margin-inline: var(--ui-media-overlay-gap, 0.75rem);

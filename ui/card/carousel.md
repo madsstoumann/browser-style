@@ -114,14 +114,20 @@ is respected (no smooth scroll, no pill timer animation).
 > e.g. `arw(arr) arw(drk)` ≡ `arrow="arr drk"`. One base SVG is **rotated** per direction
 > (left 180°, up −90°, down 90°) — no per-direction SVG duplication.
 
-### Multiple items per slide — `<ui-slide>` groups
+### Multiple items per slide — group wrappers
 
-By default each direct child of `<ui-media>` is one slide. To show **multiple items
-per slide**, wrap a group in a `<ui-slide>` element — that group becomes one slide and
-the carousel snaps the whole group (one dot per group).
+**Every direct child of `<ui-media>` is one slide** — an `<img>`/`<video>`, or any
+**wrapper element** holding a group of items. The wrapper tag is not hardcoded: use
+`<ui-slide>`, a layout-system element (`<lay-out>`), or a plain `<div>` — all behave
+identically (one slide, one dot, snaps the whole group).
 
-**The carousel does NOT lay out items inside a slide** — that grid is yours (the
-layout system, or your own class). `<ui-slide>` is just the snap-child container.
+> **Exception — overlay furniture.** `<ui-chip>`, `<ui-sticker>`, `<ui-play>` and
+> `<ui-save>` are *excluded*: they stay absolutely positioned over the frame and never
+> become slides or get a dot. (Selector: `> :not(ui-chip, ui-sticker, ui-play, ui-save)`.)
+
+**The carousel does NOT lay out items inside a slide** — that grid is yours (the layout
+system, or your own class). The wrapper is just the snap-child container; it keeps its
+own `display`, so a `<lay-out>` or `.slide-cols` element controls the inner columns.
 
 ```html
 <!-- you own the grid (here a demo class with --cols) -->

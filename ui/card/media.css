@@ -35,6 +35,22 @@
 	:where([media*="asr("]) ui-media,
 	:where(ui-media[media*="asr("]) { min-block-size: 0; }
 
+	/* A <ui-media> nested inside another <ui-media> (e.g. a layered card used as a
+	   carousel slide) is always a plain frame — never a scroller. Raw `ui-media ui-media`
+	   (specificity 0,0,2) out-specifies the carousel's descendant rules (0,0,1) in
+	   media.carousel.css, so the frame wins regardless of import order — no !important. */
+	ui-media ui-media {
+		display: grid;
+		inline-size: auto;
+		overflow: hidden;
+		scroll-snap-type: none;
+	}
+	ui-media ui-media > :is(img, video) {
+		flex: initial;
+		inset: 0;
+		position: absolute;
+	}
+
 	/* ============================================================
 	   media= PARSE LAYER — tokens set props that inherit to <ui-media>
 	   ============================================================ */
@@ -160,13 +176,13 @@
 	/* position override — parent media="el(pos)" (or self). 9 logical positions,
 	   grouped by position; each lists the elements that accept it. */
 	:where([media*="chip(ts)"]) ui-chip, :where([media*="sticker(ts)"]) ui-sticker, :where([media*="save(ts)"]) ui-save, :where([media*="play(ts)"]) ui-play { inset-block: var(--_g) auto; inset-inline: var(--_g) auto; translate: none; }
-	:where([media*="chip(tc)"]) ui-chip, :where([media*="sticker(tc)"]) ui-sticker, :where([media*="save(tc)"]) ui-save, :where([media*="play(tc)"]) ui-play { inset-block: var(--_g) auto; inset-inline: 50%; translate: -50% 0; }
+	:where([media*="chip(tc)"]) ui-chip, :where([media*="sticker(tc)"]) ui-sticker, :where([media*="save(tc)"]) ui-save, :where([media*="play(tc)"]) ui-play { inset-block: var(--_g) auto; inset-inline: 50% auto; translate: -50% 0; }
 	:where([media*="chip(te)"]) ui-chip, :where([media*="sticker(te)"]) ui-sticker, :where([media*="save(te)"]) ui-save, :where([media*="play(te)"]) ui-play { inset-block: var(--_g) auto; inset-inline: auto var(--_g); translate: none; }
-	:where([media*="chip(cs)"]) ui-chip, :where([media*="sticker(cs)"]) ui-sticker, :where([media*="save(cs)"]) ui-save, :where([media*="play(cs)"]) ui-play { inset-block: 50%; inset-inline: var(--_g) auto; translate: 0 -50%; }
-	:where([media*="chip(cc)"]) ui-chip, :where([media*="sticker(cc)"]) ui-sticker, :where([media*="save(cc)"]) ui-save, :where([media*="play(cc)"]) ui-play { inset-block: 50%; inset-inline: 50%; translate: -50% -50%; }
-	:where([media*="chip(ce)"]) ui-chip, :where([media*="sticker(ce)"]) ui-sticker, :where([media*="save(ce)"]) ui-save, :where([media*="play(ce)"]) ui-play { inset-block: 50%; inset-inline: auto var(--_g); translate: 0 -50%; }
+	:where([media*="chip(cs)"]) ui-chip, :where([media*="sticker(cs)"]) ui-sticker, :where([media*="save(cs)"]) ui-save, :where([media*="play(cs)"]) ui-play { inset-block: 50% auto; inset-inline: var(--_g) auto; translate: 0 -50%; }
+	:where([media*="chip(cc)"]) ui-chip, :where([media*="sticker(cc)"]) ui-sticker, :where([media*="save(cc)"]) ui-save, :where([media*="play(cc)"]) ui-play { inset-block: 50% auto; inset-inline: 50% auto; translate: -50% -50%; }
+	:where([media*="chip(ce)"]) ui-chip, :where([media*="sticker(ce)"]) ui-sticker, :where([media*="save(ce)"]) ui-save, :where([media*="play(ce)"]) ui-play { inset-block: 50% auto; inset-inline: auto var(--_g); translate: 0 -50%; }
 	:where([media*="chip(bs)"]) ui-chip, :where([media*="sticker(bs)"]) ui-sticker, :where([media*="save(bs)"]) ui-save, :where([media*="play(bs)"]) ui-play { inset-block: auto var(--_g); inset-inline: var(--_g) auto; translate: none; }
-	:where([media*="chip(bc)"]) ui-chip, :where([media*="sticker(bc)"]) ui-sticker, :where([media*="save(bc)"]) ui-save, :where([media*="play(bc)"]) ui-play { inset-block: auto var(--_g); inset-inline: 50%; translate: -50% 0; }
+	:where([media*="chip(bc)"]) ui-chip, :where([media*="sticker(bc)"]) ui-sticker, :where([media*="save(bc)"]) ui-save, :where([media*="play(bc)"]) ui-play { inset-block: auto var(--_g); inset-inline: 50% auto; translate: -50% 0; }
 	:where([media*="chip(be)"]) ui-chip, :where([media*="sticker(be)"]) ui-sticker, :where([media*="save(be)"]) ui-save, :where([media*="play(be)"]) ui-play { inset-block: auto var(--_g); inset-inline: auto var(--_g); translate: none; }
 
 	/* ============================================================

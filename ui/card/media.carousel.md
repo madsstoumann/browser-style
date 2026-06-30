@@ -150,23 +150,34 @@ Native thin scrollbar (`scrollbar-color: auto`) by default — cleanest, platfor
 Override colours with a single `--ui-media-scrollbar-color` token (`"<thumb> <track>"`,
 e.g. `#ccc transparent`); width via `--ui-media-scrollbar-width`.
 
-## Multi-item slides (`<ui-slide>` groups)
+## Slides — every direct child (tag-agnostic)
 
-A `<ui-slide>` element is **one slide** (snap child) that can hold multiple items
-(plain `<img>`/`<video>`, or layered `<ui-card>`s). The carousel only makes it a snap
-child — `flex: 0 0 100%; display: grid; scroll-snap-align: start` — and gives it **one**
-`::scroll-marker`. **It does NOT lay out the items inside** (columns/gap/object-fit):
-that's the **layout system's job** (or, in the demos, a `.slide-cols` class with a
-`--cols` var). There is intentionally no `cols()` token. Note: `media.css` absolutely-
-stacks any `<img>` descendant of `<ui-media>`, so a layout class for plain-image groups
-must reset them to `position: relative; inset: auto`.
+**A slide is any direct child of the carousel** — selected as
+`> :not(ui-chip, ui-sticker, ui-play, ui-save)` so the tag is never hardcoded. It can be:
+- an `<img>`/`<video>` (a single-media slide), or
+- **any wrapper** holding a group: `<ui-slide>`, a layout-system element (`<lay-out>`),
+  or a plain `<div>`. The carousel only makes it a snap child
+  (`flex: 0 0 100%; scroll-snap-align: start`) and gives it **one** `::scroll-marker`.
+
+**Excluded — overlay furniture.** `<ui-chip>` / `<ui-sticker>` / `<ui-play>` / `<ui-save>`
+are direct children too, but stay absolutely positioned over the frame (media.css). The
+`:not()` keeps them out of the slide layout *and* out of the dot set (no phantom dots).
+The same exclusion list lives in `ui-media.js` (`NOT_SLIDE`) for the loop/autoplay count.
+
+**The carousel does NOT lay out the items inside a group** (columns/gap/object-fit) — the
+wrapper keeps its own `display`, so the **layout system** (or a `.slide-cols` class with a
+`--cols` var) owns that. There is intentionally no `cols()` token. Note: `media.css`
+absolutely-stacks any `<img>` descendant of `<ui-media>`, so a layout class for
+plain-image groups must reset them to `position: relative; inset: auto`.
 
 ## Nesting guard
 
 A `<ui-media>` nested **inside** a layered `<ui-card>` slide is NOT itself a scroller.
-The descendant carousel rules would otherwise cascade into it, so `ui-media ui-media` is
-pinned back to the base frame (grid, `overflow: hidden`, abspos images) and its leaked
-controls/markers are killed (`scroll-marker-group: none`, `::scroll-button { display:none }`,
+The descendant carousel rules would otherwise cascade into it. The **layout reset** lives
+in `media.css` as a rendering rule — `ui-media ui-media` (specificity 0,0,2) pins it back
+to the base frame (grid, `overflow: hidden`, abspos images), out-specifying the carousel's
+descendant rules (0,0,1). The carousel-specific **control suppression** stays here in
+`@supports` (`scroll-marker-group: none`, `::scroll-button { display:none }`,
 `::scroll-marker { content: none }`).
 
 ## Dots
