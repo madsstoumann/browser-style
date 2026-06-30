@@ -241,7 +241,7 @@
 
 	<!-- Video + bare scroller -->
 	<h2>Video &amp; multi-source scroller</h2>
-	<p class="note"><code>&lt;ui-media&gt;</code> accepts a <code>&lt;video&gt;</code> (native controls/poster) just like an image. Add <code>media="nav"</code> for multiple sources — a flex scroll-snap row. <code>nav(none)</code> leaves it a bare swipe scroller, no JS.</p>
+	<p class="note"><code>&lt;ui-media&gt;</code> accepts a <code>&lt;video&gt;</code> (native controls/poster) just like an image. Add <code>media="nav"</code> for multiple sources — a flex scroll-snap row. <code>nav(non)</code> leaves it a bare swipe scroller, no JS.</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(16/9) chip(ts) chip(blue)">
 			<cq-box>
@@ -257,7 +257,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="col" media="asr(16/9) nav(none) chip(te) chip(accent)">
+		<ui-card variant="col" media="asr(16/9) nav(non) chip(te) chip(accent)">
 			<cq-box>
 				<ui-media>
 					<img src="https://browser.style/assets/images/destinations.png" alt="" loading="lazy">
@@ -269,7 +269,7 @@
 				<ui-content>
 					<small data-part="eyebrow">Travel</small>
 					<h2 data-part="headline">Bare swipe scroller</h2>
-					<p data-part="summary">Four sources in a scroll-snap row — <code>nav(none)</code>, swipe only.</p>
+					<p data-part="summary">Four sources in a scroll-snap row — <code>nav(non)</code>, swipe only.</p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -314,27 +314,27 @@
 
 	<!-- Carousel controls — pick pieces + theme them -->
 	<h2>Carousel controls &amp; theming</h2>
-	<p class="note">Pick controls with <code>nav(dots)</code>, <code>nav(arrows)</code>, bare <code>nav</code> (both), or <code>nav(none)</code>. Colours, dot size and the arrow glyphs are all tokens.</p>
+	<p class="note">Pick controls with <code>nav(dot)</code>, <code>nav(arw)</code>, bare <code>nav</code> (both), or <code>nav(non)</code>. Colours, dot size and the arrow glyphs are all tokens.</p>
 	<div class="grid grid-3">
-		<ui-card variant="col" media="asr(4/3) nav(dots)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav(dot)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="https://browser.style/assets/images/destinations.png" alt="" loading="lazy">
 					<img src="https://browser.style/assets/images/river.png" alt="" loading="lazy">
 					<img src="https://browser.style/assets/images/mindfulness.png" alt="" loading="lazy">
 				</ui-media>
-				<ui-content><small data-part="eyebrow">nav(dots)</small><h2 data-part="headline">Dots only</h2></ui-content>
+				<ui-content><small data-part="eyebrow">nav(dot)</small><h2 data-part="headline">Dots only</h2></ui-content>
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="col" media="asr(4/3) nav(arrows)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav(arw)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="https://browser.style/assets/images/gastronomy.png" alt="" loading="lazy">
 					<img src="https://browser.style/assets/images/brewandbean.png" alt="" loading="lazy">
 					<img src="https://browser.style/assets/images/quickboil.png" alt="" loading="lazy">
 				</ui-media>
-				<ui-content><small data-part="eyebrow">nav(arrows)</small><h2 data-part="headline">Arrows only</h2></ui-content>
+				<ui-content><small data-part="eyebrow">nav(arw)</small><h2 data-part="headline">Arrows only</h2></ui-content>
 			</cq-box>
 		</ui-card>
 

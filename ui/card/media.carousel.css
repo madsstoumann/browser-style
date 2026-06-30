@@ -1,9 +1,12 @@
-/* ui-media carousel — see media.carousel.md (internals) + carousel.md (tokens). */
+/* ui-media carousel — see media.carousel.md (internals) + carousel.md (tokens).
+   Two entry points, one vocabulary: inheritable media= tokens (arw()/dot()/nav(),
+   settable on an ancestor) OR dedicated grouped attributes on the <ui-media> itself
+   (nav / arrow= / dot=, self-only). Both resolve to the same rules. */
 @layer bs-component {
 
-	:where([media*="nav"]) ui-media,
-	ui-media:where([media*="nav"]) {
-		background: var(--ui-media-bg, transparent);
+:where([media*="nav"]) ui-media,
+	ui-media:where([media*="nav"], [nav]) {
+		background: var(--ui-media-bg, #0000);
 		display: flex;
 		inline-size: round(down, 100%, 1px);
 		overflow-x: auto;
@@ -12,7 +15,7 @@
 		scrollbar-width: thin;
 	}
 	:where([media*="nav"]) ui-media > :is(img, video),
-	ui-media:where([media*="nav"]) > :is(img, video) {
+	ui-media:where([media*="nav"], [nav]) > :is(img, video) {
 		block-size: 100%;
 		flex: 0 0 100%;
 		inline-size: 100%;
@@ -22,7 +25,7 @@
 	}
 
 	:where([media*="nav"]) ui-media > ui-slide,
-	ui-media:where([media*="nav"]) > ui-slide {
+	ui-media:where([media*="nav"], [nav]) > ui-slide {
 		block-size: 100%;
 		display: grid;
 		flex: 0 0 100%;
@@ -46,11 +49,11 @@
 
 	@media (prefers-reduced-motion: no-preference) {
 		:where([media*="nav"]) ui-media,
-		ui-media:where([media*="nav"]) { scroll-behavior: smooth; }
+		ui-media:where([media*="nav"], [nav]) { scroll-behavior: smooth; }
 	}
 
 	:where([media*="axis(y)"]) ui-media,
-	ui-media:where([media*="axis(y)"]) {
+	ui-media:where([media*="axis(y)"], [nav~="y"]) {
 		flex-direction: column;
 		overflow-x: hidden;
 		overflow-y: auto;
@@ -58,27 +61,29 @@
 	}
 
 	:where([media*="nav(bar)"]) ui-media,
-	ui-media:where([media*="nav(bar)"]) {
+	ui-media:where([media*="nav(bar)"], [nav~="bar"]) {
 		scrollbar-color: var(--ui-media-scrollbar-color, auto);
 		scrollbar-width: var(--ui-media-scrollbar-width, thin);
 	}
 
-	:where([media*="nav(below)"]) ui-media,
-	ui-media:where([media*="nav(below)"]) {
+	:where([media*="nav(blw)"]) ui-media,
+	ui-media:where([media*="nav(blw)"], [nav~="blw"]) {
 		background: var(--ui-media-controls-bg, var(--ui-media-bg, transparent));
 		padding-block-end: calc(var(--ui-media-below-gap, var(--spacing-sm, 0.5rem)) + var(--ui-media-band, 2.75rem));
 	}
 
 	@supports (scroll-marker-group: after) {
 
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(arrows)"], [media*="nav(below)"]) ui-media,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(arrows)"], [media*="nav(below)"]) { scrollbar-width: none; }
+		/* controls present (dots OR arrows) → hide native scrollbar */
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(arw)"], [media*="nav(blw)"]) ui-media,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(arw)"], [media*="nav(blw)"], [nav]:not([nav~="non"]):not([nav~="bar"])) { scrollbar-width: none; }
 
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) ui-media,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) { scroll-marker-group: after; }
+		/* ---- DOTS present: bare nav · nav(dot) · nav(blw) ---- */
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"]) ui-media,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"], [nav]:not([nav~="arw"]):not([nav~="non"]):not([nav~="bar"])) { scroll-marker-group: after; }
 
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"])::scroll-marker-group {
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"], [nav]:not([nav~="arw"]):not([nav~="non"]):not([nav~="bar"]))::scroll-marker-group {
 			display: flex;
 			gap: var(--ui-media-dot-gap, 0.5rem);
 			justify-self: anchor-center;
@@ -87,8 +92,8 @@
 			top: calc(anchor(bottom) - var(--ui-media-overlay-gap, 0.75rem) - var(--ui-media-dot-size, 0.6rem));
 			z-index: 3;
 		}
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) ui-media > :is(img, video)::scroll-marker,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) > :is(img, video)::scroll-marker {
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"]) ui-media > :is(img, video)::scroll-marker,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"], [nav]:not([nav~="arw"]):not([nav~="non"]):not([nav~="bar"])) > :is(img, video)::scroll-marker {
 			background: var(--ui-media-dot-bg, rgb(255 255 255 / 0.5));
 			block-size: var(--ui-media-dot-size, 0.6rem);
 			border: var(--ui-media-dot-border, 0);
@@ -97,13 +102,13 @@
 			cursor: pointer;
 			inline-size: var(--ui-media-dot-size, 0.6rem);
 		}
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) ui-media > :is(img, video)::scroll-marker:target-current,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) > :is(img, video)::scroll-marker:target-current {
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"]) ui-media > :is(img, video)::scroll-marker:target-current,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"], [nav]:not([nav~="arw"]):not([nav~="non"]):not([nav~="bar"])) > :is(img, video)::scroll-marker:target-current {
 			background: var(--ui-media-dot-active, #fff);
 		}
 
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) ui-media > ui-slide::scroll-marker,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) > ui-slide::scroll-marker {
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"]) ui-media > ui-slide::scroll-marker,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"], [nav]:not([nav~="arw"]):not([nav~="non"]):not([nav~="bar"])) > ui-slide::scroll-marker {
 			background: var(--ui-media-dot-bg, rgb(255 255 255 / 0.5));
 			block-size: var(--ui-media-dot-size, 0.6rem);
 			border: var(--ui-media-dot-border, 0);
@@ -112,8 +117,8 @@
 			cursor: pointer;
 			inline-size: var(--ui-media-dot-size, 0.6rem);
 		}
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) ui-media > ui-slide::scroll-marker:target-current,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dots)"], [media*="nav(below)"]) > ui-slide::scroll-marker:target-current {
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"]) ui-media > ui-slide::scroll-marker:target-current,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"], [nav]:not([nav~="arw"]):not([nav~="non"]):not([nav~="bar"])) > ui-slide::scroll-marker:target-current {
 			background: var(--ui-media-dot-active, #fff);
 		}
 
@@ -122,16 +127,17 @@
 		ui-media ui-media::scroll-marker-group { display: none; }
 		ui-media ui-media > :is(img, video)::scroll-marker { content: none; }
 
-		:where([media*="dot(pill)"]) ui-media > :is(img, video)::scroll-marker,
-		ui-media:where([media*="dot(pill)"]) > :is(img, video)::scroll-marker {
+		/* dot shape: pill (default circle needs no rule) */
+		:where([media*="dot(pll)"]) ui-media > :is(img, video)::scroll-marker,
+		ui-media:where([media*="dot(pll)"], [dot~="pll"]) > :is(img, video)::scroll-marker {
 			background: var(--ui-media-pill-track, rgb(255 255 255 / 0.35));
 			block-size: var(--ui-media-pill-height, 0.35rem);
 			border-radius: var(--radius-pill, 100px);
 			inline-size: var(--ui-media-pill-width, 1.5rem);
 		}
 		@media (prefers-reduced-motion: no-preference) {
-			:where([media*="dot(pill)"]) ui-media > :is(img, video)::scroll-marker:target-current,
-			ui-media:where([media*="dot(pill)"]) > :is(img, video)::scroll-marker:target-current {
+			:where([media*="dot(pll)"]) ui-media > :is(img, video)::scroll-marker:target-current,
+			ui-media:where([media*="dot(pll)"], [dot~="pll"]) > :is(img, video)::scroll-marker:target-current {
 				animation: ui-media-pill-fill var(--ui-media-autoplay, 5s) linear forwards;
 				background-color: var(--ui-media-pill-track, rgb(255 255 255 / 0.35));
 				background-image: linear-gradient(var(--ui-media-pill-fill, #fff), var(--ui-media-pill-fill, #fff));
@@ -140,33 +146,43 @@
 			}
 		}
 		@media (prefers-reduced-motion: reduce) {
-			:where([media*="dot(pill)"]) ui-media > :is(img, video)::scroll-marker:target-current,
-			ui-media:where([media*="dot(pill)"]) > :is(img, video)::scroll-marker:target-current {
+			:where([media*="dot(pll)"]) ui-media > :is(img, video)::scroll-marker:target-current,
+			ui-media:where([media*="dot(pll)"], [dot~="pll"]) > :is(img, video)::scroll-marker:target-current {
 				background-color: var(--ui-media-pill-fill, #fff);
 			}
 		}
-		:where([media*="dot(sm)"]) { --ui-media-dot-size: 0.45rem; --ui-media-pill-width: 1.15rem; --ui-media-pill-height: 0.28rem; }
-		:where([media*="dot(md)"]) { --ui-media-dot-size: 0.6rem;  --ui-media-pill-width: 1.5rem;  --ui-media-pill-height: 0.35rem; }
-		:where([media*="dot(lg)"]) { --ui-media-dot-size: 0.8rem;  --ui-media-pill-width: 2rem;    --ui-media-pill-height: 0.45rem; }
-		:where([media*="dot(xl)"]) { --ui-media-dot-size: 1rem;    --ui-media-pill-width: 2.5rem;  --ui-media-pill-height: 0.55rem; }
+		/* dot size */
+		:where([media*="dot(sm)"]), ui-media[dot~="sm"] { --ui-media-dot-size: 0.45rem; --ui-media-pill-width: 1.15rem; --ui-media-pill-height: 0.28rem; }
+		:where([media*="dot(md)"]), ui-media[dot~="md"] { --ui-media-dot-size: 0.6rem;  --ui-media-pill-width: 1.5rem;  --ui-media-pill-height: 0.35rem; }
+		:where([media*="dot(lg)"]), ui-media[dot~="lg"] { --ui-media-dot-size: 0.8rem;  --ui-media-pill-width: 2rem;    --ui-media-pill-height: 0.45rem; }
+		:where([media*="dot(xl)"]), ui-media[dot~="xl"] { --ui-media-dot-size: 1rem;    --ui-media-pill-width: 2.5rem;  --ui-media-pill-height: 0.55rem; }
+		/* dot ink (shared scale lgt/drk/sub) */
+		:where([media*="dot(lgt)"]), ui-media[dot~="lgt"] { --ui-media-dot-bg: rgb(255 255 255 / 0.5);  --ui-media-dot-active: #fff; }
+		:where([media*="dot(drk)"]), ui-media[dot~="drk"] { --ui-media-dot-bg: rgb(0 0 0 / 0.25);        --ui-media-dot-active: rgb(0 0 0 / 0.7); }
+		:where([media*="dot(sub)"]), ui-media[dot~="sub"] { --ui-media-dot-bg: rgb(0 0 0 / 0.12);        --ui-media-dot-active: rgb(0 0 0 / 0.4); }
 
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) {
+		/* ---- ARROWS present: bare nav · nav(arw) · nav(blw). Base glyph vars ---- */
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]),
+		ui-media:where([nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"])) {
 			--ui-media-chevron-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
 			--ui-media-chevron-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
 			--ui-media-arrow-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
 			--ui-media-arrow-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
 			--ui-media-arrow-glyph: var(--ui-media-chevron-light);
 		}
-		:where([media*="arw(arrow)"]) { --ui-media-arrow-glyph: var(--ui-media-arrow-light); }
-		:where([media*="arw(dark)"]) { --ui-media-arrow-glyph: var(--ui-media-chevron-dark); }
-		:where([media*="arw(arrow)"][media*="arw(dark)"]) { --ui-media-arrow-glyph: var(--ui-media-arrow-dark); }
-		:where([media*="arw(sm)"]) { --ui-media-arrow-size: 1.75rem; }
-		:where([media*="arw(md)"]) { --ui-media-arrow-size: 2.25rem; }
-		:where([media*="arw(lg)"]) { --ui-media-arrow-size: 2.75rem; }
-		:where([media*="arw(xl)"]) { --ui-media-arrow-size: 3.25rem; }
+		/* glyph shape (chv default) × ink (lgt default · drk · sub) */
+		:where([media*="arw(arr)"]), ui-media[arrow~="arr"] { --ui-media-arrow-glyph: var(--ui-media-arrow-light); }
+		:where([media*="arw(drk)"]), ui-media[arrow~="drk"] { --ui-media-arrow-glyph: var(--ui-media-chevron-dark); }
+		:where([media*="arw(arr)"][media*="arw(drk)"]), ui-media[arrow~="arr"][arrow~="drk"] { --ui-media-arrow-glyph: var(--ui-media-arrow-dark); }
+		:where([media*="arw(sub)"]), ui-media[arrow~="sub"] { --ui-media-arrow-color: var(--color-text-subtle, rgb(0 0 0 / 0.45)); --ui-media-arrow-bg: rgb(0 0 0 / 0.25); }
+		/* arrow size */
+		:where([media*="arw(sm)"]), ui-media[arrow~="sm"] { --ui-media-arrow-size: 1.75rem; }
+		:where([media*="arw(md)"]), ui-media[arrow~="md"] { --ui-media-arrow-size: 2.25rem; }
+		:where([media*="arw(lg)"]), ui-media[arrow~="lg"] { --ui-media-arrow-size: 2.75rem; }
+		:where([media*="arw(xl)"]), ui-media[arrow~="xl"] { --ui-media-arrow-size: 3.25rem; }
 
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) ui-media::scroll-button(*),
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(*) {
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]) ui-media::scroll-button(*),
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"]))::scroll-button(*) {
 			aspect-ratio: 1;
 			-webkit-backdrop-filter: blur(var(--ui-media-arrow-blur, 4px));
 			backdrop-filter: blur(var(--ui-media-arrow-blur, 4px));
@@ -187,76 +203,82 @@
 			transform: rotate(var(--_arw-rot, 0deg));
 			z-index: 3;
 		}
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) ui-media::scroll-button(*):hover,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(*):hover { background-color: var(--ui-media-arrow-bg-hover, rgb(0 0 0 / 0.7)); }
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) ui-media::scroll-button(*):disabled,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(*):disabled { -webkit-backdrop-filter: none; backdrop-filter: none; cursor: default; opacity: var(--ui-media-arrow-disabled-opacity, 0.4); pointer-events: none; }
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]) ui-media::scroll-button(*):hover,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"]))::scroll-button(*):hover { background-color: var(--ui-media-arrow-bg-hover, rgb(0 0 0 / 0.7)); }
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]) ui-media::scroll-button(*):disabled,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"]))::scroll-button(*):disabled { -webkit-backdrop-filter: none; backdrop-filter: none; cursor: default; opacity: var(--ui-media-arrow-disabled-opacity, 0.4); pointer-events: none; }
 
 		ui-media > [data-clone]::scroll-marker { content: none; }
 
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) ui-media::scroll-button(left),
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(left) {
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]) ui-media::scroll-button(left),
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"]))::scroll-button(left) {
 			content: "" / "Previous";
 			left: calc(anchor(left) + var(--ui-media-overlay-gap, 0.75rem));
 			--_arw-rot: 180deg;
 		}
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) ui-media::scroll-button(right),
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(right) {
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]) ui-media::scroll-button(right),
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"]))::scroll-button(right) {
 			content: "" / "Next";
 			right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem));
 		}
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) ui-media::scroll-button(up),
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(up) {
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]) ui-media::scroll-button(up),
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"]))::scroll-button(up) {
 			content: "" / "Previous";
 			--_arw-rot: -90deg;
 		}
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"]) ui-media::scroll-button(down),
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arrows)"], [media*="nav(below)"])::scroll-button(down) {
+		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]) ui-media::scroll-button(down),
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"]))::scroll-button(down) {
 			content: "" / "Next";
 			--_arw-rot: 90deg;
 		}
 
-		:where([media*="arw(top)"]) { --ui-media-arrow-top: calc(anchor(top) + var(--ui-media-overlay-gap, 0.75rem)); }
-		:where([media*="arw(bot)"]) { --ui-media-arrow-top: calc(anchor(bottom) - var(--ui-media-overlay-gap, 0.75rem) - var(--ui-media-arrow-size, 2.25rem)); }
+		/* arrow placement (mid default) */
+		:where([media*="arw(top)"]), ui-media[arrow~="top"] { --ui-media-arrow-top: calc(anchor(top) + var(--ui-media-overlay-gap, 0.75rem)); }
+		:where([media*="arw(bot)"]), ui-media[arrow~="bot"] { --ui-media-arrow-top: calc(anchor(bottom) - var(--ui-media-overlay-gap, 0.75rem) - var(--ui-media-arrow-size, 2.25rem)); }
 
-		:where([media*="arw(hide)"]) { --ui-media-arrow-disabled-opacity: 0; }
+		/* arw(hid) — auto-hide the dead-end arrow */
+		:where([media*="arw(hid)"]), ui-media[arrow~="hid"] { --ui-media-arrow-disabled-opacity: 0; }
 
+		/* arw(set) — both arrows as an adjacent pair at the inline-end */
 		:where([media*="arw(set)"]) ui-media::scroll-button(left),
-		ui-media:where([media*="arw(set)"])::scroll-button(left) {
+		ui-media:where([media*="arw(set)"], [arrow~="set"])::scroll-button(left) {
 			left: auto;
 			right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem) + var(--ui-media-arrow-size, 2.25rem) + var(--ui-media-arrow-gap, 0.5rem));
 		}
 
+		/* arw(bare) — drop the circle, paint the glyph as a recolourable shape */
 		:where([media*="arw(bare)"]) ui-media::scroll-button(*),
-		ui-media:where([media*="arw(bare)"])::scroll-button(*) {
-			-webkit-backdrop-filter: none;
-			backdrop-filter: none;
+		ui-media:where([media*="arw(bare)"], [arrow~="bare"])::scroll-button(*) {
+			/* -webkit-backdrop-filter: none;
+			backdrop-filter: none; */
 			background-color: var(--ui-media-arrow-color, #fff);
 			background-image: none;
 			border: 0;
 			box-shadow: none;
-			filter: var(--ui-media-arrow-shadow, drop-shadow(0 1px 2px rgb(0 0 0 / 0.5)));
-			-webkit-mask: var(--ui-media-arrow-glyph) center / var(--ui-media-arrow-glyph-size, 80%) no-repeat;
+			/* filter: var(--ui-media-arrow-shadow, drop-shadow(0 1px 2px rgb(0 0 0 / 0.5))); */
+			/* -webkit-mask: var(--ui-media-arrow-glyph) center / var(--ui-media-arrow-glyph-size, 80%) no-repeat; */
 			mask: var(--ui-media-arrow-glyph) center / var(--ui-media-arrow-glyph-size, 80%) no-repeat;
 		}
 		:where([media*="arw(bare)"]) ui-media::scroll-button(*):hover,
-		ui-media:where([media*="arw(bare)"])::scroll-button(*):hover { background-color: var(--ui-media-arrow-color-hover, var(--ui-media-arrow-color, #fff)); }
+		ui-media:where([media*="arw(bare)"], [arrow~="bare"])::scroll-button(*):hover { background-color: var(--ui-media-arrow-color-hover, var(--ui-media-arrow-color, #fff)); }
 
 		:where([media*="arw(bare)"]) ui-media::scroll-button(*):disabled,
-		ui-media:where([media*="arw(bare)"])::scroll-button(*):disabled {
-			-webkit-mask: none;
+		ui-media:where([media*="arw(bare)"], [arrow~="bare"])::scroll-button(*):disabled {
+			/* -webkit-mask: none; */
 			mask: none;
 			background-color: transparent;
 			background-image: var(--ui-media-arrow-glyph-dim, var(--ui-media-arrow-glyph));
 			background-position: center;
 			background-repeat: no-repeat;
 			background-size: var(--ui-media-arrow-glyph-size, 80%);
-			filter: none;
+			/* filter: none; */
 			opacity: var(--ui-media-arrow-disabled-opacity, 0.5);
 			pointer-events: none;
 		}
 
-		:where([media*="nav(below)"]) {
+		/* nav(blw) — controls into a bottom band; flip ink to dark for the light band */
+		:where([media*="nav(blw)"]),
+		ui-media[nav~="blw"] {
 			--ui-media-arrow-top: calc(anchor(bottom) - var(--ui-media-band, 2.75rem) / 2 - var(--ui-media-arrow-size, 2.25rem) / 2);
 			--ui-media-arrow-color: rgb(0 0 0 / 0.8);
 			--ui-media-arrow-glyph-dim: var(--ui-media-chevron-dark);
@@ -265,49 +287,54 @@
 			--ui-media-pill-track: rgb(0 0 0 / 0.2);
 			--ui-media-pill-fill: rgb(0 0 0 / 0.7);
 		}
-		:where([media*="nav(below)"][media*="arw(arrow)"]) { --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
-		:where([media*="nav(below)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav(below)"])::scroll-marker-group {
+		/* sub re-asserted after the nav(blw) holder so subtle ink wins inside the band too */
+		:where([media*="arw(sub)"]), ui-media[arrow~="sub"] { --ui-media-arrow-color: var(--color-text-subtle, rgb(0 0 0 / 0.45)); }
+		:where([media*="dot(sub)"]), ui-media[dot~="sub"] { --ui-media-dot-bg: rgb(0 0 0 / 0.12); --ui-media-dot-active: rgb(0 0 0 / 0.4); }
+		:where([media*="nav(blw)"][media*="arw(arr)"]),
+		ui-media[nav~="blw"][arrow~="arr"] { --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
+		:where([media*="nav(blw)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav(blw)"], [nav~="blw"])::scroll-marker-group {
 			top: calc(anchor(bottom) - var(--ui-media-band, 2.75rem) / 2 - var(--ui-media-dot-size, 0.6rem) / 2);
 		}
-		:where([media*="nav(below)"][media*="arw(set)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav(below)"][media*="arw(set)"])::scroll-marker-group {
+		:where([media*="nav(blw)"][media*="arw(set)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav(blw)"][media*="arw(set)"], [nav~="blw"][arrow~="set"])::scroll-marker-group {
 			justify-self: start;
 			left: calc(anchor(left) + var(--ui-media-overlay-gap, 0.75rem));
 		}
-		:where([media*="nav(below)"][media*="dot(start)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav(below)"][media*="dot(start)"])::scroll-marker-group {
+		:where([media*="nav(blw)"][media*="dot(sta)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav(blw)"][media*="dot(sta)"], [nav~="blw"][dot~="sta"])::scroll-marker-group {
 			justify-self: start; right: auto;
 			left: calc(anchor(left) + 2 * var(--ui-media-overlay-gap, 0.75rem) + var(--ui-media-arrow-size, 2.25rem));
 		}
-		:where([media*="nav(below)"][media*="dot(start)"][media*="arw(set)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav(below)"][media*="dot(start)"][media*="arw(set)"])::scroll-marker-group {
+		:where([media*="nav(blw)"][media*="dot(sta)"][media*="arw(set)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav(blw)"][media*="dot(sta)"][media*="arw(set)"], [nav~="blw"][dot~="sta"][arrow~="set"])::scroll-marker-group {
 			left: calc(anchor(left) + var(--ui-media-overlay-gap, 0.75rem));
 		}
-		:where([media*="nav(below)"][media*="dot(center)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav(below)"][media*="dot(center)"])::scroll-marker-group {
+		:where([media*="nav(blw)"][media*="dot(ctr)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav(blw)"][media*="dot(ctr)"], [nav~="blw"][dot~="ctr"])::scroll-marker-group {
 			justify-self: anchor-center; left: auto; right: auto;
 		}
-		:where([media*="nav(below)"][media*="dot(end)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav(below)"][media*="dot(end)"])::scroll-marker-group {
+		:where([media*="nav(blw)"][media*="dot(end)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav(blw)"][media*="dot(end)"], [nav~="blw"][dot~="end"])::scroll-marker-group {
 			justify-self: end; left: auto;
 			right: calc(anchor(right) + 2 * var(--ui-media-overlay-gap, 0.75rem) + var(--ui-media-arrow-size, 2.25rem));
 		}
-		:where([media*="nav(below)"][media*="dot(end)"][media*="arw(set)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav(below)"][media*="dot(end)"][media*="arw(set)"])::scroll-marker-group {
+		:where([media*="nav(blw)"][media*="dot(end)"][media*="arw(set)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav(blw)"][media*="dot(end)"][media*="arw(set)"], [nav~="blw"][dot~="end"][arrow~="set"])::scroll-marker-group {
 			right: calc(anchor(right) + 2 * var(--ui-media-overlay-gap, 0.75rem) + 2 * var(--ui-media-arrow-size, 2.25rem) + var(--ui-media-arrow-gap, 0.5rem));
 		}
 
+		/* ---- VERTICAL controls (axis(y) / nav="y") ---- */
 		:where([media*="axis(y)"]) ui-media::scroll-button(left),
 		:where([media*="axis(y)"]) ui-media::scroll-button(right),
-		ui-media:where([media*="axis(y)"])::scroll-button(left),
-		ui-media:where([media*="axis(y)"])::scroll-button(right) { display: none; }
+		ui-media:where([media*="axis(y)"], [nav~="y"])::scroll-button(left),
+		ui-media:where([media*="axis(y)"], [nav~="y"])::scroll-button(right) { display: none; }
 		:where([media*="nav"]:not([media*="axis(y)"])) ui-media::scroll-button(up),
 		:where([media*="nav"]:not([media*="axis(y)"])) ui-media::scroll-button(down),
-		ui-media:where([media*="nav"]:not([media*="axis(y)"]))::scroll-button(up),
-		ui-media:where([media*="nav"]:not([media*="axis(y)"]))::scroll-button(down) { display: none; }
+		ui-media:where([media*="nav"]:not([media*="axis(y)"]), [nav]:not([nav~="y"]))::scroll-button(up),
+		ui-media:where([media*="nav"]:not([media*="axis(y)"]), [nav]:not([nav~="y"]))::scroll-button(down) { display: none; }
 		:where([media*="axis(y)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="axis(y)"])::scroll-marker-group {
+		ui-media:where([media*="axis(y)"], [nav~="y"])::scroll-marker-group {
 			flex-direction: column;
 			align-self: anchor-center;
 			justify-self: end;
@@ -315,36 +342,39 @@
 			margin-inline: var(--ui-media-overlay-gap, 0.75rem);
 		}
 		:where([media*="axis(y)"]) ui-media::scroll-button(up),
-		ui-media:where([media*="axis(y)"])::scroll-button(up) {
+		ui-media:where([media*="axis(y)"], [nav~="y"])::scroll-button(up) {
 			top: calc(anchor(top) + var(--ui-media-overlay-gap, 0.75rem));
 			right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem));
 			left: auto;
 		}
 		:where([media*="axis(y)"]) ui-media::scroll-button(down),
-		ui-media:where([media*="axis(y)"])::scroll-button(down) {
+		ui-media:where([media*="axis(y)"], [nav~="y"])::scroll-button(down) {
 			top: auto;
 			bottom: calc(anchor(bottom) + var(--ui-media-overlay-gap, 0.75rem));
 			right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem));
 			left: auto;
 		}
-		:where([media*="axis(y)"][media*="arw(start)"]) ui-media::scroll-button(up),
-		:where([media*="axis(y)"][media*="arw(start)"]) ui-media::scroll-button(down),
-		ui-media:where([media*="axis(y)"][media*="arw(start)"])::scroll-button(up),
-		ui-media:where([media*="axis(y)"][media*="arw(start)"])::scroll-button(down) {
+		/* axis(y) + arw(sta): arrows + dots on the inline-start edge */
+		:where([media*="axis(y)"][media*="arw(sta)"]) ui-media::scroll-button(up),
+		:where([media*="axis(y)"][media*="arw(sta)"]) ui-media::scroll-button(down),
+		ui-media:where([media*="axis(y)"][media*="arw(sta)"], [nav~="y"][arrow~="sta"])::scroll-button(up),
+		ui-media:where([media*="axis(y)"][media*="arw(sta)"], [nav~="y"][arrow~="sta"])::scroll-button(down) {
 			left: calc(anchor(left) + var(--ui-media-overlay-gap, 0.75rem));
 			right: auto;
 		}
-		:where([media*="axis(y)"][media*="arw(start)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="axis(y)"][media*="arw(start)"])::scroll-marker-group {
+		:where([media*="axis(y)"][media*="arw(sta)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="axis(y)"][media*="arw(sta)"], [nav~="y"][arrow~="sta"])::scroll-marker-group {
 			justify-self: start;
 		}
+		/* axis(y) + arw(set): stack the pair at the block-end */
 		:where([media*="axis(y)"][media*="arw(set)"]) ui-media::scroll-button(up),
-		ui-media:where([media*="axis(y)"][media*="arw(set)"])::scroll-button(up) {
+		ui-media:where([media*="axis(y)"][media*="arw(set)"], [nav~="y"][arrow~="set"])::scroll-button(up) {
 			top: auto;
 			bottom: calc(anchor(bottom) + var(--ui-media-overlay-gap, 0.75rem) + var(--ui-media-arrow-size, 2.25rem) + var(--ui-media-arrow-gap, 0.5rem));
 		}
-		:where([media*="nav(below)"][media*="axis(y)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav(below)"][media*="axis(y)"])::scroll-marker-group {
+		/* axis(y) + nav(blw): horizontal band overlay under the vertical media */
+		:where([media*="nav(blw)"][media*="axis(y)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav(blw)"][media*="axis(y)"], [nav~="blw"][nav~="y"])::scroll-marker-group {
 			align-items: center;
 			align-self: auto;
 			background: var(--ui-media-controls-bg, var(--color-surface, #fff));
@@ -357,21 +387,21 @@
 			right: anchor(right);
 			top: calc(anchor(bottom) - var(--ui-media-below-gap, var(--spacing-sm, 0.5rem)) - var(--ui-media-band, 2.75rem));
 		}
-		:where([media*="nav(below)"][media*="axis(y)"]) ui-media::scroll-button(up),
-		:where([media*="nav(below)"][media*="axis(y)"]) ui-media::scroll-button(down),
-		ui-media:where([media*="nav(below)"][media*="axis(y)"])::scroll-button(up),
-		ui-media:where([media*="nav(below)"][media*="axis(y)"])::scroll-button(down) {
+		:where([media*="nav(blw)"][media*="axis(y)"]) ui-media::scroll-button(up),
+		:where([media*="nav(blw)"][media*="axis(y)"]) ui-media::scroll-button(down),
+		ui-media:where([media*="nav(blw)"][media*="axis(y)"], [nav~="blw"][nav~="y"])::scroll-button(up),
+		ui-media:where([media*="nav(blw)"][media*="axis(y)"], [nav~="blw"][nav~="y"])::scroll-button(down) {
 			bottom: auto;
 			top: calc(anchor(bottom) - var(--ui-media-band, 2.75rem) / 2 - var(--ui-media-arrow-size, 2.25rem) / 2);
 			z-index: 4;
 		}
-		:where([media*="nav(below)"][media*="axis(y)"]) ui-media::scroll-button(up),
-		ui-media:where([media*="nav(below)"][media*="axis(y)"])::scroll-button(up) {
+		:where([media*="nav(blw)"][media*="axis(y)"]) ui-media::scroll-button(up),
+		ui-media:where([media*="nav(blw)"][media*="axis(y)"], [nav~="blw"][nav~="y"])::scroll-button(up) {
 			left: calc(anchor(left) + var(--ui-media-overlay-gap, 0.75rem));
 			right: auto;
 		}
-		:where([media*="nav(below)"][media*="axis(y)"]) ui-media::scroll-button(down),
-		ui-media:where([media*="nav(below)"][media*="axis(y)"])::scroll-button(down) {
+		:where([media*="nav(blw)"][media*="axis(y)"]) ui-media::scroll-button(down),
+		ui-media:where([media*="nav(blw)"][media*="axis(y)"], [nav~="blw"][nav~="y"])::scroll-button(down) {
 			left: auto;
 			right: calc(anchor(right) + var(--ui-media-overlay-gap, 0.75rem));
 		}

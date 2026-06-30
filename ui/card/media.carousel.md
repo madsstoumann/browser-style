@@ -9,27 +9,120 @@ carousel.md for those tokens.
 
 ---
 
+## Two entry points, one vocabulary
+
+Every option works through **either** form (they resolve to the same rule / props):
+
+- **`media="…"`** — the inheritable single-attribute string. Parens-wrapped, prefixed
+  tokens (`nav(blw) arw(lg) arw(drk)`). Set it on the `<ui-media>` **or any ancestor**
+  (`<ui-card>` / CMS) — it inherits down. Tokens can't be grouped (CSS substring matching
+  can't isolate inner values), so each is its own token.
+- **`nav=` / `arrow=` / `dot=`** — dedicated, **space-separated grouped** attributes on the
+  `<ui-media>` **itself only** (NOT inherited — by design, so they never sit on the parent).
+  Whole-word `~=` matched, so the attribute namespaces the value: `arrow="lg drk arr set"`.
+
+Equivalence: `media="nav(blw)"` ≡ `nav="blw"` · `media="arw(drk)"` ≡ `arrow="drk"` ·
+`media="dot(pll) dot(end)"` ≡ `dot="pll end"` · bare `media="nav"` ≡ boolean `nav` ·
+`media="axis(y)"` ≡ `nav="y"`. The value is the **same 3-letter code**; only the wrapper differs.
+
+### Shared ink scale
+
+Controls + scrim share one shade vocabulary: `lgt` (light/white) · `drk` (dark/black) ·
+`sub` (subtle/low-contrast) · `med` (scrim only). Arrows + dots use `lgt`/`drk`/`sub`.
+
+## All tokens (alphabetical)
+
+Every option the carousel recognises, in both forms. **Layer:** CSS = `media.carousel.css`,
+JS = `ui-media.js`, load = `ui-media-srcset.js`. (`nav` is required to make the
+scroller; the rest layer on top. `asr()` etc. belong to the base frame — see media.md.)
+
+| `media=` token | Attr form | Layer | Effect |
+|----------------|-----------|-------|--------|
+| `arw(arr)`  | `arrow="arr"` | CSS | Full-arrow glyph (default is chevron) |
+| `arw(bare)` | `arrow="bare"` | CSS | Drop the circle — glyph painted as a recolourable shape (`--ui-media-arrow-color`) |
+| `arw(bot)`  | `arrow="bot"` | CSS | Edge arrows at the bottom |
+| `arw(chv)`  | `arrow="chv"` | CSS | Chevron glyph (**default**) |
+| `arw(drk)`  | `arrow="drk"` | CSS | Dark/black glyph ink (default is white) |
+| `arw(hid)`  | `arrow="hid"` | CSS | Auto-hide the dead-end arrow (default dims it) |
+| `arw(lg)`   | `arrow="lg"` | CSS | Arrow size 2.75rem |
+| `arw(lgt)`  | `arrow="lgt"` | CSS | Light/white glyph ink (**default**) |
+| `arw(md)`   | `arrow="md"` | CSS | Arrow size 2.25rem (**default**) |
+| `arw(mid)`  | `arrow="mid"` | CSS | Edge arrows vertically centered (**default**) |
+| `arw(set)`  | `arrow="set"` | CSS | Both arrows as an adjacent pair at the end |
+| `arw(sm)`   | `arrow="sm"` | CSS | Arrow size 1.75rem |
+| `arw(sta)`  | `arrow="sta"` | CSS | `axis(y)`: move up/down arrows + dots to the inline-start edge |
+| `arw(sub)`  | `arrow="sub"` | CSS | Subtle low-contrast ink (for light surfaces / `nav(blw)`) |
+| `arw(top)`  | `arrow="top"` | CSS | Edge arrows at the top |
+| `arw(xl)`   | `arrow="xl"` | CSS | Arrow size 3.25rem |
+| `auto` · `auto(4s)` · `auto(800ms)` | `nav="auto"` | JS | Autoplay (default 5s); pauses on hover/focus/drag/hidden-tab/reduced-motion. Attr form has no inline duration — defaults to 5s |
+| `axis(y)`   | `nav="y"` | CSS | Vertical carousel (snap on Y; arrows become up/down) |
+| `dot(cir)`  | `dot="cir"` | CSS | Circular dots (**default**) |
+| `dot(ctr)`  | `dot="ctr"` | CSS | `nav(blw)`: dots centered in the band (**default**) |
+| `dot(drk)`  | `dot="drk"` | CSS | Dark dot ink |
+| `dot(end)`  | `dot="end"` | CSS | `nav(blw)`: dots at the inline-end |
+| `dot(lg)`   | `dot="lg"` | CSS | Dot size 0.8rem |
+| `dot(lgt)`  | `dot="lgt"` | CSS | Light/white dot ink |
+| `dot(md)`   | `dot="md"` | CSS | Dot size 0.6rem (**default**) |
+| `dot(pll)`  | `dot="pll"` | CSS | Pill dots; active pill fills L→R over `--ui-media-autoplay` (timer hint) |
+| `dot(sm)`   | `dot="sm"` | CSS | Dot size 0.45rem |
+| `dot(sta)`  | `dot="sta"` | CSS | `nav(blw)`: dots at the inline-start |
+| `dot(sub)`  | `dot="sub"` | CSS | Subtle low-contrast dot ink |
+| `dot(xl)`   | `dot="xl"` | CSS | Dot size 1rem |
+| `loop`      | `nav="loop"` | JS | Seamless infinite loop (clones first/last slide) |
+| `nav`       | `nav` (boolean) | CSS | Carousel **on** — dots + arrows (the trigger) |
+| `nav(arw)`  | `nav="arw"` | CSS | Arrows only |
+| `nav(bar)`  | `nav="bar"` | CSS | Native scrollbar only (no dots/arrows) |
+| `nav(blw)`  | `nav="blw"` | CSS | Dots + arrows in a reserved band below the media |
+| `nav(dot)`  | `nav="dot"` | CSS | Dots only |
+| `nav(non)`  | `nav="non"` | CSS | Bare swipe scroller (no controls) |
+
+### `<ui-media>` frame tokens (not carousel — for reference)
+
+These belong to the base `<ui-media>` frame ([media.css](./media.css), docs in
+[media.md](./media.md)) and work with or without a carousel. Listed by family
+(`<pos>` = 9-grid `tl tc tr cl cc cr bl bc br`; the furniture ones use the corner set
+`ts tc te cs cc ce bs bc be`).
+
+| Token | Layer | Effect |
+|-------|-------|--------|
+| `asr(1/1 · 6/7 · 3/4 · 4/3 · 3/2 · 2/3 · 16/9 · 21/9)` | CSS | Aspect ratio of the frame |
+| `obf(cover · contain · fill · none)` | CSS | `object-fit` (default cover) |
+| `obp(<pos>)` | CSS | `object-position` (9-grid) |
+| `rds(none · sm · md · lg · xl · 2xl · full · pill)` | CSS | Corner radius (standalone frame); `-sq` variants add a squircle corner |
+| `flp(h · v · hv)` | CSS | Flip the image horizontally / vertically / both |
+| `hov(zoom · pan · track · drift)` | CSS (+JS) | Hover effect; `track`/`drift` follow the cursor (need `ui-media.js`) |
+| `scm` · `scm(<pos>)` · `scm(lgt · med · drk)` | CSS | Scrim — placement + intensity |
+| `load(eager · lazy)` | load | Image/video loading (`ui-media-srcset.js`); `eager` (bool attr) = first slide eager + `fetchpriority="high"` |
+| `chip(<corner>)` · `chip(<color>)` | CSS | Position + colour a `<ui-chip>` child (`accent blue green orange red dark light subtle`) |
+| `sticker(<corner>)` · `sticker(<color>)` | CSS | Position + colour a `<ui-sticker>` child |
+| `play(<corner>)` | CSS | Position a `<ui-play>` child |
+| `save(<corner>)` | CSS | Position a `<ui-save>` child |
+
+---
+
 ## Foundations
 
 - **Cascade layer:** everything is in `@layer bs-component` (same layer as `media.css`,
   which is imported first — so carousel rules win ties on source order).
 - **The `nav` token is the trigger.** `:where([media*="nav"])` turns `<ui-media>` into a
   flex scroll-snap row. Without it, `<ui-media>` is a plain single-image frame.
-- **Dual-selector form.** Every rule is written twice so `media=` can sit on the
-  `<ui-media>` itself **or** any ancestor (e.g. `<ui-card>`, props inherit down):
-  - descendant form: `:where([media*="x"]) ui-media …`
-  - self form: `ui-media:where([media*="x"]) …`
+- **Dual-selector form.** Every rule lists two (or three) selectors so the same option
+  works from `media=` on an ancestor, `media=` on the element, **or** the dedicated
+  `nav=`/`arrow=`/`dot=` attribute on the element:
+  - descendant form (inherits): `:where([media*="x"]) ui-media …`
+  - self form: `ui-media:where([media*="x"], [arrow~="x"]) …`
 - **`@supports (scroll-marker-group: after)` gate.** Dots (`::scroll-marker`) and arrows
   (`::scroll-button`) are Chromium-only; everything inside that block degrades to a bare
   swipe/scroll-snap row elsewhere. `nav(bar)` (native scrollbar) lives outside the gate.
-- **Substring matching.** Tokens are matched with `[media*="…"]`; `:not([media*="nav("])`
-  distinguishes bare `nav` from the parenthesised `nav(dots)` / `nav(arrows)` / etc.
+- **Matching.** `media=` tokens match with `[media*="…"]` (substring); `:not([media*="nav("])`
+  distinguishes bare `nav` from the parenthesised `nav(dot)` / `nav(arw)` / etc. Attribute
+  forms match whole-word with `~=` (`[arrow~="lg"]`), which is what lets them be grouped.
 
 ## Token → control mapping (inside `@supports`)
 
-- **DOTS present** = bare `nav` · `nav(dots)` · `nav(below)`
-- **ARROWS present** = bare `nav` · `nav(arrows)` · `nav(below)`
-- `nav(none)` enables neither (bare swipe scroller). `nav(bar)` shows the native scrollbar only.
+- **DOTS present** = bare `nav` · `nav(dot)` · `nav(blw)`
+- **ARROWS present** = bare `nav` · `nav(arw)` · `nav(blw)`
+- `nav(non)` enables neither (bare swipe scroller). `nav(bar)` shows the native scrollbar only.
 
 ## Scroller
 
@@ -80,8 +173,11 @@ controls/markers are killed (`scroll-marker-group: none`, `::scroll-button { dis
 
 - `::scroll-marker-group` is `position: absolute; position-anchor: auto`, centered via
   `justify-self: anchor-center`, anchored above the bottom edge with `anchor(bottom)`.
-- `dot(circle)` (default) round markers; `dot(pill)` rounded-rect.
-- **`dot(pill)` timer:** the `:target-current` pill fills L→R over `--ui-media-autoplay`
+- `dot(cir)` (default) round markers; `dot(pll)` rounded-rect.
+- **Ink:** `dot(lgt)` / `dot(drk)` / `dot(sub)` set `--ui-media-dot-bg` + `--ui-media-dot-active`
+  to the light / dark / subtle pairs (`nav(blw)` defaults to dark; `sub` is re-asserted after
+  the band holder so it still wins inside the band).
+- **`dot(pll)` timer:** the `:target-current` pill fills L→R over `--ui-media-autoplay`
   via the `ui-media-pill-fill` keyframes (a visual autoplay hint; ui-media.js advances).
   Under `prefers-reduced-motion: reduce` the fill is shown static (no animation).
 - Sizes `dot(sm|md|lg|xl)` set `--ui-media-dot-size` + matching pill width/height (`md` = default).
@@ -93,14 +189,14 @@ controls/markers are killed (`scroll-marker-group: none`, `::scroll-button { dis
 - **One base glyph, rotated.** A single RIGHT-pointing SVG (chevron or full arrow, in
   light/dark) is rotated per direction via `--_arw-rot` (left 180°, up −90°, down 90°) —
   no prev/next/up/down SVG duplication.
-- **Shape × shade** (independent, composed): shape = chevron (default) · `arw(arrow)`;
-  ink = light/white (default, for a dark circle) · `arw(dark)` (for a light circle). A
-  direct `--ui-media-arrow-glyph` override wins.
+- **Shape × shade** (independent, composed): shape = chevron (default, `arw(chv)`) · `arw(arr)`;
+  ink = light/white (default, `arw(lgt)`, for a dark circle) · `arw(drk)` (for a light circle) ·
+  `arw(sub)` (subtle low-contrast). A direct `--ui-media-arrow-glyph` override wins.
 - Sizes `arw(sm|md|lg|xl)` set `--ui-media-arrow-size` (`md` = 2.25rem default).
 - **Placement** `arw(mid|top|bot)` set `--ui-media-arrow-top` (mid = `anchor(center)` default).
 - **`arw(set)`** moves the left button next to the right one (adjacent pair at inline-end).
 - **Disabled (dead-end) arrow** dims to `--ui-media-arrow-disabled-opacity` (0.4) by
-  default; **`arw(hide)`** sets it to 0 (auto-hide instead of dim).
+  default; **`arw(hid)`** sets it to 0 (auto-hide instead of dim).
 - **`arw(bare)`** drops the circle: the glyph itself is painted as a recolourable shape
   (`mask-image` of the SVG + `background-color` = the ink), so it can be any colour
   (`--ui-media-arrow-color`). A `:disabled` `::scroll-button` drops its mask, so the
@@ -108,7 +204,7 @@ controls/markers are killed (`scroll-marker-group: none`, `::scroll-button { dis
   (`--ui-media-arrow-glyph-dim`) to avoid a circle artifact. A drop-shadow keeps a white
   glyph legible over photos.
 
-## `nav(below)` — control band
+## `nav(blw)` — control band
 
 A non-scrolling bottom band, created by `padding-block-end` on the flex scroller (vertical
 padding doesn't scroll in a horizontal scroller; images keep `block-size: 100%` and stay
@@ -118,16 +214,16 @@ defaults to the (light) card surface, so the dot/arrow ink defaults flip to dark
 
 - **Band size:** `--ui-media-band` (2.75rem) + a gap above it, `--ui-media-below-gap`
   (`--spacing-sm`), so card-shadow/elevation has room inside the clipped scrollport.
-- **Dot position:** centered by default; `dot(start|center|end)` move them — `start` = after
+- **Dot position:** centered by default; `dot(sta|ctr|end)` move them — `sta` = after
   the left arrow, `end` = before the right arrow (or the `arw(set)` pair). `arw(set)`
-  defaults dots to `start`; offsets account for arrow size/gap so they never overlap.
+  defaults dots to `sta`; offsets account for arrow size/gap so they never overlap.
 
 ## Vertical controls (`axis(y)`)
 
-Up/down arrows + a vertical dot column on the inline-end edge by default; `arw(start)`
+Up/down arrows + a vertical dot column on the inline-end edge by default; `arw(sta)`
 flips both to the inline-start edge; `arw(set)` stacks the pair at the block-end.
 
-**`nav(below)` + `axis(y)`** is special: a vertical scroller's `padding-block-end` is on
+**`nav(blw)` + `axis(y)`** is special: a vertical scroller's `padding-block-end` is on
 the SCROLL axis, so it can't carve a fixed cross-axis band (the next slide peeks through).
 So the band is a **solid, full-width overlay** (the marker-group itself) pinned to the
 bottom of the scrollport — it covers the peek; the rotated up/down arrows sit on it
