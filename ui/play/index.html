@@ -9,20 +9,59 @@
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="../icon/index.css">
 	<link rel="stylesheet" href="ui-play.css">
+	<style>
+		@keyframes demo-bounce {
+			0%, 100% { translate: 0 0;      animation-timing-function: cubic-bezier(.3,0,.7,-.3); }
+			50%      { translate: 0 -2.5rem; animation-timing-function: cubic-bezier(.3,1.3,.7,1); }
+		}
+		.demo-anim {
+			animation: demo-bounce .8s ease-in-out infinite paused;   /* starts paused — the button starts it */
+			background: linear-gradient(135deg, hsl(210 80% 55%), hsl(280 80% 55%));
+			border-radius: .75rem;
+			block-size: 5rem;
+			inline-size: 5rem;
+		}
+	</style>
 </head>
 <body>
 	<h1>UI: Play</h1>
 
-	<h2>CSS</h2>
 	<p>
-		<code>&lt;ui-play&gt;</code> is a CSS-first media play button. Wrap a single <code>&lt;button&gt;</code> that contains a <code>&lt;ui-icon type="play"&gt;</code> glyph. Use <code>variant="reveal"</code> to hide it until the parent media frame is hovered/focused, and <code>size</code> for scale. The glyph is a <code>&lt;ui-icon&gt;</code> from <code>@browser.style/icon</code> — author <code>type="play"</code> or <code>type="pause"</code>; the web component swaps it at runtime.
+		<code>&lt;ui-play&gt;</code> is a CSS-first, target-agnostic play/pause button — a single
+		<code>&lt;button&gt;</code> wrapping a <code>&lt;ui-icon&gt;</code> glyph. As a web component it drives any
+		target through the native Invoker Commands API (<code>command</code> + <code>commandfor</code>) and
+		reflects state to <code>aria-pressed</code> + <code>open</code>. With <code>type="play-pause"</code> the
+		glyph <strong>morphs</strong> between the two states via an animated <code>clip-path</code> (driven by
+		<code>open</code> on the host) — no icon swap.
 	</p>
 	<p>
-		This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript).
+		See the <a href="wc-demo.html">web component demo</a> for <code>&lt;video&gt;</code> control, the
+		<code>ui-play-toggle</code> event, and the <code>for</code> shorthand.
 	</p>
+
+	<h2>Play/pause morph — the clip-path animation</h2>
 	<p>
-		See the <a href="wc-demo.html">web component demo</a> for the registered-element version (toggle, event, and <code>for</code> video control).
+		The glyph is a single <code>&lt;ui-icon type="play-pause"&gt;</code>. Toggling the button flips
+		<code>open</code> on the host, and CSS morphs the glyph between the play triangle and the pause bars.
+		The first button has no target (pure morph); the others <strong>start and pause</strong> a bouncing
+		box's <code>animation-play-state</code> via <code>command="--toggle-play" commandfor</code> — click
+		<em>play</em> to start the bounce.
 	</p>
+	<div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+		<ui-play size="xl"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+
+		<div style="display: flex; align-items: center; gap: 1rem;">
+			<div id="spin-a" class="demo-anim"></div>
+			<ui-play size="lg" theme="dark"><button type="button" command="--toggle-play" commandfor="spin-a" aria-label="Play/pause animation"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		</div>
+
+		<div style="display: flex; align-items: center; gap: 1rem;">
+			<div id="spin-b" class="demo-anim" style="border-radius: 50%;"></div>
+			<ui-play variant="youtube" size="lg"><button type="button" command="--toggle-play" commandfor="spin-b" aria-label="Play/pause animation"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		</div>
+	</div>
+
+	<h2>Variants &amp; styling</h2>
 
 	<h3>Solid (default)</h3>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
@@ -98,5 +137,10 @@
 		<ui-play><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
 		<ui-play><button type="button" aria-label="Pause" aria-pressed="true"><ui-icon type="pause"></ui-icon></button></ui-play>
 	</div>
+
+	<script type="module">
+		import './index.js';       // registers <ui-play>
+		import './command.js';     // wires command targets (CSS animations here)
+	</script>
 </body>
 </html>
