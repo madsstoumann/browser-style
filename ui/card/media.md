@@ -420,7 +420,8 @@ Every token lives in the `--ui-media-*` namespace and inherits down from whereve
 | `--ui-media-arrow-size` | `2.25rem` | arrow button size |
 | `--ui-media-arrow-radius` | `var(--radius-circle, 50%)` | arrow corner radius (square it off for rounded-rect) |
 | `--ui-media-arrow-border` | `1px solid rgb(255 255 255 / 0.6)` | circle border (`0` to drop) |
-| `--ui-media-arrow-glyph-size` | `45%` (circle) / `80%` (bare) | glyph size |
+| `--ui-media-arrow-glyph-size` | `75%` (circle) / `80%` (bare) | glyph size |
+| `--ui-media-arrow-nudge` | `calc(arrow-size * 0.03)` chevron · `* 0.015` arrow | optical shift of the glyph toward its tip (rotates with the arrow); `0` to disable |
 | `--ui-media-arrow-color` | `#fff` (dark under `nav(below)`) | `arw(bare)` glyph ink |
 | `--ui-media-arrow-color-hover` | `var(--ui-media-arrow-color)` | `arw(bare)` glyph ink on hover |
 | `--ui-media-arrow-shadow` | `drop-shadow(0 1px 2px rgb(0 0 0 / 0.5))` | `arw(bare)` legibility shadow (`none` to drop) |

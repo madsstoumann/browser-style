@@ -67,6 +67,7 @@ scroller; the rest layer on top. `asr()` etc. belong to the base frame — see m
 | `dot(sm)`   | `dot="sm"` | CSS | Dot size 0.45rem |
 | `dot(sta)`  | `dot="sta"` | CSS | `nav(blw)`: dots at the inline-start |
 | `dot(sub)`  | `dot="sub"` | CSS | Subtle low-contrast dot ink |
+| `dot(non)`  | `dot="non"` | CSS | No dots (keeps arrows) — arrows-only band |
 | `dot(tmb)`| `dot="tmb"` | CSS | Image thumbnails; per-slide `--ui-media-thumb-url`; active thumb has a bottom timer stripe |
 | `dot(tl)` `dot(tr)` `dot(bl)` `dot(br)` | `dot="tl/tr/bl/br"` | CSS | Corner placement for the overlay marker-group (inset via `--ui-media-marker-inset`) |
 | `dot(xl)`   | `dot="xl"` | CSS | Dot size 1rem |
@@ -75,6 +76,7 @@ scroller; the rest layer on top. `asr()` etc. belong to the base frame — see m
 | `nav(arw)`  | `nav="arw"` | CSS | Arrows only |
 | `nav(bar)`  | `nav="bar"` | CSS | Native scrollbar only (no dots/arrows) |
 | `nav(blw)`  | `nav="blw"` | CSS | Dots + arrows in a reserved band below the media |
+| `nav(abv)`  | `nav="abv"` | CSS | Dots + arrows in a reserved band above the media (mirror of `nav(blw)`) |
 | `nav(dot)`  | `nav="dot"` | CSS | Dots only |
 | `nav(non)`  | `nav="non"` | CSS | Bare swipe scroller (no controls) |
 

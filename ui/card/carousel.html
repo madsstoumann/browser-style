@@ -267,7 +267,7 @@
 	<!-- ============================================================
 	     Carousel — controls below the media
 	     ============================================================ -->
-	<h2>Carousel below the media — <code>nav(blw)</code></h2>
+	<h2>Navigation below the media — <code>nav(blw)</code></h2>
 	<p class="note"><code>nav(blw)</code> moves both controls off the image into a reserved bottom band (dots centered, arrows at the ends) — the media keeps its full frame above. Size the band with <code>--ui-media-band</code> (default <code>2.75rem</code>) and colour it with <code>--ui-media-controls-bg</code>. Combine with <code>arw(set)</code> to pin the dots to the start and pair the arrows at the end, or <code>dot(pll)</code> for a timer bar. (Arrow placement atoms <code>arw(top/bot)</code> are for the overlay variant; <code>nav(blw)</code> owns its own vertical placement.)</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav(blw) arw(bare)" content="scl(sm)">
@@ -294,6 +294,77 @@
 				<ui-content><small data-part="eyebrow">nav(blw) arw(hid)</small><h2 data-part="headline">Auto-hide arrows (opt-in)</h2></ui-content>
 			</cq-box>
 		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Navigation — controls above the media
+	     ============================================================ -->
+	<h2>Navigation above the media — <code>nav(abv)</code></h2>
+	<p class="note"><code>nav(abv)</code> is the mirror of <code>nav(blw)</code> — controls sit in a reserved band <strong>above</strong> the media instead of below. Here the carousel is a <strong>bare <code>&lt;ui-media&gt;</code></strong> (no radius/clip) with rounded <code>&lt;ui-card&gt;</code> slides as children. Pair with <code>arw(set)</code> for a prev/next cluster top-right; the second drops the dots (<code>dot(non)</code>) and uses full-arrow glyphs (<code>arw(arr)</code>).</p>
+	<div class="grid grid-2">
+		<ui-media media="nav(abv) arw(bare) arw(set)">
+			<ui-card variant="col rds(lg)" media="asr(16/9)" content="scl(sm)"><cq-box>
+				<ui-media><img src="/assets/images/finance.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Nature</small><h3 data-part="headline">Wild waters</h3></ui-content>
+			</cq-box></ui-card>
+			<ui-card variant="col rds(lg)" media="asr(16/9)" content="scl(sm)"><cq-box>
+				<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Travel</small><h3 data-part="headline">Far and wide</h3></ui-content>
+			</cq-box></ui-card>
+			<ui-card variant="col rds(lg)" media="asr(16/9)" content="scl(sm)"><cq-box>
+				<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Wellbeing</small><h3 data-part="headline">Find your calm</h3></ui-content>
+			</cq-box></ui-card>
+		</ui-media>
+		<ui-media media="nav(abv) arw(arr) arw(set) dot(non)">
+			<ui-card variant="col rds(lg)" media="asr(16/9)" content="scl(sm)"><cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Space</small><h3 data-part="headline">Deep field</h3></ui-content>
+			</cq-box></ui-card>
+			<ui-card variant="col rds(lg)" media="asr(16/9)" content="scl(sm)"><cq-box>
+				<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Physics</small><h3 data-part="headline">Entangled</h3></ui-content>
+			</cq-box></ui-card>
+			<ui-card variant="col rds(lg)" media="asr(16/9)" content="scl(sm)"><cq-box>
+				<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Tech</small><h3 data-part="headline">Web Summit</h3></ui-content>
+			</cq-box></ui-card>
+		</ui-media>
+	</div>
+
+	<h3>Layered cards + <code>nav(abv)</code> — arrows-only header</h3>
+	<p class="note">The <em>layered cards</em> pattern (content over media, <code>ovr(bl)</code> + <code>scm</code>) as slides of a <code>nav(abv)</code> carousel — no dots (<code>dot(non)</code>), bare large full-arrows as a set top-right (<code>arw(bare) arw(arr) arw(lg) arw(set)</code>).</p>
+	<div class="grid">
+			<ui-media media="nav(abv) arw(bare) arw(arr) arw(lg) arw(set) dot(non)">
+				<ui-slide class="slide-cols" style="--cols: 3">
+					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Space</small><h3 data-part="headline">Hubble</h3></ui-content>
+					</cq-box></ui-card>
+					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Physics</small><h3 data-part="headline">Quantum</h3></ui-content>
+					</cq-box></ui-card>
+					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Tech</small><h3 data-part="headline">Web Summit</h3></ui-content>
+					</cq-box></ui-card>
+				</ui-slide>
+				<ui-slide class="slide-cols" style="--cols: 3">
+					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Health</small><h3 data-part="headline">Mindfulness</h3></ui-content>
+					</cq-box></ui-card>
+					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/world.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Travel</small><h3 data-part="headline">World</h3></ui-content>
+					</cq-box></ui-card>
+					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/finance.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Money</small><h3 data-part="headline">Finance</h3></ui-content>
+					</cq-box></ui-card>
+				</ui-slide>
+			</ui-media>
 	</div>
 
 	<!-- ============================================================

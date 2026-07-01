@@ -80,6 +80,7 @@ is respected (no smooth scroll, no pill timer animation).
 | `nav(arw)` | `nav="arw"` | Arrows only |
 | `nav(non)` | `nav="non"` | No controls — bare swipe scroller |
 | `nav(blw)` | `nav="blw"` | Dots + arrows in a reserved **band below** the media |
+| `nav(abv)` | `nav="abv"` | Dots + arrows in a reserved **band above** the media (mirror of `nav(blw)`) |
 | `nav(bar)` | `nav="bar"` | No dots/arrows — a styled **native scrollbar** is the only affordance |
 
 ### `axis()` — scroll direction
@@ -178,6 +179,7 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 | `dot(lgt)` `dot(drk)` `dot(sub)` | `dot="lgt/drk/sub"` | Ink — light / dark / **subtle** (`bg` + active). `nav(blw)` defaults to dark |
 | `dot(sm)` `dot(md)` `dot(lg)` `dot(xl)` | `dot="sm…xl"` | Size (`md` = default) — one scale for dots, pills **and** thumbnails, so `dot(tmb) dot(lg)` = large thumbnails |
 | `dot(sta)` `dot(ctr)` `dot(end)` | `dot="sta/ctr/end"` | **Position within a `nav(blw)` band** — left / center (default) / right. `sta`/`end` clear the arrow on that side (or the `arw(set)` pair). |
+| `dot(non)` | `dot="non"` | **No dots** (keeps arrows) — e.g. an arrows-only `nav(blw)`/`nav(abv)` band |
 | `dot(tmb)` | `dot="tmb"` | **Image thumbnails** instead of dots. Each slide sets `--ui-media-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-media-autoplay`. |
 | `dot(tl)` `dot(tr)` `dot(bl)` `dot(br)` | `dot="tl/tr/bl/br"` | **Corner placement** for the overlay marker-group (top-left / top-right / bottom-left / bottom-right). Inset via `--ui-media-marker-inset`. |
 
@@ -247,7 +249,8 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-media-arrow-bg` | `rgb(0 0 0 / 0.45)` | Circle background |
 | `--ui-media-arrow-bg-hover` | `rgb(0 0 0 / 0.7)` | Circle background on hover |
 | `--ui-media-arrow-glyph` | chevron-light | Glyph image (override directly, or use `arw(arr)`/`arw(drk)`) |
-| `--ui-media-arrow-glyph-size` | `45%` (circle) / `80%` (bare) | Glyph size within the button |
+| `--ui-media-arrow-glyph-size` | `75%` (circle) / `80%` (bare) | Glyph size within the button |
+| `--ui-media-arrow-nudge` | `calc(arrow-size * 0.03)` chevron · `* 0.015` full-arrow | **Optical** shift of the glyph toward its tip (a geometrically-centred chevron/arrow reads as off-centre). The full arrow needs less (its shaft balances it). Scales with size; set `0` to disable |
 | `--ui-media-arrow-radius` | `--radius-circle` | Button corner radius |
 | `--ui-media-arrow-border` | `1px solid rgb(255 255 255 / 0.6)` | Button border (set `0` to drop) |
 | `--ui-media-arrow-gap` | `0.5rem` | Gap between the two arrows in `arw(set)` |
