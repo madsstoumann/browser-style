@@ -267,6 +267,16 @@
 			right: calc(anchor(right) + var(--ui-media-overlay-gap) + var(--ui-media-arrow-size) + var(--ui-media-arrow-gap));
 		}
 
+		/* nav(abv) + arw(set) — flush the pair to the inline-end edge (no overlay-gap) */
+		:where([media*="nav(abv)"][media*="arw(set)"]) ui-media::scroll-button(right),
+		ui-media:where([media*="nav(abv)"][media*="arw(set)"], [nav~="abv"][arrow~="set"])::scroll-button(right) {
+			right: anchor(right);
+		}
+		:where([media*="nav(abv)"][media*="arw(set)"]) ui-media::scroll-button(left),
+		ui-media:where([media*="nav(abv)"][media*="arw(set)"], [nav~="abv"][arrow~="set"])::scroll-button(left) {
+			right: calc(anchor(right) + var(--ui-media-arrow-size) + var(--ui-media-arrow-gap));
+		}
+
 		/* arw(bare) — drop the circle, paint the glyph as a recolourable shape */
 		:where([media*="arw(bare)"]) ui-media,
 		ui-media:where([media*="arw(bare)"], [arrow~="bare"]) {
