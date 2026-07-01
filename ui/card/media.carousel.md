@@ -54,7 +54,7 @@ scroller; the rest layer on top. `asr()` etc. belong to the base frame — see m
 | `arw(sub)`  | `arrow="sub"` | CSS | Subtle low-contrast ink (for light surfaces / `nav(blw)`) |
 | `arw(top)`  | `arrow="top"` | CSS | Edge arrows at the top |
 | `arw(xl)`   | `arrow="xl"` | CSS | Arrow size 3.25rem |
-| `auto` · `auto(4s)` · `auto(800ms)` | `nav="auto"` | JS | Autoplay (default 5s); pauses on hover/focus/drag/hidden-tab/reduced-motion. Attr form has no inline duration — defaults to 5s |
+| `auto` · `auto(4s)` · `auto(800ms)` | `nav="auto"` | JS | Autoplay (default 5s); pauses on hover/focus/drag/hidden-tab/reduced-motion. Attr form has no inline duration — defaults to 5s. Add a `<ui-play>` child for an explicit play/pause control (then hover/focus pause is dropped — see `play(<corner>)`) |
 | `axis(y)`   | `nav="y"` | CSS | Vertical carousel (snap on Y; arrows become up/down) |
 | `dot(cir)`  | `dot="cir"` | CSS | Circular dots (**default**) |
 | `dot(ctr)`  | `dot="ctr"` | CSS | `nav(blw)`: dots centered in the band (**default**) |
@@ -100,7 +100,7 @@ These belong to the base `<ui-media>` frame ([media.css](./media.css), docs in
 | `load(eager · lazy)` | load | Image/video loading (`ui-media-srcset.js`); `eager` (bool attr) = first slide eager + `fetchpriority="high"` |
 | `chip(<corner>)` · `chip(<color>)` | CSS | Position + colour a `<ui-chip>` child (`accent blue green orange red dark light subtle`) |
 | `sticker(<corner>)` · `sticker(<color>)` | CSS | Position + colour a `<ui-sticker>` child |
-| `play(<corner>)` | CSS | Position a `<ui-play>` child |
+| `play(<corner>)` | CSS (+JS on autoplay) | Position a `<ui-play>` child. On a **scrolling** carousel (`auto`/`loop`) the control is `position:sticky`-pinned to the scrollport (plain furniture would scroll away) and `ui-media.js` wires it as the play/pause button — see "Play/pause control" below |
 | `save(<corner>)` | CSS | Position a `<ui-save>` child |
 
 ---
@@ -270,6 +270,52 @@ bottom of the scrollport — it covers the peek; the rotated up/down arrows sit 
 `ui-media.js` prepends/appends a clone slide for the seamless `loop`. Clones carry
 `[data-clone]` and `ui-media > [data-clone]::scroll-marker { content: none }` suppresses
 their dots, so only the real slides count.
+
+## Play/pause control (`<ui-play>`)
+
+Drop a `<ui-play>` furniture child into an autoplay carousel to get a play/pause button:
+
+```html
+<ui-media media="asr(4/3) nav auto(4s) loop play(bs)">
+  <ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+  <img …><img …>…
+</ui-media>
+```
+
+**Pinning.** A scroll container's absolute furniture lives in the *scrolled content* and
+scrolls away with the slides — only the browser-generated `::scroll-button`/`::scroll-marker`
+pseudos sit in the non-scrolling layer. So on a scrolling carousel (`auto`/`loop`) the
+control is turned into a **`position:sticky`** flex child pinned to the scrollport edge:
+
+- **Start corners** (`play(bs)`/`play(ts)`/`play(cs)`) — zero inline-size, first child,
+  left-sticky; the button overflows the 0-width box (`justify-items:start`).
+- **End corners** (`play(be)`/`play(te)`/`play(ce)`) — `inline-size:max-content`, and
+  `ui-media.js` moves the control to the **last child** so right-sticky can clamp (a
+  zero-width box has no rectangle to stick on the inline-end).
+
+Only the **6 edge corners** are pinnable — sticky pins to an edge, not the centre. The
+center-inline tokens (`play(tc)`/`play(cc)`/`play(bc)`) are for a **non-scrolling video**
+(a single centred play button, absolute furniture — see [media.md](./media.md)); on a
+scrolling carousel they fall back to bottom-start.
+
+Corner is driven by `play(*)` via three private vars set on the host/`<ui-media>`
+(`--_play-block` · `--_play-inline` · `--_play-justify` · `--_play-size`); the vars use
+`--ui-media-overlay-gap` (not `--_g`, which is only defined on the `<ui-play>` itself).
+Non-scrolling media (a single `<ui-play>` over one image) is untouched — the pin is gated
+on `auto`/`loop`.
+
+**Wiring (`ui-media.js`).** When a `<ui-play>` is present in an autoplay carousel it becomes
+the **sole** pause mechanism — the implicit hover/focus/pointer auto-pause is dropped so the
+glyph never desyncs from reality:
+
+- init: reflects the running state (`play.playing = true` → `aria-pressed`, `pause` glyph);
+- `ui-play-toggle` → toggles the timer and sets `--ui-media-play-state` (`running`/`paused`),
+  which also freezes the `dot(pll)`/`dot(tmb)` fill animations via `animation-play-state`;
+- `visibilitychange` resume is guarded by the user-pause state.
+
+Under `prefers-reduced-motion` autoplay never starts, so the control stays a static button.
+Add `variant="reveal"` (from `@browser.style/play`) to hide it until the frame is hovered
+or focused. Requires `../play/index.js` loaded on the page.
 
 ## Tokens
 

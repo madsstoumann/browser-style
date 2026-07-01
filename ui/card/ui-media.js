@@ -141,12 +141,35 @@ function initCarousel(scroller) {
 		const tick = () => { if (!paused) scrollToPos(pos() + 1, 'smooth'); };
 		const start = () => { stop(); timer = setInterval(tick, autoMs); };
 		const stop = () => { if (timer) { clearInterval(timer); timer = 0; } };
-		scroller.addEventListener('pointerenter', () => { paused = true; }, { passive: true });
-		scroller.addEventListener('pointerleave', () => { paused = false; }, { passive: true });
-		scroller.addEventListener('pointerdown', () => { paused = true; }, { passive: true });
-		scroller.addEventListener('focusin', () => { paused = true; });
-		scroller.addEventListener('focusout', () => { paused = false; });
-		document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+
+		// Explicit play/pause control (<ui-play> furniture). When present it is the SOLE
+		// pause mechanism — no implicit hover/focus auto-pause, so the button state always
+		// matches reality. It also freezes the CSS pill/thumb fill timer via --ui-media-play-state.
+		const play = scroller.querySelector(':scope > ui-play');
+		if (play) {
+			// end-corner controls (play(*e)) must be the LAST child so sticky-right pins
+			if (/play\([a-z]e\)/.test(m)) scroller.appendChild(play);
+			const reflect = (running) => {
+				scroller.style.setProperty('--ui-media-play-state', running ? 'running' : 'paused');
+				if ('playing' in play) { play.playing = running; return; }
+				const btn = play.querySelector('button');   // fallback if <ui-play> not yet upgraded
+				btn?.setAttribute('aria-pressed', String(running));
+				btn?.querySelector('ui-icon')?.setAttribute('type', running ? 'pause' : 'play');
+			};
+			play.addEventListener('ui-play-toggle', (e) => {
+				paused = !e.detail.playing;
+				scroller.style.setProperty('--ui-media-play-state', paused ? 'paused' : 'running');
+				paused ? stop() : start();
+			});
+			reflect(true);
+		} else {
+			scroller.addEventListener('pointerenter', () => { paused = true; }, { passive: true });
+			scroller.addEventListener('pointerleave', () => { paused = false; }, { passive: true });
+			scroller.addEventListener('pointerdown', () => { paused = true; }, { passive: true });
+			scroller.addEventListener('focusin', () => { paused = true; });
+			scroller.addEventListener('focusout', () => { paused = false; });
+		}
+		document.addEventListener('visibilitychange', () => document.hidden ? stop() : (!paused && start()));
 		scroller.style.setProperty('--ui-media-autoplay', (autoMs / 1000) + 's'); // sync the dot(pll) CSS timer
 		scroller.style.setProperty('--ui-media-thumb-timer-name', 'ui-media-thumb-timer'); // enable dot(tmb) fill timer (off until autoplay)
 		start();

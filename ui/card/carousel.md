@@ -227,6 +227,7 @@ dots/arrows; these tokens simply no-op.
 |-------|:--------:|--------|
 | `auto` · `auto(4s)` · `auto(800ms)` | yes | Autoplay; advances one slide per interval (default 5s), seamlessly wraps. Pauses on hover / focus / drag / hidden tab / reduced-motion. Sets `--ui-media-autoplay` so a `dot(pll)` timer stays in sync. |
 | `loop` | yes | **Seamless** infinite loop — clones the first/last slide so next-past-the-last smooth-scrolls into a clone, then invisibly resets. Works with dots + arrows, both directions. |
+| `play(<corner>)` + a `<ui-play>` child | yes | Explicit **play/pause** control. The button is `position:sticky`-pinned to the scrollport corner (plain furniture scrolls away with the slides). When present it becomes the **sole** pause mechanism — implicit hover/focus auto-pause is dropped, so the play↔pause glyph always matches state. Toggling sets `--ui-media-play-state` (`running`/`paused`), which also freezes the `dot(pll)`/`dot(tmb)` fill timer. Emits `ui-play-toggle`. Add `variant="reveal"` to hide until hover/focus. Needs `@browser.style/play` loaded. |
 
 **Performance.** The script runs **one** `document.querySelectorAll` at idle for just
 these tokens (`auto`, `loop`) — plain `<ui-media>` and CSS-only carousels never match,
@@ -274,6 +275,7 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-media-pill-track` | `rgb(255 255 255 / 0.35)` | Pill track (unfilled) |
 | `--ui-media-pill-fill` | `#fff` | Pill fill (timer) |
 | `--ui-media-autoplay` | `5s` | Pill / thumb timer duration (auto-set by `auto(Ns)`) |
+| `--ui-media-play-state` | `running` | `running` / `paused` for the pill/thumb fill timer — `ui-media.js` sets `paused` when a `<ui-play>` control pauses autoplay |
 
 ### Thumbnails (`dot(tmb)`)
 
