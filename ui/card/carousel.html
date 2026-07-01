@@ -35,6 +35,8 @@
 		.slide-cols > :is(img, video) { aspect-ratio: 1; block-size: 100%; border-radius: var(--radius-md, 0.375rem); inline-size: 100%; inset: auto; object-fit: cover; position: relative; }
 		/* gap between slides (pages) */
 		.slide-gap { --ui-media-gap: var(--spacing-lg); }
+		/* room for child-card box-shadows inside the clipping scrollport */
+		.shadow-room { padding-inline: var(--spacing-md); scroll-padding-inline: var(--spacing-md); }
 		/* shared control themes (used by several demos) */
 		.dots-dark    { --ui-media-dot-bg: rgb(0 0 0 / 0.25); --ui-media-dot-active: #000; }
 		.arrow-accent { --ui-media-arrow-color: var(--color-accent); }
@@ -480,7 +482,7 @@
 	<h2>Cards as slides — content below media</h2>
 	<p class="note">A group wrapper can hold full <code>&lt;ui-card&gt;</code>s, not just images. Here each card is a standard <code>variant="col"</code> card (image with eyebrow / headline / summary <strong>below</strong>) — a product-grid carousel that snaps a whole row at a time.</p>
 	<div class="grid">
-			<ui-media class="dots-dark slide-gap" media="nav(blw) arw(bare)">
+			<ui-media class="dots-dark slide-gap shadow-room" media="nav(blw) arw(bare)">
 				<ui-slide class="slide-cols" style="--cols: 2">
 					<ui-card variant="col" media="asr(4/3)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
