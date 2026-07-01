@@ -59,10 +59,10 @@
 		--ui-tabs-rounded-radius: var(--radius-lg);
 		--ui-tabs-squircle-exp: 2;
 		--ui-tabs-squircle-radius: 1em;
-		--ui-tabs-stagger-distance: 4rem;
-		--ui-tabs-stagger-duration: 0.75s;
-		--ui-tabs-stagger-easing: cubic-bezier(0.16, 1, 0.3, 1);
-		--ui-tabs-stagger-step: 0.07s;
+		--ui-tabs-stagger-distance: var(--stagger-distance, 4rem);
+		--ui-tabs-stagger-duration: var(--stagger-duration, 0.75s);
+		--ui-tabs-stagger-easing: var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1));
+		--ui-tabs-stagger-step: var(--stagger-step, 0.07s);
 		--ui-tabs-tab-gap: 1ch;
 	}
 

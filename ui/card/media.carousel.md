@@ -38,6 +38,8 @@ scroller; the rest layer on top. `asr()` etc. belong to the base frame — see m
 
 | `media=` token | Attr form | Layer | Effect |
 |----------------|-----------|-------|--------|
+| `ani(<type>)` | — | CSS | `stagger` **content** reveal type: `rise` (default) · `fall` · `lft` · `rgt` · `zom` · `blr` · `fde` (see "Staggered content reveal") |
+| `crd(<type>)` | — | CSS | `stagger` **card** reveal type (multi-card slides) — same vocabulary, independent of `ani()` |
 | `arw(arr)`  | `arrow="arr"` | CSS | Full-arrow glyph (default is chevron) |
 | `arw(bare)` | `arrow="bare"` | CSS | Drop the circle — glyph painted as a recolourable shape (`--ui-media-arrow-color`) |
 | `arw(bot)`  | `arrow="bot"` | CSS | Edge arrows at the bottom |
@@ -79,6 +81,7 @@ scroller; the rest layer on top. `asr()` etc. belong to the base frame — see m
 | `nav(abv)`  | `nav="abv"` | CSS | Dots + arrows in a reserved band above the media (mirror of `nav(blw)`) |
 | `nav(dot)`  | `nav="dot"` | CSS | Dots only |
 | `nav(non)`  | `nav="non"` | CSS | Bare swipe scroller (no controls) |
+| `stagger`   | `nav="stagger"` | CSS | Staggered content reveal — each slide's `<ui-content>` children fade + rise in when it becomes the snapped slide (pure CSS via `scroll-state` queries; see below) |
 
 ### `<ui-media>` frame tokens (not carousel — for reference)
 
@@ -316,6 +319,83 @@ glyph never desyncs from reality:
 Under `prefers-reduced-motion` autoplay never starts, so the control stays a static button.
 Add `variant="reveal"` (from `@browser.style/play`) to hide it until the frame is hovered
 or focused. Requires `../play/index.js` loaded on the page.
+
+## Staggered content reveal (`stagger`) — pure CSS
+
+Opt-in via `media="stagger"`. Each slide's `<ui-content>` children fade + rise in, one after
+another, when the slide becomes the current (snapped) one — the "hero slider" reveal. This is
+the same technique as [chrome.dev's slider](https://chrome.dev/carousel/horizontal/slider/):
+**no JavaScript**.
+
+**Mechanism — `scroll-state` container queries.**
+
+1. Each slide (`> :not(<furniture>)`) becomes a scroll-state query container:
+   `container-type: scroll-state`.
+2. The `<ui-content>` children carry the transition + per-child delay (always).
+3. Inside `@container not scroll-state(snapped: inline)` the children are hidden
+   (`opacity: 0; translate: 0 var(--stagger-distance)`). When the slide **snaps** to the
+   inline centre, that query stops matching → the children transition back to visible,
+   staggered by their `transition-delay`.
+
+Because it's a **time-based transition** (clock, not scroll-linked), the ~1s cascade plays
+identically on autoplay, arrow-click and swipe — and it can't be "scrubbed" or compressed by
+scroll velocity. Putting the *hidden* state inside the query means unsupported browsers just
+show the content (graceful). `scroll-state()` is Chromium-only, same tier as `::scroll-marker`.
+
+Shares the global tokens from `ui/base/tokens.css`:
+
+| Token | Default | Purpose |
+|-------|---------|---------|
+| `--stagger-begin` | `0s` | Lead-in delay before the first child starts (added to every child) |
+| `--stagger-distance` | `5rem` | Travel distance (`translate` start for rise/fall/lft/rgt) |
+| `--stagger-duration` | `0.75s` | Per-child fade/rise duration |
+| `--stagger-easing` | `cubic-bezier(0.16, 1, 0.3, 1)` | Easing |
+| `--stagger-step` | `0.07s` | Delay added per child |
+
+Per-child delay = `--stagger-begin + (sibling-index() - 1) * --stagger-step`.
+
+**Reveal type — `ani(<type>)`.** The hidden "from" state is driven by private vars
+(`--_stg-tr` translate · `--_stg-sc` scale · `--_stg-fl` filter), so `ani()` just swaps them —
+the content rule already transitions `opacity`/`translate`/`scale`/`filter`. Compose:
+`media="stagger ani(zom)"`. `<d>` = `var(--stagger-distance)`.
+
+| token | from-state | feel |
+|-------|-----------|------|
+| `ani(rise)` | `translate: 0 <d>` | up (**default**, no token needed) |
+| `ani(fall)` | `translate: 0 -<d>` | down |
+| `ani(lft)` | `translate: -<d> 0` | slide from inline-start |
+| `ani(rgt)` | `translate: <d> 0` | slide from inline-end |
+| `ani(zom)` | `scale: 0.65` | zoom / scale up |
+| `ani(blr)` | `filter: blur(12px)` | blur + fade |
+| `ani(fde)` | — (opacity only) | plain fade |
+
+Set `ani()` on the **carousel** for one shared reveal, or on an **individual slide's**
+`media=` for a per-slide reveal — the setter is element-level (`:where([media*="ani(x)"])`),
+so a slide's own `ani()` (a closer ancestor of its `<ui-content>`) overrides the
+carousel-level one. e.g. `<ui-card media="asr(16/9) … ani(zom)">`.
+
+**Multi-card slides + two channels (`crd()` + `ani()`).** When a slide is a `<ui-slide>`
+group of cards, the **cards themselves** cascade in (like the ui-tabs/ui-reveal stagger),
+*and* each card's content cascades within it (nested: card index, then child index). Two
+independent from-state channels drive it, same type vocabulary:
+
+- **`crd(<type>)`** → the **card** reveal (`--_stg-crd-*`). Default rise. Same type vocabulary as `ani()`.
+- **`ani(<type>)`** → the **content** reveal (`--_stg-*`). Per-card.
+
+So `media="stagger crd(rise)"` on the carousel + `ani(lft)` on a card = that card rises as a
+unit while its copy slides in — independently. The per-card offset uses a registered
+`@property --_stg-crd-i` (`<integer>`, inherits) set to `sibling-index() - 1` on each card, so
+`sibling-index()` resolves on the *card* (a bare custom property would defer it to the content
+child and lose the card's position). Single-card (hero) slides have no `<ui-slide>`, so
+`--_stg-crd-i` stays `0` and only the content channel runs.
+
+Add `--ui-media-gap` (on the scroller) for space between slides/pages — default `0` (flush);
+set e.g. `--ui-media-gap: var(--spacing-lg)` on multi-card carousels so pages don't touch.
+
+**Related — `ui-tabs`** uses a different trigger (`@starting-style` on `details[open]`, since
+tabs aren't a scroller) but the **same shared `--stagger-*` tokens** (it aliases its
+`--ui-tabs-stagger-*` to them). Gated on `@media (prefers-reduced-motion: no-preference)`.
+Requires a snapping carousel (`nav`); needs no `ui-media.js`.
 
 ## Tokens
 

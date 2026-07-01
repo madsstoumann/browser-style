@@ -147,6 +147,14 @@
 		--ease-out: cubic-bezier(0, 0, 0.2, 1);
 		--ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
+		/* Staggered child reveal (shared: tabs, media carousel, …).
+		   Per-child delay = --stagger-begin + (sibling-index() - 1) * --stagger-step. */
+		--stagger-begin: 0s;
+		--stagger-distance: 5rem;
+		--stagger-duration: 0.75s;
+		--stagger-easing: cubic-bezier(0.16, 1, 0.3, 1);
+		--stagger-step: 0.07s;
+
 		/* Blur */
 		--blur-sm: 4px;
 		--blur-md: 12px;

@@ -215,6 +215,46 @@ Applied by `ui-media-srcset.js`. Best practice: add `eager` to the one above-the
 (hero) carousel; leave the rest default-lazy. Author `loading`/`preload`/`srcset`
 attributes are never overwritten.
 
+### `stagger` — staggered content reveal (pure CSS)
+
+| Token / attr | Result |
+|--------------|--------|
+| `stagger` (or `nav="stagger"`) | Each slide's `<ui-content>` children fade + rise in, one after another, when the slide becomes the **snapped** (current) one — the hero-slider reveal |
+| `ani(<type>)` | **Content** reveal type: `rise` (default) · `fall` · `lft` · `rgt` · `zom` · `blr` · `fde`. Set on the carousel or per **slide/card**. e.g. `media="stagger ani(zom)"` |
+| `crd(<type>)` | **Card** reveal type (multi-card `<ui-slide>` slides) — same 7 types, **independent** of `ani()`. e.g. `media="stagger crd(rise)"` |
+
+**No JavaScript.** Each slide is a `container-type: scroll-state` query container; a
+`@container scroll-state(snapped: inline)` query reveals its content children with a
+per-child `transition-delay`. Time-based, so the ~1s cascade is identical on autoplay,
+arrow-click and swipe (it can't be scrubbed by scroll velocity) — the same technique as
+[chrome.dev's slider](https://chrome.dev/carousel/horizontal/slider/). Needs a snapping
+carousel (`nav`). Tune with the shared `--stagger-{begin,distance,duration,easing,step}`
+tokens (also used by `ui-tabs`). Chromium-only (`scroll-state()`); elsewhere content just
+shows. Off under `prefers-reduced-motion`.
+
+**Reveal types** (shared by `ani()` and `crd()`): `rise` (from below, default) · `fall`
+(from above) · `lft` / `rgt` (from the inline-start / -end) · `zom` (scale up) · `blr`
+(blur + fade) · `fde` (plain fade).
+
+**Two channels for multi-card slides.** When a slide is a `<ui-slide>` group of cards, the
+**cards themselves** cascade in (`crd()`) *and* each card's **content** cascades within it
+(`ani()`) — nested (card index, then child index), each with its own from-state. So the
+cards can rise as units while a card's copy slides in independently:
+
+```html
+<ui-media media="nav stagger crd(rise)" style="--ui-media-gap: var(--spacing-lg)">
+  <ui-slide class="slide-cols" style="--cols: 3">
+    <ui-card media="asr(3/4) obp(cc) scm ani(lft)">…</ui-card>  <!-- content slides in -->
+    <ui-card media="asr(3/4) obp(cc) scm ani(zom)">…</ui-card>  <!-- content zooms -->
+    <ui-card media="asr(3/4) obp(cc) scm ani(fde)">…</ui-card>  <!-- content fades -->
+  </ui-slide>
+</ui-media>
+```
+
+`--ui-media-gap` (on the scroller) sets the space **between slides/pages** — default `0`
+(flush); set e.g. `--ui-media-gap: var(--spacing-lg)` on multi-card carousels so pages
+don't touch.
+
 ---
 
 ## JavaScript behaviors (`ui-media.js`)
@@ -316,6 +356,24 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | Property | Default | Purpose |
 |----------|---------|---------|
 | `--ui-media-overlay-gap` | `0.75rem` | Inset of overlaid controls from the edges |
+| `--ui-media-gap` | `0` | Space between slides/pages (flush by default; set for multi-card slides) |
+
+### Staggered reveal (`stagger` / `ani()` / `crd()`)
+
+Global tokens (defined in `@browser.style/base`, shared with `ui-tabs`):
+
+| Property | Default | Purpose |
+|----------|---------|---------|
+| `--stagger-begin` | `0s` | Lead-in delay before the first item (added to every item) |
+| `--stagger-distance` | `5rem` | Travel distance (`rise`/`fall`/`lft`/`rgt` from-state) |
+| `--stagger-duration` | `0.75s` | Per-item fade/move duration |
+| `--stagger-easing` | `cubic-bezier(0.16, 1, 0.3, 1)` | Easing (swap for a spring/linear curve) |
+| `--stagger-step` | `0.07s` | Delay added per item (per child, and per card) |
+
+Per-item delay = `--stagger-begin + (index) * --stagger-step`, where *index* is the child
+index (single-card slides) or `card-index + child-index` (multi-card slides). Private
+from-state vars (`--_stg-*` content, `--_stg-crd-*` card) are set by `ani()` / `crd()` — not
+authored directly.
 
 ---
 

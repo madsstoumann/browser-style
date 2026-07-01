@@ -35,6 +35,7 @@
 	ui-media:where([media*="nav"], [nav]) {
 		background: var(--ui-media-bg);
 		display: flex;
+		gap: var(--ui-media-gap, 0);   /* space between slides/pages; 0 = flush (default) */
 		inline-size: round(down, 100%, 1px);
 		overflow-x: auto;
 		overscroll-behavior-x: contain;
@@ -53,6 +54,8 @@
 	ui-media:where([media*="nav"], [nav]) > :is(img, video) {
 		inset: auto;
 		position: static;
+		-webkit-user-drag: none;
+		user-select: none;
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
@@ -109,6 +112,97 @@
 	/* Only the 6 edge corners are pinnable (sticky pins to an edge, not the centre).
 	   Center-inline tokens (play(tc/cc/bc)) are for a NON-scrolling video (furniture,
 	   absolute — see media.css); on a scrolling carousel they fall back to bottom-start. */
+
+	/* ---- Staggered content reveal — opt-in via media="stagger" (pure CSS, no JS) ----
+	   Each slide is a scroll-state query container; when it becomes the SNAPPED (current)
+	   slide, its <ui-content> children fade + rise in with a per-child delay. Time-based
+	   (clock, via transition-delay), so the cascade is identical on autoplay, arrow-click
+	   and swipe — same shape as chrome.dev's hero slider. Shares the global --stagger-*
+	   tokens. Chromium-only (scroll-state queries, like ::scroll-marker); where unsupported
+	   the @container rule is ignored and content simply shows. Reduced-motion: effect off. */
+	/* Card column-index for multi-card slides. Registered so sibling-index() computes on the
+	   CARD (a bare custom property would defer substitution to the use site and lose the
+	   card's position); it then inherits to the card's content for the nested offset. */
+	@property --_stg-crd-i { syntax: "<integer>"; inherits: true; initial-value: 0; }
+
+	@media (prefers-reduced-motion: no-preference) {
+		/* the slide is the scroll-state container (snap target) */
+		:where([media*="stagger"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker),
+		ui-media:where([media*="stagger"], [nav~="stagger"]) > :not(ui-chip, ui-play, ui-save, ui-sticker) {
+			container-type: scroll-state;
+		}
+		/* multi-card slide: give each card its column index (inherits to its content) */
+		:where([media*="stagger"]) ui-media > ui-slide > *,
+		ui-media:where([media*="stagger"], [nav~="stagger"]) > ui-slide > * {
+			--_stg-crd-i: calc(sibling-index() - 1);
+		}
+		/* transition + from-state for BOTH stagger targets — cards cascade in like the
+		   ui-tabs/ui-reveal stagger, and every <ui-content> child cascades too (nested).
+		   ani() drives the from-state via --_stg-tr / --_stg-sc / --_stg-fl (no-op unless set). */
+		:where([media*="stagger"]) ui-media > ui-slide > *,
+		ui-media:where([media*="stagger"], [nav~="stagger"]) > ui-slide > *,
+		:where([media*="stagger"]) ui-media ui-content > *,
+		ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > * {
+			transition:
+				opacity var(--stagger-duration) var(--stagger-easing),
+				translate var(--stagger-duration) var(--stagger-easing),
+				scale var(--stagger-duration) var(--stagger-easing),
+				filter var(--stagger-duration) var(--stagger-easing);
+		}
+		/* delay — cards cascade by card index */
+		:where([media*="stagger"]) ui-media > ui-slide > *,
+		ui-media:where([media*="stagger"], [nav~="stagger"]) > ui-slide > * {
+			transition-delay: calc(var(--stagger-begin) + var(--_stg-crd-i) * var(--stagger-step));
+		}
+		/* delay — content children cascade by (card index + child index). --_stg-crd-i is 0 on
+		   single-card (hero) slides, so this reduces to a plain per-child stagger there. */
+		:where([media*="stagger"]) ui-media ui-content > *,
+		ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > * {
+			transition-delay: calc(var(--stagger-begin) + (var(--_stg-crd-i) + sibling-index() - 1) * var(--stagger-step));
+		}
+		/* hide while the slide is NOT snapped → reveals (with the delays above) on snap.
+		   Hidden state inside the query means no-support degrades to "shown". Two independent
+		   from-state channels: cards read --_stg-crd-* (set by crd()), content reads --_stg-* (ani()). */
+		@container not scroll-state(snapped: inline) {
+			:where([media*="stagger"]) ui-media > ui-slide > *,
+			ui-media:where([media*="stagger"], [nav~="stagger"]) > ui-slide > * {
+				opacity: 0;
+				translate: var(--_stg-crd-tr, 0 var(--stagger-distance));   /* card channel — default rise */
+				scale: var(--_stg-crd-sc, 1);
+				filter: var(--_stg-crd-fl, none);
+			}
+			:where([media*="stagger"]) ui-media ui-content > *,
+			ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > * {
+				opacity: 0;
+				translate: var(--_stg-tr, 0 var(--stagger-distance));   /* content channel — default rise */
+				scale: var(--_stg-sc, 1);
+				filter: var(--_stg-fl, none);
+			}
+		}
+	}
+
+	/* ani(<type>) — reveal type: sets the hidden "from" state consumed above. Bare
+	   (element-level) so it works on the carousel host (all slides) OR on an individual
+	   slide's media= (per-slide — a closer ancestor's var wins for that slide's content).
+	   Vars are harmless elsewhere (only read by the snapped-query rule). */
+	:where([media*="ani(rise)"]) { --_stg-tr: 0 var(--stagger-distance); }
+	:where([media*="ani(fall)"]) { --_stg-tr: 0 calc(-1 * var(--stagger-distance)); }
+	:where([media*="ani(lft)"])  { --_stg-tr: calc(-1 * var(--stagger-distance)) 0; }
+	:where([media*="ani(rgt)"])  { --_stg-tr: var(--stagger-distance) 0; }
+	:where([media*="ani(zom)"])  { --_stg-tr: 0 0; --_stg-sc: 0.65; }
+	:where([media*="ani(blr)"])  { --_stg-tr: 0 0; --_stg-fl: blur(12px); }
+	:where([media*="ani(fde)"])  { --_stg-tr: 0 0; }
+
+	/* crd(<type>) — CARD-level reveal (the card as a unit), independent of ani() (content).
+	   Same type vocabulary, own var channel (--_stg-crd-*). Set on the carousel for all cards, or
+	   on an individual card. Default (no crd()) = rise. e.g. media="stagger crd(rise)". */
+	:where([media*="crd(rise)"]) { --_stg-crd-tr: 0 var(--stagger-distance); }
+	:where([media*="crd(fall)"]) { --_stg-crd-tr: 0 calc(-1 * var(--stagger-distance)); }
+	:where([media*="crd(lft)"])  { --_stg-crd-tr: calc(-1 * var(--stagger-distance)) 0; }
+	:where([media*="crd(rgt)"])  { --_stg-crd-tr: var(--stagger-distance) 0; }
+	:where([media*="crd(zom)"])  { --_stg-crd-tr: 0 0; --_stg-crd-sc: 0.65; }
+	:where([media*="crd(blr)"])  { --_stg-crd-tr: 0 0; --_stg-crd-fl: blur(12px); }
+	:where([media*="crd(fde)"])  { --_stg-crd-tr: 0 0; }
 
 	:where([media*="nav(blw)"]) ui-media,
 	ui-media:where([media*="nav(blw)"], [nav~="blw"]) {
@@ -515,4 +609,5 @@
 		from { background-size: 0 var(--ui-media-thumb-timer-height, 3px), cover; }
 		to   { background-size: 100% var(--ui-media-thumb-timer-height, 3px), cover; }
 	}
+
 }
