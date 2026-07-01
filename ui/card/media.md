@@ -139,6 +139,8 @@ rds(sm-sq)  rds(md-sq)  rds(lg-sq)  rds(xl-sq)      ← squircle (superellipse c
 
 The plain steps map to the global `--radius-*` tokens; the `-sq` variants add a bespoke radius plus `corner-shape: superellipse()` (Chrome 135+, degrades to the rounded radius). Arbitrary corners via the escape hatch: `style="--ui-media-radius: 1rem"`.
 
+Add **`clip`** to also apply `clip-path: inset(0 round …)` at that same radius — a **scroll container** (carousel) can drop its rounded corners mid-scroll because `border-radius` + `overflow` compositing lets the scrolled content bleed past the corner; `clip-path` clips reliably. It's a boolean token that reuses the `rds()` value (`--ui-media-radius`, falling back to the card radius), so `rds(2xl) clip` rounds *and* clips. (`round()` has no superellipse, so a `-sq` frame clips as a plain round.) Note: `clip-path` also clips anything overlaid at the very edge, so keep controls/furniture inset.
+
 #### `obp()` — object-position 9-grid
 
 `tl tc tr · cl cc cr · bl bc br` map to `left top` … `right bottom`. Default is `center`.

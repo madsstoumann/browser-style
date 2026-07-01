@@ -91,6 +91,7 @@ These belong to the base `<ui-media>` frame ([media.css](./media.css), docs in
 | `obf(cover · contain · fill · none)` | CSS | `object-fit` (default cover) |
 | `obp(<pos>)` | CSS | `object-position` (9-grid) |
 | `rds(none · sm · md · lg · xl · 2xl · full · pill)` | CSS | Corner radius (standalone frame); `-sq` variants add a squircle corner |
+| `clip` | CSS | `clip-path: inset(0 round …)` at the `rds()` radius — keeps rounded corners while a carousel scrolls (border-radius alone can drop them mid-scroll). Reuses `--ui-media-radius`; no superellipse |
 | `flp(h · v · hv)` | CSS | Flip the image horizontally / vertically / both |
 | `hov(zoom · pan · track · drift)` | CSS (+JS) | Hover effect; `track`/`drift` follow the cursor (need `ui-media.js`) |
 | `scm` · `scm(<pos>)` · `scm(lgt · med · drk)` | CSS | Scrim — placement + intensity |

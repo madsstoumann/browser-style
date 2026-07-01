@@ -406,14 +406,14 @@
 		}
 
 		/* marker-group corner placement (overlay) — tl · tr · bl · br. Placed last so it wins
-		   over the axis(y) column rules; resets those (inline-size/align/margin/direction) so a
-		   thumbnail rail fits in a corner. Inset via --ui-media-marker-inset (falls back to overlay gap). */
+		   over the axis(y) column rules; resets their inline-size/align/margin so a rail fits in a
+		   corner. Flex-direction is left to context (row overlay, column in axis(y)). Inset via
+		   --ui-media-marker-inset (falls back to overlay gap). */
 		:where([media*="dot(tl)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(tl)"], [dot~="tl"])::scroll-marker-group,
 		:where([media*="dot(tr)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(tr)"], [dot~="tr"])::scroll-marker-group,
 		:where([media*="dot(bl)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(bl)"], [dot~="bl"])::scroll-marker-group,
 		:where([media*="dot(br)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(br)"], [dot~="br"])::scroll-marker-group {
 			align-self: auto;
-			flex-direction: row;
 			inline-size: auto;
 			margin-inline: 0;
 		}
@@ -425,9 +425,6 @@
 		ui-media:where([media*="dot(bl)"], [dot~="bl"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: calc(anchor(left) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: auto; justify-self: start; }
 		:where([media*="dot(br)"]) ui-media::scroll-marker-group,
 		ui-media:where([media*="dot(br)"], [dot~="br"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: calc(anchor(right) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: auto; justify-self: end; }
-		/* axis(y): stack the corner rail vertically (overrides the corner row above) */
-		:where([media*="axis(y)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="axis(y)"], [nav~="y"])::scroll-marker-group { flex-direction: column; }
 	}
 
 	@keyframes ui-media-pill-fill {

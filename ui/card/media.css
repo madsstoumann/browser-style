@@ -40,6 +40,8 @@
 	   (specificity 0,0,2) out-specifies the carousel's descendant rules (0,0,1) in
 	   media.carousel.css, so the frame wins regardless of import order — no !important. */
 	ui-media ui-media {
+		--ui-media-radius: 0;   /* don't inherit the scroller's rds() radius (border-radius/clip) */
+		clip-path: none;
 		display: grid;
 		inline-size: auto;
 		overflow: hidden;
@@ -94,6 +96,13 @@
 	:where([media*="rds(xl-sq)"]) { --ui-media-radius: var(--radius-xl-sq); --ui-media-squircle-exp: var(--squircle-xl); }
 	:where([media*="-sq)"]) ui-media,
 	:where(ui-media[media*="-sq)"]) { corner-shape: superellipse(var(--ui-media-squircle-exp, 1.8)); }
+
+	/* clip — clip-path to the rds() radius. A scroll container's border-radius can drop its
+	   corners mid-scroll (compositing); clip-path clips reliably. Boolean token that reuses the
+	   rds() custom property (--ui-media-radius), falling back to the card radius. round() has no
+	   superellipse, so -sq squircles clip as a plain round here. */
+
+	:where(ui-media[media*="clip"]) { clip-path: inset(0 round var(--ui-media-radius, var(--ui-card-radius, 0))); }
 
 	/* obf() — object-fit */
 	:where([media*="obf(cover)"])   { --ui-media-fit: cover; }
