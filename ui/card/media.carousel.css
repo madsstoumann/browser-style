@@ -175,20 +175,12 @@
 		@media (prefers-reduced-motion: no-preference) {
 			:where([media*="dot(thumb)"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
 			ui-media:where([media*="dot(thumb)"], [dot~="thumb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
-				animation: ui-media-thumb-timer var(--ui-media-autoplay) linear forwards;
+				/* timer is OFF by default (it's autoplay feedback); ui-media.js sets
+				   --ui-media-thumb-timer-name to the keyframe when autoplay runs. Set it manually to preview. */
+				animation: var(--ui-media-thumb-timer-name, none) var(--ui-media-autoplay) linear forwards;
 			}
 		}
 
-		/* marker-group corner placement (overlay) — tl · tr · bl · br (default is bottom-center).
-		   Inset from the edges via --ui-media-marker-inset (falls back to the overlay gap). */
-		:where([media*="dot(tl)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="dot(tl)"], [dot~="tl"])::scroll-marker-group { top: calc(anchor(top) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); bottom: auto; left: calc(anchor(left) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: auto; justify-self: start; }
-		:where([media*="dot(tr)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="dot(tr)"], [dot~="tr"])::scroll-marker-group { top: calc(anchor(top) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); bottom: auto; right: calc(anchor(right) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: auto; justify-self: end; }
-		:where([media*="dot(bl)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="dot(bl)"], [dot~="bl"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: calc(anchor(left) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: auto; justify-self: start; }
-		:where([media*="dot(br)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="dot(br)"], [dot~="br"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: calc(anchor(right) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: auto; justify-self: end; }
 
 		/* ---- ARROWS present: bare nav · nav(arw) · nav(blw). Base glyph vars ---- */
 		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]),
@@ -412,6 +404,30 @@
 			left: auto;
 			right: calc(anchor(right) + var(--ui-media-overlay-gap));
 		}
+
+		/* marker-group corner placement (overlay) — tl · tr · bl · br. Placed last so it wins
+		   over the axis(y) column rules; resets those (inline-size/align/margin/direction) so a
+		   thumbnail rail fits in a corner. Inset via --ui-media-marker-inset (falls back to overlay gap). */
+		:where([media*="dot(tl)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(tl)"], [dot~="tl"])::scroll-marker-group,
+		:where([media*="dot(tr)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(tr)"], [dot~="tr"])::scroll-marker-group,
+		:where([media*="dot(bl)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(bl)"], [dot~="bl"])::scroll-marker-group,
+		:where([media*="dot(br)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(br)"], [dot~="br"])::scroll-marker-group {
+			align-self: auto;
+			flex-direction: row;
+			inline-size: auto;
+			margin-inline: 0;
+		}
+		:where([media*="dot(tl)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="dot(tl)"], [dot~="tl"])::scroll-marker-group { top: calc(anchor(top) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); bottom: auto; left: calc(anchor(left) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: auto; justify-self: start; }
+		:where([media*="dot(tr)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="dot(tr)"], [dot~="tr"])::scroll-marker-group { top: calc(anchor(top) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); bottom: auto; right: calc(anchor(right) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: auto; justify-self: end; }
+		:where([media*="dot(bl)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="dot(bl)"], [dot~="bl"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: calc(anchor(left) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: auto; justify-self: start; }
+		:where([media*="dot(br)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="dot(br)"], [dot~="br"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: calc(anchor(right) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: auto; justify-self: end; }
+		/* axis(y): stack the corner rail vertically (overrides the corner row above) */
+		:where([media*="axis(y)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="axis(y)"], [nav~="y"])::scroll-marker-group { flex-direction: column; }
 	}
 
 	@keyframes ui-media-pill-fill {

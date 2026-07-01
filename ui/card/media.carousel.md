@@ -201,11 +201,14 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
   white `--ui-media-thumb-border`, inactive dimmed via `--ui-media-thumb-opacity`. The active
   thumb layers a **bottom timer stripe** (2-layer background: `linear-gradient` stripe over
   the image) animated 0→100% width by the `ui-media-thumb-timer` keyframes over
-  `--ui-media-autoplay` — same idea as the pill. URL is a custom property today; swaps to
-  `attr(data-thumb type(<image>))` once that resolves (Chrome parses it but doesn't yet paint).
+  `--ui-media-autoplay`. **The timer is OFF by default** (`--ui-media-thumb-timer-name: none`) —
+  it's autoplay feedback, so `ui-media.js` sets the keyframe name only when autoplay (`auto`/
+  `loop`) runs (set it manually to preview without JS). URL is a custom property today; swaps
+  to `attr(data-thumb type(<image>))` once that resolves (Chrome parses it but doesn't yet paint).
 - **Corner placement.** `dot(tl|tr|bl|br)` re-anchor the whole marker-group to a corner
   (overlay), inset by `--ui-media-marker-inset` (defaults to the overlay gap; `dot(thumb)`
-  bumps it to `1rem`). Default (no corner token) stays bottom-centered.
+  bumps it to `1rem`). In `axis(y)` the corner rail stacks vertically. Default (no corner
+  token) stays bottom-centered.
 
 ## Arrows
 

@@ -178,7 +178,7 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 | `dot(lgt)` `dot(drk)` `dot(sub)` | `dot="lgt/drk/sub"` | Ink — light / dark / **subtle** (`bg` + active). `nav(blw)` defaults to dark |
 | `dot(sm)` `dot(md)` `dot(lg)` `dot(xl)` | `dot="sm…xl"` | Size (`md` = default) — one scale for dots, pills **and** thumbnails, so `dot(thumb) dot(lg)` = large thumbnails |
 | `dot(sta)` `dot(ctr)` `dot(end)` | `dot="sta/ctr/end"` | **Position within a `nav(blw)` band** — left / center (default) / right. `sta`/`end` clear the arrow on that side (or the `arw(set)` pair). |
-| `dot(thumb)` | `dot="thumb"` | **Image thumbnails** instead of dots. Each slide sets `--ui-media-thumb-url: url(…)`; the active thumb shows full opacity + a bottom **timer** stripe (fills L→R over `--ui-media-autoplay`, like pills). |
+| `dot(thumb)` | `dot="thumb"` | **Image thumbnails** instead of dots. Each slide sets `--ui-media-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-media-autoplay`. |
 | `dot(tl)` `dot(tr)` `dot(bl)` `dot(br)` | `dot="tl/tr/bl/br"` | **Corner placement** for the overlay marker-group (top-left / top-right / bottom-left / bottom-right). Inset via `--ui-media-marker-inset`. |
 
 ### Thumbnail navigation — `dot(thumb)`
@@ -195,8 +195,10 @@ custom property; place the rail in any corner:
 
 Each slide can also be its own layered `<ui-card>` (unique headline/CTA per slide) — the
 thumbnail is set on the **card**: `<ui-card style="--ui-media-thumb-url: url(…)">`. The
-active thumb runs a bottom **timer** stripe synced to `--ui-media-autoplay`. (The URL uses a
-custom property today; it swaps to typed `attr(data-thumb type(<image>))` once that's Baseline.)
+active thumb runs a bottom **timer** stripe synced to `--ui-media-autoplay` — but only while
+**autoplay** is running (`ui-media.js` turns it on via `--ui-media-thumb-timer-name`; it's off
+in pure CSS). (The URL uses a custom property today; it swaps to typed
+`attr(data-thumb type(<image>))` once that's Baseline.)
 
 ### `load()` — image/video loading (JS-applied)
 
@@ -283,6 +285,7 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-media-thumb-opacity` | `0.55` | Inactive thumbnail opacity (active = `1`) |
 | `--ui-media-thumb-timer` | `#fff` (matches the border) | Active-thumb bottom timer-stripe colour (separate from `--ui-media-thumb-border`) |
 | `--ui-media-thumb-timer-height` | `3px` | Timer-stripe thickness |
+| `--ui-media-thumb-timer-name` | `none` (off) | Fill-timer animation. **Off by default** — `ui-media.js` sets it to `ui-media-thumb-timer` when **autoplay** (`auto`/`loop`) runs. Set it to that keyframe manually to preview without JS. |
 | `--ui-media-marker-inset` | `1rem` (thumb) / `--ui-media-overlay-gap` | Corner inset from the edges (`dot(tl/tr/bl/br)`) |
 
 ### Below-band (`nav(blw)`)

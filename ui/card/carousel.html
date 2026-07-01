@@ -563,7 +563,7 @@
 	<h2>Thumbnail navigation — <code>dot(thumb)</code></h2>
 	<p class="note">Turn the <code>::scroll-marker-group</code> dots into <strong>image thumbnails</strong> with <code>dot(thumb)</code>. Each slide is its <strong>own layered <code>&lt;ui-card&gt;</code></strong> (unique headline + CTA), full-bleed (4/3) with content overlaid bottom-left (<code>ovr(bl)</code> + <code>scm</code>). Each slide sets its thumbnail via <code>style="--ui-media-thumb-url: url(…)"</code> (custom property — swaps to typed <code>attr()</code> once Baseline). Place the rail in any corner with <code>dot(tl)</code> / <code>dot(tr)</code> / <code>dot(bl)</code> / <code>dot(br)</code> — here top-right.</p>
 	<div class="grid">
-			<ui-media media="asr(4/3) nav dot(thumb) dot(tr) dot(xl)">
+			<ui-media media="asr(4/3) nav auto dot(thumb) dot(tr) dot(xl)">
 				<ui-card variant="ovr(bl)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-media-thumb-url: url('/assets/images/finance.png')"><cq-box>
 					<ui-media><img src="/assets/images/finance.png" alt=""></ui-media>
 					<ui-content><small data-part="eyebrow">Travel</small><h2 data-part="headline">Far-flung destinations</h2><p data-part="summary">Places worth the journey.</p><nav data-part="actions"><a class="ui-button" href="#">Explore</a></nav></ui-content>
@@ -580,6 +580,33 @@
 					<ui-media><img src="/assets/images/world.png" alt=""></ui-media>
 					<ui-content><small data-part="eyebrow">Global</small><h2 data-part="headline">See the world</h2><p data-part="summary">One trip at a time.</p><nav data-part="actions"><a class="ui-button" href="#">Plan</a></nav></ui-content>
 				</cq-box></ui-card>
+			</ui-media>
+	</div>
+
+	<h3>Thumbnails bottom-right — <code>dot(br) dot(lg)</code></h3>
+	<p class="note">Plain images (no cards), 16/9, with a larger thumbnail rail (<code>dot(lg)</code>) anchored bottom-right (<code>dot(br)</code>).</p>
+	<div class="grid">
+			<ui-media media="asr(16/9) nav dot(thumb) dot(br) dot(lg)">
+				<img src="/assets/images/river.png" alt="" style="--ui-media-thumb-url: url('/assets/images/river.png')">
+				<img src="/assets/images/mindfulness.png" alt="" style="--ui-media-thumb-url: url('/assets/images/mindfulness.png')">
+				<img src="/assets/images/gastronomy.png" alt="" style="--ui-media-thumb-url: url('/assets/images/gastronomy.png')">
+				<img src="/assets/images/world.png" alt="" style="--ui-media-thumb-url: url('/assets/images/world.png')">
+				<img src="/assets/images/finance.png" alt="" style="--ui-media-thumb-url: url('/assets/images/finance.png')">
+			</ui-media>
+	</div>
+
+	<h3>Vertical thumbnails in a corner — <code>axis(y) dot(md)</code></h3>
+	<p class="note">4/3 vertical carousels with medium thumbnails (<code>dot(md)</code>) — pinned top-left (<code>dot(tl)</code>) on the first, bottom-left (<code>dot(bl)</code>) on the second — in the page's usual two-column layout.</p>
+	<div class="grid grid-2">
+			<ui-media media="asr(4/3) axis(y) nav dot(thumb) dot(tl) dot(md)">
+				<img src="/assets/images/hubble.png" alt="" style="--ui-media-thumb-url: url('/assets/images/hubble.png')">
+				<img src="/assets/images/quantum.png" alt="" style="--ui-media-thumb-url: url('/assets/images/quantum.png')">
+				<img src="/assets/images/websummit.png" alt="" style="--ui-media-thumb-url: url('/assets/images/websummit.png')">
+			</ui-media>
+			<ui-media media="asr(4/3) axis(y) nav dot(thumb) dot(bl) dot(sm)">
+				<img src="/assets/images/river.png" alt="" style="--ui-media-thumb-url: url('/assets/images/river.png')">
+				<img src="/assets/images/mindfulness.png" alt="" style="--ui-media-thumb-url: url('/assets/images/mindfulness.png')">
+				<img src="/assets/images/world.png" alt="" style="--ui-media-thumb-url: url('/assets/images/world.png')">
 			</ui-media>
 	</div>
 
