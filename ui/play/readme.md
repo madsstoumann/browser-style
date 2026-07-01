@@ -1,8 +1,8 @@
 # @browser.style/play
 
-A CSS-first media **play button** — a round play affordance designed to overlay media (images, video posters, cards). It works as a styled button with no JavaScript, and upgrades to a `<ui-play>` web component that manages an `is-playing` state, swaps the play glyph for a pause glyph, emits a `ui-play-toggle` event, and can optionally drive a `<video>`.
+A CSS-first, **target-agnostic** play/pause button — a round affordance designed to overlay media (images, video posters, cards). It works as a styled button with no JavaScript, and upgrades to a `<ui-play>` web component that manages an `is-playing` state and drives *anything* — a `<video>`, a CSS animation, a YouTube lite-embed, a carousel — through the native **Invoker Commands API** (`command` + `commandfor`). `<ui-play>` never learns what it controls: the target handles the command and reflects the real state back via the `playing` property.
 
-The glyph is a `<ui-icon>` sub-element from `@browser.style/icon`. In CSS-only mode you author the icon `type` (`play` by default); the web component swaps it between `play` and `pause` at runtime.
+The glyph is a `<ui-icon>` sub-element from `@browser.style/icon`. Use `type="play-pause"` for a single glyph that **morphs** play↔pause as state changes (driven by `open` on the host); the older static `type="play|pause"` is still swapped at runtime for backward compatibility.
 
 ## Features
 
@@ -12,7 +12,7 @@ The glyph is a `<ui-icon>` sub-element from `@browser.style/icon`. In CSS-only m
 - Brand/shape variants — `youtube` (red squircle), `vimeo` (cyan disc), `rounded(sm|md|lg)` (clip-path play triangle)
 - Four sizes: small, medium (default), large, extra-large
 - `theme` bundles for decorative colors
-- Optional web component: toggles `is-playing`, swaps the `<ui-icon type>`, emits an event, and can control a `<video>` via `for`
+- Optional web component: toggles `is-playing`, morphs the `<ui-icon>`, and drives targets via the native Invoker Commands API (`command`/`commandfor`) — with a bundled controller for `<video>` and CSS animations. Falls back to a `ui-play-toggle` event when no `commandfor` is set (carousel), and keeps a `for=` shorthand for `<video>`
 - Token-driven colors, radius, size, icon size, and transition duration
 - Light/dark mode support via design tokens
 - Works without JavaScript (CSS-only mode — a styled button without toggle)
@@ -245,14 +245,51 @@ the trigger is declarative — no JS needed:
   ```
   *(when wrapping an `<a>`, style it the same as the button — see CSS-only usage).*
 
-Load `index.js` only when you want the **is-playing toggle** — the `aria-pressed`
-play↔pause swap (the `<ui-icon type>` swaps with it), the `ui-play-toggle` event, or
-`for=` driving a `<video>` directly. For popover-based playback the popover state is
-the source of truth, so the JS toggle is usually unnecessary.
+Load `index.js` when you want the **is-playing toggle** — the `aria-pressed` state,
+the morphing glyph, command dispatch, the `ui-play-toggle` event, or `for=` driving a
+`<video>`. For popover-based playback the popover state is the source of truth, so the
+JS toggle is usually unnecessary.
 
-### `ui-play-toggle` event
+### Command model (`command` / `commandfor`)
 
-Dispatched on the `<ui-play>` element each time the button is clicked. It **bubbles** and is **composed**.
+The primary way to wire `<ui-play>` to a target is the **native Invoker Commands API**.
+Put `command` + `commandfor` on the inner `<button>`; on click the platform dispatches a
+`CommandEvent` on the element with that `id`. Custom commands must be `--`-prefixed:
+
+- `--toggle-play` — flip the target's state (the usual single button)
+- `--play` / `--pause` — explicit, for separate controls
+
+```html
+<ui-play><button type="button" command="--toggle-play" commandfor="promo" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+<video id="promo" src="promo.mp4" playsinline></video>
+```
+
+The target handles the command and reflects reality back via `uiPlay.playing = bool`.
+For `<video>`/`<audio>` and CSS-animation targets, import the bundled controller once —
+it adds a single delegated `command` listener:
+
+```js
+import '@browser.style/play';           // registers <ui-play>
+import '@browser.style/play/command.js'; // wires <video> + CSS-animation targets
+```
+
+- **`<video>` / `<audio>`** → `.play()` / `.pause()`; the controller binds to the real
+  `play`/`pause`/`ended` events so the glyph follows native controls too.
+- **CSS animation** → toggles `animation-play-state` on the target element.
+
+A YouTube lite-embed (see `@browser.style/video-embed`) uses a
+`<ui-media provider="youtube" video="ID">` frame with a nested `<ui-play>`; its own tiny
+controller defers the iframe until the first command.
+
+On browsers without native custom-command support, `<ui-play>` dispatches the same
+`CommandEvent` itself as a fallback — the controller behaves identically.
+
+### `ui-play-toggle` event (no `commandfor`)
+
+When the button has **no** `commandfor`, clicking dispatches `ui-play-toggle` on the
+`<ui-play>` element instead. It **bubbles** and is **composed**. This is the loose
+contract auto-discovered by ancestors (e.g. the carousel in `@browser.style/card`,
+whose control is a descendant with no `id`).
 
 ```js
 document.querySelector('ui-play')
@@ -261,21 +298,29 @@ document.querySelector('ui-play')
   });
 ```
 
-### `is-playing` state
+### `is-playing` state / the `playing` property
 
-The state lives on the inner button as `aria-pressed`:
+State lives on the inner button as `aria-pressed`, mirrored by `open` on the host:
 
-- `aria-pressed="false"` → idle, the web component sets the glyph to `<ui-icon type="play">`
-- `aria-pressed="true"`  → playing, the web component sets the glyph to `<ui-icon type="pause">`
+- `aria-pressed="false"` / no `open` → idle
+- `aria-pressed="true"` / `open` → playing
 
-The glyph swap is performed by the web component, which sets the inner `<ui-icon type>` to `play` or `pause` in step with `aria-pressed`. It is not a CSS pseudo-element — in CSS-only mode the authored `type` is rendered as-is.
+`open` drives a `<ui-icon type="play-pause">` glyph to morph via CSS (icon state selector
+`[open] >* > ui-icon`). A legacy static `type="play|pause"` glyph is swapped instead, so
+old markup keeps working. Read or set the state with the `playing` property — this is the
+reflect channel a target uses to report truth:
 
-### `for` — controlling a `<video>`
+```js
+document.querySelector('ui-play').playing = true; // → aria-pressed + open + glyph
+```
 
-Set `for` to the `id` of a `<video>`. On toggle, the component calls `video.play()` / `video.pause()`, and listens to the video's `play`, `pause`, and `ended` events to keep `aria-pressed` (and therefore the glyph) in sync with the real playback state.
+### `for` — `<video>` shorthand
+
+Set `for` to the `id` of a `<video>` for direct control without commands. On toggle the
+component calls `video.play()` / `video.pause()` and mirrors the video's real state.
 
 ```html
-<ui-play for="promo"><button type="button" aria-label="Play promo"><ui-icon type="play"></ui-icon></button></ui-play>
+<ui-play for="promo"><button type="button" aria-label="Play promo"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 <video id="promo" src="promo.mp4" playsinline></video>
 ```
 

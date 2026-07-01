@@ -8,6 +8,8 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-video-embed.css">
+	<link rel="stylesheet" href="../card/media.css">
+	<link rel="stylesheet" href="../play/ui-play.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
@@ -35,9 +37,26 @@
 		</button>
 	</div>
 
+	<h2>YouTube lite-embed on <code>&lt;ui-media&gt;</code></h2>
+	<p>
+		The frame is a plain <code>&lt;ui-media provider="youtube" video="ID"&gt;</code> — it owns the
+		aspect-ratio (<code>asr()</code>), corners (<code>rds()</code>) and the 3×3 grid that positions the
+		<code>&lt;ui-play&gt;</code> control (<code>play(cc)</code>). The poster is derived from the video id;
+		a nested <code>&lt;ui-play&gt;</code> targets the frame through the native Invoker Commands API
+		(<code>command="--toggle-play" commandfor</code>). The controller defers the YouTube iframe until that
+		first click, then hands off to the player's own controls. No layout of its own.
+	</p>
+	<ui-media id="yt-demo" provider="youtube" video="5b4YcLB4DVI" media="asr(16/9) play(cc) rds(md)" style="max-inline-size: 32rem;">
+		<ui-play variant="youtube" size="xl">
+			<button type="button" command="--toggle-play" commandfor="yt-demo" aria-label="Play video"><ui-icon type="play-pause"></ui-icon></button>
+		</ui-play>
+	</ui-media>
+
 	<script type="module">
 		import { common, init } from './../../assets/js/common.js';
 		import uiVideoEmbed from './uiVideoEmbed.js';
+		import '../play/index.js';
+		import './ui-video-embed.js';
 		common();
 		init('.ui-video-embed button', uiVideoEmbed);
 	</script>

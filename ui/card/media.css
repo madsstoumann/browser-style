@@ -21,8 +21,9 @@
 		overflow: hidden;
 		position: relative;
 
-		& :is(img, video) {
+		& :is(img, video, iframe) {
 			block-size: 100%;
+			border: 0;
 			inline-size: 100%;
 			inset: 0;
 			object-fit: var(--ui-media-fit, cover);
@@ -47,7 +48,7 @@
 		overflow: hidden;
 		scroll-snap-type: none;
 	}
-	ui-media ui-media > :is(img, video) {
+	ui-media ui-media > :is(img, video, iframe) {
 		flex: initial;
 		inset: 0;
 		position: absolute;

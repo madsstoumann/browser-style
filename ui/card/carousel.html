@@ -11,6 +11,8 @@
 	<link rel="stylesheet" href="../play/ui-play.css">
 	<link rel="stylesheet" href="../icon/index.css">
 	<link rel="stylesheet" href="ui-card.css">
+	<link rel="stylesheet" href="../reveal/ui-reveal.css">
+	<link rel="stylesheet" href="../accordion/ui-accordion.css">
 	<style>
 		.grid {
 			display: grid;
@@ -37,6 +39,10 @@
 		.slide-gap { --ui-media-gap: var(--spacing-lg); }
 		/* room for child-card box-shadows inside the clipping scrollport */
 		.shadow-room { padding-inline: var(--spacing-md); scroll-padding-inline: var(--spacing-md); }
+		/* movie cards nest a ui-accordion in a plain <div> back — pin the accordion to the
+		   small step (like ui/tabs) so the FAQ text doesn't ride the page's fluid ~18px base;
+		   the backside <h3> keeps the larger base, matching ui/tabs */
+		.reveal-cards ui-reveal ui-accordion { font-size: var(--font-size-sm); }
 		/* shared control themes (used by several demos) */
 		.dots-dark    { --ui-media-dot-bg: rgb(0 0 0 / 0.25); --ui-media-dot-active: #000; }
 		.arrow-accent { --ui-media-arrow-color: var(--color-accent); }
@@ -520,36 +526,138 @@
 	     Layered cards as slides — content ON media (ui/reveal pattern)
 	     ============================================================ -->
 	<h2>Layered cards as slides — content on media</h2>
-	<p class="note">For <strong>text overlaid on the media</strong>, give each card the <code>ui/reveal</code> pattern: <code>variant="ovr(bl)"</code> + <code>media="asr(3/4) obp(cc) scm"</code> (aspect + object-position + automatic scrim) on the <em>card</em>. The carousel never leaks into the nested cards' own <code>&lt;ui-media&gt;</code>.</p>
+	<p class="note">The <code>ui/tabs</code> staggered-reveal cards, dropped into carousel slides — each slide holds three <code>&lt;ui-reveal type="flip"&gt;</code> cards (slide 1 = games, slide 2 = movies). Front face is media + overlay label; the <strong>backside</strong> flips in on tap — the movie cards nest a full <code>&lt;ui-accordion&gt;</code> FAQ. Requires <code>ui/reveal</code> + <code>ui/accordion</code> CSS. The carousel snap never leaks into the nested cards' own <code>&lt;ui-media&gt;</code>.</p>
 	<div class="grid">
-			<ui-media class="slide-gap" media="nav stagger ani(lft)">
+			<ui-media class="slide-gap dots-dark reveal-cards" media="nav(blw) arw(bare) stagger ani(lft)">
 				<ui-slide class="slide-cols" style="--cols: 3">
-					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
-						<ui-content><small data-part="eyebrow">Space</small><h3 data-part="headline">Hubble</h3></ui-content>
-					</cq-box></ui-card>
-					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
-						<ui-content><small data-part="eyebrow">Physics</small><h3 data-part="headline">Quantum</h3></ui-content>
-					</cq-box></ui-card>
-					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
-						<ui-content><small data-part="eyebrow">Tech</small><h3 data-part="headline">Web Summit</h3></ui-content>
-					</cq-box></ui-card>
+					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)">
+						<details name="stagger-games">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/assets/images/game_01.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Fantasy RPG</small><strong>Starfall Legends</strong></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<ui-content tabindex="0"><h3>Starfall Legends</h3><p>Chase the falling stars across the floating isles of Auralis.</p></ui-content>
+						</details>
+					</ui-reveal>
+					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) hov(pan)">
+						<details name="stagger-games">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/assets/images/game_02.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Open-World Western</small><strong>Frontier Outlaws</strong></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<ui-content tabindex="0"><h3>Frontier Outlaws</h3><p>Ride into a frontier that remembers everything you do.</p></ui-content>
+						</details>
+					</ui-reveal>
+					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)">
+						<details name="stagger-games">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/assets/images/game_03.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Historical Epic</small><strong>Imperium: Legions</strong></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<ui-content tabindex="0"><h3>Imperium: Legions</h3><p>From a single cohort to the eternal city.</p></ui-content>
+						</details>
+					</ui-reveal>
 				</ui-slide>
 				<ui-slide class="slide-cols" style="--cols: 3">
-					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
-						<ui-content><small data-part="eyebrow">Health</small><h3 data-part="headline">Mindfulness</h3></ui-content>
-					</cq-box></ui-card>
-					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/world.png" alt=""></ui-media>
-						<ui-content><small data-part="eyebrow">Travel</small><h3 data-part="headline">World</h3></ui-content>
-					</cq-box></ui-card>
-					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/finance.png" alt=""></ui-media>
-						<ui-content><small data-part="eyebrow">Money</small><h3 data-part="headline">Finance</h3></ui-content>
-					</cq-box></ui-card>
+					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)">
+						<details name="stagger-movies">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/assets/images/movie_01.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Action Thriller</small><strong>Vault Zero</strong></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<div>
+								<h3>Vault Zero</h3>
+								<ui-accordion variant="divided">
+									<cq-box>
+										<details name="faq-movies-1">
+											<summary>Is it based on a true story?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>No. The screenplay is original, though the production hired a former vault engineer to keep the heist mechanics plausible.</div>
+										</details>
+										<details name="faq-movies-1">
+											<summary>What's the runtime?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>118 minutes, including a mid-credits scene that sets up the sequel.</div>
+										</details>
+										<details name="faq-movies-1">
+											<summary>Any age rating?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>Rated 15 for sustained action violence and strong language.</div>
+										</details>
+									</cq-box>
+								</ui-accordion>
+							</div>
+						</details>
+					</ui-reveal>
+					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(pan)">
+						<details name="stagger-movies">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/assets/images/movie_02.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Fantasy Epic</small><strong>Realms of Eldarin</strong></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<div>
+								<h3>Realms of Eldarin</h3>
+								<ui-accordion variant="divided">
+									<cq-box>
+										<details name="faq-movies-2">
+											<summary>Is it part of a series?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>Yes. It opens a planned trilogy adapted from the bestselling Eldarin novels.</div>
+										</details>
+										<details name="faq-movies-2">
+											<summary>Were the landscapes real?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>A mix. Practical locations in New Zealand and Iceland were extended with digital matte work.</div>
+										</details>
+										<details name="faq-movies-2">
+											<summary>How long was the shoot?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>Principal photography ran 214 days across two continents.</div>
+										</details>
+									</cq-box>
+								</ui-accordion>
+							</div>
+						</details>
+					</ui-reveal>
+					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)">
+						<details name="stagger-movies">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/assets/images/movie_03.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Romantic Comedy</small><strong>Two Left Feet</strong></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<div>
+								<h3>Two Left Feet</h3>
+								<ui-accordion variant="divided">
+									<cq-box>
+										<details name="faq-movies-3">
+											<summary>Where was it filmed?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>On location across Brooklyn and Manhattan over one autumn.</div>
+										</details>
+										<details name="faq-movies-3">
+											<summary>Do the leads really dance?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>Both actors trained for three months; only the final tango uses a double for one lift.</div>
+										</details>
+										<details name="faq-movies-3">
+											<summary>Is there a soundtrack album?<ui-icon type="plus-minus"></ui-icon></summary>
+											<div>Yes, featuring twelve original songs plus the closing-credits duet.</div>
+										</details>
+									</cq-box>
+								</ui-accordion>
+							</div>
+						</details>
+					</ui-reveal>
 				</ui-slide>
 			</ui-media>
 	</div>

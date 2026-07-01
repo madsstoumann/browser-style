@@ -1,7 +1,7 @@
 {
   "name": "@browser.style/play",
-  "version": "4.0.0",
-  "description": "CSS-first media play button component with optional web component wrapper",
+  "version": "4.1.0",
+  "description": "CSS-first, target-agnostic play/pause button (native Invoker Commands) with optional web component",
   "type": "module",
   "module": "index.js",
   "style": "index.css",
@@ -10,11 +10,13 @@
       "import": "./index.js",
       "style": "./index.css"
     },
+    "./command.js": "./command.js",
     "./style": "./index.css",
     "./index.css": "./index.css"
   },
   "files": [
     "index.js",
+    "command.js",
     "index.css",
     "ui-play.css"
   ],
