@@ -176,8 +176,27 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 | `dot(cir)` | `dot="cir"` | Circular dots (**default**) |
 | `dot(pll)` | `dot="pll"` | Rounded-rect pills; the active pill **fills L→R** over the autoplay duration as a timer hint |
 | `dot(lgt)` `dot(drk)` `dot(sub)` | `dot="lgt/drk/sub"` | Ink — light / dark / **subtle** (`bg` + active). `nav(blw)` defaults to dark |
-| `dot(sm)` `dot(md)` `dot(lg)` `dot(xl)` | `dot="sm…xl"` | Size (`md` = default) |
+| `dot(sm)` `dot(md)` `dot(lg)` `dot(xl)` | `dot="sm…xl"` | Size (`md` = default) — one scale for dots, pills **and** thumbnails, so `dot(thumb) dot(lg)` = large thumbnails |
 | `dot(sta)` `dot(ctr)` `dot(end)` | `dot="sta/ctr/end"` | **Position within a `nav(blw)` band** — left / center (default) / right. `sta`/`end` clear the arrow on that side (or the `arw(set)` pair). |
+| `dot(thumb)` | `dot="thumb"` | **Image thumbnails** instead of dots. Each slide sets `--ui-media-thumb-url: url(…)`; the active thumb shows full opacity + a bottom **timer** stripe (fills L→R over `--ui-media-autoplay`, like pills). |
+| `dot(tl)` `dot(tr)` `dot(bl)` `dot(br)` | `dot="tl/tr/bl/br"` | **Corner placement** for the overlay marker-group (top-left / top-right / bottom-left / bottom-right). Inset via `--ui-media-marker-inset`. |
+
+### Thumbnail navigation — `dot(thumb)`
+
+Turn the marker-group into a **thumbnail rail**. Give each slide its own picture with a
+custom property; place the rail in any corner:
+
+```html
+<ui-media media="asr(4/3) nav dot(thumb) dot(tr)">
+  <img src="1.jpg" style="--ui-media-thumb-url: url('1.jpg')">
+  <img src="2.jpg" style="--ui-media-thumb-url: url('2.jpg')">
+</ui-media>
+```
+
+Each slide can also be its own layered `<ui-card>` (unique headline/CTA per slide) — the
+thumbnail is set on the **card**: `<ui-card style="--ui-media-thumb-url: url(…)">`. The
+active thumb runs a bottom **timer** stripe synced to `--ui-media-autoplay`. (The URL uses a
+custom property today; it swaps to typed `attr(data-thumb type(<image>))` once that's Baseline.)
 
 ### `load()` — image/video loading (JS-applied)
 
@@ -227,10 +246,8 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-media-arrow-bg-hover` | `rgb(0 0 0 / 0.7)` | Circle background on hover |
 | `--ui-media-arrow-glyph` | chevron-light | Glyph image (override directly, or use `arw(arr)`/`arw(drk)`) |
 | `--ui-media-arrow-glyph-size` | `45%` (circle) / `80%` (bare) | Glyph size within the button |
-| `--ui-media-arrow-ring` | `0 0 0 1px …, 0 2px 6px …` | Frosted ring / shadow |
-| `--ui-media-arrow-blur` | `4px` | Backdrop blur behind the circle |
 | `--ui-media-arrow-radius` | `--radius-circle` | Button corner radius |
-| `--ui-media-arrow-border` | `0` | Button border |
+| `--ui-media-arrow-border` | `1px solid rgb(255 255 255 / 0.6)` | Button border (set `0` to drop) |
 | `--ui-media-arrow-gap` | `0.5rem` | Gap between the two arrows in `arw(set)` |
 | `--ui-media-arrow-disabled-opacity` | `0.4` | Dimming of a dead-end arrow (`arw(hid)` sets `0`) |
 | `--ui-media-arrow-color` | `#fff` (over image) / dark (in band) | **Bare** glyph ink |
@@ -251,7 +268,22 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-media-pill-height` | `0.35rem` | Pill height |
 | `--ui-media-pill-track` | `rgb(255 255 255 / 0.35)` | Pill track (unfilled) |
 | `--ui-media-pill-fill` | `#fff` | Pill fill (timer) |
-| `--ui-media-autoplay` | `5s` | Pill timer duration (auto-set by `auto(Ns)`) |
+| `--ui-media-autoplay` | `5s` | Pill / thumb timer duration (auto-set by `auto(Ns)`) |
+
+### Thumbnails (`dot(thumb)`)
+
+| Property | Default | Purpose |
+|----------|---------|---------|
+| `--ui-media-thumb-url` | *(none)* | **Per-slide** thumbnail image — set on each slide/card (`url(…)`) |
+| `--ui-media-thumb-size` | `2.25rem` | Thumbnail height (width follows `--ui-media-thumb-ratio`; or use `dot(sm/md/lg/xl)`) |
+| `--ui-media-thumb-ratio` | `4 / 3` | Thumbnail aspect-ratio |
+| `--ui-media-thumb-border` | `2px solid #fff` | Thumbnail border (white by default) |
+| `--ui-media-thumb-radius` | `--radius-sm` | Thumbnail corner radius |
+| `--ui-media-thumb-bg` | `rgb(0 0 0 / 0.2)` | Placeholder behind the image |
+| `--ui-media-thumb-opacity` | `0.55` | Inactive thumbnail opacity (active = `1`) |
+| `--ui-media-thumb-timer` | `#fff` (matches the border) | Active-thumb bottom timer-stripe colour (separate from `--ui-media-thumb-border`) |
+| `--ui-media-thumb-timer-height` | `3px` | Timer-stripe thickness |
+| `--ui-media-marker-inset` | `1rem` (thumb) / `--ui-media-overlay-gap` | Corner inset from the edges (`dot(tl/tr/bl/br)`) |
 
 ### Below-band (`nav(blw)`)
 

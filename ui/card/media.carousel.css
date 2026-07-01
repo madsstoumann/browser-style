@@ -15,7 +15,6 @@
 		--ui-media-arrow-bg: rgb(0 0 0 / 0.45);
 		--ui-media-arrow-bg-hover: rgb(0 0 0 / 0.7);
 		--ui-media-arrow-color: #fff;
-		--ui-media-arrow-blur: 4px;
 		--ui-media-band: 2.75rem;
 		--ui-media-below-gap: var(--spacing-sm, 0.5rem);
 		--ui-media-dot-size: 0.6rem;
@@ -140,14 +139,56 @@
 			}
 		}
 		/* dot size */
-		:where([media*="dot(sm)"]), ui-media[dot~="sm"] { --ui-media-dot-size: 0.45rem; --ui-media-pill-width: 1.15rem; --ui-media-pill-height: 0.28rem; }
-		:where([media*="dot(md)"]), ui-media[dot~="md"] { --ui-media-dot-size: 0.6rem;  --ui-media-pill-width: 1.5rem;  --ui-media-pill-height: 0.35rem; }
-		:where([media*="dot(lg)"]), ui-media[dot~="lg"] { --ui-media-dot-size: 0.8rem;  --ui-media-pill-width: 2rem;    --ui-media-pill-height: 0.45rem; }
-		:where([media*="dot(xl)"]), ui-media[dot~="xl"] { --ui-media-dot-size: 1rem;    --ui-media-pill-width: 2.5rem;  --ui-media-pill-height: 0.55rem; }
+		/* one size scale drives dots, pills AND thumbnails (dot(thumb) reads --ui-media-thumb-size) */
+		:where([media*="dot(sm)"]), ui-media[dot~="sm"] { --ui-media-dot-size: 0.45rem; --ui-media-pill-width: 1.15rem; --ui-media-pill-height: 0.28rem; --ui-media-thumb-size: 2.25rem; }
+		:where([media*="dot(md)"]), ui-media[dot~="md"] { --ui-media-dot-size: 0.6rem;  --ui-media-pill-width: 1.5rem;  --ui-media-pill-height: 0.35rem; --ui-media-thumb-size: 3rem; }
+		:where([media*="dot(lg)"]), ui-media[dot~="lg"] { --ui-media-dot-size: 0.8rem;  --ui-media-pill-width: 2rem;    --ui-media-pill-height: 0.45rem; --ui-media-thumb-size: 3.75rem; }
+		:where([media*="dot(xl)"]), ui-media[dot~="xl"] { --ui-media-dot-size: 1rem;    --ui-media-pill-width: 2.5rem;  --ui-media-pill-height: 0.55rem; --ui-media-thumb-size: 4.75rem; }
 		/* dot ink (shared scale lgt/drk/sub) */
 		:where([media*="dot(lgt)"]), ui-media[dot~="lgt"] { --ui-media-dot-bg: rgb(255 255 255 / 0.5);  --ui-media-dot-active: #fff; }
 		:where([media*="dot(drk)"]), ui-media[dot~="drk"] { --ui-media-dot-bg: rgb(0 0 0 / 0.25);        --ui-media-dot-active: rgb(0 0 0 / 0.7); }
 		:where([media*="dot(sub)"]), ui-media[dot~="sub"] { --ui-media-dot-bg: rgb(0 0 0 / 0.12);        --ui-media-dot-active: rgb(0 0 0 / 0.4); }
+
+		/* dot(thumb) — image thumbnails instead of dots. Each slide sets its own picture:
+		   style="--ui-media-thumb-url: url(...)" (later: attr(data-thumb type(<image>)) once Baseline).
+		   Active thumb: full opacity + a bottom "timer" stripe that fills L→R over --ui-media-autoplay. */
+		:where([media*="dot(thumb)"]), ui-media[dot~="thumb"] { --ui-media-marker-inset: var(--ui-media-thumb-gap, 1rem); }
+		:where([media*="dot(thumb)"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
+		ui-media:where([media*="dot(thumb)"], [dot~="thumb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
+			aspect-ratio: var(--ui-media-thumb-ratio, 4 / 3);
+			background: var(--ui-media-thumb-url) center / cover no-repeat var(--ui-media-thumb-bg, rgb(0 0 0 / 0.2));
+			block-size: var(--ui-media-thumb-size, 2.25rem);
+			border: var(--ui-media-thumb-border, 2px solid #fff);
+			border-radius: var(--ui-media-thumb-radius, var(--radius-sm, 0.25rem));
+			inline-size: auto;
+			opacity: var(--ui-media-thumb-opacity, 0.55);
+			transition: opacity var(--duration-fast, 100ms) var(--ease-default, ease);
+		}
+		:where([media*="dot(thumb)"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+		ui-media:where([media*="dot(thumb)"], [dot~="thumb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+			/* layer 1 = timer stripe (grows L→R), layer 2 = the thumbnail */
+			background:
+				linear-gradient(var(--ui-media-thumb-timer, #fff), var(--ui-media-thumb-timer, #fff)) bottom left / 0 var(--ui-media-thumb-timer-height, 3px) no-repeat,
+				var(--ui-media-thumb-url) center / cover no-repeat var(--ui-media-thumb-bg, rgb(0 0 0 / 0.2));
+			opacity: 1;
+		}
+		@media (prefers-reduced-motion: no-preference) {
+			:where([media*="dot(thumb)"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+			ui-media:where([media*="dot(thumb)"], [dot~="thumb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+				animation: ui-media-thumb-timer var(--ui-media-autoplay) linear forwards;
+			}
+		}
+
+		/* marker-group corner placement (overlay) — tl · tr · bl · br (default is bottom-center).
+		   Inset from the edges via --ui-media-marker-inset (falls back to the overlay gap). */
+		:where([media*="dot(tl)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="dot(tl)"], [dot~="tl"])::scroll-marker-group { top: calc(anchor(top) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); bottom: auto; left: calc(anchor(left) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: auto; justify-self: start; }
+		:where([media*="dot(tr)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="dot(tr)"], [dot~="tr"])::scroll-marker-group { top: calc(anchor(top) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); bottom: auto; right: calc(anchor(right) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: auto; justify-self: end; }
+		:where([media*="dot(bl)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="dot(bl)"], [dot~="bl"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: calc(anchor(left) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: auto; justify-self: start; }
+		:where([media*="dot(br)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="dot(br)"], [dot~="br"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: calc(anchor(right) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: auto; justify-self: end; }
 
 		/* ---- ARROWS present: bare nav · nav(arw) · nav(blw). Base glyph vars ---- */
 		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"]),
@@ -173,11 +214,9 @@
 		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"])) {
 			&::scroll-button(*) {
 				aspect-ratio: 1;
-				backdrop-filter: blur(var(--ui-media-arrow-blur));
 				background: var(--ui-media-arrow-glyph) center / var(--ui-media-arrow-glyph-size, 45%) no-repeat var(--ui-media-arrow-bg);
-				border: var(--ui-media-arrow-border, 0);
+				border: var(--ui-media-arrow-border, 1px solid rgb(255 255 255 / 0.6));
 				border-radius: var(--ui-media-arrow-radius, var(--radius-circle, 50%));
-				box-shadow: var(--ui-media-arrow-ring, 0 0 0 1px rgb(255 255 255 / 0.4), 0 2px 6px rgb(0 0 0 / 0.35));
 				content: "" / "";
 				cursor: pointer;
 				inline-size: var(--ui-media-arrow-size);
@@ -188,7 +227,7 @@
 				z-index: 3;
 			}
 			&::scroll-button(*):hover { background-color: var(--ui-media-arrow-bg-hover); }
-			&::scroll-button(*):disabled { backdrop-filter: none; cursor: default; opacity: var(--ui-media-arrow-disabled-opacity, 0.4); pointer-events: none; }
+			&::scroll-button(*):disabled { cursor: default; opacity: var(--ui-media-arrow-disabled-opacity, 0.4); pointer-events: none; }
 			&::scroll-button(left) {
 				content: "" / "Previous";
 				left: calc(anchor(left) + var(--ui-media-overlay-gap));
@@ -231,7 +270,6 @@
 				background-color: var(--ui-media-arrow-color);
 				background-image: none;
 				border: 0;
-				box-shadow: none;
 				mask: var(--ui-media-arrow-glyph) center / var(--ui-media-arrow-glyph-size, 80%) no-repeat;
 			}
 			&::scroll-button(*):hover { background-color: var(--ui-media-arrow-color-hover, var(--ui-media-arrow-color)); }
@@ -379,5 +417,11 @@
 	@keyframes ui-media-pill-fill {
 		from { background-size: 0% 100%; }
 		to   { background-size: 100% 100%; }
+	}
+
+	/* dot(thumb) active timer — grow the bottom stripe (layer 1), keep the thumbnail (layer 2) */
+	@keyframes ui-media-thumb-timer {
+		from { background-size: 0 var(--ui-media-thumb-timer-height, 3px), cover; }
+		to   { background-size: 100% var(--ui-media-thumb-timer-height, 3px), cover; }
 	}
 }

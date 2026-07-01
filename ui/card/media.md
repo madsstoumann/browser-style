@@ -309,7 +309,7 @@ All carousel CSS lives in **`media.carousel.css`** (imported by `ui-card.css` al
 
 Two render modes, both token-driven — no named theme atoms needed:
 
-- **Circle** *(default)* — a frosted-glass button: translucent `--ui-media-arrow-bg`, a `--ui-media-arrow-blur` backdrop-blur, and a `--ui-media-arrow-ring` (1px light ring + soft shadow) so it reads on light *and* dark photos. Colour the circle with `--ui-media-arrow-bg` / `--ui-media-arrow-bg-hover`; for a light circle switch the glyph to dark with `arw(dark)` (composes with `arw(arrow)`). Square it with `--ui-media-arrow-radius`; drop the frost/ring with `--ui-media-arrow-blur: 0` / `--ui-media-arrow-ring: none`.
+- **Circle** *(default)* — a clean bordered button: translucent `--ui-media-arrow-bg` + a `--ui-media-arrow-border` (1px light border; no backdrop-filter/shadow). Colour the circle with `--ui-media-arrow-bg` / `--ui-media-arrow-bg-hover`; for a light circle switch the glyph to dark with `arw(drk)` (composes with `arw(arr)`). Square it with `--ui-media-arrow-radius`; drop the border with `--ui-media-arrow-border: 0`.
 - **Bare** (`arw(bare)`) — no circle; the glyph *is* the colour, set with `--ui-media-arrow-color` (and `--ui-media-arrow-color-hover`). Default ink is **white** over an image and **auto-flips dark** under `nav(below)` (light band). Set any colour:
 
 ```html
@@ -417,10 +417,8 @@ Every token lives in the `--ui-media-*` namespace and inherits down from whereve
 | `--ui-media-arrow-bg-hover` | `rgb(0 0 0 / 0.7)` | arrow hover circle |
 | `--ui-media-arrow-size` | `2.25rem` | arrow button size |
 | `--ui-media-arrow-radius` | `var(--radius-circle, 50%)` | arrow corner radius (square it off for rounded-rect) |
-| `--ui-media-arrow-border` | `0` | arrow border |
+| `--ui-media-arrow-border` | `1px solid rgb(255 255 255 / 0.6)` | circle border (`0` to drop) |
 | `--ui-media-arrow-glyph-size` | `45%` (circle) / `80%` (bare) | glyph size |
-| `--ui-media-arrow-blur` | `4px` | circle backdrop-blur (frosted glass); legibility over busy photos |
-| `--ui-media-arrow-ring` | `0 0 0 1px rgb(255 255 255 / 0.4), 0 2px 6px rgb(0 0 0 / 0.35)` | circle ring + drop-shadow so it reads on any background (`none` to drop) |
 | `--ui-media-arrow-color` | `#fff` (dark under `nav(below)`) | `arw(bare)` glyph ink |
 | `--ui-media-arrow-color-hover` | `var(--ui-media-arrow-color)` | `arw(bare)` glyph ink on hover |
 | `--ui-media-arrow-shadow` | `drop-shadow(0 1px 2px rgb(0 0 0 / 0.5))` | `arw(bare)` legibility shadow (`none` to drop) |

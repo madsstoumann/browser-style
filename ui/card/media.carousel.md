@@ -67,6 +67,8 @@ scroller; the rest layer on top. `asr()` etc. belong to the base frame — see m
 | `dot(sm)`   | `dot="sm"` | CSS | Dot size 0.45rem |
 | `dot(sta)`  | `dot="sta"` | CSS | `nav(blw)`: dots at the inline-start |
 | `dot(sub)`  | `dot="sub"` | CSS | Subtle low-contrast dot ink |
+| `dot(thumb)`| `dot="thumb"` | CSS | Image thumbnails; per-slide `--ui-media-thumb-url`; active thumb has a bottom timer stripe |
+| `dot(tl)` `dot(tr)` `dot(bl)` `dot(br)` | `dot="tl/tr/bl/br"` | CSS | Corner placement for the overlay marker-group (inset via `--ui-media-marker-inset`) |
 | `dot(xl)`   | `dot="xl"` | CSS | Dot size 1rem |
 | `loop`      | `nav="loop"` | JS | Seamless infinite loop (clones first/last slide) |
 | `nav`       | `nav` (boolean) | CSS | Carousel **on** — dots + arrows (the trigger) |
@@ -191,12 +193,24 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
 - **`dot(pll)` timer:** the `:target-current` pill fills L→R over `--ui-media-autoplay`
   via the `ui-media-pill-fill` keyframes (a visual autoplay hint; ui-media.js advances).
   Under `prefers-reduced-motion: reduce` the fill is shown static (no animation).
-- Sizes `dot(sm|md|lg|xl)` set `--ui-media-dot-size` + matching pill width/height (`md` = default).
+- Sizes `dot(sm|md|lg|xl)` set `--ui-media-dot-size` + matching pill width/height **and**
+  `--ui-media-thumb-size` (`md` = default) — one scale for dots, pills and thumbnails.
+- **`dot(thumb)` — image thumbnails.** Each marker becomes a picture set per-slide via
+  `--ui-media-thumb-url` (on the slide `<img>` or the slide `<ui-card>`); it inherits to that
+  slide's `::scroll-marker`. Sized by `--ui-media-thumb-size` × `--ui-media-thumb-ratio`,
+  white `--ui-media-thumb-border`, inactive dimmed via `--ui-media-thumb-opacity`. The active
+  thumb layers a **bottom timer stripe** (2-layer background: `linear-gradient` stripe over
+  the image) animated 0→100% width by the `ui-media-thumb-timer` keyframes over
+  `--ui-media-autoplay` — same idea as the pill. URL is a custom property today; swaps to
+  `attr(data-thumb type(<image>))` once that resolves (Chrome parses it but doesn't yet paint).
+- **Corner placement.** `dot(tl|tr|bl|br)` re-anchor the whole marker-group to a corner
+  (overlay), inset by `--ui-media-marker-inset` (defaults to the overlay gap; `dot(thumb)`
+  bumps it to `1rem`). Default (no corner token) stays bottom-centered.
 
 ## Arrows
 
 - A circular `::scroll-button` = themeable circle (`--ui-media-arrow-bg`) + a glyph,
-  frosted (`backdrop-filter` blur + `box-shadow` ring).
+  a clean bordered button (`--ui-media-arrow-border`, no backdrop-filter/shadow).
 - **One base glyph, rotated.** A single RIGHT-pointing SVG (chevron or full arrow, in
   light/dark) is rotated per direction via `--_arw-rot` (left 180°, up −90°, down 90°) —
   no prev/next/up/down SVG duplication.
