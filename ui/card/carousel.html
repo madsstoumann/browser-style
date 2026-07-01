@@ -482,7 +482,7 @@
 	<h2>Cards as slides — content below media</h2>
 	<p class="note">A group wrapper can hold full <code>&lt;ui-card&gt;</code>s, not just images. Here each card is a standard <code>variant="col"</code> card (image with eyebrow / headline / summary <strong>below</strong>) — a product-grid carousel that snaps a whole row at a time.</p>
 	<div class="grid">
-			<ui-media class="dots-dark slide-gap shadow-room" media="nav(blw) arw(bare) stagger ani(fde)">
+			<ui-media class="dots-dark slide-gap shadow-room" media="nav(blw) arw(bare) stagger ani(lft)">
 				<ui-slide class="slide-cols" style="--cols: 2">
 					<ui-card variant="col" media="asr(4/3) crd(rise)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
@@ -522,7 +522,7 @@
 	<h2>Layered cards as slides — content on media</h2>
 	<p class="note">For <strong>text overlaid on the media</strong>, give each card the <code>ui/reveal</code> pattern: <code>variant="ovr(bl)"</code> + <code>media="asr(3/4) obp(cc) scm"</code> (aspect + object-position + automatic scrim) on the <em>card</em>. The carousel never leaks into the nested cards' own <code>&lt;ui-media&gt;</code>.</p>
 	<div class="grid">
-			<ui-media class="slide-gap" media="nav">
+			<ui-media class="slide-gap" media="nav stagger ani(lft)">
 				<ui-slide class="slide-cols" style="--cols: 3">
 					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
