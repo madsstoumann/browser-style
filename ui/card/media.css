@@ -40,8 +40,6 @@
 	   (specificity 0,0,2) out-specifies the carousel's descendant rules (0,0,1) in
 	   media.carousel.css, so the frame wins regardless of import order — no !important. */
 	ui-media ui-media {
-		--ui-media-radius: 0;   /* don't inherit the scroller's rds() radius (border-radius/clip) */
-		clip-path: none;
 		display: grid;
 		inline-size: auto;
 		overflow: hidden;
@@ -52,6 +50,10 @@
 		inset: 0;
 		position: absolute;
 	}
+	/* Inside a clip= scroller, a nested frame must NOT inherit the scroller's rds() radius
+	   (its border-radius reads the inherited --ui-media-radius). Scoped to clip= only, and
+	   zero-specificity so an explicit rds() on the nested media itself still wins. */
+	:where([media*="clip"] ui-media) { --ui-media-radius: 0; }
 
 	/* ============================================================
 	   media= PARSE LAYER — tokens set props that inherit to <ui-media>
