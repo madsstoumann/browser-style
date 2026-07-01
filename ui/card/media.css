@@ -29,6 +29,8 @@
 			object-position: var(--ui-media-op, center);
 			position: absolute;
 			transform: scale(var(--ui-media-fl-x, 1), var(--ui-media-fl-y, 1));
+			-webkit-user-drag: none;
+			user-select: none;
 		}
 	}
 	/* an explicit aspect-ratio drops the min-height floor (frame follows the ratio) */

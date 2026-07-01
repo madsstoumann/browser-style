@@ -54,8 +54,6 @@
 	ui-media:where([media*="nav"], [nav]) > :is(img, video) {
 		inset: auto;
 		position: static;
-		-webkit-user-drag: none;
-		user-select: none;
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
