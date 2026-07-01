@@ -148,7 +148,7 @@ function initCarousel(scroller) {
 		scroller.addEventListener('focusout', () => { paused = false; });
 		document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
 		scroller.style.setProperty('--ui-media-autoplay', (autoMs / 1000) + 's'); // sync the dot(pll) CSS timer
-		scroller.style.setProperty('--ui-media-thumb-timer-name', 'ui-media-thumb-timer'); // enable dot(thumb) fill timer (off until autoplay)
+		scroller.style.setProperty('--ui-media-thumb-timer-name', 'ui-media-thumb-timer'); // enable dot(tmb) fill timer (off until autoplay)
 		start();
 	}
 }

@@ -176,18 +176,18 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 | `dot(cir)` | `dot="cir"` | Circular dots (**default**) |
 | `dot(pll)` | `dot="pll"` | Rounded-rect pills; the active pill **fills L→R** over the autoplay duration as a timer hint |
 | `dot(lgt)` `dot(drk)` `dot(sub)` | `dot="lgt/drk/sub"` | Ink — light / dark / **subtle** (`bg` + active). `nav(blw)` defaults to dark |
-| `dot(sm)` `dot(md)` `dot(lg)` `dot(xl)` | `dot="sm…xl"` | Size (`md` = default) — one scale for dots, pills **and** thumbnails, so `dot(thumb) dot(lg)` = large thumbnails |
+| `dot(sm)` `dot(md)` `dot(lg)` `dot(xl)` | `dot="sm…xl"` | Size (`md` = default) — one scale for dots, pills **and** thumbnails, so `dot(tmb) dot(lg)` = large thumbnails |
 | `dot(sta)` `dot(ctr)` `dot(end)` | `dot="sta/ctr/end"` | **Position within a `nav(blw)` band** — left / center (default) / right. `sta`/`end` clear the arrow on that side (or the `arw(set)` pair). |
-| `dot(thumb)` | `dot="thumb"` | **Image thumbnails** instead of dots. Each slide sets `--ui-media-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-media-autoplay`. |
+| `dot(tmb)` | `dot="tmb"` | **Image thumbnails** instead of dots. Each slide sets `--ui-media-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-media-autoplay`. |
 | `dot(tl)` `dot(tr)` `dot(bl)` `dot(br)` | `dot="tl/tr/bl/br"` | **Corner placement** for the overlay marker-group (top-left / top-right / bottom-left / bottom-right). Inset via `--ui-media-marker-inset`. |
 
-### Thumbnail navigation — `dot(thumb)`
+### Thumbnail navigation — `dot(tmb)`
 
 Turn the marker-group into a **thumbnail rail**. Give each slide its own picture with a
 custom property; place the rail in any corner:
 
 ```html
-<ui-media media="asr(4/3) nav dot(thumb) dot(tr)">
+<ui-media media="asr(4/3) nav dot(tmb) dot(tr)">
   <img src="1.jpg" style="--ui-media-thumb-url: url('1.jpg')">
   <img src="2.jpg" style="--ui-media-thumb-url: url('2.jpg')">
 </ui-media>
@@ -272,7 +272,7 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-media-pill-fill` | `#fff` | Pill fill (timer) |
 | `--ui-media-autoplay` | `5s` | Pill / thumb timer duration (auto-set by `auto(Ns)`) |
 
-### Thumbnails (`dot(thumb)`)
+### Thumbnails (`dot(tmb)`)
 
 | Property | Default | Purpose |
 |----------|---------|---------|

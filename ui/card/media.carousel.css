@@ -139,7 +139,7 @@
 			}
 		}
 		/* dot size */
-		/* one size scale drives dots, pills AND thumbnails (dot(thumb) reads --ui-media-thumb-size) */
+		/* one size scale drives dots, pills AND thumbnails (dot(tmb) reads --ui-media-thumb-size) */
 		:where([media*="dot(sm)"]), ui-media[dot~="sm"] { --ui-media-dot-size: 0.45rem; --ui-media-pill-width: 1.15rem; --ui-media-pill-height: 0.28rem; --ui-media-thumb-size: 2.25rem; }
 		:where([media*="dot(md)"]), ui-media[dot~="md"] { --ui-media-dot-size: 0.6rem;  --ui-media-pill-width: 1.5rem;  --ui-media-pill-height: 0.35rem; --ui-media-thumb-size: 3rem; }
 		:where([media*="dot(lg)"]), ui-media[dot~="lg"] { --ui-media-dot-size: 0.8rem;  --ui-media-pill-width: 2rem;    --ui-media-pill-height: 0.45rem; --ui-media-thumb-size: 3.75rem; }
@@ -149,12 +149,12 @@
 		:where([media*="dot(drk)"]), ui-media[dot~="drk"] { --ui-media-dot-bg: rgb(0 0 0 / 0.25);        --ui-media-dot-active: rgb(0 0 0 / 0.7); }
 		:where([media*="dot(sub)"]), ui-media[dot~="sub"] { --ui-media-dot-bg: rgb(0 0 0 / 0.12);        --ui-media-dot-active: rgb(0 0 0 / 0.4); }
 
-		/* dot(thumb) — image thumbnails instead of dots. Each slide sets its own picture:
+		/* dot(tmb) — image thumbnails instead of dots. Each slide sets its own picture:
 		   style="--ui-media-thumb-url: url(...)" (later: attr(data-thumb type(<image>)) once Baseline).
 		   Active thumb: full opacity + a bottom "timer" stripe that fills L→R over --ui-media-autoplay. */
-		:where([media*="dot(thumb)"]), ui-media[dot~="thumb"] { --ui-media-marker-inset: var(--ui-media-thumb-gap, 1rem); }
-		:where([media*="dot(thumb)"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
-		ui-media:where([media*="dot(thumb)"], [dot~="thumb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
+		:where([media*="dot(tmb)"]), ui-media[dot~="tmb"] { --ui-media-marker-inset: var(--ui-media-thumb-gap, 1rem); }
+		:where([media*="dot(tmb)"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
+		ui-media:where([media*="dot(tmb)"], [dot~="tmb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
 			aspect-ratio: var(--ui-media-thumb-ratio, 4 / 3);
 			background: var(--ui-media-thumb-url) center / cover no-repeat var(--ui-media-thumb-bg, rgb(0 0 0 / 0.2));
 			block-size: var(--ui-media-thumb-size, 2.25rem);
@@ -164,8 +164,8 @@
 			opacity: var(--ui-media-thumb-opacity, 0.55);
 			transition: opacity var(--duration-fast, 100ms) var(--ease-default, ease);
 		}
-		:where([media*="dot(thumb)"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-		ui-media:where([media*="dot(thumb)"], [dot~="thumb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+		:where([media*="dot(tmb)"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+		ui-media:where([media*="dot(tmb)"], [dot~="tmb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
 			/* layer 1 = timer stripe (grows L→R), layer 2 = the thumbnail */
 			background:
 				linear-gradient(var(--ui-media-thumb-timer, #fff), var(--ui-media-thumb-timer, #fff)) bottom left / 0 var(--ui-media-thumb-timer-height, 3px) no-repeat,
@@ -173,8 +173,8 @@
 			opacity: 1;
 		}
 		@media (prefers-reduced-motion: no-preference) {
-			:where([media*="dot(thumb)"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-			ui-media:where([media*="dot(thumb)"], [dot~="thumb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+			:where([media*="dot(tmb)"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+			ui-media:where([media*="dot(tmb)"], [dot~="tmb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
 				/* timer is OFF by default (it's autoplay feedback); ui-media.js sets
 				   --ui-media-thumb-timer-name to the keyframe when autoplay runs. Set it manually to preview. */
 				animation: var(--ui-media-thumb-timer-name, none) var(--ui-media-autoplay) linear forwards;
@@ -435,7 +435,7 @@
 		to   { background-size: 100% 100%; }
 	}
 
-	/* dot(thumb) active timer — grow the bottom stripe (layer 1), keep the thumbnail (layer 2) */
+	/* dot(tmb) active timer — grow the bottom stripe (layer 1), keep the thumbnail (layer 2) */
 	@keyframes ui-media-thumb-timer {
 		from { background-size: 0 var(--ui-media-thumb-timer-height, 3px), cover; }
 		to   { background-size: 100% var(--ui-media-thumb-timer-height, 3px), cover; }
