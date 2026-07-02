@@ -36,6 +36,22 @@ function reflectPlay(uiPlay, playing) {
 	if (type === 'play' || type === 'pause') icon.setAttribute('type', playing ? 'pause' : 'play');
 }
 
+// Wire a <ui-play> to a <video>: mirror the video's REAL state onto the button (native
+// controls too) and toggle play/pause on the button click, loading a deferred data-src on
+// first play. The one primitive shared by initVideoPlay and the initEmbeds vimeo-native path.
+function bindVideo(uiPlay, video) {
+	const sync = () => reflectPlay(uiPlay, !video.paused);
+	video.addEventListener('play', sync);
+	video.addEventListener('pause', sync);
+	video.addEventListener('ended', sync);
+	uiPlay.querySelector('button')?.addEventListener('click', () => {
+		if (!video.paused) return video.pause();
+		if (!video.getAttribute('src') && video.dataset.src) video.src = video.dataset.src;
+		video.play()?.catch(() => {});
+	});
+	sync();
+}
+
 /* ============================================================
  * Cursor-tracked hover — hov(track) / hov(drift).
  *
@@ -220,23 +236,7 @@ export function initVideoPlay(uiPlays) {
 		const video = play.closest('ui-media')?.querySelector(':scope > video');
 		if (!video) continue;
 		play.dataset.uiVideo = '1';
-
-		const btn = play.querySelector('button');
-		btn?.addEventListener('click', () => {
-			if (video.paused) {
-				if (!video.getAttribute('src') && video.dataset.src) video.src = video.dataset.src;
-				const p = video.play();
-				if (p && typeof p.catch === 'function') p.catch(() => {});
-			} else {
-				video.pause();
-			}
-		});
-		// Follow the element's real state so the glyph never lies.
-		const sync = () => reflectPlay(play, !video.paused);
-		video.addEventListener('play', sync);
-		video.addEventListener('pause', sync);
-		video.addEventListener('ended', sync);
-		sync();
+		bindVideo(play, video);
 	}
 }
 
@@ -290,12 +290,7 @@ export function initEmbeds(frames) {
 				if (media.hasAttribute('muted')) video.muted = true;
 				media.appendChild(video);
 				media.querySelector(':scope > img')?.remove();
-				const sync = () => reflectPlay(play, !video.paused);
-				video.addEventListener('play', sync);
-				video.addEventListener('pause', sync);
-				video.addEventListener('ended', sync);
-				btn.addEventListener('click', () => { video.paused ? video.play() : video.pause(); });
-				sync();
+				bindVideo(play, video);   // same play/pause + state-sync primitive as initVideoPlay
 				return;
 			}
 
@@ -406,10 +401,9 @@ function videoPlayNodes() {
 	return [...document.querySelectorAll('ui-media:not([provider]) > ui-play')]
 		.filter(play => {
 			const media = play.parentElement;
-			if (media.querySelector(':scope > video') == null) return false;
-			const nested = !!media.parentElement?.closest('ui-media');
-			const scroller = !nested && /\bnav\b|auto|loop/.test(mediaStr(media) + ' ' + (media.getAttribute('nav') || ''));
-			return !scroller;
+			if (!media.querySelector(':scope > video')) return false;
+			const nested = !!media.parentElement?.closest('ui-media');   // per-slide control
+			return nested || !/\bnav\b|auto|loop/.test(mediaStr(media) + ' ' + (media.getAttribute('nav') || ''));
 		});
 }
 
