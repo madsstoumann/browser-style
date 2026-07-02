@@ -182,6 +182,24 @@
 		z-index: 2;
 	}
 
+	/* Native <video> play control: fade the button out WHILE PLAYING, reveal on
+	   hover/focus, and keep it visible when paused. Driven by [open] on <ui-play>,
+	   which index.js sets from the video's real playback state. Scoped to frames with a
+	   direct <video> (not iframe embeds or image carousels). */
+	:where(ui-media:has(> video)) > ui-play[open] {
+		opacity: 0;
+		transition: opacity var(--duration-normal, 0.2s) var(--ease-in-out, ease-in-out);
+	}
+	/* Reveal on hover of the WHOLE slide (the frame's parent, e.g. <cq-box>), not just
+	   the frame — in a layered card the <ui-content> overlay covers the frame and would
+	   otherwise swallow the hover, leaving only the button pokeable. Hover doesn't capture
+	   clicks, so the carousel dots/arrows/play (z-index 2-3) stay clickable above it. */
+	:where(ui-media:has(> video):hover) > ui-play[open],
+	:where(:hover) > ui-media:has(> video) > ui-play[open],
+	:where(ui-media:has(> video)) > ui-play[open]:focus-within {
+		opacity: 1;
+	}
+
 	/* default area by role */
 	:where(ui-media) ui-chip                     { inset-block-start: var(--_g); inset-inline-start: var(--_g); }   /* ts */
 	:where(ui-media) :is(ui-sticker, ui-save)    { inset-block-start: var(--_g); inset-inline-end:   var(--_g); }   /* te */
@@ -198,6 +216,16 @@
 	:where([media*="chip(bs)"]) ui-chip, :where([media*="sticker(bs)"]) ui-sticker, :where([media*="save(bs)"]) ui-save, :where([media*="play(bs)"]) ui-play { inset-block: auto var(--_g); inset-inline: var(--_g) auto; translate: none; }
 	:where([media*="chip(bc)"]) ui-chip, :where([media*="sticker(bc)"]) ui-sticker, :where([media*="save(bc)"]) ui-save, :where([media*="play(bc)"]) ui-play { inset-block: auto var(--_g); inset-inline: 50% auto; translate: -50% 0; }
 	:where([media*="chip(be)"]) ui-chip, :where([media*="sticker(be)"]) ui-sticker, :where([media*="save(be)"]) ui-save, :where([media*="play(be)"]) ui-play { inset-block: auto var(--_g); inset-inline: auto var(--_g); translate: none; }
+
+	/* A <ui-play> inside a NESTED slide frame is a PER-SLIDE video control — always
+	   centered on its own video, immune to the scroller's play() corner token (which is
+	   meant for the carousel's own control). Higher specificity (no :where) so it wins
+	   over the inherited [media*="play(*)"] furniture overrides above. */
+	ui-media ui-media > ui-play {
+		inset-block: 50% auto;
+		inset-inline: 50% auto;
+		translate: -50% -50%;
+	}
 
 	/* ============================================================
 	   SUB-THEME ROUTING — parent media="el(<key>)" → element's own tokens.

@@ -681,6 +681,21 @@
 			</cq-box>
 		</ui-card>
 	</div>
+	<p class="note">Both compose with <code>axis(y)</code> — the seamless loop and autoplay work on the vertical axis too (clones prepend/append, <code>scrollend</code> hops on <code>scrollTop</code>).</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(4/3) axis(y) nav dot(pll) dot(bc) auto(3s) loop" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">axis(y) auto(3s) loop dot(pll) dot(bc)</small><h2 data-part="headline">Vertical autoplay + pill timer</h2><p data-part="summary">Advances every 3s down the Y axis, seamlessly wraps; pauses on hover/focus.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) axis(y) nav loop" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">axis(y) loop</small><h2 data-part="headline">Vertical seamless loop</h2><p data-part="summary">Down past the last smooth-scrolls into a cloned slide, then invisibly resets — no jump. Up/down arrows + dots.</p></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
 
 	<!-- ============================================================
 	     JS-enhanced — play/pause control (<ui-play>)
@@ -704,6 +719,33 @@
 					<img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt="">
 				</ui-media>
 				<ui-content><small data-part="eyebrow">play(be) variant="reveal"</small><h2 data-part="headline">Reveal on hover (bottom-right)</h2><p data-part="summary">Hidden until the frame is hovered or focused; pinned bottom-right.</p></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     JS-enhanced — carousel of videos (pause on slide change)
+	     ============================================================ -->
+	<h2>Carousel of videos — pause on slide change</h2>
+	<p class="note">A <code>nav</code> carousel whose slides are nested <code>&lt;ui-media&gt;</code> frames each holding a native <code>&lt;video&gt;</code> + <code>&lt;ui-play&gt;</code>. <code>index.js</code> only wires the pause-on-leave behaviour when the carousel <strong>contains a video</strong> — an <code>IntersectionObserver</code> pauses a slide's video as it scrolls out, so you never hear two at once. Each per-slide <code>&lt;ui-play&gt;</code> toggles its own video (and fades while playing); a page-wide <em>solo</em> listener also pauses any other playing video when you start a new one.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(16/9) nav" content="scl(sm)">
+			<cq-box>
+				<ui-media>
+					<ui-media>
+						<video src="https://assets.stoumann.dk/video/river.mp4" poster="/assets/images/river.png" preload="none" loop playsinline></video>
+						<ui-play><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+					</ui-media>
+					<ui-media>
+						<video src="https://assets.stoumann.dk/video/river.mp4" poster="/assets/images/mindfulness.png" preload="none" loop playsinline></video>
+						<ui-play><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+					</ui-media>
+					<ui-media>
+						<video src="https://assets.stoumann.dk/video/river.mp4" poster="/assets/images/gastronomy.png" preload="none" loop playsinline></video>
+						<ui-play><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+					</ui-media>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">nav · 3 video slides</small><h2 data-part="headline">Play one, swipe away → it pauses</h2><p data-part="summary">Each slide plays independently; leaving a slide pauses its video.</p></ui-content>
 			</cq-box>
 		</ui-card>
 	</div>
@@ -753,7 +795,7 @@
 			<ui-media media="asr(4/3) nav(blw) arw(bare) arw(arr) arw(set) dot(end)">
 				<img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt="">
 			</ui-media>
-			<ui-media class="arrow-accent" media="asr(4/3) axis(y) nav arw(arr) arw(drk) arw(lg) dot(pll)">
+			<ui-media class="arrow-accent" media="asr(4/3) axis(y) nav arw(arr) arw(drk) arw(lg) dot(pll) dot(bc)">
 				<img src="/assets/images/popovers.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/government.png" alt=""><img src="/assets/images/gastronomy.png" alt="">
 			</ui-media>
 	</div>
@@ -762,7 +804,7 @@
 	     Thumbnail navigation — dot(tmb) + corner placement
 	     ============================================================ -->
 	<h2>Thumbnail navigation — <code>dot(tmb)</code></h2>
-	<p class="note">Turn the <code>::scroll-marker-group</code> dots into <strong>image thumbnails</strong> with <code>dot(tmb)</code>. Each slide is its <strong>own layered <code>&lt;ui-card&gt;</code></strong> (unique headline + CTA), full-bleed (4/3) with content overlaid bottom-left (<code>ovr(bl)</code> + <code>scm</code>). Each slide sets its thumbnail via <code>style="--ui-media-thumb-url: url(…)"</code> (custom property — swaps to typed <code>attr()</code> once Baseline). Place the rail in any corner with <code>dot(tl)</code> / <code>dot(tr)</code> / <code>dot(bl)</code> / <code>dot(br)</code> — here top-right.</p>
+	<p class="note">Turn the <code>::scroll-marker-group</code> dots into <strong>image thumbnails</strong> with <code>dot(tmb)</code>. Each slide is its <strong>own layered <code>&lt;ui-card&gt;</code></strong> (unique headline + CTA), full-bleed (4/3) with content overlaid bottom-left (<code>ovr(bl)</code> + <code>scm</code>). Each slide sets its thumbnail via <code>style="--ui-media-thumb-url: url(…)"</code> (custom property — swaps to typed <code>attr()</code> once Baseline). Place the rail in any corner with <code>dot(tl)</code> / <code>dot(tr)</code> / <code>dot(bl)</code> / <code>dot(br)</code> — here top-right. The last two slides are <strong>videos</strong>: one silent <code>autoplay muted loop</code> background (<code>preload="auto"</code>, since it plays immediately) and one <strong>manual</strong> with a <code>&lt;ui-play&gt;</code> (<code>preload="metadata"</code> — loads dimensions + the first frame for a snappy start without buffering the whole file; use <code>preload="none"</code> to defer entirely behind the poster). The manual video pauses when you swipe past its slide.</p>
 	<div class="grid">
 			<ui-media media="asr(4/3) rds(2xl) clip nav auto loop dot(tmb) dot(tr) dot(xl) play(be) stagger">
 				<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
@@ -781,6 +823,20 @@
 				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-media-thumb-url: url('/assets/images/world.png')"><cq-box>
 					<ui-media><img src="/assets/images/world.png" alt=""></ui-media>
 					<ui-content><small data-part="eyebrow">Global</small><h2 data-part="headline">See the world</h2><p data-part="summary">One trip at a time.</p><nav data-part="actions"><a class="ui-button" href="#">Plan</a></nav></ui-content>
+				</cq-box></ui-card>
+				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-media-thumb-url: url('/assets/images/city.png')"><cq-box>
+					<ui-media>
+						<video src="/assets/video/city.mp4" poster="/assets/images/city.png" preload="auto" autoplay muted loop playsinline></video>
+						<ui-play size="lg"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+					</ui-media>
+					<ui-content><small data-part="eyebrow">Video · autoplay</small><h2 data-part="headline">City in motion</h2><p data-part="summary">Silent background loop with a play/pause control.</p><nav data-part="actions"><a class="ui-button" href="#">Visit</a></nav></ui-content>
+				</cq-box></ui-card>
+				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-media-thumb-url: url('/assets/images/river.png')"><cq-box>
+					<ui-media>
+						<video src="/assets/video/river.mp4" poster="/assets/images/river.png" preload="metadata" muted loop playsinline></video>
+						<ui-play size="lg"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+					</ui-media>
+					<ui-content><small data-part="eyebrow">Video · manual</small><h2 data-part="headline">Down the river</h2><p data-part="summary">Click to play; pauses when you swipe away.</p><nav data-part="actions"><a class="ui-button" href="#">Discover</a></nav></ui-content>
 				</cq-box></ui-card>
 			</ui-media>
 	</div>
@@ -919,9 +975,7 @@
 			</ui-media>
 	</div>
 
-	<!-- cursor-tracked hover + responsive-image upgrade (harmless here; cards are pure CSS) -->
-	<script type="module" src="../play/index.js"></script>
-	<script type="module" src="ui-media-srcset.js"></script>
-	<script type="module" src="ui-media.js"></script>
+	<!-- cursor-tracked hover + loop/auto carousels (progressive enhancement) -->
+	<script type="module" src="index.js"></script>
 </body>
 </html>

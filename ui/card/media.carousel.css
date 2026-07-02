@@ -82,7 +82,10 @@
 	   --_play-justify (overflow direction of the button out of the 0-width box).
 	   Default bottom-start. End corners (play(*e)) need <ui-play> as the LAST child
 	   so sticky-right pins — ui-media.js moves it there. */
-	:where([media*="auto"], [media*="loop"]) ui-media > ui-play,
+	/* :not(ui-media ui-media) keeps this off a NESTED slide frame's own <ui-play> (a
+	   per-slide video control) — only the scroller's direct control is pinned; nested
+	   controls fall back to the centered furniture rule in media.css. */
+	:where([media*="auto"], [media*="loop"]) ui-media:not(ui-media ui-media) > ui-play,
 	ui-media:where([media*="auto"], [media*="loop"], [nav~="auto"], [nav~="loop"]) > ui-play {
 		align-content: var(--_play-block, end);
 		display: grid;
@@ -300,10 +303,11 @@
 			background: var(--ui-media-thumb-url) center / cover no-repeat var(--ui-media-thumb-bg, rgb(0 0 0 / 0.2));
 			block-size: var(--ui-media-thumb-size, 2.25rem);
 			border: var(--ui-media-thumb-border, 2px solid #fff);
+			border-color: var(--ui-media-thumb-border-color, rgb(255 255 255 / 0.5));   /* dim border on inactive thumbs */
 			border-radius: var(--ui-media-thumb-radius, var(--radius-sm, 0.25rem));
 			inline-size: auto;
-			opacity: var(--ui-media-thumb-opacity, 0.55);
-			transition: opacity var(--duration-fast, 100ms) var(--ease-default, ease);
+			opacity: var(--ui-media-thumb-opacity, 1);
+			transition: border-color var(--duration-fast, 100ms) var(--ease-default, ease), opacity var(--duration-fast, 100ms) var(--ease-default, ease);
 		}
 		:where([media*="dot(tmb)"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
 		ui-media:where([media*="dot(tmb)"], [dot~="tmb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
@@ -311,6 +315,7 @@
 			background:
 				linear-gradient(var(--ui-media-thumb-timer, #fff), var(--ui-media-thumb-timer, #fff)) bottom left / 0 var(--ui-media-thumb-timer-height, 3px) no-repeat,
 				var(--ui-media-thumb-url) center / cover no-repeat var(--ui-media-thumb-bg, rgb(0 0 0 / 0.2));
+			border-color: var(--ui-media-thumb-border-color-active, #fff);   /* full-strength border on the current thumb */
 			opacity: 1;
 		}
 		@media (prefers-reduced-motion: no-preference) {
@@ -595,6 +600,25 @@
 		ui-media:where([media*="dot(bl)"], [dot~="bl"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: calc(anchor(left) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: auto; justify-self: start; }
 		:where([media*="dot(br)"]) ui-media::scroll-marker-group,
 		ui-media:where([media*="dot(br)"], [dot~="br"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: calc(anchor(right) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: auto; justify-self: end; }
+
+		/* horizontal centre band — top-centre (tc) / bottom-centre (bc). Unlike the corners,
+		   these force flex-direction:row so a pill timer (or dot row) reads horizontally even on
+		   an axis(y) scroller, where the default puts markers in a vertical column between the
+		   up/down arrows. Same anchoring as the horizontal default, so dot(bc) on a horizontal
+		   carousel is a no-op. */
+		:where([media*="dot(tc)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(tc)"], [dot~="tc"])::scroll-marker-group,
+		:where([media*="dot(bc)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(bc)"], [dot~="bc"])::scroll-marker-group {
+			align-self: auto;
+			flex-direction: row;
+			inline-size: auto;
+			inset: auto;
+			justify-self: anchor-center;
+			margin-inline: 0;
+		}
+		:where([media*="dot(tc)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="dot(tc)"], [dot~="tc"])::scroll-marker-group { top: calc(anchor(top) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); bottom: auto; }
+		:where([media*="dot(bc)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="dot(bc)"], [dot~="bc"])::scroll-marker-group { top: calc(anchor(bottom) - var(--ui-media-overlay-gap) - var(--ui-media-dot-size)); bottom: auto; }
 	}
 
 	@keyframes ui-media-pill-fill {
