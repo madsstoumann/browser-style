@@ -26,3 +26,6 @@ _v2/
 
 # Docusaurus build cache
 baseline/.docusaurus/
+
+# Vimeo harvest — client metadata + generated previews (do not commit)
+ui/card/vimeo-data/

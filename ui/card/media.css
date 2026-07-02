@@ -276,6 +276,10 @@
 	:where(ui-media) .ui-media-tools button:is([command="--pip"], [command="--fullscreen"])[aria-pressed="true"] { background-color: var(--color-accent, hsl(211, 100%, 50%)); }
 	:where(ui-media) .ui-media-tools button[command="--fullscreen"] { --_glyph: var(--ui-media-tool-fullscreen); }
 	:where(ui-media) .ui-media-tools button[command="--pip"]        { --_glyph: var(--ui-media-tool-pip); }
+	/* PiP only works on a PLAYING video (before play, a facade has no <video> — the
+	   button is a no-op). Hide it until <ui-play> reports playing (open on the host /
+	   aria-pressed on its button). Fullscreen targets the frame, so it stays available. */
+	:where(ui-media:not(:has(:is(ui-play[open], ui-play button[aria-pressed="true"])))) .ui-media-tools button[command="--pip"] { display: none; }
 
 	/* ============================================================
 	   SUB-THEME ROUTING — parent media="el(<key>)" → element's own tokens.

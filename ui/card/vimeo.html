@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Card — Vimeo previews</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Top-10 most-played Vimeo videos as local 2s preview clips (mp4+webm), in various <ui-media> combinations: aspect-ratios, play controls, vid() tools.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../chip/ui-chip.css">
+	<link rel="stylesheet" href="../sticker/ui-sticker.css">
+	<link rel="stylesheet" href="../play/ui-play.css">
+	<link rel="stylesheet" href="../icon/index.css">
+	<link rel="stylesheet" href="ui-card.css">
+	<style>
+		.grid { display: grid; gap: var(--spacing-lg); grid-template-columns: 1fr; margin-block-end: var(--spacing-2xl); }
+		@media (min-width: 540px) { .grid-2 { grid-template-columns: repeat(2, 1fr); } .grid-3 { grid-template-columns: repeat(3, 1fr); } }
+		@media (min-width: 900px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } }
+		.note { color: var(--color-text-secondary, #666); max-inline-size: 74ch; }
+		code { font-size: 0.9em; }
+	</style>
+</head>
+<body>
+	<h1>UI: Card — Vimeo previews</h1>
+	<p class="note">The <strong>top-10 most-played</strong> videos from a Vimeo account, cut to <strong>2-second, 240p preview clips</strong> (<code>mp4</code> + <code>webm</code>, ~20–80&nbsp;KB each) with <code>ffmpeg</code> and served locally — see <a href="vimeo.md">vimeo.md</a> / <a href="vimeo.js">vimeo.js</a>. Same clips, many <code>&lt;ui-media&gt;</code> combinations: aspect-ratios (<code>asr()</code>), play controls (<code>&lt;ui-play&gt;</code>), and the fullscreen/PiP cluster (<code>vid()</code>). PiP only appears while a video is <em>playing</em>. <em>(Clips live in the git-ignored <code>vimeo-data/</code>; they’re a snapshot for local preview.)</em></p>
+
+	<!-- ============================================================
+	     1) Gif-like autoplay loops — muted autoplay loop, no controls
+	     ============================================================ -->
+	<h2>Gif-like autoplay loops</h2>
+	<p class="note">A muted <code>autoplay loop</code> of the 2s clip — the GIF effect as video. No controls; the file <em>is</em> the loop.</p>
+	<div class="grid grid-3">
+		<ui-media media="asr(16/9) chip(bs)">
+			<video autoplay muted loop playsinline poster="vimeo-data/previews/696468083.jpg">
+				<source src="vimeo-data/previews/696468083.webm" type="video/webm">
+				<source src="vimeo-data/previews/696468083.mp4" type="video/mp4">
+			</video>
+			<ui-chip>22.5k plays</ui-chip>
+		</ui-media>
+		<ui-media media="asr(1/1) sticker(te) sticker(accent)">
+			<video autoplay muted loop playsinline poster="vimeo-data/previews/1012727854.jpg">
+				<source src="vimeo-data/previews/1012727854.webm" type="video/webm">
+				<source src="vimeo-data/previews/1012727854.mp4" type="video/mp4">
+			</video>
+			<ui-sticker variant="burst">10k</ui-sticker>
+		</ui-media>
+		<ui-media media="asr(16/9) chip(bs) chip(dark)">
+			<video autoplay muted loop playsinline poster="vimeo-data/previews/703663691.jpg">
+				<source src="vimeo-data/previews/703663691.webm" type="video/webm">
+				<source src="vimeo-data/previews/703663691.mp4" type="video/mp4">
+			</video>
+			<ui-chip>unboxing</ui-chip>
+		</ui-media>
+	</div>
+
+	<!-- ============================================================
+	     2) Play/pause + tools — click to play, PiP appears while playing
+	     ============================================================ -->
+	<h2>Play/pause + tools (<code>vid(pip) vid(fls)</code>)</h2>
+	<p class="note"><code>&lt;ui-play&gt;</code> toggles the clip; the bottom-end cluster adds PiP + fullscreen. PiP is hidden until playback starts (it needs a playing video); fullscreen targets the frame, so it’s always there.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(16/9) vid(pip) vid(fls)">
+			<cq-box>
+				<ui-media>
+					<video muted loop playsinline preload="none" poster="vimeo-data/previews/845207657.jpg">
+						<source src="vimeo-data/previews/845207657.webm" type="video/webm">
+						<source src="vimeo-data/previews/845207657.mp4" type="video/mp4">
+					</video>
+					<ui-play><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">16/9 · pip + fls</small><h2 data-part="headline">Egypten</h2><p data-part="summary">Click play → PiP + fullscreen appear.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(1/1) vid(sm) vid(pip) vid(fls)">
+			<cq-box>
+				<ui-media>
+					<video muted loop playsinline preload="none" poster="vimeo-data/previews/746542514.jpg">
+						<source src="vimeo-data/previews/746542514.webm" type="video/webm">
+						<source src="vimeo-data/previews/746542514.mp4" type="video/mp4">
+					</video>
+					<ui-play variant="reveal"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">1/1 · reveal play · vid(sm)</small><h2 data-part="headline">Ud af kaos</h2><p data-part="summary">Square crop; small tools; play reveals on hover.</p></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     3) Aspect-ratios, sizes, positions & themes
+	     ============================================================ -->
+	<h2>Aspect-ratios, sizes &amp; themes</h2>
+	<p class="note">Same clip machinery across a cinematic <code>21/9</code> crop, a <code>4/3</code> frame, large vs small tools, a themed play button, and fullscreen-only.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(21/9) obp(cc) vid(lg) vid(pip) vid(fls)">
+			<cq-box>
+				<ui-media>
+					<video muted loop playsinline preload="none" poster="vimeo-data/previews/862350855.jpg">
+						<source src="vimeo-data/previews/862350855.webm" type="video/webm">
+						<source src="vimeo-data/previews/862350855.mp4" type="video/mp4">
+					</video>
+					<ui-play size="lg"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">21/9 · vid(lg)</small><h2 data-part="headline">Pauline Asingh</h2><p data-part="summary">Cinematic crop; large tools.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) vid(sm) vid(fls)">
+			<cq-box>
+				<ui-media>
+					<video muted loop playsinline preload="none" poster="vimeo-data/previews/696120095.jpg">
+						<source src="vimeo-data/previews/696120095.webm" type="video/webm">
+						<source src="vimeo-data/previews/696120095.mp4" type="video/mp4">
+					</video>
+					<ui-play theme="dark"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">4/3 · fullscreen only · theme=dark</small><h2 data-part="headline">RUS – Vikinger i Øst</h2><p data-part="summary">No PiP here; just fullscreen.</p></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     4) Overlay content — ui-card ovr() + scrim, and the PiP-on-play rule
+	     ============================================================ -->
+	<h2>Overlay content &amp; the PiP-on-play rule</h2>
+	<p class="note">Left: content overlaid on the frame (<code>ovr(bl)</code> + <code>scm</code>) with a play control. Right: watch the PiP button — it’s <strong>absent until you press play</strong>, then joins fullscreen bottom-end.</p>
+	<div class="grid grid-2">
+		<ui-card variant="ovr(bl)" media="asr(1/1) scm vid(fls)">
+			<cq-box>
+				<ui-media>
+					<video muted loop playsinline preload="none" poster="vimeo-data/previews/794832552.jpg">
+						<source src="vimeo-data/previews/794832552.webm" type="video/webm">
+						<source src="vimeo-data/previews/794832552.mp4" type="video/mp4">
+					</video>
+					<ui-play variant="reveal"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">ovr(bl) · scrim</small><h2 data-part="headline">Ud af Kaos</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(1/1) vid(pip) vid(fls)">
+			<cq-box>
+				<ui-media>
+					<video muted loop playsinline preload="none" poster="vimeo-data/previews/789027225.jpg">
+						<source src="vimeo-data/previews/789027225.webm" type="video/webm">
+						<source src="vimeo-data/previews/789027225.mp4" type="video/mp4">
+					</video>
+					<ui-play><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">pip appears on play</small><h2 data-part="headline">Ud af kaos</h2><p data-part="summary">Paused: fullscreen only. Playing: + PiP.</p></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<script type="module" src="index.js"></script>
+</body>
+</html>

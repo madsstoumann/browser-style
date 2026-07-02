@@ -352,6 +352,34 @@
 	</div>
 
 	<!-- ============================================================
+	     Vimeo — API-sourced (native playback + gif-like preview)
+	     Real URLs fetched via vimeo.js from a PUBLIC account video (Kanhavekanalen – Vikingernes smutvej på Samsø).
+	     NOTE: progressive links are SIGNED and EXPIRE (~24h) — regenerate with
+	     fetchVimeo(); do not treat these as permanent.
+	     ============================================================ -->
+	<h2>Vimeo from the API — native playback &amp; preview loop</h2>
+	<p class="note">Real <code>src</code>/<code>poster</code> pulled from the Vimeo API with <a href="vimeo.js"><code>vimeo.js</code></a> (see <a href="vimeo.md">vimeo.md</a>). Left: the <code>provider="vimeo" src="…mp4"</code> native path — poster until play, then a real <code>&lt;video&gt;</code> the <code>&lt;ui-play&gt;</code> + <code>vid()</code> tools drive. Right: a <strong>gif-like</strong> muted autoplay loop of the 360p rendition, clamped to a <strong>2-second window</strong> (<code>#t=0,2</code> + <code>loopSegment()</code>). <strong>The signed URLs expire (~24h)</strong> — regenerate server-side.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(16/9) vid(pip) vid(fls)">
+			<cq-box>
+				<ui-media provider="vimeo" src="https://player.vimeo.com/progressive_redirect/playback/1184711108/rendition/1080p/file.mp4%20%281080p%29.mp4?loc=external&amp;oauth2_token_id=1810117821&amp;signature=81737a246f92e89ebde902a5a98d6ae11e4f66fe7d915e9cbb589687b02bf9be" poster="https://i.vimeocdn.com/video/2147920882-0335dc9d64c66e47f069a255289619c81af40a6454f423808ddc2ec508eb93df-d_1920x1080?&amp;r=pad&amp;region=us" loop muted>
+					<ui-play variant="reveal"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">provider="vimeo" src (from API)</small><h2 data-part="headline">Native from the API</h2><p data-part="summary">Poster → real <code>&lt;video&gt;</code>; play/pause + PiP + fullscreen.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9)">
+			<cq-box>
+				<ui-media>
+					<video id="vimeo-preview" src="https://player.vimeo.com/progressive_redirect/playback/1184711108/rendition/360p/file.mp4%20%28360p%29.mp4?loc=external&amp;oauth2_token_id=1810117821&amp;signature=d7ad7398d23e82d2b08fa1f8935bcebc9a221688bc100a63db26e98e70b8e29e#t=0,2" poster="https://i.vimeocdn.com/video/2147920882-0335dc9d64c66e47f069a255289619c81af40a6454f423808ddc2ec508eb93df-d_1920x1080?&amp;r=pad&amp;region=us" autoplay muted loop playsinline preload="metadata"></video>
+					<ui-chip>preview loop</ui-chip>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">gif-like · 360p · 2s</small><h2 data-part="headline">Preview loop</h2><p data-part="summary">Muted autoplay loop clamped to 0–2s — the GIF effect, as video.</p></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
 	     Responsive images — optional <ui-media> JS upgrade
 	     ============================================================ -->
 	<h2>Responsive images <code>&lt;ui-media&gt;</code> JS</h2>
@@ -380,5 +408,11 @@
 
 	<!-- cursor-tracked hover for hov(track)/hov(drift) — idle until hovered -->
 	<script type="module" src="index.js"></script>
+	<!-- gif-like Vimeo preview: clamp the muted autoplay loop to a 2s window -->
+	<script type="module">
+		import { loopSegment } from './vimeo.js';
+		const preview = document.querySelector('#vimeo-preview');
+		if (preview) loopSegment(preview, 0, 2);
+	</script>
 </body>
 </html>

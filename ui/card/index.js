@@ -375,7 +375,9 @@ export function initVideoTools(frames) {
 		const wantPip = /vid\(pip\)/.test(m) || /\bpip\b/.test(vid);
 		const wantFls = /vid\(fls\)/.test(m) || /\bfls\b/.test(vid);
 		if (!wantPip && !wantFls) continue;
-		if (!frame.querySelector(':scope > video') && !frame.querySelector('video')) continue;
+		// Need a <video> — now, or later once a provider="" facade swaps one in on play.
+		// (wireTool resolves the video lazily at click time, so injecting early is fine.)
+		if (!frame.querySelector('video') && !frame.hasAttribute('provider')) continue;
 
 		// Reuse an authored cluster if present, else build one.
 		let menu = frame.querySelector(':scope > .ui-media-tools');
