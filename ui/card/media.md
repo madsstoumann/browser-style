@@ -117,6 +117,7 @@ Because custom properties inherit, **one rule set serves both placement cases**:
 | `hov()` | `zoom` `pan` `track` `drift` | hover effect (image only) | `--ui-media-hv-*` |
 | `scm()` | *(bare, or `tl … br`)* | scrim — bare matches the host `ovr()`; explicit picks a direction | `--ui-media-scrim-paint` |
 | `nav()` | *(bare, or `dots` `arrows` `none`)* | carousel — **the token IS the trigger**; bare = dots + arrows | carousel layout + controls |
+| `vid()` | `pip` `fls` · size `sm md lg xl` | player-tool cluster over a chrome-less `<video>` — JS **injects** a PiP + fullscreen cluster (bottom-end, fullscreen rightmost). Size mirrors `arw()` (`vid(sm)`…`vid(xl)`, default 2.5rem). Needs `index.js`; PiP feature-detected (skipped in Firefox). ≡ `vid="pip fls sm"`. *(Play/pause is `<ui-play>` furniture, not a `vid()` value.)* | injected `<menu class="ui-media-tools">` + `--ui-media-tool-size` |
 | `chip()` `sticker()` `save()` `play()` | `ts … be` *(position)* **or** `red orange green blue accent dark light subtle` *(sub-theme)* | place + theme an overlay element | element inset (absolute) / element `--ui-{el}-*` tokens |
 
 #### `asr()` — the 8 numeric aspect ratios

@@ -222,6 +222,8 @@ Reshape the disc into a platform badge or a clipped play triangle. These keep th
 
 Recolor with `--ui-play-bg` / `--ui-play-bg-hover`, retune the squircle with `--ui-play-radius` / `--ui-play-corner`, the triangle rounding with `--ui-play-round`, or replace the path entirely with `--ui-play-shape`.
 
+**Provider context** — inside a frame that declares a platform (`@browser.style/card`'s `<ui-media provider="youtube">` / `provider="vimeo"`), a nested `<ui-play>` picks up the matching badge automatically — no `variant` needed. Set `variant` only to force a shape standalone.
+
 ---
 
 ## JavaScript API

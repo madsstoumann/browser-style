@@ -62,29 +62,30 @@
 
 	/* brand shapes — recolor the disc into a platform badge, keeping the
 	   white <ui-icon> arrow on top. corner-shape: superellipse() carves the
-	   YouTube squircle; where unsupported it degrades to plain border-radius. */
-	:where(ui-play[variant~="youtube"]) button {
-		/* full-size radius + squircle = the YouTube badge. Gap comes from a smaller
-		   glyph (NOT padding — padding would overflow the box and break the ratio).
-		   All sz-relative so it scales with `size` and font-size. */
-		/* --ui-play-icon-sz: calc(var(--ui-play-sz, 3em) * 0.42); */
+	   YouTube squircle; where unsupported it degrades to plain border-radius.
+	   Triggered by the explicit `variant` OR, when nested, an ancestor's
+	   `provider=` (e.g. <ui-media provider="youtube">) — so a plain <ui-play>
+	   inside a provider frame brands itself, no redundant variant needed. */
+	:where(ui-play[variant~="youtube"], [provider="youtube"] ui-play) button {
+		/* Gap comes from a smaller glyph (NOT padding — padding would overflow the
+		   box and break the ratio). Width follows --ui-play-sz via the ratio, so
+		   the badge scales with `size` and font-size like every other variant. */
 		aspect-ratio: 1.422;
 		background: var(--ui-play-bg, #ff0033);
 		border-radius: var(--ui-play-radius, var(--ui-play-sz, 3em));
 		corner-shape: var(--ui-play-corner, squircle);
-		width: 80px;
 	}
-	:where(ui-play[variant~="youtube"]) button:is(:hover, :focus-visible) {
+	:where(ui-play[variant~="youtube"], [provider="youtube"] ui-play) button:is(:hover, :focus-visible) {
 		background: var(--ui-play-bg-hover, #d10029);
 	}
 
 	/* vimeo — cyan disc; keeps the <ui-icon> arrow */
-	:where(ui-play[variant~="vimeo"]) button {
+	:where(ui-play[variant~="vimeo"], [provider="vimeo"] ui-play) button {
 		aspect-ratio: 1;
 		background: var(--ui-play-bg, #1ab7ea);
 		border-radius: var(--ui-play-radius, var(--radius-circle, 50%));
 	}
-	:where(ui-play[variant~="vimeo"]) button:is(:hover, :focus-visible) {
+	:where(ui-play[variant~="vimeo"], [provider="vimeo"] ui-play) button:is(:hover, :focus-visible) {
 		background: var(--ui-play-bg-hover, #138fb8);
 	}
 

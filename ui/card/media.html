@@ -228,13 +228,13 @@
 	     Play affordance — <ui-play>
 	     ============================================================ -->
 	<h2>Play affordance — <code>&lt;ui-play&gt;</code></h2>
-	<p class="note">An interactive play button, default centered (<code>cc</code>); the glyph is a <code>&lt;ui-icon type="play"&gt;</code>. <code>variant="reveal"</code> hides it until the media is hovered/focused; <code>theme=</code> and <code>size=</code> apply. Card-only (interactive — never inside a reveal <code>&lt;summary&gt;</code>). Load <code>@browser.style/play</code> for the is-playing toggle, or point its <code>&lt;button&gt;</code> at a <code>[popover]</code> for a no-JS lightbox.</p>
+	<p class="note">An interactive play button, default centered (<code>cc</code>); the glyph is a <code>&lt;ui-icon type="play-pause"&gt;</code> (morphs play↔pause). <code>variant="reveal"</code> hides it until the media is hovered/focused; <code>theme=</code> and <code>size=</code> apply. Card-only (interactive — never inside a reveal <code>&lt;summary&gt;</code>). Load <code>@browser.style/play</code> for the is-playing toggle, or point its <code>&lt;button&gt;</code> at a <code>[popover]</code> for a no-JS lightbox.</p>
 	<div class="grid grid-3">
 		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/river.png" alt="">
-					<ui-play><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+					<ui-play><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">always visible</small><h2 data-part="headline">Play (center)</h2></ui-content>
 			</cq-box>
@@ -243,7 +243,7 @@
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/destinations.png" alt="">
-					<ui-play variant="reveal"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+					<ui-play variant="reveal"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">variant="reveal"</small><h2 data-part="headline">Hover to reveal</h2></ui-content>
 			</cq-box>
@@ -252,7 +252,7 @@
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/gastronomy.png" alt="">
-					<ui-play theme="red" size="sm"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+					<ui-play theme="red" size="sm"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">theme="red" size="sm"</small><h2 data-part="headline">Themed, large</h2></ui-content>
 			</cq-box>
@@ -294,7 +294,7 @@
 			<cq-box>
 				<ui-media>
 					<video src="https://assets.stoumann.dk/video/river.mp4" poster="/assets/images/river.png" preload="none" muted loop playsinline></video>
-					<ui-play><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+					<ui-play><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">preload="none"</small><h2 data-part="headline">Click to play</h2><p data-part="summary">File loads on first play (poster shows meanwhile); the button reflects native state.</p></ui-content>
 			</cq-box>
@@ -303,7 +303,7 @@
 			<cq-box>
 				<ui-media>
 					<video src="https://assets.stoumann.dk/video/river.mp4" poster="/assets/images/river.png" muted loop playsinline></video>
-					<ui-play variant="reveal"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+					<ui-play variant="reveal"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">variant="reveal"</small><h2 data-part="headline">Hover to reveal control</h2></ui-content>
 			</cq-box>
@@ -314,20 +314,20 @@
 	     Light-embed — provider="youtube|vimeo" (stacked facade)
 	     ============================================================ -->
 	<h2>Light-embed — <code>provider="youtube"</code> / <code>provider="vimeo"</code></h2>
-	<p class="note">A <strong>facade</strong>: a plain (non-<code>nav</code>) <code>&lt;ui-media&gt;</code> stacks its children, so a lazy poster sits on top of nothing until the first play swaps in the real player. <code>index.js</code> auto-fetches the poster from the video id (<code>i.ytimg.com</code> for YouTube, <code>vumbnail.com</code> for Vimeo) if you don't supply one. Because there's no <code>nav</code> token, multiple media never become a carousel — they stack, image on top. YouTube and Vimeo <code>video="ID"</code> hand off to the platform iframe; Vimeo with a direct <code>src="…mp4"</code> (e.g. grabbed from the API) resolves to a native <code>&lt;video&gt;</code> the button keeps toggling.</p>
-	<div class="grid grid-3">
+	<p class="note">A <strong>facade</strong>: a plain (non-<code>nav</code>) <code>&lt;ui-media&gt;</code> stacks its children, so a lazy poster sits on top of nothing until the first play swaps in the real player. <code>index.js</code> auto-fetches the poster from the video id (<code>i.ytimg.com</code> for YouTube, <code>vumbnail.com</code> for Vimeo) if you don't supply one. Because there's no <code>nav</code> token, multiple media never become a carousel — they stack, image on top. YouTube and Vimeo <code>video="ID"</code> hand off to the platform iframe; Vimeo with a direct <code>src="…mp4"</code> (e.g. grabbed from the API) resolves to a native <code>&lt;video&gt;</code> the button keeps toggling. The nested <code>&lt;ui-play&gt;</code> needs <strong>no</strong> <code>variant</code> — it inherits the platform badge (YouTube squircle / Vimeo disc) from the frame's <code>provider</code>. The fourth card is a chrome-less local autoplay loop with its own <strong>PiP + fullscreen</strong> controls, enabled by the <code>vid(pip) vid(fls)</code> media token (like <code>dot()</code>/<code>arw()</code>). Because these need real buttons + a user gesture, <code>index.js</code> injects them (fullscreen targets the frame so overlays stay; PiP is feature-detected and skipped where unsupported, e.g. Firefox).</p>
+	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
 				<ui-media provider="youtube" video="5b4YcLB4DVI">
-					<ui-play variant="youtube" size="xl"><button type="button" command="--toggle-play" aria-label="Play video"><ui-icon type="play"></ui-icon></button></ui-play>
+					<ui-play size="md"><button type="button" command="--toggle-play" aria-label="Play video"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">provider="youtube"</small><h2 data-part="headline">YouTube facade</h2><p data-part="summary">Poster → nocookie iframe on play.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
-				<ui-media provider="vimeo" video="70591644">
-					<ui-play variant="vimeo" size="xl"><button type="button" command="--toggle-play" aria-label="Play video"><ui-icon type="play"></ui-icon></button></ui-play>
+				<ui-media provider="vimeo" video="22439234">
+					<ui-play size="md"><button type="button" command="--toggle-play" aria-label="Play video"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">provider="vimeo" video="ID"</small><h2 data-part="headline">Vimeo embed</h2><p data-part="summary">Poster → player.vimeo iframe.</p></ui-content>
 			</cq-box>
@@ -335,9 +335,18 @@
 		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
 				<ui-media provider="vimeo" src="https://assets.stoumann.dk/video/river.mp4" poster="/assets/images/river.png" loop muted>
-					<ui-play variant="vimeo" size="xl"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+					<ui-play size="md"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">provider="vimeo" src="…mp4"</small><h2 data-part="headline">Vimeo native (API URL)</h2><p data-part="summary">Poster → native &lt;video&gt; the button toggles.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) vid(sm) vid(pip) vid(fls)">
+			<cq-box>
+				<ui-media>
+					<video src="/assets/video/city.mp4" poster="/assets/images/city.png" autoplay muted loop playsinline></video>
+					<ui-play variant="reveal"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">&lt;ui-play&gt; + vid(sm) vid(pip) vid(fls)</small><h2 data-part="headline">Player tools</h2><p data-part="summary">Chrome-less autoplay loop: <code>&lt;ui-play&gt;</code> (reveal-on-hover) pauses it; <code>vid(pip) vid(fls)</code> inject PiP + fullscreen (bottom-end), sized with <code>vid(sm)</code> (like <code>arw()</code>). No native <code>controls</code>.</p></ui-content>
 			</cq-box>
 		</ui-card>
 	</div>

@@ -9,6 +9,7 @@
  *   - initCarousels(nodes)   loop (seamless clones) + autoplay + play/pause control
  *   - initVideoPlay(uiPlays) <ui-play> over a native <video>
  *   - initEmbeds(frames)     provider="youtube|vimeo" lazy poster → iframe/video facade
+ *   - initVideoTools(frames) vid(pip) / vid(fls) token → injects PiP/fullscreen buttons
  *
  * No srcset here (that lives in ui-media-srcset.js). The <ui-play> component itself
  * is NOT loaded — this script drives the button state directly (reflectPlay). Pure
@@ -25,7 +26,7 @@ const navWords = (el) => (el.getAttribute('nav') || '').split(/\s+/);
 
 // Mirror <ui-play>'s visual state WITHOUT loading the component: aria-pressed on the
 // inner button, `open` on the host (morphs a <ui-icon type="play-pause"> via CSS), and
-// a legacy static <ui-icon type="play|pause"> swap for older markup.
+// a legacy static <ui-icon type="play|pause"> swaap for older markup.
 function reflectPlay(uiPlay, playing) {
 	const btn = uiPlay.querySelector('button');
 	if (!btn) return;
@@ -314,6 +315,91 @@ export function initEmbeds(frames) {
 }
 
 /* ============================================================
+ * Player tools — fullscreen + picture-in-picture, via the vid() media token.
+ *
+ * Native <video controls> can't be trimmed to "only fullscreen + PiP" (controlsList is
+ * subtractive), so for a chrome-less video we drive these ourselves. Enabled like any
+ * other media= token — vid(pip) / vid(fls), on the frame or an ancestor (or the dedicated
+ * `vid="pip fls"` attribute). Unlike dot()/arw() (pure-CSS scroll pseudo-elements), these
+ * need real buttons + a user gesture, so JS INJECTS a <menu class="ui-media-tools"> with
+ * the requested buttons (fullscreen appended last → rightmost) and wires them: fullscreen
+ * targets the FRAME (overlays stay visible), PiP targets its <video>, state via aria-pressed.
+ * PiP is feature-detected (no Firefox) → that button is simply not injected. media.css owns
+ * the glyphs (url() SVG, same convention as the carousel arrows) and the cluster styling.
+ * ============================================================ */
+function makeToolButton(command, label) {
+	const btn = document.createElement('button');
+	btn.type = 'button';
+	btn.setAttribute('command', command);
+	btn.setAttribute('aria-label', label);
+	return btn;
+}
+
+function wireTool(btn, frame) {
+	const command = btn.getAttribute('command');
+	const getVideo = () => frame.querySelector(':scope > video') || frame.querySelector('video');
+
+	if (command === '--pip') {
+		const v = getVideo();
+		if (v) {
+			v.addEventListener('enterpictureinpicture', () => btn.setAttribute('aria-pressed', 'true'));
+			v.addEventListener('leavepictureinpicture', () => btn.setAttribute('aria-pressed', 'false'));
+		}
+		btn.addEventListener('click', async () => {
+			const video = getVideo();
+			if (!video) return;
+			try {
+				if (document.pictureInPictureElement === video) await document.exitPictureInPicture();
+				else await video.requestPictureInPicture();
+			} catch { /* not ready / gesture required */ }
+		});
+	} else if (command === '--fullscreen') {
+		document.addEventListener('fullscreenchange', () => btn.setAttribute('aria-pressed', String(document.fullscreenElement === frame)));
+		btn.addEventListener('click', () => {
+			if (document.fullscreenElement) { document.exitFullscreen?.(); return; }
+			if (frame.requestFullscreen) frame.requestFullscreen().catch(() => {});
+			else getVideo()?.webkitEnterFullscreen?.();   // iOS Safari: video-only fullscreen
+		});
+	}
+}
+
+export function initVideoTools(frames) {
+	for (const frame of frames) {
+		if (frame.dataset.uiTools) continue;
+		frame.dataset.uiTools = '1';
+
+		// vid(pip) / vid(fls) from the media= token (own or ancestor), or vid="…".
+		// Play/pause is NOT here — that's <ui-play> furniture (initVideoPlay); don't duplicate it.
+		const m = mediaStr(frame);
+		const vid = frame.getAttribute('vid') || '';
+		const wantPip = /vid\(pip\)/.test(m) || /\bpip\b/.test(vid);
+		const wantFls = /vid\(fls\)/.test(m) || /\bfls\b/.test(vid);
+		if (!wantPip && !wantFls) continue;
+		if (!frame.querySelector(':scope > video') && !frame.querySelector('video')) continue;
+
+		// Reuse an authored cluster if present, else build one.
+		let menu = frame.querySelector(':scope > .ui-media-tools');
+		if (!menu) {
+			menu = document.createElement('menu');
+			menu.className = 'ui-media-tools';
+			frame.appendChild(menu);
+		}
+		// PiP first, fullscreen last → fullscreen sits rightmost. PiP feature-detected.
+		if (wantPip && document.pictureInPictureEnabled && !menu.querySelector('[command="--pip"]')) {
+			menu.appendChild(makeToolButton('--pip', 'Picture-in-picture'));
+		}
+		if (wantFls && !menu.querySelector('[command="--fullscreen"]')) {
+			menu.appendChild(makeToolButton('--fullscreen', 'Fullscreen'));
+		}
+		for (const btn of menu.querySelectorAll('button[command]')) {
+			if (btn.dataset.uiTool) continue;
+			btn.dataset.uiTool = '1';
+			wireTool(btn, frame);
+		}
+	}
+}
+
+/* ============================================================
  * Media coordination — solo play + pause-on-slide-leave.
  *
  * A "decoration" video (muted + autoplay, i.e. a silent background loop) is never
@@ -388,6 +474,8 @@ const CAROUSEL_SEL = [
 	'ui-media[nav~="auto"]', 'ui-media[nav~="loop"]',
 ].join(', ');
 const EMBED_SEL = 'ui-media[provider]';
+// vid() player-tools: frames whose own or ancestor media= carries a vid( token, or the vid= attr.
+const VIDTOOLS_SEL = ['ui-media[media*="vid("]', '[media*="vid("] ui-media', 'ui-media[vid]'].join(', ');
 // every scroll carousel (nav/auto/loop) — video-pause is filtered to those with a video.
 const NAV_SEL = [
 	'ui-media[media*="nav"]', '[media*="nav"] ui-media',
@@ -414,6 +502,7 @@ export function scan() {
 	initCarouselVideoPause(document.querySelectorAll(NAV_SEL));
 	initEmbeds(document.querySelectorAll(EMBED_SEL));
 	initVideoPlay(videoPlayNodes());
+	initVideoTools(document.querySelectorAll(VIDTOOLS_SEL));
 }
 
 (globalThis.requestIdleCallback || ((fn) => setTimeout(fn, 1)))(scan);

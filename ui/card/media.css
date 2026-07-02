@@ -228,6 +228,56 @@
 	}
 
 	/* ============================================================
+	   PLAYER TOOLS — fullscreen + picture-in-picture buttons for a
+	   chrome-less <video>. Wired by index.js (initVideoTools). Glyphs use the
+	   same inline-SVG url() convention as the carousel arrows/chevrons
+	   (media.carousel.css); the button carries no inner markup. State via
+	   aria-pressed. Cluster pinned bottom-end (fullscreen rightmost by source
+	   order); wrap the buttons in a .ui-media-tools element.
+	   ============================================================ */
+	/* Tool vars live on the [media] HOST (like the arrow vars) so they inherit down to
+	   the injected buttons — and an ancestor vid(sm…xl) can override the size. Setting
+	   them on ui-media directly would block that (ui-media would re-set the default). */
+	:where([media*="vid("], ui-media[vid]) {
+		--ui-media-tool-fullscreen: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3'/%3E%3C/svg%3E");
+		--ui-media-tool-pip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 9V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4'/%3E%3Crect width='10' height='7' x='12' y='13' rx='2'/%3E%3C/svg%3E");
+		--ui-media-tool-bg: rgb(0 0 0 / 0.55);
+		--ui-media-tool-bg-hover: rgb(0 0 0 / 0.78);
+		--ui-media-tool-size: 2.5rem;
+	}
+	/* size — mirrors arw(sm|md|lg|xl); set on the host, inherits to the buttons */
+	:where([media*="vid(sm)"], ui-media[vid~="sm"]) { --ui-media-tool-size: 2rem; }
+	:where([media*="vid(md)"], ui-media[vid~="md"]) { --ui-media-tool-size: 2.5rem; }
+	:where([media*="vid(lg)"], ui-media[vid~="lg"]) { --ui-media-tool-size: 3rem; }
+	:where([media*="vid(xl)"], ui-media[vid~="xl"]) { --ui-media-tool-size: 3.5rem; }
+	:where(ui-media) .ui-media-tools {
+		display: flex;
+		gap: var(--_g, 0.5rem);
+		inset-block-end: var(--_g, 0.75rem);
+		inset-inline-end: var(--_g, 0.75rem);
+		margin: 0;
+		padding: 0;
+		position: absolute;
+		z-index: 2;
+	}
+	:where(ui-media) .ui-media-tools button {
+		aspect-ratio: 1;
+		background: var(--_glyph) center / 55% no-repeat var(--ui-media-tool-bg);
+		border: 0;
+		border-radius: var(--radius-circle, 50%);
+		box-sizing: border-box;
+		cursor: pointer;
+		inline-size: var(--ui-media-tool-size, 2.5rem);
+		padding: 0;   /* reset base button padding (1ch 2.5ch) so the disc stays square */
+		transition: background-color var(--ui-media-tool-trsdu, 0.2s);
+	}
+	:where(ui-media) .ui-media-tools button:is(:hover, :focus-visible) { background-color: var(--ui-media-tool-bg-hover); }
+	/* active state (accent) applies to the toggle utilities, NOT play/pause (whose pressed=playing is normal) */
+	:where(ui-media) .ui-media-tools button:is([command="--pip"], [command="--fullscreen"])[aria-pressed="true"] { background-color: var(--color-accent, hsl(211, 100%, 50%)); }
+	:where(ui-media) .ui-media-tools button[command="--fullscreen"] { --_glyph: var(--ui-media-tool-fullscreen); }
+	:where(ui-media) .ui-media-tools button[command="--pip"]        { --_glyph: var(--ui-media-tool-pip); }
+
+	/* ============================================================
 	   SUB-THEME ROUTING — parent media="el(<key>)" → element's own tokens.
 	   8 keys: red orange green blue · accent dark light subtle (from base
 	   --ui-theme-*). chip uses --ui-chip-*, sticker --ui-sticker-*, save/play ink.
