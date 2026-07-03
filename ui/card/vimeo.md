@@ -68,6 +68,24 @@ a 1–2s window (`loopSegment()` or a `#t=start,end` media fragment). Smaller, s
 higher quality than a GIF — and it reuses the native-video path. See the "preview loop"
 example in [media.html](./media.html).
 
+### Animated poster — `preview="…"` on a facade
+
+A `provider="vimeo"` frame accepts a **`preview`** attribute: a small gif-like loop clip.
+Instead of a static `<img>` poster, `index.js` injects a **muted autoplay-loop
+`<video data-preview>`** as the poster; the still `poster=` (if any) shows until the loop
+paints. Pressing play swaps in the real player and drops the preview.
+
+```html
+<ui-media provider="vimeo"
+          src="…1080p.mp4"                 <!-- full clip (server-resolved, fresh) -->
+          preview="…240p-2s.mp4"           <!-- animated poster (the gif-like loop) -->
+          poster="…thumb.jpg" loop muted>
+  <ui-play><button …><ui-icon type="play-pause"></ui-icon></button></ui-play>
+</ui-media>
+```
+
+See the "animated poster" cards in [vimeo.html](./vimeo.html).
+
 ---
 
 ## Using `vimeo.js`

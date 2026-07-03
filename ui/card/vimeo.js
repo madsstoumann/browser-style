@@ -1,4 +1,4 @@
-l/**
+/**
  * Vimeo helpers for <ui-media> — normalize the Vimeo API video object into the
  * poster + source(s) a `provider="vimeo"` frame needs, fetch it, and loop a short
  * "gif-like" preview segment. See vimeo.md for the API details and field list.

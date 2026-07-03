@@ -263,23 +263,46 @@ export function initEmbeds(frames) {
 		const id = media.getAttribute('video');
 		const src = media.getAttribute('src');   // direct file URL → native path
 
-		// Hydrate a poster facade if there's no media child yet: the authored poster=
-		// attribute, else the platform thumbnail derived from the id.
+		// Facade poster. Best practice is an AUTHORED <img> in the markup — that is the
+		// no-JS fallback (with JS off, the poster still shows). JS then ENHANCES it: a
+		// `preview` (small gif-like loop) REPLACES the <img> with a muted autoplay-loop
+		// <video data-preview>. If no <img> was authored, fall back to the poster=/platform
+		// thumbnail so the JS-driven (API) flow still works.
+		const previewSrc = media.getAttribute('preview');
 		const poster = media.getAttribute('poster') || (id ? posterUrl(provider, id) : null);
-		if (poster && !media.querySelector(':scope > img, :scope > iframe, :scope > video')) {
-			const img = document.createElement('img');
-			img.loading = 'lazy';
-			img.alt = '';
-			img.src = poster;
-			media.prepend(img);
+		const authoredImg = media.querySelector(':scope > img');
+		const hasPlayer = media.querySelector(':scope > iframe, :scope > video:not([data-preview])');
+		if (!hasPlayer && !media.querySelector(':scope > video[data-preview]')) {
+			if (previewSrc) {
+				const pv = document.createElement('video');
+				pv.src = previewSrc;
+				pv.autoplay = pv.muted = pv.loop = pv.playsInline = true;
+				pv.setAttribute('data-preview', '');
+				if (poster || authoredImg) pv.poster = poster || authoredImg.src;   // still frame until the loop paints
+				if (authoredImg) authoredImg.replaceWith(pv);   // enhance the no-JS <img>
+				else media.prepend(pv);
+			} else if (poster && !authoredImg) {
+				const img = document.createElement('img');
+				img.loading = 'lazy';
+				img.alt = '';
+				img.src = poster;
+				media.prepend(img);
+			}
 		}
 
 		const play = media.querySelector(':scope > ui-play');
 		const btn = play?.querySelector('button');
 		if (!btn) continue;
 
+		// Drop the facade layers (static poster + animated preview) once the real player is in.
+		const dropFacade = () => {
+			media.querySelector(':scope > img')?.remove();
+			media.querySelector(':scope > [data-preview]')?.remove();
+		};
+
 		btn.addEventListener('click', () => {
-			if (media.querySelector(':scope > iframe, :scope > video[src]')) return;   // already swapped
+			// The animated-preview <video> has a src too — exclude it from the "already swapped" test.
+			if (media.querySelector(':scope > iframe, :scope > video[src]:not([data-preview])')) return;
 
 			// Vimeo native — a direct file URL becomes a real <video> we keep controlling.
 			if (provider === 'vimeo' && src) {
@@ -290,7 +313,7 @@ export function initEmbeds(frames) {
 				if (media.hasAttribute('loop')) video.loop = true;
 				if (media.hasAttribute('muted')) video.muted = true;
 				media.appendChild(video);
-				media.querySelector(':scope > img')?.remove();
+				dropFacade();
 				bindVideo(play, video);   // same play/pause + state-sync primitive as initVideoPlay
 				return;
 			}
@@ -306,8 +329,8 @@ export function initEmbeds(frames) {
 				: `${YT_ORIGIN}/embed/${encodeURIComponent(id)}?autoplay=1&playsinline=1&rel=0`;
 			media.appendChild(iframe);
 
-			// Drop the facade: poster gone, control handed off to the player.
-			media.querySelector(':scope > img')?.remove();
+			// Drop the facade: poster/preview gone, control handed off to the player.
+			dropFacade();
 			reflectPlay(play, true);
 			play.hidden = true;
 		});
