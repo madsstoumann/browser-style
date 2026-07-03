@@ -29,21 +29,18 @@
 	<p class="note">Drop a <code>&lt;ui-play&gt;</code> onto a native <code>&lt;video&gt;</code> (no <code>controls</code>) and <code>index.js</code> wires it: the button toggles play/pause and mirrors the real playback state (glyph morphs play↔pause). The button <strong>fades out while playing</strong>, reappears on hover, and stays put when paused. To defer the download use native <code>preload="none"</code> with a <code>poster</code> (<code>&lt;video&gt;</code> does <em>not</em> support <code>loading="lazy"</code> — that's <code>&lt;img&gt;</code>/<code>&lt;iframe&gt;</code> only); the file is only fetched on first play. <code>variant="reveal"</code> hides the button until hover/focus.</p>
 
 	<div class="grid grid-2">
-		<ui-media media="asr(16/9) rds(lg)">
+		<ui-media media="asr(16/9) rds(lg) vid(fls) vid(pip)">
 			<video src="https://assets.stoumann.dk/video/river.mp4" poster="/assets/images/river.png" preload="none" muted loop playsinline></video>
 			<ui-play><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>native video</ui-chip>
 		</ui-media>
-		<ui-media media="asr(16/9) rds(lg)">
+		<ui-media media="asr(16/9) rds(lg) vid(fls) vid(pip)">
 			<video src="/assets/video/city.mp4" poster="/assets/images/city.png" autoplay muted loop playsinline></video>
 			<ui-play variant="reveal"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>autoplay</ui-chip>
 		</ui-media>
 	</div>
 
-	<!-- ============================================================
-	     YouTube — provider="youtube" (SSR poster <img> + lazy <iframe>)
-	     ============================================================ -->
 	<h2>YouTube — <code>provider="youtube"</code></h2>
 	<p class="note">Same facade as the Vimeo embeds — <code>data-preview</code> is provider-agnostic: here a static <code>&lt;img data-preview&gt;</code> poster (Vimeo uses an animated <code>&lt;video data-preview&gt;</code> loop) sits over a lazy <code>&lt;iframe&gt;</code>, lifted by <code>z-index</code> so source order doesn't matter. The <code>&lt;ui-play&gt;</code> click drops the poster, appends <code>autoplay=1</code> and hands off to the YouTube player. (An iframe isn't an <code>HTMLMediaElement</code>, so it uses the click facade, not <code>command="play-pause"</code> — that's native <code>&lt;video&gt;</code> only.)</p>
 	<div class="grid grid-2">
@@ -159,15 +156,12 @@
 	<div class="section-head"><h2>Meet the curator</h2></div>
 	<ui-card variant="ovr(bl)" media="asr(21/9) obp(cc) scm ply(xl)" content="pad(md) lg:pad(lg)">
 		<cq-box>
-			<ui-media provider="vimeo" video="862350855">
-				<video data-preview poster="vimeo-data/previews/862350855.jpg" autoplay muted loop playsinline>
-					<source src="vimeo-data/previews/862350855.webm" type="video/webm">
-					<source src="vimeo-data/previews/862350855.mp4" type="video/mp4">
-				</video>
-				<iframe loading="lazy" src="https://player.vimeo.com/video/862350855" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
+			<ui-media provider="vimeo" video="695669200">
+				<img data-preview src="https://i.vimeocdn.com/video/1407823587-0ed01f093c174f759119f4e0d2a481010c9fe69ddee2b2f9c384988b829294e6-d_1920x1080?&amp;r=pad&amp;region=us" alt="" loading="lazy">
+				<iframe loading="lazy" src="https://player.vimeo.com/video/695669200" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
 				<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			</ui-media>
-			<ui-content><small data-part="eyebrow">Interview</small><h3 data-part="headline">Behind “Obsessed with Life”</h3><p data-part="summary">Curator Pauline Asingh on building an exhibition from a single golden mask.</p></ui-content>
+			<ui-content><small data-part="eyebrow">Collection</small><h3 data-part="headline">Silver from the caliphate</h3><p data-part="summary">Arabic dirhams that travelled from the caliphate to a hoard at Randlev near Aarhus — follow the silver route.</p></ui-content>
 		</cq-box>
 	</ui-card>
 
@@ -214,13 +208,13 @@
 		<h2>From the archive</h2>
 		<a href="#">Full archive →</a>
 	</div>
-	<div class="grid grid-4">
+	<div class="grid grid-3">
 		<ui-media provider="vimeo" video="746542514" media="asr(1/1) rds(md) chip(bs)">
 			<video data-preview poster="vimeo-data/previews/746542514.jpg" autoplay muted loop playsinline>
 				<source src="vimeo-data/previews/746542514.webm" type="video/webm">
 				<source src="vimeo-data/previews/746542514.mp4" type="video/mp4">
 			</video>
-			<iframe loading="lazy" src="https://player.vimeo.com/video/746542514" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
+			<iframe loading="lazy" src="https://player.vimeo.com/video/746542514?h=e4a87ed0c3" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
 			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>Behind the scenes</ui-chip>
 		</ui-media>
@@ -241,15 +235,6 @@
 			<iframe loading="lazy" src="https://player.vimeo.com/video/789027225" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
 			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>Interview</ui-chip>
-		</ui-media>
-		<ui-media provider="vimeo" video="1184711108" media="asr(1/1) rds(md) chip(bs)">
-			<video data-preview poster="vimeo-data/previews/1184711108.jpg" autoplay muted loop playsinline>
-				<source src="vimeo-data/previews/1184711108.webm" type="video/webm">
-				<source src="vimeo-data/previews/1184711108.mp4" type="video/mp4">
-			</video>
-			<iframe loading="lazy" src="https://player.vimeo.com/video/1184711108" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
-			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
-			<ui-chip>Landscape</ui-chip>
 		</ui-media>
 	</div>
 
