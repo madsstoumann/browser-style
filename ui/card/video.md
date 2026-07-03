@@ -1,8 +1,12 @@
-# Vimeo + `<ui-media>`
+# Video + `<ui-media>`
 
-How to source **posters**, **playable video**, **subtitles**, and a **"gif-like" preview
-loop** from the Vimeo API, and feed them into a `provider="vimeo"` frame. The helpers below
-are **reference sketches** to implement server-side — there is no shipped `vimeo.js`.
+How to source **posters**, **playable video**, **subtitles**, and a **2-second "gif-like"
+preview loop** for a `provider="vimeo"`/`provider="youtube"` frame — and how to cut the loop
+clips for Vimeo, YouTube, and plain native videos. The API helpers below are **reference
+sketches** to implement server-side — there is no shipped `vimeo.js`.
+
+Demos: [video.html](./video.html). Loop clips live in `vimeo-data/previews/` and
+`youtube-data/previews/` (both **gitignored** — signed/derived snapshots).
 
 > **Security.** Everything that hits the API needs a Vimeo **access token** — a
 > **server-side secret** (e.g. `VIMEO_ACCESS_TOKEN` in `.env`). Never expose it to the
@@ -113,6 +117,60 @@ above) to test or to simulate the response without a live call.
 | `src` / `renditions[]` | `play.progressive` → `files[]` | ascending by height; `src` = highest |
 | `hls` / `hlsExpires` | `play.hls` | manifest + expiry timestamp |
 | `id name duration width height` | top-level | — |
+
+---
+
+## Cutting the 2-second loop
+
+The animated `<video data-preview>` in front of a facade is a tiny **muted, autoplay, looping
+clip** — a 1–2s window, ~640px wide, shipped as **WebM (VP9)** + **MP4 (H.264)** for coverage.
+Where the source comes from differs per provider; the ffmpeg step is the same.
+
+**The ffmpeg recipe** (shared) — 2s from `t=8s`, scale to 640px, strip audio:
+
+```bash
+# MP4 (H.264) — universal fallback, web-optimized
+ffmpeg -ss 8 -t 2 -i src.mp4 -an -vf "scale=640:-2" -c:v libx264 -crf 28 -movflags +faststart ID.mp4
+# WebM (VP9) — smaller, listed first so modern browsers pick it
+ffmpeg -ss 8 -t 2 -i src.mp4 -an -vf "scale=640:-2" -c:v libvpx-vp9 -crf 36 -b:v 0 ID.webm
+# poster still (first frame of the window)
+ffmpeg -ss 8 -i src.mp4 -frames:v 1 -vf "scale=1280:-2" ID.jpg
+```
+
+Emit them as the facade (`<source>` order = WebM then MP4):
+
+```html
+<video data-preview poster="…/ID.jpg" autoplay muted loop playsinline>
+  <source src="…/ID.webm" type="video/webm">
+  <source src="…/ID.mp4"  type="video/mp4">
+</video>
+```
+
+### Vimeo — from the API (owner account)
+
+`src.mp4` = a **progressive rendition** (`play.progressive[]`, e.g. 360p) — see above. Fetch a
+fresh signed link server-side (`fetchVimeo`), download it, then run the ffmpeg recipe. Owner
+account only; the link expires (~24h) but the **derived clip is a static file** you host.
+
+### YouTube — no API, host your own (`yt-dlp` + ffmpeg)
+
+YouTube exposes **no preview clip**: no MP4 API, and the animated-thumbnail WebP
+(`i.ytimg.com/an_webp/{id}/mqdefault_6s.webp`) is session-gated (404 to a plain fetch). So the
+loop is **entirely self-hosted** — download the source, then the same ffmpeg recipe:
+
+```bash
+# standalone binary (no install): github.com/yt-dlp/yt-dlp/releases → yt-dlp_macos
+yt-dlp -f "bv*[height<=720][ext=mp4]/b[height<=720]" -o src.mp4 "https://www.youtube.com/watch?v=ID"
+# then the ffmpeg recipe above → ID.webm / ID.mp4 / ID.jpg
+```
+
+Poster can also be the free static thumbnail: `https://i.ytimg.com/vi/{id}/maxresdefault.jpg`.
+(Downloading is a YouTube-ToS gray area — use for content you own/are licensed to embed.)
+
+### Native videos — trim your own master
+
+For a plain native `<video>` (your own file), there's no provider step — run the ffmpeg recipe
+directly on the master to produce the loop + poster.
 
 ---
 

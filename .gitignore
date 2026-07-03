@@ -29,3 +29,4 @@ baseline/.docusaurus/
 
 # Vimeo harvest — client metadata + generated previews (do not commit)
 ui/card/vimeo-data/
+ui/card/youtube-data/
