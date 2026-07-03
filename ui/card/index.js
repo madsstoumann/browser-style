@@ -5,11 +5,12 @@
  * that takes an array/NodeList of nodes and does NOT query the DOM itself — the
  * selectors live at the very end (see scan()), so any of these can later move to
  * its own module unchanged:
- *   - initHover(nodes)       cursor-tracked hov(track) / hov(drift)
- *   - initCarousels(nodes)   loop (seamless clones) + autoplay + play/pause control
- *   - initVideoPlay(uiPlays) <ui-play> over a native <video>
- *   - initEmbeds(frames)     provider="youtube|vimeo" lazy poster → iframe/video facade
- *   - initVideoTools(frames) vid(pip) / vid(fls) token → injects PiP/fullscreen buttons
+ *   - initHover(nodes)        cursor-tracked hov(track) / hov(drift)
+ *   - initCarousels(nodes)    loop (seamless clones) + autoplay + play/pause control
+ *   - initVideoPlay(uiPlays)  <ui-play> over a native <video> (carousel/standalone)
+ *   - initMediaCommands(root) <button command="play-pause" commandfor> polyfill for <video>
+ *   - initEmbeds(frames)      provider="youtube|vimeo" facade: reveal the SSR'd real player
+ *   - initVideoTools(frames)  vid(pip) / vid(fls) token → injects PiP/fullscreen buttons
  *
  * No srcset here (that lives in ui-media-srcset.js). The <ui-play> component itself
  * is NOT loaded — this script drives the button state directly (reflectPlay). Pure
@@ -244,15 +245,77 @@ export function initVideoPlay(uiPlays) {
 /* ============================================================
  * Light-embed facades — provider="youtube|vimeo".
  *
- * A facade is a plain (non-nav) <ui-media> that STACKS its children: a lazy poster
- * sits on top until the first play, which swaps in the real player. YouTube and Vimeo
- * (video=ID) hand off to an iframe player; Vimeo with a direct file (src=URL, e.g.
- * grabbed from the API) resolves to a native <video> that <ui-play> keeps toggling.
+ * The facade is AUTHORED for progressive enhancement — a plain (non-nav) <ui-media>
+ * whose first child is the poster that shows WITH JS OFF:
+ *   - <video data-preview poster="still.jpg" autoplay muted loop> — an animated,
+ *     gif-like loop (with its own poster= still image), or
+ *   - <img> — a static poster.
+ * The real player is best SSR'd behind the preview:
+ *   - native  <video preload="none" id> — driven declaratively by the <ui-play> button's
+ *     command="play-pause" commandfor="<id>" (initMediaCommands / future native). This fn
+ *     only mirrors state onto the button and drops the preview once it plays.
+ *   - embed   <iframe data-embed loading="lazy"> — on <ui-play> click, drop the preview,
+ *     add autoplay, hand off to the platform player.
+ * When nothing real is authored (pure API flow) JS injects the poster + player on click.
  * ============================================================ */
 const YT_ORIGIN = 'https://www.youtube-nocookie.com';
 const posterUrl = (provider, id) => provider === 'vimeo'
 	? `https://vumbnail.com/${id}.jpg`
 	: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+
+/* ============================================================
+ * Media Invoker Commands polyfill — <button command commandfor> over <video>/<audio>.
+ *
+ * Implements the PROPOSED media commands (play-pause · play · pause · toggle-muted;
+ * https://open-ui.org/components/future-invokers.explainer/) so markup is written to the
+ * future standard today. ONE delegated click listener resolves commandfor→media element
+ * and acts. It AUTO-DISABLES once browsers ship native support: `button.command` reflects
+ * the value only for a recognized command (empty today), so the whole thing no-ops when
+ * native lands — delete it whenever, markup never changes. (Non-media targets fall through
+ * to the native Invoker Commands API / other handlers.)
+ * ============================================================ */
+const MEDIA_COMMANDS = new Set(['play-pause', 'play', 'pause', 'toggle-muted']);
+const nativeMediaCommands = (() => {
+	const b = document.createElement('button');
+	b.setAttribute('command', 'play-pause');
+	return b.command === 'play-pause';
+})();
+let mediaCmdBound = false;
+export function initMediaCommands(root = document) {
+	if (root === document) { if (mediaCmdBound) return; mediaCmdBound = true; }
+	root.addEventListener('click', (e) => {
+		const btn = e.target.closest?.('button[command][commandfor]');
+		if (!btn) return;
+		const cmd = btn.getAttribute('command');
+		const el = document.getElementById(btn.getAttribute('commandfor'));
+		if (!(el instanceof HTMLMediaElement)) return;
+		// Subtitle/caption track switching — CUSTOM command (no native invoker exists or is
+		// proposed for text tracks), so always handled here, even after native play-pause ships.
+		// Language is encoded in the command suffix (`command` can't carry a param): --track-da,
+		// --track-en, --track-off. Reflects aria-pressed across the sibling group.
+		if (cmd.startsWith('--track-')) { setTextTrack(el, btn); return; }
+		// Proposed media commands — skip when the browser handles them natively (auto-disable).
+		if (nativeMediaCommands || !MEDIA_COMMANDS.has(cmd)) return;
+		if (cmd === 'toggle-muted') { el.muted = !el.muted; return; }
+		if (cmd === 'pause' || (cmd === 'play-pause' && !el.paused)) el.pause();
+		else { const p = el.play(); if (p && p.catch) p.catch(() => {}); }
+	});
+}
+
+/* Switch the showing text track of `video` to the language in the button's command suffix
+ * (`--track-<lang>`; `off` disables all), then mirror aria-pressed across every --track button
+ * pointing at the same commandfor. Track match is by `.language` (the <track srclang>). */
+function setTextTrack(video, btn) {
+	const id = btn.getAttribute('commandfor');
+	const lang = btn.getAttribute('command').slice('--track-'.length);   // da | en | off
+	for (const track of video.textTracks) {
+		track.mode = (lang !== 'off' && track.language === lang) ? 'showing' : 'disabled';
+	}
+	const scope = btn.closest('[data-track-group]') || document;
+	for (const b of scope.querySelectorAll(`button[command^="--track-"][commandfor="${id}"]`)) {
+		b.setAttribute('aria-pressed', String(b === btn));
+	}
+}
 
 export function initEmbeds(frames) {
 	for (const media of frames) {
@@ -263,45 +326,60 @@ export function initEmbeds(frames) {
 		const id = media.getAttribute('video');
 		const src = media.getAttribute('src');   // direct file URL → native path
 
-		// Facade poster. Best practice is an AUTHORED <img> in the markup — that is the
-		// no-JS fallback (with JS off, the poster still shows). JS then ENHANCES it: a
-		// `preview` (small gif-like loop) REPLACES the <img> with a muted autoplay-loop
-		// <video data-preview>. If no <img> was authored, fall back to the poster=/platform
-		// thumbnail so the JS-driven (API) flow still works.
-		const previewSrc = media.getAttribute('preview');
-		const poster = media.getAttribute('poster') || (id ? posterUrl(provider, id) : null);
-		const authoredImg = media.querySelector(':scope > img');
-		const hasPlayer = media.querySelector(':scope > iframe, :scope > video:not([data-preview])');
-		if (!hasPlayer && !media.querySelector(':scope > video[data-preview]')) {
-			if (previewSrc) {
-				const pv = document.createElement('video');
-				pv.src = previewSrc;
-				pv.autoplay = pv.muted = pv.loop = pv.playsInline = true;
-				pv.setAttribute('data-preview', '');
-				if (poster || authoredImg) pv.poster = poster || authoredImg.src;   // still frame until the loop paints
-				if (authoredImg) authoredImg.replaceWith(pv);   // enhance the no-JS <img>
-				else media.prepend(pv);
-			} else if (poster && !authoredImg) {
-				const img = document.createElement('img');
-				img.loading = 'lazy';
-				img.alt = '';
-				img.src = poster;
-				media.prepend(img);
-			}
+		// No authored facade (pure API flow) → inject a platform thumbnail so something shows.
+		if (id && !media.querySelector(':scope > img, :scope > video, :scope > iframe')) {
+			const img = document.createElement('img');
+			img.loading = 'lazy';
+			img.alt = '';
+			img.src = posterUrl(provider, id);
+			media.prepend(img);
 		}
 
 		const play = media.querySelector(':scope > ui-play');
 		const btn = play?.querySelector('button');
 		if (!btn) continue;
 
-		// Drop the facade layers (static poster + animated preview) once the real player is in.
-		const dropFacade = () => {
+		// The still image behind the facade — carried onto the real <video> as its poster.
+		const facadeStill = () =>
+			media.querySelector(':scope > [data-preview]')?.getAttribute('poster')
+			|| media.querySelector(':scope > img')?.getAttribute('src')
+			|| null;
+
+		// Drop the authored facade (animated preview + static poster) once the real player is in.
+		const dropPreview = () => {
 			media.querySelector(':scope > img')?.remove();
 			media.querySelector(':scope > [data-preview]')?.remove();
 		};
+		const dropFacade = dropPreview;
+
+		// SSR'd real player already in the markup (progressive enhancement): a lazy <iframe>
+		// (embed) or a <video preload="none"> sits BEHIND the animated preview.
+		const realVideo = media.querySelector(':scope > video:not([data-preview])');
+		const realIframe = media.querySelector(':scope > iframe');
+
+		// Native <video>: the <ui-play> button drives it declaratively via
+		// command="play-pause" commandfor="<id>" (initMediaCommands / future native). We only
+		// mirror state onto the button and drop the preview once it actually plays.
+		if (realVideo) {
+			realVideo.addEventListener('play', () => { dropPreview(); reflectPlay(play, true); });
+			realVideo.addEventListener('pause', () => reflectPlay(play, false));
+			realVideo.addEventListener('ended', () => reflectPlay(play, false));
+			continue;
+		}
+		if (realIframe) {
+			btn.addEventListener('click', () => {
+				dropPreview();
+				if (!/[?&]autoplay=1/.test(realIframe.src)) {
+					realIframe.src += (realIframe.src.includes('?') ? '&' : '?') + 'autoplay=1';
+				}
+				reflectPlay(play, true);
+				play.hidden = true;
+			}, { once: true });
+			continue;
+		}
 
 		btn.addEventListener('click', () => {
-			// The animated-preview <video> has a src too — exclude it from the "already swapped" test.
+			// The <video data-preview> uses <source> (no src attr) — the real player has src / is an iframe.
 			if (media.querySelector(':scope > iframe, :scope > video[src]:not([data-preview])')) return;
 
 			// Vimeo native — a direct file URL becomes a real <video> we keep controlling.
@@ -310,6 +388,8 @@ export function initEmbeds(frames) {
 				video.src = src;
 				video.autoplay = true;
 				video.playsInline = true;
+				const still = facadeStill();
+				if (still) video.poster = still;
 				if (media.hasAttribute('loop')) video.loop = true;
 				if (media.hasAttribute('muted')) video.muted = true;
 				media.appendChild(video);
@@ -386,6 +466,24 @@ function wireTool(btn, frame) {
 	}
 }
 
+/* CC language switcher — an authored customizable <select class="ui-media-cc"> whose <option>
+ * values are track languages (srclang) plus `off`. textTrack.mode is JS-only (no declarative
+ * switch exists), so this one change handler is the irreducible JS; the menu/positioning/
+ * selected-state are all native to <select>. Targets the frame's real (non-preview) <video>. */
+function wireCcSelect(select, frame) {
+	const getVideo = () => frame.querySelector(':scope > video:not([data-preview])') || frame.querySelector('video');
+	const apply = () => {
+		const v = getVideo();
+		if (!v) return;
+		const val = select.value;
+		for (const track of v.textTracks) {
+			track.mode = (val !== 'off' && track.language === val) ? 'showing' : 'disabled';
+		}
+	};
+	select.addEventListener('change', apply);
+	apply();   // sync initial state to the selected <option> (mirrors <track default>)
+}
+
 export function initVideoTools(frames) {
 	for (const frame of frames) {
 		if (frame.dataset.uiTools) continue;
@@ -397,7 +495,8 @@ export function initVideoTools(frames) {
 		const vid = frame.getAttribute('vid') || '';
 		const wantPip = /vid\(pip\)/.test(m) || /\bpip\b/.test(vid);
 		const wantFls = /vid\(fls\)/.test(m) || /\bfls\b/.test(vid);
-		if (!wantPip && !wantFls) continue;
+		const wantCc = /vid\(cc\)/.test(m) || /\bcc\b/.test(vid);
+		if (!wantPip && !wantFls && !wantCc) continue;
 		// Need a <video> — now, or later once a provider="" facade swaps one in on play.
 		// (wireTool resolves the video lazily at click time, so injecting early is fine.)
 		if (!frame.querySelector('video') && !frame.hasAttribute('provider')) continue;
@@ -409,7 +508,17 @@ export function initVideoTools(frames) {
 			menu.className = 'ui-media-tools';
 			frame.appendChild(menu);
 		}
-		// PiP first, fullscreen last → fullscreen sits rightmost. PiP feature-detected.
+		// CC first (leftmost) → PiP → fullscreen (rightmost). PiP feature-detected.
+		// CC switcher is an AUTHORED (SSR) customizable <select class="ui-media-cc"> — wire its
+		// change→textTrack.mode. If none is authored, inject a placeholder disc button (unwired).
+		if (wantCc) {
+			const ccSelect = menu.querySelector('select.ui-media-cc');
+			if (ccSelect) {
+				if (!ccSelect.dataset.uiTool) { ccSelect.dataset.uiTool = '1'; wireCcSelect(ccSelect, frame); }
+			} else if (!menu.querySelector('[command="--cc"]')) {
+				menu.appendChild(makeToolButton('--cc', 'Subtitles'));
+			}
+		}
 		if (wantPip && document.pictureInPictureEnabled && !menu.querySelector('[command="--pip"]')) {
 			menu.appendChild(makeToolButton('--pip', 'Picture-in-picture'));
 		}
@@ -522,6 +631,7 @@ function videoPlayNodes() {
 
 export function scan() {
 	initSolo();
+	initMediaCommands();   // <button command="play-pause" commandfor> polyfill (native <video>)
 	initHover(document.querySelectorAll(HOVER_SEL));
 	initCarousels(document.querySelectorAll(CAROUSEL_SEL));
 	initCarouselVideoPause(document.querySelectorAll(NAV_SEL));

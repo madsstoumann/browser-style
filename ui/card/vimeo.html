@@ -30,14 +30,15 @@
 		<p class="lede">Ten thousand years of human history — bog bodies and Vikings, pharaohs and Celts. Watch the films, then plan your visit.</p>
 	</header>
 
-	<!-- ============================================================
-	     Hero — native full clip, split (video LEFT). Our play + PiP/fullscreen.
-	     ============================================================ -->
-	<ui-card class="split" variant="col lg:row spl(1/1)" media="asr(16/9) vid(pip) vid(fls)" content="pad(md) lg:pad(lg)">
+	<ui-card class="split" variant="col lg:row spl(1/1)" media="asr(16/9) vid(cc) vid(pip) vid(fls) ply(lg)" content="pad(md) lg:pad(lg)">
 		<cq-box>
-			<ui-media provider="vimeo" src="vimeo-data/previews/696468083.full.mp4" preview="vimeo-data/previews/696468083.mp4" poster="vimeo-data/previews/696468083.jpg" loop muted>
-					<img src="vimeo-data/previews/696468083.jpg" alt="">
-				<ui-play size="lg"><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+			<ui-media provider="vimeo" src="vimeo-data/previews/696468083.full.mp4" loop muted>
+				<video data-preview poster="vimeo-data/previews/696468083.jpg" autoplay muted loop playsinline>
+					<source src="vimeo-data/previews/696468083.webm" type="video/webm">
+					<source src="vimeo-data/previews/696468083.mp4" type="video/mp4">
+				</video>
+				<video id="film-696468083" preload="none" src="vimeo-data/previews/696468083.full.mp4" poster="vimeo-data/previews/696468083.jpg" playsinline></video>
+				<ui-play><button type="button" command="play-pause" commandfor="film-696468083" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			</ui-media>
 			<ui-content>
 				<small data-part="eyebrow">Featured film</small>
@@ -48,14 +49,15 @@
 		</cq-box>
 	</ui-card>
 
-	<!-- ============================================================
-	     Autumn — native full clip, split REVERSED (video RIGHT).
-	     ============================================================ -->
-	<ui-card class="split" variant="col lg:row-r spl(1/1)" media="asr(16/9) vid(pip) vid(fls)" content="pad(md) lg:pad(lg)">
+	<ui-card class="split" variant="col lg:row-r spl(1/1)" media="asr(16/9) vid(cc) vid(pip) vid(fls) ply(lg)" content="pad(md) lg:pad(lg)">
 		<cq-box>
-			<ui-media provider="vimeo" src="vimeo-data/previews/1012727854.full.mp4" preview="vimeo-data/previews/1012727854.mp4" poster="vimeo-data/previews/1012727854.jpg" loop muted>
-					<img src="vimeo-data/previews/1012727854.jpg" alt="">
-				<ui-play size="lg"><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+			<ui-media provider="vimeo" src="vimeo-data/previews/1012727854.full.mp4" loop muted>
+				<video data-preview poster="vimeo-data/previews/1012727854.jpg" autoplay muted loop playsinline>
+					<source src="vimeo-data/previews/1012727854.webm" type="video/webm">
+					<source src="vimeo-data/previews/1012727854.mp4" type="video/mp4">
+				</video>
+				<video id="film-1012727854" preload="none" src="vimeo-data/previews/1012727854.full.mp4" poster="vimeo-data/previews/1012727854.jpg" playsinline></video>
+				<ui-play><button type="button" command="play-pause" commandfor="film-1012727854" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			</ui-media>
 			<ui-content>
 				<small data-part="eyebrow">Season</small>
@@ -71,21 +73,29 @@
 		<a href="#">All exhibitions →</a>
 	</div>
 	<div class="grid grid-2">
-		<ui-card variant="col" media="asr(16/9) chip(ts) chip(green)" content="pad(md) md:pad(lg)">
+		<ui-card variant="col" media="asr(16/9) chip(ts) chip(green) ply(lg)" content="pad(md) md:pad(lg)">
 			<cq-box>
-				<ui-media provider="vimeo" video="845207657" preview="vimeo-data/previews/845207657.mp4" poster="vimeo-data/previews/845207657.jpg">
-					<img src="vimeo-data/previews/845207657.jpg" alt="">
-					<ui-play size="lg"><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				<ui-media provider="vimeo" video="845207657">
+					<video data-preview poster="vimeo-data/previews/845207657.jpg" autoplay muted loop playsinline>
+						<source src="vimeo-data/previews/845207657.webm" type="video/webm">
+						<source src="vimeo-data/previews/845207657.mp4" type="video/mp4">
+					</video>
+					<iframe data-embed loading="lazy" src="https://player.vimeo.com/video/845207657" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
+					<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<ui-chip>Now open</ui-chip>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">Special exhibition · full film</small><h3 data-part="headline">Egypt — Obsessed with Life</h3><p data-part="summary">Gold, gods and the promise of eternity. Press play for the full film in the Vimeo player.</p><nav data-part="actions"><a class="ui-button" href="#">Read more</a></nav></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9) sticker(te)" content="pad(md) md:pad(lg)">
+		<ui-card variant="col" media="asr(16/9) sticker(te) ply(lg)" content="pad(md) md:pad(lg)">
 			<cq-box>
-				<ui-media provider="vimeo" video="696120095" preview="vimeo-data/previews/696120095.mp4" poster="vimeo-data/previews/696120095.jpg">
-					<img src="vimeo-data/previews/696120095.jpg" alt="">
-					<ui-play size="lg"><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				<ui-media provider="vimeo" video="696120095">
+					<video data-preview poster="vimeo-data/previews/696120095.jpg" autoplay muted loop playsinline>
+						<source src="vimeo-data/previews/696120095.webm" type="video/webm">
+						<source src="vimeo-data/previews/696120095.mp4" type="video/mp4">
+					</video>
+					<iframe data-embed loading="lazy" src="https://player.vimeo.com/video/696120095" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
+					<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<ui-sticker variant="burst">New</ui-sticker>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">Exhibition · full film</small><h3 data-part="headline">The Rus — Vikings in the East</h3><p data-part="summary">Follow the river routes from Scandinavia to Byzantium and the silk roads beyond.</p><nav data-part="actions"><a class="ui-button" href="#">Read more</a></nav></ui-content>
@@ -97,13 +107,52 @@
 	     Feature — overlay content, IFRAME embed
 	     ============================================================ -->
 	<div class="section-head"><h2>Meet the curator</h2></div>
-	<ui-card variant="ovr(bl)" media="asr(21/9) obp(cc) scm" content="pad(md) lg:pad(lg)">
+	<ui-card variant="ovr(bl)" media="asr(21/9) obp(cc) scm ply(xl)" content="pad(md) lg:pad(lg)">
 		<cq-box>
-			<ui-media provider="vimeo" video="862350855" preview="vimeo-data/previews/862350855.mp4" poster="vimeo-data/previews/862350855.jpg">
-					<img src="vimeo-data/previews/862350855.jpg" alt="">
-				<ui-play size="lg"><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+			<ui-media provider="vimeo" video="862350855">
+				<video data-preview poster="vimeo-data/previews/862350855.jpg" autoplay muted loop playsinline>
+					<source src="vimeo-data/previews/862350855.webm" type="video/webm">
+					<source src="vimeo-data/previews/862350855.mp4" type="video/mp4">
+				</video>
+				<iframe data-embed loading="lazy" src="https://player.vimeo.com/video/862350855" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
+				<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			</ui-media>
 			<ui-content><small data-part="eyebrow">Interview</small><h3 data-part="headline">Behind “Obsessed with Life”</h3><p data-part="summary">Curator Pauline Asingh on building an exhibition from a single golden mask.</p></ui-content>
+		</cq-box>
+	</ui-card>
+
+	<!-- ============================================================
+	     Subtitles — chrome-less <video> + vid(cc): a CUSTOMIZABLE <select>
+	     (appearance: base-select) styled as the CC disc switches the track.
+	     SSR markup; JS only attaches change→textTrack.mode. Two <track>:
+	     Dansk (human) / English (auto).
+	     ============================================================ -->
+	<div class="section-head">
+		<h2>With subtitles</h2>
+		<a href="#">All films with captions →</a>
+	</div>
+	<ui-card class="split" variant="col lg:row spl(1/1)" media="asr(1/1) rds(md) vid(cc) vid(pip) vid(fls) ply(lg)" content="pad(md) lg:pad(lg)">
+		<cq-box>
+			<ui-media>
+				<video id="cc-746542514" preload="metadata" playsinline poster="vimeo-data/previews/746542514.jpg" src="vimeo-data/previews/746542514.full.mp4">
+					<track kind="subtitles" srclang="da" label="Dansk" src="vimeo-data/subtitles/746542514.da.vtt" default>
+					<track kind="captions" srclang="en" label="English" src="vimeo-data/subtitles/746542514.en-x-autogen.vtt">
+				</video>
+				<ui-play variant="vimeo"><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				<menu class="ui-media-tools">
+					<select class="ui-media-cc" aria-label="Subtitles">
+						<button type="button"><selectedcontent></selectedcontent></button>
+						<option value="da" selected>Dansk</option>
+						<option value="en">English</option>
+						<option value="off">Off</option>
+					</select>
+				</menu>
+			</ui-media>
+			<ui-content>
+				<small data-part="eyebrow">Ud af kaos</small>
+				<h3 data-part="headline">Camilla Bjarnø</h3>
+				<p data-part="summary">Controls hidden. The <strong>CC</strong> disc is a customizable <code>&lt;select&gt;</code> — click it to switch subtitles between <strong>Dansk</strong> (human) and <strong>English</strong> (auto-generated), or turn them off. All SSR markup; the only script is one <code>change</code> handler.</p>
+			</ui-content>
 		</cq-box>
 	</ui-card>
 
@@ -115,28 +164,44 @@
 		<a href="#">Full archive →</a>
 	</div>
 	<div class="grid grid-4">
-		<ui-media provider="vimeo" video="746542514" media="asr(1/1) rds(md) chip(bs)" poster="vimeo-data/previews/746542514.jpg">
-					<img src="vimeo-data/previews/746542514.jpg" alt="">
+		<ui-media provider="vimeo" video="746542514" media="asr(1/1) rds(md) chip(bs)">
+			<video data-preview poster="vimeo-data/previews/746542514.jpg" autoplay muted loop playsinline>
+				<source src="vimeo-data/previews/746542514.webm" type="video/webm">
+				<source src="vimeo-data/previews/746542514.mp4" type="video/mp4">
+			</video>
+			<iframe data-embed loading="lazy" src="https://player.vimeo.com/video/746542514" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
 			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>Behind the scenes</ui-chip>
 		</ui-media>
-		<ui-media provider="vimeo" video="794832552" media="asr(1/1) rds(md) sticker(te) sticker(accent)" poster="vimeo-data/previews/794832552.jpg">
-					<img src="vimeo-data/previews/794832552.jpg" alt="">
+		<ui-media provider="vimeo" video="794832552" media="asr(1/1) rds(md) sticker(te) sticker(accent)">
+			<video data-preview poster="vimeo-data/previews/794832552.jpg" autoplay muted loop playsinline>
+				<source src="vimeo-data/previews/794832552.webm" type="video/webm">
+				<source src="vimeo-data/previews/794832552.mp4" type="video/mp4">
+			</video>
+			<iframe data-embed loading="lazy" src="https://player.vimeo.com/video/794832552" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
 			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-sticker>Film</ui-sticker>
 		</ui-media>
-		<ui-media provider="vimeo" video="789027225" media="asr(1/1) rds(md) chip(bs) chip(dark)" poster="vimeo-data/previews/789027225.jpg">
-					<img src="vimeo-data/previews/789027225.jpg" alt="">
+		<ui-media provider="vimeo" video="789027225" media="asr(1/1) rds(md) chip(bs) chip(dark)">
+			<video data-preview poster="vimeo-data/previews/789027225.jpg" autoplay muted loop playsinline>
+				<source src="vimeo-data/previews/789027225.webm" type="video/webm">
+				<source src="vimeo-data/previews/789027225.mp4" type="video/mp4">
+			</video>
+			<iframe data-embed loading="lazy" src="https://player.vimeo.com/video/789027225" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
 			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>Interview</ui-chip>
 		</ui-media>
-		<ui-media provider="vimeo" video="1184711108" media="asr(1/1) rds(md) chip(bs)" poster="vimeo-data/previews/1184711108.jpg">
-					<img src="vimeo-data/previews/1184711108.jpg" alt="">
+		<ui-media provider="vimeo" video="1184711108" media="asr(1/1) rds(md) chip(bs)">
+			<video data-preview poster="vimeo-data/previews/1184711108.jpg" autoplay muted loop playsinline>
+				<source src="vimeo-data/previews/1184711108.webm" type="video/webm">
+				<source src="vimeo-data/previews/1184711108.mp4" type="video/mp4">
+			</video>
+			<iframe data-embed loading="lazy" src="https://player.vimeo.com/video/1184711108" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
 			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>Landscape</ui-chip>
 		</ui-media>
 	</div>
 
-	<!-- <script type="module" src="index.js"></script> -->
+	<script type="module" src="index.js"></script>
 </body>
 </html>
