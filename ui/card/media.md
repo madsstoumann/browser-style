@@ -594,6 +594,24 @@ Skipped automatically: images that already have a `srcset`, `data:`/`blob:`/abso
 
 ---
 
+## Video layer
+
+Video-player styles live in **`media.video.css`** (imported after `media.css`, before `media.carousel.css`). It owns the preview overlay, the native `<video>` play-control behaviour, `ply()` sizing, and the `vid()` PLAYER TOOLS cluster. Wired by `index.js` (`initEmbeds` / `initVideoPlay` / `initVideoTools` / `initMediaCommands`). Carousel-context video mentions (slide-type `img|video`, the scroller's own autoplay control) stay in `media.carousel.css`.
+
+- **Preview overlay.** A `<video data-preview>` (animated gif-like loop) sits on top of the real, SSR'd player behind it (`z-index: 1`, below furniture at `z-index: 2`). `pointer-events: none` lets clicks fall through to the real `<video controls>`, so a native video can reveal with no JS; `:playing` then hides the preview (`ui-media:has(> video:not([data-preview]):playing)`). `:playing` is Safari/Chrome only — Firefox falls back to the JS drop in `initEmbeds`. An `<iframe>` embed has no matching `<video>`, so its preview stays (that path keeps the JS facade).
+- **Play-control fade.** On a frame with a direct `<video>`, `<ui-play>` fades out while playing (`[open]`, set by `index.js` from real playback state) and reveals on hover/focus of the whole slide — the parent, not just the frame, since a layered `<ui-content>` overlay would otherwise swallow the hover.
+- **`ply()`** sizes `<ui-play>` (mirrors its `size=` scale); **`play(<pos>)`** positions it. Different tokens.
+- **PLAYER TOOLS (`vid()`).** Tool vars live on the `[media]` host (like the arrow vars) so they inherit to the JS-injected buttons and an ancestor `vid(sm…xl)` can override the size. Buttons are discs with `url()` SVG glyphs; state via `aria-pressed`. PiP is hidden until `<ui-play>` reports playing (before play, a facade has no `<video>` → the button is a no-op); fullscreen targets the frame so it stays available.
+- **CC switcher.** A customizable `<select class="ui-media-cc">` (`appearance: base-select`, Chrome 135+ / Safari soon; degrades to a plain native select). The trigger is the CC disc — `selectedcontent` and `::picker-icon` hidden, glyph shown; the picker lists the languages. `index.js` (`initVideoTools` → `wireCcSelect`) attaches the one `change` → `textTrack.mode` handler (track switching is JS-only; no declarative equivalent exists). Gotchas baked into the CSS: the `<select>` wrapper is pinned to the tool size (it otherwise reserves picker-icon width and mis-sizes); the wrapper swallows the button's `:hover`, so hover state is triggered from `.ui-media-cc:hover button`; **don't** zero the button `font-size` — the base hover ring (`--button-bxsh--hover`) spread is `.16em`; option rows set `background-color: transparent` to kill the UA's stale-active grey, and a soft `border-block-end` replaces the UA's solid `#ccc` divider.
+
+## Notes (media.css)
+
+- **Nested `<ui-media>`** (a layered frame used as a carousel slide) is always a plain frame, never a scroller. Raw `ui-media ui-media` (specificity 0,0,2) out-specifies the carousel's descendant rules (0,0,1) in `media.carousel.css`, so the frame wins regardless of import order — no `!important`.
+- **`clip`** applies `clip-path: inset(0 round …)` because a scroll container's `border-radius` can drop its corners mid-scroll (compositing); `clip-path` clips reliably. `round()` has no superellipse, so `-sq` squircles clip as a plain round.
+- **Scrim** keeps 9 directional gradients. The directional default is set by the host `ovr()` (`ui-card.css`) to match the overlay corner; `scm(<pos>)` overrides; bare `scm` paints the default. A mid colour stop holds the dark before fading so text spanning the frame stays legible, not just at the very corner.
+
+---
+
 ## Browser Support
 
 All modern browsers for the core frame, overlays, and scrim.

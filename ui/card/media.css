@@ -33,25 +33,14 @@
 			-webkit-user-drag: none;
 			user-select: none;
 		}
-		/* the animated gif-like preview sits ON TOP of the real (SSR) <video>/<iframe>
-		   behind it, below the overlay furniture (z-index 2). pointer-events:none lets
-		   clicks fall THROUGH to the real <video controls> so a native video reveals with
-		   no JS; JS removes the preview on play for the <ui-play>/Firefox path. */
-		& > [data-preview] { pointer-events: none; z-index: 1; }
+		/* Video-player styles (preview overlay, :playing reveal, play-control fade, ply(),
+		   PLAYER TOOLS + CC switcher) live in media.video.css. */
 	}
-	/* No-JS reveal (native only): once the real <video> is :playing, hide the preview.
-	   :not([data-preview]) excludes the always-autoplaying preview; an <iframe> embed has
-	   no matching <video>, so its preview stays (that path keeps the JS facade).
-	   :playing is Safari/Chrome; Firefox falls back to the JS drop in initEmbeds. */
-	:where(ui-media:has(> video:not([data-preview]):playing)) > [data-preview] { display: none; }
 	/* an explicit aspect-ratio drops the min-height floor (frame follows the ratio) */
 	:where([media*="asr("]) ui-media,
 	:where(ui-media[media*="asr("]) { min-block-size: 0; }
 
-	/* A <ui-media> nested inside another <ui-media> (e.g. a layered card used as a
-	   carousel slide) is always a plain frame — never a scroller. Raw `ui-media ui-media`
-	   (specificity 0,0,2) out-specifies the carousel's descendant rules (0,0,1) in
-	   media.carousel.css, so the frame wins regardless of import order — no !important. */
+	/* nested <ui-media> = always a plain frame, never a scroller (see media.md § Notes) */
 	ui-media ui-media {
 		display: grid;
 		inline-size: auto;
@@ -63,9 +52,7 @@
 		inset: 0;
 		position: absolute;
 	}
-	/* Inside a clip= scroller, a nested frame must NOT inherit the scroller's rds() radius
-	   (its border-radius reads the inherited --ui-media-radius). Scoped to clip= only, and
-	   zero-specificity so an explicit rds() on the nested media itself still wins. */
+	/* a nested frame inside a clip= scroller must not inherit its rds() radius */
 	:where([media*="clip"] ui-media) { --ui-media-radius: 0; }
 
 	/* ============================================================
@@ -93,9 +80,7 @@
 	:where([media*="obp(bc)"]) { --ui-media-op: center bottom; }
 	:where([media*="obp(br)"]) { --ui-media-op: right bottom; }
 
-	/* rds() — corners on a STANDALONE <ui-media>. Inside <ui-card>/<ui-reveal>
-	   the parent clips the frame, so leave rds() off there and let the card own
-	   the radius. Mirrors ui-card's rds() scale; -sq adds a squircle corner. */
+	/* rds() — corners on a STANDALONE <ui-media> (mirrors ui-card rds(); -sq = squircle) */
 	:where([media*="rds(none)"]) { --ui-media-radius: 0; }
 	:where([media*="rds(sm)"])   { --ui-media-radius: var(--radius-sm); }
 	:where([media*="rds(md)"])   { --ui-media-radius: var(--radius-md); }
@@ -104,7 +89,7 @@
 	:where([media*="rds(2xl)"])  { --ui-media-radius: var(--radius-2xl); }
 	:where([media*="rds(full)"]) { --ui-media-radius: var(--radius-circle, 50%); }
 	:where([media*="rds(pill)"]) { --ui-media-radius: var(--radius-pill, 100px); }
-	/* -sq: bespoke radius + superellipse corner-shape — shared squircle tokens (see tokens.css) */
+	/* -sq: bespoke radius + superellipse corner-shape (squircle tokens in tokens.css) */
 	:where([media*="rds(sm-sq)"]) { --ui-media-radius: var(--radius-sm-sq); --ui-media-squircle-exp: var(--squircle-sm); }
 	:where([media*="rds(md-sq)"]) { --ui-media-radius: var(--radius-md-sq); --ui-media-squircle-exp: var(--squircle-md); }
 	:where([media*="rds(lg-sq)"]) { --ui-media-radius: var(--radius-lg-sq); --ui-media-squircle-exp: var(--squircle-lg); }
@@ -112,11 +97,7 @@
 	:where([media*="-sq)"]) ui-media,
 	:where(ui-media[media*="-sq)"]) { corner-shape: superellipse(var(--ui-media-squircle-exp, 1.8)); }
 
-	/* clip — clip-path to the rds() radius. A scroll container's border-radius can drop its
-	   corners mid-scroll (compositing); clip-path clips reliably. Boolean token that reuses the
-	   rds() custom property (--ui-media-radius), falling back to the card radius. round() has no
-	   superellipse, so -sq squircles clip as a plain round here. */
-
+	/* clip — clip-path to the rds() radius (reliable during scroll; -sq clips as plain round) */
 	:where(ui-media[media*="clip"]) { clip-path: inset(0 round var(--ui-media-radius, var(--ui-card-radius, 0))); }
 
 	/* obf() — object-fit */
@@ -158,16 +139,13 @@
 			transition: translate var(--ui-media-hv-track-dur, var(--duration-normal)) var(--_hv-ease), scale var(--_hv-dur) var(--_hv-ease);
 			translate: calc(var(--ui-media-mx, 0) * var(--ui-media-hv-track, 4%)) calc(var(--ui-media-my, 0) * var(--ui-media-hv-track, 4%));
 		}
-		/* cursor-counter drift (ioi.dk-style) — image sits oversized, shrinks on
-		   hover and drifts OPPOSITE the cursor. Needs the same pointer handler. */
+		/* cursor-counter drift — oversized image shrinks on hover, drifts opposite the cursor */
 		:where([media*="hov(drift)"]) ui-media img,
 		ui-media:where([media*="hov(drift)"]) img {
 			scale: var(--ui-media-hv-drift-rest, 1.3);
 			transition: translate var(--ui-media-hv-track-dur, var(--duration-normal)) var(--_hv-ease), scale var(--_hv-dur) var(--_hv-ease);
 		}
-		/* hover state scoped to the FRAME (ui-media:hover), not the host card —
-		   so the shrink+drift only fire over the image, matching the JS which
-		   only feeds --ui-media-mx/my while the pointer is over the frame. */
+		/* hover scoped to the FRAME so shrink+drift only fire over the image */
 		:where([media*="hov(drift)"]) ui-media:hover img,
 		:where(ui-media[media*="hov(drift)"]:hover) img {
 			scale: var(--ui-media-hv-drift-hover, 1.2);
@@ -183,8 +161,7 @@
 
 	/* ============================================================
 	   OVERLAY FURNITURE — <ui-chip> <ui-sticker> <ui-save> <ui-play>
-	   Absolute-positioned (carousel-safe). Default area by role; override +
-	   theme come from the parent media= token. Elements carry only text/glyph.
+	   Absolute-positioned; default area by role, override via media= token.
 	   ============================================================ */
 	:where(ui-media) :is(ui-chip, ui-play, ui-save, ui-sticker) {
 		--_g: var(--ui-media-overlay-gap, 0.75rem);
@@ -192,31 +169,12 @@
 		z-index: 2;
 	}
 
-	/* Native <video> play control: fade the button out WHILE PLAYING, reveal on
-	   hover/focus, and keep it visible when paused. Driven by [open] on <ui-play>,
-	   which index.js sets from the video's real playback state. Scoped to frames with a
-	   direct <video> (not iframe embeds or image carousels). */
-	:where(ui-media:has(> video)) > ui-play[open] {
-		opacity: 0;
-		transition: opacity var(--duration-normal, 0.2s) var(--ease-in-out, ease-in-out);
-	}
-	/* Reveal on hover of the WHOLE slide (the frame's parent, e.g. <cq-box>), not just
-	   the frame — in a layered card the <ui-content> overlay covers the frame and would
-	   otherwise swallow the hover, leaving only the button pokeable. Hover doesn't capture
-	   clicks, so the carousel dots/arrows/play (z-index 2-3) stay clickable above it. */
-	:where(ui-media:has(> video):hover) > ui-play[open],
-	:where(:hover) > ui-media:has(> video) > ui-play[open],
-	:where(ui-media:has(> video)) > ui-play[open]:focus-within {
-		opacity: 1;
-	}
-
 	/* default area by role */
 	:where(ui-media) ui-chip                     { inset-block-start: var(--_g); inset-inline-start: var(--_g); }   /* ts */
 	:where(ui-media) :is(ui-sticker, ui-save)    { inset-block-start: var(--_g); inset-inline-end:   var(--_g); }   /* te */
 	:where(ui-media) ui-play                      { inset-block-start: 50%; inset-inline-start: 50%; translate: -50% -50%; } /* cc */
 
-	/* position override — parent media="el(pos)" (or self). 9 logical positions,
-	   grouped by position; each lists the elements that accept it. */
+	/* position override — media="el(pos)"; 9 logical positions × chip/sticker/save/play */
 	:where([media*="chip(ts)"]) ui-chip, :where([media*="sticker(ts)"]) ui-sticker, :where([media*="save(ts)"]) ui-save, :where([media*="play(ts)"]) ui-play { inset-block: var(--_g) auto; inset-inline: var(--_g) auto; translate: none; }
 	:where([media*="chip(tc)"]) ui-chip, :where([media*="sticker(tc)"]) ui-sticker, :where([media*="save(tc)"]) ui-save, :where([media*="play(tc)"]) ui-play { inset-block: var(--_g) auto; inset-inline: 50% auto; translate: -50% 0; }
 	:where([media*="chip(te)"]) ui-chip, :where([media*="sticker(te)"]) ui-sticker, :where([media*="save(te)"]) ui-save, :where([media*="play(te)"]) ui-play { inset-block: var(--_g) auto; inset-inline: auto var(--_g); translate: none; }
@@ -227,141 +185,18 @@
 	:where([media*="chip(bc)"]) ui-chip, :where([media*="sticker(bc)"]) ui-sticker, :where([media*="save(bc)"]) ui-save, :where([media*="play(bc)"]) ui-play { inset-block: auto var(--_g); inset-inline: 50% auto; translate: -50% 0; }
 	:where([media*="chip(be)"]) ui-chip, :where([media*="sticker(be)"]) ui-sticker, :where([media*="save(be)"]) ui-save, :where([media*="play(be)"]) ui-play { inset-block: auto var(--_g); inset-inline: auto var(--_g); translate: none; }
 
-	/* A <ui-play> inside a NESTED slide frame is a PER-SLIDE video control — always
-	   centered on its own video, immune to the scroller's play() corner token (which is
-	   meant for the carousel's own control). Higher specificity (no :where) so it wins
-	   over the inherited [media*="play(*)"] furniture overrides above. */
+	/* per-slide video control (nested frame) — always centered, wins over play() furniture */
 	ui-media ui-media > ui-play {
 		inset-block: 50% auto;
 		inset-inline: 50% auto;
 		translate: -50% -50%;
 	}
 
-	/* ============================================================
-	   ply() — size the <ui-play> control from the media= token (or the ply= attribute),
-	   distinct from play(<pos>) which POSITIONS it. Sets <ui-play>'s size tokens on the
-	   [media] host so they inherit down to the button; mirrors ui-play's own size= scale.
-	   An explicit size= on the <ui-play> element sets them on the button and still wins.
-	   ============================================================ */
-	:where([media*="ply(sm)"], ui-media[ply~="sm"]) { --ui-play-sz: 2.25em; --ui-play-icon-sz: 1em; }
-	:where([media*="ply(md)"], ui-media[ply~="md"]) { --ui-play-sz: 3em;    --ui-play-icon-sz: 1.5em; }
-	:where([media*="ply(lg)"], ui-media[ply~="lg"]) { --ui-play-sz: 4em;    --ui-play-icon-sz: 2em; }
-	:where([media*="ply(xl)"], ui-media[ply~="xl"]) { --ui-play-sz: 5em;    --ui-play-icon-sz: 2.5em; }
+	/* ply(), PLAYER TOOLS (fullscreen · PiP) and the CC language <select> live in
+	   media.video.css — imported after this sheet, before media.carousel.css. */
 
 	/* ============================================================
-	   PLAYER TOOLS — fullscreen + picture-in-picture buttons for a
-	   chrome-less <video>. Wired by index.js (initVideoTools). Glyphs use the
-	   same inline-SVG url() convention as the carousel arrows/chevrons
-	   (media.carousel.css); the button carries no inner markup. State via
-	   aria-pressed. Cluster pinned bottom-end (fullscreen rightmost by source
-	   order); wrap the buttons in a .ui-media-tools element.
-	   ============================================================ */
-	/* Tool vars live on the [media] HOST (like the arrow vars) so they inherit down to
-	   the injected buttons — and an ancestor vid(sm…xl) can override the size. Setting
-	   them on ui-media directly would block that (ui-media would re-set the default). */
-	:where([media*="vid("], ui-media[vid]) {
-		--ui-media-tool-fullscreen: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3'/%3E%3C/svg%3E");
-		--ui-media-tool-pip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 9V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4'/%3E%3Crect width='10' height='7' x='12' y='13' rx='2'/%3E%3C/svg%3E");
-		--ui-media-tool-cc: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='14' x='3' y='5' rx='2' ry='2'/%3E%3Cpath d='M7 15h4M15 15h2M7 11h2M13 11h4'/%3E%3C/svg%3E");
-		--ui-media-tool-bg: rgb(0 0 0 / 0.55);
-		--ui-media-tool-bg-hover: rgb(0 0 0 / 0.78);
-		--ui-media-tool-size: 2.5rem;
-	}
-	/* size — mirrors arw(sm|md|lg|xl); set on the host, inherits to the buttons */
-	:where([media*="vid(sm)"], ui-media[vid~="sm"]) { --ui-media-tool-size: 2rem; }
-	:where([media*="vid(md)"], ui-media[vid~="md"]) { --ui-media-tool-size: 2.5rem; }
-	:where([media*="vid(lg)"], ui-media[vid~="lg"]) { --ui-media-tool-size: 3rem; }
-	:where([media*="vid(xl)"], ui-media[vid~="xl"]) { --ui-media-tool-size: 3.5rem; }
-	:where(ui-media) .ui-media-tools {
-		align-items: center;   /* keep discs their own size — don't stretch to a taller sibling (CC select) */
-		display: flex;
-		gap: var(--_g, 0.5rem);
-		inset-block-end: var(--_g, 0.75rem);
-		inset-inline-end: var(--_g, 0.75rem);
-		margin: 0;
-		padding: 0;
-		position: absolute;
-		z-index: 2;
-	}
-	:where(ui-media) .ui-media-tools button {
-		aspect-ratio: 1;
-		background: var(--_glyph) center / 55% no-repeat var(--ui-media-tool-bg);
-		border: 0;
-		border-radius: var(--radius-circle, 50%);
-		box-sizing: border-box;
-		cursor: pointer;
-		inline-size: var(--ui-media-tool-size, 2.5rem);
-		padding: 0;   /* reset base button padding (1ch 2.5ch) so the disc stays square */
-		transition: background-color var(--ui-media-tool-trsdu, 0.2s);
-	}
-	:where(ui-media) .ui-media-tools button:is(:hover, :focus-visible) { background-color: var(--ui-media-tool-bg-hover); }
-	/* active state (accent) applies to the toggle utilities, NOT play/pause (whose pressed=playing is normal) */
-	:where(ui-media) .ui-media-tools button:is([command="--pip"], [command="--fullscreen"], [command="--cc"])[aria-pressed="true"] { background-color: var(--color-accent, hsl(211, 100%, 50%)); }
-	:where(ui-media) .ui-media-tools button[command="--fullscreen"] { --_glyph: var(--ui-media-tool-fullscreen); }
-	:where(ui-media) .ui-media-tools button[command="--pip"]        { --_glyph: var(--ui-media-tool-pip); }
-	:where(ui-media) .ui-media-tools button[command="--cc"]         { --_glyph: var(--ui-media-tool-cc); }
-	/* PiP only works on a PLAYING video (before play, a facade has no <video> — the
-	   button is a no-op). Hide it until <ui-play> reports playing (open on the host /
-	   aria-pressed on its button). Fullscreen targets the frame, so it stays available. */
-	:where(ui-media:not(:has(:is(ui-play[open], ui-play button[aria-pressed="true"])))) .ui-media-tools button[command="--pip"] { display: none; }
-
-	/* --- CC language switcher: a customizable <select> styled as a disc tool button ---
-	   The <select>'s trigger is the CC disc (glyph only — selectedcontent hidden); its native
-	   picker lists the languages. Needs `appearance: base-select` (Chrome 135+, Safari soon).
-	   Fallback (no base-select): degrades to a plain native <select> — still functional. */
-	:where(ui-media) .ui-media-tools .ui-media-cc,
-	:where(ui-media) .ui-media-tools .ui-media-cc::picker(select) { appearance: base-select; }
-	:where(ui-media) .ui-media-tools .ui-media-cc {
-		background: none;
-		block-size: var(--ui-media-tool-size, 2.5rem);
-		border: 0;
-		inline-size: var(--ui-media-tool-size, 2.5rem);   /* match the disc exactly — no reserved picker-icon width */
-		min-inline-size: 0;
-		outline: none;   /* focus ring lives on the round <button>, not the square wrapper */
-		padding: 0;
-	}
-	:where(ui-media) .ui-media-tools .ui-media-cc::picker-icon { display: none; }   /* drop default arrow */
-	:where(ui-media) .ui-media-tools .ui-media-cc selectedcontent { display: none; }
-	/* the trigger disc is the select's own <button> — override base button padding/border */
-	:where(ui-media) .ui-media-tools .ui-media-cc button {
-		background: var(--ui-media-tool-cc) center / 55% no-repeat var(--ui-media-tool-bg);
-		block-size: var(--ui-media-tool-size, 2.5rem);
-		border: 0;
-		border-radius: var(--radius-circle, 50%);
-		box-sizing: border-box;
-		color: transparent;   /* hide the mirrored option text; only the glyph shows */
-		cursor: pointer;
-		font-size: 0;
-		inline-size: var(--ui-media-tool-size, 2.5rem);
-		padding: 0;
-		transition: background-color var(--ui-media-tool-trsdu, 0.2s);
-	}
-	:where(ui-media) .ui-media-tools .ui-media-cc button:is(:hover, :focus-visible) { background-color: var(--ui-media-tool-bg-hover); }
-	:where(ui-media) .ui-media-tools .ui-media-cc button:focus-visible { outline: var(--ring-width, 2px) solid var(--ring-color, hsl(211, 100%, 50%)); outline-offset: var(--ring-offset, 2px); }
-	:where(ui-media) .ui-media-tools .ui-media-cc button:focus:not(:focus-visible) { outline: none; }
-	/* the dropdown */
-	:where(ui-media) .ui-media-cc::picker(select) {
-		background: var(--ui-media-tool-bg);
-		border: 0;
-		border-radius: var(--radius-md, 0.5rem);
-		margin-block-end: 0.5rem;   /* sit above the disc */
-		min-inline-size: 8rem;
-		padding: 0.25rem;
-		position-area: block-start span-inline-start;   /* open up + leftward (disc sits bottom-end) */
-	}
-	:where(ui-media) .ui-media-cc option {
-		/* border-radius: var(--radius-sm, 0.25rem); */
-		color: #fff;
-		font-size: 0.875rem;
-		padding: 0.4rem 0.6rem;
-	}
-	:where(ui-media) .ui-media-cc option:is(:hover, :focus) { background: var(--ui-media-tool-bg-hover); }
-	:where(ui-media) .ui-media-cc option:checked { color: var(--color-accent, hsl(211, 100%, 50%)); font-weight: var(--font-weight-medium, 500); }
-
-	/* ============================================================
-	   SUB-THEME ROUTING — parent media="el(<key>)" → element's own tokens.
-	   8 keys: red orange green blue · accent dark light subtle (from base
-	   --ui-theme-*). chip uses --ui-chip-*, sticker --ui-sticker-*, save/play ink.
+	   SUB-THEME ROUTING — media="el(<key>)" → element tokens (8 --ui-theme-* keys)
 	   ============================================================ */
 	:where([media*="chip(red)"])      { --ui-chip-bg: var(--ui-theme-red-bg);    --ui-chip-c: var(--ui-theme-red-c); }
 	:where([media*="chip(orange)"])   { --ui-chip-bg: var(--ui-theme-orange-bg); --ui-chip-c: var(--ui-theme-orange-c); }
@@ -382,15 +217,12 @@
 	:where([media*="sticker(subtle)"]) { --ui-sticker-bg: var(--ui-theme-subtle-bg); --ui-sticker-c: var(--ui-theme-subtle-c); }
 
 	/* ============================================================
-	   SCRIM — scm(). All 9 directional gradients kept (edges + diagonals + cc).
-	   The directional default is set by the host ovr() (ui-card.css) to match the
-	   overlay corner; scm(<pos>) overrides; bare scm paints the default.
+	   SCRIM — scm(). 9 directional gradients; default matches host ovr(),
+	   scm(<pos>) overrides, bare scm paints the default. (see media.md § Notes)
 	   ============================================================ */
-	/* gradients defined on the host too ([variant]) so ovr() can resolve a default */
 	:where(ui-media), :where([media]), :where([variant]) {
 		--ui-media-scrim-c: var(--ui-media-scrim-color, rgb(0 0 0 / 0.78));
-		/* a mid stop holds the dark near the edge/corner before fading, so spanning
-		   text stays legible over bright images (not just at the very corner) */
+		/* mid stop holds the dark before fading, so spanning text stays legible */
 		--ui-media-scrim-m: color-mix(in srgb, var(--ui-media-scrim-c), transparent 55%);
 		--ui-media-scrim-tl: linear-gradient(to bottom right, var(--ui-media-scrim-c), var(--ui-media-scrim-m) 40%, #0000 80%);
 		--ui-media-scrim-tc: linear-gradient(to bottom,       var(--ui-media-scrim-c), var(--ui-media-scrim-m) 40%, #0000 80%);
@@ -412,8 +244,7 @@
 	:where([media*="scm(bl)"]) { --ui-media-scrim: var(--ui-media-scrim-bl); }
 	:where([media*="scm(bc)"]) { --ui-media-scrim: var(--ui-media-scrim-bc); }
 	:where([media*="scm(br)"]) { --ui-media-scrim: var(--ui-media-scrim-br); }
-	/* scm() intensity — a second atomic token (disjoint vocab from the positions);
-	   sets the scrim colour the gradients read. Default (no intensity) = med. */
+	/* scm() intensity — sets the scrim colour the gradients read (default med) */
 	:where([media*="scm(lgt)"]) { --ui-media-scrim-color: rgb(0 0 0 / 0.55); }
 	:where([media*="scm(med)"]) { --ui-media-scrim-color: rgb(0 0 0 / 0.78); }
 	:where([media*="scm(drk)"]) { --ui-media-scrim-color: rgb(0 0 0 / 0.92); }
