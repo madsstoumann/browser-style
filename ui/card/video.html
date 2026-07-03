@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="../icon/index.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
-		body { max-inline-size: 75rem; margin-inline: auto; padding-inline: var(--spacing-md); }
+		/* body { max-inline-size: 75rem; margin-inline: auto; padding-inline: var(--spacing-md); } */
 		.grid { display: grid; gap: var(--spacing-lg); grid-template-columns: 1fr; margin-block-end: var(--spacing-2xl); }
 		@media (min-width: 540px) { .grid-2 { grid-template-columns: repeat(2, 1fr); } .grid-3 { grid-template-columns: repeat(3, 1fr); } .grid-4 { grid-template-columns: repeat(2, 1fr); } }
 		@media (min-width: 900px) { .grid-4 { grid-template-columns: repeat(4, 1fr); } }
@@ -24,13 +24,54 @@
 	</style>
 </head>
 <body>
-	<header style="margin-block: var(--spacing-xl) var(--spacing-2xl);">
-		<p style="color: var(--color-accent); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: .8rem; margin-block-end: .5rem;">Moesgaard Museum</p>
-		<h1 style="margin: 0 0 .5rem;">Film &amp; exhibitions</h1>
-		<p class="lede">Ten thousand years of human history — bog bodies and Vikings, pharaohs and Celts. Watch the films, then plan your visit.</p>
-	</header>
 
-	<ui-card class="split" variant="col lg:row spl(1/1)" media="asr(16/9) vid(cc) vid(pip) vid(fls) ply(lg)" content="pad(md) lg:pad(lg)">
+	<h2>Video play/pause — <code>&lt;ui-play&gt;</code> over <code>&lt;video&gt;</code></h2>
+	<p class="note">Drop a <code>&lt;ui-play&gt;</code> onto a native <code>&lt;video&gt;</code> (no <code>controls</code>) and <code>index.js</code> wires it: the button toggles play/pause and mirrors the real playback state (glyph morphs play↔pause). The button <strong>fades out while playing</strong>, reappears on hover, and stays put when paused. To defer the download use native <code>preload="none"</code> with a <code>poster</code> (<code>&lt;video&gt;</code> does <em>not</em> support <code>loading="lazy"</code> — that's <code>&lt;img&gt;</code>/<code>&lt;iframe&gt;</code> only); the file is only fetched on first play. <code>variant="reveal"</code> hides the button until hover/focus.</p>
+
+	<div class="grid grid-2">
+		<ui-media media="asr(16/9) rds(lg)">
+			<video src="https://assets.stoumann.dk/video/river.mp4" poster="/assets/images/river.png" preload="none" muted loop playsinline></video>
+			<ui-play><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+			<ui-chip>native video</ui-chip>
+		</ui-media>
+		<ui-media media="asr(16/9) rds(lg)">
+			<video src="/assets/video/city.mp4" poster="/assets/images/city.png" autoplay muted loop playsinline></video>
+			<ui-play variant="reveal"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+			<ui-chip>autoplay</ui-chip>
+		</ui-media>
+	</div>
+
+	<!-- ============================================================
+	     YouTube — provider="youtube" (SSR poster <img> + lazy <iframe>)
+	     ============================================================ -->
+	<h2>YouTube — <code>provider="youtube"</code></h2>
+	<p class="note">Same facade as the Vimeo embeds — <code>data-preview</code> is provider-agnostic: here a static <code>&lt;img data-preview&gt;</code> poster (Vimeo uses an animated <code>&lt;video data-preview&gt;</code> loop) sits over a lazy <code>&lt;iframe&gt;</code>, lifted by <code>z-index</code> so source order doesn't matter. The <code>&lt;ui-play&gt;</code> click drops the poster, appends <code>autoplay=1</code> and hands off to the YouTube player. (An iframe isn't an <code>HTMLMediaElement</code>, so it uses the click facade, not <code>command="play-pause"</code> — that's native <code>&lt;video&gt;</code> only.)</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(16/9) ply(lg)" content="pad(md) md:pad(lg)">
+			<cq-box>
+				<ui-media provider="youtube" video="VTCIStB6y8s">
+					<img data-preview src="https://i.ytimg.com/vi/VTCIStB6y8s/maxresdefault.jpg" alt="" loading="lazy">
+					<iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/VTCIStB6y8s" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen title="YouTube player"></iframe>
+					<ui-play><button type="button" aria-label="Play video"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+					<ui-chip>YouTube</ui-chip>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">provider="youtube" video="ID"</small><h3 data-part="headline">What’s new in Web UI</h3><p data-part="summary">Poster image until you press play, then the real YouTube player takes over — lazy-loaded, cookie-less.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) ply(lg)" content="pad(md) md:pad(lg)">
+			<cq-box>
+				<ui-media provider="youtube" video="5b4YcLB4DVI">
+					<img data-preview src="https://i.ytimg.com/vi/5b4YcLB4DVI/maxresdefault.jpg" alt="" loading="lazy">
+					<iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/5b4YcLB4DVI" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen title="YouTube player"></iframe>
+					<ui-play><button type="button" aria-label="Play video"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+					<ui-chip>YouTube</ui-chip>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">provider="youtube" video="ID"</small><h3 data-part="headline">Building a UI component library</h3><p data-part="summary">A comprehensive component library for modern web development — press play to watch on YouTube.</p></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<ui-card class="split" variant="col lg:row spl(1/1)" media="asr(16/9) vid(pip) vid(fls) ply(lg)" content="pad(md) lg:pad(lg)">
 		<cq-box>
 			<ui-media provider="vimeo" src="vimeo-data/previews/696468083.full.mp4" loop muted>
 				<video data-preview poster="vimeo-data/previews/696468083.jpg" autoplay muted loop playsinline>
@@ -56,8 +97,17 @@
 					<source src="vimeo-data/previews/1012727854.webm" type="video/webm">
 					<source src="vimeo-data/previews/1012727854.mp4" type="video/mp4">
 				</video>
-				<video id="film-1012727854" preload="none" src="vimeo-data/previews/1012727854.full.mp4" poster="vimeo-data/previews/1012727854.jpg" playsinline></video>
+				<video id="film-1012727854" preload="none" src="vimeo-data/previews/1012727854.full.mp4" poster="vimeo-data/previews/1012727854.jpg" playsinline>
+					<track kind="subtitles" srclang="da" label="Dansk" src="vimeo-data/subtitles/1012727854.da.vtt" default>
+				</video>
 				<ui-play><button type="button" command="play-pause" commandfor="film-1012727854" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				<menu class="ui-media-tools">
+					<select class="ui-media-cc" aria-label="Subtitles">
+						<button type="button"><selectedcontent></selectedcontent></button>
+						<option value="da" selected>Dansk</option>
+						<option value="off">Off</option>
+					</select>
+				</menu>
 			</ui-media>
 			<ui-content>
 				<small data-part="eyebrow">Season</small>
@@ -80,7 +130,7 @@
 						<source src="vimeo-data/previews/845207657.webm" type="video/webm">
 						<source src="vimeo-data/previews/845207657.mp4" type="video/mp4">
 					</video>
-					<iframe data-embed loading="lazy" src="https://player.vimeo.com/video/845207657" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
+					<iframe loading="lazy" src="https://player.vimeo.com/video/845207657" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
 					<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<ui-chip>Now open</ui-chip>
 				</ui-media>
@@ -94,7 +144,7 @@
 						<source src="vimeo-data/previews/696120095.webm" type="video/webm">
 						<source src="vimeo-data/previews/696120095.mp4" type="video/mp4">
 					</video>
-					<iframe data-embed loading="lazy" src="https://player.vimeo.com/video/696120095" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
+					<iframe loading="lazy" src="https://player.vimeo.com/video/696120095" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
 					<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<ui-sticker variant="burst">New</ui-sticker>
 				</ui-media>
@@ -114,7 +164,7 @@
 					<source src="vimeo-data/previews/862350855.webm" type="video/webm">
 					<source src="vimeo-data/previews/862350855.mp4" type="video/mp4">
 				</video>
-				<iframe data-embed loading="lazy" src="https://player.vimeo.com/video/862350855" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
+				<iframe loading="lazy" src="https://player.vimeo.com/video/862350855" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
 				<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			</ui-media>
 			<ui-content><small data-part="eyebrow">Interview</small><h3 data-part="headline">Behind “Obsessed with Life”</h3><p data-part="summary">Curator Pauline Asingh on building an exhibition from a single golden mask.</p></ui-content>
@@ -133,12 +183,12 @@
 	</div>
 	<ui-card class="split" variant="col lg:row spl(1/1)" media="asr(1/1) rds(md) vid(cc) vid(pip) vid(fls) ply(lg)" content="pad(md) lg:pad(lg)">
 		<cq-box>
-			<ui-media>
+			<ui-media provider="vimeo">
 				<video id="cc-746542514" preload="metadata" playsinline poster="vimeo-data/previews/746542514.jpg" src="vimeo-data/previews/746542514.full.mp4">
 					<track kind="subtitles" srclang="da" label="Dansk" src="vimeo-data/subtitles/746542514.da.vtt" default>
 					<track kind="captions" srclang="en" label="English" src="vimeo-data/subtitles/746542514.en-x-autogen.vtt">
 				</video>
-				<ui-play variant="vimeo"><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				<ui-play><button type="button" command="play-pause" commandfor="cc-746542514" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				<menu class="ui-media-tools">
 					<select class="ui-media-cc" aria-label="Subtitles">
 						<button type="button"><selectedcontent></selectedcontent></button>
@@ -149,9 +199,10 @@
 				</menu>
 			</ui-media>
 			<ui-content>
-				<small data-part="eyebrow">Ud af kaos</small>
-				<h3 data-part="headline">Camilla Bjarnø</h3>
-				<p data-part="summary">Controls hidden. The <strong>CC</strong> disc is a customizable <code>&lt;select&gt;</code> — click it to switch subtitles between <strong>Dansk</strong> (human) and <strong>English</strong> (auto-generated), or turn them off. All SSR markup; the only script is one <code>change</code> handler.</p>
+				<small data-part="eyebrow">Special exhibition</small>
+				<h3 data-part="headline">Out of Chaos</h3>
+				<p data-part="summary">Curator Camilla Bjarnø walks the galleries as the new exhibition takes shape — how order is coaxed from disorder across ten thousand years of human history. Use the <strong>CC</strong> button to follow along in Danish or English.</p>
+				<nav data-part="actions"><a class="ui-button" href="#">Book tickets</a></nav>
 			</ui-content>
 		</cq-box>
 	</ui-card>
@@ -169,7 +220,7 @@
 				<source src="vimeo-data/previews/746542514.webm" type="video/webm">
 				<source src="vimeo-data/previews/746542514.mp4" type="video/mp4">
 			</video>
-			<iframe data-embed loading="lazy" src="https://player.vimeo.com/video/746542514" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
+			<iframe loading="lazy" src="https://player.vimeo.com/video/746542514" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
 			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>Behind the scenes</ui-chip>
 		</ui-media>
@@ -178,7 +229,7 @@
 				<source src="vimeo-data/previews/794832552.webm" type="video/webm">
 				<source src="vimeo-data/previews/794832552.mp4" type="video/mp4">
 			</video>
-			<iframe data-embed loading="lazy" src="https://player.vimeo.com/video/794832552" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
+			<iframe loading="lazy" src="https://player.vimeo.com/video/794832552" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
 			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-sticker>Film</ui-sticker>
 		</ui-media>
@@ -187,7 +238,7 @@
 				<source src="vimeo-data/previews/789027225.webm" type="video/webm">
 				<source src="vimeo-data/previews/789027225.mp4" type="video/mp4">
 			</video>
-			<iframe data-embed loading="lazy" src="https://player.vimeo.com/video/789027225" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
+			<iframe loading="lazy" src="https://player.vimeo.com/video/789027225" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
 			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>Interview</ui-chip>
 		</ui-media>
@@ -196,7 +247,7 @@
 				<source src="vimeo-data/previews/1184711108.webm" type="video/webm">
 				<source src="vimeo-data/previews/1184711108.mp4" type="video/mp4">
 			</video>
-			<iframe data-embed loading="lazy" src="https://player.vimeo.com/video/1184711108" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
+			<iframe loading="lazy" src="https://player.vimeo.com/video/1184711108" allow="fullscreen; picture-in-picture; encrypted-media" allowfullscreen title="Vimeo player"></iframe>
 			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>Landscape</ui-chip>
 		</ui-media>

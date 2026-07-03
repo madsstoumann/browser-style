@@ -70,10 +70,12 @@
 		/* Gap comes from a smaller glyph (NOT padding — padding would overflow the
 		   box and break the ratio). Width follows --ui-play-sz via the ratio, so
 		   the badge scales with `size` and font-size like every other variant. */
+		--ui-play-icon-sz: calc(var(--ui-play-sz) / 3);
 		aspect-ratio: 1.422;
 		background: var(--ui-play-bg, #ff0033);
 		border-radius: var(--ui-play-radius, var(--ui-play-sz, 3em));
 		corner-shape: var(--ui-play-corner, squircle);
+		
 	}
 	:where(ui-play[variant~="youtube"], [provider="youtube"] ui-play) button:is(:hover, :focus-visible) {
 		background: var(--ui-play-bg-hover, #d10029);

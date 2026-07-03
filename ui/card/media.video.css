@@ -98,11 +98,13 @@
 		padding: 0;
 		transition: background-color var(--ui-media-tool-trsdu, 0.2s);
 	}
-	:where(ui-media) .ui-media-tools .ui-media-cc:hover button,
+	/* focus/hover land on the <select> wrapper, so drive the button's hover bg + ring from it */
+	:where(ui-media) .ui-media-tools .ui-media-cc:is(:hover, :focus-visible) button,
 	:where(ui-media) .ui-media-tools .ui-media-cc button:focus-visible {
 		background-color: var(--ui-media-tool-bg-hover);
 		box-shadow: var(--button-bxsh--hover);
 	}
+	:where(ui-media) .ui-media-tools .ui-media-cc:focus-visible button,
 	:where(ui-media) .ui-media-tools .ui-media-cc button:focus-visible { outline: var(--ring-width, 2px) solid var(--ring-color, hsl(211, 100%, 50%)); outline-offset: var(--ring-offset, 2px); }
 	:where(ui-media) .ui-media-tools .ui-media-cc button:focus:not(:focus-visible) { outline: none; }
 	:where(ui-media) .ui-media-cc::picker(select) {

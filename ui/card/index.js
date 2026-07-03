@@ -246,15 +246,16 @@ export function initVideoPlay(uiPlays) {
  * Light-embed facades — provider="youtube|vimeo".
  *
  * The facade is AUTHORED for progressive enhancement — a plain (non-nav) <ui-media>
- * whose first child is the poster that shows WITH JS OFF:
+ * whose poster shows WITH JS OFF. Mark it `data-preview` (provider-agnostic; z-index:1
+ * lifts it over the real player, so source order doesn't matter):
  *   - <video data-preview poster="still.jpg" autoplay muted loop> — an animated,
  *     gif-like loop (with its own poster= still image), or
- *   - <img> — a static poster.
+ *   - <img data-preview> — a static poster (e.g. a YouTube thumbnail).
  * The real player is best SSR'd behind the preview:
  *   - native  <video preload="none" id> — driven declaratively by the <ui-play> button's
  *     command="play-pause" commandfor="<id>" (initMediaCommands / future native). This fn
  *     only mirrors state onto the button and drops the preview once it plays.
- *   - embed   <iframe data-embed loading="lazy"> — on <ui-play> click, drop the preview,
+ *   - embed   <iframe loading="lazy"> — on <ui-play> click, drop the preview,
  *     add autoplay, hand off to the platform player.
  * When nothing real is authored (pure API flow) JS injects the poster + player on click.
  * ============================================================ */

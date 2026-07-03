@@ -1,13 +1,14 @@
 # Vimeo + `<ui-media>`
 
-How to source **posters**, **playable video**, and a **"gif-like" preview loop** from the
-Vimeo API, and feed them into a `provider="vimeo"` frame. Companion module: `vimeo.js`.
+How to source **posters**, **playable video**, **subtitles**, and a **"gif-like" preview
+loop** from the Vimeo API, and feed them into a `provider="vimeo"` frame. The helpers below
+are **reference sketches** to implement server-side — there is no shipped `vimeo.js`.
 
 > **Security.** Everything that hits the API needs a Vimeo **access token** — a
 > **server-side secret** (e.g. `VIMEO_ACCESS_TOKEN` in `.env`). Never expose it to the
-> browser. Progressive/HLS links are **signed and expire (~24h)**, so resolve them at
-> **render time on the server** and inject fresh URLs into the markup. `normalizeVimeo()`
-> and `loopSegment()` are pure/client-safe; only `fetchVimeo()` touches the token.
+> browser. Progressive/HLS/VTT links are **signed and expire (~24h)**, so resolve them at
+> **render time on the server** and inject fresh URLs into the markup — only the fetch
+> touches the token; the normalize/shape step is pure.
 
 ---
 
@@ -64,9 +65,8 @@ back `[]` and there is no ready GET for them — they must be **created per vide
 `upload`/`edit` scopes). Don't rely on it for on-the-fly previews.
 
 **Do this instead:** a **muted `autoplay loop` of the 240p rendition**, optionally clamped to
-a 1–2s window (`loopSegment()` or a `#t=start,end` media fragment). Smaller, smoother, and
-higher quality than a GIF — and it reuses the native-video path. See the "preview loop"
-example in [media.html](./media.html).
+a 1–2s window with a `#t=start,end` media fragment. Smaller, smoother, and higher quality than
+a GIF — and it reuses the native-video path.
 
 ### Animated poster — `preview="…"` on a facade
 
@@ -88,21 +88,18 @@ See the "animated poster" cards in [vimeo.html](./vimeo.html).
 
 ---
 
-## Using `vimeo.js`
+## Reference sketch (implement server-side)
+
+Illustrative only — there is no shipped `vimeo.js`; write these on your server:
 
 ```js
-import { fetchVimeo, normalizeVimeo, pickRendition, toUiMediaAttrs, loopSegment } from '@browser.style/card/vimeo.js';
-
-// --- server (has the token) ---
-const v = await fetchVimeo(id, process.env.VIMEO_ACCESS_TOKEN);
+// server (has the token)
+const v = normalizeVimeo(await fetchVimeo(id, process.env.VIMEO_ACCESS_TOKEN));
 // v → { id, name, duration, width, height, poster, posters[], src, renditions[], hls, hlsExpires }
-const { src, poster } = toUiMediaAttrs(v, { maxHeight: 1080 });
-// emit: <ui-media provider="vimeo" src="${src}" poster="${poster}" loop muted> … </ui-media>
+// emit: <ui-media provider="vimeo" src="${v.src}" poster="${v.poster}" loop muted> … </ui-media>
 
-const preview = pickRendition(v, 360).link;   // lightweight rendition for a gif-like loop
-
-// --- client (no token) ---
-loopSegment(document.querySelector('#preview video'), 0, 2);   // 2s looping preview
+const preview = pickRendition(v, 360);   // lightweight rendition for a #t=0,2 preview loop
+const tracks  = await fetchTextTracks(id, token);   // [{ kind, srclang, label, src }] → <track>
 ```
 
 `normalizeVimeo(raw)` is the pure core — feed it a saved/mocked API object (see the shape
@@ -119,11 +116,59 @@ above) to test or to simulate the response without a live call.
 
 ---
 
+## Subtitles / captions
+
+`GET https://api.vimeo.com/videos/{id}/texttracks` returns each track as
+`{ type: "subtitles"|"captions", language, name, active, link }`, where `link` is a **WebVTT**
+file — exactly what a native `<track>` needs. Map `type`→`kind`, `language`→`srclang`,
+`name`→`label`:
+
+```html
+<video …>
+  <source src="…1080p.mp4">
+  <track kind="subtitles" srclang="da" label="Dansk"   src="…{id}.da.vtt" default>
+  <track kind="captions"  srclang="en" label="English" src="…{id}.en.vtt">
+</video>
+```
+
+- The `<ui-media>` **CC switcher** (`vid(cc)` + a `<select class="ui-media-cc">`) flips
+  `textTrack.mode` — a **native-`<video>` only** feature. An **iframe embed** can't expose its
+  tracks to us (cross-origin), but the Vimeo player already shows its own captions UI, so no
+  switcher is needed there. See the "With subtitles" + "Autumn" cards in
+  [vimeo.html](./vimeo.html), and media.md § Video layer for the CSS/JS.
+- **CORS:** `<track>` enforces CORS. Vimeo's `captions.cloud.vimeo.com` VTT links are signed
+  and may not send permissive `Access-Control-Allow-Origin` → **proxy the VTT through your own
+  origin** (same-origin, no `crossorigin` attr, no expiry in the HTML). The token stays server-side.
+- **Quality:** `language` ending `-x-autogen` is machine-transcribed (often wrong, esp. across
+  languages). Prefer human tracks; treat autogen as best-effort.
+
+## SSR flow
+
+Building a page server-side with API access, per video:
+
+1. **One API call** for durable metadata — `pictures.sizes` (poster), `play.progressive[]`
+   (MP4 renditions), `/texttracks` (VTT). `normalizeVimeo()` shapes it.
+2. **Emit markup** pointing at those URLs: native `<video src poster><track>` (own account +
+   Pro) or an `<iframe src="player.vimeo.com/video/{id}">` embed (any public/unlisted video).
+
+**URL lifetimes — the one gotcha:**
+
+| URL | Lifetime | Strategy |
+|-----|----------|----------|
+| `player.vimeo.com/video/{id}` (iframe) | **stable** (add `?h=hash` for unlisted) | hardcode freely; captions come free from the player |
+| `play.progressive[].link` (MP4) | **signed, ~24h** | resolve at render time, or proxy `/{id}` → fresh signed URL |
+| `texttracks[].link` (VTT) | **signed, ~24h** | proxy `/{id}/{lang}` (also fixes CORS) |
+| `pictures.sizes[].link` (poster) | long-lived CDN | cache; still safest to re-resolve |
+
+So: cache the **durable metadata** (id, languages, poster hash); resolve **signed media/VTT
+URLs on demand** (per request, or a cache shorter than the TTL). Prefer iframe embeds when you
+don't need a chrome-less native player — nothing to sign, captions included.
+
 ## Caveats
 
-- **Expiry:** progressive/HLS links die (~24h). Fetch per request; never hardcode in
-  committed HTML (any Vimeo `src`/`poster` in the demos is a snapshot and will 404 later —
-  regenerate with `fetchVimeo`).
+- **Expiry:** progressive/HLS/VTT links die (~24h). Fetch per request; never hardcode in
+  committed HTML (any Vimeo `src`/`poster`/VTT in the demos is a snapshot and will 404 later —
+  regenerate with `fetchVimeo`). The committed `vimeo-data/` clips + VTTs are gitignored snapshots.
 - **Ownership:** `files`/`play` are populated only for videos on the token's account. Public
   videos you don't own give you posters (and the iframe `provider="vimeo" video="ID"` path),
   but not progressive files.
