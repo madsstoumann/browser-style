@@ -1,0 +1,44 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "social-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-04T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Community"
+  },
+  "fields": {
+    "internalName": "Demo — Social",
+    "schemaType": "social",
+    "headline": "Waterhole crossing",
+    "summary": "Waited four hours at the waterhole for this crossing. Worth every minute. 🐘",
+    "published": "2026-06-28T16:20:00Z",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/elephant.png",
+        "alt": "Elephant crossing a savanna road"
+      }
+    ],
+    "authors": [
+      {
+        "name": "@wildlifewatch",
+        "role": "Jun 28",
+        "avatar": "/assets/images/janesmith.png"
+      }
+    ],
+    "tags": ["#wildlife", "#safari", "#photography"],
+    "engagement": {
+      "likeCount": 3200,
+      "shareCount": 410,
+      "commentCount": 87
+    },
+    "details": {
+      "platform": "Chirper",
+      "author": "@wildlifewatch",
+      "hashtags": ["wildlife", "safari", "photography"]
+    }
+  }
+}

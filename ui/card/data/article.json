@@ -1,0 +1,42 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "article-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-04T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Editorial"
+  },
+  "fields": {
+    "internalName": "Demo — Article",
+    "schemaType": "article",
+    "eyebrow": "Science",
+    "headline": "Quantum computing reaches a practical milestone",
+    "summary": "Researchers demonstrate error-corrected logical qubits running a chemistry simulation faster than any classical supercomputer.",
+    "published": "2026-06-20T14:30:00Z",
+    "modified": "2026-06-21T09:00:00Z",
+    "readingTime": "5 min read",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/quantum.png",
+        "alt": "Stylised quantum processor"
+      }
+    ],
+    "authors": [
+      {
+        "name": "Jane Smith",
+        "role": "Science Editor",
+        "avatar": "/assets/images/janesmith.png"
+      }
+    ],
+    "engagement": {
+      "viewCount": 15420,
+      "likeCount": 892,
+      "shareCount": 245,
+      "commentCount": 45
+    }
+  }
+}

@@ -1,0 +1,429 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "card",
+  "title": "🃏 Card",
+  "description": "A universal, schema.org-driven card. One structured envelope (headline, summary, media, authors, actions, engagement…) shared by every card, a `schemaType` discriminator covering 25 schema.org types, and a single `details` object for type-specific data. Presentation (variant/media/content tokens for <ui-card>) deliberately lives OUTSIDE this model — in layout-config — so the same card can render as hero, grid item or overlay without content changes. `presentationHint` is the only editorial nudge.",
+  "metadata": {
+    "localized": true,
+    "version": "1.0.0",
+    "lastModified": "2026-07-04",
+    "displayField": "internalName"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards",
+    "layout": [
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Basics",
+        "description": "Type and primary text content",
+        "collapse": false,
+        "fields": ["internalName", "schemaType", "eyebrow", "headline", "subheadline", "summary"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Body & Dates",
+        "description": "Long-form text and publication dates",
+        "collapse": true,
+        "fields": ["body", "published", "modified", "readingTime"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Media",
+        "description": "Media items (more than one becomes a carousel) and overlay furniture",
+        "collapse": true,
+        "fields": ["media", "chip", "sticker", "saveable"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "People & Engagement",
+        "description": "Authors and interaction statistics",
+        "collapse": true,
+        "fields": ["authors", "engagement"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Navigation",
+        "description": "Tags, call-to-action buttons and related links",
+        "collapse": true,
+        "fields": ["tags", "actions", "links"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Type Details",
+        "description": "Schema-type-specific data and presentation hint",
+        "collapse": false,
+        "fields": ["details", "presentationHint"]
+      }
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "internalName": {
+      "type": "string",
+      "title": "Internal Name",
+      "description": "Internal name for CMS editors — not displayed on the front end",
+      "localized": false,
+      "validation": {
+        "required": true
+      }
+    },
+    "schemaType": {
+      "type": "select",
+      "title": "Schema Type",
+      "description": "schema.org content type. Drives the emitted itemtype, the microdata property mapping (headline → headline/name/title, summary → description/reviewBody) and which `details` shape applies.",
+      "localized": false,
+      "default": "content",
+      "validation": {
+        "required": true
+      },
+      "options": [
+        { "value": "content", "label": "Content (CreativeWork — fallback)" },
+        { "value": "article", "label": "Article" },
+        { "value": "news", "label": "News (NewsArticle)" },
+        { "value": "product", "label": "Product" },
+        { "value": "event", "label": "Event" },
+        { "value": "recipe", "label": "Recipe" },
+        { "value": "review", "label": "Review" },
+        { "value": "job", "label": "Job (JobPosting)" },
+        { "value": "course", "label": "Course" },
+        { "value": "booking", "label": "Booking (Reservation)" },
+        { "value": "poll", "label": "Poll (Question)" },
+        { "value": "profile", "label": "Profile (Person)" },
+        { "value": "faq", "label": "FAQ (FAQPage)" },
+        { "value": "quote", "label": "Quote (Quotation)" },
+        { "value": "timeline", "label": "Timeline (EventSeries)" },
+        { "value": "gallery", "label": "Gallery (ImageGallery)" },
+        { "value": "statistic", "label": "Statistic (Observation)" },
+        { "value": "achievement", "label": "Achievement (EducationalOccupationalCredential)" },
+        { "value": "announcement", "label": "Announcement (SpecialAnnouncement)" },
+        { "value": "business", "label": "Business (LocalBusiness)" },
+        { "value": "comparison", "label": "Comparison (ItemList)" },
+        { "value": "contact", "label": "Contact (ContactPoint)" },
+        { "value": "location", "label": "Location (Place)" },
+        { "value": "membership", "label": "Membership (Offer)" },
+        { "value": "social", "label": "Social (SocialMediaPosting)" },
+        { "value": "software", "label": "Software (SoftwareApplication)" }
+      ]
+    },
+    "eyebrow": {
+      "type": "string",
+      "title": "Eyebrow",
+      "description": "Category / kicker shown above the headline. Emitted as articleSection, category, recipeCategory or about depending on schemaType."
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline. Emitted as headline (article/news), title (job) or name (all other types).",
+      "validation": {
+        "required": true
+      }
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline / tagline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary. Emitted as description — or reviewBody (review), text (quote/social)."
+    },
+    "body": {
+      "type": "richtext",
+      "title": "Body",
+      "description": "Optional long-form content (legacy content.text paragraphs)",
+      "options": {
+        "allowImages": false,
+        "allowEmbeds": false
+      }
+    },
+    "published": {
+      "type": "datetime",
+      "title": "Published",
+      "description": "Publication date/time → datePublished / datePosted"
+    },
+    "modified": {
+      "type": "datetime",
+      "title": "Modified",
+      "description": "Last modified date/time → dateModified"
+    },
+    "readingTime": {
+      "type": "string",
+      "title": "Reading Time",
+      "description": "Human-readable reading time, e.g. “5 min read”"
+    },
+    "media": {
+      "type": "array",
+      "title": "Media",
+      "description": "Media items rendered inside <ui-media>. One item = single frame; multiple items = carousel (nav dots/arrows).",
+      "items": {
+        "type": "object",
+        "properties": {
+          "asset": {
+            "type": "media",
+            "title": "Asset",
+            "description": "Image or video asset from the media library",
+            "options": {
+              "accept": ["image/*", "video/*"],
+              "focalPoint": true
+            }
+          },
+          "mediaType": {
+            "type": "select",
+            "title": "Media Type",
+            "localized": false,
+            "default": "image",
+            "options": [
+              { "value": "image", "label": "Image" },
+              { "value": "video", "label": "Video" },
+              { "value": "youtube", "label": "YouTube" },
+              { "value": "vimeo", "label": "Vimeo" }
+            ]
+          },
+          "src": {
+            "type": "url",
+            "title": "External Source",
+            "description": "External URL or provider video id — used when no asset is set (e.g. YouTube/Vimeo id)"
+          },
+          "alt": {
+            "type": "string",
+            "title": "Alt Text",
+            "description": "Accessible description of the media item"
+          },
+          "caption": {
+            "type": "string",
+            "title": "Caption",
+            "description": "Optional visible caption (data-part=\"caption\")"
+          }
+        }
+      }
+    },
+    "authors": {
+      "type": "array",
+      "title": "Authors",
+      "description": "Authors / reviewers / speakers — rendered as byline, emitted as author → Person",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "validation": {
+              "required": true
+            }
+          },
+          "role": {
+            "type": "string",
+            "title": "Role",
+            "description": "Job title or role → jobTitle"
+          },
+          "avatar": {
+            "type": "media",
+            "title": "Avatar",
+            "options": {
+              "accept": ["image/*"]
+            }
+          }
+        }
+      }
+    },
+    "tags": {
+      "type": "tags",
+      "title": "Tags",
+      "description": "Keywords — rendered as pill list (data-part=\"tags\"), emitted as keywords"
+    },
+    "actions": {
+      "type": "array",
+      "title": "Actions",
+      "description": "Call-to-action buttons (data-part=\"actions\")",
+      "items": {
+        "type": "object",
+        "properties": {
+          "link": {
+            "type": "link",
+            "title": "Link",
+            "options": {
+              "allowInternal": true,
+              "allowExternal": true
+            }
+          },
+          "style": {
+            "type": "select",
+            "title": "Style",
+            "localized": false,
+            "default": "primary",
+            "options": [
+              { "value": "primary", "label": "Primary" },
+              { "value": "secondary", "label": "Secondary" },
+              { "value": "ghost", "label": "Ghost" }
+            ]
+          }
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "title": "Links",
+      "description": "Plain related links (rendered as text links, not buttons)",
+      "items": {
+        "type": "link",
+        "title": "Link",
+        "options": {
+          "allowInternal": true,
+          "allowExternal": true
+        }
+      }
+    },
+    "chip": {
+      "type": "object",
+      "title": "Chip",
+      "description": "Small label overlaid on the media (<ui-chip>) — replaces the legacy ribbon",
+      "properties": {
+        "text": {
+          "type": "string",
+          "title": "Text"
+        },
+        "position": {
+          "type": "select",
+          "title": "Position",
+          "localized": false,
+          "default": "ts",
+          "options": [
+            { "value": "ts", "label": "Top start" },
+            { "value": "tc", "label": "Top center" },
+            { "value": "te", "label": "Top end" },
+            { "value": "cs", "label": "Center start" },
+            { "value": "cc", "label": "Center" },
+            { "value": "ce", "label": "Center end" },
+            { "value": "bs", "label": "Bottom start" },
+            { "value": "bc", "label": "Bottom center" },
+            { "value": "be", "label": "Bottom end" }
+          ]
+        },
+        "hue": {
+          "type": "select",
+          "title": "Hue",
+          "localized": false,
+          "options": [
+            { "value": "red", "label": "Red" },
+            { "value": "orange", "label": "Orange" },
+            { "value": "green", "label": "Green" },
+            { "value": "blue", "label": "Blue" },
+            { "value": "accent", "label": "Accent" },
+            { "value": "dark", "label": "Dark" },
+            { "value": "light", "label": "Light" },
+            { "value": "subtle", "label": "Subtle" }
+          ]
+        }
+      }
+    },
+    "sticker": {
+      "type": "object",
+      "title": "Sticker",
+      "description": "Callout disc overlaid on the media (<ui-sticker>)",
+      "properties": {
+        "text": {
+          "type": "string",
+          "title": "Text"
+        },
+        "position": {
+          "type": "select",
+          "title": "Position",
+          "localized": false,
+          "default": "te",
+          "options": [
+            { "value": "ts", "label": "Top start" },
+            { "value": "tc", "label": "Top center" },
+            { "value": "te", "label": "Top end" },
+            { "value": "cs", "label": "Center start" },
+            { "value": "cc", "label": "Center" },
+            { "value": "ce", "label": "Center end" },
+            { "value": "bs", "label": "Bottom start" },
+            { "value": "bc", "label": "Bottom center" },
+            { "value": "be", "label": "Bottom end" }
+          ]
+        },
+        "hue": {
+          "type": "select",
+          "title": "Hue",
+          "localized": false,
+          "options": [
+            { "value": "red", "label": "Red" },
+            { "value": "orange", "label": "Orange" },
+            { "value": "green", "label": "Green" },
+            { "value": "blue", "label": "Blue" },
+            { "value": "accent", "label": "Accent" },
+            { "value": "dark", "label": "Dark" },
+            { "value": "light", "label": "Light" },
+            { "value": "subtle", "label": "Subtle" }
+          ]
+        },
+        "burst": {
+          "type": "boolean",
+          "title": "Burst",
+          "description": "Use the burst shape (variant=\"burst\") instead of a plain disc",
+          "default": false
+        }
+      }
+    },
+    "saveable": {
+      "type": "boolean",
+      "title": "Saveable",
+      "description": "Show a save/favorite toggle (<ui-save>) on the media",
+      "default": false
+    },
+    "engagement": {
+      "type": "object",
+      "title": "Engagement",
+      "description": "Interaction statistics — emitted as interactionStatistic → InteractionCounter (WatchAction/LikeAction/ShareAction/CommentAction)",
+      "properties": {
+        "viewCount": {
+          "type": "number",
+          "title": "Views"
+        },
+        "likeCount": {
+          "type": "number",
+          "title": "Likes"
+        },
+        "shareCount": {
+          "type": "number",
+          "title": "Shares"
+        },
+        "commentCount": {
+          "type": "number",
+          "title": "Comments"
+        }
+      }
+    },
+    "presentationHint": {
+      "type": "select",
+      "title": "Presentation Hint",
+      "description": "Optional editorial nudge for the renderer. Actual <ui-card> variant/media/content tokens live in layout-config, not here.",
+      "localized": false,
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "hero", "label": "Hero (large, overlay)" },
+        { "value": "compact", "label": "Compact (dense grid)" },
+        { "value": "overlay", "label": "Overlay (content over media)" },
+        { "value": "flip", "label": "Flip (reveal flipside)" }
+      ]
+    },
+    "details": {
+      "type": "object",
+      "title": "Type Details",
+      "description": "Type-specific data, discriminated by schemaType. Expected shapes — product: { price:{current,original,currency,discountText}, availability, rating:{value,count,max}, sku, validUntil } · event: { startDate, endDate, status, location:{name,address}, organizer:{name} } · recipe: { prepTime, cookTime, servings, ingredients[], instructions[] } · review: { rating:{value,max}, reviewer:{name,verified}, reviewDate, productReviewed } · job: { company, location, employmentType, salaryRange:{min,max,currency,period}, qualifications[], benefits[], applicationDeadline } · course: { duration, difficultyLevel, instructor:{name}, price:{current,original,currency}, prerequisites[] } · booking: { serviceName, venue, capacity, duration, price:{hourlyRate,currency}, amenities[], cancellationPolicy } · poll: { options:[{headline,votes}], totalVotes } · profile: { jobTitle, organization, location, bio, skills[], contacts:[{type,value,label}] } · faq: { items:[{question,answer}] } · timeline: { items:[{date,headline,text}] } · gallery: { albumName, totalCount, categories[] } · statistic: { metricName, currentValue, unit, trend, trendPercentage } · achievement: { issuingOrganization, dateEarned, expirationDate, skillLevel, credentialId, verificationUrl } · announcement: { announcementType, priority, effectiveDate:{start,end}, targetAudience, actionRequired } · business: { address:{streetAddress,addressLocality,postalCode,addressCountry}, telephone, email, website, geo:{latitude,longitude}, openingHours:[{schema,display}] } · comparison: { items:[{name,price,image}], recommendation, summary } · contact: { contactType, availableHours, responseTime, contactMethods:[{type,value,label}] } · location: { address, geo, hours, contact, amenities[] } · membership: { planName, price:{monthly,yearly,currency}, trialPeriod, features[], limitations[], isPopular } · social: { platform, author, postContent, hashtags[] } · software: { version, applicationCategory, operatingSystem[], developer:{name,website}, price:{current,currency} } · content/article/news/quote: no details needed (envelope only).",
+      "ui": {
+        "widget": "editor-card"
+      }
+    }
+  },
+  "required": []
+}

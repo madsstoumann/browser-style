@@ -1,0 +1,30 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "announcement-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-04T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Operations"
+  },
+  "fields": {
+    "internalName": "Demo — Announcement",
+    "schemaType": "announcement",
+    "eyebrow": "High priority",
+    "headline": "Scheduled maintenance — July 5",
+    "summary": "The API will be unavailable Saturday July 5, 02:00–04:00 UTC while we migrate the primary database.",
+    "published": "2026-07-01T00:00:00Z",
+    "details": {
+      "announcementType": "Maintenance",
+      "priority": "high",
+      "effectiveDate": {
+        "start": "2026-07-01",
+        "end": "2026-07-06"
+      },
+      "targetAudience": "API customers",
+      "actionRequired": "re-authenticate integrations after the window."
+    }
+  }
+}

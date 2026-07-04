@@ -1,0 +1,26 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "quote-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-04T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Editorial"
+  },
+  "fields": {
+    "internalName": "Demo — Quote",
+    "schemaType": "quote",
+    "eyebrow": "Quote of the day",
+    "headline": "Maria Lindgren on simplicity",
+    "summary": "Simplicity is the ultimate sophistication — every element you remove makes the remaining ones stronger.",
+    "authors": [
+      {
+        "name": "Maria Lindgren",
+        "role": "Design Director",
+        "avatar": "/assets/images/janesmith.png"
+      }
+    ]
+  }
+}

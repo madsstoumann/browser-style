@@ -1,0 +1,34 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "faq-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-04T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Support"
+  },
+  "fields": {
+    "internalName": "Demo — FAQ",
+    "schemaType": "faq",
+    "eyebrow": "Support",
+    "headline": "Frequently asked questions",
+    "details": {
+      "items": [
+        {
+          "question": "How do I reset my password?",
+          "answer": "Use “Forgot password” on the sign-in page. The reset link is valid for one hour."
+        },
+        {
+          "question": "Can I change my plan later?",
+          "answer": "Yes — upgrades apply immediately, downgrades at the next billing cycle."
+        },
+        {
+          "question": "Do you offer refunds?",
+          "answer": "Full refund within 30 days, no questions asked."
+        }
+      ]
+    }
+  }
+}

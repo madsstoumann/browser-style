@@ -196,4 +196,48 @@
 		font-size: var(--ui-content-footer-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.78));
 		gap: var(--ui-content-footer-gap, var(--spacing-sm));
 	}
+
+	/* ============================================================
+	   PROPOSED PARTS — spec'd in schema.html, not yet styled.
+	   Each renders with default typography until implemented here.
+	   ============================================================ */
+
+	/* price — <p> with <data> current, <del> original, <small> discount.
+	   Carries Offer/PriceSpecification/MonetaryAmount microdata.
+	   Used by: product, course, booking, membership, software, job (salary). */
+	/* :where(ui-content) [data-part="price"] { } */
+
+	/* rating — <div role="img" aria-label> star glyphs + count.
+	   Carries AggregateRating/Rating microdata.
+	   Used by: product, review, software. */
+	/* :where(ui-content) [data-part="rating"] { } */
+
+	/* list — <ul> check-list / <ol> ordered list.
+	   Features, qualifications, ingredients, amenities, steps.
+	   Used by: recipe, job, course, booking, location, membership. */
+	/* :where(ui-content) [data-part="list"] { } */
+
+	/* address — <address> block, distinct from byline (no avatar).
+	   Carries PostalAddress microdata scope.
+	   Used by: business, location, event, contact. */
+	/* :where(ui-content) [data-part="address"] { } */
+
+	/* stat — <p> with <data> big number + <small> unit + trend <span>.
+	   Carries QuantitativeValue microdata.
+	   Used by: statistic. */
+	/* :where(ui-content) [data-part="stat"] { } */
+
+	/* timeline — <ol> of <li> with <time> + text.
+	   Each entry is subEvent → Event microdata.
+	   Used by: timeline. */
+	/* :where(ui-content) [data-part="timeline"] { } */
+
+	/* quote — <blockquote> + <cite> pull-quote.
+	   Used by: quote, review, social. */
+	/* :where(ui-content) [data-part="quote"] { } */
+
+	/* options — <ul> of <li> with <label> + <progress> result bars.
+	   Poll answers (suggestedAnswer → Answer) / comparison rows (ListItem).
+	   Used by: poll, comparison. */
+	/* :where(ui-content) [data-part="options"] { } */
 }

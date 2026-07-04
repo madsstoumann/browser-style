@@ -1,0 +1,25 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "timeline-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-04T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Editorial"
+  },
+  "fields": {
+    "internalName": "Demo — Timeline",
+    "schemaType": "timeline",
+    "eyebrow": "Company history",
+    "headline": "A decade of browser.style",
+    "details": {
+      "items": [
+        { "date": "2016", "text": "First CSS-only component published." },
+        { "date": "2021", "text": "Design token system and 100th component." },
+        { "date": "2026", "text": "v4: the unified card engine ships." }
+      ]
+    }
+  }
+}

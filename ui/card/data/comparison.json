@@ -1,0 +1,27 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "comparison-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-04T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Commerce"
+  },
+  "fields": {
+    "internalName": "Demo — Comparison",
+    "schemaType": "comparison",
+    "eyebrow": "Buyer’s guide",
+    "headline": "Portable speakers compared",
+    "details": {
+      "items": [
+        { "name": "SoundWave Mini", "price": "USD 79", "score": 92, "scoreDisplay": "9.2" },
+        { "name": "AuraSound Go", "price": "USD 99", "score": 85, "scoreDisplay": "8.5" },
+        { "name": "QuickBoom 2", "price": "USD 69", "score": 78, "scoreDisplay": "7.8" }
+      ],
+      "recommendation": "SoundWave Mini",
+      "summary": "best sound per gram."
+    }
+  }
+}

@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Card — Schema.org</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="All 25 legacy content-card schema.org types re-created with the modern <ui-card> engine — inline microdata (itemscope/itemtype/itemprop), no JSON-LD, no JavaScript.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../chip/ui-chip.css">
+	<link rel="stylesheet" href="../sticker/ui-sticker.css">
+	<link rel="stylesheet" href="../play/ui-play.css">
+	<link rel="stylesheet" href="../save/ui-save.css">
+	<link rel="stylesheet" href="../icon/index.css">
+	<link rel="stylesheet" href="../reveal/ui-reveal.css">
+	<link rel="stylesheet" href="../accordion/ui-accordion.css">
+	<link rel="stylesheet" href="ui-card.css">
+	<style>
+		.grid {
+			display: grid;
+			gap: var(--spacing-lg);
+			grid-template-columns: 1fr;
+			margin-block-end: var(--spacing-2xl);
+		}
+		@media (min-width: 540px) {
+			.grid-2 { grid-template-columns: repeat(2, 1fr); }
+			.grid-3 { grid-template-columns: repeat(3, 1fr); }
+		}
+		@media (min-width: 900px) {
+			.grid-4 { grid-template-columns: repeat(4, 1fr); }
+		}
+		.stack { display: grid; gap: var(--spacing-lg); margin-block-end: var(--spacing-2xl); }
+		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
+		code { font-size: 0.9em; }
+		table { border-collapse: collapse; display: block; margin-block-end: var(--spacing-2xl); max-inline-size: 100%; overflow-x: auto; }
+		th, td { border: 1px solid var(--color-border, #ddd); padding: 0.4em 0.75em; text-align: start; font-size: 0.9em; }
+	</style>
+</head>
+<body>
+	<h1>UI: Card — Schema.org</h1>
+	<p class="note">Every card type from the legacy <code>content/card</code> package, re-created with the modern engine: <code>&lt;ui-card&gt;</code> + <code>&lt;ui-media&gt;</code> + <code>&lt;ui-content&gt;</code>, with satellites <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-sticker&gt;</code>, <code>&lt;ui-save&gt;</code>, <code>&lt;ui-reveal&gt;</code> and <code>&lt;ui-accordion&gt;</code>. Structured data is inline <strong>microdata</strong> (<code>itemscope</code>/<code>itemtype</code>/<code>itemprop</code> + hidden <code>&lt;meta&gt;</code> values) — no JSON-LD, no JavaScript.</p>
+	<p class="note">The matching CMS content model is <a href="../../cms/baseline/models/card.schema.json"><code>cms/baseline/models/card.schema.json</code></a>: a structured envelope + <code>schemaType</code> discriminator + one <code>details</code> object per type. See also: <a href="index.html">index.html</a> · <a href="media.html">media.html</a> · <a href="content.html">content.html</a>.</p>
+
+	<h2>Proposed <code>data-part</code> vocabulary</h2>
+	<p class="note">Rebuilding all 25 types needs a few parts <code>&lt;ui-content&gt;</code> does not style yet. This page uses them as a <strong>spec</strong> — they render with default typography until <code>content.css</code> catches up. Everything else reuses existing parts (<code>meta</code> for salaries/hours/dates, <code>tags</code> for skills/hashtags, <code>byline</code> for people, <code>footer</code> for totals).</p>
+	<table>
+		<thead><tr><th>data-part</th><th>Element</th><th>Purpose</th><th>Used by</th></tr></thead>
+		<tbody>
+			<tr><td><code>price</code></td><td><code>&lt;p&gt;</code> + <code>&lt;data&gt;</code>/<code>&lt;del&gt;</code>/<code>&lt;small&gt;</code></td><td>Price row (Offer microdata)</td><td>product, course, booking, membership, software</td></tr>
+			<tr><td><code>rating</code></td><td><code>&lt;div role="img"&gt;</code> stars + count</td><td>Star rating (AggregateRating / Rating)</td><td>product, review, software</td></tr>
+			<tr><td><code>list</code></td><td><code>&lt;ul&gt;</code> check / <code>&lt;ol&gt;</code> ordered</td><td>Features, qualifications, ingredients, steps</td><td>recipe, job, course, booking, location, membership</td></tr>
+			<tr><td><code>address</code></td><td><code>&lt;address&gt;</code></td><td>Postal address (PostalAddress scope)</td><td>business, location, event, contact</td></tr>
+			<tr><td><code>stat</code></td><td><code>&lt;p&gt;</code> + <code>&lt;data&gt;</code> value + unit + trend</td><td>Big-number display</td><td>statistic</td></tr>
+			<tr><td><code>timeline</code></td><td><code>&lt;ol&gt;</code> of <code>&lt;time&gt;</code> + text</td><td>Vertical milestone list</td><td>timeline</td></tr>
+			<tr><td><code>quote</code></td><td><code>&lt;blockquote&gt;</code> + <code>&lt;cite&gt;</code></td><td>Pull-quote</td><td>quote, review, social</td></tr>
+			<tr><td><code>options</code></td><td><code>&lt;ul&gt;</code> of <code>&lt;label&gt;</code> + <code>&lt;progress&gt;</code></td><td>Poll answers / comparison rows with bars</td><td>poll, comparison</td></tr>
+		</tbody>
+	</table>
+
+	<!-- ============================================================
+	     content — CreativeWork (fallback)
+	     ============================================================ -->
+	<h2>Content — <code>CreativeWork</code> (fallback)</h2>
+	<p class="note">The plain envelope, no <code>details</code>: eyebrow, headline, summary, tags, actions. Unknown <code>schemaType</code> values fall back to this.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/CreativeWork">
+			<cq-box>
+				<ui-media><img src="/assets/images/popovers.png" alt="Abstract illustration of layered UI panels" itemprop="image"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow" itemprop="genre">Design</small>
+					<h3 data-part="headline" itemprop="name">A generic piece of content</h3>
+					<p data-part="summary" itemprop="description">Anything without a dedicated schema type renders as CreativeWork — headline, summary, tags and actions straight from the envelope.</p>
+					<ul data-part="tags"><li><a href="#" itemprop="keywords">generic</a></li><li><a href="#" itemprop="keywords">fallback</a></li></ul>
+					<nav data-part="actions"><a class="ui-button" href="#" itemprop="url">Read more</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     article — Article
+	     ============================================================ -->
+	<h2>Article — <code>Article</code></h2>
+	<p class="note">Envelope only: byline (author → <code>Person</code>), published date, reading time, engagement (<code>InteractionCounter</code>).</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Article">
+			<cq-box>
+				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" itemprop="image"></ui-media>
+				<ui-content>
+					<meta itemprop="articleSection" content="Science">
+					<meta itemprop="dateModified" content="2026-06-21T09:00:00Z">
+					<small data-part="eyebrow">Science</small>
+					<h3 data-part="headline" itemprop="headline">Quantum computing reaches a practical milestone</h3>
+					<p data-part="summary" itemprop="description">Researchers demonstrate error-corrected logical qubits running a chemistry simulation faster than any classical supercomputer.</p>
+					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+						<img src="/assets/images/janesmith.png" alt="">
+						<span><span itemprop="name">Jane Smith</span> · <span itemprop="jobTitle">Science Editor</span></span>
+					</address>
+					<p data-part="meta"><time itemprop="datePublished" datetime="2026-06-20T14:30:00Z">Jun 20, 2026</time> · 5 min read</p>
+					<div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter">
+						<meta itemprop="interactionType" content="https://schema.org/LikeAction">
+						<meta itemprop="userInteractionCount" content="892">
+					</div>
+					<footer data-part="footer">15,420 views · 245 shares · 45 comments</footer>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     news — NewsArticle
+	     ============================================================ -->
+	<h2>News — <code>NewsArticle</code></h2>
+	<p class="note">As Article, plus a “Breaking” <code>&lt;ui-chip&gt;</code> on the media and <code>dateModified</code>.</p>
+	<div class="stack">
+		<ui-card variant="row spl(1/2)" media="asr(4/3) chip(ts) chip(red)" itemscope itemtype="https://schema.org/NewsArticle">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/government.png" alt="Parliament building at dusk" itemprop="image">
+					<ui-chip>Breaking</ui-chip>
+				</ui-media>
+				<ui-content>
+					<meta itemprop="articleSection" content="Politics">
+					<meta itemprop="datePublished" content="2026-07-01T06:15:00Z">
+					<meta itemprop="dateModified" content="2026-07-01T08:40:00Z">
+					<small data-part="eyebrow">Politics</small>
+					<h3 data-part="headline" itemprop="headline">Coalition agrees on sweeping climate package</h3>
+					<p data-part="summary" itemprop="description">The agreement includes a carbon border tariff and a national retrofit programme, ending months of negotiation.</p>
+					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+						<span><span itemprop="name">Staff Writer</span> · <span itemprop="jobTitle">Newsroom</span></span>
+					</address>
+					<p data-part="meta"><time datetime="2026-07-01T06:15:00Z">Jul 1, 2026</time> · 3 min read</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     quote — Quotation
+	     ============================================================ -->
+	<h2>Quote — <code>Quotation</code></h2>
+	<p class="note">Envelope <code>summary</code> as <code>&lt;blockquote itemprop="text"&gt;</code> + author. Proposed part: <code>quote</code>.</p>
+	<div class="grid grid-2">
+		<ui-card variant="vis(content) thm(subtle)" content="scl(lg)" itemscope itemtype="https://schema.org/Quotation">
+			<cq-box>
+				<ui-content>
+					<small data-part="eyebrow">Quote of the day</small>
+					<blockquote data-part="quote" itemprop="text">Simplicity is the ultimate sophistication — every element you remove makes the remaining ones stronger.</blockquote>
+					<address data-part="byline" itemprop="creator" itemscope itemtype="https://schema.org/Person">
+						<img src="/assets/images/janesmith.png" alt="">
+						<span><cite itemprop="name">Maria Lindgren</cite> · <span itemprop="jobTitle">Design Director</span></span>
+					</address>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     product — Product
+	     ============================================================ -->
+	<h2>Product — <code>Product</code></h2>
+	<p class="note">Offer + AggregateRating, discount <code>&lt;ui-sticker&gt;</code>, save toggle. Proposed parts: <code>price</code>, <code>rating</code>.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(red) save(ts)" itemscope itemtype="https://schema.org/Product">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/aurasoundpro.png" alt="AuraSound Pro wireless headphones" itemprop="image">
+					<ui-sticker variant="burst"><strong>-20%</strong></ui-sticker>
+					<ui-save><input type="checkbox" aria-label="Save AuraSound Pro to favorites"></ui-save>
+				</ui-media>
+				<ui-content>
+					<meta itemprop="category" content="Electronics">
+					<meta itemprop="sku" content="WH-1000XM5">
+					<small data-part="eyebrow">Electronics</small>
+					<h3 data-part="headline" itemprop="name">AuraSound Pro Wireless Headphones</h3>
+					<p data-part="summary" itemprop="description">Industry-leading noise cancellation, 30-hour battery and multipoint pairing.</p>
+					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+						<meta itemprop="priceCurrency" content="USD">
+						<meta itemprop="availability" content="https://schema.org/InStock">
+						<meta itemprop="itemCondition" content="https://schema.org/NewCondition">
+						<meta itemprop="priceValidUntil" content="2026-08-01">
+						<data itemprop="price" value="279">USD 279</data> <del>USD 349</del> <small>Save 20%</small>
+					</p>
+					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating" role="img" aria-label="Rated 4.5 out of 5 stars from 1247 ratings">
+						<meta itemprop="ratingValue" content="4.5">
+						<meta itemprop="ratingCount" content="1247">
+						<meta itemprop="bestRating" content="5">
+						<meta itemprop="worstRating" content="1">
+						<span aria-hidden="true">★★★★★</span> <span>4.5 / 5 (1,247 ratings)</span>
+					</div>
+					<p data-part="meta">In stock · SKU WH-1000XM5</p>
+					<nav data-part="actions"><a class="ui-button" href="#">Add to cart</a> <a class="ui-button --ghost" href="#">Details</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     event — Event
+	     ============================================================ -->
+	<h2>Event — <code>Event</code></h2>
+	<p class="note">Overlay composition — <code>ovr(bl)</code> + scrim. Location → <code>Place</code> → <code>PostalAddress</code>, organizer → <code>Organization</code>.</p>
+	<div class="grid grid-2">
+		<ui-card variant="ovr(bl)" media="asr(4/3) scm" content="scl(lg)" itemscope itemtype="https://schema.org/Event">
+			<cq-box>
+				<ui-media><img src="/assets/images/websummit.png" alt="Conference stage with purple lights" itemprop="image"></ui-media>
+				<ui-content>
+					<meta itemprop="eventStatus" content="https://schema.org/EventScheduled">
+					<meta itemprop="eventAttendanceMode" content="https://schema.org/OfflineEventAttendanceMode">
+					<meta itemprop="startDate" content="2026-11-09T09:00:00+00:00">
+					<meta itemprop="endDate" content="2026-11-12T18:00:00+00:00">
+					<small data-part="eyebrow">Conference</small>
+					<strong data-part="headline" itemprop="name">Web Summit 2026</strong>
+					<span data-part="summary" itemprop="description">Four days of talks on the future of the web platform.</span>
+					<span data-part="meta">Nov 9–12, 2026 · <span itemprop="location" itemscope itemtype="https://schema.org/Place"><span itemprop="name">Altice Arena</span><span itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">, <span itemprop="addressLocality">Lisbon</span></span></span></span>
+					<span data-part="meta" itemprop="organizer" itemscope itemtype="https://schema.org/Organization">Organizer: <span itemprop="name">Web Summit Ltd.</span></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     recipe — Recipe
+	     ============================================================ -->
+	<h2>Recipe — <code>Recipe</code></h2>
+	<p class="note">Ingredients as proposed part <code>list</code>; instructions as a nested <code>&lt;ui-accordion&gt;</code> with <code>HowToStep</code> items.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Recipe">
+			<cq-box>
+				<ui-media><img src="/assets/images/carbonara.png" alt="Plate of spaghetti carbonara" itemprop="image"></ui-media>
+				<ui-content>
+					<meta itemprop="recipeCategory" content="Pasta">
+					<meta itemprop="prepTime" content="PT15M">
+					<meta itemprop="cookTime" content="PT20M">
+					<meta itemprop="recipeYield" content="4">
+					<small data-part="eyebrow">Pasta</small>
+					<h3 data-part="headline" itemprop="name">Classic Spaghetti Carbonara</h3>
+					<p data-part="summary" itemprop="description">The Roman original — guanciale, pecorino, eggs and pepper. No cream.</p>
+					<p data-part="meta">Prep 15 min · Cook 20 min · Serves 4</p>
+					<ul data-part="list">
+						<li itemprop="recipeIngredient">400 g spaghetti</li>
+						<li itemprop="recipeIngredient">150 g guanciale</li>
+						<li itemprop="recipeIngredient">4 egg yolks</li>
+						<li itemprop="recipeIngredient">80 g pecorino romano</li>
+					</ul>
+					<ui-accordion group="recipe-acc">
+						<details class="ui-accordion" name="recipe-acc">
+							<summary>Instructions<ui-icon type="plus-minus"></ui-icon></summary>
+							<div itemprop="recipeInstructions" itemscope itemtype="https://schema.org/ItemList">
+								<ol>
+									<li itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep"><meta itemprop="position" content="1"><span itemprop="text">Crisp the guanciale in a dry pan.</span></li>
+									<li itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep"><meta itemprop="position" content="2"><span itemprop="text">Whisk yolks with grated pecorino and pepper.</span></li>
+									<li itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep"><meta itemprop="position" content="3"><span itemprop="text">Toss hot pasta with guanciale, then the egg mixture, off the heat.</span></li>
+								</ol>
+							</div>
+						</details>
+					</ui-accordion>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     review — Review
+	     ============================================================ -->
+	<h2>Review — <code>Review</code></h2>
+	<p class="note">Summary emits <code>reviewBody</code>; rating → <code>Rating</code>, reviewer → <code>Person</code>, reviewed item → <code>Product</code>.</p>
+	<div class="grid grid-2">
+		<ui-card variant="row spl(1/2)" media="asr(1/1)" itemscope itemtype="https://schema.org/Review">
+			<cq-box>
+				<ui-media><img src="/assets/images/soundwavemini.png" alt="SoundWave Mini speaker"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Verified review</small>
+					<h3 data-part="headline">Punches far above its size</h3>
+					<div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating" role="img" aria-label="Rated 4 out of 5 stars">
+						<meta itemprop="ratingValue" content="4">
+						<meta itemprop="bestRating" content="5">
+						<meta itemprop="worstRating" content="1">
+						<span aria-hidden="true">★★★★☆</span> <span>4/5</span>
+					</div>
+					<blockquote data-part="quote" itemprop="reviewBody">Astonishing bass for a speaker this small. Battery easily lasts a weekend trip — the app is the only weak point.</blockquote>
+					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+						<span><span itemprop="name">Alex Chen</span> ✓ Verified purchase</span>
+					</address>
+					<p data-part="meta"><time itemprop="datePublished" datetime="2026-05-14">May 14, 2026</time></p>
+					<div itemprop="itemReviewed" itemscope itemtype="https://schema.org/Product" hidden>
+						<meta itemprop="name" content="SoundWave Mini">
+					</div>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     job — JobPosting
+	     ============================================================ -->
+	<h2>Job — <code>JobPosting</code></h2>
+	<p class="note">Headline emits <code>title</code>. Salary → <code>MonetaryAmount</code> → <code>QuantitativeValue</code>; requirements/benefits in a nested <code>&lt;ui-accordion&gt;</code>.</p>
+	<div class="grid grid-2">
+		<ui-card variant="vis(content)" itemscope itemtype="https://schema.org/JobPosting">
+			<cq-box>
+				<ui-content>
+					<meta itemprop="industry" content="Software">
+					<meta itemprop="datePosted" content="2026-06-15">
+					<meta itemprop="validThrough" content="2026-08-15">
+					<meta itemprop="employmentType" content="FULL_TIME">
+					<small data-part="eyebrow">Engineering</small>
+					<h3 data-part="headline" itemprop="title">Senior Frontend Engineer</h3>
+					<p data-part="summary" itemprop="description">Own the design system of a product used by two million people. CSS depth valued over framework trivia.</p>
+					<p data-part="meta">
+						<span itemprop="hiringOrganization" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">Nordlys ApS</span></span> ·
+						<span itemprop="jobLocation" itemscope itemtype="https://schema.org/Place"><span itemprop="name">Copenhagen</span></span> ·
+						Full-time · Apply by Aug 15, 2026
+					</p>
+					<p data-part="price" itemprop="baseSalary" itemscope itemtype="https://schema.org/MonetaryAmount">
+						<meta itemprop="currency" content="DKK">
+						<span itemprop="value" itemscope itemtype="https://schema.org/QuantitativeValue">
+							<meta itemprop="minValue" content="720000">
+							<meta itemprop="maxValue" content="840000">
+							<meta itemprop="unitText" content="YEAR">
+							DKK 720,000–840,000 <small>annually</small>
+						</span>
+					</p>
+					<ui-accordion group="job-acc">
+						<details class="ui-accordion" name="job-acc">
+							<summary>Requirements<ui-icon type="plus-minus"></ui-icon></summary>
+							<div>
+								<ul data-part="list" itemprop="qualifications">
+									<li>5+ years building accessible web UI</li>
+									<li>Deep modern CSS (container queries, layers, scroll-driven animation)</li>
+									<li>Web components in production</li>
+								</ul>
+							</div>
+						</details>
+						<details class="ui-accordion" name="job-acc">
+							<summary>Benefits<ui-icon type="plus-minus"></ui-icon></summary>
+							<div>
+								<ul data-part="list" itemprop="jobBenefits">
+									<li>6 weeks vacation</li>
+									<li>Hardware budget</li>
+									<li>Conference travel</li>
+								</ul>
+							</div>
+						</details>
+					</ui-accordion>
+					<nav data-part="actions"><a class="ui-button" href="#">Apply now</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     course — Course
+	     ============================================================ -->
+	<h2>Course — <code>Course</code></h2>
+	<p class="note"><code>timeRequired</code>/<code>educationalLevel</code> metas, provider → <code>Organization</code>, offer with proposed part <code>price</code>.</p>
+	<div class="stack">
+		<ui-card variant="row spl(1/2)" media="asr(4/3)" itemscope itemtype="https://schema.org/Course">
+			<cq-box>
+				<ui-media><img src="/assets/images/mindfulness.png" alt="Person meditating at sunrise" itemprop="image"></ui-media>
+				<ui-content>
+					<meta itemprop="about" content="Wellness">
+					<meta itemprop="timeRequired" content="P6W">
+					<meta itemprop="educationalLevel" content="Beginner">
+					<div itemprop="hasCourseInstance" itemscope itemtype="https://schema.org/CourseInstance" hidden>
+						<meta itemprop="courseMode" content="Online">
+					</div>
+					<small data-part="eyebrow">Wellness</small>
+					<h3 data-part="headline" itemprop="name">Mindfulness Foundations</h3>
+					<p data-part="summary" itemprop="description">A six-week guided programme: attention training, body scans and everyday practice.</p>
+					<p data-part="meta">6 weeks · Beginner · Instructor: <span itemprop="provider" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">Calm Academy</span></span></p>
+					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+						<meta itemprop="priceCurrency" content="USD">
+						<meta itemprop="availability" content="https://schema.org/InStock">
+						<data itemprop="price" value="89">USD 89</data> <del>USD 129</del>
+					</p>
+					<ul data-part="list">
+						<li>No prior experience needed</li>
+						<li>10 minutes a day</li>
+					</ul>
+					<nav data-part="actions"><a class="ui-button" href="#">Enroll</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     booking — Reservation
+	     ============================================================ -->
+	<h2>Booking — <code>Reservation</code></h2>
+	<p class="note">Service → <code>reservationFor</code>, venue → <code>provider</code>, hourly rate with <code>totalPrice</code>/<code>priceCurrency</code> metas.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Reservation">
+			<cq-box>
+				<ui-media><img src="/assets/images/brewandbean.png" alt="Bright café interior with workspace tables" itemprop="image"></ui-media>
+				<ui-content>
+					<meta itemprop="totalPrice" content="45">
+					<meta itemprop="priceCurrency" content="USD">
+					<div itemprop="reservationFor" itemscope itemtype="https://schema.org/Service" hidden>
+						<meta itemprop="name" content="Meeting Room Rental">
+					</div>
+					<small data-part="eyebrow">Workspace</small>
+					<h3 data-part="headline" itemprop="name">Book the Loft meeting room</h3>
+					<p data-part="summary" itemprop="description">A quiet 8-person room above the café — whiteboard wall, 4K display and bottomless filter coffee.</p>
+					<p data-part="meta"><span itemprop="provider" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">Brew &amp; Bean</span></span> · Capacity 8 · Min. 1 hour · Free cancellation up to 24 h</p>
+					<p data-part="price"><data value="45">USD 45</data>/hour</p>
+					<ul data-part="list">
+						<li>4K display + HDMI/USB-C</li>
+						<li>Whiteboard wall</li>
+						<li>Coffee &amp; water included</li>
+					</ul>
+					<nav data-part="actions"><a class="ui-button" href="#">Check availability</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     poll — Question
+	     ============================================================ -->
+	<h2>Poll — <code>Question</code></h2>
+	<p class="note">Proposed part <code>options</code>: each answer is a <code>&lt;label&gt;</code> + <code>&lt;progress&gt;</code>, emitted as <code>suggestedAnswer</code> → <code>Answer</code>.</p>
+	<div class="grid grid-2">
+		<ui-card variant="vis(content)" itemscope itemtype="https://schema.org/Question">
+			<cq-box>
+				<ui-content>
+					<meta itemprop="answerCount" content="3">
+					<small data-part="eyebrow">Community poll</small>
+					<h3 data-part="headline" itemprop="name">Which CSS feature changed your workflow the most?</h3>
+					<ul data-part="options">
+						<li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer">
+							<label><input type="radio" name="poll-css"> <span itemprop="text">Container queries</span></label>
+							<progress max="100" value="52"></progress> <span>52%</span>
+						</li>
+						<li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer">
+							<label><input type="radio" name="poll-css"> <span itemprop="text">:has()</span></label>
+							<progress max="100" value="31"></progress> <span>31%</span>
+						</li>
+						<li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer">
+							<label><input type="radio" name="poll-css"> <span itemprop="text">Cascade layers</span></label>
+							<progress max="100" value="17"></progress> <span>17%</span>
+						</li>
+					</ul>
+					<footer data-part="footer">2,148 votes · closes Jul 31, 2026</footer>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     profile — Person
+	     ============================================================ -->
+	<h2>Profile — <code>Person</code></h2>
+	<p class="note">Square portrait, skills as <code>tags</code>, contact links as <code>contactPoint</code>.</p>
+	<div class="grid grid-2">
+		<ui-card variant="row spl(1/2)" media="asr(1/1) obp(tc)" itemscope itemtype="https://schema.org/Person">
+			<cq-box>
+				<ui-media><img src="/assets/images/janesmith.png" alt="Portrait of Jane Smith" itemprop="image"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Team</small>
+					<h3 data-part="headline" itemprop="name">Jane Smith</h3>
+					<p data-part="subheadline"><span itemprop="jobTitle">Chief Political Correspondent</span> · <span itemprop="worksFor" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">The Daily Ledger</span></span></p>
+					<p data-part="summary" itemprop="description">Covers elections and policy across Europe. Two decades on the beat, one Pulitzer nomination.</p>
+					<p data-part="meta" itemprop="address">Copenhagen, Denmark</p>
+					<ul data-part="tags"><li><a href="#" itemprop="knowsAbout">Elections</a></li><li><a href="#" itemprop="knowsAbout">EU policy</a></li><li><a href="#" itemprop="knowsAbout">Data journalism</a></li></ul>
+					<nav data-part="actions">
+						<a class="ui-button --ghost" itemprop="email" href="mailto:jane@dailyledger.example">Email</a>
+						<a class="ui-button --ghost" itemprop="url" href="#">Portfolio</a>
+					</nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     faq — FAQPage
+	     ============================================================ -->
+	<h2>FAQ — <code>FAQPage</code></h2>
+	<p class="note">The type that moves <em>out</em> of <code>&lt;ui-content&gt;</code> parts: a nested <code>&lt;ui-accordion&gt;</code>, each item <code>mainEntity</code> → <code>Question</code> / <code>acceptedAnswer</code> → <code>Answer</code>.</p>
+	<div class="grid grid-2">
+		<ui-card variant="vis(content)" itemscope itemtype="https://schema.org/FAQPage">
+			<cq-box>
+				<ui-content>
+					<small data-part="eyebrow">Support</small>
+					<h3 data-part="headline" itemprop="name">Frequently asked questions</h3>
+					<ui-accordion group="faq-demo">
+						<details class="ui-accordion" name="faq-demo" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+							<summary><span itemprop="name">How do I reset my password?</span><ui-icon type="plus-minus"></ui-icon></summary>
+							<div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+								<p itemprop="text">Use “Forgot password” on the sign-in page. The reset link is valid for one hour.</p>
+							</div>
+						</details>
+						<details class="ui-accordion" name="faq-demo" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+							<summary><span itemprop="name">Can I change my plan later?</span><ui-icon type="plus-minus"></ui-icon></summary>
+							<div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+								<p itemprop="text">Yes — upgrades apply immediately, downgrades at the next billing cycle.</p>
+							</div>
+						</details>
+						<details class="ui-accordion" name="faq-demo" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+							<summary><span itemprop="name">Do you offer refunds?</span><ui-icon type="plus-minus"></ui-icon></summary>
+							<div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+								<p itemprop="text">Full refund within 30 days, no questions asked.</p>
+							</div>
+						</details>
+					</ui-accordion>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     timeline — EventSeries
+	     ============================================================ -->
+	<h2>Timeline — <code>EventSeries</code></h2>
+	<p class="note">Proposed part <code>timeline</code>: an <code>&lt;ol&gt;</code> where each entry is <code>subEvent</code> → <code>Event</code>.</p>
+	<div class="grid grid-2">
+		<ui-card variant="vis(content)" itemscope itemtype="https://schema.org/EventSeries">
+			<cq-box>
+				<ui-content>
+					<small data-part="eyebrow">Company history</small>
+					<h3 data-part="headline" itemprop="name">A decade of browser.style</h3>
+					<ol data-part="timeline">
+						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
+							<time itemprop="name" datetime="2016">2016</time>
+							<span itemprop="description">First CSS-only component published.</span>
+						</li>
+						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
+							<time itemprop="name" datetime="2021">2021</time>
+							<span itemprop="description">Design token system and 100th component.</span>
+						</li>
+						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
+							<time itemprop="name" datetime="2026">2026</time>
+							<span itemprop="description">v4: the unified card engine ships.</span>
+						</li>
+					</ol>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     gallery — ImageGallery
+	     ============================================================ -->
+	<h2>Gallery — <code>ImageGallery</code></h2>
+	<p class="note">Multiple media items become a carousel — <code>nav(dot)</code> — each image carrying <code>itemprop="image"</code>.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(16/9) nav(dot)" itemscope itemtype="https://schema.org/ImageGallery">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/spring.jpg" alt="Blooming cherry trees in spring" itemprop="image">
+					<img src="/assets/images/summer.jpg" alt="Sunlit meadow in summer" itemprop="image">
+					<img src="/assets/images/autumn.jpg" alt="Golden forest in autumn" itemprop="image">
+					<img src="/assets/images/winter.jpg" alt="Snow-covered pines in winter" itemprop="image">
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Photo album</small>
+					<h3 data-part="headline" itemprop="name">Four seasons</h3>
+					<p data-part="summary" itemprop="description">One year, one forest — 4 of 48 photos.</p>
+					<ul data-part="tags"><li><a href="#" itemprop="keywords">nature</a></li><li><a href="#" itemprop="keywords">seasons</a></li></ul>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     statistic — Observation
+	     ============================================================ -->
+	<h2>Statistic — <code>Observation</code></h2>
+	<p class="note">Proposed part <code>stat</code>: big number + unit + trend, value → <code>QuantitativeValue</code>.</p>
+	<div class="grid grid-3">
+		<ui-card variant="vis(content) thm(brand)" itemscope itemtype="https://schema.org/Observation">
+			<cq-box>
+				<ui-content>
+					<small data-part="eyebrow">This quarter</small>
+					<h3 data-part="headline" itemprop="name">Monthly active users</h3>
+					<p data-part="stat" itemprop="value" itemscope itemtype="https://schema.org/QuantitativeValue">
+						<data itemprop="value" value="2400000">2.4</data><small itemprop="unitText">M</small>
+						<span>▲ 12%</span>
+					</p>
+					<p data-part="meta">vs. previous quarter</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="vis(content) thm(dark)" itemscope itemtype="https://schema.org/Observation">
+			<cq-box>
+				<ui-content>
+					<small data-part="eyebrow">Core Web Vitals</small>
+					<h3 data-part="headline" itemprop="name">Median LCP</h3>
+					<p data-part="stat" itemprop="value" itemscope itemtype="https://schema.org/QuantitativeValue">
+						<data itemprop="value" value="1.4">1.4</data><small itemprop="unitText">s</small>
+						<span>▼ 0.3s</span>
+					</p>
+					<p data-part="meta">75th percentile, last 28 days</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     achievement — EducationalOccupationalCredential
+	     ============================================================ -->
+	<h2>Achievement — <code>EducationalOccupationalCredential</code></h2>
+	<p class="note">Burst sticker, issuer → <code>recognizedBy</code>, hidden <code>dateCreated</code>/<code>expires</code>/<code>identifier</code> metas.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(16/9) sticker(te) sticker(green)" itemscope itemtype="https://schema.org/EducationalOccupationalCredential">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/hubble.png" alt="Deep space photograph" itemprop="image">
+					<ui-sticker variant="burst"><strong>Certified</strong></ui-sticker>
+				</ui-media>
+				<ui-content>
+					<meta itemprop="dateCreated" content="2026-03-12">
+					<meta itemprop="expires" content="2029-03-12">
+					<meta itemprop="educationalLevel" content="Advanced">
+					<meta itemprop="identifier" content="AWA-2026-8841">
+					<small data-part="eyebrow">Credential</small>
+					<h3 data-part="headline" itemprop="name">Advanced Web Accessibility</h3>
+					<p data-part="summary" itemprop="description">Demonstrated expertise in WCAG 2.2, ARIA patterns and assistive technology testing.</p>
+					<p data-part="meta">Issued by <span itemprop="recognizedBy" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">IAAP</span></span> · Mar 2026 · Expires Mar 2029 · ID AWA-2026-8841</p>
+					<nav data-part="actions"><a class="ui-button --ghost" href="#">Verify credential</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     announcement — SpecialAnnouncement
+	     ============================================================ -->
+	<h2>Announcement — <code>SpecialAnnouncement</code></h2>
+	<p class="note">Dark theme + priority chip pattern via eyebrow; audience → <code>Audience</code>.</p>
+	<div class="grid grid-2">
+		<ui-card variant="vis(content) thm(dark)" itemscope itemtype="https://schema.org/SpecialAnnouncement">
+			<cq-box>
+				<ui-content>
+					<meta itemprop="datePosted" content="2026-07-01">
+					<meta itemprop="datePublished" content="2026-07-01">
+					<meta itemprop="expires" content="2026-07-06">
+					<meta itemprop="spatialCoverage" content="Global">
+					<small data-part="eyebrow">High priority</small>
+					<h3 data-part="headline" itemprop="name">Scheduled maintenance — July 5</h3>
+					<p data-part="summary" itemprop="text">The API will be unavailable Saturday July 5, 02:00–04:00 UTC while we migrate the primary database.</p>
+					<p data-part="meta" itemprop="audience" itemscope itemtype="https://schema.org/Audience">Audience: <span itemprop="audienceType">API customers</span></p>
+					<footer data-part="footer">Action required: re-authenticate integrations after the window.</footer>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     business — LocalBusiness
+	     ============================================================ -->
+	<h2>Business — <code>LocalBusiness</code></h2>
+	<p class="note">Proposed part <code>address</code> (<code>PostalAddress</code> scope), geo metas, opening hours.</p>
+	<div class="stack">
+		<ui-card variant="row spl(1/2)" media="asr(4/3)" itemscope itemtype="https://schema.org/LocalBusiness">
+			<cq-box>
+				<ui-media><img src="/assets/images/brewandbean.png" alt="Brew &amp; Bean café storefront" itemprop="image"></ui-media>
+				<ui-content>
+					<meta itemprop="url" content="https://brewandbean.example">
+					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+						<meta itemprop="latitude" content="55.6761">
+						<meta itemprop="longitude" content="12.5683">
+					</div>
+					<small data-part="eyebrow">Café</small>
+					<h3 data-part="headline" itemprop="name">Brew &amp; Bean</h3>
+					<p data-part="summary" itemprop="description">Specialty coffee, fresh pastry and the city’s calmest workspace corner.</p>
+					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+						<span itemprop="streetAddress">Kaffegade 12</span>,
+						<span itemprop="postalCode">1455</span>
+						<span itemprop="addressLocality">Copenhagen</span>
+						<meta itemprop="addressCountry" content="DK">
+					</address>
+					<p data-part="meta">
+						<meta itemprop="openingHours" content="Mo-Fr 07:00-18:00">
+						<meta itemprop="openingHours" content="Sa-Su 08:00-16:00">
+						Mon–Fri 7–18 · Sat–Sun 8–16
+					</p>
+					<nav data-part="actions">
+						<a class="ui-button --ghost" itemprop="telephone" href="tel:+4533221100">+45 33 22 11 00</a>
+						<a class="ui-button --ghost" itemprop="email" href="mailto:hello@brewandbean.example">Email</a>
+					</nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     comparison — ItemList
+	     ============================================================ -->
+	<h2>Comparison — <code>ItemList</code></h2>
+	<p class="note">Items as <code>ListItem</code> with position metas; recommendation in the footer.</p>
+	<div class="grid grid-2">
+		<ui-card variant="vis(content)" itemscope itemtype="https://schema.org/ItemList">
+			<cq-box>
+				<ui-content>
+					<meta itemprop="numberOfItems" content="3">
+					<small data-part="eyebrow">Buyer’s guide</small>
+					<h3 data-part="headline" itemprop="name">Portable speakers compared</h3>
+					<ul data-part="options">
+						<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+							<meta itemprop="position" content="1">
+							<label><span itemprop="name">SoundWave Mini</span> — USD 79</label>
+							<progress max="100" value="92"></progress> <span>9.2</span>
+						</li>
+						<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+							<meta itemprop="position" content="2">
+							<label><span itemprop="name">AuraSound Go</span> — USD 99</label>
+							<progress max="100" value="85"></progress> <span>8.5</span>
+						</li>
+						<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+							<meta itemprop="position" content="3">
+							<label><span itemprop="name">QuickBoom 2</span> — USD 69</label>
+							<progress max="100" value="78"></progress> <span>7.8</span>
+						</li>
+					</ul>
+					<footer data-part="footer">Recommended: SoundWave Mini — best sound per gram.</footer>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     contact — ContactPoint
+	     ============================================================ -->
+	<h2>Contact — <code>ContactPoint</code></h2>
+	<p class="note"><code>contactType</code>/<code>hoursAvailable</code> metas; each method a real <code>mailto:</code>/<code>tel:</code> link.</p>
+	<div class="grid grid-2">
+		<ui-card variant="row-r spl(2/1)" media="asr(1/1)" itemscope itemtype="https://schema.org/ContactPoint">
+			<cq-box>
+				<ui-media><img src="/assets/images/world.png" alt="Illustrated world map"></ui-media>
+				<ui-content>
+					<meta itemprop="contactType" content="customer support">
+					<meta itemprop="hoursAvailable" content="Mo-Fr 09:00-17:00">
+					<small data-part="eyebrow">Support</small>
+					<h3 data-part="headline">Talk to a human</h3>
+					<p data-part="summary" itemprop="description">Real people, no phone trees. Average response under 2 hours.</p>
+					<p data-part="meta">Mon–Fri 9–17 CET · English, Danish, German</p>
+					<nav data-part="actions">
+						<a class="ui-button" itemprop="email" href="mailto:support@example.com">support@example.com</a>
+						<a class="ui-button --ghost" itemprop="telephone" href="tel:+4570203040">+45 70 20 30 40</a>
+					</nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     location — Place
+	     ============================================================ -->
+	<h2>Location — <code>Place</code></h2>
+	<p class="note">Overlay over a destination shot; address + geo, amenities as <code>list</code>.</p>
+	<div class="grid grid-2">
+		<ui-card variant="ovr(bl)" media="asr(3/4) scm" content="scl(lg)" itemscope itemtype="https://schema.org/Place">
+			<cq-box>
+				<ui-media><img src="/assets/images/destinations.png" alt="Coastal viewpoint with turquoise water" itemprop="image"></ui-media>
+				<ui-content>
+					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+						<meta itemprop="latitude" content="55.0603">
+						<meta itemprop="longitude" content="14.7009">
+					</div>
+					<small data-part="eyebrow">Destination</small>
+					<strong data-part="headline" itemprop="name">Hammershus Point</strong>
+					<span data-part="summary" itemprop="description">Northern Europe’s largest castle ruin, perched on Bornholm’s granite cliffs.</span>
+					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+						<span itemprop="addressLocality">Allinge</span>, <span itemprop="addressCountry">Denmark</span>
+					</address>
+					<span data-part="meta">Open all year · Free entry · Visitor centre 10–17</span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     membership — Offer
+	     ============================================================ -->
+	<h2>Membership — <code>Offer</code></h2>
+	<p class="note">Brand theme, <code>PriceSpecification</code>, features as check-<code>list</code>.</p>
+	<div class="grid grid-3">
+		<ui-card variant="vis(content) thm(brand)" itemscope itemtype="https://schema.org/Offer">
+			<cq-box>
+				<ui-content>
+					<meta itemprop="eligibleDuration" content="P14D">
+					<small data-part="eyebrow">Most popular</small>
+					<h3 data-part="headline" itemprop="name">FitTrack Pro</h3>
+					<p data-part="summary" itemprop="description">Unlimited workouts, personal coaching and priority support.</p>
+					<p data-part="price" itemprop="priceSpecification" itemscope itemtype="https://schema.org/PriceSpecification">
+						<meta itemprop="priceCurrency" content="USD">
+						<data itemprop="price" value="19">USD 19</data>/mo <small>or USD 190/yr — save 17%</small>
+					</p>
+					<ul data-part="list" itemprop="includesObject">
+						<li>Unlimited workout library</li>
+						<li>1:1 coaching sessions</li>
+						<li>Advanced sleep analytics</li>
+					</ul>
+					<p data-part="meta">14-day free trial · cancel anytime</p>
+					<nav data-part="actions"><a class="ui-button" href="#">Start free trial</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     social — SocialMediaPosting
+	     ============================================================ -->
+	<h2>Social — <code>SocialMediaPosting</code></h2>
+	<p class="note">Byline + post text as <code>quote</code> part, hashtags as tags, engagement as three <code>InteractionCounter</code>s.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/SocialMediaPosting">
+			<cq-box>
+				<ui-media><img src="/assets/images/elephant.png" alt="Elephant crossing a savanna road" itemprop="image"></ui-media>
+				<ui-content>
+					<meta itemprop="datePublished" content="2026-06-28T16:20:00Z">
+					<div itemprop="publisher" itemscope itemtype="https://schema.org/Organization" hidden>
+						<meta itemprop="name" content="Chirper">
+					</div>
+					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+						<img src="/assets/images/janesmith.png" alt="">
+						<span><span itemprop="name">@wildlifewatch</span> · Jun 28</span>
+					</address>
+					<blockquote data-part="quote" itemprop="text">Waited four hours at the waterhole for this crossing. Worth every minute. 🐘</blockquote>
+					<ul data-part="tags"><li><a href="#">#wildlife</a></li><li><a href="#">#safari</a></li><li><a href="#">#photography</a></li></ul>
+					<div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden>
+						<meta itemprop="interactionType" content="https://schema.org/LikeAction">
+						<meta itemprop="userInteractionCount" content="3200">
+					</div>
+					<div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden>
+						<meta itemprop="interactionType" content="https://schema.org/ShareAction">
+						<meta itemprop="userInteractionCount" content="410">
+					</div>
+					<div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden>
+						<meta itemprop="interactionType" content="https://schema.org/CommentAction">
+						<meta itemprop="userInteractionCount" content="87">
+					</div>
+					<footer data-part="footer">3.2K likes · 410 reposts · 87 comments</footer>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     software — SoftwareApplication (flip reveal)
+	     ============================================================ -->
+	<h2>Software — <code>SoftwareApplication</code></h2>
+	<p class="note">The flipside pattern: <code>&lt;ui-reveal type="flip"&gt;</code> — front is box art + name, the back <code>&lt;ui-content&gt;</code> holds specs, developer and offer. Microdata sits on the reveal root so it survives either face.</p>
+	<div class="grid grid-3">
+		<ui-reveal icon="top right sm" icon-close="dark" type="flip" variant="ovr(bl) rds(lg-sq)" media="asr(3/4) hov(zoom) scm" itemscope itemtype="https://schema.org/SoftwareApplication">
+			<details name="software-flip">
+				<summary>
+					<ui-face>
+						<ui-media><img src="/assets/images/game_01.png" alt="Pixel Raiders key art — chibi heroes charging into battle" itemprop="image" loading="lazy"></ui-media>
+						<ui-content>
+							<small data-part="eyebrow">Adventure game</small>
+							<strong data-part="headline" itemprop="name">Pixel Raiders</strong>
+							<span data-part="meta">v<span itemprop="softwareVersion">2.1</span></span>
+						</ui-content>
+					</ui-face>
+					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+				</summary>
+				<ui-content tabindex="0">
+					<meta itemprop="applicationCategory" content="GameApplication">
+					<meta itemprop="operatingSystem" content="macOS">
+					<meta itemprop="operatingSystem" content="Windows">
+					<meta itemprop="operatingSystem" content="Switch">
+					<small data-part="eyebrow">Adventure game</small>
+					<h3 data-part="headline">Pixel Raiders 2.1</h3>
+					<p data-part="summary" itemprop="description">Co-op dungeon crawling for up to four raiders — new Sky Fortress season, cross-play everywhere.</p>
+					<p data-part="meta">macOS · Windows · Switch · 2.4 GB</p>
+					<p data-part="meta" itemprop="author" itemscope itemtype="https://schema.org/Organization">Developer: <span itemprop="name">Bitburrow Studio</span><meta itemprop="url" content="https://bitburrow.example"></p>
+					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+						<meta itemprop="priceCurrency" content="USD">
+						<meta itemprop="availability" content="https://schema.org/InStock">
+						<data itemprop="price" value="29">USD 29</data> <small>one-time purchase</small>
+					</p>
+					<nav data-part="actions"><a class="ui-button" href="#">Play demo</a></nav>
+				</ui-content>
+			</details>
+		</ui-reveal>
+	</div>
+</body>
+</html>

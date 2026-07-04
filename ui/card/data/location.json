@@ -1,0 +1,38 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "location-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-04T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Places"
+  },
+  "fields": {
+    "internalName": "Demo — Location",
+    "schemaType": "location",
+    "eyebrow": "Destination",
+    "headline": "Hammershus Point",
+    "summary": "Northern Europe’s largest castle ruin, perched on Bornholm’s granite cliffs.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/destinations.png",
+        "alt": "Coastal viewpoint with turquoise water"
+      }
+    ],
+    "presentationHint": "overlay",
+    "details": {
+      "address": {
+        "addressLocality": "Allinge",
+        "addressCountry": "Denmark"
+      },
+      "geo": {
+        "latitude": 55.0603,
+        "longitude": 14.7009
+      },
+      "hours": "Open all year · Free entry · Visitor centre 10–17"
+    }
+  }
+}

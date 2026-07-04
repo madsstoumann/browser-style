@@ -1,0 +1,27 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "statistic-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-04T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Data"
+  },
+  "fields": {
+    "internalName": "Demo — Statistic",
+    "schemaType": "statistic",
+    "eyebrow": "This quarter",
+    "headline": "Monthly active users",
+    "details": {
+      "metricName": "Monthly active users",
+      "currentValue": 2400000,
+      "displayValue": "2.4",
+      "unit": "M",
+      "trend": "up",
+      "trendPercentage": 12,
+      "note": "vs. previous quarter"
+    }
+  }
+}

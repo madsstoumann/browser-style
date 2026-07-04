@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "contact-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-04T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Support"
+  },
+  "fields": {
+    "internalName": "Demo — Contact",
+    "schemaType": "contact",
+    "eyebrow": "Support",
+    "headline": "Talk to a human",
+    "summary": "Real people, no phone trees. Average response under 2 hours.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/world.png",
+        "alt": "Illustrated world map"
+      }
+    ],
+    "details": {
+      "contactType": "customer support",
+      "availableHours": "Mo-Fr 09:00-17:00",
+      "availableHoursDisplay": "Mon–Fri 9–17 CET",
+      "responseTime": "under 2 hours",
+      "languages": "English, Danish, German",
+      "contactMethods": [
+        { "type": "email", "value": "support@example.com", "label": "support@example.com" },
+        { "type": "phone", "value": "+4570203040", "label": "+45 70 20 30 40" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "content-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-04T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Generic"
+  },
+  "fields": {
+    "internalName": "Demo — Content (CreativeWork fallback)",
+    "schemaType": "content",
+    "eyebrow": "Design",
+    "headline": "A generic piece of content",
+    "summary": "Anything without a dedicated schema type renders as CreativeWork — headline, summary, tags and actions straight from the envelope.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/popovers.png",
+        "alt": "Abstract illustration of layered UI panels"
+      }
+    ],
+    "tags": ["generic", "fallback"],
+    "actions": [
+      { "link": { "url": "#", "text": "Read more" }, "style": "primary" }
+    ]
+  }
+}

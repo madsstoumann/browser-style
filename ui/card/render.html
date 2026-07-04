@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Card — Render Engine</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="All 26 card types rendered client-side by render.js from UCF data files in data/ — same markup and microdata as the hand-authored schema.html.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../chip/ui-chip.css">
+	<link rel="stylesheet" href="../sticker/ui-sticker.css">
+	<link rel="stylesheet" href="../play/ui-play.css">
+	<link rel="stylesheet" href="../save/ui-save.css">
+	<link rel="stylesheet" href="../icon/index.css">
+	<link rel="stylesheet" href="../reveal/ui-reveal.css">
+	<link rel="stylesheet" href="../accordion/ui-accordion.css">
+	<link rel="stylesheet" href="ui-card.css">
+	<style>
+		.grid {
+			display: grid;
+			gap: var(--spacing-lg);
+			grid-template-columns: 1fr;
+			margin-block-end: var(--spacing-2xl);
+		}
+		@media (min-width: 540px) {
+			.grid-2 { grid-template-columns: repeat(2, 1fr); }
+		}
+		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
+		code { font-size: 0.9em; }
+	</style>
+</head>
+<body>
+	<h1>UI: Card — Render Engine</h1>
+	<p class="note">Every card on this page is built at runtime by <a href="render.js"><code>render.js</code></a> from the UCF data files in <a href="data/"><code>data/</code></a> — the same envelope + <code>details</code> model defined in <code>cms/baseline/models/card.schema.json</code>. Markup and microdata match the hand-authored reference in <a href="schema.html">schema.html</a>. All DOM is built with <code>createElement</code>/<code>textContent</code> — no <code>innerHTML</code>.</p>
+
+	<main></main>
+
+	<script type="module">
+		import { renderCard, SCHEMA_TYPES } from './render.js';
+
+		const main = document.querySelector('main');
+		const types = await (await fetch('data/index.json')).json();
+
+		for (const type of types) {
+			const ucf = await (await fetch(`data/${type}.json`)).json();
+
+			const heading = document.createElement('h2');
+			const code = document.createElement('code');
+			code.textContent = SCHEMA_TYPES[ucf.fields.schemaType] || 'CreativeWork';
+			heading.append(`${type} — `, code);
+
+			const grid = document.createElement('div');
+			grid.className = 'grid grid-2';
+			grid.append(renderCard(ucf));
+
+			main.append(heading, grid);
+		}
+	</script>
+</body>
+</html>

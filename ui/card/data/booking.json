@@ -1,0 +1,45 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "booking-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-04T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Commerce"
+  },
+  "fields": {
+    "internalName": "Demo — Booking",
+    "schemaType": "booking",
+    "eyebrow": "Workspace",
+    "headline": "Book the Loft meeting room",
+    "summary": "A quiet 8-person room above the café — whiteboard wall, 4K display and bottomless filter coffee.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/brewandbean.png",
+        "alt": "Bright café interior with workspace tables"
+      }
+    ],
+    "actions": [
+      { "link": { "url": "#", "text": "Check availability" }, "style": "primary" }
+    ],
+    "details": {
+      "serviceName": "Meeting Room Rental",
+      "venue": "Brew & Bean",
+      "capacity": 8,
+      "duration": "Min. 1 hour",
+      "price": {
+        "hourlyRate": 45,
+        "currency": "USD"
+      },
+      "amenities": [
+        "4K display + HDMI/USB-C",
+        "Whiteboard wall",
+        "Coffee & water included"
+      ],
+      "cancellationPolicy": "Free cancellation up to 24 h"
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "product-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-04T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Commerce"
+  },
+  "fields": {
+    "internalName": "Demo — Product",
+    "schemaType": "product",
+    "eyebrow": "Electronics",
+    "headline": "AuraSound Pro Wireless Headphones",
+    "summary": "Industry-leading noise cancellation, 30-hour battery and multipoint pairing.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/aurasoundpro.png",
+        "alt": "AuraSound Pro wireless headphones"
+      }
+    ],
+    "sticker": {
+      "text": "-20%",
+      "position": "te",
+      "hue": "red",
+      "burst": true
+    },
+    "saveable": true,
+    "actions": [
+      { "link": { "url": "#", "text": "Add to cart" }, "style": "primary" },
+      { "link": { "url": "#", "text": "Details" }, "style": "ghost" }
+    ],
+    "details": {
+      "price": {
+        "current": 279,
+        "original": 349,
+        "currency": "USD",
+        "discountText": "Save 20%"
+      },
+      "availability": "In Stock",
+      "rating": {
+        "value": 4.5,
+        "count": 1247,
+        "max": 5
+      },
+      "sku": "WH-1000XM5",
+      "validUntil": "2026-08-01"
+    }
+  }
+}

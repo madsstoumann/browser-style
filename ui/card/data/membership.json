@@ -1,0 +1,39 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "membership-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-04T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Commerce"
+  },
+  "fields": {
+    "internalName": "Demo — Membership",
+    "schemaType": "membership",
+    "eyebrow": "Most popular",
+    "headline": "FitTrack Pro",
+    "summary": "Unlimited workouts, personal coaching and priority support.",
+    "actions": [
+      { "link": { "url": "#", "text": "Start free trial" }, "style": "primary" }
+    ],
+    "details": {
+      "planName": "FitTrack Pro",
+      "price": {
+        "monthly": 19,
+        "yearly": 190,
+        "currency": "USD",
+        "savings": "save 17%"
+      },
+      "trialPeriod": "P14D",
+      "trialText": "14-day free trial · cancel anytime",
+      "features": [
+        "Unlimited workout library",
+        "1:1 coaching sessions",
+        "Advanced sleep analytics"
+      ],
+      "isPopular": true
+    }
+  }
+}
