@@ -4,7 +4,7 @@
 	<title>Moesgaard — Film &amp; Exhibitions</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="A museum landing page built from <ui-media>/<ui-card>: native full-clip split cards (hero + Autumn) with our play/PiP/fullscreen tools, and provider=vimeo iframe embeds that open the real Vimeo player.">
+	<meta name="description" content="A museum landing page built from ui-media ui-card: native full-clip split cards (hero + Autumn) with our play/PiP/fullscreen tools, and provider=vimeo iframe embeds that open the real Vimeo player.">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
@@ -25,19 +25,27 @@
 </head>
 <body>
 
-	<h2>Video play/pause — <code>&lt;ui-play&gt;</code> over <code>&lt;video&gt;</code></h2>
-	<p class="note">Drop a <code>&lt;ui-play&gt;</code> onto a native <code>&lt;video&gt;</code> (no <code>controls</code>) and <code>index.js</code> wires it: the button toggles play/pause and mirrors the real playback state (glyph morphs play↔pause). The button <strong>fades out while playing</strong>, reappears on hover, and stays put when paused. To defer the download use native <code>preload="none"</code> with a <code>poster</code> (<code>&lt;video&gt;</code> does <em>not</em> support <code>loading="lazy"</code> — that's <code>&lt;img&gt;</code>/<code>&lt;iframe&gt;</code> only); the file is only fetched on first play. <code>variant="reveal"</code> hides the button until hover/focus.</p>
-
+	<h2>Native video</h2>
+	<p class="note">Four native-video setups. <strong>native video</strong>: the browser's own <code>&lt;video controls&gt;</code> — no <code>&lt;ui-play&gt;</code>, no JS. The rest put a <code>&lt;ui-play&gt;</code> over a chrome-less <code>&lt;video&gt;</code> — a <strong>custom</strong> control, an <strong>autoplay</strong> loop, and a <strong>custom poster</strong> that shows until play. All keep a stable frame via <code>asr()</code>.</p>
 	<div class="grid grid-2">
+		<ui-media media="asr(16/9) rds(lg)">
+			<video controls playsinline poster="/assets/images/city.png" src="/assets/video/city.mp4"></video>
+			<ui-chip>native video</ui-chip>
+		</ui-media>
 		<ui-media media="asr(16/9) rds(lg) vid(fls) vid(pip)">
 			<video src="https://assets.stoumann.dk/video/river.mp4" poster="/assets/images/river.png" preload="none" muted loop playsinline></video>
 			<ui-play><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
-			<ui-chip>native video</ui-chip>
+			<ui-chip>native custom</ui-chip>
 		</ui-media>
 		<ui-media media="asr(16/9) rds(lg) vid(fls) vid(pip)">
 			<video src="/assets/video/city.mp4" poster="/assets/images/city.png" autoplay muted loop playsinline></video>
 			<ui-play variant="reveal"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>autoplay</ui-chip>
+		</ui-media>
+		<ui-media media="asr(16/9) rds(lg) vid(fls) vid(pip)">
+			<video src="https://assets.stoumann.dk/video/river.mp4" poster="/assets/images/hubble.png" preload="none" muted loop playsinline></video>
+			<ui-play><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+			<ui-chip>custom poster</ui-chip>
 		</ui-media>
 	</div>
 
@@ -66,6 +74,32 @@
 				<ui-content><small data-part="eyebrow">provider="youtube" video="ID"</small><h3 data-part="headline">Building a UI component library</h3><p data-part="summary">A comprehensive component library for modern web development — press play to watch on YouTube.</p></ui-content>
 			</cq-box>
 		</ui-card>
+	</div>
+
+	<h2>YouTube — no-JS facade via <code>srcdoc</code></h2>
+	<p class="note">No JavaScript at all. The <code>&lt;iframe srcdoc&gt;</code> renders a poster + a real <code>&lt;a&gt;</code> link; clicking it navigates the iframe <em>itself</em> to the <code>?autoplay=1</code> embed — the click is the user gesture autoplay needs. <code>src</code> is the fallback for browsers without <code>srcdoc</code> support. No <code>provider</code>, so <code>index.js</code> never touches it.</p>
+	<div class="grid">
+		<ui-media media="asr(16/9) rds(lg) chip(red)">
+			<iframe
+				title="What’s new in Web UI"
+				loading="lazy"
+				allow="autoplay; fullscreen"
+				src="about:blank"
+		srcdoc="
+			<style>
+				:root { --_p: url('https://i.ytimg.com/vi/VTCIStB6y8s/maxresdefault.jpg'); }
+				a { position: fixed; inset: 0; display: grid; place-content: center; background: var(--_p) center / cover no-repeat; text-decoration: none; }
+				.yt { display: grid; place-content: center; inline-size: 4em; aspect-ratio: 1.422; background: #ff0033; border-radius: 4em; corner-shape: squircle; transition: background 0.2s; }
+				.yt i { display: block; inline-size: calc(4em / 3); aspect-ratio: 1; background: #fff; clip-path: polygon(16% 0%, 15% 100%, 100% 50%); }
+				a:hover .yt, a:focus .yt { background: #d10029; }
+			</style>
+			<a href='https://www.youtube-nocookie.com/embed/VTCIStB6y8s?autoplay=1&amp;mute=1&amp;playsinline=1' aria-label='Play video'>
+				<span class='yt'><i></i></span>
+			</a>
+		">
+			</iframe>
+				<ui-chip>youtube</ui-chip>
+		</ui-media>
 	</div>
 
 	<h2>YouTube — looping preview in front</h2>
