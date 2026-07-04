@@ -630,6 +630,31 @@ function videoPlayNodes() {
 		});
 }
 
+/* ============================================================
+ * Minimal opt-in video tracking. Mark a native <video data-track="label">; this logs
+ * play · pause · complete · 25/50/75% quartiles to the console. Only marked videos are
+ * tracked (explicit opt-in). Native <video> only — iframe embeds are cross-origin, no
+ * events. Swap the console.log for a real analytics sink (or dispatch a CustomEvent).
+ * ============================================================ */
+export function initVideoTracking(videos) {
+	for (const v of videos) {
+		if (v.dataset.uiTrack) continue;   // idempotent
+		v.dataset.uiTrack = '1';
+		const id = v.getAttribute('data-track') || v.id || 'video';
+		const log = (event, extra) => console.log(`[video-track] ${event}`, { id, t: Math.round(v.currentTime), ...extra });
+		v.addEventListener('play',  () => log('play'));
+		v.addEventListener('pause', () => { if (!v.ended) log('pause'); });
+		v.addEventListener('ended', () => log('complete'));
+		const seen = new Set();
+		v.addEventListener('timeupdate', () => {
+			if (!v.duration) return;
+			for (const q of [0.25, 0.5, 0.75]) {
+				if (v.currentTime / v.duration >= q && !seen.has(q)) { seen.add(q); log('progress', { pct: q * 100 }); }
+			}
+		});
+	}
+}
+
 export function scan() {
 	initSolo();
 	initMediaCommands();   // <button command="play-pause" commandfor> polyfill (native <video>)
@@ -639,6 +664,7 @@ export function scan() {
 	initEmbeds(document.querySelectorAll(EMBED_SEL));
 	initVideoPlay(videoPlayNodes());
 	initVideoTools(document.querySelectorAll(VIDTOOLS_SEL));
+	initVideoTracking(document.querySelectorAll('video[data-track]'));
 }
 
 (globalThis.requestIdleCallback || ((fn) => setTimeout(fn, 1)))(scan);
