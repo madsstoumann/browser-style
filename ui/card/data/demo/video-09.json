@@ -1,0 +1,47 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "video-demo-09",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Video demo — autumn split-reverse (1012727854)",
+    "schemaType": "content",
+    "preset": {
+      "$ref": "card-preset/video-split-reverse"
+    },
+    "eyebrow": "Season",
+    "headline": "Autumn on the heath",
+    "summary": "The grounds turn gold and the light goes low — the museum at its most beautiful. Same split card as above, mirrored: content left, video right, stacking on mobile.",
+    "media": [
+      {
+        "mediaType": "video",
+        "src": "vimeo-data/previews/1012727854.full.mp4",
+        "poster": "vimeo-data/previews/1012727854.jpg",
+        "controls": false,
+        "alt": "Autumn on the heath around the museum"
+      }
+    ],
+    "play": {
+      "position": "cc",
+      "size": "lg"
+    },
+    "chip": {
+      "text": "vimeo native"
+    },
+    "actions": [
+      {
+        "link": {
+          "url": "#",
+          "text": "See what’s on"
+        },
+        "style": "primary"
+      }
+    ]
+  }
+}

@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-04T12:00:00Z",
-    "updatedAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Education"
@@ -12,6 +12,9 @@
   "fields": {
     "internalName": "Demo — Course",
     "schemaType": "course",
+    "preset": {
+      "$ref": "card-preset/split"
+    },
     "eyebrow": "Wellness",
     "headline": "Mindfulness Foundations",
     "summary": "A six-week guided programme: attention training, body scans and everyday practice.",
@@ -23,12 +26,20 @@
       }
     ],
     "actions": [
-      { "link": { "url": "#", "text": "Enroll" }, "style": "primary" }
+      {
+        "link": {
+          "url": "#",
+          "text": "Enroll"
+        },
+        "style": "primary"
+      }
     ],
     "details": {
       "duration": "P6W",
       "difficultyLevel": "Beginner",
-      "instructor": { "name": "Calm Academy" },
+      "instructor": {
+        "name": "Calm Academy"
+      },
       "price": {
         "current": 89,
         "original": 129,

@@ -1,0 +1,43 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "carousel-demo-04",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Carousel Demo — Album with chip (3 images)",
+    "schemaType": "gallery",
+    "preset": {
+      "$ref": "card-preset/carousel-plain"
+    },
+    "eyebrow": "Album",
+    "headline": "Three photos",
+    "summary": "A chip badge counts the frames.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/popovers.png",
+        "alt": "Freshly baked popovers"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/government.png",
+        "alt": "Government building facade"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/fittrackpro.png",
+        "alt": "FitTrack Pro fitness watch"
+      }
+    ],
+    "chip": {
+      "text": "3 photos",
+      "position": "te"
+    }
+  }
+}

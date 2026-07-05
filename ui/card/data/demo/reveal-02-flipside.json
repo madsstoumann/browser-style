@@ -1,0 +1,28 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "reveal-demo-02-flipside",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Reveal demo 02 — Frontier Outlaws flipside (popup panel)",
+    "schemaType": "software",
+    "headline": "Frontier Outlaws",
+    "subheadline": "Ride into a frontier that remembers everything you do. Rob the noon stage or marshal the town that hangs you for it — every choice ripples through a living West of dust, debt and gunsmoke.",
+    "summary": "Tame wild horses, build your gang, and survive a dynamic bounty system where your reputation precedes you into every saloon. Online posses or solo drifter.",
+    "actions": [
+      {
+        "link": {
+          "url": "#",
+          "text": "Get — $39.99"
+        },
+        "style": "ghost"
+      }
+    ]
+  }
+}

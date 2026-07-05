@@ -1,0 +1,45 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "carousel-demo-08",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Carousel Demo — Video slides (3)",
+    "schemaType": "content",
+    "preset": {
+      "$ref": "card-preset/carousel-videos"
+    },
+    "eyebrow": "Video",
+    "headline": "Play one, swipe away — it pauses",
+    "summary": "Each slide plays independently; leaving a slide pauses its video.",
+    "media": [
+      {
+        "mediaType": "video",
+        "src": "https://assets.stoumann.dk/video/river.mp4",
+        "poster": "/assets/images/river.png",
+        "loop": true,
+        "alt": "River flowing past a poster frame"
+      },
+      {
+        "mediaType": "video",
+        "src": "https://assets.stoumann.dk/video/river.mp4",
+        "poster": "/assets/images/mindfulness.png",
+        "loop": true,
+        "alt": "Calm water video slide"
+      },
+      {
+        "mediaType": "video",
+        "src": "https://assets.stoumann.dk/video/river.mp4",
+        "poster": "/assets/images/gastronomy.png",
+        "loop": true,
+        "alt": "Third video slide"
+      }
+    ]
+  }
+}

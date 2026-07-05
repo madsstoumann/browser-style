@@ -1,0 +1,31 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "reveal-demo-02",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Reveal demo 02 — Frontier Outlaws",
+    "schemaType": "software",
+    "preset": {
+      "$ref": "card-preset/reveal-expand-viewport-umber"
+    },
+    "flipside": {
+      "$ref": "card/reveal-demo-02-flipside"
+    },
+    "eyebrow": "Open-World Western",
+    "headline": "Frontier Outlaws",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/game_02.png",
+        "alt": "Outlaw on horseback riding into a dusty frontier town"
+      }
+    ]
+  }
+}

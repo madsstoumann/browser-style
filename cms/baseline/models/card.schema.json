@@ -2,11 +2,11 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "id": "card",
   "title": "🃏 Card",
-  "description": "A universal, schema.org-driven card. One structured envelope (headline, summary, media, authors, actions, engagement…) shared by every card, a `schemaType` discriminator covering 25 schema.org types, and a single `details` object for type-specific data. Presentation (variant/media/content tokens for <ui-card>) deliberately lives OUTSIDE this model — in layout-config — so the same card can render as hero, grid item or overlay without content changes. `presentationHint` is the only editorial nudge.",
+  "description": "A universal, schema.org-driven card. One structured envelope (headline, summary, media, authors, actions, engagement…) shared by every card, a `schemaType` discriminator covering 25 schema.org types, and a single `details` object for type-specific data. Presentation (variant/media/content tokens for <ui-card>/<ui-reveal>) deliberately lives OUTSIDE this model — in a referenced card-preset — so the same card can render as hero, grid item, overlay or flip by swapping one reference.",
   "metadata": {
     "localized": true,
-    "version": "1.0.0",
-    "lastModified": "2026-07-04",
+    "version": "1.1.0",
+    "lastModified": "2026-07-05",
     "displayField": "internalName"
   },
   "structure": {
@@ -35,7 +35,7 @@
         "name": "Media",
         "description": "Media items (more than one becomes a carousel) and overlay furniture",
         "collapse": true,
-        "fields": ["media", "chip", "sticker", "saveable"]
+        "fields": ["media", "chip", "sticker", "play", "saveable"]
       },
       {
         "area": "main",
@@ -57,9 +57,9 @@
         "area": "main",
         "type": "group",
         "name": "Type Details",
-        "description": "Schema-type-specific data and presentation hint",
+        "description": "Schema-type-specific data, the look & feel preset, and the optional reveal flipside",
         "collapse": false,
-        "fields": ["details", "presentationHint"]
+        "fields": ["details", "preset", "flipside"]
       }
     ]
   },
@@ -373,6 +373,56 @@
         }
       }
     },
+    "play": {
+      "type": "object",
+      "title": "Play",
+      "description": "Play/pause affordance (<ui-play>) on the media — for videos and autoplay carousels. In autoplay/loop carousels it becomes the sole play/pause control.",
+      "properties": {
+        "position": {
+          "type": "select",
+          "title": "Position",
+          "localized": false,
+          "default": "cc",
+          "options": [
+            { "value": "ts", "label": "Top start" },
+            { "value": "tc", "label": "Top center" },
+            { "value": "te", "label": "Top end" },
+            { "value": "cs", "label": "Center start" },
+            { "value": "cc", "label": "Center" },
+            { "value": "ce", "label": "Center end" },
+            { "value": "bs", "label": "Bottom start" },
+            { "value": "bc", "label": "Bottom center" },
+            { "value": "be", "label": "Bottom end" }
+          ]
+        },
+        "hue": {
+          "type": "select",
+          "title": "Hue",
+          "localized": false,
+          "options": [
+            { "value": "red", "label": "Red" },
+            { "value": "orange", "label": "Orange" },
+            { "value": "green", "label": "Green" },
+            { "value": "blue", "label": "Blue" },
+            { "value": "accent", "label": "Accent" },
+            { "value": "dark", "label": "Dark" },
+            { "value": "light", "label": "Light" },
+            { "value": "subtle", "label": "Subtle" }
+          ]
+        },
+        "size": {
+          "type": "select",
+          "title": "Size",
+          "localized": false,
+          "options": [
+            { "value": "sm", "label": "Small" },
+            { "value": "md", "label": "Medium" },
+            { "value": "lg", "label": "Large" },
+            { "value": "xl", "label": "Extra large" }
+          ]
+        }
+      }
+    },
     "saveable": {
       "type": "boolean",
       "title": "Saveable",
@@ -402,19 +452,25 @@
         }
       }
     },
-    "presentationHint": {
-      "type": "select",
-      "title": "Presentation Hint",
-      "description": "Optional editorial nudge for the renderer. Actual <ui-card> variant/media/content tokens live in layout-config, not here.",
+    "preset": {
+      "type": "reference",
+      "title": "Preset",
+      "description": "Reference to a card-preset defining the look & feel: the host element (<ui-card> or <ui-reveal>) and its variant/media/content attribute token strings. Swap the reference to restyle the card without touching content. Falls back to the renderer's default (stack) when unset.",
       "localized": false,
-      "default": "default",
-      "options": [
-        { "value": "default", "label": "Default" },
-        { "value": "hero", "label": "Hero (large, overlay)" },
-        { "value": "compact", "label": "Compact (dense grid)" },
-        { "value": "overlay", "label": "Overlay (content over media)" },
-        { "value": "flip", "label": "Flip (reveal flipside)" }
-      ]
+      "options": {
+        "referenceType": "card-preset",
+        "multiple": false
+      }
+    },
+    "flipside": {
+      "type": "reference",
+      "title": "Flipside",
+      "description": "Optional reference to another card whose content renders as the reveal back panel. Only used when the preset's element is ui-reveal. Unset: the back panel is derived from this card's own envelope + details. The flipside shares the host's schema.org scope — use the same schemaType (or the neutral 'content') to keep microdata coherent. Resolved one level deep; a flipside's own flipside is ignored.",
+      "localized": false,
+      "options": {
+        "referenceType": "card",
+        "multiple": false
+      }
     },
     "details": {
       "type": "object",

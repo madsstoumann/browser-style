@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-04T12:00:00Z",
-    "updatedAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Commerce"
@@ -12,6 +12,9 @@
   "fields": {
     "internalName": "Demo — Review",
     "schemaType": "review",
+    "preset": {
+      "$ref": "card-preset/portrait"
+    },
     "eyebrow": "Verified review",
     "headline": "Punches far above its size",
     "summary": "Astonishing bass for a speaker this small. Battery easily lasts a weekend trip — the app is the only weak point.",

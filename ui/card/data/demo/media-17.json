@@ -1,0 +1,34 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "media-demo-17",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Demo — Media: starburst sticker",
+    "schemaType": "content",
+    "preset": {
+      "$ref": "card-preset/showcase"
+    },
+    "eyebrow": "Furniture",
+    "headline": "Starburst sticker",
+    "sticker": {
+      "text": "-28%",
+      "position": "te",
+      "hue": "red",
+      "burst": true
+    },
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/ergochair.png",
+        "alt": "Ergonomic office chair"
+      }
+    ]
+  }
+}

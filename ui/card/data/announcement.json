@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-04T12:00:00Z",
-    "updatedAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Operations"
@@ -12,6 +12,9 @@
   "fields": {
     "internalName": "Demo — Announcement",
     "schemaType": "announcement",
+    "preset": {
+      "$ref": "card-preset/panel-dark"
+    },
     "eyebrow": "High priority",
     "headline": "Scheduled maintenance — July 5",
     "summary": "The API will be unavailable Saturday July 5, 02:00–04:00 UTC while we migrate the primary database.",

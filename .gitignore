@@ -23,6 +23,7 @@ _v2/
 
 # CMS Configuration Files
 .cmsconfig
+/.playwright-mcp
 
 # Docusaurus build cache
 baseline/.docusaurus/

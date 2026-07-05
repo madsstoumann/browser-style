@@ -1,0 +1,33 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "media-block-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T09:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Blocks"
+  },
+  "fields": {
+    "internalName": "Demo — Media block (bare ui-media)",
+    "schemaType": "content",
+    "preset": {
+      "$ref": "card-preset/media"
+    },
+    "headline": "Copenhagen skyline at dusk",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/city.png",
+        "alt": "City skyline at dusk with illuminated towers",
+        "caption": "Copenhagen, blue hour"
+      }
+    ],
+    "chip": {
+      "text": "Featured",
+      "position": "ts",
+      "hue": "dark"
+    }
+  }
+}

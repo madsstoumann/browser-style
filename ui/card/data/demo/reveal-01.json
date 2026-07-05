@@ -1,0 +1,31 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "reveal-demo-01",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Reveal demo 01 — Starfall Legends",
+    "schemaType": "software",
+    "preset": {
+      "$ref": "card-preset/reveal-expand-viewport-indigo"
+    },
+    "flipside": {
+      "$ref": "card/reveal-demo-01-flipside"
+    },
+    "eyebrow": "Fantasy RPG",
+    "headline": "Starfall Legends",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/game_01.png",
+        "alt": "Pixel-art heroes charging beneath a falling star"
+      }
+    ]
+  }
+}

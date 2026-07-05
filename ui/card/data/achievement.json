@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-04T12:00:00Z",
-    "updatedAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/People"
@@ -12,6 +12,9 @@
   "fields": {
     "internalName": "Demo — Achievement",
     "schemaType": "achievement",
+    "preset": {
+      "$ref": "card-preset/stack"
+    },
     "eyebrow": "Credential",
     "headline": "Advanced Web Accessibility",
     "summary": "Demonstrated expertise in WCAG 2.2, ARIA patterns and assistive technology testing.",
@@ -29,7 +32,13 @@
       "burst": true
     },
     "actions": [
-      { "link": { "url": "#", "text": "Verify credential" }, "style": "ghost" }
+      {
+        "link": {
+          "url": "#",
+          "text": "Verify credential"
+        },
+        "style": "ghost"
+      }
     ],
     "details": {
       "issuingOrganization": "IAAP",

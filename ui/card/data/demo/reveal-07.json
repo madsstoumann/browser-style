@@ -1,0 +1,29 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "reveal-demo-07",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Reveal demo 07 — Pulse Theory (quick info)",
+    "schemaType": "content",
+    "preset": {
+      "$ref": "card-preset/reveal-quick-square"
+    },
+    "eyebrow": "Techno",
+    "headline": "Pulse Theory",
+    "summary": "Concrete basements and four-to-the-floor — warehouse sets that run till sunrise. No faces, no interviews, just white-label twelve-inches that turn up in the right bags at the right hour, the machines doing all the talking.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/band_techno.png",
+        "alt": "Pulse Theory"
+      }
+    ]
+  }
+}

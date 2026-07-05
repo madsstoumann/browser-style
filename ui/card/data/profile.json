@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-04T12:00:00Z",
-    "updatedAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/People"
@@ -12,6 +12,9 @@
   "fields": {
     "internalName": "Demo — Profile",
     "schemaType": "profile",
+    "preset": {
+      "$ref": "card-preset/portrait-top"
+    },
     "eyebrow": "Team",
     "headline": "Jane Smith",
     "summary": "Covers elections and policy across Europe. Two decades on the beat, one Pulitzer nomination.",
@@ -22,15 +25,31 @@
         "alt": "Portrait of Jane Smith"
       }
     ],
-    "tags": ["Elections", "EU policy", "Data journalism"],
+    "tags": [
+      "Elections",
+      "EU policy",
+      "Data journalism"
+    ],
     "details": {
       "jobTitle": "Chief Political Correspondent",
       "organization": "The Daily Ledger",
       "location": "Copenhagen, Denmark",
-      "skills": ["Elections", "EU policy", "Data journalism"],
+      "skills": [
+        "Elections",
+        "EU policy",
+        "Data journalism"
+      ],
       "contacts": [
-        { "type": "email", "value": "jane@dailyledger.example", "label": "Email" },
-        { "type": "url", "value": "#", "label": "Portfolio" }
+        {
+          "type": "email",
+          "value": "jane@dailyledger.example",
+          "label": "Email"
+        },
+        {
+          "type": "url",
+          "value": "#",
+          "label": "Portfolio"
+        }
       ]
     }
   }

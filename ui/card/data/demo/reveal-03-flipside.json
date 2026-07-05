@@ -1,0 +1,28 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "reveal-demo-03-flipside",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Reveal demo 03 — Imperium: Legions flipside (popup panel)",
+    "schemaType": "software",
+    "headline": "Imperium: Legions",
+    "subheadline": "From a single cohort to the eternal city. Command Rome's legions across a campaign that spans the Republic to the Empire — march, besiege and intrigue your way to a throne history won't forget.",
+    "summary": "Real-time battles of thousands, a Senate that schemes behind your back, and city-building that turns marble quarries into wonders. Cross-play campaigns for up to eight consuls.",
+    "actions": [
+      {
+        "link": {
+          "url": "#",
+          "text": "Get — $49.99"
+        },
+        "style": "ghost"
+      }
+    ]
+  }
+}

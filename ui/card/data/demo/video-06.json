@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "video-demo-06",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Video demo — YouTube injected poster (component library)",
+    "schemaType": "content",
+    "preset": {
+      "$ref": "card-preset/video-stack"
+    },
+    "eyebrow": "provider=\"youtube\" video=\"ID\"",
+    "headline": "Building a UI component library",
+    "summary": "No authored poster in the data — index.js injects the YouTube thumbnail itself. Press play to watch.",
+    "media": [
+      {
+        "mediaType": "youtube",
+        "src": "5b4YcLB4DVI"
+      }
+    ],
+    "play": {
+      "position": "cc",
+      "size": "lg"
+    },
+    "chip": {
+      "text": "youtube",
+      "hue": "red"
+    }
+  }
+}

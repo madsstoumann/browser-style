@@ -1,0 +1,31 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "reveal-demo-04",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Reveal demo 04 — Cover story hero",
+    "schemaType": "article",
+    "preset": {
+      "$ref": "card-preset/reveal-hero"
+    },
+    "flipside": {
+      "$ref": "card/reveal-demo-04-flipside"
+    },
+    "eyebrow": "Cover Story",
+    "headline": "The new sound of the small hours",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/band_girl_hero.png",
+        "alt": "Singer on a neon-lit stage after midnight"
+      }
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "carousel-demo-05",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Carousel Demo — Products, light images (3)",
+    "schemaType": "gallery",
+    "preset": {
+      "$ref": "card-preset/carousel-bare-dark"
+    },
+    "eyebrow": "Products",
+    "headline": "Studio shots",
+    "summary": "Light backgrounds — dark controls read best.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/ergochair.png",
+        "alt": "Ergonomic office chair"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/slimfold.png",
+        "alt": "SlimFold laptop stand"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/cutmaster.png",
+        "alt": "CutMaster chef knife"
+      }
+    ]
+  }
+}

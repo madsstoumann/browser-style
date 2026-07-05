@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-04T12:00:00Z",
-    "updatedAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Commerce"
@@ -12,11 +12,20 @@
   "fields": {
     "internalName": "Demo — Membership",
     "schemaType": "membership",
+    "preset": {
+      "$ref": "card-preset/panel-brand"
+    },
     "eyebrow": "Most popular",
     "headline": "FitTrack Pro",
     "summary": "Unlimited workouts, personal coaching and priority support.",
     "actions": [
-      { "link": { "url": "#", "text": "Start free trial" }, "style": "primary" }
+      {
+        "link": {
+          "url": "#",
+          "text": "Start free trial"
+        },
+        "style": "primary"
+      }
     ],
     "details": {
       "planName": "FitTrack Pro",

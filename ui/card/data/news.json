@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-04T12:00:00Z",
-    "updatedAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Editorial"
@@ -12,6 +12,9 @@
   "fields": {
     "internalName": "Demo — News",
     "schemaType": "news",
+    "preset": {
+      "$ref": "card-preset/split"
+    },
     "eyebrow": "Politics",
     "headline": "Coalition agrees on sweeping climate package",
     "summary": "The agreement includes a carbon border tariff and a national retrofit programme, ending months of negotiation.",
@@ -26,7 +29,10 @@
       }
     ],
     "authors": [
-      { "name": "Staff Writer", "role": "Newsroom" }
+      {
+        "name": "Staff Writer",
+        "role": "Newsroom"
+      }
     ],
     "chip": {
       "text": "Breaking",

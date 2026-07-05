@@ -1,0 +1,29 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "reveal-demo-04-flipside",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Reveal demo 04 — Cover story flipside (feature panel)",
+    "schemaType": "article",
+    "eyebrow": "Cover Story",
+    "headline": "The new sound of the small hours",
+    "subheadline": "Nine bands, one late-night frequency. From darkwave basements to glitter-soaked arenas, this is the music our editors had on repeat all month — and the people making it.",
+    "summary": "We sent writers to the warehouses, the back-room pubs and the bedroom studios where these records were cut, and came back with a portrait of a scene that refuses to sit still. No two of these acts sound alike, yet they share a stubborn refusal to wait for permission.",
+    "actions": [
+      {
+        "link": {
+          "url": "#",
+          "text": "Read the full feature →"
+        },
+        "style": "ghost"
+      }
+    ]
+  }
+}

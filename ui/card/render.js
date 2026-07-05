@@ -48,44 +48,10 @@ export const SCHEMA_TYPES = {
 	software: 'SoftwareApplication'
 };
 
-/* Default composition tokens per type (presentation defaults — a host app
-   would normally take these from layout-config instead). */
-const LAYOUTS = {
-	content: { variant: 'col', media: 'asr(16/9)' },
-	article: { variant: 'col', media: 'asr(16/9)' },
-	news: { variant: 'row spl(1/2)', media: 'asr(4/3)' },
-	product: { variant: 'col', media: 'asr(4/3)' },
-	event: { variant: 'ovr(bl)', media: 'asr(4/3) scm', content: 'scl(lg)' },
-	recipe: { variant: 'col', media: 'asr(16/9)' },
-	review: { variant: 'row spl(1/2)', media: 'asr(1/1)' },
-	job: { variant: 'vis(content)' },
-	course: { variant: 'row spl(1/2)', media: 'asr(4/3)' },
-	booking: { variant: 'col', media: 'asr(16/9)' },
-	poll: { variant: 'vis(content)' },
-	profile: { variant: 'row spl(1/2)', media: 'asr(1/1) obp(tc)' },
-	faq: { variant: 'vis(content)' },
-	quote: { variant: 'vis(content) thm(subtle)', content: 'scl(lg)' },
-	timeline: { variant: 'vis(content)' },
-	gallery: { variant: 'col', media: 'asr(16/9) nav(dot)' },
-	statistic: { variant: 'vis(content) thm(brand)' },
-	achievement: { variant: 'col', media: 'asr(16/9)' },
-	announcement: { variant: 'vis(content) thm(dark)' },
-	business: { variant: 'row spl(1/2)', media: 'asr(4/3)' },
-	comparison: { variant: 'vis(content)' },
-	contact: { variant: 'row-r spl(2/1)', media: 'asr(1/1)' },
-	location: { variant: 'ovr(bl)', media: 'asr(3/4) scm', content: 'scl(lg)' },
-	membership: { variant: 'vis(content) thm(brand)' },
-	social: { variant: 'col', media: 'asr(16/9)' },
-	software: { variant: 'col', media: 'asr(3/4)' }
-};
-
-/* presentationHint overrides */
-const HINTS = {
-	hero: { variant: 'ovr(bl)', media: 'asr(21/9) scm', content: 'scl(xl)' },
-	compact: { content: 'scl(sm) pad(sm)' },
-	overlay: null, /* keep the type's own ovr() layout */
-	flip: null /* handled structurally via <ui-reveal> */
-};
+/* Fallback when a card references no preset (or an unknown one).
+   Real presets live in data/card.presets.json — instances of the
+   card-preset model (cms/baseline/models/card-preset.schema.json). */
+const DEFAULT_PRESET = { element: 'ui-card', variant: 'col', media: 'asr(16/9)' };
 
 /* headline itemprop: job → title, article/news → headline, rest → name */
 const HEADLINE_PROP = { job: 'title', article: 'headline', news: 'headline' };
@@ -125,6 +91,14 @@ const part = (tag, name, attrs = {}, children = []) =>
 	el(tag, { 'data-part': name, ...attrs }, children);
 
 const num = (value) => (typeof value === 'number' ? value.toLocaleString('en-US') : value);
+
+/* preset.styles → style attribute value. Only CSS custom properties pass. */
+const styleAttr = (styles) => {
+	const rules = Object.entries(styles || {})
+		.filter(([key]) => key.startsWith('--'))
+		.map(([key, value]) => `${key}: ${value}`);
+	return rules.length ? rules.join('; ') : null;
+};
 
 const stars = (value, max = 5) => '★'.repeat(Math.round(value)) + '☆'.repeat(max - Math.round(value));
 
@@ -188,16 +162,55 @@ const accordion = (group, items) =>
 
 /* ── envelope ── */
 
-const buildMedia = (fields, type, tokens) => {
+const buildMedia = (fields, type, tokens, preset = {}) => {
 	if (!fields.media?.length) return null;
-	const media = el('ui-media', {}, fields.media.map((item) =>
-		el('img', {
-			src: item.asset?.$asset ? item.asset.$asset : item.src,
+	const frames = [];
+	let embed = null;
+	for (const item of fields.media) {
+		const src = item.asset?.$asset ? item.asset.$asset : item.src;
+		if (item.mediaType === 'youtube' || item.mediaType === 'vimeo') {
+			/* lite embed — provider/video attributes on the frame itself (index.js wires it) */
+			embed = { provider: item.mediaType, video: src };
+			continue;
+		}
+		if (item.mediaType === 'video') {
+			frames.push(el('video', {
+				src,
+				playsinline: true,
+				controls: item.controls !== false && !item.autoplay,
+				autoplay: !!item.autoplay,
+				muted: !!(item.muted ?? item.autoplay),
+				loop: !!item.loop,
+				poster: item.poster || null,
+				preload: item.autoplay ? 'auto' : 'metadata',
+				'aria-label': item.alt || null
+			}));
+			continue;
+		}
+		frames.push(el('img', {
+			src,
 			alt: item.alt || '',
 			loading: 'lazy',
 			itemprop: NO_IMAGE_PROP.has(type) ? null : 'image'
-		})
-	));
+		}));
+	}
+	const media = el('ui-media', {
+		/* dual-attribute carousel form from the preset (self-only, groupable) */
+		nav: preset.nav || null,
+		arrow: preset.arrow || null,
+		dot: preset.dot || null,
+		...(embed || {})
+	}, frames);
+	if (fields.play) {
+		media.append(el('ui-play', {}, [
+			el('button', { type: 'button', 'aria-label': 'Play', command: '--toggle-play' }, [
+				el('ui-icon', { type: 'play-pause' })
+			])
+		]));
+		tokens.media.push(`play(${fields.play.position || 'cc'})`);
+		if (fields.play.hue) tokens.media.push(`play(${fields.play.hue})`);
+		if (fields.play.size) tokens.media.push(`ply(${fields.play.size})`);
+	}
 	if (fields.chip?.text) {
 		media.append(el('ui-chip', {}, fields.chip.text));
 		tokens.media.push(`chip(${fields.chip.position || 'ts'})`);
@@ -668,11 +681,36 @@ const DETAILS = {
 	}
 };
 
-/* ── flip composition (<ui-reveal>) — used for presentationHint "flip" ── */
+/* ── reveal composition (<ui-reveal>) — used when preset.element is ui-reveal ── */
 
-const renderFlip = (fields, type, itemtype, tokens) => {
+/* Back panel derived from the host card's own envelope + details. */
+const buildDerivedBack = (fields, type) => {
+	const back = el('ui-content', { tabindex: '0' }, [
+		fields.eyebrow ? part('small', 'eyebrow', {}, fields.eyebrow) : null,
+		part('h3', 'headline', {}, `${fields.headline}${fields.details?.version ? ` ${fields.details.version}` : ''}`),
+		fields.summary ? part('p', 'summary', { itemprop: SUMMARY_PROP[type] || 'description' }, fields.summary) : null
+	]);
+	if (DETAILS[type] && fields.details) DETAILS[type](fields.details, back);
+	buildTail({ ...fields, published: null, readingTime: null }, back);
+	return back;
+};
+
+/* Back panel from a referenced flipside card. Rendered as a content column only —
+   never another reveal — so flipside chains cannot recurse. Shares the host's
+   itemscope: the flipside's props attach to the host entity. */
+const buildFlipsideBack = (flipside) => {
+	const fields = flipside?.fields ?? flipside ?? {};
+	const type = SCHEMA_TYPES[fields.schemaType] ? fields.schemaType : 'content';
+	const back = buildContent(fields, type, false);
+	back.setAttribute('tabindex', '0');
+	if (DETAILS[type] && fields.details) DETAILS[type](fields.details, back);
+	buildTail(fields, back);
+	return back;
+};
+
+const renderReveal = (fields, type, itemtype, tokens, preset, flipside) => {
 	const front = el('ui-face', {}, [
-		buildMedia(fields, type, tokens),
+		buildMedia(fields, type, tokens, preset),
 		el('ui-content', {}, [
 			fields.eyebrow ? part('small', 'eyebrow', {}, fields.eyebrow) : null,
 			part('strong', 'headline', { itemprop: HEADLINE_PROP[type] || 'name' }, fields.headline),
@@ -681,24 +719,25 @@ const renderFlip = (fields, type, itemtype, tokens) => {
 			]) : null
 		])
 	]);
-	const back = el('ui-content', { tabindex: '0' }, [
-		fields.eyebrow ? part('small', 'eyebrow', {}, fields.eyebrow) : null,
-		part('h3', 'headline', {}, `${fields.headline}${fields.details?.version ? ` ${fields.details.version}` : ''}`),
-		fields.summary ? part('p', 'summary', { itemprop: SUMMARY_PROP[type] || 'description' }, fields.summary) : null
-	]);
-	if (DETAILS[type] && fields.details) DETAILS[type](fields.details, back);
-	buildTail({ ...fields, published: null, readingTime: null }, back);
+	const back = flipside ? buildFlipsideBack(flipside) : buildDerivedBack(fields, type);
 
 	return el('ui-reveal', {
-		icon: 'top right sm',
-		'icon-close': 'dark',
-		type: 'flip',
-		variant: 'ovr(bl) rds(lg-sq)',
-		media: ['asr(3/4)', 'hov(zoom)', 'scm', ...tokens.media].join(' '),
+		icon: preset.icon || 'top right sm',
+		'icon-close': preset.iconClose || null,
+		type: preset.type || 'flip',
+		'type-lg': preset.typeLg || null,
+		to: preset.to || null,
+		from: preset.from || null,
+		trigger: preset.trigger || null,
+		scroll: !!preset.scroll,
+		variant: preset.variant || null,
+		media: [preset.media, ...tokens.media].filter(Boolean).join(' ') || null,
+		content: preset.content || null,
+		style: styleAttr(preset.styles),
 		itemscope: true,
 		itemtype
 	}, [
-		el('details', { name: 'render-flip' }, [
+		el('details', { name: 'render-reveal' }, [
 			el('summary', {}, [front, el('ui-icon', { type: 'plus-cross', 'aria-hidden': 'true' })]),
 			back
 		])
@@ -708,33 +747,95 @@ const renderFlip = (fields, type, itemtype, tokens) => {
 /* ── public API ── */
 
 /**
+ * Resolve a card's preset reference against a preset map.
+ * `fields.preset` is a UCF reference: { "$ref": "card-preset/{id}" }.
+ */
+const resolvePreset = (fields, presets) => {
+	const ref = fields.preset?.$ref || '';
+	const id = ref.startsWith('card-preset/') ? ref.slice('card-preset/'.length) : ref;
+	return (id && presets[id]) || DEFAULT_PRESET;
+};
+
+/* Resolve a card → card reference ({ "$ref": "card/{id}" }) against a UCF map keyed by id. */
+const resolveCard = (ref, cards) => {
+	const id = (ref?.$ref || '').split('/').pop();
+	return (id && cards[id]) || null;
+};
+
+/**
+ * Fetch a preset collection (data/card.presets.json) and return the id → preset map.
+ * @param {string} url
+ * @returns {Promise<object>}
+ */
+export async function loadPresets(url) {
+	const response = await fetch(url);
+	if (!response.ok) throw new Error(`Failed to load ${url}: ${response.status}`);
+	const doc = await response.json();
+	return doc.presets || doc;
+}
+
+/**
  * Render one card from a UCF instance (or its bare `fields` object).
+ * The look & feel comes from the referenced card-preset — pass the preset map
+ * from loadPresets(). Unknown/missing references fall back to a plain stack card.
  * @param {object} ucf — UCF file content ({ fields }) or the fields object itself
+ * @param {object} [presets] — id → preset map (from data/card.presets.json)
+ * @param {object} [cards] — id → UCF map for resolving card references (flipside)
  * @returns {HTMLElement} <ui-card> or <ui-reveal>
  */
-export function renderCard(ucf) {
+export function renderCard(ucf, presets = {}, cards = {}) {
 	const fields = ucf?.fields ?? ucf ?? {};
 	const type = SCHEMA_TYPES[fields.schemaType] ? fields.schemaType : 'content';
 	const itemtype = SCHEMA + SCHEMA_TYPES[type];
-	const layout = { ...LAYOUTS[type] };
-	const hint = HINTS[fields.presentationHint];
-	if (hint) Object.assign(layout, hint);
+	const preset = resolvePreset(fields, presets);
 
 	const tokens = { media: [] };
 
-	if (fields.presentationHint === 'flip') return renderFlip(fields, type, itemtype, tokens);
+	if (preset.element === 'ui-reveal') {
+		return renderReveal(fields, type, itemtype, tokens, preset, resolveCard(fields.flipside, cards));
+	}
 
-	const media = buildMedia(fields, type, tokens);
-	const overlay = /ovr\(/.test(layout.variant || '');
+	/* Bare <ui-media> — a standalone media frame, no card chrome. The media
+	   token string sits on the element itself (rds() applies outside a card). */
+	if (preset.element === 'ui-media') {
+		const media = buildMedia(fields, type, tokens, preset) || el('ui-media');
+		const mediaTokens = [preset.media, ...tokens.media].filter(Boolean).join(' ');
+		if (mediaTokens) media.setAttribute('media', mediaTokens);
+		const style = styleAttr(preset.styles);
+		if (style) media.setAttribute('style', style);
+		media.setAttribute('itemscope', '');
+		media.setAttribute('itemtype', itemtype);
+		if (fields.headline) media.append(meta('name', fields.headline));
+		const caption = fields.media?.find((item) => item.caption)?.caption;
+		if (caption) media.append(part('small', 'caption', {}, caption));
+		return media;
+	}
+
+	/* Bare <ui-content> — a standalone content column, no card chrome. */
+	if (preset.element === 'ui-content') {
+		const content = buildContent(fields, type, false);
+		if (DETAILS[type] && fields.details) DETAILS[type](fields.details, content);
+		buildTail(fields, content);
+		if (preset.content) content.setAttribute('content', preset.content);
+		const style = styleAttr(preset.styles);
+		if (style) content.setAttribute('style', style);
+		content.setAttribute('itemscope', '');
+		content.setAttribute('itemtype', itemtype);
+		return content;
+	}
+
+	const media = buildMedia(fields, type, tokens, preset);
+	const overlay = /ovr\(/.test(preset.variant || '');
 	const content = buildContent(fields, type, overlay);
 	if (DETAILS[type] && fields.details) DETAILS[type](fields.details, content);
 	buildTail(fields, content);
 
-	const mediaTokens = [layout.media, ...tokens.media].filter(Boolean).join(' ');
+	const mediaTokens = [preset.media, ...tokens.media].filter(Boolean).join(' ');
 	return el('ui-card', {
-		variant: layout.variant || 'col',
+		variant: preset.variant || 'col',
 		media: mediaTokens || null,
-		content: layout.content || null,
+		content: preset.content || null,
+		style: styleAttr(preset.styles),
 		itemscope: true,
 		itemtype
 	}, [
@@ -745,12 +846,14 @@ export function renderCard(ucf) {
 /**
  * Fetch a UCF file and render it.
  * @param {string} url
+ * @param {object} [presets] — id → preset map
+ * @param {object} [cards] — id → UCF map for card references
  * @returns {Promise<HTMLElement>}
  */
-export async function renderCardFrom(url) {
+export async function renderCardFrom(url, presets = {}, cards = {}) {
 	const response = await fetch(url);
 	if (!response.ok) throw new Error(`Failed to load ${url}: ${response.status}`);
-	return renderCard(await response.json());
+	return renderCard(await response.json(), presets, cards);
 }
 
 export default renderCard;

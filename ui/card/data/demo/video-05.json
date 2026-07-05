@@ -1,0 +1,41 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "video-demo-05",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Video demo — YouTube facade (What’s new in Web UI)",
+    "schemaType": "content",
+    "preset": {
+      "$ref": "card-preset/video-stack"
+    },
+    "eyebrow": "provider=\"youtube\" video=\"ID\"",
+    "headline": "What’s new in Web UI",
+    "summary": "Poster image until you press play, then the real YouTube player takes over — lazy-loaded, cookie-less.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "youtube-data/previews/VTCIStB6y8s.jpg",
+        "alt": ""
+      },
+      {
+        "mediaType": "youtube",
+        "src": "VTCIStB6y8s"
+      }
+    ],
+    "play": {
+      "position": "cc",
+      "size": "lg"
+    },
+    "chip": {
+      "text": "youtube",
+      "hue": "red"
+    }
+  }
+}

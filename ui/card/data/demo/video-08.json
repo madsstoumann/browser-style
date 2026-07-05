@@ -1,0 +1,47 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "video-demo-08",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Video demo — featured film split (696468083)",
+    "schemaType": "content",
+    "preset": {
+      "$ref": "card-preset/video-split"
+    },
+    "eyebrow": "Featured film",
+    "headline": "What can you experience?",
+    "summary": "Step inside the galleries in ninety seconds — from the Iron-Age bog bodies to the treasures of ancient Egypt. Press play for the full trailer, then come see it for real.",
+    "media": [
+      {
+        "mediaType": "video",
+        "src": "vimeo-data/previews/696468083.full.mp4",
+        "poster": "vimeo-data/previews/696468083.jpg",
+        "controls": false,
+        "alt": "Museum trailer"
+      }
+    ],
+    "play": {
+      "position": "cc",
+      "size": "lg"
+    },
+    "chip": {
+      "text": "vimeo native"
+    },
+    "actions": [
+      {
+        "link": {
+          "url": "#",
+          "text": "Plan your visit"
+        },
+        "style": "primary"
+      }
+    ]
+  }
+}

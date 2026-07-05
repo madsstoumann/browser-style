@@ -1,0 +1,29 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "media-demo-09",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Demo — Media: hover drift",
+    "schemaType": "content",
+    "preset": {
+      "$ref": "card-preset/media-hov-drift"
+    },
+    "eyebrow": "image · needs JS",
+    "headline": "hov(drift)",
+    "summary": "Oversized image shrinks slightly and drifts opposite the cursor. Same pointer handler as track.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/hubble.png",
+        "alt": "Deep space photographed by Hubble"
+      }
+    ]
+  }
+}

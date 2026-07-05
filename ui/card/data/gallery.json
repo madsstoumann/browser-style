@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-04T12:00:00Z",
-    "updatedAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Media"
@@ -12,20 +12,45 @@
   "fields": {
     "internalName": "Demo — Gallery",
     "schemaType": "gallery",
+    "preset": {
+      "$ref": "card-preset/carousel"
+    },
     "eyebrow": "Photo album",
     "headline": "Four seasons",
     "summary": "One year, one forest — 4 of 48 photos.",
     "media": [
-      { "mediaType": "image", "src": "/assets/images/spring.jpg", "alt": "Blooming cherry trees in spring" },
-      { "mediaType": "image", "src": "/assets/images/summer.jpg", "alt": "Sunlit meadow in summer" },
-      { "mediaType": "image", "src": "/assets/images/autumn.jpg", "alt": "Golden forest in autumn" },
-      { "mediaType": "image", "src": "/assets/images/winter.jpg", "alt": "Snow-covered pines in winter" }
+      {
+        "mediaType": "image",
+        "src": "/assets/images/spring.jpg",
+        "alt": "Blooming cherry trees in spring"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/summer.jpg",
+        "alt": "Sunlit meadow in summer"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/autumn.jpg",
+        "alt": "Golden forest in autumn"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/winter.jpg",
+        "alt": "Snow-covered pines in winter"
+      }
     ],
-    "tags": ["nature", "seasons"],
+    "tags": [
+      "nature",
+      "seasons"
+    ],
     "details": {
       "albumName": "Four seasons",
       "totalCount": 48,
-      "categories": ["nature", "seasons"]
+      "categories": [
+        "nature",
+        "seasons"
+      ]
     }
   }
 }

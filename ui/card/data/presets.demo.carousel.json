@@ -1,0 +1,461 @@
+{
+  "$schema": "../../../cms/baseline/models/card-preset.schema.json",
+  "model": "card-preset",
+  "description": "Demo presets recreating ui/card/carousel.html — one preset per distinct attribute combination on the host element. Furniture tokens (chip/sticker/save/play) are appended by the renderer from card content and never appear in preset.media.",
+  "presets": {
+    "carousel-default": {
+      "name": "Carousel Default",
+      "description": "Column card, 4:3 carousel with default dots + arrows, large content scale",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav",
+      "content": "scl(lg)"
+    },
+    "carousel-row": {
+      "name": "Carousel Row",
+      "description": "Carousel as the media half of a row card",
+      "element": "ui-card",
+      "variant": "row spl(4/3)",
+      "media": "asr(4/3) nav",
+      "content": "scl(md)"
+    },
+    "carousel-dots": {
+      "name": "Carousel Dots",
+      "description": "Dots only — nav(dot)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(dot)",
+      "content": "scl(sm)"
+    },
+    "carousel-arrows": {
+      "name": "Carousel Arrows",
+      "description": "Arrows only — nav(arw)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(arw)",
+      "content": "scl(sm)"
+    },
+    "carousel-both": {
+      "name": "Carousel Both",
+      "description": "Dots + arrows — bare nav, small content scale",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav",
+      "content": "scl(sm)"
+    },
+    "carousel-plain": {
+      "name": "Carousel Plain",
+      "description": "Bare swipe scroller — nav(non); chip furniture comes from content",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(non)",
+      "content": "scl(sm)"
+    },
+    "carousel-dots-themed": {
+      "name": "Carousel Dots Themed",
+      "description": "Bigger accent dots via --ui-media-dot-* tokens",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav",
+      "content": "scl(sm)",
+      "styles": {
+        "--ui-media-dot-bg": "rgb(0 0 0 / 0.25)",
+        "--ui-media-dot-active": "var(--color-accent)",
+        "--ui-media-dot-size": "0.8rem"
+      }
+    },
+    "carousel-arrows-accent": {
+      "name": "Carousel Arrows Accent",
+      "description": "Accent arrow circle via --ui-media-arrow-bg",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav",
+      "content": "scl(sm)",
+      "styles": {
+        "--ui-media-arrow-bg": "var(--color-accent)",
+        "--ui-media-arrow-bg-hover": "var(--color-accent-dark, var(--color-accent))",
+        "--ui-media-dot-active": "var(--color-accent)"
+      }
+    },
+    "carousel-arrows-inverted": {
+      "name": "Carousel Arrows Inverted",
+      "description": "Rounded-rect light circle, dark large full-arrow glyph",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(arw) arw(arr) arw(drk) arw(lg)",
+      "content": "scl(sm)",
+      "styles": {
+        "--ui-media-arrow-radius": "var(--radius-md, 0.5rem)",
+        "--ui-media-arrow-bg": "rgb(255 255 255 / 0.85)",
+        "--ui-media-arrow-bg-hover": "#fff"
+      }
+    },
+    "carousel-arrows-autohide": {
+      "name": "Carousel Arrows Autohide",
+      "description": "Auto-hide end arrow — arw(hid)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(arw) arw(hid)",
+      "content": "scl(sm)"
+    },
+    "carousel-arrow-glyph": {
+      "name": "Carousel Arrow Glyph",
+      "description": "Full-arrow glyph — arw(arr)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(arw) arw(arr)",
+      "content": "scl(sm)"
+    },
+    "carousel-arrows-top": {
+      "name": "Carousel Arrows Top",
+      "description": "Edge arrows at the top — arw(top)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(arw) arw(top)",
+      "content": "scl(sm)"
+    },
+    "carousel-arrows-bottom": {
+      "name": "Carousel Arrows Bottom",
+      "description": "Edge arrows at the bottom — arw(bot)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(arw) arw(bot)",
+      "content": "scl(sm)"
+    },
+    "carousel-arrows-set": {
+      "name": "Carousel Arrows Set",
+      "description": "Adjacent full-arrow pair, bottom end — arw(set) arw(arr) arw(bot)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(arw) arw(set) arw(arr) arw(bot)",
+      "content": "scl(sm)"
+    },
+    "carousel-bare": {
+      "name": "Carousel Bare Arrows",
+      "description": "White glyph, no circle — arw(bare)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(arw) arw(bare)",
+      "content": "scl(sm)"
+    },
+    "carousel-bare-dark": {
+      "name": "Carousel Bare Dark",
+      "description": "Black bare full-arrow for light images",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(arw) arw(bare) arw(arr)",
+      "content": "scl(sm)",
+      "styles": {
+        "--ui-media-arrow-color": "#000",
+        "--ui-media-arrow-glyph-dim": "var(--ui-media-arrow-dark)"
+      }
+    },
+    "carousel-bare-accent": {
+      "name": "Carousel Bare Accent",
+      "description": "Accent bare arrows via --ui-media-arrow-color",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(arw) arw(bare)",
+      "content": "scl(sm)",
+      "styles": {
+        "--ui-media-arrow-color": "var(--color-accent)"
+      }
+    },
+    "carousel-band-bare": {
+      "name": "Carousel Band Bare",
+      "description": "Controls in a band below the media, bare arrows (auto-dark)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(blw) arw(bare)",
+      "content": "scl(sm)"
+    },
+    "carousel-pills": {
+      "name": "Carousel Pills",
+      "description": "Pill dots with 5s autoplay fill hint — dot(pll)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(dot) dot(pll)",
+      "content": "scl(sm)"
+    },
+    "carousel-pills-fast": {
+      "name": "Carousel Pills Fast",
+      "description": "Pills + arrows, 3s fill via --ui-media-autoplay",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav dot(pll)",
+      "content": "scl(sm)",
+      "styles": {
+        "--ui-media-autoplay": "3s"
+      }
+    },
+    "carousel-pills-accent": {
+      "name": "Carousel Pills Accent",
+      "description": "Wider pills with accent fill",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(dot) dot(pll)",
+      "content": "scl(sm)",
+      "styles": {
+        "--ui-media-pill-track": "rgb(0 0 0 / 0.2)",
+        "--ui-media-pill-fill": "var(--color-accent)",
+        "--ui-media-pill-width": "2rem"
+      }
+    },
+    "carousel-pills-arrows": {
+      "name": "Carousel Pills Arrows",
+      "description": "Pills + arrows — nav dot(pll)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav dot(pll)",
+      "content": "scl(sm)"
+    },
+    "carousel-small": {
+      "name": "Carousel Small",
+      "description": "Small arrows and dots — arw(sm) dot(sm)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav arw(sm) dot(sm)",
+      "content": "scl(sm)"
+    },
+    "carousel-xl": {
+      "name": "Carousel XL",
+      "description": "Extra-large arrows and dots — arw(xl) dot(xl)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav arw(xl) dot(xl)",
+      "content": "scl(sm)"
+    },
+    "carousel-band-set": {
+      "name": "Carousel Band Set",
+      "description": "Band below: dots left, bare arrow pair right — arw(set)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(blw) arw(bare) arw(set)",
+      "content": "scl(sm)"
+    },
+    "carousel-band-pills": {
+      "name": "Carousel Band Pills",
+      "description": "Pill timer bar in a surface-coloured band",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(blw) arw(bare) dot(pll)",
+      "content": "scl(sm)",
+      "styles": {
+        "--ui-media-controls-bg": "var(--color-surface, #fff)",
+        "--ui-media-pill-track": "rgb(0 0 0 / 0.2)",
+        "--ui-media-pill-fill": "var(--color-accent)"
+      }
+    },
+    "carousel-band-autohide": {
+      "name": "Carousel Band Autohide",
+      "description": "Band below with auto-hiding bare arrows — arw(hid)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(blw) arw(bare) arw(hid)",
+      "content": "scl(sm)"
+    },
+    "carousel-band-dots-start": {
+      "name": "Carousel Band Dots Start",
+      "description": "Band below, arrow pair right, dots at inline-start — dot(sta)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(blw) arw(set) dot(sta)",
+      "content": "scl(sm)"
+    },
+    "carousel-band-dots-center": {
+      "name": "Carousel Band Dots Center",
+      "description": "Band below, arrow pair right, dots centered — dot(ctr)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(blw) arw(set) dot(ctr)",
+      "content": "scl(sm)"
+    },
+    "carousel-band-dots-end": {
+      "name": "Carousel Band Dots End",
+      "description": "Band below, arrow pair right, dots at inline-end — dot(end)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(blw) arw(set) dot(end)",
+      "content": "scl(sm)"
+    },
+    "carousel-vertical": {
+      "name": "Carousel Vertical",
+      "description": "Vertical carousel — axis(y), dots + up/down on the right",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) axis(y) nav",
+      "content": "scl(sm)"
+    },
+    "carousel-vertical-start": {
+      "name": "Carousel Vertical Start",
+      "description": "Vertical carousel, controls on the left — arw(sta)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) axis(y) nav arw(sta)",
+      "content": "scl(sm)"
+    },
+    "carousel-vertical-set": {
+      "name": "Carousel Vertical Set",
+      "description": "Vertical carousel, stacked arrow pair bottom-right — arw(set)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) axis(y) nav(arw) arw(set)",
+      "content": "scl(sm)"
+    },
+    "carousel-vertical-bare": {
+      "name": "Carousel Vertical Bare",
+      "description": "Vertical carousel, bare up/down over a corner scrim",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) axis(y) nav arw(bare) scm(cr)",
+      "content": "scl(sm)",
+      "styles": {
+        "--ui-media-scrim-color": "#000"
+      }
+    },
+    "carousel-vertical-band": {
+      "name": "Carousel Vertical Band",
+      "description": "Vertical carousel with the control band below — nav(blw)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) axis(y) nav(blw)",
+      "content": "scl(sm)"
+    },
+    "carousel-vertical-accent": {
+      "name": "Carousel Vertical Accent",
+      "description": "Vertical carousel, large accent bare arrows",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) axis(y) nav(arw) arw(bare) arw(lg)",
+      "content": "scl(sm)",
+      "styles": {
+        "--ui-media-arrow-color": "var(--color-accent)"
+      }
+    },
+    "carousel-scrollbar": {
+      "name": "Carousel Scrollbar",
+      "description": "Native thin scrollbar as the only affordance — nav(bar)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav(bar)",
+      "content": "scl(sm)"
+    },
+    "carousel-scrollbar-vertical": {
+      "name": "Carousel Scrollbar Vertical",
+      "description": "Vertical native scrollbar — axis(y) nav(bar)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) axis(y) nav(bar)",
+      "content": "scl(sm)"
+    },
+    "carousel-auto-loop": {
+      "name": "Carousel Auto Loop",
+      "description": "JS-enhanced: autoplay every 3s + seamless loop, pill timer in sync",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav dot(pll) auto(3s) loop",
+      "content": "scl(sm)"
+    },
+    "carousel-loop": {
+      "name": "Carousel Loop",
+      "description": "JS-enhanced: seamless loop via cloned slides",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav loop",
+      "content": "scl(sm)"
+    },
+    "carousel-vertical-auto-loop": {
+      "name": "Carousel Vertical Auto Loop",
+      "description": "Vertical autoplay + seamless loop, pill timer bottom-center",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) axis(y) nav dot(pll) dot(bc) auto(3s) loop",
+      "content": "scl(sm)"
+    },
+    "carousel-vertical-loop": {
+      "name": "Carousel Vertical Loop",
+      "description": "Vertical seamless loop",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) axis(y) nav loop",
+      "content": "scl(sm)"
+    },
+    "carousel-play": {
+      "name": "Carousel Play",
+      "description": "Autoplay 4s + loop + pill timer; pinned <ui-play> control comes from content",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav dot(pll) auto(4s) loop",
+      "content": "scl(sm)"
+    },
+    "carousel-play-end": {
+      "name": "Carousel Play End",
+      "description": "Autoplay 4s + loop; <ui-play> pinned bottom-right from content",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav auto(4s) loop",
+      "content": "scl(sm)"
+    },
+    "carousel-videos": {
+      "name": "Carousel Videos",
+      "description": "16:9 carousel of native video slides — pause-on-slide-change wired by index.js",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(16/9) nav",
+      "content": "scl(sm)"
+    },
+    "carousel-tokens": {
+      "name": "Carousel Tokens Form",
+      "description": "media= token form — nav(blw) arw(lg) arw(drk) dot(end)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(16/9) nav(blw) arw(lg) arw(drk) dot(end)",
+      "content": "scl(sm)"
+    },
+    "carousel-attrs": {
+      "name": "Carousel Attribute Form",
+      "description": "Dedicated grouped attributes on the <ui-media> itself — renders identically to carousel-tokens",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(16/9)",
+      "content": "scl(sm)",
+      "nav": "blw",
+      "arrow": "lg drk",
+      "dot": "end"
+    },
+    "carousel-subtle": {
+      "name": "Carousel Subtle",
+      "description": "Low-contrast ink in a below band — arw(sub) dot(sub)",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(16/9) nav(blw) arw(sub) dot(sub)",
+      "content": "scl(sm)"
+    },
+    "carousel-subtle-attrs": {
+      "name": "Carousel Subtle Attributes",
+      "description": "Subtle ink via the attribute form — nav=\"blw\" arrow=\"arr sub\" dot=\"sub pll\"",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(16/9)",
+      "content": "scl(sm)",
+      "nav": "blw",
+      "arrow": "arr sub",
+      "dot": "sub pll"
+    },
+    "carousel-bare-band": {
+      "name": "Carousel Bare Band",
+      "description": "Standalone <ui-media> — band below, bare full-arrow set, dots at the end",
+      "element": "ui-media",
+      "media": "asr(4/3) nav(blw) arw(bare) arw(arr) arw(set) dot(end)"
+    },
+    "carousel-bare-axis": {
+      "name": "Carousel Bare Axis",
+      "description": "Standalone vertical <ui-media> — dark large full-arrows, pill dots bottom-center",
+      "element": "ui-media",
+      "media": "asr(4/3) axis(y) nav arw(arr) arw(drk) arw(lg) dot(pll) dot(bc)",
+      "styles": {
+        "--ui-media-arrow-color": "var(--color-accent)"
+      }
+    }
+  }
+}

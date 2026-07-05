@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-04T12:00:00Z",
-    "updatedAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Events"
@@ -12,6 +12,9 @@
   "fields": {
     "internalName": "Demo — Event",
     "schemaType": "event",
+    "preset": {
+      "$ref": "card-preset/hero"
+    },
     "eyebrow": "Conference",
     "headline": "Web Summit 2026",
     "summary": "Four days of talks on the future of the web platform.",
@@ -22,7 +25,6 @@
         "alt": "Conference stage with purple lights"
       }
     ],
-    "presentationHint": "overlay",
     "details": {
       "startDate": "2026-11-09T09:00:00+00:00",
       "endDate": "2026-11-12T18:00:00+00:00",

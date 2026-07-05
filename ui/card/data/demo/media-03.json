@@ -1,0 +1,30 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "media-demo-03",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Demo — Media: government frame (object-position)",
+    "schemaType": "content",
+    "preset": {
+      "$ref": "card-preset/media-obp-tl"
+    },
+    "chip": {
+      "text": "obp(tl)",
+      "position": "tc"
+    },
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/government.png",
+        "alt": "Government building facade"
+      }
+    ]
+  }
+}

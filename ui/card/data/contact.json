@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-04T12:00:00Z",
-    "updatedAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Support"
@@ -12,6 +12,9 @@
   "fields": {
     "internalName": "Demo — Contact",
     "schemaType": "contact",
+    "preset": {
+      "$ref": "card-preset/split-reverse"
+    },
     "eyebrow": "Support",
     "headline": "Talk to a human",
     "summary": "Real people, no phone trees. Average response under 2 hours.",
@@ -29,8 +32,16 @@
       "responseTime": "under 2 hours",
       "languages": "English, Danish, German",
       "contactMethods": [
-        { "type": "email", "value": "support@example.com", "label": "support@example.com" },
-        { "type": "phone", "value": "+4570203040", "label": "+45 70 20 30 40" }
+        {
+          "type": "email",
+          "value": "support@example.com",
+          "label": "support@example.com"
+        },
+        {
+          "type": "phone",
+          "value": "+4570203040",
+          "label": "+45 70 20 30 40"
+        }
       ]
     }
   }

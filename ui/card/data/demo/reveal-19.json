@@ -1,0 +1,29 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "reveal-demo-19",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Reveal demo 19 — Skyline Five (tap card, media-only front)",
+    "schemaType": "content",
+    "preset": {
+      "$ref": "card-preset/reveal-tap-bottom"
+    },
+    "eyebrow": "Pop",
+    "headline": "Skyline Five",
+    "summary": "Five voices, one harmony — the boy band that broke free to write its own songs.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/band_boys.png",
+        "alt": "Skyline Five"
+      }
+    ]
+  }
+}

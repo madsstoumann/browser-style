@@ -1,0 +1,49 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "video-demo-11",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Video demo — exhibition The Rus (696120095)",
+    "schemaType": "content",
+    "preset": {
+      "$ref": "card-preset/video-stack"
+    },
+    "eyebrow": "Exhibition · full film",
+    "headline": "The Rus — Vikings in the East",
+    "summary": "Follow the river routes from Scandinavia to Byzantium and the silk roads beyond.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "vimeo-data/previews/696120095.jpg",
+        "alt": ""
+      },
+      {
+        "mediaType": "vimeo",
+        "src": "696120095"
+      }
+    ],
+    "play": {
+      "position": "cc",
+      "size": "lg"
+    },
+    "chip": {
+      "text": "vimeo iframe"
+    },
+    "actions": [
+      {
+        "link": {
+          "url": "#",
+          "text": "Read more"
+        },
+        "style": "primary"
+      }
+    ]
+  }
+}

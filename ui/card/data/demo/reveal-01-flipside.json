@@ -1,0 +1,28 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "reveal-demo-01-flipside",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Reveal demo 01 — Starfall Legends flipside (popup panel)",
+    "schemaType": "software",
+    "headline": "Starfall Legends",
+    "subheadline": "Gather your party and chase the falling stars. A hand-drawn action-RPG set across the floating isles of Auralis, where every comet leaves behind a creature to befriend — or battle.",
+    "summary": "Master the Starbind combat system, evolve your companions through dozens of forms, and uncover who shattered the night sky. Couch co-op for up to four heroes.",
+    "actions": [
+      {
+        "link": {
+          "url": "#",
+          "text": "Get — Free with in-app purchases"
+        },
+        "style": "ghost"
+      }
+    ]
+  }
+}

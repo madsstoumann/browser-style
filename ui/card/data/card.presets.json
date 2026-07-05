@@ -1,0 +1,136 @@
+{
+  "$schema": "../../../cms/baseline/models/card-preset.schema.json",
+  "model": "card-preset",
+  "description": "Named look & feel presets for the universal card. Each key is a preset id (referenced from content as card-preset/{id}); each value holds the attributes written verbatim to the host element. Furniture tokens (chip/sticker/save/play) are appended by the renderer from card content.",
+  "presets": {
+    "stack": {
+      "name": "Stack Preset",
+      "description": "Default column card — media on top, 16:9",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(16/9)"
+    },
+    "showcase": {
+      "name": "Showcase Preset",
+      "description": "Column card with a taller 4:3 media frame — products, credentials",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3)"
+    },
+    "split": {
+      "name": "Split Preset",
+      "description": "Media left, content right, content twice as wide",
+      "element": "ui-card",
+      "variant": "row spl(1/2)",
+      "media": "asr(4/3)"
+    },
+    "split-reverse": {
+      "name": "Split Reverse Preset",
+      "description": "Content first, square media trailing",
+      "element": "ui-card",
+      "variant": "row-r spl(2/1)",
+      "media": "asr(1/1)"
+    },
+    "portrait": {
+      "name": "Portrait Preset",
+      "description": "Square media beside content — reviews, small product shots",
+      "element": "ui-card",
+      "variant": "row spl(1/2)",
+      "media": "asr(1/1)"
+    },
+    "portrait-top": {
+      "name": "Portrait Top Preset",
+      "description": "Square media anchored to the top of the frame — people",
+      "element": "ui-card",
+      "variant": "row spl(1/2)",
+      "media": "asr(1/1) obp(tc)"
+    },
+    "panel": {
+      "name": "Panel Preset",
+      "description": "Content-only card, no media frame",
+      "element": "ui-card",
+      "variant": "vis(content)"
+    },
+    "panel-subtle": {
+      "name": "Panel Subtle Preset",
+      "description": "Content-only, off-white surface, large type — quotes",
+      "element": "ui-card",
+      "variant": "vis(content) thm(subtle)",
+      "content": "scl(lg)"
+    },
+    "panel-brand": {
+      "name": "Panel Brand Preset",
+      "description": "Content-only on the accent surface — stats, pricing tiers",
+      "element": "ui-card",
+      "variant": "vis(content) thm(brand)"
+    },
+    "panel-dark": {
+      "name": "Panel Dark Preset",
+      "description": "Content-only on a dark surface — announcements, alerts",
+      "element": "ui-card",
+      "variant": "vis(content) thm(dark)"
+    },
+    "hero": {
+      "name": "Hero Preset",
+      "description": "Content overlaid bottom-left on a 4:3 frame with scrim — events, campaigns",
+      "element": "ui-card",
+      "variant": "ovr(bl)",
+      "media": "asr(4/3) scm",
+      "content": "scl(lg)"
+    },
+    "poster": {
+      "name": "Poster Preset",
+      "description": "Tall 3:4 overlay card with scrim — destinations, covers",
+      "element": "ui-card",
+      "variant": "ovr(bl)",
+      "media": "asr(3/4) scm",
+      "content": "scl(lg)"
+    },
+    "media": {
+      "name": "Media Preset",
+      "description": "Bare <ui-media> frame, no card chrome — hero images, banners, standalone visuals. rds() applies because the frame owns its own corners outside a card.",
+      "element": "ui-media",
+      "media": "asr(21/9) rds(lg)"
+    },
+    "prose": {
+      "name": "Prose Preset",
+      "description": "Bare <ui-content> column, no card chrome — standalone text sections directly in a layout",
+      "element": "ui-content",
+      "content": "scl(md)"
+    },
+    "carousel": {
+      "name": "Carousel Preset",
+      "description": "Column card whose media items scroll-snap with dot navigation — galleries",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(16/9) nav(dot)"
+    },
+    "flip": {
+      "name": "Flip Preset",
+      "description": "Reveal card: overlay front face, flip to a scrollable detail panel — from the ui/reveal flip demo",
+      "element": "ui-reveal",
+      "type": "flip",
+      "icon": "top right sm",
+      "iconClose": "dark",
+      "variant": "ovr(bl) rds(lg-sq)",
+      "media": "asr(3/4) hov(zoom) scm",
+      "scroll": true
+    },
+    "hero-reveal": {
+      "name": "Hero Reveal Preset",
+      "description": "Full-width reveal hero — expand on small containers, scale on large; dark panel — from the ui/reveal hero demo",
+      "element": "ui-reveal",
+      "type": "expand",
+      "typeLg": "scale",
+      "icon": "top right",
+      "variant": "ovr(bl) rds(md-sq)",
+      "media": "asr(21/9) obp(cc) scm",
+      "content": "scl(xl) pad(lg)",
+      "scroll": true,
+      "styles": {
+        "--ui-reveal-content-bg": "#1f2937",
+        "--ui-reveal-content-c": "#f9fafb"
+      }
+    }
+  }
+}

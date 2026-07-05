@@ -1,0 +1,209 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "card-preset",
+  "title": "🎨 Card Preset",
+  "description": "A named look & feel for a card: the combined attributes placed on the <ui-card> or <ui-reveal> element itself (variant, media, content token strings — plus reveal-specific attributes). Cards reference a preset instead of owning presentation, so restyling any card is a single reference swap. Presets are design-system data: invariant, not localized.",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-07-05",
+    "displayField": "internalName"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Presets",
+    "layout": [
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Preset",
+        "description": "Name and host element",
+        "collapse": false,
+        "fields": ["internalName", "name", "description", "element"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Attributes",
+        "description": "Token strings written verbatim to the element's attributes",
+        "collapse": false,
+        "fields": ["variant", "media", "content", "styles"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Carousel",
+        "description": "Dual-attribute carousel form — written to the <ui-media> child (groupable alternative to arw()/dot() media tokens)",
+        "collapse": true,
+        "fields": ["nav", "arrow", "dot"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Reveal",
+        "description": "Only used when element is ui-reveal",
+        "collapse": true,
+        "fields": ["type", "typeLg", "to", "icon", "iconClose", "from", "trigger", "scroll"]
+      }
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "internalName": {
+      "type": "string",
+      "title": "Internal Name",
+      "description": "Internal name for CMS editors — not displayed on the front end",
+      "localized": false,
+      "validation": {
+        "required": true
+      }
+    },
+    "name": {
+      "type": "string",
+      "title": "Name",
+      "description": "Display name, e.g. “Hero Preset”",
+      "localized": false,
+      "validation": {
+        "required": true
+      }
+    },
+    "description": {
+      "type": "text",
+      "title": "Description",
+      "description": "When to use this preset",
+      "localized": false
+    },
+    "element": {
+      "type": "select",
+      "title": "Element",
+      "description": "Host element the attributes are applied to. ui-media / ui-content render the bare primitive with no card chrome — a standalone media frame or prose column living directly in a layout.",
+      "localized": false,
+      "default": "ui-card",
+      "validation": {
+        "required": true
+      },
+      "options": [
+        { "value": "ui-card", "label": "<ui-card>" },
+        { "value": "ui-reveal", "label": "<ui-reveal>" },
+        { "value": "ui-media", "label": "<ui-media> (bare media frame)" },
+        { "value": "ui-content", "label": "<ui-content> (bare content column)" }
+      ]
+    },
+    "variant": {
+      "type": "string",
+      "title": "variant=",
+      "description": "Card composition tokens: col | col-r | row | row-r, spl(1/2 …), ovr(tl…br), vis(media|content), thm(dark|brand|subtle), rds(…)",
+      "localized": false
+    },
+    "media": {
+      "type": "string",
+      "title": "media=",
+      "description": "Media frame tokens: asr(16/9 …), obf(), obp(), hov(), scm, nav(), auto, loop, clip … Furniture tokens (chip/sticker/save/play positions) are appended by the renderer from card content — do not put them here.",
+      "localized": false
+    },
+    "content": {
+      "type": "string",
+      "title": "content=",
+      "description": "Content column tokens: scl(sm|md|lg|xl), pad(), gap(), scr",
+      "localized": false
+    },
+    "styles": {
+      "type": "object",
+      "title": "Style overrides",
+      "description": "CSS custom properties written to the element's style attribute, e.g. { \"--ui-reveal-content-bg\": \"#1f2937\" }. Keys must start with --.",
+      "localized": false
+    },
+    "nav": {
+      "type": "string",
+      "title": "nav=",
+      "description": "Carousel navigation (written to <ui-media>): dot arw non bar blw abv",
+      "localized": false
+    },
+    "arrow": {
+      "type": "string",
+      "title": "arrow=",
+      "description": "Arrow atoms, groupable (written to <ui-media>): chv|arr · lgt|drk|sub · sm|md|lg|xl · mid|top|bot · set|bare|hid|sta",
+      "localized": false
+    },
+    "dot": {
+      "type": "string",
+      "title": "dot=",
+      "description": "Dot atoms, groupable (written to <ui-media>): cir|pll|tmb · sm|md|lg|xl · lgt|drk|sub · ctr|sta|end|non|tl|tr|bl|br",
+      "localized": false
+    },
+    "type": {
+      "type": "select",
+      "title": "Reveal type",
+      "description": "Reveal animation (element = ui-reveal only)",
+      "localized": false,
+      "options": [
+        { "value": "expand", "label": "Expand" },
+        { "value": "flip", "label": "Flip" },
+        { "value": "slide", "label": "Slide" },
+        { "value": "scale", "label": "Scale" }
+      ]
+    },
+    "icon": {
+      "type": "string",
+      "title": "icon=",
+      "description": "Reveal toggle-icon tokens: position (top bottom left right) · style (dark semi) · size (sm lg), e.g. “top right sm”",
+      "localized": false
+    },
+    "iconClose": {
+      "type": "string",
+      "title": "icon-close=",
+      "description": "Reveal close-icon tokens, e.g. “dark” or “dark top right”",
+      "localized": false
+    },
+    "typeLg": {
+      "type": "select",
+      "title": "type-lg=",
+      "description": "Reveal type override at the large container tier (e.g. expand on mobile, scale on desktop)",
+      "localized": false,
+      "options": [
+        { "value": "expand", "label": "Expand" },
+        { "value": "flip", "label": "Flip" },
+        { "value": "slide", "label": "Slide" },
+        { "value": "scale", "label": "Scale" }
+      ]
+    },
+    "to": {
+      "type": "select",
+      "title": "to=",
+      "description": "Expand target — pop the panel to the viewport instead of in place",
+      "localized": false,
+      "options": [
+        { "value": "viewport", "label": "Viewport" }
+      ]
+    },
+    "from": {
+      "type": "select",
+      "title": "from=",
+      "description": "Slide direction (reveal type slide)",
+      "localized": false,
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ]
+    },
+    "trigger": {
+      "type": "select",
+      "title": "trigger=",
+      "description": "What toggles the reveal",
+      "localized": false,
+      "options": [
+        { "value": "summary", "label": "Summary (default)" },
+        { "value": "card", "label": "Whole card" }
+      ]
+    },
+    "scroll": {
+      "type": "boolean",
+      "title": "scroll",
+      "description": "Scrollable reveal panel",
+      "localized": false,
+      "default": false
+    }
+  },
+  "required": []
+}

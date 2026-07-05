@@ -1,0 +1,38 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "video-demo-15",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Video demo — archive tile (789027225)",
+    "schemaType": "content",
+    "preset": {
+      "$ref": "card-preset/video-tile"
+    },
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "vimeo-data/previews/789027225.jpg",
+        "alt": ""
+      },
+      {
+        "mediaType": "vimeo",
+        "src": "789027225"
+      }
+    ],
+    "play": {
+      "position": "cc"
+    },
+    "chip": {
+      "text": "vimeo iframe",
+      "position": "bs",
+      "hue": "dark"
+    }
+  }
+}

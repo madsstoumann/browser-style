@@ -1,0 +1,48 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "carousel-demo-09",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Carousel Demo — Play control bottom-left",
+    "schemaType": "gallery",
+    "preset": {
+      "$ref": "card-preset/carousel-play"
+    },
+    "eyebrow": "Autoplay",
+    "headline": "Pinned control (bottom-left)",
+    "summary": "Always visible; click to pause — the pill timer freezes with it.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/finance.png",
+        "alt": "City skyline at dusk"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/river.png",
+        "alt": "River winding through a valley"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/mindfulness.png",
+        "alt": "Calm lakeside at dawn"
+      },
+      {
+        "mediaType": "image",
+        "src": "/assets/images/gastronomy.png",
+        "alt": "Plated dish in a restaurant"
+      }
+    ],
+    "play": {
+      "position": "bs",
+      "size": "sm"
+    }
+  }
+}

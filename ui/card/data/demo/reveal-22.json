@@ -1,0 +1,29 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "reveal-demo-22",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Reveal demo 22 — Neon Avenue (slide)",
+    "schemaType": "content",
+    "preset": {
+      "$ref": "card-preset/reveal-slide-left"
+    },
+    "eyebrow": "Synth-Pop",
+    "headline": "Neon Avenue",
+    "summary": "Bedroom demos turned stadium choruses, one second-hand synth at a time.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/band_girls.png",
+        "alt": "Neon Avenue"
+      }
+    ]
+  }
+}

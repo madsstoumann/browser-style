@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-04T12:00:00Z",
-    "updatedAt": "2026-07-04T12:00:00Z",
+    "updatedAt": "2026-07-05T09:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Community"
@@ -12,13 +12,25 @@
   "fields": {
     "internalName": "Demo — Poll",
     "schemaType": "poll",
+    "preset": {
+      "$ref": "card-preset/panel"
+    },
     "eyebrow": "Community poll",
     "headline": "Which CSS feature changed your workflow the most?",
     "details": {
       "options": [
-        { "headline": "Container queries", "votes": 1117 },
-        { "headline": ":has()", "votes": 666 },
-        { "headline": "Cascade layers", "votes": 365 }
+        {
+          "headline": "Container queries",
+          "votes": 1117
+        },
+        {
+          "headline": ":has()",
+          "votes": 666
+        },
+        {
+          "headline": "Cascade layers",
+          "votes": 365
+        }
       ],
       "totalVotes": 2148,
       "closes": "2026-07-31",

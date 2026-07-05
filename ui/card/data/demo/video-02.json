@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "video-demo-02",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Video demo — native custom control (river)",
+    "schemaType": "content",
+    "preset": {
+      "$ref": "card-preset/video-frame-tools"
+    },
+    "headline": "River",
+    "media": [
+      {
+        "mediaType": "video",
+        "src": "https://assets.stoumann.dk/video/river.mp4",
+        "poster": "/assets/images/river.png",
+        "controls": false,
+        "muted": true,
+        "loop": true,
+        "alt": "River running through a green valley"
+      }
+    ],
+    "play": {
+      "position": "cc"
+    },
+    "chip": {
+      "text": "native custom"
+    }
+  }
+}

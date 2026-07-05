@@ -1,0 +1,38 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "reveal-demo-18",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Reveal demo 18 — Neon Avenue (tap card)",
+    "schemaType": "content",
+    "preset": {
+      "$ref": "card-preset/reveal-tap-top"
+    },
+    "eyebrow": "Synth-Pop",
+    "headline": "Neon Avenue",
+    "summary": "All glitter and heartbreak under sodium streetlights.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/band_girls.png",
+        "alt": "Neon Avenue"
+      }
+    ],
+    "actions": [
+      {
+        "link": {
+          "url": "#",
+          "text": "Listen on repeat →"
+        },
+        "style": "ghost"
+      }
+    ]
+  }
+}
