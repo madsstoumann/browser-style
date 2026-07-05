@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-05T10:00:00Z",
-    "updatedAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T11:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Demo"
@@ -24,6 +24,11 @@
         "src": "/assets/images/band_glamrock.png",
         "alt": "Glitter Throne"
       }
-    ]
+    ],
+    "body": {
+      "$richtext": true,
+      "content": "Behind the spectacle sat real songs, sharp enough that even the cynics in the back row were singing along by the encore. The costumes cost more than the recording budget, and the band considered that money well spent.\n\nThey understood something their rivals never did: that a show is a promise, and a crowd that's travelled across the country deserves to leave dazzled. So they gave them everything — the smoke, the capes, the impossible high note held a beat too long.\n\nThe look dated, of course; the songs didn't. Strip away the glitter and what's left is a run of singles built like cathedrals, still loud enough to fill a room thirty years on.",
+      "format": "text"
+    }
   }
 }

@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-05T10:00:00Z",
-    "updatedAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T11:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Demo"
@@ -24,6 +24,11 @@
         "src": "/assets/images/band_alternative.png",
         "alt": "Paper Mirror"
       }
-    ]
+    ],
+    "body": {
+      "$richtext": true,
+      "content": "Their debut arrived without warning, mastered in a friend's bedroom and pressed in a run of three hundred — every copy sold before the second week was out. By the time the reissue landed, the original was changing hands for the price of a month's rent.\n\nThe songs work like that too: small at first, then suddenly enormous. A verse mumbled into a four-track becomes, by the final chorus, the loudest thing in the room. The band swear they don't plan it; it just happens whenever they stop trying to sound clever.\n\nThey still refuse the big rooms, still book the venues with bad sightlines and worse PAs, still treat every show like the first one. Ask them why and they shrug — the cassettes worked, so why change now.",
+      "format": "text"
+    }
   }
 }

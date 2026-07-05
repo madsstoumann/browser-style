@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-05T10:00:00Z",
-    "updatedAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T11:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Demo"
@@ -24,6 +24,11 @@
         "src": "/assets/images/band_country.png",
         "alt": "Red Dirt Road"
       }
-    ]
+    ],
+    "body": {
+      "$richtext": true,
+      "content": "No click track, no second takes — just four players in a circle and whatever the night gave them before the coffee ran out. You can hear the room on every track: the creak of the boards, a dog barking somewhere past the third verse.\n\nThey tour in a single van, play county fairs and roadhouse bars, and treat a half-empty room the same as a sold-out one. The songs are about staying when leaving would be easier, and they mean every word.\n\nA bigger label came sniffing once, talked about studios and string sections. The band thanked them, drove home, and cut the next record in the same barn with the same broken microphone. Some things, they reckon, you don't fix.",
+      "format": "text"
+    }
   }
 }

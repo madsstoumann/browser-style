@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-05T10:00:00Z",
-    "updatedAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T11:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Demo"
@@ -24,6 +24,11 @@
         "src": "/assets/images/band_techno.png",
         "alt": "Pulse Theory"
       }
-    ]
+    ],
+    "body": {
+      "$richtext": true,
+      "content": "They never released a face, never an interview — just white-label twelve-inches that turned up in the right bags at the right hour. For years nobody knew if Pulse Theory was one person or a collective, and the mystery only made the records travel further.\n\nThe sets were less performances than endurance rituals: six, seven hours of tracks that breathed and built and never quite resolved, a crowd held in suspension until the first grey light leaked through the loading-bay doors.\n\nPromoters begged them to tour, to play the festivals, to step into the light. They declined every time. The work was the warehouse, the dark, the hours nobody else wanted — and they had no intention of taking it anywhere a clock could find them.",
+      "format": "text"
+    }
   }
 }

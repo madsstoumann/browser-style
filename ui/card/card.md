@@ -63,13 +63,14 @@ lives in one `details` object discriminated by `schemaType`.
 | `body` | richtext | Long-form |
 | `published` / `modified` | datetime | → `datePublished`/`dateModified` — `datePosted` for job/announcement |
 | `readingTime` | string | |
-| `media` | array | `{asset|src, mediaType, alt, caption}` — more than one item ⇒ carousel |
+| `media` | array | `{asset|src, mediaType: image|video|youtube|vimeo, alt, caption}` — more than one item ⇒ carousel. Video items also take `{autoplay, muted, loop, controls, poster}`; youtube/vimeo items set `provider`/`video` lite-embed attributes on the frame |
 | `authors` | array | `{name, role, avatar}` → byline, `author`/`creator` → Person |
 | `tags` | tags | → pill list |
 | `actions` | array | `{link, style}` → `data-part="actions"` buttons |
 | `links` | array of link | Plain related links |
 | `chip` | object | `{text, position, hue}` → `<ui-chip>` (legacy ribbon) |
 | `sticker` | object | `{text, position, hue, burst}` → `<ui-sticker>` |
+| `play` | object | `{position, hue, size}` → `<ui-play>` button (videos, autoplay carousels) |
 | `saveable` | boolean | → `<ui-save>` toggle |
 | `engagement` | object | counts → `InteractionCounter` microdata |
 | `details` | object | Type-specific payload (`ui.widget: editor-card`) |
@@ -121,7 +122,7 @@ Machine values stay schema-ready (`PT15M`, salary numbers, geo coordinates);
 | `content` | both | `scl() pad() gap() scr` |
 | `styles` | both | object of CSS custom properties → `style` attribute (e.g. `--ui-reveal-content-bg`) |
 | `nav` / `arrow` / `dot` | both | dual-attribute carousel form, written to the `<ui-media>` child (groupable: `arrow="lg drk arr set"`) |
-| `type`, `typeLg`, `to`, `icon`, `iconClose`, `from`, `trigger`, `scroll` | ui-reveal | reveal animation (`type-lg` = responsive override, `to="viewport"` = expand popup, `scroll` = boolean panel scrolling) |
+| `reveal` | ui-reveal | nested object grouping the reveal-only config: `{ type, typeLg, to, icon, iconType, iconClose, from, trigger, scroll }`. Keys map 1:1 to attributes (`typeLg` → `type-lg=`); `scroll` is a boolean; `iconType` sets the toggle glyph — `plus-cross` (default) or directional `{up,down,left,right}-arrow-cross`, pairing with slide direction (panel from top → `down-arrow-cross`, etc.) |
 
 Attribute audit across all `ui/card` + `ui/reveal` demos found exactly these on the
 host elements: `variant`, `media`, `content`, `type`, `type-lg`, `to`, `icon`,
@@ -159,6 +160,11 @@ Restyling any card = changing its reference:
 ```json
 "preset": { "$ref": "card-preset/hero" }
 ```
+
+A second collection, [`data/card.presets.demo.json`](data/card.presets.demo.json),
+holds **121 demo presets** extracted 1:1 from the original demo pages
+(`media-*`, `carousel-*`, `video-*`, `reveal-*` key prefixes) — every distinct
+attribute combination those pages use, powering the `*.render.html` recreations.
 
 ## Renderer — `render.js`
 
@@ -228,7 +234,8 @@ Everything else reuses existing parts: `meta` (salaries, hours, dates), `tags`
 |------|-------|
 | [`schema.html`](schema.html) | Hand-authored reference — all 26 types with microdata |
 | [`render.html`](render.html) | Same 26 cards rendered by `render.js` from UCF data + presets |
-| [`index.html`](index.html) · [`media.html`](media.html) · [`content.html`](content.html) · [`carousel.html`](carousel.html) · [`video.html`](video.html) | The card engine itself |
+| [`media.render.html`](media.render.html) · [`carousel.render.html`](carousel.render.html) · [`video.render.html`](video.render.html) · [`reveal.render.html`](reveal.render.html) | The original demo pages recreated data-driven: presets from [`data/card.presets.demo.json`](data/card.presets.demo.json) (121 presets extracted from the originals) + UCF instances in [`data/demo/`](data/demo/). Each page lists its not-expressible demos in a bottom note |
+| [`index.html`](index.html) · [`media.html`](media.html) · [`content.html`](content.html) · [`carousel.html`](carousel.html) · [`video.html`](video.html) | The card engine itself (hand-authored originals) |
 | [`../reveal/index.html`](../reveal/index.html) | Reveal types incl. the hero (source of `hero-reveal` preset) |
 
 Serve from the repo root (absolute `/ui/base/…` and `/assets/…` paths):

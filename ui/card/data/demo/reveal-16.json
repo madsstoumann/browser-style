@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-05T10:00:00Z",
-    "updatedAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T11:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Demo"
@@ -24,6 +24,11 @@
         "src": "/assets/images/band_dreampop.png",
         "alt": "Halcyon Wash"
       }
-    ]
+    ],
+    "body": {
+      "$richtext": true,
+      "content": "They record at dusk with the tape hiss left in, chasing the exact moment a melody starts to fade. Live, the stage vanishes behind haze and slow light, the band more felt than seen.\n\nIt's deliberate, all of it. The singer mixes her own vocals down until the words blur, because the feeling, she says, was always more honest than the sentence. Fans trade lyric sheets like rumours, half-sure they've invented the lines themselves.\n\nTheir records don't so much end as evaporate, each one a little further from solid ground than the last. Critics call it escapism; the band call it the truth, just softened enough to live with.",
+      "format": "text"
+    }
   }
 }

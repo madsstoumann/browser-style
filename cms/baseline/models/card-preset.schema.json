@@ -42,7 +42,7 @@
         "name": "Reveal",
         "description": "Only used when element is ui-reveal",
         "collapse": true,
-        "fields": ["type", "typeLg", "to", "icon", "iconClose", "from", "trigger", "scroll"]
+        "fields": ["reveal"]
       }
     ]
   },
@@ -130,79 +130,101 @@
       "description": "Dot atoms, groupable (written to <ui-media>): cir|pll|tmb · sm|md|lg|xl · lgt|drk|sub · ctr|sta|end|non|tl|tr|bl|br",
       "localized": false
     },
-    "type": {
-      "type": "select",
-      "title": "Reveal type",
-      "description": "Reveal animation (element = ui-reveal only)",
+    "reveal": {
+      "type": "object",
+      "title": "Reveal",
+      "description": "Reveal configuration — only used when element is ui-reveal. Keys map 1:1 to <ui-reveal> attributes (typeLg → type-lg=, iconClose → icon-close=, iconType → the toggle <ui-icon type>).",
       "localized": false,
-      "options": [
-        { "value": "expand", "label": "Expand" },
-        { "value": "flip", "label": "Flip" },
-        { "value": "slide", "label": "Slide" },
-        { "value": "scale", "label": "Scale" }
-      ]
-    },
-    "icon": {
-      "type": "string",
-      "title": "icon=",
-      "description": "Reveal toggle-icon tokens: position (top bottom left right) · style (dark semi) · size (sm lg), e.g. “top right sm”",
-      "localized": false
-    },
-    "iconClose": {
-      "type": "string",
-      "title": "icon-close=",
-      "description": "Reveal close-icon tokens, e.g. “dark” or “dark top right”",
-      "localized": false
-    },
-    "typeLg": {
-      "type": "select",
-      "title": "type-lg=",
-      "description": "Reveal type override at the large container tier (e.g. expand on mobile, scale on desktop)",
-      "localized": false,
-      "options": [
-        { "value": "expand", "label": "Expand" },
-        { "value": "flip", "label": "Flip" },
-        { "value": "slide", "label": "Slide" },
-        { "value": "scale", "label": "Scale" }
-      ]
-    },
-    "to": {
-      "type": "select",
-      "title": "to=",
-      "description": "Expand target — pop the panel to the viewport instead of in place",
-      "localized": false,
-      "options": [
-        { "value": "viewport", "label": "Viewport" }
-      ]
-    },
-    "from": {
-      "type": "select",
-      "title": "from=",
-      "description": "Slide direction (reveal type slide)",
-      "localized": false,
-      "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "right", "label": "Right" },
-        { "value": "top", "label": "Top" },
-        { "value": "bottom", "label": "Bottom" }
-      ]
-    },
-    "trigger": {
-      "type": "select",
-      "title": "trigger=",
-      "description": "What toggles the reveal",
-      "localized": false,
-      "options": [
-        { "value": "summary", "label": "Summary (default)" },
-        { "value": "card", "label": "Whole card" }
-      ]
-    },
-    "scroll": {
-      "type": "boolean",
-      "title": "scroll",
-      "description": "Scrollable reveal panel",
-      "localized": false,
-      "default": false
+      "properties": {
+        "type": {
+          "type": "select",
+          "title": "type=",
+          "description": "Reveal animation",
+          "localized": false,
+          "options": [
+            { "value": "expand", "label": "Expand" },
+            { "value": "flip", "label": "Flip" },
+            { "value": "slide", "label": "Slide" },
+            { "value": "scale", "label": "Scale" }
+          ]
+        },
+        "typeLg": {
+          "type": "select",
+          "title": "type-lg=",
+          "description": "Reveal type override at the large container tier (e.g. expand on mobile, scale on desktop)",
+          "localized": false,
+          "options": [
+            { "value": "expand", "label": "Expand" },
+            { "value": "flip", "label": "Flip" },
+            { "value": "slide", "label": "Slide" },
+            { "value": "scale", "label": "Scale" }
+          ]
+        },
+        "to": {
+          "type": "select",
+          "title": "to=",
+          "description": "Expand target — pop the panel to the viewport instead of in place",
+          "localized": false,
+          "options": [
+            { "value": "viewport", "label": "Viewport" }
+          ]
+        },
+        "icon": {
+          "type": "string",
+          "title": "icon=",
+          "description": "Toggle-icon tokens: position (top bottom left right) · style (dark semi) · size (sm lg), e.g. “top right sm”",
+          "localized": false
+        },
+        "iconType": {
+          "type": "select",
+          "title": "Icon glyph",
+          "description": "Glyph of the toggle <ui-icon> in the summary. Directional arrow-cross glyphs pair with slide reveals (panel from top → down-arrow-cross, bottom → up, left → right, right → left).",
+          "localized": false,
+          "default": "plus-cross",
+          "options": [
+            { "value": "plus-cross", "label": "Plus / cross" },
+            { "value": "up-arrow-cross", "label": "Up arrow / cross" },
+            { "value": "down-arrow-cross", "label": "Down arrow / cross" },
+            { "value": "left-arrow-cross", "label": "Left arrow / cross" },
+            { "value": "right-arrow-cross", "label": "Right arrow / cross" }
+          ]
+        },
+        "iconClose": {
+          "type": "string",
+          "title": "icon-close=",
+          "description": "Close-icon tokens, e.g. “dark” or “dark top right”",
+          "localized": false
+        },
+        "from": {
+          "type": "select",
+          "title": "from=",
+          "description": "Slide direction (reveal type slide)",
+          "localized": false,
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" },
+            { "value": "top", "label": "Top" },
+            { "value": "bottom", "label": "Bottom" }
+          ]
+        },
+        "trigger": {
+          "type": "select",
+          "title": "trigger=",
+          "description": "What toggles the reveal",
+          "localized": false,
+          "options": [
+            { "value": "summary", "label": "Summary (default)" },
+            { "value": "card", "label": "Whole card" }
+          ]
+        },
+        "scroll": {
+          "type": "boolean",
+          "title": "scroll",
+          "description": "Scrollable reveal panel",
+          "localized": false,
+          "default": false
+        }
+      }
     }
   },
   "required": []

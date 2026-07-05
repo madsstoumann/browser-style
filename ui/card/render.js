@@ -247,9 +247,25 @@ const buildContent = (fields, type, overlay) => {
 			? part('blockquote', 'quote', { itemprop: prop }, fields.summary)
 			: part(textTag, 'summary', { itemprop: prop }, fields.summary));
 	}
+	appendBody(fields, content, textTag);
 	if (fields.published) content.append(meta(PUBLISHED_PROP[type] || 'datePublished', fields.published));
 	if (fields.modified) content.append(meta('dateModified', fields.modified));
 	return content;
+};
+
+/* Long-form body: plain string or UCF richtext ({$richtext, content, format}).
+   Rendered as one element per blank-line-separated paragraph via textContent —
+   html-format richtext is NOT rendered (no innerHTML in this engine). */
+const appendBody = (fields, content, textTag = 'p') => {
+	const body = fields.body;
+	const text = typeof body === 'string'
+		? body
+		: body?.$richtext && body.format !== 'html' ? body.content : null;
+	if (!text) return;
+	for (const paragraph of String(text).split(/\n{2,}/)) {
+		const trimmed = paragraph.trim();
+		if (trimmed) content.append(el(textTag, {}, trimmed));
+	}
 };
 
 const buildTail = (fields, content) => {
@@ -690,6 +706,7 @@ const buildDerivedBack = (fields, type) => {
 		part('h3', 'headline', {}, `${fields.headline}${fields.details?.version ? ` ${fields.details.version}` : ''}`),
 		fields.summary ? part('p', 'summary', { itemprop: SUMMARY_PROP[type] || 'description' }, fields.summary) : null
 	]);
+	appendBody(fields, back);
 	if (DETAILS[type] && fields.details) DETAILS[type](fields.details, back);
 	buildTail({ ...fields, published: null, readingTime: null }, back);
 	return back;
@@ -720,16 +737,17 @@ const renderReveal = (fields, type, itemtype, tokens, preset, flipside) => {
 		])
 	]);
 	const back = flipside ? buildFlipsideBack(flipside) : buildDerivedBack(fields, type);
+	const reveal = preset.reveal || {};
 
 	return el('ui-reveal', {
-		icon: preset.icon || 'top right sm',
-		'icon-close': preset.iconClose || null,
-		type: preset.type || 'flip',
-		'type-lg': preset.typeLg || null,
-		to: preset.to || null,
-		from: preset.from || null,
-		trigger: preset.trigger || null,
-		scroll: !!preset.scroll,
+		icon: reveal.icon || 'top right sm',
+		'icon-close': reveal.iconClose || null,
+		type: reveal.type || 'flip',
+		'type-lg': reveal.typeLg || null,
+		to: reveal.to || null,
+		from: reveal.from || null,
+		trigger: reveal.trigger || null,
+		scroll: !!reveal.scroll,
 		variant: preset.variant || null,
 		media: [preset.media, ...tokens.media].filter(Boolean).join(' ') || null,
 		content: preset.content || null,
@@ -738,7 +756,7 @@ const renderReveal = (fields, type, itemtype, tokens, preset, flipside) => {
 		itemtype
 	}, [
 		el('details', { name: 'render-reveal' }, [
-			el('summary', {}, [front, el('ui-icon', { type: 'plus-cross', 'aria-hidden': 'true' })]),
+			el('summary', {}, [front, el('ui-icon', { type: reveal.iconType || 'plus-cross', 'aria-hidden': 'true' })]),
 			back
 		])
 	]);

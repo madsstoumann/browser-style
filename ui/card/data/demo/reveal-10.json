@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-05T10:00:00Z",
-    "updatedAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T11:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Demo"
@@ -24,6 +24,11 @@
         "src": "/assets/images/band_boys.png",
         "alt": "Skyline Five"
       }
-    ]
+    ],
+    "body": {
+      "$richtext": true,
+      "content": "The split cost them a label and half their fanbase, but the songs that followed were the first anyone could honestly call their own. They financed the record themselves, rehearsing in a rented unit above a tyre shop and tracking vocals after midnight when the rates dropped.\n\nWhat surprised everyone — including them — was how good it was. The harmonies they'd been drilled on for years suddenly had something to say, and the songs landed with a warmth no focus group had ever managed to manufacture.\n\nThey're smaller now, playing theatres instead of arenas, and they'll tell you they've never been happier. The screaming is quieter; the listening is louder.",
+      "format": "text"
+    }
   }
 }

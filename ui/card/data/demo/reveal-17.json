@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-05T10:00:00Z",
-    "updatedAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T11:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Demo"
@@ -24,6 +24,11 @@
         "src": "/assets/images/band_goth.png",
         "alt": "The Lure"
       }
-    ]
+    ],
+    "body": {
+      "$richtext": true,
+      "content": "By the second record the sound had thickened — drum machines under live toms, a baritone guitar tuned down until the strings flapped, vocals buried like a confession you weren't meant to hear.\n\nThey almost split after the tour: three of them stopped speaking, the singer moved abroad, and for two years the band existed only as a rumour and a few warped bootlegs. Then a remastered single found a second life online, and a generation that had never seen them live decided The Lure belonged to them.\n\nThe reunion record, when it finally came, sounded nothing like nostalgia. It was colder, slower, and somehow more alive — proof that the old quarter still had one more song left in it.",
+      "format": "text"
+    }
   }
 }

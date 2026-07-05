@@ -4,7 +4,7 @@
 	<title>Moesgaard — Film &amp; Exhibitions (Rendered)</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="video.html recreated by render.js — every frame and card is built at runtime from UCF data in data/demo/ plus the video presets in data/presets.demo.video.json.">
+	<meta name="description" content="video.html recreated by render.js — every frame and card is built at runtime from UCF data in data/demo/ plus the video presets in data/card.presets.demo.json.">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
@@ -25,7 +25,7 @@
 <body>
 
 	<h1>Video — Render Engine</h1>
-	<p class="note">Every frame and card on this page is built at runtime by <a href="render.js"><code>render.js</code></a> from UCF files in <a href="data/demo/"><code>data/demo/</code></a>, styled by the <code>video-*</code> presets in <a href="data/presets.demo.video.json"><code>presets.demo.video.json</code></a> merged over <a href="data/card.presets.json"><code>card.presets.json</code></a>. Hand-authored reference: <a href="video.html"><code>video.html</code></a>. After rendering, <code>index.js</code>'s exported <code>scan()</code> wires embeds, play buttons and player tools.</p>
+	<p class="note">Every frame and card on this page is built at runtime by <a href="render.js"><code>render.js</code></a> from UCF files in <a href="data/demo/"><code>data/demo/</code></a>, styled by the <code>video-*</code> presets in <a href="data/card.presets.demo.json"><code>presets.demo.video.json</code></a> merged over <a href="data/card.presets.json"><code>card.presets.json</code></a>. Hand-authored reference: <a href="video.html"><code>video.html</code></a>. After rendering, <code>index.js</code>'s exported <code>scan()</code> wires embeds, play buttons and player tools.</p>
 
 	<main></main>
 
@@ -38,7 +38,7 @@
 
 		const presets = {
 			...await loadPresets('data/card.presets.json'),
-			...await loadPresets('data/presets.demo.video.json')
+			...await loadPresets('data/card.presets.demo.json')
 		};
 
 		const names = ['video-01', 'video-02', 'video-03', 'video-04', 'video-05', 'video-06', 'video-07',

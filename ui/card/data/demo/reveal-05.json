@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-05T10:00:00Z",
-    "updatedAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-05T11:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Demo"
@@ -24,6 +24,11 @@
         "src": "/assets/images/band_britpop.png",
         "alt": "Camden Court"
       }
-    ]
+    ],
+    "body": {
+      "$richtext": true,
+      "content": "The press anointed them the next big thing before the ink dried on their first single, and for one long hot July they almost believed it. The covers, the radio sessions, the rivalries invented by bored journalists — they rode all of it with a grin.\n\nThen the summer ended, as summers do. The second single stalled, the hype machine moved on, and the band were left holding a sound that had briefly defined a city and now belonged to no one in particular.\n\nThey never quite went away. Every few years they regroup, play the old songs to people who've grown up alongside them, and remind everyone that for one perfect July, Camden Court really were the best band in the country.",
+      "format": "text"
+    }
   }
 }

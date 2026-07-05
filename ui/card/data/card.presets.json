@@ -109,27 +109,31 @@
       "name": "Flip Preset",
       "description": "Reveal card: overlay front face, flip to a scrollable detail panel — from the ui/reveal flip demo",
       "element": "ui-reveal",
-      "type": "flip",
-      "icon": "top right sm",
-      "iconClose": "dark",
       "variant": "ovr(bl) rds(lg-sq)",
       "media": "asr(3/4) hov(zoom) scm",
-      "scroll": true
+      "reveal": {
+        "type": "flip",
+        "icon": "top right sm",
+        "iconClose": "dark",
+        "scroll": true
+      }
     },
     "hero-reveal": {
       "name": "Hero Reveal Preset",
       "description": "Full-width reveal hero — expand on small containers, scale on large; dark panel — from the ui/reveal hero demo",
       "element": "ui-reveal",
-      "type": "expand",
-      "typeLg": "scale",
-      "icon": "top right",
       "variant": "ovr(bl) rds(md-sq)",
       "media": "asr(21/9) obp(cc) scm",
       "content": "scl(xl) pad(lg)",
-      "scroll": true,
       "styles": {
         "--ui-reveal-content-bg": "#1f2937",
         "--ui-reveal-content-c": "#f9fafb"
+      },
+      "reveal": {
+        "type": "expand",
+        "typeLg": "scale",
+        "icon": "top right",
+        "scroll": true
       }
     }
   }
