@@ -105,77 +105,17 @@
 	:where([media*="flp(v)"])  { --ui-media-fl-y: -1; }
 	:where([media*="flp(hv)"]) { --ui-media-fl-x: -1; --ui-media-fl-y: -1; }
 
-	/* shp() — generic shape/morph MECHANISM (ships with the card). Clip media
-	   content to --ui-media-shape; if a shape also sets --ui-shape-morph, animate
-	   to it on hover. The shape LIBRARY (polygons for shp(cut-r) etc.) lives in the
-	   opt-in media.shapes.css — but this mechanism also works with any custom
-	   --ui-media-shape / --ui-shape-morph you set yourself. Morph on by default. */
+	/* shp() — static clip MECHANISM (ships with the card). Clips media content to
+	   --ui-media-shape. The shape LIBRARY (shp(cut-r) polygons) is the opt-in
+	   media.shapes.css; the hover MORPH (hov(shape) → --ui-shape-morph) lives in
+	   media.hover.css. Works with any custom --ui-media-shape you set. */
 	:where([media*="shp("]) ui-media,
 	:where(ui-media[media*="shp("]) {
 		background: #0000;
-		& :is(iframe, img, picture, video) {
-			clip-path: var(--ui-media-shape, none);
-			transition: clip-path var(--ui-media-morph-dur, 0.6s) var(--ease-in-out, ease);
-		}
-	}
-	@media (hover: hover) {
-		ui-media[media*="shp("]:hover :is(iframe, img, picture, video),
-		:where([media*="shp("]) ui-media:hover :is(iframe, img, picture, video) {
-			clip-path: var(--ui-shape-morph, var(--ui-media-shape));
-		}
-	}
-	@media (prefers-reduced-motion: reduce) {
-		:where([media*="shp("]) ui-media :is(iframe, img, picture, video),
-		:where(ui-media[media*="shp("]) :is(iframe, img, picture, video) { transition: none; }
+		& :is(iframe, img, picture, video) { clip-path: var(--ui-media-shape, none); }
 	}
 
-	/* ============================================================
-		 HOVER — hov(zoom|pan|track). Image-only (card-level hovers removed).
-		 ============================================================ */
-	@media (hover: hover) {
-		:where([media*="hov("]) {
-			--_hv-dur: var(--ui-media-hover-duration, var(--duration-slower));
-			--_hv-ease: var(--ui-media-hover-easing, var(--ease-out));
-		}
-		:where([media*="hov(zoom)"], [media*="hov(pan)"]) ui-media img,
-		ui-media:where([media*="hov(zoom)"], [media*="hov(pan)"]) img {
-			transition: scale var(--_hv-dur) var(--_hv-ease), translate var(--_hv-dur) var(--_hv-ease);
-		}
-		:where([media*="hov(zoom)"]:hover) ui-media img,
-		:where(ui-media[media*="hov(zoom)"]:hover) img {
-			scale: var(--ui-media-hv-zoom, 1.08);
-		}
-		:where([media*="hov(pan)"]:hover) ui-media img,
-		:where(ui-media[media*="hov(pan)"]:hover) img {
-			scale: var(--ui-media-hv-zoom, 1.12);
-			translate: var(--ui-media-hv-pan-x, -2%) var(--ui-media-hv-pan-y, -2%);
-		}
-		/* cursor-tracked pan — --ui-media-mx/my (-1..1) set by a pointermove handler */
-		:where([media*="hov(track)"]) ui-media img,
-		ui-media:where([media*="hov(track)"]) img {
-			scale: var(--ui-media-hv-zoom, 1.12);
-			transition: translate var(--ui-media-hv-track-dur, var(--duration-normal)) var(--_hv-ease), scale var(--_hv-dur) var(--_hv-ease);
-			translate: calc(var(--ui-media-mx, 0) * var(--ui-media-hv-track, 4%)) calc(var(--ui-media-my, 0) * var(--ui-media-hv-track, 4%));
-		}
-		/* cursor-counter drift — oversized image shrinks on hover, drifts opposite the cursor */
-		:where([media*="hov(drift)"]) ui-media img,
-		ui-media:where([media*="hov(drift)"]) img {
-			scale: var(--ui-media-hv-drift-rest, 1.3);
-			transition: translate var(--ui-media-hv-track-dur, var(--duration-normal)) var(--_hv-ease), scale var(--_hv-dur) var(--_hv-ease);
-		}
-		/* hover scoped to the FRAME so shrink+drift only fire over the image */
-		:where([media*="hov(drift)"]) ui-media:hover img,
-		:where(ui-media[media*="hov(drift)"]:hover) img {
-			scale: var(--ui-media-hv-drift-hover, 1.2);
-			translate: calc(var(--ui-media-mx, 0) * -1 * var(--ui-media-hv-drift, 4%)) calc(var(--ui-media-my, 0) * -1 * var(--ui-media-hv-drift, 4%));
-		}
-	}
-	@media (prefers-reduced-motion: reduce) {
-		:where([media*="hov("]) ui-media img,
-		ui-media:where([media*="hov("]) img { transition: none; }
-		:where([media*="hov(track)"], [media*="hov(drift)"]) ui-media img,
-		ui-media:where([media*="hov(track)"], [media*="hov(drift)"]) img { translate: 0; }
-	}
+	/* hov() hover effects live in media.hover.css (imported by ui-card.css). */
 
 	/* ============================================================
 		 OVERLAY FURNITURE — <ui-chip> <ui-sticker> <ui-save> <ui-play>

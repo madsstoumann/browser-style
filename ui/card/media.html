@@ -96,7 +96,7 @@
 	<!-- ============================================================
 	     object-fit token
 	     ============================================================ -->
-	<h2>Object-fit — <code>obf()</code> / <code>--ui-media-fit</code></h2>
+	<h2>Object-fit — <code>obf()</code></h2>
 	<p>The frame defaults to <code>object-fit: cover</code> (fill &amp; crop). Override per instance with the <code>obf()</code> token (or the <code>--ui-media-fit</code> custom property).</p>
 	<div class="grid grid-3">
 		<ui-card variant="vis(media)" media="asr(1/1) chip(bs)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-chip>cover (default)</ui-chip></ui-media></cq-box></ui-card>
@@ -108,46 +108,47 @@
 	     shape token
 	     ============================================================ -->
 	<h2>Shapes — <code>shp()</code></h2>
-	<p>Adds a <code>clip-path</code> to images, videos and iframes within <code>&lt;ui-media&gt;</code>. Names are kept short: direction suffixes are <code>-l</code>/<code>-r</code> (left/right), <code>-d</code>/<code>-u</code> (down/up). The full set (31), from the opt-in <code>media.shapes.css</code> sheet. Every shape carries a matching-vertex morph target (<code>--ui-shape-morph</code>) — hover any of them and it animates back to a full frame (the groundwork for a scroll-driven reveal). The clip + hover-morph mechanism itself lives in <code>media.css</code>, so it also works with your own <code>--ui-media-shape</code> / <code>--ui-shape-morph</code>. Morph is on by default for now; a token to gate it comes later.</p>
+	<p>Adds a <code>clip-path</code> to images, videos and iframes within <code>&lt;ui-media&gt;</code>. Names are kept short: direction suffixes are <code>-l</code>/<code>-r</code> (left/right), <code>-d</code>/<code>-u</code> (down/up). The full set (32), from the opt-in <code>media.shapes.css</code> sheet. Every shape carries a matching-vertex morph target (<code>--ui-shape-morph</code>); add <code>hov(shape)</code> (the green-chip tiles below) to animate it back to a full frame on hover — the base clip is static without it. The clip <em>mechanism</em> ships in <code>media.css</code>, the hover <em>morph</em> in <code>media.hover.css</code>, so both work with your own <code>--ui-media-shape</code> / <code>--ui-shape-morph</code> too.</p>
 	<div class="grid grid-4">
-		<ui-media media="asr(1/1) shp(pt-d) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>pt-d</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(pt-u) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>pt-u</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(cut-r) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>cut-r</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(cut-l) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>cut-l</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(pt-d) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>pt-d</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(pt-u) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>pt-u</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(cut-r) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>cut-r</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(cut-l) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>cut-l</ui-chip></ui-media>
 
-		<ui-media media="asr(1/1) shp(skew-r) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>skew-r</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(skew-l) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>skew-l</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(para) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>para</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(rhomb) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>rhomb</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(skew-r) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>skew-r</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(skew-l) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>skew-l</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(para) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>para</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(rhomb) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>rhomb</ui-chip></ui-media>
 
-		<ui-media media="asr(1/1) shp(inset) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>inset</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(pt-l) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>pt-l</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(pt-r) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>pt-r</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(hex) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>hex</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(inset) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>inset</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(pt-l) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>pt-l</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(pt-r) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>pt-r</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(hex) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>hex</ui-chip></ui-media>
 
-		<ui-media media="asr(1/1) shp(plus) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>plus</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(minus) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>minus</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(blinds-h) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>blinds-h</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(blinds-v) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>blinds-v</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(plus) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>plus</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(minus) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>minus</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(blinds-h) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>blinds-h</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(blinds-v) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>blinds-v</ui-chip></ui-media>
 
-		<ui-media media="asr(1/1) shp(frame) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>frame</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(chev-l) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>chev-l</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(chev-r) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>chev-r</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(star) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>star</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(frame) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>frame</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(chev-l) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>chev-l</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(chev-r) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>chev-r</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(star) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>star</ui-chip></ui-media>
 
-		<ui-media media="asr(1/1) shp(arr-l) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>arr-l</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(arr-r) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>arr-r</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(close) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>close</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(bolt) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>bolt</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(arr-l) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>arr-l</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(arr-r) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>arr-r</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(close) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>close</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(bolt) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>bolt</ui-chip></ui-media>
 
-		<ui-media media="asr(1/1) shp(msg) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>msg</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(curve-d) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>curve-d</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(curve-u) chip(bc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>curve-u</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(curve-r) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>curve-r</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(msg) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>msg</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(curve-d) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>curve-d</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(curve-u) chip(bc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>curve-u</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(curve-r) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>curve-r</ui-chip></ui-media>
 
-		<ui-media media="asr(1/1) shp(curve-l) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>curve-l</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(circle) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>circle</ui-chip></ui-media>
-		<ui-media media="asr(1/1) shp(circ-45) chip(tc) chip(green)"><img src="/assets/images/hubble.png" alt=""><ui-chip>circ-45</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(curve-l) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>curve-l</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(circle) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>circle</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(circ-45) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>circ-45</ui-chip></ui-media>
+		<ui-media media="asr(1/1) shp(frame-in) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>frame-in</ui-chip></ui-media>
 	</div>
 
 	<!-- ============================================================
@@ -166,30 +167,83 @@
 	     hov() — hover effects
 	     ============================================================ -->
 	<h2>Hover effects — <code>hov()</code></h2>
-	<p>Hover (or focus) a card. <code>zoom</code> / <code>pan</code> / <code>track</code> / <code>drift</code> move the <em>image</em> inside a fixed frame. Tune with <code>--ui-media-hv-*</code> and <code>--ui-media-hover-duration</code>. All respect <code>prefers-reduced-motion</code>.</p>
+	<p>Hover a card. The <strong>transform</strong> family moves the <em>image</em> inside a fixed frame (<code>zoom</code> / <code>pan</code> / <code>rotate</code>, plus cursor-driven <code>track</code> / <code>drift</code> / <code>tilt</code>); the <strong>filter</strong> family transitions CSS filters (<code>gray</code> / <code>blur</code> / <code>bright</code> / <code>dim</code> / <code>sat</code>); and <code>shape</code> morphs a <code>shp()</code> clip. All animated props share one transition list, so effects <strong>compose</strong> (e.g. <code>hov(shape) hov(zoom)</code>). Tune with <code>--ui-media-hv-*</code> / <code>--ui-media-hover-duration</code>; all respect <code>prefers-reduced-motion</code>. Effects live in <a href="media.hover.css">media.hover.css</a>. The three cursor-driven effects (<code>track</code> / <code>drift</code> / <code>tilt</code>) need a tiny pointer handler and are shown <strong>last</strong>.</p>
 	<div class="grid grid-3">
 		<ui-card variant="col" media="asr(16/9) hov(zoom)">
 			<cq-box>
 				<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">image</small><h2 data-part="headline">hov(zoom)</h2><p data-part="summary">The image scales up inside the frame.</p></ui-content>
+				<ui-content><small data-part="eyebrow">transform · CSS</small><h2 data-part="headline">hov(zoom)</h2><p data-part="summary">The image scales up inside the frame.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) hov(pan)">
 			<cq-box>
 				<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">image</small><h2 data-part="headline">hov(pan)</h2><p data-part="summary">Zooms and drifts in a fixed direction.</p></ui-content>
+				<ui-content><small data-part="eyebrow">transform · CSS</small><h2 data-part="headline">hov(pan)</h2><p data-part="summary">Zooms and drifts in a fixed direction.</p></ui-content>
 			</cq-box>
 		</ui-card>
+		<ui-card variant="col" media="asr(16/9) hov(rotate)">
+			<cq-box>
+				<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">transform · CSS</small><h2 data-part="headline">hov(rotate)</h2><p data-part="summary">A subtle whole-image spin (<code>rotate:</code> longhand, composes with <code>flp()</code>).</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) hov(shape) shp(cut-r)">
+			<cq-box>
+				<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">clip · CSS</small><h2 data-part="headline">hov(shape)</h2><p data-part="summary">Morphs a <code>shp()</code> clip to its full-frame target (see the Shapes section).</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) hov(gray)">
+			<cq-box>
+				<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">filter · CSS</small><h2 data-part="headline">hov(gray)</h2><p data-part="summary">Rest grayscale, hover restores colour.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) hov(blur)">
+			<cq-box>
+				<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">filter · CSS</small><h2 data-part="headline">hov(blur)</h2><p data-part="summary">Rest blurred, hover sharpens. Tune <code>--ui-media-hv-blur</code>.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) hov(bright)">
+			<cq-box>
+				<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">filter · CSS</small><h2 data-part="headline">hov(bright)</h2><p data-part="summary">Rest dimmed, hover restores full brightness. Tune <code>--ui-media-hv-bright-rest</code>.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) hov(dim)">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">filter · CSS</small><h2 data-part="headline">hov(dim)</h2><p data-part="summary">Darkens on hover (pairs with overlaid text). Tune <code>--ui-media-hv-dim</code>.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) hov(gray) hov(blur)">
+			<cq-box>
+				<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">filter · composes</small><h2 data-part="headline">hov(gray) hov(blur)</h2><p data-part="summary">Filters stack — one shared <code>filter</code> declaration built from per-effect vars.</p></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<h3>Cursor-driven — needs JS</h3>
+	<p>The only effects that need JavaScript: <code>index.js</code> sets <code>--ui-media-mx</code> / <code>--ui-media-my</code> (−1..1) on the frame from a <code>pointermove</code> handler; the CSS reads them.</p>
+	<div class="grid grid-3">
 		<ui-card variant="col" media="asr(16/9) hov(track)">
 			<cq-box>
 				<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">image · needs JS</small><h2 data-part="headline">hov(track)</h2><p data-part="summary">The image follows the cursor — the only effect that needs a tiny pointer handler (below).</p></ui-content>
+				<ui-content><small data-part="eyebrow">transform · JS</small><h2 data-part="headline">hov(track)</h2><p data-part="summary">The image follows the cursor.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) hov(drift)">
 			<cq-box>
 				<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">image · needs JS</small><h2 data-part="headline">hov(drift)</h2><p data-part="summary">Oversized image shrinks slightly and drifts <em>opposite</em> the cursor. Same pointer handler as <code>track</code>.</p></ui-content>
+				<ui-content><small data-part="eyebrow">transform · JS</small><h2 data-part="headline">hov(drift)</h2><p data-part="summary">Oversized image shrinks slightly and drifts <em>opposite</em> the cursor.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) hov(tilt)">
+			<cq-box>
+				<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">transform · JS</small><h2 data-part="headline">hov(tilt)</h2><p data-part="summary">3D rotate toward the cursor (perspective on the frame; keeps <code>flp()</code>).</p></ui-content>
 			</cq-box>
 		</ui-card>
 	</div>

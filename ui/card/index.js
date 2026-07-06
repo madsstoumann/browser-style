@@ -600,7 +600,7 @@ export function initCarouselVideoPause(scrollers) {
  * Each block queries once, then calls a pure node-taking function.
  * ============================================================ */
 
-const HOVER_SEL = '[media*="hov(track)"], [media*="hov(drift)"]';
+const HOVER_SEL = '[media*="hov(track)"], [media*="hov(drift)"], [media*="hov(tilt)"]';
 // JS-feature carousels, via EITHER entry point: the inheritable media= token
 // (on the element or an ancestor) OR the self-only nav= attribute value.
 const CAROUSEL_SEL = [

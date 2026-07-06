@@ -129,14 +129,17 @@ Machine values stay schema-ready (`PT15M`, salary numbers, geo coordinates);
 `img`/`video`/`iframe` inside `<ui-media>` (the frame background goes transparent).
 Names are short with `-l`/`-r` (left/right) and `-d`/`-u` (down/up) suffixes. Full set:
 `pt-d pt-u cut-r cut-l skew-r skew-l curve-d curve-u curve-r curve-l para rhomb inset
-hex arr-l arr-r pt-l pt-r chev-l chev-r star plus minus msg close frame bolt blinds-h
-blinds-v circle circ-45`. The shape polygons live in the **opt-in `media.shapes.css`**
-sheet (not bundled by `ui-card.css` — link it where you use `shp()`, see
-[`media.html`](media.html)); the clip + hover-morph **mechanism** ships in `media.css`,
-so it also works with any custom `--ui-media-shape` / `--ui-shape-morph` you set.
-Every shape carries a `--ui-shape-morph` target and animates back to a full frame on
-hover — polygons morph to a matching-vertex rect, `curve-*` grows to a full-cover
-`ellipse()`, and the circles to a `circle()` (same-function interpolation). Morph is on by default.
+hex arr-l arr-r pt-l pt-r chev-l chev-r star plus minus msg close frame frame-in bolt
+blinds-h blinds-v circle circ-45`. The shape polygons live in the **opt-in
+`media.shapes.css`** sheet (not bundled by `ui-card.css` — link it where you use `shp()`,
+see [`media.html`](media.html)); the static clip **mechanism** ships in `media.css`, so it
+also works with any custom `--ui-media-shape` you set.
+
+Every shape carries a `--ui-shape-morph` target; add **`hov(shape)`** to animate the clip
+to it on hover (the base clip is static without it) — polygons morph to a matching-vertex
+rect, `curve-*` grows to a full-cover `ellipse()`, circles to a `circle()` (same-function
+interpolation). Reverse a shape by swapping the two (`frame-in` = a small inset window that
+grows to the full frame). The hover morph lives in `media.hover.css` (see `hov()` below).
 
 Attribute audit across all `ui/card` + `ui/reveal` demos found exactly these on the
 host elements: `variant`, `media`, `content`, `type`, `type-lg`, `to`, `icon`,

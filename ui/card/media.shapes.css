@@ -63,6 +63,8 @@
 	/* frame: seam slit routed to bottom-centre (x=50%, zero-width, invisible) so the
 	   4 inner points can collapse to the true centre with no line cutting through */
 	:where([media*="shp(frame)"])		{ --ui-media-shape: polygon(0% 0%, 0% 100%, 50% 100%, 50% 75%, 25% 75%, 25% 25%, 75% 25%, 75% 75%, 50% 75%, 50% 100%, 100% 100%, 100% 0%); --ui-shape-morph: polygon(0% 0%, 0% 100%, 50% 100%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 100%, 100% 100%, 100% 0%); }
+	/* frame-in: the reverse — a small inset window that grows to the full frame on hover */
+	:where([media*="shp(frame-in)"]) { --ui-media-shape: polygon(25% 25%, 75% 25%, 75% 75%, 25% 75%); --ui-shape-morph: var(--_r4); }
 
 	/* blinds-h/-v: the 3 slats stretch to abut → the gaps close (v = the same polygon, x/y swapped) */
 	:where([media*="shp(blinds-h)"])	{ --ui-media-shape: polygon(0% 5%, 100% 5%, 100% 25%, 0% 25%, 0% 40%, 100% 40%, 100% 60%, 0% 60%, 0% 75%, 100% 75%, 100% 95%, 0% 95%); --ui-shape-morph: polygon(0% 0%, 100% 0%, 100% 33.33%, 0% 33.33%, 0% 33.33%, 100% 33.33%, 100% 66.66%, 0% 66.66%, 0% 66.66%, 100% 66.66%, 100% 100%, 0% 100%); }

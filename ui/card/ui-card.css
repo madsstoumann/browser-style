@@ -9,6 +9,7 @@
  * The media (media=) and content (content=) DSLs live in the imported primitives.
  */
 @import './media.css';
+@import './media.hover.css';
 @import './media.video.css';
 @import './media.carousel.css';
 @import './content.css';

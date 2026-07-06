@@ -1,0 +1,141 @@
+/**
+ * ui-media — hov() hover effects
+ * @version 1.0.0
+ * @author Mads Stoumann
+ *
+ * All <ui-media> hover flourishes, split out of media.css. Imported by ui-card.css
+ * (so ui-reveal gets it too). Every effect is opt-in via a hov() token in media=,
+ * and works whether the token sits on the host <ui-card>/<ui-reveal> (card-level
+ * hover) or the <ui-media> itself (standalone). Same @layer as media.css.
+ *
+ * CSS-only: zoom pan shape gray blur bright dim sat rotate
+ * JS-assisted (need --ui-media-mx/my from index.js): track drift tilt
+ *
+ * All animated properties share ONE transition list on the image so effects
+ * compose (e.g. hov(shape) hov(zoom)) without clobbering each other's transition.
+ */
+/* filter vars are registered so they INTERPOLATE — a plain custom property changes
+   discretely (the filter would jump), @property makes the transition smooth. */
+@property --_f-gray   { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --_f-blur   { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --_f-bright { syntax: "<number>"; inherits: true; initial-value: 1; }
+@property --_f-sat    { syntax: "<number>"; inherits: true; initial-value: 1; }
+
+@layer bs-component {
+	:where([media*="hov("]) {
+		--_hv-dur: var(--ui-media-hover-duration, var(--duration-slower));
+		--_hv-ease: var(--ui-media-hover-easing, var(--ease-out));
+	}
+	/* cursor-driven effects want a snappier translate/transform */
+	:where([media*="hov(track)"], [media*="hov(drift)"], [media*="hov(tilt)"]) {
+		--_hv-t: var(--ui-media-hv-track-dur, var(--duration-normal));
+	}
+
+	@media (hover: hover) {
+		/* one transition list → any combination of effects composes cleanly */
+		:where([media*="hov("]) ui-media img,
+		ui-media:where([media*="hov("]) img {
+			transition:
+				scale     var(--_hv-dur) var(--_hv-ease),
+				translate var(--_hv-t, var(--_hv-dur)) var(--_hv-ease),
+				rotate    var(--_hv-dur) var(--_hv-ease),
+				clip-path var(--ui-media-morph-dur, var(--_hv-dur)) var(--_hv-ease),
+				transform var(--_hv-t, var(--duration-normal)) var(--_hv-ease),
+				--_f-gray   var(--_hv-dur) var(--_hv-ease),
+				--_f-blur   var(--_hv-dur) var(--_hv-ease),
+				--_f-bright var(--_hv-dur) var(--_hv-ease),
+				--_f-sat    var(--_hv-dur) var(--_hv-ease);
+		}
+
+		/* zoom — scale up inside the frame */
+		:where([media*="hov(zoom)"]:is(:hover, :focus-within)) ui-media img,
+		:where(ui-media[media*="hov(zoom)"]:is(:hover, :focus-within)) img {
+			scale: var(--ui-media-hv-zoom, 1.08);
+		}
+
+		/* pan — scale + drift in a fixed direction */
+		:where([media*="hov(pan)"]:is(:hover, :focus-within)) ui-media img,
+		:where(ui-media[media*="hov(pan)"]:is(:hover, :focus-within)) img {
+			scale: var(--ui-media-hv-zoom, 1.12);
+			translate: var(--ui-media-hv-pan-x, -2%) var(--ui-media-hv-pan-y, -2%);
+		}
+
+		/* track — cursor-tracked pan; --ui-media-mx/my (-1..1) set by index.js */
+		:where([media*="hov(track)"]) ui-media img,
+		ui-media:where([media*="hov(track)"]) img {
+			scale: var(--ui-media-hv-zoom, 1.12);
+			translate: calc(var(--ui-media-mx, 0) * var(--ui-media-hv-track, 4%)) calc(var(--ui-media-my, 0) * var(--ui-media-hv-track, 4%));
+		}
+
+		/* drift — oversized image shrinks and drifts opposite the cursor */
+		:where([media*="hov(drift)"]) ui-media img,
+		ui-media:where([media*="hov(drift)"]) img {
+			scale: var(--ui-media-hv-drift-rest, 1.3);
+		}
+		:where([media*="hov(drift)"]) ui-media:hover img,
+		:where(ui-media[media*="hov(drift)"]:hover) img {
+			scale: var(--ui-media-hv-drift-hover, 1.2);
+			translate: calc(var(--ui-media-mx, 0) * -1 * var(--ui-media-hv-drift, 4%)) calc(var(--ui-media-my, 0) * -1 * var(--ui-media-hv-drift, 4%));
+		}
+
+		/* tilt — 3D rotate toward the cursor (needs perspective on the frame). Keeps the
+		   flp() scale so tilt and flip compose; --ui-media-mx/my set by index.js */
+		:where([media*="hov(tilt)"]) ui-media,
+		ui-media:where([media*="hov(tilt)"]) { perspective: var(--ui-media-hv-tilt-persp, 800px); }
+		:where([media*="hov(tilt)"]) ui-media img,
+		ui-media:where([media*="hov(tilt)"]) img {
+			transform:
+				scale(var(--ui-media-fl-x, 1), var(--ui-media-fl-y, 1))
+				rotateY(calc(var(--ui-media-mx, 0) * var(--ui-media-hv-tilt, 8deg)))
+				rotateX(calc(var(--ui-media-my, 0) * -1 * var(--ui-media-hv-tilt, 8deg)));
+		}
+		/* overfill while active so the 3D-rotated corners don't expose the frame */
+		:where([media*="hov(tilt)"]) ui-media:hover img,
+		ui-media[media*="hov(tilt)"]:hover img {
+			scale: var(--ui-media-hv-tilt-scale, 1.08);
+		}
+
+		/* rotate — a subtle whole-image rotation (rotate: longhand composes with flip).
+		   A slight scale overfills so the rotated corners don't expose the frame. */
+		:where([media*="hov(rotate)"]:is(:hover, :focus-within)) ui-media img,
+		ui-media[media*="hov(rotate)"]:is(:hover, :focus-within) img {
+			rotate: var(--ui-media-hv-rotate, 3deg);
+			scale: var(--ui-media-hv-rotate-scale, 1.06);
+		}
+
+		/* shape — morph the shp() clip-path to its --ui-shape-morph target (full frame).
+		   Base clip lives in media.css; this only overrides on hover. */
+		:where([media*="hov(shape)"]:hover) ui-media :is(img, video, iframe, picture),
+		ui-media[media*="hov(shape)"]:hover :is(img, video, iframe, picture) {
+			clip-path: var(--ui-shape-morph, var(--ui-media-shape));
+		}
+
+		/* filter family — composes via per-filter vars, so hov(gray) hov(blur) stack.
+		   Rest values set below; hover values override (higher specificity via :hover). */
+		:where([media*="hov(gray)"], [media*="hov(blur)"], [media*="hov(bright)"], [media*="hov(dim)"], [media*="hov(sat)"]) ui-media img,
+		ui-media:where([media*="hov(gray)"], [media*="hov(blur)"], [media*="hov(bright)"], [media*="hov(dim)"], [media*="hov(sat)"]) img {
+			filter: grayscale(var(--_f-gray, 0)) blur(var(--_f-blur, 0)) brightness(var(--_f-bright, 1)) saturate(var(--_f-sat, 1));
+		}
+		/* rest = degraded, hover = restored (gray/blur/sat/bright reveal on hover).
+		   dim is the exception: rest natural, hover darkens (for overlaid text). */
+		:where([media*="hov(gray)"])   { --_f-gray: 1; }
+		:where([media*="hov(blur)"])   { --_f-blur: var(--ui-media-hv-blur, 4px); }
+		:where([media*="hov(sat)"])    { --_f-sat: var(--ui-media-hv-sat-rest, 0.4); }
+		:where([media*="hov(bright)"]) { --_f-bright: var(--ui-media-hv-bright-rest, 0.6); }
+		:where([media*="hov(gray)"]:is(:hover, :focus-within))   { --_f-gray: 0; }
+		:where([media*="hov(blur)"]:is(:hover, :focus-within))   { --_f-blur: 0; }
+		:where([media*="hov(bright)"]:is(:hover, :focus-within)) { --_f-bright: var(--ui-media-hv-bright, 1); }
+		:where([media*="hov(dim)"]:is(:hover, :focus-within))    { --_f-bright: var(--ui-media-hv-dim, 0.6); }
+		:where([media*="hov(sat)"]:is(:hover, :focus-within))    { --_f-sat: var(--ui-media-hv-sat, 1); }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:where([media*="hov("]) ui-media img,
+		ui-media:where([media*="hov("]) img { transition: none; }
+		/* cursor-driven effects: pin to the resting position */
+		:where([media*="hov(track)"], [media*="hov(drift)"]) ui-media img,
+		ui-media:where([media*="hov(track)"], [media*="hov(drift)"]) img { translate: 0; }
+		:where([media*="hov(tilt)"]) ui-media img,
+		ui-media:where([media*="hov(tilt)"]) img { transform: scale(var(--ui-media-fl-x, 1), var(--ui-media-fl-y, 1)); }
+	}
+}
