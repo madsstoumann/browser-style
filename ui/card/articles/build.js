@@ -33,9 +33,12 @@ const page = (ucf) => {
 	const title = String(ucf.fields.headline).replace(/<[^>]+>/g, '');
 	/* hero frame — tag the image with its view-transition-name via data-view
 	   (first <img> only). CSS advanced attr() turns it into the name — no
-	   inline style attribute, so a strict CSP (no unsafe-inline styles) holds. */
+	   inline style attribute, so a strict CSP (no unsafe-inline styles) holds.
+	   id="hero" is the render-blocking anchor (see <link rel="expect">): by the
+	   time this <img> is parsed, the wrapping <article data-view="card-…"> start
+	   tag already is too, so BOTH morph-named elements exist at snapshot. */
 	const hero = renderCard(withPreset(ucf, 'media'), presets)
-		.replace('<img', `<img data-view="hero-${ucf.id}"`);
+		.replace('<img', `<img id="hero" data-view="hero-${ucf.id}"`);
 	const prose = renderCard(withPreset(ucf, 'prose'), presets);
 
 	return `<!DOCTYPE html>
@@ -51,6 +54,11 @@ const page = (ucf) => {
 	<link rel="stylesheet" href="../../icon/index.css">
 	<link rel="stylesheet" href="../../blockquote/ui-blockquote.css">
 	<link rel="stylesheet" href="../ui-card.css">
+	<!-- Block first paint (and the view-transition snapshot) until the hero is
+	     parsed, so the card/hero morph targets exist when the browser captures
+	     the incoming page. Without this the snapshot races HTML parsing and the
+	     morph degrades to a plain cross-fade on repeat/bfcache navigations. -->
+	<link rel="expect" href="#hero" blocking="render">
 	<style>
 		/* cross-document view transitions (@view-transition, the [data-view]
 		   attr() naming rule and group timing) come from ui-card.css */
@@ -97,6 +105,10 @@ const gridPage = (cards) => `<!DOCTYPE html>
 	<link rel="stylesheet" href="../icon/index.css">
 	<link rel="stylesheet" href="../blockquote/ui-blockquote.css">
 	<link rel="stylesheet" href="ui-card.css">
+	<!-- Block first paint (and the incoming snapshot on Back) until the card
+	     grid is parsed, so every card/hero morph target exists when the browser
+	     captures this page. Without it the reverse morph races HTML parsing. -->
+	<link rel="expect" href="#cards" blocking="render">
 	<style>
 		/* cross-document view transitions (@view-transition, the [data-view]
 		   attr() naming rule and group timing) come from ui-card.css */
@@ -121,7 +133,7 @@ const gridPage = (cards) => `<!DOCTYPE html>
 	<p class="note">Each teaser card links to its <em>own page</em> under <a href="articles/"><code>articles/</code></a>. Both documents opt in with <code>@view-transition { navigation: auto }</code> and carry the same per-article <code>view-transition-name</code>s — set via <code>data-view</code> attributes and the CSS <code>attr()</code> rule, no inline styles — so the whole card morphs into the full article across the navigation, and morphs back via the “← All articles” link or the browser Back button. Every page here is pre-rendered by <code>articles/build.js</code> (the SSR engine): static markup on both sides is what makes the capture reliable in both directions. The full view renders the <code>body</code> as <code>itemprop="articleBody"</code> instead of the teaser summary, from the <em>same UCF instance</em>.</p>
 
 	<main>
-		<div class="grid grid-2">
+		<div class="grid grid-2" id="cards">
 			${cards.join('\n\t\t\t')}
 		</div>
 	</main>

@@ -338,16 +338,29 @@ rest ([`article.render.html`](article.render.html) is the working demo):
   `attr()` is Chromium 133+; where unsupported the name resolves to `none` and
   the navigation degrades to a plain crossfade/instant swap. Markup stays
   strict-CSP clean — no `style=` attributes anywhere.
-- **Static markup on BOTH sides — this is what makes the morph reliable.**
+- **Static markup + render-blocking — this is what makes the morph reliable.**
   [`articles/build.js`](articles/build.js) (`node ui/card/articles/build.js`)
   pre-renders the grid page *and* every article page through `render.js` — the
-  SSR engine returning strings needs no DOM. A cross-document view transition
-  captures the incoming page at first render: client-fetched content isn't
-  there yet, names are missing, and the browser silently falls back to a root
-  crossfade (`blocking="render"` on an inline module did not rescue the capture
-  in Chromium). Fully static pages have no race — verified: forward, backlink
-  and browser-Back all animate `::view-transition-group(card-{id})` +
-  `(hero-{id})`, not just root.
+  SSR engine returning strings needs no DOM. But static markup alone is not
+  enough: a cross-document transition snapshots the **incoming** page at first
+  render, which *races* HTML parsing. If the parser hasn't reached the
+  `card-{id}`/`hero-{id}` elements yet, the morph silently degrades to a root
+  cross-fade — and bfcache shifts the timing enough that this shows up as
+  "animates the first time, then stops until you refresh". The fix (per
+  [Chrome's cross-document guidance](https://developer.chrome.com/docs/web-platform/view-transitions/cross-document))
+  is to render-block each incoming page until its named elements are parsed:
+
+  ```html
+  <link rel="expect" href="#hero"  blocking="render">  <!-- article pages -->
+  <link rel="expect" href="#cards" blocking="render">  <!-- grid page (reverse morph) -->
+  ```
+  The `<link rel="expect">` holds first paint (and the snapshot) until that
+  `id` is parsed; `#hero` sits inside the `<article data-view="card-…">`, so
+  both morph targets exist by then. Both pages are *incoming* (article on
+  forward, grid on Back), so both carry one. `rel="expect"` ships with the same
+  browsers as cross-document VT — no separate fallback. Verified: forward,
+  backlink and browser-Back — including the repeat navigation — all animate
+  `::view-transition-group(card-{id})` + `(hero-{id})`, not just root.
 - **Navigation — regular links via the `cover` part.** The card headline is a
   real `<a data-part="cover" href="articles/{name}.html">` — a part like every
   other (no classes), styled in [`content.css`](content.css): its `::after`

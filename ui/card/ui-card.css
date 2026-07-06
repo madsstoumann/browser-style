@@ -228,12 +228,22 @@
    styles, strict-CSP friendly. Where unsupported, the name resolves to
    `none` and navigation degrades to a plain swap.
 
-   Both documents must be same-origin, and the incoming page's named
-   elements must exist at first render — server-render or pre-build them
-   (see ui/card/articles/build.js); client-fetched content loses the
-   capture race and falls back to a crossfade.
+   Both documents must be same-origin, and — critically — the incoming
+   page's named elements must exist in the DOM when the browser takes the
+   new-page snapshot. The snapshot races HTML parsing: if the parser hasn't
+   reached the card/hero yet, the morph silently degrades to a plain
+   root cross-fade (this is why a repeat/bfcache navigation can "stop
+   animating"). Render-block each incoming page until its named elements
+   are parsed — `<link rel="expect" href="#…" blocking="render">` in the
+   <head> (see ui/card/articles/build.js). Client-fetched content can't win
+   this race at all; server-render or pre-build the named markup.
    ============================================================ */
 @view-transition { navigation: auto; }
+
+/* MANDATORY safety: no navigation transitions when reduced motion is asked for */
+@media (prefers-reduced-motion: reduce) {
+	@view-transition { navigation: none; }
+}
 
 [data-view] { view-transition-name: attr(data-view type(<custom-ident>), none); }
 

@@ -11,6 +11,11 @@
 	<link rel="stylesheet" href="../../icon/index.css">
 	<link rel="stylesheet" href="../../blockquote/ui-blockquote.css">
 	<link rel="stylesheet" href="../ui-card.css">
+	<!-- Block first paint (and the view-transition snapshot) until the hero is
+	     parsed, so the card/hero morph targets exist when the browser captures
+	     the incoming page. Without this the snapshot races HTML parsing and the
+	     morph degrades to a plain cross-fade on repeat/bfcache navigations. -->
+	<link rel="expect" href="#hero" blocking="render">
 	<style>
 		/* cross-document view transitions (@view-transition, the [data-view]
 		   attr() naming rule and group timing) come from ui-card.css */
@@ -28,7 +33,7 @@
 <body>
 	<p class="back"><a href="../article.render.html">← All articles</a></p>
 	<article class="article-view" data-view="card-article-1">
-		<ui-media media="asr(21/9) rds(lg)" itemscope itemtype="https://schema.org/Article"><img data-view="hero-article-1" src="/assets/images/quantum.png" alt="Stylised quantum processor" loading="lazy" itemprop="image"><meta itemprop="name" content="Quantum computing reaches a practical milestone"></ui-media>
+		<ui-media media="asr(21/9) rds(lg)" itemscope itemtype="https://schema.org/Article"><img id="hero" data-view="hero-article-1" src="/assets/images/quantum.png" alt="Stylised quantum processor" loading="lazy" itemprop="image"><meta itemprop="name" content="Quantum computing reaches a practical milestone"></ui-media>
 		<ui-content content="scl(md)" itemscope itemtype="https://schema.org/Article"><small data-part="eyebrow" itemprop="articleSection">Science</small><h3 data-part="headline" itemprop="headline">Quantum computing reaches a <b>practical milestone</b></h3><meta itemprop="description" content="Researchers demonstrate error-corrected logical qubits running a chemistry simulation faster than any classical supercomputer."><div itemprop="articleBody"><p>For decades, quantum computers have promised more than they delivered — laboratory curiosities whose fragile qubits collapsed under the slightest disturbance. That era may have just ended.</p><p>A research consortium announced today that an array of 48 error-corrected logical qubits completed a full simulation of a nitrogenase co-factor — the enzyme behind natural nitrogen fixation — in eleven hours. The best classical supercomputer estimate for the same calculation: fourteen years.</p><p>The breakthrough rests on a new surface-code implementation that trades physical qubit count for stability, holding logical error rates below one in ten million operations. “We stopped fighting decoherence and started budgeting for it,” said lead author Jane Smith.</p><p>The implications reach far beyond chemistry. Cryptographers are re-reading their migration timelines, materials scientists are queuing simulation proposals, and at least three pharmaceutical companies have already booked time on the machine.</p><p>Commercial access begins next quarter — at a price the consortium describes, with admirable honesty, as “dissuasive.”</p></div><meta itemprop="datePublished" content="2026-06-20T14:30:00Z"><meta itemprop="dateModified" content="2026-06-21T09:00:00Z"><address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
 		<img src="/assets/images/janesmith.png" alt="">
 		<span><span itemprop="name">Jane Smith</span> · <span itemprop="jobTitle">Science Editor</span></span>

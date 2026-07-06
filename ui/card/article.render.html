@@ -11,6 +11,10 @@
 	<link rel="stylesheet" href="../icon/index.css">
 	<link rel="stylesheet" href="../blockquote/ui-blockquote.css">
 	<link rel="stylesheet" href="ui-card.css">
+	<!-- Block first paint (and the incoming snapshot on Back) until the card
+	     grid is parsed, so every card/hero morph target exists when the browser
+	     captures this page. Without it the reverse morph races HTML parsing. -->
+	<link rel="expect" href="#cards" blocking="render">
 	<style>
 		/* cross-document view transitions (@view-transition, the [data-view]
 		   attr() naming rule and group timing) come from ui-card.css */
@@ -35,7 +39,7 @@
 	<p class="note">Each teaser card links to its <em>own page</em> under <a href="articles/"><code>articles/</code></a>. Both documents opt in with <code>@view-transition { navigation: auto }</code> and carry the same per-article <code>view-transition-name</code>s — set via <code>data-view</code> attributes and the CSS <code>attr()</code> rule, no inline styles — so the whole card morphs into the full article across the navigation, and morphs back via the “← All articles” link or the browser Back button. Every page here is pre-rendered by <code>articles/build.js</code> (the SSR engine): static markup on both sides is what makes the capture reliable in both directions. The full view renders the <code>body</code> as <code>itemprop="articleBody"</code> instead of the teaser summary, from the <em>same UCF instance</em>.</p>
 
 	<main>
-		<div class="grid grid-2">
+		<div class="grid grid-2" id="cards">
 			<ui-card data-view="card-article-1" variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Article">
 		<cq-box>
 			<ui-media><img data-view="hero-article-1" src="/assets/images/quantum.png" alt="Stylised quantum processor" loading="lazy" itemprop="image"></ui-media>
