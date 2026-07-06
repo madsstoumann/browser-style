@@ -23,6 +23,7 @@
     "media.css",
     "media.shapes.css",
     "media.hover.css",
+    "media.tint.css",
     "media.carousel.css",
     "content.css",
     "ui-media.js",

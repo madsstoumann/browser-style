@@ -118,7 +118,7 @@ Machine values stay schema-ready (`PT15M`, salary numbers, geo coordinates);
 | `name`, `description` | both | e.g. “Hero Preset” |
 | `element` | both | `ui-card` (default), `ui-reveal` — or `ui-media` / `ui-content` for **bare primitives**: the renderer emits just the media frame or content column, no card chrome. Standalone blocks are presentation, not a separate content model |
 | `variant` | both | `col row row-r spl() ovr() vis() thm() rds()` |
-| `media` | both | `asr() obf() obp() flp() rds() shp() hov() scm nav() auto loop clip …` — furniture tokens are appended by the renderer from content |
+| `media` | both | `asr() obf() obp() flp() rds() shp() hov() tnt() scm nav() auto loop clip …` — furniture tokens are appended by the renderer from content |
 | `content` | both | `scl() pad() gap() scr` |
 | `text` | both | which long text the content column shows: `summary` (teaser — default), `body` (full view — body **instead of** summary, with the summary kept as a hidden `description` meta), `both`. Reveal back panels always render both |
 | `styles` | both | object of CSS custom properties → `style` attribute (e.g. `--ui-reveal-content-bg`) |
@@ -140,6 +140,15 @@ to it on hover (the base clip is static without it) — polygons morph to a matc
 rect, `curve-*` grows to a full-cover `ellipse()`, circles to a `circle()` (same-function
 interpolation). Reverse a shape by swapping the two (`frame-in` = a small inset window that
 grows to the full frame). The hover morph lives in `media.hover.css` (see `hov()` below).
+
+**`tnt()` — tint the image a solid colour.** Blends a solid-colour overlay (`ui-media::before`)
+over the image with `mix-blend-mode` — a plain `filter` can't hit an exact colour. Named keys
+`tnt(red|orange|green|blue|accent|dark|light|subtle)` map to the theme colours; bare `tnt` reads
+`--ui-media-tint-color` (any CSS colour) for arbitrary brand hues. Default blend `color` (recolour,
+keeps detail); switch via `tnt(mul|scn|lum|hrd)` or `--ui-media-tint-blend`, fade with
+`--ui-media-tint-opacity`. Pair with **`hov(tint)`** to fade the tint out on hover (reveal true
+colour). Lives in the **opt-in `media.tint.css`** sheet (link it where you tint; not bundled by
+`ui-card.css`).
 
 Attribute audit across all `ui/card` + `ui/reveal` demos found exactly these on the
 host elements: `variant`, `media`, `content`, `type`, `type-lg`, `to`, `icon`,

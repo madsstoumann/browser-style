@@ -8,7 +8,7 @@
  * and works whether the token sits on the host <ui-card>/<ui-reveal> (card-level
  * hover) or the <ui-media> itself (standalone). Same @layer as media.css.
  *
- * CSS-only: zoom pan shape gray blur bright dim sat rotate
+ * CSS-only: zoom pan shape gray blur bright dim sat rot-r rot-l tilt-out tilt-in
  * JS-assisted (need --ui-media-mx/my from index.js): track drift tilt
  *
  * All animated properties share ONE transition list on the image so effects
@@ -40,7 +40,7 @@
 				translate var(--_hv-t, var(--_hv-dur)) var(--_hv-ease),
 				rotate    var(--_hv-dur) var(--_hv-ease),
 				clip-path var(--ui-media-morph-dur, var(--_hv-dur)) var(--_hv-ease),
-				transform var(--_hv-t, var(--duration-normal)) var(--_hv-ease),
+				transform var(--_hv-t, var(--_hv-dur)) var(--_hv-ease),
 				--_f-gray   var(--_hv-dur) var(--_hv-ease),
 				--_f-blur   var(--_hv-dur) var(--_hv-ease),
 				--_f-bright var(--_hv-dur) var(--_hv-ease),
@@ -78,10 +78,12 @@
 			translate: calc(var(--ui-media-mx, 0) * -1 * var(--ui-media-hv-drift, 4%)) calc(var(--ui-media-my, 0) * -1 * var(--ui-media-hv-drift, 4%));
 		}
 
-		/* tilt — 3D rotate toward the cursor (needs perspective on the frame). Keeps the
-		   flp() scale so tilt and flip compose; --ui-media-mx/my set by index.js */
-		:where([media*="hov(tilt)"]) ui-media,
-		ui-media:where([media*="hov(tilt)"]) { perspective: var(--ui-media-hv-tilt-persp, 800px); }
+		/* all tilt variants need perspective on the frame (matches hov(tilt), -in, -out) */
+		:where([media*="hov(tilt"]) ui-media,
+		ui-media:where([media*="hov(tilt"]) { perspective: var(--ui-media-hv-tilt-persp, 600px); }
+
+		/* tilt — 3D rotate toward the CURSOR (needs JS). Keeps the flp() scale so tilt
+		   and flip compose; --ui-media-mx/my set by index.js */
 		:where([media*="hov(tilt)"]) ui-media img,
 		ui-media:where([media*="hov(tilt)"]) img {
 			transform:
@@ -95,18 +97,39 @@
 			scale: var(--ui-media-hv-tilt-scale, 1.08);
 		}
 
-		/* rotate — a subtle whole-image rotation (rotate: longhand composes with flip).
-		   A slight scale overfills so the rotated corners don't expose the frame. */
-		:where([media*="hov(rotate)"]:is(:hover, :focus-within)) ui-media img,
-		ui-media[media*="hov(rotate)"]:is(:hover, :focus-within) img {
+		/* tilt-out / tilt-in — FIXED 3D tilt on hover (no JS). Driven by the rotate:/scale:
+		   longhands (NOT a transform list) so each interpolates its own value — a multi-
+		   function transform would fall back to matrix decomposition and jitter on the way
+		   out. flip stays in transform; perspective is on the frame (above).
+		   tilt-out = top edge toward the viewer (rotateX −), tilt-in = top edge away (+). */
+		:where([media*="hov(tilt-out)"]:is(:hover, :focus-within)) ui-media img,
+		ui-media[media*="hov(tilt-out)"]:is(:hover, :focus-within) img {
+			rotate: 1 0 0 calc(-1 * var(--ui-media-hv-tilt-fixed, 14deg));
+			scale: var(--ui-media-hv-tilt-scale, 1.1);
+		}
+		:where([media*="hov(tilt-in)"]:is(:hover, :focus-within)) ui-media img,
+		ui-media[media*="hov(tilt-in)"]:is(:hover, :focus-within) img {
+			rotate: 1 0 0 var(--ui-media-hv-tilt-fixed, 14deg);
+			scale: var(--ui-media-hv-tilt-scale, 1.1);
+		}
+
+		/* rot-r / rot-l — a subtle whole-image rotation (rotate: longhand composes with
+		   flip). A slight scale overfills so the rotated corners don't expose the frame. */
+		:where([media*="hov(rot-r)"]:is(:hover, :focus-within)) ui-media img,
+		ui-media[media*="hov(rot-r)"]:is(:hover, :focus-within) img {
 			rotate: var(--ui-media-hv-rotate, 3deg);
+			scale: var(--ui-media-hv-rotate-scale, 1.06);
+		}
+		:where([media*="hov(rot-l)"]:is(:hover, :focus-within)) ui-media img,
+		ui-media[media*="hov(rot-l)"]:is(:hover, :focus-within) img {
+			rotate: calc(-1 * var(--ui-media-hv-rotate, 3deg));
 			scale: var(--ui-media-hv-rotate-scale, 1.06);
 		}
 
 		/* shape — morph the shp() clip-path to its --ui-shape-morph target (full frame).
 		   Base clip lives in media.css; this only overrides on hover. */
-		:where([media*="hov(shape)"]:hover) ui-media :is(img, video, iframe, picture),
-		ui-media[media*="hov(shape)"]:hover :is(img, video, iframe, picture) {
+		:where([media*="hov(shape)"]:is(:hover, :focus-within)) ui-media :is(img, video, iframe, picture),
+		ui-media[media*="hov(shape)"]:is(:hover, :focus-within) :is(img, video, iframe, picture) {
 			clip-path: var(--ui-shape-morph, var(--ui-media-shape));
 		}
 
@@ -135,7 +158,7 @@
 		/* cursor-driven effects: pin to the resting position */
 		:where([media*="hov(track)"], [media*="hov(drift)"]) ui-media img,
 		ui-media:where([media*="hov(track)"], [media*="hov(drift)"]) img { translate: 0; }
-		:where([media*="hov(tilt)"]) ui-media img,
-		ui-media:where([media*="hov(tilt)"]) img { transform: scale(var(--ui-media-fl-x, 1), var(--ui-media-fl-y, 1)); }
+		:where([media*="hov(tilt"]) ui-media img,
+		ui-media:where([media*="hov(tilt"]) img { transform: scale(var(--ui-media-fl-x, 1), var(--ui-media-fl-y, 1)); }
 	}
 }

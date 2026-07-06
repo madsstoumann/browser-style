@@ -1,0 +1,74 @@
+/**
+ * ui-media — tnt() image tint
+ * @version 1.0.0
+ * @author Mads Stoumann
+ *
+ * Wash the media image in a solid colour (brand / political red-blue etc.) with a
+ * blended colour overlay on ui-media::before — a plain filter can't target an exact
+ * colour (hue-rotate only rotates existing hues). Opt-in sheet, NOT bundled by
+ * ui-card.css — link it where you tint (see media.html). Same @layer as media.css.
+ *
+ *   media="tnt(red)"                 named preset → --ui-theme-red-bg
+ *   media="tnt"  style="--ui-media-tint-color:#c8102e"   any brand colour
+ *   media="tnt(red) tnt(mul)"        blend shorthand (multiply/poster look)
+ *   media="tnt(blue) hov(tint)"      fade the tint out on hover → reveal true colour
+ *
+ * Knobs: --ui-media-tint-color (default --color-accent), --ui-media-tint-blend
+ * (default color), --ui-media-tint-opacity (default 1).
+ *
+ * Layering: image (base) · tint ::before (z-1, blends with image) · scrim ::after
+ * (z-1) · furniture (z-2). isolation:isolate scopes the blend to the frame.
+ */
+@layer bs-component {
+	/* match bare `tnt` (arbitrary --ui-media-tint-color) AND `tnt(<key>)` presets —
+	   no other media= token contains the substring "tnt" */
+	:where([media*="tnt"]) ui-media,
+	:where(ui-media[media*="tnt"]) {
+		isolation: isolate;
+		&::before {
+			background: var(--ui-media-tint-color, var(--color-accent));
+			content: "";
+			inset: 0;
+			mix-blend-mode: var(--ui-media-tint-blend, color);
+			opacity: var(--ui-media-tint-opacity, 1);
+			pointer-events: none;
+			position: absolute;
+			z-index: 1;
+		}
+	}
+	/* a nested frame (carousel slide etc.) must not paint a second tint over itself */
+	ui-media ui-media::before { content: none; }
+
+	/* named presets — mirror chip(<hue>) routing, map to the 8 theme colours */
+	:where([media*="tnt(red)"])    { --ui-media-tint-color: var(--ui-theme-red-bg); }
+	:where([media*="tnt(orange)"]) { --ui-media-tint-color: var(--ui-theme-orange-bg); }
+	:where([media*="tnt(green)"])  { --ui-media-tint-color: var(--ui-theme-green-bg); }
+	:where([media*="tnt(blue)"])   { --ui-media-tint-color: var(--ui-theme-blue-bg); }
+	:where([media*="tnt(accent)"]) { --ui-media-tint-color: var(--ui-theme-accent-bg); }
+	:where([media*="tnt(dark)"])   { --ui-media-tint-color: var(--ui-theme-dark-bg); }
+	:where([media*="tnt(light)"])  { --ui-media-tint-color: var(--ui-theme-light-bg); }
+	:where([media*="tnt(subtle)"]) { --ui-media-tint-color: var(--ui-theme-subtle-bg); }
+
+	/* blend shorthands — compose with a colour key, e.g. tnt(red) tnt(mul) */
+	:where([media*="tnt(mul)"]) { --ui-media-tint-blend: multiply; }
+	:where([media*="tnt(scn)"]) { --ui-media-tint-blend: screen; }
+	:where([media*="tnt(lum)"]) { --ui-media-tint-blend: luminosity; }
+	:where([media*="tnt(hrd)"]) { --ui-media-tint-blend: hard-light; }
+
+	/* hov(tint) — fade the tint out on hover/focus to reveal the true-colour image.
+	   Reads --_hv-dur / --_hv-ease from media.hover.css; falls back if absent. */
+	@media (hover: hover) {
+		:where([media*="hov(tint)"]) ui-media::before,
+		ui-media[media*="hov(tint)"]::before {
+			transition: opacity var(--_hv-dur, var(--duration-slower)) var(--_hv-ease, var(--ease-out));
+		}
+		:where([media*="hov(tint)"]:is(:hover, :focus-within)) ui-media::before,
+		ui-media[media*="hov(tint)"]:is(:hover, :focus-within)::before {
+			opacity: 0;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		:where([media*="hov(tint)"]) ui-media::before,
+		ui-media[media*="hov(tint)"]::before { transition: none; }
+	}
+}
