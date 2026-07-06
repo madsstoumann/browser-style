@@ -26,6 +26,7 @@
 		padding-inline: var(--ui-chip-padding-inline) var(--ui-chip-padding-inline-end);
 		text-box: text;
 		user-select: none;
+		white-space: nowrap;
 
 		/* colors — single accent token drives solid, light, and outline */
 		&[color="info"]    { --ui-chip-accent: var(--color-info); }

@@ -21,6 +21,7 @@
     "index.css",
     "ui-card.css",
     "media.css",
+    "media.shapes.css",
     "media.carousel.css",
     "content.css",
     "ui-media.js",

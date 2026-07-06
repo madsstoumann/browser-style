@@ -1,0 +1,80 @@
+/**
+ * ui-media — shp() shape LIBRARY
+ * @version 1.0.0
+ * @author Mads Stoumann
+ *
+ * Opt-in set of clip-path shapes for <ui-media>. NOT bundled by ui-card.css — link
+ * this sheet explicitly on pages that use shp() (see media.html). Each rule sets a
+ * base --ui-media-shape and (where it can morph) a matching-vertex --ui-shape-morph.
+ * The clip + hover-morph MECHANISM lives in media.css and ships with the card, so
+ * it also works with your own custom --ui-media-shape / --ui-shape-morph values.
+ * Same @layer as media.css (bs-component).
+ */
+@layer bs-component {
+	/* private morph targets — full-bleed rects matched by vertex count so the shape
+	   interpolates cleanly (the extra vertex sits on the edge nearest each tip). */
+	:where([media*="shp("]) {
+		--_r4:  polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+		--_r5:  polygon(100% 0%, 100% 100%, 50% 100%, 0% 100%, 0% 0%);
+		--_r5l: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%);
+		--_r5r: polygon(0% 0%, 100% 0%, 100% 50%, 100% 100%, 0% 100%);
+		/* ellipse target for the curve shapes — 75% radii clear all 4 corners, so the
+		   same-function morph reveals the whole frame */
+		--_ell: ellipse(75% 75% at 50% 50%);
+	}
+
+	:where([media*="shp(pt-d)"])		{ --ui-media-shape: polygon(100% 0%, 100% 85%, 50% 100%, 0% 85%, 0% 0%); --ui-shape-morph: var(--_r5); }
+	:where([media*="shp(pt-u)"])		{ --ui-media-shape: polygon(100% 0%, 100% 100%, 50% 85%, 0% 100%, 0% 0%); --ui-shape-morph: var(--_r5); }
+	:where([media*="shp(cut-r)"])		{ --ui-media-shape: polygon(0% 0%, 100% 0%, 100% 85%, 0% 100%); --ui-shape-morph: var(--_r4); }
+	:where([media*="shp(cut-l)"])		{ --ui-media-shape: polygon(0% 0%, 100% 0%, 100% 100%, 0% 85%); --ui-shape-morph: var(--_r4); }
+	:where([media*="shp(skew-r)"])	{ --ui-media-shape: polygon(0% 15%, 100% 0%, 100% 85%, 0% 100%); --ui-shape-morph: var(--_r4); }
+	:where([media*="shp(skew-l)"])	{ --ui-media-shape: polygon(0% 0%, 100% 15%, 100% 100%, 0% 85%); --ui-shape-morph: var(--_r4); }
+	:where([media*="shp(para)"])		{ --ui-media-shape: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%); --ui-shape-morph: var(--_r4); }
+	:where([media*="shp(rhomb)"])		{ --ui-media-shape: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); --ui-shape-morph: var(--_r4); }
+	:where([media*="shp(inset)"])		{ --ui-media-shape: polygon(10% 10%, 90% 10%, 90% 90%, 10% 90%); --ui-shape-morph: var(--_r4); }
+	:where([media*="shp(pt-l)"])		{ --ui-media-shape: polygon(25% 0%, 100% 1%, 100% 100%, 25% 100%, 0% 50%); --ui-shape-morph: var(--_r5l); }
+	:where([media*="shp(pt-r)"])		{ --ui-media-shape: polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%); --ui-shape-morph: var(--_r5r); }
+	:where([media*="shp(hex)"])			{ --ui-media-shape: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); --ui-shape-morph: polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%, 0% 0%); }
+
+	/* chev-l/chev-r: 3 points move (the notch out to the edge + 2 corners) → full square */
+	:where([media*="shp(chev-l)"])	{ --ui-media-shape: polygon(100% 0%, 75% 50%, 100% 100%, 25% 100%, 0% 50%, 25% 0%); --ui-shape-morph: polygon(100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 50%, 0% 0%); }
+	:where([media*="shp(chev-r)"])	{ --ui-media-shape: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 25% 50%, 0% 0%); --ui-shape-morph: polygon(100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 50%, 0% 0%); }
+
+	/* arr-l/arr-r: the arrowhead flattens into the near edge, the shaft fills → full square */
+	:where([media*="shp(arr-l)"])		{ --ui-media-shape: polygon(40% 0%, 40% 20%, 100% 20%, 100% 80%, 40% 80%, 40% 100%, 0% 50%); --ui-shape-morph: polygon(0% 0%, 50% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%, 0% 50%); }
+	:where([media*="shp(arr-r)"])		{ --ui-media-shape: polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%); --ui-shape-morph: polygon(0% 0%, 50% 0%, 100% 0%, 100% 50%, 100% 100%, 50% 100%, 0% 100%); }
+
+	/* star: all 10 points map onto the square perimeter (tips → edge mids, valleys → corners) */
+	:where([media*="shp(star)"])		{ --ui-media-shape: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); --ui-shape-morph: polygon(50% 0%, 100% 0%, 100% 50%, 100% 100%, 75% 100%, 50% 100%, 25% 100%, 0% 100%, 0% 50%, 0% 0%); }
+
+	/* plus: the 4 inner (concave) points slide out to the corners → fills the square */
+	:where([media*="shp(plus)"])		{ --ui-media-shape: polygon(35% 0%, 65% 0%, 65% 35%, 100% 35%, 100% 60%, 65% 60%, 65% 100%, 35% 100%, 35% 60%, 0% 60%, 0% 35%, 35% 35%); --ui-shape-morph: polygon(35% 0%, 65% 0%, 100% 0%, 100% 35%, 100% 60%, 100% 100%, 65% 100%, 35% 100%, 0% 100%, 0% 60%, 0% 35%, 0% 0%); }
+	/* minus: the bar grows vertically to fill (vertices mapped to the 4 corners) */
+	:where([media*="shp(minus)"])		{ --ui-media-shape: polygon(100% 35%, 100% 60%, 0% 60%, 0% 35%); --ui-shape-morph: polygon(100% 0%, 100% 100%, 0% 100%, 0% 0%); }
+
+	/* close (X): the 4 inner points push to the edge mids, the 8 arm tips to the corners */
+	:where([media*="shp(close)"])		{ --ui-media-shape: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%); --ui-shape-morph: polygon(0% 0%, 0% 0%, 0% 50%, 0% 100%, 0% 100%, 50% 100%, 100% 100%, 100% 100%, 100% 50%, 100% 0%, 100% 0%, 50% 0%); }
+	/* bolt: the 7 points map onto the square perimeter */
+	:where([media*="shp(bolt)"])		{ --ui-media-shape: polygon(25% 0%, 70% 0%, 40% 35%, 95% 35%, 20% 100%, 40% 55%, 0% 55%); --ui-shape-morph: polygon(0% 0%, 100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 100%, 0% 50%); }
+
+	/* msg: the bubble bottom + tail drop to the base edge → full square */
+	:where([media*="shp(msg)"])			{ --ui-media-shape: polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%); --ui-shape-morph: polygon(0% 0%, 100% 0%, 100% 100%, 75% 100%, 75% 100%, 50% 100%, 0% 100%); }
+
+	/* frame: seam slit routed to bottom-centre (x=50%, zero-width, invisible) so the
+	   4 inner points can collapse to the true centre with no line cutting through */
+	:where([media*="shp(frame)"])		{ --ui-media-shape: polygon(0% 0%, 0% 100%, 50% 100%, 50% 75%, 25% 75%, 25% 25%, 75% 25%, 75% 75%, 50% 75%, 50% 100%, 100% 100%, 100% 0%); --ui-shape-morph: polygon(0% 0%, 0% 100%, 50% 100%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 100%, 100% 100%, 100% 0%); }
+
+	/* blinds-h/-v: the 3 slats stretch to abut → the gaps close (v = the same polygon, x/y swapped) */
+	:where([media*="shp(blinds-h)"])	{ --ui-media-shape: polygon(0% 5%, 100% 5%, 100% 25%, 0% 25%, 0% 40%, 100% 40%, 100% 60%, 0% 60%, 0% 75%, 100% 75%, 100% 95%, 0% 95%); --ui-shape-morph: polygon(0% 0%, 100% 0%, 100% 33.33%, 0% 33.33%, 0% 33.33%, 100% 33.33%, 100% 66.66%, 0% 66.66%, 0% 66.66%, 100% 66.66%, 100% 100%, 0% 100%); }
+	:where([media*="shp(blinds-v)"])	{ --ui-media-shape: polygon(5% 0%, 5% 100%, 25% 100%, 25% 0%, 40% 0%, 40% 100%, 60% 100%, 60% 0%, 75% 0%, 75% 100%, 95% 100%, 95% 0%); --ui-shape-morph: polygon(0% 0%, 0% 100%, 33.33% 100%, 33.33% 0%, 33.33% 0%, 33.33% 100%, 66.66% 100%, 66.66% 0%, 66.66% 0%, 66.66% 100%, 100% 100%, 100% 0%); }
+
+	/* curves — morph via a same-function ellipse that grows to cover the frame */
+	:where([media*="shp(curve-d)"])	{ --ui-media-shape: ellipse(80% 50% at 50% 39%); --ui-shape-morph: var(--_ell); }
+	:where([media*="shp(curve-u)"])	{ --ui-media-shape: ellipse(80% 50% at 50% 61%); --ui-shape-morph: var(--_ell); }
+	:where([media*="shp(curve-r)"])	{ --ui-media-shape: ellipse(85% 80% at 25% 20%); --ui-shape-morph: var(--_ell); }
+	:where([media*="shp(curve-l)"])	{ --ui-media-shape: ellipse(85% 80% at 75% 20%); --ui-shape-morph: var(--_ell); }
+	/* circles — morph via a same-function circle() that grows past the corners
+	   (circle % resolves against the diagonal, so 71%+ covers a square frame) */
+	:where([media*="shp(circle)"])	{ --ui-media-shape: circle(50% at 50% 50%); --ui-shape-morph: circle(75% at 50% 50%); }
+	:where([media*="shp(circ-45)"])	{ --ui-media-shape: circle(45% at 50% 50%); --ui-shape-morph: circle(75% at 50% 50%); }
+}

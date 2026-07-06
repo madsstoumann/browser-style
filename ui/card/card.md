@@ -118,12 +118,25 @@ Machine values stay schema-ready (`PT15M`, salary numbers, geo coordinates);
 | `name`, `description` | both | e.g. “Hero Preset” |
 | `element` | both | `ui-card` (default), `ui-reveal` — or `ui-media` / `ui-content` for **bare primitives**: the renderer emits just the media frame or content column, no card chrome. Standalone blocks are presentation, not a separate content model |
 | `variant` | both | `col row row-r spl() ovr() vis() thm() rds()` |
-| `media` | both | `asr() obf() obp() hov() scm nav() auto loop clip …` — furniture tokens are appended by the renderer from content |
+| `media` | both | `asr() obf() obp() flp() rds() shp() hov() scm nav() auto loop clip …` — furniture tokens are appended by the renderer from content |
 | `content` | both | `scl() pad() gap() scr` |
 | `text` | both | which long text the content column shows: `summary` (teaser — default), `body` (full view — body **instead of** summary, with the summary kept as a hidden `description` meta), `both`. Reveal back panels always render both |
 | `styles` | both | object of CSS custom properties → `style` attribute (e.g. `--ui-reveal-content-bg`) |
 | `nav` / `arrow` / `dot` | both | dual-attribute carousel form, written to the `<ui-media>` child (groupable: `arrow="lg drk arr set"`) |
 | `reveal` | ui-reveal | nested object grouping the reveal-only config: `{ type, typeLg, to, icon, iconType, iconClose, from, trigger, scroll }`. Keys map 1:1 to attributes (`typeLg` → `type-lg=`); `scroll` is a boolean; `iconType` sets the toggle glyph — `plus-cross` (default) or directional `{up,down,left,right}-arrow-cross`, pairing with slide direction (panel from top → `down-arrow-cross`, etc.) |
+
+**`shp()` — clip the media content to a shape.** Applies a `clip-path` to the
+`img`/`video`/`iframe` inside `<ui-media>` (the frame background goes transparent).
+Names are short with `-l`/`-r` (left/right) and `-d`/`-u` (down/up) suffixes. Full set:
+`pt-d pt-u cut-r cut-l skew-r skew-l curve-d curve-u curve-r curve-l para rhomb inset
+hex arr-l arr-r pt-l pt-r chev-l chev-r star plus minus msg close frame bolt blinds-h
+blinds-v circle circ-45`. The shape polygons live in the **opt-in `media.shapes.css`**
+sheet (not bundled by `ui-card.css` — link it where you use `shp()`, see
+[`media.html`](media.html)); the clip + hover-morph **mechanism** ships in `media.css`,
+so it also works with any custom `--ui-media-shape` / `--ui-shape-morph` you set.
+Every shape carries a `--ui-shape-morph` target and animates back to a full frame on
+hover — polygons morph to a matching-vertex rect, `curve-*` grows to a full-cover
+`ellipse()`, and the circles to a `circle()` (same-function interpolation). Morph is on by default.
 
 Attribute audit across all `ui/card` + `ui/reveal` demos found exactly these on the
 host elements: `variant`, `media`, `content`, `type`, `type-lg`, `to`, `icon`,
@@ -333,6 +346,20 @@ rest ([`article.render.html`](article.render.html) is the working demo):
   ```html
   <ui-card data-view="card-article-1">… <img data-view="hero-article-1" …>
   ```
+
+  > **Note — why two `data-view` attrs (card *and* img), to rework later.**
+  > One `data-view` = one custom-ident = ONE named element per document
+  > (advanced `attr()` can't synthesise a second, distinct name, and a
+  > `view-transition-name` must be unique per document). So a single attr can't
+  > drive *both* a card-box morph and a hero-image morph — it forces a choice:
+  > name the **card** (whole box morphs, image dissolves inside — soft), name
+  > the **media** (image scales, text cross-fades), or use **two attrs** (box
+  > morphs *and* hero scales cleanly — the current, richest result). We tried
+  > auto-routing a single card `data-view` to the `<ui-media>` via an inherited
+  > custom property; it works but is media-*only*, not "card + media", so it
+  > looked worse. Kept the two-attr version. Revisit if a future CSS primitive
+  > lets one attribute yield two names (or if media-only morph is acceptable).
+
   Group timing is tokenized: `--ui-card-vt-duration` (0.4s) and
   `--ui-card-vt-easing`, gated behind `prefers-reduced-motion`. Advanced
   `attr()` is Chromium 133+; where unsupported the name resolves to `none` and

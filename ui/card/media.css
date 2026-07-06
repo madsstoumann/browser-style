@@ -1,6 +1,6 @@
 /**
  * ui-media
- * @version 4.0.0
+ * @version 1.0.0
  * @author Mads Stoumann
  *
  * Media primitive — image/video frame + overlay furniture. Works standalone or
@@ -8,13 +8,9 @@
  * element itself OR any ancestor (custom properties inherit down). See media.md.
  */
 @layer bs-component {
-
-	/* ============================================================
-	   FRAME — single image/video fills it (absolute stack)
-	   ============================================================ */
 	:where(ui-media) {
 		aspect-ratio: var(--ui-media-ar, auto);
-		background: var(--ui-media-bg, var(--color-overlay-light, transparent));
+		background: var(--ui-media-bg, var(--color-overlay-light, #0000));
 		border-radius: var(--ui-media-radius, 0);
 		display: grid;
 		min-block-size: var(--ui-media-min, 12.5rem);
@@ -33,14 +29,12 @@
 			-webkit-user-drag: none;
 			user-select: none;
 		}
-		/* Video-player styles (preview overlay, :playing reveal, play-control fade, ply(),
-		   PLAYER TOOLS + CC switcher) live in media.video.css. */
 	}
 	/* an explicit aspect-ratio drops the min-height floor (frame follows the ratio) */
 	:where([media*="asr("]) ui-media,
 	:where(ui-media[media*="asr("]) { min-block-size: 0; }
 
-	/* nested <ui-media> = always a plain frame, never a scroller (see media.md § Notes) */
+	/* nested <ui-media> = always a plain frame, never a scroller */
 	ui-media ui-media {
 		display: grid;
 		inline-size: auto;
@@ -56,8 +50,8 @@
 	:where([media*="clip"] ui-media) { --ui-media-radius: 0; }
 
 	/* ============================================================
-	   media= PARSE LAYER — tokens set props that inherit to <ui-media>
-	   ============================================================ */
+		 media= PARSE LAYER — tokens set props that inherit to <ui-media>
+		 ============================================================ */
 
 	/* asr() — aspect-ratio */
 	:where([media*="asr(1/1)"])   { --ui-media-ar: 1 / 1; }
@@ -111,9 +105,33 @@
 	:where([media*="flp(v)"])  { --ui-media-fl-y: -1; }
 	:where([media*="flp(hv)"]) { --ui-media-fl-x: -1; --ui-media-fl-y: -1; }
 
+	/* shp() — generic shape/morph MECHANISM (ships with the card). Clip media
+	   content to --ui-media-shape; if a shape also sets --ui-shape-morph, animate
+	   to it on hover. The shape LIBRARY (polygons for shp(cut-r) etc.) lives in the
+	   opt-in media.shapes.css — but this mechanism also works with any custom
+	   --ui-media-shape / --ui-shape-morph you set yourself. Morph on by default. */
+	:where([media*="shp("]) ui-media,
+	:where(ui-media[media*="shp("]) {
+		background: #0000;
+		& :is(iframe, img, picture, video) {
+			clip-path: var(--ui-media-shape, none);
+			transition: clip-path var(--ui-media-morph-dur, 0.6s) var(--ease-in-out, ease);
+		}
+	}
+	@media (hover: hover) {
+		ui-media[media*="shp("]:hover :is(iframe, img, picture, video),
+		:where([media*="shp("]) ui-media:hover :is(iframe, img, picture, video) {
+			clip-path: var(--ui-shape-morph, var(--ui-media-shape));
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		:where([media*="shp("]) ui-media :is(iframe, img, picture, video),
+		:where(ui-media[media*="shp("]) :is(iframe, img, picture, video) { transition: none; }
+	}
+
 	/* ============================================================
-	   HOVER — hov(zoom|pan|track). Image-only (card-level hovers removed).
-	   ============================================================ */
+		 HOVER — hov(zoom|pan|track). Image-only (card-level hovers removed).
+		 ============================================================ */
 	@media (hover: hover) {
 		:where([media*="hov("]) {
 			--_hv-dur: var(--ui-media-hover-duration, var(--duration-slower));
@@ -160,9 +178,9 @@
 	}
 
 	/* ============================================================
-	   OVERLAY FURNITURE — <ui-chip> <ui-sticker> <ui-save> <ui-play>
-	   Absolute-positioned; default area by role, override via media= token.
-	   ============================================================ */
+		 OVERLAY FURNITURE — <ui-chip> <ui-sticker> <ui-save> <ui-play>
+		 Absolute-positioned; default area by role, override via media= token.
+		 ============================================================ */
 	:where(ui-media) :is(ui-chip, ui-play, ui-save, ui-sticker) {
 		--_g: var(--ui-media-overlay-gap, 0.75rem);
 		position: absolute;
@@ -193,11 +211,11 @@
 	}
 
 	/* ply(), PLAYER TOOLS (fullscreen · PiP) and the CC language <select> live in
-	   media.video.css — imported after this sheet, before media.carousel.css. */
+		 media.video.css — imported after this sheet, before media.carousel.css. */
 
 	/* ============================================================
-	   SUB-THEME ROUTING — media="el(<key>)" → element tokens (8 --ui-theme-* keys)
-	   ============================================================ */
+		 SUB-THEME ROUTING — media="el(<key>)" → element tokens (8 --ui-theme-* keys)
+		 ============================================================ */
 	:where([media*="chip(red)"])      { --ui-chip-bg: var(--ui-theme-red-bg);    --ui-chip-c: var(--ui-theme-red-c); }
 	:where([media*="chip(orange)"])   { --ui-chip-bg: var(--ui-theme-orange-bg); --ui-chip-c: var(--ui-theme-orange-c); }
 	:where([media*="chip(green)"])    { --ui-chip-bg: var(--ui-theme-green-bg);  --ui-chip-c: var(--ui-theme-green-c); }
@@ -217,9 +235,9 @@
 	:where([media*="sticker(subtle)"]) { --ui-sticker-bg: var(--ui-theme-subtle-bg); --ui-sticker-c: var(--ui-theme-subtle-c); }
 
 	/* ============================================================
-	   SCRIM — scm(). 9 directional gradients; default matches host ovr(),
-	   scm(<pos>) overrides, bare scm paints the default. (see media.md § Notes)
-	   ============================================================ */
+		 SCRIM — scm(). 9 directional gradients; default matches host ovr(),
+		 scm(<pos>) overrides, bare scm paints the default. (see media.md § Notes)
+		 ============================================================ */
 	:where(ui-media), :where([media]), :where([variant]) {
 		--ui-media-scrim-c: var(--ui-media-scrim-color, rgb(0 0 0 / 0.78));
 		/* mid stop holds the dark before fading, so spanning text stays legible */
