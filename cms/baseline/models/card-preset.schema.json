@@ -26,7 +26,7 @@
         "name": "Attributes",
         "description": "Token strings written verbatim to the element's attributes",
         "collapse": false,
-        "fields": ["variant", "media", "content", "styles"]
+        "fields": ["variant", "media", "content", "text", "styles"]
       },
       {
         "area": "main",
@@ -105,6 +105,18 @@
       "title": "content=",
       "description": "Content column tokens: scl(sm|md|lg|xl), pad(), gap(), scr",
       "localized": false
+    },
+    "text": {
+      "type": "select",
+      "title": "Text mode",
+      "description": "Which long text the content column shows: summary (teaser — the default for cards), body (full view — the body replaces the summary; falls back to summary when no body exists), or both. Reveal back panels always render both.",
+      "localized": false,
+      "default": "summary",
+      "options": [
+        { "value": "summary", "label": "Summary (teaser)" },
+        { "value": "body", "label": "Body (full — instead of summary)" },
+        { "value": "both", "label": "Summary + body" }
+      ]
     },
     "styles": {
       "type": "object",

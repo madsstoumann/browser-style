@@ -120,6 +120,7 @@ Machine values stay schema-ready (`PT15M`, salary numbers, geo coordinates);
 | `variant` | both | `col row row-r spl() ovr() vis() thm() rds()` |
 | `media` | both | `asr() obf() obp() hov() scm nav() auto loop clip …` — furniture tokens are appended by the renderer from content |
 | `content` | both | `scl() pad() gap() scr` |
+| `text` | both | which long text the content column shows: `summary` (teaser — default), `body` (full view — body **instead of** summary, with the summary kept as a hidden `description` meta), `both`. Reveal back panels always render both |
 | `styles` | both | object of CSS custom properties → `style` attribute (e.g. `--ui-reveal-content-bg`) |
 | `nav` / `arrow` / `dot` | both | dual-attribute carousel form, written to the `<ui-media>` child (groupable: `arrow="lg drk arr set"`) |
 | `reveal` | ui-reveal | nested object grouping the reveal-only config: `{ type, typeLg, to, icon, iconType, iconClose, from, trigger, scroll }`. Keys map 1:1 to attributes (`typeLg` → `type-lg=`); `scroll` is a boolean; `iconType` sets the toggle glyph — `plus-cross` (default) or directional `{up,down,left,right}-arrow-cross`, pairing with slide direction (panel from top → `down-arrow-cross`, etc.) |
@@ -168,21 +169,28 @@ attribute combination those pages use, powering the `*.render.html` recreations.
 
 ## Renderer — `render.js`
 
-Zero dependencies, ES module, light DOM. All nodes via
-`createElement`/`textContent` — **no `innerHTML`**, no XSS surface.
+Zero dependencies, ES module, **SSR string engine** (v2): template literals
+returning HTML strings, no `document` usage — runs unchanged in Node or the
+browser.
+
+**Security model:** every interpolated value passes `esc()` (`& < > "`); the
+single deliberate exception is the headline, where `renderInline()` re-allows
+`<b>` only (the gradient-highlight marker). Output is therefore safe to
+`insertAdjacentHTML`/stream by construction. `format: "html"` richtext is never
+rendered — bodies are paragraph-split plain text.
 
 ```js
 import { renderCard, loadPresets } from './render.js';
 
 const presets = await loadPresets('data/card.presets.json');
 const ucf = await (await fetch('data/product.json')).json();
-document.querySelector('.grid').append(renderCard(ucf, presets));
+grid.insertAdjacentHTML('beforeend', renderCard(ucf, presets));
 ```
 
 | Export | Signature | Purpose |
 |--------|-----------|---------|
-| `renderCard` | `(ucf, presets?, cards?) => HTMLElement` | UCF instance (or bare fields) → `<ui-card>`/`<ui-reveal>`. `cards` = id→UCF map for resolving `flipside` references |
-| `renderCardFrom` | `(url, presets?, cards?) => Promise<HTMLElement>` | fetch + render |
+| `renderCard` | `(ucf, presets?, cards?) => string` | UCF instance (or bare fields) → HTML for `<ui-card>`/`<ui-reveal>`/bare primitive. `cards` = id→UCF map for resolving `flipside` references |
+| `renderCardFrom` | `(url, presets?, cards?) => Promise<string>` | fetch + render |
 | `loadPresets` | `(url) => Promise<object>` | fetch `card.presets.json` → id→preset map |
 | `SCHEMA_TYPES` | map | schemaType → schema.org type |
 
@@ -208,6 +216,23 @@ emission in [`content/card/dist/`](../../content/card/dist/)):
   `name` (rest); summary → `reviewBody` (review) / `text` (quote, announcement,
   social) / `description` (rest); published → `datePosted` (job, announcement)
 - Reveal cards keep metas on the root/back panel so microdata survives either face
+- **VideoObject** (matching the legacy emission): native video items carry the
+  scope on the `<video>` element itself with `<meta>` children as fallback
+  content — `name` (alt), `contentUrl`, `thumbnailUrl` (poster), `uploadDate`,
+  `duration`, `description`. Provider embeds (youtube/vimeo) emit a hidden
+  `<div itemprop="video" itemscope …VideoObject>` in the content column with
+  `embedUrl` + `thumbnailUrl` (`i.ytimg.com/vi/{id}/hqdefault.jpg` for YouTube)
+- **articleBody**: for `article`/`news` the `body` paragraphs are wrapped in
+  `<div itemprop="articleBody">`. Teaser/full is a preset decision — the `text`
+  field: cards show the `summary` only; a `text: "body"` preset (e.g. `prose`)
+  shows the body *instead*, keeping the summary as a hidden `description` meta
+- **Gradient headline**: `headline` is short rich text (≤256 chars, model-enforced);
+  inline `<b>` renders as gradient text via `--ui-content-headline-gradient`
+  (rule in content.css); all other markup is escaped
+- **Blockquote**: quote parts compose with `@browser.style/blockquote` —
+  `<blockquote data-part="quote" data-variant="bigquote"><q>…</q><cite>…</cite></blockquote>`
+  (quote), bare `data-variant` (review), plain (social); pages import
+  `../blockquote/ui-blockquote.css`
 
 ## Proposed `data-part` vocabulary
 
@@ -228,6 +253,130 @@ of [`content.css`](content.css):
 Everything else reuses existing parts: `meta` (salaries, hours, dates), `tags`
 (skills, hashtags), `byline` (people), `footer` (totals, recommendations).
 
+Two parts are already **implemented** in content.css: the gradient-headline `b`
+rule, and `cover` — an `<a data-part="cover">` inside the headline whose
+`::after` covers the whole card (the clickable-card link; see the Article
+pattern below).
+
+## Navigation models and ui-accordion / ui-tabs (assessment)
+
+Can `navigation` / `navigation-item` ([models](../../cms/baseline/models/navigation.schema.json))
+drive `<ui-accordion>` and `<ui-tabs>`? **Yes for menu-style uses — and one
+mapping serves both components**, because accordion and tabs share the exact
+same inner markup (`cq-box > details > summary + panel`) and morph via the
+`tabs="<variant tokens>"` attribute (`--_render` container-style query).
+
+| navigation-item field | maps to |
+|----------------------|---------|
+| `label` | `<summary>` text |
+| `badge` | `<sup>` / `<ui-chip>` inside the summary |
+| `description` | panel paragraph |
+| `url` / `page` (ref) | panel link (`page` needs URL resolution) |
+| `children` (self-nesting refs) | panel link list; nested `group` items → sub-sections |
+| `icon` / `image` (media) | summary icon / panel image (needs asset resolution) |
+| `is_featured` | e.g. `open` on the details, or a featured style hook |
+
+Example shape (one `navigation` with `group`-type items → tabs mega-menu):
+
+```html
+<ui-accordion tabs="pill panel expanded" group="main-header">
+  <cq-box>
+    <details name="main-header"><summary>Components <sup>new</sup></summary>
+      <div><p>{description}</p><a href="{url}">…</a> <!-- + children links --></div>
+    </details>…
+  </cq-box>
+</ui-accordion>
+```
+
+**Gaps:** `description` is plain `text`, not richtext — panels can't carry rich
+content; `page` references and media assets need resolution; there's no
+per-item `open`/variant control on the model. **Verdict:** navigation models
+fit *navigational* accordions/tabs (menus, footers, mega-menus — UCF instances
+already exist in [`cms/baseline/content/navigation/`](../../cms/baseline/content/navigation/)).
+*Content* accordions (FAQ, recipe steps, job requirements) stay in the card's
+`details.items` — they are card content, not site structure. No renderer code
+for this yet; a `renderNavigation(nav, items, { as, variant })` export is the
+natural next step if needed.
+
+## Article pattern — teaser card → full-page view
+
+One `card` instance serves both states; presets and view-transition names do the
+rest ([`article.render.html`](article.render.html) is the working demo):
+
+- **Teaser (grid).** The card's preset defaults to `text: "summary"` — the short
+  description shows, the `body` never renders.
+- **Full view.** The *same UCF* re-renders through the two bare presets:
+  `media` (hero frame) + `prose` (`text: "body"` — the body renders **instead
+  of** the summary, wrapped in `itemprop="articleBody"`; the summary survives as
+  a hidden `description` meta). Zero article-specific renderer code.
+- **Morph — cross-document, both directions.** Every article has its *own page*
+  under [`articles/`](articles/). Both documents opt in with
+  `@view-transition { navigation: auto; }` and carry matching per-article
+  `view-transition-name`s, nested: `card-{id}` on the grid `<ui-card>` *and* on
+  the article page's `<article>` container, `hero-{id}` on the media `<img>` in
+  both — the whole card morphs into the page across the navigation while the
+  image morphs within it, and morphs back on the “← All articles” link or the
+  browser Back button. The article surface gets card chrome
+  (`--ui-card-bg`/`--ui-card-radius` + padding) so it reads as the card
+  growing. Non-clicked cards have unique names and simply fade.
+- **Names via `data-view` + CSS `attr()` — built into ui-card.css, no inline
+  styles.** The view-transition machinery lives at the end of
+  [`ui-card.css`](ui-card.css) (outside `@layer` — `@view-transition` is a
+  top-level at-rule), so it works for *any* card on *any* page that imports it:
+  add `data-view` to a card (and optionally its `<img>`), a matching one on the
+  target page's container, link the pages with a regular `<a>` — done.
+
+  ```css
+  @view-transition { navigation: auto; }
+  [data-view] { view-transition-name: attr(data-view type(<custom-ident>), none); }
+  ```
+  ```html
+  <ui-card data-view="card-article-1">… <img data-view="hero-article-1" …>
+  ```
+  Group timing is tokenized: `--ui-card-vt-duration` (0.4s) and
+  `--ui-card-vt-easing`, gated behind `prefers-reduced-motion`. Advanced
+  `attr()` is Chromium 133+; where unsupported the name resolves to `none` and
+  the navigation degrades to a plain crossfade/instant swap. Markup stays
+  strict-CSP clean — no `style=` attributes anywhere.
+- **Static markup on BOTH sides — this is what makes the morph reliable.**
+  [`articles/build.js`](articles/build.js) (`node ui/card/articles/build.js`)
+  pre-renders the grid page *and* every article page through `render.js` — the
+  SSR engine returning strings needs no DOM. A cross-document view transition
+  captures the incoming page at first render: client-fetched content isn't
+  there yet, names are missing, and the browser silently falls back to a root
+  crossfade (`blocking="render"` on an inline module did not rescue the capture
+  in Chromium). Fully static pages have no race — verified: forward, backlink
+  and browser-Back all animate `::view-transition-group(card-{id})` +
+  `(hero-{id})`, not just root.
+- **Navigation — regular links via the `cover` part.** The card headline is a
+  real `<a data-part="cover" href="articles/{name}.html">` — a part like every
+  other (no classes), styled in [`content.css`](content.css): its `::after`
+  covers the card (the legacy content-card "clickable" pattern). The link stays
+  where it belongs semantically — inside the headline — so there are **no
+  nested anchors**; the card's own links (tag pills, actions) stay clickable
+  above it via `z-index`:
+
+  ```css
+  :where(ui-card):has([data-part~="cover"]) { position: relative; }
+  :where(ui-content) [data-part~="cover"]::after {
+    content: '';
+    inset: 0;
+    position: absolute;
+    z-index: 1;
+  }
+  /* tags/actions links sit above the cover surface (z-index: 2) */
+  ```
+
+  The article page carries a plain “← All articles” backlink to
+  `article.render.html`; browser Back morphs in reverse. Keyboard,
+  middle-click and prefetching all behave — the whole demo cluster contains
+  **zero runtime JavaScript**.
+- **Furniture rides along.** Chips/stickers come from content, not the preset —
+  the news card's "Breaking" chip appears in the full view automatically.
+
+Fallback: browsers without cross-document view transitions get a normal
+navigation; `prefers-reduced-motion` keeps default timing.
+
 ## Demo pages
 
 | Page | Shows |
@@ -235,6 +384,7 @@ Everything else reuses existing parts: `meta` (salaries, hours, dates), `tags`
 | [`schema.html`](schema.html) | Hand-authored reference — all 26 types with microdata |
 | [`render.html`](render.html) | Same 26 cards rendered by `render.js` from UCF data + presets |
 | [`media.render.html`](media.render.html) · [`carousel.render.html`](carousel.render.html) · [`video.render.html`](video.render.html) · [`reveal.render.html`](reveal.render.html) | The original demo pages recreated data-driven: presets from [`data/card.presets.demo.json`](data/card.presets.demo.json) (121 presets extracted from the originals) + UCF instances in [`data/demo/`](data/demo/). Each page lists its not-expressible demos in a bottom note |
+| [`article.render.html`](article.render.html) + [`articles/`](articles/) | The article pattern above, live and **fully static** (pre-rendered by `articles/build.js`): teaser cards with stretched-link headlines → cross-document view transition morphs the whole card into the per-article page and back (`card-{id}` + nested `hero-{id}` names via `data-view` + CSS `attr()`), body-instead-of-summary via the `prose` preset, plain `<a>` navigation, zero runtime JS |
 | [`index.html`](index.html) · [`media.html`](media.html) · [`content.html`](content.html) · [`carousel.html`](carousel.html) · [`video.html`](video.html) | The card engine itself (hand-authored originals) |
 | [`../reveal/index.html`](../reveal/index.html) | Reveal types incl. the hero (source of `hero-reveal` preset) |
 
@@ -247,8 +397,11 @@ python3 -m http.server 8000 -d .
 
 ## Status / next steps
 
-- [x] Content model, preset model, presets, 26 UCF instances, renderer, demos
-- [ ] Style the 8 proposed parts in `content.css`
+- [x] Content model, preset model, presets, UCF instances, SSR renderer, demos
+- [x] Video/YouTube/Vimeo media items + `VideoObject` microdata
+- [x] `body` → `articleBody`, gradient headlines, blockquote composition
+- [ ] Style the remaining proposed parts in `content.css` (gradient-headline `b` and quote are done/composed)
 - [ ] Sync models to a CMS via [UCM](../../cms/baseline/) (`cd cms/unified-content-model && npm run validate`)
 - [ ] `editor-card` widget update for the new `details` shapes
-- [ ] Video/YouTube media items in `render.js` (currently images; the engine's lite-embed support in [`index.js`](index.js) is the hook)
+- [ ] `renderNavigation()` if the navigation → accordion/tabs mapping gets adopted
+- [ ] HTML-format richtext bodies (needs a sanitizer decision — the engine only emits escaped text)

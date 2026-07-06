@@ -217,6 +217,73 @@
 		padding-block-start: calc(var(--ui-media-above-gap) + var(--ui-media-band));
 	}
 
+	/* ---- Token-setter atoms (custom properties ONLY) ----
+	   Deliberately OUTSIDE the @supports gate below: these rules merely set vars
+	   (sizes, inks, glyph URLs) consumed by the native pseudo rules — or, where
+	   ::scroll-marker/::scroll-button are unsupported, by /polyfill/carousel.css.
+	   Custom-property declarations are inert without a consumer, so Chromium
+	   behavior is unchanged. Rules that target pseudos (or set anchor()-valued
+	   vars) stay inside the gate. */
+	/* dot size — one scale drives dots, pills AND thumbnails (dot(tmb) reads --ui-media-thumb-size) */
+	:where([media*="dot(sm)"]), ui-media[dot~="sm"] { --ui-media-dot-size: 0.45rem; --ui-media-pill-width: 1.15rem; --ui-media-pill-height: 0.28rem; --ui-media-thumb-size: 2.25rem; }
+	:where([media*="dot(md)"]), ui-media[dot~="md"] { --ui-media-dot-size: 0.6rem;  --ui-media-pill-width: 1.5rem;  --ui-media-pill-height: 0.35rem; --ui-media-thumb-size: 3rem; }
+	:where([media*="dot(lg)"]), ui-media[dot~="lg"] { --ui-media-dot-size: 0.8rem;  --ui-media-pill-width: 2rem;    --ui-media-pill-height: 0.45rem; --ui-media-thumb-size: 3.75rem; }
+	:where([media*="dot(xl)"]), ui-media[dot~="xl"] { --ui-media-dot-size: 1rem;    --ui-media-pill-width: 2.5rem;  --ui-media-pill-height: 0.55rem; --ui-media-thumb-size: 4.75rem; }
+	/* dot ink (shared scale lgt/drk/sub) */
+	:where([media*="dot(lgt)"]), ui-media[dot~="lgt"] { --ui-media-dot-bg: rgb(255 255 255 / 0.5);  --ui-media-dot-active: #fff; }
+	:where([media*="dot(drk)"]), ui-media[dot~="drk"] { --ui-media-dot-bg: rgb(0 0 0 / 0.25);        --ui-media-dot-active: rgb(0 0 0 / 0.7); }
+	:where([media*="dot(sub)"]), ui-media[dot~="sub"] { --ui-media-dot-bg: rgb(0 0 0 / 0.12);        --ui-media-dot-active: rgb(0 0 0 / 0.4); }
+	/* dot(tmb) — thumbnails get a larger inset */
+	:where([media*="dot(tmb)"]), ui-media[dot~="tmb"] { --ui-media-marker-inset: var(--ui-media-thumb-gap, 1rem); }
+	/* arrows present: base glyph vars */
+	:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]),
+	ui-media:where([nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"])) {
+		--ui-media-chevron-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+		--ui-media-chevron-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+		--ui-media-arrow-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
+		--ui-media-arrow-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
+		--ui-media-arrow-glyph: var(--ui-media-chevron-light);
+	}
+	/* glyph shape (chv default) × ink (lgt default · drk · sub) */
+	/* full arrow has a shaft (mass nearer centre), so it needs a smaller optical nudge than the chevron */
+	:where([media*="arw(arr)"]), ui-media[arrow~="arr"] { --ui-media-arrow-glyph: var(--ui-media-arrow-light); --ui-media-arrow-nudge: calc(var(--ui-media-arrow-size) * 0.015); }
+	:where([media*="arw(drk)"]), ui-media[arrow~="drk"] { --ui-media-arrow-glyph: var(--ui-media-chevron-dark); }
+	:where([media*="arw(arr)"][media*="arw(drk)"]), ui-media[arrow~="arr"][arrow~="drk"] { --ui-media-arrow-glyph: var(--ui-media-arrow-dark); }
+	:where([media*="arw(sub)"]), ui-media[arrow~="sub"] { --ui-media-arrow-color: var(--color-text-subtle, rgb(0 0 0 / 0.45)); --ui-media-arrow-bg: rgb(0 0 0 / 0.25); }
+	/* arrow size */
+	:where([media*="arw(sm)"]), ui-media[arrow~="sm"] { --ui-media-arrow-size: 1.75rem; }
+	:where([media*="arw(md)"]), ui-media[arrow~="md"] { --ui-media-arrow-size: 2.25rem; }
+	:where([media*="arw(lg)"]), ui-media[arrow~="lg"] { --ui-media-arrow-size: 2.75rem; }
+	:where([media*="arw(xl)"]), ui-media[arrow~="xl"] { --ui-media-arrow-size: 3.25rem; }
+	/* arw(hid) — auto-hide the dead-end arrow */
+	:where([media*="arw(hid)"]), ui-media[arrow~="hid"] { --ui-media-arrow-disabled-opacity: 0; }
+	/* nav(blw) / nav(abv) — flip ink to dark for the light band (placement vars stay gated) */
+	:where([media*="nav(blw)"]),
+	ui-media[nav~="blw"] {
+		--ui-media-arrow-color: rgb(0 0 0 / 0.8);
+		--ui-media-arrow-glyph-dim: var(--ui-media-chevron-dark);
+		--ui-media-dot-bg: rgb(0 0 0 / 0.25);
+		--ui-media-dot-active: rgb(0 0 0 / 0.7);
+		--ui-media-pill-track: rgb(0 0 0 / 0.2);
+		--ui-media-pill-fill: rgb(0 0 0 / 0.7);
+	}
+	:where([media*="nav(abv)"]),
+	ui-media[nav~="abv"] {
+		--ui-media-arrow-color: rgb(0 0 0 / 0.8);
+		--ui-media-arrow-glyph-dim: var(--ui-media-chevron-dark);
+		--ui-media-dot-bg: rgb(0 0 0 / 0.25);
+		--ui-media-dot-active: rgb(0 0 0 / 0.7);
+		--ui-media-pill-track: rgb(0 0 0 / 0.2);
+		--ui-media-pill-fill: rgb(0 0 0 / 0.7);
+	}
+	/* sub re-asserted so it wins inside the nav(blw) / nav(abv) band */
+	:where([media*="arw(sub)"]), ui-media[arrow~="sub"] { --ui-media-arrow-color: var(--color-text-subtle, rgb(0 0 0 / 0.45)); }
+	:where([media*="dot(sub)"]), ui-media[dot~="sub"] { --ui-media-dot-bg: rgb(0 0 0 / 0.12); --ui-media-dot-active: rgb(0 0 0 / 0.4); }
+	:where([media*="nav(blw)"][media*="arw(arr)"]),
+	ui-media[nav~="blw"][arrow~="arr"] { --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
+	:where([media*="nav(abv)"][media*="arw(arr)"]),
+	ui-media[nav~="abv"][arrow~="arr"] { --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
+
 	@supports (scroll-marker-group: after) {
 
 		/* controls present (dots OR arrows) → hide native scrollbar */
@@ -279,16 +346,6 @@
 				background-color: var(--ui-media-pill-fill);
 			}
 		}
-		/* dot size */
-		/* one size scale drives dots, pills AND thumbnails (dot(tmb) reads --ui-media-thumb-size) */
-		:where([media*="dot(sm)"]), ui-media[dot~="sm"] { --ui-media-dot-size: 0.45rem; --ui-media-pill-width: 1.15rem; --ui-media-pill-height: 0.28rem; --ui-media-thumb-size: 2.25rem; }
-		:where([media*="dot(md)"]), ui-media[dot~="md"] { --ui-media-dot-size: 0.6rem;  --ui-media-pill-width: 1.5rem;  --ui-media-pill-height: 0.35rem; --ui-media-thumb-size: 3rem; }
-		:where([media*="dot(lg)"]), ui-media[dot~="lg"] { --ui-media-dot-size: 0.8rem;  --ui-media-pill-width: 2rem;    --ui-media-pill-height: 0.45rem; --ui-media-thumb-size: 3.75rem; }
-		:where([media*="dot(xl)"]), ui-media[dot~="xl"] { --ui-media-dot-size: 1rem;    --ui-media-pill-width: 2.5rem;  --ui-media-pill-height: 0.55rem; --ui-media-thumb-size: 4.75rem; }
-		/* dot ink (shared scale lgt/drk/sub) */
-		:where([media*="dot(lgt)"]), ui-media[dot~="lgt"] { --ui-media-dot-bg: rgb(255 255 255 / 0.5);  --ui-media-dot-active: #fff; }
-		:where([media*="dot(drk)"]), ui-media[dot~="drk"] { --ui-media-dot-bg: rgb(0 0 0 / 0.25);        --ui-media-dot-active: rgb(0 0 0 / 0.7); }
-		:where([media*="dot(sub)"]), ui-media[dot~="sub"] { --ui-media-dot-bg: rgb(0 0 0 / 0.12);        --ui-media-dot-active: rgb(0 0 0 / 0.4); }
 		/* dot(non) — no dots (keeps arrows); e.g. an arrows-only band via nav(blw)/nav(abv) */
 		:where([media*="dot(non)"]) ui-media,
 		ui-media:where([media*="dot(non)"], [dot~="non"]) { scroll-marker-group: none; }
@@ -296,7 +353,6 @@
 		/* dot(tmb) — image thumbnails instead of dots. Each slide sets its own picture:
 		   style="--ui-media-thumb-url: url(...)" (later: attr(data-thumb type(<image>)) once Baseline).
 		   Active thumb: full opacity + a bottom "timer" stripe that fills L→R over --ui-media-autoplay. */
-		:where([media*="dot(tmb)"]), ui-media[dot~="tmb"] { --ui-media-marker-inset: var(--ui-media-thumb-gap, 1rem); }
 		:where([media*="dot(tmb)"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
 		ui-media:where([media*="dot(tmb)"], [dot~="tmb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
 			aspect-ratio: var(--ui-media-thumb-ratio, 4 / 3);
@@ -329,27 +385,8 @@
 		}
 
 
-		/* ---- ARROWS present: bare nav · nav(arw) · nav(blw) · nav(abv). Base glyph vars ---- */
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]),
-		ui-media:where([nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"])) {
-			--ui-media-chevron-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
-			--ui-media-chevron-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
-			--ui-media-arrow-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
-			--ui-media-arrow-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
-			--ui-media-arrow-glyph: var(--ui-media-chevron-light);
-		}
-		/* glyph shape (chv default) × ink (lgt default · drk · sub) */
-		/* full arrow has a shaft (mass nearer centre), so it needs a smaller optical nudge than the chevron */
-		:where([media*="arw(arr)"]), ui-media[arrow~="arr"] { --ui-media-arrow-glyph: var(--ui-media-arrow-light); --ui-media-arrow-nudge: calc(var(--ui-media-arrow-size) * 0.015); }
-		:where([media*="arw(drk)"]), ui-media[arrow~="drk"] { --ui-media-arrow-glyph: var(--ui-media-chevron-dark); }
-		:where([media*="arw(arr)"][media*="arw(drk)"]), ui-media[arrow~="arr"][arrow~="drk"] { --ui-media-arrow-glyph: var(--ui-media-arrow-dark); }
-		:where([media*="arw(sub)"]), ui-media[arrow~="sub"] { --ui-media-arrow-color: var(--color-text-subtle, rgb(0 0 0 / 0.45)); --ui-media-arrow-bg: rgb(0 0 0 / 0.25); }
-		/* arrow size */
-		:where([media*="arw(sm)"]), ui-media[arrow~="sm"] { --ui-media-arrow-size: 1.75rem; }
-		:where([media*="arw(md)"]), ui-media[arrow~="md"] { --ui-media-arrow-size: 2.25rem; }
-		:where([media*="arw(lg)"]), ui-media[arrow~="lg"] { --ui-media-arrow-size: 2.75rem; }
-		:where([media*="arw(xl)"]), ui-media[arrow~="xl"] { --ui-media-arrow-size: 3.25rem; }
-
+		/* ---- ARROWS present: bare nav · nav(arw) · nav(blw) · nav(abv) ----
+		   (base glyph vars + size/ink atoms hoisted above the @supports gate) */
 		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) ui-media,
 		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"])) {
 			&::scroll-button(*) {
@@ -393,9 +430,6 @@
 		:where([media*="arw(top)"]), ui-media[arrow~="top"] { --ui-media-arrow-top: calc(anchor(top) + var(--ui-media-overlay-gap)); }
 		:where([media*="arw(bot)"]), ui-media[arrow~="bot"] { --ui-media-arrow-top: calc(anchor(bottom) - var(--ui-media-overlay-gap) - var(--ui-media-arrow-size)); }
 
-		/* arw(hid) — auto-hide the dead-end arrow */
-		:where([media*="arw(hid)"]), ui-media[arrow~="hid"] { --ui-media-arrow-disabled-opacity: 0; }
-
 		/* arw(set) — both arrows as an adjacent pair at the inline-end */
 		:where([media*="arw(set)"]) ui-media::scroll-button(left),
 		ui-media:where([media*="arw(set)"], [arrow~="set"])::scroll-button(left) {
@@ -431,35 +465,11 @@
 			}
 		}
 
-		/* nav(blw) — controls into a bottom band; flip ink to dark for the light band */
+		/* nav(blw) / nav(abv) — anchor()-valued arrow placement (ink flips hoisted above the gate) */
 		:where([media*="nav(blw)"]),
-		ui-media[nav~="blw"] {
-			--ui-media-arrow-top: calc(anchor(bottom) - var(--ui-media-band) / 2 - var(--ui-media-arrow-size) / 2);
-			--ui-media-arrow-color: rgb(0 0 0 / 0.8);
-			--ui-media-arrow-glyph-dim: var(--ui-media-chevron-dark);
-			--ui-media-dot-bg: rgb(0 0 0 / 0.25);
-			--ui-media-dot-active: rgb(0 0 0 / 0.7);
-			--ui-media-pill-track: rgb(0 0 0 / 0.2);
-			--ui-media-pill-fill: rgb(0 0 0 / 0.7);
-		}
-		/* nav(abv) — mirror of nav(blw), controls into a TOP band */
+		ui-media[nav~="blw"] { --ui-media-arrow-top: calc(anchor(bottom) - var(--ui-media-band) / 2 - var(--ui-media-arrow-size) / 2); }
 		:where([media*="nav(abv)"]),
-		ui-media[nav~="abv"] {
-			--ui-media-arrow-top: calc(anchor(top) + var(--ui-media-band) / 2 - var(--ui-media-arrow-size) / 2);
-			--ui-media-arrow-color: rgb(0 0 0 / 0.8);
-			--ui-media-arrow-glyph-dim: var(--ui-media-chevron-dark);
-			--ui-media-dot-bg: rgb(0 0 0 / 0.25);
-			--ui-media-dot-active: rgb(0 0 0 / 0.7);
-			--ui-media-pill-track: rgb(0 0 0 / 0.2);
-			--ui-media-pill-fill: rgb(0 0 0 / 0.7);
-		}
-		/* sub re-asserted so it wins inside the nav(blw) / nav(abv) band */
-		:where([media*="arw(sub)"]), ui-media[arrow~="sub"] { --ui-media-arrow-color: var(--color-text-subtle, rgb(0 0 0 / 0.45)); }
-		:where([media*="dot(sub)"]), ui-media[dot~="sub"] { --ui-media-dot-bg: rgb(0 0 0 / 0.12); --ui-media-dot-active: rgb(0 0 0 / 0.4); }
-		:where([media*="nav(blw)"][media*="arw(arr)"]),
-		ui-media[nav~="blw"][arrow~="arr"] { --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
-		:where([media*="nav(abv)"][media*="arw(arr)"]),
-		ui-media[nav~="abv"][arrow~="arr"] { --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
+		ui-media[nav~="abv"] { --ui-media-arrow-top: calc(anchor(top) + var(--ui-media-band) / 2 - var(--ui-media-arrow-size) / 2); }
 		:where([media*="nav(blw)"]) ui-media::scroll-marker-group,
 		ui-media:where([media*="nav(blw)"], [nav~="blw"])::scroll-marker-group {
 			top: calc(anchor(bottom) - var(--ui-media-band) / 2 - var(--ui-media-dot-size) / 2);

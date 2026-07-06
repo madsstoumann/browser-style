@@ -37,7 +37,12 @@
 
 	<script type="module" src="index.js"></script>
 	<script type="module">
-		import { renderCard, loadPresets } from './render.js';
+		import { renderCard as renderCardHtml, loadPresets } from './render.js';
+
+		/* render.js returns an HTML string (SSR engine — all data escaped at
+		   interpolation); parse it into a fragment for the DOM append sites below */
+		const frag = (html) => document.createRange().createContextualFragment(html);
+		const renderCard = (...args) => frag(renderCardHtml(...args));
 
 		const presets = {
 			...(await loadPresets('data/card.presets.json')),

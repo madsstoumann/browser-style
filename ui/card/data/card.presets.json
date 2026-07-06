@@ -94,9 +94,10 @@
     },
     "prose": {
       "name": "Prose Preset",
-      "description": "Bare <ui-content> column, no card chrome — standalone text sections directly in a layout",
+      "description": "Bare <ui-content> column, no card chrome — standalone text sections and full article views. text: body — the long-form body renders instead of the teaser summary (summary as fallback when no body exists).",
       "element": "ui-content",
-      "content": "scl(md)"
+      "content": "scl(md)",
+      "text": "body"
     },
     "carousel": {
       "name": "Carousel Preset",

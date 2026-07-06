@@ -109,7 +109,7 @@ export function initHover(nodes) {
  * ============================================================ */
 
 // snap children = the slides: every direct child EXCEPT the overlay furniture.
-const NOT_SLIDE = /^(UI-CHIP|UI-PLAY|UI-SAVE|UI-STICKER)$/;
+const NOT_SLIDE = /^(UI-CHIP|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS)$/;
 const slidesOf = (el) => [...el.children].filter(c => !NOT_SLIDE.test(c.tagName));
 
 const axisYOf = (scroller) => {

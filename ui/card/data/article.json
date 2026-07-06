@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-04T12:00:00Z",
-    "updatedAt": "2026-07-05T09:00:00Z",
+    "updatedAt": "2026-07-06T09:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Editorial"
@@ -16,7 +16,7 @@
       "$ref": "card-preset/stack"
     },
     "eyebrow": "Science",
-    "headline": "Quantum computing reaches a practical milestone",
+    "headline": "Quantum computing reaches a <b>practical milestone</b>",
     "summary": "Researchers demonstrate error-corrected logical qubits running a chemistry simulation faster than any classical supercomputer.",
     "published": "2026-06-20T14:30:00Z",
     "modified": "2026-06-21T09:00:00Z",
@@ -40,6 +40,11 @@
       "likeCount": 892,
       "shareCount": 245,
       "commentCount": 45
+    },
+    "body": {
+      "$richtext": true,
+      "content": "For decades, quantum computers have promised more than they delivered — laboratory curiosities whose fragile qubits collapsed under the slightest disturbance. That era may have just ended.\n\nA research consortium announced today that an array of 48 error-corrected logical qubits completed a full simulation of a nitrogenase co-factor — the enzyme behind natural nitrogen fixation — in eleven hours. The best classical supercomputer estimate for the same calculation: fourteen years.\n\nThe breakthrough rests on a new surface-code implementation that trades physical qubit count for stability, holding logical error rates below one in ten million operations. “We stopped fighting decoherence and started budgeting for it,” said lead author Jane Smith.\n\nThe implications reach far beyond chemistry. Cryptographers are re-reading their migration timelines, materials scientists are queuing simulation proposals, and at least three pharmaceutical companies have already booked time on the machine.\n\nCommercial access begins next quarter — at a price the consortium describes, with admirable honesty, as “dissuasive.”",
+      "format": "text"
     }
   }
 }

@@ -13,6 +13,7 @@
 	<link rel="stylesheet" href="../icon/index.css">
 	<link rel="stylesheet" href="../reveal/ui-reveal.css">
 	<link rel="stylesheet" href="../accordion/ui-accordion.css">
+	<link rel="stylesheet" href="../blockquote/ui-blockquote.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
 		.grid {
@@ -35,7 +36,12 @@
 	<main></main>
 
 	<script type="module">
-		import { renderCard, loadPresets, SCHEMA_TYPES } from './render.js';
+		import { renderCard as renderCardHtml, loadPresets, SCHEMA_TYPES } from './render.js';
+
+		/* render.js returns an HTML string (SSR engine — all data escaped at
+		   interpolation); parse it into a fragment for the DOM append sites below */
+		const frag = (html) => document.createRange().createContextualFragment(html);
+		const renderCard = (...args) => frag(renderCardHtml(...args));
 
 		const main = document.querySelector('main');
 		const presets = await loadPresets('data/card.presets.json');

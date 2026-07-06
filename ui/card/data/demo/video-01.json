@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-05T10:00:00Z",
-    "updatedAt": "2026-07-05T10:00:00Z",
+    "updatedAt": "2026-07-06T09:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Demo"
@@ -21,7 +21,9 @@
         "mediaType": "video",
         "src": "/assets/video/city.mp4",
         "poster": "/assets/images/city.png",
-        "alt": "Timelapse of a city at dusk"
+        "alt": "Timelapse of a city at dusk",
+        "uploadDate": "2026-05-01T10:00:00Z",
+        "duration": "PT2M10S"
       }
     ],
     "chip": {

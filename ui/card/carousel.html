@@ -51,14 +51,14 @@
 </head>
 <body>
 	<h1>UI: Media — Carousel</h1>
-	<p class="note">The CSS-only <code>&lt;ui-media&gt;</code> carousel — a flex scroll-snap row with native <code>::scroll-marker</code> dots and <code>::scroll-button()</code> arrows, no JavaScript. Driven by the <code>media=</code> token string: <code>nav()</code> controls, <code>arw()</code> glyph/placement/size/bare, <code>dot()</code> pills, and <code>nav(blw)</code> control bands. Chromium-only; elsewhere it degrades to a plain swipe scroller.</p>
+	<p class="note">The CSS-only <code>&lt;ui-media&gt;</code> carousel — a flex scroll-snap row with native <code>::scroll-marker</code> dots and <code>::scroll-button()</code> arrows, no JavaScript. Driven by the <code>media=</code> token string: <code>nav()</code> controls, <code>arw()</code> glyph/placement/size/bare, <code>dot()</code> pills, and <code>nav(blw)</code> control bands. Native in Chromium; elsewhere <code>/polyfill/carousel.js</code> (conditionally loaded) provides the same controls — with JS off it degrades to a plain swipe scroller.</p>
 	<p class="note">See also: <a href="media.html">media.html</a> (the <code>&lt;ui-media&gt;</code> frame) · <a href="index.html">index.html</a> (the full engine) · <a href="content.html">content.html</a> (the <code>&lt;ui-content&gt;</code> side) · <a href="media.md">media.md</a> (token reference).</p>
 
 	<!-- ============================================================
 	     Carousel — default
 	     ============================================================ -->
 	<h2>Carousel — <code>media="nav"</code></h2>
-	<p class="note">Add the <code>nav</code> token to put <strong>multiple sources</strong> in a scroll-snap row. By default it shows CSS-only navigation — dots (<code>::scroll-marker</code>) and prev/next arrows (<code>::scroll-button()</code>) — with no extra markup and no JS. Chromium-only for now; elsewhere it degrades to a plain swipe scroller.</p>
+	<p class="note">Add the <code>nav</code> token to put <strong>multiple sources</strong> in a scroll-snap row. By default it shows CSS-only navigation — dots (<code>::scroll-marker</code>) and prev/next arrows (<code>::scroll-button()</code>) — with no extra markup and no JS. Native in Chromium; elsewhere the carousel polyfill supplies the same controls (JS off → plain swipe scroller).</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav" content="scl(lg)">
 			<cq-box>
@@ -977,5 +977,11 @@
 
 	<!-- cursor-tracked hover + loop/auto carousels (progressive enhancement) -->
 	<script type="module" src="index.js"></script>
+	<!-- Safari: no ::scroll-marker/::scroll-button yet — load the real-element
+	     polyfill only where the native gate fails. `?polyfill` forces it (dev). -->
+	<script type="module">
+		if (!CSS.supports('scroll-marker-group: after') || location.search.includes('polyfill'))
+			import('/polyfill/carousel.js');
+	</script>
 </body>
 </html>

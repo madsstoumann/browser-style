@@ -5,8 +5,8 @@
   "description": "A universal, schema.org-driven card. One structured envelope (headline, summary, media, authors, actions, engagement…) shared by every card, a `schemaType` discriminator covering 25 schema.org types, and a single `details` object for type-specific data. Presentation (variant/media/content tokens for <ui-card>/<ui-reveal>) deliberately lives OUTSIDE this model — in a referenced card-preset — so the same card can render as hero, grid item, overlay or flip by swapping one reference.",
   "metadata": {
     "localized": true,
-    "version": "1.1.0",
-    "lastModified": "2026-07-05",
+    "version": "1.2.0",
+    "lastModified": "2026-07-06",
     "displayField": "internalName"
   },
   "structure": {
@@ -118,11 +118,16 @@
       "description": "Category / kicker shown above the headline. Emitted as articleSection, category, recipeCategory or about depending on schemaType."
     },
     "headline": {
-      "type": "string",
+      "type": "richtext",
       "title": "Headline",
-      "description": "Primary headline. Emitted as headline (article/news), title (job) or name (all other types).",
+      "description": "Primary headline. Emitted as headline (article/news), title (job) or name (all other types). Short rich text: inline <b> segments render as gradient text (--ui-content-headline-gradient); all other markup is stripped/escaped. Keep ≤256 chars — if the CMS cannot constrain rich text length, fall back to a plain rich text field. Plain strings remain valid.",
       "validation": {
-        "required": true
+        "required": true,
+        "maxLength": 256
+      },
+      "options": {
+        "allowImages": false,
+        "allowEmbeds": false
       }
     },
     "subheadline": {
@@ -201,6 +206,21 @@
             "type": "string",
             "title": "Caption",
             "description": "Optional visible caption (data-part=\"caption\")"
+          },
+          "uploadDate": {
+            "type": "datetime",
+            "title": "Upload Date",
+            "description": "Video only → VideoObject uploadDate"
+          },
+          "duration": {
+            "type": "string",
+            "title": "Duration",
+            "description": "Video only, ISO 8601 (e.g. PT2M10S) → VideoObject duration"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "description": "Video only → VideoObject description"
           }
         }
       }

@@ -215,3 +215,31 @@
 		:where([content~="lg:pad(2xl)"])  :is(cq-box, summary) { --ui-content-p: var(--spacing-2xl); }
 	}
 }
+
+/* ============================================================
+   CROSS-DOCUMENT VIEW TRANSITIONS — outside @layer (@view-transition
+   is a top-level at-rule).
+
+   Add a data-view attribute to any card (and optionally its media <img>)
+   plus a matching one on the target page's container, link the two pages
+   with a regular <a> (see data-part="cover" in content.css), and the card
+   morphs across the navigation — both directions. Names come from the
+   attribute via CSS attr() (CSS Values 5, Chromium 133+) — no inline
+   styles, strict-CSP friendly. Where unsupported, the name resolves to
+   `none` and navigation degrades to a plain swap.
+
+   Both documents must be same-origin, and the incoming page's named
+   elements must exist at first render — server-render or pre-build them
+   (see ui/card/articles/build.js); client-fetched content loses the
+   capture race and falls back to a crossfade.
+   ============================================================ */
+@view-transition { navigation: auto; }
+
+[data-view] { view-transition-name: attr(data-view type(<custom-ident>), none); }
+
+@media (prefers-reduced-motion: no-preference) {
+	::view-transition-group(*) {
+		animation-duration: var(--ui-card-vt-duration, 0.4s);
+		animation-timing-function: var(--ui-card-vt-easing, cubic-bezier(0.4, 0, 0.2, 1));
+	}
+}

@@ -197,6 +197,34 @@
 		gap: var(--ui-content-footer-gap, var(--spacing-sm));
 	}
 
+	/* cover — a link that covers the whole card (the classic stretched-link).
+	   Lives inside the headline (no nested anchors); its ::after stretches over
+	   the card. Other links (tags, actions) stay clickable above via z-index. */
+	:where(ui-card):has([data-part~="cover"]) { position: relative; }
+	:where(ui-content) [data-part~="cover"] {
+		color: inherit;
+		text-decoration: none;
+	}
+	:where(ui-content) [data-part~="cover"]::after {
+		content: '';
+		inset: 0;
+		position: absolute;
+		z-index: 1;
+	}
+	:where(ui-card):has([data-part~="cover"]) :is([data-part="tags"], [data-part="actions"]) a {
+		position: relative;
+		z-index: 2;
+	}
+
+	/* gradient highlight — <b> inside a headline. Authored in the CMS as a short
+	   rich headline (≤256 chars); the renderer only lets <b> through. */
+	:where(ui-content) :is([data-part="headline"], h2, h3, h4, h5, h6) b {
+		background: var(--ui-content-headline-gradient, linear-gradient(90deg, var(--color-accent), #c026d3));
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+
 	/* ============================================================
 	   PROPOSED PARTS — spec'd in schema.html, not yet styled.
 	   Each renders with default typography until implemented here.
@@ -232,8 +260,11 @@
 	   Used by: timeline. */
 	/* :where(ui-content) [data-part="timeline"] { } */
 
-	/* quote — <blockquote> + <cite> pull-quote.
-	   Used by: quote, review, social. */
+	/* quote — <blockquote data-part="quote" data-variant> + <q>/<cite>.
+	   Composed with @browser.style/blockquote: data-variant (bigquote/breaker/code)
+	   carries the visual style from ui-blockquote.css — this hook is for
+	   card-scoped overrides only. Used by: quote (bigquote), review (default),
+	   social (plain, no data-variant). */
 	/* :where(ui-content) [data-part="quote"] { } */
 
 	/* options — <ul> of <li> with <label> + <progress> result bars.

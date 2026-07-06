@@ -40,7 +40,12 @@
 	<main></main>
 
 	<script type="module">
-		import { renderCard, loadPresets } from './render.js';
+		import { renderCard as renderCardHtml, loadPresets } from './render.js';
+
+		/* render.js returns an HTML string (SSR engine — all data escaped at
+		   interpolation); parse it into a fragment for the DOM append sites below */
+		const frag = (html) => document.createRange().createContextualFragment(html);
+		const renderCard = (...args) => frag(renderCardHtml(...args));
 
 		const main = document.querySelector('main');
 		const [base, demo] = await Promise.all([
@@ -97,8 +102,8 @@
 			return div;
 		};
 
-		const render = (name) => renderCard(docs[name], presets, cards);
-		const renderAs = (name, preset) => renderCard(withPreset(docs[name], preset), presets, cards);
+		const render = (name) => renderCard(docs[name], presets, cards).firstElementChild;
+		const renderAs = (name, preset) => renderCard(withPreset(docs[name], preset), presets, cards).firstElementChild;
 
 		/* ── New releases — plain <ui-card> baseline: same UCF, static preset ── */
 		section(

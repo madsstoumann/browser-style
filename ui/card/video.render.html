@@ -31,8 +31,13 @@
 
 	<script type="module" src="index.js"></script>
 	<script type="module">
-		import { renderCard, loadPresets } from './render.js';
+		import { renderCard as renderCardHtml, loadPresets } from './render.js';
 		import { scan } from './index.js';
+
+		/* render.js returns an HTML string (SSR engine — all data escaped at
+		   interpolation); parse it into a fragment for the DOM append sites below */
+		const frag = (html) => document.createRange().createContextualFragment(html);
+		const renderCard = (...args) => frag(renderCardHtml(...args));
 
 		const main = document.querySelector('main');
 
@@ -100,9 +105,9 @@
 		);
 
 		/* ── Featured film + Autumn splits ── */
-		const featured = renderCard(docs['video-08'], presets);
+		const featured = renderCard(docs['video-08'], presets).firstElementChild;
 		featured.classList.add('split');
-		const autumn = renderCard(docs['video-09'], presets);
+		const autumn = renderCard(docs['video-09'], presets).firstElementChild;
 		autumn.classList.add('split');
 		main.append(
 			heading(['Featured films — split cards']),

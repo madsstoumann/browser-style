@@ -4,7 +4,7 @@
   "model": "card",
   "meta": {
     "createdAt": "2026-07-05T09:00:00Z",
-    "updatedAt": "2026-07-05T09:00:00Z",
+    "updatedAt": "2026-07-06T09:00:00Z",
     "locale": "en-US",
     "status": "published",
     "folder": "Cards/Blocks"
@@ -16,10 +16,16 @@
       "$ref": "card-preset/prose"
     },
     "eyebrow": "About",
-    "headline": "Content without a card",
+    "headline": "Content <b>without a card</b>",
     "summary": "The same envelope, rendered as a bare <ui-content> column — no surface, no radius, no shadow. For text sections that live directly in a layout, between full cards.",
     "actions": [
-      { "link": { "url": "#", "text": "Learn more" }, "style": "ghost" }
+      {
+        "link": {
+          "url": "#",
+          "text": "Learn more"
+        },
+        "style": "ghost"
+      }
     ]
   }
 }
