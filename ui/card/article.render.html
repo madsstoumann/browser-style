@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../icon/index.css">
 	<link rel="stylesheet" href="../blockquote/ui-blockquote.css">
+	<link rel="stylesheet" href="../gradient-text/ui-gradient-text.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<!-- Block first paint (and the incoming snapshot on Back) until the card
 	     grid is parsed, so every card/hero morph target exists when the browser
@@ -41,23 +42,60 @@
 	<main>
 		<div class="grid grid-2" id="cards">
 			<ui-card data-view="card-article-1" variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Article">
-		<cq-box>
-			<ui-media><img data-view="hero-article-1" src="/assets/images/quantum.png" alt="Stylised quantum processor" loading="lazy" itemprop="image"></ui-media>
-			<ui-content><small data-part="eyebrow" itemprop="articleSection">Science</small><h3 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/article.html">Quantum computing reaches a <b>practical milestone</b></a></h3><p data-part="summary" itemprop="description">Researchers demonstrate error-corrected logical qubits running a chemistry simulation faster than any classical supercomputer.</p><meta itemprop="datePublished" content="2026-06-20T14:30:00Z"><meta itemprop="dateModified" content="2026-06-21T09:00:00Z"><address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
-		<img src="/assets/images/janesmith.png" alt="">
-		<span><span itemprop="name">Jane Smith</span> · <span itemprop="jobTitle">Science Editor</span></span>
-	</address><p data-part="meta"><time datetime="2026-06-20T14:30:00Z">Jun 20, 2026</time> · 5 min read</p><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/LikeAction"><meta itemprop="userInteractionCount" content="892"></div><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/ShareAction"><meta itemprop="userInteractionCount" content="245"></div><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/CommentAction"><meta itemprop="userInteractionCount" content="45"></div><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/WatchAction"><meta itemprop="userInteractionCount" content="15420"></div><footer data-part="footer">15,420 views · 892 likes · 245 shares · 45 comments</footer></ui-content>
-		</cq-box>
-	</ui-card>
-			<ui-card data-view="card-news-1" variant="row spl(1/2)" media="asr(4/3) chip(ts) chip(red)" itemscope itemtype="https://schema.org/NewsArticle">
-		<cq-box>
-			<ui-media><img data-view="hero-news-1" src="/assets/images/government.png" alt="Parliament building at dusk" loading="lazy" itemprop="image"><ui-chip>Breaking</ui-chip></ui-media>
-			<ui-content><small data-part="eyebrow" itemprop="articleSection">Politics</small><h3 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/news.html">Coalition agrees on sweeping climate package</a></h3><p data-part="summary" itemprop="description">The agreement includes a carbon border tariff and a national retrofit programme, ending months of negotiation.</p><meta itemprop="datePublished" content="2026-07-01T06:15:00Z"><meta itemprop="dateModified" content="2026-07-01T08:40:00Z"><address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
-		
-		<span><span itemprop="name">Staff Writer</span> · <span itemprop="jobTitle">Newsroom</span></span>
-	</address><p data-part="meta"><time datetime="2026-07-01T06:15:00Z">Jul 1, 2026</time> · 3 min read</p></ui-content>
-		</cq-box>
-	</ui-card>
+				<cq-box>
+					<ui-media><img data-view="hero-article-1" src="/assets/images/quantum.png" alt="Stylised quantum processor"
+							loading="lazy" itemprop="image"></ui-media>
+					<ui-content><small data-part="eyebrow" itemprop="articleSection">Science</small>
+						<h3 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/article.html">Quantum
+								computing reaches a <ui-gradient-text>practical milestone</ui-gradient-text></a></h3>
+						<p data-part="summary" itemprop="description">Researchers demonstrate error-corrected logical qubits running a
+							chemistry simulation faster than any classical supercomputer.</p>
+						<meta itemprop="datePublished" content="2026-06-20T14:30:00Z">
+						<meta itemprop="dateModified" content="2026-06-21T09:00:00Z">
+						<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+							<img src="/assets/images/janesmith.png" alt="">
+							<span><span itemprop="name">Jane Smith</span> · <span itemprop="jobTitle">Science Editor</span></span>
+						</address>
+						<p data-part="meta"><time datetime="2026-06-20T14:30:00Z">Jun 20, 2026</time> · 5 min read</p>
+						<div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden>
+							<meta itemprop="interactionType" content="https://schema.org/LikeAction">
+							<meta itemprop="userInteractionCount" content="892">
+						</div>
+						<div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden>
+							<meta itemprop="interactionType" content="https://schema.org/ShareAction">
+							<meta itemprop="userInteractionCount" content="245">
+						</div>
+						<div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden>
+							<meta itemprop="interactionType" content="https://schema.org/CommentAction">
+							<meta itemprop="userInteractionCount" content="45">
+						</div>
+						<div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden>
+							<meta itemprop="interactionType" content="https://schema.org/WatchAction">
+							<meta itemprop="userInteractionCount" content="15420">
+						</div>
+						<footer data-part="footer">15,420 views · 892 likes · 245 shares · 45 comments</footer>
+					</ui-content>
+				</cq-box>
+			</ui-card>
+			<ui-card data-view="card-news-1" media="asr(4/3) chip(ts) chip(red)" itemscope
+				itemtype="https://schema.org/NewsArticle">
+				<cq-box>
+					<ui-media><img data-view="hero-news-1" src="/assets/images/government.png" alt="Parliament building at dusk"
+							loading="lazy" itemprop="image"><ui-chip>Breaking</ui-chip></ui-media>
+					<ui-content><small data-part="eyebrow" itemprop="articleSection">Politics</small>
+						<h3 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/news.html">Coalition agrees
+								on <ui-gradient-text>sweeping climate</ui-gradient-text> package</a></h3>
+						<p data-part="summary" itemprop="description">The agreement includes a carbon border tariff and a national
+							retrofit programme, ending months of negotiation.</p>
+						<meta itemprop="datePublished" content="2026-07-01T06:15:00Z">
+						<meta itemprop="dateModified" content="2026-07-01T08:40:00Z">
+						<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+							<span><span itemprop="name">Staff Writer</span> · <span itemprop="jobTitle">Newsroom</span></span>
+						</address>
+						<p data-part="meta"><time datetime="2026-07-01T06:15:00Z">Jul 1, 2026</time> · 3 min read</p>
+					</ui-content>
+				</cq-box>
+			</ui-card>
 		</div>
 	</main>
 </body>

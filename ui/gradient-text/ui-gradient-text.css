@@ -1,4 +1,4 @@
-@layer bs-component {
+/* @layer bs-component {
 	:where(.ui-gradient-text) {
 		background: linear-gradient(
 			var(--ui-gradient-dir, 90deg),
@@ -15,5 +15,38 @@
 	}
 	@keyframes move-bg {
 		to { background-position: var(--ui-gradient-bgsz-x, 250%) 0;}
+	}
+} */
+
+
+@layer bs-component {
+	:where(ui-gradient-text) {
+		--_anim: none;
+		--_dir: attr(dir type(*), 90deg);
+		--_dur: attr(duration type(<time>), 5s);
+		--_gradient: attr(gradient type(*), var(--GradientText, #0077ff, #00e7df, #0077ff));
+		--_size: attr(size type(<length-percentage>), 150%);
+
+		animation: var(--_anim) var(--_dur) infinite alternate linear;
+		background: linear-gradient(var(--_dir), var(--_gradient)) 0 0 / var(--_size) 100%;
+		background-clip: text;
+		color: #0000;
+
+		/* -- Animation Types -- */
+		/* 1. Slide: The classic horizontal pan */
+		&[animate="slide"], &[animate=""] {
+			--_anim: ui-slide-bg;
+		}
+		/* 2. Breathe: Expands and contracts the background size */
+		&[animate="breathe"] {
+			--_anim: ui-breathe-bg;
+			animation-timing-function: ease-in-out;
+		}
+	}
+
+	@keyframes ui-slide-bg { to { background-position: calc(2 * var(--_size)) 0; } }
+	@keyframes ui-breathe-bg {
+		0% { background-size: 100% 100%; }
+		100% { background-size: var(--_size) 100%; }
 	}
 }

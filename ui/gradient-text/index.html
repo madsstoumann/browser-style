@@ -25,27 +25,31 @@
 
 	<h2>Gradient Text</h2>
 	<p>
-		<strong>Gradient Text</strong> is a text element with a gradient color effect.<br>
-		To create a custom gradient, update the custom properties <code>--ui-gradient</code>, <code>--ui-gradient-bgsz-x</code> and <code>--ui-gradient-dir</code>.
+		<strong>Gradient Text</strong> is a custom element with a gradient color effect.<br>
+		To create a custom gradient, update the custom attributes <code>gradient</code>, <code>size</code> and <code>animate</code>.
 	</p>
 
-	<h3 class="h0 ui-gradient-text">The quick brown fox</h3>
+	<h3 class="h0">
+		Add <ui-gradient-text>gradient text</ui-gradient-text> anywhere
+	</h3>
 
-	<p>With <code>--blue-green</code> modifier:</p>
-	<h3 class="h0 ui-gradient-text --blue-green">The quick brown fox</h3>
+	<h3 class="h0">
+		<ui-gradient-text gradient="#7f00de, #ff007e, #7f00de" size="150%">
+			Jumps over the lazy dog
+		</ui-gradient-text>
+	</h3>
 
-	<p>With <code>--violet-pink</code> modifier:</p>
-	<h3 class="h0 ui-gradient-text --violet-pink">The quick brown fox</h3>
+	<h3 class="h0">
+		<ui-gradient-text animate="breathe" gradient="#ff1834, #ffc900, #ff1834" size="250%">
+			Sunset Gradient
+		</ui-gradient-text>
+	</h3>
 
-	<p>With <code>--red-orange</code> modifier:</p>
-	<h3 class="h0 ui-gradient-text --red-orange">The quick brown fox</h3>
+	<h3 class="h0">
+		<ui-gradient-text animate="slide" gradient="#ff3e41, #ff8a43, #ffeb7f, #00c9a7, #007ea7, #ff3e41" size="120%">
+			Rainbow Gradient
+		</ui-gradient-text>
+	</h3>
 
-	<p>With <code>--rainbow</code> modifier:</p>
-	<h3 class="h0 ui-gradient-text --rainbow">The quick brown fox</h3>
-
-	<p>With <code>--animate</code> modifier:</p>
-	<h3 class="h0 ui-gradient-text --blue-green --animate">The quick brown fox</h3>
-	<h3 class="h0 ui-gradient-text --violet-pink --animate">The quick brown fox</h3>
-	<h3 class="h0 ui-gradient-text --red-orange --animate">The quick brown fox</h3>
 </body>
 </html>
