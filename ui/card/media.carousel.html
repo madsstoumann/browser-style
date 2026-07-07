@@ -119,7 +119,7 @@
 	     Carousel theming
 	     ============================================================ -->
 	<h2>Carousel theming</h2>
-	<p class="note">Dots and arrows are token-driven. Recolour dots with <code>--ui-media-dot-*</code>. Each arrow is a circular button — colour the circle with <code>--ui-media-arrow-bg</code> (default semi-transparent black) and size it with <code>--ui-media-arrow-size</code>. The chevron is white by default (for the dark circle); for a light circle switch the glyph to dark with <code>arw(drk)</code>. Square off the circle with <code>--ui-media-arrow-radius</code>.</p>
+	<p class="note">Dots and arrows are token-driven. Recolour dots with <code>--ui-media-dot-*</code>. Each arrow is a circular button — colour the circle with <code>--ui-media-arrow-bg</code> (default a frosted semi-transparent white, Instagram-style, with a soft <code>--ui-media-arrow-shadow</code>) and size it with <code>--ui-media-arrow-size</code>. The chevron is dark by default (for the light circle); for a dark or accent circle switch the glyph to white with <code>arw(lgt)</code>. Square off the circle with <code>--ui-media-arrow-radius</code>.</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav" content="scl(sm)"
 			style="--ui-media-dot-bg: rgb(0 0 0 / 0.25); --ui-media-dot-active: var(--color-accent); --ui-media-dot-size: 0.8rem;">
@@ -128,7 +128,7 @@
 				<ui-content><small data-part="eyebrow">themed dots</small><h2 data-part="headline">Bigger accent dots</h2></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) nav" content="scl(sm)"
+		<ui-card variant="col" media="asr(4/3) nav arw(lgt)" content="scl(sm)"
 			style="--ui-media-arrow-bg: var(--color-accent); --ui-media-arrow-bg-hover: var(--color-accent-dark, var(--color-accent)); --ui-media-dot-active: var(--color-accent);">
 			<cq-box>
 				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>

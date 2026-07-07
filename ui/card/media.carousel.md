@@ -44,10 +44,10 @@ scroller; the rest layer on top. `asr()` etc. belong to the base frame — see m
 | `arw(bare)` | `arrow="bare"` | CSS | Drop the circle — glyph painted as a recolourable shape (`--ui-media-arrow-color`) |
 | `arw(bot)`  | `arrow="bot"` | CSS | Edge arrows at the bottom |
 | `arw(chv)`  | `arrow="chv"` | CSS | Chevron glyph (**default**) |
-| `arw(drk)`  | `arrow="drk"` | CSS | Dark/black glyph ink (default is white) |
+| `arw(drk)`  | `arrow="drk"` | CSS | Dark/black glyph ink (**default**, for the frosted light circle) |
 | `arw(hid)`  | `arrow="hid"` | CSS | Auto-hide the dead-end arrow (default dims it) |
 | `arw(lg)`   | `arrow="lg"` | CSS | Arrow size 2.75rem |
-| `arw(lgt)`  | `arrow="lgt"` | CSS | Light/white glyph ink (**default**) |
+| `arw(lgt)`  | `arrow="lgt"` | CSS | Light/white glyph ink (for a dark / accent circle) |
 | `arw(md)`   | `arrow="md"` | CSS | Arrow size 2.25rem (**default**) |
 | `arw(mid)`  | `arrow="mid"` | CSS | Edge arrows vertically centered (**default**) |
 | `arw(set)`  | `arrow="set"` | CSS | Both arrows as an adjacent pair at the end |
@@ -218,13 +218,14 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
 
 ## Arrows
 
-- A circular `::scroll-button` = themeable circle (`--ui-media-arrow-bg`) + a glyph,
-  a clean bordered button (`--ui-media-arrow-border`, no backdrop-filter/shadow).
+- A circular `::scroll-button` = themeable circle (`--ui-media-arrow-bg`) + a glyph.
+  Default is Instagram-style: a frosted semi-transparent-white circle (`rgb(255 255 255 / 0.7)`),
+  dark glyph, no border, a soft `--ui-media-arrow-shadow`.
 - **One base glyph, rotated.** A single RIGHT-pointing SVG (chevron or full arrow, in
   light/dark) is rotated per direction via `--_arw-rot` (left 180°, up −90°, down 90°) —
   no prev/next/up/down SVG duplication.
 - **Shape × shade** (independent, composed): shape = chevron (default, `arw(chv)`) · `arw(arr)`;
-  ink = light/white (default, `arw(lgt)`, for a dark circle) · `arw(drk)` (for a light circle) ·
+  ink = dark (default, `arw(drk)`, for the frosted light circle) · `arw(lgt)` (white, for a dark / accent circle) ·
   `arw(sub)` (subtle low-contrast). A direct `--ui-media-arrow-glyph` override wins.
 - Sizes `arw(sm|md|lg|xl)` set `--ui-media-arrow-size` (`md` = 2.25rem default).
 - **Placement** `arw(mid|top|bot)` set `--ui-media-arrow-top` (mid = `anchor(center)` default).

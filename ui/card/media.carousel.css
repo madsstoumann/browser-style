@@ -12,9 +12,11 @@
 		--ui-media-overlay-gap: 0.75rem;
 		--ui-media-arrow-size: 2.25rem;
 		--ui-media-arrow-gap: 0.5rem;
-		--ui-media-arrow-bg: rgb(0 0 0 / 0.45);
-		--ui-media-arrow-bg-hover: rgb(0 0 0 / 0.7);
-		--ui-media-arrow-color: #fff;
+		--ui-media-arrow-bg: rgb(255 255 255 / 0.7);                       /* frosted light circle (Instagram) — picks up image tint */
+		--ui-media-arrow-bg-hover: rgb(255 255 255 / 0.9);
+		--ui-media-arrow-color: #fff;                                     /* arw(bare) glyph ink (circle ignores this) */
+		--ui-media-arrow-border: 0;                                        /* no ring on the light circle */
+		--ui-media-arrow-shadow: 0 1px 3px rgb(0 0 0 / 0.15);              /* soft lift, keeps the circle legible over any photo */
 		--ui-media-arrow-nudge: calc(var(--ui-media-arrow-size) * 0.03);   /* optical: shift chevron toward the tip */
 		--ui-media-band: 2.75rem;
 		--ui-media-below-gap: var(--spacing-sm, 0.5rem);
@@ -242,13 +244,16 @@
 		--ui-media-chevron-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
 		--ui-media-arrow-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
 		--ui-media-arrow-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
-		--ui-media-arrow-glyph: var(--ui-media-chevron-light);
+		--ui-media-arrow-glyph: var(--ui-media-chevron-dark);
 	}
 	/* glyph shape (chv default) × ink (lgt default · drk · sub) */
 	/* full arrow has a shaft (mass nearer centre), so it needs a smaller optical nudge than the chevron */
-	:where([media*="arw(arr)"]), ui-media[arrow~="arr"] { --ui-media-arrow-glyph: var(--ui-media-arrow-light); --ui-media-arrow-nudge: calc(var(--ui-media-arrow-size) * 0.015); }
+	:where([media*="arw(arr)"]), ui-media[arrow~="arr"] { --ui-media-arrow-glyph: var(--ui-media-arrow-dark); --ui-media-arrow-nudge: calc(var(--ui-media-arrow-size) * 0.015); }
 	:where([media*="arw(drk)"]), ui-media[arrow~="drk"] { --ui-media-arrow-glyph: var(--ui-media-chevron-dark); }
 	:where([media*="arw(arr)"][media*="arw(drk)"]), ui-media[arrow~="arr"][arrow~="drk"] { --ui-media-arrow-glyph: var(--ui-media-arrow-dark); }
+	/* arw(lgt) — white glyph, for a dark / accent circle (inverse of the light default) */
+	:where([media*="arw(lgt)"]), ui-media[arrow~="lgt"] { --ui-media-arrow-glyph: var(--ui-media-chevron-light); }
+	:where([media*="arw(arr)"][media*="arw(lgt)"]), ui-media[arrow~="arr"][arrow~="lgt"] { --ui-media-arrow-glyph: var(--ui-media-arrow-light); }
 	:where([media*="arw(sub)"]), ui-media[arrow~="sub"] { --ui-media-arrow-color: var(--color-text-subtle, rgb(0 0 0 / 0.45)); --ui-media-arrow-bg: rgb(0 0 0 / 0.25); }
 	/* arrow size */
 	:where([media*="arw(sm)"]), ui-media[arrow~="sm"] { --ui-media-arrow-size: 1.75rem; }
@@ -392,8 +397,9 @@
 			&::scroll-button(*) {
 				aspect-ratio: 1;
 				background: var(--ui-media-arrow-glyph) calc(50% + var(--ui-media-arrow-nudge)) center / var(--ui-media-arrow-glyph-size, 75%) no-repeat var(--ui-media-arrow-bg);
-				border: var(--ui-media-arrow-border, 1px solid rgb(255 255 255 / 0.6));
+				border: var(--ui-media-arrow-border, 0);
 				border-radius: var(--ui-media-arrow-radius, var(--radius-circle, 50%));
+				box-shadow: var(--ui-media-arrow-shadow, none);
 				content: "" / "";
 				cursor: pointer;
 				inline-size: var(--ui-media-arrow-size);
@@ -454,6 +460,7 @@
 				background-color: var(--ui-media-arrow-color);
 				background-image: none;
 				border: 0;
+				box-shadow: none;
 				mask: var(--ui-media-arrow-glyph) calc(50% + var(--ui-media-arrow-nudge)) center / var(--ui-media-arrow-glyph-size, 80%) no-repeat;
 			}
 			&::scroll-button(*):hover { background-color: var(--ui-media-arrow-color-hover, var(--ui-media-arrow-color)); }

@@ -11,6 +11,8 @@
 	<link rel="stylesheet" href="../play/ui-play.css">
 	<link rel="stylesheet" href="../icon/index.css">
 	<link rel="stylesheet" href="ui-card.css">
+	<link rel="stylesheet" href="media.shapes.css">
+	<link rel="stylesheet" href="media.tint.css">
 	<style>
 		/* body { max-inline-size: 75rem; margin-inline: auto; padding-inline: var(--spacing-md); } */
 		.grid { display: grid; gap: var(--spacing-lg); grid-template-columns: 1fr; margin-block-end: var(--spacing-2xl); }
@@ -332,6 +334,28 @@
 			<iframe loading="lazy" src="https://player.vimeo.com/video/789027225" allow="fullscreen; picture-in-picture; encrypted-media" title="Vimeo player"></iframe>
 			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>vimeo iframe</ui-chip>
+		</ui-media>
+	</div>
+
+	<h2>Native video + <code>&lt;ui-media&gt;</code> effects</h2>
+	<p class="note">The frame treatments apply to a native <code>&lt;video&gt;</code> just like an image — <code>tnt()</code> tint, <code>shp()</code> shape/morph, <code>hov()</code> effects and furniture all clip/blend/overlay the video. Videos autoplay muted; hover the shape/blur/tint tiles.</p>
+	<div class="grid grid-2">
+		<ui-media media="asr(16/9) rds(lg) tnt(red) hov(tint) chip(bs)">
+			<video src="/assets/video/city.mp4" poster="/assets/images/city.png" autoplay muted loop playsinline></video>
+			<ui-chip>tnt(red) hov(tint)</ui-chip>
+		</ui-media>
+		<ui-media media="asr(16/9) shp(blinds-v) hov(shape) chip(bs) rds(lg)">
+			<video src="/assets/video/city.mp4" poster="/assets/images/city.png" autoplay muted loop playsinline></video>
+			<ui-chip>shp(blinds-v) hov(shape)</ui-chip>
+		</ui-media>
+		<ui-media media="asr(16/9) rds(lg) hov(blur) chip(bs)">
+			<video src="/assets/video/city.mp4" poster="/assets/images/city.png" autoplay muted loop playsinline></video>
+			<ui-chip>hov(blur)</ui-chip>
+		</ui-media>
+		<ui-media media="asr(16/9) rds(lg) sticker(te) sticker(red) chip(bs)">
+			<video src="https://assets.stoumann.dk/video/river.mp4" poster="/assets/images/river.png" autoplay muted loop playsinline></video>
+			<ui-sticker><small>NEW</small><strong>4K</strong></ui-sticker>
+			<ui-chip>sticker(red)</ui-chip>
 		</ui-media>
 	</div>
 
