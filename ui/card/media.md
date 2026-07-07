@@ -288,7 +288,7 @@ The `nav()` token **is the trigger** — there is no separate `crs` flag. Any `n
 
 Controls use native `::scroll-marker` (dots) and `::scroll-button(left|right)` (arrows), `@supports`-gated and anchor-positioned to each scroller — they **degrade to a bare swipeable scroller** where unsupported. Smooth scroll is enabled under `prefers-reduced-motion: no-preference`.
 
-The full dot/arrow token surface is token-driven (see *Tokens* — `--ui-media-dot-*`, `--ui-media-arrow-*`, and `--ui-media-overlay-gap` which drives the control inset). Arrows ship with **built-in chevron glyphs** (dark default for the frosted light circle + a `*-light` set for dark / accent circles, via `arw(lgt)`); colour the circle with `--ui-media-arrow-bg`, or override `--ui-media-arrow-prev/-next` with your own `url()` to fully customise.
+The full dot/arrow token surface is token-driven (see *Tokens* — `--ui-media-dot-*`, `--ui-media-arrow-*`, and `--ui-media-overlay-gap` which drives the control inset). Arrows ship with **built-in chevron glyphs** (dark default for the frosted light circle + a `*-light` set for dark circles, via `arw(lgt)`); colour the circle with `--ui-media-arrow-bg`, or override `--ui-media-arrow-prev/-next` with your own `url()` to fully customise.
 
 All carousel CSS lives in **`media.carousel.css`** (imported by `ui-card.css` alongside `media.css`).
 
@@ -313,14 +313,12 @@ All carousel CSS lives in **`media.carousel.css`** (imported by `ui-card.css` al
 
 Two render modes, both token-driven — no named theme atoms needed:
 
-- **Circle** *(default)* — an Instagram-style frosted button: a semi-transparent-white `--ui-media-arrow-bg` (`rgb(255 255 255 / 0.7)`, picks up the image tint), dark glyph, no border, and a soft `--ui-media-arrow-shadow`. Colour the circle with `--ui-media-arrow-bg` / `--ui-media-arrow-bg-hover`; for a dark or accent circle switch the glyph to white with `arw(lgt)` (composes with `arw(arr)`). Square it with `--ui-media-arrow-radius`; add a border with `--ui-media-arrow-border`, drop the shadow with `--ui-media-arrow-shadow: none`.
+- **Circle** *(default)* — an Instagram-style frosted button: a semi-transparent-white `--ui-media-arrow-bg` (`rgb(255 255 255 / 0.7)`, picks up the image tint), dark glyph, no border, and a soft `--ui-media-arrow-shadow`. Colour the circle with `--ui-media-arrow-bg` / `--ui-media-arrow-bg-hover`; for a dark circle switch the glyph to white with `arw(lgt)` (composes with `arw(arr)`). Square it with `--ui-media-arrow-radius`; add a border with `--ui-media-arrow-border`, drop the shadow with `--ui-media-arrow-shadow: none`.
 - **Bare** (`arw(bare)`) — no circle; the glyph *is* the colour, set with `--ui-media-arrow-color` (and `--ui-media-arrow-color-hover`). Default ink is **white** over an image and **auto-flips dark** under `nav(below)` (light band). Set any colour:
 
 ```html
 <!-- black bare arrows -->
 <ui-media media="nav(arrows) arw(bare)" style="--ui-media-arrow-color: #000">…</ui-media>
-<!-- accent bare arrows -->
-<ui-media media="nav(arrows) arw(bare)" style="--ui-media-arrow-color: var(--color-accent)">…</ui-media>
 ```
 
 Bare drops the circle (and its `--ui-media-arrow-shadow`), so a white glyph relies on the image being dark enough; over bright photos use `arw(bare)` on a `nav(blw)`/`nav(abv)` band, or keep the frosted circle. Bare composes with `arw(arrow)` (masked full-arrow) and every placement/`set` atom.
@@ -426,7 +424,10 @@ Every token lives in the `--ui-media-*` namespace and inherits down from whereve
 | `--ui-media-arrow-nudge` | `calc(arrow-size * 0.03)` chevron · `* 0.015` arrow | optical shift of the glyph toward its tip (rotates with the arrow); `0` to disable |
 | `--ui-media-arrow-color` | `#fff` (dark under `nav(below)`) | `arw(bare)` glyph ink |
 | `--ui-media-arrow-color-hover` | `var(--ui-media-arrow-color)` | `arw(bare)` glyph ink on hover (band flips to `rgb(0 0 0 / 1)`) |
-| `--ui-media-arrow-hover-scale` | `1.18` | `arw(bare)` glyph scale on hover |
+| `--ui-media-arrow-hover-scale` | `1.18` | `arw(bare)` glyph scale on hover / focus |
+| `--ui-media-focus-width` | `2px` | scroller keyboard-focus dashed ring width |
+| `--ui-media-focus-offset` | `3px` | scroller focus ring offset |
+| `--ui-media-focus-color` | `var(--ring-color)` | scroller focus ring colour |
 | `--ui-media-arrow-shadow` | `0 1px 3px rgb(0 0 0 / 0.15)` | soft `box-shadow` on the circle button (`none` to drop) |
 | `--ui-media-arrow-disabled-opacity` | `0.5` (`0` with `arw(hide)`) | opacity of a dead-end arrow (no slide that way) |
 | `--ui-media-arrow-{prev,next}-dim` | the live glyph (dark under `nav(below)`) | dead-end bare glyph SVG (`:disabled` can't mask, so it's painted directly) |
@@ -441,7 +442,7 @@ Every token lives in the `--ui-media-*` namespace and inherits down from whereve
 | `--ui-media-band` | `2.75rem` | `nav(below)` bottom-band height |
 | `--ui-media-controls-bg` | `var(--ui-media-bg)` | `nav(below)` band background |
 
-The arrow is a **circular button**: a themeable circle (`--ui-media-arrow-bg`) + a chevron image. The chevron is **dark by default** (for the frosted light circle); for a dark or accent circle, use `arw(lgt)` (or point `--ui-media-arrow-prev/-next` at the built-in `*-light` glyphs) — no SVG pasting. Square off the circle with `--ui-media-arrow-radius`.
+The arrow is a **circular button**: a themeable circle (`--ui-media-arrow-bg`) + a chevron image. The chevron is **dark by default** (for the frosted light circle); for a dark circle, use `arw(lgt)` (or point `--ui-media-arrow-prev/-next` at the built-in `*-light` glyphs) — no SVG pasting. Square off the circle with `--ui-media-arrow-radius`.
 
 ### Scrim
 

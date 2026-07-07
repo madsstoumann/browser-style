@@ -47,7 +47,7 @@ scroller; the rest layer on top. `asr()` etc. belong to the base frame — see m
 | `arw(drk)`  | `arrow="drk"` | CSS | Dark/black glyph ink (**default**, for the frosted light circle) |
 | `arw(hid)`  | `arrow="hid"` | CSS | Auto-hide the dead-end arrow (default dims it) |
 | `arw(lg)`   | `arrow="lg"` | CSS | Arrow size 2.75rem |
-| `arw(lgt)`  | `arrow="lgt"` | CSS | Light/white glyph ink (for a dark / accent circle) |
+| `arw(lgt)`  | `arrow="lgt"` | CSS | Light/white glyph ink (for a dark circle) |
 | `arw(md)`   | `arrow="md"` | CSS | Arrow size 2.25rem (**default**) |
 | `arw(mid)`  | `arrow="mid"` | CSS | Edge arrows vertically centered (**default**) |
 | `arw(set)`  | `arrow="set"` | CSS | Both arrows as an adjacent pair at the end |
@@ -225,7 +225,7 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
   light/dark) is rotated per direction via `--_arw-rot` (left 180°, up −90°, down 90°) —
   no prev/next/up/down SVG duplication.
 - **Shape × shade** (independent, composed): shape = chevron (default, `arw(chv)`) · `arw(arr)`;
-  ink = dark (default, `arw(drk)`, for the frosted light circle) · `arw(lgt)` (white, for a dark / accent circle) ·
+  ink = dark (default, `arw(drk)`, for the frosted light circle) · `arw(lgt)` (white, for a dark circle) ·
   `arw(sub)` (subtle low-contrast). A direct `--ui-media-arrow-glyph` override wins.
 - Sizes `arw(sm|md|lg|xl)` set `--ui-media-arrow-size` (`md` = 2.25rem default).
 - **Placement** `arw(mid|top|bot)` set `--ui-media-arrow-top` (mid = `anchor(center)` default).
@@ -236,8 +236,16 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
   (`mask-image` of the SVG + `background-color` = the ink), so it can be any colour
   (`--ui-media-arrow-color`). A `:disabled` `::scroll-button` drops its mask, so the
   disabled bare arrow paints the glyph SVG directly as `background-image`
-  (`--ui-media-arrow-glyph-dim`) to avoid a circle artifact. A drop-shadow keeps a white
-  glyph legible over photos.
+  (`--ui-media-arrow-glyph-dim`) to avoid a circle artifact, with `transition: none` so
+  the switch is instant (no bg-colour fade flashing a filled circle as the mask drops).
+- **Hover / focus** — the button `transform` carries a `scale()` slot; bare glyphs scale to
+  `--ui-media-arrow-hover-scale` (1.18) on hover and `:focus-visible`. Focus ring: the
+  **circle** variant uses a real `outline` (`--ring-*`); **bare** can't (its `mask` clips the
+  outline), so it uses a stacked `drop-shadow` in `--ring-color` that traces the glyph.
+- **Scroller focus** — the carousel `<ui-media>` is a keyboard-focusable scroller (arrow-key
+  scrolling). On `:focus-visible` it draws a dashed ring (`--ui-media-focus-*`): nested in a
+  `ui-card`/`ui-reveal` it rings the **wrapper** (via `:has()`), standalone it rings the
+  **media**. A `<ui-media>` nested inside another (a slide's own frame) never rings.
 
 ## `nav(blw)` — control band
 

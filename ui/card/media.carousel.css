@@ -58,6 +58,19 @@
 		position: static;
 	}
 
+	/* ---- keyboard focus on the SCROLLER itself (arrow-key scrolling) ----
+	   The carousel <ui-media> is a keyboard-focusable scroller. Ring it with a dashed
+	   outline — but only the OUTER scroller: `:not(:where(ui-media *))` excludes any
+	   <ui-media> nested inside another (a slide's own media frame never rings).
+	   Nested in a card/reveal → ring the wrapper (the whole card); standalone → ring the media. */
+	:where(ui-card, ui-reveal):has(ui-media:focus-visible:not(:where(ui-media *))),
+	ui-media:focus-visible:not(:where(ui-media *)):not(:where(ui-card, ui-reveal) *) {
+		outline: var(--ui-media-focus-width, 2px) dashed var(--ui-media-focus-color, var(--ring-color));
+		outline-offset: var(--ui-media-focus-offset, 3px);
+	}
+	/* nested scroller: suppress its own (UA) ring so only the wrapper shows one */
+	:where(ui-card, ui-reveal) ui-media:focus-visible:not(:where(ui-media *)) { outline: none; }
+
 	@media (prefers-reduced-motion: no-preference) {
 		:where([media*="nav"]) ui-media,
 		ui-media:where([media*="nav"], [nav]) { scroll-behavior: smooth; }
@@ -253,7 +266,7 @@
 	:where([media*="arw(arr)"]), ui-media[arrow~="arr"] { --ui-media-arrow-glyph: var(--ui-media-arrow-dark); --ui-media-arrow-nudge: calc(var(--ui-media-arrow-size) * 0.015); }
 	:where([media*="arw(drk)"]), ui-media[arrow~="drk"] { --ui-media-arrow-glyph: var(--ui-media-chevron-dark); }
 	:where([media*="arw(arr)"][media*="arw(drk)"]), ui-media[arrow~="arr"][arrow~="drk"] { --ui-media-arrow-glyph: var(--ui-media-arrow-dark); }
-	/* arw(lgt) — white glyph, for a dark / accent circle (inverse of the light default) */
+	/* arw(lgt) — white glyph, for a dark circle (inverse of the light default) */
 	:where([media*="arw(lgt)"]), ui-media[arrow~="lgt"] { --ui-media-arrow-glyph: var(--ui-media-chevron-light); }
 	:where([media*="arw(arr)"][media*="arw(lgt)"]), ui-media[arrow~="arr"][arrow~="lgt"] { --ui-media-arrow-glyph: var(--ui-media-arrow-light); }
 	:where([media*="arw(sub)"]), ui-media[arrow~="sub"] { --ui-media-arrow-color: var(--color-text-subtle, rgb(0 0 0 / 0.45)); --ui-media-arrow-bg: rgb(0 0 0 / 0.25); }
@@ -423,6 +436,10 @@
 				z-index: 3;
 			}
 			&::scroll-button(*):hover { background-color: var(--ui-media-arrow-bg-hover); }
+			&::scroll-button(*):focus-visible {
+				outline: var(--ring-width) solid var(--ring-color);
+				outline-offset: var(--ring-offset);
+			}
 			&::scroll-button(*):disabled { cursor: default; opacity: var(--ui-media-arrow-disabled-opacity, 0.4); pointer-events: none; }
 			&::scroll-button(left) {
 				content: "" / "Previous";
@@ -477,11 +494,16 @@
 				mask: var(--ui-media-arrow-glyph) calc(50% + var(--ui-media-arrow-nudge)) center / var(--ui-media-arrow-glyph-size, 80%) no-repeat;
 			}
 			&::scroll-button(*):hover { background-color: var(--ui-media-arrow-color-hover, var(--ui-media-arrow-color)); --_arw-scale: var(--ui-media-arrow-hover-scale, 1.18); }
+			/* bare paints its glyph with mask(), which clips a normal outline — so keyboard
+			   focus just scales the glyph (like hover); the scroller's dashed ring carries the rest */
+			&::scroll-button(*):focus-visible { --_arw-scale: var(--ui-media-arrow-hover-scale, 1.18); }
 			&::scroll-button(*):disabled {
 				mask: none;
 				background: var(--ui-media-arrow-glyph-dim, var(--ui-media-arrow-glyph)) calc(50% + var(--ui-media-arrow-nudge)) center / var(--ui-media-arrow-glyph-size, 80%) no-repeat #0000;
+				filter: none;
 				opacity: var(--ui-media-arrow-disabled-opacity, 0.5);
 				pointer-events: none;
+				transition: none;   /* switch instantly — no bg-colour fade that flashes a filled circle as the mask drops */
 			}
 		}
 

@@ -115,6 +115,10 @@
 	:where([variant*="ovr(bl)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-bl); }
 	:where([variant*="ovr(bc)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: center; --ui-content-ov-text: center; --ui-media-scrim-default: var(--ui-media-scrim-bc); }
 	:where([variant*="ovr(br)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-br); }
+	/* overlay text is light (over a scrim); a plain solid CTA keeps its light surface, so its
+	   text must stay dark — otherwise it inherits the white and vanishes. Colour variants
+	   (accent, text, …) set their own --button-c and are left untouched. */
+	:where([variant*="ovr("]) .ui-button:not([data-variant]) { color: var(--color-text, hsl(0, 0%, 15%)); }
 
 	/* ============================================================
 	   THEMES — thm(). Ink tokens cross into the content namespace.

@@ -45,8 +45,6 @@
 		.reveal-cards ui-reveal ui-accordion { font-size: var(--font-size-sm); }
 		/* shared control themes (used by several demos) */
 		.dots-dark    { --ui-media-dot-bg: rgb(0 0 0 / 0.25); --ui-media-dot-active: #000; }
-		.arrow-accent { --ui-media-arrow-color: var(--color-accent); }
-		.pill-accent  { --ui-media-pill-track: rgb(0 0 0 / 0.2); --ui-media-pill-fill: var(--color-accent); }
 	</style>
 </head>
 <body>
@@ -119,20 +117,20 @@
 	     Carousel theming
 	     ============================================================ -->
 	<h2>Carousel theming</h2>
-	<p class="note">Dots and arrows are token-driven. Recolour dots with <code>--ui-media-dot-*</code>. Each arrow is a circular button — colour the circle with <code>--ui-media-arrow-bg</code> (default a frosted semi-transparent white, Instagram-style, with a soft <code>--ui-media-arrow-shadow</code>) and size it with <code>--ui-media-arrow-size</code>. The chevron is dark by default (for the light circle); for a dark or accent circle switch the glyph to white with <code>arw(lgt)</code>. Square off the circle with <code>--ui-media-arrow-radius</code>.</p>
+	<p class="note">Dots and arrows are token-driven. Recolour dots with <code>--ui-media-dot-*</code>. Each arrow is a circular button — colour the circle with <code>--ui-media-arrow-bg</code> (default a frosted semi-transparent white, Instagram-style, with a soft <code>--ui-media-arrow-shadow</code>) and size it with <code>--ui-media-arrow-size</code>. The chevron is dark by default (for the light circle); for a dark circle switch the glyph to white with <code>arw(lgt)</code>. Square off the circle with <code>--ui-media-arrow-radius</code>.</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav" content="scl(sm)"
-			style="--ui-media-dot-bg: rgb(0 0 0 / 0.25); --ui-media-dot-active: var(--color-accent); --ui-media-dot-size: 0.8rem;">
+			style="--ui-media-dot-bg: rgb(0 0 0 / 0.25); --ui-media-dot-size: 0.8rem;">
 			<cq-box>
 				<ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">themed dots</small><h2 data-part="headline">Bigger accent dots</h2></ui-content>
+				<ui-content><small data-part="eyebrow">--ui-media-dot-size</small><h2 data-part="headline">Bigger dots</h2></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav arw(lgt)" content="scl(sm)"
-			style="--ui-media-arrow-bg: var(--color-accent); --ui-media-arrow-bg-hover: var(--color-accent-dark, var(--color-accent)); --ui-media-dot-active: var(--color-accent);">
+			style="--ui-media-arrow-bg: rgb(0 0 0 / 0.55); --ui-media-arrow-bg-hover: rgb(0 0 0 / 0.7);">
 			<cq-box>
 				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">--ui-media-arrow-bg</small><h2 data-part="headline">Accent circle</h2></ui-content>
+				<ui-content><small data-part="eyebrow">arw(lgt) + --ui-media-arrow-bg</small><h2 data-part="headline">Dark circle</h2></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(arw) arw(arr) arw(drk) arw(lg)" content="scl(sm)"
@@ -200,12 +198,6 @@
 				<ui-content><small data-part="eyebrow">arw(bare) arw(arr) · light images</small><h2 data-part="headline">Black full-arrow</h2></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card class="arrow-accent" variant="col" media="asr(4/3) nav(arw) arw(bare)" content="scl(sm)">
-			<cq-box>
-				<ui-media><img src="/assets/images/summersalad.png" alt=""><img src="/assets/images/cookies.png" alt=""><img src="/assets/images/carbonara.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">--ui-media-arrow-color</small><h2 data-part="headline">Accent arrows</h2></ui-content>
-			</cq-box>
-		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(blw) arw(bare)" content="scl(sm)">
 			<cq-box>
 				<ui-media><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/government.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
@@ -232,10 +224,10 @@
 				<ui-content><small data-part="eyebrow">--ui-media-autoplay: 3s</small><h2 data-part="headline">Faster fill + arrows</h2></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card class="pill-accent" variant="col" media="asr(4/3) nav(dot) dot(pll)" content="scl(sm)" style="--ui-media-pill-width: 2rem;">
+		<ui-card variant="col" media="asr(4/3) nav(dot) dot(pll)" content="scl(sm)" style="--ui-media-pill-width: 2rem;">
 			<cq-box>
 				<ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">themed pills</small><h2 data-part="headline">Accent fill</h2></ui-content>
+				<ui-content><small data-part="eyebrow">--ui-media-pill-width</small><h2 data-part="headline">Wider pills</h2></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav dot(pll)" content="scl(sm)">
@@ -284,7 +276,7 @@
 				<ui-content><small data-part="eyebrow">nav(blw) arw(bare) arw(set)</small><h2 data-part="headline">Dots left, arrow pair right</h2></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card class="pill-accent" variant="col" media="asr(4/3) nav(blw) arw(bare) dot(pll)" content="scl(sm)" style="--ui-media-controls-bg: var(--color-surface, #fff);">
+		<ui-card variant="col" media="asr(4/3) nav(blw) arw(bare) dot(pll)" content="scl(sm)" style="--ui-media-controls-bg: var(--color-surface, #fff);">
 			<cq-box>
 				<ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
 				<ui-content><small data-part="eyebrow">nav(blw) dot(pll)</small><h2 data-part="headline">Pill timer bar</h2></ui-content>
@@ -431,10 +423,10 @@
 				<ui-content><small data-part="eyebrow">axis(y) nav(blw)</small><h2 data-part="headline">Control band below (rotated)</h2></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card class="arrow-accent" variant="col" media="asr(4/3) axis(y) nav(arw) arw(bare) arw(lg)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) axis(y) nav(arw) arw(bare) arw(lg)" content="scl(sm)">
 			<cq-box>
 				<ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">axis(y) arw(bare) arw(lg)</small><h2 data-part="headline">Accent, large</h2></ui-content>
+				<ui-content><small data-part="eyebrow">axis(y) arw(bare) arw(lg)</small><h2 data-part="headline">Bare, large</h2></ui-content>
 			</cq-box>
 		</ui-card>
 	</div>
@@ -795,7 +787,7 @@
 			<ui-media media="asr(4/3) nav(blw) arw(bare) arw(arr) arw(set) dot(end)">
 				<img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt="">
 			</ui-media>
-			<ui-media class="arrow-accent" media="asr(4/3) axis(y) nav arw(arr) arw(drk) arw(lg) dot(pll) dot(bc)">
+			<ui-media media="asr(4/3) axis(y) nav arw(arr) arw(drk) arw(lg) dot(pll) dot(bc)">
 				<img src="/assets/images/popovers.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/government.png" alt=""><img src="/assets/images/gastronomy.png" alt="">
 			</ui-media>
 	</div>
