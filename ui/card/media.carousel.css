@@ -1,6 +1,5 @@
 /* ui-media carousel — internals in media.carousel.md, tokens in carousel.md */
 @layer bs-component {
-
 	:where([media*="nav"], ui-media[nav]) {
 		--ui-media-above-gap: var(--spacing-sm, 0.5rem);
 		--ui-media-arrow-bg-hover: rgb(255 255 255 / 0.9);
@@ -606,5 +605,4 @@
 		from { background-size: 0 var(--ui-media-thumb-timer-height, 3px), cover; }
 		to   { background-size: 100% var(--ui-media-thumb-timer-height, 3px), cover; }
 	}
-
 }
