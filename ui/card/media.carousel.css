@@ -244,6 +244,8 @@
 		--ui-media-chevron-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
 		--ui-media-arrow-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
 		--ui-media-arrow-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
+		--ui-media-chevron-grey: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+		--ui-media-arrow-grey: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
 		--ui-media-arrow-glyph: var(--ui-media-chevron-dark);
 	}
 	/* glyph shape (chv default) × ink (lgt default · drk · sub) */
@@ -265,6 +267,11 @@
 	/* nav(blw) / nav(abv) — flip ink to dark for the light band (placement vars stay gated) */
 	:where([media*="nav(blw)"]),
 	ui-media[nav~="blw"] {
+		--ui-media-arrow-bg: rgb(0 0 0 / 0.08);          /* light-grey circle for the light band (not the frosted-white overlay default) */
+		--ui-media-arrow-bg-hover: rgb(0 0 0 / 0.16);
+		--ui-media-arrow-color-hover: rgb(0 0 0 / 1);     /* bare glyph darkens on hover in the band */
+		--ui-media-arrow-shadow: none;                    /* flat on the band, no lift */
+		--ui-media-arrow-glyph: var(--ui-media-chevron-grey);   /* softer grey glyph for the light circle (not pure black) */
 		--ui-media-arrow-color: rgb(0 0 0 / 0.8);
 		--ui-media-arrow-glyph-dim: var(--ui-media-chevron-dark);
 		--ui-media-dot-bg: rgb(0 0 0 / 0.25);
@@ -274,6 +281,11 @@
 	}
 	:where([media*="nav(abv)"]),
 	ui-media[nav~="abv"] {
+		--ui-media-arrow-bg: rgb(0 0 0 / 0.08);          /* light-grey circle for the light band */
+		--ui-media-arrow-bg-hover: rgb(0 0 0 / 0.16);
+		--ui-media-arrow-color-hover: rgb(0 0 0 / 1);     /* bare glyph darkens on hover in the band */
+		--ui-media-arrow-shadow: none;
+		--ui-media-arrow-glyph: var(--ui-media-chevron-grey);
 		--ui-media-arrow-color: rgb(0 0 0 / 0.8);
 		--ui-media-arrow-glyph-dim: var(--ui-media-chevron-dark);
 		--ui-media-dot-bg: rgb(0 0 0 / 0.25);
@@ -285,9 +297,9 @@
 	:where([media*="arw(sub)"]), ui-media[arrow~="sub"] { --ui-media-arrow-color: var(--color-text-subtle, rgb(0 0 0 / 0.45)); }
 	:where([media*="dot(sub)"]), ui-media[dot~="sub"] { --ui-media-dot-bg: rgb(0 0 0 / 0.12); --ui-media-dot-active: rgb(0 0 0 / 0.4); }
 	:where([media*="nav(blw)"][media*="arw(arr)"]),
-	ui-media[nav~="blw"][arrow~="arr"] { --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
+	ui-media[nav~="blw"][arrow~="arr"] { --ui-media-arrow-glyph: var(--ui-media-arrow-grey); --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
 	:where([media*="nav(abv)"][media*="arw(arr)"]),
-	ui-media[nav~="abv"][arrow~="arr"] { --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
+	ui-media[nav~="abv"][arrow~="arr"] { --ui-media-arrow-glyph: var(--ui-media-arrow-grey); --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
 
 	@supports (scroll-marker-group: after) {
 
@@ -406,7 +418,8 @@
 				position: absolute;
 				position-anchor: auto;
 				top: var(--ui-media-arrow-top, calc(anchor(center) - var(--ui-media-arrow-size) / 2));
-				transform: rotate(var(--_arw-rot, 0deg));
+				transform: rotate(var(--_arw-rot, 0deg)) scale(var(--_arw-scale, 1));
+				transition: background-color var(--duration-fast, 100ms) var(--ease-default, ease), transform var(--duration-fast, 100ms) var(--ease-default, ease);
 				z-index: 3;
 			}
 			&::scroll-button(*):hover { background-color: var(--ui-media-arrow-bg-hover); }
@@ -463,7 +476,7 @@
 				box-shadow: none;
 				mask: var(--ui-media-arrow-glyph) calc(50% + var(--ui-media-arrow-nudge)) center / var(--ui-media-arrow-glyph-size, 80%) no-repeat;
 			}
-			&::scroll-button(*):hover { background-color: var(--ui-media-arrow-color-hover, var(--ui-media-arrow-color)); }
+			&::scroll-button(*):hover { background-color: var(--ui-media-arrow-color-hover, var(--ui-media-arrow-color)); --_arw-scale: var(--ui-media-arrow-hover-scale, 1.18); }
 			&::scroll-button(*):disabled {
 				mask: none;
 				background: var(--ui-media-arrow-glyph-dim, var(--ui-media-arrow-glyph)) calc(50% + var(--ui-media-arrow-nudge)) center / var(--ui-media-arrow-glyph-size, 80%) no-repeat #0000;

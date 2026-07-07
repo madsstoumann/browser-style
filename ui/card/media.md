@@ -425,7 +425,8 @@ Every token lives in the `--ui-media-*` namespace and inherits down from whereve
 | `--ui-media-arrow-glyph-size` | `75%` (circle) / `80%` (bare) | glyph size |
 | `--ui-media-arrow-nudge` | `calc(arrow-size * 0.03)` chevron · `* 0.015` arrow | optical shift of the glyph toward its tip (rotates with the arrow); `0` to disable |
 | `--ui-media-arrow-color` | `#fff` (dark under `nav(below)`) | `arw(bare)` glyph ink |
-| `--ui-media-arrow-color-hover` | `var(--ui-media-arrow-color)` | `arw(bare)` glyph ink on hover |
+| `--ui-media-arrow-color-hover` | `var(--ui-media-arrow-color)` | `arw(bare)` glyph ink on hover (band flips to `rgb(0 0 0 / 1)`) |
+| `--ui-media-arrow-hover-scale` | `1.18` | `arw(bare)` glyph scale on hover |
 | `--ui-media-arrow-shadow` | `0 1px 3px rgb(0 0 0 / 0.15)` | soft `box-shadow` on the circle button (`none` to drop) |
 | `--ui-media-arrow-disabled-opacity` | `0.5` (`0` with `arw(hide)`) | opacity of a dead-end arrow (no slide that way) |
 | `--ui-media-arrow-{prev,next}-dim` | the live glyph (dark under `nav(below)`) | dead-end bare glyph SVG (`:disabled` can't mask, so it's painted directly) |
