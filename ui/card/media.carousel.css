@@ -57,11 +57,6 @@
 		inset: auto;
 		position: static;
 	}
-	/* nav(abv): round the media itself so it matches the rds() frame under the band above */
-	:where([media*="nav(abv)"]) ui-media > :is(iframe, img, picture, video),
-	ui-media:where([media*="nav(abv)"], [nav~="abv"]) > :is(iframe, img, picture, video) {
-		border-radius: var(--ui-media-radius, 0);
-	}
 
 	/* ---- keyboard focus on the SCROLLER itself (arrow-key scrolling) ----
 	   The carousel <ui-media> is a keyboard-focusable scroller. Ring it with a dashed
@@ -75,6 +70,12 @@
 	}
 	/* nested scroller: suppress its own (UA) ring so only the wrapper shows one */
 	:where(ui-card, ui-reveal) ui-media:focus-visible:not(:where(ui-media *)) { outline: none; }
+	/* clip-path clips an OUTSET outline away — on focus, drop the clip so the ring shows;
+	   the element's border-radius still rounds the frame while idle (e.g. standalone
+	   nav(abv) / nav(blw) / dot(tmb) carousels). */
+	ui-media[media*="clip"]:focus-visible:not(:where(ui-media *)):not(:where(ui-card, ui-reveal) *) {
+		clip-path: none;
+	}
 
 	@media (prefers-reduced-motion: no-preference) {
 		:where([media*="nav"]) ui-media,

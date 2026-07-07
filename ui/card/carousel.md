@@ -51,7 +51,7 @@ the wrapper differs: `media="arw(drk)"` ≡ `arrow="drk"`, `media="dot(pll) dot(
 Order never matters.
 
 > **Shared ink scale.** Controls + scrim use one shade vocabulary: `lgt` (light/white) ·
-> `drk` (dark/black) · `sub` (subtle/low-contrast) · `med` (scrim only).
+> `drk` (dark/black) · `med` (scrim only). Arrows + dots use `lgt`/`drk`.
 
 > **Gotcha (standalone):** don't put `overflow` / `display` on a bare `ui-media`
 > selector in your own CSS — that beats the component's zero-specificity
@@ -63,9 +63,8 @@ Order never matters.
 
 The dots/arrows use `::scroll-marker-group` / `::scroll-button()` — **Chromium
 only**, gated by `@supports (scroll-marker-group: after)`. Everywhere else it
-**degrades gracefully** to a bare swipe/scroll-snap row (no dots/arrows). `nav(bar)`
-works everywhere (it's just a styled native scrollbar). `prefers-reduced-motion`
-is respected (no smooth scroll, no pill timer animation).
+**degrades gracefully** to a bare swipe/scroll-snap row (no dots/arrows).
+`prefers-reduced-motion` is respected (no smooth scroll, no pill timer animation).
 
 ---
 
@@ -81,7 +80,6 @@ is respected (no smooth scroll, no pill timer animation).
 | `nav(non)` | `nav="non"` | No controls — bare swipe scroller |
 | `nav(blw)` | `nav="blw"` | Dots + arrows in a reserved **band below** the media |
 | `nav(abv)` | `nav="abv"` | Dots + arrows in a reserved **band above** the media (mirror of `nav(blw)`) |
-| `nav(bar)` | `nav="bar"` | No dots/arrows — a styled **native scrollbar** is the only affordance |
 
 ### `axis()` — scroll direction
 
@@ -101,19 +99,19 @@ is respected (no smooth scroll, no pill timer animation).
 |----------------|-----------|--------|
 | `arw(chv)` | `arrow="chv"` | Chevron glyph (**default**) |
 | `arw(arr)` | `arrow="arr"` | Full arrow glyph (shaft + head) |
-| `arw(lgt)` | `arrow="lgt"` | Light/white ink (**default**, for a dark circle) |
-| `arw(drk)` | `arrow="drk"` | Dark/black ink (for light circles / light bands) |
-| `arw(sub)` | `arrow="sub"` | **Subtle** low-contrast ink (light surfaces / `nav(blw)`) |
+| `arw(lgt)` | `arrow="lgt"` | **Light theme** — light circle + dark glyph (the default look, made explicit) |
+| `arw(drk)` | `arrow="drk"` | **Dark theme** in one atom — dark circle + white glyph + light hover ring; composes on the overlay and in `nav(blw)`/`nav(abv)` bands. On `arw(bare)` it just paints a dark glyph |
 | `arw(sm)` `arw(md)` `arw(lg)` `arw(xl)` | `arrow="sm…xl"` | Button size (`md` = 2.25rem default) |
 | `arw(bare)` | `arrow="bare"` | **Drop the circle** — render the glyph itself as a recolourable shape (`--ui-media-arrow-color`) |
-| `arw(set)` | `arrow="set"` | Group both arrows as an **adjacent pair** at the end (horizontal: bottom/edge-end; vertical: stacked at block-end) |
+| `arw(set)` | `arrow="set"` | Group both arrows as an **adjacent pair** at the end (horizontal: inline-end; vertical: stacked at block-end). Pair with `arw(bot)`/`arw(top)` for a bottom-/top-end set; on `axis(y)`, `arw(set) arw(top)` stacks the pair at the top |
 | `arw(hid)` | `arrow="hid"` | Auto-**hide** the dead-end arrow (default keeps it visible but dimmed) |
 | `arw(mid)` `arw(top)` `arw(bot)` | `arrow="mid/top/bot"` | Vertical placement of the edge arrows (`mid` = centered default) |
 | `arw(sta)` | `arrow="sta"` | `axis(y)`: move the up/down arrows (and dot column) to the inline-**start** edge (default is inline-end) |
 
-> Shape (`chv`/`arr`) and ink (`lgt`/`drk`/`sub`) are independent and compose,
-> e.g. `arw(arr) arw(drk)` ≡ `arrow="arr drk"`. One base SVG is **rotated** per direction
-> (left 180°, up −90°, down 90°) — no per-direction SVG duplication.
+> **Default look:** the overlay circle is Instagram-style — a frosted semi-transparent-white
+> circle, dark chevron, soft shadow. `arw(lgt)` = that light theme; `arw(drk)` = the dark
+> theme. Shape (`chv`/`arr`) and theme (`lgt`/`drk`) compose, e.g. `arw(arr) arw(drk)` ≡
+> `arrow="arr drk"`. One base SVG is **rotated** per direction (left 180°, up −90°, down 90°).
 
 ### Multiple items per slide — group wrappers
 
@@ -176,9 +174,10 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 |----------------|-----------|--------|
 | `dot(cir)` | `dot="cir"` | Circular dots (**default**) |
 | `dot(pll)` | `dot="pll"` | Rounded-rect pills; the active pill **fills L→R** over the autoplay duration as a timer hint |
-| `dot(lgt)` `dot(drk)` `dot(sub)` | `dot="lgt/drk/sub"` | Ink — light / dark / **subtle** (`bg` + active). `nav(blw)` defaults to dark |
+| `dot(lgt)` `dot(drk)` | `dot="lgt/drk"` | Ink — light / dark (`bg` + active). `nav(blw)`/`nav(abv)` default to dark |
 | `dot(sm)` `dot(md)` `dot(lg)` `dot(xl)` | `dot="sm…xl"` | Size (`md` = default) — one scale for dots, pills **and** thumbnails, so `dot(tmb) dot(lg)` = large thumbnails |
-| `dot(sta)` `dot(ctr)` `dot(end)` | `dot="sta/ctr/end"` | **Position within a `nav(blw)` band** — left / center (default) / right. `sta`/`end` clear the arrow on that side (or the `arw(set)` pair). |
+| `dot(sta)` `dot(ctr)` `dot(end)` | `dot="sta/ctr/end"` | **Position within a band** (`nav(blw)` **and** `nav(abv)`) — left / center (default) / right. `sta`/`end` clear the arrow on that side (or the `arw(set)` pair). |
+| `dot(bc)` | `dot="bc"` | `axis(y)`: dots centered at the **bottom** (e.g. with a pill timer) |
 | `dot(non)` | `dot="non"` | **No dots** (keeps arrows) — e.g. an arrows-only `nav(blw)`/`nav(abv)` band |
 | `dot(tmb)` | `dot="tmb"` | **Image thumbnails** instead of dots. Each slide sets `--ui-media-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-media-autoplay`. |
 | `dot(tl)` `dot(tr)` `dot(bl)` `dot(br)` | `dot="tl/tr/bl/br"` | **Corner placement** for the overlay marker-group (top-left / top-right / bottom-left / bottom-right). Inset via `--ui-media-marker-inset`. |
@@ -257,6 +256,32 @@ don't touch.
 
 ---
 
+## Keyboard focus
+
+The carousel `<ui-media>` is a keyboard-focusable scroller (arrow keys scroll it). On
+`:focus-visible` it draws a **dashed ring** via `--ui-media-focus-*`:
+
+- **Nested** in a `<ui-card>` / `<ui-reveal>` the ring is drawn on the **wrapper** (the
+  whole card), via `:has()` — the scroller's own ring is suppressed.
+- **Standalone** it rings the **media** itself.
+- A slide's own **nested** `<ui-media>` never rings (only the outer scroller does).
+
+Scroll buttons (arrows) and dots keep their **own** focus rings: the **circle** arrow uses
+a real `outline` (`--ring-width` / `--ring-color` / `--ring-offset`); a **bare** glyph can't
+outline (its `mask` clips it), so it scales to `--ui-media-arrow-hover-scale` on
+`:focus-visible` instead, and the scroller's dashed ring carries the rest.
+
+> **Clip + focus.** On a **clipped** standalone scroller (the `clip` frame token →
+> `clip-path`) the clip would crop the outset ring, so on `:focus-visible` the element
+> **drops `clip-path`** — the `border-radius` still rounds the frame while idle.
+>
+> **Clip + `nav(abv)`.** In a band-above layout the media's top is a straight internal
+> edge under the band, so the band + media read as **one** rounded frame (rounded via
+> `clip`). Don't round slide children individually — `border-radius` on scrolling content
+> can drop mid-scroll.
+
+---
+
 ## JavaScript behaviors (`ui-media.js`)
 
 Two things CSS can't do are added by `ui-media.js` as **pure progressive
@@ -287,18 +312,21 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | Property | Default | Purpose |
 |----------|---------|---------|
 | `--ui-media-arrow-size` | `2.25rem` | Button size (or use `arw(sm/md/lg/xl)`) |
-| `--ui-media-arrow-bg` | `rgb(0 0 0 / 0.45)` | Circle background |
-| `--ui-media-arrow-bg-hover` | `rgb(0 0 0 / 0.7)` | Circle background on hover |
-| `--ui-media-arrow-glyph` | chevron-light | Glyph image (override directly, or use `arw(arr)`/`arw(drk)`) |
+| `--ui-media-arrow-bg` | `rgb(255 255 255 / 0.7)` | Circle background — frosted semi-transparent white (Instagram-style default; `arw(drk)` flips it dark, `nav(blw)`/`nav(abv)` bands use a light grey) |
+| `--ui-media-arrow-bg-hover` | `rgb(255 255 255 / 0.9)` | Circle background on hover (brightens) |
+| `--ui-media-arrow-glyph` | chevron-dark | Glyph image (override directly, or use `arw(arr)`/`arw(lgt)`/`arw(drk)`) |
 | `--ui-media-arrow-glyph-size` | `75%` (circle) / `80%` (bare) | Glyph size within the button |
 | `--ui-media-arrow-nudge` | `calc(arrow-size * 0.03)` chevron · `* 0.015` full-arrow | **Optical** shift of the glyph toward its tip (a geometrically-centred chevron/arrow reads as off-centre). The full arrow needs less (its shaft balances it). Scales with size; set `0` to disable |
 | `--ui-media-arrow-radius` | `--radius-circle` | Button corner radius |
-| `--ui-media-arrow-border` | `1px solid rgb(255 255 255 / 0.6)` | Button border (set `0` to drop) |
+| `--ui-media-arrow-border` | `0` | Button border — no ring on the default light circle (set e.g. `1px solid …` to add one) |
+| `--ui-media-arrow-shadow` | `0 1px 3px rgb(0 0 0 / 0.15)` | Soft circle drop shadow — keeps the frosted circle legible over any photo (`nav(blw)`/`nav(abv)` bands set `none`; set `none` to drop) |
+| `--ui-media-arrow-hover-ring` | = `--ui-media-arrow-shadow` | Circle `box-shadow` on hover — `arw(drk)` sets a light ring (`0 0 0 2px rgb(255 255 255 / 0.5)`) |
+| `--ui-media-arrow-hover-scale` | `1.18` | Scale of a **bare** glyph on hover / `:focus-visible` |
 | `--ui-media-arrow-gap` | `0.5rem` | Gap between the two arrows in `arw(set)` |
 | `--ui-media-arrow-disabled-opacity` | `0.4` | Dimming of a dead-end arrow (`arw(hid)` sets `0`) |
-| `--ui-media-arrow-color` | `#fff` (over image) / dark (in band) | **Bare** glyph ink |
-| `--ui-media-arrow-color-hover` | = arrow-color | Bare glyph ink on hover |
-| `--ui-media-arrow-shadow` | `drop-shadow(0 1px 2px …)` | Bare glyph shadow (set `none` to drop) |
+| `--ui-media-arrow-color` | `#fff` (over image) / dark (in band) | **Bare** glyph ink (`arw(bare)`; the circle ignores it) |
+| `--ui-media-arrow-color-hover` | = arrow-color | Bare glyph ink on hover (bands darken it) |
+| `--ui-media-arrow-glyph-dim` | = `--ui-media-arrow-glyph` | Disabled **bare** glyph (kept dark/dimmed so the mask can drop without flashing a circle) |
 | `--ui-media-arrow-top` | centered | Manual vertical position (or use `arw(top/mid/bot)`) |
 
 ### Dots / pills
@@ -333,23 +361,25 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-media-thumb-timer-name` | `none` (off) | Fill-timer animation. **Off by default** — `ui-media.js` sets it to `ui-media-thumb-timer` when **autoplay** (`auto`/`loop`) runs. Set it to that keyframe manually to preview without JS. |
 | `--ui-media-marker-inset` | `1rem` (thumb) / `--ui-media-overlay-gap` | Corner inset from the edges (`dot(tl/tr/bl/br)`) |
 
-### Below-band (`nav(blw)`)
+### Control band (`nav(blw)` / `nav(abv)`)
 
 | Property | Default | Purpose |
 |----------|---------|---------|
 | `--ui-media-band` | `2.75rem` | Band height |
-| `--ui-media-below-gap` | `var(--spacing-sm, 0.5rem)` | Gap between media content and the band |
+| `--ui-media-below-gap` | `var(--spacing-sm, 0.5rem)` | Gap between the media content and a **below** band (`nav(blw)`) |
+| `--ui-media-above-gap` | `var(--spacing-sm, 0.5rem)` | Gap between an **above** band (`nav(abv)`) and the media content |
 | `--ui-media-controls-bg` | card surface | Band background |
-
-### Scrollbar (`nav(bar)`)
-
-| Property | Default | Purpose |
-|----------|---------|---------|
-| `--ui-media-scrollbar-color` | `auto` | `"<thumb> <track>"`, e.g. `#ccc transparent` |
-| `--ui-media-scrollbar-width` | `thin` | `auto` · `thin` · `none` |
 
 > **Multi-item slides** (`<ui-slide>` groups) have **no carousel tokens** — the grid
 > inside a slide is your own CSS / the layout system, not the carousel's job.
+
+### Focus ring (scroller)
+
+| Property | Default | Purpose |
+|----------|---------|---------|
+| `--ui-media-focus-width` | `2px` | Dashed focus-ring width on the scroller (or its wrapper) |
+| `--ui-media-focus-offset` | `3px` | Focus-ring offset |
+| `--ui-media-focus-color` | `var(--ring-color)` | Focus-ring colour |
 
 ### Layout / shared
 
@@ -399,8 +429,8 @@ authored directly.
 <!-- Vertical, arrow pair stacked bottom-left -->
 <ui-media media="asr(3/4) axis(y) nav(arw) arw(set) arw(sta)"> … </ui-media>
 
-<!-- Plain native scrollbar, no dots/arrows -->
-<ui-media media="asr(16/9) nav(bar)"> … </ui-media>
+<!-- Bare swipe scroller, no dots/arrows -->
+<ui-media media="asr(16/9) nav(non)"> … </ui-media>
 ```
 
 See [`carousel.html`](./carousel.html) for live, copy-pasteable examples of every

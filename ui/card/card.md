@@ -66,7 +66,7 @@ lives in one `details` object discriminated by `schemaType`.
 | `media` | array | `{asset|src, mediaType: image|video|youtube|vimeo, alt, caption}` — more than one item ⇒ carousel. Video items also take `{autoplay, muted, loop, controls, poster}`; youtube/vimeo items set `provider`/`video` lite-embed attributes on the frame |
 | `authors` | array | `{name, role, avatar}` → byline, `author`/`creator` → Person |
 | `tags` | tags | → pill list |
-| `actions` | array | `{link, style}` → `data-part="actions"` buttons |
+| `actions` | array | `{link, style}` → `data-part="actions"` buttons. In an `ovr()` overlay card a plain solid button (`.ui-button` with no `data-variant`) is given **dark** text by `ui-card.css` so it stays legible on its light surface instead of inheriting the overlay's white ink; colour variants (accent, text, …) set their own ink and are left untouched |
 | `links` | array of link | Plain related links |
 | `chip` | object | `{text, position, hue}` → `<ui-chip>` (legacy ribbon) |
 | `sticker` | object | `{text, position, hue, burst}` → `<ui-sticker>` |

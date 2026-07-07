@@ -37,7 +37,6 @@
 		.slide-gap { --ui-media-gap: var(--spacing-lg); }
 		.shadow-room { padding-inline: var(--spacing-md); scroll-padding-inline: var(--spacing-md); }
 		.reveal-cards ui-reveal ui-accordion { font-size: var(--font-size-sm); }
-		.dots-dark { --ui-media-dot-bg: rgb(0 0 0 / 0.25); --ui-media-dot-active: #000; }
 		/* section rhythm */
 		
 	</style>
@@ -388,7 +387,7 @@
 	<p>Putting <strong>multiple cards in one slide</strong>, all driven by <code>stagger</code> — the group snaps as one slide and its cards / content reveal on snap.</p>
 
 	<div class="grid">
-			<ui-media class="slide-gap dots-dark reveal-cards" media="nav(blw) arw(bare) stagger ani(lft)">
+			<ui-media class="slide-gap reveal-cards" media="nav(blw) arw(bare) stagger ani(lft)">
 				<ui-slide class="slide-cols" style="--cols: 3">
 					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)" style="--ui-reveal-content-bg: hsl(255 60% 95%);">
 						<details name="stagger-games">
@@ -574,7 +573,7 @@
 	<h3>Room for card shadows — <code>padding</code> + <code>scroll-padding</code></h3>
 	<p>Full <code>&lt;ui-card&gt;</code>s as slides, each an elevated card with its own <code>box-shadow</code>. The scroller clips its scrollport, so without room the shadow gets cut off at the edges. The <code>.shadow-room</code> class adds matching <code>padding-inline</code> <strong>and</strong> <code>scroll-padding-inline</code> — the padding gives the shadow space, the scroll-padding keeps snapped slides inset so it's never clipped.</p>
 	<div class="grid">
-			<ui-media class="dots-dark slide-gap shadow-room" media="nav(blw) arw(bare) stagger ani(lft)">
+			<ui-media class="slide-gap shadow-room" media="nav(blw) arw(bare) stagger ani(lft)">
 				<ui-slide class="slide-cols" style="--cols: 2">
 					<ui-card variant="col" media="asr(4/3) crd(rise)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
