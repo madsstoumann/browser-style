@@ -103,6 +103,7 @@ only**, gated by `@supports (scroll-marker-group: after)`. Everywhere else it
 | `arw(drk)` | `arrow="drk"` | **Dark theme** in one atom — dark circle + white glyph + light hover ring; composes on the overlay and in `nav(blw)`/`nav(abv)` bands. On `arw(bare)` it just paints a dark glyph |
 | `arw(sm)` `arw(md)` `arw(lg)` `arw(xl)` | `arrow="sm…xl"` | Button size (`md` = 2.25rem default) |
 | `arw(bare)` | `arrow="bare"` | **Drop the circle** — render the glyph itself as a recolourable shape (`--ui-media-arrow-color`) |
+| `arw(sqr)` `arw(sft)` | `arrow="sqr/sft"` | **Square** button instead of the default circle — `sqr` = sharp corners, `sft` = slight radius (`--ui-media-arrow-radius`) |
 | `arw(set)` | `arrow="set"` | Group both arrows as an **adjacent pair** at the end (horizontal: inline-end; vertical: stacked at block-end). Pair with `arw(bot)`/`arw(top)` for a bottom-/top-end set; on `axis(y)`, `arw(set) arw(top)` stacks the pair at the top |
 | `arw(hid)` | `arrow="hid"` | Auto-**hide** the dead-end arrow (default keeps it visible but dimmed) |
 | `arw(mid)` `arw(top)` `arw(bot)` | `arrow="mid/top/bot"` | Vertical placement of the edge arrows (`mid` = centered default) |

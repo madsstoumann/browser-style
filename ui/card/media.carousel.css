@@ -1,23 +1,17 @@
 /* ui-media carousel — internals in media.carousel.md, tokens in carousel.md */
 @layer bs-component {
 
-	/* Component-token defaults — declared once on the carousel HOST: an element with a
-	   nav media= token (the <ui-card> ancestor OR a self-configured <ui-media>) and the
-	   attribute-form <ui-media nav>. Placement setters (arw(bot)/nav(blw)…) match the host
-	   and compute calc() there, so the vars MUST exist on the host — not only on <ui-media>.
-	   Zero-specificity :where() → token setters still override by source order, and the
-	   values inherit down to the <ui-media> pseudos. Lets every var() below drop its fallback. */
 	:where([media*="nav"], ui-media[nav]) {
 		--ui-media-bg: #0000;
 		--ui-media-overlay-gap: 0.75rem;
 		--ui-media-arrow-size: 2.25rem;
 		--ui-media-arrow-gap: 0.5rem;
-		--ui-media-arrow-bg: rgb(255 255 255 / 0.7);                       /* frosted light circle (Instagram) — picks up image tint */
+		--ui-media-arrow-bg: rgb(255 255 255 / 0.7);
 		--ui-media-arrow-bg-hover: rgb(255 255 255 / 0.9);
-		--ui-media-arrow-color: #fff;                                     /* arw(bare) glyph ink (circle ignores this) */
-		--ui-media-arrow-border: 0;                                        /* no ring on the light circle */
-		--ui-media-arrow-shadow: 0 1px 3px rgb(0 0 0 / 0.15);              /* soft lift, keeps the circle legible over any photo */
-		--ui-media-arrow-nudge: calc(var(--ui-media-arrow-size) * 0.03);   /* optical: shift chevron toward the tip */
+		--ui-media-arrow-color: #fff;
+		--ui-media-arrow-border: 0;
+		--ui-media-arrow-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
+		--ui-media-arrow-nudge: calc(var(--ui-media-arrow-size) * 0.03);
 		--ui-media-band: 2.75rem;
 		--ui-media-below-gap: var(--spacing-sm, 0.5rem);
 		--ui-media-above-gap: var(--spacing-sm, 0.5rem);
@@ -37,7 +31,7 @@
 	ui-media:where([media*="nav"], [nav]) {
 		background: var(--ui-media-bg);
 		display: flex;
-		gap: var(--ui-media-gap, 0);   /* space between slides/pages; 0 = flush (default) */
+		gap: var(--ui-media-gap, 0);
 		inline-size: round(down, 100%, 1px);
 		overflow-x: auto;
 		overscroll-behavior-x: contain;
@@ -58,11 +52,6 @@
 		position: static;
 	}
 
-	/* ---- keyboard focus on the SCROLLER itself (arrow-key scrolling) ----
-	   The carousel <ui-media> is a keyboard-focusable scroller. Ring it with a dashed
-	   outline — but only the OUTER scroller: `:not(:where(ui-media *))` excludes any
-	   <ui-media> nested inside another (a slide's own media frame never rings).
-	   Nested in a card/reveal → ring the wrapper (the whole card); standalone → ring the media. */
 	:where(ui-card, ui-reveal):has(ui-media:focus-visible:not(:where(ui-media *))),
 	ui-media:focus-visible:not(:where(ui-media *)):not(:where(ui-card, ui-reveal) *) {
 		outline: var(--ui-media-focus-width, 2px) dashed var(--ui-media-focus-color, var(--ring-color));
@@ -70,9 +59,6 @@
 	}
 	/* nested scroller: suppress its own (UA) ring so only the wrapper shows one */
 	:where(ui-card, ui-reveal) ui-media:focus-visible:not(:where(ui-media *)) { outline: none; }
-	/* clip-path clips an OUTSET outline away — on focus, drop the clip so the ring shows;
-	   the element's border-radius still rounds the frame while idle (e.g. standalone
-	   nav(abv) / nav(blw) / dot(tmb) carousels). */
 	ui-media[media*="clip"]:focus-visible:not(:where(ui-media *)):not(:where(ui-card, ui-reveal) *) {
 		clip-path: none;
 	}
@@ -89,56 +75,27 @@
 		scroll-snap-type: y mandatory;
 	}
 
-	/* ---- Play/pause control: <ui-play> pinned on a scrolling carousel ----
-	   Absolute furniture scrolls away with the slides; a zero-width position:sticky
-	   flex child stays pinned to the scrollport edge instead. Gated on the JS
-	   autoplay/loop tokens (a play/pause control only applies to autoplay). Corner
-	   via play(*): --_play-block (block edge) · --_play-inline (sticky inline edge) ·
-	   --_play-justify (overflow direction of the button out of the 0-width box).
-	   Default bottom-start. End corners (play(*e)) need <ui-play> as the LAST child
-	   so sticky-right pins — ui-media.js moves it there. */
-	/* :not(ui-media ui-media) keeps this off a NESTED slide frame's own <ui-play> (a
-	   per-slide video control) — only the scroller's direct control is pinned; nested
-	   controls fall back to the centered furniture rule in media.css. */
 	:where([media*="auto"], [media*="loop"]) ui-media:not(ui-media ui-media) > ui-play,
 	ui-media:where([media*="auto"], [media*="loop"], [nav~="auto"], [nav~="loop"]) > ui-play {
 		align-content: var(--_play-block, end);
 		display: grid;
-		inline-size: var(--_play-size, 0);                /* start corners: 0 (no slide slot) */
+		inline-size: var(--_play-size, 0);
 		inset-block: 0;
 		inset-inline: var(--_play-inline, var(--_g) auto);
-		justify-items: var(--_play-justify, start);       /* button overflows the 0-width box */
+		justify-items: var(--_play-justify, start);
 		overflow: visible;
 		padding-block: var(--_g);
 		position: sticky;
-		translate: none;                                  /* cancel the furniture cc translate */
-		z-index: 3;                                       /* with arrows/dots, above slides */
+		translate: none;
+		z-index: 3;
 	}
-	/* corner setters live on the host/ui-media, so they use --ui-media-overlay-gap
-	   (defined on the host, inherits here) — NOT --_g, which is only set on ui-play.
-	   End (inline-end) corners: real width + LAST child so right-sticky can clamp
-	   (a zero-width box has no rectangle to stick on the inline-end). ui-media.js
-	   moves the control to last child for play(*e). Start corners stay zero-width. */
 	:where([media*="play(ts)"]) ui-media, ui-media:where([media*="play(ts)"]) { --_play-block: start;  --_play-inline: var(--ui-media-overlay-gap) auto; --_play-justify: start; }
 	:where([media*="play(te)"]) ui-media, ui-media:where([media*="play(te)"]) { --_play-block: start;  --_play-inline: auto var(--ui-media-overlay-gap); --_play-justify: end; --_play-size: max-content; }
 	:where([media*="play(cs)"]) ui-media, ui-media:where([media*="play(cs)"]) { --_play-block: center; --_play-inline: var(--ui-media-overlay-gap) auto; --_play-justify: start; }
 	:where([media*="play(ce)"]) ui-media, ui-media:where([media*="play(ce)"]) { --_play-block: center; --_play-inline: auto var(--ui-media-overlay-gap); --_play-justify: end; --_play-size: max-content; }
 	:where([media*="play(bs)"]) ui-media, ui-media:where([media*="play(bs)"]) { --_play-block: end;    --_play-inline: var(--ui-media-overlay-gap) auto; --_play-justify: start; }
 	:where([media*="play(be)"]) ui-media, ui-media:where([media*="play(be)"]) { --_play-block: end;    --_play-inline: auto var(--ui-media-overlay-gap); --_play-justify: end; --_play-size: max-content; }
-	/* Only the 6 edge corners are pinnable (sticky pins to an edge, not the centre).
-	   Center-inline tokens (play(tc/cc/bc)) are for a NON-scrolling video (furniture,
-	   absolute — see media.css); on a scrolling carousel they fall back to bottom-start. */
 
-	/* ---- Staggered content reveal — opt-in via media="stagger" (pure CSS, no JS) ----
-	   Each slide is a scroll-state query container; when it becomes the SNAPPED (current)
-	   slide, its <ui-content> children fade + rise in with a per-child delay. Time-based
-	   (clock, via transition-delay), so the cascade is identical on autoplay, arrow-click
-	   and swipe — same shape as chrome.dev's hero slider. Shares the global --stagger-*
-	   tokens. Chromium-only (scroll-state queries, like ::scroll-marker); where unsupported
-	   the @container rule is ignored and content simply shows. Reduced-motion: effect off. */
-	/* Card column-index for multi-card slides. Registered so sibling-index() computes on the
-	   CARD (a bare custom property would defer substitution to the use site and lose the
-	   card's position); it then inherits to the card's content for the nested offset. */
 	@property --_stg-crd-i { syntax: "<integer>"; inherits: true; initial-value: 0; }
 
 	@media (prefers-reduced-motion: no-preference) {
@@ -152,9 +109,6 @@
 		ui-media:where([media*="stagger"], [nav~="stagger"]) > ui-slide > * {
 			--_stg-crd-i: calc(sibling-index() - 1);
 		}
-		/* transition + from-state for BOTH stagger targets — cards cascade in like the
-		   ui-tabs/ui-reveal stagger, and every <ui-content> child cascades too (nested).
-		   ani() drives the from-state via --_stg-tr / --_stg-sc / --_stg-fl (no-op unless set). */
 		:where([media*="stagger"]) ui-media > ui-slide > *,
 		ui-media:where([media*="stagger"], [nav~="stagger"]) > ui-slide > *,
 		:where([media*="stagger"]) ui-media ui-content > *,
@@ -170,37 +124,28 @@
 		ui-media:where([media*="stagger"], [nav~="stagger"]) > ui-slide > * {
 			transition-delay: calc(var(--stagger-begin) + var(--_stg-crd-i) * var(--stagger-step));
 		}
-		/* delay — content children cascade by (card index + child index). --_stg-crd-i is 0 on
-		   single-card (hero) slides, so this reduces to a plain per-child stagger there. */
 		:where([media*="stagger"]) ui-media ui-content > *,
 		ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > * {
 			transition-delay: calc(var(--stagger-begin) + (var(--_stg-crd-i) + sibling-index() - 1) * var(--stagger-step));
 		}
-		/* hide while the slide is NOT snapped → reveals (with the delays above) on snap.
-		   Hidden state inside the query means no-support degrades to "shown". Two independent
-		   from-state channels: cards read --_stg-crd-* (set by crd()), content reads --_stg-* (ani()). */
 		@container not scroll-state(snapped: inline) {
 			:where([media*="stagger"]) ui-media > ui-slide > *,
 			ui-media:where([media*="stagger"], [nav~="stagger"]) > ui-slide > * {
 				opacity: 0;
-				translate: var(--_stg-crd-tr, 0 var(--stagger-distance));   /* card channel — default rise */
+				translate: var(--_stg-crd-tr, 0 var(--stagger-distance));
 				scale: var(--_stg-crd-sc, 1);
 				filter: var(--_stg-crd-fl, none);
 			}
 			:where([media*="stagger"]) ui-media ui-content > *,
 			ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > * {
 				opacity: 0;
-				translate: var(--_stg-tr, 0 var(--stagger-distance));   /* content channel — default rise */
+				translate: var(--_stg-tr, 0 var(--stagger-distance));
 				scale: var(--_stg-sc, 1);
 				filter: var(--_stg-fl, none);
 			}
 		}
 	}
 
-	/* ani(<type>) — reveal type: sets the hidden "from" state consumed above. Bare
-	   (element-level) so it works on the carousel host (all slides) OR on an individual
-	   slide's media= (per-slide — a closer ancestor's var wins for that slide's content).
-	   Vars are harmless elsewhere (only read by the snapped-query rule). */
 	:where([media*="ani(rise)"]) { --_stg-tr: 0 var(--stagger-distance); }
 	:where([media*="ani(fall)"]) { --_stg-tr: 0 calc(-1 * var(--stagger-distance)); }
 	:where([media*="ani(lft)"])  { --_stg-tr: calc(-1 * var(--stagger-distance)) 0; }
@@ -209,9 +154,6 @@
 	:where([media*="ani(blr)"])  { --_stg-tr: 0 0; --_stg-fl: blur(12px); }
 	:where([media*="ani(fde)"])  { --_stg-tr: 0 0; }
 
-	/* crd(<type>) — CARD-level reveal (the card as a unit), independent of ani() (content).
-	   Same type vocabulary, own var channel (--_stg-crd-*). Set on the carousel for all cards, or
-	   on an individual card. Default (no crd()) = rise. e.g. media="stagger crd(rise)". */
 	:where([media*="crd(rise)"]) { --_stg-crd-tr: 0 var(--stagger-distance); }
 	:where([media*="crd(fall)"]) { --_stg-crd-tr: 0 calc(-1 * var(--stagger-distance)); }
 	:where([media*="crd(lft)"])  { --_stg-crd-tr: calc(-1 * var(--stagger-distance)) 0; }
@@ -230,16 +172,9 @@
 	ui-media:where([media*="nav(abv)"], [nav~="abv"]) {
 		background: var(--ui-media-controls-bg, var(--ui-media-bg));
 		padding-block-start: calc(var(--ui-media-above-gap) + var(--ui-media-band));
-		scroll-padding-block-start: calc(var(--ui-media-above-gap) + var(--ui-media-band));   /* snap below the band, not behind it (matters on axis(y)) */
+		scroll-padding-block-start: calc(var(--ui-media-above-gap) + var(--ui-media-band));
 	}
 
-	/* ---- Token-setter atoms (custom properties ONLY) ----
-	   Deliberately OUTSIDE the @supports gate below: these rules merely set vars
-	   (sizes, inks, glyph URLs) consumed by the native pseudo rules — or, where
-	   ::scroll-marker/::scroll-button are unsupported, by /polyfill/carousel.css.
-	   Custom-property declarations are inert without a consumer, so Chromium
-	   behavior is unchanged. Rules that target pseudos (or set anchor()-valued
-	   vars) stay inside the gate. */
 	/* dot size — one scale drives dots, pills AND thumbnails (dot(tmb) reads --ui-media-thumb-size) */
 	:where([media*="dot(sm)"]), ui-media[dot~="sm"] { --ui-media-dot-size: 0.45rem; --ui-media-pill-width: 1.15rem; --ui-media-pill-height: 0.28rem; --ui-media-thumb-size: 2.25rem; }
 	:where([media*="dot(md)"]), ui-media[dot~="md"] { --ui-media-dot-size: 0.6rem;  --ui-media-pill-width: 1.5rem;  --ui-media-pill-height: 0.35rem; --ui-media-thumb-size: 3rem; }
@@ -261,50 +196,22 @@
 		--ui-media-arrow-grey: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
 		--ui-media-arrow-glyph: var(--ui-media-chevron-dark);
 	}
-	/* glyph shape: chevron (default) × arw(arr) full-arrow.
-	   full arrow has a shaft (mass nearer centre), so it needs a smaller optical nudge than the chevron */
 	:where([media*="arw(arr)"]), ui-media[arrow~="arr"] { --ui-media-arrow-glyph: var(--ui-media-arrow-dark); --ui-media-arrow-nudge: calc(var(--ui-media-arrow-size) * 0.015); }
-	/* ---- theme presets: arw(lgt) = light circle + dark glyph (the default, made explicit) ----
-	        arw(drk) = the complete DARK theme (dark circle + white glyph + light hover ring), one atom.
-	        Composes on the overlay AND inside nav(blw)/nav(abv) bands (re-asserted after the band holder). */
-	:where([media*="arw(lgt)"]), ui-media[arrow~="lgt"] { --ui-media-arrow-glyph: var(--ui-media-chevron-dark); }
-	:where([media*="arw(arr)"][media*="arw(lgt)"]), ui-media[arrow~="arr"][arrow~="lgt"] { --ui-media-arrow-glyph: var(--ui-media-arrow-dark); }
-	:where([media*="arw(drk)"]), ui-media[arrow~="drk"] {
-		--ui-media-arrow-bg: rgb(0 0 0 / 0.6);
-		--ui-media-arrow-bg-hover: rgb(0 0 0 / 0.78);
-		--ui-media-arrow-glyph: var(--ui-media-chevron-light);
-		--ui-media-arrow-color: rgb(0 0 0 / 0.85);   /* bare(): dark ink for a light image (circle ignores this) */
-		--ui-media-arrow-glyph-dim: var(--ui-media-chevron-dark);   /* disabled bare stays dark (dimmed), not the light circle glyph */
-		--ui-media-arrow-hover-ring: 0 0 0 2px rgb(255 255 255 / 0.5);
-	}
-	:where([media*="arw(arr)"][media*="arw(drk)"]), ui-media[arrow~="arr"][arrow~="drk"] { --ui-media-arrow-glyph: var(--ui-media-arrow-light); --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
-	/* arrow size */
+	/* (theme presets arw(lgt)/arw(drk) are declared once, below the band holder — see there) */
+	/* arrow size (md = 2.25rem is the host default — no rule needed) */
 	:where([media*="arw(sm)"]), ui-media[arrow~="sm"] { --ui-media-arrow-size: 1.75rem; }
-	:where([media*="arw(md)"]), ui-media[arrow~="md"] { --ui-media-arrow-size: 2.25rem; }
 	:where([media*="arw(lg)"]), ui-media[arrow~="lg"] { --ui-media-arrow-size: 2.75rem; }
 	:where([media*="arw(xl)"]), ui-media[arrow~="xl"] { --ui-media-arrow-size: 3.25rem; }
+	/* arrow shape — square instead of the default circle */
+	:where([media*="arw(sqr)"]), ui-media[arrow~="sqr"] { --ui-media-arrow-radius: 0; }
+	:where([media*="arw(sft)"]), ui-media[arrow~="sft"] { --ui-media-arrow-radius: var(--radius-sm, 0.25rem); }
 	/* arw(hid) — auto-hide the dead-end arrow */
 	:where([media*="arw(hid)"]), ui-media[arrow~="hid"] { --ui-media-arrow-disabled-opacity: 0; }
-	/* nav(blw) / nav(abv) — flip ink to dark for the light band (placement vars stay gated) */
-	:where([media*="nav(blw)"]),
-	ui-media[nav~="blw"] {
-		--ui-media-arrow-bg: rgb(0 0 0 / 0.08);          /* light-grey circle for the light band (not the frosted-white overlay default) */
+	:where([media*="nav(blw)"], [media*="nav(abv)"]),
+	ui-media:where([nav~="blw"], [nav~="abv"]) {
+		--ui-media-arrow-bg: rgb(0 0 0 / 0.08);
 		--ui-media-arrow-bg-hover: rgb(0 0 0 / 0.16);
-		--ui-media-arrow-color-hover: rgb(0 0 0 / 1);     /* bare glyph darkens on hover in the band */
-		--ui-media-arrow-shadow: none;                    /* flat on the band, no lift */
-		--ui-media-arrow-glyph: var(--ui-media-chevron-grey);   /* softer grey glyph for the light circle (not pure black) */
-		--ui-media-arrow-color: rgb(0 0 0 / 0.8);
-		--ui-media-arrow-glyph-dim: var(--ui-media-chevron-dark);
-		--ui-media-dot-bg: rgb(0 0 0 / 0.25);
-		--ui-media-dot-active: rgb(0 0 0 / 0.7);
-		--ui-media-pill-track: rgb(0 0 0 / 0.2);
-		--ui-media-pill-fill: rgb(0 0 0 / 0.7);
-	}
-	:where([media*="nav(abv)"]),
-	ui-media[nav~="abv"] {
-		--ui-media-arrow-bg: rgb(0 0 0 / 0.08);          /* light-grey circle for the light band */
-		--ui-media-arrow-bg-hover: rgb(0 0 0 / 0.16);
-		--ui-media-arrow-color-hover: rgb(0 0 0 / 1);     /* bare glyph darkens on hover in the band */
+		--ui-media-arrow-color-hover: rgb(0 0 0 / 1);
 		--ui-media-arrow-shadow: none;
 		--ui-media-arrow-glyph: var(--ui-media-chevron-grey);
 		--ui-media-arrow-color: rgb(0 0 0 / 0.8);
@@ -314,22 +221,19 @@
 		--ui-media-pill-track: rgb(0 0 0 / 0.2);
 		--ui-media-pill-fill: rgb(0 0 0 / 0.7);
 	}
-	:where([media*="nav(blw)"][media*="arw(arr)"]),
-	ui-media[nav~="blw"][arrow~="arr"] { --ui-media-arrow-glyph: var(--ui-media-arrow-grey); --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
-	:where([media*="nav(abv)"][media*="arw(arr)"]),
-	ui-media[nav~="abv"][arrow~="arr"] { --ui-media-arrow-glyph: var(--ui-media-arrow-grey); --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
-	/* theme presets re-asserted so they win inside the nav(blw) / nav(abv) band:
-	   arw(drk) = full dark theme (dark circle + white glyph), arw(lgt) = dark glyph on the light band circle. */
+	:where([media*="nav(blw)"][media*="arw(arr)"], [media*="nav(abv)"][media*="arw(arr)"]),
+	ui-media:where([nav~="blw"][arrow~="arr"], [nav~="abv"][arrow~="arr"]) { --ui-media-arrow-glyph: var(--ui-media-arrow-grey); --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
+	:where([media*="arw(lgt)"]), ui-media[arrow~="lgt"] { --ui-media-arrow-glyph: var(--ui-media-chevron-dark); }
+	:where([media*="arw(arr)"][media*="arw(lgt)"]), ui-media[arrow~="arr"][arrow~="lgt"] { --ui-media-arrow-glyph: var(--ui-media-arrow-dark); }
 	:where([media*="arw(drk)"]), ui-media[arrow~="drk"] {
 		--ui-media-arrow-bg: rgb(0 0 0 / 0.6);
 		--ui-media-arrow-bg-hover: rgb(0 0 0 / 0.78);
 		--ui-media-arrow-glyph: var(--ui-media-chevron-light);
 		--ui-media-arrow-color: rgb(0 0 0 / 0.85);
+		--ui-media-arrow-glyph-dim: var(--ui-media-chevron-dark);
 		--ui-media-arrow-hover-ring: 0 0 0 2px rgb(255 255 255 / 0.5);
 	}
-	:where([media*="arw(arr)"][media*="arw(drk)"]), ui-media[arrow~="arr"][arrow~="drk"] { --ui-media-arrow-glyph: var(--ui-media-arrow-light); }
-	:where([media*="arw(lgt)"]), ui-media[arrow~="lgt"] { --ui-media-arrow-glyph: var(--ui-media-chevron-dark); }
-	:where([media*="arw(arr)"][media*="arw(lgt)"]), ui-media[arrow~="arr"][arrow~="lgt"] { --ui-media-arrow-glyph: var(--ui-media-arrow-dark); }
+	:where([media*="arw(arr)"][media*="arw(drk)"]), ui-media[arrow~="arr"][arrow~="drk"] { --ui-media-arrow-glyph: var(--ui-media-arrow-light); --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
 
 	@supports (scroll-marker-group: after) {
 
@@ -349,7 +253,7 @@
 				position: absolute;
 				position-anchor: auto;
 				top: calc(anchor(bottom) - var(--ui-media-overlay-gap) - var(--ui-media-dot-size));
-				z-index: 3; /* above scrim (1) + furniture (2); */
+				z-index: 3;
 			}
 			/* one dot per slide — furniture (chip/sticker/play/save) excluded */
 			& > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
@@ -383,7 +287,7 @@
 			:where([media*="dot(pll)"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
 			ui-media:where([media*="dot(pll)"], [dot~="pll"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
 				animation: ui-media-pill-fill var(--ui-media-autoplay) linear forwards;
-				animation-play-state: var(--ui-media-play-state, running);   /* ui-media.js sets 'paused' on ui-play pause */
+				animation-play-state: var(--ui-media-play-state, running);
 				background: linear-gradient(var(--ui-media-pill-fill), var(--ui-media-pill-fill)) no-repeat 0 0 / 0% 100% var(--ui-media-pill-track);
 			}
 		}
@@ -397,16 +301,13 @@
 		:where([media*="dot(non)"]) ui-media,
 		ui-media:where([media*="dot(non)"], [dot~="non"]) { scroll-marker-group: none; }
 
-		/* dot(tmb) — image thumbnails instead of dots. Each slide sets its own picture:
-		   style="--ui-media-thumb-url: url(...)" (later: attr(data-thumb type(<image>)) once Baseline).
-		   Active thumb: full opacity + a bottom "timer" stripe that fills L→R over --ui-media-autoplay. */
 		:where([media*="dot(tmb)"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
 		ui-media:where([media*="dot(tmb)"], [dot~="tmb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
 			aspect-ratio: var(--ui-media-thumb-ratio, 4 / 3);
 			background: var(--ui-media-thumb-url) center / cover no-repeat var(--ui-media-thumb-bg, rgb(0 0 0 / 0.2));
 			block-size: var(--ui-media-thumb-size, 2.25rem);
 			border: var(--ui-media-thumb-border, 2px solid #fff);
-			border-color: var(--ui-media-thumb-border-color, rgb(255 255 255 / 0.5));   /* dim border on inactive thumbs */
+			border-color: var(--ui-media-thumb-border-color, rgb(255 255 255 / 0.5));
 			border-radius: var(--ui-media-thumb-radius, var(--radius-sm, 0.25rem));
 			inline-size: auto;
 			opacity: var(--ui-media-thumb-opacity, 1);
@@ -418,22 +319,17 @@
 			background:
 				linear-gradient(var(--ui-media-thumb-timer, #fff), var(--ui-media-thumb-timer, #fff)) bottom left / 0 var(--ui-media-thumb-timer-height, 3px) no-repeat,
 				var(--ui-media-thumb-url) center / cover no-repeat var(--ui-media-thumb-bg, rgb(0 0 0 / 0.2));
-			border-color: var(--ui-media-thumb-border-color-active, #fff);   /* full-strength border on the current thumb */
+			border-color: var(--ui-media-thumb-border-color-active, #fff);
 			opacity: 1;
 		}
 		@media (prefers-reduced-motion: no-preference) {
 			:where([media*="dot(tmb)"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
 			ui-media:where([media*="dot(tmb)"], [dot~="tmb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
-				/* timer is OFF by default (it's autoplay feedback); ui-media.js sets
-				   --ui-media-thumb-timer-name to the keyframe when autoplay runs. Set it manually to preview. */
 				animation: var(--ui-media-thumb-timer-name, none) var(--ui-media-autoplay) linear forwards;
-				animation-play-state: var(--ui-media-play-state, running);   /* ui-media.js sets 'paused' on ui-play pause */
+				animation-play-state: var(--ui-media-play-state, running);
 			}
 		}
 
-
-		/* ---- ARROWS present: bare nav · nav(arw) · nav(blw) · nav(abv) ----
-		   (base glyph vars + size/ink atoms hoisted above the @supports gate) */
 		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) ui-media,
 		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"])) {
 			&::scroll-button(*) {
@@ -441,7 +337,7 @@
 				background: var(--ui-media-arrow-glyph) calc(50% + var(--ui-media-arrow-nudge)) center / var(--ui-media-arrow-glyph-size, 75%) no-repeat var(--ui-media-arrow-bg);
 				border: var(--ui-media-arrow-border, 0);
 				border-radius: var(--ui-media-arrow-radius, var(--radius-circle, 50%));
-				box-shadow: var(--ui-media-arrow-shadow, none);
+				box-shadow: var(--ui-media-arrow-shadow);
 				content: "" / "";
 				cursor: pointer;
 				inline-size: var(--ui-media-arrow-size);
@@ -452,7 +348,7 @@
 				transition: background-color var(--duration-fast, 100ms) var(--ease-default, ease), transform var(--duration-fast, 100ms) var(--ease-default, ease);
 				z-index: 3;
 			}
-			&::scroll-button(*):hover { background-color: var(--ui-media-arrow-bg-hover); box-shadow: var(--ui-media-arrow-hover-ring, var(--ui-media-arrow-shadow, none)); }
+			&::scroll-button(*):hover { background-color: var(--ui-media-arrow-bg-hover); box-shadow: var(--ui-media-arrow-hover-ring, var(--ui-media-arrow-shadow)); }
 			&::scroll-button(*):focus-visible {
 				outline: var(--ring-width) solid var(--ring-color);
 				outline-offset: var(--ring-offset);
@@ -511,8 +407,6 @@
 				mask: var(--ui-media-arrow-glyph) calc(50% + var(--ui-media-arrow-nudge)) center / var(--ui-media-arrow-glyph-size, 80%) no-repeat;
 			}
 			&::scroll-button(*):hover { background-color: var(--ui-media-arrow-color-hover, var(--ui-media-arrow-color)); --_arw-scale: var(--ui-media-arrow-hover-scale, 1.18); }
-			/* bare paints its glyph with mask(), which clips a normal outline — so keyboard
-			   focus just scales the glyph (like hover); the scroller's dashed ring carries the rest */
 			&::scroll-button(*):focus-visible { --_arw-scale: var(--ui-media-arrow-hover-scale, 1.18); }
 			&::scroll-button(*):disabled {
 				mask: none;
@@ -520,7 +414,7 @@
 				filter: none;
 				opacity: var(--ui-media-arrow-disabled-opacity, 0.5);
 				pointer-events: none;
-				transition: none;   /* switch instantly — no bg-colour fade that flashes a filled circle as the mask drops */
+				transition: none;
 			}
 		}
 
@@ -634,7 +528,7 @@
 			background: var(--ui-media-controls-bg, var(--color-surface, #fff));
 			block-size: calc(var(--ui-media-below-gap) + var(--ui-media-band));
 			flex-direction: row;
-			inline-size: auto;   /* reset the axis(y) arrow-width band → full-width horizontal band (left/right anchor) */
+			inline-size: auto;
 			justify-content: center;
 			justify-self: auto;
 			left: anchor(left);
@@ -695,10 +589,6 @@
 			right: calc(anchor(right) + var(--ui-media-overlay-gap));
 		}
 
-		/* marker-group corner placement (overlay) — tl · tr · bl · br. Placed last so it wins
-		   over the axis(y) column rules; resets their inline-size/align/margin so a rail fits in a
-		   corner. Flex-direction is left to context (row overlay, column in axis(y)). Inset via
-		   --ui-media-marker-inset (falls back to overlay gap). */
 		:where([media*="dot(tl)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(tl)"], [dot~="tl"])::scroll-marker-group,
 		:where([media*="dot(tr)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(tr)"], [dot~="tr"])::scroll-marker-group,
 		:where([media*="dot(bl)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(bl)"], [dot~="bl"])::scroll-marker-group,
@@ -716,11 +606,6 @@
 		:where([media*="dot(br)"]) ui-media::scroll-marker-group,
 		ui-media:where([media*="dot(br)"], [dot~="br"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: calc(anchor(right) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: auto; justify-self: end; }
 
-		/* horizontal centre band — top-centre (tc) / bottom-centre (bc). Unlike the corners,
-		   these force flex-direction:row so a pill timer (or dot row) reads horizontally even on
-		   an axis(y) scroller, where the default puts markers in a vertical column between the
-		   up/down arrows. Same anchoring as the horizontal default, so dot(bc) on a horizontal
-		   carousel is a no-op. */
 		:where([media*="dot(tc)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(tc)"], [dot~="tc"])::scroll-marker-group,
 		:where([media*="dot(bc)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(bc)"], [dot~="bc"])::scroll-marker-group {
 			align-self: auto;
