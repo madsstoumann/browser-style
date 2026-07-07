@@ -313,6 +313,12 @@
 	ui-media[nav~="blw"][arrow~="arr"] { --ui-media-arrow-glyph: var(--ui-media-arrow-grey); --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
 	:where([media*="nav(abv)"][media*="arw(arr)"]),
 	ui-media[nav~="abv"][arrow~="arr"] { --ui-media-arrow-glyph: var(--ui-media-arrow-grey); --ui-media-arrow-glyph-dim: var(--ui-media-arrow-dark); }
+	/* lgt / drk re-asserted so an explicit glyph shade wins inside the band — e.g. a dark
+	   circle + white chevron: `nav(blw) arw(lgt)` plus a dark --ui-media-arrow-bg. */
+	:where([media*="arw(drk)"]), ui-media[arrow~="drk"] { --ui-media-arrow-glyph: var(--ui-media-chevron-dark); }
+	:where([media*="arw(arr)"][media*="arw(drk)"]), ui-media[arrow~="arr"][arrow~="drk"] { --ui-media-arrow-glyph: var(--ui-media-arrow-dark); }
+	:where([media*="arw(lgt)"]), ui-media[arrow~="lgt"] { --ui-media-arrow-glyph: var(--ui-media-chevron-light); }
+	:where([media*="arw(arr)"][media*="arw(lgt)"]), ui-media[arrow~="arr"][arrow~="lgt"] { --ui-media-arrow-glyph: var(--ui-media-arrow-light); }
 
 	@supports (scroll-marker-group: after) {
 
