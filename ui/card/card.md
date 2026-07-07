@@ -132,23 +132,24 @@ Names are short with `-l`/`-r` (left/right) and `-d`/`-u` (down/up) suffixes. Fu
 hex arr-l arr-r pt-l pt-r chev-l chev-r star plus minus msg close frame frame-in bolt
 blinds-h blinds-v circle circ-45`. The shape polygons live in the **opt-in
 `media.shapes.css`** sheet (not bundled by `ui-card.css` — link it where you use `shp()`,
-see [`media.html`](media.html)); the static clip **mechanism** ships in `media.css`, so it
-also works with any custom `--ui-media-shape` you set.
+demos in [`media.shape.html`](media.shape.html)); the static clip **mechanism** ships in
+`media.css`, so it also works with any custom `--ui-media-shape` you set.
 
 Every shape carries a `--ui-shape-morph` target; add **`hov(shape)`** to animate the clip
 to it on hover (the base clip is static without it) — polygons morph to a matching-vertex
 rect, `curve-*` grows to a full-cover `ellipse()`, circles to a `circle()` (same-function
-interpolation). Reverse a shape by swapping the two (`frame-in` = a small inset window that
-grows to the full frame). The hover morph lives in `media.hover.css` (see `hov()` below).
+interpolation). Use **`hov(shape-rev)`** instead to swap the direction — rest at the full frame,
+morph *into* the shape on hover (e.g. `shp(star) hov(shape-rev)`); `frame-in` is a bespoke variant.
+The hover morph lives in `media.hover.css` (see `hov()` below).
 
 **`tnt()` — tint the image a solid colour.** Blends a solid-colour overlay (`ui-media::before`)
 over the image with `mix-blend-mode` — a plain `filter` can't hit an exact colour. Named keys
 `tnt(red|orange|green|blue|accent|dark|light|subtle)` map to the theme colours; bare `tnt` reads
-`--ui-media-tint-color` (any CSS colour) for arbitrary brand hues. Default blend `color` (recolour,
-keeps detail); switch via `tnt(mul|scn|lum|hrd)` or `--ui-media-tint-blend`, fade with
+`--ui-media-tint-color` (any CSS colour **or gradient**) for arbitrary brand hues. Default blend
+`color` (recolour, keeps detail); switch via `--ui-media-tint-blend`, fade with
 `--ui-media-tint-opacity`. Pair with **`hov(tint)`** to fade the tint out on hover (reveal true
-colour). Lives in the **opt-in `media.tint.css`** sheet (link it where you tint; not bundled by
-`ui-card.css`).
+colour). Demos in [`media.tint.html`](media.tint.html); lives in the **opt-in `media.tint.css`**
+sheet (link it where you tint; not bundled by `ui-card.css`).
 
 Attribute audit across all `ui/card` + `ui/reveal` demos found exactly these on the
 host elements: `variant`, `media`, `content`, `type`, `type-lg`, `to`, `icon`,

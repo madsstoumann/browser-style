@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Card — Media Furniture</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Overlay furniture inside &lt;ui-media&gt;: chip (pill label), sticker (disc / burst), save (bookmark toggle) and play — positioned via the 9-code grid and themed via the media= token.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../chip/ui-chip.css">
+	<link rel="stylesheet" href="../sticker/ui-sticker.css">
+	<link rel="stylesheet" href="../play/ui-play.css">
+	<link rel="stylesheet" href="../save/ui-save.css">
+	<link rel="stylesheet" href="../icon/index.css">
+	<link rel="stylesheet" href="ui-card.css">
+	<style>
+		.grid {
+			display: grid;
+			gap: var(--spacing-lg);
+			grid-template-columns: 1fr;
+			margin-block-end: var(--spacing-2xl);
+		}
+		@media (min-width: 540px) {
+			.grid-3 { grid-template-columns: repeat(2, 1fr); }
+		}
+		@media (min-width: 900px) {
+			.grid-3 { grid-template-columns: repeat(3, 1fr); }
+		}
+		code { font-size: 0.9em; }
+	</style>
+</head>
+<body>
+	<h1>UI: Card — Media furniture</h1>
+	<p>Overlay elements placed <strong>inside <code>&lt;ui-media&gt;</code></strong>: <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-sticker&gt;</code>, <code>&lt;ui-save&gt;</code> and <code>&lt;ui-play&gt;</code>. Position and sub-theme come from the parent <code>media=</code> token — <code>chip(&lt;pos&gt;)</code> / <code>sticker(&lt;pos&gt;)</code> / <code>save(&lt;pos&gt;)</code> / <code>play(&lt;pos&gt;)</code> using the 9-code grid (<code>ts tc te · cs cc ce · bs bc be</code>), and <code>chip(&lt;hue&gt;)</code> / <code>sticker(&lt;hue&gt;)</code> for the palette (<code>red orange green blue accent dark light subtle</code>).</p>
+	<p>See also: <a href="media.html">media.html</a> (the full <code>&lt;ui-media&gt;</code> reference).</p>
+
+	<!-- ============================================================
+	     Chip — <ui-chip>
+	     ============================================================ -->
+	<h2>Chip — <code>&lt;ui-chip&gt;</code></h2>
+	<p>A small pill label. Position with <code>chip(&lt;pos&gt;)</code>, colour with <code>chip(&lt;hue&gt;)</code>.</p>
+	<div class="grid grid-3">
+		<ui-card variant="col" media="asr(4/3) chip(bs) chip(green)">
+			<cq-box>
+				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-chip>New</ui-chip></ui-media>
+				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">chip(bs) chip(green)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) chip(te) chip(red)">
+			<cq-box>
+				<ui-media><img src="/assets/images/ergochair.png" alt=""><ui-chip>Sale</ui-chip></ui-media>
+				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">chip(te) chip(red)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) chip(tc) chip(accent)">
+			<cq-box>
+				<ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-chip>Editor's pick</ui-chip></ui-media>
+				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">chip(tc) chip(accent)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Sticker — <ui-sticker>
+	     ============================================================ -->
+	<h2>Sticker — <code>&lt;ui-sticker&gt;</code></h2>
+	<p>A disc, or a starburst with <code>variant="burst"</code> (good for discounts). Position + hue via <code>sticker(&lt;pos&gt;)</code> / <code>sticker(&lt;hue&gt;)</code>. A card can address one chip and one sticker together.</p>
+	<div class="grid grid-3">
+		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(red) chip(be) chip(green)">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/aurasoundpro.png" alt="">
+					<ui-sticker>Featured</ui-sticker>
+					<ui-chip>New</ui-chip>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">Sticker + chip</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(red)">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/ergochair.png" alt="">
+					<ui-sticker variant="burst">-28%</ui-sticker>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">Starburst sticker</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) chip(bs) chip(accent) sticker(te) sticker(orange)">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/brewandbean.png" alt="">
+					<ui-chip>Editor's pick</ui-chip>
+					<ui-sticker>Sale</ui-sticker>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">Accent chip + orange sticker</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<p>The full 9-position grid (<code>ts tc te · cs cc ce · bs bc be</code>), each a red <code>&lt;ui-sticker&gt;</code> disc with <code>&lt;small&gt;</code> + <code>&lt;strong&gt;</code> content. Top row = corners + top-centre; middle row = the centre line (<code>cs cc ce</code>); bottom row = bottom edge.</p>
+	<div class="grid grid-3">
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(ts) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>TS</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(tc) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>TC</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(te) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>TE</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(cs) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>CS</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(cc) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>CC</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(ce) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>CE</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(bs) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>BS</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(bc) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>BC</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(be) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>BE</strong></ui-sticker></ui-media></cq-box></ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Save — <ui-save>
+	     ============================================================ -->
+	<h2>Save — <code>&lt;ui-save&gt;</code></h2>
+	<p>A bookmark / save toggle. Position via <code>save(&lt;pos&gt;)</code>.</p>
+	<div class="grid grid-3">
+		<ui-card variant="col" media="asr(4/3) save(be)">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/aurasoundpro.png" alt="">
+					<ui-save></ui-save>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">save(be)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Play — <ui-play>
+	     ============================================================ -->
+	<h2>Play — <code>&lt;ui-play&gt;</code></h2>
+	<p>An interactive play button, default centred (<code>cc</code>); the glyph is a <code>&lt;ui-icon type="play-pause"&gt;</code> (morphs play↔pause). <code>variant="reveal"</code> hides it until the media is hovered/focused; <code>theme=</code> and <code>size=</code> apply. Card-only (interactive — never inside a reveal <code>&lt;summary&gt;</code>). Load <code>@browser.style/play</code> for the is-playing toggle, or point its <code>&lt;button&gt;</code> at a <code>[popover]</code> for a no-JS lightbox.</p>
+	<div class="grid grid-3">
+		<ui-card variant="col" media="asr(16/9)">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/river.png" alt="">
+					<ui-play><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">always visible</small><h2 data-part="headline">Play (center)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9)">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/destinations.png" alt="">
+					<ui-play variant="reveal"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">variant="reveal"</small><h2 data-part="headline">Hover to reveal</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9)">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/gastronomy.png" alt="">
+					<ui-play theme="red" size="sm"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">theme="red" size="sm"</small><h2 data-part="headline">Themed, small</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<script type="module" src="index.js"></script>
+</body>
+</html>

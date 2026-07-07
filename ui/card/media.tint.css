@@ -9,12 +9,13 @@
  * ui-card.css — link it where you tint (see media.html). Same @layer as media.css.
  *
  *   media="tnt(red)"                 named preset → --ui-theme-red-bg
- *   media="tnt"  style="--ui-media-tint-color:#c8102e"   any brand colour
- *   media="tnt(red) tnt(mul)"        blend shorthand (multiply/poster look)
+ *   media="tnt"  style="--ui-media-tint-color:#c8102e"   any brand colour / gradient
  *   media="tnt(blue) hov(tint)"      fade the tint out on hover → reveal true colour
  *
- * Knobs: --ui-media-tint-color (default --color-accent), --ui-media-tint-blend
- * (default color), --ui-media-tint-opacity (default 1).
+ * Knobs: --ui-media-tint-color (default --color-accent — any CSS <color> OR a
+ * gradient, since it's painted via `background`), --ui-media-tint-blend (default
+ * color; set e.g. multiply/luminosity/screen for other looks), --ui-media-tint-opacity
+ * (default 1).
  *
  * Layering: image (base) · tint ::before (z-1, blends with image) · scrim ::after
  * (z-1) · furniture (z-2). isolation:isolate scopes the blend to the frame.
@@ -48,12 +49,6 @@
 	:where([media*="tnt(dark)"])   { --ui-media-tint-color: var(--ui-theme-dark-bg); }
 	:where([media*="tnt(light)"])  { --ui-media-tint-color: var(--ui-theme-light-bg); }
 	:where([media*="tnt(subtle)"]) { --ui-media-tint-color: var(--ui-theme-subtle-bg); }
-
-	/* blend shorthands — compose with a colour key, e.g. tnt(red) tnt(mul) */
-	:where([media*="tnt(mul)"]) { --ui-media-tint-blend: multiply; }
-	:where([media*="tnt(scn)"]) { --ui-media-tint-blend: screen; }
-	:where([media*="tnt(lum)"]) { --ui-media-tint-blend: luminosity; }
-	:where([media*="tnt(hrd)"]) { --ui-media-tint-blend: hard-light; }
 
 	/* hov(tint) — fade the tint out on hover/focus to reveal the true-colour image.
 	   Reads --_hv-dur / --_hv-ease from media.hover.css; falls back if absent. */
