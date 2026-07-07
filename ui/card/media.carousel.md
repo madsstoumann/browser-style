@@ -28,7 +28,7 @@ Equivalence: `media="nav(blw)"` ≡ `nav="blw"` · `media="arw(drk)"` ≡ `arrow
 ### Shared ink scale
 
 Controls + scrim share one shade vocabulary: `lgt` (light/white) · `drk` (dark/black) ·
-`sub` (subtle/low-contrast) · `med` (scrim only). Arrows + dots use `lgt`/`drk`/`sub`.
+`med` (scrim only). Arrows + dots use `lgt`/`drk`.
 
 ## All tokens (alphabetical)
 
@@ -44,31 +44,29 @@ scroller; the rest layer on top. `asr()` etc. belong to the base frame — see m
 | `arw(bare)` | `arrow="bare"` | CSS | Drop the circle — glyph painted as a recolourable shape (`--ui-media-arrow-color`) |
 | `arw(bot)`  | `arrow="bot"` | CSS | Edge arrows at the bottom |
 | `arw(chv)`  | `arrow="chv"` | CSS | Chevron glyph (**default**) |
-| `arw(drk)`  | `arrow="drk"` | CSS | Dark/black glyph ink (**default**, for the frosted light circle) |
+| `arw(drk)`  | `arrow="drk"` | CSS | **Dark theme** preset — dark circle + white glyph + light hover ring (composes on the overlay and in `nav(blw)`/`nav(abv)` bands; on `arw(bare)` it just paints a dark glyph) |
 | `arw(hid)`  | `arrow="hid"` | CSS | Auto-hide the dead-end arrow (default dims it) |
 | `arw(lg)`   | `arrow="lg"` | CSS | Arrow size 2.75rem |
-| `arw(lgt)`  | `arrow="lgt"` | CSS | Light/white glyph ink (for a dark circle) |
+| `arw(lgt)`  | `arrow="lgt"` | CSS | **Light theme** preset — light circle + dark glyph (the default look, made explicit) |
 | `arw(md)`   | `arrow="md"` | CSS | Arrow size 2.25rem (**default**) |
 | `arw(mid)`  | `arrow="mid"` | CSS | Edge arrows vertically centered (**default**) |
 | `arw(set)`  | `arrow="set"` | CSS | Both arrows as an adjacent pair at the end |
 | `arw(sm)`   | `arrow="sm"` | CSS | Arrow size 1.75rem |
 | `arw(sta)`  | `arrow="sta"` | CSS | `axis(y)`: move up/down arrows + dots to the inline-start edge |
-| `arw(sub)`  | `arrow="sub"` | CSS | Subtle low-contrast ink (for light surfaces / `nav(blw)`) |
 | `arw(top)`  | `arrow="top"` | CSS | Edge arrows at the top |
 | `arw(xl)`   | `arrow="xl"` | CSS | Arrow size 3.25rem |
 | `auto` · `auto(4s)` · `auto(800ms)` | `nav="auto"` | JS | Autoplay (default 5s); pauses on hover/focus/drag/hidden-tab/reduced-motion. Attr form has no inline duration — defaults to 5s. Add a `<ui-play>` child for an explicit play/pause control (then hover/focus pause is dropped — see `play(<corner>)`) |
 | `axis(y)`   | `nav="y"` | CSS | Vertical carousel (snap on Y; arrows become up/down) |
 | `dot(cir)`  | `dot="cir"` | CSS | Circular dots (**default**) |
-| `dot(ctr)`  | `dot="ctr"` | CSS | `nav(blw)`: dots centered in the band (**default**) |
+| `dot(ctr)`  | `dot="ctr"` | CSS | `nav(blw)`/`nav(abv)`: dots centered in the band (**default**) |
 | `dot(drk)`  | `dot="drk"` | CSS | Dark dot ink |
-| `dot(end)`  | `dot="end"` | CSS | `nav(blw)`: dots at the inline-end |
+| `dot(end)`  | `dot="end"` | CSS | `nav(blw)`/`nav(abv)`: dots at the inline-end |
 | `dot(lg)`   | `dot="lg"` | CSS | Dot size 0.8rem |
 | `dot(lgt)`  | `dot="lgt"` | CSS | Light/white dot ink |
 | `dot(md)`   | `dot="md"` | CSS | Dot size 0.6rem (**default**) |
 | `dot(pll)`  | `dot="pll"` | CSS | Pill dots; active pill fills L→R over `--ui-media-autoplay` (timer hint) |
 | `dot(sm)`   | `dot="sm"` | CSS | Dot size 0.45rem |
-| `dot(sta)`  | `dot="sta"` | CSS | `nav(blw)`: dots at the inline-start |
-| `dot(sub)`  | `dot="sub"` | CSS | Subtle low-contrast dot ink |
+| `dot(sta)`  | `dot="sta"` | CSS | `nav(blw)`/`nav(abv)`: dots at the inline-start |
 | `dot(non)`  | `dot="non"` | CSS | No dots (keeps arrows) — arrows-only band |
 | `dot(tmb)`| `dot="tmb"` | CSS | Image thumbnails; per-slide `--ui-media-thumb-url`; active thumb has a bottom timer stripe |
 | `dot(tl)` `dot(tr)` `dot(bl)` `dot(br)` | `dot="tl/tr/bl/br"` | CSS | Corner placement for the overlay marker-group (inset via `--ui-media-marker-inset`) |
@@ -193,9 +191,8 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
 - `::scroll-marker-group` is `position: absolute; position-anchor: auto`, centered via
   `justify-self: anchor-center`, anchored above the bottom edge with `anchor(bottom)`.
 - `dot(cir)` (default) round markers; `dot(pll)` rounded-rect.
-- **Ink:** `dot(lgt)` / `dot(drk)` / `dot(sub)` set `--ui-media-dot-bg` + `--ui-media-dot-active`
-  to the light / dark / subtle pairs (`nav(blw)` defaults to dark; `sub` is re-asserted after
-  the band holder so it still wins inside the band).
+- **Ink:** `dot(lgt)` / `dot(drk)` set `--ui-media-dot-bg` + `--ui-media-dot-active`
+  to the light / dark pairs (`nav(blw)` defaults to dark).
 - **`dot(pll)` timer:** the `:target-current` pill fills L→R over `--ui-media-autoplay`
   via the `ui-media-pill-fill` keyframes (a visual autoplay hint; ui-media.js advances).
   Under `prefers-reduced-motion: reduce` the fill is shown static (no animation).
@@ -225,8 +222,8 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
   light/dark) is rotated per direction via `--_arw-rot` (left 180°, up −90°, down 90°) —
   no prev/next/up/down SVG duplication.
 - **Shape × shade** (independent, composed): shape = chevron (default, `arw(chv)`) · `arw(arr)`;
-  ink = dark (default, `arw(drk)`, for the frosted light circle) · `arw(lgt)` (white, for a dark circle) ·
-  `arw(sub)` (subtle low-contrast). A direct `--ui-media-arrow-glyph` override wins.
+  theme = light (default / `arw(lgt)`: light circle + dark glyph) · `arw(drk)` (dark circle + white glyph
+  + light hover ring, one atom — works on the overlay and in bands). A direct `--ui-media-arrow-glyph` / `--ui-media-arrow-bg` override wins.
 - Sizes `arw(sm|md|lg|xl)` set `--ui-media-arrow-size` (`md` = 2.25rem default).
 - **Placement** `arw(mid|top|bot)` set `--ui-media-arrow-top` (mid = `anchor(center)` default).
 - **`arw(set)`** moves the left button next to the right one (adjacent pair at inline-end).
@@ -260,11 +257,15 @@ defaults to the (light) card surface, so the dot/arrow ink defaults flip to dark
 - **Dot position:** centered by default; `dot(sta|ctr|end)` move them — `sta` = after
   the left arrow, `end` = before the right arrow (or the `arw(set)` pair). `arw(set)`
   defaults dots to `sta`; offsets account for arrow size/gap so they never overlap.
+  Works in **both** `nav(blw)` and `nav(abv)` (horizontal alignment is shared; only the
+  band's vertical edge differs).
 
 ## Vertical controls (`axis(y)`)
 
 Up/down arrows + a vertical dot column on the inline-end edge by default; `arw(sta)`
-flips both to the inline-start edge; `arw(set)` stacks the pair at the block-end.
+flips both to the inline-start edge; `arw(set)` stacks the pair at the block-end
+(`arw(set) arw(top)` stacks it at the block-start instead). `nav(blw)` / `nav(abv)`
+give a horizontal control band below / above the vertical media.
 
 **Dot alignment:** the dot column is given `inline-size: var(--ui-media-arrow-size)` and
 `align-items: center`, so the dots sit centered within the arrow-width band — on the same
