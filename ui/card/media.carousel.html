@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>UI: Media — Carousel (restructured)</title>
+	<title>UI: Media — Carousel</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="CSS-only <ui-media> carousel — restructured demo: basics, arrows/chevron, placement, themes (light/dark), thumbnails, vertical.">
+	<meta name="description" content="CSS-only <ui-media> carousel — basics, controls, arrows/chevron, placement, themes (light/dark), dots/pills, thumbnails, vertical, and JS-enhanced autoplay/loop.">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
@@ -157,6 +157,17 @@
 		<ui-card variant="col" media="asr(4/3) nav(arw) arw(set) arw(arr) arw(top)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">arw(set) arw(top)</small><h2 data-part="headline">Top-end set</h2></ui-content></cq-box>
+		</ui-card>
+	</div>
+	<p>A <strong>dead-end</strong> arrow (no slide that way) dims by default; <code>arw(hid)</code> hides it entirely instead — at the first slide the prev arrow disappears, at the last the next does.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(4/3) nav(arw) arw(hid)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">nav(arw) arw(hid)</small><h2 data-part="headline">Auto-hide dead-end (circle)</h2></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(blw) arw(bare) arw(hid)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">nav(blw) arw(bare) arw(hid)</small><h2 data-part="headline">Auto-hide dead-end (band)</h2></ui-content></cq-box>
 		</ui-card>
 	</div>
 
@@ -615,6 +626,21 @@
 			<cq-box>
 				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
 				<ui-content><small data-part="eyebrow">loop</small><h2 data-part="headline">Seamless loop</h2><p data-part="summary">Next past the last smooth-scrolls into a cloned slide, then invisibly resets — no jump.</p></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+	<p>Both compose with <code>axis(y)</code> — autoplay and the seamless loop work on the vertical axis too. Here the first uses a pill timer with dots bottom-centered (<code>dot(pll) dot(bc)</code>).</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(4/3) axis(y) nav dot(pll) dot(bc) auto(3s) loop" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">axis(y) auto(3s) loop dot(pll) dot(bc)</small><h2 data-part="headline">Vertical autoplay + pill timer</h2><p data-part="summary">Advances down every 3s, seamlessly wraps; pill dots centered at the bottom.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) axis(y) nav loop" content="scl(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">axis(y) loop</small><h2 data-part="headline">Vertical seamless loop</h2><p data-part="summary">Down past the last smooth-scrolls into a cloned slide, then invisibly resets — up/down arrows + dots.</p></ui-content>
 			</cq-box>
 		</ui-card>
 	</div>
