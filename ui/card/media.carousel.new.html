@@ -44,14 +44,14 @@
 </head>
 <body>
 	<h1>UI: Media — Carousel</h1>
-	<p class="note">The CSS-only <code>&lt;ui-media&gt;</code> carousel — a flex scroll-snap row with native <code>::scroll-marker</code> dots and <code>::scroll-button()</code> arrows, no JavaScript. Driven by the <code>media=</code> token string. Native in Chromium; elsewhere <code>/polyfill/carousel.js</code> (conditionally loaded) provides the same controls — with JS off it degrades to a plain swipe scroller.</p>
-	<p class="note">See also: <a href="media.html">media.html</a> (the frame) · <a href="index.html">index.html</a> (the engine) · <a href="content.html">content.html</a> (the <code>&lt;ui-content&gt;</code> side) · <a href="media.carousel.md">media.carousel.md</a> (token reference).</p>
+	<p>The CSS-only <code>&lt;ui-media&gt;</code> carousel — a flex scroll-snap row with native <code>::scroll-marker</code> dots and <code>::scroll-button()</code> arrows, no JavaScript. Driven by the <code>media=</code> token string. Native in Chromium; elsewhere <code>/polyfill/carousel.js</code> (conditionally loaded) provides the same controls — with JS off it degrades to a plain swipe scroller.</p>
+	<p>See also: <a href="media.html">media.html</a> (the frame) · <a href="index.html">index.html</a> (the engine) · <a href="content.html">content.html</a> (the <code>&lt;ui-content&gt;</code> side) · <a href="media.carousel.md">media.carousel.md</a> (token reference).</p>
 
 	<!-- ════════════════════════════════════════════════════════════
 	     1 · BASICS
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>1 · Default carousel — <code>nav</code></h2>
-	<p class="note">Add <code>nav</code> to put <strong>multiple sources</strong> in a scroll-snap row — CSS-only dots + prev/next arrows, no markup, no JS. Works in any card arrangement (a <code>col</code> card and the media half of a <code>row</code> card below).</p>
+	<p>Add <code>nav</code> to put <strong>multiple sources</strong> in a scroll-snap row — CSS-only dots + prev/next arrows, no markup, no JS. Works in any card arrangement (a <code>col</code> card and the media half of a <code>row</code> card below).</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav" content="scl(lg)">
 			<cq-box>
@@ -77,7 +77,7 @@
 	</div>
 
 	<h2>2 · Controls — <code>nav()</code></h2>
-	<p class="note">Pick which controls show: bare <code>nav</code> (both) · <code>nav(dot)</code> · <code>nav(arw)</code> · <code>nav(non)</code> (bare swipe scroller — this <em>is</em> the gallery).</p>
+	<p>Pick which controls show: bare <code>nav</code> (both) · <code>nav(dot)</code> · <code>nav(arw)</code> · <code>nav(non)</code> (bare swipe scroller — this <em>is</em> the gallery).</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav(dot)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
@@ -102,7 +102,7 @@
 	     2 · ARROWS / CHEVRON
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>3 · Arrow glyph — <code>arw()</code></h2>
-	<p class="note">The glyph is a chevron by default. <code>arw(arr)</code> swaps it for a full arrow (shaft + head). <code>arw(bare)</code> drops the circle and paints the glyph itself as a recolourable shape (<code>--ui-media-arrow-color</code>, default white over an image, auto-dark in a band).</p>
+	<p>The glyph is a chevron by default. <code>arw(arr)</code> swaps it for a full arrow (shaft + head). <code>arw(bare)</code> drops the circle and paints the glyph itself as a recolourable shape (<code>--ui-media-arrow-color</code>, default white over an image, auto-dark in a band).</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav(arw)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
@@ -123,7 +123,7 @@
 	</div>
 
 	<h2>4 · Sizes — <code>arw()</code> / <code>dot()</code></h2>
-	<p class="note">Size the arrows with <code>arw(sm|md|lg|xl)</code> (<code>md</code> default) and the dots/pills with <code>dot(sm|md|lg|xl)</code> (<code>md</code> default). They compose with every other atom.</p>
+	<p>Size the arrows with <code>arw(sm|md|lg|xl)</code> (<code>md</code> default) and the dots/pills with <code>dot(sm|md|lg|xl)</code> (<code>md</code> default). They compose with every other atom.</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav arw(sm) dot(sm)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
@@ -140,7 +140,7 @@
 	     3 · PLACEMENT
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>5 · Overlay placement — <code>arw(mid/top/bot)</code> · <code>arw(set)</code></h2>
-	<p class="note">On-media arrows sit vertically centered (<code>arw(mid)</code>, default). <code>arw(top)</code> / <code>arw(bot)</code> move them to the edges; <code>arw(set)</code> groups both into an adjacent pair at the inline-end (pair it with <code>arw(bot)</code> for a bottom-end set).</p>
+	<p>On-media arrows sit vertically centered (<code>arw(mid)</code>, default). <code>arw(top)</code> / <code>arw(bot)</code> move them to the edges; <code>arw(set)</code> groups both into an adjacent pair at the inline-end (pair it with <code>arw(bot)</code> for a bottom-end set).</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav(arw) arw(top)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
@@ -161,7 +161,7 @@
 	</div>
 
 	<h2>6 · Control bands — <code>nav(blw)</code> / <code>nav(abv)</code></h2>
-	<p class="note"><code>nav(blw)</code> / <code>nav(abv)</code> move both controls off the image into a reserved band below / above the media — the frame stays clean. Size it with <code>--ui-media-band</code>, colour it with <code>--ui-media-controls-bg</code>. Combine with <code>arw(set)</code> to pair the arrows at the end. Shown <strong>below</strong> in <code>&lt;ui-card&gt;</code>s, then the <strong>above</strong> mirror (<code>nav(abv)</code>) as standalone <code>&lt;ui-media&gt;</code> — a band above a card would read as stray whitespace at the card top.</p>
+	<p><code>nav(blw)</code> / <code>nav(abv)</code> move both controls off the image into a reserved band below / above the media — the frame stays clean. Size it with <code>--ui-media-band</code>, colour it with <code>--ui-media-controls-bg</code>. Combine with <code>arw(set)</code> to pair the arrows at the end. Shown <strong>below</strong> in <code>&lt;ui-card&gt;</code>s, then the <strong>above</strong> mirror (<code>nav(abv)</code>) as standalone <code>&lt;ui-media&gt;</code> — a band above a card would read as stray whitespace at the card top.</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav(blw) arw(bare)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
@@ -178,7 +178,7 @@
 	</div>
 
 	<h2>7 · Position in the band — <code>dot(sta/ctr/end)</code></h2>
-	<p class="note">In a band the dots default to centered; <code>dot(sta)</code> aligns them inline-start, <code>dot(end)</code> inline-end (shown with <code>arw(set)</code> — the arrow pair stays at the end while the dots move). Works in both bands. <strong>Below</strong> (<code>nav(blw)</code>), inside a <code>&lt;ui-card&gt;</code> — first with dots left, then dots right:</p>
+	<p>In a band the dots default to centered; <code>dot(sta)</code> aligns them inline-start, <code>dot(end)</code> inline-end (shown with <code>arw(set)</code> — the arrow pair stays at the end while the dots move). Works in both bands. <strong>Below</strong> (<code>nav(blw)</code>), inside a <code>&lt;ui-card&gt;</code> — first with dots left, then dots right:</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav(blw) arw(set) dot(sta)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""></ui-media>
@@ -189,7 +189,7 @@
 			<ui-content><small data-part="eyebrow">nav(blw) dot(end)</small><h2 data-part="headline">Below · dots right</h2></ui-content></cq-box>
 		</ui-card>
 	</div>
-	<p class="note"><strong>Above</strong> (<code>nav(abv)</code>) — shown as standalone rounded <code>&lt;ui-media&gt;</code> (a band above a card would read as stray whitespace at the card top). Same order: dots left, then dots right.</p>
+	<p><strong>Above</strong> (<code>nav(abv)</code>) — shown as standalone rounded <code>&lt;ui-media&gt;</code> (a band above a card would read as stray whitespace at the card top). Same order: dots left, then dots right.</p>
 	<div class="grid grid-2">
 		<ui-media media="asr(4/3) rds(lg) clip nav(abv) arw(set) dot(sta)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""><img src="/assets/images/popovers.png" alt=""></ui-media>
 		<ui-media media="asr(4/3) rds(lg) clip nav(abv) arw(set) dot(end)"><img src="/assets/images/river.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
@@ -200,7 +200,7 @@
 	     4 · THEMES — ink: light · dark
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>8 · Overlay ink — light · dark</h2>
-	<p class="note">On-media arrows default to a frosted light circle + dark chevron (Instagram-style) — the <strong>light</strong> theme. <code>arw(drk)</code> is the complete <strong>dark</strong> theme in one atom: dark circle, white chevron, light hover ring. (Fine-tune with <code>--ui-media-arrow-bg</code> if needed.)</p>
+	<p>On-media arrows default to a frosted light circle + dark chevron (Instagram-style) — the <strong>light</strong> theme. <code>arw(drk)</code> is the complete <strong>dark</strong> theme in one atom: dark circle, white chevron, light hover ring. (Fine-tune with <code>--ui-media-arrow-bg</code> if needed.)</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
@@ -213,7 +213,7 @@
 	</div>
 
 	<h2>9 · Band ink — light · dark</h2>
-	<p class="note">In a <code>nav(blw)</code> band the circle defaults to light grey + a soft grey glyph — the <strong>light</strong> theme. <code>arw(drk)</code> gives the <strong>dark</strong> theme in the band too: dark circle, white chevron (same one atom, no custom styles).</p>
+	<p>In a <code>nav(blw)</code> band the circle defaults to light grey + a soft grey glyph — the <strong>light</strong> theme. <code>arw(drk)</code> gives the <strong>dark</strong> theme in the band too: dark circle, white chevron (same one atom, no custom styles).</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav(blw)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
@@ -226,7 +226,7 @@
 	</div>
 
 	<h2>10 · Dots &amp; pills — <code>dot()</code> · <code>dot(pll)</code></h2>
-	<p class="note">Recolour dots with <code>--ui-media-dot-*</code> and size them with <code>dot(sm|md|lg|xl)</code>. <code>dot(pll)</code> swaps round dots for pills whose active fill runs left→right over <code>--ui-media-autoplay</code> (a timer hint); width via <code>--ui-media-pill-width</code>.</p>
+	<p>Recolour dots with <code>--ui-media-dot-*</code> and size them with <code>dot(sm|md|lg|xl)</code>. <code>dot(pll)</code> swaps round dots for pills whose active fill runs left→right over <code>--ui-media-autoplay</code> (a timer hint); width via <code>--ui-media-pill-width</code>.</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav(dot) dot(pll)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
@@ -239,8 +239,8 @@
 	     5 · THUMBNAILS — dot(tmb)
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>11 · Thumbnail navigation — <code>dot(tmb)</code></h2>
-	<p class="note">Turn the dots into <strong>image thumbnails</strong> with <code>dot(tmb)</code>. Each slide sets its thumbnail via <code>style="--ui-media-thumb-url: url(…)"</code>. Place the rail in any corner with <code>dot(tl/tr/bl/br)</code> and size it with <code>dot(sm|md|lg|xl)</code>. (CSS-only; a JS-enhanced version with autoplay + video lives in the JS section below.)</p>
-	<p class="note">Plain images (no cards), 16/9, larger rail (<code>dot(lg)</code>) anchored bottom-right (<code>dot(br)</code>).</p>
+	<p>Turn the dots into <strong>image thumbnails</strong> with <code>dot(tmb)</code>. Each slide sets its thumbnail via <code>style="--ui-media-thumb-url: url(…)"</code>. Place the rail in any corner with <code>dot(tl/tr/bl/br)</code> and size it with <code>dot(sm|md|lg|xl)</code>. (CSS-only; a JS-enhanced version with autoplay + video lives in the JS section below.)</p>
+	<p>Plain images (no cards), 16/9, larger rail (<code>dot(lg)</code>) anchored bottom-right (<code>dot(br)</code>).</p>
 	<div class="grid">
 			<ui-media media="asr(16/9) rds(md) clip nav dot(tmb) dot(br) dot(lg)">
 				<img src="/assets/images/river.png" alt="" style="--ui-media-thumb-url: url('/assets/images/river.png')">
@@ -256,7 +256,7 @@
 	     6 · VERTICAL — axis(y)
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>12 · Vertical carousel — <code>axis(y)</code></h2>
-	<p class="note"><code>axis(y)</code> snaps on the Y axis: dots become a column on the inline-end edge, arrows become up/down. <code>arw(sta)</code> moves them to the other edge; <code>arw(set)</code> stacks the pair at the bottom (<code>arw(set) arw(top)</code> at the top); <code>arw(bare)</code> and the sizes compose. Control bands work on both edges — <code>nav(blw)</code> below, <code>nav(abv)</code> above.</p>
+	<p><code>axis(y)</code> snaps on the Y axis: dots become a column on the inline-end edge, arrows become up/down. <code>arw(sta)</code> moves them to the other edge; <code>arw(set)</code> stacks the pair at the bottom (<code>arw(set) arw(top)</code> at the top); <code>arw(bare)</code> and the sizes compose. Control bands work on both edges — <code>nav(blw)</code> below, <code>nav(abv)</code> above.</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) axis(y) nav" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
@@ -275,12 +275,12 @@
 			<ui-content><small data-part="eyebrow">axis(y) arw(set) arw(top)</small><h2 data-part="headline">Arrow pair, top-right</h2></ui-content></cq-box>
 		</ui-card>
 	</div>
-	<p class="note">The <strong>control-band</strong> variants read cleanest on a <strong>standalone</strong> <code>&lt;ui-media&gt;</code> — the band is part of the media frame, so <code>nav(abv)</code> sits above the image without pushing whitespace into a card. <code>nav(blw)</code> below, <code>nav(abv)</code> above.</p>
+	<p>The <strong>control-band</strong> variants read cleanest on a <strong>standalone</strong> <code>&lt;ui-media&gt;</code> — the band is part of the media frame, so <code>nav(abv)</code> sits above the image without pushing whitespace into a card. <code>nav(blw)</code> below, <code>nav(abv)</code> above.</p>
 	<div class="grid grid-2">
 		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(blw)"><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
 		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(abv)"><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
 	</div>
-	<p class="note">Vertical thumbnails pin to a corner too — <code>axis(y) dot(tmb) dot(tl)</code> top-left, <code>dot(bl)</code> bottom-left.</p>
+	<p>Vertical thumbnails pin to a corner too — <code>axis(y) dot(tmb) dot(tl)</code> top-left, <code>dot(bl)</code> bottom-left.</p>
 	<div class="grid grid-2">
 			<ui-media media="asr(4/3) rds(lg) clip axis(y) nav dot(tmb) dot(tl) dot(md)">
 				<img src="/assets/images/hubble.png" alt="" style="--ui-media-thumb-url: url('/assets/images/hubble.png')">
@@ -295,7 +295,7 @@
 	</div>
 
 	<hr>
-	<p class="note"><strong>Below this line: carried over unchanged from the original demo (slide content · JS-enhanced · staggered reveal · token forms).</strong> These groups are slated for a later restructuring pass.</p>
+	<p><strong>Below this line: carried over unchanged from the original demo (slide content · JS-enhanced · staggered reveal · token forms).</strong> These groups are slated for a later restructuring pass.</p>
 
 	
 	<!-- ════════════════════════════════════════════════════════════
@@ -303,7 +303,7 @@
 	     ════════════════════════════════════════════════════════════ -->
 
 	<h2>Staggered content reveal — <code>stagger</code> · <code>ani()</code></h2>
-	<p class="note"><strong>Pure CSS</strong>, no JavaScript. When a slide becomes the snapped one, a <code>scroll-state(snapped)</code> query reveals its <code>&lt;ui-content&gt;</code> children with a per-child <code>transition-delay</code>. Pick the reveal type with <code>ani()</code> — <code>rise</code> (default) · <code>fall</code> · <code>lft</code> · <code>rgt</code> · <code>zom</code> · <code>blr</code> · <code>fde</code>.</p>
+	<p><strong>Pure CSS</strong>, no JavaScript. When a slide becomes the snapped one, a <code>scroll-state(snapped)</code> query reveals its <code>&lt;ui-content&gt;</code> children with a per-child <code>transition-delay</code>. Pick the reveal type with <code>ani()</code> — <code>rise</code> (default) · <code>fall</code> · <code>lft</code> · <code>rgt</code> · <code>zom</code> · <code>blr</code> · <code>fde</code>.</p>
 	<div class="grid">
 			<ui-media media="asr(16/9) rds(lg) clip nav stagger">
 				<ui-card variant="ovr(bl) rds(none)" media="asr(16/9) obp(cc) scm" content="pad(lg)"><cq-box>
@@ -322,7 +322,7 @@
 	</div>
 
 	<h3>A different <code>ani()</code> per slide — controls below (<code>nav(blw)</code>)</h3>
-	<p class="note">Set <code>ani()</code> on each <strong>slide</strong> (not the carousel) and every slide reveals differently — the closer <code>ani()</code> wins over any carousel-level one. Dots + arrows sit in a band <strong>below</strong> the media (<code>nav(blw)</code>) so nothing covers the copy while it animates.</p>
+	<p>Set <code>ani()</code> on each <strong>slide</strong> (not the carousel) and every slide reveals differently — the closer <code>ani()</code> wins over any carousel-level one. Dots + arrows sit in a band <strong>below</strong> the media (<code>nav(blw)</code>) so nothing covers the copy while it animates.</p>
 	<div class="grid grid-2">
 			<ui-media media="rds(none) clip nav(blw) stagger">
 				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm ani(rise)" content="pad(lg)"><cq-box>
@@ -359,14 +359,12 @@
 	     STAGGER-BASED SLIDES — layered / multi-card (all use stagger)
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>Stagger — layered &amp; multi-card slides</h2>
-	<p class="note">Putting <strong>multiple cards in one slide</strong>, all driven by <code>stagger</code> — the group snaps as one slide and its cards / content reveal on snap.</p>
+	<p>Putting <strong>multiple cards in one slide</strong>, all driven by <code>stagger</code> — the group snaps as one slide and its cards / content reveal on snap.</p>
 
-	<h3>Layered cards as slides — content on media</h3>
-	<p class="note">Layered <code>&lt;ui-reveal type="flip"&gt;</code> cards as slides — front face is media + label; tap to flip (movie cards nest a <code>&lt;ui-accordion&gt;</code>). Needs <code>ui/reveal</code> + <code>ui/accordion</code> CSS.</p>
 	<div class="grid">
 			<ui-media class="slide-gap dots-dark reveal-cards" media="nav(blw) arw(bare) stagger ani(lft)">
 				<ui-slide class="slide-cols" style="--cols: 3">
-					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)">
+					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)" style="--ui-reveal-content-bg: hsl(255 60% 95%);">
 						<details name="stagger-games">
 							<summary>
 								<ui-face>
@@ -378,7 +376,7 @@
 							<ui-content tabindex="0"><h3>Starfall Legends</h3><p>Chase the falling stars across the floating isles of Auralis.</p></ui-content>
 						</details>
 					</ui-reveal>
-					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) hov(pan)">
+					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) hov(pan)" style="--ui-reveal-content-bg: hsl(35 55% 92%);">
 						<details name="stagger-games">
 							<summary>
 								<ui-face>
@@ -390,7 +388,7 @@
 							<ui-content tabindex="0"><h3>Frontier Outlaws</h3><p>Ride into a frontier that remembers everything you do.</p></ui-content>
 						</details>
 					</ui-reveal>
-					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)">
+					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)" style="--ui-reveal-content-bg: hsl(45 58% 92%);">
 						<details name="stagger-games">
 							<summary>
 								<ui-face>
@@ -404,7 +402,7 @@
 					</ui-reveal>
 				</ui-slide>
 				<ui-slide class="slide-cols" style="--cols: 3">
-					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)">
+					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)" style="--ui-reveal-content-bg: hsl(210 42% 94%);">
 						<details name="stagger-movies">
 							<summary>
 								<ui-face>
@@ -434,7 +432,7 @@
 							</div>
 						</details>
 					</ui-reveal>
-					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(pan)">
+					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(pan)" style="--ui-reveal-content-bg: hsl(140 38% 93%);">
 						<details name="stagger-movies">
 							<summary>
 								<ui-face>
@@ -464,7 +462,7 @@
 							</div>
 						</details>
 					</ui-reveal>
-					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)">
+					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)" style="--ui-reveal-content-bg: hsl(345 65% 95%);">
 						<details name="stagger-movies">
 							<summary>
 								<ui-face>
@@ -498,8 +496,8 @@
 			</ui-media>
 	</div>
 
-	<h3>Layered cards + <code>stagger</code> — two channels (<code>crd()</code> + <code>ani()</code>)</h3>
-	<p class="note">The <em>layered cards</em> pattern (3 cards per <code>&lt;ui-slide&gt;</code>) with two <strong>independent</strong> reveal channels: <code>crd(rise)</code> makes the <strong>cards</strong> rise + cascade in as units, while each card's own <code>ani()</code> controls how its <strong>content</strong> enters — here every card drops its content in with <code>ani(fall)</code>. Both cascade (card index, then child index). Pure CSS.</p>
+	<h3><code>stagger</code> — two channels  — <code>crd()</code> + <code>ani()</code></h3>
+	<p>The <em>layered cards</em> pattern (3 cards per <code>&lt;ui-slide&gt;</code>) with two <strong>independent</strong> reveal channels: <code>crd(rise)</code> makes the <strong>cards</strong> rise + cascade in as units, while each card's own <code>ani()</code> controls how its <strong>content</strong> enters — here every card drops its content in with <code>ani(fall)</code>. Both cascade (card index, then child index).</p>
 	<div class="grid">
 			<ui-media class="slide-gap" media="nav stagger crd(rise)">
 				<ui-slide class="slide-cols" style="--cols: 3">
@@ -547,8 +545,8 @@
 			</ui-media>
 	</div>
 
-	<h3>Cards as slides — content below media</h3>
-	<p class="note">A group wrapper can hold full <code>&lt;ui-card&gt;</code>s, not just images. Here each card is a standard <code>variant="col"</code> card (image with eyebrow / headline / summary <strong>below</strong>) — a product-grid carousel that snaps a whole row at a time.</p>
+	<h3>Room for card shadows — <code>padding</code> + <code>scroll-padding</code></h3>
+	<p>Full <code>&lt;ui-card&gt;</code>s as slides, each an elevated card with its own <code>box-shadow</code>. The scroller clips its scrollport, so without room the shadow gets cut off at the edges. The <code>.shadow-room</code> class adds matching <code>padding-inline</code> <strong>and</strong> <code>scroll-padding-inline</code> — the padding gives the shadow space, the scroll-padding keeps snapped slides inset so it's never clipped.</p>
 	<div class="grid">
 			<ui-media class="dots-dark slide-gap shadow-room" media="nav(blw) arw(bare) stagger ani(lft)">
 				<ui-slide class="slide-cols" style="--cols: 2">
@@ -590,7 +588,7 @@
 	     ════════════════════════════════════════════════════════════ -->
 
 	<h2>JS-enhanced behaviors</h2>
-	<p class="note">Two things CSS can't do are layered on by <code>ui-media.js</code> — strictly progressive enhancement. With JS off the carousels still scroll, snap, show dots/arrows; these tokens just no-op.</p>
+	<p>Two things CSS can't do are layered on by <code>ui-media.js</code> — strictly progressive enhancement. With JS off the carousels still scroll, snap, show dots/arrows; these tokens just no-op.</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav dot(pll) auto(3s) loop" content="scl(sm)">
 			<cq-box>
@@ -607,7 +605,7 @@
 	</div>
 
 	<h3>Thumbnail carousel — autoplay + video (JS)</h3>
-	<p class="note">The <code>dot(tmb)</code> rail on a JS-enhanced carousel: <code>auto loop</code> autoplay, a pinned <code>&lt;ui-play&gt;</code> (<code>play(be)</code>), <code>stagger</code> content reveal, and two <strong>video</strong> slides (autoplay background + manual). Each slide is a layered <code>&lt;ui-card&gt;</code>.</p>
+	<p>The <code>dot(tmb)</code> rail on a JS-enhanced carousel: <code>auto loop</code> autoplay, a pinned <code>&lt;ui-play&gt;</code> (<code>play(be)</code>), <code>stagger</code> content reveal, and two <strong>video</strong> slides (autoplay background + manual). Each slide is a layered <code>&lt;ui-card&gt;</code>.</p>
 	<div class="grid">
 			<ui-media media="asr(4/3) rds(2xl) clip nav auto loop dot(tmb) dot(tr) dot(xl) play(be) stagger">
 				<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
@@ -645,7 +643,7 @@
 	</div>
 
 	<h2>Play/pause control — <code>&lt;ui-play&gt;</code></h2>
-	<p class="note">Drop a <code>&lt;ui-play&gt;</code> into an autoplay carousel and <code>ui-media.js</code> wires it to the timer. Pinned to the scrollport with <code>position:sticky</code>; place it with the corner tokens (<code>play(bs)</code> / <code>play(be)</code>). Add <code>variant="reveal"</code> to hide it until hover/focus.</p>
+	<p>Drop a <code>&lt;ui-play&gt;</code> into an autoplay carousel and <code>ui-media.js</code> wires it to the timer. Pinned to the scrollport with <code>position:sticky</code>; place it with the corner tokens (<code>play(bs)</code> / <code>play(be)</code>). Add <code>variant="reveal"</code> to hide it until hover/focus.</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav dot(pll) auto(4s) loop play(bs)" content="scl(sm)">
 			<cq-box>
@@ -668,7 +666,7 @@
 	</div>
 
 	<h2>Two ways to write it — <code>media=</code> tokens or <code>nav</code>/<code>arrow</code>/<code>dot</code> attributes</h2>
-	<p class="note">Same options, two entry points. <strong>Left</strong>: the inheritable <code>media=</code> string. <strong>Right</strong>: dedicated grouped attributes on the <code>&lt;ui-media&gt;</code> itself (not inherited). Both render identically.</p>
+	<p>Same options, two entry points. <strong>Left</strong>: the inheritable <code>media=</code> string. <strong>Right</strong>: dedicated grouped attributes on the <code>&lt;ui-media&gt;</code> itself (not inherited). Both render identically.</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(16/9) nav(blw) arw(lg) dot(end)" content="scl(sm)">
 			<cq-box>
