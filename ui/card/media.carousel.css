@@ -2,29 +2,29 @@
 @layer bs-component {
 
 	:where([media*="nav"], ui-media[nav]) {
-		--ui-media-bg: #0000;
-		--ui-media-overlay-gap: 0.75rem;
-		--ui-media-arrow-size: 2.25rem;
-		--ui-media-arrow-gap: 0.5rem;
-		--ui-media-arrow-bg: rgb(255 255 255 / 0.7);
+		--ui-media-above-gap: var(--spacing-sm, 0.5rem);
 		--ui-media-arrow-bg-hover: rgb(255 255 255 / 0.9);
-		--ui-media-arrow-color: #fff;
+		--ui-media-arrow-bg: rgb(255 255 255 / 0.7);
 		--ui-media-arrow-border: 0;
-		--ui-media-arrow-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
+		--ui-media-arrow-color: #fff;
+		--ui-media-arrow-gap: 0.5rem;
 		--ui-media-arrow-nudge: calc(var(--ui-media-arrow-size) * 0.03);
+		--ui-media-arrow-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
+		--ui-media-arrow-size: 2.25rem;
+		--ui-media-autoplay: 5s;
 		--ui-media-band: 2.75rem;
 		--ui-media-below-gap: var(--spacing-sm, 0.5rem);
-		--ui-media-above-gap: var(--spacing-sm, 0.5rem);
-		--ui-media-dot-size: 0.6rem;
-		--ui-media-dot-gap: 0.5rem;
-		--ui-media-dot-bg: rgb(255 255 255 / 0.5);
+		--ui-media-bg: #0000;
 		--ui-media-dot-active: #fff;
+		--ui-media-dot-bg: rgb(255 255 255 / 0.5);
 		--ui-media-dot-border: 0;
-		--ui-media-pill-width: 1.5rem;
+		--ui-media-dot-gap: 0.5rem;
+		--ui-media-dot-size: 0.6rem;
+		--ui-media-overlay-gap: 0.75rem;
+		--ui-media-pill-fill: #fff;
 		--ui-media-pill-height: 0.35rem;
 		--ui-media-pill-track: rgb(255 255 255 / 0.35);
-		--ui-media-pill-fill: #fff;
-		--ui-media-autoplay: 5s;
+		--ui-media-pill-width: 1.5rem;
 	}
 
 	:where([media*="nav"]) ui-media,
@@ -50,6 +50,11 @@
 	ui-media:where([media*="nav"], [nav]) > :is(img, video) {
 		inset: auto;
 		position: static;
+	}
+	/* nav(abv): round the media itself so it matches the rds() frame under the band above */
+	:where([media*="nav(abv)"]) ui-media > :is(iframe, img, picture, video),
+	ui-media:where([media*="nav(abv)"], [nav~="abv"]) > :is(iframe, img, picture, video) {
+		border-radius: var(--ui-media-radius, 0);
 	}
 
 	:where(ui-card, ui-reveal):has(ui-media:focus-visible:not(:where(ui-media *))),
@@ -487,106 +492,76 @@
 			}
 		}
 		/* hide the unused cross-axis buttons on a HORIZONTAL scroller */
-		:where([media*="nav"]:not([media*="axis(y)"])) ui-media::scroll-button(up),
-		:where([media*="nav"]:not([media*="axis(y)"])) ui-media::scroll-button(down),
-		ui-media:where([media*="nav"]:not([media*="axis(y)"]), [nav]:not([nav~="y"]))::scroll-button(up),
-		ui-media:where([media*="nav"]:not([media*="axis(y)"]), [nav]:not([nav~="y"]))::scroll-button(down) { display: none; }
+		:where([media*="nav"]:not([media*="axis(y)"])) ui-media,
+		ui-media:where([media*="nav"]:not([media*="axis(y)"]), [nav]:not([nav~="y"])) {
+			&::scroll-button(up), &::scroll-button(down) { display: none; }
+		}
 		/* axis(y) + arw(sta): arrows + dots on the inline-start edge */
-		:where([media*="axis(y)"][media*="arw(sta)"]) ui-media::scroll-button(up),
-		:where([media*="axis(y)"][media*="arw(sta)"]) ui-media::scroll-button(down),
-		ui-media:where([media*="axis(y)"][media*="arw(sta)"], [nav~="y"][arrow~="sta"])::scroll-button(up),
-		ui-media:where([media*="axis(y)"][media*="arw(sta)"], [nav~="y"][arrow~="sta"])::scroll-button(down) {
-			left: calc(anchor(left) + var(--ui-media-overlay-gap));
-			right: auto;
+		:where([media*="axis(y)"][media*="arw(sta)"]) ui-media,
+		ui-media:where([media*="axis(y)"][media*="arw(sta)"], [nav~="y"][arrow~="sta"]) {
+			&::scroll-button(up), &::scroll-button(down) { left: calc(anchor(left) + var(--ui-media-overlay-gap)); right: auto; }
+			&::scroll-marker-group { justify-self: start; }
 		}
-		:where([media*="axis(y)"][media*="arw(sta)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="axis(y)"][media*="arw(sta)"], [nav~="y"][arrow~="sta"])::scroll-marker-group {
-			justify-self: start;
-		}
-		/* axis(y) + arw(set): stack the pair at the block-end */
+		/* axis(y) + arw(set): stack the pair at the block-end (arw(top) → block-start) */
 		:where([media*="axis(y)"][media*="arw(set)"]) ui-media::scroll-button(up),
 		ui-media:where([media*="axis(y)"][media*="arw(set)"], [nav~="y"][arrow~="set"])::scroll-button(up) {
 			top: auto;
 			bottom: calc(anchor(bottom) + var(--ui-media-overlay-gap) + var(--ui-media-arrow-size) + var(--ui-media-arrow-gap));
 		}
-		/* axis(y) + arw(set) + arw(top): stack the pair at the block-start (top) instead */
-		:where([media*="axis(y)"][media*="arw(set)"][media*="arw(top)"]) ui-media::scroll-button(up),
-		ui-media:where([media*="axis(y)"][media*="arw(set)"][media*="arw(top)"], [nav~="y"][arrow~="set"][arrow~="top"])::scroll-button(up) {
-			top: calc(anchor(top) + var(--ui-media-overlay-gap));
-			bottom: auto;
+		:where([media*="axis(y)"][media*="arw(set)"][media*="arw(top)"]) ui-media,
+		ui-media:where([media*="axis(y)"][media*="arw(set)"][media*="arw(top)"], [nav~="y"][arrow~="set"][arrow~="top"]) {
+			&::scroll-button(up)   { top: calc(anchor(top) + var(--ui-media-overlay-gap)); bottom: auto; }
+			&::scroll-button(down) { top: calc(anchor(top) + var(--ui-media-overlay-gap) + var(--ui-media-arrow-size) + var(--ui-media-arrow-gap)); bottom: auto; }
 		}
-		:where([media*="axis(y)"][media*="arw(set)"][media*="arw(top)"]) ui-media::scroll-button(down),
-		ui-media:where([media*="axis(y)"][media*="arw(set)"][media*="arw(top)"], [nav~="y"][arrow~="set"][arrow~="top"])::scroll-button(down) {
-			top: calc(anchor(top) + var(--ui-media-overlay-gap) + var(--ui-media-arrow-size) + var(--ui-media-arrow-gap));
-			bottom: auto;
+		/* axis(y) + nav(blw): horizontal control band below the vertical media */
+		:where([media*="nav(blw)"][media*="axis(y)"]) ui-media,
+		ui-media:where([media*="nav(blw)"][media*="axis(y)"], [nav~="blw"][nav~="y"]) {
+			&::scroll-marker-group {
+				align-items: center;
+				align-self: auto;
+				background: var(--ui-media-controls-bg, var(--color-surface, #fff));
+				block-size: calc(var(--ui-media-below-gap) + var(--ui-media-band));
+				flex-direction: row;
+				inline-size: auto;
+				justify-content: center;
+				justify-self: auto;
+				left: anchor(left);
+				margin-inline: 0;
+				right: anchor(right);
+				top: calc(anchor(bottom) - var(--ui-media-below-gap) - var(--ui-media-band));
+			}
+			&::scroll-button(up), &::scroll-button(down) {
+				bottom: auto;
+				top: calc(anchor(bottom) - var(--ui-media-band) / 2 - var(--ui-media-arrow-size) / 2);
+				z-index: 4;
+			}
+			&::scroll-button(up)   { left: calc(anchor(left) + var(--ui-media-overlay-gap)); right: auto; }
+			&::scroll-button(down) { left: auto; right: calc(anchor(right) + var(--ui-media-overlay-gap)); }
 		}
-		/* axis(y) + nav(blw): horizontal band overlay under the vertical media */
-		:where([media*="nav(blw)"][media*="axis(y)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav(blw)"][media*="axis(y)"], [nav~="blw"][nav~="y"])::scroll-marker-group {
-			align-items: center;
-			align-self: auto;
-			background: var(--ui-media-controls-bg, var(--color-surface, #fff));
-			block-size: calc(var(--ui-media-below-gap) + var(--ui-media-band));
-			flex-direction: row;
-			inline-size: auto;
-			justify-content: center;
-			justify-self: auto;
-			left: anchor(left);
-			margin-inline: 0;
-			right: anchor(right);
-			top: calc(anchor(bottom) - var(--ui-media-below-gap) - var(--ui-media-band));
-		}
-		:where([media*="nav(blw)"][media*="axis(y)"]) ui-media::scroll-button(up),
-		:where([media*="nav(blw)"][media*="axis(y)"]) ui-media::scroll-button(down),
-		ui-media:where([media*="nav(blw)"][media*="axis(y)"], [nav~="blw"][nav~="y"])::scroll-button(up),
-		ui-media:where([media*="nav(blw)"][media*="axis(y)"], [nav~="blw"][nav~="y"])::scroll-button(down) {
-			bottom: auto;
-			top: calc(anchor(bottom) - var(--ui-media-band) / 2 - var(--ui-media-arrow-size) / 2);
-			z-index: 4;
-		}
-		:where([media*="nav(blw)"][media*="axis(y)"]) ui-media::scroll-button(up),
-		ui-media:where([media*="nav(blw)"][media*="axis(y)"], [nav~="blw"][nav~="y"])::scroll-button(up) {
-			left: calc(anchor(left) + var(--ui-media-overlay-gap));
-			right: auto;
-		}
-		:where([media*="nav(blw)"][media*="axis(y)"]) ui-media::scroll-button(down),
-		ui-media:where([media*="nav(blw)"][media*="axis(y)"], [nav~="blw"][nav~="y"])::scroll-button(down) {
-			left: auto;
-			right: calc(anchor(right) + var(--ui-media-overlay-gap));
-		}
-		/* axis(y) + nav(abv): horizontal band overlay ABOVE the vertical media (mirror of nav(blw)) */
-		:where([media*="nav(abv)"][media*="axis(y)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav(abv)"][media*="axis(y)"], [nav~="abv"][nav~="y"])::scroll-marker-group {
-			align-items: center;
-			align-self: auto;
-			background: var(--ui-media-controls-bg, var(--color-surface, #fff));
-			block-size: calc(var(--ui-media-above-gap) + var(--ui-media-band));
-			flex-direction: row;
-			inline-size: auto;
-			justify-content: center;
-			justify-self: auto;
-			left: anchor(left);
-			margin-inline: 0;
-			right: anchor(right);
-			top: anchor(top);
-		}
-		:where([media*="nav(abv)"][media*="axis(y)"]) ui-media::scroll-button(up),
-		:where([media*="nav(abv)"][media*="axis(y)"]) ui-media::scroll-button(down),
-		ui-media:where([media*="nav(abv)"][media*="axis(y)"], [nav~="abv"][nav~="y"])::scroll-button(up),
-		ui-media:where([media*="nav(abv)"][media*="axis(y)"], [nav~="abv"][nav~="y"])::scroll-button(down) {
-			bottom: auto;
-			top: calc(anchor(top) + var(--ui-media-band) / 2 - var(--ui-media-arrow-size) / 2);
-			z-index: 4;
-		}
-		:where([media*="nav(abv)"][media*="axis(y)"]) ui-media::scroll-button(up),
-		ui-media:where([media*="nav(abv)"][media*="axis(y)"], [nav~="abv"][nav~="y"])::scroll-button(up) {
-			left: calc(anchor(left) + var(--ui-media-overlay-gap));
-			right: auto;
-		}
-		:where([media*="nav(abv)"][media*="axis(y)"]) ui-media::scroll-button(down),
-		ui-media:where([media*="nav(abv)"][media*="axis(y)"], [nav~="abv"][nav~="y"])::scroll-button(down) {
-			left: auto;
-			right: calc(anchor(right) + var(--ui-media-overlay-gap));
+		/* axis(y) + nav(abv): horizontal control band ABOVE the vertical media (mirror of nav(blw)) */
+		:where([media*="nav(abv)"][media*="axis(y)"]) ui-media,
+		ui-media:where([media*="nav(abv)"][media*="axis(y)"], [nav~="abv"][nav~="y"]) {
+			&::scroll-marker-group {
+				align-items: center;
+				align-self: auto;
+				background: var(--ui-media-controls-bg, var(--color-surface, #fff));
+				block-size: calc(var(--ui-media-above-gap) + var(--ui-media-band));
+				flex-direction: row;
+				inline-size: auto;
+				justify-content: center;
+				justify-self: auto;
+				left: anchor(left);
+				margin-inline: 0;
+				right: anchor(right);
+				top: anchor(top);
+			}
+			&::scroll-button(up), &::scroll-button(down) {
+				bottom: auto;
+				top: calc(anchor(top) + var(--ui-media-band) / 2 - var(--ui-media-arrow-size) / 2);
+				z-index: 4;
+			}
+			&::scroll-button(up)   { left: calc(anchor(left) + var(--ui-media-overlay-gap)); right: auto; }
+			&::scroll-button(down) { left: auto; right: calc(anchor(right) + var(--ui-media-overlay-gap)); }
 		}
 
 		:where([media*="dot(tl)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(tl)"], [dot~="tl"])::scroll-marker-group,
