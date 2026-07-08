@@ -24,10 +24,11 @@
         "caption": "Copenhagen, blue hour"
       }
     ],
-    "chip": {
-      "text": "Featured",
-      "position": "ts",
-      "hue": "dark"
+    "furniture": {
+      "chip": {
+        "text": "Featured",
+        "style": "ts dark"
+      }
     }
   }
 }

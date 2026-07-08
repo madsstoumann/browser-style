@@ -35,9 +35,10 @@
         "alt": "FitTrack Pro fitness watch"
       }
     ],
-    "chip": {
-      "text": "3 photos",
-      "position": "te"
+    "furniture": {
+      "chip": {
+        "text": "3 photos"
+      }
     }
   }
 }

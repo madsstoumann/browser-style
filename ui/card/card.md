@@ -68,10 +68,7 @@ lives in one `details` object discriminated by `schemaType`.
 | `tags` | tags | → pill list |
 | `actions` | array | `{link, style}` → `data-part="actions"` buttons. In an `ovr()` overlay card a plain solid button (`.ui-button` with no `data-variant`) is given **dark** text by `ui-card.css` so it stays legible on its light surface instead of inheriting the overlay's white ink; colour variants (accent, text, …) set their own ink and are left untouched |
 | `links` | array of link | Plain related links |
-| `chip` | object | `{text, position, hue}` → `<ui-chip>` (legacy ribbon) |
-| `sticker` | object | `{text, position, hue, burst}` → `<ui-sticker>` |
-| `play` | object | `{position, hue, size}` → `<ui-play>` button (videos, autoplay carousels) |
-| `saveable` | boolean \| object | → `<ui-save>` toggle. Object form `{shape, position, color, circle, saved}` — the renderer emits `<ui-icon shape=…>` and appends the `save(…)` media tokens. See **Save furniture** below |
+| `furniture` | object | Overlay elements on the media — `{chip, sticker, save, play}`. **Content only** (text/semantics); the *look* (position, hue, size, shape) lives in the preset's `media=` tokens. See **Furniture** below |
 | `engagement` | object | counts → `InteractionCounter` microdata |
 | `details` | object | Type-specific payload (`ui.widget: editor-card`) |
 | `flipside` | reference → `card` | Optional custom reveal back panel — see below |
@@ -108,52 +105,68 @@ Documented in full in the model's `details` description. Examples:
 Machine values stay schema-ready (`PT15M`, salary numbers, geo coordinates);
 `*Display` keys carry pre-formatted strings only where formatting is not derivable.
 
-## Save furniture — `<ui-save>`
+## Furniture — chip · sticker · save · play
 
-A save / favorite / bookmark toggle, placed over the media (Amazon / IMDb style). It
-composes an **invoker button** and a **`<ui-icon type="shape">`**:
+The four overlay elements (`<ui-chip>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`) share
+one rule: **content decides *what* and *whether*; the preset decides *how it looks*.** The
+content model carries a single `furniture` object holding only text/semantics; the preset's
+`media=` token string carries position, hue, size and shape. The renderer emits the elements
+from `furniture` and *never* generates position/hue tokens — they come from the preset (the
+hand-authored [`media.furniture.html`](media.furniture.html) is the reference shape).
 
-```html
-<ui-media>
-  <img …>
-  <ui-save>
-    <button type="button" command="--save" commandfor="<card-or-media id>" aria-label="Save">
-      <ui-icon type="shape" shape="heart" variant="outline"></ui-icon>
-    </button>
-  </ui-save>
-</ui-media>
+```jsonc
+// content — text/semantics only
+"furniture": {
+  "chip":    { "text": "Breaking", "badge": "4", "style": "ts red" },
+  "sticker": { "lines": [ {"role":"label","text":"SAVE"}, {"role":"lead","text":"20","sup":"%"} ] },
+  "save":    { "shape": "heart", "saved": false },
+  "play":    true
+}
+```
+```jsonc
+// preset — look (media= tokens)
+"media": "asr(4/3) sticker(te) sticker(burst) sticker(green) save(be) play(cc)"
 ```
 
-**Shape is content, not a token.** Like `<ui-chip>` text or `ui-play`'s `type=`, the glyph is
-authored on the child `<ui-icon>` (`shape="heart|bookmark|star"`, `variant="outline"`). The
-renderer reads `saveable.shape` and emits that `<ui-icon shape=…>` directly — `media=` never
-carries the shape.
-
-**`media=` carries position, colour and the disc** (parsed like `chip()`/`sticker()`):
+**Look tokens on `media=`** — single-value tokens (the CSS matches them by substring, so
+one value per token, never `chip(ts red)`). The vocabulary is shared across all four:
 
 | Token | Effect |
 |-------|--------|
-| `save(<pos>)` | Position on the 9-code grid — `ts tc te · cs cc ce · bs bc be` (default `te`) |
-| `save(<hue>)` | Ink (idle + saved) from the 8 theme hues — `red orange green blue accent dark light subtle`. Same vocabulary for `chip()`/`sticker()`/`play()` |
-| `save(<size>)` | Scale — `sm lg xl` (`md` = default) |
-| `save(<corner>)` | Disc shape — `crc` circle (default) · `sqr` squircle · `rnd` rounded. `save(non)` hides the disc |
+| `el(<pos>)` | Position on the 9-code grid — `ts tc te · cs cc ce · bs bc be` |
+| `el(<hue>)` | Colour from the 8 theme hues — `red orange green blue accent dark light subtle` |
+| `el(<size>)` | Scale — `sm lg xl` (`md` = default); `play`/`save` |
+| `sticker(<shape>)` | `burst spark sunburst heart blob text spl spr` — no `variant=` needed |
+| `save(<corner>)` | Disc — `crc` circle (default) · `sqr` squircle · `rnd` rounded · `non` hides the disc |
 
-The disc is a solid **circle** by default (`--ui-save-circle-bg` = `Canvas`); it keeps the glyph
-legible over busy images. `bookmark` defaults to the accent colour without a `save(<hue>)` token.
+where `el` is `chip` / `sticker` / `save` / `play`. Each also works standalone via `theme=` /
+`fill=` / `ink=` / `size=` / `radius=` on the element itself.
 
-**All furniture shares one colour / size / corner model** — `el(<hue>)` · `el(<size>)` ·
-`el(<corner>)` from `media=`, or `theme=` / `fill=` / `ink=` / `size=` / `radius=` standalone. The
-corner values `non rnd pll crc sqr` are the same 3-letter set as the card frame's `rds()`
-(`rds(non/crc/pll/sm…xl/*-sqr)`; the legacy `none/full/pill/-sq` spellings still work as aliases).
+**Per-card override — `style`.** Furniture styling defaults to the preset, but any item may
+carry an optional `style` token string (same vocabulary) that the renderer appends after the
+preset tokens. A same-axis override *replaces* the preset's token for that axis
+(`mergeMediaTokens` strips the collision so the override wins deterministically — the CSS
+resolves `media=` matches by source-order, not token-order). So one card can go
+`chip: { text: "Breaking", style: "red" }` while the shared preset stays green.
 
-**State & interactivity.** The look is pure CSS off the button's `aria-pressed` — unsaved = outline
-+ idle ink, saved = filled + active ink. The toggle itself is script: `command="--save"` is a
-custom invoker whose `commandfor` points at the **`<ui-card>` or `<ui-media>`** (set by the
-renderer) so the handler has the card in hand. The `command` event does **not** bubble — listen on
-the target:
+**Text models.**
+- **chip** — a plain `text` label, plus an optional `badge` → nested `<ui-badge>`.
+- **sticker** — `lines[]`, one entry per typographic line: `role: "label"` → `<small>`
+  (styled by `font=`), `"lead"` → `<strong>` (styled by `font-lead=`), `"plain"` → `<span>`
+  (fluid). Optional `sup` renders a trailing `<sup>` (price cents, etc.). This structured shape
+  replaces the old flat `sticker.text`, which could only ever emit one `<strong>` line.
+- **save / play** — no text; both accept a bare `true`. `save` takes `{shape, saved}` (the
+  glyph `heart|bookmark|star` is content, authored on the emitted `<ui-icon shape=…>` — never a
+  `media=` token; `saved` sets initial `aria-pressed`). `play` takes an optional `label`.
+
+**Save state & interactivity.** The look is pure CSS off the button's `aria-pressed` — unsaved =
+outline + idle ink, saved = filled + active ink. The toggle is script: `command="--save"` is a
+custom invoker whose `commandfor` the renderer points at the `<ui-media>` (id `<card-id>-media`)
+so the handler has the frame in hand. The `command` event does **not** bubble — listen on the
+target:
 
 ```js
-card.addEventListener('command', (e) => {
+media.addEventListener('command', (e) => {
   if (e.command !== '--save') return;
   const btn = e.source;
   const saved = btn.getAttribute('aria-pressed') !== 'true';
@@ -162,8 +175,9 @@ card.addEventListener('command', (e) => {
 });
 ```
 
-Classified as a **control** (interactive) — card-only, never inside a reveal `<summary>`. Demos in
-[`media.furniture.html`](media.furniture.html); full component: [`ui/save`](../save/).
+Save/play are **controls** (interactive) — card-only, never inside a reveal `<summary>`. Demos in
+[`media.furniture.html`](media.furniture.html); components: [`ui/chip`](../chip/) ·
+[`ui/sticker`](../sticker/) · [`ui/save`](../save/) · [`ui/play`](../play/).
 
 ## Preset model — `card-preset`
 
@@ -175,7 +189,7 @@ Classified as a **control** (interactive) — card-only, never inside a reveal `
 | `name`, `description` | both | e.g. “Hero Preset” |
 | `element` | both | `ui-card` (default), `ui-reveal` — or `ui-media` / `ui-content` for **bare primitives**: the renderer emits just the media frame or content column, no card chrome. Standalone blocks are presentation, not a separate content model |
 | `variant` | both | `col row row-r spl() ovr() vis() thm() rds()` |
-| `media` | both | `asr() obf() obp() flp() rds() shp() hov() tnt() scm nav() auto loop clip …` — furniture tokens are appended by the renderer from content |
+| `media` | both | `asr() obf() obp() flp() rds() shp() hov() tnt() scm nav() auto loop clip …` — plus the furniture look tokens (`chip/sticker/save/play` position/hue/size/shape). The renderer appends each furniture item's optional `style=` override after these |
 | `content` | both | `scl() pad() gap() scr` |
 | `text` | both | which long text the content column shows: `summary` (teaser — default), `body` (full view — body **instead of** summary, with the summary kept as a hidden `description` meta), `both`. Reveal back panels always render both |
 | `styles` | both | object of CSS custom properties → `style` attribute (e.g. `--ui-reveal-content-bg`) |
@@ -277,8 +291,9 @@ grid.insertAdjacentHTML('beforeend', renderCard(ucf, presets));
 | `loadPresets` | `(url) => Promise<object>` | fetch `card.presets.json` → id→preset map |
 | `SCHEMA_TYPES` | map | schemaType → schema.org type |
 
-Pipeline: resolve preset → build `<ui-media>` (items; furniture appended with
-matching `media=` position/hue tokens) → build `<ui-content>` envelope parts →
+Pipeline: resolve preset → build `<ui-media>` (items; furniture emitted from the
+`furniture` object, its look from the preset's `media=` tokens plus any `style=`
+overrides) → build `<ui-content>` envelope parts →
 run the per-type `DETAILS` renderer → append trailers (byline, tags, actions,
 engagement). `preset.element === "ui-reveal"` switches to the reveal composition
 (front `<ui-face>`, back panel). Unknown preset refs fall back to a plain stack

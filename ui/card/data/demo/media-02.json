@@ -15,9 +15,10 @@
     "preset": {
       "$ref": "card-preset/media-rds-sm"
     },
-    "chip": {
-      "text": "rds(sm)",
-      "position": "bs"
+    "furniture": {
+      "chip": {
+        "text": "rds(sm)"
+      }
     },
     "media": [
       {

@@ -17,11 +17,16 @@
     },
     "eyebrow": "Furniture",
     "headline": "Starburst sticker",
-    "sticker": {
-      "text": "-28%",
-      "position": "te",
-      "hue": "red",
-      "burst": true
+    "furniture": {
+      "sticker": {
+        "lines": [
+          {
+            "role": "lead",
+            "text": "-28%"
+          }
+        ],
+        "style": "te red burst"
+      }
     },
     "media": [
       {

@@ -27,12 +27,13 @@
         "alt": "Museum trailer"
       }
     ],
-    "play": {
-      "position": "cc",
-      "size": "lg"
-    },
-    "chip": {
-      "text": "vimeo native"
+    "furniture": {
+      "chip": {
+        "text": "vimeo native"
+      },
+      "play": {
+        "style": "cc lg"
+      }
     },
     "actions": [
       {

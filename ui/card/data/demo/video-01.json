@@ -26,8 +26,10 @@
         "duration": "PT2M10S"
       }
     ],
-    "chip": {
-      "text": "native video"
+    "furniture": {
+      "chip": {
+        "text": "native video"
+      }
     }
   }
 }

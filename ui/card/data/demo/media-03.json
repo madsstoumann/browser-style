@@ -15,9 +15,10 @@
     "preset": {
       "$ref": "card-preset/media-obp-tl"
     },
-    "chip": {
-      "text": "obp(tl)",
-      "position": "tc"
+    "furniture": {
+      "chip": {
+        "text": "obp(tl)"
+      }
     },
     "media": [
       {

@@ -35,9 +35,8 @@
         "alt": "Conference stage at Web Summit"
       }
     ],
-    "play": {
-      "position": "be",
-      "size": "sm"
+    "furniture": {
+      "play": true
     }
   }
 }

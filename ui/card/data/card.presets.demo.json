@@ -7,7 +7,7 @@
       "name": "Media Aspect 1:1",
       "description": "Standalone <ui-media> frame, square crop",
       "element": "ui-media",
-      "media": "asr(1/1)"
+      "media": "asr(1/1) chip(bs)"
     },
     "media-asr-6x7": {
       "name": "Media Aspect 6:7",
@@ -55,7 +55,7 @@
       "name": "Media Corners Small",
       "description": "Standalone <ui-media> frame, 4:3, small radius",
       "element": "ui-media",
-      "media": "asr(4/3) rds(sm)"
+      "media": "asr(4/3) rds(sm) chip(bs)"
     },
     "media-rds-lg": {
       "name": "Media Corners Large",
@@ -80,7 +80,7 @@
       "description": "Media-only square card, object-position top left",
       "element": "ui-card",
       "variant": "vis(media)",
-      "media": "asr(1/1) obp(tl)"
+      "media": "asr(1/1) obp(tl) chip(tc)"
     },
     "media-obp-tc": {
       "name": "Media Position Top Center",
@@ -311,10 +311,10 @@
     },
     "carousel-plain": {
       "name": "Carousel Plain",
-      "description": "Bare swipe scroller — nav(non); chip furniture comes from content",
+      "description": "Bare swipe scroller — nav(non); chip text comes from content, chip(te) placement from the preset",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav(non)",
+      "media": "asr(4/3) nav(non) chip(te)",
       "content": "scl(sm)"
     },
     "carousel-dots-themed": {
@@ -648,18 +648,18 @@
     },
     "carousel-play": {
       "name": "Carousel Play",
-      "description": "Autoplay 4s + loop + pill timer; pinned <ui-play> control comes from content",
+      "description": "Autoplay 4s + loop + pill timer; the <ui-play> control's placement/size come from the preset, its presence from content",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav dot(pll) auto(4s) loop",
+      "media": "asr(4/3) nav dot(pll) auto(4s) loop play(bs) play(sm)",
       "content": "scl(sm)"
     },
     "carousel-play-end": {
       "name": "Carousel Play End",
-      "description": "Autoplay 4s + loop; <ui-play> pinned bottom-right from content",
+      "description": "Autoplay 4s + loop; <ui-play> pinned bottom-right, placement/size from the preset",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav auto(4s) loop",
+      "media": "asr(4/3) nav auto(4s) loop play(be) play(sm)",
       "content": "scl(sm)"
     },
     "carousel-videos": {
