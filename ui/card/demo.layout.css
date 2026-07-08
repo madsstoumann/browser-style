@@ -1,0 +1,19 @@
+/**
+ * Demo-only shim for using /layout/dist/layout.css on card/reveal demo pages.
+ * Unlayered on purpose so it wins over both bs-* and layout.* layers.
+ */
+
+/* layout.css ends with an unlayered `body { margin-inline: max(…) }` rule
+   (generated from layoutContainer in layout.config.json) that assumes the
+   layout owns the page. The demo pages are centered by base's
+   :where(body) { margin-inline: auto } — re-assert that here. */
+body {
+	margin-inline: auto;
+}
+
+lay-out {
+	/* layout gaps are n × --layout-space-unit (default 1rem);
+	   match the rhythm the old .grid wrappers had (gap: --spacing-lg) */
+	--layout-space-unit: var(--spacing-lg, 1.5rem);
+	margin-block-end: var(--spacing-2xl);
+}
