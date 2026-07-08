@@ -25,10 +25,10 @@
 		--ui-sticker-strong-scale: 1.1;
 		--ui-sticker-text-shadow-color: contrast-color(var(--ui-sticker-c, hsl(0, 0%, 100%)));
 
+		--_size: calc(var(--ui-sticker-fs) * var(--ui-sticker-fs-scale));
 		--_size-lg: calc(var(--_size) * var(--ui-sticker-strong-scale));
 		--_size-sm: calc(var(--_size) * var(--ui-sticker-small-scale));
-		--_size: calc(var(--ui-sticker-fs) * var(--ui-sticker-fs-scale));
-
+		
 		aspect-ratio: 1 / 1;
 		background: var(--ui-sticker-bg, var(--color-accent));
 		border-radius: var(--ui-sticker-radius, var(--radius-circle, 50%));
@@ -65,9 +65,6 @@
 		& > strong { font-size: max(10px, var(--_size-lg)); font-family: var(--ui-sticker-strong-font, var(--ui-sticker-font-family)); color: var(--ui-sticker-lead-c, inherit); }
 		& :is(sup, sub) { font-size: 0.5em; }
 
-		/* colour (hue) — the 8 theme hues, from theme= or the card's sticker(<hue>).
-		   `&` is ui-sticker, `:where([media*="sticker(…)"]) &` is the card form.
-		   Arbitrary fill=/ink= come after, so they override the hue. */
 		&[theme~="red"],    :where([media*="sticker(red)"])    & { --ui-sticker-bg: var(--ui-theme-red-bg);    --ui-sticker-c: var(--ui-theme-red-c); }
 		&[theme~="orange"], :where([media*="sticker(orange)"]) & { --ui-sticker-bg: var(--ui-theme-orange-bg); --ui-sticker-c: var(--ui-theme-orange-c); }
 		&[theme~="green"],  :where([media*="sticker(green)"])  & { --ui-sticker-bg: var(--ui-theme-green-bg);  --ui-sticker-c: var(--ui-theme-green-c); }
@@ -201,76 +198,31 @@
 		}
 
 		&[variant~="burst"], :where([media*="sticker(burst)"]) & {
-			--ui-sticker-clip-path: polygon(
-				50.0% 0.0%, 59.1% 16.2%, 75.0% 6.7%, 74.7% 25.3%, 93.3% 25.0%,
-				83.8% 40.9%, 100.0% 50.0%, 83.8% 59.1%, 93.3% 75.0%, 74.7% 74.7%,
-				75.0% 93.3%, 59.1% 83.8%, 50.0% 100.0%, 40.9% 83.8%, 25.0% 93.3%,
-				25.3% 74.7%, 6.7% 75.0%, 16.2% 59.1%, 0.0% 50.0%, 16.2% 40.9%,
-				6.7% 25.0%, 25.3% 25.3%, 25.0% 6.7%, 40.9% 16.2%
-			);
+			--ui-sticker-clip-path: var(--shape-burst);
 			--ui-sticker-fs: 30cqi;
 			--ui-sticker-p: 0.6em;
 		}
 
 		&[variant~="blob"], :where([media*="sticker(blob)"]) & {
-			--ui-sticker-clip-path: shape(from 90.89% 45.17%, curve to 92.79% 55.28% with 90.99% 50.00%, smooth to 93.61% 65.99%, smooth to 85.76% 72.82%, smooth to 76.90% 78.85%, smooth to 71.48% 87.66%, smooth to 63.31% 95.20%, smooth to 53.19% 93.00%, smooth to 41.81% 92.46%, smooth to 31.96% 92.67%, smooth to 26.69% 82.05%, smooth to 21.44% 73.76%, smooth to 14.78% 67.57%, smooth to 8.98% 59.50%, smooth to 5.96% 49.99%, smooth to 9.52% 40.71%, smooth to 13.81% 31.61%, smooth to 15.79% 20.88%, smooth to 22.18% 12.88%, smooth to 32.83% 10.92%, smooth to 43.10% 11.79%, smooth to 51.97% 13.79%, smooth to 61.90% 12.13%, smooth to 73.63% 9.66%, smooth to 79.98% 17.38%, smooth to 86.16% 26.73%, smooth to 91.37% 34.63%, smooth to 90.89% 45.17%);
+			--ui-sticker-clip-path: var(--shape-blob);
 			--ui-sticker-fs: 34cqi;
 			--ui-sticker-p: 0.7em;
 		}
 
 		&[variant~="spark"], :where([media*="sticker(spark)"]) & {
-			--ui-sticker-clip-path: polygon(
-				50.0% 0.0%, 62.6% 11.1%, 79.4% 9.5%, 83.1% 26.0%, 97.5% 34.5%,
-				90.9% 50.0%, 97.5% 65.5%, 83.1% 74.0%, 79.4% 90.5%, 62.6% 88.9%,
-				50.0% 100.0%, 37.4% 88.9%, 20.6% 90.5%, 16.9% 74.0%, 2.5% 65.5%,
-				9.1% 50.0%, 2.5% 34.5%, 16.9% 26.0%, 20.6% 9.5%, 37.4% 11.1%
-			);
+			--ui-sticker-clip-path: var(--shape-spark);
 			--ui-sticker-fs: 26cqi;
 			--ui-sticker-p: 0.6em;
 		}
 
 		&[variant~="sunburst"], :where([media*="sticker(sunburst)"]) & {
-			--ui-sticker-clip-path: polygon(
-				50.0% 0.0%, 53.1% 10.2%, 57.8% 0.6%, 59.3% 11.2%, 65.5% 2.5%,
-				65.3% 13.2%, 72.7% 5.5%, 70.8% 16.0%, 79.4% 9.5%, 75.9% 19.7%,
-				85.4% 14.6%, 80.3% 24.1%, 90.5% 20.6%, 84.0% 29.2%, 94.5% 27.3%,
-				86.8% 34.7%, 97.5% 34.5%, 88.8% 40.7%, 99.4% 42.2%, 89.8% 46.9%,
-				100.0% 50.0%, 89.8% 53.1%, 99.4% 57.8%, 88.8% 59.3%, 97.5% 65.5%,
-				86.8% 65.3%, 94.5% 72.7%, 84.0% 70.8%, 90.5% 79.4%, 80.3% 75.9%,
-				85.4% 85.4%, 75.9% 80.3%, 79.4% 90.5%, 70.8% 84.0%, 72.7% 94.5%,
-				65.3% 86.8%, 65.5% 97.5%, 59.3% 88.8%, 57.8% 99.4%, 53.1% 89.8%,
-				50.0% 100.0%, 46.9% 89.8%, 42.2% 99.4%, 40.7% 88.8%, 34.5% 97.5%,
-				34.7% 86.8%, 27.3% 94.5%, 29.2% 84.0%, 20.6% 90.5%, 24.1% 80.3%,
-				14.6% 85.4%, 19.7% 75.9%, 9.5% 79.4%, 16.0% 70.8%, 5.5% 72.7%,
-				13.2% 65.3%, 2.5% 65.5%, 11.2% 59.3%, 0.6% 57.8%, 10.2% 53.1%,
-				0.0% 50.0%, 10.2% 46.9%, 0.6% 42.2%, 11.2% 40.7%, 2.5% 34.5%,
-				13.2% 34.7%, 5.5% 27.3%, 16.0% 29.2%, 9.5% 20.6%, 19.7% 24.1%,
-				14.6% 14.6%, 24.1% 19.7%, 20.6% 9.5%, 29.2% 16.0%, 27.3% 5.5%,
-				34.7% 13.2%, 34.5% 2.5%, 40.7% 11.2%, 42.2% 0.6%, 46.9% 10.2%
-			);
+			--ui-sticker-clip-path: var(--shape-sunburst);
 			--ui-sticker-fs: 32cqi;
 			--ui-sticker-p: 0.5em;
 		}
 
 		&[variant~="heart"], :where([media*="sticker(heart)"]) & {
-			--ui-sticker-clip-path: shape(
-				from 45.738% 84.749%,
-				curve to 33.979% 74.461% with 43.619% 82.374% / 38.327% 77.744%,
-				curve to 14.111% 58.506% with 21.095% 64.731% / 19.342% 63.323%,
-				curve to 0.385% 28.608% with 4.467% 49.626% / 0.371% 40.705%,
-				curve to 2.448% 16.947% with 0.392% 22.703% / 0.795% 20.428%,
-				curve to 14.671% 3.969% with 5.254% 11.041% / 9.387% 6.653%,
-				curve to 26.508% 1.189% with 18.413% 2.068% / 20.259% 1.224%,
-				curve to 38.268% 4.028% with 33.046% 1.153% / 34.422% 1.915%,
-				curve to 48.762% 15.999% with 42.948% 6.599% / 47.766% 12.095%,
-				line to 49.377% 18.410%,
-				line to 50.894% 15.089%,
-				curve to 96.356% 15.556% with 59.466% -3.676% / 86.832% -3.395%,
-				curve to 97.030% 41.635% with 99.377% 21.567% / 99.709% 34.404%,
-				curve to 71.798% 69.277% with 93.535% 51.067% / 86.971% 58.258%,
-				curve to 49.801% 88.974% with 61.847% 76.504% / 50.585% 87.438%,
-				curve to 45.738% 84.749% with 48.891% 90.756% / 49.757% 89.253%
-			);
+			--ui-sticker-clip-path: var(--shape-heart-badge);
 			--ui-sticker-fs: 26cqi;
 			--ui-sticker-p: 0.8em 0.6em 1.6em;
 			border-radius: 0;
