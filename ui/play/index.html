@@ -65,7 +65,7 @@
 
 	<h3>Solid (default)</h3>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-play><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 	</div>
 
 	<h3>Playing state (pause glyph)</h3>
@@ -79,62 +79,62 @@
 	<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
 		<figure style="position: relative; margin: 0; inline-size: 16rem; aspect-ratio: 16/9; border-radius: .5rem; overflow: hidden;">
 			<img src="/assets/images/destinations.png" alt="" style="inline-size: 100%; block-size: 100%; object-fit: cover;">
-			<ui-play style="position: absolute; inset: 0; margin: auto; inline-size: max-content; block-size: max-content;"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+			<ui-play style="position: absolute; inset: 0; margin: auto; inline-size: max-content; block-size: max-content;"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 		</figure>
 		<figure style="position: relative; margin: 0; inline-size: 16rem; aspect-ratio: 16/9; border-radius: .5rem; overflow: hidden;">
 			<img src="/assets/images/hubble.png" alt="" style="inline-size: 100%; block-size: 100%; object-fit: cover;">
-			<ui-play variant="reveal" style="position: absolute; inset: 0; margin: auto; inline-size: max-content; block-size: max-content;"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+			<ui-play variant="reveal" style="position: absolute; inset: 0; margin: auto; inline-size: max-content; block-size: max-content;"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 		</figure>
 	</div>
 
 	<h3>Sizes</h3>
 	<p>Use the <code>size</code> attribute: <code>sm</code>, <code>md</code> (default), <code>lg</code>, <code>xl</code>.</p>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-play size="sm"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
-		<ui-play size="md"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
-		<ui-play size="lg"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
-		<ui-play size="xl"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play size="sm"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play size="md"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play size="lg"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play size="xl"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 	</div>
 
 	<h3>Theme</h3>
 	<p>Use <code>theme</code> for a decorative color bundle (bg + ink).</p>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-play theme="dark"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
-		<ui-play theme="accent"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
-		<ui-play theme="subtle"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play theme="dark"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play theme="accent"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play theme="subtle"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 	</div>
 
 	<h3>Custom tokens</h3>
 	<p>Override <code>--ui-play-bg</code>, <code>--ui-play-c</code>, <code>--ui-play-sz</code>, and <code>--ui-play-icon-sz</code>.</p>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-play style="--ui-play-bg: black; --ui-play-c: white; --ui-play-sz: 4.5em;"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
-		<ui-play style="--ui-play-bg: hotpink; --ui-play-c: white;"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play style="--ui-play-bg: black; --ui-play-c: white; --ui-play-sz: 4.5em;"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play style="--ui-play-bg: hotpink; --ui-play-c: white;"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 	</div>
 
 	<h3>Brand shapes</h3>
 	<p>Use <code>variant="youtube"</code> or <code>variant="vimeo"</code> to reshape the disc into a platform badge, keeping the white play arrow. YouTube is a red squircle via <code>corner-shape: superellipse()</code> (degrades to plain rounded corners where unsupported); Vimeo is a cyan disc; <code>rounded(sm|md|lg)</code> clips the disc into a play triangle with scalable corner rounding via <code>clip-path: shape()</code>. Override color with <code>--ui-play-bg</code> / <code>--ui-play-bg-hover</code>, corners with <code>--ui-play-radius</code> / <code>--ui-play-corner</code>, the path with <code>--ui-play-shape</code>.</p>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-play variant="youtube" size="lg"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
-		<ui-play variant="vimeo" size="lg"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
-		<ui-play variant="rounded(sm)" size="lg"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
-		<ui-play variant="rounded(md)" size="lg"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
-		<ui-play variant="rounded(lg)" size="lg"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play variant="youtube" size="lg"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play variant="vimeo" size="lg"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play variant="rounded(sm)" size="lg"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play variant="rounded(md)" size="lg"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play variant="rounded(lg)" size="lg"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 	</div>
 	<p>Over media:</p>
 	<div style="display: flex; gap: 1rem; flex-wrap: wrap;">
 		<figure style="position: relative; margin: 0; inline-size: 16rem; aspect-ratio: 16/9; border-radius: .5rem; overflow: hidden;">
 			<img src="/assets/images/destinations.png" alt="" style="inline-size: 100%; block-size: 100%; object-fit: cover;">
-			<ui-play variant="youtube" size="lg" style="position: absolute; inset: 0; margin: auto; inline-size: max-content; block-size: max-content;"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+			<ui-play variant="youtube" size="lg" style="position: absolute; inset: 0; margin: auto; inline-size: max-content; block-size: max-content;"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 		</figure>
 		<figure style="position: relative; margin: 0; inline-size: 16rem; aspect-ratio: 16/9; border-radius: .5rem; overflow: hidden;">
 			<img src="/assets/images/hubble.png" alt="" style="inline-size: 100%; block-size: 100%; object-fit: cover;">
-			<ui-play variant="vimeo" size="lg" style="position: absolute; inset: 0; margin: auto; inline-size: max-content; block-size: max-content;"><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+			<ui-play variant="vimeo" size="lg" style="position: absolute; inset: 0; margin: auto; inline-size: max-content; block-size: max-content;"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 		</figure>
 	</div>
 
 	<h3>With opposite color-scheme</h3>
 	<div class="bdrs-md cs-opposite pb-3 pi-3" style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-play><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 		<ui-play><button type="button" aria-label="Pause" aria-pressed="true"><ui-icon type="pause"></ui-icon></button></ui-play>
 	</div>
 
@@ -143,10 +143,10 @@
 		<code>rnd</code> rounded, <code>non</code> sharp. In a card: <code>play(&lt;corner&gt;)</code>.
 		(<code>variant="youtube"</code> / <code>"vimeo"</code> remain the brand badges.)</p>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-play theme="accent"><button type="button" aria-label="crc"><ui-icon type="play"></ui-icon></button></ui-play>
-		<ui-play theme="accent" radius="sqr"><button type="button" aria-label="sqr"><ui-icon type="play"></ui-icon></button></ui-play>
-		<ui-play theme="accent" radius="rnd"><button type="button" aria-label="rnd"><ui-icon type="play"></ui-icon></button></ui-play>
-		<ui-play theme="accent" radius="non"><button type="button" aria-label="non"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play theme="accent"><button type="button" aria-label="crc"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play theme="accent" radius="sqr"><button type="button" aria-label="sqr"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play theme="accent" radius="rnd"><button type="button" aria-label="rnd"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play theme="accent" radius="non"><button type="button" aria-label="non"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 	</div>
 
 	<script type="module">
