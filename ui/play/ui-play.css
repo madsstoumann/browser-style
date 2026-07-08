@@ -91,17 +91,14 @@
 		background: var(--ui-play-bg, #ff0033);
 		border-radius: var(--ui-play-radius, var(--ui-play-sz, 3em));
 		corner-shape: var(--ui-play-corner, superellipse(var(--squircle-md)));
-		
 	}
 	:where(ui-play[variant~="youtube"], [provider="youtube"] ui-play) button:is(:hover, :focus-visible) {
 		background: var(--ui-play-bg-hover, #d10029);
 	}
 
-	/* vimeo — cyan disc; keeps the <ui-icon> arrow */
+	/* vimeo — cyan disc; keeps the <ui-icon> arrow (base button is already a circle) */
 	:where(ui-play[variant~="vimeo"], [provider="vimeo"] ui-play) button {
-		aspect-ratio: 1;
 		background: var(--ui-play-bg, #1ab7ea);
-		border-radius: var(--ui-play-radius, var(--radius-circle, 50%));
 	}
 	:where(ui-play[variant~="vimeo"], [provider="vimeo"] ui-play) button:is(:hover, :focus-visible) {
 		background: var(--ui-play-bg-hover, #138fb8);

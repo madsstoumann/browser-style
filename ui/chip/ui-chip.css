@@ -12,7 +12,7 @@
 		--ui-chip-padding-inline: 0.95em;
 		--ui-chip-padding-inline-end: var(--ui-chip-padding-inline);
 		align-items: center;
-		background: var(--ui-chip-bg, var(--color-button));
+		background: var(--ui-chip-bg, var(--ui-chip-accent, var(--color-button)));
 		border: var(--ui-chip-border-width) solid var(--ui-chip-border-color);
 		border-radius: var(--ui-chip-radius, var(--radius-pill));
 		color: var(--ui-chip-c, var(--color-text));
@@ -31,20 +31,21 @@
 
 		/* colour — --ui-chip-accent is the single input; theme= and fill= both feed
 		   it, so solid / light / outline all work for named hues and arbitrary
-		   colours alike. `&` is standalone, `:where([media*="chip(…)"]) &` is the
-		   card form. */
-		&[theme~="red"],    :where([media*="chip(red)"])    & { --ui-chip-accent: var(--ui-theme-red-bg);    --ui-chip-bg: var(--ui-theme-red-bg);    --ui-chip-c: var(--ui-theme-red-c); }
-		&[theme~="orange"], :where([media*="chip(orange)"]) & { --ui-chip-accent: var(--ui-theme-orange-bg); --ui-chip-bg: var(--ui-theme-orange-bg); --ui-chip-c: var(--ui-theme-orange-c); }
-		&[theme~="green"],  :where([media*="chip(green)"])  & { --ui-chip-accent: var(--ui-theme-green-bg);  --ui-chip-bg: var(--ui-theme-green-bg);  --ui-chip-c: var(--ui-theme-green-c); }
-		&[theme~="blue"],   :where([media*="chip(blue)"])   & { --ui-chip-accent: var(--ui-theme-blue-bg);   --ui-chip-bg: var(--ui-theme-blue-bg);   --ui-chip-c: var(--ui-theme-blue-c); }
-		&[theme~="accent"], :where([media*="chip(accent)"]) & { --ui-chip-accent: var(--ui-theme-accent-bg); --ui-chip-bg: var(--ui-theme-accent-bg); --ui-chip-c: var(--ui-theme-accent-c); }
-		&[theme~="dark"],   :where([media*="chip(dark)"])   & { --ui-chip-accent: var(--ui-theme-dark-bg);   --ui-chip-bg: var(--ui-theme-dark-bg);   --ui-chip-c: var(--ui-theme-dark-c); }
-		&[theme~="light"],  :where([media*="chip(light)"])  & { --ui-chip-accent: var(--ui-theme-light-bg);  --ui-chip-bg: var(--ui-theme-light-bg);  --ui-chip-c: var(--ui-theme-light-c); }
-		&[theme~="subtle"], :where([media*="chip(subtle)"]) & { --ui-chip-accent: var(--ui-theme-subtle-bg); --ui-chip-bg: var(--ui-theme-subtle-bg); --ui-chip-c: var(--ui-theme-subtle-c); }
+		   colours alike. Solid bg falls back to accent (base rule), so hue rules set
+		   only accent + the curated ink. `&` is standalone, `:where([media*="chip(…)"]) &`
+		   is the card form. */
+		&[theme~="red"],    :where([media*="chip(red)"])    & { --ui-chip-accent: var(--ui-theme-red-bg);    --ui-chip-c: var(--ui-theme-red-c); }
+		&[theme~="orange"], :where([media*="chip(orange)"]) & { --ui-chip-accent: var(--ui-theme-orange-bg); --ui-chip-c: var(--ui-theme-orange-c); }
+		&[theme~="green"],  :where([media*="chip(green)"])  & { --ui-chip-accent: var(--ui-theme-green-bg);  --ui-chip-c: var(--ui-theme-green-c); }
+		&[theme~="blue"],   :where([media*="chip(blue)"])   & { --ui-chip-accent: var(--ui-theme-blue-bg);   --ui-chip-c: var(--ui-theme-blue-c); }
+		&[theme~="accent"], :where([media*="chip(accent)"]) & { --ui-chip-accent: var(--ui-theme-accent-bg); --ui-chip-c: var(--ui-theme-accent-c); }
+		&[theme~="dark"],   :where([media*="chip(dark)"])   & { --ui-chip-accent: var(--ui-theme-dark-bg);   --ui-chip-c: var(--ui-theme-dark-c); }
+		&[theme~="light"],  :where([media*="chip(light)"])  & { --ui-chip-accent: var(--ui-theme-light-bg);  --ui-chip-c: var(--ui-theme-light-c); }
+		&[theme~="subtle"], :where([media*="chip(subtle)"]) & { --ui-chip-accent: var(--ui-theme-subtle-bg); --ui-chip-c: var(--ui-theme-subtle-c); }
 
 		/* arbitrary colour (overrides the hue) — fill = surface, ink = text; ink
 		   auto-contrasts from fill when omitted. */
-		&[fill] { --ui-chip-accent: attr(fill type(<color>), var(--color-button)); --ui-chip-bg: var(--ui-chip-accent); --ui-chip-c: contrast-color(var(--ui-chip-accent)); }
+		&[fill] { --ui-chip-accent: attr(fill type(<color>), var(--color-button)); --ui-chip-c: contrast-color(var(--ui-chip-accent)); }
 		&[ink]  { --ui-chip-c: attr(ink type(<color>), hsl(0, 0%, 100%)); }
 
 		/* variants */
