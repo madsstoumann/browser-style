@@ -191,7 +191,7 @@
 	:where([media*="dot(tmb)"]), ui-media[dot~="tmb"] { --ui-media-marker-inset: var(--ui-media-thumb-gap, 1rem); }
 	/* arrows present: base glyph vars */
 	:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]),
-	ui-media:where([nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"])) {
+	ui-media:where([nav]:not([nav~="dot"]):not([nav~="non"])) {
 		--ui-media-chevron-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
 		--ui-media-chevron-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
 		--ui-media-arrow-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
@@ -243,11 +243,11 @@
 
 		/* controls present (dots OR arrows) → hide native scrollbar */
 		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) ui-media,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"], [nav]:not([nav~="non"]):not([nav~="bar"])) { scrollbar-width: none; }
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"], [nav]:not([nav~="non"])) { scrollbar-width: none; }
 
 		/* ---- DOTS present: bare nav · nav(dot) · nav(blw) · nav(abv) ---- */
 		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"], [media*="nav(abv)"]) ui-media,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"], [media*="nav(abv)"], [nav]:not([nav~="arw"]):not([nav~="non"]):not([nav~="bar"])) {
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(blw)"], [media*="nav(abv)"], [nav]:not([nav~="arw"]):not([nav~="non"])) {
 			scroll-marker-group: after;
 
 			&::scroll-marker-group {
@@ -335,7 +335,7 @@
 		}
 
 		:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) ui-media,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"], [nav]:not([nav~="dot"]):not([nav~="non"]):not([nav~="bar"])) {
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"], [nav]:not([nav~="dot"]):not([nav~="non"])) {
 			&::scroll-button(*) {
 				aspect-ratio: 1;
 				background: var(--ui-media-arrow-glyph) calc(50% + var(--ui-media-arrow-nudge)) center / var(--ui-media-arrow-glyph-size, 75%) no-repeat var(--ui-media-arrow-bg);
@@ -379,15 +379,35 @@
 
 		ui-media > [data-clone]::scroll-marker { content: none; }
 
-		/* arrow placement (mid default) */
-		:where([media*="arw(top)"]), ui-media[arrow~="top"] { --ui-media-arrow-top: calc(anchor(top) + var(--ui-media-overlay-gap)); }
-		:where([media*="arw(bot)"]), ui-media[arrow~="bot"] { --ui-media-arrow-top: calc(anchor(bottom) - var(--ui-media-overlay-gap) - var(--ui-media-arrow-size)); }
+		/* arrow vertical band — split arrows honor the block row (t/c/b); cc = middle default */
+		:where([media*="arw(ts)"], [media*="arw(tc)"], [media*="arw(te)"]),
+		ui-media:where([arrow~="ts"], [arrow~="tc"], [arrow~="te"]) { --ui-media-arrow-top: calc(anchor(top) + var(--ui-media-overlay-gap)); }
+		:where([media*="arw(bs)"], [media*="arw(bc)"], [media*="arw(be)"]),
+		ui-media:where([arrow~="bs"], [arrow~="bc"], [arrow~="be"]) { --ui-media-arrow-top: calc(anchor(bottom) - var(--ui-media-overlay-gap) - var(--ui-media-arrow-size)); }
 
-		/* arw(set) — both arrows as an adjacent pair at the inline-end */
+		/* arw(set) — cluster both arrows; inline side from the cell's inline letter (end = default) */
 		:where([media*="arw(set)"]) ui-media::scroll-button(left),
 		ui-media:where([media*="arw(set)"], [arrow~="set"])::scroll-button(left) {
 			left: auto;
 			right: calc(anchor(right) + var(--ui-media-overlay-gap) + var(--ui-media-arrow-size) + var(--ui-media-arrow-gap));
+		}
+		/* arw(set) inline-start — cells ts/cs/bs */
+		:where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"])) ui-media::scroll-button(left),
+		ui-media:where([arrow~="set"]:is([arrow~="ts"], [arrow~="cs"], [arrow~="bs"]))::scroll-button(left) {
+			left: calc(anchor(left) + var(--ui-media-overlay-gap)); right: auto;
+		}
+		:where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"])) ui-media::scroll-button(right),
+		ui-media:where([arrow~="set"]:is([arrow~="ts"], [arrow~="cs"], [arrow~="bs"]))::scroll-button(right) {
+			left: calc(anchor(left) + var(--ui-media-overlay-gap) + var(--ui-media-arrow-size) + var(--ui-media-arrow-gap)); right: auto;
+		}
+		/* arw(set) inline-center — cells tc/cc/bc */
+		:where([media*="arw(set)"]:is([media*="arw(tc)"], [media*="arw(cc)"], [media*="arw(bc)"])) ui-media::scroll-button(left),
+		ui-media:where([arrow~="set"]:is([arrow~="tc"], [arrow~="cc"], [arrow~="bc"]))::scroll-button(left) {
+			left: calc(anchor(center) - var(--ui-media-arrow-size) - var(--ui-media-arrow-gap) / 2); right: auto;
+		}
+		:where([media*="arw(set)"]:is([media*="arw(tc)"], [media*="arw(cc)"], [media*="arw(bc)"])) ui-media::scroll-button(right),
+		ui-media:where([arrow~="set"]:is([arrow~="tc"], [arrow~="cc"], [arrow~="bc"]))::scroll-button(right) {
+			left: calc(anchor(center) + var(--ui-media-arrow-gap) / 2); right: auto;
 		}
 
 		/* nav(abv) + arw(set) — flush the pair to the inline-end edge (no overlay-gap) */
@@ -435,34 +455,8 @@
 		ui-media:where([media*="nav(abv)"], [nav~="abv"])::scroll-marker-group {
 			top: calc(anchor(top) + var(--ui-media-band) / 2 - var(--ui-media-dot-size) / 2);
 		}
-		/* in-band dot alignment (sta/ctr/end) — horizontal only, so shared by BOTH nav(blw) and nav(abv) */
-		:where([media*="nav(blw)"][media*="arw(set)"], [media*="nav(abv)"][media*="arw(set)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav(blw)"][media*="arw(set)"], [media*="nav(abv)"][media*="arw(set)"], [nav~="blw"][arrow~="set"], [nav~="abv"][arrow~="set"])::scroll-marker-group {
-			justify-self: start;
-			left: calc(anchor(left) + var(--ui-media-overlay-gap));
-		}
-		:where([media*="nav(blw)"][media*="dot(sta)"], [media*="nav(abv)"][media*="dot(sta)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav(blw)"][media*="dot(sta)"], [media*="nav(abv)"][media*="dot(sta)"], [nav~="blw"][dot~="sta"], [nav~="abv"][dot~="sta"])::scroll-marker-group {
-			justify-self: start; right: auto;
-			left: calc(anchor(left) + 2 * var(--ui-media-overlay-gap) + var(--ui-media-arrow-size));
-		}
-		:where([media*="nav(blw)"][media*="dot(sta)"][media*="arw(set)"], [media*="nav(abv)"][media*="dot(sta)"][media*="arw(set)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav(blw)"][media*="dot(sta)"][media*="arw(set)"], [media*="nav(abv)"][media*="dot(sta)"][media*="arw(set)"], [nav~="blw"][dot~="sta"][arrow~="set"], [nav~="abv"][dot~="sta"][arrow~="set"])::scroll-marker-group {
-			left: calc(anchor(left) + var(--ui-media-overlay-gap));
-		}
-		:where([media*="nav(blw)"][media*="dot(ctr)"], [media*="nav(abv)"][media*="dot(ctr)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav(blw)"][media*="dot(ctr)"], [media*="nav(abv)"][media*="dot(ctr)"], [nav~="blw"][dot~="ctr"], [nav~="abv"][dot~="ctr"])::scroll-marker-group {
-			justify-self: anchor-center; left: auto; right: auto;
-		}
-		:where([media*="nav(blw)"][media*="dot(end)"], [media*="nav(abv)"][media*="dot(end)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav(blw)"][media*="dot(end)"], [media*="nav(abv)"][media*="dot(end)"], [nav~="blw"][dot~="end"], [nav~="abv"][dot~="end"])::scroll-marker-group {
-			justify-self: end; left: auto;
-			right: calc(anchor(right) + 2 * var(--ui-media-overlay-gap) + var(--ui-media-arrow-size));
-		}
-		:where([media*="nav(blw)"][media*="dot(end)"][media*="arw(set)"], [media*="nav(abv)"][media*="dot(end)"][media*="arw(set)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="nav(blw)"][media*="dot(end)"][media*="arw(set)"], [media*="nav(abv)"][media*="dot(end)"][media*="arw(set)"], [nav~="blw"][dot~="end"][arrow~="set"], [nav~="abv"][dot~="end"][arrow~="set"])::scroll-marker-group {
-			right: calc(anchor(right) + 2 * var(--ui-media-overlay-gap) + 2 * var(--ui-media-arrow-size) + var(--ui-media-arrow-gap));
-		}
+		/* in-band dot alignment lives AFTER the on-media corner/center rules (below) so the
+		   band-scoped selectors win over a same-cell on-media corner rule (equal specificity). */
 
 		/* ---- VERTICAL controls (axis(y) / nav="y") ---- */
 		:where([media*="axis(y)"]) ui-media,
@@ -495,20 +489,20 @@
 		ui-media:where([media*="nav"]:not([media*="axis(y)"]), [nav]:not([nav~="y"])) {
 			&::scroll-button(up), &::scroll-button(down) { display: none; }
 		}
-		/* axis(y) + arw(sta): arrows + dots on the inline-start edge */
-		:where([media*="axis(y)"][media*="arw(sta)"]) ui-media,
-		ui-media:where([media*="axis(y)"][media*="arw(sta)"], [nav~="y"][arrow~="sta"]) {
+		/* axis(y): a start-inline cell (cs/ts/bs) puts arrows + dots on the inline-start edge */
+		:where([media*="axis(y)"]:is([media*="arw(cs)"], [media*="arw(ts)"], [media*="arw(bs)"])) ui-media,
+		ui-media:where([nav~="y"]:is([arrow~="cs"], [arrow~="ts"], [arrow~="bs"])) {
 			&::scroll-button(up), &::scroll-button(down) { left: calc(anchor(left) + var(--ui-media-overlay-gap)); right: auto; }
 			&::scroll-marker-group { justify-self: start; }
 		}
-		/* axis(y) + arw(set): stack the pair at the block-end (arw(top) → block-start) */
+		/* axis(y) + arw(set): stack the pair at the block-end (a top-row cell → block-start) */
 		:where([media*="axis(y)"][media*="arw(set)"]) ui-media::scroll-button(up),
 		ui-media:where([media*="axis(y)"][media*="arw(set)"], [nav~="y"][arrow~="set"])::scroll-button(up) {
 			top: auto;
 			bottom: calc(anchor(bottom) + var(--ui-media-overlay-gap) + var(--ui-media-arrow-size) + var(--ui-media-arrow-gap));
 		}
-		:where([media*="axis(y)"][media*="arw(set)"][media*="arw(top)"]) ui-media,
-		ui-media:where([media*="axis(y)"][media*="arw(set)"][media*="arw(top)"], [nav~="y"][arrow~="set"][arrow~="top"]) {
+		:where([media*="axis(y)"][media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(te)"])) ui-media,
+		ui-media:where([nav~="y"][arrow~="set"]:is([arrow~="ts"], [arrow~="te"])) {
 			&::scroll-button(up)   { top: calc(anchor(top) + var(--ui-media-overlay-gap)); bottom: auto; }
 			&::scroll-button(down) { top: calc(anchor(top) + var(--ui-media-overlay-gap) + var(--ui-media-arrow-size) + var(--ui-media-arrow-gap)); bottom: auto; }
 		}
@@ -563,23 +557,25 @@
 			&::scroll-button(down) { left: auto; right: calc(anchor(right) + var(--ui-media-overlay-gap)); }
 		}
 
-		:where([media*="dot(tl)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(tl)"], [dot~="tl"])::scroll-marker-group,
-		:where([media*="dot(tr)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(tr)"], [dot~="tr"])::scroll-marker-group,
-		:where([media*="dot(bl)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(bl)"], [dot~="bl"])::scroll-marker-group,
-		:where([media*="dot(br)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(br)"], [dot~="br"])::scroll-marker-group {
+		/* dot corners — ts/te/bs/be */
+		:where([media*="dot(ts)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(ts)"], [dot~="ts"])::scroll-marker-group,
+		:where([media*="dot(te)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(te)"], [dot~="te"])::scroll-marker-group,
+		:where([media*="dot(bs)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(bs)"], [dot~="bs"])::scroll-marker-group,
+		:where([media*="dot(be)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(be)"], [dot~="be"])::scroll-marker-group {
 			align-self: auto;
 			inline-size: auto;
 			margin-inline: 0;
 		}
-		:where([media*="dot(tl)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="dot(tl)"], [dot~="tl"])::scroll-marker-group { top: calc(anchor(top) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); bottom: auto; left: calc(anchor(left) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: auto; justify-self: start; }
-		:where([media*="dot(tr)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="dot(tr)"], [dot~="tr"])::scroll-marker-group { top: calc(anchor(top) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); bottom: auto; right: calc(anchor(right) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: auto; justify-self: end; }
-		:where([media*="dot(bl)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="dot(bl)"], [dot~="bl"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: calc(anchor(left) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: auto; justify-self: start; }
-		:where([media*="dot(br)"]) ui-media::scroll-marker-group,
-		ui-media:where([media*="dot(br)"], [dot~="br"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: calc(anchor(right) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: auto; justify-self: end; }
+		:where([media*="dot(ts)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="dot(ts)"], [dot~="ts"])::scroll-marker-group { top: calc(anchor(top) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); bottom: auto; left: calc(anchor(left) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: auto; justify-self: start; }
+		:where([media*="dot(te)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="dot(te)"], [dot~="te"])::scroll-marker-group { top: calc(anchor(top) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); bottom: auto; right: calc(anchor(right) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: auto; justify-self: end; }
+		:where([media*="dot(bs)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="dot(bs)"], [dot~="bs"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: calc(anchor(left) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: auto; justify-self: start; }
+		:where([media*="dot(be)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="dot(be)"], [dot~="be"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: calc(anchor(right) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: auto; justify-self: end; }
 
+		/* dot edge-centers — tc/bc */
 		:where([media*="dot(tc)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(tc)"], [dot~="tc"])::scroll-marker-group,
 		:where([media*="dot(bc)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(bc)"], [dot~="bc"])::scroll-marker-group {
 			align-self: auto;
@@ -593,6 +589,68 @@
 		ui-media:where([media*="dot(tc)"], [dot~="tc"])::scroll-marker-group { top: calc(anchor(top) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); bottom: auto; }
 		:where([media*="dot(bc)"]) ui-media::scroll-marker-group,
 		ui-media:where([media*="dot(bc)"], [dot~="bc"])::scroll-marker-group { top: calc(anchor(bottom) - var(--ui-media-overlay-gap) - var(--ui-media-dot-size)); bottom: auto; }
+
+		/* dot center row — cs/cc/ce (vertically centered strip; grid completeness) */
+		:where([media*="dot(cs)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(cs)"], [dot~="cs"])::scroll-marker-group,
+		:where([media*="dot(cc)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(cc)"], [dot~="cc"])::scroll-marker-group,
+		:where([media*="dot(ce)"]) ui-media::scroll-marker-group, ui-media:where([media*="dot(ce)"], [dot~="ce"])::scroll-marker-group {
+			align-self: auto;
+			flex-direction: row;
+			inline-size: auto;
+			inset: auto;
+			margin-inline: 0;
+			top: calc(anchor(center) - var(--ui-media-dot-size) / 2); bottom: auto;
+		}
+		:where([media*="dot(cs)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="dot(cs)"], [dot~="cs"])::scroll-marker-group { left: calc(anchor(left) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); right: auto; justify-self: start; }
+		:where([media*="dot(cc)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="dot(cc)"], [dot~="cc"])::scroll-marker-group { justify-self: anchor-center; left: auto; right: auto; }
+		:where([media*="dot(ce)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="dot(ce)"], [dot~="ce"])::scroll-marker-group { right: calc(anchor(right) + var(--ui-media-marker-inset, var(--ui-media-overlay-gap))); left: auto; justify-self: end; }
+
+		/* ---- in-band dot alignment (nav(blw)/nav(abv)) — placed AFTER the on-media corner
+		   rules so a band-scoped cell (e.g. nav(blw) + dot(bs)) wins over the plain dot(bs) corner.
+		   In a band the row is locked, so only the cell's inline letter is honoured. ---- */
+		/* vertical: pin dots to the band centre (bottom band for blw, top band for abv) */
+		:where([media*="nav(blw)"]:is([media*="dot(bs)"], [media*="dot(bc)"], [media*="dot(be)"])) ui-media::scroll-marker-group,
+		ui-media:where([nav~="blw"]:is([dot~="bs"], [dot~="bc"], [dot~="be"]))::scroll-marker-group {
+			top: calc(anchor(bottom) - var(--ui-media-band) / 2 - var(--ui-media-dot-size) / 2); bottom: auto;
+		}
+		:where([media*="nav(abv)"]:is([media*="dot(ts)"], [media*="dot(tc)"], [media*="dot(te)"])) ui-media::scroll-marker-group,
+		ui-media:where([nav~="abv"]:is([dot~="ts"], [dot~="tc"], [dot~="te"]))::scroll-marker-group {
+			top: calc(anchor(top) + var(--ui-media-band) / 2 - var(--ui-media-dot-size) / 2); bottom: auto;
+		}
+		/* arw(set) in a band (no explicit dot cell) → shift the default-centred dots to the start */
+		:where([media*="nav(blw)"][media*="arw(set)"], [media*="nav(abv)"][media*="arw(set)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav(blw)"][media*="arw(set)"], [media*="nav(abv)"][media*="arw(set)"], [nav~="blw"][arrow~="set"], [nav~="abv"][arrow~="set"])::scroll-marker-group {
+			justify-self: start;
+			left: calc(anchor(left) + var(--ui-media-overlay-gap));
+		}
+		/* start — dot(bs) in blw / dot(ts) in abv */
+		:where([media*="nav(blw)"][media*="dot(bs)"], [media*="nav(abv)"][media*="dot(ts)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav(blw)"][media*="dot(bs)"], [media*="nav(abv)"][media*="dot(ts)"], [nav~="blw"][dot~="bs"], [nav~="abv"][dot~="ts"])::scroll-marker-group {
+			justify-self: start; right: auto;
+			left: calc(anchor(left) + 2 * var(--ui-media-overlay-gap) + var(--ui-media-arrow-size));
+		}
+		:where([media*="nav(blw)"][media*="dot(bs)"][media*="arw(set)"], [media*="nav(abv)"][media*="dot(ts)"][media*="arw(set)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav(blw)"][media*="dot(bs)"][media*="arw(set)"], [media*="nav(abv)"][media*="dot(ts)"][media*="arw(set)"], [nav~="blw"][dot~="bs"][arrow~="set"], [nav~="abv"][dot~="ts"][arrow~="set"])::scroll-marker-group {
+			left: calc(anchor(left) + var(--ui-media-overlay-gap));
+		}
+		/* centre — dot(bc)/dot(tc) (default; also resets the arw(set) start-shift) */
+		:where([media*="nav(blw)"][media*="dot(bc)"], [media*="nav(abv)"][media*="dot(tc)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav(blw)"][media*="dot(bc)"], [media*="nav(abv)"][media*="dot(tc)"], [nav~="blw"][dot~="bc"], [nav~="abv"][dot~="tc"])::scroll-marker-group {
+			justify-self: anchor-center; left: auto; right: auto;
+		}
+		/* end — dot(be) in blw / dot(te) in abv */
+		:where([media*="nav(blw)"][media*="dot(be)"], [media*="nav(abv)"][media*="dot(te)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav(blw)"][media*="dot(be)"], [media*="nav(abv)"][media*="dot(te)"], [nav~="blw"][dot~="be"], [nav~="abv"][dot~="te"])::scroll-marker-group {
+			justify-self: end; left: auto;
+			right: calc(anchor(right) + 2 * var(--ui-media-overlay-gap) + var(--ui-media-arrow-size));
+		}
+		:where([media*="nav(blw)"][media*="dot(be)"][media*="arw(set)"], [media*="nav(abv)"][media*="dot(te)"][media*="arw(set)"]) ui-media::scroll-marker-group,
+		ui-media:where([media*="nav(blw)"][media*="dot(be)"][media*="arw(set)"], [media*="nav(abv)"][media*="dot(te)"][media*="arw(set)"], [nav~="blw"][dot~="be"][arrow~="set"], [nav~="abv"][dot~="te"][arrow~="set"])::scroll-marker-group {
+			right: calc(anchor(right) + 2 * var(--ui-media-overlay-gap) + 2 * var(--ui-media-arrow-size) + var(--ui-media-arrow-gap));
+		}
 	}
 
 	@keyframes ui-media-pill-fill {

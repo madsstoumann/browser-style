@@ -7,6 +7,7 @@
 	<meta name="description" content="CSS-first save/favorite toggle component with optional web component wrapper.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/ui/icon/ui-icon.css">
 	<link rel="stylesheet" href="ui-save.css">
 </head>
 <body>
@@ -14,57 +15,93 @@
 
 	<h2>CSS</h2>
 	<p>
-		<code>&lt;ui-save&gt;</code> is a CSS-first favorite / wishlist / bookmark toggle. State is handled entirely by a wrapped checkbox — no JavaScript needed. Use <code>icon</code> for the glyph and <code>size</code> for scale.
-	</p>
-	<p>
-		This page demonstrates the <strong>CSS-only</strong> approach (no JavaScript).
-	</p>
-	<p>
-		See the <a href="wc-demo.html">web component demo</a> for the registered-element version.
+		<code>&lt;ui-save&gt;</code> is a save / favorite / wishlist / bookmark toggle. It wraps an
+		invoker <code>&lt;button command="--save"&gt;</code> and a
+		<code>&lt;ui-icon type="shape"&gt;</code>. The button's <code>aria-pressed</code> drives the
+		look: <em>unsaved</em> = outline + idle ink, <em>saved</em> = filled + active ink. Flipping
+		<code>aria-pressed</code> is wired in script via the invoker command (not shown here).
 	</p>
 
-	<h3>Basic — heart (default)</h3>
+	<h3>Unsaved / saved (heart, default)</h3>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-save><input type="checkbox" aria-label="Add to favorites"></ui-save>
-		<ui-save><input type="checkbox" aria-label="Add to favorites" checked></ui-save>
+		<ui-save>
+			<button type="button" command="--save" commandfor="s1" aria-label="Add to favorites">
+				<ui-icon type="shape" shape="heart" variant="outline"></ui-icon>
+			</button>
+		</ui-save>
+		<ui-save id="s1">
+			<button type="button" command="--save" commandfor="s1" aria-label="Remove from favorites" aria-pressed="true">
+				<ui-icon type="shape" shape="heart" variant="outline"></ui-icon>
+			</button>
+		</ui-save>
 	</div>
 
-	<h3>Icons</h3>
-	<p>Use the <code>icon</code> attribute: heart (default), <code>bookmark</code>, <code>star</code>.</p>
+	<h3>Shapes</h3>
+	<p>Any <code>ui-icon</code> shape works: <code>heart</code> (default), <code>bookmark</code>, <code>star</code>.</p>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-save><input type="checkbox" aria-label="Favorite"></ui-save>
-		<ui-save icon="bookmark"><input type="checkbox" aria-label="Bookmark"></ui-save>
-		<ui-save icon="star"><input type="checkbox" aria-label="Wishlist"></ui-save>
+		<ui-save>
+			<button type="button" command="--save" commandfor="s2" aria-label="Bookmark">
+				<ui-icon type="shape" shape="bookmark" variant="outline"></ui-icon>
+			</button>
+		</ui-save>
+		<ui-save>
+			<button type="button" command="--save" commandfor="s3" aria-label="Bookmark" aria-pressed="true">
+				<ui-icon type="shape" shape="bookmark" variant="outline"></ui-icon>
+			</button>
+		</ui-save>
+		<ui-save style="--ui-save-c-active: gold;">
+			<button type="button" command="--save" commandfor="s4" aria-label="Wishlist" aria-pressed="true">
+				<ui-icon type="shape" shape="star" variant="outline"></ui-icon>
+			</button>
+		</ui-save>
 	</div>
 
 	<h3>Sizes</h3>
-	<p>Use the <code>size</code> attribute: <code>sm</code>, <code>md</code> (default), <code>lg</code>.</p>
+	<p>Use the <code>size</code> attribute: <code>sm</code>, <code>lg</code>, <code>xl</code> (<code>md</code> is the default).</p>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-save size="sm"><input type="checkbox" aria-label="Favorite" checked></ui-save>
-		<ui-save size="md"><input type="checkbox" aria-label="Favorite" checked></ui-save>
-		<ui-save size="lg"><input type="checkbox" aria-label="Favorite" checked></ui-save>
+		<ui-save size="sm"><button type="button" command="--save" commandfor="z1" aria-label="Favorite" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save><button type="button" command="--save" commandfor="z2" aria-label="Favorite" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save size="lg"><button type="button" command="--save" commandfor="z3" aria-label="Favorite" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save size="xl"><button type="button" command="--save" commandfor="z4" aria-label="Favorite" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 	</div>
 
-	<h3>Theme</h3>
-	<p>Use <code>theme</code> for a decorative ink color from a bundle. Save is icon-only, so only the bundle's ink (<code>c</code>) tints the idle glyph.</p>
-	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-save theme="accent"><input type="checkbox" aria-label="Favorite"></ui-save>
-		<ui-save icon="star" theme="orange"><input type="checkbox" aria-label="Wishlist"></ui-save>
-		<ui-save icon="bookmark" theme="blue"><input type="checkbox" aria-label="Bookmark"></ui-save>
+	<h3>Without the circle — <code>variant="non"</code></h3>
+	<p>The circle backdrop is <strong>on by default</strong>. Add <code>variant="non"</code> for a bare
+		glyph (in a card: <code>save(non)</code>). Retune the disc via its tokens
+		(<code>--ui-save-circle-bg</code> / <code>-border-color</code> / <code>-shadow</code>).</p>
+	<div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+		<ui-save><button type="button" command="--save" commandfor="c1" aria-label="Favorite" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save variant="non"><button type="button" command="--save" commandfor="c2" aria-label="Favorite" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save variant="non"><button type="button" command="--save" commandfor="c3" aria-label="Bookmark" aria-pressed="true"><ui-icon type="shape" shape="bookmark" variant="outline"></ui-icon></button></ui-save>
+		<ui-save variant="non" style="--ui-save-c-active: gold;"><button type="button" command="--save" commandfor="c4" aria-label="Wishlist" aria-pressed="true"><ui-icon type="shape" shape="star" variant="outline"></ui-icon></button></ui-save>
 	</div>
 
-	<h3>Custom tokens</h3>
-	<p>Override <code>--ui-save-c-active</code> and <code>--ui-save-sz</code>.</p>
-	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-save icon="star" style="--ui-save-c-active: gold; --ui-save-sz: 2.4em;"><input type="checkbox" aria-label="Wishlist" checked></ui-save>
-		<ui-save style="--ui-save-c-active: hotpink;"><input type="checkbox" aria-label="Favorite" checked></ui-save>
+	<p>Over an image — the default disc keeps the glyph legible; last one retuned to a dark ink:</p>
+	<div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; padding: 1.5rem; border-radius: var(--radius-md); background: center / cover url('https://picsum.photos/600/200');">
+		<ui-save size="sm"><button type="button" command="--save" commandfor="c5" aria-label="Favorite" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save><button type="button" command="--save" commandfor="c6" aria-label="Favorite"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save size="lg"><button type="button" command="--save" commandfor="c7" aria-label="Favorite" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save size="lg" style="--ui-save-circle-bg: #111; --ui-save-circle-border-color: #333; --ui-save-c: #fff; --ui-save-c-active: gold;"><button type="button" command="--save" commandfor="c8" aria-label="Wishlist" aria-pressed="true"><ui-icon type="shape" shape="star" variant="outline"></ui-icon></button></ui-save>
 	</div>
 
-	<h3>With opposite color-scheme</h3>
-	<div class="bdrs-md cs-opposite pb-3 pi-3" style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-save><input type="checkbox" aria-label="Favorite"></ui-save>
-		<ui-save icon="bookmark"><input type="checkbox" aria-label="Bookmark" checked></ui-save>
-		<ui-save icon="star"><input type="checkbox" aria-label="Wishlist" checked></ui-save>
+	<h3>Disc shape — <code>radius=</code></h3>
+	<p>The circle disc can be reshaped: <code>crc</code> (default circle), <code>sqr</code> squircle,
+		<code>rnd</code> rounded square. (<code>variant="non"</code> hides it entirely.) In a card:
+		<code>save(sqr)</code> etc.</p>
+	<div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; font-size: 1.5rem;">
+		<ui-save><button type="button" command="--save" commandfor="r1" aria-label="crc" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save radius="sqr"><button type="button" command="--save" commandfor="r2" aria-label="sqr" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save radius="rnd"><button type="button" command="--save" commandfor="r3" aria-label="rnd" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save variant="non"><button type="button" command="--save" commandfor="r4" aria-label="non" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 	</div>
+
+	<script type="module">
+		// Author glue: command does not bubble, so listen in the capture phase.
+		document.addEventListener('command', (e) => {
+			if (e.command !== '--save') return;
+			const btn = e.source;
+			btn.setAttribute('aria-pressed', btn.getAttribute('aria-pressed') !== 'true');
+		}, true);
+	</script>
 </body>
 </html>

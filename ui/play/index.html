@@ -138,6 +138,17 @@
 		<ui-play><button type="button" aria-label="Pause" aria-pressed="true"><ui-icon type="pause"></ui-icon></button></ui-play>
 	</div>
 
+	<h3>Corners — <code>radius=</code></h3>
+	<p>The disc can be reshaped: <code>crc</code> circle (default), <code>sqr</code> squircle,
+		<code>rnd</code> rounded, <code>non</code> sharp. In a card: <code>play(&lt;corner&gt;)</code>.
+		(<code>variant="youtube"</code> / <code>"vimeo"</code> remain the brand badges.)</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-play theme="accent"><button type="button" aria-label="crc"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play theme="accent" radius="sqr"><button type="button" aria-label="sqr"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play theme="accent" radius="rnd"><button type="button" aria-label="rnd"><ui-icon type="play"></ui-icon></button></ui-play>
+		<ui-play theme="accent" radius="non"><button type="button" aria-label="non"><ui-icon type="play"></ui-icon></button></ui-play>
+	</div>
+
 	<script type="module">
 		import './index.js';       // registers <ui-play>
 		import './command.js';     // wires command targets (CSS animations here)

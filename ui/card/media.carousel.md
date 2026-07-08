@@ -22,7 +22,7 @@ Every option works through **either** form (they resolve to the same rule / prop
   Whole-word `~=` matched, so the attribute namespaces the value: `arrow="lg drk arr set"`.
 
 Equivalence: `media="nav(blw)"` ≡ `nav="blw"` · `media="arw(drk)"` ≡ `arrow="drk"` ·
-`media="dot(pll) dot(end)"` ≡ `dot="pll end"` · bare `media="nav"` ≡ boolean `nav` ·
+`media="dot(pll) dot(be)"` ≡ `dot="pll be"` · bare `media="nav"` ≡ boolean `nav` ·
 `media="axis(y)"` ≡ `nav="y"`. The value is the **same 3-letter code**; only the wrapper differs.
 
 ### Shared ink scale
@@ -42,39 +42,38 @@ scroller; the rest layer on top. `asr()` etc. belong to the base frame — see m
 | `crd(<type>)` | — | CSS | `stagger` **card** reveal type (multi-card slides) — same vocabulary, independent of `ani()` |
 | `arw(arr)`  | `arrow="arr"` | CSS | Full-arrow glyph (default is chevron) |
 | `arw(bare)` | `arrow="bare"` | CSS | Drop the circle — glyph painted as a recolourable shape (`--ui-media-arrow-color`) |
-| `arw(bot)`  | `arrow="bot"` | CSS | Edge arrows at the bottom |
+| `arw(bc)`   | `arrow="bc"` | CSS | Split arrows, bottom band (block row) |
 | `arw(chv)`  | `arrow="chv"` | CSS | Chevron glyph (**default**) |
 | `arw(drk)`  | `arrow="drk"` | CSS | **Dark theme** preset — dark circle + white glyph + light hover ring (composes on the overlay and in `nav(blw)`/`nav(abv)` bands; on `arw(bare)` it just paints a dark glyph) |
 | `arw(hid)`  | `arrow="hid"` | CSS | Auto-hide the dead-end arrow (default dims it) |
 | `arw(lg)`   | `arrow="lg"` | CSS | Arrow size 2.75rem |
 | `arw(lgt)`  | `arrow="lgt"` | CSS | **Light theme** preset — light circle + dark glyph (the default look, made explicit) |
 | `arw(md)`   | `arrow="md"` | CSS | Arrow size 2.25rem (**default**) |
-| `arw(mid)`  | `arrow="mid"` | CSS | Edge arrows vertically centered (**default**) |
-| `arw(set)`  | `arrow="set"` | CSS | Both arrows as an adjacent pair at the end |
+| `arw(cc)`   | `arrow="cc"` | CSS | Split arrows, vertically centered (**default**) |
+| `arw(set)`  | `arrow="set"` | CSS | Cluster both arrows; placeable in any grid cell — `arw(set) arw(<cell>)`, default `ce` (horizontal) / `be` (vertical) |
 | `arw(sm)`   | `arrow="sm"` | CSS | Arrow size 1.75rem |
-| `arw(sta)`  | `arrow="sta"` | CSS | `axis(y)`: move up/down arrows + dots to the inline-start edge |
-| `arw(top)`  | `arrow="top"` | CSS | Edge arrows at the top |
+| `arw(cs)`   | `arrow="cs"` | CSS | `axis(y)`: start-inline cell moves up/down arrows + dots to the inline-start edge |
+| `arw(tc)`   | `arrow="tc"` | CSS | Split arrows, top band (block row) |
 | `arw(xl)`   | `arrow="xl"` | CSS | Arrow size 3.25rem |
 | `auto` · `auto(4s)` · `auto(800ms)` | `nav="auto"` | JS | Autoplay (default 5s); pauses on hover/focus/drag/hidden-tab/reduced-motion. Attr form has no inline duration — defaults to 5s. Add a `<ui-play>` child for an explicit play/pause control (then hover/focus pause is dropped — see `play(<corner>)`) |
 | `axis(y)`   | `nav="y"` | CSS | Vertical carousel (snap on Y; arrows become up/down) |
 | `dot(cir)`  | `dot="cir"` | CSS | Circular dots (**default**) |
-| `dot(ctr)`  | `dot="ctr"` | CSS | `nav(blw)`/`nav(abv)`: dots centered in the band (**default**) |
+| `dot(bc)` `dot(tc)` | `dot="bc/tc"` | CSS | `nav(blw)`/`nav(abv)`: dots centered in the band (**default**) — `bc` below, `tc` above |
 | `dot(drk)`  | `dot="drk"` | CSS | Dark dot ink |
-| `dot(end)`  | `dot="end"` | CSS | `nav(blw)`/`nav(abv)`: dots at the inline-end |
+| `dot(be)` `dot(te)` | `dot="be/te"` | CSS | `nav(blw)`/`nav(abv)`: dots at the inline-end — `be` below, `te` above |
 | `dot(lg)`   | `dot="lg"` | CSS | Dot size 0.8rem |
 | `dot(lgt)`  | `dot="lgt"` | CSS | Light/white dot ink |
 | `dot(md)`   | `dot="md"` | CSS | Dot size 0.6rem (**default**) |
 | `dot(pll)`  | `dot="pll"` | CSS | Pill dots; active pill fills L→R over `--ui-media-autoplay` (timer hint) |
 | `dot(sm)`   | `dot="sm"` | CSS | Dot size 0.45rem |
-| `dot(sta)`  | `dot="sta"` | CSS | `nav(blw)`/`nav(abv)`: dots at the inline-start |
+| `dot(bs)` `dot(ts)` | `dot="bs/ts"` | CSS | `nav(blw)`/`nav(abv)`: dots at the inline-start — `bs` below, `ts` above |
 | `dot(non)`  | `dot="non"` | CSS | No dots (keeps arrows) — arrows-only band |
 | `dot(tmb)`| `dot="tmb"` | CSS | Image thumbnails; per-slide `--ui-media-thumb-url`; active thumb has a bottom timer stripe |
-| `dot(tl)` `dot(tr)` `dot(bl)` `dot(br)` | `dot="tl/tr/bl/br"` | CSS | Corner placement for the overlay marker-group (inset via `--ui-media-marker-inset`) |
+| `dot(ts)` `dot(te)` `dot(bs)` `dot(be)` | `dot="ts/te/bs/be"` | CSS | Corner placement for the overlay marker-group — logical (top-start / top-end / bottom-start / bottom-end). Center row `dot(cs)` `dot(cc)` `dot(ce)` completes the 9-grid. Inset via `--ui-media-marker-inset` |
 | `dot(xl)`   | `dot="xl"` | CSS | Dot size 1rem |
 | `loop`      | `nav="loop"` | JS | Seamless infinite loop (clones first/last slide) |
 | `nav`       | `nav` (boolean) | CSS | Carousel **on** — dots + arrows (the trigger) |
 | `nav(arw)`  | `nav="arw"` | CSS | Arrows only |
-| `nav(bar)`  | `nav="bar"` | CSS | Native scrollbar only (no dots/arrows) |
 | `nav(blw)`  | `nav="blw"` | CSS | Dots + arrows in a reserved band below the media |
 | `nav(abv)`  | `nav="abv"` | CSS | Dots + arrows in a reserved band above the media (mirror of `nav(blw)`) |
 | `nav(dot)`  | `nav="dot"` | CSS | Dots only |
@@ -119,7 +118,7 @@ These belong to the base `<ui-media>` frame ([media.css](./media.css), docs in
   - self form: `ui-media:where([media*="x"], [arrow~="x"]) …`
 - **`@supports (scroll-marker-group: after)` gate.** Dots (`::scroll-marker`) and arrows
   (`::scroll-button`) are Chromium-only; everything inside that block degrades to a bare
-  swipe/scroll-snap row elsewhere. `nav(bar)` (native scrollbar) lives outside the gate.
+  swipe/scroll-snap row elsewhere.
 - **Matching.** `media=` tokens match with `[media*="…"]` (substring); `:not([media*="nav("])`
   distinguishes bare `nav` from the parenthesised `nav(dot)` / `nav(arw)` / etc. Attribute
   forms match whole-word with `~=` (`[arrow~="lg"]`), which is what lets them be grouped.
@@ -128,7 +127,7 @@ These belong to the base `<ui-media>` frame ([media.css](./media.css), docs in
 
 - **DOTS present** = bare `nav` · `nav(dot)` · `nav(blw)`
 - **ARROWS present** = bare `nav` · `nav(arw)` · `nav(blw)`
-- `nav(non)` enables neither (bare swipe scroller). `nav(bar)` shows the native scrollbar only.
+- `nav(non)` enables neither (bare swipe scroller).
 
 ## Scroller
 
@@ -149,12 +148,6 @@ These belong to the base `<ui-media>` frame ([media.css](./media.css), docs in
 Column scroller, `scroll-snap-type: y mandatory`. Works with or without marker/button
 support. Cross-axis buttons are hidden per axis (a vertical scroller still generates dead
 left/right buttons, a horizontal one dead up/down).
-
-## `nav(bar)` — plain scrollbar
-
-Native thin scrollbar (`scrollbar-color: auto`) by default — cleanest, platform-correct.
-Override colours with a single `--ui-media-scrollbar-color` token (`"<thumb> <track>"`,
-e.g. `#ccc transparent`); width via `--ui-media-scrollbar-width`.
 
 ## Slides — every direct child (tag-agnostic)
 
@@ -254,23 +247,23 @@ defaults to the (light) card surface, so the dot/arrow ink defaults flip to dark
 
 - **Band size:** `--ui-media-band` (2.75rem) + a gap above it, `--ui-media-below-gap`
   (`--spacing-sm`), so card-shadow/elevation has room inside the clipped scrollport.
-- **Dot position:** centered by default; `dot(sta|ctr|end)` move them — `sta` = after
-  the left arrow, `end` = before the right arrow (or the `arw(set)` pair). `arw(set)`
-  defaults dots to `sta`; offsets account for arrow size/gap so they never overlap.
-  Works in **both** `nav(blw)` and `nav(abv)` (horizontal alignment is shared; only the
-  band's vertical edge differs).
+- **Dot position:** centered by default; the row cell's inline letter moves them —
+  start = after the left arrow, end = before the right arrow (or the `arw(set)` pair).
+  In `nav(blw)` use the bottom-row cells `dot(bs|bc|be)`; in `nav(abv)` the top-row
+  `dot(ts|tc|te)`. `arw(set)` defaults dots to start; offsets account for arrow size/gap
+  so they never overlap. The vertical band edge differs by band; the inline math is shared.
 
 ## Vertical controls (`axis(y)`)
 
-Up/down arrows + a vertical dot column on the inline-end edge by default; `arw(sta)`
-flips both to the inline-start edge; `arw(set)` stacks the pair at the block-end
-(`arw(set) arw(top)` stacks it at the block-start instead). `nav(blw)` / `nav(abv)`
-give a horizontal control band below / above the vertical media.
+Up/down arrows + a vertical dot column on the inline-end edge by default; a start-inline
+cell `arw(cs)` flips both to the inline-start edge; `arw(set)` stacks the pair at the
+block-end (a top-row cell `arw(set) arw(te)` stacks it at the block-start instead).
+`nav(blw)` / `nav(abv)` give a horizontal control band below / above the vertical media.
 
 **Dot alignment:** the dot column is given `inline-size: var(--ui-media-arrow-size)` and
 `align-items: center`, so the dots sit centered within the arrow-width band — on the same
 vertical axis as the up/down arrows (rather than flush to the edge). Works on either edge:
-`arw(sta)` only flips `justify-self`, the centering carries over.
+`arw(cs)` only flips `justify-self`, the centering carries over.
 
 **`nav(blw)` + `axis(y)`** is special: a vertical scroller's `padding-block-end` is on
 the SCROLL axis, so it can't carve a fixed cross-axis band (the next slide peeks through).

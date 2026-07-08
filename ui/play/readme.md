@@ -10,8 +10,8 @@ The glyph is a `<ui-icon>` sub-element from `@browser.style/icon`. Use `type="pl
 - The play/pause glyph is a `<ui-icon type="play|pause">` (from `@browser.style/icon`) — no icon font, no SVG asset
 - `reveal` variant — hidden until the parent media frame is hovered/focused
 - Brand/shape variants — `youtube` (red squircle), `vimeo` (cyan disc), `rounded(sm|md|lg)` (clip-path play triangle)
-- Four sizes: small, medium (default), large, extra-large
-- `theme` bundles for decorative colors
+- Sizes `sm` / `lg` / `xl` (`md` is the default)
+- `theme` hues (+ semantic aliases) or arbitrary `fill`/`ink` colours
 - Optional web component: toggles `is-playing`, morphs the `<ui-icon>`, and drives targets via the native Invoker Commands API (`command`/`commandfor`) — with a bundled controller for `<video>` and CSS animations. Falls back to a `ui-play-toggle` event when no `commandfor` is set (carousel), and keeps a `for=` shorthand for `<video>`
 - Token-driven colors, radius, size, icon size, and transition duration
 - Light/dark mode support via design tokens
@@ -81,9 +81,15 @@ The web component uses the **exact same** HTML structure as CSS-only. The JS add
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `variant` | string | Space-separated: `reveal` (hidden until parent hover/focus), `youtube`, `vimeo`, `rounded(sm)` / `rounded(md)` / `rounded(lg)` |
-| `size` | string | Predefined size: `sm`, `md` (default), `lg`, `xl` |
-| `theme` | string | Decorative color bundle: `red`, `orange`, `green`, `blue`, `accent`, `dark`, `light`, `subtle` |
+| `size` | string | `sm`, `lg`, `xl` (`md` is the default) |
+| `theme` | string | Disc hue (bg + glyph ink): `red orange green blue accent dark light subtle`, plus semantic aliases `error warning success info` |
+| `fill` | `<color>` | Arbitrary disc colour — any CSS colour; glyph auto-contrasts. Overrides `theme` |
+| `ink` | `<color>` | Arbitrary glyph colour |
+| `radius` | string | Disc shape: `crc` circle (default) · `sqr` squircle · `rnd` rounded · `non` sharp |
 | `for` | string | `id` of a `<video>` to control; toggling plays/pauses it and syncs the glyph |
+
+> Colour/size is the shared furniture model — identical standalone or via the card `media=` token
+> (`play(<hue>)`, `play(<size>)`, `play(<pos>)`).
 
 The inner `<button>` carries the `aria-pressed` state (the is-playing flag). Always label it with `aria-label`. The glyph is a `<ui-icon>` inside the button.
 

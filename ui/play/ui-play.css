@@ -16,6 +16,7 @@
 		background: var(--ui-play-bg, rgb(0 0 0 / 0.55));
 		border: 0;
 		border-radius: var(--ui-play-radius, var(--radius-circle, 50%));
+		corner-shape: var(--ui-play-corner, round);
 		color: var(--ui-play-c, hsl(0 0% 100%));
 		cursor: pointer;
 		display: grid;
@@ -48,17 +49,32 @@
 		opacity: 1;
 	}
 
-	/* sizes — em-based; disc + glyph scale together (glyph stays ~half the disc) */
-	:where(ui-play[size="sm"]) button { --ui-play-sz: 2.25em; --ui-play-icon-sz: 1em; }
-	:where(ui-play[size="md"]) button { --ui-play-sz: 3em;    --ui-play-icon-sz: 1.5em; }
-	:where(ui-play[size="lg"]) button { --ui-play-sz: 4em;    --ui-play-icon-sz: 2em; }
-	:where(ui-play[size="xl"]) button { --ui-play-sz: 5em;    --ui-play-icon-sz: 2.5em; }
+	/* colour — hue (theme= or the card's play(<hue>)) sets the disc bg + glyph ink;
+	   arbitrary fill=/ink= override. Set on the host; the button reads
+	   --ui-play-bg/-c. red=error · orange=warning · green=success · blue=info. */
+	:where(ui-play[theme~="red"],    ui-play[theme~="error"],   [media*="play(red)"]    ui-play, [media*="play(error)"]   ui-play) { --ui-play-bg: var(--ui-theme-red-bg);    --ui-play-c: var(--ui-theme-red-c); }
+	:where(ui-play[theme~="orange"], ui-play[theme~="warning"], [media*="play(orange)"] ui-play, [media*="play(warning)"] ui-play) { --ui-play-bg: var(--ui-theme-orange-bg); --ui-play-c: var(--ui-theme-orange-c); }
+	:where(ui-play[theme~="green"],  ui-play[theme~="success"], [media*="play(green)"]  ui-play, [media*="play(success)"] ui-play) { --ui-play-bg: var(--ui-theme-green-bg);  --ui-play-c: var(--ui-theme-green-c); }
+	:where(ui-play[theme~="blue"],   ui-play[theme~="info"],    [media*="play(blue)"]   ui-play, [media*="play(info)"]    ui-play) { --ui-play-bg: var(--ui-theme-blue-bg);   --ui-play-c: var(--ui-theme-blue-c); }
+	:where(ui-play[theme~="accent"], [media*="play(accent)"] ui-play) { --ui-play-bg: var(--ui-theme-accent-bg); --ui-play-c: var(--ui-theme-accent-c); }
+	:where(ui-play[theme~="dark"],   [media*="play(dark)"]   ui-play) { --ui-play-bg: var(--ui-theme-dark-bg);   --ui-play-c: var(--ui-theme-dark-c); }
+	:where(ui-play[theme~="light"],  [media*="play(light)"]  ui-play) { --ui-play-bg: var(--ui-theme-light-bg);  --ui-play-c: var(--ui-theme-light-c); }
+	:where(ui-play[theme~="subtle"], [media*="play(subtle)"] ui-play) { --ui-play-bg: var(--ui-theme-subtle-bg); --ui-play-c: var(--ui-theme-subtle-c); }
+	:where(ui-play[fill]) { --ui-play-bg: attr(fill type(<color>), rgb(0 0 0 / 0.55)); --ui-play-c: contrast-color(var(--ui-play-bg)); }
+	:where(ui-play[ink])  { --ui-play-c: attr(ink type(<color>), hsl(0 0% 100%)); }
 
-	/* theme — decorative color bundle (bg + ink). After color rules so theme= wins. */
-	:where(ui-play[theme]) button {
-		background: var(--_theme-bg);
-		color: var(--_theme-c);
-	}
+	/* size — from size= or the card's play(<size>). md (3em) = default. */
+	:where(ui-play[size="sm"], [media*="play(sm)"] ui-play) button { --ui-play-sz: 2.25em; --ui-play-icon-sz: 1em; }
+	:where(ui-play[size="lg"], [media*="play(lg)"] ui-play) button { --ui-play-sz: 4em;    --ui-play-icon-sz: 2em; }
+	:where(ui-play[size="xl"], [media*="play(xl)"] ui-play) button { --ui-play-sz: 5em;    --ui-play-icon-sz: 2.5em; }
+
+	/* corner — from radius= or the card's play(<corner>). circle = default.
+	   non sharp · rnd rounded · pll pill · crc circle · sqr squircle. */
+	:where(ui-play[radius~="non"], [media*="play(non)"] ui-play) { --ui-play-radius: 0; }
+	:where(ui-play[radius~="rnd"], [media*="play(rnd)"] ui-play) { --ui-play-radius: var(--radius-lg); }
+	:where(ui-play[radius~="pll"], [media*="play(pll)"] ui-play) { --ui-play-radius: var(--radius-pill); }
+	:where(ui-play[radius~="crc"], [media*="play(crc)"] ui-play) { --ui-play-radius: var(--radius-circle); }
+	:where(ui-play[radius~="sqr"], [media*="play(sqr)"] ui-play) { --ui-play-radius: var(--radius-circle); --ui-play-corner: superellipse(var(--squircle-md)); }
 
 	/* brand shapes — recolor the disc into a platform badge, keeping the
 	   white <ui-icon> arrow on top. corner-shape: superellipse() carves the
@@ -74,7 +90,7 @@
 		aspect-ratio: 1.422;
 		background: var(--ui-play-bg, #ff0033);
 		border-radius: var(--ui-play-radius, var(--ui-play-sz, 3em));
-		corner-shape: var(--ui-play-corner, squircle);
+		corner-shape: var(--ui-play-corner, superellipse(var(--squircle-md)));
 		
 	}
 	:where(ui-play[variant~="youtube"], [provider="youtube"] ui-play) button:is(:hover, :focus-visible) {

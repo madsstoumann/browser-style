@@ -1,17 +1,15 @@
 # @browser.style/save
 
-A CSS-first save / favorite / wishlist / bookmark toggle. State is entirely CSS-driven via a wrapped checkbox — no JavaScript required for the toggle behavior.
+A save / favorite / wishlist / bookmark toggle, designed to sit over a card or product image (top/bottom-right, Amazon / IMDb style). It composes an **invoker button** and a **`<ui-icon type="shape">`**: unsaved shows an outline glyph, saved shows a filled glyph.
 
 ## Features
 
-- Three glyphs: heart (default), bookmark, star
-- CSS-only checked state — the wrapped checkbox provides state + keyboard support
-- Three sizes: small, medium (default), large
-- Token-driven idle and active (checked) ink colors
-- Hover and checked opacity transitions
-- Light/dark mode support via design tokens
-- RTL-safe (icon is symmetric / mask-based)
-- Works without JavaScript (CSS-only mode)
+- Three glyphs via `<ui-icon>`: `heart` (default), `bookmark`, `star`
+- One shape per state — outline when unsaved, filled when saved — using `border-shape` + a `background` toggle (no second path, no attribute swap)
+- State read from the button's `aria-pressed` (native, accessible)
+- Toggle wired with the **Invoker Commands API** (`command` / `commandfor`) so a script can grab it
+- Three sizes; token-driven idle and active ink colors
+- Light/dark support via design tokens
 
 ---
 
@@ -21,211 +19,163 @@ A CSS-first save / favorite / wishlist / bookmark toggle. State is entirely CSS-
 npm install @browser.style/save
 ```
 
-Peer dependency:
+Peer dependencies:
 
 ```bash
-npm install @browser.style/base
+npm install @browser.style/base @browser.style/icon
 ```
 
-> `@browser.style/base` provides the design token system that the toggle references for colors.
+> `@browser.style/base` provides the design tokens; `@browser.style/icon` provides the shape catalog (`--ui-icon-shape-heart` / `-bookmark` / `-star`) and the `<ui-icon>` element.
 
 ---
 
 ## Usage
 
-### CSS-only (vanilla HTML)
-
 ```html
 <link rel="stylesheet" href="@browser.style/base/index.css">
+<link rel="stylesheet" href="@browser.style/icon/ui-icon.css">
 <link rel="stylesheet" href="@browser.style/save/index.css">
 ```
 
-Or via CSS `@import`:
-
-```css
-@import '@browser.style/base';
-@import '@browser.style/save/style';
-```
-
-The required markup is a `<ui-save>` wrapping a single checkbox. **Always** give the checkbox an `aria-label`:
+Markup — a `<ui-save>` wrapping an invoker `<button>` and a `<ui-icon>`. The icon stays `variant="outline"`; the button carries the state and the `aria-label`:
 
 ```html
-<ui-save><input type="checkbox" aria-label="Add to favorites"></ui-save>
-<ui-save icon="bookmark"><input type="checkbox" aria-label="Bookmark"></ui-save>
-<ui-save icon="star"><input type="checkbox" aria-label="Add to wishlist"></ui-save>
-```
-
-### Web Component
-
-Import the module to register `<ui-save>`:
-
-```js
-import '@browser.style/save';
-```
-
-The web component uses the **exact same** HTML structure as CSS-only — the JS only registers the element. The toggle state lives on the wrapped checkbox.
-
-#### Attributes
-
-| Attribute | Type | Description |
-|-----------|------|-------------|
-| `icon` | string | Glyph: `heart` (default), `bookmark`, `star` |
-| `theme` | string | Decorative ink color from a bundle: `red`, `orange`, `green`, `blue`, `accent`, `dark`, `light`, `subtle` |
-| `size` | string | Predefined size: `sm`, `md` (default), `lg` |
-
-The wrapped `<input type="checkbox">` carries the checked state; pre-check it with the standard `checked` attribute and label it with `aria-label`.
-
----
-
-### React
-
-```jsx
-import '@browser.style/save';
-import '@browser.style/save/style';
-
-function FavoriteToggle({ saved, onChange }) {
-  return (
-    <ui-save>
-      <input type="checkbox" aria-label="Add to favorites"
-             checked={saved} onChange={onChange} />
-    </ui-save>
-  );
-}
-```
-
-### Vue
-
-```vue
-<script setup>
-import '@browser.style/save';
-import '@browser.style/save/style';
-</script>
-
-<template>
-  <ui-save icon="bookmark">
-    <input type="checkbox" aria-label="Bookmark" v-model="saved">
-  </ui-save>
-</template>
-```
-
-> Tell Vue to skip custom element resolution in `vite.config.js`:
-> ```js
-> vue({ template: { compilerOptions: { isCustomElement: tag => tag.startsWith('ui-') } } })
-> ```
-
-### Svelte
-
-```svelte
-<script>
-  import '@browser.style/save';
-  import '@browser.style/save/style';
-  let saved = false;
-</script>
-
-<ui-save icon="star">
-  <input type="checkbox" aria-label="Add to wishlist" bind:checked={saved}>
+<ui-save id="save-1">
+  <button type="button" command="--save" commandfor="save-1" aria-label="Add to favorites">
+    <ui-icon type="shape" shape="heart" variant="outline"></ui-icon>
+  </button>
 </ui-save>
 ```
 
-### Astro / SSR
+Pre-mark a saved item with `aria-pressed="true"` on the button.
 
-Use the CSS-only approach — no JavaScript needed:
+### Toggling (script)
 
-```html
-<link rel="stylesheet" href="@browser.style/base/index.css">
-<link rel="stylesheet" href="@browser.style/save/index.css">
+`ui-save` ships no toggle logic — the paint is pure CSS, and flipping the state is one listener. The button fires a custom command on its target; handle it and flip `aria-pressed`:
 
-<ui-save><input type="checkbox" aria-label="Add to favorites"></ui-save>
+```js
+document.getElementById('save-1').addEventListener('command', (e) => {
+  if (e.command !== '--save') return;
+  const btn = e.source;
+  const saved = btn.getAttribute('aria-pressed') !== 'true';
+  btn.setAttribute('aria-pressed', saved);
+  // persist / emit your own event here
+});
 ```
+
+> The `command` event does not bubble — listen on the `commandfor` target (the `<ui-save>`). Invoker Commands are Baseline (Dec 2025); polyfill older browsers with [invokers-polyfill](https://github.com/keithamus/invokers-polyfill) if needed.
 
 ---
 
-## Icons
+## Shapes
 
-```html
-<ui-save><input type="checkbox" aria-label="Favorite"></ui-save>
-<ui-save icon="bookmark"><input type="checkbox" aria-label="Bookmark"></ui-save>
-<ui-save icon="star"><input type="checkbox" aria-label="Wishlist"></ui-save>
-```
+Any `ui-icon` shape works. The three save-relevant ones:
 
-| Value | Glyph |
-|-------|-------|
-| _(none)_ | Heart (default) |
-| `bookmark` | Bookmark |
-| `star` | Star |
+| `shape` | Glyph | Typical use |
+|---------|-------|-------------|
+| `heart` | Heart | Favorite |
+| `bookmark` | Bookmark | Save for later |
+| `star` | Star | Wishlist / rate |
 
-Supply your own glyph by overriding `--ui-save-icon` with any `url(...)` (a `fill="currentColor"` SVG works best, since the icon is rendered as a CSS `mask`):
-
-```css
-ui-save { --ui-save-icon: url('/icons/pin.svg'); }
-```
-
-## Theme
-
-The `theme` attribute applies a decorative color from a **bundle**. Because the save toggle is icon-only (no background), only the bundle's ink color (`c`) is used to tint the idle glyph. This is distinct from the semantic `color` axis used elsewhere; `theme` is purely cosmetic, and if a component supports both, `theme` wins.
-
-```html
-<ui-save theme="accent"><input type="checkbox" aria-label="Favorite"></ui-save>
-<ui-save icon="star" theme="orange"><input type="checkbox" aria-label="Wishlist"></ui-save>
-```
-
-8 keys:
-
-```
-red   orange  green   blue
-accent  dark  light  subtle
-```
-
-The bundles are defined as `--ui-theme-*` tokens in `@browser.style/base` and are retunable globally. (The checked color is still driven by `--ui-save-c-active`.)
+Add your own by registering a `--ui-icon-shape-{name}` token (a `shape()` / `polygon()`) in `@browser.style/icon` and using `shape="{name}"`.
 
 ## Sizes
 
+`sm`, `lg`, `xl` — `md` is the default (no attribute):
+
 ```html
-<ui-save size="sm"><input type="checkbox" aria-label="Favorite"></ui-save>
-<ui-save size="md"><input type="checkbox" aria-label="Favorite"></ui-save>
-<ui-save size="lg"><input type="checkbox" aria-label="Favorite"></ui-save>
+<ui-save size="sm">…</ui-save>
+<ui-save>…</ui-save>            <!-- md (default) -->
+<ui-save size="lg">…</ui-save>
+<ui-save size="xl">…</ui-save>
 ```
 
 ---
 
-## Customization
+## Circle backdrop
 
-### Component tokens
+Add a solid disc behind the glyph for contrast over busy images with `variant="circle"`. The disc
+colour is the `--ui-save-circle-bg` token (`Canvas` — the page background — by default), so it's
+easy to retune:
+
+```html
+<ui-save variant="circle">
+  <button type="button" command="--save" commandfor="c1" aria-label="Save">
+    <ui-icon type="shape" shape="heart" variant="outline"></ui-icon>
+  </button>
+</ui-save>
+```
+
+It's a true circle by default; for an `rds(*-sq)`-style squircle set
+`--ui-save-circle-corner: superellipse(var(--squircle-md))`.
+
+## Customization
 
 | Token | Default | Description |
 |-------|---------|-------------|
-| `--ui-save-icon` | `var(--_heart)` | Glyph as a `url(...)` (rendered via CSS `mask`) |
-| `--ui-save-c` | `var(--color-text)` | Idle (unchecked) color |
-| `--ui-save-c-active` | `var(--color-error)` | Checked color |
-| `--ui-save-sz` | `1.6em` | Icon size (block-size, square) |
-| `--ui-save-opacity` | `0.85` | Idle opacity (hover/checked → 1) |
+| `--ui-save-c` | `var(--color-text)` | Idle (unsaved) ink |
+| `--ui-save-c-active` | `var(--color-error)` | Saved ink (also on hover) |
+| `--ui-save-sz` | `1.6em` | Icon size |
+| `--ui-save-circle-bg` | `Canvas`¹ | Disc colour (¹ `Canvas` once the circle is enabled) |
+| `--ui-save-circle-radius` | `0` | Disc radius (`--radius-circle` when enabled) |
+| `--ui-save-circle-pad` | `0` | Space between glyph and disc edge |
+| `--ui-save-circle-corner` | `round` | `corner-shape` — `superellipse(...)` for a squircle |
 
-Override per instance or globally:
-
-```css
-ui-save {
-  --ui-save-c-active: hotpink;
-  --ui-save-sz: 2em;
-}
+```html
+<ui-save style="--ui-save-c-active: gold;">
+  <button type="button" command="--save" commandfor="w1" aria-label="Wishlist" aria-pressed="true">
+    <ui-icon type="shape" shape="star" variant="outline"></ui-icon>
+  </button>
+</ui-save>
 ```
+
+Outline thickness follows the icon's `stroke` attribute (it's a real `border`).
+
+---
+
+## In a card (`ui-media` furniture)
+
+Inside `<ui-media>`, the parent `media=` token drives position, colour and the disc — the shape
+stays on the `<ui-icon>`:
+
+```html
+<ui-card media="asr(4/3) save(be) save(crc) save(warning)">
+  <ui-media>
+    <img …>
+    <ui-save>
+      <button type="button" command="--save" commandfor="<card id>" aria-label="Save">
+        <ui-icon type="shape" shape="star" variant="outline"></ui-icon>
+      </button>
+    </ui-save>
+  </ui-media>
+</ui-card>
+```
+
+| Token | Standalone equivalent | Effect |
+|-------|----------------------|--------|
+| `save(<pos>)` | — | Position — `ts tc te · cs cc ce · bs bc be` |
+| `save(<hue>)` | `theme="<hue>"` | Ink from the 8 theme hues `red orange green blue accent dark light subtle` (+ semantic aliases `error warning success info`) |
+| `save(<size>)` | `size="<size>"` | Scale — `sm lg xl` (`md` = default) |
+| `save(<corner>)` | `radius="<corner>"` | Disc shape — `crc` circle (default) · `sqr` squircle · `rnd` rounded |
+| `save(non)` | `variant="non"` | Hide the disc (bare glyph) |
+
+The disc backdrop is **on by default** (`Canvas`). Standalone, use `theme=` (hue),
+`ink="<css-color>"` (glyph) / `fill="<css-color>"` (the disc), `size=` and `radius=` — the same
+model as `chip`/`sticker`/`play`.
+
+`commandfor` points at the `<ui-card>` / `<ui-media>` so the handler has the card in context. Full
+token reference: [`ui/card/card.md` → Save furniture](../card/card.md).
 
 ---
 
 ## Accessibility
 
-- The wrapped `<input type="checkbox">` provides the toggle semantics, keyboard support (Space to toggle), and focus handling for free.
-- **Always** set `aria-label` (or an associated `<label>`) on the checkbox — the glyph is purely visual.
-- The checked state is exposed to assistive tech via the native checkbox; no `aria-pressed` juggling needed.
+- The `<button>` provides the control semantics, keyboard support, and focus handling.
+- **Always** set `aria-label` on the button — the glyph is purely visual.
+- Saved state is exposed via `aria-pressed`.
 
 ---
 
 ## Browser Support
 
-All modern browsers.
-
-| Feature | Support |
-|---------|---------|
-| Custom elements | All modern browsers |
-| CSS `mask` | Chrome 120+ (unprefixed), Firefox 53+, Safari 15.4+ |
-| `appearance: none` | All modern browsers |
-| `light-dark()` (via base tokens) | Chrome 123+, Firefox 120+, Safari 17.5+ |
+The outline/fill relies on **`border-shape`**, which is still experimental (Chromium, behind active development) — no cross-browser support yet. Treat this component as forward-looking until `border-shape` ships more widely. `clip-path: shape()` (used for filled `<ui-icon>` glyphs) is Chrome 137+ / Safari 18.4+. Invoker Commands are Baseline since Dec 2025.

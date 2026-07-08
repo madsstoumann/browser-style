@@ -16,10 +16,11 @@
 		border: var(--ui-chip-border-width) solid var(--ui-chip-border-color);
 		border-radius: var(--ui-chip-radius, var(--radius-pill));
 		color: var(--ui-chip-c, var(--color-text));
+		corner-shape: var(--ui-chip-corner, round);
 		column-gap: var(--ui-chip-column-gap, 0);
 		display: inline-flex;
 		font-family: var(--ui-chip-font-family, var(--font-form));
-		font-size: var(--ui-chip-font-size, 0.75em);
+		font-size: var(--ui-chip-font-size, 0.875em);
 		font-weight: var(--ui-chip-font-weight, var(--font-weight-medium));
 		line-height: var(--ui-chip-line-height, var(--line-height-snug));
 		padding-block: var(--ui-chip-padding-block);
@@ -28,47 +29,50 @@
 		user-select: none;
 		white-space: nowrap;
 
-		/* colors — single accent token drives solid, light, and outline */
-		&[color="info"]    { --ui-chip-accent: var(--color-info); }
-		&[color="success"] { --ui-chip-accent: var(--color-success); }
-		&[color="warning"] { --ui-chip-accent: var(--color-warning); }
-		&[color="error"]   { --ui-chip-accent: var(--color-error); }
-		&[color] {
-			--ui-chip-bg: var(--ui-chip-accent);
-			--ui-chip-c: hsl(0, 0%, 100%);
-		}
+		/* colour — --ui-chip-accent is the single input; theme= and fill= both feed
+		   it, so solid / light / outline all work for named hues and arbitrary
+		   colours alike. `&` is standalone, `:where([media*="chip(…)"]) &` is the
+		   card form. red=error · orange=warning · green=success · blue=info. */
+		&[theme~="red"],    &[theme~="error"],   :where([media*="chip(red)"],    [media*="chip(error)"])   & { --ui-chip-accent: var(--ui-theme-red-bg);    --ui-chip-bg: var(--ui-theme-red-bg);    --ui-chip-c: var(--ui-theme-red-c); }
+		&[theme~="orange"], &[theme~="warning"], :where([media*="chip(orange)"], [media*="chip(warning)"]) & { --ui-chip-accent: var(--ui-theme-orange-bg); --ui-chip-bg: var(--ui-theme-orange-bg); --ui-chip-c: var(--ui-theme-orange-c); }
+		&[theme~="green"],  &[theme~="success"], :where([media*="chip(green)"],  [media*="chip(success)"]) & { --ui-chip-accent: var(--ui-theme-green-bg);  --ui-chip-bg: var(--ui-theme-green-bg);  --ui-chip-c: var(--ui-theme-green-c); }
+		&[theme~="blue"],   &[theme~="info"],    :where([media*="chip(blue)"],   [media*="chip(info)"])    & { --ui-chip-accent: var(--ui-theme-blue-bg);   --ui-chip-bg: var(--ui-theme-blue-bg);   --ui-chip-c: var(--ui-theme-blue-c); }
+		&[theme~="accent"], :where([media*="chip(accent)"]) & { --ui-chip-accent: var(--ui-theme-accent-bg); --ui-chip-bg: var(--ui-theme-accent-bg); --ui-chip-c: var(--ui-theme-accent-c); }
+		&[theme~="dark"],   :where([media*="chip(dark)"])   & { --ui-chip-accent: var(--ui-theme-dark-bg);   --ui-chip-bg: var(--ui-theme-dark-bg);   --ui-chip-c: var(--ui-theme-dark-c); }
+		&[theme~="light"],  :where([media*="chip(light)"])  & { --ui-chip-accent: var(--ui-theme-light-bg);  --ui-chip-bg: var(--ui-theme-light-bg);  --ui-chip-c: var(--ui-theme-light-c); }
+		&[theme~="subtle"], :where([media*="chip(subtle)"]) & { --ui-chip-accent: var(--ui-theme-subtle-bg); --ui-chip-bg: var(--ui-theme-subtle-bg); --ui-chip-c: var(--ui-theme-subtle-c); }
 
-		/* theme — decorative color bundle (bg + ink). Placed after color= so an
-		   explicit theme= wins the cascade (zero-specificity, source order). */
-		&[theme] {
-			--ui-chip-bg: var(--_theme-bg);
-			--ui-chip-c: var(--_theme-c);
-		}
+		/* arbitrary colour (overrides the hue) — fill = surface, ink = text; ink
+		   auto-contrasts from fill when omitted. */
+		&[fill] { --ui-chip-accent: attr(fill type(<color>), var(--color-button)); --ui-chip-bg: var(--ui-chip-accent); --ui-chip-c: contrast-color(var(--ui-chip-accent)); }
+		&[ink]  { --ui-chip-c: attr(ink type(<color>), hsl(0, 0%, 100%)); }
 
 		/* variants */
 		&[variant~="light"] {
 			--ui-chip-bg: color-mix(in oklch, var(--ui-chip-c) 15%, var(--color-surface, hsl(0, 0%, 100%)));
 		}
-		&[variant~="light"][color] { --ui-chip-c: var(--ui-chip-accent); }
+		&[variant~="light"]:is([theme], [fill]) { --ui-chip-c: var(--ui-chip-accent); }
 
 		&[variant~="outline"] {
 			--ui-chip-bg: transparent;
 			--ui-chip-border-color: currentColor;
 		}
-		&[variant~="outline"][color] { --ui-chip-c: var(--ui-chip-accent); }
+		&[variant~="outline"]:is([theme], [fill]) { --ui-chip-c: var(--ui-chip-accent); }
 
-		&[variant~="square"] {
-			--ui-chip-radius: 0.4em;
-		}
-		&[variant~="squircle"] {
-			corners: 50% superellipse(2);
-		}
+		/* corner — from radius= or the card's chip(<corner>). pill = default.
+		   non sharp · rnd rounded · pll pill · crc circle · sqr squircle.
+		   (variant="square"/"squircle" kept as aliases for rnd/sqr.) */
+		&[radius~="non"], :where([media*="chip(non)"]) & { --ui-chip-radius: 0; }
+		&[radius~="rnd"], &[variant~="square"], :where([media*="chip(rnd)"]) & { --ui-chip-radius: var(--radius-md); }
+		&[radius~="pll"], :where([media*="chip(pll)"]) & { --ui-chip-radius: var(--radius-pill); }
+		&[radius~="crc"], :where([media*="chip(crc)"]) & { --ui-chip-radius: var(--radius-circle); }
+		&[radius~="sqr"], &[variant~="squircle"], :where([media*="chip(sqr)"]) & { --ui-chip-radius: 0.75em; --ui-chip-corner: superellipse(var(--squircle-md)); }
 	}
 
-	/* sizes — em-based, so chip scales with parent font-size */
-	:where(ui-chip[size="sm"]) { --ui-chip-font-size: 0.625em; }
-	:where(ui-chip[size="md"]) { --ui-chip-font-size: 0.875em; }
-	:where(ui-chip[size="lg"]) { --ui-chip-font-size: 1em; }
+	/* size — em-based, from size= or the card's chip(<size>). md (0.875em) = default. */
+	:where(ui-chip[size="sm"], [media*="chip(sm)"] ui-chip) { --ui-chip-font-size: 0.625em; }
+	:where(ui-chip[size="lg"], [media*="chip(lg)"] ui-chip) { --ui-chip-font-size: 1em; }
+	:where(ui-chip[size="xl"], [media*="chip(xl)"] ui-chip) { --ui-chip-font-size: 1.15em; }
 
 	/* `variant="inline"` badge — auto-push to inline end with a minimum gap */
 	:where(ui-chip):has(> ui-badge[variant~="inline"]) {

@@ -7,6 +7,7 @@
 	<meta name="description" content="Web component demo for ui-save">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/ui/icon/ui-icon.css">
 	<link rel="stylesheet" href="ui-save.css">
 </head>
 <body>
@@ -14,37 +15,40 @@
 
 	<h2>Web Component</h2>
 	<p>
-		Using <code>&lt;ui-save&gt;</code> as a registered custom element. The JS only registers the element — the toggle state is carried by the wrapped checkbox and styled with CSS.
+		<code>&lt;ui-save&gt;</code> registered as a custom element. The element only registers
+		itself; the toggle is driven by the button's <code>command="--save"</code> invoker. The
+		delegated listener below flips <code>aria-pressed</code> — try clicking the toggles.
 	</p>
 
-	<h3>Basic — heart (default)</h3>
+	<h3>Heart (default)</h3>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-save><input type="checkbox" aria-label="Add to favorites"></ui-save>
-		<ui-save><input type="checkbox" aria-label="Add to favorites" checked></ui-save>
+		<ui-save id="w1"><button type="button" command="--save" commandfor="w1" aria-label="Add to favorites"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save id="w2"><button type="button" command="--save" commandfor="w2" aria-label="Add to favorites" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 	</div>
 
-	<h3>Icons</h3>
+	<h3>Shapes</h3>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-save><input type="checkbox" aria-label="Favorite"></ui-save>
-		<ui-save icon="bookmark"><input type="checkbox" aria-label="Bookmark"></ui-save>
-		<ui-save icon="star"><input type="checkbox" aria-label="Wishlist"></ui-save>
+		<ui-save id="w3"><button type="button" command="--save" commandfor="w3" aria-label="Bookmark"><ui-icon type="shape" shape="bookmark" variant="outline"></ui-icon></button></ui-save>
+		<ui-save id="w4" style="--ui-save-c-active: gold;"><button type="button" command="--save" commandfor="w4" aria-label="Wishlist"><ui-icon type="shape" shape="star" variant="outline"></ui-icon></button></ui-save>
 	</div>
 
 	<h3>Sizes</h3>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-save size="sm"><input type="checkbox" aria-label="Favorite" checked></ui-save>
-		<ui-save size="md"><input type="checkbox" aria-label="Favorite" checked></ui-save>
-		<ui-save size="lg"><input type="checkbox" aria-label="Favorite" checked></ui-save>
-	</div>
-
-	<h3>Custom tokens</h3>
-	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-save icon="star" style="--ui-save-c-active: gold; --ui-save-sz: 2.4em;"><input type="checkbox" aria-label="Wishlist" checked></ui-save>
-		<ui-save style="--ui-save-c-active: hotpink;"><input type="checkbox" aria-label="Favorite" checked></ui-save>
+		<ui-save id="w5" size="sm"><button type="button" command="--save" commandfor="w5" aria-label="Favorite"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save id="w6" size="md"><button type="button" command="--save" commandfor="w6" aria-label="Favorite"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save id="w7" size="lg"><button type="button" command="--save" commandfor="w7" aria-label="Favorite"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 	</div>
 
 	<script type="module">
 		import './index.js';
+
+		// Author glue: command does not bubble, so listen in the capture phase.
+		document.addEventListener('command', (e) => {
+			if (e.command !== '--save') return;
+			const btn = e.source;
+			const saved = btn.getAttribute('aria-pressed') !== 'true';
+			btn.setAttribute('aria-pressed', saved);
+		}, true);
 	</script>
 </body>
 </html>

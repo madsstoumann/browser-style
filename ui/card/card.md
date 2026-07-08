@@ -71,7 +71,7 @@ lives in one `details` object discriminated by `schemaType`.
 | `chip` | object | `{text, position, hue}` → `<ui-chip>` (legacy ribbon) |
 | `sticker` | object | `{text, position, hue, burst}` → `<ui-sticker>` |
 | `play` | object | `{position, hue, size}` → `<ui-play>` button (videos, autoplay carousels) |
-| `saveable` | boolean | → `<ui-save>` toggle |
+| `saveable` | boolean \| object | → `<ui-save>` toggle. Object form `{shape, position, color, circle, saved}` — the renderer emits `<ui-icon shape=…>` and appends the `save(…)` media tokens. See **Save furniture** below |
 | `engagement` | object | counts → `InteractionCounter` microdata |
 | `details` | object | Type-specific payload (`ui.widget: editor-card`) |
 | `flipside` | reference → `card` | Optional custom reveal back panel — see below |
@@ -107,6 +107,63 @@ Documented in full in the model's `details` description. Examples:
 
 Machine values stay schema-ready (`PT15M`, salary numbers, geo coordinates);
 `*Display` keys carry pre-formatted strings only where formatting is not derivable.
+
+## Save furniture — `<ui-save>`
+
+A save / favorite / bookmark toggle, placed over the media (Amazon / IMDb style). It
+composes an **invoker button** and a **`<ui-icon type="shape">`**:
+
+```html
+<ui-media>
+  <img …>
+  <ui-save>
+    <button type="button" command="--save" commandfor="<card-or-media id>" aria-label="Save">
+      <ui-icon type="shape" shape="heart" variant="outline"></ui-icon>
+    </button>
+  </ui-save>
+</ui-media>
+```
+
+**Shape is content, not a token.** Like `<ui-chip>` text or `ui-play`'s `type=`, the glyph is
+authored on the child `<ui-icon>` (`shape="heart|bookmark|star"`, `variant="outline"`). The
+renderer reads `saveable.shape` and emits that `<ui-icon shape=…>` directly — `media=` never
+carries the shape.
+
+**`media=` carries position, colour and the disc** (parsed like `chip()`/`sticker()`):
+
+| Token | Effect |
+|-------|--------|
+| `save(<pos>)` | Position on the 9-code grid — `ts tc te · cs cc ce · bs bc be` (default `te`) |
+| `save(<hue>)` | Ink (idle + saved) from the 8 theme hues — `red orange green blue accent dark light subtle`, plus semantic aliases `error warning success info` (`red`=error, `orange`=warning, `green`=success, `blue`=info). Same vocabulary for `chip()`/`sticker()`/`play()` |
+| `save(<size>)` | Scale — `sm lg xl` (`md` = default) |
+| `save(<corner>)` | Disc shape — `crc` circle (default) · `sqr` squircle · `rnd` rounded. `save(non)` hides the disc |
+
+The disc is a solid **circle** by default (`--ui-save-circle-bg` = `Canvas`); it keeps the glyph
+legible over busy images. `bookmark` defaults to the accent colour without a `save(<hue>)` token.
+
+**All furniture shares one colour / size / corner model** — `el(<hue>)` · `el(<size>)` ·
+`el(<corner>)` from `media=`, or `theme=` / `fill=` / `ink=` / `size=` / `radius=` standalone. The
+corner values `non rnd pll crc sqr` are the same 3-letter set as the card frame's `rds()`
+(`rds(non/crc/pll/sm…xl/*-sqr)`; the legacy `none/full/pill/-sq` spellings still work as aliases).
+
+**State & interactivity.** The look is pure CSS off the button's `aria-pressed` — unsaved = outline
++ idle ink, saved = filled + active ink. The toggle itself is script: `command="--save"` is a
+custom invoker whose `commandfor` points at the **`<ui-card>` or `<ui-media>`** (set by the
+renderer) so the handler has the card in hand. The `command` event does **not** bubble — listen on
+the target:
+
+```js
+card.addEventListener('command', (e) => {
+  if (e.command !== '--save') return;
+  const btn = e.source;
+  const saved = btn.getAttribute('aria-pressed') !== 'true';
+  btn.setAttribute('aria-pressed', saved);
+  // persist to your store here
+});
+```
+
+Classified as a **control** (interactive) — card-only, never inside a reveal `<summary>`. Demos in
+[`media.furniture.html`](media.furniture.html); full component: [`ui/save`](../save/).
 
 ## Preset model — `card-preset`
 

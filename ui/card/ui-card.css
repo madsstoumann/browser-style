@@ -42,24 +42,25 @@
 	/* ============================================================
 	   CORNERS — rds(): round (global scale) or -sq (bespoke squircle)
 	   ============================================================ */
-	/* round */
-	:where([variant~="rds(none)"]) { --ui-card-radius: 0; }
+	/* round — non/crc/pll are the canonical 3-letter values (none/full/pill kept
+	   as aliases; aligned with save(non/crc), dot(pll), etc.) */
+	:where([variant~="rds(non)"], [variant~="rds(none)"]) { --ui-card-radius: 0; }
 	:where([variant~="rds(sm)"])   { --ui-card-radius: var(--radius-sm); }
 	:where([variant~="rds(md)"])   { --ui-card-radius: var(--radius-md); }
 	:where([variant~="rds(lg)"])   { --ui-card-radius: var(--radius-lg); }
 	:where([variant~="rds(xl)"])   { --ui-card-radius: var(--radius-xl); }
 	:where([variant~="rds(2xl)"])  { --ui-card-radius: var(--radius-2xl); }
-	:where([variant~="rds(full)"]) { --ui-card-radius: var(--radius-circle, 50%); }
-	:where([variant~="rds(pill)"]) { --ui-card-radius: var(--radius-pill, 100px); }
+	:where([variant~="rds(crc)"], [variant~="rds(full)"]) { --ui-card-radius: var(--radius-circle, 50%); }
+	:where([variant~="rds(pll)"], [variant~="rds(pill)"]) { --ui-card-radius: var(--radius-pill, 100px); }
 	/* squircle — bespoke radius + per-size exponent (reproduces the old sq()).
 	   Values come from the shared squircle tokens (tokens.css) so ui-card and
 	   ui-media stay in lock-step. Sets --ui-card-squircle-exp so ui-reveal can
-	   apply corner-shape to its <details>. */
-	:where([variant~="rds(sm-sq)"]) { --ui-card-radius: var(--radius-sm-sq); --ui-card-squircle-exp: var(--squircle-sm); }
-	:where([variant~="rds(md-sq)"]) { --ui-card-radius: var(--radius-md-sq); --ui-card-squircle-exp: var(--squircle-md); }
-	:where([variant~="rds(lg-sq)"]) { --ui-card-radius: var(--radius-lg-sq); --ui-card-squircle-exp: var(--squircle-lg); }
-	:where([variant~="rds(xl-sq)"]) { --ui-card-radius: var(--radius-xl-sq); --ui-card-squircle-exp: var(--squircle-xl); }
-	:where(ui-card[variant*="-sq)"]) { corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8)); }
+	   apply corner-shape to its <details>. -sqr is canonical (-sq kept as alias). */
+	:where([variant~="rds(sm-sqr)"], [variant~="rds(sm-sq)"]) { --ui-card-radius: var(--radius-sm-sq); --ui-card-squircle-exp: var(--squircle-sm); }
+	:where([variant~="rds(md-sqr)"], [variant~="rds(md-sq)"]) { --ui-card-radius: var(--radius-md-sq); --ui-card-squircle-exp: var(--squircle-md); }
+	:where([variant~="rds(lg-sqr)"], [variant~="rds(lg-sq)"]) { --ui-card-radius: var(--radius-lg-sq); --ui-card-squircle-exp: var(--squircle-lg); }
+	:where([variant~="rds(xl-sqr)"], [variant~="rds(xl-sq)"]) { --ui-card-radius: var(--radius-xl-sq); --ui-card-squircle-exp: var(--squircle-xl); }
+	:where(ui-card[variant*="-sq)"], ui-card[variant*="-sqr)"]) { corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8)); }
 
 	/* ============================================================
 	   ARRANGEMENT — col (default) / row / col-r / row-r + spl()

@@ -33,6 +33,7 @@
 		background: var(--ui-sticker-bg, var(--color-accent));
 		border-radius: var(--ui-sticker-radius, var(--radius-circle, 50%));
 		color: var(--ui-sticker-c, hsl(0, 0%, 100%));
+		corner-shape: var(--ui-sticker-corner, round);
 		container-type: inline-size;
 		display: grid;
 		filter: var(--ui-sticker-shadow, none);
@@ -40,8 +41,8 @@
 		font-size: var(--font-size-sm);
 		font-weight: var(--ui-sticker-font-weight, var(--font-weight-bold, 700));
 		line-height: 1;
-		min-block-size: var(--ui-sticker-sz, 5em);
-		min-inline-size: var(--ui-sticker-sz, 5em);
+		min-block-size: var(--ui-sticker-sz, 4em);
+		min-inline-size: var(--ui-sticker-sz, 4em);
 		padding: var(--ui-sticker-p);
 		place-content: center;
 		pointer-events: none;
@@ -64,11 +65,25 @@
 		& > strong { font-size: max(10px, var(--_size-lg)); font-family: var(--ui-sticker-strong-font, var(--ui-sticker-font-family)); color: var(--ui-sticker-lead-c, inherit); }
 		& :is(sup, sub) { font-size: 0.5em; }
 
+		/* colour (hue) — the 8 theme hues + semantic aliases, from theme= or the
+		   card's sticker(<hue>). red=error · orange=warning · green=success · blue=info.
+		   `&` is ui-sticker, `:where([media*="sticker(…)"]) &` is the card form.
+		   Arbitrary fill=/ink= come after, so they override the hue. */
+		&[theme~="red"],    &[theme~="error"],   :where([media*="sticker(red)"],    [media*="sticker(error)"])   & { --ui-sticker-bg: var(--ui-theme-red-bg);    --ui-sticker-c: var(--ui-theme-red-c); }
+		&[theme~="orange"], &[theme~="warning"], :where([media*="sticker(orange)"], [media*="sticker(warning)"]) & { --ui-sticker-bg: var(--ui-theme-orange-bg); --ui-sticker-c: var(--ui-theme-orange-c); }
+		&[theme~="green"],  &[theme~="success"], :where([media*="sticker(green)"],  [media*="sticker(success)"]) & { --ui-sticker-bg: var(--ui-theme-green-bg);  --ui-sticker-c: var(--ui-theme-green-c); }
+		&[theme~="blue"],   &[theme~="info"],    :where([media*="sticker(blue)"],   [media*="sticker(info)"])    & { --ui-sticker-bg: var(--ui-theme-blue-bg);   --ui-sticker-c: var(--ui-theme-blue-c); }
+		&[theme~="accent"], :where([media*="sticker(accent)"]) & { --ui-sticker-bg: var(--ui-theme-accent-bg); --ui-sticker-c: var(--ui-theme-accent-c); }
+		&[theme~="dark"],   :where([media*="sticker(dark)"])   & { --ui-sticker-bg: var(--ui-theme-dark-bg);   --ui-sticker-c: var(--ui-theme-dark-c); }
+		&[theme~="light"],  :where([media*="sticker(light)"])  & { --ui-sticker-bg: var(--ui-theme-light-bg);  --ui-sticker-c: var(--ui-theme-light-c); }
+		&[theme~="subtle"], :where([media*="sticker(subtle)"]) & { --ui-sticker-bg: var(--ui-theme-subtle-bg); --ui-sticker-c: var(--ui-theme-subtle-c); }
+
+		/* arbitrary colour (overrides the hue) — fill = disc, ink = text; ink
+		   auto-contrasts from fill when omitted. */
 		&[fill] {
 			--ui-sticker-bg: attr(fill type(<color>), var(--color-accent));
 			--ui-sticker-c: contrast-color(var(--ui-sticker-bg));
 		}
-
 		&[ink] { --ui-sticker-c: attr(ink type(<color>), hsl(0, 0%, 100%)); }
 
 		/* ───────── font / font-lead  ───────── */
@@ -308,12 +323,20 @@
 			text-box: normal;
 			white-space: nowrap;
 		}
-		&:where([size="sm"])  { --ui-sticker-sz: 3em; }
-		&:where([size="md"])  { --ui-sticker-sz: 4em; }
-		&:where([size="lg"])  { --ui-sticker-sz: 5em; }
-		&:where([size="xl"])  { --ui-sticker-sz: 6em; }
-		&:where([size="2xl"]) { --ui-sticker-sz: 8em; }
-		&:where([size="3xl"]) { --ui-sticker-sz: 10em; }
+		/* corner — from radius= or the card's sticker(<corner>). circle = default.
+		   non sharp · rnd rounded · pll pill · crc circle · sqr squircle. */
+		&[radius~="non"], :where([media*="sticker(non)"]) & { --ui-sticker-radius: 0; }
+		&[radius~="rnd"], :where([media*="sticker(rnd)"]) & { --ui-sticker-radius: var(--radius-lg); }
+		&[radius~="pll"], :where([media*="sticker(pll)"]) & { --ui-sticker-radius: var(--radius-pill); }
+		&[radius~="crc"], :where([media*="sticker(crc)"]) & { --ui-sticker-radius: var(--radius-circle); }
+		&[radius~="sqr"], :where([media*="sticker(sqr)"]) & { --ui-sticker-radius: var(--radius-circle); --ui-sticker-corner: superellipse(var(--squircle-md)); }
+
+		/* size — from size= or the card's sticker(<size>). md (4em) = default. */
+		&:where([size="sm"]),  :where([media*="sticker(sm)"])  & { --ui-sticker-sz: 3em; }
+		&:where([size="lg"]),  :where([media*="sticker(lg)"])  & { --ui-sticker-sz: 5em; }
+		&:where([size="xl"]),  :where([media*="sticker(xl)"])  & { --ui-sticker-sz: 6em; }
+		&:where([size="2xl"]), :where([media*="sticker(2xl)"]) & { --ui-sticker-sz: 8em; }
+		&:where([size="3xl"]), :where([media*="sticker(3xl)"]) & { --ui-sticker-sz: 10em; }
 	}
 
 	@keyframes ui-sticker-spin { from { rotate: 0deg; } to { rotate: 360deg; } }

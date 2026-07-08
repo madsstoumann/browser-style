@@ -115,19 +115,84 @@
 	     Save — <ui-save>
 	     ============================================================ -->
 	<h2>Save — <code>&lt;ui-save&gt;</code></h2>
-	<p>A bookmark / save toggle. Position via <code>save(&lt;pos&gt;)</code>.</p>
+	<p>A save / favorite toggle, over the image (Amazon / IMDb style). The <code>media=</code> token
+		carries <strong>position</strong> (<code>save(&lt;pos&gt;)</code>, 9-code grid),
+		<strong>colour</strong> (<code>save(&lt;hue&gt;)</code> — the 8 theme hues, aligned with
+		chip/sticker) and <strong>size</strong> (<code>save(sm|lg|xl)</code>; <code>md</code> is the default). The
+		<strong>circle backdrop is on by default</strong>; hide it with <code>save(non)</code>. The
+		glyph is a <code>&lt;ui-icon type="shape" shape="heart|bookmark|star" variant="outline"&gt;</code>
+		inside an invoker <code>&lt;button command="--save" commandfor="&lt;card id&gt;"&gt;</code>; saved
+		state = the button's <code>aria-pressed</code>. Bookmark defaults to the accent colour.</p>
 	<p>Full component: <a href="../save/">ui/save</a>.</p>
 	<div class="grid grid-3">
-		<ui-card variant="col" media="asr(4/3) save(be)">
+		<ui-card id="card-heart" variant="col" media="asr(4/3) save(be)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/aurasoundpro.png" alt="">
-					<ui-save></ui-save>
+					<ui-save>
+						<button type="button" command="--save" commandfor="card-heart" aria-label="Add AuraSound Pro to favorites">
+							<ui-icon type="shape" shape="heart" variant="outline"></ui-icon>
+						</button>
+					</ui-save>
 				</ui-media>
-				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">save(be)</h2></ui-content>
+				<ui-content><small data-part="eyebrow">heart · circle (default) · unsaved</small><h2 data-part="headline">save(be)</h2></ui-content>
 			</cq-box>
 		</ui-card>
+		<ui-card id="card-book" variant="col" media="asr(4/3) save(te) save(non)">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/ergochair.png" alt="">
+					<ui-save>
+						<button type="button" command="--save" commandfor="card-book" aria-label="Bookmark ErgoChair" aria-pressed="true">
+							<ui-icon type="shape" shape="bookmark" variant="outline"></ui-icon>
+						</button>
+					</ui-save>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">bookmark · no circle · saved</small><h2 data-part="headline">save(te) save(non)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card id="card-star" variant="col" media="asr(4/3) save(ts) save(orange)">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/brewandbean.png" alt="">
+					<ui-save>
+						<button type="button" command="--save" commandfor="card-star" aria-label="Add Brew &amp; Bean to wishlist" aria-pressed="true">
+							<ui-icon type="shape" shape="star" variant="outline"></ui-icon>
+						</button>
+					</ui-save>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">star · orange · saved</small><h2 data-part="headline">save(ts) save(orange)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+
+		<ui-card variant="vis(media)" id="crc-1" media="asr(1/1) save(te) save(sm)">
+			<cq-box><ui-media><img src="/assets/images/destinations.png" alt="">
+				<ui-save><button type="button" command="--save" commandfor="crc-1" aria-label="Save">
+					<ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+			</ui-media></cq-box>
+		</ui-card>
+		<ui-card variant="vis(media)" id="crc-2" media="asr(1/1) save(te) save(red)">
+			<cq-box><ui-media><img src="/assets/images/destinations.png" alt="">
+				<ui-save><button type="button" command="--save" commandfor="crc-2" aria-label="Saved" aria-pressed="true">
+					<ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+			</ui-media></cq-box>
+		</ui-card>
+		<ui-card variant="vis(media)" id="crc-3" media="asr(1/1) save(te) save(accent) save(xl)">
+			<cq-box><ui-media><img src="/assets/images/destinations.png" alt="">
+				<ui-save><button type="button" command="--save" commandfor="crc-3" aria-label="Saved" aria-pressed="true">
+					<ui-icon type="shape" shape="bookmark" variant="outline"></ui-icon></button></ui-save>
+			</ui-media></cq-box>
+		</ui-card>
 	</div>
+
+	<script type="module">
+		// Invoker toggle glue for the save furniture (command does not bubble).
+		document.addEventListener('command', (e) => {
+			if (e.command !== '--save') return;
+			const btn = e.source;
+			btn.setAttribute('aria-pressed', btn.getAttribute('aria-pressed') !== 'true');
+		}, true);
+	</script>
 
 	<!-- ============================================================
 	     Play — <ui-play>

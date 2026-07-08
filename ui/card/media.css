@@ -74,22 +74,23 @@
 	:where([media*="obp(bc)"]) { --ui-media-op: center bottom; }
 	:where([media*="obp(br)"]) { --ui-media-op: right bottom; }
 
-	/* rds() — corners on a STANDALONE <ui-media> (mirrors ui-card rds(); -sq = squircle) */
-	:where([media*="rds(none)"]) { --ui-media-radius: 0; }
+	/* rds() — corners on a STANDALONE <ui-media> (mirrors ui-card rds(); -sqr =
+	   squircle). non/crc/pll canonical; none/full/pill/-sq kept as aliases. */
+	:where([media*="rds(non)"], [media*="rds(none)"]) { --ui-media-radius: 0; }
 	:where([media*="rds(sm)"])   { --ui-media-radius: var(--radius-sm); }
 	:where([media*="rds(md)"])   { --ui-media-radius: var(--radius-md); }
 	:where([media*="rds(lg)"])   { --ui-media-radius: var(--radius-lg); }
 	:where([media*="rds(xl)"])   { --ui-media-radius: var(--radius-xl); }
 	:where([media*="rds(2xl)"])  { --ui-media-radius: var(--radius-2xl); }
-	:where([media*="rds(full)"]) { --ui-media-radius: var(--radius-circle, 50%); }
-	:where([media*="rds(pill)"]) { --ui-media-radius: var(--radius-pill, 100px); }
-	/* -sq: bespoke radius + superellipse corner-shape (squircle tokens in tokens.css) */
-	:where([media*="rds(sm-sq)"]) { --ui-media-radius: var(--radius-sm-sq); --ui-media-squircle-exp: var(--squircle-sm); }
-	:where([media*="rds(md-sq)"]) { --ui-media-radius: var(--radius-md-sq); --ui-media-squircle-exp: var(--squircle-md); }
-	:where([media*="rds(lg-sq)"]) { --ui-media-radius: var(--radius-lg-sq); --ui-media-squircle-exp: var(--squircle-lg); }
-	:where([media*="rds(xl-sq)"]) { --ui-media-radius: var(--radius-xl-sq); --ui-media-squircle-exp: var(--squircle-xl); }
-	:where([media*="-sq)"]) ui-media,
-	:where(ui-media[media*="-sq)"]) { corner-shape: superellipse(var(--ui-media-squircle-exp, 1.8)); }
+	:where([media*="rds(crc)"], [media*="rds(full)"]) { --ui-media-radius: var(--radius-circle, 50%); }
+	:where([media*="rds(pll)"], [media*="rds(pill)"]) { --ui-media-radius: var(--radius-pill, 100px); }
+	/* -sqr: bespoke radius + superellipse corner-shape (squircle tokens in tokens.css) */
+	:where([media*="rds(sm-sqr)"], [media*="rds(sm-sq)"]) { --ui-media-radius: var(--radius-sm-sq); --ui-media-squircle-exp: var(--squircle-sm); }
+	:where([media*="rds(md-sqr)"], [media*="rds(md-sq)"]) { --ui-media-radius: var(--radius-md-sq); --ui-media-squircle-exp: var(--squircle-md); }
+	:where([media*="rds(lg-sqr)"], [media*="rds(lg-sq)"]) { --ui-media-radius: var(--radius-lg-sq); --ui-media-squircle-exp: var(--squircle-lg); }
+	:where([media*="rds(xl-sqr)"], [media*="rds(xl-sq)"]) { --ui-media-radius: var(--radius-xl-sq); --ui-media-squircle-exp: var(--squircle-xl); }
+	:where([media*="-sq)"]) ui-media, :where([media*="-sqr)"]) ui-media,
+	:where(ui-media[media*="-sq)"], ui-media[media*="-sqr)"]) { corner-shape: superellipse(var(--ui-media-squircle-exp, 1.8)); }
 
 	/* clip — clip-path to the rds() radius (reliable during scroll; -sq clips as plain round) */
 	:where(ui-media[media*="clip"]) { clip-path: inset(0 round var(--ui-media-radius, var(--ui-card-radius, 0))); }
@@ -154,25 +155,14 @@
 		 media.video.css — imported after this sheet, before media.carousel.css. */
 
 	/* ============================================================
-		 SUB-THEME ROUTING — media="el(<key>)" → element tokens (8 --ui-theme-* keys)
+		 SUB-THEME ROUTING moved into the components
+		 ------------------------------------------------------------
+		 chip(<hue>) / sticker(<hue>) colour and save(<hue>|<size>|non) each live
+		 in their own sheet (ui/{chip,sticker,save}/ui-*.css), combined in one
+		 nested rule with the standalone attribute (theme= / color= / size= /
+		 variant="non"), so there is a single source of truth. Only the shared
+		 positions — chip/sticker/save/play(<pos>) — stay here (above).
 		 ============================================================ */
-	:where([media*="chip(red)"])      { --ui-chip-bg: var(--ui-theme-red-bg);    --ui-chip-c: var(--ui-theme-red-c); }
-	:where([media*="chip(orange)"])   { --ui-chip-bg: var(--ui-theme-orange-bg); --ui-chip-c: var(--ui-theme-orange-c); }
-	:where([media*="chip(green)"])    { --ui-chip-bg: var(--ui-theme-green-bg);  --ui-chip-c: var(--ui-theme-green-c); }
-	:where([media*="chip(blue)"])     { --ui-chip-bg: var(--ui-theme-blue-bg);   --ui-chip-c: var(--ui-theme-blue-c); }
-	:where([media*="chip(accent)"])   { --ui-chip-bg: var(--ui-theme-accent-bg); --ui-chip-c: var(--ui-theme-accent-c); }
-	:where([media*="chip(dark)"])     { --ui-chip-bg: var(--ui-theme-dark-bg);   --ui-chip-c: var(--ui-theme-dark-c); }
-	:where([media*="chip(light)"])    { --ui-chip-bg: var(--ui-theme-light-bg);  --ui-chip-c: var(--ui-theme-light-c); }
-	:where([media*="chip(subtle)"])   { --ui-chip-bg: var(--ui-theme-subtle-bg); --ui-chip-c: var(--ui-theme-subtle-c); }
-
-	:where([media*="sticker(red)"])    { --ui-sticker-bg: var(--ui-theme-red-bg);    --ui-sticker-c: var(--ui-theme-red-c); }
-	:where([media*="sticker(orange)"]) { --ui-sticker-bg: var(--ui-theme-orange-bg); --ui-sticker-c: var(--ui-theme-orange-c); }
-	:where([media*="sticker(green)"])  { --ui-sticker-bg: var(--ui-theme-green-bg);  --ui-sticker-c: var(--ui-theme-green-c); }
-	:where([media*="sticker(blue)"])   { --ui-sticker-bg: var(--ui-theme-blue-bg);   --ui-sticker-c: var(--ui-theme-blue-c); }
-	:where([media*="sticker(accent)"]) { --ui-sticker-bg: var(--ui-theme-accent-bg); --ui-sticker-c: var(--ui-theme-accent-c); }
-	:where([media*="sticker(dark)"])   { --ui-sticker-bg: var(--ui-theme-dark-bg);   --ui-sticker-c: var(--ui-theme-dark-c); }
-	:where([media*="sticker(light)"])  { --ui-sticker-bg: var(--ui-theme-light-bg);  --ui-sticker-c: var(--ui-theme-light-c); }
-	:where([media*="sticker(subtle)"]) { --ui-sticker-bg: var(--ui-theme-subtle-bg); --ui-sticker-c: var(--ui-theme-subtle-c); }
 
 	/* ============================================================
 		 SCRIM — scm(). 9 directional gradients; default matches host ovr(),

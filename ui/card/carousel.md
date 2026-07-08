@@ -29,7 +29,7 @@ and **inherits down**, so it may sit on the `<ui-media>` **or any ancestor** `<u
 the natural CMS vehicle (one attribute on the card configures the inner media).
 
 ```html
-<ui-media media="asr(16/9) nav(blw) arw(lg) arw(drk) dot(end)"> … </ui-media>
+<ui-media media="asr(16/9) nav(blw) arw(lg) arw(drk) dot(be)"> … </ui-media>
 
 <!-- or on an ancestor <ui-card> (propagates to the inner <ui-media>) -->
 <ui-card media="asr(16/9) nav(blw) arw(lg) arw(drk)">
@@ -42,12 +42,12 @@ whole-word values — no repeated prefix. Set them on the `<ui-media>` **itself 
 they are **not** inherited (so they never need to sit on the parent card).
 
 ```html
-<ui-media nav="blw" arrow="lg drk" dot="end"> … </ui-media>
+<ui-media nav="blw" arrow="lg drk" dot="be"> … </ui-media>
 ```
 
 The two snippets above render **identically**. The value is the same 3-letter code; only
-the wrapper differs: `media="arw(drk)"` ≡ `arrow="drk"`, `media="dot(pll) dot(end)"` ≡
-`dot="pll end"`, bare `media="nav"` ≡ boolean `nav`, `media="axis(y)"` ≡ `nav="y"`.
+the wrapper differs: `media="arw(drk)"` ≡ `arrow="drk"`, `media="dot(pll) dot(be)"` ≡
+`dot="pll be"`, bare `media="nav"` ≡ boolean `nav`, `media="axis(y)"` ≡ `nav="y"`.
 Order never matters.
 
 > **Shared ink scale.** Controls + scrim use one shade vocabulary: `lgt` (light/white) ·
@@ -104,10 +104,10 @@ only**, gated by `@supports (scroll-marker-group: after)`. Everywhere else it
 | `arw(sm)` `arw(md)` `arw(lg)` `arw(xl)` | `arrow="sm…xl"` | Button size (`md` = 2.25rem default) |
 | `arw(bare)` | `arrow="bare"` | **Drop the circle** — render the glyph itself as a recolourable shape (`--ui-media-arrow-color`) |
 | `arw(sqr)` `arw(sft)` | `arrow="sqr/sft"` | **Square** button instead of the default circle — `sqr` = sharp corners, `sft` = slight radius (`--ui-media-arrow-radius`) |
-| `arw(set)` | `arrow="set"` | Group both arrows as an **adjacent pair** at the end (horizontal: inline-end; vertical: stacked at block-end). Pair with `arw(bot)`/`arw(top)` for a bottom-/top-end set; on `axis(y)`, `arw(set) arw(top)` stacks the pair at the top |
+| `arw(set)` | `arrow="set"` | Group both arrows as an **adjacent pair** (one cluster). Place it in any grid cell — `arw(set) arw(<cell>)`, e.g. `arw(set) arw(bs)` (bottom-start), `arw(set) arw(cc)` (dead center). Default `ce` (horizontal) / `be` (vertical) |
 | `arw(hid)` | `arrow="hid"` | Auto-**hide** the dead-end arrow (default keeps it visible but dimmed) |
-| `arw(mid)` `arw(top)` `arw(bot)` | `arrow="mid/top/bot"` | Vertical placement of the edge arrows (`mid` = centered default) |
-| `arw(sta)` | `arrow="sta"` | `axis(y)`: move the up/down arrows (and dot column) to the inline-**start** edge (default is inline-end) |
+| `arw(tc)` `arw(cc)` `arw(bc)` | `arrow="tc/cc/bc"` | **Split arrows** vertical band — `cc` = centered default. (Inline part of the cell is ignored for split arrows; only the block row applies) |
+| `arw(cs)` | `arrow="cs"` | `axis(y)`: a start-inline cell moves the up/down arrows (and dot column) to the inline-**start** edge (default is inline-end) |
 
 > **Default look:** the overlay circle is Instagram-style — a frosted semi-transparent-white
 > circle, dark chevron, soft shadow. `arw(lgt)` = that light theme; `arw(drk)` = the dark
@@ -177,11 +177,11 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 | `dot(pll)` | `dot="pll"` | Rounded-rect pills; the active pill **fills L→R** over the autoplay duration as a timer hint |
 | `dot(lgt)` `dot(drk)` | `dot="lgt/drk"` | Ink — light / dark (`bg` + active). `nav(blw)`/`nav(abv)` default to dark |
 | `dot(sm)` `dot(md)` `dot(lg)` `dot(xl)` | `dot="sm…xl"` | Size (`md` = default) — one scale for dots, pills **and** thumbnails, so `dot(tmb) dot(lg)` = large thumbnails |
-| `dot(sta)` `dot(ctr)` `dot(end)` | `dot="sta/ctr/end"` | **Position within a band** (`nav(blw)` **and** `nav(abv)`) — left / center (default) / right. `sta`/`end` clear the arrow on that side (or the `arw(set)` pair). |
+| **In a band** — `dot(bs/bc/be)` (below) · `dot(ts/tc/te)` (above) | `dot="bs"` … | **Position within a band** — the row is locked by `nav(blw)`/`nav(abv)`, so the cell's inline letter aligns the dots: start / center (default) / end. Start/end clear the arrow on that side (or the `arw(set)` pair). |
 | `dot(bc)` | `dot="bc"` | `axis(y)`: dots centered at the **bottom** (e.g. with a pill timer) |
 | `dot(non)` | `dot="non"` | **No dots** (keeps arrows) — e.g. an arrows-only `nav(blw)`/`nav(abv)` band |
 | `dot(tmb)` | `dot="tmb"` | **Image thumbnails** instead of dots. Each slide sets `--ui-media-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-media-autoplay`. |
-| `dot(tl)` `dot(tr)` `dot(bl)` `dot(br)` | `dot="tl/tr/bl/br"` | **Corner placement** for the overlay marker-group (top-left / top-right / bottom-left / bottom-right). Inset via `--ui-media-marker-inset`. |
+| `dot(ts)` `dot(te)` `dot(bs)` `dot(be)` | `dot="ts/te/bs/be"` | **Corner placement** for the overlay marker-group — top-start / top-end / bottom-start / bottom-end (logical, RTL-safe). Center row `dot(cs)` `dot(cc)` `dot(ce)` completes the 9-grid. Inset via `--ui-media-marker-inset`. |
 
 ### Thumbnail navigation — `dot(tmb)`
 
@@ -189,7 +189,7 @@ Turn the marker-group into a **thumbnail rail**. Give each slide its own picture
 custom property; place the rail in any corner:
 
 ```html
-<ui-media media="asr(4/3) nav dot(tmb) dot(tr)">
+<ui-media media="asr(4/3) nav dot(tmb) dot(te)">
   <img src="1.jpg" style="--ui-media-thumb-url: url('1.jpg')">
   <img src="2.jpg" style="--ui-media-thumb-url: url('2.jpg')">
 </ui-media>
@@ -422,13 +422,13 @@ authored directly.
           style="--ui-media-arrow-color: var(--color-accent)"> … </ui-media>
 
 <!-- Controls in a band below; dots left, arrow pair right -->
-<ui-media media="asr(16/9) nav(blw) arw(set) dot(sta)"> … </ui-media>
+<ui-media media="asr(16/9) nav(blw) arw(set) dot(bs)"> … </ui-media>
 
 <!-- Vertical carousel, up/down arrows on the right -->
 <ui-media media="asr(3/4) axis(y) nav"> … </ui-media>
 
 <!-- Vertical, arrow pair stacked bottom-left -->
-<ui-media media="asr(3/4) axis(y) nav(arw) arw(set) arw(sta)"> … </ui-media>
+<ui-media media="asr(3/4) axis(y) nav(arw) arw(set) arw(cs)"> … </ui-media>
 
 <!-- Bare swipe scroller, no dots/arrows -->
 <ui-media media="asr(16/9) nav(non)"> … </ui-media>

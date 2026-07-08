@@ -49,8 +49,8 @@ Or via CSS `@import`:
 
 ```html
 <ui-chip>Default</ui-chip>
-<ui-chip color="success">All services up ✓</ui-chip>
-<ui-chip variant="outline" color="info">Premium</ui-chip>
+<ui-chip theme="success">All services up ✓</ui-chip>
+<ui-chip variant="outline" theme="info">Premium</ui-chip>
 ```
 
 ### Web Component
@@ -67,10 +67,16 @@ The web component uses the **exact same** HTML structure as CSS-only — the JS 
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
-| `color` | string | Semantic color: `info`, `success`, `warning`, `error` |
-| `theme` | string | Decorative color bundle (bg + ink): `red`, `orange`, `green`, `blue`, `accent`, `dark`, `light`, `subtle` |
-| `size` | string | Predefined size: `sm`, `md` (default), `lg` |
-| `variant` | string | Space-separated: `light`, `outline`, `square`, `squircle` |
+| `theme` | string | A theme hue (bg + ink pair): `red orange green blue accent dark light subtle`, plus the semantic aliases `error`(=red) `warning`(=orange) `success`(=green) `info`(=blue) |
+| `fill` | `<color>` | Arbitrary background — any CSS colour; text auto-contrasts. Overrides `theme` |
+| `ink` | `<color>` | Arbitrary text colour — any CSS colour. Overrides the auto-contrast |
+| `size` | string | `sm`, `lg`, `xl` (`md` is the default) |
+| `radius` | string | Corner shape: `non` sharp · `rnd` rounded · `pll` pill (default) · `crc` circle · `sqr` squircle |
+| `variant` | string | Space-separated: `light`, `outline` (`square`/`squircle` are aliases for `radius="rnd"`/`"sqr"`) |
+
+> This colour/size model is shared by all `<ui-media>` furniture (`chip`, `sticker`, `save`,
+> `play`) and works identically standalone or via the card `media=` token — `chip(<hue>)`,
+> `chip(<size>)`, etc.
 
 ---
 
@@ -81,7 +87,7 @@ import '@browser.style/chip';
 import '@browser.style/chip/style';
 
 function StatusChip({ status }) {
-  return <ui-chip color={status}>{status}</ui-chip>;
+  return <ui-chip theme={status}>{status}</ui-chip>;
 }
 ```
 
@@ -94,7 +100,7 @@ import '@browser.style/chip/style';
 </script>
 
 <template>
-  <ui-chip variant="light" color="success">All services up</ui-chip>
+  <ui-chip variant="light" theme="success">All services up</ui-chip>
 </template>
 ```
 
@@ -111,7 +117,7 @@ import '@browser.style/chip/style';
   import '@browser.style/chip/style';
 </script>
 
-<ui-chip color="warning">Warning: Low</ui-chip>
+<ui-chip theme="warning">Warning: Low</ui-chip>
 ```
 
 ### Astro / SSR
@@ -122,48 +128,44 @@ Use the CSS-only approach — no JavaScript needed:
 <link rel="stylesheet" href="@browser.style/base/index.css">
 <link rel="stylesheet" href="@browser.style/chip/index.css">
 
-<ui-chip color="info">Premium</ui-chip>
+<ui-chip theme="info">Premium</ui-chip>
 ```
 
 ---
 
 ## Colors
 
-Use the `color` attribute for semantic colors:
+Use `theme` for a named hue (a background + paired ink in one keyword). The 8 hues also have
+**semantic aliases** that carry meaning:
 
 ```html
-<ui-chip color="info">Info</ui-chip>
-<ui-chip color="success">Success</ui-chip>
-<ui-chip color="warning">Warning</ui-chip>
-<ui-chip color="error">Error</ui-chip>
+<ui-chip theme="info">Info</ui-chip>       <!-- = blue -->
+<ui-chip theme="success">Success</ui-chip> <!-- = green -->
+<ui-chip theme="warning">Warning</ui-chip> <!-- = orange -->
+<ui-chip theme="error">Error</ui-chip>     <!-- = red -->
+<ui-chip theme="accent">Accent</ui-chip>
 ```
 
-| Value | Description |
+| `theme` value | Colour |
 |-------|-------------|
 | _(none)_ | Default — `--color-button` background |
-| `info` | Blue — `--color-info` |
-| `success` | Green — `--color-success` |
-| `warning` | Orange — `--color-warning` |
-| `error` | Red — `--color-error` |
+| `red` / `error` | `--color-error` |
+| `orange` / `warning` | `--color-warning` |
+| `green` / `success` | `--color-success` |
+| `blue` / `info` | `--color-info` |
+| `accent` `dark` `light` `subtle` | the matching `--ui-theme-*` bundle |
 
-## Theme
-
-The `theme` attribute applies a decorative color **bundle** — a background and a paired ink color in one keyword. This is distinct from the semantic `color` axis (`info` / `success` / `warning` / `error`), which carries meaning. Use `theme` purely for looks. If both `color` and `theme` are set, **`theme` wins**.
+For an **arbitrary colour**, use `fill` (surface) — text auto-contrasts — and optionally `ink`
+(text):
 
 ```html
-<ui-chip theme="accent">Accent</ui-chip>
-<ui-chip theme="dark">Dark</ui-chip>
-<ui-chip theme="subtle">Subtle</ui-chip>
+<ui-chip fill="gold">Gold</ui-chip>                 <!-- → black text -->
+<ui-chip fill="#1d1d1d">Dark</ui-chip>              <!-- → white text -->
+<ui-chip fill="rebeccapurple" ink="gold">Custom</ui-chip>
 ```
 
-8 keys:
-
-```
-red   orange  green   blue
-accent  dark  light  subtle
-```
-
-The bundles are defined as `--ui-theme-*` tokens in `@browser.style/base` and are retunable globally:
+`fill`/`ink` override `theme`. The named hues are retunable `--ui-theme-*` tokens in
+`@browser.style/base`:
 
 ```css
 :root {
@@ -174,26 +176,29 @@ The bundles are defined as `--ui-theme-*` tokens in `@browser.style/base` and ar
 
 ## Sizes
 
+`sm`, `lg`, `xl` — `md` is the default (no attribute):
+
 ```html
-<ui-chip size="sm" color="info">Small</ui-chip>
-<ui-chip size="md" color="info">Medium</ui-chip>
-<ui-chip size="lg" color="info">Large</ui-chip>
+<ui-chip size="sm" theme="info">Small</ui-chip>
+<ui-chip theme="info">Medium (default)</ui-chip>
+<ui-chip size="lg" theme="info">Large</ui-chip>
+<ui-chip size="xl" theme="info">X-Large</ui-chip>
 ```
 
 ## Variants
 
 ### Style variants
 
-**Light** — tinted background with the semantic color as text:
+**Light** — tinted background with the `theme`/`fill` colour as text:
 
 ```html
-<ui-chip variant="light" color="info">Premium</ui-chip>
+<ui-chip variant="light" theme="info">Premium</ui-chip>
 ```
 
 **Outline** — transparent background with a colored border:
 
 ```html
-<ui-chip variant="outline" color="success">Available</ui-chip>
+<ui-chip variant="outline" theme="success">Available</ui-chip>
 ```
 
 ### Shape variants
@@ -214,7 +219,7 @@ Chips can host `<ui-badge>` at any corner:
 
 ```html
 <ui-chip>Notifications <ui-badge color="error">4</ui-badge></ui-chip>
-<ui-chip color="info">Messages <ui-badge color="warning" position="bottom-right">2</ui-badge></ui-chip>
+<ui-chip theme="info">Messages <ui-badge color="warning" position="bottom-right">2</ui-badge></ui-chip>
 ```
 
 Add `variant="inline"` to the badge to automatically push it to the inline end inside a chip:

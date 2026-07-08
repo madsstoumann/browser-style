@@ -137,11 +137,20 @@ Use the CSS-only approach — no JavaScript needed:
 
 ---
 
-## Colors (`fill` + `ink`)
+## Colors — `theme` (hues) or `fill` + `ink` (arbitrary)
 
-Think of it as print: **`fill`** is the stock/background, **`ink`** is what's printed on it.
+For a **named hue**, use `theme=` — the 8 theme hues `red orange green blue accent dark light subtle`
+(+ semantic aliases `error warning success info`), a background + paired ink in one keyword:
 
-`fill` takes **any CSS color**, read with `attr(fill type(<color>))` for the background; the text ink is auto-picked with `contrast-color()` — so any background gets legible text for free. The default background (no `fill`) is `--color-accent`.
+```html
+<ui-sticker theme="red">Sale</ui-sticker>
+<ui-sticker theme="success">In stock</ui-sticker>
+```
+
+For an **arbitrary colour**, think of it as print: **`fill`** is the stock/background, **`ink`** is
+what's printed on it. They override `theme`.
+
+`fill` takes **any CSS color**, read with `attr(fill type(<color>))` for the background; the text ink is auto-picked with `contrast-color()` — so any background gets legible text for free. The default background (no `theme`/`fill`) is `--color-accent`.
 
 ```html
 <ui-sticker>Default</ui-sticker>
@@ -247,6 +256,16 @@ The `size` attribute scales the **box** (`--ui-sticker-sz`); element lines follo
 ```html
 <ui-sticker fill="#BC2F2F" ink="#fff" size="sm"><span>-20%</span></ui-sticker>
 <ui-sticker fill="#BC2F2F" ink="#fff" size="3xl"><span>-20%</span></ui-sticker>
+```
+
+## Corners
+
+`radius=` reshapes the plain disc: `non` sharp · `rnd` rounded · `pll` pill · `crc` circle (default) ·
+`sqr` squircle. In a card, `sticker(<corner>)`. (The decorative `variant=` silhouettes — burst,
+blob, heart… — set their own `clip-path` and ignore `radius`.)
+
+```html
+<ui-sticker theme="blue" radius="sqr"><strong>New</strong></ui-sticker>
 ```
 
 ## Shadow

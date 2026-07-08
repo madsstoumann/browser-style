@@ -1,7 +1,7 @@
 {
   "name": "@browser.style/save",
-  "version": "4.0.0",
-  "description": "CSS-first save/favorite toggle component with optional web component wrapper",
+  "version": "5.0.0",
+  "description": "Save / favorite / wishlist / bookmark toggle — an invoker button + ui-icon shape overlay for cards and product images",
   "type": "module",
   "module": "index.js",
   "style": "index.css",
@@ -11,7 +11,8 @@
       "style": "./index.css"
     },
     "./style": "./index.css",
-    "./index.css": "./index.css"
+    "./index.css": "./index.css",
+    "./ui-save.css": "./ui-save.css"
   },
   "files": [
     "index.js",
@@ -40,6 +41,7 @@
   },
   "homepage": "https://browser.style/ui/save",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.11"
+    "@browser.style/base": "^1.0.11",
+    "@browser.style/icon": "^4.0.0"
   }
 }
