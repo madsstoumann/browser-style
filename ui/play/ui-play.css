@@ -51,11 +51,11 @@
 
 	/* colour — hue (theme= or the card's play(<hue>)) sets the disc bg + glyph ink;
 	   arbitrary fill=/ink= override. Set on the host; the button reads
-	   --ui-play-bg/-c. red=error · orange=warning · green=success · blue=info. */
-	:where(ui-play[theme~="red"],    ui-play[theme~="error"],   [media*="play(red)"]    ui-play, [media*="play(error)"]   ui-play) { --ui-play-bg: var(--ui-theme-red-bg);    --ui-play-c: var(--ui-theme-red-c); }
-	:where(ui-play[theme~="orange"], ui-play[theme~="warning"], [media*="play(orange)"] ui-play, [media*="play(warning)"] ui-play) { --ui-play-bg: var(--ui-theme-orange-bg); --ui-play-c: var(--ui-theme-orange-c); }
-	:where(ui-play[theme~="green"],  ui-play[theme~="success"], [media*="play(green)"]  ui-play, [media*="play(success)"] ui-play) { --ui-play-bg: var(--ui-theme-green-bg);  --ui-play-c: var(--ui-theme-green-c); }
-	:where(ui-play[theme~="blue"],   ui-play[theme~="info"],    [media*="play(blue)"]   ui-play, [media*="play(info)"]    ui-play) { --ui-play-bg: var(--ui-theme-blue-bg);   --ui-play-c: var(--ui-theme-blue-c); }
+	   --ui-play-bg/-c. */
+	:where(ui-play[theme~="red"],    [media*="play(red)"]    ui-play) { --ui-play-bg: var(--ui-theme-red-bg);    --ui-play-c: var(--ui-theme-red-c); }
+	:where(ui-play[theme~="orange"], [media*="play(orange)"] ui-play) { --ui-play-bg: var(--ui-theme-orange-bg); --ui-play-c: var(--ui-theme-orange-c); }
+	:where(ui-play[theme~="green"],  [media*="play(green)"]  ui-play) { --ui-play-bg: var(--ui-theme-green-bg);  --ui-play-c: var(--ui-theme-green-c); }
+	:where(ui-play[theme~="blue"],   [media*="play(blue)"]   ui-play) { --ui-play-bg: var(--ui-theme-blue-bg);   --ui-play-c: var(--ui-theme-blue-c); }
 	:where(ui-play[theme~="accent"], [media*="play(accent)"] ui-play) { --ui-play-bg: var(--ui-theme-accent-bg); --ui-play-c: var(--ui-theme-accent-c); }
 	:where(ui-play[theme~="dark"],   [media*="play(dark)"]   ui-play) { --ui-play-bg: var(--ui-theme-dark-bg);   --ui-play-c: var(--ui-theme-dark-c); }
 	:where(ui-play[theme~="light"],  [media*="play(light)"]  ui-play) { --ui-play-bg: var(--ui-theme-light-bg);  --ui-play-c: var(--ui-theme-light-c); }

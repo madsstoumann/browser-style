@@ -65,14 +65,13 @@
 		& > strong { font-size: max(10px, var(--_size-lg)); font-family: var(--ui-sticker-strong-font, var(--ui-sticker-font-family)); color: var(--ui-sticker-lead-c, inherit); }
 		& :is(sup, sub) { font-size: 0.5em; }
 
-		/* colour (hue) — the 8 theme hues + semantic aliases, from theme= or the
-		   card's sticker(<hue>). red=error · orange=warning · green=success · blue=info.
+		/* colour (hue) — the 8 theme hues, from theme= or the card's sticker(<hue>).
 		   `&` is ui-sticker, `:where([media*="sticker(…)"]) &` is the card form.
 		   Arbitrary fill=/ink= come after, so they override the hue. */
-		&[theme~="red"],    &[theme~="error"],   :where([media*="sticker(red)"],    [media*="sticker(error)"])   & { --ui-sticker-bg: var(--ui-theme-red-bg);    --ui-sticker-c: var(--ui-theme-red-c); }
-		&[theme~="orange"], &[theme~="warning"], :where([media*="sticker(orange)"], [media*="sticker(warning)"]) & { --ui-sticker-bg: var(--ui-theme-orange-bg); --ui-sticker-c: var(--ui-theme-orange-c); }
-		&[theme~="green"],  &[theme~="success"], :where([media*="sticker(green)"],  [media*="sticker(success)"]) & { --ui-sticker-bg: var(--ui-theme-green-bg);  --ui-sticker-c: var(--ui-theme-green-c); }
-		&[theme~="blue"],   &[theme~="info"],    :where([media*="sticker(blue)"],   [media*="sticker(info)"])    & { --ui-sticker-bg: var(--ui-theme-blue-bg);   --ui-sticker-c: var(--ui-theme-blue-c); }
+		&[theme~="red"],    :where([media*="sticker(red)"])    & { --ui-sticker-bg: var(--ui-theme-red-bg);    --ui-sticker-c: var(--ui-theme-red-c); }
+		&[theme~="orange"], :where([media*="sticker(orange)"]) & { --ui-sticker-bg: var(--ui-theme-orange-bg); --ui-sticker-c: var(--ui-theme-orange-c); }
+		&[theme~="green"],  :where([media*="sticker(green)"])  & { --ui-sticker-bg: var(--ui-theme-green-bg);  --ui-sticker-c: var(--ui-theme-green-c); }
+		&[theme~="blue"],   :where([media*="sticker(blue)"])   & { --ui-sticker-bg: var(--ui-theme-blue-bg);   --ui-sticker-c: var(--ui-theme-blue-c); }
 		&[theme~="accent"], :where([media*="sticker(accent)"]) & { --ui-sticker-bg: var(--ui-theme-accent-bg); --ui-sticker-c: var(--ui-theme-accent-c); }
 		&[theme~="dark"],   :where([media*="sticker(dark)"])   & { --ui-sticker-bg: var(--ui-theme-dark-bg);   --ui-sticker-c: var(--ui-theme-dark-c); }
 		&[theme~="light"],  :where([media*="sticker(light)"])  & { --ui-sticker-bg: var(--ui-theme-light-bg);  --ui-sticker-c: var(--ui-theme-light-c); }
@@ -123,10 +122,12 @@
 		&[font~="shadow(solid-lg)"] > :not(strong), &[font-lead~="shadow(solid-lg)"] > strong { --ui-sticker-text-shadow: 4cqi   4cqi   0 var(--ui-sticker-text-shadow-color); }
 		&[font~="shadow(solid-xl)"] > :not(strong), &[font-lead~="shadow(solid-xl)"] > strong { --ui-sticker-text-shadow: 6cqi   6cqi   0 var(--ui-sticker-text-shadow-color); }
 
-		/* fit — native text-fit: grow on the line elements (Chrome 150+) */
 		@supports (text-fit: grow) {
-			&[font~="fit"], &[font-lead~="fit"] { grid-template-columns: 100%; }
-			&[font~="fit"] > :not(strong), &[font-lead~="fit"] > strong { text-fit: grow; }
+			&:is([font~="fit"], [font-lead~="fit"]) {
+				padding: 1.5ch;
+				text-fit: grow per-line-all;
+			}
+			&:is([font~="fit"], [font-lead~="fit"]) > * { white-space: nowrap; }
 		}
 
 		/* ───────── shadow — box drop-shadow ───────── */
@@ -176,8 +177,10 @@
 		}
 
 		/* clipped shapes — fill on a ::before so the host stays unclipped; each sets
-		   --ui-sticker-clip-path (`clip` = bring your own via the same token) */
-		&:is([variant~="clip"], [variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"]) {
+		   --ui-sticker-clip-path. From variant= OR the card's sticker(<shape>).
+		   (`clip` is attribute-only — it needs a custom --ui-sticker-clip-path.) */
+		&:is([variant~="clip"], [variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"]),
+		:where([media*="sticker(burst)"], [media*="sticker(spark)"], [media*="sticker(sunburst)"], [media*="sticker(heart)"], [media*="sticker(blob)"]) & {
 			background: none;
 			border-radius: 0;
 			isolation: isolate;
@@ -192,11 +195,12 @@
 			}
 		}
 		/* zero-specificity position so an external placement (ui-card sticker(te)) wins */
-		&:where([variant~="clip"], [variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"]) {
+		&:where([variant~="clip"], [variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"]),
+		:where([media*="sticker(burst)"], [media*="sticker(spark)"], [media*="sticker(sunburst)"], [media*="sticker(heart)"], [media*="sticker(blob)"]) & {
 			position: relative;
 		}
 
-		&[variant~="burst"] {
+		&[variant~="burst"], :where([media*="sticker(burst)"]) & {
 			--ui-sticker-clip-path: polygon(
 				50.0% 0.0%, 59.1% 16.2%, 75.0% 6.7%, 74.7% 25.3%, 93.3% 25.0%,
 				83.8% 40.9%, 100.0% 50.0%, 83.8% 59.1%, 93.3% 75.0%, 74.7% 74.7%,
@@ -208,13 +212,13 @@
 			--ui-sticker-p: 0.6em;
 		}
 
-		&[variant~="blob"] {
+		&[variant~="blob"], :where([media*="sticker(blob)"]) & {
 			--ui-sticker-clip-path: shape(from 90.89% 45.17%, curve to 92.79% 55.28% with 90.99% 50.00%, smooth to 93.61% 65.99%, smooth to 85.76% 72.82%, smooth to 76.90% 78.85%, smooth to 71.48% 87.66%, smooth to 63.31% 95.20%, smooth to 53.19% 93.00%, smooth to 41.81% 92.46%, smooth to 31.96% 92.67%, smooth to 26.69% 82.05%, smooth to 21.44% 73.76%, smooth to 14.78% 67.57%, smooth to 8.98% 59.50%, smooth to 5.96% 49.99%, smooth to 9.52% 40.71%, smooth to 13.81% 31.61%, smooth to 15.79% 20.88%, smooth to 22.18% 12.88%, smooth to 32.83% 10.92%, smooth to 43.10% 11.79%, smooth to 51.97% 13.79%, smooth to 61.90% 12.13%, smooth to 73.63% 9.66%, smooth to 79.98% 17.38%, smooth to 86.16% 26.73%, smooth to 91.37% 34.63%, smooth to 90.89% 45.17%);
 			--ui-sticker-fs: 34cqi;
 			--ui-sticker-p: 0.7em;
 		}
 
-		&[variant~="spark"] {
+		&[variant~="spark"], :where([media*="sticker(spark)"]) & {
 			--ui-sticker-clip-path: polygon(
 				50.0% 0.0%, 62.6% 11.1%, 79.4% 9.5%, 83.1% 26.0%, 97.5% 34.5%,
 				90.9% 50.0%, 97.5% 65.5%, 83.1% 74.0%, 79.4% 90.5%, 62.6% 88.9%,
@@ -225,7 +229,7 @@
 			--ui-sticker-p: 0.6em;
 		}
 
-		&[variant~="sunburst"] {
+		&[variant~="sunburst"], :where([media*="sticker(sunburst)"]) & {
 			--ui-sticker-clip-path: polygon(
 				50.0% 0.0%, 53.1% 10.2%, 57.8% 0.6%, 59.3% 11.2%, 65.5% 2.5%,
 				65.3% 13.2%, 72.7% 5.5%, 70.8% 16.0%, 79.4% 9.5%, 75.9% 19.7%,
@@ -248,7 +252,7 @@
 			--ui-sticker-p: 0.5em;
 		}
 
-		&[variant~="heart"] {
+		&[variant~="heart"], :where([media*="sticker(heart)"]) & {
 			--ui-sticker-clip-path: shape(
 				from 45.738% 84.749%,
 				curve to 33.979% 74.461% with 43.619% 82.374% / 38.327% 77.744%,
@@ -272,7 +276,9 @@
 			border-radius: 0;
 		}
 
-		&:is([variant~="speech(l)"], [variant~="speech(r)"]) {
+		/* speech bubble — media aliases spl/spr (flat, no nested parens in media=) */
+		&:is([variant~="speech(l)"], [variant~="speech(r)"]),
+		:where([media*="sticker(spl)"], [media*="sticker(spr)"]) & {
 			--ui-sticker-fs: 30cqi;
 			--ui-sticker-p: 0.6em 0.7em;
 			aspect-ratio: 5 / 4;
@@ -289,10 +295,10 @@
 				position: absolute;
 			}
 		}
-		&[variant~="speech(l)"]::after { inset-inline-start: 20%; clip-path: polygon(0 0, 100% 0, 0 100%); }
-		&[variant~="speech(r)"]::after { inset-inline-end: 20%;  clip-path: polygon(0 0, 100% 0, 100% 100%); }
+		&[variant~="speech(l)"]::after, :where([media*="sticker(spl)"]) &::after { inset-inline-start: 20%; clip-path: polygon(0 0, 100% 0, 0 100%); }
+		&[variant~="speech(r)"]::after, :where([media*="sticker(spr)"]) &::after { inset-inline-end: 20%;  clip-path: polygon(0 0, 100% 0, 100% 100%); }
 
-		&[variant~="text"] {
+		&[variant~="text"], :where([media*="sticker(text)"]) & {
 			--ui-sticker-shadow:
 				drop-shadow(var(--_o) 0 var(--_oc)) drop-shadow(calc(var(--_o) * -1) 0 var(--_oc))
 				drop-shadow(0 var(--_o) var(--_oc)) drop-shadow(0 calc(var(--_o) * -1) var(--_oc));
@@ -312,7 +318,7 @@
 			rotate: attr(angle type(<angle>), 0deg);
 			text-box: normal;
 		}
-		&[variant~="text"] > * {
+		&[variant~="text"] > *, :where([media*="sticker(text)"]) & > * {
 			/* solid fill, NOT background-clip:text (which doesn't composite with text-stroke) */
 			color: var(--ui-sticker-text-fill, var(--ui-sticker-bg, var(--color-accent)));
 			-webkit-text-fill-color: var(--ui-sticker-text-fill, var(--ui-sticker-bg, var(--color-accent)));

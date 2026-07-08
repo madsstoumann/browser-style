@@ -11,7 +11,7 @@ The glyph is a `<ui-icon>` sub-element from `@browser.style/icon`. Use `type="pl
 - `reveal` variant — hidden until the parent media frame is hovered/focused
 - Brand/shape variants — `youtube` (red squircle), `vimeo` (cyan disc), `rounded(sm|md|lg)` (clip-path play triangle)
 - Sizes `sm` / `lg` / `xl` (`md` is the default)
-- `theme` hues (+ semantic aliases) or arbitrary `fill`/`ink` colours
+- `theme` hues or arbitrary `fill`/`ink` colours
 - Optional web component: toggles `is-playing`, morphs the `<ui-icon>`, and drives targets via the native Invoker Commands API (`command`/`commandfor`) — with a bundled controller for `<video>` and CSS animations. Falls back to a `ui-play-toggle` event when no `commandfor` is set (carousel), and keeps a `for=` shorthand for `<video>`
 - Token-driven colors, radius, size, icon size, and transition duration
 - Light/dark mode support via design tokens
@@ -82,7 +82,7 @@ The web component uses the **exact same** HTML structure as CSS-only. The JS add
 |-----------|------|-------------|
 | `variant` | string | Space-separated: `reveal` (hidden until parent hover/focus), `youtube`, `vimeo`, `rounded(sm)` / `rounded(md)` / `rounded(lg)` |
 | `size` | string | `sm`, `lg`, `xl` (`md` is the default) |
-| `theme` | string | Disc hue (bg + glyph ink): `red orange green blue accent dark light subtle`, plus semantic aliases `error warning success info` |
+| `theme` | string | Disc hue (bg + glyph ink): `red orange green blue accent dark light subtle` |
 | `fill` | `<color>` | Arbitrary disc colour — any CSS colour; glyph auto-contrasts. Overrides `theme` |
 | `ink` | `<color>` | Arbitrary glyph colour |
 | `radius` | string | Disc shape: `crc` circle (default) · `sqr` squircle · `rnd` rounded · `non` sharp |

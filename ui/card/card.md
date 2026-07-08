@@ -134,7 +134,7 @@ carries the shape.
 | Token | Effect |
 |-------|--------|
 | `save(<pos>)` | Position on the 9-code grid — `ts tc te · cs cc ce · bs bc be` (default `te`) |
-| `save(<hue>)` | Ink (idle + saved) from the 8 theme hues — `red orange green blue accent dark light subtle`, plus semantic aliases `error warning success info` (`red`=error, `orange`=warning, `green`=success, `blue`=info). Same vocabulary for `chip()`/`sticker()`/`play()` |
+| `save(<hue>)` | Ink (idle + saved) from the 8 theme hues — `red orange green blue accent dark light subtle`. Same vocabulary for `chip()`/`sticker()`/`play()` |
 | `save(<size>)` | Scale — `sm lg xl` (`md` = default) |
 | `save(<corner>)` | Disc shape — `crc` circle (default) · `sqr` squircle · `rnd` rounded. `save(non)` hides the disc |
 

@@ -4,7 +4,7 @@ A CSS-first chip component for tags, labels, filters, and status indicators. Vis
 
 ## Features
 
-- Semantic colors: info, success, warning, error
+- 8 theme hues (red orange green blue accent dark light subtle) or any arbitrary fill/ink
 - Three sizes: small, medium (default), large
 - Style variants: solid (default), light (tinted), outline
 - Shape variants: pill (default), square, squircle (`corner-shape`)
@@ -49,8 +49,8 @@ Or via CSS `@import`:
 
 ```html
 <ui-chip>Default</ui-chip>
-<ui-chip theme="success">All services up ✓</ui-chip>
-<ui-chip variant="outline" theme="info">Premium</ui-chip>
+<ui-chip theme="green">All services up ✓</ui-chip>
+<ui-chip variant="outline" theme="blue">Premium</ui-chip>
 ```
 
 ### Web Component
@@ -67,7 +67,7 @@ The web component uses the **exact same** HTML structure as CSS-only — the JS 
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
-| `theme` | string | A theme hue (bg + ink pair): `red orange green blue accent dark light subtle`, plus the semantic aliases `error`(=red) `warning`(=orange) `success`(=green) `info`(=blue) |
+| `theme` | string | A theme hue (bg + ink pair): `red orange green blue accent dark light subtle` |
 | `fill` | `<color>` | Arbitrary background — any CSS colour; text auto-contrasts. Overrides `theme` |
 | `ink` | `<color>` | Arbitrary text colour — any CSS colour. Overrides the auto-contrast |
 | `size` | string | `sm`, `lg`, `xl` (`md` is the default) |
@@ -100,7 +100,7 @@ import '@browser.style/chip/style';
 </script>
 
 <template>
-  <ui-chip variant="light" theme="success">All services up</ui-chip>
+  <ui-chip variant="light" theme="green">All services up</ui-chip>
 </template>
 ```
 
@@ -117,7 +117,7 @@ import '@browser.style/chip/style';
   import '@browser.style/chip/style';
 </script>
 
-<ui-chip theme="warning">Warning: Low</ui-chip>
+<ui-chip theme="orange">Warning: Low</ui-chip>
 ```
 
 ### Astro / SSR
@@ -128,31 +128,30 @@ Use the CSS-only approach — no JavaScript needed:
 <link rel="stylesheet" href="@browser.style/base/index.css">
 <link rel="stylesheet" href="@browser.style/chip/index.css">
 
-<ui-chip theme="info">Premium</ui-chip>
+<ui-chip theme="blue">Premium</ui-chip>
 ```
 
 ---
 
 ## Colors
 
-Use `theme` for a named hue (a background + paired ink in one keyword). The 8 hues also have
-**semantic aliases** that carry meaning:
+Use `theme` for a named hue (a background + paired ink in one keyword):
 
 ```html
-<ui-chip theme="info">Info</ui-chip>       <!-- = blue -->
-<ui-chip theme="success">Success</ui-chip> <!-- = green -->
-<ui-chip theme="warning">Warning</ui-chip> <!-- = orange -->
-<ui-chip theme="error">Error</ui-chip>     <!-- = red -->
+<ui-chip theme="blue">Info</ui-chip>
+<ui-chip theme="green">Success</ui-chip>
+<ui-chip theme="orange">Warning</ui-chip>
+<ui-chip theme="red">Error</ui-chip>
 <ui-chip theme="accent">Accent</ui-chip>
 ```
 
 | `theme` value | Colour |
 |-------|-------------|
 | _(none)_ | Default — `--color-button` background |
-| `red` / `error` | `--color-error` |
-| `orange` / `warning` | `--color-warning` |
-| `green` / `success` | `--color-success` |
-| `blue` / `info` | `--color-info` |
+| `red` | `--color-error` |
+| `orange` | `--color-warning` |
+| `green` | `--color-success` |
+| `blue` | `--color-info` |
 | `accent` `dark` `light` `subtle` | the matching `--ui-theme-*` bundle |
 
 For an **arbitrary colour**, use `fill` (surface) — text auto-contrasts — and optionally `ink`
@@ -179,10 +178,10 @@ For an **arbitrary colour**, use `fill` (surface) — text auto-contrasts — an
 `sm`, `lg`, `xl` — `md` is the default (no attribute):
 
 ```html
-<ui-chip size="sm" theme="info">Small</ui-chip>
-<ui-chip theme="info">Medium (default)</ui-chip>
-<ui-chip size="lg" theme="info">Large</ui-chip>
-<ui-chip size="xl" theme="info">X-Large</ui-chip>
+<ui-chip size="sm" theme="blue">Small</ui-chip>
+<ui-chip theme="blue">Medium (default)</ui-chip>
+<ui-chip size="lg" theme="blue">Large</ui-chip>
+<ui-chip size="xl" theme="blue">X-Large</ui-chip>
 ```
 
 ## Variants
@@ -192,13 +191,13 @@ For an **arbitrary colour**, use `fill` (surface) — text auto-contrasts — an
 **Light** — tinted background with the `theme`/`fill` colour as text:
 
 ```html
-<ui-chip variant="light" theme="info">Premium</ui-chip>
+<ui-chip variant="light" theme="blue">Premium</ui-chip>
 ```
 
 **Outline** — transparent background with a colored border:
 
 ```html
-<ui-chip variant="outline" theme="success">Available</ui-chip>
+<ui-chip variant="outline" theme="green">Available</ui-chip>
 ```
 
 ### Shape variants
@@ -219,7 +218,7 @@ Chips can host `<ui-badge>` at any corner:
 
 ```html
 <ui-chip>Notifications <ui-badge color="error">4</ui-badge></ui-chip>
-<ui-chip theme="info">Messages <ui-badge color="warning" position="bottom-right">2</ui-badge></ui-chip>
+<ui-chip theme="blue">Messages <ui-badge color="warning" position="bottom-right">2</ui-badge></ui-chip>
 ```
 
 Add `variant="inline"` to the badge to automatically push it to the inline end inside a chip:

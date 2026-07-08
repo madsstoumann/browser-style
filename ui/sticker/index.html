@@ -56,9 +56,9 @@
 		<code>crc</code> circle (default), <code>sqr</code> squircle. In a card: <code>sticker(&lt;corner&gt;)</code>.
 		(Decorative <code>variant=</code> silhouettes set their own <code>clip-path</code> and ignore <code>radius</code>.)</p>
 	<div class="row">
-		<ui-sticker theme="red" radius="non" size="xl"><small>ONLY</small><strong>$9</strong></ui-sticker>
-		<ui-sticker theme="green" radius="rnd" size="xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
-		<ui-sticker theme="orange" radius="sqr" size="xl"><small>UP TO</small><strong>50%</strong></ui-sticker>
+		<ui-sticker theme="red" radius="non" size="2xl"><small>ONLY</small><strong>$9</strong></ui-sticker>
+		<ui-sticker theme="green" radius="rnd" size="2xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
+		<ui-sticker theme="orange" radius="sqr" size="2xl"><small>UP TO</small><strong>50%</strong></ui-sticker>
 	</div>
 
 	<h3>Sizes &amp; shadow</h3>
@@ -130,23 +130,17 @@
 		<ui-sticker variant="heart" hover="press" fill="#BC2F2F" ink="#fff" size="2xl"><strong>click</strong><small>ME</small></ui-sticker>
 		<ui-sticker variant="text" angle="3deg" class="font-sedgwick" fill="#8fa0f8" hover="lift"><span>Lift Off</span></ui-sticker>
 	</div>
-	<p>Inside a <code>&lt;ui-card&gt;</code>, hovering the card triggers the sticker.</p>
-	<div class="cards">
-		<ui-card variant="vis(media)" media="asr(4/3) sticker(te)">
-			<cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker hover="lift" fill="#BC2F2F" ink="#fff" font="sm"><span>SALE</span></ui-sticker></ui-media></cq-box>
-		</ui-card>
-		<ui-card variant="vis(media)" media="asr(4/3) sticker(te)">
-			<cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-sticker variant="burst" hover="pop" fill="#3E9355" ink="#fff" font="md"><span>NEW</span></ui-sticker></ui-media></cq-box>
-		</ui-card>
-	</div>
 
 	<h3>Fit to width (<code>text-fit</code>)</h3>
-	<p><code>font="fit"</code> (and/or <code>font-lead="fit"</code>) grows each line to fill the box width via native <code>text-fit</code>.</p>
+	<p><code>font="fit"</code> (and/or <code>font-lead="fit"</code>) grows each line to fill the box width via
+		native <code>text-fit: grow</code> (css-text-5). It ships behind Chrome's <em>Experimental Web
+		Platform Features</em> flag — until it's on by default the text simply stays un-grown.</p>
 	<div class="row">
-		<ui-sticker fill="#BC2F2F" font="fit" ink="#fff"><span>DEAL</span></ui-sticker>
-		<ui-sticker fill="#2F75BC" font="fit" font-lead="fit" ink="#fff"><small>UP TO</small><strong>40%</strong></ui-sticker>
-		<ui-sticker fill="#3E9355" font="fit" font-lead="fit" ink="#fff"><small>FROM</small><strong>$9</strong><small>/mo</small></ui-sticker>
-		<ui-sticker variant="burst" fill="#FEA12F" font="fit" ink="#262626"><span>WOW</span></ui-sticker>
+		<ui-sticker fill="#BC2F2F" font="fit" ink="#fff" size="sm"><span>DEAL</span></ui-sticker>
+		<ui-sticker fill="#2F75BC" font="fit" font-lead="fit" ink="#fff" size="lg"><small>UP TO</small><strong>40%</strong></ui-sticker>
+		<ui-sticker fill="#3E9355" font="fit" font-lead="fit" ink="#fff" size="2xl"><small>FROM</small><strong>$9</strong><small>/mo</small></ui-sticker>
+		<ui-sticker variant="burst" fill="#FEA12F" font="fit" ink="#262626" size="xl"><span>WOW</span></ui-sticker>
+		<ui-sticker fill="#7B5EA7" font="fit" font-lead="fit" ink="#fff" size="3xl"><small>SAVE</small><strong>50%</strong></ui-sticker>
 	</div>
 
 </body>

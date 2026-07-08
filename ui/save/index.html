@@ -36,6 +36,18 @@
 		</ui-save>
 	</div>
 
+	<h3>Click feedback — <code>hover=</code></h3>
+	<p>Opt in to motion with the <code>hover</code> attribute (like <code>ui-sticker</code>):
+		<code>press</code> scales down while you hold the click, <code>pop</code> scales up on hover.
+		Combine them (<code>hover="press pop"</code>). Tokens: <code>--ui-save-hover-press</code> /
+		<code>-pop</code> / <code>-duration</code> / <code>-ease</code>.</p>
+	<div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; font-size: 1.5rem;">
+		<ui-save hover="press"><button type="button" command="--save" commandfor="h1" aria-label="press"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save hover="pop"><button type="button" command="--save" commandfor="h2" aria-label="pop"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save hover="press pop"><button type="button" command="--save" commandfor="h3" aria-label="press pop"><ui-icon type="shape" shape="bookmark" variant="outline"></ui-icon></button></ui-save>
+		<ui-save hover="press pop" variant="non" style="--ui-save-c-active: gold;"><button type="button" command="--save" commandfor="h4" aria-label="press pop"><ui-icon type="shape" shape="star" variant="outline"></ui-icon></button></ui-save>
+	</div>
+
 	<h3>Shapes</h3>
 	<p>Any <code>ui-icon</code> shape works: <code>heart</code> (default), <code>bookmark</code>, <code>star</code>.</p>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
@@ -96,12 +108,14 @@
 	</div>
 
 	<script type="module">
-		// Author glue: command does not bubble, so listen in the capture phase.
-		document.addEventListener('command', (e) => {
-			if (e.command !== '--save') return;
-			const btn = e.source;
+		// Demo glue: toggle aria-pressed on any ui-save button click. (Production
+		// code would wire this via the invoker command + a valid commandfor target;
+		// here the demo buttons point at placeholder ids, so we delegate on click.)
+		document.addEventListener('click', (e) => {
+			const btn = e.target.closest('ui-save > button');
+			if (!btn) return;
 			btn.setAttribute('aria-pressed', btn.getAttribute('aria-pressed') !== 'true');
-		}, true);
+		});
 	</script>
 </body>
 </html>

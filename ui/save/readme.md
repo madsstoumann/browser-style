@@ -139,7 +139,7 @@ Inside `<ui-media>`, the parent `media=` token drives position, colour and the d
 stays on the `<ui-icon>`:
 
 ```html
-<ui-card media="asr(4/3) save(be) save(crc) save(warning)">
+<ui-card media="asr(4/3) save(be) save(crc) save(orange)">
   <ui-media>
     <img …>
     <ui-save>
@@ -154,7 +154,7 @@ stays on the `<ui-icon>`:
 | Token | Standalone equivalent | Effect |
 |-------|----------------------|--------|
 | `save(<pos>)` | — | Position — `ts tc te · cs cc ce · bs bc be` |
-| `save(<hue>)` | `theme="<hue>"` | Ink from the 8 theme hues `red orange green blue accent dark light subtle` (+ semantic aliases `error warning success info`) |
+| `save(<hue>)` | `theme="<hue>"` | Ink from the 8 theme hues `red orange green blue accent dark light subtle` |
 | `save(<size>)` | `size="<size>"` | Scale — `sm lg xl` (`md` = default) |
 | `save(<corner>)` | `radius="<corner>"` | Disc shape — `crc` circle (default) · `sqr` squircle · `rnd` rounded |
 | `save(non)` | `variant="non"` | Hide the disc (bare glyph) |

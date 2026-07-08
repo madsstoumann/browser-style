@@ -111,6 +111,16 @@
 		<ui-card variant="vis(media)" media="asr(1/1) sticker(be) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>BE</strong></ui-sticker></ui-media></cq-box></ui-card>
 	</div>
 
+	<p>The <strong>shape</strong> can come from the token too — <code>sticker(burst|spark|sunburst|heart|blob|text)</code>,
+		plus <code>sticker(spl)</code> / <code>sticker(spr)</code> for the speech bubbles — so a plain
+		<code>&lt;ui-sticker&gt;</code> needs no <code>variant</code> attribute. Combine with
+		<code>sticker(&lt;hue&gt;)</code> and <code>sticker(&lt;pos&gt;)</code>.</p>
+	<div class="grid grid-3">
+		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(burst) sticker(green)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-sticker><small>SAVE</small><strong>20%</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">sticker(burst)</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(heart) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>XMAS</small><strong>$50</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(heart)</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(spl) sticker(blue)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-sticker><small>NEW</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">sticker(spl)</h2></ui-content></cq-box></ui-card>
+	</div>
+
 	<!-- ============================================================
 	     Save — <ui-save>
 	     ============================================================ -->

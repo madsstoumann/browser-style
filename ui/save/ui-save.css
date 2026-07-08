@@ -21,6 +21,12 @@
 		--ui-save-c-active: var(--color-error);
 		--ui-save-sz: 1.2em;
 
+		/* hover/press feedback — opt-in via the `hover` attribute (see below) */
+		--ui-save-hover-duration: var(--duration-normal);
+		--ui-save-hover-ease: var(--ease-out);
+		--ui-save-hover-pop: 1.15;
+		--ui-save-hover-press: 0.85;
+
 		/* circle backdrop — on by default (retune any token; hide with "non") */
 		--ui-save-circle-bg: Canvas;
 		--ui-save-circle-border-color: var(--color-border);
@@ -41,13 +47,12 @@
 			--ui-save-c-active: var(--color-accent);
 		}
 
-		/* colour (hue) — the 8 theme hues + semantic aliases, from theme= or the
-		   card's save(<hue>). red=error · orange=warning · green=success · blue=info.
+		/* colour (hue) — the 8 theme hues, from theme= or the card's save(<hue>).
 		   For save the glyph IS the ink, so the hue's vivid bg is the ink colour. */
-		&[theme~="red"],    &[theme~="error"],   :where([media*="save(red)"],    [media*="save(error)"])   & { --ui-save-c: var(--ui-theme-red-bg);    --ui-save-c-active: var(--ui-theme-red-bg); }
-		&[theme~="orange"], &[theme~="warning"], :where([media*="save(orange)"], [media*="save(warning)"]) & { --ui-save-c: var(--ui-theme-orange-bg); --ui-save-c-active: var(--ui-theme-orange-bg); }
-		&[theme~="green"],  &[theme~="success"], :where([media*="save(green)"],  [media*="save(success)"]) & { --ui-save-c: var(--ui-theme-green-bg);  --ui-save-c-active: var(--ui-theme-green-bg); }
-		&[theme~="blue"],   &[theme~="info"],    :where([media*="save(blue)"],   [media*="save(info)"])    & { --ui-save-c: var(--ui-theme-blue-bg);   --ui-save-c-active: var(--ui-theme-blue-bg); }
+		&[theme~="red"],    :where([media*="save(red)"])    & { --ui-save-c: var(--ui-theme-red-bg);    --ui-save-c-active: var(--ui-theme-red-bg); }
+		&[theme~="orange"], :where([media*="save(orange)"]) & { --ui-save-c: var(--ui-theme-orange-bg); --ui-save-c-active: var(--ui-theme-orange-bg); }
+		&[theme~="green"],  :where([media*="save(green)"])  & { --ui-save-c: var(--ui-theme-green-bg);  --ui-save-c-active: var(--ui-theme-green-bg); }
+		&[theme~="blue"],   :where([media*="save(blue)"])   & { --ui-save-c: var(--ui-theme-blue-bg);   --ui-save-c-active: var(--ui-theme-blue-bg); }
 		&[theme~="accent"], :where([media*="save(accent)"]) & { --ui-save-c: var(--ui-theme-accent-bg); --ui-save-c-active: var(--ui-theme-accent-bg); }
 		&[theme~="dark"],   :where([media*="save(dark)"])   & { --ui-save-c: var(--ui-theme-dark-bg);   --ui-save-c-active: var(--ui-theme-dark-bg); }
 		&[theme~="light"],  :where([media*="save(light)"])  & { --ui-save-c: var(--ui-theme-light-bg);  --ui-save-c-active: var(--ui-theme-light-bg); }
@@ -106,6 +111,20 @@
 		& button[aria-pressed="true"] {
 			color: var(--ui-save-c-active);
 			& ui-icon[variant~="outline"]::before { background: currentColor; }
+		}
+
+		/* ───────── hover/press — opt-in via the `hover` attribute (like ui-sticker).
+		   `press` = scale down while the mouse is held (the "scale-as-you-click"
+		   feedback); `pop` = scale up on hover. Combine: hover="press pop". ───────── */
+		&[hover] button {
+			transition: scale var(--ui-save-hover-duration) var(--ui-save-hover-ease);
+		}
+		&[hover~="pop"] button:hover { scale: var(--ui-save-hover-pop); }
+		&[hover~="press"] button:active { scale: var(--ui-save-hover-press); }
+
+		@media (prefers-reduced-motion: reduce) {
+			&[hover] button { transition: none; }
+			&:is([hover~="pop"], [hover~="press"]) button:is(:hover, :active) { scale: none; }
 		}
 	}
 }
