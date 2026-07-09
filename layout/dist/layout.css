@@ -2902,8 +2902,12 @@
 }
 }
 
-body {
+:root {
   --layout-bleed-mw: 1024px;
   --layout-mi: 1rem;
+}
+body:has(lay-out) {
   margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);
+  max-inline-size: none;
+  padding-inline: 0;
 }

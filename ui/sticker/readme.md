@@ -373,7 +373,7 @@ Tune with `--ui-sticker-text-size` (default `3.5em`), `--ui-sticker-text-stroke-
 
 ## Fit to width (`font="fit"`)
 
-The `fit` token uses the native [`text-fit`](https://drafts.csswg.org/css-text-5/#text-fit-property) property to scale each line to fill the box width — no overflow, no SVG, no JS. Put it on `font` (the `<small>`/`<span>` lines), on `font-lead` (the `<strong>` line), or both. Each line starts **oversized** (`--ui-sticker-fit-start`, `100cqi`) and `text-fit: shrink per-line-all` shrinks it back down to the width — so **both** short and long lines fill their column with no overflow (`grow` alone can only enlarge, so a line that's already too wide would spill). Wrapped in `@supports (text-fit: shrink)`, so it's a **progressive enhancement** (Chrome 150+); where unsupported, the `cqi` sizing and centered layout both stay.
+The `fit` token uses the native [`text-fit`](https://drafts.csswg.org/css-text-5/#text-fit-property) property (`grow per-line-all`) to scale each line up to fill the box width — no SVG, no JS. Put it on `font` (the `<small>`/`<span>` lines), on `font-lead` (the `<strong>` line), or both. Each line fills its column independently. Wrapped in `@supports (text-fit: grow)`, so it's a **progressive enhancement** (Chrome 150+); where unsupported, the `cqi` sizing and centered layout both stay. `grow` only enlarges, so a line that's already wider than the box can still overflow — keep long lines short, or lower the base font-size / raise `--ui-sticker-fit-pad`.
 
 ```html
 <ui-sticker fill="#2F75BC" font="fit" font-lead="fit" ink="#fff"><small>UP TO</small><strong>40%</strong></ui-sticker>
@@ -458,7 +458,7 @@ The non-obvious "why" behind the CSS (kept here so the stylesheet stays terse):
 - **Clipped shapes draw their fill on a `::before`.** `clip-path` clips the result of an element's `filter`, so a host `drop-shadow` would be cut away. Instead the host stays unclipped and the `::before` carries `background` + `clip-path: var(--ui-sticker-clip-path)`.
 - **Shape positioning is zero-specificity (`&:where(…)`).** The `::before` needs a positioned host, but `position: relative` at normal specificity would out-specify `ui-card`'s `sticker(te)` `position: absolute`. `&:where(…)` gives it 0 specificity so an external placement wins.
 - **`text` fill uses `-webkit-text-fill-color`, not `background-clip: text`** (which doesn't composite as a fill alongside `-webkit-text-stroke`).
-- **`fit` starts oversized then shrinks.** Each line is set to `--ui-sticker-fit-start` (`100cqi`) and `text-fit: shrink per-line-all` scales it back down to the width. `shrink` (not `grow`) is used because `grow` can only enlarge — a line already wider than the box would overflow. Starting big + shrinking fits any line length. `grow`/`shrink` are mutually exclusive in the spec, so both can't be set.
+- **`fit` uses `grow per-line-all`.** Each line grows to fill its column. `grow` and `shrink` are mutually exclusive in the spec, so a line already wider than the box can't be auto-shrunk — it will overflow; keep long lines short or lower the base font-size.
 - **`drop-shadow`, not `box-shadow`.** Only `drop-shadow` follows the clipped star/heart/blob outlines.
 - **`shadow()` shadow auto-flips.** The ink is `contrast-color(bg)`, so the text-shadow tint defaults to `contrast-color(ink)` — the *opposite* of the ink. Sized in `cqi`.
 

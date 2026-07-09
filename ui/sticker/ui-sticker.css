@@ -1,11 +1,22 @@
 /**
  * ui-sticker
- * @version 1.0.3
- * @date 2026-06-24
+ * @version 1.0.6
+ * @date 2026-07-09
  * @author Mads Stoumann
+ *
+ * Structure (top → bottom):
+ *   A. Base         — token defaults, derived vars, host box, content lines
+ *   B. Furniture axes — colour (theme) · fill/ink · size · corner. The four
+ *                       shared axes, each one nested rule combining the
+ *                       standalone attribute AND the card's sticker(…) token.
+ *   C. Typography   — font / font-lead (family · size · weight · shadow) · fit
+ *   D. Decoration   — box shadow · hover
+ *   E. Shape variants — clipped silhouettes · speech bubble · text outline
+ *   F. Keyframes
  */
 @layer bs-component {
 	:where(ui-sticker) {
+		/* ───────── A. Base ───────── */
 		--ui-sticker-font-family: var(--font-body);
 		--ui-sticker-fs-scale: 1;
 		--ui-sticker-fs: 40cqi;
@@ -28,7 +39,7 @@
 		--_size: calc(var(--ui-sticker-fs) * var(--ui-sticker-fs-scale));
 		--_size-lg: calc(var(--_size) * var(--ui-sticker-strong-scale));
 		--_size-sm: calc(var(--_size) * var(--ui-sticker-small-scale));
-		
+
 		aspect-ratio: 1 / 1;
 		background: var(--ui-sticker-bg, var(--color-accent));
 		border-radius: var(--ui-sticker-radius, var(--radius-circle, 50%));
@@ -65,6 +76,11 @@
 		& > strong { font-size: max(10px, var(--_size-lg)); font-family: var(--ui-sticker-strong-font, var(--ui-sticker-font-family)); color: var(--ui-sticker-lead-c, inherit); }
 		& :is(sup, sub) { font-size: 0.5em; }
 
+		/* ───────── B. Furniture axes ─────────
+		   Each axis = one nested rule: `&[attr]` is the standalone element,
+		   `:where([media*="sticker(…)"]) &` is the card token. */
+
+		/* colour — hue (the 8 theme hues) */
 		&[theme~="red"],    :where([media*="sticker(red)"])    & { --ui-sticker-bg: var(--ui-theme-red-bg);    --ui-sticker-c: var(--ui-theme-red-c); }
 		&[theme~="orange"], :where([media*="sticker(orange)"]) & { --ui-sticker-bg: var(--ui-theme-orange-bg); --ui-sticker-c: var(--ui-theme-orange-c); }
 		&[theme~="green"],  :where([media*="sticker(green)"])  & { --ui-sticker-bg: var(--ui-theme-green-bg);  --ui-sticker-c: var(--ui-theme-green-c); }
@@ -75,14 +91,32 @@
 		&[theme~="subtle"], :where([media*="sticker(subtle)"]) & { --ui-sticker-bg: var(--ui-theme-subtle-bg); --ui-sticker-c: var(--ui-theme-subtle-c); }
 
 		/* arbitrary colour (overrides the hue) — fill = disc, ink = text; ink
-		   auto-contrasts from fill when omitted. */
+		   auto-contrasts from fill when omitted. Placed after the hues so an
+		   explicit fill=/ink= wins; ink after fill so an explicit ink wins. */
 		&[fill] {
 			--ui-sticker-bg: attr(fill type(<color>), var(--color-accent));
 			--ui-sticker-c: contrast-color(var(--ui-sticker-bg));
 		}
 		&[ink] { --ui-sticker-c: attr(ink type(<color>), hsl(0, 0%, 100%)); }
 
-		/* ───────── font / font-lead  ───────── */
+		/* size — from size= or the card's sticker(<size>). md (4em) = default. */
+		&[size~="sm"],  :where([media*="sticker(sm)"])  & { --ui-sticker-sz: 3em; }
+		&[size~="lg"],  :where([media*="sticker(lg)"])  & { --ui-sticker-sz: 5em; }
+		&[size~="xl"],  :where([media*="sticker(xl)"])  & { --ui-sticker-sz: 6em; }
+		&[size~="2xl"], :where([media*="sticker(2xl)"]) & { --ui-sticker-sz: 8em; }
+		&[size~="3xl"], :where([media*="sticker(3xl)"]) & { --ui-sticker-sz: 10em; }
+
+		/* corner — from radius= or the card's sticker(<corner>). circle = default.
+		   non sharp · rnd rounded · pll pill · crc circle · sqr squircle. */
+		&[radius~="non"], :where([media*="sticker(non)"]) & { --ui-sticker-radius: 0; }
+		&[radius~="rnd"], :where([media*="sticker(rnd)"]) & { --ui-sticker-radius: var(--radius-lg); }
+		&[radius~="pll"], :where([media*="sticker(pll)"]) & { --ui-sticker-radius: var(--radius-pill); }
+		&[radius~="crc"], :where([media*="sticker(crc)"]) & { --ui-sticker-radius: var(--radius-circle); }
+		&[radius~="sqr"], :where([media*="sticker(sqr)"]) & { --ui-sticker-radius: var(--radius-circle); --ui-sticker-corner: superellipse(var(--squircle-md)); }
+
+		/* ───────── C. Typography — font / font-lead ─────────
+		   `font` targets the non-strong lines (<small>/<span>), `font-lead` the
+		   <strong> lead line — comma pairs, no common subject to :is()-merge. */
 
 		/* family */
 		&[font~="body"] > :not(strong), &[font-lead~="body"] > strong       { font-family: var(--font-body); }
@@ -119,20 +153,18 @@
 		&[font~="shadow(solid-lg)"] > :not(strong), &[font-lead~="shadow(solid-lg)"] > strong { --ui-sticker-text-shadow: 4cqi   4cqi   0 var(--ui-sticker-text-shadow-color); }
 		&[font~="shadow(solid-xl)"] > :not(strong), &[font-lead~="shadow(solid-xl)"] > strong { --ui-sticker-text-shadow: 6cqi   6cqi   0 var(--ui-sticker-text-shadow-color); }
 
-		/* fit — scale each line to the box width. `grow` only enlarges, so an
-		   already-too-wide line would overflow; instead start every line oversized
-		   (--ui-sticker-fit-start) and `shrink` it down, which fits BOTH short and
-		   long lines to the width with no overflow. per-line-all sizes each line
-		   independently. */
-		@supports (text-fit: shrink) {
+		/* fit — native text-fit grows each line to fill the box width. */
+		@supports (text-fit: grow) {
 			&:is([font~="fit"], [font-lead~="fit"]), :where([media*="sticker(fit)"]) & {
 				padding: var(--ui-sticker-fit-pad, 1.25ch);
-				text-fit: shrink per-line-all;
+				text-fit: grow per-line-all;
 				& > * { white-space: nowrap; }
 			}
 		}
 
-		/* ───────── shadow — box drop-shadow ───────── */
+		/* ───────── D. Decoration ───────── */
+
+		/* box drop-shadow */
 		&[shadow~="sm"]  { --ui-sticker-shadow: drop-shadow(0 1px 1px rgb(0 0 0 / 0.18)); }
 		&[shadow~="md"]  { --ui-sticker-shadow: drop-shadow(0 2px 3px rgb(0 0 0 / 0.22)); }
 		&[shadow~="lg"]  { --ui-sticker-shadow: drop-shadow(0 4px 6px rgb(0 0 0 / 0.28)); }
@@ -149,7 +181,7 @@
 		&:is([shadow~="off(xl)"], [shadow~="-off(xl)"]) { --_o: 0.6em; }
 		&[shadow*="-off("] { --_ox: calc(var(--_o) * -1); }
 
-		/* ───────── hover — opt-in via the `hover` attribute ───────── */
+		/* hover — opt-in via the `hover` attribute */
 		&[hover] {
 			pointer-events: auto;
 			transition:
@@ -157,7 +189,6 @@
 				translate var(--ui-sticker-hover-duration) var(--ui-sticker-hover-ease),
 				rotate    var(--ui-sticker-hover-duration) var(--ui-sticker-hover-ease);
 		}
-		/* lift */
 		&:is(:hover, :where(ui-card:hover) &) {
 			&[hover~="lift"] { translate: 0 var(--ui-sticker-hover-lift); }
 			&[hover~="pop"]  { scale: var(--ui-sticker-hover-scale); }
@@ -178,9 +209,7 @@
 			}
 		}
 
-		/* clipped shapes — fill on a ::before so the host stays unclipped; each sets
-		   --ui-sticker-clip-path. From variant= OR the card's sticker(<shape>).
-		   (`clip` is attribute-only — it needs a custom --ui-sticker-clip-path.) */
+		/* ───────── E. Shape variants ───────── */
 		&:is([variant~="clip"], [variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"]),
 		:where([media*="sticker(burst)"], [media*="sticker(spark)"], [media*="sticker(sunburst)"], [media*="sticker(heart)"], [media*="sticker(blob)"]) & {
 			background: none;
@@ -255,6 +284,7 @@
 		&[variant~="speech(l)"]::after, :where([media*="sticker(spl)"]) &::after { inset-inline-start: 20%; clip-path: polygon(0 0, 100% 0, 0 100%); }
 		&[variant~="speech(r)"]::after, :where([media*="sticker(spr)"]) &::after { inset-inline-end: 20%;  clip-path: polygon(0 0, 100% 0, 100% 100%); }
 
+		/* text — outlined word mark (no disc) */
 		&[variant~="text"], :where([media*="sticker(text)"]) & {
 			--ui-sticker-shadow:
 				drop-shadow(var(--_o) 0 var(--_oc)) drop-shadow(calc(var(--_o) * -1) 0 var(--_oc))
@@ -286,21 +316,8 @@
 			text-box: normal;
 			white-space: nowrap;
 		}
-		/* corner — from radius= or the card's sticker(<corner>). circle = default.
-		   non sharp · rnd rounded · pll pill · crc circle · sqr squircle. */
-		&[radius~="non"], :where([media*="sticker(non)"]) & { --ui-sticker-radius: 0; }
-		&[radius~="rnd"], :where([media*="sticker(rnd)"]) & { --ui-sticker-radius: var(--radius-lg); }
-		&[radius~="pll"], :where([media*="sticker(pll)"]) & { --ui-sticker-radius: var(--radius-pill); }
-		&[radius~="crc"], :where([media*="sticker(crc)"]) & { --ui-sticker-radius: var(--radius-circle); }
-		&[radius~="sqr"], :where([media*="sticker(sqr)"]) & { --ui-sticker-radius: var(--radius-circle); --ui-sticker-corner: superellipse(var(--squircle-md)); }
-
-		/* size — from size= or the card's sticker(<size>). md (4em) = default. */
-		&:where([size="sm"]),  :where([media*="sticker(sm)"])  & { --ui-sticker-sz: 3em; }
-		&:where([size="lg"]),  :where([media*="sticker(lg)"])  & { --ui-sticker-sz: 5em; }
-		&:where([size="xl"]),  :where([media*="sticker(xl)"])  & { --ui-sticker-sz: 6em; }
-		&:where([size="2xl"]), :where([media*="sticker(2xl)"]) & { --ui-sticker-sz: 8em; }
-		&:where([size="3xl"]), :where([media*="sticker(3xl)"]) & { --ui-sticker-sz: 10em; }
 	}
 
+	/* ───────── F. Keyframes ───────── */
 	@keyframes ui-sticker-spin { from { rotate: 0deg; } to { rotate: 360deg; } }
 }

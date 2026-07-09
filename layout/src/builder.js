@@ -278,21 +278,39 @@ export class LayoutBuilder {
 		if (!container) return ''
 
 		const element = container.element || 'body'
+		const layoutEl = this.config.element || 'lay-out'
 		const maxWidth = container.maxWidth || 1024
 		const margin = container.margin || '1rem'
 		const setRoot = container.setRoot !== false
 
 		const maxWidthPx = typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth
 
-		let css = `\n${element} {
+		// Public knobs live on :root so a project can override them from anywhere
+		// (a later `:root { --layout-mi: … }` wins). Keep them here, NOT on the
+		// container rule below — declaring them directly on <body> would beat an
+		// inherited :root override and silently lock projects to these defaults.
+		let css = `\n:root {
   --layout-bleed-mw: ${maxWidthPx};
-  --layout-mi: ${margin};`
+  --layout-mi: ${margin};
+}\n`
 
 		if (setRoot) {
-			css += `\n  margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);`
+			// Container behaviour is gated on :has(<layout>) so dropping this
+			// stylesheet onto a page is inert until a layout element exists — then
+			// the container takes over page width. The :has() selector also lifts
+			// specificity above base's :where(body) so the resets win without
+			// !important. Values are read from the inherited :root knobs above.
+			css += `${element}:has(${layoutEl}) {
+  margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);`
+			// When the container is <body>, neutralise common base resets
+			// (max-inline-size reading column + inline padding) so the layout's
+			// calculated gutter fully owns page width and `bleed` breaks out cleanly.
+			if (element === 'body') {
+				css += `\n  max-inline-size: none;\n  padding-inline: 0;`
+			}
+			css += `\n}\n`
 		}
 
-		css += `\n}\n`
 		return css
 	}
 

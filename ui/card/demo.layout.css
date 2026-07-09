@@ -3,13 +3,11 @@
  * Unlayered on purpose so it wins over both bs-* and layout.* layers.
  */
 
-/* layout.css ends with an unlayered `body { margin-inline: max(…) }` rule
-   (generated from layoutContainer in layout.config.json) that assumes the
-   layout owns the page. The demo pages are centered by base's
-   :where(body) { margin-inline: auto } — re-assert that here. */
-body {
-	margin-inline: auto;
-}
+/* Page width is owned by the layout system: layout.css emits an unlayered
+   `body:has(lay-out) { margin-inline: max(--layout-mi, 50cqw - bleed-mw/2);
+   max-inline-size: none; padding-inline: 0 }` rule (from layoutContainer in
+   layout.config.json). That calculated gutter is what `bleed` breaks out of, and
+   it neutralises base's :where(body) 85ch/2ch reading column — no shim needed. */
 
 lay-out {
 	/* layout gaps are n × --layout-space-unit (default 1rem);

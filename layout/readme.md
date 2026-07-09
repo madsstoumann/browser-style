@@ -40,6 +40,54 @@ That's it! No JavaScript required for layouts.
 
 ---
 
+## Configure page width & margin (read this first)
+
+The stylesheet ships with two project-level knobs. As soon as a `<lay-out>`
+appears on the page, the layout system takes over `<body>` — centering it,
+applying the inline gutter, and enabling full-bleed sections:
+
+| Custom property | Default | Controls |
+|-----------------|---------|----------|
+| `--layout-bleed-mw` | `1024px` | Max content width — the column your layouts are centered in |
+| `--layout-mi` | `1rem` | Minimum inline margin (the side gutter on smaller viewports) |
+
+The defaults are emitted on `:root`. **Override them per project from your own
+CSS**, loaded after `layout.css`:
+
+```css
+:root {
+  --layout-bleed-mw: 1200px; /* wider content column */
+  --layout-mi: 2rem;         /* larger side gutter    */
+}
+```
+
+The generated rule that consumes them:
+
+```css
+:root {
+  --layout-bleed-mw: 1024px;
+  --layout-mi: 1rem;
+}
+/* Inert until a <lay-out> exists, then <body> becomes the layout container: */
+body:has(lay-out) {
+  margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);
+  max-inline-size: none; /* clears any reading-column max-width on <body>   */
+  padding-inline: 0;     /* the gutter above owns inline spacing            */
+}
+```
+
+Because the `body:has(lay-out)` gate only reads the knobs (it never
+re-declares them), a plain `:root` override always wins — no `!important`, no
+rebuild. Prefer a build-time default instead? Set `layoutContainer.maxWidth` /
+`layoutContainer.margin` in `layout.config.json` (see
+[Custom Configuration](#custom-configuration)) and rebuild.
+
+> **Requires `:has()`** (Chrome 105+, Safari 15.4+, Firefox 121+). In older
+> browsers the container styles simply don't apply — content still renders, but
+> `<body>` keeps its own width and `bleed` won't break out.
+
+---
+
 ## Features
 
 - **Pure CSS** - No JavaScript runtime needed
@@ -341,17 +389,22 @@ Properties:
 }
 ```
 
-Generates:
+Generates (the knobs on `:root` are project-overridable — see
+[Configure page width & margin](#configure-page-width--margin-read-this-first)):
 ```css
-body {
+:root {
   --layout-bleed-mw: 1024px;
   --layout-mi: 1rem;
+}
+body:has(lay-out) {
   margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);
+  max-inline-size: none; /* only when element is <body> */
+  padding-inline: 0;     /* only when element is <body> */
 }
 ```
 
 **With `setRoot: false`:**
-Only sets CSS variables without the margin calculation, giving you full control via the `[data-layout-root]` attribute in base.css.
+Only emits the `:root` CSS variables without the `body:has(…)` container rule, giving you full control via your own selector.
 
 #### `breakpoints` (required)
 Define your breakpoints and which layouts to include.
