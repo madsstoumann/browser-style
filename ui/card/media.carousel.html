@@ -100,7 +100,7 @@
 	     2 · ARROWS / CHEVRON
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>3 · Arrow glyph — <code>arw()</code></h2>
-	<p><code>arw(arr)</code> = full-arrow glyph (default chevron). <code>arw(bare)</code> drops the circle, painting the glyph as a recolourable shape (<code>--ui-media-arrow-color</code>).</p>
+	<p><code>arw(arr)</code> = full-arrow glyph (default chevron). <code>arw(bare)</code> drops the circle, painting the glyph as a recolourable shape (<code>--ui-carousel-arrow-color</code>).</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav(arw)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
@@ -249,7 +249,7 @@
 	</div>
 
 	<h2>10 · Dots &amp; pills — <code>dot()</code> · <code>dot(pll)</code></h2>
-	<p>Recolour dots with <code>--ui-media-dot-bg</code> / <code>--ui-media-dot-active</code> (or the <code>dot(lgt)</code>/<code>dot(drk)</code> atoms). <code>dot(pll)</code> = pill timers (fill over <code>--ui-media-autoplay</code>).</p>
+	<p>Recolour dots with <code>--ui-carousel-dot-bg</code> / <code>--ui-carousel-dot-active</code> (or the <code>dot(lgt)</code>/<code>dot(drk)</code> atoms). <code>dot(pll)</code> = pill timers (fill over <code>--ui-carousel-autoplay</code>).</p>
 	<div class="grid grid-2">
 		<ui-card variant="col" media="asr(4/3) nav(dot) dot(pll)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
@@ -262,30 +262,30 @@
 	     5 · THUMBNAILS — dot(tmb)
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>11 · Thumbnail navigation — <code>dot(tmb)</code></h2>
-	<p><code>dot(tmb)</code> turns dots into thumbnails — each slide sets <code>--ui-media-thumb-url</code>. Corner via <code>dot(ts/te/bs/be)</code>, size via <code>dot(sm|md|lg|xl)</code>. (JS autoplay + video version below.)</p>
+	<p><code>dot(tmb)</code> turns dots into thumbnails — each slide sets <code>--ui-carousel-thumb-url</code>. Corner via <code>dot(ts/te/bs/be)</code>, size via <code>dot(sm|md|lg|xl)</code>. (JS autoplay + video version below.)</p>
 	<p>Plain images, larger rail (<code>dot(lg)</code>), bottom-right (<code>dot(be)</code>).</p>
 	<div class="grid">
 			<ui-media media="asr(16/9) rds(md) clip nav dot(tmb) dot(be) dot(lg)">
-				<img src="/assets/images/river.png" alt="" style="--ui-media-thumb-url: url('/assets/images/river.png')">
-				<img src="/assets/images/mindfulness.png" alt="" style="--ui-media-thumb-url: url('/assets/images/mindfulness.png')">
-				<img src="/assets/images/gastronomy.png" alt="" style="--ui-media-thumb-url: url('/assets/images/gastronomy.png')">
-				<img src="/assets/images/world.png" alt="" style="--ui-media-thumb-url: url('/assets/images/world.png')">
-				<img src="/assets/images/finance.png" alt="" style="--ui-media-thumb-url: url('/assets/images/finance.png')">
+				<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')">
+				<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')">
+				<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')">
+				<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')">
+				<img src="/assets/images/finance.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/finance.png')">
 			</ui-media>
 	</div>
 	<p>Top corners — <code>dot(ts)</code> and <code>dot(te)</code>:</p>
 	<div class="grid grid-2">
 		<ui-media media="asr(16/9) rds(md) clip nav dot(tmb) dot(ts)">
-			<img src="/assets/images/hubble.png" alt="" style="--ui-media-thumb-url: url('/assets/images/hubble.png')">
-			<img src="/assets/images/quantum.png" alt="" style="--ui-media-thumb-url: url('/assets/images/quantum.png')">
-			<img src="/assets/images/websummit.png" alt="" style="--ui-media-thumb-url: url('/assets/images/websummit.png')">
-			<img src="/assets/images/popovers.png" alt="" style="--ui-media-thumb-url: url('/assets/images/popovers.png')">
+			<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')">
+			<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')">
+			<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')">
+			<img src="/assets/images/popovers.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/popovers.png')">
 		</ui-media>
 		<ui-media media="asr(16/9) rds(md) clip nav dot(tmb) dot(te)">
-			<img src="/assets/images/gastronomy.png" alt="" style="--ui-media-thumb-url: url('/assets/images/gastronomy.png')">
-			<img src="/assets/images/brewandbean.png" alt="" style="--ui-media-thumb-url: url('/assets/images/brewandbean.png')">
-			<img src="/assets/images/aurasoundpro.png" alt="" style="--ui-media-thumb-url: url('/assets/images/aurasoundpro.png')">
-			<img src="/assets/images/government.png" alt="" style="--ui-media-thumb-url: url('/assets/images/government.png')">
+			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')">
+			<img src="/assets/images/brewandbean.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/brewandbean.png')">
+			<img src="/assets/images/aurasoundpro.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/aurasoundpro.png')">
+			<img src="/assets/images/government.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/government.png')">
 		</ui-media>
 	</div>
 
@@ -321,14 +321,14 @@
 	<p>Vertical thumbnails in a corner — <code>dot(ts)</code> top-left, <code>dot(bs)</code> bottom-left.</p>
 	<div class="grid grid-2">
 			<ui-media media="asr(4/3) rds(lg) clip axis(y) nav dot(tmb) dot(ts) dot(md)">
-				<img src="/assets/images/hubble.png" alt="" style="--ui-media-thumb-url: url('/assets/images/hubble.png')">
-				<img src="/assets/images/quantum.png" alt="" style="--ui-media-thumb-url: url('/assets/images/quantum.png')">
-				<img src="/assets/images/websummit.png" alt="" style="--ui-media-thumb-url: url('/assets/images/websummit.png')">
+				<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')">
+				<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')">
+				<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')">
 			</ui-media>
 			<ui-media media="asr(4/3) rds(lg) clip axis(y) nav dot(tmb) dot(bs) dot(sm)">
-				<img src="/assets/images/river.png" alt="" style="--ui-media-thumb-url: url('/assets/images/river.png')">
-				<img src="/assets/images/mindfulness.png" alt="" style="--ui-media-thumb-url: url('/assets/images/mindfulness.png')">
-				<img src="/assets/images/world.png" alt="" style="--ui-media-thumb-url: url('/assets/images/world.png')">
+				<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')">
+				<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')">
+				<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')">
 			</ui-media>
 	</div>
 
@@ -666,30 +666,30 @@
 	<div class="grid">
 			<ui-media media="asr(4/3) rds(2xl) clip nav auto loop dot(tmb) dot(te) dot(xl) play(be) stagger">
 				<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
-				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-media-thumb-url: url('/assets/images/finance.png')"><cq-box>
+				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-carousel-thumb-url: url('/assets/images/finance.png')"><cq-box>
 					<ui-media><img src="/assets/images/finance.png" alt=""></ui-media>
 					<ui-content><small data-part="eyebrow">Travel</small><h2 data-part="headline">Far-flung destinations</h2><p data-part="summary">Places worth the journey.</p><nav data-part="actions"><a class="ui-button" href="#">Explore</a></nav></ui-content>
 				</cq-box></ui-card>
-				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-media-thumb-url: url('/assets/images/river.png')"><cq-box>
+				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-carousel-thumb-url: url('/assets/images/river.png')"><cq-box>
 					<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
 					<ui-content><small data-part="eyebrow">Nature</small><h2 data-part="headline">Wild waters</h2><p data-part="summary">Rivers, lakes and coastlines.</p><nav data-part="actions"><a class="ui-button" href="#">Discover</a></nav></ui-content>
 				</cq-box></ui-card>
-				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-media-thumb-url: url('/assets/images/mindfulness.png')"><cq-box>
+				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')"><cq-box>
 					<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
 					<ui-content><small data-part="eyebrow">Wellbeing</small><h2 data-part="headline">Find your calm</h2><p data-part="summary">Slow moments, deep breaths.</p><nav data-part="actions"><a class="ui-button" href="#">Begin</a></nav></ui-content>
 				</cq-box></ui-card>
-				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-media-thumb-url: url('/assets/images/world.png')"><cq-box>
+				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-carousel-thumb-url: url('/assets/images/world.png')"><cq-box>
 					<ui-media><img src="/assets/images/world.png" alt=""></ui-media>
 					<ui-content><small data-part="eyebrow">Global</small><h2 data-part="headline">See the world</h2><p data-part="summary">One trip at a time.</p><nav data-part="actions"><a class="ui-button" href="#">Plan</a></nav></ui-content>
 				</cq-box></ui-card>
-				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-media-thumb-url: url('/assets/images/city.png')"><cq-box>
+				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-carousel-thumb-url: url('/assets/images/city.png')"><cq-box>
 					<ui-media>
 						<video src="/assets/video/city.mp4" poster="/assets/images/city.png" preload="auto" autoplay muted loop playsinline></video>
 						<ui-play size="lg"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
 					</ui-media>
 					<ui-content><small data-part="eyebrow">Video · autoplay</small><h2 data-part="headline">City in motion</h2><p data-part="summary">Silent background loop with a play/pause control.</p><nav data-part="actions"><a class="ui-button" href="#">Visit</a></nav></ui-content>
 				</cq-box></ui-card>
-				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-media-thumb-url: url('/assets/images/river.png')"><cq-box>
+				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-carousel-thumb-url: url('/assets/images/river.png')"><cq-box>
 					<ui-media>
 						<video src="/assets/video/river.mp4" poster="/assets/images/river.png" preload="metadata" muted loop playsinline></video>
 						<ui-play size="lg"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>

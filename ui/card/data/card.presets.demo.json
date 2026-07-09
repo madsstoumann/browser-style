@@ -319,28 +319,28 @@
     },
     "carousel-dots-themed": {
       "name": "Carousel Dots Themed",
-      "description": "Bigger accent dots via --ui-media-dot-* tokens",
+      "description": "Bigger accent dots via --ui-carousel-dot-* tokens",
       "element": "ui-card",
       "variant": "col",
       "media": "asr(4/3) nav",
       "content": "scl(sm)",
       "styles": {
-        "--ui-media-dot-bg": "rgb(0 0 0 / 0.25)",
-        "--ui-media-dot-active": "var(--color-accent)",
-        "--ui-media-dot-size": "0.8rem"
+        "--ui-carousel-dot-bg": "rgb(0 0 0 / 0.25)",
+        "--ui-carousel-dot-active": "var(--color-accent)",
+        "--ui-carousel-dot-size": "0.8rem"
       }
     },
     "carousel-arrows-accent": {
       "name": "Carousel Arrows Accent",
-      "description": "Accent arrow circle via --ui-media-arrow-bg",
+      "description": "Accent arrow circle via --ui-carousel-arrow-bg",
       "element": "ui-card",
       "variant": "col",
       "media": "asr(4/3) nav",
       "content": "scl(sm)",
       "styles": {
-        "--ui-media-arrow-bg": "var(--color-accent)",
-        "--ui-media-arrow-bg-hover": "var(--color-accent-dark, var(--color-accent))",
-        "--ui-media-dot-active": "var(--color-accent)"
+        "--ui-carousel-arrow-bg": "var(--color-accent)",
+        "--ui-carousel-arrow-bg-hover": "var(--color-accent-dark, var(--color-accent))",
+        "--ui-carousel-dot-active": "var(--color-accent)"
       }
     },
     "carousel-arrows-inverted": {
@@ -351,9 +351,9 @@
       "media": "asr(4/3) nav(arw) arw(arr) arw(drk) arw(lg)",
       "content": "scl(sm)",
       "styles": {
-        "--ui-media-arrow-radius": "var(--radius-md, 0.5rem)",
-        "--ui-media-arrow-bg": "rgb(255 255 255 / 0.85)",
-        "--ui-media-arrow-bg-hover": "#fff"
+        "--ui-carousel-arrow-radius": "var(--radius-md, 0.5rem)",
+        "--ui-carousel-arrow-bg": "rgb(255 255 255 / 0.85)",
+        "--ui-carousel-arrow-bg-hover": "#fff"
       }
     },
     "carousel-arrows-autohide": {
@@ -412,19 +412,19 @@
       "media": "asr(4/3) nav(arw) arw(bare) arw(arr)",
       "content": "scl(sm)",
       "styles": {
-        "--ui-media-arrow-color": "#000",
-        "--ui-media-arrow-glyph-dim": "var(--ui-media-arrow-dark)"
+        "--ui-carousel-arrow-color": "#000",
+        "--ui-carousel-arrow-glyph-dim": "var(--ui-carousel-arrow-dark)"
       }
     },
     "carousel-bare-accent": {
       "name": "Carousel Bare Accent",
-      "description": "Accent bare arrows via --ui-media-arrow-color",
+      "description": "Accent bare arrows via --ui-carousel-arrow-color",
       "element": "ui-card",
       "variant": "col",
       "media": "asr(4/3) nav(arw) arw(bare)",
       "content": "scl(sm)",
       "styles": {
-        "--ui-media-arrow-color": "var(--color-accent)"
+        "--ui-carousel-arrow-color": "var(--color-accent)"
       }
     },
     "carousel-band-bare": {
@@ -445,13 +445,13 @@
     },
     "carousel-pills-fast": {
       "name": "Carousel Pills Fast",
-      "description": "Pills + arrows, 3s fill via --ui-media-autoplay",
+      "description": "Pills + arrows, 3s fill via --ui-carousel-autoplay",
       "element": "ui-card",
       "variant": "col",
       "media": "asr(4/3) nav dot(pll)",
       "content": "scl(sm)",
       "styles": {
-        "--ui-media-autoplay": "3s"
+        "--ui-carousel-autoplay": "3s"
       }
     },
     "carousel-pills-accent": {
@@ -462,9 +462,9 @@
       "media": "asr(4/3) nav(dot) dot(pll)",
       "content": "scl(sm)",
       "styles": {
-        "--ui-media-pill-track": "rgb(0 0 0 / 0.2)",
-        "--ui-media-pill-fill": "var(--color-accent)",
-        "--ui-media-pill-width": "2rem"
+        "--ui-carousel-pill-track": "rgb(0 0 0 / 0.2)",
+        "--ui-carousel-pill-fill": "var(--color-accent)",
+        "--ui-carousel-pill-width": "2rem"
       }
     },
     "carousel-pills-arrows": {
@@ -507,9 +507,9 @@
       "media": "asr(4/3) nav(blw) arw(bare) dot(pll)",
       "content": "scl(sm)",
       "styles": {
-        "--ui-media-controls-bg": "var(--color-surface, #fff)",
-        "--ui-media-pill-track": "rgb(0 0 0 / 0.2)",
-        "--ui-media-pill-fill": "var(--color-accent)"
+        "--ui-carousel-controls-bg": "var(--color-surface, #fff)",
+        "--ui-carousel-pill-track": "rgb(0 0 0 / 0.2)",
+        "--ui-carousel-pill-fill": "var(--color-accent)"
       }
     },
     "carousel-band-autohide": {
@@ -595,7 +595,7 @@
       "media": "asr(4/3) axis(y) nav(arw) arw(bare) arw(lg)",
       "content": "scl(sm)",
       "styles": {
-        "--ui-media-arrow-color": "var(--color-accent)"
+        "--ui-carousel-arrow-color": "var(--color-accent)"
       }
     },
     "carousel-scrollbar": {
@@ -720,7 +720,7 @@
       "element": "ui-media",
       "media": "asr(4/3) axis(y) nav arw(arr) arw(drk) arw(lg) dot(pll) dot(bc)",
       "styles": {
-        "--ui-media-arrow-color": "var(--color-accent)"
+        "--ui-carousel-arrow-color": "var(--color-accent)"
       }
     },
     "video-frame": {

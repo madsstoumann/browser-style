@@ -110,7 +110,7 @@ function init(scroller) {
 		dotEls = slides.map((slide, i) => {
 			const dot = button('dot', `Go to slide ${i + 1}`);
 			// dot(tmb): each slide carries its thumbnail vars inline — copy to its dot
-			for (const prop of ['--ui-media-thumb-url', '--ui-media-thumb-ratio']) {
+			for (const prop of ['--ui-carousel-thumb-url', '--ui-carousel-thumb-ratio']) {
 				const v = slide.style.getPropertyValue(prop);
 				if (v) dot.style.setProperty(prop, v);
 			}

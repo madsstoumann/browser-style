@@ -88,7 +88,7 @@
 			},
 			{
 				h: 'h2', title: ['Carousel theming'],
-				note: 'Dots and arrows are token-driven — recolour dots with --ui-media-dot-*, colour and size the arrow circle with --ui-media-arrow-*, square it with --ui-media-arrow-radius, switch the glyph dark with arw(drk). All via preset styles.',
+				note: 'Dots and arrows are token-driven — recolour dots with --ui-carousel-dot-*, colour and size the arrow circle with --ui-carousel-arrow-*, square it with --ui-carousel-arrow-radius, switch the glyph dark with arw(drk). All via preset styles.',
 				cards: [['01', 'carousel-dots-themed'], ['02', 'carousel-arrows-accent'], ['03', 'carousel-arrows-inverted'], ['05', 'carousel-arrows-autohide']]
 			},
 			{
@@ -98,12 +98,12 @@
 			},
 			{
 				h: 'h2', title: ['Carousel bare arrows — ', { code: 'arw(bare)' }],
-				note: 'arw(bare) drops the circle and renders the glyph as a coloured arrow — set the colour with --ui-media-arrow-color (default white; auto-flips dark under nav(blw)). Composes with arw(arr) and every placement atom.',
+				note: 'arw(bare) drops the circle and renders the glyph as a coloured arrow — set the colour with --ui-carousel-arrow-color (default white; auto-flips dark under nav(blw)). Composes with arw(arr) and every placement atom.',
 				cards: [['02', 'carousel-bare'], ['05', 'carousel-bare-dark'], ['06', 'carousel-bare-accent'], ['01', 'carousel-band-bare']]
 			},
 			{
 				h: 'h2', title: ['Carousel pills — ', { code: 'dot(pll)' }],
-				note: 'dot(pll) swaps the round dots for pills. The active pill fills over --ui-media-autoplay (default 5s) as a timer hint, restarting when the active slide changes. Recolour with --ui-media-pill-track / --ui-media-pill-fill.',
+				note: 'dot(pll) swaps the round dots for pills. The active pill fills over --ui-carousel-autoplay (default 5s) as a timer hint, restarting when the active slide changes. Recolour with --ui-carousel-pill-track / --ui-carousel-pill-fill.',
 				cards: [['01', 'carousel-pills'], ['02', 'carousel-pills-fast'], ['03', 'carousel-pills-accent'], ['06', 'carousel-pills-arrows']]
 			},
 			{
@@ -113,7 +113,7 @@
 			},
 			{
 				h: 'h2', title: ['Navigation below the media — ', { code: 'nav(blw)' }],
-				note: 'nav(blw) moves both controls off the image into a reserved bottom band (dots centered, arrows at the ends). Size with --ui-media-band, colour with --ui-media-controls-bg. Combine with arw(set), dot(pll) or arw(hid).',
+				note: 'nav(blw) moves both controls off the image into a reserved bottom band (dots centered, arrows at the ends). Size with --ui-carousel-band, colour with --ui-carousel-controls-bg. Combine with arw(set), dot(pll) or arw(hid).',
 				cards: [['01', 'carousel-band-bare'], ['02', 'carousel-band-set'], ['03', 'carousel-band-pills'], ['05', 'carousel-band-autohide']]
 			},
 			{
@@ -191,7 +191,7 @@
 			'layered cards as slides (<ui-reveal type="flip"> slides with nested <ui-accordion>)',
 			'<ui-play variant="reveal"> (hover-reveal play control — renderer emits a plain <ui-play>)',
 			'per-slide nested <ui-media> video frames with their own <ui-play> (approximated above with native video controls)',
-			'thumbnail navigation dot(tmb) (needs per-slide --ui-media-thumb-url inline styles)',
+			'thumbnail navigation dot(tmb) (needs per-slide --ui-carousel-thumb-url inline styles)',
 			'staggered content reveal stagger/ani()/crd() sections (require non-img slide children)',
 			'page-local class hacks .slide-cols/.slide-gap/.shadow-room (.dots-dark/.arrow-accent/.pill-accent were translated into preset styles)'
 		];

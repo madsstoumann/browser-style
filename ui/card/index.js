@@ -184,14 +184,14 @@ export function initAuto(scroller) {
 
 	// Explicit play/pause control (<ui-play> furniture). When present it OWNS the paused
 	// state — no implicit hover/focus auto-pause, so the glyph never lies. It also freezes
-	// the CSS pill/thumb fill timer via --ui-media-play-state.
+	// the CSS pill/thumb fill timer via --ui-carousel-play-state.
 	const play = scroller.querySelector(':scope > ui-play');
 	if (play) {
 		// end-corner controls (play(*e)) must be the LAST child so sticky-inline-end pins
 		if (/play\([a-z]e\)/.test(m)) scroller.appendChild(play);
 		const setPlaying = (running) => {
 			paused = !running;
-			scroller.style.setProperty('--ui-media-play-state', running ? 'running' : 'paused');
+			scroller.style.setProperty('--ui-carousel-play-state', running ? 'running' : 'paused');
 			reflectPlay(play, running);
 			running ? start() : stop();
 		};
@@ -206,8 +206,8 @@ export function initAuto(scroller) {
 	}
 	document.addEventListener('visibilitychange', () => document.hidden ? stop() : (!paused && start()));
 
-	scroller.style.setProperty('--ui-media-autoplay', (autoMs / 1000) + 's'); // sync the dot(pll) CSS timer
-	scroller.style.setProperty('--ui-media-thumb-timer-name', 'ui-media-thumb-timer'); // enable dot(tmb) fill timer
+	scroller.style.setProperty('--ui-carousel-autoplay', (autoMs / 1000) + 's'); // sync the dot(pll) CSS timer
+	scroller.style.setProperty('--ui-carousel-thumb-timer-name', 'ui-carousel-thumb-timer'); // enable dot(tmb) fill timer
 	start();
 }
 
