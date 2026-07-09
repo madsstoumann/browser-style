@@ -218,6 +218,27 @@
 		<ui-media media="asr(4/3) rds(lg) clip nav(abv) arw(set) dot(te)"><img src="/assets/images/river.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
 	</div>
 
+	<h2>Split placement — <code>dot(blw/abv)</code> · <code>arw(blw/abv)</code></h2>
+	<p>Band for <strong>one</strong> control group only: <code>dot(blw)</code>/<code>dot(abv)</code> put the dots in a band while the arrows stay centered on the media; <code>arw(blw)</code>/<code>arw(abv)</code> mirror it — arrows in a band, dots on the media.</p>
+	<div class="grid grid-2">
+		<ui-card variant="col" media="asr(4/3) nav dot(blw)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">nav dot(blw)</small><h2 data-part="headline">Dots below, arrows on media</h2></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav dot(abv)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">nav dot(abv)</small><h2 data-part="headline">Dots above, arrows on media</h2></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav arw(blw)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">nav arw(blw)</small><h2 data-part="headline">Arrows below, dots on media</h2></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav arw(abv)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/government.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">nav arw(abv)</small><h2 data-part="headline">Arrows above, dots on media</h2></ui-content></cq-box>
+		</ui-card>
+	</div>
+
 	<hr>
 	<!-- ════════════════════════════════════════════════════════════
 	     4 · THEMES — ink: light · dark

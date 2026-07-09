@@ -7,6 +7,7 @@
 	<meta name="description" content="Overflow Layouts using CSS layout system">
 	<link rel="stylesheet" href="layout.min.css">
 	<link rel="stylesheet" href="/layout/demo.css">
+	<link rel="stylesheet" href="/ui/base/index.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
 	<script src="../polyfills/overflow-drag.js"></script>
 </head>
@@ -14,6 +15,116 @@
 	<h1>Overflow Layouts</h1>
 	<p>These layouts demonstrate the <strong>overflow</strong> attribute with column layouts.<br>
 		The <strong>overflow="preview"</strong> shows a partial preview of the next item.</p>
+	<section>
+		<h3>Carousel controls — <code>nav</code></h3>
+		<small>Shared carousel controls from <code>ui/base/carousel.css</code>: dots + arrows via the <code>nav</code> attribute</small>
+		<code>&lt;lay-out overflow nav&gt;</code>
+		<lay-out overflow nav>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Band below — <code>nav="blw"</code></h3>
+		<small>Controls in a reserved band below the items — bare arrows</small>
+		<code>&lt;lay-out overflow nav="blw" arrow="bare"&gt;</code>
+		<lay-out overflow nav="blw" arrow="bare">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Band above — <code>nav="abv"</code> + <code>arrow="set"</code></h3>
+		<small>Controls in a band above the items, arrow pair clustered at the inline-end</small>
+		<code>&lt;lay-out overflow nav="abv" arrow="set"&gt;</code>
+		<lay-out overflow nav="abv" arrow="set">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Clustered arrows on media — <code>arrow="set be"</code></h3>
+		<small>Arrow pair as one cluster in the bottom-end corner, dots bottom-center</small>
+		<code>&lt;lay-out overflow nav arrow="set be"&gt;</code>
+		<lay-out overflow nav arrow="set be">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Dots below, arrows on media — <code>dot="blw"</code></h3>
+		<small>Dots alone in a band below; arrows stay centered on the items</small>
+		<code>&lt;lay-out overflow nav dot="blw"&gt;</code>
+		<lay-out overflow nav dot="blw">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Arrows below, dots on media — <code>arrow="blw"</code></h3>
+		<small>Arrows alone in a band below; dots stay on the items</small>
+		<code>&lt;lay-out overflow nav arrow="blw"&gt;</code>
+		<lay-out overflow nav arrow="blw">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Dots only, pill timer — <code>nav="dot"</code> + <code>dot="pll"</code></h3>
+		<small>No arrows; the current pill fills over <code>--ui-carousel-autoplay</code> (5s)</small>
+		<code>&lt;lay-out overflow nav="dot" dot="pll"&gt;</code>
+		<lay-out overflow nav="dot" dot="pll">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Arrows only, dark — <code>nav="arw"</code> + <code>arrow="drk"</code></h3>
+		<small>No dots; dark circles with white chevrons, auto-hidden at the dead end (<code>arrow="hid"</code>)</small>
+		<code>&lt;lay-out overflow nav="arw" arrow="drk hid"&gt;</code>
+		<lay-out overflow nav="arw" arrow="drk hid">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Preview + controls — <code>overflow="preview"</code> + <code>nav</code></h3>
+		<small>Next-item preview composes with controls</small>
+		<code>&lt;lay-out md="columns(2)" overflow="preview" nav&gt;</code>
+		<lay-out md="columns(2)" overflow="preview" nav>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
 	<section>
 		<h3><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor">
         <rect rx="4" width="83" height="48" x="0" y="25" />

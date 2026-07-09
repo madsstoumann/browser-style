@@ -149,14 +149,15 @@
 	:where([media*="crd(blr)"])  { --_stg-crd-tr: 0 0; --_stg-crd-fl: blur(12px); }
 	:where([media*="crd(fde)"])  { --_stg-crd-tr: 0 0; }
 
-	:where([media*="nav(blw)"]) ui-media,
-	ui-media:where([media*="nav(blw)"], [nav~="blw"]) {
+	/* reserved control band — nav(blw/abv) = both controls, dot(blw/abv) = dots only, arw(blw/abv) = arrows only */
+	:where([media*="nav(blw)"], [media*="dot(blw)"], [media*="arw(blw)"]) ui-media,
+	ui-media:where([media*="nav(blw)"], [media*="dot(blw)"], [media*="arw(blw)"], [nav~="blw"], [dot~="blw"], [arrow~="blw"]) {
 		background: var(--ui-carousel-controls-bg, var(--ui-media-bg));
 		padding-block-end: calc(var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
 	}
 
-	:where([media*="nav(abv)"]) ui-media,
-	ui-media:where([media*="nav(abv)"], [nav~="abv"]) {
+	:where([media*="nav(abv)"], [media*="dot(abv)"], [media*="arw(abv)"]) ui-media,
+	ui-media:where([media*="nav(abv)"], [media*="dot(abv)"], [media*="arw(abv)"], [nav~="abv"], [dot~="abv"], [arrow~="abv"]) {
 		background: var(--ui-carousel-controls-bg, var(--ui-media-bg));
 		padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
 		scroll-padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));

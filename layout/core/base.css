@@ -207,6 +207,23 @@
 			&[overflow*="preview-lg"] { --layout-preview-size: var(--layout-preview-lg-size); }
 			&[overflow*="preview-xl"] { --layout-preview-size: var(--layout-preview-xl-size); }
 		}
+		/* === carousel controls (nav/arrow/dot attrs — styles in ui/base/carousel.css) ===
+		   controls replace the scrollbar; a visible scrollbar would consume block-end space
+		   and push the anchored dots/arrows off the visual card edge/center */
+		@supports (scroll-marker-group: after) {
+			&[overflow][nav]:not([nav~="non"]) { scrollbar-width: none; }
+		}
+		/* reserved control band (controls themselves are anchor-positioned into it by
+		   ui/base/carousel.css) — nav = both controls, dot = dots only, arrow = arrows only */
+		&[overflow]:is([nav~="blw"], [dot~="blw"], [arrow~="blw"]) {
+			background: var(--ui-carousel-controls-bg, #0000);
+			padding-block-end: calc(var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
+		}
+		&[overflow]:is([nav~="abv"], [dot~="abv"], [arrow~="abv"]) {
+			background: var(--ui-carousel-controls-bg, #0000);
+			padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
+			scroll-padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
+		}
 
 		/* === width === */
 		&[width]:not([bleed]) { max-inline-size: var(--_mi); }
