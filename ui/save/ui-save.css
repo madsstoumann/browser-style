@@ -1,27 +1,26 @@
 /**
  * ui-save
- * @version 2.0.0
+ * @version 2.1.0
+ * @date 2026-07-09
  * @author Mads Stoumann
  *
  * Save / favorite / wishlist / bookmark toggle. Composes an invoker button and
- * a <ui-icon type="shape">.
+ * a <ui-icon type="shape">. The circle backdrop is ON by default; hide it with
+ * variant="non" / save(non).
  *
- * Single source of truth: size, colour and the circle each match BOTH the
- * standalone attribute (size= / color= / variant="non") AND the card's media=
- * token (save(sm) / save(red) / save(non)) in one nested rule — `&` is ui-save,
- * `:where([media*="save(…)"]) &` is the card form — so there is no duplication
- * between this sheet and ui/card/media.css. Position has no standalone attribute
- * and is shared with the other furniture, so it stays in media.css.
- *
- * The circle backdrop is ON by default; hide it with variant="non" / save(non).
+ * Sections: A. Base (tokens · host · button · saved state) · B. Furniture axes
+ * (colour · ink/fill · size · corner · non) · C. Decoration (hover). Each axis
+ * matches BOTH the standalone attribute AND the card's save(…) token in one
+ * nested rule, so there's no duplication with ui/card/media.css. Full docs:
+ * readme.md.
  */
 @layer bs-component {
 	:where(ui-save) {
+		/* ───────── A. Base ───────── */
 		--ui-save-c: var(--color-text);
 		--ui-save-c-active: var(--color-error);
 		--ui-save-sz: 1.2em;
 
-		/* hover/press feedback — opt-in via the `hover` attribute (see below) */
 		--ui-save-hover-duration: var(--duration-normal);
 		--ui-save-hover-ease: var(--ease-out);
 		--ui-save-hover-pop: 1.15;
@@ -39,48 +38,11 @@
 		display: inline-grid;
 		font-size: var(--ui-save-sz);
 
-		/* per-shape default ink — bookmark = accent (IMDB-style). Wrapped in
-		   :where() so it stays at zero specificity and an explicit color= /
-		   save(<hue>) still overrides it (source order). */
+		/* per-shape default ink — bookmark = accent (IMDB-style). Zero-specificity
+		   (:where) so an explicit theme=/save(<hue>) still wins by source order. */
 		&:where(:has(ui-icon[shape="bookmark"])) {
 			--ui-save-c: var(--color-accent);
 			--ui-save-c-active: var(--color-accent);
-		}
-
-		/* colour (hue) — the 8 theme hues, from theme= or the card's save(<hue>).
-		   For save the glyph IS the ink, so the hue's vivid bg is the ink colour. */
-		&[theme~="red"],    :where([media*="save(red)"])    & { --ui-save-c: var(--ui-theme-red-bg);    --ui-save-c-active: var(--ui-theme-red-bg); }
-		&[theme~="orange"], :where([media*="save(orange)"]) & { --ui-save-c: var(--ui-theme-orange-bg); --ui-save-c-active: var(--ui-theme-orange-bg); }
-		&[theme~="green"],  :where([media*="save(green)"])  & { --ui-save-c: var(--ui-theme-green-bg);  --ui-save-c-active: var(--ui-theme-green-bg); }
-		&[theme~="blue"],   :where([media*="save(blue)"])   & { --ui-save-c: var(--ui-theme-blue-bg);   --ui-save-c-active: var(--ui-theme-blue-bg); }
-		&[theme~="accent"], :where([media*="save(accent)"]) & { --ui-save-c: var(--ui-theme-accent-bg); --ui-save-c-active: var(--ui-theme-accent-bg); }
-		&[theme~="dark"],   :where([media*="save(dark)"])   & { --ui-save-c: var(--ui-theme-dark-bg);   --ui-save-c-active: var(--ui-theme-dark-bg); }
-		&[theme~="light"],  :where([media*="save(light)"])  & { --ui-save-c: var(--ui-theme-light-bg);  --ui-save-c-active: var(--ui-theme-light-bg); }
-		&[theme~="subtle"], :where([media*="save(subtle)"]) & { --ui-save-c: var(--ui-theme-subtle-bg); --ui-save-c-active: var(--ui-theme-subtle-bg); }
-
-		/* arbitrary colour (overrides theme) — ink = the glyph, fill = the circle
-		   disc. Placed after the hue rules so an explicit ink=/fill= wins. */
-		&[ink]  { --ui-save-c: attr(ink type(<color>), var(--color-text)); --ui-save-c-active: attr(ink type(<color>), var(--color-error)); }
-		&[fill] { --ui-save-circle-bg: attr(fill type(<color>), Canvas); }
-
-		/* size — em-based, from size= or the card's save(<size>). md = default. */
-		&[size="sm"], :where([media*="save(sm)"]) & { --ui-save-sz: 0.8em; }
-		&[size="lg"], :where([media*="save(lg)"]) & { --ui-save-sz: 1.6em; }
-		&[size="xl"], :where([media*="save(xl)"]) & { --ui-save-sz: 2.2em; }
-
-		/* corner — the disc shape. crc = the default circle; sqr = squircle; rnd =
-		   rounded square. (non hides the disc entirely — see below.) */
-		&[radius~="sqr"], :where([media*="save(sqr)"]) & { --ui-save-circle-corner: superellipse(var(--squircle-md)); }
-		&[radius~="rnd"], :where([media*="save(rnd)"]) & { --ui-save-circle-radius: var(--radius-lg); }
-		&[radius~="crc"], :where([media*="save(crc)"]) & { --ui-save-circle-radius: var(--radius-circle); }
-
-		/* "non" — hide the circle (bare glyph) */
-		&[variant~="non"], :where([media*="save(non)"]) & {
-			--ui-save-circle-bg: none;
-			--ui-save-circle-border-width: 0;
-			--ui-save-circle-pad: 0;
-			--ui-save-circle-radius: 0;
-			--ui-save-circle-shadow: none;
 		}
 
 		& button {
@@ -90,8 +52,6 @@
 			border-radius: var(--ui-save-circle-radius, 0);
 			box-shadow: var(--ui-save-circle-shadow, none);
 			box-sizing: border-box;
-			/* round by default (→ a true circle at radius 50%); set the corner var to
-			   e.g. superellipse(var(--squircle-md)) for an rds(*-sq)-style squircle */
 			corner-shape: var(--ui-save-circle-corner, round);
 			color: inherit;
 			cursor: pointer;
@@ -113,13 +73,49 @@
 			& ui-icon[variant~="outline"]::before { background: currentColor; }
 		}
 
-		/* ───────── hover/press — opt-in via the `hover` attribute (like ui-sticker).
-		   `press` = scale down while the mouse is held (the "scale-as-you-click"
-		   feedback); `pop` = scale up on hover. Combine: hover="press pop". ───────── */
-		&[hover] button {
-			transition: scale var(--ui-save-hover-duration) var(--ui-save-hover-ease);
+		/* ───────── B. Furniture axes — colour · ink/fill · size · corner · non ─────────
+		   Each axis: `&[attr]` = standalone, `:where([media*="save(…)"]) &` = card token. */
+
+		/* colour (hue) — for save the glyph IS the ink, so the hue's vivid bg is the ink. */
+		&[theme~="red"],    :where([media*="save(red)"])    & { --ui-save-c: var(--ui-theme-red-bg);    --ui-save-c-active: var(--ui-theme-red-bg); }
+		&[theme~="orange"], :where([media*="save(orange)"]) & { --ui-save-c: var(--ui-theme-orange-bg); --ui-save-c-active: var(--ui-theme-orange-bg); }
+		&[theme~="green"],  :where([media*="save(green)"])  & { --ui-save-c: var(--ui-theme-green-bg);  --ui-save-c-active: var(--ui-theme-green-bg); }
+		&[theme~="blue"],   :where([media*="save(blue)"])   & { --ui-save-c: var(--ui-theme-blue-bg);   --ui-save-c-active: var(--ui-theme-blue-bg); }
+		&[theme~="accent"], :where([media*="save(accent)"]) & { --ui-save-c: var(--ui-theme-accent-bg); --ui-save-c-active: var(--ui-theme-accent-bg); }
+		&[theme~="dark"],   :where([media*="save(dark)"])   & { --ui-save-c: var(--ui-theme-dark-bg);   --ui-save-c-active: var(--ui-theme-dark-bg); }
+		&[theme~="light"],  :where([media*="save(light)"])  & { --ui-save-c: var(--ui-theme-light-bg);  --ui-save-c-active: var(--ui-theme-light-bg); }
+		&[theme~="subtle"], :where([media*="save(subtle)"]) & { --ui-save-c: var(--ui-theme-subtle-bg); --ui-save-c-active: var(--ui-theme-subtle-bg); }
+
+		/* arbitrary colour (overrides theme) — ink = the glyph, fill = the circle
+		   disc. After the hue rules so an explicit ink=/fill= wins. */
+		&[ink]  { --ui-save-c: attr(ink type(<color>), var(--color-text)); --ui-save-c-active: attr(ink type(<color>), var(--color-error)); }
+		&[fill] { --ui-save-circle-bg: attr(fill type(<color>), Canvas); }
+
+		/* size — em-based, from size= or the card's save(<size>). md = default. */
+		&[size~="sm"], :where([media*="save(sm)"]) & { --ui-save-sz: 0.8em; }
+		&[size~="lg"], :where([media*="save(lg)"]) & { --ui-save-sz: 1.6em; }
+		&[size~="xl"], :where([media*="save(xl)"]) & { --ui-save-sz: 2.2em; }
+
+		/* corner — the disc shape. crc = default circle · sqr squircle · rnd rounded.
+		   (non hides the disc entirely — below.) */
+		&[radius~="sqr"], :where([media*="save(sqr)"]) & { --ui-save-circle-corner: superellipse(var(--squircle-md)); }
+		&[radius~="rnd"], :where([media*="save(rnd)"]) & { --ui-save-circle-radius: var(--radius-lg); }
+		&[radius~="crc"], :where([media*="save(crc)"]) & { --ui-save-circle-radius: var(--radius-circle); }
+
+		/* non — hide the circle (bare glyph) */
+		&[variant~="non"], :where([media*="save(non)"]) & {
+			--ui-save-circle-bg: none;
+			--ui-save-circle-border-width: 0;
+			--ui-save-circle-pad: 0;
+			--ui-save-circle-radius: 0;
+			--ui-save-circle-shadow: none;
 		}
-		&[hover~="pop"] button:hover { scale: var(--ui-save-hover-pop); }
+
+		/* ───────── C. Decoration — hover/press (opt-in via `hover`) ─────────
+		   `press` = scale down while held ("scale-as-you-click"); `pop` = scale up
+		   on hover. Combine: hover="press pop". */
+		&[hover] button { transition: scale var(--ui-save-hover-duration) var(--ui-save-hover-ease); }
+		&[hover~="pop"] button:hover    { scale: var(--ui-save-hover-pop); }
 		&[hover~="press"] button:active { scale: var(--ui-save-hover-press); }
 
 		@media (prefers-reduced-motion: reduce) {
