@@ -29,14 +29,14 @@
         "src": "845207657"
       }
     ],
-    "play": {
-      "position": "cc",
-      "size": "lg"
-    },
-    "chip": {
-      "text": "vimeo iframe",
-      "position": "ts",
-      "hue": "green"
+    "furniture": {
+      "chip": {
+        "text": "vimeo iframe",
+        "style": "ts green"
+      },
+      "play": {
+        "style": "cc lg"
+      }
     },
     "actions": [
       {

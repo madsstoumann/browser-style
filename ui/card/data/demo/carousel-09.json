@@ -40,9 +40,8 @@
         "alt": "Plated dish in a restaurant"
       }
     ],
-    "play": {
-      "position": "bs",
-      "size": "sm"
+    "furniture": {
+      "play": true
     }
   }
 }

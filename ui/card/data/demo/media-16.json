@@ -17,15 +17,20 @@
     },
     "eyebrow": "Audio",
     "headline": "Sticker + chip",
-    "sticker": {
-      "text": "Featured",
-      "position": "ts",
-      "hue": "red"
-    },
-    "chip": {
-      "text": "New",
-      "position": "be",
-      "hue": "green"
+    "furniture": {
+      "chip": {
+        "text": "New",
+        "style": "be green"
+      },
+      "sticker": {
+        "lines": [
+          {
+            "role": "lead",
+            "text": "Featured"
+          }
+        ],
+        "style": "ts red"
+      }
     },
     "media": [
       {

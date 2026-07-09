@@ -15,9 +15,11 @@
     "preset": {
       "$ref": "card-preset/media-vis-1x1"
     },
-    "chip": {
-      "text": "cover (default)",
-      "position": "bs"
+    "furniture": {
+      "chip": {
+        "text": "cover (default)",
+        "style": "bs"
+      }
     },
     "media": [
       {

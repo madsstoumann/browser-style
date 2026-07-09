@@ -29,13 +29,14 @@
         "src": "beYbnNT_02U"
       }
     ],
-    "play": {
-      "position": "cc",
-      "size": "lg"
-    },
-    "chip": {
-      "text": "youtube",
-      "hue": "red"
+    "furniture": {
+      "chip": {
+        "text": "youtube",
+        "style": "red"
+      },
+      "play": {
+        "style": "cc lg"
+      }
     }
   }
 }

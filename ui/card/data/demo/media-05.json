@@ -15,11 +15,16 @@
     "preset": {
       "$ref": "card-preset/media-vis-1x1"
     },
-    "sticker": {
-      "text": "ts",
-      "position": "ts",
-      "hue": "blue",
-      "burst": true
+    "furniture": {
+      "sticker": {
+        "lines": [
+          {
+            "role": "lead",
+            "text": "ts"
+          }
+        ],
+        "style": "ts blue burst"
+      }
     },
     "media": [
       {

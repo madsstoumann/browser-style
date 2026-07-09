@@ -28,11 +28,13 @@
         "duration": "PT2M10S"
       }
     ],
-    "play": {
-      "position": "cc"
-    },
-    "chip": {
-      "text": "autoplay"
+    "furniture": {
+      "chip": {
+        "text": "autoplay"
+      },
+      "play": {
+        "style": "cc"
+      }
     }
   }
 }

@@ -26,13 +26,14 @@
         "src": "789027225"
       }
     ],
-    "play": {
-      "position": "cc"
-    },
-    "chip": {
-      "text": "vimeo iframe",
-      "position": "bs",
-      "hue": "dark"
+    "furniture": {
+      "chip": {
+        "text": "vimeo iframe",
+        "style": "bs dark"
+      },
+      "play": {
+        "style": "cc"
+      }
     }
   }
 }

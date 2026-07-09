@@ -35,7 +35,7 @@
         "name": "Media",
         "description": "Media items (more than one becomes a carousel) and overlay furniture",
         "collapse": true,
-        "fields": ["media", "chip", "sticker", "play", "saveable"]
+        "fields": ["media", "furniture"]
       },
       {
         "area": "main",
@@ -301,153 +301,125 @@
         }
       }
     },
-    "chip": {
+    "furniture": {
       "type": "object",
-      "title": "Chip",
-      "description": "Small label overlaid on the media (<ui-chip>) — replaces the legacy ribbon",
+      "title": "Furniture",
+      "description": "Overlay elements placed on top of the media area: a chip label, a sticker callout, a save/favorite toggle and a play affordance. This model carries only their TEXT/semantic content — position, hue, size and shape are set in the preset's media= token string (chip/sticker/save/play tokens), optionally overridden per item via 'style'.",
       "properties": {
-        "text": {
-          "type": "string",
-          "title": "Text"
+        "chip": {
+          "type": "object",
+          "title": "Chip",
+          "description": "Small pill label overlaid on the media (<ui-chip>) — replaces the legacy ribbon.",
+          "properties": {
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "badge": {
+              "type": "string",
+              "title": "Badge",
+              "description": "Optional count/label rendered as a nested <ui-badge> (e.g. \"4\")."
+            },
+            "style": {
+              "type": "string",
+              "title": "Style override",
+              "localized": false,
+              "description": "Extra chip() tokens appended after the preset, e.g. \"red\" or \"bs red\". Overrides the preset for the same axis (position/hue)."
+            }
+          }
         },
-        "position": {
-          "type": "select",
-          "title": "Position",
-          "localized": false,
-          "default": "ts",
-          "options": [
-            { "value": "ts", "label": "Top start" },
-            { "value": "tc", "label": "Top center" },
-            { "value": "te", "label": "Top end" },
-            { "value": "cs", "label": "Center start" },
-            { "value": "cc", "label": "Center" },
-            { "value": "ce", "label": "Center end" },
-            { "value": "bs", "label": "Bottom start" },
-            { "value": "bc", "label": "Bottom center" },
-            { "value": "be", "label": "Bottom end" }
-          ]
+        "sticker": {
+          "type": "object",
+          "title": "Sticker",
+          "description": "Callout disc/shape overlaid on the media (<ui-sticker>). Its multi-line typography is authored as 'lines' — each line renders as its own element and is styled by the sticker's font= / font-lead= tokens.",
+          "properties": {
+            "lines": {
+              "type": "array",
+              "title": "Lines",
+              "description": "One entry per typographic line. 'label' → <small> (font=), 'lead' → <strong> (font-lead=), 'plain' → <span> (fluid). Optional 'sup' renders a trailing <sup> (e.g. price cents).",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "type": "select",
+                    "title": "Role",
+                    "localized": false,
+                    "default": "label",
+                    "options": [
+                      { "value": "label", "label": "Label (<small>)" },
+                      { "value": "lead", "label": "Lead (<strong>)" },
+                      { "value": "plain", "label": "Plain (<span>)" }
+                    ]
+                  },
+                  "text": {
+                    "type": "string",
+                    "title": "Text"
+                  },
+                  "sup": {
+                    "type": "string",
+                    "title": "Superscript",
+                    "description": "Optional <sup> appended after the text, e.g. price cents."
+                  }
+                }
+              }
+            },
+            "style": {
+              "type": "string",
+              "title": "Style override",
+              "localized": false,
+              "description": "Extra sticker() tokens appended after the preset, e.g. \"burst red\" or \"te heart\". Overrides the preset for the same axis (position/hue/shape)."
+            }
+          }
         },
-        "hue": {
-          "type": "select",
-          "title": "Hue",
-          "localized": false,
-          "options": [
-            { "value": "red", "label": "Red" },
-            { "value": "orange", "label": "Orange" },
-            { "value": "green", "label": "Green" },
-            { "value": "blue", "label": "Blue" },
-            { "value": "accent", "label": "Accent" },
-            { "value": "dark", "label": "Dark" },
-            { "value": "light", "label": "Light" },
-            { "value": "subtle", "label": "Subtle" }
-          ]
+        "save": {
+          "type": "object",
+          "title": "Save",
+          "description": "Save/favorite toggle overlaid on the media (<ui-save>). The boolean value true is also accepted and defaults to a heart.",
+          "properties": {
+            "shape": {
+              "type": "select",
+              "title": "Shape",
+              "localized": false,
+              "default": "heart",
+              "options": [
+                { "value": "heart", "label": "Heart" },
+                { "value": "bookmark", "label": "Bookmark" },
+                { "value": "star", "label": "Star" }
+              ]
+            },
+            "saved": {
+              "type": "boolean",
+              "title": "Saved",
+              "description": "Initial saved state (button aria-pressed).",
+              "default": false
+            },
+            "style": {
+              "type": "string",
+              "title": "Style override",
+              "localized": false,
+              "description": "Extra save() tokens appended after the preset, e.g. \"orange sm\" or \"non\" (hide the disc)."
+            }
+          }
+        },
+        "play": {
+          "type": "object",
+          "title": "Play",
+          "description": "Play/pause affordance overlaid on the media (<ui-play>) — for videos and autoplay carousels, where it becomes the sole play/pause control. The boolean value true is also accepted.",
+          "properties": {
+            "label": {
+              "type": "string",
+              "title": "Aria label",
+              "default": "Play"
+            },
+            "style": {
+              "type": "string",
+              "title": "Style override",
+              "localized": false,
+              "description": "Extra play() tokens appended after the preset, e.g. \"lg\" or \"bs\"."
+            }
+          }
         }
       }
-    },
-    "sticker": {
-      "type": "object",
-      "title": "Sticker",
-      "description": "Callout disc overlaid on the media (<ui-sticker>)",
-      "properties": {
-        "text": {
-          "type": "string",
-          "title": "Text"
-        },
-        "position": {
-          "type": "select",
-          "title": "Position",
-          "localized": false,
-          "default": "te",
-          "options": [
-            { "value": "ts", "label": "Top start" },
-            { "value": "tc", "label": "Top center" },
-            { "value": "te", "label": "Top end" },
-            { "value": "cs", "label": "Center start" },
-            { "value": "cc", "label": "Center" },
-            { "value": "ce", "label": "Center end" },
-            { "value": "bs", "label": "Bottom start" },
-            { "value": "bc", "label": "Bottom center" },
-            { "value": "be", "label": "Bottom end" }
-          ]
-        },
-        "hue": {
-          "type": "select",
-          "title": "Hue",
-          "localized": false,
-          "options": [
-            { "value": "red", "label": "Red" },
-            { "value": "orange", "label": "Orange" },
-            { "value": "green", "label": "Green" },
-            { "value": "blue", "label": "Blue" },
-            { "value": "accent", "label": "Accent" },
-            { "value": "dark", "label": "Dark" },
-            { "value": "light", "label": "Light" },
-            { "value": "subtle", "label": "Subtle" }
-          ]
-        },
-        "burst": {
-          "type": "boolean",
-          "title": "Burst",
-          "description": "Use the burst shape (variant=\"burst\") instead of a plain disc",
-          "default": false
-        }
-      }
-    },
-    "play": {
-      "type": "object",
-      "title": "Play",
-      "description": "Play/pause affordance (<ui-play>) on the media — for videos and autoplay carousels. In autoplay/loop carousels it becomes the sole play/pause control.",
-      "properties": {
-        "position": {
-          "type": "select",
-          "title": "Position",
-          "localized": false,
-          "default": "cc",
-          "options": [
-            { "value": "ts", "label": "Top start" },
-            { "value": "tc", "label": "Top center" },
-            { "value": "te", "label": "Top end" },
-            { "value": "cs", "label": "Center start" },
-            { "value": "cc", "label": "Center" },
-            { "value": "ce", "label": "Center end" },
-            { "value": "bs", "label": "Bottom start" },
-            { "value": "bc", "label": "Bottom center" },
-            { "value": "be", "label": "Bottom end" }
-          ]
-        },
-        "hue": {
-          "type": "select",
-          "title": "Hue",
-          "localized": false,
-          "options": [
-            { "value": "red", "label": "Red" },
-            { "value": "orange", "label": "Orange" },
-            { "value": "green", "label": "Green" },
-            { "value": "blue", "label": "Blue" },
-            { "value": "accent", "label": "Accent" },
-            { "value": "dark", "label": "Dark" },
-            { "value": "light", "label": "Light" },
-            { "value": "subtle", "label": "Subtle" }
-          ]
-        },
-        "size": {
-          "type": "select",
-          "title": "Size",
-          "localized": false,
-          "options": [
-            { "value": "sm", "label": "Small" },
-            { "value": "md", "label": "Medium" },
-            { "value": "lg", "label": "Large" },
-            { "value": "xl", "label": "Extra large" }
-          ]
-        }
-      }
-    },
-    "saveable": {
-      "type": "boolean",
-      "title": "Saveable",
-      "description": "Show a save/favorite toggle (<ui-save>) on the media",
-      "default": false
     },
     "engagement": {
       "type": "object",

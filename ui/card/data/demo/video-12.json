@@ -24,12 +24,13 @@
         "src": "695669200"
       }
     ],
-    "play": {
-      "position": "cc",
-      "size": "xl"
-    },
-    "chip": {
-      "text": "vimeo iframe"
+    "furniture": {
+      "chip": {
+        "text": "vimeo iframe"
+      },
+      "play": {
+        "style": "cc xl"
+      }
     }
   }
 }

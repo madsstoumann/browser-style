@@ -119,12 +119,17 @@
 		&[font~="shadow(solid-lg)"] > :not(strong), &[font-lead~="shadow(solid-lg)"] > strong { --ui-sticker-text-shadow: 4cqi   4cqi   0 var(--ui-sticker-text-shadow-color); }
 		&[font~="shadow(solid-xl)"] > :not(strong), &[font-lead~="shadow(solid-xl)"] > strong { --ui-sticker-text-shadow: 6cqi   6cqi   0 var(--ui-sticker-text-shadow-color); }
 
-		@supports (text-fit: grow) {
-			&:is([font~="fit"], [font-lead~="fit"]) {
-				padding: 1.5ch;
-				text-fit: grow per-line-all;
+		/* fit — scale each line to the box width. `grow` only enlarges, so an
+		   already-too-wide line would overflow; instead start every line oversized
+		   (--ui-sticker-fit-start) and `shrink` it down, which fits BOTH short and
+		   long lines to the width with no overflow. per-line-all sizes each line
+		   independently. */
+		@supports (text-fit: shrink) {
+			&:is([font~="fit"], [font-lead~="fit"]), :where([media*="sticker(fit)"]) & {
+				padding: var(--ui-sticker-fit-pad, 1.25ch);
+				text-fit: shrink per-line-all;
+				& > * { white-space: nowrap; }
 			}
-			&:is([font~="fit"], [font-lead~="fit"]) > * { white-space: nowrap; }
 		}
 
 		/* ───────── shadow — box drop-shadow ───────── */
