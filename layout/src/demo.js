@@ -16,7 +16,7 @@ function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="${title} using CSS layout system">
 	<link rel="stylesheet" href="layout.min.css">
-	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<link rel="stylesheet" href="/layout/demo.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
 </head>
 <body>
@@ -148,7 +148,7 @@ function generateOverflowHTML(columnsData, iconsDir) {
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="${title} using CSS layout system">
 	<link rel="stylesheet" href="layout.min.css">
-	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<link rel="stylesheet" href="/layout/demo.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
 	<script src="../polyfills/overflow-drag.js"></script>
 </head>
@@ -295,7 +295,7 @@ function generateIconsHTML(iconsDir) {
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="All layout system icons">
 	<link rel="stylesheet" href="layout.min.css">
-	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<link rel="stylesheet" href="/layout/demo.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
 	<style>
 		.icon-list {
@@ -470,7 +470,9 @@ export function buildDemoFiles(layoutsDir, outputDir) {
 	const pagesDir = path.join(path.dirname(new URL(import.meta.url).pathname), 'pages')
 	const staticPages = fs.readdirSync(pagesDir).filter(f => f.endsWith('.html'))
 	for (const page of staticPages) {
-		fs.copyFileSync(path.join(pagesDir, page), path.join(outputDir, page))
+		const pageContent = fs.readFileSync(path.join(pagesDir, page), 'utf8')
+			.replaceAll('/ui/layout/', '/layout/')
+		fs.writeFileSync(path.join(outputDir, page), pageContent)
 		generatedFiles.add(page)
 		demoCount++
 		console.log(`✓ Copied ${page}`)
