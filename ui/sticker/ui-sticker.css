@@ -120,11 +120,11 @@
 		&[font~="shadow(solid-xl)"] > :not(strong), &[font-lead~="shadow(solid-xl)"] > strong { --ui-sticker-text-shadow: 6cqi   6cqi   0 var(--ui-sticker-text-shadow-color); }
 
 		@supports (text-fit: grow) {
-			&:is([font~="fit"], [font-lead~="fit"]) {
+			&:is([font~="fit"], [font-lead~="fit"]), :where([media*="sticker(fit)"]) & {
 				padding: 1.5ch;
 				text-fit: grow per-line-all;
 			}
-			&:is([font~="fit"], [font-lead~="fit"]) > * { white-space: nowrap; }
+			&:is([font~="fit"], [font-lead~="fit"]) > *, :where([media*="sticker(fit)"]) & > * { white-space: nowrap; }
 		}
 
 		/* ───────── shadow — box drop-shadow ───────── */
