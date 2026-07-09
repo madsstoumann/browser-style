@@ -15,9 +15,10 @@
     "preset": {
       "$ref": "card-preset/media-asr-1x1"
     },
-    "chip": {
-      "text": "asr(1/1)",
-      "position": "bs"
+    "furniture": {
+      "chip": {
+        "text": "asr(1/1)"
+      }
     },
     "media": [
       {

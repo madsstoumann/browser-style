@@ -27,11 +27,13 @@
         "alt": "River video behind an unrelated poster image"
       }
     ],
-    "play": {
-      "position": "cc"
-    },
-    "chip": {
-      "text": "custom poster"
+    "furniture": {
+      "chip": {
+        "text": "custom poster"
+      },
+      "play": {
+        "style": "cc"
+      }
     }
   }
 }

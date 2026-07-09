@@ -187,13 +187,95 @@ const embedVideoObject = (item) => {
 
 /* ── media column ── */
 
+/* ── overlay furniture (chip / sticker / save / play) ──
+   Content = the furniture object (text/semantics only). Look = the preset's
+   media= tokens; each item's optional style= override is appended and, for a
+   token that collides with the preset on the same axis, replaces it (the CSS
+   matches media= tokens by substring, so precedence is source-order, not token
+   order — mergeMediaTokens strips the preset's same-axis token so the override
+   always wins). */
+
+const FURNITURE_AXIS = {
+	pos: new Set(['ts', 'tc', 'te', 'cs', 'cc', 'ce', 'bs', 'bc', 'be']),
+	hue: new Set(['red', 'orange', 'green', 'blue', 'accent', 'dark', 'light', 'subtle']),
+	size: new Set(['sm', 'md', 'lg', 'xl']),
+	shape: new Set(['burst', 'spark', 'sunburst', 'heart', 'blob', 'text', 'spl', 'spr']),
+	disc: new Set(['crc', 'sqr', 'rnd', 'pll', 'non'])
+};
+const axisOf = (value) => {
+	for (const [axis, set] of Object.entries(FURNITURE_AXIS)) if (set.has(value)) return axis;
+	return value; /* unknown → exact-match replacement */
+};
+const FURNITURE_TOKEN = /^(chip|sticker|save|play)\(([^)]*)\)$/;
+
+/* Merge a preset media= string with furniture style-override tokens. Overrides
+   win: any preset token of the same element+axis is dropped before appending. */
+const mergeMediaTokens = (presetMedia, overrides = []) => {
+	const ov = overrides.filter(Boolean);
+	const base = String(presetMedia || '').split(/\s+/).filter(Boolean);
+	if (!ov.length) return base.join(' ');
+	const conflicts = new Set();
+	for (const token of ov) {
+		const match = FURNITURE_TOKEN.exec(token);
+		if (match) conflicts.add(`${match[1]}:${axisOf(match[2])}`);
+	}
+	const kept = base.filter((token) => {
+		const match = FURNITURE_TOKEN.exec(token);
+		return !match || !conflicts.has(`${match[1]}:${axisOf(match[2])}`);
+	});
+	return [...kept, ...ov].join(' ');
+};
+
+/* A furniture item's style= string → per-value tokens, e.g. ("chip", "bs red")
+   → ["chip(bs)", "chip(red)"]. Single-value tokens only (CSS matches by substring). */
+const styleTokens = (el, style) =>
+	String(style || '').split(/\s+/).filter(Boolean).map((token) => `${el}(${token})`);
+
+/* Build the overlay furniture markup from the unified furniture object and push
+   each item's style-override tokens onto tokens.media (positioning/hue/shape come
+   from the preset — the renderer no longer generates those). save/play also
+   accept a bare `true`. */
+const buildFurniture = (furniture, fields, tokens, mediaId) => {
+	if (!furniture) return '';
+	let html = '';
+	const push = (el, style) => { for (const token of styleTokens(el, style)) tokens.media.push(token); };
+
+	if (furniture.play) {
+		const play = furniture.play === true ? {} : furniture.play;
+		html += `<ui-play><button type="button" aria-label="${esc(play.label || 'Play')}" command="--toggle-play"><ui-icon type="play-pause"></ui-icon></button></ui-play>`;
+		push('play', play.style);
+	}
+	if (furniture.chip?.text) {
+		const chip = furniture.chip;
+		html += `<ui-chip>${esc(chip.text)}${chip.badge ? `<ui-badge>${esc(chip.badge)}</ui-badge>` : ''}</ui-chip>`;
+		push('chip', chip.style);
+	}
+	if (furniture.sticker?.lines?.length) {
+		const sticker = furniture.sticker;
+		const lines = sticker.lines.map((line) => {
+			const el = { label: 'small', lead: 'strong', plain: 'span' }[line.role] || 'small';
+			return `<${el}>${esc(line.text ?? '')}${line.sup ? `<sup>${esc(line.sup)}</sup>` : ''}</${el}>`;
+		}).join('');
+		html += `<ui-sticker>${lines}</ui-sticker>`;
+		push('sticker', sticker.style);
+	}
+	if (furniture.save) {
+		const save = furniture.save === true ? {} : furniture.save;
+		const name = esc(plain(fields.headline) || 'card');
+		const label = save.saved ? `Remove ${name} from favorites` : `Save ${name} to favorites`;
+		html += `<ui-save><button type="button" command="--save"${mediaId ? ` commandfor="${esc(mediaId)}"` : ''} aria-label="${label}"${save.saved ? ' aria-pressed="true"' : ''}><ui-icon type="shape" shape="${esc(save.shape || 'heart')}" variant="outline"></ui-icon></button></ui-save>`;
+		push('save', save.style);
+	}
+	return html;
+};
+
 /**
  * Build the <ui-media> string. Returns { html, hostAttrs, extras }:
  * - hostAttrs: attributes computed for the frame (provider embeds, dual-attribute carousel form)
  * - extras: schema markup that must live OUTSIDE ui-media (VideoObject for embeds → content column)
- * Furniture position/hue tokens are pushed onto tokens.media for the host's media= string.
+ * Furniture style-override tokens are pushed onto tokens.media for the host's media= string.
  */
-const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}) => {
+const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId = null) => {
 	if (!fields.media?.length) return null;
 	let frames = '';
 	let embed = null;
@@ -227,28 +309,11 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}) => {
 			itemprop: NO_IMAGE_PROP.has(type) ? null : 'image'
 		})}>`;
 	}
-	let furniture = '';
-	if (fields.play) {
-		furniture += `<ui-play><button type="button" aria-label="Play" command="--toggle-play"><ui-icon type="play-pause"></ui-icon></button></ui-play>`;
-		tokens.media.push(`play(${fields.play.position || 'cc'})`);
-		if (fields.play.hue) tokens.media.push(`play(${fields.play.hue})`);
-		if (fields.play.size) tokens.media.push(`ply(${fields.play.size})`);
-	}
-	if (fields.chip?.text) {
-		furniture += `<ui-chip>${esc(fields.chip.text)}</ui-chip>`;
-		tokens.media.push(`chip(${fields.chip.position || 'ts'})`);
-		if (fields.chip.hue) tokens.media.push(`chip(${fields.chip.hue})`);
-	}
-	if (fields.sticker?.text) {
-		furniture += `<ui-sticker${fields.sticker.burst ? ' variant="burst"' : ''}><strong>${esc(fields.sticker.text)}</strong></ui-sticker>`;
-		tokens.media.push(`sticker(${fields.sticker.position || 'te'})`);
-		if (fields.sticker.hue) tokens.media.push(`sticker(${fields.sticker.hue})`);
-	}
-	if (fields.saveable) {
-		furniture += `<ui-save><input type="checkbox" aria-label="Save ${esc(plain(fields.headline) || 'card')} to favorites"></ui-save>`;
-		tokens.media.push('save(ts)');
-	}
+	/* save needs a command target — id the frame when a save toggle is present */
+	const mediaId = (fields.furniture?.save && cardId) ? `${cardId}-media` : null;
+	const furniture = buildFurniture(fields.furniture, fields, tokens, mediaId);
 	const html = `<ui-media${attrs({
+		id: mediaId,
 		nav: preset.nav || null,
 		arrow: preset.arrow || null,
 		dot: preset.dot || null,
@@ -670,8 +735,8 @@ const flipsideBack = (flipside) => {
 	return contentColumn(fields, type, false, '', 'both');
 };
 
-const renderReveal = (fields, type, itemtype, tokens, preset, flipside) => {
-	const media = buildMedia(fields, type, tokens, preset);
+const renderReveal = (fields, type, itemtype, tokens, preset, flipside, cardId = null) => {
+	const media = buildMedia(fields, type, tokens, preset, {}, cardId);
 	const front = `<ui-face>
 		${media?.html || ''}
 		<ui-content>
@@ -692,7 +757,7 @@ const renderReveal = (fields, type, itemtype, tokens, preset, flipside) => {
 		trigger: reveal.trigger || null,
 		scroll: !!reveal.scroll,
 		variant: preset.variant || null,
-		media: [preset.media, ...tokens.media].filter(Boolean).join(' ') || null,
+		media: mergeMediaTokens(preset.media, tokens.media) || null,
 		content: preset.content || null,
 		style: styleAttr(preset.styles),
 		itemscope: true,
@@ -742,23 +807,24 @@ export async function loadPresets(url) {
  */
 export function renderCard(ucf, presets = {}, cards = {}) {
 	const fields = ucf?.fields ?? ucf ?? {};
+	const cardId = ucf?.id || null;
 	const type = SCHEMA_TYPES[fields.schemaType] ? fields.schemaType : 'content';
 	const itemtype = SCHEMA + SCHEMA_TYPES[type];
 	const preset = resolvePreset(fields, presets);
 	const tokens = { media: [] };
 
 	if (preset.element === 'ui-reveal') {
-		return renderReveal(fields, type, itemtype, tokens, preset, resolveCard(fields.flipside, cards));
+		return renderReveal(fields, type, itemtype, tokens, preset, resolveCard(fields.flipside, cards), cardId);
 	}
 
 	/* Bare <ui-media> — a standalone media frame, no card chrome. The media
 	   token string sits on the element itself (rds() applies outside a card). */
 	if (preset.element === 'ui-media') {
 		const caption = fields.media?.find((item) => item.caption)?.caption;
-		const media = buildMedia(fields, type, tokens, preset, {});
+		const media = buildMedia(fields, type, tokens, preset, {}, cardId);
 		const inner = (media?.html || '<ui-media></ui-media>')
 			.replace('<ui-media', `<ui-media${attrs({
-				media: [preset.media, ...tokens.media].filter(Boolean).join(' ') || null,
+				media: mergeMediaTokens(preset.media, tokens.media) || null,
 				style: styleAttr(preset.styles),
 				itemscope: true,
 				itemtype
@@ -777,11 +843,11 @@ export function renderCard(ucf, presets = {}, cards = {}) {
 		})}>${contentColumn(fields, type, false, '', preset.text || 'summary')}</ui-content>`;
 	}
 
-	const media = buildMedia(fields, type, tokens, preset);
+	const media = buildMedia(fields, type, tokens, preset, {}, cardId);
 	const overlay = /ovr\(/.test(preset.variant || '');
 	return `<ui-card${attrs({
 		variant: preset.variant || 'col',
-		media: [preset.media, ...tokens.media].filter(Boolean).join(' ') || null,
+		media: mergeMediaTokens(preset.media, tokens.media) || null,
 		content: preset.content || null,
 		style: styleAttr(preset.styles),
 		itemscope: true,

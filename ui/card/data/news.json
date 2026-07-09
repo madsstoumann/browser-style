@@ -34,10 +34,11 @@
         "role": "Newsroom"
       }
     ],
-    "chip": {
-      "text": "Breaking",
-      "position": "ts",
-      "hue": "red"
+    "furniture": {
+      "chip": {
+        "text": "Breaking",
+        "style": "ts red"
+      }
     },
     "body": {
       "$richtext": true,

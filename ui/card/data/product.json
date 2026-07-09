@@ -25,13 +25,18 @@
         "alt": "AuraSound Pro wireless headphones"
       }
     ],
-    "sticker": {
-      "text": "-20%",
-      "position": "te",
-      "hue": "red",
-      "burst": true
+    "furniture": {
+      "sticker": {
+        "lines": [
+          { "role": "lead", "text": "-20%" }
+        ],
+        "style": "te red burst"
+      },
+      "save": {
+        "shape": "heart",
+        "style": "ts"
+      }
     },
-    "saveable": true,
     "actions": [
       {
         "link": {

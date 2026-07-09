@@ -24,13 +24,14 @@
         "src": "5b4YcLB4DVI"
       }
     ],
-    "play": {
-      "position": "cc",
-      "size": "lg"
-    },
-    "chip": {
-      "text": "youtube",
-      "hue": "red"
+    "furniture": {
+      "chip": {
+        "text": "youtube",
+        "style": "red"
+      },
+      "play": {
+        "style": "cc lg"
+      }
     }
   }
 }

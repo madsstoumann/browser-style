@@ -25,11 +25,13 @@
         "alt": "Deep space photograph"
       }
     ],
-    "sticker": {
-      "text": "Certified",
-      "position": "te",
-      "hue": "green",
-      "burst": true
+    "furniture": {
+      "sticker": {
+        "lines": [
+          { "role": "lead", "text": "Certified" }
+        ],
+        "style": "te green burst"
+      }
     },
     "actions": [
       {

@@ -17,15 +17,20 @@
     },
     "eyebrow": "Café",
     "headline": "Accent chip + orange sticker",
-    "chip": {
-      "text": "Editor's pick",
-      "position": "bs",
-      "hue": "accent"
-    },
-    "sticker": {
-      "text": "Sale",
-      "position": "te",
-      "hue": "orange"
+    "furniture": {
+      "chip": {
+        "text": "Editor's pick",
+        "style": "bs accent"
+      },
+      "sticker": {
+        "lines": [
+          {
+            "role": "lead",
+            "text": "Sale"
+          }
+        ],
+        "style": "te orange"
+      }
     },
     "media": [
       {

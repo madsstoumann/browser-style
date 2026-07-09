@@ -29,11 +29,13 @@
         "duration": "PT2M10S"
       }
     ],
-    "play": {
-      "position": "cc"
-    },
-    "chip": {
-      "text": "native custom"
+    "furniture": {
+      "chip": {
+        "text": "native custom"
+      },
+      "play": {
+        "style": "cc"
+      }
     }
   }
 }
