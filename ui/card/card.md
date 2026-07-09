@@ -137,6 +137,7 @@ one value per token, never `chip(ts red)`). The vocabulary is shared across all 
 | `el(<hue>)` | Colour from the 8 theme hues — `red orange green blue accent dark light subtle` |
 | `el(<size>)` | Scale — `sm lg xl` (`md` = default); `play`/`save` |
 | `sticker(<shape>)` | `burst spark sunburst heart blob text spl spr` — no `variant=` needed |
+| `sticker(fit)` | Native `text-fit` — scales every line to fill the box width (= `font="fit"`) |
 | `save(<corner>)` | Disc — `crc` circle (default) · `sqr` squircle · `rnd` rounded · `non` hides the disc |
 
 where `el` is `chip` / `sticker` / `save` / `play`. Each also works standalone via `theme=` /
