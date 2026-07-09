@@ -125,7 +125,7 @@ hand-authored [`media.furniture.html`](media.furniture.html) is the reference sh
 ```
 ```jsonc
 // preset — look (media= tokens)
-"media": "asr(4/3) sticker(te) sticker(burst) sticker(green) save(be) play(cc)"
+"media": "asr(4/3) sticker(te) sticker(sh:burst) sticker(green) save(be) play(cc)"
 ```
 
 **Look tokens on `media=`** — single-value tokens (the CSS matches them by substring, so

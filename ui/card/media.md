@@ -247,14 +247,14 @@ They route into the element's **own** tokens (`--ui-chip-bg` / `--ui-chip-c`, `-
 | Element | Shape / markup | Notes |
 |---------|----------------|-------|
 | `<ui-chip>` | pill label (reuses `ui/chip`) | `variant` light/outline/square/squircle, `size`, `theme`, `color`. (The unrelated `<ui-badge>` cart-number badge is untouched.) |
-| `<ui-sticker>` | round disc; opt-in starburst via `variant="burst"` (`--ui-sticker-clip-path`); **multi-line** | each direct child is a line; `--ui-sticker-gap` controls line-spacing, `text-box: cap alphabetic` trims leading |
+| `<ui-sticker>` | round disc; opt-in starburst via `variant="sh:burst"` (`--ui-sticker-clip-path`); **multi-line** | each direct child is a line; `--ui-sticker-gap` controls line-spacing, `text-box: cap alphabetic` trims leading |
 | `<ui-save>` | `<ui-save><input type="checkbox" aria-label="Save"></ui-save>` | favorite ≈ wishlist ≈ bookmark. State + a11y + keyboard from the checkbox, **zero JS**. Icon swappable via `--ui-save-icon` (heart / bookmark / star). |
 | `<ui-play>` | `<ui-play><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>` | play affordance (default `cc`). `variant="reveal"` hides until media hover/focus. JS web component swaps `<ui-icon type>` play↔pause, toggles `aria-pressed`, emits `ui-play-toggle`, and optionally drives a `<video>` via `for="videoId"`. CSS-only fallback = the authored static button. **In a scrolling carousel** (`auto`/`loop`) it becomes the play/pause control: `position:sticky`-pinned to the scrollport (plain furniture scrolls away) and wired by `ui-media.js` — see [media.carousel.md](./media.carousel.md#playpause-control-ui-play). |
 
 **`<ui-sticker>` multi-line** — "SAVE / 20%" is two children at different scales:
 
 ```html
-<ui-sticker variant="burst">
+<ui-sticker variant="sh:burst">
   <span style="font-size:.7em">SAVE</span>
   <b style="font-size:1.6em">20%</b>
 </ui-sticker>

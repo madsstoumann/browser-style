@@ -367,7 +367,7 @@
               "type": "string",
               "title": "Style override",
               "localized": false,
-              "description": "Extra sticker() tokens appended after the preset, e.g. \"burst red\" or \"te heart\". Overrides the preset for the same axis (position/hue/shape)."
+              "description": "Extra sticker() tokens appended after the preset, e.g. \"sh:burst red\" or \"te sh:heart\". Overrides the preset for the same axis (position/hue/shape)."
             }
           }
         },

@@ -4,15 +4,9 @@
  * @date 2026-07-09
  * @author Mads Stoumann
  *
- * Structure (top → bottom):
- *   A. Base         — token defaults, derived vars, host box, content lines
- *   B. Furniture axes — colour (theme) · fill/ink · size · corner. The four
- *                       shared axes, each one nested rule combining the
- *                       standalone attribute AND the card's sticker(…) token.
- *   C. Typography   — font / font-lead (family · size · weight · shadow) · fit
- *   D. Decoration   — box shadow · hover
- *   E. Shape variants — clipped silhouettes · speech bubble · text outline
- *   F. Keyframes
+ * Sections: A. Base · B. Furniture axes (theme/fill/ink/size/corner) ·
+ * C. Typography (font/font-lead/fit) · D. Decoration (shadow/hover) ·
+ * E. Shape variants · F. Keyframes. Full docs: readme.md.
  */
 @layer bs-component {
 	:where(ui-sticker) {
@@ -76,9 +70,8 @@
 		& > strong { font-size: max(10px, var(--_size-lg)); font-family: var(--ui-sticker-strong-font, var(--ui-sticker-font-family)); color: var(--ui-sticker-lead-c, inherit); }
 		& :is(sup, sub) { font-size: 0.5em; }
 
-		/* ───────── B. Furniture axes ─────────
-		   Each axis = one nested rule: `&[attr]` is the standalone element,
-		   `:where([media*="sticker(…)"]) &` is the card token. */
+		/* ───────── B. Furniture axes — theme · fill/ink · size · corner ─────────
+		   Each axis: `&[attr]` = standalone, `:where([media*="sticker(…)"]) &` = card token. */
 
 		/* colour — hue (the 8 theme hues) */
 		&[theme~="red"],    :where([media*="sticker(red)"])    & { --ui-sticker-bg: var(--ui-theme-red-bg);    --ui-sticker-c: var(--ui-theme-red-c); }
@@ -90,9 +83,8 @@
 		&[theme~="light"],  :where([media*="sticker(light)"])  & { --ui-sticker-bg: var(--ui-theme-light-bg);  --ui-sticker-c: var(--ui-theme-light-c); }
 		&[theme~="subtle"], :where([media*="sticker(subtle)"]) & { --ui-sticker-bg: var(--ui-theme-subtle-bg); --ui-sticker-c: var(--ui-theme-subtle-c); }
 
-		/* arbitrary colour (overrides the hue) — fill = disc, ink = text; ink
-		   auto-contrasts from fill when omitted. Placed after the hues so an
-		   explicit fill=/ink= wins; ink after fill so an explicit ink wins. */
+		/* arbitrary colour — fill = disc, ink = text (auto-contrasts from fill).
+		   After the hues so an explicit fill/ink wins; ink after fill. */
 		&[fill] {
 			--ui-sticker-bg: attr(fill type(<color>), var(--color-accent));
 			--ui-sticker-c: contrast-color(var(--ui-sticker-bg));
@@ -156,7 +148,7 @@
 		/* fit — native text-fit grows each line to fill the box width. */
 		@supports (text-fit: grow) {
 			&:is([font~="fit"], [font-lead~="fit"]), :where([media*="sticker(fit)"]) & {
-				padding: var(--ui-sticker-fit-pad, 1.25ch);
+				padding: var(--ui-sticker-fit-pad, 1.5ch);
 				text-fit: grow per-line-all;
 				& > * { white-space: nowrap; }
 			}
@@ -209,12 +201,16 @@
 			}
 		}
 
-		/* ───────── E. Shape variants ───────── */
-		&:is([variant~="clip"], [variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"]),
-		:where([media*="sticker(burst)"], [media*="sticker(spark)"], [media*="sticker(sunburst)"], [media*="sticker(heart)"], [media*="sticker(blob)"]) & {
+		/* ───────── E. Shape variants ─────────
+		   Clipped silhouettes carry the `sh:` prefix. This one generic rule sets up
+		   the ::before fill (substring match), so a custom `sh:<name>` + a
+		   --ui-sticker-clip-path needs no edit here. Zero-spec so an external
+		   placement wins. See readme "Adding your own shapes". */
+		&:where([variant*="sh:"]), :where([media*="sticker(sh:"]) & {
 			background: none;
 			border-radius: 0;
 			isolation: isolate;
+			position: relative;
 
 			&::before {
 				background: var(--ui-sticker-bg, var(--color-accent));
@@ -225,37 +221,33 @@
 				z-index: -1;
 			}
 		}
-		/* zero-specificity position so an external placement (ui-card sticker(te)) wins */
-		&:where([variant~="clip"], [variant~="burst"], [variant~="spark"], [variant~="sunburst"], [variant~="heart"], [variant~="blob"]),
-		:where([media*="sticker(burst)"], [media*="sticker(spark)"], [media*="sticker(sunburst)"], [media*="sticker(heart)"], [media*="sticker(blob)"]) & {
-			position: relative;
-		}
 
-		&[variant~="burst"], :where([media*="sticker(burst)"]) & {
+		/* built-in shapes — each just sets its clip-path + per-shape sizing. */
+		&[variant~="sh:burst"], :where([media*="sticker(sh:burst)"]) & {
 			--ui-sticker-clip-path: var(--shape-burst);
 			--ui-sticker-fs: 30cqi;
 			--ui-sticker-p: 0.6em;
 		}
 
-		&[variant~="blob"], :where([media*="sticker(blob)"]) & {
+		&[variant~="sh:blob"], :where([media*="sticker(sh:blob)"]) & {
 			--ui-sticker-clip-path: var(--shape-blob);
 			--ui-sticker-fs: 34cqi;
 			--ui-sticker-p: 0.7em;
 		}
 
-		&[variant~="spark"], :where([media*="sticker(spark)"]) & {
+		&[variant~="sh:spark"], :where([media*="sticker(sh:spark)"]) & {
 			--ui-sticker-clip-path: var(--shape-spark);
 			--ui-sticker-fs: 26cqi;
 			--ui-sticker-p: 0.6em;
 		}
 
-		&[variant~="sunburst"], :where([media*="sticker(sunburst)"]) & {
+		&[variant~="sh:sunburst"], :where([media*="sticker(sh:sunburst)"]) & {
 			--ui-sticker-clip-path: var(--shape-sunburst);
 			--ui-sticker-fs: 32cqi;
 			--ui-sticker-p: 0.5em;
 		}
 
-		&[variant~="heart"], :where([media*="sticker(heart)"]) & {
+		&[variant~="sh:heart"], :where([media*="sticker(sh:heart)"]) & {
 			--ui-sticker-clip-path: var(--shape-heart-badge);
 			--ui-sticker-fs: 26cqi;
 			--ui-sticker-p: 0.8em 0.6em 1.6em;

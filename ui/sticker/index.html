@@ -40,18 +40,18 @@
 
 	<div class="row">
 		<ui-sticker fill="#FEA12F" font-lead="md" ink="#262626" size="2xl"><small>ONLY</small><strong>$9</strong></ui-sticker>
-		<ui-sticker variant="burst" fill="#3E9355" font-lead="md" ink="#fff" size="2xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
-		<ui-sticker variant="spark" fill="#BC2330" font-lead="2xl" size="2xl"><small>SAVE</small><strong>69<sup>95</sup></strong></ui-sticker>
-		<ui-sticker variant="sunburst" fill="#2F75BC" font-lead="md" ink="#fff" size="2xl"><small>UP TO</small><strong>50%</strong></ui-sticker>
-		<ui-sticker variant="heart" fill="#BC2330" gap="md" size="2xl"><small>HOLIDAY</small><strong>$50</strong></ui-sticker>
-		<ui-sticker variant="blob" fill="#7B5EA7" font-lead="md" size="2xl"><small>NEW</small><strong>2026</strong></ui-sticker>
+		<ui-sticker variant="sh:burst" fill="#3E9355" font-lead="md" ink="#fff" size="2xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
+		<ui-sticker variant="sh:spark" fill="#BC2330" font-lead="2xl" size="2xl"><small>SAVE</small><strong>69<sup>95</sup></strong></ui-sticker>
+		<ui-sticker variant="sh:sunburst" fill="#2F75BC" font-lead="md" ink="#fff" size="2xl"><small>UP TO</small><strong>50%</strong></ui-sticker>
+		<ui-sticker variant="sh:heart" fill="#BC2330" gap="md" size="2xl"><small>HOLIDAY</small><strong>$50</strong></ui-sticker>
+		<ui-sticker variant="sh:blob" fill="#7B5EA7" font-lead="md" size="2xl"><small>NEW</small><strong>2026</strong></ui-sticker>
 		<ui-sticker variant="speech(l)" fill="#2980b9" font-lead="xl" ink="#FFF" size="2xl"><small>NEW</small><strong>SALE</strong></ui-sticker>
 		<ui-sticker variant="speech(r)" fill="#27ae60" font-lead="2xl" ink="#d6fce1" size="2xl"><small>UP TO</small><strong>40%</strong></ui-sticker>
 		<ui-sticker variant="text" angle="3deg" class="font-sedgwick" fill="#8fa0f8" size="2xl"><span>Flash Sale</span></ui-sticker>
 		<!-- <ui-sticker variant="clip" fill="#d4763a" font-lead="lg" ink="#fff" size="2xl" style="--ui-sticker-clip-path: shape(from 55.44% 3.52%,curve to 49.99% 0% with 54.44% 1.37%/52.32% 0%,smooth by -5.45% 3.52% with -4.43% 1.37%,line to 32.36% 29.35%,line to 5.16% 33.49%,curve by -4.87% 4.24% with -2.27% 0.35%/-4.17% 1.99%,smooth by 1.5% 6.39% with -0.13% 4.73%,line to 21.52% 64.25%,line to 16.86% 92.7%,curve by 2.44% 6.11% with -0.38% 2.34%/0.57% 4.73%,smooth by 6.4% 0.45% with 4.36% 1.56%,line by 24.3% -13.38%,line by 24.3% 13.38%,curve by 6.4% -0.45% with 2.05% 1.11%/4.53% 0.96%,smooth by 2.44% -6.11% with 2.82% -3.77%,line to 78.47% 64.25%,line to 98.2% 44.12%,curve by 1.5% -6.39% with 1.63% -1.66%/2.22% -4.14%,smooth by -4.87% -4.24% with -2.59% -3.89%,line to 67.62% 29.35%,line to 55.44% 3.52%,close);"><strong>$$</strong></ui-sticker> -->
 	</div>
 
-	<h3>Corners — <code>radius=</code></h3>
+	<h3>Corners — <code>radius</code></h3>
 	<p>Reshape the disc: <code>non</code> sharp, <code>rnd</code> rounded, <code>pll</code> pill,
 		<code>crc</code> circle (default), <code>sqr</code> squircle. In a card: <code>sticker(&lt;corner&gt;)</code>.
 		(Decorative <code>variant=</code> silhouettes set their own <code>clip-path</code> and ignore <code>radius</code>.)</p>
@@ -76,9 +76,9 @@
 	<p><code>shadow="solid"</code> = hard offset. Step with <code>off(sm|md|lg)</code>; <code>-off(…)</code> throws it left. The <code>.sh-tint</code> class tints each shadow to a dark version of its own fill.</p>
 	<div class="row">
 		<ui-sticker class="sh-tint" fill="#FEA12F" font-lead="md" ink="#262626" shadow="solid" size="2xl"><small>ONLY</small><strong>$9</strong></ui-sticker>
-		<ui-sticker variant="burst" class="sh-tint" fill="#3E9355" font-lead="md" ink="#fff" shadow="solid -off(lg)" size="2xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
-		<ui-sticker variant="heart" class="sh-tint" fill="#BC2330" gap="md" shadow="solid off(lg)" size="2xl"><small>HOLIDAY</small><strong>$50</strong></ui-sticker>
-		<ui-sticker variant="blob" class="sh-tint" fill="#7B5EA7" font-lead="md" shadow="solid off(lg)" size="2xl"><small>NEW</small><strong>2026</strong></ui-sticker>
+		<ui-sticker variant="sh:burst" class="sh-tint" fill="#3E9355" font-lead="md" ink="#fff" shadow="solid -off(lg)" size="2xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
+		<ui-sticker variant="sh:heart" class="sh-tint" fill="#BC2330" gap="md" shadow="solid off(lg)" size="2xl"><small>HOLIDAY</small><strong>$50</strong></ui-sticker>
+		<ui-sticker variant="sh:blob" class="sh-tint" fill="#7B5EA7" font-lead="md" shadow="solid off(lg)" size="2xl"><small>NEW</small><strong>2026</strong></ui-sticker>
 		<ui-sticker variant="speech(l)" class="sh-tint" fill="#2980b9" font-lead="xl" ink="#FFF" shadow="solid -off(xl)" size="2xl"><small>NEW</small><strong>SALE</strong></ui-sticker>
 		<ui-sticker variant="speech(r)" class="sh-tint" fill="#27ae60" font-lead="2xl" ink="#d6fce1" shadow="solid off(xl)" size="2xl"><small>UP TO</small><strong>40%</strong></ui-sticker>
 	</div>
@@ -104,8 +104,8 @@
 		<ui-sticker class="grad-teal" font-lead="md" size="2xl" style="--ui-sticker-lead-c: #FFE08A"><small>GRAB A</small><strong>DEAL</strong></ui-sticker>
 		<ui-sticker class="grad-amber" font-lead="md" size="2xl" style="--ui-sticker-lead-c: #FFE9C7"><small>FAMILY</small><strong>DEAL</strong></ui-sticker>
 		<ui-sticker class="grad-purple" size="2xl" style="--ui-sticker-lead-c: #D7B3FF"><small>FOR</small><strong>YOU</strong></ui-sticker>
-		<ui-sticker variant="sunburst" class="grad-hot" size="2xl" style="--ui-sticker-c: #FFE600"><span>HOT</span></ui-sticker>
-		<ui-sticker variant="heart" class="grad-love" size="2xl" style="--ui-sticker-lead-c: #FFD1D1"><strong>LOVE</strong><small>YOU</small></ui-sticker>
+		<ui-sticker variant="sh:sunburst" class="grad-hot" size="2xl" style="--ui-sticker-c: #FFE600"><span>HOT</span></ui-sticker>
+		<ui-sticker variant="sh:heart" class="grad-love" size="2xl" style="--ui-sticker-lead-c: #FFD1D1"><strong>LOVE</strong><small>YOU</small></ui-sticker>
 	</div>
 
 	<h3>Text sticker</h3>
@@ -122,12 +122,12 @@
 	<p>Opt-in <code>hover</code> effects (composable): <code>lift</code>, <code>pop</code>, <code>tilt</code>/<code>-tilt</code>, <code>spin</code>/<code>-spin</code>, <code>press</code>. Decorative until set (<code>pointer-events:none</code>). Honors <code>prefers-reduced-motion</code>. <strong>Hover below.</strong></p>
 	<div class="row">
 		<ui-sticker hover="lift" fill="#2F75BC" ink="#fff" size="2xl"><small>LIFT</small><strong>OFF</strong></ui-sticker>
-		<ui-sticker variant="burst" hover="pop" fill="#3E9355" ink="#fff" size="2xl"><strong>POP</strong></ui-sticker>
+		<ui-sticker variant="sh:burst" hover="pop" fill="#3E9355" ink="#fff" size="2xl"><strong>POP</strong></ui-sticker>
 		<ui-sticker variant="speech(r)" hover="tilt" fill="#FEA12F" ink="#262626" size="2xl"><small>HOVER</small><strong>TILT</strong></ui-sticker>
 		<ui-sticker variant="speech(l)" hover="-tilt" fill="#FEA12F" ink="#262626" size="2xl"><small>HOVER</small><strong>-TILT</strong></ui-sticker>
-		<ui-sticker variant="sunburst" hover="spin" fill="#7B5EA7" ink="#fff" size="2xl"><strong>spin</strong></ui-sticker>
-		<ui-sticker variant="spark" hover="-spin" fill="#BC2330" ink="#fff" size="2xl"><strong>-spin</strong></ui-sticker>
-		<ui-sticker variant="heart" hover="press" fill="#BC2F2F" ink="#fff" size="2xl"><strong>click</strong><small>ME</small></ui-sticker>
+		<ui-sticker variant="sh:sunburst" hover="spin" fill="#7B5EA7" ink="#fff" size="2xl"><strong>spin</strong></ui-sticker>
+		<ui-sticker variant="sh:spark" hover="-spin" fill="#BC2330" ink="#fff" size="2xl"><strong>-spin</strong></ui-sticker>
+		<ui-sticker variant="sh:heart" hover="press" fill="#BC2F2F" ink="#fff" size="2xl"><strong>click</strong><small>ME</small></ui-sticker>
 		<ui-sticker variant="text" angle="3deg" class="font-sedgwick" fill="#8fa0f8" hover="lift"><span>Lift Off</span></ui-sticker>
 	</div>
 

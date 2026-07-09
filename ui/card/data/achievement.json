@@ -30,7 +30,7 @@
         "lines": [
           { "role": "lead", "text": "Certified" }
         ],
-        "style": "te green burst"
+        "style": "te green sh:burst"
       }
     },
     "actions": [

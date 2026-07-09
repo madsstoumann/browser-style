@@ -1,10 +1,10 @@
 # @browser.style/sticker
 
-A CSS-first sticker component for promotional callouts — "Save 20%", "Best value", "-20%". A round disc by default, with optional star/heart/blob/speech shapes.
+A CSS-first sticker component for promotional callouts — "Save 20%", "Best value", "-20%". A round disc by default, with optional star / heart / blob / speech shapes (the `sh:` shape family).
 
 ## Features
 
-- Disc (default), `burst`, `spark`, `sunburst`, `heart`, `blob`, `speech` balloon or `text` shape (`variant`)
+- Disc (default) or a shape via `variant`: clipped silhouettes `sh:burst` `sh:spark` `sh:sunburst` `sh:heart` `sh:blob` (+ your own `sh:<name>`), plus `speech(l)`/`speech(r)` balloon and `text`
 - `fill` = any CSS background color with auto-contrast ink; `ink` = any text color (override)
 - Gradients via a custom class (set `--ui-sticker-bg`)
 - Two typographic shorthands: `font` (label/body lines) and `font-lead` (the `<strong>` line)
@@ -51,7 +51,7 @@ Or via CSS `@import`:
 
 ```html
 <ui-sticker>Save 20%</ui-sticker>
-<ui-sticker variant="burst" fill="#BC2F2F" ink="#fff">-20%</ui-sticker>
+<ui-sticker variant="sh:burst" fill="#BC2F2F" ink="#fff">-20%</ui-sticker>
 <ui-sticker fill="#3E9355" ink="#fff">Best value</ui-sticker>
 ```
 
@@ -69,7 +69,7 @@ The web component uses the **exact same** HTML structure as CSS-only — the JS 
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
-| `variant` | string | **Shape only:** `burst`, `spark`, `sunburst`, `heart`, `blob`, `speech(l)`, `speech(r)`, `text`, `clip` (bring-your-own via `--ui-sticker-clip-path`) |
+| `variant` | string | **Shape only:** `sh:burst`, `sh:spark`, `sh:sunburst`, `sh:heart`, `sh:blob` (or any `sh:<custom>` + `--ui-sticker-clip-path`), `speech(l)`, `speech(r)`, `text` |
 | `fill` | color | Any CSS color → background; ink auto-contrasted via `contrast-color()` |
 | `ink` | color | Any CSS color → text color; overrides the auto-contrast |
 | `size` | string | Box size: `sm`, `md`, `lg` (default), `xl`, `2xl`, `3xl` |
@@ -91,7 +91,7 @@ import '@browser.style/sticker';
 import '@browser.style/sticker/style';
 
 function SaleSticker({ amount }) {
-  return <ui-sticker variant="burst" fill="#BC2F2F" ink="#fff">-{amount}%</ui-sticker>;
+  return <ui-sticker variant="sh:burst" fill="#BC2F2F" ink="#fff">-{amount}%</ui-sticker>;
 }
 ```
 
@@ -121,7 +121,7 @@ import '@browser.style/sticker/style';
   import '@browser.style/sticker/style';
 </script>
 
-<ui-sticker variant="burst">Save 20%</ui-sticker>
+<ui-sticker variant="sh:burst">Save 20%</ui-sticker>
 ```
 
 ### Astro / SSR
@@ -175,7 +175,7 @@ Gradients are a custom class that sets `--ui-sticker-bg` (and `--ui-sticker-c`, 
 ```
 ```html
 <ui-sticker class="grad-teal"><small>GRAB A</small><strong>DEAL</strong></ui-sticker>
-<ui-sticker variant="heart" class="grad-teal"><strong>LOVE</strong></ui-sticker>
+<ui-sticker variant="sh:heart" class="grad-teal"><strong>LOVE</strong></ui-sticker>
 ```
 
 For a one-off, set the tokens inline:
@@ -224,7 +224,7 @@ No `cq-box` wrapper is needed — each element line is already a descendant of t
 A sticker is a centered grid: **each direct child is its own line**. Every child gets `text-box: cap alphabetic`, which trims the font's leading so the visual spacing is driven by the gap alone.
 
 ```html
-<ui-sticker variant="burst">
+<ui-sticker variant="sh:burst">
   <small>SAVE</small>
   <strong>20%</strong>
 </ui-sticker>
@@ -260,8 +260,7 @@ The `size` attribute scales the **box** (`--ui-sticker-sz`); element lines follo
 ## Corners
 
 `radius=` reshapes the plain disc: `non` sharp · `rnd` rounded · `pll` pill · `crc` circle (default) ·
-`sqr` squircle. In a card, `sticker(<corner>)`. (The decorative `variant=` silhouettes — burst,
-blob, heart… — set their own `clip-path` and ignore `radius`.)
+`sqr` squircle. In a card, `sticker(<corner>)`. (The decorative `sh:` silhouettes — `sh:burst`, `sh:blob`, `sh:heart`… — set their own `clip-path` and ignore `radius`.)
 
 ```html
 <ui-sticker theme="blue" radius="sqr"><strong>New</strong></ui-sticker>
@@ -284,7 +283,7 @@ Add a box drop-shadow with the `shadow` attribute. It uses `filter: drop-shadow(
 
 ```html
 <ui-sticker shadow="md">New</ui-sticker>
-<ui-sticker variant="heart" fill="#BC2F2F" ink="#fff" shadow="lg"><span>Sale</span></ui-sticker>
+<ui-sticker variant="sh:heart" fill="#BC2F2F" ink="#fff" shadow="lg"><span>Sale</span></ui-sticker>
 <ui-sticker fill="orange" shadow="solid off(lg)"><span>SALE</span></ui-sticker>
 ```
 
@@ -304,7 +303,7 @@ The `-` prefix reverses direction (mirrors `shadow`'s `-off()`).
 
 ```html
 <ui-sticker hover="lift" fill="#2F75BC" ink="#fff"><strong>Sale</strong></ui-sticker>
-<ui-sticker variant="sunburst" hover="spin" fill="#7B5EA7" ink="#fff"><strong>New</strong></ui-sticker>
+<ui-sticker variant="sh:sunburst" hover="spin" fill="#7B5EA7" ink="#fff"><strong>New</strong></ui-sticker>
 ```
 
 **Interactivity is opt-in.** A sticker is `pointer-events: none` by default — purely decorative, so it never blocks an underlying link or the card's own hover. Setting any `hover` value flips it to `pointer-events: auto` for self-hover.
@@ -325,26 +324,49 @@ Tune via the `--ui-sticker-hover-*` tokens (see [Customization](#component-token
 
 ## Shape variants
 
-The default is a disc. Set `variant` for a clipped shape (`variant` carries the shape only):
+The default is a disc. Set `variant` for a shape. **Clipped silhouettes use the `sh:` prefix** (`sh:burst`, `sh:heart`, …); the two structural shapes (`speech`, `text`) don't.
 
 | `variant` | Shape | Technique |
 |-----------|-------|-----------|
-| `burst` | 24-point starburst | `clip-path: polygon()` |
-| `spark` | sharp 10-point star (price seal) | `clip-path: polygon()` |
-| `sunburst` | fine 40-point sawtooth ring | `clip-path: polygon()` |
-| `heart` | heart | `clip-path: shape()` |
-| `blob` | organic rounded splat | `clip-path: shape()` |
-| `clip` | bring-your-own — set `--ui-sticker-clip-path` to any `polygon()`/`shape()` | custom |
+| `sh:burst` | 24-point starburst | `clip-path: polygon()` |
+| `sh:spark` | sharp 10-point star (price seal) | `clip-path: polygon()` |
+| `sh:sunburst` | fine 40-point sawtooth ring | `clip-path: polygon()` |
+| `sh:heart` | heart | `clip-path: shape()` |
+| `sh:blob` | organic rounded splat | `clip-path: shape()` |
+| `sh:<custom>` | bring-your-own — any `sh:` name + your own `--ui-sticker-clip-path` | custom (see below) |
 | `speech(l)` / `speech(r)` | rounded balloon + tail (bottom-left / -right) | `border-radius` + `::after` tail |
 | `text` | puffy lettering, no box | text-stroke + drop-shadow |
 
 ```html
-<ui-sticker variant="burst" fill="#FEA12F" ink="#262626">Starburst</ui-sticker>
-<ui-sticker variant="heart" fill="#BC2F2F" ink="#fff">Heart</ui-sticker>
+<ui-sticker variant="sh:burst" fill="#FEA12F" ink="#262626">Starburst</ui-sticker>
+<ui-sticker variant="sh:heart" fill="#BC2F2F" ink="#fff">Heart</ui-sticker>
 <ui-sticker variant="speech(l)" fill="#2980b9"><span>Hi!</span></ui-sticker>
 ```
 
 The clipped shapes draw their fill on a `::before` layer so the host stays unclipped and the `drop-shadow` follows the silhouette. The balloon isn't square: it uses a `5/4` aspect-ratio and a tail that **inherits the fill** (solid or gradient) and is included in the `drop-shadow`.
+
+### Adding your own shapes
+
+Any `variant` value that starts with **`sh:`** turns the sticker into a clipped shape — the CSS wires up the `::before` fill layer by substring (`[variant*="sh:"]`), so a new shape needs **no edit to `ui-sticker.css`**. Give it a `--ui-sticker-clip-path` (inline, a class, or the shared shape catalog) and it works:
+
+```html
+<!-- one-off, inline -->
+<ui-sticker variant="sh:arrow" style="--ui-sticker-clip-path: polygon(50% 0, 100% 100%, 0 100%)">
+  <strong>SALE</strong>
+</ui-sticker>
+
+<!-- reusable, via a class -->
+<style>.shape-tag { --ui-sticker-clip-path: shape(from 0 0, …); }</style>
+<ui-sticker variant="sh:tag" class="shape-tag"><strong>NEW</strong></ui-sticker>
+```
+
+The built-in `sh:burst`/`sh:heart`/… are just named presets of this same mechanism — each is one small rule that sets `--ui-sticker-clip-path` (to a `--shape-*` token from `@browser.style/base`) plus per-shape font-size/padding tuning. To ship a shape as a first-class name instead of an inline path, register a `--shape-<name>` token in `base/shapes.css` and add a matching `&[variant~="sh:<name>"]` rule. To also drive it from a card, it's addressable immediately as the `sticker(sh:<name>)` media token — no renderer change (the renderer treats any `sh:*` value as the shape axis).
+
+Override a built-in shape's path by setting `--ui-sticker-clip-path` on it:
+
+```html
+<ui-sticker variant="sh:burst" style="--ui-sticker-clip-path: polygon(50% 0, 100% 100%, 0 100%)">▲</ui-sticker>
+```
 
 ## Text sticker (`variant="text"`)
 
@@ -392,19 +414,7 @@ In a card, the same fill is available as the `sticker(fit)` media token (fits **
 </ui-card>
 ```
 
-`spark`, `sunburst` and `heart` are recreations of classic SVG "tactical element" price badges, redrawn as pure CSS clip paths so they scale with `font-size` and need no markup. `heart` uses `clip-path: shape()` (Chrome 137+, Safari 18.4+); the polygon stars work everywhere `clip-path` is supported.
-
-Every clipped shape (including each preset) reads `--ui-sticker-clip-path`, so you can override any of them:
-
-```html
-<ui-sticker variant="burst" style="--ui-sticker-clip-path: polygon(50% 0, 100% 100%, 0 100%)">▲</ui-sticker>
-```
-
-Or use `variant="clip"` for a bring-your-own shape with no preset — the `burst`/`spark`/etc. are just named presets of the same mechanism:
-
-```html
-<ui-sticker variant="clip" style="--ui-sticker-clip-path: shape(…)"><strong>SALE</strong></ui-sticker>
-```
+`sh:spark`, `sh:sunburst` and `sh:heart` are recreations of classic SVG "tactical element" price badges, redrawn as pure CSS clip paths so they scale with `font-size` and need no markup. `sh:heart` uses `clip-path: shape()` (Chrome 137+, Safari 18.4+); the polygon stars work everywhere `clip-path` is supported. (See **Adding your own shapes** above for custom silhouettes.)
 
 ---
 
@@ -425,7 +435,7 @@ Or use `variant="clip"` for a bring-your-own shape with no preset — the `burst
 | `--ui-sticker-font-weight` | `var(--font-weight-bold, 700)` | Host weight default |
 | `--ui-sticker-gap` | `0.16` | Line gap as a unitless factor of the font-size (scales with the box) |
 | `--ui-sticker-radius` | `var(--radius-circle, 50%)` | Corner radius (disc / speech) |
-| `--ui-sticker-clip-path` | per shape (24-point star for `burst`) | The `clip-path` the active clipped shape uses — override any preset, or supply it with `variant="clip"` |
+| `--ui-sticker-clip-path` | per shape (24-point star for `sh:burst`) | The `clip-path` the active shape uses — override any preset, or supply it with a custom `variant="sh:<name>"` |
 | `--ui-sticker-shadow-x` / `-y` / `-color` | `0.25em` / `0.25em` / `#000` | Offset + tint for `shadow="solid"` |
 | `--ui-sticker-text-shadow` | `none` | Text-shadow on the lines (set by `shadow()`, in `cqi`) |
 | `--ui-sticker-text-shadow-color` | `contrast-color(ink)` | `shadow()` tint — auto the **opposite** of the ink |

@@ -199,10 +199,11 @@ const FURNITURE_AXIS = {
 	pos: new Set(['ts', 'tc', 'te', 'cs', 'cc', 'ce', 'bs', 'bc', 'be']),
 	hue: new Set(['red', 'orange', 'green', 'blue', 'accent', 'dark', 'light', 'subtle']),
 	size: new Set(['sm', 'md', 'lg', 'xl']),
-	shape: new Set(['burst', 'spark', 'sunburst', 'heart', 'blob', 'text', 'spl', 'spr']),
+	shape: new Set(['text', 'spl', 'spr']),
 	disc: new Set(['crc', 'sqr', 'rnd', 'pll', 'non'])
 };
 const axisOf = (value) => {
+	if (value.startsWith('sh:')) return 'shape'; /* clipped silhouettes: sh:burst, sh:<custom>… */
 	for (const [axis, set] of Object.entries(FURNITURE_AXIS)) if (set.has(value)) return axis;
 	return value; /* unknown → exact-match replacement */
 };

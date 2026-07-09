@@ -237,7 +237,7 @@ The media area hosts four overlay elements as **children of `<ui-media>`**. They
 | Element | Role | Default area | In `<summary>`? |
 |---------|------|--------------|------------------|
 | `<ui-chip>` | label ("New", "Sale") | `ts` (top-start) | ✅ marker |
-| `<ui-sticker>` | callout disc / `variant="burst"` ("−20%") | `te` (top-end) | ✅ marker |
+| `<ui-sticker>` | callout disc / `variant="sh:burst"` ("−20%") | `te` (top-end) | ✅ marker |
 | `<ui-save>` | favorite / wishlist toggle | `te` (top-end) | ❌ card-only (interactive) |
 | `<ui-play>` | play affordance | `cc` (center) | ❌ card-only (interactive) |
 

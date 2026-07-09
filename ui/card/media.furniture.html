@@ -64,7 +64,7 @@
 	     Sticker — <ui-sticker>
 	     ============================================================ -->
 	<h2>Sticker — <code>&lt;ui-sticker&gt;</code></h2>
-	<p>A disc, or a starburst with <code>variant="burst"</code> (good for discounts). Position + hue via <code>sticker(&lt;pos&gt;)</code> / <code>sticker(&lt;hue&gt;)</code>. A card can address one chip and one sticker together.</p>
+	<p>A disc, or a starburst with <code>variant="sh:burst"</code> (good for discounts). Position + hue via <code>sticker(&lt;pos&gt;)</code> / <code>sticker(&lt;hue&gt;)</code>. A card can address one chip and one sticker together.</p>
 	<p>Full component: <a href="../sticker/">ui/sticker</a>.</p>
 	<div class="grid grid-3">
 		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(red) chip(be) chip(green)">
@@ -81,7 +81,7 @@
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/ergochair.png" alt="">
-					<ui-sticker variant="burst">-28%</ui-sticker>
+					<ui-sticker variant="sh:burst">-28%</ui-sticker>
 				</ui-media>
 				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">Starburst sticker</h2></ui-content>
 			</cq-box>
@@ -116,8 +116,8 @@
 		<code>&lt;ui-sticker&gt;</code> needs no <code>variant</code> attribute. Combine with
 		<code>sticker(&lt;hue&gt;)</code> and <code>sticker(&lt;pos&gt;)</code>.</p>
 	<div class="grid grid-3">
-		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(burst) sticker(green)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-sticker><small>SAVE</small><strong>20%</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">sticker(burst)</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(heart) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>XMAS</small><strong>$50</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(heart)</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(sh:burst) sticker(green)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-sticker><small>SAVE</small><strong>20%</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">sticker(sh:burst)</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(sh:heart) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>XMAS</small><strong>$50</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(sh:heart)</h2></ui-content></cq-box></ui-card>
 		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(spl) sticker(blue)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-sticker><small>NEW</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">sticker(spl)</h2></ui-content></cq-box></ui-card>
 	</div>
 
@@ -125,7 +125,7 @@
 		font-size needed (progressive enhancement, Chrome 150+).</p>
 	<div class="grid grid-3">
 		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(blue)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-sticker><small>UP TO</small><strong>40%</strong><span>OFF</span></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">sticker(fit)</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(burst) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>MEGA</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(fit) + burst</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(sh:burst) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>MEGA</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(fit) + burst</h2></ui-content></cq-box></ui-card>
 		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(green)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-sticker><strong>NEW</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">sticker(fit) single line</h2></ui-content></cq-box></ui-card>
 	</div>
 
