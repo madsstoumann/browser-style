@@ -197,6 +197,7 @@
 			aspect-ratio: var(--ui-media-ar, 3/4);
 			background: var(--ui-reveal-expand-fixed-bg, transparent); /* solid fill on the in-flow placeholder — the cell the card lifted out of */
 			border-radius: var(--ui-card-radius, var(--ui-reveal-radius)); /* match the card so the placeholder keeps the same corners (bg clips to radius) */
+			container-type: normal; /* the host's inline-size container implies contain:layout, which would trap the fixed popup + backdrop inside the host — release it while open (front-face md:/lg: tiers pause, but the popup styles own the open state) */
 
 			/* squircle: same corner-shape as the card when rds(-sq) is used */
 			&[variant*="-sq)"] { corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8)); }
@@ -468,4 +469,14 @@
 			padding-inline-start: var(--ui-reveal-icon-clear);
 		}
 	}
+}
+
+/* === popup escape hatch — <lay-out> sets `contain: layout inline-size`
+   (layout.base layer), and layout containment makes it the containing block
+   for the fixed popup, trapping it inside the grid cell area. While a popup
+   is open, drop the `layout` keyword (keep inline-size, so track sizing is
+   untouched) so the popup's inset resolves against the viewport again.
+   Unlayered on purpose: beats layout.base regardless of stylesheet order. */
+lay-out:has(ui-reveal[type="expand"][to] > details[open]) {
+	contain: inline-size;
 }
