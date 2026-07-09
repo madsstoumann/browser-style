@@ -198,7 +198,8 @@ const embedVideoObject = (item) => {
 const FURNITURE_AXIS = {
 	pos: new Set(['ts', 'tc', 'te', 'cs', 'cc', 'ce', 'bs', 'bc', 'be']),
 	hue: new Set(['red', 'orange', 'green', 'blue', 'accent', 'dark', 'light', 'subtle']),
-	size: new Set(['sm', 'md', 'lg', 'xl']),
+	size: new Set(['sm', 'md', 'lg', 'xl', '2xl', '3xl']),
+	variant: new Set(['lgt', 'out']),
 	shape: new Set(['text', 'spl', 'spr']),
 	disc: new Set(['crc', 'sqr', 'rnd', 'pll', 'non'])
 };

@@ -1,11 +1,15 @@
 /**
  * ui-chip
- * @version 4.0.1
- * @date 2026-04-12
+ * @version 4.1.0
+ * @date 2026-07-09
  * @author Mads Stoumann
+ *
+ * Sections: A. Base · B. Furniture axes (theme/fill/ink · variant · size ·
+ * corner) · C. Inline badge. Full docs: readme.md.
  */
 @layer bs-component {
 	:where(ui-chip) {
+		/* ───────── A. Base ───────── */
 		--ui-chip-border-color: transparent;
 		--ui-chip-border-width: var(--border-width, 1px);
 		--ui-chip-padding-block: 0.25em;
@@ -29,11 +33,12 @@
 		user-select: none;
 		white-space: nowrap;
 
+		/* ───────── B. Furniture axes — theme/fill/ink · variant · size · corner ─────────
+		   Each axis: `&[attr]` = standalone, `:where([media*="chip(…)"]) &` = card token. */
+
 		/* colour — --ui-chip-accent is the single input; theme= and fill= both feed
-		   it, so solid / light / outline all work for named hues and arbitrary
-		   colours alike. Solid bg falls back to accent (base rule), so hue rules set
-		   only accent + the curated ink. `&` is standalone, `:where([media*="chip(…)"]) &`
-		   is the card form. */
+		   it, so solid / light / outline all read it. Solid bg falls back to accent
+		   (base rule), so a hue only sets accent + the curated ink. */
 		&[theme~="red"],    :where([media*="chip(red)"])    & { --ui-chip-accent: var(--ui-theme-red-bg);    --ui-chip-c: var(--ui-theme-red-c); }
 		&[theme~="orange"], :where([media*="chip(orange)"]) & { --ui-chip-accent: var(--ui-theme-orange-bg); --ui-chip-c: var(--ui-theme-orange-c); }
 		&[theme~="green"],  :where([media*="chip(green)"])  & { --ui-chip-accent: var(--ui-theme-green-bg);  --ui-chip-c: var(--ui-theme-green-c); }
@@ -48,17 +53,24 @@
 		&[fill] { --ui-chip-accent: attr(fill type(<color>), var(--color-button)); --ui-chip-c: contrast-color(var(--ui-chip-accent)); }
 		&[ink]  { --ui-chip-c: attr(ink type(<color>), hsl(0, 0%, 100%)); }
 
-		/* variants */
-		&[variant~="light"] {
+		/* variant — light (tinted surface) / outline. From variant= or the card's
+		   chip(lgt)/chip(out). Ink = the accent (falls back to text when no
+		   theme/fill), so both work coloured or plain. After the hues so they win. */
+		&[variant~="light"], :where([media*="chip(lgt)"]) & {
 			--ui-chip-bg: color-mix(in oklch, var(--ui-chip-c) 15%, var(--color-surface, hsl(0, 0%, 100%)));
+			--ui-chip-c: var(--ui-chip-accent, var(--color-text));
 		}
-		&[variant~="light"]:is([theme], [fill]) { --ui-chip-c: var(--ui-chip-accent); }
-
-		&[variant~="outline"] {
+		&[variant~="outline"], :where([media*="chip(out)"]) & {
 			--ui-chip-bg: transparent;
 			--ui-chip-border-color: currentColor;
+			--ui-chip-c: var(--ui-chip-accent, var(--color-text));
 		}
-		&[variant~="outline"]:is([theme], [fill]) { --ui-chip-c: var(--ui-chip-accent); }
+
+		/* size — em-based, from size= or the card's chip(<size>). md (0.875em) = default. */
+		&[size~="sm"],  :where([media*="chip(sm)"])  & { --ui-chip-font-size: 0.625em; }
+		&[size~="lg"],  :where([media*="chip(lg)"])  & { --ui-chip-font-size: 1em; }
+		&[size~="xl"],  :where([media*="chip(xl)"])  & { --ui-chip-font-size: 1.15em; }
+		&[size~="2xl"], :where([media*="chip(2xl)"]) & { --ui-chip-font-size: 1.4em; }
 
 		/* corner — from radius= or the card's chip(<corner>). pill = default.
 		   non sharp · rnd rounded · pll pill · crc circle · sqr squircle.
@@ -68,19 +80,12 @@
 		&[radius~="pll"], :where([media*="chip(pll)"]) & { --ui-chip-radius: var(--radius-pill); }
 		&[radius~="crc"], :where([media*="chip(crc)"]) & { --ui-chip-radius: var(--radius-circle); }
 		&[radius~="sqr"], &[variant~="squircle"], :where([media*="chip(sqr)"]) & { --ui-chip-radius: 0.75em; --ui-chip-corner: superellipse(var(--squircle-md)); }
-	}
 
-	/* size — em-based, from size= or the card's chip(<size>). md (0.875em) = default. */
-	:where(ui-chip[size="sm"], [media*="chip(sm)"] ui-chip) { --ui-chip-font-size: 0.625em; }
-	:where(ui-chip[size="lg"], [media*="chip(lg)"] ui-chip) { --ui-chip-font-size: 1em; }
-	:where(ui-chip[size="xl"], [media*="chip(xl)"] ui-chip) { --ui-chip-font-size: 1.15em; }
-
-	/* `variant="inline"` badge — auto-push to inline end with a minimum gap */
-	:where(ui-chip):has(> ui-badge[variant~="inline"]) {
-		--ui-chip-padding-inline-end: 0.5em;
-		--ui-chip-column-gap: 0.75em;
-	}
-	:where(ui-chip) > ui-badge[variant~="inline"] {
-		margin-inline-start: auto;
+		/* ───────── C. Inline badge — auto-push a nested ui-badge to the inline end ───────── */
+		&:has(> ui-badge[variant~="inline"]) {
+			--ui-chip-padding-inline-end: 0.5em;
+			--ui-chip-column-gap: 0.75em;
+		}
+		& > ui-badge[variant~="inline"] { margin-inline-start: auto; }
 	}
 }

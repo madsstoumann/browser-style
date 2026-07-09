@@ -37,7 +37,9 @@
 	     Chip — <ui-chip>
 	     ============================================================ -->
 	<h2>Chip — <code>&lt;ui-chip&gt;</code></h2>
-	<p>A small pill label. Position with <code>chip(&lt;pos&gt;)</code>, colour with <code>chip(&lt;hue&gt;)</code>.</p>
+	<p>A small pill label. Position with <code>chip(&lt;pos&gt;)</code>, colour with <code>chip(&lt;hue&gt;)</code>,
+		size with <code>chip(sm|lg|xl|2xl)</code>. The <code>light</code>/<code>outline</code> variants are
+		addressable too: <code>chip(lgt)</code> (tinted surface) and <code>chip(out)</code> (bordered).</p>
 	<p>Full component: <a href="../chip/">ui/chip</a>.</p>
 	<div class="grid grid-3">
 		<ui-card variant="col" media="asr(4/3) chip(bs) chip(green)">
@@ -56,6 +58,28 @@
 			<cq-box>
 				<ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-chip>Editor's pick</ui-chip></ui-media>
 				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">chip(tc) chip(accent)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<p>Variant + hue from the token — <code>chip(lgt)</code> / <code>chip(out)</code> combined with a hue and size:</p>
+	<div class="grid grid-3">
+		<ui-card variant="col" media="asr(4/3) chip(bs) chip(lgt) chip(blue) chip(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-chip>Premium ★</ui-chip></ui-media>
+				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">chip(lgt) chip(blue)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) chip(te) chip(out) chip(green) chip(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/ergochair.png" alt=""><ui-chip>In stock ✓</ui-chip></ui-media>
+				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">chip(out) chip(green)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) chip(tc) chip(lgt) chip(red) chip(2xl)">
+			<cq-box>
+				<ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-chip>-50%</ui-chip></ui-media>
+				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">chip(lgt) chip(2xl)</h2></ui-content>
 			</cq-box>
 		</ui-card>
 	</div>

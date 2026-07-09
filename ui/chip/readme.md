@@ -70,13 +70,14 @@ The web component uses the **exact same** HTML structure as CSS-only — the JS 
 | `theme` | string | A theme hue (bg + ink pair): `red orange green blue accent dark light subtle` |
 | `fill` | `<color>` | Arbitrary background — any CSS colour; text auto-contrasts. Overrides `theme` |
 | `ink` | `<color>` | Arbitrary text colour — any CSS colour. Overrides the auto-contrast |
-| `size` | string | `sm`, `lg`, `xl` (`md` is the default) |
+| `size` | string | `sm`, `lg`, `xl`, `2xl` (`md` is the default) |
 | `radius` | string | Corner shape: `non` sharp · `rnd` rounded · `pll` pill (default) · `crc` circle · `sqr` squircle |
 | `variant` | string | Space-separated: `light`, `outline` (`square`/`squircle` are aliases for `radius="rnd"`/`"sqr"`) |
 
 > This colour/size model is shared by all `<ui-media>` furniture (`chip`, `sticker`, `save`,
-> `play`) and works identically standalone or via the card `media=` token — `chip(<hue>)`,
-> `chip(<size>)`, etc.
+> `play`) and works identically standalone or via the card `media=` token. Standalone
+> attribute ↔ card token: `theme=` ↔ `chip(<hue>)`, `size=` ↔ `chip(<size>)`, `radius=` ↔
+> `chip(<corner>)`, `variant="light"` ↔ `chip(lgt)`, `variant="outline"` ↔ `chip(out)`.
 
 ---
 
@@ -175,13 +176,14 @@ For an **arbitrary colour**, use `fill` (surface) — text auto-contrasts — an
 
 ## Sizes
 
-`sm`, `lg`, `xl` — `md` is the default (no attribute):
+`sm`, `lg`, `xl`, `2xl` — `md` is the default (no attribute). Sizes are `em`-based, so they scale with the surrounding text:
 
 ```html
 <ui-chip size="sm" theme="blue">Small</ui-chip>
 <ui-chip theme="blue">Medium (default)</ui-chip>
 <ui-chip size="lg" theme="blue">Large</ui-chip>
 <ui-chip size="xl" theme="blue">X-Large</ui-chip>
+<ui-chip size="2xl" theme="blue">2X-Large</ui-chip>
 ```
 
 ## Variants
@@ -198,6 +200,12 @@ For an **arbitrary colour**, use `fill` (surface) — text auto-contrasts — an
 
 ```html
 <ui-chip variant="outline" theme="green">Available</ui-chip>
+```
+
+Both are addressable from a card via the `media=` token — `chip(lgt)` (light) and `chip(out)` (outline), combined with a hue/size like any other furniture token:
+
+```html
+<ui-card media="asr(4/3) chip(te) chip(lgt) chip(blue)"> … </ui-card>
 ```
 
 ### Shape variants
