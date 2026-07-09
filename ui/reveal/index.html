@@ -7,18 +7,12 @@
 	<meta name="description" content="CSS-only reveal card built on details/summary with cover, flip, slide, and scale animations.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="ui-reveal.css">
+	<link rel="stylesheet" href="/ui/card/demo.layout.css">
+	<!-- typed attr() fallback for Safari/Firefox (layout gaps/spacing attributes) -->
+	<script type="module" src="/layout/polyfills/attr-fallback.js"></script>
 	<style>
-		.grid {
-			display: grid;
-			gap: var(--spacing-lg);
-			grid-template-columns: 1fr;
-			margin-block-end: var(--spacing-2xl);
-		}
-		@media (min-width: 720px) {
-			.grid { grid-template-columns: repeat(3, 1fr); }
-			.grid-2 { grid-template-columns: repeat(2, 1fr); }
-		}
 		.hero {
 			display: block;
 			margin-block-end: var(--spacing-2xl);
@@ -48,7 +42,7 @@
 	     ============================================ -->
 	<h2>New releases</h2>
 
-	<div class="grid">
+	<lay-out lg="columns(3)">
 		<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm">
 			<cq-box>
 				<ui-media><img src="/assets/images/game_01.png" alt="" loading="lazy"></ui-media>
@@ -78,7 +72,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================
 	     The same three cards as <ui-reveal> — adds the reveal behaviour.
@@ -89,7 +83,7 @@
 	     ============================================ -->
 	<h2>New releases <code>&lt;ui-reveal&gt;</code></h2>
 
-	<div class="grid">
+	<lay-out lg="columns(3)">
 		<ui-reveal type="expand" to="viewport" icon="top right semi" variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm" style="--ui-reveal-expand-fixed-bg:#6a69ab;">
 			<details>
 				<summary>
@@ -146,7 +140,7 @@
 				</ui-content>
 			</details>
 		</ui-reveal>
-	</div>
+	</lay-out>
 
 	<!-- ============================================
 	     Cover story as a plain <ui-card> — mirrored media via flp(h),
@@ -198,7 +192,7 @@
 	     ============================================ -->
 	<h2>Quick info</h2>
 
-	<div class="grid">
+	<lay-out lg="columns(3)">
 		<ui-card media="asr(6/7) obp(tc)">
 			<cq-box>
 				<ui-media><img src="/assets/images/band_britpop.png" alt="Camden Court" loading="lazy"></ui-media>
@@ -234,11 +228,11 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<h2>What we're listening to</h2>
 
-	<div class="grid">
+	<lay-out lg="columns(3)">
 		<ui-reveal class="thelure" icon="top right sm" icon-close="dark" type="flip" variant="ovr(tl) rds(lg-sq)" media="asr(1/1) hov(zoom) obp(tc)" scroll>
 			<details name="flip">
 				<summary>
@@ -418,7 +412,7 @@
 				</ui-content>
 			</details>
 		</ui-reveal>
-	</div>
+	</lay-out>
 
 	<!-- ============================================
 	     Tap the whole card — trigger="card" (ar 2/3)
@@ -426,7 +420,7 @@
 	<h2>Tap the whole card</h2>
 	<p>Three from the lineup, up close — tap anywhere, front <em>or</em> back, to turn the card over. Links on the back still work.</p>
 
-	<div class="grid">
+	<lay-out lg="columns(3)">
 		<ui-reveal type="flip" trigger="card" from="left" variant="ovr(bl)" media="asr(2/3) hov(track) scm">
 			<details>
 				<summary>
@@ -474,7 +468,7 @@
 				</ui-content>
 			</details>
 		</ui-reveal>
-	</div>
+	</lay-out>
 
 	<!-- ============================================
 	     However you frame it — media position
@@ -482,7 +476,7 @@
 	<h2>However you frame it</h2>
 	<p>The same lineup, framed four ways — image above, below, left or right of the words.</p>
 
-	<div class="grid grid-2">
+	<lay-out lg="columns(2)">
 		<!-- media top (col, default) -->
 		<ui-reveal icon="bottom right dark" type="slide" from="top" media="asr(16/9) hov(zoom)" style="--ui-reveal-bg:#f49d98;">
 			<details>
@@ -558,7 +552,7 @@
 				</ui-content>
 			</details>
 		</ui-reveal>
-	</div>
+	</lay-out>
 
 	<!-- optional responsive-image upgrade (host-gated Cloudflare srcset; transitional until SSR) -->
 	<script type="module" src="/ui/card/ui-media-srcset.js"></script>

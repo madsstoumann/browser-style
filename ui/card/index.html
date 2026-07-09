@@ -6,20 +6,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="CSS-first card composing &lt;ui-media&gt; + &lt;ui-content&gt;, configured with media=/content=/variant= token DSLs, a container-driven font scale, responsive layout tiers and themes.">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="ui-card.css">
+	<link rel="stylesheet" href="demo.layout.css">
+	<!-- typed attr() fallback for Safari/Firefox (layout gaps/spacing attributes) -->
+	<script type="module" src="/layout/polyfills/attr-fallback.js"></script>
 	<style>
-		.grid {
-			display: grid;
-			gap: var(--spacing-lg);
-			grid-template-columns: 1fr;
-			margin-block-end: var(--spacing-2xl);
-		}
-		@media (min-width: 720px) {
-			.grid-2 { grid-template-columns: repeat(2, 1fr); }
-			.grid-3 { grid-template-columns: repeat(3, 1fr); }
-		}
 		.hero { margin-block-end: var(--spacing-2xl); }
 		.note { color: var(--color-text-secondary, #666); }
 	</style>
@@ -32,7 +26,7 @@
 	     Article cards — realistic content, stacked (col)
 	     ============================================================ -->
 	<h2>Article cards</h2>
-	<div class="grid grid-3">
+	<lay-out lg="columns(3)">
 		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
 				<ui-media><img src="/assets/images/popovers.png" alt="" loading="lazy"></ui-media>
@@ -83,7 +77,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     Responsive layout — row when wide, col when narrow (lg: prefix).
@@ -104,7 +98,7 @@
 		</cq-box>
 	</ui-card>
 
-	<div class="grid grid-3">
+	<lay-out lg="columns(3)">
 		<ui-card variant="col lg:row lg:spl(1/1)" media="asr(16/9)">
 			<cq-box>
 				<ui-media><img src="/assets/images/destinations.png" alt="" loading="lazy"></ui-media>
@@ -135,7 +129,50 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
+
+	<!-- ============================================================
+	     Layout system — <lay-out> from /layout wrapping cards.
+	     grid(3a): two half-width cells on top, one full-width below —
+	     a pattern the old .grid classes could never express. The full-width
+	     card crosses its own lg container tier (44rem) and flips to lg:row,
+	     while the half-width copies stay stacked. Two systems, one markup.
+	     ============================================================ -->
+	<h2>Layout system — <code>&lt;lay-out&gt;</code></h2>
+	<p class="note">The section layout comes from <code>/layout</code> (<code>md="columns(2)" lg="grid(3a)"</code>, viewport-driven); each card still adapts to its own cell width via container queries. All three cards share identical <code>variant="col lg:row lg:spl(1/1)"</code> markup — only the full-width one flips to a row.</p>
+	<lay-out md="columns(2)" lg="grid(3a)">
+		<ui-card variant="col lg:row lg:spl(1/1)" media="asr(16/9)">
+			<cq-box>
+				<ui-media><img src="/assets/images/popovers.png" alt="" loading="lazy"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Web Development</small>
+					<h2 data-part="headline">Half-width cell — stays stacked</h2>
+					<p data-part="summary">This card sits in a 1-of-2 cell, below its own <code>lg</code> tier, so the default <code>col</code> arrangement applies.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col lg:row lg:spl(1/1)" media="asr(16/9)">
+			<cq-box>
+				<ui-media><img src="/assets/images/quantum.png" alt="" loading="lazy"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Technology</small>
+					<h2 data-part="headline">Half-width cell — stays stacked</h2>
+					<p data-part="summary">Identical markup to its neighbours; the cell width decides the arrangement.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col lg:row lg:spl(1/1)" media="asr(16/9)">
+			<cq-box>
+				<ui-media><img src="/assets/images/websummit.png" alt="" loading="lazy"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Featured</small>
+					<h2 data-part="headline">Full-width cell — flips to a row</h2>
+					<p data-part="summary">The <code>grid(3a)</code> pattern gives this card the whole bottom row. Its own width crosses the card's <code>lg</code> container tier (44rem), so <code>lg:row lg:spl(1/1)</code> kicks in — media beside content.</p>
+					<nav data-part="actions"><a class="ui-button" href="#">Read more</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
 
 	<!-- ============================================================
 	     Hero — overlay (static). Content stacked over media with a scrim.
@@ -158,7 +195,7 @@
 	     Overlay positions — realistic featured cards
 	     ============================================================ -->
 	<h2>Overlay — featured</h2>
-	<div class="grid grid-3">
+	<lay-out lg="columns(3)">
 		<ui-card variant="ovr(bl)" media="asr(3/4) obp(cc)" content="scl(lg)">
 			<cq-box>
 				<ui-media><img src="/assets/images/mindfulness.png" alt="" loading="lazy"></ui-media>
@@ -186,14 +223,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     Media overlays — <ui-chip> label + <ui-sticker> callout
 	     ============================================================ -->
 	<h2>Media overlays — chip &amp; sticker</h2>
 	<p class="note">Overlay furniture lives inside <code>&lt;ui-media&gt;</code>; position and sub-theme come from the parent <code>media=</code> token (<code>chip(&lt;pos&gt;)</code> / <code>sticker(&lt;pos&gt;)</code>, <code>chip(&lt;hue&gt;)</code>). <code>&lt;ui-chip&gt;</code> is a pill label; <code>&lt;ui-sticker&gt;</code> is a disc, or a starburst with <code>variant="burst"</code>.</p>
-	<div class="grid grid-3">
+	<lay-out lg="columns(3)">
 		<ui-card variant="col" media="asr(4/3) chip(be) chip(green) sticker(ts) sticker(red)">
 			<cq-box>
 				<ui-media>
@@ -237,12 +274,12 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- Video + bare scroller -->
 	<h2>Video &amp; multi-source scroller</h2>
 	<p class="note"><code>&lt;ui-media&gt;</code> accepts a <code>&lt;video&gt;</code> (native controls/poster) just like an image. Add <code>media="nav"</code> for multiple sources — a flex scroll-snap row. <code>nav(non)</code> leaves it a bare swipe scroller, no JS.</p>
-	<div class="grid grid-2">
+	<lay-out lg="columns(2)">
 		<ui-card variant="col" media="asr(16/9) chip(ts) chip(blue)">
 			<cq-box>
 				<ui-media>
@@ -273,12 +310,12 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- Carousel — CSS-only dots + arrows -->
 	<h2>Carousel — <code>media="nav"</code></h2>
 	<p class="note">A scroll-snap row of sources, plus CSS-only navigation dots (<code>::scroll-marker</code>) and prev/next arrows (<code>::scroll-button()</code>) shown by default. No JavaScript. Chromium-only for now — elsewhere it degrades to the plain swipe scroller.</p>
-	<div class="grid grid-2">
+	<lay-out lg="columns(2)">
 		<ui-card variant="col" media="asr(16/9) nav" content="scl(lg)">
 			<cq-box>
 				<ui-media>
@@ -310,12 +347,12 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- Carousel controls — pick pieces + theme them -->
 	<h2>Carousel controls &amp; theming</h2>
 	<p class="note">Pick controls with <code>nav(dot)</code>, <code>nav(arw)</code>, bare <code>nav</code> (both), or <code>nav(non)</code>. Colours, dot size and the arrow glyphs are all tokens.</p>
-	<div class="grid grid-3">
+	<lay-out lg="columns(3)">
 		<ui-card variant="col" media="asr(4/3) nav(dot)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
@@ -349,14 +386,14 @@
 				<ui-content><small data-part="eyebrow">themed</small><h2 data-part="headline">Accent circle via <code>--ui-media-arrow-bg</code></h2></ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     Themes — thm()
 	     ============================================================ -->
 	<h2>Themes — <code>thm()</code></h2>
 	<p class="note">The same card in default, <code>thm(dark)</code> and <code>thm(brand)</code>. Theme tokens remap surface, ink, eyebrow and tag colours.</p>
-	<div class="grid grid-3">
+	<lay-out lg="columns(3)">
 		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
 				<ui-media><img src="/assets/images/fittrackpro.png" alt="" loading="lazy"></ui-media>
@@ -395,13 +432,13 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     Profile + product — row, realistic
 	     ============================================================ -->
 	<h2>Profile &amp; product</h2>
-	<div class="grid grid-2">
+	<lay-out lg="columns(2)">
 		<ui-card variant="row spl(1/2)" media="asr(1/1)">
 			<cq-box>
 				<ui-media><img src="/assets/images/janesmith.png" alt="" loading="lazy"></ui-media>
@@ -427,7 +464,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 	<!-- cursor-tracked hover + loop/auto carousels (progressive enhancement) -->
 	<script type="module" src="index.js"></script>
 </body>
