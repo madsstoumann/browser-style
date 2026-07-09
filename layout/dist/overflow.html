@@ -7,7 +7,6 @@
 	<meta name="description" content="Overflow Layouts using CSS layout system">
 	<link rel="stylesheet" href="layout.min.css">
 	<link rel="stylesheet" href="/layout/demo.css">
-	<link rel="stylesheet" href="/ui/base/index.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
 	<script src="../polyfills/overflow-drag.js"></script>
 </head>
@@ -114,9 +113,22 @@
 	</section>
 	<section>
 		<h3>Preview + controls — <code>overflow="preview"</code> + <code>nav</code></h3>
-		<small>Next-item preview composes with controls</small>
-		<code>&lt;lay-out md="columns(2)" overflow="preview" nav&gt;</code>
-		<lay-out md="columns(2)" overflow="preview" nav>
+		<small>Next-item preview composes with controls — arrows advance one item at a time; dots in a band below via <code>dot="blw"</code>, full-arrow glyph via <code>arrow="arr"</code>. (For a control-less swipe scroller, <code>overflow="stop"</code> gives the same one-item-per-fling stepping.)</small>
+		<code>&lt;lay-out md="columns(2)" overflow="preview" nav dot="blw" arrow="arr"&gt;</code>
+		<lay-out md="columns(2)" overflow="preview" nav dot="blw" arrow="arr">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Pages — <code>pages</code> attribute</h3>
+		<small>Snap + dot per <strong>page</strong> of N items — dot count adapts per breakpoint (here: 3 dots at 2 columns, 2 dots at 3 columns), dots in a band below via <code>dot="blw"</code></small>
+		<code>&lt;lay-out md="columns(2)" lg="columns(3)" overflow nav pages dot="blw"&gt;</code>
+		<lay-out md="columns(2)" lg="columns(3)" overflow nav pages dot="blw">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>

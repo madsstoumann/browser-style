@@ -157,6 +157,133 @@ function generateOverflowHTML(columnsData, iconsDir) {
 	<p>These layouts demonstrate the <strong>overflow</strong> attribute with column layouts.<br>
 		The <strong>overflow="preview"</strong> shows a partial preview of the next item.</p>`
 
+	// Carousel controls — shared styles from ui/base/carousel.css (bundled into
+	// dist/layout.css via layout.config.json "include"); opt-in via nav / arrow= / dot= attrs.
+	html += `
+	<section>
+		<h3>Carousel controls — <code>nav</code></h3>
+		<small>Shared carousel controls from <code>ui/base/carousel.css</code>: dots + arrows via the <code>nav</code> attribute</small>
+		<code>&lt;lay-out overflow nav&gt;</code>
+		<lay-out overflow nav>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Band below — <code>nav="blw"</code></h3>
+		<small>Controls in a reserved band below the items — bare arrows</small>
+		<code>&lt;lay-out overflow nav="blw" arrow="bare"&gt;</code>
+		<lay-out overflow nav="blw" arrow="bare">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Band above — <code>nav="abv"</code> + <code>arrow="set"</code></h3>
+		<small>Controls in a band above the items, arrow pair clustered at the inline-end</small>
+		<code>&lt;lay-out overflow nav="abv" arrow="set"&gt;</code>
+		<lay-out overflow nav="abv" arrow="set">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Clustered arrows on media — <code>arrow="set be"</code></h3>
+		<small>Arrow pair as one cluster in the bottom-end corner, dots bottom-center</small>
+		<code>&lt;lay-out overflow nav arrow="set be"&gt;</code>
+		<lay-out overflow nav arrow="set be">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Dots below, arrows on media — <code>dot="blw"</code></h3>
+		<small>Dots alone in a band below; arrows stay centered on the items</small>
+		<code>&lt;lay-out overflow nav dot="blw"&gt;</code>
+		<lay-out overflow nav dot="blw">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Arrows below, dots on media — <code>arrow="blw"</code></h3>
+		<small>Arrows alone in a band below; dots stay on the items</small>
+		<code>&lt;lay-out overflow nav arrow="blw"&gt;</code>
+		<lay-out overflow nav arrow="blw">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Dots only, pill timer — <code>nav="dot"</code> + <code>dot="pll"</code></h3>
+		<small>No arrows; the current pill fills over <code>--ui-carousel-autoplay</code> (5s)</small>
+		<code>&lt;lay-out overflow nav="dot" dot="pll"&gt;</code>
+		<lay-out overflow nav="dot" dot="pll">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Arrows only, dark — <code>nav="arw"</code> + <code>arrow="drk"</code></h3>
+		<small>No dots; dark circles with white chevrons, auto-hidden at the dead end (<code>arrow="hid"</code>)</small>
+		<code>&lt;lay-out overflow nav="arw" arrow="drk hid"&gt;</code>
+		<lay-out overflow nav="arw" arrow="drk hid">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Preview + controls — <code>overflow="preview"</code> + <code>nav</code></h3>
+		<small>Next-item preview composes with controls — arrows advance one item at a time; dots in a band below via <code>dot="blw"</code>, full-arrow glyph via <code>arrow="arr"</code>. (For a control-less swipe scroller, <code>overflow="stop"</code> gives the same one-item-per-fling stepping.)</small>
+		<code>&lt;lay-out md="columns(2)" overflow="preview" nav dot="blw" arrow="arr"&gt;</code>
+		<lay-out md="columns(2)" overflow="preview" nav dot="blw" arrow="arr">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Pages — <code>pages</code> attribute</h3>
+		<small>Snap + dot per <strong>page</strong> of N items — dot count adapts per breakpoint (here: 3 dots at 2 columns, 2 dots at 3 columns), dots in a band below via <code>dot="blw"</code></small>
+		<code>&lt;lay-out md="columns(2)" lg="columns(3)" overflow nav pages dot="blw"&gt;</code>
+		<lay-out md="columns(2)" lg="columns(3)" overflow nav pages dot="blw">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>`
+
 	const overflowType = 'preview'
 
 	for (const layout of columnsData.layouts) {

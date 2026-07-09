@@ -1,70 +1,105 @@
 {
-  "element": "lay-out",
-  "layoutContainer": {
-    "element": "body",
-    "maxWidth": 1024,
-    "margin": "1rem",
-    "setRoot": true
-  },
-  "core": ["base"],
-  "common": ["animations"],
-  "breakpoints": {
-    "xs": {
-      "type": "@media",
-      "min": "240px",
-      "layouts": ["autofit", "stack"]
-    },
-    "sm": {
-      "type": "@media",
-      "min": "380px",
-      "layouts": [
-        "autofit",
-        "lanes",
-        "stack",
-        {
-          "columns": ["columns(2)"],
-          "grid": ["grid(3a)"],
-          "mosaic": ["mosaic(photo)"]
-        }
-      ]
-    },
-    "md": {
-      "type": "@media",
-      "min": "540px",
-      "layouts": [
-        "columns",
-        "lanes",
-        "stack",
-        {
-          "grid": ["grid(3a)"]
-        }
-      ]
-    },
-    "lg": {
-      "type": "@media",
-      "min": "720px",
-      "layouts": ["asymmetrical", "bento", "columns", "grid", "lanes", "ratios", "stack"]
-    },
-    "xl": {
-      "type": "@media",
-      "min": "920px",
-      "layouts": [
-        "stack",
-        {
-          "bento": ["bento(6a)"],
-          "mosaic": ["mosaic(scatter)", "mosaic(hex)", "mosaic(pinwheel)", "mosaic(cornerstone)"]
-        }
-      ]
-    },
-    "xxl": {
-      "type": "@media",
-      "min": "1140px",
-      "layouts": [
-        "stack",
-        {
-          "bento": ["bento(6a)"]
-        }
-      ]
-    }
-  }
+	"element": "lay-out",
+	"layoutContainer": {
+		"element": "body",
+		"maxWidth": 1024,
+		"margin": "1rem",
+		"setRoot": true
+	},
+	"core": [
+		"base"
+	],
+	"common": [
+		"animations"
+	],
+	"include": [
+		"../ui/base/carousel.css"
+	],
+	"breakpoints": {
+		"xs": {
+			"type": "@media",
+			"min": "240px",
+			"layouts": [
+				"autofit",
+				"stack"
+			]
+		},
+		"sm": {
+			"type": "@media",
+			"min": "380px",
+			"layouts": [
+				"autofit",
+				"lanes",
+				"stack",
+				{
+					"columns": [
+						"columns(2)"
+					],
+					"grid": [
+						"grid(3a)"
+					],
+					"mosaic": [
+						"mosaic(photo)"
+					]
+				}
+			]
+		},
+		"md": {
+			"type": "@media",
+			"min": "540px",
+			"layouts": [
+				"columns",
+				"lanes",
+				"stack",
+				{
+					"grid": [
+						"grid(3a)"
+					]
+				}
+			]
+		},
+		"lg": {
+			"type": "@media",
+			"min": "720px",
+			"layouts": [
+				"asymmetrical",
+				"bento",
+				"columns",
+				"grid",
+				"lanes",
+				"ratios",
+				"stack"
+			]
+		},
+		"xl": {
+			"type": "@media",
+			"min": "920px",
+			"layouts": [
+				"stack",
+				{
+					"bento": [
+						"bento(6a)"
+					],
+					"mosaic": [
+						"mosaic(scatter)",
+						"mosaic(hex)",
+						"mosaic(pinwheel)",
+						"mosaic(cornerstone)"
+					]
+				}
+			]
+		},
+		"xxl": {
+			"type": "@media",
+			"min": "1140px",
+			"layouts": [
+				"stack",
+				{
+					"bento": [
+						"bento(6a)"
+					]
+				}
+			]
+		}
+	}
 }

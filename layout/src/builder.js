@@ -80,6 +80,29 @@ export class LayoutBuilder {
 		return css
 	}
 
+	/* Bundle external stylesheets verbatim (paths relative to the config file) —
+	   keeps dist/layout.css a self-contained drop-in (e.g. shared carousel controls). */
+	loadIncludeFiles(files = []) {
+		let css = ''
+
+		for (const file of files) {
+			const filePath = path.resolve(path.dirname(this.configPath), file)
+
+			try {
+				if (fs.existsSync(filePath)) {
+					css += `\n/* === included: ${file} === */\n` + fs.readFileSync(filePath, 'utf8') + '\n'
+					console.log(`✓ Included ${file}`)
+				} else {
+					console.warn(`⚠ Include not found: ${filePath}`)
+				}
+			} catch (error) {
+				console.warn(`⚠ Failed to include ${file}: ${error.message}`)
+			}
+		}
+
+		return css
+	}
+
 	generateMediaQuery(breakpointConfig) {
 		const { type = '@media', min, max } = breakpointConfig
 
@@ -327,7 +350,10 @@ export class LayoutBuilder {
 		const rulesByMediaQuery = new Map()
 
 		for (const [key, properties] of this.cssRules) {
-			const [mediaQuery, selector] = key.split('::', 2)
+			// split on the FIRST '::' only — selectors may contain '::' themselves (pseudo-elements)
+			const sep = key.indexOf('::')
+			const mediaQuery = key.slice(0, sep)
+			const selector = key.slice(sep + 2)
 			const breakpointName = this.ruleBreakpoints.get(key)
 
 			if (!rulesByMediaQuery.has(mediaQuery)) {
@@ -367,10 +393,11 @@ export class LayoutBuilder {
 
 		const coreCSS = await this.loadCSSFiles(this.config.core || [])
 		const commonCSS = await this.loadCSSFiles(this.config.common || [])
+		const includeCSS = this.loadIncludeFiles(this.config.include || [])
 
 		await this.processBreakpoints()
 
-		const css = await this.generateCSS(coreCSS, commonCSS)
+		const css = await this.generateCSS(coreCSS, commonCSS) + includeCSS
 
 		const outputDir = path.dirname(this.outputPath)
 		if (!fs.existsSync(outputDir)) {
