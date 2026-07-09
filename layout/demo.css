@@ -51,7 +51,7 @@
 		line-height: 1.6;
 		row-gap: 1rem;
 	}
-	code {
+	/* code {
 		background: #333;
 		border-radius: .5ch;
 		color: #EEE;
@@ -60,7 +60,7 @@
 		font-size: .8rem;
 		margin-block: 1ch;
 		padding: .5ch 1.25ch;
-	}
+	} */
 	h1 {
 		font-weight: 500;
 		margin-block: 1ch 0;
