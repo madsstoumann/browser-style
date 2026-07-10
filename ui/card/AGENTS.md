@@ -142,6 +142,8 @@ Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are 
 | `card.md` | working on the content model, presets, or `render.js` |
 | `media.md` | working on the media frame, furniture positioning, or video |
 | `media.carousel.md` | working on carousel internals (scroll-markers, dots, arrows) |
+| `stagger.md` | working on the stagger reveal engine (details / snap-carousel / scroll-driven adapters) |
+| `animations.md` | working on the keyframe library or the `[animate]`/`animate-self` scroll API |
 | `content.md` | working on the text column, `scl()`, `data-part`s, tag choice |
 | `ui-card-tokens.md` | you need the `variant=` token / custom-property reference |
 | `video.md` | integrating video providers / posters / facades |
