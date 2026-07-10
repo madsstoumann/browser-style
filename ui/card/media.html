@@ -149,8 +149,23 @@
 			</cq-box>
 		</ui-card>
 	</div>
-	<p><strong>Intensity</strong> — a second <code>scm()</code> token sets how dark the scrim is: <code>scm(lgt)</code>, <code>scm(med)</code> (default), <code>scm(drk)</code>. Combine with a position, e.g. <code>scm scm(drk)</code>.</p>
+	<p><strong>Size</strong> — a <code>scm()</code> token sets how far the gradient reaches across the frame: <code>scm(sm)</code> hugs the edge, <code>scm(md)</code> (default), <code>scm(lg)</code> reaches across. Combine with a position, e.g. <code>scm(bc) scm(lg)</code>.</p>
 	<div class="grid grid-3">
+		<ui-card variant="ovr(bc)" media="asr(2/3) obf(cover) obp(cc) scm(bc) scm(sm)" content="scl(lg)">
+			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(sm)</small><strong data-part="headline">Small</strong></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="ovr(bc)" media="asr(2/3) obf(cover) obp(cc) scm(bc) scm(md)" content="scl(lg)">
+			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(md)</small><strong data-part="headline">Medium</strong></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="ovr(bc)" media="asr(2/3) obf(cover) obp(cc) scm(bc) scm(lg)" content="scl(lg)">
+			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(lg)</small><strong data-part="headline">Large</strong></ui-content></cq-box>
+		</ui-card>
+	</div>
+	<p><strong>Intensity</strong> — a <code>scm()</code> token sets how dark the scrim is: <code>scm(sheer)</code>, <code>scm(lgt)</code>, <code>scm(med)</code> (default), <code>scm(drk)</code>, <code>scm(solid)</code>. Combine with a position, e.g. <code>scm scm(drk)</code>.</p>
+	<div class="grid grid-3">
+		<ui-card variant="ovr(bc)" media="asr(2/3) obf(cover) obp(cc) scm scm(sheer)" content="scl(lg)">
+			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(sheer)</small><strong data-part="headline">Sheer</strong></ui-content></cq-box>
+		</ui-card>
 		<ui-card variant="ovr(bc)" media="asr(2/3) obf(cover) obp(cc) scm scm(lgt)" content="scl(lg)">
 			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(lgt)</small><strong data-part="headline">Light</strong></ui-content></cq-box>
 		</ui-card>
@@ -159,6 +174,9 @@
 		</ui-card>
 		<ui-card variant="ovr(bc)" media="asr(2/3) obf(cover) obp(cc) scm scm(drk)" content="scl(lg)">
 			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(drk)</small><strong data-part="headline">Dark</strong></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="ovr(bc)" media="asr(2/3) obf(cover) obp(cc) scm scm(solid)" content="scl(lg)">
+			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(solid)</small><strong data-part="headline">Solid</strong></ui-content></cq-box>
 		</ui-card>
 	</div>
 

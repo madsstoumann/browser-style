@@ -84,7 +84,9 @@
 	<h2>Scrim — <code>scm</code> over media</h2>
 	<p class="note">A <strong>scrim</strong> is the darkening gradient painted over the image (via <code>ui-media::after</code>) so overlaid text stays legible. <code>ovr(pos)</code> places the content over the media; bare <code>scm</code> auto-matches that position, or pass an explicit <code>scm(pos)</code>. The colour is the <code>--ui-media-scrim-color</code> token — the third card overrides it via preset <code>styles</code>.</p>
 	<div class="grid grid-3" id="scm-pos"></div>
-	<p class="note"><strong>Intensity</strong> — a second <code>scm()</code> token sets how dark the scrim is: <code>scm(lgt)</code>, <code>scm(med)</code> (default), <code>scm(drk)</code>. Combine with a position, e.g. <code>scm scm(drk)</code>.</p>
+	<p class="note"><strong>Size</strong> — a <code>scm()</code> token sets how far the gradient reaches across the frame: <code>scm(sm)</code> hugs the edge, <code>scm(md)</code> (default), <code>scm(lg)</code> reaches across. Combine with a position, e.g. <code>scm(bc) scm(lg)</code>.</p>
+	<div class="grid grid-3" id="scm-size"></div>
+	<p class="note"><strong>Intensity</strong> — a <code>scm()</code> token sets how dark the scrim is: <code>scm(sheer)</code>, <code>scm(lgt)</code>, <code>scm(med)</code> (default), <code>scm(drk)</code>, <code>scm(solid)</code>. Combine with a position, e.g. <code>scm scm(drk)</code>.</p>
 	<div class="grid grid-3" id="scm-int"></div>
 
 	<!-- ============================================================
@@ -168,7 +170,8 @@
 		/* hov() / scrim / overlays — presets referenced in the data files */
 		for (const nn of ['06', '07', '08', '09']) grid('hov').append(renderCard(await load(nn), presets));
 		for (const nn of ['10', '11', '12']) grid('scm-pos').append(renderCard(await load(nn), presets));
-		for (const nn of ['13', '14', '15']) grid('scm-int').append(renderCard(await load(nn), presets));
+		for (const nn of ['19', '20', '21']) grid('scm-size').append(renderCard(await load(nn), presets));
+		for (const nn of ['22', '13', '14', '15', '23']) grid('scm-int').append(renderCard(await load(nn), presets));
 		for (const nn of ['16', '17', '18']) grid('overlays').append(renderCard(await load(nn), presets));
 
 		/* sticker 9-position grid — one UCF frame, one preset, sticker content varies */

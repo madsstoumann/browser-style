@@ -1,0 +1,28 @@
+{
+  "$schema": "../../../../cms/baseline/models/card.schema.json",
+  "id": "media-demo-20",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-07-10T10:00:00Z",
+    "updatedAt": "2026-07-10T10:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Demo"
+  },
+  "fields": {
+    "internalName": "Demo — Media: scrim medium extent",
+    "schemaType": "content",
+    "preset": {
+      "$ref": "card-preset/media-scm-md"
+    },
+    "eyebrow": "scm(md)",
+    "headline": "Medium",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/mindfulness.png",
+        "alt": "Calm scene for mindfulness"
+      }
+    ]
+  }
+}

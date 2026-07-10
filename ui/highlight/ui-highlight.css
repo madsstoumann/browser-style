@@ -1,0 +1,100 @@
+@layer bs-component {
+	/*
+	 * <high-light> — CSS-only pen-marker highlight.
+	 *
+	 *   <high-light fill="green">highlighted text</high-light>
+	 *
+	 * fill    Named preset (green | yellow | orange | pink) OR any CSS <color>.
+	 * ink     Optional text color. Falls back to contrast-color(fill), then currentColor.
+	 * variant "underline" or "strike" — default is a full-block marker sweep.
+	 */
+	:where(high-light) {
+		/* -- Marker color: real default first, then typed attr() (dropped where unsupported) -- */
+		--_fill: #82ffad;
+		--_fill: attr(fill type(<color>), #82ffad);
+
+		/* -- Ink: explicit attr, else auto-contrast (set below), else currentColor -- */
+		--_ink-auto: currentColor;
+		--_ink: currentColor;
+		--_ink: attr(ink type(<color>), var(--_ink-auto));
+
+		/* -- Hand-drawn character (static defaults; random() enhances further down) -- */
+		--_angle: 104deg;
+		--_shadow-x: -0.45ch;
+		--_shadow-y: 0.3ch;
+		--_shadow-blur: 0.35ch;
+
+		/* -- Stroke geometry (overridden per variant) -- */
+		--_bg-size: 100% 100%;
+		--_bg-pos: 0 0;
+		--_radius: 0.4em;
+
+		-webkit-box-decoration-break: clone;
+		box-decoration-break: clone;
+		border-radius: var(--_radius);
+		color: var(--_ink);
+		padding-block: 0.12em;
+		padding-inline: 0.3em;
+
+		/* Twin gradients: a main sweep with feathered, uneven ends + a faint streak pass. */
+		background-image:
+			linear-gradient(var(--_angle),
+				color-mix(in oklab, var(--_fill), transparent 100%) 1%,
+				color-mix(in oklab, var(--_fill), transparent 0%) 3%,
+				color-mix(in oklab, var(--_fill), transparent 45%) 6%,
+				color-mix(in oklab, var(--_fill), transparent 88%) 92%,
+				color-mix(in oklab, var(--_fill), transparent 25%) 96%,
+				color-mix(in oklab, var(--_fill), transparent 100%) 99%),
+			linear-gradient(183deg,
+				color-mix(in oklab, var(--_fill), transparent 100%) 0%,
+				color-mix(in oklab, var(--_fill), transparent 70%) 8%,
+				color-mix(in oklab, var(--_fill), transparent 100%) 15%);
+		background-position: var(--_bg-pos);
+		background-repeat: no-repeat;
+		background-size: var(--_bg-size);
+
+		/* Washed marker ghost — a soft, offset bleed in the fill color. */
+		text-shadow: var(--_shadow-x) var(--_shadow-y) var(--_shadow-blur)
+			color-mix(in oklab, var(--_fill), transparent 45%);
+
+		/* -- Named highlighter presets (higher specificity than the attr() default) -- */
+		&[fill="green"] { --_fill: #82ffad; }
+		&[fill="yellow"] { --_fill: #fdfa8c; }
+		&[fill="orange"] { --_fill: #ffbe7b; }
+		&[fill="pink"] { --_fill: #ff9dc9; }
+
+		/* -- Variants: reshape the sweep into a stroke, drop the block padding/ghost -- */
+		&[variant~="underline"] {
+			--_bg-size: 100% 0.42em;
+			--_bg-pos: 0 92%;
+			--_radius: 0.2em;
+			padding-block: 0;
+			text-shadow: none;
+		}
+		&[variant~="strike"] {
+			--_bg-size: 100% 0.34em;
+			--_bg-pos: 0 55%;
+			--_radius: 0.2em;
+			padding-block: 0;
+			text-shadow: none;
+		}
+	}
+
+	/* Auto-contrast ink when `ink` is omitted (Baseline: Chrome 147 / FF 146 / Safari 26). */
+	@supports (color: contrast-color(red)) {
+		:where(high-light) { --_ink-auto: contrast-color(var(--_fill)); }
+	}
+
+	/*
+	 * Progressive enhancement (Safari 26.2+): give every <high-light> its own
+	 * random gradient angle and shadow offset so no two markers look identical.
+	 * Everywhere else the static defaults above apply unchanged.
+	 */
+	@supports (background: linear-gradient(random(90deg, 110deg), red, blue)) {
+		:where(high-light) {
+			--_angle: random(96deg, 112deg);
+			--_shadow-x: random(-0.6ch, -0.3ch);
+			--_shadow-y: random(0.22ch, 0.42ch);
+		}
+	}
+}

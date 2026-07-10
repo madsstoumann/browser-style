@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Highlight</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="A CSS-only pen-marker highlight component that simulates a hand-drawn highlighter.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="ui-highlight.css">
+	<style>
+		/* For demo */
+		.h0 {
+			font-size: 2.4em;
+			font-weight: 700;
+			line-height: 1.9;
+			margin: 0;
+			text-wrap: pretty;
+		}
+		.prose {
+			font-size: 1.3em;
+			line-height: 2.1;
+			max-inline-size: 60ch;
+		}
+	</style>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Highlight</h2>
+	<p>
+		<strong>Highlight</strong> is a CSS-only custom element that simulates a pen marker.<br>
+		Set the marker color with <code>fill</code> (a preset name or any CSS color), an optional
+		text color with <code>ink</code>, and a stroke style with <code>variant</code>.
+	</p>
+
+	<h3 class="h0">
+		You can <high-light fill="green">highlight anything</high-light> inline,
+		even across <high-light fill="yellow">several words that wrap onto the next
+		line of running text</high-light> without breaking.
+	</h3>
+
+	<h3>Presets</h3>
+	<p class="prose">
+		The four classic markers:
+		<high-light fill="green">green</high-light>,
+		<high-light fill="yellow">yellow</high-light>,
+		<high-light fill="orange">orange</high-light> and
+		<high-light fill="pink">pink</high-light>.
+	</p>
+
+	<h3>Custom colors</h3>
+	<p class="prose">
+		Pass any CSS color to <code>fill</code>:
+		<high-light fill="#c9b8ff">#c9b8ff</high-light>,
+		<high-light fill="oklch(0.9 0.15 200)">oklch()</high-light>, or
+		<high-light fill="rebeccapurple" ink="white">a dark fill with light <code>ink</code></high-light>.
+	</p>
+
+	<h3>Variants</h3>
+	<p class="prose">
+		Beyond the full block, there is an
+		<high-light fill="orange" variant="underline">underline marker</high-light>
+		and a <high-light fill="pink" variant="strike">strike-through</high-light>.
+	</p>
+
+	<h3>In a paragraph</h3>
+	<p class="prose">
+		Lorem ipsum dolor sit amet, <high-light fill="yellow">consectetur adipiscing
+		elit</high-light>, sed do eiusmod tempor incididunt ut labore et dolore magna
+		aliqua. Ut enim ad minim veniam, <high-light fill="green">quis nostrud
+		exercitation</high-light> ullamco laboris nisi ut aliquip ex ea commodo consequat.
+	</p>
+
+</body>
+</html>

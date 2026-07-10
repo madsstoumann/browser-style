@@ -107,15 +107,15 @@
 		--ui-content-ov-ink: var(--ui-card-overlay-ink, #fff);
 		--ui-content-ov-z: 1;
 	}
-	:where([variant*="ovr(tl)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-tl); }
+	:where([variant*="ovr(tl)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-ts); }
 	:where([variant*="ovr(tc)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: center; --ui-content-ov-text: center; --ui-media-scrim-default: var(--ui-media-scrim-tc); }
-	:where([variant*="ovr(tr)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-tr); }
-	:where([variant*="ovr(cl)"]) { --ui-content-ov-justify: center; --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-cl); }
+	:where([variant*="ovr(tr)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-te); }
+	:where([variant*="ovr(cl)"]) { --ui-content-ov-justify: center; --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-cs); }
 	:where([variant*="ovr(cc)"]) { --ui-content-ov-justify: center; --ui-content-ov-align: center; --ui-content-ov-text: center; --ui-media-scrim-default: var(--ui-media-scrim-cc); }
-	:where([variant*="ovr(cr)"]) { --ui-content-ov-justify: center; --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-cr); }
-	:where([variant*="ovr(bl)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-bl); }
+	:where([variant*="ovr(cr)"]) { --ui-content-ov-justify: center; --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-ce); }
+	:where([variant*="ovr(bl)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-bs); }
 	:where([variant*="ovr(bc)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: center; --ui-content-ov-text: center; --ui-media-scrim-default: var(--ui-media-scrim-bc); }
-	:where([variant*="ovr(br)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-br); }
+	:where([variant*="ovr(br)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-be); }
 	/* overlay text is light (over a scrim); a plain solid CTA keeps its light surface, so its
 	   text must stay dark — otherwise it inherits the white and vanishes. Colour variants
 	   (accent, text, …) set their own --button-c and are left untouched. */

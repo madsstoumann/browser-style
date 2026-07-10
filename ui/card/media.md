@@ -115,7 +115,7 @@ Because custom properties inherit, **one rule set serves both placement cases**:
 | `obf()` | `cover` `contain` `fill` `none` | object-fit | `--ui-media-fit` |
 | `flp()` | `h` `v` `hv` | flip / mirror the image | `--ui-media-fl-x` / `-fl-y` |
 | `hov()` | `zoom` `pan` `track` `drift` | hover effect (image only) | `--ui-media-hv-*` |
-| `scm()` | *(bare, or `tl … br`)* | scrim — bare matches the host `ovr()`; explicit picks a direction | `--ui-media-scrim-paint` |
+| `scm()` | *(bare)* · pos `ts … be` · size `sm md lg` · intensity `sheer lgt med drk solid` | scrim — bare matches the host `ovr()`; three composable axes (direction · size · intensity) | `--ui-media-scrim-paint` |
 | `nav()` | *(bare, or `dots` `arrows` `none`)* | carousel — **the token IS the trigger**; bare = dots + arrows | carousel layout + controls |
 | `vid()` | `cc` `pip` `fls` · size `sm md lg xl` | player-tool cluster over a chrome-less `<video>` — JS **injects** the requested buttons (bottom-end; order CC → PiP → fullscreen, fullscreen rightmost). Size mirrors `arw()` (`vid(sm)`…`vid(xl)`, default 2.5rem). Needs `index.js`; PiP feature-detected (skipped in Firefox). `cc` = subtitles/captions button (glyph only — **switching not wired yet**). ≡ `vid="cc pip fls sm"`. *(Play/pause is `<ui-play>` furniture, not a `vid()` value.)* | injected `<menu class="ui-media-tools">` + `--ui-media-tool-size` |
 | `chip()` `sticker()` `save()` `play()` | `ts … be` *(position)* **or** `red orange green blue accent dark light subtle` *(sub-theme)* | place + theme an overlay element | element inset (absolute) / element `--ui-{el}-*` tokens |
@@ -353,15 +353,18 @@ The fill restarts whenever the active slide changes (`:target-current`) and **ho
 
 The scrim `::after` stays out of grid flow (`position: absolute; inset: 0`).
 
-**All 9 directional gradients are preserved** (parity with the current `ui-card.css`): the 4 edges, the 4 **diagonals** (`to bottom right` / `to bottom left` / `to top right` / `to top left`) for corner placements, and the **`cc` center double-stop** (`linear-gradient(to bottom, #0000, color 50%, #0000)`). A single direction token can't reproduce the diagonals, so each `--ui-media-scrim-{tl…br}` carries a full gradient and `--ui-media-scrim-paint` selects one.
+`scm()` has **three orthogonal axes** — direction, size, and intensity — each a separate, composable token, e.g. `scm(bc) scm(lg) scm(drk)`. The **position** grid uses the same logical `ts/tc/te … bs/bc/be` tokens as the `chip()`/`sticker()` furniture. All nine directional gradients read shared colour + stop custom properties, so size and intensity vary without re-baking a gradient per combination. The 9 directions are the 4 edges, the 4 **diagonals** (`to bottom right` / `to bottom left` / `to top right` / `to top left`) for corner placements, and the **`cc` center double-stop** (`linear-gradient(to bottom, #0000, color, transparent)`).
 
-| Form | Behavior |
-|------|----------|
-| `scm` *(bare)* | reads `--ui-media-scrim-default` — set by the host `ovr()` to match the overlay corner; falls back to `bc` |
-| `scm(tl)` … `scm(br)` | explicit direction (overrides the default) |
-| `scm(lgt)` `scm(med)` `scm(drk)` | **intensity** — a second, disjoint `scm()` token; sets `--ui-media-scrim-color` (`0.55` / `0.78` default / `0.92`). Combine with a position, e.g. `scm scm(drk)` |
+| Axis | Tokens | Behavior |
+|------|--------|----------|
+| *(bare)* | `scm` | reads `--ui-media-scrim-default` — set by the host `ovr()` to match the overlay corner; falls back to `bc` |
+| **direction** | `scm(ts)` … `scm(be)` | explicit direction (overrides the default) — `ts tc te cs cc ce bs bc be`, matching furniture placement |
+| **size** | `scm(sm)` `scm(md)` `scm(lg)` | how far the gradient reaches across the frame; sets `--ui-media-scrim-mid-stop`/`-end-stop` (and the `cc` band edges). `md` = default (`40%`/`80%`) |
+| **intensity** | `scm(sheer)` `scm(lgt)` `scm(med)` `scm(drk)` `scm(solid)` | dark-end opacity; sets `--ui-media-scrim-color` (`0.35` / `0.55` / `0.78` default / `0.92` / `1`) |
 
-`scm` works **standalone** too (a darkened image, no overlay content needed).
+Combine axes freely, e.g. `scm(bc) scm(lg) scm(drk)`. `scm` works **standalone** too (a darkened image, no overlay content needed).
+
+> **RTL note:** the `s`/`e` position naming matches the furniture grid, but the gradients use *physical* directions (`to bottom right`, …), so the corner/side scrims do not mirror in RTL the way `inset-inline`-positioned furniture does. Acceptable for now; a future `[dir="rtl"]` override could swap the six left/right gradient pairs.
 
 ---
 
@@ -450,7 +453,9 @@ The arrow is a **circular button**: a themeable circle (`--ui-media-arrow-bg`) +
 |-------|---------|-------------|
 | `--ui-media-scrim-color` | `rgb(0 0 0 / 0.78)` | base scrim color (the `scm()` intensity tokens set this) |
 | `--ui-media-scrim-m` | `color-mix(scrim-color, transparent 55%)` | mid stop — holds the dark near the edge before fading, so spanning text stays legible over bright images |
-| `--ui-media-scrim-tl` … `-br` | per-direction `linear-gradient()` | the 9 directional gradients (4 edges + 4 diagonals + `cc` double-stop) |
+| `--ui-media-scrim-mid-stop` / `-end-stop` | `40%` / `80%` | shared gradient stops (the `scm()` size tokens set these) |
+| `--ui-media-scrim-cc-a` / `-cc-b` | `25%` / `75%` | `cc` centre-band edges (also driven by the size tokens) |
+| `--ui-media-scrim-ts` … `-be` | per-direction `linear-gradient()` | the 9 directional gradients (4 edges + 4 diagonals + `cc` double-stop), all reading the shared colour + stop vars |
 | `--ui-media-scrim-default` | (set by host `ovr()`) | the bare-`scm` direction; matches the overlay corner |
 | `--ui-media-scrim-paint` | `#0000` (none) | the selected gradient that gets painted |
 
@@ -610,7 +615,7 @@ Video-player styles live in **`media.video.css`** (imported after `media.css`, b
 
 - **Nested `<ui-media>`** (a layered frame used as a carousel slide) is always a plain frame, never a scroller. Raw `ui-media ui-media` (specificity 0,0,2) out-specifies the carousel's descendant rules (0,0,1) in `media.carousel.css`, so the frame wins regardless of import order — no `!important`.
 - **`clip`** applies `clip-path: inset(0 round …)` because a scroll container's `border-radius` can drop its corners mid-scroll (compositing); `clip-path` clips reliably. `round()` has no superellipse, so `-sq` squircles clip as a plain round.
-- **Scrim** keeps 9 directional gradients. The directional default is set by the host `ovr()` (`ui-card.css`) to match the overlay corner; `scm(<pos>)` overrides; bare `scm` paints the default. A mid colour stop holds the dark before fading so text spanning the frame stays legible, not just at the very corner.
+- **Scrim** has three orthogonal axes — direction (9 gradients, logical `ts…be` grid matching furniture), size (`sm md lg`, sets the shared stop positions), and intensity (`sheer lgt med drk solid`, sets the dark-end opacity). The directional default is set by the host `ovr()` (`ui-card.css`) to match the overlay corner; `scm(<pos>)` overrides; bare `scm` paints the default. A mid colour stop holds the dark before fading so text spanning the frame stays legible, not just at the very corner.
 
 ---
 

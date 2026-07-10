@@ -269,6 +269,46 @@
       "media": "asr(2/3) obf(cover) obp(cc) scm scm(drk)",
       "content": "scl(lg)"
     },
+    "media-scm-sm": {
+      "name": "Media Scrim Small",
+      "description": "Bottom-centre overlay, small scrim extent — hugs the edge",
+      "element": "ui-card",
+      "variant": "ovr(bc)",
+      "media": "asr(2/3) obf(cover) obp(cc) scm(bc) scm(sm)",
+      "content": "scl(lg)"
+    },
+    "media-scm-md": {
+      "name": "Media Scrim Medium Extent",
+      "description": "Bottom-centre overlay, medium (default) scrim extent",
+      "element": "ui-card",
+      "variant": "ovr(bc)",
+      "media": "asr(2/3) obf(cover) obp(cc) scm(bc) scm(md)",
+      "content": "scl(lg)"
+    },
+    "media-scm-lg": {
+      "name": "Media Scrim Large",
+      "description": "Bottom-centre overlay, large scrim extent — reaches across the frame",
+      "element": "ui-card",
+      "variant": "ovr(bc)",
+      "media": "asr(2/3) obf(cover) obp(cc) scm(bc) scm(lg)",
+      "content": "scl(lg)"
+    },
+    "media-scm-sheer": {
+      "name": "Media Scrim Sheer",
+      "description": "Bottom-centre overlay, sheerest scrim intensity",
+      "element": "ui-card",
+      "variant": "ovr(bc)",
+      "media": "asr(2/3) obf(cover) obp(cc) scm scm(sheer)",
+      "content": "scl(lg)"
+    },
+    "media-scm-solid": {
+      "name": "Media Scrim Solid",
+      "description": "Bottom-centre overlay, opaque scrim anchor",
+      "element": "ui-card",
+      "variant": "ovr(bc)",
+      "media": "asr(2/3) obf(cover) obp(cc) scm scm(solid)",
+      "content": "scl(lg)"
+    },
     "carousel-default": {
       "name": "Carousel Default",
       "description": "Column card, 4:3 carousel with default dots + arrows, large content scale",
@@ -573,7 +613,7 @@
       "description": "Vertical carousel, bare up/down over a corner scrim",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) axis(y) nav arw(bare) scm(cr)",
+      "media": "asr(4/3) axis(y) nav arw(bare) scm(ce)",
       "content": "scl(sm)",
       "styles": {
         "--ui-media-scrim-color": "#000"
