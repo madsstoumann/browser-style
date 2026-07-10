@@ -1,6 +1,6 @@
 /**
  * ui-accordion
- * @version 4.2.1
+ * @version 4.3.0
  * @date 2026-06-25
  * @author Mads Stoumann
  *
@@ -67,6 +67,11 @@
 						block-size: auto;
 						content-visibility: visible;
 						padding-block: var(--ui-accordion-padding-block);
+					}
+					/* staggered panel children (ui/base/stagger.css) — hold their boxes
+					   through the block-size collapse so close still animates */
+					&:not([open]) > :where([stagger], [data-stagger]) > * {
+						transition: display var(--ui-accordion-duration) allow-discrete;
 					}
 					&:has(> summary:focus-visible) {
 						outline: var(--ring-width) solid var(--ring-color);

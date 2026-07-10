@@ -1,170 +1,265 @@
+/*
+ * animations.css — canonical scroll/keyframe animation library
+ *
+ * ONE keyframe library for the whole system:
+ *  - the layout package's attribute API ([animate]/[animate-self], timelines,
+ *    ranges, triggers — machinery lives in layout/core/animations.css; this file
+ *    is bundled into dist/layout.css via layout.config.json "include")
+ *  - the .an-* / .ar-* utility classes (scroll-driven view() timeline, see
+ *    ui/scroll-animations)
+ *
+ * OWNERSHIP INVARIANT — this file exclusively owns the @keyframes names and the
+ * keyframe PARAMS: --animate-{dg,tx,ty,txv,tyv,zi,zo,mult} and their computed
+ * --_ * forms. Param defaults and every rule that SETS a param (multiplier,
+ * bounce-zi) must live here, in one layer, so source order resolves them —
+ * cross-layer order between bs-core and layout.* is page-dependent.
+ * layout.animations exclusively owns --_animn, --animtm, ranges and triggers.
+ *
+ * Stagger-token correspondence (state-triggered engine in stagger.css):
+ * rise→fade-up · fall→fade-down · lft→fade-left · rgt→fade-right ·
+ * zom→zoom-in · fde→fade-in/opacity · blr = stagger-only ·
+ * bounce/flip/reveal/slide = keyframe-only.
+ */
 @layer bs-core {
-	:root {
-		--_dg: 100deg;
-		--_tx: 55px;
-		--_ty: 110px;
-		--_zi: 0.6;
-		--_zo: 1.2;
+	/* === keyframe params (public --animate-*, internal --_* computed) === */
+	:where([animate], [animate-self], [class*="an-"]) {
+		--animate-dg: 100deg;
+		--animate-tx: 55px;
+		--animate-ty: 110px;
+		--animate-txv: 100vw;
+		--animate-tyv: 100vh;
+		--animate-zi: 0.6;
+		--animate-zo: 1.2;
+		--animate-mult: 1;
+
+		--_dg: calc(var(--animate-dg) * var(--animate-mult));
+		--_tx: calc(var(--animate-tx) * var(--animate-mult));
+		--_ty: calc(var(--animate-ty) * var(--animate-mult));
+		--_txv: calc(var(--animate-txv) * var(--animate-mult));
+		--_tyv: calc(var(--animate-tyv) * var(--animate-mult));
+		--_zi: calc(var(--animate-zi) / var(--animate-mult));
+		--_zo: calc(1 + (var(--animate-zo) - 1) * var(--animate-mult));
 	}
 
-	/* Bounce */
-	@keyframes bounce-in {
-		0% { opacity: 0; scale: 0.3 }
-		50% { scale: 1.05; }
-		70% { scale: 0.9; }
-		100% { opacity: 1; scale: 1; }
-	}
-	@keyframes bounce-in-down {
-		0% { opacity: 0; translate: 0 -100vh; }
-		60% { translate: 0 10vh; }
-		80% { translate: 0 -5vh; }
-		100% { opacity: 1; translate: 0; }
-	}
-	@keyframes bounce-in-left {
-		0% { opacity: 0; translate: -100vw 0; }
-		60% { translate: 5vw 0; }
-		80% { translate: -2.5vw 0; }
-		100% { opacity: 1; translate: 0; }
-	}
-	@keyframes bounce-in-up {
-		0% { opacity: 0; translate: 0 100vh; }
-		60% { translate: 0 -10vh; }
-		80% { translate: 0 5vh; }
-		100% { opacity: 1; translate: 0; }
-	}
-	@keyframes bounce-in-right {
-		0% { opacity: 0; translate: 100vw 0; }
-		60% { translate: -5vw 0; }
-		80% { translate: 2.5vw 0; }
-		100% { opacity: 1; translate: 0; }
-	}
+	/* multiplier: animate-self="fade-up(2)" or animate="fade-up(2)" — must live
+	   with the --animate-mult default (same file/layer, source order wins) */
+	[animate-self*="(2)"], [animate*="(2)"] { --animate-mult: 2; }
+	[animate-self*="(3)"], [animate*="(3)"] { --animate-mult: 3; }
 
-	/* Fade */
-	@keyframes fade-down {
-		0% { opacity: 0; translate: 0px calc(-1 * var(--_ty)); }
-		100% { opacity: 1; translate: 0; }
-	}
-	@keyframes fade-down-left {
-		0% { opacity: 0; translate: calc(-1 * var(--_tx)) calc(-1 * var(--_ty)); }
-		100% { opacity: 1; translate: 0; }
-	}
-	@keyframes fade-down-right {
-		0% { opacity: 0; translate: var(--_tx) calc(-1 * var(--_ty)); }
-		100% { opacity: 1; translate: 0; }
-	}
-	@keyframes fade-in {
-		0%, 20% { opacity: 0; }
+	/* bounce squeezes zoom-in start — a PARAM, so it lives here (see invariant) */
+	[animate-self*="bounce("], [animate*="bounce("] > * { --animate-zi: 0.3; }
+
+	/* ==========================================================================
+	   Keyframes (parameterized — respond to --animate-* × --animate-mult)
+	   ========================================================================== */
+
+	/* --- Opacity --- */
+
+	@keyframes opacity {
+		0%   { opacity: 0; }
 		100% { opacity: 1; }
 	}
-	@keyframes fade-left {
-		0% { opacity: 0; translate: calc(-1 * var(--_tx)) 0px; }
-		100% { opacity: 1; translate: 0; }
+
+	@keyframes fade-in {
+		0%, 20% { opacity: 0; }
+		100%    { opacity: 1; }
 	}
-	@keyframes fade-in-scale {
-		0% { opacity: 0; transform: scale(0.8); }
-		100% { opacity: 1; transform: scale(1); }
-	}
+
 	@keyframes fade-out {
-		0% { opacity: 1; }
+		0%   { opacity: 1; }
 		100% { opacity: 0; }
 	}
+
+	/* --- Bounce --- */
+
+	@keyframes bounce-in {
+		0%   { opacity: 0; scale: var(--_zi); }
+		50%  { scale: 1.05; }
+		70%  { scale: 0.9; }
+		100% { opacity: 1; scale: 1; }
+	}
+
+	@keyframes bounce-in-down {
+		0%   { opacity: 0; translate: 0 calc(-1 * var(--_tyv)); }
+		60%  { translate: 0 calc(var(--_tyv) * 0.1); }
+		80%  { translate: 0 calc(var(--_tyv) * -0.05); }
+		100% { opacity: 1; translate: 0; }
+	}
+
+	@keyframes bounce-in-left {
+		0%   { opacity: 0; translate: calc(-1 * var(--_txv)) 0; }
+		60%  { translate: calc(var(--_txv) * 0.05) 0; }
+		80%  { translate: calc(var(--_txv) * -0.025) 0; }
+		100% { opacity: 1; translate: 0; }
+	}
+
+	@keyframes bounce-in-right {
+		0%   { opacity: 0; translate: var(--_txv) 0; }
+		60%  { translate: calc(var(--_txv) * -0.05) 0; }
+		80%  { translate: calc(var(--_txv) * 0.025) 0; }
+		100% { opacity: 1; translate: 0; }
+	}
+
+	@keyframes bounce-in-up {
+		0%   { opacity: 0; translate: 0 var(--_tyv); }
+		60%  { translate: 0 calc(var(--_tyv) * -0.1); }
+		80%  { translate: 0 calc(var(--_tyv) * 0.05); }
+		100% { opacity: 1; translate: 0; }
+	}
+
+	/* --- Fade --- */
+
+	@keyframes fade-down {
+		0%   { opacity: 0; translate: 0 calc(-1 * var(--_ty)); }
+		100% { opacity: 1; translate: 0; }
+	}
+
+	@keyframes fade-down-left {
+		0%   { opacity: 0; translate: calc(-1 * var(--_tx)) calc(-1 * var(--_ty)); }
+		100% { opacity: 1; translate: 0; }
+	}
+
+	@keyframes fade-down-right {
+		0%   { opacity: 0; translate: var(--_tx) calc(-1 * var(--_ty)); }
+		100% { opacity: 1; translate: 0; }
+	}
+
+	@keyframes fade-left {
+		0%   { opacity: 0; translate: calc(-1 * var(--_tx)) 0; }
+		100% { opacity: 1; translate: 0; }
+	}
+
+	@keyframes fade-right {
+		0%   { opacity: 0; translate: var(--_tx) 0; }
+		100% { opacity: 1; translate: 0; }
+	}
+
+	@keyframes fade-up {
+		0%   { opacity: 0; translate: 0 var(--_ty); }
+		100% { opacity: 1; translate: 0; }
+	}
+
+	@keyframes fade-up-left {
+		0%   { opacity: 0; translate: calc(-1 * var(--_tx)) var(--_ty); }
+		100% { opacity: 1; translate: 0; }
+	}
+
+	@keyframes fade-up-right {
+		0%   { opacity: 0; translate: var(--_tx) var(--_ty); }
+		100% { opacity: 1; translate: 0; }
+	}
+
+	/* fade + scale (transform-based; no directional param) */
+	@keyframes fade-in-scale {
+		0%   { opacity: 0; transform: scale(0.8); }
+		100% { opacity: 1; transform: scale(1); }
+	}
+
 	@keyframes fade-out-scale {
-		0% { opacity: 1; transform: scale(1); }
+		0%   { opacity: 1; transform: scale(1); }
 		100% { opacity: 0; transform: scale(0.8); }
 	}
-	@keyframes fade-right {
-		0% { opacity: 0; translate: var(--_tx) 0px; }
-		100% { opacity: 1; translate: 0; }
-	}
-	@keyframes fade-up {
-		0% { opacity: 0; translate: 0px var(--_ty); }
-		100% { opacity: 1; translate: 0; }
-	}
-	@keyframes fade-up-left {
-		0% { opacity: 0; translate: calc(-1 * var(--_tx)) var(--_ty); }
-		100% { opacity: 1; translate: 0; }
-	}
-	@keyframes fade-up-right {
-		0% { opacity: 0; translate: var(--_tx) var(--_ty); }
-		100% { opacity: 1; translate: 0; }
-	}
 
-	/* Flip */
+	/* --- Flip --- */
+
 	@keyframes flip-diagonal {
-    0% { backface-visibility: hidden; transform: perspective(2500px) rotateX(calc(0deg - var(--_dg))) rotateY(calc(0deg - var(--_dg))); }
-    100% { transform: perspective(2500px) rotateX(0) rotateY(0); }
+		0%   { backface-visibility: hidden; opacity: 0; transform: perspective(2500px) rotateX(calc(-1 * var(--_dg))) rotateY(calc(-1 * var(--_dg))); }
+		100% { opacity: 1; transform: perspective(2500px) rotateX(0) rotateY(0); }
 	}
+
 	@keyframes flip-down {
-		0% { backface-visibility: hidden; transform: perspective(2500px) rotateX(var(--_dg)); }
-		100% { transform: perspective(2500px) rotateX(0); }
+		0%   { backface-visibility: hidden; opacity: 0; transform: perspective(2500px) rotateX(var(--_dg)); }
+		100% { opacity: 1; transform: perspective(2500px) rotateX(0); }
 	}
+
 	@keyframes flip-left {
-		0% { backface-visibility: hidden; transform: perspective(2500px) rotateY(calc(0deg - var(--_dg))); }
-		100% { transform: perspective(2500px) rotateY(0); }
+		0%   { backface-visibility: hidden; opacity: 0; transform: perspective(2500px) rotateY(calc(-1 * var(--_dg))); }
+		100% { opacity: 1; transform: perspective(2500px) rotateY(0); }
 	}
+
 	@keyframes flip-right {
-		0% { backface-visibility: hidden; transform: perspective(2500px) rotateY(var(--_dg)); }
-		100% { transform: perspective(2500px) rotateY(0); }
+		0%   { backface-visibility: hidden; opacity: 0; transform: perspective(2500px) rotateY(var(--_dg)); }
+		100% { opacity: 1; transform: perspective(2500px) rotateY(0); }
 	}
+
 	@keyframes flip-up {
-		0% { backface-visibility: hidden; transform: perspective(2500px) rotateX(calc(0deg - var(--_dg))); }
-		100% { transform: perspective(2500px) rotateX(0); }
+		0%   { backface-visibility: hidden; opacity: 0; transform: perspective(2500px) rotateX(calc(-1 * var(--_dg))); }
+		100% { opacity: 1; transform: perspective(2500px) rotateX(0); }
 	}
 
-	/* Reveal */
-	@keyframes reveal {
-		0% { opacity: 0; clip-path: inset(45% 20% 45% 20%); }
-		100% { opacity: 1; clip-path: inset(0% 0% 0% 0%); }
-	}
+	/* --- Reveal (clip-path only, deliberately opacity-free: normal = appear,
+	   reverse = morph away — stack(reveal) depends on this) --- */
+
 	@keyframes reveal-circle {
-		0% { opacity: 0; clip-path: circle(0% at 50% 50%); }
-		100% { opacity: 1; clip-path: circle(100% at 50% 50%);  }
+		0%   { clip-path: circle(0% at 50% 50%); }
+		100% { clip-path: circle(100% at 50% 50%); }
 	}
+
+	@keyframes reveal-inset {
+		0%   { clip-path: inset(45% 20% 45% 20%); }
+		100% { clip-path: inset(0% 0% 0% 0%); }
+	}
+
 	@keyframes reveal-polygon {
-		0% { opacity: 0; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%) }
-		100% { opacity: 1; clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); }
+		0%   { clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+		100% { clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); }
 	}
 
-	/* Slide */
+	@keyframes reveal-superellipse {
+		0%   { clip-path: ellipse(0% 0% at 0% 100%); }
+		100% { clip-path: ellipse(150% 150% at 0% 100%); }
+	}
+
+	/* --- Slide --- */
+
 	@keyframes slide-down {
-    0% { translate: 0 -100vh; }
-    100% { translate: 0; }
+		0%   { opacity: 0; translate: 0 calc(-1 * var(--_tyv)); }
+		100% { opacity: 1; translate: 0; }
 	}
+
 	@keyframes slide-in {
-		0% { translate: -100vw 0; }
-		100% { translate: 0; }
+		0%   { opacity: 0; translate: calc(-1 * var(--_txv)) 0; }
+		100% { opacity: 1; translate: 0; }
 	}
+
 	@keyframes slide-out {
-		0% { translate: 0; }
-		100% { translate: 100vw 0; }
+		0%   { opacity: 1; translate: 0; }
+		100% { opacity: 0; translate: var(--_txv) 0; }
 	}
+
 	@keyframes slide-up {
-    0% { translate: 0 100vh; }
-    100% { translate: 0; }
+		0%   { opacity: 0; translate: 0 var(--_tyv); }
+		100% { opacity: 1; translate: 0; }
 	}
 
-	/* Zoom */
+	/* --- Zoom --- */
+
 	@keyframes zoom-in {
-		0% { opacity: 0; scale: var(--_zi); }
+		0%   { opacity: 0; scale: var(--_zi); }
 		100% { opacity: 1; scale: 1; }
-	}
-	@keyframes zoom-in-rotate {
-    0% { opacity: 0; scale: var(--_zi); rotate: -180deg; }
-    100% { opacity: 1; scale: 1; rotate: 0deg; }
-	}
-	@keyframes zoom-out {
-		0% { opacity: 0; scale: var(--_zo); }
-		100% { opacity: 1; scale: 1; }
-	}
-	@keyframes zoom-out-rotate {
-    0% { opacity: 1; scale: 1; transform: rotate(0deg); }
-    100% { opacity: 0; scale: var(--_zo); transform: rotate(-180deg); }
 	}
 
-	/* === CLASSES === */
+	@keyframes zoom-in-rotate {
+		0%   { opacity: 0; scale: var(--_zi); rotate: -180deg; }
+		100% { opacity: 1; scale: 1; rotate: 0deg; }
+	}
+
+	@keyframes zoom-out {
+		0%   { opacity: 0; scale: var(--_zo); }
+		100% { opacity: 1; scale: 1; }
+	}
+
+	@keyframes zoom-out-rotate {
+		0%   { opacity: 1; scale: 1; rotate: 0deg; }
+		100% { opacity: 0; scale: var(--_zo); rotate: -180deg; }
+	}
+
+	/* ==========================================================================
+	   Utility classes — scroll-driven via view() timeline (see ui/scroll-animations)
+	   ========================================================================== */
 
 	/* animation-name */
-	.an-bounce-in { --animn: bounce-in; }
+	.an-bounce-in { --animn: bounce-in; --animate-zi: 0.3; }
 	.an-bounce-in-left { --animn: bounce-in-left; }
 	.an-bounce-in-right { --animn: bounce-in-right; }
 	.an-bounce-in-up { --animn: bounce-in-up; }
@@ -186,9 +281,11 @@
 	.an-flip-left { --animn: flip-left; }
 	.an-flip-right { --animn: flip-right; }
 	.an-flip-up { --animn: flip-up; }
-	.an-reveal { --animn: reveal; }
+	.an-opacity { --animn: opacity; }
+	.an-reveal { --animn: reveal-inset; }
 	.an-reveal-circle { --animn: reveal-circle; }
 	.an-reveal-polygon { --animn: reveal-polygon; }
+	.an-reveal-superellipse { --animn: reveal-superellipse; }
 	.an-slide-down { --animn: slide-down; }
 	.an-slide-in { --animn: slide-in; }
 	.an-slide-out { --animn: slide-out; }
@@ -203,7 +300,7 @@
 	.ar-cover { --animrs: entry 25%; --animre: cover 50%; }
 	.ar-exit { --animrs: exit 0%; --animre: exit 100%; }
 
-	@supports (view-transition-name: none) {	
+	@supports (view-transition-name: none) {
 		:where([class*="an-"]) {
 			animation:
 				var(--animn)

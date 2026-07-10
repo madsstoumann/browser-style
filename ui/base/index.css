@@ -7,3 +7,5 @@
 @import './utility.css'; /* REWORK ? */
 @import './webcomponents.css'; /* NEEDED ? */
 @import './carousel.css';
+@import './stagger.css';
+@import './animations.css';

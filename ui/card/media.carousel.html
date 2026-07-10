@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="CSS-only <ui-media> carousel — basics, controls, arrows/chevron, placement, themes (light/dark), dots/pills, thumbnails, vertical, and JS-enhanced autoplay/loop.">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../play/ui-play.css">
@@ -14,26 +15,13 @@
 	<link rel="stylesheet" href="../reveal/ui-reveal.css">
 	<link rel="stylesheet" href="../accordion/ui-accordion.css">
 	<style>
-		.grid {
-			display: grid;
-			gap: var(--spacing-lg);
-			grid-template-columns: 1fr;
-			margin-block-end: var(--spacing-2xl);
-		}
-		@media (min-width: 540px) {
-			.grid-2 { grid-template-columns: repeat(2, 1fr); }
-			.grid-3 { grid-template-columns: repeat(3, 1fr); }
-			.grid-4 { grid-template-columns: repeat(2, 1fr); }
-		}
-		@media (min-width: 900px) {
-			.grid-4 { grid-template-columns: repeat(4, 1fr); }
-		}
+		/* demo section grids are lay-out elements (md=columns(2) for two-up); this
+		   only adds the section rhythm — slide grids inside ui-media are untouched */
+		body > lay-out { margin-block-end: var(--spacing-2xl); }
 		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
 		.hero { margin-block-end: var(--spacing-2xl); }
 		code { font-size: 0.9em; }
-		/* per-slide grid layout — the carousel doesn't own item layout; a class does. Set --cols per group wrapper. */
-		.slide-cols { display: grid; gap: var(--spacing-lg); grid-template-columns: repeat(var(--cols, 2), 1fr); }
-		.slide-cols > :is(img, video) { aspect-ratio: 1; block-size: 100%; border-radius: var(--radius-md, 0.375rem); inline-size: 100%; inset: auto; object-fit: cover; position: relative; }
+		/* per-slide grid now comes from lay-out md=columns(N) slides */
 		.slide-gap { --ui-media-gap: var(--spacing-lg); }
 		.shadow-room { padding-inline: var(--spacing-md); scroll-padding-inline: var(--spacing-md); }
 		.reveal-cards ui-reveal ui-accordion { font-size: var(--font-size-sm); }
@@ -50,7 +38,7 @@
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>1 · Default carousel — <code>nav</code></h2>
 	<p>Add <code>nav</code> for a scroll-snap row with dots + arrows — shown in a <code>col</code> and a <code>row</code> card.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav" content="scl(lg)">
 			<cq-box>
 				<ui-media>
@@ -72,11 +60,11 @@
 				<ui-content><small data-part="eyebrow">Science</small><h2 data-part="headline">Carousel beside content</h2><p data-part="summary">A carousel works in any arrangement — here it is the media half of a <code>row</code> card.</p><nav data-part="actions"><a class="ui-button" href="#">Explore</a></nav></ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<h2>2 · Controls — <code>nav()</code></h2>
 	<p>Which controls: <code>nav</code> (both) · <code>nav(dot)</code> · <code>nav(arw)</code> · <code>nav(non)</code> (none).</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(dot)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">nav(dot)</small><h2 data-part="headline">Dots only</h2></ui-content></cq-box>
@@ -93,7 +81,7 @@
 			<cq-box><ui-media><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/government.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""><ui-chip>3 photos</ui-chip></ui-media>
 			<ui-content><small data-part="eyebrow">nav(non)</small><h2 data-part="headline">Bare swipe scroller</h2></ui-content></cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<hr>
 	<!-- ════════════════════════════════════════════════════════════
@@ -101,7 +89,7 @@
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>3 · Arrow glyph — <code>arw()</code></h2>
 	<p><code>arw(arr)</code> = full-arrow glyph (default chevron). <code>arw(bare)</code> drops the circle, painting the glyph as a recolourable shape (<code>--ui-carousel-arrow-color</code>).</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(arw)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">arw(chv) · default</small><h2 data-part="headline">Chevron</h2></ui-content></cq-box>
@@ -118,11 +106,11 @@
 			<cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><img src="/assets/images/slimfold.png" alt=""><img src="/assets/images/cutmaster.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">arw(bare) arw(arr) arw(drk) · light images</small><h2 data-part="headline">Bare, dark full-arrow</h2></ui-content></cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<h2>4 · Sizes — <code>arw()</code> / <code>dot()</code></h2>
 	<p>Arrows <code>arw(sm|md|lg|xl)</code>, dots/pills <code>dot(sm|md|lg|xl)</code>.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav arw(sm) dot(sm)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">arw(sm) dot(sm)</small><h2 data-part="headline">Small</h2></ui-content></cq-box>
@@ -131,7 +119,7 @@
 			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">arw(xl) dot(xl)</small><h2 data-part="headline">Extra-large</h2></ui-content></cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<hr>
 	<!-- ════════════════════════════════════════════════════════════
@@ -139,7 +127,7 @@
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>5 · Overlay placement — <code>arw(tc/cc/bc)</code> · <code>arw(set)</code></h2>
 	<p>Split edge arrows honor the block row: <code>arw(tc)</code> · <code>arw(cc)</code> (default) · <code>arw(bc)</code>. <code>arw(set)</code> pairs them into one cluster placeable in any grid cell — <code>arw(set) arw(&lt;cell&gt;)</code>, e.g. <code>arw(set) arw(bc)</code>.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(arw) arw(tc)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">arw(tc)</small><h2 data-part="headline">Arrows at top</h2></ui-content></cq-box>
@@ -164,9 +152,9 @@
 			<cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">arw(set) arw(cc)</small><h2 data-part="headline">Center set</h2></ui-content></cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 	<p><code>arw(hid)</code> hides a dead-end arrow (default dims it).</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(arw) arw(hid)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">nav(arw) arw(hid)</small><h2 data-part="headline">Auto-hide dead-end (circle)</h2></ui-content></cq-box>
@@ -175,17 +163,17 @@
 			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">nav(blw) arw(bare) arw(hid)</small><h2 data-part="headline">Auto-hide dead-end (band)</h2></ui-content></cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 	<h3>Arrow shape — <code>arw(sqr)</code> / <code>arw(sft)</code></h3>
 	<p>Arrows are circles by default. <code>arw(sqr)</code> = sharp square, <code>arw(sft)</code> = slightly rounded.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-media media="asr(16/9) nav arw(sqr)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
 		<ui-media media="asr(16/9) rds(lg) clip nav arw(sft)"><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
-	</div>
+	</lay-out>
 
 	<h2>6 · Control bands — <code>nav(blw)</code> / <code>nav(abv)</code></h2>
 	<p><code>nav(blw)</code> / <code>nav(abv)</code> move the controls into a band below / above the media. Below in <code>&lt;ui-card&gt;</code>s, above as standalone <code>&lt;ui-media&gt;</code>.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(blw) arw(bare)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">nav(blw) arw(bare)</small><h2 data-part="headline">Band below</h2></ui-content></cq-box>
@@ -194,15 +182,15 @@
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">nav(blw) arw(set)</small><h2 data-part="headline">Dots left, arrow pair right</h2></ui-content></cq-box>
 		</ui-card>
-	</div>
-	<div class="grid grid-2">
+	</lay-out>
+	<lay-out md="columns(2)">
 		<ui-media media="asr(4/3) rds(lg) clip nav(abv)"><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
 		<ui-media media="asr(4/3) rds(lg) clip nav(abv) arw(set)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
-	</div>
+	</lay-out>
 
 	<h2>7 · Position in the band — the row cell's inline letter</h2>
 	<p>In a band the row is locked, so a dot cell's inline letter aligns it: <strong>below</strong> (<code>nav(blw)</code>) uses <code>dot(bs)</code> / <code>dot(bc)</code> (default) / <code>dot(be)</code> — dots left, then right:</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(blw) arw(set) dot(bs)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">nav(blw) dot(bs)</small><h2 data-part="headline">Below · dots left</h2></ui-content></cq-box>
@@ -211,16 +199,16 @@
 			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">nav(blw) dot(be)</small><h2 data-part="headline">Below · dots right</h2></ui-content></cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 	<p><strong>Above</strong> (<code>nav(abv)</code>), standalone — top-row cells <code>dot(ts)</code> / <code>dot(te)</code>, dots left, then right:</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-media media="asr(4/3) rds(lg) clip nav(abv) arw(set) dot(ts)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""><img src="/assets/images/popovers.png" alt=""></ui-media>
 		<ui-media media="asr(4/3) rds(lg) clip nav(abv) arw(set) dot(te)"><img src="/assets/images/river.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
-	</div>
+	</lay-out>
 
 	<h2>Split placement — <code>dot(blw/abv)</code> · <code>arw(blw/abv)</code></h2>
 	<p>Band for <strong>one</strong> control group only: <code>dot(blw)</code>/<code>dot(abv)</code> put the dots in a band while the arrows stay centered on the media; <code>arw(blw)</code>/<code>arw(abv)</code> mirror it — arrows in a band, dots on the media.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav dot(blw)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">nav dot(blw)</small><h2 data-part="headline">Dots below, arrows on media</h2></ui-content></cq-box>
@@ -237,7 +225,7 @@
 			<cq-box><ui-media><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/government.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">nav arw(abv)</small><h2 data-part="headline">Arrows above, dots on media</h2></ui-content></cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<hr>
 	<!-- ════════════════════════════════════════════════════════════
@@ -245,7 +233,7 @@
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>8 · Overlay ink — light · dark</h2>
 	<p>Default = light circle + dark chevron. <code>arw(drk)</code> = dark circle + white chevron (one atom).</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">default</small><h2 data-part="headline">Frosted light circle</h2></ui-content></cq-box>
@@ -254,11 +242,11 @@
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">arw(drk)</small><h2 data-part="headline">Dark circle, white chevron</h2></ui-content></cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<h2>9 · Band ink — light · dark</h2>
 	<p>Band default = light-grey circle + grey glyph. <code>arw(drk)</code> = dark circle + white chevron.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(blw)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">nav(blw) · default</small><h2 data-part="headline">Light grey circle</h2></ui-content></cq-box>
@@ -267,16 +255,16 @@
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">nav(blw) arw(drk)</small><h2 data-part="headline">Dark circle, white chevron</h2></ui-content></cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<h2>10 · Dots &amp; pills — <code>dot()</code> · <code>dot(pll)</code></h2>
 	<p>Recolour dots with <code>--ui-carousel-dot-bg</code> / <code>--ui-carousel-dot-active</code> (or the <code>dot(lgt)</code>/<code>dot(drk)</code> atoms). <code>dot(pll)</code> = pill timers (fill over <code>--ui-carousel-autoplay</code>).</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(dot) dot(pll)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">dot(pll)</small><h2 data-part="headline">Pill timer (5s)</h2></ui-content></cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<hr>
 	<!-- ════════════════════════════════════════════════════════════
@@ -285,7 +273,7 @@
 	<h2>11 · Thumbnail navigation — <code>dot(tmb)</code></h2>
 	<p><code>dot(tmb)</code> turns dots into thumbnails — each slide sets <code>--ui-carousel-thumb-url</code>. Corner via <code>dot(ts/te/bs/be)</code>, size via <code>dot(sm|md|lg|xl)</code>. (JS autoplay + video version below.)</p>
 	<p>Plain images, larger rail (<code>dot(lg)</code>), bottom-right (<code>dot(be)</code>).</p>
-	<div class="grid">
+	<lay-out>
 			<ui-media media="asr(16/9) rds(md) clip nav dot(tmb) dot(be) dot(lg)">
 				<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')">
 				<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')">
@@ -293,9 +281,9 @@
 				<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')">
 				<img src="/assets/images/finance.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/finance.png')">
 			</ui-media>
-	</div>
+	</lay-out>
 	<p>Top corners — <code>dot(ts)</code> and <code>dot(te)</code>:</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-media media="asr(16/9) rds(md) clip nav dot(tmb) dot(ts)">
 			<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')">
 			<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')">
@@ -308,7 +296,7 @@
 			<img src="/assets/images/aurasoundpro.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/aurasoundpro.png')">
 			<img src="/assets/images/government.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/government.png')">
 		</ui-media>
-	</div>
+	</lay-out>
 
 	<hr>
 	<!-- ════════════════════════════════════════════════════════════
@@ -316,7 +304,7 @@
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>12 · Vertical carousel — <code>axis(y)</code></h2>
 	<p><code>axis(y)</code> = vertical (snap on Y; up/down arrows, dot column inline-end). A start-inline cell <code>arw(cs)</code> flips the edge; <code>arw(set)</code> stacks the pair at the bottom (<code>arw(set) arw(te)</code> at the top).</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) axis(y) nav" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">axis(y) nav</small><h2 data-part="headline">Dots + up/down (right)</h2></ui-content></cq-box>
@@ -333,14 +321,14 @@
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">axis(y) arw(set) arw(te)</small><h2 data-part="headline">Arrow pair, top-right</h2></ui-content></cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 	<p>Control bands read cleanest as standalone <code>&lt;ui-media&gt;</code> — the band is part of the frame. <code>nav(blw)</code> below, <code>nav(abv)</code> above.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(blw)"><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
 		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(abv)"><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
-	</div>
+	</lay-out>
 	<p>Vertical thumbnails in a corner — <code>dot(ts)</code> top-left, <code>dot(bs)</code> bottom-left.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 			<ui-media media="asr(4/3) rds(lg) clip axis(y) nav dot(tmb) dot(ts) dot(md)">
 				<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')">
 				<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')">
@@ -351,7 +339,7 @@
 				<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')">
 				<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')">
 			</ui-media>
-	</div>
+	</lay-out>
 
 	<hr>
 	
@@ -361,7 +349,7 @@
 
 	<h2>Staggered content reveal — <code>stagger</code> · <code>ani()</code></h2>
 	<p>A card's <code>&lt;ui-content&gt;</code> reveal on snap (<code>scroll-state(snapped)</code> query + per-child delay). Type via <code>ani()</code>: <code>rise</code> (default) · <code>fall</code> · <code>lft</code> · <code>rgt</code> · <code>zom</code> · <code>blr</code> · <code>fde</code>.</p>
-	<div class="grid">
+	<lay-out>
 			<ui-media media="asr(16/9) rds(lg) clip nav stagger">
 				<ui-card variant="ovr(bl) rds(none)" media="asr(16/9) obp(cc) scm" content="pad(lg)"><cq-box>
 					<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
@@ -376,11 +364,11 @@
 					<ui-content><small data-part="eyebrow">Tech</small><h2 data-part="headline">Web Summit</h2><p data-part="summary">Where the network meets in person.</p><nav data-part="actions"><a class="ui-button" href="#">Attend</a></nav></ui-content>
 				</cq-box></ui-card>
 			</ui-media>
-	</div>
+	</lay-out>
 
 	<h3>A different <code>ani()</code> per slide — controls below (<code>nav(blw)</code>)</h3>
 	<p><code>ani()</code> per <strong>slide</strong> (not the carousel) — each reveals differently, the closer value wins. Controls in a <code>nav(blw)</code> band.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 			<ui-media media="rds(none) clip nav(blw) stagger">
 				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm ani(rise)" content="pad(lg)"><cq-box>
 					<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
@@ -409,7 +397,7 @@
 					<ui-content><small data-part="eyebrow">ani(blr)</small><h2 data-part="headline">Unblur</h2><p data-part="summary">Sharpens into focus.</p></ui-content>
 				</cq-box></ui-card>
 			</ui-media>
-	</div>
+	</lay-out>
 
 	<hr>
 	<!-- ════════════════════════════════════════════════════════════
@@ -418,9 +406,9 @@
 	<h2>Stagger — layered &amp; multi-card slides</h2>
 	<p>Multiple cards per slide, revealed on snap via <code>stagger</code>.</p>
 
-	<div class="grid">
+	<lay-out>
 			<ui-media class="slide-gap reveal-cards" media="nav(blw) arw(bare) stagger ani(lft)">
-				<ui-slide class="slide-cols" style="--cols: 3">
+				<lay-out md="columns(3)" stagger>
 					<ui-reveal type="flip" icon="dark top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)" style="--ui-reveal-content-bg: hsl(255 60% 95%);">
 						<details name="stagger-games">
 							<summary>
@@ -457,8 +445,8 @@
 							<ui-content tabindex="0"><h3>Imperium: Legions</h3><p>From a single cohort to the eternal city.</p></ui-content>
 						</details>
 					</ui-reveal>
-				</ui-slide>
-				<ui-slide class="slide-cols" style="--cols: 3">
+				</lay-out>
+				<lay-out md="columns(3)" stagger>
 					<ui-reveal type="flip" icon="top right sm" icon-close="dark" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)" style="--ui-reveal-content-bg: hsl(210 42% 94%);">
 						<details name="stagger-movies">
 							<summary>
@@ -549,15 +537,15 @@
 							</div>
 						</details>
 					</ui-reveal>
-				</ui-slide>
+				</lay-out>
 			</ui-media>
-	</div>
+	</lay-out>
 
 	<h3><code>stagger</code> — two channels  — <code>crd()</code> + <code>ani()</code></h3>
 	<p>Two channels: <code>crd()</code> animates the <strong>cards</strong>, <code>ani()</code> their <strong>content</strong> (here all <code>ani(fall)</code>). Both cascade (card index, then child index).</p>
-	<div class="grid">
+	<lay-out>
 			<ui-media class="slide-gap" media="nav stagger crd(rise)">
-				<ui-slide class="slide-cols" style="--cols: 3">
+				<lay-out md="columns(3)" stagger>
 					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Space · ani(fall)</small><h3 data-part="headline">Hubble</h3></ui-content>
@@ -570,8 +558,8 @@
 						<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Tech · ani(fall)</small><h3 data-part="headline">Web Summit</h3></ui-content>
 					</cq-box></ui-card>
-				</ui-slide>
-				<ui-slide class="slide-cols" style="--cols: 3">
+				</lay-out>
+				<lay-out md="columns(3)" stagger>
 					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Health · ani(fall)</small><h3 data-part="headline">Mindfulness</h3></ui-content>
@@ -584,8 +572,8 @@
 						<ui-media><img src="/assets/images/finance.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Money · ani(fall)</small><h3 data-part="headline">Finance</h3></ui-content>
 					</cq-box></ui-card>
-				</ui-slide>
-				<ui-slide class="slide-cols" style="--cols: 3">
+				</lay-out>
+				<lay-out md="columns(3)" stagger>
 					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Nature · ani(fall)</small><h3 data-part="headline">Wild waters</h3></ui-content>
@@ -598,15 +586,15 @@
 						<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Calm · ani(fall)</small><h3 data-part="headline">Stillness</h3></ui-content>
 					</cq-box></ui-card>
-				</ui-slide>
+				</lay-out>
 			</ui-media>
-	</div>
+	</lay-out>
 
 	<h3>Room for card shadows — <code>padding</code> + <code>scroll-padding</code></h3>
 	<p>Elevated <code>&lt;ui-card&gt;</code> slides — the scroller clips its scrollport, cutting the shadow. <code>.shadow-room</code> adds matching <code>padding-inline</code> + <code>scroll-padding-inline</code> so it isn't clipped.</p>
-	<div class="grid">
+	<lay-out>
 			<ui-media class="slide-gap shadow-room" media="nav(blw) arw(bare) stagger ani(lft)">
-				<ui-slide class="slide-cols" style="--cols: 2">
+				<lay-out md="columns(2)" stagger>
 					<ui-card variant="col" media="asr(4/3) crd(rise)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Space</small><h3 data-part="headline">Hubble</h3><p data-part="summary">Deep-field imaging.</p></ui-content>
@@ -615,8 +603,8 @@
 						<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Physics</small><h3 data-part="headline">Quantum</h3><p data-part="summary">Entangled states.</p></ui-content>
 					</cq-box></ui-card>
-				</ui-slide>
-				<ui-slide class="slide-cols" style="--cols: 2">
+				</lay-out>
+				<lay-out md="columns(2)" stagger>
 					<ui-card variant="col" media="asr(4/3) crd(rise)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Tech</small><h3 data-part="headline">Web Summit</h3><p data-part="summary">Founders meet.</p></ui-content>
@@ -625,8 +613,8 @@
 						<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Health</small><h3 data-part="headline">Mindfulness</h3><p data-part="summary">Breathe deep.</p></ui-content>
 					</cq-box></ui-card>
-				</ui-slide>
-				<ui-slide class="slide-cols" style="--cols: 2">
+				</lay-out>
+				<lay-out md="columns(2)" stagger>
 					<ui-card variant="col" media="asr(4/3) crd(rise)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/world.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Travel</small><h3 data-part="headline">World</h3><p data-part="summary">Go far.</p></ui-content>
@@ -635,9 +623,9 @@
 						<ui-media><img src="/assets/images/finance.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Money</small><h3 data-part="headline">Finance</h3><p data-part="summary">Grow it.</p></ui-content>
 					</cq-box></ui-card>
-				</ui-slide>
+				</lay-out>
 			</ui-media>
-	</div>
+	</lay-out>
 
 	<hr>
 	<!-- ════════════════════════════════════════════════════════════
@@ -646,7 +634,7 @@
 
 	<h2>JS-enhanced behaviors</h2>
 	<p><code>ui-media.js</code> adds what CSS can't — progressive enhancement (tokens no-op with JS off).</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav dot(pll) auto(3s) loop play(bs)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
@@ -662,9 +650,9 @@
 				<ui-content><small data-part="eyebrow">loop</small><h2 data-part="headline">Seamless loop</h2><p data-part="summary">Next past the last smooth-scrolls into a cloned slide, then invisibly resets — no jump.</p></ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 	<p>Both work on <code>axis(y)</code> too. First: pill timer, dots bottom-centered (<code>dot(pll) dot(bc)</code>).</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) axis(y) nav dot(pll) dot(bc) auto(3s) loop play(ts)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
@@ -680,11 +668,11 @@
 				<ui-content><small data-part="eyebrow">axis(y) loop</small><h2 data-part="headline">Vertical seamless loop</h2><p data-part="summary">Down past the last smooth-scrolls into a cloned slide, then invisibly resets — up/down arrows + dots.</p></ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<h3>Thumbnail carousel — autoplay + video (JS)</h3>
 	<p><code>dot(tmb)</code> + <code>auto loop</code> + <code>&lt;ui-play&gt;</code> + <code>stagger</code>, with two video slides.</p>
-	<div class="grid">
+	<lay-out>
 			<ui-media media="asr(4/3) rds(2xl) clip nav auto loop dot(tmb) dot(te) dot(xl) play(be) stagger">
 				<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
 				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-carousel-thumb-url: url('/assets/images/finance.png')"><cq-box>
@@ -718,11 +706,11 @@
 					<ui-content><small data-part="eyebrow">Video · manual</small><h2 data-part="headline">Down the river</h2><p data-part="summary">Click to play; pauses when you swipe away.</p><nav data-part="actions"><a class="ui-button" href="#">Discover</a></nav></ui-content>
 				</cq-box></ui-card>
 			</ui-media>
-	</div>
+	</lay-out>
 
 	<h2>Play/pause control — <code>&lt;ui-play&gt;</code></h2>
 	<p><code>&lt;ui-play&gt;</code> in an autoplay carousel toggles the timer — sticky-pinned, placed with <code>play(bs)</code> / <code>play(be)</code>. <code>variant="reveal"</code> hides it until hover/focus.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav dot(pll) auto(4s) loop play(bs)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
@@ -741,11 +729,11 @@
 				<ui-content><small data-part="eyebrow">play(be) variant="reveal"</small><h2 data-part="headline">Reveal on hover (bottom-right)</h2></ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<h2>Two ways to write it — <code>media=</code> tokens or <code>nav</code>/<code>arrow</code>/<code>dot</code> attributes</h2>
 	<p>Same options, two forms: inheritable <code>media=</code> string (left) vs grouped <code>nav</code>/<code>arrow</code>/<code>dot</code> attributes (right). Identical render.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9) nav(blw) arw(lg) dot(be)" content="scl(sm)">
 			<cq-box>
 				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
@@ -758,7 +746,7 @@
 				<ui-content><small data-part="eyebrow">nav="blw" arrow="lg" dot="be"</small><h2 data-part="headline">attribute form</h2></ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- cursor-tracked hover + loop/auto carousels (progressive enhancement) -->
 	<script type="module" src="index.js"></script>

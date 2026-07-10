@@ -1,8 +1,12 @@
 /**
  * ui-tabs
- * @version 1.0.2
- * @date 2026-04-24
+ * @version 1.1.0
+ * @date 2026-07-09
  * @author Mads Stoumann
+ *
+ * Staggered panel entry ([data-stagger]) comes from ui/base/stagger.css —
+ * effect tokens (rise/fall/lft/rgt/zom/blr/fde), delays and reduced-motion
+ * live there; override via the global --stagger-* tokens on the host.
  *
  * Private custom properties (--_*)
  *   --_tc   tab-count     total <details> siblings; drives subgrid span
@@ -59,10 +63,6 @@
 		--ui-tabs-rounded-radius: var(--radius-lg);
 		--ui-tabs-squircle-exp: 2;
 		--ui-tabs-squircle-radius: 1em;
-		--ui-tabs-stagger-distance: var(--stagger-distance, 4rem);
-		--ui-tabs-stagger-duration: var(--stagger-duration, 0.75s);
-		--ui-tabs-stagger-easing: var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1));
-		--ui-tabs-stagger-step: var(--stagger-step, 0.07s);
 		--ui-tabs-tab-gap: 1ch;
 	}
 
@@ -164,30 +164,8 @@
 				&::marker { display: none; }
 			}
 
-			/* Staggered panel entry (opt-in via [data-stagger]) — transition +
-			   @starting-style replays on every tab activation. See readme.md. */
-			> cq-box > details:has(> [data-stagger])::details-content { content-visibility: visible; }
-			> cq-box > details:not([open]) > [data-stagger] > * { display: none; }
-			> cq-box > details[open] > [data-stagger] > * {
-				opacity: 1;
-				translate: 0;
-				transition:
-					opacity var(--ui-tabs-stagger-duration) var(--ui-tabs-stagger-easing),
-					translate var(--ui-tabs-stagger-duration) var(--ui-tabs-stagger-easing);
-				transition-delay: calc((sibling-index() - 1) * var(--ui-tabs-stagger-step));
-
-				@starting-style {
-					opacity: 0;
-					translate: 0 var(--ui-tabs-stagger-distance);
-				}
-			}
-			/* MANDATORY: respect reduced-motion — show instantly, no slide/fade. */
-			@media (prefers-reduced-motion: reduce) {
-				> cq-box > details[open] > [data-stagger] > * {
-					transition: none;
-					@starting-style { opacity: 1; translate: 0; }
-				}
-			}
+			/* Staggered panel entry (opt-in via [data-stagger]) — shared engine in
+			   ui/base/stagger.css (effect tokens, delays, reduced-motion). */
 		}
 
 		/* === Variants (structural) === */

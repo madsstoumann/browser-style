@@ -10,10 +10,12 @@
 		"base"
 	],
 	"common": [
+		"easings",
 		"animations"
 	],
 	"include": [
-		"../ui/base/carousel.css"
+		"../ui/base/carousel.css",
+		"../ui/base/animations.css"
 	],
 	"breakpoints": {
 		"xs": {

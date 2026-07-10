@@ -6,20 +6,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Tabs component: A tabbed interface built on native details/summary elements with a sliding indicator.">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="ui-tabs.css">
 	<link rel="stylesheet" href="/ui/reveal/ui-reveal.css">
 	<link rel="stylesheet" href="/ui/accordion/ui-accordion.css">
 	<link rel="stylesheet" href="tabs-demo.css">
 	<style>
-		.stagger-grid {
-			display: grid;
-			gap: var(--spacing-lg);
-			grid-template-columns: 1fr;
-		}
-		@media (min-width: 600px) {
-			.stagger-grid { grid-template-columns: repeat(3, 1fr); }
-		}
-		.stagger-grid ui-accordion { font-size: var(--font-size-sm); }
+		lay-out[stagger] ui-accordion { font-size: var(--font-size-sm); }
 	</style>
 </head>
 <body>
@@ -350,18 +343,24 @@
 	<br><hr>
 	<h2>Staggered reveal</h2>
 	<p>
-		Panel content animates in when its tab opens. Each direct child of a
-		<code>[data-stagger]</code> grid is offset by <code>sibling-index()</code>, so the
-		cards cascade into place. Switching tabs replays the stagger — the
-		<code>[open]</code> state restarts the animation. Reduced-motion users get an
-		instant show. Cards are <code>&lt;ui-reveal&gt;</code> components.
+		Panel content animates in when its tab opens — powered by the shared engine in
+		<code>ui/base/stagger.css</code>. Mark the grid with the <code>stagger</code>
+		attribute (bare on custom elements like <code>&lt;lay-out&gt;</code>;
+		<code>data-stagger</code> on native elements) — each direct child is offset by
+		<code>sibling-index()</code>, so the cards cascade into place. Switching tabs
+		replays the stagger every time — re-opening an already-shown tab restarts it.
+		Effect tokens: <code>rise</code> (default) · <code>fall</code> · <code>lft</code> ·
+		<code>rgt</code> · <code>zom</code> · <code>blr</code> · <code>fde</code> — the
+		third tab uses <code>stagger="zom"</code>. Reduced-motion users get an instant
+		show. Cards are <code>&lt;ui-reveal&gt;</code> components; layout is a
+		<code>&lt;lay-out md="columns(3)"&gt;</code>.
 	</p>
 	<ui-tabs class="tabs-line" no-collapse>
 		<cq-box>
 			<details name="tabs-stagger" open>
 				<summary>Games</summary>
-				<div class="stagger-grid" data-stagger>
-					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)">
+				<lay-out md="grid(3a)" lg="columns(3)" pad-top="1" stagger>
+					<ui-reveal type="flip" scroll icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)">
 						<details name="stagger-games">
 							<summary>
 								<ui-face>
@@ -370,10 +369,15 @@
 								</ui-face>
 								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 							</summary>
-							<ui-content tabindex="0"><h3>Starfall Legends</h3><p>Chase the falling stars across the floating isles of Auralis.</p></ui-content>
+							<ui-content tabindex="0">
+								<h3>Starfall Legends</h3>
+								<p><strong>Gather your party and chase the falling stars.</strong> A hand-drawn action-RPG set across the floating isles of Auralis, where every comet leaves behind a creature to befriend — or battle.</p>
+								<p>Master the Starbind combat system, evolve your companions through dozens of forms, and uncover who shattered the night sky. Couch co-op for up to four heroes.</p>
+								<p><a href="#">Get &mdash; Free with in-app purchases</a></p>
+							</ui-content>
 						</details>
 					</ui-reveal>
-					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) hov(pan)">
+					<ui-reveal type="flip" scroll icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) hov(pan)">
 						<details name="stagger-games">
 							<summary>
 								<ui-face>
@@ -382,10 +386,15 @@
 								</ui-face>
 								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 							</summary>
-							<ui-content tabindex="0"><h3>Frontier Outlaws</h3><p>Ride into a frontier that remembers everything you do.</p></ui-content>
+							<ui-content tabindex="0">
+								<h3>Frontier Outlaws</h3>
+								<p><strong>Ride into a frontier that remembers everything you do.</strong> Rob the noon stage or marshal the town that hangs you for it — every choice ripples through a living West of dust, debt and gunsmoke.</p>
+								<p>Tame wild horses, build your gang, and survive a dynamic bounty system where your reputation precedes you into every saloon. Online posses or solo drifter.</p>
+								<p><a href="#">Get &mdash; $39.99</a></p>
+							</ui-content>
 						</details>
 					</ui-reveal>
-					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)">
+					<ui-reveal type="flip" scroll icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)">
 						<details name="stagger-games">
 							<summary>
 								<ui-face>
@@ -394,15 +403,20 @@
 								</ui-face>
 								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 							</summary>
-							<ui-content tabindex="0"><h3>Imperium: Legions</h3><p>From a single cohort to the eternal city.</p></ui-content>
+							<ui-content tabindex="0">
+								<h3>Imperium: Legions</h3>
+								<p><strong>From a single cohort to the eternal city.</strong> Command Rome's legions across a campaign that spans the Republic to the Empire — march, besiege and intrigue your way to a throne history won't forget.</p>
+								<p>Real-time battles of thousands, a Senate that schemes behind your back, and city-building that turns marble quarries into wonders. Cross-play campaigns for up to eight consuls.</p>
+								<p><a href="#">Get &mdash; $49.99</a></p>
+							</ui-content>
 						</details>
 					</ui-reveal>
-				</div>
+				</lay-out>
 			</details>
 			<details name="tabs-stagger">
 				<summary>Bands</summary>
-				<div class="stagger-grid" data-stagger>
-					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) hov(pan)">
+				<lay-out md="grid(3a)" lg="columns(3)" pad-top="1" stagger>
+					<ui-reveal type="flip" scroll icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) hov(pan)">
 						<details name="stagger-bands">
 							<summary>
 								<ui-face>
@@ -411,10 +425,15 @@
 								</ui-face>
 								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 							</summary>
-							<ui-content tabindex="0"><h3>The Lure</h3><p>Darkwave from the old quarter.</p></ui-content>
+							<ui-content tabindex="0">
+								<h3>The Lure</h3>
+								<p><strong>Cold, slow darkwave conjured in a basement full of smoke.</strong> Four records deep and still allergic to daylight, The Lure trade in reverb, dread and the kind of hooks that only surface after midnight.</p>
+								<p>Their early demos still circulate on hand-dubbed cassettes passed between basement shows — a scene that refuses to sit still.</p>
+								<p><a href="#">Listen &rarr;</a></p>
+							</ui-content>
 						</details>
 					</ui-reveal>
-					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) hov(zoom)">
+					<ui-reveal type="flip" scroll icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) hov(zoom)">
 						<details name="stagger-bands">
 							<summary>
 								<ui-face>
@@ -423,10 +442,15 @@
 								</ui-face>
 								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 							</summary>
-							<ui-content tabindex="0"><h3>Paper Mirror</h3><p>Reverb-soaked guitars and hooks.</p></ui-content>
+							<ui-content tabindex="0">
+								<h3>Paper Mirror</h3>
+								<p><strong>Reverb-soaked guitars and bittersweet hooks, built on hand-dubbed cassettes.</strong> Recorded to tape in a spare room and passed hand to hand, Paper Mirror's songs sound like a memory you can't quite place.</p>
+								<p>No two tracks reach for the same trick, yet they share a stubborn refusal to wait for permission.</p>
+								<p><a href="#">Listen &rarr;</a></p>
+							</ui-content>
 						</details>
 					</ui-reveal>
-					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(pan)">
+					<ui-reveal type="flip" scroll icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(pan)">
 						<details name="stagger-bands">
 							<summary>
 								<ui-face>
@@ -435,15 +459,20 @@
 								</ui-face>
 								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 							</summary>
-							<ui-content tabindex="0"><h3>Neon Avenue</h3><p>Synth-pop with a midnight sheen.</p></ui-content>
+							<ui-content tabindex="0">
+								<h3>Neon Avenue</h3>
+								<p><strong>Bedroom demos turned stadium choruses, one second-hand synth at a time.</strong> Neon Avenue built arena-sized harmonies in a unit above a tyre shop, and never lost the glitter along the way.</p>
+								<p>Synth-pop with a midnight sheen — the sound of a scene making its own permission slips.</p>
+								<p><a href="#">Listen &rarr;</a></p>
+							</ui-content>
 						</details>
 					</ui-reveal>
-				</div>
+				</lay-out>
 			</details>
 			<details name="tabs-stagger">
 				<summary>Movies</summary>
-				<div class="stagger-grid" data-stagger>
-					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)">
+				<lay-out md="grid(3a)" lg="columns(3)" pad-top="1" stagger>
+					<ui-reveal type="flip" scroll icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)">
 						<details name="stagger-movies">
 							<summary>
 								<ui-face>
@@ -473,7 +502,7 @@
 							</div>
 						</details>
 					</ui-reveal>
-					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(pan)">
+					<ui-reveal type="flip" scroll icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(pan)">
 						<details name="stagger-movies">
 							<summary>
 								<ui-face>
@@ -503,7 +532,7 @@
 							</div>
 						</details>
 					</ui-reveal>
-					<ui-reveal type="flip" icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)">
+					<ui-reveal type="flip" scroll icon="top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)">
 						<details name="stagger-movies">
 							<summary>
 								<ui-face>
@@ -533,7 +562,7 @@
 							</div>
 						</details>
 					</ui-reveal>
-				</div>
+				</lay-out>
 			</details>
 		</cq-box>
 	</ui-tabs>

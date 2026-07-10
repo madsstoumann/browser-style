@@ -2,7 +2,9 @@
  * The generic carousel CONTROLS (arrows, dots, pills, thumbnails, bands, placement)
  * live in /ui/base/carousel.css (shared with <lay-out overflow>) and use --ui-carousel-* tokens.
  * This file owns what is ui-media-specific: the scroller box itself, furniture exclusions,
- * focus handling, ui-play placement, band padding and the stagger/ani()/crd() reveal system.
+ * focus handling, ui-play placement, band padding and the stagger TRIGGER wiring
+ * (scroll-state containers + snapped from-state). The stagger engine, delays and the
+ * ani()/crd() effect vocabulary live in /ui/base/stagger.css.
  * Internals in media.carousel.md, tokens in carousel.md */
 @layer bs-component {
 	:where([media*="nav"], ui-media[nav]) {
@@ -83,71 +85,10 @@
 	:where([media*="play(bs)"]) ui-media, ui-media:where([media*="play(bs)"]) { --_play-block: end;    --_play-inline: var(--ui-media-overlay-gap, 0.75rem) auto; --_play-justify: start; }
 	:where([media*="play(be)"]) ui-media, ui-media:where([media*="play(be)"]) { --_play-block: end;    --_play-inline: auto var(--ui-media-overlay-gap, 0.75rem); --_play-justify: end; --_play-size: max-content; }
 
-	@property --_stg-crd-i { syntax: "<integer>"; inherits: true; initial-value: 0; }
-
-	@media (prefers-reduced-motion: no-preference) {
-		/* the slide is the scroll-state container (snap target) */
-		:where([media*="stagger"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker),
-		ui-media:where([media*="stagger"], [nav~="stagger"]) > :not(ui-chip, ui-play, ui-save, ui-sticker) {
-			container-type: scroll-state;
-		}
-		/* multi-card slide: give each card its column index (inherits to its content) */
-		:where([media*="stagger"]) ui-media > ui-slide > *,
-		ui-media:where([media*="stagger"], [nav~="stagger"]) > ui-slide > * {
-			--_stg-crd-i: calc(sibling-index() - 1);
-		}
-		:where([media*="stagger"]) ui-media > ui-slide > *,
-		ui-media:where([media*="stagger"], [nav~="stagger"]) > ui-slide > *,
-		:where([media*="stagger"]) ui-media ui-content > *,
-		ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > * {
-			transition:
-				opacity var(--stagger-duration) var(--stagger-easing),
-				translate var(--stagger-duration) var(--stagger-easing),
-				scale var(--stagger-duration) var(--stagger-easing),
-				filter var(--stagger-duration) var(--stagger-easing);
-		}
-		/* delay — cards cascade by card index */
-		:where([media*="stagger"]) ui-media > ui-slide > *,
-		ui-media:where([media*="stagger"], [nav~="stagger"]) > ui-slide > * {
-			transition-delay: calc(var(--stagger-begin) + var(--_stg-crd-i) * var(--stagger-step));
-		}
-		:where([media*="stagger"]) ui-media ui-content > *,
-		ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > * {
-			transition-delay: calc(var(--stagger-begin) + (var(--_stg-crd-i) + sibling-index() - 1) * var(--stagger-step));
-		}
-		@container not scroll-state(snapped: inline) {
-			:where([media*="stagger"]) ui-media > ui-slide > *,
-			ui-media:where([media*="stagger"], [nav~="stagger"]) > ui-slide > * {
-				opacity: 0;
-				translate: var(--_stg-crd-tr, 0 var(--stagger-distance));
-				scale: var(--_stg-crd-sc, 1);
-				filter: var(--_stg-crd-fl, none);
-			}
-			:where([media*="stagger"]) ui-media ui-content > *,
-			ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > * {
-				opacity: 0;
-				translate: var(--_stg-tr, 0 var(--stagger-distance));
-				scale: var(--_stg-sc, 1);
-				filter: var(--_stg-fl, none);
-			}
-		}
-	}
-
-	:where([media*="ani(rise)"]) { --_stg-tr: 0 var(--stagger-distance); }
-	:where([media*="ani(fall)"]) { --_stg-tr: 0 calc(-1 * var(--stagger-distance)); }
-	:where([media*="ani(lft)"])  { --_stg-tr: calc(-1 * var(--stagger-distance)) 0; }
-	:where([media*="ani(rgt)"])  { --_stg-tr: var(--stagger-distance) 0; }
-	:where([media*="ani(zom)"])  { --_stg-tr: 0 0; --_stg-sc: 0.65; }
-	:where([media*="ani(blr)"])  { --_stg-tr: 0 0; --_stg-fl: blur(12px); }
-	:where([media*="ani(fde)"])  { --_stg-tr: 0 0; }
-
-	:where([media*="crd(rise)"]) { --_stg-crd-tr: 0 var(--stagger-distance); }
-	:where([media*="crd(fall)"]) { --_stg-crd-tr: 0 calc(-1 * var(--stagger-distance)); }
-	:where([media*="crd(lft)"])  { --_stg-crd-tr: calc(-1 * var(--stagger-distance)) 0; }
-	:where([media*="crd(rgt)"])  { --_stg-crd-tr: var(--stagger-distance) 0; }
-	:where([media*="crd(zom)"])  { --_stg-crd-tr: 0 0; --_stg-crd-sc: 0.65; }
-	:where([media*="crd(blr)"])  { --_stg-crd-tr: 0 0; --_stg-crd-fl: blur(12px); }
-	:where([media*="crd(fde)"])  { --_stg-crd-tr: 0 0; }
+	/* Carousel stagger — the scroll-state trigger, both channels and the ani()/crd()
+	   vocabulary are host-agnostic and live in ui/base/stagger.css (works for
+	   <ui-media media="stagger"> and <lay-out overflow stagger> alike). Nothing
+	   carousel-stagger-specific remains here. */
 
 	/* reserved control band — nav(blw/abv) = both controls, dot(blw/abv) = dots only, arw(blw/abv) = arrows only */
 	:where([media*="nav(blw)"], [media*="dot(blw)"], [media*="arw(blw)"]) ui-media,

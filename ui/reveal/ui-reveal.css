@@ -43,6 +43,12 @@
 			transition-behavior: allow-discrete;
 		}
 
+		/* staggered panel children (ui/base/stagger.css) — hold their boxes through the
+		   close animation; the shared adapter's display:none flips at transition end */
+		> details:not([open]) > :where([stagger], [data-stagger]) > * {
+			transition: display var(--ui-reveal-duration, var(--duration-slower)) allow-discrete;
+		}
+
 		/* back content — an optional generic <ui-content> placed AFTER <summary>.
 		   It inherits the card typography + data-part engine, but the front-only
 		   ov() overlay leaks via descendant selectors, so neutralise it here:

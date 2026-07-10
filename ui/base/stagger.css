@@ -1,0 +1,179 @@
+/*
+ * stagger.css — shared state-triggered stagger-reveal engine
+ *
+ * HOST-AGNOSTIC: mark the reveal group with a bare `stagger` attribute (custom
+ * elements) or `data-stagger` (native elements); its DIRECT CHILDREN cascade in.
+ * Children must be elements — bare text nodes are not staggered (or hidden).
+ * Effect tokens as attr values (~= matched): rise (default) · fall · lft · rgt ·
+ * zom · blr · fde. The vector tokens set inherited custom props (--_stg-tr/sc/fl),
+ * so a token may also sit on any ancestor — or on a single child for a per-child
+ * vector (note: that child then also acts as a nested stagger host).
+ *
+ * Per-child delay = --stagger-begin + (--_stg-base-i + sibling-index() - 1) * --stagger-step.
+ * --_stg-base-i (registered, non-inherited, initial 0) lets a host offset the
+ * cascade (the card carousel bridges its card index into it).
+ * Tokens: --stagger-{begin,distance,duration,easing,step} — ui/base/tokens.css.
+ *
+ * Two trigger adapters:
+ *  1. <details> hosts (ui-tabs, ui-reveal, ui-accordion, plain <details>) —
+ *     children replay via display flip + @starting-style on every [open].
+ *  2. ui-media carousel (media="stagger" DSL; the ani()/crd() vocabulary arms
+ *     live here per the carousel.css precedent — inert for other hosts). The
+ *     scroll-state TRIGGER wiring (container-type + from-state) stays in
+ *     ui/card/media.carousel.css: snap reveals are two-way, so they use a
+ *     container query from-state instead of @starting-style.
+ *
+ * SPECIFICITY — the effect-vocabulary setters and carousel arms are 0-0-0
+ * (:where()) so their source order resolves overrides. The <details> adapter
+ * (adapter 1) is the deliberate exception: it uses REAL specificity so its
+ * from-state (opacity/translate…) wins over host card styles — a 0-0-0 version
+ * loses and the cascade never plays. It owns only its own animated properties,
+ * so nothing else competes. Everything below the vocabulary is gated on
+ * prefers-reduced-motion: no-preference — reduce users get instant reveals.
+ *
+ * REPLAY — re-opening an already-shown <details> re-runs the cascade only if the
+ * panel stays rendered while closed (content-visibility: visible) AND the
+ * @starting-style is a STANDALONE at-rule (a nested one does not re-fire). A host
+ * that must collapse its panel (accordion sets content-visibility: hidden at
+ * higher specificity) can't replay — its block-size expand is the reveal instead.
+ */
+@layer bs-component {
+	@property --_stg-base-i {
+		syntax: "<integer>";
+		inherits: false;
+		initial-value: 0;
+	}
+	/* carousel card-index carrier — inherits so a slide's cards pass their column
+	   index down to their own content (see adapter 2) */
+	@property --_stg-crd-i {
+		syntax: "<integer>";
+		inherits: true;
+		initial-value: 0;
+	}
+
+	/* === effect vocabulary — token setters (inherit; may sit on any ancestor) === */
+	/* generic attr forms */
+	:where([stagger~="rise"], [data-stagger~="rise"]) { --_stg-tr: 0 var(--stagger-distance); }
+	:where([stagger~="fall"], [data-stagger~="fall"]) { --_stg-tr: 0 calc(-1 * var(--stagger-distance)); }
+	:where([stagger~="lft"],  [data-stagger~="lft"])  { --_stg-tr: calc(-1 * var(--stagger-distance)) 0; }
+	:where([stagger~="rgt"],  [data-stagger~="rgt"])  { --_stg-tr: var(--stagger-distance) 0; }
+	/* zoom scales from the inline-start so left-aligned text grows in place
+	   (a center origin drifts the reading edge sideways — reads like a slide) */
+	:where([stagger~="zom"],  [data-stagger~="zom"])  { --_stg-tr: 0 0; --_stg-sc: 0.65; --_stg-origin: 0 50%; }
+	:where([stagger~="blr"],  [data-stagger~="blr"])  { --_stg-tr: 0 0; --_stg-fl: blur(12px); }
+	:where([stagger~="fde"],  [data-stagger~="fde"])  { --_stg-tr: 0 0; }
+	/* media-DSL forms (card carousel) — content channel */
+	:where([media*="ani(rise)"]) { --_stg-tr: 0 var(--stagger-distance); }
+	:where([media*="ani(fall)"]) { --_stg-tr: 0 calc(-1 * var(--stagger-distance)); }
+	:where([media*="ani(lft)"])  { --_stg-tr: calc(-1 * var(--stagger-distance)) 0; }
+	:where([media*="ani(rgt)"])  { --_stg-tr: var(--stagger-distance) 0; }
+	:where([media*="ani(zom)"])  { --_stg-tr: 0 0; --_stg-sc: 0.65; --_stg-origin: 0 50%; }
+	:where([media*="ani(blr)"])  { --_stg-tr: 0 0; --_stg-fl: blur(12px); }
+	:where([media*="ani(fde)"])  { --_stg-tr: 0 0; }
+	/* media-DSL forms (card carousel) — card channel */
+	:where([media*="crd(rise)"]) { --_stg-crd-tr: 0 var(--stagger-distance); }
+	:where([media*="crd(fall)"]) { --_stg-crd-tr: 0 calc(-1 * var(--stagger-distance)); }
+	:where([media*="crd(lft)"])  { --_stg-crd-tr: calc(-1 * var(--stagger-distance)) 0; }
+	:where([media*="crd(rgt)"])  { --_stg-crd-tr: var(--stagger-distance) 0; }
+	:where([media*="crd(zom)"])  { --_stg-crd-tr: 0 0; --_stg-crd-sc: 0.65; }
+	:where([media*="crd(blr)"])  { --_stg-crd-tr: 0 0; --_stg-crd-fl: blur(12px); }
+	:where([media*="crd(fde)"])  { --_stg-crd-tr: 0 0; }
+
+	@media (prefers-reduced-motion: no-preference) {
+		/* === adapter 1: <details> hosts — replay on every [open] ===
+		   Panel forced content-visibility:visible so it stays rendered while closed;
+		   the children's display:none→block flip on [open] then re-fires
+		   @starting-style EVERY time (a nested @starting-style does not re-fire — it
+		   must be a standalone at-rule, below).
+		   NOTE: these adapter rules carry real specificity (NOT :where()) so the
+		   from-state opacity/translate win over host card styles — a 0-0-0 version
+		   loses and the cascade never plays. Own properties only, so no conflict. */
+		details:has(> :is([stagger], [data-stagger]))::details-content {
+			content-visibility: visible;
+		}
+		details:not([open]) > :is([stagger], [data-stagger]) > * {
+			display: none;
+		}
+		details[open] > :is([stagger], [data-stagger]) > * {
+			filter: none;
+			opacity: 1;
+			scale: 1;
+			translate: 0;
+			transform-origin: var(--_stg-origin, 50% 50%);
+			transition:
+				opacity var(--stagger-duration) var(--stagger-easing),
+				translate var(--stagger-duration) var(--stagger-easing),
+				scale var(--stagger-duration) var(--stagger-easing),
+				filter var(--stagger-duration) var(--stagger-easing);
+			transition-delay: calc(var(--stagger-begin) + (var(--_stg-base-i) + sibling-index() - 1) * var(--stagger-step));
+		}
+		/* standalone @starting-style — the form that re-fires on each re-open */
+		@starting-style {
+			details[open] > :is([stagger], [data-stagger]) > * {
+				filter: var(--_stg-fl, none);
+				opacity: 0;
+				scale: var(--_stg-sc, 1);
+				translate: var(--_stg-tr, 0 var(--stagger-distance));
+			}
+		}
+
+		/* === adapter 2: snap-carousel channels — two-way, revealed on snap ===
+		   Hosts: <ui-media> (media="stagger") and <lay-out overflow stagger> (the
+		   nested per-card <ui-media> stays a plain frame). Each slide is a
+		   scroll-state container; its cards + their content sit at the from-state
+		   until the slide snaps into view, then cascade in. Two channels:
+		   cards-in-a-<ui-slide> (--_stg-crd-*) and content children (--_stg-*). */
+		/* the slide is the scroll-state container (snap target); exclude furniture */
+		:where([media*="stagger"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker),
+		ui-media:where([media*="stagger"], [nav~="stagger"]) > :not(ui-chip, ui-play, ui-save, ui-sticker),
+		lay-out[overflow][stagger] > :not(lay-out, ui-carousel-controls) {
+			container-type: scroll-state;
+		}
+		/* multi-card slide: give each card its column index (inherits to its content) */
+		:where([media*="stagger"]) ui-media > :where(ui-slide, lay-out) > *,
+		ui-media:where([media*="stagger"], [nav~="stagger"]) > :where(ui-slide, lay-out) > *,
+		lay-out[overflow][stagger] > :where(ui-slide, lay-out) > * {
+			--_stg-crd-i: calc(sibling-index() - 1);
+		}
+		/* content children consume the card index as their delay base */
+		:where([media*="stagger"]) ui-media ui-content > *,
+		ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > *,
+		lay-out[overflow][stagger] ui-content > * {
+			--_stg-base-i: var(--_stg-crd-i);
+		}
+		/* transition + delay for both channels */
+		:where([media*="stagger"]) ui-media > :where(ui-slide, lay-out) > *,
+		ui-media:where([media*="stagger"], [nav~="stagger"]) > :where(ui-slide, lay-out) > *,
+		lay-out[overflow][stagger] > :where(ui-slide, lay-out) > *,
+		:where([media*="stagger"]) ui-media ui-content > *,
+		ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > *,
+		lay-out[overflow][stagger] ui-content > * {
+			transform-origin: var(--_stg-origin, 50% 50%);
+			transition:
+				opacity var(--stagger-duration) var(--stagger-easing),
+				translate var(--stagger-duration) var(--stagger-easing),
+				scale var(--stagger-duration) var(--stagger-easing),
+				filter var(--stagger-duration) var(--stagger-easing);
+			transition-delay: calc(var(--stagger-begin) + (var(--_stg-base-i) + sibling-index() - 1) * var(--stagger-step));
+		}
+		/* from-state — held until the slide snaps into the inline viewport */
+		@container not scroll-state(snapped: inline) {
+			:where([media*="stagger"]) ui-media > :where(ui-slide, lay-out) > *,
+			ui-media:where([media*="stagger"], [nav~="stagger"]) > :where(ui-slide, lay-out) > *,
+			lay-out[overflow][stagger] > :where(ui-slide, lay-out) > * {
+				opacity: 0;
+				translate: var(--_stg-crd-tr, 0 var(--stagger-distance));
+				scale: var(--_stg-crd-sc, 1);
+				filter: var(--_stg-crd-fl, none);
+			}
+			:where([media*="stagger"]) ui-media ui-content > *,
+			ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > *,
+			lay-out[overflow][stagger] ui-content > * {
+				opacity: 0;
+				translate: var(--_stg-tr, 0 var(--stagger-distance));
+				scale: var(--_stg-sc, 1);
+				filter: var(--_stg-fl, none);
+			}
+		}
+	}
+}

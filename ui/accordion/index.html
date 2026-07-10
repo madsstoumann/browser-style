@@ -1179,6 +1179,70 @@
 	</ui-accordion>
 
 	<br>
+	<h2>Staggered panel content — <code>data-stagger</code></h2>
+	<p>Wrap panel content in a <code>&lt;div data-stagger&gt;</code> (shared engine in <code>ui/base/stagger.css</code>) — its children cascade in as the panel opens, while the panel's own block-size animation runs. Effect tokens: <code>rise</code> (default) · <code>fall</code> · <code>lft</code> · <code>rgt</code> · <code>zom</code> · <code>blr</code> · <code>fde</code>. (Not for <code>type="split"</code>/<code>type="horizontal"</code> — those have their own panel choreography.)</p>
+	<ui-accordion variant="bordered divided" group="accordion-stagger">
+		<cq-box>
+			<details name="accordion-stagger">
+				<summary>Rise (default)<ui-icon type="plus-minus"></ui-icon></summary>
+				<div data-stagger>
+					<p><strong>First paragraph rises in.</strong></p>
+					<p>Then this one follows, one step later.</p>
+					<p>And a third completes the cascade.</p>
+				</div>
+			</details>
+			<details name="accordion-stagger">
+				<summary>Fall<ui-icon type="plus-minus"></ui-icon></summary>
+				<div data-stagger="fall">
+					<p><strong>Children drop down into place.</strong></p>
+					<p>The vector is inverted — they descend instead of rising.</p>
+					<p>Same staggered timing, opposite direction.</p>
+				</div>
+			</details>
+			<details name="accordion-stagger">
+				<summary>Slide from the left<ui-icon type="plus-minus"></ui-icon></summary>
+				<div data-stagger="lft">
+					<p><strong>Children enter from the inline-start.</strong></p>
+					<p>Same cascade, horizontal vector.</p>
+					<p>Driven by the shared <code>--stagger-*</code> tokens.</p>
+				</div>
+			</details>
+			<details name="accordion-stagger">
+				<summary>Slide from the right<ui-icon type="plus-minus"></ui-icon></summary>
+				<div data-stagger="rgt">
+					<p><strong>Children enter from the inline-end.</strong></p>
+					<p>Mirror of <code>lft</code> — they arrive from the other side.</p>
+					<p>Respects writing direction (RTL flips it).</p>
+				</div>
+			</details>
+			<details name="accordion-stagger">
+				<summary>Zoom<ui-icon type="plus-minus"></ui-icon></summary>
+				<div data-stagger="zom">
+					<p><strong>Children scale up into place.</strong></p>
+					<p>No translation — each grows from 65% to full size.</p>
+					<p>A punchier entrance for shorter panels.</p>
+				</div>
+			</details>
+			<details name="accordion-stagger">
+				<summary>Unblur<ui-icon type="plus-minus"></ui-icon></summary>
+				<div data-stagger="blr">
+					<p><strong>Children sharpen into focus.</strong></p>
+					<p>Blur + fade, no movement.</p>
+					<p>Reduced-motion users get everything instantly.</p>
+				</div>
+			</details>
+			<details name="accordion-stagger">
+				<summary>Fade<ui-icon type="plus-minus"></ui-icon></summary>
+				<div data-stagger="fde">
+					<p><strong>Children simply fade in.</strong></p>
+					<p>Opacity only — no movement, scale or blur.</p>
+					<p>The most restrained of the seven tokens.</p>
+				</div>
+			</details>
+		</cq-box>
+	</ui-accordion>
+
+	<br>
 	<h2>Icon Variants</h2>
 	<p>The <code>&lt;ui-icon&gt;</code> in each <code>&lt;summary&gt;</code> animates automatically when its parent <code>&lt;details&gt;</code> opens. See the <a href="/ui/icon/">icon component</a> for the full set of state-transition icons (<code>plus-minus</code>, <code>plus-cross</code>, <code>chevron down</code>, and more).</p>
 
