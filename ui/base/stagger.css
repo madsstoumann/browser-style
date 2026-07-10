@@ -53,28 +53,28 @@
 
 	/* === effect vocabulary — token setters (inherit; may sit on any ancestor) === */
 	/* generic attr forms */
-	:where([stagger~="rise"], [data-stagger~="rise"]) { --_stg-tr: 0 var(--stagger-distance); }
-	:where([stagger~="fall"], [data-stagger~="fall"]) { --_stg-tr: 0 calc(-1 * var(--stagger-distance)); }
-	:where([stagger~="lft"],  [data-stagger~="lft"])  { --_stg-tr: calc(-1 * var(--stagger-distance)) 0; }
-	:where([stagger~="rgt"],  [data-stagger~="rgt"])  { --_stg-tr: var(--stagger-distance) 0; }
+	:where([stagger~="rise"], [data-stagger~="rise"]) { --_stg-tr: 0 var(--stagger-distance, 5rem); }
+	:where([stagger~="fall"], [data-stagger~="fall"]) { --_stg-tr: 0 calc(-1 * var(--stagger-distance, 5rem)); }
+	:where([stagger~="lft"],  [data-stagger~="lft"])  { --_stg-tr: calc(-1 * var(--stagger-distance, 5rem)) 0; }
+	:where([stagger~="rgt"],  [data-stagger~="rgt"])  { --_stg-tr: var(--stagger-distance, 5rem) 0; }
 	/* zoom scales from the inline-start so left-aligned text grows in place
 	   (a center origin drifts the reading edge sideways — reads like a slide) */
 	:where([stagger~="zom"],  [data-stagger~="zom"])  { --_stg-tr: 0 0; --_stg-sc: 0.65; --_stg-origin: 0 50%; }
 	:where([stagger~="blr"],  [data-stagger~="blr"])  { --_stg-tr: 0 0; --_stg-fl: blur(12px); }
 	:where([stagger~="fde"],  [data-stagger~="fde"])  { --_stg-tr: 0 0; }
 	/* media-DSL forms (card carousel) — content channel */
-	:where([media*="ani(rise)"]) { --_stg-tr: 0 var(--stagger-distance); }
-	:where([media*="ani(fall)"]) { --_stg-tr: 0 calc(-1 * var(--stagger-distance)); }
-	:where([media*="ani(lft)"])  { --_stg-tr: calc(-1 * var(--stagger-distance)) 0; }
-	:where([media*="ani(rgt)"])  { --_stg-tr: var(--stagger-distance) 0; }
+	:where([media*="ani(rise)"]) { --_stg-tr: 0 var(--stagger-distance, 5rem); }
+	:where([media*="ani(fall)"]) { --_stg-tr: 0 calc(-1 * var(--stagger-distance, 5rem)); }
+	:where([media*="ani(lft)"])  { --_stg-tr: calc(-1 * var(--stagger-distance, 5rem)) 0; }
+	:where([media*="ani(rgt)"])  { --_stg-tr: var(--stagger-distance, 5rem) 0; }
 	:where([media*="ani(zom)"])  { --_stg-tr: 0 0; --_stg-sc: 0.65; --_stg-origin: 0 50%; }
 	:where([media*="ani(blr)"])  { --_stg-tr: 0 0; --_stg-fl: blur(12px); }
 	:where([media*="ani(fde)"])  { --_stg-tr: 0 0; }
 	/* media-DSL forms (card carousel) — card channel */
-	:where([media*="crd(rise)"]) { --_stg-crd-tr: 0 var(--stagger-distance); }
-	:where([media*="crd(fall)"]) { --_stg-crd-tr: 0 calc(-1 * var(--stagger-distance)); }
-	:where([media*="crd(lft)"])  { --_stg-crd-tr: calc(-1 * var(--stagger-distance)) 0; }
-	:where([media*="crd(rgt)"])  { --_stg-crd-tr: var(--stagger-distance) 0; }
+	:where([media*="crd(rise)"]) { --_stg-crd-tr: 0 var(--stagger-distance, 5rem); }
+	:where([media*="crd(fall)"]) { --_stg-crd-tr: 0 calc(-1 * var(--stagger-distance, 5rem)); }
+	:where([media*="crd(lft)"])  { --_stg-crd-tr: calc(-1 * var(--stagger-distance, 5rem)) 0; }
+	:where([media*="crd(rgt)"])  { --_stg-crd-tr: var(--stagger-distance, 5rem) 0; }
 	:where([media*="crd(zom)"])  { --_stg-crd-tr: 0 0; --_stg-crd-sc: 0.65; }
 	:where([media*="crd(blr)"])  { --_stg-crd-tr: 0 0; --_stg-crd-fl: blur(12px); }
 	:where([media*="crd(fde)"])  { --_stg-crd-tr: 0 0; }
@@ -101,11 +101,11 @@
 			translate: 0;
 			transform-origin: var(--_stg-origin, 50% 50%);
 			transition:
-				opacity var(--stagger-duration) var(--stagger-easing),
-				translate var(--stagger-duration) var(--stagger-easing),
-				scale var(--stagger-duration) var(--stagger-easing),
-				filter var(--stagger-duration) var(--stagger-easing);
-			transition-delay: calc(var(--stagger-begin) + (var(--_stg-base-i) + sibling-index() - 1) * var(--stagger-step));
+				opacity var(--stagger-duration, 0.75s) var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1)),
+				translate var(--stagger-duration, 0.75s) var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1)),
+				scale var(--stagger-duration, 0.75s) var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1)),
+				filter var(--stagger-duration, 0.75s) var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1));
+			transition-delay: calc(var(--stagger-begin, 0s) + (var(--_stg-base-i) + sibling-index() - 1) * var(--stagger-step, 0.07s));
 		}
 		/* standalone @starting-style — the form that re-fires on each re-open */
 		@starting-style {
@@ -113,66 +113,144 @@
 				filter: var(--_stg-fl, none);
 				opacity: 0;
 				scale: var(--_stg-sc, 1);
-				translate: var(--_stg-tr, 0 var(--stagger-distance));
+				translate: var(--_stg-tr, 0 var(--stagger-distance, 5rem));
 			}
 		}
 
-		/* === adapter 2: snap-carousel channels — two-way, revealed on snap ===
-		   Hosts: <ui-media> (media="stagger") and <lay-out overflow stagger> (the
-		   nested per-card <ui-media> stays a plain frame). Each slide is a
-		   scroll-state container; its cards + their content sit at the from-state
-		   until the slide snaps into view, then cascade in. Two channels:
-		   cards-in-a-<ui-slide> (--_stg-crd-*) and content children (--_stg-*). */
+		/* === adapter 2: <ui-media> snap-carousel channels — two-way, revealed on snap ===
+		   Each slide (a <ui-slide> or an inner <lay-out> grid) is a scroll-state
+		   container; its cards + content sit at the from-state until the slide snaps
+		   into view, then cascade. Two channels: cards-in-a-slide (--_stg-crd-*) and
+		   content children (--_stg-*). <lay-out overflow stagger> does NOT use this —
+		   it can't group a page of flat cards under one snap target (pages makes only
+		   the page-start a snap target). It uses adapter 3 (scroll-driven) instead. */
 		/* the slide is the scroll-state container (snap target); exclude furniture */
 		:where([media*="stagger"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker),
-		ui-media:where([media*="stagger"], [nav~="stagger"]) > :not(ui-chip, ui-play, ui-save, ui-sticker),
-		lay-out[overflow][stagger] > :not(lay-out, ui-carousel-controls) {
+		ui-media:where([media*="stagger"], [nav~="stagger"]) > :not(ui-chip, ui-play, ui-save, ui-sticker) {
 			container-type: scroll-state;
 		}
 		/* multi-card slide: give each card its column index (inherits to its content) */
 		:where([media*="stagger"]) ui-media > :where(ui-slide, lay-out) > *,
-		ui-media:where([media*="stagger"], [nav~="stagger"]) > :where(ui-slide, lay-out) > *,
-		lay-out[overflow][stagger] > :where(ui-slide, lay-out) > * {
+		ui-media:where([media*="stagger"], [nav~="stagger"]) > :where(ui-slide, lay-out) > * {
 			--_stg-crd-i: calc(sibling-index() - 1);
 		}
 		/* content children consume the card index as their delay base */
 		:where([media*="stagger"]) ui-media ui-content > *,
-		ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > *,
-		lay-out[overflow][stagger] ui-content > * {
+		ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > * {
 			--_stg-base-i: var(--_stg-crd-i);
 		}
 		/* transition + delay for both channels */
 		:where([media*="stagger"]) ui-media > :where(ui-slide, lay-out) > *,
 		ui-media:where([media*="stagger"], [nav~="stagger"]) > :where(ui-slide, lay-out) > *,
-		lay-out[overflow][stagger] > :where(ui-slide, lay-out) > *,
 		:where([media*="stagger"]) ui-media ui-content > *,
-		ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > *,
-		lay-out[overflow][stagger] ui-content > * {
+		ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > * {
 			transform-origin: var(--_stg-origin, 50% 50%);
 			transition:
-				opacity var(--stagger-duration) var(--stagger-easing),
-				translate var(--stagger-duration) var(--stagger-easing),
-				scale var(--stagger-duration) var(--stagger-easing),
-				filter var(--stagger-duration) var(--stagger-easing);
-			transition-delay: calc(var(--stagger-begin) + (var(--_stg-base-i) + sibling-index() - 1) * var(--stagger-step));
+				opacity var(--stagger-duration, 0.75s) var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1)),
+				translate var(--stagger-duration, 0.75s) var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1)),
+				scale var(--stagger-duration, 0.75s) var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1)),
+				filter var(--stagger-duration, 0.75s) var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1));
+			transition-delay: calc(var(--stagger-begin, 0s) + (var(--_stg-base-i) + sibling-index() - 1) * var(--stagger-step, 0.07s));
 		}
 		/* from-state — held until the slide snaps into the inline viewport */
 		@container not scroll-state(snapped: inline) {
 			:where([media*="stagger"]) ui-media > :where(ui-slide, lay-out) > *,
-			ui-media:where([media*="stagger"], [nav~="stagger"]) > :where(ui-slide, lay-out) > *,
-			lay-out[overflow][stagger] > :where(ui-slide, lay-out) > * {
+			ui-media:where([media*="stagger"], [nav~="stagger"]) > :where(ui-slide, lay-out) > * {
 				opacity: 0;
-				translate: var(--_stg-crd-tr, 0 var(--stagger-distance));
+				translate: var(--_stg-crd-tr, 0 var(--stagger-distance, 5rem));
 				scale: var(--_stg-crd-sc, 1);
 				filter: var(--_stg-crd-fl, none);
 			}
 			:where([media*="stagger"]) ui-media ui-content > *,
-			ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > *,
-			lay-out[overflow][stagger] ui-content > * {
+			ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > * {
 				opacity: 0;
-				translate: var(--_stg-tr, 0 var(--stagger-distance));
+				translate: var(--_stg-tr, 0 var(--stagger-distance, 5rem));
 				scale: var(--_stg-sc, 1);
 				filter: var(--_stg-fl, none);
+			}
+		}
+
+		/* === adapter 3: scroll-DRIVEN reveal (progress-linked, two-way) ===
+		   For <lay-out stagger> — cards reveal as they scroll THROUGH the viewport
+		   via the ui-stagger-in keyframe on a view() timeline (a transition can't
+		   bind to a scroll timeline). Progress is tied to scroll position, so it
+		   re-runs every time (scroll back = reverse), unlike a one-shot trigger.
+		   Attached ONLY inside the @supports gate, so non-supporting / reduced-motion
+		   users get no animation → cards render at natural opacity:1 (visible).
+		   Effect vectors come from the shared vocabulary (bare stagger = rise). */
+		@supports (animation-timeline: view()) {
+			/* Overflow carousel — TWO reveals on different elements (one element can't
+			   run two scroll-axis animations cleanly, so we split container vs cards):
+			   • the CONTAINER reveals on VERTICAL scroll-in (view() block) — the whole
+			     carousel fades/rises in as you scroll down to it, like animate.html.
+			     Skipped when [animate-self] is present: that attribute owns the
+			     container entry (e.g. a wilder bounce), stagger keeps the per-card
+			     swipe reveal below;
+			   • each CARD reveals on HORIZONTAL scroll (view(inline)) as it enters the
+			     inline viewport — so later pages cascade in as you swipe. */
+			lay-out[overflow][stagger]:not([animate-self]):not(:where(details *, ui-media *)) {
+				transform-origin: var(--_stg-origin, 50% 50%);
+				animation: ui-stagger-in both var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1));
+				animation-timeline: view();
+				animation-range: entry 0% cover 30%;
+			}
+			lay-out[overflow][stagger]:not(:where(details *, ui-media *)) > *:not(lay-out, ui-carousel-controls) {
+				transform-origin: var(--_stg-origin, 50% 50%);
+				animation: ui-stagger-in both var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1));
+				animation-timeline: view(inline);
+				animation-range: entry 5% cover 40%;
+			}
+			/* BLOCK axis — normal page grid. Container publishes a view() timeline;
+			   children stagger via per-sibling animation-range offset (mirrors the
+			   [animate] system). Excludes lay-out grids used as SLIDES inside a
+			   <ui-media> carousel — those reveal on snap via adapter 2. */
+			lay-out[stagger]:not([overflow]):not(:where(details *, ui-media *)) {
+				view-timeline: --stg-tl;
+			}
+			lay-out[stagger]:not([overflow]):not(:where(details *, ui-media *)) > *:not(lay-out, ui-carousel-controls) {
+				transform-origin: var(--_stg-origin, 50% 50%);
+				animation: ui-stagger-in both var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1));
+				animation-timeline: --stg-tl;
+				animation-range: entry calc((sibling-index() - 1) * 20%) entry calc(75% + (sibling-index() - 1) * 20%);
+			}
+
+			/* --- stagger="… trigger" → one-shot on entry (plays once at full
+			   duration, then STAYS — does not reverse on scroll-back). Overrides the
+			   scrubbed base above. Chrome 145+; older browsers keep the scrubbed
+			   (re-running) reveal. Mirrors the [animate] `trigger` token. */
+			@supports (timeline-trigger-name: --t) {
+				/* container: one-shot on vertical entry (skipped when [animate-self]
+				   owns the container entry) */
+				lay-out[overflow][stagger~="trigger"]:not([animate-self]):not(:where(details *, ui-media *)) {
+					timeline-trigger: --stg-self view() entry 25% exit 0%;
+					trigger-scope: --stg-self;
+					animation-timeline: auto;
+					animation-range: normal;
+					animation-duration: var(--stagger-duration, 0.75s);
+					animation-trigger: --stg-self play-forwards;
+					animation-delay: 0s;
+				}
+				/* cards: one-shot on horizontal entry */
+				lay-out[overflow][stagger~="trigger"]:not(:where(details *, ui-media *)) > *:not(lay-out, ui-carousel-controls) {
+					timeline-trigger: --stg-card view(inline) entry 25% exit 0%;
+					trigger-scope: --stg-card;
+					animation-timeline: auto;
+					animation-range: normal;
+					animation-duration: var(--stagger-duration, 0.75s);
+					animation-trigger: --stg-card play-forwards;
+					animation-delay: calc((sibling-index() - 1) * var(--animate-stagger, 10) * var(--animate-delay, 0.005s));
+				}
+				lay-out[stagger~="trigger"]:not([overflow]):not(:where(details *, ui-media *)) {
+					timeline-trigger: --stg-block view() entry 25% exit 0%;
+					trigger-scope: --stg-block;
+				}
+				lay-out[stagger~="trigger"]:not([overflow]):not(:where(details *, ui-media *)) > *:not(lay-out, ui-carousel-controls) {
+					animation-timeline: auto;
+					animation-range: normal;
+					animation-duration: var(--stagger-duration, 0.75s);
+					animation-trigger: --stg-block play-forwards;
+					animation-delay: calc((sibling-index() - 1) * var(--animate-stagger, 10) * var(--animate-delay, 0.005s));
+				}
 			}
 		}
 	}

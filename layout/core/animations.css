@@ -360,6 +360,22 @@
 		[animate~="trigger-exit"] > * { animation-trigger: --layout-trigger play-backwards; }
 		[animate~="trigger-both"] > * { animation-trigger: --layout-trigger play-forwards play-backwards; }
 
+		/* trigger on the container's OWN animation (animate-self). Separate
+		   timeline name so it can coexist with an item [animate] trigger on the
+		   same element. Plays at a fixed duration (not scrubbed) so overshoot
+		   effects like bounce look right; trigger-both replays it on scroll-back. */
+		:is([animate-self~="trigger"], [animate-self~="trigger-exit"], [animate-self~="trigger-both"]) {
+			timeline-trigger: --layout-self-trigger view() entry 25% exit 0%;
+			trigger-scope: --layout-self-trigger;
+			animation-timeline: auto;
+			animation-duration: var(--animate-dur);
+			animation-fill-mode: both;
+			animation-range: normal;
+		}
+		[animate-self~="trigger"]      { animation-trigger: --layout-self-trigger play-forwards; }
+		[animate-self~="trigger-exit"] { animation-trigger: --layout-self-trigger play-backwards; }
+		[animate-self~="trigger-both"] { animation-trigger: --layout-self-trigger play-forwards play-backwards; }
+
 		/* trigger: deep shared properties */
 		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"]):is([animate~="deep"]) > * > * {
 			animation-name: var(--_animn);

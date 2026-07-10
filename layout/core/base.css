@@ -1,6 +1,7 @@
 /* page index within a carousel page — see [overflow][pages] below (must compute to an
-   integer so if(style(--_pi: 0)) can match) */
-@property --_pi { syntax: "<integer>"; inherits: true; initial-value: 0; }
+   integer so if(style(--_pg: 0)) can match). NB: named --_pg, not --_pi — --_pi is the
+   bleed inline-padding *length*; registering it as <integer> would zero out bleed. */
+@property --_pg { syntax: "<integer>"; inherits: true; initial-value: 0; }
 
 @layer layout.base {
 	lay-out {
@@ -183,11 +184,11 @@
 		/* [pages]: snap + dot per PAGE of --_ci items instead of per item — dot count adapts
 		   per breakpoint automatically. sibling-index()/if() unsupported → per-item (graceful). */
 		&[overflow][pages] > *:not(lay-out) {
-			--_pi: calc(mod(sibling-index() - 1, var(--_ci, 1)));
-			scroll-snap-align: if(style(--_pi: 0): start; else: none);
+			--_pg: calc(mod(sibling-index() - 1, var(--_ci, 1)));
+			scroll-snap-align: if(style(--_pg: 0): start; else: none);
 		}
 		&[overflow][pages] > *:not(lay-out)::scroll-marker {
-			display: if(style(--_pi: 0): block; else: none);
+			display: if(style(--_pg: 0): block; else: none);
 		}
 		&[overflow*="preview"] {
 			overflow-x: scroll;

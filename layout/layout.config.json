@@ -15,7 +15,8 @@
 	],
 	"include": [
 		"../ui/base/carousel.css",
-		"../ui/base/animations.css"
+		"../ui/base/animations.css",
+		"../ui/base/stagger.css"
 	],
 	"breakpoints": {
 		"xs": {
