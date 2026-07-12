@@ -112,11 +112,12 @@
 	     object-fit token
 	     ============================================================ -->
 	<h2>Object-fit — <code>obf()</code></h2>
-	<p>The frame defaults to <code>object-fit: cover</code> (fill &amp; crop). Override per instance with the <code>obf()</code> token (or the <code>--ui-media-fit</code> custom property).</p>
-	<div class="grid grid-3">
+	<p>The frame defaults to <code>object-fit: cover</code> (fill &amp; crop). Override per instance with the <code>obf()</code> token (or the <code>--ui-media-fit</code> custom property): <code>contain</code> (fit whole image), <code>fill</code> (stretch), <code>none</code> (intrinsic size, cropped).</p>
+	<div class="grid grid-4">
 		<ui-card variant="vis(media)" media="asr(1/1) chip(bs)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-chip>cover (default)</ui-chip></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) obf(contain) chip(bs)" style="--ui-media-bg: var(--color-surface-alt, #f1f1f1);"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-chip>contain</ui-chip></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) obf(fill) chip(bs)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-chip>fill</ui-chip></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) obf(none) chip(bs)" style="--ui-media-bg: var(--color-surface-alt, #f1f1f1);"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-chip>none</ui-chip></ui-media></cq-box></ui-card>
 	</div>
 
 	<!-- ============================================================

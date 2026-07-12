@@ -17,7 +17,7 @@
 		overflow: hidden;
 		position: relative;
 
-		& :is(img, video, iframe) {
+		& :is(iframe, img, picture, video) {
 			block-size: 100%;
 			border: 0;
 			inline-size: 100%;
@@ -41,7 +41,7 @@
 		overflow: hidden;
 		scroll-snap-type: none;
 	}
-	ui-media ui-media > :is(img, video, iframe) {
+	ui-media ui-media > :is(iframe, img, picture, video) {
 		flex: initial;
 		inset: 0;
 		position: absolute;
@@ -182,15 +182,20 @@
 		/* size axis — shared stop positions (defaults = md = original look) */
 		--ui-media-scrim-mid: var(--ui-media-scrim-mid-stop, 40%);
 		--ui-media-scrim-end: var(--ui-media-scrim-end-stop, 80%);
-		--ui-media-scrim-ts: linear-gradient(to bottom right, var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), #0000 var(--ui-media-scrim-end));
-		--ui-media-scrim-tc: linear-gradient(to bottom,       var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), #0000 var(--ui-media-scrim-end));
-		--ui-media-scrim-te: linear-gradient(to bottom left,  var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), #0000 var(--ui-media-scrim-end));
-		--ui-media-scrim-cs: linear-gradient(to right,        var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), #0000 var(--ui-media-scrim-end));
+		/* smoothness: a concave interpolation hint (biased below the mid→end
+		   midpoint) gives a long, soft tail into transparent — blends the edge
+		   invisibly and spreads the fade over more pixels, easing the banding of a
+		   plain 3-stop linear ramp. */
+		--ui-media-scrim-hint: calc(var(--ui-media-scrim-mid) + (var(--ui-media-scrim-end) - var(--ui-media-scrim-mid)) * 0.4);
+		--ui-media-scrim-ts: linear-gradient(to bottom right, var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+		--ui-media-scrim-tc: linear-gradient(to bottom,       var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+		--ui-media-scrim-te: linear-gradient(to bottom left,  var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+		--ui-media-scrim-cs: linear-gradient(to right,        var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 		--ui-media-scrim-cc: linear-gradient(to bottom, #0000 var(--ui-media-scrim-cc-a, 25%), var(--ui-media-scrim-c) 50%, #0000 var(--ui-media-scrim-cc-b, 75%));
-		--ui-media-scrim-ce: linear-gradient(to left,         var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), #0000 var(--ui-media-scrim-end));
-		--ui-media-scrim-bs: linear-gradient(to top right,    var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), #0000 var(--ui-media-scrim-end));
-		--ui-media-scrim-bc: linear-gradient(to top,          var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), #0000 var(--ui-media-scrim-end));
-		--ui-media-scrim-be: linear-gradient(to top left,     var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), #0000 var(--ui-media-scrim-end));
+		--ui-media-scrim-ce: linear-gradient(to left,         var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+		--ui-media-scrim-bs: linear-gradient(to top right,    var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+		--ui-media-scrim-bc: linear-gradient(to top,          var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+		--ui-media-scrim-be: linear-gradient(to top left,     var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 	}
 	/* explicit scm(pos) overrides the ov-matched default */
 	:where([media*="scm(ts)"]) { --ui-media-scrim: var(--ui-media-scrim-ts); }

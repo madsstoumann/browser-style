@@ -30,8 +30,8 @@
 		inline-size: 100%;
 		scroll-snap-align: start;
 	}
-	:where([media*="nav"]) ui-media > :is(img, video),
-	ui-media:where([media*="nav"], [nav]) > :is(img, video) {
+	:where([media*="nav"]) ui-media > :is(iframe, img, picture, video),
+	ui-media:where([media*="nav"], [nav]) > :is(iframe, img, picture, video) {
 		inset: auto;
 		position: static;
 	}
