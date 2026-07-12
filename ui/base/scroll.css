@@ -1,0 +1,29 @@
+/**
+ * scroll-fade
+ * @author Mads Stoumann
+ *
+ * Shared scroll-driven edge-fade primitive. Consumed by content="scr"
+ * (ui/card/content.css) and ui-reveal[scroll] (ui/reveal/ui-reveal.css): both
+ * animate --ui-scroll-fade-start/-end on a scroll-timeline and paint the same
+ * --ui-scroll-fade-mask gradient. Extracted here so the two scrollers share one
+ * source of truth (was duplicated inline in both sheets).
+ */
+@property --ui-scroll-fade-start { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --ui-scroll-fade-end   { syntax: "<length>"; inherits: false; initial-value: 0px; }
+
+@keyframes ui-scroll-fade {
+	0%        { --ui-scroll-fade-start: 0px; }
+	10%, 100% { --ui-scroll-fade-start: var(--ui-scroll-fade-size, 3rem); }
+	0%, 90%   { --ui-scroll-fade-end: var(--ui-scroll-fade-size, 3rem); }
+	100%      { --ui-scroll-fade-end: 0px; }
+}
+
+@layer bs-core {
+	/* Declared on the two scroller hosts so the nested var(--ui-scroll-fade-start)
+	   resolves in the scroller's own context, where the animation drives it.
+	   --ui-scroll-fade-dir picks the axis (default vertical); content="scr(x)"
+	   overrides it to "to right" so the one gradient/keyframes serve both axes. */
+	:where(ui-content, ui-reveal) {
+		--ui-scroll-fade-mask: linear-gradient(var(--ui-scroll-fade-dir, to bottom), #0000, #000 var(--ui-scroll-fade-start) calc(100% - var(--ui-scroll-fade-end)), #0000);
+	}
+}

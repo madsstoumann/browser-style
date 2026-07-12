@@ -6,6 +6,7 @@
 @import './tint.css';
 @import './utility.css'; /* REWORK ? */
 @import './webcomponents.css'; /* NEEDED ? */
+@import './scroll.css';
 @import './carousel.css';
 @import './stagger.css';
 @import './animations.css';
