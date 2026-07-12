@@ -96,16 +96,24 @@ import '@browser.style/content';
 
 | Token | Args | Controls | Responsive (`md:`/`lg:`) |
 |-------|------|----------|--------------------------|
-| `scl()` | `sm` `md` `lg` `xl` | type-scale step — swaps the active body **and** headline stop | **No** (deferred) |
+| `scl()` | `sm` `md` `lg` `xl` | type-scale step — swaps the active body **and** headline stop | **Yes** |
+| `hl()` | size `sm` `md` `lg` `xl` `2xl` `poster` · tone · weight · `grad` · `shd` | headings group — headline size (only), ink, weight, gradient, shadow | size **Yes** |
+| `eb()` | tone · weight · `flat` · `shd` | eyebrow group — ink, weight, drop uppercase, shadow | No |
+| `tx()` | tone · weight · `shd` | body group — ink, weight, shadow (summary/quote/list/address/timeline/price/stat) | No |
+| `mt()` | tone · weight · `shd` | meta group — ink, weight, shadow (meta/caption/byline/footer/tags/rating/options) | No |
 | `pad()` | `none` `xs` `sm` `md` `lg` `xl` `2xl` | content padding (`--ui-content-p`) | **Yes** |
 | `gap()` | `none` `xs` `sm` `md` `lg` | row gap between parts (`--ui-content-gap`) | **Yes** |
-| `scr` | *(bare flag)* | scrollable content column + `ui-scroll-fade` edge mask | No |
+| `scr` / `scr(y)` / `scr(x)` | *(flag)* | scrollable content + shared `ui-scroll-fade` edge mask (`ui/base/scroll.css`). Bare `scr` = `scr(y)` = vertical column; `scr(x)` = horizontal row | No |
+
+**Tone** (ink strength + hue): `shr` (30%) · `lgt` (45%) · `med` (65%, = muted) · `drk` (85%) · `sld` (100%, theme text) · `accent` · `inv` (white, for overlays).
+**Weight**: `300`–`900` → `--font-weight-*` (`800` is a literal). **Vocabularies are disjoint** so a size, a tone, and a weight never collide inside one family — e.g. `hl(poster)`, `hl(accent)`, and `hl(900)` compose freely.
 
 ```css
-/* parse layer — matches the element OR any ancestor */
-:where([content*="scl(lg)"]) { --ui-content-fs: var(--ui-content-fs-lg); --ui-content-headline: var(--ui-content-headline-lg); }
-:where([content*="pad(lg)"]) { --ui-content-p:   var(--spacing-lg); }
-:where([content*="gap(sm)"]) { --ui-content-gap: var(--spacing-sm); }
+/* parse layer — matches the element OR any ancestor. Whole-token (~=) matching,
+   so base tokens don't collide with the md:/lg: prefixed forms. */
+:where([content~="scl(lg)"]) { --ui-content-fs: var(--ui-content-fs-lg); --ui-content-headline: var(--ui-content-headline-lg); }
+:where([content~="pad(lg)"]) { --ui-content-p:   var(--spacing-lg); }
+:where([content~="gap(sm)"]) { --ui-content-gap: var(--spacing-sm); }
 ```
 
 ### Arbitrary values (escape hatch)
@@ -119,6 +127,50 @@ The `()` tokens are *sugar* — each rule just writes a custom property. For any
 ### `scl()` vs the card's old `fs()`
 
 `scl()` replaces the legacy `fs()` token. It lives on `content=` (typography is a content concern) and swaps the **active body and headline stop** in one go. Media overlays (`<ui-chip>` etc.) read the same inherited `--ui-content-fs` for sizing.
+
+---
+
+## Type styling — groups, tone, size, weight
+
+Every part belongs to one of **four logical groups**. A group family token writes a group-level custom property; each part reads `var(--ui-content-{part}-X, var(--ui-content-{group}-X, <default>))`, so a group token restyles the whole group while a per-part `style="--ui-content-{part}-X"` still overrides one part.
+
+| Group | Family | Group ink prop | Parts |
+|-------|--------|----------------|-------|
+| Eyebrow | `eb()` | `--ui-content-eyebrow-ink` | eyebrow |
+| Headings | `hl()` | `--ui-content-heading-ink` | headline (+ bare `h2`–`h6`), subheadline |
+| Body | `tx()` | `--ui-content-body-ink` | summary, quote, list, address, timeline, price, stat |
+| Meta | `mt()` | `--ui-content-meta-ink` | meta, caption, byline, footer, tags, rating, options |
+
+**Three disjoint arg vocabularies** (so whole-token matching can't confuse them):
+
+- **tone** (ink): `shr` `lgt` `med` `drk` `sld` `accent` `inv` — an opacity ramp of the current ink (`shr` 30% → `sld` 100% via `--ui-content-{shr,soft,muted,drk}`), plus `accent` (`--color-accent`) and `inv` (`#fff`, for overlays). Writes the group ink prop.
+- **size** (`hl()` + `scl()` only): `sm` `md` `lg` `xl` `2xl` `poster`. `scl()` swaps body **and** headline (`sm`–`xl`); `hl()` swaps the **headline only** (`sm`–`poster`) so a display title can decouple from readable body copy. `poster` is a semantic display step (`clamp(2.5rem, 1rem + 11cqi, 8rem)`).
+- **weight**: `300`–`900` → `--font-weight-*` (`800` is a literal; there is no `--font-weight-extrabold`). Offered on `eb()`, `hl()`, `tx()`, `mt()`.
+
+Plus flags: **`eb(flat)`** drops the eyebrow's default uppercase; **`hl(grad)`** clips the whole headline to `--ui-content-headline-gradient` (the same gradient an inner `<b>` gets); **`shd`** on any family (`hl(shd)` `eb(shd)` `tx(shd)` `mt(shd)`) adds a legibility **text-shadow** to that group.
+
+### `shd` — text-shadow for legibility
+
+`shd` is an opt-in flag (disjoint from tone/size/weight) that turns on a text-shadow for a group — primarily for **overlaid** headline/eyebrow read over a `scm` scrim. It writes the group's shadow prop from the tunable `--ui-content-text-shadow` default (`0 1px 3px` of a 55% black), and each part reads `text-shadow: var(--ui-content-{part}-text-shadow, var(--ui-content-{group}-text-shadow, none))` — so shadows are off by default and overridable per part.
+
+```html
+<!-- explicit opt-in -->
+<ui-content content="hl(shd) eb(shd)"> … </ui-content>
+```
+
+**Scrim synergy:** a host `ovr()` (overlay) **automatically** sets the headline + eyebrow shadow (`--ui-content-heading-text-shadow` / `--ui-content-eyebrow-text-shadow` → `--ui-content-text-shadow`), so overlaid titles get a legibility shadow over the scrim with no extra token. Turn it off per instance with `style="--ui-content-heading-text-shadow: none"`, or retune globally via `--ui-content-text-shadow`.
+
+```html
+<!-- big accent poster title, light body, muted meta -->
+<ui-content content="hl(poster) hl(accent) tx(lgt) mt(med)">
+  <small data-part="eyebrow">Featured</small>
+  <h2 data-part="headline">Display headline</h2>
+  <p data-part="summary">Readable body copy.</p>
+  <p data-part="meta">Muted meta line.</p>
+</ui-content>
+```
+
+Because `hl(<size>)` and `scl()` both write `--ui-content-headline` at zero specificity, the `hl()` rules are placed **after** `scl()` in source, so `hl(<size>)` wins when both appear on one element.
 
 ---
 
@@ -138,6 +190,14 @@ Content parts are **semantic children** marked with `data-part`. They are auto-s
 | `tags` | `<ul data-part="tags">` | Pill list — flex-wrap; child `<li>`/`<a>` render as rounded pills |
 | `actions` | `<div data-part="actions">` | Button / link row — flex-wrap with action gap |
 | `footer` | `<footer data-part="footer">` | Trailing muted meta row — flex-wrap |
+| `price` | `<p data-part="price">` | **Body group** (prominent) — large current price; `<del>` struck original, `<small>` accent discount |
+| `stat` | `<p data-part="stat">` | **Body group** (prominent) — big `<data>` number + `<small>` unit; muted trend |
+| `list` | `<ul>`/`<ol data-part="list">` | **Body group** — feature / step list; flex column |
+| `address` | `<address data-part="address">` | **Body group** — postal block, no avatar (distinct from byline) |
+| `timeline` | `<ol data-part="timeline">` | **Body group** — dated entries; muted `<time>` |
+| `quote` | `<blockquote data-part="quote">` | **Body group** — indented; composes with `@browser.style/blockquote` `data-variant` |
+| `rating` | `<div data-part="rating">` | **Meta group** — inline star row + count |
+| `options` | `<ul data-part="options">` | **Meta group** — poll / comparison rows with `<progress>` |
 
 Bare headings (`h2`–`h6`) are styled identically to `data-part="headline"` as a convenience, so plain semantic markup just works.
 
@@ -274,6 +334,8 @@ Host themes (`thm(dark|brand|subtle)` on the composition layer) **must write the
 
 > **Namespace trap:** the legacy tokens were `--ui-card-muted` / `--ui-card-eyebrow-color` / `--ui-card-tag-bg`. In v4 they move to the `--ui-content-*` spelling. A `thm()` rule that still writes the old `--ui-card-*` names will silently lose its muted / eyebrow / tag remap.
 
+> **`-color` → `-ink` rename:** per-part ink hooks are now spelled `--ui-content-{part}-ink` (house term for text colour, cf. `--ui-content-ov-ink`). The old `--ui-content-{part}-color` names are **kept as aliases** — each part reads `var(--ui-content-{part}-ink, var(--ui-content-{part}-color, …))` — so existing themes/demos keep working. Prefer `-ink` in new code. `eb()` writes `--ui-content-eyebrow-ink`, which wins over a `thm()`-set `--ui-content-eyebrow-color`.
+
 ---
 
 ## Tokens
@@ -409,23 +471,31 @@ ui-content {
 
 `md:` / `lg:` breakpoint prefixes are parsed inside `@container` against the host's queryable descendant (`cq-box` for `<ui-card>`, `<summary>` for `<ui-reveal>`); the resulting properties inherit down to `<ui-content>`.
 
-**This round, only `content=` *spacing* is responsive** — `gap()` and `pad()`:
+**Responsive this round: `content=` *spacing* (`gap()`, `pad()`) and *size* (`scl()`, `hl(<size>)`):**
 
 ```html
-<ui-content content="gap(sm) md:gap(lg) pad(md) md:pad(lg)">…</ui-content>
+<ui-content content="scl(md) lg:scl(lg) hl(md) lg:hl(poster) gap(sm) md:gap(lg) pad(md) md:pad(lg)">…</ui-content>
 ```
 
 ```css
 @container (inline-size >= 25rem) {            /* md */
-  :where([content*="md:gap(lg)"]) :is(cq-box, summary) { --ui-content-gap: var(--spacing-lg); }
-  :where([content*="md:pad(lg)"]) :is(cq-box, summary) { --ui-content-p:   var(--spacing-lg); }
+  :where([content~="md:gap(lg)"]) :is(cq-box, summary) { --ui-content-gap: var(--spacing-lg); }
+  :where([content~="md:pad(lg)"]) :is(cq-box, summary) { --ui-content-p:   var(--spacing-lg); }
+  :where([content~="md:scl(lg)"]) :is(cq-box, summary) { --ui-content-fs: var(--ui-content-fs-lg); --ui-content-headline: var(--ui-content-headline-lg); }
+  :where([content~="md:hl(poster)"]) :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-poster); }
 }
 @container (inline-size >= 44rem) { /* lg — same shape */ }
 ```
 
-Breakpoints: **md = 25rem, lg = 44rem**.
+Breakpoints: **md = 25rem, lg = 44rem**. `scl()` accepts `sm`/`md`/`lg`/`xl` prefixed; `hl(<size>)` accepts `sm`–`poster`. Content **tone/weight** (`eb()`/`hl()`/`tx()`/`mt()` ink + weight) and `media=` tokens stay unprefixed — that would cost a rule per token × breakpoint and is deferred; the architecture is additive, so it can be generated later with no structural change.
 
-**`scl()` is NOT responsive this round** — making the full type ramp responsive would cost a rule per token × breakpoint. The architecture is additive, so responsive `scl()` (and per-part responsive tokens) can be generated later with no structural change.
+**Axis:** bare `scr` (alias `scr(y)`) is a **vertical** scrolling column with a top/bottom fade; **`scr(x)`** is a **horizontal** scrolling row (`flex-direction: row`, `overflow-x: auto`) with a left/right fade — handy for a strip of thumbnails, tags or chips that overflows the card. Both share the one `ui-scroll-fade` primitive; `scr(x)` just flips the mask direction (`--ui-scroll-fade-dir: to right`) and the scroll-timeline axis (`inline`). Cap the scroll extent with `--ui-content-scroll-bs` (block) as usual.
+
+```html
+<ui-content content="scr(x) gap(sm)">
+  <ul data-part="tags"> … many pills … </ul>
+</ui-content>
+```
 
 > **`scr` vs reveal `[scroll]`:** `content="scr"` is the *content-column* scroll (scrollable text + `ui-scroll-fade` mask). `<ui-reveal>` has its **own** `[scroll]` host attribute (the flip-panel / `type-lg="scale"` panel scroll) — that is a different mechanism and stays as `[scroll]` on the reveal host. Don't conflate them.
 

@@ -50,7 +50,7 @@ Space-separated token strings; values flow down via CSS custom properties, so a 
 |---|---|---|---|---|
 | `variant=` | `ui-card` / `ui-reveal` | composition | `col` `row` `col-r` `row-r` `spl(1/2)` `vis(media)` `ovr(bl)` `thm(dark)` `rds(lg-sq)` | `ui-card-tokens.md` |
 | `media=` | `ui-media` or ancestor | media frame | `asr(16/9)` `obf()` `obp(cc)` `flp(h)` `hov(zoom)` `scm` `nav(dot)` `chip(ts)` `sticker(red)` `vid()` `load(eager)` | `media.md`, `media.carousel.md` |
-| `content=` | `ui-content` or ancestor | text column | `scl(lg)` `pad(xl)` `gap()` `scr` | `content.md` |
+| `content=` | `ui-content` or ancestor | text column | `scl(lg)` `hl(poster)` `eb(accent)` `tx(lgt)` `mt(med)` `pad(xl)` `gap()` `scr` | `content.md` |
 
 ## Container-query model (how cards respond)
 
@@ -61,7 +61,7 @@ Two tiers, driven by the **card's own rendered width**, not the viewport:
 - `md:` → `@container (inline-size >= 25rem)` (400px)
 - `lg:` → `@container (inline-size >= 44rem)` (704px)
 
-Prefixable this round: `variant=` arrangement tokens and `content=` spacing (`gap()`/`pad()`). Not prefixed: `media=` tokens and `content="scl()"`.
+Prefixable this round: `variant=` arrangement tokens, `content=` spacing (`gap()`/`pad()`), and `content=` **size** (`scl()` and `hl(<size>)`). Not prefixed: `media=` tokens and `content=` **tone/weight** (`eb()`/`hl()`/`tx()`/`mt()` ink + weight).
 
 ## Presets + renderer (JSON → HTML)
 

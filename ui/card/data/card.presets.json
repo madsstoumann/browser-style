@@ -80,11 +80,11 @@
     },
     "poster": {
       "name": "Poster Preset",
-      "description": "Tall 3:4 overlay card with scrim — destinations, covers",
+      "description": "Tall 3:4 overlay card with scrim and a display-size headline — destinations, covers",
       "element": "ui-card",
       "variant": "ovr(bl)",
       "media": "asr(3/4) scm",
-      "content": "scl(lg)"
+      "content": "scl(lg) hl(poster)"
     },
     "media": {
       "name": "Media Preset",

@@ -4,7 +4,7 @@
 	<title>UI: Card — Content</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="Every &lt;ui-content&gt; token in one place: the scl() typographic scale (body + headline), thm() themes, the content parts, pad() padding, spl() splits, rds() corners, scrollable content and the core surface tokens.">
+	<meta name="description" content="Every &lt;ui-content&gt; text token in one place: the scl() scale, hl() headline sizes incl. poster, the eb()/hl()/tx()/mt() group tone·weight·shadow families, thm() themes, all content parts, pad()/gap() spacing, responsive size, scrollable content and the core surface tokens.">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
@@ -28,7 +28,7 @@
 </head>
 <body>
 	<h1>UI: Card — <code>&lt;ui-content&gt;</code></h1>
-	<p class="note">Everything that controls the content column: the <code>scl()</code> typographic scale (a decoupled body + headline ramp), the <code>thm()</code> themes, every <code>data-part</code>, <code>pad()</code> padding, <code>spl()</code> column splits, <code>rds()</code> corners, scrollable content, and the core surface tokens. All driven by <code>variant</code> / <code>content</code> tokens — no JavaScript.</p>
+	<p class="note">Everything that controls the content column: the <code>scl()</code> scale (decoupled body + headline ramp), <code>hl()</code> headline sizes (incl. <code>poster</code>), the four group families — <code>eb()</code> / <code>hl()</code> / <code>tx()</code> / <code>mt()</code> — for tone, weight and text-shadow, the <code>thm()</code> themes, every <code>data-part</code>, <code>pad()</code>/<code>gap()</code> spacing, responsive size, scrollable content, and the core surface tokens. All driven by <code>variant</code> / <code>content</code> tokens — no JavaScript. Media-backed treatments live in <a href="media.html">media.html</a>.</p>
 	<p class="note">See also: <a href="index.html">index.html</a> (the full engine) · <a href="media.html">media.html</a> (the <code>&lt;ui-media&gt;</code> side) · <a href="ui-card-tokens.md">ui-card-tokens.md</a> (token reference).</p>
 
 	<!-- ============================================================
@@ -118,31 +118,19 @@
 	     thm() — themes
 	     ============================================================ -->
 	<h2>Themes — <code>thm()</code></h2>
-	<p class="note">Theme tokens remap the surface, ink, eyebrow and tag colours. The same card in default, <code>thm(subtle)</code>, <code>thm(dark)</code> and <code>thm(brand)</code>. Every value is overridable (e.g. <code>--ui-card-dark-bg</code>, <code>--ui-card-brand-ink</code>).</p>
+	<p class="note">Theme tokens remap the surface, ink, eyebrow and tag colours (text-only here — for media-backed themes see <a href="media.html">media.html</a>). The same card in default, <code>thm(subtle)</code>, <code>thm(dark)</code> and <code>thm(brand)</code>. Every value is overridable (e.g. <code>--ui-card-dark-bg</code>, <code>--ui-card-brand-ink</code>).</p>
 	<div class="grid grid-4">
-		<ui-card variant="col" media="asr(16/9)">
-			<cq-box>
-				<ui-media><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">default</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Unlimited workouts, coaching and priority support.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button" href="#">Choose</a></nav></ui-content>
-			</cq-box>
+		<ui-card variant="vis(content)">
+			<cq-box><ui-content><small data-part="eyebrow">default</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Unlimited workouts, coaching and priority support.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button" href="#">Choose</a></nav></ui-content></cq-box>
 		</ui-card>
-		<ui-card variant="col thm(subtle)" media="asr(16/9)">
-			<cq-box>
-				<ui-media><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">thm(subtle)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Off-white surface, default dark ink.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button" href="#">Choose</a></nav></ui-content>
-			</cq-box>
+		<ui-card variant="vis(content) thm(subtle)">
+			<cq-box><ui-content><small data-part="eyebrow">thm(subtle)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Off-white surface, default dark ink.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button" href="#">Choose</a></nav></ui-content></cq-box>
 		</ui-card>
-		<ui-card variant="col thm(dark)" media="asr(16/9)">
-			<cq-box>
-				<ui-media><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">thm(dark)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Dark surface, light ink, accent eyebrow.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button" href="#">Choose</a></nav></ui-content>
-			</cq-box>
+		<ui-card variant="vis(content) thm(dark)">
+			<cq-box><ui-content><small data-part="eyebrow">thm(dark)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Dark surface, light ink, accent eyebrow.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button" href="#">Choose</a></nav></ui-content></cq-box>
 		</ui-card>
-		<ui-card variant="col thm(brand)" media="asr(16/9)">
-			<cq-box>
-				<ui-media><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">thm(brand)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Accent surface, white ink.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button" href="#">Choose</a></nav></ui-content>
-			</cq-box>
+		<ui-card variant="vis(content) thm(brand)">
+			<cq-box><ui-content><small data-part="eyebrow">thm(brand)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Accent surface, white ink.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button" href="#">Choose</a></nav></ui-content></cq-box>
 		</ui-card>
 	</div>
 
@@ -184,27 +172,104 @@
 		</ui-card>
 	</div>
 
+	<p class="note">For overlay (<code>ovr()</code>), scrim (<code>scm</code>), squircle corners (<code>rds(*-sq)</code>) and other media-backed treatments, see <a href="media.html">media.html</a> — this page is the text-only side.</p>
+
 	<!-- ============================================================
-	     Overlay content — ovr()
+	     Headline sizes — hl(<size>) incl. poster
 	     ============================================================ -->
-	<h2>Overlay content — <code>ovr()</code></h2>
-	<p class="note"><code>ovr(pos)</code> stacks the content <em>over</em> the media and places it with the 9-code grid. Overlaid text defaults to white (set <code>--ui-card-overlay-ink</code> for light images). Pair with <code>scm</code> for a scrim — see <a href="media.html">media.html</a>.</p>
+	<h2>Headline sizes — <code>hl(&lt;size&gt;)</code></h2>
+	<p class="note"><code>hl(sm | md | lg | xl | 2xl | poster)</code> swaps the <strong>headline stop only</strong> — the body copy stays put. Unlike <code>scl()</code> (which moves both ramps together), <code>hl()</code> decouples a display-size title from readable body. <code>poster</code> is the semantic display step.</p>
 	<div class="grid grid-3">
-		<ui-card variant="ovr(tl)" media="asr(3/4) obp(cc) scm" content="scl(lg)"><cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">ovr(tl)</small><strong data-part="headline">Top-left</strong></ui-content></cq-box></ui-card>
-		<ui-card variant="ovr(cc)" media="asr(3/4) obp(cc) scm" content="scl(lg)"><cq-box><ui-media><img src="/assets/images/hubble.png" alt=""></ui-media><ui-content><small data-part="eyebrow">ovr(cc)</small><strong data-part="headline">Centre</strong></ui-content></cq-box></ui-card>
-		<ui-card variant="ovr(br)" media="asr(3/4) obp(cc) scm" content="scl(lg)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""></ui-media><ui-content><small data-part="eyebrow">ovr(br)</small><strong data-part="headline">Bottom-right</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(subtle)" content="hl(sm)"><cq-box><ui-content><small data-part="eyebrow">hl(sm)</small><h2 data-part="headline">Small headline</h2><p data-part="summary">The body copy is unchanged across every card in this row.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(subtle)" content="hl(lg)"><cq-box><ui-content><small data-part="eyebrow">hl(lg)</small><h2 data-part="headline">Large headline</h2><p data-part="summary">The body copy is unchanged across every card in this row.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(subtle)" content="hl(2xl)"><cq-box><ui-content><small data-part="eyebrow">hl(2xl)</small><h2 data-part="headline">2xl headline</h2><p data-part="summary">The body copy is unchanged across every card in this row.</p></ui-content></cq-box></ui-card>
+	</div>
+	<p class="note">A <code>hl(poster)</code> display headline on a wide card (tracks the card width via <code>cqi</code>):</p>
+	<ui-card class="stack" variant="vis(content) thm(dark)" content="hl(poster)">
+		<cq-box><ui-content>
+			<small data-part="eyebrow">hl(poster)</small>
+			<strong data-part="headline">Poster display headline</strong>
+			<p data-part="summary">The headline reaches the poster clamp while the summary stays at a comfortable reading size — the decoupled ramp doing its job.</p>
+		</ui-content></cq-box>
+	</ui-card>
+
+	<!-- ============================================================
+	     Tones — eb() / hl() / tx() / mt() ink
+	     ============================================================ -->
+	<h2>Tones — group ink (<code>eb()</code> / <code>hl()</code> / <code>tx()</code> / <code>mt()</code>)</h2>
+	<p class="note">Each group takes a tone arg: <code>shr</code> (30%) · <code>lgt</code> (45%) · <code>med</code> (65%) · <code>drk</code> (85%) · <code>sld</code> (100%) · <code>accent</code> · <code>inv</code>. A group token restyles the whole group; a per-part <code>style="--ui-content-*-ink"</code> still overrides one part.</p>
+	<div class="grid grid-4">
+		<ui-card variant="vis(content) thm(subtle)" content="eb(lgt)"><cq-box><ui-content><small data-part="eyebrow">eb(lgt)</small><h2 data-part="headline">Light eyebrow</h2><p data-part="summary">Eyebrow ink dropped to 45%.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(subtle)" content="eb(accent)"><cq-box><ui-content><small data-part="eyebrow">eb(accent)</small><h2 data-part="headline">Accent eyebrow</h2><p data-part="summary">Eyebrow ink set to the accent hue.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(subtle)" content="eb(drk)"><cq-box><ui-content><small data-part="eyebrow">eb(drk)</small><h2 data-part="headline">Dark eyebrow</h2><p data-part="summary">Eyebrow ink pushed to 85%.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(subtle)" content="hl(accent)"><cq-box><ui-content><small data-part="eyebrow">hl(accent)</small><h2 data-part="headline">Accent headline</h2><p data-part="summary">The headings group ink is the accent hue.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(subtle)" content="tx(drk)"><cq-box><ui-content><small data-part="eyebrow">tx(drk)</small><h2 data-part="headline">Dark body</h2><p data-part="summary">The body group (summary here) darkens to 85% ink.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(subtle)" content="tx(lgt)"><cq-box><ui-content><small data-part="eyebrow">tx(lgt)</small><h2 data-part="headline">Light body</h2><p data-part="summary">The body group lightens to 45% ink.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(subtle)" content="mt(med)"><cq-box><ui-content><small data-part="eyebrow">mt(med)</small><h2 data-part="headline">Muted meta</h2><p data-part="summary">Meta row below.</p><p data-part="meta">meta → mt(med) ink</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(dark)" content="eb(inv) tx(lgt)"><cq-box><ui-content><small data-part="eyebrow">eb(inv) tx(lgt)</small><h2 data-part="headline">Inverse on dark</h2><p data-part="summary">White eyebrow, lightened body — overlay-style ink on a dark theme.</p></ui-content></cq-box></ui-card>
 	</div>
 
 	<!-- ============================================================
-	     rds() — squircle corners
+	     Weights — 300–900
 	     ============================================================ -->
-	<h2>Squircle corners — <code>rds(&lt;size&gt;-sq)</code></h2>
-	<p class="note"><code>rds(sm-sq | md-sq | lg-sq | xl-sq)</code> switches the host to a superellipse <code>corner-shape</code> and a matching radius — the smooth "squircle" corner. (Chromium-only; degrades to a normal radius elsewhere.)</p>
+	<h2>Weights — <code>300</code>–<code>900</code></h2>
+	<p class="note">Numeric args set <code>--font-weight-*</code> per group (<code>800</code> is a literal). Disjoint from tone and size, so <code>hl(900)</code>, <code>hl(accent)</code> and <code>hl(lg)</code> compose freely.</p>
 	<div class="grid grid-4">
-		<ui-card variant="col rds(sm-sq)" media="asr(4/3)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">rds(sm-sq)</small><h2 data-part="headline">Subtle</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col rds(md-sq)" media="asr(4/3)"><cq-box><ui-media><img src="/assets/images/destinations.png" alt=""></ui-media><ui-content><small data-part="eyebrow">rds(md-sq)</small><h2 data-part="headline">Medium</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col rds(lg-sq)" media="asr(4/3)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media><ui-content><small data-part="eyebrow">rds(lg-sq)</small><h2 data-part="headline">Large</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col rds(xl-sq)" media="asr(4/3)"><cq-box><ui-media><img src="/assets/images/websummit.png" alt=""></ui-media><ui-content><small data-part="eyebrow">rds(xl-sq)</small><h2 data-part="headline">Extra</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(subtle)" content="hl(300)"><cq-box><ui-content><small data-part="eyebrow">hl(300)</small><h2 data-part="headline">Light title</h2><p data-part="summary">Headline weight 300.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(subtle)" content="hl(500)"><cq-box><ui-content><small data-part="eyebrow">hl(500)</small><h2 data-part="headline">Medium title</h2><p data-part="summary">Headline weight 500.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(subtle)" content="hl(900)"><cq-box><ui-content><small data-part="eyebrow">hl(900)</small><h2 data-part="headline">Black title</h2><p data-part="summary">Headline weight 900.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(subtle)" content="eb(700) eb(flat)"><cq-box><ui-content><small data-part="eyebrow">eb(700) eb(flat)</small><h2 data-part="headline">Bold flat eyebrow</h2><p data-part="summary"><code>eb(flat)</code> also drops the default uppercase.</p></ui-content></cq-box></ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Text-shadow — shd (overlay legibility)
+	     ============================================================ -->
+	<h2>Text-shadow — <code>shd</code> (overlay legibility)</h2>
+	<p class="note">The <code>shd</code> flag adds a legibility text-shadow to a group. Its main job is overlaid text over a scrim: a host <code>ovr()</code> <strong>automatically</strong> shadows the headline + eyebrow, and <code>hl(shd)</code>/<code>eb(shd)</code> opt any group in explicitly. (This is the only media-backed example on this page — for the rest of the overlay/scrim system see <a href="media.html">media.html</a>.) Retune with <code>--ui-content-text-shadow</code> or disable via <code>style="--ui-content-heading-text-shadow: none"</code>.</p>
+	<div class="grid grid-3">
+		<ui-card variant="ovr(bl)" media="asr(3/4) obp(cc) scm" content="scl(lg)"><cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">ovr() — auto shadow</small><strong data-part="headline">Legible by default</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(bl)" media="asr(3/4) obp(cc) scm" content="scl(lg) hl(poster)" style="--ui-content-heading-text-shadow: none;"><cq-box><ui-media><img src="/assets/images/hubble.png" alt=""></ui-media><ui-content><small data-part="eyebrow">shadow disabled</small><strong data-part="headline">No shadow</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(bl)" media="asr(3/4) obp(cc) scm(shr)" content="scl(lg) hl(shd) eb(shd)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""></ui-media><ui-content><small data-part="eyebrow">hl(shd) eb(shd) · sheer scrim</small><strong data-part="headline">Shadow carries it</strong></ui-content></cq-box></ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Responsive size — lg:scl() / lg:hl()
+	     ============================================================ -->
+	<h2>Responsive size — <code>lg:scl()</code> / <code>lg:hl()</code></h2>
+	<p class="note"><strong>Resize the window</strong> (or the card's container) across the <strong>lg breakpoint (44rem / 704px)</strong>: below it the base size applies, at/above it the <code>lg:</code>-prefixed size takes over. Only size tokens are prefixable — tone and weight stay static.</p>
+	<div class="stack">
+		<ui-card variant="vis(content) thm(subtle)" content="scl(sm) lg:scl(lg)"><cq-box><ui-content><small data-part="eyebrow">scl(sm) lg:scl(lg)</small><h2 data-part="headline">Body + headline both jump at lg</h2><p data-part="summary"><code>scl()</code> moves both ramps together — this whole block steps up once the card is at least 44rem wide.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(dark)" content="hl(md) lg:hl(poster)"><cq-box><ui-content><small data-part="eyebrow">hl(md) lg:hl(poster)</small><strong data-part="headline">Headline alone jumps to poster at lg</strong><p data-part="summary"><code>hl()</code> decouples the title: the summary size is unchanged, only the headline leaps to the poster clamp when wide.</p></ui-content></cq-box></ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Parts gallery — the folded-in parts
+	     ============================================================ -->
+	<h2>Parts gallery — the folded-in parts</h2>
+	<p class="note">The eight parts that were previously spec-only are now styled and assigned to a group (Body or Meta), so they inherit the tone / weight system. Each keeps its own <code>--ui-content-{part}-*</code> hook.</p>
+	<div class="grid grid-2">
+		<ui-card variant="vis(content) thm(subtle)"><cq-box><ui-content>
+			<small data-part="eyebrow">Body group parts</small>
+			<h2 data-part="headline">ErgoChair Pro</h2>
+			<p data-part="price"><data value="349">$349</data> <del>$429</del> <small>save 19%</small></p>
+			<p data-part="summary">Adaptive lumbar support and a 12-year warranty.</p>
+			<ul data-part="list"><li>Adaptive lumbar</li><li>Breathable mesh</li><li>12-year warranty</li></ul>
+			<address data-part="address">42 Market Street<br>Copenhagen, DK</address>
+			<blockquote data-part="quote"><q>The best chair I have owned.</q> <cite>— A. Reviewer</cite></blockquote>
+			<ol data-part="timeline"><li><time>2024</time> — Launched</li><li><time>2026</time> — v2 shipped</li></ol>
+		</ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(subtle)"><cq-box><ui-content>
+			<small data-part="eyebrow">Body + Meta group parts</small>
+			<h2 data-part="headline">Quarterly report</h2>
+			<p data-part="stat"><data value="1240">1,240</data> <small>signups</small> <span>▲ 12%</span></p>
+			<div data-part="rating" role="img" aria-label="Rated 4 out of 5">★★★★☆ <small>(128)</small></div>
+			<p data-part="summary">Poll results from the latest survey:</p>
+			<ul data-part="options">
+				<li><label>Option A</label> <progress value="0.62"></progress></li>
+				<li><label>Option B</label> <progress value="0.38"></progress></li>
+			</ul>
+			<footer data-part="footer">Updated Jul 12, 2026</footer>
+		</ui-content></cq-box></ui-card>
 	</div>
 
 	<!-- ============================================================
@@ -240,6 +305,20 @@
 					<p data-part="summary">6. The end.</p>
 				</ui-content>
 			</cq-box>
+		</ui-card>
+	</div>
+	<p class="note"><code>content="scr(x)"</code> flips the axis: a <strong>horizontal</strong> scrolling row with a left/right fade — for a strip of chips, tags or thumbnails that overflows the card. Bare <code>scr</code> (= <code>scr(y)</code>) stays vertical.</p>
+	<div class="stack">
+		<ui-card variant="vis(content) thm(subtle)" content="scr(x) gap(sm)">
+			<cq-box><ui-content>
+				<small data-part="eyebrow">scr(x) · horizontal</small>
+				<ul data-part="tags" style="flex-wrap: nowrap;">
+					<li><a href="#">Design</a></li><li><a href="#">CSS</a></li><li><a href="#">Container Queries</a></li>
+					<li><a href="#">Scroll-driven</a></li><li><a href="#">Cards</a></li><li><a href="#">Primitives</a></li>
+					<li><a href="#">Tokens</a></li><li><a href="#">Light DOM</a></li><li><a href="#">No JavaScript</a></li>
+					<li><a href="#">Accessibility</a></li><li><a href="#">RTL-safe</a></li><li><a href="#">Responsive</a></li>
+				</ul>
+			</ui-content></cq-box>
 		</ui-card>
 	</div>
 
