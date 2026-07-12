@@ -118,7 +118,7 @@
 	     thm() — themes
 	     ============================================================ -->
 	<h2>Themes — <code>thm()</code></h2>
-	<p class="note">Theme tokens remap the surface, ink, eyebrow and tag colours (text-only here — for media-backed themes see <a href="media.html">media.html</a>). The same card in default, <code>thm(subtle)</code>, <code>thm(dark)</code> and <code>thm(brand)</code>. Every value is overridable (e.g. <code>--ui-card-dark-bg</code>, <code>--ui-card-brand-ink</code>).</p>
+	<p class="note">Theme tokens remap the surface, ink, eyebrow and tag colours (text-only here — for media-backed themes see <a href="media.html">media.html</a>). The same card in default, <code>thm(subtle)</code>, <code>thm(dark)</code>, and <code>thm(dark)</code> with a <code>--ui-card-dark-bg</code> accent override. (There is no <code>thm(brand)</code> — a branded surface is <code>thm(dark)</code> plus that override.) Every value is overridable.</p>
 	<div class="grid grid-4">
 		<ui-card variant="vis(content)">
 			<cq-box><ui-content><small data-part="eyebrow">default</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Unlimited workouts, coaching and priority support.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button" href="#">Choose</a></nav></ui-content></cq-box>
@@ -129,8 +129,8 @@
 		<ui-card variant="vis(content) thm(dark)">
 			<cq-box><ui-content><small data-part="eyebrow">thm(dark)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Dark surface, light ink, accent eyebrow.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button" href="#">Choose</a></nav></ui-content></cq-box>
 		</ui-card>
-		<ui-card variant="vis(content) thm(brand)">
-			<cq-box><ui-content><small data-part="eyebrow">thm(brand)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Accent surface, white ink.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button" href="#">Choose</a></nav></ui-content></cq-box>
+		<ui-card variant="vis(content) thm(dark)" style="--ui-card-dark-bg: var(--color-accent); --ui-card-dark-ink: #fff; --ui-card-dark-accent: rgb(255 255 255 / 0.75);">
+			<cq-box><ui-content><small data-part="eyebrow">thm(dark) + brand override</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Accent surface via <code>--ui-card-dark-bg</code> (replaces the old <code>thm(brand)</code>).</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button" href="#">Choose</a></nav></ui-content></cq-box>
 		</ui-card>
 	</div>
 
@@ -312,7 +312,7 @@
 		<ui-card variant="vis(content) thm(subtle)" content="scr(x) gap(sm)">
 			<cq-box><ui-content>
 				<small data-part="eyebrow">scr(x) · horizontal</small>
-				<ul data-part="tags" style="flex-wrap: nowrap;">
+				<ul data-part="tags">
 					<li><a href="#">Design</a></li><li><a href="#">CSS</a></li><li><a href="#">Container Queries</a></li>
 					<li><a href="#">Scroll-driven</a></li><li><a href="#">Cards</a></li><li><a href="#">Primitives</a></li>
 					<li><a href="#">Tokens</a></li><li><a href="#">Light DOM</a></li><li><a href="#">No JavaScript</a></li>

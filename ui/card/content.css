@@ -198,17 +198,24 @@
 		overscroll-behavior: contain;
 		scrollbar-width: thin;
 	}
-	/* horizontal — a scrolling row (thumbnails, tags, chips) that overflows the card */
+	/* horizontal — a scrolling row (thumbnails, tags, chips) that overflows the card.
+	   Children must NOT shrink or wrap, or they'd reflow to fit instead of
+	   overflowing: row nowrap + flex:0 0 auto on the items + nowrap text. */
 	:where([content~="scr(x)"]) ui-content,
 	:where(ui-content[content~="scr(x)"]) {
 		--ui-scroll-fade-dir: to right;
-		flex-direction: row;
+		flex-flow: row nowrap;
 		max-inline-size: 100%;
 		overflow-x: auto;
 		overflow-y: hidden;
 		overscroll-behavior: contain;
 		scrollbar-width: thin;
+		white-space: nowrap;
 	}
+	:where([content~="scr(x)"]) ui-content > *,
+	:where(ui-content[content~="scr(x)"]) > * { flex: 0 0 auto; }
+	/* the tags <ul> nowrap override lives AFTER the tags part rule (below) so it
+	   wins the cascade at equal specificity — see the scr(x) block there. */
 	@supports (animation-timeline: scroll()) {
 		@media (prefers-reduced-motion: no-preference) {
 			:where([content~="scr"]) ui-content, :where([content~="scr(y)"]) ui-content,
@@ -244,13 +251,22 @@
 		text-transform: var(--ui-content-eyebrow-transform, uppercase); /* eb(flat) → none */
 	}
 
-	/* headline (and bare h2–h6) — Headings group */
+	/* headline (and bare h2–h6) — Headings group.
+	   Rhythm defaults are mathematical, so they hold from sm to poster:
+	   - line-height: calc(1em + 0.25rem) — constant-leading formula. The extra
+	     leading is a fixed 0.25rem regardless of size, so the RATIO tightens as the
+	     type grows (md 1.75rem → 1.14; poster ~110px → ~1.04; asymptote → 1.0).
+	   - margin-block-end: 0.25em — modular rhythm; the space after the heading
+	     scales with the heading's own em (bigger title, proportionally bigger gap).
+	   This em rule (attribute/type specificity) wins over the container's
+	   `& > * { margin: 0 }` reset (0,0,0). Both vars stay overridable. */
 	:where(ui-content) :is([data-part="headline"], h2, h3, h4, h5, h6) {
 		color: var(--ui-content-headline-ink, var(--ui-content-heading-ink, inherit));
 		font-size: var(--ui-content-headline, var(--ui-content-headline-md));
 		font-weight: var(--ui-content-headline-weight, var(--ui-content-heading-weight, var(--font-weight-bold, 700)));
 		letter-spacing: var(--tracking-tight, -0.01em);
-		line-height: var(--ui-content-headline-line-height, var(--line-height-tight, 1.15));
+		line-height: var(--ui-content-headline-line-height, calc(1em + 0.25rem));
+		margin-block-end: var(--ui-content-headline-rhythm, 0.25em);
 		text-shadow: var(--ui-content-headline-text-shadow, var(--ui-content-heading-text-shadow, none)); /* hl(shd) / host ovr() */
 		text-wrap: pretty;
 	}
@@ -317,12 +333,20 @@
 		& > * { display: contents; }
 		& a, & li {
 			background: var(--ui-content-tag-bg, var(--color-button, hsl(0, 0%, 90%)));
-			border-radius: var(--radius-pill, 100px);
+			border-radius: var(--ui-content-tag-radius, var(--radius-pill, 100px));
 			color: var(--ui-content-tag-color, inherit);
+			display: inline-grid;              /* enables place-content centering */
+			place-content: center;             /* centre the label within the pill */
 			padding: var(--ui-content-tag-padding, 0.2em 0.7em);
 			text-decoration: none;
 		}
 	}
+	/* scr(x) tags override — must follow the tags rule above so the nowrap wins at
+	   equal specificity (a horizontal strip must not wrap; pills hold their width). */
+	:where([content~="scr(x)"]) [data-part="tags"],
+	:where(ui-content[content~="scr(x)"]) [data-part="tags"] { flex-wrap: nowrap; }
+	:where([content~="scr(x)"]) [data-part="tags"] :is(a, li),
+	:where(ui-content[content~="scr(x)"]) [data-part="tags"] :is(a, li) { flex: 0 0 auto; white-space: nowrap; }
 
 	/* actions (button / link row) */
 	:where(ui-content) [data-part="actions"] {

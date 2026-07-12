@@ -287,6 +287,13 @@ Parts size relative to the active body size (`--ui-content-fs`), so the whole bl
 | `tags` | ~0.72× |
 | `footer` | ~0.78× |
 
+### Headline rhythm (leading + space-after)
+
+The headline's vertical rhythm is set by two size-independent formulas so it reads correctly from `sm` to `poster` without per-step tuning:
+
+- **`line-height: calc(1em + 0.25rem)`** — a *constant-leading* formula. The added leading is a fixed `0.25rem` at every size, so the effective ratio tightens as the type grows (md `1.75rem` → ~1.14; poster ~110px → ~1.04; asymptote → 1.0). Small headings stay airy, display headings stay tight. Override with `--ui-content-headline-line-height`.
+- **`margin-block-end: 0.25em`** — *modular* rhythm: the gap after the heading scales with the heading's own em, so a bigger title gets a proportionally bigger gap to the body (this is in addition to the flex `gap()` between parts). Override with `--ui-content-headline-rhythm`. The em rule wins over the container's `& > * { margin: 0 }` reset (attribute/type specificity beats the zero-specificity reset).
+
 ---
 
 ## Overlay placement
@@ -316,7 +323,7 @@ Standalone content gets the neutral `normal` / `inherit` / `start` / `auto` defa
 
 ## Theme ink
 
-Host themes (`thm(dark|brand|subtle)` on the composition layer) **must write the muted / eyebrow / tag ink into the content namespace** — these ink tokens live on `<ui-content>`, not on the card:
+Host themes (`thm(dark|subtle)` on the composition layer) **must write the muted / eyebrow / tag ink into the content namespace** — these ink tokens live on `<ui-content>`, not on the card:
 
 | Token | Read by | Themed by |
 |-------|---------|-----------|
@@ -378,7 +385,8 @@ All tokens live in the `--ui-content-*` namespace. Override per instance, per ho
 | `--ui-content-eyebrow-fs` | `calc(var(--ui-content-fs) * 0.78)` | eyebrow size |
 | `--ui-content-eyebrow-weight` | `var(--font-weight-medium, 500)` | eyebrow weight |
 | `--ui-content-headline-weight` | `var(--font-weight-bold, 700)` | headline weight |
-| `--ui-content-headline-line-height` | `var(--line-height-tight, 1.15)` | headline line-height |
+| `--ui-content-headline-line-height` | `calc(1em + 0.25rem)` | headline line-height (constant-leading formula — see below) |
+| `--ui-content-headline-rhythm` | `0.25em` | space after the headline (modular em rhythm — see below) |
 | `--ui-content-subheadline-color` | `var(--ui-content-muted)` | subheadline color |
 | `--ui-content-subheadline-fs` | `calc(var(--ui-content-fs) * 0.88)` | subheadline size |
 | `--ui-content-subheadline-weight` | `var(--font-weight-normal, 400)` | subheadline weight |
@@ -393,7 +401,8 @@ All tokens live in the `--ui-content-*` namespace. Override per instance, per ho
 | `--ui-content-tags-gap` | `var(--spacing-xs, 0.35rem)` | tags gap |
 | `--ui-content-tag-bg` | `var(--color-button, hsl(0, 0%, 90%))` | tag pill background |
 | `--ui-content-tag-color` | `inherit` | tag pill text |
-| `--ui-content-tag-padding` | `0.2em 0.7em` | tag pill padding |
+| `--ui-content-tag-radius` | `var(--radius-pill, 100px)` | tag pill corner radius — set to `0` (or a small radius) for square tags |
+| `--ui-content-tag-padding` | `0.2em 0.7em` | tag pill padding (label is centered via `place-content`) |
 | `--ui-content-actions-gap` | `var(--spacing-sm)` | actions gap |
 | `--ui-content-footer-color` | `var(--ui-content-muted)` | footer color |
 | `--ui-content-footer-fs` | `calc(var(--ui-content-fs) * 0.78)` | footer size |
