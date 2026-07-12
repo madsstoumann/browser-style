@@ -219,7 +219,7 @@ Notes:
 - **Squircle corners** — `rds(*-sq)` sets the card radius and `--ui-card-squircle-exp`; reveal reads that exponent to apply the same `corner-shape: superellipse()` to its `<details>`.
 - **Overlay markers only in `<summary>`** — `<ui-chip>` / `<ui-sticker>` are valid in the trigger face; `<ui-save>` / `<ui-play>` are interactive controls and stay **card-only** (never inside `<summary>`).
 - **Responsive front face** — `<ui-reveal>` is a container, so the card engine's `md:` / `lg:` prefixes apply to the front face (`variant` arrangement + `content=` spacing). The queryable descendant for the `@container` rules is the `<summary>` subtree (not `<cq-box>`). `media=` tokens and `scl()` are not breakpoint-prefixed this round.
-- **`content="scr"` vs reveal `scroll`** — `scr` is the content-column scroll (scrollable text + edge mask); `scroll` is reveal's own panel scroll for `flip` / `type-lg="scale"`. They are different mechanisms.
+- **`content="scr"` vs reveal `scroll`** — `scr` is the content-column scroll (scrollable text + edge mask); `scroll` is reveal's own panel scroll for `flip` / `type-lg="scale"`. They are different mechanisms on different targets, but share **one** fade primitive — the `@property` / `@keyframes ui-scroll-fade` and the `--ui-scroll-fade-mask` gradient live in [`ui/base/scroll.css`](../base/scroll.css) and both scrollers consume it.
 
 ---
 

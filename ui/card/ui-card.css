@@ -106,6 +106,10 @@
 		--ui-card-stack: 1 / 1;
 		--ui-content-ov-ink: var(--ui-card-overlay-ink, #fff);
 		--ui-content-ov-z: 1;
+		/* legibility shadow for overlaid headline + eyebrow over a scrim; override
+		   per instance with style="--ui-content-heading-text-shadow: none". */
+		--ui-content-heading-text-shadow: var(--ui-content-text-shadow);
+		--ui-content-eyebrow-text-shadow: var(--ui-content-text-shadow);
 	}
 	:where([variant*="ovr(tl)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-ts); }
 	:where([variant*="ovr(tc)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: center; --ui-content-ov-text: center; --ui-media-scrim-default: var(--ui-media-scrim-tc); }
@@ -144,8 +148,9 @@
 	}
 
 	/* ============================================================
-	   RESPONSIVE — md:/lg: prefixes on variant= layout + content= spacing.
-	   (media= and content="scl()" are NOT breakpoint-prefixed this round.)
+	   RESPONSIVE — md:/lg: prefixes on variant= layout, content= spacing, and
+	   content= SIZE (scl() and hl(<size>)). content tone/weight (eb/hl/tx/mt) and
+	   media= tokens are NOT breakpoint-prefixed this round.
 	   Targets the queryable descendant (cq-box for card, summary for reveal).
 	   ============================================================ */
 
@@ -183,6 +188,18 @@
 		:where([content~="md:pad(lg)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-lg); }
 		:where([content~="md:pad(xl)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-xl); }
 		:where([content~="md:pad(2xl)"])  :is(cq-box, summary) { --ui-content-p: var(--spacing-2xl); }
+
+		/* content= SIZE — scl() sets body+headline, hl(<size>) sets headline only */
+		:where([content~="md:scl(sm)"]) :is(cq-box, summary) { --ui-content-fs: var(--ui-content-fs-sm); --ui-content-headline: var(--ui-content-headline-sm); }
+		:where([content~="md:scl(md)"]) :is(cq-box, summary) { --ui-content-fs: var(--ui-content-fs-md); --ui-content-headline: var(--ui-content-headline-md); }
+		:where([content~="md:scl(lg)"]) :is(cq-box, summary) { --ui-content-fs: var(--ui-content-fs-lg); --ui-content-headline: var(--ui-content-headline-lg); }
+		:where([content~="md:scl(xl)"]) :is(cq-box, summary) { --ui-content-fs: var(--ui-content-fs-xl); --ui-content-headline: var(--ui-content-headline-xl); }
+		:where([content~="md:hl(sm)"])     :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-sm); }
+		:where([content~="md:hl(md)"])     :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-md); }
+		:where([content~="md:hl(lg)"])     :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-lg); }
+		:where([content~="md:hl(xl)"])     :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-xl); }
+		:where([content~="md:hl(2xl)"])    :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-2xl); }
+		:where([content~="md:hl(poster)"]) :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-poster); }
 	}
 
 	/* lg (>= 44rem) */
@@ -219,6 +236,18 @@
 		:where([content~="lg:pad(lg)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-lg); }
 		:where([content~="lg:pad(xl)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-xl); }
 		:where([content~="lg:pad(2xl)"])  :is(cq-box, summary) { --ui-content-p: var(--spacing-2xl); }
+
+		/* content= SIZE — scl() sets body+headline, hl(<size>) sets headline only */
+		:where([content~="lg:scl(sm)"]) :is(cq-box, summary) { --ui-content-fs: var(--ui-content-fs-sm); --ui-content-headline: var(--ui-content-headline-sm); }
+		:where([content~="lg:scl(md)"]) :is(cq-box, summary) { --ui-content-fs: var(--ui-content-fs-md); --ui-content-headline: var(--ui-content-headline-md); }
+		:where([content~="lg:scl(lg)"]) :is(cq-box, summary) { --ui-content-fs: var(--ui-content-fs-lg); --ui-content-headline: var(--ui-content-headline-lg); }
+		:where([content~="lg:scl(xl)"]) :is(cq-box, summary) { --ui-content-fs: var(--ui-content-fs-xl); --ui-content-headline: var(--ui-content-headline-xl); }
+		:where([content~="lg:hl(sm)"])     :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-sm); }
+		:where([content~="lg:hl(md)"])     :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-md); }
+		:where([content~="lg:hl(lg)"])     :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-lg); }
+		:where([content~="lg:hl(xl)"])     :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-xl); }
+		:where([content~="lg:hl(2xl)"])    :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-2xl); }
+		:where([content~="lg:hl(poster)"]) :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-poster); }
 	}
 }
 

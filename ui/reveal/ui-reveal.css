@@ -448,14 +448,15 @@
 
 	/* scroll fade-shadow — vertical edge mask driven by scroll position. The
 	   masked edges reveal the panel background behind, so the fade adopts
-	   --ui-reveal-content-bg. Shared @property/@keyframes (ui-scroll-fade)
-	   come from ui-card.css. */
+	   --ui-reveal-content-bg. The @property/@keyframes (ui-scroll-fade) AND the
+	   --ui-scroll-fade-mask gradient are the shared scroll-fade primitive in
+	   ui/base/scroll.css (also used by content="scr"). */
 	@supports (animation-timeline: scroll()) {
 		@media (prefers-reduced-motion: no-preference) {
 			:where(ui-reveal[scroll][type="flip"]) > details[open]::details-content {
 				animation: ui-scroll-fade linear;
 				animation-timeline: --ui-reveal-scroll;
-				mask: linear-gradient(to bottom, #0000, #000 var(--ui-scroll-fade-start) calc(100% - var(--ui-scroll-fade-end)), #0000);
+				mask: var(--ui-scroll-fade-mask);
 				scroll-timeline: --ui-reveal-scroll block;
 			}
 		}

@@ -685,7 +685,17 @@ summary.addEventListener('click', (e) => {
 
 ---
 
-## TODO — dedupe scroll fade-shadow CSS
+## RESOLVED — dedupe scroll fade-shadow CSS (Tier 1, done)
+
+> **Done (feat/ui-content-text-dsl):** Tier 1 was implemented. The `@property
+> --ui-scroll-fade-start/-end`, `@keyframes ui-scroll-fade`, and the shared
+> `--ui-scroll-fade-mask` gradient now live in **`ui/base/scroll.css`** (imported
+> by `ui/base/index.css`). The scroll-fade `@property`/`@keyframes` were extracted
+> from `ui/card/content.css` (they lived there, not in `ui-card.css` as the note
+> below assumed), and both scrollers — `content="scr"` (`content.css`) and
+> `ui-reveal[scroll][type="flip"]` (`ui-reveal.css`) — now paint
+> `mask: var(--ui-scroll-fade-mask)`. Selectors + guards stay per-component. The
+> original analysis is kept below for context.
 
 The vertical scroll fade-mask (`scroll` attribute) currently lives in **two**
 places: `ui/card/ui-card.css` (generic `ui-card[scroll] ui-content`) and
