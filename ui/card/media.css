@@ -168,7 +168,7 @@
 		 SCRIM — scm(). Three orthogonal axes on the furniture 3×3 grid:
 		   scm(<pos>)  direction — ts tc te cs cc ce bs bc be (matches chip/sticker)
 		   scm(<size>) extent    — sm md lg (how far the gradient reaches; md = default)
-		   scm(<int>)  intensity — sheer lgt med drk solid (dark-end opacity)
+		   scm(<int>)  intensity — shr lgt med drk sld (dark-end opacity; sheer/solid aliases)
 		 Compose freely, e.g. scm(bc) scm(lg) scm(drk). Bare scm paints the host
 		 ovr()-matched default. All nine gradients read shared colour + stop vars so
 		 size and intensity vary without re-baking per combination. (see media.md § Scrim)
@@ -176,7 +176,7 @@
 	:where(ui-media), :where([media]), :where([variant]) {
 		--ui-media-scrim-c: var(--ui-media-scrim-color, rgb(0 0 0 / 0.78));
 		/* mid stop holds the dark before fading, so spanning text stays legible.
-		   --ui-media-scrim-fade (inherits; 0% = fully opaque hold) lets scm(solid)
+		   --ui-media-scrim-fade (inherits; 0% = fully opaque hold) lets scm(sld)
 		   make the mid stop solid even when the scm token sits on an ancestor. */
 		--ui-media-scrim-m: color-mix(in srgb, var(--ui-media-scrim-c), transparent var(--ui-media-scrim-fade, 55%));
 		/* size axis — shared stop positions (defaults = md = original look) */
@@ -213,13 +213,14 @@
 	:where([media*="scm(lg)"]) { --ui-media-scrim-mid-stop: 58%; --ui-media-scrim-end-stop: 100%; --ui-media-scrim-cc-a: 8%; --ui-media-scrim-cc-b: 92%; }
 	:where([media*="scm(xl)"]) { --ui-media-scrim-mid-stop: 74%; --ui-media-scrim-end-stop: 100%; --ui-media-scrim-cc-a: 0%; --ui-media-scrim-cc-b: 100%; }
 	/* scm() intensity — sets the scrim colour the gradients read (default med).
-	   solid also pulls the mid stop to the full colour, so it holds opaque across
-	   the covered area instead of fading through the translucent mid mix. */
-	:where([media*="scm(sheer)"]) { --ui-media-scrim-color: rgb(0 0 0 / 0.35); }
+	   Canonical 3-letter codes shr/sld (sheer/solid kept as aliases). sld also pulls
+	   the mid stop to the full colour, so it holds opaque across the covered area
+	   instead of fading through the translucent mid mix. */
+	:where([media*="scm(shr)"], [media*="scm(sheer)"]) { --ui-media-scrim-color: rgb(0 0 0 / 0.35); }
 	:where([media*="scm(lgt)"])   { --ui-media-scrim-color: rgb(0 0 0 / 0.55); }
 	:where([media*="scm(med)"])   { --ui-media-scrim-color: rgb(0 0 0 / 0.78); }
 	:where([media*="scm(drk)"])   { --ui-media-scrim-color: rgb(0 0 0 / 0.92); }
-	:where([media*="scm(solid)"]) { --ui-media-scrim-color: rgb(0 0 0 / 1); --ui-media-scrim-fade: 0%; }
+	:where([media*="scm(sld)"], [media*="scm(solid)"]) { --ui-media-scrim-color: rgb(0 0 0 / 1); --ui-media-scrim-fade: 0%; }
 	/* bare scm paints; auto-matches the ovr() position via --ui-media-scrim-default */
 	:where([media*="scm"]) { --ui-media-scrim-paint: var(--ui-media-scrim, var(--ui-media-scrim-default, var(--ui-media-scrim-bc))); }
 	:where(ui-media)::after {
