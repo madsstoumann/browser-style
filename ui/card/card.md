@@ -244,7 +244,7 @@ attributes.
 | `portrait-top` | ui-card | + `obp(tc)` | profile |
 | `panel` | ui-card | `vis(content)` | job, poll, faq, timeline, comparison |
 | `panel-subtle` | ui-card | + `thm(subtle) scl(lg)` | quote |
-| `panel-brand` | ui-card | + `thm(brand)` | statistic, membership |
+| `panel-brand` | ui-card | + `thm(dark)` (set `--ui-card-dark-bg` to accent for a branded surface) | statistic, membership |
 | `panel-dark` | ui-card | + `thm(dark)` | announcement |
 | `hero` | ui-card | `ovr(bl)` · 4:3 · scrim · `scl(lg)` | event |
 | `poster` | ui-card | `ovr(bl)` · 3:4 · scrim | location |

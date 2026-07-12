@@ -219,7 +219,7 @@ Composes the two primitives — arrangement, split, visibility, overlay, theme, 
 | `vis(media)` | show only the media (hide content) |
 | `vis(content)` | show only the content (hide media) |
 | `ovr()` | `tl … br` — stack content over media at one of 9 positions; sets the matching default scrim direction |
-| `thm()` | `dark brand subtle` — surface + ink theme (ink crosses into the content namespace) |
+| `thm()` | `dark subtle` — surface + ink theme (ink crosses into the content namespace) |
 | `rds()` | `none sm md lg xl 2xl full pill` (round) · `sm-sq md-sq lg-sq xl-sq` (squircle, `corner-shape: superellipse()`) — corner radius |
 
 ```html

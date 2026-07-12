@@ -73,8 +73,6 @@ Decorative background + ink bundles. Ink tokens cross into the `<ui-content>` na
 | `--ui-card-dark-bg` | `#1f2937` | `thm(dark)` background |
 | `--ui-card-dark-ink` | `#f9fafb` | `thm(dark)` text |
 | `--ui-card-dark-accent` | `#93c5fd` | `thm(dark)` eyebrow |
-| `--ui-card-brand-bg` | `var(--color-accent)` | `thm(brand)` background |
-| `--ui-card-brand-ink` | `#fff` | `thm(brand)` text |
 | `--ui-card-subtle-bg` | `var(--color-surface-alt)` | `thm(subtle)` background |
 | `--ui-card-subtle-ink` | `var(--color-text)` | `thm(subtle)` text |
 

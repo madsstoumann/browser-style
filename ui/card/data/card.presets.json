@@ -60,9 +60,9 @@
     },
     "panel-brand": {
       "name": "Panel Brand Preset",
-      "description": "Content-only on the accent surface — stats, pricing tiers",
+      "description": "Content-only on a dark surface — stats, pricing tiers (set --ui-card-dark-bg to the accent for a branded look)",
       "element": "ui-card",
-      "variant": "vis(content) thm(brand)"
+      "variant": "vis(content) thm(dark)"
     },
     "panel-dark": {
       "name": "Panel Dark Preset",
