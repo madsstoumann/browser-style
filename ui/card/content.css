@@ -22,20 +22,131 @@
 		--ui-content-fs-md: clamp(0.88rem, 0.80rem + 0.6cqi, 1.00rem);
 		--ui-content-fs-lg: clamp(0.95rem, 0.86rem + 0.8cqi, 1.10rem);
 		--ui-content-fs-xl: clamp(1.00rem, 0.92rem + 0.9cqi, 1.20rem);
-		/* headline */
+		/* headline — sm–xl are the scl() ramp; 2xl + poster are hl()-only display steps */
 		--ui-content-headline-sm: clamp(1.05rem, 0.90rem + 1.0cqi, 1.35rem);
 		--ui-content-headline-md: clamp(1.20rem, 1.00rem + 1.6cqi, 1.75rem);
 		--ui-content-headline-lg: clamp(1.45rem, 1.05rem + 3.0cqi, 2.50rem);
 		--ui-content-headline-xl: clamp(1.90rem, 1.10rem + 5.5cqi, 4.50rem);
+		--ui-content-headline-2xl:    clamp(2.25rem, 1.20rem + 7cqi, 5.50rem);
+		--ui-content-headline-poster: clamp(2.50rem, 1.00rem + 11cqi, 8.00rem);
 
-		--ui-content-muted: color-mix(in oklab, currentColor 65%, transparent);
+		/* ink ramp — a 5-step strength scale of the current ink colour, mirroring the
+		   scrim intensity ladder. Read by the eb()/hl()/tx()/mt() tone tokens. med is
+		   the existing --ui-content-muted (kept for back-compat + as the mt() default). */
+		--ui-content-shr:   color-mix(in oklab, currentColor 30%, transparent); /* shr */
+		--ui-content-muted: color-mix(in oklab, currentColor 65%, transparent); /* med */
+		--ui-content-soft:  color-mix(in oklab, currentColor 45%, transparent); /* lgt */
+		--ui-content-drk:   color-mix(in oklab, currentColor 85%, transparent); /* drk */
+		--ui-content-inv:   #fff;                                               /* inv — overlay ink */
+
+		/* text-shadow for the shd flag — a legibility shadow for overlaid text.
+		   Tunable; only applied when a group opts in via {eb,hl,tx,mt}(shd) (or a
+		   host ovr() enables it for headline/eyebrow over a scrim). */
+		--ui-content-text-shadow: 0 1px 3px color-mix(in oklab, #000 55%, transparent);
 	}
 
-	/* scl() — type-scale step */
-	:where([content*="scl(sm)"]) { --ui-content-fs: var(--ui-content-fs-sm); --ui-content-headline: var(--ui-content-headline-sm); }
-	:where([content*="scl(md)"]) { --ui-content-fs: var(--ui-content-fs-md); --ui-content-headline: var(--ui-content-headline-md); }
-	:where([content*="scl(lg)"]) { --ui-content-fs: var(--ui-content-fs-lg); --ui-content-headline: var(--ui-content-headline-lg); }
-	:where([content*="scl(xl)"]) { --ui-content-fs: var(--ui-content-fs-xl); --ui-content-headline: var(--ui-content-headline-xl); }
+	/* scl() — master type-scale step: sets BOTH body + headline. ~= (whole token) so
+	   base doesn't substring-match the md:/lg: prefixed forms. */
+	:where([content~="scl(sm)"]) { --ui-content-fs: var(--ui-content-fs-sm); --ui-content-headline: var(--ui-content-headline-sm); }
+	:where([content~="scl(md)"]) { --ui-content-fs: var(--ui-content-fs-md); --ui-content-headline: var(--ui-content-headline-md); }
+	:where([content~="scl(lg)"]) { --ui-content-fs: var(--ui-content-fs-lg); --ui-content-headline: var(--ui-content-headline-lg); }
+	:where([content~="scl(xl)"]) { --ui-content-fs: var(--ui-content-fs-xl); --ui-content-headline: var(--ui-content-headline-xl); }
+
+	/* ============================================================
+	   TYPE STYLING — four logical groups, each with a family token that
+	   writes a group-level prop. A part reads its own --ui-content-{part}-X
+	   then the group --ui-content-{group}-X then a default, so a group token
+	   restyles the whole group while a per-part style= still overrides one part.
+	     Eyebrow group — eb() — eyebrow
+	     Headings group — hl() — headline (+ bare h2–h6), subheadline
+	     Body group     — tx() — summary, quote, list, address, timeline, price, stat
+	     Meta group     — mt() — meta, caption, byline, footer, tags, rating, options
+	   Three disjoint arg vocabularies so whole-token matching can't confuse them:
+	     tone   shr lgt med drk sld accent inv   (ink strength + hue overrides)
+	     size   sm md lg xl (+ 2xl poster on hl)  (headline scale)
+	     weight 300–900                           (--font-weight-*)
+	   plus flags: eb(flat) drops uppercase · hl(grad) opts into the gradient headline.
+	   ============================================================ */
+
+	/* eb() — eyebrow group: tone / weight / flat flag */
+	:where([content~="eb(shr)"])    { --ui-content-eyebrow-ink: var(--ui-content-shr); }
+	:where([content~="eb(lgt)"])    { --ui-content-eyebrow-ink: var(--ui-content-soft); }
+	:where([content~="eb(med)"])    { --ui-content-eyebrow-ink: var(--ui-content-muted); }
+	:where([content~="eb(drk)"])    { --ui-content-eyebrow-ink: var(--ui-content-drk); }
+	:where([content~="eb(sld)"])    { --ui-content-eyebrow-ink: var(--color-text); }
+	:where([content~="eb(accent)"]) { --ui-content-eyebrow-ink: var(--color-accent); }
+	:where([content~="eb(inv)"])    { --ui-content-eyebrow-ink: var(--ui-content-inv); }
+	:where([content~="eb(300)"])    { --ui-content-eyebrow-weight: var(--font-weight-light); }
+	:where([content~="eb(400)"])    { --ui-content-eyebrow-weight: var(--font-weight-normal); }
+	:where([content~="eb(500)"])    { --ui-content-eyebrow-weight: var(--font-weight-medium); }
+	:where([content~="eb(600)"])    { --ui-content-eyebrow-weight: var(--font-weight-semibold); }
+	:where([content~="eb(700)"])    { --ui-content-eyebrow-weight: var(--font-weight-bold); }
+	:where([content~="eb(800)"])    { --ui-content-eyebrow-weight: 800; } /* no 800 token — literal */
+	:where([content~="eb(900)"])    { --ui-content-eyebrow-weight: var(--font-weight-black); }
+	:where([content~="eb(flat)"])   { --ui-content-eyebrow-transform: none; }
+	:where([content~="eb(shd)"])    { --ui-content-eyebrow-text-shadow: var(--ui-content-text-shadow); }
+
+	/* tx() — body group: tone / weight */
+	:where([content~="tx(shr)"])    { --ui-content-body-ink: var(--ui-content-shr); }
+	:where([content~="tx(lgt)"])    { --ui-content-body-ink: var(--ui-content-soft); }
+	:where([content~="tx(med)"])    { --ui-content-body-ink: var(--ui-content-muted); }
+	:where([content~="tx(drk)"])    { --ui-content-body-ink: var(--ui-content-drk); }
+	:where([content~="tx(sld)"])    { --ui-content-body-ink: var(--color-text); }
+	:where([content~="tx(accent)"]) { --ui-content-body-ink: var(--color-accent); }
+	:where([content~="tx(inv)"])    { --ui-content-body-ink: var(--ui-content-inv); }
+	:where([content~="tx(300)"])    { --ui-content-body-weight: var(--font-weight-light); }
+	:where([content~="tx(400)"])    { --ui-content-body-weight: var(--font-weight-normal); }
+	:where([content~="tx(500)"])    { --ui-content-body-weight: var(--font-weight-medium); }
+	:where([content~="tx(600)"])    { --ui-content-body-weight: var(--font-weight-semibold); }
+	:where([content~="tx(700)"])    { --ui-content-body-weight: var(--font-weight-bold); }
+	:where([content~="tx(800)"])    { --ui-content-body-weight: 800; }
+	:where([content~="tx(900)"])    { --ui-content-body-weight: var(--font-weight-black); }
+	:where([content~="tx(shd)"])    { --ui-content-body-text-shadow: var(--ui-content-text-shadow); }
+
+	/* mt() — meta group: tone / weight */
+	:where([content~="mt(shr)"])    { --ui-content-meta-ink: var(--ui-content-shr); }
+	:where([content~="mt(lgt)"])    { --ui-content-meta-ink: var(--ui-content-soft); }
+	:where([content~="mt(med)"])    { --ui-content-meta-ink: var(--ui-content-muted); }
+	:where([content~="mt(drk)"])    { --ui-content-meta-ink: var(--ui-content-drk); }
+	:where([content~="mt(sld)"])    { --ui-content-meta-ink: var(--color-text); }
+	:where([content~="mt(accent)"]) { --ui-content-meta-ink: var(--color-accent); }
+	:where([content~="mt(inv)"])    { --ui-content-meta-ink: var(--ui-content-inv); }
+	:where([content~="mt(300)"])    { --ui-content-meta-weight: var(--font-weight-light); }
+	:where([content~="mt(400)"])    { --ui-content-meta-weight: var(--font-weight-normal); }
+	:where([content~="mt(500)"])    { --ui-content-meta-weight: var(--font-weight-medium); }
+	:where([content~="mt(600)"])    { --ui-content-meta-weight: var(--font-weight-semibold); }
+	:where([content~="mt(700)"])    { --ui-content-meta-weight: var(--font-weight-bold); }
+	:where([content~="mt(800)"])    { --ui-content-meta-weight: 800; }
+	:where([content~="mt(900)"])    { --ui-content-meta-weight: var(--font-weight-black); }
+	:where([content~="mt(shd)"])    { --ui-content-meta-text-shadow: var(--ui-content-text-shadow); }
+
+	/* hl() — headings group: tone / weight, then SIZE (headline only), then grad flag.
+	   The size rules MUST come after scl() in source: both write --ui-content-headline
+	   with :where() (zero specificity), so hl(<size>) wins over scl() when both are set
+	   on the same element — decoupling the title from the body ramp. */
+	:where([content~="hl(shr)"])    { --ui-content-heading-ink: var(--ui-content-shr); }
+	:where([content~="hl(lgt)"])    { --ui-content-heading-ink: var(--ui-content-soft); }
+	:where([content~="hl(med)"])    { --ui-content-heading-ink: var(--ui-content-muted); }
+	:where([content~="hl(drk)"])    { --ui-content-heading-ink: var(--ui-content-drk); }
+	:where([content~="hl(sld)"])    { --ui-content-heading-ink: var(--color-text); }
+	:where([content~="hl(accent)"]) { --ui-content-heading-ink: var(--color-accent); }
+	:where([content~="hl(inv)"])    { --ui-content-heading-ink: var(--ui-content-inv); }
+	:where([content~="hl(300)"])    { --ui-content-heading-weight: var(--font-weight-light); }
+	:where([content~="hl(400)"])    { --ui-content-heading-weight: var(--font-weight-normal); }
+	:where([content~="hl(500)"])    { --ui-content-heading-weight: var(--font-weight-medium); }
+	:where([content~="hl(600)"])    { --ui-content-heading-weight: var(--font-weight-semibold); }
+	:where([content~="hl(700)"])    { --ui-content-heading-weight: var(--font-weight-bold); }
+	:where([content~="hl(800)"])    { --ui-content-heading-weight: 800; }
+	:where([content~="hl(900)"])    { --ui-content-heading-weight: var(--font-weight-black); }
+	:where([content~="hl(sm)"])     { --ui-content-headline: var(--ui-content-headline-sm); }
+	:where([content~="hl(md)"])     { --ui-content-headline: var(--ui-content-headline-md); }
+	:where([content~="hl(lg)"])     { --ui-content-headline: var(--ui-content-headline-lg); }
+	:where([content~="hl(xl)"])     { --ui-content-headline: var(--ui-content-headline-xl); }
+	:where([content~="hl(2xl)"])    { --ui-content-headline: var(--ui-content-headline-2xl); }
+	:where([content~="hl(poster)"]) { --ui-content-headline: var(--ui-content-headline-poster); }
+	:where([content~="hl(shd)"])    { --ui-content-heading-text-shadow: var(--ui-content-text-shadow); }
+	/* hl(grad) — clip the WHOLE headline to the gradient (styled with the parts below,
+	   next to the inner-<b> gradient it reuses --ui-content-headline-gradient). */
 
 	/* pad() — content padding. ~= (whole token) so base doesn't match md:/lg: forms */
 	:where([content~="pad(none)"]) { --ui-content-p: 0; }
@@ -72,33 +183,47 @@
 	}
 
 	/* ============================================================
-	   SCROLL — content="scr": scrollable column with masked edges
+	   SCROLL — content="scr": scrollable content with masked edges.
+	     scr / scr(y) — vertical (block axis; back-compat default)
+	     scr(x)       — horizontal (inline axis; a scrolling row)
+	   The @property/@keyframes and the --ui-scroll-fade-mask gradient are the
+	   shared scroll-fade primitive in ui/base/scroll.css (also used by ui-reveal).
+	   The mask direction follows --ui-scroll-fade-dir. ~= (whole token) so scr,
+	   scr(x), scr(y) are distinct and base doesn't substring-match a md:/lg: form.
 	   ============================================================ */
-	@property --ui-scroll-fade-start { syntax: "<length>"; inherits: false; initial-value: 0px; }
-	@property --ui-scroll-fade-end   { syntax: "<length>"; inherits: false; initial-value: 0px; }
-
-	@keyframes ui-scroll-fade {
-		0%        { --ui-scroll-fade-start: 0px; }
-		10%, 100% { --ui-scroll-fade-start: var(--ui-scroll-fade-size, 3rem); }
-		0%, 90%   { --ui-scroll-fade-end: var(--ui-scroll-fade-size, 3rem); }
-		100%      { --ui-scroll-fade-end: 0px; }
-	}
-
-	:where([content*="scr"]) ui-content,
-	:where(ui-content[content*="scr"]) {
+	:where([content~="scr"]) ui-content, :where([content~="scr(y)"]) ui-content,
+	:where(ui-content[content~="scr"]), :where(ui-content[content~="scr(y)"]) {
 		max-block-size: var(--ui-content-scroll-bs, 100%);
 		overflow-y: auto;
 		overscroll-behavior: contain;
 		scrollbar-width: thin;
 	}
+	/* horizontal — a scrolling row (thumbnails, tags, chips) that overflows the card */
+	:where([content~="scr(x)"]) ui-content,
+	:where(ui-content[content~="scr(x)"]) {
+		--ui-scroll-fade-dir: to right;
+		flex-direction: row;
+		max-inline-size: 100%;
+		overflow-x: auto;
+		overflow-y: hidden;
+		overscroll-behavior: contain;
+		scrollbar-width: thin;
+	}
 	@supports (animation-timeline: scroll()) {
 		@media (prefers-reduced-motion: no-preference) {
-			:where([content*="scr"]) ui-content,
-			:where(ui-content[content*="scr"]) {
+			:where([content~="scr"]) ui-content, :where([content~="scr(y)"]) ui-content,
+			:where(ui-content[content~="scr"]), :where(ui-content[content~="scr(y)"]) {
 				animation: ui-scroll-fade linear;
 				animation-timeline: --ui-scroll;
-				mask: linear-gradient(to bottom, #0000, #000 var(--ui-scroll-fade-start) calc(100% - var(--ui-scroll-fade-end)), #0000);
+				mask: var(--ui-scroll-fade-mask);
 				scroll-timeline: --ui-scroll block;
+			}
+			:where([content~="scr(x)"]) ui-content,
+			:where(ui-content[content~="scr(x)"]) {
+				animation: ui-scroll-fade linear;
+				animation-timeline: --ui-scroll;
+				mask: var(--ui-scroll-fade-mask);
+				scroll-timeline: --ui-scroll inline;
 			}
 		}
 	}
@@ -107,51 +232,67 @@
 	   PARTS — styled by [data-part], never by tag
 	   ============================================================ */
 
-	/* eyebrow */
+	/* eyebrow — Eyebrow group. ink/weight fall back to eb() group props (the
+	   eyebrow part IS the eyebrow group's representative, so the group prop and
+	   the part hook share a name); the old -color hook is kept as an alias. */
 	:where(ui-content) [data-part="eyebrow"] {
-		color: var(--ui-content-eyebrow-color, var(--color-accent));
+		color: var(--ui-content-eyebrow-ink, var(--ui-content-eyebrow-color, var(--color-accent)));
 		font-size: var(--ui-content-eyebrow-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.78));
 		font-weight: var(--ui-content-eyebrow-weight, var(--font-weight-medium, 500));
 		letter-spacing: var(--tracking-wide, 0.05em);
-		text-transform: uppercase;
+		text-shadow: var(--ui-content-eyebrow-text-shadow, none); /* eb(shd) / host ovr() */
+		text-transform: var(--ui-content-eyebrow-transform, uppercase); /* eb(flat) → none */
 	}
 
-	/* headline (and bare h2–h6) */
+	/* headline (and bare h2–h6) — Headings group */
 	:where(ui-content) :is([data-part="headline"], h2, h3, h4, h5, h6) {
+		color: var(--ui-content-headline-ink, var(--ui-content-heading-ink, inherit));
 		font-size: var(--ui-content-headline, var(--ui-content-headline-md));
-		font-weight: var(--ui-content-headline-weight, var(--font-weight-bold, 700));
+		font-weight: var(--ui-content-headline-weight, var(--ui-content-heading-weight, var(--font-weight-bold, 700)));
 		letter-spacing: var(--tracking-tight, -0.01em);
 		line-height: var(--ui-content-headline-line-height, var(--line-height-tight, 1.15));
+		text-shadow: var(--ui-content-headline-text-shadow, var(--ui-content-heading-text-shadow, none)); /* hl(shd) / host ovr() */
 		text-wrap: pretty;
 	}
 
-	/* subheadline */
+	/* subheadline — Headings group; default stays muted unless hl() sets the group ink */
 	:where(ui-content) [data-part="subheadline"] {
-		color: var(--ui-content-subheadline-color, var(--ui-content-muted));
+		color: var(--ui-content-subheadline-ink, var(--ui-content-subheadline-color, var(--ui-content-heading-ink, var(--ui-content-muted))));
 		font-size: var(--ui-content-subheadline-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.88));
 		font-weight: var(--ui-content-subheadline-weight, var(--font-weight-normal, 400));
+		text-shadow: var(--ui-content-subheadline-text-shadow, var(--ui-content-heading-text-shadow, none));
 	}
 
-	/* summary */
+	/* summary — Body group */
 	:where(ui-content) [data-part="summary"] {
-		color: var(--ui-content-summary-color, inherit);
+		color: var(--ui-content-summary-ink, var(--ui-content-summary-color, var(--ui-content-body-ink, inherit)));
 		font-size: var(--ui-content-summary-fs, var(--ui-content-fs, var(--ui-content-fs-md)));
-		line-height: var(--line-height-normal, 1.5);
+		font-weight: var(--ui-content-summary-weight, var(--ui-content-body-weight, var(--font-weight-normal, 400)));
+		line-height: var(--ui-content-summary-line-height, var(--line-height-normal, 1.5));
+		text-shadow: var(--ui-content-summary-text-shadow, var(--ui-content-body-text-shadow, none));
 	}
 
-	/* meta / caption (caption may also sit inside <ui-media>) */
+	/* meta / caption (caption may also sit inside <ui-media>) — Meta group; the
+	   meta part is the group's representative, so its ink hook is the group prop. */
 	:where(ui-content, ui-media) :is([data-part="meta"], [data-part="caption"]) {
-		color: var(--ui-content-meta-color, var(--ui-content-muted));
+		color: var(--ui-content-meta-ink, var(--ui-content-meta-color, var(--ui-content-muted)));
 		font-size: var(--ui-content-meta-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.75));
+		font-weight: var(--ui-content-meta-weight, inherit);
+		text-shadow: var(--ui-content-meta-text-shadow, none);
 	}
 
-	/* byline (author row; inner <img> becomes a round avatar) */
+	/* byline (author row; inner <img> becomes a round avatar) — Meta group.
+	   Now defaults to muted via the group (matches content.md's stated behaviour;
+	   the CSS previously left it at full ink — intentional consistency fix). */
 	:where(ui-content) [data-part="byline"] {
 		align-items: center;
+		color: var(--ui-content-byline-ink, var(--ui-content-byline-color, var(--ui-content-meta-ink, var(--ui-content-muted))));
 		display: flex;
 		font-size: var(--ui-content-byline-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.82));
 		font-style: normal;
+		font-weight: var(--ui-content-byline-weight, var(--ui-content-meta-weight, inherit));
 		gap: var(--ui-content-byline-gap, var(--spacing-sm));
+		text-shadow: var(--ui-content-byline-text-shadow, var(--ui-content-meta-text-shadow, none));
 
 		& img {
 			aspect-ratio: 1;
@@ -161,11 +302,13 @@
 		}
 	}
 
-	/* tags (pill list) */
+	/* tags (pill list) — Meta group. The container font-size joins the group; the
+	   pill ink stays pill-driven (--ui-content-tag-color) since it sits on a fill. */
 	:where(ui-content) [data-part="tags"] {
 		display: flex;
 		flex-wrap: wrap;
 		font-size: var(--ui-content-tags-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.72));
+		font-weight: var(--ui-content-tags-weight, var(--ui-content-meta-weight, inherit));
 		gap: var(--ui-content-tags-gap, var(--spacing-xs, 0.35rem));
 		list-style: none;
 		margin: 0;
@@ -188,13 +331,15 @@
 		gap: var(--ui-content-actions-gap, var(--spacing-sm));
 	}
 
-	/* footer (trailing meta) */
+	/* footer (trailing meta) — Meta group */
 	:where(ui-content) [data-part="footer"] {
-		color: var(--ui-content-footer-color, var(--ui-content-muted));
+		color: var(--ui-content-footer-ink, var(--ui-content-footer-color, var(--ui-content-meta-ink, var(--ui-content-muted))));
 		display: flex;
 		flex-wrap: wrap;
 		font-size: var(--ui-content-footer-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.78));
+		font-weight: var(--ui-content-footer-weight, var(--ui-content-meta-weight, inherit));
 		gap: var(--ui-content-footer-gap, var(--spacing-sm));
+		text-shadow: var(--ui-content-footer-text-shadow, var(--ui-content-meta-text-shadow, none));
 	}
 
 	/* cover — a link that covers the whole card (the classic stretched-link).
@@ -225,50 +370,130 @@
 		color: transparent;
 	}
 
+	/* hl(grad) — the same gradient clip applied to the ENTIRE headline (not just <b>) */
+	:where([content~="hl(grad)"]) :is([data-part="headline"], h2, h3, h4, h5, h6) {
+		background: var(--ui-content-headline-gradient, linear-gradient(90deg, var(--color-accent), #c026d3));
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+
 	/* ============================================================
-	   PROPOSED PARTS — spec'd in schema.html, not yet styled.
-	   Each renders with default typography until implemented here.
+	   PROPOSED PARTS — now folded into the group system. Each reads its own
+	   --ui-content-{part}-* hook, then its group ink (Body or Meta), then a
+	   default. Only structural essentials here; visuals stay token-driven.
 	   ============================================================ */
 
-	/* price — <p> with <data> current, <del> original, <small> discount.
-	   Carries Offer/PriceSpecification/MonetaryAmount microdata.
+	/* price — Body group (prominent). <p> with <data> current, <del> original,
+	   <small> discount. Carries Offer/PriceSpecification/MonetaryAmount microdata.
 	   Used by: product, course, booking, membership, software, job (salary). */
-	/* :where(ui-content) [data-part="price"] { } */
+	:where(ui-content) [data-part="price"] {
+		align-items: baseline;
+		color: var(--ui-content-price-ink, var(--ui-content-body-ink, inherit));
+		display: flex;
+		flex-wrap: wrap;
+		font-size: var(--ui-content-price-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 1.35));
+		font-weight: var(--ui-content-price-weight, var(--font-weight-bold, 700));
+		gap: var(--ui-content-price-gap, var(--spacing-xs));
 
-	/* rating — <div role="img" aria-label> star glyphs + count.
-	   Carries AggregateRating/Rating microdata.
-	   Used by: product, review, software. */
-	/* :where(ui-content) [data-part="rating"] { } */
+		& del   { color: var(--ui-content-muted); font-weight: var(--font-weight-normal, 400); }
+		& small { color: var(--ui-content-price-discount, var(--color-accent)); font-size: 0.7em; }
+	}
 
-	/* list — <ul> check-list / <ol> ordered list.
-	   Features, qualifications, ingredients, amenities, steps.
+	/* rating — Meta group. <div role="img" aria-label> star glyphs + count.
+	   Carries AggregateRating/Rating microdata. Used by: product, review, software. */
+	:where(ui-content) [data-part="rating"] {
+		align-items: center;
+		color: var(--ui-content-rating-ink, var(--ui-content-rating-color, var(--color-accent)));
+		display: inline-flex;
+		font-size: var(--ui-content-rating-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.9));
+		gap: var(--ui-content-rating-gap, var(--spacing-xs));
+
+		& small { color: var(--ui-content-meta-ink, var(--ui-content-muted)); }
+	}
+
+	/* list — Body group. <ul> check-list / <ol> ordered list. Features,
+	   qualifications, ingredients, amenities, steps.
 	   Used by: recipe, job, course, booking, location, membership. */
-	/* :where(ui-content) [data-part="list"] { } */
+	:where(ui-content) [data-part="list"] {
+		color: var(--ui-content-list-ink, var(--ui-content-body-ink, inherit));
+		display: flex;
+		flex-direction: column;
+		font-size: var(--ui-content-list-fs, var(--ui-content-fs, var(--ui-content-fs-md)));
+		gap: var(--ui-content-list-gap, var(--spacing-xs));
+		list-style-position: inside;
+		margin: 0;
+		padding: 0;
+	}
 
-	/* address — <address> block, distinct from byline (no avatar).
-	   Carries PostalAddress microdata scope.
-	   Used by: business, location, event, contact. */
-	/* :where(ui-content) [data-part="address"] { } */
+	/* address — Body group. <address> block, distinct from byline (no avatar).
+	   Carries PostalAddress microdata scope. Used by: business, location, event, contact. */
+	:where(ui-content) [data-part="address"] {
+		color: var(--ui-content-address-ink, var(--ui-content-body-ink, inherit));
+		font-size: var(--ui-content-address-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.9));
+		font-style: normal;
+		line-height: var(--ui-content-address-line-height, var(--line-height-normal, 1.5));
+	}
 
-	/* stat — <p> with <data> big number + <small> unit + trend <span>.
-	   Carries QuantitativeValue microdata.
-	   Used by: statistic. */
-	/* :where(ui-content) [data-part="stat"] { } */
+	/* stat — Body group (prominent). <p> with <data> big number + <small> unit +
+	   trend <span>. Carries QuantitativeValue microdata. Used by: statistic. */
+	:where(ui-content) [data-part="stat"] {
+		align-items: baseline;
+		color: var(--ui-content-stat-ink, var(--ui-content-body-ink, inherit));
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--ui-content-stat-gap, var(--spacing-xs));
 
-	/* timeline — <ol> of <li> with <time> + text.
-	   Each entry is subEvent → Event microdata.
-	   Used by: timeline. */
-	/* :where(ui-content) [data-part="timeline"] { } */
+		& data, & > :first-child {
+			font-size: var(--ui-content-stat-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 2));
+			font-weight: var(--ui-content-stat-weight, var(--font-weight-bold, 700));
+			line-height: 1;
+		}
+		& small { color: var(--ui-content-muted); }
+	}
 
-	/* quote — <blockquote data-part="quote" data-variant> + <q>/<cite>.
+	/* timeline — Body group. <ol> of <li> with <time> + text.
+	   Each entry is subEvent → Event microdata. Used by: timeline. */
+	:where(ui-content) [data-part="timeline"] {
+		color: var(--ui-content-timeline-ink, var(--ui-content-body-ink, inherit));
+		display: flex;
+		flex-direction: column;
+		font-size: var(--ui-content-timeline-fs, var(--ui-content-fs, var(--ui-content-fs-md)));
+		gap: var(--ui-content-timeline-gap, var(--spacing-sm));
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		& time { color: var(--ui-content-muted); font-size: 0.85em; }
+	}
+
+	/* quote — Body group. <blockquote data-part="quote" data-variant> + <q>/<cite>.
 	   Composed with @browser.style/blockquote: data-variant (bigquote/breaker/code)
-	   carries the visual style from ui-blockquote.css — this hook is for
-	   card-scoped overrides only. Used by: quote (bigquote), review (default),
-	   social (plain, no data-variant). */
-	/* :where(ui-content) [data-part="quote"] { } */
+	   carries the visual style from ui-blockquote.css — this hook is for card-scoped
+	   overrides only. Used by: quote (bigquote), review (default), social (plain). */
+	:where(ui-content) [data-part="quote"] {
+		border-inline-start: var(--ui-content-quote-border, var(--border-width) solid var(--color-border, currentColor));
+		color: var(--ui-content-quote-ink, var(--ui-content-body-ink, inherit));
+		font-size: var(--ui-content-quote-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 1.1));
+		margin: 0;
+		padding-inline-start: var(--ui-content-quote-indent, var(--spacing-md));
 
-	/* options — <ul> of <li> with <label> + <progress> result bars.
+		& cite { color: var(--ui-content-muted); font-size: 0.8em; font-style: normal; }
+	}
+
+	/* options — Meta group. <ul> of <li> with <label> + <progress> result bars.
 	   Poll answers (suggestedAnswer → Answer) / comparison rows (ListItem).
 	   Used by: poll, comparison. */
-	/* :where(ui-content) [data-part="options"] { } */
+	:where(ui-content) [data-part="options"] {
+		color: var(--ui-content-options-ink, var(--ui-content-meta-ink, inherit));
+		display: flex;
+		flex-direction: column;
+		font-size: var(--ui-content-options-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.9));
+		gap: var(--ui-content-options-gap, var(--spacing-sm));
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		& progress { inline-size: 100%; }
+	}
 }
