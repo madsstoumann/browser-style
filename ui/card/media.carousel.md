@@ -96,7 +96,7 @@ These belong to the base `<ui-media>` frame ([media.css](./media.css), docs in
 | `clip` | CSS | `clip-path: inset(0 round …)` at the `rds()` radius — keeps rounded corners while a carousel scrolls (border-radius alone can drop them mid-scroll). Reuses `--ui-media-radius`; no superellipse |
 | `flp(h · v · hv)` | CSS | Flip the image horizontally / vertically / both |
 | `hov(zoom · pan · track · drift)` | CSS (+JS) | Hover effect; `track`/`drift` follow the cursor (need `ui-media.js`) |
-| `scm` · `scm(<pos>)` · `scm(sm · md · lg)` · `scm(sheer · lgt · med · drk · solid)` | CSS | Scrim — direction (furniture grid) + size + intensity |
+| `scm` · `scm(<pos>)` · `scm(sm · md · lg · xl)` · `scm(sheer · lgt · med · drk · solid)` | CSS | Scrim — direction (furniture grid) + size + intensity |
 | `load(eager · lazy)` | load | Image/video loading (`ui-media-srcset.js`); `eager` (bool attr) = first slide eager + `fetchpriority="high"` |
 | `chip(<corner>)` · `chip(<color>)` | CSS | Position + colour a `<ui-chip>` child (`accent blue green orange red dark light subtle`) |
 | `sticker(<corner>)` · `sticker(<color>)` | CSS | Position + colour a `<ui-sticker>` child |

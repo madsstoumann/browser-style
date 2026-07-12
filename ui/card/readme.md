@@ -168,7 +168,7 @@ Configures `<ui-media>`: aspect-ratio, fit/position, hover, scrim, carousel, and
 | `flp()` | `h v hv` | mirror the image |
 | `hov()` | `zoom pan track` | hover effect (image-only) |
 | `rds()` | `sm md lg xl 2xl full pill` + `*-sq` | corners on a **standalone** `<ui-media>` (inside a card the card owns the radius) |
-| `scm` / `scm()` | *(bare)* · pos `ts … be` · size `sm md lg` · intensity `sheer lgt med drk solid` | scrim — bare matches the host `ovr()`; direction picks a corner (furniture grid), size sets the extent, intensity sets darkness |
+| `scm` / `scm()` | *(bare)* · pos `ts … be` · size `sm md lg xl` · intensity `sheer lgt med drk solid` | scrim — bare matches the host `ovr()`; direction picks a corner (furniture grid), size sets the extent, intensity sets darkness |
 | `nav` / `nav()` | *(bare)* · `dots arrows none` | carousel — the token **is** the trigger; bare = dots + arrows |
 | `chip()` `sticker()` `save()` `play()` | position `ts … be` **or** hue `red orange green blue accent dark light subtle` | place + theme an overlay element |
 

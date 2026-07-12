@@ -359,8 +359,8 @@ The scrim `::after` stays out of grid flow (`position: absolute; inset: 0`).
 |------|--------|----------|
 | *(bare)* | `scm` | reads `--ui-media-scrim-default` — set by the host `ovr()` to match the overlay corner; falls back to `bc` |
 | **direction** | `scm(ts)` … `scm(be)` | explicit direction (overrides the default) — `ts tc te cs cc ce bs bc be`, matching furniture placement |
-| **size** | `scm(sm)` `scm(md)` `scm(lg)` | how far the gradient reaches across the frame; sets `--ui-media-scrim-mid-stop`/`-end-stop` (and the `cc` band edges). `md` = default (`40%`/`80%`) |
-| **intensity** | `scm(sheer)` `scm(lgt)` `scm(med)` `scm(drk)` `scm(solid)` | dark-end opacity; sets `--ui-media-scrim-color` (`0.35` / `0.55` / `0.78` default / `0.92` / `1`) |
+| **size** | `scm(sm)` `scm(md)` `scm(lg)` `scm(xl)` | how far the gradient reaches across the frame; sets `--ui-media-scrim-mid-stop`/`-end-stop` (and the `cc` band edges). `md` = default (`40%`/`80%`); `xl` nearly fills the frame |
+| **intensity** | `scm(sheer)` `scm(lgt)` `scm(med)` `scm(drk)` `scm(solid)` | dark-end opacity; sets `--ui-media-scrim-color` (`0.35` / `0.55` / `0.78` default / `0.92` / `1`). `solid` also pulls the mid stop to the full colour, so it holds opaque across the covered area instead of fading through the translucent mid mix |
 
 Combine axes freely, e.g. `scm(bc) scm(lg) scm(drk)`. `scm` works **standalone** too (a darkened image, no overlay content needed).
 

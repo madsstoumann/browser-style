@@ -31,6 +31,13 @@
 		/* .note { color: var(--color-text-secondary, #666); } */
 		.hero { margin-block-end: var(--spacing-2xl); }
 		code { font-size: 0.9em; }
+		/* scm() demo: scrim colour = a hue (colour dropdown) at an alpha (intensity
+		   dropdown); the size dropdown sets the gradient stops. All three write CSS
+		   vars onto #scrim-grid, which the cards inherit. */
+		.scrim-demo { --scrim-hue: 0 0 0; }
+		.scrim-demo ui-card { --ui-media-scrim-color: rgb(var(--scrim-hue) / var(--scrim-a, 0.78)); }
+		.scrim-controls { display: flex; flex-wrap: wrap; gap: var(--spacing-lg); margin-block-end: var(--spacing-xl); }
+		.scrim-controls label { display: grid; gap: 0.25rem; font-size: 0.875em; }
 	</style>
 </head>
 <body>
@@ -94,7 +101,7 @@
 		<ui-card variant="vis(media)" media="asr(1/1) obp(tc) chip(tc)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(tc)</ui-chip></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) obp(tr) chip(tc)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(tr)</ui-chip></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) obp(cl) chip(tc)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(cl)</ui-chip></ui-media></cq-box></ui-card>
-		<ui-card variant="vis(media)" media="asr(1/1) obp(cc) chip(tc)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(cc)</ui-chip></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) obp(cc) chip(tc)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>default</ui-chip></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) obp(cr) chip(tc)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(cr)</ui-chip></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) obp(bl) chip(tc)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(bl)</ui-chip></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) obp(bc) chip(tc)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(bc)</ui-chip></ui-media></cq-box></ui-card>
@@ -128,57 +135,73 @@
 	     scm() / ovr() — scrim over media
 	     ============================================================ -->
 	<h2>Scrim — <code>scm</code> over media</h2>
-	<p>A <strong>scrim</strong> is the darkening gradient painted over the image (via <code>ui-media::after</code>) so overlaid text stays legible. <code>ovr(pos)</code> places the content over the media; bare <code>scm</code> auto-matches that position, or pass an explicit <code>scm(pos)</code>. The colour is the <code>--ui-media-scrim-color</code> token.</p>
-	<div class="grid grid-3">
-		<ui-card variant="ovr(tl)" media="asr(2/3) obf(cover) obp(cc) scm" content="scl(lg)">
-			<cq-box>
-				<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">ovr(tl) scm — top</small><strong data-part="headline">Top scrim</strong></ui-content>
-			</cq-box>
-		</ui-card>
-		<ui-card variant="ovr(bl)" media="asr(2/3) obf(cover) obp(cc) scm" content="scl(lg)">
-			<cq-box>
-				<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">ovr(bl) scm — auto-match</small><strong data-part="headline">Bottom scrim</strong></ui-content>
-			</cq-box>
-		</ui-card>
-		<ui-card variant="ovr(cc)" media="asr(2/3) obf(cover) obp(cc) scm(cc)" content="scl(lg)" style="--ui-media-scrim-color: rgb(20 0 40 / 0.7);">
-			<cq-box>
-				<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">scm(cc) + custom colour</small><strong data-part="headline">Centre band</strong></ui-content>
-			</cq-box>
-		</ui-card>
+	<p>A <strong>scrim</strong> is the darkening gradient painted over the image (via <code>ui-media::after</code>) so overlaid text stays legible. It has three composable axes: <strong>direction</strong> (<code>scm(pos)</code> — the 3×3 grid below), <strong>size</strong> (<code>scm(sm md lg xl)</code>), and <strong>intensity</strong> (<code>scm(sheer lgt med drk solid)</code>). The nine cards show every <code>scm(pos)</code> with an <code>ovr()</code> eyebrow + headline over the scrim; the dropdowns apply a <strong>size</strong>, <strong>intensity</strong>, and <strong>colour</strong> to all of them at once (colour defaults to the standard dark — switch to <code>hotpink</code> to see the gradient shape clearly).</p>
+	<div class="scrim-controls">
+		<label>Colour
+			<select id="scrim-color">
+				<option value="default">Default (dark)</option>
+				<option value="hotpink">Hotpink</option>
+				<option value="white">White</option>
+				<option value="midnight">Midnight</option>
+			</select>
+		</label>
+		<label>Size
+			<select id="scrim-size">
+				<option value="sm">sm</option>
+				<option value="md" selected>md (default)</option>
+				<option value="lg">lg</option>
+				<option value="xl">xl</option>
+			</select>
+		</label>
+		<label>Intensity
+			<select id="scrim-intensity">
+				<option value="sheer">sheer (0.35)</option>
+				<option value="lgt">lgt (0.55)</option>
+				<option value="med" selected>med (0.78, default)</option>
+				<option value="drk">drk (0.92)</option>
+				<option value="solid">solid (1)</option>
+			</select>
+		</label>
 	</div>
-	<p><strong>Size</strong> — a <code>scm()</code> token sets how far the gradient reaches across the frame: <code>scm(sm)</code> hugs the edge, <code>scm(md)</code> (default), <code>scm(lg)</code> reaches across. Combine with a position, e.g. <code>scm(bc) scm(lg)</code>.</p>
-	<div class="grid grid-3">
-		<ui-card variant="ovr(bc)" media="asr(2/3) obf(cover) obp(cc) scm(bc) scm(sm)" content="scl(lg)">
-			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(sm)</small><strong data-part="headline">Small</strong></ui-content></cq-box>
-		</ui-card>
-		<ui-card variant="ovr(bc)" media="asr(2/3) obf(cover) obp(cc) scm(bc) scm(md)" content="scl(lg)">
-			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(md)</small><strong data-part="headline">Medium</strong></ui-content></cq-box>
-		</ui-card>
-		<ui-card variant="ovr(bc)" media="asr(2/3) obf(cover) obp(cc) scm(bc) scm(lg)" content="scl(lg)">
-			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(lg)</small><strong data-part="headline">Large</strong></ui-content></cq-box>
-		</ui-card>
+	<div class="grid grid-3 scrim-demo" id="scrim-grid">
+		<ui-card variant="ovr(tl)" media="asr(1/1) scm(ts)" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(ts)</small><strong data-part="headline">Farm to table</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(tc)" media="asr(1/1) scm(tc)" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(tc)</small><strong data-part="headline">Farm to table</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(tr)" media="asr(1/1) scm(te)" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(te)</small><strong data-part="headline">Farm to table</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(cl)" media="asr(1/1) scm(cs)" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(cs)</small><strong data-part="headline">Farm to table</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(cc)" media="asr(1/1) scm(cc)" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(cc)</small><strong data-part="headline">Farm to table</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(cr)" media="asr(1/1) scm(ce)" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(ce)</small><strong data-part="headline">Farm to table</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(bl)" media="asr(1/1) scm(bs)" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(bs)</small><strong data-part="headline">Farm to table</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(bc)" media="asr(1/1) scm(bc)" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(bc)</small><strong data-part="headline">Farm to table</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(br)" media="asr(1/1) scm(be)" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(be)</small><strong data-part="headline">Farm to table</strong></ui-content></cq-box></ui-card>
 	</div>
-	<p><strong>Intensity</strong> — a <code>scm()</code> token sets how dark the scrim is: <code>scm(sheer)</code>, <code>scm(lgt)</code>, <code>scm(med)</code> (default), <code>scm(drk)</code>, <code>scm(solid)</code>. Combine with a position, e.g. <code>scm scm(drk)</code>.</p>
-	<div class="grid grid-3">
-		<ui-card variant="ovr(bc)" media="asr(2/3) obf(cover) obp(cc) scm scm(sheer)" content="scl(lg)">
-			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(sheer)</small><strong data-part="headline">Sheer</strong></ui-content></cq-box>
-		</ui-card>
-		<ui-card variant="ovr(bc)" media="asr(2/3) obf(cover) obp(cc) scm scm(lgt)" content="scl(lg)">
-			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(lgt)</small><strong data-part="headline">Light</strong></ui-content></cq-box>
-		</ui-card>
-		<ui-card variant="ovr(bc)" media="asr(2/3) obf(cover) obp(cc) scm scm(med)" content="scl(lg)">
-			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(med)</small><strong data-part="headline">Medium</strong></ui-content></cq-box>
-		</ui-card>
-		<ui-card variant="ovr(bc)" media="asr(2/3) obf(cover) obp(cc) scm scm(drk)" content="scl(lg)">
-			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(drk)</small><strong data-part="headline">Dark</strong></ui-content></cq-box>
-		</ui-card>
-		<ui-card variant="ovr(bc)" media="asr(2/3) obf(cover) obp(cc) scm scm(solid)" content="scl(lg)">
-			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(solid)</small><strong data-part="headline">Solid</strong></ui-content></cq-box>
-		</ui-card>
-	</div>
+	<script>
+		(() => {
+			const grid = document.getElementById('scrim-grid');
+			if (!grid) return;
+			const SIZE = {
+				sm: { '--ui-media-scrim-mid-stop': '22%', '--ui-media-scrim-end-stop': '48%', '--ui-media-scrim-cc-a': '38%', '--ui-media-scrim-cc-b': '62%' },
+				md: { '--ui-media-scrim-mid-stop': '40%', '--ui-media-scrim-end-stop': '80%', '--ui-media-scrim-cc-a': '25%', '--ui-media-scrim-cc-b': '75%' },
+				lg: { '--ui-media-scrim-mid-stop': '58%', '--ui-media-scrim-end-stop': '100%', '--ui-media-scrim-cc-a': '8%', '--ui-media-scrim-cc-b': '92%' },
+				xl: { '--ui-media-scrim-mid-stop': '74%', '--ui-media-scrim-end-stop': '100%', '--ui-media-scrim-cc-a': '0%', '--ui-media-scrim-cc-b': '100%' },
+			};
+			const ALPHA = { sheer: '0.35', lgt: '0.55', med: '0.78', drk: '0.92', solid: '1' };
+			const HUE = { default: '0 0 0', hotpink: '255 105 180', white: '255 255 255', midnight: '20 24 82' };
+			const setSize = (v) => { for (const [k, val] of Object.entries(SIZE[v])) grid.style.setProperty(k, val); };
+			const setIntensity = (v) => {
+				grid.style.setProperty('--scrim-a', ALPHA[v]);
+				grid.style.setProperty('--ui-media-scrim-fade', v === 'solid' ? '0%' : '55%');
+			};
+			// a white scrim needs dark overlay text; every other hue keeps it light
+			const setColor = (v) => {
+				grid.style.setProperty('--scrim-hue', HUE[v]);
+				grid.style.setProperty('--ui-card-overlay-ink', v === 'white' ? '#111' : '#fff');
+			};
+			document.getElementById('scrim-color').addEventListener('change', (e) => setColor(e.target.value));
+			document.getElementById('scrim-size').addEventListener('change', (e) => setSize(e.target.value));
+			document.getElementById('scrim-intensity').addEventListener('change', (e) => setIntensity(e.target.value));
+			setColor('default'); setSize('md'); setIntensity('med');
+		})();
+	</script>
 
 
 	<!-- ============================================================
