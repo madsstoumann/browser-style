@@ -97,7 +97,8 @@ import '@browser.style/content';
 | Token | Args | Controls | Responsive (`md:`/`lg:`) |
 |-------|------|----------|--------------------------|
 | `scl()` | `sm` `md` `lg` `xl` | type-scale step — swaps the active body **and** headline stop | **Yes** |
-| `hl()` | size `sm` `md` `lg` `xl` `2xl` `poster` · tone · weight · `grad` · `shd` | headings group — headline size (only), ink, weight, gradient, shadow | size **Yes** |
+| `hl()` | size `sm` `md` `lg` `xl` `2xl` `poster` · tone · weight · font `body`/`head`/`serif`/`mono`/`form` · `grad` · `shd` | headings group — headline size (only), ink, weight, **font**, gradient, shadow | size **Yes** |
+| `fnt()` | `body` `head` `serif` `mono` `form` | container font family for the whole column (`--ui-content-font`) | No |
 | `eb()` | tone · weight · `flat` · `shd` | eyebrow group — ink, weight, drop uppercase, shadow | No |
 | `tx()` | tone · weight · `shd` | body group — ink, weight, shadow (summary/quote/list/address/timeline/price/stat) | No |
 | `mt()` | tone · weight · `shd` | meta group — ink, weight, shadow (meta/caption/byline/footer/tags/rating/options) | No |
@@ -159,6 +160,30 @@ Plus flags: **`eb(flat)`** drops the eyebrow's default uppercase; **`hl(grad)`**
 ```
 
 **Scrim synergy:** a host `ovr()` (overlay) **automatically** sets the headline + eyebrow shadow (`--ui-content-heading-text-shadow` / `--ui-content-eyebrow-text-shadow` → `--ui-content-text-shadow`), so overlaid titles get a legibility shadow over the scrim with no extra token. Turn it off per instance with `style="--ui-content-heading-text-shadow: none"`, or retune globally via `--ui-content-text-shadow`.
+
+### `fnt()` — font families (container + heading split)
+
+`fnt(<font>)` sets the font of the **whole text column**; `hl(<font>)` overrides **only the headline**. Both take the same disjoint arg set — `body` `head` `serif` `mono` `form` — which maps to the global `--font-*` tokens. Because those words don't collide with `hl()`'s size / tone / weight / flag args, `hl(serif)` etc. compose safely on the same token.
+
+| Arg | Token | |
+|-----|-------|---|
+| `body` | `--font-body` | default sans column |
+| `head` | `--font-heading` | the theme's heading stack (`inherit` by default) |
+| `serif` | `--font-serif` | serif |
+| `mono` | `--font-mono` | monospace |
+| `form` | `--font-form` | system-UI (form controls) |
+
+- **`fnt(<font>)`** writes `--ui-content-font` → the container `font-family`. `fnt(serif)` makes the **entire** column serif.
+- **`hl(<font>)`** writes `--ui-content-heading-font` → the headline `font-family`. Since `--font-heading` resolves to `inherit`, a headline **follows the container font** unless `hl(<font>)` overrides it — so `hl(serif)` gives a **serif headline over a sans body** (the editorial split). Reverse it with `fnt(serif) hl(body)`.
+
+```html
+<!-- serif headline, sans body -->
+<ui-content content="hl(serif)"> … </ui-content>
+<!-- whole column monospace -->
+<ui-content content="fnt(mono)"> … </ui-content>
+```
+
+Escape hatch: set `--ui-content-font` (column) or `--ui-content-heading-font` (headline) directly via `style` for any family not in the token set. Live demo: [content.typography.html](content.typography.html).
 
 ```html
 <!-- big accent poster title, light body, muted meta -->
@@ -353,6 +378,8 @@ All tokens live in the `--ui-content-*` namespace. Override per instance, per ho
 
 | Token | Default | Description |
 |-------|---------|-------------|
+| `--ui-content-font` | `var(--font-body)` | Container font family (set by `fnt()`) |
+| `--ui-content-heading-font` | `var(--font-heading)` (= `inherit`) | Headline font family (set by `hl(<font>)`; follows the column font otherwise) |
 | `--ui-content-fs` | `var(--ui-content-fs-md)` | Active body font-size |
 | `--ui-content-fs-sm` | `clamp(0.80rem, 0.74rem + 0.4cqi, 0.90rem)` | Body ramp — small |
 | `--ui-content-fs-md` | `clamp(0.88rem, 0.80rem + 0.6cqi, 1.00rem)` | Body ramp — medium (default) |

@@ -23,6 +23,11 @@
 	<p class="note">Everything that controls the content column: the <code>scl()</code> scale (decoupled body + headline ramp), <code>hl()</code> headline sizes (incl. <code>poster</code>), the four group families — <code>eb()</code> / <code>hl()</code> / <code>tx()</code> / <code>mt()</code> — for tone, weight and text-shadow, the <code>thm()</code> themes, every <code>data-part</code>, <code>pad()</code>/<code>gap()</code> spacing, responsive size, scrollable content, and the core surface tokens. All driven by <code>variant</code> / <code>content</code> tokens — no JavaScript. Media-backed treatments live in <a href="media.html">media.html</a>.</p>
 	<p class="note">See also: <a href="index.html">index.html</a> (the full engine) · <a href="media.html">media.html</a> (the <code>&lt;ui-media&gt;</code> side) · <a href="ui-card-tokens.md">ui-card-tokens.md</a> (token reference).</p>
 
+	<!-- sub-pages (add more entries as sections graduate to their own page) -->
+	<ul>
+		<li><a href="content.typography.html">typography</a> — the type ramps (headline / body) and the per-part proportional scale</li>
+	</ul>
+
 	<!-- ============================================================
 	     scl() — typographic scale
 	     ============================================================ -->
@@ -104,83 +109,6 @@
 			<footer data-part="footer">footer → <code>fs × 0.78</code>, muted</footer>
 		</ui-content>
 	</lay-out>
-
-	<!-- ============================================================
-	     Complete typographic scale — full-width raw ui-content
-	     ============================================================ -->
-	<h2>Complete type scale — raw <code>&lt;ui-content&gt;</code></h2>
-	<p class="note">A full-width reference of the <em>existing</em> type system, built from bare <code>&lt;ui-content&gt;</code> elements (no card, no grid). Three parts: the independent <strong>headline ramp</strong> (<code>hl()</code>), the <strong>body ramp</strong> (<code>scl()</code>), and the <strong>per-part proportional stack</strong>. Only <code>hl()</code> has its own size steps — every other part rides the body size (<code>--ui-content-fs</code>) × a fixed factor.</p>
-
-	<h3>1 · Headline ramp — <code>hl(&lt;size&gt;)</code></h3>
-	<p class="note"><code>hl()</code> moves the headline stop <strong>only</strong>; the body line below holds its reading size at every step, so the two ramps are visibly decoupled.</p>
-	<div class="stack">
-		<ui-content content="hl(sm)">
-			<small data-part="eyebrow">hl(sm)</small>
-			<h2 data-part="headline">The five boxing wizards jump quickly</h2>
-			<p data-part="summary">Body copy holds a constant reading size while the headline steps through the ramp.</p>
-		</ui-content>
-		<ui-content content="hl(md)">
-			<small data-part="eyebrow">hl(md) — default</small>
-			<h2 data-part="headline">The five boxing wizards jump quickly</h2>
-			<p data-part="summary">Body copy holds a constant reading size while the headline steps through the ramp.</p>
-		</ui-content>
-		<ui-content content="hl(lg)">
-			<small data-part="eyebrow">hl(lg)</small>
-			<h2 data-part="headline">The five boxing wizards jump quickly</h2>
-			<p data-part="summary">Body copy holds a constant reading size while the headline steps through the ramp.</p>
-		</ui-content>
-		<ui-content content="hl(xl)">
-			<small data-part="eyebrow">hl(xl)</small>
-			<h2 data-part="headline">The five boxing wizards jump quickly</h2>
-			<p data-part="summary">Body copy holds a constant reading size while the headline steps through the ramp.</p>
-		</ui-content>
-		<ui-content content="hl(2xl)">
-			<small data-part="eyebrow">hl(2xl)</small>
-			<h2 data-part="headline">The five boxing wizards jump</h2>
-			<p data-part="summary">Body copy holds a constant reading size while the headline steps through the ramp.</p>
-		</ui-content>
-		<ui-content content="hl(poster)">
-			<small data-part="eyebrow">hl(poster)</small>
-			<strong data-part="headline">Boxing wizards jump</strong>
-			<p data-part="summary">The display step — the headline reaches the poster clamp while the body copy stays perfectly readable.</p>
-		</ui-content>
-	</div>
-
-	<h3>2 · Body ramp — <code>scl(&lt;size&gt;)</code></h3>
-	<p class="note"><code>scl()</code> moves the whole block — body <em>and</em> headline. Here the summary paragraph shows the body <code>cqi</code> ramp stepping <code>sm → md → lg → xl</code> (the eyebrow / meta / tags scale off the same <code>--ui-content-fs</code>).</p>
-	<div class="stack">
-		<ui-content content="scl(sm)">
-			<small data-part="eyebrow">scl(sm)</small>
-			<p data-part="summary">Body copy at the small step — the whole block scales down together for dense, metadata-heavy contexts.</p>
-		</ui-content>
-		<ui-content content="scl(md)">
-			<small data-part="eyebrow">scl(md) — default</small>
-			<p data-part="summary">Body copy at the default step — the baseline reading size when no <code>scl()</code> is set.</p>
-		</ui-content>
-		<ui-content content="scl(lg)">
-			<small data-part="eyebrow">scl(lg)</small>
-			<p data-part="summary">Body copy at the large step — a roomier reading size for editorial and long-form contexts.</p>
-		</ui-content>
-		<ui-content content="scl(xl)">
-			<small data-part="eyebrow">scl(xl)</small>
-			<p data-part="summary">Body copy at the extra-large step — the hero tier, where even the body reads large.</p>
-		</ui-content>
-	</div>
-
-	<h3>3 · Per-part proportional stack</h3>
-	<p class="note">Every supporting part is a <strong>fixed multiple of the body size</strong> (<code>--ui-content-fs</code>) — so the whole block scales as one when you change <code>scl()</code>. Only <code>hl()</code> has independent size steps; these factors are not tokens, they are the built-in ratios. Shown here at <code>scl(md)</code>:</p>
-	<div class="stack">
-		<ui-content content="scl(md)">
-			<small data-part="eyebrow">eyebrow — ×0.78</small>
-			<h2 data-part="headline">headline — the hl() ramp (independent)</h2>
-			<p data-part="subheadline">subheadline — ×0.88</p>
-			<p data-part="summary">summary — ×1.0 (the body size itself; everything else is relative to this)</p>
-			<p data-part="meta">meta / caption — ×0.75</p>
-			<address data-part="byline"><span>byline — ×0.82</span></address>
-			<ul data-part="tags"><li><a href="#">tags</a></li><li><a href="#">×0.72</a></li></ul>
-			<footer data-part="footer">footer — ×0.78</footer>
-		</ui-content>
-	</div>
 
 	<!-- ============================================================
 	     thm() — themes

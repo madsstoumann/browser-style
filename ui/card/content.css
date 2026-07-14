@@ -145,6 +145,22 @@
 	:where([content~="hl(2xl)"])    { --ui-content-headline: var(--ui-content-headline-2xl); }
 	:where([content~="hl(poster)"]) { --ui-content-headline: var(--ui-content-headline-poster); }
 	:where([content~="hl(shd)"])    { --ui-content-heading-text-shadow: var(--ui-content-text-shadow); }
+	/* hl(<font>) — heading font override (serif headline + sans body, etc). Disjoint
+	   from hl()'s size/tone/weight/flag args, so it composes on the same token. */
+	:where([content~="hl(body)"])   { --ui-content-heading-font: var(--font-body); }
+	:where([content~="hl(head)"])   { --ui-content-heading-font: var(--font-heading); }
+	:where([content~="hl(serif)"])  { --ui-content-heading-font: var(--font-serif); }
+	:where([content~="hl(mono)"])   { --ui-content-heading-font: var(--font-mono); }
+	:where([content~="hl(form)"])   { --ui-content-heading-font: var(--font-form); }
+
+	/* fnt() — container font family (the whole text column). head/serif/mono/form/body
+	   map to the global --font-* tokens. A headline follows this unless hl(<font>) overrides. */
+	:where([content~="fnt(body)"])  { --ui-content-font: var(--font-body); }
+	:where([content~="fnt(head)"])  { --ui-content-font: var(--font-heading); }
+	:where([content~="fnt(serif)"]) { --ui-content-font: var(--font-serif); }
+	:where([content~="fnt(mono)"])  { --ui-content-font: var(--font-mono); }
+	:where([content~="fnt(form)"])  { --ui-content-font: var(--font-form); }
+
 	/* hl(grad) — clip the WHOLE headline to the gradient (styled with the parts below,
 	   next to the inner-<b> gradient it reuses --ui-content-headline-gradient). */
 
@@ -172,6 +188,7 @@
 		color: var(--ui-content-ov-ink, inherit);
 		display: flex;
 		flex-direction: column;
+		font-family: var(--ui-content-font, var(--font-body));
 		font-size: var(--ui-content-fs, var(--ui-content-fs-md));
 		gap: var(--ui-content-gap, 1em);
 		justify-content: var(--ui-content-ov-justify, normal);
@@ -262,6 +279,7 @@
 	   `& > * { margin: 0 }` reset (0,0,0). Both vars stay overridable. */
 	:where(ui-content) :is([data-part="headline"], h2, h3, h4, h5, h6) {
 		color: var(--ui-content-headline-ink, var(--ui-content-heading-ink, inherit));
+		font-family: var(--ui-content-heading-font, var(--font-heading, inherit)); /* --font-heading = inherit → follows fnt() unless hl(<font>) sets it */
 		font-size: var(--ui-content-headline, var(--ui-content-headline-md));
 		font-weight: var(--ui-content-headline-weight, var(--ui-content-heading-weight, var(--font-weight-bold, 700)));
 		letter-spacing: var(--tracking-tight, -0.01em);
