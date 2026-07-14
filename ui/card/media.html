@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="The &lt;ui-media&gt; frame tokens: asr() aspect-ratio, rds() radius, obp() object-position, obf() object-fit, flp() flip and the scm scrim. Shapes, hover, tint, furniture, carousel and video have their own demo pages.">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../play/ui-play.css">
@@ -14,23 +15,6 @@
 	<link rel="stylesheet" href="ui-card.css">
 	<link rel="stylesheet" href="media.shapes.css">
 	<style>
-		.grid {
-			display: grid;
-			gap: var(--spacing-lg);
-			grid-template-columns: 1fr;
-			margin-block-end: var(--spacing-2xl);
-		}
-		@media (min-width: 540px) {
-			.grid-2 { grid-template-columns: repeat(2, 1fr); }
-			.grid-3 { grid-template-columns: repeat(3, 1fr); }
-			.grid-4 { grid-template-columns: repeat(2, 1fr); }
-		}
-		@media (min-width: 900px) {
-			.grid-4 { grid-template-columns: repeat(4, 1fr); }
-		}
-		/* .note { color: var(--color-text-secondary, #666); } */
-		.hero { margin-block-end: var(--spacing-2xl); }
-		code { font-size: 0.9em; }
 		/* scm() demo: scrim colour = a hue (colour dropdown) at an alpha (intensity
 		   dropdown); the size dropdown sets the gradient stops. All three write CSS
 		   vars onto #scrim-grid, which the cards inherit. */
@@ -56,10 +40,11 @@
 	<!-- ============================================================
 	     asr() — aspect-ratio
 	     ============================================================ -->
+	<hr>
 	<h2>Aspect-ratio — <code>asr()</code></h2>
 	<p>Sets the media frame's <code>aspect-ratio</code> (and drops its <code>min-block-size</code> so the ratio wins).</p>
 	<p>Without an <code>asr()</code>, the frame falls back to its natural image height (bounded by <code>--ui-media-min</code>, default <code>12.5rem</code>).</p>
-	<div class="grid grid-4">
+	<lay-out md="columns(2)" lg="columns(4)">
 		<ui-media media="asr(1/1) chip(bs)"><img src="/assets/images/destinations.png" alt=""><ui-chip>asr(1/1)</ui-chip></ui-media>
 		<ui-media media="asr(6/7) chip(bs)"><img src="/assets/images/destinations.png" alt=""><ui-chip>asr(6/7)</ui-chip></ui-media>
 		<ui-media media="asr(3/4) chip(bs)"><img src="/assets/images/destinations.png" alt=""><ui-chip>asr(3/4)</ui-chip></ui-media>
@@ -68,15 +53,17 @@
 		<ui-media media="asr(3/2) chip(bs)"><img src="/assets/images/destinations.png" alt=""><ui-chip>asr(3/2)</ui-chip></ui-media>
 		<ui-media media="asr(16/9) chip(bs)"><img src="/assets/images/destinations.png" alt=""><ui-chip>asr(16/9)</ui-chip></ui-media>
 		<ui-media media="asr(21/9) chip(bs)"><img src="/assets/images/destinations.png" alt=""><ui-chip>asr(21/9)</ui-chip></ui-media>
-	</div>
+	</lay-out>
 	
 
 	<!-- ============================================================
 	     rds() — corners (standalone <ui-media>)
 	     ============================================================ -->
+	
+	<hr>
 	<h2>Radius — <code>rds()</code></h2>
 	<p>Inside <code>&lt;ui-card&gt;</code>/<code>&lt;ui-reveal&gt;</code> the parent rounds and clips the frame, so you don't set corners on the media. <strong>Standalone</strong> <code>&lt;ui-media&gt;</code> can round its own corners with <code>rds()</code> — the same scale as the card's <code>variant="rds(…)"</code>: <code>sm md lg xl 2xl full pill</code>, plus <code>-sq</code> squircle variants (<code>sm-sq md-sq lg-sq xl-sq</code>) that add a superellipse <code>corner-shape</code>.</p>
-	<div class="grid grid-4">
+	<lay-out md="columns(2)" lg="columns(4)">
 		<ui-media media="asr(4/3) rds(none) chip(bc)"><img src="/assets/images/river.png" alt=""><ui-chip>rds(none)</ui-chip></ui-media>
 		<ui-media media="asr(4/3) rds(sm) chip(bc)"><img src="/assets/images/river.png" alt=""><ui-chip>rds(sm)</ui-chip></ui-media>
 		<ui-media media="asr(4/3) rds(md) chip(bc)"><img src="/assets/images/river.png" alt=""><ui-chip>rds(md)</ui-chip></ui-media>
@@ -89,14 +76,15 @@
 		<ui-media media="asr(4/3) rds(md-sq) chip(bc)"><img src="/assets/images/river.png" alt=""><ui-chip>rds(md-sq)</ui-chip></ui-media>
 		<ui-media media="asr(4/3) rds(lg-sq) chip(bc)"><img src="/assets/images/river.png" alt=""><ui-chip>rds(lg-sq)</ui-chip></ui-media>
 		<ui-media media="asr(4/3) rds(xl-sq) chip(bc)"><img src="/assets/images/river.png" alt=""><ui-chip>rds(xl-sq)</ui-chip></ui-media>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     obp() — object-position
 	     ============================================================ -->
+	<hr>
 	<h2>Object-position — <code>obp()</code></h2>
 	<p>When the frame's ratio crops the image, <code>obp()</code> picks <em>which</em> part stays in view — the same 9-code grid used everywhere else: <code>tl tc tr · cl cc cr · bl bc br</code>. All nine below share one square frame and one wide image.</p>
-	<div class="grid grid-3">
+	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card variant="vis(media)" media="asr(1/1) obp(tl) chip(tc)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(tl)</ui-chip></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) obp(tc) chip(tc)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(tc)</ui-chip></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) obp(tr) chip(tc)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(tr)</ui-chip></ui-media></cq-box></ui-card>
@@ -106,31 +94,31 @@
 		<ui-card variant="vis(media)" media="asr(1/1) obp(bl) chip(tc)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(bl)</ui-chip></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) obp(bc) chip(tc)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(bc)</ui-chip></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) obp(br) chip(tc)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(br)</ui-chip></ui-media></cq-box></ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     object-fit token
 	     ============================================================ -->
 	<h2>Object-fit — <code>obf()</code></h2>
 	<p>The frame defaults to <code>object-fit: cover</code> (fill &amp; crop). Override per instance with the <code>obf()</code> token (or the <code>--ui-media-fit</code> custom property): <code>contain</code> (fit whole image), <code>fill</code> (stretch), <code>none</code> (intrinsic size, cropped).</p>
-	<div class="grid grid-4">
+	<lay-out md="columns(2)" lg="columns(4)">
 		<ui-card variant="vis(media)" media="asr(1/1) chip(bs)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-chip>cover (default)</ui-chip></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) obf(contain) chip(bs)" style="--ui-media-bg: var(--color-surface-alt, #f1f1f1);"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-chip>contain</ui-chip></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) obf(fill) chip(bs)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-chip>fill</ui-chip></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) obf(none) chip(bs)" style="--ui-media-bg: var(--color-surface-alt, #f1f1f1);"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-chip>none</ui-chip></ui-media></cq-box></ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     flp() — flip / mirror
 	     ============================================================ -->
 	<h2>Flip — <code>flp()</code></h2>
 	<p>Mirror the media without editing the asset. <code>flp(h)</code> flips horizontally, <code>flp(v)</code> vertically, <code>flp(hv)</code> both. It uses <code>transform</code> on the image, separate from the scale/translate that <code>hov()</code> drives, so flip and hover compose.</p>
-	<div class="grid grid-4">
+	<lay-out md="columns(2)" lg="columns(4)">
 		<ui-card variant="vis(media)" media="asr(4/3) chip(bs)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""><ui-chip>original</ui-chip></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(4/3) flp(h) chip(bs)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""><ui-chip>flp(h)</ui-chip></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(4/3) flp(v) chip(bs)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""><ui-chip>flp(v)</ui-chip></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(4/3) flp(hv) chip(bs)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""><ui-chip>flp(hv)</ui-chip></ui-media></cq-box></ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     scm() / ovr() — scrim over media
@@ -163,8 +151,16 @@
 				<option value="solid">solid (1)</option>
 			</select>
 		</label>
+		<label>Text-shadow
+			<select id="scrim-shadow">
+				<option value="none" selected>none (default)</option>
+				<option value="soft">soft</option>
+				<option value="strong">strong</option>
+				<option value="solid">solid</option>
+			</select>
+		</label>
 	</div>
-	<div class="grid grid-3 scrim-demo" id="scrim-grid">
+	<lay-out md="columns(2)" lg="columns(3)" class="scrim-demo" id="scrim-grid">
 		<ui-card variant="ovr(tl)" media="asr(1/1) scm(ts)" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(ts)</small><strong data-part="headline">Farm to table</strong></ui-content></cq-box></ui-card>
 		<ui-card variant="ovr(tc)" media="asr(1/1) scm(tc)" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(tc)</small><strong data-part="headline">Farm to table</strong></ui-content></cq-box></ui-card>
 		<ui-card variant="ovr(tr)" media="asr(1/1) scm(te)" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(te)</small><strong data-part="headline">Farm to table</strong></ui-content></cq-box></ui-card>
@@ -174,7 +170,7 @@
 		<ui-card variant="ovr(bl)" media="asr(1/1) scm(bs)" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(bs)</small><strong data-part="headline">Farm to table</strong></ui-content></cq-box></ui-card>
 		<ui-card variant="ovr(bc)" media="asr(1/1) scm(bc)" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(bc)</small><strong data-part="headline">Farm to table</strong></ui-content></cq-box></ui-card>
 		<ui-card variant="ovr(br)" media="asr(1/1) scm(be)" content="scl(sm)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">scm(be)</small><strong data-part="headline">Farm to table</strong></ui-content></cq-box></ui-card>
-	</div>
+	</lay-out>
 	<script>
 		(() => {
 			const grid = document.getElementById('scrim-grid');
@@ -187,6 +183,12 @@
 			};
 			const ALPHA = { sheer: '0.35', lgt: '0.55', med: '0.78', drk: '0.92', solid: '1' };
 			const HUE = { default: '0 0 0', hotpink: '255 105 180', white: '255 255 255', midnight: '20 24 82' };
+			const SHADOW = {
+				none: 'none',
+				soft: '0 1px 3px color-mix(in oklab, #000 55%, transparent)',
+				strong: '0 1px 4px color-mix(in oklab, #000 80%, transparent), 0 2px 10px color-mix(in oklab, #000 60%, transparent)',
+				solid: '0 2px 0 contrast-color(currentColor)',
+			};
 			const setSize = (v) => { for (const [k, val] of Object.entries(SIZE[v])) grid.style.setProperty(k, val); };
 			const setIntensity = (v) => {
 				grid.style.setProperty('--scrim-a', ALPHA[v]);
@@ -197,10 +199,16 @@
 				grid.style.setProperty('--scrim-hue', HUE[v]);
 				grid.style.setProperty('--ui-card-overlay-ink', v === 'white' ? '#111' : '#fff');
 			};
+			// each <ui-card> has content="scl(sm)", so [content] re-declares
+			// --ui-content-text-shadow to its default on the card itself — a grid-level
+			// override never reaches it. Set it per-card (inline beats the :where rule).
+			const cards = grid.querySelectorAll(':scope > ui-card');
+			const setShadow = (v) => cards.forEach((c) => c.style.setProperty('--ui-content-text-shadow', SHADOW[v]));
 			document.getElementById('scrim-color').addEventListener('change', (e) => setColor(e.target.value));
 			document.getElementById('scrim-size').addEventListener('change', (e) => setSize(e.target.value));
 			document.getElementById('scrim-intensity').addEventListener('change', (e) => setIntensity(e.target.value));
-			setColor('default'); setSize('md'); setIntensity('med');
+			document.getElementById('scrim-shadow').addEventListener('change', (e) => setShadow(e.target.value));
+			setColor('default'); setSize('md'); setIntensity('med'); setShadow('none');
 		})();
 	</script>
 
@@ -210,7 +218,7 @@
 	     ============================================================ -->
 	<!-- <h2>Responsive images <code>&lt;ui-media&gt;</code> JS</h2>
 	<p>Loading <code>ui-media.js</code> turns <code>&lt;ui-media&gt;</code> into a light-DOM web component that upgrades its <code>&lt;img&gt;</code> children — it sets <code>loading</code>/<code>decoding</code>/<code>sizes="auto"</code> everywhere, and on the deployed <strong>browser.style</strong> host it injects a Cloudflare <code>/cdn-cgi/image/</code> <code>srcset</code> (heights derived from the <code>asr()</code> token). Locally the plain <code>src</code> is left alone — so the same root-relative <code>/assets/images/…</code> markup works in dev and gets transformed in production. It's pure enhancement: with no JS the frame still renders. The <code>cdn="on"</code> attribute (or <code>globalThis.uiMedia.cdn</code>) forces the upgrade so you can preview the generated URLs locally.</p>
-	<div class="grid grid-3">
+	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card variant="col" media="asr(16/9)" content="scl(sm)">
 			<cq-box>
 				<ui-media cdn="on"><img src="/assets/images/destinations.png" alt=""></ui-media>
@@ -229,7 +237,7 @@
 				<ui-content><small data-part="eyebrow">quality + breakpoints override</small><h2 data-part="headline">custom params</h2></ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 	<p>Inspect the <code>&lt;img&gt;</code> in DevTools: each shows a <code>srcset</code> of <code>/cdn-cgi/image/format=avif,quality=80,fit=cover,width=…,height=…/assets/images/… NNNw</code> candidates (they 404 locally — that's expected; the URL strings are what matter). Remove <code>cdn="on"</code> and they stay as plain local images.</p> -->
 
 	<!-- cursor-tracked hover for hov(track)/hov(drift) — idle until hovered -->

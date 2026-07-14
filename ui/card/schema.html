@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="All 25 legacy content-card schema.org types re-created with the modern &lt;ui-card&gt; engine — inline microdata (itemscope/itemtype/itemprop), no JSON-LD, no JavaScript.">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../play/ui-play.css">
@@ -16,19 +17,7 @@
 	<link rel="stylesheet" href="../blockquote/ui-blockquote.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
-		.grid {
-			display: grid;
-			gap: var(--spacing-lg);
-			grid-template-columns: 1fr;
-			margin-block-end: var(--spacing-2xl);
-		}
-		@media (min-width: 540px) {
-			.grid-2 { grid-template-columns: repeat(2, 1fr); }
-			.grid-3 { grid-template-columns: repeat(3, 1fr); }
-		}
-		@media (min-width: 900px) {
-			.grid-4 { grid-template-columns: repeat(4, 1fr); }
-		}
+		body > lay-out { margin-block-end: var(--spacing-2xl); }
 		.stack { display: grid; gap: var(--spacing-lg); margin-block-end: var(--spacing-2xl); }
 		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
 		code { font-size: 0.9em; }
@@ -62,7 +51,7 @@
 	     ============================================================ -->
 	<h2>Content — <code>CreativeWork</code> (fallback)</h2>
 	<p class="note">The plain envelope, no <code>details</code>: eyebrow, headline, summary, tags, actions. Unknown <code>schemaType</code> values fall back to this.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/CreativeWork">
 			<cq-box>
 				<ui-media><img src="/assets/images/popovers.png" alt="Abstract illustration of layered UI panels" itemprop="image"></ui-media>
@@ -75,14 +64,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     article — Article
 	     ============================================================ -->
 	<h2>Article — <code>Article</code></h2>
 	<p class="note">Envelope only: byline (author → <code>Person</code>), published date, reading time, engagement (<code>InteractionCounter</code>).</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Article">
 			<cq-box>
 				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" itemprop="image"></ui-media>
@@ -105,7 +94,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     news — NewsArticle
@@ -140,7 +129,7 @@
 	     ============================================================ -->
 	<h2>Quote — <code>Quotation</code></h2>
 	<p class="note">Envelope <code>summary</code> as <code>&lt;blockquote itemprop="text"&gt;</code> + author. Proposed part: <code>quote</code>.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="vis(content) thm(subtle)" content="scl(lg)" itemscope itemtype="https://schema.org/Quotation">
 			<cq-box>
 				<ui-content>
@@ -153,14 +142,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     product — Product
 	     ============================================================ -->
 	<h2>Product — <code>Product</code></h2>
 	<p class="note">Offer + AggregateRating, discount <code>&lt;ui-sticker&gt;</code>, save toggle. Proposed parts: <code>price</code>, <code>rating</code>.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(red) sticker(sh:burst) save(ts)" itemscope itemtype="https://schema.org/Product">
 			<cq-box>
 				<ui-media id="product-1-media">
@@ -193,14 +182,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     event — Event
 	     ============================================================ -->
 	<h2>Event — <code>Event</code></h2>
 	<p class="note">Overlay composition — <code>ovr(bl)</code> + scrim. Location → <code>Place</code> → <code>PostalAddress</code>, organizer → <code>Organization</code>.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="ovr(bl)" media="asr(4/3) scm" content="scl(lg)" itemscope itemtype="https://schema.org/Event">
 			<cq-box>
 				<ui-media><img src="/assets/images/websummit.png" alt="Conference stage with purple lights" itemprop="image"></ui-media>
@@ -217,14 +206,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     recipe — Recipe
 	     ============================================================ -->
 	<h2>Recipe — <code>Recipe</code></h2>
 	<p class="note">Ingredients as proposed part <code>list</code>; instructions as a nested <code>&lt;ui-accordion&gt;</code> with <code>HowToStep</code> items.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Recipe">
 			<cq-box>
 				<ui-media><img src="/assets/images/carbonara.png" alt="Plate of spaghetti carbonara" itemprop="image"></ui-media>
@@ -258,14 +247,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     review — Review
 	     ============================================================ -->
 	<h2>Review — <code>Review</code></h2>
 	<p class="note">Summary emits <code>reviewBody</code>; rating → <code>Rating</code>, reviewer → <code>Person</code>, reviewed item → <code>Product</code>.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="row spl(1/2)" media="asr(1/1)" itemscope itemtype="https://schema.org/Review">
 			<cq-box>
 				<ui-media><img src="/assets/images/soundwavemini.png" alt="SoundWave Mini speaker"></ui-media>
@@ -289,14 +278,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     job — JobPosting
 	     ============================================================ -->
 	<h2>Job — <code>JobPosting</code></h2>
 	<p class="note">Headline emits <code>title</code>. Salary → <code>MonetaryAmount</code> → <code>QuantitativeValue</code>; requirements/benefits in a nested <code>&lt;ui-accordion&gt;</code>.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="vis(content)" itemscope itemtype="https://schema.org/JobPosting">
 			<cq-box>
 				<ui-content>
@@ -347,7 +336,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     course — Course
@@ -389,7 +378,7 @@
 	     ============================================================ -->
 	<h2>Booking — <code>Reservation</code></h2>
 	<p class="note">Service → <code>reservationFor</code>, venue → <code>provider</code>, hourly rate with <code>totalPrice</code>/<code>priceCurrency</code> metas.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Reservation">
 			<cq-box>
 				<ui-media><img src="/assets/images/brewandbean.png" alt="Bright café interior with workspace tables" itemprop="image"></ui-media>
@@ -413,14 +402,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     poll — Question
 	     ============================================================ -->
 	<h2>Poll — <code>Question</code></h2>
 	<p class="note">Proposed part <code>options</code>: each answer is a <code>&lt;label&gt;</code> + <code>&lt;progress&gt;</code>, emitted as <code>suggestedAnswer</code> → <code>Answer</code>.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="vis(content)" itemscope itemtype="https://schema.org/Question">
 			<cq-box>
 				<ui-content>
@@ -445,14 +434,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     profile — Person
 	     ============================================================ -->
 	<h2>Profile — <code>Person</code></h2>
 	<p class="note">Square portrait, skills as <code>tags</code>, contact links as <code>contactPoint</code>.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="row spl(1/2)" media="asr(1/1) obp(tc)" itemscope itemtype="https://schema.org/Person">
 			<cq-box>
 				<ui-media><img src="/assets/images/janesmith.png" alt="Portrait of Jane Smith" itemprop="image"></ui-media>
@@ -470,14 +459,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     faq — FAQPage
 	     ============================================================ -->
 	<h2>FAQ — <code>FAQPage</code></h2>
 	<p class="note">The type that moves <em>out</em> of <code>&lt;ui-content&gt;</code> parts: a nested <code>&lt;ui-accordion&gt;</code>, each item <code>mainEntity</code> → <code>Question</code> / <code>acceptedAnswer</code> → <code>Answer</code>.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="vis(content)" itemscope itemtype="https://schema.org/FAQPage">
 			<cq-box>
 				<ui-content>
@@ -506,14 +495,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     timeline — EventSeries
 	     ============================================================ -->
 	<h2>Timeline — <code>EventSeries</code></h2>
 	<p class="note">Proposed part <code>timeline</code>: an <code>&lt;ol&gt;</code> where each entry is <code>subEvent</code> → <code>Event</code>.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="vis(content)" itemscope itemtype="https://schema.org/EventSeries">
 			<cq-box>
 				<ui-content>
@@ -536,14 +525,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     gallery — ImageGallery
 	     ============================================================ -->
 	<h2>Gallery — <code>ImageGallery</code></h2>
 	<p class="note">Multiple media items become a carousel — <code>nav(dot)</code> — each image carrying <code>itemprop="image"</code>.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9) nav(dot)" itemscope itemtype="https://schema.org/ImageGallery">
 			<cq-box>
 				<ui-media>
@@ -560,14 +549,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     statistic — Observation
 	     ============================================================ -->
 	<h2>Statistic — <code>Observation</code></h2>
 	<p class="note">Proposed part <code>stat</code>: big number + unit + trend, value → <code>QuantitativeValue</code>.</p>
-	<div class="grid grid-3">
+	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card variant="vis(content) thm(dark)" itemscope itemtype="https://schema.org/Observation">
 			<cq-box>
 				<ui-content>
@@ -594,14 +583,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     achievement — EducationalOccupationalCredential
 	     ============================================================ -->
 	<h2>Achievement — <code>EducationalOccupationalCredential</code></h2>
 	<p class="note">Burst sticker, issuer → <code>recognizedBy</code>, hidden <code>dateCreated</code>/<code>expires</code>/<code>identifier</code> metas.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9) sticker(te) sticker(green)" itemscope itemtype="https://schema.org/EducationalOccupationalCredential">
 			<cq-box>
 				<ui-media>
@@ -621,14 +610,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     announcement — SpecialAnnouncement
 	     ============================================================ -->
 	<h2>Announcement — <code>SpecialAnnouncement</code></h2>
 	<p class="note">Dark theme + priority chip pattern via eyebrow; audience → <code>Audience</code>.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="vis(content) thm(dark)" itemscope itemtype="https://schema.org/SpecialAnnouncement">
 			<cq-box>
 				<ui-content>
@@ -644,7 +633,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     business — LocalBusiness
@@ -689,7 +678,7 @@
 	     ============================================================ -->
 	<h2>Comparison — <code>ItemList</code></h2>
 	<p class="note">Items as <code>ListItem</code> with position metas; recommendation in the footer.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="vis(content)" itemscope itemtype="https://schema.org/ItemList">
 			<cq-box>
 				<ui-content>
@@ -717,14 +706,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     contact — ContactPoint
 	     ============================================================ -->
 	<h2>Contact — <code>ContactPoint</code></h2>
 	<p class="note"><code>contactType</code>/<code>hoursAvailable</code> metas; each method a real <code>mailto:</code>/<code>tel:</code> link.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="row-r spl(2/1)" media="asr(1/1)" itemscope itemtype="https://schema.org/ContactPoint">
 			<cq-box>
 				<ui-media><img src="/assets/images/world.png" alt="Illustrated world map"></ui-media>
@@ -742,14 +731,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     location — Place
 	     ============================================================ -->
 	<h2>Location — <code>Place</code></h2>
 	<p class="note">Overlay over a destination shot; address + geo, amenities as <code>list</code>.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="ovr(bl)" media="asr(3/4) scm" content="scl(lg)" itemscope itemtype="https://schema.org/Place">
 			<cq-box>
 				<ui-media><img src="/assets/images/destinations.png" alt="Coastal viewpoint with turquoise water" itemprop="image"></ui-media>
@@ -768,14 +757,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     membership — Offer
 	     ============================================================ -->
 	<h2>Membership — <code>Offer</code></h2>
 	<p class="note">Dark theme, <code>PriceSpecification</code>, features as check-<code>list</code>.</p>
-	<div class="grid grid-3">
+	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card variant="vis(content) thm(dark)" itemscope itemtype="https://schema.org/Offer">
 			<cq-box>
 				<ui-content>
@@ -797,14 +786,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     social — SocialMediaPosting
 	     ============================================================ -->
 	<h2>Social — <code>SocialMediaPosting</code></h2>
 	<p class="note">Byline + post text as <code>quote</code> part, hashtags as tags, engagement as three <code>InteractionCounter</code>s.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/SocialMediaPosting">
 			<cq-box>
 				<ui-media><img src="/assets/images/elephant.png" alt="Elephant crossing a savanna road" itemprop="image"></ui-media>
@@ -835,14 +824,14 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     software — SoftwareApplication (flip reveal)
 	     ============================================================ -->
 	<h2>Software — <code>SoftwareApplication</code></h2>
 	<p class="note">The flipside pattern: <code>&lt;ui-reveal type="flip"&gt;</code> — front is box art + name, the back <code>&lt;ui-content&gt;</code> holds specs, developer and offer. Microdata sits on the reveal root so it survives either face.</p>
-	<div class="grid grid-3">
+	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-reveal icon="top right sm" icon-close="dark" type="flip" variant="ovr(bl) rds(lg-sq)" media="asr(3/4) hov(zoom) scm" itemscope itemtype="https://schema.org/SoftwareApplication">
 			<details name="software-flip">
 				<summary>
@@ -875,6 +864,6 @@
 				</ui-content>
 			</details>
 		</ui-reveal>
-	</div>
+	</lay-out>
 </body>
 </html>

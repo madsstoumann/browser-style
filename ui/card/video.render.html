@@ -6,14 +6,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="video.html recreated by render.js — every frame and card is built at runtime from UCF data in data/demo/ plus the video presets in data/card.presets.demo.json.">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../play/ui-play.css">
 	<link rel="stylesheet" href="../icon/index.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
-		.grid { display: grid; gap: var(--spacing-lg); grid-template-columns: 1fr; margin-block-end: var(--spacing-2xl); }
-		@media (min-width: 540px) { .grid-2 { grid-template-columns: repeat(2, 1fr); } .grid-3 { grid-template-columns: repeat(3, 1fr); } }
+		main > lay-out { margin-block-end: var(--spacing-2xl); }
 		.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-block: var(--spacing-2xl) var(--spacing-md); }
 		.section-head h2 { margin: 0; }
 		.section-head a { color: var(--color-accent); font-weight: var(--font-weight-medium, 500); }
@@ -64,7 +64,13 @@
 		const code = (text) => el('code', null, [text]);
 		const heading = (parts) => el('h2', null, parts);
 		const note = (parts) => el('p', 'note', parts);
-		const grid = (cls, cards) => el('div', `grid ${cls}`, cards);
+		const grid = (cls, cards) => {
+			const node = document.createElement('lay-out');
+			if (cls === 'grid-2') node.setAttribute('md', 'columns(2)');
+			else if (cls === 'grid-3') { node.setAttribute('md', 'columns(2)'); node.setAttribute('lg', 'columns(3)'); }
+			for (const card of cards) node.append(card);
+			return node;
+		};
 
 		/* ── Native video ── */
 		main.append(

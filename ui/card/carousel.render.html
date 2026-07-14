@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="carousel.html recreated by render.js from UCF data — every card is data + a preset from presets.demo.carousel.json.">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../play/ui-play.css">
@@ -14,15 +15,7 @@
 	<link rel="stylesheet" href="../reveal/ui-reveal.css">
 	<link rel="stylesheet" href="../accordion/ui-accordion.css">
 	<style>
-		.grid {
-			display: grid;
-			gap: var(--spacing-lg);
-			grid-template-columns: 1fr;
-			margin-block-end: var(--spacing-2xl);
-		}
-		@media (min-width: 540px) {
-			.grid-2 { grid-template-columns: repeat(2, 1fr); }
-		}
+		main > lay-out { margin-block-end: var(--spacing-2xl); }
 		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
 		code { font-size: 0.9em; }
 		.cell { align-content: start; display: grid; gap: var(--spacing-xs, 0.5rem); }
@@ -171,8 +164,8 @@
 		const main = document.querySelector('main');
 		for (const section of sections) {
 			main.append(heading(section.h, section.title), note(section.note));
-			const grid = document.createElement('div');
-			grid.className = 'grid grid-2';
+			const grid = document.createElement('lay-out');
+			grid.setAttribute('md', 'columns(2)');
 			for (const [n, presetId] of section.cards) {
 				const cell = document.createElement('div');
 				cell.className = 'cell';

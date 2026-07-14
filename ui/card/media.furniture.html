@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Overlay furniture inside &lt;ui-media&gt;: chip (pill label), sticker (disc / burst), save (bookmark toggle) and play — positioned via the 9-code grid and themed via the media= token.">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../play/ui-play.css">
@@ -13,18 +14,7 @@
 	<link rel="stylesheet" href="../icon/index.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
-		.grid {
-			display: grid;
-			gap: var(--spacing-lg);
-			grid-template-columns: 1fr;
-			margin-block-end: var(--spacing-2xl);
-		}
-		@media (min-width: 540px) {
-			.grid-3 { grid-template-columns: repeat(2, 1fr); }
-		}
-		@media (min-width: 900px) {
-			.grid-3 { grid-template-columns: repeat(3, 1fr); }
-		}
+		body > lay-out { margin-block-end: var(--spacing-2xl); }
 		code { font-size: 0.9em; }
 	</style>
 </head>
@@ -41,7 +31,7 @@
 		size with <code>chip(sm|lg|xl|2xl)</code>. The <code>light</code>/<code>outline</code> variants are
 		addressable too: <code>chip(lgt)</code> (tinted surface) and <code>chip(out)</code> (bordered).</p>
 	<p>Full component: <a href="../chip/">ui/chip</a>.</p>
-	<div class="grid grid-3">
+	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card variant="col" media="asr(4/3) chip(bs) chip(green)">
 			<cq-box>
 				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-chip>New</ui-chip></ui-media>
@@ -60,10 +50,10 @@
 				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">chip(tc) chip(accent)</h2></ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<p>Variant + hue from the token — <code>chip(lgt)</code> / <code>chip(out)</code> combined with a hue and size:</p>
-	<div class="grid grid-3">
+	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card variant="col" media="asr(4/3) chip(bs) chip(lgt) chip(blue) chip(lg)">
 			<cq-box>
 				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-chip>Premium ★</ui-chip></ui-media>
@@ -82,7 +72,7 @@
 				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">chip(lgt) chip(2xl)</h2></ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     Sticker — <ui-sticker>
@@ -90,7 +80,7 @@
 	<h2>Sticker — <code>&lt;ui-sticker&gt;</code></h2>
 	<p>A disc, or a starburst with <code>variant="sh:burst"</code> (good for discounts). Position + hue via <code>sticker(&lt;pos&gt;)</code> / <code>sticker(&lt;hue&gt;)</code>. A card can address one chip and one sticker together.</p>
 	<p>Full component: <a href="../sticker/">ui/sticker</a>.</p>
-	<div class="grid grid-3">
+	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(red) chip(be) chip(green)">
 			<cq-box>
 				<ui-media>
@@ -120,10 +110,10 @@
 				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">Accent chip + orange sticker</h2></ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<p>The full 9-position grid (<code>ts tc te · cs cc ce · bs bc be</code>), each a red <code>&lt;ui-sticker&gt;</code> disc with <code>&lt;small&gt;</code> + <code>&lt;strong&gt;</code> content. Top row = corners + top-centre; middle row = the centre line (<code>cs cc ce</code>); bottom row = bottom edge.</p>
-	<div class="grid grid-3">
+	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card variant="vis(media)" media="asr(1/1) sticker(ts) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>TS</strong></ui-sticker></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) sticker(tc) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>TC</strong></ui-sticker></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) sticker(te) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>TE</strong></ui-sticker></ui-media></cq-box></ui-card>
@@ -133,25 +123,25 @@
 		<ui-card variant="vis(media)" media="asr(1/1) sticker(bs) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>BS</strong></ui-sticker></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) sticker(bc) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>BC</strong></ui-sticker></ui-media></cq-box></ui-card>
 		<ui-card variant="vis(media)" media="asr(1/1) sticker(be) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>BE</strong></ui-sticker></ui-media></cq-box></ui-card>
-	</div>
+	</lay-out>
 
 	<p>The <strong>shape</strong> can come from the token too — <code>sticker(burst|spark|sunburst|heart|blob|text)</code>,
 		plus <code>sticker(spl)</code> / <code>sticker(spr)</code> for the speech bubbles — so a plain
 		<code>&lt;ui-sticker&gt;</code> needs no <code>variant</code> attribute. Combine with
 		<code>sticker(&lt;hue&gt;)</code> and <code>sticker(&lt;pos&gt;)</code>.</p>
-	<div class="grid grid-3">
+	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(sh:burst) sticker(green)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-sticker><small>SAVE</small><strong>20%</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">sticker(sh:burst)</h2></ui-content></cq-box></ui-card>
 		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(sh:heart) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>XMAS</small><strong>$50</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(sh:heart)</h2></ui-content></cq-box></ui-card>
 		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(spl) sticker(blue)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-sticker><small>NEW</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">sticker(spl)</h2></ui-content></cq-box></ui-card>
-	</div>
+	</lay-out>
 
 	<p><code>sticker(fit)</code> uses native <code>text-fit</code> to grow every line to the box width — no fixed
 		font-size needed (progressive enhancement, Chrome 150+).</p>
-	<div class="grid grid-3">
+	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(blue)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-sticker><small>UP TO</small><strong>40%</strong><span>OFF</span></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">sticker(fit)</h2></ui-content></cq-box></ui-card>
 		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(sh:burst) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>MEGA</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(fit) + burst</h2></ui-content></cq-box></ui-card>
 		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(green)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-sticker><strong>NEW</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">sticker(fit) single line</h2></ui-content></cq-box></ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     Save — <ui-save>
@@ -166,7 +156,7 @@
 		inside an invoker <code>&lt;button command="--save" commandfor="&lt;card id&gt;"&gt;</code>; saved
 		state = the button's <code>aria-pressed</code>. Bookmark defaults to the accent colour.</p>
 	<p>Full component: <a href="../save/">ui/save</a>.</p>
-	<div class="grid grid-3">
+	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card id="card-heart" variant="col" media="asr(4/3) save(be)">
 			<cq-box>
 				<ui-media>
@@ -225,7 +215,7 @@
 					<ui-icon type="shape" shape="bookmark" variant="outline"></ui-icon></button></ui-save>
 			</ui-media></cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<script type="module">
 		// Invoker toggle glue for the save furniture (command does not bubble).
@@ -242,7 +232,7 @@
 	<h2>Play — <code>&lt;ui-play&gt;</code></h2>
 	<p>An interactive play button, default centred (<code>cc</code>); the glyph is a <code>&lt;ui-icon type="play-pause"&gt;</code> (morphs play↔pause). <code>variant="reveal"</code> hides it until the media is hovered/focused; <code>theme=</code> and <code>size=</code> apply. Card-only (interactive — never inside a reveal <code>&lt;summary&gt;</code>). Load <code>@browser.style/play</code> for the is-playing toggle, or point its <code>&lt;button&gt;</code> at a <code>[popover]</code> for a no-JS lightbox.</p>
 	<p>Full component: <a href="../play/">ui/play</a>.</p>
-	<div class="grid grid-3">
+	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
 				<ui-media>
@@ -270,7 +260,7 @@
 				<ui-content><small data-part="eyebrow">theme="red" size="sm"</small><h2 data-part="headline">Themed, small</h2></ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<script type="module" src="index.js"></script>
 </body>

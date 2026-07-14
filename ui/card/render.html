@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="All 26 card types rendered client-side by render.js from UCF data files in data/ — same markup and microdata as the hand-authored schema.html.">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../play/ui-play.css">
@@ -16,15 +17,7 @@
 	<link rel="stylesheet" href="../blockquote/ui-blockquote.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
-		.grid {
-			display: grid;
-			gap: var(--spacing-lg);
-			grid-template-columns: 1fr;
-			margin-block-end: var(--spacing-2xl);
-		}
-		@media (min-width: 540px) {
-			.grid-2 { grid-template-columns: repeat(2, 1fr); }
-		}
+		main > lay-out { margin-block-end: var(--spacing-2xl); }
 		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
 		code { font-size: 0.9em; }
 	</style>
@@ -65,8 +58,8 @@
 			code.textContent = `${SCHEMA_TYPES[ucf.fields.schemaType] || 'CreativeWork'} · ${presetId}`;
 			heading.append(`${name} — `, code);
 
-			const grid = document.createElement('div');
-			grid.className = 'grid grid-2';
+			const grid = document.createElement('lay-out');
+			grid.setAttribute('md', 'columns(2)');
 			grid.append(renderCard(ucf, presets, cards));
 
 			main.append(heading, grid);

@@ -7,24 +7,14 @@
 	<meta name="description" content="The ui/reveal demo page recreated section-by-section by render.js from UCF data files in data/demo/ and presets in data/card.presets.demo.json.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="../reveal/ui-reveal.css">
 	<link rel="stylesheet" href="../icon/index.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
-		.grid {
-			display: grid;
-			gap: var(--spacing-lg);
-			grid-template-columns: 1fr;
-			margin-block-end: var(--spacing-2xl);
-		}
-		@media (min-width: 540px) {
-			.grid-2 { grid-template-columns: repeat(2, 1fr); }
-		}
-		@media (min-width: 720px) {
-			.grid-3 { grid-template-columns: repeat(3, 1fr); }
-		}
+		main > lay-out { margin-block-end: var(--spacing-2xl); }
 		.hero {
 			display: block;
 			margin-block-end: var(--spacing-2xl);
@@ -97,9 +87,11 @@
 		};
 
 		const grid = (cls, nodes) => {
-			const div = el('div', null, cls);
-			div.append(...nodes);
-			return div;
+			const node = document.createElement('lay-out');
+			if (cls === 'grid grid-3') { node.setAttribute('md', 'columns(2)'); node.setAttribute('lg', 'columns(3)'); }
+			else if (cls === 'grid grid-2') node.setAttribute('md', 'columns(2)');
+			node.append(...nodes);
+			return node;
 		};
 
 		const render = (name) => renderCard(docs[name], presets, cards).firstElementChild;

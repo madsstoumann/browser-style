@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="A museum landing page built from ui-media ui-card: native full-clip split cards (hero + Autumn) with our play/PiP/fullscreen tools, and provider=vimeo iframe embeds that open the real Vimeo player.">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../play/ui-play.css">
@@ -15,9 +16,7 @@
 	<link rel="stylesheet" href="media.tint.css">
 	<style>
 		/* body { max-inline-size: 75rem; margin-inline: auto; padding-inline: var(--spacing-md); } */
-		.grid { display: grid; gap: var(--spacing-lg); grid-template-columns: 1fr; margin-block-end: var(--spacing-2xl); }
-		@media (min-width: 540px) { .grid-2 { grid-template-columns: repeat(2, 1fr); } .grid-3 { grid-template-columns: repeat(3, 1fr); } .grid-4 { grid-template-columns: repeat(2, 1fr); } }
-		@media (min-width: 900px) { .grid-4 { grid-template-columns: repeat(4, 1fr); } }
+		body > lay-out { margin-block-end: var(--spacing-2xl); }
 		.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-block: var(--spacing-2xl) var(--spacing-md); }
 		.section-head h2 { margin: 0; }
 		.section-head a { color: var(--color-accent); font-weight: var(--font-weight-medium, 500); }
@@ -29,7 +28,7 @@
 
 	<h2>Native video</h2>
 	<p class="note">Four native-video setups. <strong>native video</strong>: the browser's own <code>&lt;video controls&gt;</code> — no <code>&lt;ui-play&gt;</code>, no JS. The rest put a <code>&lt;ui-play&gt;</code> over a chrome-less <code>&lt;video&gt;</code> — a <strong>custom</strong> control, an <strong>autoplay</strong> loop, and a <strong>custom poster</strong> that shows until play. All keep a stable frame via <code>asr()</code>.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-media media="asr(16/9) rds(lg)">
 			<video controls playsinline poster="/assets/images/city.png" src="/assets/video/city.mp4"></video>
 			<ui-chip>native video</ui-chip>
@@ -49,11 +48,11 @@
 			<ui-play><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>custom poster</ui-chip>
 		</ui-media>
-	</div>
+	</lay-out>
 
 	<h2>YouTube — <code>provider="youtube"</code></h2>
 	<p class="note">Same facade as the Vimeo embeds — <code>data-preview</code> is provider-agnostic: here a static <code>&lt;img data-preview&gt;</code> poster (Vimeo uses an animated <code>&lt;video data-preview&gt;</code> loop) sits over a lazy <code>&lt;iframe&gt;</code>, lifted by <code>z-index</code> so source order doesn't matter. The <code>&lt;ui-play&gt;</code> click drops the poster, appends <code>autoplay=1</code> and hands off to the YouTube player. (An iframe isn't an <code>HTMLMediaElement</code>, so it uses the click facade, not <code>command="play-pause"</code> — that's native <code>&lt;video&gt;</code> only.)</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9) ply(lg) chip(red)" content="pad(md) md:pad(lg)">
 			<cq-box>
 				<ui-media provider="youtube" video="VTCIStB6y8s">
@@ -76,11 +75,11 @@
 				<ui-content><small data-part="eyebrow">provider="youtube" video="ID"</small><h3 data-part="headline">Building a UI component library</h3><p data-part="summary">A comprehensive component library for modern web development — press play to watch on YouTube.</p></ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<h2>YouTube — no-JS facade via <code>srcdoc</code></h2>
 	<p class="note">No JavaScript at all. The <code>&lt;iframe srcdoc&gt;</code> renders a poster + a real <code>&lt;a&gt;</code> link; clicking it navigates the iframe <em>itself</em> to the <code>?autoplay=1</code> embed — the click is the user gesture autoplay needs. <code>src</code> is the fallback for browsers without <code>srcdoc</code> support. No <code>provider</code>, so <code>index.js</code> never touches it.</p>
-	<div class="grid">
+	<lay-out>
 		<ui-media media="asr(16/9) rds(lg) chip(red)">
 			<iframe
 				title="What’s new in Web UI"
@@ -102,11 +101,11 @@
 			</iframe>
 				<ui-chip>youtube</ui-chip>
 		</ui-media>
-	</div>
+	</lay-out>
 
 	<h2>Vimeo — no-JS facade via <code>srcdoc</code></h2>
 	<p class="note">The same <code>srcdoc</code> trick works for Vimeo: poster + <code>&lt;a&gt;</code> → clicking navigates the iframe to <code>?autoplay=1&amp;muted=1</code>. Cyan circle badge to match <code>&lt;ui-play&gt;</code>'s Vimeo brand. Public/embeddable video only (a domain-locked one would 401).</p>
-	<div class="grid">
+	<lay-out>
 		<ui-media media="asr(16/9) rds(lg) chip(blue)">
 			<iframe
 				title="Egypten — Besat af livet"
@@ -128,11 +127,11 @@
 			</iframe>
 			<ui-chip>vimeo</ui-chip>
 		</ui-media>
-	</div>
+	</lay-out>
 
 	<h2>YouTube — looping preview in front</h2>
 	<p class="note">YouTube exposes no preview clip (no MP4 API, and the animated-thumbnail WebP is session-gated), so the 2-second loop is a clip <strong>we host ourselves</strong> — cut from the source with <code>yt-dlp</code> + <code>ffmpeg</code> (see <a href="video.md">video.md</a>). Same <code>&lt;video data-preview&gt;</code> facade as the Vimeo cards, now over a YouTube <code>&lt;iframe&gt;</code>.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9) ply(lg) chip(red)" content="pad(md) md:pad(lg)">
 			<cq-box>
 				<ui-media provider="youtube" video="VTCIStB6y8s">
@@ -161,7 +160,7 @@
 				<ui-content><small data-part="eyebrow">provider="youtube" + loop</small><h3 data-part="headline">What’s new in the web</h3><p data-part="summary">The looping teaser is hosted locally; the real video streams from YouTube on play.</p></ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<ui-card class="split" variant="col lg:row spl(1/1)" media="asr(16/9) vid(pip) vid(fls) ply(lg)" content="pad(md) lg:pad(lg)">
 		<cq-box>
@@ -216,7 +215,7 @@
 		<h2>Current exhibitions</h2>
 		<a href="#">All exhibitions →</a>
 	</div>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9) chip(ts) chip(green) ply(lg)" content="pad(md) md:pad(lg)">
 			<cq-box>
 				<ui-media provider="vimeo" video="845207657">
@@ -245,7 +244,7 @@
 				<ui-content><small data-part="eyebrow">Exhibition · full film</small><h3 data-part="headline">The Rus — Vikings in the East</h3><p data-part="summary">Follow the river routes from Scandinavia to Byzantium and the silk roads beyond.</p><nav data-part="actions"><a class="ui-button" href="#">Read more</a></nav></ui-content>
 			</cq-box>
 		</ui-card>
-	</div>
+	</lay-out>
 
 	<!-- ============================================================
 	     Feature — overlay content, IFRAME embed
@@ -307,7 +306,7 @@
 		<h2>From the archive</h2>
 		<a href="#">Full archive →</a>
 	</div>
-	<div class="grid grid-3">
+	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-media provider="vimeo" video="746542514" media="asr(1/1) rds(md) chip(bs)">
 			<video data-preview poster="vimeo-data/previews/746542514.jpg" autoplay muted loop playsinline>
 				<source src="vimeo-data/previews/746542514.webm" type="video/webm">
@@ -335,11 +334,11 @@
 			<ui-play><button type="button" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 			<ui-chip>vimeo iframe</ui-chip>
 		</ui-media>
-	</div>
+	</lay-out>
 
 	<h2>Native video + <code>&lt;ui-media&gt;</code> effects</h2>
 	<p class="note">The frame treatments apply to a native <code>&lt;video&gt;</code> just like an image — <code>tnt()</code> tint, <code>shp()</code> shape/morph, <code>hov()</code> effects and furniture all clip/blend/overlay the video. Videos autoplay muted; hover the shape/blur/tint tiles.</p>
-	<div class="grid grid-2">
+	<lay-out md="columns(2)">
 		<ui-media media="asr(16/9) rds(lg) tnt(red) hov(tint) chip(bs)">
 			<video src="/assets/video/city.mp4" poster="/assets/images/city.png" autoplay muted loop playsinline></video>
 			<ui-chip>tnt(red) hov(tint)</ui-chip>
@@ -357,7 +356,7 @@
 			<ui-sticker><small>NEW</small><strong>4K</strong></ui-sticker>
 			<ui-chip>sticker(red)</ui-chip>
 		</ui-media>
-	</div>
+	</lay-out>
 
 	<script type="module" src="index.js"></script>
 </body>

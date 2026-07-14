@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Teaser cards linking to per-article pages — a cross-document view transition morphs the whole card into the full article. Fully static: pre-rendered by articles/build.js.">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../icon/index.css">
@@ -18,15 +19,7 @@
 	<style>
 		/* cross-document view transitions (@view-transition, the [data-view]
 		   attr() naming rule and group timing) come from ui-card.css */
-		.grid {
-			display: grid;
-			gap: var(--spacing-lg);
-			grid-template-columns: 1fr;
-			margin-block-end: var(--spacing-2xl);
-		}
-		@media (min-width: 540px) {
-			.grid-2 { grid-template-columns: repeat(2, 1fr); }
-		}
+		main > lay-out { margin-block-end: var(--spacing-2xl); }
 		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
 		code { font-size: 0.9em; }
 
@@ -39,7 +32,7 @@
 	<p class="note">Each teaser card links to its <em>own page</em> under <a href="articles/"><code>articles/</code></a>. Both documents opt in with <code>@view-transition { navigation: auto }</code> and carry the same per-article <code>view-transition-name</code>s — set via <code>data-view</code> attributes and the CSS <code>attr()</code> rule, no inline styles — so the whole card morphs into the full article across the navigation, and morphs back via the “← All articles” link or the browser Back button. Every page here is pre-rendered by <code>articles/build.js</code> (the SSR engine): static markup on both sides is what makes the capture reliable in both directions. The full view renders the <code>body</code> as <code>itemprop="articleBody"</code> instead of the teaser summary, from the <em>same UCF instance</em>.</p>
 
 	<main>
-		<div class="grid grid-2" id="cards">
+		<lay-out md="columns(2)" id="cards">
 			<ui-card data-view="card-article-1" variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Article">
 		<cq-box>
 			<ui-media><img data-view="hero-article-1" src="/assets/images/quantum.png" alt="Stylised quantum processor" loading="lazy" itemprop="image"></ui-media>
@@ -58,7 +51,7 @@
 	</address><p data-part="meta"><time datetime="2026-07-01T06:15:00Z">Jul 1, 2026</time> · 3 min read</p></ui-content>
 		</cq-box>
 	</ui-card>
-		</div>
+		</lay-out>
 	</main>
 </body>
 </html>
