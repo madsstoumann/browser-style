@@ -10,12 +10,6 @@
 	<link rel="stylesheet" href="../chip/ui-chip.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
-		/* demo section grids are lay-out elements (md=columns(N)); this only adds the
-		   section rhythm between them. */
-		body > lay-out { margin-block-end: var(--spacing-2xl); }
-		.stack { display: grid; gap: var(--spacing-lg); margin-block-end: var(--spacing-2xl); }
-		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
-		code { font-size: 0.9em; }
 
 		/* Demo-only custom thm() tokens (navy + beige), defined in the page — extend
 		   thm() without touching the design system. Hardcoded ink = robust base. */
@@ -51,7 +45,7 @@
 		}
 	</style>
 </head>
-<body>
+<body data-layout-root data-page-gap="2">
 	<h1>UI: Card — <code>&lt;ui-content&gt;</code></h1>
 	<p class="note">Everything that controls the content column: the <code>scl()</code> scale (decoupled body + headline ramp), <code>hl()</code> headline sizes (incl. <code>poster</code>), the four group families — <code>eb()</code> / <code>hl()</code> / <code>tx()</code> / <code>mt()</code> — for tone, weight and text-shadow, the <code>thm()</code> themes, every <code>data-part</code>, <code>pad()</code>/<code>gap()</code> spacing, responsive size, scrollable content, and the core surface tokens. All driven by <code>variant</code> / <code>content</code> tokens — no JavaScript. Media-backed treatments live in <a href="media.html">media.html</a>.</p>
 	<p class="note">See also: <a href="index.html">index.html</a> (the full engine) · <a href="media.html">media.html</a> (the <code>&lt;ui-media&gt;</code> side) · <a href="ui-card-tokens.md">ui-card-tokens.md</a> (token reference).</p>
@@ -97,7 +91,7 @@
 		</ui-card>
 	</lay-out>
 	<p class="note">The same scale on a wide card shows how hard the headline ramp pushes at <code>scl(xl)</code> while the body stays readable. It also demonstrates <strong>responsive padding</strong>: <code>pad(md)</code> keeps things tight on narrow containers and <code>lg:pad(2xl)</code> opens the card up once it crosses <code>44rem</code> of its own width (a container query, not the viewport).</p>
-	<ui-card class="stack" variant="vis(content)" content="scl(xl) pad(md) lg:pad(2xl)">
+	<ui-card variant="vis(content)" content="scl(xl) pad(md) lg:pad(2xl)">
 		<cq-box><ui-content>
 			<small data-part="eyebrow">scl(xl) · pad(md) lg:pad(2xl)</small>
 			<strong data-part="headline">A display headline that scales with width</strong>
@@ -197,7 +191,7 @@
 	     ============================================================ -->
 	<h2>Arrangement &amp; split — <code>row</code> / <code>spl()</code></h2>
 	<p class="note">Beyond <code>col</code> (default), content can sit beside the media (<code>row</code>), before it (<code>col-r</code> / <code>row-r</code>), and the column ratio is set with <code>spl(1/1 | 1/2 | 2/1 | 1/3 | 3/1)</code>.</p>
-	<div class="stack">
+	<div>
 		<ui-card variant="row spl(1/2)" media="asr(1/1)">
 			<cq-box>
 				<ui-media><img src="/assets/images/ergochair.png" alt=""></ui-media>
@@ -225,7 +219,7 @@
 		<ui-card variant="vis(content) thm(subtle)" content="hl(2xl)"><cq-box><ui-content><small data-part="eyebrow">hl(2xl)</small><h2 data-part="headline">2xl headline</h2><p data-part="summary">The body copy is unchanged across every card in this row.</p></ui-content></cq-box></ui-card>
 	</lay-out>
 	<p class="note">A <code>hl(poster)</code> display headline on a wide card (tracks the card width via <code>cqi</code>):</p>
-	<ui-card class="stack" variant="vis(content) thm(dark)" content="hl(poster)">
+	<ui-card variant="vis(content) thm(dark)" content="hl(poster)">
 		<cq-box><ui-content>
 			<small data-part="eyebrow">hl(poster)</small>
 			<strong data-part="headline">Poster display headline</strong>
@@ -277,7 +271,7 @@
 	     ============================================================ -->
 	<h2>Responsive size — <code>lg:scl()</code> / <code>lg:hl()</code></h2>
 	<p class="note"><strong>Resize the window</strong> (or the card's container) across the <strong>lg breakpoint (44rem / 704px)</strong>: below it the base size applies, at/above it the <code>lg:</code>-prefixed size takes over. Only size tokens are prefixable — tone and weight stay static.</p>
-	<div class="stack">
+	<div>
 		<ui-card variant="vis(content) thm(subtle)" content="scl(sm) lg:scl(lg)"><cq-box><ui-content><small data-part="eyebrow">scl(sm) lg:scl(lg)</small><h2 data-part="headline">Body + headline both jump at lg</h2><p data-part="summary"><code>scl()</code> moves both ramps together — this whole block steps up once the card is at least 44rem wide.</p></ui-content></cq-box></ui-card>
 		<ui-card variant="vis(content) thm(dark)" content="hl(md) lg:hl(poster)"><cq-box><ui-content><small data-part="eyebrow">hl(md) lg:hl(poster)</small><strong data-part="headline">Headline alone jumps to poster at lg</strong><p data-part="summary"><code>hl()</code> decouples the title: the summary size is unchanged, only the headline leaps to the poster clamp when wide.</p></ui-content></cq-box></ui-card>
 	</div>
@@ -348,7 +342,7 @@
 		</ui-card>
 	</lay-out>
 	<p class="note"><code>content="scr(x)"</code> flips the axis: a <strong>horizontal</strong> scrolling row with a left/right fade — for a strip of chips, tags or thumbnails that overflows the card. Bare <code>scr</code> (= <code>scr(y)</code>) stays vertical. This strip is deliberately made of <strong>plain-link tags</strong> (<code>&lt;li&gt;&lt;a&gt;</code>) — the default-pill fallback (exactly what <code>render.js</code> outputs today) — to prove it still renders and scrolls without <code>&lt;ui-chip&gt;</code>.</p>
-	<div class="stack">
+	<div>
 		<ui-card variant="vis(content) thm(subtle)" content="scr(x) gap(sm)">
 			<cq-box><ui-content>
 				<small data-part="eyebrow">scr(x) · horizontal · plain-link fallback</small>
