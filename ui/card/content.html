@@ -17,9 +17,25 @@
 		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
 		code { font-size: 0.9em; }
 
-		/* Demo-only custom card themes (navy + beige). Hardcoded ink = robust base. */
-		.demo-navy  { --ui-card-bg: #0a0a4f; color: #f7f3e3; color-scheme: dark; }
-		.demo-beige { --ui-card-bg: #f7f3e3; color: #0a0a4f; }
+		/* Demo-only custom thm() tokens (navy + beige), defined in the page — extend
+		   thm() without touching the design system. Hardcoded ink = robust base. */
+		/* Override --color-accent (eyebrow reads it) AND re-alias --AccentColor from it
+		   on the card, so the .bg-accent button re-picks the themed accent here (the
+		   root --AccentColor: var(--color-accent) alias otherwise resolves at :root). */
+		:where([variant*="thm(navy)"]) {
+			--ui-card-bg: #0a0a4f; color: #f7f3e3; color-scheme: dark;
+			--color-accent: #f7f3e3;      /* cream — eyebrow + button bg */
+			--color-accent-text: #0a0a4f; /* navy label on the cream button */
+			--AccentColor: var(--color-accent);
+			--AccentColorText: var(--color-accent-text);
+		}
+		:where([variant*="thm(beige)"]) {
+			--ui-card-bg: #f7f3e3; color: #0a0a4f;
+			--color-accent: #0a0a4f;      /* navy — eyebrow + button bg */
+			--color-accent-text: #f7f3e3; /* cream label on the navy button */
+			--AccentColor: var(--color-accent);
+			--AccentColorText: var(--color-accent-text);
+		}
 
 		/* Advanced contrast-color() (una.im/advanced-contrast-color): use contrast-color()
 		   as a light/dark detector, then if()+style() upgrade black/white to the custom
@@ -28,7 +44,7 @@
 		   Safari 26, no Firefox — degrades to the hardcoded colours above. */
 		@property --demo-ink { syntax: "<color>"; inherits: true; initial-value: #0a0a4f; }
 		@supports (color: contrast-color(white)) {
-			.demo-navy, .demo-beige {
+			:where([variant*="thm(navy)"]), :where([variant*="thm(beige)"]) {
 				--demo-ink: contrast-color(var(--ui-card-bg));
 				color: if(style(--demo-ink: white): #f7f3e3; else: #0a0a4f);
 			}
@@ -152,10 +168,10 @@
 	     Custom themes — contrast-color() investigation (DEMO-ONLY)
 	     ============================================================ -->
 	<h2>Custom themes</h2>
-	<p class="note"><strong>Demo-only</strong> custom card surfaces.</p>
+	<p class="note">Custom themes defined in this page's styles — add your own by targeting <code>[variant*="thm(x)"]</code>.</p>
 	<lay-out md="columns(2)">
-		<ui-card class="demo-navy" variant="vis(content)"><cq-box><ui-content><small data-part="eyebrow">custom · navy</small><h2 data-part="headline">Midnight</h2><p data-part="summary">Custom surface via --ui-card-bg; ink auto-picked from the navy/cream pair with contrast-color() + if().</p><ul data-part="tags"><li><ui-chip><a href="#">Popular</a></ui-chip></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box></ui-card>
-		<ui-card class="demo-beige" variant="vis(content)"><cq-box><ui-content><small data-part="eyebrow">custom · beige</small><h2 data-part="headline">Parchment</h2><p data-part="summary">Beige surface, dark-navy ink — the cross-palette from the same contrast-color() rule.</p><ul data-part="tags"><li><ui-chip><a href="#">Popular</a></ui-chip></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(navy)"><cq-box><ui-content><small data-part="eyebrow">custom · navy</small><h2 data-part="headline">Midnight</h2><p data-part="summary">Custom surface via --ui-card-bg; ink auto-picked from the navy/cream pair with contrast-color() + if().</p><ul data-part="tags"><li><ui-chip><a href="#">Popular</a></ui-chip></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content) thm(beige)"><cq-box><ui-content><small data-part="eyebrow">custom · beige</small><h2 data-part="headline">Parchment</h2><p data-part="summary">Beige surface, dark-navy ink — the cross-palette from the same contrast-color() rule.</p><ul data-part="tags"><li><ui-chip><a href="#">Popular</a></ui-chip></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box></ui-card>
 	</lay-out>
 
 	<!-- ============================================================
