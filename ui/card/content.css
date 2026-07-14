@@ -286,7 +286,7 @@
 		line-height: var(--ui-content-headline-line-height, calc(1em + 0.25rem));
 		margin-block-end: var(--ui-content-headline-rhythm, 0.25em);
 		text-shadow: var(--ui-content-headline-text-shadow, var(--ui-content-heading-text-shadow, none)); /* hl(shd) / host ovr() */
-		text-wrap: pretty;
+		text-wrap: var(--ui-content-headline-wrap, balance); /* balance short titles; override to pretty for long poster copy */
 	}
 
 	/* subheadline — Headings group; default stays muted unless hl() sets the group ink */
@@ -295,6 +295,7 @@
 		font-size: var(--ui-content-subheadline-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.88));
 		font-weight: var(--ui-content-subheadline-weight, var(--font-weight-normal, 400));
 		text-shadow: var(--ui-content-subheadline-text-shadow, var(--ui-content-heading-text-shadow, none));
+		text-wrap: pretty;
 	}
 
 	/* summary — Body group */
@@ -304,6 +305,7 @@
 		font-weight: var(--ui-content-summary-weight, var(--ui-content-body-weight, var(--font-weight-normal, 400)));
 		line-height: var(--ui-content-summary-line-height, var(--line-height-normal, 1.5));
 		text-shadow: var(--ui-content-summary-text-shadow, var(--ui-content-body-text-shadow, none));
+		text-wrap: var(--ui-content-summary-wrap, pretty);
 	}
 
 	/* meta / caption (caption may also sit inside <ui-media>) — Meta group; the
@@ -353,11 +355,12 @@
 			background: var(--ui-content-tag-bg, var(--color-button, hsl(0, 0%, 90%)));
 			border-radius: var(--ui-content-tag-radius, var(--radius-pill, 100px));
 			color: var(--ui-content-tag-color, inherit);
-			display: inline-grid;              /* enables place-content centering */
-			place-content: center;             /* centre the label within the pill */
 			padding: var(--ui-content-tag-padding, 0.2em 0.7em);
 			text-decoration: none;
 		}
+		/* Only the rendered leaf becomes the pill box — the wrapper stays
+		   display:contents (above), so a <li><a> pair is ONE pill, not two. */
+		& a { display: inline-grid; place-content: center; }
 	}
 	/* scr(x) tags override — must follow the tags rule above so the nowrap wins at
 	   equal specificity (a horizontal strip must not wrap; pills hold their width). */

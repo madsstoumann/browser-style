@@ -63,10 +63,10 @@
 			</ui-content></cq-box>
 		</ui-card>
 	</lay-out>
-	<p class="note">The same scale on a wide card shows how hard the headline ramp pushes at <code>scl(xl)</code> while the body stays readable:</p>
-	<ui-card class="stack" variant="row spl(1/2) vis(content)" content="scl(xl)">
+	<p class="note">The same scale on a wide card shows how hard the headline ramp pushes at <code>scl(xl)</code> while the body stays readable. It also demonstrates <strong>responsive padding</strong>: <code>pad(md)</code> keeps things tight on narrow containers and <code>lg:pad(2xl)</code> opens the card up once it crosses <code>44rem</code> of its own width (a container query, not the viewport).</p>
+	<ui-card class="stack" variant="vis(content)" content="scl(xl) pad(md) lg:pad(2xl)">
 		<cq-box><ui-content>
-			<small data-part="eyebrow">scl(xl) · wide container</small>
+			<small data-part="eyebrow">scl(xl) · pad(md) lg:pad(2xl)</small>
 			<strong data-part="headline">A display headline that scales with width</strong>
 			<p data-part="summary">Resize the window: the headline tracks the card's own inline-size via <code>cqi</code>, bounded by its <code>clamp()</code>. The summary barely moves — that is the decoupled ramp doing its job.</p>
 		</ui-content></cq-box>

@@ -131,11 +131,13 @@
 	/* thm(brand) was removed — for a branded surface use thm(dark) with a
 	   --ui-card-dark-bg override. (dark/light/subtle spelling: full words for now.) */
 	:where([variant*="thm(dark)"]) {
+		/* color-scheme flips every light-dark() token (accent, text, border,
+		   --color-button, form controls, scrollbars) to its dark variant, so the
+		   theme is token-native — we only pin the slate surface. Muted ink, the
+		   accent eyebrow and the tag-pill bg now follow the flipped tokens. */
+		color-scheme: dark;
 		--ui-card-bg: var(--ui-card-dark-bg, #1f2937);
-		--ui-content-muted: color-mix(in oklab, currentColor 60%, transparent);
-		--ui-content-eyebrow-color: var(--ui-card-dark-accent, #93c5fd);
-		--ui-content-tag-bg: rgb(255 255 255 / 0.12);
-		color: var(--ui-card-dark-ink, #f9fafb);
+		color: var(--ui-card-dark-ink, var(--color-text));
 	}
 	:where([variant*="thm(subtle)"]) {
 		--ui-card-bg: var(--ui-card-subtle-bg, var(--color-surface-alt, #f1f1f1));
