@@ -66,13 +66,14 @@ Stacks `<ui-content>` over `<ui-media>` (same grid cell) and places + aligns it 
 
 ## Themes — `thm()`
 
-Decorative background + ink bundles. Ink tokens cross into the `<ui-content>` namespace (muted / eyebrow / tag) so parts re-tone automatically.
+Decorative background + ink bundles. Ink tokens cross into the `<ui-content>` namespace (muted / eyebrow / tag) so parts re-tone automatically. `thm(dark)` and `thm(muted)` set `color-scheme: dark`, so ink / accent / pills / controls flip automatically — those themes only need to set the surface. The three surfaces form a light→dark ramp: **`thm(subtle)` (light) < `thm(muted)` (`#374151`) < `thm(dark)` (`#1f2937`)**.
 
 | Token | Default | Controls |
 |-------|---------|----------|
 | `--ui-card-dark-bg` | `#1f2937` | `thm(dark)` background |
 | `--ui-card-dark-ink` | `#f9fafb` | `thm(dark)` text |
 | `--ui-card-dark-accent` | `#93c5fd` | `thm(dark)` eyebrow |
+| `--ui-card-muted-bg` | `#374151` | `thm(muted)` background — a lighter slate than `thm(dark)`; `color-scheme: dark` flips ink/accent/pills |
 | `--ui-card-subtle-bg` | `var(--color-surface-alt)` | `thm(subtle)` background |
 | `--ui-card-subtle-ink` | `var(--color-text)` | `thm(subtle)` text |
 

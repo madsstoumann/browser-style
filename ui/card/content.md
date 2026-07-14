@@ -359,7 +359,7 @@ Standalone content gets the neutral `normal` / `inherit` / `start` / `auto` defa
 
 ## Theme ink
 
-Host themes (`thm(dark|subtle)` on the composition layer) **must write the muted / eyebrow / tag ink into the content namespace** — these ink tokens live on `<ui-content>`, not on the card:
+Host themes (`thm(subtle|muted|dark)` on the composition layer) set the card surface; the two dark ones (`thm(muted)`, `thm(dark)`) add `color-scheme: dark` so the muted / eyebrow / tag ink and controls flip automatically. The surfaces form a light→dark ramp — **`thm(subtle)` (light) < `thm(muted)` (`#374151`, override `--ui-card-muted-bg`) < `thm(dark)` (`#1f2937`)**. Where a theme sets ink explicitly, those tokens live on `<ui-content>`, not on the card:
 
 | Token | Read by | Themed by |
 |-------|---------|-----------|

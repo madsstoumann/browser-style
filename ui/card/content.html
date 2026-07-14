@@ -115,13 +115,16 @@
 	     thm() — themes
 	     ============================================================ -->
 	<h2>Themes — <code>thm()</code></h2>
-	<p class="note">Theme tokens remap the surface, ink, eyebrow and tag colours (text-only here — for media-backed themes see <a href="media.html">media.html</a>). The same card in default, <code>thm(subtle)</code> and <code>thm(dark)</code>. Every value is overridable (e.g. <code>--ui-card-dark-bg</code>). There is no <code>thm(brand)</code> — a branded surface is <code>thm(dark)</code> plus a <code>--ui-card-dark-bg</code> override.</p>
-	<lay-out md="columns(3)">
+	<p class="note">Theme tokens remap the surface, ink, eyebrow and tag colours (text-only here — for media-backed themes see <a href="media.html">media.html</a>). The same card in default, <code>thm(subtle)</code>, <code>thm(muted)</code> and <code>thm(dark)</code> — a surface ramp from light to dark: <strong>subtle &lt; muted (<code>#374151</code>) &lt; dark (<code>#1f2937</code>)</strong>. <code>thm(muted)</code> is a soft-dark slate that flips ink / accent / pills / controls via <code>color-scheme: dark</code>, just like <code>thm(dark)</code>. Every value is overridable (e.g. <code>--ui-card-muted-bg</code>, <code>--ui-card-dark-bg</code>). There is no <code>thm(brand)</code> — a branded surface is <code>thm(dark)</code> plus a <code>--ui-card-dark-bg</code> override.</p>
+	<lay-out md="columns(2)" lg="columns(4)">
 		<ui-card variant="vis(content)">
 			<cq-box><ui-content><small data-part="eyebrow">default</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Unlimited workouts, coaching and priority support.</p><ul data-part="tags"><li><ui-chip><a href="#">Popular</a></ui-chip></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="vis(content) thm(subtle)">
 			<cq-box><ui-content><small data-part="eyebrow">thm(subtle)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Off-white surface, default dark ink.</p><ul data-part="tags"><li><ui-chip><a href="#">Popular</a></ui-chip></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="vis(content) thm(muted)">
+			<cq-box><ui-content><small data-part="eyebrow">thm(muted)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Soft-dark slate — sits between subtle and dark.</p><ul data-part="tags"><li><ui-chip><a href="#">Popular</a></ui-chip></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="vis(content) thm(dark)">
 			<cq-box><ui-content><small data-part="eyebrow">thm(dark)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Dark surface, light ink, accent eyebrow.</p><ul data-part="tags"><li><ui-chip><a href="#">Popular</a></ui-chip></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box>
