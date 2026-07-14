@@ -141,6 +141,13 @@
 		   plus a --ui-card-dark-bg override. */
 		color-scheme: dark;
 	}
+	/* thm(muted) — soft-dark companion to thm(subtle): a lighter slate than
+	   thm(dark)'s #1f2937. Same color-scheme flip drives ink/accent/pills/controls;
+	   only the surface differs. Sits between subtle (light) and dark. */
+	:where([variant*="thm(muted)"]) {
+		color-scheme: dark;
+		--ui-card-bg: var(--ui-card-muted-bg, #374151);
+	}
 	:where([variant*="thm(subtle)"]) {
 		--ui-card-bg: var(--ui-card-subtle-bg, var(--color-surface-alt, #f1f1f1));
 		color: var(--ui-card-subtle-ink, var(--color-text, inherit));
