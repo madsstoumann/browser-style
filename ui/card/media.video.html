@@ -16,7 +16,6 @@
 	<link rel="stylesheet" href="media.tint.css">
 	<style>
 		/* body { max-inline-size: 75rem; margin-inline: auto; padding-inline: var(--spacing-md); } */
-		body > lay-out { margin-block-end: var(--spacing-2xl); }
 		.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-block: var(--spacing-2xl) var(--spacing-md); }
 		.section-head h2 { margin: 0; }
 		.section-head a { color: var(--color-accent); font-weight: var(--font-weight-medium, 500); }
@@ -24,8 +23,9 @@
 		.split { margin-block-end: var(--spacing-2xl); }
 	</style>
 </head>
-<body>
+<body data-layout-root page-gap="2">
 
+	<section>
 	<h2>Native video</h2>
 	<p class="note">Four native-video setups. <strong>native video</strong>: the browser's own <code>&lt;video controls&gt;</code> — no <code>&lt;ui-play&gt;</code>, no JS. The rest put a <code>&lt;ui-play&gt;</code> over a chrome-less <code>&lt;video&gt;</code> — a <strong>custom</strong> control, an <strong>autoplay</strong> loop, and a <strong>custom poster</strong> that shows until play. All keep a stable frame via <code>asr()</code>.</p>
 	<lay-out md="columns(2)">
@@ -49,7 +49,9 @@
 			<ui-chip>custom poster</ui-chip>
 		</ui-media>
 	</lay-out>
+	</section>
 
+	<section>
 	<h2>YouTube — <code>provider="youtube"</code></h2>
 	<p class="note">Same facade as the Vimeo embeds — <code>data-preview</code> is provider-agnostic: here a static <code>&lt;img data-preview&gt;</code> poster (Vimeo uses an animated <code>&lt;video data-preview&gt;</code> loop) sits over a lazy <code>&lt;iframe&gt;</code>, lifted by <code>z-index</code> so source order doesn't matter. The <code>&lt;ui-play&gt;</code> click drops the poster, appends <code>autoplay=1</code> and hands off to the YouTube player. (An iframe isn't an <code>HTMLMediaElement</code>, so it uses the click facade, not <code>command="play-pause"</code> — that's native <code>&lt;video&gt;</code> only.)</p>
 	<lay-out md="columns(2)">
@@ -76,7 +78,9 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
+	<section>
 	<h2>YouTube — no-JS facade via <code>srcdoc</code></h2>
 	<p class="note">No JavaScript at all. The <code>&lt;iframe srcdoc&gt;</code> renders a poster + a real <code>&lt;a&gt;</code> link; clicking it navigates the iframe <em>itself</em> to the <code>?autoplay=1</code> embed — the click is the user gesture autoplay needs. <code>src</code> is the fallback for browsers without <code>srcdoc</code> support. No <code>provider</code>, so <code>index.js</code> never touches it.</p>
 	<lay-out>
@@ -102,7 +106,9 @@
 				<ui-chip>youtube</ui-chip>
 		</ui-media>
 	</lay-out>
+	</section>
 
+	<section>
 	<h2>Vimeo — no-JS facade via <code>srcdoc</code></h2>
 	<p class="note">The same <code>srcdoc</code> trick works for Vimeo: poster + <code>&lt;a&gt;</code> → clicking navigates the iframe to <code>?autoplay=1&amp;muted=1</code>. Cyan circle badge to match <code>&lt;ui-play&gt;</code>'s Vimeo brand. Public/embeddable video only (a domain-locked one would 401).</p>
 	<lay-out>
@@ -128,7 +134,9 @@
 			<ui-chip>vimeo</ui-chip>
 		</ui-media>
 	</lay-out>
+	</section>
 
+	<section>
 	<h2>YouTube — looping preview in front</h2>
 	<p class="note">YouTube exposes no preview clip (no MP4 API, and the animated-thumbnail WebP is session-gated), so the 2-second loop is a clip <strong>we host ourselves</strong> — cut from the source with <code>yt-dlp</code> + <code>ffmpeg</code> (see <a href="video.md">video.md</a>). Same <code>&lt;video data-preview&gt;</code> facade as the Vimeo cards, now over a YouTube <code>&lt;iframe&gt;</code>.</p>
 	<lay-out md="columns(2)">
@@ -211,6 +219,9 @@
 		</cq-box>
 	</ui-card>
 
+	</section>
+
+	<section>
 	<div class="section-head">
 		<h2>Current exhibitions</h2>
 		<a href="#">All exhibitions →</a>
@@ -246,6 +257,9 @@
 		</ui-card>
 	</lay-out>
 
+	</section>
+
+	<section>
 	<!-- ============================================================
 	     Feature — overlay content, IFRAME embed
 	     ============================================================ -->
@@ -262,6 +276,9 @@
 		</cq-box>
 	</ui-card>
 
+	</section>
+
+	<section>
 	<!-- ============================================================
 	     Subtitles — chrome-less <video> + vid(cc): a CUSTOMIZABLE <select>
 	     (appearance: base-select) styled as the CC disc switches the track.
@@ -299,6 +316,9 @@
 		</cq-box>
 	</ui-card>
 
+	</section>
+
+	<section>
 	<!-- ============================================================
 	     Video gallery — RAW <ui-media> (no <ui-card>), IFRAME embeds
 	     ============================================================ -->
@@ -336,6 +356,9 @@
 		</ui-media>
 	</lay-out>
 
+	</section>
+
+	<section>
 	<h2>Native video + <code>&lt;ui-media&gt;</code> effects</h2>
 	<p class="note">The frame treatments apply to a native <code>&lt;video&gt;</code> just like an image — <code>tnt()</code> tint, <code>shp()</code> shape/morph, <code>hov()</code> effects and furniture all clip/blend/overlay the video. Videos autoplay muted; hover the shape/blur/tint tiles.</p>
 	<lay-out md="columns(2)">
@@ -357,6 +380,7 @@
 			<ui-chip>sticker(red)</ui-chip>
 		</ui-media>
 	</lay-out>
+	</section>
 
 	<script type="module" src="index.js"></script>
 </body>

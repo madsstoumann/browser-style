@@ -14,7 +14,6 @@
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
-		main > lay-out { margin-block-end: var(--spacing-2xl); }
 		.hero {
 			display: block;
 			margin-block-end: var(--spacing-2xl);
@@ -27,7 +26,7 @@
 	<h1>UI: Card — Reveal Demo, Rendered</h1>
 	<p class="note">This page recreates <a href="../reveal/index.html"><code>ui/reveal/index.html</code></a> section-by-section — but every card is built at runtime by <a href="render.js"><code>render.js</code></a> from UCF data files in <a href="data/demo/"><code>data/demo/</code></a>. The looks come from <a href="data/card.presets.demo.json"><code>presets.demo.reveal.json</code></a> merged over the base <a href="data/card.presets.json"><code>card.presets.json</code></a>; sections that share content but change the look simply swap the preset reference. Back panels are either derived from the card's own envelope or come from a referenced <code>flipside</code> card. All DOM via <code>createElement</code>/<code>textContent</code> — no <code>innerHTML</code>.</p>
 
-	<main></main>
+	<main data-layout-root page-gap="2"></main>
 
 	<script type="module">
 		import { renderCard as renderCardHtml, loadPresets } from './render.js';

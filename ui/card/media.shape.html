@@ -11,17 +11,19 @@
 	<link rel="stylesheet" href="ui-card.css">
 	<link rel="stylesheet" href="media.shapes.css">
 	<style>
-		body > lay-out { margin-block-end: var(--spacing-2xl); }
 	</style>
 </head>
-<body>
+<body data-layout-root page-gap="2">
+	<header>
 	<h1>UI: Card — Media <code>shp()</code> shapes</h1>
 	<p>Clip a <code>&lt;ui-media&gt;</code> image (or video/iframe) to a shape via <code>clip-path</code>. Names are kept short: direction suffixes are <code>-l</code>/<code>-r</code> (left/right), <code>-d</code>/<code>-u</code> (down/up). The full set (32), from the opt-in <code>media.shapes.css</code> sheet. Every shape carries a matching-vertex morph target (<code>--ui-shape-morph</code>); add <code>hov(shape)</code> (all the tiles below) to animate it back to a full frame on hover — the base clip is static without it. The clip <em>mechanism</em> ships in <code>media.css</code>, the hover <em>morph</em> in <code>media.hover.css</code>, so both work with your own <code>--ui-media-shape</code> / <code>--ui-shape-morph</code> too.</p>
 	<p>See also: <a href="media.html">media.html</a> (the full <code>&lt;ui-media&gt;</code> reference).</p>
+	</header>
 
+	<section>
 	<h2>Forward — <code>shp(x) hov(shape)</code></h2>
 	<p>Rest = the shape; hover morphs it back to the <strong>full frame</strong>.</p>
-	<lay-out md="columns(2)" xl="columns(4)">
+	<lay-out md="columns(2)" lg="columns(4)">
 		<!-- points / pennants -->
 		<ui-media media="asr(1/1) shp(pt-d) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>pt-d</ui-chip></ui-media>
 		<ui-media media="asr(1/1) shp(pt-u) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>pt-u</ui-chip></ui-media>
@@ -70,10 +72,12 @@
 		<ui-media media="asr(1/1) shp(circle) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>circle</ui-chip></ui-media>
 		<ui-media media="asr(1/1) shp(circ-45) chip(tc) chip(green) hov(shape)"><img src="/assets/images/hubble.png" alt=""><ui-chip>circ-45</ui-chip></ui-media>
 	</lay-out>
+	</section>
 
+	<section>
 	<h2>Reversed — <code>shp(x) hov(shape-rev)</code></h2>
 	<p><code>hov(shape-rev)</code> swaps base and target: rest = the <strong>full frame</strong> (square), hover morphs <em>into</em> the shape. Same set, reversed direction.</p>
-	<lay-out md="columns(2)" xl="columns(4)">
+	<lay-out md="columns(2)" lg="columns(4)">
 		<!-- points / pennants -->
 		<ui-media media="asr(1/1) shp(pt-d) chip(tc) chip(green) hov(shape-rev)"><img src="/assets/images/hubble.png" alt=""><ui-chip>pt-d</ui-chip></ui-media>
 		<ui-media media="asr(1/1) shp(pt-u) chip(tc) chip(green) hov(shape-rev)"><img src="/assets/images/hubble.png" alt=""><ui-chip>pt-u</ui-chip></ui-media>
@@ -122,5 +126,6 @@
 		<ui-media media="asr(1/1) shp(circle) chip(tc) chip(green) hov(shape-rev)"><img src="/assets/images/hubble.png" alt=""><ui-chip>circle</ui-chip></ui-media>
 		<ui-media media="asr(1/1) shp(circ-45) chip(tc) chip(green) hov(shape-rev)"><img src="/assets/images/hubble.png" alt=""><ui-chip>circ-45</ui-chip></ui-media>
 	</lay-out>
+	</section>
 </body>
 </html>

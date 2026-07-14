@@ -4,6 +4,18 @@
 @property --_pg { syntax: "<integer>"; inherits: true; initial-value: 0; }
 
 @layer layout.base {
+	/* Page wrapper — mark the element that DIRECTLY contains the top-level
+	   <lay-out> sections (usually <body>, sometimes <main>) with `data-layout-root`
+	   to arrange those sections on a single-column grid. `page-gap="N"` sets the
+	   gap between sections as N × --layout-space-unit (default 1). Because the gap
+	   is grid row-gap on the direct parent, nested <lay-out>s (e.g. carousel slide
+	   grids inside <ui-media>) are untouched. --layout-space-unit is declared on
+	   <lay-out> (a descendant, not an ancestor), so fall back to 1rem here. */
+	[data-layout-root] {
+		display: grid;
+		row-gap: calc(attr(page-gap type(<number>), 1) * var(--layout-space-unit, 1rem));
+	}
+
 	lay-out {
 		--layout-col-rule-c: #CCC;
 		--layout-preview-size: 100px;

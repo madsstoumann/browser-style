@@ -13,62 +13,76 @@
 	<link rel="stylesheet" href="../icon/index.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
-		body > lay-out { margin-block-end: var(--spacing-2xl); }
 		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
 		code { font-size: 0.9em; }
 	</style>
 </head>
-<body>
+<body data-layout-root page-gap="2">
+	<header>
 	<h1>UI: Card — <code>&lt;ui-media&gt;</code> (Rendered)</h1>
 	<p class="note"><a href="media.html">media.html</a> recreated by the rendering engine: every frame and card on this page is built at runtime by <a href="render.js"><code>render.js</code></a> from UCF data files in <a href="data/demo/"><code>data/demo/</code></a>, combined with presets from <a href="data/card.presets.json"><code>card.presets.json</code></a> and <a href="data/card.presets.demo.json"><code>presets.demo.media.json</code></a>. Sections that show the same content in different looks reuse <strong>one</strong> UCF file with swapped preset references — that is the point of presets. Chip/sticker positions and hues come from <em>content</em> fields; the renderer appends the matching <code>media=</code> tokens. All DOM via <code>createElement</code>/<code>textContent</code> — no <code>innerHTML</code>.</p>
 	<p class="note">Everything that controls the media frame: the <code>asr()</code> aspect-ratios, <code>obp()</code> object-position, <code>flp()</code> flip, <code>hov()</code> hover effects, the <code>scm</code> scrim, and <code>&lt;ui-chip&gt;</code>/<code>&lt;ui-sticker&gt;</code> overlays. The CSS-only <code>nav</code> carousel lives in <a href="carousel.html">carousel.html</a>; all <code>&lt;video&gt;</code> / <code>provider=</code> examples live in <a href="video.html">video.html</a>.</p>
+	</header>
 
 	<!-- ============================================================
 	     asr() — aspect-ratio
 	     ============================================================ -->
+	<section>
 	<h2>Aspect-ratio — <code>asr()</code></h2>
 	<p class="note">Sets the media frame's <code>aspect-ratio</code> (and drops its <code>min-block-size</code> so the ratio wins). Eight stops cover the common print/screen ratios. Same image, same width — only the crop changes. <strong>These are standalone <code>&lt;ui-media&gt;</code></strong> — no <code>&lt;ui-card&gt;</code> wrapper — one UCF file (<code>media-01</code>) rendered through eight <code>media-asr-*</code> presets.</p>
 	<lay-out md="columns(2)" xl="columns(4)" id="asr"></lay-out>
 	<p class="note">Without an <code>asr()</code>, the frame falls back to its natural image height (bounded by <code>--ui-media-min</code>, default <code>12.5rem</code>).</p>
+	</section>
 
 	<!-- ============================================================
 	     rds() — corners (standalone <ui-media>)
 	     ============================================================ -->
+	<section>
 	<h2>Corners — <code>rds()</code></h2>
 	<p class="note">Inside <code>&lt;ui-card&gt;</code>/<code>&lt;ui-reveal&gt;</code> the parent rounds and clips the frame, so you don't set corners on the media. <strong>Standalone</strong> <code>&lt;ui-media&gt;</code> can round its own corners with <code>rds()</code> — the same scale as the card's <code>variant="rds(…)"</code>: <code>sm md lg xl 2xl full pill</code>, plus <code>-sq</code> squircle variants (<code>sm-sq md-sq lg-sq xl-sq</code>) that add a superellipse <code>corner-shape</code>. One UCF file (<code>media-02</code>), four <code>media-rds-*</code> presets.</p>
 	<lay-out md="columns(2)" xl="columns(4)" id="rds"></lay-out>
+	</section>
 
 	<!-- ============================================================
 	     obp() — object-position
 	     ============================================================ -->
+	<section>
 	<h2>Object-position — <code>obp()</code></h2>
 	<p class="note">When the frame's ratio crops the image, <code>obp()</code> picks <em>which</em> part stays in view — the same 9-code grid used everywhere else: <code>tl tc tr · cl cc cr · bl bc br</code>. All nine below share one square frame and one wide image — one UCF file (<code>media-03</code>), nine <code>media-obp-*</code> presets.</p>
 	<lay-out md="columns(2)" lg="columns(3)" id="obp"></lay-out>
+	</section>
 
 	<!-- ============================================================
 	     object-fit token
 	     ============================================================ -->
+	<section>
 	<h2>Object-fit — <code>obf()</code> / <code>--ui-media-fit</code></h2>
 	<p class="note">The frame defaults to <code>object-fit: cover</code> (fill &amp; crop). Override per instance with the <code>obf()</code> token (or the <code>--ui-media-fit</code> custom property) for <code>contain</code> (letterbox, whole image visible) — handy for logos and product shots that must not crop. One UCF file (<code>media-04</code>); the contain preset carries the alt surface via preset <code>styles</code>.</p>
 	<lay-out md="columns(2)" lg="columns(3)" id="obf"></lay-out>
+	</section>
 
 	<!-- ============================================================
 	     flp() — flip / mirror
 	     ============================================================ -->
+	<section>
 	<h2>Flip — <code>flp()</code></h2>
 	<p class="note">Mirror the media without editing the asset. <code>flp(h)</code> flips horizontally, <code>flp(v)</code> vertically, <code>flp(hv)</code> both. It uses <code>transform</code> on the image, separate from the scale/translate that <code>hov()</code> drives, so flip and hover compose. Same UCF file as the corners section (<code>media-02</code>), four presets.</p>
 	<lay-out md="columns(2)" xl="columns(4)" id="flp"></lay-out>
+	</section>
 
 	<!-- ============================================================
 	     hov() — hover effects
 	     ============================================================ -->
+	<section>
 	<h2>Hover effects — <code>hov()</code></h2>
 	<p class="note">Hover (or focus) a card. <code>zoom</code> / <code>pan</code> / <code>track</code> / <code>drift</code> move the <em>image</em> inside a fixed frame. Tune with <code>--ui-media-hv-*</code> and <code>--ui-media-hover-duration</code>. All respect <code>prefers-reduced-motion</code>.</p>
 	<lay-out md="columns(2)" lg="columns(3)" id="hov"></lay-out>
+	</section>
 
 	<!-- ============================================================
 	     scm() / ovr() — scrim over media
 	     ============================================================ -->
+	<section>
 	<h2>Scrim — <code>scm</code> over media</h2>
 	<p class="note">A <strong>scrim</strong> is the darkening gradient painted over the image (via <code>ui-media::after</code>) so overlaid text stays legible. <code>ovr(pos)</code> places the content over the media; bare <code>scm</code> auto-matches that position, or pass an explicit <code>scm(pos)</code>. The colour is the <code>--ui-media-scrim-color</code> token — the third card overrides it via preset <code>styles</code>.</p>
 	<lay-out md="columns(2)" lg="columns(3)" id="scm-pos"></lay-out>
@@ -76,10 +90,12 @@
 	<lay-out md="columns(2)" lg="columns(3)" id="scm-size"></lay-out>
 	<p class="note"><strong>Intensity</strong> — a <code>scm()</code> token sets how dark the scrim is: <code>scm(sheer)</code>, <code>scm(lgt)</code>, <code>scm(med)</code> (default), <code>scm(drk)</code>, <code>scm(solid)</code>. Combine with a position, e.g. <code>scm scm(drk)</code>.</p>
 	<lay-out md="columns(2)" lg="columns(3)" id="scm-int"></lay-out>
+	</section>
 
 	<!-- ============================================================
 	     Chip & sticker overlays
 	     ============================================================ -->
+	<section>
 	<h2>Media overlays — chip &amp; sticker</h2>
 	<p class="note">Place <code>&lt;ui-chip&gt;</code> (a pill label) or <code>&lt;ui-sticker&gt;</code> (a disc, or a starburst with <code>variant="sh:burst"</code>) <strong>inside <code>&lt;ui-media&gt;</code></strong>. Position and sub-theme come from the parent <code>media=</code> token: <code>chip(&lt;pos&gt;)</code> / <code>sticker(&lt;pos&gt;)</code> with the 9-code grid (<code>ts tc te · cs cc ce · bs bc be</code>), and <code>chip(&lt;hue&gt;)</code> / <code>sticker(&lt;hue&gt;)</code> for the palette (<code>red orange green blue accent dark light subtle</code>). A card can address one chip and one sticker. Here the chip/sticker text, position and hue are <em>content</em> (UCF <code>chip</code>/<code>sticker</code> fields) — the renderer appends the tokens; the look is the base <code>showcase</code> preset.</p>
 	<lay-out md="columns(2)" lg="columns(3)" id="overlays"></lay-out>
@@ -87,6 +103,7 @@
 	<lay-out md="columns(2)" lg="columns(3)" id="sticker-grid"></lay-out>
 
 	<p class="note">Not expressible via UCF/render.js: <strong>Responsive images <code>&lt;ui-media&gt;</code> JS</strong> (the <code>cdn="on"</code> / <code>quality=</code> / <code>breakpoints=</code> srcset-upgrade showcase — those are per-media-element transport attributes the renderer does not model).</p>
+	</section>
 
 	<script type="module" src="index.js"></script>
 	<script type="module" src="ui-media.js"></script>

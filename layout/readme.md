@@ -88,6 +88,43 @@ rebuild. Prefer a build-time default instead? Set `layoutContainer.maxWidth` /
 
 ---
 
+## Space between sections — `data-layout-root` + `page-gap`
+
+The container rule above owns page **width**, not the vertical gap between
+stacked `<lay-out>` sections. For that, mark the element that **directly
+contains** your top-level `<lay-out>`s — usually `<body>`, sometimes `<main>` —
+with `data-layout-root`. It becomes a single-column grid, and `page-gap="N"`
+sets the gap between its direct children as `N × --layout-space-unit` (default
+`1`):
+
+```html
+<body data-layout-root page-gap="2">
+  <h1>…</h1>
+  <lay-out md="columns(2)">…</lay-out>   <!-- 2rem gap between every -->
+  <h2>…</h2>                             <!-- direct child of the root -->
+  <lay-out md="columns(3)">…</lay-out>
+</body>
+```
+
+The generated rule:
+
+```css
+[data-layout-root] {
+  display: grid;
+  row-gap: calc(attr(page-gap type(<number>), 1) * var(--layout-space-unit, 1rem));
+}
+```
+
+Because the gap is grid `row-gap` on the **direct parent**, nested `<lay-out>`s
+(e.g. carousel slide grids inside `<ui-media>`) are untouched — only the
+sections you actually stack get spaced. Put it on whichever element is the real
+parent: on pages where the sections live inside a `<main>`, mark the `<main>`,
+not the `<body>`. Every direct child becomes a grid track, so the gap applies
+uniformly to headings and intros too; reset their block margins if you want the
+gap alone to govern the rhythm.
+
+---
+
 ## Features
 
 - **Pure CSS** - No JavaScript runtime needed

@@ -19,7 +19,6 @@
 	<style>
 		/* cross-document view transitions (@view-transition, the [data-view]
 		   attr() naming rule and group timing) come from ui-card.css */
-		main > lay-out { margin-block-end: var(--spacing-2xl); }
 		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
 		code { font-size: 0.9em; }
 
@@ -31,7 +30,7 @@
 	<h1>UI: Card — Article View Transition</h1>
 	<p class="note">Each teaser card links to its <em>own page</em> under <a href="articles/"><code>articles/</code></a>. Both documents opt in with <code>@view-transition { navigation: auto }</code> and carry the same per-article <code>view-transition-name</code>s — set via <code>data-view</code> attributes and the CSS <code>attr()</code> rule, no inline styles — so the whole card morphs into the full article across the navigation, and morphs back via the “← All articles” link or the browser Back button. Every page here is pre-rendered by <code>articles/build.js</code> (the SSR engine): static markup on both sides is what makes the capture reliable in both directions. The full view renders the <code>body</code> as <code>itemprop="articleBody"</code> instead of the teaser summary, from the <em>same UCF instance</em>.</p>
 
-	<main>
+	<main data-layout-root page-gap="2">
 		<lay-out md="columns(2)" id="cards">
 			<ui-card data-view="card-article-1" variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Article">
 		<cq-box>

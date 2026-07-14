@@ -338,8 +338,12 @@
 		}
 	}
 
-	/* tags (pill list) — Meta group. The container font-size joins the group; the
-	   pill ink stays pill-driven (--ui-content-tag-color) since it sits on a fill. */
+	/* tags (pill/chip list) — Meta group. A tag can be a plain link (styled as the
+	   bespoke pill below) OR a <ui-chip> child (which styles itself via ui-chip.css
+	   and unlocks the full chip colour palette / variants). The bespoke pill is the
+	   FALLBACK, scoped to links NOT inside a <ui-chip> so it never leaks onto the
+	   chip's own <a>. The container font-size joins the group; pill ink stays
+	   pill-driven (--ui-content-tag-color) since it sits on a fill. */
 	:where(ui-content) [data-part="tags"] {
 		display: flex;
 		flex-wrap: wrap;
@@ -351,7 +355,8 @@
 		padding: 0;
 
 		& > * { display: contents; }
-		& a, & li {
+		/* bespoke pill — plain links only (a <ui-chip> styles its own inner <a>) */
+		& a:not(ui-chip *), & li {
 			background: var(--ui-content-tag-bg, var(--color-button, hsl(0, 0%, 90%)));
 			border-radius: var(--ui-content-tag-radius, var(--radius-pill, 100px));
 			color: var(--ui-content-tag-color, inherit);
@@ -360,14 +365,14 @@
 		}
 		/* Only the rendered leaf becomes the pill box — the wrapper stays
 		   display:contents (above), so a <li><a> pair is ONE pill, not two. */
-		& a { display: inline-grid; place-content: center; }
+		& a:not(ui-chip *) { display: inline-grid; place-content: center; }
 	}
 	/* scr(x) tags override — must follow the tags rule above so the nowrap wins at
-	   equal specificity (a horizontal strip must not wrap; pills hold their width). */
+	   equal specificity (a horizontal strip must not wrap; pills/chips hold width). */
 	:where([content~="scr(x)"]) [data-part="tags"],
 	:where(ui-content[content~="scr(x)"]) [data-part="tags"] { flex-wrap: nowrap; }
-	:where([content~="scr(x)"]) [data-part="tags"] :is(a, li),
-	:where(ui-content[content~="scr(x)"]) [data-part="tags"] :is(a, li) { flex: 0 0 auto; white-space: nowrap; }
+	:where([content~="scr(x)"]) [data-part="tags"] :is(a, li, ui-chip),
+	:where(ui-content[content~="scr(x)"]) [data-part="tags"] :is(a, li, ui-chip) { flex: 0 0 auto; white-space: nowrap; }
 
 	/* actions (button / link row) */
 	:where(ui-content) [data-part="actions"] {

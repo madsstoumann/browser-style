@@ -10,14 +10,15 @@
 	<link rel="stylesheet" href="ui-card.css">
 	<link rel="stylesheet" href="media.shapes.css">
 	<style>
-		body > lay-out { margin-block-end: var(--spacing-2xl); }
 		code { font-size: 0.9em; }
 	</style>
 </head>
-<body>
+<body data-layout-root page-gap="2">
+	<header>
 	<h1>UI: Card — Media <code>hov()</code> effects</h1>
 	<p>Hover a card. The <strong>transform</strong> family moves the <em>image</em> inside a fixed frame (<code>zoom</code> / <code>pan</code> / <code>rot-r</code> / <code>rot-l</code> / fixed 3D <code>tilt-out</code> / <code>tilt-in</code>, plus cursor-driven <code>track</code> / <code>drift</code> / <code>tilt</code>); the <strong>filter</strong> family transitions CSS filters (<code>gray</code> / <code>blur</code> / <code>bright</code> / <code>dim</code> / <code>sat</code>); and <code>shape</code> morphs a <code>shp()</code> clip. All animated props share one transition list, so effects <strong>compose</strong> (e.g. <code>hov(shape) hov(zoom)</code>). Tune with <code>--ui-media-hv-*</code> / <code>--ui-media-hover-duration</code>; all respect <code>prefers-reduced-motion</code>. Effects live in <a href="media.hover.css">media.hover.css</a>. The three cursor-driven effects (<code>track</code> / <code>drift</code> / <code>tilt</code>) need a tiny pointer handler and are shown <strong>last</strong>.</p>
 	<p>See also: <a href="media.html">media.html</a> (the full <code>&lt;ui-media&gt;</code> reference).</p>
+	</header>
 	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card variant="col" tabindex="0" media="asr(16/9) hov(zoom)">
 			<cq-box>
@@ -93,6 +94,7 @@
 		</ui-card>
 	</lay-out>
 
+	<section>
 	<h2>Cursor-driven — needs JS</h2>
 	<p>The only effects that need JavaScript: <code>index.js</code> sets <code>--ui-media-mx</code> / <code>--ui-media-my</code> (−1..1) on the frame from a <code>pointermove</code> handler; the CSS reads them.</p>
 	<lay-out md="columns(2)" lg="columns(3)">
@@ -115,6 +117,7 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<script type="module" src="index.js"></script>
 </body>

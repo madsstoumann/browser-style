@@ -17,7 +17,6 @@
 	<link rel="stylesheet" href="../blockquote/ui-blockquote.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
-		body > lay-out { margin-block-end: var(--spacing-2xl); }
 		.stack { display: grid; gap: var(--spacing-lg); margin-block-end: var(--spacing-2xl); }
 		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
 		code { font-size: 0.9em; }
@@ -25,11 +24,15 @@
 		th, td { border: 1px solid var(--color-border, #ddd); padding: 0.4em 0.75em; text-align: start; font-size: 0.9em; }
 	</style>
 </head>
-<body>
+<body data-layout-root page-gap="2">
+	<header>
 	<h1>UI: Card — Schema.org</h1>
 	<p class="note">Every card type from the legacy <code>content/card</code> package, re-created with the modern engine: <code>&lt;ui-card&gt;</code> + <code>&lt;ui-media&gt;</code> + <code>&lt;ui-content&gt;</code>, with satellites <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-sticker&gt;</code>, <code>&lt;ui-save&gt;</code>, <code>&lt;ui-reveal&gt;</code> and <code>&lt;ui-accordion&gt;</code>. Structured data is inline <strong>microdata</strong> (<code>itemscope</code>/<code>itemtype</code>/<code>itemprop</code> + hidden <code>&lt;meta&gt;</code> values) — no JSON-LD, no JavaScript.</p>
 	<p class="note">The matching CMS content model is <a href="../../cms/baseline/models/card.schema.json"><code>cms/baseline/models/card.schema.json</code></a>: a structured envelope + <code>schemaType</code> discriminator + one <code>details</code> object per type. See also: <a href="index.html">index.html</a> · <a href="media.html">media.html</a> · <a href="content.html">content.html</a>.</p>
 
+	</header>
+
+	<section>
 	<h2>Proposed <code>data-part</code> vocabulary</h2>
 	<p class="note">Rebuilding all 25 types needs a few parts <code>&lt;ui-content&gt;</code> does not style yet. This page uses them as a <strong>spec</strong> — they render with default typography until <code>content.css</code> catches up. Everything else reuses existing parts (<code>meta</code> for salaries/hours/dates, <code>tags</code> for skills/hashtags, <code>byline</code> for people, <code>footer</code> for totals).</p>
 	<table>
@@ -45,10 +48,12 @@
 			<tr><td><code>options</code></td><td><code>&lt;ul&gt;</code> of <code>&lt;label&gt;</code> + <code>&lt;progress&gt;</code></td><td>Poll answers / comparison rows with bars</td><td>poll, comparison</td></tr>
 		</tbody>
 	</table>
+	</section>
 
 	<!-- ============================================================
 	     content — CreativeWork (fallback)
 	     ============================================================ -->
+	<section>
 	<h2>Content — <code>CreativeWork</code> (fallback)</h2>
 	<p class="note">The plain envelope, no <code>details</code>: eyebrow, headline, summary, tags, actions. Unknown <code>schemaType</code> values fall back to this.</p>
 	<lay-out md="columns(2)">
@@ -65,10 +70,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     article — Article
 	     ============================================================ -->
+	<section>
 	<h2>Article — <code>Article</code></h2>
 	<p class="note">Envelope only: byline (author → <code>Person</code>), published date, reading time, engagement (<code>InteractionCounter</code>).</p>
 	<lay-out md="columns(2)">
@@ -95,10 +102,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     news — NewsArticle
 	     ============================================================ -->
+	<section>
 	<h2>News — <code>NewsArticle</code></h2>
 	<p class="note">As Article, plus a “Breaking” <code>&lt;ui-chip&gt;</code> on the media and <code>dateModified</code>.</p>
 	<div class="stack">
@@ -123,10 +132,12 @@
 			</cq-box>
 		</ui-card>
 	</div>
+	</section>
 
 	<!-- ============================================================
 	     quote — Quotation
 	     ============================================================ -->
+	<section>
 	<h2>Quote — <code>Quotation</code></h2>
 	<p class="note">Envelope <code>summary</code> as <code>&lt;blockquote itemprop="text"&gt;</code> + author. Proposed part: <code>quote</code>.</p>
 	<lay-out md="columns(2)">
@@ -143,10 +154,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     product — Product
 	     ============================================================ -->
+	<section>
 	<h2>Product — <code>Product</code></h2>
 	<p class="note">Offer + AggregateRating, discount <code>&lt;ui-sticker&gt;</code>, save toggle. Proposed parts: <code>price</code>, <code>rating</code>.</p>
 	<lay-out md="columns(2)">
@@ -183,10 +196,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     event — Event
 	     ============================================================ -->
+	<section>
 	<h2>Event — <code>Event</code></h2>
 	<p class="note">Overlay composition — <code>ovr(bl)</code> + scrim. Location → <code>Place</code> → <code>PostalAddress</code>, organizer → <code>Organization</code>.</p>
 	<lay-out md="columns(2)">
@@ -207,10 +222,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     recipe — Recipe
 	     ============================================================ -->
+	<section>
 	<h2>Recipe — <code>Recipe</code></h2>
 	<p class="note">Ingredients as proposed part <code>list</code>; instructions as a nested <code>&lt;ui-accordion&gt;</code> with <code>HowToStep</code> items.</p>
 	<lay-out md="columns(2)">
@@ -248,10 +265,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     review — Review
 	     ============================================================ -->
+	<section>
 	<h2>Review — <code>Review</code></h2>
 	<p class="note">Summary emits <code>reviewBody</code>; rating → <code>Rating</code>, reviewer → <code>Person</code>, reviewed item → <code>Product</code>.</p>
 	<lay-out md="columns(2)">
@@ -279,10 +298,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     job — JobPosting
 	     ============================================================ -->
+	<section>
 	<h2>Job — <code>JobPosting</code></h2>
 	<p class="note">Headline emits <code>title</code>. Salary → <code>MonetaryAmount</code> → <code>QuantitativeValue</code>; requirements/benefits in a nested <code>&lt;ui-accordion&gt;</code>.</p>
 	<lay-out md="columns(2)">
@@ -337,10 +358,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     course — Course
 	     ============================================================ -->
+	<section>
 	<h2>Course — <code>Course</code></h2>
 	<p class="note"><code>timeRequired</code>/<code>educationalLevel</code> metas, provider → <code>Organization</code>, offer with proposed part <code>price</code>.</p>
 	<div class="stack">
@@ -372,10 +395,12 @@
 			</cq-box>
 		</ui-card>
 	</div>
+	</section>
 
 	<!-- ============================================================
 	     booking — Reservation
 	     ============================================================ -->
+	<section>
 	<h2>Booking — <code>Reservation</code></h2>
 	<p class="note">Service → <code>reservationFor</code>, venue → <code>provider</code>, hourly rate with <code>totalPrice</code>/<code>priceCurrency</code> metas.</p>
 	<lay-out md="columns(2)">
@@ -403,10 +428,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     poll — Question
 	     ============================================================ -->
+	<section>
 	<h2>Poll — <code>Question</code></h2>
 	<p class="note">Proposed part <code>options</code>: each answer is a <code>&lt;label&gt;</code> + <code>&lt;progress&gt;</code>, emitted as <code>suggestedAnswer</code> → <code>Answer</code>.</p>
 	<lay-out md="columns(2)">
@@ -435,10 +462,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     profile — Person
 	     ============================================================ -->
+	<section>
 	<h2>Profile — <code>Person</code></h2>
 	<p class="note">Square portrait, skills as <code>tags</code>, contact links as <code>contactPoint</code>.</p>
 	<lay-out md="columns(2)">
@@ -460,10 +489,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     faq — FAQPage
 	     ============================================================ -->
+	<section>
 	<h2>FAQ — <code>FAQPage</code></h2>
 	<p class="note">The type that moves <em>out</em> of <code>&lt;ui-content&gt;</code> parts: a nested <code>&lt;ui-accordion&gt;</code>, each item <code>mainEntity</code> → <code>Question</code> / <code>acceptedAnswer</code> → <code>Answer</code>.</p>
 	<lay-out md="columns(2)">
@@ -496,10 +527,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     timeline — EventSeries
 	     ============================================================ -->
+	<section>
 	<h2>Timeline — <code>EventSeries</code></h2>
 	<p class="note">Proposed part <code>timeline</code>: an <code>&lt;ol&gt;</code> where each entry is <code>subEvent</code> → <code>Event</code>.</p>
 	<lay-out md="columns(2)">
@@ -526,10 +559,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     gallery — ImageGallery
 	     ============================================================ -->
+	<section>
 	<h2>Gallery — <code>ImageGallery</code></h2>
 	<p class="note">Multiple media items become a carousel — <code>nav(dot)</code> — each image carrying <code>itemprop="image"</code>.</p>
 	<lay-out md="columns(2)">
@@ -550,10 +585,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     statistic — Observation
 	     ============================================================ -->
+	<section>
 	<h2>Statistic — <code>Observation</code></h2>
 	<p class="note">Proposed part <code>stat</code>: big number + unit + trend, value → <code>QuantitativeValue</code>.</p>
 	<lay-out md="columns(2)" lg="columns(3)">
@@ -584,10 +621,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     achievement — EducationalOccupationalCredential
 	     ============================================================ -->
+	<section>
 	<h2>Achievement — <code>EducationalOccupationalCredential</code></h2>
 	<p class="note">Burst sticker, issuer → <code>recognizedBy</code>, hidden <code>dateCreated</code>/<code>expires</code>/<code>identifier</code> metas.</p>
 	<lay-out md="columns(2)">
@@ -611,10 +650,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     announcement — SpecialAnnouncement
 	     ============================================================ -->
+	<section>
 	<h2>Announcement — <code>SpecialAnnouncement</code></h2>
 	<p class="note">Dark theme + priority chip pattern via eyebrow; audience → <code>Audience</code>.</p>
 	<lay-out md="columns(2)">
@@ -634,10 +675,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     business — LocalBusiness
 	     ============================================================ -->
+	<section>
 	<h2>Business — <code>LocalBusiness</code></h2>
 	<p class="note">Proposed part <code>address</code> (<code>PostalAddress</code> scope), geo metas, opening hours.</p>
 	<div class="stack">
@@ -672,10 +715,12 @@
 			</cq-box>
 		</ui-card>
 	</div>
+	</section>
 
 	<!-- ============================================================
 	     comparison — ItemList
 	     ============================================================ -->
+	<section>
 	<h2>Comparison — <code>ItemList</code></h2>
 	<p class="note">Items as <code>ListItem</code> with position metas; recommendation in the footer.</p>
 	<lay-out md="columns(2)">
@@ -707,10 +752,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     contact — ContactPoint
 	     ============================================================ -->
+	<section>
 	<h2>Contact — <code>ContactPoint</code></h2>
 	<p class="note"><code>contactType</code>/<code>hoursAvailable</code> metas; each method a real <code>mailto:</code>/<code>tel:</code> link.</p>
 	<lay-out md="columns(2)">
@@ -732,10 +779,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     location — Place
 	     ============================================================ -->
+	<section>
 	<h2>Location — <code>Place</code></h2>
 	<p class="note">Overlay over a destination shot; address + geo, amenities as <code>list</code>.</p>
 	<lay-out md="columns(2)">
@@ -758,10 +807,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     membership — Offer
 	     ============================================================ -->
+	<section>
 	<h2>Membership — <code>Offer</code></h2>
 	<p class="note">Dark theme, <code>PriceSpecification</code>, features as check-<code>list</code>.</p>
 	<lay-out md="columns(2)" lg="columns(3)">
@@ -787,10 +838,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     social — SocialMediaPosting
 	     ============================================================ -->
+	<section>
 	<h2>Social — <code>SocialMediaPosting</code></h2>
 	<p class="note">Byline + post text as <code>quote</code> part, hashtags as tags, engagement as three <code>InteractionCounter</code>s.</p>
 	<lay-out md="columns(2)">
@@ -825,10 +878,12 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<!-- ============================================================
 	     software — SoftwareApplication (flip reveal)
 	     ============================================================ -->
+	<section>
 	<h2>Software — <code>SoftwareApplication</code></h2>
 	<p class="note">The flipside pattern: <code>&lt;ui-reveal type="flip"&gt;</code> — front is box art + name, the back <code>&lt;ui-content&gt;</code> holds specs, developer and offer. Microdata sits on the reveal root so it survives either face.</p>
 	<lay-out md="columns(2)" lg="columns(3)">
@@ -865,5 +920,6 @@
 			</details>
 		</ui-reveal>
 	</lay-out>
+	</section>
 </body>
 </html>

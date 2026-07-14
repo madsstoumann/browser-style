@@ -14,15 +14,17 @@
 	<link rel="stylesheet" href="../icon/index.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
-		body > lay-out { margin-block-end: var(--spacing-2xl); }
 		code { font-size: 0.9em; }
 	</style>
 </head>
-<body>
+<body data-layout-root page-gap="2">
+	<header>
 	<h1>UI: Card — Media furniture</h1>
 	<p>Overlay elements placed <strong>inside <code>&lt;ui-media&gt;</code></strong>: <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-sticker&gt;</code>, <code>&lt;ui-save&gt;</code> and <code>&lt;ui-play&gt;</code>. Position and sub-theme come from the parent <code>media=</code> token — <code>chip(&lt;pos&gt;)</code> / <code>sticker(&lt;pos&gt;)</code> / <code>save(&lt;pos&gt;)</code> / <code>play(&lt;pos&gt;)</code> using the 9-code grid (<code>ts tc te · cs cc ce · bs bc be</code>), and <code>chip(&lt;hue&gt;)</code> / <code>sticker(&lt;hue&gt;)</code> for the palette (<code>red orange green blue accent dark light subtle</code>).</p>
 	<p>See also: <a href="media.html">media.html</a> (the full <code>&lt;ui-media&gt;</code> reference).</p>
+	</header>
 
+	<section>
 	<!-- ============================================================
 	     Chip — <ui-chip>
 	     ============================================================ -->
@@ -73,7 +75,9 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
+	<section>
 	<!-- ============================================================
 	     Sticker — <ui-sticker>
 	     ============================================================ -->
@@ -142,7 +146,9 @@
 		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(sh:burst) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>MEGA</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(fit) + burst</h2></ui-content></cq-box></ui-card>
 		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(green)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-sticker><strong>NEW</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">sticker(fit) single line</h2></ui-content></cq-box></ui-card>
 	</lay-out>
+	</section>
 
+	<section>
 	<!-- ============================================================
 	     Save — <ui-save>
 	     ============================================================ -->
@@ -225,7 +231,9 @@
 			btn.setAttribute('aria-pressed', btn.getAttribute('aria-pressed') !== 'true');
 		}, true);
 	</script>
+	</section>
 
+	<section>
 	<!-- ============================================================
 	     Play — <ui-play>
 	     ============================================================ -->
@@ -261,6 +269,7 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	</section>
 
 	<script type="module" src="index.js"></script>
 </body>

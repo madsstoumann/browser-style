@@ -12,11 +12,14 @@
 	<link rel="stylesheet" href="media.tint.css">
 
 </head>
-<body>
+<body data-layout-root page-gap="2">
+	<header>
 	<h1>UI: Card — Media <code>tnt()</code> tint</h1>
 	<p>Wash a <code>&lt;ui-media&gt;</code> image in a solid colour — brand or political red/blue — while keeping the photo's detail. A colour overlay (<code>ui-media::before</code>) is blended over the image with <code>mix-blend-mode</code>.</p>
 	<p>See also: <a href="media.html">media.html</a> (the full <code>&lt;ui-media&gt;</code> reference)</p>
+	</header>
 
+	<section>
 	<!-- ============================================================
 	     Theme presets — tnt(<key>)
 	     ============================================================ -->
@@ -33,7 +36,9 @@
 		<ui-media media="asr(1/1) rds(lg) tnt(light) hov(tint) chip(bc)"><img src="https://assets.stoumann.dk/img/avatar3.webp" alt=""><ui-chip>tnt(light)</ui-chip></ui-media>
 		<ui-media media="asr(1/1) rds(lg) tnt(subtle) hov(tint) chip(bc)"><img src="https://assets.stoumann.dk/img/avatar4.webp" alt=""><ui-chip>tnt(subtle)</ui-chip></ui-media>
 	</lay-out>
+	</section>
 
+	<section>
 	<!-- ============================================================
 	     Custom colours — bare tnt + --ui-media-tint-color
 	     ============================================================ -->
@@ -45,7 +50,9 @@
 		<ui-media media="asr(1/1) rds(lg) tnt(blue) hov(tint) chip(bc)" style="--ui-media-tint-opacity: 0.55;"><img src="https://assets.stoumann.dk/img/avatar3.webp" alt=""><ui-chip>opacity 0.55</ui-chip></ui-media>
 		<ui-media media="asr(1/1) rds(lg) tnt hov(tint) chip(bc)" style="--ui-media-tint-color: #0d9488;"><img src="https://assets.stoumann.dk/img/avatar4.webp" alt=""><ui-chip>#0d9488 teal</ui-chip></ui-media>
 	</lay-out>
+	</section>
 
+	<section>
 	<!-- ============================================================
 	     Rich gradients — --ui-media-tint-color: <gradient>
 	     ============================================================ -->
@@ -57,5 +64,6 @@
 		<ui-media media="asr(1/1) rds(lg) tnt hov(tint) chip(bc)" style="--ui-media-tint-color: radial-gradient(circle at 30% 25%, #f59e0b, #7c3aed 85%);"><img src="https://assets.stoumann.dk/img/avatar3.webp" alt=""><ui-chip>radial</ui-chip></ui-media>
 		<ui-media media="asr(1/1) rds(lg) tnt hov(tint) chip(bc)" style="--ui-media-tint-color: conic-gradient(from 90deg, #06b6d4, #f43f5e, #8b5cf6, #06b6d4);"><img src="https://assets.stoumann.dk/img/avatar4.webp" alt=""><ui-chip>conic</ui-chip></ui-media>
 	</lay-out>
+	</section>
 </body>
 </html>
