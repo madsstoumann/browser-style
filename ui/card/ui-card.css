@@ -20,13 +20,17 @@
 	   HOST + GRID
 	   ============================================================ */
 	:where(ui-card) {
-		--ui-card-bg: var(--color-surface);
+		/* light arm = normal surface; dark arm = the card's slate (override with
+		   --ui-card-dark-bg). Because the surface is a light-dark() pair, a card
+		   theme only has to flip color-scheme — see thm(dark). */
+		--ui-card-bg: light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937));
 		--ui-card-radius: var(--radius-2xl);
 		--ui-card-shadow: var(--shadow-xl);
 
 		background: var(--ui-card-bg);
 		border-radius: var(--ui-card-radius);
 		box-shadow: var(--ui-card-shadow);
+		color: var(--color-text);
 		container-type: inline-size;
 		display: grid;
 		overflow: hidden;
@@ -131,13 +135,11 @@
 	/* thm(brand) was removed — for a branded surface use thm(dark) with a
 	   --ui-card-dark-bg override. (dark/light/subtle spelling: full words for now.) */
 	:where([variant*="thm(dark)"]) {
-		/* color-scheme flips every light-dark() token (accent, text, border,
-		   --color-button, form controls, scrollbars) to its dark variant, so the
-		   theme is token-native — we only pin the slate surface. Muted ink, the
-		   accent eyebrow and the tag-pill bg now follow the flipped tokens. */
+		/* One flip drives the whole theme: --ui-card-bg resolves to its slate dark
+		   arm, and --color-text, --color-accent, --color-border, --color-button
+		   (pills), form controls + scrollbars all follow. Branded surface = this
+		   plus a --ui-card-dark-bg override. */
 		color-scheme: dark;
-		--ui-card-bg: var(--ui-card-dark-bg, #1f2937);
-		color: var(--ui-card-dark-ink, var(--color-text));
 	}
 	:where([variant*="thm(subtle)"]) {
 		--ui-card-bg: var(--ui-card-subtle-bg, var(--color-surface-alt, #f1f1f1));
