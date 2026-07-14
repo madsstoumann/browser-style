@@ -88,17 +88,17 @@ rebuild. Prefer a build-time default instead? Set `layoutContainer.maxWidth` /
 
 ---
 
-## Space between sections — `data-layout-root` + `page-gap`
+## Space between sections — `data-layout-root` + `data-page-gap`
 
 The container rule above owns page **width**, not the vertical gap between
 stacked `<lay-out>` sections. For that, mark the element that **directly
 contains** your top-level `<lay-out>`s — usually `<body>`, sometimes `<main>` —
-with `data-layout-root`. It becomes a single-column grid, and `page-gap="N"`
+with `data-layout-root`. It becomes a single-column grid, and `data-page-gap="N"`
 sets the gap between its direct children as `N × --layout-space-unit` (default
 `1`):
 
 ```html
-<body data-layout-root page-gap="2">
+<body data-layout-root data-page-gap="2">
   <h1>…</h1>
   <lay-out md="columns(2)">…</lay-out>   <!-- 2rem gap between every -->
   <h2>…</h2>                             <!-- direct child of the root -->
@@ -106,12 +106,16 @@ sets the gap between its direct children as `N × --layout-space-unit` (default
 </body>
 ```
 
+Both attributes are `data-*` prefixed because the root is a **native** element,
+where bare custom attributes are invalid HTML. (A bare `page-gap` is still read as
+a legacy fallback, so older markup keeps working — migrate when convenient.)
+
 The generated rule:
 
 ```css
 [data-layout-root] {
   display: grid;
-  row-gap: calc(attr(page-gap type(<number>), 1) * var(--layout-space-unit, 1rem));
+  row-gap: calc(attr(data-page-gap type(<number>), attr(page-gap type(<number>), 1)) * var(--layout-space-unit, 1rem));
 }
 ```
 
