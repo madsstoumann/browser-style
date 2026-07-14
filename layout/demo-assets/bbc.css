@@ -1,0 +1,97 @@
+/* ============================================================
+   BBC-style demo skin (approximation, NOT affiliated).
+   Recreates the *visual style* — serif headlines, near-black ink,
+   red accents, square cards — on our lay-out / ui-card system.
+   Proprietary "BBC Reith" fonts are approximated with a serif/sans
+   fallback stack. Content is original placeholder copy.
+   ============================================================ */
+:root {
+	--bbc-red: #eb0000;
+	--bbc-ink: #202224;
+	--bbc-grey: #5a5a6a;
+	--bbc-line: #d5d5d9;
+	--bbc-serif: Georgia, "Times New Roman", "BBC Reith Serif", serif;
+	--bbc-sans: system-ui, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+	/* rebrand the shared tokens the components read */
+	--color-text: var(--bbc-ink);
+	--color-accent: var(--bbc-red);
+	--color-text-muted: var(--bbc-grey);
+	--color-surface-alt: #f2f2f4;
+	background: #fff;
+	color: var(--bbc-ink);
+	font-family: var(--bbc-sans);
+}
+
+/* headlines are serif everywhere (cards + section headers) */
+:is(ui-content, lay-out-group > header) [data-part="headline"] {
+	--ui-content-heading-font: var(--bbc-serif);
+	font-family: var(--bbc-serif);
+	font-weight: 500;
+	letter-spacing: -0.02em;
+	line-height: 1.12;
+}
+
+/* square, chromeless cards; media flush */
+ui-card {
+	--ui-card-radius: 0;
+	--ui-card-shadow: none;
+	--ui-card-bg: transparent;
+}
+ui-media { --ui-media-radius: 0; }
+ui-content { --ui-content-p: 0; padding-block-start: 0.5rem; }
+[data-part="eyebrow"] { color: var(--bbc-red); font-weight: 700; }
+[data-part="meta"] { color: var(--bbc-grey); }
+
+/* section header: BBC's red top rule + black serif title */
+lay-out-group > header {
+	--layout-group-headline-fs: 1.75rem;
+	border-block-start: 3px solid var(--bbc-red);
+	padding-block-start: 0.6rem;
+}
+lay-out-group > header [data-part="headline"] { color: var(--bbc-ink); }
+lay-out-group > header [data-part="link"] { color: var(--bbc-red); }
+
+/* LIVE chip */
+ui-chip[data-live] {
+	--ui-chip-bg: var(--bbc-red);
+	--ui-chip-c: #fff;
+	--ui-chip-radius: 2px;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+/* ranked "Most read" list — the one pattern we flagged as a gap,
+   built here with plain CSS counters inside a <lay-out>. */
+.bbc-ranked {
+	border-block-start: 1px solid var(--bbc-line);
+	counter-reset: rank;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.bbc-ranked li {
+	align-items: start;
+	border-block-end: 1px solid var(--bbc-line);
+	counter-increment: rank;
+	display: grid;
+	gap: 0.75rem;
+	grid-template-columns: 1.5rem 1fr;
+	padding-block: 0.75rem;
+}
+.bbc-ranked li::before {
+	color: var(--bbc-red);
+	content: counter(rank);
+	font-size: 1.5rem;
+	font-weight: 300;
+	line-height: 1;
+}
+.bbc-ranked a {
+	color: var(--bbc-ink);
+	font-family: var(--bbc-serif);
+	font-weight: 500;
+	text-decoration: none;
+}
+.note { color: var(--bbc-grey); max-inline-size: 60ch; }

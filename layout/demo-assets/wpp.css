@@ -1,0 +1,77 @@
+/* ============================================================
+   Agency-site demo skin — WPP-flavoured (approximation, NOT
+   affiliated). Navy ink, uppercase light-weight headings, a grey
+   "our work" band, understated cards. On our lay-out / ui-card
+   system. Proprietary "wppSans" approximated via its own system
+   fallback stack. Content is original placeholder copy.
+   ============================================================ */
+:root {
+	--wpp-navy: #000050;
+	--wpp-band: #ececf1;
+	--wpp-sans: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+	--color-text: var(--wpp-navy);
+	--color-accent: var(--wpp-navy);
+	--color-text-muted: #55557a;
+	--color-surface-alt: var(--wpp-band);
+	background: #fff;
+	color: var(--wpp-navy);
+	font-family: var(--wpp-sans);
+}
+
+/* section titles — uppercase, light weight, slight negative tracking (WPP look) */
+lay-out-group > header {
+	--layout-group-headline-fs: 2rem;
+	text-align: center;
+}
+lay-out-group > header [data-part="eyebrow"] {
+	color: var(--wpp-navy);
+	font-weight: 400;
+	justify-self: center;
+	letter-spacing: 0.08em;
+}
+lay-out-group > header [data-part="headline"] {
+	color: var(--wpp-navy);
+	font-weight: 300;
+	justify-self: center;
+	letter-spacing: -0.01em;
+	max-inline-size: 22ch;
+	text-transform: uppercase;
+}
+lay-out-group > header [data-part="summary"],
+lay-out-group > header [data-part="link"] {
+	grid-column: 1;
+	justify-self: center;
+	text-align: center;
+}
+lay-out-group > header [data-part="link"] {
+	color: var(--wpp-navy);
+	grid-row: auto;   /* flow below the title instead of spanning the header rows */
+	order: 9;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+/* understated cards: square-ish, no shadow, transparent */
+ui-card {
+	--ui-card-radius: 2px;
+	--ui-card-shadow: none;
+	--ui-card-bg: transparent;
+}
+ui-media { --ui-media-radius: 2px; }
+ui-content { --ui-content-p: 0; padding-block-start: 0.75rem; }
+[data-part="headline"] { font-weight: 400; }
+[data-part="meta"] { color: var(--color-text-muted); }
+
+/* big typographic hero */
+.wpp-hero {
+	color: var(--wpp-navy);
+	font-weight: 300;
+	letter-spacing: -0.01em;
+	line-height: 1.05;
+	margin: 0;
+	text-transform: uppercase;
+}
+.note { color: var(--color-text-muted); max-inline-size: 60ch; }
