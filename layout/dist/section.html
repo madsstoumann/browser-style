@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Section headers — &lt;lay-out-group&gt; + &lt;header&gt; + &lt;lay-out&gt;</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Optional section header (eyebrow / title / subtitle / see-all link) above a lay-out grid, inside an optionally themed full-bleed band. The header sits in the themed box but outside the grid, so the grid engine is untouched.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="layout.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
+	<style>
+		/* placeholder cards so the grid is visible — not part of the feature */
+		.card {
+			background: var(--color-surface-alt, #f1f1f1);
+			border-radius: var(--radius-lg, 0.75rem);
+			display: grid;
+			min-block-size: 9rem;
+			padding: var(--spacing-md, 1rem);
+			place-content: end start;
+		}
+		.card b { font-size: var(--font-size-lg); }
+		.card small { color: var(--color-text-muted); }
+		.note { color: var(--color-text-muted); }
+	</style>
+</head>
+<body data-layout-root page-gap="3">
+	<h1>Section headers</h1>
+	<p class="note">An optional <code>&lt;header&gt;</code> above a <code>&lt;lay-out&gt;</code> grid, wrapped in a
+	<code>&lt;lay-out-group&gt;</code>. The header lives inside the (optionally themed / full-bleed) box but
+	<strong>outside</strong> the grid — so the grid engine is untouched and this works over every layout pattern.
+	The header parts reuse the <code>data-part</code> vocabulary.</p>
+
+	<!-- 1 — plain section header (no theme), content-width, over columns(3) -->
+	<lay-out-group>
+		<header>
+			<small data-part="eyebrow">Our work</small>
+			<h2 data-part="headline">World-class ideas and how they deliver</h2>
+			<p data-part="summary">A plain section header — no theme. The title/subtitle sit left, the link end-aligns.</p>
+			<a data-part="link" href="#">View all work →</a>
+		</header>
+		<lay-out md="columns(2)" lg="columns(3)">
+			<div class="card"><b>IWC Schaffhausen</b><small>Case study · 2026</small></div>
+			<div class="card"><b>Got Bag</b><small>Case study · 2026</small></div>
+			<div class="card"><b>Network Rail</b><small>Case study · 2026</small></div>
+		</lay-out>
+	</lay-out-group>
+
+	<!-- 2 — themed full-bleed band (light green), content-width header, over grid(3a) -->
+	<lay-out-group bleed pad-top="3" pad-bottom="3" style="--layout-bg:#eaf6e9;">
+		<header>
+			<small data-part="eyebrow">Trusted to grow responsibly</small>
+			<h2 data-part="headline">Sustainability across the business</h2>
+			<p data-part="summary">A full-bleed themed band. The green paints edge-to-edge; the header and grid stay in the centred content column and align.</p>
+			<a data-part="link" href="#">Learn more →</a>
+		</header>
+		<lay-out md="columns(2)" lg="grid(3a)">
+			<div class="card"><b>Report 2026</b><small>Insight</small></div>
+			<div class="card"><b>Net zero</b><small>Insight</small></div>
+			<div class="card"><b>Supply chain</b><small>Insight</small></div>
+		</lay-out>
+	</lay-out-group>
+
+	<!-- 3 — themed band with a FULL-BLEED header (data-bleed) -->
+	<lay-out-group bleed pad-top="4" pad-bottom="4" style="--layout-bg:#0a0a4f; --layout-group-c:#f7f3e3;">
+		<header data-bleed style="--color-accent:#9db4ff; --color-text-muted:#cdd6ff;">
+			<small data-part="eyebrow">Careers</small>
+			<h2 data-part="headline">Where exceptional talent reimagines growth</h2>
+			<p data-part="summary">Same band, but <code>&lt;header data-bleed&gt;</code> lets the header span the band instead of the content column.</p>
+			<a data-part="link" href="#" style="color:#9db4ff;">Explore careers →</a>
+		</header>
+		<lay-out md="columns(2)" lg="columns(4)">
+			<div class="card"><b>Engineering</b></div>
+			<div class="card"><b>Design</b></div>
+			<div class="card"><b>Strategy</b></div>
+			<div class="card"><b>Data</b></div>
+		</lay-out>
+	</lay-out-group>
+
+	<!-- 4 — header over a fixed BENTO pattern (proves the grid math is untouched) -->
+	<lay-out-group>
+		<header>
+			<small data-part="eyebrow">Latest</small>
+			<h2 data-part="headline">A header over a bento grid</h2>
+			<a data-part="link" href="#">See all →</a>
+		</header>
+		<lay-out md="columns(2)" lg="bento(6a)">
+			<div class="card"><b>1</b></div>
+			<div class="card"><b>2</b></div>
+			<div class="card"><b>3</b></div>
+			<div class="card"><b>4</b></div>
+			<div class="card"><b>5</b></div>
+			<div class="card"><b>6</b></div>
+		</lay-out>
+	</lay-out-group>
+</body>
+</html>

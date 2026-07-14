@@ -285,6 +285,134 @@
 	}
 }
 
+/* ============================================================
+   <lay-out-group> — an optional <header> above a <lay-out> grid,
+   inside an (optionally themed / full-bleed) band. A custom element
+   in the lay-out family, so it takes the same bare attributes as
+   <lay-out> (bleed, pad-top, pad-bottom, space-top, space-bottom).
+
+   Structure:
+     <lay-out-group [bleed] [pad-top] [style="--layout-bg:…"]>
+       <header>
+         <small data-part="eyebrow">…</small>
+         <h2    data-part="headline">…</h2>
+         <p     data-part="summary">…</p>       (optional)
+         <a     data-part="link" href>See all</a>   (optional)
+       </header>
+       <lay-out md="columns(2)" lg="grid(3a)">…cards…</lay-out>
+     </lay-out-group>
+
+   The header lives INSIDE the (themed) box but OUTSIDE <lay-out>, so the
+   grid engine (nth-child placement for columns/grid/bento/asym) is never
+   touched. Mirrors the lay-out[bleed] band in base.css (simplified: no
+   per-item bleed scaling). Header parts use @browser.style/base tokens.
+   ============================================================ */
+@layer layout.base {
+
+	:where(lay-out-group) {
+		--layout-space-unit: 1rem; /* mirror lay-out (declared on a descendant, not here) */
+		--_group-pi: max(var(--layout-mi, 1rem), (100dvi - var(--layout-bleed-mw, 1024px)) / 2);
+
+		background: var(--layout-group-bg, var(--layout-bg, #0000));
+		box-sizing: border-box;
+		color: var(--layout-group-c, var(--layout-c, inherit));
+		display: grid;
+		grid-template-columns: 1fr;
+		row-gap: var(--layout-group-gap, calc(2 * var(--layout-space-unit)));
+
+		/* vertical spacing — same bare-attribute vocabulary as <lay-out> (valid
+		   because <lay-out-group> is a custom element). pad-* = inner padding
+		   within the (themed) band; space-* = outer margin, added to page-gap. */
+		margin-block:
+			calc(attr(space-top type(<number>), 0) * var(--layout-space-unit))
+			calc(attr(space-bottom type(<number>), 0) * var(--layout-space-unit));
+		padding-block:
+			calc(attr(pad-top type(<number>), 0) * var(--layout-space-unit))
+			calc(attr(pad-bottom type(<number>), 0) * var(--layout-space-unit));
+
+		/* the grid fills the group's content column; it must not re-bleed */
+		& > lay-out { inline-size: 100%; }
+	}
+
+	/* Themed full-bleed band: escape the width-constrained [data-layout-root],
+	   paint the bg edge-to-edge, then re-pad content back to the centre column. */
+	:where(lay-out-group)[bleed] {
+		background-color: #0000;
+		border-image: conic-gradient(var(--layout-group-bg, var(--layout-bg)) 0 0) fill 0//0 100dvi;
+		margin-inline: min(-1 * var(--layout-mi, 0px), var(--layout-bleed-mw, 100dvi) / 2 - 50dvi);
+		padding-inline: var(--_group-pi);
+	}
+
+	/* ---- header block: text column + end-aligned "see all" link ---- */
+	:where(lay-out-group) > header {
+		align-items: end;
+		column-gap: var(--layout-space-unit, 1rem);
+		display: grid;
+		grid-template-columns: 1fr auto;
+		row-gap: calc(0.375 * var(--layout-space-unit, 1rem));
+
+		& > * { margin: 0; }
+
+		& [data-part="eyebrow"] {
+			color: var(--color-accent);
+			font-size: var(--font-size-sm, 0.875rem);
+			font-weight: var(--font-weight-medium, 500);
+			grid-column: 1;
+			letter-spacing: var(--tracking-wide, 0.025em);
+			line-height: var(--line-height-snug, 1.25);
+			text-transform: uppercase;
+		}
+		& [data-part="headline"] {
+			font-size: var(--layout-group-headline-fs, var(--font-size-2xl, 1.5rem));
+			font-weight: var(--font-weight-bold, 700);
+			grid-column: 1;
+			letter-spacing: var(--tracking-tight, -0.015em);
+			line-height: var(--line-height-tight, 1.15);
+			text-wrap: balance;
+		}
+		& [data-part="summary"] {
+			color: var(--color-text-muted);
+			font-size: var(--font-size-lg, 1.125rem);
+			grid-column: 1;
+			max-inline-size: 60ch;
+			text-wrap: pretty;
+		}
+		/* "see all" — end-aligned, bottom-aligned with the heading block */
+		& [data-part="link"] {
+			align-self: end;
+			color: var(--color-link, var(--color-accent));
+			font-size: var(--font-size-sm, 0.875rem);
+			font-weight: var(--font-weight-medium, 500);
+			grid-column: 2;
+			grid-row: 1 / -1;
+			justify-self: end;
+			white-space: nowrap;
+		}
+	}
+
+	/* Narrow: stack the link under the heading block. No container-type here, so
+	   key off viewport width (the header spans the content column). */
+	@media (width < 30rem) {
+		:where(lay-out-group) > header {
+			grid-template-columns: 1fr;
+		}
+		:where(lay-out-group) > header [data-part="link"] {
+			grid-column: 1;
+			grid-row: auto;
+			justify-self: start;
+		}
+	}
+
+	/* Opt-in full-bleed header: text spans the band (small gutter) instead of
+	   aligning to the grid's content column. Only meaningful on a bleed group.
+	   The header is a native <header>, so this toggle is data-* prefixed. */
+	:where(lay-out-group)[bleed] > header[data-bleed] {
+		margin-inline: calc(-1 * var(--_group-pi));
+		padding-inline: var(--layout-mi, 1rem);
+	}
+}
+
+
 /* CREDITS: https://github.com/argyleink/open-props/blob/main/src/props.easing.css */
 :where(html) {
   --ease-1: cubic-bezier(.25, 0, .5, 1);

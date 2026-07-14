@@ -432,6 +432,54 @@ descendant, not an ancestor). Because it's `row-gap` on the direct parent,
 All direct children become grid tracks, so headings/intros are spaced by the
 same gap — reset their block margins if the gap alone should govern rhythm.
 
+### Section headers — `<lay-out-group>` (`core/group.css`)
+
+For a section that needs a **header above the grid** (eyebrow / title / subtitle /
+"see all" link, à la BBC / WPP), wrap an optional `<header>` and the `<lay-out>`
+in a `<lay-out-group>` — a custom element in the `lay-out` family, so it takes the
+same **bare attributes** as `<lay-out>` (`bleed`, `pad-top`, …):
+
+```html
+<lay-out-group bleed pad-top="3" style="--layout-bg:#eaf6e9">   <!-- all optional -->
+  <header>
+    <small data-part="eyebrow">Our work</small>
+    <h2    data-part="headline">World-class ideas</h2>
+    <p     data-part="summary">Optional subtitle.</p>
+    <a     data-part="link" href="/work">View all →</a>
+  </header>
+  <lay-out md="columns(2)" lg="grid(3a)"> …cards… </lay-out>
+</lay-out-group>
+```
+
+Unregistered (pure CSS, like `<ui-card>`). Key properties:
+
+- **Header is inside the box but outside `<lay-out>`** — it never becomes a grid
+  item, so the `nth-child` placement of every pattern (columns, grid, bento,
+  asym, mosaic) is unaffected. Works over *any* layout.
+- **Theme / bleed**: `<lay-out-group [bleed] style="--layout-bg:…">` paints a
+  themed band. `bleed` escapes the `data-layout-root` width like `lay-out[bleed]`
+  (its own simplified band — no per-item bleed scaling); the inner `<lay-out>`
+  stays content-width and **must not** carry its own `bleed`/`--layout-bg`.
+- **Header parts** reuse the `data-part` vocabulary (`eyebrow`/`headline`/
+  `summary`/`link`), styled by `group.css` itself with `@browser.style/base`
+  tokens (no dependency on `ui-content`). The `link` end-aligns and drops below
+  the heading on narrow widths.
+- **Header width**: content-column by default (aligns with the grid). Opt into a
+  full-band header with `<header data-bleed>` (data-* because the inner `<header>`
+  is a native element).
+- **Vertical spacing** uses the same bare `<lay-out>` vocabulary (valid on the
+  custom element): `pad-top`/`pad-bottom` = inner padding *within* the band;
+  `space-top`/`space-bottom` = outer margin (added to `page-gap`). It's
+  `box-sizing: border-box` so padding doesn't disturb the bleed width math.
+- Tunables: `--layout-group-gap` (header→grid), `--layout-group-bg`/`-c`,
+  `--layout-group-headline-fs`.
+
+`core/group.css` is bundled via `layout.config.json` `core: ["base","group"]`.
+Demo: `dist/section.html`. SSR target (deferred): `renderSection()` emits this
+`<lay-out-group><header>…</header><lay-out>…</lay-out></lay-out-group>` from a
+section JSON with an optional `header` object (see `docs/card-integration.md`
+Phase 4).
+
 ## Performance
 
 - **Zero JavaScript**: Pure CSS, no runtime overhead

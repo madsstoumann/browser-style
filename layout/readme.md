@@ -125,6 +125,37 @@ gap alone to govern the rhythm.
 
 ---
 
+## Section headers — `<lay-out-group>`
+
+Need a heading, category, subtitle and a "see all" link **above** a grid (the
+classic BBC / WPP section)? Wrap an optional `<header>` and the `<lay-out>` in a
+`<lay-out-group>` — a custom element in the `lay-out` family, so it takes the same
+bare attributes as `<lay-out>`:
+
+```html
+<lay-out-group bleed pad-top="3" pad-bottom="3" style="--layout-bg:#eaf6e9">
+  <header>
+    <small data-part="eyebrow">Our work</small>
+    <h2    data-part="headline">World-class ideas</h2>
+    <p     data-part="summary">Optional subtitle.</p>
+    <a     data-part="link" href="/work">View all →</a>
+  </header>
+  <lay-out md="columns(2)" lg="grid(3a)"> …cards… </lay-out>
+</lay-out-group>
+```
+
+- The header sits inside the box but **outside** the grid, so every layout pattern
+  (columns, grid, bento, asym, mosaic) keeps working unchanged.
+- `bleed` + `--layout-bg` make a full-bleed themed band; the header and grid stay
+  in the centred content column. `<header data-bleed>` spans the whole band instead.
+- `pad-top`/`pad-bottom` (inner padding) and `space-top`/`space-bottom` (outer
+  margin) work just like on `<lay-out>`.
+- Header parts use the `data-part` vocabulary (`eyebrow`/`headline`/`summary`/`link`).
+
+Live demo: `dist/section.html`.
+
+---
+
 ## Features
 
 - **Pure CSS** - No JavaScript runtime needed
