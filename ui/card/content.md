@@ -233,7 +233,7 @@ Each part keeps its own `--ui-content-{part}-*` token(s) (see *Tokens*) for futu
 `data-part="tags"` hosts two kinds of child, and they compose in the same list:
 
 - **Plain links** — `<li><a href="…">Tag</a></li>` render as the built-in **pill** (`--ui-content-tag-bg` / `-color` / `-radius` / `-padding`). This is the default and the current `render.js` output.
-- **`<ui-chip>` children** — `<li><ui-chip theme="blue"><a href="…">Tag</a></ui-chip></li>` style themselves via `@browser.style/chip`, unlocking the **full chip palette** (`theme=` red/orange/green/blue/accent/dark/light/subtle) and **variants** (`variant="light"` / `variant="outline"`, `size=`, `radius=`). See [ui/chip](../chip/).
+- **`<ui-chip>` children** — `<li><ui-chip><a href="…">Tag</a></ui-chip></li>` style themselves via `@browser.style/chip`. A **bare `<ui-chip>` (no attributes) is the default grey pill** (grey on light surfaces, darker grey on dark — same `--color-button` as the plain-link default), so it's a drop-in upgrade; add `theme=` (red/orange/green/blue/accent/dark/light/subtle) or `variant="light"` / `variant="outline"` (plus `size=`, `radius=`) for the full palette. See [ui/chip](../chip/).
 
 The bespoke pill is scoped to `& a:not(ui-chip *)`, so it is a **fallback** that never leaks onto a chip's own `<a>` — a `<ui-chip>` always styles itself. Mixing both in one list is fine.
 

@@ -77,7 +77,7 @@
 	     ============================================================ -->
 	<h2>Content parts — the full anatomy</h2>
 	<p class="note">Parts are styled by the <code>data-part</code> attribute, not the tag name, so you pick the semantically correct element. Each part has its own font-size / colour / weight / gap tokens (all relative to <code>--ui-content-fs</code> by default). The caption over the image is a <code>&lt;ui-chip&gt;</code> positioned with <code>chip(bs)</code> on the card's <code>media=</code> (see <a href="media.furniture.html">media.furniture.html</a>). The second example is a <strong>bare <code>&lt;ui-content&gt;</code></strong> — no <code>&lt;ui-card&gt;</code>, no <code>&lt;cq-box&gt;</code> — showing the primitive works standalone with its own <code>content=</code> attribute.</p>
-	<p class="note"><strong>Tags</strong> (<code>data-part="tags"</code>) accept either <strong>plain links</strong> (rendered as the default pill — see the themed cards and the horizontal strip below) <em>or</em> <code>&lt;ui-chip&gt;</code> children, which unlock the full chip colour palette and variants (<code>theme=</code> red/orange/green/blue/accent/dark/light/subtle · <code>variant=</code> light/outline · see <a href="../chip/">ui/chip</a>). Both anatomy cards here use <code>&lt;ui-chip&gt;</code>; the plain-link form still works unchanged.</p>
+	<p class="note"><strong>Tags</strong> (<code>data-part="tags"</code>) are a <code>&lt;ul&gt;</code>/<code>&lt;li&gt;</code> list whose items are either <strong>plain links</strong> — <code>&lt;li&gt;&lt;a&gt;</code>, rendered as the default pill (this is what <code>render.js</code> emits; see the horizontal strip below) — <em>or</em> <code>&lt;ui-chip&gt;</code> children. A <strong>default</strong> <code>&lt;ui-chip&gt;</code> (no attributes) is the same grey pill (grey on light, darker grey on dark — see the three theme cards below); add <code>theme=</code> (red/orange/green/blue/accent/dark/light/subtle) or <code>variant=</code> (light/outline) for the full palette (see <a href="../chip/">ui/chip</a>), as on the two anatomy cards above.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9) chip(bs)">
 			<cq-box>
@@ -118,13 +118,13 @@
 	<p class="note">Theme tokens remap the surface, ink, eyebrow and tag colours (text-only here — for media-backed themes see <a href="media.html">media.html</a>). The same card in default, <code>thm(subtle)</code> and <code>thm(dark)</code>. Every value is overridable (e.g. <code>--ui-card-dark-bg</code>). There is no <code>thm(brand)</code> — a branded surface is <code>thm(dark)</code> plus a <code>--ui-card-dark-bg</code> override.</p>
 	<lay-out md="columns(3)">
 		<ui-card variant="vis(content)">
-			<cq-box><ui-content><small data-part="eyebrow">default</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Unlimited workouts, coaching and priority support.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box>
+			<cq-box><ui-content><small data-part="eyebrow">default</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Unlimited workouts, coaching and priority support.</p><ul data-part="tags"><li><ui-chip><a href="#">Popular</a></ui-chip></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="vis(content) thm(subtle)">
-			<cq-box><ui-content><small data-part="eyebrow">thm(subtle)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Off-white surface, default dark ink.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box>
+			<cq-box><ui-content><small data-part="eyebrow">thm(subtle)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Off-white surface, default dark ink.</p><ul data-part="tags"><li><ui-chip><a href="#">Popular</a></ui-chip></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="vis(content) thm(dark)">
-			<cq-box><ui-content><small data-part="eyebrow">thm(dark)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Dark surface, light ink, accent eyebrow.</p><ul data-part="tags"><li><a href="#">Popular</a></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box>
+			<cq-box><ui-content><small data-part="eyebrow">thm(dark)</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Dark surface, light ink, accent eyebrow.</p><ul data-part="tags"><li><ui-chip><a href="#">Popular</a></ui-chip></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
 
@@ -301,11 +301,11 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
-	<p class="note"><code>content="scr(x)"</code> flips the axis: a <strong>horizontal</strong> scrolling row with a left/right fade — for a strip of chips, tags or thumbnails that overflows the card. Bare <code>scr</code> (= <code>scr(y)</code>) stays vertical.</p>
+	<p class="note"><code>content="scr(x)"</code> flips the axis: a <strong>horizontal</strong> scrolling row with a left/right fade — for a strip of chips, tags or thumbnails that overflows the card. Bare <code>scr</code> (= <code>scr(y)</code>) stays vertical. This strip is deliberately made of <strong>plain-link tags</strong> (<code>&lt;li&gt;&lt;a&gt;</code>) — the default-pill fallback (exactly what <code>render.js</code> outputs today) — to prove it still renders and scrolls without <code>&lt;ui-chip&gt;</code>.</p>
 	<div class="stack">
 		<ui-card variant="vis(content) thm(subtle)" content="scr(x) gap(sm)">
 			<cq-box><ui-content>
-				<small data-part="eyebrow">scr(x) · horizontal</small>
+				<small data-part="eyebrow">scr(x) · horizontal · plain-link fallback</small>
 				<ul data-part="tags">
 					<li><a href="#">Design</a></li><li><a href="#">CSS</a></li><li><a href="#">Container Queries</a></li>
 					<li><a href="#">Scroll-driven</a></li><li><a href="#">Cards</a></li><li><a href="#">Primitives</a></li>
