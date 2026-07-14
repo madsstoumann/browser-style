@@ -77,6 +77,7 @@
 	     ============================================================ -->
 	<h2>Content parts — the full anatomy</h2>
 	<p class="note">Parts are styled by the <code>data-part</code> attribute, not the tag name, so you pick the semantically correct element. Each part has its own font-size / colour / weight / gap tokens (all relative to <code>--ui-content-fs</code> by default). The caption over the image is a <code>&lt;ui-chip&gt;</code> positioned with <code>chip(bs)</code> on the card's <code>media=</code> (see <a href="media.furniture.html">media.furniture.html</a>). The second example is a <strong>bare <code>&lt;ui-content&gt;</code></strong> — no <code>&lt;ui-card&gt;</code>, no <code>&lt;cq-box&gt;</code> — showing the primitive works standalone with its own <code>content=</code> attribute.</p>
+	<p class="note"><strong>Tags</strong> (<code>data-part="tags"</code>) accept either <strong>plain links</strong> (rendered as the default pill — see the themed cards and the horizontal strip below) <em>or</em> <code>&lt;ui-chip&gt;</code> children, which unlock the full chip colour palette and variants (<code>theme=</code> red/orange/green/blue/accent/dark/light/subtle · <code>variant=</code> light/outline · see <a href="../chip/">ui/chip</a>). Both anatomy cards here use <code>&lt;ui-chip&gt;</code>; the plain-link form still works unchanged.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9) chip(bs)">
 			<cq-box>
@@ -90,7 +91,7 @@
 					<p data-part="subheadline">Subheadline — a muted secondary line</p>
 					<p data-part="summary">Summary is the body copy of the card. It uses the body font-size ramp and a comfortable line-height for reading.</p>
 					<address data-part="byline"><img src="/assets/images/janesmith.png" alt=""><span>Byline · <span data-part="meta">Jun 20, 2026 · 5 min</span></span></address>
-					<ul data-part="tags"><li><a href="#">tags</a></li><li><a href="#">pill list</a></li></ul>
+					<ul data-part="tags"><li><ui-chip theme="blue"><a href="#">tags</a></ui-chip></li><li><ui-chip variant="light" theme="green"><a href="#">pill list</a></ui-chip></li></ul>
 					<nav data-part="actions"><a class="ui-button bg-accent" href="#">Primary action</a></nav>
 					<footer data-part="footer">Footer — trailing meta</footer>
 				</ui-content>
@@ -104,7 +105,7 @@
 			<p data-part="summary">summary → inherits the body colour, <code>fs × 1</code>. This whole block is a bare <code>&lt;ui-content content="scl(md)"&gt;</code> in normal page flow.</p>
 			<p data-part="meta">meta → <code>fs × 0.75</code>, muted.</p>
 			<address data-part="byline"><span>byline → <code>fs × 0.82</code> (no avatar here)</span></address>
-			<ul data-part="tags"><li><a href="#">UX</a></li><li><a href="#">CSS</a></li><li><a href="#">Cards</a></li></ul>
+			<ul data-part="tags"><li><ui-chip theme="blue"><a href="#">UX</a></ui-chip></li><li><ui-chip theme="green"><a href="#">CSS</a></ui-chip></li><li><ui-chip variant="outline" theme="accent"><a href="#">Cards</a></ui-chip></li></ul>
 			<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy</a> <a class="ui-button bg-accent --outline" href="#">Details</a></nav>
 			<footer data-part="footer">footer → <code>fs × 0.78</code>, muted</footer>
 		</ui-content>

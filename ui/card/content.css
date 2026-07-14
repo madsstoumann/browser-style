@@ -366,6 +366,11 @@
 		/* Only the rendered leaf becomes the pill box — the wrapper stays
 		   display:contents (above), so a <li><a> pair is ONE pill, not two. */
 		& a:not(ui-chip *) { display: inline-grid; place-content: center; }
+		/* a link INSIDE a tag chip: the chip paints the pill, so the anchor stays
+		   transparent/flush and just carries the href — inherit the chip ink, drop
+		   the UA underline. Higher specificity than the bespoke `& a` pill, so it
+		   also neutralises any leaked pill background/padding. */
+		& ui-chip a { background: none; color: inherit; padding: 0; text-decoration: none; }
 	}
 	/* scr(x) tags override — must follow the tags rule above so the nowrap wins at
 	   equal specificity (a horizontal strip must not wrap; pills/chips hold width). */

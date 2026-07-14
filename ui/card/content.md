@@ -212,7 +212,7 @@ Content parts are **semantic children** marked with `data-part`. They are auto-s
 | `meta` | `<p data-part="meta">` | Small muted metadata line (date, read-time) — ~0.75× body |
 | `caption` | `<figcaption data-part="caption">` | Same treatment as `meta`; usable inside `<ui-media>` (sits above the scrim) |
 | `byline` | `<address data-part="byline">` | Author row — flex, centered; an inner `<img>` becomes a round avatar |
-| `tags` | `<ul data-part="tags">` | Pill list — flex-wrap; child `<li>`/`<a>` render as rounded pills |
+| `tags` | `<ul data-part="tags">` | Tag list — flex-wrap. Children are either **plain links** (default pill) or **`<ui-chip>`** (full colour palette) — see below |
 | `actions` | `<div data-part="actions">` | Button / link row — flex-wrap with action gap |
 | `footer` | `<footer data-part="footer">` | Trailing muted meta row — flex-wrap |
 | `price` | `<p data-part="price">` | **Body group** (prominent) — large current price; `<del>` struck original, `<small>` accent discount |
@@ -227,6 +227,17 @@ Content parts are **semantic children** marked with `data-part`. They are auto-s
 Bare headings (`h2`–`h6`) are styled identically to `data-part="headline"` as a convenience, so plain semantic markup just works.
 
 Each part keeps its own `--ui-content-{part}-*` token(s) (see *Tokens*) for future per-part typography knobs.
+
+### Tags — plain links or `<ui-chip>`
+
+`data-part="tags"` hosts two kinds of child, and they compose in the same list:
+
+- **Plain links** — `<li><a href="…">Tag</a></li>` render as the built-in **pill** (`--ui-content-tag-bg` / `-color` / `-radius` / `-padding`). This is the default and the current `render.js` output.
+- **`<ui-chip>` children** — `<li><ui-chip theme="blue"><a href="…">Tag</a></ui-chip></li>` style themselves via `@browser.style/chip`, unlocking the **full chip palette** (`theme=` red/orange/green/blue/accent/dark/light/subtle) and **variants** (`variant="light"` / `variant="outline"`, `size=`, `radius=`). See [ui/chip](../chip/).
+
+The bespoke pill is scoped to `& a:not(ui-chip *)`, so it is a **fallback** that never leaks onto a chip's own `<a>` — a `<ui-chip>` always styles itself. Mixing both in one list is fine.
+
+> **Renderer:** `render.js` currently emits the plain-link form (`<li><a>`), which keeps working as the default pill. Emitting `<ui-chip>` from tag/category data is **deferred to the render rework** — the CSS + demos support chips now; `render.js` is intentionally not changed in this pass.
 
 ---
 
