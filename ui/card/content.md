@@ -104,6 +104,7 @@ import '@browser.style/content';
 | `mt()` | tone · weight · `shd` | meta group — ink, weight, shadow (meta/caption/byline/footer/tags/rating/options) | No |
 | `pad()` | `none` `xs` `sm` `md` `lg` `xl` `2xl` | content padding (`--ui-content-p`) | **Yes** |
 | `gap()` | `none` `xs` `sm` `md` `lg` | row gap between parts (`--ui-content-gap`) | **Yes** |
+| `ctr` / `end` | *(flag)* | standalone cross-axis + text alignment — centre / end the whole content column (`--ui-content-align`), independent of `ovr()` overlay placement | No |
 | `scr` / `scr(y)` / `scr(x)` | *(flag)* | scrollable content + shared `ui-scroll-fade` edge mask (`ui/base/scroll.css`). Bare `scr` = `scr(y)` = vertical column; `scr(x)` = horizontal row | No |
 
 **Tone** (ink strength + hue): `shr` (30%) · `lgt` (45%) · `med` (65%, = muted) · `drk` (85%) · `sld` (100%, theme text) · `accent` · `inv` (white, for overlays).

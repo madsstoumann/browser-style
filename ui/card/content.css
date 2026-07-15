@@ -180,11 +180,16 @@
 	:where([content~="gap(md)"])   { --ui-content-gap: var(--spacing-md); }
 	:where([content~="gap(lg)"])   { --ui-content-gap: var(--spacing-lg); }
 
+	/* ctr / end — standalone text + cross-axis alignment (independent of ov()
+	   overlay placement). Centres/ends the whole content column. */
+	:where([content~="ctr"]) { --ui-content-align: center; }
+	:where([content~="end"]) { --ui-content-align: end; }
+
 	/* ============================================================
 	   CONTAINER — flex column; ov() placement/ink read from props
 	   ============================================================ */
 	:where(ui-content) {
-		align-items: var(--ui-content-ov-align, normal);
+		align-items: var(--ui-content-ov-align, var(--ui-content-align, normal));
 		color: var(--ui-content-ov-ink, inherit);
 		display: flex;
 		flex-direction: column;
@@ -193,7 +198,7 @@
 		gap: var(--ui-content-gap, 1em);
 		justify-content: var(--ui-content-ov-justify, normal);
 		padding: var(--ui-content-p, var(--spacing-md));
-		text-align: var(--ui-content-ov-text, start);
+		text-align: var(--ui-content-ov-text, var(--ui-content-align, start));
 		z-index: var(--ui-content-ov-z, auto);
 
 		& > * { margin: 0; text-box: cap alphabetic; }

@@ -21,6 +21,10 @@
 		.card b { font-size: var(--font-size-lg); }
 		.card small { color: var(--color-text-muted); }
 		.note { color: var(--color-text-muted); }
+		/* flat cards for the subgrid demo — img / title / meta as three direct children */
+		.sg-card > img { aspect-ratio: 16 / 9; border-radius: var(--radius-md, .5rem); inline-size: 100%; object-fit: cover; }
+		.sg-card > h3 { margin: .6rem 0 0; }
+		.sg-card > small { align-self: end; color: var(--color-text-muted); }
 	</style>
 </head>
 <body data-layout-root data-page-gap="3">
@@ -92,5 +96,16 @@
 			<div class="card"><b>6</b></div>
 		</lay-out>
 	</lay-out-group>
+	<!-- ============================================================
+	     subgrid="N" — align direct children's internal rows
+	     ============================================================ -->
+	<h2 style="padding-inline:1rem;">Row alignment — <code>&lt;lay-out subgrid="3"&gt;</code></h2>
+	<p class="note" style="padding-inline:1rem;">Each card's three rows (image · title · meta) share tracks across the grid, so the images and the meta lines stay aligned even when the titles wrap to different lengths. Works on any direct child with N rows of content (here plain <code>&lt;article&gt;</code>s).</p>
+	<lay-out lg="columns(3)" subgrid="3" style="padding-inline:1rem;">
+		<article class="sg-card"><img src="/assets/images/city.png" alt=""><h3>Short title</h3><small>Category · 2026</small></article>
+		<article class="sg-card"><img src="/assets/images/river.png" alt=""><h3>A considerably longer title that wraps onto two or even three lines</h3><small>Category · 2026</small></article>
+		<article class="sg-card"><img src="/assets/images/gastronomy.png" alt=""><h3>Medium-length title here</h3><small>Category · 2026</small></article>
+	</lay-out>
+
 </body>
 </html>

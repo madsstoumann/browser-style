@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="/ui/card/ui-card.css">
+	<link rel="stylesheet" href="/ui/play/ui-play.css">
 	<link rel="stylesheet" href="wpp.css">
 	<script type="module" src="/layout/polyfills/attr-fallback.js"></script>
 </head>
@@ -15,10 +16,15 @@
 
 	<p class="note" style="padding-block:1rem;">Agency homepage — an <strong>approximation</strong> of a WPP layout (unaffiliated; original copy, repo images, system-font fallback for the proprietary face). Themed <code>&lt;lay-out-group&gt;</code> bands + <code>&lt;lay-out&gt;</code> grids + <code>&lt;ui-card&gt;</code> (add <code>animate="fade-up()"</code> to any grid for the layout system's scroll-reveal).</p>
 
-	<!-- HERO — big typographic statement with an inline image -->
-	<lay-out md="columns(1)" lg="ratio(40:60)" style="align-items:center;--layout-rg:2;">
-		<p class="wpp-hero" style="font-size:clamp(2.5rem,1rem + 6cqi,4.5rem);">Trusted growth partner for the world's leading brands</p>
-		<ui-media media="asr(4/3)" style="--ui-media-radius:2px;"><img src="/assets/images/river.png" alt=""></ui-media>
+	<!-- HERO — centred statement split around a portrait video with a ui-play control:
+	     ui-content (content="ctr") / ui-media + ui-play / ui-content, in a width="md" column -->
+	<lay-out md="columns(1)" width="md" style="--layout-rg:2;">
+		<ui-content content="ctr pad(none)"><p class="wpp-hero" style="font-size:clamp(2rem,1rem + 5cqi,3.5rem);">WPP is the trusted growth partner</p></ui-content>
+		<ui-media media="asr(3/4) play(be)" style="--ui-media-radius:2px;inline-size:min(24rem,100%);margin-inline:auto;">
+			<video src="https://assets.stoumann.dk/video/river.mp4" poster="/assets/images/river.png" autoplay muted loop playsinline></video>
+			<ui-play><button type="button" aria-label="Play/pause"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button></ui-play>
+		</ui-media>
+		<ui-content content="ctr pad(none)"><p class="wpp-hero" style="font-size:clamp(2rem,1rem + 5cqi,3.5rem);">for the world's leading brands</p></ui-content>
 	</lay-out>
 
 	<!-- OUR WORK — grey full-bleed band, centred header, 3 case cards -->
@@ -29,9 +35,9 @@
 			<a data-part="link" href="#">View all work</a>
 		</header>
 		<lay-out md="columns(1)" lg="ratio(50:25:25)">
-			<ui-card variant="col" media="asr(4/3)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><h3 data-part="headline">A heritage brand, reintroduced</h3><p data-part="meta">Brand · 2026</p></ui-content></cq-box></ui-card>
-			<ui-card variant="col" media="asr(4/3)"><cq-box><ui-media><img src="/assets/images/adventurecam.png" alt=""></ui-media><ui-content><h3 data-part="headline">Turning waste into a flagship product</h3><p data-part="meta">Sustainability · 2026</p></ui-content></cq-box></ui-card>
-			<ui-card variant="col" media="asr(4/3)"><cq-box><ui-media><img src="/assets/images/destinations.png" alt=""></ui-media><ui-content><h3 data-part="headline">Rethinking a nation's transit</h3><p data-part="meta">Experience · 2026</p></ui-content></cq-box></ui-card>
+			<ui-card variant="col" media="asr(4/3) hov(pan)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><h3 data-part="headline">A heritage brand, reintroduced</h3><p data-part="meta">Brand · 2026</p></ui-content></cq-box></ui-card>
+			<ui-card variant="col" media="asr(4/3) hov(pan)"><cq-box><ui-media><img src="/assets/images/adventurecam.png" alt=""></ui-media><ui-content><h3 data-part="headline">Turning waste into a flagship product</h3><p data-part="meta">Sustainability · 2026</p></ui-content></cq-box></ui-card>
+			<ui-card variant="col" media="asr(4/3) hov(pan)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""></ui-media><ui-content><h3 data-part="headline">Rethinking a nation's transit</h3><p data-part="meta">Experience · 2026</p></ui-content></cq-box></ui-card>
 		</lay-out>
 	</lay-out-group>
 
@@ -54,9 +60,9 @@
 			<a data-part="link" href="#">Learn more</a>
 		</header>
 		<lay-out md="columns(1)" lg="ratio(50:25:25)">
-			<ui-card variant="col" media="asr(16/9)"><cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><h3 data-part="headline">Our 2026 responsibility report</h3><p data-part="meta">Insight</p></ui-content></cq-box></ui-card>
-			<ui-card variant="col" media="asr(16/9)"><cq-box><ui-media><img src="/assets/images/elephant.png" alt=""></ui-media><ui-content><h3 data-part="headline">A credible path to net zero</h3><p data-part="meta">Insight</p></ui-content></cq-box></ui-card>
-			<ui-card variant="col" media="asr(16/9)"><cq-box><ui-media><img src="/assets/images/finance.png" alt=""></ui-media><ui-content><h3 data-part="headline">Responsible supply chains</h3><p data-part="meta">Insight</p></ui-content></cq-box></ui-card>
+			<ui-card variant="col" media="asr(16/9) hov(pan)"><cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><h3 data-part="headline">Our 2026 responsibility report</h3><p data-part="meta">Insight</p></ui-content></cq-box></ui-card>
+			<ui-card variant="col" media="asr(16/9) hov(pan)"><cq-box><ui-media><img src="/assets/images/elephant.png" alt=""></ui-media><ui-content><h3 data-part="headline">A credible path to net zero</h3><p data-part="meta">Insight</p></ui-content></cq-box></ui-card>
+			<ui-card variant="col" media="asr(16/9) hov(pan)"><cq-box><ui-media><img src="/assets/images/finance.png" alt=""></ui-media><ui-content><h3 data-part="headline">Responsible supply chains</h3><p data-part="meta">Insight</p></ui-content></cq-box></ui-card>
 		</lay-out>
 	</lay-out-group>
 

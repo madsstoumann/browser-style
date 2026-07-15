@@ -269,6 +269,23 @@
 		&[width="lg"]  { --_mi: var(--layout-width-lg,  64rem); }
 		&[width="xl"]  { --_mi: var(--layout-width-xl,  80rem); }
 		&[width="xxl"] { --_mi: var(--layout-width-xxl, 96rem); }
+
+		/* === subgrid === make each DIRECT child adopt N shared rows (subgrid="N"), so
+		   the children's internal rows (media / title / meta …) line up across the
+		   whole grid no matter how the text wraps. The count is read with attr() into a
+		   typed custom property — a bare `grid-row: span attr()` doesn't resolve, but
+		   `span var()` does. Wrapper components that nest their content and set their
+		   own container-type (e.g. <ui-card> → cq-box) need a subgrid pass-through to
+		   benefit; a plain child (div/article with N children) aligns out of the box. */
+		&[subgrid] {
+			--_sg: attr(subgrid type(<integer>), 1);
+			grid-template-rows: repeat(var(--_sg), auto);
+		}
+		&[subgrid] > :not(lay-out) {
+			display: grid;
+			grid-row: span var(--_sg);
+			grid-template-rows: subgrid;
+		}
 	}
 
 	@keyframes fade-start {
