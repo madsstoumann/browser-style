@@ -66,5 +66,15 @@
 		</lay-out>
 	</lay-out-group>
 
+	<!-- DEEP SUBGRID — align media + eyebrow + headline + CTA across cards.
+	     subgrid="4": media (row 1) + the three ui-content parts (rows 2–4). The
+	     headlines wrap to different lengths, yet the CTAs stay on one line. -->
+	<h2 style="text-align:center;font-weight:200;text-transform:uppercase;letter-spacing:-0.01em;">Aligned to the last row</h2>
+	<lay-out md="columns(1)" lg="columns(3) subgrid" subgrid="4" style="padding-inline:1rem;">
+		<ui-card variant="col" media="asr(16/9) hov(pan)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Brand</small><h3 data-part="headline">A short one</h3><nav data-part="actions"><a href="#" style="color:var(--wpp-navy);text-decoration:underline;text-underline-offset:3px;">Read the story →</a></nav></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(16/9) hov(pan)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Experience</small><h3 data-part="headline">A considerably longer headline that wraps onto three lines here</h3><nav data-part="actions"><a href="#" style="color:var(--wpp-navy);text-decoration:underline;text-underline-offset:3px;">Read the story →</a></nav></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(16/9) hov(pan)"><cq-box><ui-media><img src="/assets/images/adventurecam.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Product</small><h3 data-part="headline">A headline of medium length</h3><nav data-part="actions"><a href="#" style="color:var(--wpp-navy);text-decoration:underline;text-underline-offset:3px;">Read the story →</a></nav></ui-content></cq-box></ui-card>
+	</lay-out>
+
 </body>
 </html>

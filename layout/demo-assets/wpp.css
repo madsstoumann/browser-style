@@ -78,19 +78,40 @@ lay-out-group lay-out ui-media img { block-size: 100%; object-fit: cover; }
 	lay-out-group lay-out { grid-template-rows: auto auto; }
 	lay-out-group lay-out > ui-card {
 		container-type: normal;
-		display: grid;
 		grid-row: span 2;
 		grid-template-rows: subgrid;
 	}
 	lay-out-group lay-out > ui-card > cq-box {
-		display: grid;
 		grid-row: span 2;
 		grid-template-rows: subgrid;
 	}
 	lay-out-group lay-out > ui-card:nth-child(n+2) ui-media {
 		aspect-ratio: auto;
-		block-size: 100%;
-		min-block-size: 0;
+	}
+}
+
+/* ---- DEEP subgrid prototype: align media + eyebrow + headline + CTA across cards.
+   The lay-out's subgrid() token already makes each direct child (the ui-card) a
+   subgrid; here we CONTINUE the chain through the card's cq-box and ui-content so a
+   4-row subgrid lines up media (row 1) with the three ui-content parts (rows 2–4).
+   Two things the card must do to cooperate — this is exactly what a card-level
+   `subgrid` opt-in would bake into ui-card:
+     1. neutralise container-type (inline-size severs the subgrid chain);
+     2. make cq-box and ui-content subgrid pass-throughs (ui-content is normally flex).
+   Only from lg (multi-column); scoped to the token so the OUR WORK grid is untouched. */
+@media (min-width: 45rem) {
+	lay-out[lg~="subgrid"] > ui-card { container-type: normal; }
+	lay-out[lg~="subgrid"] > ui-card > cq-box {
+		display: grid;
+		grid-row: span var(--_sg);
+		grid-template-rows: subgrid;
+	}
+	lay-out[lg~="subgrid"] > ui-card > cq-box > ui-media { grid-row: span 1; }
+	lay-out[lg~="subgrid"] > ui-card > cq-box > ui-content {
+		align-content: stretch;
+		display: grid;
+		grid-row: 2 / -1;
+		grid-template-rows: subgrid;
 	}
 }
 
