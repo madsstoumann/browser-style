@@ -65,29 +65,34 @@ ui-content { --ui-content-p: 0; padding-block-start: 0.75rem; }
 [data-part="headline"] { font-weight: 400; }
 [data-part="meta"] { color: var(--color-text-muted); }
 
+lay-out-group lay-out ui-media img { block-size: 100%; object-fit: cover; }
+
 /* Image bottoms aligned via SUBGRID — geometry-driven, no magic heights. The card row
    shares two tracks (media + text); each card + its cq-box is a subgrid spanning both.
    Card 1 keeps its natural 4/3 (which sets the shared media-row height); cards 2 & 3
-   drop their aspect ratio and fill that row (object-fit: cover). NOTE: <ui-card>'s
-   container-type: inline-size severs the subgrid chain, so it's neutralised here. */
-lay-out-group lay-out { grid-template-rows: auto auto; }
-lay-out-group lay-out > ui-card {
-	container-type: normal;
-	display: grid;
-	grid-row: span 2;
-	grid-template-rows: subgrid;
+   drop their aspect ratio and fill that row (object-fit: cover). Only from the lg
+   breakpoint, where these grids go multi-column — stacked mobile keeps each card's own
+   4/3. NOTE: <ui-card>'s container-type: inline-size severs the subgrid chain (like the
+   built-in subgrid() token faces with cq-box), so it's neutralised here. */
+@media (min-width: 45rem) {
+	lay-out-group lay-out { grid-template-rows: auto auto; }
+	lay-out-group lay-out > ui-card {
+		container-type: normal;
+		display: grid;
+		grid-row: span 2;
+		grid-template-rows: subgrid;
+	}
+	lay-out-group lay-out > ui-card > cq-box {
+		display: grid;
+		grid-row: span 2;
+		grid-template-rows: subgrid;
+	}
+	lay-out-group lay-out > ui-card:nth-child(n+2) ui-media {
+		aspect-ratio: auto;
+		block-size: 100%;
+		min-block-size: 0;
+	}
 }
-lay-out-group lay-out > ui-card > cq-box {
-	display: grid;
-	grid-row: span 2;
-	grid-template-rows: subgrid;
-}
-lay-out-group lay-out > ui-card:nth-child(n+2) ui-media {
-	aspect-ratio: auto;
-	block-size: 100%;
-	min-block-size: 0;
-}
-lay-out-group lay-out ui-media img { block-size: 100%; object-fit: cover; }
 
 /* big typographic hero */
 .wpp-hero {

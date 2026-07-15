@@ -270,22 +270,12 @@
 		&[width="xl"]  { --_mi: var(--layout-width-xl,  80rem); }
 		&[width="xxl"] { --_mi: var(--layout-width-xxl, 96rem); }
 
-		/* === subgrid === make each DIRECT child adopt N shared rows (subgrid="N"), so
-		   the children's internal rows (media / title / meta …) line up across the
-		   whole grid no matter how the text wraps. The count is read with attr() into a
-		   typed custom property — a bare `grid-row: span attr()` doesn't resolve, but
-		   `span var()` does. Wrapper components that nest their content and set their
-		   own container-type (e.g. <ui-card> → cq-box) need a subgrid pass-through to
-		   benefit; a plain child (div/article with N children) aligns out of the box. */
-		&[subgrid] {
-			--_sg: attr(subgrid type(<integer>), 1);
-			grid-template-rows: repeat(var(--_sg), auto);
-		}
-		&[subgrid] > :not(lay-out) {
-			display: grid;
-			grid-row: span var(--_sg);
-			grid-template-rows: subgrid;
-		}
+		/* subgrid(N) is a BREAKPOINT token (e.g. lg="columns(3) subgrid(3)"), generated
+		   per-breakpoint by the builder so it only applies where the grid is actually
+		   multi-column — a stacked single-column breakpoint would collapse the shared
+		   rows. It makes each direct child adopt N shared rows, aligning their internal
+		   rows (media / title / meta) across the grid. See generateSubgridCSS in
+		   src/builder.js. */
 	}
 
 	@keyframes fade-start {
@@ -1605,6 +1595,17 @@
   lay-out[md*="rg(4)"] {
     --layout-rg: 4;
   }
+
+  lay-out[md~="subgrid"] {
+    --_sg: attr(subgrid type(<integer>), 1);
+    grid-template-rows: repeat(var(--_sg), auto);
+  }
+
+  lay-out[md~="subgrid"] > :not(lay-out) {
+    display: grid;
+    grid-row: span var(--_sg);
+    grid-template-rows: subgrid;
+  }
 }
 }
 
@@ -2486,6 +2487,17 @@
   lay-out[lg*="rg(4)"] {
     --layout-rg: 4;
   }
+
+  lay-out[lg~="subgrid"] {
+    --_sg: attr(subgrid type(<integer>), 1);
+    grid-template-rows: repeat(var(--_sg), auto);
+  }
+
+  lay-out[lg~="subgrid"] > :not(lay-out) {
+    display: grid;
+    grid-row: span var(--_sg);
+    grid-template-rows: subgrid;
+  }
 }
 }
 
@@ -2837,6 +2849,17 @@
   lay-out[xl*="rg(4)"] {
     --layout-rg: 4;
   }
+
+  lay-out[xl~="subgrid"] {
+    --_sg: attr(subgrid type(<integer>), 1);
+    grid-template-rows: repeat(var(--_sg), auto);
+  }
+
+  lay-out[xl~="subgrid"] > :not(lay-out) {
+    display: grid;
+    grid-row: span var(--_sg);
+    grid-template-rows: subgrid;
+  }
 }
 }
 
@@ -3029,6 +3052,17 @@
 
   lay-out[xxl*="rg(4)"] {
     --layout-rg: 4;
+  }
+
+  lay-out[xxl~="subgrid"] {
+    --_sg: attr(subgrid type(<integer>), 1);
+    grid-template-rows: repeat(var(--_sg), auto);
+  }
+
+  lay-out[xxl~="subgrid"] > :not(lay-out) {
+    display: grid;
+    grid-row: span var(--_sg);
+    grid-template-rows: subgrid;
   }
 }
 }

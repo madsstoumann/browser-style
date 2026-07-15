@@ -100,8 +100,8 @@
 	     subgrid="N" — align direct children's internal rows
 	     ============================================================ -->
 	<h2 style="padding-inline:1rem;">Row alignment — <code>&lt;lay-out subgrid="3"&gt;</code></h2>
-	<p class="note" style="padding-inline:1rem;">Each card's three rows (image · title · meta) share tracks across the grid, so the images and the meta lines stay aligned even when the titles wrap to different lengths. Works on any direct child with N rows of content (here plain <code>&lt;article&gt;</code>s).</p>
-	<lay-out lg="columns(3)" subgrid="3" style="padding-inline:1rem;">
+	<p class="note" style="padding-inline:1rem;">A bare <code>subgrid</code> token in a breakpoint attribute enables it from that breakpoint up (never on stacked small screens); the row count comes from the <code>subgrid="N"</code> attribute. Each card's three rows (image · title · meta) share tracks, so images and meta lines stay aligned even when titles wrap to different lengths. Works on any direct child with N rows of content (here plain <code>&lt;article&gt;</code>s).</p>
+	<lay-out md="columns(3) subgrid" subgrid="3" style="padding-inline:1rem;">
 		<article class="sg-card"><img src="/assets/images/city.png" alt=""><h3>Short title</h3><small>Category · 2026</small></article>
 		<article class="sg-card"><img src="/assets/images/river.png" alt=""><h3>A considerably longer title that wraps onto two or even three lines</h3><small>Category · 2026</small></article>
 		<article class="sg-card"><img src="/assets/images/gastronomy.png" alt=""><h3>Medium-length title here</h3><small>Category · 2026</small></article>
