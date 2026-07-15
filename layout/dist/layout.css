@@ -1602,6 +1602,7 @@
   }
 
   lay-out[md~="subgrid"] > :not(lay-out) {
+    container-type: normal;
     display: grid;
     grid-row: span var(--_sg);
     grid-template-rows: subgrid;
@@ -2494,6 +2495,7 @@
   }
 
   lay-out[lg~="subgrid"] > :not(lay-out) {
+    container-type: normal;
     display: grid;
     grid-row: span var(--_sg);
     grid-template-rows: subgrid;
@@ -2856,6 +2858,7 @@
   }
 
   lay-out[xl~="subgrid"] > :not(lay-out) {
+    container-type: normal;
     display: grid;
     grid-row: span var(--_sg);
     grid-template-rows: subgrid;
@@ -3060,6 +3063,7 @@
   }
 
   lay-out[xxl~="subgrid"] > :not(lay-out) {
+    container-type: normal;
     display: grid;
     grid-row: span var(--_sg);
     grid-template-rows: subgrid;

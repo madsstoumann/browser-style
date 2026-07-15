@@ -34,7 +34,7 @@ lay-out-group > header [data-part="eyebrow"] {
 }
 lay-out-group > header [data-part="headline"] {
 	color: var(--wpp-navy);
-	font-weight: 300;
+	font-weight: 200;
 	justify-self: center;
 	letter-spacing: -0.01em;
 	max-inline-size: 22ch;
@@ -65,53 +65,22 @@ ui-content { --ui-content-p: 0; padding-block-start: 0.75rem; }
 [data-part="headline"] { font-weight: 400; }
 [data-part="meta"] { color: var(--color-text-muted); }
 
-lay-out-group lay-out ui-media img { block-size: 100%; object-fit: cover; }
+lay-out[lg~="subgrid"] ui-media img { block-size: 100%; object-fit: cover; }
 
-/* Image bottoms aligned via SUBGRID — geometry-driven, no magic heights. The card row
-   shares two tracks (media + text); each card + its cq-box is a subgrid spanning both.
-   Card 1 keeps its natural 4/3 (which sets the shared media-row height); cards 2 & 3
-   drop their aspect ratio and fill that row (object-fit: cover). Only from the lg
-   breakpoint, where these grids go multi-column — stacked mobile keeps each card's own
-   4/3. NOTE: <ui-card>'s container-type: inline-size severs the subgrid chain (like the
-   built-in subgrid() token faces with cq-box), so it's neutralised here. */
+/* Card subgrid — the lay-out's `subgrid` token makes each ui-card a subgrid of the
+   grid's N shared rows; here we continue the chain inward (the card-level opt-in is
+   still under investigation) so the internal rows line up across every card:
+     • media (row 1): the FIRST card keeps its natural aspect and sets the shared
+       media-row height; the rest fill it (object-fit: cover) — aligns the image bottoms.
+     • ui-content (rows 2…N): a subgrid too, so eyebrow / headline / CTA align.
+   The layout already neutralises container-type on the card (inline-size severs
+   subgrid) and makes it a subgrid of N rows; here we only switch cq-box + ui-content
+   to grid subgrids so the internal rows chain through. Gated to lg (where these grids
+   are multi-column); stacked mobile keeps each card's own ratio. */
 @media (min-width: 45rem) {
-	lay-out-group lay-out { grid-template-rows: auto auto; }
-	lay-out-group lay-out > ui-card {
-		container-type: normal;
-		grid-row: span 2;
-		grid-template-rows: subgrid;
-	}
-	lay-out-group lay-out > ui-card > cq-box {
-		grid-row: span 2;
-		grid-template-rows: subgrid;
-	}
-	lay-out-group lay-out > ui-card:nth-child(n+2) ui-media {
-		aspect-ratio: auto;
-	}
-}
-
-/* ---- DEEP subgrid prototype: align media + eyebrow + headline + CTA across cards.
-   The lay-out's subgrid() token already makes each direct child (the ui-card) a
-   subgrid; here we CONTINUE the chain through the card's cq-box and ui-content so a
-   4-row subgrid lines up media (row 1) with the three ui-content parts (rows 2–4).
-   Two things the card must do to cooperate — this is exactly what a card-level
-   `subgrid` opt-in would bake into ui-card:
-     1. neutralise container-type (inline-size severs the subgrid chain);
-     2. make cq-box and ui-content subgrid pass-throughs (ui-content is normally flex).
-   Only from lg (multi-column); scoped to the token so the OUR WORK grid is untouched. */
-@media (min-width: 45rem) {
-	lay-out[lg~="subgrid"] > ui-card { container-type: normal; }
-	lay-out[lg~="subgrid"] > ui-card > cq-box {
-		display: grid;
-		grid-row: span var(--_sg);
-		grid-template-rows: subgrid;
-	}
-	lay-out[lg~="subgrid"] > ui-card > cq-box > ui-media { grid-row: span 1; }
-	lay-out[lg~="subgrid"] > ui-card > cq-box > ui-content {
-		align-content: stretch;
-		display: grid;
-		grid-row: 2 / -1;
-		grid-template-rows: subgrid;
+	lay-out[lg~="subgrid"] > ui-card {
+		& > cq-box { display: contents; }
+		&:not(:first-child) ui-media { aspect-ratio: auto; }
 	}
 }
 
@@ -124,4 +93,3 @@ lay-out-group lay-out ui-media img { block-size: 100%; object-fit: cover; }
 	margin: 0;
 	text-transform: uppercase;
 }
-.note { color: var(--color-text-muted); max-inline-size: 60ch; }

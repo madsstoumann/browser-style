@@ -152,14 +152,17 @@ export class LayoutBuilder {
 		this.generateSubgridCSS(breakpointName, mediaQuery)
 	}
 
-	// subgrid — breakpoint-scoped row alignment. A bare `subgrid` token in a breakpoint
-	// attribute (e.g. md="columns(3) subgrid") enables it from that breakpoint up; the
-	// row count comes from the `subgrid="N"` attribute, read once with attr() into a
-	// typed custom property (a bare `grid-row: span attr()` doesn't resolve, but
-	// `span var()` does). Each direct child then adopts N shared rows, aligning its
-	// internal rows (media / title / meta) across the grid regardless of text length.
-	// Only emitted from `md` upward (never xs/sm) — @media(min-width) is cumulative, and
-	// subgrid at tiny widths makes no sense (cards are stacked into one column).
+	// subgrid — breakpoint-scoped row alignment. The bare `subgrid` keyword in a
+	// breakpoint attribute (e.g. lg="columns(3) subgrid") turns it on from that
+	// breakpoint up; the row count is set ONCE, globally, via the `subgrid="N"`
+	// attribute — read with attr() into a typed custom property (a bare
+	// `grid-row: span attr()` doesn't resolve, but `span var()` does). The count is a
+	// single value, not per-breakpoint. Each direct child adopts N shared rows,
+	// aligning its internal rows (media / eyebrow / headline …) across the grid
+	// regardless of text length; container-type is neutralised on those children so a
+	// card's own inline-size container (which would sever the subgrid chain) steps out
+	// of the way. Only emitted from `md` upward (never xs/sm) — @media(min-width) is
+	// cumulative, and subgrid at tiny widths makes no sense (cards stack into one column).
 	generateSubgridCSS(breakpointName, mediaQuery) {
 		if (breakpointName === 'xs' || breakpointName === 'sm') return
 		const el = this.config.element || 'lay-out'
@@ -167,7 +170,7 @@ export class LayoutBuilder {
 		this.addRule(mediaQuery, base,
 			{ '--_sg': 'attr(subgrid type(<integer>), 1)', 'grid-template-rows': 'repeat(var(--_sg), auto)' }, breakpointName)
 		this.addRule(mediaQuery, `${base} > :not(${el})`,
-			{ 'display': 'grid', 'grid-row': 'span var(--_sg)', 'grid-template-rows': 'subgrid' }, breakpointName)
+			{ 'container-type': 'normal', 'display': 'grid', 'grid-row': 'span var(--_sg)', 'grid-template-rows': 'subgrid' }, breakpointName)
 	}
 
 	generateSpacingCSS(breakpointName, mediaQuery) {
