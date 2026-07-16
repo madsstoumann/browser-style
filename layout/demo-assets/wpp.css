@@ -22,17 +22,17 @@ body {
 }
 
 /* section titles — uppercase, light weight, slight negative tracking (WPP look) */
-lay-out-group > header {
-	--layout-group-headline-fs: 2rem;
+lay-out-group > ui-content {
+	--ui-content-headline: 2rem;
 	text-align: center;
 }
-lay-out-group > header [data-part="eyebrow"] {
+lay-out-group > ui-content [data-part="eyebrow"] {
 	color: var(--wpp-navy);
 	font-weight: 400;
 	justify-self: center;
 	letter-spacing: 0.08em;
 }
-lay-out-group > header [data-part="headline"] {
+lay-out-group > ui-content [data-part="headline"] {
 	color: var(--wpp-navy);
 	font-weight: 200;
 	justify-self: center;
@@ -40,13 +40,13 @@ lay-out-group > header [data-part="headline"] {
 	max-inline-size: 22ch;
 	text-transform: uppercase;
 }
-lay-out-group > header [data-part="summary"],
-lay-out-group > header [data-part="link"] {
+lay-out-group > ui-content [data-part="summary"],
+lay-out-group > ui-content [data-part="link"] {
 	grid-column: 1;
 	justify-self: center;
 	text-align: center;
 }
-lay-out-group > header [data-part="link"] {
+lay-out-group > ui-content [data-part="link"] {
 	color: var(--wpp-navy);
 	grid-row: auto;   /* flow below the title instead of spanning the header rows */
 	order: 9;
@@ -61,7 +61,7 @@ ui-card {
 	--ui-card-bg: transparent;
 }
 ui-media { --ui-media-radius: 2px; }
-ui-content { --ui-content-p: 0; padding-block-start: 0.75rem; }
+lay-out ui-content { --ui-content-p: 0; padding-block-start: 0.75rem; }
 [data-part="headline"] { font-weight: 400; }
 [data-part="meta"] { color: var(--color-text-muted); }
 

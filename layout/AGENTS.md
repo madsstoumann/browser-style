@@ -439,18 +439,18 @@ same gap — reset their block margins if the gap alone should govern rhythm.
 ### Section headers — `<lay-out-group>` (`core/group.css`)
 
 For a section that needs a **header above the grid** (eyebrow / title / subtitle /
-"see all" link, à la BBC / WPP), wrap an optional `<header>` and the `<lay-out>`
-in a `<lay-out-group>` — a custom element in the `lay-out` family, so it takes the
-same **bare attributes** as `<lay-out>` (`bleed`, `pad-top`, …):
+"see all" link, à la BBC / WPP), wrap an optional header `<ui-content>` and the
+`<lay-out>` in a `<lay-out-group>` — a custom element in the `lay-out` family, so it
+takes the same **bare attributes** as `<lay-out>` (`bleed`, `pad-top`, …):
 
 ```html
 <lay-out-group bleed pad-top="3" style="--layout-bg:#eaf6e9">   <!-- all optional -->
-  <header>
+  <ui-content>                              <!-- the header -->
     <small data-part="eyebrow">Our work</small>
     <h2    data-part="headline">World-class ideas</h2>
     <p     data-part="summary">Optional subtitle.</p>
     <a     data-part="link" href="/work">View all →</a>
-  </header>
+  </ui-content>
   <lay-out md="columns(2)" lg="grid(3a)"> …cards… </lay-out>
 </lay-out-group>
 ```
@@ -460,28 +460,37 @@ Unregistered (pure CSS, like `<ui-card>`). Key properties:
 - **Header is inside the box but outside `<lay-out>`** — it never becomes a grid
   item, so the `nth-child` placement of every pattern (columns, grid, bento,
   asym, mosaic) is unaffected. Works over *any* layout.
+- **Header is a `<ui-content>`, not `<header>`** — a native `<header>` in this
+  custom element can expose a stray `banner` role; the `<h2 data-part="headline">`
+  carries the heading. **This makes the header depend on card's `content.css`**
+  (`@browser.style/card`): the eyebrow/headline/summary/meta typography is reused
+  verbatim from it, so load `ui-card.css` (it `@import`s `content.css`) alongside
+  `layout.css`. `group.css` styles **only the header layout** (the 1fr/auto grid +
+  padding reset). Layer order puts `layout.base` after `bs-component`, so the grid
+  override wins while content.css's `[data-part]` rules apply untouched.
+- **The `link` part is group-specific** — `content.css` has no `link` part, so
+  `group.css` styles + end/bottom-aligns it, dropping it below the heading on narrow
+  (`< 30rem`) viewports.
 - **Theme / bleed**: `<lay-out-group [bleed] style="--layout-bg:…">` paints a
   themed band. `bleed` escapes the `data-layout-root` width like `lay-out[bleed]`
   (its own simplified band — no per-item bleed scaling); the inner `<lay-out>`
   stays content-width and **must not** carry its own `bleed`/`--layout-bg`.
-- **Header parts** reuse the `data-part` vocabulary (`eyebrow`/`headline`/
-  `summary`/`link`), styled by `group.css` itself with `@browser.style/base`
-  tokens (no dependency on `ui-content`). The `link` end-aligns and drops below
-  the heading on narrow widths.
 - **Header width**: content-column by default (aligns with the grid). Opt into a
-  full-band header with `<header data-bleed>` (data-* because the inner `<header>`
-  is a native element).
+  full-band header with `<ui-content data-bleed>` (data-* toggle).
 - **Vertical spacing** uses the same bare `<lay-out>` vocabulary (valid on the
   custom element): `pad-top`/`pad-bottom` = inner padding *within* the band;
   `space-top`/`space-bottom` = outer margin (added to `page-gap`). It's
   `box-sizing: border-box` so padding doesn't disturb the bleed width math.
-- Tunables: `--layout-group-gap` (header→grid), `--layout-group-bg`/`-c`,
-  `--layout-group-headline-fs`.
+- **Styling parts**: use the `content=` DSL / `--ui-content-*` props on the header
+  `<ui-content>` (e.g. `content="hl(lg)"`, `--ui-content-headline: 2rem`) — same API
+  as any card `<ui-content>`. Group tunables: `--layout-group-gap` (header→grid),
+  `--layout-group-bg`/`-c`.
 
-`core/group.css` is bundled via `layout.config.json` `core: ["base","group"]`.
-Demo: `dist/section.html`. SSR target (deferred): `renderSection()` emits this
-`<lay-out-group><header>…</header><lay-out>…</lay-out></lay-out-group>` from a
-section JSON with an optional `header` object (see `docs/card-integration.md`
+`core/group.css` (no comments — full docs in `readme.md`) is bundled via
+`layout.config.json` `core: ["base","group"]`. Demo: `dist/section.html` (loads
+`ui-card.css` for the header typography). SSR target (deferred): `renderSection()`
+emits this `<lay-out-group><ui-content>…</ui-content><lay-out>…</lay-out></lay-out-group>`
+from a section JSON with an optional `header` object (see `docs/card-integration.md`
 Phase 4).
 
 ## Performance

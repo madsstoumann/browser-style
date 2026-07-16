@@ -26,7 +26,7 @@ body {
 }
 
 /* headlines are serif everywhere (cards + section headers) */
-:is(ui-content, lay-out-group > header) [data-part="headline"] {
+ui-content [data-part="headline"] {
 	--ui-content-heading-font: var(--bbc-serif);
 	font-family: var(--bbc-serif);
 	font-weight: 500;
@@ -41,18 +41,18 @@ ui-card {
 	--ui-card-bg: transparent;
 }
 ui-media { --ui-media-radius: 0; }
-ui-content { --ui-content-p: 0; padding-block-start: 0.5rem; }
+lay-out ui-content { --ui-content-p: 0; padding-block-start: 0.5rem; }
 [data-part="eyebrow"] { color: var(--bbc-red); font-weight: 700; }
 [data-part="meta"] { color: var(--bbc-grey); }
 
 /* section header: BBC's red top rule + black serif title */
-lay-out-group > header {
-	--layout-group-headline-fs: 1.75rem;
+lay-out-group > ui-content {
+	--ui-content-headline: 1.75rem;
 	border-block-start: 3px solid var(--bbc-red);
 	padding-block-start: 0.6rem;
 }
-lay-out-group > header [data-part="headline"] { color: var(--bbc-ink); }
-lay-out-group > header [data-part="link"] { color: var(--bbc-red); }
+lay-out-group > ui-content [data-part="headline"] { color: var(--bbc-ink); }
+lay-out-group > ui-content [data-part="link"] { color: var(--bbc-red); }
 
 /* LIVE chip */
 ui-chip[data-live] {

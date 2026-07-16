@@ -132,31 +132,74 @@ gap alone to govern the rhythm.
 ## Section headers — `<lay-out-group>`
 
 Need a heading, category, subtitle and a "see all" link **above** a grid (the
-classic BBC / WPP section)? Wrap an optional `<header>` and the `<lay-out>` in a
+classic BBC / WPP section)? Wrap an optional header and the `<lay-out>` in a
 `<lay-out-group>` — a custom element in the `lay-out` family, so it takes the same
-bare attributes as `<lay-out>`:
+bare attributes as `<lay-out>` (`bleed`, `pad-top`, `pad-bottom`, `space-top`,
+`space-bottom`). CSS lives in `core/group.css`, bundled into `dist/layout.css`.
 
 ```html
 <lay-out-group bleed pad-top="3" pad-bottom="3" style="--layout-bg:#eaf6e9">
-  <header>
+  <ui-content>                              <!-- the header -->
     <small data-part="eyebrow">Our work</small>
     <h2    data-part="headline">World-class ideas</h2>
     <p     data-part="summary">Optional subtitle.</p>
     <a     data-part="link" href="/work">View all →</a>
-  </header>
+  </ui-content>
   <lay-out md="columns(2)" lg="grid(3a)"> …cards… </lay-out>
 </lay-out-group>
 ```
 
-- The header sits inside the box but **outside** the grid, so every layout pattern
-  (columns, grid, bento, asym, mosaic) keeps working unchanged.
-- `bleed` + `--layout-bg` make a full-bleed themed band; the header and grid stay
-  in the centred content column. `<header data-bleed>` spans the whole band instead.
-- `pad-top`/`pad-bottom` (inner padding) and `space-top`/`space-bottom` (outer
-  margin) work just like on `<lay-out>`.
-- Header parts use the `data-part` vocabulary (`eyebrow`/`headline`/`summary`/`link`).
+### Structure
 
-Live demo: `dist/section.html`.
+- The header sits **inside** the (themed) box but **outside** `<lay-out>`, so it
+  never becomes a grid item — every layout pattern (columns, grid, bento, asym,
+  mosaic) keeps its `nth-child` placement unchanged. Works over *any* layout.
+- The header is a **`<ui-content>`**, not a `<header>`. That's deliberate: a native
+  `<header>` inside the custom element can expose a stray `banner` landmark role —
+  the `<h2 data-part="headline">` already carries the heading. Being a `<ui-content>`
+  also means its part typography is reused, not re-implemented (see below).
+
+### The header depends on `@browser.style/card`
+
+Because the header is a `<ui-content>`, the **eyebrow / headline / summary / meta**
+typography comes verbatim from card's `content.css`. `group.css` styles only the
+header **layout** (a two-column grid that end-aligns the "see all" link, and zeroes
+`ui-content`'s own padding so the header text lines up with the grid's content
+column). So load card's CSS alongside the layout CSS:
+
+```html
+<link rel="stylesheet" href="@browser.style/layout/dist/layout.css">
+<link rel="stylesheet" href="@browser.style/card/ui-card.css">  <!-- @imports content.css -->
+```
+
+Without `content.css` the header still lays out correctly, but the parts fall back
+to bare element styles (no eyebrow uppercase/accent, no headline ramp). The `link`
+part is the one exception — it's **group-specific** (`content.css` has no `link`
+part), styled and end/bottom-aligned by `group.css` itself, and it drops below the
+heading on narrow (`< 30rem`) viewports.
+
+### Theme, bleed & spacing
+
+- `bleed` + `--layout-bg` (or `--layout-group-bg`) paint a **full-bleed themed
+  band**; the header and grid stay in the centred content column. It escapes the
+  `data-layout-root` width like `lay-out[bleed]` (simplified — no per-item bleed
+  scaling); the inner `<lay-out>` stays content-width and **must not** carry its own
+  `bleed`/`--layout-bg`.
+- **`<ui-content data-bleed>`** opts the header into spanning the whole band instead
+  of the content column (only meaningful on a `bleed` group).
+- `pad-top`/`pad-bottom` = inner padding *within* the band; `space-top`/`space-bottom`
+  = outer margin, added to `page-gap`. `box-sizing: border-box`, so padding doesn't
+  disturb the bleed width math.
+
+### Styling the header parts
+
+Restyle via the **`content=` token DSL** on the header `<ui-content>` (e.g.
+`content="hl(lg) eb(accent)"`) or the `--ui-content-*` custom properties — the same
+API as any card `<ui-content>`. Set the headline size with `--ui-content-headline`
+(e.g. `--ui-content-headline: 2rem`). Group-level tunables: `--layout-group-gap`
+(header→grid), `--layout-group-bg` / `--layout-group-c`.
+
+Live demo: `dist/section.html` (loads `ui-card.css` for the header typography).
 
 ---
 
