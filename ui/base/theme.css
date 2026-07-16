@@ -6,6 +6,8 @@
 @property --_theme-pale-c  { syntax: "*"; inherits: false; }
 @property --_theme-bg      { syntax: "*"; inherits: false; }
 @property --_theme-c       { syntax: "*"; inherits: false; }
+@property --_theme-border  { syntax: "*"; inherits: false; }
+@property --_theme-bw      { syntax: "*"; inherits: false; }
 
 @layer bs-core {
 
@@ -24,6 +26,8 @@
 		--_theme-pale-c:  var(--_theme-base-c);
 		--_theme-bg: var(--_theme-pale-bg);
 		--_theme-c:  var(--_theme-pale-c);
+		--_theme-border: var(--_theme-base-bg);
+		--_theme-bw: var(--border-width, 1px);
 	}
 
 	:where([theme~="pale"]) {
@@ -38,4 +42,36 @@
 
 	:where([theme~="light"]) { color-scheme: light; }
 	:where([theme~="dark"])  { color-scheme: dark; }
+
+	/* border — solid border in the base colour; fill goes transparent unless pale.
+	   Width via border(sm..2xl); sides via border(bs|be|is|ie|bk|in), default all. */
+	:where([theme*="border"]) { border-style: solid; border-color: var(--_theme-border); border-width: 0; }
+	/* transparent fill (unless pale) → ink becomes the base colour, like the border
+	   (the paired ink assumes the solid fill, which is gone). Matches chip/button outline. */
+	:where([theme*="border"]:not([theme~="pale"])) { --_theme-bg: transparent; --_theme-c: var(--_theme-base-bg); }
+
+	:where([theme*="border(sm)"])  { --_theme-bw: var(--border-width); }
+	:where([theme*="border(md)"])  { --_theme-bw: var(--border-width-thick); }
+	:where([theme*="border(lg)"])  { --_theme-bw: var(--border-width-heavy); }
+	:where([theme*="border(xl)"])  { --_theme-bw: var(--border-width-xl); }
+	:where([theme*="border(2xl)"]) { --_theme-bw: var(--border-width-2xl); }
+
+	/* style — default solid (set above); border(dashed|dotted|double) override */
+	:where([theme*="border(dashed)"]) { border-style: dashed; }
+	:where([theme*="border(dotted)"]) { border-style: dotted; }
+	:where([theme*="border(double)"]) { border-style: double; }
+
+	/* all sides — any border token with NO explicit side named */
+	:where([theme*="border"]:not(
+		[theme*="border(bs)"], [theme*="border(be)"],
+		[theme*="border(is)"], [theme*="border(ie)"],
+		[theme*="border(bk)"], [theme*="border(in)"]
+	)) { border-width: var(--_theme-bw); }
+	/* explicit sides (additive) */
+	:where([theme*="border(bs)"]) { border-block-start-width:  var(--_theme-bw); }
+	:where([theme*="border(be)"]) { border-block-end-width:    var(--_theme-bw); }
+	:where([theme*="border(is)"]) { border-inline-start-width: var(--_theme-bw); }
+	:where([theme*="border(ie)"]) { border-inline-end-width:   var(--_theme-bw); }
+	:where([theme*="border(bk)"]) { border-block-width:  var(--_theme-bw); }
+	:where([theme*="border(in)"]) { border-inline-width: var(--_theme-bw); }
 }

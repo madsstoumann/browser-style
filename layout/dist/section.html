@@ -100,6 +100,23 @@
 			<div class="card"><b>6</b></div>
 		</lay-out>
 	</lay-out-group>
+
+	<!-- 5 — an OUTLINED BOX via the theme= `border` modifier (non-bleed, content width).
+	     theme="slate border border(md)" → solid slate border on all 4 sides, md width,
+	     transparent fill. NOT combined with bleed (border-image and border-* conflict). -->
+	<lay-out-group theme="pale slate border border(md)" pad-top="2" pad-bottom="2" style="--layout-bdrs:0.75rem; padding-inline:1.5rem;">
+		<ui-content>
+			<small data-part="eyebrow">theme="slate border border(md)"</small>
+			<h2 data-part="headline">A section in an outlined box</h2>
+			<a data-part="link" href="#">See all →</a>
+		</ui-content>
+		<lay-out md="columns(3)">
+			<div class="card"><b>One</b></div>
+			<div class="card"><b>Two</b></div>
+			<div class="card"><b>Three</b></div>
+		</lay-out>
+	</lay-out-group>
+
 	<!-- ============================================================
 	     subgrid="N" — align direct children's internal rows
 	     ============================================================ -->

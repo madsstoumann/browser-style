@@ -52,6 +52,7 @@ dark mode); the `light-dark()` pair only softens the shade for the opposite sche
 | `muted` | Fades the theme colors via `color-mix(… transparent 50%)`. Reduces the **theme's** alpha only — it does **not** use element `opacity`, so descendant content is not dimmed. |
 | `light` | Sets `color-scheme: light` on the element. |
 | `dark` | Sets `color-scheme: dark` on the element. |
+| `border` | Draws a solid border in the theme's **solid base colour** and makes the fill **transparent** (unless `pale`). See [Border](#border) for sides + width. |
 
 `pale` and `muted` compose: `theme="green pale muted"` is a faded soft-green.
 
@@ -62,6 +63,49 @@ controls, scrollbars. So a card that should carry a full dark treatment for its
 content uses **`theme="black dark"`**; `theme="red dark"` makes a red surface whose
 inner content also renders dark. Without a scheme modifier, the theme follows the
 page's `color-scheme`.
+
+## Border
+
+`border` draws a solid border in the theme's **solid base colour** — always the pure
+color, unaffected by `pale`/`muted` — and makes the **fill transparent** unless
+`pale` re-establishes it. With a transparent fill the **ink also becomes the base
+colour** (like the border, matching the chip/button outline look). Sides and width
+are both spelled `border(<arg>)`.
+
+| Token | Meaning |
+|---|---|
+| `border` | all 4 sides, default width |
+| `border(bs)` | block-start only |
+| `border(be)` | block-end only |
+| `border(is)` / `border(ie)` | inline-start / inline-end |
+| `border(bk)` | block (top + bottom) |
+| `border(in)` | inline (left + right) |
+| `border(sm)` … `border(2xl)` | width — `sm`=`--border-width` (1px), `md`=`--border-width-thick` (2px), `lg`=`--border-width-heavy` (3px), `xl` (4px), `2xl` (6px). Default `--border-width`. |
+| `border(dashed)` / `border(dotted)` / `border(double)` | style (default `solid`) |
+
+**Any** `border` token turns the border on. Sides default to **all 4** unless a
+specific side is named (then only those). Width and style tokens apply to whatever
+sides are active — so `border(dashed)` alone is a dashed border on all sides, and
+`border(bs) border(lg)` is a 3px block-start rule.
+
+```html
+<div theme="red border">…</div>                 <!-- transparent fill, red border, all sides -->
+<div theme="red pale border">…</div>             <!-- pale-red fill, solid red border -->
+<div theme="red border(bs) border(lg)">…</div>   <!-- red block-start rule, lg (3px) -->
+<div theme="slate border border(md)">…</div>     <!-- slate box, md (2px) all sides -->
+```
+
+The border is applied **universally** by `theme.css` (any element with a `border`
+token gets it — cards, `<lay-out>`, `<lay-out-group>`, plain elements), so there's
+no per-component wiring.
+
+**Caveats:**
+- **Not with `bleed`.** `<lay-out [bleed]>` / `<lay-out-group [bleed]>` paint their
+  band with a `border-image` trick that conflicts with a real border. Use `border`
+  on non-bleed boxes / rules.
+- **Chip / button own their border.** They sit in the `bs-component` layer (which
+  wins over the `bs-core` theme rule) and have their own `outline`/`variant`; the
+  theme `border` targets cards / layouts / groups / generic elements.
 
 ## How a component opts in
 

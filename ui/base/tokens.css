@@ -104,6 +104,10 @@
 		--border-width: 1px;
 		--border-width-thick: 2px;
 		--border-width-heavy: 3px;
+		/* xl/2xl extend the scale for the theme= `border(<size>)` modifier
+		   (sm/md/lg reuse --border-width / -thick / -heavy). */
+		--border-width-xl: 4px;
+		--border-width-2xl: 6px;
 
 		/* Border Radius */
 		--radius-xs: 0.125rem;

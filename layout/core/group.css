@@ -28,13 +28,14 @@
 		padding-inline: var(--_group-pi);
 	}
 
+	/* ! WORK-IN-PROGRESS: USED FOR HEADER */
 	:where(lay-out-group) > ui-content {
 		align-items: end;
 		column-gap: var(--layout-space-unit, 1rem);
 		display: grid;
 		grid-template-columns: 1fr auto;
 		padding: 0;
-		row-gap: calc(0.375 * var(--layout-space-unit, 1rem));
+		/* row-gap: calc(0.375 * var(--layout-space-unit, 1rem)); */
 
 		& > :not([data-part="link"]) { grid-column: 1; }
 
