@@ -389,10 +389,10 @@
 	</lay-out>
 
 	<!-- ============================================================
-	     Themes — thm()
+	     Themes — theme=
 	     ============================================================ -->
-	<h2>Themes — <code>thm()</code></h2>
-	<p class="note">The same card in default, <code>thm(dark)</code> and <code>thm(dark)</code> with a <code>--ui-card-dark-bg</code> accent override (the branded surface — the old <code>thm(brand)</code> is now <code>thm(dark)</code> + an override). Theme tokens remap surface, ink, eyebrow and tag colours.</p>
+	<h2>Themes — <code>theme=</code></h2>
+	<p class="note">The same card in default, <code>theme="black dark"</code> and <code>theme="black dark"</code> with a <code>--ui-card-dark-bg</code> accent override (the branded surface). The shared <code>theme=</code> axis remaps surface, ink, eyebrow and tag colours; the <code>dark</code> modifier flips <code>color-scheme</code>. Full docs: <a href="../base/theme.md">theme.md</a>.</p>
 	<lay-out lg="columns(3)">
 		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
@@ -407,7 +407,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="col thm(dark)" media="asr(16/9)">
+		<ui-card variant="col" theme="black dark" media="asr(16/9)">
 			<cq-box>
 				<ui-media><img src="/assets/images/fittrackpro.png" alt="" loading="lazy"></ui-media>
 				<ui-content>
@@ -420,7 +420,7 @@
 			</cq-box>
 		</ui-card>
 
-		<ui-card variant="col thm(dark)" media="asr(16/9)" style="--ui-card-dark-bg: var(--color-accent); --ui-card-dark-ink: #fff; --ui-card-dark-accent: rgb(255 255 255 / 0.75);">
+		<ui-card variant="col" theme="black dark" media="asr(16/9)" style="--ui-card-dark-bg: var(--color-accent); --ui-card-dark-ink: #fff; --ui-card-dark-accent: rgb(255 255 255 / 0.75);">
 			<cq-box>
 				<ui-media><img src="/assets/images/fittrackpro.png" alt="" loading="lazy"></ui-media>
 				<ui-content>

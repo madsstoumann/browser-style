@@ -11,6 +11,12 @@
 	<link rel="stylesheet" href="/ui/chip/ui-chip.css">
 	<link rel="stylesheet" href="bbc.css">
 	<script type="module" src="/layout/polyfills/attr-fallback.js"></script>
+	<style>
+		/* Investigate */
+		@media (min-width: 45rem) {
+  		.sidebar { align-content: start; }   /* on the sidebar / nested lay-out */
+		}
+	</style>
 </head>
 <body data-layout-root data-page-gap="3">
 
@@ -28,7 +34,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<lay-out md="columns(1)" style="--layout-rg:0;">
+		<lay-out class="sidebar">
 			<ui-card variant="vis(content)"><cq-box><ui-content style="border-block-start:1px solid var(--bbc-line);padding-block:.75rem;"><h3 data-part="headline"><a data-part="cover" href="#">Central bank holds rates as inflation cools</a></h3><p data-part="meta">3 hrs ago · Business</p></ui-content></cq-box></ui-card>
 			<ui-card variant="vis(content)"><cq-box><ui-content style="border-block-start:1px solid var(--bbc-line);padding-block:.75rem;"><h3 data-part="headline"><a data-part="cover" href="#">New telescope survey maps a million distant galaxies</a></h3><p data-part="meta">4 hrs ago · Science</p></ui-content></cq-box></ui-card>
 			<ui-card variant="vis(content)"><cq-box><ui-content style="border-block-start:1px solid var(--bbc-line);padding-block:.75rem;"><h3 data-part="headline"><a data-part="cover" href="#">Election watchdog to review campaign finance rules</a></h3><p data-part="meta">5 hrs ago · Politics</p></ui-content></cq-box></ui-card>

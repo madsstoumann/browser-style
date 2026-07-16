@@ -46,9 +46,9 @@
 	:where([media*="tnt(green)"])  { --ui-media-tint-color: var(--ui-theme-green-bg); }
 	:where([media*="tnt(blue)"])   { --ui-media-tint-color: var(--ui-theme-blue-bg); }
 	:where([media*="tnt(accent)"]) { --ui-media-tint-color: var(--ui-theme-accent-bg); }
-	:where([media*="tnt(dark)"])   { --ui-media-tint-color: var(--ui-theme-dark-bg); }
-	:where([media*="tnt(light)"])  { --ui-media-tint-color: var(--ui-theme-light-bg); }
-	:where([media*="tnt(subtle)"]) { --ui-media-tint-color: var(--ui-theme-subtle-bg); }
+	:where([media*="tnt(black)"])  { --ui-media-tint-color: var(--ui-theme-black-bg); }
+	:where([media*="tnt(white)"])  { --ui-media-tint-color: var(--ui-theme-white-bg); }
+	:where([media*="tnt(gray)"])   { --ui-media-tint-color: var(--ui-theme-gray-bg); }
 
 	/* hov(tint) — fade the tint out on hover/focus to reveal the true-colour image.
 	   Reads --_hv-dur / --_hv-ease from media.hover.css; falls back if absent. */

@@ -189,16 +189,28 @@
 		--width-7xl: 80rem;
 		--width-prose: 65ch;
 
-		/* Theme Bundles — decorative bg + paired ink (c). Reusable color axis
-		   via the `theme=` attribute. Distinct from the semantic `color=` axis. */
+		/* Theme Bundles — the shared cross-component `theme=` axis (docs: theme.md).
+		   Each bundle is a surface (bg) + paired ink (c), both light-dark() pairs so
+		   the colors adapt to color-scheme — same approach as button's .bg-* (which
+		   read the light-dark() --color-* tokens). The `light`/`dark` MODIFIERS set
+		   color-scheme (pick the arm + re-tone descendants); `pale`/`muted` MODIFIERS
+		   transform the colors. Consumed by chip, sticker, card, layout via the
+		   resolver in theme.css. Color-name vocabulary, distinct from button's
+		   semantic .bg-* / `color=` axis. */
 		--ui-theme-red-bg:    var(--color-error);       --ui-theme-red-c:    hsl(0 0% 100%);
 		--ui-theme-orange-bg: var(--color-warning);     --ui-theme-orange-c: var(--color-text);
 		--ui-theme-green-bg:  var(--color-success);     --ui-theme-green-c:  hsl(0 0% 100%);
 		--ui-theme-blue-bg:   var(--color-info);        --ui-theme-blue-c:   hsl(0 0% 100%);
 		--ui-theme-accent-bg: var(--color-accent);      --ui-theme-accent-c: var(--color-accent-text);
-		--ui-theme-dark-bg:   var(--color-text);        --ui-theme-dark-c:   var(--color-surface);
-		--ui-theme-light-bg:  var(--color-surface);     --ui-theme-light-c:  var(--color-text);
-		--ui-theme-subtle-bg: var(--color-surface-alt); --ui-theme-subtle-c: var(--color-text-muted);
+		/* Neutral ramp — light→dark. Each stays true to its name in both modes (a
+		   `white` theme is a light surface in dark mode too); the light-dark() pair
+		   just softens the shade for the opposite scheme. black/slate hook
+		   --ui-card-dark-bg/--ui-card-muted-bg so card overrides (branded surface =
+		   black + --ui-card-dark-bg:accent) keep working. */
+		--ui-theme-white-bg:  light-dark(hsl(0 0% 100%), hsl(0 0% 90%)); --ui-theme-white-c: light-dark(hsl(0 0% 15%), hsl(0 0% 10%));
+		--ui-theme-gray-bg:   light-dark(hsl(0 0% 93%),  hsl(0 0% 84%)); --ui-theme-gray-c:  light-dark(hsl(0 0% 15%), hsl(0 0% 10%));
+		--ui-theme-slate-bg:  var(--ui-card-muted-bg, light-dark(hsl(215 19% 27%), hsl(215 16% 38%))); --ui-theme-slate-c: light-dark(hsl(0 0% 96%), hsl(0 0% 88%));
+		--ui-theme-black-bg:  var(--ui-card-dark-bg,   light-dark(hsl(215 28% 17%), hsl(215 22% 27%))); --ui-theme-black-c: light-dark(hsl(0 0% 96%), hsl(0 0% 88%));
 
 		/* Fluid Font Size (responsive, no breakpoints) */
 		--font-size-fluid-xs: clamp(0.75rem, 0.65rem + 0.25vw, 0.875rem);

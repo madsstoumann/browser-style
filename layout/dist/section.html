@@ -52,8 +52,8 @@
 		</lay-out>
 	</lay-out-group>
 
-	<!-- 2 — themed full-bleed band (light green), content-width header, over grid(3a) -->
-	<lay-out-group bleed pad-top="3" pad-bottom="3" style="--layout-bg:#eaf6e9;">
+	<!-- 2 — themed full-bleed band (built-in theme="green pale"), content-width header, over grid(3a) -->
+	<lay-out-group bleed pad-top="3" pad-bottom="3" theme="green pale">
 		<ui-content>
 			<small data-part="eyebrow">Trusted to grow responsibly</small>
 			<h2 data-part="headline">Sustainability across the business</h2>
@@ -67,13 +67,14 @@
 		</lay-out>
 	</lay-out-group>
 
-	<!-- 3 — themed band with a FULL-BLEED header (data-bleed) -->
-	<lay-out-group bleed pad-top="4" pad-bottom="4" style="--layout-bg:#0a0a4f; --layout-group-c:#f7f3e3;">
-		<ui-content data-bleed style="--color-accent:#9db4ff; --color-text-muted:#cdd6ff;">
+	<!-- 3 — themed band with a FULL-BLEED header (data-bleed), built-in theme="black dark".
+	     The dark modifier flips color-scheme, so eyebrow/muted/link re-tone automatically. -->
+	<lay-out-group bleed pad-top="4" pad-bottom="4" theme="black dark">
+		<ui-content data-bleed>
 			<small data-part="eyebrow">Careers</small>
 			<h2 data-part="headline">Where exceptional talent reimagines growth</h2>
 			<p data-part="summary">Same band, but <code>&lt;header data-bleed&gt;</code> lets the header span the band instead of the content column.</p>
-			<a data-part="link" href="#" style="color:#9db4ff;">Explore careers →</a>
+			<a data-part="link" href="#">Explore careers →</a>
 		</ui-content>
 		<lay-out md="columns(2)" lg="columns(4)">
 			<div class="card"><b>Engineering</b></div>

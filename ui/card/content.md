@@ -360,25 +360,24 @@ Standalone content gets the neutral `normal` / `inherit` / `start` / `auto` defa
 
 ## Theme ink
 
-Host themes (`thm(subtle|muted|dark)` on the composition layer) set the card surface; the two dark ones (`thm(muted)`, `thm(dark)`) add `color-scheme: dark` so the muted / eyebrow / tag ink and controls flip automatically. The surfaces form a light→dark ramp — **`thm(subtle)` (light) < `thm(muted)` (`#374151`, override `--ui-card-muted-bg`) < `thm(dark)` (`#1f2937`)**. Where a theme sets ink explicitly, those tokens live on `<ui-content>`, not on the card:
+Host themes come from the shared `theme=` axis ([base/theme.md](../base/theme.md)) and set the card surface; the neutrals ramp **`white` < `gray` < `slate` < `black`**. Adding the `dark` modifier (`theme="slate dark"`, `theme="black dark"`) flips `color-scheme: dark` so the muted / eyebrow / tag ink and controls re-tone automatically (the ink ramp derives from `currentColor`, so most parts follow with no explicit write). Where a theme sets ink explicitly, those tokens live on `<ui-content>`, not on the card:
 
 | Token | Read by | Themed by |
 |-------|---------|-----------|
-| `--ui-content-muted` | subheadline, meta, caption, byline, footer | `thm()` |
-| `--ui-content-eyebrow-color` | eyebrow | `thm()` |
-| `--ui-content-tag-bg` | tags pills | `thm()` |
+| `--ui-content-muted` | subheadline, meta, caption, byline, footer | theme |
+| `--ui-content-eyebrow-color` | eyebrow | theme |
+| `--ui-content-tag-bg` | tags pills | theme |
 
 ```css
-:where([variant*="thm(dark)"]) {
+:where([theme~="black"]) {
   --ui-content-muted: color-mix(in oklab, currentColor 60%, transparent);
-  --ui-content-eyebrow-color: var(--ui-card-dark-accent, #93c5fd);
   --ui-content-tag-bg: rgb(255 255 255 / 0.12);
 }
 ```
 
-> **Namespace trap:** the legacy tokens were `--ui-card-muted` / `--ui-card-eyebrow-color` / `--ui-card-tag-bg`. In v4 they move to the `--ui-content-*` spelling. A `thm()` rule that still writes the old `--ui-card-*` names will silently lose its muted / eyebrow / tag remap.
+> **Namespace trap:** the legacy tokens were `--ui-card-muted` / `--ui-card-eyebrow-color` / `--ui-card-tag-bg`. In v4 they move to the `--ui-content-*` spelling. A theme rule that still writes the old `--ui-card-*` names will silently lose its muted / eyebrow / tag remap.
 
-> **`-color` → `-ink` rename:** per-part ink hooks are now spelled `--ui-content-{part}-ink` (house term for text colour, cf. `--ui-content-ov-ink`). The old `--ui-content-{part}-color` names are **kept as aliases** — each part reads `var(--ui-content-{part}-ink, var(--ui-content-{part}-color, …))` — so existing themes/demos keep working. Prefer `-ink` in new code. `eb()` writes `--ui-content-eyebrow-ink`, which wins over a `thm()`-set `--ui-content-eyebrow-color`.
+> **`-color` → `-ink` rename:** per-part ink hooks are now spelled `--ui-content-{part}-ink` (house term for text colour, cf. `--ui-content-ov-ink`). The old `--ui-content-{part}-color` names are **kept as aliases** — each part reads `var(--ui-content-{part}-ink, var(--ui-content-{part}-color, …))` — so existing themes/demos keep working. Prefer `-ink` in new code. `eb()` writes `--ui-content-eyebrow-ink`, which wins over a theme-set `--ui-content-eyebrow-color`.
 
 ---
 

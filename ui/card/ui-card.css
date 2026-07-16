@@ -5,7 +5,7 @@
  *
  * Composition layer over the <ui-media> + <ui-content> primitives. Owns the host
  * surface, the media↔content arrangement (variant=), the overlay bridge (ovr()),
- * themes (thm()), corners (rds()), and the responsive layout/spacing tiers.
+ * themes (theme=), corners (rds()), and the responsive layout/spacing tiers.
  * The media (media=) and content (content=) DSLs live in the imported primitives.
  */
 @import './media.css';
@@ -22,7 +22,7 @@
 	:where(ui-card) {
 		/* light arm = normal surface; dark arm = the card's slate (override with
 		   --ui-card-dark-bg). Because the surface is a light-dark() pair, a card
-		   theme only has to flip color-scheme — see thm(dark). */
+		   theme only has to flip color-scheme — see theme="black dark". */
 		--ui-card-bg: light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937));
 		--ui-card-radius: var(--radius-2xl);
 		--ui-card-shadow: var(--shadow-xl);
@@ -130,27 +130,37 @@
 	:where([variant*="ovr("]) .ui-button:not([data-variant]) { color: var(--color-text, hsl(0, 0%, 15%)); }
 
 	/* ============================================================
-	   THEMES — thm(). Ink tokens cross into the content namespace.
+	   THEMES — theme= (the shared cross-component axis). Ink crosses into the
+	   content namespace automatically via color-scheme + currentColor.
 	   ============================================================ */
-	/* thm(brand) was removed — for a branded surface use thm(dark) with a
-	   --ui-card-dark-bg override. (dark/light/subtle spelling: full words for now.) */
+	/* Reader: surface + ink come from the resolved --_theme-* pair (see base/theme.css),
+	   both light-dark() so they adapt. Falls back to the default host surface when
+	   unthemed. Add the `dark`/`light` modifier (theme="black dark") to also flip
+	   color-scheme so the content ink ramp, eyebrow, tags, pills, form controls +
+	   scrollbars re-tone. Branded surface = theme="black" plus a --ui-card-dark-bg
+	   override (hooked in the --ui-theme-black-bg bundle). */
+	:where(ui-card[theme]) {
+		--ui-card-bg: var(--_theme-bg, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));
+		color: var(--_theme-c, var(--color-text));
+	}
+
+	/* DEPRECATED: thm() — use theme=. Thin shim routing the three legacy card themes
+	   through the current --ui-theme-* bundles (thm(subtle)→gray, thm(muted)→slate,
+	   thm(dark)→black); the two dark ones also flip color-scheme (the old behavior).
+	   Existing variant="… thm(x)" markup + presets keep rendering. Remove next major. */
 	:where([variant*="thm(dark)"]) {
-		/* One flip drives the whole theme: --ui-card-bg resolves to its slate dark
-		   arm, and --color-text, --color-accent, --color-border, --color-button
-		   (pills), form controls + scrollbars all follow. Branded surface = this
-		   plus a --ui-card-dark-bg override. */
+		--ui-card-bg: var(--ui-theme-black-bg);
+		color: var(--ui-theme-black-c);
 		color-scheme: dark;
 	}
-	/* thm(muted) — soft-dark companion to thm(subtle): a lighter slate than
-	   thm(dark)'s #1f2937. Same color-scheme flip drives ink/accent/pills/controls;
-	   only the surface differs. Sits between subtle (light) and dark. */
 	:where([variant*="thm(muted)"]) {
+		--ui-card-bg: var(--ui-theme-slate-bg);
+		color: var(--ui-theme-slate-c);
 		color-scheme: dark;
-		--ui-card-bg: var(--ui-card-muted-bg, #374151);
 	}
 	:where([variant*="thm(subtle)"]) {
-		--ui-card-bg: var(--ui-card-subtle-bg, var(--color-surface-alt, #f1f1f1));
-		color: var(--ui-card-subtle-ink, var(--color-text, inherit));
+		--ui-card-bg: var(--ui-theme-gray-bg);
+		color: var(--ui-theme-gray-c);
 	}
 
 	/* ============================================================

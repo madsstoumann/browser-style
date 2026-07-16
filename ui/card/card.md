@@ -189,7 +189,8 @@ Save/play are **controls** (interactive) — card-only, never inside a reveal `<
 |-------|-----------|-------|
 | `name`, `description` | both | e.g. “Hero Preset” |
 | `element` | both | `ui-card` (default), `ui-reveal` — or `ui-media` / `ui-content` for **bare primitives**: the renderer emits just the media frame or content column, no card chrome. Standalone blocks are presentation, not a separate content model |
-| `variant` | both | `col row row-r spl() ovr() vis() thm() rds()` |
+| `variant` | both | `col row row-r spl() ovr() vis() rds()` |
+| `theme` | both | shared theme axis — colour + `pale`/`muted`/`light`/`dark` (see [base/theme.md](../base/theme.md)) |
 | `media` | both | `asr() obf() obp() flp() rds() shp() hov() tnt() scm nav() auto loop clip …` — plus the furniture look tokens (`chip/sticker/save/play` position/hue/size/shape). The renderer appends each furniture item's optional `style=` override after these |
 | `content` | both | `scl() pad() gap() scr` |
 | `text` | both | which long text the content column shows: `summary` (teaser — default), `body` (full view — body **instead of** summary, with the summary kept as a hidden `description` meta), `both`. Reveal back panels always render both |
@@ -243,9 +244,9 @@ attributes.
 | `portrait` | ui-card | `row spl(1/2)` · 1:1 | review |
 | `portrait-top` | ui-card | + `obp(tc)` | profile |
 | `panel` | ui-card | `vis(content)` | job, poll, faq, timeline, comparison |
-| `panel-subtle` | ui-card | + `thm(subtle) scl(lg)` | quote |
-| `panel-brand` | ui-card | + `thm(dark)` (set `--ui-card-dark-bg` to accent for a branded surface) | statistic, membership |
-| `panel-dark` | ui-card | + `thm(dark)` | announcement |
+| `panel-subtle` | ui-card | + `theme="gray"`, `scl(lg)` | quote |
+| `panel-brand` | ui-card | + `theme="black dark"` (set `--ui-card-dark-bg` to accent for a branded surface) | statistic, membership |
+| `panel-dark` | ui-card | + `theme="black dark"` | announcement |
 | `hero` | ui-card | `ovr(bl)` · 4:3 · scrim · `scl(lg)` | event |
 | `poster` | ui-card | `ovr(bl)` · 3:4 · scrim | location |
 | `carousel` | ui-card | `nav(dot)` | gallery |

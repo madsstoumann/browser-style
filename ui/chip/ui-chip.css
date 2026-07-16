@@ -36,17 +36,22 @@
 		/* ───────── B. Furniture axes — theme/fill/ink · variant · size · corner ─────────
 		   Each axis: `&[attr]` = standalone, `:where([media*="chip(…)"]) &` = card token. */
 
-		/* colour — --ui-chip-accent is the single input; theme= and fill= both feed
-		   it, so solid / light / outline all read it. Solid bg falls back to accent
-		   (base rule), so a hue only sets accent + the curated ink. */
-		&[theme~="red"],    :where([media*="chip(red)"])    & { --ui-chip-accent: var(--ui-theme-red-bg);    --ui-chip-c: var(--ui-theme-red-c); }
-		&[theme~="orange"], :where([media*="chip(orange)"]) & { --ui-chip-accent: var(--ui-theme-orange-bg); --ui-chip-c: var(--ui-theme-orange-c); }
-		&[theme~="green"],  :where([media*="chip(green)"])  & { --ui-chip-accent: var(--ui-theme-green-bg);  --ui-chip-c: var(--ui-theme-green-c); }
-		&[theme~="blue"],   :where([media*="chip(blue)"])   & { --ui-chip-accent: var(--ui-theme-blue-bg);   --ui-chip-c: var(--ui-theme-blue-c); }
-		&[theme~="accent"], :where([media*="chip(accent)"]) & { --ui-chip-accent: var(--ui-theme-accent-bg); --ui-chip-c: var(--ui-theme-accent-c); }
-		&[theme~="dark"],   :where([media*="chip(dark)"])   & { --ui-chip-accent: var(--ui-theme-dark-bg);   --ui-chip-c: var(--ui-theme-dark-c); }
-		&[theme~="light"],  :where([media*="chip(light)"])  & { --ui-chip-accent: var(--ui-theme-light-bg);  --ui-chip-c: var(--ui-theme-light-c); }
-		&[theme~="subtle"], :where([media*="chip(subtle)"]) & { --ui-chip-accent: var(--ui-theme-subtle-bg); --ui-chip-c: var(--ui-theme-subtle-c); }
+		/* colour — --ui-chip-accent is the single input; theme=/fill= both feed it,
+		   so solid / pale / outline all read it. Solid bg falls back to accent
+		   (base rule), so a hue only sets accent + the curated ink.
+		   Standalone theme= resolves via base/theme.css into --_theme-* (incl. the
+		   pale/muted modifiers); the light/dark modifiers set color-scheme on the chip
+		   directly. Card-routed media="chip(<hue>)" feeds the --ui-theme-* bundle. */
+		&[theme] { --ui-chip-accent: var(--_theme-bg); --ui-chip-c: var(--_theme-c); }
+		:where([media*="chip(red)"])    & { --ui-chip-accent: var(--ui-theme-red-bg);    --ui-chip-c: var(--ui-theme-red-c); }
+		:where([media*="chip(orange)"]) & { --ui-chip-accent: var(--ui-theme-orange-bg); --ui-chip-c: var(--ui-theme-orange-c); }
+		:where([media*="chip(green)"])  & { --ui-chip-accent: var(--ui-theme-green-bg);  --ui-chip-c: var(--ui-theme-green-c); }
+		:where([media*="chip(blue)"])   & { --ui-chip-accent: var(--ui-theme-blue-bg);   --ui-chip-c: var(--ui-theme-blue-c); }
+		:where([media*="chip(accent)"]) & { --ui-chip-accent: var(--ui-theme-accent-bg); --ui-chip-c: var(--ui-theme-accent-c); }
+		:where([media*="chip(gray)"])   & { --ui-chip-accent: var(--ui-theme-gray-bg);   --ui-chip-c: var(--ui-theme-gray-c); }
+		:where([media*="chip(slate)"])  & { --ui-chip-accent: var(--ui-theme-slate-bg);  --ui-chip-c: var(--ui-theme-slate-c); }
+		:where([media*="chip(black)"])  & { --ui-chip-accent: var(--ui-theme-black-bg);  --ui-chip-c: var(--ui-theme-black-c); }
+		:where([media*="chip(white)"])  & { --ui-chip-accent: var(--ui-theme-white-bg);  --ui-chip-c: var(--ui-theme-white-c); }
 
 		/* arbitrary colour (overrides the hue) — fill = surface, ink = text; ink
 		   auto-contrasts from fill when omitted. */

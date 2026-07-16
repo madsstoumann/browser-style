@@ -57,9 +57,9 @@
 	:where(ui-play[theme~="green"],  [media*="play(green)"]  ui-play) { --ui-play-bg: var(--ui-theme-green-bg);  --ui-play-c: var(--ui-theme-green-c); }
 	:where(ui-play[theme~="blue"],   [media*="play(blue)"]   ui-play) { --ui-play-bg: var(--ui-theme-blue-bg);   --ui-play-c: var(--ui-theme-blue-c); }
 	:where(ui-play[theme~="accent"], [media*="play(accent)"] ui-play) { --ui-play-bg: var(--ui-theme-accent-bg); --ui-play-c: var(--ui-theme-accent-c); }
-	:where(ui-play[theme~="dark"],   [media*="play(dark)"]   ui-play) { --ui-play-bg: var(--ui-theme-dark-bg);   --ui-play-c: var(--ui-theme-dark-c); }
-	:where(ui-play[theme~="light"],  [media*="play(light)"]  ui-play) { --ui-play-bg: var(--ui-theme-light-bg);  --ui-play-c: var(--ui-theme-light-c); }
-	:where(ui-play[theme~="subtle"], [media*="play(subtle)"] ui-play) { --ui-play-bg: var(--ui-theme-subtle-bg); --ui-play-c: var(--ui-theme-subtle-c); }
+	:where(ui-play[theme~="black"],  [media*="play(black)"]  ui-play) { --ui-play-bg: var(--ui-theme-black-bg);  --ui-play-c: var(--ui-theme-black-c); }
+	:where(ui-play[theme~="white"],  [media*="play(white)"]  ui-play) { --ui-play-bg: var(--ui-theme-white-bg);  --ui-play-c: var(--ui-theme-white-c); }
+	:where(ui-play[theme~="gray"],   [media*="play(gray)"]   ui-play) { --ui-play-bg: var(--ui-theme-gray-bg);   --ui-play-c: var(--ui-theme-gray-c); }
 	:where(ui-play[fill]) { --ui-play-bg: attr(fill type(<color>), rgb(0 0 0 / 0.55)); --ui-play-c: contrast-color(var(--ui-play-bg)); }
 	:where(ui-play[ink])  { --ui-play-c: attr(ink type(<color>), hsl(0 0% 100%)); }
 

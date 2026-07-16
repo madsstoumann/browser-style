@@ -4,7 +4,7 @@ A CSS-first chip component for tags, labels, filters, and status indicators. Vis
 
 ## Features
 
-- 8 theme hues (red orange green blue accent dark light subtle) or any arbitrary fill/ink
+- 9 theme colours (red orange green blue accent white gray slate black) + `pale`/`muted` modifiers, or any arbitrary fill/ink
 - Three sizes: small, medium (default), large
 - Style variants: solid (default), light (tinted), outline
 - Shape variants: pill (default), square, squircle (`corner-shape`)
@@ -67,7 +67,7 @@ The web component uses the **exact same** HTML structure as CSS-only — the JS 
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
-| `theme` | string | A theme hue (bg + ink pair): `red orange green blue accent dark light subtle` |
+| `theme` | string | A theme colour (bg + ink pair): `red orange green blue accent white gray slate black`, + `pale`/`muted` modifiers. See [theme.md](../base/theme.md) |
 | `fill` | `<color>` | Arbitrary background — any CSS colour; text auto-contrasts. Overrides `theme` |
 | `ink` | `<color>` | Arbitrary text colour — any CSS colour. Overrides the auto-contrast |
 | `size` | string | `sm`, `lg`, `xl`, `2xl` (`md` is the default) |

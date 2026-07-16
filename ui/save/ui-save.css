@@ -82,9 +82,9 @@
 		&[theme~="green"],  :where([media*="save(green)"])  & { --ui-save-c: var(--ui-theme-green-bg);  --ui-save-c-active: var(--ui-theme-green-bg); }
 		&[theme~="blue"],   :where([media*="save(blue)"])   & { --ui-save-c: var(--ui-theme-blue-bg);   --ui-save-c-active: var(--ui-theme-blue-bg); }
 		&[theme~="accent"], :where([media*="save(accent)"]) & { --ui-save-c: var(--ui-theme-accent-bg); --ui-save-c-active: var(--ui-theme-accent-bg); }
-		&[theme~="dark"],   :where([media*="save(dark)"])   & { --ui-save-c: var(--ui-theme-dark-bg);   --ui-save-c-active: var(--ui-theme-dark-bg); }
-		&[theme~="light"],  :where([media*="save(light)"])  & { --ui-save-c: var(--ui-theme-light-bg);  --ui-save-c-active: var(--ui-theme-light-bg); }
-		&[theme~="subtle"], :where([media*="save(subtle)"]) & { --ui-save-c: var(--ui-theme-subtle-bg); --ui-save-c-active: var(--ui-theme-subtle-bg); }
+		&[theme~="black"],  :where([media*="save(black)"])  & { --ui-save-c: var(--ui-theme-black-bg);  --ui-save-c-active: var(--ui-theme-black-bg); }
+		&[theme~="white"],  :where([media*="save(white)"])  & { --ui-save-c: var(--ui-theme-white-bg);  --ui-save-c-active: var(--ui-theme-white-bg); }
+		&[theme~="gray"],   :where([media*="save(gray)"])   & { --ui-save-c: var(--ui-theme-gray-bg);   --ui-save-c-active: var(--ui-theme-gray-bg); }
 
 		/* arbitrary colour (overrides theme) — ink = the glyph, fill = the circle
 		   disc. After the hue rules so an explicit ink=/fill= wins. */

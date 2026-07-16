@@ -5,7 +5,7 @@
 - `<ui-media>` — the media frame, carousel, scrim, and overlay furniture. Its `media=` DSL and `--ui-media-*` tokens are documented in **[media.md](media.md)**.
 - `<ui-content>` — the text column and its parts. Its `content=` DSL and `--ui-content-*` tokens are documented in **[content.md](content.md)**.
 
-This file covers only the **card-level** tokens: the host surface, the media↔content arrangement (`variant=`), the overlay bridge (`ovr()`), themes (`thm()`), and corners (`rds()`). Every value is a CSS custom property with a built-in fallback, so override only what you need:
+This file covers only the **card-level** tokens: the host surface, the media↔content arrangement (`variant=`), the overlay bridge (`ovr()`), the shared theme axis (`theme=`, see [base/theme.md](../base/theme.md)), and corners (`rds()`). Every value is a CSS custom property with a built-in fallback, so override only what you need:
 
 ```css
 ui-card { --ui-card-radius: 0; --ui-card-shadow: none; }
@@ -22,7 +22,7 @@ All global fallbacks (`--color-*`, `--spacing-*`, `--radius-*`, `--shadow-*`, �
 
 | Token | Default | Controls |
 |-------|---------|----------|
-| `--ui-card-bg` | `var(--color-surface)` | card background (also set by `thm()`) |
+| `--ui-card-bg` | `var(--color-surface)` | card background (also set by `theme=`) |
 | `--ui-card-radius` | `var(--radius-2xl)` | corner radius (set with `rds()`) |
 | `--ui-card-shadow` | `var(--shadow-xl)` | card shadow |
 
@@ -64,20 +64,30 @@ Stacks `<ui-content>` over `<ui-media>` (same grid cell) and places + aligns it 
 - **Round** (global radius scale): `rds(none · sm · md · lg · xl · 2xl · full · pill)`.
 - **Squircle** (bespoke radius + `corner-shape: superellipse()`): `rds(sm-sq · md-sq · lg-sq · xl-sq)` → radii `1.25 / 2 / 2.8 / 3.5rem` with exponents `1.5 / 1.7 / 1.8 / 2`. `ui-reveal` reads `--ui-card-squircle-exp` to apply the same corner-shape to its `<details>`.
 
-## Themes — `thm()`
+## Themes — `theme=`
 
-Decorative background + ink bundles. Ink tokens cross into the `<ui-content>` namespace (muted / eyebrow / tag) so parts re-tone automatically. `thm(dark)` and `thm(muted)` set `color-scheme: dark`, so ink / accent / pills / controls flip automatically — those themes only need to set the surface. The three surfaces form a light→dark ramp: **`thm(subtle)` (light) < `thm(muted)` (`#374151`) < `thm(dark)` (`#1f2937`)**.
+Cards use the **shared cross-component `theme=` axis** — full reference in
+[base/theme.md](../base/theme.md). A `theme=` value is one colour
+(`red orange green blue accent white gray slate black`) plus optional modifiers
+(`pale` tint, `muted` fade, `light`/`dark` scheme). The ink crosses into the
+`<ui-content>` namespace (muted / eyebrow / tag) so parts re-tone; add the `dark`
+modifier (`theme="black dark"`) to flip `color-scheme` so accent / pills / controls
+re-tone too. The neutral surfaces form a light→dark ramp: **`white` < `gray` <
+`slate` < `black`**.
+
+Card-local override hooks (feed the `--ui-theme-black-*`/`slate` bundles):
 
 | Token | Default | Controls |
 |-------|---------|----------|
-| `--ui-card-dark-bg` | `#1f2937` | `thm(dark)` background |
-| `--ui-card-dark-ink` | `#f9fafb` | `thm(dark)` text |
-| `--ui-card-dark-accent` | `#93c5fd` | `thm(dark)` eyebrow |
-| `--ui-card-muted-bg` | `#374151` | `thm(muted)` background — a lighter slate than `thm(dark)`; `color-scheme: dark` flips ink/accent/pills |
-| `--ui-card-subtle-bg` | `var(--color-surface-alt)` | `thm(subtle)` background |
-| `--ui-card-subtle-ink` | `var(--color-text)` | `thm(subtle)` text |
+| `--ui-card-dark-bg` | `#1f2937` | `theme="black"` surface — set to `var(--color-accent)` for a branded surface |
+| `--ui-card-muted-bg` | `#374151` | `theme="slate"` surface |
 
-> The overlay-furniture **sub-themes** (`chip(red)`, `sticker(green)`, …) are a separate, hue-based palette routed via `media=` — see [media.md](media.md). `thm()` is the card-surface theme; the sub-theme keys colour individual overlay elements.
+> **Legacy:** `variant="thm(dark\|muted\|subtle)"` still works as a **deprecated**
+> alias — `thm(dark)`→`theme="black dark"`, `thm(muted)`→`theme="slate dark"`,
+> `thm(subtle)`→`theme="gray"`. Prefer `theme=`.
+>
+> The overlay-furniture **sub-themes** (`chip(red)`, `sticker(green)`, …) are the
+> same bundles routed via `media=` — see [media.md](media.md).
 
 ---
 

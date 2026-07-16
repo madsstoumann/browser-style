@@ -41,10 +41,10 @@
 		--layout-ps: attr(self type(<custom-ident>), auto);
 		--layout-rg: attr(row-gap type(<number>), 1);
 
-		background: var(--layout-bg, #0000);
+		background: var(--layout-bg, var(--_theme-bg, #0000));
 		border-radius: var(--layout-bdrs, 0);
 		box-sizing: border-box;
-		color: var(--layout-c, inherit);
+		color: var(--layout-c, var(--_theme-c, inherit));
 		column-gap: calc(var(--layout-colmg) * var(--layout-space-unit));
 		contain: layout inline-size;
 		display: grid;
@@ -86,7 +86,7 @@
 			--layout-w: calc(100dvi - var(--layout-mi, 0px)); 
 			--_pi: calc((100dvi - var(--layout-bleed-mw, 100dvi)) / 2);
 			background-color: #0000;
-			border-image: conic-gradient(var(--layout-bg) 0 0) fill 0//0 100dvi;
+			border-image: conic-gradient(var(--layout-bg, var(--_theme-bg)) 0 0) fill 0//0 100dvi;
 			margin-inline: min(-1 * var(--layout-mi, 0px), var(--layout-bleed-mw, 100dvi) / 2 - 50dvi);
 		}
 		&[bleed]:not([bleed="0"]) {

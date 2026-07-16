@@ -73,15 +73,20 @@
 		/* ───────── B. Furniture axes — theme · fill/ink · size · corner ─────────
 		   Each axis: `&[attr]` = standalone, `:where([media*="sticker(…)"]) &` = card token. */
 
-		/* colour — hue (the 8 theme hues) */
-		&[theme~="red"],    :where([media*="sticker(red)"])    & { --ui-sticker-bg: var(--ui-theme-red-bg);    --ui-sticker-c: var(--ui-theme-red-c); }
-		&[theme~="orange"], :where([media*="sticker(orange)"]) & { --ui-sticker-bg: var(--ui-theme-orange-bg); --ui-sticker-c: var(--ui-theme-orange-c); }
-		&[theme~="green"],  :where([media*="sticker(green)"])  & { --ui-sticker-bg: var(--ui-theme-green-bg);  --ui-sticker-c: var(--ui-theme-green-c); }
-		&[theme~="blue"],   :where([media*="sticker(blue)"])   & { --ui-sticker-bg: var(--ui-theme-blue-bg);   --ui-sticker-c: var(--ui-theme-blue-c); }
-		&[theme~="accent"], :where([media*="sticker(accent)"]) & { --ui-sticker-bg: var(--ui-theme-accent-bg); --ui-sticker-c: var(--ui-theme-accent-c); }
-		&[theme~="dark"],   :where([media*="sticker(dark)"])   & { --ui-sticker-bg: var(--ui-theme-dark-bg);   --ui-sticker-c: var(--ui-theme-dark-c); }
-		&[theme~="light"],  :where([media*="sticker(light)"])  & { --ui-sticker-bg: var(--ui-theme-light-bg);  --ui-sticker-c: var(--ui-theme-light-c); }
-		&[theme~="subtle"], :where([media*="sticker(subtle)"]) & { --ui-sticker-bg: var(--ui-theme-subtle-bg); --ui-sticker-c: var(--ui-theme-subtle-c); }
+		/* colour — hue. Standalone theme= resolves via base/theme.css into --_theme-*
+		   (incl. pale/muted modifiers); the light/dark modifiers set color-scheme on
+		   the sticker directly. Card-routed media="sticker(<hue>)" feeds the
+		   --ui-theme-* bundle. */
+		&[theme] { --ui-sticker-bg: var(--_theme-bg); --ui-sticker-c: var(--_theme-c); }
+		:where([media*="sticker(red)"])    & { --ui-sticker-bg: var(--ui-theme-red-bg);    --ui-sticker-c: var(--ui-theme-red-c); }
+		:where([media*="sticker(orange)"]) & { --ui-sticker-bg: var(--ui-theme-orange-bg); --ui-sticker-c: var(--ui-theme-orange-c); }
+		:where([media*="sticker(green)"])  & { --ui-sticker-bg: var(--ui-theme-green-bg);  --ui-sticker-c: var(--ui-theme-green-c); }
+		:where([media*="sticker(blue)"])   & { --ui-sticker-bg: var(--ui-theme-blue-bg);   --ui-sticker-c: var(--ui-theme-blue-c); }
+		:where([media*="sticker(accent)"]) & { --ui-sticker-bg: var(--ui-theme-accent-bg); --ui-sticker-c: var(--ui-theme-accent-c); }
+		:where([media*="sticker(gray)"])   & { --ui-sticker-bg: var(--ui-theme-gray-bg);   --ui-sticker-c: var(--ui-theme-gray-c); }
+		:where([media*="sticker(slate)"])  & { --ui-sticker-bg: var(--ui-theme-slate-bg);  --ui-sticker-c: var(--ui-theme-slate-c); }
+		:where([media*="sticker(black)"])  & { --ui-sticker-bg: var(--ui-theme-black-bg);  --ui-sticker-c: var(--ui-theme-black-c); }
+		:where([media*="sticker(white)"])  & { --ui-sticker-bg: var(--ui-theme-white-bg);  --ui-sticker-c: var(--ui-theme-white-c); }
 
 		/* arbitrary colour — fill = disc, ink = text (auto-contrasts from fill).
 		   After the hues so an explicit fill/ink wins; ink after fill. */

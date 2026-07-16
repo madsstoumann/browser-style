@@ -48,7 +48,8 @@ Space-separated token strings; values flow down via CSS custom properties, so a 
 
 | Attribute | On | Controls | Example tokens | Doc |
 |---|---|---|---|---|
-| `variant=` | `ui-card` / `ui-reveal` | composition | `col` `row` `col-r` `row-r` `spl(1/2)` `vis(media)` `ovr(bl)` `thm(dark)` `rds(lg-sq)` | `ui-card-tokens.md` |
+| `variant=` | `ui-card` / `ui-reveal` | composition | `col` `row` `col-r` `row-r` `spl(1/2)` `vis(media)` `ovr(bl)` `rds(lg-sq)` | `ui-card-tokens.md` |
+| `theme=` | `ui-card` / `ui-reveal` | shared theme axis (colour + `pale`/`muted`/`light`/`dark`) | `black dark` `red pale` `gray` | `../base/theme.md` |
 | `media=` | `ui-media` or ancestor | media frame | `asr(16/9)` `obf()` `obp(cc)` `flp(h)` `hov(zoom)` `scm` `nav(dot)` `chip(ts)` `sticker(red)` `vid()` `load(eager)` | `media.md`, `media.carousel.md` |
 | `content=` | `ui-content` or ancestor | text column | `scl(lg)` `hl(poster)` `eb(accent)` `tx(lgt)` `mt(med)` `pad(xl)` `gap()` `scr` | `content.md` |
 
@@ -132,7 +133,7 @@ Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are 
 3. **Direct-child scoping** — reveal rules use `> details > summary` so nested `<details>` don't inherit chrome; follow the same discipline (`:scope >`) in JS.
 4. **Don't register elements CSS can drive** — only `<ui-media>` needs JS, and only for srcset.
 5. **Demos use `<lay-out>`** — do not reintroduce per-page `.grid` classes; use the mapping table in `layout/docs/card-integration.md`.
-6. **`ovr()` needs `scm`** (or a dark image) for contrast; themes go through `thm()`, not ad-hoc colors.
+6. **`ovr()` needs `scm`** (or a dark image) for contrast; themes go through the shared `theme=` axis ([base/theme.md](../base/theme.md)), not ad-hoc colors. Legacy `variant="thm(…)"` is a deprecated alias.
 
 ## Doc map — read this when…
 

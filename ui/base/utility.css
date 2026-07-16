@@ -167,18 +167,20 @@
 			}
 		}
 	}
-	.bg-error { --_bg: var(--ColorError); }
+	/* Color-name vocabulary (primary) — aligned with the theme= axis. The semantic
+	   spellings (.bg-error/warning/success/info) are kept as deprecated aliases. */
+	.bg-red,    .bg-error   { --_bg: var(--color-error); }
+	.bg-orange, .bg-warning { --_bg: var(--color-warning); }
+	.bg-green,  .bg-success { --_bg: var(--color-success); }
+	.bg-blue,   .bg-info    { --_bg: var(--color-info); }
 	.bg-gray { --_bg: var(--CanvasGray); --_c: var(--CanvasText); }
-	.bg-info { --_bg: var(--ColorInfo); }
-	.bg-success { --_bg: var(--ColorSuccess); }
-	.bg-warning { --_bg: var(--ColorWarning); }
 
 	/* Text Colors */
 	.c-accent { color: var(--AccentColor); }
 	.c-black { color: var(--CanvasText); }
-	.c-error { color: var(--ColorError); }
+	.c-red,    .c-error   { color: var(--color-error); }
+	.c-orange, .c-warning { color: var(--color-warning); }
+	.c-green,  .c-success { color: var(--color-success); }
+	.c-blue,   .c-info    { color: var(--color-info); }
 	.c-gray { color: var(--CanvasGray); }
-	.c-info { color: var(--ColorInfo); }
-	.c-success { color: var(--ColorSuccess); }
-	.c-warning { color: var(--ColorWarning); }
 }

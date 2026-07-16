@@ -8,7 +8,7 @@ The three docs this file links to are authoritative for their surfaces:
 
 - **[media.md](media.md)** — the `media=` DSL and the `--ui-media-*` tokens (frame, scrim, carousel, overlay furniture).
 - **[content.md](content.md)** — the `content=` DSL, the `data-part` parts, and the `--ui-content-*` tokens.
-- **[ui-card-tokens.md](ui-card-tokens.md)** — the card-level composition tokens (`variant=`, `ovr()`, `thm()`, `rds()`, host surface).
+- **[ui-card-tokens.md](ui-card-tokens.md)** — the card-level composition tokens (`variant=`, `ovr()`, `rds()`, host surface) and the shared `theme=` axis ([theme.md](../base/theme.md)).
 
 ---
 
@@ -219,14 +219,14 @@ Composes the two primitives — arrangement, split, visibility, overlay, theme, 
 | `vis(media)` | show only the media (hide content) |
 | `vis(content)` | show only the content (hide media) |
 | `ovr()` | `tl … br` — stack content over media at one of 9 positions; sets the matching default scrim direction |
-| `thm()` | `dark subtle` — surface + ink theme (ink crosses into the content namespace) |
+| `theme=` | shared theme axis: a colour (`red … black`) + `pale`/`muted`/`light`/`dark` modifiers. Surface + ink; ink crosses into the content namespace. See [theme.md](../base/theme.md). Legacy `variant="thm(dark\|muted\|subtle)"` still works as a deprecated alias |
 | `rds()` | `none sm md lg xl 2xl full pill` (round) · `sm-sq md-sq lg-sq xl-sq` (squircle, `corner-shape: superellipse()`) — corner radius |
 
 ```html
-<ui-card variant="row spl(1/2) rds(lg) thm(subtle)" media="asr(4/3)" content="scl(lg) pad(lg)"> … </ui-card>
+<ui-card variant="row spl(1/2) rds(lg)" theme="gray" media="asr(4/3)" content="scl(lg) pad(lg)"> … </ui-card>
 ```
 
-**Full surface, host tokens and the `ovr()`/`thm()` bridges:** see **[ui-card-tokens.md](ui-card-tokens.md)**.
+**Full surface, host tokens and the `ovr()` bridge:** see **[ui-card-tokens.md](ui-card-tokens.md)**; the `theme=` axis is documented in **[theme.md](../base/theme.md)**.
 
 ---
 

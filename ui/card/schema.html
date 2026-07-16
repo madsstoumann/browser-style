@@ -141,7 +141,7 @@
 	<h2>Quote — <code>Quotation</code></h2>
 	<p class="note">Envelope <code>summary</code> as <code>&lt;blockquote itemprop="text"&gt;</code> + author. Proposed part: <code>quote</code>.</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="vis(content) thm(subtle)" content="scl(lg)" itemscope itemtype="https://schema.org/Quotation">
+		<ui-card variant="vis(content)" theme="gray" content="scl(lg)" itemscope itemtype="https://schema.org/Quotation">
 			<cq-box>
 				<ui-content>
 					<small data-part="eyebrow">Quote of the day</small>
@@ -594,7 +594,7 @@
 	<h2>Statistic — <code>Observation</code></h2>
 	<p class="note">Proposed part <code>stat</code>: big number + unit + trend, value → <code>QuantitativeValue</code>.</p>
 	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-card variant="vis(content) thm(dark)" itemscope itemtype="https://schema.org/Observation">
+		<ui-card variant="vis(content)" theme="black dark" itemscope itemtype="https://schema.org/Observation">
 			<cq-box>
 				<ui-content>
 					<small data-part="eyebrow">This quarter</small>
@@ -607,7 +607,7 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="vis(content) thm(dark)" itemscope itemtype="https://schema.org/Observation">
+		<ui-card variant="vis(content)" theme="black dark" itemscope itemtype="https://schema.org/Observation">
 			<cq-box>
 				<ui-content>
 					<small data-part="eyebrow">Core Web Vitals</small>
@@ -659,7 +659,7 @@
 	<h2>Announcement — <code>SpecialAnnouncement</code></h2>
 	<p class="note">Dark theme + priority chip pattern via eyebrow; audience → <code>Audience</code>.</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="vis(content) thm(dark)" itemscope itemtype="https://schema.org/SpecialAnnouncement">
+		<ui-card variant="vis(content)" theme="black dark" itemscope itemtype="https://schema.org/SpecialAnnouncement">
 			<cq-box>
 				<ui-content>
 					<meta itemprop="datePosted" content="2026-07-01">
@@ -816,7 +816,7 @@
 	<h2>Membership — <code>Offer</code></h2>
 	<p class="note">Dark theme, <code>PriceSpecification</code>, features as check-<code>list</code>.</p>
 	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-card variant="vis(content) thm(dark)" itemscope itemtype="https://schema.org/Offer">
+		<ui-card variant="vis(content)" theme="black dark" itemscope itemtype="https://schema.org/Offer">
 			<cq-box>
 				<ui-content>
 					<meta itemprop="eligibleDuration" content="P14D">

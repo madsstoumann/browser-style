@@ -139,7 +139,7 @@ Use the CSS-only approach — no JavaScript needed:
 
 ## Colors — `theme` (hues) or `fill` + `ink` (arbitrary)
 
-For a **named hue**, use `theme=` — the 8 theme hues `red orange green blue accent dark light subtle`, a background + paired ink in one keyword:
+For a **named colour**, use `theme=` — the 9 theme colours `red orange green blue accent white gray slate black` (+ `pale`/`muted` modifiers), a background + paired ink in one keyword:
 
 ```html
 <ui-sticker theme="red">Sale</ui-sticker>

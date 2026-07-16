@@ -4,9 +4,9 @@
 		--layout-space-unit: 1rem;
 		--_group-pi: max(var(--layout-mi, 1rem), (100dvi - var(--layout-bleed-mw, 1024px)) / 2);
 
-		background: var(--layout-group-bg, var(--layout-bg, #0000));
+		background: var(--layout-group-bg, var(--layout-bg, var(--_theme-bg, #0000)));
 		box-sizing: border-box;
-		color: var(--layout-group-c, var(--layout-c, inherit));
+		color: var(--layout-group-c, var(--layout-c, var(--_theme-c, inherit)));
 		display: grid;
 		grid-template-columns: 1fr;
 		row-gap: var(--layout-group-gap, calc(2 * var(--layout-space-unit)));
@@ -23,7 +23,7 @@
 
 	:where(lay-out-group)[bleed] {
 		background-color: #0000;
-		border-image: conic-gradient(var(--layout-group-bg, var(--layout-bg)) 0 0) fill 0//0 100dvi;
+		border-image: conic-gradient(var(--layout-group-bg, var(--layout-bg, var(--_theme-bg))) 0 0) fill 0//0 100dvi;
 		margin-inline: min(-1 * var(--layout-mi, 0px), var(--layout-bleed-mw, 100dvi) / 2 - 50dvi);
 		padding-inline: var(--_group-pi);
 	}
