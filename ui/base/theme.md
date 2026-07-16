@@ -50,6 +50,7 @@ dark mode); the `light-dark()` pair only softens the shade for the opposite sche
 |---|---|
 | `pale` | Tinted surface (`color-mix` of the color with the page surface, 80%), ink = the color. Mirrors the light button variant — a pale/pastel version. |
 | `muted` | Fades the theme colors via `color-mix(… transparent 50%)`. Reduces the **theme's** alpha only — it does **not** use element `opacity`, so descendant content is not dimmed. |
+| `ink` | Applies the theme's paired **text colour**. Off by default — see [Ink](#ink). |
 | `light` | Sets `color-scheme: light` on the element. |
 | `dark` | Sets `color-scheme: dark` on the element. |
 | `border` | Draws a solid border in the theme's **solid base colour** and makes the fill **transparent** (unless `pale`). See [Border](#border) for sides + width. |
@@ -63,6 +64,30 @@ controls, scrollbars. So a card that should carry a full dark treatment for its
 content uses **`theme="black dark"`**; `theme="red dark"` makes a red surface whose
 inner content also renders dark. Without a scheme modifier, the theme follows the
 page's `color-scheme`.
+
+## Ink
+
+A theme sets only the **background** by default — text keeps the component's own
+colour. This is what you usually want: a tinted panel (`theme="green pale"`) should
+have normal, readable body text, not dark-green text. Add **`ink`** to apply the
+theme's paired text colour.
+
+```html
+<lay-out theme="green pale">…</lay-out>       <!-- pale-green bg, normal text -->
+<lay-out theme="green pale ink">…</lay-out>   <!-- pale-green bg, dark-green text -->
+<ui-card theme="red ink">…</ui-card>          <!-- red bg, white text -->
+```
+
+`ink` uniformly gates every text colour the theme would set — the paired ink, the
+`muted`-faded ink, and the `border` outline's base-colour ink.
+
+- **Dark surfaces don't need `ink`** — pair them with `dark` (`theme="black dark"`),
+  and `color-scheme` re-tones `--color-text` to light. A dark surface **without**
+  `dark` **or** `ink` (e.g. `theme="black"` on a card) would render dark text on a
+  dark fill — add one of them.
+- **Badges keep their ink.** `<ui-chip>` / `<ui-sticker>` (and `<ui-play>` /
+  `<ui-save>`) are colored objects where the paired ink is essential, so they show it
+  regardless of `ink` — a `theme="red"` chip is still white-on-red.
 
 ## Border
 

@@ -42,7 +42,7 @@
 		   Standalone theme= resolves via base/theme.css into --_theme-* (incl. the
 		   pale/muted modifiers); the light/dark modifiers set color-scheme on the chip
 		   directly. Card-routed media="chip(<hue>)" feeds the --ui-theme-* bundle. */
-		&[theme] { --ui-chip-accent: var(--_theme-bg); --ui-chip-c: var(--_theme-c); }
+		&[theme] { --ui-chip-accent: var(--_theme-bg); --ui-chip-c: var(--_theme-c, var(--_theme-ink)); }
 		:where([media*="chip(red)"])    & { --ui-chip-accent: var(--ui-theme-red-bg);    --ui-chip-c: var(--ui-theme-red-c); }
 		:where([media*="chip(orange)"]) & { --ui-chip-accent: var(--ui-theme-orange-bg); --ui-chip-c: var(--ui-theme-orange-c); }
 		:where([media*="chip(green)"])  & { --ui-chip-accent: var(--ui-theme-green-bg);  --ui-chip-c: var(--ui-theme-green-c); }

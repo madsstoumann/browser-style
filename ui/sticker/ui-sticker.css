@@ -77,7 +77,7 @@
 		   (incl. pale/muted modifiers); the light/dark modifiers set color-scheme on
 		   the sticker directly. Card-routed media="sticker(<hue>)" feeds the
 		   --ui-theme-* bundle. */
-		&[theme] { --ui-sticker-bg: var(--_theme-bg); --ui-sticker-c: var(--_theme-c); }
+		&[theme] { --ui-sticker-bg: var(--_theme-bg); --ui-sticker-c: var(--_theme-c, var(--_theme-ink)); }
 		:where([media*="sticker(red)"])    & { --ui-sticker-bg: var(--ui-theme-red-bg);    --ui-sticker-c: var(--ui-theme-red-c); }
 		:where([media*="sticker(orange)"]) & { --ui-sticker-bg: var(--ui-theme-orange-bg); --ui-sticker-c: var(--ui-theme-orange-c); }
 		:where([media*="sticker(green)"])  & { --ui-sticker-bg: var(--ui-theme-green-bg);  --ui-sticker-c: var(--ui-theme-green-c); }
