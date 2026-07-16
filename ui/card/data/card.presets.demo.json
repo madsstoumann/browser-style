@@ -907,7 +907,8 @@
       "name": "Reveal Demo — Quick Reverse",
       "description": "Reversed column card on the subtle surface, 3:4 media below the words",
       "element": "ui-card",
-      "variant": "thm(subtle) col-r",
+      "variant": "col-r",
+      "theme": "gray",
       "media": "asr(3/4) obp(cc)"
     },
     "reveal-quick-square": {

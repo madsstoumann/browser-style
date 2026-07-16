@@ -113,8 +113,8 @@ is consumed.
 - **Semantic buttons are a separate axis.** Buttons use `.bg-red`, `.bg-accent`, …
   (see `utility.css`) with their own `light`/`outline`/`disabled` `data-variant`s.
   `theme=` is the surface axis; `.bg-*` is the semantic control axis.
-- **Card sugar:** `<ui-card>` also accepts the legacy `variant="thm(dark|muted|
-  subtle)"` spelling as a **deprecated** alias (`thm(dark)`→`black dark`,
-  `thm(muted)`→`slate dark`, `thm(subtle)`→`gray`); prefer `theme=`.
+- **Migrated from `thm()`:** the old card-only `variant="thm(dark|muted|subtle)"`
+  spelling was **removed in v4** — use `theme=`: `thm(dark)`→`black dark`,
+  `thm(muted)`→`slate dark`, `thm(subtle)`→`gray`.
 - **Furniture routing:** inside a card, `media="chip(red)"` / `sticker(green)` /
   `tnt(blue)` etc. color the overlay furniture using the same bundles.

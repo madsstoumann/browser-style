@@ -759,6 +759,7 @@ const renderReveal = (fields, type, itemtype, tokens, preset, flipside, cardId =
 		trigger: reveal.trigger || null,
 		scroll: !!reveal.scroll,
 		variant: preset.variant || null,
+		theme: preset.theme || null,
 		media: mergeMediaTokens(preset.media, tokens.media) || null,
 		content: preset.content || null,
 		style: styleAttr(preset.styles),
@@ -849,6 +850,7 @@ export function renderCard(ucf, presets = {}, cards = {}) {
 	const overlay = /ovr\(/.test(preset.variant || '');
 	return `<ui-card${attrs({
 		variant: preset.variant || 'col',
+		theme: preset.theme || null,
 		media: mergeMediaTokens(preset.media, tokens.media) || null,
 		content: preset.content || null,
 		style: styleAttr(preset.styles),

@@ -219,7 +219,7 @@ Composes the two primitives — arrangement, split, visibility, overlay, theme, 
 | `vis(media)` | show only the media (hide content) |
 | `vis(content)` | show only the content (hide media) |
 | `ovr()` | `tl … br` — stack content over media at one of 9 positions; sets the matching default scrim direction |
-| `theme=` | shared theme axis: a colour (`red … black`) + `pale`/`muted`/`light`/`dark` modifiers. Surface + ink; ink crosses into the content namespace. See [theme.md](../base/theme.md). Legacy `variant="thm(dark\|muted\|subtle)"` still works as a deprecated alias |
+| `theme=` | shared theme axis: a colour (`red … black`) + `pale`/`muted`/`light`/`dark` modifiers. Surface + ink; ink crosses into the content namespace. See [theme.md](../base/theme.md). (Replaces the old `variant="thm(…)"` spelling, removed in v4) |
 | `rds()` | `none sm md lg xl 2xl full pill` (round) · `sm-sq md-sq lg-sq xl-sq` (squircle, `corner-shape: superellipse()`) — corner radius |
 
 ```html

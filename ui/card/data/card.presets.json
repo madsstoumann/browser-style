@@ -55,20 +55,23 @@
       "name": "Panel Subtle Preset",
       "description": "Content-only, off-white surface, large type — quotes",
       "element": "ui-card",
-      "variant": "vis(content) thm(subtle)",
+      "variant": "vis(content)",
+      "theme": "gray",
       "content": "scl(lg)"
     },
     "panel-brand": {
       "name": "Panel Brand Preset",
       "description": "Content-only on a dark surface — stats, pricing tiers (set --ui-card-dark-bg to the accent for a branded look)",
       "element": "ui-card",
-      "variant": "vis(content) thm(dark)"
+      "variant": "vis(content)",
+      "theme": "black dark"
     },
     "panel-dark": {
       "name": "Panel Dark Preset",
       "description": "Content-only on a dark surface — announcements, alerts",
       "element": "ui-card",
-      "variant": "vis(content) thm(dark)"
+      "variant": "vis(content)",
+      "theme": "black dark"
     },
     "hero": {
       "name": "Hero Preset",

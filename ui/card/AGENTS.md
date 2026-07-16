@@ -133,7 +133,7 @@ Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are 
 3. **Direct-child scoping** — reveal rules use `> details > summary` so nested `<details>` don't inherit chrome; follow the same discipline (`:scope >`) in JS.
 4. **Don't register elements CSS can drive** — only `<ui-media>` needs JS, and only for srcset.
 5. **Demos use `<lay-out>`** — do not reintroduce per-page `.grid` classes; use the mapping table in `layout/docs/card-integration.md`.
-6. **`ovr()` needs `scm`** (or a dark image) for contrast; themes go through the shared `theme=` axis ([base/theme.md](../base/theme.md)), not ad-hoc colors. Legacy `variant="thm(…)"` is a deprecated alias.
+6. **`ovr()` needs `scm`** (or a dark image) for contrast; themes go through the shared `theme=` axis ([base/theme.md](../base/theme.md)), not ad-hoc colors. (The old `variant="thm(…)"` spelling was removed in v4 — use `theme=`.)
 
 ## Doc map — read this when…
 

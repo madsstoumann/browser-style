@@ -144,25 +144,6 @@
 		color: var(--_theme-c, var(--color-text));
 	}
 
-	/* DEPRECATED: thm() — use theme=. Thin shim routing the three legacy card themes
-	   through the current --ui-theme-* bundles (thm(subtle)→gray, thm(muted)→slate,
-	   thm(dark)→black); the two dark ones also flip color-scheme (the old behavior).
-	   Existing variant="… thm(x)" markup + presets keep rendering. Remove next major. */
-	:where([variant*="thm(dark)"]) {
-		--ui-card-bg: var(--ui-theme-black-bg);
-		color: var(--ui-theme-black-c);
-		color-scheme: dark;
-	}
-	:where([variant*="thm(muted)"]) {
-		--ui-card-bg: var(--ui-theme-slate-bg);
-		color: var(--ui-theme-slate-c);
-		color-scheme: dark;
-	}
-	:where([variant*="thm(subtle)"]) {
-		--ui-card-bg: var(--ui-theme-gray-bg);
-		color: var(--ui-theme-gray-c);
-	}
-
 	/* ============================================================
 	   RESPONSIVE — md:/lg: prefixes on variant= layout, content= spacing, and
 	   content= SIZE (scl() and hl(<size>)). content tone/weight (eb/hl/tx/mt) and

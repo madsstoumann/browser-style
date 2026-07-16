@@ -82,9 +82,9 @@ Card-local override hooks (feed the `--ui-theme-black-*`/`slate` bundles):
 | `--ui-card-dark-bg` | `#1f2937` | `theme="black"` surface — set to `var(--color-accent)` for a branded surface |
 | `--ui-card-muted-bg` | `#374151` | `theme="slate"` surface |
 
-> **Legacy:** `variant="thm(dark\|muted\|subtle)"` still works as a **deprecated**
-> alias — `thm(dark)`→`theme="black dark"`, `thm(muted)`→`theme="slate dark"`,
-> `thm(subtle)`→`theme="gray"`. Prefer `theme=`.
+> **Migrated from `thm()`:** the old `variant="thm(dark\|muted\|subtle)"` spelling was
+> **removed in v4** — use `theme=`: `thm(dark)`→`theme="black dark"`, `thm(muted)`→
+> `theme="slate dark"`, `thm(subtle)`→`theme="gray"`.
 >
 > The overlay-furniture **sub-themes** (`chip(red)`, `sticker(green)`, …) are the
 > same bundles routed via `media=` — see [media.md](media.md).
