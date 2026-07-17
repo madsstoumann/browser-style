@@ -639,6 +639,93 @@
 
 	<hr>
 	<!-- ════════════════════════════════════════════════════════════
+	     · FULL-SCREEN — bleed + lay-out overflow="preview-2xl center"
+	     ════════════════════════════════════════════════════════════ -->
+	<h2>13 · Full-screen carousel — <code>bleed</code> + <code>overflow="preview-2xl center"</code></h2>
+	<p>A cinematic hero carousel. The peek is a <code>&lt;lay-out overflow&gt;</code> feature (not
+	<code>&lt;ui-media&gt;</code>): <code>center</code> centers the current slide and reveals a sliver of the
+	<em>previous</em> and <em>next</em> slides; <code>preview-2xl</code> sizes each peek to 25% of the
+	carousel width, so the current slide is ≈50% and each neighbour ≈25%. <code>bleed</code> takes it
+	edge-to-edge; controls compose unchanged — <code>nav="dot"</code> shows dots only (no arrows),
+	<code>dot="hyb blw"</code> drops a hybrid dot/pill row into a band below. <code>gaps</code> adds a gutter
+	(matching the inter-item gap) before the first and after the last item, so the ends aren't flush.</p>
+	<lay-out bleed md="columns(1)" overflow="preview-2xl center gaps" nav="dot" dot="hyb blw">
+		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Drama</small><h2 data-part="headline">Your Friends &amp; Neighbours</h2><p data-part="summary">Stream now — is it so wrong to want more?</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Action</small><h2 data-part="headline">Long Way Home</h2><p data-part="summary">Stream now — the desert never forgets.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Sci-Fi</small><h2 data-part="headline">Deep Field</h2><p data-part="summary">Stream now — look closer at the dark.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Nature</small><h2 data-part="headline">Downstream</h2><p data-part="summary">Stream now — follow the current.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Wellness</small><h2 data-part="headline">Breathe</h2><p data-part="summary">Stream now — one moment at a time.</p></ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+
+	<h2>14 · Full-screen carousel, seamless loop + autoplay — <code>loop</code> · <code>auto()</code></h2>
+	<p>Same cinematic carousel with <code>loop</code> + <code>auto="4s"</code> — progressive enhancement from
+	the shared carousel script (<code>@browser.style/card</code> <code>index.js</code>, the same engine that
+	loops <code>&lt;ui-media&gt;</code>); with JS off it stays a finite scroller. It clones the <em>last</em>
+	slide before the first and the <em>first</em> after the last, so the real previous/next slides fill the
+	side peeks, the current slide stays centered even at the ends, and autoplay advances forward forever —
+	rolling into a clone, then hopping instantly to its real twin (identical frame → invisible). The hybrid
+	dot fills as a progress timer; autoplay pauses on hover/focus. Clone dots are auto-suppressed, so the
+	dot count still matches the real slides.</p>
+	<lay-out bleed md="columns(1)" overflow="preview-2xl center" loop auto="4s" nav="dot" dot="hyb blw">
+		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Drama</small><h2 data-part="headline">Your Friends &amp; Neighbours</h2><p data-part="summary">Stream now — is it so wrong to want more?</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Action</small><h2 data-part="headline">Long Way Home</h2><p data-part="summary">Stream now — the desert never forgets.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Sci-Fi</small><h2 data-part="headline">Deep Field</h2><p data-part="summary">Stream now — look closer at the dark.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Nature</small><h2 data-part="headline">Downstream</h2><p data-part="summary">Stream now — follow the current.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Wellness</small><h2 data-part="headline">Breathe</h2><p data-part="summary">Stream now — one moment at a time.</p></ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+
+	<hr>
+	<!-- ════════════════════════════════════════════════════════════
 	     9 · JS-ENHANCED
 	     ════════════════════════════════════════════════════════════ -->
 
@@ -779,7 +866,8 @@
 		</ui-card>
 	</lay-out>
 
-	<!-- cursor-tracked hover + loop/auto carousels (progressive enhancement) -->
+	<!-- cursor-tracked hover + loop/auto carousels (progressive enhancement).
+	     Also drives loop/auto on <lay-out overflow> centered carousels. -->
 	<script type="module" src="index.js"></script>
 	<!-- Safari: no ::scroll-marker/::scroll-button yet — load the real-element
 	     polyfill only where the native gate fails. `?polyfill` forces it (dev). -->

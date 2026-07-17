@@ -26,6 +26,7 @@
 		--layout-preview-sm-size: 60px;
 		--layout-preview-lg-size: 150px;
 		--layout-preview-xl-size: 200px;
+		--layout-preview-2xl-size: 25%; /* container-relative: 25% of the carousel width (for overflow="center") */
 		--layout-space-unit: 1rem;
 
 		--layout-bleed: attr(bleed type(<number>), 0);
@@ -244,6 +245,31 @@
 			&[overflow*="preview-sm"] { --layout-preview-size: var(--layout-preview-sm-size); }
 			&[overflow*="preview-lg"] { --layout-preview-size: var(--layout-preview-lg-size); }
 			&[overflow*="preview-xl"] { --layout-preview-size: var(--layout-preview-xl-size); }
+			&[overflow*="preview-2xl"] { --layout-preview-size: var(--layout-preview-2xl-size); }
+		}
+		/* === center: peek previous AND next; current slide is centered ===
+		   Use together with a preview* token. preview-2xl (25% of the carousel
+		   width) gives a full-screen 50/25/25 on a bleed columns(1) carousel.
+		   Not for use with [pages]; intended for single-item (--_ci: 1) cinematic use. */
+		&[overflow*="preview"][overflow~="center"] {
+			& > *:not(lay-out) {
+				flex: 0 0 calc((100% - 2 * var(--layout-preview-size) - (var(--_ci, 1) - 1) * calc(var(--layout-colmg) * var(--layout-space-unit))) / var(--_ci, 1));
+				scroll-snap-align: center;
+				scroll-margin-inline: 0; /* override the start-margin so centering is symmetric */
+			}
+		}
+		/* full-screen centered: neutralise bleed's asymmetric inline padding so the
+		   current slide centers and both peeks stay equal */
+		&[overflow~="center"][bleed] {
+			padding-inline: 0;
+		}
+		/* === gaps: leading gutter before the first item + trailing gutter after the
+		   last, each equal to the inter-item column gap. Uses first/last-child margins
+		   (not container padding) so it composes with the center+bleed padding reset;
+		   the layout margin is outside the snap area, so items still snap unchanged. */
+		&[overflow~="gaps"] {
+			& > *:not(lay-out):first-child { margin-inline-start: calc(var(--layout-colmg) * var(--layout-space-unit)); }
+			& > *:not(lay-out):last-child { margin-inline-end: calc(var(--layout-colmg) * var(--layout-space-unit)); }
 		}
 		/* === carousel controls (nav/arrow/dot attrs — styles in ui/base/carousel.css) ===
 		   controls replace the scrollbar; a visible scrollbar would consume block-end space

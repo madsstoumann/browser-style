@@ -81,19 +81,23 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
 
 ### overflow
 - Type: token list (space-separated tokens)
-- Accepted tokens: `none`, `preview`, `preview-xs`, `preview-sm`, `preview-lg`, `preview-xl`, `fade`, `fade-start`, `fade-end`
+- Accepted tokens: `none`, `preview`, `preview-xs`, `preview-sm`, `preview-lg`, `preview-xl`, `preview-2xl`, `center`, `gaps`, `fade`, `fade-start`, `fade-end`
 - Default: not present
 - Description: Enables an overflow behavior; when present the layout switches to a horizontal scroller. Use tokens to select variants:
   - `overflow="none"` — hides overflow (no scroll)
   - `overflow="preview"` — shows a partial preview of the next item (reserves 100px preview width)
-  - `overflow="preview-xs"` — extra small preview (25px)
-  - `overflow="preview-sm"` — small preview (50px)
+  - `overflow="preview-xs"` — extra small preview (40px)
+  - `overflow="preview-sm"` — small preview (60px)
   - `overflow="preview-lg"` — large preview (150px)
   - `overflow="preview-xl"` — extra large preview (200px)
+  - `overflow="preview-2xl"` — container-relative preview (25% of the carousel width)
+  - `overflow="preview-xl center"` — **peek both sides**: centers the current slide and reveals a sliver of the *previous* **and** *next* items. Pair with any `preview*` token for the peek size; use `preview-2xl` for a full-screen 50/25/25 (current ≈50%, each neighbour ≈25%). Composes with `nav`/`arrow`/`dot` controls and `bleed`. Intended for single-item (`columns(1)`) cinematic carousels — not for use with `[pages]`.
+  - `overflow="… gaps"` — adds a leading gutter before the first item and a trailing gutter after the last, each equal to the inter-item column gap (via first/last-child margins, so it composes with `center` + `bleed`), so the ends aren't flush to the edge
   - `overflow="preview fade"` — adds fade masks to both edges (animated on scroll)
   - `overflow="preview fade-start"` — adds fade mask to start edge only
   - `overflow="preview fade-end"` — adds fade mask to end edge only
-- Examples: `overflow="preview"`, `overflow="preview-lg fade"`, `overflow="preview fade-end"`
+- Examples: `overflow="preview"`, `overflow="preview-lg fade"`, `overflow="preview fade-end"`, `overflow="preview-2xl center"`, `bleed md="columns(1)" overflow="preview-2xl center" nav="blw" arrow="bare"`
+- Related attributes — `loop` / `auto` (progressive enhancement, JS): add a bare `loop` (seamless infinite wrap) and/or `auto` / `auto="4s"` (autoplay; bare number = seconds) to an `overflow` carousel. These are driven by the **shared carousel script** in `@browser.style/card` (`index.js`) — the same engine that loops/autoplays `<ui-media>` — so load it alongside `layout.css` for this behavior (the `nav`/`arrow`/`dot` control CSS is already shared via `ui/base/carousel.css`). It clones the last slide before the first and the first after the last, then hops from a clone to its real twin on `scrollend`. Pairs naturally with `center` — the clones fill the side peeks at the ends, so the current slide stays centered with no blank edge and forward motion never dead-ends. Clone dots are suppressed by `carousel.css`. With JS off the carousel is an ordinary finite scroller. Example: `bleed md="columns(1)" overflow="preview-2xl center" loop auto="4s" nav="dot" dot="hyb blw"`.
 
 ### width
 - Type: specific id
@@ -274,6 +278,10 @@ These properties allow styling layouts without writing custom selectors. Set the
 ### --layout-preview-xl-size
 - Default: `200px`
 - Description: Extra large preview size (used with `overflow="preview-xl"`).
+
+### --layout-preview-2xl-size
+- Default: `25%`
+- Description: Container-relative preview size (used with `overflow="preview-2xl"`). Expressed as a percentage so it resolves against the carousel's own width (via `flex-basis`) with no `container-type` needed and no viewport fallback. With `overflow="… center"` on a `columns(1)` carousel this gives current ≈50% / each peek ≈25%.
 
 ### Example (custom styling)
 

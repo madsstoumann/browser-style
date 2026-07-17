@@ -108,8 +108,9 @@ export function initHover(nodes) {
  * what CSS can't do. Both read axis / duration from the same media=/nav= tokens.
  * ============================================================ */
 
-// snap children = the slides: every direct child EXCEPT the overlay furniture.
-const NOT_SLIDE = /^(UI-CHIP|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS)$/;
+// snap children = the slides: every direct child EXCEPT the overlay furniture
+// (and nested <lay-out> wrappers, so a <lay-out overflow> carousel counts cards).
+const NOT_SLIDE = /^(UI-CHIP|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS|LAY-OUT)$/;
 const slidesOf = (el) => [...el.children].filter(c => !NOT_SLIDE.test(c.tagName));
 
 const axisYOf = (scroller) => {
@@ -117,21 +118,57 @@ const axisYOf = (scroller) => {
 	return m.includes('axis(y)') || nav.includes('y');
 };
 
-// shared scroll geometry for a scroller on a given axis
+// shared scroll geometry for a scroller on a given axis.
+//
+// Snap-alignment agnostic: each slide's target scroll is derived from its OWN box
+// (offset + size vs. the scroller), reading its computed scroll-snap-align. This is
+// identical to `p * clientWidth` for the full-width, start-snapped <ui-media> carousel
+// but also tracks a <lay-out overflow="… center"> carousel whose slides are ~50% wide
+// and center-snapped (50/25/25). pos() returns the index (into slidesOf, clones
+// included) of the slide nearest its snap position — matching the clone bookkeeping in
+// initLoop (leading clone = 0, trailing clone = count + 1).
 function geom(scroller, axisY) {
 	const size = () => axisY ? scroller.clientHeight : scroller.clientWidth;
-	const pos = () => { const s = size(); return s ? Math.round((axisY ? scroller.scrollTop : scroller.scrollLeft) / s) : 0; };
-	const scrollToPos = (p, behavior = 'smooth') =>
-		scroller.scrollTo({ [axisY ? 'top' : 'left']: p * size(), behavior: reduce.matches ? 'instant' : behavior });
+	const edge = () => axisY ? scroller.scrollTop : scroller.scrollLeft;
+	const list = () => slidesOf(scroller);
+	// inline snap-align, read once from a real slide (start | center | end)
+	const sample = list().find(el => !el.hasAttribute('data-clone')) || list()[0];
+	const align = sample ? getComputedStyle(sample).scrollSnapAlign.split(' ').pop() : 'start';
+	const offsetFor = (el) => {
+		const s = scroller.getBoundingClientRect(), e = el.getBoundingClientRect();
+		const start = edge() + (axisY ? e.top - s.top : e.left - s.left);
+		const dim = axisY ? e.height : e.width;
+		if (align === 'center') return start + dim / 2 - size() / 2;
+		if (align === 'end') return start + dim - size();
+		return start;
+	};
+	const pos = () => {
+		const items = list(), cur = edge();
+		let best = 0, bestD = Infinity;
+		items.forEach((el, i) => { const d = Math.abs(offsetFor(el) - cur); if (d < bestD) { bestD = d; best = i; } });
+		return best;
+	};
+	const scrollToPos = (p, behavior = 'smooth') => {
+		const items = list();
+		const el = items[Math.max(0, Math.min(items.length - 1, p))];
+		if (el) scroller.scrollTo({ [axisY ? 'top' : 'left']: offsetFor(el), behavior: reduce.matches ? 'instant' : behavior });
+	};
 	return { size, pos, scrollToPos };
 }
 
 /**
- * Seamless loop via clones. Prepend a clone of the LAST slide and append a clone
- * of the FIRST, so the scroll range extends one slide past each end. Native arrows /
- * snap smooth-scroll INTO a clone; on scrollend we instantly hop to the real twin
- * (identical image, adjacent position → invisible). Clones carry [data-clone] so CSS
- * suppresses their dots. Run this BEFORE initAuto so the clones exist when auto ticks.
+ * Seamless loop via clones. Prepend the last N slides and append the first N, so the
+ * scroll range extends N slides past each end; on scrollend, once the centered slide is
+ * a clone we instantly hop to its real twin N·count away (identical frame, so the jump
+ * is invisible). Clones carry [data-clone] so CSS suppresses their dots.
+ *
+ * N is chosen so a boundary clone's PEEK is always filled by another (clone) slide —
+ * otherwise the hop pops content into an empty peek (visible flicker). For a full-width
+ * <ui-media> carousel peek = 0 → N = 1 (a single clone each side, as before); for a
+ * <lay-out overflow="… center"> carousel each side peeks ~25% of a neighbour → N = 2, so
+ * the twin of the first slide still shows the second slide in its right peek at the hop.
+ *
+ * Run this BEFORE initAuto so the clones exist when autoplay ticks.
  */
 export function initLoop(scroller) {
 	const slides = slidesOf(scroller);
@@ -141,20 +178,31 @@ export function initLoop(scroller) {
 	const axisY = axisYOf(scroller);
 	const { pos, scrollToPos } = geom(scroller, axisY);
 
-	const head = slides[0].cloneNode(true);
-	const tail = slides[count - 1].cloneNode(true);
-	head.setAttribute('data-clone', '');
-	tail.setAttribute('data-clone', '');
-	scroller.prepend(tail);   // leading clone shows the LAST slide
-	scroller.append(head);    // trailing clone shows the FIRST slide
+	// clones per side: 1 (twin) + neighbours needed to fill one side's peek
+	const rect = (el) => el.getBoundingClientRect();
+	const view = axisY ? scroller.clientHeight : scroller.clientWidth;
+	const dim = axisY ? rect(slides[0]).height : rect(slides[0]).width;
+	const step = count > 1
+		? Math.abs(axisY ? rect(slides[1]).top - rect(slides[0]).top : rect(slides[1]).left - rect(slides[0]).left)
+		: dim;
+	const peek = Math.max(0, (view - dim) / 2);
+	const N = Math.min(count, 1 + Math.ceil(peek / (step || dim)));
 
+	const clone = (s) => { const c = s.cloneNode(true); c.setAttribute('data-clone', ''); c.setAttribute('aria-hidden', 'true'); c.inert = true; return c; };
+	const lead = slides.slice(count - N).map(clone);   // clones of the LAST N slides (in order)
+	const trail = slides.slice(0, N).map(clone);        // clones of the FIRST N slides (in order)
+	const firstChild = scroller.firstChild;
+	for (const c of lead) scroller.insertBefore(c, firstChild);
+	for (const c of trail) scroller.append(c);
+
+	// index map: leading clones 0…N-1 · reals N…N+count-1 · trailing clones N+count…N+2N-1
 	scroller.addEventListener('scrollend', () => {
 		const p = pos();
-		if (p <= 0) scrollToPos(count, 'instant');           // leading clone (=last)  → real last
-		else if (p >= count + 1) scrollToPos(1, 'instant');  // trailing clone (=first) → real first
+		if (p < N) scrollToPos(p + count, 'instant');            // in a leading clone → real twin
+		else if (p >= N + count) scrollToPos(p - count, 'instant'); // in a trailing clone → real twin
 	}, { passive: true });
 
-	scrollToPos(1, 'instant');   // start on the first real slide (past the leading clone)
+	scrollToPos(N, 'instant');   // start on the first real slide (past the leading clones)
 }
 
 /**
@@ -173,8 +221,15 @@ export function initAuto(scroller) {
 	const axisY = axisYOf(scroller);
 	const { pos, scrollToPos } = geom(scroller, axisY);
 
+	// duration from media="auto(Ns)" / nav="auto" (ui-media) OR a bare auto / auto="Ns"
+	// attribute (lay-out overflow, which has no media= string). Bare number = seconds.
+	const toMs = (num, unit) => unit === 'ms' ? +num : +num * 1000;
 	const am = m.match(/auto(?:\((\d+(?:\.\d+)?)(m?s)?\))?/);
-	const autoMs = am ? (am[1] ? (am[2] === 'ms' ? +am[1] : +am[1] * 1000) : 5000) : (nav.includes('auto') ? 5000 : 0);
+	const autoAttr = scroller.getAttribute('auto');
+	let autoMs = 0;
+	if (am) autoMs = am[1] ? toMs(am[1], am[2]) : 5000;
+	else if (autoAttr !== null) { const a = autoAttr.match(/^\s*(\d+(?:\.\d+)?)\s*(m?s)?\s*$/); autoMs = a ? toMs(a[1], a[2]) : 5000; }
+	else if (nav.includes('auto')) autoMs = 5000;
 	if (!autoMs || reduce.matches) return;
 
 	let timer = 0, paused = false;
@@ -220,8 +275,9 @@ export function initCarousels(nodes) {
 		if (el.dataset.uiCarousel) continue;   // idempotent
 		el.dataset.uiCarousel = '1';
 		const m = mediaStr(el), nav = navWords(el);
-		if (m.includes('loop') || nav.includes('loop')) initLoop(el);
-		if (m.includes('auto') || nav.includes('auto')) initAuto(el);
+		// lay-out overflow carousels opt in via bare loop / auto attributes
+		if (m.includes('loop') || nav.includes('loop') || el.hasAttribute('loop')) initLoop(el);
+		if (m.includes('auto') || nav.includes('auto') || el.hasAttribute('auto')) initAuto(el);
 	}
 }
 
@@ -607,6 +663,7 @@ const CAROUSEL_SEL = [
 	'ui-media[media*="auto"]', '[media*="auto"] ui-media',
 	'ui-media[media*="loop"]', '[media*="loop"] ui-media',
 	'ui-media[nav~="auto"]', 'ui-media[nav~="loop"]',
+	'lay-out[overflow][loop]', 'lay-out[overflow][auto]',
 ].join(', ');
 const EMBED_SEL = 'ui-media[provider]';
 // vid() player-tools: frames whose own or ancestor media= carries a vid( token, or the vid= attr.

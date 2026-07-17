@@ -350,6 +350,45 @@
 		</lay-out>
 	</section>
 
+	<section>
+		<h3>2XL</h3>
+		<small>25% of the carousel width (container-relative)</small>
+		<code>&lt;lay-out md="columns(1)" overflow="preview-2xl"&gt;</code>
+		<lay-out md="columns(1)" overflow="preview-2xl">
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Centered — peek both sides (<code>center</code>)</h2>
+	<p><strong>overflow="… center"</strong> centers the current slide and reveals a sliver of the <em>previous</em> and <em>next</em> items. Pair with a <strong>preview*</strong> token for the peek size; <strong>preview-2xl</strong> (25% of the carousel width) yields ≈50% current / ≈25% each side. Compose with <strong>bleed</strong> for a full-screen cinematic carousel.</p>
+	<section>
+		<h3>Centered preview — <code>overflow="preview-2xl center"</code></h3>
+		<small>current ≈50% · previous ≈25% · next ≈25%</small>
+		<code>&lt;lay-out md="columns(1)" overflow="preview-2xl center" nav="blw" arrow="bare"&gt;</code>
+		<lay-out md="columns(1)" overflow="preview-2xl center" nav="blw" arrow="bare">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Full-screen — <code>bleed</code> + <code>overflow="preview-2xl center"</code></h3>
+		<small>edge-to-edge; controls compose unchanged</small>
+		<code>&lt;lay-out bleed md="columns(1)" overflow="preview-2xl center" nav="blw" arrow="bare"&gt;</code>
+		<lay-out bleed md="columns(1)" overflow="preview-2xl center" nav="blw" arrow="bare">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+
 	<h2>Fade Masks</h2>
 	<p>Add fade effects to the overflow edges. Masks animate based on scroll position. All examples use <strong>columns(1)</strong>.</p>
 	<section>
