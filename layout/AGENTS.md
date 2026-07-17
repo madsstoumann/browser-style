@@ -118,23 +118,30 @@ Available: `columns(1)` through `columns(6)`
 
 ### Breakpoint Spacing Tokens
 
-Spacing tokens are embedded alongside layout tokens in breakpoint attributes. They use a multiplier (0–4) applied to `--layout-space-unit`, overriding the same CSS custom properties that global attributes (`pad-inline`, `col-gap`, etc.) set.
+Spacing is **token-only** — card-style tokens embedded alongside layout tokens in the breakpoint attributes. **There are no bare `pad-inline` / `pad-top` / `col-gap` etc. attributes** (removed in v4); every spacing value lives inside a breakpoint attribute. Tokens use a multiplier (default steps `0`–`4`) applied to `--layout-space-unit`, writing the `--layout-*` custom props that `base.css`/`group.css` compose into padding/margin/gap.
 
-| Token | CSS Custom Property | CSS Property |
+| Token | CSS Custom Property(ies) | CSS Property |
 |-------|-------------------|--------------|
-| `pbe(N)` | `--layout-pbe` | `padding-block-end` |
-| `pbs(N)` | `--layout-pbs` | `padding-block-start` |
+| `p(N)` | `--layout-pi` + `--layout-pbs` + `--layout-pbe` | `padding` (all sides) |
 | `pi(N)` | `--layout-pi` | `padding-inline` |
-| `mbe(N)` | `--layout-mbe` | `margin-block-end` |
+| `pb(N)` | `--layout-pbs` + `--layout-pbe` | `padding-block` |
+| `pbs(N)` | `--layout-pbs` | `padding-block-start` |
+| `pbe(N)` | `--layout-pbe` | `padding-block-end` |
 | `mbs(N)` | `--layout-mbs` | `margin-block-start` |
+| `mbe(N)` | `--layout-mbe` | `margin-block-end` |
 | `cg(N)` | `--layout-colmg` | `column-gap` |
 | `rg(N)` | `--layout-rg` | `row-gap` |
 
+Margin is **block-only** (`mbs`/`mbe`) by design — `margin-inline` stays `auto` for centering. Tokens are generated for **both** `<lay-out>` and `<lay-out-group>` (via `:is(...)`).
+
 ```html
-<lay-out md="columns(2) pi(1) pbs(1) pbe(1)" lg="columns(4) pi(4) pbs(2) pbe(2)">
+<!-- xs has no min in the default config, so it is the mobile-first base -->
+<lay-out xs="p(1)" md="columns(2) pi(2) pb(1)" lg="columns(4) p(4)">
 ```
 
-Global attributes provide defaults at all breakpoints; tokens override at specific breakpoints. Values persist until a larger breakpoint overrides them. The build system generates selectors using `*=` (contains match) to support multiple tokens in a single attribute value.
+The lowest breakpoint (`xs`, no `min`) emits its rules **without** a media query — the mobile-first base; larger breakpoints override via cascade-layer order. Values persist until a larger breakpoint overrides them. Selectors use `*=` (contains match) so multiple tokens fit in one attribute value; this is collision-safe because every value is delimited as `token(N)`.
+
+**Which tokens are generated is config-gated** — a top-level `spacing.tokens` default, overridable per breakpoint with `breakpointConfig.spacing` — so a project trims CSS by listing only the tokens each breakpoint needs (see [Configuration Options](#configuration-options)). Generated in `generateSpacingCSS()` in `src/builder.js`.
 
 ### Animations
 
@@ -309,10 +316,19 @@ Provides:
 | `element` | HTML element name for layout containers |
 | `core` | Core CSS files to include |
 | `common` | Common CSS files to include |
+| `spacing.steps` | Multiplier values generated for each spacing token (e.g. `[0,1,2,3,4]`) |
+| `spacing.tokens` | Default spacing-token vocabulary emitted for every breakpoint (`p`, `pi`, `pb`, `pbs`, `pbe`, `mbs`, `mbe`, `cg`, `rg`) |
+| `spacing.breakpoints` | Optional allowlist — generate spacing tokens only for these breakpoints (e.g. `["xs","lg"]`); omit for all |
 | `layoutContainer.maxWidth` | Max container width (generates `--layout-bleed-mw`) |
 | `layoutContainer.margin` | Inline margin (generates `--layout-mi`) |
 | `layoutContainer.setRoot` | Apply margin calculation to element |
-| `breakpoints` | Define breakpoints and included layouts |
+| `breakpoints` | Define breakpoints and included layouts; omit `min`/`max` on the lowest to make it the un-media-queried mobile-first base |
+| `breakpoints.<bp>.spacing` | Per-breakpoint override of the token list (array; `[]` disables spacing tokens for that breakpoint) |
+
+**No `include` option any more** — the layout package no longer bundles base CSS
+(`ui/base/carousel.css`, `animations.css`, `stagger.css`). Load `@browser.style/base`
+alongside `layout.css`; it provides the animation `@keyframes`, carousel controls
+(`nav`/`arrow`/`dot`) and `stagger` engine that the layout wiring references.
 
 ## Creating Custom Layouts
 
@@ -441,10 +457,11 @@ same gap — reset their block margins if the gap alone should govern rhythm.
 For a section that needs a **header above the grid** (eyebrow / title / subtitle /
 "see all" link, à la BBC / WPP), wrap an optional header `<ui-content>` and the
 `<lay-out>` in a `<lay-out-group>` — a custom element in the `lay-out` family, so it
-takes the same **bare attributes** as `<lay-out>` (`bleed`, `pad-top`, …):
+takes the same `bleed` attribute plus the same **breakpoint spacing tokens** as
+`<lay-out>` (`p`, `pi`, `pb`, `pbs`, `pbe`, `mbs`, `mbe`, `cg`, `rg`):
 
 ```html
-<lay-out-group bleed pad-top="3" style="--layout-bg:#eaf6e9">   <!-- all optional -->
+<lay-out-group bleed xs="pbs(3) pbe(3)" style="--layout-bg:#eaf6e9">   <!-- all optional -->
   <ui-content>                              <!-- the header -->
     <small data-part="eyebrow">Our work</small>
     <h2    data-part="headline">World-class ideas</h2>
@@ -478,8 +495,9 @@ Unregistered (pure CSS, like `<ui-card>`). Key properties:
 - **Header width**: content-column by default (aligns with the grid). Opt into a
   full-band header with `<ui-content data-bleed>` (data-* toggle).
 - **Vertical spacing** uses the same bare `<lay-out>` vocabulary (valid on the
-  custom element): `pad-top`/`pad-bottom` = inner padding *within* the band;
-  `space-top`/`space-bottom` = outer margin (added to `page-gap`). It's
+  custom element): `pb`/`pbs`/`pbe` tokens = inner padding *within* the band;
+  `mbs`/`mbe` tokens = outer margin (added to `page-gap`), set on the same
+  breakpoint attributes as `<lay-out>` (e.g. `xs="pbs(3) pbe(3)"`). It's
   `box-sizing: border-box` so padding doesn't disturb the bleed width math.
 - **Styling parts**: use the `content=` DSL / `--ui-content-*` props on the header
   `<ui-content>` (e.g. `content="hl(lg)"`, `--ui-content-headline: 2rem`) — same API

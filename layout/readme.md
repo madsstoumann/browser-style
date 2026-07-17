@@ -134,11 +134,12 @@ gap alone to govern the rhythm.
 Need a heading, category, subtitle and a "see all" link **above** a grid (the
 classic BBC / WPP section)? Wrap an optional header and the `<lay-out>` in a
 `<lay-out-group>` — a custom element in the `lay-out` family, so it takes the same
-bare attributes as `<lay-out>` (`bleed`, `pad-top`, `pad-bottom`, `space-top`,
-`space-bottom`). CSS lives in `core/group.css`, bundled into `dist/layout.css`.
+`bleed` attribute plus the same **breakpoint spacing tokens** as `<lay-out>` (see
+[Breakpoint Spacing Tokens](#breakpoint-spacing-tokens)). CSS lives in
+`core/group.css`, bundled into `dist/layout.css`.
 
 ```html
-<lay-out-group bleed pad-top="3" pad-bottom="3" style="--layout-bg:#eaf6e9">
+<lay-out-group bleed xs="pbs(3) pbe(3)" style="--layout-bg:#eaf6e9">
   <ui-content>                              <!-- the header -->
     <small data-part="eyebrow">Our work</small>
     <h2    data-part="headline">World-class ideas</h2>
@@ -187,9 +188,10 @@ heading on narrow (`< 30rem`) viewports.
   `bleed`/`--layout-bg`.
 - **`<ui-content data-bleed>`** opts the header into spanning the whole band instead
   of the content column (only meaningful on a `bleed` group).
-- `pad-top`/`pad-bottom` = inner padding *within* the band; `space-top`/`space-bottom`
-  = outer margin, added to `page-gap`. `box-sizing: border-box`, so padding doesn't
-  disturb the bleed width math.
+- `pb`/`pbs`/`pbe` tokens = inner padding *within* the band; `mbs`/`mbe` tokens
+  = outer margin, added to `page-gap`. Set them on the same breakpoint attributes as
+  `<lay-out>` (e.g. `xs="pbs(3) pbe(3)"`). `box-sizing: border-box`, so padding
+  doesn't disturb the bleed width math.
 
 ### Styling the header parts
 
@@ -296,11 +298,16 @@ See [demos](dist/index.html) for visual examples of all layouts.
 
 ### Breakpoint Spacing Tokens
 
-Spacing tokens can be embedded alongside layout tokens in breakpoint attributes. They use a multiplier (0–4) applied to `--layout-space-unit`.
+Spacing is **token-only** — the same card-style tokens embedded alongside layout
+tokens in the breakpoint attributes. There are **no** bare `pad-inline` / `pad-top` /
+`col-gap` etc. attributes; every spacing value lives inside a breakpoint attribute.
+Tokens take a multiplier applied to `--layout-space-unit` (default steps `0`–`4`).
 
 | Token | Property | Default |
 |-------|----------|---------|
+| `p(N)` | `padding` (all sides — inline + block) | 0 |
 | `pi(N)` | `padding-inline` | 0 |
+| `pb(N)` | `padding-block` (start + end) | 0 |
 | `pbs(N)` | `padding-block-start` | 0 |
 | `pbe(N)` | `padding-block-end` | 0 |
 | `mbs(N)` | `margin-block-start` | 0 |
@@ -308,9 +315,12 @@ Spacing tokens can be embedded alongside layout tokens in breakpoint attributes.
 | `cg(N)` | `column-gap` | 1 |
 | `rg(N)` | `row-gap` | 1 |
 
+> Margin is **block-only** (`mbs`/`mbe`): `margin-inline` stays `auto` so layouts
+> stay centered. There is no `mi`/`m` or all-sides margin token.
+
 ```html
-<!-- Responsive padding and gaps -->
-<lay-out md="columns(2) pi(1) pbs(1) pbe(1)" lg="columns(4) pi(4) pbs(2) pbe(2)">
+<!-- Base padding from the smallest (un-media-queried) breakpoint, overridden up -->
+<lay-out xs="p(1)" md="columns(2) pi(2) pb(1)" lg="columns(4) p(4)">
   <div>Item 1</div>
   <div>Item 2</div>
   <div>Item 3</div>
@@ -318,7 +328,14 @@ Spacing tokens can be embedded alongside layout tokens in breakpoint attributes.
 </lay-out>
 ```
 
-Global HTML attributes (`pad-inline`, `col-gap`, etc.) still work and provide defaults at all breakpoints. Breakpoint tokens override at specific breakpoints. Values persist until a larger breakpoint overrides them.
+The lowest breakpoint (`xs`, which has no `min` in the default config) emits its
+rules **without** a media query, so it acts as the mobile-first base; larger
+breakpoints override via cascade-layer order. Values persist until a larger
+breakpoint overrides them.
+
+**Configuring which tokens are generated.** Each token × step × breakpoint is a
+generated rule, so the vocabulary is gated in `layout.config.json` to keep the CSS
+small — see [Spacing configuration](#spacing-configuration).
 
 See [spacing demos](dist/spacing.html) for visual examples.
 
@@ -485,6 +502,49 @@ Core CSS files to include from `/core` folder.
 Common CSS files to include from `/core` folder.
 - Example: `["animations"]`
 
+#### Spacing configuration
+
+The `spacing` block controls which [spacing tokens](#breakpoint-spacing-tokens)
+the builder generates. Because every `token × step × breakpoint` combination is a
+generated CSS rule, listing only what you need per breakpoint keeps the output
+small.
+
+```json
+"spacing": {
+  "steps": [0, 1, 2, 3, 4],
+  "tokens": ["p", "pi", "pb", "pbs", "pbe", "mbs", "mbe", "cg", "rg"]
+}
+```
+
+- `steps` — the multiplier values generated for each token (× `--layout-space-unit`).
+- `tokens` — the **default** token vocabulary emitted for every breakpoint.
+- `breakpoints` *(optional)* — an **allowlist**: generate spacing tokens for only
+  these breakpoints. Omit it to generate for all.
+
+**Limit which breakpoints get spacing tokens.** Add a `breakpoints` allowlist — e.g.
+to generate padding/margin tokens for **only `xs` and `lg`**:
+
+```json
+"spacing": {
+  "steps": [0, 1, 2, 3, 4],
+  "tokens": ["p", "pi", "pb", "pbs", "pbe", "mbs", "mbe", "cg", "rg"],
+  "breakpoints": ["xs", "lg"]
+}
+```
+
+**Vary the token set per breakpoint.** Any breakpoint may override the token list
+with its own `spacing` array (an empty array `[]` disables its spacing tokens):
+
+```json
+"breakpoints": {
+  "xs": { "layouts": [...], "spacing": ["p","pi","pb","pbs","pbe","mbs","mbe","cg","rg"] },
+  "md": { "min": "540px", "layouts": [...], "spacing": ["p","pi","pb","cg","rg"] }
+}
+```
+
+Valid token names: `p` (all sides), `pi`, `pb`, `pbs`, `pbe`, `mbs`, `mbe`, `cg`,
+`rg`. Tokens are generated for both `<lay-out>` and `<lay-out-group>`.
+
 #### `layoutContainer` (required)
 Configuration for the layout container element and CSS custom properties.
 
@@ -522,7 +582,10 @@ body:has(lay-out) {
 Only emits the `:root` CSS variables without the `body:has(…)` container rule, giving you full control via your own selector.
 
 #### `breakpoints` (required)
-Define your breakpoints and which layouts to include.
+Define your breakpoints and which layouts to include. Each breakpoint may set
+`min`/`max` for its media query; **omit both on the lowest breakpoint** (e.g. `xs`)
+and its rules emit without a media query, acting as the mobile-first base that
+larger breakpoints override.
 
 **Include all variants:**
 ```json

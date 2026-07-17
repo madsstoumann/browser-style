@@ -130,8 +130,11 @@ export class LayoutBuilder {
 	}
 
 	async processBreakpoint(breakpointName, breakpointConfig) {
-		const mediaQuery = this.generateMediaQuery(breakpointConfig)
-		if (!mediaQuery) return
+		// A breakpoint with no min/max (the mobile-first base, e.g. `xs`) yields a
+		// null media query. Rather than skip it, emit its rules UN-wrapped (empty
+		// string sentinel) so they apply at all widths; larger @media breakpoints
+		// override via layer order. See generateCSS() for the empty-mq output path.
+		const mediaQuery = this.generateMediaQuery(breakpointConfig) || ''
 
 		const processedLayouts = new Set()
 		const processedGlobalRules = new Set()
@@ -148,7 +151,7 @@ export class LayoutBuilder {
 			}
 		}
 
-		this.generateSpacingCSS(breakpointName, mediaQuery)
+		this.generateSpacingCSS(breakpointName, mediaQuery, breakpointConfig)
 		this.generateSubgridCSS(breakpointName, mediaQuery)
 	}
 
@@ -173,21 +176,65 @@ export class LayoutBuilder {
 			{ 'container-type': 'normal', 'display': 'grid', 'grid-row': 'span var(--_sg)', 'grid-template-rows': 'subgrid' }, breakpointName)
 	}
 
-	generateSpacingCSS(breakpointName, mediaQuery) {
-		const elementSelector = this.config.element || 'lay-out'
-		const spacingTokens = {
-			'pbe': '--layout-pbe',
-			'pbs': '--layout-pbs',
-			'pi':  '--layout-pi',
-			'mbe': '--layout-mbe',
-			'mbs': '--layout-mbs',
-			'cg':  '--layout-colmg',
-			'rg':  '--layout-rg',
+	// Spacing tokens — card-style, per-breakpoint, config-gated.
+	//
+	// Each token maps to one or more `--layout-*` custom properties that base.css
+	// (and group.css) compose into padding/margin/gap. `p` (all-sides) and `pb`
+	// (block) are shorthands that write several props at once. Margin is
+	// block-only by design: margin-inline stays `auto` for centering.
+	//
+	// WHICH tokens are emitted is driven by config — a top-level `spacing.tokens`
+	// default, overridable per breakpoint via `breakpointConfig.spacing`. This is
+	// how a project trims generated CSS: only list the tokens each breakpoint
+	// actually needs. Steps come from `spacing.steps` (the multiplier values).
+	//
+	// Selectors target BOTH the layout element and its `-group` sibling via :is(),
+	// so <lay-out-group> spacing uses the same token vocabulary. `*=` (contains)
+	// matching is collision-safe here because every value is delimited as `token(N)`
+	// and no token name is a prefix of another up to its `(`.
+	generateSpacingCSS(breakpointName, mediaQuery, breakpointConfig = {}) {
+		const spacing = this.config.spacing
+		if (!spacing) return
+
+		// Optional allowlist: `spacing.breakpoints: ["xs","lg"]` limits spacing-token
+		// generation to just those breakpoints. Omit it to emit for all breakpoints.
+		if (Array.isArray(spacing.breakpoints) && !spacing.breakpoints.includes(breakpointName)) return
+
+		const steps = spacing.steps || [0, 1, 2, 3, 4]
+		// Token set: a per-breakpoint `spacing: [...]` array wins; otherwise the
+		// top-level default. `spacing: []` on a breakpoint disables its tokens.
+		const tokens = breakpointConfig.spacing !== undefined
+			? breakpointConfig.spacing
+			: (spacing.tokens || [])
+		if (!tokens.length) return
+
+		const el = this.config.element || 'lay-out'
+		const groupEl = this.config.groupElement || `${el}-group`
+		const scope = `:is(${el}, ${groupEl})`
+
+		const TOKEN_PROPS = {
+			p:   ['--layout-pi', '--layout-pbs', '--layout-pbe'],
+			pi:  ['--layout-pi'],
+			pb:  ['--layout-pbs', '--layout-pbe'],
+			pbs: ['--layout-pbs'],
+			pbe: ['--layout-pbe'],
+			mbs: ['--layout-mbs'],
+			mbe: ['--layout-mbe'],
+			cg:  ['--layout-colmg'],
+			rg:  ['--layout-rg'],
 		}
-		for (const [token, property] of Object.entries(spacingTokens)) {
-			for (const value of [0, 1, 2, 3, 4]) {
-				const selector = `${elementSelector}[${breakpointName}*="${token}(${value})"]`
-				this.addRule(mediaQuery, selector, { [property]: value }, breakpointName)
+
+		for (const token of tokens) {
+			const props = TOKEN_PROPS[token]
+			if (!props) {
+				console.warn(`⚠ Unknown spacing token '${token}' in breakpoint '${breakpointName}'`)
+				continue
+			}
+			for (const value of steps) {
+				const selector = `${scope}[${breakpointName}*="${token}(${value})"]`
+				const properties = {}
+				for (const prop of props) properties[prop] = value
+				this.addRule(mediaQuery, selector, properties, breakpointName)
 			}
 		}
 	}
@@ -389,9 +436,11 @@ export class LayoutBuilder {
 			rulesByMediaQuery.get(mediaQuery).rules.push(`  ${selector} {\n${props}\n  }`)
 		}
 
-		// Output media queries with layer wrappers
+		// Output media queries with layer wrappers. An empty mediaQuery is the
+		// mobile-first base breakpoint (no min/max) — emit its rules with NO @media
+		// wrapper, still inside their `@layer layout.<bp>` so cascade order holds.
 		for (const [mediaQuery, { rules, breakpointName }] of rulesByMediaQuery) {
-			css += `\n${mediaQuery} {\n`
+			if (mediaQuery) css += `\n${mediaQuery} {\n`
 			if (breakpointName) {
 				css += `@layer layout.${breakpointName} {\n`
 			}
@@ -399,7 +448,7 @@ export class LayoutBuilder {
 			if (breakpointName) {
 				css += `\n}\n`
 			}
-			css += `}\n`
+			if (mediaQuery) css += `}\n`
 		}
 
 		css += this.generateLayoutContainerCSS()

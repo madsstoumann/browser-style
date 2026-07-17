@@ -15,6 +15,7 @@ function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="${title} using CSS layout system">
+	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="layout.min.css">
 	<link rel="stylesheet" href="/layout/demo.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
@@ -147,6 +148,7 @@ function generateOverflowHTML(columnsData, iconsDir) {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="${title} using CSS layout system">
+	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="layout.min.css">
 	<link rel="stylesheet" href="/layout/demo.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
@@ -169,8 +171,9 @@ function generateOverflowHTML(columnsData, iconsDir) {
 		<p style="opacity: 0.5;">↓ Scroll down to see the carousels animate in ↓</p>
 	</div>`
 
-	// Carousel controls — shared styles from ui/base/carousel.css (bundled into
-	// dist/layout.css via layout.config.json "include"); opt-in via nav / arrow= / dot= attrs.
+	// Carousel controls — shared styles from ui/base/carousel.css, loaded via the
+	// linked @browser.style/base (ui/base/index.css); opt-in via nav / arrow= / dot= attrs.
+	// (base also provides the animation @keyframes and stagger.css used below.)
 	html += `
 	<section>
 		<h3>Carousel controls — <code>nav</code></h3>
@@ -433,6 +436,7 @@ function generateIconsHTML(iconsDir) {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="All layout system icons">
+	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="layout.min.css">
 	<link rel="stylesheet" href="/layout/demo.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>

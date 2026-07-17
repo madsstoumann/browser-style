@@ -11,12 +11,17 @@
 		grid-template-columns: 1fr;
 		row-gap: var(--layout-group-gap, calc(2 * var(--layout-space-unit)));
 
+		/* Spacing is token-only (matching <lay-out>): the builder emits the same
+		   p/pi/pb/pbs/pbe/mbs/mbe/cg/rg tokens for lay-out-group via :is(). Outer
+		   margin = mbs/mbe (space-top/-bottom), inner padding = pbs/pbe (pad-top/
+		   -bottom). Fallbacks keep the group at 0 when no token is set; the child
+		   <lay-out> re-declares these props so a group token never leaks into it. */
 		margin-block:
-			calc(attr(space-top type(<number>), 0) * var(--layout-space-unit))
-			calc(attr(space-bottom type(<number>), 0) * var(--layout-space-unit));
+			calc(var(--layout-mbs, 0) * var(--layout-space-unit))
+			calc(var(--layout-mbe, 0) * var(--layout-space-unit));
 		padding-block:
-			calc(attr(pad-top type(<number>), 0) * var(--layout-space-unit))
-			calc(attr(pad-bottom type(<number>), 0) * var(--layout-space-unit));
+			calc(var(--layout-pbs, 0) * var(--layout-space-unit))
+			calc(var(--layout-pbe, 0) * var(--layout-space-unit));
 
 		& > lay-out { inline-size: 100%; }
 	}
