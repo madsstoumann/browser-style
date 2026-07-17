@@ -275,12 +275,14 @@
 		&[width="xl"]  { --_mi: var(--layout-width-xl,  80rem); }
 		&[width="xxl"] { --_mi: var(--layout-width-xxl, 96rem); }
 
-		/* subgrid(N) is a BREAKPOINT token (e.g. lg="columns(3) subgrid(3)"), generated
-		   per-breakpoint by the builder so it only applies where the grid is actually
-		   multi-column — a stacked single-column breakpoint would collapse the shared
-		   rows. It makes each direct child adopt N shared rows, aligning their internal
-		   rows (media / title / meta) across the grid. See generateSubgridCSS in
-		   src/builder.js. */
+		/* subgrid(on) / subgrid(off) are BREAKPOINT tokens (e.g.
+		   md="columns(3) subgrid(on)" xl="subgrid(off)"), generated per-breakpoint by
+		   the builder so subgrid only applies where the grid is actually multi-column
+		   — a stacked single-column breakpoint would collapse the shared rows. `on`
+		   makes each direct child adopt N shared rows (N from the global `subgrid="N"`
+		   attribute), aligning their internal rows (media / title / meta) across the
+		   grid; `off` turns it back off at a larger breakpoint. See generateSubgridCSS
+		   in src/builder.js. */
 	}
 
 	@keyframes fade-start {

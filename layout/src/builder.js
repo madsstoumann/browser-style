@@ -155,25 +155,51 @@ export class LayoutBuilder {
 		this.generateSubgridCSS(breakpointName, mediaQuery)
 	}
 
-	// subgrid — breakpoint-scoped row alignment. The bare `subgrid` keyword in a
-	// breakpoint attribute (e.g. lg="columns(3) subgrid") turns it on from that
-	// breakpoint up; the row count is set ONCE, globally, via the `subgrid="N"`
-	// attribute — read with attr() into a typed custom property (a bare
-	// `grid-row: span attr()` doesn't resolve, but `span var()` does). The count is a
-	// single value, not per-breakpoint. Each direct child adopts N shared rows,
-	// aligning its internal rows (media / eyebrow / headline …) across the grid
-	// regardless of text length; container-type is neutralised on those children so a
-	// card's own inline-size container (which would sever the subgrid chain) steps out
-	// of the way. Only emitted from `md` upward (never xs/sm) — @media(min-width) is
-	// cumulative, and subgrid at tiny widths makes no sense (cards stack into one column).
+	// subgrid — breakpoint-scoped row alignment.
+	//
+	// ON: the `subgrid(on)` keyword in a breakpoint attribute (e.g.
+	// lg="columns(3) subgrid(on)") turns it on from that breakpoint up. The row
+	// count is set ONCE, globally, via the `subgrid="N"` attribute — read with
+	// attr() into a typed custom property (a bare `grid-row: span attr()` doesn't
+	// resolve, but `span var()` does). Each direct child adopts N shared rows,
+	// aligning its internal rows (media / eyebrow / headline …) across the grid;
+	// container-type is neutralised on those children so a card's own inline-size
+	// container (which would sever the subgrid chain) steps out of the way.
+	//
+	// OFF: `subgrid(off)` turns it back off from a LARGER breakpoint up (e.g.
+	// md="subgrid(on)" xl="subgrid(off)"). Because @media(min-width) is cumulative,
+	// the ON rule persists at larger widths on its own; the OFF rule lives in the
+	// later `@layer layout.<bp>`, so it wins by cascade-layer order (same
+	// specificity, no hacks). It restores the container's default rows and the CARD
+	// child's own inline-size query container — `revert-layer` can't be used here
+	// because the ON rule sits in a lower layer that revert-layer would resolve back
+	// to, so the reset uses explicit, card-oriented values. `~=` is exact-token
+	// matching, so `subgrid(on)` and `subgrid(off)` never cross-match.
+	//
+	// Only emitted from `md` upward (never xs/sm) — subgrid at tiny widths makes no
+	// sense (cards stack into one column).
 	generateSubgridCSS(breakpointName, mediaQuery) {
 		if (breakpointName === 'xs' || breakpointName === 'sm') return
 		const el = this.config.element || 'lay-out'
-		const base = `${el}[${breakpointName}~="subgrid"]`
-		this.addRule(mediaQuery, base,
+
+		// ON — `subgrid(on)`.
+		const on = `${el}[${breakpointName}~="subgrid(on)"]`
+		this.addRule(mediaQuery, on,
 			{ '--_sg': 'attr(subgrid type(<integer>), 1)', 'grid-template-rows': 'repeat(var(--_sg), auto)' }, breakpointName)
-		this.addRule(mediaQuery, `${base} > :not(${el})`,
+		this.addRule(mediaQuery, `${on} > :not(${el})`,
 			{ 'container-type': 'normal', 'display': 'grid', 'grid-row': 'span var(--_sg)', 'grid-template-rows': 'subgrid' }, breakpointName)
+
+		// OFF — `subgrid(off)`. Restore container rows + card child's query container.
+		// Placement is handed BACK to whatever layout is active at this breakpoint by
+		// re-asserting the same `grid-area` base rule uses (`var(--_ga, var(--layout-ga,
+		// auto))`) — NOT a bare `grid-row: auto`, which would override the row half of
+		// an area-placed layout's `--layout-ga` (bento / grid / mosaic / asym) and
+		// collapse it. This works for uniform-cell layouts too (their --layout-ga is
+		// `auto`). `grid-template-rows: initial` drops the child's own `subgrid`.
+		const off = `${el}[${breakpointName}~="subgrid(off)"]`
+		this.addRule(mediaQuery, off, { 'grid-template-rows': 'var(--layout-gtr)' }, breakpointName)
+		this.addRule(mediaQuery, `${off} > :not(${el})`,
+			{ 'container-type': 'inline-size', 'grid-area': 'var(--_ga, var(--layout-ga, auto))', 'grid-template-rows': 'initial' }, breakpointName)
 	}
 
 	// Spacing tokens — card-style, per-breakpoint, config-gated.

@@ -339,6 +339,37 @@ small — see [Spacing configuration](#spacing-configuration).
 
 See [spacing demos](dist/spacing.html) for visual examples.
 
+### Row alignment — `subgrid(on)` / `subgrid(off)`
+
+Make each direct child adopt the grid's shared rows so their internal rows (media ·
+eyebrow · headline · meta) line up across the row, regardless of how far individual
+headlines wrap. It's a **breakpoint token**, enabled per-breakpoint (only where the
+grid is actually multi-column — a stacked single-column breakpoint would collapse the
+shared rows):
+
+```html
+<lay-out subgrid="3" md="columns(3) subgrid(on)" xl="subgrid(off)">
+  <ui-card>…</ui-card>
+  <ui-card>…</ui-card>
+  <ui-card>…</ui-card>
+</lay-out>
+```
+
+- **`subgrid(on)`** — enable from that breakpoint up. The **row count** comes from the
+  separate global **`subgrid="N"`** attribute (one value, not per-breakpoint).
+- **`subgrid(off)`** — disable again from a larger breakpoint up (because
+  `@media (min-width)` is cumulative, an earlier `subgrid(on)` otherwise persists). The
+  off rule wins by cascade-layer order.
+- Generated only for `md`/`lg`/`xl`/`xxl` — never `xs`/`sm`.
+- Tuned for **card grids**: turning off restores the child's own `container-type:
+  inline-size` (its container-query root). Each child adopts N shared rows and neutralises
+  its own inline-size container while subgrid is on.
+
+> **Authoring note:** the token becomes an attribute-selector value in the generated CSS
+> (`lay-out[md~="subgrid(on)"]`). Any app/demo CSS that hooks the subgrid state (e.g. to
+> flip a wrapper to `display: contents`) must match the exact token string —
+> `[lg~="subgrid(on)"]`, not the old bare `[lg~="subgrid"]`.
+
 ### Item Animations
 
 Scroll-driven animations for individual items within a layout. Items animate based on the container's scroll visibility using a named `view-timeline`.

@@ -65,7 +65,7 @@ lay-out ui-content { --ui-content-p: 0; padding-block-start: 0.75rem; }
 [data-part="headline"] { font-weight: 400; }
 [data-part="meta"] { color: var(--color-text-muted); }
 
-lay-out[lg~="subgrid"] ui-media img { block-size: 100%; object-fit: cover; }
+lay-out[lg~="subgrid(on)"] ui-media img { block-size: 100%; object-fit: cover; }
 
 /* Card subgrid — the lay-out's `subgrid` token makes each ui-card a subgrid of the
    grid's N shared rows; here we continue the chain inward (the card-level opt-in is
@@ -78,8 +78,8 @@ lay-out[lg~="subgrid"] ui-media img { block-size: 100%; object-fit: cover; }
    to grid subgrids so the internal rows chain through. Gated to lg (where these grids
    are multi-column); stacked mobile keeps each card's own ratio. */
 @media (min-width: 45rem) {
-	lay-out[lg~="subgrid"] > ui-card {
-		& > cq-box { display: contents; }
+	lay-out[lg~="subgrid(on)"] > ui-card {
+		& > cq-box, & > cq-box > ui-content { display: contents; }
 		&:not(:first-child) ui-media { aspect-ratio: auto; }
 	}
 }
