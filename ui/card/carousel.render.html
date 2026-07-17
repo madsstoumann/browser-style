@@ -27,7 +27,7 @@
 
 	<main data-layout-root page-gap="2"></main>
 
-	<script type="module" src="index.js"></script>
+	<script type="module" src="carousel.js"></script>
 	<script type="module">
 		import { renderCard as renderCardHtml, loadPresets } from './render.js';
 
@@ -125,7 +125,7 @@
 			},
 			{
 				h: 'h2', title: ['JS-enhanced behaviors — ', { code: 'auto' }, ' · ', { code: 'loop' }],
-				note: 'Autoplay and seamless loop are layered on by index.js — strictly progressive enhancement. With JS off the carousels still scroll, snap and show dots/arrows; the tokens just no-op.',
+				note: 'Autoplay and seamless loop are layered on by carousel.js — strictly progressive enhancement. With JS off the carousels still scroll, snap and show dots/arrows; the tokens just no-op.',
 				cards: [['01', 'carousel-auto-loop'], ['02', 'carousel-loop']]
 			},
 			{
@@ -140,7 +140,7 @@
 			},
 			{
 				h: 'h2', title: ['Carousel of videos — pause on slide change'],
-				note: 'A nav carousel whose slides are native videos (mediaType "video" UCF items, with posters). index.js wires pause-on-leave when the carousel contains a video, so you never hear two at once.',
+				note: 'A nav carousel whose slides are native videos (mediaType "video" UCF items, with posters). carousel.js wires pause-on-leave when the carousel contains a video, so you never hear two at once.',
 				cards: [['08', 'carousel-videos']]
 			},
 			{
@@ -192,8 +192,9 @@
 		skipNote.textContent = 'Not expressible via UCF/render.js: ' + skipped.join(' · ') + '.';
 		main.append(skipNote);
 
-		/* re-run the progressive-enhancement scan for the dynamically appended carousels (auto/loop/play/video) */
-		globalThis.uiMedia?.scan?.();
+		/* re-run the carousel scan for the dynamically appended carousels (auto/loop/play/video) */
+		const { scanCarousels } = await import('./carousel.js');
+		scanCarousels();
 	</script>
 </body>
 </html>

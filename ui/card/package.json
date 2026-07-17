@@ -15,7 +15,16 @@
     "./ui-card.css": "./ui-card.css",
     "./ui-media.js": "./ui-media.js",
     "./ui-media-srcset.js": "./ui-media-srcset.js",
-    "./srcset.js": "./srcset.js"
+    "./srcset.js": "./srcset.js",
+    "./index.js": "./index.js",
+    "./carousel.js": "./carousel.js",
+    "./hover.js": "./hover.js",
+    "./video.js": "./video.js",
+    "./shared.js": "./shared.js",
+    "./index.min.js": "./index.min.js",
+    "./carousel.min.js": "./carousel.min.js",
+    "./hover.min.js": "./hover.min.js",
+    "./video.min.js": "./video.min.js"
   },
   "files": [
     "index.css",
@@ -28,8 +37,20 @@
     "content.css",
     "ui-media.js",
     "ui-media-srcset.js",
-    "srcset.js"
+    "srcset.js",
+    "index.js",
+    "carousel.js",
+    "hover.js",
+    "video.js",
+    "shared.js",
+    "*.min.js"
   ],
+  "scripts": {
+    "build": "node build.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.1"
+  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"

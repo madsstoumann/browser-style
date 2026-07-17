@@ -684,7 +684,7 @@
 
 	<h2>14 · Full-screen carousel, seamless loop + autoplay — <code>loop</code> · <code>auto()</code></h2>
 	<p>Same cinematic carousel with <code>loop</code> + <code>auto="4s"</code> — progressive enhancement from
-	the shared carousel script (<code>@browser.style/card</code> <code>index.js</code>, the same engine that
+	the shared carousel script (<code>@browser.style/card</code> <code>carousel.js</code>, the same engine that
 	loops <code>&lt;ui-media&gt;</code>); with JS off it stays a finite scroller. It clones the <em>last</em>
 	slide before the first and the <em>first</em> after the last, so the real previous/next slides fill the
 	side peeks, the current slide stays centered even at the ends, and autoplay advances forward forever —
@@ -866,9 +866,9 @@
 		</ui-card>
 	</lay-out>
 
-	<!-- cursor-tracked hover + loop/auto carousels (progressive enhancement).
-	     Also drives loop/auto on <lay-out overflow> centered carousels. -->
-	<script type="module" src="index.js"></script>
+	<!-- carousel chunk only: loop/auto (incl. <lay-out overflow>), pause-on-slide-leave,
+	     per-slide <ui-play> video controls (progressive enhancement). -->
+	<script type="module" src="carousel.js"></script>
 	<!-- Safari: no ::scroll-marker/::scroll-button yet — load the real-element
 	     polyfill only where the native gate fails. `?polyfill` forces it (dev). -->
 	<script type="module">
