@@ -63,12 +63,14 @@ The breakpoint attributes also carry embedded **inline tokens** (not separate at
 
 ### Animations (scroll-driven)
 
+> These are **base-owned, not layout-specific** — the whole `[animate]` engine lives in `@browser.style/base` (see §3) and works on **any** element. They're listed here because `<lay-out>` is a common host; "Applies To" below means "valid on `<lay-out>` (among any element)."
+
 | Attribute | Applies To | Purpose | Type |
 |-----------|-----------|---------|------|
-| `animate` | `<lay-out>` | Animates child items on scroll via a named view-timeline; modifiers `clip`/`deep`/`trigger*`. | Value / Token-list |
-| `animate-self` | `<lay-out>` | Animates the whole container element on scroll (incl. `morph()` overlay). | Value / Token-list |
-| `pace` | `<lay-out>` | Controls animation entry/exit speed. | Token-list |
-| `easing` | `<lay-out>` | Selects a named easing curve. | Value |
+| `animate` | any element (here `<lay-out>`) | Animates child items on scroll via a named view-timeline; modifiers `clip`/`deep`/`trigger*`; shape reveals `reveal(hex\|star\|…)`. | Value / Token-list |
+| `animate-self` | any element (here `<lay-out>`) | Animates the element itself on scroll (incl. `reveal(...)`; `morph()` is specced but unimplemented). | Value / Token-list |
+| `pace` | any animated element | Controls animation entry/exit speed. | Token-list |
+| `easing` | any animated element | Selects a named easing curve (`--ease-*`). | Value |
 | `stagger` | `<lay-out>` / any host | Cascading reveal of direct children (custom-element form). | Token-list |
 | `data-stagger` | Native host elements | Same cascading-child reveal for native elements. | Token-list |
 
