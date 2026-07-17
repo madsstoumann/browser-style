@@ -14,15 +14,13 @@ export const slidesOf = (el) => [...el.children].filter(c => !NOT_SLIDE.test(c.t
 // muted + autoplay = silent background loop; never coordinated/paused
 export const isDecoration = (v) => v.muted && v.hasAttribute('autoplay');
 
-// Mirror <ui-play>'s visual state without loading the component
+// Mirror <ui-play>'s visual state without loading the component:
+// [open] morphs the <ui-icon type="play-pause"> glyph via CSS
 export function reflectPlay(uiPlay, playing) {
 	const btn = uiPlay.querySelector('button');
 	if (!btn) return;
 	btn.setAttribute('aria-pressed', String(playing));
 	uiPlay.toggleAttribute('open', playing);
-	const icon = btn.querySelector('ui-icon');
-	const type = icon?.getAttribute('type');
-	if (type === 'play' || type === 'pause') icon.setAttribute('type', playing ? 'pause' : 'play');
 }
 
 // Wire a <ui-play> to a <video>: mirror real state, toggle on click, load deferred data-src

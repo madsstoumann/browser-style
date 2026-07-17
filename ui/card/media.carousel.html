@@ -735,7 +735,7 @@
 		<ui-card variant="col" media="asr(4/3) nav dot(hyb) auto(3s) loop play(bs)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
-					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt="">
 				</ui-media>
 				<ui-content><small data-part="eyebrow">auto(3s) loop dot(pll)</small><h2 data-part="headline">Autoplay + pill timer</h2><p data-part="summary">Advances every 3s, seamlessly wraps; pauses on hover/focus.</p></ui-content>
@@ -753,7 +753,7 @@
 		<ui-card variant="col" media="asr(4/3) nav(dot) dot(pll) auto(3s) loop play(bs)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
-					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt="">
 				</ui-media>
 				<ui-content><small data-part="eyebrow">nav(dot) dot(pll) auto(3s) loop play(bs)</small><h2 data-part="headline">Pills only — no arrows</h2><p data-part="summary">Arrows dropped; the pill timers and play/pause control remain.</p></ui-content>
@@ -762,7 +762,7 @@
 		<ui-card variant="col" media="asr(4/3) nav(non) auto(3s) loop play(bs)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
-					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""><img src="/assets/images/popovers.png" alt="">
 				</ui-media>
 				<ui-content><small data-part="eyebrow">nav(non) auto(3s) loop play(bs)</small><h2 data-part="headline">No navigation — play only</h2><p data-part="summary">No dots, no arrows; the play/pause button is the sole control.</p></ui-content>
@@ -774,7 +774,7 @@
 		<ui-card variant="col" media="asr(4/3) axis(y) nav dot(pll) dot(bc) auto(3s) loop play(ts)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
-					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt="">
 				</ui-media>
 				<ui-content><small data-part="eyebrow">axis(y) auto(3s) loop dot(pll) dot(bc)</small><h2 data-part="headline">Vertical autoplay + pill timer</h2><p data-part="summary">Advances down every 3s, seamlessly wraps; pill dots centered at the bottom.</p></ui-content>
@@ -792,7 +792,7 @@
 	<p><code>dot(tmb)</code> + <code>auto loop</code> + <code>&lt;ui-play&gt;</code> + <code>stagger</code>, with two video slides.</p>
 	<lay-out>
 			<ui-media media="asr(4/3) rds(2xl) clip nav auto loop dot(tmb) dot(te) dot(xl) play(be) stagger">
-				<ui-play size="sm" variant="reveal"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+				<ui-play size="sm" variant="reveal"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-carousel-thumb-url: url('/assets/images/finance.png')"><cq-box>
 					<ui-media><img src="/assets/images/finance.png" alt=""></ui-media>
 					<ui-content><small data-part="eyebrow">Travel</small><h2 data-part="headline">Far-flung destinations</h2><p data-part="summary">Places worth the journey.</p><nav data-part="actions"><a class="ui-button" href="#">Explore</a></nav></ui-content>
@@ -812,14 +812,14 @@
 				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-carousel-thumb-url: url('/assets/images/city.png')"><cq-box>
 					<ui-media>
 						<video src="/assets/video/city.mp4" poster="/assets/images/city.png" preload="auto" autoplay muted loop playsinline></video>
-						<ui-play size="lg"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+						<ui-play size="lg"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					</ui-media>
 					<ui-content><small data-part="eyebrow">Video · autoplay</small><h2 data-part="headline">City in motion</h2><p data-part="summary">Silent background loop with a play/pause control.</p><nav data-part="actions"><a class="ui-button" href="#">Visit</a></nav></ui-content>
 				</cq-box></ui-card>
 				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-carousel-thumb-url: url('/assets/images/river.png')"><cq-box>
 					<ui-media>
 						<video src="/assets/video/river.mp4" poster="/assets/images/river.png" preload="metadata" muted loop playsinline></video>
-						<ui-play size="lg"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+						<ui-play size="lg"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					</ui-media>
 					<ui-content><small data-part="eyebrow">Video · manual</small><h2 data-part="headline">Down the river</h2><p data-part="summary">Click to play; pauses when you swipe away.</p><nav data-part="actions"><a class="ui-button" href="#">Discover</a></nav></ui-content>
 				</cq-box></ui-card>
@@ -832,7 +832,7 @@
 		<ui-card variant="col" media="asr(4/3) nav dot(pll) auto(4s) loop play(bs)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
-					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt="">
 				</ui-media>
 				<ui-content><small data-part="eyebrow">auto(4s) loop play(bs)</small><h2 data-part="headline">Pinned control (bottom-left)</h2></ui-content>
@@ -841,7 +841,7 @@
 		<ui-card variant="col" media="asr(4/3) nav auto(4s) loop play(be)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
-					<ui-play variant="reveal" size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+					<ui-play variant="reveal" size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt="">
 				</ui-media>
 				<ui-content><small data-part="eyebrow">play(be) variant="reveal"</small><h2 data-part="headline">Reveal on hover (bottom-right)</h2></ui-content>
