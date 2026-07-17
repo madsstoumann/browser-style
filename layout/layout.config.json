@@ -11,7 +11,6 @@
 		"group"
 	],
 	"common": [
-		"easings",
 		"animations"
 	],
 	"spacing": {

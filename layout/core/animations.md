@@ -1,6 +1,8 @@
-# Layout Animation System
+# Animation System
 
-Scroll-driven animations for the `lay-out` component. Elements animate as they enter the viewport — no JavaScript required.
+> **Moved to base (v4).** The `[animate]`/`[animate-self]` engine now lives in `@browser.style/base` (`ui/base/animate.css` + `@keyframes` in `ui/base/animations.css`), so it works on **any** component, not just `<lay-out>` — load base alongside `layout.css`. Easing tokens moved to `ui/base/easings.css`. Custom-property idents were renamed `--layout-*` → `--animate-*` (`--animate-tl`, `--animate-trigger`, `--animate-self-trigger`, `--animate-item-timing`). The only rule still in the layout package is `stack(reveal)` (`core/animations.css`). Shape reveals (`reveal(hex|star|rhomb|plus|circ)`) draw from the shared `--shp-*` catalog in `ui/base/shapes.css`.
+
+Scroll-driven animations, applied via `animate-self` (container) and `animate` (children) — elements animate as they enter the viewport, no JavaScript required.
 
 ## Attributes
 
@@ -194,7 +196,7 @@ Override these on any `[animate-self]` or `[animate]` element:
 | `--animate-dur-slow` | `1s` | Duration for `slow` pace (triggered mode) |
 | `--animate-dur-fast` | `0.3s` | Duration for `fast` pace (triggered mode) |
 | `--animate-dur-very-fast` | `0.15s` | Duration for `very-fast` pace (triggered mode) |
-| `--layout-item-timing` | `ease-out` | Timing function for item/deep animations |
+| `--animate-item-timing` | `ease-out` | Timing function for item/deep animations |
 | `--layout-morph-bg` | `var(--layout-bg, black)` | Overlay color for `morph` attribute |
 
 Example — custom translation distance with multiplier:
@@ -293,7 +295,7 @@ Slot 2 (exit):   animation-name: var(--_anim-exit, none) direction: reverse
 
 The exit slot defaults to `none` (inactive). When a `pace` exit token is set, `--_anim-exit` resolves to the same keyframe as entry, played in reverse. For items, exit stagger is reversed — the last child exits first.
 
-Easing values are sourced from `easings.css` (imported at the top of `animations.css`). The `[easing]` attribute maps the attribute value to `--animtm` (for container animations) and `--layout-item-timing` (for item animations).
+Easing values are sourced from `ui/base/easings.css` (the `--ease-*` tokens, loaded by `@browser.style/base`). The `[easing]` attribute maps the attribute value to `--animtm` (for container animations) and `--animate-item-timing` (for item animations).
 
 ---
 
@@ -336,9 +338,9 @@ Browsers without `timeline-trigger-name` support ignore the `@supports` block an
 │  @supports (timeline-trigger-name: --t)                  │
 │                                                          │
 │  Container (trigger / trigger-exit / trigger-both)       │
-│    → timeline-trigger: --layout-trigger view()           │
+│    → timeline-trigger: --animate-trigger view()           │
 │       entry 25% exit 0%                                  │
-│    → trigger-scope: --layout-trigger                     │
+│    → trigger-scope: --animate-trigger                     │
 │                                                          │
 │  Children > *                                            │
 │    → animation-timeline: auto  (time-based)              │
@@ -352,7 +354,7 @@ Browsers without `timeline-trigger-name` support ignore the `@supports` block an
 │    trigger-both  → play-forwards play-backwards          │
 │                                                          │
 │  Fallback (no support):                                  │
-│    Scroll-driven via animation-timeline: --layout-tl     │
+│    Scroll-driven via animation-timeline: --animate-tl     │
 └──────────────────────────────────────────────────────────┘
 ```
 

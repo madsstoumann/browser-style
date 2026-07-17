@@ -190,6 +190,41 @@
 				background-color: var(--ui-carousel-pill-fill);
 			}
 		}
+		/* dot(hyb) — hybrid: markers stay circle dots; the active marker morphs into a
+		   pill (width/radius transition, staying on the grey track colour) and runs the
+		   EXACT dot(pll) fill-timer (grey track fills L→R to white over the autoplay
+		   duration). The quick morph reads first against the slow fill. Keyboard focus
+		   previews the pill shape. */
+		:where([media*="dot(hyb)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
+		:where(ui-media, [nav], [arrow], [dot]):where([media*="dot(hyb)"], [dot~="hyb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
+			transition:
+				inline-size var(--duration-normal, 200ms) var(--ease-in-out, ease-in-out),
+				border-radius var(--duration-normal, 200ms) var(--ease-in-out, ease-in-out);
+		}
+		:where([media*="dot(hyb)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+		:where(ui-media, [nav], [arrow], [dot]):where([media*="dot(hyb)"], [dot~="hyb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+		:where([media*="dot(hyb)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible,
+		:where(ui-media, [nav], [arrow], [dot]):where([media*="dot(hyb)"], [dot~="hyb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible {
+			background: var(--ui-carousel-pill-track);
+			border-radius: var(--radius-pill, 100px);
+			/* a touch wider than the dot(pll) timer pill so it reads clearly among the round dots */
+			inline-size: var(--ui-carousel-hyb-width, calc(var(--ui-carousel-pill-width) * 1.35));
+		}
+		@media (prefers-reduced-motion: no-preference) {
+			:where([media*="dot(hyb)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+			:where(ui-media, [nav], [arrow], [dot]):where([media*="dot(hyb)"], [dot~="hyb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+				animation: ui-carousel-pill-fill var(--ui-carousel-autoplay) linear forwards;
+				animation-play-state: var(--ui-carousel-play-state, running);
+				background: linear-gradient(var(--ui-carousel-pill-fill), var(--ui-carousel-pill-fill)) no-repeat 0 0 / 0% 100% var(--ui-carousel-pill-track);
+			}
+		}
+		@media (prefers-reduced-motion: reduce) {
+			:where([media*="dot(hyb)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+			:where(ui-media, [nav], [arrow], [dot]):where([media*="dot(hyb)"], [dot~="hyb"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+				background-color: var(--ui-carousel-pill-fill);
+			}
+		}
+
 		/* dot(non) — no dots (keeps arrows); e.g. an arrows-only band via nav(blw)/nav(abv) */
 		:where([media*="dot(non)"]) :where(ui-media),
 		:where(ui-media, [nav], [arrow], [dot]):where([media*="dot(non)"], [dot~="non"]) { scroll-marker-group: none; }

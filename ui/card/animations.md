@@ -1,11 +1,13 @@
 # Animations — keyframe library & scroll API
 
 How scroll-driven and scroll-triggered animations work: one canonical keyframe library,
-consumed by three front-ends — the layout `[animate]`/`[animate-self]` attribute API, the
-`.an-*` utility classes, and the stagger engine.
+consumed by three front-ends — the `[animate]`/`[animate-self]` attribute API, the
+`.an-*` utility classes, and the stagger engine. All in `@browser.style/base` now, so any
+component can use them.
 
 - **Keyframe library + params:** [`ui/base/animations.css`](../base/animations.css) (`@layer bs-core`).
-- **Attribute API machinery** (timelines, ranges, triggers, stagger, pace): [`layout/core/animations.css`](../../layout/core/animations.css) — full reference in [`layout/core/animations.md`](../../layout/core/animations.md).
+- **Attribute API engine** (timelines, ranges, triggers, stagger, pace): [`ui/base/animate.css`](../base/animate.css) (`@layer bs-core`) — moved out of layout in v4; full reference in [`layout/core/animations.md`](../../layout/core/animations.md). Only `stack(reveal)` remains in `layout/core/animations.css`.
+- **Easing tokens:** [`ui/base/easings.css`](../base/easings.css).
 - **Stagger engine** (the state-triggered sibling of this system): [stagger.md](./stagger.md).
 
 `ui/base/animations.css` is bundled into `dist/layout.css` via `layout.config.json`
@@ -66,7 +68,7 @@ summary:
 
 - **`animate-self="fx()"`** — animates the `<lay-out>` element **itself** on its own
   `view()` timeline.
-- **`animate="fx()"`** — the container publishes `view-timeline: --layout-tl`; its
+- **`animate="fx()"`** — the container publishes `view-timeline: --animate-tl`; its
   **children** animate against it, staggered by per-`sibling-index()` `animation-range`.
 
 **Modifiers** (space-separated): `clip` (`overflow: clip`) · `deep` (two-level
@@ -86,7 +88,7 @@ scrubbed timeline for a fixed-duration play that *starts* on scroll but isn't sc
 So for a wild effect that **re-appears** on scroll back-and-forth, use `trigger-both`; for
 one-shot, `trigger`; for scroll-scrubbed, no token.
 
-`animate-self` supports the same trigger tokens (separate `--layout-self-trigger` scope, so
+`animate-self` supports the same trigger tokens (separate `--animate-self-trigger` scope, so
 it composes with an item `[animate]` trigger on the same element).
 
 ### `animate-self` feedback deadlock

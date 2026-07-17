@@ -133,6 +133,36 @@ ui-media:where([media*="dot(pll)"], [dot~="pll"]) > ui-carousel-controls [data-d
 	}
 }
 
+/* dot(hyb) — hybrid: dots stay circles; the active dot ([aria-current]) morphs into a
+   pill (width/radius transition on the grey track) and runs the EXACT dot(pll) fill-timer.
+   Focus previews the pill shape. Mirrors the native ::scroll-marker rules. */
+:where([media*="dot(hyb)"]) ui-media ui-carousel-controls [data-dot],
+ui-media:where([media*="dot(hyb)"], [dot~="hyb"]) > ui-carousel-controls [data-dot] {
+	transition:
+		inline-size var(--duration-normal, 200ms) var(--ease-in-out, ease-in-out),
+		border-radius var(--duration-normal, 200ms) var(--ease-in-out, ease-in-out);
+}
+:where([media*="dot(hyb)"]) ui-media ui-carousel-controls [data-dot]:is([aria-current], :focus-visible),
+ui-media:where([media*="dot(hyb)"], [dot~="hyb"]) > ui-carousel-controls [data-dot]:is([aria-current], :focus-visible) {
+	background: var(--ui-carousel-pill-track);
+	border-radius: var(--radius-pill, 100px);
+	inline-size: var(--ui-carousel-hyb-width, calc(var(--ui-carousel-pill-width) * 1.35));
+}
+@media (prefers-reduced-motion: no-preference) {
+	:where([media*="dot(hyb)"]) ui-media ui-carousel-controls [data-dot][aria-current],
+	ui-media:where([media*="dot(hyb)"], [dot~="hyb"]) > ui-carousel-controls [data-dot][aria-current] {
+		animation: ui-carousel-pill-fill var(--ui-carousel-autoplay) linear forwards;
+		animation-play-state: var(--ui-carousel-play-state, running);
+		background: linear-gradient(var(--ui-carousel-pill-fill), var(--ui-carousel-pill-fill)) no-repeat 0 0 / 0% 100% var(--ui-carousel-pill-track);
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	:where([media*="dot(hyb)"]) ui-media ui-carousel-controls [data-dot][aria-current],
+	ui-media:where([media*="dot(hyb)"], [dot~="hyb"]) > ui-carousel-controls [data-dot][aria-current] {
+		background-color: var(--ui-carousel-pill-fill);
+	}
+}
+
 /* dot(tmb) — thumbnails; carousel.js copies each slide's --ui-carousel-thumb-url
    (and --ui-carousel-thumb-ratio, if set) onto its dot's inline style */
 :where([media*="dot(tmb)"]) ui-media ui-carousel-controls [data-dot],

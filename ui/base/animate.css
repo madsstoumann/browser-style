@@ -1,0 +1,383 @@
+@layer bs-core {
+
+	/* ==========================================================================
+	   Animation ENGINE — the [animate] / [animate-self] / [pace] / [easing]
+	   attribute API: timelines, ranges, stagger and scroll triggers.
+	   Generic (attribute-driven, no element coupling) so it works on ANY component.
+
+	   The @keyframes, the keyframe params (--animate-{dg,tx,ty,txv,tyv,zi,zo,mult})
+	   and the (N) multiplier live in ui/base/animations.css (imported just before
+	   this file, same bs-core layer). This file owns the trigger-mode timing tokens
+	   below plus the attribute API, timelines, ranges and triggers.
+	   ========================================================================== */
+
+	[animate-self], [animate] {
+		--animate-delay: 0.005s;
+		--animate-stagger: 10;
+		--animate-dur: 0.5s;
+		--animate-dur-very-slow: 1.5s;
+		--animate-dur-slow: 1s;
+		--animate-dur-fast: 0.3s;
+		--animate-dur-very-fast: 0.15s;
+	}
+
+	/* ==========================================================================
+	   Easing: maps [easing] attribute to --animtm custom property.
+	   Item animations inherit --animtm via the fallback chain:
+	   var(--animate-item-timing, var(--animtm, ease-out))
+	   Set --animate-item-timing directly to override item timing independently.
+	   Easing tokens (--ease-*) come from ui/base/easings.css.
+	   ========================================================================== */
+
+	/* Ease */
+	[easing="ease-1"] { --animtm: var(--ease-1); }
+	[easing="ease-2"] { --animtm: var(--ease-2); }
+	[easing="ease-3"] { --animtm: var(--ease-3); }
+	[easing="ease-4"] { --animtm: var(--ease-4); }
+	[easing="ease-5"] { --animtm: var(--ease-5); }
+
+	/* Ease In */
+	[easing="ease-in-1"] { --animtm: var(--ease-in-1); }
+	[easing="ease-in-2"] { --animtm: var(--ease-in-2); }
+	[easing="ease-in-3"] { --animtm: var(--ease-in-3); }
+	[easing="ease-in-4"] { --animtm: var(--ease-in-4); }
+	[easing="ease-in-5"] { --animtm: var(--ease-in-5); }
+
+	/* Ease Out */
+	[easing="ease-out-1"] { --animtm: var(--ease-out-1); }
+	[easing="ease-out-2"] { --animtm: var(--ease-out-2); }
+	[easing="ease-out-3"] { --animtm: var(--ease-out-3); }
+	[easing="ease-out-4"] { --animtm: var(--ease-out-4); }
+	[easing="ease-out-5"] { --animtm: var(--ease-out-5); }
+
+	/* Ease In-Out */
+	[easing="ease-in-out-1"] { --animtm: var(--ease-in-out-1); }
+	[easing="ease-in-out-2"] { --animtm: var(--ease-in-out-2); }
+	[easing="ease-in-out-3"] { --animtm: var(--ease-in-out-3); }
+	[easing="ease-in-out-4"] { --animtm: var(--ease-in-out-4); }
+	[easing="ease-in-out-5"] { --animtm: var(--ease-in-out-5); }
+
+	/* Spring */
+	[easing="ease-spring-1"] { --animtm: var(--ease-spring-1); }
+	[easing="ease-spring-2"] { --animtm: var(--ease-spring-2); }
+	[easing="ease-spring-3"] { --animtm: var(--ease-spring-3); }
+	[easing="ease-spring-4"] { --animtm: var(--ease-spring-4); }
+	[easing="ease-spring-5"] { --animtm: var(--ease-spring-5); }
+
+	/* Bounce */
+	[easing="ease-bounce-1"] { --animtm: var(--ease-bounce-1); }
+	[easing="ease-bounce-2"] { --animtm: var(--ease-bounce-2); }
+	[easing="ease-bounce-3"] { --animtm: var(--ease-bounce-3); }
+	[easing="ease-bounce-4"] { --animtm: var(--ease-bounce-4); }
+	[easing="ease-bounce-5"] { --animtm: var(--ease-bounce-5); }
+
+	/* Elastic */
+	[easing="ease-elastic-1"] { --animtm: var(--ease-elastic-1); }
+	[easing="ease-elastic-2"] { --animtm: var(--ease-elastic-2); }
+	[easing="ease-elastic-3"] { --animtm: var(--ease-elastic-3); }
+	[easing="ease-elastic-4"] { --animtm: var(--ease-elastic-4); }
+	[easing="ease-elastic-5"] { --animtm: var(--ease-elastic-5); }
+
+	/* Elastic Out */
+	[easing="ease-elastic-out-1"] { --animtm: var(--ease-elastic-out-1); }
+	[easing="ease-elastic-out-2"] { --animtm: var(--ease-elastic-out-2); }
+	[easing="ease-elastic-out-3"] { --animtm: var(--ease-elastic-out-3); }
+	[easing="ease-elastic-out-4"] { --animtm: var(--ease-elastic-out-4); }
+	[easing="ease-elastic-out-5"] { --animtm: var(--ease-elastic-out-5); }
+
+	/* Elastic In */
+	[easing="ease-elastic-in-1"] { --animtm: var(--ease-elastic-in-1); }
+	[easing="ease-elastic-in-2"] { --animtm: var(--ease-elastic-in-2); }
+	[easing="ease-elastic-in-3"] { --animtm: var(--ease-elastic-in-3); }
+	[easing="ease-elastic-in-4"] { --animtm: var(--ease-elastic-in-4); }
+	[easing="ease-elastic-in-5"] { --animtm: var(--ease-elastic-in-5); }
+
+	/* Elastic In-Out */
+	[easing="ease-elastic-in-out-1"] { --animtm: var(--ease-elastic-in-out-1); }
+	[easing="ease-elastic-in-out-2"] { --animtm: var(--ease-elastic-in-out-2); }
+	[easing="ease-elastic-in-out-3"] { --animtm: var(--ease-elastic-in-out-3); }
+	[easing="ease-elastic-in-out-4"] { --animtm: var(--ease-elastic-in-out-4); }
+	[easing="ease-elastic-in-out-5"] { --animtm: var(--ease-elastic-in-out-5); }
+
+	/* Squish */
+	[easing="ease-squish-1"] { --animtm: var(--ease-squish-1); }
+	[easing="ease-squish-2"] { --animtm: var(--ease-squish-2); }
+	[easing="ease-squish-3"] { --animtm: var(--ease-squish-3); }
+	[easing="ease-squish-4"] { --animtm: var(--ease-squish-4); }
+	[easing="ease-squish-5"] { --animtm: var(--ease-squish-5); }
+
+	/* Step */
+	[easing="ease-step-1"] { --animtm: var(--ease-step-1); }
+	[easing="ease-step-2"] { --animtm: var(--ease-step-2); }
+	[easing="ease-step-3"] { --animtm: var(--ease-step-3); }
+	[easing="ease-step-4"] { --animtm: var(--ease-step-4); }
+	[easing="ease-step-5"] { --animtm: var(--ease-step-5); }
+
+	/* Named curves */
+	[easing="ease-circ-in"]      { --animtm: var(--ease-circ-in); }
+	[easing="ease-circ-in-out"]  { --animtm: var(--ease-circ-in-out); }
+	[easing="ease-circ-out"]     { --animtm: var(--ease-circ-out); }
+	[easing="ease-cubic-in"]     { --animtm: var(--ease-cubic-in); }
+	[easing="ease-cubic-in-out"] { --animtm: var(--ease-cubic-in-out); }
+	[easing="ease-cubic-out"]    { --animtm: var(--ease-cubic-out); }
+	[easing="ease-expo-in"]      { --animtm: var(--ease-expo-in); }
+	[easing="ease-expo-in-out"]  { --animtm: var(--ease-expo-in-out); }
+	[easing="ease-expo-out"]     { --animtm: var(--ease-expo-out); }
+	[easing="ease-quad-in"]      { --animtm: var(--ease-quad-in); }
+	[easing="ease-quad-in-out"]  { --animtm: var(--ease-quad-in-out); }
+	[easing="ease-quad-out"]     { --animtm: var(--ease-quad-out); }
+	[easing="ease-quart-in"]     { --animtm: var(--ease-quart-in); }
+	[easing="ease-quart-in-out"] { --animtm: var(--ease-quart-in-out); }
+	[easing="ease-quart-out"]    { --animtm: var(--ease-quart-out); }
+	[easing="ease-quint-in"]     { --animtm: var(--ease-quint-in); }
+	[easing="ease-quint-in-out"] { --animtm: var(--ease-quint-in-out); }
+	[easing="ease-quint-out"]    { --animtm: var(--ease-quint-out); }
+	[easing="ease-sine-in"]      { --animtm: var(--ease-sine-in); }
+	[easing="ease-sine-in-out"]  { --animtm: var(--ease-sine-in-out); }
+	[easing="ease-sine-out"]     { --animtm: var(--ease-sine-out); }
+
+	/* ==========================================================================
+	   Animation Name Selectors
+	   ========================================================================== */
+
+	/* Bounce */
+	[animate-self*="bounce("],          [animate*="bounce("] > *          { --_animn: bounce-in; } /* --animate-zi: 0.3 set in ui/base/animations.css */
+	[animate-self*="bounce-in-down("],  [animate*="bounce-in-down("] > *  { --_animn: bounce-in-down; }
+	[animate-self*="bounce-in-left("],  [animate*="bounce-in-left("] > *  { --_animn: bounce-in-left; }
+	[animate-self*="bounce-in-right("], [animate*="bounce-in-right("] > * { --_animn: bounce-in-right; }
+	[animate-self*="bounce-in-up("],    [animate*="bounce-in-up("] > *    { --_animn: bounce-in-up; }
+
+	/* Fade */
+	[animate-self*="fade-down("],       [animate*="fade-down("] > *       { --_animn: fade-down; }
+	[animate-self*="fade-down-left("],  [animate*="fade-down-left("] > *  { --_animn: fade-down-left; }
+	[animate-self*="fade-down-right("], [animate*="fade-down-right("] > * { --_animn: fade-down-right; }
+	[animate-self*="fade-in("],         [animate*="fade-in("] > *         { --_animn: fade-in; }
+	[animate-self*="fade-left("],       [animate*="fade-left("] > *       { --_animn: fade-left; }
+	[animate-self*="fade-out("],        [animate*="fade-out("] > *        { --_animn: fade-out; }
+	[animate-self*="fade-right("],      [animate*="fade-right("] > *      { --_animn: fade-right; }
+	[animate-self*="fade-up("],         [animate*="fade-up("] > *         { --_animn: fade-up; }
+	[animate-self*="fade-up-left("],    [animate*="fade-up-left("] > *    { --_animn: fade-up-left; }
+	[animate-self*="fade-up-right("],   [animate*="fade-up-right("] > *   { --_animn: fade-up-right; }
+
+	/* Flip */
+	[animate-self*="flip-diagonal("],   [animate*="flip-diagonal("] > *   { --_animn: flip-diagonal; }
+	[animate-self*="flip-down("],       [animate*="flip-down("] > *       { --_animn: flip-down; }
+	[animate-self*="flip-left("],       [animate*="flip-left("] > *       { --_animn: flip-left; }
+	[animate-self*="flip-right("],      [animate*="flip-right("] > *      { --_animn: flip-right; }
+	[animate-self*="flip-up("],         [animate*="flip-up("] > *         { --_animn: flip-up; }
+
+	/* Opacity */
+	[animate-self*="opacity("],         [animate*="opacity("] > *         { --_animn: opacity; }
+
+	/* Reveal */
+	[animate-self*="reveal(circle)"]       { --_animn: reveal-circle; }
+	[animate-self*="reveal(inset)"]        { --_animn: reveal-inset; }
+	[animate-self*="reveal(polygon)"]      { --_animn: reveal-polygon; }
+	[animate-self*="reveal(superellipse)"] { --_animn: reveal-superellipse; }
+
+	/* Shape reveal — one parameterized keyframe (reveal-shape) whose clip-path
+	   endpoints come from the shared --shp-* catalog (ui/base/shapes.css). Same
+	   shape pair can drive a static media clip (media="shp(...)") and a reveal. */
+	[animate-self*="reveal(hex)"],    [animate*="reveal(hex)"] > *    { --_animn: reveal-shape; --reveal-from: var(--shp-hex);    --reveal-to: var(--shp-hex-full); }
+	[animate-self*="reveal(star)"],   [animate*="reveal(star)"] > *   { --_animn: reveal-shape; --reveal-from: var(--shp-star);   --reveal-to: var(--shp-star-full); }
+	[animate-self*="reveal(rhomb)"],  [animate*="reveal(rhomb)"] > *  { --_animn: reveal-shape; --reveal-from: var(--shp-rhomb);  --reveal-to: var(--shp-rhomb-full); }
+	[animate-self*="reveal(plus)"],   [animate*="reveal(plus)"] > *   { --_animn: reveal-shape; --reveal-from: var(--shp-plus);   --reveal-to: var(--shp-plus-full); }
+	[animate-self*="reveal(circ)"],   [animate*="reveal(circ)"] > *   { --_animn: reveal-shape; --reveal-from: var(--shp-circle); --reveal-to: var(--shp-circle-full); }
+
+	/* Slide */
+	[animate-self*="slide-down("],      [animate*="slide-down("] > *      { --_animn: slide-down; }
+	[animate-self*="slide-in("],        [animate*="slide-in("] > *        { --_animn: slide-in; }
+	[animate-self*="slide-out("],       [animate*="slide-out("] > *       { --_animn: slide-out; }
+	[animate-self*="slide-up("],        [animate*="slide-up("] > *        { --_animn: slide-up; }
+
+	/* Zoom */
+	[animate-self*="zoom-in("],         [animate*="zoom-in("] > *         { --_animn: zoom-in; }
+	[animate-self*="zoom-in-rotate("],  [animate*="zoom-in-rotate("] > *  { --_animn: zoom-in-rotate; }
+	[animate-self*="zoom-out("],        [animate*="zoom-out("] > *        { --_animn: zoom-out; }
+	[animate-self*="zoom-out-rotate("], [animate*="zoom-out-rotate("] > * { --_animn: zoom-out-rotate; }
+
+	/* ==========================================================================
+	   Pace: entry speed
+	   ========================================================================== */
+
+	[pace~="very-slow"]  { --_animrs: entry 0%;  --_animre: contain 50%; }
+	[pace~="slow"]       { --_animrs: entry 0%;  --_animre: entry 100%; }
+	/* (normal/default):   entry 0% → entry 75% — no attribute needed */
+	[pace~="fast"]       { --_animrs: entry 25%; --_animre: entry 60%; }
+	[pace~="very-fast"]  { --_animrs: entry 35%; --_animre: entry 55%; }
+
+	/* ==========================================================================
+	   Pace: exit (activates second animation slot + sets range)
+	   ========================================================================== */
+
+	[pace~="exit"]      { --_anim-exit: var(--_animn); --_exit-rs: exit 0%;      --_exit-re: exit 100%; }
+	[pace~="exit-fast"] { --_anim-exit: var(--_animn); --_exit-rs: exit 40%;     --_exit-re: exit 100%; }
+	[pace~="exit-slow"] { --_anim-exit: var(--_animn); --_exit-rs: contain 50%;  --_exit-re: exit 100%; }
+
+	/* Item exit: --_animn is on children, not the container, so set --_anim-exit there */
+	:where([pace~="exit"], [pace~="exit-fast"], [pace~="exit-slow"]) > * {
+		--_anim-exit: var(--_animn);
+	}
+
+	/* ==========================================================================
+	   Container Animation (scroll-driven via view())
+	   ========================================================================== */
+
+	@supports (view-transition-name: none) {
+		:where([animate-self]) {
+			animation-name: var(--_animn), var(--_anim-exit, none);
+			animation-direction: normal, reverse;
+			animation-timeline: view(), view();
+			animation-timing-function: var(--animtm, linear), var(--animtm, linear);
+			animation-fill-mode: var(--animfm, forwards), var(--animfm, forwards);
+			animation-range:
+				var(--_animrs, entry 0%) var(--_animre, entry 75%),
+				var(--_exit-rs, exit 0%) var(--_exit-re, exit 100%);
+		}
+
+		/* === Item Animations (scroll-driven via container timeline) === */
+
+		[animate] {
+			view-timeline: --animate-tl;
+		}
+
+		[animate~="clip"] {
+			overflow: clip;
+		}
+
+		:where([animate]) > * { --_animn: initial; }
+
+		[animate] > * {
+			animation-name: var(--_animn), var(--_anim-exit, none);
+			animation-direction: normal, reverse;
+			animation-timing-function:
+				var(--animate-item-timing, var(--animtm, ease-out)),
+				var(--animate-item-timing, var(--animtm, ease-out));
+			animation-fill-mode: backwards, forwards;
+			animation-timeline: --animate-tl, --animate-tl;
+			animation-range:
+				var(--_animrs, entry 0%) var(--_animre, entry 75%),
+				exit 25% exit 100%;
+		}
+
+		/* Stagger: offset animation-range per child (exit is reversed) */
+		[animate] > :nth-child(2) { animation-range: entry 20% entry 95%, exit 5% exit 80%; }
+		[animate] > :nth-child(3) { animation-range: entry 40% entry 100%, exit 0% exit 60%; }
+		[animate] > :nth-child(4) { animation-range: entry 50% entry 100%, exit 0% exit 50%; }
+		[animate] > :nth-child(5) { animation-range: entry 60% entry 100%, exit 0% exit 40%; }
+		[animate] > :nth-child(6) { animation-range: entry 70% entry 100%, exit 0% exit 30%; }
+
+		/* === Deep: animate grandchildren relative to item position === */
+
+		[animate~="deep"] > * > * {
+			animation-name: var(--_animn);
+			animation-timing-function: var(--animate-item-timing, var(--animtm, ease-out));
+			animation-fill-mode: backwards;
+			animation-timeline: --animate-tl;
+			animation-range:
+				entry calc((var(--_item-offset, 0) + var(--_child-offset, 0)) * 1%)
+				entry calc((75 + var(--_item-offset, 0) + var(--_child-offset, 0)) * 1%);
+		}
+
+		/* Deep stagger: item offset */
+		[animate~="deep"] > :nth-child(2) > * { --_item-offset: 20; }
+		[animate~="deep"] > :nth-child(3) > * { --_item-offset: 40; }
+		[animate~="deep"] > :nth-child(4) > * { --_item-offset: 50; }
+		[animate~="deep"] > :nth-child(5) > * { --_item-offset: 60; }
+		[animate~="deep"] > :nth-child(6) > * { --_item-offset: 70; }
+
+		/* Deep stagger: child offset within each item */
+		[animate~="deep"] > * > :nth-child(2) { --_child-offset: 10; }
+		[animate~="deep"] > * > :nth-child(3) { --_child-offset: 20; }
+		[animate~="deep"] > * > :nth-child(4) { --_child-offset: 30; }
+	}
+
+	/* ==========================================================================
+	   Stagger Enhancement: sibling-index() (scales to any child count)
+	   ========================================================================== */
+
+	@supports (width: calc(sibling-index() * 1px)) {
+		[animate] > * {
+			animation-range:
+				entry calc((sibling-index() - 1) * 20%)
+				entry calc(75% + (sibling-index() - 1) * 20%),
+				exit max(0%, calc(25% - (sibling-index() - 1) * 20%))
+				exit calc(100% - (sibling-index() - 1) * 20%);
+		}
+
+		[animate~="deep"] > * {
+			--_item-offset: calc((sibling-index() - 1) * 20);
+		}
+
+		[animate~="deep"] > * > * {
+			animation-range:
+				entry calc((var(--_item-offset) + (sibling-index() - 1) * 10) * 1%)
+				entry calc((75 + var(--_item-offset) + (sibling-index() - 1) * 10) * 1%);
+		}
+	}
+
+	/* ==========================================================================
+	   Scroll-Triggered Animations (Chrome 145+)
+	   Time-based delays triggered by scroll position
+	   ========================================================================== */
+
+	@supports (timeline-trigger-name: --t) {
+		/* trigger on container (items + deep) */
+		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"]) {
+			timeline-trigger: --animate-trigger view() entry 25% exit 0%;
+			trigger-scope: --animate-trigger;
+		}
+
+		/* trigger: shared item properties */
+		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"]) > * {
+			animation-timeline: auto;
+			animation-duration: var(--animate-dur);
+			animation-range: normal;
+			animation-delay: calc((sibling-index() - 1) * var(--animate-stagger) * var(--animate-delay));
+		}
+
+		/* trigger direction per variant */
+		[animate~="trigger"] > *      { animation-trigger: --animate-trigger play-forwards; }
+		[animate~="trigger-exit"] > * { animation-trigger: --animate-trigger play-backwards; }
+		[animate~="trigger-both"] > * { animation-trigger: --animate-trigger play-forwards play-backwards; }
+
+		/* trigger on the container's OWN animation (animate-self). Separate
+		   timeline name so it can coexist with an item [animate] trigger on the
+		   same element. Plays at a fixed duration (not scrubbed) so overshoot
+		   effects like bounce look right; trigger-both replays it on scroll-back. */
+		:is([animate-self~="trigger"], [animate-self~="trigger-exit"], [animate-self~="trigger-both"]) {
+			timeline-trigger: --animate-self-trigger view() entry 25% exit 0%;
+			trigger-scope: --animate-self-trigger;
+			animation-timeline: auto;
+			animation-duration: var(--animate-dur);
+			animation-fill-mode: both;
+			animation-range: normal;
+		}
+		[animate-self~="trigger"]      { animation-trigger: --animate-self-trigger play-forwards; }
+		[animate-self~="trigger-exit"] { animation-trigger: --animate-self-trigger play-backwards; }
+		[animate-self~="trigger-both"] { animation-trigger: --animate-self-trigger play-forwards play-backwards; }
+
+		/* trigger: deep shared properties */
+		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"]):is([animate~="deep"]) > * > * {
+			animation-name: var(--_animn);
+			animation-timing-function: var(--animate-item-timing, var(--animtm, ease-out));
+			animation-fill-mode: both;
+			animation-duration: var(--animate-dur);
+			animation-timeline: auto;
+			animation-range: normal;
+			animation-delay: calc((var(--_item-offset, 0) + var(--_child-offset, 0)) * var(--animate-delay));
+		}
+
+		/* trigger direction per variant (deep) */
+		[animate~="trigger"][animate~="deep"] > * > *      { animation-trigger: --animate-trigger play-forwards; }
+		[animate~="trigger-exit"][animate~="deep"] > * > *  { animation-trigger: --animate-trigger play-backwards; }
+		[animate~="trigger-both"][animate~="deep"] > * > *  { animation-trigger: --animate-trigger play-forwards play-backwards; }
+
+		/* Pace → duration mapping (triggered mode) */
+		[pace~="very-slow"] { --animate-dur: var(--animate-dur-very-slow); }
+		[pace~="slow"]      { --animate-dur: var(--animate-dur-slow); }
+		[pace~="fast"]      { --animate-dur: var(--animate-dur-fast); }
+		[pace~="very-fast"] { --animate-dur: var(--animate-dur-very-fast); }
+	}
+
+}

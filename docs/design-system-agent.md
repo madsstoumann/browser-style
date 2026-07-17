@@ -37,7 +37,7 @@ All global tokens are defined in `:root` inside `@layer bs-core`. Since `@browse
 | Border width | `--border-width{-modifier}` | `--border-width` (1px), `--border-width-thick` (2px) |
 | Border radius | `--radius-{size}` | `--radius-md`, `--radius-circle`, `--radius-pill` |
 | Shadows | `--shadow-{size}` | `--shadow-sm`, `--shadow-xl` |
-| Duration | `--duration-{speed}` | `--duration-fast` (100ms), `--duration-slower` (400ms) |
+| Duration | `--duration-{speed}` | `--duration-fast` (100ms), `--duration-slower` (500ms) |
 | Easing | `--ease-{name}` | `--ease-default`, `--ease-in-out` |
 | Blur | `--blur-{size}` | `--blur-sm` (4px), `--blur-lg` (24px) |
 | Z-index | `--z-index-{n}` | `--z-index-1` (1) through `--z-index-5` (1000) |
@@ -75,6 +75,10 @@ Since `@browser.style/base` is required, global tokens from `tokens.css` are alw
 | File | Purpose |
 |------|---------|
 | `ui/base/tokens.css` | Global design tokens (source of truth) |
+| `ui/base/easings.css` | Full `--ease-*` easing-curve set (Open Props); consumed by `animate.css` |
+| `ui/base/animations.css` | `@keyframes` library + keyframe params + `.an-*`/`.ar-*` classes |
+| `ui/base/animate.css` | `[animate]`/`[animate-self]`/`[pace]`/`[easing]` engine (works on any component) |
+| `ui/base/shapes.css` | Shared clip catalog: `--shape-*` glyphs + `--shp-*` reveal/media pairs |
 | `ui/base/core.css` | CSS reset, element styles |
 | `ui/base/form.css` | Form normalization, focus styles using `--ring-*` tokens |
 | `ui/base/button.css` | Button styles (extracted from form.css), focus ring tokens |

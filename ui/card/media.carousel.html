@@ -257,12 +257,16 @@
 		</ui-card>
 	</lay-out>
 
-	<h2>10 · Dots &amp; pills — <code>dot()</code> · <code>dot(pll)</code></h2>
-	<p>Recolour dots with <code>--ui-carousel-dot-bg</code> / <code>--ui-carousel-dot-active</code> (or the <code>dot(lgt)</code>/<code>dot(drk)</code> atoms). <code>dot(pll)</code> = pill timers (fill over <code>--ui-carousel-autoplay</code>).</p>
+	<h2>10 · Dots &amp; pills — <code>dot()</code> · <code>dot(pll)</code> · <code>dot(hyb)</code></h2>
+	<p>Recolour dots with <code>--ui-carousel-dot-bg</code> / <code>--ui-carousel-dot-active</code> (or the <code>dot(lgt)</code>/<code>dot(drk)</code> atoms). <code>dot(pll)</code> = pill timers (fill over <code>--ui-carousel-autoplay</code>). <code>dot(hyb)</code> = hybrid — markers stay round dots, but the active one (and any keyboard-focused one) morphs into a pill.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(dot) dot(pll)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">dot(pll)</small><h2 data-part="headline">Pill timer (5s)</h2></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(dot) dot(hyb)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""><img src="/assets/images/popovers.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">dot(hyb)</small><h2 data-part="headline">Hybrid — active pill</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
 
@@ -641,7 +645,7 @@
 	<h2>JS-enhanced behaviors</h2>
 	<p><code>ui-media.js</code> adds what CSS can't — progressive enhancement (tokens no-op with JS off).</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(4/3) nav dot(pll) auto(3s) loop play(bs)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav dot(hyb) auto(3s) loop play(bs)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
@@ -654,6 +658,27 @@
 			<cq-box>
 				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
 				<ui-content><small data-part="eyebrow">loop</small><h2 data-part="headline">Seamless loop</h2><p data-part="summary">Next past the last smooth-scrolls into a cloned slide, then invisibly resets — no jump.</p></ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	<p>Chrome-free autoplay — drop the arrows (<code>nav(dot)</code>, pills only) or all navigation (<code>nav(non)</code>), keeping the <code>&lt;ui-play&gt;</code> control as the sole handle.</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(4/3) nav(dot) dot(pll) auto(3s) loop play(bs)" content="scl(sm)">
+			<cq-box>
+				<ui-media>
+					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+					<img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt="">
+				</ui-media>
+				<ui-content><small data-part="eyebrow">nav(dot) dot(pll) auto(3s) loop play(bs)</small><h2 data-part="headline">Pills only — no arrows</h2><p data-part="summary">Arrows dropped; the pill timers and play/pause control remain.</p></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(non) auto(3s) loop play(bs)" content="scl(sm)">
+			<cq-box>
+				<ui-media>
+					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play"></ui-icon></button></ui-play>
+					<img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""><img src="/assets/images/popovers.png" alt="">
+				</ui-media>
+				<ui-content><small data-part="eyebrow">nav(non) auto(3s) loop play(bs)</small><h2 data-part="headline">No navigation — play only</h2><p data-part="summary">No dots, no arrows; the play/pause button is the sole control.</p></ui-content>
 			</cq-box>
 		</ui-card>
 	</lay-out>

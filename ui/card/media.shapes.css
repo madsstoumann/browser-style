@@ -45,11 +45,11 @@
 	:where([media*="shp(skew-r)"])	{ --_shp:polygon(0% 15%, 100% 0%, 100% 85%, 0% 100%); --_shp-full:var(--_r4); }
 	:where([media*="shp(skew-l)"])	{ --_shp:polygon(0% 0%, 100% 15%, 100% 100%, 0% 85%); --_shp-full:var(--_r4); }
 	:where([media*="shp(para)"])		{ --_shp:polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%); --_shp-full:var(--_r4); }
-	:where([media*="shp(rhomb)"])		{ --_shp:polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); --_shp-full:var(--_r4); }
+	:where([media*="shp(rhomb)"])		{ --_shp:var(--shp-rhomb); --_shp-full:var(--shp-rhomb-full); }
 	:where([media*="shp(inset)"])		{ --_shp:polygon(10% 10%, 90% 10%, 90% 90%, 10% 90%); --_shp-full:var(--_r4); }
 	:where([media*="shp(pt-l)"])		{ --_shp:polygon(25% 0%, 100% 1%, 100% 100%, 25% 100%, 0% 50%); --_shp-full:var(--_r5l); }
 	:where([media*="shp(pt-r)"])		{ --_shp:polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%); --_shp-full:var(--_r5r); }
-	:where([media*="shp(hex)"])			{ --_shp:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); --_shp-full:polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%, 0% 0%); }
+	:where([media*="shp(hex)"])			{ --_shp:var(--shp-hex); --_shp-full:var(--shp-hex-full); }
 
 	/* chev-l/chev-r: 3 points move (the notch out to the edge + 2 corners) → full square */
 	:where([media*="shp(chev-l)"])	{ --_shp:polygon(100% 0%, 75% 50%, 100% 100%, 25% 100%, 0% 50%, 25% 0%); --_shp-full:polygon(100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 50%, 0% 0%); }
@@ -60,10 +60,10 @@
 	:where([media*="shp(arr-r)"])		{ --_shp:polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%); --_shp-full:polygon(0% 0%, 50% 0%, 100% 0%, 100% 50%, 100% 100%, 50% 100%, 0% 100%); }
 
 	/* star: all 10 points map onto the square perimeter (tips → edge mids, valleys → corners) */
-	:where([media*="shp(star)"])		{ --_shp:polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); --_shp-full:polygon(50% 0%, 100% 0%, 100% 50%, 100% 100%, 75% 100%, 50% 100%, 25% 100%, 0% 100%, 0% 50%, 0% 0%); }
+	:where([media*="shp(star)"])		{ --_shp:var(--shp-star); --_shp-full:var(--shp-star-full); }
 
 	/* plus: the 4 inner (concave) points slide out to the corners → fills the square */
-	:where([media*="shp(plus)"])		{ --_shp:polygon(35% 0%, 65% 0%, 65% 35%, 100% 35%, 100% 60%, 65% 60%, 65% 100%, 35% 100%, 35% 60%, 0% 60%, 0% 35%, 35% 35%); --_shp-full:polygon(35% 0%, 65% 0%, 100% 0%, 100% 35%, 100% 60%, 100% 100%, 65% 100%, 35% 100%, 0% 100%, 0% 60%, 0% 35%, 0% 0%); }
+	:where([media*="shp(plus)"])		{ --_shp:var(--shp-plus); --_shp-full:var(--shp-plus-full); }
 	/* minus: the bar grows vertically to fill (vertices mapped to the 4 corners) */
 	:where([media*="shp(minus)"])		{ --_shp:polygon(100% 35%, 100% 60%, 0% 60%, 0% 35%); --_shp-full:polygon(100% 0%, 100% 100%, 0% 100%, 0% 0%); }
 

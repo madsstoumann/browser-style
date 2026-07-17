@@ -67,16 +67,22 @@ lay-out ui-content { --ui-content-p: 0; padding-block-start: 0.75rem; }
 
 lay-out[lg~="subgrid(on)"] ui-media img { block-size: 100%; object-fit: cover; }
 
-/* Card subgrid — the lay-out's `subgrid` token makes each ui-card a subgrid of the
-   grid's N shared rows; here we continue the chain inward (the card-level opt-in is
-   still under investigation) so the internal rows line up across every card:
-     • media (row 1): the FIRST card keeps its natural aspect and sets the shared
-       media-row height; the rest fill it (object-fit: cover) — aligns the image bottoms.
-     • ui-content (rows 2…N): a subgrid too, so eyebrow / headline / CTA align.
-   The layout already neutralises container-type on the card (inline-size severs
-   subgrid) and makes it a subgrid of N rows; here we only switch cq-box + ui-content
-   to grid subgrids so the internal rows chain through. Gated to lg (where these grids
-   are multi-column); stacked mobile keeps each card's own ratio. */
+/* Card subgrid — the lay-out's `subgrid(on)` token makes each ui-card a subgrid of
+   the grid's N shared rows, but the card's parts are nested two wrappers deep
+   (ui-card > cq-box > ui-media | ui-content > eyebrow/headline/CTA), and every wrapper
+   breaks the subgrid chain. The fix here is to FLATTEN both wrappers with
+   `display: contents` — that promotes the leaf parts (media · eyebrow · headline · CTA)
+   to be the card's own grid items, so they auto-place directly onto the N shared rows
+   (media row 1, then one part per row) and line up across every card. The first card's
+   media sets the shared media-row height; the rest fill it (object-fit: cover). Gated
+   to lg, where the grid is multi-column; stacked mobile keeps each card's own box + ratio.
+
+   NOTE — this is demo-local, and `display: contents` drops ui-content's own box
+   (padding/gap), which is fine for these flat cards but not universal. The clean,
+   reusable version is a card-system opt-in (a `sub` variant on <ui-card> that flattens
+   its wrappers only while the parent subgrid is active), builder-generated per
+   breakpoint — see the subgrid section in layout/AGENTS.md. Until that lands, hand-write
+   this per demo. */
 @media (min-width: 45rem) {
 	lay-out[lg~="subgrid(on)"] > ui-card {
 		& > cq-box, & > cq-box > ui-content { display: contents; }

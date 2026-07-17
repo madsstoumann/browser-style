@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Stack reveal demos — the last child clips away to reveal content underneath">
+	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="layout.min.css">
 	<link rel="stylesheet" href="/ui/layout/demo.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
@@ -170,6 +171,97 @@
 				<h2>Superellipse Reveal</h2>
 				<p>The top layer morphs via <strong>corner-shape</strong> + <strong>border-radius</strong>.</p>
 				<code>xs="stack(reveal)" animate-self="reveal(superellipse)"</code>
+			</div>
+		</div>
+	</lay-out>
+
+	<!-- =================================================================
+	     Shape reveals — the top layer clips into a media shape (hex, star,
+	     rhomb, plus, circ) from the shared --shp-* catalog in ui/base/shapes.css.
+	     Same shape pairs also drive static media clips (media="shp(...)").
+	     ================================================================= -->
+
+	<div class="hero" style="background: #064e3b;">
+		<h1 style="font-size: clamp(1.75rem, 5vw, 3rem);">Shape reveals</h1>
+		<p>The overlay clips into a media shape — one <code>reveal-shape</code> keyframe, endpoints from the <code>--shp-*</code> catalog.</p>
+	</div>
+
+	<lay-out bleed="0" xs="stack(reveal)" animate-self="reveal(hex)">
+		<div class="layer" style="background: linear-gradient(135deg, #10b981, #059669); color: white;">
+			<div>
+				<h2>Emerald Layer</h2>
+				<p>Revealed as the overlay clips into a hexagon.</p>
+			</div>
+		</div>
+		<div class="layer" style="background: #0f172a; color: white;">
+			<div>
+				<h2>Hexagon Reveal</h2>
+				<p>The top layer clips into a hexagon, revealing the layer below.</p>
+				<code>xs="stack(reveal)" animate-self="reveal(hex)"</code>
+			</div>
+		</div>
+	</lay-out>
+
+	<lay-out bleed="0" xs="stack(reveal)" animate-self="reveal(star)">
+		<div class="layer" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white;">
+			<div>
+				<h2>Amber Layer</h2>
+				<p>A five-point star clips the overlay away.</p>
+			</div>
+		</div>
+		<div class="layer" style="background: #1e1b4b; color: white;">
+			<div>
+				<h2>Star Reveal</h2>
+				<p>The top layer clips into a star — a 10-point polygon that morphs to the full frame.</p>
+				<code>xs="stack(reveal)" animate-self="reveal(star)"</code>
+			</div>
+		</div>
+	</lay-out>
+
+	<lay-out bleed="0" xs="stack(reveal)" animate-self="reveal(rhomb)">
+		<div class="layer" style="background: url('https://picsum.photos/1600/900?random=7') center/cover; color: white;">
+			<div>
+				<h2>Photo Layer</h2>
+				<p>An image behind a diamond-clipped overlay.</p>
+			</div>
+		</div>
+		<div class="layer" style="background: #0c4a6e; color: white;">
+			<div>
+				<h2>Rhombus Reveal</h2>
+				<p>The top layer clips into a rhombus (diamond), revealing the photo.</p>
+				<code>xs="stack(reveal)" animate-self="reveal(rhomb)"</code>
+			</div>
+		</div>
+	</lay-out>
+
+	<lay-out bleed="0" xs="stack(reveal)" animate-self="reveal(plus)" pace="exit">
+		<div class="layer" style="background: linear-gradient(135deg, #f43f5e, #be123c); color: white;">
+			<div>
+				<h2>Rose Layer</h2>
+				<p>Scroll back up — the overlay returns.</p>
+			</div>
+		</div>
+		<div class="layer" style="background: #18181b; color: white;">
+			<div>
+				<h2>Plus Reveal + Exit</h2>
+				<p>A cross/plus clip with <strong>pace="exit"</strong> — reverses on scroll-back.</p>
+				<code>xs="stack(reveal)" animate-self="reveal(plus)" pace="exit"</code>
+			</div>
+		</div>
+	</lay-out>
+
+	<lay-out bleed="0" xs="stack(reveal)" animate-self="reveal(circ)">
+		<div class="layer" style="background: linear-gradient(135deg, #6366f1, #4338ca); color: white;">
+			<div>
+				<h2>Indigo Layer</h2>
+				<p>A clean circular reveal from the shared catalog.</p>
+			</div>
+		</div>
+		<div class="layer" style="background: #0f172a; color: white;">
+			<div>
+				<h2>Circle Reveal (shape)</h2>
+				<p>Uses the reveal-tuned <code>--shp-circle</code> pair (0%&rarr;100%), distinct from <code>media="shp(circle)"</code>.</p>
+				<code>xs="stack(reveal)" animate-self="reveal(circ)"</code>
 			</div>
 		</div>
 	</lay-out>

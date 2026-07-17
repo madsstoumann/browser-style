@@ -1,4 +1,5 @@
 @import './tokens.css';
+@import './easings.css';
 @import './theme.css';
 @import './shapes.css';
 @import './core.css';
@@ -11,3 +12,4 @@
 @import './carousel.css';
 @import './stagger.css';
 @import './animations.css';
+@import './animate.css';

@@ -1,19 +1,22 @@
 /*
  * animations.css — canonical scroll/keyframe animation library
  *
- * ONE keyframe library for the whole system:
- *  - the layout package's attribute API ([animate]/[animate-self], timelines,
- *    ranges, triggers — machinery lives in layout/core/animations.css; this file
- *    is bundled into dist/layout.css via layout.config.json "include")
- *  - the .an-* / .ar-* utility classes (scroll-driven view() timeline, see
- *    ui/scroll-animations)
+ * ONE keyframe library for the whole system. All of this lives in base (@layer
+ * bs-core), loaded by any component via @browser.style/base:
+ *  - the @keyframes (fade/bounce/flip/reveal/slide/zoom/opacity) + reveal-shape
+ *  - the attribute API ENGINE — [animate]/[animate-self]/[pace]/[easing],
+ *    timelines, ranges, triggers — lives in the sibling ui/base/animate.css,
+ *    imported right AFTER this file (so it can reference these keyframes/params).
+ *  - the .an-* / .ar-* utility classes (scroll-driven view() timeline).
  *
- * OWNERSHIP INVARIANT — this file exclusively owns the @keyframes names and the
- * keyframe PARAMS: --animate-{dg,tx,ty,txv,tyv,zi,zo,mult} and their computed
- * --_ * forms. Param defaults and every rule that SETS a param (multiplier,
- * bounce-zi) must live here, in one layer, so source order resolves them —
- * cross-layer order between bs-core and layout.* is page-dependent.
- * layout.animations exclusively owns --_animn, --animtm, ranges and triggers.
+ * The ONLY animation rule still in the layout package is stack(reveal)
+ * (layout/core/animations.css, @layer layout.animations) — it's layout-domain.
+ *
+ * OWNERSHIP — this file owns the @keyframes names and the keyframe PARAMS:
+ * --animate-{dg,tx,ty,txv,tyv,zi,zo,mult} and their computed --_* forms. Param
+ * defaults and every rule that SETS a param (multiplier, bounce-zi) live here, in
+ * bs-core, so source order resolves them; animate.css (also bs-core, imported
+ * after) owns --_animn, --animtm, ranges and triggers.
  *
  * Stagger-token correspondence (state-triggered engine in stagger.css):
  * rise→fade-up · fall→fade-down · lft→fade-left · rgt→fade-right ·
@@ -208,6 +211,15 @@
 	@keyframes reveal-superellipse {
 		0%   { clip-path: ellipse(0% 0% at 0% 100%); }
 		100% { clip-path: ellipse(150% 150% at 0% 100%); }
+	}
+
+	/* Shape-driven reveal — endpoints supplied by the engine (animate.css) via
+	   --reveal-from / --reveal-to, pointed at a --shp-* pair (shapes.css). Opacity-
+	   free like the other reveal-* frames (normal = grow to full frame, reverse =
+	   morph back to the shape). Fallbacks keep it inert-safe if only one is set. */
+	@keyframes reveal-shape {
+		0%   { clip-path: var(--reveal-from, inset(45% 20%)); }
+		100% { clip-path: var(--reveal-to,   inset(0)); }
 	}
 
 	/* --- Slide --- */
