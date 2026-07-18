@@ -24,14 +24,16 @@
 const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 
 // same entry points as the core NAV_SEL (top-level filtering happens in scan)
-const SEL = 'ui-media[media*="nav"], [media*="nav"] ui-media, ui-media[nav]';
+const SEL = 'ui-media[media*="nav"], :is(ui-card[media*="nav"], ui-reveal[media*="nav"]) ui-media';
 // mirrors the core slide filter + our own injected element
 const NOT_SLIDE = /^(UI-CHIP|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS)$/;
 
-// the effective media string (own attr, else nearest ancestor that has one)
-const mediaStr = (el) => el.closest('[media]')?.getAttribute('media') || '';
-// the self-only grouped attributes (nav= / dot=)
-const attrWords = (el, name) => (el.getAttribute(name) || '').split(/\s+/).filter(Boolean);
+// the effective media string — own attr, else the ui-card/ui-reveal host
+// (media= inheritance stops at the card)
+const mediaStr = (el) => {
+	const h = el.closest('[media]');
+	return h && (h === el || h.matches('ui-card, ui-reveal')) ? (h.getAttribute('media') || '') : '';
+};
 
 // which controls do the tokens ask for? → { dots, arrows }
 function wanted(scroller) {
@@ -43,12 +45,7 @@ function wanted(scroller) {
 		else if (w === 'nav(arw)') arrows = true;
 		// nav(non) / nav(bar) ask for nothing
 	}
-	const nav = attrWords(scroller, 'nav');
-	if (nav.length && !nav.includes('non') && !nav.includes('bar')) {
-		if (!nav.includes('arw')) dots = true;
-		if (!nav.includes('dot')) arrows = true;
-	}
-	if (words.some(w => w.startsWith('dot(non)')) || attrWords(scroller, 'dot').includes('non')) dots = false;
+	if (words.some(w => w.startsWith('dot(non)'))) dots = false;
 	return { dots, arrows };
 }
 
@@ -82,9 +79,8 @@ function init(scroller) {
 	if (!dots && !arrows) return;
 
 	const m = mediaStr(scroller);
-	const nav = attrWords(scroller, 'nav');
-	const axisY = m.includes('axis(y)') || nav.includes('y');
-	const loop = /\bloop\b/.test(m) || nav.includes('loop');
+	const axisY = m.includes('axis(y)');
+	const loop = /\bloop\b/.test(m);
 	const rtl = !axisY && getComputedStyle(scroller).direction === 'rtl';
 	const slides = slidesOf(scroller);
 	const count = slides.length;
@@ -170,8 +166,7 @@ export function scan() {
 		// loop carousels get [data-clone] slides from the core's idle scan; wait
 		// for them (bounded) so the controls end up as FIRST child (sticky pins
 		// cleanly at the scroll start) and clones are excluded from the dot count
-		const nav = attrWords(scroller, 'nav');
-		const needsClones = (/\bloop\b/.test(mediaStr(scroller)) || nav.includes('loop')) && !scroller.querySelector(':scope > [data-clone]');
+		const needsClones = /\bloop\b/.test(mediaStr(scroller)) && !scroller.querySelector(':scope > [data-clone]');
 		if (needsClones && retries < 5) { deferred.push(scroller); continue; }
 		init(scroller);
 	}

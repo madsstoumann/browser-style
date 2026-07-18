@@ -71,18 +71,19 @@ addEventListener('pointerout', (e) => {
  * these tokens layer behavior on top.
  * ============================================================ */
 
-// JS-feature carousels, found via EITHER entry point: the inheritable media= token
-// (on the element or an ancestor) OR the self-only nav= attribute value.
+// JS-feature carousels via the media= token — on ui-media itself or inherited
+// from its ui-card/ui-reveal host.
 const CAROUSEL_SEL = [
-	'ui-media[media*="auto"]', '[media*="auto"] ui-media',
-	'ui-media[media*="loop"]', '[media*="loop"] ui-media',
-	'ui-media[nav~="auto"]', 'ui-media[nav~="loop"]',
+	'ui-media[media*="auto"]', ':is(ui-card[media*="auto"], ui-reveal[media*="auto"]) ui-media',
+	'ui-media[media*="loop"]', ':is(ui-card[media*="loop"], ui-reveal[media*="loop"]) ui-media',
 ].join(', ');
 
-// the effective media string (own attr, else nearest ancestor that has one)
-const mediaStr = (el) => el.closest('[media]')?.getAttribute('media') || '';
-// the self nav= attribute words (dedicated grouped attribute, not inherited)
-const navWords = (el) => (el.getAttribute('nav') || '').split(/\s+/);
+// the effective media string — own attr, else the ui-card/ui-reveal host
+// (media= inheritance stops at the card)
+const mediaStr = (el) => {
+	const h = el.closest('[media]');
+	return h && (h === el || h.matches('ui-card, ui-reveal')) ? (h.getAttribute('media') || '') : '';
+};
 // snap children = the slides: every direct child EXCEPT the overlay furniture
 // (chip/sticker/play/save). A slide is an <img>/<video>, a <ui-slide> group, or any
 // wrapper the layout system emits (<lay-out>, <div>…) — mirrors the CSS :not() list.
@@ -91,17 +92,15 @@ const slidesOf = (el) => [...el.children].filter(c => !NOT_SLIDE.test(c.tagName)
 
 function initCarousel(scroller) {
 	const m = mediaStr(scroller);
-	const nav = navWords(scroller);
 	const slides = slidesOf(scroller);
 	const count = slides.length;
 	if (count < 2) return;
 
-	const axisY = m.includes('axis(y)') || nav.includes('y');
-	const loop = m.includes('loop') || nav.includes('loop');
-	// auto · auto(4s) · auto(800ms) · auto(3) (bare number = seconds) via media=;
-	// nav="auto" (attribute form) uses the 5s default (no inline duration syntax).
+	const axisY = m.includes('axis(y)');
+	const loop = m.includes('loop');
+	// auto · auto(4s) · auto(800ms) · auto(3) (bare number = seconds) via media=
 	const am = m.match(/auto(?:\((\d+(?:\.\d+)?)(m?s)?\))?/);
-	const autoMs = am ? (am[1] ? (am[2] === 'ms' ? +am[1] : +am[1] * 1000) : 5000) : (nav.includes('auto') ? 5000 : 0);
+	const autoMs = am ? (am[1] ? (am[2] === 'ms' ? +am[1] : +am[1] * 1000) : 5000) : 0;
 	const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 
 	let timer = 0, paused = false;
