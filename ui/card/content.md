@@ -96,19 +96,21 @@ import '@browser.style/content';
 
 | Token | Args | Controls | Responsive (`md:`/`lg:`) |
 |-------|------|----------|--------------------------|
-| `scl()` | `sm` `md` `lg` `xl` | type-scale step — swaps the active body **and** headline stop | **Yes** |
-| `hl()` | size `sm` `md` `lg` `xl` `2xl` `poster` · tone · weight · font `body`/`head`/`serif`/`mono`/`form` · `grad` · `shd` | headings group — headline size (only), ink, weight, **font**, gradient, shadow | size **Yes** |
+| `scl()` | `sm` `md` `lg` `xl` | master type-scale step — swaps the active body **and** headline stop AND re-points the relational size ladder (see *Relational scale*) | **Yes** |
+| `hl()` | size `sm` `md` `lg` `xl` `2xl` `3xl` · tone · weight · font `body`/`head`/`serif`/`mono`/`form` · `grad` · `shd` | headings group — headline size (only, relational), ink, weight, **font**, gradient, shadow | size **Yes** |
 | `fnt()` | `body` `head` `serif` `mono` `form` | container font family for the whole column (`--ui-content-font`) | No |
-| `eb()` | tone · weight · `flat` · `shd` | eyebrow group — ink, weight, drop uppercase, shadow | No |
-| `tx()` | tone · weight · `shd` | body group — ink, weight, shadow (summary/quote/list/address/timeline/price/stat) | No |
-| `mt()` | tone · weight · `shd` | meta group — ink, weight, shadow (meta/caption/byline/footer/tags/rating/options) | No |
+| `eb()` | size `sm`–`xl` · tone · weight · `flat` · `shd` | eyebrow group — size (relational), ink, weight, drop uppercase, shadow | No* |
+| `tx()` | size `sm`–`xl` · tone · weight · `shd` | body group — size (relational), ink, weight, shadow (summary/quote/list/address/timeline/price/stat) | No* |
+| `mt()` | size `sm`–`xl` · tone · weight · `shd` | meta group — size (relational), ink, weight, shadow (meta/caption/byline/footer/tags/rating/options) | No* |
 | `pad()` | `none` `xs` `sm` `md` `lg` `xl` `2xl` | content padding (`--ui-content-p`) | **Yes** |
 | `gap()` | `none` `xs` `sm` `md` `lg` | row gap between parts (`--ui-content-gap`) | **Yes** |
 | `ctr` / `end` | *(flag)* | standalone cross-axis + text alignment — centre / end the whole content column (`--ui-content-align`), independent of `ovr()` overlay placement | No |
 | `scr` / `scr(y)` / `scr(x)` | *(flag)* | scrollable content + shared `ui-scroll-fade` edge mask (`ui/base/scroll.css`). Bare `scr` = `scr(y)` = vertical column; `scr(x)` = horizontal row | No |
 
 **Tone** (ink strength + hue): `shr` (30%) · `lgt` (45%) · `med` (65%, = muted) · `drk` (85%) · `sld` (100%, theme text) · `accent` · `inv` (white, for overlays).
-**Weight**: `300`–`900` → `--font-weight-*` (`800` is a literal). **Vocabularies are disjoint** so a size, a tone, and a weight never collide inside one family — e.g. `hl(poster)`, `hl(accent)`, and `hl(900)` compose freely.
+**Weight**: `300`–`900` → `--font-weight-*` (`800` is a literal). **Vocabularies are disjoint** so a size, a tone, and a weight never collide inside one family — e.g. `hl(3xl)`, `hl(accent)`, and `hl(900)` compose freely.
+
+\* Group **sizes** have no `md:`/`lg:` prefixed forms of their own — they don't need them: a group size names a step on the relational ladder, so a responsive `md:`/`lg:` `scl()` already shifts it per breakpoint (see *Relational scale*).
 
 ```css
 /* parse layer — matches the element OR any ancestor. Whole-token (~=) matching,
@@ -130,6 +132,34 @@ The `()` tokens are *sugar* — each rule just writes a custom property. For any
 
 `scl()` replaces the legacy `fs()` token. It lives on `content=` (typography is a content concern) and swaps the **active body and headline stop** in one go. Media overlays (`<ui-chip>` etc.) read the same inherited `--ui-content-fs` for sizing.
 
+### Relational scale — how sizes compose with `scl()`
+
+Size tokens name a **step on a ladder**, not an absolute stop:
+
+- **No `scl()` present** → sizes are **fixed**: `hl(2xl) tx(xl)` is the 2xl headline clamp over the xl body clamp, at every width.
+- **`scl()` present** (incl. responsive `md:`/`lg:` forms) → the master step **re-points the whole ladder**: `scl(sm)` shifts every named step one stop down, `scl(md)` is identity, `scl(lg)` one up, `scl(xl)` two up — **saturating at the ends**. So `scl(sm) hl(2xl)` renders the xl stop, and the mobile-first idiom
+
+```html
+<ui-content content="scl(sm) lg:scl(md) hl(2xl) tx(xl)">…</ui-content>
+```
+
+renders headline/summary at the xl/lg stops in a narrow container and steps them up to 2xl/xl once the container passes lg — every size token rides the master step while keeping its **relative** prominence.
+
+**Headline ladder** (`hl()` steps; the body ladder for `tx()`/`eb()`/`mt()` follows the same pattern over `fs-sm`…`fs-2xl`):
+
+| token | scl(sm) −1 | scl(md) 0 | scl(lg) +1 | scl(xl) +2 |
+|-------|-----------|-----------|-----------|------------|
+| `hl(sm)` | sm | sm | md | lg |
+| `hl(md)` | sm | md | lg | xl |
+| `hl(lg)` | md | lg | xl | 2xl |
+| `hl(xl)` | lg | xl | 2xl | 3xl |
+| `hl(2xl)` | xl | 2xl | 3xl | 3xl |
+| `hl(3xl)` | 2xl | 3xl | 3xl | 3xl |
+
+Note the saturation: under `scl(xl)` the display steps merge at `3xl`. The `scl(md)` column is the identity — which is also why existing scl-only markup renders exactly as before.
+
+Under the hood: `scl()` writes the ladder vars `--ui-content-hl-{sm…3xl}` / `--ui-content-tx-{sm…xl}`, and each size token reads its ladder var with the absolute stop as fallback (all in `content.typography.css`). The group bases are the escape hatches: `--ui-content-body-fs` (Body), `--ui-content-meta-base` (Meta), `--ui-content-eyebrow-fs` (Eyebrow) — set them directly via `style=` for any off-ladder size.
+
 ---
 
 ## Type styling — groups, tone, size, weight
@@ -146,7 +176,7 @@ Every part belongs to one of **four logical groups**. A group family token write
 **Three disjoint arg vocabularies** (so whole-token matching can't confuse them):
 
 - **tone** (ink): `shr` `lgt` `med` `drk` `sld` `accent` `inv` — an opacity ramp of the current ink (`shr` 30% → `sld` 100% via `--ui-content-{shr,soft,muted,drk}`), plus `accent` (`--color-accent`) and `inv` (`#fff`, for overlays). Writes the group ink prop.
-- **size** (`hl()` + `scl()` only): `sm` `md` `lg` `xl` `2xl` `poster`. `scl()` swaps body **and** headline (`sm`–`xl`); `hl()` swaps the **headline only** (`sm`–`poster`) so a display title can decouple from readable body copy. `poster` is a semantic display step (`clamp(2.5rem, 1rem + 11cqi, 8rem)`).
+- **size** (all four families + `scl()`): `sm` `md` `lg` `xl` (+ `2xl` `3xl` on `hl()`). `scl()` is the master step (body **and** headline, `sm`–`xl`); `hl()` sizes the **headline only** (`sm`–`3xl`) so a display title can decouple from readable body copy; `eb()`/`tx()`/`mt()` size their group off the body ramp. All sizes are **relational** — they shift with `scl()` (see *Relational scale*). `3xl` is the display step (`clamp(2.5rem, 1rem + 11cqi, 8rem)`, the token formerly called `poster`).
 - **weight**: `300`–`900` → `--font-weight-*` (`800` is a literal; there is no `--font-weight-extrabold`). Offered on `eb()`, `hl()`, `tx()`, `mt()`.
 
 Plus flags: **`eb(flat)`** drops the eyebrow's default uppercase; **`hl(grad)`** clips the whole headline to `--ui-content-headline-gradient` (the same gradient an inner `<b>` gets); **`shd`** on any family (`hl(shd)` `eb(shd)` `tx(shd)` `mt(shd)`) adds a legibility **text-shadow** to that group.
@@ -187,8 +217,8 @@ Plus flags: **`eb(flat)`** drops the eyebrow's default uppercase; **`hl(grad)`**
 Escape hatch: set `--ui-content-font` (column) or `--ui-content-heading-font` (headline) directly via `style` for any family not in the token set. Live demo: [content.typography.html](content.typography.html).
 
 ```html
-<!-- big accent poster title, light body, muted meta -->
-<ui-content content="hl(poster) hl(accent) tx(lgt) mt(med)">
+<!-- big accent display title, light body, muted meta -->
+<ui-content content="hl(3xl) hl(accent) tx(lgt) mt(med)">
   <small data-part="eyebrow">Featured</small>
   <h2 data-part="headline">Display headline</h2>
   <p data-part="summary">Readable body copy.</p>
@@ -196,7 +226,7 @@ Escape hatch: set `--ui-content-font` (column) or `--ui-content-heading-font` (h
 </ui-content>
 ```
 
-Because `hl(<size>)` and `scl()` both write `--ui-content-headline` at zero specificity, the `hl()` rules are placed **after** `scl()` in source, so `hl(<size>)` wins when both appear on one element.
+Because `hl(<size>)` and `scl()` both write `--ui-content-headline` at zero specificity, the `hl()` rules are placed **after** every `scl()` form (base and responsive) in `content.typography.css`, so `hl(<size>)` wins when both appear — while still shifting *with* `scl()` via the ladder.
 
 ---
 
@@ -285,9 +315,9 @@ Because styling keys off `[data-part]` and never the tag, the **same part token 
 
 ## Typography ramp
 
-The two fluid `cqi` `clamp()` scales (body + headline) live on `<ui-content>`. `scl()` swaps which stop is *active*; the full ladder is always defined so any stop is reachable via `style`.
+The two fluid `cqi` `clamp()` scales (body + headline) live on `<ui-content>` (defined in `content.typography.css`). `scl()` swaps which stop is *active*; the full ladder is always defined so any stop is reachable via `style`.
 
-**Body scale** (`--ui-content-fs-{sm..xl}`):
+**Body scale** (`--ui-content-fs-{sm..2xl}`):
 
 | Stop | `clamp()` |
 |------|-----------|
@@ -295,8 +325,9 @@ The two fluid `cqi` `clamp()` scales (body + headline) live on `<ui-content>`. `
 | `md` *(default)* | `clamp(0.88rem, 0.80rem + 0.6cqi, 1.00rem)` |
 | `lg` | `clamp(0.95rem, 0.86rem + 0.8cqi, 1.10rem)` |
 | `xl` | `clamp(1.00rem, 0.92rem + 0.9cqi, 1.20rem)` |
+| `2xl` | `clamp(1.08rem, 0.98rem + 1.1cqi, 1.32rem)` — ladder headroom only (no `scl(2xl)`/`tx(2xl)` token; reached when `scl(lg)`/`scl(xl)` shift `tx(lg)`/`tx(xl)` up) |
 
-**Headline scale** (`--ui-content-headline-{sm..xl}`):
+**Headline scale** (`--ui-content-headline-{sm..3xl}`):
 
 | Stop | `clamp()` |
 |------|-----------|
@@ -304,6 +335,8 @@ The two fluid `cqi` `clamp()` scales (body + headline) live on `<ui-content>`. `
 | `md` *(default)* | `clamp(1.20rem, 1.00rem + 1.6cqi, 1.75rem)` |
 | `lg` | `clamp(1.45rem, 1.05rem + 3.0cqi, 2.50rem)` |
 | `xl` | `clamp(1.90rem, 1.10rem + 5.5cqi, 4.50rem)` |
+| `2xl` | `clamp(2.25rem, 1.20rem + 7cqi, 5.50rem)` — `hl()`-only display step |
+| `3xl` | `clamp(2.50rem, 1.00rem + 11cqi, 8.00rem)` — `hl()`-only display step (formerly `poster`) |
 
 `scl(lg)` sets `--ui-content-fs: var(--ui-content-fs-lg)` **and** `--ui-content-headline: var(--ui-content-headline-lg)` together.
 
@@ -326,9 +359,9 @@ Parts size relative to the active body size (`--ui-content-fs`), so the whole bl
 
 ### Headline rhythm (leading + space-after)
 
-The headline's vertical rhythm is set by two size-independent formulas so it reads correctly from `sm` to `poster` without per-step tuning:
+The headline's vertical rhythm is set by two size-independent formulas so it reads correctly from `sm` to `3xl` without per-step tuning:
 
-- **`line-height: calc(1em + 0.25rem)`** — a *constant-leading* formula. The added leading is a fixed `0.25rem` at every size, so the effective ratio tightens as the type grows (md `1.75rem` → ~1.14; poster ~110px → ~1.04; asymptote → 1.0). Small headings stay airy, display headings stay tight. Override with `--ui-content-headline-line-height`.
+- **`line-height: calc(1em + 0.25rem)`** — a *constant-leading* formula. The added leading is a fixed `0.25rem` at every size, so the effective ratio tightens as the type grows (md `1.75rem` → ~1.14; 3xl ~110px → ~1.04; asymptote → 1.0). Small headings stay airy, display headings stay tight. Override with `--ui-content-headline-line-height`.
 - **`margin-block-end: 0.25em`** — *modular* rhythm: the gap after the heading scales with the heading's own em, so a bigger title gets a proportionally bigger gap to the body (this is in addition to the flex `gap()` between parts). Override with `--ui-content-headline-rhythm`. The em rule wins over the container's `& > * { margin: 0 }` reset (attribute/type specificity beats the zero-specificity reset).
 
 ---
@@ -396,11 +429,17 @@ All tokens live in the `--ui-content-*` namespace. Override per instance, per ho
 | `--ui-content-fs-md` | `clamp(0.88rem, 0.80rem + 0.6cqi, 1.00rem)` | Body ramp — medium (default) |
 | `--ui-content-fs-lg` | `clamp(0.95rem, 0.86rem + 0.8cqi, 1.10rem)` | Body ramp — large |
 | `--ui-content-fs-xl` | `clamp(1.00rem, 0.92rem + 0.9cqi, 1.20rem)` | Body ramp — extra large |
+| `--ui-content-fs-2xl` | `clamp(1.08rem, 0.98rem + 1.1cqi, 1.32rem)` | Body ramp — ladder headroom (no `scl(2xl)`/`tx(2xl)` token) |
 | `--ui-content-headline` | `var(--ui-content-headline-md)` | Active headline font-size |
 | `--ui-content-headline-sm` | `clamp(1.05rem, 0.90rem + 1.0cqi, 1.35rem)` | Headline ramp — small |
 | `--ui-content-headline-md` | `clamp(1.20rem, 1.00rem + 1.6cqi, 1.75rem)` | Headline ramp — medium (default) |
 | `--ui-content-headline-lg` | `clamp(1.45rem, 1.05rem + 3.0cqi, 2.50rem)` | Headline ramp — large |
 | `--ui-content-headline-xl` | `clamp(1.90rem, 1.10rem + 5.5cqi, 4.50rem)` | Headline ramp — extra large |
+| `--ui-content-headline-2xl` | `clamp(2.25rem, 1.20rem + 7cqi, 5.50rem)` | Headline ramp — display (`hl()`-only) |
+| `--ui-content-headline-3xl` | `clamp(2.50rem, 1.00rem + 11cqi, 8.00rem)` | Headline ramp — display (`hl()`-only; formerly `poster`) |
+| `--ui-content-tx-{sm..xl}` / `--ui-content-hl-{sm..3xl}` | *(unset without `scl()`)* | Relational ladders written by `scl()` — read by all size tokens (see *Relational scale*) |
+| `--ui-content-body-fs` | *(unset — body parts fall back to `--ui-content-fs`)* | Body-group base size (set by `tx(<size>)`) |
+| `--ui-content-meta-base` | *(unset — meta parts fall back to `--ui-content-fs`)* | Meta-group base size (set by `mt(<size>)`) |
 | `--ui-content-p` | `var(--spacing-md)` | Content padding (set by `pad()`) |
 | `--ui-content-gap` | `1em` | Row gap between parts (set by `gap()`) |
 | `--ui-content-muted` | `color-mix(in oklab, currentColor 65%, transparent)` | Muted ink (subheadline, meta, byline, footer) |
@@ -521,20 +560,22 @@ ui-content {
 **Responsive this round: `content=` *spacing* (`gap()`, `pad()`) and *size* (`scl()`, `hl(<size>)`):**
 
 ```html
-<ui-content content="scl(md) lg:scl(lg) hl(md) lg:hl(poster) gap(sm) md:gap(lg) pad(md) md:pad(lg)">…</ui-content>
+<ui-content content="scl(md) lg:scl(lg) hl(md) lg:hl(3xl) gap(sm) md:gap(lg) pad(md) md:pad(lg)">…</ui-content>
 ```
 
 ```css
+/* spacing lives in ui-card.css; SIZE lives in content.typography.css (source
+   order vs the base size rules is load-bearing — see that file's header) */
 @container (inline-size >= 25rem) {            /* md */
   :where([content~="md:gap(lg)"]) :is(cq-box, summary) { --ui-content-gap: var(--spacing-lg); }
   :where([content~="md:pad(lg)"]) :is(cq-box, summary) { --ui-content-p:   var(--spacing-lg); }
-  :where([content~="md:scl(lg)"]) :is(cq-box, summary) { --ui-content-fs: var(--ui-content-fs-lg); --ui-content-headline: var(--ui-content-headline-lg); }
-  :where([content~="md:hl(poster)"]) :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-poster); }
+  :where([content~="md:scl(lg)"]) :is(cq-box, summary) { --ui-content-fs: var(--ui-content-fs-lg); --ui-content-headline: var(--ui-content-headline-lg); /* + re-points the tx/hl ladders */ }
+  :where([content~="md:hl(3xl)"]) :is(cq-box, summary) { --ui-content-headline: var(--ui-content-hl-3xl, var(--ui-content-headline-3xl)); }
 }
 @container (inline-size >= 44rem) { /* lg — same shape */ }
 ```
 
-Breakpoints: **md = 25rem, lg = 44rem**. `scl()` accepts `sm`/`md`/`lg`/`xl` prefixed; `hl(<size>)` accepts `sm`–`poster`. Content **tone/weight** (`eb()`/`hl()`/`tx()`/`mt()` ink + weight) and `media=` tokens stay unprefixed — that would cost a rule per token × breakpoint and is deferred; the architecture is additive, so it can be generated later with no structural change.
+Breakpoints: **md = 25rem, lg = 44rem**. `scl()` accepts `sm`/`md`/`lg`/`xl` prefixed; `hl(<size>)` accepts `sm`–`3xl`. Content **tone/weight** (`eb()`/`hl()`/`tx()`/`mt()` ink + weight), group **sizes** (`eb()`/`tx()`/`mt()` `sm`–`xl`) and `media=` tokens stay unprefixed — tone/weight would cost a rule per token × breakpoint and is deferred; group sizes don't need prefixes at all, since a responsive `scl()` shifts them via the relational ladder.
 
 **Axis:** bare `scr` (alias `scr(y)`) is a **vertical** scrolling column with a top/bottom fade; **`scr(x)`** is a **horizontal** scrolling row (`flex-direction: row`, `overflow-x: auto`) with a left/right fade — handy for a strip of thumbnails, tags or chips that overflows the card. Both share the one `ui-scroll-fade` primitive; `scr(x)` just flips the mask direction (`--ui-scroll-fade-dir: to right`) and the scroll-timeline axis (`inline`). Cap the scroll extent with `--ui-content-scroll-bs` (block) as usual.
 
