@@ -18,15 +18,11 @@
 		/* demo section grids are lay-out elements (md=columns(2) for two-up); this
 		   only adds the section rhythm — slide grids inside ui-media are untouched */
 		body > lay-out { margin-block-end: var(--spacing-2xl); }
-		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
-		.hero { margin-block-end: var(--spacing-2xl); }
 		code { font-size: 0.9em; }
 		/* per-slide grid now comes from lay-out md=columns(N) slides */
 		.slide-gap { --ui-media-gap: var(--spacing-lg); }
 		.shadow-room { padding-inline: var(--spacing-md); scroll-padding-inline: var(--spacing-md); }
 		.reveal-cards ui-reveal ui-accordion { font-size: var(--font-size-sm); }
-		/* section rhythm */
-		
 	</style>
 </head>
 <body>
@@ -668,9 +664,9 @@
 	</lay-out>
 
 	<h2>14 · Peek both sides — <code>frame</code> in a card (side by side)</h2>
-	<p>Two framed carousels in a <code>&lt;lay-out lg="columns(2)"&gt;</code>, each wrapped in a <code>&lt;ui-card&gt;</code> for the box-shadow. <code>frame</code> is like <code>center</code> — a peek on each side — but start-snaps with a leading pad, framing a <em>page</em> of cards between symmetric peeks, advancing one card at a time. Arrows sit at their default center-edge position (<code>nav="arw"</code>). Left frames one card (<code>columns(1)</code>); right frames two (<code>columns(2)</code>) with a thinner <code>preview-sm</code> peek.</p>
-	<lay-out lg="columns(2)" style="align-items:start">
-		<ui-card variant="" theme="pale green">
+	<p>Two framed carousels in a <code>&lt;lay-out lg="columns(2)"&gt;</code>, each wrapped in a <code>&lt;ui-card&gt;</code> for the box-shadow. <code>frame</code> is like <code>center</code> — a peek on each side — but start-snaps with a leading pad, framing a <em>page</em> of cards between symmetric peeks, advancing one card at a time. Arrows sit at their default center-edge position (<code>nav="arw"</code>) and dead-end arrows auto-hide (<code>arrow="hid"</code>). Both use a thin <code>preview-xs</code> peek — left frames one card (<code>columns(1)</code>), right frames two (<code>columns(2)</code>).</p>
+	<lay-out lg="columns(2)" items="start">
+		<ui-card theme="pale green">
 			<lay-out xs="p(1)" md="columns(1)" overflow="preview-xs frame" nav="arw" arrow="hid">
 				<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Nature</small><h3 data-part="headline">Downstream</h3></ui-content></cq-box></ui-card>
 				<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/hubble.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Space</small><h3 data-part="headline">Deep Field</h3></ui-content></cq-box></ui-card>
@@ -679,7 +675,7 @@
 				<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/world.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Travel</small><h3 data-part="headline">Go Far</h3></ui-content></cq-box></ui-card>
 			</lay-out>
 		</ui-card>
-		<ui-card variant="" theme="pale blue">
+		<ui-card theme="pale blue">
 			<lay-out xs="p(1)" md="columns(2)" overflow="preview-xs frame" nav="arw" arrow="hid">
 				<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/game_01.png" alt=""></ui-media><ui-content><small data-part="eyebrow">RPG</small><h3 data-part="headline">Starfall</h3></ui-content></cq-box></ui-card>
 				<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/game_02.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Western</small><h3 data-part="headline">Frontier</h3></ui-content></cq-box></ui-card>
@@ -692,8 +688,8 @@
 	</lay-out>
 
 	<h2>15 · Seamless loop + autoplay — <code>loop</code> · <code>auto()</code></h2>
-	<p>Same carousel with <code>loop</code> + <code>auto="4s"</code> (JS, via <code>carousel.js</code>). It clones the end slides so the peeks stay filled and autoplay wraps invisibly; the hybrid dot fills as a timer, and a manual <code>&lt;ui-play&gt;</code> (positioned with the <code>media="play(bs)"</code> token) pauses/resumes it. JS off → finite scroller.</p>
-	<lay-out bleed md="columns(1)" overflow="preview-2xl center" loop auto="4s" nav="dot" dot="hyb blw" media="play(bs)">
+	<p>Same carousel with <code>loop</code> + <code>auto="4s"</code> (JS, via <code>carousel.js</code>). It clones the end slides so the peeks stay filled and autoplay wraps invisibly; the hybrid dot (<code>dot="hyb"</code>) fills as a timer, and autoplay pauses on hover/focus. JS off → finite scroller.</p>
+	<lay-out bleed md="columns(1)" overflow="preview-2xl center" loop auto="4s" nav="dot" dot="hyb blw">
 		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
 			<cq-box>
 				<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
@@ -728,7 +724,7 @@
 
 	<hr>
 	<!-- ════════════════════════════════════════════════════════════
-	     9 · JS-ENHANCED
+	     JS-ENHANCED
 	     ════════════════════════════════════════════════════════════ -->
 
 	<h2>JS-enhanced behaviors</h2>

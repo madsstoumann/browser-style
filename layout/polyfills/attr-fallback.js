@@ -35,6 +35,7 @@
 		'pad-top': '--layout-pbs',
 		'pad-inline': '--layout-pi',
 		'self': '--layout-ps',
+		'items': '--layout-ai',
 		'row-gap': '--layout-rg',
 		'size': '--_sz',
 		'degree': '--_dg',

@@ -61,6 +61,12 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
 - Description: Maps to `place-self` / `--layout-ps` to control alignment of the layout itself.
 - Examples: `self="center"`, `self="start"`, `self="stretch"`
 
+### items
+- Type: <custom-ident>
+- Default: `normal`
+- Description: Maps to `align-items` / `--layout-ai` — the block-axis alignment of the layout's own children (grid cells / flex slides). The counterpart to `self` (which aligns this layout in *its* parent). Use `items="start"` to stop unequal-height cells from stretching to the tallest — e.g. two side-by-side `columns(2)` carousels of different heights.
+- Examples: `items="start"`, `items="center"`, `items="end"`, `items="stretch"`
+
 ### row-gap
 - Type: <number>
 - Default: 1

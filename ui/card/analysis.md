@@ -34,6 +34,7 @@ The breakpoint attributes also carry embedded **inline tokens** (not separate at
 | `max-width` | `<lay-out>` | Caps the element's max inline size. | Value |
 | `width` | `<lay-out>` | Constrains to a named width preset (xs–xxl). | Value |
 | `self` | `<lay-out>` | Sets the element's own `place-self` within its parent grid. | Value |
+| `items` | `<lay-out>` | Sets `align-items` for the element's own children (grid/flex cells); counterpart to `self`. Use `items="start"` to stop unequal-height cells from stretching. | Value |
 | `size` | `<lay-out>` | Enables `content-visibility` with a `contain-intrinsic-size` hint. | Value |
 | `subgrid` | `<lay-out>` | Row count each child adopts as shared subgrid rows (activated per-breakpoint by the `subgrid(on)` token; turned off by `subgrid(off)`). | Value |
 

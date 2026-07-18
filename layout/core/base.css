@@ -34,6 +34,9 @@
 		--layout-gtr: attr(rows type(<length> | <custom-ident>), auto);
 		--layout-mw: attr(max-width type(<length> | <percentage>), 100%);
 		--layout-ps: attr(self type(<custom-ident>), auto);
+		/* --layout-ai: align-items for the layout's own children (grid/flex cells).
+		   Distinct from --layout-ps (self=), which aligns this layout in ITS parent. */
+		--layout-ai: attr(items type(<custom-ident>), normal);
 
 		/* Spacing custom props — literal defaults only. Set per-breakpoint via the
 		   card-style tokens in the breakpoint attributes (p, pi, pb, pbs, pbe, mbs,
@@ -49,6 +52,7 @@
 		--layout-mbs: 0;
 		--layout-mbe: 0;
 
+		align-items: var(--layout-ai, normal);
 		background: var(--layout-bg, var(--_theme-bg, #0000));
 		border-radius: var(--layout-bdrs, 0);
 		box-sizing: border-box;
