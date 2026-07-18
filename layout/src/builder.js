@@ -153,6 +153,20 @@ export class LayoutBuilder {
 
 		this.generateSpacingCSS(breakpointName, mediaQuery, breakpointConfig)
 		this.generateSubgridCSS(breakpointName, mediaQuery)
+		this.generateAlignmentCSS(breakpointName, mediaQuery)
+	}
+
+	// items — per-breakpoint block-axis alignment of the layout's own children
+	// (grid cells / flex slides), e.g. lg="columns(2) items(start)" to stop
+	// unequal-height cells stretching to the tallest. Writes --layout-ai, which
+	// base.css composes into `align-items`. Enumerated values only; exotic values
+	// keep the `style="--layout-ai:…"` escape hatch.
+	generateAlignmentCSS(breakpointName, mediaQuery) {
+		const el = this.config.element || 'lay-out'
+		for (const value of ['start', 'center', 'end', 'stretch']) {
+			this.addRule(mediaQuery, `${el}[${breakpointName}*="items(${value})"]`,
+				{ '--layout-ai': value }, breakpointName)
+		}
 	}
 
 	// subgrid — breakpoint-scoped row alignment.

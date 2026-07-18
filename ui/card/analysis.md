@@ -23,7 +23,7 @@ Driven by two custom elements — **`<lay-out>`** (the grid host; children are i
 | `xl` | `<lay-out>` | Layout pattern at the xl breakpoint (920px+). | Value |
 | `xxl` | `<lay-out>` | Layout pattern at the xxl breakpoint (1140px+). | Value |
 
-The breakpoint attributes also carry embedded **inline tokens** (not separate attributes). Spacing is **token-only** — there are no bare `pad-*`/`space-*`/`*-gap` attributes. Spacing tokens: `p()` (all sides), `pi()`, `pb()`, `pbs()`, `pbe()`, `mbs()`, `mbe()`, `cg()`, `rg()`, plus the `subgrid(on)` / `subgrid(off)` keywords. The lowest breakpoint (`xs`, no `min` in the default config) emits un-media-queried, acting as the mobile-first base; larger breakpoints override. Which tokens are generated per breakpoint is set in `layout.config.json` (`spacing.tokens` + per-breakpoint `spacing`).
+The breakpoint attributes also carry embedded **inline tokens** (not separate attributes). Spacing is **token-only** — there are no bare `pad-*`/`space-*`/`*-gap` attributes. Spacing tokens: `p()` (all sides), `pi()`, `pb()`, `pbs()`, `pbe()`, `mbs()`, `mbe()`, `cg()`, `rg()`, plus the `subgrid(on)` / `subgrid(off)` keywords. Child alignment is also a per-breakpoint builder token — `items(start|center|end|stretch)`, e.g. `lg="columns(2) items(start)"` (the former standalone `items=` attribute is removed). The lowest breakpoint (`xs`, no `min` in the default config) emits un-media-queried, acting as the mobile-first base; larger breakpoints override. Which tokens are generated per breakpoint is set in `layout.config.json` (`spacing.tokens` + per-breakpoint `spacing`).
 
 ### Global spacing & sizing
 
@@ -34,7 +34,6 @@ The breakpoint attributes also carry embedded **inline tokens** (not separate at
 | `max-width` | `<lay-out>` | Caps the element's max inline size. | Value |
 | `width` | `<lay-out>` | Constrains to a named width preset (xs–xxl). | Value |
 | `self` | `<lay-out>` | Sets the element's own `place-self` within its parent grid. | Value |
-| `items` | `<lay-out>` | Sets `align-items` for the element's own children (grid/flex cells); counterpart to `self`. Use `items="start"` to stop unequal-height cells from stretching. | Value |
 | `size` | `<lay-out>` | Enables `content-visibility` with a `contain-intrinsic-size` hint. | Value |
 | `subgrid` | `<lay-out>` | Row count each child adopts as shared subgrid rows (activated per-breakpoint by the `subgrid(on)` token; turned off by `subgrid(off)`). | Value |
 
@@ -56,11 +55,8 @@ The breakpoint attributes also carry embedded **inline tokens** (not separate at
 
 | Attribute | Applies To | Purpose | Type |
 |-----------|-----------|---------|------|
-| `overflow` | `<lay-out>` | Turns the layout into a horizontal scroll-snap carousel; tokens tune behaviour. | Boolean / Token-list |
-| `pages` | `<lay-out>` (with `overflow`) | One scroll-marker dot per page of items instead of per item. | Boolean |
-| `nav` | `<lay-out>` (with `overflow`) | Enables both carousel controls (arrows + dots). | Boolean / Token-list |
-| `arrow` | `<lay-out>` (with `overflow`) | Enables/configures the arrow controls only. | Boolean / Token-list |
-| `dot` | `<lay-out>` (with `overflow`) | Enables/configures the dot markers only. | Boolean / Token-list |
+| `overflow` | `<lay-out>` | Turns the layout into a horizontal scroll-snap carousel — the mode flag; behaviour is tuned via `media=` tokens. | Boolean |
+| `media` | `<lay-out>` (with `overflow`) | Carousel control tokens for the lay-out's **own** scroller — same vocabulary as `<ui-media>` (`nav`/`nav()`, `arw()`, `dot()`, `auto`, `loop`) plus `pages` (one scroll-marker dot per page of items instead of per item). Replaces the former `nav=`/`arrow=`/`dot=`/`pages` attributes. Scoped: it never leaks into a descendant `<ui-media>`. | Token-list |
 
 ### Animations (scroll-driven)
 
@@ -68,9 +64,8 @@ The breakpoint attributes also carry embedded **inline tokens** (not separate at
 
 | Attribute | Applies To | Purpose | Type |
 |-----------|-----------|---------|------|
-| `animate` | any element (here `<lay-out>`) | Animates child items on scroll via a named view-timeline; modifiers `clip`/`deep`/`trigger*`; shape reveals `reveal(hex\|star\|…)`. | Value / Token-list |
-| `animate-self` | any element (here `<lay-out>`) | Animates the element itself on scroll (incl. `reveal(...)`; `morph()` is specced but unimplemented). | Value / Token-list |
-| `pace` | any animated element | Controls animation entry/exit speed. | Token-list |
+| `animate` | any element (here `<lay-out>`) | Animates child items on scroll via a named view-timeline; modifiers `clip`/`deep`/`trigger*` and pace tokens `very-slow slow fast very-fast exit exit-fast exit-slow` (the former `pace=` attribute, now words inside the value — e.g. `animate="fade-in(2) slow exit-fast"`); shape reveals `reveal(hex\|star\|…)`. | Value / Token-list |
+| `animate-self` | any element (here `<lay-out>`) | Animates the element itself on scroll (incl. `reveal(...)`; `morph()` is specced but unimplemented); takes the same pace tokens. | Value / Token-list |
 | `easing` | any animated element | Selects a named easing curve (`--ease-*`). | Value |
 | `stagger` | `<lay-out>` / any host | Cascading reveal of direct children (custom-element form). | Token-list |
 | `data-stagger` | Native host elements | Same cascading-child reveal for native elements. | Token-list |
@@ -114,20 +109,13 @@ Elements: **`<ui-card>`** (static host, unregistered), **`<cq-box>`** (queryable
 
 | Attribute | Applies To | Purpose | Type |
 |-----------|-----------|---------|------|
-| `media` | media | Primary media DSL: aspect-ratio, fit/position, flip, hover, scrim, shape, tint, carousel, furniture, video sizing. | Token-list |
-| `nav` | media | Carousel trigger/config (dots/arrows/none, axis, auto, loop, stagger); alias of the `nav()` media token. | Boolean / Token-list |
-| `arrow` | media | Carousel arrow placement (above/below). | Token-list |
-| `dot` | media | Carousel dot placement (above/below). | Token-list |
-| `vid` | media | Native-video sizing (sm/md/lg/xl); alias of `vid()`. | Value |
-| `ply` | media | Play-affordance sizing (sm/md/lg/xl); alias of `ply()`. | Value |
+| `media` | media | Primary media DSL — the **only** configuration surface: aspect-ratio, fit/position, flip, hover, scrim, shape, tint, furniture, **all carousel controls** (`nav`/`nav()`, `arw()`, `dot()`, `axis(y)`, `auto`/`auto(4s)`, `loop`, `stagger`, `ani()`/`crd()`), loading (`load(eager\|lazy)`) and video sizing (`vid()`, `ply()`). The former alias attributes `nav=`/`arrow=`/`dot=`/`vid=`/`ply=`/`eager`/carousel-`loop` are removed. Read from the element itself or its nearest `ui-card`/`ui-reveal` host only (never other ancestors). | Token-list |
 | `provider` | media | Video embed provider (e.g. youtube/vimeo) for the facade path. | Value |
 | `video` | media | Video / embed identifier. | Value |
 | `src` | media (and inner `<img>`/`<video>`) | Direct media file URL / native source. | Value |
 | `loop` | media | Video loops. | Boolean |
 | `muted` | media | Video muted. | Boolean |
 | `autoplay` | media | Video autoplays (decorative when muted+autoplay). | Boolean |
-| `stagger` | media | Opt-in snap-carousel staggered reveal (alias `media="stagger"` / `nav="stagger"`). | Boolean / Value |
-| `load` | media | Image loading hint (eager/lazy). | Value |
 | `cdn` | media | Force/gate the Cloudflare srcset upgrade. | Value |
 | `quality` | media | srcset image quality. | Value |
 | `format` | media | srcset image format. | Value |
@@ -151,18 +139,10 @@ Elements: **`<ui-card>`** (static host, unregistered), **`<cq-box>`** (queryable
 
 | Attribute | Applies To | Purpose | Type |
 |-----------|-----------|---------|------|
-| `variant` | reveal | Composition DSL (shared with card). | Token-list |
+| `variant` | reveal | Composition DSL (shared with card) — **plus all reveal-specific config**, folded in as tokens: `rvl(exp\|flp\|sld\|scl)`, `lg:rvl()` (container tier), `frm(top\|btm\|lft\|rgt)`, `pop` (popup mode), `trg(card)`, `scr` (scroll), `ico()`/`icc()` (toggle icon, one token per word). The former individual attributes `type`/`type-lg`/`from`/`to`/`trigger`/`scroll`/`icon`/`icon-close` are removed. | Token-list |
 | `theme` | reveal | Theme axis (shared with card). | Token-list |
 | `media` | reveal (inherits) | Media DSL (shared with card). | Token-list |
 | `content` | reveal (inherits) | Content DSL (shared with card). | Token-list |
-| `type` | reveal | Reveal animation kind (expand/flip/slide/scale). | Value |
-| `type-lg` | reveal | Reveal animation kind at the `lg:` container tier. | Value |
-| `from` | reveal | Origin direction for slide/flip (top/bottom/left/right). | Value |
-| `to` | reveal | Target/end state for the transition. | Value |
-| `trigger` | reveal | Expands the trigger surface (e.g. `trigger="card"`). | Value |
-| `scroll` | reveal | Scroll-driven reveal behaviour. | Boolean |
-| `icon` | reveal | Toggle-icon placement/style (top/bottom/left/right, dark/semi, sm/lg). | Token-list |
-| `icon-close` | reveal | Icon placement/style shown in the open state. | Token-list |
 | `name` | reveal (native `<details>`) | Exclusive-accordion group name. | Value |
 | `open` | reveal (native `<details>`) | Open/expanded state. | Boolean |
 | `tabindex` | reveal / summary | Focus behaviour of the disclosure. | Value |
@@ -173,9 +153,8 @@ Elements: **`<ui-card>`** (static host, unregistered), **`<cq-box>`** (queryable
 
 | Attribute | Applies To | Purpose | Type |
 |-----------|-----------|---------|------|
-| `animate` | host / container | Scroll-driven or scroll-triggered reveal for children (`fx()` syntax; modifiers `clip`/`deep`, `trigger*`). | Token-list |
-| `animate-self` | host / element | Scroll animation applied to the element itself on its own `view()` timeline. | Token-list |
-| `pace` | animated element | Maps animation-range / duration (slow/fast/…). | Value |
+| `animate` | host / container | Scroll-driven or scroll-triggered reveal for children (`fx()` syntax; modifiers `clip`/`deep`, `trigger*`, pace tokens `slow`/`fast`/`very-*`/`exit*` — the former `pace=` attribute is now words inside this value). | Token-list |
+| `animate-self` | host / element | Scroll animation applied to the element itself on its own `view()` timeline; same pace tokens. | Token-list |
 | `easing` | animated element | Overrides the animation easing. | Value |
 
 > `media`, `content` and `variant` are space-separated token DSLs; every token ultimately writes a `--ui-media-*` / `--ui-content-*` / card custom property, so any value also has a `style="--ui-*"` escape hatch.
@@ -197,19 +176,15 @@ Global/universal attributes usable on any opted-in element. Token-list attribute
 | `tint-bl` / `data-tint-bl` | `tint.css` | Bottom-left corner colour (2D bilinear mode). | Value |
 | `tinted` / `data-tinted` | `tint.css` | Opt-in to graduate the tint across direct children; optional value switches to a 2D ramp. | Boolean / Value |
 | `stagger` / `data-stagger` | `stagger.css` | Marks a stagger-reveal group whose direct children cascade in; effect-vector tokens + one-shot `trigger` token as values. | Boolean / Token-list |
-| `animate` | `animate.css` (engine), `animations.css` (`@keyframes`) | Scroll-driven/triggered animation engine applied to an element's **children**; keyframe-name tokens + modifiers (`(2)`/`(3)`, `clip`, `deep`, `trigger*`) and shape reveals `reveal(hex\|star\|rhomb\|plus\|circ)`. Attribute-driven, so it works on **any** element. | Token-list |
-| `animate-self` | `animate.css` (engine), `animations.css` (`@keyframes`) | Same engine targeting the element **itself** (incl. `reveal(...)`); also a companion flag stagger checks to yield container-entry ownership. | Token-list |
-| `pace` | `animate.css` | Animation entry/exit speed (`slow`, `fast`, `very-*`, `exit*`) — maps to `animation-range` / duration. | Token-list |
+| `animate` | `animate.css` (engine), `animations.css` (`@keyframes`) | Scroll-driven/triggered animation engine applied to an element's **children**; keyframe-name tokens + modifiers (`(2)`/`(3)`, `clip`, `deep`, `trigger*`), pace tokens (`slow`, `fast`, `very-*`, `exit*` — the former `pace=` attribute, now words inside the value, e.g. `animate="fade-in(2) slow exit-fast"`) and shape reveals `reveal(hex\|star\|rhomb\|plus\|circ)`. Attribute-driven, so it works on **any** element. | Token-list |
+| `animate-self` | `animate.css` (engine), `animations.css` (`@keyframes`) | Same engine targeting the element **itself** (incl. `reveal(...)` and the pace tokens); also a companion flag stagger checks to yield container-entry ownership. | Token-list |
 | `easing` | `animate.css` (+ `--ease-*` tokens in `easings.css`) | Selects a named easing curve (`ease-1..5`, `ease-spring-*`, `ease-bounce-*`, `ease-elastic-*`, `ease-{circ,cubic,…}-{in,out,in-out}`, …) for the animation. | Value |
 
 ### Pattern-specific attributes (carousel / media)
 
 | Attribute | Feature / File | Purpose | Type |
 |-----------|----------------|---------|------|
-| `media` | `carousel.css`, `stagger.css` | Master carousel/effect DSL (`nav(...)`, `arw(...)`, `dot(...)`, `axis(...)`, `ani(...)`, `crd(...)`, `stagger`). | Token-list |
-| `nav` | `carousel.css` | Enables/configures carousel navigation on a standalone host (position, axis, on/off). | Boolean / Token-list |
-| `arrow` | `carousel.css` | Configures carousel arrow buttons (size, glyph, placement, style). | Token-list |
-| `dot` | `carousel.css` | Configures carousel scroll-marker dots/pills/thumbnails (size, placement, style). | Token-list |
+| `media` | `carousel.css`, `stagger.css` | Master carousel/effect DSL (`nav(...)`, `arw(...)`, `dot(...)`, `axis(...)`, `ani(...)`, `crd(...)`, `auto`, `loop`, `stagger`; on `lay-out[overflow]` also `pages`) — the **only** carousel-control surface; the former `nav=`/`arrow=`/`dot=` attributes are removed. | Token-list |
 | `overflow` | `stagger.css` (layout) | `lay-out` mode flag selecting the overflow (horizontal-carousel) reveal path; companion to `stagger`. | Boolean |
 
 ### Utility / helper attributes
@@ -227,8 +202,8 @@ Global/universal attributes usable on any opted-in element. Token-list attribute
 
 ## Notes & overlaps
 
-- **Shared vocabulary across systems.** `stagger`/`data-stagger`, `animate`, `animate-self`, `pace`, `easing`, `nav`, `arrow`, `dot`, `overflow` and `theme` originate in **base** and are re-used by both **layout** and **card**. As of v4 the **entire animation engine** now lives in base: the `[animate]`/`[animate-self]`/`[pace]`/`[easing]` wiring in `ui/base/animate.css`, the `@keyframes` in `ui/base/animations.css`, and the `--ease-*` tokens in `ui/base/easings.css` — so `[animate]` works on **any** component, not just `<lay-out>`. Carousel controls (`nav`/`arrow`/`dot`) and the `stagger` engine likewise live in `ui/base` (`carousel.css`, `stagger.css`). None of this is bundled into `layout.css` any more — `@browser.style/base` must be loaded alongside it (always true in practice). The **only** animation rule still in the layout package is `stack(reveal)` (`layout/core/animations.css`, layout-domain).
+- **Shared vocabulary across systems.** `stagger`/`data-stagger`, `animate`, `animate-self`, `easing`, `media`, `overflow` and `theme` originate in **base** and are re-used by both **layout** and **card**. As of v4 the **entire animation engine** now lives in base: the `[animate]`/`[animate-self]`/`[easing]` wiring in `ui/base/animate.css` (pace is now words *inside* `animate=`/`animate-self=`, not an attribute), the `@keyframes` in `ui/base/animations.css`, and the `--ease-*` tokens in `ui/base/easings.css` — so `[animate]` works on **any** component, not just `<lay-out>`. Carousel controls (`media=` tokens — `nav()`/`arw()`/`dot()` etc.; no `nav=`/`arrow=`/`dot=` attributes) and the `stagger` engine likewise live in `ui/base` (`carousel.css`, `stagger.css`). None of this is bundled into `layout.css` any more — `@browser.style/base` must be loaded alongside it (always true in practice). The **only** animation rule still in the layout package is `stack(reveal)` (`layout/core/animations.css`, layout-domain).
 - **Shape reveals share the media-shape catalog.** `animate-self="reveal(hex\|star\|rhomb\|plus\|circ)"` animates a single `reveal-shape` keyframe whose clip-path endpoints come from the shared `--shp-*` catalog in `ui/base/shapes.css` — the same vertex-matched pairs that drive static media clips (`media="shp(...)"` in the card system). One shape definition, two uses (static clip + reveal). `--shp-*` is deliberately distinct from the `--shape-*` glyph namespace (icons/stickers) in the same file.
 - **`data-*` twins.** The bare form is for custom elements; the `data-` form is for native HTML elements. Same feature, two spellings (`stagger`/`data-stagger`, `tint`/`data-tint`, `page-gap`/`data-page-gap`).
-- **Token-list attributes are mini-DSLs.** `theme`, `variant`, `media`, `content`, `nav`, `arrow`, `dot`, `stagger`, `animate` each encode many sub-features as space-separated keywords or `token(arg)` values inside one attribute — this is why the same attribute name appears across elements but carries a different token vocabulary.
-- **Inheritance.** On the card/reveal host, `media`, `content`, `variant` and `theme` may be authored once and cascade down to the `<ui-media>` / `<ui-content>` primitives.
+- **Token-list attributes are mini-DSLs.** `theme`, `variant`, `media`, `content`, `stagger`, `animate` each encode many sub-features as space-separated keywords or `token(arg)` values inside one attribute — this is why the same attribute name appears across elements but carries a different token vocabulary.
+- **Inheritance.** On the card/reveal host, `media`, `content`, `variant` and `theme` may be authored once and cascade down to the `<ui-media>` / `<ui-content>` primitives. Scoping differs: **`media=` stops at the card** — a `<ui-media>` reads it from itself or its nearest `ui-card`/`ui-reveal` host only, and a `media=` on `<lay-out overflow>` configures only the lay-out's own scroller (it never reaches a descendant `<ui-media>`). **`content=` flows down freely** (pure custom-property inheritance) and also works on `<lay-out>` / `<lay-out-group>`.

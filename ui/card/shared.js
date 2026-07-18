@@ -3,9 +3,13 @@
 export const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 export const onIdle = globalThis.requestIdleCallback || ((fn) => setTimeout(fn, 1));
 
-// effective media= string (own attr, else nearest ancestor) / self-only nav= words
-export const mediaStr = (el) => el.closest('[media]')?.getAttribute('media') || '';
-export const navWords = (el) => (el.getAttribute('nav') || '').split(/\s+/);
+// effective media= string — own attr, else the nearest ui-card/ui-reveal host.
+// Inheritance stops at the card: media= on a lay-out (its own scroller config)
+// or any other ancestor never leaks into a descendant ui-media.
+export const mediaStr = (el) => {
+	const h = el.closest('[media]');
+	return h && (h === el || h.matches('ui-card, ui-reveal')) ? (h.getAttribute('media') || '') : '';
+};
 
 // slides = direct children minus overlay furniture and nested <lay-out> wrappers
 const NOT_SLIDE = /^(UI-CHIP|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS|LAY-OUT)$/;
@@ -55,6 +59,6 @@ export function videoPlayNodes() {
 			const media = play.parentElement;
 			if (!media.querySelector(':scope > video')) return false;
 			const nested = !!media.parentElement?.closest('ui-media');
-			return nested || !/\bnav\b|auto|loop/.test(mediaStr(media) + ' ' + (media.getAttribute('nav') || ''));
+			return nested || !/\bnav\b|auto|loop/.test(mediaStr(media));
 		});
 }

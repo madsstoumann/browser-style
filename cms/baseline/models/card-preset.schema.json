@@ -31,14 +31,6 @@
       {
         "area": "main",
         "type": "group",
-        "name": "Carousel",
-        "description": "Dual-attribute carousel form — written to the <ui-media> child (groupable alternative to arw()/dot() media tokens)",
-        "collapse": true,
-        "fields": ["nav", "arrow", "dot"]
-      },
-      {
-        "area": "main",
-        "type": "group",
         "name": "Reveal",
         "description": "Only used when element is ui-reveal",
         "collapse": true,
@@ -103,7 +95,7 @@
     "media": {
       "type": "string",
       "title": "media=",
-      "description": "Media frame tokens: asr(16/9 …), obf(), obp(), hov(), scm, nav(), auto, loop, clip … Furniture styling also lives here, as single-value tokens (the CSS matches them by substring, so combine one value per token, not chip(ts red)): position chip|sticker|save|play(ts…be); hue chip|sticker|save(red|orange|green|blue|accent|white|gray|slate|black); sticker shape sticker(sh:burst|sh:spark|sh:sunburst|sh:heart|sh:blob|text|spl|spr) — clip silhouettes use the sh: prefix, custom ones too (sticker(sh:myshape) + inline --ui-sticker-clip-path); chip variant chip(lgt|out) and size chip(sm|lg|xl|2xl); save size save(sm|lg|xl) and disc save(crc|sqr|rnd|non); play size play(sm|lg|xl). The renderer emits the furniture elements from the card's content.furniture object and appends each item's optional style= override after these tokens (a same-axis override replaces the preset's token).",
+      "description": "Media frame tokens: asr(16/9 …), obf(), obp(), hov(), scm, clip … Carousel controls live here too — the ONLY form (no nav=/arrow=/dot= attributes): bare nav (dots + arrows), nav(dot|arw|blw|abv), arw(arr|sm|lg|xl|sqr|sft|hid|lgt|drk|bare|set|ts…be|blw|abv), dot(sm|md|lg|xl|pll|hyb|tmb|non|lgt|drk|ts…be|blw|abv), axis(y), auto, auto(4s), loop, stagger. Furniture styling also lives here, as single-value tokens (the CSS matches them by substring, so combine one value per token, not chip(ts red)): position chip|sticker|save|play(ts…be); hue chip|sticker|save(red|orange|green|blue|accent|white|gray|slate|black); sticker shape sticker(sh:burst|sh:spark|sh:sunburst|sh:heart|sh:blob|text|spl|spr) — clip silhouettes use the sh: prefix, custom ones too (sticker(sh:myshape) + inline --ui-sticker-clip-path); chip variant chip(lgt|out) and size chip(sm|lg|xl|2xl); save size save(sm|lg|xl) and disc save(crc|sqr|rnd|non); play size play(sm|lg|xl). The renderer emits the furniture elements from the card's content.furniture object and appends each item's optional style= override after these tokens (a same-axis override replaces the preset's token).",
       "localized": false
     },
     "content": {
@@ -130,28 +122,10 @@
       "description": "CSS custom properties written to the element's style attribute, e.g. { \"--ui-reveal-content-bg\": \"#1f2937\" }. Keys must start with --.",
       "localized": false
     },
-    "nav": {
-      "type": "string",
-      "title": "nav=",
-      "description": "Carousel navigation (written to <ui-media>): dot arw non bar blw abv",
-      "localized": false
-    },
-    "arrow": {
-      "type": "string",
-      "title": "arrow=",
-      "description": "Arrow atoms, groupable (written to <ui-media>): chv|arr · lgt|drk|sub · sm|md|lg|xl · mid|top|bot · set|bare|hid|sta",
-      "localized": false
-    },
-    "dot": {
-      "type": "string",
-      "title": "dot=",
-      "description": "Dot atoms, groupable (written to <ui-media>): cir|pll|tmb · sm|md|lg|xl · lgt|drk|sub · ctr|sta|end|non|tl|tr|bl|br",
-      "localized": false
-    },
     "reveal": {
       "type": "object",
       "title": "Reveal",
-      "description": "Reveal configuration — only used when element is ui-reveal. Keys map 1:1 to <ui-reveal> attributes (typeLg → type-lg=, iconClose → icon-close=, iconType → the toggle <ui-icon type>).",
+      "description": "Reveal configuration — only used when element is ui-reveal. The renderer folds these into compact variant= tokens: type → rvl(exp|flp|sld|scl), typeLg → lg:rvl(…), from → frm(top|btm|lft|rgt), to → pop, trigger card → trg(card), scroll → scr; icon/iconClose positional words fold into one corner token — ts|te|bs|be (\"top right\" → ico(te)) plus style tokens (dark → drk, semi → sem, sm, lg). iconType stays markup (the toggle <ui-icon type>).",
       "localized": false,
       "properties": {
         "type": {

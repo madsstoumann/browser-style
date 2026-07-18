@@ -585,7 +585,7 @@ Breakpoints: **md = 25rem, lg = 44rem**. `scl()` accepts `sm`/`md`/`lg`/`xl` pre
 </ui-content>
 ```
 
-> **`scr` vs reveal `[scroll]`:** `content="scr"` is the *content-column* scroll (scrollable text + `ui-scroll-fade` mask). `<ui-reveal>` has its **own** `[scroll]` host attribute (the flip-panel / `type-lg="scale"` panel scroll) — that is a different mechanism and stays as `[scroll]` on the reveal host. Don't conflate them.
+> **`scr` (content) vs `scr` (reveal):** `content="scr"` is the *content-column* scroll (scrollable text + `ui-scroll-fade` mask). `<ui-reveal>` has its **own** `scr` token on the host's `variant=` (the flip-panel / `lg:rvl(scl)` panel scroll; it replaced the old `[scroll]` attribute) — that is a different mechanism on a different attribute. Don't conflate them.
 
 ---
 

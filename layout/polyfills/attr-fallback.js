@@ -23,20 +23,15 @@
 	fallbackCSS.href = new URL('./attr-fallback.css', import.meta.url).href;
 	document.head.appendChild(fallbackCSS);
 
+	// Typed-attr() attributes only. Spacing is token-only in v4 (p()/pi()/cg()/…
+	// in the breakpoint attributes) and items() is a breakpoint token — neither
+	// goes through attr(), so they need no fallback entry.
 	const ATTR_MAP = {
 		'bleed': '--layout-bleed',
-		'col-gap': '--layout-colmg',
 		'columns': '--layout-gtc',
 		'rows': '--layout-gtr',
-		'space-bottom': '--layout-mbe',
-		'space-top': '--layout-mbs',
 		'max-width': '--layout-mw',
-		'pad-bottom': '--layout-pbe',
-		'pad-top': '--layout-pbs',
-		'pad-inline': '--layout-pi',
 		'self': '--layout-ps',
-		'items': '--layout-ai',
-		'row-gap': '--layout-rg',
 		'size': '--_sz',
 		'degree': '--_dg',
 		'trans-x': '--_tx',

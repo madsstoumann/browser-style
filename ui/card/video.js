@@ -201,10 +201,9 @@ export function initVideoTools(frames) {
 		frame.dataset.uiTools = '1';
 
 		const m = mediaStr(frame);
-		const vid = frame.getAttribute('vid') || '';
-		const wantPip = /vid\(pip\)/.test(m) || /\bpip\b/.test(vid);
-		const wantFls = /vid\(fls\)/.test(m) || /\bfls\b/.test(vid);
-		const wantCc = /vid\(cc\)/.test(m) || /\bcc\b/.test(vid);
+		const wantPip = /vid\(pip\)/.test(m);
+		const wantFls = /vid\(fls\)/.test(m);
+		const wantCc = /vid\(cc\)/.test(m);
 		if (!wantPip && !wantFls && !wantCc) continue;
 		// need a <video> — now, or later once a provider facade swaps one in on play
 		if (!frame.querySelector('video') && !frame.hasAttribute('provider')) continue;
@@ -276,7 +275,7 @@ export function initVideoTracking(videos) {
 }
 
 const EMBED_SEL = 'ui-media[provider]';
-const VIDTOOLS_SEL = ['ui-media[media*="vid("]', '[media*="vid("] ui-media', 'ui-media[vid]'].join(', ');
+const VIDTOOLS_SEL = ['ui-media[media*="vid("]', ':is(ui-card[media*="vid("], ui-reveal[media*="vid("]) ui-media'].join(', ');
 
 export function scanVideo() {
 	initSolo();

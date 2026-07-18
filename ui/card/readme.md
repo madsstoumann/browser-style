@@ -154,7 +154,7 @@ Multiple `<img>`/`<video>` inside `<ui-media>` + `nav()` — a CSS scroll-snap r
 
 ## The three attributes
 
-A card is configured by three independent token strings. `media=` / `content=` may sit on `<ui-card>` (they inherit down to the primitives) or directly on `<ui-media>` / `<ui-content>`.
+A card is configured by three independent token strings. `media=` / `content=` may sit on `<ui-card>` (they inherit down to the primitives) or directly on `<ui-media>` / `<ui-content>`. Note the scoping difference: `media=` inheritance **stops at the card** — a `<ui-media>` reads it from itself or its nearest `<ui-card>` / `<ui-reveal>` host only (a `media=` on a `<lay-out>` configures the layout's own scroller, never a nested `<ui-media>`), while `content=` is plain custom-property inheritance and flows down freely (it also works on `<lay-out>` / `<lay-out-group>`).
 
 ### `media=` — the media frame
 
@@ -169,7 +169,7 @@ Configures `<ui-media>`: aspect-ratio, fit/position, hover, scrim, carousel, and
 | `hov()` | `zoom pan track` | hover effect (image-only) |
 | `rds()` | `sm md lg xl 2xl full pill` + `*-sq` | corners on a **standalone** `<ui-media>` (inside a card the card owns the radius) |
 | `scm` / `scm()` | *(bare)* · pos `ts … be` · size `sm md lg xl` · intensity `sheer lgt med drk solid` | scrim — bare matches the host `ovr()`; direction picks a corner (furniture grid), size sets the extent, intensity sets darkness |
-| `nav` / `nav()` | *(bare)* · `dots arrows none` | carousel — the token **is** the trigger; bare = dots + arrows |
+| `nav` / `nav()` | *(bare)* · `dot arw blw abv` | carousel — the token **is** the trigger; bare = dots + arrows. All carousel controls (`arw()`, `dot()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()`) are `media=` tokens — see [carousel.md](carousel.md) |
 | `chip()` `sticker()` `save()` `play()` | position `ts … be` **or** hue `red orange green blue accent dark light subtle` | place + theme an overlay element |
 
 ```html

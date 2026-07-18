@@ -405,13 +405,13 @@
 	     STAGGER-BASED SLIDES — layered / multi-card (all use stagger)
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>Stagger — multi-card slides</h2>
-	<p>Multiple cards per page via <code>stagger</code>: a flat <code>&lt;lay-out overflow pages&gt;</code> or a <code>&lt;ui-media&gt;</code> of grouped slides.</p>
+	<p>Multiple cards per page via <code>stagger</code>: a flat <code>&lt;lay-out overflow media="pages"&gt;</code> or a <code>&lt;ui-media&gt;</code> of grouped slides.</p>
 
-	<h3><code>&lt;lay-out overflow pages stagger&gt;</code> — flat cards</h3>
-	<p>Flat <code>&lt;ui-reveal&gt;</code> cards; <code>pages</code> snaps per page, <code>stagger="rise"</code> reveals each as it swipes in. Use block/no-translate effects (<code>rise</code>/<code>fall</code>/<code>fde</code>/<code>zom</code>/<code>blr</code>) — inline slides break scroll-to-end.</p>
+	<h3><code>&lt;lay-out overflow media="pages" stagger&gt;</code> — flat cards</h3>
+	<p>Flat <code>&lt;ui-reveal&gt;</code> cards; <code>media="pages"</code> snaps per page, <code>stagger="rise"</code> reveals each as it swipes in. Use block/no-translate effects (<code>rise</code>/<code>fall</code>/<code>fde</code>/<code>zom</code>/<code>blr</code>) — inline slides break scroll-to-end.</p>
 
-	<lay-out class="reveal-cards" md="columns(2)" lg="columns(3)" overflow nav="blw" arrow="bare" pages stagger="rise">
-		<ui-reveal type="flip" icon="dark top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)" style="--ui-reveal-content-bg: hsl(255 60% 95%);">
+	<lay-out class="reveal-cards" md="columns(2)" lg="columns(3)" overflow media="nav(blw) arw(bare) pages" stagger="rise">
+		<ui-reveal variant="ovr(bl) rvl(flp) ico(te) ico(drk) ico(sm)" media="asr(3/4) obp(cc) scm hov(zoom)" style="--ui-reveal-content-bg: hsl(255 60% 95%);">
 			<details name="stagger-games">
 				<summary>
 					<ui-face>
@@ -423,7 +423,7 @@
 				<ui-content tabindex="0"><h3>Starfall Legends</h3><p>Chase the falling stars across the floating isles of Auralis.</p></ui-content>
 			</details>
 		</ui-reveal>
-		<ui-reveal type="flip" icon="dark top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) hov(pan)" style="--ui-reveal-content-bg: hsl(35 55% 92%);">
+		<ui-reveal variant="ovr(bl) rvl(flp) ico(te) ico(drk) ico(sm)" media="asr(3/4) obp(cc) hov(pan)" style="--ui-reveal-content-bg: hsl(35 55% 92%);">
 			<details name="stagger-games">
 				<summary>
 					<ui-face>
@@ -435,7 +435,7 @@
 				<ui-content tabindex="0"><h3>Frontier Outlaws</h3><p>Ride into a frontier that remembers everything you do.</p></ui-content>
 			</details>
 		</ui-reveal>
-		<ui-reveal type="flip" icon="dark top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)" style="--ui-reveal-content-bg: hsl(45 58% 92%);">
+		<ui-reveal variant="ovr(bl) rvl(flp) ico(te) ico(drk) ico(sm)" media="asr(3/4) obp(cc) scm hov(zoom)" style="--ui-reveal-content-bg: hsl(45 58% 92%);">
 			<details name="stagger-games">
 				<summary>
 					<ui-face>
@@ -447,7 +447,7 @@
 				<ui-content tabindex="0"><h3>Imperium: Legions</h3><p>From a single cohort to the eternal city.</p></ui-content>
 			</details>
 		</ui-reveal>
-		<ui-reveal type="flip" icon="top right sm" icon-close="dark" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)" style="--ui-reveal-content-bg: hsl(210 42% 94%);">
+		<ui-reveal variant="ovr(bl) rvl(flp) ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) scm hov(zoom)" style="--ui-reveal-content-bg: hsl(210 42% 94%);">
 			<details name="stagger-movies">
 				<summary>
 					<ui-face>
@@ -477,7 +477,7 @@
 				</div>
 			</details>
 		</ui-reveal>
-		<ui-reveal type="flip" icon="top right sm" icon-close="dark"  variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(pan)" style="--ui-reveal-content-bg: hsl(140 38% 93%);">
+		<ui-reveal variant="ovr(bl) rvl(flp) ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) scm hov(pan)" style="--ui-reveal-content-bg: hsl(140 38% 93%);">
 			<details name="stagger-movies">
 				<summary>
 					<ui-face>
@@ -507,7 +507,7 @@
 				</div>
 			</details>
 		</ui-reveal>
-		<ui-reveal type="flip" icon="dark top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)" style="--ui-reveal-content-bg: hsl(345 65% 95%);">
+		<ui-reveal variant="ovr(bl) rvl(flp) ico(te) ico(drk) ico(sm)" media="asr(3/4) obp(cc) scm hov(zoom)" style="--ui-reveal-content-bg: hsl(345 65% 95%);">
 			<details name="stagger-movies">
 				<summary>
 					<ui-face>
@@ -630,7 +630,7 @@
 	     · FULL-SCREEN — bleed + lay-out overflow="preview-2xl center"
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>13 · Full-screen center carousel — <code>bleed</code> + <code>preview-2xl center</code></h2>
-	<p>A <code>&lt;lay-out overflow&gt;</code> hero: <code>center</code> centers the slide with 25% peeks each side (<code>preview-2xl</code>), <code>bleed</code> goes edge-to-edge, <code>gaps</code> adds end gutters. Controls: centered dots + a bare arrow set in the light/white ink variants (<code>arrow="set bare lgt" dot="bc lgt"</code>) so they read on the dark <code>theme="black ink"</code> band. Cards are responsive by aspect — portrait on mobile, cinematic 16/9 once wide (<code>media="asr(3/4) md:asr(16/9)"</code>).</p>
+	<p>A <code>&lt;lay-out overflow&gt;</code> hero: <code>center</code> centers the slide with 25% peeks each side (<code>preview-2xl</code>), <code>bleed</code> goes edge-to-edge, <code>gaps</code> adds end gutters. Controls: centered dots + a bare arrow set in the light/white ink variants (<code>media="… arw(set) arw(bare) arw(lgt) dot(bc) dot(lgt)"</code>) so they read on the dark <code>theme="black ink"</code> band. Cards are responsive by aspect — portrait on mobile, cinematic 16/9 once wide (<code>media="asr(3/4) md:asr(16/9)"</code>).</p>
 
 	<!-- hl(lg) + scl(lg): sizes are relational — the +1 ladder renders the xl stop (same look as the old absolute hl(xl)) -->
 	<lay-out-group bleed theme="black ink" xs="pbs(3) pbe(3)" content="hl(lg) ctr scl(lg)">
@@ -639,7 +639,7 @@
 			<p data-part="summary">A start-snapped carousel of responsive cards, each with a media image and a content panel.</p>
 		</ui-content>
 		<cq-box>
-			<lay-out bleed md="columns(1)" overflow="preview-2xl center gaps" nav="blw" arrow="set bare lgt" dot="bc lgt">
+			<lay-out bleed md="columns(1)" overflow="preview-2xl center gaps" media="nav(blw) arw(set) arw(bare) arw(lgt) dot(bc) dot(lgt)">
 				<ui-card variant="ovr(bl) rds(non)" media="asr(3/4) md:asr(16/9) scm" content="scl(lg) pad(lg)">
 					<cq-box>
 						<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
@@ -677,13 +677,13 @@
 	     · APP-STYLE HIGHLIGHTS — lay-out-group + theme + gradient headline
 	     ════════════════════════════════════════════════════════════ -->
 	<!-- <h2>App-style highlights — <code>&lt;lay-out-group&gt;</code> + <code>theme</code> + gradient headline</h2>
-	<p>A themed section band (<code>&lt;lay-out-group bleed theme="gray"&gt;</code>) with a header above a start-snapped preview carousel. The headline is a <code>&lt;ui-gradient-text&gt;</code>; the carousel shows arrows only, clustered as a set in a below-band at the inline-end (<code>nav="arw" arrow="set blw"</code>) — the band renders them as light-ink chevrons. The cards are <strong>responsive by aspect</strong>: <code>media="asr(3/4) md:asr(3/2)"</code> — portrait one-at-a-time on narrow screens (the layout's <code>xs</code> default is <code>columns(1)</code>), switching to landscape once each card renders ≥ 25rem wide. No custom CSS beyond the gradient-text stylesheet.</p> -->
+	<p>A themed section band (<code>&lt;lay-out-group bleed theme="gray"&gt;</code>) with a header above a start-snapped preview carousel. The headline is a <code>&lt;ui-gradient-text&gt;</code>; the carousel shows arrows only, clustered as a set in a below-band at the inline-end (<code>media="nav(arw) arw(set) arw(blw)"</code>) — the band renders them as light-ink chevrons. The cards are <strong>responsive by aspect</strong>: <code>media="asr(3/4) md:asr(3/2)"</code> — portrait one-at-a-time on narrow screens (the layout's <code>xs</code> default is <code>columns(1)</code>), switching to landscape once each card renders ≥ 25rem wide. No custom CSS beyond the gradient-text stylesheet.</p> -->
 	<lay-out-group bleed theme="gray" xs="pbs(3) pbe(3)" content="hl(lg)">
 		<ui-content>
 			<h2 data-part="headline"><ui-gradient-text gradient="#0b2b47, #3b82c4, #0b2b47" size="160%">Explore the highlights.</ui-gradient-text></h2>
 		</ui-content>
 		<cq-box>
-		<lay-out bleed xs="pi(1)" md="columns(2)" overflow="preview-lg" nav="arw" arrow="set blw">
+		<lay-out bleed xs="pi(1)" md="columns(2)" overflow="preview-lg" media="nav(arw) arw(set) arw(blw)">
 			<ui-card variant="ovr(tl) rds(lg)" media="asr(3/4) md:asr(3/2) scm" content="scl(sm) pad(lg)">
 				<cq-box>
 					<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
@@ -719,10 +719,10 @@
 	</lay-out-group>
 
 	<h2>14 · Peek both sides — <code>frame</code> in a card (side by side)</h2>
-	<p>Two framed carousels in a <code>&lt;lay-out lg="columns(2)"&gt;</code>, each wrapped in a <code>&lt;ui-card&gt;</code> for the box-shadow. <code>frame</code> is like <code>center</code> — a peek on each side — but start-snaps with a leading pad, framing a <em>page</em> of cards between symmetric peeks, advancing one card at a time. Arrows sit at their default center-edge position (<code>nav="arw"</code>) and dead-end arrows auto-hide (<code>arrow="hid"</code>). Both use a thin <code>preview-xs</code> peek — left frames one card (<code>columns(1)</code>), right frames two (<code>columns(2)</code>).</p>
-	<lay-out lg="columns(2)" items="start">
+	<p>Two framed carousels in a <code>&lt;lay-out lg="columns(2)"&gt;</code>, each wrapped in a <code>&lt;ui-card&gt;</code> for the box-shadow. <code>frame</code> is like <code>center</code> — a peek on each side — but start-snaps with a leading pad, framing a <em>page</em> of cards between symmetric peeks, advancing one card at a time. Arrows sit at their default center-edge position (<code>nav(arw)</code>) and dead-end arrows auto-hide (<code>arw(hid)</code>). Both use a thin <code>preview-xs</code> peek — left frames one card (<code>columns(1)</code>), right frames two (<code>columns(2)</code>).</p>
+	<lay-out lg="columns(2) items(start)">
 		<ui-card theme="pale green">
-			<lay-out xs="p(1)" md="columns(1)" overflow="preview-xs frame" nav="arw" arrow="hid">
+			<lay-out xs="p(1)" md="columns(1)" overflow="preview-xs frame" media="nav(arw) arw(hid)">
 				<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Nature</small><h3 data-part="headline">Downstream</h3></ui-content></cq-box></ui-card>
 				<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/hubble.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Space</small><h3 data-part="headline">Deep Field</h3></ui-content></cq-box></ui-card>
 				<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Food</small><h3 data-part="headline">Kitchen</h3></ui-content></cq-box></ui-card>
@@ -731,7 +731,7 @@
 			</lay-out>
 		</ui-card>
 		<ui-card theme="pale blue">
-			<lay-out xs="p(1)" md="columns(2)" overflow="preview-xs frame" nav="arw" arrow="hid">
+			<lay-out xs="p(1)" md="columns(2)" overflow="preview-xs frame" media="nav(arw) arw(hid)">
 				<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/game_01.png" alt=""></ui-media><ui-content><small data-part="eyebrow">RPG</small><h3 data-part="headline">Starfall</h3></ui-content></cq-box></ui-card>
 				<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/game_02.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Western</small><h3 data-part="headline">Frontier</h3></ui-content></cq-box></ui-card>
 				<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/quantum.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Sci-Fi</small><h3 data-part="headline">Entangled</h3></ui-content></cq-box></ui-card>
@@ -743,8 +743,8 @@
 	</lay-out>
 
 	<h2>15 · Seamless loop + autoplay — <code>loop</code> · <code>auto()</code></h2>
-	<p>Same carousel with <code>loop</code> + <code>auto="4s"</code> (JS, via <code>carousel.js</code>). It clones the end slides so the peeks stay filled and autoplay wraps invisibly; the hybrid dot (<code>dot="hyb"</code>) fills as a timer, and autoplay pauses on hover/focus. JS off → finite scroller.</p>
-	<lay-out bleed md="columns(1)" overflow="preview-2xl center" loop auto="4s" nav="dot" dot="hyb blw">
+	<p>Same carousel with <code>loop</code> + <code>auto(4s)</code> (JS, via <code>carousel.js</code>). It clones the end slides so the peeks stay filled and autoplay wraps invisibly; the hybrid dot (<code>dot(hyb)</code>) fills as a timer, and autoplay pauses on hover/focus. JS off → finite scroller.</p>
+	<lay-out bleed md="columns(1)" overflow="preview-2xl center" media="loop auto(4s) nav(dot) dot(hyb) dot(blw)">
 		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
 			<cq-box>
 				<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
@@ -902,19 +902,19 @@
 		</ui-card>
 	</lay-out>
 
-	<h2>Two ways to write it — <code>media=</code> tokens or <code>nav</code>/<code>arrow</code>/<code>dot</code> attributes</h2>
-	<p>Same options, two forms: inheritable <code>media=</code> string (left) vs grouped <code>nav</code>/<code>arrow</code>/<code>dot</code> attributes (right). Identical render.</p>
+	<h2>Two places to write it — <code>media=</code> on the host or on the frame</h2>
+	<p>One token vocabulary, two placements: on the <code>&lt;ui-card&gt;</code> host (left — inherits to its <code>&lt;ui-media&gt;</code>) or directly on the <code>&lt;ui-media&gt;</code> itself (right). Identical render. Inheritance stops at the card host — a <code>media=</code> on a wrapping <code>&lt;lay-out&gt;</code> configures only the layout's own scroller.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9) nav(blw) arw(lg) dot(be)" content="scl(sm)">
 			<cq-box>
 				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">media="… nav(blw) arw(lg) dot(be)"</small><h2 data-part="headline">media= form</h2></ui-content>
+				<ui-content><small data-part="eyebrow">media="… nav(blw) arw(lg) dot(be)" on ui-card</small><h2 data-part="headline">host form</h2></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9)" content="scl(sm)">
 			<cq-box>
-				<ui-media nav="blw" arrow="lg" dot="be"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">nav="blw" arrow="lg" dot="be"</small><h2 data-part="headline">attribute form</h2></ui-content>
+				<ui-media media="nav(blw) arw(lg) dot(be)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">media="nav(blw) arw(lg) dot(be)" on ui-media</small><h2 data-part="headline">frame form</h2></ui-content>
 			</cq-box>
 		</ui-card>
 	</lay-out>

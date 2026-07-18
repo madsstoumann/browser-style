@@ -191,12 +191,11 @@ Save/play are **controls** (interactive) — card-only, never inside a reveal `<
 | `element` | both | `ui-card` (default), `ui-reveal` — or `ui-media` / `ui-content` for **bare primitives**: the renderer emits just the media frame or content column, no card chrome. Standalone blocks are presentation, not a separate content model |
 | `variant` | both | `col row row-r spl() ovr() vis() rds()` |
 | `theme` | both | shared theme axis — colour + `pale`/`muted`/`light`/`dark` (see [base/theme.md](../base/theme.md)) |
-| `media` | both | `asr() obf() obp() flp() rds() shp() hov() tnt() scm nav() auto loop clip …` — plus the furniture look tokens (`chip/sticker/save/play` position/hue/size/shape). The renderer appends each furniture item's optional `style=` override after these |
+| `media` | both | `asr() obf() obp() flp() rds() shp() hov() tnt() scm clip …` — plus **all carousel controls as tokens, the only form** (`nav`/`nav()`, `arw()`, `dot()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()`; the schema has no `nav`/`arrow`/`dot` fields) and the furniture look tokens (`chip/sticker/save/play` position/hue/size/shape). The renderer appends each furniture item's optional `style=` override after these |
 | `content` | both | `scl() pad() gap() scr` |
 | `text` | both | which long text the content column shows: `summary` (teaser — default), `body` (full view — body **instead of** summary, with the summary kept as a hidden `description` meta), `both`. Reveal back panels always render both |
 | `styles` | both | object of CSS custom properties → `style` attribute (e.g. `--ui-reveal-content-bg`) |
-| `nav` / `arrow` / `dot` | both | dual-attribute carousel form, written to the `<ui-media>` child (groupable: `arrow="lg drk arr set"`) |
-| `reveal` | ui-reveal | nested object grouping the reveal-only config: `{ type, typeLg, to, icon, iconType, iconClose, from, trigger, scroll }`. Keys map 1:1 to attributes (`typeLg` → `type-lg=`); `scroll` is a boolean; `iconType` sets the toggle glyph — `plus-cross` (default) or directional `{up,down,left,right}-arrow-cross`, pairing with slide direction (panel from top → `down-arrow-cross`, etc.) |
+| `reveal` | ui-reveal | nested object grouping the reveal-only config: `{ type, typeLg, to, icon, iconType, iconClose, from, trigger, scroll }`. The structured object stays in the schema, but the renderer **folds it into `variant=` tokens** at render time: `type` → `rvl()`, `typeLg` → `lg:rvl()`, `from` → `frm()`, `to` → `pop`, `trigger` → `trg(card)`, `scroll` → `scr`, `icon` → one `ico()` per word (default `ico(te) ico(sm)`), `iconClose` → one `icc()` per word. `iconType` stays markup — it sets the toggle glyph on the emitted `<ui-icon>`: `plus-cross` (default) or directional `{up,down,left,right}-arrow-cross`, pairing with slide direction (panel from top → `down-arrow-cross`, etc.) |
 
 **`shp()` — clip the media content to a shape.** Applies a `clip-path` to the
 `img`/`video`/`iframe` inside `<ui-media>` (the frame background goes transparent).
@@ -224,14 +223,14 @@ over the image with `mix-blend-mode` — a plain `filter` can't hit an exact col
 colour). Demos in [`media.tint.html`](media.tint.html); lives in the **opt-in `media.tint.css`**
 sheet (link it where you tint; not bundled by `ui-card.css`).
 
-Attribute audit across all `ui/card` + `ui/reveal` demos found exactly these on the
-host elements: `variant`, `media`, `content`, `type`, `type-lg`, `to`, `icon`,
-`icon-close`, `from`, `trigger`, `scroll` (bare boolean), `style`, `class`.
-`class` is an instance hook, not preset material. Media-element attributes
-(`provider`, `video`, `cdn`, `quality`, `breakpoints`) are per-media-item content
-and belong in the card's `media[]` items. Bare booleans like `clip`, `auto`,
-`loop`, `stagger`, `eager` are tokens **inside** the `media=` string, not separate
-attributes.
+The host elements carry exactly these attributes: `variant`, `media`, `content`,
+`theme`, `style`, `class` — reveal config is `variant=` tokens
+(`rvl()`/`lg:rvl()`/`frm()`/`pop`/`trg(card)`/`scr`/`ico()`/`icc()`), not separate
+attributes. `class` is an instance hook, not preset material. Media-element
+attributes (`provider`, `video`, `cdn`, `quality`, `breakpoints`) are per-media-item
+content and belong in the card's `media[]` items. Bare booleans like `clip`, `auto`,
+`loop`, `stagger` — and loading via `load(eager|lazy)` — are tokens **inside** the
+`media=` string, not separate attributes.
 
 ### Shipped presets ([`data/card.presets.json`](data/card.presets.json))
 

@@ -228,6 +228,50 @@ const mergeMediaTokens = (presetMedia, overrides = []) => {
 	return [...kept, ...ov].join(' ');
 };
 
+/* Fold a preset's structured carousel fields (nav/arrow/dot — the legacy
+   grouped-attribute form) into media= tokens on the host: nav:"blw" → nav(blw),
+   arrow:"lg drk" → arw(lg) arw(drk), nav:"y" → axis(y), nav:"auto|loop|stagger"
+   → bare token, nav:"" → bare nav, nav:"non" → nothing. */
+const carouselTokens = (preset) => {
+	const out = [];
+	if (preset.nav != null) {
+		const words = String(preset.nav).split(/\s+/).filter(Boolean);
+		if (!words.length) out.push('nav');
+		for (const w of words) {
+			if (w === 'non') continue;
+			if (w === 'y') out.push('axis(y)');
+			else if (w === 'auto' || w === 'loop' || w === 'stagger') out.push(w);
+			else out.push(`nav(${w})`);
+		}
+	}
+	for (const w of String(preset.arrow || '').split(/\s+/).filter(Boolean)) out.push(`arw(${w})`);
+	for (const w of String(preset.dot || '').split(/\s+/).filter(Boolean)) out.push(`dot(${w})`);
+	return out;
+};
+/* The preset's effective media= string: declared media tokens + carousel folds. */
+const presetMediaStr = (preset) => [preset.media, ...carouselTokens(preset)].filter(Boolean).join(' ');
+
+/* reveal preset values → compact variant-token spellings */
+const RVL_TOKEN = { expand: 'exp', flip: 'flp', slide: 'sld', scale: 'scl' };
+const FRM_TOKEN = { top: 'top', bottom: 'btm', left: 'lft', right: 'rgt' };
+const ICON_STYLE = { dark: 'drk', semi: 'sem' };
+const ICON_CELLS = new Set(['ts', 'te', 'bs', 'be']);
+/* icon words → ico()/icc() tokens: positional words fold into ONE corner token
+   (top/bottom × left/right; defaults top + end → ts te bs be),
+   style words map to their short forms, corner/short values pass through. */
+const iconTokens = (fn, words) => {
+	const out = [];
+	let block = null, inline = null;
+	for (const w of String(words || '').split(/\s+/).filter(Boolean)) {
+		if (w === 'top' || w === 'bottom') block = w;
+		else if (w === 'left' || w === 'right') inline = w;
+		else if (ICON_CELLS.has(w)) out.push(`${fn}(${w})`);
+		else out.push(`${fn}(${ICON_STYLE[w] || w})`);
+	}
+	if (block || inline) out.unshift(`${fn}(${(block || 'top')[0]}${inline === 'left' ? 's' : 'e'})`);
+	return out;
+};
+
 /* A furniture item's style= string → per-value tokens, e.g. ("chip", "bs red")
    → ["chip(bs)", "chip(red)"]. Single-value tokens only (CSS matches by substring). */
 const styleTokens = (el, style) =>
@@ -316,9 +360,6 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 	const furniture = buildFurniture(fields.furniture, fields, tokens, mediaId);
 	const html = `<ui-media${attrs({
 		id: mediaId,
-		nav: preset.nav || null,
-		arrow: preset.arrow || null,
-		dot: preset.dot || null,
 		...(embed || {}),
 		...frameAttrs
 	})}>${frames}${furniture}</ui-media>`;
@@ -749,18 +790,24 @@ const renderReveal = (fields, type, itemtype, tokens, preset, flipside, cardId =
 	</ui-face>`;
 	const back = flipside ? flipsideBack(flipside) : derivedBack(fields, type);
 	const reveal = preset.reveal || {};
+	/* reveal config → variant tokens (rvl/frm/pop/trg/scr/ico/icc). The preset
+	   keeps friendly editor values ("expand", "top right sm"); the emitted tokens
+	   use the compact spellings — rvl(exp), frm(btm), and the furniture 9-cell
+	   grid for icon placement (ico(te) = top end). */
+	const revealTokens = [
+		`rvl(${RVL_TOKEN[reveal.type] || reveal.type || 'flp'})`,
+		reveal.typeLg ? `lg:rvl(${RVL_TOKEN[reveal.typeLg] || reveal.typeLg})` : null,
+		reveal.from ? `frm(${FRM_TOKEN[reveal.from] || reveal.from})` : null,
+		reveal.to ? 'pop' : null,
+		reveal.trigger ? 'trg(card)' : null,
+		reveal.scroll ? 'scr' : null,
+		...iconTokens('ico', reveal.icon || 'top right sm'),
+		...iconTokens('icc', reveal.iconClose),
+	].filter(Boolean);
 	return `<ui-reveal${attrs({
-		icon: reveal.icon || 'top right sm',
-		'icon-close': reveal.iconClose || null,
-		type: reveal.type || 'flip',
-		'type-lg': reveal.typeLg || null,
-		to: reveal.to || null,
-		from: reveal.from || null,
-		trigger: reveal.trigger || null,
-		scroll: !!reveal.scroll,
-		variant: preset.variant || null,
+		variant: [preset.variant, ...revealTokens].filter(Boolean).join(' '),
 		theme: preset.theme || null,
-		media: mergeMediaTokens(preset.media, tokens.media) || null,
+		media: mergeMediaTokens(presetMediaStr(preset), tokens.media) || null,
 		content: preset.content || null,
 		style: styleAttr(preset.styles),
 		itemscope: true,
@@ -827,7 +874,7 @@ export function renderCard(ucf, presets = {}, cards = {}) {
 		const media = buildMedia(fields, type, tokens, preset, {}, cardId);
 		const inner = (media?.html || '<ui-media></ui-media>')
 			.replace('<ui-media', `<ui-media${attrs({
-				media: mergeMediaTokens(preset.media, tokens.media) || null,
+				media: mergeMediaTokens(presetMediaStr(preset), tokens.media) || null,
 				style: styleAttr(preset.styles),
 				itemscope: true,
 				itemtype
@@ -851,7 +898,7 @@ export function renderCard(ucf, presets = {}, cards = {}) {
 	return `<ui-card${attrs({
 		variant: preset.variant || 'col',
 		theme: preset.theme || null,
-		media: mergeMediaTokens(preset.media, tokens.media) || null,
+		media: mergeMediaTokens(presetMediaStr(preset), tokens.media) || null,
 		content: preset.content || null,
 		style: styleAttr(preset.styles),
 		itemscope: true,

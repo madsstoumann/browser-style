@@ -71,9 +71,12 @@ summary:
 - **`animate="fx()"`** — the container publishes `view-timeline: --animate-tl`; its
   **children** animate against it, staggered by per-`sibling-index()` `animation-range`.
 
-**Modifiers** (space-separated): `clip` (`overflow: clip`) · `deep` (two-level
-grandchild stagger) · `pace="slow|fast|…"` (maps `animation-range`, or duration in
-triggered mode) · `easing="…"`.
+**Modifiers** (space-separated, inside the `animate=`/`animate-self=` value): `clip`
+(`overflow: clip`) · `deep` (two-level grandchild stagger) · **pace tokens**
+`very-slow | slow | fast | very-fast | exit | exit-fast | exit-slow` (map
+`animation-range`, or duration in triggered mode — e.g.
+`animate="fade-in(2) slow exit-fast"`; the old separate `pace=` attribute is
+**removed**) · `easing="…"` (still its own attribute).
 
 **Trigger tokens** (Chrome 145+, behind `@supports (timeline-trigger-name: --t)`) — swap the
 scrubbed timeline for a fixed-duration play that *starts* on scroll but isn't scrubbed:

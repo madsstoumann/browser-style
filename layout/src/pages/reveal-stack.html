@@ -119,7 +119,7 @@
 	     Circle reveal + exit — reverses on scroll-back
 	     ================================================================= -->
 
-	<lay-out bleed="0" xs="stack(reveal)" animate-self="reveal(circle)" pace="exit">
+	<lay-out bleed="0" xs="stack(reveal)" animate-self="reveal(circle) exit">
 		<div class="layer" style="background: #0d9488; color: white;">
 			<div>
 				<h2>Teal Section</h2>
@@ -129,8 +129,8 @@
 		<div class="layer" style="background: #7c3aed; color: white;">
 			<div>
 				<h2>Reveal + Exit</h2>
-				<p>Uses <strong>pace="exit"</strong> — the clip-path reverses when scrolling back.</p>
-				<code>xs="stack(reveal)" animate-self="reveal(circle)" pace="exit"</code>
+				<p>Uses the <strong>exit</strong> token — the clip-path reverses when scrolling back.</p>
+				<code>xs="stack(reveal)" animate-self="reveal(circle) exit"</code>
 			</div>
 		</div>
 	</lay-out>
@@ -139,7 +139,7 @@
 	     Circle reveal + fade-up — container fades up while last child clips
 	     ================================================================= -->
 
-	<lay-out bleed="0" xs="stack(reveal)" animate-self="reveal(circle) fade-up()" pace="slow">
+	<lay-out bleed="0" xs="stack(reveal)" animate-self="reveal(circle) fade-up() slow">
 		<div class="layer" style="background: #0f172a; color: white;">
 			<div>
 				<h2>Combined Effect</h2>
@@ -150,7 +150,7 @@
 			<div>
 				<h2>Reveal + Fade Up</h2>
 				<p>Container fades up while the last child clips away simultaneously.</p>
-				<code>xs="stack(reveal)" animate-self="reveal(circle) fade-up()" pace="slow"</code>
+				<code>xs="stack(reveal)" animate-self="reveal(circle) fade-up() slow"</code>
 			</div>
 		</div>
 	</lay-out>
@@ -234,7 +234,7 @@
 		</div>
 	</lay-out>
 
-	<lay-out bleed="0" xs="stack(reveal)" animate-self="reveal(plus)" pace="exit">
+	<lay-out bleed="0" xs="stack(reveal)" animate-self="reveal(plus) exit">
 		<div class="layer" style="background: linear-gradient(135deg, #f43f5e, #be123c); color: white;">
 			<div>
 				<h2>Rose Layer</h2>
@@ -244,8 +244,8 @@
 		<div class="layer" style="background: #18181b; color: white;">
 			<div>
 				<h2>Plus Reveal + Exit</h2>
-				<p>A cross/plus clip with <strong>pace="exit"</strong> — reverses on scroll-back.</p>
-				<code>xs="stack(reveal)" animate-self="reveal(plus)" pace="exit"</code>
+				<p>A cross/plus clip with the <strong>exit</strong> token — reverses on scroll-back.</p>
+				<code>xs="stack(reveal)" animate-self="reveal(plus) exit"</code>
 			</div>
 		</div>
 	</lay-out>

@@ -50,7 +50,7 @@ Both systems use "md"/"lg", meaning different things (viewport attribute vs cont
 
 ### Browser support note
 
-Generated variant rules use literal values (`--layout-gtc: 1fr 1fr 1fr`), so patterns work everywhere. The *attribute-driven* props (`col-gap=`, `pad-inline=`, `bleed=` …) use typed `attr()` (Chromium-only) — pages must load `/layout/polyfills/attr-fallback.js` for Safari/Firefox, or gaps silently disappear.
+Generated variant rules use literal values (`--layout-gtc: 1fr 1fr 1fr`), so patterns work everywhere. Spacing is **token-only** in v4 (`cg()`/`rg()`/`pi()` … inside the breakpoint attributes) and is likewise generated as literal values — no `attr()` involved. The remaining *attribute-driven* props (`bleed=`, `columns=`, `rows=`, `max-width=`, `self=`, `size=` …) use typed `attr()` (Chromium-only) — pages must load `/layout/polyfills/attr-fallback.js` for Safari/Firefox, or those values silently disappear.
 
 ## Usage pattern (Phase 1, implemented)
 
@@ -126,8 +126,10 @@ The shared, editor-ready format. One JSON document describes a **section**: a la
   "model": "section",
   "id": "front-teasers",
   "layout": {
+    "xs": "cg(2) rg(2) mbe(3)",
     "md": "columns(2)", "lg": "grid(3a)",
-    "colGap": 2, "rowGap": 2, "spaceBottom": 3, "bleed": 0, "width": "xl"
+    "bleed": 0, "width": "xl",
+    "overflow": "preview center", "media": "nav(blw) dot(pll)"
   },
   "items": [
     { "card": { "$ref": "card/article-001" }, "preset": { "$ref": "card-preset/stack" } },
@@ -152,8 +154,10 @@ export function renderSection(section, presets = {}, cards = {}, layoutTools = n
     : null;
   const items = section.items.map(it =>
     renderCard(withPreset(resolveCard(it.card, cards), it.preset), presets, cards)).join('');
-  return `<lay-out${attrs({ ...bp, 'col-gap': l.colGap, 'row-gap': l.rowGap,
-    bleed: l.bleed, width: l.width, overflow: l.overflow, srcsets })}>${items}</lay-out>`;
+  // v4: spacing lives as tokens (cg()/rg()/…) inside the breakpoint strings in `bp`;
+  // carousel controls are media= tokens — no col-gap/row-gap/nav/arrow/dot attributes.
+  return `<lay-out${attrs({ ...bp, bleed: l.bleed, width: l.width,
+    overflow: l.overflow, media: l.media, srcsets })}>${items}</lay-out>`;
 }
 ```
 
@@ -164,7 +168,7 @@ export function renderSection(section, presets = {}, cards = {}, layoutTools = n
 
 ## Phase 5 — visual editor alignment
 
-The layout composer (`layout/src/components/composer/`) edits exactly the `layout` half of a section. Whether cards get their own visual editor is still undecided; the section format above keeps that door open — a card editor would edit `items[n].preset` (+ the preset collections in `ui/card/data/card.presets.json`) without touching the layout half. The layout v2 roadmap (`layout/.tmp/todo.md`, Phases 2/5: `LayoutPreset`, `presetToAttributes`, configurator package, Sanity.io schema) slots in as the persistence/UI layer for the same document.
+The layout composer (`layout/src/components/composer/`) edits exactly the `layout` half of a section. **Note:** the composer predates the v4 attribute changes (token-only spacing, `items()` token, `media=` carousel controls) and still emits pre-v4 attributes — it is stale until updated. Whether cards get their own visual editor is still undecided; the section format above keeps that door open — a card editor would edit `items[n].preset` (+ the preset collections in `ui/card/data/card.presets.json`) without touching the layout half. The layout v2 roadmap (`layout/.tmp/todo.md`, Phases 2/5: `LayoutPreset`, `presetToAttributes`, configurator package, Sanity.io schema) slots in as the persistence/UI layer for the same document.
 
 ## Phase 6 — upstream cleanups
 

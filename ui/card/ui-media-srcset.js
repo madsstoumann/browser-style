@@ -26,6 +26,13 @@ const DEFAULTS = {
 	sizes: 'auto',
 };
 
+/** media= holder: the element itself, else its ui-card/ui-reveal host (inheritance
+ *  stops at the card — media= on a lay-out never reaches a descendant ui-media). */
+function mediaHost(el) {
+	const h = el.closest('[media]');
+	return h && (h === el || h.matches('ui-card, ui-reveal')) ? h : null;
+}
+
 /** Decide whether to inject CDN srcset: attribute -> global -> host default. */
 function cdnEnabled(el) {
 	const attr = el.getAttribute('cdn');
@@ -52,14 +59,14 @@ export default class UiMedia extends HTMLElement {
 		const ratio = this.#resolveRatio();
 		const cfg = this.#config();
 
-		// Loading strategy: the `load(eager|lazy)` media token (on this or an ancestor)
-		// or the legacy `eager` attribute. Default = lazy for every slide (safe without
-		// viewport detection); opt the hero carousel in with `eager` / `load(eager)`.
-		// - load(eager): every slide eager (videos preload=auto)
+		// Loading strategy: the `load(eager|lazy)` media token — on this element or
+		// its ui-card/ui-reveal host (media= inheritance stops at the card). Default
+		// = lazy for every slide (safe without viewport detection); opt the hero
+		// carousel in with `load(eager)`.
+		// - load(eager): every slide eager (videos preload=auto), FIRST slide fetchpriority=high
 		// - load(lazy):  every slide lazy  (videos preload=none)
-		// - eager attr / hero: FIRST slide eager + fetchpriority=high, rest lazy
-		const loadTok = (this.closest('[media]')?.getAttribute('media') || '').match(/load\((eager|lazy)\)/)?.[1];
-		const hero = loadTok === 'eager' || this.hasAttribute('eager');
+		const loadTok = mediaHost(this)?.getAttribute('media')?.match(/load\((eager|lazy)\)/)?.[1];
+		const hero = loadTok === 'eager';
 
 		kids.forEach((el, i) => {
 			const eager = loadTok === 'eager' || (hero && i === 0 && loadTok !== 'lazy');
@@ -87,9 +94,11 @@ export default class UiMedia extends HTMLElement {
 		});
 	}
 
-	/** Parse asr(w/h) from this element or the nearest ancestor that has it. */
+	/** Parse asr(w/h) from this element or its ui-card/ui-reveal host. */
 	#resolveRatio() {
-		const holder = this.matches('[media*="asr("]') ? this : this.closest('[media*="asr("]');
+		const holder = this.matches('[media*="asr("]')
+			? this
+			: this.closest('ui-card[media*="asr("], ui-reveal[media*="asr("]');
 		const m = holder?.getAttribute('media')?.match(/asr\((\d+)\/(\d+)\)/);
 		if (!m) return null;
 		const w = +m[1], h = +m[2];

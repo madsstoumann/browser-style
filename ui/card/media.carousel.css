@@ -7,12 +7,12 @@
  * ani()/crd() effect vocabulary live in /ui/base/stagger.css.
  * Internals in media.carousel.md, tokens in carousel.md */
 @layer bs-component {
-	:where([media*="nav"], ui-media[nav]) {
+	:where(ui-card, ui-reveal, ui-media):where([media*="nav"]) {
 		--ui-media-bg: #0000;
 	}
 
-	:where([media*="nav"]) ui-media,
-	ui-media:where([media*="nav"], [nav]) {
+	:where(ui-card, ui-reveal):where([media*="nav"]) ui-media,
+	ui-media:where([media*="nav"]) {
 		background: var(--ui-media-bg);
 		display: flex;
 		gap: var(--ui-media-gap, 0);
@@ -23,21 +23,21 @@
 		scrollbar-width: thin;
 	}
 		/* slides = every direct child except overlay furniture */
-	:where([media*="nav"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker),
-	ui-media:where([media*="nav"], [nav]) > :not(ui-chip, ui-play, ui-save, ui-sticker) {
+	:where(ui-card, ui-reveal):where([media*="nav"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker),
+	ui-media:where([media*="nav"]) > :not(ui-chip, ui-play, ui-save, ui-sticker) {
 		block-size: 100%;
 		flex: 0 0 100%;
 		inline-size: 100%;
 		scroll-snap-align: start;
 	}
-	:where([media*="nav"]) ui-media > :is(iframe, img, picture, video),
-	ui-media:where([media*="nav"], [nav]) > :is(iframe, img, picture, video) {
+	:where(ui-card, ui-reveal):where([media*="nav"]) ui-media > :is(iframe, img, picture, video),
+	ui-media:where([media*="nav"]) > :is(iframe, img, picture, video) {
 		inset: auto;
 		position: static;
 	}
 	/* nav(abv): round the media itself so it matches the rds() frame under the band above */
-	:where([media*="nav(abv)"]) ui-media > :is(iframe, img, picture, video),
-	ui-media:where([media*="nav(abv)"], [nav~="abv"]) > :is(iframe, img, picture, video) {
+	:where(ui-card, ui-reveal):where([media*="nav(abv)"]) ui-media > :is(iframe, img, picture, video),
+	ui-media:where([media*="nav(abv)"]) > :is(iframe, img, picture, video) {
 		border-radius: var(--ui-media-radius, 0);
 	}
 
@@ -53,19 +53,19 @@
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
-		:where([media*="nav"]) ui-media,
-		ui-media:where([media*="nav"], [nav]) { scroll-behavior: smooth; }
+		:where(ui-card, ui-reveal):where([media*="nav"]) ui-media,
+		ui-media:where([media*="nav"]) { scroll-behavior: smooth; }
 	}
 
-	:where([media*="axis(y)"]) ui-media,
-	ui-media:where([media*="axis(y)"], [nav~="y"]) {
+	:where(ui-card, ui-reveal):where([media*="axis(y)"]) ui-media,
+	ui-media:where([media*="axis(y)"]) {
 		flex-direction: column;
 		overflow: hidden auto;
 		scroll-snap-type: y mandatory;
 	}
 
-	:where([media*="auto"], [media*="loop"]) ui-media:not(ui-media ui-media) > ui-play,
-	ui-media:where([media*="auto"], [media*="loop"], [nav~="auto"], [nav~="loop"]) > ui-play {
+	:where(ui-card, ui-reveal):where([media*="auto"], [media*="loop"]) ui-media:not(ui-media ui-media) > ui-play,
+	ui-media:where([media*="auto"], [media*="loop"]) > ui-play {
 		align-content: var(--_play-block, end);
 		display: grid;
 		inline-size: var(--_play-size, 0);
@@ -78,12 +78,12 @@
 		translate: none;
 		z-index: 3;
 	}
-	:where([media*="play(ts)"]) ui-media, ui-media:where([media*="play(ts)"]) { --_play-block: start;  --_play-inline: var(--ui-media-overlay-gap, 0.75rem) auto; --_play-justify: start; }
-	:where([media*="play(te)"]) ui-media, ui-media:where([media*="play(te)"]) { --_play-block: start;  --_play-inline: auto var(--ui-media-overlay-gap, 0.75rem); --_play-justify: end; --_play-size: max-content; }
-	:where([media*="play(cs)"]) ui-media, ui-media:where([media*="play(cs)"]) { --_play-block: center; --_play-inline: var(--ui-media-overlay-gap, 0.75rem) auto; --_play-justify: start; }
-	:where([media*="play(ce)"]) ui-media, ui-media:where([media*="play(ce)"]) { --_play-block: center; --_play-inline: auto var(--ui-media-overlay-gap, 0.75rem); --_play-justify: end; --_play-size: max-content; }
-	:where([media*="play(bs)"]) ui-media, ui-media:where([media*="play(bs)"]) { --_play-block: end;    --_play-inline: var(--ui-media-overlay-gap, 0.75rem) auto; --_play-justify: start; }
-	:where([media*="play(be)"]) ui-media, ui-media:where([media*="play(be)"]) { --_play-block: end;    --_play-inline: auto var(--ui-media-overlay-gap, 0.75rem); --_play-justify: end; --_play-size: max-content; }
+	:where(ui-card, ui-reveal):where([media*="play(ts)"]) ui-media, ui-media:where([media*="play(ts)"]) { --_play-block: start;  --_play-inline: var(--ui-media-overlay-gap, 0.75rem) auto; --_play-justify: start; }
+	:where(ui-card, ui-reveal):where([media*="play(te)"]) ui-media, ui-media:where([media*="play(te)"]) { --_play-block: start;  --_play-inline: auto var(--ui-media-overlay-gap, 0.75rem); --_play-justify: end; --_play-size: max-content; }
+	:where(ui-card, ui-reveal):where([media*="play(cs)"]) ui-media, ui-media:where([media*="play(cs)"]) { --_play-block: center; --_play-inline: var(--ui-media-overlay-gap, 0.75rem) auto; --_play-justify: start; }
+	:where(ui-card, ui-reveal):where([media*="play(ce)"]) ui-media, ui-media:where([media*="play(ce)"]) { --_play-block: center; --_play-inline: auto var(--ui-media-overlay-gap, 0.75rem); --_play-justify: end; --_play-size: max-content; }
+	:where(ui-card, ui-reveal):where([media*="play(bs)"]) ui-media, ui-media:where([media*="play(bs)"]) { --_play-block: end;    --_play-inline: var(--ui-media-overlay-gap, 0.75rem) auto; --_play-justify: start; }
+	:where(ui-card, ui-reveal):where([media*="play(be)"]) ui-media, ui-media:where([media*="play(be)"]) { --_play-block: end;    --_play-inline: auto var(--ui-media-overlay-gap, 0.75rem); --_play-justify: end; --_play-size: max-content; }
 
 	/* Carousel stagger — the scroll-state trigger, both channels and the ani()/crd()
 	   vocabulary are host-agnostic and live in ui/base/stagger.css (works for
@@ -91,14 +91,14 @@
 	   carousel-stagger-specific remains here. */
 
 	/* reserved control band — nav(blw/abv) = both controls, dot(blw/abv) = dots only, arw(blw/abv) = arrows only */
-	:where([media*="nav(blw)"], [media*="dot(blw)"], [media*="arw(blw)"]) ui-media,
-	ui-media:where([media*="nav(blw)"], [media*="dot(blw)"], [media*="arw(blw)"], [nav~="blw"], [dot~="blw"], [arrow~="blw"]) {
+	:where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="dot(blw)"], [media*="arw(blw)"]) ui-media,
+	ui-media:where([media*="nav(blw)"], [media*="dot(blw)"], [media*="arw(blw)"]) {
 		background: var(--ui-carousel-controls-bg, var(--ui-media-bg));
 		padding-block-end: calc(var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
 	}
 
-	:where([media*="nav(abv)"], [media*="dot(abv)"], [media*="arw(abv)"]) ui-media,
-	ui-media:where([media*="nav(abv)"], [media*="dot(abv)"], [media*="arw(abv)"], [nav~="abv"], [dot~="abv"], [arrow~="abv"]) {
+	:where(ui-card, ui-reveal):where([media*="nav(abv)"], [media*="dot(abv)"], [media*="arw(abv)"]) ui-media,
+	ui-media:where([media*="nav(abv)"], [media*="dot(abv)"], [media*="arw(abv)"]) {
 		background: var(--ui-carousel-controls-bg, var(--ui-media-bg));
 		padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
 		scroll-padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
@@ -106,7 +106,7 @@
 
 	@supports (scroll-marker-group: after) {
 		/* controls present (dots OR arrows) → hide native scrollbar (overrides the `thin` above) */
-		:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) ui-media,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"], [nav]:not([nav~="non"])) { scrollbar-width: none; }
+		:where(ui-card, ui-reveal):where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) ui-media,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) { scrollbar-width: none; }
 	}
 }

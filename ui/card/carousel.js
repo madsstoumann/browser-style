@@ -2,10 +2,9 @@
  * per-slide <ui-play> video controls. The base carousel (scroll-snap, dots, arrows) is
  * pure CSS; with JS off everything still scrolls and snaps. */
 
-import { reduce, onIdle, mediaStr, navWords, slidesOf, isDecoration, reflectPlay, initVideoPlay, videoPlayNodes } from './shared.js';
+import { reduce, onIdle, mediaStr, slidesOf, isDecoration, reflectPlay, initVideoPlay, videoPlayNodes } from './shared.js';
 
-const axisYOf = (scroller) =>
-	mediaStr(scroller).includes('axis(y)') || navWords(scroller).includes('y');
+const axisYOf = (scroller) => mediaStr(scroller).includes('axis(y)');
 
 // Shared scroll geometry, snap-alignment agnostic: each slide's target scroll comes from
 // its own box + computed scroll-snap-align, so full-width start-snapped frames and
@@ -76,23 +75,20 @@ export function initLoop(scroller) {
 	scrollToPos(N, 'instant');
 }
 
-// Autoplay: advance one position every N ms. Duration from media="auto(4s|800ms|3)",
-// a bare auto/auto="…" attribute (lay-out overflow), or nav="auto" (5s default).
+// Autoplay: advance one position every N ms. Duration from the auto media token —
+// bare `auto` (5s default) or `auto(4s|800ms|3)` — on ui-media, its card host,
+// or a <lay-out overflow media="auto(…)"> scroller.
 // A <ui-play> control, when present, is the sole pause mechanism.
 export function initAuto(scroller) {
 	const slides = slidesOf(scroller);
 	if (slides.length < 2) return;
 
-	const m = mediaStr(scroller), nav = navWords(scroller);
+	const m = mediaStr(scroller);
 	const { pos, scrollToPos } = geom(scroller, axisYOf(scroller));
 
 	const toMs = (num, unit) => unit === 'ms' ? +num : +num * 1000;
 	const am = m.match(/auto(?:\((\d+(?:\.\d+)?)(m?s)?\))?/);
-	const autoAttr = scroller.getAttribute('auto');
-	let autoMs = 0;
-	if (am) autoMs = am[1] ? toMs(am[1], am[2]) : 5000;
-	else if (autoAttr !== null) { const a = autoAttr.match(/^\s*(\d+(?:\.\d+)?)\s*(m?s)?\s*$/); autoMs = a ? toMs(a[1], a[2]) : 5000; }
-	else if (nav.includes('auto')) autoMs = 5000;
+	const autoMs = am ? (am[1] ? toMs(am[1], am[2]) : 5000) : 0;
 	if (!autoMs || reduce.matches) return;
 
 	let timer = 0, paused = false;
@@ -131,9 +127,9 @@ export function initCarousels(nodes) {
 	for (const el of nodes) {
 		if (el.dataset.uiCarousel) continue;
 		el.dataset.uiCarousel = '1';
-		const m = mediaStr(el), nav = navWords(el);
-		if (m.includes('loop') || nav.includes('loop') || el.hasAttribute('loop')) initLoop(el);
-		if (m.includes('auto') || nav.includes('auto') || el.hasAttribute('auto')) initAuto(el);
+		const m = mediaStr(el);
+		if (m.includes('loop')) initLoop(el);
+		if (m.includes('auto')) initAuto(el);
 	}
 }
 
@@ -157,17 +153,17 @@ export function initCarouselVideoPause(scrollers) {
 	}
 }
 
-// JS-feature carousels via the inheritable media= token OR the self-only nav= attribute
+// JS-feature carousels via the media= token — on ui-media itself, inherited from
+// its ui-card/ui-reveal host, or on a lay-out's own overflow scroller
 export const CAROUSEL_SEL = [
-	'ui-media[media*="auto"]', '[media*="auto"] ui-media',
-	'ui-media[media*="loop"]', '[media*="loop"] ui-media',
-	'ui-media[nav~="auto"]', 'ui-media[nav~="loop"]',
-	'lay-out[overflow][loop]', 'lay-out[overflow][auto]',
+	'ui-media[media*="auto"]', ':is(ui-card[media*="auto"], ui-reveal[media*="auto"]) ui-media',
+	'ui-media[media*="loop"]', ':is(ui-card[media*="loop"], ui-reveal[media*="loop"]) ui-media',
+	'lay-out[overflow][media*="loop"]', 'lay-out[overflow][media*="auto"]',
 ].join(', ');
 // every scroll carousel — video-pause filters to those containing a <video>
 const NAV_SEL = [
-	'ui-media[media*="nav"]', '[media*="nav"] ui-media',
-	'ui-media[nav]', CAROUSEL_SEL,
+	'ui-media[media*="nav"]', ':is(ui-card[media*="nav"], ui-reveal[media*="nav"]) ui-media',
+	CAROUSEL_SEL,
 ].join(', ');
 
 export function scanCarousels() {
