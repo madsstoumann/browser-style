@@ -251,6 +251,27 @@ const carouselTokens = (preset) => {
 /* The preset's effective media= string: declared media tokens + carousel folds. */
 const presetMediaStr = (preset) => [preset.media, ...carouselTokens(preset)].filter(Boolean).join(' ');
 
+/* reveal preset values → compact variant-token spellings */
+const RVL_TOKEN = { expand: 'exp', flip: 'flp', slide: 'sld', scale: 'scl' };
+const FRM_TOKEN = { top: 'top', bottom: 'btm', left: 'lft', right: 'rgt' };
+const ICON_STYLE = { dark: 'drk', semi: 'sem' };
+const ICON_CELLS = new Set(['ts', 'tc', 'te', 'cs', 'cc', 'ce', 'bs', 'bc', 'be']);
+/* icon words → ico()/icc() tokens: positional words fold into ONE 9-cell token
+   (top/bottom = block row, left/right = inline column; defaults top + end),
+   style words map to their short forms, cell/short values pass through. */
+const iconTokens = (fn, words) => {
+	const out = [];
+	let block = null, inline = null;
+	for (const w of String(words || '').split(/\s+/).filter(Boolean)) {
+		if (w === 'top' || w === 'bottom') block = w;
+		else if (w === 'left' || w === 'right') inline = w;
+		else if (ICON_CELLS.has(w)) out.push(`${fn}(${w})`);
+		else out.push(`${fn}(${ICON_STYLE[w] || w})`);
+	}
+	if (block || inline) out.unshift(`${fn}(${(block || 'top')[0]}${inline === 'left' ? 's' : 'e'})`);
+	return out;
+};
+
 /* A furniture item's style= string → per-value tokens, e.g. ("chip", "bs red")
    → ["chip(bs)", "chip(red)"]. Single-value tokens only (CSS matches by substring). */
 const styleTokens = (el, style) =>
@@ -769,16 +790,19 @@ const renderReveal = (fields, type, itemtype, tokens, preset, flipside, cardId =
 	</ui-face>`;
 	const back = flipside ? flipsideBack(flipside) : derivedBack(fields, type);
 	const reveal = preset.reveal || {};
-	/* reveal config → variant tokens (rvl/frm/pop/trg/scr/ico/icc) */
+	/* reveal config → variant tokens (rvl/frm/pop/trg/scr/ico/icc). The preset
+	   keeps friendly editor values ("expand", "top right sm"); the emitted tokens
+	   use the compact spellings — rvl(exp), frm(btm), and the furniture 9-cell
+	   grid for icon placement (ico(te) = top end). */
 	const revealTokens = [
-		`rvl(${reveal.type || 'flip'})`,
-		reveal.typeLg ? `lg:rvl(${reveal.typeLg})` : null,
-		reveal.from ? `frm(${reveal.from})` : null,
+		`rvl(${RVL_TOKEN[reveal.type] || reveal.type || 'flp'})`,
+		reveal.typeLg ? `lg:rvl(${RVL_TOKEN[reveal.typeLg] || reveal.typeLg})` : null,
+		reveal.from ? `frm(${FRM_TOKEN[reveal.from] || reveal.from})` : null,
 		reveal.to ? 'pop' : null,
 		reveal.trigger ? 'trg(card)' : null,
 		reveal.scroll ? 'scr' : null,
-		...String(reveal.icon || 'top right sm').split(/\s+/).filter(Boolean).map((w) => `ico(${w})`),
-		...String(reveal.iconClose || '').split(/\s+/).filter(Boolean).map((w) => `icc(${w})`),
+		...iconTokens('ico', reveal.icon || 'top right sm'),
+		...iconTokens('icc', reveal.iconClose),
 	].filter(Boolean);
 	return `<ui-reveal${attrs({
 		variant: [preset.variant, ...revealTokens].filter(Boolean).join(' '),

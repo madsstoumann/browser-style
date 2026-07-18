@@ -125,7 +125,7 @@
     "reveal": {
       "type": "object",
       "title": "Reveal",
-      "description": "Reveal configuration — only used when element is ui-reveal. The renderer folds these into variant= tokens: type → rvl(), typeLg → lg:rvl(), from → frm(), to → pop, trigger card → trg(card), scroll → scr, icon → ico() per word, iconClose → icc() per word. iconType stays markup (the toggle <ui-icon type>).",
+      "description": "Reveal configuration — only used when element is ui-reveal. The renderer folds these into compact variant= tokens: type → rvl(exp|flp|sld|scl), typeLg → lg:rvl(…), from → frm(top|btm|lft|rgt), to → pop, trigger card → trg(card), scroll → scr; icon/iconClose positional words fold into one furniture 9-cell token (\"top right\" → ico(te)) plus style tokens (dark → drk, semi → sem, sm, lg). iconType stays markup (the toggle <ui-icon type>).",
       "localized": false,
       "properties": {
         "type": {

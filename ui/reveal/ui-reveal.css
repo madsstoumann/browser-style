@@ -2,9 +2,10 @@
  * ui-reveal
  * CSS-only reveal card built on <details>/<summary>.
  * Reveal behaviour is configured via variant= tokens (shared attribute with ui-card):
- *   rvl(expand|flip|slide|scale) · lg:rvl(scale) · frm(top|bottom|left|right) ·
+ *   rvl(exp|flp|sld|scl) · lg:rvl(scl) · frm(top|btm|lft|rgt) ·
  *   pop (popup mode) · trg(card) · scr (scrollable panel) ·
- *   ico(top|bottom|left|right|dark|semi|sm|lg) · icc(…) (open-state icon)
+ *   ico(<cell>|drk|sem|sm|lg) · icc(…) (open-state icon) — <cell> is the same
+ *   9-cell grid as the media furniture: ts tc te cs cc ce bs bc be
  * @version 2.0.0
  * @author Mads Stoumann
  */
@@ -89,7 +90,7 @@
 			box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-bg), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ui-reveal-ring-active, var(--ui-reveal-content-c, currentColor));
 		}
 
-		&:is([variant~="rvl(flip)"], [variant~="rvl(scale)"], [variant~="rvl(slide)"], [variant~="lg:rvl(scale)"]) > details::details-content {
+		&:is([variant~="rvl(flp)"], [variant~="rvl(scl)"], [variant~="rvl(sld)"], [variant~="lg:rvl(scl)"]) > details::details-content {
 			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
 			color: var(--ui-reveal-content-c, inherit);
 		}
@@ -124,35 +125,41 @@
 		/* === variants (vertical-r / horizontal / media-only / overlay(pos))
 		   and ar() / op() are inherited from ui-card.css === */
 
-		/* === icon === */
-		&:is([variant~="ico(top)"],[variant~="ico(bottom)"],[variant~="ico(left)"],[variant~="ico(right)"]) > details > summary > ui-icon {
+		/* === ico() — toggle-icon cell placement, same 9-cell grid as the media
+		   furniture (chip(ts) … save(be)): block row t/c/b × inline column s/c/e.
+		   Logical axes, so it flips automatically in rtl. === */
+		&:is([variant~="ico(ts)"],[variant~="ico(tc)"],[variant~="ico(te)"],[variant~="ico(cs)"],[variant~="ico(cc)"],[variant~="ico(ce)"],[variant~="ico(bs)"],[variant~="ico(bc)"],[variant~="ico(be)"]) > details > summary > ui-icon {
 			margin: var(--ui-reveal-icon-m);
 			position: absolute;
 			z-index: 2;
 		}
-		&[variant~="ico(top)"]    > details > summary > ui-icon { inset-block: 0 auto; }
-		&[variant~="ico(bottom)"] > details > summary > ui-icon { inset-block: auto 0; }
-		&[variant~="ico(left)"]   > details > summary > ui-icon { inset-inline: 0 auto; }
-		&[variant~="ico(right)"]  > details > summary > ui-icon { inset-inline: auto 0; }
+		&:is([variant~="ico(ts)"],[variant~="ico(tc)"],[variant~="ico(te)"]) > details > summary > ui-icon { inset-block: 0 auto; }
+		&:is([variant~="ico(bs)"],[variant~="ico(bc)"],[variant~="ico(be)"]) > details > summary > ui-icon { inset-block: auto 0; }
+		&:is([variant~="ico(cs)"],[variant~="ico(cc)"],[variant~="ico(ce)"]) > details > summary > ui-icon { inset-block: 0; margin-block: auto; }
+		&:is([variant~="ico(ts)"],[variant~="ico(cs)"],[variant~="ico(bs)"]) > details > summary > ui-icon { inset-inline: 0 auto; }
+		&:is([variant~="ico(te)"],[variant~="ico(ce)"],[variant~="ico(be)"]) > details > summary > ui-icon { inset-inline: auto 0; }
+		&:is([variant~="ico(tc)"],[variant~="ico(cc)"],[variant~="ico(bc)"]) > details > summary > ui-icon { inset-inline: 0; margin-inline: auto; }
 
-		/* === icc() — open-state icon === */
-		&:is([variant~="icc(top)"],[variant~="icc(bottom)"],[variant~="icc(left)"],[variant~="icc(right)"]) > details[open] > summary > ui-icon {
+		/* === icc() — open-state icon cell (same grid) === */
+		&:is([variant~="icc(ts)"],[variant~="icc(tc)"],[variant~="icc(te)"],[variant~="icc(cs)"],[variant~="icc(cc)"],[variant~="icc(ce)"],[variant~="icc(bs)"],[variant~="icc(bc)"],[variant~="icc(be)"]) > details[open] > summary > ui-icon {
 			position: absolute;
 			z-index: 2;
 		}
-		&[variant~="icc(top)"]    > details[open] > summary > ui-icon { inset-block: 0 auto; }
-		&[variant~="icc(bottom)"] > details[open] > summary > ui-icon { inset-block: auto 0; }
-		&[variant~="icc(left)"]   > details[open] > summary > ui-icon { inset-inline: 0 auto; }
-		&[variant~="icc(right)"]  > details[open] > summary > ui-icon { inset-inline: auto 0; }
+		&:is([variant~="icc(ts)"],[variant~="icc(tc)"],[variant~="icc(te)"]) > details[open] > summary > ui-icon { inset-block: 0 auto; }
+		&:is([variant~="icc(bs)"],[variant~="icc(bc)"],[variant~="icc(be)"]) > details[open] > summary > ui-icon { inset-block: auto 0; }
+		&:is([variant~="icc(cs)"],[variant~="icc(cc)"],[variant~="icc(ce)"]) > details[open] > summary > ui-icon { inset-block: 0; margin-block: auto; }
+		&:is([variant~="icc(ts)"],[variant~="icc(cs)"],[variant~="icc(bs)"]) > details[open] > summary > ui-icon { inset-inline: 0 auto; }
+		&:is([variant~="icc(te)"],[variant~="icc(ce)"],[variant~="icc(be)"]) > details[open] > summary > ui-icon { inset-inline: auto 0; }
+		&:is([variant~="icc(tc)"],[variant~="icc(cc)"],[variant~="icc(bc)"]) > details[open] > summary > ui-icon { inset-inline: 0; margin-inline: auto; }
 
-		/* === icon style: dark (default is light) + semi (opacity) — both === */
-		&[variant~="ico(dark)"] > details > summary > ui-icon,
-		&[variant~="icc(dark)"] > details[open] > summary > ui-icon {
+		/* === icon style: drk (default is light) + sem (opacity) — both === */
+		&[variant~="ico(drk)"] > details > summary > ui-icon,
+		&[variant~="icc(drk)"] > details[open] > summary > ui-icon {
 			--ui-reveal-icon-bg: #000; /* TODO! */
 			color: #fff;
 		}
-		&[variant~="ico(semi)"] > details > summary > ui-icon,
-		&[variant~="icc(semi)"] > details[open] > summary > ui-icon {
+		&[variant~="ico(sem)"] > details > summary > ui-icon,
+		&[variant~="icc(sem)"] > details[open] > summary > ui-icon {
 			opacity: var(--ui-reveal-icon-opacity, 0.6);
 		}
 
@@ -176,8 +183,8 @@
 		}
 	}
 
-	/* === rvl(expand) === */
-	:where(ui-reveal[variant~="rvl(expand)"]) {
+	/* === rvl(exp) === */
+	:where(ui-reveal[variant~="rvl(exp)"]) {
 		> details::details-content {
 			block-size: 0;
 			content-visibility: hidden;
@@ -243,7 +250,7 @@
 		}
 	}
 
-	/* === rvl(expand) pop popup entry animations === */
+	/* === rvl(exp) pop popup entry animations === */
 	@keyframes ui-reveal-backdrop {
 		from { opacity: 0; }
 		to   { opacity: 1; }
@@ -253,8 +260,8 @@
 		to   { opacity: 1; scale: 1; }
 	}
 
-	/* === rvl(flip) === */
-	:where(ui-reveal[variant~="rvl(flip)"]) {
+	/* === rvl(flp) === */
+	:where(ui-reveal[variant~="rvl(flp)"]) {
 		--_persp: perspective(var(--ui-reveal-perspective, 1000px));
 		/* flip direction via frm(); closed/open pairs share one rotation axis so
 		   transforms interpolate as rotations (no 180° matrix degeneracy). */
@@ -263,7 +270,7 @@
 		--_panel-closed: rotateY(-180deg);
 		--_panel-open: rotateY(0deg);
 
-		&[variant~="frm(left)"] {
+		&[variant~="frm(lft)"] {
 			--_face-open: rotateY(-180deg);
 			--_panel-closed: rotateY(180deg);
 		}
@@ -273,7 +280,7 @@
 			--_panel-closed: rotateX(180deg);
 			--_panel-open: rotateX(0deg);
 		}
-		&[variant~="frm(bottom)"] {
+		&[variant~="frm(btm)"] {
 			--_face-closed: rotateX(0deg);
 			--_face-open: rotateX(180deg);
 			--_panel-closed: rotateX(-180deg);
@@ -302,18 +309,18 @@
 	/* flip icon dip — icon fades out edge-on, back in once the new face lands;
 	   open/close use twin keyframes so toggling restarts it. See readme.md. */
 	@media (prefers-reduced-motion: no-preference) {
-		:where(ui-reveal[variant~="rvl(flip)"]) > details > summary > ui-icon {
+		:where(ui-reveal[variant~="rvl(flp)"]) > details > summary > ui-icon {
 			animation: ui-reveal-icon-dip var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
 		}
-		:where(ui-reveal[variant~="rvl(flip)"]) > details[open] > summary > ui-icon { animation-name: ui-reveal-icon-dip-open; }
+		:where(ui-reveal[variant~="rvl(flp)"]) > details[open] > summary > ui-icon { animation-name: ui-reveal-icon-dip-open; }
 	}
 
 	/* asymmetric: quick fade-out (to 40%), slower fade back in (remaining 60%) */
 	@keyframes ui-reveal-icon-dip      { 0% { opacity: 1; } 40% { opacity: 0; } 100% { opacity: 1; } }
 	@keyframes ui-reveal-icon-dip-open { 0% { opacity: 1; } 40% { opacity: 0; } 100% { opacity: 1; } }
 
-	/* === rvl(slide) === */
-	:where(ui-reveal[variant~="rvl(slide)"]) {
+	/* === rvl(sld) === */
+	:where(ui-reveal[variant~="rvl(sld)"]) {
 		> details::details-content {
 			grid-area: 1 / -1;
 			translate: 100% 0;
@@ -322,9 +329,9 @@
 		}
 
 		&[variant~="frm(top)"]    > details::details-content { translate: 0 -100%; }
-		&[variant~="frm(bottom)"] > details::details-content { translate: 0 100%; }
-		&[variant~="frm(left)"]   > details::details-content { translate: -100% 0; }
-		&[variant~="frm(right)"]  > details::details-content { translate: 100% 0; }
+		&[variant~="frm(btm)"] > details::details-content { translate: 0 100%; }
+		&[variant~="frm(lft)"]   > details::details-content { translate: -100% 0; }
+		&[variant~="frm(rgt)"]  > details::details-content { translate: 100% 0; }
 		> details[open]::details-content { translate: 0 0; }
 
 		/* panel + its links take clicks; icon stays the toggle */
@@ -332,8 +339,8 @@
 		> details[open] > summary > ui-icon { pointer-events: auto; }
 	}
 
-	/* === rvl(scale) === */
-	:where(ui-reveal[variant~="rvl(scale)"]) {
+	/* === rvl(scl) === */
+	:where(ui-reveal[variant~="rvl(scl)"]) {
 		> details { position: relative; }
 
 		> details::details-content {
@@ -361,10 +368,10 @@
 		}
 
 		/* morph origin (anchored corner) follows icon position */
-		&[variant~="ico(top)"]    { --_scale-bs: 0; --_scale-be: auto; }
-		&[variant~="ico(bottom)"] { --_scale-bs: auto; --_scale-be: 0; }
-		&[variant~="ico(left)"]   { --_scale-is: 0; --_scale-ie: auto; }
-		&[variant~="ico(right)"]  { --_scale-is: auto; --_scale-ie: 0; }
+		&:is([variant~="ico(ts)"],[variant~="ico(tc)"],[variant~="ico(te)"]) { --_scale-bs: 0; --_scale-be: auto; }
+		&:is([variant~="ico(bs)"],[variant~="ico(bc)"],[variant~="ico(be)"]) { --_scale-bs: auto; --_scale-be: 0; }
+		&:is([variant~="ico(ts)"],[variant~="ico(cs)"],[variant~="ico(bs)"]) { --_scale-is: 0; --_scale-ie: auto; }
+		&:is([variant~="ico(te)"],[variant~="ico(ce)"],[variant~="ico(be)"]) { --_scale-is: auto; --_scale-ie: 0; }
 
 		/* panel takes clicks; icon stays the toggle */
 		&:not([variant~="trg(card)"]) > details[open] > summary { pointer-events: none; }
@@ -372,18 +379,18 @@
 	}
 
 	/* === lg:rvl() — swap the reveal animation at a width (variant lg: tier).
-	   e.g. variant="rvl(expand) lg:rvl(scale)": grows below when narrow, morphs/scales
+	   e.g. variant="rvl(exp) lg:rvl(scl)": grows below when narrow, morphs/scales
 	   when wide. The @container re-applies the scale rules to the DESCENDANTS so
 	   they override the base type; the morph-origin vars (set on the host) live
 	   OUTSIDE it — a @container can't style its own container element. === */
-	:where(ui-reveal[variant~="lg:rvl(scale)"]) {
-		&[variant~="ico(top)"]    { --_scale-bs: 0; --_scale-be: auto; }
-		&[variant~="ico(bottom)"] { --_scale-bs: auto; --_scale-be: 0; }
-		&[variant~="ico(left)"]   { --_scale-is: 0; --_scale-ie: auto; }
-		&[variant~="ico(right)"]  { --_scale-is: auto; --_scale-ie: 0; }
+	:where(ui-reveal[variant~="lg:rvl(scl)"]) {
+		&:is([variant~="ico(ts)"],[variant~="ico(tc)"],[variant~="ico(te)"]) { --_scale-bs: 0; --_scale-be: auto; }
+		&:is([variant~="ico(bs)"],[variant~="ico(bc)"],[variant~="ico(be)"]) { --_scale-bs: auto; --_scale-be: 0; }
+		&:is([variant~="ico(ts)"],[variant~="ico(cs)"],[variant~="ico(bs)"]) { --_scale-is: 0; --_scale-ie: auto; }
+		&:is([variant~="ico(te)"],[variant~="ico(ce)"],[variant~="ico(be)"]) { --_scale-is: auto; --_scale-ie: 0; }
 	}
 	@container (inline-size >= 44rem) {
-		:where(ui-reveal[variant~="lg:rvl(scale)"]) {
+		:where(ui-reveal[variant~="lg:rvl(scl)"]) {
 			> details { position: relative; }
 			> details::details-content {
 				block-size: var(--ui-reveal-icon-sz);
@@ -436,7 +443,7 @@
 	   Opt-in. Panel goes absolute (out of grid track sizing) so a long
 	   flipside can't grow the card. Default height = closed face (inset:0);
 	   override with --ui-reveal-content-bs. flip only for now. */
-	:where(ui-reveal[variant~="scr"][variant~="rvl(flip)"]) {
+	:where(ui-reveal[variant~="scr"][variant~="rvl(flp)"]) {
 		> details { position: relative; }
 		> details::details-content {
 			block-size: var(--ui-reveal-content-bs, auto);
@@ -457,7 +464,7 @@
 	   ui/base/scroll.css (also used by content="scr"). */
 	@supports (animation-timeline: scroll()) {
 		@media (prefers-reduced-motion: no-preference) {
-			:where(ui-reveal[variant~="scr"][variant~="rvl(flip)"]) > details[open]::details-content {
+			:where(ui-reveal[variant~="scr"][variant~="rvl(flp)"]) > details[open]::details-content {
 				animation: ui-scroll-fade linear;
 				animation-timeline: --ui-reveal-scroll;
 				mask: var(--ui-scroll-fade-mask);
@@ -470,13 +477,13 @@
 	   a top close-icon. Logical padding tracks the icon's logical side, so it
 	   flips automatically in rtl. Only the first child is indented; the rest of
 	   the panel stays full-width. */
-	:where(ui-reveal[variant~="rvl(flip)"]) {
+	:where(ui-reveal[variant~="rvl(flp)"]) {
 		--ui-reveal-icon-clear: calc(var(--ui-reveal-icon-sz) + var(--ui-reveal-icon-m));
 		/* open-state icon side = icc() if set, else ico() */
-		&:is([variant~="ico(top)"][variant~="ico(right)"], [variant~="icc(top)"][variant~="icc(right)"]) > details[open]::details-content > * > :first-child {
+		&:is([variant~="ico(te)"], [variant~="icc(te)"]) > details[open]::details-content > * > :first-child {
 			padding-inline-end: var(--ui-reveal-icon-clear);
 		}
-		&:is([variant~="ico(top)"][variant~="ico(left)"], [variant~="icc(top)"][variant~="icc(left)"]) > details[open]::details-content > * > :first-child {
+		&:is([variant~="ico(ts)"], [variant~="icc(ts)"]) > details[open]::details-content > * > :first-child {
 			padding-inline-start: var(--ui-reveal-icon-clear);
 		}
 	}
@@ -488,6 +495,6 @@
    is open, drop the `layout` keyword (keep inline-size, so track sizing is
    untouched) so the popup's inset resolves against the viewport again.
    Unlayered on purpose: beats layout.base regardless of stylesheet order. */
-lay-out:has(ui-reveal[variant~="rvl(expand)"][variant~="pop"] > details[open]) {
+lay-out:has(ui-reveal[variant~="rvl(exp)"][variant~="pop"] > details[open]) {
 	contain: inline-size;
 }
