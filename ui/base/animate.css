@@ -1,8 +1,10 @@
 @layer bs-core {
 
 	/* ==========================================================================
-	   Animation ENGINE — the [animate] / [animate-self] / [pace] / [easing]
+	   Animation ENGINE — the [animate] / [animate-self] / [easing]
 	   attribute API: timelines, ranges, stagger and scroll triggers.
+	   Pace is part of the animate/animate-self token vocabulary
+	   (animate="fade-in(2) slow exit-fast") — no separate attribute.
 	   Generic (attribute-driven, no element coupling) so it works on ANY component.
 
 	   The @keyframes, the keyframe params (--animate-{dg,tx,ty,txv,tyv,zi,zo,mult})
@@ -200,22 +202,22 @@
 	   Pace: entry speed
 	   ========================================================================== */
 
-	[pace~="very-slow"]  { --_animrs: entry 0%;  --_animre: contain 50%; }
-	[pace~="slow"]       { --_animrs: entry 0%;  --_animre: entry 100%; }
+	:is([animate~="very-slow"], [animate-self~="very-slow"])  { --_animrs: entry 0%;  --_animre: contain 50%; }
+	:is([animate~="slow"], [animate-self~="slow"])       { --_animrs: entry 0%;  --_animre: entry 100%; }
 	/* (normal/default):   entry 0% → entry 75% — no attribute needed */
-	[pace~="fast"]       { --_animrs: entry 25%; --_animre: entry 60%; }
-	[pace~="very-fast"]  { --_animrs: entry 35%; --_animre: entry 55%; }
+	:is([animate~="fast"], [animate-self~="fast"])       { --_animrs: entry 25%; --_animre: entry 60%; }
+	:is([animate~="very-fast"], [animate-self~="very-fast"])  { --_animrs: entry 35%; --_animre: entry 55%; }
 
 	/* ==========================================================================
 	   Pace: exit (activates second animation slot + sets range)
 	   ========================================================================== */
 
-	[pace~="exit"]      { --_anim-exit: var(--_animn); --_exit-rs: exit 0%;      --_exit-re: exit 100%; }
-	[pace~="exit-fast"] { --_anim-exit: var(--_animn); --_exit-rs: exit 40%;     --_exit-re: exit 100%; }
-	[pace~="exit-slow"] { --_anim-exit: var(--_animn); --_exit-rs: contain 50%;  --_exit-re: exit 100%; }
+	:is([animate~="exit"], [animate-self~="exit"])      { --_anim-exit: var(--_animn); --_exit-rs: exit 0%;      --_exit-re: exit 100%; }
+	:is([animate~="exit-fast"], [animate-self~="exit-fast"]) { --_anim-exit: var(--_animn); --_exit-rs: exit 40%;     --_exit-re: exit 100%; }
+	:is([animate~="exit-slow"], [animate-self~="exit-slow"]) { --_anim-exit: var(--_animn); --_exit-rs: contain 50%;  --_exit-re: exit 100%; }
 
 	/* Item exit: --_animn is on children, not the container, so set --_anim-exit there */
-	:where([pace~="exit"], [pace~="exit-fast"], [pace~="exit-slow"]) > * {
+	:where([animate~="exit"], [animate~="exit-fast"], [animate~="exit-slow"]) > * {
 		--_anim-exit: var(--_animn);
 	}
 
@@ -374,10 +376,10 @@
 		[animate~="trigger-both"][animate~="deep"] > * > *  { animation-trigger: --animate-trigger play-forwards play-backwards; }
 
 		/* Pace → duration mapping (triggered mode) */
-		[pace~="very-slow"] { --animate-dur: var(--animate-dur-very-slow); }
-		[pace~="slow"]      { --animate-dur: var(--animate-dur-slow); }
-		[pace~="fast"]      { --animate-dur: var(--animate-dur-fast); }
-		[pace~="very-fast"] { --animate-dur: var(--animate-dur-very-fast); }
+		:is([animate~="very-slow"], [animate-self~="very-slow"]) { --animate-dur: var(--animate-dur-very-slow); }
+		:is([animate~="slow"], [animate-self~="slow"])      { --animate-dur: var(--animate-dur-slow); }
+		:is([animate~="fast"], [animate-self~="fast"])      { --animate-dur: var(--animate-dur-fast); }
+		:is([animate~="very-fast"], [animate-self~="very-fast"]) { --animate-dur: var(--animate-dur-very-fast); }
 	}
 
 }

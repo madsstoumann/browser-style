@@ -4,7 +4,7 @@
  * ONE keyframe library for the whole system. All of this lives in base (@layer
  * bs-core), loaded by any component via @browser.style/base:
  *  - the @keyframes (fade/bounce/flip/reveal/slide/zoom/opacity) + reveal-shape
- *  - the attribute API ENGINE — [animate]/[animate-self]/[pace]/[easing],
+ *  - the attribute API ENGINE — [animate]/[animate-self]/[easing],
  *    timelines, ranges, triggers — lives in the sibling ui/base/animate.css,
  *    imported right AFTER this file (so it can reference these keyframes/params).
  *  - the .an-* / .ar-* utility classes (scroll-driven view() timeline).

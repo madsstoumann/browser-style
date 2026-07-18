@@ -3,7 +3,7 @@
 	/* ==========================================================================
 	   stack(reveal) — the ONE layout-specific animation rule.
 
-	   The full [animate]/[animate-self]/[pace]/[easing] ENGINE and the @keyframes
+	   The full [animate]/[animate-self]/[easing] ENGINE and the @keyframes
 	   now live in @browser.style/base (ui/base/animate.css + ui/base/animations.css,
 	   @layer bs-core) — load base alongside layout.css. This file keeps only the
 	   stack(reveal) redirect, which is layout-domain: it keys off the layout

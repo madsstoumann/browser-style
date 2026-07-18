@@ -125,25 +125,25 @@
 		   it can't group a page of flat cards under one snap target (pages makes only
 		   the page-start a snap target). It uses adapter 3 (scroll-driven) instead. */
 		/* the slide is the scroll-state container (snap target); exclude furniture */
-		:where([media*="stagger"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker),
-		ui-media:where([media*="stagger"], [nav~="stagger"]) > :not(ui-chip, ui-play, ui-save, ui-sticker) {
+		:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker),
+		ui-media:where([media*="stagger"]) > :not(ui-chip, ui-play, ui-save, ui-sticker) {
 			container-type: scroll-state;
 		}
 		/* multi-card slide: give each card its column index (inherits to its content) */
-		:where([media*="stagger"]) ui-media > :where(ui-slide, lay-out) > *,
-		ui-media:where([media*="stagger"], [nav~="stagger"]) > :where(ui-slide, lay-out) > * {
+		:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) ui-media > :where(ui-slide, lay-out) > *,
+		ui-media:where([media*="stagger"]) > :where(ui-slide, lay-out) > * {
 			--_stg-crd-i: calc(sibling-index() - 1);
 		}
 		/* content children consume the card index as their delay base */
-		:where([media*="stagger"]) ui-media ui-content > *,
-		ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > * {
+		:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) ui-media ui-content > *,
+		ui-media:where([media*="stagger"]) ui-content > * {
 			--_stg-base-i: var(--_stg-crd-i);
 		}
 		/* transition + delay for both channels */
-		:where([media*="stagger"]) ui-media > :where(ui-slide, lay-out) > *,
-		ui-media:where([media*="stagger"], [nav~="stagger"]) > :where(ui-slide, lay-out) > *,
-		:where([media*="stagger"]) ui-media ui-content > *,
-		ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > * {
+		:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) ui-media > :where(ui-slide, lay-out) > *,
+		ui-media:where([media*="stagger"]) > :where(ui-slide, lay-out) > *,
+		:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) ui-media ui-content > *,
+		ui-media:where([media*="stagger"]) ui-content > * {
 			transform-origin: var(--_stg-origin, 50% 50%);
 			transition:
 				opacity var(--stagger-duration, 0.75s) var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1)),
@@ -154,15 +154,15 @@
 		}
 		/* from-state — held until the slide snaps into the inline viewport */
 		@container not scroll-state(snapped: inline) {
-			:where([media*="stagger"]) ui-media > :where(ui-slide, lay-out) > *,
-			ui-media:where([media*="stagger"], [nav~="stagger"]) > :where(ui-slide, lay-out) > * {
+			:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) ui-media > :where(ui-slide, lay-out) > *,
+			ui-media:where([media*="stagger"]) > :where(ui-slide, lay-out) > * {
 				opacity: 0;
 				translate: var(--_stg-crd-tr, 0 var(--stagger-distance, 5rem));
 				scale: var(--_stg-crd-sc, 1);
 				filter: var(--_stg-crd-fl, none);
 			}
-			:where([media*="stagger"]) ui-media ui-content > *,
-			ui-media:where([media*="stagger"], [nav~="stagger"]) ui-content > * {
+			:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) ui-media ui-content > *,
+			ui-media:where([media*="stagger"]) ui-content > * {
 				opacity: 0;
 				translate: var(--_stg-tr, 0 var(--stagger-distance, 5rem));
 				scale: var(--_stg-sc, 1);
