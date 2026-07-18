@@ -296,6 +296,42 @@ Masonry-style layouts using CSS `display: grid-lanes` (6 variants available). Fa
 
 See [demos](dist/index.html) for visual examples of all layouts.
 
+### Carousels — `overflow` + `media=` controls
+
+Add the `overflow` attribute to turn any layout into a horizontal scroller/carousel
+(`preview*`, `center`, `frame`, `gaps`, `fade*`, `none`, `stop` tokens — see
+`core/base.md` for the full reference). Carousel **controls** (arrows, dots, page
+markers, autoplay, seamless loop) are configured with tokens in the **`media=`**
+attribute — the same control vocabulary as `<ui-media>` in `@browser.style/card`,
+styled by `ui/base/carousel.css` (load `@browser.style/base` alongside `layout.css`):
+
+```html
+<lay-out bleed md="columns(1)" overflow="preview-2xl center"
+         media="nav(blw) arw(bare) dot(pll) pages auto(4s) loop">
+  <div>Slide 1</div>
+  <div>Slide 2</div>
+  <div>Slide 3</div>
+</lay-out>
+```
+
+- `nav` / `nav(dot|arw|blw|abv)` — which controls to show and where (`blw`/`abv` =
+  reserved band below/above the scroller)
+- `arw(…)` — arrow style/placement modifiers (`bare`, `sm`…`xl`, `sqr`, `sft`,
+  `lgt`/`drk`, corner/edge positions, …)
+- `dot(…)` — dot style modifiers (`sm`…`xl`, `pll` pills, `hyb`, `tmb` thumbnails,
+  `non`, …)
+- `pages` — snap + one dot per *page* of items instead of per item
+- `auto` / `auto(4s)` — autoplay; `loop` — seamless infinite wrap (both are
+  progressive enhancement via the shared carousel script in `@browser.style/card`)
+
+> **Scoping:** `media=` on a `<lay-out>` configures only the lay-out's **own**
+> scroller — it never inherits into `<ui-media>` carousels inside descendant cards
+> (`media=` inheritance stops at the nearest `ui-card`/`ui-reveal` host).
+
+> **Removed in v4:** the individual `nav`, `arrow=`, `dot=`, `pages`, `auto=` and
+> carousel `loop` attributes on `<lay-out>` — use the `media=` tokens above.
+> `overflow` itself is unchanged.
+
 ### Breakpoint Spacing Tokens
 
 Spacing is **token-only** — the same card-style tokens embedded alongside layout
@@ -376,13 +412,17 @@ Scroll-driven animations for individual items within a layout. Items animate bas
 
 ```html
 <!-- Item animation only -->
-<lay-out animate="fade-up" lg="grid(3a)">
+<lay-out animate="fade-up()" lg="grid(3a)">
 
 <!-- Container + item animation -->
-<lay-out animate-self="fade-right" animate="fade-up" lg="grid(3a)">
+<lay-out animate-self="fade-right()" animate="fade-up()" lg="grid(3a)">
 ```
 
-Available presets: `fade-up`, `fade-down`, `fade-left`, `fade-right`, `fade-in`, `zoom-in`, `flip-up`
+Available presets include: `fade-up()`, `fade-down()`, `fade-left()`, `fade-right()`, `fade-in()`, `zoom-in()`, `flip-up()`
+
+Speed/exit ("pace") words are plain tokens in the same attribute value — there is no
+separate `pace` attribute: `animate="fade-up() slow exit"` (`very-slow`, `slow`,
+`fast`, `very-fast`, `exit`, `exit-fast`, `exit-slow`).
 
 Items stagger automatically via nth-child `animation-range` offsets (up to 6 children). In browsers supporting `sibling-index()`, stagger scales to any number of children.
 

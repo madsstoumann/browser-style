@@ -9,21 +9,19 @@ carousel.md for those tokens.
 
 ---
 
-## Two entry points, one vocabulary
+## One entry point, one vocabulary
 
-Every option works through **either** form (they resolve to the same rule / props):
+**`media="…"` tokens are the only configuration surface.** Parens-wrapped, prefixed
+tokens (`nav(blw) arw(lg) arw(drk)`). Tokens can't be grouped (CSS substring matching
+can't isolate inner values), so each is its own token. The old dedicated `nav=` /
+`arrow=` / `dot=` attributes are **removed** — there is no attribute form.
 
-- **`media="…"`** — the inheritable single-attribute string. Parens-wrapped, prefixed
-  tokens (`nav(blw) arw(lg) arw(drk)`). Set it on the `<ui-media>` **or any ancestor**
-  (`<ui-card>` / CMS) — it inherits down. Tokens can't be grouped (CSS substring matching
-  can't isolate inner values), so each is its own token.
-- **`nav=` / `arrow=` / `dot=`** — dedicated, **space-separated grouped** attributes on the
-  `<ui-media>` **itself only** (NOT inherited — by design, so they never sit on the parent).
-  Whole-word `~=` matched, so the attribute namespaces the value: `arrow="lg drk arr set"`.
-
-Equivalence: `media="nav(blw)"` ≡ `nav="blw"` · `media="arw(drk)"` ≡ `arrow="drk"` ·
-`media="dot(pll) dot(be)"` ≡ `dot="pll be"` · bare `media="nav"` ≡ boolean `nav` ·
-`media="axis(y)"` ≡ `nav="y"`. The value is the **same 3-letter code**; only the wrapper differs.
+**Inheritance stops at the card.** A `<ui-media>` reads `media=` from **itself or its
+nearest `<ui-card>` / `<ui-reveal>` host only** — never from arbitrary ancestors. A
+`media=` on a `<lay-out overflow>` configures only the lay-out's **own** scroller (it
+uses these same control tokens — `<lay-out overflow media="nav(blw) arw(bare) pages">`)
+and never leaks into a descendant `<ui-media>`. Contrast `content=`, which is pure
+custom-property inheritance and flows down freely.
 
 ### Shared ink scale
 
@@ -32,53 +30,53 @@ Controls + scrim share one shade vocabulary: `lgt` (light/white) · `drk` (dark/
 
 ## All tokens (alphabetical)
 
-Every option the carousel recognises, in both forms. **Layer:** CSS = `media.carousel.css`,
+Every option the carousel recognises. **Layer:** CSS = `media.carousel.css`,
 JS = `ui-media.js`, load = `ui-media-srcset.js`. (`nav` is required to make the
 scroller; the rest layer on top. `asr()` etc. belong to the base frame — see media.md.)
 
-| `media=` token | Attr form | Layer | Effect |
-|----------------|-----------|-------|--------|
-| `ani(<type>)` | — | CSS | `stagger` **content** reveal type: `rise` (default) · `fall` · `lft` · `rgt` · `zom` · `blr` · `fde` (see "Staggered content reveal") |
-| `crd(<type>)` | — | CSS | `stagger` **card** reveal type (multi-card slides) — same vocabulary, independent of `ani()` |
-| `arw(arr)`  | `arrow="arr"` | CSS | Full-arrow glyph (default is chevron) |
-| `arw(bare)` | `arrow="bare"` | CSS | Drop the circle — glyph painted as a recolourable shape (`--ui-media-arrow-color`) |
-| `arw(bc)`   | `arrow="bc"` | CSS | Split arrows, bottom band (block row) |
-| `arw(chv)`  | `arrow="chv"` | CSS | Chevron glyph (**default**) |
-| `arw(drk)`  | `arrow="drk"` | CSS | **Dark theme** preset — dark circle + white glyph + light hover ring (composes on the overlay and in `nav(blw)`/`nav(abv)` bands; on `arw(bare)` it just paints a dark glyph) |
-| `arw(hid)`  | `arrow="hid"` | CSS | Auto-hide the dead-end arrow (default dims it) |
-| `arw(lg)`   | `arrow="lg"` | CSS | Arrow size 2.75rem |
-| `arw(lgt)`  | `arrow="lgt"` | CSS | **Light theme** preset — light circle + dark glyph (the default look, made explicit) |
-| `arw(md)`   | `arrow="md"` | CSS | Arrow size 2.25rem (**default**) |
-| `arw(cc)`   | `arrow="cc"` | CSS | Split arrows, vertically centered (**default**) |
-| `arw(set)`  | `arrow="set"` | CSS | Cluster both arrows; placeable in any grid cell — `arw(set) arw(<cell>)`, default `ce` (horizontal) / `be` (vertical) |
-| `arw(sm)`   | `arrow="sm"` | CSS | Arrow size 1.75rem |
-| `arw(cs)`   | `arrow="cs"` | CSS | `axis(y)`: start-inline cell moves up/down arrows + dots to the inline-start edge |
-| `arw(tc)`   | `arrow="tc"` | CSS | Split arrows, top band (block row) |
-| `arw(xl)`   | `arrow="xl"` | CSS | Arrow size 3.25rem |
-| `auto` · `auto(4s)` · `auto(800ms)` | `nav="auto"` | JS | Autoplay (default 5s); pauses on hover/focus/drag/hidden-tab/reduced-motion. Attr form has no inline duration — defaults to 5s. Add a `<ui-play>` child for an explicit play/pause control (then hover/focus pause is dropped — see `play(<corner>)`) |
-| `axis(y)`   | `nav="y"` | CSS | Vertical carousel (snap on Y; arrows become up/down) |
-| `dot(cir)`  | `dot="cir"` | CSS | Circular dots (**default**) |
-| `dot(bc)` `dot(tc)` | `dot="bc/tc"` | CSS | `nav(blw)`/`nav(abv)`: dots centered in the band (**default**) — `bc` below, `tc` above |
-| `dot(drk)`  | `dot="drk"` | CSS | Dark dot ink |
-| `dot(be)` `dot(te)` | `dot="be/te"` | CSS | `nav(blw)`/`nav(abv)`: dots at the inline-end — `be` below, `te` above |
-| `dot(lg)`   | `dot="lg"` | CSS | Dot size 0.8rem |
-| `dot(lgt)`  | `dot="lgt"` | CSS | Light/white dot ink |
-| `dot(md)`   | `dot="md"` | CSS | Dot size 0.6rem (**default**) |
-| `dot(pll)`  | `dot="pll"` | CSS | Pill dots; active pill fills L→R over `--ui-media-autoplay` (timer hint) |
-| `dot(sm)`   | `dot="sm"` | CSS | Dot size 0.45rem |
-| `dot(bs)` `dot(ts)` | `dot="bs/ts"` | CSS | `nav(blw)`/`nav(abv)`: dots at the inline-start — `bs` below, `ts` above |
-| `dot(non)`  | `dot="non"` | CSS | No dots (keeps arrows) — arrows-only band |
-| `dot(tmb)`| `dot="tmb"` | CSS | Image thumbnails; per-slide `--ui-media-thumb-url`; active thumb has a bottom timer stripe |
-| `dot(ts)` `dot(te)` `dot(bs)` `dot(be)` | `dot="ts/te/bs/be"` | CSS | Corner placement for the overlay marker-group — logical (top-start / top-end / bottom-start / bottom-end). Center row `dot(cs)` `dot(cc)` `dot(ce)` completes the 9-grid. Inset via `--ui-media-marker-inset` |
-| `dot(xl)`   | `dot="xl"` | CSS | Dot size 1rem |
-| `loop`      | `nav="loop"` | JS | Seamless infinite loop (clones first/last slide) |
-| `nav`       | `nav` (boolean) | CSS | Carousel **on** — dots + arrows (the trigger) |
-| `nav(arw)`  | `nav="arw"` | CSS | Arrows only |
-| `nav(blw)`  | `nav="blw"` | CSS | Dots + arrows in a reserved band below the media |
-| `nav(abv)`  | `nav="abv"` | CSS | Dots + arrows in a reserved band above the media (mirror of `nav(blw)`) |
-| `nav(dot)`  | `nav="dot"` | CSS | Dots only |
-| `nav(non)`  | `nav="non"` | CSS | Bare swipe scroller (no controls) |
-| `stagger`   | `nav="stagger"` | CSS | Staggered content reveal — each slide's `<ui-content>` children fade + rise in when it becomes the snapped slide (pure CSS via `scroll-state` queries; see below) |
+| `media=` token | Layer | Effect |
+|----------------|-------|--------|
+| `ani(<type>)` | CSS | `stagger` **content** reveal type: `rise` (default) · `fall` · `lft` · `rgt` · `zom` · `blr` · `fde` (see "Staggered content reveal") |
+| `crd(<type>)` | CSS | `stagger` **card** reveal type (multi-card slides) — same vocabulary, independent of `ani()` |
+| `arw(arr)`  | CSS | Full-arrow glyph (default is chevron — no token) |
+| `arw(bare)` | CSS | Drop the circle — glyph painted as a recolourable shape (`--ui-media-arrow-color`) |
+| `arw(bc)`   | CSS | Split arrows, bottom band (block row) |
+| `arw(blw)` `arw(abv)` | CSS | Arrows **alone** in a reserved band below / above the media (dots keep their on-media position/ink); arrow ink flips to the band theme |
+| `arw(drk)`  | CSS | **Dark theme** preset — dark circle + white glyph + light hover ring (composes on the overlay and in `nav(blw)`/`nav(abv)` bands; on `arw(bare)` it just paints a dark glyph) |
+| `arw(hid)`  | CSS | Auto-hide the dead-end arrow (default dims it) |
+| `arw(lg)`   | CSS | Arrow size 2.75rem |
+| `arw(lgt)`  | CSS | **Light theme** preset — light circle + dark glyph (the default look, made explicit) |
+| `arw(cc)`   | CSS | Split arrows, vertically centered (**default**) |
+| `arw(set)`  | CSS | Cluster both arrows; placeable in any grid cell — `arw(set) arw(<cell>)`, default `ce` (horizontal) / `be` (vertical) |
+| `arw(sm)`   | CSS | Arrow size 1.75rem (default is 2.25rem — no token) |
+| `arw(sqr)` `arw(sft)` | CSS | **Square** button instead of the default circle — `sqr` = sharp corners, `sft` = slight radius |
+| `arw(cs)`   | CSS | `axis(y)`: start-inline cell moves up/down arrows + dots to the inline-start edge |
+| `arw(tc)`   | CSS | Split arrows, top band (block row) |
+| `arw(xl)`   | CSS | Arrow size 3.25rem |
+| `auto` · `auto(4s)` · `auto(800ms)` | JS | Autoplay (default 5s); pauses on hover/focus/drag/hidden-tab/reduced-motion. Add a `<ui-play>` child for an explicit play/pause control (then hover/focus pause is dropped — see `play(<corner>)`) |
+| `axis(y)`   | CSS | Vertical carousel (snap on Y; arrows become up/down) |
+| `dot(bc)` `dot(tc)` | CSS | `nav(blw)`/`nav(abv)`: dots centered in the band (**default**) — `bc` below, `tc` above |
+| `dot(blw)` `dot(abv)` | CSS | Dots **alone** in a reserved band below / above the media (arrows keep their on-media position/ink); dot/pill ink flips to the band theme |
+| `dot(drk)`  | CSS | Dark dot ink |
+| `dot(be)` `dot(te)` | CSS | `nav(blw)`/`nav(abv)`: dots at the inline-end — `be` below, `te` above |
+| `dot(hyb)`  | CSS | **Hybrid** dots — markers stay circles; the active one morphs into a pill and runs the `dot(pll)` fill timer |
+| `dot(lg)`   | CSS | Dot size 0.8rem |
+| `dot(lgt)`  | CSS | Light/white dot ink |
+| `dot(md)`   | CSS | Dot size 0.6rem (**default**) |
+| `dot(pll)`  | CSS | Pill dots; active pill fills L→R over `--ui-media-autoplay` (timer hint) |
+| `dot(sm)`   | CSS | Dot size 0.45rem |
+| `dot(bs)` `dot(ts)` | CSS | `nav(blw)`/`nav(abv)`: dots at the inline-start — `bs` below, `ts` above |
+| `dot(non)`  | CSS | No dots (keeps arrows) — arrows-only band |
+| `dot(tmb)`| CSS | Image thumbnails; per-slide `--ui-media-thumb-url`; active thumb has a bottom timer stripe |
+| `dot(ts)` `dot(te)` `dot(bs)` `dot(be)` | CSS | Corner placement for the overlay marker-group — logical (top-start / top-end / bottom-start / bottom-end). Center row `dot(cs)` `dot(cc)` `dot(ce)` completes the 9-grid. Inset via `--ui-media-marker-inset` |
+| `dot(xl)`   | CSS | Dot size 1rem |
+| `loop`      | JS | Seamless infinite loop (clones first/last slide) |
+| `nav`       | CSS | Carousel **on** — dots + arrows (the trigger) |
+| `nav(arw)`  | CSS | Arrows only |
+| `nav(blw)`  | CSS | Dots + arrows in a reserved band below the media |
+| `nav(abv)`  | CSS | Dots + arrows in a reserved band above the media (mirror of `nav(blw)`) |
+| `nav(dot)`  | CSS | Dots only |
+| `stagger`   | CSS | Staggered content reveal — each slide's `<ui-content>` children fade + rise in when it becomes the snapped slide (pure CSS via `scroll-state` queries; see below) |
 
 ### `<ui-media>` frame tokens (not carousel — for reference)
 
@@ -97,7 +95,7 @@ These belong to the base `<ui-media>` frame ([media.css](./media.css), docs in
 | `flp(h · v · hv)` | CSS | Flip the image horizontally / vertically / both |
 | `hov(zoom · pan · track · drift)` | CSS (+JS) | Hover effect; `track`/`drift` follow the cursor (need `ui-media.js`) |
 | `scm` · `scm(<pos>)` · `scm(sm · md · lg · xl)` · `scm(sheer · lgt · med · drk · solid)` | CSS | Scrim — direction (furniture grid) + size + intensity |
-| `load(eager · lazy)` | load | Image/video loading (`ui-media-srcset.js`); `eager` (bool attr) = first slide eager + `fetchpriority="high"` |
+| `load(eager · lazy)` | load | Image/video loading (`ui-media-srcset.js`); `load(eager)` = all slides eager, first slide gets `fetchpriority="high"` (hero); `load(lazy)` = all lazy (the default) |
 | `chip(<corner>)` · `chip(<color>)` | CSS | Position + colour a `<ui-chip>` child (`accent blue green orange red dark light subtle`) |
 | `sticker(<corner>)` · `sticker(<color>)` | CSS | Position + colour a `<ui-sticker>` child |
 | `play(<corner>)` | CSS (+JS on autoplay) | Position a `<ui-play>` child. On a **scrolling** carousel (`auto`/`loop`) the control is `position:sticky`-pinned to the scrollport (plain furniture would scroll away) and `ui-media.js` wires it as the play/pause button — see "Play/pause control" below |
