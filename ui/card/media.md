@@ -130,6 +130,14 @@ asr(3/2)   asr(2/3)   asr(16/9)  asr(21/9)
 
 There were never any named keywords — ratios are always numeric. Any other ratio goes through the escape hatch: `style="--ui-media-ar: 5/4"`. Setting `asr()` also zeroes the frame's `min-block-size` so the ratio governs height.
 
+**Responsive aspect — `md:asr()` / `lg:asr()`.** `asr()` is the one `media=` token that takes the card's `md:`/`lg:` **container-query** prefixes (all other `media=` tokens are unprefixed). The prefixed form re-sets the ratio once the card itself renders ≥ 25rem (`md:`) or ≥ 44rem (`lg:`) wide — so a card can be portrait when it's the only one in a narrow carousel and landscape once it widens:
+
+```html
+<ui-card media="asr(3/4) md:asr(3/2)">…</ui-card>
+```
+
+The base (unprefixed) value is the small-card default; the prefixes only ever override upward in width. Only `asr()` is prefixable — the base rule is whole-token (`~=`) matched so `md:`/`lg:` variants don't leak into it. (Prefixes are the card's own width via container queries, not the viewport, so aspect tracks how wide the card actually renders regardless of layout.)
+
 #### `rds()` — corners (standalone only)
 
 Inside `<ui-card>`/`<ui-reveal>` the **parent** rounds and clips the frame (via its own `variant="rds(…)"`), so you don't set corners on the media. A **standalone** `<ui-media>` can round its own corners with `rds()` — the same scale as the card:

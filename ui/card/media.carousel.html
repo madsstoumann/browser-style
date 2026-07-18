@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../play/ui-play.css">
 	<link rel="stylesheet" href="../icon/index.css">
+	<link rel="stylesheet" href="../gradient-text/ui-gradient-text.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<link rel="stylesheet" href="../reveal/ui-reveal.css">
 	<link rel="stylesheet" href="../accordion/ui-accordion.css">
@@ -629,39 +630,92 @@
 	     · FULL-SCREEN — bleed + lay-out overflow="preview-2xl center"
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>13 · Full-screen center carousel — <code>bleed</code> + <code>preview-2xl center</code></h2>
-	<p>A <code>&lt;lay-out overflow&gt;</code> hero: <code>center</code> centers the slide with 25% peeks each side (<code>preview-2xl</code>), <code>bleed</code> goes edge-to-edge, <code>gaps</code> adds end gutters. Controls: centered dots + bare arrow set (<code>nav="blw" arrow="set bare" dot="bc"</code>).</p>
-	<lay-out bleed md="columns(1)" overflow="preview-2xl center gaps" nav="blw" arrow="set bare" dot="bc">
-		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
-			<cq-box>
-				<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">Drama</small><h2 data-part="headline">Your Friends &amp; Neighbours</h2><p data-part="summary">Stream now — is it so wrong to want more?</p></ui-content>
-			</cq-box>
-		</ui-card>
-		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
-			<cq-box>
-				<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">Action</small><h2 data-part="headline">Long Way Home</h2><p data-part="summary">Stream now — the desert never forgets.</p></ui-content>
-			</cq-box>
-		</ui-card>
-		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
-			<cq-box>
-				<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">Sci-Fi</small><h2 data-part="headline">Deep Field</h2><p data-part="summary">Stream now — look closer at the dark.</p></ui-content>
-			</cq-box>
-		</ui-card>
-		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
-			<cq-box>
-				<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">Nature</small><h2 data-part="headline">Downstream</h2><p data-part="summary">Stream now — follow the current.</p></ui-content>
-			</cq-box>
-		</ui-card>
-		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
-			<cq-box>
-				<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">Wellness</small><h2 data-part="headline">Breathe</h2><p data-part="summary">Stream now — one moment at a time.</p></ui-content>
-			</cq-box>
-		</ui-card>
-	</lay-out>
+	<p>A <code>&lt;lay-out overflow&gt;</code> hero: <code>center</code> centers the slide with 25% peeks each side (<code>preview-2xl</code>), <code>bleed</code> goes edge-to-edge, <code>gaps</code> adds end gutters. Controls: centered dots + a bare arrow set in the light/white ink variants (<code>arrow="set bare lgt" dot="bc lgt"</code>) so they read on the dark <code>theme="black ink"</code> band. Cards are responsive by aspect — portrait on mobile, cinematic 16/9 once wide (<code>media="asr(3/4) md:asr(16/9)"</code>).</p>
+
+	<lay-out-group bleed theme="black ink" xs="pbs(3) pbe(3)" content="hl(xl) ctr scl(lg)">
+		<ui-content>
+			<h2 data-part="headline"><ui-gradient-text gradient="#bf4800, #ff8a3d, #bf4800" size="160%">Full-screen center</ui-gradient-text></h2>
+			<p data-part="summary">A start-snapped carousel of responsive cards, each with a media image and a content panel.</p>
+		</ui-content>
+		<cq-box>
+			<lay-out bleed md="columns(1)" overflow="preview-2xl center gaps" nav="blw" arrow="set bare lgt" dot="bc lgt">
+				<ui-card variant="ovr(bl) rds(non)" media="asr(3/4) md:asr(16/9) scm" content="scl(lg) pad(lg)">
+					<cq-box>
+						<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Drama</small><h2 data-part="headline">Your Friends &amp; Neighbours</h2><p data-part="summary">Stream now — is it so wrong to want more?</p></ui-content>
+					</cq-box>
+				</ui-card>
+				<ui-card variant="ovr(bl) rds(non)" media="asr(3/4) md:asr(16/9) scm" content="scl(lg) pad(lg)">
+					<cq-box>
+						<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Action</small><h2 data-part="headline">Long Way Home</h2><p data-part="summary">Stream now — the desert never forgets.</p></ui-content>
+					</cq-box>
+				</ui-card>
+				<ui-card variant="ovr(bl) rds(non)" media="asr(3/4) md:asr(16/9) scm" content="scl(lg) pad(lg)">
+					<cq-box>
+						<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Sci-Fi</small><h2 data-part="headline">Deep Field</h2><p data-part="summary">Stream now — look closer at the dark.</p></ui-content>
+					</cq-box>
+				</ui-card>
+				<ui-card variant="ovr(bl) rds(non)" media="asr(3/4) md:asr(16/9) scm" content="scl(lg) pad(lg)">
+					<cq-box>
+						<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Nature</small><h2 data-part="headline">Downstream</h2><p data-part="summary">Stream now — follow the current.</p></ui-content>
+					</cq-box>
+				</ui-card>
+				<ui-card variant="ovr(bl) rds(non)" media="asr(3/4) md:asr(16/9) scm" content="scl(lg) pad(lg)">
+					<cq-box>
+						<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+						<ui-content><small data-part="eyebrow">Wellness</small><h2 data-part="headline">Breathe</h2><p data-part="summary">Stream now — one moment at a time.</p></ui-content>
+					</cq-box>
+				</ui-card>
+			</lay-out>
+		</cq-box>
+	</lay-out-group>
+	<!-- ════════════════════════════════════════════════════════════
+	     · APP-STYLE HIGHLIGHTS — lay-out-group + theme + gradient headline
+	     ════════════════════════════════════════════════════════════ -->
+	<!-- <h2>App-style highlights — <code>&lt;lay-out-group&gt;</code> + <code>theme</code> + gradient headline</h2>
+	<p>A themed section band (<code>&lt;lay-out-group bleed theme="gray"&gt;</code>) with a header above a start-snapped preview carousel. The headline is a <code>&lt;ui-gradient-text&gt;</code>; the carousel shows arrows only, clustered as a set in a below-band at the inline-end (<code>nav="arw" arrow="set blw"</code>) — the band renders them as light-ink chevrons. The cards are <strong>responsive by aspect</strong>: <code>media="asr(3/4) md:asr(3/2)"</code> — portrait one-at-a-time on narrow screens (the layout's <code>xs</code> default is <code>columns(1)</code>), switching to landscape once each card renders ≥ 25rem wide. No custom CSS beyond the gradient-text stylesheet.</p> -->
+	<lay-out-group bleed theme="gray" xs="pbs(3) pbe(3)" content="hl(lg)">
+		<ui-content>
+			<h2 data-part="headline"><ui-gradient-text gradient="#0b2b47, #3b82c4, #0b2b47" size="160%">Explore the highlights.</ui-gradient-text></h2>
+		</ui-content>
+		<cq-box>
+		<lay-out bleed xs="pi(1)" md="columns(2)" overflow="preview-lg" nav="arw" arrow="set blw">
+			<ui-card variant="ovr(tl) rds(lg)" media="asr(3/4) md:asr(3/2) scm" content="scl(sm) pad(lg)">
+				<cq-box>
+					<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
+					<ui-content><h3 data-part="headline">Quantum computing you can almost touch.</h3></ui-content>
+				</cq-box>
+			</ui-card>
+			<ui-card variant="ovr(tl) rds(lg)" media="asr(3/4) md:asr(3/2) scm" content="scl(sm) pad(lg)">
+				<cq-box>
+					<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+					<ui-content><h3 data-part="headline">Find your calm, deep in the forest.</h3></ui-content>
+				</cq-box>
+			</ui-card>
+			<ui-card variant="ovr(tl) rds(lg)" media="asr(3/4) md:asr(3/2) scm" content="scl(sm) pad(lg)">
+				<cq-box>
+					<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
+					<ui-content><h3 data-part="headline">Where great ideas connect and grow.</h3></ui-content>
+				</cq-box>
+			</ui-card>
+			<ui-card variant="ovr(tl) rds(lg)" media="asr(3/4) md:asr(3/2) scm" content="scl(sm) pad(lg)">
+				<cq-box>
+					<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+					<ui-content><h3 data-part="headline">Look closer into the deep dark sky.</h3></ui-content>
+				</cq-box>
+			</ui-card>
+			<ui-card variant="ovr(tl) rds(lg)" media="asr(3/4) md:asr(3/2) scm" content="scl(sm) pad(lg)">
+				<cq-box>
+					<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+					<ui-content><h3 data-part="headline">Taste the craft behind every plate.</h3></ui-content>
+				</cq-box>
+			</ui-card>
+		</lay-out>
+		</cq-box>
+	</lay-out-group>
 
 	<h2>14 · Peek both sides — <code>frame</code> in a card (side by side)</h2>
 	<p>Two framed carousels in a <code>&lt;lay-out lg="columns(2)"&gt;</code>, each wrapped in a <code>&lt;ui-card&gt;</code> for the box-shadow. <code>frame</code> is like <code>center</code> — a peek on each side — but start-snaps with a leading pad, framing a <em>page</em> of cards between symmetric peeks, advancing one card at a time. Arrows sit at their default center-edge position (<code>nav="arw"</code>) and dead-end arrows auto-hide (<code>arrow="hid"</code>). Both use a thin <code>preview-xs</code> peek — left frames one card (<code>columns(1)</code>), right frames two (<code>columns(2)</code>).</p>

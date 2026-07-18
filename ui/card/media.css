@@ -53,16 +53,17 @@
 		 media= PARSE LAYER — tokens set props that inherit to <ui-media>
 		 ============================================================ */
 
-	/* asr() — aspect-ratio */
-	:where([media*="asr(1/1)"])   { --ui-media-ar: 1 / 1; }
-	:where([media*="asr(1/2)"])   { --ui-media-ar: 1 / 2; }
-	:where([media*="asr(6/7)"])   { --ui-media-ar: 6 / 7; }
-	:where([media*="asr(3/4)"])   { --ui-media-ar: 3 / 4; }
-	:where([media*="asr(4/3)"])   { --ui-media-ar: 4 / 3; }
-	:where([media*="asr(3/2)"])   { --ui-media-ar: 3 / 2; }
-	:where([media*="asr(2/3)"])   { --ui-media-ar: 2 / 3; }
-	:where([media*="asr(16/9)"])  { --ui-media-ar: 16 / 9; }
-	:where([media*="asr(21/9)"])  { --ui-media-ar: 21 / 9; }
+	/* asr() — aspect-ratio. Whole-token (~=) so the md:/lg: prefixed variants
+	   (set per container width in ui-card.css) don't also match here as substrings. */
+	:where([media~="asr(1/1)"])   { --ui-media-ar: 1 / 1; }
+	:where([media~="asr(1/2)"])   { --ui-media-ar: 1 / 2; }
+	:where([media~="asr(6/7)"])   { --ui-media-ar: 6 / 7; }
+	:where([media~="asr(3/4)"])   { --ui-media-ar: 3 / 4; }
+	:where([media~="asr(4/3)"])   { --ui-media-ar: 4 / 3; }
+	:where([media~="asr(3/2)"])   { --ui-media-ar: 3 / 2; }
+	:where([media~="asr(2/3)"])   { --ui-media-ar: 2 / 3; }
+	:where([media~="asr(16/9)"])  { --ui-media-ar: 16 / 9; }
+	:where([media~="asr(21/9)"])  { --ui-media-ar: 21 / 9; }
 
 	/* obp() — object-position (9-grid) */
 	:where([media*="obp(tl)"]) { --ui-media-op: left top; }

@@ -147,9 +147,13 @@
 	/* ============================================================
 	   RESPONSIVE — md:/lg: prefixes on variant= layout, content= spacing, and
 	   content= SIZE (scl() and hl(<size>)). content tone/weight (eb/hl/tx/mt) and
-	   media= tokens are NOT breakpoint-prefixed this round.
-	   Targets the queryable descendant (cq-box for card, summary for reveal).
-	   ============================================================ */
+	   media= tokens are NOT breakpoint-prefixed this round — EXCEPT asr(), whose
+	   md:/lg: variants set --ui-media-ar per container width below (the aspect a card
+	   wants genuinely depends on how wide it renders: portrait in a 1-up carousel,
+	   landscape once it widens). Base asr() (media.css) is whole-token matched so it
+	   ignores these prefixed forms.
+	   Targets the queryable descendant (cq-box for card, summary for reveal). Setting
+	   --ui-media-ar on cq-box (nearer than the host) overrides the base per container. */
 
 	/* md (>= 25rem) */
 	@container (inline-size >= 25rem) {
@@ -197,6 +201,17 @@
 		:where([content~="md:hl(xl)"])     :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-xl); }
 		:where([content~="md:hl(2xl)"])    :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-2xl); }
 		:where([content~="md:hl(poster)"]) :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-poster); }
+
+		/* md:asr() — aspect-ratio once the card is >= 25rem wide */
+		:where([media~="md:asr(1/1)"])  :is(cq-box, summary) { --ui-media-ar: 1 / 1; }
+		:where([media~="md:asr(1/2)"])  :is(cq-box, summary) { --ui-media-ar: 1 / 2; }
+		:where([media~="md:asr(6/7)"])  :is(cq-box, summary) { --ui-media-ar: 6 / 7; }
+		:where([media~="md:asr(3/4)"])  :is(cq-box, summary) { --ui-media-ar: 3 / 4; }
+		:where([media~="md:asr(4/3)"])  :is(cq-box, summary) { --ui-media-ar: 4 / 3; }
+		:where([media~="md:asr(3/2)"])  :is(cq-box, summary) { --ui-media-ar: 3 / 2; }
+		:where([media~="md:asr(2/3)"])  :is(cq-box, summary) { --ui-media-ar: 2 / 3; }
+		:where([media~="md:asr(16/9)"]) :is(cq-box, summary) { --ui-media-ar: 16 / 9; }
+		:where([media~="md:asr(21/9)"]) :is(cq-box, summary) { --ui-media-ar: 21 / 9; }
 	}
 
 	/* lg (>= 44rem) */
@@ -245,6 +260,17 @@
 		:where([content~="lg:hl(xl)"])     :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-xl); }
 		:where([content~="lg:hl(2xl)"])    :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-2xl); }
 		:where([content~="lg:hl(poster)"]) :is(cq-box, summary) { --ui-content-headline: var(--ui-content-headline-poster); }
+
+		/* lg:asr() — aspect-ratio once the card is >= 44rem wide */
+		:where([media~="lg:asr(1/1)"])  :is(cq-box, summary) { --ui-media-ar: 1 / 1; }
+		:where([media~="lg:asr(1/2)"])  :is(cq-box, summary) { --ui-media-ar: 1 / 2; }
+		:where([media~="lg:asr(6/7)"])  :is(cq-box, summary) { --ui-media-ar: 6 / 7; }
+		:where([media~="lg:asr(3/4)"])  :is(cq-box, summary) { --ui-media-ar: 3 / 4; }
+		:where([media~="lg:asr(4/3)"])  :is(cq-box, summary) { --ui-media-ar: 4 / 3; }
+		:where([media~="lg:asr(3/2)"])  :is(cq-box, summary) { --ui-media-ar: 3 / 2; }
+		:where([media~="lg:asr(2/3)"])  :is(cq-box, summary) { --ui-media-ar: 2 / 3; }
+		:where([media~="lg:asr(16/9)"]) :is(cq-box, summary) { --ui-media-ar: 16 / 9; }
+		:where([media~="lg:asr(21/9)"]) :is(cq-box, summary) { --ui-media-ar: 21 / 9; }
 	}
 }
 
