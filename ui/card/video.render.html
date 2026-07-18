@@ -24,14 +24,13 @@
 <body>
 
 	<h1>Video — Render Engine</h1>
-	<p class="note">Every frame and card on this page is built at runtime by <a href="render.js"><code>render.js</code></a> from UCF files in <a href="data/demo/"><code>data/demo/</code></a>, styled by the <code>video-*</code> presets in <a href="data/card.presets.demo.json"><code>presets.demo.video.json</code></a> merged over <a href="data/card.presets.json"><code>card.presets.json</code></a>. Hand-authored reference: <a href="video.html"><code>video.html</code></a>. After rendering, <code>index.js</code>'s exported <code>scan()</code> wires embeds, play buttons and player tools.</p>
+	<p class="note">Every frame and card on this page is built at runtime by <a href="render.js"><code>render.js</code></a> from UCF files in <a href="data/demo/"><code>data/demo/</code></a>, styled by the <code>video-*</code> presets in <a href="data/card.presets.demo.json"><code>presets.demo.video.json</code></a> merged over <a href="data/card.presets.json"><code>card.presets.json</code></a>. Hand-authored reference: <a href="video.html"><code>video.html</code></a>. After rendering, <code>video.js</code>'s exported <code>scanVideo()</code> wires embeds, play buttons and player tools.</p>
 
 	<main data-layout-root page-gap="2"></main>
 
-	<script type="module" src="index.js"></script>
 	<script type="module">
 		import { renderCard as renderCardHtml, loadPresets } from './render.js';
-		import { scan } from './index.js';
+		import { scanVideo } from './video.js';
 
 		/* render.js returns an HTML string (SSR engine — all data escaped at
 		   interpolation); parse it into a fragment for the DOM append sites below */
@@ -89,7 +88,7 @@
 		main.append(
 			heading(['YouTube — ', code('provider="youtube"')]),
 			note([code('{mediaType: "youtube", src: "<id>"}'), ' sets ', code('provider'), '/', code('video'),
-				' on the frame; ', code('index.js'), ' wires the facade. The first card authors a poster as an image media item, the second has none — ',
+				' on the frame; ', code('video.js'), ' wires the facade. The first card authors a poster as an image media item, the second has none — ',
 				code('initEmbeds'), ' injects the YouTube thumbnail. Press play: poster drops, the lazy iframe player takes over.']),
 			grid('grid-2', [
 				renderCard(docs['video-05'], presets),
@@ -137,7 +136,7 @@
 		/* ── Meet the curator ── */
 		main.append(
 			el('div', 'section-head', [el('h2', null, ['Meet the curator'])]),
-			note(['Overlay card, 21:9 with scrim. No poster in the data — ', code('index.js'),
+			note(['Overlay card, 21:9 with scrim. No poster in the data — ', code('video.js'),
 				' injects the Vimeo thumbnail (vumbnail.com) before the click-to-play handoff.']),
 			grid('', [renderCard(docs['video-12'], presets)])
 		);
@@ -163,9 +162,9 @@
 			code('<select class="ui-media-cc">'), ' (the whole “With subtitles — Out of Chaos” card is skipped); ',
 			code('data-track'), ' video tracking; and ', code('<ui-play variant="reveal">'), ' on the autoplay frame.']));
 
-		/* index.js auto-scans on idle, but that can fire before this module finishes rendering —
-		   scan() is idempotent, so run it again now that all cards are in the DOM. */
-		scan();
+		/* video.js auto-scans on idle, but that can fire before this module finishes rendering —
+		   scanVideo() is idempotent, so run it again now that all cards are in the DOM. */
+		scanVideo();
 	</script>
 </body>
 </html>

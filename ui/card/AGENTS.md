@@ -120,8 +120,13 @@ Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are 
 
 | File | Purpose |
 |---|---|
-| `index.js` | full PE bundle: cursor-tracked hover, carousel loop/autoplay, video play/pause, embed facades, PiP/fullscreen |
-| `ui-media.js` | hover tracking only (`hov(track)`/`hov(drift)`) |
+| `index.js` | all-in-one entry: imports the three chunks below, exports `scan()` (also `globalThis.uiMedia.scan`) |
+| `hover.js` | cursor-tracked `hov(track|drift|tilt)` — standalone, zero imports |
+| `carousel.js` | loop (seamless clones), autoplay, pause-on-slide-leave, per-slide `<ui-play>` video controls |
+| `video.js` | embed facades, media-command polyfill, `vid()` player tools, solo play, opt-in tracking |
+| `shared.js` | primitives shared by carousel.js/video.js (`reflectPlay`, `bindVideo`, token readers) |
+| `build.js` | `node build.js` → bundled+minified `*.min.js` per entry + gzip/brotli size table |
+| `ui-media.js` | hover tracking only (`hov(track)`/`hov(drift)`) — superseded by `hover.js` |
 | `ui-media-srcset.js` | registers `<ui-media>`; host-gated Cloudflare `srcset` + loading/decoding upgrades. **Transitional** — retire once srcset is SSR'd |
 | `srcset.js` | dependency-free Cloudflare Image Resizing URL builder |
 | `render.js` | Node-safe SSR: JSON (UCF) → HTML string |

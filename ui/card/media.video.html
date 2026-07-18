@@ -82,7 +82,7 @@
 
 	<section>
 	<h2>YouTube — no-JS facade via <code>srcdoc</code></h2>
-	<p class="note">No JavaScript at all. The <code>&lt;iframe srcdoc&gt;</code> renders a poster + a real <code>&lt;a&gt;</code> link; clicking it navigates the iframe <em>itself</em> to the <code>?autoplay=1</code> embed — the click is the user gesture autoplay needs. <code>src</code> is the fallback for browsers without <code>srcdoc</code> support. No <code>provider</code>, so <code>index.js</code> never touches it.</p>
+	<p class="note">No JavaScript at all. The <code>&lt;iframe srcdoc&gt;</code> renders a poster + a real <code>&lt;a&gt;</code> link; clicking it navigates the iframe <em>itself</em> to the <code>?autoplay=1</code> embed — the click is the user gesture autoplay needs. <code>src</code> is the fallback for browsers without <code>srcdoc</code> support. No <code>provider</code>, so <code>video.js</code> never touches it.</p>
 	<lay-out>
 		<ui-media media="asr(16/9) rds(lg) chip(red)">
 			<iframe
@@ -382,6 +382,6 @@
 	</lay-out>
 	</section>
 
-	<script type="module" src="index.js"></script>
+	<script type="module" src="video.js"></script>
 </body>
 </html>
