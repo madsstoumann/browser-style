@@ -4,7 +4,7 @@
 	<title>UI: Card — Content</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="Every &lt;ui-content&gt; text token in one place: the scl() scale, hl() headline sizes incl. poster, the eb()/hl()/tx()/mt() group tone·weight·shadow families, theme= themes, all content parts, pad()/gap() spacing, responsive size, scrollable content and the core surface tokens.">
+	<meta name="description" content="Every &lt;ui-content&gt; text token in one place: the scl() scale, hl() headline sizes incl. the 3xl display step, the eb()/hl()/tx()/mt() group tone·weight·shadow families, theme= themes, all content parts, pad()/gap() spacing, responsive size, scrollable content and the core surface tokens.">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
@@ -46,7 +46,7 @@
 </head>
 <body data-layout-root data-page-gap="2">
 	<h1>UI: Card — <code>&lt;ui-content&gt;</code></h1>
-	<p class="note">Everything that controls the content column: the <code>scl()</code> scale (decoupled body + headline ramp), <code>hl()</code> headline sizes (incl. <code>poster</code>), the four group families — <code>eb()</code> / <code>hl()</code> / <code>tx()</code> / <code>mt()</code> — for tone, weight and text-shadow, the <code>theme=</code> themes, every <code>data-part</code>, <code>pad()</code>/<code>gap()</code> spacing, responsive size, scrollable content, and the core surface tokens. All driven by <code>variant</code> / <code>content</code> tokens — no JavaScript. Media-backed treatments live in <a href="media.html">media.html</a>.</p>
+	<p class="note">Everything that controls the content column: the <code>scl()</code> scale (decoupled body + headline ramp), <code>hl()</code> headline sizes (incl. <code>3xl</code>), the four group families — <code>eb()</code> / <code>hl()</code> / <code>tx()</code> / <code>mt()</code> — for tone, weight and text-shadow, the <code>theme=</code> themes, every <code>data-part</code>, <code>pad()</code>/<code>gap()</code> spacing, responsive size, scrollable content, and the core surface tokens. All driven by <code>variant</code> / <code>content</code> tokens — no JavaScript. Media-backed treatments live in <a href="media.html">media.html</a>.</p>
 	<p class="note">See also: <a href="index.html">index.html</a> (the full engine) · <a href="media.html">media.html</a> (the <code>&lt;ui-media&gt;</code> side) · <a href="ui-card-tokens.md">ui-card-tokens.md</a> (token reference).</p>
 
 	<!-- sub-pages (add more entries as sections graduate to their own page) -->
@@ -208,21 +208,21 @@
 	<p class="note">For overlay (<code>ovr()</code>), scrim (<code>scm</code>), squircle corners (<code>rds(*-sq)</code>) and other media-backed treatments, see <a href="media.html">media.html</a> — this page is the text-only side.</p>
 
 	<!-- ============================================================
-	     Headline sizes — hl(<size>) incl. poster
+	     Headline sizes — hl(<size>) incl. 3xl
 	     ============================================================ -->
 	<h2>Headline sizes — <code>hl(&lt;size&gt;)</code></h2>
-	<p class="note"><code>hl(sm | md | lg | xl | 2xl | poster)</code> swaps the <strong>headline stop only</strong> — the body copy stays put. Unlike <code>scl()</code> (which moves both ramps together), <code>hl()</code> decouples a display-size title from readable body. <code>poster</code> is the semantic display step.</p>
+	<p class="note"><code>hl(sm | md | lg | xl | 2xl | 3xl)</code> swaps the <strong>headline stop only</strong> — the body copy stays put. Unlike <code>scl()</code> (which moves both ramps together), <code>hl()</code> decouples a display-size title from readable body. <code>3xl</code> is the display step (formerly <code>poster</code>).</p>
 	<lay-out md="columns(3)">
 		<ui-card variant="vis(content)" theme="gray" content="hl(sm)"><cq-box><ui-content><small data-part="eyebrow">hl(sm)</small><h2 data-part="headline">Small headline</h2><p data-part="summary">The body copy is unchanged across every card in this row.</p></ui-content></cq-box></ui-card>
 		<ui-card variant="vis(content)" theme="gray" content="hl(lg)"><cq-box><ui-content><small data-part="eyebrow">hl(lg)</small><h2 data-part="headline">Large headline</h2><p data-part="summary">The body copy is unchanged across every card in this row.</p></ui-content></cq-box></ui-card>
 		<ui-card variant="vis(content)" theme="gray" content="hl(2xl)"><cq-box><ui-content><small data-part="eyebrow">hl(2xl)</small><h2 data-part="headline">2xl headline</h2><p data-part="summary">The body copy is unchanged across every card in this row.</p></ui-content></cq-box></ui-card>
 	</lay-out>
-	<p class="note">A <code>hl(poster)</code> display headline on a wide card (tracks the card width via <code>cqi</code>):</p>
-	<ui-card variant="vis(content)" theme="black dark" content="hl(poster)">
+	<p class="note">A <code>hl(3xl)</code> display headline on a wide card (tracks the card width via <code>cqi</code>):</p>
+	<ui-card variant="vis(content)" theme="black dark" content="hl(3xl)">
 		<cq-box><ui-content>
-			<small data-part="eyebrow">hl(poster)</small>
+			<small data-part="eyebrow">hl(3xl)</small>
 			<strong data-part="headline">Poster display headline</strong>
-			<p data-part="summary">The headline reaches the poster clamp while the summary stays at a comfortable reading size — the decoupled ramp doing its job.</p>
+			<p data-part="summary">The headline reaches the 3xl display clamp while the summary stays at a comfortable reading size — the decoupled ramp doing its job.</p>
 		</ui-content></cq-box>
 	</ui-card>
 
@@ -261,7 +261,7 @@
 	<p class="note">The <code>shd</code> flag adds a legibility text-shadow to a group. Its main job is overlaid text over a scrim: a host <code>ovr()</code> <strong>automatically</strong> shadows the headline + eyebrow, and <code>hl(shd)</code>/<code>eb(shd)</code> opt any group in explicitly. (This is the only media-backed example on this page — for the rest of the overlay/scrim system see <a href="media.html">media.html</a>.) Retune with <code>--ui-content-text-shadow</code> or disable via <code>style="--ui-content-heading-text-shadow: none"</code>.</p>
 	<lay-out md="columns(3)">
 		<ui-card variant="ovr(bl)" media="asr(3/4) obp(cc) scm" content="scl(lg)"><cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">ovr() — auto shadow</small><strong data-part="headline">Legible by default</strong></ui-content></cq-box></ui-card>
-		<ui-card variant="ovr(bl)" media="asr(3/4) obp(cc) scm" content="scl(lg) hl(poster)" style="--ui-content-heading-text-shadow: none;"><cq-box><ui-media><img src="/assets/images/hubble.png" alt=""></ui-media><ui-content><small data-part="eyebrow">shadow disabled</small><strong data-part="headline">No shadow</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(bl)" media="asr(3/4) obp(cc) scm" content="scl(lg) hl(3xl)" style="--ui-content-heading-text-shadow: none;"><cq-box><ui-media><img src="/assets/images/hubble.png" alt=""></ui-media><ui-content><small data-part="eyebrow">shadow disabled</small><strong data-part="headline">No shadow</strong></ui-content></cq-box></ui-card>
 		<ui-card variant="ovr(bl)" media="asr(3/4) obp(cc) scm(shr)" content="scl(lg) hl(shd) eb(shd)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""></ui-media><ui-content><small data-part="eyebrow">hl(shd) eb(shd) · sheer scrim</small><strong data-part="headline">Shadow carries it</strong></ui-content></cq-box></ui-card>
 	</lay-out>
 
@@ -272,7 +272,7 @@
 	<p class="note"><strong>Resize the window</strong> (or the card's container) across the <strong>lg breakpoint (44rem / 704px)</strong>: below it the base size applies, at/above it the <code>lg:</code>-prefixed size takes over. Only size tokens are prefixable — tone and weight stay static.</p>
 	<div>
 		<ui-card variant="vis(content)" theme="gray" content="scl(sm) lg:scl(lg)"><cq-box><ui-content><small data-part="eyebrow">scl(sm) lg:scl(lg)</small><h2 data-part="headline">Body + headline both jump at lg</h2><p data-part="summary"><code>scl()</code> moves both ramps together — this whole block steps up once the card is at least 44rem wide.</p></ui-content></cq-box></ui-card>
-		<ui-card variant="vis(content)" theme="black dark" content="hl(md) lg:hl(poster)"><cq-box><ui-content><small data-part="eyebrow">hl(md) lg:hl(poster)</small><strong data-part="headline">Headline alone jumps to poster at lg</strong><p data-part="summary"><code>hl()</code> decouples the title: the summary size is unchanged, only the headline leaps to the poster clamp when wide.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="black dark" content="hl(md) lg:hl(3xl)"><cq-box><ui-content><small data-part="eyebrow">hl(md) lg:hl(3xl)</small><strong data-part="headline">Headline alone jumps to 3xl at lg</strong><p data-part="summary"><code>hl()</code> decouples the title: the summary size is unchanged, only the headline leaps to the 3xl display clamp when wide.</p></ui-content></cq-box></ui-card>
 	</div>
 
 	<!-- ============================================================
