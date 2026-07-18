@@ -2,8 +2,8 @@
 
 A **CSS-only** carousel for `<ui-media>`: a flex scroll-snap row with native
 `::scroll-marker` dots and `::scroll-button()` arrows — **no JavaScript**. Driven by
-a `media=` token string **or** the dedicated `nav=` / `arrow=` / `dot=` attributes (see
-[Two ways to configure](#two-ways-to-configure)).
+a `media=` token string — the only configuration surface (see
+[Configuring](#configuring)).
 
 ```html
 <ui-media media="asr(16/9) nav">
@@ -20,35 +20,28 @@ a `media=` token string **or** the dedicated `nav=` / `arrow=` / `dot=` attribut
 
 ---
 
-## Two ways to configure
+## Configuring
 
-Every option works through **either** form — pick whichever fits:
-
-**1. `media=` string (inheritable).** Parens-wrapped, prefixed tokens. **Substring-matched**
-and **inherits down**, so it may sit on the `<ui-media>` **or any ancestor** `<ui-card>` —
-the natural CMS vehicle (one attribute on the card configures the inner media).
+**`media=` tokens are the only form.** Parens-wrapped, prefixed tokens,
+**substring-matched** — each token is atomic (one value per `token(…)`, never
+grouped). Order never matters. The old dedicated `nav=` / `arrow=` / `dot=`
+attributes are **removed**.
 
 ```html
 <ui-media media="asr(16/9) nav(blw) arw(lg) arw(drk) dot(be)"> … </ui-media>
 
-<!-- or on an ancestor <ui-card> (propagates to the inner <ui-media>) -->
+<!-- or on the card host (propagates to the inner <ui-media>) -->
 <ui-card media="asr(16/9) nav(blw) arw(lg) arw(drk)">
   <cq-box><ui-media> … </ui-media></cq-box>
 </ui-card>
 ```
 
-**2. `nav=` / `arrow=` / `dot=` attributes (grouped, self-only).** Space-separated,
-whole-word values — no repeated prefix. Set them on the `<ui-media>` **itself only**;
-they are **not** inherited (so they never need to sit on the parent card).
-
-```html
-<ui-media nav="blw" arrow="lg drk" dot="be"> … </ui-media>
-```
-
-The two snippets above render **identically**. The value is the same 3-letter code; only
-the wrapper differs: `media="arw(drk)"` ≡ `arrow="drk"`, `media="dot(pll) dot(be)"` ≡
-`dot="pll be"`, bare `media="nav"` ≡ boolean `nav`, `media="axis(y)"` ≡ `nav="y"`.
-Order never matters.
+**Inheritance stops at the card.** A `<ui-media>` reads `media=` from **itself or its
+nearest `<ui-card>` / `<ui-reveal>` host only** — the natural CMS vehicle (one attribute
+on the card configures the inner media) — never from arbitrary ancestors. A `media=` on
+a `<lay-out overflow>` scroller uses this **same control vocabulary**
+(`<lay-out overflow media="nav(blw) arw(bare) pages">`) but configures only the
+lay-out's **own** carousel; it never leaks into a descendant `<ui-media>`.
 
 > **Shared ink scale.** Controls + scrim use one shade vocabulary: `lgt` (light/white) ·
 > `drk` (dark/black) · `med` (scrim only). Arrows + dots use `lgt`/`drk`.
@@ -72,21 +65,20 @@ only**, gated by `@supports (scroll-marker-group: after)`. Everywhere else it
 
 ### `nav()` — which controls
 
-| `media=` token | Attr form | Result |
-|----------------|-----------|--------|
-| `nav` | `nav` (boolean) | Both **dots + arrows** (overlaid) |
-| `nav(dot)` | `nav="dot"` | Dots only |
-| `nav(arw)` | `nav="arw"` | Arrows only |
-| `nav(non)` | `nav="non"` | No controls — bare swipe scroller |
-| `nav(blw)` | `nav="blw"` | Dots + arrows in a reserved **band below** the media |
-| `nav(abv)` | `nav="abv"` | Dots + arrows in a reserved **band above** the media (mirror of `nav(blw)`) |
+| `media=` token | Result |
+|----------------|--------|
+| `nav` | Both **dots + arrows** (overlaid) |
+| `nav(dot)` | Dots only |
+| `nav(arw)` | Arrows only |
+| `nav(blw)` | Dots + arrows in a reserved **band below** the media |
+| `nav(abv)` | Dots + arrows in a reserved **band above** the media (mirror of `nav(blw)`) |
 
 ### `axis()` — scroll direction
 
-| `media=` token | Attr form | Result |
-|----------------|-----------|--------|
-| *(default)* | — | Horizontal (snap on X) |
-| `axis(y)` | `nav="y"` | **Vertical** carousel (column, snap on Y). Arrows become **up/down**; dots become a vertical column on the inline-end edge. Give the frame a portrait `asr()` so there's height to scroll. |
+| `media=` token | Result |
+|----------------|--------|
+| *(default)* | Horizontal (snap on X) |
+| `axis(y)` | **Vertical** carousel (column, snap on Y). Arrows become **up/down**; dots become a vertical column on the inline-end edge. Give the frame a portrait `asr()` so there's height to scroll. |
 
 ### `asr()` — aspect ratio of the frame
 
@@ -95,24 +87,25 @@ only**, gated by `@supports (scroll-marker-group: after)`. Everywhere else it
 
 ### `arw()` — arrows
 
-| `media=` token | Attr form | Result |
-|----------------|-----------|--------|
-| `arw(chv)` | `arrow="chv"` | Chevron glyph (**default**) |
-| `arw(arr)` | `arrow="arr"` | Full arrow glyph (shaft + head) |
-| `arw(lgt)` | `arrow="lgt"` | **Light theme** — light circle + dark glyph (the default look, made explicit) |
-| `arw(drk)` | `arrow="drk"` | **Dark theme** in one atom — dark circle + white glyph + light hover ring; composes on the overlay and in `nav(blw)`/`nav(abv)` bands. On `arw(bare)` it just paints a dark glyph |
-| `arw(sm)` `arw(md)` `arw(lg)` `arw(xl)` | `arrow="sm…xl"` | Button size (`md` = 2.25rem default) |
-| `arw(bare)` | `arrow="bare"` | **Drop the circle** — render the glyph itself as a recolourable shape (`--ui-media-arrow-color`) |
-| `arw(sqr)` `arw(sft)` | `arrow="sqr/sft"` | **Square** button instead of the default circle — `sqr` = sharp corners, `sft` = slight radius (`--ui-media-arrow-radius`) |
-| `arw(set)` | `arrow="set"` | Group both arrows as an **adjacent pair** (one cluster). Place it in any grid cell — `arw(set) arw(<cell>)`, e.g. `arw(set) arw(bs)` (bottom-start), `arw(set) arw(cc)` (dead center). Default `ce` (horizontal) / `be` (vertical) |
-| `arw(hid)` | `arrow="hid"` | Auto-**hide** the dead-end arrow (default keeps it visible but dimmed) |
-| `arw(tc)` `arw(cc)` `arw(bc)` | `arrow="tc/cc/bc"` | **Split arrows** vertical band — `cc` = centered default. (Inline part of the cell is ignored for split arrows; only the block row applies) |
-| `arw(cs)` | `arrow="cs"` | `axis(y)`: a start-inline cell moves the up/down arrows (and dot column) to the inline-**start** edge (default is inline-end) |
+| `media=` token | Result |
+|----------------|--------|
+| *(default)* | Chevron glyph (no token needed) |
+| `arw(arr)` | Full arrow glyph (shaft + head) |
+| `arw(lgt)` | **Light theme** — light circle + dark glyph (the default look, made explicit) |
+| `arw(drk)` | **Dark theme** in one atom — dark circle + white glyph + light hover ring; composes on the overlay and in `nav(blw)`/`nav(abv)` bands. On `arw(bare)` it just paints a dark glyph |
+| `arw(sm)` `arw(lg)` `arw(xl)` | Button size (default 2.25rem — no token) |
+| `arw(bare)` | **Drop the circle** — render the glyph itself as a recolourable shape (`--ui-media-arrow-color`) |
+| `arw(sqr)` `arw(sft)` | **Square** button instead of the default circle — `sqr` = sharp corners, `sft` = slight radius (`--ui-media-arrow-radius`) |
+| `arw(set)` | Group both arrows as an **adjacent pair** (one cluster). Place it in any grid cell — `arw(set) arw(<cell>)`, e.g. `arw(set) arw(bs)` (bottom-start), `arw(set) arw(cc)` (dead center). Default `ce` (horizontal) / `be` (vertical) |
+| `arw(hid)` | Auto-**hide** the dead-end arrow (default keeps it visible but dimmed) |
+| `arw(tc)` `arw(cc)` `arw(bc)` | **Split arrows** vertical band — `cc` = centered default. (Inline part of the cell is ignored for split arrows; only the block row applies) |
+| `arw(cs)` | `axis(y)`: a start-inline cell moves the up/down arrows (and dot column) to the inline-**start** edge (default is inline-end) |
+| `arw(blw)` `arw(abv)` | Arrows **alone** in a reserved band below / above the media — dots keep their on-media position/ink; the arrow ink flips to the band theme |
 
 > **Default look:** the overlay circle is Instagram-style — a frosted semi-transparent-white
 > circle, dark chevron, soft shadow. `arw(lgt)` = that light theme; `arw(drk)` = the dark
-> theme. Shape (`chv`/`arr`) and theme (`lgt`/`drk`) compose, e.g. `arw(arr) arw(drk)` ≡
-> `arrow="arr drk"`. One base SVG is **rotated** per direction (left 180°, up −90°, down 90°).
+> theme. Shape (`arw(arr)`) and theme (`lgt`/`drk`) compose, e.g. `arw(arr) arw(drk)`.
+> One base SVG is **rotated** per direction (left 180°, up −90°, down 90°).
 
 ### Multiple items per slide — group wrappers
 
@@ -171,17 +164,19 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 
 ### `dot()` — dots
 
-| `media=` token | Attr form | Result |
-|----------------|-----------|--------|
-| `dot(cir)` | `dot="cir"` | Circular dots (**default**) |
-| `dot(pll)` | `dot="pll"` | Rounded-rect pills; the active pill **fills L→R** over the autoplay duration as a timer hint |
-| `dot(lgt)` `dot(drk)` | `dot="lgt/drk"` | Ink — light / dark (`bg` + active). `nav(blw)`/`nav(abv)` default to dark |
-| `dot(sm)` `dot(md)` `dot(lg)` `dot(xl)` | `dot="sm…xl"` | Size (`md` = default) — one scale for dots, pills **and** thumbnails, so `dot(tmb) dot(lg)` = large thumbnails |
-| **In a band** — `dot(bs/bc/be)` (below) · `dot(ts/tc/te)` (above) | `dot="bs"` … | **Position within a band** — the row is locked by `nav(blw)`/`nav(abv)`, so the cell's inline letter aligns the dots: start / center (default) / end. Start/end clear the arrow on that side (or the `arw(set)` pair). |
-| `dot(bc)` | `dot="bc"` | `axis(y)`: dots centered at the **bottom** (e.g. with a pill timer) |
-| `dot(non)` | `dot="non"` | **No dots** (keeps arrows) — e.g. an arrows-only `nav(blw)`/`nav(abv)` band |
-| `dot(tmb)` | `dot="tmb"` | **Image thumbnails** instead of dots. Each slide sets `--ui-media-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-media-autoplay`. |
-| `dot(ts)` `dot(te)` `dot(bs)` `dot(be)` | `dot="ts/te/bs/be"` | **Corner placement** for the overlay marker-group — top-start / top-end / bottom-start / bottom-end (logical, RTL-safe). Center row `dot(cs)` `dot(cc)` `dot(ce)` completes the 9-grid. Inset via `--ui-media-marker-inset`. |
+| `media=` token | Result |
+|----------------|--------|
+| *(default)* | Circular dots (no token needed) |
+| `dot(pll)` | Rounded-rect pills; the active pill **fills L→R** over the autoplay duration as a timer hint |
+| `dot(hyb)` | **Hybrid** — markers stay circle dots; the active one morphs into a pill and runs the same fill timer as `dot(pll)` |
+| `dot(lgt)` `dot(drk)` | Ink — light / dark (`bg` + active). `nav(blw)`/`nav(abv)` default to dark |
+| `dot(sm)` `dot(md)` `dot(lg)` `dot(xl)` | Size (`md` = default) — one scale for dots, pills **and** thumbnails, so `dot(tmb) dot(lg)` = large thumbnails |
+| **In a band** — `dot(bs/bc/be)` (below) · `dot(ts/tc/te)` (above) | **Position within a band** — the row is locked by `nav(blw)`/`nav(abv)`, so the cell's inline letter aligns the dots: start / center (default) / end. Start/end clear the arrow on that side (or the `arw(set)` pair). |
+| `dot(bc)` | `axis(y)`: dots centered at the **bottom** (e.g. with a pill timer) |
+| `dot(non)` | **No dots** (keeps arrows) — e.g. an arrows-only `nav(blw)`/`nav(abv)` band |
+| `dot(blw)` `dot(abv)` | Dots **alone** in a reserved band below / above the media — arrows keep their on-media position/ink; the dot/pill ink flips to the band theme |
+| `dot(tmb)` | **Image thumbnails** instead of dots. Each slide sets `--ui-media-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-media-autoplay`. |
+| `dot(ts)` `dot(te)` `dot(bs)` `dot(be)` | **Corner placement** for the overlay marker-group — top-start / top-end / bottom-start / bottom-end (logical, RTL-safe). Center row `dot(cs)` `dot(cc)` `dot(ce)` completes the 9-grid. Inset via `--ui-media-marker-inset`. |
 
 ### Thumbnail navigation — `dot(tmb)`
 
@@ -204,22 +199,21 @@ in pure CSS). (The URL uses a custom property today; it swaps to typed
 
 ### `load()` — image/video loading (JS-applied)
 
-| Token / attr | Result |
-|--------------|--------|
+| Token | Result |
+|-------|--------|
 | *(default)* | Every slide `loading="lazy"`, `decoding="async"`; video `preload="none"` |
-| `eager` (attr) | **First** slide `loading="eager"` + `fetchpriority="high"` (hero); rest lazy |
-| `load(eager)` | **All** slides eager (+ first `fetchpriority="high"`); video `preload="auto"` |
-| `load(lazy)` | All slides lazy |
+| `load(eager)` | **All** slides eager, **first** slide gets `fetchpriority="high"` (hero); video `preload="auto"` |
+| `load(lazy)` | All slides lazy (the default, made explicit) |
 
-Applied by `ui-media-srcset.js`. Best practice: add `eager` to the one above-the-fold
-(hero) carousel; leave the rest default-lazy. Author `loading`/`preload`/`srcset`
-attributes are never overwritten.
+Applied by `ui-media-srcset.js`. Best practice: add `load(eager)` to the one
+above-the-fold (hero) carousel; leave the rest default-lazy. Author
+`loading`/`preload`/`srcset` attributes are never overwritten.
 
 ### `stagger` — staggered content reveal (pure CSS)
 
-| Token / attr | Result |
-|--------------|--------|
-| `stagger` (or `nav="stagger"`) | Each slide's `<ui-content>` children fade + rise in, one after another, when the slide becomes the **snapped** (current) one — the hero-slider reveal |
+| Token | Result |
+|-------|--------|
+| `stagger` | Each slide's `<ui-content>` children fade + rise in, one after another, when the slide becomes the **snapped** (current) one — the hero-slider reveal |
 | `ani(<type>)` | **Content** reveal type: `rise` (default) · `fall` · `lft` · `rgt` · `zom` · `blr` · `fde`. Set on the carousel or per **slide/card**. e.g. `media="stagger ani(zom)"` |
 | `crd(<type>)` | **Card** reveal type (multi-card `<ui-slide>` slides) — same 7 types, **independent** of `ani()`. e.g. `media="stagger crd(rise)"` |
 
@@ -430,8 +424,8 @@ authored directly.
 <!-- Vertical, arrow pair stacked bottom-left -->
 <ui-media media="asr(3/4) axis(y) nav(arw) arw(set) arw(cs)"> … </ui-media>
 
-<!-- Bare swipe scroller, no dots/arrows -->
-<ui-media media="asr(16/9) nav(non)"> … </ui-media>
+<!-- lay-out carousel — same control tokens on the layout's OWN media= -->
+<lay-out overflow media="nav(blw) arw(bare) pages"> … </lay-out>
 ```
 
 See [`carousel.html`](./carousel.html) for live, copy-pasteable examples of every

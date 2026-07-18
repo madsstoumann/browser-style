@@ -109,23 +109,23 @@ These belong to the base `<ui-media>` frame ([media.css](./media.css), docs in
   which is imported first — so carousel rules win ties on source order).
 - **The `nav` token is the trigger.** `:where([media*="nav"])` turns `<ui-media>` into a
   flex scroll-snap row. Without it, `<ui-media>` is a plain single-image frame.
-- **Dual-selector form.** Every rule lists two (or three) selectors so the same option
-  works from `media=` on an ancestor, `media=` on the element, **or** the dedicated
-  `nav=`/`arrow=`/`dot=` attribute on the element:
-  - descendant form (inherits): `:where([media*="x"]) ui-media …`
-  - self form: `ui-media:where([media*="x"], [arrow~="x"]) …`
+- **Dual-selector form.** Every rule lists two selectors so the same option works from
+  `media=` on the card host or on the element itself — and this pair is exactly the
+  "stops at the card" scoping rule, expressed in CSS (only `ui-card`/`ui-reveal`
+  qualify as hosts, never arbitrary ancestors):
+  - host form (card-scoped): `:where(ui-card, ui-reveal):where([media*="x"]) ui-media …`
+  - self form: `ui-media:where([media*="x"]) …`
 - **`@supports (scroll-marker-group: after)` gate.** Dots (`::scroll-marker`) and arrows
   (`::scroll-button`) are Chromium-only; everything inside that block degrades to a bare
   swipe/scroll-snap row elsewhere.
 - **Matching.** `media=` tokens match with `[media*="…"]` (substring); `:not([media*="nav("])`
-  distinguishes bare `nav` from the parenthesised `nav(dot)` / `nav(arw)` / etc. Attribute
-  forms match whole-word with `~=` (`[arrow~="lg"]`), which is what lets them be grouped.
+  distinguishes bare `nav` from the parenthesised `nav(dot)` / `nav(arw)` / etc. Substring
+  matching is also why tokens are atomic — one value per `token(…)`, never grouped.
 
 ## Token → control mapping (inside `@supports`)
 
-- **DOTS present** = bare `nav` · `nav(dot)` · `nav(blw)`
-- **ARROWS present** = bare `nav` · `nav(arw)` · `nav(blw)`
-- `nav(non)` enables neither (bare swipe scroller).
+- **DOTS present** = bare `nav` · `nav(dot)` · `nav(blw)` / `nav(abv)` (drop them with `dot(non)`)
+- **ARROWS present** = bare `nav` · `nav(arw)` · `nav(blw)` / `nav(abv)`
 
 ## Scroller
 

@@ -1,6 +1,6 @@
 # @browser.style/media
 
-A CSS-first **media primitive** — an image/video frame with overlay furniture (label, sticker, favorite, play). It works **standalone** or **nested inside** `<ui-card>` / `<ui-reveal>`, and it is configured entirely through a compact `media=` token string that can sit on the element *itself* or on **any ancestor** (the configuration inherits down through custom properties).
+A CSS-first **media primitive** — an image/video frame with overlay furniture (label, sticker, favorite, play). It works **standalone** or **nested inside** `<ui-card>` / `<ui-reveal>`, and it is configured entirely through a compact `media=` token string that can sit on the element *itself* or on its **`<ui-card>` / `<ui-reveal>` host** (the configuration inherits down through custom properties — but stops at the card: a `media=` on any other ancestor, e.g. a `<lay-out>`, configures that element's own scroller and never leaks into a nested `<ui-media>`).
 
 > **Status:** shipped (v4). `<ui-media>` is the media primitive extracted from `ui-card.css` into `ui/card/media.css`, per `docs/plans/2026-06-20-ui-media-content-split-design.md`. This documents the implemented API.
 
@@ -85,12 +85,13 @@ Both use the **exact same** HTML as CSS-only; with no JS the element still rende
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
-| `media` | token string | Configures the frame + overlays. Valid on `<ui-media>` **or any ancestor** (it inherits). See the DSL below. |
+| `media` | token string | Configures the frame + overlays. Valid on `<ui-media>` **or its `<ui-card>` / `<ui-reveal>` host** (it inherits — but only from the card host, never from other ancestors). See the DSL below. |
 | `cdn` | `on` \| `off` | Force-enable/disable the Cloudflare `srcset` upgrade regardless of host. Default: auto (on only for `*.browser.style`). |
 | `breakpoints` | CSV of widths | Override srcset widths. Default `240,320,480,720,1200`. |
 | `format` / `quality` / `fit` | string | Cloudflare transform params. Default `avif` / `80` / `cover`. |
 | `sizes` | string | The `sizes` value. Default `auto`. |
-| `eager` | boolean | First `<img>` loads `eager` + `fetchpriority="high"` (hero image). |
+
+Loading strategy is a **`media=` token**, not an attribute: `load(eager)` (all slides eager, first `<img>` gets `fetchpriority="high"` — hero) / `load(lazy)` (the default).
 
 There are no per-overlay positioning/theming attributes on the overlay elements themselves — everything is driven from the parent `media=` string. (The overlay elements do expose their own `theme=` / `size=` for self-service use; see *Overlay furniture*.)
 
@@ -116,10 +117,10 @@ Because custom properties inherit, **one rule set serves both placement cases**:
 | `flp()` | `h` `v` `hv` | flip / mirror the image | `--ui-media-fl-x` / `-fl-y` |
 | `hov()` | `zoom` `pan` `track` `drift` | hover effect (image only) | `--ui-media-hv-*` |
 | `scm()` | *(bare)* · pos `ts … be` · size `sm md lg` · intensity `shr lgt med drk sld` (sheer/solid aliases) | scrim — bare matches the host `ovr()`; three composable axes (direction · size · intensity) | `--ui-media-scrim-paint` |
-| `nav()` | *(bare, or `dots` `arrows` `none`)* | carousel — **the token IS the trigger**; bare = dots + arrows | carousel layout + controls |
-| `vid()` | `cc` `pip` `fls` · size `sm md lg xl` | player-tool cluster over a chrome-less `<video>` — JS **injects** the requested buttons (bottom-end; order CC → PiP → fullscreen, fullscreen rightmost). Size mirrors `arw()` (`vid(sm)`…`vid(xl)`, default 2.5rem). Needs `index.js`; PiP feature-detected (skipped in Firefox). `cc` = subtitles/captions button (glyph only — **switching not wired yet**). ≡ `vid="cc pip fls sm"`. *(Play/pause is `<ui-play>` furniture, not a `vid()` value.)* | injected `<menu class="ui-media-tools">` + `--ui-media-tool-size` |
+| `nav()` | *(bare, or `dot` `arw` `blw` `abv`)* | carousel — **the token IS the trigger**; bare = dots + arrows (full control vocabulary — `arw()`, `dot()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()` — in [carousel.md](./carousel.md)) | carousel layout + controls |
+| `vid()` | `cc` `pip` `fls` · size `sm md lg xl` | player-tool cluster over a chrome-less `<video>` — JS **injects** the requested buttons (bottom-end; order CC → PiP → fullscreen, fullscreen rightmost). Size mirrors `arw()` (`vid(sm)`…`vid(xl)`, default 2.5rem). Needs `index.js`; PiP feature-detected (skipped in Firefox). `cc` = subtitles/captions button (glyph only — **switching not wired yet**). *(Play/pause is `<ui-play>` furniture, not a `vid()` value.)* | injected `<menu class="ui-media-tools">` + `--ui-media-tool-size` |
 | `chip()` `sticker()` `save()` `play()` | `ts … be` *(position)* **or** `red orange green blue accent dark light subtle` *(sub-theme)* | place + theme an overlay element | element inset (absolute) / element `--ui-{el}-*` tokens |
-| `ply()` | `sm md lg xl` | **size** the `<ui-play>` control (distinct from `play(<pos>)` which *positions* it). Mirrors `<ui-play>`'s own `size=` scale; an explicit `size=` on the element still wins. ≡ `ply="lg"` | `--ui-play-sz` / `--ui-play-icon-sz` on the host |
+| `ply()` | `sm md lg xl` | **size** the `<ui-play>` control (distinct from `play(<pos>)` which *positions* it). Mirrors `<ui-play>`'s own `size=` scale; an explicit `size=` on the element still wins. | `--ui-play-sz` / `--ui-play-icon-sz` on the host |
 
 #### `asr()` — the 8 numeric aspect ratios
 
@@ -276,15 +277,15 @@ A single text node still works as one line: `<ui-sticker>-20%</ui-sticker>`.
 
 ## Carousel
 
-The `nav()` token **is the trigger** — there is no separate `crs` flag. Any `nav` turns the frame into a flex scroll-snap row; each direct `img`/`video` becomes a 100%-wide slide.
+The `nav()` token **is the trigger** — there is no separate `crs` flag. Any `nav` turns the frame into a flex scroll-snap row; each direct `img`/`video` becomes a 100%-wide slide. (Full token reference and recipes: [carousel.md](./carousel.md); internals: [media.carousel.md](./media.carousel.md).)
 
 | Token | Controls shown |
 |-------|----------------|
 | `nav` *(bare)* | dots **+** arrows |
-| `nav(dots)` | dots only |
-| `nav(arrows)` | arrows only |
-| `nav(none)` | swipe-only (no controls) |
-| `nav(below)` | dots **+** arrows in a reserved bottom **band** (not overlaid) |
+| `nav(dot)` | dots only |
+| `nav(arw)` | arrows only |
+| `nav(blw)` | dots **+** arrows in a reserved **band below** the media (not overlaid) |
+| `nav(abv)` | dots **+** arrows in a reserved **band above** the media |
 
 ```html
 <ui-media media="nav asr(16/9)">
@@ -304,34 +305,34 @@ All carousel CSS lives in **`media.carousel.css`** (imported by `ui-card.css` al
 
 | Token | Effect |
 |-------|--------|
-| `arw(chevron)` *(default)* | chevron glyph (shape) |
-| `arw(arrow)` | full-arrow glyph, shaft + head (shape) |
-| `arw(light)` *(default)* · `arw(dark)` | glyph ink — light/white (for a dark circle) / dark (for a light circle) |
-| `arw(sm)` · `arw(md)` *(default)* · `arw(lg)` · `arw(xl)` | arrow button size (`1.75` / `2.25` / `2.75` / `3.25rem`) |
-| `arw(mid)` *(default)* | edge arrows at vertical center |
-| `arw(top)` | edge arrows at top |
-| `arw(bot)` | edge arrows at bottom |
-| `arw(set)` | both arrows as an adjacent pair at the inline-end |
+| *(default)* | chevron glyph in a frosted light circle, vertically centered — no token needed |
+| `arw(arr)` | full-arrow glyph, shaft + head (shape) |
+| `arw(lgt)` · `arw(drk)` | theme — light circle + dark glyph (the default, made explicit) / dark circle + white glyph |
+| `arw(sm)` · `arw(lg)` · `arw(xl)` | arrow button size (`1.75` / `2.75` / `3.25rem`; default `2.25rem`, no token) |
+| `arw(sqr)` · `arw(sft)` | square button — sharp corners / slight radius |
+| `arw(tc)` · `arw(cc)` *(default)* · `arw(bc)` | split arrows at the top / center / bottom row |
+| `arw(set)` | both arrows as an adjacent pair (place with `arw(set) arw(<cell>)`, default inline-end) |
 | `arw(bare)` | drop the circle — render the glyph itself as a coloured arrow (any colour) |
-| `arw(hide)` | **auto-hide** the dead-end arrow (no slide that way) — opt out of the always-visible default |
+| `arw(hid)` | **auto-hide** the dead-end arrow (no slide that way) — opt out of the always-visible default |
+| `arw(blw)` · `arw(abv)` | arrows alone in a reserved band below / above the media |
 
-`arw()` atoms are **independent** — combine them as separate tokens, e.g. `arw(arrow) arw(dark) arw(lg)` or `arw(set) arw(bot)`, **not** `arw(arrow dark)`. Shape (`arw(arrow)`) and ink (`arw(dark)`) are separate axes and compose. A direct `style="--ui-media-arrow-prev/-next: …"` still overrides as an escape hatch.
+`arw()` atoms are **independent** — combine them as separate tokens, e.g. `arw(arr) arw(drk) arw(lg)` or `arw(set) arw(bc)`, **not** `arw(arr drk)`. Shape (`arw(arr)`) and theme (`arw(lgt)`/`arw(drk)`) are separate axes and compose. A direct `style="--ui-media-arrow-prev/-next: …"` still overrides as an escape hatch.
 
 #### Theming arrows
 
 Two render modes, both token-driven — no named theme atoms needed:
 
-- **Circle** *(default)* — an Instagram-style frosted button: a semi-transparent-white `--ui-media-arrow-bg` (`rgb(255 255 255 / 0.7)`, picks up the image tint), dark glyph, no border, and a soft `--ui-media-arrow-shadow`. Colour the circle with `--ui-media-arrow-bg` / `--ui-media-arrow-bg-hover`; for a dark circle switch the glyph to white with `arw(lgt)` (composes with `arw(arr)`). Square it with `--ui-media-arrow-radius`; add a border with `--ui-media-arrow-border`, drop the shadow with `--ui-media-arrow-shadow: none`.
-- **Bare** (`arw(bare)`) — no circle; the glyph *is* the colour, set with `--ui-media-arrow-color` (and `--ui-media-arrow-color-hover`). Default ink is **white** over an image and **auto-flips dark** under `nav(below)` (light band). Set any colour:
+- **Circle** *(default)* — an Instagram-style frosted button: a semi-transparent-white `--ui-media-arrow-bg` (`rgb(255 255 255 / 0.7)`, picks up the image tint), dark glyph, no border, and a soft `--ui-media-arrow-shadow`. Colour the circle with `--ui-media-arrow-bg` / `--ui-media-arrow-bg-hover`; for a dark circle + white glyph in one token use `arw(drk)` (composes with `arw(arr)`). Square it with `--ui-media-arrow-radius` (or `arw(sqr)`/`arw(sft)`); add a border with `--ui-media-arrow-border`, drop the shadow with `--ui-media-arrow-shadow: none`.
+- **Bare** (`arw(bare)`) — no circle; the glyph *is* the colour, set with `--ui-media-arrow-color` (and `--ui-media-arrow-color-hover`). Default ink is **white** over an image and **auto-flips dark** in a `nav(blw)`/`nav(abv)` (light) band. Set any colour:
 
 ```html
 <!-- black bare arrows -->
-<ui-media media="nav(arrows) arw(bare)" style="--ui-media-arrow-color: #000">…</ui-media>
+<ui-media media="nav(arw) arw(bare)" style="--ui-media-arrow-color: #000">…</ui-media>
 ```
 
-Bare drops the circle (and its `--ui-media-arrow-shadow`), so a white glyph relies on the image being dark enough; over bright photos use `arw(bare)` on a `nav(blw)`/`nav(abv)` band, or keep the frosted circle. Bare composes with `arw(arrow)` (masked full-arrow) and every placement/`set` atom.
+Bare drops the circle (and its `--ui-media-arrow-shadow`), so a white glyph relies on the image being dark enough; over bright photos use `arw(bare)` on a `nav(blw)`/`nav(abv)` band, or keep the frosted circle. Bare composes with `arw(arr)` (masked full-arrow) and every placement/`set` atom.
 
-**By default every arrow stays visible** — at the first/last slide the dead-end arrow dims to `--ui-media-arrow-disabled-opacity` (default `0.5`) instead of disappearing. Add `arw(hide)` to auto-hide it instead. (Implementation note: a `:disabled` `::scroll-button` can't carry a mask, so a bare dead-end arrow paints the glyph SVG directly — white over an image, dark under `nav(below)` — tracking the glyph's light/dark shade rather than an arbitrary `--ui-media-arrow-color`.)
+**By default every arrow stays visible** — at the first/last slide the dead-end arrow dims to `--ui-media-arrow-disabled-opacity` (default `0.5`) instead of disappearing. Add `arw(hid)` to auto-hide it instead. (Implementation note: a `:disabled` `::scroll-button` can't carry a mask, so a bare dead-end arrow paints the glyph SVG directly — white over an image, dark in a band — tracking the glyph's light/dark shade rather than an arbitrary `--ui-media-arrow-color`.)
 
 ### Pill dots with autoplay fill — `dot()`
 
