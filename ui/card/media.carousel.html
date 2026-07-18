@@ -351,8 +351,8 @@
 	     STAGGERED CONTENT REVEAL (pure CSS)
 	     ════════════════════════════════════════════════════════════ -->
 
-	<h2>Staggered content reveal — <code>stagger</code> · <code>ani()</code></h2>
-	<p>A card's <code>&lt;ui-content&gt;</code> reveal on snap (<code>scroll-state(snapped)</code> query + per-child delay). Type via <code>ani()</code>: <code>rise</code> (default) · <code>fall</code> · <code>lft</code> · <code>rgt</code> · <code>zom</code> · <code>blr</code> · <code>fde</code>.</p>
+	<h2>Stagger — content reveal</h2>
+	<p>A card's content reveals on snap. Type via <code>ani()</code>: <code>rise</code> · <code>fall</code> · <code>lft</code> · <code>rgt</code> · <code>zom</code> · <code>blr</code> · <code>fde</code>.</p>
 	<lay-out>
 			<ui-media media="asr(16/9) rds(lg) clip nav stagger">
 				<ui-card variant="ovr(bl) rds(none)" media="asr(16/9) obp(cc) scm" content="pad(lg)"><cq-box>
@@ -370,8 +370,8 @@
 			</ui-media>
 	</lay-out>
 
-	<h3>A different <code>ani()</code> per slide — controls below (<code>nav(blw)</code>)</h3>
-	<p><code>ani()</code> per <strong>slide</strong> (not the carousel) — each reveals differently, the closer value wins. Controls in a <code>nav(blw)</code> band.</p>
+	<h3>Per-slide <code>ani()</code></h3>
+	<p>Each slide reveals differently (closer value wins); controls in a <code>nav(blw)</code> band.</p>
 	<lay-out md="columns(2)">
 			<ui-media media="rds(none) clip nav(blw) stagger">
 				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm ani(rise)" content="pad(lg)"><cq-box>
@@ -407,20 +407,11 @@
 	<!-- ════════════════════════════════════════════════════════════
 	     STAGGER-BASED SLIDES — layered / multi-card (all use stagger)
 	     ════════════════════════════════════════════════════════════ -->
-	<h2>Stagger — layered &amp; multi-card slides</h2>
-	<p>Multiple cards per page, revealed with <code>stagger</code>. Two ways to build it:
-	a flat <code>&lt;lay-out overflow pages&gt;</code> (scroll-driven, per-card) or a
-	<code>&lt;ui-media&gt;</code> carousel of grouped slides (snap-triggered, two-channel).</p>
+	<h2>Stagger — multi-card slides</h2>
+	<p>Multiple cards per page via <code>stagger</code>: a flat <code>&lt;lay-out overflow pages&gt;</code> or a <code>&lt;ui-media&gt;</code> of grouped slides.</p>
 
-	<h3><code>&lt;lay-out overflow pages stagger&gt;</code> — flat cards, no <code>ui-media</code></h3>
-	<p>Flat <code>&lt;ui-reveal&gt;</code> cards in one <code>&lt;lay-out&gt;</code>; <code>pages</code> snaps
-	per page of N (responsive 2→3), <code>stagger="rise"</code> reveals each card as it swipes in
-	(scroll-driven, re-runs). Controls via the shared <code>nav="blw" arrow="bare"</code>. No inner
-	slide wrappers — compare the <code>crd()</code>+<code>ani()</code> <code>ui-media</code> version below.
-	<strong>Note:</strong> use a block-axis (<code>rise</code>/<code>fall</code>) or no-translate
-	(<code>fde</code>/<code>zom</code>/<code>blr</code>) effect here — an inline slide
-	(<code>lft</code>/<code>rgt</code>) translates cards along the scroll axis, breaking scroll-to-end
-	and overlapping neighbours' controls.</p>
+	<h3><code>&lt;lay-out overflow pages stagger&gt;</code> — flat cards</h3>
+	<p>Flat <code>&lt;ui-reveal&gt;</code> cards; <code>pages</code> snaps per page, <code>stagger="rise"</code> reveals each as it swipes in. Use block/no-translate effects (<code>rise</code>/<code>fall</code>/<code>fde</code>/<code>zom</code>/<code>blr</code>) — inline slides break scroll-to-end.</p>
 
 	<lay-out class="reveal-cards" md="columns(2)" lg="columns(3)" overflow nav="blw" arrow="bare" pages stagger="rise">
 		<ui-reveal type="flip" icon="dark top right sm" variant="ovr(bl)" media="asr(3/4) obp(cc) scm hov(zoom)" style="--ui-reveal-content-bg: hsl(255 60% 95%);">
@@ -551,8 +542,8 @@
 		</ui-reveal>
 	</lay-out>
 
-	<h3><code>stagger</code> — two channels  — <code>crd()</code> + <code>ani()</code></h3>
-	<p>Two channels: <code>crd()</code> animates the <strong>cards</strong>, <code>ani()</code> their <strong>content</strong> (here all <code>ani(fall)</code>). Both cascade (card index, then child index).</p>
+	<h3>Two channels — <code>crd()</code> + <code>ani()</code></h3>
+	<p><code>crd()</code> animates the cards, <code>ani()</code> their content; both cascade.</p>
 	<lay-out>
 			<ui-media class="slide-gap" media="nav stagger crd(rise)">
 				<lay-out md="columns(3)" stagger>
@@ -600,8 +591,8 @@
 			</ui-media>
 	</lay-out>
 
-	<h3>Room for card shadows — <code>padding</code> + <code>scroll-padding</code></h3>
-	<p>Elevated <code>&lt;ui-card&gt;</code> slides — the scroller clips its scrollport, cutting the shadow. <code>.shadow-room</code> adds matching <code>padding-inline</code> + <code>scroll-padding-inline</code> so it isn't clipped.</p>
+	<h3>Room for card shadows</h3>
+	<p>The scroller clips its scrollport; <code>.shadow-room</code> adds matching <code>padding-inline</code> + <code>scroll-padding-inline</code> so shadows aren't cut.</p>
 	<lay-out>
 			<ui-media class="slide-gap shadow-room" media="nav(blw) arw(bare) stagger ani(lft)">
 				<lay-out md="columns(2)" stagger>
@@ -641,15 +632,9 @@
 	<!-- ════════════════════════════════════════════════════════════
 	     · FULL-SCREEN — bleed + lay-out overflow="preview-2xl center"
 	     ════════════════════════════════════════════════════════════ -->
-	<h2>13 · Full-screen carousel — <code>bleed</code> + <code>overflow="preview-2xl center"</code></h2>
-	<p>A cinematic hero carousel. The peek is a <code>&lt;lay-out overflow&gt;</code> feature (not
-	<code>&lt;ui-media&gt;</code>): <code>center</code> centers the current slide and reveals a sliver of the
-	<em>previous</em> and <em>next</em> slides; <code>preview-2xl</code> sizes each peek to 25% of the
-	carousel width, so the current slide is ≈50% and each neighbour ≈25%. <code>bleed</code> takes it
-	edge-to-edge; controls compose unchanged — <code>nav="dot"</code> shows dots only (no arrows),
-	<code>dot="hyb blw"</code> drops a hybrid dot/pill row into a band below. <code>gaps</code> adds a gutter
-	(matching the inter-item gap) before the first and after the last item, so the ends aren't flush.</p>
-	<lay-out bleed md="columns(1)" overflow="preview-2xl center gaps" nav="dot" dot="hyb blw">
+	<h2>13 · Full-screen center carousel — <code>bleed</code> + <code>preview-2xl center</code></h2>
+	<p>A <code>&lt;lay-out overflow&gt;</code> hero: <code>center</code> centers the slide with 25% peeks each side (<code>preview-2xl</code>), <code>bleed</code> goes edge-to-edge, <code>gaps</code> adds end gutters. Controls: centered dots + bare arrow set (<code>nav="blw" arrow="set bare" dot="bc"</code>).</p>
+	<lay-out bleed md="columns(1)" overflow="preview-2xl center gaps" nav="blw" arrow="set bare" dot="bc">
 		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
 			<cq-box>
 				<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
@@ -682,16 +667,33 @@
 		</ui-card>
 	</lay-out>
 
-	<h2>14 · Full-screen carousel, seamless loop + autoplay — <code>loop</code> · <code>auto()</code></h2>
-	<p>Same cinematic carousel with <code>loop</code> + <code>auto="4s"</code> — progressive enhancement from
-	the shared carousel script (<code>@browser.style/card</code> <code>carousel.js</code>, the same engine that
-	loops <code>&lt;ui-media&gt;</code>); with JS off it stays a finite scroller. It clones the <em>last</em>
-	slide before the first and the <em>first</em> after the last, so the real previous/next slides fill the
-	side peeks, the current slide stays centered even at the ends, and autoplay advances forward forever —
-	rolling into a clone, then hopping instantly to its real twin (identical frame → invisible). The hybrid
-	dot fills as a progress timer; autoplay pauses on hover/focus. Clone dots are auto-suppressed, so the
-	dot count still matches the real slides.</p>
-	<lay-out bleed md="columns(1)" overflow="preview-2xl center" loop auto="4s" nav="dot" dot="hyb blw">
+	<h2>14 · Peek both sides — <code>frame</code> in a card (side by side)</h2>
+	<p>Two framed carousels in a <code>&lt;lay-out lg="columns(2)"&gt;</code>, each wrapped in a <code>&lt;ui-card&gt;</code> for the box-shadow. <code>frame</code> is like <code>center</code> — a peek on each side — but start-snaps with a leading pad, framing a <em>page</em> of cards between symmetric peeks, advancing one card at a time. Arrows sit at their default center-edge position (<code>nav="arw"</code>). Left frames one card (<code>columns(1)</code>); right frames two (<code>columns(2)</code>) with a thinner <code>preview-sm</code> peek.</p>
+	<lay-out lg="columns(2)" style="align-items:start">
+		<ui-card variant="" theme="pale green">
+			<lay-out xs="p(1)" md="columns(1)" overflow="preview-xs frame" nav="arw" arrow="hid">
+				<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) obp(cc) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Nature</small><h3 data-part="headline">Downstream</h3></ui-content></cq-box></ui-card>
+				<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) obp(cc) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/hubble.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Space</small><h3 data-part="headline">Deep Field</h3></ui-content></cq-box></ui-card>
+				<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) obp(cc) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Food</small><h3 data-part="headline">Kitchen</h3></ui-content></cq-box></ui-card>
+				<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) obp(cc) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Calm</small><h3 data-part="headline">Breathe</h3></ui-content></cq-box></ui-card>
+				<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) obp(cc) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/world.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Travel</small><h3 data-part="headline">Go Far</h3></ui-content></cq-box></ui-card>
+			</lay-out>
+		</ui-card>
+		<ui-card variant="" theme="pale blue">
+			<lay-out xs="p(1)" md="columns(2)" overflow="preview-xs frame" nav="arw" arrow="hid">
+				<ui-card variant="ovr(bl) rds(lg)" media="asr(2/3) obp(cc) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/game_01.png" alt=""></ui-media><ui-content><small data-part="eyebrow">RPG</small><h3 data-part="headline">Starfall</h3></ui-content></cq-box></ui-card>
+				<ui-card variant="ovr(bl) rds(lg)" media="asr(2/3) obp(cc) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/game_02.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Western</small><h3 data-part="headline">Frontier</h3></ui-content></cq-box></ui-card>
+				<ui-card variant="ovr(bl) rds(lg)" media="asr(2/3) obp(cc) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/quantum.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Sci-Fi</small><h3 data-part="headline">Entangled</h3></ui-content></cq-box></ui-card>
+				<ui-card variant="ovr(bl) rds(lg)" media="asr(2/3) obp(cc) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/websummit.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Tech</small><h3 data-part="headline">Summit</h3></ui-content></cq-box></ui-card>
+				<ui-card variant="ovr(bl) rds(lg)" media="asr(2/3) obp(cc) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/finance.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Money</small><h3 data-part="headline">Grow It</h3></ui-content></cq-box></ui-card>
+				<ui-card variant="ovr(bl) rds(lg)" media="asr(2/3) obp(cc) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Nature</small><h3 data-part="headline">Current</h3></ui-content></cq-box></ui-card>
+			</lay-out>
+		</ui-card>
+	</lay-out>
+
+	<h2>15 · Seamless loop + autoplay — <code>loop</code> · <code>auto()</code></h2>
+	<p>Same carousel with <code>loop</code> + <code>auto="4s"</code> (JS, via <code>carousel.js</code>). It clones the end slides so the peeks stay filled and autoplay wraps invisibly; the hybrid dot fills as a timer, and a manual <code>&lt;ui-play&gt;</code> (positioned with the <code>media="play(bs)"</code> token) pauses/resumes it. JS off → finite scroller.</p>
+	<lay-out bleed md="columns(1)" overflow="preview-2xl center" loop auto="4s" nav="dot" dot="hyb blw" media="play(bs)">
 		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
 			<cq-box>
 				<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>

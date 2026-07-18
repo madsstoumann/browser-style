@@ -81,7 +81,7 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
 
 ### overflow
 - Type: token list (space-separated tokens)
-- Accepted tokens: `none`, `preview`, `preview-xs`, `preview-sm`, `preview-lg`, `preview-xl`, `preview-2xl`, `center`, `gaps`, `fade`, `fade-start`, `fade-end`
+- Accepted tokens: `none`, `preview`, `preview-xs`, `preview-sm`, `preview-lg`, `preview-xl`, `preview-2xl`, `center`, `frame`, `gaps`, `fade`, `fade-start`, `fade-end`
 - Default: not present
 - Description: Enables an overflow behavior; when present the layout switches to a horizontal scroller. Use tokens to select variants:
   - `overflow="none"` — hides overflow (no scroll)
@@ -92,7 +92,8 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
   - `overflow="preview-xl"` — extra large preview (200px)
   - `overflow="preview-2xl"` — container-relative preview (25% of the carousel width)
   - `overflow="preview-xl center"` — **peek both sides**: centers the current slide and reveals a sliver of the *previous* **and** *next* items. Pair with any `preview*` token for the peek size; use `preview-2xl` for a full-screen 50/25/25 (current ≈50%, each neighbour ≈25%). Composes with `nav`/`arrow`/`dot` controls and `bleed`. Intended for single-item (`columns(1)`) cinematic carousels — not for use with `[pages]`.
-  - `overflow="… gaps"` — adds a leading gutter before the first item and a trailing gutter after the last, each equal to the inter-item column gap (via first/last-child margins, so it composes with `center` + `bleed`), so the ends aren't flush to the edge
+  - `overflow="preview-2xl frame"` — like `center`, a peek on **each** side, but **start-snapped** with a leading peek pad, so it frames a *page* of `--_ci` cards between symmetric peeks `[peek | card(s) | peek]` and advances one card at a time. Works for `columns(1)` (one framed card) **and** `columns(2+)` (2-up "Reels" style — use a smaller peek like `preview-sm` so each peek stays thinner than a card). Use `frame` (not `center`) whenever you want 2+ cards visible — centre-snap ignores an asymmetric scroll-padding, so a multi-up must be start-snapped. `center` remains the choice for the single centred slide + seamless `loop`.
+  - `overflow="… gaps"` — adds a leading gutter before the first item and a trailing gutter after the last, each equal to the inter-item column gap (via first/last-child margins, so it composes with `center`/`frame` + `bleed`), so the ends aren't flush to the edge
   - `overflow="preview fade"` — adds fade masks to both edges (animated on scroll)
   - `overflow="preview fade-start"` — adds fade mask to start edge only
   - `overflow="preview fade-end"` — adds fade mask to end edge only
