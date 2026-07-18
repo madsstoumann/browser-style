@@ -88,8 +88,21 @@ attributes instead — e.g. `col-gap="2"` → `xs="cg(2)"`, `pad-inline="1"` →
   - `overflow="preview fade"` — adds fade masks to both edges (animated on scroll)
   - `overflow="preview fade-start"` — adds fade mask to start edge only
   - `overflow="preview fade-end"` — adds fade mask to end edge only
-- Examples: `overflow="preview"`, `overflow="preview-lg fade"`, `overflow="preview fade-end"`, `overflow="preview-2xl center"`, `bleed md="columns(1)" overflow="preview-2xl center" nav="blw" arrow="bare"`
-- Related attributes — `loop` / `auto` (progressive enhancement, JS): add a bare `loop` (seamless infinite wrap) and/or `auto` / `auto="4s"` (autoplay; bare number = seconds) to an `overflow` carousel. These are driven by the **shared carousel script** in `@browser.style/card` (`index.js`) — the same engine that loops/autoplays `<ui-media>` — so load it alongside `layout.css` for this behavior (the `nav`/`arrow`/`dot` control CSS is already shared via `ui/base/carousel.css`). It clones the last slide before the first and the first after the last, then hops from a clone to its real twin on `scrollend`. Pairs naturally with `center` — the clones fill the side peeks at the ends, so the current slide stays centered with no blank edge and forward motion never dead-ends. Clone dots are suppressed by `carousel.css`. With JS off the carousel is an ordinary finite scroller. Example: `bleed md="columns(1)" overflow="preview-2xl center" loop auto="4s" nav="dot" dot="hyb blw"`.
+  - `overflow="… stop"` — scrolls (arrows, fling) halt at every snap position — one item per step
+- Examples: `overflow="preview"`, `overflow="preview-lg fade"`, `overflow="preview fade-end"`, `overflow="preview-2xl center"`, `bleed md="columns(1)" overflow="preview-2xl center" media="nav(blw) arw(bare)"`
+- Related `media=` tokens — `loop` / `auto` (progressive enhancement, JS): add a bare `loop` token (seamless infinite wrap) and/or `auto` / `auto(4s)` (autoplay; `auto(N)` = seconds, `auto(800ms)` also accepted) to the `media=` attribute of an `overflow` carousel. These are driven by the **shared carousel script** in `@browser.style/card` — the same engine that loops/autoplays `<ui-media>` — so load it alongside `layout.css` for this behavior (the `nav()`/`arw()`/`dot()` control CSS is already shared via `ui/base/carousel.css`). It clones the last slide before the first and the first after the last, then hops from a clone to its real twin on `scrollend`. Pairs naturally with `center` — the clones fill the side peeks at the ends, so the current slide stays centered with no blank edge and forward motion never dead-ends. Clone dots are suppressed by `carousel.css`. With JS off the carousel is an ordinary finite scroller. Example: `bleed md="columns(1)" overflow="preview-2xl center" media="loop auto(4s) nav(dot) dot(hyb) dot(blw)"`.
+
+### media
+- Type: token list (space-separated tokens) — the **carousel-control DSL**, shared with `<ui-media>` in `@browser.style/card`; styles live in `ui/base/carousel.css` (load `@browser.style/base` alongside `layout.css`)
+- Default: not present (an `overflow` carousel without `media=` is a plain scroller with no controls)
+- Description: Configures the controls of an `overflow` carousel. **Replaces the individual `nav`, `arrow=`, `dot=`, `pages`, `auto=` and carousel `loop` attributes, all removed in v4.** Accepted tokens:
+  - `nav` (bare) — enable default controls; `nav(dot|arw|blw|abv)` — dots only / arrows only / reserved control band below / above the scroller
+  - `arw(arr|sm|lg|xl|sqr|sft|hid|lgt|drk|bare|set|ts|tc|te|cs|cc|ce|bs|bc|be|blw|abv)` — arrow style, size, ink and placement modifiers (one modifier per `arw()` token; repeat the token to combine)
+  - `dot(sm|md|lg|xl|pll|hyb|tmb|non|lgt|drk|ts…be|blw|abv)` — dot style (pills, hybrid, thumbnails), size, ink and placement modifiers
+  - `pages` (bare token, `~=` matched) — snap + one dot per *page* of items instead of per item
+  - `auto` / `auto(4s)` — autoplay; `loop` — seamless infinite wrap (JS progressive enhancement, see the `overflow` entry above)
+- **Scoping rule:** `media=` on a `<lay-out>` configures **only the lay-out's own scroller** — it never inherits into descendant `<ui-media>` inside cards (`media=` inheritance stops at the nearest `ui-card`/`ui-reveal` host). `content=`, by contrast, flows down freely via custom-property inheritance.
+- Examples: `overflow media="nav"`, `overflow="preview-2xl center" media="nav(blw) arw(bare) dot(pll) pages auto(4s) loop"`
 
 ### width
 - Type: specific id
@@ -111,10 +124,10 @@ attributes instead — e.g. `col-gap="2"` → `xs="cg(2)"`, `pad-inline="1"` →
 
 ### animate
 - Type: token list (space-separated tokens)
-- Accepted tokens: `fade-up`, `fade-down`, `fade-left`, `fade-right`, `fade-in`, `zoom-in`, `flip-up`, `deep`, `clip`
+- Accepted tokens: animation names in function-call syntax (`fade-up()`, `fade-down()`, `fade-left()`, `fade-right()`, `fade-in()`, `zoom-in()`, `flip-up()`, …), the modifiers `deep` / `clip`, trigger tokens (`trigger`, `trigger-exit`, `trigger-both`) and pace words (`very-slow`, `slow`, `fast`, `very-fast`, `exit`, `exit-fast`, `exit-slow`). There is **no separate `pace` attribute** (removed in v4) — pace words live in this value.
 - Default: not present
-- Description: Enables scroll-driven item animations. Creates a named `view-timeline` on the container; all direct children animate using that timeline as they enter the viewport. Children stagger via nth-child `animation-range` offsets (20% per child, up to 6 children). In browsers supporting `sibling-index()`, stagger scales to any number of children automatically.
-- Examples: `animate="fade-up()"`, `animate="zoom-in() deep"`, `animate="slide-down() clip"`
+- Description: Enables scroll-driven item animations. Creates a named `view-timeline` on the container; all direct children animate using that timeline as they enter the viewport. Children stagger via nth-child `animation-range` offsets (20% per child, up to 6 children). In browsers supporting `sibling-index()`, stagger scales to any number of children automatically. Full engine docs: `core/animations.md` (the engine itself lives in `@browser.style/base`).
+- Examples: `animate="fade-up()"`, `animate="zoom-in() deep"`, `animate="slide-down() clip slow exit"`
 
 ---
 
@@ -123,8 +136,7 @@ attributes instead — e.g. `col-gap="2"` → `xs="cg(2)"`, `pad-inline="1"` →
 ```html
 <lay-out
   columns="repeat(3, 1fr)"
-  col-gap="2"
-  pad-inline="1"
+  xs="cg(2) pi(1)"
   gap
   overflow="preview"
   width="md"
@@ -172,7 +184,7 @@ attributes instead — e.g. `col-gap="2"` → `xs="cg(2)"`, `pad-inline="1"` →
 ```
 
 ### Notes and hints
-- Numeric attributes documented here (e.g., `col-gap`, `pad-inline`, `row-gap`, `space-top`) are multiplied by the component's `--layout-space-unit` CSS variable. Provide numbers (unitless) not lengths.
+- Spacing is token-only: the multiplier in the breakpoint spacing tokens (e.g., `cg(2)`, `pi(1)`, `mbe(3)`) is multiplied by the component's `--layout-space-unit` CSS variable. Provide numbers (unitless) not lengths.
 - Attributes typed as `<length>` should include units (px, rem, vw, etc.) unless using percentage where allowed.
 - `overflow` is parsed as a token list (space-separated). Use `~=` matching in CSS selectors (e.g., `[overflow~="none"]`).
 - The implementation relies on `attr()` to copy attribute values into CSS custom properties. Keep attribute names and value syntax compatible with the types listed above.
@@ -182,25 +194,27 @@ attributes instead — e.g. `col-gap="2"` → `xs="cg(2)"`, `pad-inline="1"` →
 
 ## Breakpoint Spacing Tokens
 
-Spacing tokens can be embedded in breakpoint attributes alongside layout tokens. They use a **multiplier** (0–4) applied to `--layout-space-unit`, overriding the same CSS custom properties that the global attributes set.
+Spacing is **token-only** (the bare spacing attributes were removed in v4 — see above). Tokens are embedded in breakpoint attributes alongside layout tokens. They use a **multiplier** (0–4) applied to `--layout-space-unit`, writing the `--layout-*` custom properties that `base.css` composes into padding/margin/gap.
 
 ### Available tokens
 
 | Token | CSS Custom Property | CSS Property | Default |
 |-------|-------------------|--------------|---------|
-| `pbe(N)` | `--layout-pbe` | `padding-block-end` | 0 |
-| `pbs(N)` | `--layout-pbs` | `padding-block-start` | 0 |
+| `p(N)` | `--layout-pi` + `--layout-pbs` + `--layout-pbe` | `padding` (all sides) | 0 |
 | `pi(N)` | `--layout-pi` | `padding-inline` | 0 |
-| `mbe(N)` | `--layout-mbe` | `margin-block-end` | 0 |
+| `pb(N)` | `--layout-pbs` + `--layout-pbe` | `padding-block` | 0 |
+| `pbs(N)` | `--layout-pbs` | `padding-block-start` | 0 |
+| `pbe(N)` | `--layout-pbe` | `padding-block-end` | 0 |
 | `mbs(N)` | `--layout-mbs` | `margin-block-start` | 0 |
+| `mbe(N)` | `--layout-mbe` | `margin-block-end` | 0 |
 | `cg(N)` | `--layout-colmg` | `column-gap` | 1 |
 | `rg(N)` | `--layout-rg` | `row-gap` | 1 |
 
-**N** = 0, 1, 2, 3, or 4.
+**N** = 0, 1, 2, 3, or 4 (default steps; configurable via `spacing.steps`).
 
-### Coexistence with global attributes
+### Mobile-first base
 
-Global HTML attributes (`pad-inline`, `col-gap`, etc.) set the default multiplier via `attr()` at all breakpoints. Breakpoint tokens override the same CSS custom property at specific breakpoints. Values persist through larger breakpoints until explicitly overridden.
+The lowest breakpoint (`xs` in the default config, which has no `min`) emits its rules without a media query, so tokens there act as the mobile-first default. Breakpoint tokens override the same CSS custom property at specific breakpoints; values persist through larger breakpoints until explicitly overridden.
 
 ### Example usage (Breakpoint Spacing)
 
@@ -213,9 +227,9 @@ Global HTML attributes (`pad-inline`, `col-gap`, etc.) set the default multiplie
   <div>Item 4</div>
 </lay-out>
 
-<!-- Global attribute with breakpoint override -->
-<lay-out pad-inline="1" lg="columns(3) pi(3)">
-  <!-- pad-inline=1 is the default; at lg, pi overrides to 3 -->
+<!-- Mobile-first base with breakpoint override -->
+<lay-out xs="pi(1)" lg="columns(3) pi(3)">
+  <!-- pi(1) is the base; at lg, pi overrides to 3 -->
 </lay-out>
 
 <!-- Gap control -->

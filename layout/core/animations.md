@@ -11,7 +11,8 @@ Scroll-driven animations, applied via `animate-self` (container) and `animate` (
 | `animate-self` | Container | Animates the entire `lay-out` element |
 | `animate` | Children | Animates each direct child independently |
 | `easing` | Container | Applies a custom easing from `easings.css` |
-| `pace` | Container | Controls animation speed and entry/exit behavior (space-separated tokens) |
+
+> **No `pace` attribute (removed in v4, system-wide).** Pace words — `very-slow`, `slow`, `fast`, `very-fast`, `exit`, `exit-fast`, `exit-slow` — are plain tokens **inside** the `animate` / `animate-self` value, e.g. `animate="fade-up() slow exit-fast"`. See [Pace](#pace).
 
 ## Syntax
 
@@ -132,14 +133,14 @@ This sets `overflow: clip` on the container. Omit it when you want slight overfl
 
 ### Item Exit Animations
 
-Exit tokens from `pace` work with `animate` too. A second animation slot plays the same keyframe in reverse as the container scrolls out, with reversed stagger — the last child exits first:
+Exit pace tokens work with `animate` too. A second animation slot plays the same keyframe in reverse as the container scrolls out, with reversed stagger — the last child exits first:
 
 ```html
 <!-- Items animate in on entry and out on exit -->
-<lay-out animate="fade-up()" pace="exit" lg="columns(3)">
+<lay-out animate="fade-up() exit" lg="columns(3)">
 
 <!-- Slow entry, fast exit -->
-<lay-out animate="zoom-in()" pace="slow exit-fast" lg="columns(3)">
+<lay-out animate="zoom-in() slow exit-fast" lg="columns(3)">
 ```
 
 Entry pace tokens (`very-slow`, `slow`, `fast`, `very-fast`) also affect item animations.
@@ -208,7 +209,7 @@ Example — custom translation distance with multiplier:
 
 ## Pace
 
-Controls animation speed and when the animation plays relative to the viewport. Tokens are space-separated, so entry and exit can be combined.
+Pace tokens control animation speed and when the animation plays relative to the viewport. They are part of the `animate` / `animate-self` token vocabulary — **there is no separate `pace` attribute** (removed in v4). Tokens are space-separated within the attribute value, so entry and exit can be combined.
 
 ### Entry Speed
 
@@ -234,25 +235,25 @@ Exit tokens activate a second animation slot that plays the same keyframe in rev
 
 ```html
 <!-- Entry only, slow -->
-<lay-out animate-self="fade-up()" pace="slow">
+<lay-out animate-self="fade-up() slow">
 
 <!-- Entry + exit, default speeds -->
-<lay-out animate-self="fade-up()" pace="exit">
+<lay-out animate-self="fade-up() exit">
 
 <!-- Slow entry, fast exit -->
-<lay-out animate-self="fade-up()" pace="slow exit-fast">
+<lay-out animate-self="fade-up() slow exit-fast">
 
 <!-- Fast entry, slow exit -->
-<lay-out animate-self="zoom-in()" pace="fast exit-slow">
+<lay-out animate-self="zoom-in() fast exit-slow">
 
 <!-- Very slow entry + exit -->
-<lay-out animate-self="flip-up()" pace="very-slow exit">
+<lay-out animate-self="flip-up() very-slow exit">
 
 <!-- Item animations with exit -->
-<lay-out animate="fade-up()" pace="exit" lg="columns(3)">
+<lay-out animate="fade-up() exit" lg="columns(3)">
 
 <!-- Item animations: slow entry + clip for slides -->
-<lay-out animate="slide-down() clip" pace="slow exit" lg="columns(3)">
+<lay-out animate="slide-down() clip slow exit" lg="columns(3)">
 ```
 
 ## Progressive Enhancement
@@ -293,7 +294,7 @@ Slot 1 (entry):  animation-name: var(--_animn)          direction: normal
 Slot 2 (exit):   animation-name: var(--_anim-exit, none) direction: reverse
 ```
 
-The exit slot defaults to `none` (inactive). When a `pace` exit token is set, `--_anim-exit` resolves to the same keyframe as entry, played in reverse. For items, exit stagger is reversed — the last child exits first.
+The exit slot defaults to `none` (inactive). When an exit pace token is set (in the `animate`/`animate-self` value), `--_anim-exit` resolves to the same keyframe as entry, played in reverse. For items, exit stagger is reversed — the last child exits first.
 
 Easing values are sourced from `ui/base/easings.css` (the `--ease-*` tokens, loaded by `@browser.style/base`). The `[easing]` attribute maps the attribute value to `--animtm` (for container animations) and `--animate-item-timing` (for item animations).
 
@@ -303,7 +304,7 @@ Easing values are sourced from `ui/base/easings.css` (the `--ease-*` tokens, loa
 
 ### Problem
 
-Scroll-driven animations (`animation-timeline: view()`) tie animation progress directly to scroll position. This means animation speed depends entirely on how fast the user scrolls — fast scrolling produces fast animations, slow scrolling produces slow ones. The `pace` attribute helps by widening or narrowing the scroll range, but cannot guarantee consistent timing.
+Scroll-driven animations (`animation-timeline: view()`) tie animation progress directly to scroll position. This means animation speed depends entirely on how fast the user scrolls — fast scrolling produces fast animations, slow scrolling produces slow ones. Pace tokens help by widening or narrowing the scroll range, but cannot guarantee consistent timing.
 
 ### Solution: Trigger Tokens
 
@@ -373,7 +374,7 @@ The container defines a `timeline-trigger` that fires when it enters the viewpor
 
 ### Pace Mapping
 
-In scroll-driven mode, `pace` tokens set `animation-range` values. In triggered mode, the same entry speed tokens map to `--animate-dur`:
+In scroll-driven mode, pace tokens set `animation-range` values. In triggered mode, the same entry speed tokens map to `--animate-dur`:
 
 | Token | Scroll-driven effect | Triggered effect |
 |-------|---------------------|---------------------|
@@ -383,7 +384,7 @@ In scroll-driven mode, `pace` tokens set `animation-range` values. In triggered 
 | `fast` | Narrow scroll range | `--animate-dur: 0.3s` |
 | `very-fast` | Narrowest scroll range | `--animate-dur: 0.15s` |
 
-Exit direction in triggered mode is controlled by the trigger token (`trigger-exit`, `trigger-both`), not by `pace` exit tokens. The `pace` exit tokens (`exit`, `exit-fast`, `exit-slow`) only apply in scroll-driven mode.
+Exit direction in triggered mode is controlled by the trigger token (`trigger-exit`, `trigger-both`), not by exit pace tokens. The exit pace tokens (`exit`, `exit-fast`, `exit-slow`) only apply in scroll-driven mode.
 
 ### Interaction With `deep`
 
@@ -463,8 +464,8 @@ Morph uses the same function-call syntax as other animations, specified via `ani
 
 Morph reuses the animation system's custom properties via inheritance on `::after`:
 
-- **`pace`** entry tokens control `animation-range` (via `--_animrs` / `--_animre`)
-- **`pace`** exit tokens activate a second animation slot that reverses the morph
+- **Pace entry tokens** (in the same `animate-self`/`animate` value) control `animation-range` (via `--_animrs` / `--_animre`)
+- **Pace exit tokens** activate a second animation slot that reverses the morph
 - **`easing`** sets `animation-timing-function` (via `--animtm`)
 - **Other animations** can be combined in the same attribute — e.g. `animate-self="fade-up() morph(circle)"`
 
@@ -476,11 +477,11 @@ Morph reuses the animation system's custom properties via inheritance on `::afte
          style="--layout-bg: #e2e8f0; --layout-morph-bg: #0f172a;">
 
 <!-- Inset morph with slow pace -->
-<lay-out bleed="0" animate-self="morph(inset)" pace="slow"
+<lay-out bleed="0" animate-self="morph(inset) slow"
          style="--layout-bg: #1e293b; --layout-morph-bg: #e2e8f0;">
 
 <!-- Polygon morph with exit (overlay returns on scroll-back) -->
-<lay-out bleed="0" animate-self="morph(polygon)" pace="exit"
+<lay-out bleed="0" animate-self="morph(polygon) exit"
          style="--layout-bg: #7c3aed; --layout-morph-bg: #0d9488;">
 
 <!-- Combined: content fades up while overlay morphs away -->
