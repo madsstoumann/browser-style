@@ -43,21 +43,37 @@
 	   TYPE SCALE — decoupled body + headline cqi clamps (the ladder swaps stops)
 	   ============================================================ */
 	:where(ui-content), :where([content]) {
+		/* The hand-tuned fluid clamps — SINGLE SOURCE for the fluid mode (the
+		   -fluid- companions mirror base's --font-size-fluid-* naming). The
+		   canonical stops below default to these; scl(fix) re-points the stops
+		   to the global static scale and scl(fluid) re-points them back here. */
+		--ui-content-fs-fluid-sm: clamp(0.80rem, 0.74rem + 0.4cqi, 0.90rem);
+		--ui-content-fs-fluid-md: clamp(0.88rem, 0.80rem + 0.6cqi, 1.00rem);
+		--ui-content-fs-fluid-lg: clamp(0.95rem, 0.86rem + 0.8cqi, 1.10rem);
+		--ui-content-fs-fluid-xl: clamp(1.00rem, 0.92rem + 0.9cqi, 1.20rem);
+		--ui-content-fs-fluid-2xl: clamp(1.08rem, 0.98rem + 1.1cqi, 1.32rem);
+		--ui-content-headline-fluid-sm: clamp(1.05rem, 0.90rem + 1.0cqi, 1.35rem);
+		--ui-content-headline-fluid-md: clamp(1.20rem, 1.00rem + 1.6cqi, 1.75rem);
+		--ui-content-headline-fluid-lg: clamp(1.45rem, 1.05rem + 3.0cqi, 2.50rem);
+		--ui-content-headline-fluid-xl: clamp(1.90rem, 1.10rem + 5.5cqi, 4.50rem);
+		--ui-content-headline-fluid-2xl: clamp(2.25rem, 1.20rem + 7cqi, 5.50rem);
+		--ui-content-headline-fluid-3xl: clamp(2.50rem, 1.00rem + 11cqi, 8.00rem);
+
 		/* body — active --ui-content-fs/-headline are set by scl() on the host (or a
 		   self content=) and inherit down; consumers fall back to -md. Defining the
 		   active value here on ui-content would block that inheritance. */
-		--ui-content-fs-sm: clamp(0.80rem, 0.74rem + 0.4cqi, 0.90rem);
-		--ui-content-fs-md: clamp(0.88rem, 0.80rem + 0.6cqi, 1.00rem);
-		--ui-content-fs-lg: clamp(0.95rem, 0.86rem + 0.8cqi, 1.10rem);
-		--ui-content-fs-xl: clamp(1.00rem, 0.92rem + 0.9cqi, 1.20rem);
-		--ui-content-fs-2xl: clamp(1.08rem, 0.98rem + 1.1cqi, 1.32rem); /* ladder headroom only — no scl(2xl)/tx(2xl) token */
+		--ui-content-fs-sm: var(--ui-content-fs-fluid-sm);
+		--ui-content-fs-md: var(--ui-content-fs-fluid-md);
+		--ui-content-fs-lg: var(--ui-content-fs-fluid-lg);
+		--ui-content-fs-xl: var(--ui-content-fs-fluid-xl);
+		--ui-content-fs-2xl: var(--ui-content-fs-fluid-2xl); /* ladder headroom only — no scl(2xl)/tx(2xl) token */
 		/* headline — sm–xl are the scl() ramp; 2xl + 3xl are hl()-only display steps */
-		--ui-content-headline-sm: clamp(1.05rem, 0.90rem + 1.0cqi, 1.35rem);
-		--ui-content-headline-md: clamp(1.20rem, 1.00rem + 1.6cqi, 1.75rem);
-		--ui-content-headline-lg: clamp(1.45rem, 1.05rem + 3.0cqi, 2.50rem);
-		--ui-content-headline-xl: clamp(1.90rem, 1.10rem + 5.5cqi, 4.50rem);
-		--ui-content-headline-2xl: clamp(2.25rem, 1.20rem + 7cqi, 5.50rem);
-		--ui-content-headline-3xl: clamp(2.50rem, 1.00rem + 11cqi, 8.00rem);
+		--ui-content-headline-sm: var(--ui-content-headline-fluid-sm);
+		--ui-content-headline-md: var(--ui-content-headline-fluid-md);
+		--ui-content-headline-lg: var(--ui-content-headline-fluid-lg);
+		--ui-content-headline-xl: var(--ui-content-headline-fluid-xl);
+		--ui-content-headline-2xl: var(--ui-content-headline-fluid-2xl);
+		--ui-content-headline-3xl: var(--ui-content-headline-fluid-3xl);
 
 		/* ink ramp — a 5-step strength scale of the current ink colour, mirroring the
 		   scrim intensity ladder. Read by the eb()/hl()/tx()/mt() tone tokens. med is
@@ -72,6 +88,56 @@
 		   Tunable; only applied when a group opts in via {eb,hl,tx,mt}(shd) (or a
 		   host ovr() enables it for headline/eyebrow over a scrim). */
 		--ui-content-text-shadow: 0 1px 3px color-mix(in oklab, #000 55%, transparent);
+	}
+
+	/* ============================================================
+	   scl(fix) — static scale mode. Re-points every stop from its fluid cqi
+	   clamp to the global static type scale (--font-size-* in ui/base/tokens.css):
+	     body     sm→sm  md→base  lg→lg  xl→xl  2xl→2xl
+	     headline sm→xl  md→2xl   lg→3xl xl→5xl 2xl→6xl 3xl→7xl
+	   (the 3xl→5xl skip mirrors the fluid ramp's own big lg→xl jump).
+	   Because scl()/hl()/the ladder are pure indirection through the stop vars,
+	   EVERYTHING still works — steps, relational shifting, md:/lg: breakpoint
+	   jumps — just between static sizes: type changes only at the breakpoints,
+	   never in between. Designers get the discrete Tailwind text scale.
+	   The stop-definition rule above matches every ui-content/[content] element,
+	   so fix must ALSO re-declare on descendants — and its SELF form must match
+	   the descendant form's (0,1,0) specificity (hence :is(), not :where()), or
+	   a nested host's own mode token would lose to an ancestor's descendant rule
+	   on the host element itself. scl(fluid) is the explicit opt-out (a nested
+	   card in a fixed deck going fluid again); it comes after fix in source, so
+	   on a tie fluid wins — meaning an explicit scl(fluid) cannot be re-fixed
+	   further down. Neither form is md:/lg: prefixable — fix is a MODE, not a
+	   step. These write ONLY the stop vars, so they never collide with the
+	   (0,0,1) size rules below.
+	   ============================================================ */
+	:is([content~="scl(fix)"]),
+	:where([content~="scl(fix)"]) :is(ui-content, [content]) {
+		--ui-content-fs-sm: var(--font-size-sm);
+		--ui-content-fs-md: var(--font-size-base);
+		--ui-content-fs-lg: var(--font-size-lg);
+		--ui-content-fs-xl: var(--font-size-xl);
+		--ui-content-fs-2xl: var(--font-size-2xl);
+		--ui-content-headline-sm: var(--font-size-xl);
+		--ui-content-headline-md: var(--font-size-2xl);
+		--ui-content-headline-lg: var(--font-size-3xl);
+		--ui-content-headline-xl: var(--font-size-5xl);
+		--ui-content-headline-2xl: var(--font-size-6xl);
+		--ui-content-headline-3xl: var(--font-size-7xl);
+	}
+	:is([content~="scl(fluid)"]),
+	:where([content~="scl(fluid)"]) :is(ui-content, [content]) {
+		--ui-content-fs-sm: var(--ui-content-fs-fluid-sm);
+		--ui-content-fs-md: var(--ui-content-fs-fluid-md);
+		--ui-content-fs-lg: var(--ui-content-fs-fluid-lg);
+		--ui-content-fs-xl: var(--ui-content-fs-fluid-xl);
+		--ui-content-fs-2xl: var(--ui-content-fs-fluid-2xl);
+		--ui-content-headline-sm: var(--ui-content-headline-fluid-sm);
+		--ui-content-headline-md: var(--ui-content-headline-fluid-md);
+		--ui-content-headline-lg: var(--ui-content-headline-fluid-lg);
+		--ui-content-headline-xl: var(--ui-content-headline-fluid-xl);
+		--ui-content-headline-2xl: var(--ui-content-headline-fluid-2xl);
+		--ui-content-headline-3xl: var(--ui-content-headline-fluid-3xl);
 	}
 
 	/* ============================================================

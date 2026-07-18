@@ -160,6 +160,25 @@
 		</div>
 	</div>
 
+	<h3>7 · Static scale — <code>scl(fix)</code></h3>
+	<p class="note"><code>scl(fix)</code> re-points every stop from its fluid <code>cqi</code> clamp to the <strong>global static scale</strong> (<code>--font-size-*</code>): type changes only at the <code>md:</code>/<code>lg:</code> container breakpoints, never in between. <strong>Resize the cards</strong> — the first holds its exact sizes within each breakpoint tier and snaps at <code>lg</code>; the second (<code>scl(fluid)</code> opt-out inside a fixed wrapper) scales continuously.</p>
+	<div class="stack" content="scl(fix)">
+		<div style="resize: horizontal; overflow: hidden; min-inline-size: 16rem; max-inline-size: 100%; padding-block-end: var(--spacing-sm);">
+			<ui-card variant="vis(content)" theme="gray" content="hl(lg) lg:hl(xl)"><cq-box><ui-content>
+				<small data-part="eyebrow">scl(fix) hl(lg) lg:hl(xl)</small>
+				<h2 data-part="headline">Exactly 1.875rem, then exactly 3rem</h2>
+				<p data-part="summary">The designer's spec: two precise sizes from the global <code>--font-size-*</code> scale, switched at the 44rem container breakpoint — no in-between scaling.</p>
+			</ui-content></cq-box></ui-card>
+		</div>
+		<div style="resize: horizontal; overflow: hidden; min-inline-size: 16rem; max-inline-size: 100%; padding-block-end: var(--spacing-sm);">
+			<ui-card variant="vis(content)" theme="black dark" content="scl(fluid) hl(lg)"><cq-box><ui-content>
+				<small data-part="eyebrow">scl(fluid) — opt-out inside the fixed wrapper</small>
+				<h2 data-part="headline">Back on the fluid clamp</h2>
+				<p data-part="summary">The wrapper sets <code>scl(fix)</code>; this card's own <code>scl(fluid)</code> wins (nearest mode), so the headline tracks the card width continuously again.</p>
+			</ui-content></cq-box></ui-card>
+		</div>
+	</div>
+
 	<!-- ============================================================
 	     Font families — fnt()
 	     ============================================================ -->

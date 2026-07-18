@@ -96,7 +96,7 @@ import '@browser.style/content';
 
 | Token | Args | Controls | Responsive (`md:`/`lg:`) |
 |-------|------|----------|--------------------------|
-| `scl()` | `sm` `md` `lg` `xl` | master type-scale step — swaps the active body **and** headline stop AND re-points the relational size ladder (see *Relational scale*) | **Yes** |
+| `scl()` | `sm` `md` `lg` `xl` · mode `fix` `fluid` | master type-scale step — swaps the active body **and** headline stop AND re-points the relational size ladder (see *Relational scale*). `fix` switches every stop to the global static scale, `fluid` back to the `cqi` clamps (see *Static scale*) | steps **Yes** (modes No) |
 | `hl()` | size `sm` `md` `lg` `xl` `2xl` `3xl` · tone · weight · font `body`/`head`/`serif`/`mono`/`form` · `grad` · `shd` | headings group — headline size (only, relational), ink, weight, **font**, gradient, shadow | size **Yes** |
 | `fnt()` | `body` `head` `serif` `mono` `form` | container font family for the whole column (`--ui-content-font`) | No |
 | `eb()` | size `sm`–`xl` · tone · weight · `flat` · `shd` | eyebrow group — size (relational), ink, weight, drop uppercase, shadow | No* |
@@ -159,6 +159,28 @@ renders headline/summary at the xl/lg stops in a narrow container and steps them
 Note the saturation: under `scl(xl)` the display steps merge at `3xl`. The `scl(md)` column is the identity — which is also why existing scl-only markup renders exactly as before.
 
 Under the hood: `scl()` writes the ladder vars `--ui-content-hl-{sm…3xl}` / `--ui-content-tx-{sm…xl}`, and each size token reads its ladder var with the absolute stop as fallback (all in `content.typography.css`). The group bases are the escape hatches: `--ui-content-body-fs` (Body), `--ui-content-meta-base` (Meta), `--ui-content-eyebrow-fs` (Eyebrow) — set them directly via `style=` for any off-ladder size.
+
+### Static scale — `scl(fix)` / `scl(fluid)`
+
+Fluidity is a **mode**, and `scl(fix)` turns it off: every stop is re-pointed from its hand-tuned `cqi` clamp to the **global static type scale** (`--font-size-*` in `ui/base/tokens.css`), so type changes only at the `md:`/`lg:` container breakpoints — never in between. Everything else keeps working unchanged (steps, the relational ladder, responsive prefixes, per-part ×-factors), just between discrete sizes:
+
+```html
+<!-- the designer's model: two exact sizes, switched at the lg breakpoint -->
+<ui-card content="scl(fix) hl(lg) lg:hl(xl)">…</ui-card>  <!-- 1.875rem, then 3rem -->
+```
+
+Stop → global token mapping (the 3xl→5xl skip mirrors the fluid ramp's own big `lg`→`xl` jump):
+
+| Stop | Body | Headline |
+|------|------|----------|
+| `sm` | `--font-size-sm` (0.875rem) | `--font-size-xl` (1.25rem) |
+| `md` | `--font-size-base` (1rem) | `--font-size-2xl` (1.5rem) |
+| `lg` | `--font-size-lg` (1.125rem) | `--font-size-3xl` (1.875rem) |
+| `xl` | `--font-size-xl` (1.25rem) | `--font-size-5xl` (3rem) |
+| `2xl` | `--font-size-2xl` (1.5rem) | `--font-size-6xl` (3.75rem) |
+| `3xl` | — | `--font-size-7xl` (4.5rem) |
+
+`scl(fluid)` is the explicit opt-out — a nested card inside a `fix` deck goes fluid again (the fluid clamps live in the `--ui-content-{fs,headline}-fluid-*` companion vars, single-sourced). Notes: the modes are **not** `md:`/`lg:` prefixable (a mode, not a step); mode tokens are matched at `(0,1,0)` self + descendant forms, so the **nearest mode token wins** — except an explicit `scl(fluid)` cannot be re-fixed further down (source-order tie-break). Rebrand the static scale globally by overriding `--font-size-*`, or per-scope by overriding the stop vars directly.
 
 ---
 
@@ -315,7 +337,7 @@ Because styling keys off `[data-part]` and never the tag, the **same part token 
 
 ## Typography ramp
 
-The two fluid `cqi` `clamp()` scales (body + headline) live on `<ui-content>` (defined in `content.typography.css`). `scl()` swaps which stop is *active*; the full ladder is always defined so any stop is reachable via `style`.
+The two fluid `cqi` `clamp()` scales (body + headline) live on `<ui-content>` (defined in `content.typography.css`). `scl()` swaps which stop is *active*; the full ladder is always defined so any stop is reachable via `style`. The clamps are single-sourced in `--ui-content-{fs,headline}-fluid-*` companion vars — the canonical stops default to them, and `scl(fix)` re-points the stops to the global static `--font-size-*` scale instead (see *Static scale*).
 
 **Body scale** (`--ui-content-fs-{sm..2xl}`):
 

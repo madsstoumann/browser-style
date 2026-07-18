@@ -8,7 +8,7 @@
 
 Three ideas carry the whole system:
 
-1. **Two fluid ramps.** Body text and headlines each have a scale of hand-tuned `clamp()` stops (`sm`–`2xl` for body, `sm`–`3xl` for headlines) that grow with the **container**, not the viewport (`cqi` units). A card in a sidebar and the same card as a hero already render different sizes before you write a single token.
+1. **Two fluid ramps.** Body text and headlines each have a scale of hand-tuned `clamp()` stops (`sm`–`2xl` for body, `sm`–`3xl` for headlines) that grow with the **container**, not the viewport (`cqi` units). A card in a sidebar and the same card as a hero already render different sizes before you write a single token. Fluidity is a *mode*, not a law — `scl(fix)` switches every stop to the global static scale (use-case 16).
 
 2. **One master step — `scl()`.** `scl(sm|md|lg|xl)` moves the *whole text column* through the scale: body, headline, and every derived part (eyebrow ×0.78, meta ×0.75, tags ×0.72, …) in one go.
 
@@ -324,6 +324,31 @@ Every token writes a property; write the property yourself when the ladder doesn
 
 Group bases: `--ui-content-body-fs` (Body), `--ui-content-meta-base` (Meta), `--ui-content-eyebrow-fs` (Eyebrow). A directly-set property is absolute — it deliberately does **not** ride the ladder.
 
+### 16 · Designer-fixed scales — `scl(fix)`
+
+Designers often spec **exact sizes per breakpoint**, not fluid ranges. `scl(fix)` re-points every stop from its fluid clamp to the **global static type scale** (`--font-size-*` — the familiar 0.875 / 1 / 1.125 / 1.25 / 1.5rem text sizes, headlines on `xl`–`7xl`):
+
+```html
+<!-- exactly 1.875rem, then exactly 3rem past the lg breakpoint — nothing in between -->
+<ui-card content="scl(fix) hl(lg) lg:hl(xl)">…</ui-card>
+
+<!-- the whole relational system still works, just discrete: -->
+<ui-card content="scl(fix) scl(sm) lg:scl(md) hl(2xl) tx(xl)">…</ui-card>
+```
+
+Everything composes as before — steps, the ladder, responsive prefixes, the ×-factor parts — the only thing that changes is *what a stop is*: a static token instead of a clamp. Type now changes **only at the container breakpoints**, which is precisely the Figma mental model. The full stop→token mapping is in [content.md](content.md) (*Static scale*).
+
+Escape back per card with `scl(fluid)` — a fixed deck can hold one fluid hero:
+
+```html
+<lay-out lg="grid(3a)" content="scl(fix) scl(sm)">
+  <ui-card content="scl(fluid) scl(lg) hl(2xl)">…</ui-card>  <!-- fluid feature card -->
+  <ui-card>…</ui-card>                                        <!-- static, per the deck -->
+</lay-out>
+```
+
+Rebrand the static scale in one place by overriding `--font-size-*` globally — the cards follow.
+
 ---
 
 ## How resolution works (when you need to reason about it)
@@ -341,6 +366,8 @@ Group bases: `--ui-content-body-fs` (Body), `--ui-content-meta-base` (Meta), `--
 - **No `scl(2xl)` / `tx(2xl)`.** The body ramp's `2xl` stop is ladder headroom only — you reach it when `scl(lg)`/`scl(xl)` shift `tx(lg)`/`tx(xl)` up.
 - **Group sizes have no `md:` forms — by design.** Don't look for `md:tx(lg)`; write `tx(lg)` and let `md:scl()` move it.
 - **`ch` widths, `cqi` values and animation endpoints are not tokens** — content-relative values stay literal (see *What NOT to Do* in [docs/design-system-agent.md](../../docs/design-system-agent.md)).
+- **`scl(fix)`/`scl(fluid)` are modes, not steps** — no `md:` forms, and the nearest mode token wins in nesting, with one asymmetry: an explicit `scl(fluid)` can't be re-fixed further down its subtree.
+- **`scl(fix)` changes rendered sizes slightly** vs. the fluid clamps at most widths — the static values are the global scale's round numbers, not frozen snapshots of the clamps. That's the point: designers get the sizes they spec'd.
 
 ## Where everything is defined
 
