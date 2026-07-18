@@ -719,15 +719,12 @@
       "content": "scl(sm)"
     },
     "carousel-attrs": {
-      "name": "Carousel Attribute Form",
-      "description": "Dedicated grouped attributes on the <ui-media> itself — renders identically to carousel-tokens",
+      "name": "Carousel Tokens (folded)",
+      "description": "Token-only equivalent of the former grouped-attribute form — renders identically to carousel-tokens",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(16/9)",
-      "content": "scl(sm)",
-      "nav": "blw",
-      "arrow": "lg drk",
-      "dot": "end"
+      "media": "asr(16/9) nav(blw) arw(lg) arw(drk) dot(end)",
+      "content": "scl(sm)"
     },
     "carousel-subtle": {
       "name": "Carousel Subtle",
@@ -738,15 +735,12 @@
       "content": "scl(sm)"
     },
     "carousel-subtle-attrs": {
-      "name": "Carousel Subtle Attributes",
-      "description": "Subtle ink via the attribute form — nav=\"blw\" arrow=\"arr sub\" dot=\"sub pll\"",
+      "name": "Carousel Subtle (folded)",
+      "description": "Token-only equivalent of the former attribute form — media=\"… nav(blw) arw(arr) arw(sub) dot(sub) dot(pll)\"",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(16/9)",
-      "content": "scl(sm)",
-      "nav": "blw",
-      "arrow": "arr sub",
-      "dot": "sub pll"
+      "media": "asr(16/9) nav(blw) arw(arr) arw(sub) dot(sub) dot(pll)",
+      "content": "scl(sm)"
     },
     "carousel-bare-band": {
       "name": "Carousel Bare Band",

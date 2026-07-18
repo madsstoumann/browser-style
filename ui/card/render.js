@@ -228,6 +228,29 @@ const mergeMediaTokens = (presetMedia, overrides = []) => {
 	return [...kept, ...ov].join(' ');
 };
 
+/* Fold a preset's structured carousel fields (nav/arrow/dot — the legacy
+   grouped-attribute form) into media= tokens on the host: nav:"blw" → nav(blw),
+   arrow:"lg drk" → arw(lg) arw(drk), nav:"y" → axis(y), nav:"auto|loop|stagger"
+   → bare token, nav:"" → bare nav, nav:"non" → nothing. */
+const carouselTokens = (preset) => {
+	const out = [];
+	if (preset.nav != null) {
+		const words = String(preset.nav).split(/\s+/).filter(Boolean);
+		if (!words.length) out.push('nav');
+		for (const w of words) {
+			if (w === 'non') continue;
+			if (w === 'y') out.push('axis(y)');
+			else if (w === 'auto' || w === 'loop' || w === 'stagger') out.push(w);
+			else out.push(`nav(${w})`);
+		}
+	}
+	for (const w of String(preset.arrow || '').split(/\s+/).filter(Boolean)) out.push(`arw(${w})`);
+	for (const w of String(preset.dot || '').split(/\s+/).filter(Boolean)) out.push(`dot(${w})`);
+	return out;
+};
+/* The preset's effective media= string: declared media tokens + carousel folds. */
+const presetMediaStr = (preset) => [preset.media, ...carouselTokens(preset)].filter(Boolean).join(' ');
+
 /* A furniture item's style= string → per-value tokens, e.g. ("chip", "bs red")
    → ["chip(bs)", "chip(red)"]. Single-value tokens only (CSS matches by substring). */
 const styleTokens = (el, style) =>
@@ -316,9 +339,6 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 	const furniture = buildFurniture(fields.furniture, fields, tokens, mediaId);
 	const html = `<ui-media${attrs({
 		id: mediaId,
-		nav: preset.nav || null,
-		arrow: preset.arrow || null,
-		dot: preset.dot || null,
 		...(embed || {}),
 		...frameAttrs
 	})}>${frames}${furniture}</ui-media>`;
@@ -749,18 +769,21 @@ const renderReveal = (fields, type, itemtype, tokens, preset, flipside, cardId =
 	</ui-face>`;
 	const back = flipside ? flipsideBack(flipside) : derivedBack(fields, type);
 	const reveal = preset.reveal || {};
+	/* reveal config → variant tokens (rvl/frm/pop/trg/scr/ico/icc) */
+	const revealTokens = [
+		`rvl(${reveal.type || 'flip'})`,
+		reveal.typeLg ? `lg:rvl(${reveal.typeLg})` : null,
+		reveal.from ? `frm(${reveal.from})` : null,
+		reveal.to ? 'pop' : null,
+		reveal.trigger ? 'trg(card)' : null,
+		reveal.scroll ? 'scr' : null,
+		...String(reveal.icon || 'top right sm').split(/\s+/).filter(Boolean).map((w) => `ico(${w})`),
+		...String(reveal.iconClose || '').split(/\s+/).filter(Boolean).map((w) => `icc(${w})`),
+	].filter(Boolean);
 	return `<ui-reveal${attrs({
-		icon: reveal.icon || 'top right sm',
-		'icon-close': reveal.iconClose || null,
-		type: reveal.type || 'flip',
-		'type-lg': reveal.typeLg || null,
-		to: reveal.to || null,
-		from: reveal.from || null,
-		trigger: reveal.trigger || null,
-		scroll: !!reveal.scroll,
-		variant: preset.variant || null,
+		variant: [preset.variant, ...revealTokens].filter(Boolean).join(' '),
 		theme: preset.theme || null,
-		media: mergeMediaTokens(preset.media, tokens.media) || null,
+		media: mergeMediaTokens(presetMediaStr(preset), tokens.media) || null,
 		content: preset.content || null,
 		style: styleAttr(preset.styles),
 		itemscope: true,
@@ -827,7 +850,7 @@ export function renderCard(ucf, presets = {}, cards = {}) {
 		const media = buildMedia(fields, type, tokens, preset, {}, cardId);
 		const inner = (media?.html || '<ui-media></ui-media>')
 			.replace('<ui-media', `<ui-media${attrs({
-				media: mergeMediaTokens(preset.media, tokens.media) || null,
+				media: mergeMediaTokens(presetMediaStr(preset), tokens.media) || null,
 				style: styleAttr(preset.styles),
 				itemscope: true,
 				itemtype
@@ -851,7 +874,7 @@ export function renderCard(ucf, presets = {}, cards = {}) {
 	return `<ui-card${attrs({
 		variant: preset.variant || 'col',
 		theme: preset.theme || null,
-		media: mergeMediaTokens(preset.media, tokens.media) || null,
+		media: mergeMediaTokens(presetMediaStr(preset), tokens.media) || null,
 		content: preset.content || null,
 		style: styleAttr(preset.styles),
 		itemscope: true,
