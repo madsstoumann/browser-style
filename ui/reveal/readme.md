@@ -135,7 +135,7 @@ One word per token — `ico(te) ico(sm)` anchors a small icon in the top-right c
 
 | Group | Words | Effect |
 |---|---|---|
-| Cell | `ts` `tc` `te` `cs` `cc` `ce` `bs` `bc` `be` | Anchors the icon in that cell of the 9-cell grid (same vocabulary as the media furniture: block row t/c/b × inline column s/c/e; logical axes, rtl-safe). Absolute, inset by `--ui-reveal-icon-m`. |
+| Corner | `ts` `te` `bs` `be` | Anchors the icon in that corner (furniture spellings: top/bottom × start/end; logical axes, rtl-safe). Absolute, inset by `--ui-reveal-icon-m`. |
 | Style | `drk` | Solid dark icon (default is light). |
 | Style | `sem` | Reduced opacity (`--ui-reveal-icon-opacity`, default `0.6`). |
 | Size | `sm` `lg` | `sm` = `--size-5`, default = `--size-7`, `lg` = `--size-8`. |

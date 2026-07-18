@@ -255,10 +255,10 @@ const presetMediaStr = (preset) => [preset.media, ...carouselTokens(preset)].fil
 const RVL_TOKEN = { expand: 'exp', flip: 'flp', slide: 'sld', scale: 'scl' };
 const FRM_TOKEN = { top: 'top', bottom: 'btm', left: 'lft', right: 'rgt' };
 const ICON_STYLE = { dark: 'drk', semi: 'sem' };
-const ICON_CELLS = new Set(['ts', 'tc', 'te', 'cs', 'cc', 'ce', 'bs', 'bc', 'be']);
-/* icon words → ico()/icc() tokens: positional words fold into ONE 9-cell token
-   (top/bottom = block row, left/right = inline column; defaults top + end),
-   style words map to their short forms, cell/short values pass through. */
+const ICON_CELLS = new Set(['ts', 'te', 'bs', 'be']);
+/* icon words → ico()/icc() tokens: positional words fold into ONE corner token
+   (top/bottom × left/right; defaults top + end → ts te bs be),
+   style words map to their short forms, corner/short values pass through. */
 const iconTokens = (fn, words) => {
 	const out = [];
 	let block = null, inline = null;

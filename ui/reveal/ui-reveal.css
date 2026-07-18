@@ -4,8 +4,8 @@
  * Reveal behaviour is configured via variant= tokens (shared attribute with ui-card):
  *   rvl(exp|flp|sld|scl) · lg:rvl(scl) · frm(top|btm|lft|rgt) ·
  *   pop (popup mode) · trg(card) · scr (scrollable panel) ·
- *   ico(<cell>|drk|sem|sm|lg) · icc(…) (open-state icon) — <cell> is the same
- *   9-cell grid as the media furniture: ts tc te cs cc ce bs bc be
+ *   ico(<corner>|drk|sem|sm|lg) · icc(…) (open-state icon) — <corner> uses the
+ *   furniture corner spellings: ts te bs be (top/bottom × start/end)
  * @version 2.0.0
  * @author Mads Stoumann
  */
@@ -125,32 +125,28 @@
 		/* === variants (vertical-r / horizontal / media-only / overlay(pos))
 		   and ar() / op() are inherited from ui-card.css === */
 
-		/* === ico() — toggle-icon cell placement, same 9-cell grid as the media
-		   furniture (chip(ts) … save(be)): block row t/c/b × inline column s/c/e.
-		   Logical axes, so it flips automatically in rtl. === */
-		&:is([variant~="ico(ts)"],[variant~="ico(tc)"],[variant~="ico(te)"],[variant~="ico(cs)"],[variant~="ico(cc)"],[variant~="ico(ce)"],[variant~="ico(bs)"],[variant~="ico(bc)"],[variant~="ico(be)"]) > details > summary > ui-icon {
+		/* === ico() — toggle-icon corner placement, furniture corner spellings
+		   (ts te bs be): block row t/b × inline column s/e. Logical axes, so it
+		   flips automatically in rtl. === */
+		&:is([variant~="ico(ts)"],[variant~="ico(te)"],[variant~="ico(bs)"],[variant~="ico(be)"]) > details > summary > ui-icon {
 			margin: var(--ui-reveal-icon-m);
 			position: absolute;
 			z-index: 2;
 		}
-		&:is([variant~="ico(ts)"],[variant~="ico(tc)"],[variant~="ico(te)"]) > details > summary > ui-icon { inset-block: 0 auto; }
-		&:is([variant~="ico(bs)"],[variant~="ico(bc)"],[variant~="ico(be)"]) > details > summary > ui-icon { inset-block: auto 0; }
-		&:is([variant~="ico(cs)"],[variant~="ico(cc)"],[variant~="ico(ce)"]) > details > summary > ui-icon { inset-block: 0; margin-block: auto; }
-		&:is([variant~="ico(ts)"],[variant~="ico(cs)"],[variant~="ico(bs)"]) > details > summary > ui-icon { inset-inline: 0 auto; }
-		&:is([variant~="ico(te)"],[variant~="ico(ce)"],[variant~="ico(be)"]) > details > summary > ui-icon { inset-inline: auto 0; }
-		&:is([variant~="ico(tc)"],[variant~="ico(cc)"],[variant~="ico(bc)"]) > details > summary > ui-icon { inset-inline: 0; margin-inline: auto; }
+		&:is([variant~="ico(ts)"],[variant~="ico(te)"]) > details > summary > ui-icon { inset-block: 0 auto; }
+		&:is([variant~="ico(bs)"],[variant~="ico(be)"]) > details > summary > ui-icon { inset-block: auto 0; }
+		&:is([variant~="ico(ts)"],[variant~="ico(bs)"]) > details > summary > ui-icon { inset-inline: 0 auto; }
+		&:is([variant~="ico(te)"],[variant~="ico(be)"]) > details > summary > ui-icon { inset-inline: auto 0; }
 
-		/* === icc() — open-state icon cell (same grid) === */
-		&:is([variant~="icc(ts)"],[variant~="icc(tc)"],[variant~="icc(te)"],[variant~="icc(cs)"],[variant~="icc(cc)"],[variant~="icc(ce)"],[variant~="icc(bs)"],[variant~="icc(bc)"],[variant~="icc(be)"]) > details[open] > summary > ui-icon {
+		/* === icc() — open-state icon corner (same spellings) === */
+		&:is([variant~="icc(ts)"],[variant~="icc(te)"],[variant~="icc(bs)"],[variant~="icc(be)"]) > details[open] > summary > ui-icon {
 			position: absolute;
 			z-index: 2;
 		}
-		&:is([variant~="icc(ts)"],[variant~="icc(tc)"],[variant~="icc(te)"]) > details[open] > summary > ui-icon { inset-block: 0 auto; }
-		&:is([variant~="icc(bs)"],[variant~="icc(bc)"],[variant~="icc(be)"]) > details[open] > summary > ui-icon { inset-block: auto 0; }
-		&:is([variant~="icc(cs)"],[variant~="icc(cc)"],[variant~="icc(ce)"]) > details[open] > summary > ui-icon { inset-block: 0; margin-block: auto; }
-		&:is([variant~="icc(ts)"],[variant~="icc(cs)"],[variant~="icc(bs)"]) > details[open] > summary > ui-icon { inset-inline: 0 auto; }
-		&:is([variant~="icc(te)"],[variant~="icc(ce)"],[variant~="icc(be)"]) > details[open] > summary > ui-icon { inset-inline: auto 0; }
-		&:is([variant~="icc(tc)"],[variant~="icc(cc)"],[variant~="icc(bc)"]) > details[open] > summary > ui-icon { inset-inline: 0; margin-inline: auto; }
+		&:is([variant~="icc(ts)"],[variant~="icc(te)"]) > details[open] > summary > ui-icon { inset-block: 0 auto; }
+		&:is([variant~="icc(bs)"],[variant~="icc(be)"]) > details[open] > summary > ui-icon { inset-block: auto 0; }
+		&:is([variant~="icc(ts)"],[variant~="icc(bs)"]) > details[open] > summary > ui-icon { inset-inline: 0 auto; }
+		&:is([variant~="icc(te)"],[variant~="icc(be)"]) > details[open] > summary > ui-icon { inset-inline: auto 0; }
 
 		/* === icon style: drk (default is light) + sem (opacity) — both === */
 		&[variant~="ico(drk)"] > details > summary > ui-icon,
@@ -368,10 +364,10 @@
 		}
 
 		/* morph origin (anchored corner) follows icon position */
-		&:is([variant~="ico(ts)"],[variant~="ico(tc)"],[variant~="ico(te)"]) { --_scale-bs: 0; --_scale-be: auto; }
-		&:is([variant~="ico(bs)"],[variant~="ico(bc)"],[variant~="ico(be)"]) { --_scale-bs: auto; --_scale-be: 0; }
-		&:is([variant~="ico(ts)"],[variant~="ico(cs)"],[variant~="ico(bs)"]) { --_scale-is: 0; --_scale-ie: auto; }
-		&:is([variant~="ico(te)"],[variant~="ico(ce)"],[variant~="ico(be)"]) { --_scale-is: auto; --_scale-ie: 0; }
+		&:is([variant~="ico(ts)"],[variant~="ico(te)"]) { --_scale-bs: 0; --_scale-be: auto; }
+		&:is([variant~="ico(bs)"],[variant~="ico(be)"]) { --_scale-bs: auto; --_scale-be: 0; }
+		&:is([variant~="ico(ts)"],[variant~="ico(bs)"]) { --_scale-is: 0; --_scale-ie: auto; }
+		&:is([variant~="ico(te)"],[variant~="ico(be)"]) { --_scale-is: auto; --_scale-ie: 0; }
 
 		/* panel takes clicks; icon stays the toggle */
 		&:not([variant~="trg(card)"]) > details[open] > summary { pointer-events: none; }
@@ -384,10 +380,10 @@
 	   they override the base type; the morph-origin vars (set on the host) live
 	   OUTSIDE it — a @container can't style its own container element. === */
 	:where(ui-reveal[variant~="lg:rvl(scl)"]) {
-		&:is([variant~="ico(ts)"],[variant~="ico(tc)"],[variant~="ico(te)"]) { --_scale-bs: 0; --_scale-be: auto; }
-		&:is([variant~="ico(bs)"],[variant~="ico(bc)"],[variant~="ico(be)"]) { --_scale-bs: auto; --_scale-be: 0; }
-		&:is([variant~="ico(ts)"],[variant~="ico(cs)"],[variant~="ico(bs)"]) { --_scale-is: 0; --_scale-ie: auto; }
-		&:is([variant~="ico(te)"],[variant~="ico(ce)"],[variant~="ico(be)"]) { --_scale-is: auto; --_scale-ie: 0; }
+		&:is([variant~="ico(ts)"],[variant~="ico(te)"]) { --_scale-bs: 0; --_scale-be: auto; }
+		&:is([variant~="ico(bs)"],[variant~="ico(be)"]) { --_scale-bs: auto; --_scale-be: 0; }
+		&:is([variant~="ico(ts)"],[variant~="ico(bs)"]) { --_scale-is: 0; --_scale-ie: auto; }
+		&:is([variant~="ico(te)"],[variant~="ico(be)"]) { --_scale-is: auto; --_scale-ie: 0; }
 	}
 	@container (inline-size >= 44rem) {
 		:where(ui-reveal[variant~="lg:rvl(scl)"]) {

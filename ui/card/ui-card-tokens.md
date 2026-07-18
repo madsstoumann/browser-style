@@ -101,7 +101,7 @@ Card-local override hooks (feed the `--ui-theme-black-*`/`slate` bundles):
 | `pop` | *(bare flag)* | `to=` | popup mode for the revealed panel |
 | `trg(card)` | — | `trigger="card"` | whole card toggles the disclosure |
 | `scr` | *(bare flag)* | `scroll` | scrollable reveal panel |
-| `ico()` | cell `ts` `tc` `te` `cs` `cc` `ce` `bs` `bc` `be` · ink `drk` `sem` · size `sm` `lg` | `icon=` | toggle-icon placement / ink / size — placement uses the same 9-cell grid as the media furniture (`chip(ts)` … `save(be)`); **one token per word**, e.g. `ico(te) ico(sm)` |
+| `ico()` | corner `ts` `te` `bs` `be` · ink `drk` `sem` · size `sm` `lg` | `icon=` | toggle-icon placement / ink / size — placement uses the furniture corner spellings (top/bottom × start/end, logical + rtl-safe); **one token per word**, e.g. `ico(te) ico(sm)` |
 | `icc()` | same words as `ico()` | `icon-close=` | icon placement/style in the **open** state |
 
 The renderer's default icon is `ico(te) ico(sm)`. Native `<details name>` (exclusivity) and `open` stay as real attributes. Full reveal reference: [../reveal/readme.md](../reveal/readme.md).
