@@ -51,7 +51,7 @@ Space-separated token strings; values flow down via CSS custom properties, so a 
 | `variant=` | `ui-card` / `ui-reveal` | composition | `col` `row` `col-r` `row-r` `spl(1/2)` `vis(media)` `ovr(bl)` `rds(lg-sq)` | `ui-card-tokens.md` |
 | `theme=` | `ui-card` / `ui-reveal` | shared theme axis (colour + `pale`/`muted`/`light`/`dark`) | `black dark` `red pale` `gray` | `../base/theme.md` |
 | `media=` | `ui-media` or ancestor | media frame | `asr(16/9)` `obf()` `obp(cc)` `flp(h)` `hov(zoom)` `scm` `nav(dot)` `chip(ts)` `sticker(red)` `vid()` `load(eager)` | `media.md`, `media.carousel.md` |
-| `content=` | `ui-content` or ancestor | text column | `scl(lg)` `hl(poster)` `eb(accent)` `tx(lgt)` `mt(med)` `pad(xl)` `gap()` `scr` | `content.md` |
+| `content=` | `ui-content` or ancestor | text column | `scl(lg)` `hl(3xl)` `eb(accent)` `tx(lgt)` `mt(med)` `pad(xl)` `gap()` `scr` | `content.md` |
 
 ## Container-query model (how cards respond)
 

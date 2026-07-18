@@ -4,7 +4,7 @@
 	<title>UI: Card — Content · Typography</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="The &lt;ui-content&gt; type system: the headline ramp hl(), the body ramp scl(), the per-part proportional scale, and the fnt() font-family token (container + heading split).">
+	<meta name="description" content="The &lt;ui-content&gt; type system: the headline ramp hl(), the master step scl(), the relational size ladder, group sizes eb()/tx()/mt(), the per-part proportional scale, and the fnt() font-family token (container + heading split).">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
@@ -55,10 +55,10 @@
 			<h2 data-part="headline">The five boxing wizards jump</h2>
 			<p data-part="summary">Body copy holds a constant reading size while the headline steps through the ramp.</p>
 		</ui-content>
-		<ui-content content="hl(poster)">
-			<small data-part="eyebrow">hl(poster)</small>
+		<ui-content content="hl(3xl)">
+			<small data-part="eyebrow">hl(3xl)</small>
 			<strong data-part="headline">Boxing wizards jump</strong>
-			<p data-part="summary">The display step — the headline reaches the poster clamp while the body copy stays perfectly readable.</p>
+			<p data-part="summary">The display step (formerly <code>poster</code>) — the headline reaches the 3xl clamp while the body copy stays perfectly readable.</p>
 		</ui-content>
 	</div>
 
@@ -96,6 +96,68 @@
 			<ul data-part="tags"><li><a href="#">tags</a></li><li><a href="#">×0.72</a></li></ul>
 			<footer data-part="footer">footer — ×0.78</footer>
 		</ui-content>
+	</div>
+
+	<!-- ============================================================
+	     Relational scale — size tokens riding scl()
+	     ============================================================ -->
+	<h3>4 · Relational scale — <code>hl()</code>/<code>tx()</code> × <code>scl()</code></h3>
+	<p class="note">Size tokens name a <strong>step on a ladder</strong>, not an absolute stop. Without <code>scl()</code> they are fixed; with <code>scl()</code> the whole ladder shifts (<code>scl(sm)</code> −1 · <code>scl(md)</code> identity · <code>scl(lg)</code> +1 · <code>scl(xl)</code> +2, saturating at the ends). Same <code>hl(2xl) tx(xl)</code> tokens, three master steps:</p>
+	<div class="stack">
+		<ui-content content="hl(2xl) tx(xl)">
+			<small data-part="eyebrow">hl(2xl) tx(xl) — no scl(): fixed</small>
+			<h2 data-part="headline">Headline at the 2xl stop</h2>
+			<p data-part="summary">Summary at the xl body stop — the absolute clamps, exactly as named.</p>
+			<p data-part="meta">meta — rides the default body size</p>
+		</ui-content>
+		<ui-content content="scl(sm) hl(2xl) tx(xl)">
+			<small data-part="eyebrow">scl(sm) hl(2xl) tx(xl) — shifted −1</small>
+			<h2 data-part="headline">Headline renders the xl stop</h2>
+			<p data-part="summary">Summary renders the lg body stop — both kept their <em>relative</em> prominence, one step down.</p>
+			<p data-part="meta">meta — follows scl(sm)</p>
+		</ui-content>
+		<ui-content content="scl(lg) hl(2xl) tx(xl)">
+			<small data-part="eyebrow">scl(lg) hl(2xl) tx(xl) — shifted +1</small>
+			<h2 data-part="headline">Headline renders 3xl</h2>
+			<p data-part="summary">Summary renders the 2xl body stop (the ladder-headroom clamp above xl).</p>
+			<p data-part="meta">meta — follows scl(lg)</p>
+		</ui-content>
+	</div>
+
+	<h3>5 · Group sizes — <code>eb()</code> / <code>tx()</code> / <code>mt()</code></h3>
+	<p class="note">All four families take a size arg. <code>tx(&lt;size&gt;)</code> sets the Body-group base (summary, list, quote, price…), <code>eb()</code>/<code>mt()</code> size their group at the same ladder step × the group's built-in factor. Sizes are relational, so they shift with <code>scl()</code> like everything else.</p>
+	<div class="stack">
+		<ui-content>
+			<small data-part="eyebrow">defaults — everything rides scl()</small>
+			<h2 data-part="headline">Baseline for comparison</h2>
+			<p data-part="summary">summary at the body size</p>
+			<p data-part="meta">meta at ×0.75</p>
+		</ui-content>
+		<ui-content content="eb(lg) tx(lg) mt(sm)">
+			<small data-part="eyebrow">eb(lg) — eyebrow up two steps</small>
+			<h2 data-part="headline">Groups sized independently</h2>
+			<p data-part="summary">tx(lg) — summary at the lg body stop</p>
+			<p data-part="meta">mt(sm) — meta damped to the sm step</p>
+		</ui-content>
+	</div>
+
+	<h3>6 · Responsive relational — <code>md:</code>/<code>lg:scl()</code> × fixed size tokens</h3>
+	<p class="note"><strong>Resize the cards</strong> (drag the handle): the size tokens stay put in the markup while the responsive master step re-points the ladder per container width. First card: the mobile-first idiom — small type in a narrow container, stepping up at <code>lg</code> (44rem). Second card: base <code>hl(2xl)</code> with <code>md:scl(lg)</code> — the <em>unprefixed</em> headline token re-resolves against the <code>md:</code> ladder (2xl → 3xl at 25rem).</p>
+	<div class="stack">
+		<div style="resize: horizontal; overflow: hidden; min-inline-size: 16rem; max-inline-size: 100%; padding-block-end: var(--spacing-sm);">
+			<ui-card variant="vis(content)" theme="gray" content="scl(sm) lg:scl(md) hl(2xl) tx(xl)"><cq-box><ui-content>
+				<small data-part="eyebrow">scl(sm) lg:scl(md) hl(2xl) tx(xl)</small>
+				<h2 data-part="headline">Steps down when narrow</h2>
+				<p data-part="summary">Narrow: headline xl, summary lg. Past 44rem: headline 2xl, summary xl — the tokens never change, the ladder does.</p>
+			</ui-content></cq-box></ui-card>
+		</div>
+		<div style="resize: horizontal; overflow: hidden; min-inline-size: 16rem; max-inline-size: 100%; padding-block-end: var(--spacing-sm);">
+			<ui-card variant="vis(content)" theme="black dark" content="hl(2xl) md:scl(lg)"><cq-box><ui-content>
+				<small data-part="eyebrow">hl(2xl) md:scl(lg)</small>
+				<h2 data-part="headline">Base token, responsive ladder</h2>
+				<p data-part="summary">Below 25rem the headline is the fixed 2xl clamp; at md the master step shifts the ladder +1 and the same <code>hl(2xl)</code> renders 3xl.</p>
+			</ui-content></cq-box></ui-card>
+		</div>
 	</div>
 
 	<!-- ============================================================

@@ -87,7 +87,7 @@
       "element": "ui-card",
       "variant": "ovr(bl)",
       "media": "asr(3/4) scm",
-      "content": "scl(lg) hl(poster)"
+      "content": "scl(lg) hl(3xl)"
     },
     "media": {
       "name": "Media Preset",
