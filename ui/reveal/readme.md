@@ -1,6 +1,6 @@
 # @browser.style/reveal
 
-A CSS-first **disclosure** built on native `<details>` / `<summary>`, composed over the same card engine as `<ui-card>`. The `<summary>` is the trigger face; the revealed panel is `::details-content` (everything after `</summary>`). Four reveal animations — `rvl(expand)`, `rvl(flip)`, `rvl(slide)`, `rvl(scale)` — plus a full-card trigger (`trg(card)`) and an expand-to-popup mode (`pop`), all configured through the same `variant=` token attribute `<ui-card>` uses. No JavaScript required.
+A CSS-first **disclosure** built on native `<details>` / `<summary>`, composed over the same card engine as `<ui-card>`. The `<summary>` is the trigger face; the revealed panel is `::details-content` (everything after `</summary>`). Four reveal animations — `rvl(exp)`, `rvl(flp)`, `rvl(sld)`, `rvl(scl)` — plus a full-card trigger (`trg(card)`) and an expand-to-popup mode (`pop`), all configured through the same `variant=` token attribute `<ui-card>` uses. No JavaScript required.
 
 `<ui-reveal>` `@import`s `ui-card.css`, so it shares the card primitives and DSLs verbatim: the **`media=`** frame ([media.md](../card/media.md)), the **`content=`** text column ([content.md](../card/content.md)), and the **`variant=`** arrangement / overlay / theme / corners ([ui-card-tokens.md](../card/ui-card-tokens.md)). This package adds only the reveal-specific parts: the `<details>` / `<summary>` wiring, `<ui-icon>`, `<ui-face>`, and the reveal `variant=` tokens (`rvl()`, `frm()`, `ico()`, …) that drive the animations.
 
@@ -40,7 +40,7 @@ npm install @browser.style/base @browser.style/card @browser.style/icon
 `<details>` is the direct child; `<summary>` is the front face; one element after `</summary>` is the panel. Use `<ui-content>` for the panel so it inherits the card typography + `data-part` engine.
 
 ```html
-<ui-reveal variant="rvl(expand) ico(top) ico(right)">
+<ui-reveal variant="rvl(exp) ico(te)">
   <details>
     <summary>
       <ui-content>
@@ -63,10 +63,10 @@ npm install @browser.style/base @browser.style/card @browser.style/icon
 
 ### Reveal with media + overlay marker
 
-For `rvl(flip)` / `rvl(scale)` / `rvl(slide)`, wrap the front face in `<ui-face>` so it can transform independently of the toggle icon. Overlay **markers** (`<ui-chip>`, `<ui-sticker>`) are valid inside the `<summary>` media; overlay **controls** (`<ui-save>`, `<ui-play>`) are **not** — they are interactive, which is invalid in `<summary>` (a click there toggles the `<details>`).
+For `rvl(flp)` / `rvl(scl)` / `rvl(sld)`, wrap the front face in `<ui-face>` so it can transform independently of the toggle icon. Overlay **markers** (`<ui-chip>`, `<ui-sticker>`) are valid inside the `<summary>` media; overlay **controls** (`<ui-save>`, `<ui-play>`) are **not** — they are interactive, which is invalid in `<summary>` (a click there toggles the `<details>`).
 
 ```html
-<ui-reveal variant="rvl(flip) ovr(tl) rds(lg-sq) ico(top) ico(right) ico(sm) icc(dark) scr"
+<ui-reveal variant="rvl(flp) ovr(tl) rds(lg-sq) ico(te) ico(sm) icc(drk) scr"
            media="asr(1/1) hov(zoom) obp(tc)">
   <details name="flip">
     <summary>
@@ -94,7 +94,7 @@ A shared `name` on the `<details>` makes a group of cards mutually exclusive (na
 
 - `<ui-reveal>` — component root (renders as a block; sets `container-type: inline-size`).
 - `<details>` — direct child, one per card. Optional `name` groups cards into a mutually-exclusive set.
-- `<summary>` — the front face. For `rvl(flip)` / `rvl(scale)` / `rvl(slide)`, wrap it in `<ui-face>`. `<ui-media>` / `<ui-content>` inside come from the card engine.
+- `<summary>` — the front face. For `rvl(flp)` / `rvl(scl)` / `rvl(sld)`, wrap it in `<ui-face>`. `<ui-media>` / `<ui-content>` inside come from the card engine.
 - `<ui-icon>` — the toggle (optional with `trg(card)`).
 - **One** element after `</summary>` — the panel. Use `<ui-content>` to give the back the card typography + `data-part` parts; the front-only `ovr()` overlay is reset on the back, so it renders as a normal flow column on the panel background.
 
@@ -108,40 +108,40 @@ Reveal behaviour lives on the same space-separated, composable `variant=` attrib
 
 | Token | Values | Effect |
 |---|---|---|
-| `rvl()` | *(omit)* `rvl(expand)` `rvl(flip)` `rvl(slide)` `rvl(scale)` | Reveal animation (see below). |
-| `lg:rvl()` | `lg:rvl(scale)` | Swaps the animation to `scale` at the `lg` width (≥ 44rem container), overriding the base `rvl()`. |
-| `frm()` | `frm(left)` `frm(right)` *(default)* `frm(top)` `frm(bottom)` | Direction for `rvl(flip)` / `rvl(slide)`. |
+| `rvl()` | *(omit)* `rvl(exp)` `rvl(flp)` `rvl(sld)` `rvl(scl)` | Reveal animation (see below). |
+| `lg:rvl()` | `lg:rvl(scl)` | Swaps the animation to `scale` at the `lg` width (≥ 44rem container), overriding the base `rvl()`. |
+| `frm()` | `frm(lft)` `frm(rgt)` *(default)* `frm(top)` `frm(btm)` | Direction for `rvl(flp)` / `rvl(sld)`. |
 | `trg(card)` | — | Whole card toggles, front and back — no `<ui-icon>` needed. |
-| `pop` | — | `rvl(expand)` only — opens the card as a fixed, centered popup with a backdrop and pop-in. |
-| `scr` | — | Locks a long panel to the card frame and scrolls the overflow. `rvl(flip)` (any width) and `lg:rvl(scale)` (≥ 44rem). |
+| `pop` | — | `rvl(exp)` only — opens the card as a fixed, centered popup with a backdrop and pop-in. |
+| `scr` | — | Locks a long panel to the card frame and scrolls the overflow. `rvl(flp)` (any width) and `lg:rvl(scl)` (≥ 44rem). |
 | `ico()` | position + style + size words, one per token | Positions and styles the toggle icon (see below). |
 | `icc()` | same words as `ico()` | Same words, applied only while the card is **open** (re-place / re-colour the icon on the back). |
 
-> `name` is the native `<details>` attribute (set on the inner `<details>`), not a reveal token. With `rvl(expand) pop`, the in-flow `<ui-reveal>` stays as a placeholder (reserves the cell via `aspect-ratio`) and only the inner `<details>` goes `position: fixed`, so the surrounding grid never reflows.
+> `name` is the native `<details>` attribute (set on the inner `<details>`), not a reveal token. With `rvl(exp) pop`, the in-flow `<ui-reveal>` stays as a placeholder (reserves the cell via `aspect-ratio`) and only the inner `<details>` goes `position: fixed`, so the surrounding grid never reflows.
 
 ### `rvl()` — animation
 
 | Token | Behaviour |
 |---|---|
 | *(omit)* | Plain disclosure — content shows/hides, no special motion. |
-| `rvl(expand)` | Panel expands open below the front face (height animation to `auto`). With `pop` it morphs into a fixed popup. |
-| `rvl(flip)` | Card flips 180° to reveal the back. Wrap the front in `<ui-face>`. Direction via `frm()`. |
-| `rvl(slide)` | Panel slides in over the face from an edge. Direction via `frm()`. |
-| `rvl(scale)` | Panel morphs out from the icon's corner, scaling to fill the card. Morph origin follows the `ico()` position. |
+| `rvl(exp)` | Panel expands open below the front face (height animation to `auto`). With `pop` it morphs into a fixed popup. |
+| `rvl(flp)` | Card flips 180° to reveal the back. Wrap the front in `<ui-face>`. Direction via `frm()`. |
+| `rvl(sld)` | Panel slides in over the face from an edge. Direction via `frm()`. |
+| `rvl(scl)` | Panel morphs out from the icon's corner, scaling to fill the card. Morph origin follows the `ico()` position. |
 
 ### `ico()` / `icc()` — toggle icon
 
-One word per token — `ico(top) ico(right) ico(sm)` anchors a small icon in the top-right corner. `icc()` takes the same words but applies only while open.
+One word per token — `ico(te) ico(sm)` anchors a small icon in the top-right corner. `icc()` takes the same words but applies only while open.
 
 | Group | Words | Effect |
 |---|---|---|
-| Position | `top` `bottom` `left` `right` | Anchors the icon to that edge (absolute, inset by `--ui-reveal-icon-m`). |
-| Style | `dark` | Solid dark icon (default is light). |
-| Style | `semi` | Reduced opacity (`--ui-reveal-icon-opacity`, default `0.6`). |
+| Cell | `ts` `tc` `te` `cs` `cc` `ce` `bs` `bc` `be` | Anchors the icon in that cell of the 9-cell grid (same vocabulary as the media furniture: block row t/c/b × inline column s/c/e; logical axes, rtl-safe). Absolute, inset by `--ui-reveal-icon-m`. |
+| Style | `drk` | Solid dark icon (default is light). |
+| Style | `sem` | Reduced opacity (`--ui-reveal-icon-opacity`, default `0.6`). |
 | Size | `sm` `lg` | `sm` = `--size-5`, default = `--size-7`, `lg` = `--size-8`. |
 
 ```html
-<ui-reveal variant="rvl(flip) ico(top) ico(right) ico(sm) icc(bottom) icc(right) icc(dark)">…</ui-reveal>
+<ui-reveal variant="rvl(flp) ico(te) ico(sm) icc(be) icc(drk)">…</ui-reveal>
 ```
 
 ---
@@ -181,16 +181,16 @@ Scoped to `:where(ui-reveal)` — low specificity, easy to override.
 | Token | Default | Purpose |
 |---|---|---|
 | `--ui-reveal-icon-sz` | `var(--size-7)` | Icon button size (`sm` / `lg` override). |
-| `--ui-reveal-icon-bg` | `var(--color-button)` | Icon background (`dark` sets `#000`). |
+| `--ui-reveal-icon-bg` | `var(--color-button)` | Icon background (`drk` sets `#000`). |
 | `--ui-reveal-icon-radius` | `var(--radius-circle)` | Icon shape. |
 | `--ui-reveal-icon-m` | `var(--spacing-md)` | Icon inset from the edge (decoupled from content padding). |
-| `--ui-reveal-icon-opacity` | `0.6` | Opacity for the `semi` modifier. |
+| `--ui-reveal-icon-opacity` | `0.6` | Opacity for the `sem` modifier. |
 
 ### Flip / expand-popup
 
 | Token | Default | Purpose |
 |---|---|---|
-| `--ui-reveal-perspective` | `1000px` | 3D perspective for `rvl(flip)`. |
+| `--ui-reveal-perspective` | `1000px` | 3D perspective for `rvl(flp)`. |
 | `--ui-reveal-pop-scale` | `0.92` | Popup entry scale (`@keyframes ui-reveal-pop`). |
 | `--ui-reveal-expand-aspect` | `16/9` | Popup aspect ratio (`pop`). |
 | `--ui-reveal-expand-max-is` | `65ch` | Popup max inline-size. |
@@ -212,7 +212,7 @@ Scoped to `:where(ui-reveal)` — low specificity, easy to override.
 | `variant=` | `<ui-reveal>` | arrangement, overlay, theme, corners — `col` `col-r` `row` `row-r` `spl()` `vis()` `ovr()` `thm()` `rds()` | [ui-card-tokens.md](../card/ui-card-tokens.md) |
 
 ```html
-<ui-reveal variant="rvl(flip) ovr(bl) rds(md-sq) thm(dark)"
+<ui-reveal variant="rvl(flp) ovr(bl) rds(md-sq) thm(dark)"
            media="asr(3/4) obp(cc) hov(zoom) scm" content="scl(xl) pad(lg)"> … </ui-reveal>
 ```
 
@@ -221,7 +221,7 @@ Notes:
 - **Squircle corners** — `rds(*-sq)` sets the card radius and `--ui-card-squircle-exp`; reveal reads that exponent to apply the same `corner-shape: superellipse()` to its `<details>`.
 - **Overlay markers only in `<summary>`** — `<ui-chip>` / `<ui-sticker>` are valid in the trigger face; `<ui-save>` / `<ui-play>` are interactive controls and stay **card-only** (never inside `<summary>`).
 - **Responsive front face** — `<ui-reveal>` is a container, so the card engine's `md:` / `lg:` prefixes apply to the front face (`variant` arrangement + `content=` spacing). The queryable descendant for the `@container` rules is the `<summary>` subtree (not `<cq-box>`). `media=` tokens and `scl()` are not breakpoint-prefixed this round.
-- **`content="scr"` vs reveal `variant="… scr"`** — `content="scr"` is the content-column scroll (scrollable text + edge mask); the `scr` token on `variant=` is reveal's own panel scroll for `rvl(flip)` / `lg:rvl(scale)`. They are different mechanisms on different targets, but share **one** fade primitive — the `@property` / `@keyframes ui-scroll-fade` and the `--ui-scroll-fade-mask` gradient live in [`ui/base/scroll.css`](../base/scroll.css) and both scrollers consume it.
+- **`content="scr"` vs reveal `variant="… scr"`** — `content="scr"` is the content-column scroll (scrollable text + edge mask); the `scr` token on `variant=` is reveal's own panel scroll for `rvl(flp)` / `lg:rvl(scl)`. They are different mechanisms on different targets, but share **one** fade primitive — the `@property` / `@keyframes ui-scroll-fade` and the `--ui-scroll-fade-mask` gradient live in [`ui/base/scroll.css`](../base/scroll.css) and both scrollers consume it.
 
 ---
 
@@ -231,7 +231,7 @@ Notes:
 |---|---|---|
 | `::details-content` | all `rvl()` animations | Chrome 131+, Safari 18.1+, Firefox 131+ |
 | `transition-behavior: allow-discrete` | enter/exit animation | Chrome 117+, Safari 17.4+, Firefox 129+ |
-| `interpolate-size: allow-keywords` | `rvl(expand)` height animation to `auto` | Chrome 129+ |
+| `interpolate-size: allow-keywords` | `rvl(exp)` height animation to `auto` | Chrome 129+ |
 | `:has()` | `pop` popup state, `trg(card)` | Chrome 105+, Safari 15.4+, Firefox 121+ |
 | Container queries | responsive front face, `lg:rvl()` | Chrome 105+, Firefox 110+, Safari 16+ |
 | `corner-shape: superellipse(…)` | `rds(*-sq)` squircle corners | Chrome 135+ (falls back to normal rounding) |

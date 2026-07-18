@@ -89,6 +89,23 @@ Card-local override hooks (feed the `--ui-theme-black-*`/`slate` bundles):
 > The overlay-furniture **sub-themes** (`chip(red)`, `sticker(green)`, …) are the
 > same bundles routed via `media=` — see [media.md](media.md).
 
+## Reveal tokens (`ui-reveal`)
+
+`<ui-reveal>` (in `ui/reveal`) is configured through the **same `variant=` attribute** as the card — its former individual attributes (`type`, `type-lg`, `from`, `to`, `trigger`, `scroll`, `icon`, `icon-close`) are **removed**, folded into `variant=` tokens. Like the card's arrangement tokens they are whole-token (`~=`) matched, and the `lg:` container-tier prefix works the same way (`lg:rvl(scl)` replaces the old `type-lg=`).
+
+| Token | Values | Replaces | Effect |
+|-------|--------|----------|--------|
+| `rvl()` | `exp` `flp` `sld` `scl` | `type=` | the reveal animation kind (expand / flip / slide / scale) |
+| `lg:rvl()` | e.g. `lg:rvl(scl)` | `type-lg=` | reveal kind at the `lg:` container tier (≥ 44rem) |
+| `frm()` | `top` `btm` `lft` `rgt` | `from=` | origin direction for slide/flip |
+| `pop` | *(bare flag)* | `to=` | popup mode for the revealed panel |
+| `trg(card)` | — | `trigger="card"` | whole card toggles the disclosure |
+| `scr` | *(bare flag)* | `scroll` | scrollable reveal panel |
+| `ico()` | cell `ts` `tc` `te` `cs` `cc` `ce` `bs` `bc` `be` · ink `drk` `sem` · size `sm` `lg` | `icon=` | toggle-icon placement / ink / size — placement uses the same 9-cell grid as the media furniture (`chip(ts)` … `save(be)`); **one token per word**, e.g. `ico(te) ico(sm)` |
+| `icc()` | same words as `ico()` | `icon-close=` | icon placement/style in the **open** state |
+
+The renderer's default icon is `ico(te) ico(sm)`. Native `<details name>` (exclusivity) and `open` stay as real attributes. Full reveal reference: [../reveal/readme.md](../reveal/readme.md).
+
 ---
 
 ## Internal tokens (written by `variant=` — don't set directly)

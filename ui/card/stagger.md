@@ -87,7 +87,9 @@ from the vector to visible on `[open]`, staggered by delay.
 
 ### 2. `<ui-media>` snap carousel — reveal on snap (two-way)
 
-Opt-in via `media="stagger"` / `nav="stagger"`. Each slide is a
+Opt-in via `media="stagger"` (the only form — read from the `<ui-media>` itself or its
+nearest `ui-card`/`ui-reveal` host; the standalone `stagger`/`data-stagger` attribute on
+lay-out / native hosts is a different adapter and is unchanged). Each slide is a
 `container-type: scroll-state` container; its children sit at the from-state until the
 slide **snaps** into the inline viewport (`@container not scroll-state(snapped: inline)`),
 then transition in. Because it's a **time-based transition** (clock, not scroll-linked),

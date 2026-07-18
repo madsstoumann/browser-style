@@ -181,7 +181,7 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
 
 - `::scroll-marker-group` is `position: absolute; position-anchor: auto`, centered via
   `justify-self: anchor-center`, anchored above the bottom edge with `anchor(bottom)`.
-- `dot(cir)` (default) round markers; `dot(pll)` rounded-rect.
+- Default markers are round dots (no token); `dot(pll)` rounded-rect.
 - **Ink:** `dot(lgt)` / `dot(drk)` set `--ui-media-dot-bg` + `--ui-media-dot-active`
   to the light / dark pairs (`nav(blw)` defaults to dark).
 - **`dot(pll)` timer:** the `:target-current` pill fills L→R over `--ui-media-autoplay`
@@ -212,7 +212,7 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
 - **One base glyph, rotated.** A single RIGHT-pointing SVG (chevron or full arrow, in
   light/dark) is rotated per direction via `--_arw-rot` (left 180°, up −90°, down 90°) —
   no prev/next/up/down SVG duplication.
-- **Shape × shade** (independent, composed): shape = chevron (default, `arw(chv)`) · `arw(arr)`;
+- **Shape × shade** (independent, composed): shape = chevron (default, no token) · `arw(arr)`;
   theme = light (default / `arw(lgt)`: light circle + dark glyph) · `arw(drk)` (dark circle + white glyph
   + light hover ring, one atom — works on the overlay and in bands). A direct `--ui-media-arrow-glyph` / `--ui-media-arrow-bg` override wins.
 - Sizes `arw(sm|md|lg|xl)` set `--ui-media-arrow-size` (`md` = 2.25rem default).

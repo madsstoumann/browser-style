@@ -44,13 +44,13 @@ Everything except `<ui-media>` is an **unregistered custom element** styled pure
 
 ## The three attribute DSLs
 
-Space-separated token strings; values flow down via CSS custom properties, so a token may sit on the host or the primitive itself.
+Space-separated token strings; values flow down via CSS custom properties, so a token may sit on the host or the primitive itself. **Scoping differs per DSL:** `media=` inheritance **stops at the card host** — a `<ui-media>` reads `media=` from itself or its nearest `ui-card`/`ui-reveal` only, never from other ancestors (a `media=` on a `<lay-out overflow>` drives the *layout's own* carousel and never leaks into descendant `<ui-media>`). `content=` by contrast is pure custom-property inheritance and flows down freely — it works on `lay-out` / `lay-out-group` too.
 
 | Attribute | On | Controls | Example tokens | Doc |
 |---|---|---|---|---|
-| `variant=` | `ui-card` / `ui-reveal` | composition | `col` `row` `col-r` `row-r` `spl(1/2)` `vis(media)` `ovr(bl)` `rds(lg-sq)` | `ui-card-tokens.md` |
+| `variant=` | `ui-card` / `ui-reveal` | composition (+ all reveal config on `ui-reveal` — `rvl()` etc., see below) | `col` `row` `col-r` `row-r` `spl(1/2)` `vis(media)` `ovr(bl)` `rds(lg-sq)` | `ui-card-tokens.md` |
 | `theme=` | `ui-card` / `ui-reveal` | shared theme axis (colour + `pale`/`muted`/`light`/`dark`) | `black dark` `red pale` `gray` | `../base/theme.md` |
-| `media=` | `ui-media` or ancestor | media frame | `asr(16/9)` `obf()` `obp(cc)` `flp(h)` `hov(zoom)` `scm` `nav(dot)` `chip(ts)` `sticker(red)` `vid()` `load(eager)` | `media.md`, `media.carousel.md` |
+| `media=` | `ui-media` or its card host (also `lay-out[overflow]` for its own scroller) | media frame + **all carousel controls (media-token-only — the old `nav=`/`arrow=`/`dot=`/`vid=`/`ply=`/`eager` attributes are removed)** | `asr(16/9)` `obf()` `obp(cc)` `flp(h)` `hov(zoom)` `scm` `nav(dot)` `arw(drk)` `dot(pll)` `axis(y)` `auto` `loop` `stagger` `chip(ts)` `sticker(red)` `vid()` `ply()` `load(eager)` | `media.md`, `carousel.md`, `media.carousel.md` |
 | `content=` | `ui-content` or ancestor | text column | `scl(lg)` `hl(3xl)` `eb(accent)` `tx(lgt)` `mt(med)` `pad(xl)` `gap()` `scr` | `content.md` |
 
 ## Container-query model (how cards respond)
@@ -77,13 +77,13 @@ A **preset** is a named look-&-feel bundle written verbatim to the host attribut
 }
 ```
 
-Shape: `{ element, variant, media, content, text?, styles?, reveal?{type, typeLg, icon, iconClose, scroll…} }`. Collections: `data/card.presets.json` (canonical) and `data/card.presets.demo.json`. Content instances reference one via `"preset": { "$ref": "card-preset/hero" }` — swap the ref to restyle without touching content. Schemas live in `cms/baseline/models/` (`card.schema.json`, `card-preset.schema.json`).
+Shape: `{ element, variant, media, content, text?, styles?, reveal?{type, typeLg, icon, iconClose, scroll…} }` — the structured `reveal{}` object stays, but `render.js` folds it into `variant=` tokens (`rvl()`/`lg:rvl()`/`frm()`/`pop`/`trg(card)`/`scr`/`ico()`/`icc()`) at render time; the preset schema has no `nav`/`arrow`/`dot` fields (carousel controls are `media=` tokens). Collections: `data/card.presets.json` (canonical) and `data/card.presets.demo.json`. Content instances reference one via `"preset": { "$ref": "card-preset/hero" }` — swap the ref to restyle without touching content. Schemas live in `cms/baseline/models/` (`card.schema.json`, `card-preset.schema.json`).
 
 `render.js` is a **string-producing SSR engine** — no `document`, runs unchanged in Node. `renderCard(ucf, presets, cards)` resolves the preset, dispatches on `preset.element` (`ui-card` | `ui-reveal` | `ui-media` | `ui-content`), and appends furniture tokens from the content (e.g. a `chip` field → `chip(ts) chip(green)` on `media=`). Everything passes through `esc()`. Demo data: `data/demo/*.json`, manifest `data/index.json`, driver `render.html`. Full walkthrough: `card.md`.
 
 ## ui/reveal — the sibling
 
-`<ui-reveal>` (`ui/reveal/ui-reveal.css`) composes the **same engine** over native `<details>/<summary>` — it `@import`s `../card/ui-card.css`, so all three DSLs work unchanged. Front face lives in `<summary>` (wrapped in `<ui-face>` for flip/scale/slide), the revealed panel is the one element after `</summary>` (usually `<ui-content>`), animated via `::details-content`. Reveal-specific attributes: `type` (`expand|flip|slide|scale`), `type-lg`, `from`, `to`, `trigger="card"`, `scroll`, `icon`/`icon-close`, native `<details name>` for exclusivity. Interactive furniture (`ui-save`/`ui-play`) is **invalid inside `<summary>`**; markers (`ui-chip`/`ui-sticker`) are fine. Details: `ui/reveal/readme.md`, design rationale: `ui/reveal/plan.md`.
+`<ui-reveal>` (`ui/reveal/ui-reveal.css`) composes the **same engine** over native `<details>/<summary>` — it `@import`s `../card/ui-card.css`, so all three DSLs work unchanged. Front face lives in `<summary>` (wrapped in `<ui-face>` for flip/scale/slide), the revealed panel is the one element after `</summary>` (usually `<ui-content>`), animated via `::details-content`. Reveal-specific config is **`variant=` tokens** (the old `type`/`type-lg`/`from`/`to`/`trigger`/`scroll`/`icon`/`icon-close` attributes are removed): `rvl(exp|flp|sld|scl)`, `lg:rvl(…)` (container-tier, was `type-lg`), `frm(top|btm|lft|rgt)`, `pop` (popup mode, was `to=`), `trg(card)`, `scr`, `ico(<cell>|drk|sem|sm|lg)` one token per word, `icc(…)` same words for the open-state icon; native `<details name>` still handles exclusivity. Interactive furniture (`ui-save`/`ui-play`) is **invalid inside `<summary>`**; markers (`ui-chip`/`ui-sticker`) are fine. Details: `ui/reveal/readme.md`, design rationale: `ui/reveal/plan.md`.
 
 ## Layout integration (section layout comes from /layout)
 
@@ -99,7 +99,7 @@ Multi-card layout is **not** part of the card system. Sections are arranged by t
 
 Two axes, one markup:
 
-- **`<lay-out md= lg=>`** — *viewport* `@media` breakpoints (xs 240 / sm 380 / md 540 / lg 720 / xl 920 / xxl 1140 px) pick the section pattern and give each card a cell.
+- **`<lay-out md= lg=>`** — *viewport* `@media` breakpoints (xs 240 / sm 380 / md 540 / lg 720 / xl 920 / xxl 1140 px) pick the section pattern and give each card a cell. Alignment is a per-breakpoint **builder token** inside those attributes: `items(start|center|end|stretch)`, e.g. `lg="columns(2) items(start)"` (the old standalone `items=` attribute is removed).
 - **card `md:` / `lg:`** — *container* queries react to the cell width the layout produced.
 
 Both vocabularies use "md"/"lg" but never co-occur on one element (attribute vs token prefix) — keep both, don't rename. They don't collide technically either: `lay-out` has `contain: layout inline-size` but no `container-type` (cards keep their query root), and the CSS lives in disjoint cascade layers (`layout.*` vs `bs-component`).

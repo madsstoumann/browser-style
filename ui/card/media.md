@@ -338,15 +338,16 @@ Bare drops the circle (and its `--ui-media-arrow-shadow`), so a white glyph reli
 
 | Token | Effect |
 |-------|--------|
-| `dot(circle)` *(default)* | round dots |
-| `dot(pill)` | rounded-rect pills; the **active** pill fills left→right over `--ui-media-autoplay` (default `5s`) as a timer hint |
-| `dot(sm)` · `dot(md)` *(default)* · `dot(lg)` · `dot(xl)` | dot / pill size (composes with `dot(pill)`) |
+| *(default)* | round dots — no token needed |
+| `dot(pll)` | rounded-rect pills; the **active** pill fills left→right over `--ui-media-autoplay` (default `5s`) as a timer hint |
+| `dot(hyb)` | hybrid — round dots whose active marker morphs into a pill and runs the same fill timer |
+| `dot(sm)` · `dot(md)` *(default)* · `dot(lg)` · `dot(xl)` | dot / pill size (composes with `dot(pll)`) |
 
-The fill restarts whenever the active slide changes (`:target-current`) and **holds full** when no JS advances the slide — JS-driven autoplay lands later; the indicator is wired now. Under `prefers-reduced-motion: reduce` the active pill shows filled with no animation. Theme with `--ui-media-pill-track` / `--ui-media-pill-fill` / `--ui-media-pill-width` / `--ui-media-pill-height`.
+The fill restarts whenever the active slide changes (`:target-current`); the `auto` token (JS autoplay) keeps it in sync with the advance interval. Under `prefers-reduced-motion: reduce` the active pill shows filled with no animation. Theme with `--ui-media-pill-track` / `--ui-media-pill-fill` / `--ui-media-pill-width` / `--ui-media-pill-height`.
 
-### Controls below the media — `nav(below)`
+### Controls in a band — `nav(blw)` / `nav(abv)`
 
-`nav(below)` shows **both** controls in a reserved, non-scrolling **bottom band** beneath the frame (B2: the band is block-end padding on the flex scroller, so the absolute controls re-anchor into it without overlaying the image). Default layout: dots centered, arrows at the band's left/right ends. Combine with `arw(set)` to pin the dots to the start and pair the arrows at the end, or `dot(pill)` for a timer bar across the band. Size the band with `--ui-media-band` (default `2.75rem`); colour it with `--ui-media-controls-bg`. The `arw(top)/arw(bot)` placement atoms are for the **overlay** variant — `nav(below)` owns its own vertical placement.
+`nav(blw)` shows **both** controls in a reserved, non-scrolling **bottom band** beneath the frame (the band is block-end padding on the flex scroller, so the absolute controls re-anchor into it without overlaying the image); `nav(abv)` is the mirror band above. Default layout: dots centered, arrows at the band's left/right ends. Combine with `arw(set)` to pin the dots to the start and pair the arrows at the end, or `dot(pll)` for a timer bar across the band. Size the band with `--ui-media-band` (default `2.75rem`); colour it with `--ui-media-controls-bg`. The `arw(tc)/arw(cc)/arw(bc)` placement atoms are for the **overlay** variant — the bands own their own vertical placement.
 
 ---
 
@@ -417,11 +418,11 @@ Every token lives in the `--ui-media-*` namespace and inherits down from whereve
 | `--ui-media-dot-size` | `0.6rem` | dot diameter |
 | `--ui-media-dots-gap` | `0.5rem` | gap between dots |
 | `--ui-media-dot-border` | `0` | dot border |
-| `--ui-media-pill-width` | `1.5rem` | `dot(pill)` width |
-| `--ui-media-pill-height` | `0.35rem` | `dot(pill)` height |
-| `--ui-media-pill-track` | `rgb(255 255 255 / 0.35)` | `dot(pill)` inactive/track color |
-| `--ui-media-pill-fill` | `#fff` | `dot(pill)` active fill color |
-| `--ui-media-autoplay` | `5s` | `dot(pill)` timer-fill duration (future JS autoplay cadence) |
+| `--ui-media-pill-width` | `1.5rem` | `dot(pll)` width |
+| `--ui-media-pill-height` | `0.35rem` | `dot(pll)` height |
+| `--ui-media-pill-track` | `rgb(255 255 255 / 0.35)` | `dot(pll)` inactive/track color |
+| `--ui-media-pill-fill` | `#fff` | `dot(pll)` active fill color |
+| `--ui-media-autoplay` | `5s` | `dot(pll)` timer-fill duration (set by the `auto(Ns)` token) |
 
 ### Carousel — arrows
 
@@ -434,25 +435,25 @@ Every token lives in the `--ui-media-*` namespace and inherits down from whereve
 | `--ui-media-arrow-border` | `0` | circle border (add e.g. `1px solid …`) |
 | `--ui-media-arrow-glyph-size` | `75%` (circle) / `80%` (bare) | glyph size |
 | `--ui-media-arrow-nudge` | `calc(arrow-size * 0.03)` chevron · `* 0.015` arrow | optical shift of the glyph toward its tip (rotates with the arrow); `0` to disable |
-| `--ui-media-arrow-color` | `#fff` (dark under `nav(below)`) | `arw(bare)` glyph ink |
+| `--ui-media-arrow-color` | `#fff` (dark in a `nav(blw)`/`nav(abv)` band) | `arw(bare)` glyph ink |
 | `--ui-media-arrow-color-hover` | `var(--ui-media-arrow-color)` | `arw(bare)` glyph ink on hover (band flips to `rgb(0 0 0 / 1)`) |
 | `--ui-media-arrow-hover-scale` | `1.18` | `arw(bare)` glyph scale on hover / focus |
 | `--ui-media-focus-width` | `2px` | scroller keyboard-focus dashed ring width |
 | `--ui-media-focus-offset` | `3px` | scroller focus ring offset |
 | `--ui-media-focus-color` | `var(--ring-color)` | scroller focus ring colour |
 | `--ui-media-arrow-shadow` | `0 1px 3px rgb(0 0 0 / 0.15)` | soft `box-shadow` on the circle button (`none` to drop) |
-| `--ui-media-arrow-disabled-opacity` | `0.5` (`0` with `arw(hide)`) | opacity of a dead-end arrow (no slide that way) |
-| `--ui-media-arrow-{prev,next}-dim` | the live glyph (dark under `nav(below)`) | dead-end bare glyph SVG (`:disabled` can't mask, so it's painted directly) |
+| `--ui-media-arrow-disabled-opacity` | `0.5` (`0` with `arw(hid)`) | opacity of a dead-end arrow (no slide that way) |
+| `--ui-media-arrow-{prev,next}-dim` | the live glyph (dark in a band) | dead-end bare glyph SVG (`:disabled` can't mask, so it's painted directly) |
 | `--ui-media-arrow-prev` | `var(--ui-media-arrow-prev-light)` | previous-arrow glyph (`url(...)`) |
 | `--ui-media-arrow-next` | `var(--ui-media-arrow-next-light)` | next-arrow glyph (`url(...)`) |
 | `--ui-media-arrow-prev-light` / `-next-light` | white chevron SVG | built-in chevron glyphs for the dark default circle |
 | `--ui-media-arrow-prev-dark` / `-next-dark` | black chevron SVG | built-in chevron glyphs for a light circle — switch via `--ui-media-arrow-prev/-next: var(--ui-media-arrow-*-dark)` |
-| `--ui-media-arrow-prev-arrow-light` / `-next-arrow-light` | white full-arrow SVG | built-in full-arrow glyphs (used by `arw(arrow)`) |
+| `--ui-media-arrow-prev-arrow-light` / `-next-arrow-light` | white full-arrow SVG | built-in full-arrow glyphs (used by `arw(arr)`) |
 | `--ui-media-arrow-prev-arrow-dark` / `-next-arrow-dark` | black full-arrow SVG | full-arrow glyphs for a light circle |
-| `--ui-media-arrow-top` | `calc(anchor(center) − size/2)` | vertical-placement hook (set by `arw(top)`/`arw(bot)`/`nav(below)`) |
+| `--ui-media-arrow-top` | `calc(anchor(center) − size/2)` | vertical-placement hook (set by `arw(tc)`/`arw(bc)`/the band tokens) |
 | `--ui-media-arrow-gap` | `0.5rem` | spacing between the two arrows in an `arw(set)` pair |
-| `--ui-media-band` | `2.75rem` | `nav(below)` bottom-band height |
-| `--ui-media-controls-bg` | `var(--ui-media-bg)` | `nav(below)` band background |
+| `--ui-media-band` | `2.75rem` | `nav(blw)`/`nav(abv)` band height |
+| `--ui-media-controls-bg` | `var(--ui-media-bg)` | `nav(blw)`/`nav(abv)` band background |
 
 The arrow is a **circular button**: a themeable circle (`--ui-media-arrow-bg`) + a chevron image. The chevron is **dark by default** (for the frosted light circle); for a dark circle, use `arw(lgt)` (or point `--ui-media-arrow-prev/-next` at the built-in `*-light` glyphs) — no SVG pasting. Square off the circle with `--ui-media-arrow-radius`.
 
@@ -580,7 +581,7 @@ The parse layer is purely additive, so adding responsive media tokens later is a
 
 Loading the srcset module (`import '@browser.style/card/ui-media-srcset.js'`) upgrades each `<img>` child as **progressive enhancement** (this is the transitional, SSR-replaceable module — separate from `ui-media.js`, which only does cursor hover):
 
-- **Always:** sets `loading="lazy"`, `decoding="async"`, and `sizes="auto"` if absent. (`sizes="auto"` needs `loading="lazy"`; the browser then picks the candidate from the image's real rendered width — Chrome 121+/Firefox, graceful elsewhere.) `eager` makes the first image load `eager` + `fetchpriority="high"` for a hero.
+- **Always:** sets `loading="lazy"`, `decoding="async"`, and `sizes="auto"` if absent. (`sizes="auto"` needs `loading="lazy"`; the browser then picks the candidate from the image's real rendered width — Chrome 121+/Firefox, graceful elsewhere.) The `load(eager)` media token makes every image load eagerly, with `fetchpriority="high"` on the first for a hero.
 - **On the deployed `*.browser.style` host only:** injects a [Cloudflare Image Resizing](https://developers.cloudflare.com/images/transform-images/) `srcset`, deriving each candidate's height from the element's `asr()` token:
 
   ```

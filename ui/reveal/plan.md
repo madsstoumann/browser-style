@@ -3,21 +3,21 @@
 > **Superseded — attribute API folded into `variant=` tokens.** The individual
 > reveal attributes designed below were removed after implementation and merged
 > into the same space-separated `variant=` token DSL that `<ui-card>` uses
-> (implemented as `[variant~="rvl(flip)"]`-style selectors in `ui-reveal.css`).
+> (implemented as `[variant~="rvl(flp)"]`-style selectors in `ui-reveal.css`).
 > The mapping is strict 1:1 — same values, same semantics:
 >
 > | Old attribute | `variant=` token |
 > |---|---|
-> | `type="expand\|flip\|slide\|scale"` | `rvl(expand)` / `rvl(flip)` / `rvl(slide)` / `rvl(scale)` |
-> | `type-lg="scale"` | `lg:rvl(scale)` (variant's `lg:` container tier, ≥ 44rem) |
+> | `type="expand\|flip\|slide\|scale"` | `rvl(exp)` / `rvl(flp)` / `rvl(sld)` / `rvl(scl)` |
+> | `type-lg="scale"` | `lg:rvl(scl)` (variant's `lg:` container tier, ≥ 44rem) |
 > | `from="top\|bottom\|left\|right"` | `frm(top)` etc. |
 > | `to` (expand popup mode) | `pop` |
 > | `trigger="card"` | `trg(card)` |
 > | `scroll` | `scr` |
-> | `icon="top right sm"` | `ico(top) ico(right) ico(sm)` — one word per token |
+> | `icon="top right sm"` | `ico(te) ico(sm)` — one word per token |
 > | `icon-close="…"` | `icc(…)` — same words, open state |
 >
-> The `type="popup"` sketched below shipped as `rvl(expand)` + `pop`, and the
+> The `type="popup"` sketched below shipped as `rvl(exp)` + `pop`, and the
 > layout `variant` tokens below shipped as the shared card tokens (`col` / `row` /
 > `ovr()` / …). Native `<details name>`, `open`, `theme=`, `media=`, `content=`
 > and stagger are unchanged. See `readme.md` for the current API — the sections
@@ -587,7 +587,7 @@ ui-reveal[type="popup"] details[open]::details-content {
 
 ## Future: Popup via Same-Document View Transitions
 
-Idea: morph the popup card (now `variant="rvl(expand) pop"`) from its grid cell straight to a full-bleed
+Idea: morph the popup card (now `variant="rvl(exp) pop"`) from its grid cell straight to a full-bleed
 `position: fixed` overlay using the View Transitions API — the "expand thumbnail
 into hero" pattern. Browser snapshots old rect (grid cell) + new rect (fixed
 `inset: 0`) and morphs size/position automatically, in the top layer above any
@@ -716,7 +716,7 @@ summary.addEventListener('click', (e) => {
 > by `ui/base/index.css`). The scroll-fade `@property`/`@keyframes` were extracted
 > from `ui/card/content.css` (they lived there, not in `ui-card.css` as the note
 > below assumed), and both scrollers — `content="scr"` (`content.css`) and
-> `ui-reveal[variant~="scr"][variant~="rvl(flip)"]` (`ui-reveal.css`) — now paint
+> `ui-reveal[variant~="scr"][variant~="rvl(flp)"]` (`ui-reveal.css`) — now paint
 > `mask: var(--ui-scroll-fade-mask)`. Selectors + guards stay per-component. The
 > original analysis is kept below for context.
 
