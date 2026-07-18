@@ -587,7 +587,7 @@ ui-reveal[type="popup"] details[open]::details-content {
 
 ## Future: Popup via Same-Document View Transitions
 
-Idea: morph the `type="popup"` card from its grid cell straight to a full-bleed
+Idea: morph the popup card (now `variant="rvl(expand) pop"`) from its grid cell straight to a full-bleed
 `position: fixed` overlay using the View Transitions API — the "expand thumbnail
 into hero" pattern. Browser snapshots old rect (grid cell) + new rect (fixed
 `inset: 0`) and morphs size/position automatically, in the top layer above any
@@ -620,10 +620,10 @@ Firefox 144).
 ### Sketch
 
 ```css
-:where(ui-reveal[type="popup"]) details {
+:where(ui-reveal[variant~="pop"]) details {
   view-transition-name: var(--ui-reveal-vt, none); /* JS sets unique name */
 }
-:where(ui-reveal[type="popup"]) details[open] {
+:where(ui-reveal[variant~="pop"]) details[open] {
   inset: 0; position: fixed; z-index: 100; overflow-y: auto;
 }
 @media (prefers-reduced-motion: reduce) {
