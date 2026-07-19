@@ -267,6 +267,59 @@
 		</ui-card>
 	</lay-out>
 
+	<h2>Styled scrollbar — <code>dot(bar)</code></h2>
+	<p><code>dot(bar)</code> turns the markers into a <strong>thin scrollbar</strong>: one continuous hairline track spanning the container, with the current slide's stretch drawn thicker in the active ink — the thumb. The whole track is click-to-jump (each invisible segment is a scroll marker) and keyboard-navigable. Ink follows the dot tokens (<code>dot(lgt)</code>/<code>dot(drk)</code>, band flips); tune with <code>--ui-carousel-bar-size</code> / <code>--ui-carousel-bar-track-size</code> / <code>--ui-carousel-bar-inset</code>. Overlaid on the media by default; put it in a band with <code>dot(blw)</code>. Where <code>::scroll-marker-group</code> is unsupported it degrades to a tinted native thin scrollbar.</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(4/3) nav dot(bar)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">nav dot(bar)</small><h2 data-part="headline">Bar on the media</h2></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav dot(bar) dot(blw)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""><img src="/assets/images/popovers.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">nav dot(bar) dot(blw)</small><h2 data-part="headline">Bar in a band below</h2></ui-content></cq-box>
+		</ui-card>
+	</lay-out>
+	<h3>Card row with arrows above, bar below — <code>arw(abv) arw(set) dot(bar) dot(blw)</code></h3>
+	<p>The classic listing-carousel pattern: a <code>&lt;lay-out overflow&gt;</code> row of cards with the <strong>arrow pair top-right</strong> (<code>arw(abv) arw(set)</code>) and the <strong>thin scrollbar underneath</strong> (<code>dot(bar) dot(blw)</code>).</p>
+	<lay-out bleed xs="pi(1)" md="columns(2)" lg="columns(3)" overflow="preview-lg" media="nav arw(abv) arw(set) dot(bar) dot(blw)">
+		<ui-card variant="ovr(bl) rds(lg)" media="asr(3/4) scm" content="scl(sm) pad(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Fredagsrock</small><h3 data-part="headline">Gastronomy live</h3><p data-part="summary">31. juli kl. 22.00</p><nav data-part="actions"><a class="ui-button" href="#">Køb billet</a></nav></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="ovr(bl) rds(lg)" media="asr(3/4) scm" content="scl(sm) pad(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Fredagsrock</small><h3 data-part="headline">Web Summit</h3><p data-part="summary">7. august kl. 19.00</p><nav data-part="actions"><a class="ui-button" href="#">Køb billet</a></nav></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="ovr(bl) rds(lg)" media="asr(3/4) scm" content="scl(sm) pad(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Fredagsrock</small><h3 data-part="headline">Deep Field</h3><p data-part="summary">7. august kl. 22.00</p><nav data-part="actions"><a class="ui-button" href="#">Køb billet</a></nav></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="ovr(bl) rds(lg)" media="asr(3/4) scm" content="scl(sm) pad(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Fredagsrock</small><h3 data-part="headline">Downstream</h3><p data-part="summary">14. august kl. 19.00</p><nav data-part="actions"><a class="ui-button" href="#">Køb billet</a></nav></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="ovr(bl) rds(lg)" media="asr(3/4) scm" content="scl(sm) pad(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Fredagsrock</small><h3 data-part="headline">Entangled</h3><p data-part="summary">14. august kl. 22.00</p><nav data-part="actions"><a class="ui-button" href="#">Køb billet</a></nav></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="ovr(bl) rds(lg)" media="asr(3/4) scm" content="scl(sm) pad(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">Fredagsrock</small><h3 data-part="headline">Stillness</h3><p data-part="summary">21. august kl. 19.00</p><nav data-part="actions"><a class="ui-button" href="#">Køb billet</a></nav></ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+
 	<hr>
 	<!-- ════════════════════════════════════════════════════════════
 	     5 · THUMBNAILS — dot(tmb)

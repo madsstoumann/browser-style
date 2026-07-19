@@ -169,6 +169,7 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 | *(default)* | Circular dots (no token needed) |
 | `dot(pll)` | Rounded-rect pills; the active pill **fills L→R** over the autoplay duration as a timer hint |
 | `dot(hyb)` | **Hybrid** — markers stay circle dots; the active one morphs into a pill and runs the same fill timer as `dot(pll)` |
+| `dot(bar)` | **Thin styled scrollbar** — one continuous hairline track spanning the container; the current slide's stretch renders thicker in the active ink (the thumb, 1/N of the width). Click-to-jump + keyboard-navigable. See [Styled scrollbar](#styled-scrollbar--dotbar) |
 | `dot(lgt)` `dot(drk)` | Ink — light / dark (`bg` + active). `nav(blw)`/`nav(abv)` default to dark |
 | `dot(sm)` `dot(md)` `dot(lg)` `dot(xl)` | Size (`md` = default) — one scale for dots, pills **and** thumbnails, so `dot(tmb) dot(lg)` = large thumbnails |
 | **In a band** — `dot(bs/bc/be)` (below) · `dot(ts/tc/te)` (above) | **Position within a band** — the row is locked by `nav(blw)`/`nav(abv)`, so the cell's inline letter aligns the dots: start / center (default) / end. Start/end clear the arrow on that side (or the `arw(set)` pair). |
@@ -196,6 +197,37 @@ active thumb runs a bottom **timer** stripe synced to `--ui-media-autoplay` — 
 **autoplay** is running (`ui-media.js` turns it on via `--ui-media-thumb-timer-name`; it's off
 in pure CSS). (The URL uses a custom property today; it swaps to typed
 `attr(data-thumb type(<image>))` once that's Baseline.)
+
+### Styled scrollbar — `dot(bar)`
+
+Turn the marker-group into a **thin scrollbar**: a hairline track across the full
+container width, with the current slide's segment drawn thicker in the active-dot
+ink — the thumb. Every marker becomes an invisible, equal-width segment of the
+track, so the thumb is automatically **1/N of the width**, clicking anywhere on
+the track snaps to that slide, and the segments stay keyboard-focusable
+(a focused segment shows a ring).
+
+```html
+<!-- overlaid on the media (light ink) -->
+<ui-media media="asr(16/9) nav dot(bar)"> … </ui-media>
+
+<!-- the listing pattern: arrows top-right, bar in a band below (dark ink) -->
+<lay-out md="columns(3)" overflow media="nav arw(abv) arw(set) dot(bar) dot(blw)"> … </lay-out>
+```
+
+- **Ink** follows the dot tokens — track = `--ui-carousel-dot-bg`, thumb =
+  `--ui-carousel-dot-active` — so `dot(lgt)`/`dot(drk)` and the automatic dark
+  flip in `nav(blw)`/`dot(blw)`/`nav(abv)` bands just work.
+- **Geometry tokens**: `--ui-carousel-bar-size` (thumb thickness, `3px`),
+  `--ui-carousel-bar-track-size` (track thickness, `1px`), `--ui-carousel-bar-hit`
+  (clickable strip height, `0.875rem`), `--ui-carousel-bar-inset` (inline inset
+  from the container edges, `0px`).
+- **Placement**: overlaid at the media's block-end by default (like dots); use the
+  band atoms (`dot(blw)`, `nav(blw)`, …) to move it under the media. Horizontal
+  carousels only — `axis(y)` keeps its dot column.
+- **Fallback**: where `::scroll-marker-group` is unsupported, the scroller keeps
+  its **native thin scrollbar**, tinted via `scrollbar-color` with the active-dot
+  ink — still thin, still interactive.
 
 ### `load()` — image/video loading (JS-applied)
 
