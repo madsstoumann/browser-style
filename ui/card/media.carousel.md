@@ -222,7 +222,14 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
   bar-specific position rules; the geometry block is declared last inside the gate so
   it wins the corner/in-band alignment rules on source order. Horizontal only; outside
   the `@supports` gate the host arm tints the native thin scrollbar via
-  `scrollbar-color` as the fallback. (A continuous gliding thumb is possible —
+  `scrollbar-color` as the fallback. **Width**: with `dot(bar)` the dot size scale is
+  repurposed — the atoms set `--ui-carousel-bar-span` (sm .33 · md .5 · lg .75 =
+  default · xl 1), a **fraction** that multiplies the `anchor-size()` term in the
+  group's `inline-size` calc (fraction, not percentage: `calc(<length> * <percentage>)`
+  is invalid). A partial-span strip stays centered via `justify-self: anchor-center`;
+  the cell's inline letter re-pins it (`dot(bs)`/`dot(ts)` → `left: anchor(left)`,
+  `dot(be)`/`dot(te)` → `right: anchor(right)`) — rules declared after the geometry
+  block so they win on source order. (A continuous gliding thumb is possible —
   scroll-driven animation on the scroller + an inherited custom property, since
   `scroll(nearest)` does **not** resolve from the group's own box — but the segmented
   form needs no timeline at all.)
