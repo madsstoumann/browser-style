@@ -139,7 +139,7 @@ Elements: **`<ui-card>`** (static host, unregistered), **`<cq-box>`** (queryable
 
 | Attribute | Applies To | Purpose | Type |
 |-----------|-----------|---------|------|
-| `variant` | reveal | Composition DSL (shared with card) — **plus all reveal-specific config**, folded in as tokens: `rvl(exp\|flp\|sld\|scl)`, `lg:rvl()` (container tier), `frm(top\|btm\|lft\|rgt)`, `pop` (popup mode), `trg(card)`, `scr` (scroll), `ico()`/`icc()` (toggle icon, one token per word). The former individual attributes `type`/`type-lg`/`from`/`to`/`trigger`/`scroll`/`icon`/`icon-close` are removed. | Token-list |
+| `variant` | reveal | Composition DSL (shared with card) — **plus all reveal-specific config**, folded in as tokens: `exp`\|`flp()`\|`sld()`\|`scl()` (one token, direction/origin in the value), `lg:scl` (container tier), `pop` (popup mode), `trg(card)`, `scr` (scroll), `ico()`/`icc()` (toggle icon, one token per word). The former individual attributes `type`/`type-lg`/`from`/`to`/`trigger`/`scroll`/`icon`/`icon-close` are removed. | Token-list |
 | `theme` | reveal | Theme axis (shared with card). | Token-list |
 | `media` | reveal (inherits) | Media DSL (shared with card). | Token-list |
 | `content` | reveal (inherits) | Content DSL (shared with card). | Token-list |

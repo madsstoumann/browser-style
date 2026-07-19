@@ -91,13 +91,12 @@ Card-local override hooks (feed the `--ui-theme-black-*`/`slate` bundles):
 
 ## Reveal tokens (`ui-reveal`)
 
-`<ui-reveal>` (in `ui/reveal`) is configured through the **same `variant=` attribute** as the card — its former individual attributes (`type`, `type-lg`, `from`, `to`, `trigger`, `scroll`, `icon`, `icon-close`) are **removed**, folded into `variant=` tokens. Like the card's arrangement tokens they are whole-token (`~=`) matched, and the `lg:` container-tier prefix works the same way (`lg:rvl(scl)` replaces the old `type-lg=`).
+`<ui-reveal>` (in `ui/reveal`) is configured through the **same `variant=` attribute** as the card — its former individual attributes (`type`, `type-lg`, `from`, `to`, `trigger`, `scroll`, `icon`, `icon-close`) are **removed**, folded into `variant=` tokens. Like the card's arrangement tokens they are whole-token (`~=`) matched, and the `lg:` container-tier prefix works the same way (`lg:scl` replaces the old `type-lg=`). The animation token carries its own direction/origin — there is no separate `frm()` token.
 
 | Token | Values | Replaces | Effect |
 |-------|--------|----------|--------|
-| `rvl()` | `exp` `flp` `sld` `scl` | `type=` | the reveal animation kind (expand / flip / slide / scale) |
-| `lg:rvl()` | e.g. `lg:rvl(scl)` | `type-lg=` | reveal kind at the `lg:` container tier (≥ 44rem) |
-| `frm()` | `top` `btm` `lft` `rgt` | `from=` | origin direction for slide/flip |
+| `exp` · `flp()` · `sld()` · `scl()` | `flp(top|btm|lft)` · `sld(top|btm|lft|rgt)` · `scl(ts|te|bs|be)` | `type=` + `from=` | ONE token per animation, direction/origin in the value (expand / flip / slide / scale). Bare `flp`/`sld` = from the right; bare `scl` follows the `ico()` corner |
+| `lg:` animation | e.g. `lg:scl` | `type-lg=` | animation at the `lg:` container tier (≥ 44rem) |
 | `pop` | *(bare flag)* | `to=` | popup mode for the revealed panel |
 | `trg(card)` | — | `trigger="card"` | whole card toggles the disclosure |
 | `scr` | *(bare flag)* | `scroll` | scrollable reveal panel |

@@ -790,14 +790,16 @@ const renderReveal = (fields, type, itemtype, tokens, preset, flipside, cardId =
 	</ui-face>`;
 	const back = flipside ? flipsideBack(flipside) : derivedBack(fields, type);
 	const reveal = preset.reveal || {};
-	/* reveal config → variant tokens (rvl/frm/pop/trg/scr/ico/icc). The preset
-	   keeps friendly editor values ("expand", "top right sm"); the emitted tokens
-	   use the compact spellings — rvl(exp), frm(btm), and the furniture 9-cell
-	   grid for icon placement (ico(te) = top end). */
+	/* reveal config → variant tokens. The preset keeps friendly editor values
+	   ("slide", "left", "top right sm"); the emitted animation token carries its
+	   own direction/origin — type+from fold into ONE token: slide+left → sld(lft),
+	   flip+top → flp(top); expand → exp; scale → scl (origin follows ico()).
+	   Icon placement folds into a corner token (ico(te) = top end). */
+	const anim = RVL_TOKEN[reveal.type] || reveal.type || 'flp';
+	const dir = reveal.from && (anim === 'flp' || anim === 'sld') ? FRM_TOKEN[reveal.from] || reveal.from : null;
 	const revealTokens = [
-		`rvl(${RVL_TOKEN[reveal.type] || reveal.type || 'flp'})`,
-		reveal.typeLg ? `lg:rvl(${RVL_TOKEN[reveal.typeLg] || reveal.typeLg})` : null,
-		reveal.from ? `frm(${FRM_TOKEN[reveal.from] || reveal.from})` : null,
+		dir ? `${anim}(${dir})` : anim,
+		reveal.typeLg ? `lg:${RVL_TOKEN[reveal.typeLg] || reveal.typeLg}` : null,
 		reveal.to ? 'pop' : null,
 		reveal.trigger ? 'trg(card)' : null,
 		reveal.scroll ? 'scr' : null,

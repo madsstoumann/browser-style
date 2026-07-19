@@ -298,7 +298,7 @@ And because `media=` inheritance stops at the card, none of this leaks: the card
 `<ui-reveal>` is a card built on native `<details>/<summary>`: the front face is the `<summary>`, the hidden panel is whatever follows it. No JavaScript — the browser owns the open/close state.
 
 ```html
-<ui-reveal variant="rvl(flp) ovr(bl) rds(lg) ico(te) ico(sm) icc(drk)"
+<ui-reveal variant="flp ovr(bl) rds(lg) ico(te) ico(sm) icc(drk)"
            media="asr(1/1) hov(zoom) scm">
   <details name="cards">
     <summary>
@@ -320,9 +320,8 @@ All reveal behaviour lives in the same `variant=` attribute the card uses:
 
 | Token | Effect |
 |---|---|
-| `rvl(exp · flp · sld · scl)` | the animation — **exp**and below, **fl**i**p** 180°, **sl**i**d**e in, **sc**a**l**e from the icon's corner |
-| `lg:rvl(scl)` | switch animation when the card is wide (expand on mobile, morph on desktop) |
-| `frm(top · btm · lft · rgt)` | direction for flip / slide |
+| `exp` · `flp(top|btm|lft)` · `sld(top|btm|lft|rgt)` · `scl(ts|te|bs|be)` | the animation — **exp**and below, **fl**i**p** 180°, **sl**i**d**e in, **sc**a**l**e from a corner. One token; the direction/origin rides in the value (bare `flp`/`sld` = from the right, bare `scl` follows the `ico()` corner) |
+| `lg:scl` | switch animation when the card is wide (expand on mobile, morph on desktop) |
 | `pop` | expand becomes a centered popup with a backdrop |
 | `trg(card)` | the whole card is the toggle (no icon needed) |
 | `scr` | long panels scroll inside the card frame |
