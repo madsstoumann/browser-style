@@ -55,6 +55,30 @@
 	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="dot(xl)"]) { --ui-carousel-dot-size: 1rem;    --ui-carousel-pill-width: 2.5rem;  --ui-carousel-pill-height: 0.55rem; --ui-carousel-thumb-size: 4.75rem; }
 	/* dot(tmb) — thumbnails get a larger inset */
 	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="dot(tmb)"]) { --ui-carousel-marker-inset: var(--ui-carousel-thumb-gap, 1rem); }
+	/* dot(bar) — thin styled scrollbar: token defaults. --ui-carousel-dot-size is aliased
+	   to the hit height so every existing marker-group top/centering calc (overlay, bands)
+	   centers the bar's hit strip without bar-specific position rules. Declared after the
+	   dot size scale so a stray dot(sm|…|xl) never skews the bar geometry. */
+	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="dot(bar)"]) {
+		--ui-carousel-bar-hit: 0.875rem;
+		--ui-carousel-bar-inset: 0px;
+		--ui-carousel-bar-size: 3px;
+		--ui-carousel-bar-track-size: 1px;
+		--ui-carousel-dot-size: var(--ui-carousel-bar-hit);
+	}
+	/* dot(bar) scroller arm — the anchor-name lets the marker-group size itself to the
+	   scroller via anchor-size() (implicit-anchor sizing is not reliable there). The
+	   anchor-scope is load-bearing: it confines the name to this scroller so multiple
+	   bar carousels on a page can't cross-bind to each other's anchors. Plus the native
+	   fallback: where ::scroll-marker-group is unsupported the scroller keeps its thin
+	   native scrollbar (hidden in supporting browsers by the controls-present rules in
+	   media.carousel.css / layout.css); tint its thumb with the active-dot ink */
+	:where(ui-card, ui-reveal):where([media*="dot(bar)"]) ui-media,
+	:where(ui-media, lay-out[overflow]):where([media*="dot(bar)"]) {
+		anchor-name: --ui-carousel-bar;
+		anchor-scope: --ui-carousel-bar;
+		scrollbar-color: var(--ui-carousel-dot-active, rgb(0 0 0 / 0.7)) #0000;
+	}
 	/* arrows present: base glyph vars */
 	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) {
 		--ui-carousel-chevron-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
@@ -163,6 +187,14 @@
 		ui-media ui-media::scroll-button(*) { display: none; }
 		ui-media ui-media::scroll-marker-group { display: none; }
 		ui-media ui-media > :is(img, video)::scroll-marker { content: none; }
+
+		/* dot(bar) default (overlay) strip position — same value as the base rule above,
+		   restated as a standalone rule (like the band rules) so the strip's top never
+		   depends on the nested declaration; any band/in-band rule below still wins. */
+		:where(ui-card, ui-reveal):where([media*="dot(bar)"]) :where(ui-media)::scroll-marker-group,
+		:where(ui-media, lay-out[overflow]):where([media*="dot(bar)"])::scroll-marker-group {
+			top: calc(anchor(bottom) - var(--ui-carousel-overlay-gap) - var(--ui-carousel-dot-size));
+		}
 
 		/* dot shape: pill (default circle needs no rule) — applies to every slide marker */
 		:where(ui-card, ui-reveal):where([media*="dot(pll)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
@@ -575,6 +607,47 @@
 		:where(ui-card, ui-reveal):where([media*="nav(blw)"][media*="dot(be)"][media*="arw(set)"], [media*="nav(abv)"][media*="dot(te)"][media*="arw(set)"]) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="nav(blw)"][media*="dot(be)"][media*="arw(set)"], [media*="nav(abv)"][media*="dot(te)"][media*="arw(set)"])::scroll-marker-group {
 			right: calc(anchor(right) + 2 * var(--ui-carousel-overlay-gap) + 2 * var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
+		}
+
+		/* ---- dot(bar) — thin styled scrollbar ---- declared LAST so the bar's geometry
+		   wins every corner/band/in-band alignment rule above (equal 0-specificity, source
+		   order). The marker-group stretches across the container as one continuous
+		   hairline; every marker is an invisible flex segment of it, and :target-current
+		   paints its stretch thicker in the active-dot ink — the "thumb" (length = 1/N).
+		   The whole track is click-to-jump and keyboard-focusable. The existing top/centering
+		   rules place the strip (the hit height is aliased into --ui-carousel-dot-size above);
+		   horizontal carousels only — axis(y) keeps its dot column. */
+		:where(ui-card, ui-reveal):where([media*="dot(bar)"]) :where(ui-media)::scroll-marker-group,
+		:where(ui-media, lay-out[overflow]):where([media*="dot(bar)"])::scroll-marker-group {
+			block-size: var(--ui-carousel-bar-hit, 0.875rem);
+			gap: 0;
+			/* the markers are flex: 1 1 0 — the group needs an explicit inline-size or it
+			   shrink-wraps to 0. Sized to the scroller via its --ui-carousel-bar anchor-name
+			   (implicit-anchor sizing is unreliable); position-anchor also makes it the
+			   default anchor, so the unnamed anchor() top/centering rules above keep working */
+			inline-size: calc(anchor-size(--ui-carousel-bar inline) - 2 * var(--ui-carousel-bar-inset, 0px));
+			inset-inline: auto;
+			justify-self: anchor-center;
+			position-anchor: --ui-carousel-bar;
+		}
+		:where(ui-card, ui-reveal):where([media*="dot(bar)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
+		:where(ui-media, lay-out[overflow]):where([media*="dot(bar)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
+			background: linear-gradient(var(--ui-carousel-dot-bg) 0 0) no-repeat center / 100% var(--ui-carousel-bar-track-size, 1px);
+			block-size: 100%;
+			border: 0;
+			border-radius: 0;
+			flex: 1 1 0;
+			inline-size: auto;
+		}
+		:where(ui-card, ui-reveal):where([media*="dot(bar)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+		:where(ui-media, lay-out[overflow]):where([media*="dot(bar)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+			background: linear-gradient(var(--ui-carousel-dot-active) 0 0) no-repeat center / 100% var(--ui-carousel-bar-size, 3px);
+		}
+		/* segments are visually seamless, so keyboard focus needs its own ring */
+		:where(ui-card, ui-reveal):where([media*="dot(bar)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible,
+		:where(ui-media, lay-out[overflow]):where([media*="dot(bar)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible {
+			outline: var(--ring-width, 2px) solid var(--ring-color, currentColor);
+			outline-offset: calc(-1 * var(--ring-width, 2px));
 		}
 	}
 

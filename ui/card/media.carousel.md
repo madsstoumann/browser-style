@@ -203,6 +203,29 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
   (overlay), inset by `--ui-media-marker-inset` (defaults to the overlay gap; `dot(tmb)`
   bumps it to `1rem`). In `axis(y)` the corner rail stacks vertically. Default (no corner
   token) stays bottom-centered.
+- **`dot(bar)` — segmented thin scrollbar.** The marker-group becomes one full-width
+  strip: every marker is an invisible `flex: 1 1 0` segment painted as a centered
+  hairline (`linear-gradient` track, `100% × --ui-carousel-bar-track-size`), and
+  `:target-current` repaints its stretch thicker (`--ui-carousel-bar-size`) in the
+  active-dot ink — the "thumb", 1/N wide, snapping segment-to-segment. Track clicks
+  and keyboard focus are native marker behavior; a focused segment shows an inset ring.
+  **Sizing** is the subtle part: the `flex: 1 1 0` markers give the group no intrinsic
+  width and opposing `left`/`right` anchor insets don't reliably stretch an
+  anchor-positioned pseudo, so the scroller declares `anchor-name: --ui-carousel-bar`
+  and the group sizes itself with `inline-size: calc(anchor-size(--ui-carousel-bar
+  inline) - 2 * --ui-carousel-bar-inset)` (+ `position-anchor` to the same name, so the
+  unnamed `anchor()` top/centering rules keep resolving). The scroller's matching
+  `anchor-scope: --ui-carousel-bar` is **load-bearing** — without it, multiple bar
+  carousels on one page cross-bind to each other's anchors. The hit-strip height
+  (`--ui-carousel-bar-hit`) is aliased into `--ui-carousel-dot-size` on the host arm so
+  every existing group top/centering calc (overlay + bands) centers the bar without
+  bar-specific position rules; the geometry block is declared last inside the gate so
+  it wins the corner/in-band alignment rules on source order. Horizontal only; outside
+  the `@supports` gate the host arm tints the native thin scrollbar via
+  `scrollbar-color` as the fallback. (A continuous gliding thumb is possible —
+  scroll-driven animation on the scroller + an inherited custom property, since
+  `scroll(nearest)` does **not** resolve from the group's own box — but the segmented
+  form needs no timeline at all.)
 
 ## Arrows
 
