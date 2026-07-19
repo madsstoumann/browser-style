@@ -8,6 +8,7 @@
  * C. Typography (font/font-lead/fit) · D. Decoration (shadow/hover) ·
  * E. Shape variants · F. Keyframes. Full docs: readme.md.
  */
+@import '../base/shapes-glyphs.css'; /* --shape-* badge silhouettes (opt-in, not in base's default chain) */
 @layer bs-component {
 	:where(ui-sticker) {
 		/* ───────── A. Base ───────── */
