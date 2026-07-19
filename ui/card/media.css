@@ -76,23 +76,23 @@
 	:where([media*="obp(bc)"]) { --ui-media-op: center bottom; }
 	:where([media*="obp(br)"]) { --ui-media-op: right bottom; }
 
-	/* rds() — corners on a STANDALONE <ui-media> (mirrors ui-card rds(); -sqr =
-	   squircle). non/crc/pll canonical; none/full/pill/-sq kept as aliases. */
+	/* rds() — corners on a STANDALONE <ui-media> (mirrors ui-card rds(); -sq =
+	   squircle). non canonical (none kept as alias). */
 	:where([media*="rds(non)"], [media*="rds(none)"]) { --ui-media-radius: 0; }
 	:where([media*="rds(sm)"])   { --ui-media-radius: var(--radius-sm); }
 	:where([media*="rds(md)"])   { --ui-media-radius: var(--radius-md); }
 	:where([media*="rds(lg)"])   { --ui-media-radius: var(--radius-lg); }
 	:where([media*="rds(xl)"])   { --ui-media-radius: var(--radius-xl); }
 	:where([media*="rds(2xl)"])  { --ui-media-radius: var(--radius-2xl); }
-	:where([media*="rds(crc)"], [media*="rds(full)"]) { --ui-media-radius: var(--radius-circle, 50%); }
-	:where([media*="rds(pll)"], [media*="rds(pill)"]) { --ui-media-radius: var(--radius-pill, 100px); }
-	/* -sqr: bespoke radius + superellipse corner-shape (squircle tokens in tokens.css) */
-	:where([media*="rds(sm-sqr)"], [media*="rds(sm-sq)"]) { --ui-media-radius: var(--radius-sm-sq); --ui-media-squircle-exp: var(--squircle-sm); }
-	:where([media*="rds(md-sqr)"], [media*="rds(md-sq)"]) { --ui-media-radius: var(--radius-md-sq); --ui-media-squircle-exp: var(--squircle-md); }
-	:where([media*="rds(lg-sqr)"], [media*="rds(lg-sq)"]) { --ui-media-radius: var(--radius-lg-sq); --ui-media-squircle-exp: var(--squircle-lg); }
-	:where([media*="rds(xl-sqr)"], [media*="rds(xl-sq)"]) { --ui-media-radius: var(--radius-xl-sq); --ui-media-squircle-exp: var(--squircle-xl); }
-	:where([media*="-sq)"]) ui-media, :where([media*="-sqr)"]) ui-media,
-	:where(ui-media[media*="-sq)"], ui-media[media*="-sqr)"]) { corner-shape: superellipse(var(--ui-media-squircle-exp, 1.8)); }
+	:where([media*="rds(full)"]) { --ui-media-radius: var(--radius-circle, 50%); }
+	:where([media*="rds(pill)"]) { --ui-media-radius: var(--radius-pill, 100px); }
+	/* -sq: bespoke radius + superellipse corner-shape (squircle tokens in tokens.css) */
+	:where([media*="rds(sm-sq)"]) { --ui-media-radius: var(--radius-sm-sq); --ui-media-squircle-exp: var(--squircle-sm); }
+	:where([media*="rds(md-sq)"]) { --ui-media-radius: var(--radius-md-sq); --ui-media-squircle-exp: var(--squircle-md); }
+	:where([media*="rds(lg-sq)"]) { --ui-media-radius: var(--radius-lg-sq); --ui-media-squircle-exp: var(--squircle-lg); }
+	:where([media*="rds(xl-sq)"]) { --ui-media-radius: var(--radius-xl-sq); --ui-media-squircle-exp: var(--squircle-xl); }
+	:where([media*="-sq)"]) ui-media,
+	:where(ui-media[media*="-sq)"]) { corner-shape: superellipse(var(--ui-media-squircle-exp, 1.8)); }
 
 	/* clip — clip-path to the rds() radius (reliable during scroll; -sq clips as plain round) */
 	:where(ui-media[media*="clip"]) { clip-path: inset(0 round var(--ui-media-radius, var(--ui-card-radius, 0))); }
