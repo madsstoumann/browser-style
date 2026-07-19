@@ -112,7 +112,7 @@ Reveal behaviour lives on the same space-separated, composable `variant=` attrib
 | `lg:` animation | `lg:scl` | Swaps the animation at the `lg` width (≥ 44rem container), overriding the base one. |
 | `trg(card)` | — | Whole card toggles, front and back — no `<ui-icon>` needed. |
 | `pop` | — | `exp` only — opens the card as a fixed, centered popup with a backdrop and pop-in. |
-| `scr` | — | Locks a long panel to the card frame and scrolls the overflow. `flp` (any width) and `lg:scl` (≥ 44rem). |
+| `scr` | — | Locks a long panel to the card frame and scrolls the overflow. `flp` (any width) and the scale-morph — `scl` or `lg:scl` — whenever it is the active animation. |
 | `ico()` | position + style + size words, one per token | Positions and styles the toggle icon (see below). |
 | `icc()` | same words as `ico()` | Same words, applied only while the card is **open** (re-place / re-colour the icon on the back). |
 

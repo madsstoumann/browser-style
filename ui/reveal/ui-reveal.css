@@ -13,6 +13,17 @@
  */
 @import '../card/ui-card.css';
 @import '../icon/index.css';
+
+/* Animation-dispatch flag — each variant= animation family writes ONE value
+   onto `> details` (exp | flp | sld | scl); the per-animation geometry blocks
+   below match it with style queries against the details container (named
+   bs-rvl), so every animation's tokens are enumerated exactly once, and the
+   lg: tier swaps the animation by re-flipping the flag instead of duplicating
+   geometry. NON-inheriting on purpose: a nested <ui-reveal>'s details must not
+   pick up an outer reveal's animation. Universal syntax needs no initial-value
+   (the guaranteed-invalid initial simply never matches a style query). */
+@property --_rvl { syntax: "*"; inherits: false; }
+
 @layer bs-component {
 	:where(ui-reveal) {
 		--ui-content-gap: var(--ui-reveal-row-gap, 1em);
@@ -31,9 +42,24 @@
 			background: var(--ui-reveal-bg);
 			border-radius: var(--ui-card-radius, var(--ui-reveal-radius));
 			box-shadow: var(--ui-reveal-shadow, var(--shadow-xl));
+			/* the style-query container for the animation dispatch: summary/ui-face
+			   resolve here (nearest named container) and so does ::details-content
+			   (originating element). The resolved --_rvl flag lives on this element. */
+			container-name: bs-rvl;
 			display: grid;
 			overflow: hidden;
+			/* shared anchor for the absolutely-positioned panels (scl morph, scr
+			   frame-lock); exp pop's `position: fixed` overrides it while open */
+			position: relative;
 		}
+
+		/* animation dispatch — one setter per family (the only place each
+		   family's tokens are enumerated). :where() keeps them at 0-0-1 so the
+		   lg: tier swap (same specificity, later in the file) wins by order. */
+		&:where([variant~="exp"]) > details { --_rvl: exp; }
+		&:where([variant~="flp"], [variant~="flp(top)"], [variant~="flp(btm)"], [variant~="flp(lft)"], [variant~="flp(rgt)"]) > details { --_rvl: flp; }
+		&:where([variant~="sld"], [variant~="sld(top)"], [variant~="sld(btm)"], [variant~="sld(lft)"], [variant~="sld(rgt)"]) > details { --_rvl: sld; }
+		&:where([variant~="scl"], [variant~="scl(ts)"], [variant~="scl(te)"], [variant~="scl(bs)"], [variant~="scl(be)"]) > details { --_rvl: scl; }
 
 		/* consume shared --ui-card-cols (horizontal/split tokens) */
 		> details > summary,
@@ -92,12 +118,13 @@
 			box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-bg), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ui-reveal-ring-active, var(--ui-reveal-content-c, currentColor));
 		}
 
-		&:is([variant~="flp"], [variant~="flp(top)"], [variant~="flp(btm)"], [variant~="flp(lft)"], [variant~="flp(rgt)"],
-			[variant~="sld"], [variant~="sld(top)"], [variant~="sld(btm)"], [variant~="sld(lft)"], [variant~="sld(rgt)"],
-			[variant~="scl"], [variant~="scl(ts)"], [variant~="scl(te)"], [variant~="scl(bs)"], [variant~="scl(be)"],
-			[variant~="lg:scl"], [variant~="lg:scl(ts)"], [variant~="lg:scl(te)"], [variant~="lg:scl(bs)"], [variant~="lg:scl(be)"]) > details::details-content {
-			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
-			color: var(--ui-reveal-content-c, inherit);
+		/* flp/sld/scl panels paint bg + ink from the START of the reveal (exp's
+		   panel is in-flow and gets them on [open] via the base rule above) */
+		@container bs-rvl style(--_rvl: flp) or style(--_rvl: sld) or style(--_rvl: scl) {
+			> details::details-content {
+				background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
+				color: var(--ui-reveal-content-c, inherit);
+			}
 		}
 
 		> details > summary {
@@ -185,24 +212,28 @@
 	}
 
 	/* === exp â expand === */
-	:where(ui-reveal[variant~="exp"]) {
-		> details::details-content {
+	@container bs-rvl style(--_rvl: exp) {
+		:where(ui-reveal) > details::details-content {
 			block-size: 0;
 			content-visibility: hidden;
 			overflow: hidden;
 			transition: block-size var(--_trs), content-visibility var(--_trs), padding var(--_trs);
 			transition-behavior: allow-discrete; /* keep content rendered while closing so block-size animates autoâ0 (shorthand above resets it) */
 		}
-		> details[open]::details-content {
+		:where(ui-reveal) > details[open]::details-content {
 			block-size: auto;
 			content-visibility: visible;
 		}
 
 		/* popup mode: animate on OPEN only (transition on [open]); close snaps
 		   shut so block-size doesn't drift back into the grid. See readme.md. */
-		&[variant~="pop"] > details::details-content { transition: none; }
-		&[variant~="pop"] > details[open]::details-content { transition: block-size var(--_trs), content-visibility var(--_trs), padding var(--_trs); }
+		:where(ui-reveal[variant~="pop"]) > details::details-content { transition: none; }
+		:where(ui-reveal[variant~="pop"]) > details[open]::details-content { transition: block-size var(--_trs), content-visibility var(--_trs), padding var(--_trs); }
+	}
 
+	/* exp pop — HOST-side popup styling (a container can't style itself, so
+	   this block stays attribute-keyed; pop only exists with exp) */
+	:where(ui-reveal[variant~="exp"]) {
 		/* popup: keep the OUTER ui-reveal in normal flow as a placeholder â
 		   reserve the closed tile's cell via its ar so siblings don't reflow (no
 		   background layout shift). Only the INNER <details> goes fixed. Backdrop
@@ -261,15 +292,19 @@
 		to   { opacity: 1; scale: 1; }
 	}
 
-	/* === flp â flip (direction in the value: flp(top|btm|lft); bare = right) === */
-	:where(ui-reveal:is([variant~="flp"], [variant~="flp(top)"], [variant~="flp(btm)"], [variant~="flp(lft)"], [variant~="flp(rgt)"])) {
+	/* === flp — flip (direction in the value: flp(top|btm|lft); bare = right) ===
+	   The host carries the perspective + rotation-pair vars (a container can't
+	   style itself); they're inert unless the dispatched flag is flp. */
+	:where(ui-reveal) {
 		--_persp: perspective(var(--ui-reveal-perspective, 1000px));
 		/* flip direction via the flp() value; closed/open pairs share one rotation axis so
-		   transforms interpolate as rotations (no 180Â° matrix degeneracy). */
+		   transforms interpolate as rotations (no 180° matrix degeneracy). */
 		--_face-closed: rotateY(0deg);
 		--_face-open: rotateY(180deg);
 		--_panel-closed: rotateY(-180deg);
 		--_panel-open: rotateY(0deg);
+		/* icc() close-icon clearance, consumed by the flp panel rules below */
+		--ui-reveal-icon-clear: calc(var(--ui-reveal-icon-sz) + var(--ui-reveal-icon-m));
 
 		&[variant~="flp(lft)"] {
 			--_face-open: rotateY(-180deg);
@@ -287,64 +322,109 @@
 			--_panel-closed: rotateX(-180deg);
 			--_panel-open: rotateX(0deg);
 		}
+	}
 
-		> details > summary > ui-face {
+	@container bs-rvl style(--_rvl: flp) {
+		:where(ui-reveal) > details > summary > ui-face {
 			backface-visibility: hidden;
 			transform: var(--_persp) var(--_face-closed);
 			transition: transform var(--_trs);
 		}
-		> details[open] > summary > ui-face { transform: var(--_persp) var(--_face-open); }
+		:where(ui-reveal) > details[open] > summary > ui-face { transform: var(--_persp) var(--_face-open); }
 
 		/* icon paints (and hit-tests) above the open panel */
-		> details > summary > ui-icon { z-index: 2; }
+		:where(ui-reveal) > details > summary > ui-icon { z-index: 2; }
 
-		> details::details-content {
+		:where(ui-reveal) > details::details-content {
 			backface-visibility: hidden;
 			grid-area: 1 / -1;
 			transform: var(--_persp) var(--_panel-closed);
 			transition: transform var(--_trs), content-visibility var(--_trs);
 		}
-		> details[open]::details-content { transform: var(--_persp) var(--_panel-open); }
+		:where(ui-reveal) > details[open]::details-content { transform: var(--_persp) var(--_panel-open); }
+
+		/* icc() close-icon clearance — keep the panel's first element out from
+		   under a top close-icon. Logical padding tracks the icon's logical side,
+		   so it flips automatically in rtl. Only the first child is indented; the
+		   rest of the panel stays full-width. Open-state side = icc() if set, else ico(). */
+		:where(ui-reveal:is([variant~="ico(te)"], [variant~="icc(te)"])) > details[open]::details-content > * > :first-child {
+			padding-inline-end: var(--ui-reveal-icon-clear);
+		}
+		:where(ui-reveal:is([variant~="ico(ts)"], [variant~="icc(ts)"])) > details[open]::details-content > * > :first-child {
+			padding-inline-start: var(--ui-reveal-icon-clear);
+		}
+
+		/* scr — lock the panel to the closed-card frame, scroll the overflow.
+		   Opt-in. Panel goes absolute (out of grid track sizing) so a long
+		   flipside can't grow the card. Default height = closed face (inset:0);
+		   override with --ui-reveal-content-bs. (position:relative on details
+		   comes from the base details rule.) */
+		:where(ui-reveal[variant~="scr"]) > details::details-content {
+			block-size: var(--ui-reveal-content-bs, auto);
+			inset: 0;
+			overflow-y: auto;
+			overscroll-behavior: contain;
+			position: absolute;
+			scrollbar-color: var(--ui-reveal-scrollbar-color, color-mix(in oklab, currentColor 40%, transparent)) transparent;
+			scrollbar-gutter: auto;
+			scrollbar-width: thin;
+		}
 	}
 
-	/* flip icon dip â icon fades out edge-on, back in once the new face lands;
+	/* flip icon dip — icon fades out edge-on, back in once the new face lands;
 	   open/close use twin keyframes so toggling restarts it. See readme.md. */
 	@media (prefers-reduced-motion: no-preference) {
-		:where(ui-reveal:is([variant~="flp"], [variant~="flp(top)"], [variant~="flp(btm)"], [variant~="flp(lft)"], [variant~="flp(rgt)"])) > details > summary > ui-icon {
-			animation: ui-reveal-icon-dip var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
+		@container bs-rvl style(--_rvl: flp) {
+			:where(ui-reveal) > details > summary > ui-icon {
+				animation: ui-reveal-icon-dip var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
+			}
+			:where(ui-reveal) > details[open] > summary > ui-icon { animation-name: ui-reveal-icon-dip-open; }
 		}
-		:where(ui-reveal:is([variant~="flp"], [variant~="flp(top)"], [variant~="flp(btm)"], [variant~="flp(lft)"], [variant~="flp(rgt)"])) > details[open] > summary > ui-icon { animation-name: ui-reveal-icon-dip-open; }
 	}
 
 	/* asymmetric: quick fade-out (to 40%), slower fade back in (remaining 60%) */
 	@keyframes ui-reveal-icon-dip      { 0% { opacity: 1; } 40% { opacity: 0; } 100% { opacity: 1; } }
 	@keyframes ui-reveal-icon-dip-open { 0% { opacity: 1; } 40% { opacity: 0; } 100% { opacity: 1; } }
 
-	/* === sld â slide (direction in the value: sld(top|btm|lft|rgt); bare = right) === */
-	:where(ui-reveal:is([variant~="sld"], [variant~="sld(top)"], [variant~="sld(btm)"], [variant~="sld(lft)"], [variant~="sld(rgt)"])) {
-		> details::details-content {
+	/* scroll fade-shadow — vertical edge mask driven by scroll position. The
+	   masked edges reveal the panel background behind, so the fade adopts
+	   --ui-reveal-content-bg. The @property/@keyframes (ui-scroll-fade) AND the
+	   --ui-scroll-fade-mask gradient are the shared scroll-fade primitive in
+	   ui/base/scroll.css (also used by content="scr"). */
+	@supports (animation-timeline: scroll()) {
+		@media (prefers-reduced-motion: no-preference) {
+			@container bs-rvl style(--_rvl: flp) {
+				:where(ui-reveal[variant~="scr"]) > details[open]::details-content {
+					animation: ui-scroll-fade linear;
+					animation-timeline: --ui-reveal-scroll;
+					mask: var(--ui-scroll-fade-mask);
+					scroll-timeline: --ui-reveal-scroll block;
+				}
+			}
+		}
+	}
+
+	/* === sld — slide (direction in the value: sld(top|btm|lft|rgt); bare = right) === */
+	@container bs-rvl style(--_rvl: sld) {
+		:where(ui-reveal) > details::details-content {
 			grid-area: 1 / -1;
 			translate: 100% 0;
 			z-index: 1;
 			transition: translate var(--_trs), content-visibility var(--_trs);
 		}
-
-		&[variant~="sld(top)"] > details::details-content { translate: 0 -100%; }
-		&[variant~="sld(btm)"] > details::details-content { translate: 0 100%; }
-		&[variant~="sld(lft)"] > details::details-content { translate: -100% 0; }
-		&[variant~="sld(rgt)"] > details::details-content { translate: 100% 0; }
-		> details[open]::details-content { translate: 0 0; }
-
-		/* panel + its links take clicks; icon stays the toggle */
-		&:not([variant~="trg(card)"]) > details[open] > summary { pointer-events: none; }
-		> details[open] > summary > ui-icon { pointer-events: auto; }
+		:where(ui-reveal[variant~="sld(top)"]) > details::details-content { translate: 0 -100%; }
+		:where(ui-reveal[variant~="sld(btm)"]) > details::details-content { translate: 0 100%; }
+		:where(ui-reveal[variant~="sld(lft)"]) > details::details-content { translate: -100% 0; }
+		:where(ui-reveal[variant~="sld(rgt)"]) > details::details-content { translate: 100% 0; }
+		:where(ui-reveal) > details[open]::details-content { translate: 0 0; }
 	}
 
-	/* === scl â scale-morph (origin follows ico(), or pin it: scl(ts|te|bs|be)) === */
-	:where(ui-reveal:is([variant~="scl"], [variant~="scl(ts)"], [variant~="scl(te)"], [variant~="scl(bs)"], [variant~="scl(be)"])) {
-		> details { position: relative; }
-
-		> details::details-content {
+	/* === scl — scale-morph (origin follows ico(), or pin it: scl(ts|te|bs|be)).
+	   ONE geometry block serves both the scl tokens and the lg:scl tier swap —
+	   the flag re-flip below re-uses it. (position:relative on details comes
+	   from the base details rule.) === */
+	@container bs-rvl style(--_rvl: scl) {
+		:where(ui-reveal) > details::details-content {
 			block-size: var(--ui-reveal-icon-sz);
 			border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
 			box-sizing: border-box;
@@ -359,7 +439,7 @@
 			transition: block-size var(--_trs), inline-size var(--_trs), border-radius var(--_trs), margin var(--_trs), opacity var(--_trs), content-visibility var(--_trs);
 			z-index: 1;
 		}
-		> details[open]::details-content {
+		:where(ui-reveal) > details[open]::details-content {
 			block-size: 100%;
 			border-radius: 0;
 			content-visibility: visible;
@@ -368,78 +448,46 @@
 			opacity: 1;
 		}
 
-		/* morph origin (anchored corner) follows the icon position… */
-		&:is([variant~="ico(ts)"],[variant~="ico(te)"]) { --_scale-bs: 0; --_scale-be: auto; }
-		&:is([variant~="ico(bs)"],[variant~="ico(be)"]) { --_scale-bs: auto; --_scale-be: 0; }
-		&:is([variant~="ico(ts)"],[variant~="ico(bs)"]) { --_scale-is: 0; --_scale-ie: auto; }
-		&:is([variant~="ico(te)"],[variant~="ico(be)"]) { --_scale-is: auto; --_scale-ie: 0; }
-		/* …or is pinned explicitly by the scl() corner (wins over ico) */
-		&:is([variant~="scl(ts)"],[variant~="scl(te)"]) { --_scale-bs: 0; --_scale-be: auto; }
-		&:is([variant~="scl(bs)"],[variant~="scl(be)"]) { --_scale-bs: auto; --_scale-be: 0; }
-		&:is([variant~="scl(ts)"],[variant~="scl(bs)"]) { --_scale-is: 0; --_scale-ie: auto; }
-		&:is([variant~="scl(te)"],[variant~="scl(be)"]) { --_scale-is: auto; --_scale-ie: 0; }
-
-		/* panel takes clicks; icon stays the toggle */
-		&:not([variant~="trg(card)"]) > details[open] > summary { pointer-events: none; }
-		> details[open] > summary > ui-icon { pointer-events: auto; }
-	}
-
-	/* === lg:scl â swap the reveal animation at a width (variant lg: tier).
-	   e.g. variant="exp lg:scl": grows below when narrow, morphs/scales
-	   when wide. The @container re-applies the scale rules to the DESCENDANTS so
-	   they override the base type; the morph-origin vars (set on the host) live
-	   OUTSIDE it â a @container can't style its own container element. === */
-	:where(ui-reveal:is([variant~="lg:scl"], [variant~="lg:scl(ts)"], [variant~="lg:scl(te)"], [variant~="lg:scl(bs)"], [variant~="lg:scl(be)"])) {
-		&:is([variant~="ico(ts)"],[variant~="ico(te)"]) { --_scale-bs: 0; --_scale-be: auto; }
-		&:is([variant~="ico(bs)"],[variant~="ico(be)"]) { --_scale-bs: auto; --_scale-be: 0; }
-		&:is([variant~="ico(ts)"],[variant~="ico(bs)"]) { --_scale-is: 0; --_scale-ie: auto; }
-		&:is([variant~="ico(te)"],[variant~="ico(be)"]) { --_scale-is: auto; --_scale-ie: 0; }
-		/* explicit lg:scl() corner wins over ico */
-		&:is([variant~="lg:scl(ts)"],[variant~="lg:scl(te)"]) { --_scale-bs: 0; --_scale-be: auto; }
-		&:is([variant~="lg:scl(bs)"],[variant~="lg:scl(be)"]) { --_scale-bs: auto; --_scale-be: 0; }
-		&:is([variant~="lg:scl(ts)"],[variant~="lg:scl(bs)"]) { --_scale-is: 0; --_scale-ie: auto; }
-		&:is([variant~="lg:scl(te)"],[variant~="lg:scl(be)"]) { --_scale-is: auto; --_scale-ie: 0; }
-	}
-	@container (inline-size >= 44rem) {
-		:where(ui-reveal:is([variant~="lg:scl"], [variant~="lg:scl(ts)"], [variant~="lg:scl(te)"], [variant~="lg:scl(bs)"], [variant~="lg:scl(be)"])) {
-			> details { position: relative; }
-			> details::details-content {
-				block-size: var(--ui-reveal-icon-sz);
-				border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
-				box-sizing: border-box;
-				content-visibility: hidden;
-				inline-size: var(--ui-reveal-icon-sz);
-				inset-block: var(--_scale-bs, auto) var(--_scale-be, 0);
-				inset-inline: var(--_scale-is, auto) var(--_scale-ie, 0);
-				margin: var(--ui-reveal-p);
-				opacity: 0;
-				overflow: hidden;
-				position: absolute;
-				transition: block-size var(--_trs), inline-size var(--_trs), border-radius var(--_trs), margin var(--_trs), opacity var(--_trs), content-visibility var(--_trs);
-				z-index: 1;
-			}
-			> details[open]::details-content {
-				block-size: 100%;
-				border-radius: 0;
-				content-visibility: visible;
-				inline-size: 100%;
-				margin: 0;
-				opacity: 1;
-			}
-			&:not([variant~="trg(card)"]) > details[open] > summary { pointer-events: none; }
-			> details[open] > summary > ui-icon { pointer-events: auto; }
-
-			/* scrollable morphed panel â long flipside doesn't clip. Bar hidden
-			   for the clean morph look; content still scrolls (wheel/drag). */
-			&[variant~="scr"] > details[open]::details-content {
-				overflow-y: auto;
-				overscroll-behavior: contain;
-				scrollbar-width: none;
-			}
+		/* scrollable morphed panel — long flipside doesn't clip. Bar hidden
+		   for the clean morph look; content still scrolls (wheel/drag). */
+		:where(ui-reveal[variant~="scr"]) > details[open]::details-content {
+			overflow-y: auto;
+			overscroll-behavior: contain;
+			scrollbar-width: none;
 		}
 	}
 
-	/* === trg(card) â whole card toggles (no ui-icon). Clicks fall through
+	/* morph origin (anchored corner) — follows the icon position, or is pinned
+	   explicitly by a scl()/lg:scl() corner (wins by source order). Host-side
+	   var setters, consumed only by the scl geometry above (inert otherwise);
+	   one set serves both the base tokens and the lg: tier. */
+	:where(ui-reveal) {
+		&:is([variant~="ico(ts)"],[variant~="ico(te)"]) { --_scale-bs: 0; --_scale-be: auto; }
+		&:is([variant~="ico(bs)"],[variant~="ico(be)"]) { --_scale-bs: auto; --_scale-be: 0; }
+		&:is([variant~="ico(ts)"],[variant~="ico(bs)"]) { --_scale-is: 0; --_scale-ie: auto; }
+		&:is([variant~="ico(te)"],[variant~="ico(be)"]) { --_scale-is: auto; --_scale-ie: 0; }
+		&:is([variant~="scl(ts)"],[variant~="scl(te)"],[variant~="lg:scl(ts)"],[variant~="lg:scl(te)"]) { --_scale-bs: 0; --_scale-be: auto; }
+		&:is([variant~="scl(bs)"],[variant~="scl(be)"],[variant~="lg:scl(bs)"],[variant~="lg:scl(be)"]) { --_scale-bs: auto; --_scale-be: 0; }
+		&:is([variant~="scl(ts)"],[variant~="scl(bs)"],[variant~="lg:scl(ts)"],[variant~="lg:scl(bs)"]) { --_scale-is: 0; --_scale-ie: auto; }
+		&:is([variant~="scl(te)"],[variant~="scl(be)"],[variant~="lg:scl(te)"],[variant~="lg:scl(be)"]) { --_scale-is: auto; --_scale-ie: 0; }
+	}
+
+	/* sld/scl panels take clicks (links stay clickable); the icon stays the toggle */
+	@container bs-rvl style(--_rvl: sld) or style(--_rvl: scl) {
+		:where(ui-reveal:not([variant~="trg(card)"])) > details[open] > summary { pointer-events: none; }
+		:where(ui-reveal) > details[open] > summary > ui-icon { pointer-events: auto; }
+	}
+
+	/* === lg:scl — swap the reveal animation at the lg container tier, e.g.
+	   variant="exp lg:scl": grows below when narrow, morphs/scales when wide.
+	   Just re-flip the dispatch flag on <details> — the ONE scl geometry block
+	   above applies; nothing is duplicated. Same 0-0-1 specificity as the base
+	   setters, later in the file, so it wins by source order. === */
+	@container (inline-size >= 44rem) {
+		:where(ui-reveal:is([variant~="lg:scl"], [variant~="lg:scl(ts)"], [variant~="lg:scl(te)"], [variant~="lg:scl(bs)"], [variant~="lg:scl(be)"])) > details { --_rvl: scl; }
+	}
+
+	/* === trg(card) — whole card toggles (no ui-icon). Clicks fall through
 	   to <summary>; interactive panel content opts back in. See readme.md. */
 	:where(ui-reveal[variant~="trg(card)"]) {
 		> details[open]::details-content { pointer-events: none; }
@@ -447,55 +495,6 @@
 
 		> details:has(> summary:focus-visible) {
 			box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-bg), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ring-color), var(--ui-reveal-shadow, var(--shadow-xl));
-		}
-	}
-
-	/* === scr â lock panel to the closed-card frame, scroll overflow ===
-	   Opt-in. Panel goes absolute (out of grid track sizing) so a long
-	   flipside can't grow the card. Default height = closed face (inset:0);
-	   override with --ui-reveal-content-bs. flip only for now. */
-	:where(ui-reveal[variant~="scr"]:is([variant~="flp"], [variant~="flp(top)"], [variant~="flp(btm)"], [variant~="flp(lft)"], [variant~="flp(rgt)"])) {
-		> details { position: relative; }
-		> details::details-content {
-			block-size: var(--ui-reveal-content-bs, auto);
-			inset: 0;
-			overflow-y: auto;
-			overscroll-behavior: contain;
-			position: absolute;
-			scrollbar-color: var(--ui-reveal-scrollbar-color, color-mix(in oklab, currentColor 40%, transparent)) transparent;
-			scrollbar-gutter: auto;
-			scrollbar-width: thin;
-		}
-	}
-
-	/* scroll fade-shadow â vertical edge mask driven by scroll position. The
-	   masked edges reveal the panel background behind, so the fade adopts
-	   --ui-reveal-content-bg. The @property/@keyframes (ui-scroll-fade) AND the
-	   --ui-scroll-fade-mask gradient are the shared scroll-fade primitive in
-	   ui/base/scroll.css (also used by content="scr"). */
-	@supports (animation-timeline: scroll()) {
-		@media (prefers-reduced-motion: no-preference) {
-			:where(ui-reveal[variant~="scr"]:is([variant~="flp"], [variant~="flp(top)"], [variant~="flp(btm)"], [variant~="flp(lft)"], [variant~="flp(rgt)"])) > details[open]::details-content {
-				animation: ui-scroll-fade linear;
-				animation-timeline: --ui-reveal-scroll;
-				mask: var(--ui-scroll-fade-mask);
-				scroll-timeline: --ui-reveal-scroll block;
-			}
-		}
-	}
-
-	/* === icc() close-icon clearance â keep the panel's first element out from under
-	   a top close-icon. Logical padding tracks the icon's logical side, so it
-	   flips automatically in rtl. Only the first child is indented; the rest of
-	   the panel stays full-width. */
-	:where(ui-reveal:is([variant~="flp"], [variant~="flp(top)"], [variant~="flp(btm)"], [variant~="flp(lft)"], [variant~="flp(rgt)"])) {
-		--ui-reveal-icon-clear: calc(var(--ui-reveal-icon-sz) + var(--ui-reveal-icon-m));
-		/* open-state icon side = icc() if set, else ico() */
-		&:is([variant~="ico(te)"], [variant~="icc(te)"]) > details[open]::details-content > * > :first-child {
-			padding-inline-end: var(--ui-reveal-icon-clear);
-		}
-		&:is([variant~="ico(ts)"], [variant~="icc(ts)"]) > details[open]::details-content > * > :first-child {
-			padding-inline-start: var(--ui-reveal-icon-clear);
 		}
 	}
 }
