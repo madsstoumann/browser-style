@@ -15,6 +15,7 @@ export class LayoutBuilder {
 		this.layouts = new Map()
 		this.cssRules = new Map()
 		this.ruleBreakpoints = new Map()
+		this.ruleMeta = new Map()
 	}
 
 	async loadConfig() {
@@ -165,7 +166,7 @@ export class LayoutBuilder {
 		const el = this.config.element || 'lay-out'
 		for (const value of ['start', 'center', 'end', 'stretch']) {
 			this.addRule(mediaQuery, `${el}[${breakpointName}*="items(${value})"]`,
-				{ '--layout-ai': value }, breakpointName)
+				{ '--layout-ai': value }, breakpointName, { kind: 'feature', variantKey: `items(${value})` })
 		}
 	}
 
@@ -175,19 +176,18 @@ export class LayoutBuilder {
 	// lg="columns(3) subgrid(on)") turns it on from that breakpoint up. The row
 	// count is set ONCE, globally, via the `subgrid="N"` attribute — read with
 	// attr() into a typed custom property (a bare `grid-row: span attr()` doesn't
-	// resolve, but `span var()` does). Each direct child adopts N shared rows,
-	// aligning its internal rows (media / eyebrow / headline …) across the grid;
-	// container-type is neutralised on those children so a card's own inline-size
-	// container (which would sever the subgrid chain) steps out of the way.
+	// resolve, but `span var()` does).
 	//
-	// OFF: `subgrid(off)` turns it back off from a LARGER breakpoint up (e.g.
-	// md="subgrid(on)" xl="subgrid(off)"). Because @media(min-width) is cumulative,
-	// the ON rule persists at larger widths on its own; the OFF rule lives in the
-	// later `@layer layout.<bp>`, so it wins by cascade-layer order (same
-	// specificity, no hacks). It restores the container's default rows and the CARD
-	// child's own inline-size query container — `revert-layer` can't be used here
-	// because the ON rule sits in a lower layer that revert-layer would resolve back
-	// to, so the reset uses explicit, card-oriented values. `~=` is exact-token
+	// The heavy per-child body (container-type / display / grid-row /
+	// grid-template-rows: subgrid) lives ONCE in core/base.css behind
+	// `@container style(--_subgrid: on)` — the rules emitted here are just flag
+	// flips plus the container's own physical rows. OFF (`subgrid(off)` at a
+	// LARGER breakpoint) flips the flag back in a later `@layer layout.<bp>`, the
+	// style query stops matching, and every child property reverts to its natural
+	// value (the card's own inline-size container, base's grid-area placement) —
+	// no explicit undo rules needed. The container's `grid-template-rows` is a
+	// physical declaration (it must outrank later breakpoints' --layout-gtr
+	// variant tokens), so OFF re-asserts the var() read. `~=` is exact-token
 	// matching, so `subgrid(on)` and `subgrid(off)` never cross-match.
 	//
 	// Only emitted from `md` upward (never xs/sm) — subgrid at tiny widths makes no
@@ -196,24 +196,12 @@ export class LayoutBuilder {
 		if (breakpointName === 'xs' || breakpointName === 'sm') return
 		const el = this.config.element || 'lay-out'
 
-		// ON — `subgrid(on)`.
-		const on = `${el}[${breakpointName}~="subgrid(on)"]`
-		this.addRule(mediaQuery, on,
-			{ '--_sg': 'attr(subgrid type(<integer>), 1)', 'grid-template-rows': 'repeat(var(--_sg), auto)' }, breakpointName)
-		this.addRule(mediaQuery, `${on} > :not(${el})`,
-			{ 'container-type': 'normal', 'display': 'grid', 'grid-row': 'span var(--_sg)', 'grid-template-rows': 'subgrid' }, breakpointName)
-
-		// OFF — `subgrid(off)`. Restore container rows + card child's query container.
-		// Placement is handed BACK to whatever layout is active at this breakpoint by
-		// re-asserting the same `grid-area` base rule uses (`var(--_ga, var(--layout-ga,
-		// auto))`) — NOT a bare `grid-row: auto`, which would override the row half of
-		// an area-placed layout's `--layout-ga` (bento / grid / mosaic / asym) and
-		// collapse it. This works for uniform-cell layouts too (their --layout-ga is
-		// `auto`). `grid-template-rows: initial` drops the child's own `subgrid`.
-		const off = `${el}[${breakpointName}~="subgrid(off)"]`
-		this.addRule(mediaQuery, off, { 'grid-template-rows': 'var(--layout-gtr)' }, breakpointName)
-		this.addRule(mediaQuery, `${off} > :not(${el})`,
-			{ 'container-type': 'inline-size', 'grid-area': 'var(--_ga, var(--layout-ga, auto))', 'grid-template-rows': 'initial' }, breakpointName)
+		this.addRule(mediaQuery, `${el}[${breakpointName}~="subgrid(on)"]`,
+			{ '--_subgrid': 'on', '--_sg': 'attr(subgrid type(<integer>), 1)', 'grid-template-rows': 'repeat(var(--_sg), auto)' },
+			breakpointName, { kind: 'feature', variantKey: 'subgrid(on)' })
+		this.addRule(mediaQuery, `${el}[${breakpointName}~="subgrid(off)"]`,
+			{ '--_subgrid': 'off', 'grid-template-rows': 'var(--layout-gtr)' },
+			breakpointName, { kind: 'feature', variantKey: 'subgrid(off)' })
 	}
 
 	// Spacing tokens — card-style, per-breakpoint, config-gated.
@@ -274,7 +262,7 @@ export class LayoutBuilder {
 				const selector = `${scope}[${breakpointName}*="${token}(${value})"]`
 				const properties = {}
 				for (const prop of props) properties[prop] = value
-				this.addRule(mediaQuery, selector, properties, breakpointName)
+				this.addRule(mediaQuery, selector, properties, breakpointName, { kind: 'feature', variantKey: `${token}(${value})` })
 			}
 		}
 	}
@@ -355,12 +343,14 @@ export class LayoutBuilder {
 		if (!processedGlobalRules.has(breakpointResetKey)) {
 			processedGlobalRules.add(breakpointResetKey)
 			const resetSelector = `${elementSelector}[${breakpointName}]`
-			this.addRule(mediaQuery, resetSelector, { '--_ga': 'initial' }, breakpointName)
-			this.addRule(mediaQuery, `${resetSelector} > *`, { '--layout-ga': 'auto' }, breakpointName)
+			this.addRule(mediaQuery, resetSelector, { '--_ga': 'initial' }, breakpointName, { kind: 'reset' })
+			this.addRule(mediaQuery, `${resetSelector} > *`, { '--layout-ga': 'auto' }, breakpointName, { kind: 'reset' })
 		}
 
+		const meta = { kind: 'layout', variantKey: `${layoutPrefix}(${layoutId})`, prefix: layoutPrefix, wildcard: isWildcard }
+
 		if (Object.keys(containerProps).length > 0) {
-			this.addRule(mediaQuery, baseSelector, containerProps, breakpointName)
+			this.addRule(mediaQuery, baseSelector, containerProps, breakpointName, meta)
 		}
 
 		if (layout.rules && Array.isArray(layout.rules)) {
@@ -377,12 +367,12 @@ export class LayoutBuilder {
 					selector = `${baseSelector} > ${rule.selector}`
 				}
 
-				this.addRule(mediaQuery, selector, rule.properties, breakpointName)
+				this.addRule(mediaQuery, selector, rule.properties, breakpointName, meta)
 			}
 		}
 	}
 
-	addRule(mediaQuery, selector, properties, breakpointName = null) {
+	addRule(mediaQuery, selector, properties, breakpointName = null, meta = null) {
 		const key = `${mediaQuery}::${selector}`
 
 		if (!this.cssRules.has(key)) {
@@ -397,6 +387,96 @@ export class LayoutBuilder {
 		if (breakpointName) {
 			this.ruleBreakpoints.set(key, breakpointName)
 		}
+		if (meta) {
+			this.ruleMeta.set(key, meta)
+		}
+	}
+
+	// --- Grouped-selector emission -------------------------------------------
+	//
+	// Identical declaration bodies inside one media-query bucket are emitted ONCE
+	// with a grouped selector list (`selA,\n  selB { … }`) instead of re-serialized
+	// per rule. Grouping moves a later rule up to the group's first-occurrence
+	// position, so it is only applied when provably cascade-safe: a merge is
+	// blocked if any rule between the group and the candidate (a) sets one of the
+	// candidate's properties with a DIFFERENT body and (b) could match the same
+	// element (`mayCoMatch`). Different layout variants are mutually exclusive on
+	// an element by the system's contract (one layout token per breakpoint
+	// attribute), as are different values of the same feature token — those pairs
+	// merge freely; everything else is treated conservatively as co-matching.
+
+	static childPartOf(selector) {
+		const i = selector.lastIndexOf(' > ')
+		return i === -1 ? null : selector.slice(i + 3).trim()
+	}
+
+	// true only when the two subjects PROVABLY never coincide: two exact
+	// :nth-child(N) indexes, or two same-modulus formulas (An+B vs An+C, B≠C —
+	// different residues mod A never share an element). Everything else —
+	// container vs child, mixed exact/formula, different moduli — stays "may
+	// co-match" (a nested lay-out can be both container and child).
+	static childDisjoint(a, b) {
+		const re = /^\*?:nth-child\((?:(\d+)n\+)?(\d+)\)$/
+		const ma = a && a.match(re)
+		const mb = b && b.match(re)
+		if (!ma || !mb) return false
+		const modA = ma[1] || '', modB = mb[1] || ''
+		return modA === modB && ma[2] !== mb[2]
+	}
+
+	static mayCoMatch(a, b) {
+		if (!a.meta || !b.meta) return true
+		if (a.meta.kind === 'reset' || b.meta.kind === 'reset') return true
+		const va = a.meta.variantKey, vb = b.meta.variantKey
+		if (a.meta.kind === 'layout' && b.meta.kind === 'layout') {
+			if (va !== vb) {
+				const overlap = (a.meta.wildcard && b.meta.prefix === a.meta.prefix)
+					|| (b.meta.wildcard && a.meta.prefix === b.meta.prefix)
+				if (!overlap) return false
+			}
+			return !LayoutBuilder.childDisjoint(a.childPart, b.childPart)
+		}
+		if (a.meta.kind === 'feature' && b.meta.kind === 'feature') {
+			const name = (k) => k.slice(0, k.indexOf('('))
+			if (va === vb) return !LayoutBuilder.childDisjoint(a.childPart, b.childPart)
+			if (name(va) === name(vb)) return false
+			return true
+		}
+		return true
+	}
+
+	groupBucketRules(bucket) {
+		// bucket: [{selector, body, props:Set, meta, childPart}] in source order.
+		// Returns [{selectors: [...], body}] preserving first-occurrence order.
+		const groups = []
+		const byBody = new Map()
+		bucket.forEach((rule, i) => {
+			rule.index = i
+			const target = byBody.get(rule.body)
+			let merged = false
+			if (target) {
+				let hazard = false
+				for (let j = target.index + 1; j < i && !hazard; j++) {
+					const h = bucket[j]
+					if (h.body === rule.body) continue
+					let intersects = false
+					for (const p of rule.props) if (h.props.has(p)) { intersects = true; break }
+					if (intersects && LayoutBuilder.mayCoMatch(h, rule)) hazard = true
+				}
+				if (!hazard) {
+					target.group.selectors.push(rule.selector)
+					merged = true
+				}
+			}
+			if (!merged) {
+				const group = { selectors: [rule.selector], body: rule.body }
+				groups.push(group)
+				// later duplicates merge into the MOST RECENT occurrence — the
+				// shortest hazard window
+				byBody.set(rule.body, { index: i, group })
+			}
+		})
+		return groups
 	}
 	generateLayerDeclaration() {
 		const baseLayers = ['layout.base', 'layout.reset', 'layout.animations']
@@ -466,20 +546,28 @@ export class LayoutBuilder {
 			const breakpointName = this.ruleBreakpoints.get(key)
 
 			if (!rulesByMediaQuery.has(mediaQuery)) {
-				rulesByMediaQuery.set(mediaQuery, { rules: [], breakpointName })
+				rulesByMediaQuery.set(mediaQuery, { bucket: [], breakpointName })
 			}
 
-			const props = Array.from(properties.entries())
+			const body = Array.from(properties.entries())
 				.map(([prop, value]) => `    ${prop}: ${value};`)
 				.join('\n')
 
-			rulesByMediaQuery.get(mediaQuery).rules.push(`  ${selector} {\n${props}\n  }`)
+			rulesByMediaQuery.get(mediaQuery).bucket.push({
+				selector,
+				body,
+				props: new Set(properties.keys()),
+				meta: this.ruleMeta.get(key) || null,
+				childPart: LayoutBuilder.childPartOf(selector),
+			})
 		}
 
 		// Output media queries with layer wrappers. An empty mediaQuery is the
 		// mobile-first base breakpoint (no min/max) — emit its rules with NO @media
 		// wrapper, still inside their `@layer layout.<bp>` so cascade order holds.
-		for (const [mediaQuery, { rules, breakpointName }] of rulesByMediaQuery) {
+		for (const [mediaQuery, { bucket, breakpointName }] of rulesByMediaQuery) {
+			const rules = this.groupBucketRules(bucket)
+				.map(({ selectors, body }) => `  ${selectors.join(',\n  ')} {\n${body}\n  }`)
 			if (mediaQuery) css += `\n${mediaQuery} {\n`
 			if (breakpointName) {
 				css += `@layer layout.${breakpointName} {\n`

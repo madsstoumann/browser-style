@@ -397,9 +397,11 @@ shared rows):
   `@media (min-width)` is cumulative, an earlier `subgrid(on)` otherwise persists). The
   off rule wins by cascade-layer order.
 - Generated only for `md`/`lg`/`xl`/`xxl` — never `xs`/`sm`.
-- Tuned for **card grids**: turning off restores the child's own `container-type:
-  inline-size` (its container-query root). Each child adopts N shared rows and neutralises
-  its own inline-size container while subgrid is on.
+- Tuned for **card grids**: each child adopts N shared rows and neutralises its own
+  inline-size container while subgrid is on; turning off lets the child's own
+  `container-type: inline-size` (its container-query root) come back naturally — the
+  per-child styles are dispatched on an internal flag (`@container style(--_subgrid: on)`
+  in `core/base.css`), so `off` simply stops the dispatch instead of re-asserting values.
 
 > **Authoring note:** the token becomes an attribute-selector value in the generated CSS
 > (`lay-out[md~="subgrid(on)"]`). Any app/demo CSS that hooks the subgrid state (e.g. to
