@@ -171,7 +171,7 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 | `dot(hyb)` | **Hybrid** — markers stay circle dots; the active one morphs into a pill and runs the same fill timer as `dot(pll)` |
 | `dot(bar)` | **Thin styled scrollbar** — one continuous hairline track spanning the container; the current slide's stretch renders thicker in the active ink (the thumb, 1/N of the width). Click-to-jump + keyboard-navigable. See [Styled scrollbar](#styled-scrollbar--dotbar) |
 | `dot(lgt)` `dot(drk)` | Ink — light / dark (`bg` + active). `nav(blw)`/`nav(abv)` default to dark |
-| `dot(sm)` `dot(md)` `dot(lg)` `dot(xl)` | Size (`md` = default) — one scale for dots, pills **and** thumbnails, so `dot(tmb) dot(lg)` = large thumbnails |
+| `dot(sm)` `dot(md)` `dot(lg)` `dot(xl)` | Size (`md` = default) — one scale for dots, pills **and** thumbnails, so `dot(tmb) dot(lg)` = large thumbnails. With `dot(bar)` the scale sets the bar **width** instead: 33% · 50% · 75% (`lg` = default) · 100% |
 | **In a band** — `dot(bs/bc/be)` (below) · `dot(ts/tc/te)` (above) | **Position within a band** — the row is locked by `nav(blw)`/`nav(abv)`, so the cell's inline letter aligns the dots: start / center (default) / end. Start/end clear the arrow on that side (or the `arw(set)` pair). |
 | `dot(bc)` | `axis(y)`: dots centered at the **bottom** (e.g. with a pill timer) |
 | `dot(non)` | **No dots** (keeps arrows) — e.g. an arrows-only `nav(blw)`/`nav(abv)` band |
@@ -211,17 +211,23 @@ the track snaps to that slide, and the segments stay keyboard-focusable
 <!-- overlaid on the media (light ink) -->
 <ui-media media="asr(16/9) nav dot(bar)"> … </ui-media>
 
-<!-- the listing pattern: arrows top-right, bar in a band below (dark ink) -->
-<lay-out md="columns(3)" overflow media="nav arw(abv) arw(set) dot(bar) dot(blw)"> … </lay-out>
+<!-- the listing pattern: arrows top-right, full-width bar in a band below (dark ink) -->
+<lay-out md="columns(3)" overflow media="nav arw(abv) arw(set) dot(bar) dot(xl) dot(blw)"> … </lay-out>
 ```
 
+- **Width** comes from the repurposed size scale: `dot(sm)` 33% · `dot(md)` 50% ·
+  `dot(lg)` 75% (**default**, no token needed) · `dot(xl)` 100%. A partial-width
+  bar is centered; pin it to an edge with the cell's inline letter —
+  `dot(bs)`/`dot(ts)` = start, `dot(be)`/`dot(te)` = end. Fine-tune with
+  `--ui-carousel-bar-span` (a **fraction**, e.g. `0.6` — it multiplies the
+  scroller's `anchor-size()`, so it can't be a percentage).
 - **Ink** follows the dot tokens — track = `--ui-carousel-dot-bg`, thumb =
   `--ui-carousel-dot-active` — so `dot(lgt)`/`dot(drk)` and the automatic dark
   flip in `nav(blw)`/`dot(blw)`/`nav(abv)` bands just work.
-- **Geometry tokens**: `--ui-carousel-bar-size` (thumb thickness, `3px`),
-  `--ui-carousel-bar-track-size` (track thickness, `1px`), `--ui-carousel-bar-hit`
-  (clickable strip height, `0.875rem`), `--ui-carousel-bar-inset` (inline inset
-  from the container edges, `0px`).
+- **Thickness / geometry tokens**: `--ui-carousel-bar-size` (thumb thickness,
+  `3px`), `--ui-carousel-bar-track-size` (track thickness, `1px`) — bump these
+  for a heavier bar; `--ui-carousel-bar-hit` (clickable strip height, `0.875rem`),
+  `--ui-carousel-bar-inset` (inline inset from the container edges, `0px`).
 - **Placement**: overlaid at the media's block-end by default (like dots); use the
   band atoms (`dot(blw)`, `nav(blw)`, …) to move it under the media. Horizontal
   carousels only — `axis(y)` keeps its dot column.

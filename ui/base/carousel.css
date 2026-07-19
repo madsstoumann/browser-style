@@ -58,13 +58,22 @@
 	/* dot(bar) — thin styled scrollbar: token defaults. --ui-carousel-dot-size is aliased
 	   to the hit height so every existing marker-group top/centering calc (overlay, bands)
 	   centers the bar's hit strip without bar-specific position rules. Declared after the
-	   dot size scale so a stray dot(sm|…|xl) never skews the bar geometry. */
+	   dot size scale, which the bar REPURPOSES: with dot(bar), the size atoms set the bar's
+	   inline span as a fraction of the scroller — sm 33% · md 50% · lg 75% (default) ·
+	   xl 100% (a fraction, not a percentage: it multiplies anchor-size() in a calc).
+	   The nested atoms stay :where()-wrapped to keep the file's 0-0-0 specificity. */
 	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="dot(bar)"]) {
 		--ui-carousel-bar-hit: 0.875rem;
 		--ui-carousel-bar-inset: 0px;
 		--ui-carousel-bar-size: 3px;
+		--ui-carousel-bar-span: 0.75;
 		--ui-carousel-bar-track-size: 1px;
 		--ui-carousel-dot-size: var(--ui-carousel-bar-hit);
+
+		&:where([media*="dot(sm)"]) { --ui-carousel-bar-span: 0.33; }
+		&:where([media*="dot(md)"]) { --ui-carousel-bar-span: 0.5; }
+		&:where([media*="dot(lg)"]) { --ui-carousel-bar-span: 0.75; }
+		&:where([media*="dot(xl)"]) { --ui-carousel-bar-span: 1; }
 	}
 	/* dot(bar) scroller arm — the anchor-name lets the marker-group size itself to the
 	   scroller via anchor-size() (implicit-anchor sizing is not reliable there). The
@@ -624,8 +633,10 @@
 			/* the markers are flex: 1 1 0 — the group needs an explicit inline-size or it
 			   shrink-wraps to 0. Sized to the scroller via its --ui-carousel-bar anchor-name
 			   (implicit-anchor sizing is unreliable); position-anchor also makes it the
-			   default anchor, so the unnamed anchor() top/centering rules above keep working */
-			inline-size: calc(anchor-size(--ui-carousel-bar inline) - 2 * var(--ui-carousel-bar-inset, 0px));
+			   default anchor, so the unnamed anchor() top/centering rules above keep working.
+			   --ui-carousel-bar-span (a fraction, from the repurposed dot size scale) then
+			   scales the strip; anchor-center keeps a partial-span strip centered. */
+			inline-size: calc((anchor-size(--ui-carousel-bar inline) - 2 * var(--ui-carousel-bar-inset, 0px)) * var(--ui-carousel-bar-span, 1));
 			inset-inline: auto;
 			justify-self: anchor-center;
 			position-anchor: --ui-carousel-bar;
@@ -648,6 +659,21 @@
 		:where(ui-media, lay-out[overflow]):where([media*="dot(bar)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible {
 			outline: var(--ring-width, 2px) solid var(--ring-color, currentColor);
 			outline-offset: calc(-1 * var(--ring-width, 2px));
+		}
+		/* partial-span alignment — centered by default (anchor-center above); the cell's
+		   inline letter pins the strip to an edge instead (bs/ts = start, be/te = end).
+		   Vertical placement still comes from the corner/band rules earlier in the file. */
+		:where(ui-card, ui-reveal):where([media*="dot(bar)"]:is([media*="dot(bs)"], [media*="dot(ts)"])) :where(ui-media)::scroll-marker-group,
+		:where(ui-media, lay-out[overflow]):where([media*="dot(bar)"]:is([media*="dot(bs)"], [media*="dot(ts)"]))::scroll-marker-group {
+			justify-self: start;
+			left: calc(anchor(left) + var(--ui-carousel-bar-inset, 0px));
+			right: auto;
+		}
+		:where(ui-card, ui-reveal):where([media*="dot(bar)"]:is([media*="dot(be)"], [media*="dot(te)"])) :where(ui-media)::scroll-marker-group,
+		:where(ui-media, lay-out[overflow]):where([media*="dot(bar)"]:is([media*="dot(be)"], [media*="dot(te)"]))::scroll-marker-group {
+			justify-self: end;
+			left: auto;
+			right: calc(anchor(right) + var(--ui-carousel-bar-inset, 0px));
 		}
 	}
 

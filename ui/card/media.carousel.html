@@ -268,7 +268,7 @@
 	</lay-out>
 
 	<h2>Styled scrollbar — <code>dot(bar)</code></h2>
-	<p><code>dot(bar)</code> turns the markers into a <strong>thin scrollbar</strong>: one continuous hairline track spanning the container, with the current slide's stretch drawn thicker in the active ink — the thumb. The whole track is click-to-jump (each invisible segment is a scroll marker) and keyboard-navigable. Ink follows the dot tokens (<code>dot(lgt)</code>/<code>dot(drk)</code>, band flips); tune with <code>--ui-carousel-bar-size</code> / <code>--ui-carousel-bar-track-size</code> / <code>--ui-carousel-bar-inset</code>. Overlaid on the media by default; put it in a band with <code>dot(blw)</code>. Where <code>::scroll-marker-group</code> is unsupported it degrades to a tinted native thin scrollbar.</p>
+	<p><code>dot(bar)</code> turns the markers into a <strong>thin scrollbar</strong>: one continuous hairline track, with the current slide's stretch drawn thicker in the active ink — the thumb. The whole track is click-to-jump (each invisible segment is a scroll marker) and keyboard-navigable. With <code>dot(bar)</code> the size scale sets the bar's <strong>width</strong>: <code>dot(sm)</code> 33% · <code>dot(md)</code> 50% · <code>dot(lg)</code> 75% (default) · <code>dot(xl)</code> 100%. A partial bar centers; the cell's inline letter pins it to an edge (<code>dot(bs)</code>/<code>dot(be)</code>). Ink follows the dot tokens (<code>dot(lgt)</code>/<code>dot(drk)</code>, band flips); thickness via <code>--ui-carousel-bar-size</code> / <code>--ui-carousel-bar-track-size</code>. Overlaid on the media by default; put it in a band with <code>dot(blw)</code>. Where <code>::scroll-marker-group</code> is unsupported it degrades to a tinted native thin scrollbar.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav dot(bar)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""></ui-media>
@@ -279,9 +279,28 @@
 			<ui-content><small data-part="eyebrow">nav dot(bar) dot(blw)</small><h2 data-part="headline">Bar in a band below</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
+	<h3>Width — <code>dot(sm|md|lg|xl)</code> · edge alignment</h3>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(4/3) nav dot(bar) dot(sm) dot(blw)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">dot(bar) dot(sm)</small><h2 data-part="headline">Short bar — 33%</h2></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav dot(bar) dot(md) dot(blw)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">dot(bar) dot(md)</small><h2 data-part="headline">Half width — 50%</h2></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav dot(bar) dot(xl) dot(blw)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><img src="/assets/images/slimfold.png" alt=""><img src="/assets/images/cutmaster.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">dot(bar) dot(xl)</small><h2 data-part="headline">Full width — 100%</h2></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav dot(bar) dot(sm) dot(be) dot(blw)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/river.png" alt=""><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/government.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">dot(bar) dot(sm) dot(be)</small><h2 data-part="headline">Short bar, inline-end</h2></ui-content></cq-box>
+		</ui-card>
+	</lay-out>
 	<h3>Card row with arrows above, bar below — <code>arw(abv) arw(set) dot(bar) dot(blw)</code></h3>
 	<p>The classic listing-carousel pattern: a <code>&lt;lay-out overflow&gt;</code> row of cards with the <strong>arrow pair top-right</strong> (<code>arw(abv) arw(set)</code>) and the <strong>thin scrollbar underneath</strong> (<code>dot(bar) dot(blw)</code>).</p>
-	<lay-out bleed xs="pi(1)" md="columns(2)" lg="columns(3)" overflow="preview-lg" media="nav arw(abv) arw(set) dot(bar) dot(blw)">
+	<lay-out bleed xs="pi(1)" md="columns(2)" lg="columns(3)" overflow="preview-lg" media="nav arw(abv) arw(set) dot(bar) dot(xl) dot(blw)">
 		<ui-card variant="ovr(bl) rds(lg)" media="asr(3/4) scm" content="scl(sm) pad(lg)">
 			<cq-box>
 				<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
