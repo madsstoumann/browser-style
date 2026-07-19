@@ -195,7 +195,7 @@ Save/play are **controls** (interactive) — card-only, never inside a reveal `<
 | `content` | both | `scl() pad() gap() scr` |
 | `text` | both | which long text the content column shows: `summary` (teaser — default), `body` (full view — body **instead of** summary, with the summary kept as a hidden `description` meta), `both`. Reveal back panels always render both |
 | `styles` | both | object of CSS custom properties → `style` attribute (e.g. `--ui-reveal-content-bg`) |
-| `reveal` | ui-reveal | nested object grouping the reveal-only config: `{ type, typeLg, to, icon, iconType, iconClose, from, trigger, scroll }`. The structured object stays in the schema, but the renderer **folds it into `variant=` tokens** at render time: `type` → `rvl()`, `typeLg` → `lg:rvl()`, `from` → `frm()`, `to` → `pop`, `trigger` → `trg(card)`, `scroll` → `scr`, `icon` → one `ico()` per word (default `ico(te) ico(sm)`), `iconClose` → one `icc()` per word. `iconType` stays markup — it sets the toggle glyph on the emitted `<ui-icon>`: `plus-cross` (default) or directional `{up,down,left,right}-arrow-cross`, pairing with slide direction (panel from top → `down-arrow-cross`, etc.) |
+| `reveal` | ui-reveal | nested object grouping the reveal-only config: `{ type, typeLg, to, icon, iconType, iconClose, from, trigger, scroll }`. The structured object stays in the schema, but the renderer **folds it into `variant=` tokens** at render time: `type`+`from` → one animation token (`exp`, `flp(top)`, `sld(lft)`, `scl`), `typeLg` → `lg:`-prefixed swap (`lg:scl`), `to` → `pop`, `trigger` → `trg(card)`, `scroll` → `scr`, `icon` → one `ico()` per word (default `ico(te) ico(sm)`), `iconClose` → one `icc()` per word. `iconType` stays markup — it sets the toggle glyph on the emitted `<ui-icon>`: `plus-cross` (default) or directional `{up,down,left,right}-arrow-cross`, pairing with slide direction (panel from top → `down-arrow-cross`, etc.) |
 
 **`shp()` — clip the media content to a shape.** Applies a `clip-path` to the
 `img`/`video`/`iframe` inside `<ui-media>` (the frame background goes transparent).
@@ -225,7 +225,7 @@ sheet (link it where you tint; not bundled by `ui-card.css`).
 
 The host elements carry exactly these attributes: `variant`, `media`, `content`,
 `theme`, `style`, `class` — reveal config is `variant=` tokens
-(`rvl()`/`lg:rvl()`/`frm()`/`pop`/`trg(card)`/`scr`/`ico()`/`icc()`), not separate
+(`exp`/`flp()`/`sld()`/`scl()`/`pop`/`trg(card)`/`scr`/`ico()`/`icc()`), not separate
 attributes. `class` is an instance hook, not preset material. Media-element
 attributes (`provider`, `video`, `cdn`, `quality`, `breakpoints`) are per-media-item
 content and belong in the card's `media[]` items. Bare booleans like `clip`, `auto`,
