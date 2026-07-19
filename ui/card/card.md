@@ -191,7 +191,7 @@ Save/play are **controls** (interactive) — card-only, never inside a reveal `<
 | `element` | both | `ui-card` (default), `ui-reveal` — or `ui-media` / `ui-content` for **bare primitives**: the renderer emits just the media frame or content column, no card chrome. Standalone blocks are presentation, not a separate content model |
 | `variant` | both | `col row row-r spl() ovr() vis() rds()` |
 | `theme` | both | shared theme axis — colour + `pale`/`muted`/`light`/`dark` (see [base/theme.md](../base/theme.md)) |
-| `media` | both | `asr() obf() obp() flp() rds() shp() hov() tnt() scm clip …` — plus **all carousel controls as tokens, the only form** (`nav`/`nav()`, `arw()`, `dot()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()`; the schema has no `nav`/`arrow`/`dot` fields) and the furniture look tokens (`chip/sticker/save/play` position/hue/size/shape). The renderer appends each furniture item's optional `style=` override after these |
+| `media` | both | `asr() obf() obp() flp() rds() shp() hov() tnt() scm clip …` — plus **all carousel controls as tokens, the only form** (`nav`/`nav()`, `arw()`, `mrk()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()`; the schema has no `nav`/`arrow`/`dot` fields) and the furniture look tokens (`chip/sticker/save/play` position/hue/size/shape). The renderer appends each furniture item's optional `style=` override after these |
 | `content` | both | `scl() pad() gap() scr` |
 | `text` | both | which long text the content column shows: `summary` (teaser — default), `body` (full view — body **instead of** summary, with the summary kept as a hidden `description` meta), `both`. Reveal back panels always render both |
 | `styles` | both | object of CSS custom properties → `style` attribute (e.g. `--ui-reveal-content-bg`) |
@@ -248,7 +248,7 @@ content and belong in the card's `media[]` items. Bare booleans like `clip`, `au
 | `panel-dark` | ui-card | + `theme="black dark"` | announcement |
 | `hero` | ui-card | `ovr(bl)` · 4:3 · scrim · `scl(lg)` | event |
 | `poster` | ui-card | `ovr(bl)` · 3:4 · scrim | location |
-| `carousel` | ui-card | `nav(dot)` | gallery |
+| `carousel` | ui-card | `nav(mrk)` | gallery |
 | `media` | ui-media | bare frame · 21:9 · `rds(lg)` | media-block |
 | `prose` | ui-content | bare content column | prose-block |
 | `flip` | ui-reveal | flip · `ovr(bl) rds(lg-sq)` · `scroll` | software |

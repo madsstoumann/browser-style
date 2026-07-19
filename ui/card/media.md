@@ -10,7 +10,7 @@ A CSS-first **media primitive** — an image/video frame with overlay furniture 
 - Optional, **host-gated Cloudflare `srcset`** upgrade for responsive images (root-relative paths, no hardcoded domain) — pure progressive enhancement
 - Hover effects (zoom / pan / cursor-track) — media-only
 - Scrim gradients in **9 directions** (4 edges + 4 diagonals + a centered double-stop)
-- Native carousel via `::scroll-marker` / `::scroll-button` (dots + arrows)
+- Native carousel via `::scroll-marker` / `::scroll-button` (markers + arrows)
 - A **3×3 overlay grid** for furniture: `<ui-chip>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`
 - Logical / RTL-aware positioning — geometry defined once, mirrors automatically
 - Reads its own inherited `--ui-media-*` namespace — no descendant-selector coupling, so it is **inert-proof standalone**
@@ -117,7 +117,7 @@ Because custom properties inherit, **one rule set serves both placement cases**:
 | `flp()` | `h` `v` `hv` | flip / mirror the image | `--ui-media-fl-x` / `-fl-y` |
 | `hov()` | `zoom` `pan` `track` `drift` | hover effect (image only) | `--ui-media-hv-*` |
 | `scm()` | *(bare)* · pos `ts … be` · size `sm md lg` · intensity `shr lgt med drk sld` (sheer/solid aliases) | scrim — bare matches the host `ovr()`; three composable axes (direction · size · intensity) | `--ui-media-scrim-paint` |
-| `nav()` | *(bare, or `dot` `arw` `blw` `abv`)* | carousel — **the token IS the trigger**; bare = dots + arrows (full control vocabulary — `arw()`, `dot()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()` — in [carousel.md](./carousel.md)) | carousel layout + controls |
+| `nav()` | *(bare, or `mrk` `arw` `blw` `abv`)* | carousel — **the token IS the trigger**; bare = markers + arrows (full control vocabulary — `arw()`, `mrk()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()` — in [carousel.md](./carousel.md)) | carousel layout + controls |
 | `vid()` | `cc` `pip` `fls` · size `sm md lg xl` | player-tool cluster over a chrome-less `<video>` — JS **injects** the requested buttons (bottom-end; order CC → PiP → fullscreen, fullscreen rightmost). Size mirrors `arw()` (`vid(sm)`…`vid(xl)`, default 2.5rem). Needs `index.js`; PiP feature-detected (skipped in Firefox). `cc` = subtitles/captions button (glyph only — **switching not wired yet**). *(Play/pause is `<ui-play>` furniture, not a `vid()` value.)* | injected `<menu class="ui-media-tools">` + `--ui-media-tool-size` |
 | `chip()` `sticker()` `save()` `play()` | `ts … be` *(position)* **or** `red orange green blue accent dark light subtle` *(sub-theme)* | place + theme an overlay element | element inset (absolute) / element `--ui-{el}-*` tokens |
 | `ply()` | `sm md lg xl` | **size** the `<ui-play>` control (distinct from `play(<pos>)` which *positions* it). Mirrors `<ui-play>`'s own `size=` scale; an explicit `size=` on the element still wins. | `--ui-play-sz` / `--ui-play-icon-sz` on the host |
@@ -282,7 +282,7 @@ The `nav()` token **is the trigger** — there is no separate `crs` flag. Any `n
 | Token | Controls shown |
 |-------|----------------|
 | `nav` *(bare)* | dots **+** arrows |
-| `nav(dot)` | dots only |
+| `nav(mrk)` | dots only |
 | `nav(arw)` | arrows only |
 | `nav(blw)` | dots **+** arrows in a reserved **band below** the media (not overlaid) |
 | `nav(abv)` | dots **+** arrows in a reserved **band above** the media |
@@ -297,7 +297,7 @@ The `nav()` token **is the trigger** — there is no separate `crs` flag. Any `n
 
 Controls use native `::scroll-marker` (dots) and `::scroll-button(left|right)` (arrows), `@supports`-gated and anchor-positioned to each scroller — they **degrade to a bare swipeable scroller** where unsupported. Smooth scroll is enabled under `prefers-reduced-motion: no-preference`.
 
-The full dot/arrow token surface is token-driven (see *Tokens* — `--ui-media-dot-*`, `--ui-media-arrow-*`, and `--ui-media-overlay-gap` which drives the control inset). Arrows ship with **built-in chevron glyphs** (dark default for the frosted light circle + a `*-light` set for dark circles, via `arw(lgt)`); colour the circle with `--ui-media-arrow-bg`, or override `--ui-media-arrow-prev/-next` with your own `url()` to fully customise.
+The full marker/arrow token surface is token-driven (see *Tokens* — `--ui-media-marker-*`, `--ui-media-arrow-*`, and `--ui-media-overlay-gap` which drives the control inset). Arrows ship with **built-in chevron glyphs** (dark default for the frosted light circle + a `*-light` set for dark circles, via `arw(lgt)`); colour the circle with `--ui-media-arrow-bg`, or override `--ui-media-arrow-prev/-next` with your own `url()` to fully customise.
 
 All carousel CSS lives in **`media.carousel.css`** (imported by `ui-card.css` alongside `media.css`).
 
@@ -334,20 +334,20 @@ Bare drops the circle (and its `--ui-media-arrow-shadow`), so a white glyph reli
 
 **By default every arrow stays visible** — at the first/last slide the dead-end arrow dims to `--ui-media-arrow-disabled-opacity` (default `0.5`) instead of disappearing. Add `arw(hid)` to auto-hide it instead. (Implementation note: a `:disabled` `::scroll-button` can't carry a mask, so a bare dead-end arrow paints the glyph SVG directly — white over an image, dark in a band — tracking the glyph's light/dark shade rather than an arbitrary `--ui-media-arrow-color`.)
 
-### Pill dots with autoplay fill — `dot()`
+### Pill dots with autoplay fill — `mrk()`
 
 | Token | Effect |
 |-------|--------|
 | *(default)* | round dots — no token needed |
-| `dot(pll)` | rounded-rect pills; the **active** pill fills left→right over `--ui-media-autoplay` (default `5s`) as a timer hint |
-| `dot(hyb)` | hybrid — round dots whose active marker morphs into a pill and runs the same fill timer |
-| `dot(sm)` · `dot(md)` *(default)* · `dot(lg)` · `dot(xl)` | dot / pill size (composes with `dot(pll)`) |
+| `mrk(pll)` | rounded-rect pills; the **active** pill fills left→right over `--ui-media-autoplay` (default `5s`) as a timer hint |
+| `mrk(hyb)` | hybrid — round dots whose active marker morphs into a pill and runs the same fill timer |
+| `mrk(sm)` · `mrk(md)` *(default)* · `mrk(lg)` · `mrk(xl)` | dot / pill size (composes with `mrk(pll)`) |
 
 The fill restarts whenever the active slide changes (`:target-current`); the `auto` token (JS autoplay) keeps it in sync with the advance interval. Under `prefers-reduced-motion: reduce` the active pill shows filled with no animation. Theme with `--ui-media-pill-track` / `--ui-media-pill-fill` / `--ui-media-pill-width` / `--ui-media-pill-height`.
 
 ### Controls in a band — `nav(blw)` / `nav(abv)`
 
-`nav(blw)` shows **both** controls in a reserved, non-scrolling **bottom band** beneath the frame (the band is block-end padding on the flex scroller, so the absolute controls re-anchor into it without overlaying the image); `nav(abv)` is the mirror band above. Default layout: dots centered, arrows at the band's left/right ends. Combine with `arw(set)` to pin the dots to the start and pair the arrows at the end, or `dot(pll)` for a timer bar across the band. Size the band with `--ui-media-band` (default `2.75rem`); colour it with `--ui-media-controls-bg`. The `arw(tc)/arw(cc)/arw(bc)` placement atoms are for the **overlay** variant — the bands own their own vertical placement.
+`nav(blw)` shows **both** controls in a reserved, non-scrolling **bottom band** beneath the frame (the band is block-end padding on the flex scroller, so the absolute controls re-anchor into it without overlaying the image); `nav(abv)` is the mirror band above. Default layout: dots centered, arrows at the band's left/right ends. Combine with `arw(set)` to pin the dots to the start and pair the arrows at the end, or `mrk(pll)` for a timer bar across the band. Size the band with `--ui-media-band` (default `2.75rem`); colour it with `--ui-media-controls-bg`. The `arw(tc)/arw(cc)/arw(bc)` placement atoms are for the **overlay** variant — the bands own their own vertical placement.
 
 ---
 
@@ -409,20 +409,20 @@ Every token lives in the `--ui-media-*` namespace and inherits down from whereve
 | `--ui-media-hover-easing` | `var(--ease-out)` | hover transition easing |
 | `--ui-media-mx` / `--ui-media-my` | `0` | pointer offset hooks for `hov(track)` / `hov(drift)` (−1…1), set by JS |
 
-### Carousel — dots
+### Carousel — markers
 
 | Token | Default | Description |
 |-------|---------|-------------|
-| `--ui-media-dot-bg` | `rgb(255 255 255 / 0.5)` | dot color |
-| `--ui-media-dot-active` | `#fff` | current-dot color |
-| `--ui-media-dot-size` | `0.6rem` | dot diameter |
-| `--ui-media-dots-gap` | `0.5rem` | gap between dots |
-| `--ui-media-dot-border` | `0` | dot border |
-| `--ui-media-pill-width` | `1.5rem` | `dot(pll)` width |
-| `--ui-media-pill-height` | `0.35rem` | `dot(pll)` height |
-| `--ui-media-pill-track` | `rgb(255 255 255 / 0.35)` | `dot(pll)` inactive/track color |
-| `--ui-media-pill-fill` | `#fff` | `dot(pll)` active fill color |
-| `--ui-media-autoplay` | `5s` | `dot(pll)` timer-fill duration (set by the `auto(Ns)` token) |
+| `--ui-media-marker-bg` | `rgb(255 255 255 / 0.5)` | marker color |
+| `--ui-media-marker-active` | `#fff` | current-marker color |
+| `--ui-media-marker-size` | `0.6rem` | marker diameter |
+| `--ui-media-marker-gap` | `0.5rem` | gap between dots |
+| `--ui-media-marker-border` | `0` | marker border |
+| `--ui-media-pill-width` | `1.5rem` | `mrk(pll)` width |
+| `--ui-media-pill-height` | `0.35rem` | `mrk(pll)` height |
+| `--ui-media-pill-track` | `rgb(255 255 255 / 0.35)` | `mrk(pll)` inactive/track color |
+| `--ui-media-pill-fill` | `#fff` | `mrk(pll)` active fill color |
+| `--ui-media-autoplay` | `5s` | `mrk(pll)` timer-fill duration (set by the `auto(Ns)` token) |
 
 ### Carousel — arrows
 
@@ -473,7 +473,7 @@ The arrow is a **circular button**: a themeable circle (`--ui-media-arrow-bg`) +
 
 | Token | Default | Description |
 |-------|---------|-------------|
-| `--ui-media-overlay-gap` | `0.75rem` | inset of every overlay element; also drives dot/arrow inset |
+| `--ui-media-overlay-gap` | `0.75rem` | inset of every overlay element; also drives marker/arrow inset |
 
 Overlay positions are **not tokens** — each element has a default position by role (`<ui-chip>` `ts`, `<ui-sticker>`/`<ui-save>` `te`, `<ui-play>` `cc`) and is repositioned via the parent `media="el(<pos>)"` token, where `<pos>` is one of the nine logical codes.
 

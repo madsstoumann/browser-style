@@ -48,7 +48,7 @@
 	   CORNERS — rds(): round (global scale) or -sq (bespoke squircle)
 	   ============================================================ */
 	/* round — non/crc/pll are the canonical 3-letter values (none/full/pill kept
-	   as aliases; aligned with save(non/crc), dot(pll), etc.) */
+	   as aliases; aligned with save(non/crc), mrk(pll), etc.) */
 	:where([variant~="rds(non)"], [variant~="rds(none)"]) { --ui-card-radius: 0; }
 	:where([variant~="rds(sm)"])   { --ui-card-radius: var(--radius-sm); }
 	:where([variant~="rds(md)"])   { --ui-card-radius: var(--radius-md); }

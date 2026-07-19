@@ -245,7 +245,7 @@ const carouselTokens = (preset) => {
 		}
 	}
 	for (const w of String(preset.arrow || '').split(/\s+/).filter(Boolean)) out.push(`arw(${w})`);
-	for (const w of String(preset.dot || '').split(/\s+/).filter(Boolean)) out.push(`dot(${w})`);
+	for (const w of String(preset.mrk || '').split(/\s+/).filter(Boolean)) out.push(`mrk(${w})`);
 	return out;
 };
 /* The preset's effective media= string: declared media tokens + carousel folds. */

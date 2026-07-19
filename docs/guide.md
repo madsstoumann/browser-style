@@ -197,19 +197,19 @@ That's a complete carousel: scroll-snap slides, CSS-only dots and arrows. Everyt
 
 | Token | Effect |
 |---|---|
-| `nav` | dots + arrows overlaid on the media |
-| `nav(dot)` / `nav(arw)` | just one kind of control |
+| `nav` | markers + arrows overlaid on the media |
+| `nav(mrk)` / `nav(arw)` | just one kind of control |
 | `nav(blw)` / `nav(abv)` | move the controls into a reserved band below / above |
 | `arw(arr · sm · lg · xl · sqr · sft · bare · set · drk · lgt · hid)` | arrow glyph, size, shape, style; `set` clusters the pair, `hid` auto-hides at the ends |
-| `dot(sm … xl · pll · hyb · tmb · non · drk · lgt)` | dot size and shape — `pll` pills with a fill timer, `tmb` thumbnails |
-| `arw(ts … be)` / `dot(ts … be)` | place arrows / dots on the corner-and-edge grid |
+| `mrk(sm … xl · pll · hyb · tmb · non · drk · lgt)` | dot size and shape — `pll` pills with a fill timer, `tmb` thumbnails |
+| `arw(ts … be)` / `mrk(ts … be)` | place arrows / dots on the corner-and-edge grid |
 | `axis(y)` | vertical carousel |
 | `auto` / `auto(4s)` · `loop` | autoplay and seamless wrap (the JS chunk) |
 
 A polished example — band below, bare full arrows, pill dots, autoplaying:
 
 ```html
-<ui-card variant="col" media="asr(16/9) nav(blw) arw(bare) arw(arr) dot(pll) auto(4s) loop">
+<ui-card variant="col" media="asr(16/9) nav(blw) arw(bare) arw(arr) mrk(pll) auto(4s) loop">
 ```
 
 ---
@@ -277,7 +277,7 @@ Wrap a section to give it a header — and since `content=` flows down, style th
 A section can *be* a carousel: `overflow` turns the layout into a scroll-snap row, and — here's rule 2 paying off — the layout's **own** `media=` attribute configures its controls with the exact same tokens you already know:
 
 ```html
-<lay-out md="columns(2)" lg="columns(3)" overflow media="nav(blw) arw(bare) dot(pll) pages">
+<lay-out md="columns(2)" lg="columns(3)" overflow media="nav(blw) arw(bare) mrk(pll) pages">
   <ui-card …>…</ui-card>
   <ui-card …>…</ui-card>
   <ui-card …>…</ui-card>

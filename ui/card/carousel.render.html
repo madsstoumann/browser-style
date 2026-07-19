@@ -75,12 +75,12 @@
 			},
 			{
 				h: 'h2', title: ['Carousel controls — ', { code: 'nav()' }],
-				note: 'Pick which controls show: bare nav (both), nav(dot), nav(arw), or nav(non) for a bare swipe scroller — a carousel with its controls off is the gallery. The chip on the last card comes from the UCF chip field, not the preset.',
+				note: 'Pick which controls show: bare nav (both), nav(mrk), nav(arw), or nav(non) for a bare swipe scroller — a carousel with its controls off is the gallery. The chip on the last card comes from the UCF chip field, not the preset.',
 				cards: [['01', 'carousel-dots'], ['03', 'carousel-arrows'], ['02', 'carousel-both'], ['04', 'carousel-plain']]
 			},
 			{
 				h: 'h2', title: ['Carousel theming'],
-				note: 'Dots and arrows are token-driven — recolour dots with --ui-carousel-dot-*, colour and size the arrow circle with --ui-carousel-arrow-*, square it with --ui-carousel-arrow-radius, switch the glyph dark with arw(drk). All via preset styles.',
+				note: 'Dots and arrows are token-driven — recolour dots with --ui-carousel-marker-*, colour and size the arrow circle with --ui-carousel-arrow-*, square it with --ui-carousel-arrow-radius, switch the glyph dark with arw(drk). All via preset styles.',
 				cards: [['01', 'carousel-dots-themed'], ['02', 'carousel-arrows-accent'], ['03', 'carousel-arrows-inverted'], ['05', 'carousel-arrows-autohide']]
 			},
 			{
@@ -94,23 +94,23 @@
 				cards: [['02', 'carousel-bare'], ['05', 'carousel-bare-dark'], ['06', 'carousel-bare-accent'], ['01', 'carousel-band-bare']]
 			},
 			{
-				h: 'h2', title: ['Carousel pills — ', { code: 'dot(pll)' }],
-				note: 'dot(pll) swaps the round dots for pills. The active pill fills over --ui-carousel-autoplay (default 5s) as a timer hint, restarting when the active slide changes. Recolour with --ui-carousel-pill-track / --ui-carousel-pill-fill.',
+				h: 'h2', title: ['Carousel pills — ', { code: 'mrk(pll)' }],
+				note: 'mrk(pll) swaps the round dots for pills. The active pill fills over --ui-carousel-autoplay (default 5s) as a timer hint, restarting when the active slide changes. Recolour with --ui-carousel-pill-track / --ui-carousel-pill-fill.',
 				cards: [['01', 'carousel-pills'], ['02', 'carousel-pills-fast'], ['03', 'carousel-pills-accent'], ['06', 'carousel-pills-arrows']]
 			},
 			{
-				h: 'h2', title: ['Carousel sizes — ', { code: 'arw()' }, ' / ', { code: 'dot()' }],
-				note: 'Size the arrows with arw(sm/md/lg/xl) and the dots/pills with dot(sm/md/lg/xl) — they compose with every other atom.',
+				h: 'h2', title: ['Carousel sizes — ', { code: 'arw()' }, ' / ', { code: 'mrk()' }],
+				note: 'Size the arrows with arw(sm/md/lg/xl) and the dots/pills with mrk(sm/md/lg/xl) — they compose with every other atom.',
 				cards: [['02', 'carousel-small'], ['01', 'carousel-xl']]
 			},
 			{
 				h: 'h2', title: ['Navigation below the media — ', { code: 'nav(blw)' }],
-				note: 'nav(blw) moves both controls off the image into a reserved bottom band (dots centered, arrows at the ends). Size with --ui-carousel-band, colour with --ui-carousel-controls-bg. Combine with arw(set), dot(pll) or arw(hid).',
+				note: 'nav(blw) moves both controls off the image into a reserved bottom band (dots centered, arrows at the ends). Size with --ui-carousel-band, colour with --ui-carousel-controls-bg. Combine with arw(set), mrk(pll) or arw(hid).',
 				cards: [['01', 'carousel-band-bare'], ['02', 'carousel-band-set'], ['03', 'carousel-band-pills'], ['05', 'carousel-band-autohide']]
 			},
 			{
-				h: 'h3', title: ['Dot position in the band — ', { code: 'dot(sta)' }, ' · ', { code: 'dot(ctr)' }, ' · ', { code: 'dot(end)' }],
-				note: 'In a nav(blw) band the dots default to centered. dot(sta) aligns them to the inline-start, dot(end) to the inline-end — the arw(set) pair stays bottom-right while the dots move left → center → right.',
+				h: 'h3', title: ['Dot position in the band — ', { code: 'mrk(sta)' }, ' · ', { code: 'mrk(ctr)' }, ' · ', { code: 'mrk(end)' }],
+				note: 'In a nav(blw) band the dots default to centered. mrk(sta) aligns them to the inline-start, mrk(end) to the inline-end — the arw(set) pair stays bottom-right while the dots move left → center → right.',
 				cards: [['07', 'carousel-band-dots-start'], ['07', 'carousel-band-dots-center'], ['07', 'carousel-band-dots-end']]
 			},
 			{
@@ -120,12 +120,12 @@
 			},
 			{
 				h: 'h2', title: ['Plain scrollbar — ', { code: 'nav(bar)' }],
-				note: 'nav(bar) drops the dots/arrows and shows the native thin scrollbar as the only affordance — works on either axis. Override with --ui-media-scrollbar-color / --ui-media-scrollbar-width.',
+				note: 'nav(bar) drops the markers/arrows and shows the native thin scrollbar as the only affordance — works on either axis. Override with --ui-media-scrollbar-color / --ui-media-scrollbar-width.',
 				cards: [['01', 'carousel-scrollbar'], ['02', 'carousel-scrollbar-vertical']]
 			},
 			{
 				h: 'h2', title: ['JS-enhanced behaviors — ', { code: 'auto' }, ' · ', { code: 'loop' }],
-				note: 'Autoplay and seamless loop are layered on by carousel.js — strictly progressive enhancement. With JS off the carousels still scroll, snap and show dots/arrows; the tokens just no-op.',
+				note: 'Autoplay and seamless loop are layered on by carousel.js — strictly progressive enhancement. With JS off the carousels still scroll, snap and show markers/arrows; the tokens just no-op.',
 				cards: [['01', 'carousel-auto-loop'], ['02', 'carousel-loop']]
 			},
 			{
@@ -145,12 +145,12 @@
 			},
 			{
 				h: 'h2', title: ['One way to write it — ', { code: 'media=' }, ' tokens'],
-				note: 'Carousel controls are configured exclusively through the inheritable media= token string (nav()/arw()/dot()) — the former grouped nav/arrow/dot attributes are gone. Two presets with the same tokens render identically.',
+				note: 'Carousel controls are configured exclusively through the inheritable media= token string (nav()/arw()/mrk()) — the former grouped nav/arrow/dot attributes are gone. Two presets with the same tokens render identically.',
 				cards: [['02', 'carousel-tokens'], ['02', 'carousel-attrs']]
 			},
 			{
-				h: 'h3', title: ['Subtle controls — ', { code: 'arw(sub)' }, ' / ', { code: 'dot(sub)' }],
-				note: 'Low-contrast ink for light surfaces (e.g. a nav(blw) band): media="… arw(sub) dot(sub)".',
+				h: 'h3', title: ['Subtle controls — ', { code: 'arw(sub)' }, ' / ', { code: 'mrk(sub)' }],
+				note: 'Low-contrast ink for light surfaces (e.g. a nav(blw) band): media="… arw(sub) mrk(sub)".',
 				cards: [['01', 'carousel-subtle'], ['03', 'carousel-subtle-attrs']]
 			},
 			{
@@ -183,7 +183,7 @@
 			'layered cards as slides (<ui-reveal variant="flp"> slides with nested <ui-accordion>)',
 			'<ui-play variant="reveal"> (hover-reveal play control — renderer emits a plain <ui-play>)',
 			'per-slide nested <ui-media> video frames with their own <ui-play> (approximated above with native video controls)',
-			'thumbnail navigation dot(tmb) (needs per-slide --ui-carousel-thumb-url inline styles)',
+			'thumbnail navigation mrk(tmb) (needs per-slide --ui-carousel-thumb-url inline styles)',
 			'staggered content reveal stagger/ani()/crd() sections (require non-img slide children)',
 			'page-local class hacks .slide-cols/.slide-gap/.shadow-room (.dots-dark/.arrow-accent/.pill-accent were translated into preset styles)'
 		];

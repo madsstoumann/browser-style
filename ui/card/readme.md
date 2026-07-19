@@ -131,7 +131,7 @@ Content stacked over the media (`ovr(bl)`), a scrim for legibility (`scm` on `me
 
 ### Carousel
 
-Multiple `<img>`/`<video>` inside `<ui-media>` + `nav()` — a CSS scroll-snap row with native dots + arrows. No JS.
+Multiple `<img>`/`<video>` inside `<ui-media>` + `nav()` — a CSS scroll-snap row with native markers + arrows. No JS.
 
 ```html
 <ui-card variant="col" media="asr(16/9) nav" content="scl(lg)">
@@ -169,7 +169,7 @@ Configures `<ui-media>`: aspect-ratio, fit/position, hover, scrim, carousel, and
 | `hov()` | `zoom pan track` | hover effect (image-only) |
 | `rds()` | `sm md lg xl 2xl full pill` + `*-sq` | corners on a **standalone** `<ui-media>` (inside a card the card owns the radius) |
 | `scm` / `scm()` | *(bare)* · pos `ts … be` · size `sm md lg xl` · intensity `sheer lgt med drk solid` | scrim — bare matches the host `ovr()`; direction picks a corner (furniture grid), size sets the extent, intensity sets darkness |
-| `nav` / `nav()` | *(bare)* · `dot arw blw abv` | carousel — the token **is** the trigger; bare = dots + arrows. All carousel controls (`arw()`, `dot()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()`) are `media=` tokens — see [carousel.md](carousel.md) |
+| `nav` / `nav()` | *(bare)* · `dot arw blw abv` | carousel — the token **is** the trigger; bare = markers + arrows. All carousel controls (`arw()`, `mrk()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()`) are `media=` tokens — see [carousel.md](carousel.md) |
 | `chip()` `sticker()` `save()` `play()` | position `ts … be` **or** hue `red orange green blue accent dark light subtle` | place + theme an overlay element |
 
 ```html
@@ -362,11 +362,11 @@ The core surface — frame, layout, overlay furniture, scrim, themes, type ramp 
 | `aspect-ratio` | Chrome 88+, Firefox 89+, Safari 15+ |
 | Container queries (`md:` / `lg:` tiers, `cqi` type ramp) | Chrome 105+, Firefox 110+, Safari 16+ |
 | `color-mix()` (themes, muted ink) | Chrome 111+, Firefox 113+, Safari 16.2+ |
-| `::scroll-marker` / `::scroll-button` + `anchor()` (carousel dots/arrows) | Chromium-only |
+| `::scroll-marker` / `::scroll-button` + `anchor()` (carousel markers/arrows) | Chromium-only |
 | `corner-shape: superellipse()` (`rds(*-sq)` squircles) | Chrome 135+ |
 | `text-box: cap alphabetic` (leading trim) | Chrome 133+ |
 
-**Graceful degradation:** the carousel always remains a native, swipeable scroll-snap row even without `::scroll-marker` / `anchor()` (the dots/arrows simply don't appear). The scrim and the overlay markers are pure CSS and need no JS. Squircle corners fall back to the bespoke radius without the superellipse shape. Where `cqi` / `color-mix()` are unavailable, the type ramp resolves at its preferred value and ink falls back to the inherited color — the layout stays intact.
+**Graceful degradation:** the carousel always remains a native, swipeable scroll-snap row even without `::scroll-marker` / `anchor()` (the markers/arrows simply don't appear). The scrim and the overlay markers are pure CSS and need no JS. Squircle corners fall back to the bespoke radius without the superellipse shape. Where `cqi` / `color-mix()` are unavailable, the type ramp resolves at its preferred value and ink falls back to the inherited color — the layout stays intact.
 
 ---
 

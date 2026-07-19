@@ -197,13 +197,13 @@ from individual attributes into the `media=` token attribute**: the `nav`, `arro
 
 ```html
 <lay-out bleed md="columns(1)" overflow="preview-2xl center"
-         media="nav(blw) arw(bare) dot(pll) pages auto(4s) loop">
+         media="nav(blw) arw(bare) mrk(pll) pages auto(4s) loop">
 ```
 
 - **Shared vocabulary** with `<ui-media>` (styles in `ui/base/carousel.css`): bare
-  `nav`, `nav(dot|arw|blw|abv)`,
+  `nav`, `nav(mrk|arw|blw|abv)`,
   `arw(arr|sm|lg|xl|sqr|sft|hid|lgt|drk|bare|set|ts|tc|te|cs|cc|ce|bs|bc|be|blw|abv)`,
-  `dot(sm|md|lg|xl|pll|hyb|tmb|non|lgt|drk|ts…be|blw|abv)`, `pages` (bare token, `~=`
+  `mrk(sm|md|lg|xl|pll|hyb|tmb|non|lgt|drk|ts…be|blw|abv)`, `pages` (bare token, `~=`
   matched), `auto` / `auto(4s)` and `loop`. `loop`/`auto` are progressive enhancement
   driven by the shared carousel script in `@browser.style/card`.
 - **Scoping rule:** `media=` on a `<lay-out>` configures **only the lay-out's own
@@ -401,7 +401,7 @@ Provides:
 **No `include` option any more** — the layout package no longer bundles base CSS
 (`ui/base/carousel.css`, `animations.css`, `stagger.css`). Load `@browser.style/base`
 alongside `layout.css`; it provides the animation `@keyframes`, the `media=` carousel
-controls (`nav()`/`arw()`/`dot()`, styled by `ui/base/carousel.css`) and the `stagger`
+controls (`nav()`/`arw()`/`mrk()`, styled by `ui/base/carousel.css`) and the `stagger`
 engine that the layout wiring references.
 
 ## Creating Custom Layouts

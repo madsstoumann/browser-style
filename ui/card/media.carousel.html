@@ -60,11 +60,11 @@
 	</lay-out>
 
 	<h2>2 · Controls — <code>nav()</code></h2>
-	<p>Which controls: <code>nav</code> (both) · <code>nav(dot)</code> · <code>nav(arw)</code> · <code>nav(non)</code> (none).</p>
+	<p>Which controls: <code>nav</code> (both) · <code>nav(mrk)</code> · <code>nav(arw)</code> · <code>nav(non)</code> (none).</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(4/3) nav(dot)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav(mrk)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">nav(dot)</small><h2 data-part="headline">Dots only</h2></ui-content></cq-box>
+			<ui-content><small data-part="eyebrow">nav(mrk)</small><h2 data-part="headline">Dots only</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(arw)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
@@ -105,16 +105,16 @@
 		</ui-card>
 	</lay-out>
 
-	<h2>4 · Sizes — <code>arw()</code> / <code>dot()</code></h2>
-	<p>Arrows <code>arw(sm|md|lg|xl)</code>, dots/pills <code>dot(sm|md|lg|xl)</code>.</p>
+	<h2>4 · Sizes — <code>arw()</code> / <code>mrk()</code></h2>
+	<p>Arrows <code>arw(sm|md|lg|xl)</code>, dots/pills <code>mrk(sm|md|lg|xl)</code>.</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(4/3) nav arw(sm) dot(sm)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav arw(sm) mrk(sm)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">arw(sm) dot(sm)</small><h2 data-part="headline">Small</h2></ui-content></cq-box>
+			<ui-content><small data-part="eyebrow">arw(sm) mrk(sm)</small><h2 data-part="headline">Small</h2></ui-content></cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) nav arw(xl) dot(xl)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav arw(xl) mrk(xl)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">arw(xl) dot(xl)</small><h2 data-part="headline">Extra-large</h2></ui-content></cq-box>
+			<ui-content><small data-part="eyebrow">arw(xl) mrk(xl)</small><h2 data-part="headline">Extra-large</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
 
@@ -186,33 +186,33 @@
 	</lay-out>
 
 	<h2>7 · Position in the band — the row cell's inline letter</h2>
-	<p>In a band the row is locked, so a dot cell's inline letter aligns it: <strong>below</strong> (<code>nav(blw)</code>) uses <code>dot(bs)</code> / <code>dot(bc)</code> (default) / <code>dot(be)</code> — dots left, then right:</p>
+	<p>In a band the row is locked, so a dot cell's inline letter aligns it: <strong>below</strong> (<code>nav(blw)</code>) uses <code>mrk(bs)</code> / <code>mrk(bc)</code> (default) / <code>mrk(be)</code> — dots left, then right:</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(4/3) nav(blw) arw(set) dot(bs)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav(blw) arw(set) mrk(bs)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">nav(blw) dot(bs)</small><h2 data-part="headline">Below · dots left</h2></ui-content></cq-box>
+			<ui-content><small data-part="eyebrow">nav(blw) mrk(bs)</small><h2 data-part="headline">Below · dots left</h2></ui-content></cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) nav(blw) arw(set) dot(be)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav(blw) arw(set) mrk(be)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">nav(blw) dot(be)</small><h2 data-part="headline">Below · dots right</h2></ui-content></cq-box>
+			<ui-content><small data-part="eyebrow">nav(blw) mrk(be)</small><h2 data-part="headline">Below · dots right</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
-	<p><strong>Above</strong> (<code>nav(abv)</code>), standalone — top-row cells <code>dot(ts)</code> / <code>dot(te)</code>, dots left, then right:</p>
+	<p><strong>Above</strong> (<code>nav(abv)</code>), standalone — top-row cells <code>mrk(ts)</code> / <code>mrk(te)</code>, dots left, then right:</p>
 	<lay-out md="columns(2)">
-		<ui-media media="asr(4/3) rds(lg) clip nav(abv) arw(set) dot(ts)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""><img src="/assets/images/popovers.png" alt=""></ui-media>
-		<ui-media media="asr(4/3) rds(lg) clip nav(abv) arw(set) dot(te)"><img src="/assets/images/river.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+		<ui-media media="asr(4/3) rds(lg) clip nav(abv) arw(set) mrk(ts)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""><img src="/assets/images/popovers.png" alt=""></ui-media>
+		<ui-media media="asr(4/3) rds(lg) clip nav(abv) arw(set) mrk(te)"><img src="/assets/images/river.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
 	</lay-out>
 
-	<h2>Split placement — <code>dot(blw/abv)</code> · <code>arw(blw/abv)</code></h2>
-	<p>Band for <strong>one</strong> control group only: <code>dot(blw)</code>/<code>dot(abv)</code> put the dots in a band while the arrows stay centered on the media; <code>arw(blw)</code>/<code>arw(abv)</code> mirror it — arrows in a band, dots on the media.</p>
+	<h2>Split placement — <code>mrk(blw/abv)</code> · <code>arw(blw/abv)</code></h2>
+	<p>Band for <strong>one</strong> control group only: <code>mrk(blw)</code>/<code>mrk(abv)</code> put the dots in a band while the arrows stay centered on the media; <code>arw(blw)</code>/<code>arw(abv)</code> mirror it — arrows in a band, dots on the media.</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(4/3) nav dot(blw)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav mrk(blw)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">nav dot(blw)</small><h2 data-part="headline">Dots below, arrows on media</h2></ui-content></cq-box>
+			<ui-content><small data-part="eyebrow">nav mrk(blw)</small><h2 data-part="headline">Dots below, arrows on media</h2></ui-content></cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) nav dot(abv)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav mrk(abv)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">nav dot(abv)</small><h2 data-part="headline">Dots above, arrows on media</h2></ui-content></cq-box>
+			<ui-content><small data-part="eyebrow">nav mrk(abv)</small><h2 data-part="headline">Dots above, arrows on media</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav arw(blw)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
@@ -254,53 +254,53 @@
 		</ui-card>
 	</lay-out>
 
-	<h2>10 · Dots &amp; pills — <code>dot()</code> · <code>dot(pll)</code> · <code>dot(hyb)</code></h2>
-	<p>Recolour dots with <code>--ui-carousel-dot-bg</code> / <code>--ui-carousel-dot-active</code> (or the <code>dot(lgt)</code>/<code>dot(drk)</code> atoms). <code>dot(pll)</code> = pill timers (fill over <code>--ui-carousel-autoplay</code>). <code>dot(hyb)</code> = hybrid — markers stay round dots, but the active one (and any keyboard-focused one) morphs into a pill.</p>
+	<h2>10 · Dots &amp; pills — <code>mrk()</code> · <code>mrk(pll)</code> · <code>mrk(hyb)</code></h2>
+	<p>Recolour dots with <code>--ui-carousel-marker-bg</code> / <code>--ui-carousel-marker-active</code> (or the <code>mrk(lgt)</code>/<code>mrk(drk)</code> atoms). <code>mrk(pll)</code> = pill timers (fill over <code>--ui-carousel-autoplay</code>). <code>mrk(hyb)</code> = hybrid — markers stay round dots, but the active one (and any keyboard-focused one) morphs into a pill.</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(4/3) nav(dot) dot(pll)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav(mrk) mrk(pll)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">dot(pll)</small><h2 data-part="headline">Pill timer (5s)</h2></ui-content></cq-box>
+			<ui-content><small data-part="eyebrow">mrk(pll)</small><h2 data-part="headline">Pill timer (5s)</h2></ui-content></cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) nav(dot) dot(hyb)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav(mrk) mrk(hyb)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""><img src="/assets/images/popovers.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">dot(hyb)</small><h2 data-part="headline">Hybrid — active pill</h2></ui-content></cq-box>
+			<ui-content><small data-part="eyebrow">mrk(hyb)</small><h2 data-part="headline">Hybrid — active pill</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
 
-	<h2>Styled scrollbar — <code>dot(bar)</code></h2>
-	<p><code>dot(bar)</code> turns the markers into a <strong>thin scrollbar</strong>: one continuous hairline track, with the current slide's stretch drawn thicker in the active ink — the thumb. The whole track is click-to-jump (each invisible segment is a scroll marker) and keyboard-navigable. With <code>dot(bar)</code> the size scale sets the bar's <strong>width</strong>: <code>dot(sm)</code> 33% · <code>dot(md)</code> 50% · <code>dot(lg)</code> 75% (default) · <code>dot(xl)</code> 100%. A partial bar centers; the cell's inline letter pins it to an edge (<code>dot(bs)</code>/<code>dot(be)</code>). Ink follows the dot tokens (<code>dot(lgt)</code>/<code>dot(drk)</code>, band flips); thickness via <code>--ui-carousel-bar-size</code> / <code>--ui-carousel-bar-track-size</code>. Overlaid on the media by default; put it in a band with <code>dot(blw)</code>. Where <code>::scroll-marker-group</code> is unsupported it degrades to a tinted native thin scrollbar.</p>
+	<h2>Styled scrollbar — <code>mrk(bar)</code></h2>
+	<p><code>mrk(bar)</code> turns the markers into a <strong>thin scrollbar</strong>: one continuous hairline track, with the current slide's stretch drawn thicker in the active ink — the thumb. The whole track is click-to-jump (each invisible segment is a scroll marker) and keyboard-navigable. With <code>mrk(bar)</code> the size scale sets the bar's <strong>width</strong>: <code>mrk(sm)</code> 33% · <code>mrk(md)</code> 50% · <code>mrk(lg)</code> 75% (default) · <code>mrk(xl)</code> 100%. A partial bar centers; the cell's inline letter pins it to an edge (<code>mrk(bs)</code>/<code>mrk(be)</code>). Ink follows the marker tokens (<code>mrk(lgt)</code>/<code>mrk(drk)</code>, band flips); thickness via <code>--ui-carousel-bar-size</code> / <code>--ui-carousel-bar-track-size</code>. Overlaid on the media by default; put it in a band with <code>mrk(blw)</code>. Where <code>::scroll-marker-group</code> is unsupported it degrades to a tinted native thin scrollbar.</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(4/3) nav dot(bar)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav mrk(bar)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">nav dot(bar)</small><h2 data-part="headline">Bar on the media</h2></ui-content></cq-box>
+			<ui-content><small data-part="eyebrow">nav mrk(bar)</small><h2 data-part="headline">Bar on the media</h2></ui-content></cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) nav dot(bar) dot(blw)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav mrk(bar) mrk(blw)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""><img src="/assets/images/popovers.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">nav dot(bar) dot(blw)</small><h2 data-part="headline">Bar in a band below</h2></ui-content></cq-box>
+			<ui-content><small data-part="eyebrow">nav mrk(bar) mrk(blw)</small><h2 data-part="headline">Bar in a band below</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
-	<h3>Width — <code>dot(sm|md|lg|xl)</code> · edge alignment</h3>
+	<h3>Width — <code>mrk(sm|md|lg|xl)</code> · edge alignment</h3>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(4/3) nav dot(bar) dot(sm) dot(blw)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav mrk(bar) mrk(sm) mrk(blw)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">dot(bar) dot(sm)</small><h2 data-part="headline">Short bar — 33%</h2></ui-content></cq-box>
+			<ui-content><small data-part="eyebrow">mrk(bar) mrk(sm)</small><h2 data-part="headline">Short bar — 33%</h2></ui-content></cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) nav dot(bar) dot(md) dot(blw)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav mrk(bar) mrk(md) mrk(blw)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">dot(bar) dot(md)</small><h2 data-part="headline">Half width — 50%</h2></ui-content></cq-box>
+			<ui-content><small data-part="eyebrow">mrk(bar) mrk(md)</small><h2 data-part="headline">Half width — 50%</h2></ui-content></cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) nav dot(bar) dot(xl) dot(blw)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav mrk(bar) mrk(xl) mrk(blw)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><img src="/assets/images/slimfold.png" alt=""><img src="/assets/images/cutmaster.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">dot(bar) dot(xl)</small><h2 data-part="headline">Full width — 100%</h2></ui-content></cq-box>
+			<ui-content><small data-part="eyebrow">mrk(bar) mrk(xl)</small><h2 data-part="headline">Full width — 100%</h2></ui-content></cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) nav dot(bar) dot(sm) dot(be) dot(blw)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav mrk(bar) mrk(sm) mrk(be) mrk(blw)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/river.png" alt=""><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/government.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">dot(bar) dot(sm) dot(be)</small><h2 data-part="headline">Short bar, inline-end</h2></ui-content></cq-box>
+			<ui-content><small data-part="eyebrow">mrk(bar) mrk(sm) mrk(be)</small><h2 data-part="headline">Short bar, inline-end</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
-	<h3>Card row with arrows above, bar below — <code>arw(abv) arw(set) dot(bar) dot(blw)</code></h3>
-	<p>The classic listing-carousel pattern: a <code>&lt;lay-out overflow&gt;</code> row of cards with the <strong>arrow pair top-right</strong> (<code>arw(abv) arw(set)</code>) and the <strong>thin scrollbar underneath</strong> (<code>dot(bar) dot(blw)</code>).</p>
-	<lay-out bleed xs="pi(1)" md="columns(2)" lg="columns(3)" overflow="preview-lg" media="nav arw(abv) arw(set) dot(bar) dot(xl) dot(blw)">
+	<h3>Card row with arrows above, bar below — <code>arw(abv) arw(set) mrk(bar) mrk(blw)</code></h3>
+	<p>The classic listing-carousel pattern: a <code>&lt;lay-out overflow&gt;</code> row of cards with the <strong>arrow pair top-right</strong> (<code>arw(abv) arw(set)</code>) and the <strong>thin scrollbar underneath</strong> (<code>mrk(bar) mrk(blw)</code>).</p>
+	<lay-out bleed xs="pi(1)" md="columns(2)" lg="columns(3)" overflow="preview-lg" media="nav arw(abv) arw(set) mrk(bar) mrk(xl) mrk(blw)">
 		<ui-card variant="ovr(bl) rds(lg)" media="asr(3/4) scm" content="scl(sm) pad(lg)">
 			<cq-box>
 				<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
@@ -341,13 +341,13 @@
 
 	<hr>
 	<!-- ════════════════════════════════════════════════════════════
-	     5 · THUMBNAILS — dot(tmb)
+	     5 · THUMBNAILS — mrk(tmb)
 	     ════════════════════════════════════════════════════════════ -->
-	<h2>11 · Thumbnail navigation — <code>dot(tmb)</code></h2>
-	<p><code>dot(tmb)</code> turns dots into thumbnails — each slide sets <code>--ui-carousel-thumb-url</code>. Corner via <code>dot(ts/te/bs/be)</code>, size via <code>dot(sm|md|lg|xl)</code>. (JS autoplay + video version below.)</p>
-	<p>Plain images, larger rail (<code>dot(lg)</code>), bottom-right (<code>dot(be)</code>).</p>
+	<h2>11 · Thumbnail navigation — <code>mrk(tmb)</code></h2>
+	<p><code>mrk(tmb)</code> turns dots into thumbnails — each slide sets <code>--ui-carousel-thumb-url</code>. Corner via <code>mrk(ts/te/bs/be)</code>, size via <code>mrk(sm|md|lg|xl)</code>. (JS autoplay + video version below.)</p>
+	<p>Plain images, larger rail (<code>mrk(lg)</code>), bottom-right (<code>mrk(be)</code>).</p>
 	<lay-out>
-			<ui-media media="asr(16/9) rds(md) clip nav dot(tmb) dot(be) dot(lg)">
+			<ui-media media="asr(16/9) rds(md) clip nav mrk(tmb) mrk(be) mrk(lg)">
 				<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')">
 				<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')">
 				<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')">
@@ -355,15 +355,15 @@
 				<img src="/assets/images/finance.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/finance.png')">
 			</ui-media>
 	</lay-out>
-	<p>Top corners — <code>dot(ts)</code> and <code>dot(te)</code>:</p>
+	<p>Top corners — <code>mrk(ts)</code> and <code>mrk(te)</code>:</p>
 	<lay-out md="columns(2)">
-		<ui-media media="asr(16/9) rds(md) clip nav dot(tmb) dot(ts)">
+		<ui-media media="asr(16/9) rds(md) clip nav mrk(tmb) mrk(ts)">
 			<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')">
 			<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')">
 			<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')">
 			<img src="/assets/images/popovers.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/popovers.png')">
 		</ui-media>
-		<ui-media media="asr(16/9) rds(md) clip nav dot(tmb) dot(te)">
+		<ui-media media="asr(16/9) rds(md) clip nav mrk(tmb) mrk(te)">
 			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')">
 			<img src="/assets/images/brewandbean.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/brewandbean.png')">
 			<img src="/assets/images/aurasoundpro.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/aurasoundpro.png')">
@@ -400,14 +400,14 @@
 		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(blw)"><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
 		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(abv)"><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
 	</lay-out>
-	<p>Vertical thumbnails in a corner — <code>dot(ts)</code> top-left, <code>dot(bs)</code> bottom-left.</p>
+	<p>Vertical thumbnails in a corner — <code>mrk(ts)</code> top-left, <code>mrk(bs)</code> bottom-left.</p>
 	<lay-out md="columns(2)">
-			<ui-media media="asr(4/3) rds(lg) clip axis(y) nav dot(tmb) dot(ts) dot(md)">
+			<ui-media media="asr(4/3) rds(lg) clip axis(y) nav mrk(tmb) mrk(ts) mrk(md)">
 				<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')">
 				<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')">
 				<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')">
 			</ui-media>
-			<ui-media media="asr(4/3) rds(lg) clip axis(y) nav dot(tmb) dot(bs) dot(sm)">
+			<ui-media media="asr(4/3) rds(lg) clip axis(y) nav mrk(tmb) mrk(bs) mrk(sm)">
 				<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')">
 				<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')">
 				<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')">
@@ -702,7 +702,7 @@
 	     · FULL-SCREEN — bleed + lay-out overflow="preview-2xl center"
 	     ════════════════════════════════════════════════════════════ -->
 	<h2>13 · Full-screen center carousel — <code>bleed</code> + <code>preview-2xl center</code></h2>
-	<p>A <code>&lt;lay-out overflow&gt;</code> hero: <code>center</code> centers the slide with 25% peeks each side (<code>preview-2xl</code>), <code>bleed</code> goes edge-to-edge, <code>gaps</code> adds end gutters. Controls: centered dots + a bare arrow set in the light/white ink variants (<code>media="… arw(set) arw(bare) arw(lgt) dot(bc) dot(lgt)"</code>) so they read on the dark <code>theme="black ink"</code> band. Cards are responsive by aspect — portrait on mobile, cinematic 16/9 once wide (<code>media="asr(3/4) md:asr(16/9)"</code>).</p>
+	<p>A <code>&lt;lay-out overflow&gt;</code> hero: <code>center</code> centers the slide with 25% peeks each side (<code>preview-2xl</code>), <code>bleed</code> goes edge-to-edge, <code>gaps</code> adds end gutters. Controls: centered dots + a bare arrow set in the light/white ink variants (<code>media="… arw(set) arw(bare) arw(lgt) mrk(bc) mrk(lgt)"</code>) so they read on the dark <code>theme="black ink"</code> band. Cards are responsive by aspect — portrait on mobile, cinematic 16/9 once wide (<code>media="asr(3/4) md:asr(16/9)"</code>).</p>
 
 	<!-- hl(lg) + scl(lg): sizes are relational — the +1 ladder renders the xl stop (same look as the old absolute hl(xl)) -->
 	<lay-out-group bleed theme="black ink" xs="pbs(3) pbe(3)" content="hl(lg) ctr scl(lg)">
@@ -711,7 +711,7 @@
 			<p data-part="summary">A start-snapped carousel of responsive cards, each with a media image and a content panel.</p>
 		</ui-content>
 		<cq-box>
-			<lay-out bleed md="columns(1)" overflow="preview-2xl center gaps" media="nav(blw) arw(set) arw(bare) arw(lgt) dot(bc) dot(lgt)">
+			<lay-out bleed md="columns(1)" overflow="preview-2xl center gaps" media="nav(blw) arw(set) arw(bare) arw(lgt) mrk(bc) mrk(lgt)">
 				<ui-card variant="ovr(bl) rds(non)" media="asr(3/4) md:asr(16/9) scm" content="scl(lg) pad(lg)">
 					<cq-box>
 						<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
@@ -815,8 +815,8 @@
 	</lay-out>
 
 	<h2>15 · Seamless loop + autoplay — <code>loop</code> · <code>auto()</code></h2>
-	<p>Same carousel with <code>loop</code> + <code>auto(4s)</code> (JS, via <code>carousel.js</code>). It clones the end slides so the peeks stay filled and autoplay wraps invisibly; the hybrid dot (<code>dot(hyb)</code>) fills as a timer, and autoplay pauses on hover/focus. JS off → finite scroller.</p>
-	<lay-out bleed md="columns(1)" overflow="preview-2xl center" media="loop auto(4s) nav(dot) dot(hyb) dot(blw)">
+	<p>Same carousel with <code>loop</code> + <code>auto(4s)</code> (JS, via <code>carousel.js</code>). It clones the end slides so the peeks stay filled and autoplay wraps invisibly; the hybrid dot (<code>mrk(hyb)</code>) fills as a timer, and autoplay pauses on hover/focus. JS off → finite scroller.</p>
+	<lay-out bleed md="columns(1)" overflow="preview-2xl center" media="loop auto(4s) nav(mrk) mrk(hyb) mrk(blw)">
 		<ui-card variant="ovr(bl) rds(non)" media="asr(16/9) scm" content="scl(lg)">
 			<cq-box>
 				<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
@@ -857,13 +857,13 @@
 	<h2>JS-enhanced behaviors</h2>
 	<p><code>ui-media.js</code> adds what CSS can't — progressive enhancement (tokens no-op with JS off).</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(4/3) nav dot(hyb) auto(3s) loop play(bs)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav mrk(hyb) auto(3s) loop play(bs)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt="">
 				</ui-media>
-				<ui-content><small data-part="eyebrow">auto(3s) loop dot(pll)</small><h2 data-part="headline">Autoplay + pill timer</h2><p data-part="summary">Advances every 3s, seamlessly wraps; pauses on hover/focus.</p></ui-content>
+				<ui-content><small data-part="eyebrow">auto(3s) loop mrk(pll)</small><h2 data-part="headline">Autoplay + pill timer</h2><p data-part="summary">Advances every 3s, seamlessly wraps; pauses on hover/focus.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav loop" content="scl(sm)">
@@ -873,15 +873,15 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
-	<p>Chrome-free autoplay — drop the arrows (<code>nav(dot)</code>, pills only) or all navigation (<code>nav(non)</code>), keeping the <code>&lt;ui-play&gt;</code> control as the sole handle.</p>
+	<p>Chrome-free autoplay — drop the arrows (<code>nav(mrk)</code>, pills only) or all navigation (<code>nav(non)</code>), keeping the <code>&lt;ui-play&gt;</code> control as the sole handle.</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(4/3) nav(dot) dot(pll) auto(3s) loop play(bs)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav(mrk) mrk(pll) auto(3s) loop play(bs)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt="">
 				</ui-media>
-				<ui-content><small data-part="eyebrow">nav(dot) dot(pll) auto(3s) loop play(bs)</small><h2 data-part="headline">Pills only — no arrows</h2><p data-part="summary">Arrows dropped; the pill timers and play/pause control remain.</p></ui-content>
+				<ui-content><small data-part="eyebrow">nav(mrk) mrk(pll) auto(3s) loop play(bs)</small><h2 data-part="headline">Pills only — no arrows</h2><p data-part="summary">Arrows dropped; the pill timers and play/pause control remain.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(non) auto(3s) loop play(bs)" content="scl(sm)">
@@ -894,15 +894,15 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
-	<p>Both work on <code>axis(y)</code> too. First: pill timer, dots bottom-centered (<code>dot(pll) dot(bc)</code>).</p>
+	<p>Both work on <code>axis(y)</code> too. First: pill timer, dots bottom-centered (<code>mrk(pll) mrk(bc)</code>).</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(4/3) axis(y) nav dot(pll) dot(bc) auto(3s) loop play(ts)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) axis(y) nav mrk(pll) mrk(bc) auto(3s) loop play(ts)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt="">
 				</ui-media>
-				<ui-content><small data-part="eyebrow">axis(y) auto(3s) loop dot(pll) dot(bc)</small><h2 data-part="headline">Vertical autoplay + pill timer</h2><p data-part="summary">Advances down every 3s, seamlessly wraps; pill dots centered at the bottom.</p></ui-content>
+				<ui-content><small data-part="eyebrow">axis(y) auto(3s) loop mrk(pll) mrk(bc)</small><h2 data-part="headline">Vertical autoplay + pill timer</h2><p data-part="summary">Advances down every 3s, seamlessly wraps; pill dots centered at the bottom.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) axis(y) nav loop" content="scl(sm)">
@@ -914,9 +914,9 @@
 	</lay-out>
 
 	<h3>Thumbnail carousel — autoplay + video (JS)</h3>
-	<p><code>dot(tmb)</code> + <code>auto loop</code> + <code>&lt;ui-play&gt;</code> + <code>stagger</code>, with two video slides.</p>
+	<p><code>mrk(tmb)</code> + <code>auto loop</code> + <code>&lt;ui-play&gt;</code> + <code>stagger</code>, with two video slides.</p>
 	<lay-out>
-			<ui-media media="asr(4/3) rds(2xl) clip nav auto loop dot(tmb) dot(te) dot(xl) play(be) stagger">
+			<ui-media media="asr(4/3) rds(2xl) clip nav auto loop mrk(tmb) mrk(te) mrk(xl) play(be) stagger">
 				<ui-play size="sm" variant="reveal"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				<ui-card variant="ovr(bl) rds(none)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-carousel-thumb-url: url('/assets/images/finance.png')"><cq-box>
 					<ui-media><img src="/assets/images/finance.png" alt=""></ui-media>
@@ -954,7 +954,7 @@
 	<h2>Play/pause control — <code>&lt;ui-play&gt;</code></h2>
 	<p><code>&lt;ui-play&gt;</code> in an autoplay carousel toggles the timer — sticky-pinned, placed with <code>play(bs)</code> / <code>play(be)</code>. <code>variant="reveal"</code> hides it until hover/focus.</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(4/3) nav dot(pll) auto(4s) loop play(bs)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav mrk(pll) auto(4s) loop play(bs)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
@@ -977,16 +977,16 @@
 	<h2>Two places to write it — <code>media=</code> on the host or on the frame</h2>
 	<p>One token vocabulary, two placements: on the <code>&lt;ui-card&gt;</code> host (left — inherits to its <code>&lt;ui-media&gt;</code>) or directly on the <code>&lt;ui-media&gt;</code> itself (right). Identical render. Inheritance stops at the card host — a <code>media=</code> on a wrapping <code>&lt;lay-out&gt;</code> configures only the layout's own scroller.</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(16/9) nav(blw) arw(lg) dot(be)" content="scl(sm)">
+		<ui-card variant="col" media="asr(16/9) nav(blw) arw(lg) mrk(be)" content="scl(sm)">
 			<cq-box>
 				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">media="… nav(blw) arw(lg) dot(be)" on ui-card</small><h2 data-part="headline">host form</h2></ui-content>
+				<ui-content><small data-part="eyebrow">media="… nav(blw) arw(lg) mrk(be)" on ui-card</small><h2 data-part="headline">host form</h2></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9)" content="scl(sm)">
 			<cq-box>
-				<ui-media media="nav(blw) arw(lg) dot(be)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
-				<ui-content><small data-part="eyebrow">media="nav(blw) arw(lg) dot(be)" on ui-media</small><h2 data-part="headline">frame form</h2></ui-content>
+				<ui-media media="nav(blw) arw(lg) mrk(be)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">media="nav(blw) arw(lg) mrk(be)" on ui-media</small><h2 data-part="headline">frame form</h2></ui-content>
 			</cq-box>
 		</ui-card>
 	</lay-out>

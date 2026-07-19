@@ -41,11 +41,11 @@ function wanted(scroller) {
 	let dots = false, arrows = false;
 	for (const w of words) {
 		if (w === 'nav' || w === 'nav(blw)' || w === 'nav(abv)') dots = arrows = true;
-		else if (w === 'nav(dot)') dots = true;
+		else if (w === 'nav(mrk)') dots = true;
 		else if (w === 'nav(arw)') arrows = true;
 		// nav(non) / nav(bar) ask for nothing
 	}
-	if (words.some(w => w.startsWith('dot(non)'))) dots = false;
+	if (words.some(w => w.startsWith('mrk(non)'))) dots = false;
 	return { dots, arrows };
 }
 
@@ -105,7 +105,7 @@ function init(scroller) {
 		group.setAttribute('aria-label', 'Slides');
 		dotEls = slides.map((slide, i) => {
 			const dot = button('dot', `Go to slide ${i + 1}`);
-			// dot(tmb): each slide carries its thumbnail vars inline — copy to its dot
+			// mrk(tmb): each slide carries its thumbnail vars inline — copy to its dot
 			for (const prop of ['--ui-carousel-thumb-url', '--ui-carousel-thumb-ratio']) {
 				const v = slide.style.getPropertyValue(prop);
 				if (v) dot.style.setProperty(prop, v);

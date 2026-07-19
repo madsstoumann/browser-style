@@ -307,18 +307,18 @@ styled by `ui/base/carousel.css` (load `@browser.style/base` alongside `layout.c
 
 ```html
 <lay-out bleed md="columns(1)" overflow="preview-2xl center"
-         media="nav(blw) arw(bare) dot(pll) pages auto(4s) loop">
+         media="nav(blw) arw(bare) mrk(pll) pages auto(4s) loop">
   <div>Slide 1</div>
   <div>Slide 2</div>
   <div>Slide 3</div>
 </lay-out>
 ```
 
-- `nav` / `nav(dot|arw|blw|abv)` — which controls to show and where (`blw`/`abv` =
+- `nav` / `nav(mrk|arw|blw|abv)` — which controls to show and where (`blw`/`abv` =
   reserved band below/above the scroller)
 - `arw(…)` — arrow style/placement modifiers (`bare`, `sm`…`xl`, `sqr`, `sft`,
   `lgt`/`drk`, corner/edge positions, …)
-- `dot(…)` — dot style modifiers (`sm`…`xl`, `pll` pills, `hyb`, `tmb` thumbnails,
+- `mrk(…)` — dot style modifiers (`sm`…`xl`, `pll` pills, `hyb`, `tmb` thumbnails,
   `non`, …)
 - `pages` — snap + one dot per *page* of items instead of per item
 - `auto` / `auto(4s)` — autoplay; `loop` — seamless infinite wrap (both are

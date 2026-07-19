@@ -56,7 +56,7 @@ The breakpoint attributes also carry embedded **inline tokens** (not separate at
 | Attribute | Applies To | Purpose | Type |
 |-----------|-----------|---------|------|
 | `overflow` | `<lay-out>` | Turns the layout into a horizontal scroll-snap carousel — the mode flag; behaviour is tuned via `media=` tokens. | Boolean |
-| `media` | `<lay-out>` (with `overflow`) | Carousel control tokens for the lay-out's **own** scroller — same vocabulary as `<ui-media>` (`nav`/`nav()`, `arw()`, `dot()`, `auto`, `loop`) plus `pages` (one scroll-marker dot per page of items instead of per item). Replaces the former `nav=`/`arrow=`/`dot=`/`pages` attributes. Scoped: it never leaks into a descendant `<ui-media>`. | Token-list |
+| `media` | `<lay-out>` (with `overflow`) | Carousel control tokens for the lay-out's **own** scroller — same vocabulary as `<ui-media>` (`nav`/`nav()`, `arw()`, `mrk()`, `auto`, `loop`) plus `pages` (one scroll-marker dot per page of items instead of per item). Replaces the former `nav=`/`arrow=`/`dot=`/`pages` attributes. Scoped: it never leaks into a descendant `<ui-media>`. | Token-list |
 
 ### Animations (scroll-driven)
 
@@ -109,7 +109,7 @@ Elements: **`<ui-card>`** (static host, unregistered), **`<cq-box>`** (queryable
 
 | Attribute | Applies To | Purpose | Type |
 |-----------|-----------|---------|------|
-| `media` | media | Primary media DSL — the **only** configuration surface: aspect-ratio, fit/position, flip, hover, scrim, shape, tint, furniture, **all carousel controls** (`nav`/`nav()`, `arw()`, `dot()`, `axis(y)`, `auto`/`auto(4s)`, `loop`, `stagger`, `ani()`/`crd()`), loading (`load(eager\|lazy)`) and video sizing (`vid()`, `ply()`). The former alias attributes `nav=`/`arrow=`/`dot=`/`vid=`/`ply=`/`eager`/carousel-`loop` are removed. Read from the element itself or its nearest `ui-card`/`ui-reveal` host only (never other ancestors). | Token-list |
+| `media` | media | Primary media DSL — the **only** configuration surface: aspect-ratio, fit/position, flip, hover, scrim, shape, tint, furniture, **all carousel controls** (`nav`/`nav()`, `arw()`, `mrk()`, `axis(y)`, `auto`/`auto(4s)`, `loop`, `stagger`, `ani()`/`crd()`), loading (`load(eager\|lazy)`) and video sizing (`vid()`, `ply()`). The former alias attributes `nav=`/`arrow=`/`dot=`/`vid=`/`ply=`/`eager`/carousel-`loop` are removed. Read from the element itself or its nearest `ui-card`/`ui-reveal` host only (never other ancestors). | Token-list |
 | `provider` | media | Video embed provider (e.g. youtube/vimeo) for the facade path. | Value |
 | `video` | media | Video / embed identifier. | Value |
 | `src` | media (and inner `<img>`/`<video>`) | Direct media file URL / native source. | Value |
@@ -184,7 +184,7 @@ Global/universal attributes usable on any opted-in element. Token-list attribute
 
 | Attribute | Feature / File | Purpose | Type |
 |-----------|----------------|---------|------|
-| `media` | `carousel.css`, `stagger.css` | Master carousel/effect DSL (`nav(...)`, `arw(...)`, `dot(...)`, `axis(...)`, `ani(...)`, `crd(...)`, `auto`, `loop`, `stagger`; on `lay-out[overflow]` also `pages`) — the **only** carousel-control surface; the former `nav=`/`arrow=`/`dot=` attributes are removed. | Token-list |
+| `media` | `carousel.css`, `stagger.css` | Master carousel/effect DSL (`nav(...)`, `arw(...)`, `mrk(...)`, `axis(...)`, `ani(...)`, `crd(...)`, `auto`, `loop`, `stagger`; on `lay-out[overflow]` also `pages`) — the **only** carousel-control surface; the former `nav=`/`arrow=`/`dot=` attributes are removed. | Token-list |
 | `overflow` | `stagger.css` (layout) | `lay-out` mode flag selecting the overflow (horizontal-carousel) reveal path; companion to `stagger`. | Boolean |
 
 ### Utility / helper attributes
@@ -202,7 +202,7 @@ Global/universal attributes usable on any opted-in element. Token-list attribute
 
 ## Notes & overlaps
 
-- **Shared vocabulary across systems.** `stagger`/`data-stagger`, `animate`, `animate-self`, `easing`, `media`, `overflow` and `theme` originate in **base** and are re-used by both **layout** and **card**. As of v4 the **entire animation engine** now lives in base: the `[animate]`/`[animate-self]`/`[easing]` wiring in `ui/base/animate.css` (pace is now words *inside* `animate=`/`animate-self=`, not an attribute), the `@keyframes` in `ui/base/animations.css`, and the `--ease-*` tokens in `ui/base/easings.css` — so `[animate]` works on **any** component, not just `<lay-out>`. Carousel controls (`media=` tokens — `nav()`/`arw()`/`dot()` etc.; no `nav=`/`arrow=`/`dot=` attributes) and the `stagger` engine likewise live in `ui/base` (`carousel.css`, `stagger.css`). None of this is bundled into `layout.css` any more — `@browser.style/base` must be loaded alongside it (always true in practice). The **only** animation rule still in the layout package is `stack(reveal)` (`layout/core/animations.css`, layout-domain).
+- **Shared vocabulary across systems.** `stagger`/`data-stagger`, `animate`, `animate-self`, `easing`, `media`, `overflow` and `theme` originate in **base** and are re-used by both **layout** and **card**. As of v4 the **entire animation engine** now lives in base: the `[animate]`/`[animate-self]`/`[easing]` wiring in `ui/base/animate.css` (pace is now words *inside* `animate=`/`animate-self=`, not an attribute), the `@keyframes` in `ui/base/animations.css`, and the `--ease-*` tokens in `ui/base/easings.css` — so `[animate]` works on **any** component, not just `<lay-out>`. Carousel controls (`media=` tokens — `nav()`/`arw()`/`mrk()` etc.; no `nav=`/`arrow=`/`dot=` attributes) and the `stagger` engine likewise live in `ui/base` (`carousel.css`, `stagger.css`). None of this is bundled into `layout.css` any more — `@browser.style/base` must be loaded alongside it (always true in practice). The **only** animation rule still in the layout package is `stack(reveal)` (`layout/core/animations.css`, layout-domain).
 - **Shape reveals share the media-shape catalog.** `animate-self="reveal(hex\|star\|rhomb\|plus\|circ)"` animates a single `reveal-shape` keyframe whose clip-path endpoints come from the shared `--shp-*` catalog in `ui/base/shapes.css` — the same vertex-matched pairs that drive static media clips (`media="shp(...)"` in the card system). One shape definition, two uses (static clip + reveal). `--shp-*` is deliberately distinct from the `--shape-*` glyph namespace (icons/stickers) in the same file.
 - **`data-*` twins.** The bare form is for custom elements; the `data-` form is for native HTML elements. Same feature, two spellings (`stagger`/`data-stagger`, `tint`/`data-tint`, `page-gap`/`data-page-gap`).
 - **Token-list attributes are mini-DSLs.** `theme`, `variant`, `media`, `content`, `stagger`, `animate` each encode many sub-features as space-separated keywords or `token(arg)` values inside one attribute — this is why the same attribute name appears across elements but carries a different token vocabulary.
