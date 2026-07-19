@@ -301,12 +301,12 @@
 		   (or one page with media="pages") per arrow click / fling */
 		&[overflow][media*="nav"] > *:not(lay-out) { scroll-snap-stop: always; }
 		/* reserved control band (controls themselves are anchor-positioned into it by
-		   ui/base/carousel.css) — nav() = both controls, dot() = dots only, arw() = arrows only */
-		&[overflow]:is([media*="nav(blw)"], [media*="dot(blw)"], [media*="arw(blw)"]) {
+		   ui/base/carousel.css) — nav() = both controls, mrk() = dots only, arw() = arrows only */
+		&[overflow]:is([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"]) {
 			background: var(--ui-carousel-controls-bg, #0000);
 			padding-block-end: calc(var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
 		}
-		&[overflow]:is([media*="nav(abv)"], [media*="dot(abv)"], [media*="arw(abv)"]) {
+		&[overflow]:is([media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) {
 			background: var(--ui-carousel-controls-bg, #0000);
 			padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
 			scroll-padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));

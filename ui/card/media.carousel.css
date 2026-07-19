@@ -90,15 +90,15 @@
 	   <ui-media media="stagger"> and <lay-out overflow stagger> alike). Nothing
 	   carousel-stagger-specific remains here. */
 
-	/* reserved control band — nav(blw/abv) = both controls, dot(blw/abv) = dots only, arw(blw/abv) = arrows only */
-	:where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="dot(blw)"], [media*="arw(blw)"]) ui-media,
-	ui-media:where([media*="nav(blw)"], [media*="dot(blw)"], [media*="arw(blw)"]) {
+	/* reserved control band — nav(blw/abv) = both controls, mrk(blw/abv) = dots only, arw(blw/abv) = arrows only */
+	:where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"]) ui-media,
+	ui-media:where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"]) {
 		background: var(--ui-carousel-controls-bg, var(--ui-media-bg));
 		padding-block-end: calc(var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
 	}
 
-	:where(ui-card, ui-reveal):where([media*="nav(abv)"], [media*="dot(abv)"], [media*="arw(abv)"]) ui-media,
-	ui-media:where([media*="nav(abv)"], [media*="dot(abv)"], [media*="arw(abv)"]) {
+	:where(ui-card, ui-reveal):where([media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media,
+	ui-media:where([media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) {
 		background: var(--ui-carousel-controls-bg, var(--ui-media-bg));
 		padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
 		scroll-padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
@@ -106,7 +106,7 @@
 
 	@supports (scroll-marker-group: after) {
 		/* controls present (dots OR arrows) → hide native scrollbar (overrides the `thin` above) */
-		:where(ui-card, ui-reveal):where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) ui-media,
-		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(dot)"], [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) { scrollbar-width: none; }
+		:where(ui-card, ui-reveal):where([media*="nav"]:not([media*="nav("]), [media*="nav(mrk)"], [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) ui-media,
+		ui-media:where([media*="nav"]:not([media*="nav("]), [media*="nav(mrk)"], [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) { scrollbar-width: none; }
 	}
 }

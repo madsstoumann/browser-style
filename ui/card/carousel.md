@@ -28,7 +28,7 @@ grouped). Order never matters. The old dedicated `nav=` / `arrow=` / `dot=`
 attributes are **removed**.
 
 ```html
-<ui-media media="asr(16/9) nav(blw) arw(lg) arw(drk) dot(be)"> … </ui-media>
+<ui-media media="asr(16/9) nav(blw) arw(lg) arw(drk) mrk(be)"> … </ui-media>
 
 <!-- or on the card host (propagates to the inner <ui-media>) -->
 <ui-card media="asr(16/9) nav(blw) arw(lg) arw(drk)">
@@ -44,7 +44,7 @@ a `<lay-out overflow>` scroller uses this **same control vocabulary**
 lay-out's **own** carousel; it never leaks into a descendant `<ui-media>`.
 
 > **Shared ink scale.** Controls + scrim use one shade vocabulary: `lgt` (light/white) ·
-> `drk` (dark/black) · `med` (scrim only). Arrows + dots use `lgt`/`drk`.
+> `drk` (dark/black) · `med` (scrim only). Arrows + markers use `lgt`/`drk`.
 
 > **Gotcha (standalone):** don't put `overflow` / `display` on a bare `ui-media`
 > selector in your own CSS — that beats the component's zero-specificity
@@ -54,9 +54,9 @@ lay-out's **own** carousel; it never leaks into a descendant `<ui-media>`.
 
 ## Browser support
 
-The dots/arrows use `::scroll-marker-group` / `::scroll-button()` — **Chromium
+The markers/arrows use `::scroll-marker-group` / `::scroll-button()` — **Chromium
 only**, gated by `@supports (scroll-marker-group: after)`. Everywhere else it
-**degrades gracefully** to a bare swipe/scroll-snap row (no dots/arrows).
+**degrades gracefully** to a bare swipe/scroll-snap row (no markers/arrows).
 `prefers-reduced-motion` is respected (no smooth scroll, no pill timer animation).
 
 ---
@@ -67,11 +67,11 @@ only**, gated by `@supports (scroll-marker-group: after)`. Everywhere else it
 
 | `media=` token | Result |
 |----------------|--------|
-| `nav` | Both **dots + arrows** (overlaid) |
-| `nav(dot)` | Dots only |
+| `nav` | Both **markers + arrows** (overlaid) |
+| `nav(mrk)` | Markers only |
 | `nav(arw)` | Arrows only |
-| `nav(blw)` | Dots + arrows in a reserved **band below** the media |
-| `nav(abv)` | Dots + arrows in a reserved **band above** the media (mirror of `nav(blw)`) |
+| `nav(blw)` | Markers + arrows in a reserved **band below** the media |
+| `nav(abv)` | Markers + arrows in a reserved **band above** the media (mirror of `nav(blw)`) |
 
 ### `axis()` — scroll direction
 
@@ -99,8 +99,8 @@ only**, gated by `@supports (scroll-marker-group: after)`. Everywhere else it
 | `arw(set)` | Group both arrows as an **adjacent pair** (one cluster). Place it in any grid cell — `arw(set) arw(<cell>)`, e.g. `arw(set) arw(bs)` (bottom-start), `arw(set) arw(cc)` (dead center). Default `ce` (horizontal) / `be` (vertical) |
 | `arw(hid)` | Auto-**hide** the dead-end arrow (default keeps it visible but dimmed) |
 | `arw(tc)` `arw(cc)` `arw(bc)` | **Split arrows** vertical band — `cc` = centered default. (Inline part of the cell is ignored for split arrows; only the block row applies) |
-| `arw(cs)` | `axis(y)`: a start-inline cell moves the up/down arrows (and dot column) to the inline-**start** edge (default is inline-end) |
-| `arw(blw)` `arw(abv)` | Arrows **alone** in a reserved band below / above the media — dots keep their on-media position/ink; the arrow ink flips to the band theme |
+| `arw(cs)` | `axis(y)`: a start-inline cell moves the up/down arrows (and marker column) to the inline-**start** edge (default is inline-end) |
+| `arw(blw)` `arw(abv)` | Arrows **alone** in a reserved band below / above the media — markers keep their on-media position/ink; the arrow ink flips to the band theme |
 
 > **Default look:** the overlay circle is Instagram-style — a frosted semi-transparent-white
 > circle, dark chevron, soft shadow. `arw(lgt)` = that light theme; `arw(drk)` = the dark
@@ -112,11 +112,11 @@ only**, gated by `@supports (scroll-marker-group: after)`. Everywhere else it
 **Every direct child of `<ui-media>` is one slide** — an `<img>`/`<video>`, or any
 **wrapper element** holding a group of items. The wrapper tag is not hardcoded: use
 `<ui-slide>`, a layout-system element (`<lay-out>`), or a plain `<div>` — all behave
-identically (one slide, one dot, snaps the whole group).
+identically (one slide, one marker, snaps the whole group).
 
 > **Exception — overlay furniture.** `<ui-chip>`, `<ui-sticker>`, `<ui-play>` and
 > `<ui-save>` are *excluded*: they stay absolutely positioned over the frame and never
-> become slides or get a dot. (Selector: `> :not(ui-chip, ui-sticker, ui-play, ui-save)`.)
+> become slides or get a marker. (Selector: `> :not(ui-chip, ui-sticker, ui-play, ui-save)`.)
 
 **The carousel does NOT lay out items inside a slide** — that grid is yours (the layout
 system, or your own class). The wrapper is just the snap-child container; it keeps its
@@ -162,30 +162,30 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 </ui-media>
 ```
 
-### `dot()` — dots
+### `mrk()` — markers
 
 | `media=` token | Result |
 |----------------|--------|
 | *(default)* | Circular dots (no token needed) |
-| `dot(pll)` | Rounded-rect pills; the active pill **fills L→R** over the autoplay duration as a timer hint |
-| `dot(hyb)` | **Hybrid** — markers stay circle dots; the active one morphs into a pill and runs the same fill timer as `dot(pll)` |
-| `dot(bar)` | **Thin styled scrollbar** — one continuous hairline track spanning the container; the current slide's stretch renders thicker in the active ink (the thumb, 1/N of the width). Click-to-jump + keyboard-navigable. See [Styled scrollbar](#styled-scrollbar--dotbar) |
-| `dot(lgt)` `dot(drk)` | Ink — light / dark (`bg` + active). `nav(blw)`/`nav(abv)` default to dark |
-| `dot(sm)` `dot(md)` `dot(lg)` `dot(xl)` | Size (`md` = default) — one scale for dots, pills **and** thumbnails, so `dot(tmb) dot(lg)` = large thumbnails. With `dot(bar)` the scale sets the bar **width** instead: 33% · 50% · 75% (`lg` = default) · 100% |
-| **In a band** — `dot(bs/bc/be)` (below) · `dot(ts/tc/te)` (above) | **Position within a band** — the row is locked by `nav(blw)`/`nav(abv)`, so the cell's inline letter aligns the dots: start / center (default) / end. Start/end clear the arrow on that side (or the `arw(set)` pair). |
-| `dot(bc)` | `axis(y)`: dots centered at the **bottom** (e.g. with a pill timer) |
-| `dot(non)` | **No dots** (keeps arrows) — e.g. an arrows-only `nav(blw)`/`nav(abv)` band |
-| `dot(blw)` `dot(abv)` | Dots **alone** in a reserved band below / above the media — arrows keep their on-media position/ink; the dot/pill ink flips to the band theme |
-| `dot(tmb)` | **Image thumbnails** instead of dots. Each slide sets `--ui-media-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-media-autoplay`. |
-| `dot(ts)` `dot(te)` `dot(bs)` `dot(be)` | **Corner placement** for the overlay marker-group — top-start / top-end / bottom-start / bottom-end (logical, RTL-safe). Center row `dot(cs)` `dot(cc)` `dot(ce)` completes the 9-grid. Inset via `--ui-media-marker-inset`. |
+| `mrk(pll)` | Rounded-rect pills; the active pill **fills L→R** over the autoplay duration as a timer hint |
+| `mrk(hyb)` | **Hybrid** — markers stay circle dots; the active one morphs into a pill and runs the same fill timer as `mrk(pll)` |
+| `mrk(bar)` | **Thin styled scrollbar** — one continuous hairline track spanning the container; the current slide's stretch renders thicker in the active ink (the thumb, 1/N of the width). Click-to-jump + keyboard-navigable. See [Styled scrollbar](#styled-scrollbar--mrkbar) |
+| `mrk(lgt)` `mrk(drk)` | Ink — light / dark (`bg` + active). `nav(blw)`/`nav(abv)` default to dark |
+| `mrk(sm)` `mrk(md)` `mrk(lg)` `mrk(xl)` | Size (`md` = default) — one scale for dots, pills **and** thumbnails, so `mrk(tmb) mrk(lg)` = large thumbnails. With `mrk(bar)` the scale sets the bar **width** instead: 33% · 50% · 75% (`lg` = default) · 100% |
+| **In a band** — `mrk(bs/bc/be)` (below) · `mrk(ts/tc/te)` (above) | **Position within a band** — the row is locked by `nav(blw)`/`nav(abv)`, so the cell's inline letter aligns the markers: start / center (default) / end. Start/end clear the arrow on that side (or the `arw(set)` pair). |
+| `mrk(bc)` | `axis(y)`: dots centered at the **bottom** (e.g. with a pill timer) |
+| `mrk(non)` | **No dots** (keeps arrows) — e.g. an arrows-only `nav(blw)`/`nav(abv)` band |
+| `mrk(blw)` `mrk(abv)` | Dots **alone** in a reserved band below / above the media — arrows keep their on-media position/ink; the marker/pill ink flips to the band theme |
+| `mrk(tmb)` | **Image thumbnails** instead of dots. Each slide sets `--ui-media-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-media-autoplay`. |
+| `mrk(ts)` `mrk(te)` `mrk(bs)` `mrk(be)` | **Corner placement** for the overlay marker-group — top-start / top-end / bottom-start / bottom-end (logical, RTL-safe). Center row `mrk(cs)` `mrk(cc)` `mrk(ce)` completes the 9-grid. Inset via `--ui-media-marker-inset`. |
 
-### Thumbnail navigation — `dot(tmb)`
+### Thumbnail navigation — `mrk(tmb)`
 
 Turn the marker-group into a **thumbnail rail**. Give each slide its own picture with a
 custom property; place the rail in any corner:
 
 ```html
-<ui-media media="asr(4/3) nav dot(tmb) dot(te)">
+<ui-media media="asr(4/3) nav mrk(tmb) mrk(te)">
   <img src="1.jpg" style="--ui-media-thumb-url: url('1.jpg')">
   <img src="2.jpg" style="--ui-media-thumb-url: url('2.jpg')">
 </ui-media>
@@ -198,10 +198,10 @@ active thumb runs a bottom **timer** stripe synced to `--ui-media-autoplay` — 
 in pure CSS). (The URL uses a custom property today; it swaps to typed
 `attr(data-thumb type(<image>))` once that's Baseline.)
 
-### Styled scrollbar — `dot(bar)`
+### Styled scrollbar — `mrk(bar)`
 
 Turn the marker-group into a **thin scrollbar**: a hairline track across the full
-container width, with the current slide's segment drawn thicker in the active-dot
+container width, with the current slide's segment drawn thicker in the active-marker
 ink — the thumb. Every marker becomes an invisible, equal-width segment of the
 track, so the thumb is automatically **1/N of the width**, clicking anywhere on
 the track snaps to that slide, and the segments stay keyboard-focusable
@@ -209,30 +209,30 @@ the track snaps to that slide, and the segments stay keyboard-focusable
 
 ```html
 <!-- overlaid on the media (light ink) -->
-<ui-media media="asr(16/9) nav dot(bar)"> … </ui-media>
+<ui-media media="asr(16/9) nav mrk(bar)"> … </ui-media>
 
 <!-- the listing pattern: arrows top-right, full-width bar in a band below (dark ink) -->
-<lay-out md="columns(3)" overflow media="nav arw(abv) arw(set) dot(bar) dot(xl) dot(blw)"> … </lay-out>
+<lay-out md="columns(3)" overflow media="nav arw(abv) arw(set) mrk(bar) mrk(xl) mrk(blw)"> … </lay-out>
 ```
 
-- **Width** comes from the repurposed size scale: `dot(sm)` 33% · `dot(md)` 50% ·
-  `dot(lg)` 75% (**default**, no token needed) · `dot(xl)` 100%. A partial-width
+- **Width** comes from the repurposed size scale: `mrk(sm)` 33% · `mrk(md)` 50% ·
+  `mrk(lg)` 75% (**default**, no token needed) · `mrk(xl)` 100%. A partial-width
   bar is centered; pin it to an edge with the cell's inline letter —
-  `dot(bs)`/`dot(ts)` = start, `dot(be)`/`dot(te)` = end. Fine-tune with
+  `mrk(bs)`/`mrk(ts)` = start, `mrk(be)`/`mrk(te)` = end. Fine-tune with
   `--ui-carousel-bar-span` (a **fraction**, e.g. `0.6` — it multiplies the
   scroller's `anchor-size()`, so it can't be a percentage).
-- **Ink** follows the dot tokens — track = `--ui-carousel-dot-bg`, thumb =
-  `--ui-carousel-dot-active` — so `dot(lgt)`/`dot(drk)` and the automatic dark
-  flip in `nav(blw)`/`dot(blw)`/`nav(abv)` bands just work.
+- **Ink** follows the marker tokens — track = `--ui-carousel-marker-bg`, thumb =
+  `--ui-carousel-marker-active` — so `mrk(lgt)`/`mrk(drk)` and the automatic dark
+  flip in `nav(blw)`/`mrk(blw)`/`nav(abv)` bands just work.
 - **Thickness / geometry tokens**: `--ui-carousel-bar-size` (thumb thickness,
   `3px`), `--ui-carousel-bar-track-size` (track thickness, `1px`) — bump these
   for a heavier bar; `--ui-carousel-bar-hit` (clickable strip height, `0.875rem`),
   `--ui-carousel-bar-inset` (inline inset from the container edges, `0px`).
 - **Placement**: overlaid at the media's block-end by default (like dots); use the
-  band atoms (`dot(blw)`, `nav(blw)`, …) to move it under the media. Horizontal
-  carousels only — `axis(y)` keeps its dot column.
+  band atoms (`mrk(blw)`, `nav(blw)`, …) to move it under the media. Horizontal
+  carousels only — `axis(y)` keeps its marker column.
 - **Fallback**: where `::scroll-marker-group` is unsupported, the scroller keeps
-  its **native thin scrollbar**, tinted via `scrollbar-color` with the active-dot
+  its **native thin scrollbar**, tinted via `scrollbar-color` with the active-marker
   ink — still thin, still interactive.
 
 ### `load()` — image/video loading (JS-applied)
@@ -319,13 +319,13 @@ outline (its `mask` clips it), so it scales to `--ui-media-arrow-hover-scale` on
 
 Two things CSS can't do are added by `ui-media.js` as **pure progressive
 enhancement** — with JS off the carousel still scrolls, snaps, and shows
-dots/arrows; these tokens simply no-op.
+markers/arrows; these tokens simply no-op.
 
 | Token | Needs JS | Result |
 |-------|:--------:|--------|
-| `auto` · `auto(4s)` · `auto(800ms)` | yes | Autoplay; advances one slide per interval (default 5s), seamlessly wraps. Pauses on hover / focus / drag / hidden tab / reduced-motion. Sets `--ui-media-autoplay` so a `dot(pll)` timer stays in sync. |
-| `loop` | yes | **Seamless** infinite loop — clones the first/last slide so next-past-the-last smooth-scrolls into a clone, then invisibly resets. Works with dots + arrows, both directions. |
-| `play(<corner>)` + a `<ui-play>` child | yes | Explicit **play/pause** control. The button is `position:sticky`-pinned to the scrollport corner (plain furniture scrolls away with the slides). When present it becomes the **sole** pause mechanism — implicit hover/focus auto-pause is dropped, so the play↔pause glyph always matches state. Toggling sets `--ui-media-play-state` (`running`/`paused`), which also freezes the `dot(pll)`/`dot(tmb)` fill timer. Emits `ui-play-toggle`. Add `variant="reveal"` to hide until hover/focus. Needs `@browser.style/play` loaded. |
+| `auto` · `auto(4s)` · `auto(800ms)` | yes | Autoplay; advances one slide per interval (default 5s), seamlessly wraps. Pauses on hover / focus / drag / hidden tab / reduced-motion. Sets `--ui-media-autoplay` so a `mrk(pll)` timer stays in sync. |
+| `loop` | yes | **Seamless** infinite loop — clones the first/last slide so next-past-the-last smooth-scrolls into a clone, then invisibly resets. Works with markers + arrows, both directions. |
+| `play(<corner>)` + a `<ui-play>` child | yes | Explicit **play/pause** control. The button is `position:sticky`-pinned to the scrollport corner (plain furniture scrolls away with the slides). When present it becomes the **sole** pause mechanism — implicit hover/focus auto-pause is dropped, so the play↔pause glyph always matches state. Toggling sets `--ui-media-play-state` (`running`/`paused`), which also freezes the `mrk(pll)`/`mrk(tmb)` fill timer. Emits `ui-play-toggle`. Add `variant="reveal"` to hide until hover/focus. Needs `@browser.style/play` loaded. |
 
 **Performance.** The script runs **one** `document.querySelectorAll` at idle for just
 these tokens (`auto`, `loop`) — plain `<ui-media>` and CSS-only carousels never match,
@@ -362,15 +362,15 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-media-arrow-glyph-dim` | = `--ui-media-arrow-glyph` | Disabled **bare** glyph (kept dark/dimmed so the mask can drop without flashing a circle) |
 | `--ui-media-arrow-top` | centered | Manual vertical position (or use `arw(top/mid/bot)`) |
 
-### Dots / pills
+### Markers / pills
 
 | Property | Default | Purpose |
 |----------|---------|---------|
-| `--ui-media-dot-size` | `0.6rem` | Dot diameter (or `dot(sm/md/lg/xl)`) |
-| `--ui-media-dot-gap` | `0.5rem` | Gap between dots |
-| `--ui-media-dot-bg` | `rgb(255 255 255 / 0.5)` | Inactive dot |
-| `--ui-media-dot-active` | `#fff` | Active dot |
-| `--ui-media-dot-border` | `0` | Dot border |
+| `--ui-media-marker-size` | `0.6rem` | Marker diameter (or `mrk(sm/md/lg/xl)`) |
+| `--ui-media-marker-gap` | `0.5rem` | Gap between markers |
+| `--ui-media-marker-bg` | `rgb(255 255 255 / 0.5)` | Inactive marker |
+| `--ui-media-marker-active` | `#fff` | Active marker |
+| `--ui-media-marker-border` | `0` | Marker border |
 | `--ui-media-pill-width` | `1.5rem` | Pill width |
 | `--ui-media-pill-height` | `0.35rem` | Pill height |
 | `--ui-media-pill-track` | `rgb(255 255 255 / 0.35)` | Pill track (unfilled) |
@@ -378,12 +378,12 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-media-autoplay` | `5s` | Pill / thumb timer duration (auto-set by `auto(Ns)`) |
 | `--ui-media-play-state` | `running` | `running` / `paused` for the pill/thumb fill timer — `ui-media.js` sets `paused` when a `<ui-play>` control pauses autoplay |
 
-### Thumbnails (`dot(tmb)`)
+### Thumbnails (`mrk(tmb)`)
 
 | Property | Default | Purpose |
 |----------|---------|---------|
 | `--ui-media-thumb-url` | *(none)* | **Per-slide** thumbnail image — set on each slide/card (`url(…)`) |
-| `--ui-media-thumb-size` | `2.25rem` | Thumbnail height (width follows `--ui-media-thumb-ratio`; or use `dot(sm/md/lg/xl)`) |
+| `--ui-media-thumb-size` | `2.25rem` | Thumbnail height (width follows `--ui-media-thumb-ratio`; or use `mrk(sm/md/lg/xl)`) |
 | `--ui-media-thumb-ratio` | `4 / 3` | Thumbnail aspect-ratio |
 | `--ui-media-thumb-border` | `2px solid #fff` | Thumbnail border (white by default) |
 | `--ui-media-thumb-radius` | `--radius-sm` | Thumbnail corner radius |
@@ -392,7 +392,7 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-media-thumb-timer` | `#fff` (matches the border) | Active-thumb bottom timer-stripe colour (separate from `--ui-media-thumb-border`) |
 | `--ui-media-thumb-timer-height` | `3px` | Timer-stripe thickness |
 | `--ui-media-thumb-timer-name` | `none` (off) | Fill-timer animation. **Off by default** — `ui-media.js` sets it to `ui-media-thumb-timer` when **autoplay** (`auto`/`loop`) runs. Set it to that keyframe manually to preview without JS. |
-| `--ui-media-marker-inset` | `1rem` (thumb) / `--ui-media-overlay-gap` | Corner inset from the edges (`dot(tl/tr/bl/br)`) |
+| `--ui-media-marker-inset` | `1rem` (thumb) / `--ui-media-overlay-gap` | Corner inset from the edges (`mrk(tl/tr/bl/br)`) |
 
 ### Control band (`nav(blw)` / `nav(abv)`)
 
@@ -447,14 +447,14 @@ authored directly.
 <ui-media media="asr(16/9) nav"> … </ui-media>
 
 <!-- Full arrows, large, dark ink, pill timer dots -->
-<ui-media media="asr(16/9) nav arw(arr) arw(drk) arw(lg) dot(pll)"> … </ui-media>
+<ui-media media="asr(16/9) nav arw(arr) arw(drk) arw(lg) mrk(pll)"> … </ui-media>
 
 <!-- Bare arrows (no circle), accent colour -->
 <ui-media media="asr(16/9) nav(arw) arw(bare)"
           style="--ui-media-arrow-color: var(--color-accent)"> … </ui-media>
 
 <!-- Controls in a band below; dots left, arrow pair right -->
-<ui-media media="asr(16/9) nav(blw) arw(set) dot(bs)"> … </ui-media>
+<ui-media media="asr(16/9) nav(blw) arw(set) mrk(bs)"> … </ui-media>
 
 <!-- Vertical carousel, up/down arrows on the right -->
 <ui-media media="asr(3/4) axis(y) nav"> … </ui-media>

@@ -169,8 +169,8 @@ function initCarousel(scroller) {
 			scroller.addEventListener('focusout', () => { paused = false; });
 		}
 		document.addEventListener('visibilitychange', () => document.hidden ? stop() : (!paused && start()));
-		scroller.style.setProperty('--ui-carousel-autoplay', (autoMs / 1000) + 's'); // sync the dot(pll) CSS timer
-		scroller.style.setProperty('--ui-carousel-thumb-timer-name', 'ui-carousel-thumb-timer'); // enable dot(tmb) fill timer (off until autoplay)
+		scroller.style.setProperty('--ui-carousel-autoplay', (autoMs / 1000) + 's'); // sync the mrk(pll) CSS timer
+		scroller.style.setProperty('--ui-carousel-thumb-timer-name', 'ui-carousel-thumb-timer'); // enable mrk(tmb) fill timer (off until autoplay)
 		start();
 	}
 }

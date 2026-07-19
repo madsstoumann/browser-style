@@ -107,7 +107,7 @@
       "description": "Column card whose media items scroll-snap with dot navigation — galleries",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(16/9) nav(dot)"
+      "media": "asr(16/9) nav(mrk)"
     },
     "flip": {
       "name": "Flip Preset",

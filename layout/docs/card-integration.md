@@ -129,7 +129,7 @@ The shared, editor-ready format. One JSON document describes a **section**: a la
     "xs": "cg(2) rg(2) mbe(3)",
     "md": "columns(2)", "lg": "grid(3a)",
     "bleed": 0, "width": "xl",
-    "overflow": "preview center", "media": "nav(blw) dot(pll)"
+    "overflow": "preview center", "media": "nav(blw) mrk(pll)"
   },
   "items": [
     { "card": { "$ref": "card/article-001" }, "preset": { "$ref": "card-preset/stack" } },

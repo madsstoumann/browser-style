@@ -312,7 +312,7 @@
 		</ui-card>
 	</lay-out>
 
-	<!-- Carousel — CSS-only dots + arrows -->
+	<!-- Carousel — CSS-only markers + arrows -->
 	<h2>Carousel — <code>media="nav"</code></h2>
 	<p class="note">A scroll-snap row of sources, plus CSS-only navigation dots (<code>::scroll-marker</code>) and prev/next arrows (<code>::scroll-button()</code>) shown by default. No JavaScript. Chromium-only for now — elsewhere it degrades to the plain swipe scroller.</p>
 	<lay-out lg="columns(2)">
@@ -351,16 +351,16 @@
 
 	<!-- Carousel controls — pick pieces + theme them -->
 	<h2>Carousel controls &amp; theming</h2>
-	<p class="note">Pick controls with <code>nav(dot)</code>, <code>nav(arw)</code>, bare <code>nav</code> (both), or <code>nav(non)</code>. Colours, dot size and the arrow glyphs are all tokens.</p>
+	<p class="note">Pick controls with <code>nav(mrk)</code>, <code>nav(arw)</code>, bare <code>nav</code> (both), or <code>nav(non)</code>. Colours, dot size and the arrow glyphs are all tokens.</p>
 	<lay-out lg="columns(3)">
-		<ui-card variant="col" media="asr(4/3) nav(dot)" content="scl(sm)">
+		<ui-card variant="col" media="asr(4/3) nav(mrk)" content="scl(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="https://browser.style/assets/images/destinations.png" alt="" loading="lazy">
 					<img src="https://browser.style/assets/images/river.png" alt="" loading="lazy">
 					<img src="https://browser.style/assets/images/mindfulness.png" alt="" loading="lazy">
 				</ui-media>
-				<ui-content><small data-part="eyebrow">nav(dot)</small><h2 data-part="headline">Dots only</h2></ui-content>
+				<ui-content><small data-part="eyebrow">nav(mrk)</small><h2 data-part="headline">Markers only</h2></ui-content>
 			</cq-box>
 		</ui-card>
 
@@ -376,7 +376,7 @@
 		</ui-card>
 
 		<ui-card variant="col" media="asr(4/3) nav" content="scl(sm)"
-			style="--ui-carousel-dot-bg: rgb(0 0 0 / 0.25); --ui-carousel-dot-active: var(--color-accent); --ui-carousel-arrow-bg: var(--color-accent);">
+			style="--ui-carousel-marker-bg: rgb(0 0 0 / 0.25); --ui-carousel-marker-active: var(--color-accent); --ui-carousel-arrow-bg: var(--color-accent);">
 			<cq-box>
 				<ui-media>
 					<img src="https://browser.style/assets/images/hubble.png" alt="" loading="lazy">

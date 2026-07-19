@@ -327,10 +327,10 @@
     },
     "carousel-dots": {
       "name": "Carousel Dots",
-      "description": "Dots only — nav(dot)",
+      "description": "Dots only — nav(mrk)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav(dot)",
+      "media": "asr(4/3) nav(mrk)",
       "content": "scl(sm)"
     },
     "carousel-arrows": {
@@ -359,15 +359,15 @@
     },
     "carousel-dots-themed": {
       "name": "Carousel Dots Themed",
-      "description": "Bigger accent dots via --ui-carousel-dot-* tokens",
+      "description": "Bigger accent dots via --ui-carousel-marker-* tokens",
       "element": "ui-card",
       "variant": "col",
       "media": "asr(4/3) nav",
       "content": "scl(sm)",
       "styles": {
-        "--ui-carousel-dot-bg": "rgb(0 0 0 / 0.25)",
-        "--ui-carousel-dot-active": "var(--color-accent)",
-        "--ui-carousel-dot-size": "0.8rem"
+        "--ui-carousel-marker-bg": "rgb(0 0 0 / 0.25)",
+        "--ui-carousel-marker-active": "var(--color-accent)",
+        "--ui-carousel-marker-size": "0.8rem"
       }
     },
     "carousel-arrows-accent": {
@@ -380,7 +380,7 @@
       "styles": {
         "--ui-carousel-arrow-bg": "var(--color-accent)",
         "--ui-carousel-arrow-bg-hover": "var(--color-accent-dark, var(--color-accent))",
-        "--ui-carousel-dot-active": "var(--color-accent)"
+        "--ui-carousel-marker-active": "var(--color-accent)"
       }
     },
     "carousel-arrows-inverted": {
@@ -477,10 +477,10 @@
     },
     "carousel-pills": {
       "name": "Carousel Pills",
-      "description": "Pill dots with 5s autoplay fill hint — dot(pll)",
+      "description": "Pill dots with 5s autoplay fill hint — mrk(pll)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav(dot) dot(pll)",
+      "media": "asr(4/3) nav(mrk) mrk(pll)",
       "content": "scl(sm)"
     },
     "carousel-pills-fast": {
@@ -488,7 +488,7 @@
       "description": "Pills + arrows, 3s fill via --ui-carousel-autoplay",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav dot(pll)",
+      "media": "asr(4/3) nav mrk(pll)",
       "content": "scl(sm)",
       "styles": {
         "--ui-carousel-autoplay": "3s"
@@ -499,7 +499,7 @@
       "description": "Wider pills with accent fill",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav(dot) dot(pll)",
+      "media": "asr(4/3) nav(mrk) mrk(pll)",
       "content": "scl(sm)",
       "styles": {
         "--ui-carousel-pill-track": "rgb(0 0 0 / 0.2)",
@@ -509,26 +509,26 @@
     },
     "carousel-pills-arrows": {
       "name": "Carousel Pills Arrows",
-      "description": "Pills + arrows — nav dot(pll)",
+      "description": "Pills + arrows — nav mrk(pll)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav dot(pll)",
+      "media": "asr(4/3) nav mrk(pll)",
       "content": "scl(sm)"
     },
     "carousel-small": {
       "name": "Carousel Small",
-      "description": "Small arrows and dots — arw(sm) dot(sm)",
+      "description": "Small arrows and dots — arw(sm) mrk(sm)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav arw(sm) dot(sm)",
+      "media": "asr(4/3) nav arw(sm) mrk(sm)",
       "content": "scl(sm)"
     },
     "carousel-xl": {
       "name": "Carousel XL",
-      "description": "Extra-large arrows and dots — arw(xl) dot(xl)",
+      "description": "Extra-large arrows and dots — arw(xl) mrk(xl)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav arw(xl) dot(xl)",
+      "media": "asr(4/3) nav arw(xl) mrk(xl)",
       "content": "scl(sm)"
     },
     "carousel-band-set": {
@@ -544,7 +544,7 @@
       "description": "Pill timer bar in a surface-coloured band",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav(blw) arw(bare) dot(pll)",
+      "media": "asr(4/3) nav(blw) arw(bare) mrk(pll)",
       "content": "scl(sm)",
       "styles": {
         "--ui-carousel-controls-bg": "var(--color-surface, #fff)",
@@ -562,26 +562,26 @@
     },
     "carousel-band-dots-start": {
       "name": "Carousel Band Dots Start",
-      "description": "Band below, arrow pair right, dots at inline-start — dot(sta)",
+      "description": "Band below, arrow pair right, dots at inline-start — mrk(sta)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav(blw) arw(set) dot(sta)",
+      "media": "asr(4/3) nav(blw) arw(set) mrk(sta)",
       "content": "scl(sm)"
     },
     "carousel-band-dots-center": {
       "name": "Carousel Band Dots Center",
-      "description": "Band below, arrow pair right, dots centered — dot(ctr)",
+      "description": "Band below, arrow pair right, dots centered — mrk(ctr)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav(blw) arw(set) dot(ctr)",
+      "media": "asr(4/3) nav(blw) arw(set) mrk(ctr)",
       "content": "scl(sm)"
     },
     "carousel-band-dots-end": {
       "name": "Carousel Band Dots End",
-      "description": "Band below, arrow pair right, dots at inline-end — dot(end)",
+      "description": "Band below, arrow pair right, dots at inline-end — mrk(end)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav(blw) arw(set) dot(end)",
+      "media": "asr(4/3) nav(blw) arw(set) mrk(end)",
       "content": "scl(sm)"
     },
     "carousel-vertical": {
@@ -659,7 +659,7 @@
       "description": "JS-enhanced: autoplay every 3s + seamless loop, pill timer in sync",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav dot(pll) auto(3s) loop",
+      "media": "asr(4/3) nav mrk(pll) auto(3s) loop",
       "content": "scl(sm)"
     },
     "carousel-loop": {
@@ -675,7 +675,7 @@
       "description": "Vertical autoplay + seamless loop, pill timer bottom-center",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) axis(y) nav dot(pll) dot(bc) auto(3s) loop",
+      "media": "asr(4/3) axis(y) nav mrk(pll) mrk(bc) auto(3s) loop",
       "content": "scl(sm)"
     },
     "carousel-vertical-loop": {
@@ -691,7 +691,7 @@
       "description": "Autoplay 4s + loop + pill timer; the <ui-play> control's placement/size come from the preset, its presence from content",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav dot(pll) auto(4s) loop play(bs) play(sm)",
+      "media": "asr(4/3) nav mrk(pll) auto(4s) loop play(bs) play(sm)",
       "content": "scl(sm)"
     },
     "carousel-play-end": {
@@ -712,10 +712,10 @@
     },
     "carousel-tokens": {
       "name": "Carousel Tokens Form",
-      "description": "media= token form — nav(blw) arw(lg) arw(drk) dot(end)",
+      "description": "media= token form — nav(blw) arw(lg) arw(drk) mrk(end)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(16/9) nav(blw) arw(lg) arw(drk) dot(end)",
+      "media": "asr(16/9) nav(blw) arw(lg) arw(drk) mrk(end)",
       "content": "scl(sm)"
     },
     "carousel-attrs": {
@@ -723,36 +723,36 @@
       "description": "Token-only equivalent of the former grouped-attribute form — renders identically to carousel-tokens",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(16/9) nav(blw) arw(lg) arw(drk) dot(end)",
+      "media": "asr(16/9) nav(blw) arw(lg) arw(drk) mrk(end)",
       "content": "scl(sm)"
     },
     "carousel-subtle": {
       "name": "Carousel Subtle",
-      "description": "Low-contrast ink in a below band — arw(sub) dot(sub)",
+      "description": "Low-contrast ink in a below band — arw(sub) mrk(sub)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(16/9) nav(blw) arw(sub) dot(sub)",
+      "media": "asr(16/9) nav(blw) arw(sub) mrk(sub)",
       "content": "scl(sm)"
     },
     "carousel-subtle-attrs": {
       "name": "Carousel Subtle (folded)",
-      "description": "Token-only equivalent of the former attribute form — media=\"… nav(blw) arw(arr) arw(sub) dot(sub) dot(pll)\"",
+      "description": "Token-only equivalent of the former attribute form — media=\"… nav(blw) arw(arr) arw(sub) mrk(sub) mrk(pll)\"",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(16/9) nav(blw) arw(arr) arw(sub) dot(sub) dot(pll)",
+      "media": "asr(16/9) nav(blw) arw(arr) arw(sub) mrk(sub) mrk(pll)",
       "content": "scl(sm)"
     },
     "carousel-bare-band": {
       "name": "Carousel Bare Band",
       "description": "Standalone <ui-media> — band below, bare full-arrow set, dots at the end",
       "element": "ui-media",
-      "media": "asr(4/3) nav(blw) arw(bare) arw(arr) arw(set) dot(end)"
+      "media": "asr(4/3) nav(blw) arw(bare) arw(arr) arw(set) mrk(end)"
     },
     "carousel-bare-axis": {
       "name": "Carousel Bare Axis",
       "description": "Standalone vertical <ui-media> — dark large full-arrows, pill dots bottom-center",
       "element": "ui-media",
-      "media": "asr(4/3) axis(y) nav arw(arr) arw(drk) arw(lg) dot(pll) dot(bc)",
+      "media": "asr(4/3) axis(y) nav arw(arr) arw(drk) arw(lg) mrk(pll) mrk(bc)",
       "styles": {
         "--ui-carousel-arrow-color": "var(--color-accent)"
       }
