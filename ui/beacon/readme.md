@@ -160,6 +160,55 @@ In default + pill variants the animation targets the dot. In solid the whole pil
 
 Without `color`, the dot uses the current text color.
 
+## Themes — the shared `theme=` axis
+
+Beacon opts into the cross-component `theme=` axis (see `ui/base/theme.md`) exactly
+like `<ui-chip>` and `<ui-sticker>`: one colour token (`red orange green blue accent
+white gray slate black`) plus modifiers (`pale`, `muted`, `light`, `dark`). The theme
+feeds the beacon's single colour input (`--ui-beacon-bg`) and the paired ink used by
+the `solid`/`ticker` faces.
+
+```html
+<ui-beacon theme="red">Recording</ui-beacon>
+<ui-beacon theme="red pale" variant="pill">Live</ui-beacon>
+<ui-beacon theme="slate dark" variant="solid">REC</ui-beacon>
+```
+
+A `theme=` (or a card `beacon(<hue>)` token) wins over `color=` when both are present.
+
+## Card furniture — `beacon(…)` tokens
+
+Inside the card system, a beacon is **overlay furniture** on `<ui-media>` — the
+animated counterpart to the static `<ui-chip>` (LIVE / REC / Breaking). Everything is
+driven from the parent `media=` string, same as chip/sticker (single-value tokens,
+one axis per token):
+
+```html
+<ui-card media="asr(16/9) beacon(sld) beacon(red) beacon(bln)">
+  <cq-box>
+    <ui-media>
+      <img src="…" alt="">
+      <ui-beacon>LIVE</ui-beacon>
+    </ui-media>
+    …
+  </cq-box>
+</ui-card>
+```
+
+| Axis | Tokens | Notes |
+|---|---|---|
+| position | `beacon(ts…be)` | 9-cell furniture grid; default `bs` (coexists with the chip's `ts`) |
+| hue | `beacon(red\|orange\|green\|blue\|accent\|white\|gray\|slate\|black)` | same `--ui-theme-*` bundles as `chip()`/`sticker()` |
+| variant | `beacon(pll)` pill · `beacon(sld)` solid | over imagery prefer these — the bare dot has no contrast plate |
+| animation | `beacon(bln)` blink · `beacon(pls)` pulse · `beacon(brt)` breathe · `beacon(non)` off | solid defaults to blink |
+| size | `beacon(xs\|sm\|md\|lg)` | same em scale as the `size=` attribute |
+
+As furniture the beacon is **marker-class** (like chip/sticker): valid inside a
+reveal `<summary>`, never rendered with the click-to-pause checkbox (the web
+component skips it inside `ui-media`/`summary`); pausing still works via
+`prefers-reduced-motion` and the `paused` attribute. The `ticker` variant is
+attribute-driven (`variant="ticker"`) and not part of the furniture token set.
+
 ---
 
 ## Pause behavior

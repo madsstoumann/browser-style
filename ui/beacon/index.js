@@ -37,6 +37,10 @@ class UiBeacon extends HTMLElement {
 	}
 
 	shouldHavePauseToggle() {
+		// as card furniture (inside ui-media) or on a reveal front face (inside
+		// summary) the beacon is a MARKER — never inject the interactive
+		// click-to-pause checkbox there ([paused] + reduced-motion still work)
+		if (this.closest('ui-media, summary')) return false;
 		const variant = this.getAttribute('variant') || '';
 		if (variant.includes('solid')) return true;
 		const animation = this.getAttribute('animation');

@@ -1,8 +1,13 @@
 /**
  * ui-beacon
- * @version 4.1.0
- * @date 2026-04-27
+ * @version 4.2.0
+ * @date 2026-07-20
  * @author Mads Stoumann
+ *
+ * Colour: color= (semantic) · theme= (shared axis, base/theme.css) ·
+ * beacon(<hue>) card token (--ui-theme-* bundles, aligned with chip/sticker).
+ * Card tokens (media=): position beacon(ts…be) lives in ui/card/media.css;
+ * hue/size/variant/animation dual arms live here next to their attribute twins.
  */
 @layer bs-component {
 	:where(ui-beacon) {
@@ -41,57 +46,80 @@
 		&[color="success"] { --ui-beacon-bg: var(--color-success); }
 		&[color="warning"] { --ui-beacon-bg: var(--color-warning); }
 		&[color="error"]   { --ui-beacon-bg: var(--color-error); }
+
+		/* ───────── Furniture axes — theme · hue (aligned with ui-chip/ui-sticker) ─────────
+		   Each axis: `&[attr]` = standalone, `:where([media*="beacon(…)"]) &` = card token.
+		   --ui-beacon-bg is the single colour input (dot / pill accent / solid fill);
+		   --ui-beacon-ink is the label ink on the solid/ticker face (default white).
+		   Standalone theme= resolves via base/theme.css into --_theme-* (incl. the
+		   pale/muted modifiers; light/dark set color-scheme on the beacon directly).
+		   Card-routed media="beacon(<hue>)" feeds the --ui-theme-* bundle — same
+		   vocabulary as chip(<hue>)/sticker(<hue>). Declared after color= so a theme
+		   or hue wins when both are present. */
+		&[theme] { --ui-beacon-bg: var(--_theme-bg); --ui-beacon-ink: var(--_theme-c, var(--_theme-ink)); }
+		:where([media*="beacon(red)"])    & { --ui-beacon-bg: var(--ui-theme-red-bg);    --ui-beacon-ink: var(--ui-theme-red-c); }
+		:where([media*="beacon(orange)"]) & { --ui-beacon-bg: var(--ui-theme-orange-bg); --ui-beacon-ink: var(--ui-theme-orange-c); }
+		:where([media*="beacon(green)"])  & { --ui-beacon-bg: var(--ui-theme-green-bg);  --ui-beacon-ink: var(--ui-theme-green-c); }
+		:where([media*="beacon(blue)"])   & { --ui-beacon-bg: var(--ui-theme-blue-bg);   --ui-beacon-ink: var(--ui-theme-blue-c); }
+		:where([media*="beacon(accent)"]) & { --ui-beacon-bg: var(--ui-theme-accent-bg); --ui-beacon-ink: var(--ui-theme-accent-c); }
+		:where([media*="beacon(gray)"])   & { --ui-beacon-bg: var(--ui-theme-gray-bg);   --ui-beacon-ink: var(--ui-theme-gray-c); }
+		:where([media*="beacon(slate)"])  & { --ui-beacon-bg: var(--ui-theme-slate-bg);  --ui-beacon-ink: var(--ui-theme-slate-c); }
+		:where([media*="beacon(black)"])  & { --ui-beacon-bg: var(--ui-theme-black-bg);  --ui-beacon-ink: var(--ui-theme-black-c); }
+		:where([media*="beacon(white)"])  & { --ui-beacon-bg: var(--ui-theme-white-bg);  --ui-beacon-ink: var(--ui-theme-white-c); }
 	}
 
-	/* sizes — em-based, aligned 1:1 with ui-chip; dot tracks font-size */
-	:where(ui-beacon[size="xs"]) { --ui-beacon-font-size: 0.5em; }
-	:where(ui-beacon[size="sm"]) { --ui-beacon-font-size: 0.625em; }
-	:where(ui-beacon[size="md"]) { --ui-beacon-font-size: 0.875em; }
-	:where(ui-beacon[size="lg"]) { --ui-beacon-font-size: 1em; }
+	/* sizes — em-based, aligned 1:1 with ui-chip; dot tracks font-size.
+	   Dual arms: size= standalone, beacon(<size>) as a card token. */
+	:where(ui-beacon[size="xs"], [media*="beacon(xs)"] ui-beacon) { --ui-beacon-font-size: 0.5em; }
+	:where(ui-beacon[size="sm"], [media*="beacon(sm)"] ui-beacon) { --ui-beacon-font-size: 0.625em; }
+	:where(ui-beacon[size="md"], [media*="beacon(md)"] ui-beacon) { --ui-beacon-font-size: 0.875em; }
+	:where(ui-beacon[size="lg"], [media*="beacon(lg)"] ui-beacon) { --ui-beacon-font-size: 1em; }
 
-	/* === Animations target the dot (::before) for default + pill variants === */
-	:where(ui-beacon[animation="blink"])::before {
+	/* === Animations target the dot (::before) for default + pill variants ===
+	   Dual arms: animation= standalone, beacon(bln|pls|brt|non) as a card token. */
+	:where(ui-beacon[animation="blink"], [media*="beacon(bln)"] ui-beacon)::before {
 		animation: beacon-blink var(--ui-beacon-blink-duration) infinite;
 	}
-	:where(ui-beacon[animation="pulse"]) {
+	:where(ui-beacon[animation="pulse"], [media*="beacon(pls)"] ui-beacon) {
 		/* pulse looks best with a small inner dot — the box-shadow ring expands outward */
 		--ui-beacon-size: 0.5em;
 	}
-	:where(ui-beacon[animation="pulse"])::before {
+	:where(ui-beacon[animation="pulse"], [media*="beacon(pls)"] ui-beacon)::before {
 		animation: beacon-pulse var(--ui-beacon-pulse-duration) ease-out infinite;
 	}
-	:where(ui-beacon[animation="breathe"])::before {
+	:where(ui-beacon[animation="breathe"], [media*="beacon(brt)"] ui-beacon)::before {
 		animation: beacon-breathe var(--ui-beacon-breathe-duration) ease-in-out infinite;
 	}
 
 	/* === Pill variant — chip-like, tinted bg + accent dot === */
-	:where(ui-beacon[variant~="pill"]) {
+	:where(ui-beacon[variant~="pill"], [media*="beacon(pll)"] ui-beacon) {
 		background: color-mix(in oklch, var(--ui-beacon-bg) 15%, var(--color-surface));
 		border-radius: var(--radius-pill);
 		padding: 0.4em 0.9em 0.4em 0.7em;
 	}
 
-	/* === Solid variant — original ui-blink: filled pill, no inner dot === */
-	:where(ui-beacon[variant~="solid"]) {
+	/* === Solid variant — original ui-blink: filled pill, no inner dot.
+	   Label ink = --ui-beacon-ink (white default; theme/hue supplies the pair). === */
+	:where(ui-beacon[variant~="solid"], [media*="beacon(sld)"] ui-beacon) {
 		background: var(--ui-beacon-bg);
 		border-radius: var(--radius-sm);
-		color: hsl(0, 0%, 100%);
+		color: var(--ui-beacon-ink, hsl(0, 0%, 100%));
 		padding: 0.33em 0.8em;
 
 		&::before { display: none; }
 
 		/* default to blink (matches original ui-blink) */
 		&,
-		&[animation="blink"] {
+		&[animation="blink"], :where([media*="beacon(bln)"]) & {
 			animation: beacon-blink var(--ui-beacon-blink-duration) infinite;
 		}
-		&[animation="pulse"] {
+		&[animation="pulse"], :where([media*="beacon(pls)"]) & {
 			animation: beacon-pulse var(--ui-beacon-pulse-duration) ease-out infinite;
 		}
-		&[animation="breathe"] {
+		&[animation="breathe"], :where([media*="beacon(brt)"]) & {
 			animation: beacon-breathe var(--ui-beacon-breathe-duration) ease-in-out infinite;
 		}
-		&[animation="none"] { animation: none; }
+		&[animation="none"], :where([media*="beacon(non)"]) & { animation: none; }
 	}
 
 	/* === Ticker variant — original ui-live === */
@@ -106,7 +134,7 @@
 			align-items: center;
 			animation: beacon-slide var(--ui-beacon-slide-duration) infinite linear;
 			background: var(--ui-beacon-bg);
-			color: hsl(0, 0%, 100%);
+			color: var(--ui-beacon-ink, hsl(0, 0%, 100%));
 			display: flex;
 			gap: 1ch;
 			padding: 0.25ch 1.5ch;

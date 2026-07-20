@@ -18,6 +18,10 @@
     "furniture": {
       "chip": {
         "text": "rds(sm)"
+      },
+      "beacon": {
+        "text": "LIVE",
+        "style": "sld red bln"
       }
     },
     "media": [

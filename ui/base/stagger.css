@@ -125,8 +125,8 @@
 		   it can't group a page of flat cards under one snap target (pages makes only
 		   the page-start a snap target). It uses adapter 3 (scroll-driven) instead. */
 		/* the slide is the scroll-state container (snap target); exclude furniture */
-		:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) ui-media > :not(ui-chip, ui-play, ui-save, ui-sticker),
-		ui-media:where([media*="stagger"]) > :not(ui-chip, ui-play, ui-save, ui-sticker) {
+		:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) ui-media > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker),
+		ui-media:where([media*="stagger"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker) {
 			container-type: scroll-state;
 		}
 		/* multi-card slide: give each card its column index (inherits to its content) */

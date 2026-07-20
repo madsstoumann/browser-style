@@ -121,30 +121,31 @@
 	/* hov() hover effects live in media.hover.css (imported by ui-card.css). */
 
 	/* ============================================================
-		 OVERLAY FURNITURE — <ui-chip> <ui-sticker> <ui-save> <ui-play>
+		 OVERLAY FURNITURE — <ui-chip> <ui-sticker> <ui-save> <ui-play> <ui-beacon>
 		 Absolute-positioned; default area by role, override via media= token.
 		 ============================================================ */
-	:where(ui-media) :is(ui-chip, ui-play, ui-save, ui-sticker) {
+	:where(ui-media) :is(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker) {
 		--_g: var(--ui-media-overlay-gap, 0.75rem);
 		position: absolute;
 		z-index: 2;
 	}
 
-	/* default area by role */
+	/* default area by role — beacon takes bs so it can coexist with the ts chip */
 	:where(ui-media) ui-chip                     { inset-block-start: var(--_g); inset-inline-start: var(--_g); }   /* ts */
 	:where(ui-media) :is(ui-sticker, ui-save)    { inset-block-start: var(--_g); inset-inline-end:   var(--_g); }   /* te */
+	:where(ui-media) ui-beacon                    { inset-block-end: var(--_g); inset-inline-start: var(--_g); }    /* bs */
 	:where(ui-media) ui-play                      { inset-block-start: 50%; inset-inline-start: 50%; translate: -50% -50%; } /* cc */
 
-	/* position override — media="el(pos)"; 9 logical positions × chip/sticker/save/play */
-	:where([media*="chip(ts)"]) ui-chip, :where([media*="sticker(ts)"]) ui-sticker, :where([media*="save(ts)"]) ui-save, :where([media*="play(ts)"]) ui-play { inset-block: var(--_g) auto; inset-inline: var(--_g) auto; translate: none; }
-	:where([media*="chip(tc)"]) ui-chip, :where([media*="sticker(tc)"]) ui-sticker, :where([media*="save(tc)"]) ui-save, :where([media*="play(tc)"]) ui-play { inset-block: var(--_g) auto; inset-inline: 50% auto; translate: -50% 0; }
-	:where([media*="chip(te)"]) ui-chip, :where([media*="sticker(te)"]) ui-sticker, :where([media*="save(te)"]) ui-save, :where([media*="play(te)"]) ui-play { inset-block: var(--_g) auto; inset-inline: auto var(--_g); translate: none; }
-	:where([media*="chip(cs)"]) ui-chip, :where([media*="sticker(cs)"]) ui-sticker, :where([media*="save(cs)"]) ui-save, :where([media*="play(cs)"]) ui-play { inset-block: 50% auto; inset-inline: var(--_g) auto; translate: 0 -50%; }
-	:where([media*="chip(cc)"]) ui-chip, :where([media*="sticker(cc)"]) ui-sticker, :where([media*="save(cc)"]) ui-save, :where([media*="play(cc)"]) ui-play { inset-block: 50% auto; inset-inline: 50% auto; translate: -50% -50%; }
-	:where([media*="chip(ce)"]) ui-chip, :where([media*="sticker(ce)"]) ui-sticker, :where([media*="save(ce)"]) ui-save, :where([media*="play(ce)"]) ui-play { inset-block: 50% auto; inset-inline: auto var(--_g); translate: 0 -50%; }
-	:where([media*="chip(bs)"]) ui-chip, :where([media*="sticker(bs)"]) ui-sticker, :where([media*="save(bs)"]) ui-save, :where([media*="play(bs)"]) ui-play { inset-block: auto var(--_g); inset-inline: var(--_g) auto; translate: none; }
-	:where([media*="chip(bc)"]) ui-chip, :where([media*="sticker(bc)"]) ui-sticker, :where([media*="save(bc)"]) ui-save, :where([media*="play(bc)"]) ui-play { inset-block: auto var(--_g); inset-inline: 50% auto; translate: -50% 0; }
-	:where([media*="chip(be)"]) ui-chip, :where([media*="sticker(be)"]) ui-sticker, :where([media*="save(be)"]) ui-save, :where([media*="play(be)"]) ui-play { inset-block: auto var(--_g); inset-inline: auto var(--_g); translate: none; }
+	/* position override — media="el(pos)"; 9 logical positions × chip/sticker/save/play/beacon */
+	:where([media*="chip(ts)"]) ui-chip, :where([media*="sticker(ts)"]) ui-sticker, :where([media*="save(ts)"]) ui-save, :where([media*="play(ts)"]) ui-play, :where([media*="beacon(ts)"]) ui-beacon { inset-block: var(--_g) auto; inset-inline: var(--_g) auto; translate: none; }
+	:where([media*="chip(tc)"]) ui-chip, :where([media*="sticker(tc)"]) ui-sticker, :where([media*="save(tc)"]) ui-save, :where([media*="play(tc)"]) ui-play, :where([media*="beacon(tc)"]) ui-beacon { inset-block: var(--_g) auto; inset-inline: 50% auto; translate: -50% 0; }
+	:where([media*="chip(te)"]) ui-chip, :where([media*="sticker(te)"]) ui-sticker, :where([media*="save(te)"]) ui-save, :where([media*="play(te)"]) ui-play, :where([media*="beacon(te)"]) ui-beacon { inset-block: var(--_g) auto; inset-inline: auto var(--_g); translate: none; }
+	:where([media*="chip(cs)"]) ui-chip, :where([media*="sticker(cs)"]) ui-sticker, :where([media*="save(cs)"]) ui-save, :where([media*="play(cs)"]) ui-play, :where([media*="beacon(cs)"]) ui-beacon { inset-block: 50% auto; inset-inline: var(--_g) auto; translate: 0 -50%; }
+	:where([media*="chip(cc)"]) ui-chip, :where([media*="sticker(cc)"]) ui-sticker, :where([media*="save(cc)"]) ui-save, :where([media*="play(cc)"]) ui-play, :where([media*="beacon(cc)"]) ui-beacon { inset-block: 50% auto; inset-inline: 50% auto; translate: -50% -50%; }
+	:where([media*="chip(ce)"]) ui-chip, :where([media*="sticker(ce)"]) ui-sticker, :where([media*="save(ce)"]) ui-save, :where([media*="play(ce)"]) ui-play, :where([media*="beacon(ce)"]) ui-beacon { inset-block: 50% auto; inset-inline: auto var(--_g); translate: 0 -50%; }
+	:where([media*="chip(bs)"]) ui-chip, :where([media*="sticker(bs)"]) ui-sticker, :where([media*="save(bs)"]) ui-save, :where([media*="play(bs)"]) ui-play, :where([media*="beacon(bs)"]) ui-beacon { inset-block: auto var(--_g); inset-inline: var(--_g) auto; translate: none; }
+	:where([media*="chip(bc)"]) ui-chip, :where([media*="sticker(bc)"]) ui-sticker, :where([media*="save(bc)"]) ui-save, :where([media*="play(bc)"]) ui-play, :where([media*="beacon(bc)"]) ui-beacon { inset-block: auto var(--_g); inset-inline: 50% auto; translate: -50% 0; }
+	:where([media*="chip(be)"]) ui-chip, :where([media*="sticker(be)"]) ui-sticker, :where([media*="save(be)"]) ui-save, :where([media*="play(be)"]) ui-play, :where([media*="beacon(be)"]) ui-beacon { inset-block: auto var(--_g); inset-inline: auto var(--_g); translate: none; }
 
 	/* per-slide video control (nested frame) — always centered, wins over play() furniture */
 	ui-media ui-media > ui-play {

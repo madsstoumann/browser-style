@@ -304,7 +304,7 @@
     "furniture": {
       "type": "object",
       "title": "Furniture",
-      "description": "Overlay elements placed on top of the media area: a chip label, a sticker callout, a save/favorite toggle and a play affordance. This model carries only their TEXT/semantic content — position, hue, size and shape are set in the preset's media= token string (chip/sticker/save/play tokens), optionally overridden per item via 'style'.",
+      "description": "Overlay elements placed on top of the media area: a chip label, a beacon (live/status indicator), a sticker callout, a save/favorite toggle and a play affordance. This model carries only their TEXT/semantic content — position, hue, size and shape are set in the preset's media= token string (chip/sticker/save/play/beacon tokens), optionally overridden per item via 'style'.",
       "properties": {
         "chip": {
           "type": "object",
@@ -325,6 +325,23 @@
               "title": "Style override",
               "localized": false,
               "description": "Extra chip() tokens appended after the preset, e.g. \"red\" or \"bs red\". Overrides the preset for the same axis (position/hue)."
+            }
+          }
+        },
+        "beacon": {
+          "type": "object",
+          "title": "Beacon",
+          "description": "Live/status indicator overlaid on the media (<ui-beacon>) — the animated counterpart to the static chip (e.g. LIVE, REC, Breaking). Marker-class: rendered text-only, no click-to-pause toggle; pausing still works via prefers-reduced-motion and the paused attribute.",
+          "properties": {
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "style": {
+              "type": "string",
+              "title": "Style override",
+              "localized": false,
+              "description": "Extra beacon() tokens appended after the preset, e.g. \"red sld bln\" or \"ts pll\". Axes: position (ts…be) · hue (red…white) · variant (pll pill | sld solid) · animation (bln blink | pls pulse | brt breathe | non none) · size (xs sm md lg). Overrides the preset for the same axis."
             }
           }
         },
