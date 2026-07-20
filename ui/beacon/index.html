@@ -9,7 +9,6 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-beacon.css">
-	<script type="module" src="index.js"></script>
 	<style>
 		.row { align-items: center; display: flex; flex-wrap: wrap; gap: 1.25rem; margin-block-end: 0.75rem; }
 		.row > span { color: var(--color-text-light); font-size: var(--font-size-xs); min-width: 5ch; }
@@ -79,7 +78,7 @@
 
 	<hr>
 	<h2>Pill variant</h2>
-	<p>Chip-style tinted background with a colored dot inside. Click to pause animation.</p>
+	<p>Chip-style tinted background with a colored dot inside.</p>
 	<div class="row">
 		<ui-beacon variant="pill" color="error" animation="blink">Live</ui-beacon>
 		<ui-beacon variant="pill" color="success" animation="pulse">Online</ui-beacon>
@@ -89,7 +88,7 @@
 
 	<hr>
 	<h2>Solid variant</h2>
-	<p>The classic blinking pill — solid colored background with white text. Defaults to blink animation. Click to pause.</p>
+	<p>The classic blinking pill — solid colored background with white text. Defaults to blink animation.</p>
 	<div class="row">
 		<ui-beacon variant="solid">Live now</ui-beacon>
 		<ui-beacon variant="solid" color="info">News</ui-beacon>
@@ -150,7 +149,7 @@
 
 	<hr>
 	<h2>CSS-only authoring</h2>
-	<p>Without the JS module, author the markup directly. Bare dots need no inner markup; only the ticker needs inner structure.</p>
+	<p>Every face is markup-free — plain text content only. No JavaScript, no inner elements: the ticker's sliding panel and dot loader are pseudo-elements riding one registered animation clock.</p>
 
 	<h3>Bare dot</h3>
 	<ui-beacon animation="blink" color="error"></ui-beacon>
@@ -159,9 +158,7 @@
 	<ui-beacon variant="solid" color="error">LIVE</ui-beacon>
 
 	<h3>Ticker</h3>
-	<ui-beacon variant="ticker" color="error">
-		<span>Live <i></i></span>
-	</ui-beacon>
+	<ui-beacon variant="ticker" color="error">Live</ui-beacon>
 
 	<hr>
 	<h2>Token customization</h2>

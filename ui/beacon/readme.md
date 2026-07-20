@@ -1,6 +1,6 @@
 # @browser.style/beacon
 
-A CSS-first status indicator. Four layout variants (bare dot, pill, solid, ticker) and three animation modes (blink, pulse, breathe). Visually aligned with `@browser.style/badge` and `@browser.style/chip` — same semantic colors, same size scale, same shape tokens.
+A CSS-only status indicator — zero JavaScript. Four layout variants (bare dot, pill, solid, ticker) and three animation modes (blink, pulse, breathe). Visually aligned with `@browser.style/badge` and `@browser.style/chip` — same semantic colors, same size scale, same shape tokens.
 
 ## Features
 
@@ -13,7 +13,7 @@ A CSS-first status indicator. Four layout variants (bare dot, pill, solid, ticke
 - **Sizes**: `xs`, `sm`, `md`, `lg`
 - **Semantic colors**: `info`, `success`, `warning`, `error`
 - Light/dark mode via design tokens
-- Works as plain CSS or as a `<ui-beacon>` web component (light DOM, no Shadow DOM)
+- **Zero JavaScript, markup-free** — every face is plain text content; the ticker's sliding panel and dot loader are pseudo-elements driven by one registered `@property` animation clock
 
 ---
 
@@ -53,27 +53,20 @@ Solid / pill need no inner markup either:
 <ui-beacon variant="solid" color="error">LIVE</ui-beacon>
 ```
 
-Ticker needs a manual `<span>` and `<i>`:
+The ticker too — no inner markup:
 
 ```html
-<ui-beacon variant="ticker" color="error">
-  <span>Live <i></i></span>
-</ui-beacon>
-```
-
-### Web component
-
-```js
-import '@browser.style/beacon';
-```
-
-The component auto-renders the ticker's inner structure (everything else is pure CSS):
-
-```html
-<ui-beacon color="error" animation="blink">Recording</ui-beacon>
-<ui-beacon variant="solid" color="error">LIVE</ui-beacon>
 <ui-beacon variant="ticker" color="error">Live</ui-beacon>
 ```
+
+### How the markup-free ticker works
+
+Transforms can't move inline text and CSS can't wrap a text node — but
+`text-indent` is animatable. One registered `@property --_slide` percentage,
+animated by a single host animation, drives the text (`text-indent`), the
+colored panel (`::before` translate) and the dot loader (`::after` translate)
+in frame-perfect sync; a paired `--_fade` and a `color` flip in the same
+keyframes handle the wrap-around jump. There is no JavaScript in this package.
 
 ---
 
@@ -205,14 +198,9 @@ As furniture the beacon is **marker-class** (like chip/sticker): plain
 non-interactive markup, valid inside a reveal `<summary>`. Animations are
 reduced-motion-gated like everywhere else; `paused` still works.
 
-**Ticker as furniture — `beacon(tck)`** — ticker styling is a normal card
-token (dual arm with the standalone `variant="ticker"` attribute), but it is
-the one face that needs inner *markup* (`<span>label <i></i></span>`), which
-CSS cannot create. The markup comes from whichever layer renders the card:
-the SSR renderer emits it when `tck` is in the beacon tokens; the web
-component builds it when it sees `beacon(tck)` in its media scope (same
-precedent as carousel.js building `loop` clones); CSS-only pages hand-author
-the span. Without the span the face degrades to a static tinted label.
+**Ticker as furniture — `beacon(tck)`** — a normal card token (dual arm with
+the standalone `variant="ticker"` attribute), markup-free like every other
+face: `<ui-beacon>Live</ui-beacon>` plus the token is all it takes.
 
 ---
 
@@ -268,7 +256,6 @@ beacon.toggleAttribute('paused');
 ### React
 
 ```jsx
-import '@browser.style/beacon';
 import '@browser.style/base';
 import '@browser.style/beacon/style';
 
@@ -280,7 +267,6 @@ import '@browser.style/beacon/style';
 
 ```vue
 <script setup>
-import '@browser.style/beacon';
 import '@browser.style/base';
 import '@browser.style/beacon/style';
 </script>
@@ -300,8 +286,7 @@ import '@browser.style/beacon/style';
 
 ```svelte
 <script>
-  import '@browser.style/beacon';
-  import '@browser.style/base';
+    import '@browser.style/base';
   import '@browser.style/beacon/style';
 </script>
 

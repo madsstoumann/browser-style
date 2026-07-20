@@ -1,14 +1,25 @@
 /**
  * ui-beacon
- * @version 4.2.0
+ * @version 4.3.0
  * @date 2026-07-20
  * @author Mads Stoumann
  *
  * Colour: color= (semantic) · theme= (shared axis, base/theme.css) ·
  * beacon(<hue>) card token (--ui-theme-* bundles, aligned with chip/sticker).
  * Card tokens (media=): position beacon(ts…be) lives in ui/card/media.css;
- * hue/size/variant/animation dual arms live here next to their attribute twins.
+ * hue/size/face/animation dual arms live here next to their attribute twins.
+ * Zero JavaScript — every face incl. the ticker is markup-free CSS.
  */
+
+/* Ticker animation clock — ONE registered property pair, animated by a single
+   host animation and consumed by the text (text-indent), the panel (::before
+   translate/opacity) and the dot loader (::after translate/opacity). A shared
+   inherited property is what makes the markup-free ticker possible: transforms
+   can't move inline text and CSS can't wrap a text node, but text-indent is
+   animatable — driving it and the pseudos from the same interpolated value
+   keeps all three in frame-perfect sync (no parallel-keyframes drift). */
+@property --_slide { syntax: "<percentage>"; inherits: true; initial-value: 0%; }
+@property --_fade  { syntax: "<number>"; inherits: true; initial-value: 1; }
 @layer bs-component {
 	:where(ui-beacon) {
 		--ui-beacon-bg: var(--color-text);
@@ -131,27 +142,41 @@
 	}
 
 	/* === Ticker variant — original ui-live. Dual arm like the other faces:
-	   variant="ticker" standalone, beacon(tck) as the card token. The inner
-	   <span>label <i></i></span> markup comes from the renderer / web component
-	   / hand-authoring (CSS can't wrap text); without it the face degrades to a
-	   static tinted label on the track. === */
+	   variant="ticker" standalone, beacon(tck) as the card token. MARKUP-FREE:
+	   plain text content only — the host is the clipping track (text rides on
+	   animated text-indent), ::before is the sliding colored panel, ::after is
+	   the 3-dot loader; all three consume the same --_slide/--_fade clock (see
+	   the @property registrations at the top). Not inline-flex: text-indent
+	   only applies to block containers, so the face is inline-block. === */
 	:where(ui-beacon[variant~="ticker"], [media*="beacon(tck)"] ui-beacon) {
 		background: var(--ui-beacon-track-bg, color-mix(in oklch, var(--ui-beacon-bg) 15%, var(--color-surface)));
+		color: var(--ui-beacon-ink, hsl(0, 0%, 100%));
+		display: inline-block;
+		isolation: isolate; /* keeps the panel's z-index:-1 above the track bg, below the text */
 		overflow: hidden;
-		padding: 0;
+		padding: 0.25ch 1.5ch;
+		padding-inline-end: calc(1.5ch + 1ch + 1.4em); /* reserve the dot-loader area */
+		/* containing block for the inset:0 pseudos — without it the panel escapes
+		   to the viewport. (In furniture context media.css's absolute wins, 0-0-1.) */
+		position: relative;
+		text-indent: var(--_slide);
 
-		&::before { display: none; }
-
-		& > span {
-			align-items: center;
+		/* sliding colored panel (replaces the old <span> face) */
+		&::before {
 			background: var(--ui-beacon-bg);
-			color: var(--ui-beacon-ink, hsl(0, 0%, 100%));
-			display: flex;
-			gap: 1ch;
-			padding: 0.25ch 1.5ch;
+			border-radius: 0;
+			content: "";
+			height: auto;
+			inset: 0;
+			opacity: var(--_fade);
+			position: absolute;
+			translate: var(--_slide) 0;
+			width: auto;
+			z-index: -1;
 		}
 
-		& i {
+		/* 3-dot loader (replaces the old <i>) — currentColor, pinned inline-end */
+		&::after {
 			--_g: no-repeat radial-gradient(circle closest-side, currentColor 90%, transparent);
 			aspect-ratio: 4 / 1;
 			background:
@@ -159,13 +184,19 @@
 				var(--_g) 50% 50%,
 				var(--_g) 100% 50%;
 			background-size: calc(100%/3) 100%;
-			display: block;
+			content: "";
+			inset-block: 0;
+			inset-inline-end: 1.5ch;
+			margin-block: auto;
+			opacity: var(--_fade);
+			position: absolute;
+			translate: var(--_slide) 0;
 			width: 1.4em;
 		}
 
 		@media (prefers-reduced-motion: no-preference) {
-			& > span { animation: beacon-slide var(--ui-beacon-slide-duration) infinite linear; }
-			& i { animation: beacon-dots 1.5s infinite linear; }
+			& { animation: beacon-slide var(--ui-beacon-slide-duration) infinite linear; }
+			&::after { animation: beacon-dots 1.5s infinite linear; }
 		}
 	}
 
@@ -177,9 +208,8 @@
 	   an all-:where() form would lose to an explicit animation attribute. */
 	:where(ui-beacon)[paused],
 	:where(ui-beacon)[paused]::before,
-	:where(ui-beacon)[paused] > span {
+	:where(ui-beacon)[paused]::after {
 		animation-play-state: paused;
-		opacity: 1;
 	}
 
 	/* === Keyframes === */
@@ -193,13 +223,19 @@
 	@keyframes beacon-breathe {
 		50% { transform: scale(0.8); opacity: 0.6; }
 	}
+	/* Runs on the ticker HOST, animating the shared clock (--_slide/--_fade)
+	   plus the text ink. ±120% overshoots ±100% because text-indent resolves
+	   against the content box while the pseudos' translate resolves against
+	   their border box — the overshoot absorbs the difference off-screen.
+	   color mirrors --_fade for the text itself (host opacity would fade the
+	   track too); dots follow via currentColor. */
 	@keyframes beacon-slide {
-		70%  { opacity: 1; translate: 0 0; }
-		80%  { translate: -100% 0; }
-		81%  { opacity: 0; translate: 100% 0; }
-		82%  { opacity: 1; }
-		90%  { translate: 100% 0; }
-		100% { translate: 0 0; }
+		70%  { --_slide: 0%; --_fade: 1; color: var(--ui-beacon-ink, hsl(0, 0%, 100%)); }
+		80%  { --_slide: -120%; }
+		81%  { --_slide: 120%; --_fade: 0; color: transparent; }
+		82%  { --_fade: 1; color: var(--ui-beacon-ink, hsl(0, 0%, 100%)); }
+		90%  { --_slide: 120%; }
+		100% { --_slide: 0%; }
 	}
 	@keyframes beacon-dots {
 		33% { background-size: calc(100%/3) 0%,   calc(100%/3) 100%, calc(100%/3) 100%; }
