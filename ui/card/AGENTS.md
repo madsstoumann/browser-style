@@ -36,7 +36,7 @@ They compose inside a host — `<ui-card>` (static) or `<ui-reveal>` (disclosure
 | `<ui-content>` | no | text column |
 | `<ui-reveal>` | no | disclosure host built on `<details>/<summary>` (`ui/reveal`) |
 | `<ui-face>` | no | front-face wrapper inside `<summary>` for flip/scale/slide |
-| `<ui-chip>`, `<ui-sticker>`, `<ui-beacon>` | no* | marker furniture (labels/badges/live indicators on media) — own packages `ui/chip`, `ui/sticker`, `ui/beacon` (*beacon ships an optional WC for ticker/pause markup; as furniture it renders CSS-only) |
+| `<ui-chip>`, `<ui-sticker>`, `<ui-beacon>` | no* | marker furniture (labels/badges/live indicators on media) — own packages `ui/chip`, `ui/sticker`, `ui/beacon` (*beacon ships an optional WC for ticker markup only; as furniture it renders CSS-only) |
 | `<ui-save>`, `<ui-play>` | no | interactive furniture — `ui/save`, `ui/play` |
 | `<ui-icon>` | no | reveal toggle icon — `ui/icon` |
 

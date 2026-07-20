@@ -331,7 +331,7 @@
         "beacon": {
           "type": "object",
           "title": "Beacon",
-          "description": "Live/status indicator overlaid on the media (<ui-beacon>) — the animated counterpart to the static chip (e.g. LIVE, REC, Breaking). Marker-class: rendered text-only, no click-to-pause toggle; pausing still works via prefers-reduced-motion and the paused attribute.",
+          "description": "Live/status indicator overlaid on the media (<ui-beacon>) — the animated counterpart to the static chip (e.g. LIVE, REC, Breaking). Marker-class: rendered text-only. Animations are gated behind prefers-reduced-motion: no-preference; the paused attribute freezes a running one.",
           "properties": {
             "text": {
               "type": "string",

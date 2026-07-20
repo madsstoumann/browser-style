@@ -76,19 +76,25 @@
 	:where(ui-beacon[size="lg"], [media*="beacon(lg)"] ui-beacon) { --ui-beacon-font-size: 1em; }
 
 	/* === Animations target the dot (::before) for default + pill variants ===
-	   Dual arms: animation= standalone, beacon(bln|pls|brt|non) as a card token. */
-	:where(ui-beacon[animation="blink"], [media*="beacon(bln)"] ui-beacon)::before {
-		animation: beacon-blink var(--ui-beacon-blink-duration) infinite;
-	}
-	:where(ui-beacon[animation="pulse"], [media*="beacon(pls)"] ui-beacon) {
-		/* pulse looks best with a small inner dot — the box-shadow ring expands outward */
-		--ui-beacon-size: 0.5em;
-	}
-	:where(ui-beacon[animation="pulse"], [media*="beacon(pls)"] ui-beacon)::before {
-		animation: beacon-pulse var(--ui-beacon-pulse-duration) ease-out infinite;
-	}
-	:where(ui-beacon[animation="breathe"], [media*="beacon(brt)"] ui-beacon)::before {
-		animation: beacon-breathe var(--ui-beacon-breathe-duration) ease-in-out infinite;
+	   Dual arms: animation= standalone, beacon(bln|pls|brt|non) as a card token.
+	   MOTION IS OPT-IN at the system level: every animation in this file is
+	   gated behind prefers-reduced-motion: no-preference, so reduced-motion
+	   users get a static beacon with zero per-instance wiring (no click-to-
+	   pause checkbox needed). [paused] still freezes a running animation. */
+	@media (prefers-reduced-motion: no-preference) {
+		:where(ui-beacon[animation="blink"], [media*="beacon(bln)"] ui-beacon)::before {
+			animation: beacon-blink var(--ui-beacon-blink-duration) infinite;
+		}
+		:where(ui-beacon[animation="pulse"], [media*="beacon(pls)"] ui-beacon) {
+			/* pulse looks best with a small inner dot — the box-shadow ring expands outward */
+			--ui-beacon-size: 0.5em;
+		}
+		:where(ui-beacon[animation="pulse"], [media*="beacon(pls)"] ui-beacon)::before {
+			animation: beacon-pulse var(--ui-beacon-pulse-duration) ease-out infinite;
+		}
+		:where(ui-beacon[animation="breathe"], [media*="beacon(brt)"] ui-beacon)::before {
+			animation: beacon-breathe var(--ui-beacon-breathe-duration) ease-in-out infinite;
+		}
 	}
 
 	/* === Pill variant — chip-like, tinted bg + accent dot === */
@@ -108,18 +114,20 @@
 
 		&::before { display: none; }
 
-		/* default to blink (matches original ui-blink) */
-		&,
-		&[animation="blink"], :where([media*="beacon(bln)"]) & {
-			animation: beacon-blink var(--ui-beacon-blink-duration) infinite;
+		@media (prefers-reduced-motion: no-preference) {
+			/* default to blink (matches original ui-blink) */
+			&,
+			&[animation="blink"], :where([media*="beacon(bln)"]) & {
+				animation: beacon-blink var(--ui-beacon-blink-duration) infinite;
+			}
+			&[animation="pulse"], :where([media*="beacon(pls)"]) & {
+				animation: beacon-pulse var(--ui-beacon-pulse-duration) ease-out infinite;
+			}
+			&[animation="breathe"], :where([media*="beacon(brt)"]) & {
+				animation: beacon-breathe var(--ui-beacon-breathe-duration) ease-in-out infinite;
+			}
+			&[animation="none"], :where([media*="beacon(non)"]) & { animation: none; }
 		}
-		&[animation="pulse"], :where([media*="beacon(pls)"]) & {
-			animation: beacon-pulse var(--ui-beacon-pulse-duration) ease-out infinite;
-		}
-		&[animation="breathe"], :where([media*="beacon(brt)"]) & {
-			animation: beacon-breathe var(--ui-beacon-breathe-duration) ease-in-out infinite;
-		}
-		&[animation="none"], :where([media*="beacon(non)"]) & { animation: none; }
 	}
 
 	/* === Ticker variant — original ui-live === */
@@ -132,7 +140,6 @@
 
 		& > span {
 			align-items: center;
-			animation: beacon-slide var(--ui-beacon-slide-duration) infinite linear;
 			background: var(--ui-beacon-bg);
 			color: var(--ui-beacon-ink, hsl(0, 0%, 100%));
 			display: flex;
@@ -142,7 +149,6 @@
 
 		& i {
 			--_g: no-repeat radial-gradient(circle closest-side, currentColor 90%, transparent);
-			animation: beacon-dots 1.5s infinite linear;
 			aspect-ratio: 4 / 1;
 			background:
 				var(--_g) 0% 50%,
@@ -152,39 +158,24 @@
 			display: block;
 			width: 1.4em;
 		}
+
+		@media (prefers-reduced-motion: no-preference) {
+			& > span { animation: beacon-slide var(--ui-beacon-slide-duration) infinite linear; }
+			& i { animation: beacon-dots 1.5s infinite linear; }
+		}
 	}
 
-	/* === Pause hooks (declarative + checkbox + reduced-motion) === */
-	:where(ui-beacon[paused]),
-	:where(ui-beacon[paused])::before,
-	:where(ui-beacon[paused]) > span,
-	:where(ui-beacon):has(> label > input:checked),
-	:where(ui-beacon):has(> label > input:checked)::before,
-	:where(ui-beacon):has(> label > input:checked) > span {
+	/* === paused — declarative pause. (Reduced-motion users never start an
+	   animation at all: motion is gated behind no-preference above, so no
+	   reduce-block or per-instance click-to-pause wiring is needed.)
+	   [paused] sits OUTSIDE the :where() on purpose: 0-1-0 ties the strongest
+	   animation setter (&[animation="…"], also 0-1-0) and wins by source order —
+	   an all-:where() form would lose to an explicit animation attribute. */
+	:where(ui-beacon)[paused],
+	:where(ui-beacon)[paused]::before,
+	:where(ui-beacon)[paused] > span {
 		animation-play-state: paused;
 		opacity: 1;
-	}
-
-	/* label inside ui-beacon — undo form.css grid layout, keep clickable */
-	:where(ui-beacon) > label {
-		column-gap: 0;
-		cursor: pointer;
-		display: inline-flex;
-		place-items: center;
-		user-select: none;
-	}
-	:where(ui-beacon):has(> label > input:focus-visible) {
-		outline: var(--ring-width) solid var(--ring-color);
-		outline-offset: var(--ring-offset);
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		:where(ui-beacon),
-		:where(ui-beacon)::before,
-		:where(ui-beacon) > span,
-		:where(ui-beacon) i {
-			animation: none;
-		}
 	}
 
 	/* === Keyframes === */

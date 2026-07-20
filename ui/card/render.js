@@ -298,9 +298,9 @@ const buildFurniture = (furniture, fields, tokens, mediaId) => {
 		push('chip', chip.style);
 	}
 	if (furniture.beacon?.text) {
-		/* marker-class live/status indicator — text-only markup (no click-to-pause
-		   checkbox, so it stays valid inside a reveal <summary>); look comes from
-		   beacon(…) tokens: position/hue/size/variant (pll|sld)/animation (bln|pls|brt|non) */
+		/* marker-class live/status indicator — plain text-only markup (summary-
+		   safe); look comes from beacon(…) tokens: position/hue/size/variant
+		   (pll|sld)/animation (bln|pls|brt|non — reduced-motion-gated in CSS) */
 		const beacon = furniture.beacon;
 		html += `<ui-beacon>${esc(beacon.text)}</ui-beacon>`;
 		push('beacon', beacon.style);

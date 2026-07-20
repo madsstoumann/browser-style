@@ -9,7 +9,7 @@ A CSS-first status indicator. Four layout variants (bare dot, pill, solid, ticke
 - **Pill variant** — chip-style tinted background with inner dot
 - **Solid variant** — original `<blink>`-style filled label, defaults to blink
 - **Ticker variant** — sliding marquee with trailing 3-dot loader
-- **Three pause mechanisms**: `prefers-reduced-motion`, `paused` attribute, click-to-pause via inner checkbox
+- **Motion is opt-in**: every animation is gated behind `prefers-reduced-motion: no-preference` — reduced-motion users get a static beacon automatically; pause a running animation with the `paused` attribute
 - **Sizes**: `xs`, `sm`, `md`, `lg`
 - **Semantic colors**: `info`, `success`, `warning`, `error`
 - Light/dark mode via design tokens
@@ -47,12 +47,10 @@ Bare dots need no inner markup:
 <ui-beacon color="error" animation="blink">Recording</ui-beacon>
 ```
 
-Solid / pill with click-to-pause needs a manual `<label>`:
+Solid / pill need no inner markup either:
 
 ```html
-<ui-beacon variant="solid" color="error">
-  <label><input type="checkbox" data-sr><span>LIVE</span></label>
-</ui-beacon>
+<ui-beacon variant="solid" color="error">LIVE</ui-beacon>
 ```
 
 Ticker needs a manual `<span>` and `<i>`:
@@ -69,7 +67,7 @@ Ticker needs a manual `<span>` and `<i>`:
 import '@browser.style/beacon';
 ```
 
-The component auto-renders the inner structure for `solid`, `pill`, animated labels, and `ticker`:
+The component auto-renders the ticker's inner structure (everything else is pure CSS):
 
 ```html
 <ui-beacon color="error" animation="blink">Recording</ui-beacon>
@@ -203,27 +201,30 @@ one axis per token):
 | animation | `beacon(bln)` blink · `beacon(pls)` pulse · `beacon(brt)` breathe · `beacon(non)` off | solid defaults to blink |
 | size | `beacon(xs\|sm\|md\|lg)` | same em scale as the `size=` attribute |
 
-As furniture the beacon is **marker-class** (like chip/sticker): valid inside a
-reveal `<summary>`, never rendered with the click-to-pause checkbox (the web
-component skips it inside `ui-media`/`summary`); pausing still works via
-`prefers-reduced-motion` and the `paused` attribute. The `ticker` variant is
-attribute-driven (`variant="ticker"`) and not part of the furniture token set.
+As furniture the beacon is **marker-class** (like chip/sticker): plain
+non-interactive markup, valid inside a reveal `<summary>`. Animations are
+reduced-motion-gated like everywhere else; `paused` still works. The `ticker`
+variant is attribute-driven (`variant="ticker"`) and not part of the furniture
+token set.
 
 ---
 
 ## Pause behavior
 
-Three mechanisms, ordered from most to least automatic:
+Motion is **opt-in at the system level**: every animation lives inside
+`@media (prefers-reduced-motion: no-preference)`, so under
+`prefers-reduced-motion: reduce` no beacon animation ever starts (WCAG 2.3.1) —
+no per-instance wiring needed.
 
-1. **`prefers-reduced-motion: reduce`** — every beacon animation stops automatically (WCAG 2.3.1).
-2. **`paused` attribute** — declarative pause; toggleable from JS.
-   ```html
-   <ui-beacon variant="solid" color="error" paused>Paused</ui-beacon>
-   ```
-   ```js
-   beacon.toggleAttribute('paused');
-   ```
-3. **Click-to-pause** — animated labelled beacons render an inner `<label><input type="checkbox" data-sr><span>…</span></label>` so users can click to pause / resume. No JS handler needed; it relies on native label-click → checkbox-toggle → CSS `:has(input:checked)`.
+For everyone else, the **`paused` attribute** freezes a running animation
+declaratively; toggle it from JS:
+
+```html
+<ui-beacon variant="solid" color="error" paused>Paused</ui-beacon>
+```
+```js
+beacon.toggleAttribute('paused');
+```
 
 ---
 
@@ -235,7 +236,7 @@ Three mechanisms, ordered from most to least automatic:
 | `size` | `xs \| sm \| md \| lg` | Size scale (defaults to `md`) |
 | `animation` | `blink \| pulse \| breathe \| none` | Animation mode (defaults to none, except `solid` defaults to `blink`) |
 | `variant` | `pill \| solid \| ticker` | Layout variant (defaults to bare dot) |
-| `paused` | _(boolean)_ | Pause any active animation |
+| `paused` | _(boolean)_ | Pause any active animation (animations never start under reduced motion) |
 
 ---
 
@@ -317,9 +318,7 @@ import '@browser.style/beacon/style';
 
 ## Accessibility
 
-- All animations honour `prefers-reduced-motion: reduce` — no opt-in or media query authoring required.
-- Click-to-pause is keyboard accessible via the native `<label>` + `<input type="checkbox">` pattern (Space / Enter).
-- Focus ring shown on keyboard focus via `--ring-*` tokens.
+- Animations are opt-in behind `prefers-reduced-motion: no-preference` — reduced-motion users never see them, with no media-query authoring required.
 - The dot is decorative; expose status via the text label inside the beacon.
 - Works without JavaScript (CSS-only mode).
 

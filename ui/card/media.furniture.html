@@ -111,6 +111,29 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+	<p>Hues route the same <code>--ui-theme-*</code> bundles as chip/sticker; <code>beacon(brt)</code>
+		breathes, <code>paused</code> freezes. Animations only run under
+		<code>prefers-reduced-motion: no-preference</code> — no wiring needed for reduced-motion users.</p>
+	<lay-out md="columns(2)" lg="columns(3)">
+		<ui-card variant="col" media="asr(4/3) beacon(ts) beacon(pll) beacon(blue) beacon(brt)">
+			<cq-box>
+				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-beacon>Restocking</ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(pll) beacon(blue) beacon(brt)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) beacon(bc) beacon(sld) beacon(accent) beacon(bln) beacon(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/ergochair.png" alt=""><ui-beacon>BREAKING</ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">beacon(bc) beacon(accent) beacon(lg)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) beacon(sld) beacon(red) beacon(bln)">
+			<cq-box>
+				<ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-beacon paused>LIVE</ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">paused attribute (frozen blink)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
 	</section>
 
 	<section>
