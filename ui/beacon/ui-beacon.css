@@ -130,8 +130,12 @@
 		}
 	}
 
-	/* === Ticker variant — original ui-live === */
-	:where(ui-beacon[variant~="ticker"]) {
+	/* === Ticker variant — original ui-live. Dual arm like the other faces:
+	   variant="ticker" standalone, beacon(tck) as the card token. The inner
+	   <span>label <i></i></span> markup comes from the renderer / web component
+	   / hand-authoring (CSS can't wrap text); without it the face degrades to a
+	   static tinted label on the track. === */
+	:where(ui-beacon[variant~="ticker"], [media*="beacon(tck)"] ui-beacon) {
 		background: var(--ui-beacon-track-bg, color-mix(in oklch, var(--ui-beacon-bg) 15%, var(--color-surface)));
 		overflow: hidden;
 		padding: 0;

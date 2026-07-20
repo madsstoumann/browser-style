@@ -202,6 +202,7 @@ const FURNITURE_AXIS = {
 	variant: new Set(['lgt', 'out']),
 	shape: new Set(['text', 'spl', 'spr']),
 	anim: new Set(['bln', 'pls', 'brt']), /* beacon animations (beacon(non) turns solid's default blink off — axis 'disc') */
+	face: new Set(['sld', 'tck']), /* beacon faces (pll stays in disc — shared with the chip/save radius vocabulary) */
 	disc: new Set(['crc', 'sqr', 'rnd', 'pll', 'non'])
 };
 const axisOf = (value) => {
@@ -282,7 +283,7 @@ const styleTokens = (el, style) =>
    each item's style-override tokens onto tokens.media (positioning/hue/shape come
    from the preset — the renderer no longer generates those). save/play also
    accept a bare `true`. */
-const buildFurniture = (furniture, fields, tokens, mediaId) => {
+const buildFurniture = (furniture, fields, tokens, mediaId, presetMedia = '') => {
 	if (!furniture) return '';
 	let html = '';
 	const push = (el, style) => { for (const token of styleTokens(el, style)) tokens.media.push(token); };
@@ -299,10 +300,17 @@ const buildFurniture = (furniture, fields, tokens, mediaId) => {
 	}
 	if (furniture.beacon?.text) {
 		/* marker-class live/status indicator — plain text-only markup (summary-
-		   safe); look comes from beacon(…) tokens: position/hue/size/variant
-		   (pll|sld)/animation (bln|pls|brt|non — reduced-motion-gated in CSS) */
+		   safe); look comes from beacon(…) tokens: position/hue/size/face
+		   (pll|sld|tck)/animation (bln|pls|brt|non — reduced-motion-gated in CSS).
+		   The tck (ticker) face is the one that needs inner MARKUP, so when the
+		   token is present (preset media= or item style) the renderer emits the
+		   span + <i> loader — SSR-safe, no web component required. The
+		   variant="ticker" ATTRIBUTE remains the standalone (non-card) API. */
 		const beacon = furniture.beacon;
-		html += `<ui-beacon>${esc(beacon.text)}</ui-beacon>`;
+		const ticker = `${presetMedia} ${styleTokens('beacon', beacon.style).join(' ')}`.includes('beacon(tck)');
+		html += ticker
+			? `<ui-beacon><span>${esc(beacon.text)} <i></i></span></ui-beacon>`
+			: `<ui-beacon>${esc(beacon.text)}</ui-beacon>`;
 		push('beacon', beacon.style);
 	}
 	if (furniture.sticker?.lines?.length) {
@@ -366,7 +374,7 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 	}
 	/* save needs a command target — id the frame when a save toggle is present */
 	const mediaId = (fields.furniture?.save && cardId) ? `${cardId}-media` : null;
-	const furniture = buildFurniture(fields.furniture, fields, tokens, mediaId);
+	const furniture = buildFurniture(fields.furniture, fields, tokens, mediaId, presetMediaStr(preset));
 	const html = `<ui-media${attrs({
 		id: mediaId,
 		...(embed || {}),

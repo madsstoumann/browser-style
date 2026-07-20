@@ -197,15 +197,22 @@ one axis per token):
 |---|---|---|
 | position | `beacon(ts…be)` | 9-cell furniture grid; default `bs` (coexists with the chip's `ts`) |
 | hue | `beacon(red\|orange\|green\|blue\|accent\|white\|gray\|slate\|black)` | same `--ui-theme-*` bundles as `chip()`/`sticker()` |
-| variant | `beacon(pll)` pill · `beacon(sld)` solid | over imagery prefer these — the bare dot has no contrast plate |
+| face | `beacon(pll)` pill · `beacon(sld)` solid · `beacon(tck)` ticker | over imagery prefer these — the bare dot has no contrast plate |
 | animation | `beacon(bln)` blink · `beacon(pls)` pulse · `beacon(brt)` breathe · `beacon(non)` off | solid defaults to blink |
 | size | `beacon(xs\|sm\|md\|lg)` | same em scale as the `size=` attribute |
 
 As furniture the beacon is **marker-class** (like chip/sticker): plain
 non-interactive markup, valid inside a reveal `<summary>`. Animations are
-reduced-motion-gated like everywhere else; `paused` still works. The `ticker`
-variant is attribute-driven (`variant="ticker"`) and not part of the furniture
-token set.
+reduced-motion-gated like everywhere else; `paused` still works.
+
+**Ticker as furniture — `beacon(tck)`** — ticker styling is a normal card
+token (dual arm with the standalone `variant="ticker"` attribute), but it is
+the one face that needs inner *markup* (`<span>label <i></i></span>`), which
+CSS cannot create. The markup comes from whichever layer renders the card:
+the SSR renderer emits it when `tck` is in the beacon tokens; the web
+component builds it when it sees `beacon(tck)` in its media scope (same
+precedent as carousel.js building `loop` clones); CSS-only pages hand-author
+the span. Without the span the face degrades to a static tinted label.
 
 ---
 

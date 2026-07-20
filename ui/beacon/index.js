@@ -16,9 +16,19 @@ class UiBeacon extends HTMLElement {
 	static observedAttributes = ['variant'];
 
 	connectedCallback() {
-		if ((this.getAttribute('variant') || '').includes('ticker')) {
+		if (this.isTicker()) {
 			this.renderTicker();
 		}
+	}
+
+	isTicker() {
+		if ((this.getAttribute('variant') || '').includes('ticker')) return true;
+		/* card context: the beacon(tck) media token — on the own <ui-media> or its
+		   card host (media= inheritance stops at the card, same scope the CSS uses).
+		   Precedent for token-driven DOM: carousel.js building loop clones. */
+		const media = this.closest('ui-media');
+		const host = this.closest('ui-card, ui-reveal');
+		return `${media?.getAttribute('media') || ''} ${host?.getAttribute('media') || ''}`.includes('beacon(tck)');
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
