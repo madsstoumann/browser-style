@@ -149,7 +149,7 @@ Breakpoint tokens (generated `md`+ only, in `generateSubgridCSS()`), using `~=`
 exact-token matching:
 
 - **`subgrid(on)`** — each direct child adopts N shared rows (`grid-template-rows: subgrid`), aligning their internal rows across the grid. **N comes from the global `subgrid="N"` attribute** (one value, read via `attr()` into `--_sg`); the child's own `container-type` is neutralised so its inline-size container doesn't sever the subgrid chain.
-- **`subgrid(off)`** — disables from a larger breakpoint up. `@media (min-width)` is cumulative, so an earlier `on` persists on its own; the `off` rule (later `@layer layout.<bp>`) wins by layer order, same specificity. It restores the container's default rows and the card child's `container-type: inline-size`. `revert-layer` can't be used (the lower-layer `on` rule would be its target), so the reset uses explicit, card-oriented values.
+- **`subgrid(off)`** — disables from a larger breakpoint up. `@media (min-width)` is cumulative, so an earlier `on` persists on its own; the `off` rule (later `@layer layout.<bp>`) wins by layer order, same specificity. Mechanically, on/off are 2-declaration **flag flips** (`--_subgrid`, a non-inheriting registered property) plus the container's own physical rows; the per-child body lives once in `core/base.css` behind `@container style(--_subgrid: on)`. When the flag flips off the query stops matching and each child property reverts to its natural value — the card's own `container-type: inline-size` comes back without explicit undo rules.
 
 > **The token is an attribute-selector value** in the generated CSS
 > (`lay-out[md~="subgrid(on)"]`). App/demo CSS that hooks the subgrid state (e.g.

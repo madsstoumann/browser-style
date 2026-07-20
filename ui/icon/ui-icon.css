@@ -4,6 +4,7 @@
  * @version 4.0.0
  * @author Mads Stoumann
  */
+@import '../base/shapes-glyphs.css'; /* --shape-* glyph/badge catalog (opt-in, not in base's default chain) */
 @layer bs-component {
 	:where(ui-icon) {
 		/* Component tokens */

@@ -10,7 +10,11 @@
  *
  * INVARIANT — uniform 0-0-0 specificity: every rule in this file is wrapped in :where().
  * Internal overrides rely purely on source order (e.g. in-band dot alignment must follow
- * the 9-grid corner rules). This is safe because this file exclusively owns its properties:
+ * the 9-grid corner rules). Host-level token setters are grouped under nested
+ * `:where(hosts) { &:where([media*="…"]) { … } }` blocks — the leading & compounds onto
+ * the parent (same match as the old flat prefix) and the inner :where() keeps the rule
+ * at 0-0-0; dual ancestor/self arms stay top-level. This is safe because this file
+ * exclusively owns its properties:
  * the ::scroll-button()/::scroll-marker(-group) pseudos and the --ui-carousel-* tokens.
  * Do not add rules here that compete with a host package's own scroller styles.
  *
@@ -23,57 +27,59 @@
  * Internals: ui/card/media.carousel.md · token reference: ui/card/carousel.md
  */
 @layer bs-component {
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="nav"]) {
-		--ui-carousel-above-gap: var(--spacing-sm, 0.5rem);
-		--ui-carousel-arrow-bg-hover: rgb(255 255 255 / 0.9);
-		--ui-carousel-arrow-bg: rgb(255 255 255 / 0.7);
-		--ui-carousel-arrow-border: 0;
-		--ui-carousel-arrow-color: #fff;
-		--ui-carousel-arrow-gap: 0.5rem;
-		--ui-carousel-arrow-nudge: calc(var(--ui-carousel-arrow-size) * 0.03);
-		--ui-carousel-arrow-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
-		--ui-carousel-arrow-size: 2.25rem;
-		--ui-carousel-autoplay: 5s;
-		--ui-carousel-band: 2.75rem;
-		--ui-carousel-below-gap: var(--spacing-sm, 0.5rem);
-		--ui-carousel-marker-active: #fff;
-		--ui-carousel-marker-bg: rgb(255 255 255 / 0.5);
-		--ui-carousel-marker-border: 0;
-		--ui-carousel-marker-gap: 0.5rem;
-		--ui-carousel-marker-size: 0.6rem;
-		--ui-carousel-overlay-gap: 0.75rem;
-		--ui-carousel-pill-fill: #fff;
-		--ui-carousel-pill-height: 0.35rem;
-		--ui-carousel-pill-track: rgb(255 255 255 / 0.35);
-		--ui-carousel-pill-width: 1.5rem;
-	}
+	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
+		&:where([media*="nav"]) {
+			--ui-carousel-above-gap: var(--spacing-sm, 0.5rem);
+			--ui-carousel-arrow-bg-hover: rgb(255 255 255 / 0.9);
+			--ui-carousel-arrow-bg: rgb(255 255 255 / 0.7);
+			--ui-carousel-arrow-border: 0;
+			--ui-carousel-arrow-color: #fff;
+			--ui-carousel-arrow-gap: 0.5rem;
+			--ui-carousel-arrow-nudge: calc(var(--ui-carousel-arrow-size) * 0.03);
+			--ui-carousel-arrow-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
+			--ui-carousel-arrow-size: 2.25rem;
+			--ui-carousel-autoplay: 5s;
+			--ui-carousel-band: 2.75rem;
+			--ui-carousel-below-gap: var(--spacing-sm, 0.5rem);
+			--ui-carousel-marker-active: #fff;
+			--ui-carousel-marker-bg: rgb(255 255 255 / 0.5);
+			--ui-carousel-marker-border: 0;
+			--ui-carousel-marker-gap: 0.5rem;
+			--ui-carousel-marker-size: 0.6rem;
+			--ui-carousel-overlay-gap: 0.75rem;
+			--ui-carousel-pill-fill: #fff;
+			--ui-carousel-pill-height: 0.35rem;
+			--ui-carousel-pill-track: rgb(255 255 255 / 0.35);
+			--ui-carousel-pill-width: 1.5rem;
+		}
 
-	/* dot size — one scale drives dots, pills AND thumbnails (mrk(tmb) reads --ui-carousel-thumb-size) */
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="mrk(sm)"]) { --ui-carousel-marker-size: 0.45rem; --ui-carousel-pill-width: 1.15rem; --ui-carousel-pill-height: 0.28rem; --ui-carousel-thumb-size: 2.25rem; }
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="mrk(md)"]) { --ui-carousel-marker-size: 0.6rem;  --ui-carousel-pill-width: 1.5rem;  --ui-carousel-pill-height: 0.35rem; --ui-carousel-thumb-size: 3rem; }
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="mrk(lg)"]) { --ui-carousel-marker-size: 0.8rem;  --ui-carousel-pill-width: 2rem;    --ui-carousel-pill-height: 0.45rem; --ui-carousel-thumb-size: 3.75rem; }
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="mrk(xl)"]) { --ui-carousel-marker-size: 1rem;    --ui-carousel-pill-width: 2.5rem;  --ui-carousel-pill-height: 0.55rem; --ui-carousel-thumb-size: 4.75rem; }
-	/* mrk(tmb) — thumbnails get a larger inset */
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) { --ui-carousel-marker-inset: var(--ui-carousel-thumb-gap, 1rem); }
-	/* mrk(bar) — thin styled scrollbar: token defaults. --ui-carousel-marker-size is aliased
-	   to the hit height so every existing marker-group top/centering calc (overlay, bands)
-	   centers the bar's hit strip without bar-specific position rules. Declared after the
-	   dot size scale, which the bar REPURPOSES: with mrk(bar), the size atoms set the bar's
-	   inline span as a fraction of the scroller — sm 33% · md 50% · lg 75% (default) ·
-	   xl 100% (a fraction, not a percentage: it multiplies anchor-size() in a calc).
-	   The nested atoms stay :where()-wrapped to keep the file's 0-0-0 specificity. */
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="mrk(bar)"]) {
-		--ui-carousel-bar-hit: 0.875rem;
-		--ui-carousel-bar-inset: 0px;
-		--ui-carousel-bar-size: 3px;
-		--ui-carousel-bar-span: 0.75;
-		--ui-carousel-bar-track-size: 1px;
-		--ui-carousel-marker-size: var(--ui-carousel-bar-hit);
+		/* dot size — one scale drives dots, pills AND thumbnails (mrk(tmb) reads --ui-carousel-thumb-size) */
+		&:where([media*="mrk(sm)"]) { --ui-carousel-marker-size: 0.45rem; --ui-carousel-pill-width: 1.15rem; --ui-carousel-pill-height: 0.28rem; --ui-carousel-thumb-size: 2.25rem; }
+		&:where([media*="mrk(md)"]) { --ui-carousel-marker-size: 0.6rem;  --ui-carousel-pill-width: 1.5rem;  --ui-carousel-pill-height: 0.35rem; --ui-carousel-thumb-size: 3rem; }
+		&:where([media*="mrk(lg)"]) { --ui-carousel-marker-size: 0.8rem;  --ui-carousel-pill-width: 2rem;    --ui-carousel-pill-height: 0.45rem; --ui-carousel-thumb-size: 3.75rem; }
+		&:where([media*="mrk(xl)"]) { --ui-carousel-marker-size: 1rem;    --ui-carousel-pill-width: 2.5rem;  --ui-carousel-pill-height: 0.55rem; --ui-carousel-thumb-size: 4.75rem; }
+		/* mrk(tmb) — thumbnails get a larger inset */
+		&:where([media*="mrk(tmb)"]) { --ui-carousel-marker-inset: var(--ui-carousel-thumb-gap, 1rem); }
+		/* mrk(bar) — thin styled scrollbar: token defaults. --ui-carousel-marker-size is aliased
+		   to the hit height so every existing marker-group top/centering calc (overlay, bands)
+		   centers the bar's hit strip without bar-specific position rules. Declared after the
+		   dot size scale, which the bar REPURPOSES: with mrk(bar), the size atoms set the bar's
+		   inline span as a fraction of the scroller — sm 33% · md 50% · lg 75% (default) ·
+		   xl 100% (a fraction, not a percentage: it multiplies anchor-size() in a calc).
+		   The nested atoms stay :where()-wrapped to keep the file's 0-0-0 specificity. */
+		&:where([media*="mrk(bar)"]) {
+			--ui-carousel-bar-hit: 0.875rem;
+			--ui-carousel-bar-inset: 0px;
+			--ui-carousel-bar-size: 3px;
+			--ui-carousel-bar-span: 0.75;
+			--ui-carousel-bar-track-size: 1px;
+			--ui-carousel-marker-size: var(--ui-carousel-bar-hit);
 
-		&:where([media*="mrk(sm)"]) { --ui-carousel-bar-span: 0.33; }
-		&:where([media*="mrk(md)"]) { --ui-carousel-bar-span: 0.5; }
-		&:where([media*="mrk(lg)"]) { --ui-carousel-bar-span: 0.75; }
-		&:where([media*="mrk(xl)"]) { --ui-carousel-bar-span: 1; }
+			&:where([media*="mrk(sm)"]) { --ui-carousel-bar-span: 0.33; }
+			&:where([media*="mrk(md)"]) { --ui-carousel-bar-span: 0.5; }
+			&:where([media*="mrk(lg)"]) { --ui-carousel-bar-span: 0.75; }
+			&:where([media*="mrk(xl)"]) { --ui-carousel-bar-span: 1; }
+		}
 	}
 	/* mrk(bar) scroller arm — the anchor-name lets the marker-group size itself to the
 	   scroller via anchor-size() (implicit-anchor sizing is not reliable there). The
@@ -89,77 +95,79 @@
 		scrollbar-color: var(--ui-carousel-marker-active, rgb(0 0 0 / 0.7)) #0000;
 	}
 	/* arrows present: base glyph vars */
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) {
-		--ui-carousel-chevron-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
-		--ui-carousel-chevron-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
-		--ui-carousel-arrow-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
-		--ui-carousel-arrow-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
-		--ui-carousel-chevron-grey: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
-		--ui-carousel-arrow-grey: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
-		--ui-carousel-arrow-glyph: var(--ui-carousel-chevron-dark);
-	}
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="arw(arr)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-dark); --ui-carousel-arrow-nudge: calc(var(--ui-carousel-arrow-size) * 0.015); }
-	/* (theme presets arw(lgt)/arw(drk) are declared once, below the band holder — see there) */
-	/* arrow size (md = 2.25rem is the host default — no rule needed) */
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="arw(sm)"]) { --ui-carousel-arrow-size: 1.75rem; }
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="arw(lg)"]) { --ui-carousel-arrow-size: 2.75rem; }
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="arw(xl)"]) { --ui-carousel-arrow-size: 3.25rem; }
-	/* arrow shape — square instead of the default circle */
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="arw(sqr)"]) { --ui-carousel-arrow-radius: 0; }
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="arw(sft)"]) { --ui-carousel-arrow-radius: var(--radius-sm, 0.25rem); }
-	/* arw(hid) — auto-hide the dead-end arrow */
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="arw(hid)"]) { --ui-carousel-arrow-disabled-opacity: 0; }
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="nav(blw)"], [media*="nav(abv)"]) {
-		--ui-carousel-arrow-bg: rgb(0 0 0 / 0.08);
-		--ui-carousel-arrow-bg-hover: rgb(0 0 0 / 0.16);
-		--ui-carousel-arrow-color-hover: rgb(0 0 0 / 1);
-		--ui-carousel-arrow-shadow: none;
-		--ui-carousel-arrow-glyph: var(--ui-carousel-chevron-grey);
-		--ui-carousel-arrow-color: rgb(0 0 0 / 0.8);
-		--ui-carousel-arrow-glyph-dim: var(--ui-carousel-chevron-dark);
-		--ui-carousel-marker-bg: rgb(0 0 0 / 0.25);
-		--ui-carousel-marker-active: rgb(0 0 0 / 0.7);
-		--ui-carousel-pill-track: rgb(0 0 0 / 0.2);
-		--ui-carousel-pill-fill: rgb(0 0 0 / 0.7);
-	}
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="nav(blw)"][media*="arw(arr)"], [media*="nav(abv)"][media*="arw(arr)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-grey); --ui-carousel-arrow-glyph-dim: var(--ui-carousel-arrow-dark); }
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="arw(lgt)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-chevron-dark); --ui-carousel-arrow-color: rgb(255 255 255 / 0.92); --ui-carousel-arrow-color-hover: #fff; }
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="arw(arr)"][media*="arw(lgt)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-dark); }
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="arw(drk)"]) {
-		--ui-carousel-arrow-bg: rgb(0 0 0 / 0.6);
-		--ui-carousel-arrow-bg-hover: rgb(0 0 0 / 0.78);
-		--ui-carousel-arrow-glyph: var(--ui-carousel-chevron-light);
-		--ui-carousel-arrow-color: rgb(0 0 0 / 0.85);
-		--ui-carousel-arrow-glyph-dim: var(--ui-carousel-chevron-dark);
-		--ui-carousel-arrow-hover-ring: 0 0 0 2px rgb(255 255 255 / 0.5);
-	}
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="arw(arr)"][media*="arw(drk)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-light); --ui-carousel-arrow-glyph-dim: var(--ui-carousel-arrow-dark); }
-	/* mrk(blw)/mrk(abv) — dots alone in a reserved band (arrows keep their on-media position/ink):
-	   flip only the dot/pill ink to the band (page-bg) theme */
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="mrk(blw)"], [media*="mrk(abv)"]) {
-		--ui-carousel-marker-bg: rgb(0 0 0 / 0.25);
-		--ui-carousel-marker-active: rgb(0 0 0 / 0.7);
-		--ui-carousel-pill-track: rgb(0 0 0 / 0.2);
-		--ui-carousel-pill-fill: rgb(0 0 0 / 0.7);
-	}
-	/* arw(blw)/arw(abv) — arrows alone in a reserved band (dots keep their on-media position/ink):
-	   flip only the arrow ink to the band (page-bg) theme */
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="arw(blw)"], [media*="arw(abv)"]) {
-		--ui-carousel-arrow-bg: rgb(0 0 0 / 0.08);
-		--ui-carousel-arrow-bg-hover: rgb(0 0 0 / 0.16);
-		--ui-carousel-arrow-color-hover: rgb(0 0 0 / 1);
-		--ui-carousel-arrow-shadow: none;
-		--ui-carousel-arrow-glyph: var(--ui-carousel-chevron-grey);
-		--ui-carousel-arrow-color: rgb(0 0 0 / 0.8);
-		--ui-carousel-arrow-glyph-dim: var(--ui-carousel-chevron-dark);
-	}
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="arw(blw)"][media*="arw(arr)"], [media*="arw(abv)"][media*="arw(arr)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-grey); --ui-carousel-arrow-glyph-dim: var(--ui-carousel-arrow-dark); }
+	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
+		&:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) {
+			--ui-carousel-chevron-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+			--ui-carousel-chevron-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+			--ui-carousel-arrow-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
+			--ui-carousel-arrow-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
+			--ui-carousel-chevron-grey: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+			--ui-carousel-arrow-grey: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
+			--ui-carousel-arrow-glyph: var(--ui-carousel-chevron-dark);
+		}
+		&:where([media*="arw(arr)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-dark); --ui-carousel-arrow-nudge: calc(var(--ui-carousel-arrow-size) * 0.015); }
+		/* (theme presets arw(lgt)/arw(drk) are declared once, below the band holder — see there) */
+		/* arrow size (md = 2.25rem is the host default — no rule needed) */
+		&:where([media*="arw(sm)"]) { --ui-carousel-arrow-size: 1.75rem; }
+		&:where([media*="arw(lg)"]) { --ui-carousel-arrow-size: 2.75rem; }
+		&:where([media*="arw(xl)"]) { --ui-carousel-arrow-size: 3.25rem; }
+		/* arrow shape — square instead of the default circle */
+		&:where([media*="arw(sqr)"]) { --ui-carousel-arrow-radius: 0; }
+		&:where([media*="arw(sft)"]) { --ui-carousel-arrow-radius: var(--radius-sm, 0.25rem); }
+		/* arw(hid) — auto-hide the dead-end arrow */
+		&:where([media*="arw(hid)"]) { --ui-carousel-arrow-disabled-opacity: 0; }
+		&:where([media*="nav(blw)"], [media*="nav(abv)"]) {
+			--ui-carousel-arrow-bg: rgb(0 0 0 / 0.08);
+			--ui-carousel-arrow-bg-hover: rgb(0 0 0 / 0.16);
+			--ui-carousel-arrow-color-hover: rgb(0 0 0 / 1);
+			--ui-carousel-arrow-shadow: none;
+			--ui-carousel-arrow-glyph: var(--ui-carousel-chevron-grey);
+			--ui-carousel-arrow-color: rgb(0 0 0 / 0.8);
+			--ui-carousel-arrow-glyph-dim: var(--ui-carousel-chevron-dark);
+			--ui-carousel-marker-bg: rgb(0 0 0 / 0.25);
+			--ui-carousel-marker-active: rgb(0 0 0 / 0.7);
+			--ui-carousel-pill-track: rgb(0 0 0 / 0.2);
+			--ui-carousel-pill-fill: rgb(0 0 0 / 0.7);
+		}
+		&:where([media*="nav(blw)"][media*="arw(arr)"], [media*="nav(abv)"][media*="arw(arr)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-grey); --ui-carousel-arrow-glyph-dim: var(--ui-carousel-arrow-dark); }
+		&:where([media*="arw(lgt)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-chevron-dark); --ui-carousel-arrow-color: rgb(255 255 255 / 0.92); --ui-carousel-arrow-color-hover: #fff; }
+		&:where([media*="arw(arr)"][media*="arw(lgt)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-dark); }
+		&:where([media*="arw(drk)"]) {
+			--ui-carousel-arrow-bg: rgb(0 0 0 / 0.6);
+			--ui-carousel-arrow-bg-hover: rgb(0 0 0 / 0.78);
+			--ui-carousel-arrow-glyph: var(--ui-carousel-chevron-light);
+			--ui-carousel-arrow-color: rgb(0 0 0 / 0.85);
+			--ui-carousel-arrow-glyph-dim: var(--ui-carousel-chevron-dark);
+			--ui-carousel-arrow-hover-ring: 0 0 0 2px rgb(255 255 255 / 0.5);
+		}
+		&:where([media*="arw(arr)"][media*="arw(drk)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-light); --ui-carousel-arrow-glyph-dim: var(--ui-carousel-arrow-dark); }
+		/* mrk(blw)/mrk(abv) — dots alone in a reserved band (arrows keep their on-media position/ink):
+		   flip only the dot/pill ink to the band (page-bg) theme */
+		&:where([media*="mrk(blw)"], [media*="mrk(abv)"]) {
+			--ui-carousel-marker-bg: rgb(0 0 0 / 0.25);
+			--ui-carousel-marker-active: rgb(0 0 0 / 0.7);
+			--ui-carousel-pill-track: rgb(0 0 0 / 0.2);
+			--ui-carousel-pill-fill: rgb(0 0 0 / 0.7);
+		}
+		/* arw(blw)/arw(abv) — arrows alone in a reserved band (dots keep their on-media position/ink):
+		   flip only the arrow ink to the band (page-bg) theme */
+		&:where([media*="arw(blw)"], [media*="arw(abv)"]) {
+			--ui-carousel-arrow-bg: rgb(0 0 0 / 0.08);
+			--ui-carousel-arrow-bg-hover: rgb(0 0 0 / 0.16);
+			--ui-carousel-arrow-color-hover: rgb(0 0 0 / 1);
+			--ui-carousel-arrow-shadow: none;
+			--ui-carousel-arrow-glyph: var(--ui-carousel-chevron-grey);
+			--ui-carousel-arrow-color: rgb(0 0 0 / 0.8);
+			--ui-carousel-arrow-glyph-dim: var(--ui-carousel-chevron-dark);
+		}
+		&:where([media*="arw(blw)"][media*="arw(arr)"], [media*="arw(abv)"][media*="arw(arr)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-grey); --ui-carousel-arrow-glyph-dim: var(--ui-carousel-arrow-dark); }
 
-	/* dot ink (shared scale lgt/drk) — declared AFTER the band ink blocks above so an
-	   explicit mrk(lgt)/mrk(drk) overrides a band's default dot ink (e.g. white dots on a
-	   dark nav(blw) band). Same reason arw(lgt)/arw(drk) sit after the band. */
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="mrk(lgt)"]) { --ui-carousel-marker-bg: rgb(255 255 255 / 0.5);  --ui-carousel-marker-active: #fff; }
-	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="mrk(drk)"]) { --ui-carousel-marker-bg: rgb(0 0 0 / 0.25);        --ui-carousel-marker-active: rgb(0 0 0 / 0.7); }
+		/* dot ink (shared scale lgt/drk) — declared AFTER the band ink blocks above so an
+		   explicit mrk(lgt)/mrk(drk) overrides a band's default dot ink (e.g. white dots on a
+		   dark nav(blw) band). Same reason arw(lgt)/arw(drk) sit after the band. */
+		&:where([media*="mrk(lgt)"]) { --ui-carousel-marker-bg: rgb(255 255 255 / 0.5);  --ui-carousel-marker-active: #fff; }
+		&:where([media*="mrk(drk)"]) { --ui-carousel-marker-bg: rgb(0 0 0 / 0.25);        --ui-carousel-marker-active: rgb(0 0 0 / 0.7); }
+	}
 
 	@supports (scroll-marker-group: after) {
 
@@ -340,9 +348,11 @@
 
 		:where(ui-media, lay-out[overflow]) > [data-clone]::scroll-marker { content: none; }
 
-		/* arrow vertical band — split arrows honor the block row (t/c/b); cc = middle default */
-		:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="arw(ts)"], [media*="arw(tc)"], [media*="arw(te)"]) { --ui-carousel-arrow-top: calc(anchor(top) + var(--ui-carousel-overlay-gap)); }
-		:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="arw(bs)"], [media*="arw(bc)"], [media*="arw(be)"]) { --ui-carousel-arrow-top: calc(anchor(bottom) - var(--ui-carousel-overlay-gap) - var(--ui-carousel-arrow-size)); }
+		:where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
+			/* arrow vertical band — split arrows honor the block row (t/c/b); cc = middle default */
+			&:where([media*="arw(ts)"], [media*="arw(tc)"], [media*="arw(te)"]) { --ui-carousel-arrow-top: calc(anchor(top) + var(--ui-carousel-overlay-gap)); }
+			&:where([media*="arw(bs)"], [media*="arw(bc)"], [media*="arw(be)"]) { --ui-carousel-arrow-top: calc(anchor(bottom) - var(--ui-carousel-overlay-gap) - var(--ui-carousel-arrow-size)); }
+		}
 
 		/* arw(set) — cluster both arrows; inline side from the cell's inline letter (end = default) */
 		:where(ui-card, ui-reveal):where([media*="arw(set)"]) :where(ui-media)::scroll-button(left),
@@ -397,15 +407,17 @@
 			}
 		}
 
-		/* mrk(blw)/mrk(abv) — dots-only band: re-center the on-media arrows on the VISIBLE media
-		   (the box includes the reserved band, so plain anchor(center) would sit band/2 off).
-		   Declared BEFORE the band arrow-top setters so an explicit arrow band wins in combos. */
-		:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="mrk(blw)"]) { --ui-carousel-arrow-top: calc(anchor(center) - (var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem)) / 2 - var(--ui-carousel-arrow-size) / 2); }
-		:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="mrk(abv)"]) { --ui-carousel-arrow-top: calc(anchor(center) + (var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem)) / 2 - var(--ui-carousel-arrow-size) / 2); }
-		/* nav(blw)/nav(abv) + arw(blw)/arw(abv) — anchor()-valued arrow placement in the band
-		   (ink flips hoisted above the gate) */
-		:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="nav(blw)"], [media*="arw(blw)"]) { --ui-carousel-arrow-top: calc(anchor(bottom) - var(--ui-carousel-band) / 2 - var(--ui-carousel-arrow-size) / 2); }
-		:where(ui-card, ui-reveal, ui-media, lay-out[overflow]):where([media*="nav(abv)"], [media*="arw(abv)"]) { --ui-carousel-arrow-top: calc(anchor(top) + var(--ui-carousel-band) / 2 - var(--ui-carousel-arrow-size) / 2); }
+		:where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
+			/* mrk(blw)/mrk(abv) — dots-only band: re-center the on-media arrows on the VISIBLE media
+			   (the box includes the reserved band, so plain anchor(center) would sit band/2 off).
+			   Declared BEFORE the band arrow-top setters so an explicit arrow band wins in combos. */
+			&:where([media*="mrk(blw)"]) { --ui-carousel-arrow-top: calc(anchor(center) - (var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem)) / 2 - var(--ui-carousel-arrow-size) / 2); }
+			&:where([media*="mrk(abv)"]) { --ui-carousel-arrow-top: calc(anchor(center) + (var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem)) / 2 - var(--ui-carousel-arrow-size) / 2); }
+			/* nav(blw)/nav(abv) + arw(blw)/arw(abv) — anchor()-valued arrow placement in the band
+			   (ink flips hoisted above the gate) */
+			&:where([media*="nav(blw)"], [media*="arw(blw)"]) { --ui-carousel-arrow-top: calc(anchor(bottom) - var(--ui-carousel-band) / 2 - var(--ui-carousel-arrow-size) / 2); }
+			&:where([media*="nav(abv)"], [media*="arw(abv)"]) { --ui-carousel-arrow-top: calc(anchor(top) + var(--ui-carousel-band) / 2 - var(--ui-carousel-arrow-size) / 2); }
+		}
 		/* arw(blw) — arrows-only band below: the default dots would anchor to the box bottom
 		   (inside the band); lift them back onto the visible media edge */
 		:where(ui-card, ui-reveal):where([media*="arw(blw)"]) :where(ui-media)::scroll-marker-group,
