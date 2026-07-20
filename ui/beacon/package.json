@@ -1,20 +1,17 @@
 {
   "name": "@browser.style/beacon",
-  "version": "4.1.0",
-  "description": "CSS-first status indicator: bare dot, pill, solid, and ticker variants with blink/pulse/breathe animations",
+  "version": "4.3.0",
+  "description": "CSS-first status indicator: bare dot, pill, solid, and ticker variants with blink/pulse/breathe animations. Zero JavaScript.",
   "type": "module",
-  "module": "index.js",
   "style": "index.css",
   "exports": {
     ".": {
-      "import": "./index.js",
       "style": "./index.css"
     },
     "./style": "./index.css",
     "./index.css": "./index.css"
   },
   "files": [
-    "index.js",
     "index.css",
     "ui-beacon.css"
   ],
@@ -31,8 +28,7 @@
     "live",
     "status",
     "indicator",
-    "css-first",
-    "web-components"
+    "css-first"
   ],
   "author": "Mads Stoumann",
   "license": "ISC",
