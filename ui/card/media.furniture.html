@@ -87,7 +87,7 @@
 	<p>The chip's <strong>live</strong> counterpart — an animated status indicator for LIVE / REC / breaking-news
 		cards. Position with <code>beacon(&lt;pos&gt;)</code> (default <code>bs</code>, so it coexists with the
 		<code>ts</code> chip), colour with <code>beacon(&lt;hue&gt;)</code> (same theme bundles as chip/sticker),
-		face with <code>beacon(pll)</code> / <code>beacon(sld)</code>, animation with
+		face with <code>beacon(pll)</code> / <code>beacon(sld)</code> / <code>beacon(tck)</code>, animation with
 		<code>beacon(bln|pls|brt|non)</code>. Marker-class: valid on a reveal front face; pauses via
 		<code>prefers-reduced-motion</code> or <code>paused</code>.</p>
 	<p>Full component: <a href="../beacon/">ui/beacon</a>.</p>
@@ -131,6 +131,12 @@
 			<cq-box>
 				<ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-beacon paused>LIVE</ui-beacon></ui-media>
 				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">paused attribute (frozen blink)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) beacon(te) beacon(red) beacon(tck)">
+			<cq-box>
+				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-beacon><span>Live <i></i></span></ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(tck) — ticker face (hand-authored span on this CSS-only page)</h2></ui-content>
 			</cq-box>
 		</ui-card>
 	</lay-out>
