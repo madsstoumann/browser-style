@@ -2,21 +2,22 @@
  * <ui-beacon>
  * Light DOM web component for the CSS-first beacon indicator.
  * Variants: bare dot (default), pill, solid, ticker.
- * Animations: blink, pulse, breathe (or static).
- * Pause: prefers-reduced-motion, [paused] attribute, or click-to-pause via inner checkbox.
+ * Animations: blink, pulse, breathe (or static) — gated behind
+ * prefers-reduced-motion: no-preference in the CSS, so reduced-motion users
+ * get a static beacon automatically. Pause a running animation with the
+ * [paused] attribute.
+ * The component only auto-renders the ticker's inner structure
+ * (<span>label <i></i></span>); every other variant is pure CSS.
  * No Shadow DOM.
- * @version 4.1.0
+ * @version 4.2.0
  */
 
 class UiBeacon extends HTMLElement {
 	static observedAttributes = ['variant'];
 
 	connectedCallback() {
-		const variant = this.getAttribute('variant') || '';
-		if (variant.includes('ticker')) {
+		if ((this.getAttribute('variant') || '').includes('ticker')) {
 			this.renderTicker();
-		} else if (this.hasText() && this.shouldHavePauseToggle()) {
-			this.renderLabel();
 		}
 	}
 
@@ -32,17 +33,6 @@ class UiBeacon extends HTMLElement {
 		}
 	}
 
-	hasText() {
-		return this.textContent.trim().length > 0;
-	}
-
-	shouldHavePauseToggle() {
-		const variant = this.getAttribute('variant') || '';
-		if (variant.includes('solid')) return true;
-		const animation = this.getAttribute('animation');
-		return !!animation && animation !== 'none';
-	}
-
 	renderTicker() {
 		if (this.querySelector(':scope > span')) return;
 		const span = document.createElement('span');
@@ -51,24 +41,11 @@ class UiBeacon extends HTMLElement {
 		this.appendChild(span);
 	}
 
-	renderLabel() {
-		if (this.querySelector(':scope > label')) return;
-		const label = document.createElement('label');
-		const input = document.createElement('input');
-		input.type = 'checkbox';
-		input.setAttribute('data-sr', '');
-		const span = document.createElement('span');
-		while (this.firstChild) span.appendChild(this.firstChild);
-		label.append(input, span);
-		this.appendChild(label);
-	}
-
 	unwrap() {
-		const wrapper = this.querySelector(':scope > label, :scope > span');
+		const wrapper = this.querySelector(':scope > span');
 		if (!wrapper) return;
-		wrapper.querySelectorAll(':scope > input, :scope > i').forEach(el => el.remove());
-		const inner = wrapper.querySelector(':scope > span') || wrapper;
-		while (inner.firstChild) this.appendChild(inner.firstChild);
+		wrapper.querySelectorAll(':scope > i').forEach(el => el.remove());
+		while (wrapper.firstChild) this.appendChild(wrapper.firstChild);
 		wrapper.remove();
 	}
 }

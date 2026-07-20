@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../play/ui-play.css">
 	<link rel="stylesheet" href="../save/ui-save.css">
+	<link rel="stylesheet" href="../beacon/ui-beacon.css">
 	<link rel="stylesheet" href="../icon/index.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
@@ -73,6 +74,63 @@
 			<cq-box>
 				<ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-chip>-50%</ui-chip></ui-media>
 				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">chip(lgt) chip(2xl)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	</section>
+
+	<section>
+	<!-- ============================================================
+	     Beacon — <ui-beacon>
+	     ============================================================ -->
+	<h2>Beacon — <code>&lt;ui-beacon&gt;</code></h2>
+	<p>The chip's <strong>live</strong> counterpart — an animated status indicator for LIVE / REC / breaking-news
+		cards. Position with <code>beacon(&lt;pos&gt;)</code> (default <code>bs</code>, so it coexists with the
+		<code>ts</code> chip), colour with <code>beacon(&lt;hue&gt;)</code> (same theme bundles as chip/sticker),
+		face with <code>beacon(pll)</code> / <code>beacon(sld)</code>, animation with
+		<code>beacon(bln|pls|brt|non)</code>. Marker-class: valid on a reveal front face; pauses via
+		<code>prefers-reduced-motion</code> or <code>paused</code>.</p>
+	<p>Full component: <a href="../beacon/">ui/beacon</a>.</p>
+	<lay-out md="columns(2)" lg="columns(3)">
+		<ui-card variant="col" media="asr(4/3) beacon(sld) beacon(red) beacon(bln)">
+			<cq-box>
+				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-beacon>LIVE</ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(sld) beacon(red) beacon(bln)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) beacon(ts) beacon(pll) beacon(green) beacon(pls) chip(te) chip(gray)">
+			<cq-box>
+				<ui-media><img src="/assets/images/ergochair.png" alt=""><ui-beacon>In stock</ui-beacon><ui-chip>Bestseller</ui-chip></ui-media>
+				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">beacon(pll) beacon(pls) + chip</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) beacon(be) beacon(sld) beacon(black) beacon(non) beacon(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-beacon>REC</ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">beacon(sld) beacon(non) beacon(sm)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	<p>Hues route the same <code>--ui-theme-*</code> bundles as chip/sticker; <code>beacon(brt)</code>
+		breathes, <code>paused</code> freezes. Animations only run under
+		<code>prefers-reduced-motion: no-preference</code> — no wiring needed for reduced-motion users.</p>
+	<lay-out md="columns(2)" lg="columns(3)">
+		<ui-card variant="col" media="asr(4/3) beacon(ts) beacon(pll) beacon(blue) beacon(brt)">
+			<cq-box>
+				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-beacon>Restocking</ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(pll) beacon(blue) beacon(brt)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) beacon(bc) beacon(sld) beacon(accent) beacon(bln) beacon(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/ergochair.png" alt=""><ui-beacon>BREAKING</ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">beacon(bc) beacon(accent) beacon(lg)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) beacon(sld) beacon(red) beacon(bln)">
+			<cq-box>
+				<ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-beacon paused>LIVE</ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">paused attribute (frozen blink)</h2></ui-content>
 			</cq-box>
 		</ui-card>
 	</lay-out>

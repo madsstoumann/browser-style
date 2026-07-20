@@ -186,7 +186,7 @@
 				z-index: 3;
 			}
 			/* one dot per slide — furniture (chip/sticker/play/save) excluded */
-			& > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
+			& > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
 				background: var(--ui-carousel-marker-bg);
 				block-size: var(--ui-carousel-marker-size);
 				border: var(--ui-carousel-marker-border);
@@ -195,7 +195,7 @@
 				cursor: pointer;
 				inline-size: var(--ui-carousel-marker-size);
 			}
-			& > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+			& > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
 				background: var(--ui-carousel-marker-active);
 			}
 		}
@@ -214,24 +214,24 @@
 		}
 
 		/* dot shape: pill (default circle needs no rule) — applies to every slide marker */
-		:where(ui-card, ui-reveal):where([media*="mrk(pll)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(pll)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
+		:where(ui-card, ui-reveal):where([media*="mrk(pll)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(pll)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
 			background: var(--ui-carousel-pill-track);
 			block-size: var(--ui-carousel-pill-height);
 			border-radius: var(--radius-pill, 100px);
 			inline-size: var(--ui-carousel-pill-width);
 		}
 		@media (prefers-reduced-motion: no-preference) {
-			:where(ui-card, ui-reveal):where([media*="mrk(pll)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-			:where(ui-media, lay-out[overflow]):where([media*="mrk(pll)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+			:where(ui-card, ui-reveal):where([media*="mrk(pll)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+			:where(ui-media, lay-out[overflow]):where([media*="mrk(pll)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
 				animation: ui-carousel-pill-fill var(--ui-carousel-autoplay) linear forwards;
 				animation-play-state: var(--ui-carousel-play-state, running);
 				background: linear-gradient(var(--ui-carousel-pill-fill), var(--ui-carousel-pill-fill)) no-repeat 0 0 / 0% 100% var(--ui-carousel-pill-track);
 			}
 		}
 		@media (prefers-reduced-motion: reduce) {
-			:where(ui-card, ui-reveal):where([media*="mrk(pll)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-			:where(ui-media, lay-out[overflow]):where([media*="mrk(pll)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+			:where(ui-card, ui-reveal):where([media*="mrk(pll)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+			:where(ui-media, lay-out[overflow]):where([media*="mrk(pll)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
 				background-color: var(--ui-carousel-pill-fill);
 			}
 		}
@@ -240,32 +240,32 @@
 		   EXACT mrk(pll) fill-timer (grey track fills L→R to white over the autoplay
 		   duration). The quick morph reads first against the slow fill. Keyboard focus
 		   previews the pill shape. */
-		:where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
+		:where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
 			transition:
 				inline-size var(--duration-normal, 200ms) var(--ease-in-out, ease-in-out),
 				border-radius var(--duration-normal, 200ms) var(--ease-in-out, ease-in-out);
 		}
-		:where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-		:where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible {
+		:where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+		:where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible {
 			background: var(--ui-carousel-pill-track);
 			border-radius: var(--radius-pill, 100px);
 			/* a touch wider than the mrk(pll) timer pill so it reads clearly among the round dots */
 			inline-size: var(--ui-carousel-hyb-width, calc(var(--ui-carousel-pill-width) * 1.35));
 		}
 		@media (prefers-reduced-motion: no-preference) {
-			:where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-			:where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+			:where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+			:where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
 				animation: ui-carousel-pill-fill var(--ui-carousel-autoplay) linear forwards;
 				animation-play-state: var(--ui-carousel-play-state, running);
 				background: linear-gradient(var(--ui-carousel-pill-fill), var(--ui-carousel-pill-fill)) no-repeat 0 0 / 0% 100% var(--ui-carousel-pill-track);
 			}
 		}
 		@media (prefers-reduced-motion: reduce) {
-			:where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-			:where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+			:where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+			:where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
 				background-color: var(--ui-carousel-pill-fill);
 			}
 		}
@@ -274,8 +274,8 @@
 		:where(ui-card, ui-reveal):where([media*="mrk(non)"]) :where(ui-media),
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(non)"]) { scroll-marker-group: none; }
 
-		:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
+		:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
 			aspect-ratio: var(--ui-carousel-thumb-ratio, 4 / 3);
 			background: var(--ui-carousel-thumb-url) center / cover no-repeat var(--ui-carousel-thumb-bg, rgb(0 0 0 / 0.2));
 			block-size: var(--ui-carousel-thumb-size, 2.25rem);
@@ -286,8 +286,8 @@
 			opacity: var(--ui-carousel-thumb-opacity, 1);
 			transition: border-color var(--duration-fast, 100ms) var(--ease-default, ease), opacity var(--duration-fast, 100ms) var(--ease-default, ease);
 		}
-		:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+		:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
 			/* layer 1 = timer stripe (grows L→R), layer 2 = the thumbnail */
 			background:
 				linear-gradient(var(--ui-carousel-thumb-timer, #fff), var(--ui-carousel-thumb-timer, #fff)) bottom left / 0 var(--ui-carousel-thumb-timer-height, 3px) no-repeat,
@@ -296,8 +296,8 @@
 			opacity: 1;
 		}
 		@media (prefers-reduced-motion: no-preference) {
-			:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-			:where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+			:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+			:where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
 				animation: var(--ui-carousel-thumb-timer-name, none) var(--ui-carousel-autoplay) linear forwards;
 				animation-play-state: var(--ui-carousel-play-state, running);
 			}
@@ -653,8 +653,8 @@
 			justify-self: anchor-center;
 			position-anchor: --ui-carousel-bar;
 		}
-		:where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
+		:where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
 			background: linear-gradient(var(--ui-carousel-marker-bg) 0 0) no-repeat center / 100% var(--ui-carousel-bar-track-size, 1px);
 			block-size: 100%;
 			border: 0;
@@ -662,13 +662,13 @@
 			flex: 1 1 0;
 			inline-size: auto;
 		}
-		:where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+		:where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
 			background: linear-gradient(var(--ui-carousel-marker-active) 0 0) no-repeat center / 100% var(--ui-carousel-bar-size, 3px);
 		}
 		/* segments are visually seamless, so keyboard focus needs its own ring */
-		:where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"]) > :not(ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible {
+		:where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible {
 			outline: var(--ring-width, 2px) solid var(--ring-color, currentColor);
 			outline-offset: calc(-1 * var(--ring-width, 2px));
 		}

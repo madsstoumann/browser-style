@@ -156,7 +156,7 @@ left/right buttons, a horizontal one dead up/down).
   or a plain `<div>`. The carousel only makes it a snap child
   (`flex: 0 0 100%; scroll-snap-align: start`) and gives it **one** `::scroll-marker`.
 
-**Excluded — overlay furniture.** `<ui-chip>` / `<ui-sticker>` / `<ui-play>` / `<ui-save>`
+**Excluded — overlay furniture.** `<ui-chip>` / `<ui-beacon>` / `<ui-sticker>` / `<ui-play>` / `<ui-save>`
 are direct children too, but stay absolutely positioned over the frame (media.css). The
 `:not()` keeps them out of the slide layout *and* out of the marker set (no phantom markers).
 The same exclusion list lives in `ui-media.js` (`NOT_SLIDE`) for the loop/autoplay count.

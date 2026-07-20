@@ -118,21 +118,15 @@
 	<hr>
 	<h2>Pause behavior</h2>
 
-	<h3>1. <code>prefers-reduced-motion: reduce</code> (system-level)</h3>
-	<p>Toggle DevTools → Rendering → "Emulate CSS media feature prefers-reduced-motion: reduce" — every animation above stops automatically.</p>
+	<h3>1. <code>prefers-reduced-motion</code> (system-level, opt-in)</h3>
+	<p>Every animation is gated behind <code>prefers-reduced-motion: no-preference</code> — under
+		"reduce" (DevTools → Rendering → emulate) no beacon animation ever <em>starts</em>. No
+		per-instance wiring needed.</p>
 
 	<h3>2. Declarative <code>paused</code> attribute</h3>
 	<div class="row">
 		<ui-beacon variant="solid" color="error">Running</ui-beacon>
 		<ui-beacon variant="solid" color="error" paused>Paused</ui-beacon>
-	</div>
-
-	<h3>3. Click-to-pause (legacy checkbox)</h3>
-	<p>Click any animated label to pause / resume. The component renders an inner label + hidden checkbox automatically.</p>
-	<div class="row">
-		<ui-beacon variant="solid" color="error">Click me</ui-beacon>
-		<ui-beacon variant="pill" color="info" animation="pulse">Click me</ui-beacon>
-		<ui-beacon color="success" animation="blink">Click me</ui-beacon>
 	</div>
 
 	<hr>
@@ -156,15 +150,13 @@
 
 	<hr>
 	<h2>CSS-only authoring</h2>
-	<p>Without the JS module, author the markup directly. Bare dots need no inner markup; labelled / ticker variants do.</p>
+	<p>Without the JS module, author the markup directly. Bare dots need no inner markup; only the ticker needs inner structure.</p>
 
 	<h3>Bare dot</h3>
 	<ui-beacon animation="blink" color="error"></ui-beacon>
 
-	<h3>Solid with click-to-pause</h3>
-	<ui-beacon variant="solid" color="error">
-		<label><input type="checkbox" data-sr><span>LIVE</span></label>
-	</ui-beacon>
+	<h3>Solid</h3>
+	<ui-beacon variant="solid" color="error">LIVE</ui-beacon>
 
 	<h3>Ticker</h3>
 	<ui-beacon variant="ticker" color="error">

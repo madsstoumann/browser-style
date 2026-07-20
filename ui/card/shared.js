@@ -12,7 +12,7 @@ export const mediaStr = (el) => {
 };
 
 // slides = direct children minus overlay furniture and nested <lay-out> wrappers
-const NOT_SLIDE = /^(UI-CHIP|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS|LAY-OUT)$/;
+const NOT_SLIDE = /^(UI-BEACON|UI-CHIP|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS|LAY-OUT)$/;
 export const slidesOf = (el) => [...el.children].filter(c => !NOT_SLIDE.test(c.tagName));
 
 // muted + autoplay = silent background loop; never coordinated/paused

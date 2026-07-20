@@ -187,7 +187,7 @@ const embedVideoObject = (item) => {
 
 /* ── media column ── */
 
-/* ── overlay furniture (chip / sticker / save / play) ──
+/* ── overlay furniture (chip / sticker / save / play / beacon) ──
    Content = the furniture object (text/semantics only). Look = the preset's
    media= tokens; each item's optional style= override is appended and, for a
    token that collides with the preset on the same axis, replaces it (the CSS
@@ -197,10 +197,11 @@ const embedVideoObject = (item) => {
 
 const FURNITURE_AXIS = {
 	pos: new Set(['ts', 'tc', 'te', 'cs', 'cc', 'ce', 'bs', 'bc', 'be']),
-	hue: new Set(['red', 'orange', 'green', 'blue', 'accent', 'dark', 'light', 'subtle']),
+	hue: new Set(['red', 'orange', 'green', 'blue', 'accent', 'gray', 'slate', 'black', 'white', 'dark', 'light', 'subtle']),
 	size: new Set(['sm', 'md', 'lg', 'xl', '2xl', '3xl']),
 	variant: new Set(['lgt', 'out']),
 	shape: new Set(['text', 'spl', 'spr']),
+	anim: new Set(['bln', 'pls', 'brt']), /* beacon animations (beacon(non) turns solid's default blink off — axis 'disc') */
 	disc: new Set(['crc', 'sqr', 'rnd', 'pll', 'non'])
 };
 const axisOf = (value) => {
@@ -208,7 +209,7 @@ const axisOf = (value) => {
 	for (const [axis, set] of Object.entries(FURNITURE_AXIS)) if (set.has(value)) return axis;
 	return value; /* unknown → exact-match replacement */
 };
-const FURNITURE_TOKEN = /^(chip|sticker|save|play)\(([^)]*)\)$/;
+const FURNITURE_TOKEN = /^(beacon|chip|sticker|save|play)\(([^)]*)\)$/;
 
 /* Merge a preset media= string with furniture style-override tokens. Overrides
    win: any preset token of the same element+axis is dropped before appending. */
@@ -295,6 +296,14 @@ const buildFurniture = (furniture, fields, tokens, mediaId) => {
 		const chip = furniture.chip;
 		html += `<ui-chip>${esc(chip.text)}${chip.badge ? `<ui-badge>${esc(chip.badge)}</ui-badge>` : ''}</ui-chip>`;
 		push('chip', chip.style);
+	}
+	if (furniture.beacon?.text) {
+		/* marker-class live/status indicator — plain text-only markup (summary-
+		   safe); look comes from beacon(…) tokens: position/hue/size/variant
+		   (pll|sld)/animation (bln|pls|brt|non — reduced-motion-gated in CSS) */
+		const beacon = furniture.beacon;
+		html += `<ui-beacon>${esc(beacon.text)}</ui-beacon>`;
+		push('beacon', beacon.style);
 	}
 	if (furniture.sticker?.lines?.length) {
 		const sticker = furniture.sticker;

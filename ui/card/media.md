@@ -1,6 +1,6 @@
 # @browser.style/media
 
-A CSS-first **media primitive** — an image/video frame with overlay furniture (label, sticker, favorite, play). It works **standalone** or **nested inside** `<ui-card>` / `<ui-reveal>`, and it is configured entirely through a compact `media=` token string that can sit on the element *itself* or on its **`<ui-card>` / `<ui-reveal>` host** (the configuration inherits down through custom properties — but stops at the card: a `media=` on any other ancestor, e.g. a `<lay-out>`, configures that element's own scroller and never leaks into a nested `<ui-media>`).
+A CSS-first **media primitive** — an image/video frame with overlay furniture (label, beacon, sticker, favorite, play). It works **standalone** or **nested inside** `<ui-card>` / `<ui-reveal>`, and it is configured entirely through a compact `media=` token string that can sit on the element *itself* or on its **`<ui-card>` / `<ui-reveal>` host** (the configuration inherits down through custom properties — but stops at the card: a `media=` on any other ancestor, e.g. a `<lay-out>`, configures that element's own scroller and never leaks into a nested `<ui-media>`).
 
 > **Status:** shipped (v4). `<ui-media>` is the media primitive extracted from `ui-card.css` into `ui/card/media.css`, per `docs/plans/2026-06-20-ui-media-content-split-design.md`. This documents the implemented API.
 
@@ -11,7 +11,7 @@ A CSS-first **media primitive** — an image/video frame with overlay furniture 
 - Hover effects (zoom / pan / cursor-track) — media-only
 - Scrim gradients in **9 directions** (4 edges + 4 diagonals + a centered double-stop)
 - Native carousel via `::scroll-marker` / `::scroll-button` (markers + arrows)
-- A **3×3 overlay grid** for furniture: `<ui-chip>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`
+- A **3×3 overlay grid** for furniture: `<ui-chip>`, `<ui-beacon>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`
 - Logical / RTL-aware positioning — geometry defined once, mirrors automatically
 - Reads its own inherited `--ui-media-*` namespace — no descendant-selector coupling, so it is **inert-proof standalone**
 - Works without JavaScript (CSS-only mode); markers need no JS at all
@@ -187,7 +187,7 @@ Every `()` token is *sugar* over a custom property, so any value that has no tok
 
 ## Overlay furniture
 
-The media area hosts four overlay elements. They carry **only their text/glyph** — position and theme come from the parent `media=` string (so a `<ui-card>` can configure them and the config inherits down).
+The media area hosts five overlay elements. They carry **only their text/glyph** — position and theme come from the parent `media=` string (so a `<ui-card>` can configure them and the config inherits down).
 
 ### The 3×3 positioning grid
 
@@ -201,16 +201,17 @@ bs   bc   be        bottom-start bottom-center bottom-end
 
 Positions use **logical** insets (`inset-inline-start/-end`), so they **mirror automatically in RTL** — `ts` renders top-right in Arabic. An overlay element just *picks a position*; the geometry is keyed on the parent `media="el(pos)"` token, never duplicated per element instance. The `img` / `video` sit underneath (`position: absolute; inset: 0`).
 
-### The four elements & their default areas
+### The five elements & their default areas
 
 | Element | Role | Default area | Type | Valid in `<summary>`? |
 |---------|------|--------------|------|------------------------|
 | `<ui-chip>` | label ("New", "Sale") | `ts` (top-start) | marker (non-interactive) | ✅ yes |
+| `<ui-beacon>` | live/status indicator ("LIVE", "REC") | `bs` (bottom-start) | marker (non-interactive) | ✅ yes |
 | `<ui-sticker>` | callout disc / burst ("−20%") | `te` (top-end) | marker (non-interactive) | ✅ yes |
 | `<ui-save>` | favorite / wishlist toggle | `te` (top-end) | **control** (interactive) | ❌ card-only |
 | `<ui-play>` | play affordance | `cc` (center) | **control** (interactive) | ❌ card-only |
 
-**Markers vs controls.** Markers (`<ui-chip>`, `<ui-sticker>`) are non-interactive autonomous custom elements = valid **phrasing content**, so they parse inside a card *and* inside a reveal `<summary>` (the trigger face), with **no JS**. Controls (`<ui-save>`, `<ui-play>`) are interactive → **card-only**: a click inside `<summary>` toggles the `<details>`, and interactive content is invalid there.
+**Markers vs controls.** Markers (`<ui-chip>`, `<ui-beacon>`, `<ui-sticker>`) are non-interactive autonomous custom elements = valid **phrasing content**, so they parse inside a card *and* inside a reveal `<summary>` (the trigger face), with **no JS**. Controls (`<ui-save>`, `<ui-play>`) are interactive → **card-only**: a click inside `<summary>` toggles the `<details>`, and interactive content is invalid there.
 
 ### Position override
 
@@ -256,6 +257,7 @@ They route into the element's **own** tokens (`--ui-chip-bg` / `--ui-chip-c`, `-
 | Element | Shape / markup | Notes |
 |---------|----------------|-------|
 | `<ui-chip>` | pill label (reuses `ui/chip`) | `variant` light/outline/square/squircle, `size`, `theme`, `color`. (The unrelated `<ui-badge>` cart-number badge is untouched.) |
+| `<ui-beacon>` | animated dot / pill / solid label (reuses `ui/beacon`) | the chip's **live** counterpart. Card tokens: hue `beacon(red…white)` (same `--ui-theme-*` bundles as chip/sticker), variant `beacon(pll)` pill / `beacon(sld)` solid, animation `beacon(bln)` blink / `beacon(pls)` pulse / `beacon(brt)` breathe / `beacon(non)` off (solid defaults to blink), size `beacon(xs\|sm\|md\|lg)`. Over imagery prefer `pll`/`sld` — the bare dot has no contrast plate. **Marker-class as furniture**: plain text-only markup, summary-safe. Animations are gated behind `prefers-reduced-motion: no-preference` (never start for reduced-motion users); `[paused]` freezes a running one. |
 | `<ui-sticker>` | round disc; opt-in starburst via `variant="sh:burst"` (`--ui-sticker-clip-path`); **multi-line** | each direct child is a line; `--ui-sticker-gap` controls line-spacing, `text-box: cap alphabetic` trims leading |
 | `<ui-save>` | `<ui-save><input type="checkbox" aria-label="Save"></ui-save>` | favorite ≈ wishlist ≈ bookmark. State + a11y + keyboard from the checkbox, **zero JS**. Icon swappable via `--ui-save-icon` (heart / bookmark / star). |
 | `<ui-play>` | `<ui-play><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>` | play affordance (default `cc`). `variant="reveal"` hides until media hover/focus. JS web component swaps `<ui-icon type>` play↔pause, toggles `aria-pressed`, emits `ui-play-toggle`, and optionally drives a `<video>` via `for="videoId"`. CSS-only fallback = the authored static button. **In a scrolling carousel** (`auto`/`loop`) it becomes the play/pause control: `position:sticky`-pinned to the scrollport (plain furniture scrolls away) and wired by `ui-media.js` — see [media.carousel.md](./media.carousel.md#playpause-control-ui-play). |

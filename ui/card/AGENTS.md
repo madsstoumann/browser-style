@@ -8,7 +8,7 @@ A CSS-first **universal card system**: one set of primitives renders articles, p
 
 Each card has two areas:
 
-- **`<ui-media>`** — the media frame: images, video, carousels, plus "furniture" overlaid on top (chips, stickers, save/play buttons).
+- **`<ui-media>`** — the media frame: images, video, carousels, plus "furniture" overlaid on top (chips, beacons, stickers, save/play buttons).
 - **`<ui-content>`** — the text column: eyebrow, headline, summary, byline, tags, actions… tagged with `data-part` and schema.org microdata.
 
 They compose inside a host — `<ui-card>` (static) or `<ui-reveal>` (disclosure, in `ui/reveal`) — and the host adapts its internal arrangement to **its own width** via container queries, so the same markup works as a hero, a grid cell, or a sidebar item.
@@ -36,7 +36,7 @@ They compose inside a host — `<ui-card>` (static) or `<ui-reveal>` (disclosure
 | `<ui-content>` | no | text column |
 | `<ui-reveal>` | no | disclosure host built on `<details>/<summary>` (`ui/reveal`) |
 | `<ui-face>` | no | front-face wrapper inside `<summary>` for flip/scale/slide |
-| `<ui-chip>`, `<ui-sticker>` | no | marker furniture (labels/badges on media) — own packages `ui/chip`, `ui/sticker` |
+| `<ui-chip>`, `<ui-sticker>`, `<ui-beacon>` | no* | marker furniture (labels/badges/live indicators on media) — own packages `ui/chip`, `ui/sticker`, `ui/beacon` (*beacon ships an optional WC for ticker markup only; as furniture it renders CSS-only) |
 | `<ui-save>`, `<ui-play>` | no | interactive furniture — `ui/save`, `ui/play` |
 | `<ui-icon>` | no | reveal toggle icon — `ui/icon` |
 
@@ -50,7 +50,7 @@ Space-separated token strings; values flow down via CSS custom properties, so a 
 |---|---|---|---|---|
 | `variant=` | `ui-card` / `ui-reveal` | composition (+ all reveal config on `ui-reveal` — `exp`/`flp()`/`sld()`/`scl()` etc., see below) | `col` `row` `col-r` `row-r` `spl(1/2)` `vis(media)` `ovr(bl)` `rds(lg-sq)` | `ui-card-tokens.md` |
 | `theme=` | `ui-card` / `ui-reveal` | shared theme axis (colour + `pale`/`muted`/`light`/`dark`) | `black dark` `red pale` `gray` | `../base/theme.md` |
-| `media=` | `ui-media` or its card host (also `lay-out[overflow]` for its own scroller) | media frame + **all carousel controls (media-token-only — the old `nav=`/`arrow=`/`dot=`/`vid=`/`ply=`/`eager` attributes are removed)** | `asr(16/9)` `obf()` `obp(cc)` `flp(h)` `hov(zoom)` `scm` `nav(mrk)` `arw(drk)` `mrk(pll)` `axis(y)` `auto` `loop` `stagger` `chip(ts)` `sticker(red)` `vid()` `ply()` `load(eager)` | `media.md`, `carousel.md`, `media.carousel.md` |
+| `media=` | `ui-media` or its card host (also `lay-out[overflow]` for its own scroller) | media frame + **all carousel controls (media-token-only — the old `nav=`/`arrow=`/`dot=`/`vid=`/`ply=`/`eager` attributes are removed)** | `asr(16/9)` `obf()` `obp(cc)` `flp(h)` `hov(zoom)` `scm` `nav(mrk)` `arw(drk)` `mrk(pll)` `axis(y)` `auto` `loop` `stagger` `chip(ts)` `sticker(red)` `beacon(sld)` `vid()` `ply()` `load(eager)` | `media.md`, `carousel.md`, `media.carousel.md` |
 | `content=` | `ui-content` or ancestor | text column | `scl(lg)` `hl(3xl)` `eb(accent)` `tx(lgt)` `mt(med)` `pad(xl)` `gap()` `scr` | `content.md` |
 
 ## Container-query model (how cards respond)
@@ -83,7 +83,7 @@ Shape: `{ element, variant, media, content, text?, styles?, reveal?{type, typeLg
 
 ## ui/reveal — the sibling
 
-`<ui-reveal>` (`ui/reveal/ui-reveal.css`) composes the **same engine** over native `<details>/<summary>` — it `@import`s `../card/ui-card.css`, so all three DSLs work unchanged. Front face lives in `<summary>` (wrapped in `<ui-face>` for flip/scale/slide), the revealed panel is the one element after `</summary>` (usually `<ui-content>`), animated via `::details-content`. Reveal-specific config is **`variant=` tokens** (the old `type`/`type-lg`/`from`/`to`/`trigger`/`scroll`/`icon`/`icon-close` attributes are removed): `exp` · `flp(top|btm|lft)` · `sld(top|btm|lft|rgt)` · `scl(ts|te|bs|be)` (the animation token carries its own direction/origin; type+from fold into one), `lg:scl` (container-tier swap, was `type-lg`), `pop` (popup mode, was `to=`), `trg(card)`, `scr`, `ico(ts|te|bs|be|drk|sem|sm|lg)` one token per word, `icc(…)` same words for the open-state icon; native `<details name>` still handles exclusivity. Interactive furniture (`ui-save`/`ui-play`) is **invalid inside `<summary>`**; markers (`ui-chip`/`ui-sticker`) are fine. Details: `ui/reveal/readme.md`, design rationale: `ui/reveal/plan.md`.
+`<ui-reveal>` (`ui/reveal/ui-reveal.css`) composes the **same engine** over native `<details>/<summary>` — it `@import`s `../card/ui-card.css`, so all three DSLs work unchanged. Front face lives in `<summary>` (wrapped in `<ui-face>` for flip/scale/slide), the revealed panel is the one element after `</summary>` (usually `<ui-content>`), animated via `::details-content`. Reveal-specific config is **`variant=` tokens** (the old `type`/`type-lg`/`from`/`to`/`trigger`/`scroll`/`icon`/`icon-close` attributes are removed): `exp` · `flp(top|btm|lft)` · `sld(top|btm|lft|rgt)` · `scl(ts|te|bs|be)` (the animation token carries its own direction/origin; type+from fold into one), `lg:scl` (container-tier swap, was `type-lg`), `pop` (popup mode, was `to=`), `trg(card)`, `scr`, `ico(ts|te|bs|be|drk|sem|sm|lg)` one token per word, `icc(…)` same words for the open-state icon; native `<details name>` still handles exclusivity. Interactive furniture (`ui-save`/`ui-play`) is **invalid inside `<summary>`**; markers (`ui-chip`/`ui-sticker`/`ui-beacon`) are fine. Details: `ui/reveal/readme.md`, design rationale: `ui/reveal/plan.md`.
 
 ## Layout integration (section layout comes from /layout)
 
