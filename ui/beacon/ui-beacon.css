@@ -182,12 +182,6 @@
 		50% { transform: scale(0.8); opacity: 0.6; }
 	}
 
-	/* --_slide moves the panel (translate %, border box) and the text (text-indent
-	   %, content box) different pixel distances, so the text can't travel locked to
-	   the panel. Instead of syncing motion, sync APPEARANCE: text + dots ride
-	   currentColor, kept transparent through the slide-in and faded in (0%→5%) just
-	   after the solid panel lands — so they read as arriving with the background.
-	   The panel itself stays visible the whole time via --_fade. */
 	@keyframes beacon-slide {
 		0%   { color: #0000; }
 		5%   { color: var(--ui-beacon-ink, hsl(0, 0%, 100%)); }
