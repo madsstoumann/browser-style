@@ -1,25 +1,12 @@
 /**
  * ui-beacon
- * @version 4.3.0
- * @date 2026-07-20
+ * @version 4.3.1
+ * @date 2026-07-23
  * @author Mads Stoumann
- *
- * Colour: color= (semantic) · theme= (shared axis, base/theme.css) ·
- * beacon(<hue>) card token (--ui-theme-* bundles, aligned with chip/sticker).
- * Card tokens (media=): position beacon(ts…be) lives in ui/card/media.css;
- * hue/size/face/animation dual arms live here next to their attribute twins.
- * Zero JavaScript — every face incl. the ticker is markup-free CSS.
  */
-
-/* Ticker animation clock — ONE registered property pair, animated by a single
-   host animation and consumed by the text (text-indent), the panel (::before
-   translate/opacity) and the dot loader (::after translate/opacity). A shared
-   inherited property is what makes the markup-free ticker possible: transforms
-   can't move inline text and CSS can't wrap a text node, but text-indent is
-   animatable — driving it and the pseudos from the same interpolated value
-   keeps all three in frame-perfect sync (no parallel-keyframes drift). */
 @property --_slide { syntax: "<percentage>"; inherits: true; initial-value: 0%; }
 @property --_fade  { syntax: "<number>"; inherits: true; initial-value: 1; }
+
 @layer bs-component {
 	:where(ui-beacon) {
 		--ui-beacon-bg: var(--color-text);
@@ -32,12 +19,11 @@
 		--ui-beacon-slide-duration: 5s;
 
 		color: var(--ui-beacon-bg);
-		column-gap: 0.6ch;
+		column-gap: 0.6ch; /* space between the dot and the label */
 		display: inline-flex;
-		font-family: var(--font-form);
+		font-family: var(--ui-beacon-ff, var(--font-form));
 		font-size: var(--ui-beacon-font-size);
 		font-weight: var(--ui-beacon-font-weight);
-		line-height: var(--line-height-snug);
 		place-items: center;
 		text-box: cap alphabetic;
 		white-space: nowrap;
@@ -52,21 +38,12 @@
 			width: var(--ui-beacon-size);
 		}
 
-		/* colors — same palette as badge/chip */
+		/* colors */
 		&[color="info"]    { --ui-beacon-bg: var(--color-info); }
 		&[color="success"] { --ui-beacon-bg: var(--color-success); }
 		&[color="warning"] { --ui-beacon-bg: var(--color-warning); }
 		&[color="error"]   { --ui-beacon-bg: var(--color-error); }
 
-		/* ───────── Furniture axes — theme · hue (aligned with ui-chip/ui-sticker) ─────────
-		   Each axis: `&[attr]` = standalone, `:where([media*="beacon(…)"]) &` = card token.
-		   --ui-beacon-bg is the single colour input (dot / pill accent / solid fill);
-		   --ui-beacon-ink is the label ink on the solid/ticker face (default white).
-		   Standalone theme= resolves via base/theme.css into --_theme-* (incl. the
-		   pale/muted modifiers; light/dark set color-scheme on the beacon directly).
-		   Card-routed media="beacon(<hue>)" feeds the --ui-theme-* bundle — same
-		   vocabulary as chip(<hue>)/sticker(<hue>). Declared after color= so a theme
-		   or hue wins when both are present. */
 		&[theme] { --ui-beacon-bg: var(--_theme-bg); --ui-beacon-ink: var(--_theme-c, var(--_theme-ink)); }
 		:where([media*="beacon(red)"])    & { --ui-beacon-bg: var(--ui-theme-red-bg);    --ui-beacon-ink: var(--ui-theme-red-c); }
 		:where([media*="beacon(orange)"]) & { --ui-beacon-bg: var(--ui-theme-orange-bg); --ui-beacon-ink: var(--ui-theme-orange-c); }
@@ -86,12 +63,7 @@
 	:where(ui-beacon[size="md"], [media*="beacon(md)"] ui-beacon) { --ui-beacon-font-size: 0.875em; }
 	:where(ui-beacon[size="lg"], [media*="beacon(lg)"] ui-beacon) { --ui-beacon-font-size: 1em; }
 
-	/* === Animations target the dot (::before) for default + pill variants ===
-	   Dual arms: animation= standalone, beacon(bln|pls|brt|non) as a card token.
-	   MOTION IS OPT-IN at the system level: every animation in this file is
-	   gated behind prefers-reduced-motion: no-preference, so reduced-motion
-	   users get a static beacon with zero per-instance wiring (no click-to-
-	   pause checkbox needed). [paused] still freezes a running animation. */
+	/* === Animations === */
 	@media (prefers-reduced-motion: no-preference) {
 		:where(ui-beacon[animation="blink"], [media*="beacon(bln)"] ui-beacon)::before {
 			animation: beacon-blink var(--ui-beacon-blink-duration) infinite;
