@@ -9,10 +9,6 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-beacon.css">
-	<style>
-		.row { align-items: center; display: flex; flex-wrap: wrap; gap: 1.25rem; margin-block-end: 0.75rem; }
-		.row > span { color: var(--color-text-light); font-size: var(--font-size-xs); min-width: 5ch; }
-	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
@@ -28,141 +24,119 @@
 	<p>The atomic primitive — a colored circle. Optional inline label.</p>
 
 	<h3>Static dot, all colors</h3>
-	<div class="row">
+	<p>
 		<ui-beacon></ui-beacon>
 		<ui-beacon color="info"></ui-beacon>
 		<ui-beacon color="success"></ui-beacon>
 		<ui-beacon color="warning"></ui-beacon>
 		<ui-beacon color="error"></ui-beacon>
-	</div>
+	</p>
 
 	<h3>Sizes (xs, sm, md, lg)</h3>
-	<div class="row">
+	<p>
 		<ui-beacon size="xs" color="success"></ui-beacon>
 		<ui-beacon size="sm" color="success"></ui-beacon>
 		<ui-beacon size="md" color="success"></ui-beacon>
 		<ui-beacon size="lg" color="success"></ui-beacon>
-	</div>
+	</p>
 
 	<h3>With inline label</h3>
-	<div class="row">
-		<ui-beacon color="success">Online</ui-beacon>
-		<ui-beacon color="warning">Away</ui-beacon>
-		<ui-beacon color="error">Busy</ui-beacon>
+	<p>
+		<ui-beacon color="success">Online</ui-beacon>&nbsp;
+		<ui-beacon color="warning">Away</ui-beacon>&nbsp;
+		<ui-beacon color="error">Busy</ui-beacon>&nbsp;
 		<ui-beacon>Offline</ui-beacon>
-	</div>
+	</p>
 
 	<hr>
 	<h2>Animations</h2>
 
-	<h3>Blink — broadcast feel (LIVE / REC)</h3>
-	<div class="row">
-		<ui-beacon animation="blink" color="error"></ui-beacon>
-		<ui-beacon animation="blink" color="error">Recording</ui-beacon>
+	<h3>Blink</h3>
+	<p>
+		<ui-beacon animation="blink" color="error">Recording</ui-beacon> &nbsp; 
 		<ui-beacon animation="blink" color="success">Active stream</ui-beacon>
-	</div>
+	</p>
 
-	<h3>Pulse — outward ripple (attention / onboarding)</h3>
-	<div class="row">
-		<ui-beacon animation="pulse" color="info"></ui-beacon>
-		<ui-beacon animation="pulse" color="info">New feature</ui-beacon>
+	<h3>Pulse</h3>
+	<p>
+		<ui-beacon animation="pulse" color="info">New feature</ui-beacon> &nbsp; 
 		<ui-beacon animation="pulse" color="success">Connected</ui-beacon>
-	</div>
+	</p>
 
-	<h3>Breathe — gentle scale (ambient / processing)</h3>
-	<div class="row">
-		<ui-beacon animation="breathe" color="warning"></ui-beacon>
-		<ui-beacon animation="breathe" color="warning">Syncing</ui-beacon>
+	<h3>Breathe</h3>
+	<p>
+		<ui-beacon animation="breathe" color="warning">Syncing</ui-beacon> &nbsp; 
 		<ui-beacon animation="breathe" color="info">Loading</ui-beacon>
-	</div>
+	</p>
 
 	<hr>
 	<h2>Pill variant</h2>
 	<p>Chip-style tinted background with a colored dot inside.</p>
-	<div class="row">
-		<ui-beacon variant="pill" color="error" animation="blink">Live</ui-beacon>
-		<ui-beacon variant="pill" color="success" animation="pulse">Online</ui-beacon>
-		<ui-beacon variant="pill" color="warning" animation="breathe">Idle</ui-beacon>
+	<p>
+		<ui-beacon variant="pill" color="error" animation="blink">Live</ui-beacon>&nbsp;
+		<ui-beacon variant="pill" color="success" animation="pulse">Online</ui-beacon>&nbsp;
+		<ui-beacon variant="pill" color="warning" animation="breathe">Idle</ui-beacon>&nbsp;
 		<ui-beacon variant="pill" color="info">Beta</ui-beacon>
-	</div>
+	</p>
 
 	<hr>
 	<h2>Solid variant</h2>
 	<p>The classic blinking pill — solid colored background with white text. Defaults to blink animation.</p>
-	<div class="row">
-		<ui-beacon variant="solid">Live now</ui-beacon>
-		<ui-beacon variant="solid" color="info">News</ui-beacon>
-		<ui-beacon variant="solid" color="success">On Air</ui-beacon>
-		<ui-beacon variant="solid" color="warning">Caution</ui-beacon>
+	<p>
+		<ui-beacon variant="solid">Live now</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" color="info">News</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" color="success">On Air</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" color="warning">Caution</ui-beacon>&nbsp;
 		<ui-beacon variant="solid" color="error">LIVE</ui-beacon>
-	</div>
+	</p>
 
 	<h3>Solid with alternative animation</h3>
-	<div class="row">
-		<ui-beacon variant="solid" color="error" animation="pulse">Alert</ui-beacon>
-		<ui-beacon variant="solid" color="info" animation="breathe">Loading</ui-beacon>
+	<p>
+		<ui-beacon variant="solid" color="error" animation="pulse">Alert</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" color="info" animation="breathe">Loading</ui-beacon>&nbsp;
 		<ui-beacon variant="solid" color="success" animation="none">Static</ui-beacon>
-	</div>
+	</p>
 
 	<hr>
 	<h2>Ticker variant</h2>
-	<p>Slide-out / slide-in compound animation with a trailing dot loader — for streaming-style tickers.</p>
-	<div class="row">
-		<ui-beacon variant="ticker">Live</ui-beacon>
-		<ui-beacon variant="ticker" color="info">Breaking</ui-beacon>
-		<ui-beacon variant="ticker" color="success">Update</ui-beacon>
+	<p>Slide-out / slide-in compound animation with a trailing dot loader.</p>
+	<p>
+		<ui-beacon variant="ticker">Live</ui-beacon>&nbsp;
+		<ui-beacon variant="ticker" color="info">Breaking</ui-beacon>&nbsp;
+		<ui-beacon variant="ticker" color="success">Update</ui-beacon>&nbsp;
 		<ui-beacon variant="ticker" color="error">Live</ui-beacon>
-	</div>
+	</p>
 
 	<hr>
 	<h2>Pause behavior</h2>
 
-	<h3>1. <code>prefers-reduced-motion</code> (system-level, opt-in)</h3>
+	<h3><code>prefers-reduced-motion</code> (system-level, opt-in)</h3>
 	<p>Every animation is gated behind <code>prefers-reduced-motion: no-preference</code> — under
 		"reduce" (DevTools → Rendering → emulate) no beacon animation ever <em>starts</em>. No
 		per-instance wiring needed.</p>
 
-	<h3>2. Declarative <code>paused</code> attribute</h3>
-	<div class="row">
-		<ui-beacon variant="solid" color="error">Running</ui-beacon>
+	<h3><code>paused</code> attribute</h3>
+	<p>
+		<ui-beacon variant="solid" color="error">Running</ui-beacon>&nbsp;
 		<ui-beacon variant="solid" color="error" paused>Paused</ui-beacon>
-	</div>
+	</p>
 
 	<hr>
 	<h2>Opposite color scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
-		<ui-beacon color="success">Online</ui-beacon>
-		<ui-beacon animation="pulse" color="info">Pulse</ui-beacon>
-		<ui-beacon variant="pill" color="warning" animation="breathe">Idle</ui-beacon>
-		<ui-beacon variant="solid" color="error">LIVE</ui-beacon>
+	<p class="bdrs-md cs-opposite pb-3 pi-3">
+		<ui-beacon color="success">Online</ui-beacon>&nbsp;
+		<ui-beacon animation="pulse" color="info">Pulse</ui-beacon>&nbsp;
+		<ui-beacon variant="pill" color="warning" animation="breathe">Idle</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" color="error">LIVE</ui-beacon>&nbsp;
 		<ui-beacon variant="ticker" color="error">Live</ui-beacon>
-	</div>
+	</p>
 
-	<br>
 	<h2>Right-to-left</h2>
-	<div dir="rtl" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
-		<ui-beacon color="success">متصل</ui-beacon>
-		<ui-beacon variant="pill" color="error" animation="blink">مباشر</ui-beacon>
-		<ui-beacon variant="solid" color="error">LIVE</ui-beacon>
+	<p dir="rtl">
+		<ui-beacon color="success">متصل</ui-beacon>&nbsp;
+		<ui-beacon variant="pill" color="error" animation="blink">مباشر</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" color="error">LIVE</ui-beacon>&nbsp;
 		<ui-beacon variant="ticker" color="error">Live</ui-beacon>
-	</div>
-
-	<hr>
-	<h2>CSS-only authoring</h2>
-	<p>Every face is markup-free — plain text content only. No JavaScript, no inner elements: the ticker's sliding panel and dot loader are pseudo-elements riding one registered animation clock.</p>
-
-	<h3>Bare dot</h3>
-	<ui-beacon animation="blink" color="error"></ui-beacon>
-
-	<h3>Solid</h3>
-	<ui-beacon variant="solid" color="error">LIVE</ui-beacon>
-
-	<h3>Ticker</h3>
-	<ui-beacon variant="ticker" color="error">Live</ui-beacon>
-
-	<hr>
-	<h2>Token customization</h2>
-	<ui-beacon style="--ui-beacon-bg: crimson; --ui-beacon-size: 1rem; --ui-beacon-pulse-duration: 2.5s;" animation="pulse">Custom</ui-beacon>
-
+	</p>
 </body>
 </html>

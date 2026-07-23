@@ -141,30 +141,22 @@
 		}
 	}
 
-	/* === Ticker variant — original ui-live. Dual arm like the other faces:
-	   variant="ticker" standalone, beacon(tck) as the card token. MARKUP-FREE:
-	   plain text content only — the host is the clipping track (text rides on
-	   animated text-indent), ::before is the sliding colored panel, ::after is
-	   the 3-dot loader; all three consume the same --_slide/--_fade clock (see
-	   the @property registrations at the top). Not inline-flex: text-indent
-	   only applies to block containers, so the face is inline-block. === */
+	/* === Ticker variant === */
 	:where(ui-beacon[variant~="ticker"], [media*="beacon(tck)"] ui-beacon) {
 		background: var(--ui-beacon-track-bg, color-mix(in oklch, var(--ui-beacon-bg) 15%, var(--color-surface)));
+		border-radius: var(--radius-sm);
+		padding-block: 0.33em;
 		color: var(--ui-beacon-ink, hsl(0, 0%, 100%));
-		display: inline-block;
-		isolation: isolate; /* keeps the panel's z-index:-1 above the track bg, below the text */
+		isolation: isolate;
 		overflow: hidden;
-		padding: 0.25ch 1.5ch;
-		padding-inline-end: calc(1.5ch + 1ch + 1.4em); /* reserve the dot-loader area */
-		/* containing block for the inset:0 pseudos — without it the panel escapes
-		   to the viewport. (In furniture context media.css's absolute wins, 0-0-1.) */
+		padding-inline: 0.8em calc(1.5ch + 0.8em + 1.4em); /* reserve the dot-loader area */
 		position: relative;
 		text-indent: var(--_slide);
 
 		/* sliding colored panel (replaces the old <span> face) */
 		&::before {
 			background: var(--ui-beacon-bg);
-			border-radius: 0;
+			border-radius: inherit;
 			content: "";
 			height: auto;
 			inset: 0;
@@ -200,12 +192,6 @@
 		}
 	}
 
-	/* === paused — declarative pause. (Reduced-motion users never start an
-	   animation at all: motion is gated behind no-preference above, so no
-	   reduce-block or per-instance click-to-pause wiring is needed.)
-	   [paused] sits OUTSIDE the :where() on purpose: 0-1-0 ties the strongest
-	   animation setter (&[animation="…"], also 0-1-0) and wins by source order —
-	   an all-:where() form would lose to an explicit animation attribute. */
 	:where(ui-beacon)[paused],
 	:where(ui-beacon)[paused]::before,
 	:where(ui-beacon)[paused]::after {
@@ -223,17 +209,12 @@
 	@keyframes beacon-breathe {
 		50% { transform: scale(0.8); opacity: 0.6; }
 	}
-	/* Runs on the ticker HOST, animating the shared clock (--_slide/--_fade)
-	   plus the text ink. ±120% overshoots ±100% because text-indent resolves
-	   against the content box while the pseudos' translate resolves against
-	   their border box — the overshoot absorbs the difference off-screen.
-	   color mirrors --_fade for the text itself (host opacity would fade the
-	   track too); dots follow via currentColor. */
+
 	@keyframes beacon-slide {
 		70%  { --_slide: 0%; --_fade: 1; color: var(--ui-beacon-ink, hsl(0, 0%, 100%)); }
 		80%  { --_slide: -120%; }
-		81%  { --_slide: 120%; --_fade: 0; color: transparent; }
-		82%  { --_fade: 1; color: var(--ui-beacon-ink, hsl(0, 0%, 100%)); }
+		81%  { --_slide: 120%; --_fade: 0; color: #0000; }
+		82%  { --_fade: 1; /*color: var(--ui-beacon-ink, hsl(0, 0%, 100%));*/ }
 		90%  { --_slide: 120%; }
 		100% { --_slide: 0%; }
 	}
