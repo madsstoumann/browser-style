@@ -341,7 +341,7 @@
               "type": "string",
               "title": "Style override",
               "localized": false,
-              "description": "Extra beacon() tokens appended after the preset, e.g. \"red sld bln\" or \"ts pll\". Axes: position (ts…be) · hue (red…white) · face (pll pill | sld solid | tck ticker) · animation (bln blink | pls pulse | brt breathe | non none) · size (xs sm md lg). Overrides the preset for the same axis."
+              "description": "Extra beacon() tokens appended after the preset, e.g. \"red sld bln\" or \"ts pll\". Axes: position (ts…be) · hue (red…white) · face (pll pill | sld solid | tck ticker) · animation (bln blink | pls pulse | brt breathe | non none) · size (xs sm md lg xl 2xl) · corner (rnd sqr). Overrides the preset for the same axis."
             }
           }
         },

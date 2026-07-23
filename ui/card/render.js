@@ -198,7 +198,7 @@ const embedVideoObject = (item) => {
 const FURNITURE_AXIS = {
 	pos: new Set(['ts', 'tc', 'te', 'cs', 'cc', 'ce', 'bs', 'bc', 'be']),
 	hue: new Set(['red', 'orange', 'green', 'blue', 'accent', 'gray', 'slate', 'black', 'white', 'dark', 'light', 'subtle']),
-	size: new Set(['sm', 'md', 'lg', 'xl', '2xl', '3xl']),
+	size: new Set(['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl']), /* xs is beacon-only */
 	variant: new Set(['lgt', 'out']),
 	shape: new Set(['text', 'spl', 'spr']),
 	anim: new Set(['bln', 'pls', 'brt']), /* beacon animations (beacon(non) turns solid's default blink off — axis 'disc') */

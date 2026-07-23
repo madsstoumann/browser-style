@@ -5,14 +5,14 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
-	<meta name="description" content="Overlay furniture inside &lt;ui-media&gt;: chip (pill label), sticker (disc / burst), save (bookmark toggle) and play — positioned via the 9-code grid and themed via the media= token.">
+	<meta name="description" content="Overlay furniture inside &lt;ui-media&gt;: beacon (live status), chip (pill label), play, save (bookmark toggle) and sticker (disc / burst) — positioned via the 9-code grid and themed via the media= token.">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="/layout/dist/layout.css">
+	<link rel="stylesheet" href="../beacon/ui-beacon.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
-	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../play/ui-play.css">
 	<link rel="stylesheet" href="../save/ui-save.css">
-	<link rel="stylesheet" href="../beacon/ui-beacon.css">
+	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../icon/index.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
@@ -22,9 +22,68 @@
 <body data-layout-root page-gap="2">
 	<header>
 	<h1>UI: Card — Media furniture</h1>
-	<p>Overlay elements placed <strong>inside <code>&lt;ui-media&gt;</code></strong>: <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-sticker&gt;</code>, <code>&lt;ui-save&gt;</code> and <code>&lt;ui-play&gt;</code>. Position and sub-theme come from the parent <code>media=</code> token — <code>chip(&lt;pos&gt;)</code> / <code>sticker(&lt;pos&gt;)</code> / <code>save(&lt;pos&gt;)</code> / <code>play(&lt;pos&gt;)</code> using the 9-code grid (<code>ts tc te · cs cc ce · bs bc be</code>), and <code>chip(&lt;hue&gt;)</code> / <code>sticker(&lt;hue&gt;)</code> for the palette (<code>red orange green blue accent dark light subtle</code>).</p>
-	<p>See also: <a href="media.html">media.html</a> (the full <code>&lt;ui-media&gt;</code> reference).</p>
+	<p>Overlay elements inside <code>&lt;ui-media&gt;</code>: <code>&lt;ui-beacon&gt;</code>, <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-play&gt;</code>, <code>&lt;ui-save&gt;</code>, <code>&lt;ui-sticker&gt;</code>. All configured from the parent <code>media=</code> token as <code>&lt;el&gt;(&lt;value&gt;)</code> — position on the 9-code grid (<code>ts tc te · cs cc ce · bs bc be</code>), plus hue, size and corner.</p>
+	<p>Reference: <a href="media.md">media.md</a> · <a href="media.html">media.html</a>.</p>
 	</header>
+
+	<section>
+	<!-- ============================================================
+	     Beacon — <ui-beacon>
+	     ============================================================ -->
+	<h2>Beacon — <code>&lt;ui-beacon&gt;</code></h2>
+	<p>The chip's <strong>live</strong> counterpart. Face with <code>beacon(pll|sld|tck)</code>, animation with
+		<code>beacon(bln|pls|brt|non)</code>, plus the usual <code>&lt;pos&gt;</code> / <code>&lt;hue&gt;</code> /
+		<code>&lt;size&gt;</code>. Over imagery prefer <code>pll</code>/<code>sld</code> — the bare dot has no
+		contrast plate.</p>
+	<p>Full component: <a href="../beacon/">ui/beacon</a>.</p>
+	<lay-out md="columns(2)" lg="columns(3)">
+		<ui-card variant="col" media="asr(4/3) beacon(sld) beacon(red) beacon(bln)">
+			<cq-box>
+				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-beacon>LIVE</ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(sld) beacon(red) beacon(bln)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) beacon(ts) beacon(pll) beacon(green) beacon(pls) chip(te) chip(gray)">
+			<cq-box>
+				<ui-media><img src="/assets/images/ergochair.png" alt=""><ui-beacon>In stock</ui-beacon><ui-chip>Bestseller</ui-chip></ui-media>
+				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">beacon(pll) beacon(pls) + chip</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) beacon(be) beacon(sld) beacon(black) beacon(non) beacon(sm)">
+			<cq-box>
+				<ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-beacon>REC</ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">beacon(sld) beacon(non) beacon(sm)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	<p>Animations only run under <code>prefers-reduced-motion: no-preference</code>; <code>paused</code> freezes one.</p>
+	<lay-out md="columns(2)" lg="columns(3)">
+		<ui-card variant="col" media="asr(4/3) beacon(ts) beacon(pll) beacon(blue) beacon(brt)">
+			<cq-box>
+				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-beacon>Restocking</ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(pll) beacon(blue) beacon(brt)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) beacon(bc) beacon(sld) beacon(accent) beacon(bln) beacon(lg)">
+			<cq-box>
+				<ui-media><img src="/assets/images/ergochair.png" alt=""><ui-beacon>BREAKING</ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">beacon(bc) beacon(accent) beacon(lg)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) beacon(sld) beacon(red) beacon(bln)">
+			<cq-box>
+				<ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-beacon paused>LIVE</ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">paused attribute (frozen blink)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) beacon(te) beacon(red) beacon(tck)">
+			<cq-box>
+				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-beacon>Live</ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(tck) — ticker face, text-only markup</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	</section>
 
 	<section>
 	<!-- ============================================================
@@ -81,135 +140,39 @@
 
 	<section>
 	<!-- ============================================================
-	     Beacon — <ui-beacon>
+	     Play — <ui-play>
 	     ============================================================ -->
-	<h2>Beacon — <code>&lt;ui-beacon&gt;</code></h2>
-	<p>The chip's <strong>live</strong> counterpart — an animated status indicator for LIVE / REC / breaking-news
-		cards. Position with <code>beacon(&lt;pos&gt;)</code> (default <code>bs</code>, so it coexists with the
-		<code>ts</code> chip), colour with <code>beacon(&lt;hue&gt;)</code> (same theme bundles as chip/sticker),
-		face with <code>beacon(pll)</code> / <code>beacon(sld)</code> / <code>beacon(tck)</code>, animation with
-		<code>beacon(bln|pls|brt|non)</code>. Marker-class: valid on a reveal front face; pauses via
-		<code>prefers-reduced-motion</code> or <code>paused</code>.</p>
-	<p>Full component: <a href="../beacon/">ui/beacon</a>.</p>
+	<h2>Play — <code>&lt;ui-play&gt;</code></h2>
+	<p>An interactive play button, default centred (<code>cc</code>); the glyph is a <code>&lt;ui-icon type="play-pause"&gt;</code> (morphs play↔pause). <code>variant="reveal"</code> hides it until the media is hovered/focused; <code>theme=</code> and <code>size=</code> apply. Card-only (interactive — never inside a reveal <code>&lt;summary&gt;</code>). Load <code>@browser.style/play</code> for the is-playing toggle, or point its <code>&lt;button&gt;</code> at a <code>[popover]</code> for a no-JS lightbox.</p>
+	<p>Full component: <a href="../play/">ui/play</a>.</p>
 	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-card variant="col" media="asr(4/3) beacon(sld) beacon(red) beacon(bln)">
-			<cq-box>
-				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-beacon>LIVE</ui-beacon></ui-media>
-				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(sld) beacon(red) beacon(bln)</h2></ui-content>
-			</cq-box>
-		</ui-card>
-		<ui-card variant="col" media="asr(4/3) beacon(ts) beacon(pll) beacon(green) beacon(pls) chip(te) chip(gray)">
-			<cq-box>
-				<ui-media><img src="/assets/images/ergochair.png" alt=""><ui-beacon>In stock</ui-beacon><ui-chip>Bestseller</ui-chip></ui-media>
-				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">beacon(pll) beacon(pls) + chip</h2></ui-content>
-			</cq-box>
-		</ui-card>
-		<ui-card variant="col" media="asr(4/3) beacon(be) beacon(sld) beacon(black) beacon(non) beacon(sm)">
-			<cq-box>
-				<ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-beacon>REC</ui-beacon></ui-media>
-				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">beacon(sld) beacon(non) beacon(sm)</h2></ui-content>
-			</cq-box>
-		</ui-card>
-	</lay-out>
-	<p>Hues route the same <code>--ui-theme-*</code> bundles as chip/sticker; <code>beacon(brt)</code>
-		breathes, <code>paused</code> freezes. Animations only run under
-		<code>prefers-reduced-motion: no-preference</code> — no wiring needed for reduced-motion users.</p>
-	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-card variant="col" media="asr(4/3) beacon(ts) beacon(pll) beacon(blue) beacon(brt)">
-			<cq-box>
-				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-beacon>Restocking</ui-beacon></ui-media>
-				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(pll) beacon(blue) beacon(brt)</h2></ui-content>
-			</cq-box>
-		</ui-card>
-		<ui-card variant="col" media="asr(4/3) beacon(bc) beacon(sld) beacon(accent) beacon(bln) beacon(lg)">
-			<cq-box>
-				<ui-media><img src="/assets/images/ergochair.png" alt=""><ui-beacon>BREAKING</ui-beacon></ui-media>
-				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">beacon(bc) beacon(accent) beacon(lg)</h2></ui-content>
-			</cq-box>
-		</ui-card>
-		<ui-card variant="col" media="asr(4/3) beacon(sld) beacon(red) beacon(bln)">
-			<cq-box>
-				<ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-beacon paused>LIVE</ui-beacon></ui-media>
-				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">paused attribute (frozen blink)</h2></ui-content>
-			</cq-box>
-		</ui-card>
-		<ui-card variant="col" media="asr(4/3) beacon(te) beacon(red) beacon(tck)">
-			<cq-box>
-				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-beacon>Live</ui-beacon></ui-media>
-				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(tck) — ticker face, text-only markup</h2></ui-content>
-			</cq-box>
-		</ui-card>
-	</lay-out>
-	</section>
-
-	<section>
-	<!-- ============================================================
-	     Sticker — <ui-sticker>
-	     ============================================================ -->
-	<h2>Sticker — <code>&lt;ui-sticker&gt;</code></h2>
-	<p>A disc, or a starburst with <code>variant="sh:burst"</code> (good for discounts). Position + hue via <code>sticker(&lt;pos&gt;)</code> / <code>sticker(&lt;hue&gt;)</code>. A card can address one chip and one sticker together.</p>
-	<p>Full component: <a href="../sticker/">ui/sticker</a>.</p>
-	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(red) chip(be) chip(green)">
+		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/aurasoundpro.png" alt="">
-					<ui-sticker>Featured</ui-sticker>
-					<ui-chip>New</ui-chip>
+					<img src="/assets/images/river.png" alt="">
+					<ui-play><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				</ui-media>
-				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">Sticker + chip</h2></ui-content>
+				<ui-content><small data-part="eyebrow">always visible</small><h2 data-part="headline">Play (center)</h2></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(red)">
+		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/ergochair.png" alt="">
-					<ui-sticker variant="sh:burst">-28%</ui-sticker>
+					<img src="/assets/images/destinations.png" alt="">
+					<ui-play variant="reveal"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				</ui-media>
-				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">Starburst sticker</h2></ui-content>
+				<ui-content><small data-part="eyebrow">variant="reveal"</small><h2 data-part="headline">Hover to reveal</h2></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) chip(bs) chip(accent) sticker(te) sticker(orange)">
+		<ui-card variant="col" media="asr(16/9)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/brewandbean.png" alt="">
-					<ui-chip>Editor's pick</ui-chip>
-					<ui-sticker>Sale</ui-sticker>
+					<img src="/assets/images/gastronomy.png" alt="">
+					<ui-play theme="red" size="sm"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				</ui-media>
-				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">Accent chip + orange sticker</h2></ui-content>
+				<ui-content><small data-part="eyebrow">theme="red" size="sm"</small><h2 data-part="headline">Themed, small</h2></ui-content>
 			</cq-box>
 		</ui-card>
-	</lay-out>
-
-	<p>The full 9-position grid (<code>ts tc te · cs cc ce · bs bc be</code>), each a red <code>&lt;ui-sticker&gt;</code> disc with <code>&lt;small&gt;</code> + <code>&lt;strong&gt;</code> content. Top row = corners + top-centre; middle row = the centre line (<code>cs cc ce</code>); bottom row = bottom edge.</p>
-	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(ts) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>TS</strong></ui-sticker></ui-media></cq-box></ui-card>
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(tc) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>TC</strong></ui-sticker></ui-media></cq-box></ui-card>
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(te) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>TE</strong></ui-sticker></ui-media></cq-box></ui-card>
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(cs) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>CS</strong></ui-sticker></ui-media></cq-box></ui-card>
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(cc) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>CC</strong></ui-sticker></ui-media></cq-box></ui-card>
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(ce) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>CE</strong></ui-sticker></ui-media></cq-box></ui-card>
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(bs) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>BS</strong></ui-sticker></ui-media></cq-box></ui-card>
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(bc) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>BC</strong></ui-sticker></ui-media></cq-box></ui-card>
-		<ui-card variant="vis(media)" media="asr(1/1) sticker(be) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>BE</strong></ui-sticker></ui-media></cq-box></ui-card>
-	</lay-out>
-
-	<p>The <strong>shape</strong> can come from the token too — <code>sticker(burst|spark|sunburst|heart|blob|text)</code>,
-		plus <code>sticker(spl)</code> / <code>sticker(spr)</code> for the speech bubbles — so a plain
-		<code>&lt;ui-sticker&gt;</code> needs no <code>variant</code> attribute. Combine with
-		<code>sticker(&lt;hue&gt;)</code> and <code>sticker(&lt;pos&gt;)</code>.</p>
-	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(sh:burst) sticker(green)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-sticker><small>SAVE</small><strong>20%</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">sticker(sh:burst)</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(sh:heart) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>XMAS</small><strong>$50</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(sh:heart)</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(spl) sticker(blue)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-sticker><small>NEW</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">sticker(spl)</h2></ui-content></cq-box></ui-card>
-	</lay-out>
-
-	<p><code>sticker(fit)</code> uses native <code>text-fit</code> to grow every line to the box width — no fixed
-		font-size needed (progressive enhancement, Chrome 150+).</p>
-	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(blue)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-sticker><small>UP TO</small><strong>40%</strong><span>OFF</span></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">sticker(fit)</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(sh:burst) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>MEGA</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(fit) + burst</h2></ui-content></cq-box></ui-card>
-		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(green)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-sticker><strong>NEW</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">sticker(fit) single line</h2></ui-content></cq-box></ui-card>
 	</lay-out>
 	</section>
 
@@ -300,39 +263,72 @@
 
 	<section>
 	<!-- ============================================================
-	     Play — <ui-play>
+	     Sticker — <ui-sticker>
 	     ============================================================ -->
-	<h2>Play — <code>&lt;ui-play&gt;</code></h2>
-	<p>An interactive play button, default centred (<code>cc</code>); the glyph is a <code>&lt;ui-icon type="play-pause"&gt;</code> (morphs play↔pause). <code>variant="reveal"</code> hides it until the media is hovered/focused; <code>theme=</code> and <code>size=</code> apply. Card-only (interactive — never inside a reveal <code>&lt;summary&gt;</code>). Load <code>@browser.style/play</code> for the is-playing toggle, or point its <code>&lt;button&gt;</code> at a <code>[popover]</code> for a no-JS lightbox.</p>
-	<p>Full component: <a href="../play/">ui/play</a>.</p>
+	<h2>Sticker — <code>&lt;ui-sticker&gt;</code></h2>
+	<p>A disc, or a starburst with <code>variant="sh:burst"</code> (good for discounts). Position + hue via <code>sticker(&lt;pos&gt;)</code> / <code>sticker(&lt;hue&gt;)</code>. A card can address one chip and one sticker together.</p>
+	<p>Full component: <a href="../sticker/">ui/sticker</a>.</p>
 	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-card variant="col" media="asr(16/9)">
+		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(red) chip(be) chip(green)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/river.png" alt="">
-					<ui-play><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+					<img src="/assets/images/aurasoundpro.png" alt="">
+					<ui-sticker>Featured</ui-sticker>
+					<ui-chip>New</ui-chip>
 				</ui-media>
-				<ui-content><small data-part="eyebrow">always visible</small><h2 data-part="headline">Play (center)</h2></ui-content>
+				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">Sticker + chip</h2></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9)">
+		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(red)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/destinations.png" alt="">
-					<ui-play variant="reveal"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+					<img src="/assets/images/ergochair.png" alt="">
+					<ui-sticker variant="sh:burst">-28%</ui-sticker>
 				</ui-media>
-				<ui-content><small data-part="eyebrow">variant="reveal"</small><h2 data-part="headline">Hover to reveal</h2></ui-content>
+				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">Starburst sticker</h2></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(16/9)">
+		<ui-card variant="col" media="asr(4/3) chip(bs) chip(accent) sticker(te) sticker(orange)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/gastronomy.png" alt="">
-					<ui-play theme="red" size="sm"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+					<img src="/assets/images/brewandbean.png" alt="">
+					<ui-chip>Editor's pick</ui-chip>
+					<ui-sticker>Sale</ui-sticker>
 				</ui-media>
-				<ui-content><small data-part="eyebrow">theme="red" size="sm"</small><h2 data-part="headline">Themed, small</h2></ui-content>
+				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">Accent chip + orange sticker</h2></ui-content>
 			</cq-box>
 		</ui-card>
+	</lay-out>
+
+	<p>The full 9-position grid (<code>ts tc te · cs cc ce · bs bc be</code>), each a red <code>&lt;ui-sticker&gt;</code> disc with <code>&lt;small&gt;</code> + <code>&lt;strong&gt;</code> content. Top row = corners + top-centre; middle row = the centre line (<code>cs cc ce</code>); bottom row = bottom edge.</p>
+	<lay-out md="columns(2)" lg="columns(3)">
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(ts) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>TS</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(tc) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>TC</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(te) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>TE</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(cs) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>CS</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(cc) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>CC</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(ce) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>CE</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(bs) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>BS</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(bc) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>BC</strong></ui-sticker></ui-media></cq-box></ui-card>
+		<ui-card variant="vis(media)" media="asr(1/1) sticker(be) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>PLACE</small><strong>BE</strong></ui-sticker></ui-media></cq-box></ui-card>
+	</lay-out>
+
+	<p>The <strong>shape</strong> can come from the token too — <code>sticker(burst|spark|sunburst|heart|blob|text)</code>,
+		plus <code>sticker(spl)</code> / <code>sticker(spr)</code> for the speech bubbles — so a plain
+		<code>&lt;ui-sticker&gt;</code> needs no <code>variant</code> attribute. Combine with
+		<code>sticker(&lt;hue&gt;)</code> and <code>sticker(&lt;pos&gt;)</code>.</p>
+	<lay-out md="columns(2)" lg="columns(3)">
+		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(sh:burst) sticker(green)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-sticker><small>SAVE</small><strong>20%</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">sticker(sh:burst)</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(sh:heart) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>XMAS</small><strong>$50</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(sh:heart)</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(ts) sticker(spl) sticker(blue)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-sticker><small>NEW</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">sticker(spl)</h2></ui-content></cq-box></ui-card>
+	</lay-out>
+
+	<p><code>sticker(fit)</code> uses native <code>text-fit</code> to grow every line to the box width — no fixed
+		font-size needed (progressive enhancement, Chrome 150+).</p>
+	<lay-out md="columns(2)" lg="columns(3)">
+		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(blue)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-sticker><small>UP TO</small><strong>40%</strong><span>OFF</span></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">sticker(fit)</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(sh:burst) sticker(red)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><ui-sticker><small>MEGA</small><strong>SALE</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">sticker(fit) + burst</h2></ui-content></cq-box></ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(fit) sticker(lg) sticker(green)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-sticker><strong>NEW</strong></ui-sticker></ui-media><ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">sticker(fit) single line</h2></ui-content></cq-box></ui-card>
 	</lay-out>
 	</section>
 

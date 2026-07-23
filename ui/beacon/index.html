@@ -9,6 +9,12 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-beacon.css">
+	<style>
+		/* Demo-only: offset each beacon in a row so they don't blink in lockstep.
+		   sibling-index() is 1-based, so subtract 1 to keep the first at 0s. The
+		   component exposes --ui-beacon-delay and feeds it to every animation. */
+		.stagger ui-beacon { --ui-beacon-delay: calc((sibling-index() - 1) * 0.3s); }
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
@@ -16,35 +22,49 @@
 	<h2>Beacon</h2>
 	<p>
 		A status indicator with four layouts (bare dot, pill, solid, ticker) and three animation modes (blink, pulse, breathe).
-		Aligns visually with <code>&lt;ui-badge&gt;</code> and <code>&lt;ui-chip&gt;</code>: same colors, same size scale, same shape tokens.
 	</p>
 
 	<hr>
 	<h2>Bare dot (default)</h2>
 	<p>The atomic primitive — a colored circle. Optional inline label.</p>
 
-	<h3>Static dot, all colors</h3>
+	<h3>Static dot, all hues</h3>
 	<p>
 		<ui-beacon></ui-beacon>
-		<ui-beacon color="info"></ui-beacon>
-		<ui-beacon color="success"></ui-beacon>
-		<ui-beacon color="warning"></ui-beacon>
-		<ui-beacon color="error"></ui-beacon>
+		<ui-beacon theme="blue"></ui-beacon>
+		<ui-beacon theme="green"></ui-beacon>
+		<ui-beacon theme="orange"></ui-beacon>
+		<ui-beacon theme="red"></ui-beacon>
+		<ui-beacon theme="accent"></ui-beacon>
+		<ui-beacon theme="gray"></ui-beacon>
+		<ui-beacon theme="slate"></ui-beacon>
+		<ui-beacon theme="black"></ui-beacon>
 	</p>
 
-	<h3>Sizes (xs, sm, md, lg)</h3>
+	<h3>Sizes (xs, sm, md, lg, xl, 2xl)</h3>
+	<p>A bare <code>&lt;ui-beacon&gt;</code> equals <code>size="md"</code>.</p>
 	<p>
-		<ui-beacon size="xs" color="success"></ui-beacon>
-		<ui-beacon size="sm" color="success"></ui-beacon>
-		<ui-beacon size="md" color="success"></ui-beacon>
-		<ui-beacon size="lg" color="success"></ui-beacon>
+		<ui-beacon size="xs" theme="green"></ui-beacon>
+		<ui-beacon size="sm" theme="green"></ui-beacon>
+		<ui-beacon size="md" theme="green"></ui-beacon>
+		<ui-beacon size="lg" theme="green"></ui-beacon>
+		<ui-beacon size="xl" theme="green"></ui-beacon>
+		<ui-beacon size="2xl" theme="green"></ui-beacon>
+	</p>
+	<p>
+		<ui-beacon size="xs" theme="green">xs</ui-beacon>&nbsp;
+		<ui-beacon size="sm" theme="green">sm</ui-beacon>&nbsp;
+		<ui-beacon size="md" theme="green">md</ui-beacon>&nbsp;
+		<ui-beacon size="lg" theme="green">lg</ui-beacon>&nbsp;
+		<ui-beacon size="xl" theme="green">xl</ui-beacon>&nbsp;
+		<ui-beacon size="2xl" theme="green">2xl</ui-beacon>
 	</p>
 
 	<h3>With inline label</h3>
 	<p>
-		<ui-beacon color="success">Online</ui-beacon>&nbsp;
-		<ui-beacon color="warning">Away</ui-beacon>&nbsp;
-		<ui-beacon color="error">Busy</ui-beacon>&nbsp;
+		<ui-beacon theme="green">Online</ui-beacon>&nbsp;
+		<ui-beacon theme="orange">Away</ui-beacon>&nbsp;
+		<ui-beacon theme="red">Busy</ui-beacon>&nbsp;
 		<ui-beacon>Offline</ui-beacon>
 	</p>
 
@@ -53,48 +73,81 @@
 
 	<h3>Blink</h3>
 	<p>
-		<ui-beacon animation="blink" color="error">Recording</ui-beacon> &nbsp; 
-		<ui-beacon animation="blink" color="success">Active stream</ui-beacon>
+		<ui-beacon animation="blink" theme="red">Recording</ui-beacon> &nbsp;
+		<ui-beacon animation="blink" theme="green">Active stream</ui-beacon>
 	</p>
 
 	<h3>Pulse</h3>
 	<p>
-		<ui-beacon animation="pulse" color="info">New feature</ui-beacon> &nbsp; 
-		<ui-beacon animation="pulse" color="success">Connected</ui-beacon>
+		<ui-beacon animation="pulse" theme="blue">New feature</ui-beacon> &nbsp;
+		<ui-beacon animation="pulse" theme="green">Connected</ui-beacon>
 	</p>
 
 	<h3>Breathe</h3>
 	<p>
-		<ui-beacon animation="breathe" color="warning">Syncing</ui-beacon> &nbsp; 
-		<ui-beacon animation="breathe" color="info">Loading</ui-beacon>
+		<ui-beacon animation="breathe" theme="orange">Syncing</ui-beacon> &nbsp;
+		<ui-beacon animation="breathe" theme="blue">Loading</ui-beacon>
 	</p>
 
 	<hr>
 	<h2>Pill variant</h2>
 	<p>Chip-style tinted background with a colored dot inside.</p>
 	<p>
-		<ui-beacon variant="pill" color="error" animation="blink">Live</ui-beacon>&nbsp;
-		<ui-beacon variant="pill" color="success" animation="pulse">Online</ui-beacon>&nbsp;
-		<ui-beacon variant="pill" color="warning" animation="breathe">Idle</ui-beacon>&nbsp;
-		<ui-beacon variant="pill" color="info">Beta</ui-beacon>
+		<ui-beacon variant="pill" theme="red" animation="blink">Live</ui-beacon>&nbsp;
+		<ui-beacon variant="pill" theme="green" animation="pulse">Online</ui-beacon>&nbsp;
+		<ui-beacon variant="pill" theme="orange" animation="breathe">Idle</ui-beacon>&nbsp;
+		<ui-beacon variant="pill" theme="blue">Beta</ui-beacon>
 	</p>
 
 	<hr>
 	<h2>Solid variant</h2>
-	<p>The classic blinking pill — solid colored background with white text. Defaults to blink animation.</p>
-	<p>
+	<p>The classic blinking pill — solid colored background with the hue's paired ink. Defaults to blink animation.</p>
+	<p class="stagger">
 		<ui-beacon variant="solid">Live now</ui-beacon>&nbsp;
-		<ui-beacon variant="solid" color="info">News</ui-beacon>&nbsp;
-		<ui-beacon variant="solid" color="success">On Air</ui-beacon>&nbsp;
-		<ui-beacon variant="solid" color="warning">Caution</ui-beacon>&nbsp;
-		<ui-beacon variant="solid" color="error">LIVE</ui-beacon>
+		<ui-beacon variant="solid" theme="blue">News</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" theme="green">On Air</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" theme="orange">Caution</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" theme="red">LIVE</ui-beacon>
+	</p>
+	<p>
+		The <code>orange</code> beacon above renders <em>dark</em> text — each hue carries its own
+		curated ink (<code>--ui-theme-orange-c</code>), so a light plate never gets white text.
+	</p>
+
+	<h3>Staggering a row — <code>--ui-beacon-delay</code></h3>
+	<p>
+		Each animation shorthand takes <code>--ui-beacon-delay</code> (default <code>0s</code>), so a row
+		can be offset without touching the durations. The row above uses it; here it is on its own,
+		with a wider beat:
+	</p>
+	<pre><code>.stagger ui-beacon { --ui-beacon-delay: calc((sibling-index() - 1) * 0.3s); }
+
+&lt;p class="stagger"&gt;
+  &lt;ui-beacon variant="solid"&gt;1&lt;/ui-beacon&gt;
+  &lt;ui-beacon variant="solid"&gt;2&lt;/ui-beacon&gt;
+&lt;/p&gt;</code></pre>
+	<p class="stagger">
+		<ui-beacon variant="solid" theme="red">1</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" theme="red">2</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" theme="red">3</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" theme="red">4</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" theme="red">5</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" theme="red">6</ui-beacon>
+	</p>
+	<p>It works on the dot faces too — same token, same offset:</p>
+	<p class="stagger">
+		<ui-beacon animation="pulse" theme="green"></ui-beacon>&nbsp;
+		<ui-beacon animation="pulse" theme="green"></ui-beacon>&nbsp;
+		<ui-beacon animation="pulse" theme="green"></ui-beacon>&nbsp;
+		<ui-beacon animation="pulse" theme="green"></ui-beacon>&nbsp;
+		<ui-beacon animation="pulse" theme="green"></ui-beacon>
 	</p>
 
 	<h3>Solid with alternative animation</h3>
 	<p>
-		<ui-beacon variant="solid" color="error" animation="pulse">Alert</ui-beacon>&nbsp;
-		<ui-beacon variant="solid" color="info" animation="breathe">Loading</ui-beacon>&nbsp;
-		<ui-beacon variant="solid" color="success" animation="none">Static</ui-beacon>
+		<ui-beacon variant="solid" theme="red" animation="pulse">Alert</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" theme="blue" animation="breathe">Loading</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" theme="green" animation="none">Static</ui-beacon>
 	</p>
 
 	<hr>
@@ -102,9 +155,60 @@
 	<p>Slide-out / slide-in compound animation with a trailing dot loader.</p>
 	<p>
 		<ui-beacon variant="ticker">Live</ui-beacon>&nbsp;
-		<ui-beacon variant="ticker" color="info">Breaking</ui-beacon>&nbsp;
-		<ui-beacon variant="ticker" color="success">Update</ui-beacon>&nbsp;
-		<ui-beacon variant="ticker" color="error">Live</ui-beacon>
+		<ui-beacon variant="ticker" theme="blue">Breaking</ui-beacon>&nbsp;
+		<ui-beacon variant="ticker" theme="green">Update</ui-beacon>&nbsp;
+		<ui-beacon variant="ticker" theme="red">Live</ui-beacon>
+	</p>
+
+	<hr>
+	<h2>Theme modifiers</h2>
+	<p>The shared <code>theme=</code> axis carries <code>pale</code>, <code>muted</code>, <code>light</code> and <code>dark</code>.</p>
+	<p>
+		<ui-beacon theme="red pale" variant="pill">Pale</ui-beacon>&nbsp;
+		<ui-beacon theme="red muted" variant="pill">Muted</ui-beacon>&nbsp;
+		<ui-beacon theme="slate dark" variant="solid">REC</ui-beacon>&nbsp;
+		<ui-beacon theme="blue" variant="solid" animation="none">Base</ui-beacon>
+	</p>
+
+	<hr>
+	<h2>Arbitrary colors — <code>fill=</code> / <code>ink=</code></h2>
+	<p>
+		<code>fill</code> sets the accent (dot, solid plate, ticker panel); the plated faces derive a
+		readable label with <code>contrast-color()</code>. <code>ink</code> overrides that derived label.
+	</p>
+	<p>
+		<ui-beacon fill="#8b5cf6">Violet dot</ui-beacon>&nbsp;
+		<ui-beacon fill="#8b5cf6" variant="pill">Violet pill</ui-beacon>&nbsp;
+		<ui-beacon fill="#8b5cf6" variant="solid" animation="none">Auto ink</ui-beacon>&nbsp;
+		<ui-beacon fill="#facc15" variant="solid" animation="none">Auto ink</ui-beacon>&nbsp;
+		<ui-beacon fill="#8b5cf6" ink="gold" variant="solid" animation="none">Gold ink</ui-beacon>
+	</p>
+
+	<hr>
+	<h2>Corners — <code>radius=</code></h2>
+	<p>
+		<code>rnd</code> rounded · <code>sqr</code> squircle · <code>pll</code> fully rounded. Applies to the
+		plated faces. (<code>non</code> is not part of this axis — beacon spends it on animation-off.)
+	</p>
+	<p>
+		<ui-beacon variant="solid" theme="red" animation="none">default</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" theme="red" radius="rnd" animation="none">rnd</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" theme="red" radius="sqr" animation="none">sqr</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" theme="red" radius="pll" animation="none">pll</ui-beacon>
+	</p>
+	<p>
+		<ui-beacon variant="pill" theme="green">pill (default)</ui-beacon>&nbsp;
+		<ui-beacon variant="pill" theme="green" radius="rnd">pill + rnd</ui-beacon>&nbsp;
+		<ui-beacon variant="pill" theme="green" radius="sqr">pill + sqr</ui-beacon>
+	</p>
+
+	<h3>Pill ticker</h3>
+	<p>The ticker face with <code>radius="pll"</code> — the sliding panel inherits the plate's radius.</p>
+	<p>
+		<ui-beacon variant="ticker" radius="pll">Live</ui-beacon>&nbsp;
+		<ui-beacon variant="ticker" radius="pll" theme="red">Breaking</ui-beacon>&nbsp;
+		<ui-beacon variant="ticker" radius="pll" theme="blue" size="lg">Update</ui-beacon>&nbsp;
+		<ui-beacon variant="ticker" radius="rnd" theme="green">Rounded</ui-beacon>
 	</p>
 
 	<hr>
@@ -117,26 +221,26 @@
 
 	<h3><code>paused</code> attribute</h3>
 	<p>
-		<ui-beacon variant="solid" color="error">Running</ui-beacon>&nbsp;
-		<ui-beacon variant="solid" color="error" paused>Paused</ui-beacon>
+		<ui-beacon variant="solid" theme="red">Running</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" theme="red" paused>Paused</ui-beacon>
 	</p>
 
 	<hr>
 	<h2>Opposite color scheme</h2>
 	<p class="bdrs-md cs-opposite pb-3 pi-3">
-		<ui-beacon color="success">Online</ui-beacon>&nbsp;
-		<ui-beacon animation="pulse" color="info">Pulse</ui-beacon>&nbsp;
-		<ui-beacon variant="pill" color="warning" animation="breathe">Idle</ui-beacon>&nbsp;
-		<ui-beacon variant="solid" color="error">LIVE</ui-beacon>&nbsp;
-		<ui-beacon variant="ticker" color="error">Live</ui-beacon>
+		<ui-beacon theme="green">Online</ui-beacon>&nbsp;
+		<ui-beacon animation="pulse" theme="blue">Pulse</ui-beacon>&nbsp;
+		<ui-beacon variant="pill" theme="orange" animation="breathe">Idle</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" theme="red">LIVE</ui-beacon>&nbsp;
+		<ui-beacon variant="ticker" theme="red">Live</ui-beacon>
 	</p>
 
 	<h2>Right-to-left</h2>
 	<p dir="rtl">
-		<ui-beacon color="success">متصل</ui-beacon>&nbsp;
-		<ui-beacon variant="pill" color="error" animation="blink">مباشر</ui-beacon>&nbsp;
-		<ui-beacon variant="solid" color="error">LIVE</ui-beacon>&nbsp;
-		<ui-beacon variant="ticker" color="error">Live</ui-beacon>
+		<ui-beacon theme="green">متصل</ui-beacon>&nbsp;
+		<ui-beacon variant="pill" theme="red" animation="blink">مباشر</ui-beacon>&nbsp;
+		<ui-beacon variant="solid" theme="red">LIVE</ui-beacon>&nbsp;
+		<ui-beacon variant="ticker" theme="red">Live</ui-beacon>
 	</p>
 </body>
 </html>

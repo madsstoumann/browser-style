@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/beacon",
-  "version": "4.3.0",
+  "version": "5.0.0",
   "description": "CSS-first status indicator: bare dot, pill, solid, and ticker variants with blink/pulse/breathe animations. Zero JavaScript.",
   "type": "module",
   "style": "index.css",

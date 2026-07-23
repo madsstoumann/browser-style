@@ -1,29 +1,58 @@
 /**
  * ui-beacon
- * @version 4.3.1
+ * @version 5.0.0
  * @date 2026-07-23
  * @author Mads Stoumann
+ *
+ * Live/status indicator — the chip's animated counterpart. Marker-class
+ * furniture: plain text-only markup, valid inside a reveal <summary>.
+ *
+ * Sections: A. Base · B. Furniture axes (theme/fill/ink · size) · C. Faces
+ * (pill · solid · ticker) · D. Animations · E. Corner axis · F. Keyframes.
+ * Full docs: readme.md.
  */
 @property --_slide { syntax: "<percentage>"; inherits: true; initial-value: 0%; }
 @property --_fade  { syntax: "<number>"; inherits: true; initial-value: 1; }
 
 @layer bs-component {
 	:where(ui-beacon) {
-		--ui-beacon-bg: var(--color-text);
+		/* ───────── A. Base ─────────
+		   Colour is three slots, same model as ui-chip:
+		     --ui-beacon-accent  the hue input — dot, solid plate, ticker panel
+		     --ui-beacon-bg      the plate (left unset; each face supplies its own
+		                         default through var(--ui-beacon-bg, <fallback>))
+		     --ui-beacon-c       the ink, read ONLY by the plated faces (solid/
+		                         ticker). The bare dot and the pill have no opaque
+		                         plate, so their label ink is the accent itself —
+		                         a theme's curated ink (white) would vanish on the
+		                         page background. Same split as the chip's
+		                         light/outline variants.
+
+		   Only tokens read from more than one place are declared below; single-use
+		   ones carry their default inline at the use site, as var(--token, <fb>). */
+		--ui-beacon-accent: var(--color-text);
+		--ui-beacon-c: contrast-color(var(--ui-beacon-accent));
+
 		--ui-beacon-blink-duration: 1.5s;
 		--ui-beacon-breathe-duration: 2s;
-		--ui-beacon-font-size: 0.75em;
-		--ui-beacon-font-weight: var(--font-weight-medium);
+		--ui-beacon-delay: 0s; /* offsets every animation — lets a row of beacons stagger */
+		--ui-beacon-dot-size: 0.75em;
+		--ui-beacon-dots-inset: 1.5ch;
+		--ui-beacon-dots-width: 1.4em;
+		--ui-beacon-padding-block: 0.33em;
+		--ui-beacon-padding-inline: 0.8em;
+		--ui-beacon-padding-inline-end: var(--ui-beacon-padding-inline);
 		--ui-beacon-pulse-duration: 1.5s;
-		--ui-beacon-size: 0.75em;
-		--ui-beacon-slide-duration: 5s;
+		--ui-beacon-tint: 15%;
 
-		color: var(--ui-beacon-bg);
-		column-gap: 0.6ch; /* space between the dot and the label */
+		color: var(--ui-beacon-accent);
+		column-gap: var(--ui-beacon-column-gap, 0.6ch); /* dot ↔ label */
+		corner-shape: var(--ui-beacon-corner, round);
 		display: inline-flex;
-		font-family: var(--ui-beacon-ff, var(--font-form));
-		font-size: var(--ui-beacon-font-size);
-		font-weight: var(--ui-beacon-font-weight);
+		font-family: var(--ui-beacon-font-family, var(--font-form));
+		font-size: var(--ui-beacon-font-size, 0.875em);
+		font-weight: var(--ui-beacon-font-weight, var(--font-weight-medium));
+		line-height: var(--ui-beacon-line-height, var(--line-height-snug));
 		place-items: center;
 		text-box: cap alphabetic;
 		white-space: nowrap;
@@ -31,69 +60,69 @@
 
 		/* the dot */
 		&::before {
-			background: var(--ui-beacon-bg);
-			border-radius: var(--radius-circle);
+			background: var(--ui-beacon-accent);
+			block-size: var(--ui-beacon-dot-size);
+			border-radius: var(--ui-beacon-dot-radius, var(--radius-circle));
 			content: '';
-			height: var(--ui-beacon-size);
-			width: var(--ui-beacon-size);
+			inline-size: var(--ui-beacon-dot-size);
 		}
 
-		/* colors */
-		&[color="info"]    { --ui-beacon-bg: var(--color-info); }
-		&[color="success"] { --ui-beacon-bg: var(--color-success); }
-		&[color="warning"] { --ui-beacon-bg: var(--color-warning); }
-		&[color="error"]   { --ui-beacon-bg: var(--color-error); }
+		/* ───────── B. Furniture axes — theme/fill/ink · size ─────────
+		   Each axis: `&[attr]` = standalone, `:where([media*="beacon(…)"]) &` = card token. */
 
-		&[theme] { --ui-beacon-bg: var(--_theme-bg); --ui-beacon-ink: var(--_theme-c, var(--_theme-ink)); }
-		:where([media*="beacon(red)"])    & { --ui-beacon-bg: var(--ui-theme-red-bg);    --ui-beacon-ink: var(--ui-theme-red-c); }
-		:where([media*="beacon(orange)"]) & { --ui-beacon-bg: var(--ui-theme-orange-bg); --ui-beacon-ink: var(--ui-theme-orange-c); }
-		:where([media*="beacon(green)"])  & { --ui-beacon-bg: var(--ui-theme-green-bg);  --ui-beacon-ink: var(--ui-theme-green-c); }
-		:where([media*="beacon(blue)"])   & { --ui-beacon-bg: var(--ui-theme-blue-bg);   --ui-beacon-ink: var(--ui-theme-blue-c); }
-		:where([media*="beacon(accent)"]) & { --ui-beacon-bg: var(--ui-theme-accent-bg); --ui-beacon-ink: var(--ui-theme-accent-c); }
-		:where([media*="beacon(gray)"])   & { --ui-beacon-bg: var(--ui-theme-gray-bg);   --ui-beacon-ink: var(--ui-theme-gray-c); }
-		:where([media*="beacon(slate)"])  & { --ui-beacon-bg: var(--ui-theme-slate-bg);  --ui-beacon-ink: var(--ui-theme-slate-c); }
-		:where([media*="beacon(black)"])  & { --ui-beacon-bg: var(--ui-theme-black-bg);  --ui-beacon-ink: var(--ui-theme-black-c); }
-		:where([media*="beacon(white)"])  & { --ui-beacon-bg: var(--ui-theme-white-bg);  --ui-beacon-ink: var(--ui-theme-white-c); }
+		/* colour — hue. Standalone theme= resolves via base/theme.css into --_theme-*
+		   (incl. the pale/muted modifiers); the light/dark modifiers set color-scheme
+		   on the beacon directly. Card-routed media="beacon(<hue>)" feeds the
+		   --ui-theme-* bundle. */
+		&[theme] { --ui-beacon-accent: var(--_theme-bg); --ui-beacon-c: var(--_theme-c, var(--_theme-ink)); }
+		:where([media*="beacon(red)"])    & { --ui-beacon-accent: var(--ui-theme-red-bg);    --ui-beacon-c: var(--ui-theme-red-c); }
+		:where([media*="beacon(orange)"]) & { --ui-beacon-accent: var(--ui-theme-orange-bg); --ui-beacon-c: var(--ui-theme-orange-c); }
+		:where([media*="beacon(green)"])  & { --ui-beacon-accent: var(--ui-theme-green-bg);  --ui-beacon-c: var(--ui-theme-green-c); }
+		:where([media*="beacon(blue)"])   & { --ui-beacon-accent: var(--ui-theme-blue-bg);   --ui-beacon-c: var(--ui-theme-blue-c); }
+		:where([media*="beacon(accent)"]) & { --ui-beacon-accent: var(--ui-theme-accent-bg); --ui-beacon-c: var(--ui-theme-accent-c); }
+		:where([media*="beacon(gray)"])   & { --ui-beacon-accent: var(--ui-theme-gray-bg);   --ui-beacon-c: var(--ui-theme-gray-c); }
+		:where([media*="beacon(slate)"])  & { --ui-beacon-accent: var(--ui-theme-slate-bg);  --ui-beacon-c: var(--ui-theme-slate-c); }
+		:where([media*="beacon(black)"])  & { --ui-beacon-accent: var(--ui-theme-black-bg);  --ui-beacon-c: var(--ui-theme-black-c); }
+		:where([media*="beacon(white)"])  & { --ui-beacon-accent: var(--ui-theme-white-bg);  --ui-beacon-c: var(--ui-theme-white-c); }
+
+		/* arbitrary colour (overrides the hue) — fill = accent, ink = the plated
+		   faces' label; ink auto-contrasts from fill when omitted. ink after fill. */
+		&[fill] {
+			--ui-beacon-accent: attr(fill type(<color>), var(--color-text));
+			--ui-beacon-c: contrast-color(var(--ui-beacon-accent));
+		}
+		&[ink] { --ui-beacon-c: attr(ink type(<color>), hsl(0, 0%, 100%)); }
+
+		/* size — em-based, aligned with ui-chip; the dot tracks font-size.
+		   md (0.875em) = default; xs is a beacon extra. */
+		&[size~="xs"],  :where([media*="beacon(xs)"])  & { --ui-beacon-font-size: 0.5em; }
+		&[size~="sm"],  :where([media*="beacon(sm)"])  & { --ui-beacon-font-size: 0.625em; }
+		&[size~="md"],  :where([media*="beacon(md)"])  & { --ui-beacon-font-size: 0.875em; }
+		&[size~="lg"],  :where([media*="beacon(lg)"])  & { --ui-beacon-font-size: 1em; }
+		&[size~="xl"],  :where([media*="beacon(xl)"])  & { --ui-beacon-font-size: 1.15em; }
+		&[size~="2xl"], :where([media*="beacon(2xl)"]) & { --ui-beacon-font-size: 1.4em; }
 	}
 
-	/* sizes — em-based, aligned 1:1 with ui-chip; dot tracks font-size.
-	   Dual arms: size= standalone, beacon(<size>) as a card token. */
-	:where(ui-beacon[size="xs"], [media*="beacon(xs)"] ui-beacon) { --ui-beacon-font-size: 0.5em; }
-	:where(ui-beacon[size="sm"], [media*="beacon(sm)"] ui-beacon) { --ui-beacon-font-size: 0.625em; }
-	:where(ui-beacon[size="md"], [media*="beacon(md)"] ui-beacon) { --ui-beacon-font-size: 0.875em; }
-	:where(ui-beacon[size="lg"], [media*="beacon(lg)"] ui-beacon) { --ui-beacon-font-size: 1em; }
+	/* ───────── C. Faces — pill · solid · ticker ───────── */
 
-	/* === Animations === */
-	@media (prefers-reduced-motion: no-preference) {
-		:where(ui-beacon[animation="blink"], [media*="beacon(bln)"] ui-beacon)::before {
-			animation: beacon-blink var(--ui-beacon-blink-duration) infinite;
-		}
-		:where(ui-beacon[animation="pulse"], [media*="beacon(pls)"] ui-beacon) {
-			/* pulse looks best with a small inner dot — the box-shadow ring expands outward */
-			--ui-beacon-size: 0.5em;
-		}
-		:where(ui-beacon[animation="pulse"], [media*="beacon(pls)"] ui-beacon)::before {
-			animation: beacon-pulse var(--ui-beacon-pulse-duration) ease-out infinite;
-		}
-		:where(ui-beacon[animation="breathe"], [media*="beacon(brt)"] ui-beacon)::before {
-			animation: beacon-breathe var(--ui-beacon-breathe-duration) ease-in-out infinite;
-		}
-	}
-
-	/* === Pill variant — chip-like, tinted bg + accent dot === */
+	/* pill — chip-like tinted plate + accent dot; label ink stays the accent.
+	   --ui-beacon-radius is never declared, only ever set by the corner axis, so
+	   each face keeps its own default here and an explicit radius= wins outright. */
 	:where(ui-beacon[variant~="pill"], [media*="beacon(pll)"] ui-beacon) {
-		background: color-mix(in oklch, var(--ui-beacon-bg) 15%, var(--color-surface));
-		border-radius: var(--radius-pill);
-		padding: 0.4em 0.9em 0.4em 0.7em;
+		background: var(--ui-beacon-bg, color-mix(in oklch, var(--ui-beacon-accent) var(--ui-beacon-tint), var(--color-surface)));
+		border-radius: var(--ui-beacon-radius, var(--radius-pill));
+		padding-block: var(--ui-beacon-padding-block);
+		padding-inline: var(--ui-beacon-padding-inline) var(--ui-beacon-padding-inline-end);
 	}
 
-	/* === Solid variant — original ui-blink: filled pill, no inner dot.
-	   Label ink = --ui-beacon-ink (white default; theme/hue supplies the pair). === */
+	/* solid — original ui-blink: filled plate, no inner dot. Label reads
+	   --ui-beacon-c (theme's curated ink, or contrast-color from the accent). */
 	:where(ui-beacon[variant~="solid"], [media*="beacon(sld)"] ui-beacon) {
-		background: var(--ui-beacon-bg);
-		border-radius: var(--radius-sm);
-		color: var(--ui-beacon-ink, hsl(0, 0%, 100%));
-		padding: 0.33em 0.8em;
+		background: var(--ui-beacon-bg, var(--ui-beacon-accent));
+		border-radius: var(--ui-beacon-radius, var(--radius-sm));
+		color: var(--ui-beacon-c);
+		padding-block: var(--ui-beacon-padding-block);
+		padding-inline: var(--ui-beacon-padding-inline) var(--ui-beacon-padding-inline-end);
 
 		&::before { display: none; }
 
@@ -101,33 +130,41 @@
 			/* default to blink (matches original ui-blink) */
 			&,
 			&[animation="blink"], :where([media*="beacon(bln)"]) & {
-				animation: beacon-blink var(--ui-beacon-blink-duration) infinite;
+				animation: beacon-blink var(--ui-beacon-blink-duration) var(--ui-beacon-delay) infinite;
 			}
 			&[animation="pulse"], :where([media*="beacon(pls)"]) & {
-				animation: beacon-pulse var(--ui-beacon-pulse-duration) ease-out infinite;
+				animation: beacon-pulse var(--ui-beacon-pulse-duration) var(--ui-beacon-delay) ease-out infinite;
 			}
 			&[animation="breathe"], :where([media*="beacon(brt)"]) & {
-				animation: beacon-breathe var(--ui-beacon-breathe-duration) ease-in-out infinite;
+				animation: beacon-breathe var(--ui-beacon-breathe-duration) var(--ui-beacon-delay) ease-in-out infinite;
 			}
 			&[animation="none"], :where([media*="beacon(non)"]) & { animation: none; }
 		}
 	}
 
-	/* === Ticker variant === */
+	/* ticker — sliding accent panel over a tinted track + a trailing dot loader.
+	   Markup-free: both are pseudo-elements riding the registered --_slide clock.
+
+	   Always LTR: the slide is driven by signed percentages on text-indent and
+	   translate, which flip meaning under `direction: rtl` and desynchronise the
+	   text from the panel it rides on. Pinning direction keeps the choreography
+	   intact on RTL pages; the label's own bidi run still shapes correctly. */
 	:where(ui-beacon[variant~="ticker"], [media*="beacon(tck)"] ui-beacon) {
-		background: var(--ui-beacon-track-bg, color-mix(in oklch, var(--ui-beacon-bg) 15%, var(--color-surface)));
-		border-radius: var(--radius-sm);
-		padding-block: 0.33em;
-		color: var(--ui-beacon-ink, hsl(0, 0%, 100%));
+		background: var(--ui-beacon-bg, color-mix(in oklch, var(--ui-beacon-accent) var(--ui-beacon-tint), var(--color-surface)));
+		border-radius: var(--ui-beacon-radius, var(--radius-sm));
+		color: var(--ui-beacon-c);
+		direction: ltr;
 		isolation: isolate;
 		overflow: hidden;
-		padding-inline: 0.8em calc(1.5ch + 0.8em + 1.4em); /* reserve the dot-loader area */
+		padding-block: var(--ui-beacon-padding-block);
+		/* reserve the dot-loader area at the inline end */
+		padding-inline: var(--ui-beacon-padding-inline) calc(var(--ui-beacon-dots-inset) + var(--ui-beacon-padding-inline) + var(--ui-beacon-dots-width));
 		position: relative;
 		text-indent: var(--_slide);
 
-		/* sliding colored panel (replaces the old <span> face) */
+		/* sliding coloured panel */
 		&::before {
-			background: var(--ui-beacon-bg);
+			background: var(--ui-beacon-accent);
 			border-radius: inherit;
 			content: "";
 			height: auto;
@@ -139,7 +176,7 @@
 			z-index: -1;
 		}
 
-		/* 3-dot loader (replaces the old <i>) — currentColor, pinned inline-end */
+		/* 3-dot loader — currentColor, pinned inline-end */
 		&::after {
 			--_g: no-repeat radial-gradient(circle closest-side, currentColor 90%, transparent);
 			aspect-ratio: 4 / 1;
@@ -150,17 +187,34 @@
 			background-size: calc(100%/3) 100%;
 			content: "";
 			inset-block: 0;
-			inset-inline-end: 1.5ch;
+			inset-inline-end: var(--ui-beacon-dots-inset);
 			margin-block: auto;
 			opacity: var(--_fade);
 			position: absolute;
 			translate: var(--_slide) 0;
-			width: 1.4em;
+			width: var(--ui-beacon-dots-width);
 		}
 
 		@media (prefers-reduced-motion: no-preference) {
-			& { animation: beacon-slide var(--ui-beacon-slide-duration) infinite linear; }
-			&::after { animation: beacon-dots 1.5s infinite linear; }
+			& { animation: beacon-slide var(--ui-beacon-slide-duration, 5s) var(--ui-beacon-delay) infinite linear; }
+			&::after { animation: beacon-dots var(--ui-beacon-dots-duration, 1.5s) var(--ui-beacon-delay) infinite linear; }
+		}
+	}
+
+	/* ───────── D. Animations — bare dot / pill (the solid + ticker faces own theirs) ───────── */
+	@media (prefers-reduced-motion: no-preference) {
+		:where(ui-beacon[animation="blink"], [media*="beacon(bln)"] ui-beacon)::before {
+			animation: beacon-blink var(--ui-beacon-blink-duration) var(--ui-beacon-delay) infinite;
+		}
+		:where(ui-beacon[animation="pulse"], [media*="beacon(pls)"] ui-beacon) {
+			/* pulse looks best with a small inner dot — the box-shadow ring expands outward */
+			--ui-beacon-dot-size: 0.5em;
+		}
+		:where(ui-beacon[animation="pulse"], [media*="beacon(pls)"] ui-beacon)::before {
+			animation: beacon-pulse var(--ui-beacon-pulse-duration) var(--ui-beacon-delay) ease-out infinite;
+		}
+		:where(ui-beacon[animation="breathe"], [media*="beacon(brt)"] ui-beacon)::before {
+			animation: beacon-breathe var(--ui-beacon-breathe-duration) var(--ui-beacon-delay) ease-in-out infinite;
 		}
 	}
 
@@ -170,23 +224,40 @@
 		animation-play-state: paused;
 	}
 
-	/* === Keyframes === */
+	/* ───────── E. Corner axis — from radius= or the card's beacon(<corner>).
+	   The ONLY place --ui-beacon-radius is set, so each face above keeps its own
+	   default (pill = pill, solid/ticker = sm) and an explicit radius= overrides
+	   all three regardless of source order. `pll` and `non` are NOT part of this
+	   axis — beacon already spends them on the pill face and animation-off; `crc`
+	   is omitted too (a circle makes no sense on a text-bearing plate).
+
+	   `radius="pll"` is the one asymmetric member: as an ATTRIBUTE it is free
+	   (`radius=` and `variant=` are separate namespaces), so radius="pll" rounds
+	   the solid/ticker plate fully — a pill ticker. There is no beacon(pll) card
+	   arm for it, because in the card's flat token namespace beacon(pll) already
+	   means the pill face. From a card, reach it with an inline
+	   --ui-beacon-radius instead. ───────── */
+	:where(ui-beacon[radius~="rnd"], [media*="beacon(rnd)"] ui-beacon) { --ui-beacon-radius: var(--radius-md); }
+	:where(ui-beacon[radius~="sqr"], [media*="beacon(sqr)"] ui-beacon) { --ui-beacon-radius: 0.75em; --ui-beacon-corner: superellipse(var(--squircle-md)); }
+	:where(ui-beacon[radius~="pll"]) { --ui-beacon-radius: var(--radius-pill); }
+
+	/* ───────── F. Keyframes ───────── */
 	@keyframes beacon-blink {
 		50% { opacity: 0; }
 	}
 	@keyframes beacon-pulse {
-		0%   { box-shadow: 0 0 0 0 var(--ui-beacon-bg); }
-		100% { box-shadow: 0 0 0 1em transparent; }
+		0%   { box-shadow: 0 0 0 0 var(--ui-beacon-accent); }
+		100% { box-shadow: 0 0 0 var(--ui-beacon-pulse-spread, 1em) transparent; }
 	}
 	@keyframes beacon-breathe {
-		50% { transform: scale(0.8); opacity: 0.6; }
+		50% { transform: scale(var(--ui-beacon-breathe-scale, 0.8)); opacity: var(--ui-beacon-breathe-opacity, 0.6); }
 	}
 
 	@keyframes beacon-slide {
 		0%   { color: #0000; }
-		5%   { color: var(--ui-beacon-ink, hsl(0, 0%, 100%)); }
-		70%  { --_slide: 0%; --_fade: 1; color: var(--ui-beacon-ink, hsl(0, 0%, 100%)); }
-		80%  { --_slide: -120%; color: var(--ui-beacon-ink, hsl(0, 0%, 100%)); }
+		5%   { color: var(--ui-beacon-c); }
+		70%  { --_slide: 0%; --_fade: 1; color: var(--ui-beacon-c); }
+		80%  { --_slide: -120%; color: var(--ui-beacon-c); }
 		81%  { --_slide: 120%; --_fade: 0; color: #0000; }
 		82%  { --_fade: 1; color: #0000; }
 		90%  { --_slide: 120%; color: #0000; }
