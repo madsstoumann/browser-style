@@ -41,7 +41,6 @@ npm install @browser.style/base @browser.style/icon
 
 ```html
 <link rel="stylesheet" href="@browser.style/base/index.css">
-<link rel="stylesheet" href="@browser.style/icon/index.css">
 <link rel="stylesheet" href="@browser.style/play/index.css">
 ```
 
@@ -49,9 +48,11 @@ Or via CSS `@import`:
 
 ```css
 @import '@browser.style/base';
-@import '@browser.style/icon/style';
 @import '@browser.style/play/style';
 ```
+
+`index.css` pulls in `@browser.style/icon` for the glyph, so you only link this one
+file. If you bundle the icon set yourself, import the bare `play/ui-play.css` instead.
 
 The required markup is a `<ui-play>` wrapping a single `<button>` that contains a `<ui-icon type="play">` glyph. **Always** give the button an `aria-label`:
 
@@ -155,7 +156,6 @@ Use the CSS-only approach — no JavaScript needed:
 
 ```html
 <link rel="stylesheet" href="@browser.style/base/index.css">
-<link rel="stylesheet" href="@browser.style/icon/index.css">
 <link rel="stylesheet" href="@browser.style/play/index.css">
 
 <ui-play><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>

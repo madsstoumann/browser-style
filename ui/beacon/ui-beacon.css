@@ -8,7 +8,7 @@
  * furniture: plain text-only markup, valid inside a reveal <summary>.
  *
  * Sections: A. Base · B. Furniture axes (theme/fill/ink · size) · C. Faces
- * (pill · solid · ticker) · D. Animations · E. Corner axis · F. Keyframes.
+ * (pill · solid · ticker · dots) · D. Animations · E. Corner axis · F. Keyframes.
  * Full docs: readme.md.
  */
 @property --_slide { syntax: "<percentage>"; inherits: true; initial-value: 0%; }
@@ -38,6 +38,8 @@
 		--ui-beacon-delay: 0s; /* offsets every animation — lets a row of beacons stagger */
 		--ui-beacon-dot-size: 0.75em;
 		--ui-beacon-dots-inset: 1.5ch;
+		--ui-beacon-dots-jump: 0.25em;
+		--ui-beacon-dots-size: 0.35em;
 		--ui-beacon-dots-width: 1.4em;
 		--ui-beacon-padding-block: 0.33em;
 		--ui-beacon-padding-inline: 0.8em;
@@ -201,8 +203,34 @@
 		}
 	}
 
-	/* ───────── D. Animations — bare dot / pill (the solid + ticker faces own theirs) ───────── */
+	/* dots — chat-style "someone is typing": three dots hopping in sequence.
+	   Still one element and zero markup. Three background layers, each a fixed-
+	   size circle; the hop animates each layer's background-position Y
+	   independently (background-size stays put — that's the ticker loader's
+	   trick, and it fades rather than moves).
+
+	   Geometry: the box is one dot tall plus a jump's worth of clearance above
+	   AND below, so resting at y=50% lands the dots on the line's centre with no
+	   nudging, and y=0% is exactly one --ui-beacon-dots-jump higher.
+	   The strip replaces the dot, not the label — a text label still works. */
+	:where(ui-beacon[variant~="dots"], [media*="beacon(dts)"] ui-beacon)::before {
+		--_g: no-repeat radial-gradient(circle closest-side, currentColor 90%, transparent);
+		background: var(--_g), var(--_g), var(--_g);
+		background-position: 0% 50%, 50% 50%, 100% 50%;
+		background-size: var(--ui-beacon-dots-size) var(--ui-beacon-dots-size);
+		block-size: calc(var(--ui-beacon-dots-size) + 2 * var(--ui-beacon-dots-jump));
+		border-radius: 0;
+		inline-size: var(--ui-beacon-dots-width);
+	}
+
+	/* ───────── D. Animations — bare dot / dots / pill (solid + ticker own theirs) ─────────
+	   The dots face animates by default (it *is* a live indicator), so its rule
+	   comes first: the explicit animation= rules below are attribute-gated and
+	   later in source order, so an author's choice still wins. */
 	@media (prefers-reduced-motion: no-preference) {
+		:where(ui-beacon[variant~="dots"], [media*="beacon(dts)"] ui-beacon)::before {
+			animation: beacon-bounce var(--ui-beacon-bounce-duration, 1.1s) var(--ui-beacon-delay) infinite linear;
+		}
 		:where(ui-beacon[animation="blink"], [media*="beacon(bln)"] ui-beacon)::before {
 			animation: beacon-blink var(--ui-beacon-blink-duration) var(--ui-beacon-delay) infinite;
 		}
@@ -215,6 +243,10 @@
 		}
 		:where(ui-beacon[animation="breathe"], [media*="beacon(brt)"] ui-beacon)::before {
 			animation: beacon-breathe var(--ui-beacon-breathe-duration) var(--ui-beacon-delay) ease-in-out infinite;
+		}
+		/* last — turns off any of the above, incl. the dots face's default wave */
+		:where(ui-beacon[animation="none"], [media*="beacon(non)"] ui-beacon)::before {
+			animation: none;
 		}
 	}
 
@@ -262,6 +294,34 @@
 		82%  { --_fade: 1; color: #0000; }
 		90%  { --_slide: 120%; color: #0000; }
 		100% { --_slide: 0%; color: #0000; }
+	}
+	/* Staggered hop, then a rest beat. Each dot's arc is sin², which has zero
+	   velocity at BOTH ends — so it settles onto the line instead of snapping,
+	   and the pause after the third dot (75%–100%) reads as a beat rather than
+	   a stall. Sampled every 4% and run `linear`: an easing function would ease
+	   between every keyframe pair and stutter: the curve does the easing. */
+	@keyframes beacon-bounce {
+		0%    { background-position: 0% 50%, 50% 50%, 100% 50%; }
+		4%    { background-position: 0% 45.7%, 50% 50%, 100% 50%; }
+		8%    { background-position: 0% 34.1%, 50% 50%, 100% 50%; }
+		12%   { background-position: 0% 19.4%, 50% 50%, 100% 50%; }
+		16%   { background-position: 0% 6.7%, 50% 50%, 100% 50%; }
+		20%   { background-position: 0% 0.3%, 50% 46.7%, 100% 50%; }
+		24%   { background-position: 0% 2.5%, 50% 35.8%, 100% 50%; }
+		28%   { background-position: 0% 12.5%, 50% 21.3%, 100% 50%; }
+		32%   { background-position: 0% 26.9%, 50% 8%, 100% 50%; }
+		36%   { background-position: 0% 40.6%, 50% 0.6%, 100% 47.5%; }
+		40%   { background-position: 0% 48.9%, 50% 1.7%, 100% 37.5%; }
+		44%   { background-position: 0% 50%, 50% 10.9%, 100% 23.1%; }
+		48%   { background-position: 0% 50%, 50% 25%, 100% 9.4%; }
+		52%   { background-position: 0% 50%, 50% 39.1%, 100% 1.1%; }
+		56%   { background-position: 0% 50%, 50% 48.3%, 100% 1.1%; }
+		60%   { background-position: 0% 50%, 50% 50%, 100% 9.4%; }
+		64%   { background-position: 0% 50%, 50% 50%, 100% 23.1%; }
+		68%   { background-position: 0% 50%, 50% 50%, 100% 37.5%; }
+		72%   { background-position: 0% 50%, 50% 50%, 100% 47.5%; }
+		76%   { background-position: 0% 50%, 50% 50%, 100% 50%; }
+		100%  { background-position: 0% 50%, 50% 50%, 100% 50%; }
 	}
 	@keyframes beacon-dots {
 		33% { background-size: calc(100%/3) 0%,   calc(100%/3) 100%, calc(100%/3) 100%; }

@@ -1,6 +1,6 @@
 # @browser.style/beacon
 
-A CSS-only status indicator — zero JavaScript. Four layout variants (bare dot, pill, solid, ticker) and three animation modes (blink, pulse, breathe). Part of the card-furniture family alongside `@browser.style/chip`, `@browser.style/sticker`, `@browser.style/play` and `@browser.style/save` — same `theme=` hue axis, same `fill=`/`ink=` escape hatch, same size scale, same corner vocabulary.
+A CSS-only status indicator — zero JavaScript. Five layout variants (bare dot, dots, pill, solid, ticker) and three animation modes (blink, pulse, breathe). Part of the card-furniture family alongside `@browser.style/chip`, `@browser.style/sticker`, `@browser.style/play` and `@browser.style/save` — same `theme=` hue axis, same `fill=`/`ink=` escape hatch, same size scale, same corner vocabulary.
 
 > **v5 is a breaking change.** The `color=` attribute is gone and three custom properties were renamed. See [Migration 4.x → 5.0](#migration-4x--50).
 
@@ -10,6 +10,7 @@ A CSS-only status indicator — zero JavaScript. Four layout variants (bare dot,
 - **Three distinct animations**: `blink` (broadcast LIVE/REC), `pulse` (outward ripple, attention), `breathe` (gentle scale)
 - **Pill variant** — chip-style tinted background with inner dot
 - **Solid variant** — original `<blink>`-style filled label, defaults to blink
+- **Dots variant** — chat-style "typing" indicator: three dots bobbing in a staggered sine wave
 - **Ticker variant** — sliding marquee with trailing 3-dot loader
 - **Motion is opt-in**: every animation is gated behind `prefers-reduced-motion: no-preference` — reduced-motion users get a static beacon automatically; pause a running animation with the `paused` attribute
 - **Sizes**: `xs`, `sm`, `md` (default), `lg`, `xl`, `2xl` — the `<ui-chip>` scale
@@ -104,6 +105,28 @@ A solid-coloured pill whose whole face flashes. Defaults to `blink` animation. T
 <ui-beacon variant="solid" theme="blue">News</ui-beacon>
 <ui-beacon variant="solid" theme="red" animation="none">Static</ui-beacon>
 ```
+
+### Dots — `variant="dots"`
+
+The chat "someone is typing" indicator: three dots hopping in sequence, then a short rest
+beat before the loop repeats. It's the bare-dot face with three dots instead of one,
+so an optional label still works. Animates by default — reads as a live/updating marker
+in front of a headline.
+
+```html
+<ui-beacon variant="dots" theme="red"></ui-beacon>
+<ui-beacon variant="dots" theme="red">Liveblog</ui-beacon>
+<ui-beacon variant="dots" animation="none"></ui-beacon>   <!-- static -->
+```
+
+Tune it with `--ui-beacon-dots-size` (dot diameter), `--ui-beacon-dots-jump` (how far it
+travels), `--ui-beacon-dots-width` (strip width) and `--ui-beacon-bounce-duration` (cycle).
+
+> Each dot's arc is `sin²`, sampled every 4% and run `linear`. Both details matter: an
+> easing function eases between *every* keyframe pair, so a sparse version stutters —
+> the curve does the easing instead. And `sin²` has zero velocity at both ends, so a dot
+> settles onto the line rather than snapping to a halt. The three hops finish at 75%,
+> leaving a quarter-cycle rest beat before the loop repeats.
 
 ### Ticker — `variant="ticker"`
 
@@ -266,9 +289,9 @@ one axis per token):
 
 | Axis | Tokens | Notes |
 |---|---|---|
-| position | `beacon(ts…be)` | 9-cell furniture grid; default `bs` (coexists with the chip's `ts`) |
+| position | `beacon(ts…be)` | 9-cell furniture grid; default `ts` — same cell as the chip, so position one explicitly when a frame carries both |
 | hue | `beacon(red\|orange\|green\|blue\|accent\|white\|gray\|slate\|black)` | same `--ui-theme-*` bundles as `chip()`/`sticker()` |
-| face | `beacon(pll)` pill · `beacon(sld)` solid · `beacon(tck)` ticker | over imagery prefer these — the bare dot has no contrast plate |
+| face | `beacon(dts)` dots · `beacon(pll)` pill · `beacon(sld)` solid · `beacon(tck)` ticker | over imagery prefer these — the bare dot has no contrast plate |
 | animation | `beacon(bln)` blink · `beacon(pls)` pulse · `beacon(brt)` breathe · `beacon(non)` off | solid defaults to blink |
 | size | `beacon(xs\|sm\|md\|lg\|xl\|2xl)` | same em scale as the `size=` attribute |
 | corner | `beacon(rnd\|sqr)` | plated faces only; `pll`/`non` belong to the face and animation axes |
@@ -312,7 +335,7 @@ beacon.toggleAttribute('paused');
 | `size` | `xs \| sm \| md \| lg \| xl \| 2xl` | Size scale (defaults to `md`) |
 | `radius` | `rnd \| sqr \| pll` | Corner shape of the plated faces |
 | `animation` | `blink \| pulse \| breathe \| none` | Animation mode (defaults to none, except `solid` defaults to `blink`) |
-| `variant` | `pill \| solid \| ticker` | Layout variant (defaults to bare dot) |
+| `variant` | `dots \| pill \| solid \| ticker` | Layout variant (defaults to bare dot) |
 | `paused` | _(boolean)_ | Pause any active animation (animations never start under reduced motion) |
 
 ---
@@ -359,7 +382,10 @@ Every token falls back to a global from `@browser.style/base` where one exists.
 | `--ui-beacon-breathe-scale` | `0.8` | Breathe scale floor |
 | `--ui-beacon-breathe-opacity` | `0.6` | Breathe opacity floor |
 | `--ui-beacon-slide-duration` | `5s` | Ticker slide cycle |
+| `--ui-beacon-bounce-duration` | `1.1s` | Dots-face hop cycle, rest beat included |
 | `--ui-beacon-dots-duration` | `1.5s` | Ticker dot-loader cycle |
+| `--ui-beacon-dots-size` | `0.35em` | Dots-face dot diameter |
+| `--ui-beacon-dots-jump` | `0.25em` | Dots-face bob travel, above and below centre |
 | `--ui-beacon-dots-width` | `1.4em` | Ticker dot-loader width |
 | `--ui-beacon-dots-inset` | `1.5ch` | Ticker dot-loader inline-end offset |
 

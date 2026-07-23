@@ -42,5 +42,9 @@
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
   "homepage": "https://browser.style/ui/data/entry",
-  "customElements": "custom-elements.json"
+  "customElements": "custom-elements.json",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11",
+    "@browser.style/icon": "^4.0.0"
+  }
 }

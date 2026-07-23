@@ -8,12 +8,12 @@
 	<meta name="description" content="Overlay furniture inside &lt;ui-media&gt;: beacon (live status), chip (pill label), play, save (bookmark toggle) and sticker (disc / burst) — positioned via the 9-code grid and themed via the media= token.">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="/layout/dist/layout.css">
-	<link rel="stylesheet" href="../beacon/ui-beacon.css">
-	<link rel="stylesheet" href="../chip/ui-chip.css">
-	<link rel="stylesheet" href="../play/ui-play.css">
-	<link rel="stylesheet" href="../save/ui-save.css">
-	<link rel="stylesheet" href="../sticker/ui-sticker.css">
-	<link rel="stylesheet" href="../icon/index.css">
+	<!-- Package entry points — play/save pull in <ui-icon> themselves. -->
+	<link rel="stylesheet" href="../beacon/index.css">
+	<link rel="stylesheet" href="../chip/index.css">
+	<link rel="stylesheet" href="../play/index.css">
+	<link rel="stylesheet" href="../save/index.css">
+	<link rel="stylesheet" href="../sticker/index.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
 		code { font-size: 0.9em; }
@@ -23,15 +23,11 @@
 	<header>
 	<h1>UI: Card — Media furniture</h1>
 	<p>Overlay elements inside <code>&lt;ui-media&gt;</code>: <code>&lt;ui-beacon&gt;</code>, <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-play&gt;</code>, <code>&lt;ui-save&gt;</code>, <code>&lt;ui-sticker&gt;</code>. All configured from the parent <code>media=</code> token as <code>&lt;el&gt;(&lt;value&gt;)</code> — position on the 9-code grid (<code>ts tc te · cs cc ce · bs bc be</code>), plus hue, size and corner.</p>
-	<p>Reference: <a href="media.md">media.md</a> · <a href="media.html">media.html</a>.</p>
 	</header>
 
 	<section>
-	<!-- ============================================================
-	     Beacon — <ui-beacon>
-	     ============================================================ -->
 	<h2>Beacon — <code>&lt;ui-beacon&gt;</code></h2>
-	<p>The chip's <strong>live</strong> counterpart. Face with <code>beacon(pll|sld|tck)</code>, animation with
+	<p>The chip's <strong>live</strong> counterpart. Face with <code>beacon(dts|pll|sld|tck)</code>, animation with
 		<code>beacon(bln|pls|brt|non)</code>, plus the usual <code>&lt;pos&gt;</code> / <code>&lt;hue&gt;</code> /
 		<code>&lt;size&gt;</code>. Over imagery prefer <code>pll</code>/<code>sld</code> — the bare dot has no
 		contrast plate.</p>
@@ -43,46 +39,49 @@
 				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(sld) beacon(red) beacon(bln)</h2></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) beacon(ts) beacon(pll) beacon(green) beacon(pls) chip(te) chip(gray)">
+		<ui-card variant="col" media="asr(4/3) beacon(pll) beacon(green) beacon(pls) chip(te) chip(gray)">
 			<cq-box>
 				<ui-media><img src="/assets/images/ergochair.png" alt=""><ui-beacon>In stock</ui-beacon><ui-chip>Bestseller</ui-chip></ui-media>
-				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">beacon(pll) beacon(pls) + chip</h2></ui-content>
+				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">beacon(pll) beacon(green) beacon(pls) + chip(te) chip(gray)</h2></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) beacon(be) beacon(sld) beacon(black) beacon(non) beacon(sm)">
-			<cq-box>
-				<ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-beacon>REC</ui-beacon></ui-media>
-				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">beacon(sld) beacon(non) beacon(sm)</h2></ui-content>
-			</cq-box>
-		</ui-card>
-	</lay-out>
-	<p>Animations only run under <code>prefers-reduced-motion: no-preference</code>; <code>paused</code> freezes one.</p>
-	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-card variant="col" media="asr(4/3) beacon(ts) beacon(pll) beacon(blue) beacon(brt)">
+		<ui-card variant="col" media="asr(4/3) beacon(sm) beacon(pll) beacon(blue) beacon(brt)">
 			<cq-box>
 				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-beacon>Restocking</ui-beacon></ui-media>
-				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(pll) beacon(blue) beacon(brt)</h2></ui-content>
+				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(sm) beacon(pll) beacon(blue) beacon(brt)</h2></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) beacon(bc) beacon(sld) beacon(accent) beacon(bln) beacon(lg)">
+		<ui-card variant="col" media="asr(4/3) beacon(red) beacon(tck)">
 			<cq-box>
-				<ui-media><img src="/assets/images/ergochair.png" alt=""><ui-beacon>BREAKING</ui-beacon></ui-media>
-				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">beacon(bc) beacon(accent) beacon(lg)</h2></ui-content>
+				<ui-media><img src="/assets/images/government.png" alt=""><ui-beacon>Live</ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(red) beacon(tck)</h2></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) beacon(sld) beacon(red) beacon(bln)">
+		<ui-card variant="col" media="asr(4/3) beacon(be) beacon(sld) beacon(orange) beacon(pls) beacon(xs)">
+			<cq-box>
+				<ui-media><img src="/assets/images/ergochair.png" alt=""><ui-beacon>FEW IN STOCK</ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Furniture</small><h2 data-part="headline">beacon(be) beacon(sld) beacon(orange) beacon(pls) beacon(xs)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) beacon(te) beacon(sld) beacon(red) beacon(bln)">
 			<cq-box>
 				<ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-beacon paused>LIVE</ui-beacon></ui-media>
-				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">paused attribute (frozen blink)</h2></ui-content>
+				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">beacon(te) beacon(sld) beacon(red) beacon(bln) + paused</h2></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) beacon(te) beacon(red) beacon(tck)">
+		<ui-card variant="col" media="asr(4/3) beacon(dts) beacon(red)">
 			<cq-box>
-				<ui-media><img src="/assets/images/aurasoundpro.png" alt=""><ui-beacon>Live</ui-beacon></ui-media>
-				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">beacon(tck) — ticker face, text-only markup</h2></ui-content>
+				<ui-media><img src="/assets/images/government.png" alt=""><ui-beacon></ui-beacon></ui-media>
+				<ui-content><small data-part="eyebrow">Weather</small><h2 data-part="headline">beacon(dts) beacon(red)</h2></ui-content>
 			</cq-box>
 		</ui-card>
+
 	</lay-out>
+	<p>The <code>dts</code> face is the chat "typing" indicator — three dots hopping in sequence with a
+		rest beat between loops, no label needed. Reads as a live/updating marker in front of a headline:</p>
+	<p style="font-size:1.5rem;font-weight:700;line-height:1.2;max-inline-size:32ch">
+		<ui-beacon variant="dots" theme="red"></ui-beacon> Storm warning: ferries cancelled along the west coast
+	</p>
 	</section>
 
 	<section>

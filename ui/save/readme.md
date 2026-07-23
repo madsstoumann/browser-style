@@ -33,9 +33,11 @@ npm install @browser.style/base @browser.style/icon
 
 ```html
 <link rel="stylesheet" href="@browser.style/base/index.css">
-<link rel="stylesheet" href="@browser.style/icon/ui-icon.css">
 <link rel="stylesheet" href="@browser.style/save/index.css">
 ```
+
+`index.css` pulls in `@browser.style/icon` for the glyph, so you only link this one
+file. If you bundle the icon set yourself, import the bare `save/ui-save.css` instead.
 
 Markup — a `<ui-save>` wrapping an invoker `<button>` and a `<ui-icon>`. The icon stays `variant="outline"`; the button carries the state and the `aria-label`:
 

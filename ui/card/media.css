@@ -130,10 +130,11 @@
 		z-index: 2;
 	}
 
-	/* default area by role — beacon takes bs so it can coexist with the ts chip */
-	:where(ui-media) ui-chip                     { inset-block-start: var(--_g); inset-inline-start: var(--_g); }   /* ts */
+	/* default area by role — chip and beacon both take ts: it's where a label or a
+	   LIVE/REC indicator belongs, and a frame carries one or the other far more
+	   often than both. Using both? Position one explicitly, e.g. chip(te). */
+	:where(ui-media) :is(ui-beacon, ui-chip)     { inset-block-start: var(--_g); inset-inline-start: var(--_g); }   /* ts */
 	:where(ui-media) :is(ui-sticker, ui-save)    { inset-block-start: var(--_g); inset-inline-end:   var(--_g); }   /* te */
-	:where(ui-media) ui-beacon                    { inset-block-end: var(--_g); inset-inline-start: var(--_g); }    /* bs */
 	:where(ui-media) ui-play                      { inset-block-start: 50%; inset-inline-start: 50%; translate: -50% -50%; } /* cc */
 
 	/* position override — media="el(pos)"; 9 logical positions × chip/sticker/save/play/beacon */

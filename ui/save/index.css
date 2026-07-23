@@ -1,1 +1,2 @@
+@import '../icon/index.css'; /* <ui-icon> glyph — peer dep, imported so the entry is self-contained */
 @import './ui-save.css';

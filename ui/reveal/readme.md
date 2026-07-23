@@ -27,8 +27,7 @@ npm install @browser.style/base @browser.style/card @browser.style/icon
 ```css
 @import '@browser.style/base';
 @import '@browser.style/card/style';
-@import '@browser.style/icon';
-@import '@browser.style/reveal/style';
+@import '@browser.style/reveal/style';   /* pulls in @browser.style/icon */
 ```
 
 ---

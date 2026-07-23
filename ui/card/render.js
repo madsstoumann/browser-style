@@ -202,7 +202,7 @@ const FURNITURE_AXIS = {
 	variant: new Set(['lgt', 'out']),
 	shape: new Set(['text', 'spl', 'spr']),
 	anim: new Set(['bln', 'pls', 'brt']), /* beacon animations (beacon(non) turns solid's default blink off — axis 'disc') */
-	face: new Set(['sld', 'tck']), /* beacon faces (pll stays in disc — shared with the chip/save radius vocabulary) */
+	face: new Set(['sld', 'tck', 'dts']), /* beacon faces (pll stays in disc — shared with the chip/save radius vocabulary) */
 	disc: new Set(['crc', 'sqr', 'rnd', 'pll', 'non'])
 };
 const axisOf = (value) => {

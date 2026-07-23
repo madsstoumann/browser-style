@@ -21,7 +21,7 @@
 
 	<h2>Beacon</h2>
 	<p>
-		A status indicator with four layouts (bare dot, pill, solid, ticker) and three animation modes (blink, pulse, breathe).
+		A status indicator with five layouts (bare dot, dots, pill, solid, ticker) and three animation modes (blink, pulse, breathe).
 	</p>
 
 	<hr>
@@ -148,6 +148,31 @@
 		<ui-beacon variant="solid" theme="red" animation="pulse">Alert</ui-beacon>&nbsp;
 		<ui-beacon variant="solid" theme="blue" animation="breathe">Loading</ui-beacon>&nbsp;
 		<ui-beacon variant="solid" theme="green" animation="none">Static</ui-beacon>
+	</p>
+
+	<hr>
+	<h2>Dots variant</h2>
+	<p>
+		The chat "someone is typing" indicator — three dots hopping in sequence, then a short rest
+		beat before it repeats. It's the bare-dot face with three dots instead of one,
+		so an optional label works just the same. Animates by default.
+	</p>
+	<p>
+		<ui-beacon variant="dots" theme="red"></ui-beacon>&nbsp;
+		<ui-beacon variant="dots" theme="green"></ui-beacon>&nbsp;
+		<ui-beacon variant="dots" theme="blue"></ui-beacon>&nbsp;
+		<ui-beacon variant="dots"></ui-beacon>&nbsp;
+		<ui-beacon variant="dots" theme="red" animation="none"></ui-beacon> <small>(animation="none")</small>
+	</p>
+	<p>With a label, and at a few sizes:</p>
+	<p>
+		<ui-beacon variant="dots" theme="red">Liveblog</ui-beacon>&nbsp;
+		<ui-beacon variant="dots" theme="green" size="lg">Updating</ui-beacon>&nbsp;
+		<ui-beacon variant="dots" theme="blue" size="2xl">Live</ui-beacon>
+	</p>
+	<p>In front of a headline — the liveblog use case:</p>
+	<p style="font-size:1.75rem;font-weight:700;line-height:1.2;max-inline-size:26ch">
+		<ui-beacon variant="dots" theme="red"></ui-beacon> Storm warning: ferries cancelled along the west coast
 	</p>
 
 	<hr>
