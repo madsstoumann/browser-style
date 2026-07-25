@@ -14,6 +14,7 @@
 	<link rel="stylesheet" href="../play/index.css">
 	<link rel="stylesheet" href="../save/index.css">
 	<link rel="stylesheet" href="../sticker/index.css">
+	<link rel="stylesheet" href="../marquee/index.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
 		code { font-size: 0.9em; }
@@ -132,6 +133,61 @@
 			<cq-box>
 				<ui-media><img src="/assets/images/brewandbean.png" alt=""><ui-chip>-50%</ui-chip></ui-media>
 				<ui-content><small data-part="eyebrow">Café</small><h2 data-part="headline">chip(lgt) chip(2xl)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	</section>
+
+	<section class="marquee-demo">
+	<!-- ============================================================
+	     Marquee — <ui-marquee>
+	     ============================================================ -->
+	<h2>Marquee — <code>&lt;ui-marquee&gt;</code></h2>
+	<p>A full-width scrolling band across <code>&lt;ui-media&gt;</code>. Position is a minimal two-arm token: <strong>top by default</strong>, <code>marquee(bottom)</code> pins it to the bottom edge. It sits at <code>z-index:1</code>, <strong>below</strong> the other furniture (chip/beacon/sticker are <code>z-index:2</code>). Hue and the rest come from the component's own attributes (<code>theme</code>, <code>variant</code>, <code>font</code>, <code>size</code>, <code>fade</code>).</p>
+	<p>Full component: <a href="../marquee/">ui/marquee</a>.</p>
+	<lay-out md="columns(2)" lg="columns(3)">
+		<ui-card variant="col" media="asr(4/3)">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/government.png" alt="">
+					<ui-marquee variant="loop" theme="red" font="bold" size="sm">
+						<div>
+							<span>BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;</span>
+							<span aria-hidden="true">BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;</span>
+						</div>
+					</ui-marquee>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">News</small><h2 data-part="headline">marquee at top (default)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) beacon(red) beacon(tck) marquee(bottom)">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/government.png" alt="">
+					<ui-beacon>Live</ui-beacon>
+					<ui-marquee variant="loop" theme="red" font="bold" size="sm">
+						<div>
+							<span>BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;</span>
+							<span aria-hidden="true">BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;</span>
+						</div>
+					</ui-marquee>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">News</small><h2 data-part="headline">marquee at bottom + beacon(red) beacon(tck)</h2></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(sh:burst) sticker(orange) sticker(xl) marquee(bottom)">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/aurasoundpro.png" alt="">
+					<ui-sticker><small>SAVE</small><strong>40%</strong></ui-sticker>
+					<ui-marquee variant="loop" theme="green pale" font="bold" size="sm" fade>
+						<div>
+							<span>LIMITED TIME OFFER&nbsp;&bull;&nbsp;LIMITED TIME OFFER&nbsp;&bull;&nbsp;LIMITED TIME OFFER&nbsp;&bull;&nbsp;LIMITED TIME OFFER&nbsp;&bull;&nbsp;</span>
+							<span aria-hidden="true">LIMITED TIME OFFER&nbsp;&bull;&nbsp;LIMITED TIME OFFER&nbsp;&bull;&nbsp;LIMITED TIME OFFER&nbsp;&bull;&nbsp;LIMITED TIME OFFER&nbsp;&bull;&nbsp;</span>
+						</div>
+					</ui-marquee>
+				</ui-media>
+				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">$5 OFF sticker + green-pale marquee + fade</h2></ui-content>
 			</cq-box>
 		</ui-card>
 	</lay-out>

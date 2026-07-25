@@ -148,6 +148,13 @@
 	:where([media*="chip(bc)"]) ui-chip, :where([media*="sticker(bc)"]) ui-sticker, :where([media*="save(bc)"]) ui-save, :where([media*="play(bc)"]) ui-play, :where([media*="beacon(bc)"]) ui-beacon { inset-block: auto var(--_g); inset-inline: 50% auto; translate: -50% 0; }
 	:where([media*="chip(be)"]) ui-chip, :where([media*="sticker(be)"]) ui-sticker, :where([media*="save(be)"]) ui-save, :where([media*="play(be)"]) ui-play, :where([media*="beacon(be)"]) ui-beacon { inset-block: auto var(--_g); inset-inline: auto var(--_g); translate: none; }
 
+	/* ── Marquee — full-width scrolling band (not a 9-grid point). Sits at
+	   z-index 1, BELOW the z-2 furniture above. Two arms: top by default,
+	   marquee(bottom) pins it to the bottom edge. Hue/size/etc. come from the
+	   component's own marquee(<value>) arms. ── */
+	:where(ui-media) ui-marquee { position: absolute; inset-inline: 0; inset-block: 0 auto; z-index: 1; }
+	:where([media*="marquee(bottom)"]) ui-media ui-marquee { inset-block: auto 0; }
+
 	/* per-slide video control (nested frame) — always centered, wins over play() furniture */
 	ui-media ui-media > ui-play {
 		inset-block: 50% auto;
