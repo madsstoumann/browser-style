@@ -69,6 +69,21 @@
 	:where(ui-card[variant*="-sq)"]) { corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8)); }
 
 	/* ============================================================
+	   BORDER — bdr: opt-in hairline for surface cards whose edges vanish
+	   against a surface page. Separate from theme= border() (needs a colour
+	   theme + transparent-izes the fill). Author knobs: --ui-card-border-color
+	   / -width / -style. Substring match so bdr(md) alone also enables it.
+	   ============================================================ */
+	:where([variant*="bdr"]) {
+		border: var(--ui-card-border-width, var(--border-width, 1px)) var(--ui-card-border-style, solid) var(--ui-card-border-color, var(--color-border));
+	}
+	:where([variant~="bdr(sm)"]) { --ui-card-border-width: var(--border-width); }
+	:where([variant~="bdr(md)"]) { --ui-card-border-width: var(--border-width-thick); }
+	:where([variant~="bdr(lg)"]) { --ui-card-border-width: var(--border-width-heavy); }
+	:where([variant~="bdr(lgt)"]) { --ui-card-border-color: color-mix(in srgb, var(--color-border), transparent 50%); }
+	:where([variant~="bdr(drk)"]) { --ui-card-border-color: color-mix(in srgb, var(--color-text) 30%, transparent); }
+
+	/* ============================================================
 	   ARRANGEMENT — col (default) / row / col-r / row-r + spl()
 	   ============================================================ */
 	:where([variant~="row"], [variant~="row-r"]) {

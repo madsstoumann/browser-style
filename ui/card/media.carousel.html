@@ -169,6 +169,13 @@
 		<ui-media media="asr(16/9) rds(lg) clip nav arw(sft)"><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
 	</lay-out>
 
+	<h3>Reveal on hover — <code>arw(rev)</code></h3>
+	<p><code>arw(rev)</code> hides the arrows until the media is <strong>hovered</strong> or <strong>keyboard-focused</strong> (revealed also on the button's own <code>:focus-visible</code>). Gated on <code>@media (hover: hover)</code> — touch devices, which never hover, keep the arrows visible so they stay reachable. Hover the cards below:</p>
+	<lay-out md="columns(2)">
+		<ui-media media="asr(16/9) rds(lg) clip nav arw(rev)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+		<ui-media media="asr(16/9) rds(lg) clip nav(arw) arw(rev) arw(bare)"><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
+	</lay-out>
+
 	<h2>6 · Control bands — <code>nav(blw)</code> / <code>nav(abv)</code></h2>
 	<p><code>nav(blw)</code> / <code>nav(abv)</code> move the controls into a band below / above the media. Below in <code>&lt;ui-card&gt;</code>s, above as standalone <code>&lt;ui-media&gt;</code>.</p>
 	<lay-out md="columns(2)">
@@ -369,6 +376,35 @@
 			<img src="/assets/images/brewandbean.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/brewandbean.png')">
 			<img src="/assets/images/aurasoundpro.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/aurasoundpro.png')">
 			<img src="/assets/images/government.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/government.png')">
+		</ui-media>
+	</lay-out>
+	<h3>Thumbnail aspect-ratio — <code>tmb(&lt;ratio&gt;)</code></h3>
+	<p>Thumbnails default to <code>4/3</code>. <code>tmb(1/1)</code> · <code>tmb(3/4)</code> · <code>tmb(16/9)</code> · <code>tmb(3/2)</code> · <code>tmb(2/3)</code> reshape them (mirrors <code>asr()</code>; slash, not colon). Or set <code>--ui-carousel-thumb-ratio</code> manually.</p>
+	<lay-out md="columns(2)">
+		<ui-media media="asr(16/9) rds(md) clip nav mrk(tmb) mrk(be) mrk(lg) tmb(1/1)">
+			<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')">
+			<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')">
+			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')">
+			<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')">
+		</ui-media>
+		<ui-media media="asr(16/9) rds(md) clip nav mrk(tmb) mrk(be) mrk(lg) tmb(16/9)">
+			<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')">
+			<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')">
+			<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')">
+			<img src="/assets/images/popovers.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/popovers.png')">
+		</ui-media>
+	</lay-out>
+	<p>Square thumbs in a vertical rail — the rail widens/narrows to the ratio (<code>tmb(1/1)</code> vs default <code>4/3</code>):</p>
+	<lay-out md="columns(2)">
+		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(md) tmb(1/1)">
+			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')">
+			<img src="/assets/images/brewandbean.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/brewandbean.png')">
+			<img src="/assets/images/aurasoundpro.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/aurasoundpro.png')">
+		</ui-media>
+		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(md) tmb(16/9)">
+			<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')">
+			<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')">
+			<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')">
 		</ui-media>
 	</lay-out>
 	<h3>Filmstrip below — <code>mrk(tmb) mrk(blw)</code></h3>
@@ -1042,6 +1078,28 @@
 				<ui-media media="nav(blw) arw(lg) mrk(be)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
 				<ui-content><small data-part="eyebrow">media="nav(blw) arw(lg) mrk(be)" on ui-media</small><h2 data-part="headline">frame form</h2></ui-content>
 			</cq-box>
+		</ui-card>
+	</lay-out>
+
+	<hr>
+	<h2>Card border — <code>variant="bdr"</code></h2>
+	<p>A <code>ui-card</code> uses the <code>surface</code> background, so its edges can vanish against a surface page even with the shadow. <code>bdr</code> adds an opt-in hairline. Shades: <code>bdr(lgt)</code> (super-light) · default · <code>bdr(drk)</code> (darker). Widths: <code>bdr(sm)</code> 1px · <code>bdr(md)</code> 2px · <code>bdr(lg)</code> 3px. Author overrides: <code>--ui-card-border-color</code> / <code>--ui-card-border-width</code> / <code>--ui-card-border-style</code> (e.g. dashed).</p>
+	<lay-out md="columns(2)" lg="columns(4)">
+		<ui-card variant="col bdr bdr(lgt)" media="asr(4/3) rds(md) scm" content="scl(sm) pad(md)">
+			<cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">bdr(lgt)</small><h3 data-part="headline">Super-light</h3></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col bdr" media="asr(4/3) rds(md) scm" content="scl(sm) pad(md)">
+			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">bdr</small><h3 data-part="headline">Default</h3></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col bdr bdr(drk)" media="asr(4/3) rds(md) scm" content="scl(sm) pad(md)">
+			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">bdr(drk)</small><h3 data-part="headline">Darker</h3></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col bdr bdr(md)" media="asr(4/3) rds(md) scm" content="scl(sm) pad(md)" style="--ui-card-border-style: dashed; --ui-card-border-color: var(--color-accent);">
+			<cq-box><ui-media><img src="/assets/images/world.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">bdr(md) + dashed accent</small><h3 data-part="headline">Authored</h3></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
 

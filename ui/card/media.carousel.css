@@ -111,7 +111,7 @@
 	   (content-box). Column parked in the rail by carousel.css. See media.carousel.md */
 	:where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(rail)"]) ui-media,
 	ui-media:where([media*="axis(y)"][media*="mrk(rail)"]) {
-		--ui-carousel-rail: calc(var(--ui-carousel-thumb-size, 2.25rem) * 4 / 3 + 0.5rem);
+		--ui-carousel-rail: calc(var(--ui-carousel-thumb-size, 2.25rem) * var(--ui-carousel-thumb-ratio-n, 1.3333) + 0.5rem);
 		background: var(--ui-carousel-controls-bg, var(--ui-media-bg));
 		inline-size: calc(round(down, 100%, 1px) - var(--ui-carousel-rail) - 2 * var(--ui-carousel-overlay-gap, 0.75rem));
 		padding-inline-start: calc(var(--ui-carousel-rail) + 2 * var(--ui-carousel-overlay-gap, 0.75rem));

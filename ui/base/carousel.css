@@ -42,6 +42,14 @@
 			--ui-carousel-marker-inset: var(--ui-carousel-thumb-gap, 1rem);
 			--ui-carousel-marker-size: var(--ui-carousel-thumb-size, 2.25rem);
 		}
+		/* tmb(<ratio>) — thumbnail aspect-ratio (default 4/3). -ratio drives aspect-ratio,
+		   -ratio-n is the numeric form the mrk(rail) width calc needs. */
+		&:where([media~="tmb(1/1)"])  { --ui-carousel-thumb-ratio: 1 / 1;  --ui-carousel-thumb-ratio-n: 1; }
+		&:where([media~="tmb(4/3)"])  { --ui-carousel-thumb-ratio: 4 / 3;  --ui-carousel-thumb-ratio-n: 1.3333; }
+		&:where([media~="tmb(3/4)"])  { --ui-carousel-thumb-ratio: 3 / 4;  --ui-carousel-thumb-ratio-n: 0.75; }
+		&:where([media~="tmb(16/9)"]) { --ui-carousel-thumb-ratio: 16 / 9; --ui-carousel-thumb-ratio-n: 1.7778; }
+		&:where([media~="tmb(3/2)"])  { --ui-carousel-thumb-ratio: 3 / 2;  --ui-carousel-thumb-ratio-n: 1.5; }
+		&:where([media~="tmb(2/3)"])  { --ui-carousel-thumb-ratio: 2 / 3;  --ui-carousel-thumb-ratio-n: 0.6667; }
 		/* mrk(bar) — thin styled scrollbar: token defaults; size atoms repurposed as bar span fraction */
 		&:where([media*="mrk(bar)"]) {
 			--ui-carousel-bar-hit: 0.875rem;
@@ -63,6 +71,13 @@
 		anchor-name: --ui-carousel-bar;
 		anchor-scope: --ui-carousel-bar;
 		scrollbar-color: var(--ui-carousel-marker-active, rgb(0 0 0 / 0.7)) #0000;
+	}
+	/* mrk(tmb) scroller arm — anchor-name/scope so the (non-rail) thumb strip can cap its
+	   width to the frame via anchor-size() (scoped so multiple carousels don't cross-bind) */
+	:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]:not([media*="mrk(rail)"])) ui-media,
+	:where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]:not([media*="mrk(rail)"])) {
+		anchor-name: --ui-carousel-thumbs;
+		anchor-scope: --ui-carousel-thumbs;
 	}
 	/* arrows present: base glyph vars */
 	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
@@ -234,6 +249,20 @@
 		:where(ui-card, ui-reveal):where([media*="mrk(non)"]) :where(ui-media),
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(non)"]) { scroll-marker-group: none; }
 
+		/* mrk(tmb) horizontal thumb strips (overlay corners + blw/abv bands, NOT the rail)
+		   must never overflow the frame: cap to the scroller width and scroll instead. Wide
+		   thumbs (tmb(16/9)) or many thumbs would otherwise spill past the edge / neighbour.
+		   The cap uses anchor-size() (the scroller declares --ui-carousel-thumbs below) — a
+		   plain `%` max-inline-size resolves against the wrong containing block for a
+		   ::scroll-marker-group and does not constrain it. */
+		:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]:not([media*="mrk(rail)"])) :where(ui-media)::scroll-marker-group,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]:not([media*="mrk(rail)"]))::scroll-marker-group {
+			max-inline-size: calc(anchor-size(--ui-carousel-thumbs inline) - 2 * var(--ui-carousel-overlay-gap, 0.75rem));
+			overflow-x: auto;
+			overscroll-behavior-x: contain;
+			scrollbar-width: thin;
+		}
+
 		:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
 			aspect-ratio: var(--ui-carousel-thumb-ratio, 4 / 3);
@@ -242,6 +271,7 @@
 			border: var(--ui-carousel-thumb-border, 2px solid #fff);
 			border-color: var(--ui-carousel-thumb-border-color, rgb(255 255 255 / 0.5));
 			border-radius: var(--ui-carousel-thumb-radius, var(--radius-sm, 0.25rem));
+			flex: 0 0 auto;
 			inline-size: auto;
 			opacity: var(--ui-carousel-thumb-opacity, 1);
 			transition: border-color var(--duration-fast, 100ms) var(--ease-default, ease), opacity var(--duration-fast, 100ms) var(--ease-default, ease);
@@ -278,7 +308,7 @@
 				position-anchor: auto;
 				top: var(--ui-carousel-arrow-top, calc(anchor(center) - var(--ui-carousel-arrow-size) / 2));
 				transform: rotate(var(--_arw-rot, 0deg)) scale(var(--_arw-scale, 1));
-				transition: background-color var(--duration-fast, 100ms) var(--ease-default, ease), transform var(--duration-fast, 100ms) var(--ease-default, ease);
+				transition: background-color var(--duration-fast, 100ms) var(--ease-default, ease), transform var(--duration-fast, 100ms) var(--ease-default, ease), opacity var(--duration-fast, 100ms) var(--ease-default, ease);
 				z-index: 3;
 			}
 			&::scroll-button(*):hover { background-color: var(--ui-carousel-arrow-bg-hover); box-shadow: var(--ui-carousel-arrow-hover-ring, var(--ui-carousel-arrow-shadow)); }
@@ -307,6 +337,19 @@
 		}
 
 		:where(ui-media, lay-out[overflow]) > [data-clone]::scroll-marker { content: none; }
+
+		/* arw(rev) — arrows hidden, revealed on hover / focus-within (or the button's own
+		   focus-visible for keyboards). Gated on @media (hover: hover) so touch — which never
+		   hovers — keeps them visible. */
+		@media (hover: hover) {
+			:where(ui-card, ui-reveal):where([media*="arw(rev)"]) :where(ui-media),
+			:where(ui-media, lay-out[overflow]):where([media*="arw(rev)"]) {
+				&::scroll-button(*) { opacity: 0; }
+				&:hover::scroll-button(*),
+				&:focus-within::scroll-button(*),
+				&::scroll-button(*):focus-visible { opacity: 1; }
+			}
+		}
 
 		:where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
 			/* arrow vertical band — split arrows honor the block row (t/c/b); cc = middle default */

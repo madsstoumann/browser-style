@@ -44,6 +44,7 @@ scroller; the rest layer on top. `asr()` etc. belong to the base frame — see m
 | `arw(blw)` `arw(abv)` | CSS | Arrows **alone** in a reserved band below / above the media (markers keep their on-media position/ink); arrow ink flips to the band theme |
 | `arw(drk)`  | CSS | **Dark theme** preset — dark circle + white glyph + light hover ring (composes on the overlay and in `nav(blw)`/`nav(abv)` bands; on `arw(bare)` it just paints a dark glyph) |
 | `arw(hid)`  | CSS | Auto-hide the dead-end arrow (default dims it) |
+| `arw(rev)`  | CSS | Reveal arrows on hover / focus-within (+ button `:focus-visible`); gated on `@media (hover: hover)` so touch keeps them visible |
 | `arw(lg)`   | CSS | Arrow size 2.75rem |
 | `arw(lgt)`  | CSS | **Light theme** preset — light circle + dark glyph (the default look, made explicit) |
 | `arw(cc)`   | CSS | Split arrows, vertically centered (**default**) |
@@ -70,6 +71,7 @@ scroller; the rest layer on top. `asr()` etc. belong to the base frame — see m
 | `mrk(tmb)`| CSS | Image thumbnails; per-slide `--ui-media-thumb-url`; active thumb has a bottom timer stripe. Overlay in a corner, or `+ mrk(blw)`/`nav(blw)` for a gallery **filmstrip band** below — band auto-sizes to the thumb; image keeps `asr()` (`box-sizing: content-box`) and is rounded on all 4 corners to `rds()` |
 | `mrk(ts)` `mrk(te)` `mrk(bs)` `mrk(be)` | CSS | Corner placement for the overlay marker-group — logical (top-start / top-end / bottom-start / bottom-end). Center row `mrk(cs)` `mrk(cc)` `mrk(ce)` completes the 9-grid. Inset via `--ui-media-marker-inset` |
 | `mrk(rail)` | CSS | With `axis(y)` + `mrk(tmb)`: vertical thumbnail rail **beside** the media (inline-start; right in RTL). Reserves inline space (`padding-inline-start` + `content-box`) so the image keeps `asr()`; arrows dropped; thumbs shrink to `--ui-carousel-thumb-min` then the rail scrolls. Width `--ui-carousel-rail` |
+| `tmb(<ratio>)` | CSS | Thumbnail aspect-ratio (default `4/3`): `1/1 · 4/3 · 3/4 · 16/9 · 3/2 · 2/3` (slash, mirrors `asr()`). Sets `--ui-carousel-thumb-ratio` (+ `-ratio-n`, the numeric form the `mrk(rail)` width calc uses) |
 | `mrk(xl)`   | CSS | Marker size 1rem |
 | `loop`      | JS | Seamless infinite loop (clones first/last slide) |
 | `nav`       | CSS | Carousel **on** — markers + arrows (the trigger) |
@@ -251,6 +253,10 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
 - **`arw(set)`** moves the left button next to the right one (adjacent pair at inline-end).
 - **Disabled (dead-end) arrow** dims to `--ui-media-arrow-disabled-opacity` (0.4) by
   default; **`arw(hid)`** sets it to 0 (auto-hide instead of dim).
+- **`arw(rev)`** hides the arrows (`opacity: 0`, added to the button transition) and reveals
+  them on the scroller's `:hover` / `:focus-within`, plus the button's own `:focus-visible`
+  (keyboard). Wrapped in `@media (hover: hover)` — on touch (no hover) the rule never applies,
+  so arrows stay visible and reachable.
 - **`arw(bare)`** drops the circle: the glyph itself is painted as a recolourable shape
   (`mask-image` of the SVG + `background-color` = the ink), so it can be any colour
   (`--ui-media-arrow-color`). A `:disabled` `::scroll-button` drops its mask, so the

@@ -64,6 +64,25 @@ Stacks `<ui-content>` over `<ui-media>` (same grid cell) and places + aligns it 
 - **Round** (global radius scale): `rds(none · sm · md · lg · xl · 2xl · full · pill)`.
 - **Squircle** (bespoke radius + `corner-shape: superellipse()`): `rds(sm-sq · md-sq · lg-sq · xl-sq)` → radii `1.25 / 2 / 2.8 / 3.5rem` with exponents `1.5 / 1.7 / 1.8 / 2`. `ui-reveal` reads `--ui-card-squircle-exp` to apply the same corner-shape to its `<details>`.
 
+## Border — `bdr`
+
+Opt-in hairline for cards on a `surface` background whose edges otherwise vanish. Distinct from the `theme=` `border()` system ([base/theme.md](../base/theme.md)) — that needs a colour theme and makes the fill transparent; `bdr` leaves the surface fill intact.
+
+- **On:** `variant="bdr"` (default: `--color-border`, 1px, solid). `bdr(md)` alone also enables it.
+- **Shade:** `bdr(lgt)` super-light · default · `bdr(drk)` darker (same `lgt`/`drk` vocabulary as the carousel).
+- **Width:** `bdr(sm)` 1px (default) · `bdr(md)` 2px · `bdr(lg)` 3px (reuses `--border-width` / `-thick` / `-heavy`).
+
+| Custom property | Default | Purpose |
+|---|---|---|
+| `--ui-card-border-color` | `var(--color-border)` | border colour (or use `bdr(sub)`/`bdr(strong)`) |
+| `--ui-card-border-width` | `var(--border-width)` | border width (or use `bdr(sm/md/lg)`) |
+| `--ui-card-border-style` | `solid` | border style — **author-only** (e.g. `dashed`, `dotted`) |
+
+```html
+<ui-card variant="col bdr bdr(lgt)"> … </ui-card>
+<ui-card variant="col bdr bdr(md)" style="--ui-card-border-style: dashed; --ui-card-border-color: var(--color-accent)"> … </ui-card>
+```
+
 ## Themes — `theme=`
 
 Cards use the **shared cross-component `theme=` axis** — full reference in
