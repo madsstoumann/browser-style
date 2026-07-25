@@ -291,6 +291,7 @@ one axis per token):
 |---|---|---|
 | position | `beacon(ts…be)` | 9-cell furniture grid; default `ts` — same cell as the chip, so position one explicitly when a frame carries both |
 | hue | `beacon(red\|orange\|green\|blue\|accent\|white\|gray\|slate\|black)` | same `--ui-theme-*` bundles as `chip()`/`sticker()` |
+| hue modifier | `beacon(pale)` · `beacon(muted)` | pale = light tint + hue ink · muted = translucent plate; add alongside a hue, e.g. `beacon(red) beacon(pale)` |
 | face | `beacon(dts)` dots · `beacon(pll)` pill · `beacon(sld)` solid · `beacon(tck)` ticker | over imagery prefer these — the bare dot has no contrast plate |
 | animation | `beacon(bln)` blink · `beacon(pls)` pulse · `beacon(brt)` breathe · `beacon(non)` off | solid defaults to blink |
 | size | `beacon(xs\|sm\|md\|lg\|xl\|2xl)` | same em scale as the `size=` attribute |

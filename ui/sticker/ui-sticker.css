@@ -78,16 +78,25 @@
 		   (incl. pale/muted modifiers); the light/dark modifiers set color-scheme on
 		   the sticker directly. Card-routed media="sticker(<hue>)" feeds the
 		   --ui-theme-* bundle. */
+		/* Standalone theme= flows through base/theme.css. Card media="sticker(<hue>)"
+		   feeds the SAME resolver: hue → --_theme-base-*, pale/muted transform it
+		   (hue-agnostic), consumer maps the result to the disc/ink. Don't combine
+		   theme= with a media hue — both write --_theme-*. */
 		&[theme] { --ui-sticker-bg: var(--_theme-bg); --ui-sticker-c: var(--_theme-c, var(--_theme-ink)); }
-		:where([media*="sticker(red)"])    & { --ui-sticker-bg: var(--ui-theme-red-bg);    --ui-sticker-c: var(--ui-theme-red-c); }
-		:where([media*="sticker(orange)"]) & { --ui-sticker-bg: var(--ui-theme-orange-bg); --ui-sticker-c: var(--ui-theme-orange-c); }
-		:where([media*="sticker(green)"])  & { --ui-sticker-bg: var(--ui-theme-green-bg);  --ui-sticker-c: var(--ui-theme-green-c); }
-		:where([media*="sticker(blue)"])   & { --ui-sticker-bg: var(--ui-theme-blue-bg);   --ui-sticker-c: var(--ui-theme-blue-c); }
-		:where([media*="sticker(accent)"]) & { --ui-sticker-bg: var(--ui-theme-accent-bg); --ui-sticker-c: var(--ui-theme-accent-c); }
-		:where([media*="sticker(gray)"])   & { --ui-sticker-bg: var(--ui-theme-gray-bg);   --ui-sticker-c: var(--ui-theme-gray-c); }
-		:where([media*="sticker(slate)"])  & { --ui-sticker-bg: var(--ui-theme-slate-bg);  --ui-sticker-c: var(--ui-theme-slate-c); }
-		:where([media*="sticker(black)"])  & { --ui-sticker-bg: var(--ui-theme-black-bg);  --ui-sticker-c: var(--ui-theme-black-c); }
-		:where([media*="sticker(white)"])  & { --ui-sticker-bg: var(--ui-theme-white-bg);  --ui-sticker-c: var(--ui-theme-white-c); }
+		:where([media*="sticker(red)"])    & { --_theme-base-bg: var(--ui-theme-red-bg);    --_theme-base-c: var(--ui-theme-red-c); }
+		:where([media*="sticker(orange)"]) & { --_theme-base-bg: var(--ui-theme-orange-bg); --_theme-base-c: var(--ui-theme-orange-c); }
+		:where([media*="sticker(green)"])  & { --_theme-base-bg: var(--ui-theme-green-bg);  --_theme-base-c: var(--ui-theme-green-c); }
+		:where([media*="sticker(blue)"])   & { --_theme-base-bg: var(--ui-theme-blue-bg);   --_theme-base-c: var(--ui-theme-blue-c); }
+		:where([media*="sticker(accent)"]) & { --_theme-base-bg: var(--ui-theme-accent-bg); --_theme-base-c: var(--ui-theme-accent-c); }
+		:where([media*="sticker(gray)"])   & { --_theme-base-bg: var(--ui-theme-gray-bg);   --_theme-base-c: var(--ui-theme-gray-c); }
+		:where([media*="sticker(slate)"])  & { --_theme-base-bg: var(--ui-theme-slate-bg);  --_theme-base-c: var(--ui-theme-slate-c); }
+		:where([media*="sticker(black)"])  & { --_theme-base-bg: var(--ui-theme-black-bg);  --_theme-base-c: var(--ui-theme-black-c); }
+		:where([media*="sticker(white)"])  & { --_theme-base-bg: var(--ui-theme-white-bg);  --_theme-base-c: var(--ui-theme-white-c); }
+		/* pale = light tint + hue ink · muted = translucent disc (hue-agnostic) */
+		:where([media*="sticker(pale)"])  & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), var(--color-surface) 80%); --_theme-c: var(--_theme-base-bg); }
+		:where([media*="sticker(muted)"]) & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), transparent 50%); --_theme-c: var(--_theme-base-c); }
+		/* consumer — media hue → disc/ink (no-hue tokens keep the defaults) */
+		:where([media*="sticker("]) & { --ui-sticker-bg: var(--_theme-bg, var(--_theme-base-bg, var(--color-accent))); --ui-sticker-c: var(--_theme-c, var(--_theme-base-c, hsl(0, 0%, 100%))); }
 
 		/* arbitrary colour — fill = disc, ink = text (auto-contrasts from fill).
 		   After the hues so an explicit fill/ink wins; ink after fill. */

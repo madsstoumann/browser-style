@@ -146,6 +146,8 @@ For a **named colour**, use `theme=` — the 9 theme colours `red orange green b
 <ui-sticker theme="green">In stock</ui-sticker>
 ```
 
+From a card the same hues work as `media="sticker(<hue>)"`, plus the shared modifiers `sticker(pale)` (light tint + hue ink) and `sticker(muted)` (translucent disc) — add one alongside a hue, e.g. `sticker(red) sticker(pale)`.
+
 For an **arbitrary colour**, think of it as print: **`fill`** is the stock/background, **`ink`** is
 what's printed on it. They override `theme`.
 

@@ -73,28 +73,28 @@
 	</div>
 
 	<h2>Seamless — logo strip (Chrome-only; falls back to fade elsewhere)</h2>
-	<p><code>variant="seamless fade" style="--ui-marquee-item-size:9rem"</code></p>
+	<p><code>variant="seam fade" style="--ui-marquee-item-size:9rem"</code></p>
 	<p>Uses the css-tip <code>offset</code>/<code>sibling-count()</code> technique — a gap-free loop with no duplication. Edges fade via <code>fade</code>.</p>
-	<ui-marquee variant="seamless fade" style="--ui-marquee-item-size:9rem;">
-		<div>
-			<span class="demo-logo">ACME</span>
-			<span class="demo-logo">GLOBEX</span>
-			<span class="demo-logo">INITECH</span>
-			<span class="demo-logo">UMBRELLA</span>
-			<span class="demo-logo">STARK</span>
-			<span class="demo-logo">WAYNE</span>
-		</div>
+	<ui-marquee variant="seam fade" style="--ui-marquee-item-size:9rem;">
+		<span class="demo-logo">ACME</span>
+		<span class="demo-logo">GLOBEX</span>
+		<span class="demo-logo">INITECH</span>
+		<span class="demo-logo">UMBRELLA</span>
+		<span class="demo-logo">STARK</span>
+		<span class="demo-logo">WAYNE</span>
 	</ui-marquee>
 
 	<h2>Loop — never-ending text (all browsers)</h2>
 	<p><code>variant="loop" theme="red" font="bold"</code></p>
-	<p>Seamless continuous text: the phrase re-appears with no fade. Repeat the phrase to fill the frame, then duplicate the whole run (2nd copy <code>aria-hidden</code>); the track shifts by exactly &minus;50%.</p>
+	<p>Seamless continuous text: the phrase re-appears with no fade. Two identical direct children (2nd copy <code>aria-hidden</code>), each shifted by exactly &minus;100% of its own width. Or skip the markup entirely with <code>aria-label</code> (below).</p>
 	<ui-marquee variant="loop" theme="red" font="bold">
-		<div>
-			<span>BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;</span>
-			<span aria-hidden="true">BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;</span>
-		</div>
+		<span>BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;</span>
+		<span aria-hidden="true">BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;</span>
 	</ui-marquee>
+
+	<h2>Loop via <code>aria-label</code> — zero markup</h2>
+	<p><code>aria-label="…"</code> on an empty <code>&lt;ui-marquee&gt;</code> fills <code>::before</code> + <code>::after</code> — no child elements, and it's the accessible name too.</p>
+	<ui-marquee variant="loop" theme="blue" aria-label="NOW PLAYING • NOW PLAYING • NOW PLAYING • NOW PLAYING • NOW PLAYING • NOW PLAYING • "></ui-marquee>
 
 	<h2>Edge-fade</h2>
 	<p><code>fade</code></p>

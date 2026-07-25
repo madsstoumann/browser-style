@@ -208,6 +208,8 @@ Both are addressable from a card via the `media=` token — `chip(lgt)` (light) 
 <ui-card media="asr(4/3) chip(te) chip(lgt) chip(blue)"> … </ui-card>
 ```
 
+The shared **hue modifiers** `chip(pale)` (light tint + hue ink, the theme-standard pale ratio) and `chip(muted)` (translucent plate) also work from a card — add one alongside a hue, e.g. `chip(red) chip(pale)`.
+
 ### Shape variants
 
 The default is a pill shape. Use `square` for rounded corners or `squircle` for an iOS-style superellipse:

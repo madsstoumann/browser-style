@@ -5,10 +5,21 @@
  * @author Mads Stoumann
  *
  * CSS-only scrolling content strip — card-furniture family (ui-chip / ui-beacon /
- * ui-sticker). Modes: fade (default) · loop · seamless. Full docs + how-it-works:
- * readme.md.
+ * ui-sticker). Modes: fade (default) · loop · seam (seamless).
  *
- * Sections: A. Base · B. Track · C. Direction · C2. Loop · D. Furniture axes ·
+ * Content (no wrapper needed):
+ *   • direct children — one for fade, two identical for loop, N for seam/logos
+ *   • aria-label — zero-markup text: fills ::before (+ ::after for loop) when the
+ *     marquee is :empty. Also the accessible name.
+ *
+ *   <ui-marquee><span>Breaking news …</span></ui-marquee>
+ *   <ui-marquee aria-label="Breaking news …"></ui-marquee>
+ *   <ui-marquee variant="seam"><img><img><img></ui-marquee>
+ *
+ * Animation is var-driven: the host sets --_name (keyframes) and --_dir
+ * (direction); every item — child OR pseudo — reads them. Full docs: readme.md.
+ *
+ * Sections: A. Base · B. Items · C. Direction · C2. Loop · D. Furniture axes ·
  * E. Edge-fade · F. Pause · G. Seamless · H. Reduced motion · I. Keyframes.
  */
 @layer bs-component {
@@ -28,70 +39,82 @@
 		font-family: var(--ui-marquee-font-family, inherit);
 		font-size: var(--ui-marquee-font-size, 1em);
 		font-style: var(--ui-marquee-font-style, normal);
-		font-weight: var(--ui-marquee-font-weight, inherit);
+		font-weight: var(--ui-marquee-font-weight, var(--font-weight-semibold, 600));
 		gap: var(--ui-marquee-gap);
 		overflow: hidden;
 		padding-block: var(--ui-marquee-padding-block, 0.5em);
 		padding-inline: var(--ui-marquee-padding-inline, 0);
 		user-select: none;
 
-		/* B. Track — the single child holding all content */
-		& > * {
+		/* B. Items — direct children, or ::before/::after from aria-label.
+		   --_name (keyframes) and --_dir (direction) are set on the host by the
+		   mode/direction rules and inherited here. */
+		& > *, &::before, &::after {
 			align-items: center;
-			animation: ui-marquee-x var(--ui-marquee-duration) linear infinite;
+			animation: var(--_name, ui-marquee-x) var(--ui-marquee-duration) linear infinite;
+			animation-direction: var(--_dir, normal);
 			display: flex;
 			flex: 0 0 auto;
 			gap: var(--ui-marquee-gap);
 			inline-size: max-content;
 			white-space: nowrap;
 		}
+		/* aria-label = zero-markup text content, only when there are no children.
+		   ::after supplies the 2nd copy loop needs. */
+		&[aria-label]:empty::before { content: attr(aria-label); }
+		&:is([variant~="loop"], :where([media*="marquee(loop)"]) &)[aria-label]:empty::after { content: attr(aria-label); }
 
-		/* C. Direction — left(default) · right · up · down */
-		&[direction~="right"] > *,
-		:where([media*="marquee(right)"]) & > * { animation-direction: reverse; }
-
-		/* rtl flips the default left → right (self or ancestor dir=rtl) */
-		&[dir="rtl"]:not([direction~="right"]) > *,
-		:where([dir="rtl"]) &:not([dir="ltr"]):not([direction~="right"]) > * { animation-direction: reverse; }
+		/* C. Direction — left(default) · right · up · down (sets --_name / --_dir) */
+		&[direction~="right"], :where([media*="marquee(right)"]) &,
+		&[dir="rtl"]:not([direction~="right"]),
+		:where([dir="rtl"]) &:not([dir="ltr"]):not([direction~="right"]) { --_dir: reverse; }
 
 		&:is([direction~="up"], [direction~="down"]),
 		:where([media*="marquee(up)"], [media*="marquee(down)"]) & {
+			--_name: ui-marquee-y;
 			block-size: var(--ui-marquee-block-size, 12rem);
 			container-type: size;
+			flex-direction: column;
 		}
 		&:is([direction~="up"], [direction~="down"]) > *,
 		:where([media*="marquee(up)"], [media*="marquee(down)"]) & > * {
-			animation-name: ui-marquee-y;
 			block-size: max-content;
 			flex-direction: column;
 			inline-size: auto;
 			white-space: normal;
 		}
-		&[direction~="down"] > *,
-		:where([media*="marquee(down)"]) & > * { animation-direction: reverse; }
+		&[direction~="down"], :where([media*="marquee(down)"]) & { --_dir: reverse; }
 
-		/* C2. Loop — never-ending text: duplicate run + translate -50% (gap 0) */
-		&[variant~="loop"], :where([media*="marquee(loop)"]) & {
-			& > * { animation-name: ui-marquee-loop-x; gap: 0; }
-		}
-		&[variant~="loop"]:is([direction~="up"], [direction~="down"]) > *,
-		:where([media*="marquee(loop)"]) &:is([direction~="up"], [direction~="down"]) > * {
-			animation-name: ui-marquee-loop-y;
-		}
+		/* C2. Loop — two identical copies (or aria-label ::before+::after) shifted
+		   by exactly -100% each (own width) → seamless. gap 0 keeps the shift exact. */
+		&[variant~="loop"], :where([media*="marquee(loop)"]) & { --_name: ui-marquee-loop-x; gap: 0; }
+		&[variant~="loop"]:is([direction~="up"], [direction~="down"]),
+		:where([media*="marquee(loop)"]) &:is([direction~="up"], [direction~="down"]) { --_name: ui-marquee-loop-y; }
 
 		/* D. Furniture axes — `&[attr]` standalone + `[media*="marquee(…)"] &` card token */
 
-		/* colour — hue */
+		/* colour — hue + pale/muted modifiers.
+		   Standalone theme= flows through base/theme.css directly. Card
+		   media="marquee(<hue>)" feeds the SAME resolver: the hue sets --_theme-base-*,
+		   the pale/muted arms transform it (hue-agnostic — 2 rules, not 9×2), and one
+		   consumer reads the result. Don't combine theme= with a media hue on the same
+		   element — both write --_theme-*. (Other theme.css modifiers — border/light/
+		   dark/ink — are attribute-only; they're geometry/color-scheme, not a plate.) */
 		&[theme] { --ui-marquee-bg: var(--_theme-bg); --ui-marquee-c: var(--_theme-c, var(--_theme-ink)); }
-		:where([media*="marquee(red)"])    & { --ui-marquee-bg: var(--ui-theme-red-bg);    --ui-marquee-c: var(--ui-theme-red-c); }
-		:where([media*="marquee(orange)"]) & { --ui-marquee-bg: var(--ui-theme-orange-bg); --ui-marquee-c: var(--ui-theme-orange-c); }
-		:where([media*="marquee(green)"])  & { --ui-marquee-bg: var(--ui-theme-green-bg);  --ui-marquee-c: var(--ui-theme-green-c); }
-		:where([media*="marquee(blue)"])   & { --ui-marquee-bg: var(--ui-theme-blue-bg);   --ui-marquee-c: var(--ui-theme-blue-c); }
-		:where([media*="marquee(accent)"]) & { --ui-marquee-bg: var(--ui-theme-accent-bg); --ui-marquee-c: var(--ui-theme-accent-c); }
-		:where([media*="marquee(gray)"])   & { --ui-marquee-bg: var(--ui-theme-gray-bg);   --ui-marquee-c: var(--ui-theme-gray-c); }
-		:where([media*="marquee(slate)"])  & { --ui-marquee-bg: var(--ui-theme-slate-bg);  --ui-marquee-c: var(--ui-theme-slate-c); }
-		:where([media*="marquee(black)"])  & { --ui-marquee-bg: var(--ui-theme-black-bg);  --ui-marquee-c: var(--ui-theme-black-c); }
-		:where([media*="marquee(white)"])  & { --ui-marquee-bg: var(--ui-theme-white-bg);  --ui-marquee-c: var(--ui-theme-white-c); }
+		:where([media*="marquee(red)"])    & { --_theme-base-bg: var(--ui-theme-red-bg);    --_theme-base-c: var(--ui-theme-red-c); }
+		:where([media*="marquee(orange)"]) & { --_theme-base-bg: var(--ui-theme-orange-bg); --_theme-base-c: var(--ui-theme-orange-c); }
+		:where([media*="marquee(green)"])  & { --_theme-base-bg: var(--ui-theme-green-bg);  --_theme-base-c: var(--ui-theme-green-c); }
+		:where([media*="marquee(blue)"])   & { --_theme-base-bg: var(--ui-theme-blue-bg);   --_theme-base-c: var(--ui-theme-blue-c); }
+		:where([media*="marquee(accent)"]) & { --_theme-base-bg: var(--ui-theme-accent-bg); --_theme-base-c: var(--ui-theme-accent-c); }
+		:where([media*="marquee(gray)"])   & { --_theme-base-bg: var(--ui-theme-gray-bg);   --_theme-base-c: var(--ui-theme-gray-c); }
+		:where([media*="marquee(slate)"])  & { --_theme-base-bg: var(--ui-theme-slate-bg);  --_theme-base-c: var(--ui-theme-slate-c); }
+		:where([media*="marquee(black)"])  & { --_theme-base-bg: var(--ui-theme-black-bg);  --_theme-base-c: var(--ui-theme-black-c); }
+		:where([media*="marquee(white)"])  & { --_theme-base-bg: var(--ui-theme-white-bg);  --_theme-base-c: var(--ui-theme-white-c); }
+		/* pale = light tint + hue ink · muted = translucent plate (hue-agnostic) */
+		:where([media*="marquee(pale)"])  & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), var(--color-surface) 80%); --_theme-c: var(--_theme-base-bg); }
+		:where([media*="marquee(muted)"]) & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), transparent 50%); --_theme-c: var(--_theme-base-c); }
+		/* consumer — media hue → plate/ink (defaults to the base when no modifier) */
+		:where([media*="marquee("]) & { --ui-marquee-bg: var(--_theme-bg, var(--_theme-base-bg, transparent)); --ui-marquee-c: var(--_theme-c, var(--_theme-base-c, inherit)); }
 
 		/* arbitrary colour — fill overrides hue, ink auto-contrasts from fill */
 		&[fill] { --ui-marquee-bg: attr(fill type(<color>), var(--color-surface)); --ui-marquee-c: contrast-color(var(--ui-marquee-bg)); }
@@ -110,7 +133,8 @@
 		&[radius~="crc"], :where([media*="marquee(crc)"]) & { --ui-marquee-radius: var(--radius-circle); }
 		&[radius~="sqr"], :where([media*="marquee(sqr)"]) & { --ui-marquee-radius: 0.75em; --ui-marquee-corner: superellipse(var(--squircle-md)); }
 
-		/* font — order-free bag: family · weight · italic */
+		/* font — order-free bag: family · weight · italic (attribute-only; weights
+		   like `black` collide with the `black` hue in the flat media= namespace) */
 		&[font~="body"]    { --ui-marquee-font-family: var(--font-body); }
 		&[font~="heading"] { --ui-marquee-font-family: var(--font-heading); }
 		&[font~="mono"]    { --ui-marquee-font-family: var(--font-mono); }
@@ -142,36 +166,26 @@
 			mask: linear-gradient(to bottom, #0000, #000 var(--ui-marquee-fade-size), #000 calc(100% - var(--ui-marquee-fade-size)), #0000);
 		}
 
-		/* F. Pause — paused= / hover / focus. Covers fade+loop track (> *) and
-		   seamless items (> * > *). See readme "Why pause, not slow". */
-		&[paused] > *, &[paused] > * > *,
+		/* F. Pause — paused= / hover / focus, on every item (children + pseudos) */
+		&[paused] > *, &[paused]::before, &[paused]::after,
 		&:is(:hover, :focus-within) > *,
-		&:is(:hover, :focus-within) > * > * { animation-play-state: paused; }
+		&:is(:hover, :focus-within)::before,
+		&:is(:hover, :focus-within)::after { animation-play-state: paused; }
 	}
 
 	/* G. Seamless — css-tip offset technique (Chrome-only; else fade). Horizontal
-	   only. Longhand animation on purpose (see readme "Why pause, not slow"). */
+	   only, direct children (logos). Host sets --_name; items get the path + a
+	   sibling-index() stagger. Direction still rides --_dir. */
 	@supports (offset-path: shape(from 0% 0%, hline by 10px)) {
 		@media (prefers-reduced-motion: no-preference) {
-			:where(ui-marquee[variant~="seamless"], [media*="marquee(seamless)"] ui-marquee):not(:is([direction~="up"], [direction~="down"])) {
+			:where(ui-marquee[variant~="seam"], [media*="marquee(seam)"] ui-marquee):not(:is([direction~="up"], [direction~="down"])) {
+				--_name: ui-marquee-seamless;
 				& > * {
-					animation: none;
-					display: contents;
-				}
-				& > * > * {
 					--_n: var(--ui-marquee-visible, 4);
-					flex: 0 0 auto;
 					offset: shape(from calc(var(--ui-marquee-item-size) / -2) 50%,
 						hline by calc(sibling-count() * max(100cqi / var(--_n), var(--ui-marquee-item-size))));
-					animation-name: ui-marquee-seamless;
-					animation-duration: var(--ui-marquee-duration);
-					animation-timing-function: linear;
-					animation-iteration-count: infinite;
 					animation-delay: calc(-1 * sibling-index() * var(--ui-marquee-duration) / sibling-count());
 				}
-				&[direction~="right"] > * > *,
-				&[dir="rtl"]:not([direction~="right"]) > * > *,
-				:where([dir="rtl"]) &:not([dir="ltr"]):not([direction~="right"]) > * > * { animation-direction: reverse; }
 			}
 		}
 	}
@@ -179,14 +193,14 @@
 	/* H. Reduced motion — no auto-scroll (WCAG 2.3.1); hand-scrollable instead */
 	@media (prefers-reduced-motion: reduce) {
 		:where(ui-marquee) { overflow: auto; }
-		:where(ui-marquee) > *, :where(ui-marquee) > * > * { animation: none; translate: none; offset: none; }
+		:where(ui-marquee) > *, :where(ui-marquee)::before, :where(ui-marquee)::after { animation: none; translate: none; offset: none; }
 	}
 
-	/* I. Keyframes — 100cqi/cqb = full host (off-screen start); -100% = track's own
-	   max-content size (fully cleared); loop -50% = one of the two copies */
+	/* I. Keyframes — fade: 100cqi/cqb (off-screen) → -100% (item's own max-content,
+	   fully cleared). loop: 0 → -100% (one copy's width). seam: offset path. */
 	@keyframes ui-marquee-x { from { translate: 100cqi 0; } to { translate: -100% 0; } }
 	@keyframes ui-marquee-y { from { translate: 0 100cqb; } to { translate: 0 -100%; } }
 	@keyframes ui-marquee-seamless { to { offset-distance: 100%; } }
-	@keyframes ui-marquee-loop-x { to { translate: -50% 0; } }
-	@keyframes ui-marquee-loop-y { to { translate: 0 -50%; } }
+	@keyframes ui-marquee-loop-x { from { translate: 0 0; } to { translate: -100% 0; } }
+	@keyframes ui-marquee-loop-y { from { translate: 0 0; } to { translate: 0 -100%; } }
 }

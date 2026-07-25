@@ -143,54 +143,51 @@
 	     Marquee — <ui-marquee>
 	     ============================================================ -->
 	<h2>Marquee — <code>&lt;ui-marquee&gt;</code></h2>
-	<p>A full-width scrolling band across <code>&lt;ui-media&gt;</code>. Position is a minimal two-arm token: <strong>top by default</strong>, <code>marquee(bottom)</code> pins it to the bottom edge. It sits at <code>z-index:1</code>, <strong>below</strong> the other furniture (chip/beacon/sticker are <code>z-index:2</code>). Hue and the rest come from the component's own attributes (<code>theme</code>, <code>variant</code>, <code>font</code>, <code>size</code>, <code>fade</code>).</p>
+	<p>A full-width scrolling band across <code>&lt;ui-media&gt;</code>, driven <strong>entirely from the parent <code>media=</code> token</strong> — nothing on the <code>&lt;ui-marquee&gt;</code> itself. Position <code>marquee(top)</code> (default) / <code>marquee(bot)</code>; hue <code>marquee(&lt;red…white&gt;)</code>; size <code>marquee(sm|lg|xl|2xl)</code>; plus modes <code>marquee(loop)</code> / <code>marquee(seam)</code> and <code>marquee(fade)</code>. Sits at <code>z-index:1</code>, <strong>below</strong> the other furniture (chip/beacon/sticker are <code>z-index:2</code>). Content here is zero-markup: <code>aria-label</code> on an empty <code>&lt;ui-marquee&gt;</code> fills <code>::before</code>/<code>::after</code> and doubles as the accessible name. Weight defaults to the component's — override with <code>--ui-marquee-font-weight</code>.</p>
 	<p>Full component: <a href="../marquee/">ui/marquee</a>.</p>
 	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-card variant="col" media="asr(4/3)">
+		<ui-card variant="col" media="asr(4/3) marquee(loop) marquee(red) marquee(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/government.png" alt="">
-					<ui-marquee variant="loop" theme="red" font="bold" size="sm">
-						<div>
-							<span>BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;</span>
-							<span aria-hidden="true">BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;</span>
-						</div>
-					</ui-marquee>
+					<ui-marquee aria-label="BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • "></ui-marquee>
 				</ui-media>
-				<ui-content><small data-part="eyebrow">News</small><h2 data-part="headline">marquee at top (default)</h2></ui-content>
+				<ui-content><small data-part="eyebrow">Politics</small><h2 data-part="headline">Parliament passes budget after late-night vote</h2><p data-part="summary">Red headline band pinned to the top, text supplied by <code>aria-label</code>: <code>marquee(top) marquee(red) marquee(sm)</code>.</p></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) beacon(red) beacon(tck) marquee(bottom)">
+		<ui-card variant="col" media="asr(4/3) beacon(red) beacon(tck) marquee(bot) marquee(loop) marquee(red) marquee(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/government.png" alt="">
 					<ui-beacon>Live</ui-beacon>
-					<ui-marquee variant="loop" theme="red" font="bold" size="sm">
-						<div>
-							<span>BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;</span>
-							<span aria-hidden="true">BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;</span>
-						</div>
-					</ui-marquee>
+					<ui-marquee aria-label="BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • "></ui-marquee>
 				</ui-media>
-				<ui-content><small data-part="eyebrow">News</small><h2 data-part="headline">marquee at bottom + beacon(red) beacon(tck)</h2></ui-content>
+				<ui-content><small data-part="eyebrow">Live</small><h2 data-part="headline">Election night: results as they land</h2><p data-part="summary">Bottom ticker under a live indicator — <code>marquee(bot) marquee(red) marquee(sm)</code> below <code>beacon(red) beacon(tck)</code> (z-index 1 vs 2).</p></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(sh:burst) sticker(orange) sticker(xl) marquee(bottom)">
+		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(sh:burst) sticker(orange) sticker(xl) marquee(bot) marquee(loop) marquee(green) marquee(pale) marquee(sm) marquee(fade)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/aurasoundpro.png" alt="">
 					<ui-sticker><small>SAVE</small><strong>40%</strong></ui-sticker>
-					<ui-marquee variant="loop" theme="green pale" font="bold" size="sm" fade>
-						<div>
-							<span>LIMITED TIME OFFER&nbsp;&bull;&nbsp;LIMITED TIME OFFER&nbsp;&bull;&nbsp;LIMITED TIME OFFER&nbsp;&bull;&nbsp;LIMITED TIME OFFER&nbsp;&bull;&nbsp;</span>
-							<span aria-hidden="true">LIMITED TIME OFFER&nbsp;&bull;&nbsp;LIMITED TIME OFFER&nbsp;&bull;&nbsp;LIMITED TIME OFFER&nbsp;&bull;&nbsp;LIMITED TIME OFFER&nbsp;&bull;&nbsp;</span>
-						</div>
-					</ui-marquee>
+					<ui-marquee aria-label="LIMITED TIME OFFER • LIMITED TIME OFFER • LIMITED TIME OFFER • LIMITED TIME OFFER • LIMITED TIME OFFER • "></ui-marquee>
 				</ui-media>
-				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">$5 OFF sticker + green-pale marquee + fade</h2></ui-content>
+				<ui-content><small data-part="eyebrow">Audio</small><h2 data-part="headline">AuraSound Pro wireless speaker</h2><p data-part="summary">Soft promo band with faded edges — <code>marquee(bot) marquee(green) marquee(pale) marquee(fade)</code> — paired with a <code>sticker(sh:burst) sticker(orange)</code> badge.</p></ui-content>
 			</cq-box>
 		</ui-card>
 	</lay-out>
+
+	<p>Full-width, content-only (no <code>&lt;ui-media&gt;</code>): a looping <code>&lt;ui-marquee&gt;</code> kicker over a <code>content="hl(3xl)"</code> poster headline on <code>theme="black dark"</code>.</p>
+	<ui-card variant="vis(content)" theme="black dark" content="hl(3xl)">
+		<cq-box>
+			<ui-marquee variant="loop" font="bold" aria-label="BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • "></ui-marquee>
+			<ui-content>
+				<small data-part="eyebrow">Feature</small>
+				<strong data-part="headline">Type that <span style="color:var(--color-accent)">scales</span> with the card</strong>
+				<p data-part="summary">A content-only card pairing a continuous <code>&lt;ui-marquee variant="loop"&gt;</code> (text via <code>aria-label</code>) with a <code>content="hl(3xl)"</code> display headline.</p>
+			</ui-content>
+		</cq-box>
+	</ui-card>
 	</section>
 
 	<section>

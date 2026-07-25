@@ -57,6 +57,7 @@
 		line-height: var(--ui-beacon-line-height, var(--line-height-snug));
 		place-items: center;
 		text-box: cap alphabetic;
+		user-select: none;
 		white-space: nowrap;
 		width: fit-content;
 
@@ -76,16 +77,25 @@
 		   (incl. the pale/muted modifiers); the light/dark modifiers set color-scheme
 		   on the beacon directly. Card-routed media="beacon(<hue>)" feeds the
 		   --ui-theme-* bundle. */
+		/* Standalone theme= flows through base/theme.css. Card media="beacon(<hue>)"
+		   feeds the SAME resolver: hue → --_theme-base-*, pale/muted transform it
+		   (hue-agnostic), consumer maps the result to accent/ink. Don't combine
+		   theme= with a media hue — both write --_theme-*. */
 		&[theme] { --ui-beacon-accent: var(--_theme-bg); --ui-beacon-c: var(--_theme-c, var(--_theme-ink)); }
-		:where([media*="beacon(red)"])    & { --ui-beacon-accent: var(--ui-theme-red-bg);    --ui-beacon-c: var(--ui-theme-red-c); }
-		:where([media*="beacon(orange)"]) & { --ui-beacon-accent: var(--ui-theme-orange-bg); --ui-beacon-c: var(--ui-theme-orange-c); }
-		:where([media*="beacon(green)"])  & { --ui-beacon-accent: var(--ui-theme-green-bg);  --ui-beacon-c: var(--ui-theme-green-c); }
-		:where([media*="beacon(blue)"])   & { --ui-beacon-accent: var(--ui-theme-blue-bg);   --ui-beacon-c: var(--ui-theme-blue-c); }
-		:where([media*="beacon(accent)"]) & { --ui-beacon-accent: var(--ui-theme-accent-bg); --ui-beacon-c: var(--ui-theme-accent-c); }
-		:where([media*="beacon(gray)"])   & { --ui-beacon-accent: var(--ui-theme-gray-bg);   --ui-beacon-c: var(--ui-theme-gray-c); }
-		:where([media*="beacon(slate)"])  & { --ui-beacon-accent: var(--ui-theme-slate-bg);  --ui-beacon-c: var(--ui-theme-slate-c); }
-		:where([media*="beacon(black)"])  & { --ui-beacon-accent: var(--ui-theme-black-bg);  --ui-beacon-c: var(--ui-theme-black-c); }
-		:where([media*="beacon(white)"])  & { --ui-beacon-accent: var(--ui-theme-white-bg);  --ui-beacon-c: var(--ui-theme-white-c); }
+		:where([media*="beacon(red)"])    & { --_theme-base-bg: var(--ui-theme-red-bg);    --_theme-base-c: var(--ui-theme-red-c); }
+		:where([media*="beacon(orange)"]) & { --_theme-base-bg: var(--ui-theme-orange-bg); --_theme-base-c: var(--ui-theme-orange-c); }
+		:where([media*="beacon(green)"])  & { --_theme-base-bg: var(--ui-theme-green-bg);  --_theme-base-c: var(--ui-theme-green-c); }
+		:where([media*="beacon(blue)"])   & { --_theme-base-bg: var(--ui-theme-blue-bg);   --_theme-base-c: var(--ui-theme-blue-c); }
+		:where([media*="beacon(accent)"]) & { --_theme-base-bg: var(--ui-theme-accent-bg); --_theme-base-c: var(--ui-theme-accent-c); }
+		:where([media*="beacon(gray)"])   & { --_theme-base-bg: var(--ui-theme-gray-bg);   --_theme-base-c: var(--ui-theme-gray-c); }
+		:where([media*="beacon(slate)"])  & { --_theme-base-bg: var(--ui-theme-slate-bg);  --_theme-base-c: var(--ui-theme-slate-c); }
+		:where([media*="beacon(black)"])  & { --_theme-base-bg: var(--ui-theme-black-bg);  --_theme-base-c: var(--ui-theme-black-c); }
+		:where([media*="beacon(white)"])  & { --_theme-base-bg: var(--ui-theme-white-bg);  --_theme-base-c: var(--ui-theme-white-c); }
+		/* pale = light tint + hue ink · muted = translucent plate (hue-agnostic) */
+		:where([media*="beacon(pale)"])  & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), var(--color-surface) 80%); --_theme-c: var(--_theme-base-bg); }
+		:where([media*="beacon(muted)"]) & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), transparent 50%); --_theme-c: var(--_theme-base-c); }
+		/* consumer — media hue → accent/ink (no-hue tokens keep the defaults) */
+		:where([media*="beacon("]) & { --ui-beacon-accent: var(--_theme-bg, var(--_theme-base-bg, var(--color-text))); --ui-beacon-c: var(--_theme-c, var(--_theme-base-c, contrast-color(var(--color-text)))); }
 
 		/* arbitrary colour (overrides the hue) — fill = accent, ink = the plated
 		   faces' label; ink auto-contrasts from fill when omitted. ink after fill. */

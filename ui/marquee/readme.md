@@ -16,9 +16,9 @@ corner vocabulary and the same dual-arm token model (standalone attribute + card
   - **Fade before repeat** (default) — the run fully clears the frame before it
     repeats, at *any* content length. All modern browsers, no JS.
   - **Loop** (`variant="loop"`) — never-ending continuous **text** that re-appears
-    with no fade ("BREAKING NEWS • …"). Duplicate-run + `translate -50%`. All
-    modern browsers.
-  - **Seamless** (`variant="seamless"`) — gap-free **logo/item** loop via the
+    with no fade ("BREAKING NEWS • …"). Two identical copies + `translate -100%`.
+    All modern browsers.
+  - **Seamless** (`variant="seam"`) — gap-free **logo/item** loop via the
     modern css-tip `offset`/`sibling-count()` technique. Chrome-only; degrades to
     fade mode everywhere else.
 - **Four directions** — `left` (default), `right`, `up`, `down`. Horizontal flips
@@ -32,6 +32,8 @@ corner vocabulary and the same dual-arm token model (standalone attribute + card
 - **Hues** — the shared `theme=` axis or arbitrary `fill=` / `ink=` colours.
 - **Reduced-motion safe** — under `prefers-reduced-motion: reduce` no marquee
   ever auto-scrolls (WCAG 2.3.1); the strip becomes hand-scrollable instead.
+- **No wrapper** — content is direct children, or zero-markup via `aria-label`
+  (fills `::before`/`::after`, and doubles as the accessible name).
 - **Zero JavaScript** — every mode is pure CSS.
 
 ---
@@ -52,26 +54,39 @@ npm install @browser.style/base
 
 ## DOM structure
 
-`<ui-marquee>` is the clip viewport. Put **all** scrolling content in a **single
-child** — the *track*. This is what animates (it continues the legacy `<span>`
-convention).
+`<ui-marquee>` is the clip viewport. **No wrapper element** — content comes from
+direct children, or from `aria-label` (which also becomes the accessible name):
 
 ```html
-<!-- text -->
+<!-- fade: one child is the moving run -->
 <ui-marquee><span>Breaking news …</span></ui-marquee>
 
-<!-- logos / images (wrap them in one child) -->
-<ui-marquee variant="seamless">
-  <div>
-    <img src="logo-1.svg" alt="ACME">
-    <img src="logo-2.svg" alt="Globex">
-    <img src="logo-3.svg" alt="Initech">
-  </div>
+<!-- loop: two identical children (2nd aria-hidden) -->
+<ui-marquee variant="loop">
+  <span>NEWS • </span><span aria-hidden="true">NEWS • </span>
 </ui-marquee>
+
+<!-- seam: the logos/items themselves, no wrapper -->
+<ui-marquee variant="seam">
+  <img src="logo-1.svg" alt="ACME">
+  <img src="logo-2.svg" alt="Globex">
+  <img src="logo-3.svg" alt="Initech">
+</ui-marquee>
+
+<!-- zero-markup text via aria-label (fills ::before, + ::after for loop) -->
+<ui-marquee aria-label="Breaking news …"></ui-marquee>
+<ui-marquee variant="loop" aria-label="NEWS • NEWS • NEWS • "></ui-marquee>
 ```
 
-> Multiple items only loop **seamlessly** in the seamless mode. In fade mode the
-> whole track is treated as one run.
+How content maps to items:
+
+- **fade** — one child (or `::before` from `aria-label`) is the moving run.
+- **loop** — two identical items shifted `-100%` each; supply two children, or an
+  `aria-label` on an **empty** marquee (it fills `::before` **and** `::after`).
+- **seam** — the direct children are the items the css-tip path staggers.
+
+> `aria-label` only generates content when the marquee is `:empty`. With children
+> present it's just the accessible name.
 
 ---
 
@@ -108,39 +123,41 @@ needed.
 ### Loop — `variant="loop"`
 
 For a never-ending **text** ticker where the phrase re-appears with no fade — the
-classic "BREAKING NEWS • BREAKING NEWS •" scroller. Cross-browser, no JS: the
-track holds the run **twice** and shifts by exactly `-50%`, so the second copy
-lands where the first began.
+classic "BREAKING NEWS • BREAKING NEWS •" scroller. Cross-browser, no JS: two
+identical items sit side by side and each shifts by exactly `-100%` of its own
+width, so the second lands where the first began.
 
 ```html
-<ui-marquee variant="loop" theme="red" font="bold">
-  <div>
-    <span>BREAKING NEWS &bull; BREAKING NEWS &bull; BREAKING NEWS &bull; </span>
-    <span aria-hidden="true">BREAKING NEWS &bull; BREAKING NEWS &bull; BREAKING NEWS &bull; </span>
-  </div>
+<!-- two direct children (2nd aria-hidden) -->
+<ui-marquee variant="loop" theme="red">
+  <span>BREAKING NEWS &bull; BREAKING NEWS &bull; BREAKING NEWS &bull; </span>
+  <span aria-hidden="true">BREAKING NEWS &bull; BREAKING NEWS &bull; BREAKING NEWS &bull; </span>
 </ui-marquee>
+
+<!-- or zero markup: aria-label fills ::before + ::after -->
+<ui-marquee variant="loop" theme="red" aria-label="BREAKING NEWS • BREAKING NEWS • BREAKING NEWS • "></ui-marquee>
 ```
 
 Two rules for a gap-free result:
 
 1. **Repeat the phrase** enough that one copy already exceeds the frame width
    (otherwise you get empty space, not a gap-free loop).
-2. **Duplicate the whole run** — the first `<span>` and an identical
-   `aria-hidden` second `<span>`. Bake spacing into the text (a trailing
-   separator like `• `); the track gap is forced to `0` so the `-50%` stays exact.
+2. **Provide two identical copies** — two children, or the `aria-label` form
+   which auto-supplies the second via `::after`. Bake spacing into the text (a
+   trailing `• `); the container `gap` is forced to `0` so the `-100%` stays exact.
 
-Works with every direction (`right` / `up` / `down` reverse or reorient it) and
-with `fade`, `theme`, `font`, `speed`, etc.
+Works with every direction (`right` / `up` / `down` reorient it) and with `fade`,
+`theme`, `font`, `speed`, etc.
 
-### Seamless — `variant="seamless"`
+### Seamless — `variant="seam"`
 
 For logo strips and repeating items. Each item rides an `offset` path sized by
 `sibling-count()` and staggered by `sibling-index()`, producing a continuous
 gap-free loop with **no content duplication**.
 
 ```html
-<ui-marquee variant="seamless" style="--ui-marquee-item-size: 9rem;">
-  <div><img …><img …><img …><img …></div>
+<ui-marquee variant="seam" style="--ui-marquee-item-size: 9rem;">
+  <img …><img …><img …><img …>
 </ui-marquee>
 ```
 
@@ -251,7 +268,7 @@ scroll container, so the mask is static rather than scroll-driven).
 
 | Attribute | Type | Description |
 |---|---|---|
-| `variant` | `loop \| seamless \| fade` | `loop` = never-ending text (all browsers); `seamless` = gap-free item loop (Chrome); `fade` = edge-fade mask |
+| `variant` | `loop \| seam \| fade` | `loop` = never-ending text (all browsers); `seam` = gap-free (seamless) item loop (Chrome); `fade` = edge-fade mask |
 | `direction` | `left \| right \| up \| down` | Scroll direction (default `left`; flips under `dir="rtl"`) |
 | `theme` | `red \| orange \| green \| blue \| accent \| gray \| slate \| black \| white` + `pale \| muted \| light \| dark` | Shared hue axis |
 | `fill` | `<color>` | Arbitrary plate colour; overrides `theme` |
@@ -263,6 +280,7 @@ scroll container, so the mask is static rather than scroll-driven).
 | `gap` | `sm \| lg` | Space between repeated items |
 | `fade` | _(boolean)_ | Edge-fade mask (same as `variant="fade"`) |
 | `paused` | _(boolean)_ | Freeze the animation |
+| `aria-label` | `<string>` | On an **empty** marquee, becomes the scrolling text via `::before` (+ `::after` for loop) — and the accessible name |
 
 ---
 
@@ -283,7 +301,7 @@ Every token falls back to a global from `@browser.style/base` where one exists.
 | `--ui-marquee-radius` | `0` | Corner radius |
 | `--ui-marquee-corner` | `round` | `corner-shape` (`sqr` → superellipse) |
 | `--ui-marquee-font-family` | `inherit` | Content font family |
-| `--ui-marquee-font-weight` | `inherit` | Content font weight |
+| `--ui-marquee-font-weight` | `var(--font-weight-semibold)` (600) | Content font weight |
 | `--ui-marquee-font-style` | `normal` | Content font style |
 | `--ui-marquee-font-size` | `1em` | Content font size (drives the scale) |
 | `--ui-marquee-padding-block` | `0.5em` | Viewport block padding |
@@ -313,7 +331,8 @@ works from the parent `media=` string:
 | Axis | Tokens |
 |---|---|
 | hue | `marquee(red\|orange\|green\|blue\|accent\|white\|gray\|slate\|black)` |
-| mode | `marquee(loop)` · `marquee(seamless)` · `marquee(fade)` |
+| hue modifier | `marquee(pale)` (light tint + hue ink) · `marquee(muted)` (translucent plate) — add alongside a hue, e.g. `marquee(green) marquee(pale)` |
+| mode | `marquee(loop)` · `marquee(seam)` · `marquee(fade)` |
 | direction | `marquee(right)` · `marquee(up)` · `marquee(down)` |
 | size | `marquee(sm\|lg\|xl\|2xl)` |
 | corner | `marquee(non\|rnd\|pll\|crc\|sqr)` |
@@ -408,41 +427,57 @@ import '@browser.style/marquee/style';
 The `ui-marquee.css` comments are kept terse; the reasoning behind the mechanics
 lives here.
 
-### The track child
+### Items, and no wrapper
 
-`<ui-marquee>` is the clip viewport (`overflow: hidden`, `container-type`); its
-**single child** is the *track* that actually animates. It continues the legacy
-`<span>` convention. Only tokens read from more than one place are declared in
-section A — single-use ones carry their default inline at the use site as
-`var(--token, <fallback>)`.
+`<ui-marquee>` is the clip viewport (`overflow: hidden`, `container-type`, `flex`).
+The **items** are its direct children — or `::before`/`::after` generated from
+`aria-label` when the marquee is `:empty`. Animation is var-driven: the host sets
+`--_name` (which keyframes) and `--_dir` (direction), and every item — child or
+pseudo — reads them via `animation: var(--_name) …; animation-direction: var(--_dir)`.
+That's why one item rule covers children and pseudos, and why the mode/direction
+rules only need to flip a custom property on the host.
 
 ### Fade mode — why `100cqi → -100%`
 
-The default keyframe animates the track's `translate` from `100cqi` (the full
-host width → content starts fully off the right edge) to `-100%` (the track's own
+The default keyframe animates the item's `translate` from `100cqi` (the full host
+width → content starts fully off the right edge) to `-100%` (the item's own
 `max-content` width → content is fully gone before the loop repeats). Because the
-end is a percentage of the *track*, it clears correctly at **any** content length
-— that's what the old `uiMarquee.js` measured `scrollWidth` for; container-query
+end is a percentage of the *item*, it clears correctly at **any** content length —
+that's what the old `uiMarquee.js` measured `scrollWidth` for; container-query
 units replace it, so the component is zero-JS. Vertical directions swap to
 `cqb`/height and need a `--ui-marquee-block-size` so `100cqb` resolves.
 
-### Loop mode — why gap `0` and `-50%`
+### Loop mode — why gap `0` and `-100%`
 
-`variant="loop"` holds the run **twice** and shifts by exactly `-50%`, so copy 2
-lands where copy 1 began — seamless with no fade, no measurement, no offset paths.
-The track `gap` is forced to `0` so the `-50%` stays exact (bake spacing into the
-text). The rule sits after the direction rules so its `animation-name` wins while
-direction `reverse` still applies.
+`variant="loop"` uses **two identical items** (children, or `::before`+`::after`),
+each shifted `-100%` of its own width. Since they're the same width they move in
+lockstep, and copy 2 lands exactly where copy 1 began — seamless, no measurement,
+no offset paths. The container `gap` is forced to `0` so the `-100%` stays exact
+(bake spacing into the text).
 
 ### Seamless mode — css-tip, and why it's Chrome-only
 
-`variant="seamless"` uses the [css-tip logo-marquee](https://css-tip.com/logo-marquee/)
-technique: each item rides an `offset` path sized by `sibling-count()` and
-staggered by `sibling-index()`. The track collapses to `display: contents` so the
-items become the host's flex children (matching the css-tip `container > img`
-layout). It's `@supports`-gated on `offset-path: shape(...)`; where that isn't
+`variant="seam"` uses the [css-tip logo-marquee](https://css-tip.com/logo-marquee/)
+technique: each **direct child** rides an `offset` path sized by `sibling-count()`
+and staggered by `sibling-index()` (host just switches `--_name` to the offset
+keyframes). It's `@supports`-gated on `offset-path: shape(...)`; where that isn't
 supported (Firefox, Safari) the fade animation from section B stays in force.
 Horizontal only — vertical seamless falls back to fade.
+
+### Why not repeat the text as a background image?
+
+Tempting: tile one string with an SVG `<text>` `background: …repeat-x` and animate
+`background-position-x` — a truly infinite loop from a single element, no children,
+no `::after`. Two dealbreakers for this component: (1) **web fonts don't render**
+inside a data-URI SVG used as `background-image` (no `@font-face` access in that
+context), so `font=` / `--ui-marquee-font-family` would be limited to system
+families; (2) the text becomes **pixels** — not selectable, not in the a11y tree.
+The current real-text approach keeps fonts and accessibility; the duplicated copy
+is one repaint, not a cost worth trading those for.
+
+CSS `element()` (which could have referenced a live DOM node as an image) never
+went cross-browser — it only ever shipped as Firefox's prefixed `-moz-element()`
+and the spec stalled — so it's not an option either.
 
 ### Why pause, not slow, on hover
 
@@ -469,6 +504,9 @@ marquee.querySelectorAll('*').forEach(el =>
 - Hover / focus pause the motion; `paused` stops it.
 - Content is real DOM text/markup — screen readers read it normally. Avoid
   putting essential, time-limited information *only* in a marquee.
+- The `aria-label` form exposes the text as the element's accessible **name**
+  (the visible glyphs are CSS-generated `content`); prefer real child text when
+  the wording must be reliably announced across every screen reader.
 - `user-select: none` keeps the moving text from being awkward to select; the
   reduced-motion static strip remains selectable.
 
