@@ -67,7 +67,7 @@ scroller; the rest layer on top. `asr()` etc. belong to the base frame — see m
 | `mrk(sm)`   | CSS | Marker size 0.45rem |
 | `mrk(bs)` `mrk(ts)` | CSS | `nav(blw)`/`nav(abv)`: dots at the inline-start — `bs` below, `ts` above |
 | `mrk(non)`  | CSS | No dots (keeps arrows) — arrows-only band |
-| `mrk(tmb)`| CSS | Image thumbnails; per-slide `--ui-media-thumb-url`; active thumb has a bottom timer stripe |
+| `mrk(tmb)`| CSS | Image thumbnails; per-slide `--ui-media-thumb-url`; active thumb has a bottom timer stripe. Overlay in a corner, or `+ mrk(blw)`/`nav(blw)` for a gallery **filmstrip band** below — band auto-sizes to the thumb; image keeps `asr()` (`box-sizing: content-box`) and is rounded on all 4 corners to `rds()` |
 | `mrk(ts)` `mrk(te)` `mrk(bs)` `mrk(be)` | CSS | Corner placement for the overlay marker-group — logical (top-start / top-end / bottom-start / bottom-end). Center row `mrk(cs)` `mrk(cc)` `mrk(ce)` completes the 9-grid. Inset via `--ui-media-marker-inset` |
 | `mrk(xl)`   | CSS | Marker size 1rem |
 | `loop`      | JS | Seamless infinite loop (clones first/last slide) |

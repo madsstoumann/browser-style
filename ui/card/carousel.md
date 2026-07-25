@@ -176,7 +176,7 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 | `mrk(bc)` | `axis(y)`: dots centered at the **bottom** (e.g. with a pill timer) |
 | `mrk(non)` | **No dots** (keeps arrows) — e.g. an arrows-only `nav(blw)`/`nav(abv)` band |
 | `mrk(blw)` `mrk(abv)` | Dots **alone** in a reserved band below / above the media — arrows keep their on-media position/ink; the marker/pill ink flips to the band theme |
-| `mrk(tmb)` | **Image thumbnails** instead of dots. Each slide sets `--ui-media-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-media-autoplay`. |
+| `mrk(tmb)` | **Image thumbnails** instead of dots. Each slide sets `--ui-media-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-media-autoplay`. Overlay in any corner (`mrk(ts/te/bs/be)`), or add `mrk(blw)`/`nav(blw)` for a **gallery filmstrip band** below (see below). |
 | `mrk(ts)` `mrk(te)` `mrk(bs)` `mrk(be)` | **Corner placement** for the overlay marker-group — top-start / top-end / bottom-start / bottom-end (logical, RTL-safe). Center row `mrk(cs)` `mrk(cc)` `mrk(ce)` completes the 9-grid. Inset via `--ui-media-marker-inset`. |
 
 ### Thumbnail navigation — `mrk(tmb)`
@@ -186,6 +186,21 @@ custom property; place the rail in any corner:
 
 ```html
 <ui-media media="asr(4/3) nav mrk(tmb) mrk(te)">
+  <img src="1.jpg" style="--ui-media-thumb-url: url('1.jpg')">
+  <img src="2.jpg" style="--ui-media-thumb-url: url('2.jpg')">
+</ui-media>
+```
+
+**Filmstrip below (gallery)** — add `mrk(blw)` (or `nav(blw)` to keep arrows on the image)
+to move the thumbnails into a reserved band **below** the media, like a classic image
+gallery. The band auto-sizes to the thumb size (`mrk(sm|md|lg|xl)`); the cell's inline
+letter aligns them (`mrk(bs)` left · `mrk(bc)` centre default · `mrk(be)` right). `mrk(abv)`
+mirrors it above. In a band the image keeps its full `asr()` aspect-ratio (the band is added
+outside via `box-sizing: content-box`) and each slide is rounded on **all four** corners to
+`rds()`, floating as a card above the strip:
+
+```html
+<ui-media media="asr(16/9) rds(md) clip nav mrk(tmb) mrk(blw) mrk(lg)">
   <img src="1.jpg" style="--ui-media-thumb-url: url('1.jpg')">
   <img src="2.jpg" style="--ui-media-thumb-url: url('2.jpg')">
 </ui-media>

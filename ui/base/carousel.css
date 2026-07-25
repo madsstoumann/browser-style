@@ -58,8 +58,15 @@
 		&:where([media*="mrk(md)"]) { --ui-carousel-marker-size: 0.6rem;  --ui-carousel-pill-width: 1.5rem;  --ui-carousel-pill-height: 0.35rem; --ui-carousel-thumb-size: 3rem; }
 		&:where([media*="mrk(lg)"]) { --ui-carousel-marker-size: 0.8rem;  --ui-carousel-pill-width: 2rem;    --ui-carousel-pill-height: 0.45rem; --ui-carousel-thumb-size: 3.75rem; }
 		&:where([media*="mrk(xl)"]) { --ui-carousel-marker-size: 1rem;    --ui-carousel-pill-width: 2.5rem;  --ui-carousel-pill-height: 0.55rem; --ui-carousel-thumb-size: 4.75rem; }
-		/* mrk(tmb) — thumbnails get a larger inset */
-		&:where([media*="mrk(tmb)"]) { --ui-carousel-marker-inset: var(--ui-carousel-thumb-gap, 1rem); }
+		/* mrk(tmb) — thumbnails get a larger inset. Alias --ui-carousel-marker-size to the
+		   thumb size (same trick as mrk(bar) below) so EVERY group-position/centering calc
+		   (overlay corners, bands) sizes to the real thumb, not the 0.6rem dot. --ui-carousel-band
+		   grows to fit a thumb so mrk(blw)/mrk(abv)/nav(blw) reserve a gallery filmstrip band. */
+		&:where([media*="mrk(tmb)"]) {
+			--ui-carousel-band: calc(var(--ui-carousel-thumb-size, 2.25rem) + var(--spacing-sm, 0.5rem));
+			--ui-carousel-marker-inset: var(--ui-carousel-thumb-gap, 1rem);
+			--ui-carousel-marker-size: var(--ui-carousel-thumb-size, 2.25rem);
+		}
 		/* mrk(bar) — thin styled scrollbar: token defaults. --ui-carousel-marker-size is aliased
 		   to the hit height so every existing marker-group top/centering calc (overlay, bands)
 		   centers the bar's hit strip without bar-specific position rules. Declared after the

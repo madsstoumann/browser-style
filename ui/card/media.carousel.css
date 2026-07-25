@@ -104,6 +104,25 @@
 		scroll-padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
 	}
 
+	/* mrk(tmb) filmstrip band: aspect-ratio must size the IMAGE, not frame+band. With the
+	   default border-box, the band's padding-block steals height from the asr() image
+	   (squished). content-box makes asr() size the content box so the thumbnail band is
+	   added OUTSIDE the image. No-op for overlay thumbnails (no band padding to move) and
+	   for the inline dimension (no inline padding). */
+	:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) ui-media,
+	ui-media:where([media*="mrk(tmb)"]) {
+		box-sizing: content-box;
+	}
+	/* mrk(tmb) filmstrip band: round ALL FOUR corners of each slide image. The frame-level
+	   clip=/rds() clips the whole border box, so its bottom radius sits below the band — the
+	   image's own bottom corners would stay square against the gap. Round the media elements
+	   directly (same --ui-media-radius) so the image floats as a fully-rounded card above the
+	   filmstrip. Only in a block band (blw/abv); overlay thumbnails keep the frame clip. */
+	:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]:is([media*="nav(blw)"], [media*="mrk(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"])) ui-media > :is(iframe, img, picture, video),
+	ui-media:where([media*="mrk(tmb)"]:is([media*="nav(blw)"], [media*="mrk(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"])) > :is(iframe, img, picture, video) {
+		border-radius: var(--ui-media-radius, 0);
+	}
+
 	@supports (scroll-marker-group: after) {
 		/* controls present (dots OR arrows) → hide native scrollbar (overrides the `thin` above) */
 		:where(ui-card, ui-reveal):where([media*="nav"]:not([media*="nav("]), [media*="nav(mrk)"], [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) ui-media,
