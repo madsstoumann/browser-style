@@ -1,30 +1,8 @@
 /*
- * carousel.css — shared CSS-carousel controls (arrows, dots, pills, thumbnails, bands)
- *
- * Driven entirely by the media= token DSL (media="nav(blw) arw(bare) mrk(pll)").
- * Hosts: <ui-media> (token on itself or inherited from its ui-card/ui-reveal host)
- * and <lay-out overflow> (token on itself — configures the layout's OWN scroller).
- * SCOPING RULE — media= inheritance stops at the card: ancestor arms are scoped to
- * ui-card/ui-reveal, so media= on a lay-out never leaks into descendant ui-media.
- * Loaded via @browser.style/base; the layout package expects it alongside layout.css.
- *
- * INVARIANT — uniform 0-0-0 specificity: every rule in this file is wrapped in :where().
- * Internal overrides rely purely on source order (e.g. in-band dot alignment must follow
- * the 9-grid corner rules). Host-level token setters are grouped under nested
- * `:where(hosts) { &:where([media*="…"]) { … } }` blocks — the leading & compounds onto
- * the parent (same match as the old flat prefix) and the inner :where() keeps the rule
- * at 0-0-0; dual ancestor/self arms stay top-level. This is safe because this file
- * exclusively owns its properties:
- * the ::scroll-button()/::scroll-marker(-group) pseudos and the --ui-carousel-* tokens.
- * Do not add rules here that compete with a host package's own scroller styles.
- *
- * POLYFILL CONTRACT — the token-setter atoms (mrk()/arw() sizes, inks, glyphs) sit OUTSIDE
- * the @supports (scroll-marker-group: after) gate: /polyfill/carousel.{js,css} reuses them
- * in browsers without native support.
- *
- * Token defaults are declared on the host and every use site keeps an inline var() fallback —
- * setters may resolve on an ancestor (e.g. ui-card), so fallbacks are load-bearing.
- * Internals: ui/card/media.carousel.md · token reference: ui/card/carousel.md
+ * carousel.css — shared CSS-carousel controls (arrows, dots, pills, thumbnails, bands).
+ * Driven by the media= token DSL. Architecture, invariants (0-0-0 :where, polyfill
+ * contract, token fallbacks, anchor() positioning) and internals: ui/card/media.carousel.md
+ * Token reference: ui/card/carousel.md
  */
 @layer bs-component {
 	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
@@ -58,22 +36,13 @@
 		&:where([media*="mrk(md)"]) { --ui-carousel-marker-size: 0.6rem;  --ui-carousel-pill-width: 1.5rem;  --ui-carousel-pill-height: 0.35rem; --ui-carousel-thumb-size: 3rem; }
 		&:where([media*="mrk(lg)"]) { --ui-carousel-marker-size: 0.8rem;  --ui-carousel-pill-width: 2rem;    --ui-carousel-pill-height: 0.45rem; --ui-carousel-thumb-size: 3.75rem; }
 		&:where([media*="mrk(xl)"]) { --ui-carousel-marker-size: 1rem;    --ui-carousel-pill-width: 2.5rem;  --ui-carousel-pill-height: 0.55rem; --ui-carousel-thumb-size: 4.75rem; }
-		/* mrk(tmb) — thumbnails get a larger inset. Alias --ui-carousel-marker-size to the
-		   thumb size (same trick as mrk(bar) below) so EVERY group-position/centering calc
-		   (overlay corners, bands) sizes to the real thumb, not the 0.6rem dot. --ui-carousel-band
-		   grows to fit a thumb so mrk(blw)/mrk(abv)/nav(blw) reserve a gallery filmstrip band. */
+		/* mrk(tmb) — alias marker-size→thumb-size (centering calcs) + grow the band to fit a thumb */
 		&:where([media*="mrk(tmb)"]) {
 			--ui-carousel-band: calc(var(--ui-carousel-thumb-size, 2.25rem) + var(--spacing-sm, 0.5rem));
 			--ui-carousel-marker-inset: var(--ui-carousel-thumb-gap, 1rem);
 			--ui-carousel-marker-size: var(--ui-carousel-thumb-size, 2.25rem);
 		}
-		/* mrk(bar) — thin styled scrollbar: token defaults. --ui-carousel-marker-size is aliased
-		   to the hit height so every existing marker-group top/centering calc (overlay, bands)
-		   centers the bar's hit strip without bar-specific position rules. Declared after the
-		   dot size scale, which the bar REPURPOSES: with mrk(bar), the size atoms set the bar's
-		   inline span as a fraction of the scroller — sm 33% · md 50% · lg 75% (default) ·
-		   xl 100% (a fraction, not a percentage: it multiplies anchor-size() in a calc).
-		   The nested atoms stay :where()-wrapped to keep the file's 0-0-0 specificity. */
+		/* mrk(bar) — thin styled scrollbar: token defaults; size atoms repurposed as bar span fraction */
 		&:where([media*="mrk(bar)"]) {
 			--ui-carousel-bar-hit: 0.875rem;
 			--ui-carousel-bar-inset: 0px;
@@ -88,13 +57,7 @@
 			&:where([media*="mrk(xl)"]) { --ui-carousel-bar-span: 1; }
 		}
 	}
-	/* mrk(bar) scroller arm — the anchor-name lets the marker-group size itself to the
-	   scroller via anchor-size() (implicit-anchor sizing is not reliable there). The
-	   anchor-scope is load-bearing: it confines the name to this scroller so multiple
-	   bar carousels on a page can't cross-bind to each other's anchors. Plus the native
-	   fallback: where ::scroll-marker-group is unsupported the scroller keeps its thin
-	   native scrollbar (hidden in supporting browsers by the controls-present rules in
-	   media.carousel.css / layout.css); tint its thumb with the active-dot ink */
+	/* mrk(bar) scroller arm — anchor-name/scope for anchor-size() sizing; native scrollbar fallback tint */
 	:where(ui-card, ui-reveal):where([media*="mrk(bar)"]) ui-media,
 	:where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"]) {
 		anchor-name: --ui-carousel-bar;
@@ -148,16 +111,14 @@
 			--ui-carousel-arrow-hover-ring: 0 0 0 2px rgb(255 255 255 / 0.5);
 		}
 		&:where([media*="arw(arr)"][media*="arw(drk)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-light); --ui-carousel-arrow-glyph-dim: var(--ui-carousel-arrow-dark); }
-		/* mrk(blw)/mrk(abv) — dots alone in a reserved band (arrows keep their on-media position/ink):
-		   flip only the dot/pill ink to the band (page-bg) theme */
+		/* mrk(blw)/mrk(abv) — dots-only band: flip dot/pill ink to the band theme */
 		&:where([media*="mrk(blw)"], [media*="mrk(abv)"]) {
 			--ui-carousel-marker-bg: rgb(0 0 0 / 0.25);
 			--ui-carousel-marker-active: rgb(0 0 0 / 0.7);
 			--ui-carousel-pill-track: rgb(0 0 0 / 0.2);
 			--ui-carousel-pill-fill: rgb(0 0 0 / 0.7);
 		}
-		/* arw(blw)/arw(abv) — arrows alone in a reserved band (dots keep their on-media position/ink):
-		   flip only the arrow ink to the band (page-bg) theme */
+		/* arw(blw)/arw(abv) — arrows-only band: flip arrow ink to the band theme */
 		&:where([media*="arw(blw)"], [media*="arw(abv)"]) {
 			--ui-carousel-arrow-bg: rgb(0 0 0 / 0.08);
 			--ui-carousel-arrow-bg-hover: rgb(0 0 0 / 0.16);
@@ -169,9 +130,7 @@
 		}
 		&:where([media*="arw(blw)"][media*="arw(arr)"], [media*="arw(abv)"][media*="arw(arr)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-grey); --ui-carousel-arrow-glyph-dim: var(--ui-carousel-arrow-dark); }
 
-		/* dot ink (shared scale lgt/drk) — declared AFTER the band ink blocks above so an
-		   explicit mrk(lgt)/mrk(drk) overrides a band's default dot ink (e.g. white dots on a
-		   dark nav(blw) band). Same reason arw(lgt)/arw(drk) sit after the band. */
+		/* dot ink lgt/drk — after the band blocks so explicit ink overrides a band default */
 		&:where([media*="mrk(lgt)"]) { --ui-carousel-marker-bg: rgb(255 255 255 / 0.5);  --ui-carousel-marker-active: #fff; }
 		&:where([media*="mrk(drk)"]) { --ui-carousel-marker-bg: rgb(0 0 0 / 0.25);        --ui-carousel-marker-active: rgb(0 0 0 / 0.7); }
 	}
@@ -212,9 +171,7 @@
 		ui-media ui-media::scroll-marker-group { display: none; }
 		ui-media ui-media > :is(img, video)::scroll-marker { content: none; }
 
-		/* mrk(bar) default (overlay) strip position — same value as the base rule above,
-		   restated as a standalone rule (like the band rules) so the strip's top never
-		   depends on the nested declaration; any band/in-band rule below still wins. */
+		/* mrk(bar) default (overlay) strip position */
 		:where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"])::scroll-marker-group {
 			top: calc(anchor(bottom) - var(--ui-carousel-overlay-gap) - var(--ui-carousel-marker-size));
@@ -242,11 +199,7 @@
 				background-color: var(--ui-carousel-pill-fill);
 			}
 		}
-		/* mrk(hyb) — hybrid: markers stay circle dots; the active marker morphs into a
-		   pill (width/radius transition, staying on the grey track colour) and runs the
-		   EXACT mrk(pll) fill-timer (grey track fills L→R to white over the autoplay
-		   duration). The quick morph reads first against the slow fill. Keyboard focus
-		   previews the pill shape. */
+		/* mrk(hyb) — dots stay circles; active/focused morphs to a pill + runs the mrk(pll) fill timer */
 		:where(ui-card, ui-reveal):where([media*="mrk(hyb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(hyb)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
 			transition:
@@ -415,18 +368,14 @@
 		}
 
 		:where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
-			/* mrk(blw)/mrk(abv) — dots-only band: re-center the on-media arrows on the VISIBLE media
-			   (the box includes the reserved band, so plain anchor(center) would sit band/2 off).
-			   Declared BEFORE the band arrow-top setters so an explicit arrow band wins in combos. */
+			/* mrk(blw)/mrk(abv) — re-center on-media arrows on the visible media (box includes the band) */
 			&:where([media*="mrk(blw)"]) { --ui-carousel-arrow-top: calc(anchor(center) - (var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem)) / 2 - var(--ui-carousel-arrow-size) / 2); }
 			&:where([media*="mrk(abv)"]) { --ui-carousel-arrow-top: calc(anchor(center) + (var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem)) / 2 - var(--ui-carousel-arrow-size) / 2); }
-			/* nav(blw)/nav(abv) + arw(blw)/arw(abv) — anchor()-valued arrow placement in the band
-			   (ink flips hoisted above the gate) */
+			/* nav(blw)/nav(abv) + arw(blw)/arw(abv) — arrow placement in the band */
 			&:where([media*="nav(blw)"], [media*="arw(blw)"]) { --ui-carousel-arrow-top: calc(anchor(bottom) - var(--ui-carousel-band) / 2 - var(--ui-carousel-arrow-size) / 2); }
 			&:where([media*="nav(abv)"], [media*="arw(abv)"]) { --ui-carousel-arrow-top: calc(anchor(top) + var(--ui-carousel-band) / 2 - var(--ui-carousel-arrow-size) / 2); }
 		}
-		/* arw(blw) — arrows-only band below: the default dots would anchor to the box bottom
-		   (inside the band); lift them back onto the visible media edge */
+		/* arw(blw) — lift the default dots back onto the visible media edge */
 		:where(ui-card, ui-reveal):where([media*="arw(blw)"]) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="arw(blw)"])::scroll-marker-group {
 			top: calc(anchor(bottom) - var(--ui-carousel-below-gap, 0.5rem) - var(--ui-carousel-band, 2.75rem) - var(--ui-carousel-overlay-gap) - var(--ui-carousel-marker-size));
@@ -440,10 +389,7 @@
 		:where(ui-media, lay-out[overflow]):where([media*="nav(abv)"], [media*="mrk(abv)"])::scroll-marker-group {
 			top: calc(anchor(top) + var(--ui-carousel-band) / 2 - var(--ui-carousel-marker-size) / 2);
 		}
-		/* in-band dot alignment lives AFTER the on-media corner/center rules (below) so the
-		   band-scoped selectors win over a same-cell on-media corner rule (equal specificity). */
-
-		/* ---- VERTICAL controls (axis(y) / nav="y") ---- */
+		/* ---- VERTICAL controls (axis(y)) ---- */
 		:where(ui-card, ui-reveal):where([media*="axis(y)"]) :where(ui-media),
 		:where(ui-media, lay-out[overflow]):where([media*="axis(y)"]) {
 			&::scroll-button(left),
@@ -541,6 +487,42 @@
 			&::scroll-button(up)   { left: calc(anchor(left) + var(--ui-carousel-overlay-gap)); right: auto; }
 			&::scroll-button(down) { left: auto; right: calc(anchor(right) + var(--ui-carousel-overlay-gap)); }
 		}
+		/* axis(y) + mrk(rail): vertical thumbnail rail beside the media (see media.carousel.md).
+		   Group positioned via anchor() on BOTH axes (per-scroller — plain insets collide across
+		   groups); arrows un-generated with content:none; thumbs shrink to a floor then scroll. */
+		:where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(rail)"]) :where(ui-media),
+		:where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(rail)"]) {
+			&::scroll-button(*) { content: none; }
+			&::scroll-marker-group {
+				align-items: center;
+				align-self: auto;
+				bottom: anchor(bottom);
+				flex-direction: column;
+				gap: var(--ui-carousel-marker-gap);
+				inline-size: var(--ui-carousel-rail);
+				justify-content: safe center;
+				justify-self: auto;
+				left: calc(anchor(left) + var(--ui-carousel-overlay-gap));
+				margin-inline: 0;
+				overflow: hidden auto;
+				overscroll-behavior: contain;
+				right: auto;
+				scrollbar-width: thin;
+				top: anchor(top);
+			}
+		}
+		/* rail thumbs: shrink to a readable floor, then the group scrolls */
+		:where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(rail)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
+		:where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(rail)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
+			flex: 0 1 auto;
+			min-block-size: var(--ui-carousel-thumb-min, 2.5rem);
+		}
+		/* RTL — flip the rail to the inline-end (right) edge (physical anchors → explicit :dir) */
+		:where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(rail)"]) :where(ui-media):dir(rtl)::scroll-marker-group,
+		:where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(rail)"]):dir(rtl)::scroll-marker-group {
+			left: auto;
+			right: calc(anchor(right) + var(--ui-carousel-overlay-gap));
+		}
 
 		/* dot corners — ts/te/bs/be */
 		:where(ui-card, ui-reveal):where([media*="mrk(ts)"]) :where(ui-media)::scroll-marker-group, :where(ui-media, lay-out[overflow]):where([media*="mrk(ts)"])::scroll-marker-group,
@@ -593,10 +575,8 @@
 		:where(ui-card, ui-reveal):where([media*="mrk(ce)"]) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(ce)"])::scroll-marker-group { right: calc(anchor(right) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); left: auto; justify-self: end; }
 
-		/* ---- in-band dot alignment (nav(blw)/nav(abv)) — placed AFTER the on-media corner
-		   rules so a band-scoped cell (e.g. nav(blw) + mrk(bs)) wins over the plain mrk(bs) corner.
-		   In a band the row is locked, so only the cell's inline letter is honoured. ---- */
-		/* vertical: pin dots to the band centre (bottom band for blw, top band for abv) */
+		/* ---- in-band dot alignment (nav(blw)/nav(abv)) — after the corner rules so the band cell wins ---- */
+		/* vertical: pin dots to the band centre */
 		:where(ui-card, ui-reveal):where(:is([media*="nav(blw)"], [media*="mrk(blw)"]):is([media*="mrk(bs)"], [media*="mrk(bc)"], [media*="mrk(be)"])) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where(:is([media*="nav(blw)"], [media*="mrk(blw)"]):is([media*="mrk(bs)"], [media*="mrk(bc)"], [media*="mrk(be)"]))::scroll-marker-group {
 			top: calc(anchor(bottom) - var(--ui-carousel-band) / 2 - var(--ui-carousel-marker-size) / 2); bottom: auto;
@@ -637,24 +617,12 @@
 			right: calc(anchor(right) + 2 * var(--ui-carousel-overlay-gap) + 2 * var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
 		}
 
-		/* ---- mrk(bar) — thin styled scrollbar ---- declared LAST so the bar's geometry
-		   wins every corner/band/in-band alignment rule above (equal 0-specificity, source
-		   order). The marker-group stretches across the container as one continuous
-		   hairline; every marker is an invisible flex segment of it, and :target-current
-		   paints its stretch thicker in the active-dot ink — the "thumb" (length = 1/N).
-		   The whole track is click-to-jump and keyboard-focusable. The existing top/centering
-		   rules place the strip (the hit height is aliased into --ui-carousel-marker-size above);
-		   horizontal carousels only — axis(y) keeps its dot column. */
+		/* ---- mrk(bar) — thin styled scrollbar (declared LAST so its geometry wins) ---- */
 		:where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"])::scroll-marker-group {
 			block-size: var(--ui-carousel-bar-hit, 0.875rem);
 			gap: 0;
-			/* the markers are flex: 1 1 0 — the group needs an explicit inline-size or it
-			   shrink-wraps to 0. Sized to the scroller via its --ui-carousel-bar anchor-name
-			   (implicit-anchor sizing is unreliable); position-anchor also makes it the
-			   default anchor, so the unnamed anchor() top/centering rules above keep working.
-			   --ui-carousel-bar-span (a fraction, from the repurposed dot size scale) then
-			   scales the strip; anchor-center keeps a partial-span strip centered. */
+			/* sized to the scroller via the --ui-carousel-bar anchor-name × bar-span fraction */
 			inline-size: calc((anchor-size(--ui-carousel-bar inline) - 2 * var(--ui-carousel-bar-inset, 0px)) * var(--ui-carousel-bar-span, 1));
 			inset-inline: auto;
 			justify-self: anchor-center;
@@ -679,9 +647,7 @@
 			outline: var(--ring-width, 2px) solid var(--ring-color, currentColor);
 			outline-offset: calc(-1 * var(--ring-width, 2px));
 		}
-		/* partial-span alignment — centered by default (anchor-center above); the cell's
-		   inline letter pins the strip to an edge instead (bs/ts = start, be/te = end).
-		   Vertical placement still comes from the corner/band rules earlier in the file. */
+		/* partial-span alignment — centered by default; the cell's inline letter pins it to an edge */
 		:where(ui-card, ui-reveal):where([media*="mrk(bar)"]:is([media*="mrk(bs)"], [media*="mrk(ts)"])) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"]:is([media*="mrk(bs)"], [media*="mrk(ts)"]))::scroll-marker-group {
 			justify-self: start;

@@ -178,6 +178,7 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 | `mrk(blw)` `mrk(abv)` | Dots **alone** in a reserved band below / above the media — arrows keep their on-media position/ink; the marker/pill ink flips to the band theme |
 | `mrk(tmb)` | **Image thumbnails** instead of dots. Each slide sets `--ui-media-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-media-autoplay`. Overlay in any corner (`mrk(ts/te/bs/be)`), or add `mrk(blw)`/`nav(blw)` for a **gallery filmstrip band** below (see below). |
 | `mrk(ts)` `mrk(te)` `mrk(bs)` `mrk(be)` | **Corner placement** for the overlay marker-group — top-start / top-end / bottom-start / bottom-end (logical, RTL-safe). Center row `mrk(cs)` `mrk(cc)` `mrk(ce)` completes the 9-grid. Inset via `--ui-media-marker-inset`. |
+| `mrk(rail)` | With `axis(y)` + `mrk(tmb)`: a **vertical thumbnail rail beside** the media (inline-start; **right in RTL**). Image keeps `asr()`, rail added outside; arrows dropped; overflow shrinks-to-floor then scrolls. See below. |
 
 ### Thumbnail navigation — `mrk(tmb)`
 
@@ -201,6 +202,20 @@ outside via `box-sizing: content-box`) and each slide is rounded on **all four**
 
 ```html
 <ui-media media="asr(16/9) rds(md) clip nav mrk(tmb) mrk(blw) mrk(lg)">
+  <img src="1.jpg" style="--ui-media-thumb-url: url('1.jpg')">
+  <img src="2.jpg" style="--ui-media-thumb-url: url('2.jpg')">
+</ui-media>
+```
+
+**Thumbnail rail beside (`axis(y) mrk(rail)`)** — the inline analogue of `mrk(blw)`: a
+**vertical thumbnail rail beside** an `axis(y)` (vertical) carousel — inline-start (left in
+LTR, **right in RTL** automatically). The main image keeps its full `asr()` — the rail is
+reserved *outside* it (`padding-inline-start` + `box-sizing: content-box`), not carved from
+it. The rail is the navigation, so up/down arrows are dropped. Many thumbs shrink to a
+readable floor (`--ui-carousel-thumb-min`), then the rail scrolls. Width via `--ui-carousel-rail`.
+
+```html
+<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(md)">
   <img src="1.jpg" style="--ui-media-thumb-url: url('1.jpg')">
   <img src="2.jpg" style="--ui-media-thumb-url: url('2.jpg')">
 </ui-media>

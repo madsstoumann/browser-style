@@ -1,11 +1,7 @@
-/* ui-media carousel — card-side scroller + reveal.
- * The generic carousel CONTROLS (arrows, dots, pills, thumbnails, bands, placement)
- * live in /ui/base/carousel.css (shared with <lay-out overflow>) and use --ui-carousel-* tokens.
- * This file owns what is ui-media-specific: the scroller box itself, furniture exclusions,
- * focus handling, ui-play placement, band padding and the stagger TRIGGER wiring
- * (scroll-state containers + snapped from-state). The stagger engine, delays and the
- * ani()/crd() effect vocabulary live in /ui/base/stagger.css.
- * Internals in media.carousel.md, tokens in carousel.md */
+/* ui-media carousel — ui-media-specific scroller box, furniture exclusions, focus, ui-play
+ * placement, band/rail reservation, stagger trigger wiring. Generic controls live in
+ * /ui/base/carousel.css; stagger engine in /ui/base/stagger.css.
+ * Internals: media.carousel.md · tokens: carousel.md */
 @layer bs-component {
 	:where(ui-card, ui-reveal, ui-media):where([media*="nav"]) {
 		--ui-media-bg: #0000;
@@ -85,11 +81,6 @@
 	:where(ui-card, ui-reveal):where([media*="play(bs)"]) ui-media, ui-media:where([media*="play(bs)"]) { --_play-block: end;    --_play-inline: var(--ui-media-overlay-gap, 0.75rem) auto; --_play-justify: start; }
 	:where(ui-card, ui-reveal):where([media*="play(be)"]) ui-media, ui-media:where([media*="play(be)"]) { --_play-block: end;    --_play-inline: auto var(--ui-media-overlay-gap, 0.75rem); --_play-justify: end; --_play-size: max-content; }
 
-	/* Carousel stagger — the scroll-state trigger, both channels and the ani()/crd()
-	   vocabulary are host-agnostic and live in ui/base/stagger.css (works for
-	   <ui-media media="stagger"> and <lay-out overflow stagger> alike). Nothing
-	   carousel-stagger-specific remains here. */
-
 	/* reserved control band — nav(blw/abv) = both controls, mrk(blw/abv) = dots only, arw(blw/abv) = arrows only */
 	:where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"]) ui-media,
 	ui-media:where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"]) {
@@ -104,23 +95,27 @@
 		scroll-padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
 	}
 
-	/* mrk(tmb) filmstrip band: aspect-ratio must size the IMAGE, not frame+band. With the
-	   default border-box, the band's padding-block steals height from the asr() image
-	   (squished). content-box makes asr() size the content box so the thumbnail band is
-	   added OUTSIDE the image. No-op for overlay thumbnails (no band padding to move) and
-	   for the inline dimension (no inline padding). */
+	/* mrk(tmb) band: content-box so asr() sizes the image, band added outside (see media.carousel.md) */
 	:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) ui-media,
 	ui-media:where([media*="mrk(tmb)"]) {
 		box-sizing: content-box;
 	}
-	/* mrk(tmb) filmstrip band: round ALL FOUR corners of each slide image. The frame-level
-	   clip=/rds() clips the whole border box, so its bottom radius sits below the band — the
-	   image's own bottom corners would stay square against the gap. Round the media elements
-	   directly (same --ui-media-radius) so the image floats as a fully-rounded card above the
-	   filmstrip. Only in a block band (blw/abv); overlay thumbnails keep the frame clip. */
-	:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]:is([media*="nav(blw)"], [media*="mrk(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"])) ui-media > :is(iframe, img, picture, video),
-	ui-media:where([media*="mrk(tmb)"]:is([media*="nav(blw)"], [media*="mrk(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"])) > :is(iframe, img, picture, video) {
+	/* mrk(tmb) band: round all 4 corners of each slide (frame clip only rounds the outer box) */
+	:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]:is([media*="nav(blw)"], [media*="mrk(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="mrk(rail)"])) ui-media > :is(iframe, img, picture, video),
+	ui-media:where([media*="mrk(tmb)"]:is([media*="nav(blw)"], [media*="mrk(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="mrk(rail)"])) > :is(iframe, img, picture, video) {
 		border-radius: var(--ui-media-radius, 0);
+	}
+
+	/* mrk(rail) — reserve inline space for the thumb rail beside axis(y) media; padding-inline-start
+	   (logical, RTL-aware) + shrunk content width keep the frame full-width and the image at asr()
+	   (content-box). Column parked in the rail by carousel.css. See media.carousel.md */
+	:where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(rail)"]) ui-media,
+	ui-media:where([media*="axis(y)"][media*="mrk(rail)"]) {
+		--ui-carousel-rail: calc(var(--ui-carousel-thumb-size, 2.25rem) * 4 / 3 + 0.5rem);
+		background: var(--ui-carousel-controls-bg, var(--ui-media-bg));
+		inline-size: calc(round(down, 100%, 1px) - var(--ui-carousel-rail) - 2 * var(--ui-carousel-overlay-gap, 0.75rem));
+		padding-inline-start: calc(var(--ui-carousel-rail) + 2 * var(--ui-carousel-overlay-gap, 0.75rem));
+		scroll-padding-inline-start: calc(var(--ui-carousel-rail) + 2 * var(--ui-carousel-overlay-gap, 0.75rem));
 	}
 
 	@supports (scroll-marker-group: after) {

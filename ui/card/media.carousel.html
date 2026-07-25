@@ -443,6 +443,30 @@
 				<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')">
 			</ui-media>
 	</lay-out>
+	<h3>Thumbnail rail beside — <code>axis(y) mrk(tmb) mrk(rail)</code></h3>
+	<p><code>mrk(rail)</code> is the inline analogue of <code>mrk(blw)</code>: it reserves a <strong>vertical thumbnail rail beside</strong> the media (inline-start — left in LTR, <strong>right in RTL</strong>), the classic product-gallery layout. The image keeps its full <code>asr()</code> aspect-ratio — the rail is added <em>outside</em> it, not carved out of it. Size via <code>mrk(sm|md|lg|xl)</code>. The rail <strong>is</strong> the navigation, so up/down arrows are dropped (<code>nav</code> and <code>nav(mrk)</code> render identically). Many thumbs shrink to a readable floor, then the rail scrolls.</p>
+	<lay-out md="columns(2)">
+		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(md)">
+			<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')">
+			<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')">
+			<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')">
+			<img src="/assets/images/popovers.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/popovers.png')">
+		</ui-media>
+		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(lg)">
+			<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')">
+			<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')">
+			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')">
+			<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')">
+		</ui-media>
+	</lay-out>
+	<p>RTL — the rail flips to the <strong>right</strong> automatically (<code>dir="rtl"</code>):</p>
+	<lay-out>
+		<ui-media dir="rtl" media="asr(16/9) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(md)">
+			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')">
+			<img src="/assets/images/brewandbean.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/brewandbean.png')">
+			<img src="/assets/images/aurasoundpro.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/aurasoundpro.png')">
+		</ui-media>
+	</lay-out>
 
 	<hr>
 	

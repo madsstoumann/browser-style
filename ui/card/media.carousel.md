@@ -69,6 +69,7 @@ scroller; the rest layer on top. `asr()` etc. belong to the base frame — see m
 | `mrk(non)`  | CSS | No dots (keeps arrows) — arrows-only band |
 | `mrk(tmb)`| CSS | Image thumbnails; per-slide `--ui-media-thumb-url`; active thumb has a bottom timer stripe. Overlay in a corner, or `+ mrk(blw)`/`nav(blw)` for a gallery **filmstrip band** below — band auto-sizes to the thumb; image keeps `asr()` (`box-sizing: content-box`) and is rounded on all 4 corners to `rds()` |
 | `mrk(ts)` `mrk(te)` `mrk(bs)` `mrk(be)` | CSS | Corner placement for the overlay marker-group — logical (top-start / top-end / bottom-start / bottom-end). Center row `mrk(cs)` `mrk(cc)` `mrk(ce)` completes the 9-grid. Inset via `--ui-media-marker-inset` |
+| `mrk(rail)` | CSS | With `axis(y)` + `mrk(tmb)`: vertical thumbnail rail **beside** the media (inline-start; right in RTL). Reserves inline space (`padding-inline-start` + `content-box`) so the image keeps `asr()`; arrows dropped; thumbs shrink to `--ui-carousel-thumb-min` then the rail scrolls. Width `--ui-carousel-rail` |
 | `mrk(xl)`   | CSS | Marker size 1rem |
 | `loop`      | JS | Seamless infinite loop (clones first/last slide) |
 | `nav`       | CSS | Carousel **on** — markers + arrows (the trigger) |
@@ -298,6 +299,38 @@ the SCROLL axis, so it can't carve a fixed cross-axis band (the next slide peeks
 So the band is a **solid, full-width overlay** (the marker-group itself) pinned to the
 bottom of the scrollport — it covers the peek; the rotated up/down arrows sit on it
 (`z-index: 4`). The base `padding-block-end` still shrinks each slide to fit above it.
+
+## Thumbnail bands — filmstrip (`mrk(tmb) mrk(blw)`) & rail (`axis(y) mrk(tmb) mrk(rail)`)
+
+`mrk(tmb)` markers can move off the media into a **reserved band** — below/above
+(`mrk(blw)`/`mrk(abv)`, block axis) or **beside** (`mrk(rail)`, inline axis, `axis(y)` only).
+
+- **Band auto-size.** `mrk(tmb)` bumps `--ui-carousel-band` to `thumb-size + spacing-sm` and
+  aliases `--ui-carousel-marker-size` to `--ui-carousel-thumb-size` (same trick as `mrk(bar)`)
+  so every existing band/corner centering calc sizes to the real thumb, not the 0.6rem dot.
+- **`box-sizing: content-box` (load-bearing).** `aspect-ratio` on the default border-box frame
+  makes the band's `padding` steal from the `asr()` image (squished). content-box makes `asr()`
+  size the **content box**, so the band is added *outside* the image. For the inline **rail**
+  the slide `inline-size` is also shrunk by the rail width, or the border box overflows the
+  container horizontally.
+- **All-4-corner radius.** The frame `clip`/`rds()` clips the whole border box, so its bottom
+  (or inline) radius sits below/beside the band — the image's own edge stays square. In a band
+  the slide media elements are rounded directly to `--ui-media-radius` so the image floats as a
+  fully-rounded card.
+
+### Rail specifics (`mrk(rail)`)
+
+- **Reservation:** `padding-inline-start` (logical → left in LTR, **right in RTL**) sized to
+  `--ui-carousel-rail` (`thumb-size × 4/3` + slack) + gaps; the column is parked in it.
+- **`anchor()` positioning is mandatory (collision).** Multiple `::scroll-marker-group`s on a
+  page positioned with plain/logical insets (`inset-inline-start`, `inset-block`) collide — the
+  insets resolve against a **shared** containing block, so a second rail renders over the first.
+  The rail group must use `anchor()` on both axes (per-scroller, like the corner rules).
+  `anchor(left)`/`anchor(right)` are physical, so RTL is an explicit `:dir(rtl)` flip.
+- **Arrows dropped.** The rail is the navigation; `::scroll-button(*) { content: none }`
+  un-generates the arrows (must be `content: none`, not `display: none`).
+- **Overflow:** thumbs `flex: 0 1 auto` with `min-block-size: --ui-carousel-thumb-min` shrink to
+  fit the media height, then the group scrolls (`overflow: hidden auto`) — never slivers.
 
 ## Loop clones
 
