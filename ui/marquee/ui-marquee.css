@@ -1,41 +1,192 @@
+/**
+ * ui-marquee
+ * @version 5.0.0
+ * @date 2026-07-25
+ * @author Mads Stoumann
+ *
+ * CSS-only scrolling content strip — card-furniture family (ui-chip / ui-beacon /
+ * ui-sticker). Modes: fade (default) · loop · seamless. Full docs + how-it-works:
+ * readme.md.
+ *
+ * Sections: A. Base · B. Track · C. Direction · C2. Loop · D. Furniture axes ·
+ * E. Edge-fade · F. Pause · G. Seamless · H. Reduced motion · I. Keyframes.
+ */
 @layer bs-component {
-	:where(.ui-marquee) {
-		background-color: var(--CanvasGray);
-		border-radius: var(--input-bdrs);
-		display: flex;
-		overflow: hidden;
-		padding: 2ch 0;
-		& span {
-			animation: scroll var(--ui-marquee-animdur, 20s) linear infinite;
-			display: flex;
-			flex-shrink: 0;
-			translate: 100% 0;
-			user-select: none;
-			white-space: nowrap;
-			width: 100%;
-			[dir=rtl] & { animation-name: scroll-rtl; }
-		}
-		& input:checked + span {
-			animation-play-state: paused;
-		}
-		&:has(input:focus-visible) {
-			outline: 1px solid var(--ButtonBorder);
-		}
-	}
-	:where(.ui-blink-marquee) {
-		border: 0;
-		gap: 0;
-		padding: 0;
-		& .ui-blink { border-radius: var(--input-bdrs) var(--input-bdrs) 0 0; }
-		& .ui-marquee { border-radius-start-start: 0; }
+	:where(ui-marquee) {
+		/* A. Base */
+		--ui-marquee-duration: 20s;
+		--ui-marquee-gap: 2rem;
+		--ui-marquee-fade-size: 3rem;
+		--ui-marquee-item-size: 150px;
 
+		background: var(--ui-marquee-bg, transparent);
+		border-radius: var(--ui-marquee-radius, 0);
+		color: var(--ui-marquee-c, inherit);
+		container-type: inline-size;
+		corner-shape: var(--ui-marquee-corner, round);
+		display: flex;
+		font-family: var(--ui-marquee-font-family, inherit);
+		font-size: var(--ui-marquee-font-size, 1em);
+		font-style: var(--ui-marquee-font-style, normal);
+		font-weight: var(--ui-marquee-font-weight, inherit);
+		gap: var(--ui-marquee-gap);
+		overflow: hidden;
+		padding-block: var(--ui-marquee-padding-block, 0.5em);
+		padding-inline: var(--ui-marquee-padding-inline, 0);
+		user-select: none;
+
+		/* B. Track — the single child holding all content */
+		& > * {
+			align-items: center;
+			animation: ui-marquee-x var(--ui-marquee-duration) linear infinite;
+			display: flex;
+			flex: 0 0 auto;
+			gap: var(--ui-marquee-gap);
+			inline-size: max-content;
+			white-space: nowrap;
+		}
+
+		/* C. Direction — left(default) · right · up · down */
+		&[direction~="right"] > *,
+		:where([media*="marquee(right)"]) & > * { animation-direction: reverse; }
+
+		/* rtl flips the default left → right (self or ancestor dir=rtl) */
+		&[dir="rtl"]:not([direction~="right"]) > *,
+		:where([dir="rtl"]) &:not([dir="ltr"]):not([direction~="right"]) > * { animation-direction: reverse; }
+
+		&:is([direction~="up"], [direction~="down"]),
+		:where([media*="marquee(up)"], [media*="marquee(down)"]) & {
+			block-size: var(--ui-marquee-block-size, 12rem);
+			container-type: size;
+		}
+		&:is([direction~="up"], [direction~="down"]) > *,
+		:where([media*="marquee(up)"], [media*="marquee(down)"]) & > * {
+			animation-name: ui-marquee-y;
+			block-size: max-content;
+			flex-direction: column;
+			inline-size: auto;
+			white-space: normal;
+		}
+		&[direction~="down"] > *,
+		:where([media*="marquee(down)"]) & > * { animation-direction: reverse; }
+
+		/* C2. Loop — never-ending text: duplicate run + translate -50% (gap 0) */
+		&[variant~="loop"], :where([media*="marquee(loop)"]) & {
+			& > * { animation-name: ui-marquee-loop-x; gap: 0; }
+		}
+		&[variant~="loop"]:is([direction~="up"], [direction~="down"]) > *,
+		:where([media*="marquee(loop)"]) &:is([direction~="up"], [direction~="down"]) > * {
+			animation-name: ui-marquee-loop-y;
+		}
+
+		/* D. Furniture axes — `&[attr]` standalone + `[media*="marquee(…)"] &` card token */
+
+		/* colour — hue */
+		&[theme] { --ui-marquee-bg: var(--_theme-bg); --ui-marquee-c: var(--_theme-c, var(--_theme-ink)); }
+		:where([media*="marquee(red)"])    & { --ui-marquee-bg: var(--ui-theme-red-bg);    --ui-marquee-c: var(--ui-theme-red-c); }
+		:where([media*="marquee(orange)"]) & { --ui-marquee-bg: var(--ui-theme-orange-bg); --ui-marquee-c: var(--ui-theme-orange-c); }
+		:where([media*="marquee(green)"])  & { --ui-marquee-bg: var(--ui-theme-green-bg);  --ui-marquee-c: var(--ui-theme-green-c); }
+		:where([media*="marquee(blue)"])   & { --ui-marquee-bg: var(--ui-theme-blue-bg);   --ui-marquee-c: var(--ui-theme-blue-c); }
+		:where([media*="marquee(accent)"]) & { --ui-marquee-bg: var(--ui-theme-accent-bg); --ui-marquee-c: var(--ui-theme-accent-c); }
+		:where([media*="marquee(gray)"])   & { --ui-marquee-bg: var(--ui-theme-gray-bg);   --ui-marquee-c: var(--ui-theme-gray-c); }
+		:where([media*="marquee(slate)"])  & { --ui-marquee-bg: var(--ui-theme-slate-bg);  --ui-marquee-c: var(--ui-theme-slate-c); }
+		:where([media*="marquee(black)"])  & { --ui-marquee-bg: var(--ui-theme-black-bg);  --ui-marquee-c: var(--ui-theme-black-c); }
+		:where([media*="marquee(white)"])  & { --ui-marquee-bg: var(--ui-theme-white-bg);  --ui-marquee-c: var(--ui-theme-white-c); }
+
+		/* arbitrary colour — fill overrides hue, ink auto-contrasts from fill */
+		&[fill] { --ui-marquee-bg: attr(fill type(<color>), var(--color-surface)); --ui-marquee-c: contrast-color(var(--ui-marquee-bg)); }
+		&[ink]  { --ui-marquee-c: attr(ink type(<color>), hsl(0, 0%, 100%)); }
+
+		/* size — md (1em) = default */
+		&[size~="sm"],  :where([media*="marquee(sm)"])  & { --ui-marquee-font-size: 0.75em; }
+		&[size~="lg"],  :where([media*="marquee(lg)"])  & { --ui-marquee-font-size: 1.15em; }
+		&[size~="xl"],  :where([media*="marquee(xl)"])  & { --ui-marquee-font-size: 1.4em; }
+		&[size~="2xl"], :where([media*="marquee(2xl)"]) & { --ui-marquee-font-size: 1.75em; }
+
+		/* corner — non · rnd · pll · crc · sqr (sharp = default) */
+		&[radius~="non"], :where([media*="marquee(non)"]) & { --ui-marquee-radius: 0; }
+		&[radius~="rnd"], :where([media*="marquee(rnd)"]) & { --ui-marquee-radius: var(--radius-md); }
+		&[radius~="pll"], :where([media*="marquee(pll)"]) & { --ui-marquee-radius: var(--radius-pill); }
+		&[radius~="crc"], :where([media*="marquee(crc)"]) & { --ui-marquee-radius: var(--radius-circle); }
+		&[radius~="sqr"], :where([media*="marquee(sqr)"]) & { --ui-marquee-radius: 0.75em; --ui-marquee-corner: superellipse(var(--squircle-md)); }
+
+		/* font — order-free bag: family · weight · italic */
+		&[font~="body"]    { --ui-marquee-font-family: var(--font-body); }
+		&[font~="heading"] { --ui-marquee-font-family: var(--font-heading); }
+		&[font~="mono"]    { --ui-marquee-font-family: var(--font-mono); }
+		&[font~="serif"]   { --ui-marquee-font-family: var(--font-serif); }
+		&[font~="thin"]     { --ui-marquee-font-weight: var(--font-weight-thin, 100); }
+		&[font~="light"]    { --ui-marquee-font-weight: var(--font-weight-light, 300); }
+		&[font~="normal"]   { --ui-marquee-font-weight: var(--font-weight-normal, 400); }
+		&[font~="medium"]   { --ui-marquee-font-weight: var(--font-weight-medium, 500); }
+		&[font~="semibold"] { --ui-marquee-font-weight: var(--font-weight-semibold, 600); }
+		&[font~="bold"]     { --ui-marquee-font-weight: var(--font-weight-bold, 700); }
+		&[font~="black"]    { --ui-marquee-font-weight: var(--font-weight-black, 900); }
+		&[font~="italic"]   { --ui-marquee-font-style: italic; }
+
+		/* speed — base duration (smaller = faster); normal (20s) = default */
+		&[speed~="slow"],   :where([media*="marquee(slow)"])   & { --ui-marquee-duration: 40s; }
+		&[speed~="fast"],   :where([media*="marquee(fast)"])   & { --ui-marquee-duration: 8s; }
+		&[speed~="faster"], :where([media*="marquee(faster)"]) & { --ui-marquee-duration: 4s; }
+
+		/* gap — space between repeated items / logos */
+		&[gap~="sm"], :where([media*="marquee(gap-sm)"]) & { --ui-marquee-gap: 1rem; }
+		&[gap~="lg"], :where([media*="marquee(gap-lg)"]) & { --ui-marquee-gap: 4rem; }
+
+		/* E. Edge-fade — static mask on the scroll axis, opt-in via fade */
+		&:is([fade], [variant~="fade"]), :where([media*="marquee(fade)"]) & {
+			mask: linear-gradient(to right, #0000, #000 var(--ui-marquee-fade-size), #000 calc(100% - var(--ui-marquee-fade-size)), #0000);
+		}
+		&:is([direction~="up"], [direction~="down"]):is([fade], [variant~="fade"]),
+		:where([media*="marquee(up)"], [media*="marquee(down)"]) &:is([fade], [variant~="fade"]) {
+			mask: linear-gradient(to bottom, #0000, #000 var(--ui-marquee-fade-size), #000 calc(100% - var(--ui-marquee-fade-size)), #0000);
+		}
+
+		/* F. Pause — paused= / hover / focus. Covers fade+loop track (> *) and
+		   seamless items (> * > *). See readme "Why pause, not slow". */
+		&[paused] > *, &[paused] > * > *,
+		&:is(:hover, :focus-within) > *,
+		&:is(:hover, :focus-within) > * > * { animation-play-state: paused; }
 	}
-	@keyframes scroll {
-		from { translate: 100% 0;}
-		to { translate: var(--_x, -100%) 0; }
+
+	/* G. Seamless — css-tip offset technique (Chrome-only; else fade). Horizontal
+	   only. Longhand animation on purpose (see readme "Why pause, not slow"). */
+	@supports (offset-path: shape(from 0% 0%, hline by 10px)) {
+		@media (prefers-reduced-motion: no-preference) {
+			:where(ui-marquee[variant~="seamless"], [media*="marquee(seamless)"] ui-marquee):not(:is([direction~="up"], [direction~="down"])) {
+				& > * {
+					animation: none;
+					display: contents;
+				}
+				& > * > * {
+					--_n: var(--ui-marquee-visible, 4);
+					flex: 0 0 auto;
+					offset: shape(from calc(var(--ui-marquee-item-size) / -2) 50%,
+						hline by calc(sibling-count() * max(100cqi / var(--_n), var(--ui-marquee-item-size))));
+					animation-name: ui-marquee-seamless;
+					animation-duration: var(--ui-marquee-duration);
+					animation-timing-function: linear;
+					animation-iteration-count: infinite;
+					animation-delay: calc(-1 * sibling-index() * var(--ui-marquee-duration) / sibling-count());
+				}
+				&[direction~="right"] > * > *,
+				&[dir="rtl"]:not([direction~="right"]) > * > *,
+				:where([dir="rtl"]) &:not([dir="ltr"]):not([direction~="right"]) > * > * { animation-direction: reverse; }
+			}
+		}
 	}
-	@keyframes scroll-rtl {
-		from { translate: -100% 0;}
-		to { translate: var(--_x, 100%) 0; }
+
+	/* H. Reduced motion — no auto-scroll (WCAG 2.3.1); hand-scrollable instead */
+	@media (prefers-reduced-motion: reduce) {
+		:where(ui-marquee) { overflow: auto; }
+		:where(ui-marquee) > *, :where(ui-marquee) > * > * { animation: none; translate: none; offset: none; }
 	}
+
+	/* I. Keyframes — 100cqi/cqb = full host (off-screen start); -100% = track's own
+	   max-content size (fully cleared); loop -50% = one of the two copies */
+	@keyframes ui-marquee-x { from { translate: 100cqi 0; } to { translate: -100% 0; } }
+	@keyframes ui-marquee-y { from { translate: 0 100cqb; } to { translate: 0 -100%; } }
+	@keyframes ui-marquee-seamless { to { offset-distance: 100%; } }
+	@keyframes ui-marquee-loop-x { to { translate: -50% 0; } }
+	@keyframes ui-marquee-loop-y { to { translate: 0 -50%; } }
 }

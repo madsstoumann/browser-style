@@ -1,0 +1,42 @@
+{
+  "name": "@browser.style/marquee",
+  "version": "5.0.0",
+  "description": "CSS-first scrolling content strip: text, logos or images with fade-before-repeat (all browsers) or seamless (Chrome) modes, four directions, edge-fade and hover slow-down. Zero JavaScript.",
+  "type": "module",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css"
+  },
+  "files": [
+    "index.css",
+    "ui-marquee.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "marquee",
+    "ticker",
+    "scroller",
+    "logo-strip",
+    "news",
+    "css-first"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/marquee"
+  },
+  "homepage": "https://browser.style/ui/marquee",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11"
+  }
+}

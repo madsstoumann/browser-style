@@ -5,72 +5,127 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
-	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="description" content="CSS-first scrolling content strip — text, logos or images, four directions, fade or seamless.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="ui-marquee.css">
-	<link rel="stylesheet" href="../blink/ui-blink.css">
+	<style>
+		body { padding-block-end: 4rem; }
+		.demo-logo {
+			aspect-ratio: 3 / 1;
+			background: color-mix(in oklch, currentColor 12%, transparent);
+			border-radius: var(--radius-md);
+			display: grid;
+			font-weight: 700;
+			inline-size: 9rem;
+			place-content: center;
+		}
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Marquee</h2>
 	<p>
-		<code>Marquee</code> is a scrolling text that moves across the screen. It is used to display a list of items or messages one at a time.
+		<code>&lt;ui-marquee&gt;</code> scrolls its content across a clip viewport. Put all
+		content in a <strong>single child</strong> (the track) — text, logos, images or chips.
+		Zero JavaScript. Pauses on hover/focus; add <code>paused</code> to stop.
 	</p>
-	<p><strong>Click to pause</strong>. A small JavaScript is used to set a variable with the amount to translate:<br><code>scrollWidth / offsetWidth * 100%</code>.</p>
 
-	<label class="ui-marquee">
-		<input type="checkbox" data-sr>
-		<span>
-			Sensationalism, sometimes called "yellow journalism," is designed to invoke an emotional reaction in readers. Headlines using this tactic often involve highly emotional words and exaggerated claims that play up fear or other strong reactions.
-		</span>
-	</label>
+	<h2>Default — fade before repeat (scrolls left)</h2>
+	<p><code>&lt;ui-marquee&gt;</code></p>
+	<p>Content fully clears before the loop repeats, at any length. Works in all modern browsers.</p>
+	<ui-marquee>
+		<span>Sensationalism, sometimes called "yellow journalism," is designed to invoke an emotional reaction in readers. Headlines using this tactic often involve highly emotional words and exaggerated claims that play up fear or other strong reactions.</span>
+	</ui-marquee>
 
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<label class="ui-marquee">
-			<input type="checkbox" data-sr>
-			<span>
-				Sensationalism, sometimes called "yellow journalism," is designed to invoke an emotional reaction in readers. Headlines using this tactic often involve highly emotional words and exaggerated claims that play up fear or other strong reactions.
-			</span>
-		</label>
+	<h2>Direction — right</h2>
+	<p><code>direction="right"</code></p>
+	<ui-marquee direction="right">
+		<span>This strip scrolls to the right. Under <code>dir="rtl"</code> the default flips to right automatically.</span>
+	</ui-marquee>
+
+	<h2>Right-to-left document</h2>
+	<p><code>dir="rtl"</code></p>
+	<ui-marquee dir="rtl">
+		<span>هذا شريط نصي يتحرك تلقائيًا في الاتجاه الصحيح للغة العربية.</span>
+	</ui-marquee>
+
+	<h2>Vertical — up &amp; down</h2>
+	<p><code>direction="up" style="--ui-marquee-block-size:10rem"</code> · <code>direction="down" style="--ui-marquee-block-size:10rem"</code></p>
+	<div class="df gap-3" style="grid-template-columns:1fr 1fr;display:grid;">
+		<ui-marquee direction="up" style="--ui-marquee-block-size:10rem;">
+			<div>
+				<p>First headline scrolling upward.</p>
+				<p>Second line follows.</p>
+				<p>Third line of the vertical ticker.</p>
+				<p>Fourth and final line.</p>
+			</div>
+		</ui-marquee>
+		<ui-marquee direction="down" style="--ui-marquee-block-size:10rem;">
+			<div>
+				<p>First headline scrolling downward.</p>
+				<p>Second line follows.</p>
+				<p>Third line of the vertical ticker.</p>
+				<p>Fourth and final line.</p>
+			</div>
+		</ui-marquee>
 	</div>
 
-	<br>
-	<h2>With right-to-left</h2>
-	<label class="ui-marquee" dir="rtl">
-		<input type="checkbox" data-sr>
-		<span>
-			Sensationalism, sometimes called "yellow journalism," is designed to invoke an emotional reaction in readers. Headlines using this tactic often involve highly emotional words and exaggerated claims that play up fear or other strong reactions.
-		</span>
-	</label>
+	<h2>Seamless — logo strip (Chrome-only; falls back to fade elsewhere)</h2>
+	<p><code>variant="seamless fade" style="--ui-marquee-item-size:9rem"</code></p>
+	<p>Uses the css-tip <code>offset</code>/<code>sibling-count()</code> technique — a gap-free loop with no duplication. Edges fade via <code>fade</code>.</p>
+	<ui-marquee variant="seamless fade" style="--ui-marquee-item-size:9rem;">
+		<div>
+			<span class="demo-logo">ACME</span>
+			<span class="demo-logo">GLOBEX</span>
+			<span class="demo-logo">INITECH</span>
+			<span class="demo-logo">UMBRELLA</span>
+			<span class="demo-logo">STARK</span>
+			<span class="demo-logo">WAYNE</span>
+		</div>
+	</ui-marquee>
 
-	<br>
-	<h2>Variants</h2>
-	<p>With <code>ui-blink</code></p>
+	<h2>Loop — never-ending text (all browsers)</h2>
+	<p><code>variant="loop" theme="red" font="bold"</code></p>
+	<p>Seamless continuous text: the phrase re-appears with no fade. Repeat the phrase to fill the frame, then duplicate the whole run (2nd copy <code>aria-hidden</code>); the track shifts by exactly &minus;50%.</p>
+	<ui-marquee variant="loop" theme="red" font="bold">
+		<div>
+			<span>BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;</span>
+			<span aria-hidden="true">BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;BREAKING NEWS&nbsp;&bull;&nbsp;</span>
+		</div>
+	</ui-marquee>
 
-	<fieldset class="ui-blink-marquee">
-		<label class="ui-blink">
-			<input type="checkbox" data-sr>
-			<span>BREAKING</span>
-		</label>
-		<label class="ui-marquee">
-			<input type="checkbox" data-sr>
-			<span>
-				Sensationalism, sometimes called "yellow journalism," is designed to invoke an emotional reaction in readers. Headlines using this tactic often involve highly emotional words and exaggerated claims that play up fear or other strong reactions.
-			</span>
-		</label>
-	</fieldset>
+	<h2>Edge-fade</h2>
+	<p><code>fade</code></p>
+	<p>Optional static mask fades content in/out at both ends — the scroll-shadow analog.</p>
+	<ui-marquee fade>
+		<span>With <code>fade</code>, the strip's leading and trailing edges melt into the background instead of hard-cutting at the frame.</span>
+	</ui-marquee>
 
+	<h2>Themed + font control</h2>
+	<p><code>theme="red" font="bold italic" radius="pll"</code> · <code>fill="#8b5cf6" font="mono" size="lg" radius="rnd"</code></p>
+	<ui-marquee theme="red" font="bold italic" radius="pll">
+		<span>BREAKING — themed marquee with bold italic type and a pill radius.</span>
+	</ui-marquee>
+	<ui-marquee fill="#8b5cf6" font="mono" size="lg" radius="rnd">
+		<span>Arbitrary fill colour, monospace, large — ink auto-contrasts.</span>
+	</ui-marquee>
 
-	<script type="module">
-		import { common, init } from './../../assets/js/common.js';
-		import uiMarquee from './uiMarquee.js';
+	<h2>Speed &amp; paused</h2>
+	<p><code>speed="faster"</code> · <code>speed="slow" paused</code></p>
+	<ui-marquee speed="faster">
+		<span>Faster (4s base). Hover to pause.</span>
+	</ui-marquee>
+	<ui-marquee speed="slow" paused>
+		<span>Slow (40s base) and paused — no motion until the <code>paused</code> attribute is removed.</span>
+	</ui-marquee>
 
-		common();
-		init('.ui-marquee', uiMarquee);
-	</script>
+	<h2>Inside a card's content column</h2>
+	<p><code>theme="slate" size="sm"</code></p>
+	<p>As a news ticker inside <code>ui-content</code>. (Card CSS not required for this standalone demo.)</p>
+	<ui-marquee theme="slate" size="sm">
+		<span>Markets · AAPL ▲ 1.2% · TSLA ▼ 0.8% · BTC ▲ 3.4% · Gold ▲ 0.3% · EUR/USD 1.09 · Oil ▼ 1.1%</span>
+	</ui-marquee>
 </body>
 </html>
