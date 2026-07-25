@@ -248,8 +248,7 @@ ui-media:where([media*="arw(bare)"]) > ui-carousel-controls [data-nav]:hover {
 }
 :where(ui-card, ui-reveal):where([media*="arw(bare)"]) ui-media ui-carousel-controls [data-nav]:disabled,
 ui-media:where([media*="arw(bare)"]) > ui-carousel-controls [data-nav]:disabled {
-	mask: none;
-	background: var(--ui-carousel-arrow-glyph-dim, var(--ui-carousel-arrow-glyph)) calc(50% + var(--ui-carousel-arrow-nudge)) center / var(--ui-carousel-arrow-glyph-size, 80%) no-repeat #0000;
+	background-color: var(--ui-carousel-arrow-color);
 	opacity: var(--ui-carousel-arrow-disabled-opacity, 0.5);
 	pointer-events: none;
 }

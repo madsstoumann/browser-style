@@ -259,10 +259,10 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
   so arrows stay visible and reachable.
 - **`arw(bare)`** drops the circle: the glyph itself is painted as a recolourable shape
   (`mask-image` of the SVG + `background-color` = the ink), so it can be any colour
-  (`--ui-media-arrow-color`). A `:disabled` `::scroll-button` drops its mask, so the
-  disabled bare arrow paints the glyph SVG directly as `background-image`
-  (`--ui-media-arrow-glyph-dim`) to avoid a circle artifact, with `transition: none` so
-  the switch is instant (no bg-colour fade flashing a filled circle as the mask drops).
+  (`--ui-media-arrow-color`). A `:disabled` bare arrow **keeps** the mask and just dims
+  `opacity` (`--ui-media-arrow-disabled-opacity`), so it stays the same ink, faded — a white
+  bare arrow stays white on a dark frame (the old glyph-dim swap repainted a fixed dark SVG,
+  invisible there).
 - **Hover / focus** — the button `transform` carries a `scale()` slot; bare glyphs scale to
   `--ui-media-arrow-hover-scale` (1.18) on hover and `:focus-visible`. Focus ring: the
   **circle** variant uses a real `outline` (`--ring-*`); **bare** can't (its `mask` clips the

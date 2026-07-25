@@ -391,7 +391,6 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-media-arrow-disabled-opacity` | `0.4` | Dimming of a dead-end arrow (`arw(hid)` sets `0`) |
 | `--ui-media-arrow-color` | `#fff` (over image) / dark (in band) | **Bare** glyph ink (`arw(bare)`; the circle ignores it) |
 | `--ui-media-arrow-color-hover` | = arrow-color | Bare glyph ink on hover (bands darken it) |
-| `--ui-media-arrow-glyph-dim` | = `--ui-media-arrow-glyph` | Disabled **bare** glyph (kept dark/dimmed so the mask can drop without flashing a circle) |
 | `--ui-media-arrow-top` | centered | Manual vertical position (or use `arw(top/mid/bot)`) |
 
 ### Markers / pills
