@@ -28,13 +28,13 @@ One shipped demo bug deserves immediate attention: `marquee(loop)` substring-mat
 | R-01 | Fix `marquee(loop)` collision; unify the four slide-exclusion lists | Broken | S | Fix now |
 | R-02 | Package entry → `index.js`; delete `ui-media.js`; load the hover handler where demos need it | Broken | S | Fix now |
 | R-03 | Pick one `<ui-play>` contract (recommend `command`/`commandfor`) | Contract-mismatch | M | Fix now |
-| R-04 | Fix `layout/src/components/index.js` broken re-export | Broken | S | Fix now |
+| R-04 | Mark the layout composer (`layout/src/components/composer`) as legacy precursor-system code | Polish | S | Design decision |
 | R-05 | Fix the `--_g` private-var leak in `media.video.css` | Debt | S | Fix now |
 | R-06 | JS hygiene: single `mediaStr`, single `scan()` path, remove dead `carouselTokens()`, publish or de-document `render.js`/`data/` | Debt | S | Fix now |
 | R-07 | Doc sync pass (carousel namespace, `hov()` list, furniture count, stale `thm()`) | Debt | M | Fix now |
 | R-08 | One position vocabulary: logical `ts…be` everywhere; RTL-correct scrims | Contract-mismatch | M | Design decision |
 | R-09 | One 8-hue palette with declared aliases | Contract-mismatch | S | Design decision |
-| R-10 | `rds()` single owner; retire alias arg duals (`non/none`, `sheer/shr`, `solid/sld`) | Debt | S | Design decision |
+| R-10 | Single-source the `rds()` definition (multi-placement is by design); add standalone `ui-content` corners; retire alias arg duals | Debt | S | Design decision |
 | R-11 | Resolve token homonyms: reveal `scl()`, `ply()`/`play()`, marquee's odd-one-out status | Debt | M | Design decision |
 | R-12 | Reveal/card sharing: factor `:is(cq-box, summary)`, fix `align-content` divergence, decide leak-undo vs scoping | Debt | M | Design decision |
 | R-13 | **Tokens manifest** — single source of truth for token → axis → property knowledge | — | L | v5 / presets |
@@ -166,9 +166,9 @@ Scrim positions use the furniture's `ts…be` spelling, but the gradients are ph
 Evidence: `ui/card/media.md:246-249` vs `ui/card/media.tint.css:44-51` vs `ui/card/render.js:200`.
 Docs say `red orange green blue accent dark light subtle`; `media.tint.css` implements `red orange green blue accent black white gray`; `render.js` accepts the union plus `slate`. Recommend the implemented set (`…black white gray`) as truth — it ships — with the doc names (`dark/light/subtle`) and `slate` declared as aliases in the manifest, then removed in v5.
 
-**F-04 `rds()` is implemented twice** `[Debt]` `[S]` `[→ R-10]`
-Evidence: `ui/card/ui-card.css:53-69` vs `ui/card/media.css:81-95`.
-Identical value sets on `variant=` (card) and `media=` (standalone media), with parallel property pairs (`--ui-card-radius`/`--ui-media-radius`, `--ui-card-squircle-exp`/`--ui-media-squircle-exp`) and duplicated squircle plumbing. The standalone use case is real (per the 2026-06-22 design doc), but the *implementation* should be single-sourced: one token definition, two property targets, generated or at least colocated.
+**F-04 `rds()`'s multi-placement is by design — but the definition is transcribed twice, and `<ui-content>` lacks it** `[Debt]` `[S]` `[→ R-10]`
+Evidence: `ui/card/ui-card.css:53-69` vs `ui/card/media.css:81-95`; no `rds()` in `ui/card/content.css`.
+The two placements are deliberate, not duplication: on the card, `rds()` rounds the host and the host's `overflow: hidden` clips the inner areas (`ui-card.css:32-36`), so media/content corners follow their position within the arrangement — media gets the top corners in `col`, one side in `row`, and so on. `rds()` on `media=` serves the standalone frame (per the 2026-06-22 design doc). Keep both. The narrower findings: (a) the token's scale table is *transcribed* twice — parallel `--ui-card-*`/`--ui-media-*` rule blocks with duplicated squircle plumbing that must be kept in lock-step by hand; (b) asymmetry: a standalone `<ui-content>` has **no** corner token at all — only the `style="--ui-*"` escape hatch — so a preset emitting a bare content column cannot round it the way a bare media frame can.
 
 **F-05 Token homonyms** `[Debt]` `[M]` `[→ R-11]`
 `scl()` means *type scale* on `content=` but *scale animation* on reveal's `variant=` (`ui/card/ui-card-tokens.md:117`). `lgt`/`drk` mean five different things across arms: border shade (`variant="bdr(lgt)"`), scrim intensity (`scm(lgt)`), arrow theme (`arw(lgt)`), chip variant (`chip(lgt)`), and content tone (`tx(lgt)`). The vocabularies are technically disjoint per attribute, so nothing breaks — but a preset editor (and a human) must learn five meanings for one spelling. Rename reveal's `scl()` (content's has the larger usage surface); enumerate the `lgt`/`drk` contexts in the manifest either way.
@@ -293,7 +293,7 @@ Per element:
 **Role.** Viewport-breakpoint grid generated from `layouts/*.json` by `build.js`/`src/builder.js` (layered output, cascade-safe rule grouping, mobile-first unqueried base), plus the section wrapper whose intro header is a card-system `<ui-content>` — the cleanest demonstration that `content=`'s free inheritance was the right call. The `ui-content`-not-`header` choice (avoids a stray `banner` landmark) is documented and correct.
 
 **Local findings.**
-**F-34** `[Broken]` `[S]` `[→ R-04]` `layout/src/components/index.js:10` re-exports `LayOutConfigurator` from `./configurator/index.js` — wrong class name *and* wrong path (the directory is `composer/`, the class `LayoutComposer`). The documented entry `@browser.style/layout/components` (`package.json:27`) throws on import.
+**F-34** `[Polish]` `[S]` `[→ R-04]` `layout/src/components/composer/` is **legacy precursor-system code** — a schema-driven configurator (`model.json`, `model.proposal.md`) from the component generation that preceded `ui/card`; the docs already flag it as pre-v4 (`AGENTS.md:770-771`). The barrel export at `layout/src/components/index.js:10` (re-exporting a `LayOutConfigurator` from a nonexistent `./configurator/` path) is a symptom of that legacy status, not live debt — though it does mean the documented entry `@browser.style/layout/components` (`package.json:27`) currently throws, which also blocks importing the still-live `LayOut` srcset component from it. Treat as legacy: see R-04.
 **F-35** `[Contract-mismatch]` `[S]` Two config shapes share one name: `layout.config.json` uses `layoutContainer.maxWidth`, while `src/components/layout/index.js:41` and `src/srcsets.js:3` read a flat `maxLayoutWidth` shape (produced by `layouts-map.js:67-77`). Passing the wrong one silently yields `@1024` defaults. Rename one (e.g. `srcsetConfig`).
 **F-36** `[Debt]` `[S]` `[→ R-07]` `layout/index.html` is thoroughly stale: loads a non-existent `dist/content.min.css`, uses the removed `animation=` attribute, references layouts absent from every `layouts/*.json` (`bento(1lg:2sm-right)`, `stack(b-r)`, …). `dist/section.html`'s comments likewise lag its own markup. The composer is flagged pre-v4 by the docs themselves (`AGENTS.md:770-771`).
 **F-37** `[Debt]` `[S]` The builder appends the `body:has(lay-out)` container CSS **outside all layers** (`src/builder.js:488-527`) — already on record as Phase-6 debt in `docs/card-integration.md`; still outstanding.
@@ -320,8 +320,8 @@ Point `package.json` `main`/`exports["."].import` at `index.js`; delete `ui-medi
 ## R-03 — One `<ui-play>` contract `[Fix now]`
 Standardize on invoker commands: `render.js` emits `command="play-pause" commandfor="<video id>"`; `video.js` remains the only handler; `shared.js`'s `[open]`/`aria-pressed` reflection stays; the `ui-play-toggle` event contract dies with the monolith; `media.md:263` rewritten to the one shape. Presets then describe play buttons declaratively with confidence.
 
-## R-04 — Fix the layout components entry `[Fix now]`
-`layout/src/components/index.js`: re-export `LayoutComposer` from `./composer/index.js`. Also resolve F-35's config-shape collision while in the file's neighborhood.
+## R-04 — Mark the layout composer as legacy `[Design decision]`
+`layout/src/components/composer/` is precursor-system code (schema-driven, pre-`ui/card`) and should be ignored, not fixed. Minimal action: drop the stale `LayOutConfigurator` line from the barrel (`layout/src/components/index.js:10`) so `import { LayOut } from '@browser.style/layout/components'` works again for the still-live srcset component, and add a "legacy — superseded by ui/card" note to `src/components/README.md` (or move `composer/` to an archive folder). F-35's config-shape collision remains a small live item (it affects `src/components/layout` + `src/srcsets.js`, which are current).
 
 ## R-05 — `--_g` leak `[Fix now]`
 Declare the gap on `.ui-media-tools` (or read `--ui-media-overlay-gap` with one consistent fallback). Re-assert the convention in `AGENTS.md`: `--_*` vars are single-file.
@@ -338,8 +338,8 @@ Adopt logical `ts…be` everywhere. Concretely: `ovr()` accepts `ts…be` (its i
 ## R-09 — One hue palette `[Design decision]`
 Truth = implemented set `red orange green blue accent black white gray` (matches the `--ui-theme-*` bundles and the neutral ramp `white < gray < slate < black` used by `theme=`). `dark/light/subtle` and `slate` become declared aliases (manifest), removed v5. `render.js:200` then validates against the manifest instead of its own union set.
 
-## R-10 — `rds()` single owner; retire arg duals `[Design decision]`
-Keep both *placements* (card `variant=`, standalone media `media=` — the standalone case is a shipped design decision) but single-source the *definition*: one token block generating both property targets, or at minimum colocated rules with a shared comment contract; the squircle exponent map defined once. Retire `rds(none)`, `scm(sheer)`, `scm(solid)` long forms per F-06.
+## R-10 — Single-source the `rds()` definition; content-corner symmetry; retire arg duals `[Design decision]`
+The multi-placement model is by design and stays as-is: the card's `rds()` rounds the host and clips the inner areas through `overflow: hidden`, so media/content corners follow the arrangement's axis/order; `rds()` on `media=` serves the standalone frame. What should change: (a) single-source the *definition* — one scale table generating both the `--ui-card-*` and `--ui-media-*` rule blocks (a natural early consumer of the R-13 manifest), or at minimum colocated rules with a shared comment contract and the squircle exponent map defined once; (b) for symmetry, consider adding `rds()` to `content=` (same scale, writing `--ui-content-radius`) so a standalone `<ui-content>` — which presets can emit as a bare primitive — can round itself the way a standalone `<ui-media>` can; (c) retire the `rds(none)`, `scm(sheer)`, `scm(solid)` long forms per F-06.
 
 ## R-11 — Token homonyms and the marquee decision `[Design decision]`
 Rename reveal's `scl()` animation token (suggestion: `grw()` or `zom()`); content's `scl()` keeps the name. Fold `ply()` into the furniture-standard `play(<size>)` — position/hue/size args are already disjoint vocabularies, so the single stem parses unambiguously, and it removes the system's only two-stem element. Marquee: keep it off the 9-grid but *document* it as a band (new furniture-vs-band paragraph in `media.md`), give it exclusion-list and renderer citizenship, and de-collide its args (R-01).
@@ -381,8 +381,8 @@ Adopt in three steps (full analysis in §2):
 3. **v5:** migrate existing real-property tokens to inherited `--_*` flags + `@container style()` (the pattern reveal's `--_rvl` already proves), with boundary resets on `ui-card, ui-reveal` to preserve the stops-at-card contract, accepting the older-Firefox degradation as a v5 support-posture decision.
 
 ## R-15 — Sequencing
-1. **Stop the bleeding** (R-01…R-07): all S/M, no design input needed, immediately shippable.
-2. **Vocabulary unification** (R-08…R-12): needs the maintainer's calls; must land **before** the manifest freezes names.
+1. **Stop the bleeding** (R-01…R-03, R-05…R-07): all S/M, no design input needed, immediately shippable.
+2. **Vocabulary unification** (R-04, R-08…R-12): needs the maintainer's calls; must land **before** the manifest freezes names. (R-04 is just a legacy-marking note — zero urgency.)
 3. **Manifest + presets** (R-13, R-14): the manifest is the preset system's foundation — build it from the unified vocabulary, port `render.js` onto it, then the preset editor and generated docs follow.
 
 ---
