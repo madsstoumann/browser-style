@@ -19,8 +19,8 @@
  *     children replay via display flip + @starting-style on every [open].
  *  2. ui-media carousel (media="stagger" DSL; the ani()/crd() vocabulary arms
  *     live here per the carousel.css precedent — inert for other hosts). The
- *     scroll-state TRIGGER wiring (container-type + from-state) stays in
- *     ui/card/media.carousel.css: snap reveals are two-way, so they use a
+ *     scroll-state TRIGGER wiring (container-type + from-state, below in this
+ *     file) is two-way: snap reveals replay in both directions, so they use a
  *     container query from-state instead of @starting-style.
  *
  * SPECIFICITY — the effect-vocabulary setters and carousel arms are 0-0-0

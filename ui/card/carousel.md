@@ -373,9 +373,8 @@ shows. Off under `prefers-reduced-motion`.
 > `container-type: scroll-state` slide wiring, the `@container not scroll-state(snapped:
 > inline)` from-state and the per-child delay — is in **[`ui/base/stagger.css`](../base/stagger.css)**,
 > the host-agnostic engine `ui-tabs`, `ui-reveal` and `ui-accordion` share.
-> `media.carousel.css` contributes no stagger rules; a header comment there (and one in
-> `stagger.css` itself) still says the trigger wiring is split between the two, which is
-> stale. Engine reference: [stagger.md](./stagger.md).
+> `media.carousel.css` contributes no stagger rules. Engine reference:
+> [stagger.md](./stagger.md).
 
 **Reveal types** (shared by `ani()` and `crd()`): `rise` (from below, default) · `fall`
 (from above) · `lft` / `rgt` (from the inline-start / -end) · `zom` (scale up) · `blr`

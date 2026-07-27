@@ -1,6 +1,6 @@
 /* ui-media carousel — ui-media-specific scroller box, furniture exclusions, focus, ui-play
- * placement, band/rail reservation, stagger trigger wiring. Generic controls live in
- * /ui/base/carousel.css; stagger engine in /ui/base/stagger.css.
+ * placement, band/rail reservation. Generic controls live in /ui/base/carousel.css;
+ * stagger engine AND its carousel trigger wiring in /ui/base/stagger.css.
  * Internals: media.carousel.md · tokens: carousel.md
  *
  * DUAL ARM, ONE SELECTOR (R-14 step 1). Carousel tokens set REAL properties on the

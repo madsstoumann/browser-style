@@ -457,12 +457,10 @@ or focused. Requires `../play/index.js` loaded on the page.
 
 > **Not in this stylesheet.** Unlike every other section on this page, the stagger system
 > lives entirely in **[`ui/base/stagger.css`](../base/stagger.css)** — the host-agnostic
-> engine `ui-tabs`, `ui-reveal` and `ui-accordion` share. That includes the parts a header
-> comment here and in `stagger.css` still describe as "trigger wiring [that] stays in
-> `ui/card/media.carousel.css`": the `container-type: scroll-state` on each slide, the
-> `@container not scroll-state(snapped: inline)` from-state, the per-child
-> `transition-delay`, and the `ani()`/`crd()` vocabulary arms. `media.carousel.css` carries
-> **no** stagger rules at all. Both comments are stale; the section below is kept here
+> engine `ui-tabs`, `ui-reveal` and `ui-accordion` share: the `container-type:
+> scroll-state` on each slide, the `@container not scroll-state(snapped: inline)`
+> from-state, the per-child `transition-delay`, and the `ani()`/`crd()` vocabulary arms.
+> `media.carousel.css` carries **no** stagger rules at all. The section below is kept here
 > because `media="stagger"` is a carousel token, but the code to read is `stagger.css`
 > (overview: [stagger.md](./stagger.md)).
 
