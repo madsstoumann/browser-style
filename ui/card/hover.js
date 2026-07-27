@@ -6,37 +6,49 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 export function initHover(nodes) {
 	if (!nodes || !nodes.length) return;
 
-	// resolve matched nodes (frame or host card) to their <ui-media> frames, deduped
-	const frames = new Set();
+	// Listen on the element that CARRIES the token (the frame itself, or the host
+	// ui-card/ui-reveal), not on the <ui-media> alone: in an ovr() card the overlay
+	// <ui-content> is painted on top of the frame but is NOT inside it, so pointer
+	// events over the overlay never reach the frame and the effect stays dead.
+	// Coordinates are still normalised against the FRAME's box — that's the geometry
+	// the CSS animates against.
+	const hosts = new Map();
 	for (const el of nodes) {
-		if (el.matches('ui-media')) frames.add(el);
-		else for (const m of el.querySelectorAll('ui-media')) frames.add(m);
+		const frames = el.matches('ui-media') ? [el] : [...el.querySelectorAll('ui-media')];
+		if (frames.length) hosts.set(el, frames);
 	}
 
 	let raf = 0;
-	for (const media of frames) {
-		if (media.dataset.uiHover) continue;
-		media.dataset.uiHover = '1';
-		let rect = null;
+	for (const [host, frames] of hosts) {
+		if (host.dataset.uiHover) continue;
+		host.dataset.uiHover = '1';
+		let rects = null;
+		const measure = () => frames.map((f) => f.getBoundingClientRect());
 
-		media.addEventListener('pointerenter', () => { rect = media.getBoundingClientRect(); }, { passive: true });
+		host.addEventListener('pointerenter', () => { rects = measure(); }, { passive: true });
 
-		media.addEventListener('pointermove', (e) => {
+		host.addEventListener('pointermove', (e) => {
 			if (raf || reduce.matches) return;
 			raf = requestAnimationFrame(() => {
 				raf = 0;
-				rect ??= media.getBoundingClientRect();
-				const mx = Math.max(-1, Math.min(1, (e.clientX - rect.left) / rect.width * 2 - 1));
-				const my = Math.max(-1, Math.min(1, (e.clientY - rect.top) / rect.height * 2 - 1));
-				media.style.setProperty('--ui-media-mx', mx.toFixed(3));
-				media.style.setProperty('--ui-media-my', my.toFixed(3));
+				rects ??= measure();
+				frames.forEach((frame, i) => {
+					const rect = rects[i];
+					if (!rect?.width || !rect.height) return;
+					const mx = Math.max(-1, Math.min(1, (e.clientX - rect.left) / rect.width * 2 - 1));
+					const my = Math.max(-1, Math.min(1, (e.clientY - rect.top) / rect.height * 2 - 1));
+					frame.style.setProperty('--ui-media-mx', mx.toFixed(3));
+					frame.style.setProperty('--ui-media-my', my.toFixed(3));
+				});
 			});
 		}, { passive: true });
 
-		media.addEventListener('pointerleave', () => {
-			media.style.removeProperty('--ui-media-mx');
-			media.style.removeProperty('--ui-media-my');
-			rect = null;
+		host.addEventListener('pointerleave', () => {
+			for (const frame of frames) {
+				frame.style.removeProperty('--ui-media-mx');
+				frame.style.removeProperty('--ui-media-my');
+			}
+			rects = null;
 		}, { passive: true });
 	}
 }

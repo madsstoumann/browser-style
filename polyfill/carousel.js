@@ -23,10 +23,14 @@
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 
-// same entry points as the core NAV_SEL (top-level filtering happens in scan)
-const SEL = 'ui-media[media*="nav"], :is(ui-card[media*="nav"], ui-reveal[media*="nav"]) ui-media';
-// mirrors the core slide filter + our own injected element
-const NOT_SLIDE = /^(UI-CHIP|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS)$/;
+// same entry points as the core NAV_SEL (top-level filtering happens in scan).
+// Whole-token needles, mirroring carousel.js: a bare [media*="nav"] substring would
+// also fire on any future token that merely CONTAINS "nav".
+const NAV = ':is([media~="nav"], [media*="nav("])';
+const SEL = `ui-media${NAV}, :is(ui-card${NAV}, ui-reveal${NAV}) ui-media`;
+// mirrors the core slide filter (NOT_SLIDE in ui/card/shared.js) + our own injected
+// element — keep in sync with it and with the :not() list in media.carousel.css
+const NOT_SLIDE = /^(UI-BEACON|UI-CHIP|UI-MARQUEE|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS|LAY-OUT)$/;
 
 // the effective media string — own attr, else the ui-card/ui-reveal host
 // (media= inheritance stops at the card)
@@ -45,9 +49,13 @@ function wanted(scroller) {
 		else if (w === 'nav(arw)') arrows = true;
 		// nav(non) / nav(bar) ask for nothing
 	}
-	if (words.some(w => w.startsWith('mrk(non)'))) dots = false;
+	if (words.includes('mrk(non)')) dots = false;
 	return { dots, arrows };
 }
+
+// whole-token test — `loop` must never match marquee(loop) (mirrors hasToken in
+// ui/card/shared.js; kept local so this polyfill stays dependency-free)
+const hasToken = (str, name) => new RegExp(`(^|\\s)${name}(\\(|\\s|$)`).test(str);
 
 // real slides: direct children minus furniture, loop clones and our controls
 const slidesOf = (el) => [...el.children].filter(c => !NOT_SLIDE.test(c.tagName) && !c.hasAttribute('data-clone'));
@@ -80,7 +88,7 @@ function init(scroller) {
 
 	const m = mediaStr(scroller);
 	const axisY = m.includes('axis(y)');
-	const loop = /\bloop\b/.test(m);
+	const loop = hasToken(m, 'loop');
 	const rtl = !axisY && getComputedStyle(scroller).direction === 'rtl';
 	const slides = slidesOf(scroller);
 	const count = slides.length;
@@ -166,7 +174,7 @@ export function scan() {
 		// loop carousels get [data-clone] slides from the core's idle scan; wait
 		// for them (bounded) so the controls end up as FIRST child (sticky pins
 		// cleanly at the scroll start) and clones are excluded from the dot count
-		const needsClones = /\bloop\b/.test(mediaStr(scroller)) && !scroller.querySelector(':scope > [data-clone]');
+		const needsClones = hasToken(mediaStr(scroller), 'loop') && !scroller.querySelector(':scope > [data-clone]');
 		if (needsClones && retries < 5) { deferred.push(scroller); continue; }
 		init(scroller);
 	}

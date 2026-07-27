@@ -85,9 +85,12 @@
 		&[theme~="black"],  :where([media*="save(black)"])  & { --ui-save-c: var(--ui-theme-black-bg);  --ui-save-c-active: var(--ui-theme-black-bg); }
 		&[theme~="white"],  :where([media*="save(white)"])  & { --ui-save-c: var(--ui-theme-white-bg);  --ui-save-c-active: var(--ui-theme-white-bg); }
 		&[theme~="gray"],   :where([media*="save(gray)"])   & { --ui-save-c: var(--ui-theme-gray-bg);   --ui-save-c-active: var(--ui-theme-gray-bg); }
+		&[theme~="slate"],  :where([media*="save(slate)"])  & { --ui-save-c: var(--ui-theme-slate-bg);  --ui-save-c-active: var(--ui-theme-slate-bg); } /* deprecated alias — remove in v5 */
 		/* HUE TRUTH SET: red orange green blue accent black white gray. The doc-era
-		   spellings below stay as working aliases of it. media= arg only — they are
-		   not theme= values (base/theme.css has no dark/light/subtle hue). */
+		   spellings below and the extra slate key above stay as working aliases of it
+		   (this is the media= furniture arg vocabulary only — theme="slate" on the
+		   element itself remains a first-class theme in base/theme.css). dark/light/
+		   subtle are media= args only; base/theme.css has no such hue. */
 		:where([media*="save(dark)"])   & { --ui-save-c: var(--ui-theme-black-bg);  --ui-save-c-active: var(--ui-theme-black-bg); } /* deprecated alias — remove in v5 */
 		:where([media*="save(light)"])  & { --ui-save-c: var(--ui-theme-white-bg);  --ui-save-c-active: var(--ui-theme-white-bg); } /* deprecated alias — remove in v5 */
 		:where([media*="save(subtle)"]) & { --ui-save-c: var(--ui-theme-gray-bg);   --ui-save-c-active: var(--ui-theme-gray-bg); }  /* deprecated alias — remove in v5 */

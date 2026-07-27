@@ -15,7 +15,10 @@
  *     glyphs are swapped too, for backward compatibility.
  *
  * With NO `commandfor`, it emits a bubbling/composed `ui-play-toggle {playing}` event
- * instead — the loose contract the carousel (ui-media.js) auto-discovery relies on.
+ * instead. Note the card system does NOT consume that event: ui/card's carousel.js /
+ * shared.js bind the inner <button>'s click directly and mirror state through
+ * `aria-pressed` + the host's [open] attribute, so <ui-play> works there with or
+ * without this module loaded.
  *
  * `for="<video-id>"` remains a built-in shorthand that drives a <video> directly and
  * mirrors its real playback state. No Shadow DOM.

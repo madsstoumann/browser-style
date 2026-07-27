@@ -528,7 +528,7 @@
 	   Just re-flip the dispatch flag on <details> — the ONE grw geometry block
 	   above applies; nothing is duplicated. Same 0-0-1 specificity as the base
 	   setters, later in the file, so it wins by source order. === */
-	@container (inline-size >= 44rem) {
+	@container bs-card (inline-size >= 44rem) {
 		:where(ui-reveal:is(
 			[variant~="lg:grw"], [variant~="lg:grw(ts)"], [variant~="lg:grw(te)"], [variant~="lg:grw(bs)"], [variant~="lg:grw(be)"],
 			[variant~="lg:scl"], [variant~="lg:scl(ts)"], [variant~="lg:scl(te)"], [variant~="lg:scl(bs)"], [variant~="lg:scl(be)"] /* deprecated alias — remove in v5 */
