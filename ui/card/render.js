@@ -200,8 +200,13 @@ const embedVideoObject = (item) => {
    order — mergeMediaTokens strips the preset's same-axis token so the override
    always wins). */
 
-/* the furniture stems (chip/sticker/save/play/beacon) + their deprecated spellings */
-const FURNITURE = Object.entries(TOKENS.attributes.media.tokens).filter(([, entry]) => entry.axis === 'furniture');
+/* The overlay stems the renderer emits: the five FURNITURE elements (chip/sticker/
+   save/play/beacon) + their deprecated spellings, plus the marquee BAND. The band is
+   a different manifest axis on purpose (full-width strip, `top`/`bot` instead of the
+   9-grid) but it has the exact same merge problem — CSS resolves media= by source
+   order, not token order — so it joins the same override table. */
+const FURNITURE = Object.entries(TOKENS.attributes.media.tokens)
+	.filter(([, entry]) => entry.axis === 'furniture' || entry.axis === 'band');
 const FURNITURE_TOKEN = new RegExp(`^(${FURNITURE.filter(([, entry]) => !entry.deprecated).map(([stem]) => stem).join('|')})\\(([^)]*)\\)$`);
 /* deprecated stem → canonical: ply(<size>) is the legacy spelling of play()'s sizes,
    accepted as input and normalized away so <ui-play> has one stem for both its axes. */
@@ -217,7 +222,10 @@ const normToken = (token) => {
    (`pos` = the 9-grid · `hue` = the 8-key palette + its accepted aliases · `size` — xs is
    beacon-only, play() sizes live here too · `anim`/`face` are beacon's, `disc` the shared
    radius vocabulary: beacon(non) turns solid's default blink off and stays in `disc` ·
-   `mode` = the pale/muted plate tones · `flag` = sticker(fit)'s text-fit typesetting.) */
+   `mode` = the pale/muted plate tones + the marquee's rpt/seam/fade play modes ·
+   `flag` = sticker(fit)'s text-fit typesetting. The marquee's `value` class —
+   direction/speed/gap — is deliberately NOT here: those compose rather than
+   displace, so each one falls through to exact-match replacement.) */
 const MERGE_CLASSES = ['pos', 'hue', 'size', 'variant', 'shape', 'anim', 'face', 'disc', 'mode', 'flag'];
 const FURNITURE_AXIS = Object.fromEntries(MERGE_CLASSES.map((cls) => [cls, new Set()]));
 for (const [, entry] of FURNITURE) {
@@ -289,6 +297,18 @@ const iconTokens = (fn, words) => {
 const styleTokens = (el, style) =>
 	String(style || '').split(/\s+/).filter(Boolean).map((token) => `${el}(${token})`);
 
+/* Every word marquee() accepts, straight from the manifest (args + argAliases,
+   placeholders skipped). The band is validated where the point furniture is not,
+   because its position vocabulary is only `top`/`bot` — an author reaching for a
+   furniture corner (`marquee(te)`) would otherwise emit a token no rule matches
+   and get the silent default. Unknown words are dropped, never emitted. */
+const MARQUEE_ARGS = new Set([
+	...Object.values(TOKENS.attributes.media.tokens.marquee.args).flat().filter((value) => !value.includes('<')),
+	...Object.keys(TOKENS.attributes.media.tokens.marquee.argAliases)
+]);
+const marqueeStyle = (style) =>
+	String(style || '').split(/\s+/).filter((word) => MARQUEE_ARGS.has(word)).join(' ');
+
 /* Build the overlay furniture markup from the unified furniture object and push
    each item's style-override tokens onto tokens.media (positioning/hue/shape come
    from the preset — the renderer no longer generates those). save/play also
@@ -298,6 +318,17 @@ const buildFurniture = (furniture, fields, tokens, mediaId, videoId = null) => {
 	let html = '';
 	const push = (el, style) => { for (const token of styleTokens(el, style)) tokens.media.push(token); };
 
+	if (furniture.marquee?.label) {
+		/* A BAND, not 9-grid furniture: it spans the frame's full inline size and
+		   takes no position cell — `top` (default) and `bot` are its only placement
+		   words, and it rides at z-index 1, BELOW the z-2 point furniture. Text goes
+		   on aria-label, which is both the accessible name and the rendered string:
+		   ui-marquee.css fills ::before (and ::after for the rpt mode) while the
+		   element is :empty, so the band needs no child markup at all. */
+		const marquee = furniture.marquee;
+		html += `<ui-marquee aria-label="${esc(marquee.label)}"></ui-marquee>`;
+		push('marquee', marqueeStyle(marquee.style));
+	}
 	if (furniture.play) {
 		/* invoker commands are the one <ui-play> contract (video.js handles them).
 		   With no native <video> to target it stays a labelled affordance. */

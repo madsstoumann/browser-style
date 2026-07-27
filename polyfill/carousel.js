@@ -29,7 +29,10 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 const NAV = ':is([media~="nav"], [media*="nav("])';
 const SEL = `ui-media${NAV}, :is(ui-card${NAV}, ui-reveal${NAV}) ui-media`;
 // mirrors the core slide filter (NOT_SLIDE in ui/card/shared.js) + our own injected
-// element — keep in sync with it and with the :not() list in media.carousel.css
+// element. Kept LOCAL on purpose: this polyfill imports nothing, so it can be loaded
+// standalone behind a @supports gate. The copy is safe because drift is a build
+// error — ui/card/tokens.lint.js parses this literal and requires it to equal
+// shared.js's exactly (and the :not() list in media.carousel.css to be a subset).
 const NOT_SLIDE = /^(UI-BEACON|UI-CHIP|UI-MARQUEE|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS|LAY-OUT)$/;
 
 // the effective media string — own attr, else the ui-card/ui-reveal host

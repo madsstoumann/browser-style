@@ -4,6 +4,7 @@
  *   2. every [media*=…]/[content~=…]/… needle in the CSS resolves to a manifest token
  *   3. data/tokens.data.js is in sync with data/tokens.json, aliases resolve,
  *      deprecated entries name a canonical that exists
+ *   4. the slide-exclusion list is the same list everywhere it is transcribed (R-01)
  * Run: node tokens.lint.js  (or npm run lint:tokens) */
 
 import { readFileSync } from 'node:fs';
@@ -53,6 +54,46 @@ const spellings = (name, entry) => {
 };
 
 const flatten = (group) => Object.entries({ ...group.tokens, ...group.bareFlags });
+
+/* ── slide-exclusion sync (R-01) ──
+   "Which direct children of a scroller are NOT slides" is transcribed in three
+   places by design, and the design call is that they stay transcribed:
+   /polyfill/carousel.js keeps a LOCAL mirror so the polyfill has zero imports
+   from /ui/card/ (it must be loadable on its own, from a CDN, behind a
+   `@supports` gate). A deliberate copy is only safe if drift is a build error —
+   hence this check. The documented contract:
+     • polyfill/carousel.js NOT_SLIDE  ==  ui/card/shared.js NOT_SLIDE   (exact)
+     • media.carousel.css `> :not(…)`  ⊆   shared.js NOT_SLIDE           (subset)
+   The CSS list is a subset, not an equal: <ui-carousel-controls> is injected by
+   the polyfill (the native path has no such element) and <lay-out> is a JS-only
+   wrapper exclusion, so neither needs the flex/snap reset the CSS rule applies. */
+const SLIDE_LISTS = {
+	'ui/card/shared.js': [/NOT_SLIDE\s*=\s*\/\^\(([^)]*)\)\$\//, (body) => body.split('|')],
+	'polyfill/carousel.js': [/NOT_SLIDE\s*=\s*\/\^\(([^)]*)\)\$\//, (body) => body.split('|')],
+	/* the slide rule: `ui-media…> :not(<tags>)` — anchored on ui-media so an
+	   unrelated `> :not()` elsewhere in the sheet can never be read as the list */
+	'ui/card/media.carousel.css': [/ui-media[^{;]*>\s*:not\(([^)]*)\)/, (body) => body.split(',').map((tag) => tag.trim().toUpperCase())]
+};
+
+const slideList = (file, errors) => {
+	const [pattern, split] = SLIDE_LISTS[file];
+	const match = pattern.exec(readFileSync(root + file, 'utf8'));
+	if (!match) { errors.push(`${file}: no slide-exclusion list found — the sync check cannot run`); return null; }
+	return new Set(split(match[1]).map((tag) => tag.trim()).filter(Boolean));
+};
+
+const lintSlideLists = (errors) => {
+	const shared = slideList('ui/card/shared.js', errors);
+	const polyfill = slideList('polyfill/carousel.js', errors);
+	const css = slideList('ui/card/media.carousel.css', errors);
+	if (!shared || !polyfill || !css) return;
+	const diff = (a, b) => [...a].filter((tag) => !b.has(tag)).sort();
+	/* polyfill == shared: an exact mirror, so name BOTH directions of any drift */
+	for (const tag of diff(polyfill, shared)) errors.push(`polyfill/carousel.js: NOT_SLIDE has ${tag}, missing from ui/card/shared.js — the mirror has drifted`);
+	for (const tag of diff(shared, polyfill)) errors.push(`ui/card/shared.js: NOT_SLIDE has ${tag}, missing from polyfill/carousel.js — the mirror has drifted`);
+	/* CSS ⊆ shared: extra CSS entries are the drift; missing ones are allowed */
+	for (const tag of diff(css, shared)) errors.push(`ui/card/media.carousel.css: :not() excludes ${tag}, which is not in ui/card/shared.js NOT_SLIDE`);
+};
 
 export const lintTokens = () => {
 	const manifest = readManifest();
@@ -111,6 +152,9 @@ export const lintTokens = () => {
 			}
 		});
 	}
+
+	/* ── 4. slide-exclusion list sync ── */
+	lintSlideLists(errors);
 
 	return errors;
 };

@@ -84,8 +84,23 @@
 	   against a surface page. Separate from theme= border() (needs a colour
 	   theme + transparent-izes the fill). Author knobs: --ui-card-border-color
 	   / -width / -style. Substring match so bdr(md) alone also enables it.
+
+	   TWO ARMS, one hairline. On a card the host box IS the visible surface, so
+	   the border paints there. On a <ui-reveal> the host is a bare block and the
+	   rounded, shadowed, overflow-clipped surface is `> details` (ui-reveal.css) —
+	   painting on the host would draw a SQUARE outline around a rounded card. So
+	   the reveal arm moves the border one level in, where it inherits the same
+	   --ui-card-border-* knobs (custom properties, still declared on the host by
+	   the bdr(<size>)/bdr(<shade>) rules below) and picks up the details radius,
+	   which is already var(--ui-card-radius, …) — so rds() keeps working.
+	   The card arm keeps its exact original selector and (0,0,0); the reveal arm
+	   is (0,0,1) because it names a child element, matching every other
+	   `> details` rule in ui-reveal.css.
 	   ============================================================ */
-	:where([variant*="bdr"]) {
+	:where([variant*="bdr"]:not(ui-reveal)) {
+		border: var(--ui-card-border-width, var(--border-width, 1px)) var(--ui-card-border-style, solid) var(--ui-card-border-color, var(--color-border));
+	}
+	:where(ui-reveal[variant*="bdr"]) > details {
 		border: var(--ui-card-border-width, var(--border-width, 1px)) var(--ui-card-border-style, solid) var(--ui-card-border-color, var(--color-border));
 	}
 	:where([variant~="bdr(sm)"]) { --ui-card-border-width: var(--border-width); }

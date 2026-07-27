@@ -28,14 +28,22 @@
  * non-type responsive tokens) and why the hl() block sits after all scl forms.
  *
  * Size tokens are DUAL-DECLARED — on the token host AND on the host's OWN
- * queryable descendant (ui-card[content] > cq-box / ui-reveal[content] >
- * details > summary, both kept at (0,0,1) via :where()). var() substitution
- * happens where a custom property is declared; the descendant declaration is
- * what lets a responsive md:/lg:scl() ladder remap on cq-box re-resolve a size
- * declared on the host. It is deliberately scoped to the host's own box — NOT
- * the broad `:is(cq-box, summary)` the md:/lg: rules use — so a size token on
- * an outer group can't reach into nested cards and beat their nearer scl()/
- * size declarations (nearest-host-wins nesting, as in v4 before this layer).
+ * queryable descendant (ui-card[content] > cq-box / lay-out-group[content] >
+ * cq-box / ui-reveal[content] > details > summary, all kept at (0,0,1) via
+ * :where()). var() substitution happens where a custom property is declared;
+ * the descendant declaration is what lets a responsive md:/lg:scl() ladder
+ * remap on cq-box re-resolve a size declared on the host. It is deliberately
+ * scoped to the host's own box via `>` — NOT the broad `:is(cq-box, summary)`
+ * the md:/lg: rules use — so a size token on an outer group can't reach into
+ * nested cards and beat their nearer scl()/size declarations (nearest-host-wins
+ * nesting, as in v4 before this layer).
+ *
+ * The lay-out-group arm exists because a group is a bs-card container too
+ * (R-16, layout/core/group.css) and takes the same content= tokens on the
+ * attribute-on-group authoring shape (<lay-out-group content> > <cq-box>).
+ * Without it, a group header's md:/lg:scl() ladder remapped on the cq-box while
+ * its hl()/eb()/tx()/mt() size stayed resolved against the base ladder on the
+ * host — the header size simply never moved with the responsive step.
  */
 @layer bs-component {
 
@@ -380,15 +388,19 @@
 	/* eb(<size>) — writes the eyebrow part's existing fs hook (× its 0.78 factor) */
 	:where([content~="eb(sm)"]),
 	:where(ui-card[content~="eb(sm)"]) > cq-box,
+	:where(lay-out-group[content~="eb(sm)"]) > cq-box,
 	:where(ui-reveal[content~="eb(sm)"] > details) > summary { --ui-content-eyebrow-fs: calc(var(--ui-content-tx-sm, var(--ui-content-fs-sm)) * 0.78); }
 	:where([content~="eb(md)"]),
 	:where(ui-card[content~="eb(md)"]) > cq-box,
+	:where(lay-out-group[content~="eb(md)"]) > cq-box,
 	:where(ui-reveal[content~="eb(md)"] > details) > summary { --ui-content-eyebrow-fs: calc(var(--ui-content-tx-md, var(--ui-content-fs-md)) * 0.78); }
 	:where([content~="eb(lg)"]),
 	:where(ui-card[content~="eb(lg)"]) > cq-box,
+	:where(lay-out-group[content~="eb(lg)"]) > cq-box,
 	:where(ui-reveal[content~="eb(lg)"] > details) > summary { --ui-content-eyebrow-fs: calc(var(--ui-content-tx-lg, var(--ui-content-fs-lg)) * 0.78); }
 	:where([content~="eb(xl)"]),
 	:where(ui-card[content~="eb(xl)"]) > cq-box,
+	:where(lay-out-group[content~="eb(xl)"]) > cq-box,
 	:where(ui-reveal[content~="eb(xl)"] > details) > summary { --ui-content-eyebrow-fs: calc(var(--ui-content-tx-xl, var(--ui-content-fs-xl)) * 0.78); }
 
 	/* tx() — body group: tone / weight / size */
@@ -411,15 +423,19 @@
 	   (price/stat/quote/…) read --ui-content-body-fs before --ui-content-fs */
 	:where([content~="tx(sm)"]),
 	:where(ui-card[content~="tx(sm)"]) > cq-box,
+	:where(lay-out-group[content~="tx(sm)"]) > cq-box,
 	:where(ui-reveal[content~="tx(sm)"] > details) > summary { --ui-content-body-fs: var(--ui-content-tx-sm, var(--ui-content-fs-sm)); }
 	:where([content~="tx(md)"]),
 	:where(ui-card[content~="tx(md)"]) > cq-box,
+	:where(lay-out-group[content~="tx(md)"]) > cq-box,
 	:where(ui-reveal[content~="tx(md)"] > details) > summary { --ui-content-body-fs: var(--ui-content-tx-md, var(--ui-content-fs-md)); }
 	:where([content~="tx(lg)"]),
 	:where(ui-card[content~="tx(lg)"]) > cq-box,
+	:where(lay-out-group[content~="tx(lg)"]) > cq-box,
 	:where(ui-reveal[content~="tx(lg)"] > details) > summary { --ui-content-body-fs: var(--ui-content-tx-lg, var(--ui-content-fs-lg)); }
 	:where([content~="tx(xl)"]),
 	:where(ui-card[content~="tx(xl)"]) > cq-box,
+	:where(lay-out-group[content~="tx(xl)"]) > cq-box,
 	:where(ui-reveal[content~="tx(xl)"] > details) > summary { --ui-content-body-fs: var(--ui-content-tx-xl, var(--ui-content-fs-xl)); }
 
 	/* mt() — meta group: tone / weight / size */
@@ -443,15 +459,19 @@
 	   part's literal font-size hook) */
 	:where([content~="mt(sm)"]),
 	:where(ui-card[content~="mt(sm)"]) > cq-box,
+	:where(lay-out-group[content~="mt(sm)"]) > cq-box,
 	:where(ui-reveal[content~="mt(sm)"] > details) > summary { --ui-content-meta-base: var(--ui-content-tx-sm, var(--ui-content-fs-sm)); }
 	:where([content~="mt(md)"]),
 	:where(ui-card[content~="mt(md)"]) > cq-box,
+	:where(lay-out-group[content~="mt(md)"]) > cq-box,
 	:where(ui-reveal[content~="mt(md)"] > details) > summary { --ui-content-meta-base: var(--ui-content-tx-md, var(--ui-content-fs-md)); }
 	:where([content~="mt(lg)"]),
 	:where(ui-card[content~="mt(lg)"]) > cq-box,
+	:where(lay-out-group[content~="mt(lg)"]) > cq-box,
 	:where(ui-reveal[content~="mt(lg)"] > details) > summary { --ui-content-meta-base: var(--ui-content-tx-lg, var(--ui-content-fs-lg)); }
 	:where([content~="mt(xl)"]),
 	:where(ui-card[content~="mt(xl)"]) > cq-box,
+	:where(lay-out-group[content~="mt(xl)"]) > cq-box,
 	:where(ui-reveal[content~="mt(xl)"] > details) > summary { --ui-content-meta-base: var(--ui-content-tx-xl, var(--ui-content-fs-xl)); }
 
 	/* hl() — headings group: tone / weight, then SIZE (headline only), then grad
@@ -476,21 +496,27 @@
 	:where([content~="hl(900)"])    { --ui-content-heading-weight: var(--font-weight-black); }
 	:where([content~="hl(sm)"]),
 	:where(ui-card[content~="hl(sm)"]) > cq-box,
+	:where(lay-out-group[content~="hl(sm)"]) > cq-box,
 	:where(ui-reveal[content~="hl(sm)"] > details) > summary  { --ui-content-headline: var(--ui-content-hl-sm, var(--ui-content-headline-sm)); }
 	:where([content~="hl(md)"]),
 	:where(ui-card[content~="hl(md)"]) > cq-box,
+	:where(lay-out-group[content~="hl(md)"]) > cq-box,
 	:where(ui-reveal[content~="hl(md)"] > details) > summary  { --ui-content-headline: var(--ui-content-hl-md, var(--ui-content-headline-md)); }
 	:where([content~="hl(lg)"]),
 	:where(ui-card[content~="hl(lg)"]) > cq-box,
+	:where(lay-out-group[content~="hl(lg)"]) > cq-box,
 	:where(ui-reveal[content~="hl(lg)"] > details) > summary  { --ui-content-headline: var(--ui-content-hl-lg, var(--ui-content-headline-lg)); }
 	:where([content~="hl(xl)"]),
 	:where(ui-card[content~="hl(xl)"]) > cq-box,
+	:where(lay-out-group[content~="hl(xl)"]) > cq-box,
 	:where(ui-reveal[content~="hl(xl)"] > details) > summary  { --ui-content-headline: var(--ui-content-hl-xl, var(--ui-content-headline-xl)); }
 	:where([content~="hl(2xl)"]),
 	:where(ui-card[content~="hl(2xl)"]) > cq-box,
+	:where(lay-out-group[content~="hl(2xl)"]) > cq-box,
 	:where(ui-reveal[content~="hl(2xl)"] > details) > summary { --ui-content-headline: var(--ui-content-hl-2xl, var(--ui-content-headline-2xl)); }
 	:where([content~="hl(3xl)"]),
 	:where(ui-card[content~="hl(3xl)"]) > cq-box,
+	:where(lay-out-group[content~="hl(3xl)"]) > cq-box,
 	:where(ui-reveal[content~="hl(3xl)"] > details) > summary { --ui-content-headline: var(--ui-content-hl-3xl, var(--ui-content-headline-3xl)); }
 	:where([content~="hl(shd)"])    { --ui-content-heading-text-shadow: var(--ui-content-text-shadow); }
 	/* hl(<font>) — heading font override (serif headline + sans body, etc). Disjoint
