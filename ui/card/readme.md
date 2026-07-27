@@ -160,17 +160,47 @@ A card is configured by three independent token strings. `media=` / `content=` m
 
 Configures `<ui-media>`: aspect-ratio, fit/position, hover, scrim, carousel, and overlay furniture. Set it on the card or on `<ui-media>`.
 
-| Token | Args | Controls |
-|-------|------|----------|
-| `asr()` | `1/1 6/7 3/4 4/3 3/2 2/3 16/9 21/9` | aspect-ratio |
-| `obf()` | `cover contain fill none` | object-fit |
-| `obp()` | `tl tc tr · cl cc cr · bl bc br` | object-position (9-grid) |
-| `flp()` | `h v hv` | mirror the image |
-| `hov()` | `zoom pan track` | hover effect (image-only) |
-| `rds()` | `sm md lg xl 2xl full pill` + `*-sq` | corners on a **standalone** `<ui-media>` (inside a card the card owns the radius) |
-| `scm` / `scm()` | *(bare)* · pos `ts … be` · size `sm md lg xl` · intensity `sheer lgt med drk solid` | scrim — bare matches the host `ovr()`; direction picks a corner (furniture grid), size sets the extent, intensity sets darkness |
-| `nav` / `nav()` | *(bare)* · `dot arw blw abv` | carousel — the token **is** the trigger; bare = markers + arrows. All carousel controls (`arw()`, `mrk()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()`) are `media=` tokens — see [carousel.md](carousel.md) |
-| `chip()` `sticker()` `save()` `play()` | position `ts … be` **or** hue `red orange green blue accent dark light subtle` | place + theme an overlay element |
+| Token | Controls |
+|-------|----------|
+| `asr()` | aspect-ratio — the **only** `media=` token that takes `md:`/`lg:` prefixes |
+| `obf()` | object-fit |
+| `obp()` | object-position (9-grid) — logical `ts…be` **and** physical `tl…br`, both current |
+| `flp()` | mirror the image |
+| `hov()` | hover effect (image-only) — 17 values; only `track`/`drift`/`tilt` need JS |
+| `rds()` | corners on a **standalone** `<ui-media>` (inside a card the card owns the radius) |
+| `scm` / `scm()` | scrim — bare matches the host `ovr()`; direction picks a corner (furniture grid), size sets the extent, tone sets darkness. Three composable tokens, e.g. `scm(bc) scm(lg) scm(drk)` |
+| `nav` / `nav()` | carousel — the token **is** the trigger; bare = markers + arrows. All carousel controls (`arw()`, `mrk()`, `tmb()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()`) are `media=` tokens — see [carousel.md](carousel.md) |
+| `chip()` `sticker()` `save()` `play()` | place + theme an overlay element — one atomic token per axis (`chip(te) chip(black)`, never `chip(te black)`) |
+
+Argument vocabularies, **generated from `data/tokens.json`** so they can't drift from the CSS:
+
+<!-- tokens:args attr=media stems=asr,obf,obp,flp,hov,rds,scm,nav -->
+| token | arg class | values | aliases |
+|---|---|---|---|
+| `asr()` | **ratio** | 1/1 1/2 6/7 3/4 4/3 3/2 2/3 16/9 21/9 | — |
+| `obf()` | **mode** | cover contain fill none | — |
+| `obp()` | **pos** | ts tc te cs cc ce bs bc be tl tr cl cr bl br | — |
+| `flp()` | **mode** | h v hv | — |
+| `hov()` | **mode** | zoom pan track drift tilt tilt-out tilt-in rot-r rot-l shape shape-rev gray blur bright sat dim tint | — |
+| `rds()` | **size** | non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | none→non |
+| `scm()` | **pos** | ts tc te cs cc ce bs bc be | — |
+| `scm()` | **size** | sm md lg xl | — |
+| `scm()` | **tone** | shr lgt med drk sld | sheer→shr solid→sld |
+| `nav()` | **mode** | mrk arw blw abv | — |
+<!-- /tokens -->
+
+Overlay furniture — position, hue and each element's own axes:
+
+<!-- tokens:matrix attr=media stems=chip,sticker,save,play classes=pos,hue,mode,size,disc -->
+| token | pos | hue | mode | size | disc | deprecated aliases |
+|---|---|---|---|---|---|---|
+| `chip()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | pale muted | sm lg xl 2xl | non rnd pll crc sqr | dark→black light→white subtle→gray slate→gray |
+| `sticker()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | pale muted | sm lg xl 2xl 3xl | non rnd pll crc sqr | dark→black light→white subtle→gray slate→gray |
+| `save()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | — | sm lg xl | non rnd crc sqr | dark→black light→white subtle→gray slate→gray |
+| `play()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | — | sm md lg xl | non rnd pll crc sqr | dark→black light→white subtle→gray slate→gray |
+<!-- /tokens -->
+
+`<ui-beacon>` and `<ui-marquee>` take the same shape with extra axes of their own — full matrix in [media.md](media.md).
 
 ```html
 <ui-card variant="col" media="asr(4/3) obp(cc) hov(zoom) chip(be) chip(green)"> … </ui-card>
@@ -218,9 +248,9 @@ Composes the two primitives — arrangement, split, visibility, overlay, theme, 
 | `spl()` | `1/1 1/2 2/1 1/3 3/1` — column ratio for `row` / `row-r` |
 | `vis(media)` | show only the media (hide content) |
 | `vis(content)` | show only the content (hide media) |
-| `ovr()` | `tl … br` — stack content over media at one of 9 positions; sets the matching default scrim direction |
+| `ovr()` | `ts tc te · cs cc ce · bs bc be` — stack content over media at one of 9 **logical** positions; sets the matching default scrim direction. (The six physical spellings `tl tr cl cr bl br` are deprecated aliases; `tc`/`cc`/`bc` are spelled the same in both grids.) |
 | `theme=` | shared theme axis: a colour (`red … black`) + `pale`/`muted`/`light`/`dark` modifiers. Surface + ink; ink crosses into the content namespace. See [theme.md](../base/theme.md). (Replaces the old `variant="thm(…)"` spelling, removed in v4) |
-| `rds()` | `none sm md lg xl 2xl full pill` (round) · `sm-sq md-sq lg-sq xl-sq` (squircle, `corner-shape: superellipse()`) — corner radius |
+| `rds()` | `non sm md lg xl 2xl full pill` (round) · `sm-sq md-sq lg-sq xl-sq` (squircle, `corner-shape: superellipse()`) — corner radius. `rds(none)` is a deprecated alias of `rds(non)` |
 
 ```html
 <ui-card variant="row spl(1/2) rds(lg)" theme="gray" media="asr(4/3)" content="scl(lg) pad(lg)"> … </ui-card>

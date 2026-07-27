@@ -13,7 +13,10 @@ a `media=` token string — the only configuration surface (see
 </ui-media>
 ```
 
-- **Children**: any number of `<img>` / `<video>`. Each becomes a full-bleed slide.
+- **Children**: any number of `<img>` / `<video>` / `<picture>` / nested `<ui-media>`, or a
+  `<ui-slide>` / `<div>` wrapper around a group. Each becomes a full-bleed slide. Overlay
+  furniture, `<ui-marquee>` and `<lay-out>` are **not** slides — see
+  [group wrappers](#multiple-items-per-slide--group-wrappers).
 - **The `nav` token is the trigger** — without a `nav*` token `<ui-media>` is a
   plain single image, not a scroller.
 - Requires `ui-card.css` loaded (it `@import`s `media.css` + `media.carousel.css`).
@@ -63,6 +66,30 @@ only**, gated by `@supports (scroll-marker-group: after)`. Everywhere else it
 
 ## Token reference
 
+Every carousel token, its full argument vocabulary, the `--ui-carousel-*` / `--ui-media-*`
+properties it writes, and the elements it may sit on are **generated from
+`data/tokens.json`** — the manifest `render.js` and `tokens.lint.js` read, so this
+inventory cannot drift from the CSS. The prose tables under it explain what the values
+*do*; this one is the complete list.
+
+<!-- tokens:summary attr=media stems=nav,arw,mrk,tmb,axis,auto,ani,crd,load,clip,loop,stagger,pages -->
+| token | axis | args | aliases | bare | writes | md:/lg: | deprecated |
+|---|---|---|---|---|---|---|---|
+| `nav()` | carousel | **mode** mrk arw blw abv | — | yes | --ui-media-bg --ui-carousel-* | — | — |
+| `arw()` | arrows | **variant** arr bare sqr sft lgt drk hid rev set · **size** sm lg xl · **pos** ts tc te cs cc bs bc be · **mode** blw abv | — | — | --ui-carousel-arrow-glyph --ui-carousel-arrow-size --ui-carousel-arrow-radius --ui-carousel-arrow-bg --ui-carousel-arrow-bg-hover --ui-carousel-arrow-color --ui-carousel-arrow-color-hover --ui-carousel-arrow-shadow --ui-carousel-arrow-hover-ring --ui-carousel-arrow-nudge --ui-carousel-arrow-disabled-opacity --ui-carousel-arrow-top --_arw-rot --_arw-scale | — | — |
+| `mrk()` | markers | **variant** pll hyb bar tmb rail non lgt drk sbr lbl · **size** sm md lg xl · **pos** ts tc te cs cc ce bs bc be · **mode** blw abv | — | — | --ui-carousel-marker-size --ui-carousel-marker-bg --ui-carousel-marker-active --ui-carousel-marker-inset --ui-carousel-pill-width --ui-carousel-pill-height --ui-carousel-pill-track --ui-carousel-pill-fill --ui-carousel-thumb-size --ui-carousel-bar-* --ui-carousel-band --ui-carousel-rail --ui-carousel-sbr-* --ui-carousel-label-* | — | — |
+| `tmb()` | thumbs | **ratio** 1/1 4/3 3/4 16/9 3/2 2/3 | — | — | --ui-carousel-thumb-ratio --ui-carousel-thumb-ratio-n | — | — |
+| `axis()` | carousel | **value** y | — | — | — | — | — |
+| `auto()` | carousel | **value** &lt;n&gt; &lt;n&gt;s &lt;n&gt;ms | — | yes | --ui-carousel-autoplay --ui-carousel-play-state --ui-carousel-thumb-timer-name --_play-block --_play-inline --_play-justify --_play-size | — | — |
+| `ani()` | carousel | **anim** rise fall lft rgt zom blr fde | — | — | --_stg-tr --_stg-sc --_stg-fl --_stg-origin | — | — |
+| `crd()` | carousel | **anim** rise fall lft rgt zom blr fde | — | — | --_stg-crd-tr --_stg-crd-sc --_stg-crd-fl | — | — |
+| `load()` | loading | **mode** eager lazy | — | — | — | — | — |
+| `clip` | corners | — | — | yes | --ui-media-radius | — | — |
+| `loop` | carousel | — | — | yes | --_play-block --_play-inline --_play-justify --_play-size | — | — |
+| `stagger` | carousel | — | — | yes | --_stg-base-i --_stg-crd-i | — | — |
+| `pages` | carousel | — | — | yes | --_pg | — | — |
+<!-- /tokens -->
+
 ### `nav()` — which controls
 
 | `media=` token | Result |
@@ -82,8 +109,16 @@ only**, gated by `@supports (scroll-marker-group: after)`. Everywhere else it
 
 ### `asr()` — aspect ratio of the frame
 
-`asr(1/1)` · `asr(6/7)` · `asr(3/4)` · `asr(4/3)` · `asr(3/2)` · `asr(2/3)` ·
-`asr(16/9)` · `asr(21/9)`
+<!-- tokens:args attr=media stems=asr,tmb -->
+| token | arg class | values | aliases |
+|---|---|---|---|
+| `asr()` | **ratio** | 1/1 1/2 6/7 3/4 4/3 3/2 2/3 16/9 21/9 | — |
+| `tmb()` | **ratio** | 1/1 4/3 3/4 16/9 3/2 2/3 | — |
+<!-- /tokens -->
+
+`asr()` is the one `media=` token that takes the `md:` / `lg:` container-query prefixes
+(`media="asr(3/4) md:asr(16/9)"`); `tmb()` sizes the `mrk(tmb)` thumbnails on the same
+slash-ratio vocabulary.
 
 ### `arw()` — arrows
 
@@ -99,7 +134,7 @@ only**, gated by `@supports (scroll-marker-group: after)`. Everywhere else it
 | `arw(set)` | Group both arrows as an **adjacent pair** (one cluster). Place it in any grid cell — `arw(set) arw(<cell>)`, e.g. `arw(set) arw(bs)` (bottom-start), `arw(set) arw(cc)` (dead center). Default `ce` (horizontal) / `be` (vertical) |
 | `arw(hid)` | Auto-**hide** the dead-end arrow (default keeps it visible but dimmed) |
 | `arw(rev)` | **Reveal on hover/focus** — arrows hidden until the media is hovered or keyboard-focused (also on the button's own `:focus-visible`). Gated on `@media (hover: hover)` so touch keeps them visible |
-| `arw(tc)` `arw(cc)` `arw(bc)` | **Split arrows** vertical band — `cc` = centered default. (Inline part of the cell is ignored for split arrows; only the block row applies) |
+| `arw(ts)` `arw(tc)` `arw(te)` `arw(cs)` `arw(cc)` `arw(bs)` `arw(bc)` `arw(be)` | **Placement cell.** The eight cells `arw()` implements — there is no `arw(ce)` (the inline-end column is `arw(set)`'s default) and no `arw(top)`/`arw(mid)`/`arw(bot)`. For **split** arrows only the block row is read: `tc` top · `cc` centered (**default**) · `bc` bottom. The inline letter matters for `arw(set)` and under `axis(y)` |
 | `arw(cs)` | `axis(y)`: a start-inline cell moves the up/down arrows (and marker column) to the inline-**start** edge (default is inline-end) |
 | `arw(blw)` `arw(abv)` | Arrows **alone** in a reserved band below / above the media — markers keep their on-media position/ink; the arrow ink flips to the band theme |
 
@@ -110,21 +145,31 @@ only**, gated by `@supports (scroll-marker-group: after)`. Everywhere else it
 
 ### Multiple items per slide — group wrappers
 
-**Every direct child of `<ui-media>` is one slide** — an `<img>`/`<video>`, or any
-**wrapper element** holding a group of items. The wrapper tag is not hardcoded: use
-`<ui-slide>`, a layout-system element (`<lay-out>`), or a plain `<div>` — all behave
-identically (one slide, one marker, snaps the whole group).
+**Every direct child of `<ui-media>` is one slide, unless it is on the exclusion list** — so
+an `<img>` / `<video>` / `<picture>` / nested `<ui-media>`, or any **wrapper element** holding
+a group of items. The wrapper tag is not hardcoded: use `<ui-slide>` or a plain `<div>` — both
+behave identically (one slide, one marker, snaps the whole group). Give the wrapper its own
+`display` and the carousel leaves the inner layout alone.
 
-> **Exception — furniture and bands.** The five overlay elements (`<ui-chip>`,
-> `<ui-beacon>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`) and the `<ui-marquee>` band are
-> *excluded*: they stay absolutely positioned over the frame and never become slides or get
-> a marker. Selector: `> :not(ui-beacon, ui-chip, ui-marquee, ui-play, ui-save, ui-sticker)`,
-> cross-referenced with the `NOT_SLIDE` list exported from `shared.js` that the JS counts
-> slides with.
+> **Excluded — furniture, bands, control chrome and `<lay-out>`.** The five overlay elements
+> (`<ui-chip>`, `<ui-beacon>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`) and the
+> `<ui-marquee>` band never become slides: they stay absolutely positioned over the frame and
+> get no marker. The CSS selector is
+> `> :not(ui-beacon, ui-chip, ui-marquee, ui-play, ui-save, ui-sticker)`; the JS list
+> `NOT_SLIDE` in `shared.js` adds `UI-CAROUSEL-CONTROLS` (generated chrome) and **`LAY-OUT`**.
+>
+> **`<lay-out>` is therefore NOT a valid slide wrapper inside `<ui-media>`.** `slidesOf()`
+> deliberately excludes it, because a `<lay-out overflow>` is a scroller in its own right —
+> counting it as a slide would make `loop` clone counts and autoplay indexing disagree with
+> the markers. Use `<ui-slide>` or a `<div>` for a group of items, and put the grid *inside*
+> that wrapper (a `<lay-out>` nested one level down is fine — it just must not be the direct
+> child of `<ui-media>`). Multi-card decks arranged **by** the layout system belong on
+> `<lay-out overflow media="…">`, which runs the same control vocabulary on its own scroller.
 
-**The carousel does NOT lay out items inside a slide** — that grid is yours (the layout
-system, or your own class). The wrapper is just the snap-child container; it keeps its
-own `display`, so a `<lay-out>` or `.slide-cols` element controls the inner columns.
+**The carousel does NOT lay out items inside a slide** — that grid is yours. The wrapper is
+just the snap-child container; it keeps its own `display`, so a `.slide-cols` class (or a
+`<lay-out>` nested *inside* the wrapper, never as the wrapper itself) controls the inner
+columns.
 
 ```html
 <!-- you own the grid (here a demo class with --cols) -->
@@ -183,6 +228,8 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 | `mrk(tmb)` | **Image thumbnails** instead of dots. Each slide sets `--ui-carousel-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-carousel-autoplay`. Overlay in any corner (`mrk(ts/te/bs/be)`), or add `mrk(blw)`/`nav(blw)` for a **gallery filmstrip band** below (see below). |
 | `mrk(ts)` `mrk(te)` `mrk(bs)` `mrk(be)` | **Corner placement** for the overlay marker-group — top-start / top-end / bottom-start / bottom-end (logical, RTL-safe). Center row `mrk(cs)` `mrk(cc)` `mrk(ce)` completes the 9-grid. Inset via `--ui-carousel-marker-inset`. |
 | `mrk(rail)` | With `axis(y)` + `mrk(tmb)`: a **vertical thumbnail rail beside** the media (inline-start; **right in RTL**). Image keeps `asr()`, rail added outside; arrows dropped; overflow shrinks-to-floor then scrolls. See below. |
+| `mrk(lbl)` | **Text-label pills** — each slide's `aria-label` becomes a pill (`content: attr(aria-label)`, the label analogue of `mrk(tmb)`'s per-slide image). Same nine placement cells; styled via the `--ui-carousel-label-*` custom properties (incl. an optional group plate). Keep labels short — a marker group can't be clamped to the frame |
+| `mrk(sbr)` | **System bar (WIP)** — styles the scroller's **real** scrollbar as a full-width bottom bar instead of drawing a fake one, so it is natively draggable with zero JS. Central `--ui-carousel-sbr-*` tokens (`-track`, `-thumb`, `-size`, `-inset`, `-radius`, `-gap`) feed both the standard (Firefox `scrollbar-color`) and `::-webkit-scrollbar` paths; `content-box` like `mrk(tmb)`. See [media.carousel.md](./media.carousel.md) |
 | `tmb(<ratio>)` | **Thumbnail aspect-ratio** (default `4/3`) — `tmb(1/1)` · `tmb(4/3)` · `tmb(3/4)` · `tmb(16/9)` · `tmb(3/2)` · `tmb(2/3)` (slash, mirrors `asr()`). In a `mrk(rail)` the rail width tracks the ratio. Or set `--ui-carousel-thumb-ratio` directly. |
 
 ### Thumbnail navigation — `mrk(tmb)`
@@ -270,6 +317,29 @@ the track snaps to that slide, and the segments stay keyboard-focusable
   its **native thin scrollbar**, tinted via `scrollbar-color` with the active-marker
   ink — still thin, still interactive.
 
+### `pages` — one marker per page (`<lay-out overflow>` only)
+
+| Token | Result |
+|-------|--------|
+| *(default)* | One `::scroll-marker` per **item**, and each item is its own snap target |
+| `pages` | One marker per **page** of `--_ci` items, and the scroller snaps page-by-page |
+
+`pages` is the one `media=` token that exists **only** on `<lay-out overflow>` — never on a
+`<ui-media>` frame. A layout carousel shows several cards at once (`--_ci`, the layout's own
+items-per-view), so a marker per card would produce a dot row that doesn't match what a
+swipe actually advances. `pages` collapses the two:
+
+```html
+<lay-out md="columns(3)" overflow media="nav(blw) arw(bare) mrk(bar) pages"> … </lay-out>
+```
+
+It is whole-token matched (`[media~="pages"]`) and implemented in `layout/core/base.css`
+with `mod(sibling-index() - 1, --_ci)` + `if(style(--_pg: 0))`, writing the private `--_pg`.
+Where `sibling-index()` / `if()` are unsupported it **degrades to per-item** markers — the
+scroller still works, the dot count is just finer. Every other control token (`nav()`,
+`arw()`, `mrk()`, `auto`, `loop`, `stagger`) behaves identically on a layout carousel and on
+a `<ui-media>` one; `pages` is the only asymmetry.
+
 ### `load()` — image/video loading (JS-applied)
 
 | Token | Result |
@@ -298,6 +368,14 @@ arrow-click and swipe (it can't be scrubbed by scroll velocity) — the same tec
 carousel (`nav`). Tune with the shared `--stagger-{begin,distance,duration,easing,step}`
 tokens (also used by `ui-tabs`). Chromium-only (`scroll-state()`); elsewhere content just
 shows. Off under `prefers-reduced-motion`.
+
+> **Where it lives.** All of it — the `ani()`/`crd()` vocabulary arms, the
+> `container-type: scroll-state` slide wiring, the `@container not scroll-state(snapped:
+> inline)` from-state and the per-child delay — is in **[`ui/base/stagger.css`](../base/stagger.css)**,
+> the host-agnostic engine `ui-tabs`, `ui-reveal` and `ui-accordion` share.
+> `media.carousel.css` contributes no stagger rules; a header comment there (and one in
+> `stagger.css` itself) still says the trigger wiring is split between the two, which is
+> stale. Engine reference: [stagger.md](./stagger.md).
 
 **Reveal types** (shared by `ani()` and `crd()`): `rise` (from below, default) · `fall`
 (from above) · `lft` / `rgt` (from the inline-start / -end) · `zom` (scale up) · `blr`
@@ -414,7 +492,7 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-carousel-arrow-disabled-opacity` | `0.4` | Dimming of a dead-end arrow (`arw(hid)` sets `0`) |
 | `--ui-carousel-arrow-color` | `#fff` (over image) / dark (in band) | **Bare** glyph ink (`arw(bare)`; the circle ignores it) |
 | `--ui-carousel-arrow-color-hover` | = arrow-color | Bare glyph ink on hover (bands darken it) |
-| `--ui-carousel-arrow-top` | centered | Manual vertical position (or use `arw(top/mid/bot)`) |
+| `--ui-carousel-arrow-top` | centered | Manual vertical position (or use a placement cell — `arw(tc)` / `arw(cc)` / `arw(bc)` for split arrows, `arw(ts…be)` generally. There is no `arw(top)`/`arw(mid)`/`arw(bot)`) |
 
 ### Markers / pills
 
@@ -439,10 +517,12 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-carousel-thumb-url` | *(none)* | **Per-slide** thumbnail image — set on each slide/card (`url(…)`) |
 | `--ui-carousel-thumb-size` | `2.25rem` | Thumbnail height (width follows `--ui-carousel-thumb-ratio`; or use `mrk(sm/md/lg/xl)`) |
 | `--ui-carousel-thumb-ratio` | `4 / 3` | Thumbnail aspect-ratio |
-| `--ui-carousel-thumb-border` | `2px solid #fff` | Thumbnail border (white by default) |
+| `--ui-carousel-thumb-border` | `2px solid #fff` | Thumbnail border shorthand (width + style) |
+| `--ui-carousel-thumb-border-color` | `rgb(255 255 255 / 0.5)` | Inactive thumbnail border colour |
+| `--ui-carousel-thumb-border-color-active` | `#fff` | Active thumbnail border colour — the default active/inactive signal |
 | `--ui-carousel-thumb-radius` | `--radius-sm` | Thumbnail corner radius |
 | `--ui-carousel-thumb-bg` | `rgb(0 0 0 / 0.2)` | Placeholder behind the image |
-| `--ui-carousel-thumb-opacity` | `0.55` | Inactive thumbnail opacity (active = `1`) |
+| `--ui-carousel-thumb-opacity` | `1` | Inactive thumbnail opacity. Thumbnails ship **fully opaque** and signal the active slide with `--ui-carousel-thumb-border-color-active` instead; set e.g. `0.55` to dim the inactive ones as well (active is always forced to `1`) |
 | `--ui-carousel-thumb-timer` | `#fff` (matches the border) | Active-thumb bottom timer-stripe colour (separate from `--ui-carousel-thumb-border`) |
 | `--ui-carousel-thumb-timer-height` | `3px` | Timer-stripe thickness |
 | `--ui-carousel-thumb-timer-name` | `none` (off) | Fill-timer animation. **Off by default** — `carousel.js` sets it to the `ui-carousel-thumb-timer` keyframe when **autoplay** (`auto`/`loop`) runs. Set it to that keyframe manually to preview without JS. |

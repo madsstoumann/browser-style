@@ -1,8 +1,10 @@
 # @browser.style/reveal
 
-A CSS-first **disclosure** built on native `<details>` / `<summary>`, composed over the same card engine as `<ui-card>`. The `<summary>` is the trigger face; the revealed panel is `::details-content` (everything after `</summary>`). Four reveal animations — `exp`, `flp`, `sld`, `scl` — plus a full-card trigger (`trg(card)`) and an expand-to-popup mode (`pop`), all configured through the same `variant=` token attribute `<ui-card>` uses. No JavaScript required.
+A CSS-first **disclosure** built on native `<details>` / `<summary>`, composed over the same card engine as `<ui-card>`. The `<summary>` is the trigger face; the revealed panel is `::details-content` (everything after `</summary>`). Four reveal animations — `exp`, `flp`, `sld`, `grw` — plus a full-card trigger (`trg(card)`) and an expand-to-popup mode (`pop`), all configured through the same `variant=` token attribute `<ui-card>` uses. No JavaScript required.
 
-`<ui-reveal>` `@import`s `ui-card.css`, so it shares the card primitives and DSLs verbatim: the **`media=`** frame ([media.md](../card/media.md)), the **`content=`** text column ([content.md](../card/content.md)), and the **`variant=`** arrangement / overlay / theme / corners ([ui-card-tokens.md](../card/ui-card-tokens.md)). This package adds only the reveal-specific parts: the `<details>` / `<summary>` wiring, `<ui-icon>`, `<ui-face>`, and the reveal `variant=` tokens (`exp`, `flp()`, `sld()`, `scl()`, `ico()`, …) that drive the animations.
+`<ui-reveal>` `@import`s `ui-card.css`, so it shares the card primitives and DSLs verbatim: the **`media=`** frame ([media.md](../card/media.md)), the **`content=`** text column ([content.md](../card/content.md)), and the **`variant=`** arrangement / overlay / theme / corners ([ui-card-tokens.md](../card/ui-card-tokens.md)). This package adds only the reveal-specific parts: the `<details>` / `<summary>` wiring, `<ui-icon>`, `<ui-face>`, and the reveal `variant=` tokens (`exp`, `flp()`, `sld()`, `grw()`, `ico()`, …) that drive the animations.
+
+> The grow-morph animation is spelled **`grw()`**. `scl` / `scl(ts|te|bs|be)` / `lg:scl` are kept as **deprecated aliases** (removed in v5) — `scl()` is `content=`'s type-scale token, and one spelling should mean one thing even across attributes.
 
 ---
 
@@ -62,7 +64,7 @@ npm install @browser.style/base @browser.style/card @browser.style/icon
 
 ### Reveal with media + overlay marker
 
-For `flp` / `scl` / `sld`, wrap the front face in `<ui-face>` so it can transform independently of the toggle icon. Overlay **markers** (`<ui-chip>`, `<ui-sticker>`) are valid inside the `<summary>` media; overlay **controls** (`<ui-save>`, `<ui-play>`) are **not** — they are interactive, which is invalid in `<summary>` (a click there toggles the `<details>`).
+For `flp` / `grw` / `sld`, wrap the front face in `<ui-face>` so it can transform independently of the toggle icon. Overlay **markers** (`<ui-chip>`, `<ui-sticker>`) are valid inside the `<summary>` media; overlay **controls** (`<ui-save>`, `<ui-play>`) are **not** — they are interactive, which is invalid in `<summary>` (a click there toggles the `<details>`).
 
 ```html
 <ui-reveal variant="flp ovr(tl) rds(lg-sq) ico(te) ico(sm) icc(drk) scr"
@@ -107,15 +109,36 @@ Reveal behaviour lives on the same space-separated, composable `variant=` attrib
 
 > **There is no `thm()` token.** The old `variant="thm(…)"` spelling was removed in v4; colour comes from the shared `theme=` attribute (`theme="gray"`, `theme="black dark"`). Migration mapping in [base/theme.md](../base/theme.md): `thm(dark)` → `theme="black dark"`, `thm(muted)` → `theme="slate dark"`, `thm(subtle)` → `theme="gray"`.
 
+Argument vocabularies are **generated from the card manifest** (`ui/card/data/tokens.json`) —
+the same file `render.js` and the token lint read, so this list cannot drift from
+`ui-reveal.css`. The `md:/lg:` column is the container-tier prefix: only `grw()` (and its
+deprecated `scl()` alias) has one.
+
+<!-- tokens:summary attr=variant stems=exp,flp,sld,grw,scl,pop,trg,scr,ico,icc -->
+| token | axis | args | aliases | bare | writes | md:/lg: | deprecated |
+|---|---|---|---|---|---|---|---|
+| `exp` | reveal-animation | — | — | yes | --_rvl | — | — |
+| `flp()` | reveal-animation | **pos** top btm lft rgt | — | yes | --_rvl --_face-closed --_face-open --_panel-closed --_panel-open --ui-reveal-icon-clear | — | — |
+| `sld()` | reveal-animation | **pos** top btm lft rgt | — | yes | --_rvl | — | — |
+| `grw()` | reveal-animation | **pos** ts te bs be | — | yes | --_rvl --_scale-bs --_scale-be --_scale-is --_scale-ie | lg: (pos) | — |
+| `scl()` | reveal-animation | **pos** ts te bs be | — | yes | --_rvl --_scale-bs --_scale-be --_scale-is --_scale-ie | lg: (pos) | yes → `grw` |
+| `pop` | reveal-mode | — | — | yes | --ui-reveal-expand-m --ui-media-ar --ui-reveal-content-fs | — | — |
+| `trg()` | reveal-mode | **value** card | — | — | — | — | — |
+| `scr` | scroll | — | — | yes | — | — | — |
+| `ico()` | reveal-icon | **pos** ts te bs be · **tone** drk sem · **size** sm lg | — | — | --ui-reveal-icon-bg --ui-reveal-icon-sz --_scale-bs --_scale-be --_scale-is --_scale-ie | — | — |
+| `icc()` | reveal-icon | **pos** ts te bs be · **tone** drk sem · **size** sm lg | — | — | --ui-reveal-icon-bg --ui-reveal-icon-sz | — | — |
+<!-- /tokens -->
+
 | Token | Values | Effect |
 |---|---|---|
 | animation | *(omit)* `exp` · `flp` / `flp(top\|btm\|lft\|rgt)` · `sld` / `sld(top\|btm\|lft\|rgt)` · `grw` / `grw(ts\|te\|bs\|be)` | The reveal animation — ONE token that carries its own direction/origin (see below). Bare `flp`/`sld` come from the right; bare `grw` morphs from the `ico()` corner. |
-| `lg:` animation | `lg:grw` | Swaps the animation at the `lg` width (≥ 44rem container), overriding the base one. |
-| `trg(card)` | — | Whole card toggles, front and back — and **no `<ui-icon>` is rendered**. |
-| `pop` | — | `exp` only — opens the card as a fixed, centered popup with a backdrop and pop-in. |
-| `scr` | — | Locks a long panel to the card frame and scrolls the overflow. `flp` (any width) and the grow-morph — `grw` or `lg:grw` — whenever it is the active animation. |
-| `ico()` | position + style + size words, one per token | Positions and styles the toggle icon (see below). |
+| `lg:` animation | `lg:grw` (+ the deprecated `lg:scl`) | Swaps to the grow-morph at the `lg` width (≥ 44rem container), overriding the base one. **`grw` is the only animation with an `lg:` form** — there is no `lg:exp`, `lg:flp` or `lg:sld`. |
+| `trg(card)` | `card` | Whole card toggles, front and back — and **no `<ui-icon>` is rendered**. |
+| `pop` | *(bare flag)* | `exp` only — opens the card as a fixed, centered popup with a backdrop and pop-in. |
+| `scr` | *(bare flag)* | Locks a long panel to the card frame and scrolls the overflow. `flp` (any width) and the grow-morph — `grw` or `lg:grw` — whenever it is the active animation. |
+| `ico()` | corner + style + size words, one per token | Positions and styles the toggle icon (see below). |
 | `icc()` | same words as `ico()` | Same words, applied only while the card is **open** (re-place / re-colour the icon on the back). |
+| `bdr` / `bdr()` | shade `lgt` `drk` · width `sm` `md` `lg` | The card engine's hairline border. On a reveal it paints on the direct-child **`> details`** — the rounded surface — not on the `<ui-reveal>` host box, so it follows `rds()` corners and the flip/grow transforms. Same tokens as the card ([ui-card-tokens.md](../card/ui-card-tokens.md#border--bdr)). |
 
 > `name` is the native `<details>` attribute (set on the inner `<details>`), not a reveal token. With `exp pop`, the in-flow `<ui-reveal>` stays as a placeholder (reserves the cell via `aspect-ratio`) and only the inner `<details>` goes `position: fixed`, so the surrounding grid never reflows.
 
@@ -131,6 +154,23 @@ Reveal behaviour lives on the same space-separated, composable `variant=` attrib
 
 > **Renamed this round: `scl()` → `grw()`.** `scl()` is `content=`'s type-scale token, and one spelling should mean one thing even across attributes. `scl`, `scl(ts\|te\|bs\|be)`, `lg:scl` and its corner forms are kept as **deprecated aliases** — they still work in v4 and are removed in v5.
 
+Every deprecated `variant=` spelling a reveal can carry, generated from the manifest:
+
+<!-- tokens:aliases attr=variant -->
+| deprecated | canonical | on | kind |
+|---|---|---|---|
+| `rds(none)` | `rds(non)` | `variant=` | arg |
+| `ovr(tl)` | `ovr(ts)` | `variant=` | arg |
+| `ovr(tr)` | `ovr(te)` | `variant=` | arg |
+| `ovr(cl)` | `ovr(cs)` | `variant=` | arg |
+| `ovr(cr)` | `ovr(ce)` | `variant=` | arg |
+| `ovr(bl)` | `ovr(bs)` | `variant=` | arg |
+| `ovr(br)` | `ovr(be)` | `variant=` | arg |
+| `scl()` | `grw()` | `variant=` | whole token |
+<!-- /tokens -->
+
+`ovr()` has **six** physical aliases, not nine — `ovr(tc)` / `ovr(cc)` / `ovr(bc)` are spelled identically in the logical and physical grids and need none.
+
 ### `ico()` / `icc()` — toggle icon
 
 One word per token — `ico(te) ico(sm)` anchors a small icon in the top-right corner. `icc()` takes the same words but applies only while open.
@@ -138,9 +178,9 @@ One word per token — `ico(te) ico(sm)` anchors a small icon in the top-right c
 | Group | Words | Effect |
 |---|---|---|
 | Corner | `ts` `te` `bs` `be` | Anchors the icon in that corner (furniture spellings: top/bottom × start/end; logical axes, rtl-safe). Absolute, inset by `--ui-reveal-icon-m`. |
-| Style | `drk` | Solid dark icon (default is light). |
+| Style | `drk` | Dark chrome — sets `--ui-reveal-icon-bg` to the neutral ramp's **`--ui-theme-black-bg`** bundle (a `light-dark()` pair that stays dark in *both* colour schemes, and picks up a `--ui-card-dark-bg` override so a branded card brands its icon) plus a real `color: var(--ui-theme-black-c, #fff)` for the glyph. Not a flat `#000`, and not `--color-text`, which would invert in dark mode. |
 | Style | `sem` | Reduced opacity (`--ui-reveal-icon-opacity`, default `0.6`). |
-| Size | `sm` `lg` | `sm` = `--size-5`, default = `--size-7`, `lg` = `--size-8`. |
+| Size | `sm` `lg` | `sm` = `--size-5`, `lg` = `--size-8`. The **default is `--size-7` and has no token** — "medium" is the *absence* of a size word, so `ico(md)` / `icc(md)` do not exist. |
 
 ```html
 <ui-reveal variant="flp ico(te) ico(sm) icc(be) icc(drk)">…</ui-reveal>
@@ -183,8 +223,8 @@ Scoped to `:where(ui-reveal)` — low specificity, easy to override.
 
 | Token | Default | Purpose |
 |---|---|---|
-| `--ui-reveal-icon-sz` | `var(--size-7)` | Icon button size (`sm` / `lg` override). |
-| `--ui-reveal-icon-bg` | `var(--color-button)` | Icon background (`drk` sets `#000`). |
+| `--ui-reveal-icon-sz` | `var(--size-7)` | Icon button size (`ico(sm)` / `ico(lg)` override; the `--size-7` default has no token). |
+| `--ui-reveal-icon-bg` | `var(--color-button)` | Icon background. `ico(drk)`/`icc(drk)` set it to `var(--ui-theme-black-bg)` — the neutral ramp's dark bundle, not a literal `#000` — and additionally set a real `color` for the glyph. |
 | `--ui-reveal-icon-radius` | `var(--radius-circle)` | Icon shape. |
 | `--ui-reveal-icon-m` | `var(--spacing-md)` | Icon inset from the edge (decoupled from content padding). |
 | `--ui-reveal-icon-opacity` | `0.6` | Opacity for the `sem` modifier. |

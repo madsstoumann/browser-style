@@ -92,23 +92,52 @@ import '@browser.style/content';
 
 ## The `content=` token DSL
 
-`content=` is a compact attribute mini-language. Each modifier is a **3-letter code** with `()` arguments, plus one bare flag (`scr`). Every token simply writes a custom property, so an unsupported value is never a blocker — set the property directly via `style` (see *Arbitrary values*).
+`content=` is a compact attribute mini-language. Each modifier is a **3-letter code** with `()` arguments, plus three bare flags — `scr` (which also takes an axis arg), `ctr` and `end`. Every token simply writes a custom property, so an unsupported value is never a blocker — set the property directly via `style` (see *Arbitrary values*).
 
-| Token | Args | Controls | Responsive (`md:`/`lg:`) |
-|-------|------|----------|--------------------------|
-| `scl()` | `sm` `md` `lg` `xl` · mode `fix` `fluid` | master type-scale step — swaps the active body **and** headline stop AND re-points the relational size ladder (see *Relational scale*). `fix` switches every stop to the global static scale, `fluid` back to the `cqi` clamps (see *Static scale*) | steps **Yes** (modes No) |
-| `hl()` | size `sm` `md` `lg` `xl` `2xl` `3xl` · tone · weight · font `body`/`head`/`serif`/`mono`/`form` · `grad` · `shd` | headings group — headline size (only, relational), ink, weight, **font**, gradient, shadow | size **Yes** |
-| `fnt()` | `body` `head` `serif` `mono` `form` | container font family for the whole column (`--ui-content-font`) | No |
-| `eb()` | size `sm`–`xl` · tone · weight · `flat` · `shd` | eyebrow group — size (relational), ink, weight, drop uppercase, shadow | No* |
-| `tx()` | size `sm`–`xl` · tone · weight · `shd` | body group — size (relational), ink, weight, shadow (summary/quote/list/address/timeline/price/stat) | No* |
-| `mt()` | size `sm`–`xl` · tone · weight · `shd` | meta group — size (relational), ink, weight, shadow (meta/caption/byline/footer/tags/rating/options) | No* |
-| `pad()` | `none` `xs` `sm` `md` `lg` `xl` `2xl` | padding, **all sides** (`--ui-content-p`) | **Yes** |
-| `pb()` `pi()` | same value set | padding, **one axis** — block / inline (`--ui-content-pb` / `-pi`) | **Yes** |
-| `pbs()` `pbe()` `pis()` `pie()` | same value set | padding, **one side** — block-start / block-end / inline-start / inline-end | **Yes** |
-| `rds()` | `sm` `md` `lg` `xl` `2xl` `full` `pill` · `non` · `sm-sq` `md-sq` `lg-sq` `xl-sq` | corners on a **standalone** `<ui-content>` (`--ui-content-radius`) | No |
-| `gap()` | `none` `xs` `sm` `md` `lg` | row gap between parts (`--ui-content-gap`) | **Yes** |
-| `ctr` / `end` | *(flag)* | standalone cross-axis + text alignment — centre / end the whole content column (`--ui-content-align`), independent of `ovr()` overlay placement | No |
-| `scr` / `scr(y)` / `scr(x)` | *(flag)* | scrollable content + shared `ui-scroll-fade` edge mask (`ui/base/scroll.css`). Bare `scr` = `scr(y)` = vertical column; `scr(x)` = horizontal row | No |
+Argument vocabularies, the custom properties each token writes, and which tokens take the
+`md:`/`lg:` container-query prefixes are **generated from `data/tokens.json`** — the manifest
+`render.js` and `tokens.lint.js` read, so this inventory cannot drift from the CSS:
+
+<!-- tokens:summary attr=content -->
+| token | axis | args | aliases | bare | writes | md:/lg: | deprecated |
+|---|---|---|---|---|---|---|---|
+| `pad()` | padding | **size** none xs sm md lg xl 2xl | — | — | --ui-content-p | md: lg: (size) | — |
+| `pb()` | padding | **size** none xs sm md lg xl 2xl | — | — | --ui-content-pb | md: lg: (size) | — |
+| `pi()` | padding | **size** none xs sm md lg xl 2xl | — | — | --ui-content-pi | md: lg: (size) | — |
+| `pbs()` | padding | **size** none xs sm md lg xl 2xl | — | — | --ui-content-pbs | md: lg: (size) | — |
+| `pbe()` | padding | **size** none xs sm md lg xl 2xl | — | — | --ui-content-pbe | md: lg: (size) | — |
+| `pis()` | padding | **size** none xs sm md lg xl 2xl | — | — | --ui-content-pis | md: lg: (size) | — |
+| `pie()` | padding | **size** none xs sm md lg xl 2xl | — | — | --ui-content-pie | md: lg: (size) | — |
+| `gap()` | spacing | **size** none xs sm md lg | — | — | --ui-content-gap | md: lg: (size) | — |
+| `scl()` | type-scale | **size** sm md lg xl · **mode** fix fluid | — | — | --ui-content-fs --ui-content-headline --ui-content-tx-sm --ui-content-tx-md --ui-content-tx-lg --ui-content-tx-xl --ui-content-hl-sm --ui-content-hl-md --ui-content-hl-lg --ui-content-hl-xl --ui-content-hl-2xl --ui-content-hl-3xl --ui-content-fs-sm --ui-content-fs-md --ui-content-fs-lg --ui-content-fs-xl --ui-content-fs-2xl --ui-content-headline-sm --ui-content-headline-md --ui-content-headline-lg --ui-content-headline-xl --ui-content-headline-2xl --ui-content-headline-3xl | md: lg: (size) | — |
+| `hl()` | type-group | **size** sm md lg xl 2xl 3xl · **tone** shr lgt med drk sld accent inv · **weight** 300 400 500 600 700 800 900 · **font** body head serif mono form · **flag** grad shd | — | — | --ui-content-heading-ink --ui-content-heading-weight --ui-content-heading-text-shadow --ui-content-heading-font --ui-content-headline | md: lg: (size) | — |
+| `eb()` | type-group | **size** sm md lg xl · **tone** shr lgt med drk sld accent inv · **weight** 300 400 500 600 700 800 900 · **flag** flat shd | — | — | --ui-content-eyebrow-ink --ui-content-eyebrow-weight --ui-content-eyebrow-transform --ui-content-eyebrow-text-shadow --ui-content-eyebrow-fs | — | — |
+| `tx()` | type-group | **size** sm md lg xl · **tone** shr lgt med drk sld accent inv · **weight** 300 400 500 600 700 800 900 · **flag** shd | — | — | --ui-content-body-ink --ui-content-body-weight --ui-content-body-text-shadow --ui-content-body-fs | — | — |
+| `mt()` | type-group | **size** sm md lg xl · **tone** shr lgt med drk sld accent inv · **weight** 300 400 500 600 700 800 900 · **flag** shd | — | — | --ui-content-meta-ink --ui-content-meta-weight --ui-content-meta-text-shadow --ui-content-meta-base | — | — |
+| `fnt()` | font | **font** body head serif mono form | — | — | --ui-content-font | — | — |
+| `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | none→non | — | --ui-content-radius --ui-content-squircle-exp | — | — |
+| `scr()` | scroll | **value** x y | — | yes | --ui-scroll-fade-dir | — | — |
+| `ctr` | alignment | — | — | yes | --ui-content-align | — | — |
+| `end` | alignment | — | — | yes | --ui-content-align | — | — |
+<!-- /tokens -->
+
+What each one is *for*:
+
+| Token | Controls | Responsive (`md:`/`lg:`) |
+|-------|----------|--------------------------|
+| `scl()` | master type-scale step — swaps the active body **and** headline stop AND re-points the relational size ladder (see *Relational scale*). `fix` switches every stop to the global static scale, `fluid` back to the `cqi` clamps (see *Static scale*) | steps **Yes** (modes No) |
+| `hl()` | headings group — headline size (only, relational), ink, weight, **font**, gradient, shadow | size **Yes** |
+| `fnt()` | container font family for the whole column (`--ui-content-font`) | No |
+| `eb()` | eyebrow group — size (relational), ink, weight, drop uppercase (`flat`), shadow | No* |
+| `tx()` | body group — size (relational), ink, weight, shadow (summary/quote/list/address/timeline/price/stat) | No* |
+| `mt()` | meta group — size (relational), ink, weight, shadow (meta/caption/byline/footer/tags/rating/options) | No* |
+| `pad()` | padding, **all sides** (`--ui-content-p`) | **Yes** |
+| `pb()` `pi()` | padding, **one axis** — block / inline (`--ui-content-pb` / `-pi`) | **Yes** |
+| `pbs()` `pbe()` `pis()` `pie()` | padding, **one side** — block-start / block-end / inline-start / inline-end | **Yes** |
+| `rds()` | corners on a **standalone** `<ui-content>` (`--ui-content-radius`) | No |
+| `gap()` | row gap between parts (`--ui-content-gap`) | **Yes** |
+| `ctr` / `end` | *(bare flags)* standalone cross-axis + text alignment — centre / end the whole content column (`--ui-content-align`), independent of `ovr()` overlay placement | No |
+| `scr` / `scr(y)` / `scr(x)` | *(bare flag + axis arg)* scrollable content + shared `ui-scroll-fade` edge mask (`ui/base/scroll.css`). Bare `scr` = `scr(y)` = vertical column; `scr(x)` = horizontal row | No |
 
 **Tone** (ink strength + hue): `shr` (30%) · `lgt` (45%) · `med` (65%, = muted) · `drk` (85%) · `sld` (100%, theme text) · `accent` · `inv` (white, for overlays).
 **Weight**: `300`–`900` → `--font-weight-*` (`800` is a literal). **Vocabularies are disjoint** so a size, a tone, and a weight never collide inside one family — e.g. `hl(3xl)`, `hl(accent)`, and `hl(900)` compose freely.
@@ -714,6 +743,8 @@ The queries are named on purpose. An *unnamed* size query resolves against the s
 
 A group is viewport-wide, so the card-scale thresholds (25rem / 44rem) act as a mobile/desktop switch for headers — which is what a section header usually wants. Declarations made on the group (or its `cq-box`) inherit into the nested `<lay-out>`'s cards too; a card's own nearer declaration wins, per the ladder's nearest-host-wins design.
 
+> **Group headers ride the relational ladder too.** A base **size** token (`hl(2xl)`, `tx(lg)`, …) reads its ladder var (`--ui-content-hl-2xl`) rather than the absolute stop, and a responsive `md:`/`lg:` `scl()` re-points that var on the queryable descendant. So the base size rules ship a second declaration on the descendant, or the token would resolve its ladder var from *above* the breakpoint rule and stay fixed. That second declaration used to cover `<ui-card>`'s `<cq-box>` and `<ui-reveal>`'s `<summary>` only — it now covers **`lay-out-group`** as well. `<lay-out-group content="scl(md) lg:scl(xl) hl(2xl)">` therefore steps its header exactly the way the identical tokens step inside a card; before this round the `hl(2xl)` stayed pinned to the base stop while the body copy moved.
+
 ### Canonical placement
 
 `render.js` emits `content=` **on the `<ui-content>`** and `media=` on the `<ui-media>`; `variant=` and `theme=` stay on the host. Hand-authored HTML keeps working with the attribute on the host or any ancestor — **ancestor placement remains the bulk-config mechanism**, and is the right tool when one declaration should govern a whole section of cards.
@@ -730,7 +761,7 @@ Content **tone/weight** (`eb()`/`hl()`/`tx()`/`mt()` ink + weight), group **size
 </ui-content>
 ```
 
-> **`scr` (content) vs `scr` (reveal):** `content="scr"` is the *content-column* scroll (scrollable text + `ui-scroll-fade` mask). `<ui-reveal>` has its **own** `scr` token on the host's `variant=` (the flip-panel / `lg:scl` panel scroll; it replaced the old `[scroll]` attribute) — that is a different mechanism on a different attribute. Don't conflate them.
+> **`scr` (content) vs `scr` (reveal):** `content="scr"` is the *content-column* scroll (scrollable text + `ui-scroll-fade` mask). `<ui-reveal>` has its **own** `scr` token on the host's `variant=` (the `flp` flip-panel / `grw` — or `lg:grw` — grow-morph panel scroll; it replaced the old `[scroll]` attribute) — that is a different mechanism on a different attribute. Don't conflate them.
 
 ---
 
@@ -757,4 +788,9 @@ All modern browsers.
 | Scroll-driven `ui-scroll-fade` mask (`scr`) | Chrome 115+ (graceful fallback to a plain scroll) |
 | `::details-content` (reveal panel styling) | Chrome 131+, with fallbacks |
 
-Graceful degradation: where `cqi`/`color-mix()`/`text-box` are unavailable, the `clamp()` ramp resolves at its preferred value, the muted ink falls back to the inherited color, and leading-trim is simply skipped — the layout stays intact.
+Graceful degradation: the muted ink falls back to the inherited color where `color-mix()` is unavailable, and leading-trim is simply skipped without `text-box` — the layout stays intact either way.
+
+`cqi` has **two** distinct fallback stories, and only the first is about support:
+
+- **Where container query units are unsupported** the whole `clamp()` term is invalid at computed-value time, so the declaration is dropped and the part renders at its inherited/UA size. Every ramp stop is still a plain custom property, so `style="--ui-content-fs: 1rem"` (or `scl(fix)`, which re-points every stop at the static `--font-size-*` scale) gives those browsers exact sizes.
+- **Where `cqi` is supported but there is no query container** — a standalone `<ui-content>` outside a card — the unit is perfectly valid and resolves against the **small viewport**: `1cqi` = `1svi`. The clamp evaluates normally, just measured against the viewport instead of the column, which pushes the ramp toward its `max` on a wide screen and will *not* shrink in a narrow column. See the note under *Typography ramp*; the fix is a `container-type: inline-size` wrapper, not a fallback.

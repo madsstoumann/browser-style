@@ -32,6 +32,38 @@ The card is `display: grid` + `container-type: inline-size` + `overflow: hidden`
 
 The `variant=` string composes the media and content primitives. Tokens are **whole-token** matched (`~=`), so `md:`/`lg:` prefixes don't collide with the base form.
 
+The full `variant=` inventory — every token, its argument vocabulary, its deprecated
+spellings, the properties it writes and which tokens take a `md:`/`lg:` prefix — is
+**generated from `data/tokens.json`**, the manifest `render.js` and `tokens.lint.js` read.
+The reveal-only tokens (`exp`, `flp()`, `sld()`, `grw()`, `ico()`, …) are in the same
+attribute and therefore the same table; they are explained under *Reveal tokens* below.
+
+<!-- tokens:summary attr=variant -->
+| token | axis | args | aliases | bare | writes | md:/lg: | deprecated |
+|---|---|---|---|---|---|---|---|
+| `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | none→non | — | --ui-card-radius --ui-card-squircle-exp | — | — |
+| `bdr()` | border | **size** sm md lg · **tone** lgt drk | — | yes | --ui-card-border-width --ui-card-border-color | — | — |
+| `spl()` | split | **ratio** 1/1 1/2 2/1 1/3 3/1 | — | — | --ui-card-split | md: lg: (ratio) | — |
+| `vis()` | visibility | **value** media content | — | — | — | md: lg: (value) | — |
+| `ovr()` | overlay | **pos** ts tc te cs cc ce bs bc be | tl→ts tr→te cl→cs cr→ce bl→bs br→be | — | --ui-card-stack --ui-content-ov-ink --ui-content-ov-z --ui-content-heading-text-shadow --ui-content-eyebrow-text-shadow --ui-content-ov-justify --ui-content-ov-align --ui-content-ov-text --ui-media-scrim-default | — | — |
+| `flp()` | reveal-animation | **pos** top btm lft rgt | — | yes | --_rvl --_face-closed --_face-open --_panel-closed --_panel-open --ui-reveal-icon-clear | — | — |
+| `sld()` | reveal-animation | **pos** top btm lft rgt | — | yes | --_rvl | — | — |
+| `grw()` | reveal-animation | **pos** ts te bs be | — | yes | --_rvl --_scale-bs --_scale-be --_scale-is --_scale-ie | lg: (pos) | — |
+| `scl()` | reveal-animation | **pos** ts te bs be | — | yes | --_rvl --_scale-bs --_scale-be --_scale-is --_scale-ie | lg: (pos) | yes → `grw` |
+| `trg()` | reveal-mode | **value** card | — | — | — | — | — |
+| `ico()` | reveal-icon | **pos** ts te bs be · **tone** drk sem · **size** sm lg | — | — | --ui-reveal-icon-bg --ui-reveal-icon-sz --_scale-bs --_scale-be --_scale-is --_scale-ie | — | — |
+| `icc()` | reveal-icon | **pos** ts te bs be · **tone** drk sem · **size** sm lg | — | — | --ui-reveal-icon-bg --ui-reveal-icon-sz | — | — |
+| `col` | arrangement | — | — | yes | --ui-card-cols | md: lg: | — |
+| `col-r` | arrangement | — | — | yes | --ui-card-cols | md: lg: | — |
+| `row` | arrangement | — | — | yes | --ui-card-cols | md: lg: | — |
+| `row-r` | arrangement | — | — | yes | --ui-card-cols | md: lg: | — |
+| `exp` | reveal-animation | — | — | yes | --_rvl | — | — |
+| `pop` | reveal-mode | — | — | yes | --ui-reveal-expand-m --ui-media-ar --ui-reveal-content-fs | — | — |
+| `scr` | scroll | — | — | yes | — | — | — |
+<!-- /tokens -->
+
+What each arrangement token does:
+
 | Token | Effect |
 |-------|--------|
 | `col` *(default)* | content below media (single column) |
@@ -78,15 +110,29 @@ Each sets `--ui-content-ov-justify` / `-align` / `-text` and points `--ui-media-
 
 Opt-in hairline for cards on a `surface` background whose edges otherwise vanish. Distinct from the `theme=` `border()` system ([base/theme.md](../base/theme.md)) — that needs a colour theme and makes the fill transparent; `bdr` leaves the surface fill intact.
 
-- **On:** `variant="bdr"` (default: `--color-border`, 1px, solid). `bdr(md)` alone also enables it.
-- **Shade:** `bdr(lgt)` super-light · default · `bdr(drk)` darker (same `lgt`/`drk` vocabulary as the carousel).
+- **On:** `variant="bdr"` (default: `--color-border`, 1px, solid). Substring-matched, so any `bdr(…)` arg alone also enables it.
+- **Shade:** `bdr(lgt)` super-light · default · `bdr(drk)` darker (same `lgt`/`drk` vocabulary as the carousel). There is no `bdr(sub)` / `bdr(strong)`.
 - **Width:** `bdr(sm)` 1px (default) · `bdr(md)` 2px · `bdr(lg)` 3px (reuses `--border-width` / `-thick` / `-heavy`).
+
+<!-- tokens:args attr=variant stems=bdr -->
+| token | arg class | values | aliases |
+|---|---|---|---|
+| `bdr()` | **size** | sm md lg | — |
+| `bdr()` | **tone** | lgt drk | — |
+<!-- /tokens -->
 
 | Custom property | Default | Purpose |
 |---|---|---|
-| `--ui-card-border-color` | `var(--color-border)` | border colour (or use `bdr(sub)`/`bdr(strong)`) |
-| `--ui-card-border-width` | `var(--border-width)` | border width (or use `bdr(sm/md/lg)`) |
+| `--ui-card-border-color` | `var(--color-border)` | border colour (or use `bdr(lgt)`/`bdr(drk)`) |
+| `--ui-card-border-width` | `var(--border-width)` | border width (or use `bdr(sm)`/`bdr(md)`/`bdr(lg)`) |
 | `--ui-card-border-style` | `solid` | border style — **author-only** (e.g. `dashed`, `dotted`) |
+
+> **On `<ui-reveal>` the border paints on `> details`, not the host box.** The rounded
+> surface a reveal actually shows is the inner `<details>` (that is what carries the radius,
+> the background and the flip/grow transforms), so painting the hairline on `<ui-reveal>`
+> itself would draw a square outline floating around a rounded card. `variant="bdr"` on a
+> reveal therefore targets the direct-child `<details>`; the tokens and the arg vocabulary
+> are identical to the card's.
 
 ```html
 <ui-card variant="col bdr bdr(lgt)"> … </ui-card>
@@ -122,15 +168,36 @@ Card-local override hooks (feed the `--ui-theme-black-*`/`slate` bundles):
 
 `<ui-reveal>` (in `ui/reveal`) is configured through the **same `variant=` attribute** as the card — its former individual attributes (`type`, `type-lg`, `from`, `to`, `trigger`, `scroll`, `icon`, `icon-close`) are **removed**, folded into `variant=` tokens. Like the card's arrangement tokens they are whole-token (`~=`) matched, and the `lg:` container-tier prefix works the same way (`lg:grw` replaces the old `type-lg=`). The animation token carries its own direction/origin — there is no separate `frm()` token.
 
-| Token | Values | Replaces | Effect |
-|-------|--------|----------|--------|
-| `exp` · `flp()` · `sld()` · `grw()` | `flp(top\|btm\|lft\|rgt)` · `sld(top\|btm\|lft\|rgt)` · `grw(ts\|te\|bs\|be)` | `type=` + `from=` | ONE token per animation, direction/origin in the value (expand / flip / slide / **grow**). Bare `flp`/`sld` = from the right; bare `grw` follows the `ico()` corner |
-| `lg:` animation | e.g. `lg:grw` | `type-lg=` | animation at the `lg:` container tier (≥ 44rem) |
-| `pop` | *(bare flag)* | `to=` | popup mode for the revealed panel |
-| `trg(card)` | — | `trigger="card"` | whole card toggles the disclosure — **and suppresses the toggle icon** |
-| `scr` | *(bare flag)* | `scroll` | scrollable reveal panel |
-| `ico()` | corner `ts` `te` `bs` `be` · ink `drk` `sem` · size `sm` `lg` | `icon=` | toggle-icon placement / ink / size — placement uses the furniture corner spellings (top/bottom × start/end, logical + rtl-safe); **one token per word**, e.g. `ico(te) ico(sm)` |
-| `icc()` | same words as `ico()` | `icon-close=` | icon placement/style in the **open** state |
+The argument vocabularies are generated from the manifest:
+
+<!-- tokens:args attr=variant stems=exp,flp,sld,grw,scl,pop,trg,scr,ico,icc -->
+| token | arg class | values | aliases |
+|---|---|---|---|
+| `exp` | *(bare flag)* | — | — |
+| `flp()` | **pos** | top btm lft rgt | — |
+| `sld()` | **pos** | top btm lft rgt | — |
+| `grw()` | **pos** | ts te bs be | — |
+| `scl()` | **pos** | ts te bs be | — |
+| `pop` | *(bare flag)* | — | — |
+| `trg()` | **value** | card | — |
+| `scr` | *(bare flag)* | — | — |
+| `ico()` | **pos** | ts te bs be | — |
+| `ico()` | **tone** | drk sem | — |
+| `ico()` | **size** | sm lg | — |
+| `icc()` | **pos** | ts te bs be | — |
+| `icc()` | **tone** | drk sem | — |
+| `icc()` | **size** | sm lg | — |
+<!-- /tokens -->
+
+| Token | Replaces | Effect |
+|-------|----------|--------|
+| `exp` · `flp()` · `sld()` · `grw()` | `type=` + `from=` | ONE token per animation, direction/origin in the value (expand / flip / slide / **grow**). Bare `flp`/`sld` = from the right; bare `grw` follows the `ico()` corner |
+| `lg:grw` | `type-lg=` | Swap to the grow-morph at the `lg:` container tier (≥ 44rem). **`grw` is the only animation with an `lg:` form** (its deprecated alias `lg:scl` too) — there is no `lg:exp`, `lg:flp` or `lg:sld` |
+| `pop` | `to=` | popup mode for the revealed panel |
+| `trg(card)` | `trigger="card"` | whole card toggles the disclosure — **and suppresses the toggle icon** |
+| `scr` | `scroll` | scrollable reveal panel |
+| `ico()` | `icon=` | toggle-icon placement / ink / size — placement uses the furniture corner spellings (top/bottom × start/end, logical + rtl-safe); **one token per word**, e.g. `ico(te) ico(sm)`. Size is `sm` / `lg` only: the default (`--size-7`) has **no** token, so there is no `ico(md)` |
+| `icc()` | `icon-close=` | same words as `ico()`, applied in the **open** state (and likewise no `icc(md)`) |
 
 > **`scl()` → `grw()`.** The reveal's scale-morph animation was renamed this round: `scl` is `content=`'s type-scale token, and one spelling should mean one thing even across attributes. `scl`, `scl(ts\|te\|bs\|be)` and `lg:scl` (+ its corner forms) are kept as **deprecated aliases**, removed in v5.
 

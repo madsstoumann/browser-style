@@ -117,27 +117,74 @@ Because custom properties inherit, **one rule set serves both placement cases**:
 
 ### Token reference
 
-| Token | Args | Controls | Writes |
-|-------|------|----------|--------|
-| `asr()` | `1/1` `6/7` `3/4` `4/3` `3/2` `2/3` `16/9` `21/9` (or any via `style`) | aspect-ratio | `--ui-media-ar` |
-| `rds()` | `sm md lg xl 2xl full pill` + `sm-sq md-sq lg-sq xl-sq` | corners (**standalone only**) | `--ui-media-radius` (+ `corner-shape`) |
-| `obp()` | logical `ts tc te · cs cc ce · bs bc be` **or** physical `tl tc tr · cl cc cr · bl bc br` | object-position (9-grid). Both spellings are supported and neither is deprecated — see below | `--ui-media-op` |
-| `obf()` | `cover` `contain` `fill` `none` | object-fit | `--ui-media-fit` |
-| `flp()` | `h` `v` `hv` | flip / mirror the image | `--ui-media-fl-x` / `-fl-y` |
-| `hov()` | 17 values across five families — see the table below | hover effect (image only) | `--ui-media-hv-*`, `--_f-*` |
-| `scm()` | *(bare)* · pos `ts … be` · size `sm md lg xl` · intensity `shr lgt med drk sld` (sheer/solid aliases) | scrim — bare matches the host `ovr()`; three composable axes (direction · size · intensity) | `--ui-media-scrim-paint` |
-| `nav()` | *(bare, or `mrk` `arw` `blw` `abv`)* | carousel — **the token IS the trigger**; bare = markers + arrows (full control vocabulary — `arw()`, `mrk()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()` — in [carousel.md](./carousel.md)) | carousel layout + controls |
-| `vid()` | `cc` `pip` `fls` · size `sm md lg xl` | player-tool cluster over a chrome-less `<video>` — JS **injects** the requested buttons (bottom-end; order CC → PiP → fullscreen, fullscreen rightmost). Size mirrors `arw()` (`vid(sm)`…`vid(xl)`, default 2.5rem). Needs `index.js`; PiP feature-detected (skipped in Firefox). `cc` = subtitles/captions button (glyph only — **switching not wired yet**). *(Play/pause is `<ui-play>` furniture, not a `vid()` value.)* | injected `<menu class="ui-media-tools">` + `--ui-media-tool-size` |
-| `chip()` `sticker()` `beacon()` `save()` `play()` | `ts … be` *(position)* **or** `red orange green blue accent black white gray` *(hue)* — plus each element's own size/shape args | place + theme an overlay element | element inset (absolute) / element `--ui-{el}-*` tokens |
-| `play()` | `sm md lg xl` *(size)* — same stem as `play(<pos>)` | **size** the `<ui-play>` control. Mirrors `<ui-play>`'s own `size=` scale; an explicit `size=` on the element still wins. Position args (`ts…be`) and size args are disjoint vocabularies, so one stem parses unambiguously. *(`ply(<size>)` is a deprecated alias.)* | `--ui-play-sz` / `--ui-play-icon-sz` |
-| `marquee()` | mode `rpt` `seam` `fade` · position `top` `bot` · hue · size `sm lg xl 2xl` · speed · corner | the `<ui-marquee>` **band** (not 9-grid furniture) — see *Overlay furniture* | `--ui-marquee-*` |
+The inventory below — every `media=` stem and bare flag, its argument vocabulary, its
+deprecated spellings, and the custom properties it writes — is **generated from
+`data/tokens.json`**, the same manifest `render.js` and `tokens.lint.js` read. It cannot
+drift from the CSS. (`md:/lg:` is the container-query prefix column: only `asr()` takes one.)
 
-#### `asr()` — the 8 numeric aspect ratios
+<!-- tokens:summary attr=media -->
+| token | axis | args | aliases | bare | writes | md:/lg: | deprecated |
+|---|---|---|---|---|---|---|---|
+| `asr()` | aspect | **ratio** 1/1 1/2 6/7 3/4 4/3 3/2 2/3 16/9 21/9 | — | — | --ui-media-ar | md: lg: (ratio) | — |
+| `obp()` | position | **pos** ts tc te cs cc ce bs bc be tl tr cl cr bl br | — | — | --ui-media-op | — | — |
+| `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | none→non | — | --ui-media-radius --ui-media-squircle-exp | — | — |
+| `obf()` | fit | **mode** cover contain fill none | — | — | --ui-media-fit | — | — |
+| `flp()` | flip | **mode** h v hv | — | — | --ui-media-fl-x --ui-media-fl-y | — | — |
+| `shp()` | shape | **shape** pt-d pt-u pt-l pt-r cut-r cut-l skew-r skew-l para rhomb inset hex chev-l chev-r arr-l arr-r star plus minus close bolt msg frame frame-in blinds-h blinds-v curve-d curve-u curve-r curve-l circle circ-45 | — | — | --ui-media-shape --ui-shape-morph --_shp --_shp-full --_r4 --_r5 --_r5l --_r5r --_ell | — | — |
+| `hov()` | hover | **mode** zoom pan track drift tilt tilt-out tilt-in rot-r rot-l shape shape-rev gray blur bright sat dim tint | — | — | --_hv-dur --_hv-ease --_hv-t --_f-gray --_f-blur --_f-bright --_f-sat | — | — |
+| `tnt()` | tint | **hue** red orange green blue accent black white gray | dark→black light→white subtle→gray slate→gray | yes | --ui-media-tint-color | — | — |
+| `scm()` | scrim | **pos** ts tc te cs cc ce bs bc be · **size** sm md lg xl · **tone** shr lgt med drk sld | sheer→shr solid→sld | yes | --ui-media-scrim --ui-media-scrim-paint --ui-media-scrim-color --ui-media-scrim-fade --ui-media-scrim-mid-stop --ui-media-scrim-end-stop --ui-media-scrim-cc-a --ui-media-scrim-cc-b | — | — |
+| `chip()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray · **mode** pale muted · **variant** lgt out · **size** sm lg xl 2xl · **disc** non rnd pll crc sqr | dark→black light→white subtle→gray slate→gray | — | --ui-chip-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
+| `sticker()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray · **mode** pale muted · **size** sm lg xl 2xl 3xl · **disc** non rnd pll crc sqr · **shape** text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; · **flag** fit | dark→black light→white subtle→gray slate→gray | — | --ui-sticker-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
+| `save()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray · **size** sm lg xl · **disc** non rnd crc sqr | dark→black light→white subtle→gray slate→gray | — | --ui-save-c --ui-save-c-active --ui-save-sz --ui-save-circle-* | — | — |
+| `play()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray · **size** sm md lg xl · **disc** non rnd pll crc sqr | dark→black light→white subtle→gray slate→gray | — | --ui-play-sz --ui-play-icon-sz --ui-play-bg --ui-play-c --ui-play-radius --ui-play-corner --_play-block --_play-inline --_play-justify --_play-size | — | — |
+| `beacon()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray · **mode** pale muted · **size** xs sm md lg xl 2xl · **face** sld tck dts · **anim** bln pls brt · **disc** pll rnd sqr non | dark→black light→white subtle→gray slate→gray | — | --ui-beacon-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
+| `marquee()` | band | **pos** top bot · **hue** red orange green blue accent black white gray · **mode** rpt seam fade pale muted · **size** sm lg xl 2xl · **disc** non rnd pll crc sqr · **value** right up down slow fast faster gap-sm gap-lg | loop→rpt dark→black light→white subtle→gray slate→gray | — | --ui-marquee-* --_name --_dir --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
+| `vid()` | video | **mode** cc pip fls · **size** sm md lg xl | — | — | --ui-media-tool-fullscreen --ui-media-tool-pip --ui-media-tool-cc --ui-media-tool-bg --ui-media-tool-bg-hover --ui-media-tool-size | — | — |
+| `load()` | loading | **mode** eager lazy | — | — | — | — | — |
+| `nav()` | carousel | **mode** mrk arw blw abv | — | yes | --ui-media-bg --ui-carousel-* | — | — |
+| `arw()` | arrows | **variant** arr bare sqr sft lgt drk hid rev set · **size** sm lg xl · **pos** ts tc te cs cc bs bc be · **mode** blw abv | — | — | --ui-carousel-arrow-glyph --ui-carousel-arrow-size --ui-carousel-arrow-radius --ui-carousel-arrow-bg --ui-carousel-arrow-bg-hover --ui-carousel-arrow-color --ui-carousel-arrow-color-hover --ui-carousel-arrow-shadow --ui-carousel-arrow-hover-ring --ui-carousel-arrow-nudge --ui-carousel-arrow-disabled-opacity --ui-carousel-arrow-top --_arw-rot --_arw-scale | — | — |
+| `mrk()` | markers | **variant** pll hyb bar tmb rail non lgt drk sbr lbl · **size** sm md lg xl · **pos** ts tc te cs cc ce bs bc be · **mode** blw abv | — | — | --ui-carousel-marker-size --ui-carousel-marker-bg --ui-carousel-marker-active --ui-carousel-marker-inset --ui-carousel-pill-width --ui-carousel-pill-height --ui-carousel-pill-track --ui-carousel-pill-fill --ui-carousel-thumb-size --ui-carousel-bar-* --ui-carousel-band --ui-carousel-rail --ui-carousel-sbr-* --ui-carousel-label-* | — | — |
+| `tmb()` | thumbs | **ratio** 1/1 4/3 3/4 16/9 3/2 2/3 | — | — | --ui-carousel-thumb-ratio --ui-carousel-thumb-ratio-n | — | — |
+| `axis()` | carousel | **value** y | — | — | — | — | — |
+| `auto()` | carousel | **value** &lt;n&gt; &lt;n&gt;s &lt;n&gt;ms | — | yes | --ui-carousel-autoplay --ui-carousel-play-state --ui-carousel-thumb-timer-name --_play-block --_play-inline --_play-justify --_play-size | — | — |
+| `ani()` | carousel | **anim** rise fall lft rgt zom blr fde | — | — | --_stg-tr --_stg-sc --_stg-fl --_stg-origin | — | — |
+| `crd()` | carousel | **anim** rise fall lft rgt zom blr fde | — | — | --_stg-crd-tr --_stg-crd-sc --_stg-crd-fl | — | — |
+| `ply()` | furniture | **size** sm md lg xl | — | — | --ui-play-sz --ui-play-icon-sz | — | yes → `play` |
+| `clip` | corners | — | — | yes | --ui-media-radius | — | — |
+| `loop` | carousel | — | — | yes | --_play-block --_play-inline --_play-justify --_play-size | — | — |
+| `stagger` | carousel | — | — | yes | --_stg-base-i --_stg-crd-i | — | — |
+| `pages` | carousel | — | — | yes | --_pg | — | — |
+<!-- /tokens -->
 
-```
-asr(1/1)   asr(6/7)   asr(3/4)   asr(4/3)
-asr(3/2)   asr(2/3)   asr(16/9)  asr(21/9)
-```
+What each one is *for*:
+
+| Token | Controls |
+|-------|----------|
+| `asr()` | aspect-ratio (or any ratio via `style="--ui-media-ar"`) |
+| `rds()` | corners (**standalone only**) — plain steps plus `-sq` squircles |
+| `obp()` | object-position (9-grid). Logical **and** physical spellings are supported and neither is deprecated — see below |
+| `obf()` | object-fit |
+| `flp()` | flip / mirror the image |
+| `shp()` | clip the frame to one of the shared `--shape-*` glyphs (`ui/base/shapes.css`) |
+| `hov()` | hover effect (image only) — 17 values across five families, see the table below |
+| `tnt()` | colour tint over the image (`media.tint.css`, opt-in), faded out by `hov(tint)` |
+| `scm()` | scrim — bare matches the host `ovr()`; three composable axes (direction · size · intensity) |
+| `nav()` | carousel — **the token IS the trigger**; bare = markers + arrows (full control vocabulary — `arw()`, `mrk()`, `tmb()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()` — in [carousel.md](./carousel.md)) |
+| `vid()` | player-tool cluster over a chrome-less `<video>` — JS **injects** the requested buttons (bottom-end; order CC → PiP → fullscreen, fullscreen rightmost). Size mirrors `arw()` (`vid(sm)`…`vid(xl)`, default 2.5rem). Needs `index.js`; PiP feature-detected (skipped in Firefox). `cc` = subtitles/captions button (glyph only — **switching not wired yet**). *(Play/pause is `<ui-play>` furniture, not a `vid()` value.)* |
+| `load()` | loading strategy — `load(eager)` makes every slide eager and gives the first `fetchpriority="high"` |
+| `chip()` `sticker()` `beacon()` `save()` `play()` | place + theme an overlay element — position **or** hue **or** that element's own size/shape args, one atomic token each |
+| `play()` | also **sizes** the `<ui-play>` control (`sm md lg xl`). Mirrors `<ui-play>`'s own `size=` scale; an explicit `size=` on the element still wins. Position args (`ts…be`) and size args are disjoint vocabularies, so one stem parses unambiguously. *(`ply(<size>)` is a deprecated alias.)* |
+| `marquee()` | the `<ui-marquee>` **band** (not 9-grid furniture) — see *Overlay furniture* |
+| `pages` | **`<lay-out overflow>` only** — one `::scroll-marker` per *page* of items instead of per item; see [carousel.md](./carousel.md#pages--one-marker-per-page-lay-out-overflow-only) |
+
+#### `asr()` — the 9 numeric aspect ratios
+
+<!-- tokens:args attr=media stems=asr -->
+| token | arg class | values | aliases |
+|---|---|---|---|
+| `asr()` | **ratio** | 1/1 1/2 6/7 3/4 4/3 3/2 2/3 16/9 21/9 | — |
+<!-- /tokens -->
 
 There were never any named keywords — ratios are always numeric. Any other ratio goes through the escape hatch: `style="--ui-media-ar: 5/4"`. Setting `asr()` also zeroes the frame's `min-block-size` so the ratio governs height.
 
@@ -345,27 +392,61 @@ Two **fill modifiers** compose on top of a hue: `el(pale)` (mixed 80% into the s
 
 #### Deprecated hue aliases
 
-Four older spellings are kept as aliases and **removed in v5**:
+Four older spellings are kept as aliases on every hue-taking token and **removed in v5**:
 
-| Deprecated | Use instead | Note |
-|---|---|---|
-| `dark` | `black` | |
-| `light` | `white` | |
-| `subtle` | `gray` | |
-| `slate` | `gray` | `slate` was a distinct `--ui-theme-slate-*` bundle; it now resolves to its own bundle where implemented, but is not part of the canonical set |
+<!-- tokens:aliases attr=media stems=tnt,chip,sticker,beacon,marquee,save,play -->
+| deprecated | canonical | on | kind |
+|---|---|---|---|
+| `tnt(dark)` | `tnt(black)` | `media=` | arg |
+| `tnt(light)` | `tnt(white)` | `media=` | arg |
+| `tnt(subtle)` | `tnt(gray)` | `media=` | arg |
+| `tnt(slate)` | `tnt(gray)` | `media=` | arg |
+| `chip(dark)` | `chip(black)` | `media=` | arg |
+| `chip(light)` | `chip(white)` | `media=` | arg |
+| `chip(subtle)` | `chip(gray)` | `media=` | arg |
+| `chip(slate)` | `chip(gray)` | `media=` | arg |
+| `sticker(dark)` | `sticker(black)` | `media=` | arg |
+| `sticker(light)` | `sticker(white)` | `media=` | arg |
+| `sticker(subtle)` | `sticker(gray)` | `media=` | arg |
+| `sticker(slate)` | `sticker(gray)` | `media=` | arg |
+| `beacon(dark)` | `beacon(black)` | `media=` | arg |
+| `beacon(light)` | `beacon(white)` | `media=` | arg |
+| `beacon(subtle)` | `beacon(gray)` | `media=` | arg |
+| `beacon(slate)` | `beacon(gray)` | `media=` | arg |
+| `marquee(loop)` | `marquee(rpt)` | `media=` | arg |
+| `marquee(dark)` | `marquee(black)` | `media=` | arg |
+| `marquee(light)` | `marquee(white)` | `media=` | arg |
+| `marquee(subtle)` | `marquee(gray)` | `media=` | arg |
+| `marquee(slate)` | `marquee(gray)` | `media=` | arg |
+| `save(dark)` | `save(black)` | `media=` | arg |
+| `save(light)` | `save(white)` | `media=` | arg |
+| `save(subtle)` | `save(gray)` | `media=` | arg |
+| `save(slate)` | `save(gray)` | `media=` | arg |
+| `play(dark)` | `play(black)` | `media=` | arg |
+| `play(light)` | `play(white)` | `media=` | arg |
+| `play(subtle)` | `play(gray)` | `media=` | arg |
+| `play(slate)` | `play(gray)` | `media=` | arg |
+<!-- /tokens -->
 
-#### Per-element support matrix (verified against source)
+> **`slate` is the one alias that does not resolve to its canonical.** `dark`/`light`/`subtle` really are re-spellings of `black`/`white`/`gray` and route to those bundles. `slate` routes to its **own** `--ui-theme-slate-*` bundle — a fifth neutral, one step lighter than `black`, that every one of the six elements implements. It is listed against `gray` above because that is the canonical hue to *migrate to*, not because it renders as gray. If you want the slate surface after v5, use the element's own `theme="slate"` (a first-class theme in [base/theme.md](../base/theme.md)) rather than the `media=` furniture arg.
 
-| Element | canonical 8 | `pale` / `muted` | `dark` `light` `subtle` | `slate` |
-|---|---|---|---|---|
-| `<ui-chip>` | ✅ | ✅ | ✅ (aliased) | ✅ (aliased) |
-| `<ui-sticker>` | ✅ | ✅ | ✅ (aliased) | ✅ (aliased) |
-| `<ui-beacon>` | ✅ | ✅ | ✅ (aliased) | ✅ (aliased) |
-| `<ui-marquee>` | ✅ | ✅ | ✅ (aliased) | ✅ (aliased) |
-| `<ui-save>` | ✅ | ❌ | ✅ (aliased) | ❌ |
-| `<ui-play>` | ✅ | ❌ | ❌ | ❌ |
+#### Per-element support matrix (generated from the manifest)
 
-> **Honest gaps.** `ui/save/ui-save.css` implements `dark`/`light`/`subtle` but **not** `slate`; `ui/play/ui-play.css` implements **none** of the four deprecated aliases. So `media="play(dark)"` and `media="save(slate)"` are silently inert today. Both elements are single-ink controls (`--ui-save-c`, `--ui-play-bg/-c`) with no `pale`/`muted` mixing. Use the canonical names on `save`/`play` and the gap never bites.
+The furniture stems and the exact vocabulary each one accepts. A blank cell means that
+element has no such axis — `pos` and `hue` are universal; the rest differ per element.
+
+<!-- tokens:matrix attr=media stems=chip,sticker,beacon,marquee,save,play classes=pos,hue,mode,size,disc,face,anim,shape,flag,value -->
+| token | pos | hue | mode | size | disc | face | anim | shape | flag | value | deprecated aliases |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| `chip()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | pale muted | sm lg xl 2xl | non rnd pll crc sqr | — | — | — | — | — | dark→black light→white subtle→gray slate→gray |
+| `sticker()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | pale muted | sm lg xl 2xl 3xl | non rnd pll crc sqr | — | — | text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; | fit | — | dark→black light→white subtle→gray slate→gray |
+| `beacon()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | pale muted | xs sm md lg xl 2xl | pll rnd sqr non | sld tck dts | bln pls brt | — | — | — | dark→black light→white subtle→gray slate→gray |
+| `marquee()` | top bot | red orange green blue accent black white gray | rpt seam fade pale muted | sm lg xl 2xl | non rnd pll crc sqr | — | — | — | — | right up down slow fast faster gap-sm gap-lg | loop→rpt dark→black light→white subtle→gray slate→gray |
+| `save()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | — | sm lg xl | non rnd crc sqr | — | — | — | — | — | dark→black light→white subtle→gray slate→gray |
+| `play()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | — | sm md lg xl | non rnd pll crc sqr | — | — | — | — | — | dark→black light→white subtle→gray slate→gray |
+<!-- /tokens -->
+
+> **Honest gap: no `pale`/`muted` on `save`/`play`.** The `mode` column is empty for both — they are single-ink controls (`--ui-save-c`, `--ui-play-bg/-c`) with nothing to mix a tint into, so `media="save(pale)"` / `media="play(muted)"` are silently inert. Both *do* ship the full canonical eight **and** all four deprecated aliases including `slate` (verified in `ui/save/ui-save.css` and `ui/play/ui-play.css`), so hue itself has no holes.
 
 > **Position and hue are disjoint vocabularies** (`ts…be` vs `red…gray`), so `chip(cc)` and `chip(black)` parse unambiguously. They are **two atomic tokens** — `media="chip(te) chip(black)"`, not a combined `chip(te black)` — so the pure-CSS substring parser can scope each arg to its element. Because position usually defaults by role, the common case is a single token (e.g. `chip(black)`).
 
@@ -453,7 +534,7 @@ All carousel CSS lives in **`media.carousel.css`** (imported by `ui-card.css` al
 | `arw(lgt)` · `arw(drk)` | theme — light circle + dark glyph (the default, made explicit) / dark circle + white glyph |
 | `arw(sm)` · `arw(lg)` · `arw(xl)` | arrow button size (`1.75` / `2.75` / `3.25rem`; default `2.25rem`, no token) |
 | `arw(sqr)` · `arw(sft)` | square button — sharp corners / slight radius |
-| `arw(tc)` · `arw(cc)` *(default)* · `arw(bc)` | split arrows at the top / center / bottom row |
+| `arw(ts…be)` | placement cell — `ts tc te · cs cc · bs bc be`. For **split** arrows only the block row counts (`tc` top / `cc` center, the default / `bc` bottom); the inline letter matters under `axis(y)` and for `arw(set)` |
 | `arw(set)` | both arrows as an adjacent pair (place with `arw(set) arw(<cell>)`, default inline-end) |
 | `arw(bare)` | drop the circle — render the glyph itself as a coloured arrow (any colour) |
 | `arw(hid)` | **auto-hide** the dead-end arrow (no slide that way) — opt out of the always-visible default |
@@ -487,6 +568,8 @@ Bare drops the circle (and its `--ui-carousel-arrow-shadow`), so a white glyph r
 | `mrk(sm)` · `mrk(md)` *(default)* · `mrk(lg)` · `mrk(xl)` | dot / pill size (composes with `mrk(pll)`) |
 
 The fill restarts whenever the active slide changes (`:target-current`); the `auto` token (JS autoplay) keeps it in sync with the advance interval. Under `prefers-reduced-motion: reduce` the active pill shows filled with no animation. Theme with `--ui-carousel-pill-track` / `--ui-carousel-pill-fill` / `--ui-carousel-pill-width` / `--ui-carousel-pill-height`.
+
+Those four are the frame-level highlights. The **full** `mrk()` vocabulary — `bar` (styled scrollbar) · `tmb` (thumbnails) · `rail` · `sbr` (real scrollbar) · `lbl` (`aria-label` text pills) · `non` · the `lgt`/`drk` ink pair · the nine placement cells · the `blw`/`abv` band atoms — is generated in [carousel.md](./carousel.md#token-reference).
 
 ### Controls in a band — `nav(blw)` / `nav(abv)`
 
@@ -791,21 +874,64 @@ Video-player styles live in **`media.video.css`** (imported after `media.css`, b
 
 ## Deprecated aliases (v4 → v5)
 
-Everything below still works in v4 and is **scheduled for removal in v5**. Each is a pure CSS alias — no console warning, no runtime cost — so migration is a find-and-replace. Sorted by where it appears.
+Everything below still works in v4 and is **scheduled for removal in v5**. Each is a pure CSS alias — no console warning, no runtime cost — so migration is a find-and-replace. The full inventory across all three attributes is generated from the manifest:
 
-| Deprecated | Canonical | Where | Why it changed |
+<!-- tokens:aliases attr=media,variant,content -->
+| deprecated | canonical | on | kind |
 |---|---|---|---|
-| `ovr(tl)` `ovr(tr)` `ovr(cl)` `ovr(cr)` `ovr(bl)` `ovr(br)` | `ovr(ts)` `ovr(te)` `ovr(cs)` `ovr(ce)` `ovr(bs)` `ovr(be)` | `variant=` | The implementation was **already logical** — `ovr(tl)` rendered top-*end* in RTL. This renames the args to match reality. `ovr(tc)`/`ovr(cc)`/`ovr(bc)` are spelled the same in both and unaffected. |
-| `rds(none)` | `rds(non)` | `variant=` · `media=` · `content=` | Three-letter args everywhere; `non` matches the `non`/`rnd`/`pll`/`crc`/`sqr` corner vocabulary the furniture already uses. |
-| `scm(sheer)` | `scm(shr)` | `media=` | Same — canonical 3-letter intensity codes. |
-| `scm(solid)` | `scm(sld)` | `media=` | |
-| `chip(dark)` `sticker(dark)` `beacon(dark)` `marquee(dark)` `save(dark)` `tnt(dark)` | `…(black)` | `media=` | One hue palette (see *The canonical eight hues*). |
-| `…(light)` | `…(white)` | `media=` | |
-| `…(subtle)` | `…(gray)` | `media=` | |
-| `…(slate)` | `…(gray)` | `media=` | `slate` was a fifth neutral outside the canonical set. |
-| `scl` `scl(ts\|te\|bs\|be)` `lg:scl` | `grw` `grw(ts\|te\|bs\|be)` `lg:grw` | `variant=` on `<ui-reveal>` | Reveal's scale-morph animation collided by name with `content=`'s `scl()` type scale. Different attributes, but one spelling should mean one thing. |
-| `ply(sm\|md\|lg\|xl)` | `play(sm\|md\|lg\|xl)` | `media=` | Folds the system's only two-stem element into one. Position args (`ts…be`) and size args are disjoint, so one stem parses unambiguously. |
-| `marquee(loop)` | `marquee(rpt)` | `media=` | `loop` is also the bare carousel autoplay-with-clones flag in the same attribute; the substring match collided. |
+| `rds(none)` | `rds(non)` | `media=` | arg |
+| `tnt(dark)` | `tnt(black)` | `media=` | arg |
+| `tnt(light)` | `tnt(white)` | `media=` | arg |
+| `tnt(subtle)` | `tnt(gray)` | `media=` | arg |
+| `tnt(slate)` | `tnt(gray)` | `media=` | arg |
+| `scm(sheer)` | `scm(shr)` | `media=` | arg |
+| `scm(solid)` | `scm(sld)` | `media=` | arg |
+| `chip(dark)` | `chip(black)` | `media=` | arg |
+| `chip(light)` | `chip(white)` | `media=` | arg |
+| `chip(subtle)` | `chip(gray)` | `media=` | arg |
+| `chip(slate)` | `chip(gray)` | `media=` | arg |
+| `sticker(dark)` | `sticker(black)` | `media=` | arg |
+| `sticker(light)` | `sticker(white)` | `media=` | arg |
+| `sticker(subtle)` | `sticker(gray)` | `media=` | arg |
+| `sticker(slate)` | `sticker(gray)` | `media=` | arg |
+| `save(dark)` | `save(black)` | `media=` | arg |
+| `save(light)` | `save(white)` | `media=` | arg |
+| `save(subtle)` | `save(gray)` | `media=` | arg |
+| `save(slate)` | `save(gray)` | `media=` | arg |
+| `play(dark)` | `play(black)` | `media=` | arg |
+| `play(light)` | `play(white)` | `media=` | arg |
+| `play(subtle)` | `play(gray)` | `media=` | arg |
+| `play(slate)` | `play(gray)` | `media=` | arg |
+| `beacon(dark)` | `beacon(black)` | `media=` | arg |
+| `beacon(light)` | `beacon(white)` | `media=` | arg |
+| `beacon(subtle)` | `beacon(gray)` | `media=` | arg |
+| `beacon(slate)` | `beacon(gray)` | `media=` | arg |
+| `marquee(loop)` | `marquee(rpt)` | `media=` | arg |
+| `marquee(dark)` | `marquee(black)` | `media=` | arg |
+| `marquee(light)` | `marquee(white)` | `media=` | arg |
+| `marquee(subtle)` | `marquee(gray)` | `media=` | arg |
+| `marquee(slate)` | `marquee(gray)` | `media=` | arg |
+| `ply()` | `play()` | `media=` | whole token |
+| `rds(none)` | `rds(non)` | `variant=` | arg |
+| `ovr(tl)` | `ovr(ts)` | `variant=` | arg |
+| `ovr(tr)` | `ovr(te)` | `variant=` | arg |
+| `ovr(cl)` | `ovr(cs)` | `variant=` | arg |
+| `ovr(cr)` | `ovr(ce)` | `variant=` | arg |
+| `ovr(bl)` | `ovr(bs)` | `variant=` | arg |
+| `ovr(br)` | `ovr(be)` | `variant=` | arg |
+| `scl()` | `grw()` | `variant=` | whole token |
+| `rds(none)` | `rds(non)` | `content=` | arg |
+<!-- /tokens -->
+
+**Why each one changed:**
+
+- **`ovr(tl…br)` → `ovr(ts…be)`** — the implementation was **already logical**: `ovr(tl)` rendered top-*end* in RTL. This renames the args to match reality. There are **six** aliases, not nine: `ovr(tc)`/`ovr(cc)`/`ovr(bc)` are spelled identically in both grids and need none.
+- **`rds(none)` → `rds(non)`** (all three attributes) — three-letter args everywhere; `non` matches the `non`/`rnd`/`pll`/`crc`/`sqr` corner vocabulary the furniture already uses.
+- **`scm(sheer)`/`scm(solid)` → `scm(shr)`/`scm(sld)`** — same, canonical 3-letter intensity codes.
+- **`…(dark)`/`…(light)`/`…(subtle)`/`…(slate)` → `…(black)`/`…(white)`/`…(gray)`** — one hue palette (see *The canonical eight hues*). `slate` is the odd one out: it is a real fifth neutral with its own `--ui-theme-slate-*` bundle, listed against `gray` because that is the canonical hue to migrate to — not because it renders as gray.
+- **`scl` / `scl(ts…be)` / `lg:scl` → `grw` / `grw(ts…be)` / `lg:grw`** (`variant=` on `<ui-reveal>`) — reveal's scale-morph animation collided by name with `content=`'s `scl()` type scale. Different attributes, but one spelling should mean one thing.
+- **`ply(<size>)` → `play(<size>)`** — folds the system's only two-stem element into one. Position args (`ts…be`) and size args are disjoint, so one stem parses unambiguously.
+- **`marquee(loop)` → `marquee(rpt)`** — `loop` is also the bare carousel autoplay-with-clones flag in the same attribute; the substring match collided.
 
 **Not deprecated, despite looking like it:** `obp()`'s physical spellings (`tl…br`). `object-position` has no logical keywords and "crop to the left edge" is a genuine direction-independent intent — see [`obp()`](#obp--object-position-9-grid).
 

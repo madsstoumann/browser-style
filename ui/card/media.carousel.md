@@ -31,9 +31,12 @@ Controls + scrim share one shade vocabulary: `lgt` (light/white) · `drk` (dark/
 
 ## All tokens (alphabetical)
 
-Every option the carousel recognises. **Layer:** CSS = `media.carousel.css`,
-JS = `carousel.js` / `video.js` / `hover.js` (all bundled by `index.js`), load = `ui-media-srcset.js`. (`nav` is required to make the
-scroller; the rest layer on top. `asr()` etc. belong to the base frame — see media.md.)
+Every option the carousel recognises. **Layer:** CSS = `media.carousel.css` (with the
+generic control chrome in `ui/base/carousel.css`, and `stagger` / `ani()` / `crd()` entirely
+in `ui/base/stagger.css` — see *Staggered content reveal*), JS = `carousel.js` / `video.js` /
+`hover.js` (all bundled by `index.js`), load = `ui-media-srcset.js`. (`nav` is required to
+make the scroller; the rest layer on top. `asr()` etc. belong to the base frame — see
+media.md.)
 
 | `media=` token | Layer | Effect |
 |----------------|-------|--------|
@@ -73,6 +76,7 @@ scroller; the rest layer on top. `asr()` etc. belong to the base frame — see m
 | `mrk(tmb)`| CSS | Image thumbnails; per-slide `--ui-carousel-thumb-url`; active thumb has a bottom timer stripe. Overlay in a corner, or `+ mrk(blw)`/`nav(blw)` for a gallery **filmstrip band** below — band auto-sizes to the thumb; image keeps `asr()` (`box-sizing: content-box`) and is rounded on all 4 corners to `rds()` |
 | `mrk(ts)` `mrk(te)` `mrk(bs)` `mrk(be)` | CSS | Corner placement for the overlay marker-group — logical (top-start / top-end / bottom-start / bottom-end). Center row `mrk(cs)` `mrk(cc)` `mrk(ce)` completes the 9-grid. Inset via `--ui-carousel-marker-inset` |
 | `mrk(rail)` | CSS | With `axis(y)` + `mrk(tmb)`: vertical thumbnail rail **beside** the media (inline-start; right in RTL). Reserves inline space (`padding-inline-start` + `content-box`) so the image keeps `asr()`; arrows dropped; thumbs shrink to `--ui-carousel-thumb-min` then the rail scrolls. Width `--ui-carousel-rail` |
+| `mrk(sbr)` | CSS | **System bar (WIP)** — styles the scroller's **real** scrollbar as a full-width bottom bar instead of drawing markers, so it is natively draggable with zero JS. One central `--ui-carousel-sbr-*` set (`-track` `-thumb` `-size` `-inset` `-radius` `-track-radius` `-thumb-radius` `-gap`) feeds both the standard (Firefox `scrollbar-color`) and `::-webkit-scrollbar` paths; `content-box` like `mrk(tmb)` so the bar is added outside the `asr()` image |
 | `tmb(<ratio>)` | CSS | Thumbnail aspect-ratio (default `4/3`): `1/1 · 4/3 · 3/4 · 16/9 · 3/2 · 2/3` (slash, mirrors `asr()`). Sets `--ui-carousel-thumb-ratio` (+ `-ratio-n`, the numeric form the `mrk(rail)` width calc uses) |
 | `mrk(xl)`   | CSS | Marker size 1rem |
 | `loop`      | JS | Seamless infinite loop (clones first/last slide) |
@@ -81,6 +85,7 @@ scroller; the rest layer on top. `asr()` etc. belong to the base frame — see m
 | `nav(blw)`  | CSS | Markers + arrows in a reserved band below the media |
 | `nav(abv)`  | CSS | Markers + arrows in a reserved band above the media (mirror of `nav(blw)`) |
 | `nav(mrk)`  | CSS | Markers only |
+| `pages`     | CSS | **`<lay-out overflow>` only** — one `::scroll-marker` per *page* of `--_ci` items instead of per item, and page-wise snapping. Whole-token matched; implemented in `layout/core/base.css` via `mod(sibling-index() - 1, --_ci)` + `if(style(--_pg: 0))`, degrading to per-item where those are unsupported |
 | `stagger`   | CSS | Staggered content reveal — each slide's `<ui-content>` children fade + rise in when it becomes the snapped slide (pure CSS via `scroll-state` queries; see below) |
 
 ### `<ui-media>` frame tokens (not carousel — for reference)
@@ -93,7 +98,7 @@ because `object-position` has no logical keywords. Furniture uses the logical se
 
 | Token | Layer | Effect |
 |-------|-------|--------|
-| `asr(1/1 · 6/7 · 3/4 · 4/3 · 3/2 · 2/3 · 16/9 · 21/9)` | CSS | Aspect ratio of the frame |
+| `asr(1/1 · 1/2 · 6/7 · 3/4 · 4/3 · 3/2 · 2/3 · 16/9 · 21/9)` | CSS | Aspect ratio of the frame — nine ratios, and the one `media=` token that takes `md:`/`lg:` prefixes |
 | `obf(cover · contain · fill · none)` | CSS | `object-fit` (default cover) |
 | `obp(<pos>)` | CSS | `object-position` (9-grid, logical **or** physical spelling) |
 | `rds(non · sm · md · lg · xl · 2xl · full · pill)` | CSS | Corner radius (standalone frame); `-sq` variants add a squircle corner. `rds(none)` is a deprecated alias of `rds(non)` |
@@ -224,7 +229,9 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
 - **`mrk(tmb)` — image thumbnails.** Each marker becomes a picture set per-slide via
   `--ui-carousel-thumb-url` (on the slide `<img>` or the slide `<ui-card>`); it inherits to that
   slide's `::scroll-marker`. Sized by `--ui-carousel-thumb-size` × `--ui-carousel-thumb-ratio`,
-  white `--ui-carousel-thumb-border`, inactive dimmed via `--ui-carousel-thumb-opacity`. The active
+  white `--ui-carousel-thumb-border`. Active vs inactive is signalled by border colour
+  (`--ui-carousel-thumb-border-color` → `-color-active`); `--ui-carousel-thumb-opacity` defaults to
+  `1`, so thumbs are fully opaque unless you set it lower. The active
   thumb layers a **bottom timer stripe** (2-layer background: `linear-gradient` stripe over
   the image) animated 0→100% width by the `ui-carousel-thumb-timer` keyframes over
   `--ui-carousel-autoplay`. **The timer is OFF by default** (`--ui-carousel-thumb-timer-name: none`) —
@@ -245,10 +252,12 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
   `-group-gap`. Positions with the same 9-grid cells as dots/thumbs. The group hugs its labels;
   like a wide dot row it can spill on very narrow frames (a `::scroll-marker-group`'s inline size
   can't be reliably clamped to the frame in current Chrome), so keep labels short.
-- **Corner placement.** `mrk(tl|tr|bl|br)` re-anchor the whole marker-group to a corner
+- **Corner placement.** `mrk(ts|te|bs|be)` re-anchor the whole marker-group to a corner
   (overlay), inset by `--ui-carousel-marker-inset` (defaults to the overlay gap; `mrk(tmb)`
-  bumps it to `1rem`). In `axis(y)` the corner rail stacks vertically. Default (no corner
-  token) stays bottom-centered.
+  bumps it to `1rem`). The centre row `mrk(cs|cc|ce)` completes the same nine-cell logical
+  grid the furniture uses — these are **logical** spellings (start/end, rtl-safe); there are
+  no physical `mrk(tl|tr|bl|br)` forms. In `axis(y)` the corner rail stacks vertically.
+  Default (no cell token) stays bottom-centered.
 - **`mrk(bar)` — segmented thin scrollbar.** The marker-group becomes one full-width
   strip: every marker is an invisible `flex: 1 1 0` segment painted as a centered
   hairline (`linear-gradient` track, `100% × --ui-carousel-bar-track-size`), and
@@ -291,8 +300,12 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
 - **Shape × shade** (independent, composed): shape = chevron (default, no token) · `arw(arr)`;
   theme = light (default / `arw(lgt)`: light circle + dark glyph) · `arw(drk)` (dark circle + white glyph
   + light hover ring, one atom — works on the overlay and in bands). A direct `--ui-carousel-arrow-glyph` / `--ui-carousel-arrow-bg` override wins.
-- Sizes `arw(sm|md|lg|xl)` set `--ui-carousel-arrow-size` (`md` = 2.25rem default).
-- **Placement** `arw(mid|top|bot)` set `--ui-carousel-arrow-top` (mid = `anchor(center)` default).
+- Sizes `arw(sm|lg|xl)` set `--ui-carousel-arrow-size`. The 2.25rem default is the *absence*
+  of a size arg — there is no `arw(md)`.
+- **Placement** is the eight-cell vocabulary `arw(ts|tc|te|cs|cc|bs|bc|be)`, which sets
+  `--ui-carousel-arrow-top`; for **split** arrows only the block row is read (`tc` top ·
+  `cc` centered = `anchor(center)`, the default · `bc` bottom). There is no `arw(ce)` (the
+  inline-end column is `arw(set)`'s default) and no `arw(top|mid|bot)`.
 - **`arw(set)`** moves the left button next to the right one (adjacent pair at inline-end).
 - **Disabled (dead-end) arrow** dims to `--ui-carousel-arrow-disabled-opacity` (0.4) by
   default; **`arw(hid)`** sets it to 0 (auto-hide instead of dim).
@@ -441,6 +454,17 @@ Add `variant="reveal"` (from `@browser.style/play`) to hide it until the frame i
 or focused. Requires `../play/index.js` loaded on the page.
 
 ## Staggered content reveal (`stagger`) — pure CSS
+
+> **Not in this stylesheet.** Unlike every other section on this page, the stagger system
+> lives entirely in **[`ui/base/stagger.css`](../base/stagger.css)** — the host-agnostic
+> engine `ui-tabs`, `ui-reveal` and `ui-accordion` share. That includes the parts a header
+> comment here and in `stagger.css` still describe as "trigger wiring [that] stays in
+> `ui/card/media.carousel.css`": the `container-type: scroll-state` on each slide, the
+> `@container not scroll-state(snapped: inline)` from-state, the per-child
+> `transition-delay`, and the `ani()`/`crd()` vocabulary arms. `media.carousel.css` carries
+> **no** stagger rules at all. Both comments are stale; the section below is kept here
+> because `media="stagger"` is a carousel token, but the code to read is `stagger.css`
+> (overview: [stagger.md](./stagger.md)).
 
 Opt-in via `media="stagger"`. Each slide's `<ui-content>` children fade + rise in, one after
 another, when the slide becomes the current (snapped) one — the "hero slider" reveal. This is

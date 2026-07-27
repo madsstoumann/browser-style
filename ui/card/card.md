@@ -129,19 +129,35 @@ hand-authored [`media.furniture.html`](media.furniture.html) is the reference sh
 ```
 
 **Look tokens on `media=`** — single-value tokens (the CSS matches them by substring, so
-one value per token, never `chip(ts red)`). The vocabulary is shared across all four:
+one value per token, never `chip(ts red)`). The vocabulary is generated from
+`data/tokens.json`, so it can't drift from the element stylesheets:
 
-| Token | Effect |
-|-------|--------|
-| `el(<pos>)` | Position on the 9-code grid — `ts tc te · cs cc ce · bs bc be` |
-| `el(<hue>)` | Colour from the 8 theme hues — `red orange green blue accent dark light subtle` |
-| `el(<size>)` | Scale — `sm lg xl` (`md` = default); `play`/`save` |
-| `sticker(<shape>)` | `burst spark sunburst heart blob text spl spr` — no `variant=` needed |
-| `sticker(fit)` | Native `text-fit` — scales every line to fill the box width (= `font="fit"`) |
-| `save(<corner>)` | Disc — `crc` circle (default) · `sqr` squircle · `rnd` rounded · `non` hides the disc |
+<!-- tokens:matrix attr=media stems=chip,sticker,save,play classes=pos,hue,mode,size,disc,shape,flag -->
+| token | pos | hue | mode | size | disc | shape | flag | deprecated aliases |
+|---|---|---|---|---|---|---|---|---|
+| `chip()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | pale muted | sm lg xl 2xl | non rnd pll crc sqr | — | — | dark→black light→white subtle→gray slate→gray |
+| `sticker()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | pale muted | sm lg xl 2xl 3xl | non rnd pll crc sqr | text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; | fit | dark→black light→white subtle→gray slate→gray |
+| `save()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | — | sm lg xl | non rnd crc sqr | — | — | dark→black light→white subtle→gray slate→gray |
+| `play()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | — | sm md lg xl | non rnd pll crc sqr | — | — | dark→black light→white subtle→gray slate→gray |
+<!-- /tokens -->
 
-where `el` is `chip` / `sticker` / `save` / `play`. Each also works standalone via `theme=` /
-`fill=` / `ink=` / `size=` / `radius=` on the element itself.
+- **`pos`** — the 9-code logical grid, shared with `ovr()`, `scm()` and reveal's `ico()`.
+- **`hue`** — the canonical eight. `dark`/`light`/`subtle`/`slate` still work as deprecated
+  aliases (last column); `slate` resolves to its own `--ui-theme-slate-*` bundle rather than
+  to `gray`. See [media.md](media.md#the-canonical-eight-hues).
+- **`mode`** — the `pale` / `muted` fill modifiers. `save` and `play` are single-ink controls
+  and implement neither.
+- **`size`** — `md` is the default on every element and is spelled by *omitting* a size arg,
+  except on `play()` where `play(md)` is also accepted explicitly.
+- **`disc`** — the backing shape: `crc` circle · `sqr` squircle · `rnd` rounded · `pll` pill ·
+  `non` hides the disc.
+- **`sticker(<shape>)`** — `text spl spr` plus the `sh:` clip set (`sh:burst`, `sh:blob`,
+  `sh:spark`, `sh:sunburst`, `sh:heart`, or any `sh:<custom>` you define). No `variant=` needed.
+- **`sticker(fit)`** — native `text-fit`; scales every line to fill the box width (= `font="fit"`).
+
+Each element also works standalone via `theme=` / `fill=` / `ink=` / `size=` / `radius=` on
+the element itself. `<ui-beacon>` and `<ui-marquee>` take the same `media=` shape with extra
+axes of their own — full matrix in [media.md](media.md#per-element-support-matrix-generated-from-the-manifest).
 
 **Per-card override — `style`.** Furniture styling defaults to the preset, but any item may
 carry an optional `style` token string (same vocabulary) that the renderer appends after the
