@@ -139,7 +139,7 @@ drift from the CSS. (`md:/lg:` is the container-query prefix column: only `asr()
 | `save()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray · **size** sm lg xl · **disc** non rnd crc sqr | dark→black light→white subtle→gray slate→gray | — | --ui-save-c --ui-save-c-active --ui-save-sz --ui-save-circle-* | — | — |
 | `play()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray · **size** sm md lg xl · **disc** non rnd pll crc sqr | dark→black light→white subtle→gray slate→gray | — | --ui-play-sz --ui-play-icon-sz --ui-play-bg --ui-play-c --ui-play-radius --ui-play-corner --_play-block --_play-inline --_play-justify --_play-size | — | — |
 | `beacon()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray · **mode** pale muted · **size** xs sm md lg xl 2xl · **face** sld tck dts · **anim** bln pls brt · **disc** pll rnd sqr non | dark→black light→white subtle→gray slate→gray | — | --ui-beacon-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
-| `marquee()` | band | **pos** top bot · **hue** red orange green blue accent black white gray · **mode** rpt seam fade pale muted · **size** sm lg xl 2xl · **disc** non rnd pll crc sqr · **value** right up down slow fast faster gap-sm gap-lg | loop→rpt dark→black light→white subtle→gray slate→gray | — | --ui-marquee-* --_name --_dir --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
+| `marquee()` | band | **pos** top bot · **hue** red orange green blue accent black white gray · **mode** rpt seam fade pale muted · **size** sm lg xl 2xl · **disc** non rnd pll crc sqr · **value** right up down slow fast faster gap-sm gap-lg | dark→black light→white subtle→gray slate→gray | — | --ui-marquee-* --_name --_dir --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
 | `vid()` | video | **mode** cc pip fls · **size** sm md lg xl | — | — | --ui-media-tool-fullscreen --ui-media-tool-pip --ui-media-tool-cc --ui-media-tool-bg --ui-media-tool-bg-hover --ui-media-tool-size | — | — |
 | `load()` | loading | **mode** eager lazy | — | — | — | — | — |
 | `nav()` | carousel | **mode** mrk arw blw abv | — | yes | --ui-media-bg --ui-carousel-* | — | — |
@@ -321,7 +321,7 @@ Two placement modes:
 
 Args beyond position: mode `marquee(rpt)` (continuous repeat) / `marquee(seam)` / `marquee(fade)`, hue (the canonical eight, below), size `marquee(sm|lg|xl|2xl)`, speed `marquee(slow|fast|faster)`, gap `marquee(gap-sm|gap-lg)`, corner `marquee(non|rnd|pll|crc|sqr)`, direction `marquee(right|up|down)`.
 
-> **`marquee(rpt)` was `marquee(loop)`.** Renamed because `loop` is also a bare carousel flag in the same `media=` string — `media="nav loop"` starts autoplay-with-clones, and a substring-matched `marquee(loop)` collided with it. `marquee(loop)` is kept as a **deprecated alias** (removed in v5); the carousel's own bare `loop` is now whole-token matched so the two can never cross-fire again.
+> **`marquee(rpt)` was `marquee(loop)`.** Renamed because `loop` is also a bare carousel flag in the same `media=` string — `media="nav loop"` starts autoplay-with-clones, and a substring-matched `marquee(loop)` collided with it. The old spelling is **fully removed** (no live alias — the one rename where keeping one would re-create the collision surface); the carousel's own bare `loop` is whole-token matched so the two can never cross-fire again.
 
 Content is markup-free: put the text in `aria-label` on an empty `<ui-marquee>` and it fills `::before`/`::after` while doubling as the accessible name. Full component: [ui/marquee](../marquee/).
 
@@ -413,7 +413,6 @@ Four older spellings are kept as aliases on every hue-taking token and **removed
 | `beacon(light)` | `beacon(white)` | `media=` | arg |
 | `beacon(subtle)` | `beacon(gray)` | `media=` | arg |
 | `beacon(slate)` | `beacon(gray)` | `media=` | arg |
-| `marquee(loop)` | `marquee(rpt)` | `media=` | arg |
 | `marquee(dark)` | `marquee(black)` | `media=` | arg |
 | `marquee(light)` | `marquee(white)` | `media=` | arg |
 | `marquee(subtle)` | `marquee(gray)` | `media=` | arg |
@@ -441,7 +440,7 @@ element has no such axis — `pos` and `hue` are universal; the rest differ per 
 | `chip()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | pale muted | sm lg xl 2xl | non rnd pll crc sqr | — | — | — | — | — | dark→black light→white subtle→gray slate→gray |
 | `sticker()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | pale muted | sm lg xl 2xl 3xl | non rnd pll crc sqr | — | — | text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; | fit | — | dark→black light→white subtle→gray slate→gray |
 | `beacon()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | pale muted | xs sm md lg xl 2xl | pll rnd sqr non | sld tck dts | bln pls brt | — | — | — | dark→black light→white subtle→gray slate→gray |
-| `marquee()` | top bot | red orange green blue accent black white gray | rpt seam fade pale muted | sm lg xl 2xl | non rnd pll crc sqr | — | — | — | — | right up down slow fast faster gap-sm gap-lg | loop→rpt dark→black light→white subtle→gray slate→gray |
+| `marquee()` | top bot | red orange green blue accent black white gray | rpt seam fade pale muted | sm lg xl 2xl | non rnd pll crc sqr | — | — | — | — | right up down slow fast faster gap-sm gap-lg | dark→black light→white subtle→gray slate→gray |
 | `save()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | — | sm lg xl | non rnd crc sqr | — | — | — | — | — | dark→black light→white subtle→gray slate→gray |
 | `play()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | — | sm md lg xl | non rnd pll crc sqr | — | — | — | — | — | dark→black light→white subtle→gray slate→gray |
 <!-- /tokens -->
@@ -906,7 +905,6 @@ Everything below still works in v4 and is **scheduled for removal in v5**. Each 
 | `beacon(light)` | `beacon(white)` | `media=` | arg |
 | `beacon(subtle)` | `beacon(gray)` | `media=` | arg |
 | `beacon(slate)` | `beacon(gray)` | `media=` | arg |
-| `marquee(loop)` | `marquee(rpt)` | `media=` | arg |
 | `marquee(dark)` | `marquee(black)` | `media=` | arg |
 | `marquee(light)` | `marquee(white)` | `media=` | arg |
 | `marquee(subtle)` | `marquee(gray)` | `media=` | arg |
@@ -931,7 +929,7 @@ Everything below still works in v4 and is **scheduled for removal in v5**. Each 
 - **`…(dark)`/`…(light)`/`…(subtle)`/`…(slate)` → `…(black)`/`…(white)`/`…(gray)`** — one hue palette (see *The canonical eight hues*). `slate` is the odd one out: it is a real fifth neutral with its own `--ui-theme-slate-*` bundle, listed against `gray` because that is the canonical hue to migrate to — not because it renders as gray.
 - **`scl` / `scl(ts…be)` / `lg:scl` → `grw` / `grw(ts…be)` / `lg:grw`** (`variant=` on `<ui-reveal>`) — reveal's scale-morph animation collided by name with `content=`'s `scl()` type scale. Different attributes, but one spelling should mean one thing.
 - **`ply(<size>)` → `play(<size>)`** — folds the system's only two-stem element into one. Position args (`ts…be`) and size args are disjoint, so one stem parses unambiguously.
-- **`marquee(loop)` → `marquee(rpt)`** — `loop` is also the bare carousel autoplay-with-clones flag in the same attribute; the substring match collided.
+- **`marquee(loop)` → `marquee(rpt)`** — `loop` is also the bare carousel autoplay-with-clones flag in the same attribute; the substring match collided. Unlike the renames above, the old spelling is **removed outright** (no deprecated alias — keeping it would keep the collision surface alive).
 
 **Not deprecated, despite looking like it:** `obp()`'s physical spellings (`tl…br`). `object-position` has no logical keywords and "crop to the left edge" is a genuine direction-independent intent — see [`obp()`](#obp--object-position-9-grid).
 

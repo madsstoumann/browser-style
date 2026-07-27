@@ -332,7 +332,7 @@ works from the parent `media=` string:
 |---|---|
 | hue | `marquee(red\|orange\|green\|blue\|accent\|white\|gray\|slate\|black)` |
 | hue modifier | `marquee(pale)` (light tint + hue ink) · `marquee(muted)` (translucent plate) — add alongside a hue, e.g. `marquee(green) marquee(pale)` |
-| mode | `marquee(rpt)` (alias: `marquee(loop)`, deprecated) · `marquee(seam)` · `marquee(fade)` |
+| mode | `marquee(rpt)` · `marquee(seam)` · `marquee(fade)` |
 | direction | `marquee(right)` · `marquee(up)` · `marquee(down)` |
 | size | `marquee(sm\|lg\|xl\|2xl)` |
 | corner | `marquee(non\|rnd\|pll\|crc\|sqr)` |

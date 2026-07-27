@@ -62,7 +62,7 @@
 		/* aria-label = zero-markup text content, only when there are no children.
 		   ::after supplies the 2nd copy loop needs. */
 		&[aria-label]:empty::before { content: attr(aria-label); }
-		&:is([variant~="loop"], :where([media*="marquee(rpt)"], [media*="marquee(loop)"] /* deprecated alias — remove in v5 */) &)[aria-label]:empty::after { content: attr(aria-label); }
+		&:is([variant~="loop"], :where([media*="marquee(rpt)"]) &)[aria-label]:empty::after { content: attr(aria-label); }
 
 		/* C. Direction — left(default) · right · up · down (sets --_name / --_dir) */
 		&[direction~="right"], :where([media*="marquee(right)"]) &,
@@ -87,13 +87,12 @@
 
 		/* C2. Loop — two identical copies (or aria-label ::before+::after) shifted
 		   by exactly -100% each (own width) → seamless. gap 0 keeps the shift exact.
-		   The card token is marquee(rpt): the old marquee(loop) spelling shadowed the
-		   carousel's own `loop` token under substring matching (it is whole-token
-		   matched now, so the alias below is safe to keep). The element's standalone
-		   variant="loop" is a different attribute and is unaffected. */
-		&[variant~="loop"], :where([media*="marquee(rpt)"], [media*="marquee(loop)"] /* deprecated alias — remove in v5 */) & { --_name: ui-marquee-loop-x; gap: 0; }
+		   The card token is marquee(rpt) — named to never substring-collide with the
+		   carousel's own bare `loop` token (the old marquee(loop) spelling is removed).
+		   The element's standalone variant="loop" is a different attribute, no collision. */
+		&[variant~="loop"], :where([media*="marquee(rpt)"]) & { --_name: ui-marquee-loop-x; gap: 0; }
 		&[variant~="loop"]:is([direction~="up"], [direction~="down"]),
-		:where([media*="marquee(rpt)"], [media*="marquee(loop)"] /* deprecated alias — remove in v5 */) &:is([direction~="up"], [direction~="down"]) { --_name: ui-marquee-loop-y; }
+		:where([media*="marquee(rpt)"]) &:is([direction~="up"], [direction~="down"]) { --_name: ui-marquee-loop-y; }
 
 		/* D. Furniture axes — `&[attr]` standalone + `[media*="marquee(…)"] &` card token */
 
