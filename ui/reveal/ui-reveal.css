@@ -129,7 +129,7 @@
 		> details > ui-content {
 			color: var(--ui-reveal-content-c, inherit); /* neutralise the ov() white; palette or inherit (dark) */
 			align-items: normal;
-			display: flex; /* media-only's ui-content{display:none} leaks via descendant match */
+			display: flex; /* vis(media)'s ui-content{display:none} leaks via descendant match */
 			gap: var(--ui-reveal-content-gap, 1em); /* roomier than the tight overlay-face row-gap */
 			grid-area: auto;
 			justify-content: normal;
@@ -194,8 +194,8 @@
 			}
 		}
 
-		/* === variants (vertical-r / horizontal / media-only / overlay(pos))
-		   and ar() / op() are inherited from ui-card.css === */
+		/* === variants (col-r / row / vis(media) / ovr(pos))
+		   and asr() / obp() are inherited from ui-card.css === */
 
 		/* === ico() â toggle-icon corner placement, furniture corner spellings
 		   (ts te bs be): block row t/b Ã inline column s/e. Logical axes, so it
