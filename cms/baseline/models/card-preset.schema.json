@@ -125,7 +125,7 @@
     "reveal": {
       "type": "object",
       "title": "Reveal",
-      "description": "Reveal configuration — only used when element is ui-reveal. The renderer folds these into compact variant= tokens where the animation carries its own direction: type+from → one token (expand → exp, flip+top → flp(top), slide+left → sld(lft), scale → scl), typeLg → lg:-prefixed swap (lg:scl), to → pop, trigger card → trg(card), scroll → scr; icon/iconClose positional words fold into one corner token — ts|te|bs|be (\"top right\" → ico(te)) plus style tokens (dark → drk, semi → sem, sm, lg). iconType stays markup (the toggle <ui-icon type>).",
+      "description": "Reveal configuration — only used when element is ui-reveal. The renderer folds these into compact variant= tokens where the animation carries its own direction: type+from → one token (expand → exp, flip+top → flp(top), slide+left → sld(lft), scale → grw), typeLg → lg:-prefixed swap (lg:grw), to → pop, trigger card → trg(card), scroll → scr; icon/iconClose positional words fold into one corner token — ts|te|bs|be (\"top right\" → ico(te)) plus style tokens (dark → drk, semi → sem, sm, lg). iconType stays markup (the toggle <ui-icon type>).",
       "localized": false,
       "properties": {
         "type": {
@@ -215,6 +215,12 @@
           "description": "Scrollable reveal panel",
           "localized": false,
           "default": false
+        },
+        "name": {
+          "type": "string",
+          "title": "name=",
+          "description": "Exclusive-accordion group — reveals sharing a name close each other (native <details name>). Omit for independent reveals; the renderer never defaults it",
+          "localized": false
         }
       }
     }

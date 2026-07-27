@@ -450,4 +450,17 @@ If more `media=` tokens should become breakpoint-prefixable later (e.g. `obp()`,
 
 ---
 
-*Report generated from a full-source review of the v4 branch. Line references are valid as of the commit this file is introduced on.*
+# Implementation status (2026-07-27)
+
+Implemented on this branch in three waves (JS/renderer → CSS vocabulary → responsive machinery, then docs + verification):
+
+| IDs | Status |
+|-----|--------|
+| R-01…R-07, R-18 | **Done** — incl. fixes the verification pass surfaced beyond the report: the carousel *polyfill* carried the same `loop` collision and a stale exclusion list; `hover.js` listened on the wrong element (cursor effects dead on `ovr()` cards); `layout/dist` had never been rebuilt (R-16 wasn't shipping); `ui/play`/`ui/save` hue-alias gaps. |
+| R-08…R-12, R-16, R-17 | **Done** per the decisions recorded above (logical positions + aliases, implemented hue set + aliases, `rds()` colocated + on `content=`, `grw()`, `play(<size>)`, marquee `rpt`, align-content fix, group as `bs-card` container, side/axis padding system). |
+| R-14 | Steps 1–3 + 5 **done** (factoring shipped in a specificity-preserving form — the literal Option-1 shape would have dropped `hov(shape)`'s cascade win; self arms + `bs-card` naming + canonical renderer placement verified in-browser). Step 4 (style()-flag migration) **deferred to v5** as planned. |
+| R-13 (manifest), R-15 | **Deferred** by decision — next round. |
+
+Open items carried forward: the polyfill keeps a deliberately local (now-synced, cross-referenced) `NOT_SLIDE` mirror — collapsing it needs a call on whether `/polyfill/` may import from `/ui/card/`; `carousel.md` documents `<lay-out>` as a valid slide wrapper while `slidesOf()` excludes `LAY-OUT` (contract contradiction to resolve); a `pop` reveal inside a `lay-out-group` is trapped by the group's containment (documented limitation) and its open-state tier-pause now resolves against the group container (unobserved, flagged); `buildFurniture` still has no marquee branch (F-40 renderer half); F-12 scrim-declaration scoping and the `-ink` alias retirement wait for v5.
+
+*Report generated from a full-source review of the v4 branch. Line references describe the tree at the commit this file was introduced on (pre-implementation); the implementation commits above may have shifted exact line numbers.*
