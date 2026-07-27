@@ -466,6 +466,28 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+
+	<hr>
+	<h2>Card border — <code>variant="bdr"</code></h2>
+	<p>A <code>ui-card</code> uses the <code>surface</code> background, so its edges can vanish against a surface page even with the shadow. <code>bdr</code> adds an opt-in hairline. Shades: <code>bdr(lgt)</code> (super-light) · default · <code>bdr(drk)</code> (darker). Widths: <code>bdr(sm)</code> 1px · <code>bdr(md)</code> 2px · <code>bdr(lg)</code> 3px. Author overrides: <code>--ui-card-border-color</code> / <code>--ui-card-border-width</code> / <code>--ui-card-border-style</code> (e.g. dashed).</p>
+	<lay-out md="columns(2)" lg="columns(4)">
+		<ui-card variant="col bdr bdr(lgt) rds(md)" media="asr(4/3) scm" content="scl(sm) pad(md)">
+			<cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">bdr(lgt)</small><h3 data-part="headline">Super-light</h3></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col bdr rds(md)" media="asr(4/3) scm" content="scl(sm) pad(md)">
+			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">bdr</small><h3 data-part="headline">Default</h3></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col bdr bdr(drk) rds(md)" media="asr(4/3) scm" content="scl(sm) pad(md)">
+			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">bdr(drk)</small><h3 data-part="headline">Darker</h3></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col bdr bdr(md) rds(md)" media="asr(4/3) scm" content="scl(sm) pad(md)" style="--ui-card-border-style: dashed; --ui-card-border-color: var(--color-accent);">
+			<cq-box><ui-media><img src="/assets/images/world.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">bdr(md) + dashed accent</small><h3 data-part="headline">Authored</h3></ui-content></cq-box>
+		</ui-card>
+	</lay-out>
 	<!-- cursor-tracked hover + loop/auto carousels (progressive enhancement) -->
 	<script type="module" src="index.js"></script>
 </body>

@@ -62,6 +62,7 @@ scroller; the rest layer on top. `asr()` etc. belong to the base frame — see m
 | `mrk(drk)`  | CSS | Dark marker ink |
 | `mrk(be)` `mrk(te)` | CSS | `nav(blw)`/`nav(abv)`: dots at the inline-end — `be` below, `te` above |
 | `mrk(hyb)`  | CSS | **Hybrid** dots — markers stay circles; the active one morphs into a pill and runs the `mrk(pll)` fill timer |
+| `mrk(lbl)`  | CSS | **Text-label** markers — each slide's `aria-label` becomes a pill (`content: attr(aria-label)`, mirrors how `mrk(tmb)` reads a per-slide image). Positions with the same 9-grid cells (`mrk(ts/tc/te … bs/bc/be)`). Styled via `--ui-carousel-label-*` custom properties (below), incl. an optional group background/shadow |
 | `mrk(lg)`   | CSS | Marker size 0.8rem |
 | `mrk(lgt)`  | CSS | Light/white marker ink |
 | `mrk(md)`   | CSS | Marker size 0.6rem (**default**) |
@@ -230,6 +231,20 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
   it's autoplay feedback, so `carousel.js` sets the keyframe name only when autoplay (`auto`/
   `loop`) runs (set it manually to preview without JS). URL is a custom property today; swaps
   to `attr(data-thumb type(<image>))` once that resolves (Chrome parses it but doesn't yet paint).
+- **`mrk(lbl)` — text-label pills.** Each marker prints its slide's `aria-label` via
+  `content: attr(aria-label)` (the label analogue of `mrk(tmb)`'s per-slide image). The
+  pill is auto-height (`block/inline-size: auto`, padded), so the default/bottom/center
+  placement re-anchors the group by its own edges instead of `--ui-carousel-marker-size`
+  (top-row cells already anchor by `anchor(top)`). Styled entirely by **custom properties,
+  not tokens** — per pill: `--ui-carousel-label-bg` / `-bg-current`, `-color` / `-color-current`,
+  `-border-width` / `-border-color` / `-border-color-current`, `-radius`, `-padding`,
+  `-font-size`, `-font-weight`; and on the group itself (optional, off by default):
+  `--ui-carousel-label-group-bg`, `-group-backdrop` (e.g. `blur(8px)` — **no-op in Chrome today**:
+  `backdrop-filter` is ignored on the `::scroll-marker-group` pseudo, so a "frosted" capsule renders
+  translucent-only until browsers paint it), `-group-shadow`, `-group-radius`, `-group-padding`,
+  `-group-gap`. Positions with the same 9-grid cells as dots/thumbs. The group hugs its labels;
+  like a wide dot row it can spill on very narrow frames (a `::scroll-marker-group`'s inline size
+  can't be reliably clamped to the frame in current Chrome), so keep labels short.
 - **Corner placement.** `mrk(tl|tr|bl|br)` re-anchor the whole marker-group to a corner
   (overlay), inset by `--ui-carousel-marker-inset` (defaults to the overlay gap; `mrk(tmb)`
   bumps it to `1rem`). In `axis(y)` the corner rail stacks vertically. Default (no corner

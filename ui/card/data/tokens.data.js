@@ -1165,7 +1165,9 @@ export default {
 							"rail",
 							"non",
 							"lgt",
-							"drk"
+							"drk",
+							"sbr",
+							"lbl"
 						],
 						"size": [
 							"sm",
@@ -1204,7 +1206,9 @@ export default {
 						"--ui-carousel-thumb-size",
 						"--ui-carousel-bar-*",
 						"--ui-carousel-band",
-						"--ui-carousel-rail"
+						"--ui-carousel-rail",
+						"--ui-carousel-sbr-*",
+						"--ui-carousel-label-*"
 					],
 					"realProperties": true,
 					"cqPrefixes": [],
@@ -1223,9 +1227,11 @@ export default {
 						"ui/base/carousel.css:35",
 						"ui/base/carousel.css:193",
 						"ui/base/carousel.css:263",
-						"ui/card/media.carousel.css:111"
+						"ui/card/media.carousel.css:111",
+						"ui/card/media.carousel.css:150",
+						"ui/base/carousel.css:316"
 					],
-					"notes": "Only STYLES/positions the dots — presence comes from nav (bare|mrk|blw|abv); mrk(non) removes them (scroll-marker-group:none). One size scale drives dots, pills AND thumbnails. mrk(tmb) needs a per-slide --ui-carousel-thumb-url and switches the frame to box-sizing:content-box (media.carousel.css:111); mrk(rail) (axis(y) only) reserves inline space via --ui-carousel-rail (media.carousel.css:125). mrk(bar)/mrk(tmb) declare anchor-name/anchor-scope on the scroller so ::scroll-marker-group can anchor-size() itself. Pill/thumb fill timers read --ui-carousel-autoplay + --ui-carousel-play-state written by carousel.js."
+					"notes": "Only STYLES/positions the dots — presence comes from nav (bare|mrk|blw|abv); mrk(non) removes them (scroll-marker-group:none). One size scale drives dots, pills AND thumbnails. mrk(tmb) needs a per-slide --ui-carousel-thumb-url and switches the frame to box-sizing:content-box (media.carousel.css:111); mrk(rail) (axis(y) only) reserves inline space via --ui-carousel-rail (media.carousel.css:125). mrk(bar)/mrk(tmb) declare anchor-name/anchor-scope on the scroller so ::scroll-marker-group can anchor-size() itself. Pill/thumb fill timers read --ui-carousel-autoplay + --ui-carousel-play-state written by carousel.js. mrk(sbr) (WIP) styles the scroller's REAL scrollbar as a full-width bottom system bar — natively draggable, zero JS; central --ui-carousel-sbr-* tokens feed both the standard (Firefox) and ::-webkit-scrollbar paths, content-box like mrk(tmb) (media.carousel.css:150). mrk(lbl) renders each slide's aria-label as a text pill via ::scroll-marker content:attr(aria-label); look via --ui-carousel-label-* custom properties, positioning reuses the 9-grid mrk() cells with height-agnostic re-anchoring (ui/base/carousel.css:316)."
 				},
 				"tmb": {
 					"axis": "thumbs",
