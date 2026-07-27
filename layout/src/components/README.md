@@ -67,10 +67,10 @@ If you have your own `layout.config.json` and generated `layouts-map.js`:
 
 ```javascript
 import { LayOut } from '@browser.style/layout/components'
-import { srcsetMap, layoutConfig } from './layouts-map.js'
+import { srcsetMap, srcsetConfig } from './layouts-map.js'
 
 // Override with your custom configuration
-LayOut.initialize(srcsetMap, layoutConfig)
+LayOut.initialize(srcsetMap, srcsetConfig)
 ```
 
 ### Framework Integration
@@ -136,11 +136,11 @@ function App() {
 - `srcsets` - Auto-generated srcsets string (read-only)
 
 **Static Methods:**
-- `LayOut.initialize(srcsetMap, layoutConfig)` - Override with custom configuration
+- `LayOut.initialize(srcsetMap, srcsetConfig)` - Override with custom configuration
 
 **Static Properties:**
 - `LayOut.srcsetMap` - Map of layout patterns to srcsets
-- `LayOut.layoutConfig` - Configuration with breakpoints and maxLayoutWidth
+- `LayOut.srcsetConfig` - Configuration with breakpoints and maxLayoutWidth
 
 ## Package Exports
 
@@ -152,7 +152,7 @@ import { LayOut } from '@browser.style/layout/components'
 import '@browser.style/layout/css'
 
 // Layout maps (for custom initialization)
-import { srcsetMap, layoutConfig } from '@browser.style/layout/maps'
+import { srcsetMap, srcsetConfig } from '@browser.style/layout/maps'
 
 // Srcsets utilities (for vanilla JS)
 import { generateSrcsets, applySrcsets } from '@browser.style/layout/srcsets'

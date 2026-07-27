@@ -5,11 +5,12 @@
 	<title>Layout Demo</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="Layout using CSS container queries">
+	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="dist/layout.min.css">
-	<link rel="stylesheet" href="dist/content.min.css">
 	<link rel="stylesheet" href="demo.css">
-	
+	<script type="module" src="polyfills/attr-fallback.js"></script>
 </head>
 <body>
 
@@ -21,7 +22,7 @@
 		lg="grid(3d)"
 		xl="grid(3c)">
 		<con-tain>
-			<item-card sm="rows(b-t)">
+			<item-card sm="asym(b-t)">
 				<figure>
 					<img src="https://picsum.photos/seed/1/320/180" alt="Image 1">
 				</figure>
@@ -33,7 +34,7 @@
 			</item-card>
 		</con-tain>
 		<con-tain>
-			<item-card sm="rows(b-t)" lg="stack(b-r)" md="stack(c-c)" xxl="stack(b-r)">
+			<item-card sm="asym(b-t)" lg="stack(overlay)" md="stack(overlay)" xxl="stack(overlay)">
 				<figure>
 					<img src="https://picsum.photos/seed/3/320/180" alt="Image 1">
 				</figure>
@@ -45,7 +46,7 @@
 			</item-card>
 		</con-tain>
 		<con-tain>
-			<item-card sm="rows(t-b)">
+			<item-card sm="asym(t-b)">
 				<figure>
 					<img src="https://picsum.photos/seed/2/320/180" alt="Image 1">
 				</figure>
@@ -79,7 +80,7 @@
 	<lay-out
 		md="columns(3)"
 		xs="pi(1) pb(2) mbe(4)"
-		animation="fade-up"
+		animate="fade-up() trigger-both"
 		bleed>
 		<item-card></item-card>
 		<item-card></item-card>
@@ -88,7 +89,7 @@
 
 	<lay-out
 		lg="grid(4b)"
-		animation="bounce-in-left">
+		animate="bounce-in-left() trigger-both">
 		<item-card></item-card>
 		<item-card></item-card>
 		<item-card></item-card>
@@ -97,11 +98,11 @@
 
 	<lay-out
 		sm="columns(2)"
-		md="bento(1lg:2sm-right)"
-		lg="bento(fixed-8a)"
+		md="columns(3)"
+		lg="bento(8a)"
 		xl="mosaic(scatter)"
 		xs="pi(2) pb(3)"
-		animation="fade-in-scale"
+		animate="zoom-in() trigger-both"
 		bleed>
 		<item-card></item-card>
 		<item-card></item-card>

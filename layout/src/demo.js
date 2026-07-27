@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { buildIcons } from './icons.js'
 import { generateSrcsets } from './srcsets.js'
-import { srcsetMap, layoutConfig } from '../layouts-map.js'
+import { srcsetMap, srcsetConfig } from '../layouts-map.js'
 
 function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 	const title = layoutType.name || `${layoutName.charAt(0).toUpperCase() + layoutName.slice(1)} Layouts`
@@ -74,7 +74,7 @@ function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 				breakpointsObj = { md: `columns(${itemCount})`, lg: `${prefix}(${layoutId})` }
 			}
 
-			const srcsets = generateSrcsets(breakpointsObj, srcsetMap, layoutConfig)
+			const srcsets = generateSrcsets(breakpointsObj, srcsetMap, srcsetConfig)
 			const srcsetsAttr = srcsets ? ` srcsets="${srcsets}"` : ''
 			const overflowAttr = layout.overflow ? ` overflow="${layout.overflow}"` : ''
 

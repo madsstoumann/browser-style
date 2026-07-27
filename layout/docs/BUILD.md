@@ -415,7 +415,7 @@ export const srcsetMap = {
   // ... all 57 layouts
 }
 
-export const layoutConfig = {
+export const srcsetConfig = {
   "maxLayoutWidth": 1024,
   "breakpoints": {
     "md": 540,

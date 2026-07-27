@@ -1,6 +1,6 @@
-export function generateSrcsets(breakpoints, srcsetMap, layoutConfig) {
-	const bps = layoutConfig.breakpoints || {}
-	const maxWidth = layoutConfig.maxLayoutWidth || 1024
+export function generateSrcsets(breakpoints, srcsetMap, srcsetConfig) {
+	const bps = srcsetConfig.breakpoints || {}
+	const maxWidth = srcsetConfig.maxLayoutWidth || 1024
 	const parts = []
 
 	for (const [breakpointName, layoutPattern] of Object.entries(breakpoints)) {
@@ -13,14 +13,14 @@ export function generateSrcsets(breakpoints, srcsetMap, layoutConfig) {
 	return parts.length > 0 ? `${parts.join(';')}@${maxWidth}` : ''
 }
 
-export function applySrcsets(selector = 'lay-out', srcsetMap, layoutConfig) {
+export function applySrcsets(selector = 'lay-out', srcsetMap, srcsetConfig) {
 	if (typeof document === 'undefined') return
 
 	document.querySelectorAll(selector).forEach(element => {
 		if (element.hasAttribute('srcsets')) return
 
 		const breakpoints = {}
-		const bps = layoutConfig.breakpoints || {}
+		const bps = srcsetConfig.breakpoints || {}
 
 		for (const breakpointName of Object.keys(bps)) {
 			const layoutPattern = element.getAttribute(breakpointName)
@@ -29,7 +29,7 @@ export function applySrcsets(selector = 'lay-out', srcsetMap, layoutConfig) {
 			}
 		}
 
-		const srcsets = generateSrcsets(breakpoints, srcsetMap, layoutConfig)
+		const srcsets = generateSrcsets(breakpoints, srcsetMap, srcsetConfig)
 		if (srcsets) {
 			element.setAttribute('srcsets', srcsets)
 		}

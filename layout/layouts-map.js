@@ -64,7 +64,7 @@ export const srcsetMap = {
   "ratio(50:25:25)": "50%,25%,25%"
 }
 
-export const layoutConfig = {
+export const srcsetConfig = {
   "maxLayoutWidth": 1024,
   "breakpoints": {
     "xs": 240,

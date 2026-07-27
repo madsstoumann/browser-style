@@ -311,13 +311,13 @@ Set `--layout-morph-bg` to match the previous section's background for seamless 
 ### Automatic Srcset Generation
 
 ```javascript
-import { srcsetMap, layoutConfig } from '@browser.style/layout/maps';
+import { srcsetMap, srcsetConfig } from '@browser.style/layout/maps';
 import { generateSrcsets } from '@browser.style/layout/src/srcsets.js';
 
 const srcsets = generateSrcsets(
   { md: "columns(2)", lg: "grid(3a)" },
   srcsetMap,
-  layoutConfig
+  srcsetConfig
 );
 // Returns: "540:50%;720:50%,50%,100%@1024"
 ```
@@ -327,7 +327,7 @@ const srcsets = generateSrcsets(
 ```javascript
 import { applySrcsets } from '@browser.style/layout/src/srcsets.js';
 
-applySrcsets('lay-out', srcsetMap, layoutConfig);
+applySrcsets('lay-out', srcsetMap, srcsetConfig);
 ```
 
 ### Manual Srcsets
@@ -629,7 +629,7 @@ class LayoutBuilder {
 
 ## Srcset Utilities
 
-### `generateSrcsets(breakpoints, srcsetMap, layoutConfig)`
+### `generateSrcsets(breakpoints, srcsetMap, srcsetConfig)`
 
 Generates srcset string from breakpoint attributes:
 
@@ -637,17 +637,17 @@ Generates srcset string from breakpoint attributes:
 generateSrcsets(
   { md: "columns(2)", lg: "grid(3a)" },
   srcsetMap,
-  layoutConfig
+  srcsetConfig
 );
 // Returns: "540:50%;720:50%,50%,100%@1024"
 ```
 
-### `applySrcsets(selector, srcsetMap, layoutConfig)`
+### `applySrcsets(selector, srcsetMap, srcsetConfig)`
 
 Applies srcsets attribute to existing elements:
 
 ```javascript
-applySrcsets('lay-out', srcsetMap, layoutConfig);
+applySrcsets('lay-out', srcsetMap, srcsetConfig);
 // Adds srcsets="..." to all <lay-out> elements
 ```
 

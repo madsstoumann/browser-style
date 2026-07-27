@@ -78,7 +78,7 @@
 		// Log the loaded data
 		console.log('LayOut component loaded')
 		console.log('srcsetMap:', LayOut.srcsetMap)
-		console.log('layoutConfig:', LayOut.layoutConfig)
+		console.log('srcsetConfig:', LayOut.srcsetConfig)
 
 		// Check if data was loaded
 		const hasData = Object.keys(LayOut.srcsetMap).length > 0
@@ -129,8 +129,8 @@
 			if (window.LayOut) {
 				results += '\nLayOut static data:\n'
 				results += `  srcsetMap entries: ${Object.keys(window.LayOut.srcsetMap).length}\n`
-				results += `  breakpoints: ${Object.keys(window.LayOut.layoutConfig.breakpoints || {}).join(', ')}\n`
-				results += `  maxLayoutWidth: ${window.LayOut.layoutConfig.maxLayoutWidth}\n`
+				results += `  breakpoints: ${Object.keys(window.LayOut.srcsetConfig.breakpoints || {}).join(', ')}\n`
+				results += `  maxLayoutWidth: ${window.LayOut.srcsetConfig.maxLayoutWidth}\n`
 			}
 
 			output.textContent = results

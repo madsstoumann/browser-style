@@ -439,14 +439,14 @@ See [animation demos](dist/animations.html) for visual examples.
 Import the srcset utilities:
 
 ```javascript
-import { srcsetMap, layoutConfig } from '@browser.style/layout/maps'
+import { srcsetMap, srcsetConfig } from '@browser.style/layout/maps'
 import { generateSrcsets } from '@browser.style/layout/src/srcsets.js'
 
 // Generate srcsets for a layout
 const srcsets = generateSrcsets(
   { md: "columns(2)", lg: "grid(3a)" },
   srcsetMap,
-  layoutConfig
+  srcsetConfig
 )
 // Returns: "540:50%;720:50%,50%,100%@1024"
 ```
@@ -455,10 +455,10 @@ const srcsets = generateSrcsets(
 
 ```javascript
 import { applySrcsets } from '@browser.style/layout/src/srcsets.js'
-import { srcsetMap, layoutConfig } from '@browser.style/layout/maps'
+import { srcsetMap, srcsetConfig } from '@browser.style/layout/maps'
 
 // After adding lay-out elements to DOM
-applySrcsets('lay-out', srcsetMap, layoutConfig)
+applySrcsets('lay-out', srcsetMap, srcsetConfig)
 ```
 
 ### Manual Srcsets

@@ -63,7 +63,7 @@ export const srcsetMap = {
   // ... all 57 layouts
 }
 
-export const layoutConfig = {
+export const srcsetConfig = {
   "maxLayoutWidth": 1024,
   "breakpoints": {
     "xs": 240,
@@ -294,7 +294,7 @@ import '@browser.style/layout/dist/layout.css'
 
 #### Import Layouts Map
 ```javascript
-import { srcsetMap, layoutConfig } from '@browser.style/layout/maps'
+import { srcsetMap, srcsetConfig } from '@browser.style/layout/maps'
 ```
 
 ---

@@ -1,19 +1,21 @@
 // Auto-load package's layout data
-import { srcsetMap as defaultSrcsetMap, layoutConfig as defaultLayoutConfig } from '../../../layouts-map.js'
+import { srcsetMap as defaultSrcsetMap, srcsetConfig as defaultSrcsetConfig } from '../../../layouts-map.js'
 
 export class LayOut extends HTMLElement {
 	static srcsetMap = defaultSrcsetMap
-	static layoutConfig = defaultLayoutConfig
+	static srcsetConfig = defaultSrcsetConfig
 
 	/**
 	 * Initialize with custom maps (optional)
 	 * Use this if you have your own layout.config.json and generated layouts-map.js
 	 * @param {Object} srcsetMap - Custom srcset map
-	 * @param {Object} layoutConfig - Custom layout config
+	 * @param {Object} srcsetConfig - Custom flat srcset config: `{ maxLayoutWidth, breakpoints }`.
+	 *   NB: this is NOT the nested `layout.config.json` shape (which nests width under
+	 *   `layoutContainer.maxWidth`) — it is the flattened form emitted by `layouts-map.js`.
 	 */
-	static initialize(srcsetMap = {}, layoutConfig = {}) {
+	static initialize(srcsetMap = {}, srcsetConfig = {}) {
 		LayOut.srcsetMap = srcsetMap
-		LayOut.layoutConfig = layoutConfig
+		LayOut.srcsetConfig = srcsetConfig
 
 		if (typeof document !== 'undefined') {
 			document.querySelectorAll('lay-out:not([srcsets])').forEach(element => {
@@ -37,8 +39,8 @@ export class LayOut extends HTMLElement {
 	}
 
 	buildSrcsets() {
-		const { srcsetMap, layoutConfig } = LayOut
-		const { breakpoints = {}, maxLayoutWidth = 1024 } = layoutConfig
+		const { srcsetMap, srcsetConfig } = LayOut
+		const { breakpoints = {}, maxLayoutWidth = 1024 } = srcsetConfig
 		const parts = []
 
 		for (const [breakpointName, breakpointValue] of Object.entries(breakpoints)) {

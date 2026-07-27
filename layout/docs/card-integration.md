@@ -42,7 +42,7 @@ At viewport ≥ 720px, `grid(3a)` gives the first two cards half-width cells (~b
 - `lay-out` has `contain: layout inline-size` but **no `container-type`** — it never becomes a query container, so `cq-box`/`summary` still resolve to their `ui-card`/`ui-reveal` ancestor.
 - Card CSS lives in `@layer bs-component` (base in `bs-core`); layout CSS in `@layer layout.*`. Zero selector/layer overlap.
 - `lay-out > *:not(lay-out) { grid-area: var(--_ga, var(--layout-ga, auto)) }` is harmless — cards never set their own `grid-area`.
-- **One known conflict:** `dist/layout.css` ends with an *unlayered* `body { margin-inline: max(…) }` rule (generated from `layoutContainer` in `layout.config.json`) that beats base's `:where(body) { margin-inline: auto }`. Demo pages counter it in `ui/card/demo.layout.css`; the upstream fix (Phase 6) is to emit that rule inside `@layer layout.base`.
+- **Resolved (Phase 6):** the generated `layoutContainer` rules (`:root` knobs + `body:has(lay-out) { margin-inline: max(…); max-inline-size: none; padding-inline: 0 }`) used to be emitted *outside every `@layer`*, so they beat base's `:where(body) { margin-inline: auto }` by being unlayered. They are now emitted inside `@layer layout.base` and still win, because pages link `/ui/base/index.css` **before** `/layout/dist/layout.css` — every `layout.*` layer therefore sorts after every `bs-*` layer. **Keep that link order.** The trade-off: an *unlayered* author rule on `body`/`:root` now beats them regardless of specificity (intended for the `--layout-mi` / `--layout-bleed-mw` knobs; put page-width overrides in a layer if the calculated gutter should keep winning).
 
 ### Naming: keep both vocabularies
 
@@ -150,7 +150,7 @@ export function renderSection(section, presets = {}, cards = {}, layoutTools = n
   const bp = Object.fromEntries(
     ['xs','sm','md','lg','xl','xxl'].filter(k => l[k]).map(k => [k, l[k]]));
   const srcsets = layoutTools
-    ? layoutTools.generateSrcsets(bp, layoutTools.srcsetMap, layoutTools.layoutConfig)
+    ? layoutTools.generateSrcsets(bp, layoutTools.srcsetMap, layoutTools.srcsetConfig)
     : null;
   const items = section.items.map(it =>
     renderCard(withPreset(resolveCard(it.card, cards), it.preset), presets, cards)).join('');
@@ -161,17 +161,21 @@ export function renderSection(section, presets = {}, cards = {}, layoutTools = n
 }
 ```
 
-`layoutTools` (`{ generateSrcsets, srcsetMap, layoutConfig }` from `/layout/src/srcsets.js` + `/layout/layouts-map.js`) is injected so `render-section.js` has no hard layout dependency. The emitted `srcsets` attribute is what the Phase 3 bridge consumes — SSR layout context flows into client image `sizes` with no extra plumbing. True SSR `srcset` on `<img>` inside `render.js` is the follow-up that retires `ui-media-srcset.js` entirely (it's documented as transitional).
+`layoutTools` (`{ generateSrcsets, srcsetMap, srcsetConfig }` from `/layout/src/srcsets.js` + `/layout/layouts-map.js`) is injected so `render-section.js` has no hard layout dependency. The emitted `srcsets` attribute is what the Phase 3 bridge consumes — SSR layout context flows into client image `sizes` with no extra plumbing. True SSR `srcset` on `<img>` inside `render.js` is the follow-up that retires `ui-media-srcset.js` entirely (it's documented as transitional).
 
 - Validation: a section referencing a non-`repeatable` variant should check `items.length` against the variant's `items` count in `layouts/*.json` (the composer's `model.json` already carries this metadata).
 - Demo: `ui/card/section.render.html` + a sample `ui/card/data/sections/*.json`.
 
 ## Phase 5 — visual editor alignment
 
-The layout composer (`layout/src/components/composer/`) edits exactly the `layout` half of a section. **Note:** the composer predates the v4 attribute changes (token-only spacing, `items()` token, `media=` carousel controls) and still emits pre-v4 attributes — it is stale until updated. Whether cards get their own visual editor is still undecided; the section format above keeps that door open — a card editor would edit `items[n].preset` (+ the preset collections in `ui/card/data/card.presets.json`) without touching the layout half. The layout v2 roadmap (`layout/.tmp/todo.md`, Phases 2/5: `LayoutPreset`, `presetToAttributes`, configurator package, Sanity.io schema) slots in as the persistence/UI layer for the same document.
+The layout composer (`layout/src/components/composer/`) edits exactly the `layout` half of a section. **Note:** the composer predates the v4 attribute changes (token-only spacing, `items()` token, `media=` carousel controls) and still emits pre-v4 attributes — it is stale until updated. Whether cards get their own visual editor is still undecided; the section format above keeps that door open — a card editor would edit `items[n].preset` (+ the preset collections in `ui/card/data/card.presets.json`) without touching the layout half. The layout v2 roadmap that used to be sketched in `layout/.tmp/todo.md` (`LayoutPreset`, `presetToAttributes`, a configurator package, a Sanity.io schema) would slot in as the persistence/UI layer for the same document — that file has been pruned (its Phase 1 landed differently), so treat this paragraph as the surviving pointer.
 
 ## Phase 6 — upstream cleanups
 
-- `layout/src/builder.js`: emit the generated `layoutContainer` `body` rule inside `@layer layout.base`, then drop the counter-rule from `demo.layout.css`.
-- Remove `.grid` guidance from card docs; point to this document.
-- Optional: a `cards` theme in layout demos so `item-card` placeholders can be replaced by real `<ui-card>`s in `/layout/dist/*.html` demos too.
+- [x] `layout/src/builder.js`: emit the generated `layoutContainer` rules inside `@layer layout.base` (`generateLayoutContainerCSS()`), and rebuild `dist/layout.css` + `dist/layout.min.css`. The `demo.layout.css` counter-rule was already gone; only its explanatory comment needed re-syncing. See the "Resolved (Phase 6)" bullet above for the cascade consequences.
+- [x] Rename the flat `{ maxLayoutWidth, breakpoints }` config to `srcsetConfig` so it stops colliding by name with `layout.config.json`'s nested `layoutContainer.maxWidth` shape (which `src/components/composer/` still imports as `layoutConfig`). Touches `layouts-map.js`, `src/maps.js` (the generator template), `src/srcsets.js`, `src/components/layout/index.js`, `src/demo.js` and the docs. `LayOut.layoutConfig` → `LayOut.srcsetConfig` and the `@browser.style/layout/maps` export are public API — downstream copies (e.g. `content/card/public/static/js/layouts-map.js`, generated by `content/card/build-layouts-map.js`) still emit the old name.
+- [x] Repair `layout/index.html`: dropped the 404ing `dist/content.min.css`, added `/ui/base/index.css` (matches `dist/*.html`) so the `[animate]` engine is actually present, migrated `animation=` → `animate="…() trigger-both"`, and replaced non-existent layout ids (`bento(1lg:2sm-right)`, `bento(fixed-8a)`, `rows(t-b)`, `rows(b-t)`) with real ones.
+- [x] Pruned the stale planning files `layout/.tmp/todo.md` (v2 roadmap whose Phase 1 landed differently) and `layout/.tmp/readme.md` (superseded srcsets API).
+- [ ] Remove `.grid` guidance from card docs; point to this document.
+- [ ] Optional: a `cards` theme in layout demos so `item-card` placeholders can be replaced by real `<ui-card>`s in `/layout/dist/*.html` demos too.
+- [ ] Known generator drift (found while doing the rename, **not** fixed): `src/maps.js` `loadConfig()` skips breakpoints with no `min`, so regenerating `layouts-map.js` silently DROPS `xs: 240` from `srcsetConfig.breakpoints`. The checked-in map is therefore stale relative to its generator — give `xs` a `min` in `layout.config.json` (or special-case it) before running `npm run build:maps`.
