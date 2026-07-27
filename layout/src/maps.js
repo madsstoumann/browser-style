@@ -21,11 +21,13 @@ function extractLayoutData(layoutFile) {
     return layouts
 }
 
-// KNOWN DRIFT: the checked-in ../layouts-map.js carries `xs: 240`, but the `xs`
-// breakpoint in layout.config.json has no `min` (it is the mobile-first base, no
-// media query), so the reducer below skips it. Regenerating therefore DROPS
-// `xs: 240` from srcsetConfig.breakpoints and silently disables xs srcset hints.
-// Give `xs` a `min` in the config (or special-case it here) before regenerating.
+// A breakpoint needs a numeric width here even when it has no `min` in the
+// config: the mobile-first base (`xs`) deliberately omits `min` so the CSS
+// builder emits its rules un-wrapped, but srcset generation still needs its
+// design width — and applySrcsets only reads element attributes for names
+// present in srcsetConfig.breakpoints, so dropping it would silently disable
+// `xs=` srcset hints entirely. Such breakpoints declare `srcsetMin` instead
+// (builder ignores it; it never becomes a media query).
 function loadConfig() {
     const configContent = readFileSync(configPath, 'utf-8')
     const config = JSON.parse(configContent)
@@ -33,8 +35,9 @@ function loadConfig() {
     return {
         maxLayoutWidth: config.layoutContainer?.maxWidth || 1024,
         breakpoints: Object.entries(config.breakpoints || {}).reduce((acc, [name, bp]) => {
-            if (bp.min) {
-                acc[name] = parseInt(bp.min.replace('px', ''))
+            const width = bp.min ?? bp.srcsetMin
+            if (width) {
+                acc[name] = parseInt(width.replace('px', ''))
             }
             return acc
         }, {})

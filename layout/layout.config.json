@@ -21,6 +21,7 @@
 	"breakpoints": {
 		"xs": {
 			"type": "@media",
+			"srcsetMin": "240px",
 			"layouts": [
 				"autofit",
 				"stack"
