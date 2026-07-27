@@ -296,6 +296,23 @@
 			}
 		}
 
+		/* mrk(tmb): play badge on thumbnails whose slide is (or contains) a <video> — a purely visual
+		   overlay (no controls). Auto-detected; glyph via --ui-carousel-thumb-play, size via
+		   --ui-carousel-thumb-play-size. Layered ON TOP of the poster (and the active timer stripe). */
+		:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker):is(video, :has(video))::scroll-marker,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker):is(video, :has(video))::scroll-marker {
+			background:
+				var(--ui-carousel-thumb-play, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='11' fill='%23000' fill-opacity='.5'/%3E%3Cpath d='M9.5 7.5v9l7-4.5z' fill='%23fff'/%3E%3C/svg%3E")) center / var(--ui-carousel-thumb-play-size, 45%) no-repeat,
+				var(--ui-carousel-thumb-url) center / cover no-repeat var(--ui-carousel-thumb-bg, rgb(0 0 0 / 0.2));
+		}
+		:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker):is(video, :has(video))::scroll-marker:target-current,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker):is(video, :has(video))::scroll-marker:target-current {
+			background:
+				var(--ui-carousel-thumb-play, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='11' fill='%23000' fill-opacity='.5'/%3E%3Cpath d='M9.5 7.5v9l7-4.5z' fill='%23fff'/%3E%3C/svg%3E")) center / var(--ui-carousel-thumb-play-size, 45%) no-repeat,
+				linear-gradient(var(--ui-carousel-thumb-timer, #fff), var(--ui-carousel-thumb-timer, #fff)) bottom left / 0 var(--ui-carousel-thumb-timer-height, 3px) no-repeat,
+				var(--ui-carousel-thumb-url) center / cover no-repeat var(--ui-carousel-thumb-bg, rgb(0 0 0 / 0.2));
+		}
+
 		/* mrk(lbl) — text-label markers: each slide's aria-label becomes a pill.
 		   Look-and-feel is exposed as --ui-carousel-label-* custom properties (not tokens);
 		   positioning reuses the 9-grid mrk() cells below (with a height fix — labels are auto-height). */
