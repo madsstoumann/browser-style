@@ -40,6 +40,9 @@ One shipped demo bug deserves immediate attention: `marquee(loop)` substring-mat
 | R-13 | **Tokens manifest** — single source of truth for token → axis → property knowledge | — | L | v5 / presets |
 | R-14 | Dual-arm strategy: `:where()` factoring now; inherited-flag + `style()` queries in v5; renderer places `media=`/`content=` on the primitives | — | M | v5 / presets |
 | R-15 | Sequencing: stop-the-bleeding → vocabulary unification → manifest + presets | — | — | v5 / presets |
+| R-16 | Make `lay-out-group` a query container so headers get `md:`/`lg:` support (`cq-box` or self-arm path) | — | S | Design decision |
+| R-17 | Side/axis padding tokens for `content=` (`pb pi pbs pbe pis pie`, precedence in the `var()` chain) | — | M | Design decision |
+| R-18 | Responsive `asr()` is already shipped — close the child-placement and standalone gaps | Contract-mismatch | S | Fix now |
 
 Severity: **Broken** = user-visible or import-breaking today · **Contract-mismatch** = API/doc/implementation disagree · **Debt** = internal inconsistency · **Polish** = cosmetic.
 
@@ -385,7 +388,7 @@ Invariants the preset system needs, stated as manifest-enforced rules: whole-tok
 ## R-14 — Dual-arm strategy `[v5 / presets]`
 Adopt in five steps (full analysis in §2):
 1. **Now:** `:where()` selector-list factoring in `media.hover.css`/`media.carousel.css` — zero behavior change, halves selector maintenance.
-2. **Now:** `render.js` always emits `media=` on `<ui-media>`; docs declare child placement canonical. New real-property tokens get no new dual arms — they use the flag pattern.
+2. **Now:** `render.js` always emits `media=` on `<ui-media>`; docs declare child placement canonical. New real-property tokens get no new dual arms — they use the flag pattern. **Correction (investigation of 2026-07-27):** this flip is *not* zero-cost after all — the one breakpoint-prefixed media token, `md:`/`lg:asr()`, is parsed as `:where([media~="md:asr(…)"]) :is(cq-box, summary)` (`ui-card.css:216-224, 264-272`), which requires the attribute on an **ancestor** of `cq-box`. With `media=` on `<ui-media>` those rules silently no-op. Prerequisite, same shape as step 3's: add self arms — `ui-media[media~="md:asr(…)"]` inside the same `@container` blocks (the card is still the nearest query container; a declaration on `ui-media` beats the inherited `cq-box` one, preserving precedence).
 3. **Symmetric `content=` placement** (maintainer-confirmed direction): the renderer emits `content=` on the `<ui-content>` it configures — which also unifies an existing renderer inconsistency (standalone `element: "ui-content"` presets already place it on the element, `render.js:902-903`, while cards/reveals place it on the host, `:825`/`:916`). **Prerequisite:** the responsive `md:`/`lg:` content rules currently have *no self arm* — they declare on the host's queryable descendant only (`:where([content~="md:gap(sm)"]) :is(cq-box, summary)`, `ui-card.css:199-201`; same shape for `md:scl()`/`md:hl()`, `content.typography.css:219,502`), so `content="md:…"` on `<ui-content>` silently no-ops today. Add self arms first: `@container` rules targeting `ui-content[content~="md:…"]` work as-is (the card remains ui-content's nearest query container) and nearest-wins precedence holds (a declaration on `ui-content` beats one on `cq-box`). Do this in the same pass as R-12's `:is(cq-box, summary)` factoring — it touches the identical rules. **Unlike `media=`, ancestor placement of `content=` is not legacy**: free inheritance is a live feature (`lay-out-group` headers, deck/section-level bulk configuration) and stays the documented author mechanism; `variant=` stays on the host by nature (it arranges the two children). Side benefit: child placement stops a host `content=` from leaking into *nested* cards' content — the leak the type ladder currently counters with its nearest-host-wins dual declarations (`content.typography.css:36-38`).
 4. **v5:** migrate existing real-property tokens to inherited `--_*` flags + `@container style()` (the pattern reveal's `--_rvl` already proves), with boundary resets on `ui-card, ui-reveal` to preserve the stops-at-card contract, accepting the older-Firefox degradation as a v5 support-posture decision.
 5. **Name the query container** (fixes F-42): add `container-name: bs-card` to `ui-card`/`ui-reveal` and qualify every size query as `@container bs-card (inline-size >= …)` — the same move reveal already made with `bs-rvl` for its style queries. Zero behavior change for composed markup (the nearest container there is always the card already), but it makes the two standalone failure modes predictable and useful: a standalone primitive inside an unrelated container can no longer match the wrong box, and standalone responsiveness becomes a **deliberate opt-in** — wrap the primitive in a named container (`<div style="container: bs-card / inline-size">`) and the full `md:`/`lg:` tier system lights up. That is the preset story for standalone primitives: same preset, one documented wrapper. Also fix `content.md:365`'s incorrect "resolves at its preferred value" claim — `cqi` with no container falls back to the small viewport size (R-07).
@@ -394,6 +397,56 @@ Adopt in five steps (full analysis in §2):
 1. **Stop the bleeding** (R-01…R-03, R-05…R-07): all S/M, no design input needed, immediately shippable.
 2. **Vocabulary unification** (R-04, R-08…R-12): needs the maintainer's calls; must land **before** the manifest freezes names. (R-04 is just a legacy-marking note — zero urgency.)
 3. **Manifest + presets** (R-13, R-14): the manifest is the preset system's foundation — build it from the unified vocabulary, port `render.js` onto it, then the preset editor and generated docs follow.
+
+---
+
+# Part IV — Maintainer-directed proposals (added 2026-07-27)
+
+Three investigations requested after review, with concrete designs.
+
+## R-16 — Make `lay-out-group` a query container (header CQ support) `[Design decision]` `[S]`
+
+**Today** `lay-out-group` is not a container (`layout/core/group.css` declares no `container-type`), so a group header's `content=` supports only non-prefixed tokens (F-42's support matrix). Two changes give it full `md:`/`lg:` support:
+
+1. **`container-type: inline-size`** on `:where(lay-out-group)` (plus `container-name: bs-card` once R-14 step 5 names the card queries — the group deliberately joins the same query namespace). Safe: the group is a block-level section whose height is content-driven; inline-size containment doesn't constrain it. Note the semantics: a group is viewport-wide, so the card-scale thresholds (`md` 25rem / `lg` 44rem) effectively act as a mobile/desktop switch for headers — acceptable, and consistent with what a section header wants.
+2. **A queryable descendant.** Two equivalent paths, both should be supported:
+   - **`<cq-box>` wrapper (works with today's rule shapes):** `<lay-out-group content="pad(md) lg:pbs(none)"><cq-box><ui-content>…</ui-content></cq-box><lay-out>…</lay-out></lay-out-group>`. The existing responsive rules (`:where([content~="md:…"]) :is(cq-box, summary)`) match as-is because their subject is *any* `cq-box` under the attribute holder. Cost: the group's header rules use a direct-child combinator (`:where(lay-out-group) > ui-content`, `group.css:37`, plus the `[data-bleed]` and `<30rem` variants) and must each gain a `> cq-box > ui-content` alternative. `cq-box` is `display: contents`, so layout is unaffected.
+   - **Self arms (no markup change):** once R-14 step 3 adds `ui-content[content~="md:…"]` self arms, `<ui-content content="…md:…">` works directly inside the (now container) group — no `cq-box` needed. Recommend this as the documented default, with the `cq-box` path as the attribute-on-group form.
+
+   Declarations made on the group's `cq-box` inherit into the nested `<lay-out>`'s cards too — same free-inheritance semantics `content=` already has from any ancestor; a card's own nearer declarations win (the ladder's nearest-host-wins design).
+
+## R-17 — Flexible `content=` padding: side/axis longhand tokens `[Design decision]` `[M]`
+
+**Requirement:** control padding on all sides (`pad()`), per axis (`pb()`, `pi()`), or per side (`pbs()`, `pbe()`, `pis()`, `pie()`), each independently at `md:`/`lg:` — e.g. `pad(lg)` everywhere, then `lg:pbs(none)` to zero only block-start at the large tier.
+
+**Design — precedence in the `var()` chain, not the cascade.** Replace the single `padding: var(--ui-content-p, var(--spacing-md))` (`content.css:55`) with four longhands, each resolving side → axis → all-sides:
+
+```css
+:where(ui-content) {
+  padding-block-start:  var(--ui-content-pbs, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+  padding-block-end:    var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+  padding-inline-start: var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
+  padding-inline-end:   var(--ui-content-pie, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
+}
+```
+
+Each token writes exactly one property — `pad()` → `--ui-content-p` (unchanged), `pb()`/`pi()` → the axis props, `pbs()`/`pbe()`/`pis()`/`pie()` → the side props — all over the existing value set `none xs sm md lg xl 2xl`, with `md:`/`lg:` forms following the established shape (declared on `:is(cq-box, summary)` + the R-14 self arm). The example works with no ordering rules: `content="pad(lg) lg:pbs(none)"` — at ≥ 44rem the `lg:pbs(none)` rule writes `--ui-content-pbs: 0` on `cq-box`; the chain resolves `pbs` before `p`, so block-start goes to 0 while the other three sides keep `lg`. Custom properties resolve per-side from the nearest declaring ancestor, so base and breakpoint tokens can even sit on different elements and still compose.
+
+**The model to document:** *side beats axis beats all-sides — at every breakpoint*. A breakpoint changes the value in a slot; it never changes slot precedence. (Deliberately unlike CSS shorthand ordering: `pbs(sm) lg:pad(xl)` keeps block-start at `sm` even at `lg`, because the side slot is still filled. Predictable for preset merging — each of the 7 tokens is its own override axis in `mergeMediaTokens` terms.)
+
+**Costs and notes:**
+- Rule count: 7 tokens × 7 values × (1 base + 2 breakpoints × 2 arms) ≈ 250 small rules. Mechanical and compressible — the strongest argument yet for generating token CSS from the R-13 manifest. Precedent in-house: the layout builder already *generates* this exact spacing vocabulary (`p/pi/pb/pbs/pbe` tokens, `src/builder.js` `generateSpacingCSS`) — and `group.css:14-19` shows `lay-out-group` consuming it.
+- Vocabulary alignment: the token stems match layout's spacing tokens exactly (`pb pbs pbe pi …`); the two systems differ only in `pad()` vs layout's `p()` and in values (content = named `--spacing-*` steps; layout = numeric multiples of `--layout-space-unit`). Keep both value systems (named steps are the preset-friendly enum; layout's numeric scale is its own domain) but record the stem mapping in the manifest.
+- Interactions checked: `group.css:42`'s header `padding: 0` is a shorthand and resets all four longhands — unaffected. Reveal's panel double-padding guard (`ui-reveal.css:103`) likewise uses the shorthand — unaffected. The `--ui-content-p` escape hatch and all existing `pad()` markup keep working unchanged (the chain's last slot).
+
+## R-18 — Responsive `asr()`: already shipped; two gaps to close `[Fix now / status]` `[S]`
+
+**Status:** `md:asr()` / `lg:asr()` already exist and work — nine ratios per tier (`ui-card.css:216-224` md, `:264-272` lg), demo'd in production markup (`media.carousel.html:805`: `media="asr(3/4) md:asr(16/9)"`), documented in `media.md` §`asr()`. No new system is needed. What remains:
+
+1. **The canonical-placement interaction (the R-14 step 2 correction):** the responsive `asr()` rules require `media=` on an ancestor of `cq-box`, so the renderer flip to child placement must ship the `ui-media[media~="md:asr(…)"]` self arms with it — otherwise rendered cards lose responsive aspect. Same pass, ~18 selectors.
+2. **Standalone** `<ui-media media="asr(3/4) md:asr(16/9)">` follows F-42: self arms + a named container wrapper (R-14 step 5) make it work outside a card.
+
+If more `media=` tokens should become breakpoint-prefixable later (e.g. `obp()`, `scm()`), the same recipe applies per token — a rule-per-value × tier × arm cost that the manifest should generate rather than hand-write; `asr()` is the template.
 
 ---
 
