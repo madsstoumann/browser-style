@@ -48,21 +48,23 @@ Space-separated token strings; values flow down via CSS custom properties, so a 
 
 | Attribute | On | Controls | Example tokens | Doc |
 |---|---|---|---|---|
-| `variant=` | `ui-card` / `ui-reveal` | composition (+ all reveal config on `ui-reveal` — `exp`/`flp()`/`sld()`/`scl()` etc., see below) | `col` `row` `col-r` `row-r` `spl(1/2)` `vis(media)` `ovr(bl)` `rds(lg-sq)` | `ui-card-tokens.md` |
+| `variant=` | `ui-card` / `ui-reveal` | composition (+ all reveal config on `ui-reveal` — `exp`/`flp()`/`sld()`/`grw()` etc., see below) | `col` `row` `col-r` `row-r` `spl(1/2)` `vis(media)` `ovr(bl)` `rds(lg-sq)` | `ui-card-tokens.md` |
 | `theme=` | `ui-card` / `ui-reveal` | shared theme axis (colour + `pale`/`muted`/`light`/`dark`) | `black dark` `red pale` `gray` | `../base/theme.md` |
-| `media=` | `ui-media` or its card host (also `lay-out[overflow]` for its own scroller) | media frame + **all carousel controls (media-token-only — the old `nav=`/`arrow=`/`dot=`/`vid=`/`ply=`/`eager` attributes are removed)** | `asr(16/9)` `obf()` `obp(cc)` `flp(h)` `hov(zoom)` `scm` `nav(mrk)` `arw(drk)` `mrk(pll)` `axis(y)` `auto` `loop` `stagger` `chip(ts)` `sticker(red)` `beacon(sld)` `vid()` `ply()` `load(eager)` | `media.md`, `carousel.md`, `media.carousel.md` |
-| `content=` | `ui-content` or ancestor | text column | `scl(lg)` `hl(3xl)` `eb(accent)` `tx(lgt)` `mt(med)` `pad(xl)` `gap()` `scr` | `content.md` |
+| `media=` | `ui-media` or its card host (also `lay-out[overflow]` for its own scroller) | media frame + **all carousel controls (media-token-only — the old `nav=`/`arrow=`/`dot=`/`vid=`/`ply=`/`eager` attributes are removed)** | `asr(16/9)` `md:asr(4/3)` `obf()` `obp(cc)` `flp(h)` `hov(zoom)` `scm` `nav(mrk)` `arw(drk)` `mrk(pll)` `axis(y)` `auto` `loop` `stagger` `chip(ts)` `sticker(red)` `beacon(sld)` `marquee(bot)` `vid()` `play(lg)` `load(eager)` | `media.md`, `carousel.md`, `media.carousel.md` |
+| `content=` | `ui-content` (canonical) or ancestor | text column | `scl(lg)` `hl(3xl)` `eb(accent)` `tx(lgt)` `mt(med)` `pad(xl)` `lg:pbs(none)` `gap()` `rds(lg)` `scr` | `content.md` |
 
 ## Container-query model (how cards respond)
 
-The host (`ui-card`/`ui-reveal`) is an **anonymous inline-size container** (no `container-name`). A container can't query its own size, so all `@container` rules target the queryable descendant — `<cq-box>` in a card, `<summary>` in a reveal — via `:is(cq-box, summary)`, which is how card and reveal share one rule set (`ui-card.css`).
+The host (`ui-card`/`ui-reveal`) is an inline-size container **named `bs-card`** — `lay-out-group` joins the same namespace. A container can't query its own size, so the **host arm** of every rule targets the queryable descendant (`<cq-box>` in a card, `<summary>` in a reveal) via `:is(cq-box, summary)`, which is how card and reveal share one rule set (`ui-card.css`). Each `content=`/`asr()` rule also ships a **self arm** (`ui-content[content~=…]` / `ui-media[media~=…]`) so the attribute can sit on the primitive — the renderer's canonical placement. `variant=` gets no self arm: it arranges the two children.
 
 Two tiers, driven by the **card's own rendered width**, not the viewport:
 
-- `md:` → `@container (inline-size >= 25rem)` (400px)
-- `lg:` → `@container (inline-size >= 44rem)` (704px)
+- `md:` → `@container bs-card (inline-size >= 25rem)` (400px)
+- `lg:` → `@container bs-card (inline-size >= 44rem)` (704px)
 
-Prefixable this round: `variant=` arrangement tokens, `content=` spacing (`gap()`/`pad()`), and `content=` **size** (`scl()` and `hl(<size>)`). Not prefixed: `media=` tokens and `content=` **tone/weight** (`eb()`/`hl()`/`tx()`/`mt()` ink + weight).
+The **name is load-bearing**: an unnamed size query resolves against the subject's nearest size container, so a self-armed primitive outside a card would switch tiers off an unrelated ancestor. A standalone `<ui-content>`/`<ui-media>` opts in with `<div style="container: bs-card / inline-size">`. `<lay-out>` deliberately stays a non-container so cards keep their own query root.
+
+Prefixable: `variant=` arrangement tokens, `content=` spacing (`gap()` + the seven padding tokens `pad() pb() pi() pbs() pbe() pis() pie()`), `content=` **size** (`scl()`, `hl(<size>)`), and `media=`'s `asr()`. Not prefixed: every other `media=` token and `content=` **tone/weight**.
 
 ## Presets + renderer (JSON → HTML)
 
@@ -121,15 +123,14 @@ Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are 
 | File | Purpose |
 |---|---|
 | `index.js` | all-in-one entry: imports the three chunks below, exports `scan()` (also `globalThis.uiMedia.scan`) |
-| `hover.js` | cursor-tracked `hov(track|drift|tilt)` — standalone, zero imports |
+| `hover.js` | cursor-tracked `hov(track\|drift\|tilt)` — standalone, zero imports. (`ui-media.js` is **deleted**; this replaced it) |
 | `carousel.js` | loop (seamless clones), autoplay, pause-on-slide-leave, per-slide `<ui-play>` video controls |
 | `video.js` | embed facades, media-command polyfill, `vid()` player tools, solo play, opt-in tracking |
-| `shared.js` | primitives shared by carousel.js/video.js (`reflectPlay`, `bindVideo`, token readers) |
+| `shared.js` | primitives shared by carousel.js/video.js — `reflectPlay`, `bindVideo`, token readers (`mediaStr`, `hasToken`), and the single exported slide-exclusion list `NOT_SLIDE`/`slidesOf` (cross-referenced from the `:not()` list in `media.carousel.css`) |
 | `build.js` | `node build.js` → bundled+minified `*.min.js` per entry + gzip/brotli size table |
-| `ui-media.js` | hover tracking only (`hov(track)`/`hov(drift)`) — superseded by `hover.js` |
 | `ui-media-srcset.js` | registers `<ui-media>`; host-gated Cloudflare `srcset` + loading/decoding upgrades. **Transitional** — retire once srcset is SSR'd |
 | `srcset.js` | dependency-free Cloudflare Image Resizing URL builder |
-| `render.js` | Node-safe SSR: JSON (UCF) → HTML string |
+| `render.js` | Node-safe SSR: JSON (UCF) → HTML string. Published (in `package.json` `files`/`exports`) together with `data/` |
 
 ## Conventions & pitfalls
 
@@ -139,6 +140,9 @@ Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are 
 4. **Don't register elements CSS can drive** — only `<ui-media>` needs JS, and only for srcset.
 5. **Demos use `<lay-out>`** — do not reintroduce per-page `.grid` classes; use the mapping table in `layout/docs/card-integration.md`.
 6. **`ovr()` needs `scm`** (or a dark image) for contrast; themes go through the shared `theme=` axis ([base/theme.md](../base/theme.md)), not ad-hoc colors. (The old `variant="thm(…)"` spelling was removed in v4 — use `theme=`.)
+7. **One position grid.** `ovr()`, furniture, `scm()` and reveal's `ico()` all use the logical `ts tc te · cs cc ce · bs bc be` set; the physical `tl…br` spellings are deprecated aliases (v5 removal) **except** on `obp()`, where they are genuinely physical and stay.
+8. **One hue palette.** `red orange green blue accent black white gray`. `dark`/`light`/`subtle`/`slate` are deprecated aliases — and `ui/play` implements none of them while `ui/save` lacks `slate`, so prefer the canonical names.
+9. **`<ui-play>` has one contract:** `command="play-pause" commandfor="<video id>"`, handled by `video.js`. No `ui-play-toggle` event. The carousel's control is the one target-less exception, auto-discovered by `carousel.js`.
 
 ## Doc map — read this when…
 

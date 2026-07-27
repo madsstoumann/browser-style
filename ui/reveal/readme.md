@@ -92,9 +92,9 @@ A shared `name` on the `<details>` makes a group of cards mutually exclusive (na
 ### Required structure
 
 - `<ui-reveal>` — component root (renders as a block; sets `container-type: inline-size`).
-- `<details>` — direct child, one per card. Optional `name` groups cards into a mutually-exclusive set.
-- `<summary>` — the front face. For `flp` / `scl` / `sld`, wrap it in `<ui-face>`. `<ui-media>` / `<ui-content>` inside come from the card engine.
-- `<ui-icon>` — the toggle (optional with `trg(card)`).
+- `<details>` — direct child, one per card. Optional native `name` groups cards into a mutually-exclusive set. The renderer emits it **only** from the preset's `reveal.name` field — there is no `variant=` token for it and it is never inferred.
+- `<summary>` — the front face. For `flp` / `sld` / `grw`, wrap it in `<ui-face>` — those three transform the front face, so they need a wrapper to transform. `exp` animates the **host**, so it needs no `<ui-face>` (and `render.js` emits one only for the three faced animations). `<ui-media>` / `<ui-content>` inside come from the card engine.
+- `<ui-icon>` — the toggle. **Omitted entirely under `trg(card)`**: the whole summary is the trigger, so there is nothing for an icon to add. `render.js` emits no `<ui-icon>` when `reveal.trigger` is set.
 - **One** element after `</summary>` — the panel. Use `<ui-content>` to give the back the card typography + `data-part` parts; the front-only `ovr()` overlay is reset on the back, so it renders as a normal flow column on the panel background.
 
 > All reveal rules are **direct-child scoped** (`> details`, `> details > summary`), so you can nest other `<details>`-based components (e.g. a `<ui-accordion>` of FAQs) in the panel without them inheriting the card chrome, the floating icon, or the transforms.
@@ -103,15 +103,17 @@ A shared `name` on the `<details>` makes a group of cards mutually exclusive (na
 
 ## Reveal-specific `variant=` tokens
 
-Reveal behaviour lives on the same space-separated, composable `variant=` attribute as the card tokens (`ovr()`, `thm()`, `rds()`, …) — mix them freely.
+Reveal behaviour lives on the same space-separated, composable `variant=` attribute as the card tokens (`ovr()`, `rds()`, `bdr`, …) — mix them freely.
+
+> **There is no `thm()` token.** The old `variant="thm(…)"` spelling was removed in v4; colour comes from the shared `theme=` attribute (`theme="gray"`, `theme="black dark"`). Migration mapping in [base/theme.md](../base/theme.md): `thm(dark)` → `theme="black dark"`, `thm(muted)` → `theme="slate dark"`, `thm(subtle)` → `theme="gray"`.
 
 | Token | Values | Effect |
 |---|---|---|
-| animation | *(omit)* `exp` · `flp` / `flp(top|btm|lft)` · `sld` / `sld(top|btm|lft|rgt)` · `scl` / `scl(ts|te|bs|be)` | The reveal animation — ONE token that carries its own direction/origin (see below). Bare `flp`/`sld` come from the right; bare `scl` morphs from the `ico()` corner. |
-| `lg:` animation | `lg:scl` | Swaps the animation at the `lg` width (≥ 44rem container), overriding the base one. |
-| `trg(card)` | — | Whole card toggles, front and back — no `<ui-icon>` needed. |
+| animation | *(omit)* `exp` · `flp` / `flp(top\|btm\|lft\|rgt)` · `sld` / `sld(top\|btm\|lft\|rgt)` · `grw` / `grw(ts\|te\|bs\|be)` | The reveal animation — ONE token that carries its own direction/origin (see below). Bare `flp`/`sld` come from the right; bare `grw` morphs from the `ico()` corner. |
+| `lg:` animation | `lg:grw` | Swaps the animation at the `lg` width (≥ 44rem container), overriding the base one. |
+| `trg(card)` | — | Whole card toggles, front and back — and **no `<ui-icon>` is rendered**. |
 | `pop` | — | `exp` only — opens the card as a fixed, centered popup with a backdrop and pop-in. |
-| `scr` | — | Locks a long panel to the card frame and scrolls the overflow. `flp` (any width) and the scale-morph — `scl` or `lg:scl` — whenever it is the active animation. |
+| `scr` | — | Locks a long panel to the card frame and scrolls the overflow. `flp` (any width) and the grow-morph — `grw` or `lg:grw` — whenever it is the active animation. |
 | `ico()` | position + style + size words, one per token | Positions and styles the toggle icon (see below). |
 | `icc()` | same words as `ico()` | Same words, applied only while the card is **open** (re-place / re-colour the icon on the back). |
 
@@ -123,9 +125,11 @@ Reveal behaviour lives on the same space-separated, composable `variant=` attrib
 |---|---|
 | *(omit)* | Plain disclosure — content shows/hides, no special motion. |
 | `exp` | Panel expands open below the front face (height animation to `auto`). With `pop` it morphs into a fixed popup. |
-| `flp` / `flp(top|btm|lft)` | Card flips 180° to reveal the back. Wrap the front in `<ui-face>`. Direction in the value; bare = from the right. |
-| `sld` / `sld(top|btm|lft|rgt)` | Panel slides in over the face from an edge. Direction in the value; bare = from the right. |
-| `scl` / `scl(ts|te|bs|be)` | Panel morphs out from a corner, scaling to fill the card. Origin follows the `ico()` position, or pin it explicitly with the value. |
+| `flp` / `flp(top\|btm\|lft\|rgt)` | Card flips 180° to reveal the back. Wrap the front in `<ui-face>`. Direction in the value; bare = from the right. |
+| `sld` / `sld(top\|btm\|lft\|rgt)` | Panel slides in over the face from an edge. Direction in the value; bare = from the right. |
+| `grw` / `grw(ts\|te\|bs\|be)` | Panel morphs out from a corner, scaling to fill the card. Origin follows the `ico()` position, or pin it explicitly with the value. |
+
+> **Renamed this round: `scl()` → `grw()`.** `scl()` is `content=`'s type-scale token, and one spelling should mean one thing even across attributes. `scl`, `scl(ts\|te\|bs\|be)`, `lg:scl` and its corner forms are kept as **deprecated aliases** — they still work in v4 and are removed in v5.
 
 ### `ico()` / `icc()` — toggle icon
 
@@ -140,6 +144,7 @@ One word per token — `ico(te) ico(sm)` anchors a small icon in the top-right c
 
 ```html
 <ui-reveal variant="flp ico(te) ico(sm) icc(be) icc(drk)">…</ui-reveal>
+<ui-reveal variant="exp lg:grw ico(te)" theme="gray">…</ui-reveal>
 ```
 
 ---
@@ -206,20 +211,35 @@ Scoped to `:where(ui-reveal)` — low specificity, easy to override.
 | DSL | On | Documents | Reference |
 |---|---|---|---|
 | `media=` | `<ui-media>` / any ancestor | frame, scrim, overlay markers, carousel — `asr()` `obp()` `obf()` `flp()` `hov()` `scm()` `nav()` `chip()` `sticker()` | [media.md](../card/media.md) |
-| `content=` | `<ui-content>` / any ancestor | text column + parts — `scl()` `pad()` `gap()` `scr` | [content.md](../card/content.md) |
-| `variant=` | `<ui-reveal>` | arrangement, overlay, theme, corners — `col` `col-r` `row` `row-r` `spl()` `vis()` `ovr()` `thm()` `rds()` | [ui-card-tokens.md](../card/ui-card-tokens.md) |
+| `content=` | `<ui-content>` / any ancestor | text column + parts — `scl()` `hl()` `gap()` · padding `pad()` `pb()` `pi()` `pbs()` `pbe()` `pis()` `pie()` · `rds()` `scr` | [content.md](../card/content.md) |
+| `variant=` | `<ui-reveal>` | arrangement, overlay, corners — `col` `col-r` `row` `row-r` `spl()` `vis()` `ovr()` `rds()` `bdr` | [ui-card-tokens.md](../card/ui-card-tokens.md) |
+| `theme=` | `<ui-reveal>` | colour — one hue + optional `pale` / `muted` / `light` / `dark` | [base/theme.md](../base/theme.md) |
 
 ```html
-<ui-reveal variant="flp ovr(bl) rds(md-sq) thm(dark)"
-           media="asr(3/4) obp(cc) hov(zoom) scm" content="scl(xl) pad(lg)"> … </ui-reveal>
+<ui-reveal variant="flp ovr(bs) rds(md-sq)" theme="black dark"
+           media="asr(3/4) obp(cc) hov(zoom) scm" content="scl(xl) pad(lg) lg:pbs(none)"> … </ui-reveal>
 ```
 
 Notes:
 
 - **Squircle corners** — `rds(*-sq)` sets the card radius and `--ui-card-squircle-exp`; reveal reads that exponent to apply the same `corner-shape: superellipse()` to its `<details>`.
 - **Overlay markers only in `<summary>`** — `<ui-chip>` / `<ui-sticker>` are valid in the trigger face; `<ui-save>` / `<ui-play>` are interactive controls and stay **card-only** (never inside `<summary>`).
-- **Responsive front face** — `<ui-reveal>` is a container, so the card engine's `md:` / `lg:` prefixes apply to the front face (`variant` arrangement + `content=` spacing). The queryable descendant for the `@container` rules is the `<summary>` subtree (not `<cq-box>`). `media=` tokens and `scl()` are not breakpoint-prefixed this round.
-- **`content="scr"` vs reveal `variant="… scr"`** — `content="scr"` is the content-column scroll (scrollable text + edge mask); the `scr` token on `variant=` is reveal's own panel scroll for `flp` / `lg:scl`. They are different mechanisms on different targets, but share **one** fade primitive — the `@property` / `@keyframes ui-scroll-fade` and the `--ui-scroll-fade-mask` gradient live in [`ui/base/scroll.css`](../base/scroll.css) and both scrollers consume it.
+- **Responsive front face** — `<ui-reveal>` is a `bs-card`-named container, so the card engine's `md:` / `lg:` prefixes apply to the front face. The **host arm** targets `<summary>` (reveal's queryable descendant, standing in for the card's `<cq-box>`); the **self arm** lets a `content=`/`media=` token sit on the `<ui-content>`/`<ui-media>` itself. Prefixable: `variant=` arrangement, `content=` size (`scl()`, `hl()`) and spacing (`gap()` + all seven padding tokens), and `media=`'s `asr()`.
+- **`content="scr"` vs reveal `variant="… scr"`** — `content="scr"` is the content-column scroll (scrollable text + edge mask); the `scr` token on `variant=` is reveal's own panel scroll for `flp` / `lg:grw`. They are different mechanisms on different targets, but share **one** fade primitive — the `@property` / `@keyframes ui-scroll-fade` and the `--ui-scroll-fade-mask` gradient live in [`ui/base/scroll.css`](../base/scroll.css) and both scrollers consume it.
+
+---
+
+## Known limitations
+
+- **`exp pop` inside a `lay-out-group` band.** A `variant="exp pop"` reveal opens as a
+  `position: fixed` popup, and the component already releases its **own** containment for
+  that (`container-type: normal` while open), plus `<lay-out>` carries an escape hatch for
+  the section grid. Neither covers a `<lay-out-group>`: the group is a query container in
+  its own right (`container-type: inline-size`, which implies `contain: layout`), so a
+  popup opened from a card inside a group **band** is clipped to the band rather than
+  filling the viewport. Rare enough that this round documents it rather than patching it.
+  Workarounds: use `exp` without `pop` inside a group band, or place the popup-capable
+  cards in a `<lay-out>` that is not wrapped in a `<lay-out-group>`.
 
 ---
 

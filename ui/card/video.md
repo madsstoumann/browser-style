@@ -75,7 +75,7 @@ a GIF — and it reuses the native-video path.
 ### Animated poster — `preview="…"` on a facade
 
 A `provider="vimeo"` frame accepts a **`preview`** attribute: a small gif-like loop clip.
-Instead of a static `<img>` poster, `index.js` injects a **muted autoplay-loop
+Instead of a static `<img>` poster, `video.js` (bundled by the package entry `index.js`) injects a **muted autoplay-loop
 `<video data-preview>`** as the poster; the still `poster=` (if any) shows until the loop
 paints. Pressing play swaps in the real player and drops the preview.
 
@@ -84,11 +84,38 @@ paints. Pressing play swaps in the real player and drops the preview.
           src="…1080p.mp4"                 <!-- full clip (server-resolved, fresh) -->
           preview="…240p-2s.mp4"           <!-- animated poster (the gif-like loop) -->
           poster="…thumb.jpg" loop muted>
-  <ui-play><button …><ui-icon type="play-pause"></ui-icon></button></ui-play>
+  <ui-play><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 </ui-media>
 ```
 
 See the "animated poster" cards in [vimeo.html](./vimeo.html).
+
+### The `<ui-play>` contract
+
+Over a **native `<video>`**, `<ui-play>` is declarative — the inner `<button>` carries the
+invoker pair, and `video.js` handles the command (polyfilling the proposed media commands
+until browsers ship them natively):
+
+```html
+<ui-media media="play(cc) play(lg)">
+  <video id="film" src="…1080p.mp4" playsinline poster="…thumb.jpg"></video>
+  <ui-play>
+    <button type="button" command="play-pause" commandfor="film" aria-label="Play">
+      <ui-icon type="play-pause" aria-hidden="true"></ui-icon>
+    </button>
+  </ui-play>
+</ui-media>
+```
+
+`aria-pressed` and the host's `[open]` (which morphs the glyph in CSS) are mirrored from
+the video's real `play`/`pause`/`ended` events — never guessed. **There is no
+`ui-play-toggle` event.**
+
+A **provider facade** is the exception: an `<iframe>` is not an `HTMLMediaElement`, so a
+`provider="youtube|vimeo"` frame uses the click facade instead (drop the poster, append
+`autoplay=1`, hand off to the platform player) and its `<button>` carries no
+`command`/`commandfor`. Size the control with `play(sm|md|lg|xl)` — `ply()` is a deprecated
+alias. Full reference: [media.md](./media.md#ui-play--one-contract).
 
 ---
 

@@ -102,7 +102,10 @@ import '@browser.style/content';
 | `eb()` | size `sm`–`xl` · tone · weight · `flat` · `shd` | eyebrow group — size (relational), ink, weight, drop uppercase, shadow | No* |
 | `tx()` | size `sm`–`xl` · tone · weight · `shd` | body group — size (relational), ink, weight, shadow (summary/quote/list/address/timeline/price/stat) | No* |
 | `mt()` | size `sm`–`xl` · tone · weight · `shd` | meta group — size (relational), ink, weight, shadow (meta/caption/byline/footer/tags/rating/options) | No* |
-| `pad()` | `none` `xs` `sm` `md` `lg` `xl` `2xl` | content padding (`--ui-content-p`) | **Yes** |
+| `pad()` | `none` `xs` `sm` `md` `lg` `xl` `2xl` | padding, **all sides** (`--ui-content-p`) | **Yes** |
+| `pb()` `pi()` | same value set | padding, **one axis** — block / inline (`--ui-content-pb` / `-pi`) | **Yes** |
+| `pbs()` `pbe()` `pis()` `pie()` | same value set | padding, **one side** — block-start / block-end / inline-start / inline-end | **Yes** |
+| `rds()` | `sm` `md` `lg` `xl` `2xl` `full` `pill` · `non` · `sm-sq` `md-sq` `lg-sq` `xl-sq` | corners on a **standalone** `<ui-content>` (`--ui-content-radius`) | No |
 | `gap()` | `none` `xs` `sm` `md` `lg` | row gap between parts (`--ui-content-gap`) | **Yes** |
 | `ctr` / `end` | *(flag)* | standalone cross-axis + text alignment — centre / end the whole content column (`--ui-content-align`), independent of `ovr()` overlay placement | No |
 | `scr` / `scr(y)` / `scr(x)` | *(flag)* | scrollable content + shared `ui-scroll-fade` edge mask (`ui/base/scroll.css`). Bare `scr` = `scr(y)` = vertical column; `scr(x)` = horizontal row | No |
@@ -120,6 +123,60 @@ import '@browser.style/content';
 :where([content~="gap(sm)"]) { --ui-content-gap: var(--spacing-sm); }
 ```
 
+### Padding — seven tokens, one value set
+
+Padding has three granularities. All seven tokens share the **same value set** — `none xs sm md lg xl 2xl` — and every one of them has `md:` and `lg:` forms.
+
+| Granularity | Tokens | Writes |
+|---|---|---|
+| all sides | `pad()` | `--ui-content-p` |
+| one axis | `pb()` block · `pi()` inline | `--ui-content-pb` / `--ui-content-pi` |
+| one side | `pbs()` `pbe()` `pis()` `pie()` | `--ui-content-pbs` / `-pbe` / `-pis` / `-pie` |
+
+The stems match the layout package's spacing vocabulary exactly (`pb pbs pbe pi pis pie`); only the value system differs — content uses the named `--spacing-*` steps, layout uses numeric multiples of its own unit.
+
+#### Precedence: side beats axis beats all-sides
+
+Precedence lives in the **`var()` chain**, not the cascade. Each of the four physical longhands resolves through its own three-step fallback:
+
+```css
+:where(ui-content) {
+  padding-block-start:  var(--ui-content-pbs, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+  padding-block-end:    var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+  padding-inline-start: var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
+  padding-inline-end:   var(--ui-content-pie, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
+}
+```
+
+Each token fills exactly **one slot**, and the slots have a fixed order. So:
+
+```html
+<ui-content content="pad(lg) lg:pbs(none)">…</ui-content>
+```
+
+At any width the four sides are `lg`. Once the card renders ≥ 44rem, `lg:pbs(none)` fills the `pbs` slot with `0` — the chain reaches `pbs` before `p`, so **block-start goes to 0 while the other three sides stay `lg`**. No ordering rule, no `!important`, no source-order dependency.
+
+> **A breakpoint changes the VALUE in a slot; it never changes the slot order.** This is deliberately *unlike* CSS shorthand ordering. `content="pbs(sm) lg:pad(xl)"` keeps block-start at `sm` even at the `lg` tier, because the `pbs` slot is still filled. Predictable is the point: each of the seven tokens is its own independent override axis, which is what makes preset merging safe.
+
+Because custom properties resolve per-side from the nearest declaring ancestor, the base token and the breakpoint token can even sit on **different elements** and still compose correctly.
+
+`--ui-content-p` remains the all-sides slot, so every existing `pad()` token and the `style="--ui-content-p: …"` escape hatch keep working unchanged. A `padding` **shorthand** (as used by `lay-out-group`'s header reset and reveal's panel double-padding guard) resets all four longhands and therefore overrides the whole chain — that's intended.
+
+### `rds()` — corners on a standalone `<ui-content>`
+
+Inside a `<ui-card>` / `<ui-reveal>` the host owns the corners: it rounds itself and clips the inner areas through `overflow: hidden`, so media and content corners follow the arrangement. `rds()` on `content=` therefore targets the **standalone** case — a bare `<ui-content>` emitted as its own primitive (presets do this), which until this round had no token-level corners at all.
+
+```
+rds(sm)  rds(md)  rds(lg)  rds(xl)  rds(2xl)  rds(full)  rds(pill)   rds(non)
+rds(sm-sq)  rds(md-sq)  rds(lg-sq)  rds(xl-sq)       ← squircle (superellipse corner-shape)
+```
+
+Same scale as `variant="rds()"` on the card and `media="rds()"` on a standalone frame — the values come from the global `--radius-*` / `--radius-*-sq` / `--squircle-*` tokens in `@browser.style/base`, so all three stay in lock-step.
+
+> **Corners need a background to be visible.** `--ui-content-radius` defaults to `0` and is inert inside a card. `<ui-content>` **paints no background of its own** — the card sheets set `background` on `ui-card`, not on the text column — so on a standalone primitive you must supply one yourself (`style="background: …"`, a utility class, or a themed wrapper). Rounding a transparent box is a no-op. The token is there so a preset can emit a bare `<ui-content>` with real corners once it has a surface.
+
+`rds()` is substring-matched (like the card's and media's), which is safe here because it has no `md:`/`lg:` forms to shadow and `rds(sm)` is not a substring of `rds(sm-sq)`. `rds(none)` is a **deprecated alias** of `rds(non)`, removed in v5.
+
 ### Arbitrary values (escape hatch)
 
 The `()` tokens are *sugar* — each rule just writes a custom property. For any value not in the token list, set the property directly:
@@ -127,6 +184,8 @@ The `()` tokens are *sugar* — each rule just writes a custom property. For any
 ```html
 <ui-content style="--ui-content-gap: 1.25rem; --ui-content-p: 2.5rem;">…</ui-content>
 ```
+
+Because the padding chain reads four separate slots, the escape hatch works per-side too: `style="--ui-content-pis: 3ch"` indents only the inline-start edge and leaves `pad()` governing the rest.
 
 ### `scl()` vs the card's old `fs()`
 
@@ -362,7 +421,17 @@ The two fluid `cqi` `clamp()` scales (body + headline) live on `<ui-content>` (d
 
 `scl(lg)` sets `--ui-content-fs: var(--ui-content-fs-lg)` **and** `--ui-content-headline: var(--ui-content-headline-lg)` together.
 
-> The `cqi` unit measures against the nearest container. Standalone, drop `<ui-content>` inside an element with `container-type: inline-size` to make the ramp fluid; otherwise the `clamp()` resolves at its preferred value. Inside `<ui-card>` the card is the container.
+> The `cqi` unit measures against the nearest **query container**. Inside `<ui-card>` / `<ui-reveal>` the host is that container, so the ramp is fluid with no extra markup. Standalone, drop `<ui-content>` inside an element with `container-type: inline-size` to get the same behaviour.
+>
+> **With no container, `cqi` does not "fall back to the preferred value".** Per spec a container-relative unit with no query container resolves against the **small viewport size** — `1cqi` becomes `1svi`. The `clamp()` still evaluates normally; its middle term is just measured against the viewport instead of the card. On a wide screen that pushes the ramp toward its `max`; in a narrow column it will *not* shrink, because the column isn't what's being measured. That's the practical reason to wrap a standalone `<ui-content>`.
+
+If the standalone element also needs the `md:`/`lg:` tiers, name that wrapper `bs-card` and it does both jobs at once:
+
+```html
+<div style="container: bs-card / inline-size">
+  <ui-content content="scl(md) lg:scl(xl) pad(lg) lg:pbs(none)">…</ui-content>
+</div>
+```
 
 ### Per-part size ratios
 
@@ -577,27 +646,81 @@ ui-content {
 
 ## Responsive
 
-`md:` / `lg:` breakpoint prefixes are parsed inside `@container` against the host's queryable descendant (`cq-box` for `<ui-card>`, `<summary>` for `<ui-reveal>`); the resulting properties inherit down to `<ui-content>`.
+Breakpoints: **md = 25rem, lg = 44rem** — the card's own rendered width, not the viewport. Every size query is **named**: `@container bs-card (…)`.
 
-**Responsive this round: `content=` *spacing* (`gap()`, `pad()`) and *size* (`scl()`, `hl(<size>)`):**
+**Responsive this round: `content=` *spacing* (`gap()` + all seven padding tokens) and *size* (`scl()`, `hl(<size>)`):**
 
 ```html
-<ui-content content="scl(md) lg:scl(lg) hl(md) lg:hl(3xl) gap(sm) md:gap(lg) pad(md) md:pad(lg)">…</ui-content>
+<ui-content content="scl(md) lg:scl(lg) hl(md) lg:hl(3xl) gap(sm) md:gap(lg) pad(md) md:pad(lg) lg:pbs(none)">…</ui-content>
 ```
+
+### Two arms — the attribute can sit on the primitive or the host
+
+Every responsive `content=` rule ships **two** selectors:
 
 ```css
 /* spacing lives in ui-card.css; SIZE lives in content.typography.css (source
    order vs the base size rules is load-bearing — see that file's header) */
-@container (inline-size >= 25rem) {            /* md */
-  :where([content~="md:gap(lg)"]) :is(cq-box, summary) { --ui-content-gap: var(--spacing-lg); }
-  :where([content~="md:pad(lg)"]) :is(cq-box, summary) { --ui-content-p:   var(--spacing-lg); }
-  :where([content~="md:scl(lg)"]) :is(cq-box, summary) { --ui-content-fs: var(--ui-content-fs-lg); --ui-content-headline: var(--ui-content-headline-lg); /* + re-points the tx/hl ladders */ }
-  :where([content~="md:hl(3xl)"]) :is(cq-box, summary) { --ui-content-headline: var(--ui-content-hl-3xl, var(--ui-content-headline-3xl)); }
+@container bs-card (inline-size >= 25rem) {                              /* md */
+  /*                    host arm                          self arm                          */
+  :where([content~="md:gap(lg)"]) :is(cq-box, summary), :where(ui-content[content~="md:gap(lg)"]) { --ui-content-gap: var(--spacing-lg); }
+  :where([content~="md:pad(lg)"]) :is(cq-box, summary), :where(ui-content[content~="md:pad(lg)"]) { --ui-content-p:   var(--spacing-lg); }
+  :where([content~="md:pbs(none)"]) :is(cq-box, summary), :where(ui-content[content~="md:pbs(none)"]) { --ui-content-pbs: 0; }
+  :where([content~="md:scl(lg)"]) :is(cq-box, summary), :where(ui-content[content~="md:scl(lg)"]) { --ui-content-fs: var(--ui-content-fs-lg); --ui-content-headline: var(--ui-content-headline-lg); /* + re-points the tx/hl ladders */ }
 }
-@container (inline-size >= 44rem) { /* lg — same shape */ }
+@container bs-card (inline-size >= 44rem) { /* lg — same shape */ }
 ```
 
-Breakpoints: **md = 25rem, lg = 44rem**. `scl()` accepts `sm`/`md`/`lg`/`xl` prefixed; `hl(<size>)` accepts `sm`–`3xl`. Content **tone/weight** (`eb()`/`hl()`/`tx()`/`mt()` ink + weight), group **sizes** (`eb()`/`tx()`/`mt()` `sm`–`xl`) and `media=` tokens stay unprefixed — tone/weight would cost a rule per token × breakpoint and is deferred; group sizes don't need prefixes at all, since a responsive `scl()` shifts them via the relational ladder.
+- **Host arm** — the attribute sits on `<ui-card>`/`<ui-reveal>`/`<lay-out-group>` and the rule targets the queryable descendant (`cq-box` in a card, `summary` in a reveal). The properties then inherit down to `<ui-content>`.
+- **Self arm** — the attribute sits on the `<ui-content>` itself. This is the **renderer's canonical placement**. Nearest-wins keeps precedence right: a declaration on the primitive beats the one it would otherwise inherit from `cq-box`.
+
+`variant=` deliberately gets **no** self arm — it arranges the two children, so it belongs on the host by nature.
+
+### Container-query support matrix
+
+| Context | Is a `bs-card` container? | `md:`/`lg:` `content=` works? |
+|---|---|---|
+| `<ui-card>` | yes (`container: bs-card / inline-size`) | yes — both arms |
+| `<ui-reveal>` | yes (own `container-type`, name declared in `ui-card.css`) | yes — both arms; queryable descendant is `<summary>` |
+| `<lay-out-group>` | **yes, new this round** | yes — self arm directly; for the attribute *on the group*, wrap the header in `<cq-box>` |
+| `<lay-out>` | **no** — deliberately not a container | n/a (cards inside it keep their own query root) |
+| standalone `<ui-content>` | no | **opt in** with a `bs-card`-named wrapper |
+
+The queries are named on purpose. An *unnamed* size query resolves against the subject's nearest size container, so a self-armed `<ui-content>` standing outside a card could switch tiers off an unrelated ancestor's width. With the name, only the three container elements above match — and a standalone primitive opts in deliberately:
+
+```html
+<div style="container: bs-card / inline-size">
+  <ui-content content="pad(md) lg:pad(2xl)">…</ui-content>
+</div>
+```
+
+### `lay-out-group` headers
+
+`lay-out-group` now declares `container-name: bs-card; container-type: inline-size`, so a group header supports the full `md:`/`lg:` `content=` vocabulary. Two equivalent paths — prefer the first:
+
+```html
+<!-- self arm: no extra markup -->
+<lay-out-group>
+  <ui-content content="pad(md) lg:pbs(none) lg:hl(3xl)">…</ui-content>
+  <lay-out md="columns(2)">…</lay-out>
+</lay-out-group>
+
+<!-- attribute on the group: needs the queryable descendant -->
+<lay-out-group content="pad(md) lg:pbs(none)">
+  <cq-box><ui-content>…</ui-content></cq-box>
+  <lay-out md="columns(2)">…</lay-out>
+</lay-out-group>
+```
+
+A group is viewport-wide, so the card-scale thresholds (25rem / 44rem) act as a mobile/desktop switch for headers — which is what a section header usually wants. Declarations made on the group (or its `cq-box`) inherit into the nested `<lay-out>`'s cards too; a card's own nearer declaration wins, per the ladder's nearest-host-wins design.
+
+### Canonical placement
+
+`render.js` emits `content=` **on the `<ui-content>`** and `media=` on the `<ui-media>`; `variant=` and `theme=` stay on the host. Hand-authored HTML keeps working with the attribute on the host or any ancestor — **ancestor placement remains the bulk-config mechanism**, and is the right tool when one declaration should govern a whole section of cards.
+
+### What is still unprefixed
+
+Content **tone/weight** (`eb()`/`hl()`/`tx()`/`mt()` ink + weight), group **sizes** (`eb()`/`tx()`/`mt()` `sm`–`xl`), `fnt()`, `ctr`/`end`, `scr` and `rds()` have no `md:`/`lg:` forms. Tone/weight would cost a rule per token × tier × arm and is deferred; group sizes don't need prefixes at all, since a responsive `scl()` shifts them via the relational ladder. On the `media=` side only `asr()` is prefixable — see [media.md](./media.md#responsive).
 
 **Axis:** bare `scr` (alias `scr(y)`) is a **vertical** scrolling column with a top/bottom fade; **`scr(x)`** is a **horizontal** scrolling row (`flex-direction: row`, `overflow-x: auto`) with a left/right fade — handy for a strip of thumbnails, tags or chips that overflows the card. Both share the one `ui-scroll-fade` primitive; `scr(x)` just flips the mask direction (`--ui-scroll-fade-dir: to right`) and the scroll-timeline axis (`inline`). Cap the scroll extent with `--ui-content-scroll-bs` (block) as usual.
 

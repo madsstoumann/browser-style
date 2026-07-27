@@ -102,18 +102,18 @@ Elements: **`<ui-card>`** (static host, unregistered), **`<cq-box>`** (queryable
 | `variant` | card / reveal | Composition DSL: arrangement, split, visibility, overlay, corners. | Token-list |
 | `theme` | card / reveal | Shared theme axis (colour + light/dark/pale/muted modifiers); surface + ink. | Token-list |
 | `media` | card (inherits to media) | Media-frame DSL; can live on the host and flow down to `<ui-media>`. | Token-list |
-| `content` | card (inherits to content) | Content-column DSL; can live on the host and flow down to `<ui-content>`. | Token-list |
+| `content` | content (canonical) — **or** the card / any ancestor | Content-column DSL. The renderer's **canonical placement is the `<ui-content>` itself**; host and ancestor placement stay fully supported, and ancestor placement is the deliberate **bulk-config** mechanism (pure custom-property inheritance — one declaration on a `<lay-out>`/`<lay-out-group>` governs every card beneath it; a nearer declaration wins). Responsive `md:`/`lg:` forms ship two arms (host → `:is(cq-box, summary)`, self → `ui-content[content~=…]`) so both placements work. | Token-list |
 | `data-view` | card (and optionally its `<img>`) | Sets `view-transition-name` for cross-page view transitions. | Value |
 
 ### Media — `<ui-media>`
 
 | Attribute | Applies To | Purpose | Type |
 |-----------|-----------|---------|------|
-| `media` | media | Primary media DSL — the **only** configuration surface: aspect-ratio, fit/position, flip, hover, scrim, shape, tint, furniture, **all carousel controls** (`nav`/`nav()`, `arw()`, `mrk()`, `axis(y)`, `auto`/`auto(4s)`, `loop`, `stagger`, `ani()`/`crd()`), loading (`load(eager\|lazy)`) and video sizing (`vid()`, `ply()`). The former alias attributes `nav=`/`arrow=`/`dot=`/`vid=`/`ply=`/`eager`/carousel-`loop` are removed. Read from the element itself or its nearest `ui-card`/`ui-reveal` host only (never other ancestors). | Token-list |
+| `media` | media (canonical) — **or** its nearest `ui-card`/`ui-reveal` host | Primary media DSL — the **only** configuration surface: aspect-ratio, fit/position, flip, hover, scrim, shape, tint, furniture, the `marquee()` band, **all carousel controls** (`nav`/`nav()`, `arw()`, `mrk()`, `axis(y)`, `auto`/`auto(4s)`, `loop`, `stagger`, `ani()`/`crd()`), loading (`load(eager\|lazy)`) and video tooling (`vid()`, `play(<size>)`). The former alias attributes `nav=`/`arrow=`/`dot=`/`vid=`/`ply=`/`eager`/carousel-`loop` are removed. The renderer's **canonical placement is the `<ui-media>` itself**; the `md:`/`lg:` `asr()` rules ship a self arm and a host arm so both placements work. Inheritance **stops at the card host** — never read from other ancestors. | Token-list |
 | `provider` | media | Video embed provider (e.g. youtube/vimeo) for the facade path. | Value |
 | `video` | media | Video / embed identifier. | Value |
 | `src` | media (and inner `<img>`/`<video>`) | Direct media file URL / native source. | Value |
-| `loop` | media | Video loops. | Boolean |
+| `loop` | media | **Native `<video loop>`** on the inner element. Distinct from the carousel's bare `loop` *token* inside `media=` (seamless clone loop) — the two are read with a whole-token test so they can't cross-fire, and the marquee's mode token was renamed `marquee(loop)` → `marquee(rpt)` for the same reason. | Boolean |
 | `muted` | media | Video muted. | Boolean |
 | `autoplay` | media | Video autoplays (decorative when muted+autoplay). | Boolean |
 | `cdn` | media | Force/gate the Cloudflare srcset upgrade. | Value |
@@ -139,11 +139,11 @@ Elements: **`<ui-card>`** (static host, unregistered), **`<cq-box>`** (queryable
 
 | Attribute | Applies To | Purpose | Type |
 |-----------|-----------|---------|------|
-| `variant` | reveal | Composition DSL (shared with card) — **plus all reveal-specific config**, folded in as tokens: `exp`\|`flp()`\|`sld()`\|`scl()` (one token, direction/origin in the value), `lg:scl` (container tier), `pop` (popup mode), `trg(card)`, `scr` (scroll), `ico()`/`icc()` (toggle icon, one token per word). The former individual attributes `type`/`type-lg`/`from`/`to`/`trigger`/`scroll`/`icon`/`icon-close` are removed. | Token-list |
+| `variant` | reveal | Composition DSL (shared with card) — **plus all reveal-specific config**, folded in as tokens: `exp`\|`flp()`\|`sld()`\|`grw()` (one token, direction/origin in the value), `lg:grw` (container tier), `pop` (popup mode), `trg(card)`, `scr` (scroll), `ico()`/`icc()` (toggle icon, one token per word). The former individual attributes `type`/`type-lg`/`from`/`to`/`trigger`/`scroll`/`icon`/`icon-close` are removed; `scl`/`lg:scl` remain as **deprecated aliases** of `grw`/`lg:grw`. There is no `thm()` token — colour is the shared `theme=` attribute. | Token-list |
 | `theme` | reveal | Theme axis (shared with card). | Token-list |
 | `media` | reveal (inherits) | Media DSL (shared with card). | Token-list |
 | `content` | reveal (inherits) | Content DSL (shared with card). | Token-list |
-| `name` | reveal (native `<details>`) | Exclusive-accordion group name. | Value |
+| `name` | reveal (native `<details>`) | Exclusive-accordion group name. Emitted by `render.js` **only** from the preset's `reveal.name` field — never inferred. | Value |
 | `open` | reveal (native `<details>`) | Open/expanded state. | Boolean |
 | `tabindex` | reveal / summary | Focus behaviour of the disclosure. | Value |
 | `stagger` | reveal | Staggered child reveal (scroll-driven; supports `trigger`). | Boolean / Value |
@@ -184,7 +184,7 @@ Global/universal attributes usable on any opted-in element. Token-list attribute
 
 | Attribute | Feature / File | Purpose | Type |
 |-----------|----------------|---------|------|
-| `media` | `carousel.css`, `stagger.css` | Master carousel/effect DSL (`nav(...)`, `arw(...)`, `mrk(...)`, `axis(...)`, `ani(...)`, `crd(...)`, `auto`, `loop`, `stagger`; on `lay-out[overflow]` also `pages`) — the **only** carousel-control surface; the former `nav=`/`arrow=`/`dot=` attributes are removed. | Token-list |
+| `media` | `carousel.css`, `stagger.css` | Master carousel/effect DSL (`nav(...)`, `arw(...)`, `mrk(...)`, `axis(...)`, `ani(...)`, `crd(...)`, `auto`, `loop`, `stagger`; on `lay-out[overflow]` also `pages`) — the **only** carousel-control surface; the former `nav=`/`arrow=`/`dot=` attributes are removed. Control tokens write the `--ui-carousel-*` namespace (shared with `lay-out[overflow]`, which has no `<ui-media>`); frame tokens keep `--ui-media-*`. | Token-list |
 | `overflow` | `stagger.css` (layout) | `lay-out` mode flag selecting the overflow (horizontal-carousel) reveal path; companion to `stagger`. | Boolean |
 
 ### Utility / helper attributes

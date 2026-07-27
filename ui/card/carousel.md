@@ -94,8 +94,8 @@ only**, gated by `@supports (scroll-marker-group: after)`. Everywhere else it
 | `arw(lgt)` | **Light theme** — light circle + dark glyph (the default look, made explicit) |
 | `arw(drk)` | **Dark theme** in one atom — dark circle + white glyph + light hover ring; composes on the overlay and in `nav(blw)`/`nav(abv)` bands. On `arw(bare)` it just paints a dark glyph |
 | `arw(sm)` `arw(lg)` `arw(xl)` | Button size (default 2.25rem — no token) |
-| `arw(bare)` | **Drop the circle** — render the glyph itself as a recolourable shape (`--ui-media-arrow-color`) |
-| `arw(sqr)` `arw(sft)` | **Square** button instead of the default circle — `sqr` = sharp corners, `sft` = slight radius (`--ui-media-arrow-radius`) |
+| `arw(bare)` | **Drop the circle** — render the glyph itself as a recolourable shape (`--ui-carousel-arrow-color`) |
+| `arw(sqr)` `arw(sft)` | **Square** button instead of the default circle — `sqr` = sharp corners, `sft` = slight radius (`--ui-carousel-arrow-radius`) |
 | `arw(set)` | Group both arrows as an **adjacent pair** (one cluster). Place it in any grid cell — `arw(set) arw(<cell>)`, e.g. `arw(set) arw(bs)` (bottom-start), `arw(set) arw(cc)` (dead center). Default `ce` (horizontal) / `be` (vertical) |
 | `arw(hid)` | Auto-**hide** the dead-end arrow (default keeps it visible but dimmed) |
 | `arw(rev)` | **Reveal on hover/focus** — arrows hidden until the media is hovered or keyboard-focused (also on the button's own `:focus-visible`). Gated on `@media (hover: hover)` so touch keeps them visible |
@@ -115,9 +115,12 @@ only**, gated by `@supports (scroll-marker-group: after)`. Everywhere else it
 `<ui-slide>`, a layout-system element (`<lay-out>`), or a plain `<div>` — all behave
 identically (one slide, one marker, snaps the whole group).
 
-> **Exception — overlay furniture.** `<ui-chip>`, `<ui-sticker>`, `<ui-play>` and
-> `<ui-save>` are *excluded*: they stay absolutely positioned over the frame and never
-> become slides or get a marker. (Selector: `> :not(ui-chip, ui-sticker, ui-play, ui-save)`.)
+> **Exception — furniture and bands.** The five overlay elements (`<ui-chip>`,
+> `<ui-beacon>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`) and the `<ui-marquee>` band are
+> *excluded*: they stay absolutely positioned over the frame and never become slides or get
+> a marker. Selector: `> :not(ui-beacon, ui-chip, ui-marquee, ui-play, ui-save, ui-sticker)`,
+> cross-referenced with the `NOT_SLIDE` list exported from `shared.js` that the JS counts
+> slides with.
 
 **The carousel does NOT lay out items inside a slide** — that grid is yours (the layout
 system, or your own class). The wrapper is just the snap-child container; it keeps its
@@ -177,10 +180,10 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 | `mrk(bc)` | `axis(y)`: dots centered at the **bottom** (e.g. with a pill timer) |
 | `mrk(non)` | **No dots** (keeps arrows) — e.g. an arrows-only `nav(blw)`/`nav(abv)` band |
 | `mrk(blw)` `mrk(abv)` | Dots **alone** in a reserved band below / above the media — arrows keep their on-media position/ink; the marker/pill ink flips to the band theme |
-| `mrk(tmb)` | **Image thumbnails** instead of dots. Each slide sets `--ui-media-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-media-autoplay`. Overlay in any corner (`mrk(ts/te/bs/be)`), or add `mrk(blw)`/`nav(blw)` for a **gallery filmstrip band** below (see below). |
-| `mrk(ts)` `mrk(te)` `mrk(bs)` `mrk(be)` | **Corner placement** for the overlay marker-group — top-start / top-end / bottom-start / bottom-end (logical, RTL-safe). Center row `mrk(cs)` `mrk(cc)` `mrk(ce)` completes the 9-grid. Inset via `--ui-media-marker-inset`. |
+| `mrk(tmb)` | **Image thumbnails** instead of dots. Each slide sets `--ui-carousel-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-carousel-autoplay`. Overlay in any corner (`mrk(ts/te/bs/be)`), or add `mrk(blw)`/`nav(blw)` for a **gallery filmstrip band** below (see below). |
+| `mrk(ts)` `mrk(te)` `mrk(bs)` `mrk(be)` | **Corner placement** for the overlay marker-group — top-start / top-end / bottom-start / bottom-end (logical, RTL-safe). Center row `mrk(cs)` `mrk(cc)` `mrk(ce)` completes the 9-grid. Inset via `--ui-carousel-marker-inset`. |
 | `mrk(rail)` | With `axis(y)` + `mrk(tmb)`: a **vertical thumbnail rail beside** the media (inline-start; **right in RTL**). Image keeps `asr()`, rail added outside; arrows dropped; overflow shrinks-to-floor then scrolls. See below. |
-| `tmb(<ratio>)` | **Thumbnail aspect-ratio** (default `4/3`) — `tmb(1/1)` · `tmb(4/3)` · `tmb(3/4)` · `tmb(16/9)` · `tmb(3/2)` · `tmb(2/3)` (slash, mirrors `asr()`). In a `mrk(rail)` the rail width tracks the ratio. Or set `--ui-media-thumb-ratio` directly. |
+| `tmb(<ratio>)` | **Thumbnail aspect-ratio** (default `4/3`) — `tmb(1/1)` · `tmb(4/3)` · `tmb(3/4)` · `tmb(16/9)` · `tmb(3/2)` · `tmb(2/3)` (slash, mirrors `asr()`). In a `mrk(rail)` the rail width tracks the ratio. Or set `--ui-carousel-thumb-ratio` directly. |
 
 ### Thumbnail navigation — `mrk(tmb)`
 
@@ -189,8 +192,8 @@ custom property; place the rail in any corner:
 
 ```html
 <ui-media media="asr(4/3) nav mrk(tmb) mrk(te)">
-  <img src="1.jpg" style="--ui-media-thumb-url: url('1.jpg')">
-  <img src="2.jpg" style="--ui-media-thumb-url: url('2.jpg')">
+  <img src="1.jpg" style="--ui-carousel-thumb-url: url('1.jpg')">
+  <img src="2.jpg" style="--ui-carousel-thumb-url: url('2.jpg')">
 </ui-media>
 ```
 
@@ -204,8 +207,8 @@ outside via `box-sizing: content-box`) and each slide is rounded on **all four**
 
 ```html
 <ui-media media="asr(16/9) rds(md) clip nav mrk(tmb) mrk(blw) mrk(lg)">
-  <img src="1.jpg" style="--ui-media-thumb-url: url('1.jpg')">
-  <img src="2.jpg" style="--ui-media-thumb-url: url('2.jpg')">
+  <img src="1.jpg" style="--ui-carousel-thumb-url: url('1.jpg')">
+  <img src="2.jpg" style="--ui-carousel-thumb-url: url('2.jpg')">
 </ui-media>
 ```
 
@@ -218,15 +221,15 @@ readable floor (`--ui-carousel-thumb-min`), then the rail scrolls. Width via `--
 
 ```html
 <ui-media media="asr(4/3) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(md)">
-  <img src="1.jpg" style="--ui-media-thumb-url: url('1.jpg')">
-  <img src="2.jpg" style="--ui-media-thumb-url: url('2.jpg')">
+  <img src="1.jpg" style="--ui-carousel-thumb-url: url('1.jpg')">
+  <img src="2.jpg" style="--ui-carousel-thumb-url: url('2.jpg')">
 </ui-media>
 ```
 
 Each slide can also be its own layered `<ui-card>` (unique headline/CTA per slide) — the
-thumbnail is set on the **card**: `<ui-card style="--ui-media-thumb-url: url(…)">`. The
-active thumb runs a bottom **timer** stripe synced to `--ui-media-autoplay` — but only while
-**autoplay** is running (`ui-media.js` turns it on via `--ui-media-thumb-timer-name`; it's off
+thumbnail is set on the **card**: `<ui-card style="--ui-carousel-thumb-url: url(…)">`. The
+active thumb runs a bottom **timer** stripe synced to `--ui-carousel-autoplay` — but only while
+**autoplay** is running (`carousel.js` turns it on via `--ui-carousel-thumb-timer-name`; it's off
 in pure CSS). (The URL uses a custom property today; it swaps to typed
 `attr(data-thumb type(<image>))` once that's Baseline.)
 
@@ -333,7 +336,7 @@ The carousel `<ui-media>` is a keyboard-focusable scroller (arrow keys scroll it
 
 Scroll buttons (arrows) and dots keep their **own** focus rings: the **circle** arrow uses
 a real `outline` (`--ring-width` / `--ring-color` / `--ring-offset`); a **bare** glyph can't
-outline (its `mask` clips it), so it scales to `--ui-media-arrow-hover-scale` on
+outline (its `mask` clips it), so it scales to `--ui-carousel-arrow-hover-scale` on
 `:focus-visible` instead, and the scroller's dashed ring carries the rest.
 
 > **Clip + focus.** On a **clipped** standalone scroller (the `clip` frame token →
@@ -347,23 +350,43 @@ outline (its `mask` clips it), so it scales to `--ui-media-arrow-hover-scale` on
 
 ---
 
-## JavaScript behaviors (`ui-media.js`)
+## JavaScript behaviors (`carousel.js`)
 
-Two things CSS can't do are added by `ui-media.js` as **pure progressive
-enhancement** — with JS off the carousel still scrolls, snaps, and shows
+Two things CSS can't do are added by **`carousel.js`** as pure progressive
+enhancement — with JS off the carousel still scrolls, snaps, and shows
 markers/arrows; these tokens simply no-op.
+
+Load it either way:
+
+```js
+import '@browser.style/card';             // index.js — hover + carousel + video
+import '@browser.style/card/carousel.js'; // just this chunk
+```
 
 | Token | Needs JS | Result |
 |-------|:--------:|--------|
-| `auto` · `auto(4s)` · `auto(800ms)` | yes | Autoplay; advances one slide per interval (default 5s), seamlessly wraps. Pauses on hover / focus / drag / hidden tab / reduced-motion. Sets `--ui-media-autoplay` so a `mrk(pll)` timer stays in sync. |
+| `auto` · `auto(4s)` · `auto(800ms)` | yes | Autoplay; advances one slide per interval (default 5s), seamlessly wraps. Pauses on hover / focus / pointer-down / hidden tab; never starts under reduced-motion. Sets `--ui-carousel-autoplay` so a `mrk(pll)` timer stays in sync. |
 | `loop` | yes | **Seamless** infinite loop — clones the first/last slide so next-past-the-last smooth-scrolls into a clone, then invisibly resets. Works with markers + arrows, both directions. |
-| `play(<corner>)` + a `<ui-play>` child | yes | Explicit **play/pause** control. The button is `position:sticky`-pinned to the scrollport corner (plain furniture scrolls away with the slides). When present it becomes the **sole** pause mechanism — implicit hover/focus auto-pause is dropped, so the play↔pause glyph always matches state. Toggling sets `--ui-media-play-state` (`running`/`paused`), which also freezes the `mrk(pll)`/`mrk(tmb)` fill timer. Emits `ui-play-toggle`. Add `variant="reveal"` to hide until hover/focus. Needs `@browser.style/play` loaded. |
+| `play(<pos>)` + a `<ui-play>` child | yes | Explicit **play/pause** control. The button is `position:sticky`-pinned to the scrollport corner (plain furniture scrolls away with the slides); an end-corner control (`play(*e)`) is moved to last child so sticky-inline-end can clamp. When present it becomes the **sole** pause mechanism — implicit hover/focus auto-pause is dropped, so the play↔pause glyph always matches state. Toggling sets `--ui-carousel-play-state` (`running`/`paused`), which also freezes the `mrk(pll)`/`mrk(tmb)` fill timer. Add `variant="reveal"` to hide until hover/focus. Needs `@browser.style/play` loaded for the element's own styling. |
 
-**Performance.** The script runs **one** `document.querySelectorAll` at idle for just
+> **No `ui-play-toggle` event.** The carousel control is auto-discovered by
+> `carousel.js`, which binds the click directly and mirrors state back onto the
+> `<ui-play>`. Elsewhere `<ui-play>` uses the invoker contract
+> (`command="play-pause" commandfor="…"`, handled by `video.js`). Either way the
+> card system never listens for a `ui-play-toggle` event — see
+> [media.md](./media.md#ui-play--one-contract).
+
+**Slide counting.** "One slide" = a direct child that is **not** overlay furniture,
+a band, a carousel control group, or a nested `<lay-out>` wrapper. That exclusion
+list is exported **once**, as `NOT_SLIDE` in `shared.js`, and consumed by
+`slidesOf()` — so `loop` clone counts and autoplay indexing can't drift apart. The
+`:not()` list in `media.carousel.css` carries a cross-reference comment to it.
+
+**Performance.** The chunk runs **one** `document.querySelectorAll` at idle for just
 these tokens (`auto`, `loop`) — plain `<ui-media>` and CSS-only carousels never match,
 so a page with hundreds of media items costs nothing. **No IntersectionObserver /
-MutationObserver.** For content injected after load, call `window.uiMedia.scan()` to
-re-run discovery.
+MutationObserver.** For content injected after load, call `globalThis.uiMedia.scan()`
+to re-run discovery (owned by `index.js`; a solo chunk import registers its own).
 
 ---
 
@@ -376,63 +399,63 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 
 | Property | Default | Purpose |
 |----------|---------|---------|
-| `--ui-media-arrow-size` | `2.25rem` | Button size (or use `arw(sm/md/lg/xl)`) |
-| `--ui-media-arrow-bg` | `rgb(255 255 255 / 0.7)` | Circle background — frosted semi-transparent white (Instagram-style default; `arw(drk)` flips it dark, `nav(blw)`/`nav(abv)` bands use a light grey) |
-| `--ui-media-arrow-bg-hover` | `rgb(255 255 255 / 0.9)` | Circle background on hover (brightens) |
-| `--ui-media-arrow-glyph` | chevron-dark | Glyph image (override directly, or use `arw(arr)`/`arw(lgt)`/`arw(drk)`) |
-| `--ui-media-arrow-glyph-size` | `75%` (circle) / `80%` (bare) | Glyph size within the button |
-| `--ui-media-arrow-nudge` | `calc(arrow-size * 0.03)` chevron · `* 0.015` full-arrow | **Optical** shift of the glyph toward its tip (a geometrically-centred chevron/arrow reads as off-centre). The full arrow needs less (its shaft balances it). Scales with size; set `0` to disable |
-| `--ui-media-arrow-radius` | `--radius-circle` | Button corner radius |
-| `--ui-media-arrow-border` | `0` | Button border — no ring on the default light circle (set e.g. `1px solid …` to add one) |
-| `--ui-media-arrow-shadow` | `0 1px 3px rgb(0 0 0 / 0.15)` | Soft circle drop shadow — keeps the frosted circle legible over any photo (`nav(blw)`/`nav(abv)` bands set `none`; set `none` to drop) |
-| `--ui-media-arrow-hover-ring` | = `--ui-media-arrow-shadow` | Circle `box-shadow` on hover — `arw(drk)` sets a light ring (`0 0 0 2px rgb(255 255 255 / 0.5)`) |
-| `--ui-media-arrow-hover-scale` | `1.18` | Scale of a **bare** glyph on hover / `:focus-visible` |
-| `--ui-media-arrow-gap` | `0.5rem` | Gap between the two arrows in `arw(set)` |
-| `--ui-media-arrow-disabled-opacity` | `0.4` | Dimming of a dead-end arrow (`arw(hid)` sets `0`) |
-| `--ui-media-arrow-color` | `#fff` (over image) / dark (in band) | **Bare** glyph ink (`arw(bare)`; the circle ignores it) |
-| `--ui-media-arrow-color-hover` | = arrow-color | Bare glyph ink on hover (bands darken it) |
-| `--ui-media-arrow-top` | centered | Manual vertical position (or use `arw(top/mid/bot)`) |
+| `--ui-carousel-arrow-size` | `2.25rem` | Button size (or use `arw(sm/md/lg/xl)`) |
+| `--ui-carousel-arrow-bg` | `rgb(255 255 255 / 0.7)` | Circle background — frosted semi-transparent white (Instagram-style default; `arw(drk)` flips it dark, `nav(blw)`/`nav(abv)` bands use a light grey) |
+| `--ui-carousel-arrow-bg-hover` | `rgb(255 255 255 / 0.9)` | Circle background on hover (brightens) |
+| `--ui-carousel-arrow-glyph` | chevron-dark | Glyph image (override directly, or use `arw(arr)`/`arw(lgt)`/`arw(drk)`) |
+| `--ui-carousel-arrow-glyph-size` | `75%` (circle) / `80%` (bare) | Glyph size within the button |
+| `--ui-carousel-arrow-nudge` | `calc(arrow-size * 0.03)` chevron · `* 0.015` full-arrow | **Optical** shift of the glyph toward its tip (a geometrically-centred chevron/arrow reads as off-centre). The full arrow needs less (its shaft balances it). Scales with size; set `0` to disable |
+| `--ui-carousel-arrow-radius` | `--radius-circle` | Button corner radius |
+| `--ui-carousel-arrow-border` | `0` | Button border — no ring on the default light circle (set e.g. `1px solid …` to add one) |
+| `--ui-carousel-arrow-shadow` | `0 1px 3px rgb(0 0 0 / 0.15)` | Soft circle drop shadow — keeps the frosted circle legible over any photo (`nav(blw)`/`nav(abv)` bands set `none`; set `none` to drop) |
+| `--ui-carousel-arrow-hover-ring` | = `--ui-carousel-arrow-shadow` | Circle `box-shadow` on hover — `arw(drk)` sets a light ring (`0 0 0 2px rgb(255 255 255 / 0.5)`) |
+| `--ui-carousel-arrow-hover-scale` | `1.18` | Scale of a **bare** glyph on hover / `:focus-visible` |
+| `--ui-carousel-arrow-gap` | `0.5rem` | Gap between the two arrows in `arw(set)` |
+| `--ui-carousel-arrow-disabled-opacity` | `0.4` | Dimming of a dead-end arrow (`arw(hid)` sets `0`) |
+| `--ui-carousel-arrow-color` | `#fff` (over image) / dark (in band) | **Bare** glyph ink (`arw(bare)`; the circle ignores it) |
+| `--ui-carousel-arrow-color-hover` | = arrow-color | Bare glyph ink on hover (bands darken it) |
+| `--ui-carousel-arrow-top` | centered | Manual vertical position (or use `arw(top/mid/bot)`) |
 
 ### Markers / pills
 
 | Property | Default | Purpose |
 |----------|---------|---------|
-| `--ui-media-marker-size` | `0.6rem` | Marker diameter (or `mrk(sm/md/lg/xl)`) |
-| `--ui-media-marker-gap` | `0.5rem` | Gap between markers |
-| `--ui-media-marker-bg` | `rgb(255 255 255 / 0.5)` | Inactive marker |
-| `--ui-media-marker-active` | `#fff` | Active marker |
-| `--ui-media-marker-border` | `0` | Marker border |
-| `--ui-media-pill-width` | `1.5rem` | Pill width |
-| `--ui-media-pill-height` | `0.35rem` | Pill height |
-| `--ui-media-pill-track` | `rgb(255 255 255 / 0.35)` | Pill track (unfilled) |
-| `--ui-media-pill-fill` | `#fff` | Pill fill (timer) |
-| `--ui-media-autoplay` | `5s` | Pill / thumb timer duration (auto-set by `auto(Ns)`) |
-| `--ui-media-play-state` | `running` | `running` / `paused` for the pill/thumb fill timer — `ui-media.js` sets `paused` when a `<ui-play>` control pauses autoplay |
+| `--ui-carousel-marker-size` | `0.6rem` | Marker diameter (or `mrk(sm/md/lg/xl)`) |
+| `--ui-carousel-marker-gap` | `0.5rem` | Gap between markers |
+| `--ui-carousel-marker-bg` | `rgb(255 255 255 / 0.5)` | Inactive marker |
+| `--ui-carousel-marker-active` | `#fff` | Active marker |
+| `--ui-carousel-marker-border` | `0` | Marker border |
+| `--ui-carousel-pill-width` | `1.5rem` | Pill width |
+| `--ui-carousel-pill-height` | `0.35rem` | Pill height |
+| `--ui-carousel-pill-track` | `rgb(255 255 255 / 0.35)` | Pill track (unfilled) |
+| `--ui-carousel-pill-fill` | `#fff` | Pill fill (timer) |
+| `--ui-carousel-autoplay` | `5s` | Pill / thumb timer duration (auto-set by `auto(Ns)`) |
+| `--ui-carousel-play-state` | `running` | `running` / `paused` for the pill/thumb fill timer — `carousel.js` sets `paused` when a `<ui-play>` control pauses autoplay |
 
 ### Thumbnails (`mrk(tmb)`)
 
 | Property | Default | Purpose |
 |----------|---------|---------|
-| `--ui-media-thumb-url` | *(none)* | **Per-slide** thumbnail image — set on each slide/card (`url(…)`) |
-| `--ui-media-thumb-size` | `2.25rem` | Thumbnail height (width follows `--ui-media-thumb-ratio`; or use `mrk(sm/md/lg/xl)`) |
-| `--ui-media-thumb-ratio` | `4 / 3` | Thumbnail aspect-ratio |
-| `--ui-media-thumb-border` | `2px solid #fff` | Thumbnail border (white by default) |
-| `--ui-media-thumb-radius` | `--radius-sm` | Thumbnail corner radius |
-| `--ui-media-thumb-bg` | `rgb(0 0 0 / 0.2)` | Placeholder behind the image |
-| `--ui-media-thumb-opacity` | `0.55` | Inactive thumbnail opacity (active = `1`) |
-| `--ui-media-thumb-timer` | `#fff` (matches the border) | Active-thumb bottom timer-stripe colour (separate from `--ui-media-thumb-border`) |
-| `--ui-media-thumb-timer-height` | `3px` | Timer-stripe thickness |
-| `--ui-media-thumb-timer-name` | `none` (off) | Fill-timer animation. **Off by default** — `ui-media.js` sets it to `ui-media-thumb-timer` when **autoplay** (`auto`/`loop`) runs. Set it to that keyframe manually to preview without JS. |
-| `--ui-media-marker-inset` | `1rem` (thumb) / `--ui-media-overlay-gap` | Corner inset from the edges (`mrk(tl/tr/bl/br)`) |
+| `--ui-carousel-thumb-url` | *(none)* | **Per-slide** thumbnail image — set on each slide/card (`url(…)`) |
+| `--ui-carousel-thumb-size` | `2.25rem` | Thumbnail height (width follows `--ui-carousel-thumb-ratio`; or use `mrk(sm/md/lg/xl)`) |
+| `--ui-carousel-thumb-ratio` | `4 / 3` | Thumbnail aspect-ratio |
+| `--ui-carousel-thumb-border` | `2px solid #fff` | Thumbnail border (white by default) |
+| `--ui-carousel-thumb-radius` | `--radius-sm` | Thumbnail corner radius |
+| `--ui-carousel-thumb-bg` | `rgb(0 0 0 / 0.2)` | Placeholder behind the image |
+| `--ui-carousel-thumb-opacity` | `0.55` | Inactive thumbnail opacity (active = `1`) |
+| `--ui-carousel-thumb-timer` | `#fff` (matches the border) | Active-thumb bottom timer-stripe colour (separate from `--ui-carousel-thumb-border`) |
+| `--ui-carousel-thumb-timer-height` | `3px` | Timer-stripe thickness |
+| `--ui-carousel-thumb-timer-name` | `none` (off) | Fill-timer animation. **Off by default** — `carousel.js` sets it to the `ui-carousel-thumb-timer` keyframe when **autoplay** (`auto`/`loop`) runs. Set it to that keyframe manually to preview without JS. |
+| `--ui-carousel-marker-inset` | `--ui-carousel-overlay-gap` (`1rem` under `mrk(tmb)`) | Corner inset from the edges (`mrk(ts/te/bs/be)`) |
 
 ### Control band (`nav(blw)` / `nav(abv)`)
 
 | Property | Default | Purpose |
 |----------|---------|---------|
-| `--ui-media-band` | `2.75rem` | Band height |
-| `--ui-media-below-gap` | `var(--spacing-sm, 0.5rem)` | Gap between the media content and a **below** band (`nav(blw)`) |
-| `--ui-media-above-gap` | `var(--spacing-sm, 0.5rem)` | Gap between an **above** band (`nav(abv)`) and the media content |
-| `--ui-media-controls-bg` | card surface | Band background |
+| `--ui-carousel-band` | `2.75rem` | Band height |
+| `--ui-carousel-below-gap` | `var(--spacing-sm, 0.5rem)` | Gap between the media content and a **below** band (`nav(blw)`) |
+| `--ui-carousel-above-gap` | `var(--spacing-sm, 0.5rem)` | Gap between an **above** band (`nav(abv)`) and the media content |
+| `--ui-carousel-controls-bg` | card surface | Band background |
 
 > **Multi-item slides** (`<ui-slide>` groups) have **no carousel tokens** — the grid
 > inside a slide is your own CSS / the layout system, not the carousel's job.
@@ -449,7 +472,8 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 
 | Property | Default | Purpose |
 |----------|---------|---------|
-| `--ui-media-overlay-gap` | `0.75rem` | Inset of overlaid controls from the edges |
+| `--ui-carousel-overlay-gap` | `0.75rem` | Inset of overlaid **controls** (dots, arrows, thumb rail) from the frame edges |
+| `--ui-media-overlay-gap` | `0.75rem` | Inset of overlaid **furniture** (chip/beacon/sticker/save/play) — the frame's token, not the carousel's |
 | `--ui-media-gap` | `0` | Space between slides/pages (flush by default; set for multi-card slides) |
 
 ### Staggered reveal (`stagger` / `ani()` / `crd()`)
@@ -482,7 +506,7 @@ authored directly.
 
 <!-- Bare arrows (no circle), accent colour -->
 <ui-media media="asr(16/9) nav(arw) arw(bare)"
-          style="--ui-media-arrow-color: var(--color-accent)"> … </ui-media>
+          style="--ui-carousel-arrow-color: var(--color-accent)"> … </ui-media>
 
 <!-- Controls in a band below; dots left, arrow pair right -->
 <ui-media media="asr(16/9) nav(blw) arw(set) mrk(bs)"> … </ui-media>

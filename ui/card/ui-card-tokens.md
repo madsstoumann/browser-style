@@ -42,7 +42,7 @@ The `variant=` string composes the media and content primitives. Tokens are **wh
 | `vis(media)` | show only the media (hide `<ui-content>`) |
 | `vis(content)` | show only the content (hide `<ui-media>`) |
 
-**Responsive:** `col` `col-r` `row` `row-r` `spl()` `vis()` accept `md:` (≥ 25rem) and `lg:` (≥ 44rem) container-query prefixes, e.g. `variant="col md:row lg:spl(1/2)"`. (Content spacing `gap()`/`pad()` are also prefixable — see [content.md](content.md). `media=` tokens and `scl()` are **not** prefixed this round.)
+**Responsive:** `col` `col-r` `row` `row-r` `spl()` `vis()` accept `md:` (≥ 25rem) and `lg:` (≥ 44rem) container-query prefixes, e.g. `variant="col md:row lg:spl(1/2)"`. All size queries are **named** — `@container bs-card (…)`. `variant=` is host-only (no self arm): it arranges the two children, so it belongs on the host by nature. `content=` spacing (`gap()` + the seven padding tokens) and size (`scl()`, `hl()`) are prefixable **and** ship a self arm — see [content.md](content.md#responsive). On `media=`, only `asr()` is prefixable.
 
 ## Overlay — `ovr()`
 
@@ -52,7 +52,17 @@ Stacks `<ui-content>` over `<ui-media>` (same grid cell) and places + aligns it 
 |-------|---------|----------|
 | `--ui-card-overlay-ink` | `#fff` | text colour when content is overlaid (`--ui-content-ov-ink`) |
 
-`ovr(tl … br)` — nine positions (`tl tc tr · cl cc cr · bl br …`). Each sets `--ui-content-ov-justify/-align/-text` and `--ui-media-scrim-default` to the matching gradient.
+`ovr()` takes the **logical** nine-point grid — the same one furniture, `scm()` and reveal's `ico()` use:
+
+```
+ovr(ts)  ovr(tc)  ovr(te)
+ovr(cs)  ovr(cc)  ovr(ce)
+ovr(bs)  ovr(bc)  ovr(be)
+```
+
+Each sets `--ui-content-ov-justify` / `-align` / `-text` and points `--ui-media-scrim-default` at the matching gradient (which itself mirrors under `:dir(rtl)` — see [media.md](media.md#scrim)).
+
+> **The physical spellings `ovr(tl) ovr(tr) ovr(cl) ovr(cr) ovr(bl) ovr(br)` are deprecated aliases**, removed in v5. They were always *mislabelled* rather than wrong: the implementation has been logical all along, so `ovr(tl)` already rendered top-**end** under `dir="rtl"`. This round renames the args to match reality. `ovr(tc)`, `ovr(cc)` and `ovr(bc)` are spelled identically in both grids and are unaffected.
 
 ## Corners — `rds()`
 
@@ -61,7 +71,7 @@ Stacks `<ui-content>` over `<ui-media>` (same grid cell) and places + aligns it 
 | `--ui-card-radius` | `var(--radius-2xl)` | corner radius |
 | `--ui-card-squircle-exp` | `1.8` | superellipse exponent for `-sq` variants |
 
-- **Round** (global radius scale): `rds(none · sm · md · lg · xl · 2xl · full · pill)`.
+- **Round** (global radius scale): `rds(non · sm · md · lg · xl · 2xl · full · pill)`. `rds(none)` is a **deprecated alias** of `rds(non)`, removed in v5. The same scale and the same alias exist on `media=` (standalone frame) and `content=` (standalone content corners).
 - **Squircle** (bespoke radius + `corner-shape: superellipse()`): `rds(sm-sq · md-sq · lg-sq · xl-sq)` → radii `1.25 / 2 / 2.8 / 3.5rem` with exponents `1.5 / 1.7 / 1.8 / 2`. `ui-reveal` reads `--ui-card-squircle-exp` to apply the same corner-shape to its `<details>`.
 
 ## Border — `bdr`
@@ -110,19 +120,23 @@ Card-local override hooks (feed the `--ui-theme-black-*`/`slate` bundles):
 
 ## Reveal tokens (`ui-reveal`)
 
-`<ui-reveal>` (in `ui/reveal`) is configured through the **same `variant=` attribute** as the card — its former individual attributes (`type`, `type-lg`, `from`, `to`, `trigger`, `scroll`, `icon`, `icon-close`) are **removed**, folded into `variant=` tokens. Like the card's arrangement tokens they are whole-token (`~=`) matched, and the `lg:` container-tier prefix works the same way (`lg:scl` replaces the old `type-lg=`). The animation token carries its own direction/origin — there is no separate `frm()` token.
+`<ui-reveal>` (in `ui/reveal`) is configured through the **same `variant=` attribute** as the card — its former individual attributes (`type`, `type-lg`, `from`, `to`, `trigger`, `scroll`, `icon`, `icon-close`) are **removed**, folded into `variant=` tokens. Like the card's arrangement tokens they are whole-token (`~=`) matched, and the `lg:` container-tier prefix works the same way (`lg:grw` replaces the old `type-lg=`). The animation token carries its own direction/origin — there is no separate `frm()` token.
 
 | Token | Values | Replaces | Effect |
 |-------|--------|----------|--------|
-| `exp` · `flp()` · `sld()` · `scl()` | `flp(top|btm|lft)` · `sld(top|btm|lft|rgt)` · `scl(ts|te|bs|be)` | `type=` + `from=` | ONE token per animation, direction/origin in the value (expand / flip / slide / scale). Bare `flp`/`sld` = from the right; bare `scl` follows the `ico()` corner |
-| `lg:` animation | e.g. `lg:scl` | `type-lg=` | animation at the `lg:` container tier (≥ 44rem) |
+| `exp` · `flp()` · `sld()` · `grw()` | `flp(top\|btm\|lft\|rgt)` · `sld(top\|btm\|lft\|rgt)` · `grw(ts\|te\|bs\|be)` | `type=` + `from=` | ONE token per animation, direction/origin in the value (expand / flip / slide / **grow**). Bare `flp`/`sld` = from the right; bare `grw` follows the `ico()` corner |
+| `lg:` animation | e.g. `lg:grw` | `type-lg=` | animation at the `lg:` container tier (≥ 44rem) |
 | `pop` | *(bare flag)* | `to=` | popup mode for the revealed panel |
-| `trg(card)` | — | `trigger="card"` | whole card toggles the disclosure |
+| `trg(card)` | — | `trigger="card"` | whole card toggles the disclosure — **and suppresses the toggle icon** |
 | `scr` | *(bare flag)* | `scroll` | scrollable reveal panel |
 | `ico()` | corner `ts` `te` `bs` `be` · ink `drk` `sem` · size `sm` `lg` | `icon=` | toggle-icon placement / ink / size — placement uses the furniture corner spellings (top/bottom × start/end, logical + rtl-safe); **one token per word**, e.g. `ico(te) ico(sm)` |
 | `icc()` | same words as `ico()` | `icon-close=` | icon placement/style in the **open** state |
 
-The renderer's default icon is `ico(te) ico(sm)`. Native `<details name>` (exclusivity) and `open` stay as real attributes. Full reveal reference: [../reveal/readme.md](../reveal/readme.md).
+> **`scl()` → `grw()`.** The reveal's scale-morph animation was renamed this round: `scl` is `content=`'s type-scale token, and one spelling should mean one thing even across attributes. `scl`, `scl(ts\|te\|bs\|be)` and `lg:scl` (+ its corner forms) are kept as **deprecated aliases**, removed in v5.
+
+There is **no `thm()` token.** Theming goes through the shared `theme=` attribute — see *Themes* above for the migration mapping.
+
+The renderer's default icon is `ico(te) ico(sm)`. Native `<details name>` (exclusivity) and `open` stay as real attributes; `render.js` emits `name=` only when the preset supplies `reveal.name`. Full reveal reference: [../reveal/readme.md](../reveal/readme.md).
 
 ---
 

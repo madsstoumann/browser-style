@@ -232,14 +232,19 @@ Composes the two primitives — arrangement, split, visibility, overlay, theme, 
 
 ## Overlay furniture
 
-The media area hosts four overlay elements as **children of `<ui-media>`**. They carry only their text/glyph — **position and theme come from the parent `media=` token** (e.g. `media="chip(be) chip(red)"`), not from attributes on the element itself.
+The media area hosts **five** overlay elements as **children of `<ui-media>`**. They carry only their text/glyph — **position and hue come from the parent `media=` token** (e.g. `media="chip(be) chip(red)"`), not from attributes on the element itself.
 
 | Element | Role | Default area | In `<summary>`? |
 |---------|------|--------------|------------------|
 | `<ui-chip>` | label ("New", "Sale") | `ts` (top-start) | ✅ marker |
+| `<ui-beacon>` | live/status indicator ("LIVE", "REC") | `ts` (top-start) | ✅ marker |
 | `<ui-sticker>` | callout disc / `variant="sh:burst"` ("−20%") | `te` (top-end) | ✅ marker |
 | `<ui-save>` | favorite / wishlist toggle | `te` (top-end) | ❌ card-only (interactive) |
 | `<ui-play>` | play affordance | `cc` (center) | ❌ card-only (interactive) |
+
+A sixth element, **`<ui-marquee>`, is a *band*, not furniture** — full-width, `top`/`bot` only (no nine-point grid), and it sits at `z-index: 1`, *below* the furniture. Overlaid in `<ui-media>` it is token-placed (`marquee(top)` / `marquee(bot)`); inside `<ui-content>` it is markup-placed by flow order. Details in **[media.md](media.md#furniture-vs-band--ui-marquee-is-not-furniture)**.
+
+Hues are the canonical eight — `red orange green blue accent black white gray` (`dark`/`light`/`subtle`/`slate` are deprecated aliases, removed in v5).
 
 ```html
 <ui-card variant="col" media="asr(4/3) chip(be) chip(green) sticker(ts) sticker(red)">
@@ -262,14 +267,27 @@ Position (`ts…be`) and theme (`red…subtle`) are disjoint vocabularies and ar
 
 Add `md:` (container width ≥ 25rem) and/or `lg:` (≥ 44rem) prefixes to make a card react to **its own width** (evaluated against the `<cq-box>` descendant). Same markup renders differently in a hero slot vs. a 3-up grid — no media queries.
 
-**This round, breakpoint prefixes apply to layout + content spacing only:**
+**Prefixable:**
 
-- `variant=` arrangement — `col` `col-r` `row` `row-r` `spl()` `vis()`
-- `content=` spacing — `gap()` `pad()`
+- `variant=` arrangement — `col` `col-r` `row` `row-r` `spl()` `vis()` *(host only — it arranges the two children)*
+- `content=` spacing — `gap()` and all seven padding tokens (`pad()` `pb()` `pi()` `pbs()` `pbe()` `pis()` `pie()`)
+- `content=` size — `scl()` and `hl(<size>)`
+- `media=` — `asr()` (the only prefixable media token)
 
-`media=` tokens (`asr()`, `obp()`, `scm()`, …) and `content="scl()"` are **not** breakpoint-prefixed this round.
+Everything else (`obp()`, `scm()`, `hov()`, content tone/weight, …) is unprefixed.
 
-**Optional JS — two independent modules.** `import '@browser.style/card/ui-media-srcset.js'` upgrades each `<ui-media>` `<img>` — `loading`/`decoding`/`sizes="auto"` always, plus a host-gated Cloudflare `srcset` on `*.browser.style` (heights from `asr()`). Author `src`s **root-relative** (`/assets/images/foo.png`) so they load from disk in dev and gain the transformed `srcset` in production — no hardcoded domain. Force it locally with `cdn="on"`. (Transitional — drop it once srcset is server-side rendered.) Separately, `import '@browser.style/card/ui-media.js'` wires the cursor-tracked `hov(track)`/`hov(drift)` effects (delegated; idle until a frame is hovered). Full detail in **[media.md](media.md)**.
+All size queries are **named** — `@container bs-card (…)` — and each `content=`/`asr()` rule ships **two arms**, so the attribute may sit on the host *or* on the primitive itself (the renderer's canonical placement). `<lay-out-group>` is now a `bs-card` container too, so section headers support the same prefixes. A **standalone** `<ui-content>`/`<ui-media>` opts in with a named wrapper: `<div style="container: bs-card / inline-size">`.
+
+**Optional JS.** The package entry is **`index.js`** — an orchestrator importing three feature chunks, each also importable alone:
+
+```js
+import '@browser.style/card';              // index.js: hover + carousel + video
+import '@browser.style/card/hover.js';     // cursor-tracked hov(track|drift|tilt)
+import '@browser.style/card/carousel.js';  // loop clones · autoplay · pause-on-leave
+import '@browser.style/card/video.js';     // embed facades · media commands · vid() · <ui-play>
+```
+
+Separately, `import '@browser.style/card/ui-media-srcset.js'` upgrades each `<ui-media>` `<img>` — `loading`/`decoding`/`sizes="auto"` always, plus a host-gated Cloudflare `srcset` on `*.browser.style` (heights from `asr()`). Author `src`s **root-relative** (`/assets/images/foo.png`) so they load from disk in dev and gain the transformed `srcset` in production — no hardcoded domain. Force it locally with `cdn="on"`. (Transitional, and deliberately outside `index.js` — drop it once srcset is server-side rendered.) Full detail in **[media.md](media.md)**.
 
 ```html
 <!-- stacked in a narrow grid cell; media beside content when the container is wide -->

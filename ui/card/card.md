@@ -37,7 +37,7 @@ JSON-LD). This system carries all of that forward onto the v4 primitives.
 |------|------|
 | [`cms/baseline/models/card.schema.json`](../../cms/baseline/models/card.schema.json) | **Content model** (UCM). Structured envelope + `schemaType` select (26 values) + `preset` reference + one `details` object per type |
 | [`cms/baseline/models/card-preset.schema.json`](../../cms/baseline/models/card-preset.schema.json) | **Preset model** (UCM). The attributes on the host element itself |
-| [`data/card.presets.json`](data/card.presets.json) | Preset instances — 15 named looks |
+| [`data/card.presets.json`](data/card.presets.json) | Preset instances — **17** named looks |
 | [`data/*.json`](data/) | 26 UCF card instances (one per schemaType) + [`index.json`](data/index.json) manifest |
 | [`render.js`](render.js) | Rendering engine: UCF + presets → DOM with microdata |
 | [`render.html`](render.html) | Live demo — all 26 cards rendered from data |
@@ -68,7 +68,7 @@ lives in one `details` object discriminated by `schemaType`.
 | `tags` | tags | → pill list |
 | `actions` | array | `{link, style}` → `data-part="actions"` buttons. In an `ovr()` overlay card a plain solid button (`.ui-button` with no `data-variant`) is given **dark** text by `ui-card.css` so it stays legible on its light surface instead of inheriting the overlay's white ink; colour variants (accent, text, …) set their own ink and are left untouched |
 | `links` | array of link | Plain related links |
-| `furniture` | object | Overlay elements on the media — `{chip, sticker, save, play}`. **Content only** (text/semantics); the *look* (position, hue, size, shape) lives in the preset's `media=` tokens. See **Furniture** below |
+| `furniture` | object | Overlay elements on the media — `{chip, beacon, sticker, save, play}` (five; `<ui-marquee>` is a **band**, not furniture, and has no renderer field — see the gap note under *Renderer*). **Content only** (text/semantics); the *look* (position, hue, size, shape) lives in the preset's `media=` tokens. See **Furniture** below |
 | `engagement` | object | counts → `InteractionCounter` microdata |
 | `details` | object | Type-specific payload (`ui.widget: editor-card`) |
 | `flipside` | reference → `card` | Optional custom reveal back panel — see below |
@@ -192,10 +192,25 @@ Save/play are **controls** (interactive) — card-only, never inside a reveal `<
 | `variant` | both | `col row row-r spl() ovr() vis() rds()` |
 | `theme` | both | shared theme axis — colour + `pale`/`muted`/`light`/`dark` (see [base/theme.md](../base/theme.md)) |
 | `media` | both | `asr() obf() obp() flp() rds() shp() hov() tnt() scm clip …` — plus **all carousel controls as tokens, the only form** (`nav`/`nav()`, `arw()`, `mrk()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()`; the schema has no `nav`/`arrow`/`dot` fields) and the furniture look tokens (`chip/sticker/save/play` position/hue/size/shape). The renderer appends each furniture item's optional `style=` override after these |
-| `content` | both | `scl() pad() gap() scr` |
+| `content` | both | `scl() hl() gap() scr` · padding `pad() pb() pi() pbs() pbe() pis() pie()` · `rds()` — plus their `md:`/`lg:` forms |
 | `text` | both | which long text the content column shows: `summary` (teaser — default), `body` (full view — body **instead of** summary, with the summary kept as a hidden `description` meta), `both`. Reveal back panels always render both |
 | `styles` | both | object of CSS custom properties → `style` attribute (e.g. `--ui-reveal-content-bg`) |
-| `reveal` | ui-reveal | nested object grouping the reveal-only config: `{ type, typeLg, to, icon, iconType, iconClose, from, trigger, scroll }`. The structured object stays in the schema, but the renderer **folds it into `variant=` tokens** at render time: `type`+`from` → one animation token (`exp`, `flp(top)`, `sld(lft)`, `scl`), `typeLg` → `lg:`-prefixed swap (`lg:scl`), `to` → `pop`, `trigger` → `trg(card)`, `scroll` → `scr`, `icon` → one `ico()` per word (default `ico(te) ico(sm)`), `iconClose` → one `icc()` per word. `iconType` stays markup — it sets the toggle glyph on the emitted `<ui-icon>`: `plus-cross` (default) or directional `{up,down,left,right}-arrow-cross`, pairing with slide direction (panel from top → `down-arrow-cross`, etc.) |
+| `reveal` | ui-reveal | nested object grouping the reveal-only config: `{ type, typeLg, to, icon, iconType, iconClose, from, trigger, scroll, name }`. The structured object stays in the schema, but the renderer **folds it into `variant=` tokens** at render time: `type`+`from` → one animation token (`exp`, `flp(top)`, `sld(lft)`, `grw`), `typeLg` → `lg:`-prefixed swap (`lg:grw`), `to` → `pop`, `trigger` → `trg(card)`, `scroll` → `scr`, `icon` → one `ico()` per word (default `ico(te) ico(sm)`), `iconClose` → one `icc()` per word. Three fields stay **markup**, not tokens: `iconType` sets the toggle glyph on the emitted `<ui-icon>` (`plus-cross` default, or directional `{up,down,left,right}-arrow-cross` pairing with slide direction — panel from top → `down-arrow-cross`); `name` becomes the native `<details name>`; and `trigger` additionally **suppresses the `<ui-icon>` entirely** |
+
+**Three renderer behaviours worth knowing when writing a `reveal` object:**
+
+| Field / condition | Emitted markup |
+|---|---|
+| `type` is `flip` / `slide` / `scale` (→ `flp` / `sld` / `grw`) | the front face is wrapped in `<ui-face>` — those three animate the **face**. `exp` animates the **host**, so it gets **no** `<ui-face>` |
+| `trigger` set (→ `trg(card)`) | **no `<ui-icon>` at all** — the whole summary is the trigger |
+| `name` set | `<details name="…">` for native exclusivity. Emitted **only** from this field; never inferred from the preset id, the card id, or anything else |
+
+> **Schema note.** `render.js` reads `reveal.name`, but `card-preset.schema.json` does not
+> yet declare it among the `reveal` properties (`type typeLg to icon iconType iconClose from
+> trigger scroll`). The renderer honours it today; the schema needs the field added before an
+> editor can surface it. That schema's `description` also still spells the scale animation
+> `scl`/`lg:scl` — the CSS canonical spelling is now `grw`/`lg:grw` (old spellings kept as
+> deprecated aliases, so nothing is broken).
 
 **`shp()` — clip the media content to a shape.** Applies a `clip-path` to the
 `img`/`video`/`iframe` inside `<ui-media>` (the frame background goes transparent).
@@ -216,7 +231,7 @@ The hover morph lives in `media.hover.css` (see `hov()` below).
 
 **`tnt()` — tint the image a solid colour.** Blends a solid-colour overlay (`ui-media::before`)
 over the image with `mix-blend-mode` — a plain `filter` can't hit an exact colour. Named keys
-`tnt(red|orange|green|blue|accent|dark|light|subtle)` map to the theme colours; bare `tnt` reads
+`tnt(red|orange|green|blue|accent|black|white|gray)` map to the theme colours (`dark`/`light`/`subtle`/`slate` are deprecated aliases); bare `tnt` reads
 `--ui-media-tint-color` (any CSS colour **or gradient**) for arbitrary brand hues. Default blend
 `color` (recolour, keeps detail); switch via `--ui-media-tint-blend`, fade with
 `--ui-media-tint-opacity`. Pair with **`hov(tint)`** to fade the tint out on hover (reveal true
@@ -225,7 +240,7 @@ sheet (link it where you tint; not bundled by `ui-card.css`).
 
 The host elements carry exactly these attributes: `variant`, `media`, `content`,
 `theme`, `style`, `class` — reveal config is `variant=` tokens
-(`exp`/`flp()`/`sld()`/`scl()`/`pop`/`trg(card)`/`scr`/`ico()`/`icc()`), not separate
+(`exp`/`flp()`/`sld()`/`grw()`/`pop`/`trg(card)`/`scr`/`ico()`/`icc()`), not separate
 attributes. `class` is an instance hook, not preset material. Media-element
 attributes (`provider`, `video`, `cdn`, `quality`, `breakpoints`) are per-media-item
 content and belong in the card's `media[]` items. Bare booleans like `clip`, `auto`,
@@ -261,7 +276,7 @@ Restyling any card = changing its reference:
 ```
 
 A second collection, [`data/card.presets.demo.json`](data/card.presets.demo.json),
-holds **121 demo presets** extracted 1:1 from the original demo pages
+holds **126 demo presets** extracted 1:1 from the original demo pages
 (`media-*`, `carousel-*`, `video-*`, `reveal-*` key prefixes) — every distinct
 attribute combination those pages use, powering the `*.render.html` recreations.
 
@@ -297,8 +312,37 @@ Pipeline: resolve preset → build `<ui-media>` (items; furniture emitted from t
 overrides) → build `<ui-content>` envelope parts →
 run the per-type `DETAILS` renderer → append trailers (byline, tags, actions,
 engagement). `preset.element === "ui-reveal"` switches to the reveal composition
-(front `<ui-face>`, back panel). Unknown preset refs fall back to a plain stack
-card; unknown schemaTypes fall back to CreativeWork.
+(front face, back panel — `<ui-face>` only for `flp`/`sld`/`grw`). Unknown preset refs
+fall back to a plain stack card; unknown schemaTypes fall back to CreativeWork.
+
+### Canonical attribute placement
+
+The renderer puts each token string on **the element that owns it**:
+
+| Attribute | Emitted on | Why |
+|---|---|---|
+| `media=` | the `<ui-media>` | the frame's own config |
+| `content=` | the `<ui-content>` | the text column's own config |
+| `variant=` | the host (`<ui-card>` / `<ui-reveal>`) | it *arranges the two children*, so it belongs to the host by nature |
+| `theme=` | the host | one colour axis for the whole card |
+
+This is the **canonical** placement, not the only legal one. Hand-authored HTML may keep
+`media=` / `content=` on the host or on any ancestor — nothing was removed. The responsive
+`md:`/`lg:` rules ship **two arms** exactly so both placements keep working: a host arm
+targeting the queryable descendant (`cq-box` / `summary`) and a self arm targeting the
+primitive. See [content.md](content.md#two-arms--the-attribute-can-sit-on-the-primitive-or-the-host).
+
+**Ancestor placement stays the bulk-config mechanism.** `content=` is pure custom-property
+inheritance, so one declaration on a `<lay-out>` or `<lay-out-group>` still governs every
+card beneath it, and a card's own nearer declaration wins. That is a feature, not legacy —
+use it when a whole section should share type scale or padding. (`media=` is different: its
+inheritance deliberately **stops at the card host**, so a `media=` on a `<lay-out overflow>`
+configures that layout's own scroller and never leaks into a descendant `<ui-media>`.)
+
+> **Renderer gap — `<ui-marquee>`.** `buildFurniture` emits five elements: `play`, `chip`,
+> `beacon`, `sticker`, `save`. There is **no `furniture.marquee`** — the band is stylable
+> from `media=` (`marquee(bot)`, hue, size…) but must be hand-authored in the markup;
+> presets cannot generate it yet.
 
 ## Microdata conventions
 

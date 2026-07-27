@@ -67,19 +67,28 @@ Or via CSS `@import`:
 </ui-media>
 ```
 
-### Optional JavaScript — two independent modules
+### Optional JavaScript — one entry point, three chunks
 
-The frame, overlays, scrim, and marker controls are **all pure CSS** — `<ui-media>` needs no JS. Two small, independent modules add optional progressive enhancement; load only what a page uses:
+The frame, overlays, scrim, and marker controls are **all pure CSS** — `<ui-media>` needs no JS. The enhancement layer is `index.js`, an orchestrator that imports three feature chunks; each chunk is also importable on its own, so a page can load just the slice it uses:
 
 ```js
-import '@browser.style/card/ui-media.js';          // cursor-tracked hover: hov(track) / hov(drift)
+import '@browser.style/card';                      // = index.js — hover + carousel + video
+// …or cherry-pick:
+import '@browser.style/card/hover.js';             // cursor-tracked hov(track|drift|tilt)
+import '@browser.style/card/carousel.js';          // loop clones · autoplay · pause-on-slide-leave
+import '@browser.style/card/video.js';             // embed facades · media commands · vid() tools · <ui-play>
 import '@browser.style/card/ui-media-srcset.js';   // responsive Cloudflare srcset (transitional, see below)
 ```
 
-- **`ui-media.js`** — wires the two cursor-tracked hover effects (`hov(track)`, `hov(drift)`). It uses **event delegation**: one idle set of listeners that never iterates or mounts `<ui-media>` — nothing runs until a pointer enters a `track`/`drift` frame. Load it only on pages that use those tokens.
-- **`ui-media-srcset.js`** — registers the `<ui-media>` element and upgrades its `<img>` children (`loading`/`decoding`/`sizes="auto"` + host-gated Cloudflare `srcset`; see *Responsive images*). **Transitional:** once the srcset is server-side rendered, stop loading it.
+| Module | Role |
+|--------|------|
+| **`index.js`** | The package entry (`main` / the `.` export). Imports the three chunks, exports `scan()`, and is the **sole owner** of the idle scan + `globalThis.uiMedia.scan`. |
+| **`hover.js`** | Sets `--ui-media-mx` / `--ui-media-my` (−1…1) on frames matching `hov(track)`, `hov(drift)` or `hov(tilt)`. Listeners are attached per frame on first scan; the pointer handler is `requestAnimationFrame`-throttled and skips updates under `prefers-reduced-motion: reduce`. |
+| **`carousel.js`** | Seamless `loop` (clone slides), `auto(…)` autoplay, and pause-a-slide's-video-on-leave. Slides are counted with the shared `NOT_SLIDE` exclusion list. |
+| **`shared.js`** | Not a feature — the primitives `carousel.js` / `video.js` / `index.js` share (`mediaStr`, `hasToken`, `slidesOf` / `NOT_SLIDE`, `reflectPlay`, `bindVideo`). |
+| **`ui-media-srcset.js`** | Registers the `<ui-media>` element and upgrades its `<img>` children (`loading`/`decoding`/`sizes="auto"` + host-gated Cloudflare `srcset`; see *Responsive images*). **Transitional** and deliberately outside `index.js` — once srcset is server-side rendered, stop loading it. |
 
-Both use the **exact same** HTML as CSS-only; with no JS the element still renders.
+A chunk imported on its own falls back to its own idle scan, so cherry-picking needs no extra wiring. All of them use the **exact same** HTML as CSS-only; with no JS the element still renders and still scrolls.
 
 #### Attributes
 
@@ -112,15 +121,16 @@ Because custom properties inherit, **one rule set serves both placement cases**:
 |-------|------|----------|--------|
 | `asr()` | `1/1` `6/7` `3/4` `4/3` `3/2` `2/3` `16/9` `21/9` (or any via `style`) | aspect-ratio | `--ui-media-ar` |
 | `rds()` | `sm md lg xl 2xl full pill` + `sm-sq md-sq lg-sq xl-sq` | corners (**standalone only**) | `--ui-media-radius` (+ `corner-shape`) |
-| `obp()` | `tl tc tr · cl cc cr · bl bc br` | object-position (9-grid) | `--ui-media-op` |
+| `obp()` | logical `ts tc te · cs cc ce · bs bc be` **or** physical `tl tc tr · cl cc cr · bl bc br` | object-position (9-grid). Both spellings are supported and neither is deprecated — see below | `--ui-media-op` |
 | `obf()` | `cover` `contain` `fill` `none` | object-fit | `--ui-media-fit` |
 | `flp()` | `h` `v` `hv` | flip / mirror the image | `--ui-media-fl-x` / `-fl-y` |
-| `hov()` | `zoom` `pan` `track` `drift` | hover effect (image only) | `--ui-media-hv-*` |
-| `scm()` | *(bare)* · pos `ts … be` · size `sm md lg` · intensity `shr lgt med drk sld` (sheer/solid aliases) | scrim — bare matches the host `ovr()`; three composable axes (direction · size · intensity) | `--ui-media-scrim-paint` |
+| `hov()` | 17 values across five families — see the table below | hover effect (image only) | `--ui-media-hv-*`, `--_f-*` |
+| `scm()` | *(bare)* · pos `ts … be` · size `sm md lg xl` · intensity `shr lgt med drk sld` (sheer/solid aliases) | scrim — bare matches the host `ovr()`; three composable axes (direction · size · intensity) | `--ui-media-scrim-paint` |
 | `nav()` | *(bare, or `mrk` `arw` `blw` `abv`)* | carousel — **the token IS the trigger**; bare = markers + arrows (full control vocabulary — `arw()`, `mrk()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()` — in [carousel.md](./carousel.md)) | carousel layout + controls |
 | `vid()` | `cc` `pip` `fls` · size `sm md lg xl` | player-tool cluster over a chrome-less `<video>` — JS **injects** the requested buttons (bottom-end; order CC → PiP → fullscreen, fullscreen rightmost). Size mirrors `arw()` (`vid(sm)`…`vid(xl)`, default 2.5rem). Needs `index.js`; PiP feature-detected (skipped in Firefox). `cc` = subtitles/captions button (glyph only — **switching not wired yet**). *(Play/pause is `<ui-play>` furniture, not a `vid()` value.)* | injected `<menu class="ui-media-tools">` + `--ui-media-tool-size` |
-| `chip()` `sticker()` `save()` `play()` | `ts … be` *(position)* **or** `red orange green blue accent dark light subtle` *(sub-theme)* | place + theme an overlay element | element inset (absolute) / element `--ui-{el}-*` tokens |
-| `ply()` | `sm md lg xl` | **size** the `<ui-play>` control (distinct from `play(<pos>)` which *positions* it). Mirrors `<ui-play>`'s own `size=` scale; an explicit `size=` on the element still wins. | `--ui-play-sz` / `--ui-play-icon-sz` on the host |
+| `chip()` `sticker()` `beacon()` `save()` `play()` | `ts … be` *(position)* **or** `red orange green blue accent black white gray` *(hue)* — plus each element's own size/shape args | place + theme an overlay element | element inset (absolute) / element `--ui-{el}-*` tokens |
+| `play()` | `sm md lg xl` *(size)* — same stem as `play(<pos>)` | **size** the `<ui-play>` control. Mirrors `<ui-play>`'s own `size=` scale; an explicit `size=` on the element still wins. Position args (`ts…be`) and size args are disjoint vocabularies, so one stem parses unambiguously. *(`ply(<size>)` is a deprecated alias.)* | `--ui-play-sz` / `--ui-play-icon-sz` |
+| `marquee()` | mode `rpt` `seam` `fade` · position `top` `bot` · hue · size `sm lg xl 2xl` · speed · corner | the `<ui-marquee>` **band** (not 9-grid furniture) — see *Overlay furniture* | `--ui-marquee-*` |
 
 #### `asr()` — the 8 numeric aspect ratios
 
@@ -139,6 +149,22 @@ There were never any named keywords — ratios are always numeric. Any other rat
 
 The base (unprefixed) value is the small-card default; the prefixes only ever override upward in width. Only `asr()` is prefixable — the base rule is whole-token (`~=`) matched so `md:`/`lg:` variants don't leak into it. (Prefixes are the card's own width via container queries, not the viewport, so aspect tracks how wide the card actually renders regardless of layout.)
 
+**Where the attribute may sit.** Each prefixed `asr()` ships **two arms**, so the token works in either placement:
+
+| `media=` sits on | Arm | Works? |
+|---|---|---|
+| the host `<ui-card>` / `<ui-reveal>` | host arm — `:where([media~="md:asr(…)"]) :is(cq-box, summary)` | yes (needs the `<cq-box>` / `<summary>` descendant) |
+| the `<ui-media>` itself, inside a card | self arm — `:where(ui-media[media~="md:asr(…)"])` | yes — this is the **renderer's canonical placement** |
+| a standalone `<ui-media>`, no card | self arm | only inside a `bs-card`-named container — see below |
+
+The queries are **named**: `@container bs-card (inline-size >= 25rem)`. An *unnamed* size query resolves against the subject's nearest size container, so a self-armed `<ui-media>` standing outside a card could otherwise switch tiers off an unrelated ancestor's width. With the name, only `ui-card` / `ui-reveal` / `lay-out-group` match. A standalone primitive opts in deliberately:
+
+```html
+<div style="container: bs-card / inline-size">
+  <ui-media media="asr(3/4) md:asr(16/9)"><img src="…" alt="…"></ui-media>
+</div>
+```
+
 #### `rds()` — corners (standalone only)
 
 Inside `<ui-card>`/`<ui-reveal>` the **parent** rounds and clips the frame (via its own `variant="rds(…)"`), so you don't set corners on the media. A **standalone** `<ui-media>` can round its own corners with `rds()` — the same scale as the card:
@@ -154,7 +180,18 @@ Add **`clip`** to also apply `clip-path: inset(0 round …)` at that same radius
 
 #### `obp()` — object-position 9-grid
 
-`tl tc tr · cl cc cr · bl bc br` map to `left top` … `right bottom`. Default is `center`.
+Two spellings, **both current** — this is the one place in the system where a physical vocabulary is kept on purpose.
+
+```
+LOGICAL    ts  tc  te  ·  cs  cc  ce  ·  bs  bc  be     ← canonical; mirrors in RTL
+PHYSICAL   tl  tc  tr  ·  cl  cc  cr  ·  bl  bc  br     ← never mirrors
+```
+
+- **Logical** (`ts…be`) is the canonical grid, shared with furniture, `scm()`, `ovr()` and reveal's `ico()`. `s`/`e` follow the writing direction: `obp(ts)` is `left top` in LTR and `right top` under `:dir(rtl)`.
+- **Physical** (`tl…br`) is **not deprecated**. `object-position` has no logical keywords, and "crop to the left edge" is a real direction-independent intent — e.g. a subject baked into the left of the frame. These never mirror.
+- The centre column (`tc` `cc` `bc`) is spelled identically in both and is axis-pure.
+
+The RTL flip is done with `:dir(rtl)`, which matches the token holder's own resolved directionality — so it works whether `dir` sits on the element or an ancestor. Default (no token) is `center`.
 
 #### `flp()` — mirror
 
@@ -162,16 +199,33 @@ Add **`clip`** to also apply `clip-path: inset(0 round …)` at that same radius
 
 #### `hov()` — hover effect (image only)
 
-| Value | Effect |
-|-------|--------|
-| `zoom` | scales the image up on hover |
-| `pan` | scales + translates the image |
-| `track` | cursor-tracked pan — reads `--ui-media-mx` / `--ui-media-my` (−1…1), set by the pointer handler in **`ui-media.js`** (load it; **inert without it**). Image follows the cursor |
-| `drift` | cursor-**counter** parallax (ioi.dk-style) — oversized image (rest scale `1.3`) shrinks toward `1.2` on hover and drifts **opposite** the cursor. Same `--ui-media-mx` / `--ui-media-my` handler in `ui-media.js` |
+Seventeen values in five families. All compose — the animated properties share **one** transition list on the image, so `hov(shape) hov(zoom)` (or `hov(gray) hov(blur)`) stack without clobbering each other.
 
-`track` and `drift` are the **only** hover effects that need JS — load `ui-media.js` (delegated; activates only when a `track`/`drift` frame is hovered). `zoom` and `pan` are pure CSS. All hover effects are guarded by `@media (hover: hover)` and disabled under `prefers-reduced-motion: reduce` (the JS handler skips updates under reduced-motion too). The token can sit on the host `<ui-card>`/`<ui-reveal>` or on a standalone `<ui-media>`.
+| Value | Family | JS? | Effect |
+|-------|--------|-----|--------|
+| `zoom` | scale | — | scales the image up on hover (`1.08`) |
+| `pan` | scale | — | scales (`1.12`) + translates in a **fixed** direction |
+| `track` | cursor | **yes** | cursor-tracked pan — image follows the pointer (`1.12` + up to `4%` translate) |
+| `drift` | cursor | **yes** | cursor-**counter** parallax — oversized image (rest `1.3`) shrinks toward `1.2` on hover and drifts **opposite** the cursor |
+| `tilt` | cursor | **yes** | 3D rotate **toward** the cursor (`rotateX`/`rotateY`, up to `8deg`) on a `600px` perspective; overfills to `1.08` while active so the rotated corners don't expose the frame |
+| `tilt-out` | 3D | — | **fixed** tilt on hover, top edge toward the viewer (`rotateX −14deg`) |
+| `tilt-in` | 3D | — | **fixed** tilt on hover, top edge away (`rotateX +14deg`) |
+| `rot-r` | rotate | — | whole-image rotation right (`3deg`) + `1.06` overfill |
+| `rot-l` | rotate | — | whole-image rotation left |
+| `shape` | clip | — | morphs the `shp()` clip-path to its `--ui-shape-morph` target on hover |
+| `shape-rev` | clip | — | the same morph set up in the reverse direction (`media.shapes.css`) |
+| `gray` | filter | — | rest greyscale, restored to colour on hover |
+| `blur` | filter | — | rest blurred (`4px`), sharpens on hover |
+| `bright` | filter | — | rest darkened (`0.6`), restored on hover |
+| `sat` | filter | — | rest desaturated (`0.4`), restored on hover |
+| `dim` | filter | — | the filter family's exception: rest **natural**, hover **darkens** (`0.6`) — for text overlaid on the image |
+| `tint` | tint | — | fades a `tnt()` colour tint out on hover to reveal the true-colour image. Lives in `media.tint.css`, which is **opt-in** — `ui-card.css` does not bundle it, so link it on pages that tint |
 
-> **Removed:** the old card-level hovers `hv(lift)` / `hv(shrink)` / `hv(tilt)` are **gone** in v4 — hover is now media-only.
+**Which need JS.** Only the three **cursor** effects — `track`, `drift`, `tilt` — read `--ui-media-mx` / `--ui-media-my`, which are set by the pointer handler in `hover.js` (load `index.js`, or `hover.js` alone). Without it those three are inert: `track`/`drift` sit at their resting scale and `tilt` renders flat. Everything else is pure CSS.
+
+> `hov(tilt)` is **not** gone in v4 — it ships, and it is the cursor-driven member of the tilt family. `tilt-out` / `tilt-in` are its JS-free fixed-angle siblings. (What *was* removed in v4 are the old card-level hovers `hv(lift)` / `hv(shrink)` / `hv(tilt)` — the `hv()` stem itself; hover is now media-only under `hov()`.)
+
+All hover effects are guarded by `@media (hover: hover)`. Under `prefers-reduced-motion: reduce` transitions are dropped, the cursor effects pin to their resting position, and the JS handler stops updating. The four filter vars are registered with `@property` so the filter **interpolates** instead of jumping. The token can sit on the host `<ui-card>`/`<ui-reveal>` or on the `<ui-media>` itself — one folded selector serves both arms.
 
 ### Arbitrary values — the `style=` escape hatch
 
@@ -187,7 +241,44 @@ Every `()` token is *sugar* over a custom property, so any value that has no tok
 
 ## Overlay furniture
 
-The media area hosts five overlay elements. They carry **only their text/glyph** — position and theme come from the parent `media=` string (so a `<ui-card>` can configure them and the config inherits down).
+The media area hosts **five overlay elements** — `<ui-chip>`, `<ui-beacon>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`. They carry **only their text/glyph** — position and theme come from the parent `media=` string (so a `<ui-card>` can configure them and the config inherits down).
+
+### Furniture vs band — `<ui-marquee>` is not furniture
+
+A sixth element, **`<ui-marquee>`, is a *band*, not furniture**, and that distinction is why it is counted separately:
+
+| | Furniture (chip · beacon · sticker · save · play) | Band (`<ui-marquee>`) |
+|---|---|---|
+| Sizing | intrinsic — as wide as its content | **full-width** (`inset-inline: 0`) |
+| Placement | any of the **nine** logical grid points | **top / bottom only** — a full-width strip has no `start`/`end`, and no centre row |
+| Vocabulary | `el(ts…be)` | `marquee(top)` (default) / `marquee(bot)` |
+| Stacking | `z-index: 2` | `z-index: 1` — **below** the furniture, so a chip or beacon sits on top of a running band |
+
+Two placement modes:
+
+- **Overlaid in `<ui-media>`** — the band is absolutely positioned and **token-placed**: `marquee(top)` (the default) or `marquee(bot)`.
+- **Inside `<ui-content>`** — the band is an ordinary flow child and is **markup-placed**: it lands wherever you write it in source order. There is no position token in this mode.
+
+```html
+<!-- overlaid on the media, pinned to the bottom -->
+<ui-card variant="col" media="asr(4/3) marquee(bot) marquee(rpt) marquee(red) marquee(sm)">
+  <cq-box>
+    <ui-media>
+      <img src="…" alt="…">
+      <ui-marquee aria-label="BREAKING NEWS • BREAKING NEWS • "></ui-marquee>
+    </ui-media>
+    <ui-content>…</ui-content>
+  </cq-box>
+</ui-card>
+```
+
+Args beyond position: mode `marquee(rpt)` (continuous repeat) / `marquee(seam)` / `marquee(fade)`, hue (the canonical eight, below), size `marquee(sm|lg|xl|2xl)`, speed `marquee(slow|fast|faster)`, gap `marquee(gap-sm|gap-lg)`, corner `marquee(non|rnd|pll|crc|sqr)`, direction `marquee(right|up|down)`.
+
+> **`marquee(rpt)` was `marquee(loop)`.** Renamed because `loop` is also a bare carousel flag in the same `media=` string — `media="nav loop"` starts autoplay-with-clones, and a substring-matched `marquee(loop)` collided with it. `marquee(loop)` is kept as a **deprecated alias** (removed in v5); the carousel's own bare `loop` is now whole-token matched so the two can never cross-fire again.
+
+Content is markup-free: put the text in `aria-label` on an empty `<ui-marquee>` and it fills `::before`/`::after` while doubling as the accessible name. Full component: [ui/marquee](../marquee/).
+
+> **Placement caveat.** Unlike the nine-point furniture tokens, the two *position* tokens are matched as `:where([media*="marquee(top|bot)"]) ui-media ui-marquee` — the token holder must be an **ancestor** of the `<ui-media>`. Put `marquee(bot)` on the `<ui-card>`/`<ui-reveal>` host, not on the `<ui-media>` itself. Every other `marquee()` arg (hue, size, mode, speed…) resolves through the component's own arms and works from either placement; `marquee(top)` is the base default regardless.
 
 ### The 3×3 positioning grid
 
@@ -225,8 +316,8 @@ Override an element's default area with a position token in `media=`:
 </ui-media>
 ```
 
-This writes `--ui-media-chip-area: be`, `--ui-media-sticker-area: cc`, etc. Overlay
-elements are **always children of `<ui-media>`** (the grid that positions them) — see
+A position token writes the element's `inset-block` / `inset-inline` / `translate` directly — there is no intermediate `--ui-media-*-area` custom property. Overlay
+elements are **always children of `<ui-media>`** (the box that positions them) — see
 [Nesting](#nested-in-ui-card--everything-configured-on-the-parent).
 
 ### Theming an overlay from the parent
@@ -241,16 +332,42 @@ Theme an element with a **sub-theme key** in `media=`:
 </ui-media>
 ```
 
-The 8 sub-theme keys are **hues + neutrals** (decorative, *not* status):
+#### The canonical eight hues
 
 ```
-red   orange  green   blue
-accent  dark  light  subtle
+red   orange   green   blue
+accent   black   white   gray
 ```
 
-They route into the element's **own** tokens (`--ui-chip-bg` / `--ui-chip-c`, `--ui-sticker-bg/-c`, `--ui-save-c`, `--ui-play-bg/-c`) and resolve from the shared `--ui-theme-*` bundles defined once in `@browser.style/base`. This is the **same palette** as each element's self-service `theme=` attribute — `media="chip(red)"` and `<ui-chip theme="red">` produce identical colors.
+Four hues + four neutrals — decorative, *not* status. They route into the element's **own** tokens (`--ui-chip-accent`/`-c`, `--ui-sticker-bg/-c`, `--ui-beacon-accent/-c`, `--ui-marquee-bg/-c`, `--ui-save-c`, `--ui-play-bg/-c`) and resolve from the shared `--ui-theme-*` bundles defined once in `@browser.style/base`. This is the **same palette** as each element's self-service `theme=` attribute — `media="chip(red)"` and `<ui-chip theme="red">` produce identical colors.
 
-> **Position and theme are disjoint vocabularies** (`ts…be` vs `red…subtle`), so `chip(cc)` and `chip(dark)` parse unambiguously. They are **two atomic tokens** — `media="chip(tl) chip(dark)"`, not a combined `chip(tl dark)` — so the pure-CSS substring parser can scope each arg to its element. Because position usually defaults by role, the common case is a single token (e.g. `chip(dark)`).
+Two **fill modifiers** compose on top of a hue: `el(pale)` (mixed 80% into the surface, hue-coloured ink) and `el(muted)` (50% transparent).
+
+#### Deprecated hue aliases
+
+Four older spellings are kept as aliases and **removed in v5**:
+
+| Deprecated | Use instead | Note |
+|---|---|---|
+| `dark` | `black` | |
+| `light` | `white` | |
+| `subtle` | `gray` | |
+| `slate` | `gray` | `slate` was a distinct `--ui-theme-slate-*` bundle; it now resolves to its own bundle where implemented, but is not part of the canonical set |
+
+#### Per-element support matrix (verified against source)
+
+| Element | canonical 8 | `pale` / `muted` | `dark` `light` `subtle` | `slate` |
+|---|---|---|---|---|
+| `<ui-chip>` | ✅ | ✅ | ✅ (aliased) | ✅ (aliased) |
+| `<ui-sticker>` | ✅ | ✅ | ✅ (aliased) | ✅ (aliased) |
+| `<ui-beacon>` | ✅ | ✅ | ✅ (aliased) | ✅ (aliased) |
+| `<ui-marquee>` | ✅ | ✅ | ✅ (aliased) | ✅ (aliased) |
+| `<ui-save>` | ✅ | ❌ | ✅ (aliased) | ❌ |
+| `<ui-play>` | ✅ | ❌ | ❌ | ❌ |
+
+> **Honest gaps.** `ui/save/ui-save.css` implements `dark`/`light`/`subtle` but **not** `slate`; `ui/play/ui-play.css` implements **none** of the four deprecated aliases. So `media="play(dark)"` and `media="save(slate)"` are silently inert today. Both elements are single-ink controls (`--ui-save-c`, `--ui-play-bg/-c`) with no `pale`/`muted` mixing. Use the canonical names on `save`/`play` and the gap never bites.
+
+> **Position and hue are disjoint vocabularies** (`ts…be` vs `red…gray`), so `chip(cc)` and `chip(black)` parse unambiguously. They are **two atomic tokens** — `media="chip(te) chip(black)"`, not a combined `chip(te black)` — so the pure-CSS substring parser can scope each arg to its element. Because position usually defaults by role, the common case is a single token (e.g. `chip(black)`).
 
 ### Element details
 
@@ -259,8 +376,32 @@ They route into the element's **own** tokens (`--ui-chip-bg` / `--ui-chip-c`, `-
 | `<ui-chip>` | pill label (reuses `ui/chip`) | `variant` light/outline/square/squircle, `size`, `theme`, `color`. (The unrelated `<ui-badge>` cart-number badge is untouched.) |
 | `<ui-beacon>` | animated dot / pill / solid label (reuses `ui/beacon`) | the chip's **live** counterpart. Card tokens: hue `beacon(red…white)` (same `--ui-theme-*` bundles as chip/sticker), face `beacon(dts)` dots / `beacon(pll)` pill / `beacon(sld)` solid / `beacon(tck)` ticker (markup-free — the sliding panel and dot loader are pseudo-elements), animation `beacon(bln)` blink / `beacon(pls)` pulse / `beacon(brt)` breathe / `beacon(non)` off (solid defaults to blink), size `beacon(xs\|sm\|md\|lg\|xl\|2xl)`, corner `beacon(rnd\|sqr)`, arbitrary colour via `fill=`/`ink=`. Over imagery prefer `pll`/`sld` — the bare dot has no contrast plate. **Marker-class as furniture**: plain text-only markup, summary-safe. Animations are gated behind `prefers-reduced-motion: no-preference` (never start for reduced-motion users); `[paused]` freezes a running one. |
 | `<ui-sticker>` | round disc; opt-in starburst via `variant="sh:burst"` (`--ui-sticker-clip-path`); **multi-line** | each direct child is a line; `--ui-sticker-gap` controls line-spacing, `text-box: cap alphabetic` trims leading |
-| `<ui-save>` | `<ui-save><input type="checkbox" aria-label="Save"></ui-save>` | favorite ≈ wishlist ≈ bookmark. State + a11y + keyboard from the checkbox, **zero JS**. Icon swappable via `--ui-save-icon` (heart / bookmark / star). |
-| `<ui-play>` | `<ui-play><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>` | play affordance (default `cc`). `variant="reveal"` hides until media hover/focus. JS web component swaps `<ui-icon type>` play↔pause, toggles `aria-pressed`, emits `ui-play-toggle`, and optionally drives a `<video>` via `for="videoId"`. CSS-only fallback = the authored static button. **In a scrolling carousel** (`auto`/`loop`) it becomes the play/pause control: `position:sticky`-pinned to the scrollport (plain furniture scrolls away) and wired by `ui-media.js` — see [media.carousel.md](./media.carousel.md#playpause-control-ui-play). |
+| `<ui-save>` | `<ui-save><button type="button" command="--save" commandfor="<media id>" aria-label="Save …"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>` | favorite ≈ wishlist ≈ bookmark. Composes an **invoker button** with `aria-pressed` for saved state (`aria-pressed="true"` = saved) — the same invoker shape `<ui-play>` uses. Glyph via the `<ui-icon shape>` (heart / bookmark / star). |
+| `<ui-play>` | see the invoker contract below | play affordance (default `cc`, sized with `play(sm\|md\|lg\|xl)`). `variant="reveal"` hides until media hover/focus. **In a scrolling carousel** (`auto`/`loop`) it becomes the play/pause control: `position:sticky`-pinned to the scrollport (plain furniture scrolls away) and wired by `carousel.js` — see [media.carousel.md](./media.carousel.md#playpause-control-ui-play). |
+
+#### `<ui-play>` — one contract
+
+Over a `<video>`, `<ui-play>` is driven **declaratively** by the native Invoker Commands API. The inner `<button>` carries `command="play-pause"` and `commandfor="<video id>"`:
+
+```html
+<ui-media media="play(cc) play(lg)">
+  <video id="reel" src="/media/reel.mp4" playsinline poster="/media/reel.jpg"></video>
+  <ui-play>
+    <button type="button" command="play-pause" commandfor="reel" aria-label="Play">
+      <ui-icon type="play-pause" aria-hidden="true"></ui-icon>
+    </button>
+  </ui-play>
+</ui-media>
+```
+
+- **`video.js` handles the command** — it ships a polyfill for the proposed media commands (`play-pause`, `play`, `pause`, `toggle-muted`) that **auto-disables** once the browser supports them natively.
+- **State is mirrored, never guessed.** The `<video>`'s own `play`/`pause`/`ended` events drive `aria-pressed` on the button and `[open]` on the host, which morphs a `<ui-icon type="play-pause">` glyph purely in CSS.
+- **There is no `ui-play-toggle` event in the card system.** A button carrying `command`/`commandfor` is toggled by the command handler; the card's JS only reflects state, or the two would cancel each other out.
+- **CSS-only fallback** is the authored static button plus the browser's own `<video controls>` if you add it — the frame, the sizing and the placement need no JS at all.
+Two shapes sit outside the invoker contract, both because their target isn't an `HTMLMediaElement`:
+
+- **Provider embeds** (`provider="youtube|vimeo"`) use the **click facade** in `video.js` — the click drops the poster, appends `autoplay=1` and hands off to the platform player. An `<iframe>` can't receive a media command.
+- **The carousel control** — with no `commandfor`, a `<ui-play>` inside an `auto`/`loop` scroller is auto-discovered by `carousel.js`, which binds the click directly and writes `--ui-carousel-play-state` (`running`/`paused`), freezing the `mrk(pll)` / `mrk(tmb)` fill timer with it.
 
 **`<ui-sticker>` multi-line** — "SAVE / 20%" is two children at different scales:
 
@@ -299,7 +440,7 @@ The `nav()` token **is the trigger** — there is no separate `crs` flag. Any `n
 
 Controls use native `::scroll-marker` (dots) and `::scroll-button(left|right)` (arrows), `@supports`-gated and anchor-positioned to each scroller — they **degrade to a bare swipeable scroller** where unsupported. Smooth scroll is enabled under `prefers-reduced-motion: no-preference`.
 
-The full marker/arrow token surface is token-driven (see *Tokens* — `--ui-media-marker-*`, `--ui-media-arrow-*`, and `--ui-media-overlay-gap` which drives the control inset). Arrows ship with **built-in chevron glyphs** (dark default for the frosted light circle + a `*-light` set for dark circles, via `arw(lgt)`); colour the circle with `--ui-media-arrow-bg`, or override `--ui-media-arrow-prev/-next` with your own `url()` to fully customise.
+The full marker/arrow token surface is token-driven (see *Tokens* — `--ui-carousel-marker-*`, `--ui-carousel-arrow-*`, and `--ui-carousel-overlay-gap` which drives the control inset). Arrows ship with **built-in glyph sets** — `--ui-carousel-chevron-{light,dark,grey}` and `--ui-carousel-arrow-{light,dark,grey}` — selected by `arw(lgt)`/`arw(drk)`/`arw(arr)`; colour the circle with `--ui-carousel-arrow-bg`, or point the single `--ui-carousel-arrow-glyph` at your own `url()` to fully customise.
 
 All carousel CSS lives in **`media.carousel.css`** (imported by `ui-card.css` alongside `media.css`).
 
@@ -318,38 +459,38 @@ All carousel CSS lives in **`media.carousel.css`** (imported by `ui-card.css` al
 | `arw(hid)` | **auto-hide** the dead-end arrow (no slide that way) — opt out of the always-visible default |
 | `arw(blw)` · `arw(abv)` | arrows alone in a reserved band below / above the media |
 
-`arw()` atoms are **independent** — combine them as separate tokens, e.g. `arw(arr) arw(drk) arw(lg)` or `arw(set) arw(bc)`, **not** `arw(arr drk)`. Shape (`arw(arr)`) and theme (`arw(lgt)`/`arw(drk)`) are separate axes and compose. A direct `style="--ui-media-arrow-prev/-next: …"` still overrides as an escape hatch.
+`arw()` atoms are **independent** — combine them as separate tokens, e.g. `arw(arr) arw(drk) arw(lg)` or `arw(set) arw(bc)`, **not** `arw(arr drk)`. Shape (`arw(arr)`) and theme (`arw(lgt)`/`arw(drk)`) are separate axes and compose. A direct `style="--ui-carousel-arrow-glyph: url(…)"` still overrides as an escape hatch — it is **one** token for both directions; the button pseudo mirrors it per direction.
 
 #### Theming arrows
 
 Two render modes, both token-driven — no named theme atoms needed:
 
-- **Circle** *(default)* — an Instagram-style frosted button: a semi-transparent-white `--ui-media-arrow-bg` (`rgb(255 255 255 / 0.7)`, picks up the image tint), dark glyph, no border, and a soft `--ui-media-arrow-shadow`. Colour the circle with `--ui-media-arrow-bg` / `--ui-media-arrow-bg-hover`; for a dark circle + white glyph in one token use `arw(drk)` (composes with `arw(arr)`). Square it with `--ui-media-arrow-radius` (or `arw(sqr)`/`arw(sft)`); add a border with `--ui-media-arrow-border`, drop the shadow with `--ui-media-arrow-shadow: none`.
-- **Bare** (`arw(bare)`) — no circle; the glyph *is* the colour, set with `--ui-media-arrow-color` (and `--ui-media-arrow-color-hover`). Default ink is **white** over an image and **auto-flips dark** in a `nav(blw)`/`nav(abv)` (light) band. Set any colour:
+- **Circle** *(default)* — an Instagram-style frosted button: a semi-transparent-white `--ui-carousel-arrow-bg` (`rgb(255 255 255 / 0.7)`, picks up the image tint), dark glyph, no border, and a soft `--ui-carousel-arrow-shadow`. Colour the circle with `--ui-carousel-arrow-bg` / `--ui-carousel-arrow-bg-hover`; for a dark circle + white glyph in one token use `arw(drk)` (composes with `arw(arr)`). Square it with `--ui-carousel-arrow-radius` (or `arw(sqr)`/`arw(sft)`); add a border with `--ui-carousel-arrow-border`, drop the shadow with `--ui-carousel-arrow-shadow: none`.
+- **Bare** (`arw(bare)`) — no circle; the glyph *is* the colour, set with `--ui-carousel-arrow-color` (and `--ui-carousel-arrow-color-hover`). Default ink is **white** over an image and **auto-flips dark** in a `nav(blw)`/`nav(abv)` (light) band. Set any colour:
 
 ```html
 <!-- black bare arrows -->
-<ui-media media="nav(arw) arw(bare)" style="--ui-media-arrow-color: #000">…</ui-media>
+<ui-media media="nav(arw) arw(bare)" style="--ui-carousel-arrow-color: #000">…</ui-media>
 ```
 
-Bare drops the circle (and its `--ui-media-arrow-shadow`), so a white glyph relies on the image being dark enough; over bright photos use `arw(bare)` on a `nav(blw)`/`nav(abv)` band, or keep the frosted circle. Bare composes with `arw(arr)` (masked full-arrow) and every placement/`set` atom.
+Bare drops the circle (and its `--ui-carousel-arrow-shadow`), so a white glyph relies on the image being dark enough; over bright photos use `arw(bare)` on a `nav(blw)`/`nav(abv)` band, or keep the frosted circle. Bare composes with `arw(arr)` (masked full-arrow) and every placement/`set` atom.
 
-**By default every arrow stays visible** — at the first/last slide the dead-end arrow dims to `--ui-media-arrow-disabled-opacity` (default `0.5`) instead of disappearing. Add `arw(hid)` to auto-hide it instead. (Implementation note: a `:disabled` `::scroll-button` can't carry a mask, so a bare dead-end arrow paints the glyph SVG directly — white over an image, dark in a band — tracking the glyph's light/dark shade rather than an arbitrary `--ui-media-arrow-color`.)
+**By default every arrow stays visible** — at the first/last slide the dead-end arrow dims to `--ui-carousel-arrow-disabled-opacity` (default `0.4`) instead of disappearing. Add `arw(hid)` to auto-hide it instead.
 
 ### Pill dots with autoplay fill — `mrk()`
 
 | Token | Effect |
 |-------|--------|
 | *(default)* | round dots — no token needed |
-| `mrk(pll)` | rounded-rect pills; the **active** pill fills left→right over `--ui-media-autoplay` (default `5s`) as a timer hint |
+| `mrk(pll)` | rounded-rect pills; the **active** pill fills left→right over `--ui-carousel-autoplay` (default `5s`) as a timer hint |
 | `mrk(hyb)` | hybrid — round dots whose active marker morphs into a pill and runs the same fill timer |
 | `mrk(sm)` · `mrk(md)` *(default)* · `mrk(lg)` · `mrk(xl)` | dot / pill size (composes with `mrk(pll)`) |
 
-The fill restarts whenever the active slide changes (`:target-current`); the `auto` token (JS autoplay) keeps it in sync with the advance interval. Under `prefers-reduced-motion: reduce` the active pill shows filled with no animation. Theme with `--ui-media-pill-track` / `--ui-media-pill-fill` / `--ui-media-pill-width` / `--ui-media-pill-height`.
+The fill restarts whenever the active slide changes (`:target-current`); the `auto` token (JS autoplay) keeps it in sync with the advance interval. Under `prefers-reduced-motion: reduce` the active pill shows filled with no animation. Theme with `--ui-carousel-pill-track` / `--ui-carousel-pill-fill` / `--ui-carousel-pill-width` / `--ui-carousel-pill-height`.
 
 ### Controls in a band — `nav(blw)` / `nav(abv)`
 
-`nav(blw)` shows **both** controls in a reserved, non-scrolling **bottom band** beneath the frame (the band is block-end padding on the flex scroller, so the absolute controls re-anchor into it without overlaying the image); `nav(abv)` is the mirror band above. Default layout: dots centered, arrows at the band's left/right ends. Combine with `arw(set)` to pin the dots to the start and pair the arrows at the end, or `mrk(pll)` for a timer bar across the band. Size the band with `--ui-media-band` (default `2.75rem`); colour it with `--ui-media-controls-bg`. The `arw(tc)/arw(cc)/arw(bc)` placement atoms are for the **overlay** variant — the bands own their own vertical placement.
+`nav(blw)` shows **both** controls in a reserved, non-scrolling **bottom band** beneath the frame (the band is block-end padding on the flex scroller, so the absolute controls re-anchor into it without overlaying the image); `nav(abv)` is the mirror band above. Default layout: dots centered, arrows at the band's left/right ends. Combine with `arw(set)` to pin the dots to the start and pair the arrows at the end, or `mrk(pll)` for a timer bar across the band. Size the band with `--ui-carousel-band` (default `2.75rem`); colour it with `--ui-carousel-controls-bg`. The `arw(tc)/arw(cc)/arw(bc)` placement atoms are for the **overlay** variant — the bands own their own vertical placement.
 
 ---
 
@@ -376,13 +517,31 @@ The scrim `::after` stays out of grid flow (`position: absolute; inset: 0`).
 
 Combine axes freely, e.g. `scm(bc) scm(lg) scm(drk)`. `scm` works **standalone** too (a darkened image, no overlay content needed).
 
-> **RTL note:** the `s`/`e` position naming matches the furniture grid, but the gradients use *physical* directions (`to bottom right`, …), so the corner/side scrims do not mirror in RTL the way `inset-inline`-positioned furniture does. Acceptable for now; a future `[dir="rtl"]` override could swap the six left/right gradient pairs.
+**RTL — scrims mirror.** `linear-gradient()` has no logical directions, so the six gradients carrying a left/right component are **re-baked mirrored** under `:dir(rtl)`:
+
+| Position | LTR | RTL |
+|---|---|---|
+| `ts` | `to bottom right` | `to bottom left` |
+| `te` | `to bottom left` | `to bottom right` |
+| `cs` | `to right` | `to left` |
+| `ce` | `to left` | `to right` |
+| `bs` | `to top right` | `to top left` |
+| `be` | `to top left` | `to top right` |
+
+`tc`, `bc` and `cc` are axis-pure (`to bottom` / `to top` / a vertical band) and never flip. This is what keeps a `chip(ts)` and its matching `scm(ts)` in agreement: before this round the chip mirrored in RTL and the scrim didn't. `:dir(rtl)` matches the token holder's own resolved directionality, so it works whether `dir` sits on the element or an ancestor, and the override sits at the same `0-0-0` specificity later in source.
 
 ---
 
 ## Tokens
 
-Every token lives in the `--ui-media-*` namespace and inherits down from wherever `media=` is set.
+Two namespaces, split by ownership. Both inherit down from wherever `media=` is set.
+
+| Namespace | Owns | Defined in |
+|---|---|---|
+| `--ui-media-*` | the **frame** — aspect, fit, position, flip, background, hover, scrim, overlay gap, scroller focus ring | `media.css`, `media.hover.css`, `media.carousel.css` |
+| `--ui-carousel-*` | the **controls** — dots, pills, arrows, thumbnails, bands, the scrollbar, autoplay timing | `ui/base/carousel.css` (shared with `lay-out[overflow]`) |
+
+The split is deliberate: the control chrome is shared with `<lay-out overflow>`, which has no `<ui-media>` at all, so it can't live in the media namespace. A handful of tokens stay `--ui-media-*` inside the carousel because they belong to the frame rather than the controls: `--ui-media-bg`, `--ui-media-gap`, `--ui-media-radius`, `--ui-media-overlay-gap`, and the three `--ui-media-focus-*` ring tokens.
 
 ### Frame
 
@@ -415,49 +574,52 @@ Every token lives in the `--ui-media-*` namespace and inherits down from whereve
 
 | Token | Default | Description |
 |-------|---------|-------------|
-| `--ui-media-marker-bg` | `rgb(255 255 255 / 0.5)` | marker color |
-| `--ui-media-marker-active` | `#fff` | current-marker color |
-| `--ui-media-marker-size` | `0.6rem` | marker diameter |
-| `--ui-media-marker-gap` | `0.5rem` | gap between dots |
-| `--ui-media-marker-border` | `0` | marker border |
-| `--ui-media-pill-width` | `1.5rem` | `mrk(pll)` width |
-| `--ui-media-pill-height` | `0.35rem` | `mrk(pll)` height |
-| `--ui-media-pill-track` | `rgb(255 255 255 / 0.35)` | `mrk(pll)` inactive/track color |
-| `--ui-media-pill-fill` | `#fff` | `mrk(pll)` active fill color |
-| `--ui-media-autoplay` | `5s` | `mrk(pll)` timer-fill duration (set by the `auto(Ns)` token) |
+| `--ui-carousel-marker-bg` | `rgb(255 255 255 / 0.5)` | marker color |
+| `--ui-carousel-marker-active` | `#fff` | current-marker color |
+| `--ui-carousel-marker-size` | `0.6rem` | marker diameter (the `mrk(sm\|md\|lg\|xl)` scale sets this **and** the pill + thumb sizes together) |
+| `--ui-carousel-marker-gap` | `0.5rem` | gap between dots |
+| `--ui-carousel-marker-border` | `0` | marker border |
+| `--ui-carousel-marker-inset` | `--ui-carousel-overlay-gap` (`1rem` under `mrk(tmb)`) | corner inset for the overlay marker group (`mrk(ts…be)`) |
+| `--ui-carousel-pill-width` | `1.5rem` | `mrk(pll)` width |
+| `--ui-carousel-pill-height` | `0.35rem` | `mrk(pll)` height |
+| `--ui-carousel-pill-track` | `rgb(255 255 255 / 0.35)` | `mrk(pll)` inactive/track color |
+| `--ui-carousel-pill-fill` | `#fff` | `mrk(pll)` active fill color |
+| `--ui-carousel-autoplay` | `5s` | `mrk(pll)` timer-fill duration — written by `carousel.js` from the `auto(Ns)` token |
+| `--ui-carousel-play-state` | `running` | `running` / `paused` for the pill + thumb fill timer; `carousel.js` sets `paused` when a `<ui-play>` pauses autoplay |
 
 ### Carousel — arrows
 
 | Token | Default | Description |
 |-------|---------|-------------|
-| `--ui-media-arrow-bg` | `rgb(255 255 255 / 0.7)` | arrow button circle (frosted semi-transparent white) |
-| `--ui-media-arrow-bg-hover` | `rgb(255 255 255 / 0.9)` | arrow hover circle |
-| `--ui-media-arrow-size` | `2.25rem` | arrow button size |
-| `--ui-media-arrow-radius` | `var(--radius-circle, 50%)` | arrow corner radius (square it off for rounded-rect) |
-| `--ui-media-arrow-border` | `0` | circle border (add e.g. `1px solid …`) |
-| `--ui-media-arrow-glyph-size` | `75%` (circle) / `80%` (bare) | glyph size |
-| `--ui-media-arrow-nudge` | `calc(arrow-size * 0.03)` chevron · `* 0.015` arrow | optical shift of the glyph toward its tip (rotates with the arrow); `0` to disable |
-| `--ui-media-arrow-color` | `#fff` (dark in a `nav(blw)`/`nav(abv)` band) | `arw(bare)` glyph ink |
-| `--ui-media-arrow-color-hover` | `var(--ui-media-arrow-color)` | `arw(bare)` glyph ink on hover (band flips to `rgb(0 0 0 / 1)`) |
-| `--ui-media-arrow-hover-scale` | `1.18` | `arw(bare)` glyph scale on hover / focus |
+| `--ui-carousel-arrow-bg` | `rgb(255 255 255 / 0.7)` | arrow button circle (frosted semi-transparent white) |
+| `--ui-carousel-arrow-bg-hover` | `rgb(255 255 255 / 0.9)` | arrow hover circle |
+| `--ui-carousel-arrow-size` | `2.25rem` | arrow button size (`arw(sm\|lg\|xl)`) |
+| `--ui-carousel-arrow-radius` | `var(--radius-circle, 50%)` | arrow corner radius (`arw(sqr)` → `0`, `arw(sft)` → `--radius-sm`) |
+| `--ui-carousel-arrow-border` | `0` | circle border (add e.g. `1px solid …`) |
+| `--ui-carousel-arrow-glyph-size` | `75%` | glyph size within the button |
+| `--ui-carousel-arrow-nudge` | `calc(arrow-size * 0.03)` chevron · `* 0.015` full arrow | optical shift of the glyph toward its tip; `0` to disable |
+| `--ui-carousel-arrow-color` | `#fff` (`rgb(0 0 0 / 0.8)` in a band) | bare-glyph ink |
+| `--ui-carousel-arrow-color-hover` | inherits the base ink (band flips to `rgb(0 0 0 / 1)`) | bare-glyph ink on hover |
+| `--ui-carousel-arrow-hover-scale` | `1.18` | bare-glyph scale on hover / focus |
+| `--ui-carousel-arrow-shadow` | `0 1px 3px rgb(0 0 0 / 0.15)` (`none` in a band) | soft `box-shadow` on the circle button |
+| `--ui-carousel-arrow-hover-ring` | — | replaces the shadow on hover (set by `arw(drk)`) |
+| `--ui-carousel-arrow-disabled-opacity` | `0.4` (`0` with `arw(hid)`) | opacity of a dead-end arrow (no slide that way) |
+| `--ui-carousel-arrow-glyph` | `var(--ui-carousel-chevron-dark)` | **the** glyph. One token, not a prev/next pair — the button pseudo mirrors it per direction |
+| `--ui-carousel-chevron-light` / `-dark` / `-grey` | white / black / `#555` chevron SVG | built-in chevron glyph set |
+| `--ui-carousel-arrow-light` / `-dark` / `-grey` | white / black / `#555` full-arrow SVG | built-in full-arrow glyph set (selected by `arw(arr)`) |
+| `--ui-carousel-arrow-top` | `calc(anchor(center) − size/2)` | vertical-placement hook (set by `arw(ts…be)` and the band tokens) |
+| `--ui-carousel-arrow-gap` | `0.5rem` | spacing between the two arrows in an `arw(set)` pair |
+| `--ui-carousel-band` | `2.75rem` (auto-grown under `mrk(tmb)`) | `nav(blw)`/`nav(abv)` band height |
+| `--ui-carousel-above-gap` / `-below-gap` | `var(--spacing-sm)` | gap between the frame and an above/below band |
+| `--ui-carousel-controls-bg` | `var(--ui-media-bg)` | band background |
+| `--ui-carousel-overlay-gap` | `0.75rem` | inset of the **controls** from the frame edges |
 | `--ui-media-focus-width` | `2px` | scroller keyboard-focus dashed ring width |
 | `--ui-media-focus-offset` | `3px` | scroller focus ring offset |
 | `--ui-media-focus-color` | `var(--ring-color)` | scroller focus ring colour |
-| `--ui-media-arrow-shadow` | `0 1px 3px rgb(0 0 0 / 0.15)` | soft `box-shadow` on the circle button (`none` to drop) |
-| `--ui-media-arrow-disabled-opacity` | `0.5` (`0` with `arw(hid)`) | opacity of a dead-end arrow (no slide that way) |
-| `--ui-media-arrow-{prev,next}-dim` | the live glyph (dark in a band) | dead-end bare glyph SVG (`:disabled` can't mask, so it's painted directly) |
-| `--ui-media-arrow-prev` | `var(--ui-media-arrow-prev-light)` | previous-arrow glyph (`url(...)`) |
-| `--ui-media-arrow-next` | `var(--ui-media-arrow-next-light)` | next-arrow glyph (`url(...)`) |
-| `--ui-media-arrow-prev-light` / `-next-light` | white chevron SVG | built-in chevron glyphs for the dark default circle |
-| `--ui-media-arrow-prev-dark` / `-next-dark` | black chevron SVG | built-in chevron glyphs for a light circle — switch via `--ui-media-arrow-prev/-next: var(--ui-media-arrow-*-dark)` |
-| `--ui-media-arrow-prev-arrow-light` / `-next-arrow-light` | white full-arrow SVG | built-in full-arrow glyphs (used by `arw(arr)`) |
-| `--ui-media-arrow-prev-arrow-dark` / `-next-arrow-dark` | black full-arrow SVG | full-arrow glyphs for a light circle |
-| `--ui-media-arrow-top` | `calc(anchor(center) − size/2)` | vertical-placement hook (set by `arw(tc)`/`arw(bc)`/the band tokens) |
-| `--ui-media-arrow-gap` | `0.5rem` | spacing between the two arrows in an `arw(set)` pair |
-| `--ui-media-band` | `2.75rem` | `nav(blw)`/`nav(abv)` band height |
-| `--ui-media-controls-bg` | `var(--ui-media-bg)` | `nav(blw)`/`nav(abv)` band background |
 
-The arrow is a **circular button**: a themeable circle (`--ui-media-arrow-bg`) + a chevron image. The chevron is **dark by default** (for the frosted light circle); for a dark circle, use `arw(lgt)` (or point `--ui-media-arrow-prev/-next` at the built-in `*-light` glyphs) — no SVG pasting. Square off the circle with `--ui-media-arrow-radius`.
+The arrow is a **circular button**: a themeable circle (`--ui-carousel-arrow-bg`) + one glyph image. The glyph is **dark by default** (for the frosted light circle); `arw(lgt)` and `arw(drk)` swap the whole ink bundle, and `arw(arr)` swaps the chevron family for the full-arrow family — no SVG pasting. Square off the circle with `--ui-carousel-arrow-radius`.
+
+> The old `--ui-media-marker-*` / `--ui-media-pill-*` / `--ui-media-arrow-{prev,next}*` / `--ui-media-band` / `--ui-media-controls-bg` names documented before this round **never existed in shipped code** — they are not aliases, and setting them does nothing. Use the `--ui-carousel-*` names above.
 
 ### Scrim
 
@@ -573,15 +735,19 @@ No extra markup. The grid columns follow the inline axis, so all overlay positio
 
 ## Responsive
 
-`<ui-card>` / `<ui-reveal>` support `md:` / `lg:` breakpoint prefixes (container queries at md = `25rem`, lg = `44rem`, evaluated against the queryable descendant `cq-box` / `summary`).
+`<ui-card>` / `<ui-reveal>` support `md:` / `lg:` breakpoint prefixes — **named** container queries, `@container bs-card (inline-size >= 25rem)` and `>= 44rem`, evaluated against the queryable descendant (`cq-box` in a card, `summary` in a reveal) or against the primitive itself.
 
-> **This round, breakpoint prefixes apply to layout + spacing only** — `variant=` arrangement (`col`/`row`/`spl()`/`vis()`) and `content=` spacing (`gap()`/`pad()`). **`media=` tokens are *not* breakpoint-prefixed yet** — `asr()`, `obp()`, `hov()`, `scm()`, etc. do not transform at a breakpoint. Making every media token responsive is a rule-per-token × breakpoint cost that is deferred. A media frame that must change ratio/position at a breakpoint needs a static treatment (or your own `@container` rule writing `--ui-media-*`) for now.
+**`asr()` is the one prefixable `media=` token.** `md:asr()` / `lg:asr()` ship all nine ratios per tier — the aspect a card wants genuinely depends on how wide it renders (portrait in a 1-up carousel, landscape once it widens). Every other `media=` token (`obp()`, `hov()`, `scm()`, `obf()`, `flp()`, `rds()`…) is unprefixed; the base `asr()` rule is whole-token (`~=`) matched so the prefixed forms never leak into it.
 
-The parse layer is purely additive, so adding responsive media tokens later is a non-breaking generation step.
+Placement and the standalone opt-in are covered under [`asr()`](#asr--the-8-numeric-aspect-ratios) above: two arms (host + self), and a standalone `<ui-media>` joins the tiers by sitting in a `bs-card`-named container.
+
+On the `content=` side the prefixes cover rather more — size (`scl()`, `hl()`), `gap()`, and the whole seven-token padding system (`pad() pb() pi() pbs() pbe() pis() pie()`). See [content.md](./content.md#responsive).
+
+The parse layer is purely additive, so prefixing further media tokens later is a non-breaking generation step — `asr()` is the template (a rule per value × tier × arm).
 
 ### Responsive images — Cloudflare `srcset` (optional JS)
 
-Loading the srcset module (`import '@browser.style/card/ui-media-srcset.js'`) upgrades each `<img>` child as **progressive enhancement** (this is the transitional, SSR-replaceable module — separate from `ui-media.js`, which only does cursor hover):
+Loading the srcset module (`import '@browser.style/card/ui-media-srcset.js'`) upgrades each `<img>` child as **progressive enhancement** (this is the transitional, SSR-replaceable module — deliberately kept **outside** `index.js`, which owns the hover/carousel/video enhancements):
 
 - **Always:** sets `loading="lazy"`, `decoding="async"`, and `sizes="auto"` if absent. (`sizes="auto"` needs `loading="lazy"`; the browser then picks the candidate from the image's real rendered width — Chrome 121+/Firefox, graceful elsewhere.) The `load(eager)` media token makes every image load eagerly, with `fetchpriority="high"` on the first for a hero.
 - **On the deployed `*.browser.style` host only:** injects a [Cloudflare Image Resizing](https://developers.cloudflare.com/images/transform-images/) `srcset`, deriving each candidate's height from the element's `asr()` token:
@@ -605,29 +771,51 @@ Skipped automatically: images that already have a `srcset`, `data:`/`blob:`/abso
 ## Accessibility
 
 - **Always provide `alt`** on `<img>` (or `aria-label`/captions for `<video>`). The frame is purely presentational.
-- **`<ui-save>`** — always set `aria-label` on the wrapped `<input type="checkbox">`. State, keyboard (Space), and focus come from the native checkbox; no `aria-pressed` juggling.
-- **`<ui-play>`** — the inner `<button>` carries `aria-label`; the JS web component toggles `aria-pressed` (is-playing). The CSS-only fallback is still a real, focusable button.
+- **`<ui-save>`** — always set a descriptive `aria-label` on the inner `<button>` (the renderer writes "Save <headline> to favorites"). Saved state is `aria-pressed`; keyboard and focus come from the native button.
+- **`<ui-play>`** — the inner `<button>` carries `aria-label`; `aria-pressed` is mirrored from the target's **real** playback state, never guessed. The CSS-only fallback is still a real, focusable button.
 - **Interactive overlays are card-only.** Never place `<ui-save>` / `<ui-play>` inside a reveal `<summary>` — a click there toggles the `<details>`, and interactive content is invalid in `summary`. Markers (`<ui-chip>`, `<ui-sticker>`) are safe there.
-- **Color isn't meaning.** Sub-themes (`red`/`green`/…) are decorative; convey status with text, not hue alone.
+- **Color isn't meaning.** Hues (`red`/`green`/…) are decorative; convey status with text, not hue alone.
 - Hover effects respect `prefers-reduced-motion: reduce` (disabled); carousel smooth-scroll is gated the same way.
 
 ---
 
 ## Video layer
 
-Video-player styles live in **`media.video.css`** (imported after `media.css`, before `media.carousel.css`). It owns the preview overlay, the native `<video>` play-control behaviour, `ply()` sizing, and the `vid()` PLAYER TOOLS cluster. Wired by `index.js` (`initEmbeds` / `initVideoPlay` / `initVideoTools` / `initMediaCommands`). Carousel-context video mentions (slide-type `img|video`, the scroller's own autoplay control) stay in `media.carousel.css`.
+Video-player styles live in **`media.video.css`** (imported after `media.css`, before `media.carousel.css`). It owns the preview overlay, the native `<video>` play-control behaviour, `play(<size>)` sizing, and the `vid()` PLAYER TOOLS cluster. Wired by `index.js` (`initEmbeds` / `initVideoPlay` / `initVideoTools` / `initMediaCommands`). Carousel-context video mentions (slide-type `img|video`, the scroller's own autoplay control) stay in `media.carousel.css`.
 
 - **Preview overlay.** `data-preview` is the **provider-agnostic facade layer** — a `<video data-preview>` (animated gif-like loop, e.g. Vimeo) **or** an `<img data-preview>` (static poster, e.g. a YouTube thumbnail). It sits on top of the real, SSR'd player behind it (`z-index: 1`, below furniture at `z-index: 2`) — the `z-index` lifts it, so **source order doesn't matter**. `pointer-events: none` lets clicks fall through to a real `<video controls>`, so a native video can reveal with no JS; `:playing` then hides the preview (`ui-media:has(> video:not([data-preview]):playing)`). `:playing` is Safari/Chrome only — Firefox falls back to the JS drop in `initEmbeds`. An `<iframe>` embed has no matching `<video>`, so its preview stays until the JS click facade drops it.
 - **Play-control fade.** On a frame with a direct `<video>`, `<ui-play>` fades out while playing (`[open]`, set by `index.js` from real playback state) and reveals on hover/focus of the whole slide — the parent, not just the frame, since a layered `<ui-content>` overlay would otherwise swallow the hover.
-- **`ply()`** sizes `<ui-play>` (mirrors its `size=` scale); **`play(<pos>)`** positions it. Different tokens.
+- **`play(<size>)`** sizes `<ui-play>` (`sm md lg xl`, mirroring its `size=` scale); **`play(<pos>)`** positions it (`ts…be`). **One stem, two disjoint vocabularies** — they parse unambiguously and compose: `media="play(be) play(lg)"`. (`ply(<size>)` is a deprecated alias, removed in v5.)
 - **PLAYER TOOLS (`vid()`).** Tool vars live on the `[media]` host (like the arrow vars) so they inherit to the JS-injected buttons and an ancestor `vid(sm…xl)` can override the size. Buttons are discs with `url()` SVG glyphs; state via `aria-pressed`. PiP is hidden until `<ui-play>` reports playing (before play, a facade has no `<video>` → the button is a no-op); fullscreen targets the frame so it stays available.
 - **CC switcher.** A customizable `<select class="ui-media-cc">` (`appearance: base-select`, Chrome 135+ / Safari soon; degrades to a plain native select). The trigger is the CC disc — `selectedcontent` and `::picker-icon` hidden, glyph shown; the picker lists the languages. `index.js` (`initVideoTools` → `wireCcSelect`) attaches the one `change` → `textTrack.mode` handler (track switching is JS-only; no declarative equivalent exists). Gotchas baked into the CSS: the `<select>` wrapper is pinned to the tool size (it otherwise reserves picker-icon width and mis-sizes); the wrapper swallows the button's `:hover`, so hover state is triggered from `.ui-media-cc:hover button`; **don't** zero the button `font-size` — the base hover ring (`--button-bxsh--hover`) spread is `.16em`; option rows set `background-color: transparent` to kill the UA's stale-active grey, and a soft `border-block-end` replaces the UA's solid `#ccc` divider.
+
+## Deprecated aliases (v4 → v5)
+
+Everything below still works in v4 and is **scheduled for removal in v5**. Each is a pure CSS alias — no console warning, no runtime cost — so migration is a find-and-replace. Sorted by where it appears.
+
+| Deprecated | Canonical | Where | Why it changed |
+|---|---|---|---|
+| `ovr(tl)` `ovr(tr)` `ovr(cl)` `ovr(cr)` `ovr(bl)` `ovr(br)` | `ovr(ts)` `ovr(te)` `ovr(cs)` `ovr(ce)` `ovr(bs)` `ovr(be)` | `variant=` | The implementation was **already logical** — `ovr(tl)` rendered top-*end* in RTL. This renames the args to match reality. `ovr(tc)`/`ovr(cc)`/`ovr(bc)` are spelled the same in both and unaffected. |
+| `rds(none)` | `rds(non)` | `variant=` · `media=` · `content=` | Three-letter args everywhere; `non` matches the `non`/`rnd`/`pll`/`crc`/`sqr` corner vocabulary the furniture already uses. |
+| `scm(sheer)` | `scm(shr)` | `media=` | Same — canonical 3-letter intensity codes. |
+| `scm(solid)` | `scm(sld)` | `media=` | |
+| `chip(dark)` `sticker(dark)` `beacon(dark)` `marquee(dark)` `save(dark)` `tnt(dark)` | `…(black)` | `media=` | One hue palette (see *The canonical eight hues*). |
+| `…(light)` | `…(white)` | `media=` | |
+| `…(subtle)` | `…(gray)` | `media=` | |
+| `…(slate)` | `…(gray)` | `media=` | `slate` was a fifth neutral outside the canonical set. |
+| `scl` `scl(ts\|te\|bs\|be)` `lg:scl` | `grw` `grw(ts\|te\|bs\|be)` `lg:grw` | `variant=` on `<ui-reveal>` | Reveal's scale-morph animation collided by name with `content=`'s `scl()` type scale. Different attributes, but one spelling should mean one thing. |
+| `ply(sm\|md\|lg\|xl)` | `play(sm\|md\|lg\|xl)` | `media=` | Folds the system's only two-stem element into one. Position args (`ts…be`) and size args are disjoint, so one stem parses unambiguously. |
+| `marquee(loop)` | `marquee(rpt)` | `media=` | `loop` is also the bare carousel autoplay-with-clones flag in the same attribute; the substring match collided. |
+
+**Not deprecated, despite looking like it:** `obp()`'s physical spellings (`tl…br`). `object-position` has no logical keywords and "crop to the left edge" is a genuine direction-independent intent — see [`obp()`](#obp--object-position-9-grid).
+
+---
 
 ## Notes (media.css)
 
 - **Nested `<ui-media>`** (a layered frame used as a carousel slide) is always a plain frame, never a scroller. Raw `ui-media ui-media` (specificity 0,0,2) out-specifies the carousel's descendant rules (0,0,1) in `media.carousel.css`, so the frame wins regardless of import order — no `!important`.
 - **`clip`** applies `clip-path: inset(0 round …)` because a scroll container's `border-radius` can drop its corners mid-scroll (compositing); `clip-path` clips reliably. `round()` has no superellipse, so `-sq` squircles clip as a plain round.
-- **Scrim** has three orthogonal axes — direction (9 gradients, logical `ts…be` grid matching furniture), size (`sm md lg`, sets the shared stop positions), and intensity (`shr lgt med drk sld`, `sheer`/`solid` aliases, sets the dark-end opacity). The directional default is set by the host `ovr()` (`ui-card.css`) to match the overlay corner; `scm(<pos>)` overrides; bare `scm` paints the default. A mid colour stop holds the dark before fading so text spanning the frame stays legible, not just at the very corner.
+- **Scrim** has three orthogonal axes — direction (9 gradients, logical `ts…be` grid matching furniture, mirrored under `:dir(rtl)`), size (`sm md lg xl`, sets the shared stop positions), and intensity (`shr lgt med drk sld`, `sheer`/`solid` aliases, sets the dark-end opacity). The directional default is set by the host `ovr()` (`ui-card.css`) to match the overlay corner; `scm(<pos>)` overrides; bare `scm` paints the default. A mid colour stop holds the dark before fading so text spanning the frame stays legible, not just at the very corner.
 
 ---
 
