@@ -15,6 +15,7 @@
 	<link rel="stylesheet" href="../save/index.css">
 	<link rel="stylesheet" href="../sticker/index.css">
 	<link rel="stylesheet" href="../marquee/index.css">
+	<link rel="stylesheet" href="../gradient-text/ui-gradient-text.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<style>
 		code { font-size: 0.9em; }
@@ -178,12 +179,12 @@
 	</lay-out>
 
 	<p>Full-width, content-only (no <code>&lt;ui-media&gt;</code>): a looping <code>&lt;ui-marquee&gt;</code> kicker over a <code>content="hl(3xl)"</code> poster headline on <code>theme="black dark"</code>.</p>
-	<ui-card variant="vis(content)" theme="black dark" content="hl(3xl)">
+	<ui-card variant="vis(content)" theme="black dark" content="hl(3xl) pad(lg) lg:pad(lg) pad(bs:none)">
 		<cq-box>
 			<ui-marquee variant="loop" font="bold" aria-label="BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • BROWSER.STYLE • "></ui-marquee>
-			<ui-content>
+			<ui-content style="padding-block-start:0">
 				<small data-part="eyebrow">Feature</small>
-				<strong data-part="headline">Type that <span style="color:var(--color-accent)">scales</span> with the card</strong>
+				<strong data-part="headline">Type that <ui-gradient-text animate="slide" gradient="#ff3e41, #ff8a43, #ffeb7f, #00c9a7, #007ea7, #ff3e41" size="150%">scales</ui-gradient-text> with the card</strong>
 				<p data-part="summary">A content-only card pairing a continuous <code>&lt;ui-marquee variant="loop"&gt;</code> (text via <code>aria-label</code>) with a <code>content="hl(3xl)"</code> display headline.</p>
 			</ui-content>
 		</cq-box>
