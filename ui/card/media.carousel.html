@@ -116,7 +116,8 @@
 			<strong>Markers</strong>
 			<ol>
 				<li><a href="#markerdots">Dots &amp; pills</a></li>
-				<li><a href="#markerbar">Scrollbar</a></li>
+				<li><a href="#markerbar">Bar</a></li>
+				<li><a href="#markersbr">System bar</a></li>
 				<li><a href="#markerthumb">Thumbnails</a></li>
 				<li><a href="#markerlabel">Labels</a></li>
 			</ol>
@@ -407,7 +408,7 @@
 		</ui-card>
 	</lay-out>
 
-	<h3 id="markerbar">Scrollbar — <code>mrk(bar)</code></h3>
+	<h3 id="markerbar">Bar — <code>mrk(bar)</code></h3>
 	<p>A thin scrollbar: one hairline track, the current slide's stretch drawn thicker (the thumb). Click-to-jump, keyboard-navigable. The size scale sets the bar's width; overlay by default, or in a band with <code>mrk(blw)</code>.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav mrk(bar)" content="scl(sm)">
@@ -432,7 +433,7 @@
 	</lay-out>
 	<h4>Card row — arrows above, bar below</h4>
 	<p>The classic listing-carousel: a <code>&lt;lay-out overflow&gt;</code> row with the arrow pair top-right (<code>arw(abv) arw(set)</code>) and the bar underneath (<code>mrk(bar) mrk(blw)</code>).</p>
-	<lay-out bleed xs="pi(1)" md="columns(2)" lg="columns(3)" overflow="preview-lg" media="nav arw(abv) arw(set) mrk(bar) mrk(lg) mrk(blw)">
+	<lay-out bleed xs="pi(1)" md="columns(2)" lg="columns(3)" overflow="preview-lg" media="nav arw(abv) arw(set) mrk(bar) mrk(sm) mrk(blw)">
 		<ui-card variant="ovr(bl) rds(lg)" media="asr(3/4) scm" content="scl(sm) pad(lg)">
 			<cq-box>
 				<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
@@ -468,6 +469,27 @@
 				<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
 				<ui-content><small data-part="eyebrow">Fredagsrock</small><h3 data-part="headline">Stillness</h3><p data-part="summary">August 21, 7:00 PM</p><nav data-part="actions"><a class="ui-button" href="#">Buy ticket</a></nav></ui-content>
 			</cq-box>
+		</ui-card>
+	</lay-out>
+
+	<h3 id="markersbr">System bar — <code>mrk(sbr)</code></h3>
+	<p>Styles the <strong>real</strong> scrollbar — natively <strong>draggable</strong>. Full-width and square by default; tune per instance with <code>--ui-carousel-sbr-*</code> (inset, gap, radius, size, colours).</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(4/3) nav(arw) mrk(sbr)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">mrk(sbr)</small><h2 data-part="headline">Default — full-width, square</h2></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(arw) mrk(sbr)" content="scl(sm)" style="--ui-carousel-sbr-inset: 1rem;">
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""><img src="/assets/images/popovers.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">--ui-carousel-sbr-inset: 1rem</small><h2 data-part="headline">Inset + gap</h2></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(arw) mrk(sbr)" content="scl(sm)" style="--ui-carousel-sbr-inset: 1rem; --ui-carousel-sbr-radius: var(--radius-pill);">
+			<cq-box><ui-media><img src="/assets/images/river.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">--ui-carousel-sbr-radius: var(--radius-pill)</small><h2 data-part="headline">Inset + gap + rounded</h2></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(arw) mrk(sbr)" content="scl(sm)" style="--ui-carousel-sbr-inset: 1rem; --ui-carousel-sbr-radius: var(--radius-pill); --ui-carousel-sbr-thumb: var(--color-accent); --ui-carousel-sbr-track: color-mix(in oklab, var(--color-accent) 25%, transparent);">
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/finance.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">--ui-carousel-sbr-track / -thumb</small><h2 data-part="headline">Custom colours</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
 
@@ -981,7 +1003,7 @@
 	     ════════════════════════════════════════════════════════════ -->
 	<!-- <h2>App-style highlights — <code>&lt;lay-out-group&gt;</code> + <code>theme</code> + gradient headline</h2>
 	<p>A themed section band (<code>&lt;lay-out-group bleed theme="gray"&gt;</code>) with a header above a start-snapped preview carousel. The headline is a <code>&lt;ui-gradient-text&gt;</code>; the carousel shows arrows only, clustered as a set in a below-band at the inline-end (<code>media="nav(arw) arw(set) arw(blw)"</code>) — the band renders them as light-ink chevrons. The cards are <strong>responsive by aspect</strong>: <code>media="asr(3/4) md:asr(3/2)"</code> — portrait one-at-a-time on narrow screens (the layout's <code>xs</code> default is <code>columns(1)</code>), switching to landscape once each card renders ≥ 25rem wide. No custom CSS beyond the gradient-text stylesheet.</p> -->
-	<lay-out-group bleed theme="gray" xs="pbs(3) pbe(3)" content="hl(lg)">
+	<lay-out-group bleed theme="muted gray" xs="pbs(3) pbe(3)" content="hl(lg)">
 		<ui-content>
 			<h2 data-part="headline"><ui-gradient-text gradient="#0b2b47, #3b82c4, #0b2b47" size="160%">Explore the highlights.</ui-gradient-text></h2>
 		</ui-content>
@@ -1023,44 +1045,46 @@
 
 	<h3 id="layoutpeek">Peek both sides — <code>frame</code></h3>
 	<p><code>frame</code> start-snaps a <em>page</em> of cards between symmetric side peeks, advancing one at a time. Two framed carousels here, each a bordered <code>&lt;ui-card&gt;</code> with a small header above its swipeable sub-cards — left frames one card, right frames two.</p>
-	<lay-out lg="items(start)" width="sm">
-		<ui-card variant="bdr bdr(lgt)">
-			<lay-out-group style="--layout-group-gap: 0">
-				<ui-content style="padding: var(--spacing-md) var(--spacing-md) 0">
-					<small data-part="eyebrow">Watch</small>
-					<h2 data-part="headline">Reels</h2>
-				</ui-content>
-				<lay-out xs="p(1)" md="columns(1)" overflow="preview-xs frame" media="nav(arw) arw(hid)">
-					<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Nature</small><h3 data-part="headline">Downstream</h3></ui-content></cq-box></ui-card>
-					<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/hubble.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Space</small><h3 data-part="headline">Deep Field</h3></ui-content></cq-box></ui-card>
-					<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Food</small><h3 data-part="headline">Kitchen</h3></ui-content></cq-box></ui-card>
-					<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Calm</small><h3 data-part="headline">Breathe</h3></ui-content></cq-box></ui-card>
-					<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/world.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Travel</small><h3 data-part="headline">Go Far</h3></ui-content></cq-box></ui-card>
-				</lay-out>
-			</lay-out-group>
-		</ui-card>
-		<!-- -->
-	</lay-out>
-	<lay-out lg="items(start)" width="sm">
-		<ui-card variant="bdr bdr(lgt)">
-			<lay-out-group style="--layout-group-gap: 0">
-				<ui-content style="padding: var(--spacing-md) var(--spacing-md) 0">
-					<small data-part="eyebrow">Play</small>
-					<h2 data-part="headline">Games</h2>
-				</ui-content>
-				<lay-out xs="p(1)" md="columns(2)" overflow="preview-xs frame" media="nav(arw) arw(hid)">
-					<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/game_01.png" alt=""></ui-media><ui-content><small data-part="eyebrow">RPG</small><h3 data-part="headline">Starfall</h3></ui-content></cq-box></ui-card>
-					<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/game_02.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Western</small><h3 data-part="headline">Frontier</h3></ui-content></cq-box></ui-card>
-					<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/quantum.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Sci-Fi</small><h3 data-part="headline">Entangled</h3></ui-content></cq-box></ui-card>
-					<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/websummit.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Tech</small><h3 data-part="headline">Summit</h3></ui-content></cq-box></ui-card>
-				<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/finance.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Money</small><h3 data-part="headline">Grow It</h3></ui-content></cq-box></ui-card>
-					<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Nature</small><h3 data-part="headline">Current</h3></ui-content></cq-box></ui-card>
-				</lay-out>
-			</lay-out-group>
-		</ui-card> 
+
+	<lay-out bleed theme="muted gray" xs="pbs(3) pbe(3)">
+		<lay-out lg="items(start)" width="sm">
+			<ui-card variant="bdr bdr(lgt)">
+				<lay-out-group style="--layout-group-gap: 0">
+					<ui-content style="padding: var(--spacing-md) var(--spacing-md) 0">
+						<small data-part="eyebrow">Watch</small>
+						<h2 data-part="headline">Reels</h2>
+					</ui-content>
+					<lay-out xs="p(1)" md="columns(1)" overflow="preview-xs frame" media="nav(arw) arw(hid)">
+						<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Nature</small><h3 data-part="headline">Downstream</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/hubble.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Space</small><h3 data-part="headline">Deep Field</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Food</small><h3 data-part="headline">Kitchen</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Calm</small><h3 data-part="headline">Breathe</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bl) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/world.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Travel</small><h3 data-part="headline">Go Far</h3></ui-content></cq-box></ui-card>
+					</lay-out>
+				</lay-out-group>
+			</ui-card>
+		</lay-out>
+		&nbsp;<br>
+		<lay-out lg="items(start)" width="sm">
+			<ui-card variant="bdr bdr(lgt)">
+				<lay-out-group style="--layout-group-gap: 0">
+					<ui-content style="padding: var(--spacing-md) var(--spacing-md) 0">
+						<small data-part="eyebrow">Play</small>
+						<h2 data-part="headline">Games</h2>
+					</ui-content>
+					<lay-out xs="p(1)" md="columns(2)" overflow="preview-xs frame" media="nav(arw) arw(hid)">
+						<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/game_01.png" alt=""></ui-media><ui-content><small data-part="eyebrow">RPG</small><h3 data-part="headline">Starfall</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/game_02.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Western</small><h3 data-part="headline">Frontier</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/quantum.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Sci-Fi</small><h3 data-part="headline">Entangled</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/websummit.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Tech</small><h3 data-part="headline">Summit</h3></ui-content></cq-box></ui-card>
+					<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/finance.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Money</small><h3 data-part="headline">Grow It</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Nature</small><h3 data-part="headline">Current</h3></ui-content></cq-box></ui-card>
+					</lay-out>
+				</lay-out-group>
+			</ui-card> 
+		</lay-out>
 	</lay-out>
 
-	<hr>
 	<!-- ════════════════════════════════════════════════════════════
 	     JS-ENHANCED — needs carousel.js
 	     ════════════════════════════════════════════════════════════ -->
