@@ -214,9 +214,18 @@
 	   ladders, so every size token — responsive or not — re-resolves against
 	   the step active at this width. Must precede the hl() block (source order
 	   decides ties on cq-box).
+	   TWO ARMS (R-14 step 3): the host arm declares on the queryable descendant,
+	   the ui-content SELF arm covers the token sitting on the primitive itself
+	   (the renderer's canonical placement). Both carry the SAME declarations and
+	   sit in the SAME source position — this file's order is load-bearing (see the
+	   header) — and nearest-wins does the rest: a ladder written on ui-content
+	   beats the one it would inherit from cq-box.
+	   The size queries are NAMED (bs-card, declared on ui-card/ui-reveal in
+	   ui-card.css, and on lay-out-group) so a self-armed standalone primitive can
+	   never resolve its tiers against an unrelated ancestor container (F-42).
 	   ------------------------------------------------------------ */
-	@container (inline-size >= 25rem) {
-		:where([content~="md:scl(sm)"]) :is(cq-box, summary) {
+	@container bs-card (inline-size >= 25rem) {
+		:where([content~="md:scl(sm)"]) :is(cq-box, summary), :where(ui-content[content~="md:scl(sm)"]) {
 			--ui-content-fs: var(--ui-content-fs-sm);
 			--ui-content-headline: var(--ui-content-headline-sm);
 			--ui-content-tx-sm: var(--ui-content-fs-sm);
@@ -230,7 +239,7 @@
 			--ui-content-hl-2xl: var(--ui-content-headline-xl);
 			--ui-content-hl-3xl: var(--ui-content-headline-2xl);
 		}
-		:where([content~="md:scl(md)"]) :is(cq-box, summary) {
+		:where([content~="md:scl(md)"]) :is(cq-box, summary), :where(ui-content[content~="md:scl(md)"]) {
 			--ui-content-fs: var(--ui-content-fs-md);
 			--ui-content-headline: var(--ui-content-headline-md);
 			--ui-content-tx-sm: var(--ui-content-fs-sm);
@@ -244,7 +253,7 @@
 			--ui-content-hl-2xl: var(--ui-content-headline-2xl);
 			--ui-content-hl-3xl: var(--ui-content-headline-3xl);
 		}
-		:where([content~="md:scl(lg)"]) :is(cq-box, summary) {
+		:where([content~="md:scl(lg)"]) :is(cq-box, summary), :where(ui-content[content~="md:scl(lg)"]) {
 			--ui-content-fs: var(--ui-content-fs-lg);
 			--ui-content-headline: var(--ui-content-headline-lg);
 			--ui-content-tx-sm: var(--ui-content-fs-md);
@@ -258,7 +267,7 @@
 			--ui-content-hl-2xl: var(--ui-content-headline-3xl);
 			--ui-content-hl-3xl: var(--ui-content-headline-3xl);
 		}
-		:where([content~="md:scl(xl)"]) :is(cq-box, summary) {
+		:where([content~="md:scl(xl)"]) :is(cq-box, summary), :where(ui-content[content~="md:scl(xl)"]) {
 			--ui-content-fs: var(--ui-content-fs-xl);
 			--ui-content-headline: var(--ui-content-headline-xl);
 			--ui-content-tx-sm: var(--ui-content-fs-lg);
@@ -273,8 +282,8 @@
 			--ui-content-hl-3xl: var(--ui-content-headline-3xl);
 		}
 	}
-	@container (inline-size >= 44rem) {
-		:where([content~="lg:scl(sm)"]) :is(cq-box, summary) {
+	@container bs-card (inline-size >= 44rem) {
+		:where([content~="lg:scl(sm)"]) :is(cq-box, summary), :where(ui-content[content~="lg:scl(sm)"]) {
 			--ui-content-fs: var(--ui-content-fs-sm);
 			--ui-content-headline: var(--ui-content-headline-sm);
 			--ui-content-tx-sm: var(--ui-content-fs-sm);
@@ -288,7 +297,7 @@
 			--ui-content-hl-2xl: var(--ui-content-headline-xl);
 			--ui-content-hl-3xl: var(--ui-content-headline-2xl);
 		}
-		:where([content~="lg:scl(md)"]) :is(cq-box, summary) {
+		:where([content~="lg:scl(md)"]) :is(cq-box, summary), :where(ui-content[content~="lg:scl(md)"]) {
 			--ui-content-fs: var(--ui-content-fs-md);
 			--ui-content-headline: var(--ui-content-headline-md);
 			--ui-content-tx-sm: var(--ui-content-fs-sm);
@@ -302,7 +311,7 @@
 			--ui-content-hl-2xl: var(--ui-content-headline-2xl);
 			--ui-content-hl-3xl: var(--ui-content-headline-3xl);
 		}
-		:where([content~="lg:scl(lg)"]) :is(cq-box, summary) {
+		:where([content~="lg:scl(lg)"]) :is(cq-box, summary), :where(ui-content[content~="lg:scl(lg)"]) {
 			--ui-content-fs: var(--ui-content-fs-lg);
 			--ui-content-headline: var(--ui-content-headline-lg);
 			--ui-content-tx-sm: var(--ui-content-fs-md);
@@ -316,7 +325,7 @@
 			--ui-content-hl-2xl: var(--ui-content-headline-3xl);
 			--ui-content-hl-3xl: var(--ui-content-headline-3xl);
 		}
-		:where([content~="lg:scl(xl)"]) :is(cq-box, summary) {
+		:where([content~="lg:scl(xl)"]) :is(cq-box, summary), :where(ui-content[content~="lg:scl(xl)"]) {
 			--ui-content-fs: var(--ui-content-fs-xl);
 			--ui-content-headline: var(--ui-content-headline-xl);
 			--ui-content-tx-sm: var(--ui-content-fs-lg);
@@ -494,25 +503,26 @@
 
 	/* ------------------------------------------------------------
 	   md:/lg: hl(<size>) — responsive headline step, after base hl() so a
-	   prefixed form wins on cq-box/summary at its width. Reads the same ladder:
+	   prefixed form wins on cq-box/summary (or on ui-content, via the self arm)
+	   at its width. Reads the same ladder:
 	   substitution uses the final cascaded ladder value on the same element, so
 	   these compose with any scl() form regardless of which is prefixed.
 	   ------------------------------------------------------------ */
-	@container (inline-size >= 25rem) {
-		:where([content~="md:hl(sm)"])  :is(cq-box, summary) { --ui-content-headline: var(--ui-content-hl-sm, var(--ui-content-headline-sm)); }
-		:where([content~="md:hl(md)"])  :is(cq-box, summary) { --ui-content-headline: var(--ui-content-hl-md, var(--ui-content-headline-md)); }
-		:where([content~="md:hl(lg)"])  :is(cq-box, summary) { --ui-content-headline: var(--ui-content-hl-lg, var(--ui-content-headline-lg)); }
-		:where([content~="md:hl(xl)"])  :is(cq-box, summary) { --ui-content-headline: var(--ui-content-hl-xl, var(--ui-content-headline-xl)); }
-		:where([content~="md:hl(2xl)"]) :is(cq-box, summary) { --ui-content-headline: var(--ui-content-hl-2xl, var(--ui-content-headline-2xl)); }
-		:where([content~="md:hl(3xl)"]) :is(cq-box, summary) { --ui-content-headline: var(--ui-content-hl-3xl, var(--ui-content-headline-3xl)); }
+	@container bs-card (inline-size >= 25rem) {
+		:where([content~="md:hl(sm)"])  :is(cq-box, summary), :where(ui-content[content~="md:hl(sm)"]) { --ui-content-headline: var(--ui-content-hl-sm, var(--ui-content-headline-sm)); }
+		:where([content~="md:hl(md)"])  :is(cq-box, summary), :where(ui-content[content~="md:hl(md)"]) { --ui-content-headline: var(--ui-content-hl-md, var(--ui-content-headline-md)); }
+		:where([content~="md:hl(lg)"])  :is(cq-box, summary), :where(ui-content[content~="md:hl(lg)"]) { --ui-content-headline: var(--ui-content-hl-lg, var(--ui-content-headline-lg)); }
+		:where([content~="md:hl(xl)"])  :is(cq-box, summary), :where(ui-content[content~="md:hl(xl)"]) { --ui-content-headline: var(--ui-content-hl-xl, var(--ui-content-headline-xl)); }
+		:where([content~="md:hl(2xl)"]) :is(cq-box, summary), :where(ui-content[content~="md:hl(2xl)"]) { --ui-content-headline: var(--ui-content-hl-2xl, var(--ui-content-headline-2xl)); }
+		:where([content~="md:hl(3xl)"]) :is(cq-box, summary), :where(ui-content[content~="md:hl(3xl)"]) { --ui-content-headline: var(--ui-content-hl-3xl, var(--ui-content-headline-3xl)); }
 	}
-	@container (inline-size >= 44rem) {
-		:where([content~="lg:hl(sm)"])  :is(cq-box, summary) { --ui-content-headline: var(--ui-content-hl-sm, var(--ui-content-headline-sm)); }
-		:where([content~="lg:hl(md)"])  :is(cq-box, summary) { --ui-content-headline: var(--ui-content-hl-md, var(--ui-content-headline-md)); }
-		:where([content~="lg:hl(lg)"])  :is(cq-box, summary) { --ui-content-headline: var(--ui-content-hl-lg, var(--ui-content-headline-lg)); }
-		:where([content~="lg:hl(xl)"])  :is(cq-box, summary) { --ui-content-headline: var(--ui-content-hl-xl, var(--ui-content-headline-xl)); }
-		:where([content~="lg:hl(2xl)"]) :is(cq-box, summary) { --ui-content-headline: var(--ui-content-hl-2xl, var(--ui-content-headline-2xl)); }
-		:where([content~="lg:hl(3xl)"]) :is(cq-box, summary) { --ui-content-headline: var(--ui-content-hl-3xl, var(--ui-content-headline-3xl)); }
+	@container bs-card (inline-size >= 44rem) {
+		:where([content~="lg:hl(sm)"])  :is(cq-box, summary), :where(ui-content[content~="lg:hl(sm)"]) { --ui-content-headline: var(--ui-content-hl-sm, var(--ui-content-headline-sm)); }
+		:where([content~="lg:hl(md)"])  :is(cq-box, summary), :where(ui-content[content~="lg:hl(md)"]) { --ui-content-headline: var(--ui-content-hl-md, var(--ui-content-headline-md)); }
+		:where([content~="lg:hl(lg)"])  :is(cq-box, summary), :where(ui-content[content~="lg:hl(lg)"]) { --ui-content-headline: var(--ui-content-hl-lg, var(--ui-content-headline-lg)); }
+		:where([content~="lg:hl(xl)"])  :is(cq-box, summary), :where(ui-content[content~="lg:hl(xl)"]) { --ui-content-headline: var(--ui-content-hl-xl, var(--ui-content-headline-xl)); }
+		:where([content~="lg:hl(2xl)"]) :is(cq-box, summary), :where(ui-content[content~="lg:hl(2xl)"]) { --ui-content-headline: var(--ui-content-hl-2xl, var(--ui-content-headline-2xl)); }
+		:where([content~="lg:hl(3xl)"]) :is(cq-box, summary), :where(ui-content[content~="lg:hl(3xl)"]) { --ui-content-headline: var(--ui-content-hl-3xl, var(--ui-content-headline-3xl)); }
 	}
 
 	/* fnt() — container font family (the whole text column). head/serif/mono/form/body

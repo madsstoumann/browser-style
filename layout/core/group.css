@@ -7,6 +7,17 @@
 		background: var(--layout-group-bg, var(--layout-bg, var(--_theme-bg, #0000)));
 		box-sizing: border-box;
 		color: var(--layout-group-c, var(--layout-c, var(--_theme-c, inherit)));
+		/* Query container for the header's content= tokens (R-16). The group joins the
+		   CARD query namespace (bs-card — same name ui-card/ui-reveal declare), so the
+		   md:/lg: tiers written in ui/card resolve here without a second vocabulary.
+		   Note the semantics: a group is viewport-wide, so the card-scale thresholds
+		   (md 25rem / lg 44rem) act as a mobile/desktop switch for headers rather than
+		   a per-card tier. Safe for layout: the group is a block-level grid whose
+		   inline size comes from the page, so inline-size containment has nothing to
+		   feed back into. <lay-out> deliberately stays a non-container (cards keep
+		   their own query root) — this only adds one above it. */
+		container-name: bs-card;
+		container-type: inline-size;
 		display: grid;
 		grid-template-columns: 1fr;
 		row-gap: var(--layout-group-gap, calc(2 * var(--layout-space-unit)));
@@ -33,8 +44,20 @@
 		padding-inline: var(--_group-pi);
 	}
 
-	/* ! WORK-IN-PROGRESS: USED FOR HEADER */
-	:where(lay-out-group) > ui-content {
+	/* ! WORK-IN-PROGRESS: USED FOR HEADER
+	   Two authoring shapes, both supported: content= on the <ui-content> itself
+	   (the documented default — the responsive tiers reach it through their
+	   ui-content self arms), or content= on the <lay-out-group> with the header
+	   wrapped in a <cq-box> (the attribute-on-group form: the tiers' host arm
+	   targets `:is(cq-box, summary)`, so the wrapper is what makes them match).
+	   <cq-box> is display: contents, so the grid below is unaffected either way —
+	   hence the `> cq-box > ui-content` alternative on each header rule. The
+	   alternative goes INSIDE the :where() (rather than a second selector in the
+	   list) so both paths stay at (0,0,1): this rule nests, and `&` takes the
+	   specificity of the MOST specific selector in its parent list — a bare
+	   `> cq-box > ui-content` arm would silently promote the nested rules below
+	   past the <30rem overrides. */
+	:where(lay-out-group, lay-out-group > cq-box) > ui-content {
 		align-items: end;
 		column-gap: var(--layout-space-unit, 1rem);
 		display: grid;
@@ -57,17 +80,18 @@
 	}
 
 	@media (width < 30rem) {
-		:where(lay-out-group) > ui-content {
+		:where(lay-out-group, lay-out-group > cq-box) > ui-content {
 			grid-template-columns: 1fr;
 		}
-		:where(lay-out-group) > ui-content [data-part="link"] {
+		:where(lay-out-group, lay-out-group > cq-box) > ui-content [data-part="link"] {
 			grid-column: 1;
 			grid-row: auto;
 			justify-self: start;
 		}
 	}
 
-	:where(lay-out-group)[bleed] > ui-content[data-bleed] {
+	:where(lay-out-group)[bleed] > ui-content[data-bleed],
+	:where(lay-out-group)[bleed] > cq-box > ui-content[data-bleed] {
 		margin-inline: calc(-1 * var(--_group-pi));
 		padding-inline: var(--layout-mi, 1rem);
 	}

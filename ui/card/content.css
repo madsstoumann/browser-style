@@ -28,6 +28,61 @@
 	:where([content~="pad(xl)"])   { --ui-content-p: var(--spacing-xl); }
 	:where([content~="pad(2xl)"])  { --ui-content-p: var(--spacing-2xl); }
 
+	/* AXIS + SIDE padding — same value set as pad(), one slot each: pb()/pi() write
+	   the block/inline axis, pbs()/pbe()/pis()/pie() a single side. Precedence
+	   (side > axis > all) is resolved in the var() chain on the longhands below, not
+	   by the cascade, so the three stems compose in any order and at any breakpoint.
+	   Stems match /layout's spacing tokens (p/pi/pb/pbs/pbe/…) — same names, named
+	   --spacing-* steps instead of layout's numeric unit multiples. ~= (whole token)
+	   so base doesn't match the md:/lg: forms in ui-card.css. */
+	:where([content~="pb(none)"]) { --ui-content-pb: 0; }
+	:where([content~="pb(xs)"])   { --ui-content-pb: var(--spacing-xs); }
+	:where([content~="pb(sm)"])   { --ui-content-pb: var(--spacing-sm); }
+	:where([content~="pb(md)"])   { --ui-content-pb: var(--spacing-md); }
+	:where([content~="pb(lg)"])   { --ui-content-pb: var(--spacing-lg); }
+	:where([content~="pb(xl)"])   { --ui-content-pb: var(--spacing-xl); }
+	:where([content~="pb(2xl)"])  { --ui-content-pb: var(--spacing-2xl); }
+
+	:where([content~="pi(none)"]) { --ui-content-pi: 0; }
+	:where([content~="pi(xs)"])   { --ui-content-pi: var(--spacing-xs); }
+	:where([content~="pi(sm)"])   { --ui-content-pi: var(--spacing-sm); }
+	:where([content~="pi(md)"])   { --ui-content-pi: var(--spacing-md); }
+	:where([content~="pi(lg)"])   { --ui-content-pi: var(--spacing-lg); }
+	:where([content~="pi(xl)"])   { --ui-content-pi: var(--spacing-xl); }
+	:where([content~="pi(2xl)"])  { --ui-content-pi: var(--spacing-2xl); }
+
+	:where([content~="pbs(none)"]) { --ui-content-pbs: 0; }
+	:where([content~="pbs(xs)"])   { --ui-content-pbs: var(--spacing-xs); }
+	:where([content~="pbs(sm)"])   { --ui-content-pbs: var(--spacing-sm); }
+	:where([content~="pbs(md)"])   { --ui-content-pbs: var(--spacing-md); }
+	:where([content~="pbs(lg)"])   { --ui-content-pbs: var(--spacing-lg); }
+	:where([content~="pbs(xl)"])   { --ui-content-pbs: var(--spacing-xl); }
+	:where([content~="pbs(2xl)"])  { --ui-content-pbs: var(--spacing-2xl); }
+
+	:where([content~="pbe(none)"]) { --ui-content-pbe: 0; }
+	:where([content~="pbe(xs)"])   { --ui-content-pbe: var(--spacing-xs); }
+	:where([content~="pbe(sm)"])   { --ui-content-pbe: var(--spacing-sm); }
+	:where([content~="pbe(md)"])   { --ui-content-pbe: var(--spacing-md); }
+	:where([content~="pbe(lg)"])   { --ui-content-pbe: var(--spacing-lg); }
+	:where([content~="pbe(xl)"])   { --ui-content-pbe: var(--spacing-xl); }
+	:where([content~="pbe(2xl)"])  { --ui-content-pbe: var(--spacing-2xl); }
+
+	:where([content~="pis(none)"]) { --ui-content-pis: 0; }
+	:where([content~="pis(xs)"])   { --ui-content-pis: var(--spacing-xs); }
+	:where([content~="pis(sm)"])   { --ui-content-pis: var(--spacing-sm); }
+	:where([content~="pis(md)"])   { --ui-content-pis: var(--spacing-md); }
+	:where([content~="pis(lg)"])   { --ui-content-pis: var(--spacing-lg); }
+	:where([content~="pis(xl)"])   { --ui-content-pis: var(--spacing-xl); }
+	:where([content~="pis(2xl)"])  { --ui-content-pis: var(--spacing-2xl); }
+
+	:where([content~="pie(none)"]) { --ui-content-pie: 0; }
+	:where([content~="pie(xs)"])   { --ui-content-pie: var(--spacing-xs); }
+	:where([content~="pie(sm)"])   { --ui-content-pie: var(--spacing-sm); }
+	:where([content~="pie(md)"])   { --ui-content-pie: var(--spacing-md); }
+	:where([content~="pie(lg)"])   { --ui-content-pie: var(--spacing-lg); }
+	:where([content~="pie(xl)"])   { --ui-content-pie: var(--spacing-xl); }
+	:where([content~="pie(2xl)"])  { --ui-content-pie: var(--spacing-2xl); }
+
 	/* gap() — row gap. ~= so base doesn't match md:/lg: forms */
 	:where([content~="gap(none)"]) { --ui-content-gap: 0; }
 	:where([content~="gap(xs)"])   { --ui-content-gap: var(--spacing-xs); }
@@ -82,7 +137,19 @@
 		font-size: var(--ui-content-fs, var(--ui-content-fs-md));
 		gap: var(--ui-content-gap, 1em);
 		justify-content: var(--ui-content-ov-justify, normal);
-		padding: var(--ui-content-p, var(--spacing-md));
+		/* PADDING — four longhands, each resolving side → axis → all-sides. The
+		   precedence lives in the var() chain, NOT the cascade: whichever slot is
+		   filled nearest the front of the chain wins, whatever order the tokens were
+		   written in and whichever element declared them. A breakpoint therefore
+		   changes the VALUE in a slot, never the slot order — content="pbs(sm)
+		   lg:pad(xl)" keeps block-start at sm past 44rem, because the pbs slot is
+		   still filled. (Deliberately unlike CSS shorthand ordering.) --ui-content-p
+		   stays the all-sides slot, so every existing pad() token and the
+		   style="--ui-content-p" escape hatch keep working unchanged. */
+		padding-block-start:  var(--ui-content-pbs, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+		padding-block-end:    var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+		padding-inline-start: var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
+		padding-inline-end:   var(--ui-content-pie, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
 		text-align: var(--ui-content-ov-text, var(--ui-content-align, start));
 		z-index: var(--ui-content-ov-z, auto);
 

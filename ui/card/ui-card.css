@@ -32,10 +32,16 @@
 		border-radius: var(--ui-card-radius);
 		box-shadow: var(--ui-card-shadow);
 		color: var(--color-text);
+		container-name: bs-card; /* the md:/lg: tier namespace — see the RESPONSIVE block */
 		container-type: inline-size;
 		display: grid;
 		overflow: hidden;
 	}
+	/* <ui-reveal> declares its own container-type (ui/reveal/ui-reveal.css) but reuses
+	   this file's md:/lg: tiers, so it has to join the same query namespace. Declared
+	   here — not there — so the name and the @container rules that consume it stay in
+	   one file; move it next to reveal's container-type once that file is touched. */
+	:where(ui-reveal) { container-name: bs-card; }
 
 	/* layout grid layer (queryable descendant for container queries) */
 	:where(ui-card) > cq-box {
@@ -187,11 +193,24 @@
 	   depends on how wide it renders: portrait in a 1-up carousel, landscape once
 	   it widens). Base asr() (media.css) is whole-token matched so it ignores these
 	   prefixed forms.
-	   Targets the queryable descendant (cq-box for card, summary for reveal). Setting
-	   --ui-media-ar on cq-box (nearer than the host) overrides the base per container. */
+	   TWO ARMS per token (R-14 step 3 / R-18). The HOST arm targets the queryable
+	   descendant (cq-box for card, summary for reveal) — setting the --ui-content-
+	   and --ui-media- props there (nearer than the host) overrides the base per
+	   container.
+	   The SELF arm targets the primitive itself, so a token placed directly on
+	   <ui-content>/<ui-media> — the renderer's canonical placement — works too;
+	   nearest-wins keeps precedence right (a declaration on the primitive beats the
+	   one it would otherwise inherit from cq-box). variant= gets NO self arm: it
+	   arranges the two children, so it belongs on the host by nature. */
 
-	/* md (>= 25rem) */
-	@container (inline-size >= 25rem) {
+	/* md (>= 25rem)
+	   NAMED container (bs-card): an unnamed size query resolves against the subject's
+	   nearest size container, so a self-armed primitive standing outside a card could
+	   otherwise match an unrelated ancestor container and switch tiers off the wrong
+	   box's width (F-42). With the name, only ui-card/ui-reveal/lay-out-group match —
+	   and a standalone primitive opts into the tiers deliberately by wrapping it in a
+	   bs-card-named container: <div style="container: bs-card / inline-size">. */
+	@container bs-card (inline-size >= 25rem) {
 		:where([variant~="md:col"]) :is(cq-box, summary),
 		:where([variant~="md:col-r"]) :is(cq-box, summary)   { --ui-card-cols: 1fr; }
 		:where([variant~="md:row"]) :is(cq-box, summary),
@@ -211,36 +230,89 @@
 		:where([variant~="md:spl(1/3)"]) :is(cq-box, summary) { --ui-card-split: 1fr 3fr; }
 		:where([variant~="md:spl(3/1)"]) :is(cq-box, summary) { --ui-card-split: 3fr 1fr; }
 
-		:where([content~="md:gap(none)"]) :is(cq-box, summary) { --ui-content-gap: 0; }
-		:where([content~="md:gap(xs)"])   :is(cq-box, summary) { --ui-content-gap: var(--spacing-xs); }
-		:where([content~="md:gap(sm)"])   :is(cq-box, summary) { --ui-content-gap: var(--spacing-sm); }
-		:where([content~="md:gap(md)"])   :is(cq-box, summary) { --ui-content-gap: var(--spacing-md); }
-		:where([content~="md:gap(lg)"])   :is(cq-box, summary) { --ui-content-gap: var(--spacing-lg); }
+		:where([content~="md:gap(none)"]) :is(cq-box, summary), :where(ui-content[content~="md:gap(none)"]) { --ui-content-gap: 0; }
+		:where([content~="md:gap(xs)"])   :is(cq-box, summary), :where(ui-content[content~="md:gap(xs)"])   { --ui-content-gap: var(--spacing-xs); }
+		:where([content~="md:gap(sm)"])   :is(cq-box, summary), :where(ui-content[content~="md:gap(sm)"])   { --ui-content-gap: var(--spacing-sm); }
+		:where([content~="md:gap(md)"])   :is(cq-box, summary), :where(ui-content[content~="md:gap(md)"])   { --ui-content-gap: var(--spacing-md); }
+		:where([content~="md:gap(lg)"])   :is(cq-box, summary), :where(ui-content[content~="md:gap(lg)"])   { --ui-content-gap: var(--spacing-lg); }
 
-		:where([content~="md:pad(none)"]) :is(cq-box, summary) { --ui-content-p: 0; }
-		:where([content~="md:pad(xs)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-xs); }
-		:where([content~="md:pad(sm)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-sm); }
-		:where([content~="md:pad(md)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-md); }
-		:where([content~="md:pad(lg)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-lg); }
-		:where([content~="md:pad(xl)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-xl); }
-		:where([content~="md:pad(2xl)"])  :is(cq-box, summary) { --ui-content-p: var(--spacing-2xl); }
+		/* padding: side > axis > all — precedence lives in the var() chain, not the
+		   cascade (see analysis report R-17). Seven independent slots: pad() all
+		   sides, pb()/pi() one axis, pbs()/pbe()/pis()/pie() one side. A breakpoint
+		   changes the VALUE in a slot, never the slot order — pbs(sm) lg:pad(xl)
+		   keeps block-start at sm. The chain itself lives in content.css. */
+		:where([content~="md:pad(none)"]) :is(cq-box, summary), :where(ui-content[content~="md:pad(none)"]) { --ui-content-p: 0; }
+		:where([content~="md:pad(xs)"])   :is(cq-box, summary), :where(ui-content[content~="md:pad(xs)"])   { --ui-content-p: var(--spacing-xs); }
+		:where([content~="md:pad(sm)"])   :is(cq-box, summary), :where(ui-content[content~="md:pad(sm)"])   { --ui-content-p: var(--spacing-sm); }
+		:where([content~="md:pad(md)"])   :is(cq-box, summary), :where(ui-content[content~="md:pad(md)"])   { --ui-content-p: var(--spacing-md); }
+		:where([content~="md:pad(lg)"])   :is(cq-box, summary), :where(ui-content[content~="md:pad(lg)"])   { --ui-content-p: var(--spacing-lg); }
+		:where([content~="md:pad(xl)"])   :is(cq-box, summary), :where(ui-content[content~="md:pad(xl)"])   { --ui-content-p: var(--spacing-xl); }
+		:where([content~="md:pad(2xl)"])  :is(cq-box, summary), :where(ui-content[content~="md:pad(2xl)"])  { --ui-content-p: var(--spacing-2xl); }
+
+		:where([content~="md:pb(none)"]) :is(cq-box, summary), :where(ui-content[content~="md:pb(none)"]) { --ui-content-pb: 0; }
+		:where([content~="md:pb(xs)"])   :is(cq-box, summary), :where(ui-content[content~="md:pb(xs)"])   { --ui-content-pb: var(--spacing-xs); }
+		:where([content~="md:pb(sm)"])   :is(cq-box, summary), :where(ui-content[content~="md:pb(sm)"])   { --ui-content-pb: var(--spacing-sm); }
+		:where([content~="md:pb(md)"])   :is(cq-box, summary), :where(ui-content[content~="md:pb(md)"])   { --ui-content-pb: var(--spacing-md); }
+		:where([content~="md:pb(lg)"])   :is(cq-box, summary), :where(ui-content[content~="md:pb(lg)"])   { --ui-content-pb: var(--spacing-lg); }
+		:where([content~="md:pb(xl)"])   :is(cq-box, summary), :where(ui-content[content~="md:pb(xl)"])   { --ui-content-pb: var(--spacing-xl); }
+		:where([content~="md:pb(2xl)"])  :is(cq-box, summary), :where(ui-content[content~="md:pb(2xl)"])  { --ui-content-pb: var(--spacing-2xl); }
+
+		:where([content~="md:pi(none)"]) :is(cq-box, summary), :where(ui-content[content~="md:pi(none)"]) { --ui-content-pi: 0; }
+		:where([content~="md:pi(xs)"])   :is(cq-box, summary), :where(ui-content[content~="md:pi(xs)"])   { --ui-content-pi: var(--spacing-xs); }
+		:where([content~="md:pi(sm)"])   :is(cq-box, summary), :where(ui-content[content~="md:pi(sm)"])   { --ui-content-pi: var(--spacing-sm); }
+		:where([content~="md:pi(md)"])   :is(cq-box, summary), :where(ui-content[content~="md:pi(md)"])   { --ui-content-pi: var(--spacing-md); }
+		:where([content~="md:pi(lg)"])   :is(cq-box, summary), :where(ui-content[content~="md:pi(lg)"])   { --ui-content-pi: var(--spacing-lg); }
+		:where([content~="md:pi(xl)"])   :is(cq-box, summary), :where(ui-content[content~="md:pi(xl)"])   { --ui-content-pi: var(--spacing-xl); }
+		:where([content~="md:pi(2xl)"])  :is(cq-box, summary), :where(ui-content[content~="md:pi(2xl)"])  { --ui-content-pi: var(--spacing-2xl); }
+
+		:where([content~="md:pbs(none)"]) :is(cq-box, summary), :where(ui-content[content~="md:pbs(none)"]) { --ui-content-pbs: 0; }
+		:where([content~="md:pbs(xs)"])   :is(cq-box, summary), :where(ui-content[content~="md:pbs(xs)"])   { --ui-content-pbs: var(--spacing-xs); }
+		:where([content~="md:pbs(sm)"])   :is(cq-box, summary), :where(ui-content[content~="md:pbs(sm)"])   { --ui-content-pbs: var(--spacing-sm); }
+		:where([content~="md:pbs(md)"])   :is(cq-box, summary), :where(ui-content[content~="md:pbs(md)"])   { --ui-content-pbs: var(--spacing-md); }
+		:where([content~="md:pbs(lg)"])   :is(cq-box, summary), :where(ui-content[content~="md:pbs(lg)"])   { --ui-content-pbs: var(--spacing-lg); }
+		:where([content~="md:pbs(xl)"])   :is(cq-box, summary), :where(ui-content[content~="md:pbs(xl)"])   { --ui-content-pbs: var(--spacing-xl); }
+		:where([content~="md:pbs(2xl)"])  :is(cq-box, summary), :where(ui-content[content~="md:pbs(2xl)"])  { --ui-content-pbs: var(--spacing-2xl); }
+
+		:where([content~="md:pbe(none)"]) :is(cq-box, summary), :where(ui-content[content~="md:pbe(none)"]) { --ui-content-pbe: 0; }
+		:where([content~="md:pbe(xs)"])   :is(cq-box, summary), :where(ui-content[content~="md:pbe(xs)"])   { --ui-content-pbe: var(--spacing-xs); }
+		:where([content~="md:pbe(sm)"])   :is(cq-box, summary), :where(ui-content[content~="md:pbe(sm)"])   { --ui-content-pbe: var(--spacing-sm); }
+		:where([content~="md:pbe(md)"])   :is(cq-box, summary), :where(ui-content[content~="md:pbe(md)"])   { --ui-content-pbe: var(--spacing-md); }
+		:where([content~="md:pbe(lg)"])   :is(cq-box, summary), :where(ui-content[content~="md:pbe(lg)"])   { --ui-content-pbe: var(--spacing-lg); }
+		:where([content~="md:pbe(xl)"])   :is(cq-box, summary), :where(ui-content[content~="md:pbe(xl)"])   { --ui-content-pbe: var(--spacing-xl); }
+		:where([content~="md:pbe(2xl)"])  :is(cq-box, summary), :where(ui-content[content~="md:pbe(2xl)"])  { --ui-content-pbe: var(--spacing-2xl); }
+
+		:where([content~="md:pis(none)"]) :is(cq-box, summary), :where(ui-content[content~="md:pis(none)"]) { --ui-content-pis: 0; }
+		:where([content~="md:pis(xs)"])   :is(cq-box, summary), :where(ui-content[content~="md:pis(xs)"])   { --ui-content-pis: var(--spacing-xs); }
+		:where([content~="md:pis(sm)"])   :is(cq-box, summary), :where(ui-content[content~="md:pis(sm)"])   { --ui-content-pis: var(--spacing-sm); }
+		:where([content~="md:pis(md)"])   :is(cq-box, summary), :where(ui-content[content~="md:pis(md)"])   { --ui-content-pis: var(--spacing-md); }
+		:where([content~="md:pis(lg)"])   :is(cq-box, summary), :where(ui-content[content~="md:pis(lg)"])   { --ui-content-pis: var(--spacing-lg); }
+		:where([content~="md:pis(xl)"])   :is(cq-box, summary), :where(ui-content[content~="md:pis(xl)"])   { --ui-content-pis: var(--spacing-xl); }
+		:where([content~="md:pis(2xl)"])  :is(cq-box, summary), :where(ui-content[content~="md:pis(2xl)"])  { --ui-content-pis: var(--spacing-2xl); }
+
+		:where([content~="md:pie(none)"]) :is(cq-box, summary), :where(ui-content[content~="md:pie(none)"]) { --ui-content-pie: 0; }
+		:where([content~="md:pie(xs)"])   :is(cq-box, summary), :where(ui-content[content~="md:pie(xs)"])   { --ui-content-pie: var(--spacing-xs); }
+		:where([content~="md:pie(sm)"])   :is(cq-box, summary), :where(ui-content[content~="md:pie(sm)"])   { --ui-content-pie: var(--spacing-sm); }
+		:where([content~="md:pie(md)"])   :is(cq-box, summary), :where(ui-content[content~="md:pie(md)"])   { --ui-content-pie: var(--spacing-md); }
+		:where([content~="md:pie(lg)"])   :is(cq-box, summary), :where(ui-content[content~="md:pie(lg)"])   { --ui-content-pie: var(--spacing-lg); }
+		:where([content~="md:pie(xl)"])   :is(cq-box, summary), :where(ui-content[content~="md:pie(xl)"])   { --ui-content-pie: var(--spacing-xl); }
+		:where([content~="md:pie(2xl)"])  :is(cq-box, summary), :where(ui-content[content~="md:pie(2xl)"])  { --ui-content-pie: var(--spacing-2xl); }
 
 		/* content= SIZE (md:scl()/md:hl()) — moved to content.typography.css */
 
 		/* md:asr() — aspect-ratio once the card is >= 25rem wide */
-		:where([media~="md:asr(1/1)"])  :is(cq-box, summary) { --ui-media-ar: 1 / 1; }
-		:where([media~="md:asr(1/2)"])  :is(cq-box, summary) { --ui-media-ar: 1 / 2; }
-		:where([media~="md:asr(6/7)"])  :is(cq-box, summary) { --ui-media-ar: 6 / 7; }
-		:where([media~="md:asr(3/4)"])  :is(cq-box, summary) { --ui-media-ar: 3 / 4; }
-		:where([media~="md:asr(4/3)"])  :is(cq-box, summary) { --ui-media-ar: 4 / 3; }
-		:where([media~="md:asr(3/2)"])  :is(cq-box, summary) { --ui-media-ar: 3 / 2; }
-		:where([media~="md:asr(2/3)"])  :is(cq-box, summary) { --ui-media-ar: 2 / 3; }
-		:where([media~="md:asr(16/9)"]) :is(cq-box, summary) { --ui-media-ar: 16 / 9; }
-		:where([media~="md:asr(21/9)"]) :is(cq-box, summary) { --ui-media-ar: 21 / 9; }
+		:where([media~="md:asr(1/1)"])  :is(cq-box, summary), :where(ui-media[media~="md:asr(1/1)"])  { --ui-media-ar: 1 / 1; }
+		:where([media~="md:asr(1/2)"])  :is(cq-box, summary), :where(ui-media[media~="md:asr(1/2)"])  { --ui-media-ar: 1 / 2; }
+		:where([media~="md:asr(6/7)"])  :is(cq-box, summary), :where(ui-media[media~="md:asr(6/7)"])  { --ui-media-ar: 6 / 7; }
+		:where([media~="md:asr(3/4)"])  :is(cq-box, summary), :where(ui-media[media~="md:asr(3/4)"])  { --ui-media-ar: 3 / 4; }
+		:where([media~="md:asr(4/3)"])  :is(cq-box, summary), :where(ui-media[media~="md:asr(4/3)"])  { --ui-media-ar: 4 / 3; }
+		:where([media~="md:asr(3/2)"])  :is(cq-box, summary), :where(ui-media[media~="md:asr(3/2)"])  { --ui-media-ar: 3 / 2; }
+		:where([media~="md:asr(2/3)"])  :is(cq-box, summary), :where(ui-media[media~="md:asr(2/3)"])  { --ui-media-ar: 2 / 3; }
+		:where([media~="md:asr(16/9)"]) :is(cq-box, summary), :where(ui-media[media~="md:asr(16/9)"]) { --ui-media-ar: 16 / 9; }
+		:where([media~="md:asr(21/9)"]) :is(cq-box, summary), :where(ui-media[media~="md:asr(21/9)"]) { --ui-media-ar: 21 / 9; }
 	}
 
-	/* lg (>= 44rem) */
-	@container (inline-size >= 44rem) {
+	/* lg (>= 44rem) — same two-arm + named-container model as md above */
+	@container bs-card (inline-size >= 44rem) {
 		:where([variant~="lg:col"]) :is(cq-box, summary),
 		:where([variant~="lg:col-r"]) :is(cq-box, summary)   { --ui-card-cols: 1fr; }
 		:where([variant~="lg:row"]) :is(cq-box, summary),
@@ -260,32 +332,81 @@
 		:where([variant~="lg:spl(1/3)"]) :is(cq-box, summary) { --ui-card-split: 1fr 3fr; }
 		:where([variant~="lg:spl(3/1)"]) :is(cq-box, summary) { --ui-card-split: 3fr 1fr; }
 
-		:where([content~="lg:gap(none)"]) :is(cq-box, summary) { --ui-content-gap: 0; }
-		:where([content~="lg:gap(xs)"])   :is(cq-box, summary) { --ui-content-gap: var(--spacing-xs); }
-		:where([content~="lg:gap(sm)"])   :is(cq-box, summary) { --ui-content-gap: var(--spacing-sm); }
-		:where([content~="lg:gap(md)"])   :is(cq-box, summary) { --ui-content-gap: var(--spacing-md); }
-		:where([content~="lg:gap(lg)"])   :is(cq-box, summary) { --ui-content-gap: var(--spacing-lg); }
+		:where([content~="lg:gap(none)"]) :is(cq-box, summary), :where(ui-content[content~="lg:gap(none)"]) { --ui-content-gap: 0; }
+		:where([content~="lg:gap(xs)"])   :is(cq-box, summary), :where(ui-content[content~="lg:gap(xs)"])   { --ui-content-gap: var(--spacing-xs); }
+		:where([content~="lg:gap(sm)"])   :is(cq-box, summary), :where(ui-content[content~="lg:gap(sm)"])   { --ui-content-gap: var(--spacing-sm); }
+		:where([content~="lg:gap(md)"])   :is(cq-box, summary), :where(ui-content[content~="lg:gap(md)"])   { --ui-content-gap: var(--spacing-md); }
+		:where([content~="lg:gap(lg)"])   :is(cq-box, summary), :where(ui-content[content~="lg:gap(lg)"])   { --ui-content-gap: var(--spacing-lg); }
 
-		:where([content~="lg:pad(none)"]) :is(cq-box, summary) { --ui-content-p: 0; }
-		:where([content~="lg:pad(xs)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-xs); }
-		:where([content~="lg:pad(sm)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-sm); }
-		:where([content~="lg:pad(md)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-md); }
-		:where([content~="lg:pad(lg)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-lg); }
-		:where([content~="lg:pad(xl)"])   :is(cq-box, summary) { --ui-content-p: var(--spacing-xl); }
-		:where([content~="lg:pad(2xl)"])  :is(cq-box, summary) { --ui-content-p: var(--spacing-2xl); }
+		/* padding: side > axis > all — see the md tier's note (R-17) */
+		:where([content~="lg:pad(none)"]) :is(cq-box, summary), :where(ui-content[content~="lg:pad(none)"]) { --ui-content-p: 0; }
+		:where([content~="lg:pad(xs)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pad(xs)"])   { --ui-content-p: var(--spacing-xs); }
+		:where([content~="lg:pad(sm)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pad(sm)"])   { --ui-content-p: var(--spacing-sm); }
+		:where([content~="lg:pad(md)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pad(md)"])   { --ui-content-p: var(--spacing-md); }
+		:where([content~="lg:pad(lg)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pad(lg)"])   { --ui-content-p: var(--spacing-lg); }
+		:where([content~="lg:pad(xl)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pad(xl)"])   { --ui-content-p: var(--spacing-xl); }
+		:where([content~="lg:pad(2xl)"])  :is(cq-box, summary), :where(ui-content[content~="lg:pad(2xl)"])  { --ui-content-p: var(--spacing-2xl); }
+
+		:where([content~="lg:pb(none)"]) :is(cq-box, summary), :where(ui-content[content~="lg:pb(none)"]) { --ui-content-pb: 0; }
+		:where([content~="lg:pb(xs)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pb(xs)"])   { --ui-content-pb: var(--spacing-xs); }
+		:where([content~="lg:pb(sm)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pb(sm)"])   { --ui-content-pb: var(--spacing-sm); }
+		:where([content~="lg:pb(md)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pb(md)"])   { --ui-content-pb: var(--spacing-md); }
+		:where([content~="lg:pb(lg)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pb(lg)"])   { --ui-content-pb: var(--spacing-lg); }
+		:where([content~="lg:pb(xl)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pb(xl)"])   { --ui-content-pb: var(--spacing-xl); }
+		:where([content~="lg:pb(2xl)"])  :is(cq-box, summary), :where(ui-content[content~="lg:pb(2xl)"])  { --ui-content-pb: var(--spacing-2xl); }
+
+		:where([content~="lg:pi(none)"]) :is(cq-box, summary), :where(ui-content[content~="lg:pi(none)"]) { --ui-content-pi: 0; }
+		:where([content~="lg:pi(xs)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pi(xs)"])   { --ui-content-pi: var(--spacing-xs); }
+		:where([content~="lg:pi(sm)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pi(sm)"])   { --ui-content-pi: var(--spacing-sm); }
+		:where([content~="lg:pi(md)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pi(md)"])   { --ui-content-pi: var(--spacing-md); }
+		:where([content~="lg:pi(lg)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pi(lg)"])   { --ui-content-pi: var(--spacing-lg); }
+		:where([content~="lg:pi(xl)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pi(xl)"])   { --ui-content-pi: var(--spacing-xl); }
+		:where([content~="lg:pi(2xl)"])  :is(cq-box, summary), :where(ui-content[content~="lg:pi(2xl)"])  { --ui-content-pi: var(--spacing-2xl); }
+
+		:where([content~="lg:pbs(none)"]) :is(cq-box, summary), :where(ui-content[content~="lg:pbs(none)"]) { --ui-content-pbs: 0; }
+		:where([content~="lg:pbs(xs)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pbs(xs)"])   { --ui-content-pbs: var(--spacing-xs); }
+		:where([content~="lg:pbs(sm)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pbs(sm)"])   { --ui-content-pbs: var(--spacing-sm); }
+		:where([content~="lg:pbs(md)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pbs(md)"])   { --ui-content-pbs: var(--spacing-md); }
+		:where([content~="lg:pbs(lg)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pbs(lg)"])   { --ui-content-pbs: var(--spacing-lg); }
+		:where([content~="lg:pbs(xl)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pbs(xl)"])   { --ui-content-pbs: var(--spacing-xl); }
+		:where([content~="lg:pbs(2xl)"])  :is(cq-box, summary), :where(ui-content[content~="lg:pbs(2xl)"])  { --ui-content-pbs: var(--spacing-2xl); }
+
+		:where([content~="lg:pbe(none)"]) :is(cq-box, summary), :where(ui-content[content~="lg:pbe(none)"]) { --ui-content-pbe: 0; }
+		:where([content~="lg:pbe(xs)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pbe(xs)"])   { --ui-content-pbe: var(--spacing-xs); }
+		:where([content~="lg:pbe(sm)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pbe(sm)"])   { --ui-content-pbe: var(--spacing-sm); }
+		:where([content~="lg:pbe(md)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pbe(md)"])   { --ui-content-pbe: var(--spacing-md); }
+		:where([content~="lg:pbe(lg)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pbe(lg)"])   { --ui-content-pbe: var(--spacing-lg); }
+		:where([content~="lg:pbe(xl)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pbe(xl)"])   { --ui-content-pbe: var(--spacing-xl); }
+		:where([content~="lg:pbe(2xl)"])  :is(cq-box, summary), :where(ui-content[content~="lg:pbe(2xl)"])  { --ui-content-pbe: var(--spacing-2xl); }
+
+		:where([content~="lg:pis(none)"]) :is(cq-box, summary), :where(ui-content[content~="lg:pis(none)"]) { --ui-content-pis: 0; }
+		:where([content~="lg:pis(xs)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pis(xs)"])   { --ui-content-pis: var(--spacing-xs); }
+		:where([content~="lg:pis(sm)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pis(sm)"])   { --ui-content-pis: var(--spacing-sm); }
+		:where([content~="lg:pis(md)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pis(md)"])   { --ui-content-pis: var(--spacing-md); }
+		:where([content~="lg:pis(lg)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pis(lg)"])   { --ui-content-pis: var(--spacing-lg); }
+		:where([content~="lg:pis(xl)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pis(xl)"])   { --ui-content-pis: var(--spacing-xl); }
+		:where([content~="lg:pis(2xl)"])  :is(cq-box, summary), :where(ui-content[content~="lg:pis(2xl)"])  { --ui-content-pis: var(--spacing-2xl); }
+
+		:where([content~="lg:pie(none)"]) :is(cq-box, summary), :where(ui-content[content~="lg:pie(none)"]) { --ui-content-pie: 0; }
+		:where([content~="lg:pie(xs)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pie(xs)"])   { --ui-content-pie: var(--spacing-xs); }
+		:where([content~="lg:pie(sm)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pie(sm)"])   { --ui-content-pie: var(--spacing-sm); }
+		:where([content~="lg:pie(md)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pie(md)"])   { --ui-content-pie: var(--spacing-md); }
+		:where([content~="lg:pie(lg)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pie(lg)"])   { --ui-content-pie: var(--spacing-lg); }
+		:where([content~="lg:pie(xl)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pie(xl)"])   { --ui-content-pie: var(--spacing-xl); }
+		:where([content~="lg:pie(2xl)"])  :is(cq-box, summary), :where(ui-content[content~="lg:pie(2xl)"])  { --ui-content-pie: var(--spacing-2xl); }
 
 		/* content= SIZE (lg:scl()/lg:hl()) — moved to content.typography.css */
 
 		/* lg:asr() — aspect-ratio once the card is >= 44rem wide */
-		:where([media~="lg:asr(1/1)"])  :is(cq-box, summary) { --ui-media-ar: 1 / 1; }
-		:where([media~="lg:asr(1/2)"])  :is(cq-box, summary) { --ui-media-ar: 1 / 2; }
-		:where([media~="lg:asr(6/7)"])  :is(cq-box, summary) { --ui-media-ar: 6 / 7; }
-		:where([media~="lg:asr(3/4)"])  :is(cq-box, summary) { --ui-media-ar: 3 / 4; }
-		:where([media~="lg:asr(4/3)"])  :is(cq-box, summary) { --ui-media-ar: 4 / 3; }
-		:where([media~="lg:asr(3/2)"])  :is(cq-box, summary) { --ui-media-ar: 3 / 2; }
-		:where([media~="lg:asr(2/3)"])  :is(cq-box, summary) { --ui-media-ar: 2 / 3; }
-		:where([media~="lg:asr(16/9)"]) :is(cq-box, summary) { --ui-media-ar: 16 / 9; }
-		:where([media~="lg:asr(21/9)"]) :is(cq-box, summary) { --ui-media-ar: 21 / 9; }
+		:where([media~="lg:asr(1/1)"])  :is(cq-box, summary), :where(ui-media[media~="lg:asr(1/1)"])  { --ui-media-ar: 1 / 1; }
+		:where([media~="lg:asr(1/2)"])  :is(cq-box, summary), :where(ui-media[media~="lg:asr(1/2)"])  { --ui-media-ar: 1 / 2; }
+		:where([media~="lg:asr(6/7)"])  :is(cq-box, summary), :where(ui-media[media~="lg:asr(6/7)"])  { --ui-media-ar: 6 / 7; }
+		:where([media~="lg:asr(3/4)"])  :is(cq-box, summary), :where(ui-media[media~="lg:asr(3/4)"])  { --ui-media-ar: 3 / 4; }
+		:where([media~="lg:asr(4/3)"])  :is(cq-box, summary), :where(ui-media[media~="lg:asr(4/3)"])  { --ui-media-ar: 4 / 3; }
+		:where([media~="lg:asr(3/2)"])  :is(cq-box, summary), :where(ui-media[media~="lg:asr(3/2)"])  { --ui-media-ar: 3 / 2; }
+		:where([media~="lg:asr(2/3)"])  :is(cq-box, summary), :where(ui-media[media~="lg:asr(2/3)"])  { --ui-media-ar: 2 / 3; }
+		:where([media~="lg:asr(16/9)"]) :is(cq-box, summary), :where(ui-media[media~="lg:asr(16/9)"]) { --ui-media-ar: 16 / 9; }
+		:where([media~="lg:asr(21/9)"]) :is(cq-box, summary), :where(ui-media[media~="lg:asr(21/9)"]) { --ui-media-ar: 21 / 9; }
 	}
 }
 
