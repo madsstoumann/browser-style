@@ -195,10 +195,15 @@ const embedVideoObject = (item) => {
    order — mergeMediaTokens strips the preset's same-axis token so the override
    always wins). */
 
+/* hue vocabulary: the 8 canonical keys the CSS implements, plus the accepted
+   aliases (dark/light/subtle/slate) which pass through unchanged — the CSS maps them. */
+const HUE = ['red', 'orange', 'green', 'blue', 'accent', 'black', 'white', 'gray'];
+const HUE_ALIAS = ['dark', 'light', 'subtle', 'slate'];
+
 const FURNITURE_AXIS = {
 	pos: new Set(['ts', 'tc', 'te', 'cs', 'cc', 'ce', 'bs', 'bc', 'be']),
-	hue: new Set(['red', 'orange', 'green', 'blue', 'accent', 'gray', 'slate', 'black', 'white', 'dark', 'light', 'subtle']),
-	size: new Set(['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl']), /* xs is beacon-only */
+	hue: new Set([...HUE, ...HUE_ALIAS]),
+	size: new Set(['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl']), /* xs is beacon-only; play() sizes here too */
 	variant: new Set(['lgt', 'out']),
 	shape: new Set(['text', 'spl', 'spr']),
 	anim: new Set(['bln', 'pls', 'brt']), /* beacon animations (beacon(non) turns solid's default blink off — axis 'disc') */
@@ -212,11 +217,15 @@ const axisOf = (value) => {
 };
 const FURNITURE_TOKEN = /^(beacon|chip|sticker|save|play)\(([^)]*)\)$/;
 
+/* ply(<size>) is the legacy stem for the play() sizes — accepted as input,
+   normalized away so <ui-play> has one stem for both its axes. */
+const normToken = (token) => token.startsWith('ply(') ? `play(${token.slice(4)}` : token;
+
 /* Merge a preset media= string with furniture style-override tokens. Overrides
    win: any preset token of the same element+axis is dropped before appending. */
 const mergeMediaTokens = (presetMedia, overrides = []) => {
-	const ov = overrides.filter(Boolean);
-	const base = String(presetMedia || '').split(/\s+/).filter(Boolean);
+	const ov = overrides.filter(Boolean).map(normToken);
+	const base = String(presetMedia || '').split(/\s+/).filter(Boolean).map(normToken);
 	if (!ov.length) return base.join(' ');
 	const conflicts = new Set();
 	for (const token of ov) {
@@ -230,32 +239,18 @@ const mergeMediaTokens = (presetMedia, overrides = []) => {
 	return [...kept, ...ov].join(' ');
 };
 
-/* Fold a preset's structured carousel fields (nav/arrow/dot — the legacy
-   grouped-attribute form) into media= tokens on the host: nav:"blw" → nav(blw),
-   arrow:"lg drk" → arw(lg) arw(drk), nav:"y" → axis(y), nav:"auto|loop|stagger"
-   → bare token, nav:"" → bare nav, nav:"non" → nothing. */
-const carouselTokens = (preset) => {
-	const out = [];
-	if (preset.nav != null) {
-		const words = String(preset.nav).split(/\s+/).filter(Boolean);
-		if (!words.length) out.push('nav');
-		for (const w of words) {
-			if (w === 'non') continue;
-			if (w === 'y') out.push('axis(y)');
-			else if (w === 'auto' || w === 'loop' || w === 'stagger') out.push(w);
-			else out.push(`nav(${w})`);
-		}
-	}
-	for (const w of String(preset.arrow || '').split(/\s+/).filter(Boolean)) out.push(`arw(${w})`);
-	for (const w of String(preset.mrk || '').split(/\s+/).filter(Boolean)) out.push(`mrk(${w})`);
-	return out;
-};
-/* The preset's effective media= string: declared media tokens + carousel folds. */
-const presetMediaStr = (preset) => [preset.media, ...carouselTokens(preset)].filter(Boolean).join(' ');
+/* media= belongs on the frame it configures (canonical placement) — inject it
+   into the built <ui-media> rather than onto the ui-card/ui-reveal host. */
+const withMedia = (html, media) => media ? html.replace('<ui-media', `<ui-media${attrs({ media })}`) : html;
 
-/* reveal preset values → compact variant-token spellings */
-const RVL_TOKEN = { expand: 'exp', flip: 'flp', slide: 'sld', scale: 'scl' };
+/* reveal preset values → compact variant-token spellings. The scale animation is
+   grw() (content= owns scl()); both spellings are accepted as preset input. */
+const RVL_TOKEN = { expand: 'exp', flip: 'flp', slide: 'sld', scale: 'grw', scl: 'grw' };
 const FRM_TOKEN = { top: 'top', bottom: 'btm', left: 'lft', right: 'rgt' };
+/* animations whose token carries a direction/origin argument */
+const RVL_DIRECTED = new Set(['flp', 'sld', 'grw']);
+/* animations that need the <ui-face> front-face wrapper (exp animates the host) */
+const RVL_FACED = new Set(['flp', 'sld', 'grw']);
 const ICON_STYLE = { dark: 'drk', semi: 'sem' };
 const ICON_CELLS = new Set(['ts', 'te', 'bs', 'be']);
 /* icon words → ico()/icc() tokens: positional words fold into ONE corner token
@@ -283,14 +278,21 @@ const styleTokens = (el, style) =>
    each item's style-override tokens onto tokens.media (positioning/hue/shape come
    from the preset — the renderer no longer generates those). save/play also
    accept a bare `true`. */
-const buildFurniture = (furniture, fields, tokens, mediaId) => {
+const buildFurniture = (furniture, fields, tokens, mediaId, videoId = null) => {
 	if (!furniture) return '';
 	let html = '';
 	const push = (el, style) => { for (const token of styleTokens(el, style)) tokens.media.push(token); };
 
 	if (furniture.play) {
+		/* invoker commands are the one <ui-play> contract (video.js handles them).
+		   With no native <video> to target it stays a labelled affordance. */
 		const play = furniture.play === true ? {} : furniture.play;
-		html += `<ui-play><button type="button" aria-label="${esc(play.label || 'Play')}" command="--toggle-play"><ui-icon type="play-pause"></ui-icon></button></ui-play>`;
+		html += `<ui-play><button${attrs({
+			type: 'button',
+			'aria-label': play.label || 'Play',
+			command: videoId ? 'play-pause' : null,
+			commandfor: videoId
+		})}><ui-icon type="play-pause"></ui-icon></button></ui-play>`;
 		push('play', play.style);
 	}
 	if (furniture.chip?.text) {
@@ -338,6 +340,9 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 	let frames = '';
 	let embed = null;
 	let extras = '';
+	/* a <ui-play> commands the frame's FIRST native <video> — id it for commandfor */
+	const playId = (fields.furniture?.play && cardId) ? `${cardId}-video` : null;
+	let videoId = playId;
 	for (const item of fields.media) {
 		const src = item.asset?.$asset ? item.asset.$asset : item.src;
 		if (item.mediaType === 'youtube' || item.mediaType === 'vimeo') {
@@ -347,7 +352,10 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 			continue;
 		}
 		if (item.mediaType === 'video') {
+			const id = videoId;
+			videoId = null;
 			frames += `<video${attrs({
+				id,
 				src,
 				playsinline: true,
 				controls: item.controls !== false && !item.autoplay,
@@ -369,7 +377,7 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 	}
 	/* save needs a command target — id the frame when a save toggle is present */
 	const mediaId = (fields.furniture?.save && cardId) ? `${cardId}-media` : null;
-	const furniture = buildFurniture(fields.furniture, fields, tokens, mediaId);
+	const furniture = buildFurniture(fields.furniture, fields, tokens, mediaId, videoId ? null : playId);
 	const html = `<ui-media${attrs({
 		id: mediaId,
 		...(embed || {}),
@@ -792,23 +800,15 @@ const flipsideBack = (flipside) => {
 
 const renderReveal = (fields, type, itemtype, tokens, preset, flipside, cardId = null) => {
 	const media = buildMedia(fields, type, tokens, preset, {}, cardId);
-	const front = `<ui-face>
-		${media?.html || ''}
-		<ui-content>
-			${fields.eyebrow ? `<small data-part="eyebrow">${esc(fields.eyebrow)}</small>` : ''}
-			<strong data-part="headline" itemprop="${HEADLINE_PROP[type] || 'name'}">${renderInline(fields.headline)}</strong>
-			${fields.details?.version ? `<span data-part="meta">v<span itemprop="softwareVersion">${esc(fields.details.version)}</span></span>` : ''}
-		</ui-content>
-	</ui-face>`;
 	const back = flipside ? flipsideBack(flipside) : derivedBack(fields, type);
 	const reveal = preset.reveal || {};
 	/* reveal config → variant tokens. The preset keeps friendly editor values
 	   ("slide", "left", "top right sm"); the emitted animation token carries its
 	   own direction/origin — type+from fold into ONE token: slide+left → sld(lft),
-	   flip+top → flp(top); expand → exp; scale → scl (origin follows ico()).
+	   flip+top → flp(top); expand → exp; scale → grw (origin follows ico()).
 	   Icon placement folds into a corner token (ico(te) = top end). */
 	const anim = RVL_TOKEN[reveal.type] || reveal.type || 'flp';
-	const dir = reveal.from && (anim === 'flp' || anim === 'sld') ? FRM_TOKEN[reveal.from] || reveal.from : null;
+	const dir = reveal.from && RVL_DIRECTED.has(anim) ? FRM_TOKEN[reveal.from] || reveal.from : null;
 	const revealTokens = [
 		dir ? `${anim}(${dir})` : anim,
 		reveal.typeLg ? `lg:${RVL_TOKEN[reveal.typeLg] || reveal.typeLg}` : null,
@@ -818,17 +818,26 @@ const renderReveal = (fields, type, itemtype, tokens, preset, flipside, cardId =
 		...iconTokens('ico', reveal.icon || 'top right sm'),
 		...iconTokens('icc', reveal.iconClose),
 	].filter(Boolean);
+	/* media=/content= sit on the primitives they configure; variant=/theme= on the host */
+	const inner = `${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
+		<ui-content${attrs({ content: preset.content || null })}>
+			${fields.eyebrow ? `<small data-part="eyebrow">${esc(fields.eyebrow)}</small>` : ''}
+			<strong data-part="headline" itemprop="${HEADLINE_PROP[type] || 'name'}">${renderInline(fields.headline)}</strong>
+			${fields.details?.version ? `<span data-part="meta">v<span itemprop="softwareVersion">${esc(fields.details.version)}</span></span>` : ''}
+		</ui-content>`;
+	/* <ui-face> only where the animation transforms the front face; exp animates the host */
+	const front = RVL_FACED.has(anim) ? `<ui-face>${inner}</ui-face>` : inner;
+	/* trg(card) makes the whole summary the trigger — no toggle icon */
+	const icon = reveal.trigger ? '' : `<ui-icon type="${esc(reveal.iconType || 'plus-cross')}" aria-hidden="true"></ui-icon>`;
 	return `<ui-reveal${attrs({
 		variant: [preset.variant, ...revealTokens].filter(Boolean).join(' '),
 		theme: preset.theme || null,
-		media: mergeMediaTokens(presetMediaStr(preset), tokens.media) || null,
-		content: preset.content || null,
 		style: styleAttr(preset.styles),
 		itemscope: true,
 		itemtype
 	})}>
-		<details name="render-reveal">
-			<summary>${front}<ui-icon type="${esc(reveal.iconType || 'plus-cross')}" aria-hidden="true"></ui-icon></summary>
+		<details${attrs({ name: reveal.name || null })}>
+			<summary>${front}${icon}</summary>
 			<ui-content tabindex="0">${back}${media?.extras || ''}</ui-content>
 		</details>
 	</ui-reveal>`;
@@ -888,7 +897,7 @@ export function renderCard(ucf, presets = {}, cards = {}) {
 		const media = buildMedia(fields, type, tokens, preset, {}, cardId);
 		const inner = (media?.html || '<ui-media></ui-media>')
 			.replace('<ui-media', `<ui-media${attrs({
-				media: mergeMediaTokens(presetMediaStr(preset), tokens.media) || null,
+				media: mergeMediaTokens(preset.media, tokens.media) || null,
 				style: styleAttr(preset.styles),
 				itemscope: true,
 				itemtype
@@ -909,18 +918,17 @@ export function renderCard(ucf, presets = {}, cards = {}) {
 
 	const media = buildMedia(fields, type, tokens, preset, {}, cardId);
 	const overlay = /ovr\(/.test(preset.variant || '');
+	/* media=/content= sit on the primitives they configure; variant=/theme= on the host */
 	return `<ui-card${attrs({
 		variant: preset.variant || 'col',
 		theme: preset.theme || null,
-		media: mergeMediaTokens(presetMediaStr(preset), tokens.media) || null,
-		content: preset.content || null,
 		style: styleAttr(preset.styles),
 		itemscope: true,
 		itemtype
 	})}>
 		<cq-box>
-			${media?.html || ''}
-			<ui-content>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary')}</ui-content>
+			${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
+			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary')}</ui-content>
 		</cq-box>
 	</ui-card>`;
 }

@@ -286,4 +286,5 @@ export function scanVideo() {
 	initVideoTracking(document.querySelectorAll('video[data-track]'));
 }
 
-onIdle(scanVideo);
+// index.js owns idle scanning when it's loaded; this only covers a solo import
+onIdle(() => { if (!globalThis.uiMedia?.scan) scanVideo(); });

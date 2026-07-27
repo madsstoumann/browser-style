@@ -781,29 +781,3 @@ pseudo rules out a clean shared `[data-scroll-fade]` hook.
    the ship-raw-CSS ethos.
 
 **Decision:** do Tier 1 when next touching scroll-fade.
-
----
-
-## TODO — move `hv(track)` script into a `<ui-card>` custom element
-
-`hv(track)` (cursor-tracked image pan) needs a `pointermove` handler that writes
-normalized `--ui-card-mx` / `--ui-card-my` (-1..1) onto the card; the CSS in
-`ui-card.css` does the transform. Today that handler is an **inline `<script>`
-in `ui/reveal/index.html`** — fine for the demo, but every consuming page would
-have to copy it.
-
-**Plan:** when `ui-card` / `ui-reveal` gain a JS web-component layer, fold this
-tracking logic into it so the effect ships with the component:
-
-- On `connectedCallback`, if `variant` contains `hv(track)`, attach the
-  `pointerenter`/`pointermove`(rAF-throttled)/`pointerleave` listeners to the
-  host, targeting the inner `ui-media` rect.
-- Keep CSS-only graceful degradation: without the JS the image just shows the
-  static `scale(1.12)` zoom — no breakage.
-- Respect `prefers-reduced-motion` (skip listener attach), matching the CSS
-  `translate: 0` reduced-motion rule.
-- Reuse the same `--ui-card-mx/my` contract so the inline demo script and the
-  component implementation stay interchangeable.
-
-Reference implementation = the inline script currently in
-`ui/reveal/index.html` (search `hv(track)`).

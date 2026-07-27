@@ -18,9 +18,10 @@
 		scroll-snap-type: x mandatory;
 		scrollbar-width: thin;
 	}
-		/* slides = every direct child except overlay furniture */
-	:where(ui-card, ui-reveal):where([media*="nav"]) ui-media > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker),
-	ui-media:where([media*="nav"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker) {
+		/* slides = every direct child except overlay furniture and bands */
+		/* keep in sync with NOT_SLIDE in shared.js */
+	:where(ui-card, ui-reveal):where([media*="nav"]) ui-media > :not(ui-beacon, ui-chip, ui-marquee, ui-play, ui-save, ui-sticker),
+	ui-media:where([media*="nav"]) > :not(ui-beacon, ui-chip, ui-marquee, ui-play, ui-save, ui-sticker) {
 		block-size: 100%;
 		flex: 0 0 100%;
 		inline-size: 100%;

@@ -1,8 +1,8 @@
-/* Carousel enhancements — seamless loop (clones), autoplay, pause-on-slide-leave, and
- * per-slide <ui-play> video controls. The base carousel (scroll-snap, dots, arrows) is
- * pure CSS; with JS off everything still scrolls and snaps. */
+/* Carousel enhancements — seamless loop (clones), autoplay and pause-on-slide-leave.
+ * The base carousel (scroll-snap, dots, arrows) is pure CSS; with JS off everything
+ * still scrolls and snaps. Per-slide <ui-play> video controls live in video.js. */
 
-import { reduce, onIdle, mediaStr, slidesOf, isDecoration, reflectPlay, initVideoPlay, videoPlayNodes } from './shared.js';
+import { reduce, onIdle, mediaStr, hasToken, slidesOf, isDecoration, reflectPlay } from './shared.js';
 
 const axisYOf = (scroller) => mediaStr(scroller).includes('axis(y)');
 
@@ -87,7 +87,7 @@ export function initAuto(scroller) {
 	const { pos, scrollToPos } = geom(scroller, axisYOf(scroller));
 
 	const toMs = (num, unit) => unit === 'ms' ? +num : +num * 1000;
-	const am = m.match(/auto(?:\((\d+(?:\.\d+)?)(m?s)?\))?/);
+	const am = m.match(/(?:^|\s)auto(?:\((\d+(?:\.\d+)?)(m?s)?\))?/);
 	const autoMs = am ? (am[1] ? toMs(am[1], am[2]) : 5000) : 0;
 	if (!autoMs || reduce.matches) return;
 
@@ -128,8 +128,8 @@ export function initCarousels(nodes) {
 		if (el.dataset.uiCarousel) continue;
 		el.dataset.uiCarousel = '1';
 		const m = mediaStr(el);
-		if (m.includes('loop')) initLoop(el);
-		if (m.includes('auto')) initAuto(el);
+		if (hasToken(m, 'loop')) initLoop(el);
+		if (hasToken(m, 'auto')) initAuto(el);
 	}
 }
 
@@ -154,22 +154,27 @@ export function initCarouselVideoPause(scrollers) {
 }
 
 // JS-feature carousels via the media= token — on ui-media itself, inherited from
-// its ui-card/ui-reveal host, or on a lay-out's own overflow scroller
+// its ui-card/ui-reveal host, or on a lay-out's own overflow scroller.
+// Whole-token needles: a substring match would fire on marquee(loop) & co.
+// `auto`/`nav` also have parameterized forms, so both spellings are needled.
+const AUTO = ':is([media~="auto"], [media*="auto("])';
+const LOOP = '[media~="loop"]';
+const NAV = ':is([media~="nav"], [media*="nav("])';
 export const CAROUSEL_SEL = [
-	'ui-media[media*="auto"]', ':is(ui-card[media*="auto"], ui-reveal[media*="auto"]) ui-media',
-	'ui-media[media*="loop"]', ':is(ui-card[media*="loop"], ui-reveal[media*="loop"]) ui-media',
-	'lay-out[overflow][media*="loop"]', 'lay-out[overflow][media*="auto"]',
+	`ui-media${AUTO}`, `:is(ui-card, ui-reveal)${AUTO} ui-media`,
+	`ui-media${LOOP}`, `:is(ui-card, ui-reveal)${LOOP} ui-media`,
+	`lay-out[overflow]${LOOP}`, `lay-out[overflow]${AUTO}`,
 ].join(', ');
 // every scroll carousel — video-pause filters to those containing a <video>
 const NAV_SEL = [
-	'ui-media[media*="nav"]', ':is(ui-card[media*="nav"], ui-reveal[media*="nav"]) ui-media',
+	`ui-media${NAV}`, `:is(ui-card, ui-reveal)${NAV} ui-media`,
 	CAROUSEL_SEL,
 ].join(', ');
 
 export function scanCarousels() {
 	initCarousels(document.querySelectorAll(CAROUSEL_SEL));
 	initCarouselVideoPause(document.querySelectorAll(NAV_SEL));
-	initVideoPlay(videoPlayNodes());
 }
 
-onIdle(scanCarousels);
+// index.js owns idle scanning when it's loaded; this only covers a solo import
+onIdle(() => { if (!globalThis.uiMedia?.scan) scanCarousels(); });

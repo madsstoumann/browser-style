@@ -1,4 +1,5 @@
 import { buildSrcset } from './srcset.js';
+import { mediaStr } from './shared.js';
 
 /**
  * <ui-media> responsive-image upgrade — optional progressive enhancement.
@@ -13,7 +14,7 @@ import { buildSrcset } from './srcset.js';
  * production — no hardcoded domain in markup.
  *
  * This module is transitional: once the srcset is server-side rendered, stop
- * loading it. The cursor-tracked hover effects live separately in ui-media.js.
+ * loading it. The cursor-tracked hover effects live separately in hover.js.
  */
 
 const HOST_SUFFIX = 'browser.style';
@@ -25,13 +26,6 @@ const DEFAULTS = {
 	fit: 'cover',
 	sizes: 'auto',
 };
-
-/** media= holder: the element itself, else its ui-card/ui-reveal host (inheritance
- *  stops at the card — media= on a lay-out never reaches a descendant ui-media). */
-function mediaHost(el) {
-	const h = el.closest('[media]');
-	return h && (h === el || h.matches('ui-card, ui-reveal')) ? h : null;
-}
 
 /** Decide whether to inject CDN srcset: attribute -> global -> host default. */
 function cdnEnabled(el) {
@@ -65,7 +59,7 @@ export default class UiMedia extends HTMLElement {
 		// carousel in with `load(eager)`.
 		// - load(eager): every slide eager (videos preload=auto), FIRST slide fetchpriority=high
 		// - load(lazy):  every slide lazy  (videos preload=none)
-		const loadTok = mediaHost(this)?.getAttribute('media')?.match(/load\((eager|lazy)\)/)?.[1];
+		const loadTok = mediaStr(this).match(/load\((eager|lazy)\)/)?.[1];
 		const hero = loadTok === 'eager';
 
 		kids.forEach((el, i) => {

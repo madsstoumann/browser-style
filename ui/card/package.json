@@ -3,18 +3,17 @@
   "version": "4.0.0",
   "description": "CSS-first card engine built on <ui-media> + <ui-content>, with variant tokens and a container-driven font scale. Shared base for ui-reveal.",
   "type": "module",
-  "main": "ui-media.js",
+  "main": "index.js",
   "style": "index.css",
   "exports": {
     ".": {
       "style": "./index.css",
-      "import": "./ui-media.js"
+      "import": "./index.js"
     },
     "./style": "./index.css",
     "./index.css": "./index.css",
     "./ui-card.css": "./ui-card.css",
     "./content.typography.css": "./content.typography.css",
-    "./ui-media.js": "./ui-media.js",
     "./ui-media-srcset.js": "./ui-media-srcset.js",
     "./srcset.js": "./srcset.js",
     "./index.js": "./index.js",
@@ -22,6 +21,7 @@
     "./hover.js": "./hover.js",
     "./video.js": "./video.js",
     "./shared.js": "./shared.js",
+    "./render.js": "./render.js",
     "./index.min.js": "./index.min.js",
     "./carousel.min.js": "./carousel.min.js",
     "./hover.min.js": "./hover.min.js",
@@ -38,7 +38,6 @@
     "media.video.css",
     "content.css",
     "content.typography.css",
-    "ui-media.js",
     "ui-media-srcset.js",
     "srcset.js",
     "index.js",
@@ -46,6 +45,8 @@
     "hover.js",
     "video.js",
     "shared.js",
+    "render.js",
+    "data/",
     "*.min.js"
   ],
   "scripts": {

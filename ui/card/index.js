@@ -1,14 +1,15 @@
-/* <ui-media> progressive enhancement — all-in-one entry point.
- * Feature chunks (each self-initializes on idle and is importable on its own):
+/* <ui-media> progressive enhancement — all-in-one entry point. Sole owner of the idle
+ * scan and globalThis.uiMedia.scan; a chunk imported on its own falls back to its own.
+ * Feature chunks (each importable standalone):
  *   hover.js     cursor-tracked hov(track|drift|tilt)
- *   carousel.js  loop (seamless clones) · autoplay · pause-on-slide-leave · slide <ui-play>
- *   video.js     embed facades · media commands · vid() tools · solo play · tracking
+ *   carousel.js  loop (seamless clones) · autoplay · pause-on-slide-leave
+ *   video.js     embed facades · media commands · vid() tools · <ui-play> · solo play · tracking
  * No srcset here (ui-media-srcset.js). With JS off everything still renders and scrolls. */
 
 import { initHover, scanHover } from './hover.js';
 import { initLoop, initAuto, initCarousels, initCarouselVideoPause, scanCarousels } from './carousel.js';
 import { initMediaCommands, initEmbeds, initVideoTools, initSolo, initVideoTracking, scanVideo } from './video.js';
-import { initVideoPlay } from './shared.js';
+import { onIdle, initVideoPlay } from './shared.js';
 
 export {
 	initHover, scanHover,
@@ -24,3 +25,4 @@ export function scan() {
 }
 
 globalThis.uiMedia = Object.assign(globalThis.uiMedia || {}, { scan });
+onIdle(scan);

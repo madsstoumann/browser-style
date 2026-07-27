@@ -11,8 +11,13 @@ export const mediaStr = (el) => {
 	return h && (h === el || h.matches('ui-card, ui-reveal')) ? (h.getAttribute('media') || '') : '';
 };
 
-// slides = direct children minus overlay furniture and nested <lay-out> wrappers
-const NOT_SLIDE = /^(UI-BEACON|UI-CHIP|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS|LAY-OUT)$/;
+// whole-token test for bare media= flags — `loop` must never match marquee(loop),
+// and `auto`/`nav` also have parameterized forms (auto(4s), nav(mrk)).
+export const hasToken = (str, name) => new RegExp(`(^|\\s)${name}(\\(|\\s|$)`).test(str);
+
+// slides = direct children minus overlay furniture, bands and nested <lay-out> wrappers
+// (keep in sync with the :not() list in media.carousel.css)
+export const NOT_SLIDE = /^(UI-BEACON|UI-CHIP|UI-MARQUEE|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS|LAY-OUT)$/;
 export const slidesOf = (el) => [...el.children].filter(c => !NOT_SLIDE.test(c.tagName));
 
 // muted + autoplay = silent background loop; never coordinated/paused
@@ -27,13 +32,16 @@ export function reflectPlay(uiPlay, playing) {
 	uiPlay.toggleAttribute('open', playing);
 }
 
-// Wire a <ui-play> to a <video>: mirror real state, toggle on click, load deferred data-src
+// Wire a <ui-play> to a <video>: mirror real state, toggle on click, load deferred data-src.
+// A button carrying the invoker contract (command/commandfor) is toggled by video.js's
+// command handler instead — we only mirror state, or the two would cancel out.
 export function bindVideo(uiPlay, video) {
 	const sync = () => reflectPlay(uiPlay, !video.paused);
 	video.addEventListener('play', sync);
 	video.addEventListener('pause', sync);
 	video.addEventListener('ended', sync);
-	uiPlay.querySelector('button')?.addEventListener('click', () => {
+	const btn = uiPlay.querySelector('button');
+	if (btn && !btn.hasAttribute('commandfor')) btn.addEventListener('click', () => {
 		if (!video.paused) return video.pause();
 		if (!video.getAttribute('src') && video.dataset.src) video.src = video.dataset.src;
 		video.play()?.catch(() => {});
@@ -59,6 +67,7 @@ export function videoPlayNodes() {
 			const media = play.parentElement;
 			if (!media.querySelector(':scope > video')) return false;
 			const nested = !!media.parentElement?.closest('ui-media');
-			return nested || !/\bnav\b|auto|loop/.test(mediaStr(media));
+			const m = mediaStr(media);
+			return nested || !(hasToken(m, 'nav') || hasToken(m, 'auto') || hasToken(m, 'loop'));
 		});
 }

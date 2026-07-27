@@ -47,4 +47,7 @@ export function scanHover() {
 	initHover(document.querySelectorAll(HOVER_SEL));
 }
 
-(globalThis.requestIdleCallback || ((fn) => setTimeout(fn, 1)))(scanHover);
+// index.js owns idle scanning when it's loaded; this only covers a solo import
+(globalThis.requestIdleCallback || ((fn) => setTimeout(fn, 1)))(() => {
+	if (!globalThis.uiMedia?.scan) scanHover();
+});

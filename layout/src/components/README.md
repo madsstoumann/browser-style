@@ -5,10 +5,15 @@ This directory contains all web components for the layout system.
 ## Components
 
 ### LayOut
-Responsive layout component with auto-generated srcsets for images.
+Responsive layout component with auto-generated srcsets for images. This is the live component.
 
-### LayOutConfigurator
-Visual configuration tool for creating and testing layout patterns.
+### Legacy — `composer/`
+`composer/` is **precursor-system code**: a schema-driven configurator (`model.json`,
+`model.proposal.md`) from the component generation that preceded `ui/card` and its
+`variant=`/`media=`/`content=` attributes. It is kept for reference only — not exported,
+not maintained, and not part of the package API. The `LayOutConfigurator` barrel export
+it once fed has been removed (it pointed at a `./configurator/` path that never shipped
+and broke `import { LayOut }` with it).
 
 ## Usage
 
@@ -22,7 +27,7 @@ npm install @browser.style/layout
 
 ```javascript
 // Import both components from a single entry point
-import { LayOut, LayOutConfigurator } from '@browser.style/layout/components'
+import { LayOut } from '@browser.style/layout/components'
 ```
 
 ### Basic Usage - LayOut
@@ -73,7 +78,7 @@ LayOut.initialize(srcsetMap, layoutConfig)
 #### Vue 3
 ```javascript
 // main.js or App.vue
-import { LayOut, LayOutConfigurator } from '@browser.style/layout/components'
+import { LayOut } from '@browser.style/layout/components'
 import '@browser.style/layout/css'
 
 // Components are now available globally
@@ -93,7 +98,7 @@ import '@browser.style/layout/css'
 ```javascript
 // +layout.svelte or +page.svelte
 <script>
-  import { LayOut, LayOutConfigurator } from '@browser.style/layout/components'
+  import { LayOut } from '@browser.style/layout/components'
   import '@browser.style/layout/css'
 </script>
 
@@ -137,15 +142,11 @@ function App() {
 - `LayOut.srcsetMap` - Map of layout patterns to srcsets
 - `LayOut.layoutConfig` - Configuration with breakpoints and maxLayoutWidth
 
-### LayOutConfigurator
-
-Coming soon...
-
 ## Package Exports
 
 ```javascript
 // All components
-import { LayOut, LayOutConfigurator } from '@browser.style/layout/components'
+import { LayOut } from '@browser.style/layout/components'
 
 // CSS
 import '@browser.style/layout/css'

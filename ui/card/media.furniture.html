@@ -143,10 +143,10 @@
 	     Marquee — <ui-marquee>
 	     ============================================================ -->
 	<h2>Marquee — <code>&lt;ui-marquee&gt;</code></h2>
-	<p>A full-width scrolling band across <code>&lt;ui-media&gt;</code>, driven <strong>entirely from the parent <code>media=</code> token</strong> — nothing on the <code>&lt;ui-marquee&gt;</code> itself. Position <code>marquee(top)</code> (default) / <code>marquee(bot)</code>; hue <code>marquee(&lt;red…white&gt;)</code>; size <code>marquee(sm|lg|xl|2xl)</code>; plus modes <code>marquee(loop)</code> / <code>marquee(seam)</code> and <code>marquee(fade)</code>. Sits at <code>z-index:1</code>, <strong>below</strong> the other furniture (chip/beacon/sticker are <code>z-index:2</code>). Content here is zero-markup: <code>aria-label</code> on an empty <code>&lt;ui-marquee&gt;</code> fills <code>::before</code>/<code>::after</code> and doubles as the accessible name. Weight defaults to the component's — override with <code>--ui-marquee-font-weight</code>.</p>
+	<p>A full-width scrolling band across <code>&lt;ui-media&gt;</code>, driven <strong>entirely from the parent <code>media=</code> token</strong> — nothing on the <code>&lt;ui-marquee&gt;</code> itself. Position <code>marquee(top)</code> (default) / <code>marquee(bot)</code>; hue <code>marquee(&lt;red…white&gt;)</code>; size <code>marquee(sm|lg|xl|2xl)</code>; plus modes <code>marquee(rpt)</code> / <code>marquee(seam)</code> and <code>marquee(fade)</code>. Sits at <code>z-index:1</code>, <strong>below</strong> the other furniture (chip/beacon/sticker are <code>z-index:2</code>). Content here is zero-markup: <code>aria-label</code> on an empty <code>&lt;ui-marquee&gt;</code> fills <code>::before</code>/<code>::after</code> and doubles as the accessible name. Weight defaults to the component's — override with <code>--ui-marquee-font-weight</code>.</p>
 	<p>Full component: <a href="../marquee/">ui/marquee</a>.</p>
 	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-card variant="col" media="asr(4/3) marquee(loop) marquee(red) marquee(sm)">
+		<ui-card variant="col" media="asr(4/3) marquee(rpt) marquee(red) marquee(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/government.png" alt="">
@@ -155,7 +155,7 @@
 				<ui-content><small data-part="eyebrow">Politics</small><h2 data-part="headline">Parliament passes budget after late-night vote</h2><p data-part="summary">Red headline band pinned to the top, text supplied by <code>aria-label</code>: <code>marquee(top) marquee(red) marquee(sm)</code>.</p></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) beacon(red) beacon(tck) marquee(bot) marquee(loop) marquee(red) marquee(sm)">
+		<ui-card variant="col" media="asr(4/3) beacon(red) beacon(tck) marquee(bot) marquee(rpt) marquee(red) marquee(sm)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/government.png" alt="">
@@ -165,7 +165,7 @@
 				<ui-content><small data-part="eyebrow">Live</small><h2 data-part="headline">Election night: results as they land</h2><p data-part="summary">Bottom ticker under a live indicator — <code>marquee(bot) marquee(red) marquee(sm)</code> below <code>beacon(red) beacon(tck)</code> (z-index 1 vs 2).</p></ui-content>
 			</cq-box>
 		</ui-card>
-		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(sh:burst) sticker(orange) sticker(xl) marquee(bot) marquee(loop) marquee(green) marquee(pale) marquee(sm) marquee(fade)">
+		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(sh:burst) sticker(orange) sticker(xl) marquee(bot) marquee(rpt) marquee(green) marquee(pale) marquee(sm) marquee(fade)">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/aurasoundpro.png" alt="">
