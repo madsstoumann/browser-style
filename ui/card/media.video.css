@@ -23,11 +23,15 @@
 		opacity: 1;
 	}
 
-	/* ply() — size the <ui-play> control (mirrors ui-play size=) */
-	:where([media*="ply(sm)"]) { --ui-play-sz: 2.25em; --ui-play-icon-sz: 1em; }
-	:where([media*="ply(md)"]) { --ui-play-sz: 3em;    --ui-play-icon-sz: 1.5em; }
-	:where([media*="ply(lg)"]) { --ui-play-sz: 4em;    --ui-play-icon-sz: 2em; }
-	:where([media*="ply(xl)"]) { --ui-play-sz: 5em;    --ui-play-icon-sz: 2.5em; }
+	/* play(<size>) — size the <ui-play> control (mirrors ui-play size=). Folded into
+	   the furniture-standard single stem: play() already carries the position args
+	   (ts…be, media.css) and every other element sizes via el(<size>), so ui-play is
+	   no longer the one element with two stems. The two arg sets are disjoint
+	   vocabularies, so the substring match stays unambiguous. ply() kept as an alias. */
+	:where([media*="play(sm)"], [media*="ply(sm)"] /* deprecated alias — remove in v5 */) { --ui-play-sz: 2.25em; --ui-play-icon-sz: 1em; }
+	:where([media*="play(md)"], [media*="ply(md)"] /* deprecated alias — remove in v5 */) { --ui-play-sz: 3em;    --ui-play-icon-sz: 1.5em; }
+	:where([media*="play(lg)"], [media*="ply(lg)"] /* deprecated alias — remove in v5 */) { --ui-play-sz: 4em;    --ui-play-icon-sz: 2em; }
+	:where([media*="play(xl)"], [media*="ply(xl)"] /* deprecated alias — remove in v5 */) { --ui-play-sz: 5em;    --ui-play-icon-sz: 2.5em; }
 
 	/* vid() — PLAYER TOOLS: tokens on the [media] host so they inherit to injected buttons */
 	:where([media*="vid("]) {
@@ -43,12 +47,17 @@
 	:where([media*="vid(lg)"]) { --ui-media-tool-size: 3rem; }
 	:where([media*="vid(xl)"]) { --ui-media-tool-size: 3.5rem; }
 
+	/* --_g is declared here, not read across files: media.css declares its own on the
+	   furniture elements only, and the tools menu is not one of them — so the reads
+	   below used to fall to their fallbacks, which disagreed (0.5rem vs 0.75rem).
+	   Private --_* vars stay single-file; one gap, one fallback. */
 	:where(ui-media) .ui-media-tools {
+		--_g: var(--ui-media-overlay-gap, 0.75rem);
 		align-items: center;
 		display: flex;
-		gap: var(--_g, 0.5rem);
-		inset-block-end: var(--_g, 0.75rem);
-		inset-inline-end: var(--_g, 0.75rem);
+		gap: var(--_g);
+		inset-block-end: var(--_g);
+		inset-inline-end: var(--_g);
 		margin: 0;
 		padding: 0;
 		position: absolute;
@@ -113,7 +122,6 @@
 		border-radius: var(--radius-md, 0.5rem);
 		margin-block-end: 0.5rem;
 		min-inline-size: 8rem;
-		/* padding: 0.25rem; */
 		position-area: block-start span-inline-start;
 	}
 	:where(ui-media) .ui-media-cc option {

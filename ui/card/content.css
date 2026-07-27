@@ -41,10 +41,40 @@
 	:where([content~="end"]) { --ui-content-align: end; }
 
 	/* ============================================================
+	   CORNERS — rds(): round (global scale) or -sq (bespoke squircle)
+	   ------------------------------------------------------------
+	   rds() scale — keep in lock-step with ui-card.css (--ui-card-*) and media.css
+	   (--ui-media-*); single manifest source lands with R-13. The radius values and
+	   squircle exponents are NOT defined here: --radius-*, --radius-*-sq and
+	   --squircle-* all come from ui/base/tokens.css, which is the canonical scale —
+	   these blocks only route a token arg to a namespace.
+	   For a STANDALONE <ui-content> that has been given a surface (theme=, author
+	   CSS): inside a card the host's overflow clipping already owns the corners, so
+	   the default 0 is inert there. Substring-matched like the other two rds()
+	   blocks — rds() has no md:/lg: forms to shadow, and rds(sm) is not a substring
+	   of rds(sm-sq). non canonical (none kept as alias). */
+	:where([content*="rds(non)"], [content*="rds(none)"] /* deprecated alias — remove in v5 */) { --ui-content-radius: 0; }
+	:where([content*="rds(sm)"])   { --ui-content-radius: var(--radius-sm); }
+	:where([content*="rds(md)"])   { --ui-content-radius: var(--radius-md); }
+	:where([content*="rds(lg)"])   { --ui-content-radius: var(--radius-lg); }
+	:where([content*="rds(xl)"])   { --ui-content-radius: var(--radius-xl); }
+	:where([content*="rds(2xl)"])  { --ui-content-radius: var(--radius-2xl); }
+	:where([content*="rds(full)"]) { --ui-content-radius: var(--radius-circle, 50%); }
+	:where([content*="rds(pill)"]) { --ui-content-radius: var(--radius-pill, 100px); }
+	/* -sq: bespoke radius + superellipse corner-shape (squircle tokens in tokens.css) */
+	:where([content*="rds(sm-sq)"]) { --ui-content-radius: var(--radius-sm-sq); --ui-content-squircle-exp: var(--squircle-sm); }
+	:where([content*="rds(md-sq)"]) { --ui-content-radius: var(--radius-md-sq); --ui-content-squircle-exp: var(--squircle-md); }
+	:where([content*="rds(lg-sq)"]) { --ui-content-radius: var(--radius-lg-sq); --ui-content-squircle-exp: var(--squircle-lg); }
+	:where([content*="rds(xl-sq)"]) { --ui-content-radius: var(--radius-xl-sq); --ui-content-squircle-exp: var(--squircle-xl); }
+	:where([content*="-sq)"]) ui-content,
+	:where(ui-content[content*="-sq)"]) { corner-shape: superellipse(var(--ui-content-squircle-exp, 1.8)); }
+
+	/* ============================================================
 	   CONTAINER — flex column; ov() placement/ink read from props
 	   ============================================================ */
 	:where(ui-content) {
 		align-items: var(--ui-content-ov-align, var(--ui-content-align, normal));
+		border-radius: var(--ui-content-radius, 0); /* rds(); inert (0) unless set — a card host clips its own corners */
 		color: var(--ui-content-ov-ink, inherit);
 		display: flex;
 		flex-direction: column;

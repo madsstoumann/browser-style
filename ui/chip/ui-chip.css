@@ -49,9 +49,18 @@
 		:where([media*="chip(blue)"])   & { --_theme-base-bg: var(--ui-theme-blue-bg);   --_theme-base-c: var(--ui-theme-blue-c); }
 		:where([media*="chip(accent)"]) & { --_theme-base-bg: var(--ui-theme-accent-bg); --_theme-base-c: var(--ui-theme-accent-c); }
 		:where([media*="chip(gray)"])   & { --_theme-base-bg: var(--ui-theme-gray-bg);   --_theme-base-c: var(--ui-theme-gray-c); }
-		:where([media*="chip(slate)"])  & { --_theme-base-bg: var(--ui-theme-slate-bg);  --_theme-base-c: var(--ui-theme-slate-c); }
+		:where([media*="chip(slate)"])  & { --_theme-base-bg: var(--ui-theme-slate-bg);  --_theme-base-c: var(--ui-theme-slate-c); } /* deprecated alias — remove in v5 */
 		:where([media*="chip(black)"])  & { --_theme-base-bg: var(--ui-theme-black-bg);  --_theme-base-c: var(--ui-theme-black-c); }
 		:where([media*="chip(white)"])  & { --_theme-base-bg: var(--ui-theme-white-bg);  --_theme-base-c: var(--ui-theme-white-c); }
+		/* HUE TRUTH SET: red orange green blue accent black white gray. The doc-era
+		   spellings below and the extra slate key above stay as working aliases of it
+		   (this is the media= furniture arg vocabulary only — theme="slate" on the
+		   element itself remains a first-class theme in base/theme.css).
+		   Note chip(light) is a HUE (→ white); the unrelated chip(lgt) below is the
+		   light VARIANT — different axis, different spelling, no substring overlap. */
+		:where([media*="chip(dark)"])   & { --_theme-base-bg: var(--ui-theme-black-bg);  --_theme-base-c: var(--ui-theme-black-c); } /* deprecated alias — remove in v5 */
+		:where([media*="chip(light)"])  & { --_theme-base-bg: var(--ui-theme-white-bg);  --_theme-base-c: var(--ui-theme-white-c); } /* deprecated alias — remove in v5 */
+		:where([media*="chip(subtle)"]) & { --_theme-base-bg: var(--ui-theme-gray-bg);   --_theme-base-c: var(--ui-theme-gray-c); }  /* deprecated alias — remove in v5 */
 		/* pale = light tint + hue ink · muted = translucent plate (hue-agnostic).
 		   Distinct from chip(lgt): pale follows the shared theme pale ratio. */
 		:where([media*="chip(pale)"])  & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), var(--color-surface) 80%); --_theme-c: var(--_theme-base-bg); }

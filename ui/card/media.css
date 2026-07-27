@@ -65,7 +65,15 @@
 	:where([media~="asr(16/9)"])  { --ui-media-ar: 16 / 9; }
 	:where([media~="asr(21/9)"])  { --ui-media-ar: 21 / 9; }
 
-	/* obp() — object-position (9-grid) */
+	/* obp() — object-position (9-grid). TWO spellings on purpose:
+	     LOGICAL  ts tc te · cs cc ce · bs bc be — CANONICAL. One grid for the whole
+	              system (furniture, scm(), ovr(), reveal's ico()); s/e follow the
+	              writing direction, so they mirror under dir="rtl" (block below).
+	     PHYSICAL tl tc tr · cl cc cr · bl bc br — NOT deprecated. object-position has
+	              no logical keywords, and "crop to the left edge" is a real,
+	              direction-independent intent (e.g. a subject baked into the left of
+	              the frame). These never mirror.
+	   The centre column (tc/cc/bc) is spelled identically in both and is axis-pure. */
 	:where([media*="obp(tl)"]) { --ui-media-op: left top; }
 	:where([media*="obp(tc)"]) { --ui-media-op: center top; }
 	:where([media*="obp(tr)"]) { --ui-media-op: right top; }
@@ -75,10 +83,31 @@
 	:where([media*="obp(bl)"]) { --ui-media-op: left bottom; }
 	:where([media*="obp(bc)"]) { --ui-media-op: center bottom; }
 	:where([media*="obp(br)"]) { --ui-media-op: right bottom; }
+	/* logical spellings — ltr resolution (start = left) */
+	:where([media*="obp(ts)"]) { --ui-media-op: left top; }
+	:where([media*="obp(te)"]) { --ui-media-op: right top; }
+	:where([media*="obp(cs)"]) { --ui-media-op: left center; }
+	:where([media*="obp(ce)"]) { --ui-media-op: right center; }
+	:where([media*="obp(bs)"]) { --ui-media-op: left bottom; }
+	:where([media*="obp(be)"]) { --ui-media-op: right bottom; }
+	/* rtl — swap start/end for the LOGICAL spellings only. :dir() matches the token
+	   holder's own resolved directionality, so it works whether dir sits on the
+	   element or an ancestor, and stays at zero specificity inside :where(). */
+	:where([media*="obp(ts)"]:dir(rtl)) { --ui-media-op: right top; }
+	:where([media*="obp(te)"]:dir(rtl)) { --ui-media-op: left top; }
+	:where([media*="obp(cs)"]:dir(rtl)) { --ui-media-op: right center; }
+	:where([media*="obp(ce)"]:dir(rtl)) { --ui-media-op: left center; }
+	:where([media*="obp(bs)"]:dir(rtl)) { --ui-media-op: right bottom; }
+	:where([media*="obp(be)"]:dir(rtl)) { --ui-media-op: left bottom; }
 
-	/* rds() — corners on a STANDALONE <ui-media> (mirrors ui-card rds(); -sq =
-	   squircle). non canonical (none kept as alias). */
-	:where([media*="rds(non)"], [media*="rds(none)"]) { --ui-media-radius: 0; }
+	/* rds() scale — keep in lock-step with ui-card.css (--ui-card-*) and content.css
+	   (--ui-content-*); single manifest source lands with R-13. The radius values and
+	   squircle exponents are NOT defined here: --radius-*, --radius-*-sq and
+	   --squircle-* all come from ui/base/tokens.css, which is the canonical scale —
+	   these blocks only route a token arg to a namespace.
+	   Corners on a STANDALONE <ui-media> (inside a card the host's overflow clipping
+	   owns the corners). non canonical (none kept as alias). */
+	:where([media*="rds(non)"], [media*="rds(none)"] /* deprecated alias — remove in v5 */) { --ui-media-radius: 0; }
 	:where([media*="rds(sm)"])   { --ui-media-radius: var(--radius-sm); }
 	:where([media*="rds(md)"])   { --ui-media-radius: var(--radius-md); }
 	:where([media*="rds(lg)"])   { --ui-media-radius: var(--radius-lg); }
@@ -163,8 +192,10 @@
 		translate: -50% -50%;
 	}
 
-	/* ply(), PLAYER TOOLS (fullscreen · PiP) and the CC language <select> live in
-		 media.video.css — imported after this sheet, before media.carousel.css. */
+	/* play(<size>) (was ply()), PLAYER TOOLS (fullscreen · PiP) and the CC language
+		 <select> live in media.video.css — imported after this sheet, before
+		 media.carousel.css. play()'s size args (sm md lg xl) and its position args
+		 (ts…be, above) are disjoint vocabularies, so one stem parses unambiguously. */
 
 	/* ============================================================
 		 SUB-THEME ROUTING moved into the components
@@ -209,6 +240,19 @@
 		--ui-media-scrim-bc: linear-gradient(to top,          var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 		--ui-media-scrim-be: linear-gradient(to top left,     var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 	}
+	/* RTL — the scrim positions are spelled logically (ts…be, matching furniture), but
+	   linear-gradient() has no logical directions, so the six gradients that carry a
+	   left/right component are re-baked mirrored here. Without this a chip(ts) mirrors
+	   in rtl and its matching scm(ts) does not. tc/bc/cc are axis-pure (to bottom / to
+	   top / a vertical band) and never flip. Same 0-0-0 specificity, later in source. */
+	:where(ui-media:dir(rtl)), :where([media]:dir(rtl)), :where([variant]:dir(rtl)) {
+		--ui-media-scrim-ts: linear-gradient(to bottom left,  var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+		--ui-media-scrim-te: linear-gradient(to bottom right, var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+		--ui-media-scrim-cs: linear-gradient(to left,         var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+		--ui-media-scrim-ce: linear-gradient(to right,        var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+		--ui-media-scrim-bs: linear-gradient(to top left,     var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+		--ui-media-scrim-be: linear-gradient(to top right,    var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+	}
 	/* explicit scm(pos) overrides the ov-matched default */
 	:where([media*="scm(ts)"]) { --ui-media-scrim: var(--ui-media-scrim-ts); }
 	:where([media*="scm(tc)"]) { --ui-media-scrim: var(--ui-media-scrim-tc); }
@@ -228,11 +272,11 @@
 	   Canonical 3-letter codes shr/sld (sheer/solid kept as aliases). sld also pulls
 	   the mid stop to the full colour, so it holds opaque across the covered area
 	   instead of fading through the translucent mid mix. */
-	:where([media*="scm(shr)"], [media*="scm(sheer)"]) { --ui-media-scrim-color: rgb(0 0 0 / 0.35); }
+	:where([media*="scm(shr)"], [media*="scm(sheer)"] /* deprecated alias — remove in v5 */) { --ui-media-scrim-color: rgb(0 0 0 / 0.35); }
 	:where([media*="scm(lgt)"])   { --ui-media-scrim-color: rgb(0 0 0 / 0.55); }
 	:where([media*="scm(med)"])   { --ui-media-scrim-color: rgb(0 0 0 / 0.78); }
 	:where([media*="scm(drk)"])   { --ui-media-scrim-color: rgb(0 0 0 / 0.92); }
-	:where([media*="scm(sld)"], [media*="scm(solid)"]) { --ui-media-scrim-color: rgb(0 0 0 / 1); --ui-media-scrim-fade: 0%; }
+	:where([media*="scm(sld)"], [media*="scm(solid)"] /* deprecated alias — remove in v5 */) { --ui-media-scrim-color: rgb(0 0 0 / 1); --ui-media-scrim-fade: 0%; }
 	/* bare scm paints; auto-matches the ovr() position via --ui-media-scrim-default */
 	:where([media*="scm"]) { --ui-media-scrim-paint: var(--ui-media-scrim, var(--ui-media-scrim-default, var(--ui-media-scrim-bc))); }
 	:where(ui-media)::after {

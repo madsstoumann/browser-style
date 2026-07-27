@@ -47,10 +47,15 @@
 	/* ============================================================
 	   CORNERS — rds(): round (global scale) or -sq (bespoke squircle)
 	   ============================================================ */
-	/* round — global radius scale. rds(non) keeps a 3-letter form (aligned with
+	/* rds() scale — keep in lock-step with media.css (--ui-media-*) and content.css
+	   (--ui-content-*); single manifest source lands with R-13. The radius values and
+	   squircle exponents are NOT defined here: --radius-*, --radius-*-sq and
+	   --squircle-* all come from ui/base/tokens.css, which is the canonical scale —
+	   these blocks only route a token arg to a namespace.
+	   round — global radius scale. rds(non) keeps a 3-letter form (aligned with
 	   save(non), mrk(non)); none is its alias. full/pill match the token names
 	   in tokens.css (--radius-circle / --radius-pill). */
-	:where([variant~="rds(non)"], [variant~="rds(none)"]) { --ui-card-radius: 0; }
+	:where([variant~="rds(non)"], [variant~="rds(none)"] /* deprecated alias — remove in v5 */) { --ui-card-radius: 0; }
 	:where([variant~="rds(sm)"])   { --ui-card-radius: var(--radius-sm); }
 	:where([variant~="rds(md)"])   { --ui-card-radius: var(--radius-md); }
 	:where([variant~="rds(lg)"])   { --ui-card-radius: var(--radius-lg); }
@@ -110,13 +115,16 @@
 	   ALIGN-CONTENT — stacked layouts collect slack at the edge; row /
 	   overlay / single-part layouts stretch.
 	   ============================================================ */
-	:where([variant]) > cq-box { align-content: start; }
-	:where([variant~="col-r"]) > cq-box { align-content: space-between; }
+	/* subject is the queryable descendant :is(cq-box, summary) — same shape as every
+	   neighbouring rule — so a <ui-reveal>'s <summary> gets the same align-content as
+	   a card's <cq-box> for the same variant= value (F-14). */
+	:where([variant]) :is(cq-box, summary) { align-content: start; }
+	:where([variant~="col-r"]) :is(cq-box, summary) { align-content: space-between; }
 	:where(
 		[variant~="row"], [variant~="row-r"], [variant~="vis(media)"], [variant~="vis(content)"], [variant*="ovr("],
 		[variant~="md:row"], [variant~="md:row-r"], [variant~="md:vis(media)"], [variant~="md:vis(content)"],
 		[variant~="lg:row"], [variant~="lg:row-r"], [variant~="lg:vis(media)"], [variant~="lg:vis(content)"]
-	) > cq-box { align-content: stretch; }
+	) :is(cq-box, summary) { align-content: stretch; }
 
 	/* ============================================================
 	   ovr() — stack content over media + place it. Writes into the
@@ -132,15 +140,22 @@
 		--ui-content-heading-text-shadow: var(--ui-content-text-shadow);
 		--ui-content-eyebrow-text-shadow: var(--ui-content-text-shadow);
 	}
-	:where([variant*="ovr(tl)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-ts); }
+	/* POSITION VOCABULARY — logical ts tc te · cs cc ce · bs bc be (one grid for the
+	   whole system: furniture, scm(), mrk(), reveal's ico()). ovr()'s implementation
+	   was always logical (justify/align/text-align: start|center|end), so the old
+	   PHYSICAL spellings were mislabelled — ovr(tl) already rendered top-END in rtl.
+	   tl…br are therefore kept as deprecated aliases in the same selector list (so the
+	   scrim default fires for both spellings); the centre column tc/cc/bc is spelled
+	   identically in both vocabularies and needs no alias. */
+	:where([variant*="ovr(ts)"], [variant*="ovr(tl)"] /* deprecated alias — remove in v5 */) { --ui-content-ov-justify: start;  --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-ts); }
 	:where([variant*="ovr(tc)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: center; --ui-content-ov-text: center; --ui-media-scrim-default: var(--ui-media-scrim-tc); }
-	:where([variant*="ovr(tr)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-te); }
-	:where([variant*="ovr(cl)"]) { --ui-content-ov-justify: center; --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-cs); }
+	:where([variant*="ovr(te)"], [variant*="ovr(tr)"] /* deprecated alias — remove in v5 */) { --ui-content-ov-justify: start;  --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-te); }
+	:where([variant*="ovr(cs)"], [variant*="ovr(cl)"] /* deprecated alias — remove in v5 */) { --ui-content-ov-justify: center; --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-cs); }
 	:where([variant*="ovr(cc)"]) { --ui-content-ov-justify: center; --ui-content-ov-align: center; --ui-content-ov-text: center; --ui-media-scrim-default: var(--ui-media-scrim-cc); }
-	:where([variant*="ovr(cr)"]) { --ui-content-ov-justify: center; --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-ce); }
-	:where([variant*="ovr(bl)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-bs); }
+	:where([variant*="ovr(ce)"], [variant*="ovr(cr)"] /* deprecated alias — remove in v5 */) { --ui-content-ov-justify: center; --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-ce); }
+	:where([variant*="ovr(bs)"], [variant*="ovr(bl)"] /* deprecated alias — remove in v5 */) { --ui-content-ov-justify: end;    --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-bs); }
 	:where([variant*="ovr(bc)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: center; --ui-content-ov-text: center; --ui-media-scrim-default: var(--ui-media-scrim-bc); }
-	:where([variant*="ovr(br)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-be); }
+	:where([variant*="ovr(be)"], [variant*="ovr(br)"] /* deprecated alias — remove in v5 */) { --ui-content-ov-justify: end;    --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-be); }
 	/* overlay text is light (over a scrim); a plain solid CTA keeps its light surface, so its
 	   text must stay dark — otherwise it inherits the white and vanishes. Colour variants
 	   (accent, text, …) set their own --button-c and are left untouched. */

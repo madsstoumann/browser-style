@@ -85,6 +85,12 @@
 		&[theme~="black"],  :where([media*="save(black)"])  & { --ui-save-c: var(--ui-theme-black-bg);  --ui-save-c-active: var(--ui-theme-black-bg); }
 		&[theme~="white"],  :where([media*="save(white)"])  & { --ui-save-c: var(--ui-theme-white-bg);  --ui-save-c-active: var(--ui-theme-white-bg); }
 		&[theme~="gray"],   :where([media*="save(gray)"])   & { --ui-save-c: var(--ui-theme-gray-bg);   --ui-save-c-active: var(--ui-theme-gray-bg); }
+		/* HUE TRUTH SET: red orange green blue accent black white gray. The doc-era
+		   spellings below stay as working aliases of it. media= arg only — they are
+		   not theme= values (base/theme.css has no dark/light/subtle hue). */
+		:where([media*="save(dark)"])   & { --ui-save-c: var(--ui-theme-black-bg);  --ui-save-c-active: var(--ui-theme-black-bg); } /* deprecated alias — remove in v5 */
+		:where([media*="save(light)"])  & { --ui-save-c: var(--ui-theme-white-bg);  --ui-save-c-active: var(--ui-theme-white-bg); } /* deprecated alias — remove in v5 */
+		:where([media*="save(subtle)"]) & { --ui-save-c: var(--ui-theme-gray-bg);   --ui-save-c-active: var(--ui-theme-gray-bg); }  /* deprecated alias — remove in v5 */
 
 		/* arbitrary colour (overrides theme) — ink = the glyph, fill = the circle
 		   disc. After the hue rules so an explicit ink=/fill= wins. */

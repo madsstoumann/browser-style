@@ -2,9 +2,9 @@
  * ui-reveal
  * CSS-only reveal card built on <details>/<summary>.
  * Reveal behaviour is configured via variant= tokens (shared attribute with ui-card):
- *   exp Â· flp(top|btm|lft|rgt) Â· sld(top|btm|lft|rgt) Â· scl(ts|te|bs|be) â the
+ *   exp Â· flp(top|btm|lft|rgt) Â· sld(top|btm|lft|rgt) Â· grw(ts|te|bs|be) â the
  *   animation token carries its own direction/origin; bare flp/sld default to
- *   right, bare scl follows the ico() corner Â· lg:scl (swap at the lg tier) Â·
+ *   right, bare grw follows the ico() corner Â· lg:grw (swap at the lg tier) Â·
  *   pop (popup mode) Â· trg(card) Â· scr (scrollable panel) Â·
  *   ico(<corner>|drk|sem|sm|lg) Â· icc(â¦) (open-state icon) â <corner> uses the
  *   furniture corner spellings: ts te bs be (top/bottom Ã start/end)
@@ -14,8 +14,39 @@
 @import '../card/ui-card.css';
 @import '../icon/index.css';
 
+/* ============================================================
+   CARD-RULE LEAK CHECKLIST — audit this list when adding card tokens.
+   ------------------------------------------------------------
+   ui-card.css writes many of its rules as host-scoped DESCENDANT selectors
+   (`:where([variant…]) ui-content`, `… :is(cq-box, summary)`). A <ui-reveal> is a
+   [variant] host, so those rules reach past the front face and into the revealed
+   panel, which is not a card area at all. Every one of them has to be counter-
+   reset below. Current undo list — keep it in sync:
+
+     1. ovr() ink + placement + z  (ui-card.css `ovr(` block, --ui-content-ov-*)
+        → undone by `> details > ui-content` (color / align-items /
+          justify-content / text-align / z-index), ~line 92 below.
+     2. vis(media)'s `ui-content { display: none }` (ui-card.css vis() rules)
+        → undone by the `display: flex` in the same block, ~line 95.
+     3. ovr()'s grid-area stacking (`:where([variant]) :is(ui-media, ui-content)`)
+        → undone by `grid-area: auto` in the same block, ~line 97.
+     4. content padding doubling (ui-content self-pads via --ui-content-p AND the
+        panel pads via --ui-reveal-content-p)
+        → undone by `> details[open]:has(> ui-content)::details-content { padding: 0 }`,
+          ~line 103.
+     5. type-scale decoupling for a panel with no content= of its own
+        → `> details > ui-content:not([content])`, ~line 107.
+     6. align-content (ui-card.css arrangement block) now DOES reach <summary> by
+        design (F-14) — that one is shared on purpose, not a leak.
+
+   When a new card token is added, ask: does its selector subject sit inside
+   `ui-reveal > details` without passing through `summary`/`ui-face`? If yes, it
+   leaks into the panel and needs an entry here. Long-term (v5) the card rules move
+   to front-face-scoped subjects and this list shrinks toward zero.
+   ============================================================ */
+
 /* Animation-dispatch flag — each variant= animation family writes ONE value
-   onto `> details` (exp | flp | sld | scl); the per-animation geometry blocks
+   onto `> details` (exp | flp | sld | grw); the per-animation geometry blocks
    below match it with style queries against the details container (named
    bs-rvl), so every animation's tokens are enumerated exactly once, and the
    lg: tier swaps the animation by re-flipping the flag instead of duplicating
@@ -48,7 +79,7 @@
 			container-name: bs-rvl;
 			display: grid;
 			overflow: hidden;
-			/* shared anchor for the absolutely-positioned panels (scl morph, scr
+			/* shared anchor for the absolutely-positioned panels (grw morph, scr
 			   frame-lock); exp pop's `position: fixed` overrides it while open */
 			position: relative;
 		}
@@ -59,7 +90,13 @@
 		&:where([variant~="exp"]) > details { --_rvl: exp; }
 		&:where([variant~="flp"], [variant~="flp(top)"], [variant~="flp(btm)"], [variant~="flp(lft)"], [variant~="flp(rgt)"]) > details { --_rvl: flp; }
 		&:where([variant~="sld"], [variant~="sld(top)"], [variant~="sld(btm)"], [variant~="sld(lft)"], [variant~="sld(rgt)"]) > details { --_rvl: sld; }
-		&:where([variant~="scl"], [variant~="scl(ts)"], [variant~="scl(te)"], [variant~="scl(bs)"], [variant~="scl(be)"]) > details { --_rvl: scl; }
+		/* grw = grow/scale-morph. Renamed from scl() so it stops colliding with
+		   content='s scl() type scale (a different attribute, but one spelling should
+		   mean one thing); the scl spellings stay as deprecated aliases. */
+		&:where(
+			[variant~="grw"], [variant~="grw(ts)"], [variant~="grw(te)"], [variant~="grw(bs)"], [variant~="grw(be)"],
+			[variant~="scl"], [variant~="scl(ts)"], [variant~="scl(te)"], [variant~="scl(bs)"], [variant~="scl(be)"] /* deprecated alias — remove in v5 */
+		) > details { --_rvl: grw; }
 
 		/* consume shared --ui-card-cols (horizontal/split tokens) */
 		> details > summary,
@@ -101,9 +138,12 @@
 		}
 		/* a ui-content back self-pads â drop the panel padding so it isn't doubled */
 		> details[open]:has(> ui-content)::details-content { padding: 0; }
-		/* scale decoupling ONLY when the back has no variant of its own â a
-		   variant (fs(), th(), â¦) on the back lets it self-scale/theme via the
-		   card engine instead (the reset would otherwise out-specify it). */
+		/* Type-scale decoupling for a panel that carries NO content= of its own.
+		   The tested attribute is content= — an explicit content= on the back (scl(),
+		   hl(), tx(), …) means the author wants the panel to size itself through the
+		   content DSL, and this reset would otherwise out-specify it. (The previous
+		   comment here described a variant= test naming fs()/th() — both pre-v4
+		   spellings that no longer exist. The selector is what ships.) */
 		> details > ui-content:not([content]) {
 			--ui-content-fs: var(--ui-reveal-content-fs, var(--font-size-base));
 			--ui-content-headline: var(--ui-reveal-content-headline, var(--ui-content-headline-md));
@@ -118,9 +158,9 @@
 			box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-bg), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ui-reveal-ring-active, var(--ui-reveal-content-c, currentColor));
 		}
 
-		/* flp/sld/scl panels paint bg + ink from the START of the reveal (exp's
+		/* flp/sld/grw panels paint bg + ink from the START of the reveal (exp's
 		   panel is in-flow and gets them on [open] via the base rule above) */
-		@container bs-rvl style(--_rvl: flp) or style(--_rvl: sld) or style(--_rvl: scl) {
+		@container bs-rvl style(--_rvl: flp) or style(--_rvl: sld) or style(--_rvl: grw) {
 			> details::details-content {
 				background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
 				color: var(--ui-reveal-content-c, inherit);
@@ -183,8 +223,12 @@
 		/* === icon style: drk (default is light) + sem (opacity) â both === */
 		&[variant~="ico(drk)"] > details > summary > ui-icon,
 		&[variant~="icc(drk)"] > details[open] > summary > ui-icon {
-			--ui-reveal-icon-bg: #000; /* TODO! */
-			color: #fff;
+			/* dark chrome: a dark plate behind a light glyph, in BOTH colour schemes —
+			   so this is the neutral ramp's `black` bundle (light-dark() pair that stays
+			   dark either way), not --color-text, which inverts in dark mode. Also picks
+			   up a --ui-card-dark-bg override, so a branded card brands its icon too. */
+			--ui-reveal-icon-bg: var(--ui-theme-black-bg);
+			color: var(--ui-theme-black-c, #fff);
 		}
 		&[variant~="ico(sem)"] > details > summary > ui-icon,
 		&[variant~="icc(sem)"] > details[open] > summary > ui-icon {
@@ -419,11 +463,11 @@
 		:where(ui-reveal) > details[open]::details-content { translate: 0 0; }
 	}
 
-	/* === scl — scale-morph (origin follows ico(), or pin it: scl(ts|te|bs|be)).
-	   ONE geometry block serves both the scl tokens and the lg:scl tier swap —
+	/* === grw — grow/scale-morph (origin follows ico(), or pin it: grw(ts|te|bs|be)).
+	   ONE geometry block serves both the grw tokens and the lg:grw tier swap —
 	   the flag re-flip below re-uses it. (position:relative on details comes
 	   from the base details rule.) === */
-	@container bs-rvl style(--_rvl: scl) {
+	@container bs-rvl style(--_rvl: grw) {
 		:where(ui-reveal) > details::details-content {
 			block-size: var(--ui-reveal-icon-sz);
 			border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
@@ -458,33 +502,37 @@
 	}
 
 	/* morph origin (anchored corner) — follows the icon position, or is pinned
-	   explicitly by a scl()/lg:scl() corner (wins by source order). Host-side
-	   var setters, consumed only by the scl geometry above (inert otherwise);
-	   one set serves both the base tokens and the lg: tier. */
+	   explicitly by a grw()/lg:grw() corner (wins by source order). Host-side
+	   var setters, consumed only by the grw geometry above (inert otherwise);
+	   one set serves both the base tokens and the lg: tier. The scl()/lg:scl()
+	   spellings ride along in the same lists as deprecated aliases. */
 	:where(ui-reveal) {
 		&:is([variant~="ico(ts)"],[variant~="ico(te)"]) { --_scale-bs: 0; --_scale-be: auto; }
 		&:is([variant~="ico(bs)"],[variant~="ico(be)"]) { --_scale-bs: auto; --_scale-be: 0; }
 		&:is([variant~="ico(ts)"],[variant~="ico(bs)"]) { --_scale-is: 0; --_scale-ie: auto; }
 		&:is([variant~="ico(te)"],[variant~="ico(be)"]) { --_scale-is: auto; --_scale-ie: 0; }
-		&:is([variant~="scl(ts)"],[variant~="scl(te)"],[variant~="lg:scl(ts)"],[variant~="lg:scl(te)"]) { --_scale-bs: 0; --_scale-be: auto; }
-		&:is([variant~="scl(bs)"],[variant~="scl(be)"],[variant~="lg:scl(bs)"],[variant~="lg:scl(be)"]) { --_scale-bs: auto; --_scale-be: 0; }
-		&:is([variant~="scl(ts)"],[variant~="scl(bs)"],[variant~="lg:scl(ts)"],[variant~="lg:scl(bs)"]) { --_scale-is: 0; --_scale-ie: auto; }
-		&:is([variant~="scl(te)"],[variant~="scl(be)"],[variant~="lg:scl(te)"],[variant~="lg:scl(be)"]) { --_scale-is: auto; --_scale-ie: 0; }
+		&:is([variant~="grw(ts)"],[variant~="grw(te)"],[variant~="lg:grw(ts)"],[variant~="lg:grw(te)"],[variant~="scl(ts)"],[variant~="scl(te)"],[variant~="lg:scl(ts)"],[variant~="lg:scl(te)"] /* deprecated alias — remove in v5 */) { --_scale-bs: 0; --_scale-be: auto; }
+		&:is([variant~="grw(bs)"],[variant~="grw(be)"],[variant~="lg:grw(bs)"],[variant~="lg:grw(be)"],[variant~="scl(bs)"],[variant~="scl(be)"],[variant~="lg:scl(bs)"],[variant~="lg:scl(be)"] /* deprecated alias — remove in v5 */) { --_scale-bs: auto; --_scale-be: 0; }
+		&:is([variant~="grw(ts)"],[variant~="grw(bs)"],[variant~="lg:grw(ts)"],[variant~="lg:grw(bs)"],[variant~="scl(ts)"],[variant~="scl(bs)"],[variant~="lg:scl(ts)"],[variant~="lg:scl(bs)"] /* deprecated alias — remove in v5 */) { --_scale-is: 0; --_scale-ie: auto; }
+		&:is([variant~="grw(te)"],[variant~="grw(be)"],[variant~="lg:grw(te)"],[variant~="lg:grw(be)"],[variant~="scl(te)"],[variant~="scl(be)"],[variant~="lg:scl(te)"],[variant~="lg:scl(be)"] /* deprecated alias — remove in v5 */) { --_scale-is: auto; --_scale-ie: 0; }
 	}
 
-	/* sld/scl panels take clicks (links stay clickable); the icon stays the toggle */
-	@container bs-rvl style(--_rvl: sld) or style(--_rvl: scl) {
+	/* sld/grw panels take clicks (links stay clickable); the icon stays the toggle */
+	@container bs-rvl style(--_rvl: sld) or style(--_rvl: grw) {
 		:where(ui-reveal:not([variant~="trg(card)"])) > details[open] > summary { pointer-events: none; }
 		:where(ui-reveal) > details[open] > summary > ui-icon { pointer-events: auto; }
 	}
 
-	/* === lg:scl — swap the reveal animation at the lg container tier, e.g.
-	   variant="exp lg:scl": grows below when narrow, morphs/scales when wide.
-	   Just re-flip the dispatch flag on <details> — the ONE scl geometry block
+	/* === lg:grw — swap the reveal animation at the lg container tier, e.g.
+	   variant="exp lg:grw": expands below when narrow, morphs/scales when wide.
+	   Just re-flip the dispatch flag on <details> — the ONE grw geometry block
 	   above applies; nothing is duplicated. Same 0-0-1 specificity as the base
 	   setters, later in the file, so it wins by source order. === */
 	@container (inline-size >= 44rem) {
-		:where(ui-reveal:is([variant~="lg:scl"], [variant~="lg:scl(ts)"], [variant~="lg:scl(te)"], [variant~="lg:scl(bs)"], [variant~="lg:scl(be)"])) > details { --_rvl: scl; }
+		:where(ui-reveal:is(
+			[variant~="lg:grw"], [variant~="lg:grw(ts)"], [variant~="lg:grw(te)"], [variant~="lg:grw(bs)"], [variant~="lg:grw(be)"],
+			[variant~="lg:scl"], [variant~="lg:scl(ts)"], [variant~="lg:scl(te)"], [variant~="lg:scl(bs)"], [variant~="lg:scl(be)"] /* deprecated alias — remove in v5 */
+		)) > details { --_rvl: grw; }
 	}
 
 	/* === trg(card) — whole card toggles (no ui-icon). Clicks fall through
