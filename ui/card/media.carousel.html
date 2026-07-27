@@ -25,6 +25,45 @@
 		.slide-gap { --ui-media-gap: var(--spacing-lg); }
 		.shadow-room { padding-inline: var(--spacing-md); scroll-padding-inline: var(--spacing-md); }
 		.reveal-cards ui-reveal ui-accordion { font-size: var(--font-size-sm); }
+		/* mrk(lbl) demo look — dark capsule, white outlined pills, filled current pill */
+		/* 1 · smoked glass — neutral dark translucent capsule. NOTE: --ui-carousel-label-group-backdrop
+		   (blur) is set but is a no-op today — Chrome ignores backdrop-filter on the
+		   ::scroll-marker-group pseudo; it will frost automatically once browsers paint it. */
+		.label-frost {
+			--ui-carousel-label-color: #fff;
+			--ui-carousel-label-bg: transparent;
+			--ui-carousel-label-border-color: rgb(255 255 255 / 0.55);
+			--ui-carousel-label-bg-current: rgb(255 255 255 / 0.22);
+			--ui-carousel-label-border-color-current: transparent;
+			--ui-carousel-label-group-bg: rgb(0 0 0 / 0.3);
+			--ui-carousel-label-group-backdrop: blur(8px);
+			--ui-carousel-label-group-padding: 0.5rem;
+			--ui-carousel-label-group-shadow: 0 2px 12px rgb(0 0 0 / 0.35);
+		}
+		/* 2 · squared pills, no group background — pills sit straight on the media */
+		.label-square {
+			--ui-carousel-label-radius: 0.25rem;
+			--ui-carousel-label-color: #fff;
+			--ui-carousel-label-bg: rgb(0 0 0 / 0.4);
+			--ui-carousel-label-border-color: rgb(255 255 255 / 0.35);
+			--ui-carousel-label-bg-current: #fff;
+			--ui-carousel-label-color-current: #1a1a1a;
+			--ui-carousel-label-border-color-current: transparent;
+			/* no group bg / padding / shadow */
+		}
+		/* 3 · frosted white — light capsule, dark ink */
+		.label-white {
+			--ui-carousel-label-color: #1a1a1a;
+			--ui-carousel-label-bg: transparent;
+			--ui-carousel-label-border-color: rgb(0 0 0 / 0.35);
+			--ui-carousel-label-bg-current: #1a1a1a;
+			--ui-carousel-label-color-current: #fff;
+			--ui-carousel-label-border-color-current: transparent;
+			--ui-carousel-label-group-bg: rgb(255 255 255 / 0.5);
+			--ui-carousel-label-group-backdrop: blur(8px);
+			--ui-carousel-label-group-padding: 0.5rem;
+			--ui-carousel-label-group-shadow: 0 2px 12px rgb(0 0 0 / 0.25);
+		}
 	</style>
 </head>
 <body>
@@ -434,6 +473,34 @@
 			<img src="/assets/images/finance.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/finance.png')">
 			<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')">
 			<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')">
+		</ui-media>
+	</lay-out>
+	<hr>
+	<!-- ════════════════════════════════════════════════════════════
+	     LABELS — mrk(lbl)
+	     ════════════════════════════════════════════════════════════ -->
+	<h2>11b · Label navigation — <code>mrk(lbl)</code></h2>
+	<p><code>mrk(lbl)</code> renders each slide's <code>aria-label</code> as a text pill (like <code>mrk(tmb)</code> reads a per-slide <code>--ui-carousel-thumb-url</code>). Look-and-feel is set with <code>--ui-carousel-label-*</code> custom properties. Positions with the same 9-grid cells as dots/thumbs (<code>mrk(ts/tc/te … bs/bc/be)</code>). Three demo looks below — all in the page <code>&lt;style&gt;</code>.</p>
+	<p><strong>Smoked glass</strong>, top-centre — neutral dark translucent capsule (<code>.label-frost</code>, <code>mrk(tc)</code>). It also sets <code>--ui-carousel-label-group-backdrop: blur()</code>, a no-op today — Chrome ignores <code>backdrop-filter</code> on the <code>::scroll-marker-group</code> pseudo, so it stays translucent-only until browsers paint it.</p>
+	<lay-out>
+		<ui-media class="label-frost" media="asr(16/9) rds(md) clip nav(mrk) mrk(lbl) mrk(tc)">
+			<img src="/assets/images/river.png" alt="" aria-label="River Walk">
+			<img src="/assets/images/mindfulness.png" alt="" aria-label="Mindful Living">
+			<img src="/assets/images/gastronomy.png" alt="" aria-label="Fine Dining">
+			<img src="/assets/images/world.png" alt="" aria-label="Our World">
+		</ui-media>
+	</lay-out>
+	<p><strong>Squared pills, no group background</strong> — small pill radius, pills sit straight on the media (<code>.label-square</code>, <code>mrk(te)</code>); and the <strong>frosted-white</strong> capsule (<code>.label-white</code>, <code>mrk(bs)</code>):</p>
+	<lay-out md="columns(2)">
+		<ui-media class="label-square" media="asr(16/9) rds(md) clip nav(mrk) mrk(lbl) mrk(te)">
+			<img src="/assets/images/hubble.png" alt="" aria-label="Deep field">
+			<img src="/assets/images/quantum.png" alt="" aria-label="Quantum lab">
+			<img src="/assets/images/websummit.png" alt="" aria-label="Web Summit">
+		</ui-media>
+		<ui-media class="label-white" media="asr(16/9) rds(md) clip nav(mrk) mrk(lbl) mrk(bs)">
+			<img src="/assets/images/gastronomy.png" alt="" aria-label="Tasting menu">
+			<img src="/assets/images/brewandbean.png" alt="" aria-label="Brew &amp; Bean">
+			<img src="/assets/images/aurasoundpro.png" alt="" aria-label="AuraSound Pro">
 		</ui-media>
 	</lay-out>
 

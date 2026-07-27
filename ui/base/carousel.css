@@ -290,6 +290,64 @@
 			}
 		}
 
+		/* mrk(lbl) — text-label markers: each slide's aria-label becomes a pill.
+		   Look-and-feel is exposed as --ui-carousel-label-* custom properties (not tokens);
+		   positioning reuses the 9-grid mrk() cells below (with a height fix — labels are auto-height). */
+		:where(ui-card, ui-reveal):where([media*="mrk(lbl)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
+			align-items: center;
+			background: var(--ui-carousel-label-bg, transparent);
+			block-size: auto;
+			border: var(--ui-carousel-label-border-width, 1px) solid var(--ui-carousel-label-border-color, rgb(255 255 255 / 0.6));
+			border-radius: var(--ui-carousel-label-radius, var(--radius-pill, 100px));
+			color: var(--ui-carousel-label-color, #fff);
+			content: attr(aria-label);
+			cursor: pointer;
+			display: inline-flex;
+			font-size: var(--ui-carousel-label-font-size, var(--font-size-sm, 0.875rem));
+			font-style: normal;
+			font-weight: var(--ui-carousel-label-font-weight, 500);
+			inline-size: auto;
+			padding: var(--ui-carousel-label-padding, 0.4em 0.9em);
+			text-decoration: none;
+			transition:
+				background-color var(--duration-fast, 100ms) var(--ease-default, ease),
+				border-color var(--duration-fast, 100ms) var(--ease-default, ease),
+				color var(--duration-fast, 100ms) var(--ease-default, ease);
+			white-space: nowrap;
+		}
+		/* :target-current repeats the full geometry (not just colours) — some Chrome builds don't
+		   cascade the plain ::scroll-marker rule into the :target-current state, so the current pill
+		   would otherwise drop to UA defaults (big radius, no padding). Self-contained = browser-proof. */
+		:where(ui-card, ui-reveal):where([media*="mrk(lbl)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+			align-items: center;
+			background: var(--ui-carousel-label-bg-current, rgb(255 255 255 / 0.25));
+			block-size: auto;
+			border: var(--ui-carousel-label-border-width, 1px) solid var(--ui-carousel-label-border-color-current, transparent);
+			border-radius: var(--ui-carousel-label-radius, var(--radius-pill, 100px));
+			color: var(--ui-carousel-label-color-current, var(--ui-carousel-label-color, #fff));
+			display: inline-flex;
+			font-size: var(--ui-carousel-label-font-size, var(--font-size-sm, 0.875rem));
+			font-style: normal;
+			font-weight: var(--ui-carousel-label-font-weight, 500);
+			inline-size: auto;
+			padding: var(--ui-carousel-label-padding, 0.4em 0.9em);
+			text-decoration: none;
+			white-space: nowrap;
+		}
+		/* optional background / shadow on the group itself (transparent + zero-padding by default,
+		   so the group geometry is unchanged until a dev opts in) */
+		:where(ui-card, ui-reveal):where([media*="mrk(lbl)"]) :where(ui-media)::scroll-marker-group,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"])::scroll-marker-group {
+			backdrop-filter: var(--ui-carousel-label-group-backdrop, none);
+			background: var(--ui-carousel-label-group-bg, transparent);
+			border-radius: var(--ui-carousel-label-group-radius, var(--radius-pill, 100px));
+			box-shadow: var(--ui-carousel-label-group-shadow, none);
+			gap: var(--ui-carousel-label-group-gap, var(--ui-carousel-marker-gap));
+			padding: var(--ui-carousel-label-group-padding, 0);
+		}
+
 		:where(ui-card, ui-reveal):where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) :where(ui-media),
 		:where(ui-media, lay-out[overflow]):where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) {
 			&::scroll-button(*) {
@@ -657,6 +715,27 @@
 		:where(ui-media, lay-out[overflow]):where([media*="nav(blw)"][media*="mrk(be)"][media*="arw(set)"], [media*="nav(abv)"][media*="mrk(te)"][media*="arw(set)"])::scroll-marker-group {
 			right: calc(anchor(right) + 2 * var(--ui-carousel-overlay-gap) + 2 * var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
 		}
+
+		/* ---- mrk(lbl) height-agnostic vertical placement ----
+		   Dot cells anchor the group by its TOP edge + --ui-carousel-marker-size (a dot's height ==
+		   marker-size). Labels are auto-height, so re-anchor bottom/center cells by the group's own
+		   edges. Top-row cells (ts/tc/te) already anchor by anchor(top) and need no override. */
+		:where(ui-card, ui-reveal):where([media*="mrk(lbl)"]:not([media*="mrk(ts)"], [media*="mrk(tc)"], [media*="mrk(te)"], [media*="mrk(cs)"], [media*="mrk(cc)"], [media*="mrk(ce)"])) :where(ui-media)::scroll-marker-group,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]:not([media*="mrk(ts)"], [media*="mrk(tc)"], [media*="mrk(te)"], [media*="mrk(cs)"], [media*="mrk(cc)"], [media*="mrk(ce)"]))::scroll-marker-group {
+			top: auto;
+			bottom: calc(anchor(bottom) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)));
+		}
+		:where(ui-card, ui-reveal):where([media*="mrk(lbl)"]:is([media*="mrk(cs)"], [media*="mrk(cc)"], [media*="mrk(ce)"])) :where(ui-media)::scroll-marker-group,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]:is([media*="mrk(cs)"], [media*="mrk(cc)"], [media*="mrk(ce)"]))::scroll-marker-group {
+			top: anchor(center);
+			bottom: auto;
+			transform: translateY(-50%);
+		}
+		/* NOTE: constraining the pill group's inline size to the frame (to scroll or wrap long
+		   labels on narrow frames) is not reliably possible in current Chrome — anchor-size() caps,
+		   %, and both-edge insets all fail to clamp a ::scroll-marker-group (computed reports a
+		   bound the paint ignores). So mrk(lbl) hugs its content and, like a wide dot row, can spill
+		   on very narrow frames. Keep labels short, or revisit when the pseudo's sizing is fixed. */
 
 		/* ---- mrk(bar) — thin styled scrollbar (declared LAST so its geometry wins) ---- */
 		:where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media)::scroll-marker-group,
