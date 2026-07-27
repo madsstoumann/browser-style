@@ -22,6 +22,8 @@
     "./video.js": "./video.js",
     "./shared.js": "./shared.js",
     "./render.js": "./render.js",
+    "./data/tokens.json": "./data/tokens.json",
+    "./data/tokens.data.js": "./data/tokens.data.js",
     "./index.min.js": "./index.min.js",
     "./carousel.min.js": "./carousel.min.js",
     "./hover.min.js": "./hover.min.js",
@@ -47,10 +49,13 @@
     "shared.js",
     "render.js",
     "data/",
+    "tokens.md",
     "*.min.js"
   ],
   "scripts": {
-    "build": "node build.js"
+    "build": "node build.js",
+    "build:tokens": "node tokens.build.js",
+    "lint:tokens": "node tokens.lint.js"
   },
   "devDependencies": {
     "esbuild": "^0.28.1"

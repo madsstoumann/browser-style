@@ -22,6 +22,11 @@
  *   grid.insertAdjacentHTML('beforeend', renderCard(ucf, presets));
  */
 
+/* Token knowledge is DATA: data/tokens.json is the manifest the CSS conventions, this
+   renderer, the generated tokens.md and tokens.lint.js all read. tokens.data.js is its
+   generated ES-module mirror — a plain import, so this module stays Node+browser safe. */
+import TOKENS from './data/tokens.data.js';
+
 const SCHEMA = 'https://schema.org/';
 
 /* schemaType → schema.org itemtype */
@@ -195,31 +200,37 @@ const embedVideoObject = (item) => {
    order — mergeMediaTokens strips the preset's same-axis token so the override
    always wins). */
 
-/* hue vocabulary: the 8 canonical keys the CSS implements, plus the accepted
-   aliases (dark/light/subtle/slate) which pass through unchanged — the CSS maps them. */
-const HUE = ['red', 'orange', 'green', 'blue', 'accent', 'black', 'white', 'gray'];
-const HUE_ALIAS = ['dark', 'light', 'subtle', 'slate'];
-
-const FURNITURE_AXIS = {
-	pos: new Set(['ts', 'tc', 'te', 'cs', 'cc', 'ce', 'bs', 'bc', 'be']),
-	hue: new Set([...HUE, ...HUE_ALIAS]),
-	size: new Set(['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl']), /* xs is beacon-only; play() sizes here too */
-	variant: new Set(['lgt', 'out']),
-	shape: new Set(['text', 'spl', 'spr']),
-	anim: new Set(['bln', 'pls', 'brt']), /* beacon animations (beacon(non) turns solid's default blink off — axis 'disc') */
-	face: new Set(['sld', 'tck', 'dts']), /* beacon faces (pll stays in disc — shared with the chip/save radius vocabulary) */
-	disc: new Set(['crc', 'sqr', 'rnd', 'pll', 'non'])
+/* the furniture stems (chip/sticker/save/play/beacon) + their deprecated spellings */
+const FURNITURE = Object.entries(TOKENS.attributes.media.tokens).filter(([, entry]) => entry.axis === 'furniture');
+const FURNITURE_TOKEN = new RegExp(`^(${FURNITURE.filter(([, entry]) => !entry.deprecated).map(([stem]) => stem).join('|')})\\(([^)]*)\\)$`);
+/* deprecated stem → canonical: ply(<size>) is the legacy spelling of play()'s sizes,
+   accepted as input and normalized away so <ui-play> has one stem for both its axes. */
+const STEM_ALIAS = FURNITURE.filter(([, entry]) => entry.deprecated).map(([stem, entry]) => [stem + '(', entry.canonical + '(']);
+const normToken = (token) => {
+	for (const [from, to] of STEM_ALIAS) if (token.startsWith(from)) return to + token.slice(from.length);
+	return token;
 };
+
+/* arg value → merge axis, unioned from the manifest across the furniture stems. The
+   class list is PINNED: adopting a new manifest arg class changes which preset tokens
+   an override displaces, so it is a deliberate edit, not a silent data pickup.
+   (`pos` = the 9-grid · `hue` = the 8-key palette + its accepted aliases · `size` — xs is
+   beacon-only, play() sizes live here too · `anim`/`face` are beacon's, `disc` the shared
+   radius vocabulary: beacon(non) turns solid's default blink off and stays in `disc`.) */
+const MERGE_CLASSES = ['pos', 'hue', 'size', 'variant', 'shape', 'anim', 'face', 'disc'];
+const FURNITURE_AXIS = Object.fromEntries(MERGE_CLASSES.map((cls) => [cls, new Set()]));
+for (const [, entry] of FURNITURE) {
+	for (const cls of MERGE_CLASSES)
+		for (const value of entry.args[cls] || []) if (!value.includes('<')) FURNITURE_AXIS[cls].add(value);
+	/* an accepted alias classifies with its canonical — dark→black is a hue */
+	for (const [alias, canonical] of Object.entries(entry.argAliases))
+		for (const cls of MERGE_CLASSES) if (FURNITURE_AXIS[cls].has(canonical)) FURNITURE_AXIS[cls].add(alias);
+}
 const axisOf = (value) => {
 	if (value.startsWith('sh:')) return 'shape'; /* clipped silhouettes: sh:burst, sh:<custom>… */
 	for (const [axis, set] of Object.entries(FURNITURE_AXIS)) if (set.has(value)) return axis;
 	return value; /* unknown → exact-match replacement */
 };
-const FURNITURE_TOKEN = /^(beacon|chip|sticker|save|play)\(([^)]*)\)$/;
-
-/* ply(<size>) is the legacy stem for the play() sizes — accepted as input,
-   normalized away so <ui-play> has one stem for both its axes. */
-const normToken = (token) => token.startsWith('ply(') ? `play(${token.slice(4)}` : token;
 
 /* Merge a preset media= string with furniture style-override tokens. Overrides
    win: any preset token of the same element+axis is dropped before appending. */
@@ -247,12 +258,15 @@ const withMedia = (html, media) => media ? html.replace('<ui-media', `<ui-media$
    grw() (content= owns scl()); both spellings are accepted as preset input. */
 const RVL_TOKEN = { expand: 'exp', flip: 'flp', slide: 'sld', scale: 'grw', scl: 'grw' };
 const FRM_TOKEN = { top: 'top', bottom: 'btm', left: 'lft', right: 'rgt' };
-/* animations whose token carries a direction/origin argument */
-const RVL_DIRECTED = new Set(['flp', 'sld', 'grw']);
+/* animations whose token carries a direction/origin argument (manifest: the
+   reveal-animation stems that declare a `pos` arg class — exp declares none) */
+const RVL_DIRECTED = new Set(Object.entries(TOKENS.attributes.variant.tokens)
+	.filter(([, entry]) => entry.axis === 'reveal-animation' && !entry.deprecated && entry.args.pos)
+	.map(([stem]) => stem));
 /* animations that need the <ui-face> front-face wrapper (exp animates the host) */
 const RVL_FACED = new Set(['flp', 'sld', 'grw']);
 const ICON_STYLE = { dark: 'drk', semi: 'sem' };
-const ICON_CELLS = new Set(['ts', 'te', 'bs', 'be']);
+const ICON_CELLS = new Set(TOKENS.attributes.variant.tokens.ico.args.pos);
 /* icon words → ico()/icc() tokens: positional words fold into ONE corner token
    (top/bottom × left/right; defaults top + end → ts te bs be),
    style words map to their short forms, corner/short values pass through. */
