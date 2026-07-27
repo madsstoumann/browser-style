@@ -471,4 +471,27 @@ Open items carried forward: a `pop` reveal inside a `lay-out-group` is trapped b
 - **F-40.** `buildFurniture` renders the marquee band (`{text, style}`, manifest-validated, band axis joins the same-axis merge table); `card.schema.json` declares the matching furniture entry.
 - **Layout quick wins.** F-35 flat-config rename (`srcsetConfig`), F-36 demo repair + stale `.tmp` plan removal, F-37 generated container CSS layered into `@layer layout.base` with dist rebuilt. Two follow-ups surfaced and were then fixed (both verified against main, where `xs` still had a `min` and `index.js` was equally absent — the entry was always intended, never written): the root `layout/index.js` now exists (Node-safe srcset/map API + browser-only `registerLayOut()`, since the component's `extends HTMLElement` cannot be statically re-exported into Node), and `build:maps` keeps min-less base breakpoints via `srcsetMin` in the config (`xs: 240` regenerates byte-identically; the CSS builder ignores the field).
 
+# TODO — manual review (2026-07-27)
+
+Everything actionable above is implemented and machine-verified (tokens lint, 104-instance SSR snapshot, Playwright demo checks). What remains is eyeball review and the consciously-deferred items:
+
+**Test these pages** (automated checks pass; taste calls are yours):
+
+- [ ] `ui/card/index.html` + `ui/reveal/index.html` — card + reveal system; **`bdr` on `<ui-reveal>` now paints on `> details`** (rounded surface, not the square host box)
+- [ ] `layout/dist/section.html` — **group headers now ride the responsive `scl()` ladder** (`hl(2xl)` etc. step with the `md:` container tier, same as inside cards); one-way bare `subgrid` demo at the bottom
+- [ ] `ui/card/media.carousel.html` + `media.furniture.html` — carousel incl. new `mrk(sbr)`/`mrk(lbl)`, marquee (only `marquee(rpt)` now — `marquee(loop)` is removed, no alias)
+- [ ] `layout/index.html` — repaired demo (real layout ids, `animate=` attributes)
+- [ ] `ui/card/render.html` — SSR renderer incl. the new `furniture.marquee: {text, style}` (schema entry in `card.schema.json`)
+- [ ] `node ui/card/build.js` — regenerates tokens.data.js/tokens.md **and the marker-injected doc tables**; lint runs inside
+
+**Deferred / open (decide when):**
+
+- [ ] **v5 batch:** R-14 step 4 (`style()`-flag migration), F-12 (scrim-declaration scoping), hue-alias retirement (`dark/light/subtle/slate`), `-ink` aliases, physical `tl…br` position aliases
+- [ ] **F-38** `[L]` — card `sub` variant so subgrid reaches card parts without the demo-local `display: contents` hack (pairs with the preset system; wpp.html shows the interim hack)
+- [ ] **F-32** — popup escape hatch (`lay-out:has(…) { contain: inline-size }`) still ships unlayered from the card package; consider moving into layout's own sheet
+- [ ] **Downstream:** `content/card/build-layouts-map.js` still emits the old `layoutConfig` name; `LayOut.srcsetConfig` is a published-API rename — coordinate when touching content/card
+- [ ] **Publish prep:** `layout/package.json` now has a real entry (`index.js`), but a publish dry-run (`npm pack`) hasn't been done for any package on this branch
+
+---
+
 *Report generated from a full-source review of the v4 branch. Line references describe the tree at the commit this file was introduced on (pre-implementation); the implementation commits above may have shifted exact line numbers.*
