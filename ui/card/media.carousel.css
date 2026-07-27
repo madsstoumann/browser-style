@@ -83,16 +83,20 @@
 	:where(ui-card, ui-reveal):where([media*="play(bs)"]) ui-media, ui-media:where([media*="play(bs)"]) { --_play-block: end;    --_play-inline: var(--ui-media-overlay-gap, 0.75rem) auto; --_play-justify: start; }
 	:where(ui-card, ui-reveal):where([media*="play(be)"]) ui-media, ui-media:where([media*="play(be)"]) { --_play-block: end;    --_play-inline: auto var(--ui-media-overlay-gap, 0.75rem); --_play-justify: end; --_play-size: max-content; }
 
-	/* reserved control band — nav(blw/abv) = both controls, mrk(blw/abv) = dots only, arw(blw/abv) = arrows only */
+	/* reserved control band — nav(blw/abv) = both controls, mrk(blw/abv) = dots only, arw(blw/abv) = arrows only.
+	   content-box so asr() sizes the IMAGE and the band is reserved OUTSIDE it (border-box would fold the
+	   band into the aspect-ratio box and squash the image — see media.carousel.md). */
 	:where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"]) ui-media,
 	ui-media:where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"]) {
 		background: var(--ui-carousel-controls-bg, var(--ui-media-bg));
+		box-sizing: content-box;
 		padding-block-end: calc(var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
 	}
 
 	:where(ui-card, ui-reveal):where([media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media,
 	ui-media:where([media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) {
 		background: var(--ui-carousel-controls-bg, var(--ui-media-bg));
+		box-sizing: content-box;
 		padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
 		scroll-padding-block-start: calc(var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));
 	}
