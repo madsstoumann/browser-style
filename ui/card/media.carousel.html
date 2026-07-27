@@ -90,7 +90,8 @@
 			<ol>
 				<li><a href="#arrowglyph">Glyph</a></li>
 				<li><a href="#sizes">Sizes</a></li>
-				<li><a href="#arrowshape">Shape &amp; reveal</a></li>
+				<li><a href="#arrowshape">Shape</a></li>
+				<li><a href="#arrowreveal">Reveal on hover</a></li>
 				<li><a href="#arrowplacement">Placement</a></li>
 				<li><a href="#arrowset">Sets</a></li>
 				<li><a href="#arrowhide">Auto-hide</a></li>
@@ -221,13 +222,18 @@
 		</ui-card>
 	</lay-out>
 
-	<h3 id="arrowshape">Shape &amp; reveal — <code>arw(sqr/sft/rev)</code></h3>
-	<p><code>arw(sqr)</code> square · <code>arw(sft)</code> rounded · <code>arw(rev)</code> reveal on hover/focus (touch keeps them visible).</p>
+	<h3 id="arrowshape">Shape — <code>arw(sqr)</code> / <code>arw(sft)</code></h3>
+	<p>Arrows are circles by default; <code>arw(sqr)</code> square, <code>arw(sft)</code> rounded.</p>
 	<lay-out md="columns(2)">
 		<ui-media media="asr(16/9) nav arw(sqr)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
 		<ui-media media="asr(16/9) rds(lg) clip nav arw(sft)"><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
-		<ui-media media="asr(16/9) rds(lg) clip nav arw(rev)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
-		<ui-media media="asr(16/9) rds(lg) clip nav(arw) arw(rev) arw(bare)"><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
+	</lay-out>
+
+	<h3 id="arrowreveal">Reveal on hover — <code>arw(rev)</code></h3>
+	<p><code>arw(rev)</code> hides the arrows until the media is hovered or keyboard-focused (touch keeps them visible). Dots stay always-visible in a band below.</p>
+	<lay-out md="columns(2)">
+		<ui-media media="asr(16/9) rds(lg) clip nav mrk(blw) arw(rev)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+		<ui-media media="asr(16/9) rds(lg) clip nav mrk(blw) arw(rev) arw(bare)"><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
 	</lay-out>
 
 	<h3 id="arrowplacement">Placement — <code>arw(tc/cc/bc)</code></h3>

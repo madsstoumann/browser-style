@@ -42,6 +42,12 @@
 			--ui-carousel-marker-inset: var(--ui-carousel-thumb-gap, 1rem);
 			--ui-carousel-marker-size: var(--ui-carousel-thumb-size, 2.25rem);
 		}
+		/* filmstrip / rail: thumbs sit in a band (page bg, not the image), so the white active
+		   border vanishes. Default the active border to a page-contrasting ink; still overridable
+		   via --ui-carousel-thumb-border-color-active. */
+		&:where([media*="mrk(tmb)"]:is([media*="mrk(blw)"], [media*="mrk(abv)"], [media*="nav(blw)"], [media*="nav(abv)"], [media*="mrk(rail)"])) {
+			--ui-carousel-thumb-border-color-active: color-mix(in oklab, CanvasText 70%, transparent);
+		}
 		/* tmb(<ratio>) — thumbnail aspect-ratio (default 4/3). -ratio drives aspect-ratio,
 		   -ratio-n is the numeric form the mrk(rail) width calc needs. */
 		&:where([media~="tmb(1/1)"])  { --ui-carousel-thumb-ratio: 1 / 1;  --ui-carousel-thumb-ratio-n: 1; }
@@ -393,19 +399,6 @@
 
 		:where(ui-media, lay-out[overflow]) > [data-clone]::scroll-marker { content: none; }
 
-		/* arw(rev) — arrows hidden, revealed on hover / focus-within (or the button's own
-		   focus-visible for keyboards). Gated on @media (hover: hover) so touch — which never
-		   hovers — keeps them visible. */
-		@media (hover: hover) {
-			:where(ui-card, ui-reveal):where([media*="arw(rev)"]) :where(ui-media),
-			:where(ui-media, lay-out[overflow]):where([media*="arw(rev)"]) {
-				&::scroll-button(*) { opacity: 0; }
-				&:hover::scroll-button(*),
-				&:focus-within::scroll-button(*),
-				&::scroll-button(*):focus-visible { opacity: 1; }
-			}
-		}
-
 		:where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
 			/* arrow vertical band — split arrows honor the block row (t/c/b); cc = middle default */
 			&:where([media*="arw(ts)"], [media*="arw(tc)"], [media*="arw(te)"]) { --ui-carousel-arrow-top: calc(anchor(top) + var(--ui-carousel-overlay-gap)); }
@@ -463,6 +456,23 @@
 				opacity: var(--ui-carousel-arrow-disabled-opacity, 0.5);
 				pointer-events: none;
 				--_arw-scale: 1;
+			}
+		}
+
+		/* arw(rev) — hide EVERY arrow (incl. disabled dead-ends) until the media is hovered or
+		   keyboard-focused. Declared after the nav/bare :disabled rules so its opacity:0 wins by
+		   source order; on reveal, enabled arrows go full, disabled ones show dimmed. Gated on
+		   @media (hover: hover) so touch — which never hovers — keeps them visible. */
+		@media (hover: hover) {
+			:where(ui-card, ui-reveal):where([media*="arw(rev)"]) :where(ui-media),
+			:where(ui-media, lay-out[overflow]):where([media*="arw(rev)"]) {
+				&::scroll-button(*),
+				&::scroll-button(*):disabled { opacity: 0; }
+				&:hover::scroll-button(*),
+				&:focus-within::scroll-button(*),
+				&::scroll-button(*):focus-visible { opacity: 1; }
+				&:hover::scroll-button(*):disabled,
+				&:focus-within::scroll-button(*):disabled { opacity: var(--ui-carousel-arrow-disabled-opacity, 0.5); }
 			}
 		}
 

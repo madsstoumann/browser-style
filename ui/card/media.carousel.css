@@ -31,9 +31,11 @@
 		inset: auto;
 		position: static;
 	}
-	/* nav(abv): round the media itself so it matches the rds() frame under the band above */
-	:where(ui-card, ui-reveal):where([media*="nav(abv)"]) ui-media > :is(iframe, img, picture, video),
-	ui-media:where([media*="nav(abv)"]) > :is(iframe, img, picture, video) {
+	/* reserved band (nav/mrk/arw · blw or abv): round the image itself so the edge offset from the
+	   band matches the rds() frame — the outer clip only rounds the frame corners, not the image
+	   edge that sits inset from the band (image bottom for blw, image top for abv) */
+	:where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media > :is(iframe, img, picture, video),
+	ui-media:where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) > :is(iframe, img, picture, video) {
 		border-radius: var(--ui-media-radius, 0);
 	}
 
