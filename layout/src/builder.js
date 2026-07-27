@@ -170,25 +170,23 @@ export class LayoutBuilder {
 		}
 	}
 
-	// subgrid — breakpoint-scoped row alignment.
+	// subgrid — breakpoint-scoped row alignment, one-way.
 	//
-	// ON: the `subgrid(on)` keyword in a breakpoint attribute (e.g.
-	// lg="columns(3) subgrid(on)") turns it on from that breakpoint up. The row
-	// count is set ONCE, globally, via the `subgrid="N"` attribute — read with
-	// attr() into a typed custom property (a bare `grid-row: span attr()` doesn't
-	// resolve, but `span var()` does).
+	// The bare `subgrid` keyword in a breakpoint attribute (e.g.
+	// lg="columns(3) subgrid") turns it on from that breakpoint up — there is no
+	// off token: once a layout commits to shared rows it doesn't uncommit at a
+	// larger width (the old subgrid(off) was removed with its parenthesised
+	// spelling). The row count is set ONCE, globally, via the `subgrid="N"`
+	// attribute — read with attr() into a typed custom property (a bare
+	// `grid-row: span attr()` doesn't resolve, but `span var()` does). `~=` is
+	// exact-token matching, so the token never collides with that attribute (a
+	// selector on `[lg~="subgrid"]` never reads `subgrid="3"`).
 	//
 	// The heavy per-child body (container-type / display / grid-row /
 	// grid-template-rows: subgrid) lives ONCE in core/base.css behind
-	// `@container style(--_subgrid: on)` — the rules emitted here are just flag
-	// flips plus the container's own physical rows. OFF (`subgrid(off)` at a
-	// LARGER breakpoint) flips the flag back in a later `@layer layout.<bp>`, the
-	// style query stops matching, and every child property reverts to its natural
-	// value (the card's own inline-size container, base's grid-area placement) —
-	// no explicit undo rules needed. The container's `grid-template-rows` is a
-	// physical declaration (it must outrank later breakpoints' --layout-gtr
-	// variant tokens), so OFF re-asserts the var() read. `~=` is exact-token
-	// matching, so `subgrid(on)` and `subgrid(off)` never cross-match.
+	// `@container style(--_subgrid: on)` — the rule emitted here is just the flag
+	// flip plus the container's own physical rows (physical because it must
+	// outrank later breakpoints' --layout-gtr variant tokens).
 	//
 	// Only emitted from `md` upward (never xs/sm) — subgrid at tiny widths makes no
 	// sense (cards stack into one column).
@@ -196,12 +194,9 @@ export class LayoutBuilder {
 		if (breakpointName === 'xs' || breakpointName === 'sm') return
 		const el = this.config.element || 'lay-out'
 
-		this.addRule(mediaQuery, `${el}[${breakpointName}~="subgrid(on)"]`,
+		this.addRule(mediaQuery, `${el}[${breakpointName}~="subgrid"]`,
 			{ '--_subgrid': 'on', '--_sg': 'attr(subgrid type(<integer>), 1)', 'grid-template-rows': 'repeat(var(--_sg), auto)' },
-			breakpointName, { kind: 'feature', variantKey: 'subgrid(on)' })
-		this.addRule(mediaQuery, `${el}[${breakpointName}~="subgrid(off)"]`,
-			{ '--_subgrid': 'off', 'grid-template-rows': 'var(--layout-gtr)' },
-			breakpointName, { kind: 'feature', variantKey: 'subgrid(off)' })
+			breakpointName, { kind: 'feature', variantKey: 'subgrid' })
 	}
 
 	// Spacing tokens — card-style, per-breakpoint, config-gated.

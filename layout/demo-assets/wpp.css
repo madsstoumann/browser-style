@@ -65,9 +65,9 @@ lay-out ui-content { --ui-content-p: 0; padding-block-start: 0.75rem; }
 [data-part="headline"] { font-weight: 400; }
 [data-part="meta"] { color: var(--color-text-muted); }
 
-lay-out[lg~="subgrid(on)"] ui-media img { block-size: 100%; object-fit: cover; }
+lay-out[lg~="subgrid"] ui-media img { block-size: 100%; object-fit: cover; }
 
-/* Card subgrid — the lay-out's `subgrid(on)` token makes each ui-card a subgrid of
+/* Card subgrid — the lay-out's `subgrid` token makes each ui-card a subgrid of
    the grid's N shared rows, but the card's parts are nested two wrappers deep
    (ui-card > cq-box > ui-media | ui-content > eyebrow/headline/CTA), and every wrapper
    breaks the subgrid chain. The fix here is to FLATTEN both wrappers with
@@ -84,7 +84,7 @@ lay-out[lg~="subgrid(on)"] ui-media img { block-size: 100%; object-fit: cover; }
    breakpoint — see the subgrid section in layout/AGENTS.md. Until that lands, hand-write
    this per demo. */
 @media (min-width: 45rem) {
-	lay-out[lg~="subgrid(on)"] > ui-card {
+	lay-out[lg~="subgrid"] > ui-card {
 		& > cq-box, & > cq-box > ui-content { display: contents; }
 		&:not(:first-child) ui-media { aspect-ratio: auto; }
 	}

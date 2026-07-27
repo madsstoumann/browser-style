@@ -5,8 +5,8 @@
    bleed inline-padding *length*; registering it as <integer> would zero out bleed. */
 @property --_pg { syntax: "<integer>"; inherits: true; initial-value: 0; }
 
-/* subgrid flag — flipped per breakpoint by the builder (subgrid(on)/subgrid(off)
-   tokens, see generateSubgridCSS); the child body below dispatches on it via a
+/* subgrid flag — set per breakpoint by the builder (the bare `subgrid` token,
+   see generateSubgridCSS); the child body below dispatches on it via a
    style query. NON-inheriting on purpose: a nested <lay-out> must not pick up a
    wrapping layout's subgrid state. Universal syntax needs no initial-value (the
    guaranteed-invalid initial simply never matches the style query). */
@@ -330,24 +330,21 @@
 		&[width="xl"]  { --_mi: var(--layout-width-xl,  80rem); }
 		&[width="xxl"] { --_mi: var(--layout-width-xxl, 96rem); }
 
-		/* subgrid(on) / subgrid(off) are BREAKPOINT tokens (e.g.
-		   md="columns(3) subgrid(on)" xl="subgrid(off)"), generated per-breakpoint by
-		   the builder so subgrid only applies where the grid is actually multi-column
-		   — a stacked single-column breakpoint would collapse the shared rows. `on`
-		   makes each direct child adopt N shared rows (N from the global `subgrid="N"`
-		   attribute), aligning their internal rows (media / title / meta) across the
-		   grid; `off` turns it back off at a larger breakpoint.
+		/* `subgrid` is a BREAKPOINT token (e.g. md="columns(3) subgrid"), generated
+		   per-breakpoint by the builder so subgrid only applies where the grid is
+		   actually multi-column — a stacked single-column breakpoint would collapse
+		   the shared rows. It makes each direct child adopt N shared rows (N from
+		   the global `subgrid="N"` attribute), aligning their internal rows
+		   (media / title / meta) across the grid. One-way by design: there is no
+		   off token — once a layout commits to shared rows it stays committed at
+		   every larger breakpoint.
 
-		   The builder emits only 2-declaration flag flips (--_subgrid + the
-		   container's own physical rows — see generateSubgridCSS in src/builder.js);
-		   the per-child body lives HERE, once, dispatched on the flag. The children
-		   query their parent (every element is a style container; --_subgrid is
-		   non-inheriting, so the value is the parent's own). When the flag flips off
-		   at a larger breakpoint the query stops matching and each property reverts
-		   to its natural value — the card's own inline-size query container and
-		   base's grid-area placement come back without explicit undo rules.
-		   container-type is neutralised while ON because a card's own inline-size
-		   container would sever the subgrid chain. */
+		   The builder emits only the flag flip (--_subgrid + the container's own
+		   physical rows — see generateSubgridCSS in src/builder.js); the per-child
+		   body lives HERE, once, dispatched on the flag. The children query their
+		   parent (every element is a style container; --_subgrid is non-inheriting,
+		   so the value is the parent's own). container-type is neutralised while ON
+		   because a card's own inline-size container would sever the subgrid chain. */
 		@container style(--_subgrid: on) {
 			& > :not(lay-out) {
 				container-type: normal;
@@ -960,15 +957,10 @@
     --layout-ga: auto / span 2;
   }
 
-  lay-out[md~="subgrid(on)"] {
+  lay-out[md~="subgrid"] {
     --_subgrid: on;
     --_sg: attr(subgrid type(<integer>), 1);
     grid-template-rows: repeat(var(--_sg), auto);
-  }
-
-  lay-out[md~="subgrid(off)"] {
-    --_subgrid: off;
-    grid-template-rows: var(--layout-gtr);
   }
 
   lay-out[md*="items(start)"] {
@@ -1627,15 +1619,10 @@
     --layout-rg: 4;
   }
 
-  lay-out[lg~="subgrid(on)"] {
+  lay-out[lg~="subgrid"] {
     --_subgrid: on;
     --_sg: attr(subgrid type(<integer>), 1);
     grid-template-rows: repeat(var(--_sg), auto);
-  }
-
-  lay-out[lg~="subgrid(off)"] {
-    --_subgrid: off;
-    grid-template-rows: var(--layout-gtr);
   }
 
   lay-out[lg*="items(start)"] {
@@ -1850,15 +1837,10 @@
     aspect-ratio: 1;
   }
 
-  lay-out[xl~="subgrid(on)"] {
+  lay-out[xl~="subgrid"] {
     --_subgrid: on;
     --_sg: attr(subgrid type(<integer>), 1);
     grid-template-rows: repeat(var(--_sg), auto);
-  }
-
-  lay-out[xl~="subgrid(off)"] {
-    --_subgrid: off;
-    grid-template-rows: var(--layout-gtr);
   }
 
   lay-out[xl*="items(start)"] {
@@ -1924,15 +1906,10 @@
     display: none;
   }
 
-  lay-out[xxl~="subgrid(on)"] {
+  lay-out[xxl~="subgrid"] {
     --_subgrid: on;
     --_sg: attr(subgrid type(<integer>), 1);
     grid-template-rows: repeat(var(--_sg), auto);
-  }
-
-  lay-out[xxl~="subgrid(off)"] {
-    --_subgrid: off;
-    grid-template-rows: var(--layout-gtr);
   }
 
   lay-out[xxl*="items(start)"] {

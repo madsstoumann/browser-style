@@ -375,7 +375,7 @@ small — see [Spacing configuration](#spacing-configuration).
 
 See [spacing demos](dist/spacing.html) for visual examples.
 
-### Row alignment — `subgrid(on)` / `subgrid(off)`
+### Row alignment — `subgrid`
 
 Make each direct child adopt the grid's shared rows so their internal rows (media ·
 eyebrow · headline · meta) line up across the row, regardless of how far individual
@@ -384,29 +384,29 @@ grid is actually multi-column — a stacked single-column breakpoint would colla
 shared rows):
 
 ```html
-<lay-out subgrid="3" md="columns(3) subgrid(on)" xl="subgrid(off)">
+<lay-out subgrid="3" md="columns(3) subgrid">
   <ui-card>…</ui-card>
   <ui-card>…</ui-card>
   <ui-card>…</ui-card>
 </lay-out>
 ```
 
-- **`subgrid(on)`** — enable from that breakpoint up. The **row count** comes from the
-  separate global **`subgrid="N"`** attribute (one value, not per-breakpoint).
-- **`subgrid(off)`** — disable again from a larger breakpoint up (because
-  `@media (min-width)` is cumulative, an earlier `subgrid(on)` otherwise persists). The
-  off rule wins by cascade-layer order.
+- **`subgrid`** — enable from that breakpoint up. The **row count** comes from the
+  separate global **`subgrid="N"`** attribute (one value, not per-breakpoint; `~=` is
+  exact-token matching, so the token and the attribute never collide).
+- **One-way by design** — there is no off token. `@media (min-width)` is cumulative, so
+  once a breakpoint commits to shared rows every larger breakpoint keeps them; a layout
+  that switches to subgrid doesn't switch back. (The old `subgrid(on)`/`subgrid(off)`
+  pair is removed.)
 - Generated only for `md`/`lg`/`xl`/`xxl` — never `xs`/`sm`.
 - Tuned for **card grids**: each child adopts N shared rows and neutralises its own
-  inline-size container while subgrid is on; turning off lets the child's own
-  `container-type: inline-size` (its container-query root) come back naturally — the
-  per-child styles are dispatched on an internal flag (`@container style(--_subgrid: on)`
-  in `core/base.css`), so `off` simply stops the dispatch instead of re-asserting values.
+  inline-size container while subgrid is on — the per-child styles are dispatched on an
+  internal flag (`@container style(--_subgrid: on)` in `core/base.css`).
 
 > **Authoring note:** the token becomes an attribute-selector value in the generated CSS
-> (`lay-out[md~="subgrid(on)"]`). Any app/demo CSS that hooks the subgrid state (e.g. to
-> flip a wrapper to `display: contents`) must match the exact token string —
-> `[lg~="subgrid(on)"]`, not the old bare `[lg~="subgrid"]`.
+> (`lay-out[md~="subgrid"]`). Any app/demo CSS that hooks the subgrid state (e.g. to
+> flip a wrapper to `display: contents`) matches the bare token — `[lg~="subgrid"]`,
+> not the removed `[lg~="subgrid(on)"]`.
 
 ### Item Animations
 

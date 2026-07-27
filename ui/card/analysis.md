@@ -23,7 +23,7 @@ Driven by two custom elements — **`<lay-out>`** (the grid host; children are i
 | `xl` | `<lay-out>` | Layout pattern at the xl breakpoint (920px+). | Value |
 | `xxl` | `<lay-out>` | Layout pattern at the xxl breakpoint (1140px+). | Value |
 
-The breakpoint attributes also carry embedded **inline tokens** (not separate attributes). Spacing is **token-only** — there are no bare `pad-*`/`space-*`/`*-gap` attributes. Spacing tokens: `p()` (all sides), `pi()`, `pb()`, `pbs()`, `pbe()`, `mbs()`, `mbe()`, `cg()`, `rg()`, plus the `subgrid(on)` / `subgrid(off)` keywords. Child alignment is also a per-breakpoint builder token — `items(start|center|end|stretch)`, e.g. `lg="columns(2) items(start)"` (the former standalone `items=` attribute is removed). The lowest breakpoint (`xs`, no `min` in the default config) emits un-media-queried, acting as the mobile-first base; larger breakpoints override. Which tokens are generated per breakpoint is set in `layout.config.json` (`spacing.tokens` + per-breakpoint `spacing`).
+The breakpoint attributes also carry embedded **inline tokens** (not separate attributes). Spacing is **token-only** — there are no bare `pad-*`/`space-*`/`*-gap` attributes. Spacing tokens: `p()` (all sides), `pi()`, `pb()`, `pbs()`, `pbe()`, `mbs()`, `mbe()`, `cg()`, `rg()`, plus the bare `subgrid` keyword (one-way — no off token). Child alignment is also a per-breakpoint builder token — `items(start|center|end|stretch)`, e.g. `lg="columns(2) items(start)"` (the former standalone `items=` attribute is removed). The lowest breakpoint (`xs`, no `min` in the default config) emits un-media-queried, acting as the mobile-first base; larger breakpoints override. Which tokens are generated per breakpoint is set in `layout.config.json` (`spacing.tokens` + per-breakpoint `spacing`).
 
 ### Global spacing & sizing
 
@@ -35,7 +35,7 @@ The breakpoint attributes also carry embedded **inline tokens** (not separate at
 | `width` | `<lay-out>` | Constrains to a named width preset (xs–xxl). | Value |
 | `self` | `<lay-out>` | Sets the element's own `place-self` within its parent grid. | Value |
 | `size` | `<lay-out>` | Enables `content-visibility` with a `contain-intrinsic-size` hint. | Value |
-| `subgrid` | `<lay-out>` | Row count each child adopts as shared subgrid rows (activated per-breakpoint by the `subgrid(on)` token; turned off by `subgrid(off)`). | Value |
+| `subgrid` | `<lay-out>` | Row count each child adopts as shared subgrid rows (activated per-breakpoint by the bare `subgrid` token — one-way, no off token). | Value |
 
 ### Full-bleed & decorations
 
