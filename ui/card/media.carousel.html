@@ -1005,7 +1005,7 @@
 
 	<h2>14 · Peek both sides — <code>frame</code> in a card (side by side)</h2>
 	<p>Two framed carousels in a <code>&lt;lay-out lg="columns(2)"&gt;</code>, each a <code>&lt;ui-card variant="bdr bdr(lgt)"&gt;</code> — a light hairline instead of a themed fill. Inside each card a <code>&lt;lay-out-group&gt;</code> holds a small header (eyebrow + title + one line — see <a href="/layout/dist/section.html">section.html</a>) above its swipeable sub-cards. <code>frame</code> is like <code>center</code> — a peek on each side — but start-snaps with a leading pad, framing a <em>page</em> of cards between symmetric peeks, advancing one card at a time. Arrows sit at their default center-edge position (<code>nav(arw)</code>) and dead-end arrows auto-hide (<code>arw(hid)</code>). Both use a thin <code>preview-xs</code> peek — left frames one card (<code>columns(1)</code>), right frames two (<code>columns(2)</code>).</p>
-	<lay-out lg="columns(2) items(start)">
+	<lay-out lg="items(start)" width="sm">
 		<ui-card variant="bdr bdr(lgt)">
 			<lay-out-group style="--layout-group-gap: 0">
 				<ui-content style="padding: var(--spacing-md) var(--spacing-md) 0">
@@ -1021,6 +1021,9 @@
 				</lay-out>
 			</lay-out-group>
 		</ui-card>
+		<!-- -->
+	</lay-out>
+	<lay-out lg="items(start)" width="sm">
 		<ui-card variant="bdr bdr(lgt)">
 			<lay-out-group style="--layout-group-gap: 0">
 				<ui-content style="padding: var(--spacing-md) var(--spacing-md) 0">
@@ -1036,7 +1039,7 @@
 					<ui-card variant="ovr(bl) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Nature</small><h3 data-part="headline">Current</h3></ui-content></cq-box></ui-card>
 				</lay-out>
 			</lay-out-group>
-		</ui-card>
+		</ui-card> 
 	</lay-out>
 
 	<h2>15 · Seamless loop + autoplay — <code>loop</code> · <code>auto()</code></h2>
@@ -1213,28 +1216,6 @@
 				<ui-media media="nav(blw) arw(lg) mrk(be)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
 				<ui-content><small data-part="eyebrow">media="nav(blw) arw(lg) mrk(be)" on ui-media</small><h2 data-part="headline">frame form</h2></ui-content>
 			</cq-box>
-		</ui-card>
-	</lay-out>
-
-	<hr>
-	<h2>Card border — <code>variant="bdr"</code></h2>
-	<p>A <code>ui-card</code> uses the <code>surface</code> background, so its edges can vanish against a surface page even with the shadow. <code>bdr</code> adds an opt-in hairline. Shades: <code>bdr(lgt)</code> (super-light) · default · <code>bdr(drk)</code> (darker). Widths: <code>bdr(sm)</code> 1px · <code>bdr(md)</code> 2px · <code>bdr(lg)</code> 3px. Author overrides: <code>--ui-card-border-color</code> / <code>--ui-card-border-width</code> / <code>--ui-card-border-style</code> (e.g. dashed).</p>
-	<lay-out md="columns(2)" lg="columns(4)">
-		<ui-card variant="col bdr bdr(lgt) rds(md)" media="asr(4/3) scm" content="scl(sm) pad(md)">
-			<cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">bdr(lgt)</small><h3 data-part="headline">Super-light</h3></ui-content></cq-box>
-		</ui-card>
-		<ui-card variant="col bdr rds(md)" media="asr(4/3) scm" content="scl(sm) pad(md)">
-			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">bdr</small><h3 data-part="headline">Default</h3></ui-content></cq-box>
-		</ui-card>
-		<ui-card variant="col bdr bdr(drk) rds(md)" media="asr(4/3) scm" content="scl(sm) pad(md)">
-			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">bdr(drk)</small><h3 data-part="headline">Darker</h3></ui-content></cq-box>
-		</ui-card>
-		<ui-card variant="col bdr bdr(md) rds(md)" media="asr(4/3) scm" content="scl(sm) pad(md)" style="--ui-card-border-style: dashed; --ui-card-border-color: var(--color-accent);">
-			<cq-box><ui-media><img src="/assets/images/world.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">bdr(md) + dashed accent</small><h3 data-part="headline">Authored</h3></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
 
