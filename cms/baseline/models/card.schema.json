@@ -388,6 +388,23 @@
             }
           }
         },
+        "marquee": {
+          "type": "object",
+          "title": "Marquee",
+          "description": "Full-width scrolling text band across the media (<ui-marquee>) — a BAND, not 9-grid furniture: it spans the frame's inline size, is positioned only top (default) or bot, and sits below the point furniture (chip/beacon/sticker). Text renders via aria-label on an empty element — no child markup.",
+          "properties": {
+            "text": {
+              "type": "string",
+              "title": "Text"
+            },
+            "style": {
+              "type": "string",
+              "title": "Style override",
+              "localized": false,
+              "description": "Extra marquee() tokens appended after the preset, e.g. \"red sm rpt\" or \"bot fade\". Overrides the preset for the same axis (position/hue/size/mode); unknown words are dropped by the renderer."
+            }
+          }
+        },
         "save": {
           "type": "object",
           "title": "Save",

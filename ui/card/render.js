@@ -318,7 +318,7 @@ const buildFurniture = (furniture, fields, tokens, mediaId, videoId = null) => {
 	let html = '';
 	const push = (el, style) => { for (const token of styleTokens(el, style)) tokens.media.push(token); };
 
-	if (furniture.marquee?.label) {
+	if (furniture.marquee?.text) {
 		/* A BAND, not 9-grid furniture: it spans the frame's full inline size and
 		   takes no position cell — `top` (default) and `bot` are its only placement
 		   words, and it rides at z-index 1, BELOW the z-2 point furniture. Text goes
@@ -326,7 +326,7 @@ const buildFurniture = (furniture, fields, tokens, mediaId, videoId = null) => {
 		   ui-marquee.css fills ::before (and ::after for the rpt mode) while the
 		   element is :empty, so the band needs no child markup at all. */
 		const marquee = furniture.marquee;
-		html += `<ui-marquee aria-label="${esc(marquee.label)}"></ui-marquee>`;
+		html += `<ui-marquee aria-label="${esc(marquee.text)}"></ui-marquee>`;
 		push('marquee', marqueeStyle(marquee.style));
 	}
 	if (furniture.play) {
