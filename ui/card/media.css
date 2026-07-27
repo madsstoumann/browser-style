@@ -180,10 +180,16 @@
 	/* ── Marquee — full-width scrolling band. Not a 9-grid point, so a band-only
 	   top/bot vocab (top = default). Sits at z-index 1, BELOW the z-2 furniture.
 	   Hue marquee(<hue>) and size marquee(sm|lg|xl|2xl) come from the component's
-	   own arms. ── */
+	   own arms — those are `:where([media*="marquee(…)"]) &` in ui-marquee.css, so
+	   they already resolve from either placement. The POSITION args needed the
+	   second (self) arm below: the host arm has ui-media as a middle combinator,
+	   so it only matched with media= on an ANCESTOR — while the renderer's
+	   canonical placement puts media= on the <ui-media> itself. ── */
 	:where(ui-media) ui-marquee { position: absolute; inset-inline: 0; inset-block: 0 auto; z-index: 1; }
-	:where([media*="marquee(top)"]) ui-media ui-marquee { inset-block: 0 auto; }
-	:where([media*="marquee(bot)"]) ui-media ui-marquee { inset-block: auto 0; }
+	:where([media*="marquee(top)"]) ui-media ui-marquee,
+	:where(ui-media[media*="marquee(top)"]) ui-marquee { inset-block: 0 auto; }
+	:where([media*="marquee(bot)"]) ui-media ui-marquee,
+	:where(ui-media[media*="marquee(bot)"]) ui-marquee { inset-block: auto 0; }
 
 	/* per-slide video control (nested frame) — always centered, wins over play() furniture */
 	ui-media ui-media > ui-play {

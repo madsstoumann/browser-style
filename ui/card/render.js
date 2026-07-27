@@ -216,8 +216,9 @@ const normToken = (token) => {
    an override displaces, so it is a deliberate edit, not a silent data pickup.
    (`pos` = the 9-grid · `hue` = the 8-key palette + its accepted aliases · `size` — xs is
    beacon-only, play() sizes live here too · `anim`/`face` are beacon's, `disc` the shared
-   radius vocabulary: beacon(non) turns solid's default blink off and stays in `disc`.) */
-const MERGE_CLASSES = ['pos', 'hue', 'size', 'variant', 'shape', 'anim', 'face', 'disc'];
+   radius vocabulary: beacon(non) turns solid's default blink off and stays in `disc` ·
+   `mode` = the pale/muted plate tones · `flag` = sticker(fit)'s text-fit typesetting.) */
+const MERGE_CLASSES = ['pos', 'hue', 'size', 'variant', 'shape', 'anim', 'face', 'disc', 'mode', 'flag'];
 const FURNITURE_AXIS = Object.fromEntries(MERGE_CLASSES.map((cls) => [cls, new Set()]));
 for (const [, entry] of FURNITURE) {
 	for (const cls of MERGE_CLASSES)

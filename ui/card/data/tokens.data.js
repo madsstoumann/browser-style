@@ -564,8 +564,7 @@ export default {
 						],
 						"mode": [
 							"pale",
-							"muted",
-							"fit"
+							"muted"
 						],
 						"size": [
 							"sm",
@@ -591,6 +590,9 @@ export default {
 							"sh:sunburst",
 							"sh:heart",
 							"sh:<custom>"
+						],
+						"flag": [
+							"fit"
 						]
 					},
 					"argAliases": {
@@ -625,7 +627,7 @@ export default {
 						"ui/sticker/ui-sticker.css:86",
 						"ui/sticker/ui-sticker.css:231"
 					],
-					"notes": "Default area te. sh: is an OPEN prefix — the generic rule [media*=\"sticker(sh:\"] (ui-sticker.css:231) sets up the ::before fill, so a custom sh:<name> + --ui-sticker-clip-path needs no CSS edit (render.js:214 classifies any sh:* as axis 'shape'). spl/spr are the flat media= aliases for variant=\"speech(l|r)\" (nested parens are illegal in a media= token). sticker(fit) opts into text-fit: grow (@supports-gated) and has NO class in render.js FURNITURE_AXIS."
+					"notes": "Default area te. sh: is an OPEN prefix — the generic rule [media*=\"sticker(sh:\"] (ui-sticker.css:231) sets up the ::before fill, so a custom sh:<name> + --ui-sticker-clip-path needs no CSS edit (render.js:214 classifies any sh:* as axis 'shape'). spl/spr are the flat media= aliases for variant=\"speech(l|r)\" (nested parens are illegal in a media= token). sticker(fit) opts into text-fit: grow (@supports-gated) and has NO class in render.js FURNITURE_AXIS. sticker(fit) is a TYPESETTING flag (text-fit: grow per-line-all, @supports-gated, ui-sticker.css:170-176), independent of the pale/muted plate tones — hence its own `flag` arg class."
 				},
 				"save": {
 					"axis": "furniture",
@@ -935,7 +937,7 @@ export default {
 					"realProperties": true,
 					"cqPrefixes": [],
 					"cqArgs": [],
-					"selfArm": false,
+					"selfArm": true,
 					"hosts": [
 						"ui-media",
 						"ui-card",
@@ -945,12 +947,12 @@ export default {
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
-						"ui/card/media.css:184",
+						"ui/card/media.css:189",
 						"ui/marquee/ui-marquee.css:94",
 						"ui/marquee/ui-marquee.css:108",
 						"ui/marquee/ui-marquee.css:135"
 					],
-					"notes": "A BAND, not 9-grid furniture: full-width (inset-inline: 0), z-index 1 (BELOW the z-2 furniture), and only two placements. SPLIT ARMS: the position tokens are matched :where([media*=\"marquee(top|bot)\"]) ui-media ui-marquee (media.css:185) — the holder must be an ANCESTOR of the frame, so marquee(bot) on the <ui-media> itself is a no-op; every other arg resolves through ui-marquee.css's own ancestor arms and works from either placement. Direction/speed/gap live only in the 'value' bucket (no render.js axis class). marquee(loop) is a live deprecated alias that still substring-collides with the carousel's `loop` (see discrepancies). seam is @supports(offset-path)+reduced-motion gated."
+					"notes": "A BAND, not 9-grid furniture: full-width (inset-inline: 0), z-index 1 (BELOW the z-2 furniture), and only two placements. The position args carry a dual arm — host `:where([media*=\"marquee(top|bot)\"]) ui-media ui-marquee` plus self `:where(ui-media[media*=\"marquee(top|bot)\"]) ui-marquee` (media.css:189-192); before the self arm was added, marquee(bot) on the <ui-media> itself (the renderer's canonical placement) was a silent no-op. Every other arg resolves through ui-marquee.css's own ancestor arms (`:where([media*=\"marquee(…)\"]) &`) and has always worked from either placement. Direction/speed/gap live only in the 'value' bucket (no render.js merge class). marquee(loop) is a live deprecated alias of marquee(rpt); it no longer collides with the carousel's bare `loop`, which is whole-token matched on both the CSS and JS sides. seam is @supports(offset-path)+reduced-motion gated."
 				},
 				"vid": {
 					"axis": "video",
@@ -1333,11 +1335,11 @@ export default {
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
-						"ui/card/media.carousel.css:71",
+						"ui/card/media.carousel.css:75",
 						"ui/card/carousel.js:82",
 						"ui/card/carousel.js:160"
 					],
-					"notes": "MIXED matching: CSS uses substring [media*=\"auto\"] (media.carousel.css:71-72, the sticky <ui-play> rule); JS uses whole-token — :is([media~=\"auto\"], [media*=\"auto(\"]) plus hasToken() — and parses the duration with /(?:^|\\s)auto(?:\\((\\d+(?:\\.\\d+)?)(m?s)?\\))?/, so a bare number means SECONDS. Default 5s. No-ops under prefers-reduced-motion and with <2 slides. The three --ui-carousel-* writes are inline styles set by carousel.js, not CSS. The CSS arm is deliberately NOT factored: the host arm excludes nested frames (:not(ui-media ui-media)), the self arm doesn't."
+					"notes": "Matched as :is([media~=\"auto\"], [media*=\"auto(\"]) in BOTH the CSS sticky-<ui-play> rule (media.carousel.css:75-76) and carousel.js — the stem-scoped `auto(` needle is the parameterized half, the bare half is whole-token. JS parses the duration with /(?:^|\\s)auto(?:\\((\\d+(?:\\.\\d+)?)(m?s)?\\))?/, so a bare number means SECONDS. Default 5s. No-ops under prefers-reduced-motion and with <2 slides. The three --ui-carousel-* writes are inline styles set by carousel.js, not CSS. The CSS arm is deliberately NOT factored: the host arm excludes nested frames (:not(ui-media ui-media)), the self arm doesn't."
 				},
 				"ani": {
 					"axis": "carousel",
@@ -1490,7 +1492,7 @@ export default {
 					"args": {},
 					"argAliases": {},
 					"bare": true,
-					"matching": "substring",
+					"matching": "whole",
 					"writes": [
 						"--_play-block",
 						"--_play-inline",
@@ -1513,11 +1515,11 @@ export default {
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
-						"ui/card/media.carousel.css:71",
+						"ui/card/media.carousel.css:75",
 						"ui/card/carousel.js:44",
 						"ui/card/carousel.js:161"
 					],
-					"notes": "Seamless infinite loop — carousel.js clones N leading/trailing slides ([data-clone], aria-hidden, inert) and hops on scrollend; runs before initAuto so clones exist when autoplay ticks. MIXED matching: JS is whole-token ([media~=\"loop\"] + hasToken), but the CSS sticky-<ui-play> rule (media.carousel.css:71-72) is still substring [media*=\"loop\"] and therefore still fires on marquee(loop). Clone markers are suppressed (carousel.css:336)."
+					"notes": "Seamless infinite loop — carousel.js clones N leading/trailing slides ([data-clone], aria-hidden, inert) and hops on scrollend; runs before initAuto so clones exist when autoplay ticks. WHOLE-TOKEN on both sides: carousel.js needles [media~=\"loop\"] + hasToken(), and the CSS sticky-<ui-play> rule (media.carousel.css:75-76) was moved off substring matching so it no longer fires on marquee(loop). Clone markers are suppressed (carousel.css:336)."
 				},
 				"stagger": {
 					"axis": "carousel",

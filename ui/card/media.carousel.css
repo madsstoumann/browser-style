@@ -67,9 +67,13 @@
 
 	/* NOT factored: the two arms are asymmetric on purpose — the host arm excludes
 	   nested frames (:not(ui-media ui-media)), the self arm doesn't. Folding them
-	   would silently apply that exclusion to the self arm too. */
-	:where(ui-card, ui-reveal):where([media*="auto"], [media*="loop"]) ui-media:not(ui-media ui-media) > ui-play,
-	ui-media:where([media*="auto"], [media*="loop"]) > ui-play {
+	   would silently apply that exclusion to the self arm too.
+	   WHOLE-TOKEN needles, mirroring carousel.js's AUTO/LOOP (carousel.js:160-161):
+	   a bare [media*="loop"] also fires on marquee(loop), which would turn a
+	   single-image frame into a sticky-<ui-play> scroller. `auto` needs both
+	   spellings because it has a parameterized form (auto(4s)); `loop` has none. */
+	:where(ui-card, ui-reveal):where([media~="auto"], [media*="auto("], [media~="loop"]) ui-media:not(ui-media ui-media) > ui-play,
+	ui-media:where([media~="auto"], [media*="auto("], [media~="loop"]) > ui-play {
 		align-content: var(--_play-block, end);
 		display: grid;
 		inline-size: var(--_play-size, 0);

@@ -43,7 +43,7 @@ const spellings = (name, entry) => {
 	const aliases = Object.keys(entry.argAliases || {});
 	if (entry.bare || !args.length) out.add(name);
 	for (const value of [...values, ...aliases]) out.add(`${name}(${value})`);
-	if (values.length || aliases.length) out.add(`${name}(`); /* the open-stem needle */
+	if (args.length) out.add(`${name}(`); /* the open-stem needle — also the only spelling for placeholder-only args like auto(<n>) */
 	for (const prefix of entry.cqPrefixes || []) {
 		const classes = new Set(entry.cqArgs || []);
 		if (entry.bare || !args.length) out.add(`${prefix}:${name}`);
