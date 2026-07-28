@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
-	<meta name="description" content="Interactive carousel designer — compose the media= token string live: marker types (dots/pill/hybrid/bar/thumbnails/labels/system bar), 9-grid and band positions, arrow shapes/sets, tones, autoplay and loop.">
+	<meta name="description" content="Interactive carousel designer — compose the media= token string live: frame aspect asr() and corners rds() (incl. squircles), thumbnail ratio tmb(), marker types (dots/pill/hybrid/bar/thumbnails/labels/system bar), 9-grid and band positions, arrow shapes/sets, tones, autoplay and loop.">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="../play/ui-play.css">
@@ -60,18 +60,42 @@
 				<legend>Frame</legend>
 				<label>Aspect — <code>asr()</code>
 					<select id="c-asr">
-						<option value="16/9" selected>16/9</option>
+						<option value="1/1">1/1 — square</option>
+						<option value="1/2">1/2 — tall</option>
+						<option value="6/7">6/7</option>
+						<option value="3/4">3/4</option>
+						<option value="2/3">2/3</option>
 						<option value="4/3">4/3</option>
 						<option value="3/2">3/2</option>
-						<option value="1/1">1/1</option>
-						<option value="21/9">21/9</option>
+						<option value="16/9" selected>16/9</option>
+						<option value="21/9">21/9 — cinematic</option>
 					</select>
 				</label>
 				<label>Corners — <code>rds()</code>
 					<select id="c-rds">
-						<option value="">square</option>
-						<option value="rds(md) clip" selected>rds(md) clip</option>
-						<option value="rds(lg) clip">rds(lg) clip</option>
+						<option value="">square — no token</option>
+						<option value="rds(non) clip">rds(non) — explicit 0</option>
+						<option value="rds(sm) clip">rds(sm)</option>
+						<option value="rds(md) clip" selected>rds(md)</option>
+						<option value="rds(lg) clip">rds(lg)</option>
+						<option value="rds(xl) clip">rds(xl)</option>
+						<option value="rds(2xl) clip">rds(2xl)</option>
+						<option value="rds(full) clip">rds(full) — circle</option>
+						<option value="rds(pill) clip">rds(pill)</option>
+						<option value="rds(sm-sq) clip">rds(sm-sq) — squircle</option>
+						<option value="rds(md-sq) clip">rds(md-sq) — squircle</option>
+						<option value="rds(lg-sq) clip">rds(lg-sq) — squircle</option>
+						<option value="rds(xl-sq) clip">rds(xl-sq) — squircle</option>
+					</select>
+				</label>
+				<label>Thumb ratio — <code>tmb()</code>
+					<select id="c-tmb">
+						<option value="" selected>4/3 (default)</option>
+						<option value="1/1">1/1</option>
+						<option value="3/4">3/4</option>
+						<option value="3/2">3/2</option>
+						<option value="2/3">2/3</option>
+						<option value="16/9">16/9</option>
 					</select>
 				</label>
 			</fieldset>
@@ -227,7 +251,7 @@
 
 		const $ = (id) => document.getElementById(id);
 		const stage = $('stage'), out = $('out'), note = $('note');
-		const controls = ['c-asr', 'c-rds', 'c-nav', 'c-mrk-type', 'c-mrk-pos', 'c-mrk-size', 'c-mrk-tone', 'c-mrk-color', 'c-arw-style', 'c-arw-size', 'c-arw-pos', 'c-arw-tone', 'c-arw-vis', 'c-auto', 'c-loop', 'c-play'];
+		const controls = ['c-asr', 'c-rds', 'c-tmb', 'c-nav', 'c-mrk-type', 'c-mrk-pos', 'c-mrk-size', 'c-mrk-tone', 'c-mrk-color', 'c-arw-style', 'c-arw-size', 'c-arw-pos', 'c-arw-tone', 'c-arw-vis', 'c-auto', 'c-loop', 'c-play'];
 
 		/* Curated colour bundles per marker family — the tool writes custom
 		   properties inline on the frame, exactly what a page author would do. */
@@ -253,6 +277,8 @@
 					if ($('c-mrk-size').value) t.push(`mrk(${$('c-mrk-size').value})`);
 					if ($('c-mrk-tone').value) t.push(`mrk(${$('c-mrk-tone').value})`);
 				}
+				// tmb() is inert without mrk(tmb); 4/3 is the default, so it takes no token
+				if (mrkType === 'tmb' && $('c-tmb').value) t.push(`tmb(${$('c-tmb').value})`);
 			}
 
 			if (!['nav(mrk)', 'nav(non)'].includes($('c-nav').value)) {
@@ -271,7 +297,7 @@
 
 		const NOTES = {
 			sbr: 'mrk(sbr) styles the real scrollbar (natively draggable, WIP) — always full-width at the bottom, so marker position/size/tone are ignored.',
-			tmb: 'mrk(tmb) reads each slide’s --ui-carousel-thumb-url; the video slide gets the play badge on its thumbnail.',
+			tmb: 'mrk(tmb) reads each slide’s --ui-carousel-thumb-url; the video slide gets the play badge on its thumbnail. Frame → Thumb ratio writes tmb(<ratio>) — the strip caps to the frame width and scrolls.',
 			lbl: 'mrk(lbl) renders each slide’s aria-label as a text pill.',
 			bar: 'mrk(bar) spans a progress bar; combine with a band position (blw/abv) or a corner.',
 		};
@@ -286,6 +312,7 @@
 			const noDots = navOff || mrkType === 'non';
 			$('f-mrk').querySelectorAll('select:not(#c-mrk-type)').forEach((s) => { s.disabled = noDots || mrkType === 'sbr'; });
 			$('c-mrk-type').disabled = navOff;
+			$('c-tmb').disabled = noDots || mrkType !== 'tmb';
 			$('f-arw').querySelectorAll('select').forEach((s) => { s.disabled = ['nav(mrk)', 'nav(non)'].includes($('c-nav').value); });
 			$('c-play').disabled = !autoOn;
 
