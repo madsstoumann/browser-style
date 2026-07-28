@@ -392,12 +392,9 @@
 	</lay-out>
 
 	<h3 id="banddotink">Band dot ink — automatic</h3>
-	<p>A band is <strong>transparent</strong>: it shows the card surface behind it, and that surface
-		already carries its own ink. So band dots/pills derive from
-		<code>--ui-carousel-controls-ink</code> (default <code>currentColor</code>) — they re-ink
-		themselves for dark mode and for <code>theme=</code> surfaces with no media query. Toggle your
-		OS to dark and watch card 1; card 2 forces a dark surface in any scheme; card 3 sets the ink hook
-		by hand. <code>mrk(lgt)</code>/<code>mrk(drk)</code> still force either side outright.</p>
+	<p>Band dots derive from <code>--ui-carousel-controls-ink</code> (default <code>currentColor</code>),
+		so they re-ink for dark mode and <code>theme=</code> surfaces; <code>mrk(lgt)</code>/<code>mrk(drk)</code>
+		still force a side.</p>
 	<lay-out md="columns(3)">
 		<ui-card variant="col" media="asr(4/3) nav(blw) mrk(lg)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
