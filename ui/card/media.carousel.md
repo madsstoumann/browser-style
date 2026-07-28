@@ -45,7 +45,7 @@ media.md.)
 | `arw(arr)`  | CSS | Full-arrow glyph (default is chevron — no token) |
 | `arw(bare)` | CSS | Drop the circle — glyph painted as a recolourable shape (`--ui-carousel-arrow-color`) |
 | `arw(bc)`   | CSS | Split arrows, bottom band (block row) |
-| `arw(blw)` `arw(abv)` | CSS | Arrows **alone** in a reserved band below / above the media (markers keep their on-media position/ink); arrow ink flips to the band theme |
+| `arw(blw)` `arw(abv)` | CSS | Arrows **alone** in a reserved band below / above the media (markers keep their on-media position/ink); arrow ink follows the band ink |
 | `arw(drk)`  | CSS | **Dark theme** preset — dark circle + white glyph + light hover ring (composes on the overlay and in `nav(blw)`/`nav(abv)` bands; on `arw(bare)` it just paints a dark glyph) |
 | `arw(hid)`  | CSS | Auto-hide the dead-end arrow (default dims it) |
 | `arw(rev)`  | CSS | Reveal arrows on hover / focus-within (+ button `:focus-visible`); gated on `@media (hover: hover)` so touch keeps them visible |
@@ -61,7 +61,7 @@ media.md.)
 | `auto` · `auto(4s)` · `auto(800ms)` | JS | Autoplay (default 5s); pauses on hover/focus/drag/hidden-tab/reduced-motion. Add a `<ui-play>` child for an explicit play/pause control (then hover/focus pause is dropped — see `play(<corner>)`) |
 | `axis(y)`   | CSS | Vertical carousel (snap on Y; arrows become up/down) |
 | `mrk(bc)` `mrk(tc)` | CSS | `nav(blw)`/`nav(abv)`: dots centered in the band (**default**) — `bc` below, `tc` above |
-| `mrk(blw)` `mrk(abv)` | CSS | Dots **alone** in a reserved band below / above the media (arrows keep their on-media position/ink); marker/pill ink flips to the band theme |
+| `mrk(blw)` `mrk(abv)` | CSS | Dots **alone** in a reserved band below / above the media (arrows keep their on-media position/ink); marker/pill ink follows the band ink |
 | `mrk(drk)`  | CSS | Dark marker ink |
 | `mrk(be)` `mrk(te)` | CSS | `nav(blw)`/`nav(abv)`: dots at the inline-end — `be` below, `te` above |
 | `mrk(hyb)`  | CSS | **Hybrid** dots — markers stay circles; the active one morphs into a pill and runs the `mrk(pll)` fill timer |
@@ -227,10 +227,17 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
   and `theme=` with no media query. `mrk(lgt)` / `mrk(drk)` are declared after the band
   blocks and still force `--ui-carousel-marker-bg` + `--ui-carousel-marker-active` to
   the light / dark pairs.
-  **Gotcha:** the UA styles a `::scroll-marker` like an anchor, so its `color` starts at
-  `LinkText` (blue) — `currentColor` in a marker means *link blue*, not the card ink.
-  The base marker rule therefore sets `color: inherit`; without it the band ink resolves
-  blue. (Same reason `mrk(lbl)` sets an explicit colour + `text-decoration: none`.)
+  **Gotcha:** the UA gives both control pseudos their own colour — a `::scroll-marker` is
+  styled like an anchor (`LinkText`, blue), a `::scroll-button()` like a button
+  (`ButtonText`). `currentColor` inside either means *that*, not the card ink, so both the
+  base marker rule and the base button rule set `color: inherit`; without it the band ink
+  resolves blue/black. (Same reason `mrk(lbl)` sets an explicit colour + `text-decoration`.)
+- **Band arrows paint their own glyph.** In a band (and only there, unless `arw(bare)` is
+  set) `::scroll-button()` switches to the mask rendering: `--ui-carousel-arrow-color`
+  (ink at 80%) paints the shape and the glyph SVG is used for its alpha only, so its baked
+  stroke colour stops mattering. This is the *only* way a band arrow can follow the scheme —
+  `light-dark()` takes colours, never a `url()`, so a fixed data-URI glyph can't flip.
+  `arw(lgt)` / `arw(drk)` are excluded from the arm and keep the image+circle rendering.
 - **`mrk(pll)` timer:** the `:target-current` pill fills L→R over `--ui-carousel-autoplay`
   via the `ui-carousel-pill-fill` keyframes (a visual autoplay hint; `carousel.js` advances).
   Under `prefers-reduced-motion: reduce` the fill is shown static (no animation).

@@ -130,14 +130,14 @@ slash-ratio vocabulary.
 | `arw(lgt)` | **Light theme** — light circle + dark glyph (the default look, made explicit) |
 | `arw(drk)` | **Dark theme** in one atom — dark circle + white glyph + light hover ring; composes on the overlay and in `nav(blw)`/`nav(abv)` bands. On `arw(bare)` it just paints a dark glyph |
 | `arw(sm)` `arw(lg)` `arw(xl)` | Button size (default 2.25rem — no token) |
-| `arw(bare)` | **Drop the circle** — render the glyph itself as a recolourable shape (`--ui-carousel-arrow-color`) |
+| `arw(bare)` | **Drop the circle** — render the glyph itself as a recolourable shape (`--ui-carousel-arrow-color`). **Band arrows use this rendering by default** (that is how they follow the band ink); `arw(lgt)`/`arw(drk)` opt back out |
 | `arw(sqr)` `arw(sft)` | **Square** button instead of the default circle — `sqr` = sharp corners, `sft` = slight radius (`--ui-carousel-arrow-radius`) |
 | `arw(set)` | Group both arrows as an **adjacent pair** (one cluster). Place it in any grid cell — `arw(set) arw(<cell>)`, e.g. `arw(set) arw(bs)` (bottom-start), `arw(set) arw(cc)` (dead center). Default `ce` (horizontal) / `be` (vertical) |
 | `arw(hid)` | Auto-**hide** the dead-end arrow (default keeps it visible but dimmed) |
 | `arw(rev)` | **Reveal on hover/focus** — arrows hidden until the media is hovered or keyboard-focused (also on the button's own `:focus-visible`). Gated on `@media (hover: hover)` so touch keeps them visible |
 | `arw(ts)` `arw(tc)` `arw(te)` `arw(cs)` `arw(cc)` `arw(bs)` `arw(bc)` `arw(be)` | **Placement cell.** The eight cells `arw()` implements — there is no `arw(ce)` (the inline-end column is `arw(set)`'s default) and no `arw(top)`/`arw(mid)`/`arw(bot)`. For **split** arrows only the block row is read: `tc` top · `cc` centered (**default**) · `bc` bottom. The inline letter matters for `arw(set)` and under `axis(y)` |
 | `arw(cs)` | `axis(y)`: a start-inline cell moves the up/down arrows (and marker column) to the inline-**start** edge (default is inline-end) |
-| `arw(blw)` `arw(abv)` | Arrows **alone** in a reserved band below / above the media — markers keep their on-media position/ink; the arrow ink flips to the band theme |
+| `arw(blw)` `arw(abv)` | Arrows **alone** in a reserved band below / above the media — markers keep their on-media position/ink; the arrow ink follows the band (see *Automatic band ink*) |
 
 > **Default look:** the overlay circle is Instagram-style — a frosted semi-transparent-white
 > circle, dark chevron, soft shadow. `arw(lgt)` = that light theme; `arw(drk)` = the dark
@@ -263,18 +263,43 @@ Contract and limits (ui-media context):
 | `mrk(pll)` | Rounded-rect pills; the active pill **fills L→R** over the autoplay duration as a timer hint |
 | `mrk(hyb)` | **Hybrid** — markers stay circle dots; the active one morphs into a pill and runs the same fill timer as `mrk(pll)` |
 | `mrk(bar)` | **Thin styled scrollbar** — one continuous hairline track spanning the container; the current slide's stretch renders thicker in the active ink (the thumb, 1/N of the width). Click-to-jump + keyboard-navigable. See [Styled scrollbar](#styled-scrollbar--mrkbar) |
-| `mrk(lgt)` `mrk(drk)` | Ink — light / dark (`bg` + active). `nav(blw)`/`nav(abv)` default to dark |
+| `mrk(lgt)` `mrk(drk)` | Ink — light / dark (`bg` + active). Bands don't need either: they ink themselves (see [Automatic band ink](#automatic-band-ink)) |
 | `mrk(sm)` `mrk(md)` `mrk(lg)` `mrk(xl)` | Size (`md` = default) — one scale for dots, pills **and** thumbnails, so `mrk(tmb) mrk(lg)` = large thumbnails. With `mrk(bar)` the scale sets the bar **width** instead: 33% · 50% · 75% (`lg` = default) · 100% |
 | **In a band** — `mrk(bs/bc/be)` (below) · `mrk(ts/tc/te)` (above) | **Position within a band** — the row is locked by `nav(blw)`/`nav(abv)`, so the cell's inline letter aligns the markers: start / center (default) / end. Start/end clear the arrow on that side (or the `arw(set)` pair). |
 | `mrk(bc)` | `axis(y)`: dots centered at the **bottom** (e.g. with a pill timer) |
 | `mrk(non)` | **No dots** (keeps arrows) — e.g. an arrows-only `nav(blw)`/`nav(abv)` band |
-| `mrk(blw)` `mrk(abv)` | Dots **alone** in a reserved band below / above the media — arrows keep their on-media position/ink; the marker/pill ink flips to the band theme |
+| `mrk(blw)` `mrk(abv)` | Dots **alone** in a reserved band below / above the media — arrows keep their on-media position/ink; the marker/pill ink follows the band (see *Automatic band ink*) |
 | `mrk(tmb)` | **Image thumbnails** instead of dots. Each slide sets `--ui-carousel-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-carousel-autoplay`. Overlay in any corner (`mrk(ts/te/bs/be)`), or add `mrk(blw)`/`nav(blw)` for a **gallery filmstrip band** below (see below). |
 | `mrk(ts)` `mrk(te)` `mrk(bs)` `mrk(be)` | **Corner placement** for the overlay marker-group — top-start / top-end / bottom-start / bottom-end (logical, RTL-safe). Center row `mrk(cs)` `mrk(cc)` `mrk(ce)` completes the 9-grid. Inset via `--ui-carousel-marker-inset`. |
 | `mrk(rail)` | With `axis(y)` + `mrk(tmb)`: a **vertical thumbnail rail beside** the media (inline-start; **right in RTL**). Image keeps `asr()`, rail added outside; arrows dropped; overflow shrinks-to-floor then scrolls. See below. |
 | `mrk(lbl)` | **Text-label pills** — each slide's `aria-label` becomes a pill (`content: attr(aria-label)`, the label analogue of `mrk(tmb)`'s per-slide image). Same nine placement cells; styled via the `--ui-carousel-label-*` custom properties (incl. an optional group plate). Keep labels short — a marker group can't be clamped to the frame |
 | `mrk(sbr)` | **System bar (WIP)** — styles the scroller's **real** scrollbar as a full-width bottom bar instead of drawing a fake one, so it is natively draggable with zero JS. Central `--ui-carousel-sbr-*` tokens (`-track`, `-thumb`, `-size`, `-inset`, `-radius`, `-gap`) feed both the standard (Firefox `scrollbar-color`) and `::-webkit-scrollbar` paths; `content-box` like `mrk(tmb)`. See [media.carousel.md](./media.carousel.md) |
 | `tmb(<ratio>)` | **Thumbnail aspect-ratio** (default `4/3`) — `tmb(1/1)` · `tmb(4/3)` · `tmb(3/4)` · `tmb(16/9)` · `tmb(3/2)` · `tmb(2/3)` (slash, mirrors `asr()`). In a `mrk(rail)` the rail width tracks the ratio. Or set `--ui-carousel-thumb-ratio` directly. |
+
+### Automatic band ink
+
+A band is **transparent** — it shows the card surface behind it, and that surface already
+carries its own ink (`color` on the card: `--color-text`, or the `theme=` ink). So every
+band control derives from **`--ui-carousel-controls-ink`, default `currentColor`**:
+
+| Control | Derived value |
+|---|---|
+| Inactive dot / pill track | ink at 25% / 20% |
+| Active dot / pill fill | ink at 70% |
+| Arrow glyph | ink at 80% (full ink on hover) |
+| Arrow hit area | ink at 8% (16% on hover) |
+
+Band dots and arrows therefore follow `color-scheme` **and** `theme=` with no media query
+and no `@supports` gate. Two consequences worth knowing:
+
+- **Band arrows paint their own glyph** (the `arw(bare)` rendering) instead of drawing a
+  circle behind a fixed image. A baked data-URI SVG can't be recoloured per scheme —
+  painting the glyph is what lets it go light on a dark band. `arw(lgt)` / `arw(drk)` opt
+  back out and keep their matched circle+glyph pair.
+- To ink a **custom** band surface, set the surface and the ink together:
+  `--ui-carousel-controls-bg: #123; --ui-carousel-controls-ink: white`. Individual
+  `--ui-carousel-marker-*` / `--ui-carousel-arrow-*` overrides and
+  `mrk(lgt)`/`mrk(drk)` still win over the derived defaults.
 
 ### Thumbnail navigation — `mrk(tmb)`
 
@@ -533,8 +558,8 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-carousel-arrow-hover-scale` | `1.18` | Scale of a **bare** glyph on hover / `:focus-visible` |
 | `--ui-carousel-arrow-gap` | `0.5rem` | Gap between the two arrows in `arw(set)` |
 | `--ui-carousel-arrow-disabled-opacity` | `0.4` | Dimming of a dead-end arrow (`arw(hid)` sets `0`) |
-| `--ui-carousel-arrow-color` | `#fff` (over image) / dark (in band) | **Bare** glyph ink (`arw(bare)`; the circle ignores it) |
-| `--ui-carousel-arrow-color-hover` | = arrow-color | Bare glyph ink on hover (bands darken it) |
+| `--ui-carousel-arrow-color` | `#fff` (over image) / `--ui-carousel-controls-ink` at 80% (in band) | **Bare** glyph ink — used by `arw(bare)` **and by every band arrow**, which paints its own glyph (the circle ignores it) |
+| `--ui-carousel-arrow-color-hover` | = arrow-color | Bare glyph ink on hover (bands go to the full ink) |
 | `--ui-carousel-arrow-top` | centered | Manual vertical position (or use a placement cell — `arw(tc)` / `arw(cc)` / `arw(bc)` for split arrows, `arw(ts…be)` generally. There is no `arw(top)`/`arw(mid)`/`arw(bot)`) |
 
 ### Markers / pills

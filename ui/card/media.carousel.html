@@ -111,7 +111,7 @@
 			<ol>
 				<li><a href="#overlayink">Overlay ink</a></li>
 				<li><a href="#bandink">Band ink</a></li>
-				<li><a href="#banddotink">Band dot ink — automatic</a></li>
+				<li><a href="#autoink">Automatic ink</a></li>
 			</ol>
 		</div>
 		<div>
@@ -379,11 +379,11 @@
 	</lay-out>
 
 	<h3 id="bandink">Band ink</h3>
-	<p>Band default light-grey circle; <code>arw(drk)</code> flips to dark + white chevron.</p>
+	<p>Band default paints the glyph itself in the band ink (no circle); <code>arw(drk)</code> restores a dark circle + white chevron.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(blw)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">nav(blw) · default</small><h2 data-part="headline">Light grey circle</h2></ui-content></cq-box>
+			<ui-content><small data-part="eyebrow">nav(blw) · default</small><h2 data-part="headline">Bare glyph in band ink</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(blw) arw(drk)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
@@ -391,9 +391,10 @@
 		</ui-card>
 	</lay-out>
 
-	<h3 id="banddotink">Band dot ink — automatic</h3>
-	<p>Band dots derive from <code>--ui-carousel-controls-ink</code> (default <code>currentColor</code>),
-		so they re-ink for dark mode and <code>theme=</code> surfaces; <code>mrk(lgt)</code>/<code>mrk(drk)</code>
+	<h3 id="autoink">Automatic ink</h3>
+	<p>Band dots and arrows derive from <code>--ui-carousel-controls-ink</code> (default
+		<code>currentColor</code>), so they re-ink for dark mode and <code>theme=</code> surfaces;
+		<code>mrk(lgt)</code>/<code>mrk(drk)</code> and <code>arw(lgt)</code>/<code>arw(drk)</code>
 		still force a side.</p>
 	<lay-out md="columns(3)">
 		<ui-card variant="col" media="asr(4/3) nav(blw) mrk(lg)" content="scl(sm)">

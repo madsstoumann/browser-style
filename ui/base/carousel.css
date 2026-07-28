@@ -116,12 +116,12 @@
 		   and --ui-carousel-pill- properties, or force a side with mrk(lgt)/mrk(drk) (declared
 		   below, so they win). */
 		&:where([media*="nav(blw)"], [media*="nav(abv)"]) {
-			--ui-carousel-arrow-bg: rgb(0 0 0 / 0.08);
-			--ui-carousel-arrow-bg-hover: rgb(0 0 0 / 0.16);
-			--ui-carousel-arrow-color-hover: rgb(0 0 0 / 1);
+			--ui-carousel-arrow-bg: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 8%, transparent);
+			--ui-carousel-arrow-bg-hover: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 16%, transparent);
+			--ui-carousel-arrow-color-hover: var(--ui-carousel-controls-ink, currentColor);
 			--ui-carousel-arrow-shadow: none;
 			--ui-carousel-arrow-glyph: var(--ui-carousel-chevron-grey);
-			--ui-carousel-arrow-color: rgb(0 0 0 / 0.8);
+			--ui-carousel-arrow-color: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 80%, transparent);
 			--ui-carousel-marker-bg: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 25%, transparent);
 			--ui-carousel-marker-active: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 70%, transparent);
 			--ui-carousel-pill-track: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 20%, transparent);
@@ -145,14 +145,14 @@
 			--ui-carousel-pill-track: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 20%, transparent);
 			--ui-carousel-pill-fill: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 70%, transparent);
 		}
-		/* arw(blw)/arw(abv) — arrows-only band: flip arrow ink to the band theme */
+		/* arw(blw)/arw(abv) — arrows-only band: same currentColor-derived band ink */
 		&:where([media*="arw(blw)"], [media*="arw(abv)"]) {
-			--ui-carousel-arrow-bg: rgb(0 0 0 / 0.08);
-			--ui-carousel-arrow-bg-hover: rgb(0 0 0 / 0.16);
-			--ui-carousel-arrow-color-hover: rgb(0 0 0 / 1);
+			--ui-carousel-arrow-bg: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 8%, transparent);
+			--ui-carousel-arrow-bg-hover: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 16%, transparent);
+			--ui-carousel-arrow-color-hover: var(--ui-carousel-controls-ink, currentColor);
 			--ui-carousel-arrow-shadow: none;
 			--ui-carousel-arrow-glyph: var(--ui-carousel-chevron-grey);
-			--ui-carousel-arrow-color: rgb(0 0 0 / 0.8);
+			--ui-carousel-arrow-color: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 80%, transparent);
 		}
 		&:where([media*="arw(blw)"][media*="arw(arr)"], [media*="arw(abv)"][media*="arw(arr)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-grey); }
 
@@ -420,6 +420,9 @@
 				border: var(--ui-carousel-arrow-border, 0);
 				border-radius: var(--ui-carousel-arrow-radius, var(--radius-circle, 50%));
 				box-shadow: var(--ui-carousel-arrow-shadow);
+				/* same reason as the marker rule: the UA gives the button pseudo its own colour
+				   (ButtonText), so band ink built on currentColor must inherit the card's ink */
+				color: inherit;
 				content: "" / "";
 				cursor: pointer;
 				inline-size: var(--ui-carousel-arrow-size);
@@ -494,9 +497,19 @@
 			right: calc(anchor(right) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
 		}
 
-		/* arw(bare) — drop the circle, paint the glyph as a recolourable shape */
+		/* arw(bare) — drop the circle, paint the glyph as a recolourable shape.
+		   BAND ARROWS JOIN THIS RENDERING BY DEFAULT. The glyph is a baked data-URI SVG, and
+		   nothing (not light-dark(), which is colours-only) can recolour a url() per scheme — so
+		   the only way a band arrow can follow the band ink is to paint the glyph itself, from
+		   --ui-carousel-arrow-color. In mask mode the SVG's own stroke colour is irrelevant (only
+		   its alpha is read), which is what makes one glyph work in both schemes. The 8% circle it
+		   replaces was near-invisible anyway; --ui-carousel-arrow-bg still tints the hit area for
+		   anyone who raises it. arw(lgt)/arw(drk) opt OUT — those presets are a matched
+		   circle+glyph pair and keep the image rendering. */
 		:where(ui-card, ui-reveal):where([media*="arw(bare)"]) :where(ui-media),
-		:where(ui-media, lay-out[overflow]):where([media*="arw(bare)"]) {
+		:where(ui-media, lay-out[overflow]):where([media*="arw(bare)"]),
+		:where(ui-card, ui-reveal):where(:is([media*="nav(blw)"], [media*="nav(abv)"], [media*="arw(blw)"], [media*="arw(abv)"]):not([media*="arw(lgt)"], [media*="arw(drk)"])) :where(ui-media),
+		:where(ui-media, lay-out[overflow]):where(:is([media*="nav(blw)"], [media*="nav(abv)"], [media*="arw(blw)"], [media*="arw(abv)"]):not([media*="arw(lgt)"], [media*="arw(drk)"])) {
 			&::scroll-button(*) {
 				background-color: var(--ui-carousel-arrow-color);
 				background-image: none;
