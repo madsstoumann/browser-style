@@ -2304,6 +2304,31 @@ export default {
 						"ui/reveal/ui-reveal.css:497-501"
 					],
 					"notes": "Reveal PANEL scroll — only active under flp (panel goes `position: absolute; inset: 0` so a long flipside can't grow the card, with the shared ui-scroll-fade edge mask) and under grw / lg:grw (overflow-y auto, scrollbar hidden). Inert under exp and sld. Reads --ui-reveal-content-bs / --ui-reveal-scrollbar-color; writes no custom property. HOMONYM of content='s `scr` — different attribute, different target (content= scrolls the text column inside <ui-content>). Both share the one ui-scroll-fade primitive in ui/base/scroll.css."
+				},
+				"page": {
+					"axis": "carousel",
+					"element": "lay-out",
+					"args": {},
+					"argAliases": {},
+					"bare": true,
+					"matching": "whole",
+					"writes": [],
+					"realProperties": true,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"lay-out"
+					],
+					"requiresJs": {},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/card/media.carousel.css:56",
+						"ui/base/carousel.css:186",
+						"ui/base/stagger.css:174"
+					],
+					"notes": "On a <lay-out> PAGE wrapper inside a ui-media carousel (e.g. <lay-out variant=\"page\" md=\"columns(3)\">): below the layout system's md viewport breakpoint (540px) the wrapper dissolves via display:contents, so each card becomes its own full-width snap target with its own dot — instead of the page stacking into one tall column. Grandchild ::scroll-markers collect into the scroller's group automatically; a boxless wrapper generates none, so the page dot vanishes for free. Stagger: each card becomes its own scroll-state container (scroll-state inline-size — bs-card size queries stay alive); the ani() content channel plays per-card, the crd() card channel is inert below md. CSS-only: carousel.js slidesOf() still counts the wrapper as ONE slide, so auto/loop do not see through the dissolve. Dot markers only — pll/hyb/tmb/lbl families stay per-direct-slide."
 				}
 			}
 		},

@@ -60,6 +60,7 @@ attribute and therefore the same table; they are explained under *Reveal tokens*
 | `exp` | reveal-animation | — | — | yes | --_rvl | — | — |
 | `pop` | reveal-mode | — | — | yes | --ui-reveal-expand-m --ui-media-ar --ui-reveal-content-fs | — | — |
 | `scr` | scroll | — | — | yes | — | — | — |
+| `page` | carousel | — | — | yes | — | — | — |
 <!-- /tokens -->
 
 What each arrangement token does:

@@ -39,6 +39,23 @@
 		inset: auto;
 		position: static;
 	}
+	/* variant="page" — a <lay-out> slide that groups a PAGE of cards (e.g.
+	   md="columns(3)") dissolves below the layout system's md viewport breakpoint:
+	   display:contents drops its box, so each card becomes its own full-width snap
+	   target instead of the page stacking into one tall column. The grandchild
+	   slide/marker/stagger arms are viewport-scoped to the same query (markers:
+	   ui/base/carousel.css, stagger: ui/base/stagger.css — a boxless wrapper
+	   generates NO ::scroll-marker, so its own dot vanishes for free). CSS-only:
+	   carousel.js's slidesOf() still counts the wrapper as one slide, so auto/loop
+	   don't see through the dissolve. */
+	@media (width < 540px) {
+		ui-media:where([media*="nav"], :is(ui-card, ui-reveal)[media*="nav"] *) > lay-out[variant~="page"] > * {
+			block-size: 100%;
+			flex: 0 0 100%;
+			inline-size: 100%;
+			scroll-snap-align: start;
+		}
+	}
 	/* reserved band (nav/mrk/arw · blw or abv): round the image itself so the edge offset from the
 	   band matches the rds() frame — the outer clip only rounds the frame corners, not the image
 	   edge that sits inset from the band (image bottom for blw, image top for abv) */
@@ -215,5 +232,17 @@
 	ui-reveal[media*="mrk(sbr)"] ui-media::-webkit-scrollbar-button {
 		background: #0000;
 		width: var(--_sbr-inset);
+	}
+}
+
+/* variant="page" dissolve — OUTSIDE @layer on purpose (same escape-hatch pattern
+   as the reveal popup rule): the wrapper's `display: grid` comes from
+   @layer layout.base, which outranks bs-component by layer order, so a layered
+   arm here could never flip it. Unlayered author styles beat every layer. The
+   grandchild slide/marker/stagger arms stay layered (they set properties the
+   layout layer doesn't touch) — see the variant="page" block inside the layer. */
+@media (width < 540px) {
+	ui-media:where([media*="nav"], :is(ui-card, ui-reveal)[media*="nav"] *) > lay-out[variant~="page"] {
+		display: contents;
 	}
 }
