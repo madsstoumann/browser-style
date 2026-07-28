@@ -272,7 +272,7 @@ Contract and limits (ui-media context):
 | `mrk(tmb)` | **Image thumbnails** instead of dots. Each slide sets `--ui-carousel-thumb-url: url(…)`; the active thumb shows full opacity + (during **autoplay**) a bottom **timer** stripe that fills L→R over `--ui-carousel-autoplay`. Overlay in any corner (`mrk(ts/te/bs/be)`), or add `mrk(blw)`/`nav(blw)` for a **gallery filmstrip band** below (see below). |
 | `mrk(ts)` `mrk(te)` `mrk(bs)` `mrk(be)` | **Corner placement** for the overlay marker-group — top-start / top-end / bottom-start / bottom-end (logical, RTL-safe). Center row `mrk(cs)` `mrk(cc)` `mrk(ce)` completes the 9-grid. Inset via `--ui-carousel-marker-inset`. |
 | `mrk(rail)` | With `axis(y)` + `mrk(tmb)`: a **vertical thumbnail rail beside** the media (inline-start; **right in RTL**). Image keeps `asr()`, rail added outside; arrows dropped; overflow shrinks-to-floor then scrolls. See below. |
-| `mrk(lbl)` | **Text-label pills** — each slide's `aria-label` becomes a pill (`content: attr(aria-label)`, the label analogue of `mrk(tmb)`'s per-slide image). Same nine placement cells; styled via the `--ui-carousel-label-*` custom properties (incl. an optional group plate). Keep labels short — a marker group can't be clamped to the frame |
+| `mrk(lbl)` | **Text-label pills** — each slide's `aria-label` becomes a pill (`content: attr(aria-label)`, the label analogue of `mrk(tmb)`'s per-slide image). Same nine placement cells; styled via the `--ui-carousel-label-*` custom properties (incl. an optional group plate). A long label set never spills: the group caps to the frame and **scrolls**, keeping the current label in view — see below |
 | `mrk(sbr)` | **System bar (WIP)** — styles the scroller's **real** scrollbar as a full-width bottom bar instead of drawing a fake one, so it is natively draggable with zero JS. Central `--ui-carousel-sbr-*` tokens (`-track`, `-thumb`, `-size`, `-inset`, `-radius`, `-gap`) feed both the standard (Firefox `scrollbar-color`) and `::-webkit-scrollbar` paths; `content-box` like `mrk(tmb)`. See [media.carousel.md](./media.carousel.md) |
 | `tmb(<ratio>)` | **Thumbnail aspect-ratio** (default `4/3`) — `tmb(1/1)` · `tmb(4/3)` · `tmb(3/4)` · `tmb(16/9)` · `tmb(3/2)` · `tmb(2/3)` (slash, mirrors `asr()`). In a `mrk(rail)` the rail width tracks the ratio. Or set `--ui-carousel-thumb-ratio` directly. |
 
@@ -601,6 +601,41 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-carousel-thumb-timer-height` | `3px` | Timer-stripe thickness |
 | `--ui-carousel-thumb-timer-name` | `none` (off) | Fill-timer animation. **Off by default** — `carousel.js` sets it to the `ui-carousel-thumb-timer` keyframe when **autoplay** (`auto`/`loop`) runs. Set it to that keyframe manually to preview without JS. |
 | `--ui-carousel-marker-inset` | `--ui-carousel-overlay-gap` (`1rem` under `mrk(tmb)`) | Corner inset from the edges (`mrk(ts/te/bs/be)`) |
+
+### Labels (`mrk(lbl)`)
+
+Per pill:
+
+| Property | Default | Purpose |
+|----------|---------|---------|
+| `--ui-carousel-label-bg` / `-bg-current` | `transparent` / `rgb(255 255 255 / 0.25)` | Pill fill, idle / current |
+| `--ui-carousel-label-color` / `-color-current` | `#fff` / *(inherits `-color`)* | Pill ink, idle / current |
+| `--ui-carousel-label-border-width` | `1px` | Pill border width |
+| `--ui-carousel-label-border-color` / `-border-color-current` | `rgb(255 255 255 / 0.6)` / `transparent` | Pill border colour, idle / current |
+| `--ui-carousel-label-radius` | `--radius-pill` | Pill corner radius |
+| `--ui-carousel-label-padding` | `0.4em 0.9em` | Pill padding |
+| `--ui-carousel-label-font-size` | `--font-size-sm` | Pill type size |
+| `--ui-carousel-label-font-weight` | `500` | Pill type weight |
+
+On the group (the plate the pills sit in — off by default):
+
+| Property | Default | Purpose |
+|----------|---------|---------|
+| `--ui-carousel-label-group-bg` | `transparent` | Group plate fill |
+| `--ui-carousel-label-group-backdrop` | `none` | Group `backdrop-filter` — **no-op in Chrome today** (ignored on the `::scroll-marker-group` pseudo) |
+| `--ui-carousel-label-group-shadow` | `none` | Group shadow |
+| `--ui-carousel-label-group-radius` | `--radius-pill` | Group corner radius |
+| `--ui-carousel-label-group-padding` | `0` | Group padding |
+| `--ui-carousel-label-group-gap` | `--ui-carousel-marker-gap` | Gap between pills (also the scroll padding) |
+| `--ui-carousel-label-group-max-inline-size` | `anchor-size(--ui-carousel-labels inline) - 2 × overlay-gap` | **Overflow cap** — the group never grows past the frame |
+| `--ui-carousel-label-group-scrollbar` | `none` | `scrollbar-width` for the group scroller — set `thin` / `auto` to show it |
+| `--ui-carousel-label-group-wrap` | `nowrap` | Set `wrap` to stack a long label set into rows instead of scrolling it |
+
+> **Long label sets never spill.** Labels are text, so a dozen of them outgrow any frame.
+> The group therefore caps to the frame's inline size and becomes its own horizontal
+> scroller — and because a `::scroll-marker-group` is a *scroll-target-group*, the browser
+> keeps the current (`:target-current`) label scrolled into view by itself, with no JS.
+> Mechanism and the browser caveats behind it: [media.carousel.md](./media.carousel.md).
 
 ### Control band (`nav(blw)` / `nav(abv)`)
 

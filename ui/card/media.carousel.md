@@ -310,9 +310,21 @@ mechanism follows from the markup shape.
   `--ui-carousel-label-group-bg`, `-group-backdrop` (e.g. `blur(8px)` — **no-op in Chrome today**:
   `backdrop-filter` is ignored on the `::scroll-marker-group` pseudo, so a "frosted" capsule renders
   translucent-only until browsers paint it), `-group-shadow`, `-group-radius`, `-group-padding`,
-  `-group-gap`. Positions with the same 9-grid cells as dots/thumbs. The group hugs its labels;
-  like a wide dot row it can spill on very narrow frames (a `::scroll-marker-group`'s inline size
-  can't be reliably clamped to the frame in current Chrome), so keep labels short.
+  `-group-gap`. Positions with the same 9-grid cells as dots/thumbs.
+  **Overflow.** Labels are text, so a long set outgrows any frame. The group therefore caps to
+  the frame's inline size and becomes **its own horizontal scroller** — the same treatment (and
+  the same mechanism) as the `mrk(tmb)` thumb strip: the scroller declares
+  `anchor-name/anchor-scope: --ui-carousel-labels` and the group takes
+  `max-inline-size: calc(anchor-size(--ui-carousel-labels inline) - 2 × overlay-gap)` plus
+  `overflow-x: auto`. A **named** anchor is required — `max-inline-size: <%>` resolves against the
+  group's containing block (the card / `lay-out`, not the frame), a both-edge inset pair does not
+  size the pseudo at all, and the implicit `anchor-size(inline)` does not resolve on a
+  `::scroll-marker-group`. (`getComputedStyle()` is no witness either way: it reports
+  `none`/`auto` for any value holding an anchor function.) `::scroll-marker-group` is a
+  **scroll-target-group**, so Chromium keeps the `:target-current` pill scrolled into view on its
+  own — no JS. Knobs, all optional: `--ui-carousel-label-group-max-inline-size` (override the cap),
+  `-group-scrollbar` (`none` by default — set `thin`/`auto` to show it), `-group-wrap` (`nowrap`
+  by default — set `wrap` to get a wrapping block of labels instead of a scroller).
 - **Corner placement.** `mrk(ts|te|bs|be)` re-anchor the whole marker-group to a corner
   (overlay), inset by `--ui-carousel-marker-inset` (defaults to the overlay gap; `mrk(tmb)`
   bumps it to `1rem`). The centre row `mrk(cs|cc|ce)` completes the same nine-cell logical

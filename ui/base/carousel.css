@@ -85,6 +85,16 @@
 		anchor-name: --ui-carousel-thumbs;
 		anchor-scope: --ui-carousel-thumbs;
 	}
+	/* mrk(lbl) scroller arm — same mechanism as the thumb strip above, for the same reason: the
+	   pill row is TEXT, so a handful of labels outgrows any frame. A NAMED anchor is required —
+	   a plain %, a both-edge inset pair and the implicit (nameless) anchor-size() all fail to
+	   constrain a ::scroll-marker-group. Scoped so carousels don't cross-bind; skipped when tmb
+	   owns the marker family (it declares its own name on the same element). */
+	:where(ui-card, ui-reveal):where([media*="mrk(lbl)"]:not([media*="mrk(tmb)"])) ui-media,
+	:where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]:not([media*="mrk(tmb)"])) {
+		anchor-name: --ui-carousel-labels;
+		anchor-scope: --ui-carousel-labels;
+	}
 	/* arrows present: base glyph vars */
 	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
 		&:where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) {
@@ -400,16 +410,31 @@
 			text-decoration: none;
 			white-space: nowrap;
 		}
-		/* optional background / shadow on the group itself (transparent + zero-padding by default,
-		   so the group geometry is unchanged until a dev opts in) */
+		/* The group box. Two jobs:
+		   1. optional background / shadow (transparent + zero-padding by default, so the group
+		      geometry is unchanged until a dev opts in);
+		   2. the OVERFLOW GUARD — the group caps to the frame's inline size and becomes its own
+		      horizontal scroller instead of spilling past the frame edges. ::scroll-marker-group
+		      is a scroll-target-group, so it keeps the :target-current pill scrolled into view by
+		      itself — no JS, no scroll-into-view call. The scrollbar is hidden by default (the
+		      current label already tracks the carousel); set --ui-carousel-label-group-scrollbar
+		      to `thin`/`auto` to show it, or --ui-carousel-label-group-wrap: wrap for a wrapping
+		      block of labels instead of a scroller. See ui/card/media.carousel.md § Labels. */
 		:where(ui-card, ui-reveal):where([media*="mrk(lbl)"]) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"])::scroll-marker-group {
 			backdrop-filter: var(--ui-carousel-label-group-backdrop, none);
 			background: var(--ui-carousel-label-group-bg, transparent);
 			border-radius: var(--ui-carousel-label-group-radius, var(--radius-pill, 100px));
 			box-shadow: var(--ui-carousel-label-group-shadow, none);
+			flex-wrap: var(--ui-carousel-label-group-wrap, nowrap);
 			gap: var(--ui-carousel-label-group-gap, var(--ui-carousel-marker-gap));
+			max-inline-size: var(--ui-carousel-label-group-max-inline-size,
+				calc(anchor-size(--ui-carousel-labels inline) - 2 * var(--ui-carousel-overlay-gap, 0.75rem)));
+			overflow-x: auto;
+			overscroll-behavior-x: contain;
 			padding: var(--ui-carousel-label-group-padding, 0);
+			scroll-padding-inline: var(--ui-carousel-label-group-gap, var(--ui-carousel-marker-gap));
+			scrollbar-width: var(--ui-carousel-label-group-scrollbar, none);
 		}
 
 		:where(ui-card, ui-reveal):where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) :where(ui-media),
@@ -812,11 +837,14 @@
 			bottom: auto;
 			transform: translateY(-50%);
 		}
-		/* NOTE: constraining the pill group's inline size to the frame (to scroll or wrap long
-		   labels on narrow frames) is not reliably possible in current Chrome — anchor-size() caps,
-		   %, and both-edge insets all fail to clamp a ::scroll-marker-group (computed reports a
-		   bound the paint ignores). So mrk(lbl) hugs its content and, like a wide dot row, can spill
-		   on very narrow frames. Keep labels short, or revisit when the pseudo's sizing is fixed. */
+		/* NOTE (was: "clamping the pill group is not possible") — it is, with ONE caveat: the
+		   anchor-size() must name an anchor. `max-inline-size: <%>` resolves against the group's
+		   containing block (the card / lay-out, not the frame), a both-edge inset pair does not
+		   size the pseudo at all, and the implicit anchor-size(inline) does not resolve on a
+		   ::scroll-marker-group. `anchor-size(--name inline)` against an anchor-name declared on
+		   the scroller does — which is what the scroller arm above and the group rule now use.
+		   getComputedStyle() is NOT a witness here: it reports `none`/`auto` for any value holding
+		   an anchor function, which is what the old note misread as "the paint ignores it". */
 
 		/* ---- mrk(bar) — thin styled scrollbar (declared LAST so its geometry wins) ---- */
 		:where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media)::scroll-marker-group,

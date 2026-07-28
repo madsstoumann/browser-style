@@ -72,6 +72,12 @@
 			--ui-carousel-label-group-padding: 0.5rem;
 			--ui-carousel-label-group-shadow: 0 2px 12px rgb(0 0 0 / 0.25);
 		}
+		/* 4 · wrap instead of scroll — the group still caps to the frame, but a long label set
+		   stacks into rows rather than becoming a horizontal scroller */
+		.label-wrap {
+			--ui-carousel-label-group-wrap: wrap;
+			--ui-carousel-label-group-radius: var(--radius-lg);
+		}
 	</style>
 </head>
 <body>
@@ -626,7 +632,7 @@
 	</lay-out>
 
 	<h3 id="markerlabel">Labels — <code>mrk(lbl)</code></h3>
-	<p><code>mrk(lbl)</code> renders each slide's <code>aria-label</code> as a text pill, styled with <code>--ui-carousel-label-*</code> custom properties.</p>
+	<p><code>mrk(lbl)</code> renders each slide's <code>aria-label</code> as a text pill, styled with <code>--ui-carousel-label-*</code> custom properties. A long label set never spills past the frame — the group caps to the frame's inline size and scrolls (see below).</p>
 	<lay-out>
 		<ui-media class="label-frost" media="asr(16/9) rds(md) clip nav(mrk) mrk(lbl) mrk(tc)">
 			<img src="/assets/images/river.png" alt="" aria-label="River Walk">
@@ -646,6 +652,40 @@
 			<img src="/assets/images/gastronomy.png" alt="" aria-label="Tasting menu">
 			<img src="/assets/images/brewandbean.png" alt="" aria-label="Brew &amp; Bean">
 			<img src="/assets/images/aurasoundpro.png" alt="" aria-label="AuraSound Pro">
+		</ui-media>
+	</lay-out>
+	<p>Labels are text, so a long set outgrows any frame. The group caps to the frame's inline size and becomes its own horizontal scroller — and because <code>::scroll-marker-group</code> is a scroll-target-group, the current label is scrolled into view for free. Twelve labels, unchanged markup:</p>
+	<lay-out>
+		<ui-media class="label-frost" media="asr(16/9) rds(md) clip nav(mrk) mrk(lbl) mrk(bc)">
+			<img src="/assets/images/river.png" alt="" aria-label="River Walk">
+			<img src="/assets/images/mindfulness.png" alt="" aria-label="Mindful Living">
+			<img src="/assets/images/gastronomy.png" alt="" aria-label="Fine Dining">
+			<img src="/assets/images/world.png" alt="" aria-label="World Report">
+			<img src="/assets/images/finance.png" alt="" aria-label="Market Watch">
+			<img src="/assets/images/city.png" alt="" aria-label="City Lights">
+			<img src="/assets/images/hubble.png" alt="" aria-label="Deep Field">
+			<img src="/assets/images/quantum.png" alt="" aria-label="Quantum Lab">
+			<img src="/assets/images/websummit.png" alt="" aria-label="Web Summit">
+			<img src="/assets/images/brewandbean.png" alt="" aria-label="Brew &amp; Bean">
+			<img src="/assets/images/aurasoundpro.png" alt="" aria-label="AuraSound Pro">
+			<img src="/assets/images/mindfulness.png" alt="" aria-label="Morning Meditation">
+		</ui-media>
+	</lay-out>
+	<p>Prefer the whole set visible at once? <code>--ui-carousel-label-group-wrap: wrap</code> swaps the scroller for a wrapping block — still capped to the frame's inline size, but it grows in the block direction, so it suits short label sets or a band placement rather than a narrow overlay (<code>.label-wrap</code>, same twelve labels):</p>
+	<lay-out>
+		<ui-media class="label-frost label-wrap" media="asr(16/9) rds(md) clip nav(mrk) mrk(lbl) mrk(bc)">
+			<img src="/assets/images/river.png" alt="" aria-label="River Walk">
+			<img src="/assets/images/mindfulness.png" alt="" aria-label="Mindful Living">
+			<img src="/assets/images/gastronomy.png" alt="" aria-label="Fine Dining">
+			<img src="/assets/images/world.png" alt="" aria-label="World Report">
+			<img src="/assets/images/finance.png" alt="" aria-label="Market Watch">
+			<img src="/assets/images/city.png" alt="" aria-label="City Lights">
+			<img src="/assets/images/hubble.png" alt="" aria-label="Deep Field">
+			<img src="/assets/images/quantum.png" alt="" aria-label="Quantum Lab">
+			<img src="/assets/images/websummit.png" alt="" aria-label="Web Summit">
+			<img src="/assets/images/brewandbean.png" alt="" aria-label="Brew &amp; Bean">
+			<img src="/assets/images/aurasoundpro.png" alt="" aria-label="AuraSound Pro">
+			<img src="/assets/images/mindfulness.png" alt="" aria-label="Morning Meditation">
 		</ui-media>
 	</lay-out>
 
