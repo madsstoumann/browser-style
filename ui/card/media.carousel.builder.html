@@ -83,6 +83,7 @@
 						<option value="nav" selected>nav — dots + arrows</option>
 						<option value="nav(mrk)">nav(mrk) — dots only</option>
 						<option value="nav(arw)">nav(arw) — arrows only</option>
+						<option value="nav(non)">nav(non) — bare swipe scroller</option>
 					</select>
 				</label>
 			</fieldset>
@@ -243,7 +244,7 @@
 			t.push($('c-nav').value);
 
 			const mrkType = $('c-mrk-type').value;
-			const dotsOn = $('c-nav').value !== 'nav(arw)';
+			const dotsOn = !['nav(arw)', 'nav(non)'].includes($('c-nav').value);
 			if (dotsOn) {
 				if (mrkType) t.push(`mrk(${mrkType})`);
 				// sbr is always a full-width bottom bar — position/size don't apply
@@ -254,7 +255,7 @@
 				}
 			}
 
-			if ($('c-nav').value !== 'nav(mrk)') {
+			if (!['nav(mrk)', 'nav(non)'].includes($('c-nav').value)) {
 				if ($('c-arw-style').value) for (const w of $('c-arw-style').value.split(' ')) t.push(`arw(${w})`);
 				if ($('c-arw-size').value) t.push(`arw(${$('c-arw-size').value})`);
 				if ($('c-arw-pos').value) for (const w of $('c-arw-pos').value.split(' ')) t.push(`arw(${w})`);
@@ -281,10 +282,11 @@
 
 			// interlocks: grey out what the current configuration ignores
 			const mrkType = $('c-mrk-type').value;
-			const noDots = $('c-nav').value === 'nav(arw)' || mrkType === 'non';
+			const navOff = ['nav(arw)', 'nav(non)'].includes($('c-nav').value);
+			const noDots = navOff || mrkType === 'non';
 			$('f-mrk').querySelectorAll('select:not(#c-mrk-type)').forEach((s) => { s.disabled = noDots || mrkType === 'sbr'; });
-			$('c-mrk-type').disabled = $('c-nav').value === 'nav(arw)';
-			$('f-arw').querySelectorAll('select').forEach((s) => { s.disabled = $('c-nav').value === 'nav(mrk)'; });
+			$('c-mrk-type').disabled = navOff;
+			$('f-arw').querySelectorAll('select').forEach((s) => { s.disabled = ['nav(mrk)', 'nav(non)'].includes($('c-nav').value); });
 			$('c-play').disabled = !autoOn;
 
 			// fresh frame from the pristine template — never reuse the live node

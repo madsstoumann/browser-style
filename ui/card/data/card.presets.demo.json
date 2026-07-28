@@ -414,26 +414,26 @@
     },
     "carousel-arrows-top": {
       "name": "Carousel Arrows Top",
-      "description": "Edge arrows at the top — arw(top)",
+      "description": "Edge arrows at the top — arw(tc)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav(arw) arw(top)",
+      "media": "asr(4/3) nav(arw) arw(tc)",
       "content": "scl(sm)"
     },
     "carousel-arrows-bottom": {
       "name": "Carousel Arrows Bottom",
-      "description": "Edge arrows at the bottom — arw(bot)",
+      "description": "Edge arrows at the bottom — arw(bc)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav(arw) arw(bot)",
+      "media": "asr(4/3) nav(arw) arw(bc)",
       "content": "scl(sm)"
     },
     "carousel-arrows-set": {
       "name": "Carousel Arrows Set",
-      "description": "Adjacent full-arrow pair, bottom end — arw(set) arw(arr) arw(bot)",
+      "description": "Adjacent full-arrow pair, bottom end — arw(set) arw(arr) arw(bc)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav(arw) arw(set) arw(arr) arw(bot)",
+      "media": "asr(4/3) nav(arw) arw(set) arw(arr)",
       "content": "scl(sm)"
     },
     "carousel-bare": {
@@ -562,10 +562,10 @@
     },
     "carousel-band-dots-start": {
       "name": "Carousel Band Dots Start",
-      "description": "Band below, arrow pair right, dots at inline-start — mrk(sta)",
+      "description": "Band below, arrow pair right, dots at inline-start — mrk(bs)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav(blw) arw(set) mrk(sta)",
+      "media": "asr(4/3) nav(blw) arw(set) mrk(bs)",
       "content": "scl(sm)"
     },
     "carousel-band-dots-center": {
@@ -578,10 +578,10 @@
     },
     "carousel-band-dots-end": {
       "name": "Carousel Band Dots End",
-      "description": "Band below, arrow pair right, dots at inline-end — mrk(end)",
+      "description": "Band below, arrow pair right, dots at inline-end — mrk(be)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav(blw) arw(set) mrk(end)",
+      "media": "asr(4/3) nav(blw) arw(set) mrk(be)",
       "content": "scl(sm)"
     },
     "carousel-vertical": {
@@ -594,10 +594,10 @@
     },
     "carousel-vertical-start": {
       "name": "Carousel Vertical Start",
-      "description": "Vertical carousel, controls on the left — arw(sta)",
+      "description": "Vertical carousel, controls on the left — arw(cs)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) axis(y) nav arw(sta)",
+      "media": "asr(4/3) axis(y) nav arw(cs)",
       "content": "scl(sm)"
     },
     "carousel-vertical-set": {
@@ -640,18 +640,18 @@
     },
     "carousel-scrollbar": {
       "name": "Carousel Scrollbar",
-      "description": "Native thin scrollbar as the only affordance — nav(bar)",
+      "description": "Native thin scrollbar as the only affordance — nav(mrk) mrk(bar)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav(bar)",
+      "media": "asr(4/3) nav(mrk) mrk(bar)",
       "content": "scl(sm)"
     },
     "carousel-scrollbar-vertical": {
       "name": "Carousel Scrollbar Vertical",
-      "description": "Vertical native scrollbar — axis(y) nav(bar)",
+      "description": "Vertical native scrollbar — axis(y) nav(mrk) mrk(bar)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) axis(y) nav(bar)",
+      "media": "asr(4/3) axis(y) nav(mrk) mrk(bar)",
       "content": "scl(sm)"
     },
     "carousel-auto-loop": {
@@ -712,10 +712,10 @@
     },
     "carousel-tokens": {
       "name": "Carousel Tokens Form",
-      "description": "media= token form — nav(blw) arw(lg) arw(drk) mrk(end)",
+      "description": "media= token form — nav(blw) arw(lg) arw(drk) mrk(be)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(16/9) nav(blw) arw(lg) arw(drk) mrk(end)",
+      "media": "asr(16/9) nav(blw) arw(lg) arw(drk) mrk(be)",
       "content": "scl(sm)"
     },
     "carousel-attrs": {
@@ -723,30 +723,30 @@
       "description": "Token-only equivalent of the former grouped-attribute form — renders identically to carousel-tokens",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(16/9) nav(blw) arw(lg) arw(drk) mrk(end)",
+      "media": "asr(16/9) nav(blw) arw(lg) arw(drk) mrk(be)",
       "content": "scl(sm)"
     },
     "carousel-subtle": {
       "name": "Carousel Subtle",
-      "description": "Low-contrast ink in a below band — arw(sub) mrk(sub)",
+      "description": "Low-contrast ink in a below band — arw(lgt) mrk(lgt)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(16/9) nav(blw) arw(sub) mrk(sub)",
+      "media": "asr(16/9) nav(blw) arw(lgt) mrk(lgt)",
       "content": "scl(sm)"
     },
     "carousel-subtle-attrs": {
       "name": "Carousel Subtle (folded)",
-      "description": "Token-only equivalent of the former attribute form — media=\"… nav(blw) arw(arr) arw(sub) mrk(sub) mrk(pll)\"",
+      "description": "Token-only equivalent of the former attribute form — media=\"… nav(blw) arw(arr) arw(lgt) mrk(lgt) mrk(pll)\"",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(16/9) nav(blw) arw(arr) arw(sub) mrk(sub) mrk(pll)",
+      "media": "asr(16/9) nav(blw) arw(arr) arw(lgt) mrk(lgt) mrk(pll)",
       "content": "scl(sm)"
     },
     "carousel-bare-band": {
       "name": "Carousel Bare Band",
       "description": "Standalone <ui-media> — band below, bare full-arrow set, dots at the end",
       "element": "ui-media",
-      "media": "asr(4/3) nav(blw) arw(bare) arw(arr) arw(set) mrk(end)"
+      "media": "asr(4/3) nav(blw) arw(bare) arw(arr) arw(set) mrk(be)"
     },
     "carousel-bare-axis": {
       "name": "Carousel Bare Axis",

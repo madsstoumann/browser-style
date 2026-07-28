@@ -156,7 +156,43 @@ export const lintTokens = () => {
 	/* ── 4. slide-exclusion list sync ── */
 	lintSlideLists(errors);
 
+	/* ── 5. preset data speaks the current dialect ──
+	   The preset collections are renderer INPUT — a token the manifest doesn't
+	   know is a silent no-op in the browser (it matches no CSS rule), which is
+	   how a whole pre-rename carousel vocabulary (arw(top), mrk(sta), nav(bar),
+	   …) survived unnoticed in card.presets.demo.json. Validate every
+	   variant/media/content string in both collections against the manifest. */
+	lintPresets(manifest, errors);
+
 	return errors;
+};
+
+const PRESET_FILES = ['data/card.presets.json', 'data/card.presets.demo.json'];
+/* stems whose args are free-form numbers/ratios the manifest lists as placeholders */
+const OPEN_STEMS = /^(?:md:|lg:)?(?:asr|spl|auto|tmb)\([\d/.:a-z%]+\)$/;
+const lintPresets = (manifest, errors) => {
+	const valid = {};
+	for (const [attr, group] of Object.entries(manifest.attributes)) {
+		const set = new Set();
+		for (const [name, entry] of flatten(group)) for (const spelling of spellings(name, entry)) if (!spelling.endsWith('(')) set.add(spelling);
+		valid[attr] = set;
+	}
+	const walk = (node, file, path) => {
+		if (Array.isArray(node)) return node.forEach((item, index) => walk(item, file, `${path}[${index}]`));
+		if (!node || typeof node !== 'object') return;
+		for (const [key, value] of Object.entries(node)) {
+			if (['variant', 'media', 'content'].includes(key) && typeof value === 'string') {
+				for (const token of value.trim().split(/\s+/)) {
+					if (!token || valid[key].has(token) || OPEN_STEMS.test(token)) continue;
+					errors.push(`${file} ${path}: ${key}= token "${token}" is not in the manifest — dead in the browser`);
+				}
+			} else walk(value, file, `${path}.${key}`);
+		}
+	};
+	for (const file of PRESET_FILES) {
+		try { walk(JSON.parse(readFileSync(new URL(file, import.meta.url), 'utf8')), file, '$'); }
+		catch (error) { errors.push(`${file}: unreadable — ${error.message}`); }
+	}
 };
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

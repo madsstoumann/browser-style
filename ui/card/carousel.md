@@ -75,7 +75,7 @@ inventory cannot drift from the CSS. The prose tables under it explain what the 
 <!-- tokens:summary attr=media stems=nav,arw,mrk,tmb,axis,auto,ani,crd,load,clip,loop,stagger,pages -->
 | token | axis | args | aliases | bare | writes | md:/lg: | deprecated |
 |---|---|---|---|---|---|---|---|
-| `nav()` | carousel | **mode** mrk arw blw abv | — | yes | --ui-media-bg --ui-carousel-* | — | — |
+| `nav()` | carousel | **mode** mrk arw blw abv non | — | yes | --ui-media-bg --ui-carousel-* | — | — |
 | `arw()` | arrows | **variant** arr bare sqr sft lgt drk hid rev set · **size** sm lg xl · **pos** ts tc te cs cc bs bc be · **mode** blw abv | — | — | --ui-carousel-arrow-glyph --ui-carousel-arrow-size --ui-carousel-arrow-radius --ui-carousel-arrow-bg --ui-carousel-arrow-bg-hover --ui-carousel-arrow-color --ui-carousel-arrow-color-hover --ui-carousel-arrow-shadow --ui-carousel-arrow-hover-ring --ui-carousel-arrow-nudge --ui-carousel-arrow-disabled-opacity --ui-carousel-arrow-top --_arw-rot --_arw-scale | — | — |
 | `mrk()` | markers | **variant** pll hyb bar tmb rail non lgt drk sbr lbl · **size** sm md lg xl · **pos** ts tc te cs cc ce bs bc be · **mode** blw abv | — | — | --ui-carousel-marker-size --ui-carousel-marker-bg --ui-carousel-marker-active --ui-carousel-marker-inset --ui-carousel-pill-width --ui-carousel-pill-height --ui-carousel-pill-track --ui-carousel-pill-fill --ui-carousel-thumb-size --ui-carousel-bar-* --ui-carousel-band --ui-carousel-rail --ui-carousel-sbr-* --ui-carousel-label-* | — | — |
 | `tmb()` | thumbs | **ratio** 1/1 4/3 3/4 16/9 3/2 2/3 | — | — | --ui-carousel-thumb-ratio --ui-carousel-thumb-ratio-n | — | — |
@@ -99,6 +99,7 @@ inventory cannot drift from the CSS. The prose tables under it explain what the 
 | `nav(arw)` | Arrows only |
 | `nav(blw)` | Markers + arrows in a reserved **band below** the media |
 | `nav(abv)` | Markers + arrows in a reserved **band above** the media (mirror of `nav(blw)`) |
+| `nav(non)` | **Scroller only, no controls** — a bare swipe carousel. The parenthesised arg suppresses the bare-`nav` needle (so neither dots nor arrows are declared) while the `nav` substring still enables the scroll-snap scroller |
 
 ### `axis()` — scroll direction
 

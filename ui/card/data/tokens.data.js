@@ -1046,7 +1046,8 @@ export default {
 							"mrk",
 							"arw",
 							"blw",
-							"abv"
+							"abv",
+							"non"
 						]
 					},
 					"argAliases": {},
@@ -1075,7 +1076,7 @@ export default {
 						"ui/base/carousel.css:153",
 						"layout/core/base.css:305"
 					],
-					"notes": "THE TOKEN IS THE TRIGGER — no separate carousel element. Turns the frame into a flex scroll-snap scroller and declares the whole --ui-carousel-* default bundle. BARE-nav detection is the compound needle [media*=\"nav\"]:not([media*=\"nav(\"]) (carousel.css:84,153). Dual arm on ui-media (`ui-media:where([media*=\"nav\"], :is(ui-card, ui-reveal)[media*=\"nav\"] *)`); the lay-out[overflow] arm is a separate host that drives the LAYOUT's own scroller, never descendant frames. Slides = direct children minus the NOT_SLIDE list (media.carousel.css:32, shared.js:20). Controls are ::scroll-marker/::scroll-button, @supports-gated (Chromium)."
+					"notes": "THE TOKEN IS THE TRIGGER — no separate carousel element. Turns the frame into a flex scroll-snap scroller and declares the whole --ui-carousel-* default bundle. BARE-nav detection is the compound needle [media*=\"nav\"]:not([media*=\"nav(\"]) (carousel.css:84,153). Dual arm on ui-media (`ui-media:where([media*=\"nav\"], :is(ui-card, ui-reveal)[media*=\"nav\"] *)`); the lay-out[overflow] arm is a separate host that drives the LAYOUT's own scroller, never descendant frames. Slides = direct children minus the NOT_SLIDE list (media.carousel.css:32, shared.js:20). Controls are ::scroll-marker/::scroll-button, @supports-gated (Chromium). nav(non) = scroller only, NO controls: the parenthesised arg suppresses the bare-nav compound needle (so neither dots nor arrows are declared) while the plain [media*=\"nav\"] substring still enables the scroll-snap scroller — a bare swipe carousel. No dedicated CSS rule exists or is needed."
 				},
 				"arw": {
 					"axis": "arrows",

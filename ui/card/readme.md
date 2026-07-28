@@ -186,7 +186,7 @@ Argument vocabularies, **generated from `data/tokens.json`** so they can't drift
 | `scm()` | **pos** | ts tc te cs cc ce bs bc be | — |
 | `scm()` | **size** | sm md lg xl | — |
 | `scm()` | **tone** | shr lgt med drk sld | sheer→shr solid→sld |
-| `nav()` | **mode** | mrk arw blw abv | — |
+| `nav()` | **mode** | mrk arw blw abv non | — |
 <!-- /tokens -->
 
 Overlay furniture — position, hue and each element's own axes:
