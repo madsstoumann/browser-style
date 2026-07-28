@@ -11,7 +11,15 @@
 	<link rel="stylesheet" href="/ui/layout/demo.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
 	<style>
-		body { margin: 0; }
+		/* NO `body { margin: 0 }` here. This <style> is unlayered, so it would beat
+		   @layer layout's `body:has(lay-out) { margin-inline: max(--layout-mi, 50cqw -
+		   --layout-bleed-mw / 2) }` — the rule that centres the body as the content
+		   column. lay-out[bleed] escapes that column with the exact negative of it, so
+		   zeroing the body margin leaves every bleed layout pulled ~388px off to the
+		   inline-start instead of spanning the viewport. Full-bleed is a job for
+		   <lay-out bleed="0">, which the hero below uses. Only the BLOCK axis is
+		   zeroed here (the UA's 8px top/bottom body margin). */
+		body { margin-block: 0; }
 		.hero {
 			background: #0f172a;
 			color: white;
@@ -23,6 +31,7 @@
 		}
 		.hero h1 { font-size: clamp(2rem, 6vw, 4rem); font-weight: 200; margin: 0; }
 		.hero p { font-size: 1.2rem; opacity: 0.6; }
+		.hero .hero-scroll { margin-block-start: 4rem; opacity: 0.3; }
 		.layer {
 			display: grid;
 			font-family: system-ui;
@@ -46,15 +55,308 @@
 			font-size: 0.8rem;
 			padding: 0.5ch 1.25ch;
 		}
+
+		/* ═══════════════════════════════════════════════════════════════════
+		   PRODUCT SCENE — stack(reveal) as a sticky cage, own timeline.
+
+		   Every other demo on this page hands the scene to the engine:
+		   `animate-self="reveal(…)"` makes layout/core/animations.css hijack the
+		   container into the --stack-reveal timeline, where the LAST child clips
+		   itself away. This one deliberately omits that attribute, so
+		   stack(reveal) contributes only its cage — grid 1fr, children
+		   `position: sticky; top: 0`, min-height 100dvh + --layout-reveal-pad —
+		   and the scene declares its own `view-timeline`. Same token, two jobs.
+
+		   ONE timeline, three phases, all scrubbed by scroll position:
+		     1  the phone dollies ~1024px wide → fits the panel (top only → whole device)
+		     2  the intro copy on the screen fades out
+		     3  the app UI unblurs + fades in
+		   The runway ends right after phase 3, so the next section takes over
+		     as soon as the whole device has resolved.
+
+		   Why `contain` and not `entry`/`exit`: for a subject TALLER than the
+		   viewport, `contain` is exactly the window in which it fully covers the
+		   scrollport — i.e. precisely while the sticky child is pinned. On
+		   `entry` the animation would burn itself out during the scroll-in,
+		   before the scene is even in place.
+		   ═══════════════════════════════════════════════════════════════════ */
+
+		.scene {
+			--layout-reveal-pad: 150dvh;   /* length of the pinned scroll runway */
+			/* zoomed width ≈ 22rem × 2.9 ≈ 1020px — state 1 is a ~1024px-wide
+			   device with only its top edge in view */
+			--phone-zoom: 2.9;
+			view-timeline: --phone-scene;
+		}
+
+		.panel {
+			background: radial-gradient(120% 90% at 78% 8%, #fbbf24 0%, #f97316 38%, #ea580c 68%, #c2410c 100%);
+			block-size: 100dvh;
+			color: #fff;
+			display: grid;
+			grid-template-rows: auto 1fr;
+			overflow: clip;   /* the device overflows the panel while zoomed in */
+		}
+
+		.panel-bar {
+			align-items: center;
+			display: flex;
+			font-size: 0.875rem;
+			gap: 1rem;
+			justify-content: space-between;
+			padding: 1.25rem clamp(1rem, 4vw, 3rem);
+		}
+		.panel-brand { font-weight: 600; letter-spacing: -0.01em; }
+		.panel-cta {
+			background: #16a34a;
+			border-radius: 100px;
+			color: #fff;
+			font-size: 0.75rem;
+			font-weight: 600;
+			padding: 0.5em 1.1em;
+			text-decoration: none;
+		}
+
+		.phone-stage {
+			align-content: start;
+			display: grid;
+			justify-items: center;
+			padding-block-start: clamp(1rem, 4vh, 3rem);
+		}
+
+		.phone {
+			aspect-ratio: 9 / 19.5;
+			background: #0b0b0f;
+			border-radius: clamp(1.75rem, 4vw, 2.75rem);
+			box-shadow: 0 0 0 2px #2a2a33, 0 2.5rem 5rem rgb(0 0 0 / 0.35);
+			display: grid;
+			/* The FINAL size. The third term is the load-bearing one: 9/19.5 of
+			   86dvh, i.e. the widest this device can be and still fit the panel
+			   top-to-bottom. That guarantee is what makes "the whole phone is
+			   visible" a real moment the timeline can hand off on. */
+			inline-size: min(22rem, 82vw, 39.7dvh);
+			padding: 0.4rem;
+			position: relative;
+			/* growth is pinned to the top edge, so the device's top stays put in
+			   every state and it grows DOWN out of the panel */
+			transform-origin: 50% 0;
+		}
+
+		.phone::before {   /* dynamic island */
+			background: #0b0b0f;
+			block-size: 1.15rem;
+			border-radius: 100px;
+			content: "";
+			inline-size: 33%;
+			inset-block-start: 0.75rem;
+			inset-inline-start: 50%;
+			position: absolute;
+			translate: -50% 0;
+			z-index: 2;
+		}
+		.phone-screen {
+			background: #fff;
+			border-radius: calc(clamp(1.75rem, 4vw, 2.75rem) - 0.4rem);
+			color: #1c1917;
+			display: grid;
+			overflow: clip;
+		}
+		.phone-screen > * { grid-area: 1 / 1; }   /* both screens cross-fade in place */
+
+		/* screen 1 — the intro copy, on screen while the device is zoomed.
+		   Defaults to the END state (gone): without scroll-driven animation
+		   support the app screen is simply what you see. */
+		.screen-intro {
+			/* NOT `align-content: center` — centring is relative to the SCREEN, and
+			   while the device is zoomed the screen is ~2150px tall, so the copy
+			   would sit far below the fold in state 1. A block-start offset in %
+			   resolves against the screen's WIDTH, so it scales with the device and
+			   the copy holds the same relative position in every state. */
+			align-content: start;
+			display: grid;
+			gap: 1rem;
+			justify-items: center;
+			opacity: 0;
+			padding: 34% 1.5rem 2rem;
+			text-align: center;
+		}
+		.screen-intro h2 {
+			border: 0;
+			font-size: clamp(1.1rem, 1.1rem + 0.6vw, 1.6rem);
+			font-weight: 600;
+			letter-spacing: -0.02em;
+			line-height: 1.15;
+			margin: 0;
+		}
+		.screen-intro a { color: #ea580c; font-size: 0.8rem; font-weight: 600; }
+
+		/* screen 2 — the app UI, unblurs last */
+		.screen-app {
+			align-content: start;
+			display: grid;
+			gap: 0.75rem;
+			padding: 2.25rem 1rem 1rem;
+		}
+		.screen-app h3 { font-size: 0.95rem; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+		.app-metric {
+			background: #f5f5f4;
+			border-radius: 0.9rem;
+			display: grid;
+			gap: 0.15rem;
+			padding: 0.75rem 0.9rem;
+		}
+		.app-metric b { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.02em; }
+		.app-metric span { color: #78716c; font-size: 0.65rem; letter-spacing: 0.06em; text-transform: uppercase; }
+		.app-metric[data-tone="pulse"] { background: #fee2e2; color: #b91c1c; }
+		.app-metric[data-tone="move"] { background: #dcfce7; color: #15803d; }
+		.app-row { display: grid; gap: 0.5rem; grid-template-columns: 1fr 1fr; }
+		.app-chart {
+			align-items: end;
+			background: #f5f5f4;
+			block-size: 6rem;
+			border-radius: 0.9rem;
+			display: grid;
+			gap: 0.35rem;
+			grid-auto-flow: column;
+			padding: 0.75rem;
+		}
+		/* a small radius, not a pill — at this bar width `100px` rounds the short
+		   bars into blobs */
+		.app-chart i { background: #ea580c; block-size: calc(var(--v, 50) * 1%); border-radius: 0.25rem; display: block; }
+		.app-chart i:nth-child(1) { --v: 45; }
+		.app-chart i:nth-child(2) { --v: 62; }
+		.app-chart i:nth-child(3) { --v: 38; }
+		.app-chart i:nth-child(4) { --v: 80; }
+		.app-chart i:nth-child(5) { --v: 55; }
+		.app-chart i:nth-child(6) { --v: 92; }
+		.app-chart i:nth-child(7) { --v: 70; }
+
+		/* ── the scroll-driven layer ────────────────────────────────────────
+		   Everything above already renders the END state, so a browser without
+		   scroll-driven animations (Firefox) gets the finished scene and no
+		   fallback script is needed. `(animation-range: entry)` is part of the
+		   @supports test on purpose — it filters out partial implementations. */
+
+		@media (prefers-reduced-motion: no-preference) {
+			@supports ((animation-timeline: view()) and (animation-range: entry)) {
+
+				@keyframes phone-dolly {
+					from { scale: var(--phone-zoom); }
+					to   { scale: 1; }
+				}
+				@keyframes screen-out {
+					from { opacity: 1; }
+					to   { opacity: 0; }
+				}
+				@keyframes screen-in {
+					from { opacity: 0; filter: blur(14px); }
+					to   { opacity: 1; filter: blur(0); }
+				}
+
+				/* phase 1 — `backwards` fill holds the zoomed start state while
+				   the panel is still scrolling in, before the range opens */
+				.phone {
+					animation: phone-dolly linear backwards;
+					animation-timeline: --phone-scene;
+					animation-range: contain 0% contain 45%;
+				}
+				/* phase 2 — `both`: on screen before the range, gone after it */
+				.screen-intro {
+					animation: screen-out linear both;
+					animation-timeline: --phone-scene;
+					animation-range: contain 38% contain 52%;
+				}
+				/* phase 3 — unblur once the device is whole */
+				.screen-app {
+					animation: screen-in linear both;
+					animation-timeline: --phone-scene;
+					animation-range: contain 50% contain 85%;
+				}
+
+				/* MOBILE — two states, not three. There is no room for a distinct
+				   "whole device, intro still on screen" beat (the phone fills the
+				   panel either way), so the runway shortens and the hand-over
+				   overlaps the dolly instead of following it. */
+				@media (width < 600px) {
+					/* a gentler dolly — at 68vw a 1.9 zoom pushes the bezel past
+					   both edges and the device stops reading as a device */
+					.scene { --layout-reveal-pad: 120dvh; --phone-zoom: 1.6; }
+					.phone        { animation-range: contain 0% contain 48%; }
+					.screen-intro { animation-range: contain 32% contain 50%; }
+					.screen-app   { animation-range: contain 46% contain 85%; }
+				}
+			}
+		}
 	</style>
 </head>
 <body>
 
-	<div class="hero">
-		<h1>Stack Reveal Demos</h1>
-		<p>The last child clips away via clip-path to reveal content underneath.</p>
-		<p style="opacity: 0.3; margin-top: 4rem;">&darr; Scroll down &darr;</p>
-	</div>
+	<lay-out bleed="0">
+		<div class="hero">
+			<h1>Stack Reveal Demos</h1>
+			<p>The last child clips away via clip-path to reveal content underneath.</p>
+			<p class="hero-scroll">&darr; Scroll down &darr;</p>
+		</div>
+	</lay-out>
+
+	<!-- =================================================================
+	     Product scene — stack(reveal) used ONLY as a sticky cage.
+	     No animate-self= here on purpose: the page owns the timeline, so
+	     one pinned panel can run three sequential scroll-scrubbed phases.
+	     ================================================================= -->
+
+	<lay-out bleed="0" xs="stack(reveal)" class="scene">
+		<section class="panel">
+			<header class="panel-bar">
+				<span class="panel-brand">Cardia&trade;</span>
+				<a class="panel-cta" href="#end">Get the app</a>
+			</header>
+
+			<div class="phone-stage">
+				<div class="phone">
+					<div class="phone-screen">
+
+						<div class="screen-intro">
+							<h2>Designed for your heart.<br>Built for your safety.</h2>
+							<a href="#end">Learn more &rarr;</a>
+						</div>
+
+						<div class="screen-app">
+							<h3>Today</h3>
+							<div class="app-metric" data-tone="pulse">
+								<b>68 bpm</b>
+								<span>Resting heart rate</span>
+							</div>
+							<div class="app-row">
+								<div class="app-metric" data-tone="move">
+									<b>8.2k</b>
+									<span>Steps</span>
+								</div>
+								<div class="app-metric">
+									<b>7h 41m</b>
+									<span>Sleep</span>
+								</div>
+							</div>
+							<div class="app-chart" aria-hidden="true">
+								<i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+							</div>
+							<div class="app-row">
+								<div class="app-metric">
+									<b>412</b>
+									<span>Active kcal</span>
+								</div>
+								<div class="app-metric">
+									<b>14 min</b>
+									<span>Mindful</span>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</section>
+	</lay-out>
 
 	<!-- =================================================================
 	     Circle reveal — last child clips away to reveal image layer
@@ -267,7 +569,7 @@
 		</div>
 	</lay-out>
 
-	<div class="hero" style="background: #0f172a;">
+	<div class="hero" id="end" style="background: #0f172a;">
 		<p style="opacity: 0.3;">End of demos</p>
 	</div>
 
