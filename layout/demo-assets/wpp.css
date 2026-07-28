@@ -67,27 +67,19 @@ lay-out ui-content { --ui-content-p: 0; padding-block-start: 0.75rem; }
 
 lay-out[lg~="subgrid"] ui-media img { block-size: 100%; object-fit: cover; }
 
-/* Card subgrid — the lay-out's `subgrid` token makes each ui-card a subgrid of
-   the grid's N shared rows, but the card's parts are nested two wrappers deep
-   (ui-card > cq-box > ui-media | ui-content > eyebrow/headline/CTA), and every wrapper
-   breaks the subgrid chain. The fix here is to FLATTEN both wrappers with
-   `display: contents` — that promotes the leaf parts (media · eyebrow · headline · CTA)
-   to be the card's own grid items, so they auto-place directly onto the N shared rows
-   (media row 1, then one part per row) and line up across every card. The first card's
-   media sets the shared media-row height; the rest fill it (object-fit: cover). Gated
-   to lg, where the grid is multi-column; stacked mobile keeps each card's own box + ratio.
+/* Card subgrid — the wrapper flattening is NO LONGER demo-local: the cards carry
+   `variant="col sub"`, and the card system's `sub` variant (ui/card/ui-card.css)
+   dissolves `> cq-box` and `> cq-box > ui-content` for exactly as long as the
+   parent lay-out's `subgrid` flag is on, so the leaf parts (media · eyebrow ·
+   headline · CTA) become the card's own grid items on the N shared rows. It syncs
+   to the flag, not to a breakpoint — moving `subgrid` from lg= to xl= here needs
+   no CSS change on either side.
 
-   NOTE — this is demo-local, and `display: contents` drops ui-content's own box
-   (padding/gap), which is fine for these flat cards but not universal. The clean,
-   reusable version is a card-system opt-in (a `sub` variant on <ui-card> that flattens
-   its wrappers only while the parent subgrid is active), builder-generated per
-   breakpoint — see the subgrid section in layout/AGENTS.md. Until that lands, hand-write
-   this per demo. */
+   What is left below is purely this demo's media sizing: the first card's media
+   sets the shared media-row height and the rest fill it (aspect-ratio: auto +
+   object-fit: cover), which is a look, not a mechanism. */
 @media (min-width: 45rem) {
-	lay-out[lg~="subgrid"] > ui-card {
-		& > cq-box, & > cq-box > ui-content { display: contents; }
-		&:not(:first-child) ui-media { aspect-ratio: auto; }
-	}
+	lay-out[lg~="subgrid"] > ui-card:not(:first-child) ui-media { aspect-ratio: auto; }
 }
 
 /* big typographic hero */

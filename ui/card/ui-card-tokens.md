@@ -60,6 +60,7 @@ attribute and therefore the same table; they are explained under *Reveal tokens*
 | `exp` | reveal-animation | — | — | yes | --_rvl | — | — |
 | `pop` | reveal-mode | — | — | yes | --ui-reveal-expand-m --ui-media-ar --ui-reveal-content-fs | — | — |
 | `scr` | scroll | — | — | yes | — | — | — |
+| `sub` | subgrid | — | — | yes | --_sub | — | — |
 <!-- /tokens -->
 
 What each arrangement token does:
@@ -73,6 +74,31 @@ What each arrangement token does:
 | `spl(1/1 · 1/2 · 2/1 · 1/3 · 3/1)` | column ratio for `row`/`row-r` (writes `--ui-card-split`) |
 | `vis(media)` | show only the media (hide `<ui-content>`) |
 | `vis(content)` | show only the content (hide `<ui-media>`) |
+| `sub` | join the parent `<lay-out>`'s subgrid rows — dissolves `> cq-box` and `> cq-box > ui-content` so the leaf parts become the card's own grid items (see below) |
+
+### `sub` — join the parent layout's subgrid
+
+`<lay-out lg="columns(3) subgrid" subgrid="4">` gives every **direct** child N shared rows. A card's parts sit two wrappers deep (`ui-card > cq-box > ui-content > eyebrow/headline/CTA`) and every wrapper breaks the subgrid chain, so `sub` flattens the wrappers with `display: contents`: media lands in row 1, then one content part per row, aligned across the whole deck however differently the headlines wrap.
+
+```html
+<lay-out lg="columns(3) subgrid" subgrid="4">
+  <ui-card variant="col sub" media="asr(16/9)"><cq-box>
+    <ui-media><img src="…" alt=""></ui-media>
+    <ui-content><small data-part="eyebrow">…</small><h3 data-part="headline">…</h3><nav data-part="actions">…</nav></ui-content>
+  </cq-box></ui-card>
+  …
+</lay-out>
+```
+
+**`sub` names no breakpoint — it follows the layout's flag.** The bare `subgrid` token only flips `--_subgrid: on` on the `<lay-out>` inside whichever `@media` the layout builder emitted it for; `sub` syncs to that live flag. Moving the markup from `lg="columns(3) subgrid"` to `xl="…"` (or `md=`, or several breakpoints) therefore needs **no card-side change at all** — the flag goes on and off with the layout's own breakpoint, and `sub` goes on and off with the flag. Below that breakpoint the card is an ordinary card again.
+
+Three things to know:
+
+- **`<ui-media>` is not flattened** — it *is* the row-1 grid item. Dissolving it would drop `asr()`/`rds()`/`scm` and spill its `<img>` plus any furniture across several rows.
+- **While flattened, `<ui-content>`'s box is gone**, so its `pad()`/`gap()` have nothing to apply to; vertical rhythm comes from the layout's row gaps (`rg(N)` / `--layout-rg`). The subgrid engine also neutralises the card's `container-type`, so the card's own `md:`/`lg:` **container** tiers are suspended for as long as the flag is on. Both are by design.
+- **`<ui-reveal>` is not a host for `sub`** — its front face is `details > summary`, and dissolving those destroys the disclosure surface and its `::details-content` animation. Use `<ui-card>` for subgridded decks.
+
+See [layout/AGENTS.md](../../layout/AGENTS.md#subgrid--subgrid) for the layout half, and `layout/demo-assets/wpp.html` + `layout/dist/section.html` for working demos.
 
 **Responsive:** `col` `col-r` `row` `row-r` `spl()` `vis()` accept `md:` (≥ 25rem) and `lg:` (≥ 44rem) container-query prefixes, e.g. `variant="col md:row lg:spl(1/2)"`. All size queries are **named** — `@container bs-card (…)`. `variant=` is host-only (no self arm): it arranges the two children, so it belongs on the host by nature. `content=` spacing (`gap()` + the seven padding tokens) and size (`scl()`, `hl()`) are prefixable **and** ship a self arm — see [content.md](content.md#responsive). On `media=`, only `asr()` is prefixable.
 

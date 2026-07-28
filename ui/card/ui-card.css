@@ -133,6 +133,71 @@
 	:where([variant~="vis(content)"]) ui-media { display: none; }
 
 	/* ============================================================
+	   SUB — the card joins its parent <lay-out>'s subgrid rows (F-38)
+
+	   `<lay-out lg="columns(3) subgrid" subgrid="4">` makes every DIRECT child a
+	   subgrid of N shared rows (layout/core/base.css: `display: grid` +
+	   `grid-row: span var(--_sg)` + `grid-template-rows: subgrid`, plus
+	   `container-type: normal` so the child's own inline-size container can't
+	   sever the chain). A card's parts, though, sit two wrappers deep —
+	   ui-card > cq-box > ui-content > eyebrow/headline/actions — and every
+	   wrapper breaks the chain. `sub` dissolves the wrappers (display: contents)
+	   so the leaf parts become the CARD's own grid items and auto-place onto the
+	   shared rows: media in row 1, then one content part per row, aligned across
+	   every card in the deck however differently their headlines wrap.
+
+	   NO BREAKPOINT IS NAMED HERE — and that is the whole mechanism. The
+	   layout's bare `subgrid` token only flips `--_subgrid: on` (a NON-inheriting
+	   registered property) on the <lay-out> itself, inside whichever @media the
+	   builder emitted it for. The card syncs to that live flag, never to a
+	   breakpoint of its own — so moving the markup from `lg="columns(3) subgrid"`
+	   to `xl="…"` (or `md=`, or several at once) needs NO card-side change: the
+	   flag goes on and off with the layout's own breakpoint, and `sub` goes on
+	   and off with the flag.
+
+	   TWO HOPS, because a style query resolves against the subject's PARENT.
+	   Hop 1's subject is the card, whose parent IS the <lay-out>, so it can see
+	   --_subgrid. Hop 2's subject is <cq-box>, whose parent is the card — which
+	   has no --_subgrid of its own precisely because that property does not
+	   inherit. So hop 1 relays the state into --_sub, an ordinary INHERITING
+	   custom property (deliberately NOT @property-registered: the default
+	   `inherits: true` is exactly what the relay needs), which the wrappers read.
+	   Verified in Chromium: the single-hop form — `@container style(--_subgrid:
+	   on) { … > cq-box { display: contents } }` — matches nothing.
+
+	   <ui-media> is deliberately NOT flattened: it IS the row-1 grid item.
+	   Dissolving it would drop asr()/rds()/scrim and spill its <img> plus any
+	   furniture across several rows instead of filling one.
+
+	   CONSEQUENCES — by design, documented rather than fought:
+	   • while flattened, <ui-content>'s box is gone, so its pad()/gap() have
+	     nothing to apply to; vertical rhythm comes from the LAYOUT's row gaps
+	     (--layout-rg / the `rg(N)` breakpoint token).
+	   • the subgrid engine sets container-type: normal on the card, so the card's
+	     own md:/lg: container tiers are suspended for as long as the flag is on.
+	   • <ui-reveal> is NOT a host for `sub`: its front face is
+	     `details > summary`, and dissolving those destroys the disclosure surface
+	     and the ::details-content animation. Use <ui-card> for subgridded decks.
+	   ============================================================ */
+	/* boundary — a host nested inside another host starts OFF, so a subgridded
+	   outer card can't flatten an inner one that is not itself a direct child of
+	   an ON layout. Declared BEFORE the setter so the setter re-wins for an inner
+	   card that genuinely is one (both are zero-specificity :where(), so source
+	   order decides) — the same nearest-host-wins discipline content.typography.css
+	   uses for its size resets. */
+	:where(ui-card, ui-reveal) :where(ui-card, ui-reveal) { --_sub: 0; }
+
+	/* hop 1 — the card reads its parent layout's live flag */
+	@container style(--_subgrid: on) {
+		:where(lay-out) > :where(ui-card):where([variant~="sub"]) { --_sub: 1; }
+	}
+	/* hop 2 — the wrappers read the inherited relay and dissolve */
+	@container style(--_sub: 1) {
+		:where(ui-card[variant~="sub"]) > cq-box,
+		:where(ui-card[variant~="sub"]) > cq-box > ui-content { display: contents; }
+	}
+
+	/* ============================================================
 	   ALIGN-CONTENT — stacked layouts collect slack at the edge; row /
 	   overlay / single-part layouts stretch.
 	   ============================================================ */

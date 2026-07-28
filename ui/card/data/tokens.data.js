@@ -2309,6 +2309,32 @@ export default {
 						"ui/reveal/ui-reveal.css:497-501"
 					],
 					"notes": "Reveal PANEL scroll — only active under flp (panel goes `position: absolute; inset: 0` so a long flipside can't grow the card, with the shared ui-scroll-fade edge mask) and under grw / lg:grw (overflow-y auto, scrollbar hidden). Inert under exp and sld. Reads --ui-reveal-content-bs / --ui-reveal-scrollbar-color; writes no custom property. HOMONYM of content='s `scr` — different attribute, different target (content= scrolls the text column inside <ui-content>). Both share the one ui-scroll-fade primitive in ui/base/scroll.css."
+				},
+				"sub": {
+					"axis": "subgrid",
+					"element": null,
+					"args": {},
+					"argAliases": {},
+					"bare": true,
+					"matching": "whole",
+					"writes": [
+						"--_sub"
+					],
+					"realProperties": true,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": false,
+					"hosts": [
+						"ui-card"
+					],
+					"requiresJs": {},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/card/ui-card.css:135-198",
+						"layout/core/base.css:331-354"
+					],
+					"notes": "Opt-in wrapper flattening so a card's parts join the rows of a parent <lay-out>'s subgrid (F-38) — replaces the old demo-local `display: contents` hack in layout/demo-assets/wpp.css. FLAG RELAY, not a breakpoint: the layout's bare `subgrid` breakpoint token flips `--_subgrid: on` on the <lay-out> inside whichever @media the builder emitted it for; `sub` syncs to that live flag and NEVER names a breakpoint of its own, so switching the markup from lg=\"columns(3) subgrid\" to xl=\"…\" (or md=, or several) needs no card-side change. TWO HOPS because a style query resolves against the SUBJECT'S PARENT: hop 1's subject is the card, whose parent is the <lay-out>, so it can read the non-inheriting --_subgrid; hop 2's subject is <cq-box>, whose parent is the card, which has no --_subgrid of its own — so hop 1 relays into --_sub, an ordinary INHERITING custom property (not @property-registered on purpose) that <cq-box> and <ui-content> can read. Verified in Chromium: the single-hop form matches nothing. Flattens `> cq-box` and `> cq-box > ui-content` only — <ui-media> stays a box because it IS the row-1 grid item (dissolving it would drop asr()/rds()/scrim and spill its <img> + furniture across rows). A nested host resets --_sub to 0 (nearest-host-wins boundary) so a subgridded outer card can't flatten an inner one. Known consequences: while flattened <ui-content>'s box is gone, so pad()/gap() do nothing and rhythm comes from the layout's row gaps (rg(N)); and the subgrid engine's `container-type: normal` on the card suspends the card's own md:/lg: container tiers for as long as the flag is on. NOT supported on <ui-reveal> — its front face is details > summary and dissolving those destroys the disclosure surface + ::details-content animation. variant= is host-only by design — there is no self arm on <ui-media>/<ui-content>."
 				}
 			}
 		},
