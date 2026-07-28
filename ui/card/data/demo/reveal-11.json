@@ -13,7 +13,7 @@
     "internalName": "Reveal demo 11 — Neon Avenue (flip)",
     "schemaType": "content",
     "preset": {
-      "$ref": "card-preset/reveal-flip-cl"
+      "$ref": "card-preset/reveal-flip-cs"
     },
     "eyebrow": "Synth-Pop",
     "headline": "Neon Avenue",

@@ -139,7 +139,7 @@ The classic serif-headline-over-sans-body:
 Content stacked on the image, scrim for contrast, display-size title:
 
 ```html
-<ui-card variant="ovr(bl)" media="asr(21/9) scm"
+<ui-card variant="ovr(bs)" media="asr(21/9) scm"
          content="scl(lg) hl(3xl) eb(inv) mt(lgt)">
   <cq-box>
     <ui-media><img src="…" alt=""></ui-media>
@@ -159,7 +159,7 @@ Content stacked on the image, scrim for contrast, display-size title:
 One spec that is a *poster* on wide slots and a *card* on narrow ones:
 
 ```html
-<ui-card variant="ovr(bl)" media="asr(3/4) lg:asr(21/9) scm"
+<ui-card variant="ovr(bs)" media="asr(3/4) lg:asr(21/9) scm"
          content="scl(sm) lg:scl(md) hl(2xl) tx(xl)">
   <cq-box>…</cq-box>
 </ui-card>

@@ -45,7 +45,7 @@ attribute and therefore the same table; they are explained under *Reveal tokens*
 | `bdr()` | border | **size** sm md lg · **tone** lgt drk | — | yes | --ui-card-border-width --ui-card-border-color | — | — |
 | `spl()` | split | **ratio** 1/1 1/2 2/1 1/3 3/1 | — | — | --ui-card-split | md: lg: (ratio) | — |
 | `vis()` | visibility | **value** media content | — | — | — | md: lg: (value) | — |
-| `ovr()` | overlay | **pos** ts tc te cs cc ce bs bc be | tl→ts tr→te cl→cs cr→ce bl→bs br→be | — | --ui-card-stack --ui-content-ov-ink --ui-content-ov-z --ui-content-heading-text-shadow --ui-content-eyebrow-text-shadow --ui-content-ov-justify --ui-content-ov-align --ui-content-ov-text --ui-media-scrim-default | — | — |
+| `ovr()` | overlay | **pos** ts tc te cs cc ce bs bc be | — | — | --ui-card-stack --ui-content-ov-ink --ui-content-ov-z --ui-content-heading-text-shadow --ui-content-eyebrow-text-shadow --ui-content-ov-justify --ui-content-ov-align --ui-content-ov-text --ui-media-scrim-default | — | — |
 | `flp()` | reveal-animation | **pos** top btm lft rgt | — | yes | --_rvl --_face-closed --_face-open --_panel-closed --_panel-open --ui-reveal-icon-clear | — | — |
 | `sld()` | reveal-animation | **pos** top btm lft rgt | — | yes | --_rvl | — | — |
 | `grw()` | reveal-animation | **pos** ts te bs be | — | yes | --_rvl --_scale-bs --_scale-be --_scale-is --_scale-ie | lg: (pos) | — |
@@ -120,7 +120,7 @@ ovr(bs)  ovr(bc)  ovr(be)
 
 Each sets `--ui-content-ov-justify` / `-align` / `-text` and points `--ui-media-scrim-default` at the matching gradient (which itself mirrors under `:dir(rtl)` — see [media.md](media.md#scrim)).
 
-> **The physical spellings `ovr(tl) ovr(tr) ovr(cl) ovr(cr) ovr(bl) ovr(br)` are deprecated aliases**, removed in v5. They were always *mislabelled* rather than wrong: the implementation has been logical all along, so `ovr(tl)` already rendered top-**end** under `dir="rtl"`. This round renames the args to match reality. `ovr(tc)`, `ovr(cc)` and `ovr(bc)` are spelled identically in both grids and are unaffected.
+> **The physical spellings `ovr(tl) ovr(tr) ovr(cl) ovr(cr) ovr(bl) ovr(br)` were removed in v5** — they no longer resolve. They were always *mislabelled* rather than wrong: the implementation has been logical all along, so `ovr(tl)` already rendered top-**end** under `dir="rtl"`, and the migration is a pure find-and-replace (`tl`→`ts`, `tr`→`te`, `cl`→`cs`, `cr`→`ce`, `bl`→`bs`, `br`→`be`). `ovr(tc)`, `ovr(cc)` and `ovr(bc)` are spelled identically in both grids and are unaffected. With `ovr()` converted, **`obp()` is the system's only physical position vocabulary** — see [media.md](media.md#obp--object-position-9-grid).
 
 ## Corners — `rds()`
 

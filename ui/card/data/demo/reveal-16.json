@@ -13,7 +13,7 @@
     "internalName": "Reveal demo 16 — Halcyon Wash (flip)",
     "schemaType": "content",
     "preset": {
-      "$ref": "card-preset/reveal-flip-br"
+      "$ref": "card-preset/reveal-flip-be"
     },
     "eyebrow": "Dream-Pop",
     "headline": "Halcyon Wash",

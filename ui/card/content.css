@@ -249,9 +249,10 @@
 
 	/* eyebrow — Eyebrow group. ink/weight fall back to eb() group props (the
 	   eyebrow part IS the eyebrow group's representative, so the group prop and
-	   the part hook share a name); the old -color hook is kept as an alias. */
+	   the part hook share a name). The legacy `-color` alias slots were REMOVED
+	   in v5 across every part — `-ink` is the single ink hook (F-09). */
 	:where(ui-content) [data-part="eyebrow"] {
-		color: var(--ui-content-eyebrow-ink, var(--ui-content-eyebrow-color, var(--color-accent)));
+		color: var(--ui-content-eyebrow-ink, var(--color-accent));
 		font-size: var(--ui-content-eyebrow-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.78));
 		font-weight: var(--ui-content-eyebrow-weight, var(--font-weight-medium, 500));
 		letter-spacing: var(--tracking-wide, 0.05em);
@@ -282,7 +283,7 @@
 
 	/* subheadline — Headings group; default stays muted unless hl() sets the group ink */
 	:where(ui-content) [data-part="subheadline"] {
-		color: var(--ui-content-subheadline-ink, var(--ui-content-subheadline-color, var(--ui-content-heading-ink, var(--ui-content-muted))));
+		color: var(--ui-content-subheadline-ink, var(--ui-content-heading-ink, var(--ui-content-muted)));
 		font-size: var(--ui-content-subheadline-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.88));
 		font-weight: var(--ui-content-subheadline-weight, var(--font-weight-normal, 400));
 		text-shadow: var(--ui-content-subheadline-text-shadow, var(--ui-content-heading-text-shadow, none));
@@ -291,7 +292,7 @@
 
 	/* summary — Body group */
 	:where(ui-content) [data-part="summary"] {
-		color: var(--ui-content-summary-ink, var(--ui-content-summary-color, var(--ui-content-body-ink, inherit)));
+		color: var(--ui-content-summary-ink, var(--ui-content-body-ink, inherit));
 		font-size: var(--ui-content-summary-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
 		font-weight: var(--ui-content-summary-weight, var(--ui-content-body-weight, var(--font-weight-normal, 400)));
 		line-height: var(--ui-content-summary-line-height, var(--line-height-normal, 1.5));
@@ -302,7 +303,7 @@
 	/* meta / caption (caption may also sit inside <ui-media>) — Meta group; the
 	   meta part is the group's representative, so its ink hook is the group prop. */
 	:where(ui-content, ui-media) :is([data-part="meta"], [data-part="caption"]) {
-		color: var(--ui-content-meta-ink, var(--ui-content-meta-color, var(--ui-content-muted)));
+		color: var(--ui-content-meta-ink, var(--ui-content-muted));
 		font-size: var(--ui-content-meta-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.75));
 		font-weight: var(--ui-content-meta-weight, inherit);
 		text-shadow: var(--ui-content-meta-text-shadow, none);
@@ -313,7 +314,7 @@
 	   the CSS previously left it at full ink — intentional consistency fix). */
 	:where(ui-content) [data-part="byline"] {
 		align-items: center;
-		color: var(--ui-content-byline-ink, var(--ui-content-byline-color, var(--ui-content-meta-ink, var(--ui-content-muted))));
+		color: var(--ui-content-byline-ink, var(--ui-content-meta-ink, var(--ui-content-muted)));
 		display: flex;
 		font-size: var(--ui-content-byline-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.82));
 		font-style: normal;
@@ -379,7 +380,7 @@
 
 	/* footer (trailing meta) — Meta group */
 	:where(ui-content) [data-part="footer"] {
-		color: var(--ui-content-footer-ink, var(--ui-content-footer-color, var(--ui-content-meta-ink, var(--ui-content-muted))));
+		color: var(--ui-content-footer-ink, var(--ui-content-meta-ink, var(--ui-content-muted)));
 		display: flex;
 		flex-wrap: wrap;
 		font-size: var(--ui-content-footer-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.78));
@@ -450,7 +451,7 @@
 	   Carries AggregateRating/Rating microdata. Used by: product, review, software. */
 	:where(ui-content) [data-part="rating"] {
 		align-items: center;
-		color: var(--ui-content-rating-ink, var(--ui-content-rating-color, var(--color-accent)));
+		color: var(--ui-content-rating-ink, var(--color-accent));
 		display: inline-flex;
 		font-size: var(--ui-content-rating-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9));
 		gap: var(--ui-content-rating-gap, var(--spacing-xs));

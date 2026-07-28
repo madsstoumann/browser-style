@@ -135,16 +135,17 @@ one value per token, never `chip(ts red)`). The vocabulary is generated from
 <!-- tokens:matrix attr=media stems=chip,sticker,save,play classes=pos,hue,mode,size,disc,shape,flag -->
 | token | pos | hue | mode | size | disc | shape | flag | deprecated aliases |
 |---|---|---|---|---|---|---|---|---|
-| `chip()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | pale muted | sm lg xl 2xl | non rnd pll crc sqr | — | — | dark→black light→white subtle→gray slate→gray |
-| `sticker()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | pale muted | sm lg xl 2xl 3xl | non rnd pll crc sqr | text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; | fit | dark→black light→white subtle→gray slate→gray |
-| `save()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | — | sm lg xl | non rnd crc sqr | — | — | dark→black light→white subtle→gray slate→gray |
-| `play()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | — | sm md lg xl | non rnd pll crc sqr | — | — | dark→black light→white subtle→gray slate→gray |
+| `chip()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | pale muted | sm lg xl 2xl | non rnd pll crc sqr | — | — | — |
+| `sticker()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | pale muted | sm lg xl 2xl 3xl | non rnd pll crc sqr | text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; | fit | — |
+| `save()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm lg xl | non rnd crc sqr | — | — | — |
+| `play()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm md lg xl | non rnd pll crc sqr | — | — | — |
 <!-- /tokens -->
 
 - **`pos`** — the 9-code logical grid, shared with `ovr()`, `scm()` and reveal's `ico()`.
-- **`hue`** — the canonical eight. `dark`/`light`/`subtle`/`slate` still work as deprecated
-  aliases (last column); `slate` resolves to its own `--ui-theme-slate-*` bundle rather than
-  to `gray`. See [media.md](media.md#the-canonical-eight-hues).
+- **`hue`** — the canonical nine: four hues plus the `white < gray < slate < black` neutral
+  ramp. `slate` became a canonical hue in v5 (it always resolved to its own
+  `--ui-theme-slate-*` bundle, never to `gray`); the `dark`/`light`/`subtle` aliases were
+  removed in the same round. See [media.md](media.md#the-canonical-nine-hues).
 - **`mode`** — the `pale` / `muted` fill modifiers. `save` and `play` are single-ink controls
   and implement neither.
 - **`size`** — `md` is the default on every element and is spelled by *omitting* a size arg,
@@ -247,7 +248,7 @@ The hover morph lives in `media.hover.css` (see `hov()` below).
 
 **`tnt()` — tint the image a solid colour.** Blends a solid-colour overlay (`ui-media::before`)
 over the image with `mix-blend-mode` — a plain `filter` can't hit an exact colour. Named keys
-`tnt(red|orange|green|blue|accent|black|white|gray)` map to the theme colours (`dark`/`light`/`subtle`/`slate` are deprecated aliases); bare `tnt` reads
+`tnt(red|orange|green|blue|accent|black|white|gray|slate)` map to the theme colours (the `dark`/`light`/`subtle` aliases were removed in v5); bare `tnt` reads
 `--ui-media-tint-color` (any CSS colour **or gradient**) for arbitrary brand hues. Default blend
 `color` (recolour, keeps detail); switch via `--ui-media-tint-blend`, fade with
 `--ui-media-tint-opacity`. Pair with **`hov(tint)`** to fade the tint out on hover (reveal true
@@ -277,12 +278,12 @@ content and belong in the card's `media[]` items. Bare booleans like `clip`, `au
 | `panel-subtle` | ui-card | + `theme="gray"`, `scl(lg)` | quote |
 | `panel-brand` | ui-card | + `theme="black dark"` (set `--ui-card-dark-bg` to accent for a branded surface) | statistic, membership |
 | `panel-dark` | ui-card | + `theme="black dark"` | announcement |
-| `hero` | ui-card | `ovr(bl)` · 4:3 · scrim · `scl(lg)` | event |
-| `poster` | ui-card | `ovr(bl)` · 3:4 · scrim | location |
+| `hero` | ui-card | `ovr(bs)` · 4:3 · scrim · `scl(lg)` | event |
+| `poster` | ui-card | `ovr(bs)` · 3:4 · scrim | location |
 | `carousel` | ui-card | `nav(mrk)` | gallery |
 | `media` | ui-media | bare frame · 21:9 · `rds(lg)` | media-block |
 | `prose` | ui-content | bare content column | prose-block |
-| `flip` | ui-reveal | flip · `ovr(bl) rds(lg-sq)` · `scroll` | software |
+| `flip` | ui-reveal | flip · `ovr(bs) rds(lg-sq)` · `scroll` | software |
 | `hero-reveal` | ui-reveal | expand → scale at lg · 21:9 · dark panel via `styles` | — (from the ui/reveal hero demo) |
 
 Restyling any card = changing its reference:

@@ -40,20 +40,21 @@
 	/* a nested frame (carousel slide etc.) must not paint a second tint over itself */
 	ui-media ui-media::before { content: none; }
 
-	/* named presets — mirror chip(<hue>) routing, map to the 8 theme colours.
-	   HUE TRUTH SET: red orange green blue accent black white gray. The doc-era
-	   spellings dark/light/subtle and the extra slate key are kept as working
-	   deprecated aliases (dark→black, light→white, subtle→gray, slate→the slate
-	   bundle, which is the neutral ramp's white < gray < slate < black step). */
+	/* named presets — mirror chip(<hue>) routing, map to the 9 theme colours.
+	   HUE TRUTH SET (nine): red orange green blue accent black white gray slate.
+	   slate is a canonical hue in its own right — the neutral ramp's
+	   white < gray < slate < black step, with its own --ui-theme-slate-* bundle.
+	   The doc-era tnt(dark)/tnt(light)/tnt(subtle) aliases were REMOVED in v5 —
+	   use tnt(black)/tnt(white)/tnt(gray). */
 	:where([media*="tnt(red)"])    { --ui-media-tint-color: var(--ui-theme-red-bg); }
 	:where([media*="tnt(orange)"]) { --ui-media-tint-color: var(--ui-theme-orange-bg); }
 	:where([media*="tnt(green)"])  { --ui-media-tint-color: var(--ui-theme-green-bg); }
 	:where([media*="tnt(blue)"])   { --ui-media-tint-color: var(--ui-theme-blue-bg); }
 	:where([media*="tnt(accent)"]) { --ui-media-tint-color: var(--ui-theme-accent-bg); }
-	:where([media*="tnt(black)"], [media*="tnt(dark)"]   /* deprecated alias — remove in v5 */) { --ui-media-tint-color: var(--ui-theme-black-bg); }
-	:where([media*="tnt(white)"], [media*="tnt(light)"]  /* deprecated alias — remove in v5 */) { --ui-media-tint-color: var(--ui-theme-white-bg); }
-	:where([media*="tnt(gray)"],  [media*="tnt(subtle)"] /* deprecated alias — remove in v5 */) { --ui-media-tint-color: var(--ui-theme-gray-bg); }
-	:where([media*="tnt(slate)"] /* deprecated alias — remove in v5 */) { --ui-media-tint-color: var(--ui-theme-slate-bg); }
+	:where([media*="tnt(black)"])  { --ui-media-tint-color: var(--ui-theme-black-bg); }
+	:where([media*="tnt(white)"])  { --ui-media-tint-color: var(--ui-theme-white-bg); }
+	:where([media*="tnt(gray)"])   { --ui-media-tint-color: var(--ui-theme-gray-bg); }
+	:where([media*="tnt(slate)"])  { --ui-media-tint-color: var(--ui-theme-slate-bg); }
 
 	/* hov(tint) — fade the tint out on hover/focus to reveal the true-colour image.
 	   Reads --_hv-dur / --_hv-ease from media.hover.css; falls back if absent. */

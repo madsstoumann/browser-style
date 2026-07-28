@@ -13,7 +13,7 @@
     "internalName": "Reveal demo 08 — The Lure (flip)",
     "schemaType": "content",
     "preset": {
-      "$ref": "card-preset/reveal-flip-tl"
+      "$ref": "card-preset/reveal-flip-ts"
     },
     "eyebrow": "Gothic",
     "headline": "The Lure",

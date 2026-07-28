@@ -13,9 +13,9 @@
     "internalName": "Demo — Media: scrim top",
     "schemaType": "content",
     "preset": {
-      "$ref": "card-preset/media-scm-tl"
+      "$ref": "card-preset/media-scm-ts"
     },
-    "eyebrow": "ovr(tl) scm — top",
+    "eyebrow": "ovr(ts) scm — top",
     "headline": "Top scrim",
     "media": [
       {

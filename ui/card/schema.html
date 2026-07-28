@@ -204,9 +204,9 @@
 	     ============================================================ -->
 	<section>
 	<h2>Event — <code>Event</code></h2>
-	<p class="note">Overlay composition — <code>ovr(bl)</code> + scrim. Location → <code>Place</code> → <code>PostalAddress</code>, organizer → <code>Organization</code>.</p>
+	<p class="note">Overlay composition — <code>ovr(bs)</code> + scrim. Location → <code>Place</code> → <code>PostalAddress</code>, organizer → <code>Organization</code>.</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="ovr(bl)" media="asr(4/3) scm" content="scl(lg)" itemscope itemtype="https://schema.org/Event">
+		<ui-card variant="ovr(bs)" media="asr(4/3) scm" content="scl(lg)" itemscope itemtype="https://schema.org/Event">
 			<cq-box>
 				<ui-media><img src="/assets/images/websummit.png" alt="Conference stage with purple lights" itemprop="image"></ui-media>
 				<ui-content>
@@ -789,7 +789,7 @@
 	<h2>Location — <code>Place</code></h2>
 	<p class="note">Overlay over a destination shot; address + geo, amenities as <code>list</code>.</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="ovr(bl)" media="asr(3/4) scm" content="scl(lg)" itemscope itemtype="https://schema.org/Place">
+		<ui-card variant="ovr(bs)" media="asr(3/4) scm" content="scl(lg)" itemscope itemtype="https://schema.org/Place">
 			<cq-box>
 				<ui-media><img src="/assets/images/destinations.png" alt="Coastal viewpoint with turquoise water" itemprop="image"></ui-media>
 				<ui-content>
@@ -888,7 +888,7 @@
 	<h2>Software — <code>SoftwareApplication</code></h2>
 	<p class="note">The flipside pattern: <code>&lt;ui-reveal type="flip"&gt;</code> — front is box art + name, the back <code>&lt;ui-content&gt;</code> holds specs, developer and offer. Microdata sits on the reveal root so it survives either face.</p>
 	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-reveal variant="ovr(bl) rds(lg-sq) flp ico(te) ico(sm) icc(drk)" media="asr(3/4) hov(zoom) scm" itemscope itemtype="https://schema.org/SoftwareApplication">
+		<ui-reveal variant="ovr(bs) rds(lg-sq) flp ico(te) ico(sm) icc(drk)" media="asr(3/4) hov(zoom) scm" itemscope itemtype="https://schema.org/SoftwareApplication">
 			<details name="software-flip">
 				<summary>
 					<ui-face>

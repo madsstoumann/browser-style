@@ -226,22 +226,23 @@
 		--ui-content-heading-text-shadow: var(--ui-content-text-shadow);
 		--ui-content-eyebrow-text-shadow: var(--ui-content-text-shadow);
 	}
-	/* POSITION VOCABULARY — logical ts tc te · cs cc ce · bs bc be (one grid for the
-	   whole system: furniture, scm(), mrk(), reveal's ico()). ovr()'s implementation
-	   was always logical (justify/align/text-align: start|center|end), so the old
-	   PHYSICAL spellings were mislabelled — ovr(tl) already rendered top-END in rtl.
-	   tl…br are therefore kept as deprecated aliases in the same selector list (so the
-	   scrim default fires for both spellings); the centre column tc/cc/bc is spelled
-	   identically in both vocabularies and needs no alias. */
-	:where([variant*="ovr(ts)"], [variant*="ovr(tl)"] /* deprecated alias — remove in v5 */) { --ui-content-ov-justify: start;  --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-ts); }
+	/* POSITION VOCABULARY — logical ts tc te · cs cc ce · bs bc be, the ONE grid for
+	   the whole system (furniture, scm(), mrk(), reveal's ico()). ovr()'s
+	   implementation was always logical (justify/align/text-align: start|center|end),
+	   so the old PHYSICAL spellings were mislabelled — ovr(tl) already rendered
+	   top-END in rtl. Those six aliases (tl tr cl cr bl br) were REMOVED in v5; the
+	   centre column tc/cc/bc is spelled identically in both grids and is unaffected.
+	   obp() is now the system's only physical vocabulary (object-position has no
+	   logical keywords — see media.css). */
+	:where([variant*="ovr(ts)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-ts); }
 	:where([variant*="ovr(tc)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: center; --ui-content-ov-text: center; --ui-media-scrim-default: var(--ui-media-scrim-tc); }
-	:where([variant*="ovr(te)"], [variant*="ovr(tr)"] /* deprecated alias — remove in v5 */) { --ui-content-ov-justify: start;  --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-te); }
-	:where([variant*="ovr(cs)"], [variant*="ovr(cl)"] /* deprecated alias — remove in v5 */) { --ui-content-ov-justify: center; --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-cs); }
+	:where([variant*="ovr(te)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-te); }
+	:where([variant*="ovr(cs)"]) { --ui-content-ov-justify: center; --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-cs); }
 	:where([variant*="ovr(cc)"]) { --ui-content-ov-justify: center; --ui-content-ov-align: center; --ui-content-ov-text: center; --ui-media-scrim-default: var(--ui-media-scrim-cc); }
-	:where([variant*="ovr(ce)"], [variant*="ovr(cr)"] /* deprecated alias — remove in v5 */) { --ui-content-ov-justify: center; --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-ce); }
-	:where([variant*="ovr(bs)"], [variant*="ovr(bl)"] /* deprecated alias — remove in v5 */) { --ui-content-ov-justify: end;    --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-bs); }
+	:where([variant*="ovr(ce)"]) { --ui-content-ov-justify: center; --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-ce); }
+	:where([variant*="ovr(bs)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-bs); }
 	:where([variant*="ovr(bc)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: center; --ui-content-ov-text: center; --ui-media-scrim-default: var(--ui-media-scrim-bc); }
-	:where([variant*="ovr(be)"], [variant*="ovr(br)"] /* deprecated alias — remove in v5 */) { --ui-content-ov-justify: end;    --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-be); }
+	:where([variant*="ovr(be)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-be); }
 	/* overlay text is light (over a scrim); a plain solid CTA keeps its light surface, so its
 	   text must stay dark — otherwise it inherits the white and vanishes. Colour variants
 	   (accent, text, …) set their own --button-c and are left untouched. */

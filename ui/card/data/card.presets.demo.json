@@ -218,19 +218,19 @@
       "variant": "col",
       "media": "asr(16/9) hov(drift)"
     },
-    "media-scm-tl": {
+    "media-scm-ts": {
       "name": "Media Scrim Top Left",
       "description": "Content overlaid top-left, 2:3 frame with auto-matched top scrim",
       "element": "ui-card",
-      "variant": "ovr(tl)",
+      "variant": "ovr(ts)",
       "media": "asr(2/3) obf(cover) obp(cc) scm",
       "content": "scl(lg)"
     },
-    "media-scm-bl": {
+    "media-scm-bs": {
       "name": "Media Scrim Bottom Left",
       "description": "Content overlaid bottom-left, 2:3 frame with auto-matched bottom scrim",
       "element": "ui-card",
-      "variant": "ovr(bl)",
+      "variant": "ovr(bs)",
       "media": "asr(2/3) obf(cover) obp(cc) scm",
       "content": "scl(lg)"
     },
@@ -797,7 +797,7 @@
       "name": "Video Overlay Preset",
       "description": "Cinematic 21:9 overlay card — content bottom-left over a scrim",
       "element": "ui-card",
-      "variant": "ovr(bl)",
+      "variant": "ovr(bs)",
       "media": "asr(21/9) obp(cc) scm",
       "content": "pad(md) lg:pad(lg)"
     },
@@ -811,14 +811,14 @@
       "name": "Reveal Demo — Poster Static",
       "description": "Plain 3:4 overlay card — the static front-face baseline from the New releases section",
       "element": "ui-card",
-      "variant": "ovr(bl) rds(md-sq)",
+      "variant": "ovr(bs) rds(md-sq)",
       "media": "asr(3/4) obp(cc) scm"
     },
     "reveal-expand-viewport-indigo": {
       "name": "Reveal Demo — Expand Viewport (indigo)",
       "description": "Expand-to-viewport popup reveal, indigo fixed backdrop",
       "element": "ui-reveal",
-      "variant": "ovr(bl) rds(md-sq)",
+      "variant": "ovr(bs) rds(md-sq)",
       "media": "asr(3/4) obp(cc) scm",
       "styles": {
         "--ui-reveal-expand-fixed-bg": "#6a69ab"
@@ -833,7 +833,7 @@
       "name": "Reveal Demo — Expand Viewport (umber)",
       "description": "Expand-to-viewport popup reveal, umber fixed backdrop",
       "element": "ui-reveal",
-      "variant": "ovr(bl) rds(md-sq)",
+      "variant": "ovr(bs) rds(md-sq)",
       "media": "asr(3/4) obp(cc) scm",
       "styles": {
         "--ui-reveal-expand-fixed-bg": "#664a31"
@@ -848,7 +848,7 @@
       "name": "Reveal Demo — Expand Viewport (stone)",
       "description": "Expand-to-viewport popup reveal, stone fixed backdrop",
       "element": "ui-reveal",
-      "variant": "ovr(bl) rds(md-sq)",
+      "variant": "ovr(bs) rds(md-sq)",
       "media": "asr(3/4) obp(cc) scm",
       "styles": {
         "--ui-reveal-expand-fixed-bg": "#6d6358"
@@ -863,7 +863,7 @@
       "name": "Reveal Demo — Hero Static",
       "description": "Plain 21:9 overlay hero — mirrored media, text bottom-right over a scrim",
       "element": "ui-card",
-      "variant": "ovr(br) rds(md-sq)",
+      "variant": "ovr(be) rds(md-sq)",
       "media": "asr(21/9) flp(h) obp(cc) scm",
       "content": "scl(xl) pad(lg)",
       "styles": {
@@ -874,7 +874,7 @@
       "name": "Reveal Demo — Hero Reveal",
       "description": "Cover-story reveal hero — expand on small containers, scale morph on large; dark panel via styles",
       "element": "ui-reveal",
-      "variant": "ovr(bl) rds(md-sq)",
+      "variant": "ovr(bs) rds(md-sq)",
       "media": "asr(21/9) obp(cc) scm",
       "content": "scl(xl) pad(lg)",
       "styles": {
@@ -912,11 +912,11 @@
       "variant": "col",
       "media": "asr(1/1) obp(tc)"
     },
-    "reveal-flip-tl": {
+    "reveal-flip-ts": {
       "name": "Reveal Demo — Flip (overlay top-left)",
       "description": "Square flip card, front text top-left, zoom hover — The Lure palette",
       "element": "ui-reveal",
-      "variant": "ovr(tl) rds(lg-sq)",
+      "variant": "ovr(ts) rds(lg-sq)",
       "media": "asr(1/1) hov(zoom) obp(tc)",
       "styles": {
         "--ui-reveal-content-bg": "#d8d6dc",
@@ -946,11 +946,11 @@
         "scroll": true
       }
     },
-    "reveal-flip-tr": {
+    "reveal-flip-te": {
       "name": "Reveal Demo — Flip (overlay top-right)",
       "description": "Square flip card, front text top-right, toggle icon moved top-left, close icon back top-right — Skyline Five palette",
       "element": "ui-reveal",
-      "variant": "ovr(tr) rds(lg-sq)",
+      "variant": "ovr(te) rds(lg-sq)",
       "media": "asr(1/1) hov(zoom) obp(tc)",
       "styles": {
         "--ui-reveal-content-bg": "#ddd9d1",
@@ -963,11 +963,11 @@
         "scroll": true
       }
     },
-    "reveal-flip-cl": {
+    "reveal-flip-cs": {
       "name": "Reveal Demo — Flip (overlay center-left)",
       "description": "Square flip card, front text center-left over a scrim, pan hover — Neon Avenue palette",
       "element": "ui-reveal",
-      "variant": "ovr(cl) rds(lg-sq)",
+      "variant": "ovr(cs) rds(lg-sq)",
       "media": "asr(1/1) hov(pan) obp(tc) scm",
       "styles": {
         "--ui-reveal-content-bg": "#f1dde3",
@@ -997,11 +997,11 @@
         "scroll": true
       }
     },
-    "reveal-flip-cr": {
+    "reveal-flip-ce": {
       "name": "Reveal Demo — Flip (overlay center-right)",
       "description": "Square flip card, front text center-right over a scrim, pan hover — Red Dirt Road palette",
       "element": "ui-reveal",
-      "variant": "ovr(cr) rds(lg-sq)",
+      "variant": "ovr(ce) rds(lg-sq)",
       "media": "asr(1/1) hov(pan) scm",
       "styles": {
         "--ui-reveal-content-bg": "#ddd6c6",
@@ -1014,11 +1014,11 @@
         "scroll": true
       }
     },
-    "reveal-flip-bl": {
+    "reveal-flip-bs": {
       "name": "Reveal Demo — Flip (overlay bottom-left)",
       "description": "Square flip card, front text bottom-left over a scrim, zoom hover — Glitter Throne palette",
       "element": "ui-reveal",
-      "variant": "ovr(bl) rds(lg-sq)",
+      "variant": "ovr(bs) rds(lg-sq)",
       "media": "asr(1/1) hov(zoom) scm",
       "styles": {
         "--ui-reveal-content-bg": "#f0e3bf",
@@ -1048,11 +1048,11 @@
         "scroll": true
       }
     },
-    "reveal-flip-br": {
+    "reveal-flip-be": {
       "name": "Reveal Demo — Flip (overlay bottom-right)",
       "description": "Square flip card, front text bottom-right, zoom hover — Halcyon Wash palette",
       "element": "ui-reveal",
-      "variant": "ovr(br) rds(lg-sq)",
+      "variant": "ovr(be) rds(lg-sq)",
       "media": "asr(1/1) hov(zoom)",
       "styles": {
         "--ui-reveal-content-bg": "#dcd8e0",
@@ -1065,11 +1065,11 @@
         "scroll": true
       }
     },
-    "reveal-tap-left": {
+    "reveal-tap-start": {
       "name": "Reveal Demo — Tap Card (from left)",
       "description": "Whole-card flip trigger, back panel enters from the left, cursor-tracked hover",
       "element": "ui-reveal",
-      "variant": "ovr(bl)",
+      "variant": "ovr(bs)",
       "media": "asr(2/3) hov(track) scm",
       "reveal": {
         "type": "flip",

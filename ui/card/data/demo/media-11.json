@@ -13,9 +13,9 @@
     "internalName": "Demo — Media: scrim bottom (auto-match)",
     "schemaType": "content",
     "preset": {
-      "$ref": "card-preset/media-scm-bl"
+      "$ref": "card-preset/media-scm-bs"
     },
-    "eyebrow": "ovr(bl) scm — auto-match",
+    "eyebrow": "ovr(bs) scm — auto-match",
     "headline": "Bottom scrim",
     "media": [
       {
