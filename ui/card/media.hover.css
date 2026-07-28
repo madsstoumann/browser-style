@@ -14,17 +14,42 @@
  * All animated properties share ONE transition list on the image so effects
  * compose (e.g. hov(shape) hov(zoom)) without clobbering each other's transition.
  *
- * DUAL ARM, ONE SELECTOR (R-14 step 1). A hov() token sets REAL properties on the
- * image, so the rule's subject must sit inside the frame — reachable by two paths
- * (token on the host, token on the <ui-media>). Both arms are folded into ONE
- * selector anchored on the frame:
- *     ui-media:where(<token>, <token> *) :is(iframe, img, picture, video)
- *   self arm ─────────┘       └───────── host arm (any ancestor holding the token)
- * The `ui-media` stays OUTSIDE the :where() on purpose: it keeps the rules at
- * (0,0,2) — the specificity the host arm has always had — which is what lets
- * hov(shape) beat shp()'s own clip-path (media.css, same (0,0,2), earlier in
- * source). Folding the frame into the :where() too would drop these to (0,0,1)
- * and silently disable the shape morph. Everything else stays zero-specificity.
+ * ONE ARM, VIA AN INHERITED FLAG (R-14 step 4). A hov() token sets REAL properties
+ * on the image, and a real declaration does not inherit — so reaching the image
+ * from either attribute placement used to need two selector arms (folded into one
+ * `ui-media:where(<tok>, <tok> *)` selector in v4). Now the token sets an
+ * INHERITING flag with a single combinator-free selector that matches BOTH
+ * placements, and one style query applies the properties:
+ *
+ *     :where([media*="hov(zoom)"]:is(:hover, :focus-within)) { --_hv-zoom: 1; }
+ *     @container style(--_hv-zoom: 1) {
+ *       ui-media :is(iframe, img, picture, video) { scale: …; }
+ *     }
+ *
+ * The subject's container is <ui-media>: token on the frame → the flag is set
+ * there directly; token on the host → it inherits down. Either way the query sees
+ * it. See the pattern note at the top of media.css for the full rationale, the
+ * boundary reset (which lives there and lists every flag), and the support posture.
+ *
+ * WHERE THE HOVER STATE IS READ — two shapes, deliberately different:
+ *   • Effects whose :hover sat on the TOKEN HOLDER (zoom, pan, tilt-out, tilt-in,
+ *     rot-r, rot-l, shape) put :hover/:focus-within on the FLAG SETTER, so hovering
+ *     anywhere in the card still fires a card-placed token.
+ *   • Effects whose :hover sat on the FRAME (drift, tilt overfill) keep :hover on
+ *     the subject INSIDE the query — `ui-media:hover :is(…)`. The flag only gates;
+ *     the frame's own hover still selects. That preserves the (0,1,2) specificity
+ *     those rules always had.
+ *
+ * SPECIFICITY is unchanged at (0,0,2) for every image rule — which is what lets
+ * hov(shape) beat shp()'s own clip-path (media.css, also (0,0,2), earlier in
+ * source). Both are now the same `ui-media :is(iframe, img, picture, video)` shape
+ * inside a style query, so the win is plain source order rather than a hand-tuned
+ * selector — the v4 note warning not to fold `ui-media` into the :where() no longer
+ * applies, because there is no :where() left to fold it into.
+ *
+ * NOT MIGRATED — hov(tilt*)'s `perspective`, whose subject IS <ui-media>. A
+ * container cannot restyle itself, so from the self arm no ancestor carries the
+ * flag; it keeps the two-arm form (marked at its site below).
  */
 /* filter vars are registered so they INTERPOLATE — a plain custom property changes
    discretely (the filter would jump), @property makes the transition smooth. */
@@ -35,6 +60,7 @@
 
 @layer bs-component {
 	:where([media*="hov("]) {
+		--_hv-any: 1;
 		--_hv-dur: var(--ui-media-hover-duration, var(--duration-slower));
 		--_hv-ease: var(--ui-media-hover-easing, var(--ease-out));
 	}
@@ -43,61 +69,89 @@
 		--_hv-t: var(--ui-media-hv-track-dur, var(--duration-normal));
 	}
 
+	/* ── flag setters — one cheap selector each, matching host OR <ui-media> ── */
+	:where([media*="hov(track)"])   { --_hv-track: 1; }
+	:where([media*="hov(drift)"])   { --_hv-drift: 1; }
+	:where([media*="hov(tilt"])     { --_hv-tiltx: 1; }   /* tilt · tilt-out · tilt-in */
+	:where([media*="hov(tilt)"])    { --_hv-tilt: 1; }
+	:where([media*="hov(zoom)"]:is(:hover, :focus-within))      { --_hv-zoom: 1; }
+	:where([media*="hov(pan)"]:is(:hover, :focus-within))       { --_hv-pan: 1; }
+	:where([media*="hov(tilt-out)"]:is(:hover, :focus-within))  { --_hv-tilt-out: 1; }
+	:where([media*="hov(tilt-in)"]:is(:hover, :focus-within))   { --_hv-tilt-in: 1; }
+	:where([media*="hov(rot-r)"]:is(:hover, :focus-within))     { --_hv-rot-r: 1; }
+	:where([media*="hov(rot-l)"]:is(:hover, :focus-within))     { --_hv-rot-l: 1; }
+	:where([media*="hov(shape"]:is(:hover, :focus-within))      { --_hv-shape: 1; }
+	:where(
+		[media*="hov(gray)"], [media*="hov(blur)"], [media*="hov(bright)"],
+		[media*="hov(dim)"], [media*="hov(sat)"]
+	) { --_hv-filter: 1; }
+
 	@media (hover: hover) {
 		/* one transition list → any combination of effects composes cleanly */
-		ui-media:where([media*="hov("], [media*="hov("] *) :is(iframe, img, picture, video) {
-			transition:
-				scale     var(--_hv-dur) var(--_hv-ease),
-				translate var(--_hv-t, var(--_hv-dur)) var(--_hv-ease),
-				rotate    var(--_hv-dur) var(--_hv-ease),
-				clip-path var(--ui-media-morph-dur, var(--_hv-dur)) var(--_hv-ease),
-				transform var(--_hv-t, var(--_hv-dur)) var(--_hv-ease),
-				--_f-gray   var(--_hv-dur) var(--_hv-ease),
-				--_f-blur   var(--_hv-dur) var(--_hv-ease),
-				--_f-bright var(--_hv-dur) var(--_hv-ease),
-				--_f-sat    var(--_hv-dur) var(--_hv-ease);
+		@container style(--_hv-any: 1) {
+			ui-media :is(iframe, img, picture, video) {
+				transition:
+					scale     var(--_hv-dur) var(--_hv-ease),
+					translate var(--_hv-t, var(--_hv-dur)) var(--_hv-ease),
+					rotate    var(--_hv-dur) var(--_hv-ease),
+					clip-path var(--ui-media-morph-dur, var(--_hv-dur)) var(--_hv-ease),
+					transform var(--_hv-t, var(--_hv-dur)) var(--_hv-ease),
+					--_f-gray   var(--_hv-dur) var(--_hv-ease),
+					--_f-blur   var(--_hv-dur) var(--_hv-ease),
+					--_f-bright var(--_hv-dur) var(--_hv-ease),
+					--_f-sat    var(--_hv-dur) var(--_hv-ease);
+			}
 		}
 
 		/* zoom — scale up inside the frame */
-		ui-media:where([media*="hov(zoom)"]:is(:hover, :focus-within), [media*="hov(zoom)"]:is(:hover, :focus-within) *) :is(iframe, img, picture, video) {
-			scale: var(--ui-media-hv-zoom, 1.08);
+		@container style(--_hv-zoom: 1) {
+			ui-media :is(iframe, img, picture, video) { scale: var(--ui-media-hv-zoom, 1.08); }
 		}
 
 		/* pan — scale + drift in a fixed direction */
-		ui-media:where([media*="hov(pan)"]:is(:hover, :focus-within), [media*="hov(pan)"]:is(:hover, :focus-within) *) :is(iframe, img, picture, video) {
-			scale: var(--ui-media-hv-zoom, 1.12);
-			translate: var(--ui-media-hv-pan-x, -2%) var(--ui-media-hv-pan-y, -2%);
+		@container style(--_hv-pan: 1) {
+			ui-media :is(iframe, img, picture, video) {
+				scale: var(--ui-media-hv-zoom, 1.12);
+				translate: var(--ui-media-hv-pan-x, -2%) var(--ui-media-hv-pan-y, -2%);
+			}
 		}
 
 		/* track — cursor-tracked pan; --ui-media-mx/my (-1..1) set by index.js */
-		ui-media:where([media*="hov(track)"], [media*="hov(track)"] *) :is(iframe, img, picture, video) {
-			scale: var(--ui-media-hv-zoom, 1.12);
-			translate: calc(var(--ui-media-mx, 0) * var(--ui-media-hv-track, 4%)) calc(var(--ui-media-my, 0) * var(--ui-media-hv-track, 4%));
+		@container style(--_hv-track: 1) {
+			ui-media :is(iframe, img, picture, video) {
+				scale: var(--ui-media-hv-zoom, 1.12);
+				translate: calc(var(--ui-media-mx, 0) * var(--ui-media-hv-track, 4%)) calc(var(--ui-media-my, 0) * var(--ui-media-hv-track, 4%));
+			}
 		}
 
-		/* drift — oversized image shrinks and drifts opposite the cursor */
-		ui-media:where([media*="hov(drift)"], [media*="hov(drift)"] *) :is(iframe, img, picture, video) {
-			scale: var(--ui-media-hv-drift-rest, 1.3);
-		}
-		ui-media:where([media*="hov(drift)"], [media*="hov(drift)"] *):hover :is(iframe, img, picture, video) {
-			scale: var(--ui-media-hv-drift-hover, 1.2);
-			translate: calc(var(--ui-media-mx, 0) * -1 * var(--ui-media-hv-drift, 4%)) calc(var(--ui-media-my, 0) * -1 * var(--ui-media-hv-drift, 4%));
+		/* drift — oversized image shrinks and drifts opposite the cursor. The hover
+		   state is the FRAME's, so :hover stays on the subject inside the query. */
+		@container style(--_hv-drift: 1) {
+			ui-media :is(iframe, img, picture, video) { scale: var(--ui-media-hv-drift-rest, 1.3); }
+			ui-media:hover :is(iframe, img, picture, video) {
+				scale: var(--ui-media-hv-drift-hover, 1.2);
+				translate: calc(var(--ui-media-mx, 0) * -1 * var(--ui-media-hv-drift, 4%)) calc(var(--ui-media-my, 0) * -1 * var(--ui-media-hv-drift, 4%));
+			}
 		}
 
-		/* all tilt variants need perspective on the frame (matches hov(tilt), -in, -out) */
+		/* all tilt variants need perspective on the frame (matches hov(tilt), -in, -out).
+		   NOT MIGRATABLE — the subject IS <ui-media>, and a style query resolves
+		   against the subject's nearest ANCESTOR, so the self arm would have nothing
+		   to read. Keeps the folded two-arm selector. */
 		ui-media:where([media*="hov(tilt"], [media*="hov(tilt"] *) { perspective: var(--ui-media-hv-tilt-persp, 600px); }
 
 		/* tilt — 3D rotate toward the CURSOR (needs JS). Keeps the flp() scale so tilt
-		   and flip compose; --ui-media-mx/my set by index.js */
-		ui-media:where([media*="hov(tilt)"], [media*="hov(tilt)"] *) :is(iframe, img, picture, video) {
-			transform:
-				scale(var(--ui-media-fl-x, 1), var(--ui-media-fl-y, 1))
-				rotateY(calc(var(--ui-media-mx, 0) * var(--ui-media-hv-tilt, 8deg)))
-				rotateX(calc(var(--ui-media-my, 0) * -1 * var(--ui-media-hv-tilt, 8deg)));
-		}
-		/* overfill while active so the 3D-rotated corners don't expose the frame */
-		ui-media:where([media*="hov(tilt)"], [media*="hov(tilt)"] *):hover :is(iframe, img, picture, video) {
-			scale: var(--ui-media-hv-tilt-scale, 1.08);
+		   and flip compose; --ui-media-mx/my set by index.js. The overfill-on-hover
+		   rule is frame-hover, so :hover stays on the subject (see drift). */
+		@container style(--_hv-tilt: 1) {
+			ui-media :is(iframe, img, picture, video) {
+				transform:
+					scale(var(--ui-media-fl-x, 1), var(--ui-media-fl-y, 1))
+					rotateY(calc(var(--ui-media-mx, 0) * var(--ui-media-hv-tilt, 8deg)))
+					rotateX(calc(var(--ui-media-my, 0) * -1 * var(--ui-media-hv-tilt, 8deg)));
+			}
+			/* overfill while active so the 3D-rotated corners don't expose the frame */
+			ui-media:hover :is(iframe, img, picture, video) { scale: var(--ui-media-hv-tilt-scale, 1.08); }
 		}
 
 		/* tilt-out / tilt-in — FIXED 3D tilt on hover (no JS). Driven by the rotate:/scale:
@@ -105,46 +159,54 @@
 		   function transform would fall back to matrix decomposition and jitter on the way
 		   out. flip stays in transform; perspective is on the frame (above).
 		   tilt-out = top edge toward the viewer (rotateX −), tilt-in = top edge away (+). */
-		ui-media:where([media*="hov(tilt-out)"]:is(:hover, :focus-within), [media*="hov(tilt-out)"]:is(:hover, :focus-within) *) :is(iframe, img, picture, video) {
-			rotate: 1 0 0 calc(-1 * var(--ui-media-hv-tilt-fixed, 14deg));
-			scale: var(--ui-media-hv-tilt-scale, 1.1);
+		@container style(--_hv-tilt-out: 1) {
+			ui-media :is(iframe, img, picture, video) {
+				rotate: 1 0 0 calc(-1 * var(--ui-media-hv-tilt-fixed, 14deg));
+				scale: var(--ui-media-hv-tilt-scale, 1.1);
+			}
 		}
-		ui-media:where([media*="hov(tilt-in)"]:is(:hover, :focus-within), [media*="hov(tilt-in)"]:is(:hover, :focus-within) *) :is(iframe, img, picture, video) {
-			rotate: 1 0 0 var(--ui-media-hv-tilt-fixed, 14deg);
-			scale: var(--ui-media-hv-tilt-scale, 1.1);
+		@container style(--_hv-tilt-in: 1) {
+			ui-media :is(iframe, img, picture, video) {
+				rotate: 1 0 0 var(--ui-media-hv-tilt-fixed, 14deg);
+				scale: var(--ui-media-hv-tilt-scale, 1.1);
+			}
 		}
 
 		/* rot-r / rot-l — a subtle whole-image rotation (rotate: longhand composes with
 		   flip). A slight scale overfills so the rotated corners don't expose the frame. */
-		ui-media:where([media*="hov(rot-r)"]:is(:hover, :focus-within), [media*="hov(rot-r)"]:is(:hover, :focus-within) *) :is(iframe, img, picture, video) {
-			rotate: var(--ui-media-hv-rotate, 3deg);
-			scale: var(--ui-media-hv-rotate-scale, 1.06);
+		@container style(--_hv-rot-r: 1) {
+			ui-media :is(iframe, img, picture, video) {
+				rotate: var(--ui-media-hv-rotate, 3deg);
+				scale: var(--ui-media-hv-rotate-scale, 1.06);
+			}
 		}
-		ui-media:where([media*="hov(rot-l)"]:is(:hover, :focus-within), [media*="hov(rot-l)"]:is(:hover, :focus-within) *) :is(iframe, img, picture, video) {
-			rotate: calc(-1 * var(--ui-media-hv-rotate, 3deg));
-			scale: var(--ui-media-hv-rotate-scale, 1.06);
+		@container style(--_hv-rot-l: 1) {
+			ui-media :is(iframe, img, picture, video) {
+				rotate: calc(-1 * var(--ui-media-hv-rotate, 3deg));
+				scale: var(--ui-media-hv-rotate-scale, 1.06);
+			}
 		}
 
 		/* shape — morph the shp() clip-path to its --ui-shape-morph target on hover.
-		   Matches hov(shape) AND hov(shape-rev) (the reverse direction is set up in
-		   media.shapes.css). Base clip lives in media.css; this only overrides on hover.
-		   SPECIFICITY-CRITICAL: shp()'s own clip-path (media.css) is also (0,0,2) and
-		   comes earlier in source, so this rule must stay at (0,0,2) to win — see the
-		   dual-arm note in the file header before changing the selector shape. */
-		ui-media:where([media*="hov(shape"]:is(:hover, :focus-within), [media*="hov(shape"]:is(:hover, :focus-within) *) :is(iframe, img, picture, video) {
-			clip-path: var(--ui-shape-morph, var(--ui-media-shape));
+		   The flag needle is the `hov(shape` prefix, so it covers hov(shape) AND
+		   hov(shape-rev) (the reverse direction is set up in media.shapes.css). Base
+		   clip lives in media.css; this only overrides on hover. Same (0,0,2) as that
+		   base rule and later in source, so it wins — see the header note. */
+		@container style(--_hv-shape: 1) {
+			ui-media :is(iframe, img, picture, video) { clip-path: var(--ui-shape-morph, var(--ui-media-shape)); }
 		}
 
 		/* filter family — composes via per-filter vars, so hov(gray) hov(blur) stack.
 		   Rest values set below; hover values override (higher specificity via :hover). */
-		ui-media:where(
-			:is([media*="hov(gray)"], [media*="hov(blur)"], [media*="hov(bright)"], [media*="hov(dim)"], [media*="hov(sat)"]),
-			:is([media*="hov(gray)"], [media*="hov(blur)"], [media*="hov(bright)"], [media*="hov(dim)"], [media*="hov(sat)"]) *
-		) :is(iframe, img, picture, video) {
-			filter: grayscale(var(--_f-gray, 0)) blur(var(--_f-blur, 0)) brightness(var(--_f-bright, 1)) saturate(var(--_f-sat, 1));
+		@container style(--_hv-filter: 1) {
+			ui-media :is(iframe, img, picture, video) {
+				filter: grayscale(var(--_f-gray, 0)) blur(var(--_f-blur, 0)) brightness(var(--_f-bright, 1)) saturate(var(--_f-sat, 1));
+			}
 		}
 		/* rest = degraded, hover = restored (gray/blur/sat/bright reveal on hover).
-		   dim is the exception: rest natural, hover darkens (for overlaid text). */
+		   dim is the exception: rest natural, hover darkens (for overlaid text).
+		   These are plain custom properties — they already inherit, so they never had
+		   a dual arm and need no flag. */
 		:where([media*="hov(gray)"])   { --_f-gray: 1; }
 		:where([media*="hov(blur)"])   { --_f-blur: var(--ui-media-hv-blur, 4px); }
 		:where([media*="hov(sat)"])    { --_f-sat: var(--ui-media-hv-sat-rest, 0.4); }
@@ -157,9 +219,15 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		ui-media:where([media*="hov("], [media*="hov("] *) :is(iframe, img, picture, video) { transition: none; }
+		@container style(--_hv-any: 1) {
+			ui-media :is(iframe, img, picture, video) { transition: none; }
+		}
 		/* cursor-driven effects: pin to the resting position */
-		ui-media:where(:is([media*="hov(track)"], [media*="hov(drift)"]), :is([media*="hov(track)"], [media*="hov(drift)"]) *) :is(iframe, img, picture, video) { translate: 0; }
-		ui-media:where([media*="hov(tilt"], [media*="hov(tilt"] *) :is(iframe, img, picture, video) { transform: scale(var(--ui-media-fl-x, 1), var(--ui-media-fl-y, 1)); }
+		@container style(--_hv-track: 1) or style(--_hv-drift: 1) {
+			ui-media :is(iframe, img, picture, video) { translate: 0; }
+		}
+		@container style(--_hv-tiltx: 1) {
+			ui-media :is(iframe, img, picture, video) { transform: scale(var(--ui-media-fl-x, 1), var(--ui-media-fl-y, 1)); }
+		}
 	}
 }

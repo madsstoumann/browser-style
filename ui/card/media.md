@@ -130,16 +130,16 @@ drift from the CSS. (`md:/lg:` is the container-query prefix column: only `asr()
 | `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | none→non | — | --ui-media-radius --ui-media-squircle-exp | — | — |
 | `obf()` | fit | **mode** cover contain fill none | — | — | --ui-media-fit | — | — |
 | `flp()` | flip | **mode** h v hv | — | — | --ui-media-fl-x --ui-media-fl-y | — | — |
-| `shp()` | shape | **shape** pt-d pt-u pt-l pt-r cut-r cut-l skew-r skew-l para rhomb inset hex chev-l chev-r arr-l arr-r star plus minus close bolt msg frame frame-in blinds-h blinds-v curve-d curve-u curve-r curve-l circle circ-45 | — | — | --ui-media-shape --ui-shape-morph --_shp --_shp-full --_r4 --_r5 --_r5l --_r5r --_ell | — | — |
-| `hov()` | hover | **mode** zoom pan track drift tilt tilt-out tilt-in rot-r rot-l shape shape-rev gray blur bright sat dim tint | — | — | --_hv-dur --_hv-ease --_hv-t --_f-gray --_f-blur --_f-bright --_f-sat | — | — |
-| `tnt()` | tint | **hue** red orange green blue accent black white gray slate | — | yes | --ui-media-tint-color | — | — |
+| `shp()` | shape | **shape** pt-d pt-u pt-l pt-r cut-r cut-l skew-r skew-l para rhomb inset hex chev-l chev-r arr-l arr-r star plus minus close bolt msg frame frame-in blinds-h blinds-v curve-d curve-u curve-r curve-l circle circ-45 | — | — | --ui-media-shape --ui-shape-morph --_shp --_shp-full --_r4 --_r5 --_r5l --_r5r --_ell --_shp-clip | — | — |
+| `hov()` | hover | **mode** zoom pan track drift tilt tilt-out tilt-in rot-r rot-l shape shape-rev gray blur bright sat dim tint | — | — | --_hv-dur --_hv-ease --_hv-t --_f-gray --_f-blur --_f-bright --_f-sat --_hv-any --_hv-zoom --_hv-pan --_hv-track --_hv-drift --_hv-tilt --_hv-tiltx --_hv-tilt-out --_hv-tilt-in --_hv-rot-r --_hv-rot-l --_hv-shape --_hv-filter --_hv-tint | — | — |
+| `tnt()` | tint | **hue** red orange green blue accent black white gray slate | — | yes | --ui-media-tint-color --_tnt --_hv-tint | — | — |
 | `scm()` | scrim | **pos** ts tc te cs cc ce bs bc be · **size** sm md lg xl · **tone** shr lgt med drk sld | sheer→shr solid→sld | yes | --ui-media-scrim --ui-media-scrim-paint --ui-media-scrim-color --ui-media-scrim-fade --ui-media-scrim-mid-stop --ui-media-scrim-end-stop --ui-media-scrim-cc-a --ui-media-scrim-cc-b | — | — |
 | `chip()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **mode** pale muted · **variant** lgt out · **size** sm lg xl 2xl · **disc** non rnd pll crc sqr | — | — | --ui-chip-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
 | `sticker()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **mode** pale muted · **size** sm lg xl 2xl 3xl · **disc** non rnd pll crc sqr · **shape** text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; · **flag** fit | — | — | --ui-sticker-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
 | `save()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **size** sm lg xl · **disc** non rnd crc sqr | — | — | --ui-save-c --ui-save-c-active --ui-save-sz --ui-save-circle-* | — | — |
 | `play()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **size** sm md lg xl · **disc** non rnd pll crc sqr | — | — | --ui-play-sz --ui-play-icon-sz --ui-play-bg --ui-play-c --ui-play-radius --ui-play-corner --_play-block --_play-inline --_play-justify --_play-size | — | — |
 | `beacon()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **mode** pale muted · **size** xs sm md lg xl 2xl · **face** sld tck dts · **anim** bln pls brt · **disc** pll rnd sqr non | — | — | --ui-beacon-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
-| `marquee()` | band | **pos** top bot · **hue** red orange green blue accent black white gray slate · **mode** rpt seam fade pale muted · **size** sm lg xl 2xl · **disc** non rnd pll crc sqr · **value** right up down slow fast faster gap-sm gap-lg | — | — | --ui-marquee-* --_name --_dir --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
+| `marquee()` | band | **pos** top bot · **hue** red orange green blue accent black white gray slate · **mode** rpt seam fade pale muted · **size** sm lg xl 2xl · **disc** non rnd pll crc sqr · **value** right up down slow fast faster gap-sm gap-lg | — | — | --ui-marquee-* --_name --_dir --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c --_mrq | — | — |
 | `vid()` | video | **mode** cc pip fls · **size** sm md lg xl | — | — | --ui-media-tool-fullscreen --ui-media-tool-pip --ui-media-tool-cc --ui-media-tool-bg --ui-media-tool-bg-hover --ui-media-tool-size | — | — |
 | `load()` | loading | **mode** eager lazy | — | — | — | — | — |
 | `nav()` | carousel | **mode** mrk arw blw abv non | — | yes | --ui-media-bg --ui-carousel-* | — | — |
@@ -920,5 +920,45 @@ All modern browsers for the core frame, overlays, and scrim.
 | `text-box: cap alphabetic` (sticker line-trim) | Chrome 133+; degrades to normal leading |
 | `corner-shape` (chip squircle) | Chrome 135+ |
 | `color-mix()` / `light-dark()` (tokens) | Chrome 111+/123+, Firefox 113+/120+, Safari 16.2+/17.5+ |
+| **`@container style()` style queries** (see below) | Chrome 111+, Safari 18+, Firefox 128+ |
 
 Graceful degradation: the carousel always remains a native, swipeable scroll-snap row even without `::scroll-marker`/`anchor()`; markers and the scrim are pure CSS and need no JS.
+
+### v5 support posture — style queries
+
+A `media=` token that sets **real properties** (not just custom properties) has to reach a
+subject that is not the element carrying the attribute — and the attribute may sit on the
+host (`<ui-card>`/`<ui-reveal>`) or on the `<ui-media>` itself. Through v4 that meant every
+such rule was written with **two selector arms**. In v5 (R-14 step 4) the migrated families
+instead set an **inheriting `--_*` flag** with one combinator-free selector that matches
+both placements, and apply their properties from a single `@container style(--_flag: …)`
+block. The mechanism is the same one `<ui-reveal>` already uses for `--_rvl` and the card
+uses for `variant="sub"`.
+
+**Migrated so far:** `marquee(top|bot)` position · `shp()`'s image clip · `tnt` paint and
+`hov(tint)` fade · the whole `hov()` family.
+
+**What this costs:** style queries are **Chrome 111+, Safari 18+, Firefox 128+**. On older
+Firefox these five families now no-op — the frame renders in its default/un-hovered state.
+Nothing breaks structurally: the image, the aspect ratio, the scrim, the furniture and every
+carousel control are unaffected, because none of those go through a style query. This is an
+accepted v5 posture decision, consistent with the project already shipping `style()` queries
+in `ui/reveal` and `layout/core` and Chromium-only `::scroll-marker` controls.
+
+**What did NOT migrate, and why it never will.** A container cannot restyle *itself*: a style
+query resolves against the subject's nearest **ancestor**. So a token whose real properties
+land on the attribute-bearing `<ui-media>` has nothing to read the flag from when the token
+sits on that same element, and keeps its two-arm form permanently:
+
+| Token | Property on `<ui-media>` |
+|---|---|
+| `asr()` | `min-block-size: 0` (drops the 12.5rem floor) |
+| `rds(*-sq)` | `corner-shape: superellipse()` |
+| `shp()` | the frame's transparent `background` |
+| `tnt` | `isolation: isolate` |
+| `hov(tilt*)` | `perspective` |
+| the carousel bundle (`nav` · `axis(y)` · `mrk(blw/abv/tmb/rail/sbr)` · `arw(blw/abv)`) | `display` / `overflow` / `box-sizing` / `padding` / `inline-size` / `scrollbar-*` — the scroller box **is** the frame |
+
+Tokens that only write custom properties (`flp()`, `obf()`, `obp()`, the `rds()` radius
+scale, `asr()`'s ratio, the `scm()` scrim) never needed two arms in the first place — custom
+properties already inherit — and are untouched by this change.

@@ -8,6 +8,56 @@
  * element itself OR any ancestor (custom properties inherit down). See media.md.
  */
 @layer bs-component {
+	/* ============================================================
+	   R-14 STEP 4 — INHERITED FLAGS + @container style() (v5)
+
+	   A media= token that sets REAL properties (not just custom properties) used
+	   to need TWO selector arms, because the attribute can sit on the host
+	   (<ui-card>/<ui-reveal>) or on the <ui-media> itself, and a real declaration
+	   does not inherit. The flag pattern removes the duplication: ONE cheap,
+	   combinator-free selector — `:where([media*="tok"])` matches BOTH placements —
+	   sets an INHERITING `--_*` flag, and ONE `@container style(--_flag: …)` block
+	   applies the properties to a DESCENDANT of the flag holder.
+
+	   WHY IT WORKS FOR BOTH ARMS: a style query resolves against the subject's
+	   nearest ancestor. Token on the host → the flag inherits down through
+	   <cq-box>/<ui-media> to the subject's parent. Token on <ui-media> → the flag
+	   is set on <ui-media>, which IS the subject's parent. Either way the query
+	   sees it. (Pseudo-elements are the friendly special case: a ::before queries
+	   its ORIGINATING element, so `ui-media::before` sees a flag set on
+	   <ui-media> itself — verified in Chromium.)
+
+	   WHAT CANNOT MIGRATE: a container can never restyle itself, so a token whose
+	   real properties land ON the attribute-bearing element (asr()'s
+	   min-block-size, rds(*-sq)'s corner-shape, tnt's isolation, shp()'s frame
+	   background, hov(tilt*)'s perspective — all subjects are <ui-media>) keeps
+	   its dual arm. Those are enumerated at each site below.
+
+	   FLAG NAMES are listed in the boundary-reset block that follows; every new
+	   flag MUST be added there.
+
+	   BROWSER SUPPORT: style queries are Chromium 111+ / Safari 18+ / Firefox 128+.
+	   Older Firefox loses the migrated effects (they degrade to the un-hovered /
+	   default look — nothing breaks structurally). Accepted v5 support posture,
+	   see media.md § "v5 support posture".
+	   ============================================================ */
+	/* BOUNDARY — media= inheritance stops at the card host, but a custom property
+	   does not. A host nested inside another host clears every migrated flag, so an
+	   outer card's media= can never drive a NESTED card's frame. Declared BEFORE
+	   any setter so an inner host carrying its own token re-wins on source order
+	   (both are zero-specificity :where()) — the same nearest-host-wins discipline
+	   ui-card.css uses for `sub` and content.typography.css for the size ladder. */
+	:where(ui-card, ui-reveal) :where(ui-card, ui-reveal) {
+		--_mrq: initial;                                                    /* media.css   — marquee(top|bot) */
+		--_shp-clip: initial;                                               /* media.css   — shp() image clip */
+		--_hv-zoom: initial; --_hv-pan: initial; --_hv-track: initial;      /* media.hover.css */
+		--_hv-drift: initial; --_hv-tilt: initial; --_hv-tiltx: initial;
+		--_hv-tilt-out: initial; --_hv-tilt-in: initial;
+		--_hv-rot-r: initial; --_hv-rot-l: initial;
+		--_hv-shape: initial; --_hv-filter: initial; --_hv-any: initial;
+		--_tnt: initial; --_hv-tint: initial;                               /* media.tint.css */
+	}
+
 	:where(ui-media) {
 		aspect-ratio: var(--ui-media-ar, auto);
 		background: var(--ui-media-bg, var(--color-overlay-light, #0000));
@@ -141,10 +191,17 @@
 	   --ui-media-shape. The shape LIBRARY (shp(cut-r) polygons) is the opt-in
 	   media.shapes.css; the hover MORPH (hov(shape) → --ui-shape-morph) lives in
 	   media.hover.css. Works with any custom --ui-media-shape you set. */
+	/* R-14 step 4: the CLIP is flag-driven (subject = the image, a descendant of the
+	   frame). The frame's own transparent background is NOT migratable — its subject
+	   IS <ui-media>, and a container cannot restyle itself, so the self arm has no
+	   ancestor carrying the flag. It keeps the two-arm form.
+	   The style-query rule stays at (0,0,2) — the specificity hov(shape) in
+	   media.hover.css (also (0,0,2), later in source) must beat to morph the clip. */
+	:where([media*="shp("]) { --_shp-clip: 1; }
 	:where([media*="shp("]) ui-media,
-	:where(ui-media[media*="shp("]) {
-		background: #0000;
-		& :is(iframe, img, picture, video) { clip-path: var(--ui-media-shape, none); }
+	:where(ui-media[media*="shp("]) { background: #0000; }
+	@container style(--_shp-clip: 1) {
+		ui-media :is(iframe, img, picture, video) { clip-path: var(--ui-media-shape, none); }
 	}
 
 	/* hov() hover effects live in media.hover.css (imported by ui-card.css). */
@@ -181,15 +238,18 @@
 	   top/bot vocab (top = default). Sits at z-index 1, BELOW the z-2 furniture.
 	   Hue marquee(<hue>) and size marquee(sm|lg|xl|2xl) come from the component's
 	   own arms — those are `:where([media*="marquee(…)"]) &` in ui-marquee.css, so
-	   they already resolve from either placement. The POSITION args needed the
-	   second (self) arm below: the host arm has ui-media as a middle combinator,
-	   so it only matched with media= on an ANCESTOR — while the renderer's
-	   canonical placement puts media= on the <ui-media> itself. ── */
+	   they already resolve from either placement.
+	   The POSITION args are R-14-step-4 migrated: one flag setter (matches host OR
+	   <ui-media>, no combinator) + one style query whose subject is <ui-marquee>,
+	   a CHILD of the frame — so the query reads the flag off <ui-media> whichever
+	   placement set it. `:where(ui-media)` is kept on the subject so the rule stays
+	   scoped to frames and at the same (0,0,1) specificity as the base rule above,
+	   which it must beat on source order. ── */
 	:where(ui-media) ui-marquee { position: absolute; inset-inline: 0; inset-block: 0 auto; z-index: 1; }
-	:where([media*="marquee(top)"]) ui-media ui-marquee,
-	:where(ui-media[media*="marquee(top)"]) ui-marquee { inset-block: 0 auto; }
-	:where([media*="marquee(bot)"]) ui-media ui-marquee,
-	:where(ui-media[media*="marquee(bot)"]) ui-marquee { inset-block: auto 0; }
+	:where([media*="marquee(top)"]) { --_mrq: top; }
+	:where([media*="marquee(bot)"]) { --_mrq: bot; }
+	@container style(--_mrq: top) { :where(ui-media) ui-marquee { inset-block: 0 auto; } }
+	@container style(--_mrq: bot) { :where(ui-media) ui-marquee { inset-block: auto 0; } }
 
 	/* per-slide video control (nested frame) — always centered, wins over play() furniture */
 	ui-media ui-media > ui-play {
