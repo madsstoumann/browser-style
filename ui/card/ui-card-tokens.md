@@ -131,6 +131,32 @@ Each sets `--ui-content-ov-justify` / `-align` / `-text` and points `--ui-media-
 - **Round** (global radius scale): `rds(non · sm · md · lg · xl · 2xl · full · pill)`. The old `rds(none)` spelling was **removed in v5** — migrate to `rds(non)`. The same scale exists on `media=` (standalone frame) and `content=` (standalone content corners), and the alias is gone on all three.
 - **Squircle** (bespoke radius + `corner-shape: superellipse()`): `rds(sm-sq · md-sq · lg-sq · xl-sq)` → radii `1.25 / 2 / 2.8 / 3.5rem` with exponents `1.5 / 1.7 / 1.8 / 2`. `ui-reveal` reads `--ui-card-squircle-exp` to apply the same corner-shape to its `<details>`.
 
+> **Three `rds()` blocks, one scale — keep them in lock-step.** `ui-card.css`
+> (`--ui-card-*`), `media.css` (`--ui-media-*`) and `content.css` (`--ui-content-*`) each
+> ship the same ladder against a different namespace, and a token added to one must be added
+> to all three. The single manifest source lands with R-13; until then the three comment
+> markers are the contract. What they do **not** own is the values: `--radius-*`,
+> `--radius-*-sq` and `--squircle-*` all come from `ui/base/tokens.css`, the canonical scale
+> — the blocks only route a token arg to a namespace.
+>
+> The three differ only in **scope and matching**, all for the same reason — inside a card
+> the host rounds itself and clips the inner areas via `overflow: hidden`, so only the host's
+> radius is ever visible:
+>
+> | Sheet | Serves | Matching |
+> |---|---|---|
+> | `ui-card.css` | the card/reveal host | whole-token (`~=`) |
+> | `media.css` | a **standalone** `<ui-media>` frame | substring (`*=`) |
+> | `content.css` | a **standalone** `<ui-content>` that has been given a surface (`theme=`, author CSS) — the default `0` is inert inside a card | substring (`*=`) |
+>
+> Substring matching is safe for the two standalone blocks because `rds()` has no `md:`/`lg:`
+> forms to shadow and `rds(sm)` is not a substring of `rds(sm-sq)` — the closing paren
+> separates them. The `-sq` **shape** application is a separate stem-less needle
+> (`[…*="-sq)"]`) in each sheet, and it is the only real property `rds()` sets — which is why
+> it keeps a dual arm permanently (`corner-shape`'s subject *is* the element carrying the
+> attribute; a container cannot restyle itself). A nested frame under `clip` is forced back to
+> `--ui-media-radius: 0`.
+
 ## Border — `bdr`
 
 Opt-in hairline for cards on a `surface` background whose edges otherwise vanish. Distinct from the `theme=` `border()` system ([base/theme.md](../base/theme.md)) — that needs a colour theme and makes the fill transparent; `bdr` leaves the surface fill intact.
@@ -239,3 +265,180 @@ The renderer's default icon is `ico(te) ico(sm)`. Native `<details name>` (exclu
 | `--ui-card-split` | `spl()` | row column ratio |
 | `--ui-card-stack` | `ovr()` | `1 / 1` grid area to overlay media + content |
 | `--ui-card-squircle-exp` | `rds(*-sq)` | superellipse exponent |
+
+---
+
+## Internals (`ui-card.css`)
+
+> The *why* behind the sheet. These sections used to live as essay-length comment
+> blocks in the CSS; the file keeps one-line pointers back here plus the guardrail
+> markers a future editor must not delete.
+
+### `sub` — the two-hop flag relay
+
+`sub` is a **flag relay**, not a breakpoint. Two hops are required, because a style query
+resolves against the subject's **parent**:
+
+| Hop | Subject | Parent | Reads / writes |
+|---|---|---|---|
+| 1 | the `<ui-card>` | the `<lay-out>` | reads `--_subgrid` (non-inheriting, set by the layout's bare `subgrid` token) → writes `--_sub: 1` |
+| 2 | `<cq-box>` | the `<ui-card>` | reads the inherited `--_sub` → `display: contents` on `> cq-box` and `> cq-box > ui-content` |
+
+Hop 2 cannot read `--_subgrid` directly: the card has none of its own, precisely because
+that property does not inherit. So hop 1 relays the state into `--_sub`, an ordinary
+**inheriting** custom property — deliberately *not* `@property`-registered, since the
+default `inherits: true` is exactly what the relay needs. **Verified in Chromium: the
+single-hop form matches nothing.**
+
+The layout half is `layout/core/base.css`: `<lay-out lg="columns(3) subgrid" subgrid="4">`
+gives every direct child `display: grid` + `grid-row: span var(--_sg)` +
+`grid-template-rows: subgrid`, plus `container-type: normal` so the child's own inline-size
+container cannot sever the subgrid chain.
+
+**Boundary reset.** A host nested inside another host starts `--_sub: 0`, so a subgridded
+outer card cannot flatten an inner one that is not itself a direct child of an ON layout.
+It is declared **before** the setter, so the setter re-wins for an inner card that genuinely
+is one (both sides are zero-specificity `:where()`, so source order decides) — the same
+nearest-host-wins discipline `content.typography.css` uses for its size resets. The comment
+marking it in the CSS stays for that reason.
+
+### The named `bs-card` container (F-42)
+
+Every `md:`/`lg:` rule queries a **named** container, `@container bs-card (…)`. An *unnamed*
+size query resolves against the subject's nearest size container — so a self-armed primitive
+standing outside a card could match an unrelated ancestor container and switch tiers off the
+wrong box's width. With the name, only `ui-card` / `ui-reveal` / `lay-out-group` match, and
+a standalone primitive opts in deliberately:
+
+```html
+<div style="container: bs-card / inline-size"> <ui-content content="lg:scl(xl)"> … </div>
+```
+
+### Two arms per responsive token (R-14 step 3 / R-18)
+
+- **Host arm** — targets the queryable descendant (`cq-box` for a card, `summary` for a
+  reveal). Setting the `--ui-content-*` / `--ui-media-*` props *there* (nearer than the
+  host) is what overrides the base per container.
+- **Self arm** — targets the primitive itself, so a token placed directly on
+  `<ui-content>`/`<ui-media>` (the renderer's canonical placement) works too.
+  Nearest-wins keeps precedence right: a declaration on the primitive beats the one it
+  would otherwise inherit from `cq-box`.
+- **`variant=` gets no self arm** — it arranges the two children, so it belongs on the host
+  by nature.
+
+`content=` **size** (`md:`/`lg:` `scl()` and `hl(<size>)`) lives in
+`content.typography.css`, not here: those rules must precede/follow the base size rules in a
+fixed source order (everything ties at `:where()` specificity), so the whole type cascade
+stays in one file. `content=` tone/weight and `media=` tokens are not prefixed — **except**
+`asr()`, whose `md:`/`lg:` forms set `--ui-media-ar` per container width, because the aspect
+a card wants genuinely depends on how wide it renders (portrait in a 1-up carousel,
+landscape once it widens). Base `asr()` is whole-token matched, so it ignores the prefixed
+forms.
+
+### `bdr` — why the reveal arm moves one level in
+
+The specificity contract behind the note in *Border* above: the **card** arm keeps its exact
+original selector at `(0,0,0)`; the **reveal** arm is `(0,0,1)` because it names a child
+element, matching every other `> details` rule in `ui-reveal.css`. The reveal arm inherits
+the same `--ui-card-border-*` knobs (still declared on the host by the
+`bdr(<size>)`/`bdr(<shade>)` rules) and picks up the `<details>` radius, which is already
+`var(--ui-card-radius, …)` — so `rds()` keeps working.
+
+### `theme=` — how ink crosses namespaces
+
+Surface + ink come from the resolved `--_theme-*` pair (see
+[base/theme.md](../base/theme.md)), both `light-dark()` so they adapt, falling back to the
+default host surface when unthemed. Adding the `dark`/`light` modifier
+(`theme="black dark"`) also flips `color-scheme`, which is what re-tones the content ink
+ramp, eyebrow, tags, pills, form controls and scrollbars. A **branded** surface is
+`theme="black"` plus a `--ui-card-dark-bg` override (hooked in the `--ui-theme-black-bg`
+bundle).
+
+### Cross-document view transitions
+
+`@view-transition` is a top-level at-rule, so this block ships **outside** `@layer`.
+
+Add a `data-view` attribute to any card (and optionally its media `<img>`) plus a matching
+one on the target page's container, link the two pages with a regular `<a>` (see
+`data-part="cover"` in `content.css`), and the card morphs across the navigation — both
+directions. Names come from the attribute via CSS `attr()` (CSS Values 5, Chromium 133+), so
+there are no inline styles and it stays strict-CSP friendly. Where unsupported the name
+resolves to `none` and navigation degrades to a plain swap.
+
+**The race that bites.** Both documents must be same-origin, and — critically — the incoming
+page's named elements must exist in the DOM when the browser takes the new-page snapshot.
+That snapshot races HTML parsing: if the parser has not reached the card/hero yet, the morph
+silently degrades to a plain root cross-fade. (This is why a repeat/bfcache navigation can
+appear to "stop animating".) Render-block each incoming page until its named elements are
+parsed — `<link rel="expect" href="#…" blocking="render">` in the `<head>`, as
+`ui/card/articles/build.js` emits. Client-fetched content cannot win this race at all:
+server-render or pre-build the named markup.
+
+A **mandatory** safety rule follows in the sheet: no navigation transitions under
+`prefers-reduced-motion: reduce`.
+
+---
+
+## Internals (`ui-reveal.css`)
+
+### The card-rule leak checklist
+
+`ui-card.css` writes many rules as host-scoped **descendant** selectors
+(`:where([variant…]) ui-content`, `… :is(cq-box, summary)`). A `<ui-reveal>` is a
+`[variant]` host, so those rules reach *past* the front face and into the revealed panel —
+which is not a card area at all. Each one is counter-reset in `ui-reveal.css`:
+
+| # | Leaking card rule | Undone by |
+|---|---|---|
+| 1 | `ovr()` ink + placement + z (`--ui-content-ov-*`) | `> details > ui-content` — `color` / `align-items` / `justify-content` / `text-align` / `z-index` |
+| 2 | `vis(media)`'s `ui-content { display: none }` | `display: flex` in the same block |
+| 3 | `ovr()`'s grid-area stacking (`:where([variant]) :is(ui-media, ui-content)`) | `grid-area: auto` in the same block |
+| 4 | content padding doubling (`--ui-content-p` **and** `--ui-reveal-content-p`) | `> details[open]:has(> ui-content)::details-content { padding: 0 }` |
+| 5 | type-scale on a panel with no `content=` of its own | `> details > ui-content:not([content])` |
+
+Item 6 is the exception that proves the rule: `align-content` (the `ui-card.css`
+arrangement block) **does** reach `<summary>`, by design (F-14) — shared on purpose, not a
+leak.
+
+> **The audit rule — keep the CSS marker.** When a new card token is added, ask: *does its
+> selector subject sit inside `ui-reveal > details` without passing through
+> `summary`/`ui-face`?* If yes, it leaks into the panel and needs an entry here plus a
+> counter-reset. Long-term (v5) the card rules move to front-face-scoped subjects and this
+> list shrinks toward zero.
+
+**Why #5 tests `content=` and not `variant=`.** An explicit `content=` on the back
+(`scl()`, `hl()`, `tx()`, …) means the author wants the panel to size itself through the
+content DSL, and the reset would otherwise out-specify it. The **back content** itself is an
+optional generic `<ui-content>` placed after `</summary>`: it inherits the card typography
+and `data-part` engine, keeps its own content padding (`--ui-content-p`, settable with
+`pad()`), and the panel padding is zeroed so the two do not double.
+
+### The `--_rvl` animation-dispatch flag
+
+Each `variant=` animation family writes **one** value onto `> details` (`exp` | `flp` |
+`sld` | `grw`); the per-animation geometry blocks match it with style queries against the
+`details` container (named `bs-rvl`). So every animation's tokens are enumerated exactly
+once, and the `lg:` tier swaps the animation by **re-flipping the flag** rather than
+duplicating geometry.
+
+`--_rvl` is **non-inheriting on purpose**: a nested `<ui-reveal>`'s `<details>` must not pick
+up an outer reveal's animation. The universal syntax (`syntax: "*"`) needs no
+`initial-value` — the guaranteed-invalid initial simply never matches a style query.
+
+### `pop` — why the backdrop is on `ui-reveal::before`
+
+`pop` keeps the **outer** `<ui-reveal>` in normal flow as a placeholder, reserving the closed
+tile's cell via its aspect ratio so siblings do not reflow; only the **inner** `<details>`
+goes fixed. The backdrop therefore sits on `ui-reveal::before`, **not** `details::before`:
+`<details>` runs a scale transform (`ui-reveal-pop`), which makes it the containing block for
+fixed descendants *and* clips them via `overflow: hidden`. `<ui-reveal>` has no transform, so
+its fixed `::before` fills the viewport. The host block also stays attribute-keyed rather
+than style-queried — a container cannot style itself, and `pop` only exists with `exp`.
+
+**The popup escape hatch ships UNLAYERED, on purpose.** `<lay-out>` sets
+`contain: layout inline-size` in `@layer layout.base`, and *layout* containment makes it the
+containing block for the fixed popup, trapping it inside the grid cell. While a popup is
+open the rule drops the `layout` keyword (keeping `inline-size`, so track sizing is
+untouched) so the popup's `inset` resolves against the viewport again. Unlayered beats
+`layout.base` regardless of stylesheet order — the marker in the CSS records that; do not
+move the rule into a layer.

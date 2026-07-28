@@ -955,3 +955,181 @@ sits on that same element, and keeps its two-arm form permanently:
 Tokens that only write custom properties (`flp()`, `obf()`, `obp()`, the `rds()` radius
 scale, `asr()`'s ratio, the `scm()` scrim) never needed two arms in the first place — custom
 properties already inherit — and are untouched by this change.
+
+---
+
+## Internals (`media.css`, `media.hover.css`, `media.tint.css`)
+
+> The *why* behind the sheets. These sections used to live as essay-length comment
+> blocks at the top of the CSS; the files keep one-line pointers back here plus the
+> guardrail markers a future editor must not delete.
+
+### Why the flag pattern reaches both attribute placements
+
+A style query resolves against the subject's **nearest ancestor**, and that is exactly
+what makes one flag serve both arms:
+
+- **Token on the host** (`<ui-card>`/`<ui-reveal>`) — the flag is set there and *inherits*
+  down through `<cq-box>`/`<ui-media>` to the subject's parent.
+- **Token on the `<ui-media>`** — the flag is set on `<ui-media>`, which **is** the
+  subject's parent.
+
+Either way the query sees it, so one combinator-free `:where([media*="tok"])` setter
+replaces the two selector arms — and it is cheap, because a combinator-free selector is
+the fastest shape the engine has.
+
+**Pseudo-elements are the friendly special case.** A `::before`/`::after` resolves its
+style query against its **originating** element, so `ui-media::before` sees a flag set on
+`<ui-media>` itself. That is what makes `tnt`'s paint migratable at all — verified in
+Chromium before the migration was written.
+
+### The flag registry and the nesting boundary
+
+`media=` inheritance stops at the card host, but a **custom property does not** — so a
+host nested inside another host has to clear every migrated flag, or an outer card's
+`media=` would drive a nested card's frame. One reset block at the top of `media.css`
+does that:
+
+```css
+:where(ui-card, ui-reveal) :where(ui-card, ui-reveal) { --_mrq: initial; /* … */ }
+```
+
+Two rules follow from it, both load-bearing:
+
+1. **Every new flag MUST be listed in that block.** It is the flag registry as well as
+   the boundary — a flag missing from it leaks across host nesting. The comment marking
+   it in `media.css` stays for that reason.
+2. **It is declared BEFORE any setter** so an inner host carrying its own token re-wins
+   on source order (both sides are zero-specificity `:where()`). Same nearest-host-wins
+   discipline `ui-card.css` uses for `sub` and `content.typography.css` for the size
+   ladder.
+
+### Where the hover state is read — two deliberately different shapes
+
+`hov()` is the largest migrated family (14 rules), and its `:hover` sits in one of two
+places depending on where it sat before the migration:
+
+- Effects whose `:hover` was on the **token holder** (`zoom` `pan` `tilt-out` `tilt-in`
+  `rot-r` `rot-l` `shape`) put `:hover`/`:focus-within` on the **flag setter**, so
+  hovering anywhere in the card still fires a card-placed token.
+- Effects whose `:hover` was on the **frame** (`drift`, `tilt` overfill) keep `:hover` on
+  the subject *inside* the query — `ui-media:hover :is(…)`. The flag only gates; the
+  frame's own hover still selects. That preserves the `(0,1,2)` specificity those rules
+  always had.
+
+Every image rule stays at `(0,0,2)`, which is what lets `hov(shape)` beat `shp()`'s own
+`clip-path` (`media.css`, also `(0,0,2)`, earlier in source). Both are now the same
+`ui-media :is(iframe, img, picture, video)` shape inside a style query, so the win is
+plain **source order** rather than a hand-tuned selector. All animated properties also
+share **one** transition list on the image, so effects compose (`hov(shape) hov(zoom)`)
+without clobbering each other's transition. The `filter` vars are `@property`-registered
+so they *interpolate* — an unregistered custom property changes discretely and the filter
+would jump.
+
+`hov(track|drift|tilt)` are the three effects that need JS (`--ui-media-mx/my` from
+`index.js`); the other eleven are CSS-only.
+
+### `obp()` — two spellings, on purpose
+
+`obp()` is the one place the system keeps a **physical** position vocabulary:
+
+- **Logical** `ts tc te · cs cc ce · bs bc be` — canonical, and the one grid the rest of
+  the system uses (furniture, `scm()`, `ovr()`, reveal's `ico()`). `s`/`e` follow the
+  writing direction, so they mirror under `dir="rtl"`.
+- **Physical** `tl tc tr · cl cc cr · bl bc br` — **not** deprecated. `object-position`
+  has no logical keywords, and "crop to the left edge" is a real direction-independent
+  intent (a subject baked into the left of the frame). These never mirror.
+
+The centre column (`tc`/`cc`/`bc`) is spelled identically in both and is axis-pure.
+
+### The marquee band's position args
+
+`marquee()` is a **band**, not a 9-grid point, so it has a band-only `top`/`bot`
+vocabulary (`top` = default) and sits at `z-index: 1`, **below** the `z-index: 2`
+furniture. Hue and size come from the component's own arms in `ui-marquee.css`
+(`:where([media*="marquee(…)"]) &`), which already resolve from either placement.
+
+Only the **position** args are R-14-step-4 migrated: one flag setter plus one style query
+whose subject is `<ui-marquee>`, a *child* of the frame — so the query reads the flag off
+`<ui-media>` whichever placement set it. `:where(ui-media)` is kept on the subject so the
+rule stays scoped to frames and at the same `(0,0,1)` specificity as the base rule it must
+beat on source order.
+
+### Scrim — declaration scope and the RTL re-bake
+
+`scm()` composes three orthogonal axes on the furniture 3×3 grid — direction
+(`scm(<pos>)`), extent (`scm(sm|md|lg|xl)`, `md` default) and intensity
+(`scm(shr|lgt|med|drk|sld)`) — and all nine gradients read shared colour + stop vars, so
+size and intensity vary without re-baking a gradient per combination. A **mid stop** holds
+the dark before fading, so text spanning the frame stays legible rather than only at the
+very corner.
+
+**Declaration scope (F-12, tightened in v5).** The nine gradient families are declared on
+exactly the three subjects that can read them, never on every `[media]`/`[variant]` host:
+
+| Subject | Why it reads them |
+|---|---|
+| `:where(ui-media)` | the painter (`::after`) and the standalone frame |
+| `:where([media*="scm"])` | any host carrying an `scm` token — it computes `--ui-media-scrim` / `--ui-media-scrim-paint` there |
+| `:where([variant*="ovr("])` | the overlay host — `ovr()` writes `--ui-media-scrim-default: var(--ui-media-scrim-<pos>)` (`ui-card.css`), which must substitute on the **host** |
+
+A card that uses neither `scm` nor `ovr()` no longer carries 13 custom-property
+declarations for nothing.
+
+**RTL re-bake.** The scrim positions are spelled logically, but `linear-gradient()` has no
+logical directions — so the six gradients that carry a left/right component are re-baked
+mirrored in a `:dir(rtl)` block at the same `(0,0,0)` specificity, later in source. Without
+it a `chip(ts)` would mirror in RTL and its matching `scm(ts)` would not. `tc`/`bc`/`cc` are
+axis-pure (to bottom / to top / a vertical band) and never flip. The `:dir(rtl)` block's
+subjects mirror the declaration scope above exactly.
+
+### Sub-theme routing lives in the components
+
+`chip(<hue>)` / `sticker(<hue>)` colour and `save(<hue>|<size>|non)` are **not** in
+`media.css`. Each lives in its own sheet (`ui/{chip,sticker,save}/ui-*.css`) in one nested
+rule combined with the standalone attribute form (`theme=` / `color=` / `size=` /
+`variant="non"`), so there is a single source of truth per element. Only the shared
+**positions** — `chip/sticker/save/play(<pos>)` — stay in `media.css`.
+
+### `tnt()` — the opt-in tint sheet
+
+`media.tint.css` is **not** imported by `ui-card.css` — link it on pages that tint (see
+`media.tint.html`). It washes the image in a solid colour through a blended overlay on
+`ui-media::before`, because a plain `filter` cannot target an exact colour (`hue-rotate`
+only rotates the hues already there).
+
+```html
+<ui-media media="tnt(red)">                                   <!-- named preset → --ui-theme-red-bg -->
+<ui-media media="tnt" style="--ui-media-tint-color:#c8102e">  <!-- any brand colour or gradient -->
+<ui-media media="tnt(blue) hov(tint)">                        <!-- fade out on hover → true colour -->
+```
+
+Knobs: `--ui-media-tint-color` (default `--color-accent`; any CSS `<color>` **or** a
+gradient, since it is painted via `background`), `--ui-media-tint-blend` (default `color`;
+try `multiply`/`luminosity`/`screen`), `--ui-media-tint-opacity` (default `1`).
+
+**Layering:** image (base) · tint `::before` (z-1, blends with the image) · scrim `::after`
+(z-1) · furniture (z-2). `isolation: isolate` scopes the blend to the frame. Nested frames
+suppress the second tint (`ui-media ui-media::before { content: none }`).
+
+The needle `[media*="tnt"]` is safe because no other `media=` token contains the substring
+`tnt`. The **paint** is the textbook flag case (the `::before` originating-element rule
+above); `isolation: isolate` is not migratable — its subject *is* `<ui-media>` — so it keeps
+the two-arm form. Specificity is unchanged: the old `&::before` under the `(0,0,1)` host arm
+was `(0,0,2)`, and so is the bare `ui-media::before`, which the `(0,0,2)`
+`ui-media ui-media::before` nested-frame guard still beats on source order.
+
+### `shp()` — the opt-in shape library
+
+`media.shapes.css` is likewise **not** bundled — link it on pages that use `shp()` (see
+`media.shape.html`). Each rule sets two neutral vars, `--_shp` (the shape) and `--_shp-full`
+(its matching-vertex full frame), and a shared bridge wires them into the mechanism that
+lives in `media.css` and ships with the card:
+
+| Tokens | Effect |
+|---|---|
+| `shp(x) hov(shape)` | forward — shape morphs to the full frame on hover |
+| `shp(x) hov(shape-rev)` | reverse — full frame (square) morphs to the shape on hover |
+
+Because the mechanism is in `media.css`, it also works with your own custom
+`--ui-media-shape` / `--ui-shape-morph` values without the library sheet.

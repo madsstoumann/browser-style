@@ -5,13 +5,9 @@
  *
  * Opt-in set of clip-path shapes for <ui-media>. NOT bundled by ui-card.css — link
  * this sheet explicitly on pages that use shp() (see media.shape.html). Each rule sets
- * two neutral vars: --_shp (the shape) and --_shp-full (its matching-vertex full frame).
- * A shared bridge wires them into the mechanism media.css consumes:
- *   forward   shp(x) hov(shape)       shape → full frame on hover
- *   reverse   shp(x) hov(shape-rev)   full frame (square) → shape on hover
- * The clip + hover-morph MECHANISM lives in media.css and ships with the card, so it
- * also works with your own custom --ui-media-shape / --ui-shape-morph values.
- * Same @layer as media.css (bs-component).
+ * two neutral vars, --_shp and --_shp-full, which a shared bridge wires into the
+ * clip + hover-morph MECHANISM that lives in media.css. Same @layer as media.css.
+ * See media.md § Internals — "shp() — the opt-in shape library".
  */
 @layer bs-component {
 	/* private morph targets — full-bleed rects matched by vertex count so the shape

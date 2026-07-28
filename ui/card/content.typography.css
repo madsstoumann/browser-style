@@ -5,45 +5,16 @@
  *
  * The <ui-content> TYPE LAYER: scale stops, the master step scl(), the
  * relational size ladders, the four styling groups (eb/hl/tx/mt) and fnt().
- * Split out of content.css (which keeps container/parts/layout) so the type
- * system is self-contained — a standalone <ui-content> consumer gets the full
- * responsive type system from this file alone.
+ * Split out of content.css (which keeps container/parts/layout).
  *
- * RELATIONAL SCALE — how sizes compose:
- * Size tokens name a step on a LADDER, not an absolute stop. With no scl()
- * present, each ladder var is unset and the token falls back to its absolute
- * stop — hl(2xl) IS the 2xl clamp. When scl() sets the master step, it also
- * re-points every ladder var (scl(sm) = one step down, scl(md) = identity,
- * scl(lg) = one up, scl(xl) = two up, saturating at the ends) — so
- * hl(2xl) under scl(sm) renders the xl stop, and with responsive md:/lg:scl()
- * every size token steps down on small containers automatically.
- *
- * SOURCE ORDER IS LOAD-BEARING. Everything here is :where() (zero specificity
- * on the host form; the :is(cq-box, summary) descendant forms all tie), so the
- * cascade is decided by order within this file:
+ * SOURCE ORDER IS LOAD-BEARING — everything here ties at :where() specificity,
+ * so the cascade is decided by order within this file:
  *   base scl() < md:scl() < lg:scl() < base hl() < md:hl() < lg:hl()
- * scl() writes --ui-content-headline directly (the master default); an explicit
- * hl(<size>) must beat it at EVERY breakpoint, which is why the responsive
- * scl()/hl() rules live HERE (after this file, ui-card.css keeps only the
- * non-type responsive tokens) and why the hl() block sits after all scl forms.
+ * Do not reorder these blocks.
  *
- * Size tokens are DUAL-DECLARED — on the token host AND on the host's OWN
- * queryable descendant (ui-card[content] > cq-box / lay-out-group[content] >
- * cq-box / ui-reveal[content] > details > summary, all kept at (0,0,1) via
- * :where()). var() substitution happens where a custom property is declared;
- * the descendant declaration is what lets a responsive md:/lg:scl() ladder
- * remap on cq-box re-resolve a size declared on the host. It is deliberately
- * scoped to the host's own box via `>` — NOT the broad `:is(cq-box, summary)`
- * the md:/lg: rules use — so a size token on an outer group can't reach into
- * nested cards and beat their nearer scl()/size declarations (nearest-host-wins
- * nesting, as in v4 before this layer).
- *
- * The lay-out-group arm exists because a group is a bs-card container too
- * (R-16, layout/core/group.css) and takes the same content= tokens on the
- * attribute-on-group authoring shape (<lay-out-group content> > <cq-box>).
- * Without it, a group header's md:/lg:scl() ladder remapped on the cq-box while
- * its hl()/eb()/tx()/mt() size stayed resolved against the base ladder on the
- * host — the header size simply never moved with the responsive step.
+ * The relational ladder, the dual-declared size tokens (and why the `>` scoping
+ * matters), the lay-out-group arm and the scl(fix) stop mapping are all in
+ * content.md § Internals.
  */
 @layer bs-component {
 
@@ -99,25 +70,11 @@
 	}
 
 	/* ============================================================
-	   scl(fix) — static scale mode. Re-points every stop from its fluid cqi
-	   clamp to the global static type scale (--font-size-* in ui/base/tokens.css):
-	     body     sm→sm  md→base  lg→lg  xl→xl  2xl→2xl
-	     headline sm→xl  md→2xl   lg→3xl xl→5xl 2xl→6xl 3xl→7xl
-	   (the 3xl→5xl skip mirrors the fluid ramp's own big lg→xl jump).
-	   Because scl()/hl()/the ladder are pure indirection through the stop vars,
-	   EVERYTHING still works — steps, relational shifting, md:/lg: breakpoint
-	   jumps — just between static sizes: type changes only at the breakpoints,
-	   never in between. Designers get the discrete Tailwind text scale.
-	   The stop-definition rule above matches every ui-content/[content] element,
-	   so fix must ALSO re-declare on descendants — and its SELF form must match
-	   the descendant form's (0,1,0) specificity (hence :is(), not :where()), or
-	   a nested host's own mode token would lose to an ancestor's descendant rule
-	   on the host element itself. scl(fluid) is the explicit opt-out (a nested
-	   card in a fixed deck going fluid again); it comes after fix in source, so
-	   on a tie fluid wins — meaning an explicit scl(fluid) cannot be re-fixed
-	   further down. Neither form is md:/lg: prefixable — fix is a MODE, not a
-	   step. These write ONLY the stop vars, so they never collide with the
-	   (0,0,1) size rules below.
+	   scl(fix) / scl(fluid) — static scale MODE (not a step; no md:/lg: forms).
+	   :is() NOT :where() on purpose: the self form must match the descendant
+	   form's (0,1,0), or a nested host's own mode token loses to an ancestor's
+	   descendant rule. fluid comes after fix, so on a tie fluid wins.
+	   Stop mapping + full rationale: content.md § Internals — "scl(fix)".
 	   ============================================================ */
 	:is([content~="scl(fix)"]),
 	:where([content~="scl(fix)"]) :is(ui-content, [content]) {
@@ -149,14 +106,9 @@
 	}
 
 	/* ============================================================
-	   scl() — master type-scale step. Sets the ACTIVE body + headline props AND
-	   re-points the two relative ladders (--ui-content-tx-* body steps,
-	   --ui-content-hl-* headline steps) that the size tokens read. scl(md) writes
-	   the identity ladder explicitly so a nested scl(md) resets an ancestor's
-	   shifted ladder. Ladder values inherit as unresolved token streams (clamp()
-	   isn't evaluated in custom properties), so they re-resolve wherever a size
-	   token re-declares. ~= (whole token) so base doesn't substring-match the
-	   md:/lg: prefixed forms.
+	   scl() — master type-scale step: active body + headline props AND both
+	   relational ladders. ~= (whole token) so base doesn't substring-match the
+	   md:/lg: forms. See content.md § Internals — "The four styling groups".
 	   ============================================================ */
 	:where([content~="scl(sm)"]) { /* shift −1 (saturates at sm) */
 		--ui-content-fs: var(--ui-content-fs-sm);
@@ -216,21 +168,9 @@
 	}
 
 	/* ------------------------------------------------------------
-	   md:/lg: scl() — the responsive master step, on the queryable descendant
-	   (cq-box for <ui-card>, summary for <ui-reveal>; props inherit down to
-	   ui-content). Writes the SAME set as base scl(): active props + both
-	   ladders, so every size token — responsive or not — re-resolves against
-	   the step active at this width. Must precede the hl() block (source order
-	   decides ties on cq-box).
-	   TWO ARMS (R-14 step 3): the host arm declares on the queryable descendant,
-	   the ui-content SELF arm covers the token sitting on the primitive itself
-	   (the renderer's canonical placement). Both carry the SAME declarations and
-	   sit in the SAME source position — this file's order is load-bearing (see the
-	   header) — and nearest-wins does the rest: a ladder written on ui-content
-	   beats the one it would inherit from cq-box.
-	   The size queries are NAMED (bs-card, declared on ui-card/ui-reveal in
-	   ui-card.css, and on lay-out-group) so a self-armed standalone primitive can
-	   never resolve its tiers against an unrelated ancestor container (F-42).
+	   md:/lg: scl() — responsive master step, two arms (R-14 step 3). MUST precede
+	   the hl() block: source order decides ties on cq-box. NAMED size queries
+	   (bs-card) per F-42. See content.md § Internals — "Dual-declared size tokens".
 	   ------------------------------------------------------------ */
 	@container bs-card (inline-size >= 25rem) {
 		:where([content~="md:scl(sm)"]) :is(cq-box, summary), :where(ui-content[content~="md:scl(sm)"]) {
@@ -350,22 +290,10 @@
 	}
 
 	/* ============================================================
-	   TYPE STYLING — four logical groups, each with a family token that
-	   writes a group-level prop. A part reads its own --ui-content-{part}-X
-	   then the group --ui-content-{group}-X then a default, so a group token
-	   restyles the whole group while a per-part style= still overrides one part.
-	     Eyebrow group — eb() — eyebrow
-	     Headings group — hl() — headline (+ bare h2–h6), subheadline
-	     Body group     — tx() — summary, quote, list, address, timeline, price, stat
-	     Meta group     — mt() — meta, caption, byline, footer, tags, rating, options
-	   Four disjoint arg vocabularies so whole-token matching can't confuse them:
-	     tone   shr lgt med drk sld accent inv    (ink strength + hue overrides)
-	     size   sm md lg xl (+ 2xl 3xl on hl)     (a step on the relational ladder)
-	     weight 300–900                            (--font-weight-*)
-	   plus flags: eb(flat) drops uppercase · hl(grad) opts into the gradient headline.
-	   Size args read the ladder with an absolute fallback — fixed without scl(),
-	   shifted with it — and are dual-declared (host + cq-box/summary) so a
-	   responsive scl() remap re-resolves them (see file header).
+	   TYPE STYLING — four logical groups (eb / hl / tx / mt), each with four
+	   disjoint arg vocabularies (tone / size / weight / flag) so whole-token
+	   matching can't confuse them. Group/part table and the full arg vocabulary:
+	   content.md § Internals — "The four styling groups".
 	   ============================================================ */
 
 	/* eb() — eyebrow group: tone / weight / size / flat flag */
@@ -474,12 +402,10 @@
 	:where(lay-out-group[content~="mt(xl)"]) > cq-box,
 	:where(ui-reveal[content~="mt(xl)"] > details) > summary { --ui-content-meta-base: var(--ui-content-tx-xl, var(--ui-content-fs-xl)); }
 
-	/* hl() — headings group: tone / weight, then SIZE (headline only), then grad
-	   flag. The size rules read the --ui-content-hl-* ladder (absolute fallback),
-	   and MUST come after every scl() form in source: all of them write
-	   --ui-content-headline at tying specificity, so an explicit hl(<size>) wins
-	   over the master step's direct write at every breakpoint — decoupling the
-	   title from the body ramp while still shifting WITH the ramp via the ladder. */
+	/* hl() — headings group: tone / weight, then SIZE (headline only), then grad.
+	   The size rules MUST come after every scl() form in source — all of them write
+	   --ui-content-headline at tying specificity. See content.md § Internals —
+	   "Source order is load-bearing". */
 	:where([content~="hl(shr)"])    { --ui-content-heading-ink: var(--ui-content-shr); }
 	:where([content~="hl(lgt)"])    { --ui-content-heading-ink: var(--ui-content-soft); }
 	:where([content~="hl(med)"])    { --ui-content-heading-ink: var(--ui-content-muted); }
@@ -528,11 +454,9 @@
 	:where([content~="hl(form)"])   { --ui-content-heading-font: var(--font-form); }
 
 	/* ------------------------------------------------------------
-	   md:/lg: hl(<size>) — responsive headline step, after base hl() so a
-	   prefixed form wins on cq-box/summary (or on ui-content, via the self arm)
-	   at its width. Reads the same ladder:
-	   substitution uses the final cascaded ladder value on the same element, so
-	   these compose with any scl() form regardless of which is prefixed.
+	   md:/lg: hl(<size>) — responsive headline step, AFTER base hl() so a prefixed
+	   form wins at its width. Reads the same ladder, so these compose with any
+	   scl() form regardless of which is prefixed.
 	   ------------------------------------------------------------ */
 	@container bs-card (inline-size >= 25rem) {
 		:where([content~="md:hl(sm)"])  :is(cq-box, summary), :where(ui-content[content~="md:hl(sm)"]) { --ui-content-headline: var(--ui-content-hl-sm, var(--ui-content-headline-sm)); }

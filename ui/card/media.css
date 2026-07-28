@@ -10,43 +10,14 @@
 @layer bs-component {
 	/* ============================================================
 	   R-14 STEP 4 — INHERITED FLAGS + @container style() (v5)
-
-	   A media= token that sets REAL properties (not just custom properties) used
-	   to need TWO selector arms, because the attribute can sit on the host
-	   (<ui-card>/<ui-reveal>) or on the <ui-media> itself, and a real declaration
-	   does not inherit. The flag pattern removes the duplication: ONE cheap,
-	   combinator-free selector — `:where([media*="tok"])` matches BOTH placements —
-	   sets an INHERITING `--_*` flag, and ONE `@container style(--_flag: …)` block
-	   applies the properties to a DESCENDANT of the flag holder.
-
-	   WHY IT WORKS FOR BOTH ARMS: a style query resolves against the subject's
-	   nearest ancestor. Token on the host → the flag inherits down through
-	   <cq-box>/<ui-media> to the subject's parent. Token on <ui-media> → the flag
-	   is set on <ui-media>, which IS the subject's parent. Either way the query
-	   sees it. (Pseudo-elements are the friendly special case: a ::before queries
-	   its ORIGINATING element, so `ui-media::before` sees a flag set on
-	   <ui-media> itself — verified in Chromium.)
-
-	   WHAT CANNOT MIGRATE: a container can never restyle itself, so a token whose
-	   real properties land ON the attribute-bearing element (asr()'s
-	   min-block-size, rds(*-sq)'s corner-shape, tnt's isolation, shp()'s frame
-	   background, hov(tilt*)'s perspective — all subjects are <ui-media>) keeps
-	   its dual arm. Those are enumerated at each site below.
-
-	   FLAG NAMES are listed in the boundary-reset block that follows; every new
-	   flag MUST be added there.
-
-	   BROWSER SUPPORT: style queries are Chromium 111+ / Safari 18+ / Firefox 128+.
-	   Older Firefox loses the migrated effects (they degrade to the un-hovered /
-	   default look — nothing breaks structurally). Accepted v5 support posture,
-	   see media.md § "v5 support posture".
+	   Rationale, both-arms proof and support posture: see media.md
+	   § "v5 support posture — style queries" and § Internals.
 	   ============================================================ */
-	/* BOUNDARY — media= inheritance stops at the card host, but a custom property
-	   does not. A host nested inside another host clears every migrated flag, so an
-	   outer card's media= can never drive a NESTED card's frame. Declared BEFORE
-	   any setter so an inner host carrying its own token re-wins on source order
-	   (both are zero-specificity :where()) — the same nearest-host-wins discipline
-	   ui-card.css uses for `sub` and content.typography.css for the size ladder. */
+	/* BOUNDARY + FLAG REGISTRY — every migrated flag MUST be listed here, or it
+	   leaks across host nesting. Declared BEFORE any setter so an inner host
+	   carrying its own token re-wins on source order (both zero-specificity
+	   :where()). See media.md § Internals — "The flag registry and the nesting
+	   boundary". */
 	:where(ui-card, ui-reveal) :where(ui-card, ui-reveal) {
 		--_mrq: initial;                                                    /* media.css   — marquee(top|bot) */
 		--_shp-clip: initial;                                               /* media.css   — shp() image clip */
@@ -115,15 +86,9 @@
 	:where([media~="asr(16/9)"])  { --ui-media-ar: 16 / 9; }
 	:where([media~="asr(21/9)"])  { --ui-media-ar: 21 / 9; }
 
-	/* obp() — object-position (9-grid). TWO spellings on purpose:
-	     LOGICAL  ts tc te · cs cc ce · bs bc be — CANONICAL. One grid for the whole
-	              system (furniture, scm(), ovr(), reveal's ico()); s/e follow the
-	              writing direction, so they mirror under dir="rtl" (block below).
-	     PHYSICAL tl tc tr · cl cc cr · bl bc br — NOT deprecated. object-position has
-	              no logical keywords, and "crop to the left edge" is a real,
-	              direction-independent intent (e.g. a subject baked into the left of
-	              the frame). These never mirror.
-	   The centre column (tc/cc/bc) is spelled identically in both and is axis-pure. */
+	/* obp() — object-position (9-grid). TWO spellings on purpose, logical (mirrors
+	   under dir="rtl", block below) and physical (never mirrors, NOT deprecated) —
+	   see media.md § Internals — "obp() — two spellings, on purpose". */
 	:where([media*="obp(tl)"]) { --ui-media-op: left top; }
 	:where([media*="obp(tc)"]) { --ui-media-op: center top; }
 	:where([media*="obp(tr)"]) { --ui-media-op: right top; }
@@ -150,13 +115,10 @@
 	:where([media*="obp(bs)"]:dir(rtl)) { --ui-media-op: right bottom; }
 	:where([media*="obp(be)"]:dir(rtl)) { --ui-media-op: left bottom; }
 
-	/* rds() scale — keep in lock-step with ui-card.css (--ui-card-*) and content.css
-	   (--ui-content-*); single manifest source lands with R-13. The radius values and
-	   squircle exponents are NOT defined here: --radius-*, --radius-*-sq and
-	   --squircle-* all come from ui/base/tokens.css, which is the canonical scale —
-	   these blocks only route a token arg to a namespace.
-	   Corners on a STANDALONE <ui-media> (inside a card the host's overflow clipping
-	   owns the corners). non is the only spelling — rds(none) removed in v5. */
+	/* rds() scale — KEEP IN LOCK-STEP with ui-card.css (--ui-card-*) and content.css
+	   (--ui-content-*). Serves the STANDALONE frame; inside a card the host's
+	   overflow clipping owns the corners. See ui-card-tokens.md § Corners — "Three
+	   rds() blocks, one scale". */
 	:where([media*="rds(non)"]) { --ui-media-radius: 0; }
 	:where([media*="rds(sm)"])   { --ui-media-radius: var(--radius-sm); }
 	:where([media*="rds(md)"])   { --ui-media-radius: var(--radius-md); }
@@ -234,17 +196,11 @@
 	:where([media*="chip(bc)"]) ui-chip, :where([media*="sticker(bc)"]) ui-sticker, :where([media*="save(bc)"]) ui-save, :where([media*="play(bc)"]) ui-play, :where([media*="beacon(bc)"]) ui-beacon { inset-block: auto var(--_g); inset-inline: 50% auto; translate: -50% 0; }
 	:where([media*="chip(be)"]) ui-chip, :where([media*="sticker(be)"]) ui-sticker, :where([media*="save(be)"]) ui-save, :where([media*="play(be)"]) ui-play, :where([media*="beacon(be)"]) ui-beacon { inset-block: auto var(--_g); inset-inline: auto var(--_g); translate: none; }
 
-	/* ── Marquee — full-width scrolling band. Not a 9-grid point, so a band-only
-	   top/bot vocab (top = default). Sits at z-index 1, BELOW the z-2 furniture.
-	   Hue marquee(<hue>) and size marquee(sm|lg|xl|2xl) come from the component's
-	   own arms — those are `:where([media*="marquee(…)"]) &` in ui-marquee.css, so
-	   they already resolve from either placement.
-	   The POSITION args are R-14-step-4 migrated: one flag setter (matches host OR
-	   <ui-media>, no combinator) + one style query whose subject is <ui-marquee>,
-	   a CHILD of the frame — so the query reads the flag off <ui-media> whichever
-	   placement set it. `:where(ui-media)` is kept on the subject so the rule stays
-	   scoped to frames and at the same (0,0,1) specificity as the base rule above,
-	   which it must beat on source order. ── */
+	/* ── Marquee — full-width band (top/bot only, z-index 1, below the z-2
+	   furniture); position args are R-14-step-4 migrated. See media.md § Internals
+	   — "The marquee band's position args". `:where(ui-media)` stays on the query's
+	   subject: it holds the (0,0,1) specificity this rule must beat on source
+	   order. ── */
 	:where(ui-media) ui-marquee { position: absolute; inset-inline: 0; inset-block: 0 auto; z-index: 1; }
 	:where([media*="marquee(top)"]) { --_mrq: top; }
 	:where([media*="marquee(bot)"]) { --_mrq: bot; }
@@ -264,35 +220,18 @@
 		 (ts…be, above) are disjoint vocabularies, so one stem parses unambiguously. */
 
 	/* ============================================================
-		 SUB-THEME ROUTING moved into the components
-		 ------------------------------------------------------------
-		 chip(<hue>) / sticker(<hue>) colour and save(<hue>|<size>|non) each live
-		 in their own sheet (ui/{chip,sticker,save}/ui-*.css), combined in one
-		 nested rule with the standalone attribute (theme= / color= / size= /
-		 variant="non"), so there is a single source of truth. Only the shared
-		 positions — chip/sticker/save/play(<pos>) — stay here (above).
+		 SUB-THEME ROUTING moved into the components — chip/sticker/save colour
+		 lives in ui/{chip,sticker,save}/ui-*.css; only the shared positions stay
+		 here (above). See media.md § Internals — "Sub-theme routing lives in the
+		 components".
 		 ============================================================ */
 
 	/* ============================================================
-		 SCRIM — scm(). Three orthogonal axes on the furniture 3×3 grid:
-		   scm(<pos>)  direction — ts tc te cs cc ce bs bc be (matches chip/sticker)
-		   scm(<size>) extent    — sm md lg (how far the gradient reaches; md = default)
-		   scm(<int>)  intensity — shr lgt med drk sld (dark-end opacity; sheer/solid aliases)
-		 Compose freely, e.g. scm(bc) scm(lg) scm(drk). Bare scm paints the host
-		 ovr()-matched default. All nine gradients read shared colour + stop vars so
-		 size and intensity vary without re-baking per combination. (see media.md § Scrim)
-
-		 DECLARATION SCOPE (F-12, tightened in v5) — the nine gradient families are
-		 declared on exactly the three subjects that can read them, not on every
-		 [media]/[variant] host:
-		   :where(ui-media)          the painter (::after) and the standalone frame
-		   :where([media*="scm"])    any host carrying an scm token — it computes
-		                             --ui-media-scrim / --ui-media-scrim-paint here
-		   :where([variant*="ovr("]) the overlay host — ovr() writes
-		                             --ui-media-scrim-default: var(--ui-media-scrim-<pos>)
-		                             (ui-card.css), which must substitute on the HOST
-		 A card that uses neither scm nor ovr() never reads them and no longer
-		 carries 13 custom-property declarations for nothing.
+		 SCRIM — scm(). Direction × extent × intensity, freely composable; bare
+		 scm paints the host ovr()-matched default. The declaration scope below is
+		 F-12-tightened to the exact three subjects that read the gradients — see
+		 media.md § Scrim and § Internals — "Scrim — declaration scope and the RTL
+		 re-bake".
 		 ============================================================ */
 	:where(ui-media), :where([media*="scm"]), :where([variant*="ovr("]) {
 		--ui-media-scrim-c: var(--ui-media-scrim-color, rgb(0 0 0 / 0.78));
@@ -318,12 +257,10 @@
 		--ui-media-scrim-bc: linear-gradient(to top,          var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 		--ui-media-scrim-be: linear-gradient(to top left,     var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 	}
-	/* RTL — the scrim positions are spelled logically (ts…be, matching furniture), but
-	   linear-gradient() has no logical directions, so the six gradients that carry a
-	   left/right component are re-baked mirrored here. Without this a chip(ts) mirrors
-	   in rtl and its matching scm(ts) does not. tc/bc/cc are axis-pure (to bottom / to
-	   top / a vertical band) and never flip. Same 0-0-0 specificity, later in source.
-	   Subjects mirror the declaration scope above exactly. */
+	/* RTL — linear-gradient() has no logical directions, so the six gradients with a
+	   left/right component are re-baked mirrored here (tc/bc/cc are axis-pure and
+	   never flip). Same 0-0-0 specificity, later in source; subjects mirror the
+	   declaration scope above exactly. See media.md § Internals — "Scrim". */
 	:where(ui-media:dir(rtl)), :where([media*="scm"]:dir(rtl)), :where([variant*="ovr("]:dir(rtl)) {
 		--ui-media-scrim-ts: linear-gradient(to bottom left,  var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 		--ui-media-scrim-te: linear-gradient(to bottom right, var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));

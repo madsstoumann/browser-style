@@ -53,14 +53,10 @@
 	/* ============================================================
 	   CORNERS — rds(): round (global scale) or -sq (bespoke squircle)
 	   ============================================================ */
-	/* rds() scale — keep in lock-step with media.css (--ui-media-*) and content.css
-	   (--ui-content-*); single manifest source lands with R-13. The radius values and
-	   squircle exponents are NOT defined here: --radius-*, --radius-*-sq and
-	   --squircle-* all come from ui/base/tokens.css, which is the canonical scale —
-	   these blocks only route a token arg to a namespace.
-	   round — global radius scale. rds(non) is the only spelling (aligned with
-	   save(non), mrk(non)); the rds(none) alias was removed in v5. full/pill match
-	   the token names in tokens.css (--radius-circle / --radius-pill). */
+	/* rds() scale — KEEP IN LOCK-STEP with media.css (--ui-media-*) and content.css
+	   (--ui-content-*): a token added here must be added to both. Values live in
+	   ui/base/tokens.css. See ui-card-tokens.md § Corners — "Three rds() blocks,
+	   one scale". */
 	:where([variant~="rds(non)"]) { --ui-card-radius: 0; }
 	:where([variant~="rds(sm)"])   { --ui-card-radius: var(--radius-sm); }
 	:where([variant~="rds(md)"])   { --ui-card-radius: var(--radius-md); }
@@ -85,17 +81,9 @@
 	   theme + transparent-izes the fill). Author knobs: --ui-card-border-color
 	   / -width / -style. Substring match so bdr(md) alone also enables it.
 
-	   TWO ARMS, one hairline. On a card the host box IS the visible surface, so
-	   the border paints there. On a <ui-reveal> the host is a bare block and the
-	   rounded, shadowed, overflow-clipped surface is `> details` (ui-reveal.css) —
-	   painting on the host would draw a SQUARE outline around a rounded card. So
-	   the reveal arm moves the border one level in, where it inherits the same
-	   --ui-card-border-* knobs (custom properties, still declared on the host by
-	   the bdr(<size>)/bdr(<shade>) rules below) and picks up the details radius,
-	   which is already var(--ui-card-radius, …) — so rds() keeps working.
-	   The card arm keeps its exact original selector and (0,0,0); the reveal arm
-	   is (0,0,1) because it names a child element, matching every other
-	   `> details` rule in ui-reveal.css.
+	   TWO ARMS, one hairline: the card arm keeps (0,0,0); the reveal arm is (0,0,1)
+	   because it names `> details` — the rounded surface a reveal actually shows.
+	   See ui-card-tokens.md § Border and § Internals — "bdr".
 	   ============================================================ */
 	:where([variant*="bdr"]:not(ui-reveal)) {
 		border: var(--ui-card-border-width, var(--border-width, 1px)) var(--ui-card-border-style, solid) var(--ui-card-border-color, var(--color-border));
@@ -133,58 +121,15 @@
 	:where([variant~="vis(content)"]) ui-media { display: none; }
 
 	/* ============================================================
-	   SUB — the card joins its parent <lay-out>'s subgrid rows (F-38)
-
-	   `<lay-out lg="columns(3) subgrid" subgrid="4">` makes every DIRECT child a
-	   subgrid of N shared rows (layout/core/base.css: `display: grid` +
-	   `grid-row: span var(--_sg)` + `grid-template-rows: subgrid`, plus
-	   `container-type: normal` so the child's own inline-size container can't
-	   sever the chain). A card's parts, though, sit two wrappers deep —
-	   ui-card > cq-box > ui-content > eyebrow/headline/actions — and every
-	   wrapper breaks the chain. `sub` dissolves the wrappers (display: contents)
-	   so the leaf parts become the CARD's own grid items and auto-place onto the
-	   shared rows: media in row 1, then one content part per row, aligned across
-	   every card in the deck however differently their headlines wrap.
-
-	   NO BREAKPOINT IS NAMED HERE — and that is the whole mechanism. The
-	   layout's bare `subgrid` token only flips `--_subgrid: on` (a NON-inheriting
-	   registered property) on the <lay-out> itself, inside whichever @media the
-	   builder emitted it for. The card syncs to that live flag, never to a
-	   breakpoint of its own — so moving the markup from `lg="columns(3) subgrid"`
-	   to `xl="…"` (or `md=`, or several at once) needs NO card-side change: the
-	   flag goes on and off with the layout's own breakpoint, and `sub` goes on
-	   and off with the flag.
-
-	   TWO HOPS, because a style query resolves against the subject's PARENT.
-	   Hop 1's subject is the card, whose parent IS the <lay-out>, so it can see
-	   --_subgrid. Hop 2's subject is <cq-box>, whose parent is the card — which
-	   has no --_subgrid of its own precisely because that property does not
-	   inherit. So hop 1 relays the state into --_sub, an ordinary INHERITING
-	   custom property (deliberately NOT @property-registered: the default
-	   `inherits: true` is exactly what the relay needs), which the wrappers read.
-	   Verified in Chromium: the single-hop form — `@container style(--_subgrid:
-	   on) { … > cq-box { display: contents } }` — matches nothing.
-
-	   <ui-media> is deliberately NOT flattened: it IS the row-1 grid item.
-	   Dissolving it would drop asr()/rds()/scrim and spill its <img> plus any
-	   furniture across several rows instead of filling one.
-
-	   CONSEQUENCES — by design, documented rather than fought:
-	   • while flattened, <ui-content>'s box is gone, so its pad()/gap() have
-	     nothing to apply to; vertical rhythm comes from the LAYOUT's row gaps
-	     (--layout-rg / the `rg(N)` breakpoint token).
-	   • the subgrid engine sets container-type: normal on the card, so the card's
-	     own md:/lg: container tiers are suspended for as long as the flag is on.
-	   • <ui-reveal> is NOT a host for `sub`: its front face is
-	     `details > summary`, and dissolving those destroys the disclosure surface
-	     and the ::details-content animation. Use <ui-card> for subgridded decks.
+	   SUB — the card joins its parent <lay-out>'s subgrid rows (F-38).
+	   A two-hop flag relay; NO breakpoint is named here, `sub` syncs to the
+	   layout's live --_subgrid flag. Mechanism, the hop table, why <ui-media>
+	   stays a box and the by-design consequences: ui-card-tokens.md § `sub` and
+	   § Internals — "sub — the two-hop flag relay".
 	   ============================================================ */
-	/* boundary — a host nested inside another host starts OFF, so a subgridded
-	   outer card can't flatten an inner one that is not itself a direct child of
-	   an ON layout. Declared BEFORE the setter so the setter re-wins for an inner
-	   card that genuinely is one (both are zero-specificity :where(), so source
-	   order decides) — the same nearest-host-wins discipline content.typography.css
-	   uses for its size resets. */
+	/* boundary — declared BEFORE the setter so the setter re-wins for an inner card
+	   that genuinely is a direct child of an ON layout (both zero-specificity
+	   :where(), so source order decides). */
 	:where(ui-card, ui-reveal) :where(ui-card, ui-reveal) { --_sub: 0; }
 
 	/* hop 1 — the card reads its parent layout's live flag */
@@ -227,13 +172,8 @@
 		--ui-content-eyebrow-text-shadow: var(--ui-content-text-shadow);
 	}
 	/* POSITION VOCABULARY — logical ts tc te · cs cc ce · bs bc be, the ONE grid for
-	   the whole system (furniture, scm(), mrk(), reveal's ico()). ovr()'s
-	   implementation was always logical (justify/align/text-align: start|center|end),
-	   so the old PHYSICAL spellings were mislabelled — ovr(tl) already rendered
-	   top-END in rtl. Those six aliases (tl tr cl cr bl br) were REMOVED in v5; the
-	   centre column tc/cc/bc is spelled identically in both grids and is unaffected.
-	   obp() is now the system's only physical vocabulary (object-position has no
-	   logical keywords — see media.css). */
+	   the whole system. obp() is the only physical vocabulary left; ovr()'s six
+	   physical spellings were removed in v5 — see media.md § "Removed in v5". */
 	:where([variant*="ovr(ts)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-ts); }
 	:where([variant*="ovr(tc)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: center; --ui-content-ov-text: center; --ui-media-scrim-default: var(--ui-media-scrim-tc); }
 	:where([variant*="ovr(te)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-te); }
@@ -252,45 +192,24 @@
 	   THEMES — theme= (the shared cross-component axis). Ink crosses into the
 	   content namespace automatically via color-scheme + currentColor.
 	   ============================================================ */
-	/* Reader: surface + ink come from the resolved --_theme-* pair (see base/theme.css),
-	   both light-dark() so they adapt. Falls back to the default host surface when
-	   unthemed. Add the `dark`/`light` modifier (theme="black dark") to also flip
-	   color-scheme so the content ink ramp, eyebrow, tags, pills, form controls +
-	   scrollbars re-tone. Branded surface = theme="black" plus a --ui-card-dark-bg
-	   override (hooked in the --ui-theme-black-bg bundle). */
+	/* Reader: surface + ink come from the resolved --_theme-* pair (base/theme.css),
+	   both light-dark(). See ui-card-tokens.md § Internals — "theme=". */
 	:where(ui-card[theme]) {
 		--ui-card-bg: var(--_theme-bg, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));
 		color: var(--_theme-c, var(--color-text));
 	}
 
 	/* ============================================================
-	   RESPONSIVE — md:/lg: prefixes on variant= layout and content= spacing.
-	   content= SIZE (md:/lg: scl() and hl(<size>)) lives in content.typography.css:
-	   those rules must precede/follow the base size rules in a fixed source order
-	   (everything ties at :where() specificity), so the whole type cascade stays in
-	   one file. content tone/weight (eb/hl/tx/mt) and media= tokens are NOT
-	   breakpoint-prefixed this round — EXCEPT asr(), whose md:/lg: variants set
-	   --ui-media-ar per container width below (the aspect a card wants genuinely
-	   depends on how wide it renders: portrait in a 1-up carousel, landscape once
-	   it widens). Base asr() (media.css) is whole-token matched so it ignores these
-	   prefixed forms.
-	   TWO ARMS per token (R-14 step 3 / R-18). The HOST arm targets the queryable
-	   descendant (cq-box for card, summary for reveal) — setting the --ui-content-
-	   and --ui-media- props there (nearer than the host) overrides the base per
-	   container.
-	   The SELF arm targets the primitive itself, so a token placed directly on
-	   <ui-content>/<ui-media> — the renderer's canonical placement — works too;
-	   nearest-wins keeps precedence right (a declaration on the primitive beats the
-	   one it would otherwise inherit from cq-box). variant= gets NO self arm: it
-	   arranges the two children, so it belongs on the host by nature. */
+	   RESPONSIVE — md:/lg: prefixes on variant= layout and content= spacing, two
+	   arms per token (R-14 step 3 / R-18). content= SIZE lives in
+	   content.typography.css, where its source order is load-bearing.
+	   See ui-card-tokens.md § Internals — "Two arms per responsive token".
+	   ============================================================ */
 
 	/* md (>= 25rem)
-	   NAMED container (bs-card): an unnamed size query resolves against the subject's
-	   nearest size container, so a self-armed primitive standing outside a card could
-	   otherwise match an unrelated ancestor container and switch tiers off the wrong
-	   box's width (F-42). With the name, only ui-card/ui-reveal/lay-out-group match —
-	   and a standalone primitive opts into the tiers deliberately by wrapping it in a
-	   bs-card-named container: <div style="container: bs-card / inline-size">. */
+	   NAMED container (bs-card) — the name is load-bearing (F-42); an unnamed size
+	   query would let a self-armed primitive switch tiers off an unrelated ancestor.
+	   See ui-card-tokens.md § Internals — "The named bs-card container". */
 	@container bs-card (inline-size >= 25rem) {
 		:where([variant~="md:col"]) :is(cq-box, summary),
 		:where([variant~="md:col-r"]) :is(cq-box, summary)   { --ui-card-cols: 1fr; }
@@ -492,26 +411,11 @@
 }
 
 /* ============================================================
-   CROSS-DOCUMENT VIEW TRANSITIONS — outside @layer (@view-transition
-   is a top-level at-rule).
-
-   Add a data-view attribute to any card (and optionally its media <img>)
-   plus a matching one on the target page's container, link the two pages
-   with a regular <a> (see data-part="cover" in content.css), and the card
-   morphs across the navigation — both directions. Names come from the
-   attribute via CSS attr() (CSS Values 5, Chromium 133+) — no inline
-   styles, strict-CSP friendly. Where unsupported, the name resolves to
-   `none` and navigation degrades to a plain swap.
-
-   Both documents must be same-origin, and — critically — the incoming
-   page's named elements must exist in the DOM when the browser takes the
-   new-page snapshot. The snapshot races HTML parsing: if the parser hasn't
-   reached the card/hero yet, the morph silently degrades to a plain
-   root cross-fade (this is why a repeat/bfcache navigation can "stop
-   animating"). Render-block each incoming page until its named elements
-   are parsed — `<link rel="expect" href="#…" blocking="render">` in the
-   <head> (see ui/card/articles/build.js). Client-fetched content can't win
-   this race at all; server-render or pre-build the named markup.
+   CROSS-DOCUMENT VIEW TRANSITIONS — OUTSIDE @layer on purpose
+   (@view-transition is a top-level at-rule).
+   Setup, the attr()/CSP story and the snapshot-vs-parser race (which is why
+   each incoming page needs `<link rel="expect" … blocking="render">`):
+   ui-card-tokens.md § Internals — "Cross-document view transitions".
    ============================================================ */
 @view-transition { navigation: auto; }
 

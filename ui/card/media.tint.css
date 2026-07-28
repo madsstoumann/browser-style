@@ -3,36 +3,15 @@
  * @version 1.0.0
  * @author Mads Stoumann
  *
- * Wash the media image in a solid colour (brand / political red-blue etc.) with a
- * blended colour overlay on ui-media::before — a plain filter can't target an exact
- * colour (hue-rotate only rotates existing hues). Opt-in sheet, NOT bundled by
- * ui-card.css — link it where you tint (see media.html). Same @layer as media.css.
- *
- *   media="tnt(red)"                 named preset → --ui-theme-red-bg
- *   media="tnt"  style="--ui-media-tint-color:#c8102e"   any brand colour / gradient
- *   media="tnt(blue) hov(tint)"      fade the tint out on hover → reveal true colour
- *
- * Knobs: --ui-media-tint-color (default --color-accent — any CSS <color> OR a
- * gradient, since it's painted via `background`), --ui-media-tint-blend (default
- * color; set e.g. multiply/luminosity/screen for other looks), --ui-media-tint-opacity
- * (default 1).
- *
- * Layering: image (base) · tint ::before (z-1, blends with image) · scrim ::after
- * (z-1) · furniture (z-2). isolation:isolate scopes the blend to the frame.
+ * Wash the media image in a solid colour with a blended overlay on ui-media::before.
+ * OPT-IN sheet, NOT bundled by ui-card.css — link it where you tint (see
+ * media.tint.html). Same @layer as media.css. Usage, knobs, layering and the R-14
+ * flag rationale: media.md § Internals — "tnt() — the opt-in tint sheet".
  */
 @layer bs-component {
-	/* match bare `tnt` (arbitrary --ui-media-tint-color) AND `tnt(<key>)` presets —
-	   no other media= token contains the substring "tnt".
-
-	   R-14 step 4 (see the pattern note at the top of media.css). The PAINT is the
-	   textbook case for the flag: a ::before resolves its style query against its
-	   ORIGINATING element, so `ui-media::before` sees --_tnt whether the token set
-	   it on <ui-media> itself (self arm) or on the host and it inherited down.
-	   `isolation: isolate` is NOT migratable — its subject IS <ui-media>, and a
-	   container cannot restyle itself, so it keeps the two-arm form.
-	   Specificity is unchanged: the old `&::before` under the (0,0,1) host arm was
-	   (0,0,2), and so is the bare `ui-media::before` below — which the (0,0,2)
-	   `ui-media ui-media::before` nested-frame guard still beats on source order. */
+	/* `[media*="tnt"]` matches bare `tnt` AND `tnt(<key>)` — safe, no other media=
+	   token contains that substring. isolation:isolate keeps its two-arm form (its
+	   subject IS <ui-media> — a container cannot restyle itself). */
 	:where([media*="tnt"]) { --_tnt: 1; }
 	:where([media*="tnt"]) ui-media,
 	:where(ui-media[media*="tnt"]) { isolation: isolate; }

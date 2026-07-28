@@ -28,13 +28,11 @@
 	:where([content~="pad(xl)"])   { --ui-content-p: var(--spacing-xl); }
 	:where([content~="pad(2xl)"])  { --ui-content-p: var(--spacing-2xl); }
 
-	/* AXIS + SIDE padding — same value set as pad(), one slot each: pb()/pi() write
-	   the block/inline axis, pbs()/pbe()/pis()/pie() a single side. Precedence
-	   (side > axis > all) is resolved in the var() chain on the longhands below, not
-	   by the cascade, so the three stems compose in any order and at any breakpoint.
-	   Stems match /layout's spacing tokens (p/pi/pb/pbs/pbe/…) — same names, named
-	   --spacing-* steps instead of layout's numeric unit multiples. ~= (whole token)
-	   so base doesn't match the md:/lg: forms in ui-card.css. */
+	/* AXIS + SIDE padding — one slot each. Precedence (side > axis > all) is
+	   resolved in the var() chain on the longhands below, NOT by the cascade.
+	   ~= (whole token) so base doesn't match the md:/lg: forms in ui-card.css.
+	   See content.md § Internals — "Padding: the precedence lives in the var()
+	   chain". */
 	:where([content~="pb(none)"]) { --ui-content-pb: 0; }
 	:where([content~="pb(xs)"])   { --ui-content-pb: var(--spacing-xs); }
 	:where([content~="pb(sm)"])   { --ui-content-pb: var(--spacing-sm); }
@@ -90,14 +88,9 @@
 	:where([content~="gap(md)"])   { --ui-content-gap: var(--spacing-md); }
 	:where([content~="gap(lg)"])   { --ui-content-gap: var(--spacing-lg); }
 
-	/* plc(<cell>) — 3×3 placement of the content rows inside the column's box.
-	   Same nine logical cells as the media-furniture grid (ts…be) but NOT
-	   absolute positioning: the block letter drives justify-content (the flex
-	   column's main axis — visible only when the column is taller than its rows,
-	   e.g. a row card beside asr(1/1) media) and the inline letter drives
-	   align-items. ovr() placement (--ui-content-ov-*) keeps charge in overlay
-	   mode. Does not touch text-align — that's tal(). (The old combined ctr/end
-	   bare flags are removed — ctr ≈ plc(tc) tal(ctr), end ≈ plc(te) tal(end).) */
+	/* plc(<cell>) — 3×3 placement of the content rows: flex alignment, NOT absolute
+	   positioning, and it never touches text-align (that's tal()). See content.md
+	   § Internals — "plc() is flex alignment, not positioning". */
 	:where([content~="plc(ts)"]) { --ui-content-place-block: start;  --ui-content-place-inline: start; }
 	:where([content~="plc(tc)"]) { --ui-content-place-block: start;  --ui-content-place-inline: center; }
 	:where([content~="plc(te)"]) { --ui-content-place-block: start;  --ui-content-place-inline: end; }
@@ -130,16 +123,10 @@
 	/* ============================================================
 	   CORNERS — rds(): round (global scale) or -sq (bespoke squircle)
 	   ------------------------------------------------------------
-	   rds() scale — keep in lock-step with ui-card.css (--ui-card-*) and media.css
-	   (--ui-media-*); single manifest source lands with R-13. The radius values and
-	   squircle exponents are NOT defined here: --radius-*, --radius-*-sq and
-	   --squircle-* all come from ui/base/tokens.css, which is the canonical scale —
-	   these blocks only route a token arg to a namespace.
-	   For a STANDALONE <ui-content> that has been given a surface (theme=, author
-	   CSS): inside a card the host's overflow clipping already owns the corners, so
-	   the default 0 is inert there. Substring-matched like the other two rds()
-	   blocks — rds() has no md:/lg: forms to shadow, and rds(sm) is not a substring
-	   of rds(sm-sq). non is the only spelling — rds(none) removed in v5. */
+	   rds() scale — KEEP IN LOCK-STEP with ui-card.css (--ui-card-*) and media.css
+	   (--ui-media-*). Serves a STANDALONE <ui-content> given a surface; inside a card
+	   the host's clipping owns the corners, so the default 0 is inert there.
+	   See ui-card-tokens.md § Corners — "Three rds() blocks, one scale". */
 	:where([content*="rds(non)"]) { --ui-content-radius: 0; }
 	:where([content*="rds(sm)"])   { --ui-content-radius: var(--radius-sm); }
 	:where([content*="rds(md)"])   { --ui-content-radius: var(--radius-md); }
@@ -170,14 +157,9 @@
 		gap: var(--ui-content-gap, 1em);
 		justify-content: var(--ui-content-ov-justify, var(--ui-content-place-block, normal));
 		/* PADDING — four longhands, each resolving side → axis → all-sides. The
-		   precedence lives in the var() chain, NOT the cascade: whichever slot is
-		   filled nearest the front of the chain wins, whatever order the tokens were
-		   written in and whichever element declared them. A breakpoint therefore
-		   changes the VALUE in a slot, never the slot order — content="pbs(sm)
-		   lg:pad(xl)" keeps block-start at sm past 44rem, because the pbs slot is
-		   still filled. (Deliberately unlike CSS shorthand ordering.) --ui-content-p
-		   stays the all-sides slot, so every existing pad() token and the
-		   style="--ui-content-p" escape hatch keep working unchanged. */
+		   precedence lives in this var() chain, NOT the cascade; a breakpoint
+		   changes the VALUE in a slot, never the slot order. Do not flatten these
+		   into a shorthand. See content.md § Internals — "Padding". */
 		padding-block-start:  var(--ui-content-pbs, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
 		padding-block-end:    var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
 		padding-inline-start: var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
@@ -191,13 +173,10 @@
 	}
 
 	/* ============================================================
-	   SCROLL — content="scr": scrollable content with masked edges.
-	     scr / scr(y) — vertical (block axis; back-compat default)
-	     scr(x)       — horizontal (inline axis; a scrolling row)
-	   The @property/@keyframes and the --ui-scroll-fade-mask gradient are the
-	   shared scroll-fade primitive in ui/base/scroll.css (also used by ui-reveal).
-	   The mask direction follows --ui-scroll-fade-dir. ~= (whole token) so scr,
-	   scr(x), scr(y) are distinct and base doesn't substring-match a md:/lg: form.
+	   SCROLL — content="scr": scrollable content with masked edges. The @property/
+	   @keyframes and the --ui-scroll-fade-mask gradient are the shared primitive in
+	   ui/base/scroll.css. ~= (whole token) so scr, scr(x), scr(y) stay distinct.
+	   See content.md § Internals — "scr reuses the shared scroll-fade primitive".
 	   ============================================================ */
 	:where([content~="scr"]) ui-content, :where([content~="scr(y)"]) ui-content,
 	:where(ui-content[content~="scr"]), :where(ui-content[content~="scr(y)"]) {
@@ -260,15 +239,11 @@
 		text-transform: var(--ui-content-eyebrow-transform, uppercase); /* eb(flat) → none */
 	}
 
-	/* headline (and bare h2–h6) — Headings group.
-	   Rhythm defaults are mathematical, so they hold from sm to poster:
-	   - line-height: calc(1em + 0.25rem) — constant-leading formula. The extra
-	     leading is a fixed 0.25rem regardless of size, so the RATIO tightens as the
-	     type grows (md 1.75rem → 1.14; poster ~110px → ~1.04; asymptote → 1.0).
-	   - margin-block-end: 0.25em — modular rhythm; the space after the heading
-	     scales with the heading's own em (bigger title, proportionally bigger gap).
-	   This em rule (attribute/type specificity) wins over the container's
-	   `& > * { margin: 0 }` reset (0,0,0). Both vars stay overridable. */
+	/* headline (and bare h2–h6) — Headings group. Rhythm defaults are mathematical
+	   (constant leading + modular margin) so they hold from sm to poster; this rule
+	   carries attribute/type specificity, which is what beats the container's
+	   `& > * { margin: 0 }` reset at (0,0,0). See content.md § Internals —
+	   "Headline rhythm is mathematical". */
 	:where(ui-content) :is([data-part="headline"], h2, h3, h4, h5, h6) {
 		color: var(--ui-content-headline-ink, var(--ui-content-heading-ink, inherit));
 		font-family: var(--ui-content-heading-font, var(--font-heading, inherit)); /* --font-heading = inherit → follows fnt() unless hl(<font>) sets it */
@@ -330,12 +305,9 @@
 		}
 	}
 
-	/* tags (pill/chip list) — Meta group. A tag can be a plain link (styled as the
-	   bespoke pill below) OR a <ui-chip> child (which styles itself via ui-chip.css
-	   and unlocks the full chip colour palette / variants). The bespoke pill is the
-	   FALLBACK, scoped to links NOT inside a <ui-chip> so it never leaks onto the
-	   chip's own <a>. The container font-size joins the group; pill ink stays
-	   pill-driven (--ui-content-tag-color) since it sits on a fill. */
+	/* tags (pill/chip list) — Meta group. The bespoke pill below is the FALLBACK for
+	   a plain link, scoped to links NOT inside a <ui-chip> so it never leaks onto
+	   the chip's own <a>. See content.md § Internals — "Tags". */
 	:where(ui-content) [data-part="tags"] {
 		display: flex;
 		flex-wrap: wrap;

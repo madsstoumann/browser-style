@@ -15,44 +15,19 @@
 @import '../icon/index.css';
 
 /* ============================================================
-   CARD-RULE LEAK CHECKLIST — audit this list when adding card tokens.
-   ------------------------------------------------------------
-   ui-card.css writes many of its rules as host-scoped DESCENDANT selectors
-   (`:where([variant…]) ui-content`, `… :is(cq-box, summary)`). A <ui-reveal> is a
-   [variant] host, so those rules reach past the front face and into the revealed
-   panel, which is not a card area at all. Every one of them has to be counter-
-   reset below. Current undo list — keep it in sync:
-
-     1. ovr() ink + placement + z  (ui-card.css `ovr(` block, --ui-content-ov-*)
-        → undone by `> details > ui-content` (color / align-items /
-          justify-content / text-align / z-index), ~line 92 below.
-     2. vis(media)'s `ui-content { display: none }` (ui-card.css vis() rules)
-        → undone by the `display: flex` in the same block, ~line 95.
-     3. ovr()'s grid-area stacking (`:where([variant]) :is(ui-media, ui-content)`)
-        → undone by `grid-area: auto` in the same block, ~line 97.
-     4. content padding doubling (ui-content self-pads via --ui-content-p AND the
-        panel pads via --ui-reveal-content-p)
-        → undone by `> details[open]:has(> ui-content)::details-content { padding: 0 }`,
-          ~line 103.
-     5. type-scale decoupling for a panel with no content= of its own
-        → `> details > ui-content:not([content])`, ~line 107.
-     6. align-content (ui-card.css arrangement block) now DOES reach <summary> by
-        design (F-14) — that one is shared on purpose, not a leak.
-
-   When a new card token is added, ask: does its selector subject sit inside
-   `ui-reveal > details` without passing through `summary`/`ui-face`? If yes, it
-   leaks into the panel and needs an entry here. Long-term (v5) the card rules move
-   to front-face-scoped subjects and this list shrinks toward zero.
+   CARD-RULE LEAK CHECKLIST — AUDIT RULE, keep this marker.
+   When adding a card token, ask: does its selector subject sit inside
+   `ui-reveal > details` WITHOUT passing through `summary`/`ui-face`? If yes it
+   leaks into the revealed panel and needs a counter-reset here AND a row in the
+   checklist table: ui/card/ui-card-tokens.md § Internals (ui-reveal.css) —
+   "The card-rule leak checklist". Keep the two in sync.
    ============================================================ */
 
-/* Animation-dispatch flag — each variant= animation family writes ONE value
-   onto `> details` (exp | flp | sld | grw); the per-animation geometry blocks
-   below match it with style queries against the details container (named
-   bs-rvl), so every animation's tokens are enumerated exactly once, and the
-   lg: tier swaps the animation by re-flipping the flag instead of duplicating
-   geometry. NON-inheriting on purpose: a nested <ui-reveal>'s details must not
-   pick up an outer reveal's animation. Universal syntax needs no initial-value
-   (the guaranteed-invalid initial simply never matches a style query). */
+/* Animation-dispatch flag — one value per animation family on `> details`
+   (exp | flp | sld | grw), matched by style queries against the bs-rvl container.
+   NON-inheriting on purpose: a nested <ui-reveal>'s details must not pick up an
+   outer reveal's animation. See ui/card/ui-card-tokens.md § Internals — "The
+   --_rvl animation-dispatch flag". */
 @property --_rvl { syntax: "*"; inherits: false; }
 
 @layer bs-component {
@@ -116,13 +91,10 @@
 			transition: display var(--ui-reveal-duration, var(--duration-slower)) allow-discrete;
 		}
 
-		/* back content â an optional generic <ui-content> placed AFTER <summary>.
-		   It inherits the card typography + data-part engine, but the front-only
-		   ov() overlay leaks via descendant selectors, so neutralise it here:
-		   render as a normal flow column on the panel background. The back keeps
-		   its own content padding (--ui-content-p, settable with pad()), and the panel
-		   padding is zeroed below so they don't double. color resets the ov()
-		   white to the panel ink (--ui-reveal-content-c) or inherited dark. */
+		/* back content — the leak-checklist counter-resets (items 1-3): an optional
+		   generic <ui-content> after </summary>, with the front-only ovr() overlay
+		   neutralised. See ui/card/ui-card-tokens.md § Internals — "The card-rule
+		   leak checklist". */
 		> details > ui-content {
 			color: var(--ui-reveal-content-c, inherit); /* neutralise the ov() white; palette or inherit (dark) */
 			align-items: normal;
@@ -135,12 +107,9 @@
 		}
 		/* a ui-content back self-pads â drop the panel padding so it isn't doubled */
 		> details[open]:has(> ui-content)::details-content { padding: 0; }
-		/* Type-scale decoupling for a panel that carries NO content= of its own.
-		   The tested attribute is content= — an explicit content= on the back (scl(),
-		   hl(), tx(), …) means the author wants the panel to size itself through the
-		   content DSL, and this reset would otherwise out-specify it. (The previous
-		   comment here described a variant= test naming fs()/th() — both pre-v4
-		   spellings that no longer exist. The selector is what ships.) */
+		/* leak-checklist item 5 — type-scale decoupling for a panel with NO content=
+		   of its own. The tested attribute is content= on purpose; see
+		   ui/card/ui-card-tokens.md § Internals — "Why #5 tests content=". */
 		> details > ui-content:not([content]) {
 			--ui-content-fs: var(--ui-reveal-content-fs, var(--font-size-base));
 			--ui-content-headline: var(--ui-reveal-content-headline, var(--ui-content-headline-md));
@@ -275,13 +244,10 @@
 	/* exp pop — HOST-side popup styling (a container can't style itself, so
 	   this block stays attribute-keyed; pop only exists with exp) */
 	:where(ui-reveal[variant~="exp"]) {
-		/* popup: keep the OUTER ui-reveal in normal flow as a placeholder â
-		   reserve the closed tile's cell via its ar so siblings don't reflow (no
-		   background layout shift). Only the INNER <details> goes fixed. Backdrop
-		   sits on ui-reveal::before, NOT details::before: details runs a scale
-		   transform (ui-reveal-pop) which makes it the containing block for fixed
-		   descendants + clips them via overflow:hidden. ui-reveal has no transform,
-		   so its fixed ::before fills the viewport. */
+		/* popup: only the INNER <details> goes fixed; the outer <ui-reveal> stays in
+		   flow as a placeholder, and the backdrop sits on ui-reveal::before (details
+		   runs a transform, so it would contain + clip a fixed child). See
+		   ui/card/ui-card-tokens.md § Internals — "pop". */
 		&[variant~="pop"]:has(> details[open]) {
 			--ui-reveal-expand-m: 2ch;
 			aspect-ratio: var(--ui-media-ar, 3/4);
@@ -543,12 +509,10 @@
 	}
 }
 
-/* === popup escape hatch â <lay-out> sets `contain: layout inline-size`
-   (layout.base layer), and layout containment makes it the containing block
-   for the fixed popup, trapping it inside the grid cell area. While a popup
-   is open, drop the `layout` keyword (keep inline-size, so track sizing is
-   untouched) so the popup's inset resolves against the viewport again.
-   Unlayered on purpose: beats layout.base regardless of stylesheet order. */
+/* === popup escape hatch — UNLAYERED on purpose: it must beat <lay-out>'s
+   `contain: layout inline-size` (@layer layout.base) regardless of stylesheet
+   order, or layout containment traps the fixed popup in the grid cell. Do not
+   move this into a layer. See ui/card/ui-card-tokens.md § Internals — "pop". === */
 lay-out:has(ui-reveal[variant~="exp"][variant~="pop"] > details[open]) {
 	contain: inline-size;
 }

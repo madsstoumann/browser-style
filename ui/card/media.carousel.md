@@ -122,12 +122,33 @@ because `object-position` has no logical keywords. Furniture uses the logical se
   which is imported first — so carousel rules win ties on source order).
 - **The `nav` token is the trigger.** `:where([media*="nav"])` turns `<ui-media>` into a
   flex scroll-snap row. Without it, `<ui-media>` is a plain single-image frame.
-- **Dual-selector form.** Every rule lists two selectors so the same option works from
-  `media=` on the card host or on the element itself — and this pair is exactly the
-  "stops at the card" scoping rule, expressed in CSS (only `ui-card`/`ui-reveal`
-  qualify as hosts, never arbitrary ancestors):
-  - host form (card-scoped): `:where(ui-card, ui-reveal):where([media*="x"]) ui-media …`
-  - self form: `ui-media:where([media*="x"]) …`
+- **Dual arm, one selector (R-14 step 1).** Carousel tokens set **real** properties on the
+  frame, so the same option has to work from `media=` on the card host *or* on the element
+  itself — and that pair is exactly the "stops at the card" scoping rule expressed in CSS
+  (only `ui-card`/`ui-reveal` qualify as hosts, never arbitrary ancestors). Each rule used
+  to be written twice; both arms are now folded into **one** selector anchored on the frame:
+
+  ```css
+  ui-media:where([media*="nav"], :is(ui-card, ui-reveal)[media*="nav"] *)
+   self arm ──────┘              └────── host arm (media= stops at the card host)
+  ```
+
+  **`ui-media` stays OUTSIDE the `:where()`** — that is what keeps every rule at the exact
+  specificity both arms had, `(0,0,1)` plus whatever the subject adds; everything inside
+  the `:where()` stays zero-specificity. This is a different idiom from the R-14 **step 4**
+  inherited-flag pattern used in `media.css` (see [media.md](./media.md#internals-mediacss-mediahovercss-mediatintcss)):
+  the carousel bundle cannot use flags at all, because its real properties *are* the
+  scroller box — `display`/`overflow`/`box-sizing`/`padding`/`inline-size`/`scrollbar-*`
+  all land on `<ui-media>` itself, and a container cannot restyle itself.
+
+- **One asymmetry that is NOT factored.** The `<ui-play>` placement rule keeps its two arms
+  written out, because they differ on purpose: the **host** arm excludes nested frames
+  (`:not(ui-media ui-media)`), the **self** arm does not. Folding them would silently apply
+  that exclusion to the self arm too. Its needles are also **whole-token**
+  (`[media~="auto"], [media*="auto("], [media~="loop"]`), mirroring `carousel.js`'s
+  `AUTO`/`LOOP`: a bare `[media*="loop"]` would once have fired on `marquee(loop)` and
+  turned a single-image frame into a sticky-`<ui-play>` scroller. `auto` needs both
+  spellings because it has a parameterized form `auto(4s)`; `loop` has none.
 - **`@supports (scroll-marker-group: after)` gate.** Dots (`::scroll-marker`) and arrows
   (`::scroll-button`) are Chromium-only; everything inside that block degrades to a bare
   swipe/scroll-snap row elsewhere.
@@ -213,6 +234,29 @@ to the base frame (grid, `overflow: hidden`, abspos images), out-specifying the 
 descendant rules (0,0,1). The carousel-specific **control suppression** stays here in
 `@supports` (`scroll-marker-group: none`, `::scroll-button { display:none }`,
 `::scroll-marker { content: none }`).
+
+## `media="pages"` — the wrapper dissolve
+
+On a `<ui-media>` scroller, the `<lay-out>` children are **page wrappers** (e.g.
+`md="columns(3)"`). Below the layout system's `md` viewport breakpoint (540px) each page
+dissolves — `display: contents` drops the wrapper's box, so every card becomes its own
+full-width snap target instead of the page stacking into one tall column.
+
+Same word, same intent as the math-paging `pages` flag on `<lay-out overflow>`
+(`layout/core/base.css`): *"this carousel navigates by pages, and adapts on mobile"* — the
+mechanism follows from the markup shape.
+
+- The grandchild slide / marker / stagger arms are viewport-scoped to the **same** query
+  (markers in `ui/base/carousel.css`, stagger in `ui/base/stagger.css`). A boxless wrapper
+  generates **no** `::scroll-marker`, so its page dot vanishes for free.
+- **CSS-only**: `carousel.js`'s `slidesOf()` still counts the wrapper as one slide, so
+  `auto`/`loop` never see through the dissolve.
+- **The dissolve rule itself ships UNLAYERED, on purpose** — the same escape-hatch pattern
+  as the reveal popup rule. The wrapper's `display: grid` comes from `@layer layout.base`,
+  which outranks `bs-component` by layer order, so a layered arm here could never flip it;
+  unlayered author styles beat every layer. The grandchild arms stay layered, because they
+  set properties the layout layer does not touch. The `OUTSIDE @layer on purpose` marker in
+  `media.carousel.css` records this — do not "tidy" that rule into the layer.
 
 ## Markers
 

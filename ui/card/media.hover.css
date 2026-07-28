@@ -11,48 +11,13 @@
  * CSS-only: zoom pan shape gray blur bright dim sat rot-r rot-l tilt-out tilt-in
  * JS-assisted (need --ui-media-mx/my from index.js): track drift tilt
  *
- * All animated properties share ONE transition list on the image so effects
- * compose (e.g. hov(shape) hov(zoom)) without clobbering each other's transition.
- *
- * ONE ARM, VIA AN INHERITED FLAG (R-14 step 4). A hov() token sets REAL properties
- * on the image, and a real declaration does not inherit — so reaching the image
- * from either attribute placement used to need two selector arms (folded into one
- * `ui-media:where(<tok>, <tok> *)` selector in v4). Now the token sets an
- * INHERITING flag with a single combinator-free selector that matches BOTH
- * placements, and one style query applies the properties:
- *
- *     :where([media*="hov(zoom)"]:is(:hover, :focus-within)) { --_hv-zoom: 1; }
- *     @container style(--_hv-zoom: 1) {
- *       ui-media :is(iframe, img, picture, video) { scale: …; }
- *     }
- *
- * The subject's container is <ui-media>: token on the frame → the flag is set
- * there directly; token on the host → it inherits down. Either way the query sees
- * it. See the pattern note at the top of media.css for the full rationale, the
- * boundary reset (which lives there and lists every flag), and the support posture.
- *
- * WHERE THE HOVER STATE IS READ — two shapes, deliberately different:
- *   • Effects whose :hover sat on the TOKEN HOLDER (zoom, pan, tilt-out, tilt-in,
- *     rot-r, rot-l, shape) put :hover/:focus-within on the FLAG SETTER, so hovering
- *     anywhere in the card still fires a card-placed token.
- *   • Effects whose :hover sat on the FRAME (drift, tilt overfill) keep :hover on
- *     the subject INSIDE the query — `ui-media:hover :is(…)`. The flag only gates;
- *     the frame's own hover still selects. That preserves the (0,1,2) specificity
- *     those rules always had.
- *
- * SPECIFICITY is unchanged at (0,0,2) for every image rule — which is what lets
- * hov(shape) beat shp()'s own clip-path (media.css, also (0,0,2), earlier in
- * source). Both are now the same `ui-media :is(iframe, img, picture, video)` shape
- * inside a style query, so the win is plain source order rather than a hand-tuned
- * selector — the v4 note warning not to fold `ui-media` into the :where() no longer
- * applies, because there is no :where() left to fold it into.
- *
- * NOT MIGRATED — hov(tilt*)'s `perspective`, whose subject IS <ui-media>. A
- * container cannot restyle itself, so from the self arm no ancestor carries the
- * flag; it keeps the two-arm form (marked at its site below).
+ * ONE ARM, VIA AN INHERITED FLAG (R-14 step 4) — the whole family sets an
+ * inheriting --_hv-* flag and applies its properties from a style query. The two
+ * hover-state shapes, the (0,0,2) specificity contract vs shp(), the shared
+ * transition list and the @property-registered filter vars are all explained in
+ * media.md § Internals — "Where the hover state is read". Every flag is registered
+ * in the boundary-reset block at the top of media.css.
  */
-/* filter vars are registered so they INTERPOLATE — a plain custom property changes
-   discretely (the filter would jump), @property makes the transition smooth. */
 @property --_f-gray   { syntax: "<number>"; inherits: true; initial-value: 0; }
 @property --_f-blur   { syntax: "<length>"; inherits: true; initial-value: 0px; }
 @property --_f-bright { syntax: "<number>"; inherits: true; initial-value: 1; }

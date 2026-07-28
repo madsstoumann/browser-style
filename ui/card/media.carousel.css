@@ -3,15 +3,9 @@
  * stagger engine AND its carousel trigger wiring in /ui/base/stagger.css.
  * Internals: media.carousel.md · tokens: carousel.md
  *
- * DUAL ARM, ONE SELECTOR (R-14 step 1). Carousel tokens set REAL properties on the
- * frame, so each rule used to be written twice — once for the token on the host,
- * once for the token on the <ui-media>. Both arms are now folded into ONE selector
- * anchored on the frame:
- *     ui-media:where([media*="nav"], :is(ui-card, ui-reveal)[media*="nav"] *)
- *      self arm ──────┘              └────── host arm (media= stops at the card host)
- * The `ui-media` stays OUTSIDE the :where() so every rule keeps the exact
- * specificity both arms had ((0,0,1) + whatever the subject adds); everything
- * inside stays zero-specificity. */
+ * DUAL ARM, ONE SELECTOR (R-14 step 1) — see media.carousel.md § Foundations.
+ * `ui-media` stays OUTSIDE the :where() so every rule keeps the exact specificity
+ * both arms had; everything inside stays zero-specificity. */
 @layer bs-component {
 	:where(ui-card, ui-reveal, ui-media):where([media*="nav"]) {
 		--ui-media-bg: #0000;
@@ -39,18 +33,9 @@
 		inset: auto;
 		position: static;
 	}
-	/* media="pages" on a ui-media scroller — its <lay-out> children are PAGE
-	   wrappers (e.g. md="columns(3)"), and below the layout system's md viewport
-	   breakpoint each page dissolves: display:contents drops the wrapper's box, so
-	   each card becomes its own full-width snap target instead of the page stacking
-	   into one tall column. Same word, same intent as the math-paging `pages` flag
-	   on <lay-out overflow> (layout/core/base.css) — "this carousel navigates by
-	   pages, and adapts on mobile"; the mechanism follows from the markup shape.
-	   The grandchild slide/marker/stagger arms are viewport-scoped to the same
-	   query (markers: ui/base/carousel.css, stagger: ui/base/stagger.css — a
-	   boxless wrapper generates NO ::scroll-marker, so its page dot vanishes for
-	   free). CSS-only: carousel.js's slidesOf() still counts the wrapper as one
-	   slide, so auto/loop don't see through the dissolve. */
+	/* media="pages" — the grandchild slide/marker/stagger arms, viewport-scoped to
+	   the same query as the (unlayered) wrapper dissolve at the foot of this file.
+	   See media.carousel.md § `media="pages"` — the wrapper dissolve. */
 	@media (width < 540px) {
 		ui-media:where([media~="pages"], :is(ui-card, ui-reveal)[media~="pages"] *) > lay-out > * {
 			block-size: 100%;
@@ -89,12 +74,9 @@
 	}
 
 	/* NOT factored: the two arms are asymmetric on purpose — the host arm excludes
-	   nested frames (:not(ui-media ui-media)), the self arm doesn't. Folding them
-	   would silently apply that exclusion to the self arm too.
-	   WHOLE-TOKEN needles, mirroring carousel.js's AUTO/LOOP (carousel.js:160-161):
-	   a bare [media*="loop"] also fires on marquee(loop), which would turn a
-	   single-image frame into a sticky-<ui-play> scroller. `auto` needs both
-	   spellings because it has a parameterized form (auto(4s)); `loop` has none. */
+	   nested frames (:not(ui-media ui-media)), the self arm doesn't.
+	   WHOLE-TOKEN needles, mirroring carousel.js's AUTO/LOOP.
+	   See media.carousel.md § Foundations — "One asymmetry that is NOT factored". */
 	:where(ui-card, ui-reveal):where([media~="auto"], [media*="auto("], [media~="loop"]) ui-media:not(ui-media ui-media) > ui-play,
 	ui-media:where([media~="auto"], [media*="auto("], [media~="loop"]) > ui-play {
 		align-content: var(--_play-block, end);
@@ -238,12 +220,10 @@
 	}
 }
 
-/* media="pages" dissolve — OUTSIDE @layer on purpose (same escape-hatch pattern
-   as the reveal popup rule): the wrapper's `display: grid` comes from
-   @layer layout.base, which outranks bs-component by layer order, so a layered
-   arm here could never flip it. Unlayered author styles beat every layer. The
-   grandchild slide/marker/stagger arms stay layered (they set properties the
-   layout layer doesn't touch) — see the media="pages" block inside the layer. */
+/* media="pages" dissolve — OUTSIDE @layer on purpose: the wrapper's `display: grid`
+   comes from @layer layout.base, which outranks bs-component, so a layered arm here
+   could never flip it. Do not move this into the layer.
+   See media.carousel.md § `media="pages"` — the wrapper dissolve. */
 @media (width < 540px) {
 	ui-media:where([media~="pages"], :is(ui-card, ui-reveal)[media~="pages"] *) > lay-out {
 		display: contents;

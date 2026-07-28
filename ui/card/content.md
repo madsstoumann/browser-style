@@ -798,6 +798,173 @@ All modern browsers.
 | Scroll-driven `ui-scroll-fade` mask (`scr`) | Chrome 115+ (graceful fallback to a plain scroll) |
 | `::details-content` (reveal panel styling) | Chrome 131+, with fallbacks |
 
+---
+
+## Internals (`content.css`, `content.typography.css`)
+
+> The *why* behind the two sheets. These sections used to live as essay-length
+> comment blocks in the CSS; the files keep one-line pointers back here plus the
+> guardrail markers a future editor must not delete.
+
+### Why the type layer is its own file
+
+`content.typography.css` owns the scale stops, the master step `scl()`, the relational
+ladders, the four styling groups (`eb`/`hl`/`tx`/`mt`) and `fnt()`. `content.css` keeps
+spacing, container, scroll and the parts, and reads the group base props written over there
+(`--ui-content-body-fs` for Body, `--ui-content-meta-base` for Meta). The split means a
+standalone `<ui-content>` consumer gets the **whole** responsive type system from one file.
+
+### Source order is load-bearing
+
+Everything in the type layer is `:where()` — zero specificity on the host form, and the
+`:is(cq-box, summary)` descendant forms all tie — so the cascade is decided purely by
+**order within the file**:
+
+```
+base scl()  <  md:scl()  <  lg:scl()  <  base hl()  <  md:hl()  <  lg:hl()
+```
+
+`scl()` writes `--ui-content-headline` directly (the master default), and an explicit
+`hl(<size>)` must beat it at **every** breakpoint. That is exactly why the responsive
+`scl()`/`hl()` rules live in this file rather than with the other responsive tokens in
+`ui-card.css`, and why the `hl()` block sits after every `scl()` form. Moving either
+silently changes which one wins at a tier.
+
+### Dual-declared size tokens, and why the `>` matters
+
+Size tokens are declared **twice** — on the token host *and* on the host's own queryable
+descendant:
+
+```
+ui-card[content]       > cq-box
+lay-out-group[content] > cq-box
+ui-reveal[content]     > details > summary
+```
+
+`var()` substitution happens where a custom property is **declared**, so only a
+re-declaration on `cq-box`/`summary` can pick up a responsive `md:`/`lg:` `scl()` ladder
+remap made there.
+
+The `>` is deliberate: the dual declaration is scoped to the host's **own** box, not the
+broad `:is(cq-box, summary)` the `md:`/`lg:` rules use. Without it, a size token on an outer
+group would reach into nested cards and beat their nearer `scl()`/size declarations —
+breaking nearest-host-wins.
+
+The **`lay-out-group` arm** exists because a group is a `bs-card` container too (R-16,
+`layout/core/group.css`) and takes the same `content=` tokens on the attribute-on-group
+authoring shape (`<lay-out-group content> > <cq-box>`). Without it, a group header's
+`md:`/`lg:` `scl()` ladder remapped on the `cq-box` while its `hl()`/`eb()`/`tx()`/`mt()`
+size stayed resolved against the base ladder on the host — the header size simply never
+moved with the responsive step.
+
+The `md:`/`lg:` size queries are **named** (`bs-card`) for the same F-42 reason as the rest
+of the system: a self-armed standalone primitive must never resolve its tiers against an
+unrelated ancestor container.
+
+### `scl(fix)` — the static stop mapping
+
+`scl(fix)` re-points every stop from its fluid `cqi` clamp to the global static scale
+(`--font-size-*` in `ui/base/tokens.css`):
+
+| | sm | md | lg | xl | 2xl | 3xl |
+|---|---|---|---|---|---|---|
+| body | `sm` | `base` | `lg` | `xl` | `2xl` | — |
+| headline | `xl` | `2xl` | `3xl` | `5xl` | `6xl` | `7xl` |
+
+The headline `3xl→5xl` skip mirrors the fluid ramp's own big `lg→xl` jump. Because
+`scl()`/`hl()`/the ladder are pure indirection through the stop vars, *everything* still
+works — steps, relational shifting, `md:`/`lg:` jumps — just between static sizes.
+
+**The one specificity exception in the file.** The stop-definition rule matches every
+`ui-content`/`[content]` element, so `fix` must also re-declare on descendants — and its
+**self** form must match the descendant form's `(0,1,0)`, hence `:is()` rather than
+`:where()`. Otherwise a nested host's own mode token would lose to an ancestor's descendant
+rule on the host element itself. `scl(fluid)` comes after `fix` in source, so on a tie fluid
+wins — an explicit `scl(fluid)` cannot be re-fixed further down. Neither is `md:`/`lg:`
+prefixable: they are **modes**, not steps. Both write only stop vars, so they never collide
+with the `(0,0,1)` size rules.
+
+### The four styling groups
+
+Each group has a family token writing a group-level prop. A part reads its own
+`--ui-content-{part}-X`, then the group `--ui-content-{group}-X`, then a default — so a group
+token restyles the whole group while a per-part `style=` still overrides one part.
+
+| Group | Token | Parts |
+|---|---|---|
+| Eyebrow | `eb()` | eyebrow |
+| Headings | `hl()` | headline (+ bare `h2`–`h6`), subheadline |
+| Body | `tx()` | summary, quote, list, address, timeline, price, stat |
+| Meta | `mt()` | meta, caption, byline, footer, tags, rating, options |
+
+Four **disjoint** arg vocabularies, so whole-token matching can never confuse them: tone
+(`shr lgt med drk sld accent inv`), size (`sm md lg xl`, plus `2xl 3xl` on `hl`), weight
+(`300`–`900`), plus the flags `eb(flat)` (drops uppercase) and `hl(grad)` (gradient
+headline). Size args read the ladder with an absolute fallback — fixed without `scl()`,
+shifted with it.
+
+`scl(md)` writes the identity ladder **explicitly**, so a nested `scl(md)` resets an
+ancestor's shifted ladder. Ladder values inherit as unresolved token streams (`clamp()` is
+not evaluated inside custom properties), so they re-resolve wherever a size token
+re-declares.
+
+### Headline rhythm is mathematical
+
+The headline defaults hold from `sm` to poster without a per-size table:
+
+- `line-height: calc(1em + 0.25rem)` — a **constant-leading** formula. The extra leading is a
+  fixed `0.25rem` whatever the size, so the *ratio* tightens as the type grows (md 1.75rem →
+  1.14; poster ~110px → ~1.04; asymptote → 1.0).
+- `margin-block-end: 0.25em` — **modular** rhythm: the space after the heading scales with
+  the heading's own em.
+
+This rule carries attribute/type specificity, so it wins over the container's
+`& > * { margin: 0 }` reset at `(0,0,0)`. Both vars stay overridable.
+
+### `plc()` is flex alignment, not positioning
+
+`plc(<cell>)` uses the same nine logical cells as the media-furniture grid, but it is **not**
+absolute positioning: the block letter drives `justify-content` (the flex column's main axis
+— visible only when the column is taller than its rows, e.g. a row card beside `asr(1/1)`
+media) and the inline letter drives `align-items`. `ovr()` placement
+(`--ui-content-ov-*`) stays in charge in overlay mode, and `plc()` never touches
+`text-align` — that is `tal()`.
+
+`wid()`'s cap rides the **rows**, not the column box (`& > * { max-inline-size: … }`), so
+`plc()`'s inline letter can still place the capped rows within the column.
+
+### Padding: the precedence lives in the `var()` chain
+
+Four longhands, each resolving side → axis → all-sides:
+
+```css
+padding-block-start: var(--ui-content-pbs, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
+```
+
+Precedence is therefore **not** cascade-based: whichever slot is filled nearest the front of
+the chain wins, whatever order the tokens were written in and whichever element declared
+them. That is what makes the seven padding stems compose in any order and at any breakpoint
+— see *Precedence: side beats axis beats all-sides* above. The stems match `/layout`'s
+spacing tokens (`p`/`pi`/`pb`/`pbs`/`pbe`/…) — same names, named `--spacing-*` steps instead
+of layout's numeric unit multiples. All are whole-token (`~=`) matched so the base rules
+never substring-match the `md:`/`lg:` forms declared in `ui-card.css`.
+
+### `scr` reuses the shared scroll-fade primitive
+
+`content="scr"` / `scr(y)` scroll the block axis (`scr` is the back-compat default);
+`scr(x)` scrolls the inline axis as a row. The `@property`/`@keyframes` and the
+`--ui-scroll-fade-mask` gradient are **not** defined here — they are the shared primitive in
+`ui/base/scroll.css`, also used by `<ui-reveal>`; the mask direction follows
+`--ui-scroll-fade-dir`. Whole-token matched so `scr`, `scr(x)` and `scr(y)` stay distinct.
+
+### Tags: bespoke pill as the fallback
+
+A tag can be a plain link (styled as the bespoke pill) **or** a `<ui-chip>` child, which
+styles itself via `ui-chip.css` and unlocks the full chip colour palette and variants. The
+bespoke pill is the **fallback**, scoped to links *not* inside a `<ui-chip>` so it never
+leaks onto the chip's own `<a>`. The container font-size joins the Meta group; pill ink
+stays pill-driven (`--ui-content-tag-color`), since it sits on a fill.
+
 Graceful degradation: the muted ink falls back to the inherited color where `color-mix()` is unavailable, and leading-trim is simply skipped without `text-box` — the layout stays intact either way.
 
 `cqi` has **two** distinct fallback stories, and only the first is about support:
