@@ -209,6 +209,47 @@
 	<p class="note">For overlay (<code>ovr()</code>), scrim (<code>scm</code>), squircle corners (<code>rds(*-sq)</code>) and other media-backed treatments, see <a href="media.html">media.html</a> — this page is the text-only side.</p>
 
 	<!-- ============================================================
+	     Placement — plc(<cell>): the 3×3 grid, via flex alignment
+	     ============================================================ -->
+	<h2>Placement — <code>plc(&lt;cell&gt;)</code></h2>
+	<p class="note">The same nine logical cells as the media furniture grid (<code>ts tc te · cs cc ce · bs bc be</code>), but via <strong>align/justify</strong>, not absolute positioning: the block letter drives <code>justify-content</code>, the inline letter <code>align-items</code>. The full-width row cards below (media <code>asr(1/1)</code>, content beside it — alternating <code>row-r</code>/<code>row</code>) give the column room on both axes so every cell is visible. Text alignment is untouched — that's <a href="#tal"><code>tal()</code></a>.</p>
+	<div>
+		<ui-card variant="row-r" media="asr(1/1)" content="plc(ts)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(ts)</small><h2 data-part="headline">Top start</h2><p data-part="summary">Rows gather at the block start, each aligned to the inline start. This is closest to the no-token default.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row" media="asr(1/1)" content="plc(tc)"><cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(tc)</small><h2 data-part="headline">Top center</h2><p data-part="summary">Rows gather at the block start, each centred on the inline axis. Note the text itself still reads start-aligned.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row-r" media="asr(1/1)" content="plc(te)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(te)</small><h2 data-part="headline">Top end</h2><p data-part="summary">Rows gather at the block start, pushed to the inline end. In RTL every cell mirrors automatically.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row" media="asr(1/1)" content="plc(cs)"><cq-box><ui-media><img src="/assets/images/world.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(cs)</small><h2 data-part="headline">Center start</h2><p data-part="summary">The column centres vertically beside the square media. A common editorial look for side-by-side cards.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row-r" media="asr(1/1)" content="plc(cc)"><cq-box><ui-media><img src="/assets/images/finance.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(cc)</small><h2 data-part="headline">Dead center</h2><p data-part="summary">Centred on both axes. Combine with tal(ctr) below when the text should centre too.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row" media="asr(1/1)" content="plc(ce)"><cq-box><ui-media><img src="/assets/images/hubble.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(ce)</small><h2 data-part="headline">Center end</h2><p data-part="summary">Vertically centred, hugging the inline end. Pairs naturally with a row card whose media sits at the start.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row-r" media="asr(1/1)" content="plc(bs)"><cq-box><ui-media><img src="/assets/images/quantum.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(bs)</small><h2 data-part="headline">Bottom start</h2><p data-part="summary">Rows sink to the block end, aligned to the inline start. The classic caption position.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row" media="asr(1/1)" content="plc(bc)"><cq-box><ui-media><img src="/assets/images/websummit.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(bc)</small><h2 data-part="headline">Bottom center</h2><p data-part="summary">Sunk to the block end and centred inline. The block letter only bites when the column is taller than its rows.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row-r" media="asr(1/1)" content="plc(be)"><cq-box><ui-media><img src="/assets/images/destinations.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(be)</small><h2 data-part="headline">Bottom end</h2><p data-part="summary">Both axes at their end. The ninth cell completes the same grid the furniture and ovr() use.</p></ui-content></cq-box></ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Width — wid(<size>): text measure, default 65ch prose
+	     ============================================================ -->
+	<h2>Width — <code>wid(&lt;size&gt;)</code></h2>
+	<p class="note">Caps the text measure — each content row's <code>max-inline-size</code>. The no-token default is the prose measure <code>--width-prose</code> (65ch); the ladder is <code>sm</code> 35ch · <code>md</code> 50ch · <code>lg</code> 65ch · <code>xl</code> 80ch · <code>2xl</code> 100% (no cap). No <code>xs</code> step — the type ladders start at <code>sm</code>; only the spacing scale has an <code>xs</code>. The cap rides the rows, not the column, so <code>plc()</code>'s inline letter still places a narrow measure within a wide column.</p>
+	<div>
+		<ui-card variant="row-r" media="asr(1/1)" content="wid(sm)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""></ui-media><ui-content><small data-part="eyebrow">wid(sm)</small><h2 data-part="headline">35ch measure</h2><p data-part="summary">The tightest step — sidebar notes and captions, where a long line would dwarf the type.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row" media="asr(1/1)" content="wid(md)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt=""></ui-media><ui-content><small data-part="eyebrow">wid(md)</small><h2 data-part="headline">50ch measure</h2><p data-part="summary">A compact reading column — short summaries stay comfortable without spanning the card.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row-r" media="asr(1/1)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""></ui-media><ui-content><small data-part="eyebrow">default · wid(lg)</small><h2 data-part="headline">65ch prose</h2><p data-part="summary">The no-token default — the classic prose measure from --width-prose, also reachable explicitly as wid(lg).</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row" media="asr(1/1)" content="wid(xl)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""></ui-media><ui-content><small data-part="eyebrow">wid(xl)</small><h2 data-part="headline">80ch measure</h2><p data-part="summary">A wide editorial column — leadier text for hero rows where the default would feel narrow.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row-r" media="asr(1/1)" content="wid(2xl)"><cq-box><ui-media><img src="/assets/images/city.png" alt=""></ui-media><ui-content><small data-part="eyebrow">wid(2xl)</small><h2 data-part="headline">Full width</h2><p data-part="summary">No cap at all — every row spans the column. Use sparingly; long lines cost readability.</p></ui-content></cq-box></ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Text alignment — tal(): start / ctr / end
+	     ============================================================ -->
+	<h2 id="tal">Text alignment — <code>tal()</code></h2>
+	<p class="note"><code>tal(start)</code> (the no-token default) · <code>tal(ctr)</code> · <code>tal(end)</code>. Pure <code>text-align</code> — combine with <code>plc()</code> to move the block and align the text independently. The legacy bare flags <code>ctr</code>/<code>end</code> still set both at once; <code>tal()</code> wins when both are present.</p>
+	<div>
+		<ui-card variant="row-r" media="asr(1/1)" content="tal(start) plc(cs)"><cq-box><ui-media><img src="/assets/images/game_01.png" alt=""></ui-media><ui-content><small data-part="eyebrow">tal(start) · plc(cs)</small><h2 data-part="headline">Start aligned</h2><p data-part="summary">The reading default — ragged-right in LTR, ragged-left in RTL. Explicit tal(start) also resets an inherited centre.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row" media="asr(1/1)" content="tal(ctr) plc(cc)"><cq-box><ui-media><img src="/assets/images/game_02.png" alt=""></ui-media><ui-content><small data-part="eyebrow">tal(ctr) · plc(cc)</small><h2 data-part="headline">Centered text</h2><p data-part="summary">Centred type over a centred block — the symmetric hero treatment, without touching the overlay system.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row-r" media="asr(1/1)" content="tal(end) plc(ce)"><cq-box><ui-media><img src="/assets/images/janesmith.png" alt=""></ui-media><ui-content><small data-part="eyebrow">tal(end) · plc(ce)</small><h2 data-part="headline">End aligned</h2><p data-part="summary">Type ragged toward the media — a mirrored look for alternating rows like these.</p></ui-content></cq-box></ui-card>
+	</div>
+
+	<!-- ============================================================
 	     Headline sizes — hl(<size>) incl. 3xl
 	     ============================================================ -->
 	<h2>Headline sizes — <code>hl(&lt;size&gt;)</code></h2>

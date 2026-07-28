@@ -3109,6 +3109,120 @@ export default {
 					],
 					"notes": "NEW this round (R-10b) and aimed at the STANDALONE <ui-content> — inside a card the host rounds itself and clips the inner areas via overflow: hidden, so the default 0 is inert there. SUBSTRING matched (`[content*=\"rds(sm)\"]`), unlike every other content token except scr's companion arms: safe because rds() has no md:/lg: forms to shadow and `rds(sm)` is not a substring of `rds(sm-sq)` (the closing paren separates them). Same scale and the same `none` -> `non` alias as variant='s and media='s rds(); values come from ui/base/tokens.css. The -sq shape rule is a second substring selector on `-sq)` with both arms (`:where([content*=\"-sq)\"]) ui-content` and `:where(ui-content[content*=\"-sq)\"])`) and is this token's real property (corner-shape: superellipse)."
 				},
+				"plc": {
+					"axis": "placement",
+					"element": null,
+					"args": {
+						"pos": [
+							"ts",
+							"tc",
+							"te",
+							"cs",
+							"cc",
+							"ce",
+							"bs",
+							"bc",
+							"be"
+						]
+					},
+					"argAliases": {},
+					"bare": false,
+					"matching": "whole",
+					"writes": [
+						"--ui-content-place-block",
+						"--ui-content-place-inline"
+					],
+					"realProperties": false,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-content",
+						"ui-card",
+						"ui-reveal",
+						"lay-out-group",
+						"any-ancestor"
+					],
+					"requiresJs": {},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/card/content.css:100"
+					],
+					"notes": "3x3 placement of the content rows inside the column's box — the same nine logical cells as the media-furniture grid, but via flex alignment, NOT absolute positioning: block letter -> justify-content (start|center|end; visible only when the column is taller than its rows, e.g. a row card beside asr(1/1) media), inline letter -> align-items. Sits UNDER the ovr() slots (--ui-content-ov-align/-justify win in overlay mode) and ABOVE the legacy ctr/end flags in the inline chain. Does not touch text-align — that's tal()."
+				},
+				"wid": {
+					"axis": "measure",
+					"element": null,
+					"args": {
+						"size": [
+							"sm",
+							"md",
+							"lg",
+							"xl",
+							"2xl"
+						]
+					},
+					"argAliases": {},
+					"bare": false,
+					"matching": "whole",
+					"writes": [
+						"--ui-content-max"
+					],
+					"realProperties": false,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-content",
+						"ui-card",
+						"ui-reveal",
+						"lay-out-group",
+						"any-ancestor"
+					],
+					"requiresJs": {},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/card/content.css:120"
+					],
+					"notes": "Text measure — caps each content row's max-inline-size: sm 35ch, md 50ch, lg 65ch, xl 80ch, 2xl 100% (no cap). The no-token default is the prose measure --width-prose (65ch), applied to ui-content's direct children so plc()'s inline letter can still place the capped rows. scr(x) rows are exempt (they must overflow). No xs step — the type ladders start at sm; only the spacing scale has xs. ch values stay un-tokenized by design."
+				},
+				"tal": {
+					"axis": "alignment",
+					"element": null,
+					"args": {
+						"value": [
+							"start",
+							"ctr",
+							"end"
+						]
+					},
+					"argAliases": {},
+					"bare": false,
+					"matching": "whole",
+					"writes": [
+						"--ui-content-text-align"
+					],
+					"realProperties": false,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-content",
+						"ui-card",
+						"ui-reveal",
+						"lay-out-group",
+						"any-ancestor"
+					],
+					"requiresJs": {},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/card/content.css:128"
+					],
+					"notes": "Explicit text-align: start (the no-token default), ctr, end. Outranks ovr()'s implied per-cell text alignment (unlike plc, which sits under the ov-* slots) and the legacy ctr/end flags' text half."
+				},
 				"scr": {
 					"axis": "scroll",
 					"element": null,
@@ -3146,6 +3260,64 @@ export default {
 						"ui/base/scroll.css"
 					],
 					"notes": "Scrollable content column with a masked fade edge. Bare `scr` == `scr(y)` (vertical, back-compat default) sets max-block-size / overflow-y / overscroll-behavior / scrollbar-width; `scr(x)` is a horizontal row — it flips --ui-scroll-fade-dir to `to right`, sets flex-flow: row nowrap + white-space: nowrap and forces `flex: 0 0 auto` on the children (they must not shrink or they would reflow instead of overflowing), with an extra flex-wrap: nowrap override for [data-part=\"tags\"] placed AFTER the tags rule so it wins at equal specificity. Whole-token (~=) so scr, scr(x) and scr(y) stay distinct. TWO ARMS everywhere (ancestor arm `:where([content~=\"scr\"]) ui-content` + self arm `:where(ui-content[content~=\"scr\"])`) because the effect is real properties on the <ui-content> box. The animation-timeline / mask half is gated on @supports (animation-timeline: scroll()) and prefers-reduced-motion; the @property, @keyframes ui-scroll-fade and --ui-scroll-fade-mask are the shared primitive in ui/base/scroll.css (also used by reveal's variant=scr). HOMONYM of variant='s reveal `scr`."
+				},
+				"ctr": {
+					"axis": "alignment",
+					"element": null,
+					"args": {},
+					"argAliases": {},
+					"bare": true,
+					"matching": "whole",
+					"writes": [
+						"--ui-content-align"
+					],
+					"realProperties": false,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-content",
+						"ui-card",
+						"ui-reveal",
+						"lay-out-group",
+						"any-ancestor"
+					],
+					"requiresJs": {},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/card/content.css:97-98"
+					],
+					"notes": "Legacy bare flag: sets --ui-content-align: center — BOTH the column's cross-axis (align-items) and text-align in one prop. plc()/tal() are the fine-grained forms and win when present. Kept live (not deprecated); prefer plc()/tal() in new code."
+				},
+				"end": {
+					"axis": "alignment",
+					"element": null,
+					"args": {},
+					"argAliases": {},
+					"bare": true,
+					"matching": "whole",
+					"writes": [
+						"--ui-content-align"
+					],
+					"realProperties": false,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-content",
+						"ui-card",
+						"ui-reveal",
+						"lay-out-group",
+						"any-ancestor"
+					],
+					"requiresJs": {},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/card/content.css:97-98"
+					],
+					"notes": "Legacy bare flag: sets --ui-content-align: end — BOTH the column's cross-axis (align-items) and text-align in one prop. plc()/tal() are the fine-grained forms and win when present. Kept live (not deprecated); prefer plc()/tal() in new code."
 				}
 			},
 			"bareFlags": {

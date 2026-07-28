@@ -116,6 +116,9 @@ Argument vocabularies, the custom properties each token writes, and which tokens
 | `mt()` | type-group | **size** sm md lg xl · **tone** shr lgt med drk sld accent inv · **weight** 300 400 500 600 700 800 900 · **flag** shd | — | — | --ui-content-meta-ink --ui-content-meta-weight --ui-content-meta-text-shadow --ui-content-meta-base | — | — |
 | `fnt()` | font | **font** body head serif mono form | — | — | --ui-content-font | — | — |
 | `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | none→non | — | --ui-content-radius --ui-content-squircle-exp | — | — |
+| `plc()` | placement | **pos** ts tc te cs cc ce bs bc be | — | — | --ui-content-place-block --ui-content-place-inline | — | — |
+| `wid()` | measure | **size** sm md lg xl 2xl | — | — | --ui-content-max | — | — |
+| `tal()` | alignment | **value** start ctr end | — | — | --ui-content-text-align | — | — |
 | `scr()` | scroll | **value** x y | — | yes | --ui-scroll-fade-dir | — | — |
 | `ctr` | alignment | — | — | yes | --ui-content-align | — | — |
 | `end` | alignment | — | — | yes | --ui-content-align | — | — |
@@ -136,7 +139,10 @@ What each one is *for*:
 | `pbs()` `pbe()` `pis()` `pie()` | padding, **one side** — block-start / block-end / inline-start / inline-end | **Yes** |
 | `rds()` | corners on a **standalone** `<ui-content>` (`--ui-content-radius`) | No |
 | `gap()` | row gap between parts (`--ui-content-gap`) | **Yes** |
-| `ctr` / `end` | *(bare flags)* standalone cross-axis + text alignment — centre / end the whole content column (`--ui-content-align`), independent of `ovr()` overlay placement | No |
+| `plc()` | 3×3 placement of the content rows inside the column's box — same nine logical cells as the furniture grid, via flex alignment (block letter → `justify-content`, inline letter → `align-items`; NOT absolute positioning). Sits under the `ovr()` slots, above `ctr`/`end` | No |
+| `wid()` | text measure — caps each row's `max-inline-size`: `sm` 35ch · `md` 50ch · `lg` 65ch · `xl` 80ch · `2xl` 100%. No-token default = `--width-prose` (65ch); `scr(x)` rows exempt | No |
+| `tal()` | explicit `text-align` — `start` (default) / `ctr` / `end`; outranks `ovr()`'s implied per-cell text alignment and the `ctr`/`end` flags' text half | No |
+| `ctr` / `end` | *(legacy bare flags)* combined cross-axis + text alignment — centre / end the whole content column (`--ui-content-align`) in one word, independent of `ovr()` overlay placement. `plc()`/`tal()` are the fine-grained forms and win when present | No |
 | `scr` / `scr(y)` / `scr(x)` | *(bare flag + axis arg)* scrollable content + shared `ui-scroll-fade` edge mask (`ui/base/scroll.css`). Bare `scr` = `scr(y)` = vertical column; `scr(x)` = horizontal row | No |
 
 **Tone** (ink strength + hue): `shr` (30%) · `lgt` (45%) · `med` (65%, = muted) · `drk` (85%) · `sld` (100%, theme text) · `accent` · `inv` (white, for overlays).

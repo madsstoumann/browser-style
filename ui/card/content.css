@@ -91,9 +91,46 @@
 	:where([content~="gap(lg)"])   { --ui-content-gap: var(--spacing-lg); }
 
 	/* ctr / end — standalone text + cross-axis alignment (independent of ov()
-	   overlay placement). Centres/ends the whole content column. */
+	   overlay placement). Centres/ends the whole content column. Legacy combined
+	   flags — plc() + tal() below are the fine-grained forms. */
 	:where([content~="ctr"]) { --ui-content-align: center; }
 	:where([content~="end"]) { --ui-content-align: end; }
+
+	/* plc(<cell>) — 3×3 placement of the content rows inside the column's box.
+	   Same nine logical cells as the media-furniture grid (ts…be) but NOT
+	   absolute positioning: the block letter drives justify-content (the flex
+	   column's main axis — visible only when the column is taller than its rows,
+	   e.g. a row card beside asr(1/1) media) and the inline letter drives
+	   align-items. ovr() placement (--ui-content-ov-*) keeps charge in overlay
+	   mode; the legacy ctr/end flags keep working one slot further down the
+	   inline chain. Does not touch text-align — that's tal(). */
+	:where([content~="plc(ts)"]) { --ui-content-place-block: start;  --ui-content-place-inline: start; }
+	:where([content~="plc(tc)"]) { --ui-content-place-block: start;  --ui-content-place-inline: center; }
+	:where([content~="plc(te)"]) { --ui-content-place-block: start;  --ui-content-place-inline: end; }
+	:where([content~="plc(cs)"]) { --ui-content-place-block: center; --ui-content-place-inline: start; }
+	:where([content~="plc(cc)"]) { --ui-content-place-block: center; --ui-content-place-inline: center; }
+	:where([content~="plc(ce)"]) { --ui-content-place-block: center; --ui-content-place-inline: end; }
+	:where([content~="plc(bs)"]) { --ui-content-place-block: end;    --ui-content-place-inline: start; }
+	:where([content~="plc(bc)"]) { --ui-content-place-block: end;    --ui-content-place-inline: center; }
+	:where([content~="plc(be)"]) { --ui-content-place-block: end;    --ui-content-place-inline: end; }
+
+	/* wid(<size>) — text measure: caps each content row's inline size. The
+	   no-token default is the prose measure --width-prose (65ch); 2xl lifts the
+	   cap. The ch values stay un-tokenized by design (content-relative). No xs
+	   step — the type ladders (scl/hl/eb/tx/mt) start at sm; only the spacing
+	   scale (pad/gap) has an xs. */
+	:where([content~="wid(sm)"])  { --ui-content-max: 35ch; }
+	:where([content~="wid(md)"])  { --ui-content-max: 50ch; }
+	:where([content~="wid(lg)"])  { --ui-content-max: 65ch; }
+	:where([content~="wid(xl)"])  { --ui-content-max: 80ch; }
+	:where([content~="wid(2xl)"]) { --ui-content-max: 100%; }
+
+	/* tal(<kw>) — explicit text alignment; start is the no-token default.
+	   Explicit intent, so it outranks ovr()'s implied per-cell text alignment
+	   (unlike plc(), which sits under the ov-* slots). */
+	:where([content~="tal(start)"]) { --ui-content-text-align: start; }
+	:where([content~="tal(ctr)"])   { --ui-content-text-align: center; }
+	:where([content~="tal(end)"])   { --ui-content-text-align: end; }
 
 	/* ============================================================
 	   CORNERS — rds(): round (global scale) or -sq (bespoke squircle)
@@ -128,7 +165,7 @@
 	   CONTAINER — flex column; ov() placement/ink read from props
 	   ============================================================ */
 	:where(ui-content) {
-		align-items: var(--ui-content-ov-align, var(--ui-content-align, normal));
+		align-items: var(--ui-content-ov-align, var(--ui-content-place-inline, var(--ui-content-align, normal)));
 		border-radius: var(--ui-content-radius, 0); /* rds(); inert (0) unless set — a card host clips its own corners */
 		color: var(--ui-content-ov-ink, inherit);
 		display: flex;
@@ -136,7 +173,7 @@
 		font-family: var(--ui-content-font, var(--font-body));
 		font-size: var(--ui-content-fs, var(--ui-content-fs-md));
 		gap: var(--ui-content-gap, 1em);
-		justify-content: var(--ui-content-ov-justify, normal);
+		justify-content: var(--ui-content-ov-justify, var(--ui-content-place-block, normal));
 		/* PADDING — four longhands, each resolving side → axis → all-sides. The
 		   precedence lives in the var() chain, NOT the cascade: whichever slot is
 		   filled nearest the front of the chain wins, whatever order the tokens were
@@ -150,10 +187,12 @@
 		padding-block-end:    var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
 		padding-inline-start: var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
 		padding-inline-end:   var(--ui-content-pie, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
-		text-align: var(--ui-content-ov-text, var(--ui-content-align, start));
+		text-align: var(--ui-content-text-align, var(--ui-content-ov-text, var(--ui-content-align, start)));
 		z-index: var(--ui-content-ov-z, auto);
 
-		& > * { margin: 0; text-box: cap alphabetic; }
+		/* wid() text measure — the cap rides the rows, not the column box, so
+		   plc()'s inline letter can still place the capped rows within it */
+		& > * { margin: 0; max-inline-size: var(--ui-content-max, var(--width-prose, 65ch)); text-box: cap alphabetic; }
 	}
 
 	/* ============================================================
@@ -187,7 +226,7 @@
 		white-space: nowrap;
 	}
 	:where([content~="scr(x)"]) ui-content > *,
-	:where(ui-content[content~="scr(x)"]) > * { flex: 0 0 auto; }
+	:where(ui-content[content~="scr(x)"]) > * { flex: 0 0 auto; max-inline-size: none; /* a scrolling row must overflow — the wid()/prose cap would clamp it */ }
 	/* the tags <ul> nowrap override lives AFTER the tags part rule (below) so it
 	   wins the cascade at equal specificity — see the scr(x) block there. */
 	@supports (animation-timeline: scroll()) {
