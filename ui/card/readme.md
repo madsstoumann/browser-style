@@ -413,6 +413,9 @@ The core surface — frame, layout, overlay furniture, scrim, themes, type ramp 
 | `::scroll-marker` / `::scroll-button` + `anchor()` (carousel markers/arrows) | Chromium-only |
 | `corner-shape: superellipse()` (`rds(*-sq)` squircles) | Chrome 135+ |
 | `text-box: cap alphabetic` (leading trim) | Chrome 133+ |
+| `@container style()` (`hov()`, `tnt`, `shp()`'s clip, `marquee()` placement) | Chrome 111+, Safari 18+, Firefox 128+ |
+
+**v5 support posture:** in v5 those four token families moved from duplicated selectors to an inherited `--_*` flag read by a `@container style()` query, so the token works identically whether it sits on the host or on `<ui-media>`. On **older Firefox** they now no-op — the frame simply renders un-hovered / un-tinted / un-clipped. Nothing else is affected: images, aspect ratio, scrim, furniture and every carousel control avoid style queries entirely. Full rationale and the list of tokens that can never migrate: [`media.md` § v5 support posture](media.md#v5-support-posture--style-queries).
 
 **Graceful degradation:** the carousel always remains a native, swipeable scroll-snap row even without `::scroll-marker` / `anchor()` (the markers/arrows simply don't appear). The scrim and the overlay markers are pure CSS and need no JS. Squircle corners fall back to the bespoke radius without the superellipse shape. Where `cqi` / `color-mix()` are unavailable, the type ramp resolves at its preferred value and ink falls back to the inherited color — the layout stays intact.
 

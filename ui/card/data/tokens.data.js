@@ -50,7 +50,7 @@ export default {
 						"ui/card/media.css:34",
 						"ui/card/ui-card.css:303"
 					],
-					"notes": "Value rules are whole-token (~=) so md:/lg: forms don't leak into the base. MIXED matching: the min-block-size:0 reset (media.css:34-35) is substring [media*=\"asr(\"] and ships both arms, so a prefixed-only asr() also drops the 12.5rem floor. md:/lg: rules (ui-card.css:303,401) are dual-armed: host arm :is(cq-box, summary) + self arm ui-media[media~=…], inside the NAMED @container bs-card. ui-media-srcset.js:93 also reads asr(w/h) (substring) to pick the CDN srcset ratio."
+					"notes": "Value rules are whole-token (~=) so md:/lg: forms don't leak into the base. MIXED matching: the min-block-size:0 reset (media.css:34-35) is substring [media*=\"asr(\"] and ships both arms (NOT R-14-step-4 migratable: its subject IS <ui-media>, and a style query resolves against the subject's nearest ANCESTOR, so the self arm would have no flag holder to read), so a prefixed-only asr() also drops the 12.5rem floor. md:/lg: rules (ui-card.css:303,401) are dual-armed: host arm :is(cq-box, summary) + self arm ui-media[media~=…], inside the NAMED @container bs-card. ui-media-srcset.js:93 also reads asr(w/h) (substring) to pick the CDN srcset ratio."
 				},
 				"obp": {
 					"axis": "position",
@@ -144,7 +144,7 @@ export default {
 						"ui/card/media.css:119",
 						"ui/card/media.css:123"
 					],
-					"notes": "corner-shape: superellipse() is applied by a stem-less needle [media*=\"-sq)\"] (media.css:123, dual arm), not by rds( itself. Serves the STANDALONE frame; inside a card the host's overflow:hidden owns the corners (see the parallel --ui-card-* scale, ui-card.css:64-80). A nested frame under clip= gets --ui-media-radius:0 (media.css:50)."
+					"notes": "corner-shape: superellipse() is applied by a stem-less needle [media*=\"-sq)\"] (media.css, dual arm), not by rds( itself. The dual arm is permanent: corner-shape's subject IS <ui-media>, so R-14 step 4's flag pattern cannot reach it (a container cannot restyle itself). Serves the STANDALONE frame; inside a card the host's overflow:hidden owns the corners (see the parallel --ui-card-* scale, ui-card.css:64-80). A nested frame under clip= gets --ui-media-radius:0 (media.css:50)."
 				},
 				"obf": {
 					"axis": "fit",
@@ -266,7 +266,8 @@ export default {
 						"--_r5",
 						"--_r5l",
 						"--_r5r",
-						"--_ell"
+						"--_ell",
+						"--_shp-clip"
 					],
 					"realProperties": true,
 					"cqPrefixes": [],
@@ -281,11 +282,11 @@ export default {
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
-						"ui/card/media.css:144",
+						"ui/card/media.css:196",
 						"ui/card/media.shapes.css:19",
 						"ui/card/media.shapes.css:41"
 					],
-					"notes": "Split: the CLIP MECHANISM (background:#0000 on the frame + clip-path on the image, dual arm at (0,0,2)) ships in media.css:144-148; the 32-shape LIBRARY is the OPT-IN sheet media.shapes.css, which must be linked separately. Any custom --ui-media-shape works without the library. hov(shape)/hov(shape-rev) morph to --ui-shape-morph; shape-rev swaps the pair (media.shapes.css:36). rhomb/hex/star/plus read --shp-* glyphs from ui/base/shapes.css."
+					"notes": "Split: the CLIP MECHANISM (background:#0000 on the frame + clip-path on the image) ships in media.css; the 32-shape LIBRARY is the OPT-IN sheet media.shapes.css, which must be linked separately. R-14 step 4 (v5): the real-property rules are now ONE flag setter + ONE @container style() block instead of two selector arms — style queries need Chromium 111+ / Safari 18+ / Firefox 128+, see media.md § \"v5 support posture\". The image clip-path is flag-driven (--_shp-clip, subject `ui-media :is(iframe, img, picture, video)` at (0,0,2)); the frame's transparent background is NOT migrated — its subject IS <ui-media>, so it keeps the two-arm form. Any custom --ui-media-shape works without the library. hov(shape)/hov(shape-rev) morph to --ui-shape-morph and win on source order (media.hover.css is imported after media.css); shape-rev swaps the pair (media.shapes.css). rhomb/hex/star/plus read --shp-* glyphs from ui/base/shapes.css."
 				},
 				"hov": {
 					"axis": "hover",
@@ -321,7 +322,21 @@ export default {
 						"--_f-gray",
 						"--_f-blur",
 						"--_f-bright",
-						"--_f-sat"
+						"--_f-sat",
+						"--_hv-any",
+						"--_hv-zoom",
+						"--_hv-pan",
+						"--_hv-track",
+						"--_hv-drift",
+						"--_hv-tilt",
+						"--_hv-tiltx",
+						"--_hv-tilt-out",
+						"--_hv-tilt-in",
+						"--_hv-rot-r",
+						"--_hv-rot-l",
+						"--_hv-shape",
+						"--_hv-filter",
+						"--_hv-tint"
 					],
 					"realProperties": true,
 					"cqPrefixes": [],
@@ -340,12 +355,12 @@ export default {
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
-						"ui/card/media.hover.css:48",
-						"ui/card/media.hover.css:134",
-						"ui/card/media.tint.css:61",
+						"ui/card/media.hover.css:75",
+						"ui/card/media.hover.css:96",
+						"ui/card/media.tint.css:70",
 						"ui/card/hover.js:56"
 					],
-					"notes": "17 values in five families (scale · cursor · 3D/rotate · clip · filter) + tint. DUAL ARM, ONE SELECTOR: `ui-media:where(<tok>, <tok> *)` with ui-media OUTSIDE the :where() to keep (0,0,2) — required so hov(shape) beats shp()'s own clip-path. Two needles are paren-less on purpose: [media*=\"hov(tilt\"] matches tilt/tilt-in/tilt-out, [media*=\"hov(shape\"] matches shape/shape-rev. hov(tint) lives in the OPT-IN media.tint.css:61 (not bundled by ui-card.css). Filter vars are @property-registered so they interpolate. Cursor effects need --ui-media-mx/my from hover.js; all effects are gated on @media (hover: hover) and pinned under prefers-reduced-motion."
+					"notes": "17 values in five families (scale · cursor · 3D/rotate · clip · filter) + tint. R-14 step 4 (v5): the real-property rules are now ONE flag setter + ONE @container style() block instead of two selector arms — style queries need Chromium 111+ / Safari 18+ / Firefox 128+, see media.md § \"v5 support posture\". Each value sets an inheriting --_hv-* flag with a combinator-free `:where([media*=\"hov(…)\"])` selector that matches the host AND the <ui-media>, and one style query applies the image rules (subject `ui-media :is(iframe, img, picture, video)`, still (0,0,2) — so hov(shape) beats shp()'s own clip-path on source order, no hand-tuned selector needed). Effects whose :hover sat on the FRAME (drift, tilt overfill) keep `ui-media:hover` on the subject inside the query; the rest read :hover/:focus-within on the flag setter, so a card-placed token still fires from anywhere in the card. hov(tilt*)'s `perspective` is NOT migrated — its subject IS <ui-media> and a container cannot restyle itself, so it keeps the folded two-arm selector. Two needles are paren-less on purpose: [media*=\"hov(tilt\"] matches tilt/tilt-in/tilt-out, [media*=\"hov(shape\"] matches shape/shape-rev. hov(tint) lives in the OPT-IN media.tint.css (not bundled by ui-card.css). Filter vars are @property-registered so they interpolate. Cursor effects need --ui-media-mx/my from hover.js; all effects are gated on @media (hover: hover) and pinned under prefers-reduced-motion."
 				},
 				"tnt": {
 					"axis": "tint",
@@ -367,7 +382,9 @@ export default {
 					"bare": true,
 					"matching": "substring",
 					"writes": [
-						"--ui-media-tint-color"
+						"--ui-media-tint-color",
+						"--_tnt",
+						"--_hv-tint"
 					],
 					"realProperties": true,
 					"cqPrefixes": [],
@@ -382,11 +399,11 @@ export default {
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
-						"ui/card/media.tint.css:26",
-						"ui/card/media.tint.css:48",
-						"ui/card/media.tint.css:56"
+						"ui/card/media.tint.css:36",
+						"ui/card/media.tint.css:58",
+						"ui/card/media.tint.css:66"
 					],
-					"notes": "OPT-IN sheet (media.tint.css) — NOT imported by ui-card.css. Bare `tnt` paints --ui-media-tint-color (default --color-accent) via ui-media::before with mix-blend-mode. Knobs: --ui-media-tint-blend (default color), --ui-media-tint-opacity. tnt(slate) resolves to its OWN --ui-theme-slate-bg bundle — slate is a canonical hue, never an alias of gray. The tnt(dark)/tnt(light)/tnt(subtle) aliases were removed in v5. Nested frames suppress the second tint (media.tint.css:41)."
+					"notes": "OPT-IN sheet (media.tint.css) — NOT imported by ui-card.css. Bare `tnt` paints --ui-media-tint-color (default --color-accent) via ui-media::before with mix-blend-mode. R-14 step 4 (v5): the real-property rules are now ONE flag setter + ONE @container style() block instead of two selector arms — style queries need Chromium 111+ / Safari 18+ / Firefox 128+, see media.md § \"v5 support posture\". The paint is the textbook flag case: a ::before resolves its style query against its ORIGINATING element, so `ui-media::before` reads --_tnt from either attribute placement. `isolation: isolate` is NOT migrated — its subject IS <ui-media>, so it keeps the two-arm form. hov(tint) uses one flag with two values (idle/on). Knobs: --ui-media-tint-blend (default color), --ui-media-tint-opacity. tnt(slate) resolves to its OWN --ui-theme-slate-bg bundle — slate is a canonical hue, never an alias of gray. The tnt(dark)/tnt(light)/tnt(subtle) aliases were removed in v5. Nested frames suppress the second tint (media.tint.css, `ui-media ui-media::before { content: none }`)."
 				},
 				"scm": {
 					"axis": "scrim",
@@ -903,7 +920,8 @@ export default {
 						"--_theme-base-bg",
 						"--_theme-base-c",
 						"--_theme-bg",
-						"--_theme-c"
+						"--_theme-c",
+						"--_mrq"
 					],
 					"realProperties": true,
 					"cqPrefixes": [],
@@ -918,12 +936,12 @@ export default {
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
-						"ui/card/media.css:189",
+						"ui/card/media.css:238",
 						"ui/marquee/ui-marquee.css:94",
 						"ui/marquee/ui-marquee.css:108",
 						"ui/marquee/ui-marquee.css:135"
 					],
-					"notes": "A BAND, not 9-grid furniture: full-width (inset-inline: 0), z-index 1 (BELOW the z-2 furniture), and only two placements. The position args carry a dual arm — host `:where([media*=\"marquee(top|bot)\"]) ui-media ui-marquee` plus self `:where(ui-media[media*=\"marquee(top|bot)\"]) ui-marquee` (media.css:189-192); before the self arm was added, marquee(bot) on the <ui-media> itself (the renderer's canonical placement) was a silent no-op. Every other arg resolves through ui-marquee.css's own ancestor arms (`:where([media*=\"marquee(…)\"]) &`) and has always worked from either placement. Direction/speed/gap live only in the 'value' bucket (no render.js merge class). The old marquee(loop) spelling is REMOVED (2026-07-27): it was renamed to rpt because a substring-matched marquee(loop) collided with the carousel's bare `loop` flag in the same attribute (that flag is whole-token matched on both the CSS and JS sides). seam is @supports(offset-path)+reduced-motion gated. marquee(slate) is a canonical hue with its own --ui-theme-slate-* bundle; the marquee(dark)/marquee(light)/marquee(subtle) aliases were removed in v5."
+					"notes": "A BAND, not 9-grid furniture: full-width (inset-inline: 0), z-index 1 (BELOW the z-2 furniture), and only two placements. The position args were the first R-14-step-4 migration: one flag setter `:where([media*=\"marquee(top|bot)\"]) { --_mrq: top|bot }` (matches host AND <ui-media>) plus one @container style(--_mrq: …) block whose subject is `:where(ui-media) ui-marquee`, a CHILD of the frame. R-14 step 4 (v5): the real-property rules are now ONE flag setter + ONE @container style() block instead of two selector arms — style queries need Chromium 111+ / Safari 18+ / Firefox 128+, see media.md § \"v5 support posture\". Before the v4 self arm existed, marquee(bot) on the <ui-media> itself (the renderer's canonical placement) was a silent no-op. Every other arg resolves through ui-marquee.css's own ancestor arms (`:where([media*=\"marquee(…)\"]) &`) and has always worked from either placement. Direction/speed/gap live only in the 'value' bucket (no render.js merge class). The old marquee(loop) spelling is REMOVED (2026-07-27): it was renamed to rpt because a substring-matched marquee(loop) collided with the carousel's bare `loop` flag in the same attribute (that flag is whole-token matched on both the CSS and JS sides). seam is @supports(offset-path)+reduced-motion gated. marquee(slate) is a canonical hue with its own --ui-theme-slate-* bundle; the marquee(dark)/marquee(light)/marquee(subtle) aliases were removed in v5."
 				},
 				"vid": {
 					"axis": "video",

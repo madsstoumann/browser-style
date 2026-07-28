@@ -22,11 +22,22 @@
  */
 @layer bs-component {
 	/* match bare `tnt` (arbitrary --ui-media-tint-color) AND `tnt(<key>)` presets —
-	   no other media= token contains the substring "tnt" */
+	   no other media= token contains the substring "tnt".
+
+	   R-14 step 4 (see the pattern note at the top of media.css). The PAINT is the
+	   textbook case for the flag: a ::before resolves its style query against its
+	   ORIGINATING element, so `ui-media::before` sees --_tnt whether the token set
+	   it on <ui-media> itself (self arm) or on the host and it inherited down.
+	   `isolation: isolate` is NOT migratable — its subject IS <ui-media>, and a
+	   container cannot restyle itself, so it keeps the two-arm form.
+	   Specificity is unchanged: the old `&::before` under the (0,0,1) host arm was
+	   (0,0,2), and so is the bare `ui-media::before` below — which the (0,0,2)
+	   `ui-media ui-media::before` nested-frame guard still beats on source order. */
+	:where([media*="tnt"]) { --_tnt: 1; }
 	:where([media*="tnt"]) ui-media,
-	:where(ui-media[media*="tnt"]) {
-		isolation: isolate;
-		&::before {
+	:where(ui-media[media*="tnt"]) { isolation: isolate; }
+	@container style(--_tnt: 1) {
+		ui-media::before {
 			background: var(--ui-media-tint-color, var(--color-accent));
 			content: "";
 			inset: 0;
@@ -57,19 +68,24 @@
 	:where([media*="tnt(slate)"])  { --ui-media-tint-color: var(--ui-theme-slate-bg); }
 
 	/* hov(tint) — fade the tint out on hover/focus to reveal the true-colour image.
-	   Reads --_hv-dur / --_hv-ease from media.hover.css; falls back if absent. */
+	   Reads --_hv-dur / --_hv-ease from media.hover.css; falls back if absent.
+	   R-14 step 4: ONE flag with two values — `idle` (the token is present, so the
+	   standing transition applies) and `on` (the holder is hovered/focused). The
+	   hover setter is declared after the idle one, so it re-wins on source order,
+	   exactly as the old :hover arm out-specified its own base arm. */
+	:where([media*="hov(tint)"]) { --_hv-tint: idle; }
+	:where([media*="hov(tint)"]:is(:hover, :focus-within)) { --_hv-tint: on; }
 	@media (hover: hover) {
-		:where([media*="hov(tint)"]) ui-media::before,
-		ui-media[media*="hov(tint)"]::before {
-			transition: opacity var(--_hv-dur, var(--duration-slower)) var(--_hv-ease, var(--ease-out));
+		@container style(--_hv-tint: idle) or style(--_hv-tint: on) {
+			ui-media::before { transition: opacity var(--_hv-dur, var(--duration-slower)) var(--_hv-ease, var(--ease-out)); }
 		}
-		:where([media*="hov(tint)"]:is(:hover, :focus-within)) ui-media::before,
-		ui-media[media*="hov(tint)"]:is(:hover, :focus-within)::before {
-			opacity: 0;
+		@container style(--_hv-tint: on) {
+			ui-media::before { opacity: 0; }
 		}
 	}
 	@media (prefers-reduced-motion: reduce) {
-		:where([media*="hov(tint)"]) ui-media::before,
-		ui-media[media*="hov(tint)"]::before { transition: none; }
+		@container style(--_hv-tint: idle) or style(--_hv-tint: on) {
+			ui-media::before { transition: none; }
+		}
 	}
 }
