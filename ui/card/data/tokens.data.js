@@ -1572,16 +1572,21 @@ export default {
 					"cqArgs": [],
 					"selfArm": true,
 					"hosts": [
-						"lay-out[overflow]"
+						"lay-out[overflow]",
+						"ui-media",
+						"ui-card",
+						"ui-reveal"
 					],
 					"requiresJs": {},
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
 						"layout/core/base.css:223",
-						"layout/core/base.css:227"
+						"ui/card/media.carousel.css:51",
+						"ui/base/carousel.css:186",
+						"ui/base/stagger.css:174"
 					],
-					"notes": "The one media= token that exists ONLY on <lay-out overflow> — never on a frame. Whole-token ([media~=\"pages\"]). Snaps + emits one ::scroll-marker per PAGE of --_ci items instead of per item, via mod(sibling-index()-1, --_ci) + if(style(--_pg: 0)); degrades to per-item where sibling-index()/if() are unsupported. Not mentioned in media.md/carousel.md's token tables."
+					"notes": "One word, one intent — 'this carousel navigates by pages, and adapts on mobile' — with the mechanism following from the markup shape. On <lay-out overflow> (flat children): math paging — snaps + emits one ::scroll-marker per PAGE of --_ci items instead of per item, via mod(sibling-index()-1, --_ci) + if(style(--_pg: 0)); the dot count auto-adapts per breakpoint because --_ci follows columns(N); degrades to per-item where sibling-index()/if() are unsupported. On a <ui-media> scroller (or its card host): the <lay-out> children are PAGE wrappers — below the layout system's md viewport breakpoint (540px) each wrapper dissolves via display:contents, so every card becomes its own full-width snap target with its own dot (grandchild markers collect into the scroller's group natively; a boxless wrapper generates none). ui-media context is CSS-only: slidesOf() still counts the wrapper as ONE slide, so auto/loop don't see through the dissolve; dot markers only (pll/hyb/tmb/lbl stay per-direct-slide). Stagger: each dissolved card becomes its own scroll-state inline-size container — ani() plays per-card, crd() is inert below md. Whole-token ([media~=\"pages\"])."
 				}
 			}
 		},
@@ -2304,31 +2309,6 @@ export default {
 						"ui/reveal/ui-reveal.css:497-501"
 					],
 					"notes": "Reveal PANEL scroll — only active under flp (panel goes `position: absolute; inset: 0` so a long flipside can't grow the card, with the shared ui-scroll-fade edge mask) and under grw / lg:grw (overflow-y auto, scrollbar hidden). Inert under exp and sld. Reads --ui-reveal-content-bs / --ui-reveal-scrollbar-color; writes no custom property. HOMONYM of content='s `scr` — different attribute, different target (content= scrolls the text column inside <ui-content>). Both share the one ui-scroll-fade primitive in ui/base/scroll.css."
-				},
-				"page": {
-					"axis": "carousel",
-					"element": "lay-out",
-					"args": {},
-					"argAliases": {},
-					"bare": true,
-					"matching": "whole",
-					"writes": [],
-					"realProperties": true,
-					"cqPrefixes": [],
-					"cqArgs": [],
-					"selfArm": true,
-					"hosts": [
-						"lay-out"
-					],
-					"requiresJs": {},
-					"deprecated": false,
-					"canonical": null,
-					"sources": [
-						"ui/card/media.carousel.css:56",
-						"ui/base/carousel.css:186",
-						"ui/base/stagger.css:174"
-					],
-					"notes": "On a <lay-out> PAGE wrapper inside a ui-media carousel (e.g. <lay-out variant=\"page\" md=\"columns(3)\">): below the layout system's md viewport breakpoint (540px) the wrapper dissolves via display:contents, so each card becomes its own full-width snap target with its own dot — instead of the page stacking into one tall column. Grandchild ::scroll-markers collect into the scroller's group automatically; a boxless wrapper generates none, so the page dot vanishes for free. Stagger: each card becomes its own scroll-state container (scroll-state inline-size — bs-card size queries stay alive); the ani() content channel plays per-card, the crd() card channel is inert below md. CSS-only: carousel.js slidesOf() still counts the wrapper as ONE slide, so auto/loop do not see through the dissolve. Dot markers only — pll/hyb/tmb/lbl families stay per-direct-slide."
 				}
 			}
 		},

@@ -867,13 +867,13 @@
 	</lay-out>
 
 	<h3 id="layoutgrids">Grid pages, staggered</h3>
-	<p>Each page here is its own <code>&lt;lay-out variant="page"&gt;</code> grid inside a <code>stagger</code> scroller — so a whole grid of cards reveals per snap, not one card at a time. <strong>Below the <code>md</code> viewport breakpoint (540px) the page dissolves</strong> (<code>display: contents</code>): each card becomes its own full-width slide with its own dot, instead of the page stacking into a tall three-card column. Narrow the window to watch the dot count jump from pages to cards. (CSS-only — <code>auto</code>/<code>loop</code> still count the wrapper as one slide; dot markers only.)</p>
+	<p>Each page here is its own <code>&lt;lay-out&gt;</code> grid inside a <code>stagger pages</code> scroller — so a whole grid of cards reveals per snap, not one card at a time. The <code>pages</code> token on the scroller declares the lay-outs as page wrappers: <strong>below the <code>md</code> viewport breakpoint (540px) each page dissolves</strong> (<code>display: contents</code>) and every card becomes its own full-width slide with its own dot, instead of the page stacking into a tall three-card column. Narrow the window to watch the dot count jump from pages to cards. Same word, same intent as <code>media="pages"</code> on a <code>&lt;lay-out overflow&gt;</code> scroller — there it pages a flat card list by math. (ui-media context is CSS-only — <code>auto</code>/<code>loop</code> still count the wrapper as one slide; dot markers only.)</p>
 
 	<h4>Two channels — <code>crd()</code> + <code>ani()</code></h4>
 	<p><code>crd()</code> animates the cards, <code>ani()</code> their content; both cascade.</p>
 	<lay-out>
-			<ui-media class="slide-gap" media="nav stagger crd(rise)">
-				<lay-out variant="page" md="columns(3)" stagger>
+			<ui-media class="slide-gap" media="nav stagger crd(rise) pages">
+				<lay-out md="columns(3)" stagger>
 					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Space · ani(fall)</small><h3 data-part="headline">Hubble</h3></ui-content>
@@ -887,7 +887,7 @@
 						<ui-content><small data-part="eyebrow">Tech · ani(fall)</small><h3 data-part="headline">Web Summit</h3></ui-content>
 					</cq-box></ui-card>
 				</lay-out>
-				<lay-out variant="page" md="columns(3)" stagger>
+				<lay-out md="columns(3)" stagger>
 					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Health · ani(fall)</small><h3 data-part="headline">Mindfulness</h3></ui-content>
@@ -901,7 +901,7 @@
 						<ui-content><small data-part="eyebrow">Money · ani(fall)</small><h3 data-part="headline">Finance</h3></ui-content>
 					</cq-box></ui-card>
 				</lay-out>
-				<lay-out variant="page" md="columns(3)" stagger>
+				<lay-out md="columns(3)" stagger>
 					<ui-card variant="ovr(bl) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Nature · ani(fall)</small><h3 data-part="headline">Wild waters</h3></ui-content>
@@ -921,8 +921,8 @@
 	<h4>Room for card shadows</h4>
 	<p>The scroller clips its scrollport; <code>.shadow-room</code> adds matching <code>padding-inline</code> + <code>scroll-padding-inline</code> so shadows aren't cut.</p>
 	<lay-out>
-			<ui-media class="slide-gap shadow-room" media="nav(blw) arw(bare) stagger ani(lft)">
-				<lay-out variant="page" md="columns(2)" stagger>
+			<ui-media class="slide-gap shadow-room" media="nav(blw) arw(bare) stagger ani(lft) pages">
+				<lay-out md="columns(2)" stagger>
 					<ui-card variant="col" media="asr(4/3) crd(rise)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Space</small><h3 data-part="headline">Hubble</h3><p data-part="summary">Deep-field imaging.</p></ui-content>
@@ -932,7 +932,7 @@
 						<ui-content><small data-part="eyebrow">Physics</small><h3 data-part="headline">Quantum</h3><p data-part="summary">Entangled states.</p></ui-content>
 					</cq-box></ui-card>
 				</lay-out>
-				<lay-out variant="page" md="columns(2)" stagger>
+				<lay-out md="columns(2)" stagger>
 					<ui-card variant="col" media="asr(4/3) crd(rise)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Tech</small><h3 data-part="headline">Web Summit</h3><p data-part="summary">Founders meet.</p></ui-content>
@@ -942,7 +942,7 @@
 						<ui-content><small data-part="eyebrow">Health</small><h3 data-part="headline">Mindfulness</h3><p data-part="summary">Breathe deep.</p></ui-content>
 					</cq-box></ui-card>
 				</lay-out>
-				<lay-out variant="page" md="columns(2)" stagger>
+				<lay-out md="columns(2)" stagger>
 					<ui-card variant="col" media="asr(4/3) crd(rise)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/world.png" alt=""></ui-media>
 						<ui-content><small data-part="eyebrow">Travel</small><h3 data-part="headline">World</h3><p data-part="summary">Go far.</p></ui-content>

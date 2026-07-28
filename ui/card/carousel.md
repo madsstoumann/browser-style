@@ -188,28 +188,33 @@ A group can also hold full **`<ui-card>`s** — standard (content below) or laye
 (content on the media). The carousel never leaks into a nested card's own
 `<ui-media>`.
 
-### Responsive page dissolve — `<lay-out variant="page">`
+### Responsive page dissolve — `media="pages"` on a `<ui-media>` scroller
+
+`pages` is one word with one intent — *"this carousel navigates by pages, and adapts
+on mobile"* — and the mechanism follows from the markup shape. On a
+`<lay-out overflow>` scroller it pages a **flat** card list by math (see the layout
+docs: snap + dot per page of `columns(N)`, auto-adapting per breakpoint). On a
+**`<ui-media>` scroller** it declares the `<lay-out>` children as **page wrappers**:
+
+```html
+<ui-media media="nav stagger crd(rise) pages">
+  <lay-out md="columns(3)" stagger> …3 cards… </lay-out>
+  <lay-out md="columns(3)" stagger> …3 cards… </lay-out>
+</ui-media>
+```
 
 A **CSS-only** carousel (no `auto`/`loop`) may use `<lay-out>` grids as its page
 wrappers — the CSS slide rules treat any non-furniture direct child as a slide; only
 the JS features exclude `LAY-OUT`. Such a page (e.g. `md="columns(3)"`) has a mobile
 problem: below the layout system's `md` viewport breakpoint the grid stacks, so one
-slide becomes a tall three-card column. `variant="page"` on the wrapper fixes it:
+slide becomes a tall three-card column. With `pages` on the scroller, **below `540px`**
+each wrapper dissolves via `display: contents`: every card becomes its own full-width
+snap target **with its own dot** — grandchild `::scroll-marker`s collect into the
+scroller's marker group automatically, and a boxless wrapper generates none, so the
+page dot vanishes for free. Above the breakpoint nothing changes: the page is one
+slide, one dot.
 
-```html
-<ui-media media="nav stagger crd(rise)">
-  <lay-out variant="page" md="columns(3)" stagger> …3 cards… </lay-out>
-  <lay-out variant="page" md="columns(3)" stagger> …3 cards… </lay-out>
-</ui-media>
-```
-
-**Below `540px`** (viewport) the wrapper dissolves via `display: contents`: each card
-becomes its own full-width snap target **with its own dot** — grandchild
-`::scroll-marker`s collect into the scroller's marker group automatically, and a
-boxless wrapper generates none, so the page dot vanishes for free. Above the
-breakpoint nothing changes: the page is one slide, one dot.
-
-Contract and limits:
+Contract and limits (ui-media context):
 
 - **CSS-only.** `slidesOf()` still counts the wrapper as **one** slide — `auto`/`loop`
   do not see through the dissolve. Use it on CSS-only carousels (like the stagger
@@ -221,7 +226,7 @@ Contract and limits:
   plays per-card — the same behaviour as a single-card slide; the `crd()` card
   channel is inert below the breakpoint (a container cannot restyle itself from its
   own query), and the card body is pinned visible.
-- **Fixed breakpoint.** `page` means "dissolve below `md` (540px)" — matching the
+- **Fixed breakpoint.** The dissolve happens below `md` (540px) — matching the
   common `md="columns(N)"` page pattern. The dissolve rule itself ships **unlayered**
   (the wrapper's `display: grid` comes from `@layer layout.base`, which outranks
   `bs-component`); the grandchild slide/marker/stagger arms stay layered.

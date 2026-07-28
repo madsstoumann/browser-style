@@ -170,26 +170,28 @@
 			}
 		}
 
-		/* --- variant="page" (below the md viewport breakpoint) ---
-		   The page wrapper dissolves (display:contents — media.carousel.css), so it
-		   can no longer be the scroll-state container. Each CARD becomes its own
-		   snap target and its own container instead — `scroll-state inline-size`
-		   keeps the card's bs-card size queries alive alongside the snap state.
-		   Consequences, both deliberate: the content channel (ani(), `ui-content >
-		   *` subjects) now plays per-card off the card's own snapped state — the
-		   same behaviour as a single-card slide; the CARD channel (crd()) is inert
-		   here (a container can't restyle itself from its own query), so the card
-		   body is pinned visible below and its content index resets to 0. */
+		/* --- media="pages" on a ui-media scroller (below the md viewport breakpoint) ---
+		   The <lay-out> page wrapper dissolves (display:contents —
+		   media.carousel.css), so it can no longer be the scroll-state container.
+		   Each CARD becomes its own snap target and its own container instead —
+		   `scroll-state inline-size` keeps the card's bs-card size queries alive
+		   alongside the snap state. Consequences, both deliberate: the content
+		   channel (ani(), `ui-content > *` subjects) now plays per-card off the
+		   card's own snapped state — the same behaviour as a single-card slide; the
+		   CARD channel (crd()) is inert here (a container can't restyle itself from
+		   its own query), so the card body is pinned visible below and its content
+		   index resets to 0. */
 		@media (width < 540px) {
-			:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) ui-media > lay-out[variant~="page"] > *,
-			ui-media:where([media*="stagger"]) > lay-out[variant~="page"] > * {
+			:where(ui-card[media~="pages"], ui-reveal[media~="pages"]) ui-media > lay-out > *,
+			ui-media:where([media~="pages"]) > lay-out > * {
 				container-type: scroll-state inline-size;
 				--_stg-crd-i: 0;
 			}
 			/* real specificity on purpose: outranks the card-channel from-state above
 			   (its :where() subjects sit at (0,0,2)) so a dissolved card is never
 			   stranded at opacity 0 with no ancestor container to release it */
-			ui-media > lay-out[variant~="page"] > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker) {
+			ui-media[media~="pages"] > lay-out > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker),
+			:is(ui-card, ui-reveal)[media~="pages"] ui-media > lay-out > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker) {
 				filter: none;
 				opacity: 1;
 				scale: none;

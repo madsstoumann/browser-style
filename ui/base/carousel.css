@@ -182,26 +182,31 @@
 			& > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
 				background: var(--ui-carousel-marker-active);
 			}
-			/* variant="page" (below the md viewport breakpoint): the page wrapper
-			   dissolves (display:contents — media.carousel.css), so its cards are the
-			   slides and each gets its own dot. Grandchild markers collect into this
-			   scroller's group automatically; the boxless wrapper generates none.
-			   Viewport-scoped: above 540px the wrapper is a real slide with one dot,
-			   and its children must NOT add markers. Dots only — the pll/hyb/tmb/lbl
-			   marker families stay per-direct-slide. */
-			@media (width < 540px) {
-				& > lay-out[variant~="page"] > *::scroll-marker {
-					background: var(--ui-carousel-marker-bg);
-					block-size: var(--ui-carousel-marker-size);
-					border: var(--ui-carousel-marker-border);
-					border-radius: var(--radius-circle, 50%);
-					content: "";
-					cursor: pointer;
-					inline-size: var(--ui-carousel-marker-size);
-				}
-				& > lay-out[variant~="page"] > *::scroll-marker:target-current {
-					background: var(--ui-carousel-marker-active);
-				}
+		}
+
+		/* media="pages" on a ui-media scroller (below the md viewport breakpoint):
+		   the <lay-out> page wrappers dissolve (display:contents —
+		   media.carousel.css), so their cards are the slides and each gets its own
+		   dot. Grandchild markers collect into the scroller's group automatically;
+		   the boxless wrapper generates none. Viewport-scoped: above 540px the page
+		   is a real slide with one dot, and its children must NOT add markers.
+		   Dots only — the pll/hyb/tmb/lbl marker families stay per-direct-slide.
+		   Deliberately NOT the lay-out[overflow] arm: there `pages` means math
+		   paging over flat children (layout/core/base.css), never wrappers. */
+		@media (width < 540px) {
+			:where(ui-card, ui-reveal):where([media~="pages"]) :where(ui-media) > lay-out > *::scroll-marker,
+			ui-media:where([media~="pages"]) > lay-out > *::scroll-marker {
+				background: var(--ui-carousel-marker-bg);
+				block-size: var(--ui-carousel-marker-size);
+				border: var(--ui-carousel-marker-border);
+				border-radius: var(--radius-circle, 50%);
+				content: "";
+				cursor: pointer;
+				inline-size: var(--ui-carousel-marker-size);
+			}
+			:where(ui-card, ui-reveal):where([media~="pages"]) :where(ui-media) > lay-out > *::scroll-marker:target-current,
+			ui-media:where([media~="pages"]) > lay-out > *::scroll-marker:target-current {
+				background: var(--ui-carousel-marker-active);
 			}
 		}
 
