@@ -1270,9 +1270,12 @@
 	</lay-out>
 
 
-	<!-- carousel chunk only: loop/auto (incl. <lay-out overflow>), pause-on-slide-leave,
-	     per-slide <ui-play> video controls (progressive enhancement). -->
+	<!-- carousel chunk: loop/auto (incl. <lay-out overflow>), pause-on-slide-leave. -->
 	<script type="module" src="carousel.js"></script>
+	<!-- video chunk: the per-slide <ui-play> controls in "Thumbnail + video" are wired by
+	     video.js (initVideoPlay), NOT carousel.js — carousel.js only owns the scroller's own
+	     target-less <ui-play>. Without this the slide buttons are inert. -->
+	<script type="module" src="video.js"></script>
 	<!-- Safari: no ::scroll-marker/::scroll-button yet — load the real-element
 	     polyfill only where the native gate fails. `?polyfill` forces it (dev). -->
 	<script type="module">

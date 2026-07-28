@@ -322,9 +322,9 @@
 		}
 		:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
-			/* layer 1 = timer stripe (grows L→R), layer 2 = the thumbnail */
+			/* layer 1 = timer stripe (grows L→R via --ui-carousel-thumb-timer-progress), layer 2 = the thumbnail */
 			background:
-				linear-gradient(var(--ui-carousel-thumb-timer, #fff), var(--ui-carousel-thumb-timer, #fff)) bottom left / 0 var(--ui-carousel-thumb-timer-height, 3px) no-repeat,
+				linear-gradient(var(--ui-carousel-thumb-timer, #fff), var(--ui-carousel-thumb-timer, #fff)) bottom left / var(--ui-carousel-thumb-timer-progress, 0) var(--ui-carousel-thumb-timer-height, 3px) no-repeat,
 				var(--ui-carousel-thumb-url) center / cover no-repeat var(--ui-carousel-thumb-bg, rgb(0 0 0 / 0.2));
 			border-color: var(--ui-carousel-thumb-border-color-active, #fff);
 			opacity: 1;
@@ -350,7 +350,7 @@
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker):is(video, :has(video))::scroll-marker:target-current {
 			background:
 				var(--ui-carousel-thumb-play, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='11' fill='%23000' fill-opacity='.5'/%3E%3Cpath d='M9.5 7.5v9l7-4.5z' fill='%23fff'/%3E%3C/svg%3E")) center / var(--ui-carousel-thumb-play-size, 45%) no-repeat,
-				linear-gradient(var(--ui-carousel-thumb-timer, #fff), var(--ui-carousel-thumb-timer, #fff)) bottom left / 0 var(--ui-carousel-thumb-timer-height, 3px) no-repeat,
+				linear-gradient(var(--ui-carousel-thumb-timer, #fff), var(--ui-carousel-thumb-timer, #fff)) bottom left / var(--ui-carousel-thumb-timer-progress, 0) var(--ui-carousel-thumb-timer-height, 3px) no-repeat,
 				var(--ui-carousel-thumb-url) center / cover no-repeat var(--ui-carousel-thumb-bg, rgb(0 0 0 / 0.2));
 		}
 
@@ -868,9 +868,23 @@
 		to   { background-size: 100% 100%; }
 	}
 
-	/* mrk(tmb) active timer — grow the bottom stripe (layer 1), keep the thumbnail (layer 2) */
+	/* mrk(tmb) active timer — animate the stripe's WIDTH as a registered custom property, not
+	   background-size. A background-size keyframe has to spell out every layer, and the layer
+	   count is not fixed: a plain thumb has 2 (stripe + image), a video thumb has 3 (play badge
+	   + stripe + image). CSS repeats a short size list over the extra layers, so the 2-value
+	   version put `cover` on the WHITE stripe of a video thumb and painted the whole marker
+	   white. One animated length keeps every layer's size where its own rule declared it. */
 	@keyframes ui-carousel-thumb-timer {
-		from { background-size: 0 var(--ui-carousel-thumb-timer-height, 3px), cover; }
-		to   { background-size: 100% var(--ui-carousel-thumb-timer-height, 3px), cover; }
+		from { --ui-carousel-thumb-timer-progress: 0%; }
+		to   { --ui-carousel-thumb-timer-progress: 100%; }
 	}
+}
+
+/* Registered so the keyframe above can interpolate it (unregistered custom properties
+   animate discretely — the stripe would jump 0% → 100% at the end). Outside the layer:
+   @property is not a style rule and takes no layer scoping. */
+@property --ui-carousel-thumb-timer-progress {
+	syntax: "<length-percentage>";
+	inherits: false;
+	initial-value: 0%;
 }
