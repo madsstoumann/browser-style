@@ -156,8 +156,8 @@
 	   --squircle-* all come from ui/base/tokens.css, which is the canonical scale —
 	   these blocks only route a token arg to a namespace.
 	   Corners on a STANDALONE <ui-media> (inside a card the host's overflow clipping
-	   owns the corners). non canonical (none kept as alias). */
-	:where([media*="rds(non)"], [media*="rds(none)"] /* deprecated alias — remove in v5 */) { --ui-media-radius: 0; }
+	   owns the corners). non is the only spelling — rds(none) removed in v5. */
+	:where([media*="rds(non)"]) { --ui-media-radius: 0; }
 	:where([media*="rds(sm)"])   { --ui-media-radius: var(--radius-sm); }
 	:where([media*="rds(md)"])   { --ui-media-radius: var(--radius-md); }
 	:where([media*="rds(lg)"])   { --ui-media-radius: var(--radius-lg); }
@@ -258,7 +258,7 @@
 		translate: -50% -50%;
 	}
 
-	/* play(<size>) (was ply()), PLAYER TOOLS (fullscreen · PiP) and the CC language
+	/* play(<size>), PLAYER TOOLS (fullscreen · PiP) and the CC language
 		 <select> live in media.video.css — imported after this sheet, before
 		 media.carousel.css. play()'s size args (sm md lg xl) and its position args
 		 (ts…be, above) are disjoint vocabularies, so one stem parses unambiguously. */
@@ -348,14 +348,14 @@
 	:where([media*="scm(lg)"]) { --ui-media-scrim-mid-stop: 58%; --ui-media-scrim-end-stop: 100%; --ui-media-scrim-cc-a: 8%; --ui-media-scrim-cc-b: 92%; }
 	:where([media*="scm(xl)"]) { --ui-media-scrim-mid-stop: 74%; --ui-media-scrim-end-stop: 100%; --ui-media-scrim-cc-a: 0%; --ui-media-scrim-cc-b: 100%; }
 	/* scm() intensity — sets the scrim colour the gradients read (default med).
-	   Canonical 3-letter codes shr/sld (sheer/solid kept as aliases). sld also pulls
-	   the mid stop to the full colour, so it holds opaque across the covered area
-	   instead of fading through the translucent mid mix. */
-	:where([media*="scm(shr)"], [media*="scm(sheer)"] /* deprecated alias — remove in v5 */) { --ui-media-scrim-color: rgb(0 0 0 / 0.35); }
+	   3-letter codes only — the scm(sheer)/scm(solid) aliases were removed in v5.
+	   sld also pulls the mid stop to the full colour, so it holds opaque across the
+	   covered area instead of fading through the translucent mid mix. */
+	:where([media*="scm(shr)"]) { --ui-media-scrim-color: rgb(0 0 0 / 0.35); }
 	:where([media*="scm(lgt)"])   { --ui-media-scrim-color: rgb(0 0 0 / 0.55); }
 	:where([media*="scm(med)"])   { --ui-media-scrim-color: rgb(0 0 0 / 0.78); }
 	:where([media*="scm(drk)"])   { --ui-media-scrim-color: rgb(0 0 0 / 0.92); }
-	:where([media*="scm(sld)"], [media*="scm(solid)"] /* deprecated alias — remove in v5 */) { --ui-media-scrim-color: rgb(0 0 0 / 1); --ui-media-scrim-fade: 0%; }
+	:where([media*="scm(sld)"]) { --ui-media-scrim-color: rgb(0 0 0 / 1); --ui-media-scrim-fade: 0%; }
 	/* bare scm paints; auto-matches the ovr() position via --ui-media-scrim-default */
 	:where([media*="scm"]) { --ui-media-scrim-paint: var(--ui-media-scrim, var(--ui-media-scrim-default, var(--ui-media-scrim-bc))); }
 	:where(ui-media)::after {

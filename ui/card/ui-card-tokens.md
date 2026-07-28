@@ -41,7 +41,7 @@ attribute and therefore the same table; they are explained under *Reveal tokens*
 <!-- tokens:summary attr=variant -->
 | token | axis | args | aliases | bare | writes | md:/lg: | deprecated |
 |---|---|---|---|---|---|---|---|
-| `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | none→non | — | --ui-card-radius --ui-card-squircle-exp | — | — |
+| `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | — | — | --ui-card-radius --ui-card-squircle-exp | — | — |
 | `bdr()` | border | **size** sm md lg · **tone** lgt drk | — | yes | --ui-card-border-width --ui-card-border-color | — | — |
 | `spl()` | split | **ratio** 1/1 1/2 2/1 1/3 3/1 | — | — | --ui-card-split | md: lg: (ratio) | — |
 | `vis()` | visibility | **value** media content | — | — | — | md: lg: (value) | — |
@@ -49,7 +49,6 @@ attribute and therefore the same table; they are explained under *Reveal tokens*
 | `flp()` | reveal-animation | **pos** top btm lft rgt | — | yes | --_rvl --_face-closed --_face-open --_panel-closed --_panel-open --ui-reveal-icon-clear | — | — |
 | `sld()` | reveal-animation | **pos** top btm lft rgt | — | yes | --_rvl | — | — |
 | `grw()` | reveal-animation | **pos** ts te bs be | — | yes | --_rvl --_scale-bs --_scale-be --_scale-is --_scale-ie | lg: (pos) | — |
-| `scl()` | reveal-animation | **pos** ts te bs be | — | yes | --_rvl --_scale-bs --_scale-be --_scale-is --_scale-ie | lg: (pos) | yes → `grw` |
 | `trg()` | reveal-mode | **value** card | — | — | — | — | — |
 | `ico()` | reveal-icon | **pos** ts te bs be · **tone** drk sem · **size** sm lg | — | — | --ui-reveal-icon-bg --ui-reveal-icon-sz --_scale-bs --_scale-be --_scale-is --_scale-ie | — | — |
 | `icc()` | reveal-icon | **pos** ts te bs be · **tone** drk sem · **size** sm lg | — | — | --ui-reveal-icon-bg --ui-reveal-icon-sz | — | — |
@@ -129,7 +128,7 @@ Each sets `--ui-content-ov-justify` / `-align` / `-text` and points `--ui-media-
 | `--ui-card-radius` | `var(--radius-2xl)` | corner radius |
 | `--ui-card-squircle-exp` | `1.8` | superellipse exponent for `-sq` variants |
 
-- **Round** (global radius scale): `rds(non · sm · md · lg · xl · 2xl · full · pill)`. `rds(none)` is a **deprecated alias** of `rds(non)`, removed in v5. The same scale and the same alias exist on `media=` (standalone frame) and `content=` (standalone content corners).
+- **Round** (global radius scale): `rds(non · sm · md · lg · xl · 2xl · full · pill)`. The old `rds(none)` spelling was **removed in v5** — migrate to `rds(non)`. The same scale exists on `media=` (standalone frame) and `content=` (standalone content corners), and the alias is gone on all three.
 - **Squircle** (bespoke radius + `corner-shape: superellipse()`): `rds(sm-sq · md-sq · lg-sq · xl-sq)` → radii `1.25 / 2 / 2.8 / 3.5rem` with exponents `1.5 / 1.7 / 1.8 / 2`. `ui-reveal` reads `--ui-card-squircle-exp` to apply the same corner-shape to its `<details>`.
 
 ## Border — `bdr`
@@ -196,14 +195,13 @@ Card-local override hooks (feed the `--ui-theme-black-*`/`slate` bundles):
 
 The argument vocabularies are generated from the manifest:
 
-<!-- tokens:args attr=variant stems=exp,flp,sld,grw,scl,pop,trg,scr,ico,icc -->
+<!-- tokens:args attr=variant stems=exp,flp,sld,grw,pop,trg,scr,ico,icc -->
 | token | arg class | values | aliases |
 |---|---|---|---|
 | `exp` | *(bare flag)* | — | — |
 | `flp()` | **pos** | top btm lft rgt | — |
 | `sld()` | **pos** | top btm lft rgt | — |
 | `grw()` | **pos** | ts te bs be | — |
-| `scl()` | **pos** | ts te bs be | — |
 | `pop` | *(bare flag)* | — | — |
 | `trg()` | **value** | card | — |
 | `scr` | *(bare flag)* | — | — |
@@ -218,14 +216,14 @@ The argument vocabularies are generated from the manifest:
 | Token | Replaces | Effect |
 |-------|----------|--------|
 | `exp` · `flp()` · `sld()` · `grw()` | `type=` + `from=` | ONE token per animation, direction/origin in the value (expand / flip / slide / **grow**). Bare `flp`/`sld` = from the right; bare `grw` follows the `ico()` corner |
-| `lg:grw` | `type-lg=` | Swap to the grow-morph at the `lg:` container tier (≥ 44rem). **`grw` is the only animation with an `lg:` form** (its deprecated alias `lg:scl` too) — there is no `lg:exp`, `lg:flp` or `lg:sld` |
+| `lg:grw` | `type-lg=` | Swap to the grow-morph at the `lg:` container tier (≥ 44rem). **`grw` is the only animation with an `lg:` form** — there is no `lg:exp`, `lg:flp` or `lg:sld` |
 | `pop` | `to=` | popup mode for the revealed panel |
 | `trg(card)` | `trigger="card"` | whole card toggles the disclosure — **and suppresses the toggle icon** |
 | `scr` | `scroll` | scrollable reveal panel |
 | `ico()` | `icon=` | toggle-icon placement / ink / size — placement uses the furniture corner spellings (top/bottom × start/end, logical + rtl-safe); **one token per word**, e.g. `ico(te) ico(sm)`. Size is `sm` / `lg` only: the default (`--size-7`) has **no** token, so there is no `ico(md)` |
 | `icc()` | `icon-close=` | same words as `ico()`, applied in the **open** state (and likewise no `icc(md)`) |
 
-> **`scl()` → `grw()`.** The reveal's scale-morph animation was renamed this round: `scl` is `content=`'s type-scale token, and one spelling should mean one thing even across attributes. `scl`, `scl(ts\|te\|bs\|be)` and `lg:scl` (+ its corner forms) are kept as **deprecated aliases**, removed in v5.
+> **`scl()` → `grw()`.** The reveal's scale-morph animation was renamed: `scl` is `content=`'s type-scale token, and one spelling should mean one thing even across attributes. `scl`, `scl(ts\|te\|bs\|be)`, `lg:scl` and its corner forms were **removed in v5** — no alias remains, so migrate `scl` → `grw`, `scl(<corner>)` → `grw(<corner>)`, `lg:scl…` → `lg:grw…`.
 
 There is **no `thm()` token.** Theming goes through the shared `theme=` attribute — see *Themes* above for the migration mapping.
 

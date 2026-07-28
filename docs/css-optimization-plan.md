@@ -138,7 +138,9 @@ paints an invisible background).
 
 `rds(crc)`, `rds(pll)`, `rds(*-sqr)` had zero usage in any markup, preset, or
 doc (documented API: `full`/`pill`/`*-sq`) — dropped from both the `variant=`
-and `media=` mappings. `scm(sld)`/`scm(solid)` kept: documented canonical + alias.
+and `media=` mappings. `scm(sld)`/`scm(solid)` were kept at the time as canonical +
+alias; the `scm(solid)`/`scm(sheer)` aliases were **removed in the v5 sweep** — see the
+v5 alias batch in `docs/plans/2026-07-26-v4-card-system-architecture-analysis.md`.
 
 ## 6. ui/base/shapes.css — split the glyph catalog ✅
 

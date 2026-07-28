@@ -101,17 +101,17 @@ because `object-position` has no logical keywords. Furniture uses the logical se
 | `asr(1/1 · 1/2 · 6/7 · 3/4 · 4/3 · 3/2 · 2/3 · 16/9 · 21/9)` | CSS | Aspect ratio of the frame — nine ratios, and the one `media=` token that takes `md:`/`lg:` prefixes |
 | `obf(cover · contain · fill · none)` | CSS | `object-fit` (default cover) |
 | `obp(<pos>)` | CSS | `object-position` (9-grid, logical **or** physical spelling) |
-| `rds(non · sm · md · lg · xl · 2xl · full · pill)` | CSS | Corner radius (standalone frame); `-sq` variants add a squircle corner. `rds(none)` is a deprecated alias of `rds(non)` |
+| `rds(non · sm · md · lg · xl · 2xl · full · pill)` | CSS | Corner radius (standalone frame); `-sq` variants add a squircle corner. The old `rds(none)` spelling was removed in v5 |
 | `clip` | CSS | `clip-path: inset(0 round …)` at the `rds()` radius — keeps rounded corners while a carousel scrolls (border-radius alone can drop them mid-scroll). Reuses `--ui-media-radius`; no superellipse |
 | `flp(h · v · hv)` | CSS | Flip the image horizontally / vertically / both |
 | `hov(<17 values>)` | CSS (+JS) | Hover effect. Five families — scale (`zoom` `pan`), cursor (`track` `drift` `tilt`), 3D (`tilt-out` `tilt-in`), rotate (`rot-r` `rot-l`), clip (`shape` `shape-rev`), filter (`gray` `blur` `bright` `dim` `sat`) + `tint`. Only the three **cursor** effects need JS (`hover.js`) — full table in [media.md](./media.md#hov--hover-effect-image-only) |
-| `scm` · `scm(<pos>)` · `scm(sm · md · lg · xl)` · `scm(shr · lgt · med · drk · sld)` | CSS | Scrim — direction (logical furniture grid, mirrored under `:dir(rtl)`) + size + intensity. `sheer`/`solid` are deprecated aliases of `shr`/`sld` |
+| `scm` · `scm(<pos>)` · `scm(sm · md · lg · xl)` · `scm(shr · lgt · med · drk · sld)` | CSS | Scrim — direction (logical furniture grid, mirrored under `:dir(rtl)`) + size + intensity. The old `sheer`/`solid` spellings were removed in v5 |
 | `load(eager · lazy)` | load | Image/video loading (`ui-media-srcset.js`); `load(eager)` = all slides eager, first slide gets `fetchpriority="high"` (hero); `load(lazy)` = all lazy (the default) |
 | `chip(<pos>)` · `chip(<hue>)` | CSS | Position + colour a `<ui-chip>` child. Canonical hues: `red orange green blue accent black white gray slate` (+ `pale`/`muted` modifiers; the `dark`/`light`/`subtle` aliases were removed in v5) |
 | `sticker(<pos>)` · `sticker(<hue>)` | CSS | Position + colour a `<ui-sticker>` child — same grid + hue set as `chip()` |
 | `beacon(<pos>)` · `beacon(<hue>)` | CSS | Position + colour a `<ui-beacon>` child — same grid + hue set |
 | `marquee(top · bot)` · `marquee(rpt · seam · fade)` · `marquee(<hue>)` · `marquee(sm · lg · xl · 2xl)` | CSS | The `<ui-marquee>` **band** — full-width, top/bottom only, `z-index: 1` (below furniture). The old `marquee(loop)` spelling is removed — use `marquee(rpt)` |
-| `play(<pos>)` · `play(<size>)` | CSS (+JS on autoplay) | Position **and** size a `<ui-play>` child — one stem, two disjoint vocabularies (`ts…be` vs `sm md lg xl`). On a **scrolling** carousel (`auto`/`loop`) the control is `position:sticky`-pinned to the scrollport (plain furniture would scroll away) and `carousel.js` wires it as the play/pause button — see "Play/pause control" below. (`ply(<size>)` is a deprecated alias) |
+| `play(<pos>)` · `play(<size>)` | CSS (+JS on autoplay) | Position **and** size a `<ui-play>` child — one stem, two disjoint vocabularies (`ts…be` vs `sm md lg xl`). On a **scrolling** carousel (`auto`/`loop`) the control is `position:sticky`-pinned to the scrollport (plain furniture would scroll away) and `carousel.js` wires it as the play/pause button — see "Play/pause control" below. (The old `ply(<size>)` stem was removed in v5) |
 | `save(<pos>)` · `save(<hue>)` | CSS | Position + colour a `<ui-save>` child |
 
 ---

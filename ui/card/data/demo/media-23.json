@@ -15,7 +15,7 @@
     "preset": {
       "$ref": "card-preset/media-scm-solid"
     },
-    "eyebrow": "scm(solid)",
+    "eyebrow": "scm(sld)",
     "headline": "Solid",
     "media": [
       {

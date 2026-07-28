@@ -182,10 +182,10 @@ Argument vocabularies, **generated from `data/tokens.json`** so they can't drift
 | `obp()` | **pos** | ts tc te cs cc ce bs bc be tl tr cl cr bl br | — |
 | `flp()` | **mode** | h v hv | — |
 | `hov()` | **mode** | zoom pan track drift tilt tilt-out tilt-in rot-r rot-l shape shape-rev gray blur bright sat dim tint | — |
-| `rds()` | **size** | non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | none→non |
+| `rds()` | **size** | non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | — |
 | `scm()` | **pos** | ts tc te cs cc ce bs bc be | — |
 | `scm()` | **size** | sm md lg xl | — |
-| `scm()` | **tone** | shr lgt med drk sld | sheer→shr solid→sld |
+| `scm()` | **tone** | shr lgt med drk sld | — |
 | `nav()` | **mode** | mrk arw blw abv non | — |
 <!-- /tokens -->
 
@@ -248,9 +248,9 @@ Composes the two primitives — arrangement, split, visibility, overlay, theme, 
 | `spl()` | `1/1 1/2 2/1 1/3 3/1` — column ratio for `row` / `row-r` |
 | `vis(media)` | show only the media (hide content) |
 | `vis(content)` | show only the content (hide media) |
-| `ovr()` | `ts tc te · cs cc ce · bs bc be` — stack content over media at one of 9 **logical** positions; sets the matching default scrim direction. (The six physical spellings `tl tr cl cr bl br` are deprecated aliases; `tc`/`cc`/`bc` are spelled the same in both grids.) |
+| `ovr()` | `ts tc te · cs cc ce · bs bc be` — stack content over media at one of 9 **logical** positions; sets the matching default scrim direction. (The six physical spellings `tl tr cl cr bl br` were removed in v5; `tc`/`cc`/`bc` are spelled the same in both grids.) |
 | `theme=` | shared theme axis: a colour (`red … black`) + `pale`/`muted`/`light`/`dark` modifiers. Surface + ink; ink crosses into the content namespace. See [theme.md](../base/theme.md). (Replaces the old `variant="thm(…)"` spelling, removed in v4) |
-| `rds()` | `non sm md lg xl 2xl full pill` (round) · `sm-sq md-sq lg-sq xl-sq` (squircle, `corner-shape: superellipse()`) — corner radius. `rds(none)` is a deprecated alias of `rds(non)` |
+| `rds()` | `non sm md lg xl 2xl full pill` (round) · `sm-sq md-sq lg-sq xl-sq` (squircle, `corner-shape: superellipse()`) — corner radius. The old `rds(none)` spelling was removed in v5 |
 
 ```html
 <ui-card variant="row spl(1/2) rds(lg)" theme="gray" media="asr(4/3)" content="scl(lg) pad(lg)"> … </ui-card>

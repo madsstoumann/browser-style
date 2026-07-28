@@ -15,7 +15,7 @@
     "preset": {
       "$ref": "card-preset/media-scm-sheer"
     },
-    "eyebrow": "scm(sheer)",
+    "eyebrow": "scm(shr)",
     "headline": "Sheer",
     "media": [
       {

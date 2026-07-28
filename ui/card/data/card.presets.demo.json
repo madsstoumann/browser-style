@@ -298,7 +298,7 @@
       "description": "Bottom-centre overlay, sheerest scrim intensity",
       "element": "ui-card",
       "variant": "ovr(bc)",
-      "media": "asr(2/3) obf(cover) obp(cc) scm scm(sheer)",
+      "media": "asr(2/3) obf(cover) obp(cc) scm scm(shr)",
       "content": "scl(lg)"
     },
     "media-scm-solid": {
@@ -306,7 +306,7 @@
       "description": "Bottom-centre overlay, opaque scrim anchor",
       "element": "ui-card",
       "variant": "ovr(bc)",
-      "media": "asr(2/3) obf(cover) obp(cc) scm scm(solid)",
+      "media": "asr(2/3) obf(cover) obp(cc) scm scm(sld)",
       "content": "scl(lg)"
     },
     "carousel-default": {

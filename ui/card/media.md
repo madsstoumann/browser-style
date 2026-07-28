@@ -117,8 +117,9 @@ Because custom properties inherit, **one rule set serves both placement cases**:
 
 ### Token reference
 
-The inventory below — every `media=` stem and bare flag, its argument vocabulary, its
-deprecated spellings, and the custom properties it writes — is **generated from
+The inventory below — every `media=` stem and bare flag, its argument vocabulary and
+the custom properties it writes (the alias column is empty system-wide after the v5
+sweep) — is **generated from
 `data/tokens.json`**, the same manifest `render.js` and `tokens.lint.js` read. It cannot
 drift from the CSS. (`md:/lg:` is the container-query prefix column: only `asr()` takes one.)
 
@@ -127,13 +128,13 @@ drift from the CSS. (`md:/lg:` is the container-query prefix column: only `asr()
 |---|---|---|---|---|---|---|---|
 | `asr()` | aspect | **ratio** 1/1 1/2 6/7 3/4 4/3 3/2 2/3 16/9 21/9 | — | — | --ui-media-ar | md: lg: (ratio) | — |
 | `obp()` | position | **pos** ts tc te cs cc ce bs bc be tl tr cl cr bl br | — | — | --ui-media-op | — | — |
-| `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | none→non | — | --ui-media-radius --ui-media-squircle-exp | — | — |
+| `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | — | — | --ui-media-radius --ui-media-squircle-exp | — | — |
 | `obf()` | fit | **mode** cover contain fill none | — | — | --ui-media-fit | — | — |
 | `flp()` | flip | **mode** h v hv | — | — | --ui-media-fl-x --ui-media-fl-y | — | — |
 | `shp()` | shape | **shape** pt-d pt-u pt-l pt-r cut-r cut-l skew-r skew-l para rhomb inset hex chev-l chev-r arr-l arr-r star plus minus close bolt msg frame frame-in blinds-h blinds-v curve-d curve-u curve-r curve-l circle circ-45 | — | — | --ui-media-shape --ui-shape-morph --_shp --_shp-full --_r4 --_r5 --_r5l --_r5r --_ell --_shp-clip | — | — |
 | `hov()` | hover | **mode** zoom pan track drift tilt tilt-out tilt-in rot-r rot-l shape shape-rev gray blur bright sat dim tint | — | — | --_hv-dur --_hv-ease --_hv-t --_f-gray --_f-blur --_f-bright --_f-sat --_hv-any --_hv-zoom --_hv-pan --_hv-track --_hv-drift --_hv-tilt --_hv-tiltx --_hv-tilt-out --_hv-tilt-in --_hv-rot-r --_hv-rot-l --_hv-shape --_hv-filter --_hv-tint | — | — |
 | `tnt()` | tint | **hue** red orange green blue accent black white gray slate | — | yes | --ui-media-tint-color --_tnt --_hv-tint | — | — |
-| `scm()` | scrim | **pos** ts tc te cs cc ce bs bc be · **size** sm md lg xl · **tone** shr lgt med drk sld | sheer→shr solid→sld | yes | --ui-media-scrim --ui-media-scrim-paint --ui-media-scrim-color --ui-media-scrim-fade --ui-media-scrim-mid-stop --ui-media-scrim-end-stop --ui-media-scrim-cc-a --ui-media-scrim-cc-b | — | — |
+| `scm()` | scrim | **pos** ts tc te cs cc ce bs bc be · **size** sm md lg xl · **tone** shr lgt med drk sld | — | yes | --ui-media-scrim --ui-media-scrim-paint --ui-media-scrim-color --ui-media-scrim-fade --ui-media-scrim-mid-stop --ui-media-scrim-end-stop --ui-media-scrim-cc-a --ui-media-scrim-cc-b | — | — |
 | `chip()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **mode** pale muted · **variant** lgt out · **size** sm lg xl 2xl · **disc** non rnd pll crc sqr | — | — | --ui-chip-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
 | `sticker()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **mode** pale muted · **size** sm lg xl 2xl 3xl · **disc** non rnd pll crc sqr · **shape** text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; · **flag** fit | — | — | --ui-sticker-* --_theme-base-bg --_theme-base-c --_theme-bg --_theme-c | — | — |
 | `save()` | furniture | **pos** ts tc te cs cc ce bs bc be · **hue** red orange green blue accent black white gray slate · **size** sm lg xl · **disc** non rnd crc sqr | — | — | --ui-save-c --ui-save-c-active --ui-save-sz --ui-save-circle-* | — | — |
@@ -150,7 +151,6 @@ drift from the CSS. (`md:/lg:` is the container-query prefix column: only `asr()
 | `auto()` | carousel | **value** &lt;n&gt; &lt;n&gt;s &lt;n&gt;ms | — | yes | --ui-carousel-autoplay --ui-carousel-play-state --ui-carousel-thumb-timer-name --_play-block --_play-inline --_play-justify --_play-size | — | — |
 | `ani()` | carousel | **anim** rise fall lft rgt zom blr fde | — | — | --_stg-tr --_stg-sc --_stg-fl --_stg-origin | — | — |
 | `crd()` | carousel | **anim** rise fall lft rgt zom blr fde | — | — | --_stg-crd-tr --_stg-crd-sc --_stg-crd-fl | — | — |
-| `ply()` | furniture | **size** sm md lg xl | — | — | --ui-play-sz --ui-play-icon-sz | — | yes → `play` |
 | `clip` | corners | — | — | yes | --ui-media-radius | — | — |
 | `loop` | carousel | — | — | yes | --_play-block --_play-inline --_play-justify --_play-size | — | — |
 | `stagger` | carousel | — | — | yes | --_stg-base-i --_stg-crd-i | — | — |
@@ -174,7 +174,7 @@ What each one is *for*:
 | `vid()` | player-tool cluster over a chrome-less `<video>` — JS **injects** the requested buttons (bottom-end; order CC → PiP → fullscreen, fullscreen rightmost). Size mirrors `arw()` (`vid(sm)`…`vid(xl)`, default 2.5rem). Needs `index.js`; PiP feature-detected (skipped in Firefox). `cc` = subtitles/captions button (glyph only — **switching not wired yet**). *(Play/pause is `<ui-play>` furniture, not a `vid()` value.)* |
 | `load()` | loading strategy — `load(eager)` makes every slide eager and gives the first `fetchpriority="high"` |
 | `chip()` `sticker()` `beacon()` `save()` `play()` | place + theme an overlay element — position **or** hue **or** that element's own size/shape args, one atomic token each |
-| `play()` | also **sizes** the `<ui-play>` control (`sm md lg xl`). Mirrors `<ui-play>`'s own `size=` scale; an explicit `size=` on the element still wins. Position args (`ts…be`) and size args are disjoint vocabularies, so one stem parses unambiguously. *(`ply(<size>)` is a deprecated alias.)* |
+| `play()` | also **sizes** the `<ui-play>` control (`sm md lg xl`). Mirrors `<ui-play>`'s own `size=` scale; an explicit `size=` on the element still wins. Position args (`ts…be`) and size args are disjoint vocabularies, so one stem parses unambiguously. *(The old `ply(<size>)` stem was removed in v5.)* |
 | `marquee()` | the `<ui-marquee>` **band** (not 9-grid furniture) — see *Overlay furniture* |
 | `pages` | **`<lay-out overflow>` only** — one `::scroll-marker` per *page* of items instead of per item; see [carousel.md](./carousel.md#pages--one-marker-per-page-lay-out-overflow-only) |
 
@@ -573,7 +573,7 @@ The scrim `::after` stays out of grid flow (`position: absolute; inset: 0`).
 | *(bare)* | `scm` | reads `--ui-media-scrim-default` — set by the host `ovr()` to match the overlay corner; falls back to `bc` |
 | **direction** | `scm(ts)` … `scm(be)` | explicit direction (overrides the default) — `ts tc te cs cc ce bs bc be`, matching furniture placement |
 | **size** | `scm(sm)` `scm(md)` `scm(lg)` `scm(xl)` | how far the gradient reaches across the frame; sets `--ui-media-scrim-mid-stop`/`-end-stop` (and the `cc` band edges). `md` = default (`40%`/`80%`); `xl` nearly fills the frame |
-| **intensity** | `scm(shr)` `scm(lgt)` `scm(med)` `scm(drk)` `scm(sld)` | dark-end opacity; sets `--ui-media-scrim-color` (`0.35` / `0.55` / `0.78` default / `0.92` / `1`). Canonical 3-letter codes; **`sheer`/`solid` are kept as aliases** of `shr`/`sld`. `sld` also pulls the mid stop to the full colour, so it holds opaque across the covered area instead of fading through the translucent mid mix |
+| **intensity** | `scm(shr)` `scm(lgt)` `scm(med)` `scm(drk)` `scm(sld)` | dark-end opacity; sets `--ui-media-scrim-color` (`0.35` / `0.55` / `0.78` default / `0.92` / `1`). 3-letter codes only — the long `sheer`/`solid` spellings were **removed in v5**. `sld` also pulls the mid stop to the full colour, so it holds opaque across the covered area instead of fading through the translucent mid mix |
 
 Combine axes freely, e.g. `scm(bc) scm(lg) scm(drk)`. `scm` works **standalone** too (a darkened image, no overlay content needed).
 
@@ -845,51 +845,44 @@ Video-player styles live in **`media.video.css`** (imported after `media.css`, b
 
 - **Preview overlay.** `data-preview` is the **provider-agnostic facade layer** — a `<video data-preview>` (animated gif-like loop, e.g. Vimeo) **or** an `<img data-preview>` (static poster, e.g. a YouTube thumbnail). It sits on top of the real, SSR'd player behind it (`z-index: 1`, below furniture at `z-index: 2`) — the `z-index` lifts it, so **source order doesn't matter**. `pointer-events: none` lets clicks fall through to a real `<video controls>`, so a native video can reveal with no JS; `:playing` then hides the preview (`ui-media:has(> video:not([data-preview]):playing)`). `:playing` is Safari/Chrome only — Firefox falls back to the JS drop in `initEmbeds`. An `<iframe>` embed has no matching `<video>`, so its preview stays until the JS click facade drops it.
 - **Play-control fade.** On a frame with a direct `<video>`, `<ui-play>` fades out while playing (`[open]`, set by `index.js` from real playback state) and reveals on hover/focus of the whole slide — the parent, not just the frame, since a layered `<ui-content>` overlay would otherwise swallow the hover.
-- **`play(<size>)`** sizes `<ui-play>` (`sm md lg xl`, mirroring its `size=` scale); **`play(<pos>)`** positions it (`ts…be`). **One stem, two disjoint vocabularies** — they parse unambiguously and compose: `media="play(be) play(lg)"`. (`ply(<size>)` is a deprecated alias, removed in v5.)
+- **`play(<size>)`** sizes `<ui-play>` (`sm md lg xl`, mirroring its `size=` scale); **`play(<pos>)`** positions it (`ts…be`). **One stem, two disjoint vocabularies** — they parse unambiguously and compose: `media="play(be) play(lg)"`. (The old `ply(<size>)` stem was **removed in v5** — no alias remains.)
 - **PLAYER TOOLS (`vid()`).** Tool vars live on the `[media]` host (like the arrow vars) so they inherit to the JS-injected buttons and an ancestor `vid(sm…xl)` can override the size. Buttons are discs with `url()` SVG glyphs; state via `aria-pressed`. PiP is hidden until `<ui-play>` reports playing (before play, a facade has no `<video>` → the button is a no-op); fullscreen targets the frame so it stays available.
 - **CC switcher.** A customizable `<select class="ui-media-cc">` (`appearance: base-select`, Chrome 135+ / Safari soon; degrades to a plain native select). The trigger is the CC disc — `selectedcontent` and `::picker-icon` hidden, glyph shown; the picker lists the languages. `index.js` (`initVideoTools` → `wireCcSelect`) attaches the one `change` → `textTrack.mode` handler (track switching is JS-only; no declarative equivalent exists). Gotchas baked into the CSS: the `<select>` wrapper is pinned to the tool size (it otherwise reserves picker-icon width and mis-sizes); the wrapper swallows the button's `:hover`, so hover state is triggered from `.ui-media-cc:hover button`; **don't** zero the button `font-size` — the base hover ring (`--button-bxsh--hover`) spread is `.16em`; option rows set `background-color: transparent` to kill the UA's stale-active grey, and a soft `border-block-end` replaces the UA's solid `#ccc` divider.
 
-## Aliases — still live, and the ones removed in v5
+## Aliases — the v5 sweep left none
 
-Everything in the generated table below is still a live alias: a pure CSS
-re-spelling — no console warning, no runtime cost — so migrating off it is a
-find-and-replace. The full inventory across all three attributes comes from the
-manifest:
+**There are no live aliases left in the system.** The generated table below is the
+full inventory across all three attributes, straight from the manifest, and it is
+empty — it stays that way until a new alias is declared:
 
 <!-- tokens:aliases attr=media,variant,content -->
 | deprecated | canonical | on | kind |
 |---|---|---|---|
-| `rds(none)` | `rds(non)` | `media=` | arg |
-| `scm(sheer)` | `scm(shr)` | `media=` | arg |
-| `scm(solid)` | `scm(sld)` | `media=` | arg |
-| `ply()` | `play()` | `media=` | whole token |
-| `rds(none)` | `rds(non)` | `variant=` | arg |
-| `scl()` | `grw()` | `variant=` | whole token |
-| `rds(none)` | `rds(non)` | `content=` | arg |
 <!-- /tokens -->
-
-**Why each live alias exists:**
-
-- **`rds(none)` → `rds(non)`** (all three attributes) — three-letter args everywhere; `non` matches the `non`/`rnd`/`pll`/`crc`/`sqr` corner vocabulary the furniture already uses.
-- **`scm(sheer)`/`scm(solid)` → `scm(shr)`/`scm(sld)`** — same, canonical 3-letter intensity codes.
-- **`scl` / `scl(ts…be)` / `lg:scl` → `grw` / `grw(ts…be)` / `lg:grw`** (`variant=` on `<ui-reveal>`) — reveal's scale-morph animation collided by name with `content=`'s `scl()` type scale. Different attributes, but one spelling should mean one thing.
-- **`ply(<size>)` → `play(<size>)`** — folds the system's only two-stem element into one. Position args (`ts…be`) and size args are disjoint, so one stem parses unambiguously.
 
 ### Removed in v5 (no alias remains)
 
 These stopped resolving — the CSS arms and the manifest entries are gone, so the
-old spellings are inert. Migration is still a find-and-replace, but it is now
-mandatory:
+old spellings are inert (no console warning: a token that matches no rule is
+simply a no-op). Migration is a find-and-replace, but it is now mandatory:
 
 | removed | use instead | on |
 |---|---|---|
 | `ovr(tl)` `ovr(tr)` `ovr(cl)` `ovr(cr)` `ovr(bl)` `ovr(br)` | `ovr(ts)` `ovr(te)` `ovr(cs)` `ovr(ce)` `ovr(bs)` `ovr(be)` | `variant=` |
 | `…(dark)` `…(light)` `…(subtle)` on `tnt` `chip` `sticker` `beacon` `marquee` `save` `play` | `…(black)` `…(white)` `…(gray)` | `media=` |
 | `marquee(loop)` | `marquee(rpt)` | `media=` |
+| `rds(none)` | `rds(non)` | `variant=` `media=` `content=` |
+| `scm(sheer)` `scm(solid)` | `scm(shr)` `scm(sld)` | `media=` |
+| `ply(sm\|md\|lg\|xl)` | `play(sm\|md\|lg\|xl)` | `media=` |
+| `scl` `scl(ts…be)` `lg:scl` `lg:scl(ts…be)` | `grw` `grw(ts…be)` `lg:grw` `lg:grw(ts…be)` | `variant=` |
 
 - **`ovr(tl…br)` → `ovr(ts…be)`** — the implementation was **already logical**: `ovr(tl)` rendered top-*end* in RTL, so the physical names were mislabels, not behaviour. Six spellings went, not nine: `ovr(tc)`/`ovr(cc)`/`ovr(bc)` are identical in both grids. With these gone, **`obp()` is the only physical position vocabulary left in the system** — everywhere else `ts tc te · cs cc ce · bs bc be` is the single spelling.
 - **`…(dark)`/`…(light)`/`…(subtle)` → `…(black)`/`…(white)`/`…(gray)`** — one hue palette (see *The canonical nine hues*). `slate` was **not** removed with them: it routes to its own `--ui-theme-slate-*` bundle, so it was promoted to a canonical hue instead.
 - **`marquee(loop)` → `marquee(rpt)`** — `loop` is also the bare carousel autoplay-with-clones flag in the same attribute; the substring match collided, and keeping an alias would have kept the collision surface alive.
+- **`rds(none)` → `rds(non)`** (all three attributes) — three-letter args everywhere; `non` matches the `non`/`rnd`/`pll`/`crc`/`sqr` corner vocabulary the furniture already uses.
+- **`scm(sheer)`/`scm(solid)` → `scm(shr)`/`scm(sld)`** — same, canonical 3-letter intensity codes, matching the `lgt`/`med`/`drk` ones between them.
+- **`ply(<size>)` → `play(<size>)`** — folds the system's only two-stem element into one. Position args (`ts…be`) and size args are disjoint, so one stem parses unambiguously. `render.js` used to normalize `ply(` → `play(` on preset and override input; that code path is gone too, so a stale `ply()` now reaches `media=` verbatim and matches nothing.
+- **`scl` / `scl(ts…be)` / `lg:scl` → `grw` / `grw(ts…be)` / `lg:grw`** (`variant=` on `<ui-reveal>`) — reveal's scale-morph animation collided by name with `content=`'s `scl()` type scale. Different attributes, but one spelling should mean one thing; `scl()` now means the type scale and nothing else. The reveal preset word `"type": "scale"` still folds to `grw` — only the token spelling `scl` was dropped.
 
 **Physical by design, not by legacy:** `obp()`'s `tl…br`. `object-position` has no logical keywords and "crop to the left edge" is a genuine direction-independent intent — see [`obp()`](#obp--object-position-9-grid). It is the sole exception to the one-position-grid rule.
 
@@ -899,7 +892,7 @@ mandatory:
 
 - **Nested `<ui-media>`** (a layered frame used as a carousel slide) is always a plain frame, never a scroller. Raw `ui-media ui-media` (specificity 0,0,2) out-specifies the carousel's descendant rules (0,0,1) in `media.carousel.css`, so the frame wins regardless of import order — no `!important`.
 - **`clip`** applies `clip-path: inset(0 round …)` because a scroll container's `border-radius` can drop its corners mid-scroll (compositing); `clip-path` clips reliably. `round()` has no superellipse, so `-sq` squircles clip as a plain round.
-- **Scrim** has three orthogonal axes — direction (9 gradients, logical `ts…be` grid matching furniture, mirrored under `:dir(rtl)`), size (`sm md lg xl`, sets the shared stop positions), and intensity (`shr lgt med drk sld`, `sheer`/`solid` aliases, sets the dark-end opacity). The directional default is set by the host `ovr()` (`ui-card.css`) to match the overlay corner; `scm(<pos>)` overrides; bare `scm` paints the default. A mid colour stop holds the dark before fading so text spanning the frame stays legible, not just at the very corner.
+- **Scrim** has three orthogonal axes — direction (9 gradients, logical `ts…be` grid matching furniture, mirrored under `:dir(rtl)`), size (`sm md lg xl`, sets the shared stop positions), and intensity (`shr lgt med drk sld` — the `sheer`/`solid` aliases were removed in v5 — sets the dark-end opacity). The directional default is set by the host `ovr()` (`ui-card.css`) to match the overlay corner; `scm(<pos>)` overrides; bare `scm` paints the default. A mid colour stop holds the dark before fading so text spanning the frame stays legible, not just at the very corner.
 
 ---
 

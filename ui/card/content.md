@@ -115,7 +115,7 @@ Argument vocabularies, the custom properties each token writes, and which tokens
 | `tx()` | type-group | **size** sm md lg xl · **tone** shr lgt med drk sld accent inv · **weight** 300 400 500 600 700 800 900 · **flag** shd | — | — | --ui-content-body-ink --ui-content-body-weight --ui-content-body-text-shadow --ui-content-body-fs | — | — |
 | `mt()` | type-group | **size** sm md lg xl · **tone** shr lgt med drk sld accent inv · **weight** 300 400 500 600 700 800 900 · **flag** shd | — | — | --ui-content-meta-ink --ui-content-meta-weight --ui-content-meta-text-shadow --ui-content-meta-base | — | — |
 | `fnt()` | font | **font** body head serif mono form | — | — | --ui-content-font | — | — |
-| `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | none→non | — | --ui-content-radius --ui-content-squircle-exp | — | — |
+| `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | — | — | --ui-content-radius --ui-content-squircle-exp | — | — |
 | `plc()` | placement | **pos** ts tc te cs cc ce bs bc be | — | — | --ui-content-place-block --ui-content-place-inline | — | — |
 | `wid()` | measure | **size** sm md lg xl 2xl | — | — | --ui-content-max | — | — |
 | `tal()` | alignment | **value** start ctr end | — | — | --ui-content-text-align | — | — |
@@ -207,7 +207,7 @@ Same scale as `variant="rds()"` on the card and `media="rds()"` on a standalone 
 
 > **Corners need a background to be visible.** `--ui-content-radius` defaults to `0` and is inert inside a card. `<ui-content>` **paints no background of its own** — the card sheets set `background` on `ui-card`, not on the text column — so on a standalone primitive you must supply one yourself (`style="background: …"`, a utility class, or a themed wrapper). Rounding a transparent box is a no-op. The token is there so a preset can emit a bare `<ui-content>` with real corners once it has a surface.
 
-`rds()` is substring-matched (like the card's and media's), which is safe here because it has no `md:`/`lg:` forms to shadow and `rds(sm)` is not a substring of `rds(sm-sq)`. `rds(none)` is a **deprecated alias** of `rds(non)`, removed in v5.
+`rds()` is substring-matched (like the card's and media's), which is safe here because it has no `md:`/`lg:` forms to shadow and `rds(sm)` is not a substring of `rds(sm-sq)`. The old `rds(none)` spelling was **removed in v5** on all three attributes — `rds(non)` is the only spelling.
 
 ### Arbitrary values (escape hatch)
 

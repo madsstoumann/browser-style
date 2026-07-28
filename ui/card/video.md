@@ -114,8 +114,8 @@ the video's real `play`/`pause`/`ended` events — never guessed. **There is no
 A **provider facade** is the exception: an `<iframe>` is not an `HTMLMediaElement`, so a
 `provider="youtube|vimeo"` frame uses the click facade instead (drop the poster, append
 `autoplay=1`, hand off to the platform player) and its `<button>` carries no
-`command`/`commandfor`. Size the control with `play(sm|md|lg|xl)` — `ply()` is a deprecated
-alias. Full reference: [media.md](./media.md#ui-play--one-contract).
+`command`/`commandfor`. Size the control with `play(sm|md|lg|xl)` — the old `ply()` stem was
+removed in v5. Full reference: [media.md](./media.md#ui-play--one-contract).
 
 ---
 

@@ -8,8 +8,8 @@
 >
 > | Old attribute | `variant=` token |
 > |---|---|
-> | `type="expand\|flip\|slide\|scale"` | `exp` / `flp` / `sld` / `scl` |
-> | `type-lg="scale"` | `lg:scl` (variant's `lg:` container tier, ≥ 44rem) |
+> | `type="expand\|flip\|slide\|scale"` | `exp` / `flp` / `sld` / `grw` (shipped as `scl`, renamed to `grw`; `scl` removed in v5) |
+> | `type-lg="scale"` | `lg:grw` (variant's `lg:` container tier, ≥ 44rem) |
 > | `from="top\|bottom\|left\|right"` | folded into the animation token's value: `flp(top)`, `sld(lft)`, … |
 > | `to` (expand popup mode) | `pop` |
 > | `trigger="card"` | `trg(card)` |

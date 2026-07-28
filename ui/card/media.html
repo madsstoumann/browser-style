@@ -69,7 +69,7 @@
 	<h2>Radius — <code>rds()</code></h2>
 	<p>Inside <code>&lt;ui-card&gt;</code>/<code>&lt;ui-reveal&gt;</code> the parent rounds and clips the frame, so you don't set corners on the media. <strong>Standalone</strong> <code>&lt;ui-media&gt;</code> can round its own corners with <code>rds()</code> — the same scale as the card's <code>variant="rds(…)"</code>: <code>sm md lg xl 2xl full pill</code>, plus <code>-sq</code> squircle variants (<code>sm-sq md-sq lg-sq xl-sq</code>) that add a superellipse <code>corner-shape</code>.</p>
 	<lay-out md="columns(2)" lg="columns(4)">
-		<ui-media media="asr(4/3) rds(none) chip(bc)"><img src="/assets/images/river.png" alt=""><ui-chip>rds(none)</ui-chip></ui-media>
+		<ui-media media="asr(4/3) rds(non) chip(bc)"><img src="/assets/images/river.png" alt=""><ui-chip>rds(non)</ui-chip></ui-media>
 		<ui-media media="asr(4/3) rds(sm) chip(bc)"><img src="/assets/images/river.png" alt=""><ui-chip>rds(sm)</ui-chip></ui-media>
 		<ui-media media="asr(4/3) rds(md) chip(bc)"><img src="/assets/images/river.png" alt=""><ui-chip>rds(md)</ui-chip></ui-media>
 		<ui-media media="asr(4/3) rds(lg) chip(bc)"><img src="/assets/images/river.png" alt=""><ui-chip>rds(lg)</ui-chip></ui-media>
@@ -136,7 +136,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Scrim — <code>scm</code> over media</h2>
-	<p>A <strong>scrim</strong> is the darkening gradient painted over the image (via <code>ui-media::after</code>) so overlaid text stays legible. It has three composable axes: <strong>direction</strong> (<code>scm(pos)</code> — the 3×3 grid below), <strong>size</strong> (<code>scm(sm md lg xl)</code>), and <strong>intensity</strong> (<code>scm(sheer lgt med drk solid)</code>). The nine cards show every <code>scm(pos)</code> with an <code>ovr()</code> eyebrow + headline over the scrim; the dropdowns apply a <strong>size</strong>, <strong>intensity</strong>, and <strong>colour</strong> to all of them at once (colour defaults to the standard dark — switch to <code>hotpink</code> to see the gradient shape clearly).</p>
+	<p>A <strong>scrim</strong> is the darkening gradient painted over the image (via <code>ui-media::after</code>) so overlaid text stays legible. It has three composable axes: <strong>direction</strong> (<code>scm(pos)</code> — the 3×3 grid below), <strong>size</strong> (<code>scm(sm md lg xl)</code>), and <strong>intensity</strong> (<code>scm(shr lgt med drk sld)</code>). The nine cards show every <code>scm(pos)</code> with an <code>ovr()</code> eyebrow + headline over the scrim; the dropdowns apply a <strong>size</strong>, <strong>intensity</strong>, and <strong>colour</strong> to all of them at once (colour defaults to the standard dark — switch to <code>hotpink</code> to see the gradient shape clearly).</p>
 	<div class="scrim-controls">
 		<label>Colour
 			<select id="scrim-color">
@@ -156,11 +156,11 @@
 		</label>
 		<label>Intensity
 			<select id="scrim-intensity">
-				<option value="sheer">sheer (0.35)</option>
+				<option value="shr">shr (0.35)</option>
 				<option value="lgt">lgt (0.55)</option>
 				<option value="med" selected>med (0.78, default)</option>
 				<option value="drk">drk (0.92)</option>
-				<option value="solid">solid (1)</option>
+				<option value="sld">sld (1)</option>
 			</select>
 		</label>
 		<label>Text-shadow
@@ -193,7 +193,7 @@
 				lg: { '--ui-media-scrim-mid-stop': '58%', '--ui-media-scrim-end-stop': '100%', '--ui-media-scrim-cc-a': '8%', '--ui-media-scrim-cc-b': '92%' },
 				xl: { '--ui-media-scrim-mid-stop': '74%', '--ui-media-scrim-end-stop': '100%', '--ui-media-scrim-cc-a': '0%', '--ui-media-scrim-cc-b': '100%' },
 			};
-			const ALPHA = { sheer: '0.35', lgt: '0.55', med: '0.78', drk: '0.92', solid: '1' };
+			const ALPHA = { shr: '0.35', lgt: '0.55', med: '0.78', drk: '0.92', sld: '1' };
 			const HUE = { default: '0 0 0', hotpink: '255 105 180', white: '255 255 255', midnight: '20 24 82' };
 			const SHADOW = {
 				none: 'none',
@@ -204,7 +204,7 @@
 			const setSize = (v) => { for (const [k, val] of Object.entries(SIZE[v])) grid.style.setProperty(k, val); };
 			const setIntensity = (v) => {
 				grid.style.setProperty('--scrim-a', ALPHA[v]);
-				grid.style.setProperty('--ui-media-scrim-fade', v === 'solid' ? '0%' : '55%');
+				grid.style.setProperty('--ui-media-scrim-fade', v === 'sld' ? '0%' : '55%');
 			};
 			// a white scrim needs dark overlay text; every other hue keeps it light
 			const setColor = (v) => {

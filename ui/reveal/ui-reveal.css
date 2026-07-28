@@ -92,11 +92,8 @@
 		&:where([variant~="sld"], [variant~="sld(top)"], [variant~="sld(btm)"], [variant~="sld(lft)"], [variant~="sld(rgt)"]) > details { --_rvl: sld; }
 		/* grw = grow/scale-morph. Renamed from scl() so it stops colliding with
 		   content='s scl() type scale (a different attribute, but one spelling should
-		   mean one thing); the scl spellings stay as deprecated aliases. */
-		&:where(
-			[variant~="grw"], [variant~="grw(ts)"], [variant~="grw(te)"], [variant~="grw(bs)"], [variant~="grw(be)"],
-			[variant~="scl"], [variant~="scl(ts)"], [variant~="scl(te)"], [variant~="scl(bs)"], [variant~="scl(be)"] /* deprecated alias — remove in v5 */
-		) > details { --_rvl: grw; }
+		   mean one thing); the scl spellings were removed in v5. */
+		&:where([variant~="grw"], [variant~="grw(ts)"], [variant~="grw(te)"], [variant~="grw(bs)"], [variant~="grw(be)"]) > details { --_rvl: grw; }
 
 		/* consume shared --ui-card-cols (horizontal/split tokens) */
 		> details > summary,
@@ -505,16 +502,16 @@
 	   explicitly by a grw()/lg:grw() corner (wins by source order). Host-side
 	   var setters, consumed only by the grw geometry above (inert otherwise);
 	   one set serves both the base tokens and the lg: tier. The scl()/lg:scl()
-	   spellings ride along in the same lists as deprecated aliases. */
+	   spellings that used to ride along in these lists were removed in v5. */
 	:where(ui-reveal) {
 		&:is([variant~="ico(ts)"],[variant~="ico(te)"]) { --_scale-bs: 0; --_scale-be: auto; }
 		&:is([variant~="ico(bs)"],[variant~="ico(be)"]) { --_scale-bs: auto; --_scale-be: 0; }
 		&:is([variant~="ico(ts)"],[variant~="ico(bs)"]) { --_scale-is: 0; --_scale-ie: auto; }
 		&:is([variant~="ico(te)"],[variant~="ico(be)"]) { --_scale-is: auto; --_scale-ie: 0; }
-		&:is([variant~="grw(ts)"],[variant~="grw(te)"],[variant~="lg:grw(ts)"],[variant~="lg:grw(te)"],[variant~="scl(ts)"],[variant~="scl(te)"],[variant~="lg:scl(ts)"],[variant~="lg:scl(te)"] /* deprecated alias — remove in v5 */) { --_scale-bs: 0; --_scale-be: auto; }
-		&:is([variant~="grw(bs)"],[variant~="grw(be)"],[variant~="lg:grw(bs)"],[variant~="lg:grw(be)"],[variant~="scl(bs)"],[variant~="scl(be)"],[variant~="lg:scl(bs)"],[variant~="lg:scl(be)"] /* deprecated alias — remove in v5 */) { --_scale-bs: auto; --_scale-be: 0; }
-		&:is([variant~="grw(ts)"],[variant~="grw(bs)"],[variant~="lg:grw(ts)"],[variant~="lg:grw(bs)"],[variant~="scl(ts)"],[variant~="scl(bs)"],[variant~="lg:scl(ts)"],[variant~="lg:scl(bs)"] /* deprecated alias — remove in v5 */) { --_scale-is: 0; --_scale-ie: auto; }
-		&:is([variant~="grw(te)"],[variant~="grw(be)"],[variant~="lg:grw(te)"],[variant~="lg:grw(be)"],[variant~="scl(te)"],[variant~="scl(be)"],[variant~="lg:scl(te)"],[variant~="lg:scl(be)"] /* deprecated alias — remove in v5 */) { --_scale-is: auto; --_scale-ie: 0; }
+		&:is([variant~="grw(ts)"],[variant~="grw(te)"],[variant~="lg:grw(ts)"],[variant~="lg:grw(te)"]) { --_scale-bs: 0; --_scale-be: auto; }
+		&:is([variant~="grw(bs)"],[variant~="grw(be)"],[variant~="lg:grw(bs)"],[variant~="lg:grw(be)"]) { --_scale-bs: auto; --_scale-be: 0; }
+		&:is([variant~="grw(ts)"],[variant~="grw(bs)"],[variant~="lg:grw(ts)"],[variant~="lg:grw(bs)"]) { --_scale-is: 0; --_scale-ie: auto; }
+		&:is([variant~="grw(te)"],[variant~="grw(be)"],[variant~="lg:grw(te)"],[variant~="lg:grw(be)"]) { --_scale-is: auto; --_scale-ie: 0; }
 	}
 
 	/* sld/grw panels take clicks (links stay clickable); the icon stays the toggle */
@@ -530,8 +527,7 @@
 	   setters, later in the file, so it wins by source order. === */
 	@container bs-card (inline-size >= 44rem) {
 		:where(ui-reveal:is(
-			[variant~="lg:grw"], [variant~="lg:grw(ts)"], [variant~="lg:grw(te)"], [variant~="lg:grw(bs)"], [variant~="lg:grw(be)"],
-			[variant~="lg:scl"], [variant~="lg:scl(ts)"], [variant~="lg:scl(te)"], [variant~="lg:scl(bs)"], [variant~="lg:scl(be)"] /* deprecated alias — remove in v5 */
+			[variant~="lg:grw"], [variant~="lg:grw(ts)"], [variant~="lg:grw(te)"], [variant~="lg:grw(bs)"], [variant~="lg:grw(be)"]
 		)) > details { --_rvl: grw; }
 	}
 

@@ -118,9 +118,7 @@ export default {
 							"xl-sq"
 						]
 					},
-					"argAliases": {
-						"none": "non"
-					},
+					"argAliases": {},
 					"bare": false,
 					"matching": "substring",
 					"writes": [
@@ -434,10 +432,7 @@ export default {
 							"sld"
 						]
 					},
-					"argAliases": {
-						"sheer": "shr",
-						"solid": "sld"
-					},
+					"argAliases": {},
 					"bare": true,
 					"matching": "substring",
 					"writes": [
@@ -773,7 +768,7 @@ export default {
 						"ui/play/ui-play.css:55",
 						"ui/card/media.carousel.css:85"
 					],
-					"notes": "Default area cc; INTERACTIVE, invalid inside <summary>. ONE stem carries two disjoint vocabularies: position (media.css:170) and size (media.video.css:31, ply() alias) — folding the system's only two-stem element into one. Inside a carousel (auto/loop) the control is re-laid-out as position:sticky and play(<pos>) is re-implemented via --_play-* (media.carousel.css:71-90) for SIX cells only: ts te cs ce bs be (no tc/bc). play(md) exists only in media.video.css:32; ui-play.css:76-78 ships sm/lg/xl on `ui-play button`. play(slate) is a canonical hue with its own --ui-theme-slate-* bundle; the play(dark)/play(light)/play(subtle) aliases were removed in v5."
+					"notes": "Default area cc; INTERACTIVE, invalid inside <summary>. ONE stem carries two disjoint vocabularies: position (media.css:170) and size (media.video.css:31) — folding the system's only two-stem element into one; the legacy ply(<size>) stem was removed in v5 (no alias remains, and render.js no longer normalizes it). Inside a carousel (auto/loop) the control is re-laid-out as position:sticky and play(<pos>) is re-implemented via --_play-* (media.carousel.css:71-90) for SIX cells only: ts te cs ce bs be (no tc/bc). play(md) exists only in media.video.css:32; ui-play.css:76-78 ships sm/lg/xl on `ui-play button`. play(slate) is a canonical hue with its own --ui-theme-slate-* bundle; the play(dark)/play(light)/play(subtle) aliases were removed in v5."
 				},
 				"beacon": {
 					"axis": "furniture",
@@ -1415,43 +1410,6 @@ export default {
 						"ui/base/stagger.css:74"
 					],
 					"notes": "CARD channel — the cards inside a multi-card slide (<ui-slide> or an inner <lay-out>), independent of ani(). Same 7 effects. crd(zom) sets no --_stg-origin (ani(zom) does), so the card zoom uses the default 50% 50% origin."
-				},
-				"ply": {
-					"axis": "furniture",
-					"element": "ui-play",
-					"args": {
-						"size": [
-							"sm",
-							"md",
-							"lg",
-							"xl"
-						]
-					},
-					"argAliases": {},
-					"bare": false,
-					"matching": "substring",
-					"writes": [
-						"--ui-play-sz",
-						"--ui-play-icon-sz"
-					],
-					"realProperties": false,
-					"cqPrefixes": [],
-					"cqArgs": [],
-					"selfArm": true,
-					"hosts": [
-						"ui-media",
-						"ui-card",
-						"ui-reveal"
-					],
-					"requiresJs": {},
-					"deprecated": true,
-					"canonical": "play",
-					"sources": [
-						"ui/card/media.video.css:31",
-						"ui/card/render.js:222",
-						"ui/card/media.md:807"
-					],
-					"notes": "Legacy size-only stem, kept as an alias in the same selector list as play(<size>) (media.video.css:31-34, marked 'remove in v5'). render.js:222 normToken() rewrites ply( → play( on both preset and override input, so nothing downstream sees it. ply() never carried position or hue args."
 				}
 			},
 			"bareFlags": {
@@ -1602,9 +1560,7 @@ export default {
 							"xl-sq"
 						]
 					},
-					"argAliases": {
-						"none": "non"
-					},
+					"argAliases": {},
 					"bare": false,
 					"matching": "whole",
 					"writes": [
@@ -1632,7 +1588,7 @@ export default {
 						"ui/reveal/ui-reveal.css:292",
 						"ui/reveal/ui-reveal.css:296"
 					],
-					"notes": "Arg rules are whole-token (~=); the SHAPE application is a separate SUBSTRING rule `:where(ui-card[variant*=\"-sq)\"]) { corner-shape: superellipse(var(--ui-card-squircle-exp,1.8)) }` (ui/card/ui-card.css:80), mirrored on `ui-reveal[variant*=\"-sq)\"] > details` (ui/reveal/ui-reveal.css:253) and on the exp-pop placeholder (ui/reveal/ui-reveal.css:296) — that is the only real property this token sets. Radius/exponent VALUES (--radius-*, --radius-*-sq, --squircle-*) live in ui/base/tokens.css; these rules only route an arg to a namespace. --ui-card-radius is also consumed by <ui-reveal>'s `> details` border-radius (ui/reveal/ui-reveal.css:74). Same scale + same `none`->`non` alias exists on media= and content=. variant= is host-only by design — it arranges the two children, so there is no self arm on <ui-media>/<ui-content>."
+					"notes": "Arg rules are whole-token (~=); the SHAPE application is a separate SUBSTRING rule `:where(ui-card[variant*=\"-sq)\"]) { corner-shape: superellipse(var(--ui-card-squircle-exp,1.8)) }` (ui/card/ui-card.css:80), mirrored on `ui-reveal[variant*=\"-sq)\"] > details` (ui/reveal/ui-reveal.css:253) and on the exp-pop placeholder (ui/reveal/ui-reveal.css:296) — that is the only real property this token sets. Radius/exponent VALUES (--radius-*, --radius-*-sq, --squircle-*) live in ui/base/tokens.css; these rules only route an arg to a namespace. --ui-card-radius is also consumed by <ui-reveal>'s `> details` border-radius (ui/reveal/ui-reveal.css:74). The same scale exists on media= and content=; the rds(none) alias was removed in v5 on all three attributes — `non` is the only spelling. variant= is host-only by design — it arranges the two children, so there is no self arm on <ui-media>/<ui-content>."
 				},
 				"bdr": {
 					"axis": "border",
@@ -1915,54 +1871,12 @@ export default {
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
-						"ui/reveal/ui-reveal.css:96-99",
-						"ui/reveal/ui-reveal.css:470-502",
-						"ui/reveal/ui-reveal.css:509-518",
-						"ui/reveal/ui-reveal.css:531-536"
+						"ui/reveal/ui-reveal.css:96",
+						"ui/reveal/ui-reveal.css:467-499",
+						"ui/reveal/ui-reveal.css:506-515",
+						"ui/reveal/ui-reveal.css:528-532"
 					],
-					"notes": "Grow / scale-morph. Writes `--_rvl: grw` on `> details`; ONE geometry block (`@container bs-rvl style(--_rvl: grw)`) serves both the base tokens and the lg: tier swap. Bare `grw` takes its anchored corner from ico() (the ico() corner rules write the same --_scale-* vars); grw(ts|te|bs|be) pins it explicitly and wins by source order. `lg:grw` (+ its four corner forms) re-flips the dispatch flag inside `@container bs-card (inline-size >= 44rem)` (ui/reveal/ui-reveal.css:531-536) — it is the ONLY animation with a container-tier swap (there is no lg:exp / lg:flp / lg:sld, and no md: tier at all). Renamed from scl() so one spelling means one thing across attributes; `scl` remains a deprecated alias. Requires <ui-face> around the front face."
-				},
-				"scl": {
-					"axis": "reveal-animation",
-					"element": null,
-					"args": {
-						"pos": [
-							"ts",
-							"te",
-							"bs",
-							"be"
-						]
-					},
-					"argAliases": {},
-					"bare": true,
-					"matching": "whole",
-					"writes": [
-						"--_rvl",
-						"--_scale-bs",
-						"--_scale-be",
-						"--_scale-is",
-						"--_scale-ie"
-					],
-					"realProperties": true,
-					"cqPrefixes": [
-						"lg"
-					],
-					"cqArgs": [
-						"pos"
-					],
-					"selfArm": false,
-					"hosts": [
-						"ui-reveal"
-					],
-					"requiresJs": {},
-					"deprecated": true,
-					"canonical": "grw",
-					"sources": [
-						"ui/reveal/ui-reveal.css:96-99",
-						"ui/reveal/ui-reveal.css:514-517",
-						"ui/reveal/ui-reveal.css:531-536"
-					],
-					"notes": "DEPRECATED alias of grw (remove in v5). Every spelling rides in the same selector lists as its grw counterpart: bare `scl`, `scl(ts|te|bs|be)`, bare `lg:scl` and `lg:scl(<corner>)`. It is a HOMONYM of content='s scl() type-scale token — different attribute, different axis; a manifest consumer must key tokens per attribute, never by bare stem."
+					"notes": "Grow / scale-morph. Writes `--_rvl: grw` on `> details`; ONE geometry block (`@container bs-rvl style(--_rvl: grw)`) serves both the base tokens and the lg: tier swap. Bare `grw` takes its anchored corner from ico() (the ico() corner rules write the same --_scale-* vars); grw(ts|te|bs|be) pins it explicitly and wins by source order. `lg:grw` (+ its four corner forms) re-flips the dispatch flag inside `@container bs-card (inline-size >= 44rem)` (ui/reveal/ui-reveal.css:528-532) — it is the ONLY animation with a container-tier swap (there is no lg:exp / lg:flp / lg:sld, and no md: tier at all). Renamed from scl() so one spelling means one thing across attributes; the `scl`/`lg:scl` spellings were removed in v5 — no alias remains. Requires <ui-face> around the front face."
 				},
 				"trg": {
 					"axis": "reveal-mode",
@@ -2769,7 +2683,7 @@ export default {
 						"ui/card/content.typography.css:227-284",
 						"ui/card/content.typography.css:285-342"
 					],
-					"notes": "TWO DISJOINT ARG CLASSES WITH DIFFERENT MECHANICS.\n(1) STEPS (sm md lg xl) — the master step. Each writes the ACTIVE props (--ui-content-fs, --ui-content-headline) AND re-points both relational ladders (--ui-content-tx-* body, --ui-content-hl-* headline): scl(sm) = one step down, scl(md) = identity (written explicitly so a nested scl(md) resets an inherited shift), scl(lg) = +1, scl(xl) = +2, SATURATING at the ends. That is why hl(2xl) under scl(sm) renders the xl stop, and why the group size tokens need no md:/lg: forms of their own. Ladder values inherit as unresolved token streams (clamp() is not evaluated in custom properties), so they re-resolve wherever a size token re-declares. Prefixable, both arms.\n(2) MODES (fix, fluid) — NOT prefixable, and the one documented cascade exception (analysis §2b): they re-point the STOP vars (fluid cqi clamps <-> the global static --font-size-* scale) and are written with `:is([content~=\"scl(fix)\"])` at (0,1,0) — everything else in this file is :where() at (0,0,x) — so the nearest mode wins over an ancestor's descendant re-declaration. scl(fluid) comes AFTER scl(fix) in source, so on a tie fluid wins: an explicit scl(fluid) CANNOT be re-fixed further down (a deliberate one-way door). Modes write only stop vars, so they never collide with the size rules.\nSOURCE ORDER IS LOAD-BEARING for the whole file: base scl < md:scl < lg:scl < base hl < md:hl < lg:hl, all tying at :where() specificity.\nThere is no scl(2xl): --ui-content-fs-2xl exists as ladder headroom only. HOMONYM of variant='s deprecated reveal `scl` alias — key per attribute."
+					"notes": "TWO DISJOINT ARG CLASSES WITH DIFFERENT MECHANICS.\n(1) STEPS (sm md lg xl) — the master step. Each writes the ACTIVE props (--ui-content-fs, --ui-content-headline) AND re-points both relational ladders (--ui-content-tx-* body, --ui-content-hl-* headline): scl(sm) = one step down, scl(md) = identity (written explicitly so a nested scl(md) resets an inherited shift), scl(lg) = +1, scl(xl) = +2, SATURATING at the ends. That is why hl(2xl) under scl(sm) renders the xl stop, and why the group size tokens need no md:/lg: forms of their own. Ladder values inherit as unresolved token streams (clamp() is not evaluated in custom properties), so they re-resolve wherever a size token re-declares. Prefixable, both arms.\n(2) MODES (fix, fluid) — NOT prefixable, and the one documented cascade exception (analysis §2b): they re-point the STOP vars (fluid cqi clamps <-> the global static --font-size-* scale) and are written with `:is([content~=\"scl(fix)\"])` at (0,1,0) — everything else in this file is :where() at (0,0,x) — so the nearest mode wins over an ancestor's descendant re-declaration. scl(fluid) comes AFTER scl(fix) in source, so on a tie fluid wins: an explicit scl(fluid) CANNOT be re-fixed further down (a deliberate one-way door). Modes write only stop vars, so they never collide with the size rules.\nSOURCE ORDER IS LOAD-BEARING for the whole file: base scl < md:scl < lg:scl < base hl < md:hl < lg:hl, all tying at :where() specificity.\nThere is no scl(2xl): --ui-content-fs-2xl exists as ladder headroom only. It was once a HOMONYM of variant='s reveal `scl` alias; that alias was removed in v5 (reveal's animation is grw()), so this is now the system's only scl(). A manifest consumer must still key tokens per attribute, never by bare stem."
 				},
 				"hl": {
 					"axis": "type-group",
@@ -3094,9 +3008,7 @@ export default {
 							"xl-sq"
 						]
 					},
-					"argAliases": {
-						"none": "non"
-					},
+					"argAliases": {},
 					"bare": false,
 					"matching": "substring",
 					"writes": [
@@ -3122,7 +3034,7 @@ export default {
 						"ui/card/content.css:124-125",
 						"ui/card/content.css:132"
 					],
-					"notes": "NEW this round (R-10b) and aimed at the STANDALONE <ui-content> — inside a card the host rounds itself and clips the inner areas via overflow: hidden, so the default 0 is inert there. SUBSTRING matched (`[content*=\"rds(sm)\"]`), unlike every other content token except scr's companion arms: safe because rds() has no md:/lg: forms to shadow and `rds(sm)` is not a substring of `rds(sm-sq)` (the closing paren separates them). Same scale and the same `none` -> `non` alias as variant='s and media='s rds(); values come from ui/base/tokens.css. The -sq shape rule is a second substring selector on `-sq)` with both arms (`:where([content*=\"-sq)\"]) ui-content` and `:where(ui-content[content*=\"-sq)\"])`) and is this token's real property (corner-shape: superellipse)."
+					"notes": "NEW this round (R-10b) and aimed at the STANDALONE <ui-content> — inside a card the host rounds itself and clips the inner areas via overflow: hidden, so the default 0 is inert there. SUBSTRING matched (`[content*=\"rds(sm)\"]`), unlike every other content token except scr's companion arms: safe because rds() has no md:/lg: forms to shadow and `rds(sm)` is not a substring of `rds(sm-sq)` (the closing paren separates them). Same scale as variant='s and media='s rds(); the rds(none) alias was removed in v5 on all three attributes, so `non` is the only spelling. Values come from ui/base/tokens.css. The -sq shape rule is a second substring selector on `-sq)` with both arms (`:where([content*=\"-sq)\"]) ui-content` and `:where(ui-content[content*=\"-sq)\"])`) and is this token's real property (corner-shape: superellipse)."
 				},
 				"plc": {
 					"axis": "placement",

@@ -201,20 +201,16 @@ const embedVideoObject = (item) => {
    always wins). */
 
 /* The overlay stems the renderer emits: the five FURNITURE elements (chip/sticker/
-   save/play/beacon) + their deprecated spellings, plus the marquee BAND. The band is
-   a different manifest axis on purpose (full-width strip, `top`/`bot` instead of the
-   9-grid) but it has the exact same merge problem — CSS resolves media= by source
-   order, not token order — so it joins the same override table. */
+   save/play/beacon), plus the marquee BAND. The band is a different manifest axis on
+   purpose (full-width strip, `top`/`bot` instead of the 9-grid) but it has the exact
+   same merge problem — CSS resolves media= by source order, not token order — so it
+   joins the same override table. Deprecated stems are excluded from the table (the
+   guard is currently a no-op — ply() was folded into play() and removed in v5, so no
+   furniture stem has a deprecated spelling left and token strings reach the merge
+   verbatim, with no stem-normalization step). */
 const FURNITURE = Object.entries(TOKENS.attributes.media.tokens)
 	.filter(([, entry]) => entry.axis === 'furniture' || entry.axis === 'band');
 const FURNITURE_TOKEN = new RegExp(`^(${FURNITURE.filter(([, entry]) => !entry.deprecated).map(([stem]) => stem).join('|')})\\(([^)]*)\\)$`);
-/* deprecated stem → canonical: ply(<size>) is the legacy spelling of play()'s sizes,
-   accepted as input and normalized away so <ui-play> has one stem for both its axes. */
-const STEM_ALIAS = FURNITURE.filter(([, entry]) => entry.deprecated).map(([stem, entry]) => [stem + '(', entry.canonical + '(']);
-const normToken = (token) => {
-	for (const [from, to] of STEM_ALIAS) if (token.startsWith(from)) return to + token.slice(from.length);
-	return token;
-};
 
 /* arg value → merge axis, unioned from the manifest across the furniture stems. The
    class list is PINNED: adopting a new manifest arg class changes which preset tokens
@@ -244,8 +240,8 @@ const axisOf = (value) => {
 /* Merge a preset media= string with furniture style-override tokens. Overrides
    win: any preset token of the same element+axis is dropped before appending. */
 const mergeMediaTokens = (presetMedia, overrides = []) => {
-	const ov = overrides.filter(Boolean).map(normToken);
-	const base = String(presetMedia || '').split(/\s+/).filter(Boolean).map(normToken);
+	const ov = overrides.filter(Boolean);
+	const base = String(presetMedia || '').split(/\s+/).filter(Boolean);
 	if (!ov.length) return base.join(' ');
 	const conflicts = new Set();
 	for (const token of ov) {
@@ -264,8 +260,9 @@ const mergeMediaTokens = (presetMedia, overrides = []) => {
 const withMedia = (html, media) => media ? html.replace('<ui-media', `<ui-media${attrs({ media })}`) : html;
 
 /* reveal preset values → compact variant-token spellings. The scale animation is
-   grw() (content= owns scl()); both spellings are accepted as preset input. */
-const RVL_TOKEN = { expand: 'exp', flip: 'flp', slide: 'sld', scale: 'grw', scl: 'grw' };
+   grw() (content= owns scl()); the old `scl` spelling was removed in v5, so `scale`
+   is the only preset word that folds to it. */
+const RVL_TOKEN = { expand: 'exp', flip: 'flp', slide: 'sld', scale: 'grw' };
 const FRM_TOKEN = { top: 'top', bottom: 'btm', left: 'lft', right: 'rgt' };
 /* animations whose token carries a direction/origin argument (manifest: the
    reveal-animation stems that declare a `pos` arg class — exp declares none) */

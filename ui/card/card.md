@@ -225,9 +225,9 @@ Save/play are **controls** (interactive) — card-only, never inside a reveal `<
 > **Schema note.** `render.js` reads `reveal.name`, but `card-preset.schema.json` does not
 > yet declare it among the `reveal` properties (`type typeLg to icon iconType iconClose from
 > trigger scroll`). The renderer honours it today; the schema needs the field added before an
-> editor can surface it. That schema's `description` also still spells the scale animation
-> `scl`/`lg:scl` — the CSS canonical spelling is now `grw`/`lg:grw` (old spellings kept as
-> deprecated aliases, so nothing is broken).
+> editor can surface it. (The schema's own `description` is current on the animation: the
+> preset word `"type": "scale"` folds to the `grw`/`lg:grw` tokens. The old `scl`/`lg:scl`
+> token spellings were **removed in v5** — migrate to `grw`/`lg:grw`.)
 
 **`shp()` — clip the media content to a shape.** Applies a `clip-path` to the
 `img`/`video`/`iframe` inside `<ui-media>` (the frame background goes transparent).

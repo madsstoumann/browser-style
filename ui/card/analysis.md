@@ -139,7 +139,7 @@ Elements: **`<ui-card>`** (static host, unregistered), **`<cq-box>`** (queryable
 
 | Attribute | Applies To | Purpose | Type |
 |-----------|-----------|---------|------|
-| `variant` | reveal | Composition DSL (shared with card) — **plus all reveal-specific config**, folded in as tokens: `exp`\|`flp()`\|`sld()`\|`grw()` (one token, direction/origin in the value), `lg:grw` (container tier), `pop` (popup mode), `trg(card)`, `scr` (scroll), `ico()`/`icc()` (toggle icon, one token per word). The former individual attributes `type`/`type-lg`/`from`/`to`/`trigger`/`scroll`/`icon`/`icon-close` are removed; `scl`/`lg:scl` remain as **deprecated aliases** of `grw`/`lg:grw`. There is no `thm()` token — colour is the shared `theme=` attribute. | Token-list |
+| `variant` | reveal | Composition DSL (shared with card) — **plus all reveal-specific config**, folded in as tokens: `exp`\|`flp()`\|`sld()`\|`grw()` (one token, direction/origin in the value), `lg:grw` (container tier), `pop` (popup mode), `trg(card)`, `scr` (scroll), `ico()`/`icc()` (toggle icon, one token per word). The former individual attributes `type`/`type-lg`/`from`/`to`/`trigger`/`scroll`/`icon`/`icon-close` are removed; so are the old `scl`/`lg:scl` spellings (**removed in v5** — use `grw`/`lg:grw`). There is no `thm()` token — colour is the shared `theme=` attribute. | Token-list |
 | `theme` | reveal | Theme axis (shared with card). | Token-list |
 | `media` | reveal (inherits) | Media DSL (shared with card). | Token-list |
 | `content` | reveal (inherits) | Content DSL (shared with card). | Token-list |

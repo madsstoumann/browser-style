@@ -58,10 +58,10 @@
 	   squircle exponents are NOT defined here: --radius-*, --radius-*-sq and
 	   --squircle-* all come from ui/base/tokens.css, which is the canonical scale —
 	   these blocks only route a token arg to a namespace.
-	   round — global radius scale. rds(non) keeps a 3-letter form (aligned with
-	   save(non), mrk(non)); none is its alias. full/pill match the token names
-	   in tokens.css (--radius-circle / --radius-pill). */
-	:where([variant~="rds(non)"], [variant~="rds(none)"] /* deprecated alias — remove in v5 */) { --ui-card-radius: 0; }
+	   round — global radius scale. rds(non) is the only spelling (aligned with
+	   save(non), mrk(non)); the rds(none) alias was removed in v5. full/pill match
+	   the token names in tokens.css (--radius-circle / --radius-pill). */
+	:where([variant~="rds(non)"]) { --ui-card-radius: 0; }
 	:where([variant~="rds(sm)"])   { --ui-card-radius: var(--radius-sm); }
 	:where([variant~="rds(md)"])   { --ui-card-radius: var(--radius-md); }
 	:where([variant~="rds(lg)"])   { --ui-card-radius: var(--radius-lg); }

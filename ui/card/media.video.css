@@ -27,11 +27,12 @@
 	   the furniture-standard single stem: play() already carries the position args
 	   (ts…be, media.css) and every other element sizes via el(<size>), so ui-play is
 	   no longer the one element with two stems. The two arg sets are disjoint
-	   vocabularies, so the substring match stays unambiguous. ply() kept as an alias. */
-	:where([media*="play(sm)"], [media*="ply(sm)"] /* deprecated alias — remove in v5 */) { --ui-play-sz: 2.25em; --ui-play-icon-sz: 1em; }
-	:where([media*="play(md)"], [media*="ply(md)"] /* deprecated alias — remove in v5 */) { --ui-play-sz: 3em;    --ui-play-icon-sz: 1.5em; }
-	:where([media*="play(lg)"], [media*="ply(lg)"] /* deprecated alias — remove in v5 */) { --ui-play-sz: 4em;    --ui-play-icon-sz: 2em; }
-	:where([media*="play(xl)"], [media*="ply(xl)"] /* deprecated alias — remove in v5 */) { --ui-play-sz: 5em;    --ui-play-icon-sz: 2.5em; }
+	   vocabularies, so the substring match stays unambiguous. The ply() stem was
+	   removed in v5 — play(<size>) is the only spelling. */
+	:where([media*="play(sm)"]) { --ui-play-sz: 2.25em; --ui-play-icon-sz: 1em; }
+	:where([media*="play(md)"]) { --ui-play-sz: 3em;    --ui-play-icon-sz: 1.5em; }
+	:where([media*="play(lg)"]) { --ui-play-sz: 4em;    --ui-play-icon-sz: 2em; }
+	:where([media*="play(xl)"]) { --ui-play-sz: 5em;    --ui-play-icon-sz: 2.5em; }
 
 	/* vid() — PLAYER TOOLS: tokens on the [media] host so they inherit to injected buttons */
 	:where([media*="vid("]) {

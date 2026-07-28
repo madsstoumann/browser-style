@@ -4,7 +4,7 @@ A CSS-first **disclosure** built on native `<details>` / `<summary>`, composed o
 
 `<ui-reveal>` `@import`s `ui-card.css`, so it shares the card primitives and DSLs verbatim: the **`media=`** frame ([media.md](../card/media.md)), the **`content=`** text column ([content.md](../card/content.md)), and the **`variant=`** arrangement / overlay / theme / corners ([ui-card-tokens.md](../card/ui-card-tokens.md)). This package adds only the reveal-specific parts: the `<details>` / `<summary>` wiring, `<ui-icon>`, `<ui-face>`, and the reveal `variant=` tokens (`exp`, `flp()`, `sld()`, `grw()`, `ico()`, …) that drive the animations.
 
-> The grow-morph animation is spelled **`grw()`**. `scl` / `scl(ts|te|bs|be)` / `lg:scl` are kept as **deprecated aliases** (removed in v5) — `scl()` is `content=`'s type-scale token, and one spelling should mean one thing even across attributes.
+> The grow-morph animation is spelled **`grw()`**. The old `scl` / `scl(ts|te|bs|be)` / `lg:scl` / `lg:scl(ts|te|bs|be)` spellings were **removed in v5** — migrate them to `grw` / `grw(ts|te|bs|be)` / `lg:grw` / `lg:grw(ts|te|bs|be)`. `scl()` is `content=`'s type-scale token, and one spelling should mean one thing even across attributes.
 
 ---
 
@@ -111,17 +111,15 @@ Reveal behaviour lives on the same space-separated, composable `variant=` attrib
 
 Argument vocabularies are **generated from the card manifest** (`ui/card/data/tokens.json`) —
 the same file `render.js` and the token lint read, so this list cannot drift from
-`ui-reveal.css`. The `md:/lg:` column is the container-tier prefix: only `grw()` (and its
-deprecated `scl()` alias) has one.
+`ui-reveal.css`. The `md:/lg:` column is the container-tier prefix: only `grw()` has one.
 
-<!-- tokens:summary attr=variant stems=exp,flp,sld,grw,scl,pop,trg,scr,ico,icc -->
+<!-- tokens:summary attr=variant stems=exp,flp,sld,grw,pop,trg,scr,ico,icc -->
 | token | axis | args | aliases | bare | writes | md:/lg: | deprecated |
 |---|---|---|---|---|---|---|---|
 | `exp` | reveal-animation | — | — | yes | --_rvl | — | — |
 | `flp()` | reveal-animation | **pos** top btm lft rgt | — | yes | --_rvl --_face-closed --_face-open --_panel-closed --_panel-open --ui-reveal-icon-clear | — | — |
 | `sld()` | reveal-animation | **pos** top btm lft rgt | — | yes | --_rvl | — | — |
 | `grw()` | reveal-animation | **pos** ts te bs be | — | yes | --_rvl --_scale-bs --_scale-be --_scale-is --_scale-ie | lg: (pos) | — |
-| `scl()` | reveal-animation | **pos** ts te bs be | — | yes | --_rvl --_scale-bs --_scale-be --_scale-is --_scale-ie | lg: (pos) | yes → `grw` |
 | `pop` | reveal-mode | — | — | yes | --ui-reveal-expand-m --ui-media-ar --ui-reveal-content-fs | — | — |
 | `trg()` | reveal-mode | **value** card | — | — | — | — | — |
 | `scr` | scroll | — | — | yes | — | — | — |
@@ -132,7 +130,7 @@ deprecated `scl()` alias) has one.
 | Token | Values | Effect |
 |---|---|---|
 | animation | *(omit)* `exp` · `flp` / `flp(top\|btm\|lft\|rgt)` · `sld` / `sld(top\|btm\|lft\|rgt)` · `grw` / `grw(ts\|te\|bs\|be)` | The reveal animation — ONE token that carries its own direction/origin (see below). Bare `flp`/`sld` come from the right; bare `grw` morphs from the `ico()` corner. |
-| `lg:` animation | `lg:grw` (+ the deprecated `lg:scl`) | Swaps to the grow-morph at the `lg` width (≥ 44rem container), overriding the base one. **`grw` is the only animation with an `lg:` form** — there is no `lg:exp`, `lg:flp` or `lg:sld`. |
+| `lg:` animation | `lg:grw` | Swaps to the grow-morph at the `lg` width (≥ 44rem container), overriding the base one. **`grw` is the only animation with an `lg:` form** — there is no `lg:exp`, `lg:flp` or `lg:sld`. |
 | `trg(card)` | `card` | Whole card toggles, front and back — and **no `<ui-icon>` is rendered**. |
 | `pop` | *(bare flag)* | `exp` only — opens the card as a fixed, centered popup with a backdrop and pop-in. |
 | `scr` | *(bare flag)* | Locks a long panel to the card frame and scrolls the overflow. `flp` (any width) and the grow-morph — `grw` or `lg:grw` — whenever it is the active animation. |
@@ -152,15 +150,13 @@ deprecated `scl()` alias) has one.
 | `sld` / `sld(top\|btm\|lft\|rgt)` | Panel slides in over the face from an edge. Direction in the value; bare = from the right. |
 | `grw` / `grw(ts\|te\|bs\|be)` | Panel morphs out from a corner, scaling to fill the card. Origin follows the `ico()` position, or pin it explicitly with the value. |
 
-> **Renamed this round: `scl()` → `grw()`.** `scl()` is `content=`'s type-scale token, and one spelling should mean one thing even across attributes. `scl`, `scl(ts\|te\|bs\|be)`, `lg:scl` and its corner forms are kept as **deprecated aliases** — they still work in v4 and are removed in v5.
+> **`scl()` → `grw()`.** `scl()` is `content=`'s type-scale token, and one spelling should mean one thing even across attributes. `scl`, `scl(ts\|te\|bs\|be)`, `lg:scl` and its corner forms were kept as deprecated aliases through v4 and are **removed in v5**: migrate `scl` → `grw`, `scl(<corner>)` → `grw(<corner>)`, `lg:scl` → `lg:grw`, `lg:scl(<corner>)` → `lg:grw(<corner>)`. A stale `scl` in a reveal's `variant=` now matches no rule, so the disclosure falls back to the plain `exp`-less default. The preset word `"type": "scale"` is unaffected — `render.js` still folds it to `grw`.
 
-Every deprecated `variant=` spelling a reveal can carry, generated from the manifest:
+Every deprecated `variant=` spelling a reveal can carry, generated from the manifest — **empty since the v5 sweep**:
 
 <!-- tokens:aliases attr=variant -->
 | deprecated | canonical | on | kind |
 |---|---|---|---|
-| `rds(none)` | `rds(non)` | `variant=` | arg |
-| `scl()` | `grw()` | `variant=` | whole token |
 <!-- /tokens -->
 
 `ovr()`'s six physical aliases (`ovr(tl)` `ovr(tr)` `ovr(cl)` `ovr(cr)` `ovr(bl)` `ovr(br)`) were **removed in v5** — use the logical `ovr(ts)` `ovr(te)` `ovr(cs)` `ovr(ce)` `ovr(bs)` `ovr(be)`. There were six, not nine: `ovr(tc)` / `ovr(cc)` / `ovr(bc)` are spelled identically in both grids and are unaffected. `ico()` / `icc()` were always logical-only.

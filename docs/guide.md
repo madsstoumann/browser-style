@@ -320,8 +320,8 @@ All reveal behaviour lives in the same `variant=` attribute the card uses:
 
 | Token | Effect |
 |---|---|
-| `exp` · `flp(top|btm|lft)` · `sld(top|btm|lft|rgt)` · `scl(ts|te|bs|be)` | the animation — **exp**and below, **fl**i**p** 180°, **sl**i**d**e in, **sc**a**l**e from a corner. One token; the direction/origin rides in the value (bare `flp`/`sld` = from the right, bare `scl` follows the `ico()` corner) |
-| `lg:scl` | switch animation when the card is wide (expand on mobile, morph on desktop) |
+| `exp` · `flp(top|btm|lft)` · `sld(top|btm|lft|rgt)` · `grw(ts|te|bs|be)` | the animation — **exp**and below, **fl**i**p** 180°, **sl**i**d**e in, **gr**o**w** from a corner. One token; the direction/origin rides in the value (bare `flp`/`sld` = from the right, bare `grw` follows the `ico()` corner) |
+| `lg:grw` | switch animation when the card is wide (expand on mobile, morph on desktop) |
 | `pop` | expand becomes a centered popup with a backdrop |
 | `trg(card)` | the whole card is the toggle (no icon needed) |
 | `scr` | long panels scroll inside the card frame |
