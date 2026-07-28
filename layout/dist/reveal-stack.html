@@ -11,7 +11,15 @@
 	<link rel="stylesheet" href="/layout/demo.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
 	<style>
-		body { margin: 0; }
+		/* NO `body { margin: 0 }` here. This <style> is unlayered, so it would beat
+		   @layer layout's `body:has(lay-out) { margin-inline: max(--layout-mi, 50cqw -
+		   --layout-bleed-mw / 2) }` — the rule that centres the body as the content
+		   column. lay-out[bleed] escapes that column with the exact negative of it, so
+		   zeroing the body margin leaves every bleed layout pulled ~388px off to the
+		   inline-start instead of spanning the viewport. Full-bleed is a job for
+		   <lay-out bleed="0">, which the hero below uses. Only the BLOCK axis is
+		   zeroed here (the UA's 8px top/bottom body margin). */
+		body { margin-block: 0; }
 		.hero {
 			background: #0f172a;
 			color: white;
@@ -23,6 +31,7 @@
 		}
 		.hero h1 { font-size: clamp(2rem, 6vw, 4rem); font-weight: 200; margin: 0; }
 		.hero p { font-size: 1.2rem; opacity: 0.6; }
+		.hero .hero-scroll { margin-block-start: 4rem; opacity: 0.3; }
 		.layer {
 			display: grid;
 			font-family: system-ui;
@@ -50,11 +59,13 @@
 </head>
 <body>
 
-	<div class="hero">
-		<h1>Stack Reveal Demos</h1>
-		<p>The last child clips away via clip-path to reveal content underneath.</p>
-		<p style="opacity: 0.3; margin-top: 4rem;">&darr; Scroll down &darr;</p>
-	</div>
+	<lay-out bleed="0">
+		<div class="hero">
+			<h1>Stack Reveal Demos</h1>
+			<p>The last child clips away via clip-path to reveal content underneath.</p>
+			<p class="hero-scroll">&darr; Scroll down &darr;</p>
+		</div>
+	</lay-out>
 
 	<!-- =================================================================
 	     Circle reveal — last child clips away to reveal image layer
