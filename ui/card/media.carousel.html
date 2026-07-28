@@ -111,6 +111,7 @@
 			<ol>
 				<li><a href="#overlayink">Overlay ink</a></li>
 				<li><a href="#bandink">Band ink</a></li>
+				<li><a href="#banddotink">Band dot ink — automatic</a></li>
 			</ol>
 		</div>
 		<div>
@@ -387,6 +388,28 @@
 		<ui-card variant="col" media="asr(4/3) nav(blw) arw(drk)" content="scl(sm)">
 			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
 			<ui-content><small data-part="eyebrow">nav(blw) arw(drk)</small><h2 data-part="headline">Dark circle, white chevron</h2></ui-content></cq-box>
+		</ui-card>
+	</lay-out>
+
+	<h3 id="banddotink">Band dot ink — automatic</h3>
+	<p>A band is <strong>transparent</strong>: it shows the card surface behind it, and that surface
+		already carries its own ink. So band dots/pills derive from
+		<code>--ui-carousel-controls-ink</code> (default <code>currentColor</code>) — they re-ink
+		themselves for dark mode and for <code>theme=</code> surfaces with no media query. Toggle your
+		OS to dark and watch card 1; card 2 forces a dark surface in any scheme; card 3 sets the ink hook
+		by hand. <code>mrk(lgt)</code>/<code>mrk(drk)</code> still force either side outright.</p>
+	<lay-out md="columns(3)">
+		<ui-card variant="col" media="asr(4/3) nav(blw) mrk(lg)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">nav(blw) · default</small><h2 data-part="headline">Follows color-scheme</h2></ui-content></cq-box>
+		</ui-card>
+		<ui-card theme="black dark" variant="col" media="asr(4/3) nav(blw) mrk(lg)" content="scl(sm)">
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">theme="black dark"</small><h2 data-part="headline">Follows the card theme</h2></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(blw) mrk(lg)" content="scl(sm)" style="--ui-carousel-controls-ink: var(--color-accent)">
+			<cq-box><ui-media><img src="/assets/images/city.png" alt=""><img src="/assets/images/destinations.png" alt=""><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+			<ui-content><small data-part="eyebrow">--ui-carousel-controls-ink</small><h2 data-part="headline">Or set the ink yourself</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
 

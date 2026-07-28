@@ -107,6 +107,14 @@
 		&:where([media*="arw(sft)"]) { --ui-carousel-arrow-radius: var(--radius-sm, 0.25rem); }
 		/* arw(hid) — auto-hide the dead-end arrow */
 		&:where([media*="arw(hid)"]) { --ui-carousel-arrow-disabled-opacity: 0; }
+		/* nav(blw)/nav(abv) — control band. The band is TRANSPARENT (--ui-media-bg is #0000 for
+		   every nav carousel), so it shows the surface behind it: --ui-card-bg in a card, the page
+		   surface standalone — both light-dark() pairs. That surface always carries its own ink
+		   (`color` on ui-card = --color-text, or --_theme-c when themed), so the dot/pill ink is
+		   derived from currentColor and follows color-scheme + theme= for free. Override the whole
+		   set with --ui-carousel-controls-ink, one value at a time with the --ui-carousel-marker-
+		   and --ui-carousel-pill- properties, or force a side with mrk(lgt)/mrk(drk) (declared
+		   below, so they win). */
 		&:where([media*="nav(blw)"], [media*="nav(abv)"]) {
 			--ui-carousel-arrow-bg: rgb(0 0 0 / 0.08);
 			--ui-carousel-arrow-bg-hover: rgb(0 0 0 / 0.16);
@@ -114,10 +122,10 @@
 			--ui-carousel-arrow-shadow: none;
 			--ui-carousel-arrow-glyph: var(--ui-carousel-chevron-grey);
 			--ui-carousel-arrow-color: rgb(0 0 0 / 0.8);
-			--ui-carousel-marker-bg: rgb(0 0 0 / 0.25);
-			--ui-carousel-marker-active: rgb(0 0 0 / 0.7);
-			--ui-carousel-pill-track: rgb(0 0 0 / 0.2);
-			--ui-carousel-pill-fill: rgb(0 0 0 / 0.7);
+			--ui-carousel-marker-bg: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 25%, transparent);
+			--ui-carousel-marker-active: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 70%, transparent);
+			--ui-carousel-pill-track: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 20%, transparent);
+			--ui-carousel-pill-fill: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 70%, transparent);
 		}
 		&:where([media*="nav(blw)"][media*="arw(arr)"], [media*="nav(abv)"][media*="arw(arr)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-grey); }
 		&:where([media*="arw(lgt)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-chevron-dark); --ui-carousel-arrow-color: rgb(255 255 255 / 0.92); --ui-carousel-arrow-color-hover: #fff; }
@@ -130,12 +138,12 @@
 			--ui-carousel-arrow-hover-ring: 0 0 0 2px rgb(255 255 255 / 0.5);
 		}
 		&:where([media*="arw(arr)"][media*="arw(drk)"]) { --ui-carousel-arrow-glyph: var(--ui-carousel-arrow-light); }
-		/* mrk(blw)/mrk(abv) — dots-only band: flip dot/pill ink to the band theme */
+		/* mrk(blw)/mrk(abv) — dots-only band: same currentColor-derived band ink as nav(blw)/nav(abv) */
 		&:where([media*="mrk(blw)"], [media*="mrk(abv)"]) {
-			--ui-carousel-marker-bg: rgb(0 0 0 / 0.25);
-			--ui-carousel-marker-active: rgb(0 0 0 / 0.7);
-			--ui-carousel-pill-track: rgb(0 0 0 / 0.2);
-			--ui-carousel-pill-fill: rgb(0 0 0 / 0.7);
+			--ui-carousel-marker-bg: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 25%, transparent);
+			--ui-carousel-marker-active: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 70%, transparent);
+			--ui-carousel-pill-track: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 20%, transparent);
+			--ui-carousel-pill-fill: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 70%, transparent);
 		}
 		/* arw(blw)/arw(abv) — arrows-only band: flip arrow ink to the band theme */
 		&:where([media*="arw(blw)"], [media*="arw(abv)"]) {
@@ -169,12 +177,18 @@
 				top: calc(anchor(bottom) - var(--ui-carousel-overlay-gap) - var(--ui-carousel-marker-size));
 				z-index: 3;
 			}
-			/* one dot per slide — furniture (chip/sticker/play/save) excluded */
+			/* one dot per slide — furniture (chip/sticker/play/save) excluded.
+			   `color: inherit` is load-bearing, not cosmetic: the UA styles a ::scroll-marker like
+			   an anchor, so its `color` defaults to LinkText (blue). The band ink is built on
+			   currentColor, which resolves against the PSEUDO — inheriting the slide's colour is
+			   what makes it the card's ink instead of the UA link blue. (Same reason mrk(lbl)
+			   sets an explicit colour + text-decoration.) */
 			& > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker)::scroll-marker {
 				background: var(--ui-carousel-marker-bg);
 				block-size: var(--ui-carousel-marker-size);
 				border: var(--ui-carousel-marker-border);
 				border-radius: var(--radius-circle, 50%);
+				color: inherit;
 				content: "";
 				cursor: pointer;
 				inline-size: var(--ui-carousel-marker-size);
@@ -200,6 +214,7 @@
 				block-size: var(--ui-carousel-marker-size);
 				border: var(--ui-carousel-marker-border);
 				border-radius: var(--radius-circle, 50%);
+				color: inherit; /* see the base marker rule — the UA colours markers like links */
 				content: "";
 				cursor: pointer;
 				inline-size: var(--ui-carousel-marker-size);

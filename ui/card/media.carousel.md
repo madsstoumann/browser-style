@@ -219,8 +219,18 @@ descendant rules (0,0,1). The carousel-specific **control suppression** stays he
 - `::scroll-marker-group` is `position: absolute; position-anchor: auto`, centered via
   `justify-self: anchor-center`, anchored above the bottom edge with `anchor(bottom)`.
 - Default markers are round dots (no token); `mrk(pll)` rounded-rect.
-- **Ink:** `mrk(lgt)` / `mrk(drk)` set `--ui-carousel-marker-bg` + `--ui-carousel-marker-active`
-  to the light / dark pairs (`nav(blw)` defaults to dark).
+- **Ink:** overlaid dots default to the light pair (white on the image). In a **band**
+  (`nav(blw|abv)`, `mrk(blw|abv)`) the marker + pill tokens are re-derived from
+  `--ui-carousel-controls-ink`, default `currentColor` — the band is transparent, so
+  the ink of the surface showing through (`--color-text`, or `--_theme-c` on a themed
+  card) is exactly the right contrast reference, and the dots follow `color-scheme`
+  and `theme=` with no media query. `mrk(lgt)` / `mrk(drk)` are declared after the band
+  blocks and still force `--ui-carousel-marker-bg` + `--ui-carousel-marker-active` to
+  the light / dark pairs.
+  **Gotcha:** the UA styles a `::scroll-marker` like an anchor, so its `color` starts at
+  `LinkText` (blue) — `currentColor` in a marker means *link blue*, not the card ink.
+  The base marker rule therefore sets `color: inherit`; without it the band ink resolves
+  blue. (Same reason `mrk(lbl)` sets an explicit colour + `text-decoration: none`.)
 - **`mrk(pll)` timer:** the `:target-current` pill fills L→R over `--ui-carousel-autoplay`
   via the `ui-carousel-pill-fill` keyframes (a visual autoplay hint; `carousel.js` advances).
   Under `prefers-reduced-motion: reduce` the fill is shown static (no animation).

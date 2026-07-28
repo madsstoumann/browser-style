@@ -553,6 +553,12 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-carousel-autoplay` | `5s` | Pill / thumb timer duration (auto-set by `auto(Ns)`) |
 | `--ui-carousel-play-state` | `running` | `running` / `paused` for the pill/thumb fill timer — `carousel.js` sets `paused` when a `<ui-play>` control pauses autoplay |
 
+> The four ink defaults above are the **overlay** values (white, for dots sitting on
+> the image). In a **band** (`nav(blw)` `nav(abv)` `mrk(blw)` `mrk(abv)`) they are
+> re-derived from `--ui-carousel-controls-ink` (default `currentColor`) at 25% / 70% /
+> 20% / 70%, so band dots re-ink themselves for dark mode and `theme=` surfaces.
+> `mrk(lgt)` / `mrk(drk)` still force either side explicitly.
+
 ### Thumbnails (`mrk(tmb)`)
 
 | Property | Default | Purpose |
@@ -579,6 +585,7 @@ All optional — sensible defaults baked in. Set via `style="--token: value"` on
 | `--ui-carousel-below-gap` | `var(--spacing-sm, 0.5rem)` | Gap between the media content and a **below** band (`nav(blw)`) |
 | `--ui-carousel-above-gap` | `var(--spacing-sm, 0.5rem)` | Gap between an **above** band (`nav(abv)`) and the media content |
 | `--ui-carousel-controls-bg` | card surface | Band background |
+| `--ui-carousel-controls-ink` | `currentColor` | Band control ink — the dot/pill defaults in a band derive from it (25% inactive, 70% active). The band is transparent, so `currentColor` *is* the ink of the surface showing through: it follows `color-scheme` and `theme=` automatically. Set this when you paint your own opaque `--ui-carousel-controls-bg`; set the individual `--ui-carousel-marker-*`/`--ui-carousel-pill-*` properties (or `mrk(lgt)`/`mrk(drk)`) to override just one |
 
 > **Multi-item slides** (`<ui-slide>` groups) have **no carousel tokens** — the grid
 > inside a slide is your own CSS / the layout system, not the carousel's job.
