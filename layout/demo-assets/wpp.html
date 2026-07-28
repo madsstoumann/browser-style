@@ -17,14 +17,14 @@
 	<p class="note" style="padding-block:1rem;">Agency homepage — an <strong>approximation</strong> of a WPP layout (unaffiliated; original copy, repo images, system-font fallback for the proprietary face). Themed <code>&lt;lay-out-group&gt;</code> bands + <code>&lt;lay-out&gt;</code> grids + <code>&lt;ui-card&gt;</code> (add <code>animate="fade-up()"</code> to any grid for the layout system's scroll-reveal).</p>
 
 	<!-- HERO — centred statement split around a portrait video with a ui-play control:
-	     ui-content (content="ctr") / ui-media + ui-play / ui-content, in a width="md" column -->
+	     ui-content (content="plc(tc) tal(ctr)") / ui-media + ui-play / ui-content, in a width="md" column -->
 	<lay-out md="columns(1)" width="md" style="--layout-rg:2;">
-		<ui-content content="ctr pad(none)"><p class="wpp-hero" style="font-size:clamp(2rem,1rem + 5cqi,3.5rem);">WPP is the trusted growth partner</p></ui-content>
+		<ui-content content="plc(tc) tal(ctr) pad(none)"><p class="wpp-hero" style="font-size:clamp(2rem,1rem + 5cqi,3.5rem);">WPP is the trusted growth partner</p></ui-content>
 		<ui-media media="asr(3/4) play(be)" style="--ui-media-radius:2px;inline-size:min(24rem,100%);margin-inline:auto;">
 			<video src="https://assets.stoumann.dk/video/river.mp4" poster="/assets/images/river.png" autoplay muted loop playsinline></video>
 			<ui-play><button type="button" aria-label="Play/pause"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button></ui-play>
 		</ui-media>
-		<ui-content content="ctr pad(none)"><p class="wpp-hero" style="font-size:clamp(2rem,1rem + 5cqi,3.5rem);">for the world's leading brands</p></ui-content>
+		<ui-content content="plc(tc) tal(ctr) pad(none)"><p class="wpp-hero" style="font-size:clamp(2rem,1rem + 5cqi,3.5rem);">for the world's leading brands</p></ui-content>
 	</lay-out>
 
 	<!-- OUR WORK — grey full-bleed band, centred header, 3 case cards -->

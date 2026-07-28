@@ -573,7 +573,7 @@
       "description": "Band below, arrow pair right, dots centered — mrk(ctr)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav(blw) arw(set) mrk(ctr)",
+      "media": "asr(4/3) nav(blw) arw(set)",
       "content": "scl(sm)"
     },
     "carousel-band-dots-end": {

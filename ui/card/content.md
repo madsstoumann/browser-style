@@ -92,7 +92,7 @@ import '@browser.style/content';
 
 ## The `content=` token DSL
 
-`content=` is a compact attribute mini-language. Each modifier is a **3-letter code** with `()` arguments, plus three bare flags — `scr` (which also takes an axis arg), `ctr` and `end`. Every token simply writes a custom property, so an unsupported value is never a blocker — set the property directly via `style` (see *Arbitrary values*).
+`content=` is a compact attribute mini-language. Each modifier is a **3-letter code** with `()` arguments, plus one bare flag — `scr` (which also takes an axis arg). Every token simply writes a custom property, so an unsupported value is never a blocker — set the property directly via `style` (see *Arbitrary values*). (The old combined `ctr`/`end` bare flags are **removed** — use `plc()` for box placement and `tal()` for text alignment: `ctr` ≈ `plc(tc) tal(ctr)`, `end` ≈ `plc(te) tal(end)`.)
 
 Argument vocabularies, the custom properties each token writes, and which tokens take the
 `md:`/`lg:` container-query prefixes are **generated from `data/tokens.json`** — the manifest
@@ -120,8 +120,6 @@ Argument vocabularies, the custom properties each token writes, and which tokens
 | `wid()` | measure | **size** sm md lg xl 2xl | — | — | --ui-content-max | — | — |
 | `tal()` | alignment | **value** start ctr end | — | — | --ui-content-text-align | — | — |
 | `scr()` | scroll | **value** x y | — | yes | --ui-scroll-fade-dir | — | — |
-| `ctr` | alignment | — | — | yes | --ui-content-align | — | — |
-| `end` | alignment | — | — | yes | --ui-content-align | — | — |
 <!-- /tokens -->
 
 What each one is *for*:
@@ -141,8 +139,7 @@ What each one is *for*:
 | `gap()` | row gap between parts (`--ui-content-gap`) | **Yes** |
 | `plc()` | 3×3 placement of the content rows inside the column's box — same nine logical cells as the furniture grid, via flex alignment (block letter → `justify-content`, inline letter → `align-items`; NOT absolute positioning). Sits under the `ovr()` slots, above `ctr`/`end` | No |
 | `wid()` | text measure — caps each row's `max-inline-size`: `sm` 35ch · `md` 50ch · `lg` 65ch · `xl` 80ch · `2xl` 100%. No-token default = `--width-prose` (65ch); `scr(x)` rows exempt | No |
-| `tal()` | explicit `text-align` — `start` (default) / `ctr` / `end`; outranks `ovr()`'s implied per-cell text alignment and the `ctr`/`end` flags' text half | No |
-| `ctr` / `end` | *(legacy bare flags)* combined cross-axis + text alignment — centre / end the whole content column (`--ui-content-align`) in one word, independent of `ovr()` overlay placement. `plc()`/`tal()` are the fine-grained forms and win when present | No |
+| `tal()` | explicit `text-align` — `start` (default) / `ctr` / `end`. Sits under the `ovr()` slot (like `plc()`): `content=` inherits freely, so a group-level `tal(ctr)` never overrides a nested overlay card's cell-derived alignment | No |
 | `scr` / `scr(y)` / `scr(x)` | *(bare flag + axis arg)* scrollable content + shared `ui-scroll-fade` edge mask (`ui/base/scroll.css`). Bare `scr` = `scr(y)` = vertical column; `scr(x)` = horizontal row | No |
 
 **Tone** (ink strength + hue): `shr` (30%) · `lgt` (45%) · `med` (65%, = muted) · `drk` (85%) · `sld` (100%, theme text) · `accent` · `inv` (white, for overlays).
@@ -757,7 +754,7 @@ A group is viewport-wide, so the card-scale thresholds (25rem / 44rem) act as a 
 
 ### What is still unprefixed
 
-Content **tone/weight** (`eb()`/`hl()`/`tx()`/`mt()` ink + weight), group **sizes** (`eb()`/`tx()`/`mt()` `sm`–`xl`), `fnt()`, `ctr`/`end`, `scr` and `rds()` have no `md:`/`lg:` forms. Tone/weight would cost a rule per token × tier × arm and is deferred; group sizes don't need prefixes at all, since a responsive `scl()` shifts them via the relational ladder. On the `media=` side only `asr()` is prefixable — see [media.md](./media.md#responsive).
+Content **tone/weight** (`eb()`/`hl()`/`tx()`/`mt()` ink + weight), group **sizes** (`eb()`/`tx()`/`mt()` `sm`–`xl`), `fnt()`, `plc()`, `wid()`, `tal()`, `scr` and `rds()` have no `md:`/`lg:` forms. Tone/weight would cost a rule per token × tier × arm and is deferred; group sizes don't need prefixes at all, since a responsive `scl()` shifts them via the relational ladder. On the `media=` side only `asr()` is prefixable — see [media.md](./media.md#responsive).
 
 **Axis:** bare `scr` (alias `scr(y)`) is a **vertical** scrolling column with a top/bottom fade; **`scr(x)`** is a **horizontal** scrolling row (`flex-direction: row`, `overflow-x: auto`) with a left/right fade — handy for a strip of thumbnails, tags or chips that overflows the card. Both share the one `ui-scroll-fade` primitive; `scr(x)` just flips the mask direction (`--ui-scroll-fade-dir: to right`) and the scroll-timeline axis (`inline`). Cap the scroll extent with `--ui-content-scroll-bs` (block) as usual.
 

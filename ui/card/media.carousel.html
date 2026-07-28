@@ -960,7 +960,7 @@
 	<p>A <code>&lt;lay-out overflow&gt;</code> hero: <code>center</code> centers each slide with side peeks (<code>preview-2xl</code>), <code>bleed</code> goes edge-to-edge, <code>gaps</code> adds end gutters. Cards flip portrait → 16/9 as they widen (<code>asr(3/4) md:asr(16/9)</code>).</p>
 
 	<!-- hl(lg) + scl(lg): sizes are relational — the +1 ladder renders the xl stop (same look as the old absolute hl(xl)) -->
-	<lay-out-group bleed theme="black ink" xs="pbs(3) pbe(3)" content="hl(lg) ctr scl(lg)">
+	<lay-out-group bleed theme="black ink" xs="pbs(3) pbe(3)" content="hl(lg) plc(tc) tal(ctr) scl(lg)">
 		<ui-content>
 			<h2 data-part="headline"><ui-gradient-text gradient="#bf4800, #ff8a3d, #bf4800" size="160%">Full-screen center</ui-gradient-text></h2>
 			<p data-part="summary">A start-snapped carousel of responsive cards, each with a media image and a content panel.</p>

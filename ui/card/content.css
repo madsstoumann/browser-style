@@ -90,20 +90,14 @@
 	:where([content~="gap(md)"])   { --ui-content-gap: var(--spacing-md); }
 	:where([content~="gap(lg)"])   { --ui-content-gap: var(--spacing-lg); }
 
-	/* ctr / end — standalone text + cross-axis alignment (independent of ov()
-	   overlay placement). Centres/ends the whole content column. Legacy combined
-	   flags — plc() + tal() below are the fine-grained forms. */
-	:where([content~="ctr"]) { --ui-content-align: center; }
-	:where([content~="end"]) { --ui-content-align: end; }
-
 	/* plc(<cell>) — 3×3 placement of the content rows inside the column's box.
 	   Same nine logical cells as the media-furniture grid (ts…be) but NOT
 	   absolute positioning: the block letter drives justify-content (the flex
 	   column's main axis — visible only when the column is taller than its rows,
 	   e.g. a row card beside asr(1/1) media) and the inline letter drives
 	   align-items. ovr() placement (--ui-content-ov-*) keeps charge in overlay
-	   mode; the legacy ctr/end flags keep working one slot further down the
-	   inline chain. Does not touch text-align — that's tal(). */
+	   mode. Does not touch text-align — that's tal(). (The old combined ctr/end
+	   bare flags are removed — ctr ≈ plc(tc) tal(ctr), end ≈ plc(te) tal(end).) */
 	:where([content~="plc(ts)"]) { --ui-content-place-block: start;  --ui-content-place-inline: start; }
 	:where([content~="plc(tc)"]) { --ui-content-place-block: start;  --ui-content-place-inline: center; }
 	:where([content~="plc(te)"]) { --ui-content-place-block: start;  --ui-content-place-inline: end; }
@@ -126,8 +120,9 @@
 	:where([content~="wid(2xl)"]) { --ui-content-max: 100%; }
 
 	/* tal(<kw>) — explicit text alignment; start is the no-token default.
-	   Explicit intent, so it outranks ovr()'s implied per-cell text alignment
-	   (unlike plc(), which sits under the ov-* slots). */
+	   Sits UNDER the ovr() slot like plc(): content= inherits freely, so a
+	   group-level tal(ctr) must not override a nested overlay card's
+	   cell-derived text alignment (the old ctr/end flags had the same rank). */
 	:where([content~="tal(start)"]) { --ui-content-text-align: start; }
 	:where([content~="tal(ctr)"])   { --ui-content-text-align: center; }
 	:where([content~="tal(end)"])   { --ui-content-text-align: end; }
@@ -165,7 +160,7 @@
 	   CONTAINER — flex column; ov() placement/ink read from props
 	   ============================================================ */
 	:where(ui-content) {
-		align-items: var(--ui-content-ov-align, var(--ui-content-place-inline, var(--ui-content-align, normal)));
+		align-items: var(--ui-content-ov-align, var(--ui-content-place-inline, normal));
 		border-radius: var(--ui-content-radius, 0); /* rds(); inert (0) unless set — a card host clips its own corners */
 		color: var(--ui-content-ov-ink, inherit);
 		display: flex;
@@ -187,7 +182,7 @@
 		padding-block-end:    var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
 		padding-inline-start: var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
 		padding-inline-end:   var(--ui-content-pie, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
-		text-align: var(--ui-content-text-align, var(--ui-content-ov-text, var(--ui-content-align, start)));
+		text-align: var(--ui-content-ov-text, var(--ui-content-text-align, start));
 		z-index: var(--ui-content-ov-z, auto);
 
 		/* wid() text measure — the cap rides the rows, not the column box, so
