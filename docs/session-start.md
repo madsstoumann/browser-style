@@ -49,8 +49,10 @@
   `loop`/`auto`/`pages` are whole-token so they can't cross-fire with parameterized
   or substring cousins). The manifest records each token's matching mode.
 - **One position grid** (ts tc te / cs cc ce / bs bc be) across furniture, ovr(),
-  scm(), mrk(), arw(), plc(), reveal ico(). One hue palette (red orange green blue
-  accent black white gray; dark/light/subtle/slate are deprecated aliases).
+  scm(), mrk(), arw(), plc(), reveal ico() — obp() is the ONLY physical (tl…br)
+  vocabulary left, by design. One hue palette of nine (red orange green blue
+  accent black white gray slate); dark/light/subtle were removed in v5, slate was
+  promoted to canonical.
   `pages` means "paged carousel" in both contexts: math paging on
   `<lay-out overflow>`, wrapper-dissolve-below-md on a `<ui-media>` scroller.
 - **Renderer**: render.js is Node-safe string SSR; everything escapes via esc();

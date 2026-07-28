@@ -48,7 +48,7 @@ Space-separated token strings; values flow down via CSS custom properties, so a 
 
 | Attribute | On | Controls | Example tokens | Doc |
 |---|---|---|---|---|
-| `variant=` | `ui-card` / `ui-reveal` | composition (+ all reveal config on `ui-reveal` — `exp`/`flp()`/`sld()`/`grw()` etc., see below) | `col` `row` `col-r` `row-r` `spl(1/2)` `vis(media)` `ovr(bl)` `rds(lg-sq)` | `ui-card-tokens.md` |
+| `variant=` | `ui-card` / `ui-reveal` | composition (+ all reveal config on `ui-reveal` — `exp`/`flp()`/`sld()`/`grw()` etc., see below) | `col` `row` `col-r` `row-r` `spl(1/2)` `vis(media)` `ovr(bs)` `rds(lg-sq)` | `ui-card-tokens.md` |
 | `theme=` | `ui-card` / `ui-reveal` | shared theme axis (colour + `pale`/`muted`/`light`/`dark`) | `black dark` `red pale` `gray` | `../base/theme.md` |
 | `media=` | `ui-media` or its card host (also `lay-out[overflow]` for its own scroller) | media frame + **all carousel controls (media-token-only — the old `nav=`/`arrow=`/`dot=`/`vid=`/`ply=`/`eager` attributes are removed)** | `asr(16/9)` `md:asr(4/3)` `obf()` `obp(cc)` `flp(h)` `hov(zoom)` `scm` `nav(mrk)` `arw(drk)` `mrk(pll)` `axis(y)` `auto` `loop` `stagger` `chip(ts)` `sticker(red)` `beacon(sld)` `marquee(bot)` `vid()` `play(lg)` `load(eager)` | `media.md`, `carousel.md`, `media.carousel.md` |
 | `content=` | `ui-content` (canonical) or ancestor | text column | `scl(lg)` `hl(3xl)` `eb(accent)` `tx(lgt)` `mt(med)` `pad(xl)` `lg:pbs(none)` `gap()` `rds(lg)` `scr` | `content.md` |
@@ -73,7 +73,7 @@ A **preset** is a named look-&-feel bundle written verbatim to the host attribut
 ```json
 "hero": {
   "element": "ui-card",
-  "variant": "ovr(bl)",
+  "variant": "ovr(bs)",
   "media": "asr(4/3) scm",
   "content": "scl(lg)"
 }
@@ -140,8 +140,8 @@ Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are 
 4. **Don't register elements CSS can drive** — only `<ui-media>` needs JS, and only for srcset.
 5. **Demos use `<lay-out>`** — do not reintroduce per-page `.grid` classes; use the mapping table in `layout/docs/card-integration.md`.
 6. **`ovr()` needs `scm`** (or a dark image) for contrast; themes go through the shared `theme=` axis ([base/theme.md](../base/theme.md)), not ad-hoc colors. (The old `variant="thm(…)"` spelling was removed in v4 — use `theme=`.)
-7. **One position grid.** `ovr()`, furniture, `scm()` and reveal's `ico()` all use the logical `ts tc te · cs cc ce · bs bc be` set; the physical `tl…br` spellings are deprecated aliases (v5 removal) **except** on `obp()`, where they are genuinely physical and stay.
-8. **One hue palette.** `red orange green blue accent black white gray`. `dark`/`light`/`subtle`/`slate` are deprecated aliases, implemented by all six furniture/band elements (`slate` routes to its own `--ui-theme-slate-*` bundle, not to gray). The real per-element gap is the `pale`/`muted` fill modifiers: `ui/save` and `ui/play` are single-ink controls and implement neither. Prefer the canonical names.
+7. **One position grid.** `ovr()`, furniture, `scm()`, `mrk()`, `plc()` and reveal's `ico()` all use the logical `ts tc te · cs cc ce · bs bc be` set. The physical `tl…br` aliases were **removed in v5**; `obp()` is now the system's *only* physical vocabulary (`object-position` has no logical keywords), and it keeps both spellings by design.
+8. **One hue palette — nine hues.** `red orange green blue accent black white gray slate`: four hues plus the `white < gray < slate < black` neutral ramp. `slate` was promoted from alias to canonical in v5 (it always routed to its own `--ui-theme-slate-*` bundle, never to gray) and is implemented by all six furniture/band elements plus `tnt()`. The `dark`/`light`/`subtle` aliases were **removed** in the same round — no live alias remains. The real per-element gap is the `pale`/`muted` fill modifiers: `ui/save` and `ui/play` are single-ink controls and implement neither.
 9. **`<ui-play>` has one contract:** `command="play-pause" commandfor="<video id>"`, handled by `video.js`. No `ui-play-toggle` event. The carousel's control is the one target-less exception, auto-discovered by `carousel.js`.
 
 ## Doc map — read this when…

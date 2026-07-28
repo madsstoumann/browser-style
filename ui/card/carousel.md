@@ -246,7 +246,7 @@ Contract and limits (ui-media context):
 <!-- layered cards (content on media — ui/reveal pattern: media + scm on the CARD) -->
 <ui-media media="nav">
   <ui-slide class="slide-cols" style="--cols: 3">
-    <ui-card variant="ovr(bl)" media="asr(3/4) obp(cc) scm"><cq-box>
+    <ui-card variant="ovr(bs)" media="asr(3/4) obp(cc) scm"><cq-box>
       <ui-media><img src="1.jpg"></ui-media>
       <ui-content><h3 data-part="headline">Title</h3></ui-content>
     </cq-box></ui-card>

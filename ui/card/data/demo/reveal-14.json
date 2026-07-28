@@ -13,7 +13,7 @@
     "internalName": "Reveal demo 14 — Glitter Throne (flip)",
     "schemaType": "content",
     "preset": {
-      "$ref": "card-preset/reveal-flip-bl"
+      "$ref": "card-preset/reveal-flip-bs"
     },
     "eyebrow": "Glam Rock",
     "headline": "Glitter Throne",

@@ -152,30 +152,68 @@ exact-token matching:
 - **One-way by design** — there is no off token. `@media (min-width)` is cumulative, so once a breakpoint commits to shared rows every larger one keeps them; a layout that switches to subgrid doesn't switch back. (The old `subgrid(on)`/`subgrid(off)` pair was removed with this simplification.)
 
 > **The token is an attribute-selector value** in the generated CSS
-> (`lay-out[md~="subgrid"]`). App/demo CSS that hooks the subgrid state (e.g.
-> `wpp.css` flips `cq-box` to `display: contents`) must match the **exact** token
-> string — migrating the markup means migrating those selectors too (sweep `*.css`,
-> not just `*.html`).
+> (`lay-out[md~="subgrid"]`). App/demo CSS that hooks the subgrid state by *token*
+> must match the **exact** string — migrating the markup means migrating those
+> selectors too (sweep `*.css`, not just `*.html`). CSS that hooks the *state*
+> should instead read the flag (`@container style(--_subgrid: on)`), which is
+> breakpoint-agnostic — that is what the card's `sub` variant does, below.
 
-**Subgrid + `<ui-card>` (wrapper flattening).** `subgrid` only reaches the
-**direct** child of `<lay-out>`. Flat children (`<article><img><h3><small>`) map their
-parts onto the shared rows for free. A **card** nests its parts two wrappers deep
-(`ui-card > cq-box > ui-media | ui-content > eyebrow/headline/CTA`), and every wrapper
-breaks the chain. To align card parts across a row, flatten the wrappers so the leaf
-parts become the card's own grid items:
+**Subgrid + `<ui-card>` — the `sub` variant (wrapper flattening).** `subgrid` only
+reaches the **direct** child of `<lay-out>`. Flat children (`<article><img><h3><small>`)
+map their parts onto the shared rows for free. A **card** nests its parts two wrappers
+deep (`ui-card > cq-box > ui-media | ui-content > eyebrow/headline/CTA`), and every
+wrapper breaks the chain. Opt the card in with **`variant="sub"`** and the card system
+dissolves those wrappers, so the leaf parts become the card's own grid items:
+
+```html
+<lay-out lg="columns(3) subgrid" subgrid="4">
+  <ui-card variant="col sub" media="asr(16/9)"><cq-box>
+    <ui-media><img src="…" alt=""></ui-media>
+    <ui-content><small data-part="eyebrow">…</small><h3 data-part="headline">…</h3><nav data-part="actions">…</nav></ui-content>
+  </cq-box></ui-card>
+  …
+</lay-out>
+```
+
+No per-demo CSS is needed any more (`demo-assets/wpp.css` used to hand-write the
+`display: contents` pair; `demo-assets/wpp.html` and `dist/section.html` now both use
+`sub`). The implementation lives in `ui/card/ui-card.css` (near the arrangement
+section) and is a **two-hop flag relay**:
 
 ```css
-@media (min-width: 45rem) {
-  lay-out[lg~="subgrid"] > ui-card > cq-box,
-  lay-out[lg~="subgrid"] > ui-card > cq-box > ui-content { display: contents; }
+/* hop 1 — subject is the card, so the style query resolves against the <lay-out> */
+@container style(--_subgrid: on) {
+  :where(lay-out) > :where(ui-card):where([variant~="sub"]) { --_sub: 1; }
+}
+/* hop 2 — --_sub INHERITS, so the wrappers can read it (--_subgrid does not) */
+@container style(--_sub: 1) {
+  :where(ui-card[variant~="sub"]) > cq-box,
+  :where(ui-card[variant~="sub"]) > cq-box > ui-content { display: contents; }
 }
 ```
 
-This is currently **demo-local** (see `demo-assets/wpp.css`) and note that
-`display: contents` drops `ui-content`'s own box (padding/gap). The intended clean
-solution is a **card-system opt-in** — a `sub` variant on `<ui-card>` that flattens its
-wrappers only while the parent subgrid is active, ideally builder-generated per
-breakpoint so no per-demo CSS is needed. **Not yet built.**
+Two hops are required, not stylistic: a style query resolves against the **subject's
+parent**. `<cq-box>`'s parent is the card, which has no `--_subgrid` of its own because
+that property is registered `inherits: false` — the single-hop form
+(`@container style(--_subgrid: on) { … > cq-box }`) matches nothing in Chromium
+(verified). Hop 1 therefore relays into `--_sub`, an ordinary inheriting custom
+property. A host nested inside another host resets `--_sub` to `0`, so a subgridded
+outer card can't flatten an inner one.
+
+**`sub` names no breakpoint — it follows the flag.** Because it syncs to the live
+`--_subgrid` value rather than to a breakpoint of its own, changing
+`lg="columns(3) subgrid"` to `xl="…"` (or `md=`, or several) needs **no card-side
+change**: the flag goes on and off with the layout's own breakpoint and `sub` follows.
+`dist/section.html` syncs at `md`, `demo-assets/wpp.html` at `lg`, with identical card
+markup.
+
+Known consequences, by design: `display: contents` drops `<ui-content>`'s own box
+(padding/gap), so vertical rhythm comes from the layout's row gaps (`rg(N)`); and the
+subgrid engine's `container-type: normal` on the child suspends the card's own
+`md:`/`lg:` **container** tiers for as long as the flag is on. `<ui-media>` is
+deliberately *not* flattened — it is the row-1 grid item. `<ui-reveal>` is **not**
+supported (`details > summary` cannot be dissolved without destroying the disclosure).
+Full token reference: `ui/card/ui-card-tokens.md`.
 
 ### Item alignment — `items()` breakpoint token
 

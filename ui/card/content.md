@@ -521,7 +521,7 @@ Host themes come from the shared `theme=` axis ([base/theme.md](../base/theme.md
 | Token | Read by | Themed by |
 |-------|---------|-----------|
 | `--ui-content-muted` | subheadline, meta, caption, byline, footer | theme |
-| `--ui-content-eyebrow-color` | eyebrow | theme |
+| `--ui-content-eyebrow-ink` | eyebrow | theme |
 | `--ui-content-tag-bg` | tags pills | theme |
 
 ```css
@@ -533,7 +533,14 @@ Host themes come from the shared `theme=` axis ([base/theme.md](../base/theme.md
 
 > **Namespace trap:** the legacy tokens were `--ui-card-muted` / `--ui-card-eyebrow-color` / `--ui-card-tag-bg`. In v4 they move to the `--ui-content-*` spelling. A theme rule that still writes the old `--ui-card-*` names will silently lose its muted / eyebrow / tag remap.
 
-> **`-color` → `-ink` rename:** per-part ink hooks are now spelled `--ui-content-{part}-ink` (house term for text colour, cf. `--ui-content-ov-ink`). The old `--ui-content-{part}-color` names are **kept as aliases** — each part reads `var(--ui-content-{part}-ink, var(--ui-content-{part}-color, …))` — so existing themes/demos keep working. Prefer `-ink` in new code. `eb()` writes `--ui-content-eyebrow-ink`, which wins over a theme-set `--ui-content-eyebrow-color`.
+> **`-color` → `-ink` rename (aliases REMOVED in v5):** per-part ink hooks are spelled
+> `--ui-content-{part}-ink` (house term for text colour, cf. `--ui-content-ov-ink`). The old
+> `--ui-content-{part}-color` names used to ride along as a second slot in each part's `var()`
+> chain; that slot is **gone** — `-ink` is the only ink hook. Seven author-facing custom
+> properties stopped resolving: `--ui-content-eyebrow-color`, `--ui-content-subheadline-color`,
+> `--ui-content-summary-color`, `--ui-content-meta-color`, `--ui-content-byline-color`,
+> `--ui-content-footer-color`, `--ui-content-rating-color`. Rename each to `-ink`. (Unrelated
+> and untouched: `--ui-content-tag-color`, which is a pill fill hook, not an alias.)
 
 ---
 
@@ -581,18 +588,18 @@ All tokens live in the `--ui-content-*` namespace. Override per instance, per ho
 
 | Token | Default | Part |
 |-------|---------|------|
-| `--ui-content-eyebrow-color` | `var(--color-accent)` | eyebrow color |
+| `--ui-content-eyebrow-ink` | `var(--color-accent)` | eyebrow ink |
 | `--ui-content-eyebrow-fs` | `calc(var(--ui-content-fs) * 0.78)` | eyebrow size |
 | `--ui-content-eyebrow-weight` | `var(--font-weight-medium, 500)` | eyebrow weight |
 | `--ui-content-headline-weight` | `var(--font-weight-bold, 700)` | headline weight |
 | `--ui-content-headline-line-height` | `calc(1em + 0.25rem)` | headline line-height (constant-leading formula — see below) |
 | `--ui-content-headline-rhythm` | `0.25em` | space after the headline (modular em rhythm — see below) |
-| `--ui-content-subheadline-color` | `var(--ui-content-muted)` | subheadline color |
+| `--ui-content-subheadline-ink` | `var(--ui-content-muted)` | subheadline ink |
 | `--ui-content-subheadline-fs` | `calc(var(--ui-content-fs) * 0.88)` | subheadline size |
 | `--ui-content-subheadline-weight` | `var(--font-weight-normal, 400)` | subheadline weight |
-| `--ui-content-summary-color` | `inherit` | summary color |
+| `--ui-content-summary-ink` | `inherit` | summary ink |
 | `--ui-content-summary-fs` | `var(--ui-content-fs)` | summary size |
-| `--ui-content-meta-color` | `var(--ui-content-muted)` | meta / caption color |
+| `--ui-content-meta-ink` | `var(--ui-content-muted)` | meta / caption ink |
 | `--ui-content-meta-fs` | `calc(var(--ui-content-fs) * 0.75)` | meta / caption size |
 | `--ui-content-byline-fs` | `calc(var(--ui-content-fs) * 0.82)` | byline size |
 | `--ui-content-byline-gap` | `var(--spacing-sm)` | byline gap |
@@ -604,7 +611,7 @@ All tokens live in the `--ui-content-*` namespace. Override per instance, per ho
 | `--ui-content-tag-radius` | `var(--radius-pill, 100px)` | tag pill corner radius — set to `0` (or a small radius) for square tags |
 | `--ui-content-tag-padding` | `0.2em 0.7em` | tag pill padding (label is centered via `place-content`) |
 | `--ui-content-actions-gap` | `var(--spacing-sm)` | actions gap |
-| `--ui-content-footer-color` | `var(--ui-content-muted)` | footer color |
+| `--ui-content-footer-ink` | `var(--ui-content-muted)` | footer ink |
 | `--ui-content-footer-fs` | `calc(var(--ui-content-fs) * 0.78)` | footer size |
 | `--ui-content-footer-gap` | `var(--spacing-sm)` | footer gap |
 
@@ -613,7 +620,7 @@ Override per instance or globally:
 ```css
 ui-content {
   --ui-content-gap: 1.25rem;
-  --ui-content-eyebrow-color: hotpink;
+  --ui-content-eyebrow-ink: hotpink;
 }
 ```
 

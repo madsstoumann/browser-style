@@ -380,25 +380,30 @@ ui-media:where([media*="nav(blw)"][media*="axis(y)"]) > ui-carousel-controls [da
 }
 
 /* ============================================================
-   marker-group corner / centre placement — mrk(tl/tr/bl/br/tc/bc)
+   marker-group corner / centre placement — mrk(ts/te/bs/be/tc/bc)
    Placed last so it wins over the band/axis rules above.
+   v5: these arms used to be spelled with the PHYSICAL tl/tr/bl/br cells, which
+   the manifest never declared — so under the polyfill the canonical mrk(ts…be)
+   spellings got no corner placement at all. Renamed to the one logical grid
+   (the insets were already logical, so RTL behaviour is unchanged). Note the
+   middle row cs/cc/ce still has no polyfill arm — a separate gap.
    ============================================================ */
-:where(ui-card, ui-reveal):where([media*="mrk(tl)"]) ui-media ui-carousel-controls [data-dots], ui-media:where([media*="mrk(tl)"]) > ui-carousel-controls [data-dots],
-:where(ui-card, ui-reveal):where([media*="mrk(tr)"]) ui-media ui-carousel-controls [data-dots], ui-media:where([media*="mrk(tr)"]) > ui-carousel-controls [data-dots],
-:where(ui-card, ui-reveal):where([media*="mrk(bl)"]) ui-media ui-carousel-controls [data-dots], ui-media:where([media*="mrk(bl)"]) > ui-carousel-controls [data-dots],
-:where(ui-card, ui-reveal):where([media*="mrk(br)"]) ui-media ui-carousel-controls [data-dots], ui-media:where([media*="mrk(br)"]) > ui-carousel-controls [data-dots] {
+:where(ui-card, ui-reveal):where([media*="mrk(ts)"]) ui-media ui-carousel-controls [data-dots], ui-media:where([media*="mrk(ts)"]) > ui-carousel-controls [data-dots],
+:where(ui-card, ui-reveal):where([media*="mrk(te)"]) ui-media ui-carousel-controls [data-dots], ui-media:where([media*="mrk(te)"]) > ui-carousel-controls [data-dots],
+:where(ui-card, ui-reveal):where([media*="mrk(bs)"]) ui-media ui-carousel-controls [data-dots], ui-media:where([media*="mrk(bs)"]) > ui-carousel-controls [data-dots],
+:where(ui-card, ui-reveal):where([media*="mrk(be)"]) ui-media ui-carousel-controls [data-dots], ui-media:where([media*="mrk(be)"]) > ui-carousel-controls [data-dots] {
 	block-size: auto;
 	inline-size: max-content;
 	padding: 0;
 }
-:where(ui-card, ui-reveal):where([media*="mrk(tl)"]) ui-media ui-carousel-controls [data-dots],
-ui-media:where([media*="mrk(tl)"]) > ui-carousel-controls [data-dots] { inset-block: var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)) auto; inset-inline: var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)) auto; }
-:where(ui-card, ui-reveal):where([media*="mrk(tr)"]) ui-media ui-carousel-controls [data-dots],
-ui-media:where([media*="mrk(tr)"]) > ui-carousel-controls [data-dots] { inset-block: var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)) auto; inset-inline: auto var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)); }
-:where(ui-card, ui-reveal):where([media*="mrk(bl)"]) ui-media ui-carousel-controls [data-dots],
-ui-media:where([media*="mrk(bl)"]) > ui-carousel-controls [data-dots] { inset-block: auto var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)); inset-inline: var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)) auto; }
-:where(ui-card, ui-reveal):where([media*="mrk(br)"]) ui-media ui-carousel-controls [data-dots],
-ui-media:where([media*="mrk(br)"]) > ui-carousel-controls [data-dots] { inset-block: auto var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)); inset-inline: auto var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)); }
+:where(ui-card, ui-reveal):where([media*="mrk(ts)"]) ui-media ui-carousel-controls [data-dots],
+ui-media:where([media*="mrk(ts)"]) > ui-carousel-controls [data-dots] { inset-block: var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)) auto; inset-inline: var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)) auto; }
+:where(ui-card, ui-reveal):where([media*="mrk(te)"]) ui-media ui-carousel-controls [data-dots],
+ui-media:where([media*="mrk(te)"]) > ui-carousel-controls [data-dots] { inset-block: var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)) auto; inset-inline: auto var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)); }
+:where(ui-card, ui-reveal):where([media*="mrk(bs)"]) ui-media ui-carousel-controls [data-dots],
+ui-media:where([media*="mrk(bs)"]) > ui-carousel-controls [data-dots] { inset-block: auto var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)); inset-inline: var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)) auto; }
+:where(ui-card, ui-reveal):where([media*="mrk(be)"]) ui-media ui-carousel-controls [data-dots],
+ui-media:where([media*="mrk(be)"]) > ui-carousel-controls [data-dots] { inset-block: auto var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)); inset-inline: auto var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)); }
 /* horizontal centre band — force row so a pill timer reads horizontally even on axis(y) */
 :where(ui-card, ui-reveal):where([media*="mrk(tc)"]) ui-media ui-carousel-controls [data-dots], ui-media:where([media*="mrk(tc)"]) > ui-carousel-controls [data-dots],
 :where(ui-card, ui-reveal):where([media*="mrk(bc)"]) ui-media ui-carousel-controls [data-dots], ui-media:where([media*="mrk(bc)"]) > ui-carousel-controls [data-dots] {

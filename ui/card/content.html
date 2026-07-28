@@ -302,9 +302,9 @@
 	<h2>Text-shadow — <code>shd</code> (overlay legibility)</h2>
 	<p class="note">The <code>shd</code> flag adds a legibility text-shadow to a group. Its main job is overlaid text over a scrim: a host <code>ovr()</code> <strong>automatically</strong> shadows the headline + eyebrow, and <code>hl(shd)</code>/<code>eb(shd)</code> opt any group in explicitly. (This is the only media-backed example on this page — for the rest of the overlay/scrim system see <a href="media.html">media.html</a>.) Retune with <code>--ui-content-text-shadow</code> or disable via <code>style="--ui-content-heading-text-shadow: none"</code>.</p>
 	<lay-out md="columns(3)">
-		<ui-card variant="ovr(bl)" media="asr(3/4) obp(cc) scm" content="scl(lg)"><cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">ovr() — auto shadow</small><strong data-part="headline">Legible by default</strong></ui-content></cq-box></ui-card>
-		<ui-card variant="ovr(bl)" media="asr(3/4) obp(cc) scm" content="scl(lg) hl(3xl)" style="--ui-content-heading-text-shadow: none;"><cq-box><ui-media><img src="/assets/images/hubble.png" alt=""></ui-media><ui-content><small data-part="eyebrow">shadow disabled</small><strong data-part="headline">No shadow</strong></ui-content></cq-box></ui-card>
-		<ui-card variant="ovr(bl)" media="asr(3/4) obp(cc) scm(shr)" content="scl(lg) hl(shd) eb(shd)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""></ui-media><ui-content><small data-part="eyebrow">hl(shd) eb(shd) · sheer scrim</small><strong data-part="headline">Shadow carries it</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(bs)" media="asr(3/4) obp(cc) scm" content="scl(lg)"><cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">ovr() — auto shadow</small><strong data-part="headline">Legible by default</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(bs)" media="asr(3/4) obp(cc) scm" content="scl(lg) hl(3xl)" style="--ui-content-heading-text-shadow: none;"><cq-box><ui-media><img src="/assets/images/hubble.png" alt=""></ui-media><ui-content><small data-part="eyebrow">shadow disabled</small><strong data-part="headline">No shadow</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(bs)" media="asr(3/4) obp(cc) scm(shr)" content="scl(lg) hl(shd) eb(shd)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""></ui-media><ui-content><small data-part="eyebrow">hl(shd) eb(shd) · sheer scrim</small><strong data-part="headline">Shadow carries it</strong></ui-content></cq-box></ui-card>
 	</lay-out>
 
 	<!-- ============================================================
@@ -410,7 +410,7 @@
 			<cq-box><ui-content><small data-part="eyebrow">soft</small><h2 data-part="headline">Small radius + shadow</h2><p data-part="summary">A lighter, subtler surface.</p></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="vis(content)" style="--ui-card-bg: linear-gradient(135deg, #6366f1, #ec4899); color: #fff;">
-			<cq-box><ui-content><small data-part="eyebrow" style="--ui-content-eyebrow-color: rgb(255 255 255 / 0.8);">gradient bg</small><h2 data-part="headline">Custom background</h2><p data-part="summary"><code>--ui-card-bg</code> takes any background value — including a gradient.</p></ui-content></cq-box>
+			<cq-box><ui-content><small data-part="eyebrow" style="--ui-content-eyebrow-ink: rgb(255 255 255 / 0.8);">gradient bg</small><h2 data-part="headline">Custom background</h2><p data-part="summary"><code>--ui-card-bg</code> takes any background value — including a gradient.</p></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
 </body>

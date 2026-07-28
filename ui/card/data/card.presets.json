@@ -77,7 +77,7 @@
       "name": "Hero Preset",
       "description": "Content overlaid bottom-left on a 4:3 frame with scrim — events, campaigns",
       "element": "ui-card",
-      "variant": "ovr(bl)",
+      "variant": "ovr(bs)",
       "media": "asr(4/3) scm",
       "content": "scl(lg)"
     },
@@ -85,7 +85,7 @@
       "name": "Poster Preset",
       "description": "Tall 3:4 overlay card with scrim and a display-size headline — destinations, covers",
       "element": "ui-card",
-      "variant": "ovr(bl)",
+      "variant": "ovr(bs)",
       "media": "asr(3/4) scm",
       "content": "scl(lg) hl(3xl)"
     },
@@ -113,7 +113,7 @@
       "name": "Flip Preset",
       "description": "Reveal card: overlay front face, flip to a scrollable detail panel — from the ui/reveal flip demo",
       "element": "ui-reveal",
-      "variant": "ovr(bl) rds(lg-sq)",
+      "variant": "ovr(bs) rds(lg-sq)",
       "media": "asr(3/4) hov(zoom) scm",
       "reveal": {
         "type": "flip",
@@ -126,7 +126,7 @@
       "name": "Hero Reveal Preset",
       "description": "Full-width reveal hero — expand on small containers, scale on large; dark panel — from the ui/reveal hero demo",
       "element": "ui-reveal",
-      "variant": "ovr(bl) rds(md-sq)",
+      "variant": "ovr(bs) rds(md-sq)",
       "media": "asr(21/9) obp(cc) scm",
       "content": "scl(xl) pad(lg)",
       "styles": {

@@ -67,7 +67,7 @@ npm install @browser.style/base @browser.style/card @browser.style/icon
 For `flp` / `grw` / `sld`, wrap the front face in `<ui-face>` so it can transform independently of the toggle icon. Overlay **markers** (`<ui-chip>`, `<ui-sticker>`) are valid inside the `<summary>` media; overlay **controls** (`<ui-save>`, `<ui-play>`) are **not** — they are interactive, which is invalid in `<summary>` (a click there toggles the `<details>`).
 
 ```html
-<ui-reveal variant="flp ovr(tl) rds(lg-sq) ico(te) ico(sm) icc(drk) scr"
+<ui-reveal variant="flp ovr(ts) rds(lg-sq) ico(te) ico(sm) icc(drk) scr"
            media="asr(1/1) hov(zoom) obp(tc)">
   <details name="flip">
     <summary>
@@ -160,16 +160,10 @@ Every deprecated `variant=` spelling a reveal can carry, generated from the mani
 | deprecated | canonical | on | kind |
 |---|---|---|---|
 | `rds(none)` | `rds(non)` | `variant=` | arg |
-| `ovr(tl)` | `ovr(ts)` | `variant=` | arg |
-| `ovr(tr)` | `ovr(te)` | `variant=` | arg |
-| `ovr(cl)` | `ovr(cs)` | `variant=` | arg |
-| `ovr(cr)` | `ovr(ce)` | `variant=` | arg |
-| `ovr(bl)` | `ovr(bs)` | `variant=` | arg |
-| `ovr(br)` | `ovr(be)` | `variant=` | arg |
 | `scl()` | `grw()` | `variant=` | whole token |
 <!-- /tokens -->
 
-`ovr()` has **six** physical aliases, not nine — `ovr(tc)` / `ovr(cc)` / `ovr(bc)` are spelled identically in the logical and physical grids and need none.
+`ovr()`'s six physical aliases (`ovr(tl)` `ovr(tr)` `ovr(cl)` `ovr(cr)` `ovr(bl)` `ovr(br)`) were **removed in v5** — use the logical `ovr(ts)` `ovr(te)` `ovr(cs)` `ovr(ce)` `ovr(bs)` `ovr(be)`. There were six, not nine: `ovr(tc)` / `ovr(cc)` / `ovr(bc)` are spelled identically in both grids and are unaffected. `ico()` / `icc()` were always logical-only.
 
 ### `ico()` / `icc()` — toggle icon
 

@@ -89,16 +89,14 @@
 		:where([media*="sticker(blue)"])   & { --_theme-base-bg: var(--ui-theme-blue-bg);   --_theme-base-c: var(--ui-theme-blue-c); }
 		:where([media*="sticker(accent)"]) & { --_theme-base-bg: var(--ui-theme-accent-bg); --_theme-base-c: var(--ui-theme-accent-c); }
 		:where([media*="sticker(gray)"])   & { --_theme-base-bg: var(--ui-theme-gray-bg);   --_theme-base-c: var(--ui-theme-gray-c); }
-		:where([media*="sticker(slate)"])  & { --_theme-base-bg: var(--ui-theme-slate-bg);  --_theme-base-c: var(--ui-theme-slate-c); } /* deprecated alias — remove in v5 */
+		:where([media*="sticker(slate)"])  & { --_theme-base-bg: var(--ui-theme-slate-bg);  --_theme-base-c: var(--ui-theme-slate-c); }
 		:where([media*="sticker(black)"])  & { --_theme-base-bg: var(--ui-theme-black-bg);  --_theme-base-c: var(--ui-theme-black-c); }
 		:where([media*="sticker(white)"])  & { --_theme-base-bg: var(--ui-theme-white-bg);  --_theme-base-c: var(--ui-theme-white-c); }
-		/* HUE TRUTH SET: red orange green blue accent black white gray. The doc-era
-		   spellings below and the extra slate key above stay as working aliases of it
-		   (media= furniture arg vocabulary only — theme="slate" on the element itself
-		   remains a first-class theme in base/theme.css). */
-		:where([media*="sticker(dark)"])   & { --_theme-base-bg: var(--ui-theme-black-bg);  --_theme-base-c: var(--ui-theme-black-c); } /* deprecated alias — remove in v5 */
-		:where([media*="sticker(light)"])  & { --_theme-base-bg: var(--ui-theme-white-bg);  --_theme-base-c: var(--ui-theme-white-c); } /* deprecated alias — remove in v5 */
-		:where([media*="sticker(subtle)"]) & { --_theme-base-bg: var(--ui-theme-gray-bg);   --_theme-base-c: var(--ui-theme-gray-c); }  /* deprecated alias — remove in v5 */
+		/* HUE TRUTH SET (nine): red orange green blue accent black white gray slate.
+		   slate is a canonical hue in its own right (the fifth neutral, white < gray <
+		   slate < black), not an alias of gray. The doc-era sticker(dark)/sticker(light)/
+		   sticker(subtle) aliases were REMOVED in v5 — use sticker(black)/sticker(white)/
+		   sticker(gray). */
 		/* pale = light tint + hue ink · muted = translucent disc (hue-agnostic) */
 		:where([media*="sticker(pale)"])  & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), var(--color-surface) 80%); --_theme-c: var(--_theme-base-bg); }
 		:where([media*="sticker(muted)"]) & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), transparent 50%); --_theme-c: var(--_theme-base-c); }

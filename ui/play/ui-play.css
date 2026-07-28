@@ -60,15 +60,12 @@
 	:where(ui-play[theme~="black"],  [media*="play(black)"]  ui-play) { --ui-play-bg: var(--ui-theme-black-bg);  --ui-play-c: var(--ui-theme-black-c); }
 	:where(ui-play[theme~="white"],  [media*="play(white)"]  ui-play) { --ui-play-bg: var(--ui-theme-white-bg);  --ui-play-c: var(--ui-theme-white-c); }
 	:where(ui-play[theme~="gray"],   [media*="play(gray)"]   ui-play) { --ui-play-bg: var(--ui-theme-gray-bg);   --ui-play-c: var(--ui-theme-gray-c); }
-	:where(ui-play[theme~="slate"],  [media*="play(slate)"]  ui-play) { --ui-play-bg: var(--ui-theme-slate-bg);  --ui-play-c: var(--ui-theme-slate-c); } /* deprecated alias — remove in v5 */
-	/* HUE TRUTH SET: red orange green blue accent black white gray. The doc-era
-	   spellings below and the extra slate key above stay as working aliases of it
-	   (this is the media= furniture arg vocabulary only — theme="slate" on the
-	   element itself remains a first-class theme in base/theme.css). dark/light/
-	   subtle are media= args only; base/theme.css has no such hue. */
-	:where([media*="play(dark)"]   ui-play) { --ui-play-bg: var(--ui-theme-black-bg); --ui-play-c: var(--ui-theme-black-c); } /* deprecated alias — remove in v5 */
-	:where([media*="play(light)"]  ui-play) { --ui-play-bg: var(--ui-theme-white-bg); --ui-play-c: var(--ui-theme-white-c); } /* deprecated alias — remove in v5 */
-	:where([media*="play(subtle)"] ui-play) { --ui-play-bg: var(--ui-theme-gray-bg);  --ui-play-c: var(--ui-theme-gray-c); }  /* deprecated alias — remove in v5 */
+	:where(ui-play[theme~="slate"],  [media*="play(slate)"]  ui-play) { --ui-play-bg: var(--ui-theme-slate-bg);  --ui-play-c: var(--ui-theme-slate-c); }
+	/* HUE TRUTH SET (nine): red orange green blue accent black white gray slate.
+	   slate is a canonical hue in its own right (the fifth neutral, white < gray <
+	   slate < black), not an alias of gray. The doc-era play(dark)/play(light)/
+	   play(subtle) aliases were REMOVED in v5 — use play(black)/play(white)/
+	   play(gray). */
 	:where(ui-play[fill]) { --ui-play-bg: attr(fill type(<color>), rgb(0 0 0 / 0.55)); --ui-play-c: contrast-color(var(--ui-play-bg)); }
 	:where(ui-play[ink])  { --ui-play-c: attr(ink type(<color>), hsl(0 0% 100%)); }
 

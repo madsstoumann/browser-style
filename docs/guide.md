@@ -121,7 +121,7 @@ The same markup is a stacked tile in a narrow sidebar and a split hero in a wide
 One pairing to remember: `ovr()` puts (usually white) text on top of your image, so add `scm` (scrim) to `media=` for contrast:
 
 ```html
-<ui-card variant="ovr(bl) rds(lg)" media="asr(4/3) scm" content="scl(lg)">
+<ui-card variant="ovr(bs) rds(lg)" media="asr(4/3) scm" content="scl(lg)">
 ```
 
 ---
@@ -298,7 +298,7 @@ And because `media=` inheritance stops at the card, none of this leaks: the card
 `<ui-reveal>` is a card built on native `<details>/<summary>`: the front face is the `<summary>`, the hidden panel is whatever follows it. No JavaScript — the browser owns the open/close state.
 
 ```html
-<ui-reveal variant="flp ovr(bl) rds(lg) ico(te) ico(sm) icc(drk)"
+<ui-reveal variant="flp ovr(bs) rds(lg) ico(te) ico(sm) icc(drk)"
            media="asr(1/1) hov(zoom) scm">
   <details name="cards">
     <summary>

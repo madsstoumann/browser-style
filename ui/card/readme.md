@@ -111,10 +111,10 @@ Media above content — the default arrangement.
 
 ### Overlay hero (`ovr()` + `scm`)
 
-Content stacked over the media (`ovr(bl)`), a scrim for legibility (`scm` on `media=`), and a display-size headline (`scl(xl)` on `content=`).
+Content stacked over the media (`ovr(bs)`), a scrim for legibility (`scm` on `media=`), and a display-size headline (`scl(xl)` on `content=`).
 
 ```html
-<ui-card variant="ovr(bl)" media="asr(16/9) obp(cc) scm" content="scl(xl)">
+<ui-card variant="ovr(bs)" media="asr(16/9) obp(cc) scm" content="scl(xl)">
   <cq-box>
     <ui-media><img src="websummit.jpg" alt="Web Innovators Summit"></ui-media>
     <ui-content>
@@ -194,10 +194,10 @@ Overlay furniture — position, hue and each element's own axes:
 <!-- tokens:matrix attr=media stems=chip,sticker,save,play classes=pos,hue,mode,size,disc -->
 | token | pos | hue | mode | size | disc | deprecated aliases |
 |---|---|---|---|---|---|---|
-| `chip()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | pale muted | sm lg xl 2xl | non rnd pll crc sqr | dark→black light→white subtle→gray slate→gray |
-| `sticker()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | pale muted | sm lg xl 2xl 3xl | non rnd pll crc sqr | dark→black light→white subtle→gray slate→gray |
-| `save()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | — | sm lg xl | non rnd crc sqr | dark→black light→white subtle→gray slate→gray |
-| `play()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray | — | sm md lg xl | non rnd pll crc sqr | dark→black light→white subtle→gray slate→gray |
+| `chip()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | pale muted | sm lg xl 2xl | non rnd pll crc sqr | — |
+| `sticker()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | pale muted | sm lg xl 2xl 3xl | non rnd pll crc sqr | — |
+| `save()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm lg xl | non rnd crc sqr | — |
+| `play()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm md lg xl | non rnd pll crc sqr | — |
 <!-- /tokens -->
 
 `<ui-beacon>` and `<ui-marquee>` take the same shape with extra axes of their own — full matrix in [media.md](media.md).
@@ -274,7 +274,7 @@ The media area hosts **five** overlay elements as **children of `<ui-media>`**. 
 
 A sixth element, **`<ui-marquee>`, is a *band*, not furniture** — full-width, `top`/`bot` only (no nine-point grid), and it sits at `z-index: 1`, *below* the furniture. Overlaid in `<ui-media>` it is token-placed (`marquee(top)` / `marquee(bot)`); inside `<ui-content>` it is markup-placed by flow order. Details in **[media.md](media.md#furniture-vs-band--ui-marquee-is-not-furniture)**.
 
-Hues are the canonical eight — `red orange green blue accent black white gray` (`dark`/`light`/`subtle`/`slate` are deprecated aliases, removed in v5).
+Hues are the canonical nine — `red orange green blue accent black white gray slate` (four hues + the `white < gray < slate < black` neutral ramp). The doc-era `dark`/`light`/`subtle` aliases were removed in v5; `slate` was promoted to a canonical hue rather than removed, because it always routed to its own `--ui-theme-slate-*` bundle.
 
 ```html
 <ui-card variant="col" media="asr(4/3) chip(be) chip(green) sticker(ts) sticker(red)">

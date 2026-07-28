@@ -129,5 +129,13 @@
 		<article class="sg-card"><img src="/assets/images/gastronomy.png" alt=""><h3>Medium-length title here</h3><small>Category · 2026</small></article>
 	</lay-out>
 
+	<h3 style="padding-inline:1rem;">…with <code>&lt;ui-card&gt;</code> — the <code>sub</code> variant</h3>
+	<p class="note" style="padding-inline:1rem;">Flat children map onto the shared rows for free; a card's parts sit two wrappers deep (<code>ui-card &gt; cq-box &gt; ui-content &gt; …</code>) and every wrapper breaks the chain. <code>variant="sub"</code> dissolves those wrappers so the leaf parts become the card's own grid items. It carries <strong>no breakpoint of its own</strong> — it follows the layout's live <code>subgrid</code> flag, so this deck syncs at <code>md</code> while the same markup would sync at <code>xl</code> unchanged. While flattened, <code>&lt;ui-content&gt;</code>'s own box (padding/gap) is gone — the rhythm is the layout's row gaps — and the card's <code>md:</code>/<code>lg:</code> container tiers are suspended, because the subgrid engine neutralises its <code>container-type</code>.</p>
+	<lay-out md="columns(3) subgrid" subgrid="3" style="padding-inline:1rem;">
+		<ui-card variant="col sub" media="asr(16/9)"><cq-box><ui-media><img src="/assets/images/city.png" alt=""></ui-media><ui-content><h3 data-part="headline">Short title</h3><p data-part="meta">Category · 2026</p></ui-content></cq-box></ui-card>
+		<ui-card variant="col sub" media="asr(16/9)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media><ui-content><h3 data-part="headline">A considerably longer title that wraps onto two or even three lines</h3><p data-part="meta">Category · 2026</p></ui-content></cq-box></ui-card>
+		<ui-card variant="col sub" media="asr(16/9)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><h3 data-part="headline">Medium-length title here</h3><p data-part="meta">Category · 2026</p></ui-content></cq-box></ui-card>
+	</lay-out>
+
 </body>
 </html>

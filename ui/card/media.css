@@ -221,8 +221,20 @@
 		 Compose freely, e.g. scm(bc) scm(lg) scm(drk). Bare scm paints the host
 		 ovr()-matched default. All nine gradients read shared colour + stop vars so
 		 size and intensity vary without re-baking per combination. (see media.md § Scrim)
+
+		 DECLARATION SCOPE (F-12, tightened in v5) — the nine gradient families are
+		 declared on exactly the three subjects that can read them, not on every
+		 [media]/[variant] host:
+		   :where(ui-media)          the painter (::after) and the standalone frame
+		   :where([media*="scm"])    any host carrying an scm token — it computes
+		                             --ui-media-scrim / --ui-media-scrim-paint here
+		   :where([variant*="ovr("]) the overlay host — ovr() writes
+		                             --ui-media-scrim-default: var(--ui-media-scrim-<pos>)
+		                             (ui-card.css), which must substitute on the HOST
+		 A card that uses neither scm nor ovr() never reads them and no longer
+		 carries 13 custom-property declarations for nothing.
 		 ============================================================ */
-	:where(ui-media), :where([media]), :where([variant]) {
+	:where(ui-media), :where([media*="scm"]), :where([variant*="ovr("]) {
 		--ui-media-scrim-c: var(--ui-media-scrim-color, rgb(0 0 0 / 0.78));
 		/* mid stop holds the dark before fading, so spanning text stays legible.
 		   --ui-media-scrim-fade (inherits; 0% = fully opaque hold) lets scm(sld)
@@ -250,8 +262,9 @@
 	   linear-gradient() has no logical directions, so the six gradients that carry a
 	   left/right component are re-baked mirrored here. Without this a chip(ts) mirrors
 	   in rtl and its matching scm(ts) does not. tc/bc/cc are axis-pure (to bottom / to
-	   top / a vertical band) and never flip. Same 0-0-0 specificity, later in source. */
-	:where(ui-media:dir(rtl)), :where([media]:dir(rtl)), :where([variant]:dir(rtl)) {
+	   top / a vertical band) and never flip. Same 0-0-0 specificity, later in source.
+	   Subjects mirror the declaration scope above exactly. */
+	:where(ui-media:dir(rtl)), :where([media*="scm"]:dir(rtl)), :where([variant*="ovr("]:dir(rtl)) {
 		--ui-media-scrim-ts: linear-gradient(to bottom left,  var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 		--ui-media-scrim-te: linear-gradient(to bottom right, var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 		--ui-media-scrim-cs: linear-gradient(to left,         var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));

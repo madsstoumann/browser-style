@@ -13,7 +13,7 @@
     "internalName": "Reveal demo 17 — The Lure (tap card)",
     "schemaType": "content",
     "preset": {
-      "$ref": "card-preset/reveal-tap-left"
+      "$ref": "card-preset/reveal-tap-start"
     },
     "eyebrow": "Gothic",
     "headline": "The Lure",

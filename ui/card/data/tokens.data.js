@@ -97,7 +97,7 @@ export default {
 						"ui/card/media.css:87",
 						"ui/card/media.css:96"
 					],
-					"notes": "TWO deliberate vocabularies, neither deprecated (unlike ovr()): logical ts/te/cs/ce/bs/be mirror under :dir(rtl) (media.css:96-101); physical tl/tr/cl/cr/bl/br never mirror (object-position has no logical keywords). tc/cc/bc are spelled identically in both."
+					"notes": "TWO deliberate vocabularies, neither deprecated: logical ts/te/cs/ce/bs/be mirror under :dir(rtl) (media.css); physical tl/tr/cl/cr/bl/br never mirror (object-position has no logical keywords). tc/cc/bc are spelled identically in both. Since v5 removed ovr()'s physical aliases, obp() is the system's ONLY physical position vocabulary — everywhere else the logical ts…be grid is the single spelling."
 				},
 				"rds": {
 					"axis": "corners",
@@ -359,15 +359,11 @@ export default {
 							"accent",
 							"black",
 							"white",
-							"gray"
+							"gray",
+							"slate"
 						]
 					},
-					"argAliases": {
-						"dark": "black",
-						"light": "white",
-						"subtle": "gray",
-						"slate": "gray"
-					},
+					"argAliases": {},
 					"bare": true,
 					"matching": "substring",
 					"writes": [
@@ -390,7 +386,7 @@ export default {
 						"ui/card/media.tint.css:48",
 						"ui/card/media.tint.css:56"
 					],
-					"notes": "OPT-IN sheet (media.tint.css) — NOT imported by ui-card.css. Bare `tnt` paints --ui-media-tint-color (default --color-accent) via ui-media::before with mix-blend-mode. Knobs: --ui-media-tint-blend (default color), --ui-media-tint-opacity. tnt(slate) resolves to its OWN --ui-theme-slate-bg bundle (media.tint.css:56), not to gray as the deprecation table claims. Nested frames suppress the second tint (media.tint.css:41)."
+					"notes": "OPT-IN sheet (media.tint.css) — NOT imported by ui-card.css. Bare `tnt` paints --ui-media-tint-color (default --color-accent) via ui-media::before with mix-blend-mode. Knobs: --ui-media-tint-blend (default color), --ui-media-tint-opacity. tnt(slate) resolves to its OWN --ui-theme-slate-bg bundle — slate is a canonical hue, never an alias of gray. The tnt(dark)/tnt(light)/tnt(subtle) aliases were removed in v5. Nested frames suppress the second tint (media.tint.css:41)."
 				},
 				"scm": {
 					"axis": "scrim",
@@ -454,7 +450,7 @@ export default {
 						"ui/card/media.css:267",
 						"ui/card/media.css:281"
 					],
-					"notes": "Three orthogonal, freely composable axes (direction · extent · intensity). Bare `scm` paints --ui-media-scrim-paint = scrim || --ui-media-scrim-default (written by the host's ovr(), ui-card.css:156-164) || the bc gradient. The 9 gradient families --ui-media-scrim-ts…-be are pre-declared on :where(ui-media), :where([media]), :where([variant]) (media.css:219) and re-baked mirrored under :dir(rtl) (media.css:248). The ui-media::after painter (media.css:282) is UNCONDITIONAL, so the token itself sets only custom properties."
+					"notes": "Three orthogonal, freely composable axes (direction · extent · intensity). Bare `scm` paints --ui-media-scrim-paint = scrim || --ui-media-scrim-default (written by the host's ovr(), ui-card.css:156-164) || the bc gradient. The 9 gradient families --ui-media-scrim-ts…-be are pre-declared on :where(ui-media), :where([media*=\"scm\"]), :where([variant*=\"ovr(\"]) — the exact set of subjects that read them (F-12, tightened in v5; the old blanket [media]/[variant] arms are gone) — and re-baked mirrored under :dir(rtl). The ui-media::after painter (media.css:282) is UNCONDITIONAL, so the token itself sets only custom properties."
 				},
 				"chip": {
 					"axis": "furniture",
@@ -479,7 +475,8 @@ export default {
 							"accent",
 							"black",
 							"white",
-							"gray"
+							"gray",
+							"slate"
 						],
 						"mode": [
 							"pale",
@@ -503,12 +500,7 @@ export default {
 							"sqr"
 						]
 					},
-					"argAliases": {
-						"dark": "black",
-						"light": "white",
-						"subtle": "gray",
-						"slate": "gray"
-					},
+					"argAliases": {},
 					"bare": false,
 					"matching": "substring",
 					"writes": [
@@ -535,7 +527,7 @@ export default {
 						"ui/chip/ui-chip.css:46",
 						"ui/chip/ui-chip.css:99"
 					],
-					"notes": "Default area ts. Position args live in media.css (shared 9-grid rule, real inset/translate props); every other axis lives in ui/chip/ui-chip.css paired with the standalone attribute form (&[theme]/&[variant]/&[size]/&[radius]). No chip(md) — md is the default size. chip(slate) is implemented as its own --ui-theme-slate-* bundle (ui-chip.css:52), marked deprecated in-file."
+					"notes": "Default area ts. Position args live in media.css (shared 9-grid rule, real inset/translate props); every other axis lives in ui/chip/ui-chip.css paired with the standalone attribute form (&[theme]/&[variant]/&[size]/&[radius]). No chip(md) — md is the default size. chip(slate) is a canonical hue with its own --ui-theme-slate-* bundle (ui-chip.css). The chip(dark)/chip(light)/chip(subtle) aliases were removed in v5."
 				},
 				"sticker": {
 					"axis": "furniture",
@@ -560,7 +552,8 @@ export default {
 							"accent",
 							"black",
 							"white",
-							"gray"
+							"gray",
+							"slate"
 						],
 						"mode": [
 							"pale",
@@ -595,12 +588,7 @@ export default {
 							"fit"
 						]
 					},
-					"argAliases": {
-						"dark": "black",
-						"light": "white",
-						"subtle": "gray",
-						"slate": "gray"
-					},
+					"argAliases": {},
 					"bare": false,
 					"matching": "substring",
 					"writes": [
@@ -627,7 +615,7 @@ export default {
 						"ui/sticker/ui-sticker.css:86",
 						"ui/sticker/ui-sticker.css:231"
 					],
-					"notes": "Default area te. sh: is an OPEN prefix — the generic rule [media*=\"sticker(sh:\"] (ui-sticker.css:231) sets up the ::before fill, so a custom sh:<name> + --ui-sticker-clip-path needs no CSS edit (render.js:214 classifies any sh:* as axis 'shape'). spl/spr are the flat media= aliases for variant=\"speech(l|r)\" (nested parens are illegal in a media= token). sticker(fit) opts into text-fit: grow (@supports-gated) and has NO class in render.js FURNITURE_AXIS. sticker(fit) is a TYPESETTING flag (text-fit: grow per-line-all, @supports-gated, ui-sticker.css:170-176), independent of the pale/muted plate tones — hence its own `flag` arg class."
+					"notes": "Default area te. sh: is an OPEN prefix — the generic rule [media*=\"sticker(sh:\"] (ui-sticker.css:231) sets up the ::before fill, so a custom sh:<name> + --ui-sticker-clip-path needs no CSS edit (render.js:214 classifies any sh:* as axis 'shape'). spl/spr are the flat media= aliases for variant=\"speech(l|r)\" (nested parens are illegal in a media= token). sticker(fit) opts into text-fit: grow (@supports-gated) and has NO class in render.js FURNITURE_AXIS. sticker(fit) is a TYPESETTING flag (text-fit: grow per-line-all, @supports-gated, ui-sticker.css:170-176), independent of the pale/muted plate tones — hence its own `flag` arg class. sticker(slate) is a canonical hue with its own --ui-theme-slate-* bundle; the sticker(dark)/sticker(light)/sticker(subtle) aliases were removed in v5."
 				},
 				"save": {
 					"axis": "furniture",
@@ -652,7 +640,8 @@ export default {
 							"accent",
 							"black",
 							"white",
-							"gray"
+							"gray",
+							"slate"
 						],
 						"size": [
 							"sm",
@@ -666,12 +655,7 @@ export default {
 							"sqr"
 						]
 					},
-					"argAliases": {
-						"dark": "black",
-						"light": "white",
-						"subtle": "gray",
-						"slate": "gray"
-					},
+					"argAliases": {},
 					"bare": false,
 					"matching": "substring",
 					"writes": [
@@ -697,7 +681,7 @@ export default {
 						"ui/save/ui-save.css:80",
 						"ui/save/ui-save.css:115"
 					],
-					"notes": "Default area te; INTERACTIVE, so invalid inside a <summary> (ui-reveal front face). No pale/muted arms. save(non) is a variant (hides the disc, bare glyph) but render.js classifies `non` under axis 'disc'. save(slate) IS implemented (ui-save.css:88) despite AGENTS.md claiming otherwise. No save(pll)."
+					"notes": "Default area te; INTERACTIVE, so invalid inside a <summary> (ui-reveal front face). No pale/muted arms. save(non) is a variant (hides the disc, bare glyph) but render.js classifies `non` under axis 'disc'. save(slate) is a canonical hue with its own --ui-theme-slate-* bundle (ui-save.css). The save(dark)/save(light)/save(subtle) aliases were removed in v5. No save(pll)."
 				},
 				"play": {
 					"axis": "furniture",
@@ -722,7 +706,8 @@ export default {
 							"accent",
 							"black",
 							"white",
-							"gray"
+							"gray",
+							"slate"
 						],
 						"size": [
 							"sm",
@@ -738,12 +723,7 @@ export default {
 							"sqr"
 						]
 					},
-					"argAliases": {
-						"dark": "black",
-						"light": "white",
-						"subtle": "gray",
-						"slate": "gray"
-					},
+					"argAliases": {},
 					"bare": false,
 					"matching": "substring",
 					"writes": [
@@ -776,7 +756,7 @@ export default {
 						"ui/play/ui-play.css:55",
 						"ui/card/media.carousel.css:85"
 					],
-					"notes": "Default area cc; INTERACTIVE, invalid inside <summary>. ONE stem carries two disjoint vocabularies: position (media.css:170) and size (media.video.css:31, ply() alias) — folding the system's only two-stem element into one. Inside a carousel (auto/loop) the control is re-laid-out as position:sticky and play(<pos>) is re-implemented via --_play-* (media.carousel.css:71-90) for SIX cells only: ts te cs ce bs be (no tc/bc). play(md) exists only in media.video.css:32; ui-play.css:76-78 ships sm/lg/xl on `ui-play button`."
+					"notes": "Default area cc; INTERACTIVE, invalid inside <summary>. ONE stem carries two disjoint vocabularies: position (media.css:170) and size (media.video.css:31, ply() alias) — folding the system's only two-stem element into one. Inside a carousel (auto/loop) the control is re-laid-out as position:sticky and play(<pos>) is re-implemented via --_play-* (media.carousel.css:71-90) for SIX cells only: ts te cs ce bs be (no tc/bc). play(md) exists only in media.video.css:32; ui-play.css:76-78 ships sm/lg/xl on `ui-play button`. play(slate) is a canonical hue with its own --ui-theme-slate-* bundle; the play(dark)/play(light)/play(subtle) aliases were removed in v5."
 				},
 				"beacon": {
 					"axis": "furniture",
@@ -801,7 +781,8 @@ export default {
 							"accent",
 							"black",
 							"white",
-							"gray"
+							"gray",
+							"slate"
 						],
 						"mode": [
 							"pale",
@@ -832,12 +813,7 @@ export default {
 							"non"
 						]
 					},
-					"argAliases": {
-						"dark": "black",
-						"light": "white",
-						"subtle": "gray",
-						"slate": "gray"
-					},
+					"argAliases": {},
 					"bare": false,
 					"matching": "substring",
 					"writes": [
@@ -865,7 +841,7 @@ export default {
 						"ui/beacon/ui-beacon.css:130",
 						"ui/beacon/ui-beacon.css:151"
 					],
-					"notes": "Default area ts (shares it with chip by design). Only element with an xs size and with md declared explicitly. Two axes overlap the shared vocabulary: `pll` is a FACE here (variant=\"pill\", ui-beacon.css:130) though render.js files it under 'disc'; `non` turns the solid face's default blink OFF (animation:none, ui-beacon.css:160) though render.js also files it under 'disc'. Animations are gated on prefers-reduced-motion (ui-beacon.css:248-266). Every face incl. the tck ticker is markup-free CSS."
+					"notes": "Default area ts (shares it with chip by design). Only element with an xs size and with md declared explicitly. Two axes overlap the shared vocabulary: `pll` is a FACE here (variant=\"pill\", ui-beacon.css:130) though render.js files it under 'disc'; `non` turns the solid face's default blink OFF (animation:none, ui-beacon.css:160) though render.js also files it under 'disc'. Animations are gated on prefers-reduced-motion (ui-beacon.css:248-266). Every face incl. the tck ticker is markup-free CSS. beacon(slate) is a canonical hue with its own --ui-theme-slate-* bundle; the beacon(dark)/beacon(light)/beacon(subtle) aliases were removed in v5."
 				},
 				"marquee": {
 					"axis": "band",
@@ -883,7 +859,8 @@ export default {
 							"accent",
 							"black",
 							"white",
-							"gray"
+							"gray",
+							"slate"
 						],
 						"mode": [
 							"rpt",
@@ -916,12 +893,7 @@ export default {
 							"gap-lg"
 						]
 					},
-					"argAliases": {
-						"dark": "black",
-						"light": "white",
-						"subtle": "gray",
-						"slate": "gray"
-					},
+					"argAliases": {},
 					"bare": false,
 					"matching": "substring",
 					"writes": [
@@ -951,7 +923,7 @@ export default {
 						"ui/marquee/ui-marquee.css:108",
 						"ui/marquee/ui-marquee.css:135"
 					],
-					"notes": "A BAND, not 9-grid furniture: full-width (inset-inline: 0), z-index 1 (BELOW the z-2 furniture), and only two placements. The position args carry a dual arm — host `:where([media*=\"marquee(top|bot)\"]) ui-media ui-marquee` plus self `:where(ui-media[media*=\"marquee(top|bot)\"]) ui-marquee` (media.css:189-192); before the self arm was added, marquee(bot) on the <ui-media> itself (the renderer's canonical placement) was a silent no-op. Every other arg resolves through ui-marquee.css's own ancestor arms (`:where([media*=\"marquee(…)\"]) &`) and has always worked from either placement. Direction/speed/gap live only in the 'value' bucket (no render.js merge class). The old marquee(loop) spelling is REMOVED (2026-07-27): it was renamed to rpt because a substring-matched marquee(loop) collided with the carousel's bare `loop` flag in the same attribute (that flag is whole-token matched on both the CSS and JS sides). seam is @supports(offset-path)+reduced-motion gated."
+					"notes": "A BAND, not 9-grid furniture: full-width (inset-inline: 0), z-index 1 (BELOW the z-2 furniture), and only two placements. The position args carry a dual arm — host `:where([media*=\"marquee(top|bot)\"]) ui-media ui-marquee` plus self `:where(ui-media[media*=\"marquee(top|bot)\"]) ui-marquee` (media.css:189-192); before the self arm was added, marquee(bot) on the <ui-media> itself (the renderer's canonical placement) was a silent no-op. Every other arg resolves through ui-marquee.css's own ancestor arms (`:where([media*=\"marquee(…)\"]) &`) and has always worked from either placement. Direction/speed/gap live only in the 'value' bucket (no render.js merge class). The old marquee(loop) spelling is REMOVED (2026-07-27): it was renamed to rpt because a substring-matched marquee(loop) collided with the carousel's bare `loop` flag in the same attribute (that flag is whole-token matched on both the CSS and JS sides). seam is @supports(offset-path)+reduced-motion gated. marquee(slate) is a canonical hue with its own --ui-theme-slate-* bundle; the marquee(dark)/marquee(light)/marquee(subtle) aliases were removed in v5."
 				},
 				"vid": {
 					"axis": "video",
@@ -1778,14 +1750,7 @@ export default {
 							"be"
 						]
 					},
-					"argAliases": {
-						"tl": "ts",
-						"tr": "te",
-						"cl": "cs",
-						"cr": "ce",
-						"bl": "bs",
-						"br": "be"
-					},
+					"argAliases": {},
 					"bare": false,
 					"matching": "substring",
 					"writes": [
@@ -1819,7 +1784,7 @@ export default {
 						"ui/card/media.css:219-255",
 						"ui/reveal/ui-reveal.css:129-138"
 					],
-					"notes": "SUBSTRING matched (`[variant*=\"ovr(\"]` for the bridge, `[variant*=\"ovr(ts)\"]` per position) — the only card arrangement axis that is not whole-token. Six DEPRECATED physical aliases only (tl tr cl cr bl br), not nine: the centre column tc/cc/bc is spelled identically in the logical and physical vocabularies and needs no alias; each alias rides in the SAME selector list as its canonical form so the scrim default fires for both spellings. The implementation was always logical (justify/align/text-align: start|center|end), so ovr(tl) already rendered top-END in rtl — the rename fixes the label, not the behaviour. Real properties: `grid-area: var(--ui-card-stack, auto)` on :is(ui-media, ui-content) (ui/card/ui-card.css:139, armed by the bare [variant] presence), `align-content: stretch` on the queryable descendant, and `color` on a plain .ui-button (ui/card/ui-card.css:168). --ui-media-scrim-default is consumed by bare `scm` on media=; the nine gradients are defined on `:where([variant])` in media.css and re-baked mirrored under :dir(rtl). ovr()'s ink/placement/z leak into a reveal panel and are counter-reset at ui/reveal/ui-reveal.css:129-138 (leak-checklist items 1 + 3). variant= is host-only by design — it arranges the two children, so there is no self arm on <ui-media>/<ui-content>."
+					"notes": "SUBSTRING matched (`[variant*=\"ovr(\"]` for the bridge, `[variant*=\"ovr(ts)\"]` per position) — the only card arrangement axis that is not whole-token. The six physical aliases (tl tr cl cr bl br) were REMOVED in v5 — logical ts…be is the only spelling. The centre column tc/cc/bc was always spelled identically in both vocabularies and is unaffected. obp() is now the system's only physical position vocabulary. The implementation was always logical (justify/align/text-align: start|center|end), so ovr(tl) already rendered top-END in rtl — the rename fixes the label, not the behaviour. Real properties: `grid-area: var(--ui-card-stack, auto)` on :is(ui-media, ui-content) (ui/card/ui-card.css:139, armed by the bare [variant] presence), `align-content: stretch` on the queryable descendant, and `color` on a plain .ui-button (ui/card/ui-card.css:168). --ui-media-scrim-default is consumed by bare `scm` on media=; the nine gradients are defined on `:where([variant*=\"ovr(\"])` (among other subjects) in media.css and re-baked mirrored under :dir(rtl). ovr()'s ink/placement/z leak into a reveal panel and are counter-reset at ui/reveal/ui-reveal.css:129-138 (leak-checklist items 1 + 3). variant= is host-only by design — it arranges the two children, so there is no self arm on <ui-media>/<ui-content>."
 				},
 				"flp": {
 					"axis": "reveal-animation",
@@ -2309,6 +2274,32 @@ export default {
 						"ui/reveal/ui-reveal.css:497-501"
 					],
 					"notes": "Reveal PANEL scroll — only active under flp (panel goes `position: absolute; inset: 0` so a long flipside can't grow the card, with the shared ui-scroll-fade edge mask) and under grw / lg:grw (overflow-y auto, scrollbar hidden). Inert under exp and sld. Reads --ui-reveal-content-bs / --ui-reveal-scrollbar-color; writes no custom property. HOMONYM of content='s `scr` — different attribute, different target (content= scrolls the text column inside <ui-content>). Both share the one ui-scroll-fade primitive in ui/base/scroll.css."
+				},
+				"sub": {
+					"axis": "subgrid",
+					"element": null,
+					"args": {},
+					"argAliases": {},
+					"bare": true,
+					"matching": "whole",
+					"writes": [
+						"--_sub"
+					],
+					"realProperties": true,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": false,
+					"hosts": [
+						"ui-card"
+					],
+					"requiresJs": {},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/card/ui-card.css:135-198",
+						"layout/core/base.css:331-354"
+					],
+					"notes": "Opt-in wrapper flattening so a card's parts join the rows of a parent <lay-out>'s subgrid (F-38) — replaces the old demo-local `display: contents` hack in layout/demo-assets/wpp.css. FLAG RELAY, not a breakpoint: the layout's bare `subgrid` breakpoint token flips `--_subgrid: on` on the <lay-out> inside whichever @media the builder emitted it for; `sub` syncs to that live flag and NEVER names a breakpoint of its own, so switching the markup from lg=\"columns(3) subgrid\" to xl=\"…\" (or md=, or several) needs no card-side change. TWO HOPS because a style query resolves against the SUBJECT'S PARENT: hop 1's subject is the card, whose parent is the <lay-out>, so it can read the non-inheriting --_subgrid; hop 2's subject is <cq-box>, whose parent is the card, which has no --_subgrid of its own — so hop 1 relays into --_sub, an ordinary INHERITING custom property (not @property-registered on purpose) that <cq-box> and <ui-content> can read. Verified in Chromium: the single-hop form matches nothing. Flattens `> cq-box` and `> cq-box > ui-content` only — <ui-media> stays a box because it IS the row-1 grid item (dissolving it would drop asr()/rds()/scrim and spill its <img> + furniture across rows). A nested host resets --_sub to 0 (nearest-host-wins boundary) so a subgridded outer card can't flatten an inner one. Known consequences: while flattened <ui-content>'s box is gone, so pad()/gap() do nothing and rhythm comes from the layout's row gaps (rg(N)); and the subgrid engine's `container-type: normal` on the card suspends the card's own md:/lg: container tiers for as long as the flag is on. NOT supported on <ui-reveal> — its front face is details > summary and dissolving those destroys the disclosure surface + ::details-content animation. variant= is host-only by design — there is no self arm on <ui-media>/<ui-content>."
 				}
 			}
 		},
