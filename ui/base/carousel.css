@@ -424,7 +424,7 @@
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"])::scroll-marker-group {
 			backdrop-filter: var(--ui-carousel-label-group-backdrop, none);
 			background: var(--ui-carousel-label-group-bg, transparent);
-			border-radius: var(--ui-carousel-label-group-radius, var(--radius-pill, 100px));
+			border-radius: var(--ui-carousel-label-group-radius, var(--ui-carousel-label-radius, var(--radius-pill, 100px)));
 			box-shadow: var(--ui-carousel-label-group-shadow, none);
 			flex-wrap: var(--ui-carousel-label-group-wrap, nowrap);
 			gap: var(--ui-carousel-label-group-gap, var(--ui-carousel-marker-gap));
