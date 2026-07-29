@@ -36,6 +36,10 @@ html { scrollbar-gutter: stable; }
    (the accordion's own marker-hide rule is gated to accordion-render mode), and apply
    typography tweaks. Scoped to auto-morph[render="tabs"] above 650px. */
 @container (inline-size > 650px) {
+	/* first tab label flush with the panel's text column below */
+	auto-morph[render="tabs"] [tabs~="expanded"] > cq-box > details:first-of-type > summary {
+		padding-inline-start: 0;
+	}
 	auto-morph[render="tabs"] [tabs~="expanded"] > cq-box > details > ui-accordion > cq-box {
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));

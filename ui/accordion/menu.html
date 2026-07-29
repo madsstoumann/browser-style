@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Accordion: Mega-menu in header</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="Mega-menu demo: nested ui-accordion morphing into tabs, toggled on mobile via a CSS-only checkbox hack.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="ui-accordion.css">
+	<link rel="stylesheet" href="../tabs/ui-tabs.css">
+	<link rel="stylesheet" href="../tabs/tabs-demo.css">
+	<link rel="stylesheet" href="../auto-morph/auto-morph.css">
+	<style>
+		/* tabs-demo.css reserves a scrollbar gutter; when unfilled it leaves an
+		   unpainted strip right of the bleed layers — cancel it. Without the
+		   gutter, 100vw includes the scrollbar, so the 50vw-bleeds overshoot by
+		   half a scrollbar: overflow-x hidden (not clip — Chrome still lets the
+		   viewport scroll with clip) disables horizontal scrolling entirely */
+		html {
+			overflow-x: hidden;
+			scrollbar-gutter: auto;
+		}
+		body { margin-block-start: 0; margin-inline: auto; }
+		header {
+			align-items: center;
+			/* top gap = body's inline padding (2ch, core.css) — logo sits the
+			   same distance from the top as the text does from the edge.
+			   Padding (not margin) so the gap survives sticking and the stuck
+			   bg layer covers it */
+			padding-block-start: 2ch;
+			container-type: scroll-state;
+			display: grid;
+			/* row gap = top padding: equal space above and below the logo */
+			gap: 2ch var(--spacing-md);
+			grid-template-columns: 1fr auto;
+			inset-block-start: 0;
+			position: sticky;
+			z-index: var(--z-index-4);
+		}
+		/* bg + shadow layer, faded in by the stuck query below — a scroll-state
+		   query can't style its own container, but its pseudos count as
+		   descendants */
+		header::before {
+			background: var(--color-surface);
+			box-shadow: var(--shadow-md);
+			content: "";
+			inset: 0 calc(50% - 50vw);
+			opacity: 0;
+			position: absolute;
+			transition: opacity var(--duration-normal) var(--ease-in-out);
+			z-index: -1;
+		}
+		@container scroll-state(stuck: top) {
+			header::before { opacity: 1; }
+		}
+		/* hide on scroll down, reveal on scroll up — direction query against the
+		   root scroller (header's own scroll-state container only serves its
+		   descendants, so `header` here resolves to the html container).
+		   Guarded so an open panel keeps the header on screen. */
+		html { container-type: scroll-state; }
+		header { transition: translate var(--duration-slow) var(--ease-in-out); }
+		@container scroll-state(scrolled: block-end) {
+			header { translate: 0 -100%; }
+		}
+		/* desktop guard: an open overlay panel keeps the header on screen.
+		   Desktop-only — on mobile a section left [open] inside the closed
+		   slide menu must not block hiding */
+		@media (width > 650px) {
+			@container scroll-state(scrolled: block-end) {
+				header:has([tabs] > cq-box > details[open]) { translate: none; }
+			}
+		}
+		header > auto-morph {
+			grid-column: 1 / -1;
+		}
+		header { --_logo: clamp(50px, 30px + 5.333vw, 90px); }
+		.logo {
+			aspect-ratio: 1;
+			/* seam runs perpendicular to the gradient line — `to bottom right`
+			   puts the triangle split on the bottom-left → top-right diagonal */
+			background: linear-gradient(to bottom right, #9a9a9a 50%, #d4d4d4 50%);
+			inline-size: var(--_logo);
+		}
+		/* click-outside backdrop — enabled on desktop while a panel is open */
+		.backdrop { display: none; }
+
+		/* checkbox: hidden but accessible */
+		#menu-toggle {
+			block-size: 1px;
+			clip-path: inset(50%);
+			inline-size: 1px;
+			overflow: hidden;
+			position: absolute;
+			white-space: nowrap;
+		}
+		header > label {
+			cursor: pointer;
+			display: grid;
+			font-size: 1.5rem;
+			/* base form.css gives labels a gap; the hidden input's phantom
+			   0-track would otherwise drag it in and offset the icon */
+			gap: 0;
+			justify-self: end;
+		}
+		header > label:has(#menu-toggle:focus-visible) {
+			outline: var(--ring-width) solid var(--ring-color);
+			outline-offset: var(--ring-offset);
+		}
+
+		/* mobile: slide-in panel handled by auto-morph[slide-from]; the toggle
+		   stacks above it (burger morphs to a cross via ui-icon's :checked
+		   state) and locks page scroll */
+		@media (width <= 650px) {
+			/* closed slide panel is display:none — row 2 vanishes and the row
+			   gap with it; padding restores the space below the logo */
+			header { padding-block-end: 2ch; }
+			header > label {
+				z-index: calc(var(--z-index-5, 1000) + 1);
+			}
+			/* no body scroll-lock here: overflow:hidden on the root stops the
+			   sticky header from sticking (it jumps to document top, taking the
+			   toggle with it); the panel's overscroll-behavior handles chaining */
+			auto-morph { padding: 4rem var(--spacing-md) var(--spacing-md); }
+		}
+		/* desktop: menu always visible, toggle gone. The menu bar reserves only
+		   its own row — panels drop out of flow (absolute, below the bar) so an
+		   open panel overlays <main> instead of pushing it down. */
+		@media (width > 650px) {
+			header > label { display: none; }
+			/* logo-row height tracks the logo so the partial-reveal offset is expressible */
+			header { --_row1: var(--_logo); grid-template-rows: var(--_row1) auto; }
+			/* scrolling back up mid-page reveals ONLY the menu bar (header shifted
+			   up by the logo row); the full header returns at the very top, where
+			   scrollable: block-start no longer matches. Nested single-feature
+			   queries — the compound scroll-state((a) and (b)) form parses only
+			   in newer Chrome */
+			@container scroll-state(scrolled: block-start) {
+				@container scroll-state(scrollable: block-start) {
+					header {
+						/* shift past top padding + logo row + row gap — bar lands flush */
+						translate: 0 calc(-1 * (2ch + var(--_row1) + 2ch));
+					}
+				}
+			}
+			/* row 2 (and the switch morph's implicit row 3) collapse to a fixed 0 —
+			   panels keep their grid/subgrid placement (bleed, columns, morphs all
+			   behave as in the plain demo) but overflow the row as an overlay */
+			header [tabs] > cq-box {
+				grid-auto-rows: 0;
+				grid-template-rows: auto 0;
+			}
+			/* in a 0-height track, stretch would resolve block-size:auto to 0 —
+			   start-align so the panel sizes to its content and overflows */
+			header [tabs] > cq-box > details::details-content {
+				align-self: start;
+			}
+			/* overlay switch: hold the closing panel's box one duration (its
+			   content fades out) so the dropdown sheet never dips mid-switch */
+			header [tabs] > cq-box:has(> details[open]) > details:not([open])::details-content {
+				transition-delay: var(--ui-tabs-panel-duration);
+			}
+			/* light dismiss: the backdrop is a dummy <details> in the same
+			   name-group ("mega-menu"). Its summary covers the viewport while a
+			   real panel is open; clicking it opens the dummy, and native
+			   exclusive-group behavior closes the panel — with its animation.
+			   The dummy's own open state renders nothing, and the next tab click
+			   closes it again. Shown only when a real panel is open. */
+			body:has(header [tabs] > cq-box > details[open]) .backdrop {
+				display: block;
+			}
+			.backdrop > summary {
+				background: #ff69b4DD; /* TEMP: verification color — remove */
+				cursor: default;
+				inset: 0;
+				list-style: none;
+				position: fixed;
+				/* above <main>, below the header (and its panel) */
+				z-index: calc(var(--z-index-4) - 1);
+				&::-webkit-details-marker { display: none; }
+			}
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<a class="logo" href="#" aria-label="Home"></a>
+		<label aria-label="Toggle menu">
+			<input type="checkbox" id="menu-toggle">
+			<ui-icon type="burger-menu"></ui-icon>
+		</label>
+		<auto-morph render="tabs" slide-from="right">
+			<ui-accordion variant="divided" group="mega-menu" indent tabs="bleed compact expanded panel">
+				<cq-box>
+					<details name="mega-menu">
+						<summary>Products<ui-icon type="chevron down"></ui-icon></summary>
+						<ui-accordion variant="divided" group="mega-products">
+							<cq-box>
+								<details name="mega-products">
+									<summary>Smartphones<ui-icon type="arrow right"></ui-icon></summary>
+									<div role="group">
+										<a href="#">iPhone</a>
+										<a href="#">Android</a>
+										<a href="#">Google Pixel</a>
+										<a href="#">Samsung Galaxy</a>
+									</div>
+								</details>
+								<details name="mega-products">
+									<summary>Laptops<ui-icon type="arrow right"></ui-icon></summary>
+									<div role="group">
+										<a href="#">MacBook</a>
+										<a href="#">Surface</a>
+										<a href="#">ThinkPad</a>
+										<a href="#">Chromebook</a>
+									</div>
+								</details>
+								<details name="mega-products">
+									<summary>Tablets<ui-icon type="arrow right"></ui-icon></summary>
+									<div role="group">
+										<a href="#">iPad</a>
+										<a href="#">Surface Pro</a>
+										<a href="#">Galaxy Tab</a>
+									</div>
+								</details>
+								<details name="mega-products">
+									<summary>Audio<ui-icon type="arrow right"></ui-icon></summary>
+									<div role="group">
+										<a href="#">Headphones</a>
+										<a href="#">Earbuds</a>
+										<a href="#">Speakers</a>
+									</div>
+								</details>
+								<details name="mega-products">
+									<summary>Charging<ui-icon type="arrow right"></ui-icon></summary>
+									<div role="group">
+										<a href="#">Cables</a>
+										<a href="#">Wireless Chargers</a>
+										<a href="#">Power Banks</a>
+									</div>
+								</details>
+							</cq-box>
+						</ui-accordion>
+					</details>
+					<details name="mega-menu">
+						<summary>Services<ui-icon type="chevron down"></ui-icon></summary>
+						<ui-accordion variant="divided" group="mega-services">
+							<cq-box>
+								<details name="mega-services">
+									<summary>Support<ui-icon type="arrow right"></ui-icon></summary>
+									<div role="group">
+										<a href="#">Technical Support</a>
+										<a href="#">Warranty</a>
+										<a href="#">Repairs</a>
+									</div>
+								</details>
+								<details name="mega-services">
+									<summary>Business<ui-icon type="arrow right"></ui-icon></summary>
+									<div role="group">
+										<a href="#">Enterprise Solutions</a>
+										<a href="#">Bulk Orders</a>
+										<a href="#">Consultation</a>
+									</div>
+								</details>
+								<details name="mega-services">
+									<summary>Training<ui-icon type="arrow right"></ui-icon></summary>
+									<div role="group">
+										<a href="#">Workshops</a>
+										<a href="#">Certifications</a>
+										<a href="#">Tutorials</a>
+									</div>
+								</details>
+								<details name="mega-services">
+									<summary>Cloud<ui-icon type="arrow right"></ui-icon></summary>
+									<div role="group">
+										<a href="#">Storage</a>
+										<a href="#">Backup</a>
+										<a href="#">Sync</a>
+									</div>
+								</details>
+								<details name="mega-services">
+									<summary>Subscriptions<ui-icon type="arrow right"></ui-icon></summary>
+									<div role="group">
+										<a href="#">Plans</a>
+										<a href="#">Billing</a>
+										<a href="#">Renewals</a>
+									</div>
+								</details>
+							</cq-box>
+						</ui-accordion>
+					</details>
+					<details name="mega-menu">
+						<summary>Company<ui-icon type="chevron down"></ui-icon></summary>
+						<ui-accordion variant="divided" group="mega-company">
+							<cq-box>
+								<details name="mega-company">
+									<summary>About<ui-icon type="arrow right"></ui-icon></summary>
+									<div role="group">
+										<a href="#">Our Story</a>
+										<a href="#">Team</a>
+										<a href="#">Mission</a>
+									</div>
+								</details>
+								<details name="mega-company">
+									<summary>Careers<ui-icon type="arrow right"></ui-icon></summary>
+									<div role="group">
+										<a href="#">Open Roles</a>
+										<a href="#">Internships</a>
+										<a href="#">Benefits</a>
+									</div>
+								</details>
+								<details name="mega-company">
+									<summary>News<ui-icon type="arrow right"></ui-icon></summary>
+									<div role="group">
+										<a href="#">Press Releases</a>
+										<a href="#">Blog</a>
+										<a href="#">Events</a>
+									</div>
+								</details>
+								<details name="mega-company">
+									<summary>Investors<ui-icon type="arrow right"></ui-icon></summary>
+									<div role="group">
+										<a href="#">Reports</a>
+										<a href="#">Earnings</a>
+										<a href="#">Stock</a>
+									</div>
+								</details>
+								<details name="mega-company">
+									<summary>Contact<ui-icon type="arrow right"></ui-icon></summary>
+									<div role="group">
+										<a href="#">Offices</a>
+										<a href="#">Email</a>
+										<a href="#">Phone</a>
+									</div>
+								</details>
+							</cq-box>
+						</ui-accordion>
+					</details>
+				</cq-box>
+			</ui-accordion>
+		</auto-morph>
+	</header>
+	<!-- click-outside backdrop: OUTSIDE the header — the header carries a
+	     translate in its hidden/menubar-only states, which would otherwise
+	     become the containing block for this fixed summary -->
+	<details class="backdrop" name="mega-menu">
+		<summary aria-label="Close menu"></summary>
+	</details>
+
+	<main>
+		<h1>Mega-menu in a header</h1>
+		<p>
+			The "Nested as mega-menu" example from <a href="index.html">the accordion demo</a>, placed in a <code>&lt;header&gt;</code>
+			with a dummy logo. No JavaScript: a visually hidden — but accessible — checkbox toggles the menu on mobile
+			(burger icon, top right). Below 650px, <code>&lt;auto-morph slide-from="right"&gt;</code> turns the menu into a
+			full-viewport panel (100vw × 100dvh) that slides in from the right; unchecking slides it out again.
+			Above 650px the menu is always visible as panel-style tabs and the toggle is hidden.
+			The header is sticky; when it sticks, a <code>scroll-state(stuck: top)</code> container query fades in
+			its background and shadow.
+		</p>
+		<h2>What is Lorem Ipsum?</h2>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+		<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+		<h2>Why do we use it?</h2>
+		<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
+		<p>Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
+		<h2>Where does it come from?</h2>
+		<p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.</p>
+		<p>Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.</p>
+		<h2>1914 translation by H. Rackham</h2>
+		<p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful.</p>
+		<p>Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it?</p>
+	</main>
+</body>
+</html>

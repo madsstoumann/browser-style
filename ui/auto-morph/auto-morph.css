@@ -3,8 +3,8 @@
  * Generic container-query wrapper that flips a renderer-mode custom property
  * on a descendant when the wrapper's inline-size crosses a breakpoint.
  *
- * @version 1.0.0
- * @date 2026-04-26
+ * @version 1.1.0
+ * @date 2026-07-29
  * @author Mads Stoumann
  *
  * Usage:
@@ -19,6 +19,16 @@
  *   @container (inline-size <= 650px) {
  *     auto-morph[render="nav"] [tabs] { --_render: <fallback>; }
  *   }
+ *
+ * slide-from="right|left" — below 650px viewport width the wrapper becomes a
+ * fixed, full-viewport (100vw × 100dvh) panel, slid offscreen toward the given
+ * edge. CSS-only open contract: a PRECEDING SIBLING checked input — bare or
+ * wrapped in a label — opens it:
+ *   <label><input type="checkbox"><ui-icon type="burger-menu"></ui-icon></label>
+ *   <auto-morph slide-from="right">…
+ * Closed = translated offscreen + visibility:hidden, so hidden content is
+ * unfocusable; the toggle input must live OUTSIDE the panel to stay reachable.
+ * Tokens: --auto-morph-bg, --auto-morph-duration.
  */
 @layer bs-component {
 	auto-morph {
@@ -28,5 +38,46 @@
 
 	@container (inline-size <= 650px) {
 		auto-morph[render="tabs"] [tabs] { --_render: accordion; }
+	}
+
+	@media (width <= 650px) {
+		auto-morph[slide-from] {
+			/* overshoot 100vw — with scrollbar-gutter the panel is narrower than
+			   the viewport, and a plain 100% shift leaves a gutter-wide sliver */
+			--_x: calc(100vw + 2rem);
+			background: var(--auto-morph-bg, var(--color-surface, Canvas));
+			block-size: 100dvh;
+			/* display:none while closed — a transformed ancestor (e.g. a header
+			   hidden via translate) becomes this fixed panel's containing block,
+			   and the offscreen box would join layout as horizontal overflow.
+			   allow-discrete keeps the slide-out animation (closing only ever
+			   happens while the ancestor is untransformed) */
+			display: none;
+			inline-size: 100vw;
+			inset-block-start: 0;
+			inset-inline-start: 0;
+			overflow: hidden auto;
+			overscroll-behavior: contain;
+			position: fixed;
+			transition:
+				display var(--auto-morph-duration, var(--duration-slow, 300ms)) allow-discrete,
+				translate var(--auto-morph-duration, var(--duration-slow, 300ms)) var(--ease-in-out, ease),
+				visibility var(--auto-morph-duration, var(--duration-slow, 300ms));
+			translate: var(--_x) 0;
+			visibility: hidden;
+			z-index: var(--z-index-5, 1000);
+		}
+		auto-morph[slide-from="left"] { --_x: calc(-100vw - 2rem); }
+		:is(input:checked, :has(> input:checked)) ~ auto-morph[slide-from] {
+			display: block;
+			translate: 0 0;
+			visibility: visible;
+		}
+		/* standalone so it re-fires on every open */
+		@starting-style {
+			:is(input:checked, :has(> input:checked)) ~ auto-morph[slide-from] {
+				translate: var(--_x) 0;
+			}
+		}
 	}
 }

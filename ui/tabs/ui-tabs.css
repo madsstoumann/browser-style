@@ -174,7 +174,17 @@
 		/* bleed — header bg reaches viewport edges. See readme for scrollbar notes. */
 		:is(ui-tabs[variant~="bleed"], [tabs~="bleed"]) cq-box::before { inset-inline: calc(50% - 50vw); }
 
-		/* bleed + panel — panel bg also bleeds; padding keeps text in column. */
+		/* bleed + panel — panel bg also bleeds; padding keeps text in column.
+		   The clipping ::details-content box is widened to full-bleed too
+		   (margin/padding cancel out, % of the cq-box), so the bled sheet —
+		   and its shadow, via clip-margin — escape the panel's overflow clip. */
+		:is(
+			ui-tabs[variant~="bleed"][variant~="panel"],
+			[tabs~="bleed"][tabs~="panel"]
+		) details::details-content {
+			margin-inline: calc(50% - 50vw);
+			padding-inline: calc(50vw - 50%);
+		}
 		:is(
 			ui-tabs[variant~="bleed"][variant~="panel"],
 			[tabs~="bleed"][tabs~="panel"]
@@ -206,8 +216,10 @@
 				> details::details-content {
 					block-size: 0;
 					content-visibility: hidden;
+					/* clip growing content, but let the panel shadow paint —
+					   clip-margin requires clip on BOTH axes (single-axis clip
+					   ignores it and clips shadows at the padding edge) */
 					overflow: clip;
-					/* clip growing content but let the panel shadow paint */
 					overflow-clip-margin: var(--ui-tabs-panel-clip-margin, 2rem);
 					transition:
 						block-size var(--ui-tabs-panel-duration) var(--ease-in-out),

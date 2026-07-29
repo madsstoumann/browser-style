@@ -359,6 +359,14 @@
 					padding-inline-start: calc((var(--_id) + 1) * var(--ui-accordion-padding-inline));
 				}
 			}
+			/* variants that don't pad details (no bordered/breakout): leaf rows
+			   get an end padding so their icons align with parent summaries'
+			   (bordered/breakout details carry their own inline padding) */
+			&[indent]:not([variant~="bordered"], [variant~="breakout"]) cq-box ui-accordion {
+				details:not(:has(> ui-accordion)) > * {
+					padding-inline-end: var(--ui-accordion-padding-inline);
+				}
+			}
 		}
 
 		:where([dir="rtl"]) ui-accordion[type="slide"] cq-box { --_sd: -1; }
