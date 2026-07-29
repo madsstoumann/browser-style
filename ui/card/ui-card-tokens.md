@@ -208,6 +208,14 @@ Card-local override hooks (feed the `--ui-theme-black-*`/`slate` bundles):
 | `--ui-card-dark-bg` | `#1f2937` | `theme="black"` surface — set to `var(--color-accent)` for a branded surface |
 | `--ui-card-muted-bg` | `#374151` | `theme="slate"` surface |
 
+**On a `<ui-reveal>`** the axis works the same, with one twist: the painted, rounded
+box is the inner `<details>`, so the host arm *re-publishes* the resolved surface into
+`--ui-reveal-bg` (the back panel and the `pop` popup card follow through their own
+fallback chains). The **flipside** carries its own `theme=` on the element after
+`</summary>` — see [Two sides, two themes](../reveal/readme.md#two-sides-two-themes).
+`theme="… border"` is routed too: the host takes the card radius grown by the border
+width, and the card shadow is dropped (the fill is transparent by then).
+
 > **Migrated from `thm()`:** the old `variant="thm(dark\|muted\|subtle)"` spelling was
 > **removed in v4** — use `theme=`: `thm(dark)`→`theme="black dark"`, `thm(muted)`→
 > `theme="slate dark"`, `thm(subtle)`→`theme="gray"`.
@@ -396,14 +404,19 @@ which is not a card area at all. Each one is counter-reset in `ui-reveal.css`:
 | 4 | content padding doubling (`--ui-content-p` **and** `--ui-reveal-content-p`) | `> details[open]:has(> ui-content)::details-content { padding: 0 }` |
 | 5 | type-scale on a panel with no `content=` of its own | `> details > ui-content:not([content])` |
 
-Item 6 is the exception that proves the rule: `align-content` (the `ui-card.css`
-arrangement block) **does** reach `<summary>`, by design (F-14) — shared on purpose, not a
-leak.
+Items 6 and 7 are the exceptions that prove the rule — rules that reach into the panel **on
+purpose**:
+
+| # | Card/content rule reaching the panel | Why it stays |
+|---|---|---|
+| 6 | `align-content` (the `ui-card.css` arrangement block) reaches `<summary>` | shared on purpose (F-14) |
+| 7 | `ui-content[theme]` surface + ink (`content.css`) | **not undone — by design.** Its subject sits inside `ui-reveal > details` without passing `summary`, which is exactly the point: it is how a flipside gets its own colour. Written at (0,1,0) so it deliberately out-specifies item 1's `color` reset; `ui-reveal.css` adds only the geometric fill (`min-block-size: 100%`) plus the same payload for a non-`ui-content` back |
 
 > **The audit rule — keep the CSS marker.** When a new card token is added, ask: *does its
 > selector subject sit inside `ui-reveal > details` without passing through
-> `summary`/`ui-face`?* If yes, it leaks into the panel and needs an entry here plus a
-> counter-reset. Long-term (v5) the card rules move to front-face-scoped subjects and this
+> `summary`/`ui-face`?* If yes, it either leaks into the panel and needs an entry here plus a
+> counter-reset — or it reaches the panel **intentionally**, in which case it still needs a
+> row (items 6-7) saying so, and the specificity that makes it survive the counter-resets. Long-term (v5) the card rules move to front-face-scoped subjects and this
 > list shrinks toward zero.
 
 **Why #5 tests `content=` and not `variant=`.** An explicit `content=` on the back

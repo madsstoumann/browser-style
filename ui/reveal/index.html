@@ -18,17 +18,6 @@
 			display: block;
 			margin-block-end: var(--spacing-2xl);
 		}
-		/* Flip-card back-face palettes — a light shade pulled from each band photo,
-		   paired with an AA-contrast text colour. */
-		.thelure       { --ui-reveal-content-bg: #d8d6dc; --ui-reveal-content-c: #2a2730; }
-		.papermirror   { --ui-reveal-content-bg: #e6d8ec; --ui-reveal-content-c: #3d2747; }
-		.skylinefive   { --ui-reveal-content-bg: #ddd9d1; --ui-reveal-content-c: #34322b; }
-		.neonavenue    { --ui-reveal-content-bg: #f1dde3; --ui-reveal-content-c: #5a2f3d; }
-		.camdencourt   { --ui-reveal-content-bg: #e8dac4; --ui-reveal-content-c: #58361f; }
-		.reddirtroad   { --ui-reveal-content-bg: #ddd6c6; --ui-reveal-content-c: #43392a; }
-		.glitterthrone { --ui-reveal-content-bg: #f0e3bf; --ui-reveal-content-c: #4a2d6e; }
-		.pulsetheory   { --ui-reveal-content-bg: #dbdee1; --ui-reveal-content-c: #2b3037; }
-		.halcyonwash   { --ui-reveal-content-bg: #dcd8e0; --ui-reveal-content-c: #2b2733; }
 	</style>
 </head>
 <body>
@@ -167,7 +156,7 @@
 	     ============================================ -->
 	<h2>Cover story — <code>&lt;ui-reveal&gt;</code> </h2>
 
-	<ui-reveal class="hero" variant="ovr(bs) rds(md-sq) exp lg:grw scr ico(te)" media="asr(21/9) obp(cc) scm" content="scl(xl) pad(lg)" style="--ui-reveal-content-bg:#1f2937;--ui-reveal-content-c:#f9fafb;--ui-content-headline-line-height:0.9;--ui-reveal-content-gap:1.25em;">
+	<ui-reveal class="hero" variant="ovr(bs) rds(md-sq) exp lg:grw scr ico(te)" media="asr(21/9) obp(cc) scm" content="scl(xl) pad(lg)" style="--ui-content-headline-line-height:0.9;--ui-reveal-content-gap:1.25em;">
 		<details>
 			<summary>
 				<ui-media><img src="/assets/images/band_girl_hero.png" alt="" loading="lazy"></ui-media>
@@ -234,7 +223,7 @@
 	<h2>What we're listening to</h2>
 
 	<lay-out md="columns(2)" lg="columns(3)">
-		<ui-reveal class="thelure" variant="ovr(ts) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) hov(zoom) obp(tc)">
+		<ui-reveal variant="ovr(ts) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) hov(zoom) obp(tc)">
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -243,7 +232,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<ui-content tabindex="0">
+				<ui-content tabindex="0" theme="pale black">
 					<small data-part="eyebrow">Gothic</small>
 					<h3 data-part="headline">The Lure</h3>
 					<p data-part="summary">Darkwave from the old quarter. The Lure formed in the long shadow of post-punk, trading jangle for reverb and dread, their early demos circulating on hand-dubbed cassettes passed between basement shows.</p>
@@ -254,7 +243,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="papermirror" variant="ovr(tc) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) hov(pan) obp(tc)">
+		<ui-reveal variant="ovr(tc) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) hov(pan) obp(tc)">
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -263,7 +252,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<ui-content tabindex="0">
+				<ui-content tabindex="0" theme="pale black">
 					<small data-part="eyebrow">Alternative</small>
 					<h3 data-part="headline">Paper Mirror</h3>
 					<p data-part="summary">Reverb-soaked guitars and bittersweet hooks. Built a following on hand-dubbed cassettes passed between basement shows, and turned down every label that came calling.</p>
@@ -274,7 +263,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="skylinefive" variant="ovr(te) rds(lg-sq) flp scr ico(ts) ico(sm) icc(te) icc(drk)" media="asr(1/1) hov(zoom) obp(tc)">
+		<ui-reveal variant="ovr(te) rds(lg-sq) flp scr ico(ts) ico(sm) icc(te) icc(drk)" media="asr(1/1) hov(zoom) obp(tc)">
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -283,7 +272,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<ui-content tabindex="0">
+				<ui-content tabindex="0" theme="pale black">
 					<small data-part="eyebrow">Pop</small>
 					<h3 data-part="headline">Skyline Five</h3>
 					<p data-part="summary">Five voices, one harmony. Assembled for the arenas but secretly writing their own songs, they broke from their handlers to chase a sound that was finally theirs.</p>
@@ -294,7 +283,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="neonavenue" variant="ovr(cs) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) hov(pan) obp(tc) scm">
+		<ui-reveal variant="ovr(cs) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) hov(pan) obp(tc) scm">
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -303,7 +292,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<ui-content tabindex="0">
+				<ui-content tabindex="0" theme="pale black">
 					<small data-part="eyebrow">Synth-Pop</small>
 					<h3 data-part="headline">Neon Avenue</h3>
 					<p data-part="summary">Synth-pop with a midnight sheen. Traded bedroom demos for stadium choruses — all glitter and heartbreak under sodium streetlights.</p>
@@ -314,7 +303,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="camdencourt" variant="ovr(cc) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) hov(zoom) scm">
+		<ui-reveal variant="ovr(cc) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) hov(zoom) scm">
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -323,7 +312,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<ui-content tabindex="0">
+				<ui-content tabindex="0" theme="pale black">
 					<small data-part="eyebrow">Britpop</small>
 					<h3 data-part="headline">Camden Court</h3>
 					<p data-part="summary">Swaggering guitars and singalong choruses. Kings of the back-room pub circuit, they soundtracked a summer of cheap lager and outsized dreams.</p>
@@ -334,7 +323,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="reddirtroad" variant="ovr(ce) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) hov(pan) scm">
+		<ui-reveal variant="ovr(ce) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) hov(pan) scm">
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -343,7 +332,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<ui-content tabindex="0">
+				<ui-content tabindex="0" theme="pale black">
 					<small data-part="eyebrow">Country</small>
 					<h3 data-part="headline">Red Dirt Road</h3>
 					<p data-part="summary">Steel strings and long highways. Recorded live in a barn with the doors thrown open, singing about towns that never quite let you leave.</p>
@@ -354,7 +343,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="glitterthrone" variant="ovr(bs) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) hov(zoom) scm">
+		<ui-reveal variant="ovr(bs) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) hov(zoom) scm">
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -363,7 +352,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<ui-content tabindex="0">
+				<ui-content tabindex="0" theme="pale black">
 					<small data-part="eyebrow">Glam Rock</small>
 					<h3 data-part="headline">Glitter Throne</h3>
 					<p data-part="summary">Platform boots and pyrotechnics. Every gig became a coronation — feathers, fireworks, and a guitar solo that refused to end.</p>
@@ -374,7 +363,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="pulsetheory" variant="ovr(bc) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) hov(pan)">
+		<ui-reveal variant="ovr(bc) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) hov(pan)">
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -383,7 +372,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<ui-content tabindex="0">
+				<ui-content tabindex="0" theme="pale black">
 					<small data-part="eyebrow">Techno</small>
 					<h3 data-part="headline">Pulse Theory</h3>
 					<p data-part="summary">Concrete basements and four-to-the-floor. A reputation built on warehouse sets that ran till sunrise, the machines doing all the talking.</p>
@@ -394,7 +383,7 @@
 			</details>
 		</ui-reveal>
 
-		<ui-reveal class="halcyonwash" variant="ovr(be) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) hov(zoom)">
+		<ui-reveal variant="ovr(be) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) hov(zoom)">
 			<details name="flip">
 				<summary>
 					<ui-face>
@@ -403,7 +392,7 @@
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
 				</summary>
-				<ui-content tabindex="0">
+				<ui-content tabindex="0" theme="pale black">
 					<small data-part="eyebrow">Dream-Pop</small>
 					<h3 data-part="headline">Halcyon Wash</h3>
 					<p data-part="summary">Guitars drowned in reverb and a voice half-dissolved in the mix. Halcyon Wash make songs that feel remembered rather than heard — bright, blurred, and always slipping just out of reach.</p>

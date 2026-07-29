@@ -205,7 +205,7 @@ rds(sm-sq)  rds(md-sq)  rds(lg-sq)  rds(xl-sq)       ← squircle (superellipse 
 
 Same scale as `variant="rds()"` on the card and `media="rds()"` on a standalone frame — the values come from the global `--radius-*` / `--radius-*-sq` / `--squircle-*` tokens in `@browser.style/base`, so all three stay in lock-step.
 
-> **Corners need a background to be visible.** `--ui-content-radius` defaults to `0` and is inert inside a card. `<ui-content>` **paints no background of its own** — the card sheets set `background` on `ui-card`, not on the text column — so on a standalone primitive you must supply one yourself (`style="background: …"`, a utility class, or a themed wrapper). Rounding a transparent box is a no-op. The token is there so a preset can emit a bare `<ui-content>` with real corners once it has a surface.
+> **Corners need a background to be visible.** `--ui-content-radius` defaults to `0` and is inert inside a card, because `<ui-content>` paints no background *until you give it one*. The canonical way is **`theme=`** — `<ui-content theme="gray" content="rds(lg)">` is a rounded plate (see [Theme surface](#theme-surface)); `style="background: …"` or a utility class work too. Rounding a transparent box is a no-op.
 
 `rds()` is substring-matched (like the card's and media's), which is safe here because it has no `md:`/`lg:` forms to shadow and `rds(sm)` is not a substring of `rds(sm-sq)`. The old `rds(none)` spelling was **removed in v5** on all three attributes — `rds(non)` is the only spelling.
 
@@ -513,6 +513,26 @@ Example — host overlay at bottom-center:
 Standalone content gets the neutral `normal` / `inherit` / `start` / `auto` defaults — overlay placement is inert until a layout asks for it.
 
 ---
+
+## Theme surface
+
+`<ui-content>` is itself a consumer of the shared `theme=` axis
+([base/theme.md](../base/theme.md)): put `theme=` on the element and it paints the
+resolved surface, with surface ink (`--color-text`, re-toned by `light`/`dark`
+through `color-scheme`; add `ink` for the theme's paired ink).
+
+```html
+<ui-content theme="gray" content="rds(lg) pad(lg)">…</ui-content>   <!-- standalone plate -->
+```
+
+Two things this unlocks: `rds()` finally has a background to round, and a
+`<ui-reveal>` **flipside** can carry its own colour independent of the card's front
+face — see [Two sides, two themes](../reveal/readme.md#two-sides-two-themes).
+
+Inside an `ovr()` card, a themed `<ui-content>` overlay becomes a solid/translucent
+**plate** over the media (`theme="black muted"`) rather than a scrim-lit column: the
+theme's ink replaces the overlay's `--ui-content-ov-ink` white, which is what a plate
+wants. Leave `theme=` off to keep the scrim treatment.
 
 ## Theme ink
 

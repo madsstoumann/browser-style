@@ -1,10 +1,15 @@
 # Theme — the shared `theme=` axis
 
 `theme=` is one **generic, cross-component color axis**. The same vocabulary works
-on `<ui-card>`, `<ui-chip>`, `<ui-sticker>`, `<lay-out>`/`<lay-out-group>` and any
-other component that opts in — so a layout can be `gray` while the cards inside it
-are `black`, `red pale`, etc. Each element resolves its own `theme=` independently;
-a themed ancestor never leaks its theme onto un-themed descendants.
+on `<ui-card>`, `<ui-reveal>`, `<ui-content>`, `<ui-chip>`, `<ui-sticker>`,
+`<lay-out>`/`<lay-out-group>` and any other component that opts in — so a layout can
+be `gray` while the cards inside it are `black`, `red pale`, etc. Each element
+resolves its own `theme=` independently; a themed ancestor never leaks its theme onto
+un-themed descendants.
+
+That independence is what makes **two-sided** components work: a `<ui-reveal>` carries
+the card's theme, and the back panel element carries its own — see
+[Two sides, two themes](../reveal/readme.md#two-sides-two-themes).
 
 Resolver + modifiers live in `theme.css`; the named bundles live in `tokens.css`.
 `@browser.style/base` is a required peer dependency, so both are always available.
@@ -131,6 +136,11 @@ no per-component wiring.
 - **Chip / button own their border.** They sit in the `bs-component` layer (which
   wins over the `bs-core` theme rule) and have their own `outline`/`variant`; the
   theme `border` targets cards / layouts / groups / generic elements.
+- **`<ui-reveal>` routes it.** The reveal's painted, rounded box is its inner
+  `<details>`, not the host `theme.css` draws on — so `ui-reveal.css` gives the host
+  the card radius grown by the border width (concentric curves) and drops the card
+  shadow, which would otherwise hang under a now-transparent fill. Per-side
+  `border(bs|be|is|ie|bk|in)` and the width/style words keep working unchanged.
 
 ## How a component opts in
 
@@ -148,6 +158,23 @@ tokens:
 `color-scheme` is handled by the `light`/`dark` modifiers directly on the element —
 the component does not need to touch it. Because `--_theme-*` are registered with
 `inherits: false`, an un-themed child does not pick up an ancestor's theme.
+
+**Containers publish, plates paint.** A component whose visible surface is an inner
+element (`<ui-reveal>` paints its `<details>`; `<lay-out>` paints itself but feeds a
+`--layout-bg` knob) must **re-publish** into its own *inheriting* token, because a
+descendant rule cannot read the non-inheriting `--_theme-*` off an ancestor. A leaf
+plate (`<ui-content>`, `<ui-chip>`) simply paints `background: var(--_theme-bg)` on
+itself. Both shapes are in the repo:
+
+```css
+:where(ui-reveal[theme]) { --ui-reveal-bg: var(--_theme-bg, var(--color-surface)); }  /* publish */
+:where(ui-content)[theme] { background: var(--_theme-bg, transparent); }              /* paint */
+```
+
+**Pick the ink fallback by role.** Surfaces (card, reveal, content, layout) fall back
+to `var(--color-text)` so the `light`/`dark` modifiers re-tone them through
+`color-scheme`; badges (chip, sticker, beacon, marquee) fall back to
+`var(--_theme-ink)` so their curated pair always shows. See [Ink](#ink).
 
 ## Create your own theme
 

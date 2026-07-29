@@ -70,6 +70,38 @@
 		   mean one thing); the scl spellings were removed in v5. */
 		&:where([variant~="grw"], [variant~="grw(ts)"], [variant~="grw(te)"], [variant~="grw(bs)"], [variant~="grw(be)"]) > details { --_rvl: grw; }
 
+		/* === theme= — the shared colour axis (base/theme.css), CARD side. The
+		   painted box is `> details`, not the host, and --_theme-* are
+		   inherits:false — so the resolved pair is re-published here (subject =
+		   the themed element) into --ui-reveal-bg, which `> details` consumes.
+		   Everything else follows for free: the back panel through
+		   `var(--ui-reveal-content-bg, var(--ui-reveal-bg))`, the popup card
+		   through --ui-reveal-expand-bg's own fallback, the icon focus rings.
+		   Ink is set ONCE as `color` on the host and inherits into both faces
+		   (--ui-reveal-content-c defaults to `inherit`), so don't write it here.
+		   Surface consumer like ui-card.css, not furniture: the --color-text
+		   fallback is what makes theme="black dark" re-tone through color-scheme.
+		   The BACK face carries its own theme= — see the back-slot rule below. === */
+		&[theme] {
+			--ui-reveal-bg: var(--_theme-bg, var(--color-surface));
+			color: var(--_theme-c, var(--color-text));
+		}
+		/* theme="… border" — bs-core draws the ring on the HOST box (theme.css),
+		   which has neither radius nor fill, while `> details` owns both. Give the
+		   host the card radius grown by the border width so the two curves stay
+		   concentric under the global border-box sizing. The fill is already
+		   transparent (border sets --_theme-bg: #0000 → --ui-reveal-bg above), and a
+		   drop shadow under a transparent card reads as a bug. --_theme-bw is
+		   readable because the subject IS the themed element; do NOT re-publish it
+		   to `> details` (that would flatten the per-side border() vocabulary). */
+		&[theme*="border"] {
+			--ui-reveal-shadow: none;
+			border-radius: calc(var(--ui-card-radius, var(--ui-reveal-radius)) + var(--_theme-bw, var(--border-width, 1px)));
+		}
+		&[theme*="border"][variant*="-sq)"] {
+			corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8));
+		}
+
 		/* consume shared --ui-card-cols (horizontal/split tokens) */
 		> details > summary,
 		> details > summary > ui-face { grid-template-columns: var(--ui-card-cols, 1fr); }
@@ -107,6 +139,26 @@
 		}
 		/* a ui-content back self-pads â drop the panel padding so it isn't doubled */
 		> details[open]:has(> ui-content)::details-content { padding: 0; }
+
+		/* === theme= — PANEL side. The back slot is "any direct child of <details>
+		   that isn't the <summary>": usually <ui-content>, sometimes a <div>
+		   wrapper (a nested ui-accordion), potentially a <ui-media>. A themed back
+		   paints its OWN surface — a pseudo-element can't carry an attribute, and
+		   --_theme-* are inherits:false, so the colour has to come from the element
+		   itself; ::details-content keeps its --ui-reveal-content-bg paint behind it.
+		   The panel padding is already zeroed above for a ui-content back, so the
+		   fill reaches the panel edges. min-block-size stretches it to the panel box
+		   (flp/sld/grw panels are grid-area 1/-1, scr is inset:0); inert under exp,
+		   whose in-flow panel height is indefinite.
+		   (0,1,2) — out-specifies the ovr() ink counter-reset above on the class
+		   column, and repeats content.css's payload so a non-ui-content back works
+		   too. See ui/card/ui-card-tokens.md § the card-rule leak checklist, row 7. */
+		> details > :where(:not(summary))[theme] {
+			background: var(--_theme-bg, transparent);
+			color: var(--_theme-c, var(--color-text));
+			min-block-size: 100%;
+		}
+
 		/* leak-checklist item 5 — type-scale decoupling for a panel with NO content=
 		   of its own. The tested attribute is content= on purpose; see
 		   ui/card/ui-card-tokens.md § Internals — "Why #5 tests content=". */
@@ -121,8 +173,23 @@
 		   two focus stops read differently: blue = toggle, active = panel. */
 		> details > ui-content[tabindex]:focus-visible { outline: none; }
 		> details[open]:has(> ui-content[tabindex]:focus-visible) > summary > ui-icon {
-			box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-bg), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ui-reveal-ring-active, var(--ui-reveal-content-c, currentColor));
+			/* the gap is punched in the OPEN panel, so it takes the panel's colour —
+			   not --ui-reveal-bg, which is the front face. The ring itself is the
+			   panel's INK: --color-text, not currentColor, because currentColor here
+			   is the icon glyph (white under ico(drk)/icc(drk)) — a white ring on a
+			   light panel is the invisible case. --ui-reveal-ring-gap /
+			   --ui-reveal-ring-active are the escape hatches for a back that paints
+			   itself (theme=, see the back-slot rule above), which this subtree can't
+			   read; the `dark`/`light` arms below cover the common case by flipping
+			   the icon's own scheme so both light-dark() tokens re-resolve. */
+			box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-ring-gap, var(--ui-reveal-content-bg, var(--ui-reveal-bg))), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ui-reveal-ring-active, var(--ui-reveal-content-c, var(--color-text)));
 		}
+		/* a back that themes its own scheme takes the ring with it: flipping
+		   color-scheme on the icon re-resolves BOTH light-dark() tokens above
+		   (--color-surface behind --ui-reveal-bg, and --color-text), so a dark
+		   flipside gets a dark gap + light ring without any hand-set colour. */
+		> details[open]:has(> :where(:not(summary))[theme~="dark"]:focus-visible) > summary > ui-icon { color-scheme: dark; }
+		> details[open]:has(> :where(:not(summary))[theme~="light"]:focus-visible) > summary > ui-icon { color-scheme: light; }
 
 		/* flp/sld/grw panels paint bg + ink from the START of the reveal (exp's
 		   panel is in-flow and gets them on [open] via the base rule above) */

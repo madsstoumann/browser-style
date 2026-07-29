@@ -199,8 +199,10 @@ Scoped to `:where(ui-reveal)` — low specificity, easy to override.
 
 | Token | Default | Purpose |
 |---|---|---|
-| `--ui-reveal-content-bg` | `var(--ui-reveal-bg)` | Panel background. |
-| `--ui-reveal-content-c` | `inherit` | Panel text colour. |
+| `--ui-reveal-content-bg` | `var(--ui-reveal-bg)` | Panel background. **Escape hatch** — for arbitrary colour (a shade pulled from the card's photo, a pastel outside the palette). For a palette colour, put `theme=` on the back element instead; see [Two sides, two themes](#two-sides-two-themes). |
+| `--ui-reveal-content-c` | `inherit` | Panel text colour. Same escape-hatch note as above. |
+| `--ui-reveal-ring-gap` | `var(--ui-reveal-content-bg, var(--ui-reveal-bg))` | Colour of the gap inside the icon's focus ring while the panel is **open** (the second tab stop: focus on a `[tabindex]` back). |
+| `--ui-reveal-ring-active` | `var(--ui-reveal-content-c, var(--color-text))` | Colour of that ring — the panel's ink, so the two focus stops read differently (blue = toggle, ink = panel). Not `currentColor`: that is the icon glyph, which `ico(drk)`/`icc(drk)` make white. A back themed `dark` / `light` flips the icon's own `color-scheme`, so both this and the gap re-resolve for the panel automatically; set the two properties by hand only for a back painted with arbitrary colours. |
 | `--ui-reveal-content-p` | `var(--ui-reveal-p)` | Panel padding. |
 | `--ui-reveal-content-fs` | `inherit` / `var(--font-size-base)` | Panel font-size; also the body scale of a `<ui-content>` back. |
 | `--ui-reveal-content-gap` | `1em` | Row gap between back blocks (roomier than the overlay-face gap). |
@@ -243,7 +245,7 @@ Scoped to `:where(ui-reveal)` — low specificity, easy to override.
 | `media=` | `<ui-media>` / any ancestor | frame, scrim, overlay markers, carousel — `asr()` `obp()` `obf()` `flp()` `hov()` `scm()` `nav()` `chip()` `sticker()` | [media.md](../card/media.md) |
 | `content=` | `<ui-content>` / any ancestor | text column + parts — `scl()` `hl()` `gap()` · padding `pad()` `pb()` `pi()` `pbs()` `pbe()` `pis()` `pie()` · `rds()` `scr` | [content.md](../card/content.md) |
 | `variant=` | `<ui-reveal>` | arrangement, overlay, corners — `col` `col-r` `row` `row-r` `spl()` `vis()` `ovr()` `rds()` `bdr` | [ui-card-tokens.md](../card/ui-card-tokens.md) |
-| `theme=` | `<ui-reveal>` | colour — one hue + optional `pale` / `muted` / `light` / `dark` | [base/theme.md](../base/theme.md) |
+| `theme=` | `<ui-reveal>` (card) · the **back element** (panel) | colour — one hue + optional `pale` / `muted` / `ink` / `light` / `dark` / `border` | [base/theme.md](../base/theme.md), [Two sides, two themes](#two-sides-two-themes) |
 
 ```html
 <ui-reveal variant="flp ovr(bs) rds(md-sq)" theme="black dark"
@@ -256,6 +258,60 @@ Notes:
 - **Overlay markers only in `<summary>`** — `<ui-chip>` / `<ui-sticker>` are valid in the trigger face; `<ui-save>` / `<ui-play>` are interactive controls and stay **card-only** (never inside `<summary>`).
 - **Responsive front face** — `<ui-reveal>` is a `bs-card`-named container, so the card engine's `md:` / `lg:` prefixes apply to the front face. The **host arm** targets `<summary>` (reveal's queryable descendant, standing in for the card's `<cq-box>`); the **self arm** lets a `content=`/`media=` token sit on the `<ui-content>`/`<ui-media>` itself. Prefixable: `variant=` arrangement, `content=` size (`scl()`, `hl()`) and spacing (`gap()` + all seven padding tokens), and `media=`'s `asr()`.
 - **`content="scr"` vs reveal `variant="… scr"`** — `content="scr"` is the content-column scroll (scrollable text + edge mask); the `scr` token on `variant=` is reveal's own panel scroll for `flp` / `lg:grw`. They are different mechanisms on different targets, but share **one** fade primitive — the `@property` / `@keyframes ui-scroll-fade` and the `--ui-scroll-fade-mask` gradient live in [`ui/base/scroll.css`](../base/scroll.css) and both scrollers consume it.
+
+### Two sides, two themes
+
+A reveal has **two faces**, so it takes **two themes**: one on the host for the card
+(frame + front face), one on the back element for the panel. Each element resolves
+its own `theme=` — that is the whole point of the axis being per-element.
+
+```html
+<ui-reveal variant="flp scr ico(te)" theme="gray">
+  <details>
+    <summary>
+      <ui-face>
+        <ui-media><img src="…" alt=""></ui-media>
+        <ui-content><small data-part="eyebrow">Cover story</small><strong data-part="headline">…</strong></ui-content>
+      </ui-face>
+      <ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+    </summary>
+    <ui-content theme="black dark" tabindex="0">   <!-- the flipside -->
+      <h3 data-part="headline">…</h3>
+      <p>…</p>
+    </ui-content>
+  </details>
+</ui-reveal>
+```
+
+- **Host `theme=`** publishes into `--ui-reveal-bg`, so it colours the `<details>`
+  box — and, through the default fallback chain, the panel and the `pop` popup card
+  too. Themed card, no back-side attribute: both sides match.
+- **Back `theme=`** sits on whatever element follows `</summary>` — a `<ui-content>`,
+  a `<div>` wrapping a nested `<ui-accordion>`, a `<ui-media>`. It paints that
+  element's own surface and stretches it to the panel box, so it reads as the
+  flipside. `theme="black dark"` also flips `color-scheme` **for the panel only**,
+  which re-tones the back's eyebrows, tags and links without touching the front face.
+- **Bespoke colours keep the custom properties.** `--ui-reveal-content-bg` / `-c` are
+  still the right tool for a shade sampled from the card's own photo or a pastel
+  outside the nine-hue palette (that is exactly what the band cards in `index.html`
+  do). `theme=` is for palette colours; the two mechanisms compose — an explicit
+  `--ui-reveal-content-bg` paints the panel *behind* a themed back element.
+
+Caveats:
+
+- **`scr` fade edges.** The scroll-fade mask (`variant="… scr"`) masks the panel and
+  its contents, so the faded edges reveal the `<details>` background — the **card**
+  colour. When the two sides differ, that seam is visible at the scroll ends. Theme
+  both sides, or set `--ui-reveal-bg`, if you need it invisible.
+- **`pop` uses the host theme.** The popup's panel is deliberately transparent so the
+  popup card (`--ui-reveal-expand-bg`, defaulting to `--ui-reveal-bg`) shows through
+  — so theme the **host**. A themed back inside `pop` paints a band inside the popup.
+  The in-flow placeholder (`--ui-reveal-expand-fixed-bg`) is a page-level hole and is
+  never themed for you.
+- **A non-`<ui-content>` back keeps the panel padding.** The padding is only zeroed
+  for a `<ui-content>` back (which self-pads), so a themed `<div>` / `<ui-media>`
+  back is inset by `--ui-reveal-content-p`. Set `--ui-reveal-content-p: 0` and pad the
+  wrapper yourself for an edge-to-edge fill.
 
 ---
 

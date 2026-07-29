@@ -170,6 +170,21 @@
 		/* wid() text measure — the cap rides the rows, not the column box, so
 		   plc()'s inline letter can still place the capped rows within it */
 		& > * { margin: 0; max-inline-size: var(--ui-content-max, var(--width-prose, 65ch)); text-box: cap alphabetic; }
+
+		/* theme= — the shared colour axis (base/theme.css). <ui-content> is the
+		   system's text PLATE, so it paints the resolved surface directly instead of
+		   re-publishing into a token the way a container host does. This is the
+		   background rds() has been waiting for, and it is how a <ui-reveal> back
+		   panel gets its own colour independent of the front face.
+		   SURFACE ink (--color-text, re-toned by the light/dark modifiers through
+		   color-scheme), not the badge pair --_theme-ink — see base/theme.md § Ink.
+		   NOT :where()-wrapped: at (0,1,0) it must out-specify the reveal's back-face
+		   ovr() ink counter-reset, `:where(ui-reveal) > details > ui-content` (0,0,2)
+		   in ui-reveal.css. */
+		&[theme] {
+			background: var(--_theme-bg, transparent);
+			color: var(--_theme-c, var(--color-text));
+		}
 	}
 
 	/* ============================================================
