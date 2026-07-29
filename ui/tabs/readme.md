@@ -85,7 +85,7 @@ Space-separated tokens. Combinable.
 | `bordered` | Border around the component + divider between header and panel. Uses `--ui-tabs-border-width` / `--ui-tabs-border-color`. |
 | `compact` | Tabs use their natural min-content width, grouped at the start; remaining header area is filled by the header background. |
 | `no-background` | Removes the header background. When combined with `compact`, also removes inline padding on summaries and panel content so edges flush to cq-box. |
-| `panel` | Active panel gets `--ui-tabs-panel-bg` + `--ui-tabs-panel-shadow`, and slides in/out on tab switch. |
+| `panel` | Active panel gets `--ui-tabs-panel-bg` + `--ui-tabs-panel-shadow`, and slides in/out on tab switch. Panel height animates smoothly on open, close and switch (`--ui-tabs-panel-duration`); on switch the closing panel stacks below the opening one so the total height morphs directly from old to new — one motion, no dip, no late settle. |
 | `pill` | Fully rounded header bar and indicator (`--ui-tabs-pill-radius`). |
 | `rounded` | Slightly rounded outer corners + rounded top of header bar (`--ui-tabs-rounded-radius`). |
 | `ellipse` | Corners drawn via the CSS `corner` shorthand / `corner-shape` (Chrome Canary 151+). Default `--ui-tabs-squircle-exp: 2` is an iOS-style squircle; `1` = plain round, higher = squarer. |
@@ -150,6 +150,8 @@ All tokens are scoped to `:where(ui-tabs)` — low specificity, easy to override
 | `--ui-tabs-padding-block` | `1.25ch` | Tab vertical padding. |
 | `--ui-tabs-padding-inline` | `1.5ch` | Tab horizontal padding. |
 | `--ui-tabs-panel-bg` | `var(--color-surface)` | Panel surface color (with `variant="panel"`). |
+| `--ui-tabs-panel-clip-margin` | `2rem` | Overflow clip margin on the animating panel — lets the panel shadow paint while the growing content clips. |
+| `--ui-tabs-panel-duration` | `var(--duration-slow)` | Panel open/close/switch height animation duration (with `variant="panel"`). Set to `0s` under reduced motion. |
 | `--ui-tabs-panel-padding-block` | `2ch` | Panel vertical padding. |
 | `--ui-tabs-panel-padding-inline` | `1.5ch` | Panel horizontal padding. |
 | `--ui-tabs-panel-shadow` | `var(--shadow-md)` | Panel surface shadow. |

@@ -773,33 +773,37 @@
 
 	<br>
 	<h2>With <code>tabs</code> attribute</h2>
-	<p>Morphs into tabs above 650px, accordion below. Wrapped in <code>&lt;auto-morph render="tabs"&gt;</code>.</p>
+	<p>Morphs into tabs above 650px, accordion below. Wrapped in <code>&lt;auto-morph render="tabs"&gt;</code>. Panel content cascades in via <code>&lt;div data-stagger&gt;</code> (shared engine in <code>ui/base/stagger.css</code>) — bare attribute = default <code>rise</code>.</p>
 
 	<auto-morph render="tabs">
 		<ui-accordion group="accordion-tabs" class="tabs-fill-accent tabs-offset tabs-rounded" variant="bordered divided rounded" tabs="pill">
 			<cq-box>
 				<details name="accordion-tabs" open>
 					<summary>Shipping<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days.
+					<div data-stagger>
+						<p>The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product.</p>
+						<p>Generally, we aim to process and ship orders within 1-2 business days.</p>
 					</div>
 				</details>
 				<details name="accordion-tabs">
 					<summary>Payment<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express.
+					<div data-stagger>
+						<p>We accept a variety of payment methods to provide convenience and flexibility to our customers.</p>
+						<p>Currently, we accept major credit cards such as Visa, Mastercard, and American Express.</p>
 					</div>
 				</details>
 				<details name="accordion-tabs">
 					<summary>Returns<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						If you're not completely satisfied with your purchase, you can return it within 30 days for a full refund. Items must be in their original condition and packaging.
+					<div data-stagger>
+						<p>If you're not completely satisfied with your purchase, you can return it within 30 days for a full refund.</p>
+						<p>Items must be in their original condition and packaging.</p>
 					</div>
 				</details>
 				<details name="accordion-tabs">
 					<summary>Support<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat during business hours.
+					<div data-stagger>
+						<p>Our customer support team is here to assist you with any questions or concerns you may have.</p>
+						<p>You can reach us by phone, email, or live chat during business hours.</p>
 					</div>
 				</details>
 			</cq-box>
@@ -807,32 +811,36 @@
 	</auto-morph>
 
 	<br>
-	<p>With <code>tabs="ellipse"</code> and classes <code>tabs-fill-surface tabs-offset</code>:</p>
+	<p>With <code>tabs="ellipse"</code> and classes <code>tabs-fill-surface tabs-offset</code> — panels stagger with <code>data-stagger="fall"</code>:</p>
 	<auto-morph render="tabs">
 		<ui-accordion group="accordion-tabs-ellipse" class="tabs-fill-surface tabs-offset" variant="bordered divided rounded" tabs="ellipse">
 			<cq-box>
 				<details name="accordion-tabs-ellipse" open>
 					<summary>Shipping<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days.
+					<div data-stagger="fall">
+						<p>The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product.</p>
+						<p>Generally, we aim to process and ship orders within 1-2 business days.</p>
 					</div>
 				</details>
 				<details name="accordion-tabs-ellipse">
 					<summary>Payment<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express.
+					<div data-stagger="fall">
+						<p>We accept a variety of payment methods to provide convenience and flexibility to our customers.</p>
+						<p>Currently, we accept major credit cards such as Visa, Mastercard, and American Express.</p>
 					</div>
 				</details>
 				<details name="accordion-tabs-ellipse">
 					<summary>Returns<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						If you're not completely satisfied with your purchase, you can return it within 30 days for a full refund. Items must be in their original condition and packaging.
+					<div data-stagger="fall">
+						<p>If you're not completely satisfied with your purchase, you can return it within 30 days for a full refund.</p>
+						<p>Items must be in their original condition and packaging.</p>
 					</div>
 				</details>
 				<details name="accordion-tabs-ellipse">
 					<summary>Support<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat during business hours.
+					<div data-stagger="fall">
+						<p>Our customer support team is here to assist you with any questions or concerns you may have.</p>
+						<p>You can reach us by phone, email, or live chat during business hours.</p>
 					</div>
 				</details>
 			</cq-box>
@@ -840,32 +848,36 @@
 	</auto-morph>
 
 	<br>
-	<p>With <code>tabs="no-background"</code> and classes <code>tabs-outline tabs-text</code> — classic desktop-tab outline:</p>
+	<p>With <code>tabs="no-background"</code> and classes <code>tabs-outline tabs-text</code> — classic desktop-tab outline. Panels alternate <code>data-stagger="lft"</code> / <code>data-stagger="rgt"</code>:</p>
 	<auto-morph render="tabs">
 		<ui-accordion group="accordion-tabs-outline" class="tabs-outline tabs-text" variant="bordered divided rounded" tabs="no-background">
 			<cq-box>
 				<details name="accordion-tabs-outline" open>
 					<summary>Shipping<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days.
+					<div data-stagger="lft">
+						<p>The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product.</p>
+						<p>Generally, we aim to process and ship orders within 1-2 business days.</p>
 					</div>
 				</details>
 				<details name="accordion-tabs-outline">
 					<summary>Payment<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express.
+					<div data-stagger="rgt">
+						<p>We accept a variety of payment methods to provide convenience and flexibility to our customers.</p>
+						<p>Currently, we accept major credit cards such as Visa, Mastercard, and American Express.</p>
 					</div>
 				</details>
 				<details name="accordion-tabs-outline">
 					<summary>Returns<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						If you're not completely satisfied with your purchase, you can return it within 30 days for a full refund. Items must be in their original condition and packaging.
+					<div data-stagger="lft">
+						<p>If you're not completely satisfied with your purchase, you can return it within 30 days for a full refund.</p>
+						<p>Items must be in their original condition and packaging.</p>
 					</div>
 				</details>
 				<details name="accordion-tabs-outline">
 					<summary>Support<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat during business hours.
+					<div data-stagger="rgt">
+						<p>Our customer support team is here to assist you with any questions or concerns you may have.</p>
+						<p>You can reach us by phone, email, or live chat during business hours.</p>
 					</div>
 				</details>
 			</cq-box>
@@ -873,32 +885,36 @@
 	</auto-morph>
 
 	<br>
-	<p>With <code>tabs="rounded bordered"</code> and class <code>tabs-line</code> — bordered frame with sliding underline:</p>
+	<p>With <code>tabs="rounded bordered"</code> and class <code>tabs-line</code> — bordered frame with sliding underline. Panels stagger with <code>data-stagger="zom"</code>:</p>
 	<auto-morph render="tabs">
 		<ui-accordion group="accordion-tabs-bordered" class="tabs-line" variant="bordered divided rounded" tabs="rounded bordered">
 			<cq-box>
 				<details name="accordion-tabs-bordered" open>
 					<summary>Shipping<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days.
+					<div data-stagger="zom">
+						<p>The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product.</p>
+						<p>Generally, we aim to process and ship orders within 1-2 business days.</p>
 					</div>
 				</details>
 				<details name="accordion-tabs-bordered">
 					<summary>Payment<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express.
+					<div data-stagger="zom">
+						<p>We accept a variety of payment methods to provide convenience and flexibility to our customers.</p>
+						<p>Currently, we accept major credit cards such as Visa, Mastercard, and American Express.</p>
 					</div>
 				</details>
 				<details name="accordion-tabs-bordered">
 					<summary>Returns<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						If you're not completely satisfied with your purchase, you can return it within 30 days for a full refund. Items must be in their original condition and packaging.
+					<div data-stagger="zom">
+						<p>If you're not completely satisfied with your purchase, you can return it within 30 days for a full refund.</p>
+						<p>Items must be in their original condition and packaging.</p>
 					</div>
 				</details>
 				<details name="accordion-tabs-bordered">
 					<summary>Support<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat during business hours.
+					<div data-stagger="zom">
+						<p>Our customer support team is here to assist you with any questions or concerns you may have.</p>
+						<p>You can reach us by phone, email, or live chat during business hours.</p>
 					</div>
 				</details>
 			</cq-box>
@@ -906,32 +922,36 @@
 	</auto-morph>
 
 	<br>
-	<p>With <code>tabs="compact no-background"</code> and class <code>tabs-line</code> — compact with a transparent header, flush edges, and an underline:</p>
+	<p>With <code>tabs="compact no-background"</code> and class <code>tabs-line</code> — compact with a transparent header, flush edges, and an underline. Panels alternate <code>data-stagger="blr"</code> / <code>data-stagger="fde"</code>:</p>
 	<auto-morph render="tabs">
 		<ui-accordion group="accordion-tabs-compact" class="tabs-line" variant="bordered divided rounded" tabs="compact no-background">
 			<cq-box>
 				<details name="accordion-tabs-compact" open>
 					<summary>Shipping<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days.
+					<div data-stagger="blr">
+						<p>The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product.</p>
+						<p>Generally, we aim to process and ship orders within 1-2 business days.</p>
 					</div>
 				</details>
 				<details name="accordion-tabs-compact">
 					<summary>Payment<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express.
+					<div data-stagger="fde">
+						<p>We accept a variety of payment methods to provide convenience and flexibility to our customers.</p>
+						<p>Currently, we accept major credit cards such as Visa, Mastercard, and American Express.</p>
 					</div>
 				</details>
 				<details name="accordion-tabs-compact">
 					<summary>Returns<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						If you're not completely satisfied with your purchase, you can return it within 30 days for a full refund. Items must be in their original condition and packaging.
+					<div data-stagger="blr">
+						<p>If you're not completely satisfied with your purchase, you can return it within 30 days for a full refund.</p>
+						<p>Items must be in their original condition and packaging.</p>
 					</div>
 				</details>
 				<details name="accordion-tabs-compact">
 					<summary>Support<ui-icon type="plus-minus"></ui-icon></summary>
-					<div>
-						Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat during business hours.
+					<div data-stagger="fde">
+						<p>Our customer support team is here to assist you with any questions or concerns you may have.</p>
+						<p>You can reach us by phone, email, or live chat during business hours.</p>
 					</div>
 				</details>
 			</cq-box>
