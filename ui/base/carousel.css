@@ -497,18 +497,26 @@
 			left: auto;
 			right: calc(anchor(right) + var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
 		}
-		/* arw(set) inline-start — cells ts/cs/bs */
-		:where(ui-card, ui-reveal):where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"])) :where(ui-media)::scroll-button(left) {
+		/* arw(set) inline-start — cells ts/cs/bs. BOTH arms are required: the ancestor arm for a
+		   card/reveal host, the self arm for a standalone <ui-media> or <lay-out overflow>. The
+		   self arm was lost when the legacy [arrow~="…"] attributes were dropped (it had never
+		   been given a [media*="arw(…)"] spelling), which left the inline letter dead on every
+		   non-card host — the cluster fell through to the inline-end default below. */
+		:where(ui-card, ui-reveal):where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"])) :where(ui-media)::scroll-button(left),
+		:where(ui-media, lay-out[overflow]):where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"]))::scroll-button(left) {
 			left: calc(anchor(left) + var(--ui-carousel-overlay-gap)); right: auto;
 		}
-		:where(ui-card, ui-reveal):where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"])) :where(ui-media)::scroll-button(right) {
+		:where(ui-card, ui-reveal):where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"])) :where(ui-media)::scroll-button(right),
+		:where(ui-media, lay-out[overflow]):where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"]))::scroll-button(right) {
 			left: calc(anchor(left) + var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap)); right: auto;
 		}
-		/* arw(set) inline-center — cells tc/cc/bc */
-		:where(ui-card, ui-reveal):where([media*="arw(set)"]:is([media*="arw(tc)"], [media*="arw(cc)"], [media*="arw(bc)"])) :where(ui-media)::scroll-button(left) {
+		/* arw(set) inline-center — cells tc/cc/bc (same dual-arm requirement) */
+		:where(ui-card, ui-reveal):where([media*="arw(set)"]:is([media*="arw(tc)"], [media*="arw(cc)"], [media*="arw(bc)"])) :where(ui-media)::scroll-button(left),
+		:where(ui-media, lay-out[overflow]):where([media*="arw(set)"]:is([media*="arw(tc)"], [media*="arw(cc)"], [media*="arw(bc)"]))::scroll-button(left) {
 			left: calc(anchor(center) - var(--ui-carousel-arrow-size) - var(--ui-carousel-arrow-gap) / 2); right: auto;
 		}
-		:where(ui-card, ui-reveal):where([media*="arw(set)"]:is([media*="arw(tc)"], [media*="arw(cc)"], [media*="arw(bc)"])) :where(ui-media)::scroll-button(right) {
+		:where(ui-card, ui-reveal):where([media*="arw(set)"]:is([media*="arw(tc)"], [media*="arw(cc)"], [media*="arw(bc)"])) :where(ui-media)::scroll-button(right),
+		:where(ui-media, lay-out[overflow]):where([media*="arw(set)"]:is([media*="arw(tc)"], [media*="arw(cc)"], [media*="arw(bc)"]))::scroll-button(right) {
 			left: calc(anchor(center) + var(--ui-carousel-arrow-gap) / 2); right: auto;
 		}
 
