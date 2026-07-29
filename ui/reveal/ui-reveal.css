@@ -1,33 +1,18 @@
 /**
- * ui-reveal
- * CSS-only reveal card built on <details>/<summary>.
- * Reveal behaviour is configured via variant= tokens (shared attribute with ui-card):
- *   exp Â· flp(top|btm|lft|rgt) Â· sld(top|btm|lft|rgt) Â· grw(ts|te|bs|be) â the
- *   animation token carries its own direction/origin; bare flp/sld default to
- *   right, bare grw follows the ico() corner Â· lg:grw (swap at the lg tier) Â·
- *   pop (popup mode) Â· trg(card) Â· scr (scrollable panel) Â·
- *   ico(<corner>|drk|sem|sm|lg) Â· icc(â¦) (open-state icon) â <corner> uses the
- *   furniture corner spellings: ts te bs be (top/bottom Ã start/end)
+ * ui-reveal — CSS-only reveal card on <details>/<summary>.
+ * Configured through variant= tokens (shared attribute with ui-card).
+ * Docs: ../reveal/readme.md · ui/card/ui-card-tokens.md § Internals (ui-reveal.css)
  * @version 2.0.0
  * @author Mads Stoumann
  */
 @import '../card/ui-card.css';
 @import '../icon/index.css';
 
-/* ============================================================
-   CARD-RULE LEAK CHECKLIST — AUDIT RULE, keep this marker.
-   When adding a card token, ask: does its selector subject sit inside
-   `ui-reveal > details` WITHOUT passing through `summary`/`ui-face`? If yes it
-   leaks into the revealed panel and needs a counter-reset here AND a row in the
-   checklist table: ui/card/ui-card-tokens.md § Internals (ui-reveal.css) —
-   "The card-rule leak checklist". Keep the two in sync.
-   ============================================================ */
+/* CARD-RULE LEAK CHECKLIST — AUDIT MARKER, keep. A card rule whose subject sits
+   inside `ui-reveal > details` without passing summary/ui-face needs a row — and
+   usually a counter-reset — in ui/card/ui-card-tokens.md § the leak checklist. */
 
-/* Animation-dispatch flag — one value per animation family on `> details`
-   (exp | flp | sld | grw), matched by style queries against the bs-rvl container.
-   NON-inheriting on purpose: a nested <ui-reveal>'s details must not pick up an
-   outer reveal's animation. See ui/card/ui-card-tokens.md § Internals — "The
-   --_rvl animation-dispatch flag". */
+/* animation-dispatch flag; non-inheriting on purpose */
 @property --_rvl { syntax: "*"; inherits: false; }
 
 @layer bs-component {
@@ -48,52 +33,26 @@
 			background: var(--ui-reveal-bg);
 			border-radius: var(--ui-card-radius, var(--ui-reveal-radius));
 			box-shadow: var(--ui-reveal-shadow, var(--shadow-xl));
-			/* the style-query container for the animation dispatch: summary/ui-face
-			   resolve here (nearest named container) and so does ::details-content
-			   (originating element). The resolved --_rvl flag lives on this element. */
+			/* style-query container for the dispatch flag */
 			container-name: bs-rvl;
 			display: grid;
 			overflow: hidden;
-			/* shared anchor for the absolutely-positioned panels (grw morph, scr
-			   frame-lock); exp pop's `position: fixed` overrides it while open */
+			/* anchor for the absolutely-positioned panels */
 			position: relative;
 		}
 
-		/* animation dispatch — one setter per family (the only place each
-		   family's tokens are enumerated). :where() keeps them at 0-0-1 so the
-		   lg: tier swap (same specificity, later in the file) wins by order. */
+		/* animation dispatch — one setter per family */
 		&:where([variant~="exp"]) > details { --_rvl: exp; }
 		&:where([variant~="flp"], [variant~="flp(top)"], [variant~="flp(btm)"], [variant~="flp(lft)"], [variant~="flp(rgt)"]) > details { --_rvl: flp; }
 		&:where([variant~="sld"], [variant~="sld(top)"], [variant~="sld(btm)"], [variant~="sld(lft)"], [variant~="sld(rgt)"]) > details { --_rvl: sld; }
-		/* grw = grow/scale-morph. Renamed from scl() so it stops colliding with
-		   content='s scl() type scale (a different attribute, but one spelling should
-		   mean one thing); the scl spellings were removed in v5. */
 		&:where([variant~="grw"], [variant~="grw(ts)"], [variant~="grw(te)"], [variant~="grw(bs)"], [variant~="grw(be)"]) > details { --_rvl: grw; }
 
-		/* === theme= — the shared colour axis (base/theme.css), CARD side. The
-		   painted box is `> details`, not the host, and --_theme-* are
-		   inherits:false — so the resolved pair is re-published here (subject =
-		   the themed element) into --ui-reveal-bg, which `> details` consumes.
-		   Everything else follows for free: the back panel through
-		   `var(--ui-reveal-content-bg, var(--ui-reveal-bg))`, the popup card
-		   through --ui-reveal-expand-bg's own fallback, the icon focus rings.
-		   Ink is set ONCE as `color` on the host and inherits into both faces
-		   (--ui-reveal-content-c defaults to `inherit`), so don't write it here.
-		   Surface consumer like ui-card.css, not furniture: the --color-text
-		   fallback is what makes theme="black dark" re-tone through color-scheme.
-		   The BACK face carries its own theme= — see the back-slot rule below. === */
+		/* theme= — card side: re-publish the resolved pair into --ui-reveal-bg */
 		&[theme] {
 			--ui-reveal-bg: var(--_theme-bg, var(--color-surface));
 			color: var(--_theme-c, var(--color-text));
 		}
-		/* theme="… border" — bs-core draws the ring on the HOST box (theme.css),
-		   which has neither radius nor fill, while `> details` owns both. Give the
-		   host the card radius grown by the border width so the two curves stay
-		   concentric under the global border-box sizing. The fill is already
-		   transparent (border sets --_theme-bg: #0000 → --ui-reveal-bg above), and a
-		   drop shadow under a transparent card reads as a bug. --_theme-bw is
-		   readable because the subject IS the themed element; do NOT re-publish it
-		   to `> details` (that would flatten the per-side border() vocabulary). */
+		/* theme="… border" — the ring is drawn on the host, so match the card radius */
 		&[theme*="border"] {
 			--ui-reveal-shadow: none;
 			border-radius: calc(var(--ui-card-radius, var(--ui-reveal-radius)) + var(--_theme-bw, var(--border-width, 1px)));
@@ -117,16 +76,12 @@
 			transition-behavior: allow-discrete;
 		}
 
-		/* staggered panel children (ui/base/stagger.css) â hold their boxes through the
-		   close animation; the shared adapter's display:none flips at transition end */
+		/* stagger — hold the boxes through the close animation */
 		> details:not([open]) > :where([stagger], [data-stagger]) > * {
 			transition: display var(--ui-reveal-duration, var(--duration-slower)) allow-discrete;
 		}
 
-		/* back content — the leak-checklist counter-resets (items 1-3): an optional
-		   generic <ui-content> after </summary>, with the front-only ovr() overlay
-		   neutralised. See ui/card/ui-card-tokens.md § Internals — "The card-rule
-		   leak checklist". */
+		/* back content — leak-checklist counter-resets (items 1-3) */
 		> details > ui-content {
 			color: var(--ui-reveal-content-c, inherit); /* neutralise the ov() white; palette or inherit (dark) */
 			align-items: normal;
@@ -140,59 +95,31 @@
 		/* a ui-content back self-pads â drop the panel padding so it isn't doubled */
 		> details[open]:has(> ui-content)::details-content { padding: 0; }
 
-		/* === theme= — PANEL side. The back slot is "any direct child of <details>
-		   that isn't the <summary>": usually <ui-content>, sometimes a <div>
-		   wrapper (a nested ui-accordion), potentially a <ui-media>. A themed back
-		   paints its OWN surface — a pseudo-element can't carry an attribute, and
-		   --_theme-* are inherits:false, so the colour has to come from the element
-		   itself; ::details-content keeps its --ui-reveal-content-bg paint behind it.
-		   The panel padding is already zeroed above for a ui-content back, so the
-		   fill reaches the panel edges. min-block-size stretches it to the panel box
-		   (flp/sld/grw panels are grid-area 1/-1, scr is inset:0); inert under exp,
-		   whose in-flow panel height is indefinite.
-		   (0,1,2) — out-specifies the ovr() ink counter-reset above on the class
-		   column, and repeats content.css's payload so a non-ui-content back works
-		   too. See ui/card/ui-card-tokens.md § the card-rule leak checklist, row 7. */
+		/* theme= — panel side: the back element paints itself and fills the panel */
 		> details > :where(:not(summary))[theme] {
 			background: var(--_theme-bg, transparent);
 			color: var(--_theme-c, var(--color-text));
 			min-block-size: 100%;
 		}
 
-		/* leak-checklist item 5 — type-scale decoupling for a panel with NO content=
-		   of its own. The tested attribute is content= on purpose; see
-		   ui/card/ui-card-tokens.md § Internals — "Why #5 tests content=". */
+		/* leak-checklist item 5 — type-scale decoupling */
 		> details > ui-content:not([content]) {
 			--ui-content-fs: var(--ui-reveal-content-fs, var(--font-size-base));
 			--ui-content-headline: var(--ui-reveal-content-headline, var(--ui-content-headline-md));
 			--ui-content-headline-line-height: var(--ui-reveal-content-headline-line-height, var(--line-height-tight, 1.15));
 		}
 
-		/* focusable back face ([tabindex]) â second tab stop. Suppress its own
-		   (clipped) outline and instead recolor the summary's icon ring so the
-		   two focus stops read differently: blue = toggle, active = panel. */
+		/* focusable back face ([tabindex]) — the second tab stop */
 		> details > ui-content[tabindex]:focus-visible { outline: none; }
 		> details[open]:has(> ui-content[tabindex]:focus-visible) > summary > ui-icon {
-			/* the gap is punched in the OPEN panel, so it takes the panel's colour —
-			   not --ui-reveal-bg, which is the front face. The ring itself is the
-			   panel's INK: --color-text, not currentColor, because currentColor here
-			   is the icon glyph (white under ico(drk)/icc(drk)) — a white ring on a
-			   light panel is the invisible case. --ui-reveal-ring-gap /
-			   --ui-reveal-ring-active are the escape hatches for a back that paints
-			   itself (theme=, see the back-slot rule above), which this subtree can't
-			   read; the `dark`/`light` arms below cover the common case by flipping
-			   the icon's own scheme so both light-dark() tokens re-resolve. */
+			/* ring = panel ink, gap = panel surface (currentColor here is the glyph) */
 			box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-ring-gap, var(--ui-reveal-content-bg, var(--ui-reveal-bg))), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ui-reveal-ring-active, var(--ui-reveal-content-c, var(--color-text)));
 		}
-		/* a back that themes its own scheme takes the ring with it: flipping
-		   color-scheme on the icon re-resolves BOTH light-dark() tokens above
-		   (--color-surface behind --ui-reveal-bg, and --color-text), so a dark
-		   flipside gets a dark gap + light ring without any hand-set colour. */
+		/* a dark/light back takes the ring with it, via color-scheme */
 		> details[open]:has(> :where(:not(summary))[theme~="dark"]:focus-visible) > summary > ui-icon { color-scheme: dark; }
 		> details[open]:has(> :where(:not(summary))[theme~="light"]:focus-visible) > summary > ui-icon { color-scheme: light; }
 
-		/* flp/sld/grw panels paint bg + ink from the START of the reveal (exp's
-		   panel is in-flow and gets them on [open] via the base rule above) */
+		/* flp/sld/grw panels paint from the START of the reveal */
 		@container bs-rvl style(--_rvl: flp) or style(--_rvl: sld) or style(--_rvl: grw) {
 			> details::details-content {
 				background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
@@ -227,12 +154,9 @@
 			}
 		}
 
-		/* === variants (col-r / row / vis(media) / ovr(pos))
-		   and asr() / obp() are inherited from ui-card.css === */
+		/* === variants, asr() and obp() are inherited from ui-card.css === */
 
-		/* === ico() â toggle-icon corner placement, furniture corner spellings
-		   (ts te bs be): block row t/b Ã inline column s/e. Logical axes, so it
-		   flips automatically in rtl. === */
+		/* === ico() — toggle-icon corner placement (ts te bs be, logical) === */
 		&:is([variant~="ico(ts)"],[variant~="ico(te)"],[variant~="ico(bs)"],[variant~="ico(be)"]) > details > summary > ui-icon {
 			margin: var(--ui-reveal-icon-m);
 			position: absolute;
@@ -256,10 +180,7 @@
 		/* === icon style: drk (default is light) + sem (opacity) â both === */
 		&[variant~="ico(drk)"] > details > summary > ui-icon,
 		&[variant~="icc(drk)"] > details[open] > summary > ui-icon {
-			/* dark chrome: a dark plate behind a light glyph, in BOTH colour schemes —
-			   so this is the neutral ramp's `black` bundle (light-dark() pair that stays
-			   dark either way), not --color-text, which inverts in dark mode. Also picks
-			   up a --ui-card-dark-bg override, so a branded card brands its icon too. */
+			/* dark chrome — the `black` bundle, so it stays dark in both schemes */
 			--ui-reveal-icon-bg: var(--ui-theme-black-bg);
 			color: var(--ui-theme-black-c, #fff);
 		}
@@ -278,11 +199,9 @@
 			--ui-reveal-icon-sz: var(--size-8);
 		}
 
-		/* === ar() aspect-ratio and op() object-position tokens are inherited
-		   from ui-card.css === */
+		/* === ar() and op() are inherited from ui-card.css === */
 
-		/* === squircle â rds(<size>-sq) radius/exponent mapping comes from
-		   ui-card; reveal only applies corner-shape to its <details> === */
+		/* === squircle — reveal only applies corner-shape to its <details> === */
 		&[variant*="-sq)"] > details {
 			corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8));
 		}
@@ -302,19 +221,14 @@
 			content-visibility: visible;
 		}
 
-		/* popup mode: animate on OPEN only (transition on [open]); close snaps
-		   shut so block-size doesn't drift back into the grid. See readme.md. */
+		/* popup mode: animate on OPEN only; close snaps shut */
 		:where(ui-reveal[variant~="pop"]) > details::details-content { transition: none; }
 		:where(ui-reveal[variant~="pop"]) > details[open]::details-content { transition: block-size var(--_trs), content-visibility var(--_trs), padding var(--_trs); }
 	}
 
-	/* exp pop — HOST-side popup styling (a container can't style itself, so
-	   this block stays attribute-keyed; pop only exists with exp) */
+	/* exp pop — host-side popup styling (attribute-keyed: a container can't style itself) */
 	:where(ui-reveal[variant~="exp"]) {
-		/* popup: only the INNER <details> goes fixed; the outer <ui-reveal> stays in
-		   flow as a placeholder, and the backdrop sits on ui-reveal::before (details
-		   runs a transform, so it would contain + clip a fixed child). See
-		   ui/card/ui-card-tokens.md § Internals — "pop". */
+		/* only the INNER <details> goes fixed; the backdrop sits on ui-reveal::before */
 		&[variant~="pop"]:has(> details[open]) {
 			--ui-reveal-expand-m: 2ch;
 			aspect-ratio: var(--ui-media-ar, 3/4);
@@ -366,13 +280,11 @@
 		to   { opacity: 1; scale: 1; }
 	}
 
-	/* === flp — flip (direction in the value: flp(top|btm|lft); bare = right) ===
-	   The host carries the perspective + rotation-pair vars (a container can't
-	   style itself); they're inert unless the dispatched flag is flp. */
+	/* === flp — flip (direction in the value; bare = right). Rotation vars ride the
+	   host because a container can't style itself. === */
 	:where(ui-reveal) {
 		--_persp: perspective(var(--ui-reveal-perspective, 1000px));
-		/* flip direction via the flp() value; closed/open pairs share one rotation axis so
-		   transforms interpolate as rotations (no 180° matrix degeneracy). */
+		/* closed/open pairs share one rotation axis */
 		--_face-closed: rotateY(0deg);
 		--_face-open: rotateY(180deg);
 		--_panel-closed: rotateY(-180deg);
@@ -417,10 +329,7 @@
 		}
 		:where(ui-reveal) > details[open]::details-content { transform: var(--_persp) var(--_panel-open); }
 
-		/* icc() close-icon clearance — keep the panel's first element out from
-		   under a top close-icon. Logical padding tracks the icon's logical side,
-		   so it flips automatically in rtl. Only the first child is indented; the
-		   rest of the panel stays full-width. Open-state side = icc() if set, else ico(). */
+		/* icc() close-icon clearance — indent the panel's first child only */
 		:where(ui-reveal:is([variant~="ico(te)"], [variant~="icc(te)"])) > details[open]::details-content > * > :first-child {
 			padding-inline-end: var(--ui-reveal-icon-clear);
 		}
@@ -428,11 +337,7 @@
 			padding-inline-start: var(--ui-reveal-icon-clear);
 		}
 
-		/* scr — lock the panel to the closed-card frame, scroll the overflow.
-		   Opt-in. Panel goes absolute (out of grid track sizing) so a long
-		   flipside can't grow the card. Default height = closed face (inset:0);
-		   override with --ui-reveal-content-bs. (position:relative on details
-		   comes from the base details rule.) */
+		/* scr — lock the panel to the closed-card frame, scroll the overflow */
 		:where(ui-reveal[variant~="scr"]) > details::details-content {
 			block-size: var(--ui-reveal-content-bs, auto);
 			inset: 0;
@@ -445,8 +350,7 @@
 		}
 	}
 
-	/* flip icon dip — icon fades out edge-on, back in once the new face lands;
-	   open/close use twin keyframes so toggling restarts it. See readme.md. */
+	/* flip icon dip — twin keyframes so toggling restarts it */
 	@media (prefers-reduced-motion: no-preference) {
 		@container bs-rvl style(--_rvl: flp) {
 			:where(ui-reveal) > details > summary > ui-icon {
@@ -460,11 +364,7 @@
 	@keyframes ui-reveal-icon-dip      { 0% { opacity: 1; } 40% { opacity: 0; } 100% { opacity: 1; } }
 	@keyframes ui-reveal-icon-dip-open { 0% { opacity: 1; } 40% { opacity: 0; } 100% { opacity: 1; } }
 
-	/* scroll fade-shadow — vertical edge mask driven by scroll position. The
-	   masked edges reveal the panel background behind, so the fade adopts
-	   --ui-reveal-content-bg. The @property/@keyframes (ui-scroll-fade) AND the
-	   --ui-scroll-fade-mask gradient are the shared scroll-fade primitive in
-	   ui/base/scroll.css (also used by content="scr"). */
+	/* scroll fade-shadow — shared primitive in ui/base/scroll.css */
 	@supports (animation-timeline: scroll()) {
 		@media (prefers-reduced-motion: no-preference) {
 			@container bs-rvl style(--_rvl: flp) {
@@ -493,10 +393,8 @@
 		:where(ui-reveal) > details[open]::details-content { translate: 0 0; }
 	}
 
-	/* === grw — grow/scale-morph (origin follows ico(), or pin it: grw(ts|te|bs|be)).
-	   ONE geometry block serves both the grw tokens and the lg:grw tier swap —
-	   the flag re-flip below re-uses it. (position:relative on details comes
-	   from the base details rule.) === */
+	/* === grw — grow/scale-morph (origin follows ico(), or grw(ts|te|bs|be)).
+	   ONE geometry block serves the grw tokens and the lg:grw tier swap. === */
 	@container bs-rvl style(--_rvl: grw) {
 		:where(ui-reveal) > details::details-content {
 			block-size: var(--ui-reveal-icon-sz);
@@ -522,8 +420,7 @@
 			opacity: 1;
 		}
 
-		/* scrollable morphed panel — long flipside doesn't clip. Bar hidden
-		   for the clean morph look; content still scrolls (wheel/drag). */
+		/* scrollable morphed panel — bar hidden, content still scrolls */
 		:where(ui-reveal[variant~="scr"]) > details[open]::details-content {
 			overflow-y: auto;
 			overscroll-behavior: contain;
@@ -531,11 +428,7 @@
 		}
 	}
 
-	/* morph origin (anchored corner) — follows the icon position, or is pinned
-	   explicitly by a grw()/lg:grw() corner (wins by source order). Host-side
-	   var setters, consumed only by the grw geometry above (inert otherwise);
-	   one set serves both the base tokens and the lg: tier. The scl()/lg:scl()
-	   spellings that used to ride along in these lists were removed in v5. */
+	/* morph origin — follows ico(), or pinned by grw()/lg:grw() */
 	:where(ui-reveal) {
 		&:is([variant~="ico(ts)"],[variant~="ico(te)"]) { --_scale-bs: 0; --_scale-be: auto; }
 		&:is([variant~="ico(bs)"],[variant~="ico(be)"]) { --_scale-bs: auto; --_scale-be: 0; }
@@ -553,19 +446,14 @@
 		:where(ui-reveal) > details[open] > summary > ui-icon { pointer-events: auto; }
 	}
 
-	/* === lg:grw — swap the reveal animation at the lg container tier, e.g.
-	   variant="exp lg:grw": expands below when narrow, morphs/scales when wide.
-	   Just re-flip the dispatch flag on <details> — the ONE grw geometry block
-	   above applies; nothing is duplicated. Same 0-0-1 specificity as the base
-	   setters, later in the file, so it wins by source order. === */
+	/* === lg:grw — swap the animation at the lg tier by re-flipping the flag === */
 	@container bs-card (inline-size >= 44rem) {
 		:where(ui-reveal:is(
 			[variant~="lg:grw"], [variant~="lg:grw(ts)"], [variant~="lg:grw(te)"], [variant~="lg:grw(bs)"], [variant~="lg:grw(be)"]
 		)) > details { --_rvl: grw; }
 	}
 
-	/* === trg(card) — whole card toggles (no ui-icon). Clicks fall through
-	   to <summary>; interactive panel content opts back in. See readme.md. */
+	/* === trg(card) — whole card toggles (no ui-icon) === */
 	:where(ui-reveal[variant~="trg(card)"]) {
 		> details[open]::details-content { pointer-events: none; }
 		> details[open] :is(a, button, input, select, textarea, [tabindex]) { pointer-events: auto; }
@@ -577,9 +465,7 @@
 }
 
 /* === popup escape hatch — UNLAYERED on purpose: it must beat <lay-out>'s
-   `contain: layout inline-size` (@layer layout.base) regardless of stylesheet
-   order, or layout containment traps the fixed popup in the grid cell. Do not
-   move this into a layer. See ui/card/ui-card-tokens.md § Internals — "pop". === */
+   containment regardless of stylesheet order. Do not move it into a layer. === */
 lay-out:has(ui-reveal[variant~="exp"][variant~="pop"] > details[open]) {
 	contain: inline-size;
 }

@@ -28,6 +28,8 @@ All global fallbacks (`--color-*`, `--spacing-*`, `--radius-*`, `--shadow-*`, �
 
 The card is `display: grid` + `container-type: inline-size` + `overflow: hidden`. Children are wrapped in a `<cq-box>` (the queryable descendant for container queries); its grid columns come from `--ui-card-cols`.
 
+`--ui-card-bg` is a `light-dark()` pair — light arm the normal surface, dark arm the card's own slate (`--ui-card-dark-bg`). Because the *default* is already a pair, a card theme only has to flip `color-scheme`, which is what `theme="black dark"` does.
+
 ## Arrangement — `variant=`
 
 The `variant=` string composes the media and content primitives. Tokens are **whole-token** matched (`~=`), so `md:`/`lg:` prefixes don't collide with the base form.
@@ -118,6 +120,13 @@ ovr(bs)  ovr(bc)  ovr(be)
 ```
 
 Each sets `--ui-content-ov-justify` / `-align` / `-text` and points `--ui-media-scrim-default` at the matching gradient (which itself mirrors under `:dir(rtl)` — see [media.md](media.md#scrim)).
+
+Two ink details ride along with the overlay: the headline and eyebrow get a legibility
+`text-shadow` (`--ui-content-heading-text-shadow` / `--ui-content-eyebrow-text-shadow`,
+silence it per instance with `style="--ui-content-heading-text-shadow: none"`), and a plain
+solid CTA button inside an overlay keeps **dark** text — it still paints its light surface,
+so inheriting the overlay's white would make it vanish. Colour button variants (`accent`,
+`text`, …) set their own `--button-c` and are left untouched.
 
 > **The physical spellings `ovr(tl) ovr(tr) ovr(cl) ovr(cr) ovr(bl) ovr(br)` were removed in v5** — they no longer resolve. They were always *mislabelled* rather than wrong: the implementation has been logical all along, so `ovr(tl)` already rendered top-**end** under `dir="rtl"`, and the migration is a pure find-and-replace (`tl`→`ts`, `tr`→`te`, `cl`→`cs`, `cr`→`ce`, `bl`→`bs`, `br`→`be`). `ovr(tc)`, `ovr(cc)` and `ovr(bc)` are spelled identically in both grids and are unaffected. With `ovr()` converted, **`obp()` is the system's only physical position vocabulary** — see [media.md](media.md#obp--object-position-9-grid).
 
@@ -437,6 +446,67 @@ duplicating geometry.
 `--_rvl` is **non-inheriting on purpose**: a nested `<ui-reveal>`'s `<details>` must not pick
 up an outer reveal's animation. The universal syntax (`syntax: "*"`) needs no
 `initial-value` — the guaranteed-invalid initial simply never matches a style query.
+
+### `theme=` — the two sides
+
+**Card arm.** `:where(ui-reveal)&[theme]` re-publishes the resolved pair into
+`--ui-reveal-bg` (consumed by `> details`) plus one `color` on the host. It has to
+re-publish rather than paint: `--_theme-*` are `inherits: false`, so only a rule whose
+subject *is* the themed element can read them, and the painted box is a child. Everything
+downstream then follows through existing fallbacks — the panel via
+`var(--ui-reveal-content-bg, var(--ui-reveal-bg))`, the popup card via
+`--ui-reveal-expand-bg`, the icon focus rings. Ink is set once and inherits into both faces,
+so `--ui-reveal-content-c` is deliberately left alone. Surface-style ink fallback
+(`--color-text`), not the badge pair — that is what makes `theme="black dark"` re-tone
+through `color-scheme`.
+
+`theme="… border"` is routed on the host too: `theme.css` draws the ring on the
+`<ui-reveal>` box, which has neither radius nor fill, so the host takes the card radius
+grown by `--_theme-bw` (concentric curves under border-box sizing) and drops the card
+shadow — the fill is already transparent, since `border` sets `--_theme-bg: #0000`.
+`--_theme-border`/`-bw` are **not** re-published to `> details`: that would flatten the
+per-side `border(bs|be|is|ie|bk|in)` vocabulary into one width.
+
+**Back slot.** The panel's own colour comes from a `theme=` on the back element, matched as
+`> details > :where(:not(summary))[theme]` — "any direct child of `<details>` that isn't the
+trigger", so it covers a `<ui-content>`, a `<div>` wrapper around a nested component, or a
+`<ui-media>`. It **paints itself** (a pseudo-element can't carry an attribute, and the
+non-inheriting `--_theme-*` can't cross elements), while `::details-content` keeps its
+`--ui-reveal-content-bg` paint behind it. `min-block-size: 100%` stretches it to the panel
+box — `flp`/`sld`/`grw` panels are `grid-area: 1 / -1`, `scr` is `inset: 0`; under `exp` the
+in-flow panel height is indefinite, so the percentage is inert. The rule sits at (0,1,2) to
+out-specify the row-1 `ovr()` ink counter-reset above, and repeats `content.css`'s payload so
+a non-`ui-content` back works too. Panel padding is already zeroed for a `<ui-content>` back
+(checklist item 4), which is what lets the fill reach the panel edges.
+
+**The open-panel focus ring.** The second tab stop (a `[tabindex]` back) suppresses its own
+clipped outline and recolours the summary's icon ring instead. The ring is the panel's ink —
+`--ui-reveal-ring-active` → `--ui-reveal-content-c` → `--color-text`, **not** `currentColor`,
+which on that icon is the glyph (white under `ico(drk)`/`icc(drk)`). The gap is the panel's
+surface — `--ui-reveal-ring-gap` → `--ui-reveal-content-bg` → `--ui-reveal-bg`. Neither can
+read a back that paints itself, so a back themed `dark` / `light` flips `color-scheme` on the
+icon: both `light-dark()` tokens re-resolve and a dark flipside gets a dark gap with a light
+ring, with no hand-set colour. Arbitrary back colours set the two properties directly.
+
+### Panel geometry — `scr`, `icc()` clearance, `grw` origin, the `lg:` re-flip
+
+- **`scr`** takes the panel out of grid track sizing (`position: absolute; inset: 0`) so a
+  long flipside can't grow the card; default height is the closed face, overridable with
+  `--ui-reveal-content-bs`. Its scroll fade-shadow reuses the shared primitive in
+  `ui/base/scroll.css` (`@keyframes ui-scroll-fade` + `--ui-scroll-fade-mask`, also used by
+  `content="scr"`); the mask cuts the panel's own paint, so the faded edges reveal whatever
+  is *behind* it — the `<details>` background.
+- **`icc()` clearance** indents only the panel's first child out from under a top close-icon,
+  with logical padding so it flips in rtl. The active side is `icc()` if set, else `ico()`.
+- **`grw` origin** follows the icon corner unless a `grw(ts|te|bs|be)` pins it; the setters
+  live on the host (a container can't style itself) and are inert unless the dispatched flag
+  is `grw`. One geometry block serves both the base tokens and the `lg:` tier.
+- **`lg:grw`** swaps the animation by re-flipping `--_rvl` on `<details>` — same 0-0-1
+  specificity as the base setters, later in the file, so it wins by source order. No geometry
+  is duplicated.
+- **`flp` rotation pairs** share one axis per direction (closed/open), so the transforms
+  interpolate as rotations instead of degenerating at 180°. The icon dip is twin keyframes
+  (open/close) so re-toggling restarts the fade.
 
 ### `pop` — why the backdrop is on `ui-reveal::before`
 

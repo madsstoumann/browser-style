@@ -1,34 +1,28 @@
 /**
- * ui-media — shp() shape LIBRARY
+ * ui-media — shp() shape LIBRARY. Opt-in: NOT bundled by ui-card.css, link it on
+ * pages that use shp() (see media.shape.html). Each rule sets two neutral vars,
+ * --_shp and --_shp-full, which a shared bridge wires into the clip + hover-morph
+ * mechanism in media.css. Same @layer as media.css. Docs: media.md § Internals
  * @version 1.0.0
  * @author Mads Stoumann
- *
- * Opt-in set of clip-path shapes for <ui-media>. NOT bundled by ui-card.css — link
- * this sheet explicitly on pages that use shp() (see media.shape.html). Each rule sets
- * two neutral vars, --_shp and --_shp-full, which a shared bridge wires into the
- * clip + hover-morph MECHANISM that lives in media.css. Same @layer as media.css.
- * See media.md § Internals — "shp() — the opt-in shape library".
  */
 @layer bs-component {
 	/* private morph targets — full-bleed rects matched by vertex count so the shape
-	   interpolates cleanly (the extra vertex sits on the edge nearest each tip). */
+	   interpolates cleanly */
 	:where([media*="shp("]) {
 		--_r4:  polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
 		--_r5:  polygon(100% 0%, 100% 100%, 50% 100%, 0% 100%, 0% 0%);
 		--_r5l: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%);
 		--_r5r: polygon(0% 0%, 100% 0%, 100% 50%, 100% 100%, 0% 100%);
-		/* ellipse target for the curve shapes — 75% radii clear all 4 corners, so the
-		   same-function morph reveals the whole frame */
+		/* ellipse target for the curve shapes — 75% radii clear all 4 corners */
 		--_ell: ellipse(75% 75% at 50% 50%);
 
-		/* Each shape below sets neutral --_shp (the shape) + --_shp-full (its matching-
-		   vertex full frame). Here they wire into the mechanism media.css consumes:
-		   FORWARD = clip to the shape at rest, morph to the full frame on hover. */
+		/* wire the neutral vars into the mechanism: FORWARD = clip to the shape at rest,
+		   morph to the full frame on hover */
 		--ui-media-shape: var(--_shp);
 		--ui-shape-morph: var(--_shp-full);
 	}
-	/* hov(shape-rev) — swap the two: start at the full frame (square) and morph INTO
-	   the shape on hover. Same clever trick frame-in uses, generalised to every shape. */
+	/* hov(shape-rev) — swap the two: start full, morph INTO the shape on hover */
 	:where([media*="shp("][media*="hov(shape-rev)"]) {
 		--ui-media-shape: var(--_shp-full);
 		--ui-shape-morph: var(--_shp);
@@ -71,8 +65,7 @@
 	/* msg: the bubble bottom + tail drop to the base edge → full square */
 	:where([media*="shp(msg)"])			{ --_shp:polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%); --_shp-full:polygon(0% 0%, 100% 0%, 100% 100%, 75% 100%, 75% 100%, 50% 100%, 0% 100%); }
 
-	/* frame: seam slit routed to bottom-centre (x=50%, zero-width, invisible) so the
-	   4 inner points can collapse to the true centre with no line cutting through */
+	/* frame: seam slit routed to bottom-centre (zero-width, invisible) */
 	:where([media*="shp(frame)"])		{ --_shp:polygon(0% 0%, 0% 100%, 50% 100%, 50% 75%, 25% 75%, 25% 25%, 75% 25%, 75% 75%, 50% 75%, 50% 100%, 100% 100%, 100% 0%); --_shp-full:polygon(0% 0%, 0% 100%, 50% 100%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 100%, 100% 100%, 100% 0%); }
 	/* frame-in: the reverse — a small inset window that grows to the full frame on hover */
 	:where([media*="shp(frame-in)"]) { --_shp:polygon(25% 25%, 75% 25%, 75% 75%, 25% 75%); --_shp-full:var(--_r4); }
@@ -86,8 +79,7 @@
 	:where([media*="shp(curve-u)"])	{ --_shp:ellipse(80% 50% at 50% 61%); --_shp-full:var(--_ell); }
 	:where([media*="shp(curve-r)"])	{ --_shp:ellipse(85% 80% at 25% 20%); --_shp-full:var(--_ell); }
 	:where([media*="shp(curve-l)"])	{ --_shp:ellipse(85% 80% at 75% 20%); --_shp-full:var(--_ell); }
-	/* circles — morph via a same-function circle() that grows past the corners
-	   (circle % resolves against the diagonal, so 71%+ covers a square frame) */
+	/* circles — morph via a same-function circle() that grows past the corners */
 	:where([media*="shp(circle)"])	{ --_shp:circle(50% at 50% 50%); --_shp-full:circle(75% at 50% 50%); }
 	:where([media*="shp(circ-45)"])	{ --_shp:circle(45% at 50% 50%); --_shp-full:circle(75% at 50% 50%); }
 }

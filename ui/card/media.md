@@ -1017,6 +1017,17 @@ places depending on where it sat before the migration:
   frame's own hover still selects. That preserves the `(0,1,2)` specificity those rules
   always had.
 
+Two implementation notes ride along. The 3D effects (`tilt-out` / `tilt-in` / `rot-r` /
+`rot-l`) are driven by the **`rotate:` / `scale:` longhands, not a `transform` list**: a
+multi-function `transform` falls back to matrix decomposition between keyframes and jitters
+on the way out, while the longhands each interpolate their own value (and leave `transform`
+free for `flp()`, so flip composes with them). Perspective for the whole tilt family sits on
+the frame and keeps its two-arm form — the subject *is* `<ui-media>`, and a style query
+resolves against the subject's nearest **ancestor**, so a self arm would have nothing to
+read. The **filter family** (`gray` `blur` `bright` `sat` `dim`) needs no flag at all: it
+composes through per-filter custom properties, which already inherit — rest values are set
+on the frame, hover values override at higher specificity.
+
 Every image rule stays at `(0,0,2)`, which is what lets `hov(shape)` beat `shp()`'s own
 `clip-path` (`media.css`, also `(0,0,2)`, earlier in source). Both are now the same
 `ui-media :is(iframe, img, picture, video)` shape inside a style query, so the win is
@@ -1062,7 +1073,9 @@ beat on source order.
 (`scm(shr|lgt|med|drk|sld)`) — and all nine gradients read shared colour + stop vars, so
 size and intensity vary without re-baking a gradient per combination. A **mid stop** holds
 the dark before fading, so text spanning the frame stays legible rather than only at the
-very corner.
+very corner. Each ramp also carries a **concave interpolation hint** biased below the
+mid→end midpoint: a long, soft tail into transparent blends the edge invisibly and spreads
+the fade over more pixels, which is what keeps a plain three-stop linear ramp from banding.
 
 **Declaration scope (F-12, tightened in v5).** The nine gradient families are declared on
 exactly the three subjects that can read them, never on every `[media]`/`[variant]` host:
@@ -1133,3 +1146,11 @@ lives in `media.css` and ships with the card:
 
 Because the mechanism is in `media.css`, it also works with your own custom
 `--ui-media-shape` / `--ui-shape-morph` values without the library sheet.
+
+**Why the morph targets look odd.** A clip-path only interpolates cleanly between shapes of
+the same function and the same vertex count, so each `--_shp-full` is a full-bleed rectangle
+padded to its shape's vertex count — the extra vertices sit on the edge nearest each tip.
+The curve shapes pair with an `ellipse()` at 75% radii (clears all four corners) and the
+circular ones with a `circle()` past 71% (a circle percentage resolves against the diagonal,
+so 71%+ covers a square frame). `frame` routes its seam slit to bottom-centre at zero width,
+so the four inner points can collapse to the true centre with no visible line cutting through.

@@ -1,31 +1,19 @@
 /**
- * ui-content — typography
+ * ui-content — typography: scale stops, the master step scl(), the relational
+ * ladders, the four styling groups (eb/hl/tx/mt) and fnt().
+ *
+ * SOURCE ORDER IS LOAD-BEARING — everything ties at :where() specificity, so the
+ * cascade is decided by order within this file:
+ *   base scl() < md:scl() < lg:scl() < base hl() < md:hl() < lg:hl()
+ * Do not reorder these blocks. Docs: content.md § Internals
  * @version 4.0.0
  * @author Mads Stoumann
- *
- * The <ui-content> TYPE LAYER: scale stops, the master step scl(), the
- * relational size ladders, the four styling groups (eb/hl/tx/mt) and fnt().
- * Split out of content.css (which keeps container/parts/layout).
- *
- * SOURCE ORDER IS LOAD-BEARING — everything here ties at :where() specificity,
- * so the cascade is decided by order within this file:
- *   base scl() < md:scl() < lg:scl() < base hl() < md:hl() < lg:hl()
- * Do not reorder these blocks.
- *
- * The relational ladder, the dual-declared size tokens (and why the `>` scoping
- * matters), the lay-out-group arm and the scl(fix) stop mapping are all in
- * content.md § Internals.
  */
 @layer bs-component {
 
-	/* ============================================================
-	   TYPE SCALE — decoupled body + headline cqi clamps (the ladder swaps stops)
-	   ============================================================ */
+	/* === TYPE SCALE — decoupled body + headline cqi clamps === */
 	:where(ui-content), :where([content]) {
-		/* The hand-tuned fluid clamps — SINGLE SOURCE for the fluid mode (the
-		   -fluid- companions mirror base's --font-size-fluid-* naming). The
-		   canonical stops below default to these; scl(fix) re-points the stops
-		   to the global static scale and scl(fluid) re-points them back here. */
+		/* the hand-tuned fluid clamps — SINGLE SOURCE for the fluid mode */
 		--ui-content-fs-fluid-sm: clamp(0.80rem, 0.74rem + 0.4cqi, 0.90rem);
 		--ui-content-fs-fluid-md: clamp(0.88rem, 0.80rem + 0.6cqi, 1.00rem);
 		--ui-content-fs-fluid-lg: clamp(0.95rem, 0.86rem + 0.8cqi, 1.10rem);
@@ -38,9 +26,8 @@
 		--ui-content-headline-fluid-2xl: clamp(2.25rem, 1.20rem + 7cqi, 5.50rem);
 		--ui-content-headline-fluid-3xl: clamp(2.50rem, 1.00rem + 11cqi, 8.00rem);
 
-		/* body — active --ui-content-fs/-headline are set by scl() on the host (or a
-		   self content=) and inherit down; consumers fall back to -md. Defining the
-		   active value here on ui-content would block that inheritance. */
+		/* body — the active props are set by scl() and inherit down; defining them on
+		   ui-content here would block that inheritance */
 		--ui-content-fs-sm: var(--ui-content-fs-fluid-sm);
 		--ui-content-fs-md: var(--ui-content-fs-fluid-md);
 		--ui-content-fs-lg: var(--ui-content-fs-fluid-lg);
@@ -54,28 +41,20 @@
 		--ui-content-headline-2xl: var(--ui-content-headline-fluid-2xl);
 		--ui-content-headline-3xl: var(--ui-content-headline-fluid-3xl);
 
-		/* ink ramp — a 5-step strength scale of the current ink colour, mirroring the
-		   scrim intensity ladder. Read by the eb()/hl()/tx()/mt() tone tokens. med is
-		   the existing --ui-content-muted (kept for back-compat + as the mt() default). */
+		/* ink ramp — 5-step strength scale of the current ink, read by the tone tokens */
 		--ui-content-shr:   color-mix(in oklab, currentColor 30%, transparent); /* shr */
 		--ui-content-muted: color-mix(in oklab, currentColor 65%, transparent); /* med */
 		--ui-content-soft:  color-mix(in oklab, currentColor 45%, transparent); /* lgt */
 		--ui-content-drk:   color-mix(in oklab, currentColor 85%, transparent); /* drk */
 		--ui-content-inv:   #fff;                                               /* inv — overlay ink */
 
-		/* text-shadow for the shd flag — a legibility shadow for overlaid text.
-		   Tunable; only applied when a group opts in via {eb,hl,tx,mt}(shd) (or a
-		   host ovr() enables it for headline/eyebrow over a scrim). */
+		/* text-shadow for the shd flag; also enabled by a host ovr() */
 		--ui-content-text-shadow: 0 1px 3px color-mix(in oklab, #000 55%, transparent);
 	}
 
-	/* ============================================================
-	   scl(fix) / scl(fluid) — static scale MODE (not a step; no md:/lg: forms).
-	   :is() NOT :where() on purpose: the self form must match the descendant
-	   form's (0,1,0), or a nested host's own mode token loses to an ancestor's
-	   descendant rule. fluid comes after fix, so on a tie fluid wins.
-	   Stop mapping + full rationale: content.md § Internals — "scl(fix)".
-	   ============================================================ */
+	/* === scl(fix) / scl(fluid) — static scale MODE (not a step). :is() NOT :where()
+	   on purpose, so a nested host's own mode token doesn't lose to an ancestor's
+	   descendant rule; fluid comes after fix, so on a tie fluid wins. === */
 	:is([content~="scl(fix)"]),
 	:where([content~="scl(fix)"]) :is(ui-content, [content]) {
 		--ui-content-fs-sm: var(--font-size-sm);
@@ -105,11 +84,8 @@
 		--ui-content-headline-3xl: var(--ui-content-headline-fluid-3xl);
 	}
 
-	/* ============================================================
-	   scl() — master type-scale step: active body + headline props AND both
-	   relational ladders. ~= (whole token) so base doesn't substring-match the
-	   md:/lg: forms. See content.md § Internals — "The four styling groups".
-	   ============================================================ */
+	/* === scl() — master type-scale step: active body + headline props AND both
+	   relational ladders === */
 	:where([content~="scl(sm)"]) { /* shift −1 (saturates at sm) */
 		--ui-content-fs: var(--ui-content-fs-sm);
 		--ui-content-headline: var(--ui-content-headline-sm);
@@ -167,11 +143,7 @@
 		--ui-content-hl-3xl: var(--ui-content-headline-3xl);
 	}
 
-	/* ------------------------------------------------------------
-	   md:/lg: scl() — responsive master step, two arms (R-14 step 3). MUST precede
-	   the hl() block: source order decides ties on cq-box. NAMED size queries
-	   (bs-card) per F-42. See content.md § Internals — "Dual-declared size tokens".
-	   ------------------------------------------------------------ */
+	/* --- md:/lg: scl() — MUST precede the hl() block: source order decides ties --- */
 	@container bs-card (inline-size >= 25rem) {
 		:where([content~="md:scl(sm)"]) :is(cq-box, summary), :where(ui-content[content~="md:scl(sm)"]) {
 			--ui-content-fs: var(--ui-content-fs-sm);
@@ -289,12 +261,8 @@
 		}
 	}
 
-	/* ============================================================
-	   TYPE STYLING — four logical groups (eb / hl / tx / mt), each with four
-	   disjoint arg vocabularies (tone / size / weight / flag) so whole-token
-	   matching can't confuse them. Group/part table and the full arg vocabulary:
-	   content.md § Internals — "The four styling groups".
-	   ============================================================ */
+	/* === TYPE STYLING — four groups (eb / hl / tx / mt), each with four disjoint
+	   arg vocabularies (tone / size / weight / flag) === */
 
 	/* eb() — eyebrow group: tone / weight / size / flat flag */
 	:where([content~="eb(shr)"])    { --ui-content-eyebrow-ink: var(--ui-content-shr); }
@@ -347,8 +315,7 @@
 	:where([content~="tx(800)"])    { --ui-content-body-weight: 800; }
 	:where([content~="tx(900)"])    { --ui-content-body-weight: var(--font-weight-black); }
 	:where([content~="tx(shd)"])    { --ui-content-body-text-shadow: var(--ui-content-text-shadow); }
-	/* tx(<size>) — body-group base size; summary (×1.0) and the factor parts
-	   (price/stat/quote/…) read --ui-content-body-fs before --ui-content-fs */
+	/* tx(<size>) — body-group base size */
 	:where([content~="tx(sm)"]),
 	:where(ui-card[content~="tx(sm)"]) > cq-box,
 	:where(lay-out-group[content~="tx(sm)"]) > cq-box,
@@ -382,9 +349,8 @@
 	:where([content~="mt(800)"])    { --ui-content-meta-weight: 800; }
 	:where([content~="mt(900)"])    { --ui-content-meta-weight: var(--font-weight-black); }
 	:where([content~="mt(shd)"])    { --ui-content-meta-text-shadow: var(--ui-content-text-shadow); }
-	/* mt(<size>) — meta-group base size; the meta parts multiply their own factor
-	   onto --ui-content-meta-base (NOT --ui-content-meta-fs, which stays the meta
-	   part's literal font-size hook) */
+	/* mt(<size>) — meta-group base size; the meta parts multiply their factor onto
+	   --ui-content-meta-base */
 	:where([content~="mt(sm)"]),
 	:where(ui-card[content~="mt(sm)"]) > cq-box,
 	:where(lay-out-group[content~="mt(sm)"]) > cq-box,
@@ -402,10 +368,7 @@
 	:where(lay-out-group[content~="mt(xl)"]) > cq-box,
 	:where(ui-reveal[content~="mt(xl)"] > details) > summary { --ui-content-meta-base: var(--ui-content-tx-xl, var(--ui-content-fs-xl)); }
 
-	/* hl() — headings group: tone / weight, then SIZE (headline only), then grad.
-	   The size rules MUST come after every scl() form in source — all of them write
-	   --ui-content-headline at tying specificity. See content.md § Internals —
-	   "Source order is load-bearing". */
+	/* hl() — headings group. The size rules MUST come after every scl() form */
 	:where([content~="hl(shr)"])    { --ui-content-heading-ink: var(--ui-content-shr); }
 	:where([content~="hl(lgt)"])    { --ui-content-heading-ink: var(--ui-content-soft); }
 	:where([content~="hl(med)"])    { --ui-content-heading-ink: var(--ui-content-muted); }
@@ -445,19 +408,14 @@
 	:where(lay-out-group[content~="hl(3xl)"]) > cq-box,
 	:where(ui-reveal[content~="hl(3xl)"] > details) > summary { --ui-content-headline: var(--ui-content-hl-3xl, var(--ui-content-headline-3xl)); }
 	:where([content~="hl(shd)"])    { --ui-content-heading-text-shadow: var(--ui-content-text-shadow); }
-	/* hl(<font>) — heading font override (serif headline + sans body, etc). Disjoint
-	   from hl()'s size/tone/weight/flag args, so it composes on the same token. */
+	/* hl(<font>) — heading font override; disjoint from hl()'s other args */
 	:where([content~="hl(body)"])   { --ui-content-heading-font: var(--font-body); }
 	:where([content~="hl(head)"])   { --ui-content-heading-font: var(--font-heading); }
 	:where([content~="hl(serif)"])  { --ui-content-heading-font: var(--font-serif); }
 	:where([content~="hl(mono)"])   { --ui-content-heading-font: var(--font-mono); }
 	:where([content~="hl(form)"])   { --ui-content-heading-font: var(--font-form); }
 
-	/* ------------------------------------------------------------
-	   md:/lg: hl(<size>) — responsive headline step, AFTER base hl() so a prefixed
-	   form wins at its width. Reads the same ladder, so these compose with any
-	   scl() form regardless of which is prefixed.
-	   ------------------------------------------------------------ */
+	/* --- md:/lg: hl(<size>) — AFTER base hl() so a prefixed form wins --- */
 	@container bs-card (inline-size >= 25rem) {
 		:where([content~="md:hl(sm)"])  :is(cq-box, summary), :where(ui-content[content~="md:hl(sm)"]) { --ui-content-headline: var(--ui-content-hl-sm, var(--ui-content-headline-sm)); }
 		:where([content~="md:hl(md)"])  :is(cq-box, summary), :where(ui-content[content~="md:hl(md)"]) { --ui-content-headline: var(--ui-content-hl-md, var(--ui-content-headline-md)); }
@@ -475,8 +433,7 @@
 		:where([content~="lg:hl(3xl)"]) :is(cq-box, summary), :where(ui-content[content~="lg:hl(3xl)"]) { --ui-content-headline: var(--ui-content-hl-3xl, var(--ui-content-headline-3xl)); }
 	}
 
-	/* fnt() — container font family (the whole text column). head/serif/mono/form/body
-	   map to the global --font-* tokens. A headline follows this unless hl(<font>) overrides. */
+	/* fnt() — container font family for the whole text column */
 	:where([content~="fnt(body)"])  { --ui-content-font: var(--font-body); }
 	:where([content~="fnt(head)"])  { --ui-content-font: var(--font-heading); }
 	:where([content~="fnt(serif)"]) { --ui-content-font: var(--font-serif); }

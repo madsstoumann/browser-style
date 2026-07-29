@@ -372,6 +372,27 @@ Bare headings (`h2`–`h6`) are styled identically to `data-part="headline"` as 
 
 Each part keeps its own `--ui-content-{part}-*` token(s) (see *Tokens*) for future per-part typography knobs.
 
+### Structured parts — microdata scope + who uses them
+
+The eight later parts each carry a schema.org scope and were added for specific content
+types (conventions in [card.md § Microdata](card.md#microdata-conventions)). The CSS keeps
+only structural essentials — visuals stay token-driven.
+
+| Part | Markup | Microdata | Used by |
+|---|---|---|---|
+| `price` | `<p>` + `<data>` current, `<del>` original, `<small>` discount | `Offer` / `PriceSpecification` / `MonetaryAmount` | product, course, booking, membership, software, job (salary) |
+| `rating` | `<div role="img" aria-label>` star glyphs + count | `AggregateRating` / `Rating` | product, review, software |
+| `list` | `<ul>` check-list / `<ol>` ordered | — | recipe, job, course, booking, location, membership |
+| `address` | `<address>` block (no avatar — that's `byline`) | `PostalAddress` | business, location, event, contact |
+| `stat` | `<p>` + `<data>` number, `<small>` unit, trend `<span>` | `QuantitativeValue` | statistic |
+| `timeline` | `<ol>` of `<li>` with `<time>` + text | `subEvent` → `Event` | timeline |
+| `quote` | `<blockquote data-variant>` + `<q>`/`<cite>` | — | quote (`bigquote`), review (default), social (plain) |
+| `options` | `<ul>` of `<li>` with `<label>` + `<progress>` | `suggestedAnswer` → `Answer` / `ListItem` | poll, comparison |
+
+`quote` composes with `@browser.style/blockquote`: `data-variant` (`bigquote` / `breaker` /
+`code`) carries the visual style from `ui-blockquote.css`, and the card-side hook is for
+card-scoped overrides only.
+
 ### Tags — plain links or `<ui-chip>`
 
 `data-part="tags"` hosts two kinds of child, and they compose in the same list:
@@ -976,6 +997,11 @@ never substring-match the `md:`/`lg:` forms declared in `ui-card.css`.
 `--ui-scroll-fade-mask` gradient are **not** defined here — they are the shared primitive in
 `ui/base/scroll.css`, also used by `<ui-reveal>`; the mask direction follows
 `--ui-scroll-fade-dir`. Whole-token matched so `scr`, `scr(x)` and `scr(y)` stay distinct.
+
+`scr(x)` needs its children to refuse to shrink or wrap — `row nowrap` on the container,
+`flex: 0 0 auto` on the items, `nowrap` text — or they reflow to fit instead of overflowing.
+Its `tags` override is declared **after** the tags part rule so the `nowrap` wins at equal
+specificity; a horizontal strip must not wrap, and pills/chips must hold their width.
 
 ### Tags: bespoke pill as the fallback
 

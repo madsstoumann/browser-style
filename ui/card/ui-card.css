@@ -1,12 +1,10 @@
 /**
- * ui-card
+ * ui-card — composition layer over the <ui-media> + <ui-content> primitives.
+ * Owns the host surface, the media↔content arrangement (variant=), the overlay
+ * bridge (ovr()), themes (theme=), corners (rds()) and the responsive tiers.
+ * Docs: ui-card-tokens.md (+ media.md / content.md for the primitives).
  * @version 4.0.0
  * @author Mads Stoumann
- *
- * Composition layer over the <ui-media> + <ui-content> primitives. Owns the host
- * surface, the media↔content arrangement (variant=), the overlay bridge (ovr()),
- * themes (theme=), corners (rds()), and the responsive layout/spacing tiers.
- * The media (media=) and content (content=) DSLs live in the imported primitives.
  */
 @import './media.css';
 @import './media.hover.css';
@@ -17,13 +15,9 @@
 
 @layer bs-component {
 
-	/* ============================================================
-	   HOST + GRID
-	   ============================================================ */
+	/* === HOST + GRID === */
 	:where(ui-card) {
-		/* light arm = normal surface; dark arm = the card's slate (override with
-		   --ui-card-dark-bg). Because the surface is a light-dark() pair, a card
-		   theme only has to flip color-scheme — see theme="black dark". */
+		/* light-dark() pair, so a theme only has to flip color-scheme */
 		--ui-card-bg: light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937));
 		--ui-card-radius: var(--radius-2xl);
 		--ui-card-shadow: var(--shadow-xl);
@@ -37,10 +31,8 @@
 		display: grid;
 		overflow: hidden;
 	}
-	/* <ui-reveal> declares its own container-type (ui/reveal/ui-reveal.css) but reuses
-	   this file's md:/lg: tiers, so it has to join the same query namespace. Declared
-	   here — not there — so the name and the @container rules that consume it stay in
-	   one file; move it next to reveal's container-type once that file is touched. */
+	/* named here so the name and the @container rules that consume it stay in one
+	   file; <ui-reveal> declares its own container-type but joins this namespace */
 	:where(ui-reveal) { container-name: bs-card; }
 
 	/* layout grid layer (queryable descendant for container queries) */
@@ -50,13 +42,8 @@
 		grid-template-columns: var(--ui-card-cols, 1fr);
 	}
 
-	/* ============================================================
-	   CORNERS — rds(): round (global scale) or -sq (bespoke squircle)
-	   ============================================================ */
-	/* rds() scale — KEEP IN LOCK-STEP with media.css (--ui-media-*) and content.css
-	   (--ui-content-*): a token added here must be added to both. Values live in
-	   ui/base/tokens.css. See ui-card-tokens.md § Corners — "Three rds() blocks,
-	   one scale". */
+	/* === CORNERS — rds(): round (global scale) or -sq (squircle) === */
+	/* KEEP IN LOCK-STEP with media.css and content.css — see ui-card-tokens.md */
 	:where([variant~="rds(non)"]) { --ui-card-radius: 0; }
 	:where([variant~="rds(sm)"])   { --ui-card-radius: var(--radius-sm); }
 	:where([variant~="rds(md)"])   { --ui-card-radius: var(--radius-md); }
@@ -65,26 +52,15 @@
 	:where([variant~="rds(2xl)"])  { --ui-card-radius: var(--radius-2xl); }
 	:where([variant~="rds(full)"]) { --ui-card-radius: var(--radius-circle, 50%); }
 	:where([variant~="rds(pill)"]) { --ui-card-radius: var(--radius-pill, 100px); }
-	/* squircle — bespoke radius + per-size exponent (reproduces the old sq()).
-	   Values come from the shared squircle tokens (tokens.css) so ui-card and
-	   ui-media stay in lock-step. Sets --ui-card-squircle-exp so ui-reveal can
-	   apply corner-shape to its <details>. */
+	/* squircle — radius + per-size exponent; --ui-card-squircle-exp is read by ui-reveal */
 	:where([variant~="rds(sm-sq)"]) { --ui-card-radius: var(--radius-sm-sq); --ui-card-squircle-exp: var(--squircle-sm); }
 	:where([variant~="rds(md-sq)"]) { --ui-card-radius: var(--radius-md-sq); --ui-card-squircle-exp: var(--squircle-md); }
 	:where([variant~="rds(lg-sq)"]) { --ui-card-radius: var(--radius-lg-sq); --ui-card-squircle-exp: var(--squircle-lg); }
 	:where([variant~="rds(xl-sq)"]) { --ui-card-radius: var(--radius-xl-sq); --ui-card-squircle-exp: var(--squircle-xl); }
 	:where(ui-card[variant*="-sq)"]) { corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8)); }
 
-	/* ============================================================
-	   BORDER — bdr: opt-in hairline for surface cards whose edges vanish
-	   against a surface page. Separate from theme= border() (needs a colour
-	   theme + transparent-izes the fill). Author knobs: --ui-card-border-color
-	   / -width / -style. Substring match so bdr(md) alone also enables it.
-
-	   TWO ARMS, one hairline: the card arm keeps (0,0,0); the reveal arm is (0,0,1)
-	   because it names `> details` — the rounded surface a reveal actually shows.
-	   See ui-card-tokens.md § Border and § Internals — "bdr".
-	   ============================================================ */
+	/* === BORDER — bdr: opt-in hairline. Two arms: the card arm stays (0,0,0), the
+	   reveal arm names `> details` (0,0,1) — the surface a reveal actually shows. === */
 	:where([variant*="bdr"]:not(ui-reveal)) {
 		border: var(--ui-card-border-width, var(--border-width, 1px)) var(--ui-card-border-style, solid) var(--ui-card-border-color, var(--color-border));
 	}
@@ -97,9 +73,7 @@
 	:where([variant~="bdr(lgt)"]) { --ui-card-border-color: color-mix(in srgb, var(--color-border), transparent 50%); }
 	:where([variant~="bdr(drk)"]) { --ui-card-border-color: color-mix(in srgb, var(--color-text) 30%, transparent); }
 
-	/* ============================================================
-	   ARRANGEMENT — col (default) / row / col-r / row-r + spl()
-	   ============================================================ */
+	/* === ARRANGEMENT — col (default) / row / col-r / row-r + spl() === */
 	:where([variant~="row"], [variant~="row-r"]) {
 		--ui-card-cols: var(--ui-card-split, 1fr 1fr);
 	}
@@ -120,16 +94,10 @@
 	:where([variant~="vis(media)"]) ui-content { display: none; }
 	:where([variant~="vis(content)"]) ui-media { display: none; }
 
-	/* ============================================================
-	   SUB — the card joins its parent <lay-out>'s subgrid rows (F-38).
-	   A two-hop flag relay; NO breakpoint is named here, `sub` syncs to the
-	   layout's live --_subgrid flag. Mechanism, the hop table, why <ui-media>
-	   stays a box and the by-design consequences: ui-card-tokens.md § `sub` and
-	   § Internals — "sub — the two-hop flag relay".
-	   ============================================================ */
-	/* boundary — declared BEFORE the setter so the setter re-wins for an inner card
-	   that genuinely is a direct child of an ON layout (both zero-specificity
-	   :where(), so source order decides). */
+	/* === SUB — the card joins its parent <lay-out>'s subgrid rows (F-38).
+	   Two-hop flag relay, no breakpoint named here. See ui-card-tokens.md. === */
+	/* boundary — declared BEFORE the setter so the setter re-wins for a genuine
+	   direct child (both :where(), so source order decides) */
 	:where(ui-card, ui-reveal) :where(ui-card, ui-reveal) { --_sub: 0; }
 
 	/* hop 1 — the card reads its parent layout's live flag */
@@ -142,13 +110,8 @@
 		:where(ui-card[variant~="sub"]) > cq-box > ui-content { display: contents; }
 	}
 
-	/* ============================================================
-	   ALIGN-CONTENT — stacked layouts collect slack at the edge; row /
-	   overlay / single-part layouts stretch.
-	   ============================================================ */
-	/* subject is the queryable descendant :is(cq-box, summary) — same shape as every
-	   neighbouring rule — so a <ui-reveal>'s <summary> gets the same align-content as
-	   a card's <cq-box> for the same variant= value (F-14). */
+	/* === ALIGN-CONTENT — stacked layouts collect slack at the edge; row / overlay /
+	   single-part layouts stretch. Subject is :is(cq-box, summary) (F-14). === */
 	:where([variant]) :is(cq-box, summary) { align-content: start; }
 	:where([variant~="col-r"]) :is(cq-box, summary) { align-content: space-between; }
 	:where(
@@ -157,23 +120,18 @@
 		[variant~="lg:row"], [variant~="lg:row-r"], [variant~="lg:vis(media)"], [variant~="lg:vis(content)"]
 	) :is(cq-box, summary) { align-content: stretch; }
 
-	/* ============================================================
-	   ovr() — stack content over media + place it. Writes into the
-	   primitive namespaces so they stay self-contained.
-	   ============================================================ */
+	/* === ovr() — stack content over media + place it; writes into the primitive
+	   namespaces so they stay self-contained. === */
 	:where([variant]) :is(ui-media, ui-content) { grid-area: var(--ui-card-stack, auto); }
 	:where([variant*="ovr("]) {
 		--ui-card-stack: 1 / 1;
 		--ui-content-ov-ink: var(--ui-card-overlay-ink, #fff);
 		--ui-content-ov-z: 1;
-		/* legibility shadow for overlaid headline + eyebrow over a scrim; override
-		   per instance with style="--ui-content-heading-text-shadow: none". */
+		/* legibility shadow for overlaid headline + eyebrow */
 		--ui-content-heading-text-shadow: var(--ui-content-text-shadow);
 		--ui-content-eyebrow-text-shadow: var(--ui-content-text-shadow);
 	}
-	/* POSITION VOCABULARY — logical ts tc te · cs cc ce · bs bc be, the ONE grid for
-	   the whole system. obp() is the only physical vocabulary left; ovr()'s six
-	   physical spellings were removed in v5 — see media.md § "Removed in v5". */
+	/* position vocabulary — logical ts tc te · cs cc ce · bs bc be */
 	:where([variant*="ovr(ts)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-ts); }
 	:where([variant*="ovr(tc)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: center; --ui-content-ov-text: center; --ui-media-scrim-default: var(--ui-media-scrim-tc); }
 	:where([variant*="ovr(te)"]) { --ui-content-ov-justify: start;  --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-te); }
@@ -183,33 +141,20 @@
 	:where([variant*="ovr(bs)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: start;  --ui-content-ov-text: start;  --ui-media-scrim-default: var(--ui-media-scrim-bs); }
 	:where([variant*="ovr(bc)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: center; --ui-content-ov-text: center; --ui-media-scrim-default: var(--ui-media-scrim-bc); }
 	:where([variant*="ovr(be)"]) { --ui-content-ov-justify: end;    --ui-content-ov-align: end;    --ui-content-ov-text: end;    --ui-media-scrim-default: var(--ui-media-scrim-be); }
-	/* overlay text is light (over a scrim); a plain solid CTA keeps its light surface, so its
-	   text must stay dark — otherwise it inherits the white and vanishes. Colour variants
-	   (accent, text, …) set their own --button-c and are left untouched. */
+	/* a solid CTA keeps its light surface, so its text must stay dark */
 	:where([variant*="ovr("]) .ui-button:not([data-variant]) { color: var(--color-text, hsl(0, 0%, 15%)); }
 
-	/* ============================================================
-	   THEMES — theme= (the shared cross-component axis). Ink crosses into the
-	   content namespace automatically via color-scheme + currentColor.
-	   ============================================================ */
-	/* Reader: surface + ink come from the resolved --_theme-* pair (base/theme.css),
-	   both light-dark(). See ui-card-tokens.md § Internals — "theme=". */
+	/* === THEMES — theme= (the shared cross-component axis) === */
+	/* surface + ink come from the resolved --_theme-* pair (base/theme.css) */
 	:where(ui-card[theme]) {
 		--ui-card-bg: var(--_theme-bg, light-dark(var(--color-surface), var(--ui-card-dark-bg, #1f2937)));
 		color: var(--_theme-c, var(--color-text));
 	}
 
-	/* ============================================================
-	   RESPONSIVE — md:/lg: prefixes on variant= layout and content= spacing, two
-	   arms per token (R-14 step 3 / R-18). content= SIZE lives in
-	   content.typography.css, where its source order is load-bearing.
-	   See ui-card-tokens.md § Internals — "Two arms per responsive token".
-	   ============================================================ */
+	/* === RESPONSIVE — md:/lg: prefixes, two arms per token. content= SIZE lives in
+	   content.typography.css, where its source order is load-bearing. === */
 
-	/* md (>= 25rem)
-	   NAMED container (bs-card) — the name is load-bearing (F-42); an unnamed size
-	   query would let a self-armed primitive switch tiers off an unrelated ancestor.
-	   See ui-card-tokens.md § Internals — "The named bs-card container". */
+	/* md (>= 25rem) — the container NAME is load-bearing (F-42) */
 	@container bs-card (inline-size >= 25rem) {
 		:where([variant~="md:col"]) :is(cq-box, summary),
 		:where([variant~="md:col-r"]) :is(cq-box, summary)   { --ui-card-cols: 1fr; }
@@ -236,11 +181,7 @@
 		:where([content~="md:gap(md)"])   :is(cq-box, summary), :where(ui-content[content~="md:gap(md)"])   { --ui-content-gap: var(--spacing-md); }
 		:where([content~="md:gap(lg)"])   :is(cq-box, summary), :where(ui-content[content~="md:gap(lg)"])   { --ui-content-gap: var(--spacing-lg); }
 
-		/* padding: side > axis > all — precedence lives in the var() chain, not the
-		   cascade (see analysis report R-17). Seven independent slots: pad() all
-		   sides, pb()/pi() one axis, pbs()/pbe()/pis()/pie() one side. A breakpoint
-		   changes the VALUE in a slot, never the slot order — pbs(sm) lg:pad(xl)
-		   keeps block-start at sm. The chain itself lives in content.css. */
+		/* padding: side > axis > all — precedence lives in the var() chain (content.css) */
 		:where([content~="md:pad(none)"]) :is(cq-box, summary), :where(ui-content[content~="md:pad(none)"]) { --ui-content-p: 0; }
 		:where([content~="md:pad(xs)"])   :is(cq-box, summary), :where(ui-content[content~="md:pad(xs)"])   { --ui-content-p: var(--spacing-xs); }
 		:where([content~="md:pad(sm)"])   :is(cq-box, summary), :where(ui-content[content~="md:pad(sm)"])   { --ui-content-p: var(--spacing-sm); }
@@ -410,13 +351,8 @@
 	}
 }
 
-/* ============================================================
-   CROSS-DOCUMENT VIEW TRANSITIONS — OUTSIDE @layer on purpose
-   (@view-transition is a top-level at-rule).
-   Setup, the attr()/CSP story and the snapshot-vs-parser race (which is why
-   each incoming page needs `<link rel="expect" … blocking="render">`):
-   ui-card-tokens.md § Internals — "Cross-document view transitions".
-   ============================================================ */
+/* === CROSS-DOCUMENT VIEW TRANSITIONS — OUTSIDE @layer on purpose
+   (@view-transition is a top-level at-rule). See ui-card-tokens.md. === */
 @view-transition { navigation: auto; }
 
 /* MANDATORY safety: no navigation transitions when reduced motion is asked for */

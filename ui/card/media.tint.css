@@ -1,17 +1,13 @@
 /**
- * ui-media — tnt() image tint
+ * ui-media — tnt() image tint: wash the image in a solid colour with a blended
+ * overlay on ui-media::before. OPT-IN sheet, NOT bundled by ui-card.css (see
+ * media.tint.html). Same @layer as media.css. Docs: media.md § Internals
  * @version 1.0.0
  * @author Mads Stoumann
- *
- * Wash the media image in a solid colour with a blended overlay on ui-media::before.
- * OPT-IN sheet, NOT bundled by ui-card.css — link it where you tint (see
- * media.tint.html). Same @layer as media.css. Usage, knobs, layering and the R-14
- * flag rationale: media.md § Internals — "tnt() — the opt-in tint sheet".
  */
 @layer bs-component {
-	/* `[media*="tnt"]` matches bare `tnt` AND `tnt(<key>)` — safe, no other media=
-	   token contains that substring. isolation:isolate keeps its two-arm form (its
-	   subject IS <ui-media> — a container cannot restyle itself). */
+	/* `[media*="tnt"]` matches bare tnt AND tnt(<key>). isolation:isolate keeps its
+	   two-arm form (its subject IS <ui-media>). */
 	:where([media*="tnt"]) { --_tnt: 1; }
 	:where([media*="tnt"]) ui-media,
 	:where(ui-media[media*="tnt"]) { isolation: isolate; }
@@ -30,12 +26,7 @@
 	/* a nested frame (carousel slide etc.) must not paint a second tint over itself */
 	ui-media ui-media::before { content: none; }
 
-	/* named presets — mirror chip(<hue>) routing, map to the 9 theme colours.
-	   HUE TRUTH SET (nine): red orange green blue accent black white gray slate.
-	   slate is a canonical hue in its own right — the neutral ramp's
-	   white < gray < slate < black step, with its own --ui-theme-slate-* bundle.
-	   The doc-era tnt(dark)/tnt(light)/tnt(subtle) aliases were REMOVED in v5 —
-	   use tnt(black)/tnt(white)/tnt(gray). */
+	/* named presets — mirror chip(<hue>) routing, map to the nine theme colours */
 	:where([media*="tnt(red)"])    { --ui-media-tint-color: var(--ui-theme-red-bg); }
 	:where([media*="tnt(orange)"]) { --ui-media-tint-color: var(--ui-theme-orange-bg); }
 	:where([media*="tnt(green)"])  { --ui-media-tint-color: var(--ui-theme-green-bg); }
@@ -46,12 +37,9 @@
 	:where([media*="tnt(gray)"])   { --ui-media-tint-color: var(--ui-theme-gray-bg); }
 	:where([media*="tnt(slate)"])  { --ui-media-tint-color: var(--ui-theme-slate-bg); }
 
-	/* hov(tint) — fade the tint out on hover/focus to reveal the true-colour image.
-	   Reads --_hv-dur / --_hv-ease from media.hover.css; falls back if absent.
-	   R-14 step 4: ONE flag with two values — `idle` (the token is present, so the
-	   standing transition applies) and `on` (the holder is hovered/focused). The
-	   hover setter is declared after the idle one, so it re-wins on source order,
-	   exactly as the old :hover arm out-specified its own base arm. */
+	/* hov(tint) — fade the tint out on hover/focus. ONE flag with two values: idle
+	   (standing transition) and on (holder hovered/focused); the hover setter is
+	   declared later, so it re-wins on source order. */
 	:where([media*="hov(tint)"]) { --_hv-tint: idle; }
 	:where([media*="hov(tint)"]:is(:hover, :focus-within)) { --_hv-tint: on; }
 	@media (hover: hover) {

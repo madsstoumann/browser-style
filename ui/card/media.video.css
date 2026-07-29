@@ -1,10 +1,8 @@
 /**
- * ui-media — video layer
+ * ui-media — video layer, split from media.css. Import after media.css, before
+ * media.carousel.css (ui-card.css). Docs: media.md § Video layer
  * @version 4.0.0
  * @author Mads Stoumann
- *
- * Video-player styles split from media.css. Notes/rationale in media.md (§ Video layer).
- * Import after media.css, before media.carousel.css (ui-card.css).
  */
 @layer bs-component {
 
@@ -23,12 +21,8 @@
 		opacity: 1;
 	}
 
-	/* play(<size>) — size the <ui-play> control (mirrors ui-play size=). Folded into
-	   the furniture-standard single stem: play() already carries the position args
-	   (ts…be, media.css) and every other element sizes via el(<size>), so ui-play is
-	   no longer the one element with two stems. The two arg sets are disjoint
-	   vocabularies, so the substring match stays unambiguous. The ply() stem was
-	   removed in v5 — play(<size>) is the only spelling. */
+	/* play(<size>) — size the <ui-play> control (mirrors ui-play size=); disjoint
+	   from play()'s position args, so one stem parses unambiguously */
 	:where([media*="play(sm)"]) { --ui-play-sz: 2.25em; --ui-play-icon-sz: 1em; }
 	:where([media*="play(md)"]) { --ui-play-sz: 3em;    --ui-play-icon-sz: 1.5em; }
 	:where([media*="play(lg)"]) { --ui-play-sz: 4em;    --ui-play-icon-sz: 2em; }
@@ -48,10 +42,8 @@
 	:where([media*="vid(lg)"]) { --ui-media-tool-size: 3rem; }
 	:where([media*="vid(xl)"]) { --ui-media-tool-size: 3.5rem; }
 
-	/* --_g is declared here, not read across files: media.css declares its own on the
-	   furniture elements only, and the tools menu is not one of them — so the reads
-	   below used to fall to their fallbacks, which disagreed (0.5rem vs 0.75rem).
-	   Private --_* vars stay single-file; one gap, one fallback. */
+	/* --_g is declared here, not read across files — private --_* vars stay
+	   single-file: one gap, one fallback */
 	:where(ui-media) .ui-media-tools {
 		--_g: var(--ui-media-overlay-gap, 0.75rem);
 		align-items: center;

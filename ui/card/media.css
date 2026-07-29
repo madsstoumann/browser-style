@@ -1,23 +1,15 @@
 /**
- * ui-media
+ * ui-media — media primitive: image/video frame + overlay furniture. Standalone
+ * or nested in <ui-card>/<ui-reveal>; configured by media= on the element or its
+ * card host. Docs: media.md
  * @version 1.0.0
  * @author Mads Stoumann
- *
- * Media primitive — image/video frame + overlay furniture. Works standalone or
- * nested in <ui-card>/<ui-reveal>. Configured by the `media=` token string on the
- * element itself OR any ancestor (custom properties inherit down). See media.md.
  */
 @layer bs-component {
-	/* ============================================================
-	   R-14 STEP 4 — INHERITED FLAGS + @container style() (v5)
-	   Rationale, both-arms proof and support posture: see media.md
-	   § "v5 support posture — style queries" and § Internals.
-	   ============================================================ */
+	/* === INHERITED FLAGS + @container style() (R-14 step 4). Docs: media.md === */
 	/* BOUNDARY + FLAG REGISTRY — every migrated flag MUST be listed here, or it
-	   leaks across host nesting. Declared BEFORE any setter so an inner host
-	   carrying its own token re-wins on source order (both zero-specificity
-	   :where()). See media.md § Internals — "The flag registry and the nesting
-	   boundary". */
+	   leaks across host nesting. Declared BEFORE any setter so an inner host re-wins
+	   on source order. */
 	:where(ui-card, ui-reveal) :where(ui-card, ui-reveal) {
 		--_mrq: initial;                                                    /* media.css   — marquee(top|bot) */
 		--_shp-clip: initial;                                               /* media.css   — shp() image clip */
@@ -70,12 +62,9 @@
 	/* a nested frame inside a clip= scroller must not inherit its rds() radius */
 	:where([media*="clip"] ui-media) { --ui-media-radius: 0; }
 
-	/* ============================================================
-		 media= PARSE LAYER — tokens set props that inherit to <ui-media>
-		 ============================================================ */
+	/* === media= PARSE LAYER — tokens set props that inherit to <ui-media> === */
 
-	/* asr() — aspect-ratio. Whole-token (~=) so the md:/lg: prefixed variants
-	   (set per container width in ui-card.css) don't also match here as substrings. */
+	/* asr() — aspect-ratio. Whole-token (~=) so the md:/lg: forms don't also match */
 	:where([media~="asr(1/1)"])   { --ui-media-ar: 1 / 1; }
 	:where([media~="asr(1/2)"])   { --ui-media-ar: 1 / 2; }
 	:where([media~="asr(6/7)"])   { --ui-media-ar: 6 / 7; }
@@ -86,9 +75,8 @@
 	:where([media~="asr(16/9)"])  { --ui-media-ar: 16 / 9; }
 	:where([media~="asr(21/9)"])  { --ui-media-ar: 21 / 9; }
 
-	/* obp() — object-position (9-grid). TWO spellings on purpose, logical (mirrors
-	   under dir="rtl", block below) and physical (never mirrors, NOT deprecated) —
-	   see media.md § Internals — "obp() — two spellings, on purpose". */
+	/* obp() — object-position (9-grid). TWO spellings on purpose: logical (mirrors
+	   in rtl) and physical (never mirrors, NOT deprecated) */
 	:where([media*="obp(tl)"]) { --ui-media-op: left top; }
 	:where([media*="obp(tc)"]) { --ui-media-op: center top; }
 	:where([media*="obp(tr)"]) { --ui-media-op: right top; }
@@ -105,9 +93,7 @@
 	:where([media*="obp(ce)"]) { --ui-media-op: right center; }
 	:where([media*="obp(bs)"]) { --ui-media-op: left bottom; }
 	:where([media*="obp(be)"]) { --ui-media-op: right bottom; }
-	/* rtl — swap start/end for the LOGICAL spellings only. :dir() matches the token
-	   holder's own resolved directionality, so it works whether dir sits on the
-	   element or an ancestor, and stays at zero specificity inside :where(). */
+	/* rtl — swap start/end for the LOGICAL spellings only */
 	:where([media*="obp(ts)"]:dir(rtl)) { --ui-media-op: right top; }
 	:where([media*="obp(te)"]:dir(rtl)) { --ui-media-op: left top; }
 	:where([media*="obp(cs)"]:dir(rtl)) { --ui-media-op: right center; }
@@ -115,10 +101,8 @@
 	:where([media*="obp(bs)"]:dir(rtl)) { --ui-media-op: right bottom; }
 	:where([media*="obp(be)"]:dir(rtl)) { --ui-media-op: left bottom; }
 
-	/* rds() scale — KEEP IN LOCK-STEP with ui-card.css (--ui-card-*) and content.css
-	   (--ui-content-*). Serves the STANDALONE frame; inside a card the host's
-	   overflow clipping owns the corners. See ui-card-tokens.md § Corners — "Three
-	   rds() blocks, one scale". */
+	/* rds() — KEEP IN LOCK-STEP with ui-card.css and content.css. Serves the
+	   STANDALONE frame; inside a card the host's clipping owns the corners. */
 	:where([media*="rds(non)"]) { --ui-media-radius: 0; }
 	:where([media*="rds(sm)"])   { --ui-media-radius: var(--radius-sm); }
 	:where([media*="rds(md)"])   { --ui-media-radius: var(--radius-md); }
@@ -149,16 +133,11 @@
 	:where([media*="flp(v)"])  { --ui-media-fl-y: -1; }
 	:where([media*="flp(hv)"]) { --ui-media-fl-x: -1; --ui-media-fl-y: -1; }
 
-	/* shp() — static clip MECHANISM (ships with the card). Clips media content to
-	   --ui-media-shape. The shape LIBRARY (shp(cut-r) polygons) is the opt-in
-	   media.shapes.css; the hover MORPH (hov(shape) → --ui-shape-morph) lives in
-	   media.hover.css. Works with any custom --ui-media-shape you set. */
-	/* R-14 step 4: the CLIP is flag-driven (subject = the image, a descendant of the
-	   frame). The frame's own transparent background is NOT migratable — its subject
-	   IS <ui-media>, and a container cannot restyle itself, so the self arm has no
-	   ancestor carrying the flag. It keeps the two-arm form.
-	   The style-query rule stays at (0,0,2) — the specificity hov(shape) in
-	   media.hover.css (also (0,0,2), later in source) must beat to morph the clip. */
+	/* shp() — static clip MECHANISM. The shape LIBRARY is the opt-in
+	   media.shapes.css; the hover MORPH lives in media.hover.css. */
+	/* the CLIP is flag-driven (subject = the image); the frame's transparent
+	   background keeps the two-arm form (a container can't restyle itself). Stays at
+	   (0,0,2) — the specificity hov(shape) must beat to morph the clip. */
 	:where([media*="shp("]) { --_shp-clip: 1; }
 	:where([media*="shp("]) ui-media,
 	:where(ui-media[media*="shp("]) { background: #0000; }
@@ -168,19 +147,16 @@
 
 	/* hov() hover effects live in media.hover.css (imported by ui-card.css). */
 
-	/* ============================================================
-		 OVERLAY FURNITURE — <ui-chip> <ui-sticker> <ui-save> <ui-play> <ui-beacon>
-		 Absolute-positioned; default area by role, override via media= token.
-		 ============================================================ */
+	/* === OVERLAY FURNITURE — <ui-chip> <ui-sticker> <ui-save> <ui-play> <ui-beacon>.
+		 Absolute-positioned; default area by role, override via media= token. === */
 	:where(ui-media) :is(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker) {
 		--_g: var(--ui-media-overlay-gap, 0.75rem);
 		position: absolute;
 		z-index: 2;
 	}
 
-	/* default area by role — chip and beacon both take ts: it's where a label or a
-	   LIVE/REC indicator belongs, and a frame carries one or the other far more
-	   often than both. Using both? Position one explicitly, e.g. chip(te). */
+	/* default area by role — chip and beacon share ts; position one explicitly when
+	   a frame carries both */
 	:where(ui-media) :is(ui-beacon, ui-chip)     { inset-block-start: var(--_g); inset-inline-start: var(--_g); }   /* ts */
 	:where(ui-media) :is(ui-sticker, ui-save)    { inset-block-start: var(--_g); inset-inline-end:   var(--_g); }   /* te */
 	:where(ui-media) ui-play                      { inset-block-start: 50%; inset-inline-start: 50%; translate: -50% -50%; } /* cc */
@@ -196,11 +172,9 @@
 	:where([media*="chip(bc)"]) ui-chip, :where([media*="sticker(bc)"]) ui-sticker, :where([media*="save(bc)"]) ui-save, :where([media*="play(bc)"]) ui-play, :where([media*="beacon(bc)"]) ui-beacon { inset-block: auto var(--_g); inset-inline: 50% auto; translate: -50% 0; }
 	:where([media*="chip(be)"]) ui-chip, :where([media*="sticker(be)"]) ui-sticker, :where([media*="save(be)"]) ui-save, :where([media*="play(be)"]) ui-play, :where([media*="beacon(be)"]) ui-beacon { inset-block: auto var(--_g); inset-inline: auto var(--_g); translate: none; }
 
-	/* ── Marquee — full-width band (top/bot only, z-index 1, below the z-2
-	   furniture); position args are R-14-step-4 migrated. See media.md § Internals
-	   — "The marquee band's position args". `:where(ui-media)` stays on the query's
-	   subject: it holds the (0,0,1) specificity this rule must beat on source
-	   order. ── */
+	/* --- Marquee — full-width band (top/bot only, z-1, below the z-2 furniture).
+	   `:where(ui-media)` stays on the subject: it holds the (0,0,1) this rule must
+	   beat on source order. --- */
 	:where(ui-media) ui-marquee { position: absolute; inset-inline: 0; inset-block: 0 auto; z-index: 1; }
 	:where([media*="marquee(top)"]) { --_mrq: top; }
 	:where([media*="marquee(bot)"]) { --_mrq: bot; }
@@ -214,38 +188,23 @@
 		translate: -50% -50%;
 	}
 
-	/* play(<size>), PLAYER TOOLS (fullscreen · PiP) and the CC language
-		 <select> live in media.video.css — imported after this sheet, before
-		 media.carousel.css. play()'s size args (sm md lg xl) and its position args
-		 (ts…be, above) are disjoint vocabularies, so one stem parses unambiguously. */
+	/* play(<size>), the player tools and the CC <select> live in media.video.css;
+		 play()'s size and position args are disjoint, so one stem parses unambiguously */
 
-	/* ============================================================
-		 SUB-THEME ROUTING moved into the components — chip/sticker/save colour
-		 lives in ui/{chip,sticker,save}/ui-*.css; only the shared positions stay
-		 here (above). See media.md § Internals — "Sub-theme routing lives in the
-		 components".
-		 ============================================================ */
+	/* === SUB-THEME ROUTING lives in the components (ui/{chip,sticker,save}); only
+		 the shared positions stay here === */
 
-	/* ============================================================
-		 SCRIM — scm(). Direction × extent × intensity, freely composable; bare
-		 scm paints the host ovr()-matched default. The declaration scope below is
-		 F-12-tightened to the exact three subjects that read the gradients — see
-		 media.md § Scrim and § Internals — "Scrim — declaration scope and the RTL
-		 re-bake".
-		 ============================================================ */
+	/* === SCRIM — scm(): direction × extent × intensity, freely composable; bare scm
+		 paints the host ovr()-matched default. Declaration scope is F-12-tightened to
+		 the three subjects that read the gradients. === */
 	:where(ui-media), :where([media*="scm"]), :where([variant*="ovr("]) {
 		--ui-media-scrim-c: var(--ui-media-scrim-color, rgb(0 0 0 / 0.78));
-		/* mid stop holds the dark before fading, so spanning text stays legible.
-		   --ui-media-scrim-fade (inherits; 0% = fully opaque hold) lets scm(sld)
-		   make the mid stop solid even when the scm token sits on an ancestor. */
+		/* mid stop holds the dark before fading, so spanning text stays legible */
 		--ui-media-scrim-m: color-mix(in srgb, var(--ui-media-scrim-c), transparent var(--ui-media-scrim-fade, 55%));
 		/* size axis — shared stop positions (defaults = md = original look) */
 		--ui-media-scrim-mid: var(--ui-media-scrim-mid-stop, 40%);
 		--ui-media-scrim-end: var(--ui-media-scrim-end-stop, 80%);
-		/* smoothness: a concave interpolation hint (biased below the mid→end
-		   midpoint) gives a long, soft tail into transparent — blends the edge
-		   invisibly and spreads the fade over more pixels, easing the banding of a
-		   plain 3-stop linear ramp. */
+		/* concave interpolation hint — long soft tail into transparent, eases banding */
 		--ui-media-scrim-hint: calc(var(--ui-media-scrim-mid) + (var(--ui-media-scrim-end) - var(--ui-media-scrim-mid)) * 0.4);
 		--ui-media-scrim-ts: linear-gradient(to bottom right, var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 		--ui-media-scrim-tc: linear-gradient(to bottom,       var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
@@ -258,9 +217,7 @@
 		--ui-media-scrim-be: linear-gradient(to top left,     var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 	}
 	/* RTL — linear-gradient() has no logical directions, so the six gradients with a
-	   left/right component are re-baked mirrored here (tc/bc/cc are axis-pure and
-	   never flip). Same 0-0-0 specificity, later in source; subjects mirror the
-	   declaration scope above exactly. See media.md § Internals — "Scrim". */
+	   left/right component are re-baked mirrored here (tc/bc/cc are axis-pure) */
 	:where(ui-media:dir(rtl)), :where([media*="scm"]:dir(rtl)), :where([variant*="ovr("]:dir(rtl)) {
 		--ui-media-scrim-ts: linear-gradient(to bottom left,  var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 		--ui-media-scrim-te: linear-gradient(to bottom right, var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
@@ -284,10 +241,8 @@
 	:where([media*="scm(md)"]) { --ui-media-scrim-mid-stop: 40%; --ui-media-scrim-end-stop: 80%; --ui-media-scrim-cc-a: 25%; --ui-media-scrim-cc-b: 75%; }
 	:where([media*="scm(lg)"]) { --ui-media-scrim-mid-stop: 58%; --ui-media-scrim-end-stop: 100%; --ui-media-scrim-cc-a: 8%; --ui-media-scrim-cc-b: 92%; }
 	:where([media*="scm(xl)"]) { --ui-media-scrim-mid-stop: 74%; --ui-media-scrim-end-stop: 100%; --ui-media-scrim-cc-a: 0%; --ui-media-scrim-cc-b: 100%; }
-	/* scm() intensity — sets the scrim colour the gradients read (default med).
-	   3-letter codes only — the scm(sheer)/scm(solid) aliases were removed in v5.
-	   sld also pulls the mid stop to the full colour, so it holds opaque across the
-	   covered area instead of fading through the translucent mid mix. */
+	/* scm() intensity — sets the scrim colour the gradients read (default med);
+	   sld also pulls the mid stop to the full colour */
 	:where([media*="scm(shr)"]) { --ui-media-scrim-color: rgb(0 0 0 / 0.35); }
 	:where([media*="scm(lgt)"])   { --ui-media-scrim-color: rgb(0 0 0 / 0.55); }
 	:where([media*="scm(med)"])   { --ui-media-scrim-color: rgb(0 0 0 / 0.78); }

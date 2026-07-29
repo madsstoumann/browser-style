@@ -1,23 +1,13 @@
 /**
- * ui-content
+ * ui-content — the text column primitive. Standalone or nested in
+ * <ui-card>/<ui-reveal>; configured by content= on the element or any ancestor.
+ * Parts are styled by [data-part], never by tag. The TYPE LAYER (scl(), the
+ * eb/hl/tx/mt groups, fnt()) lives in content.typography.css.
+ * Docs: content.md
  * @version 4.0.0
  * @author Mads Stoumann
- *
- * Content primitive — the text column. Works standalone or nested in
- * <ui-card>/<ui-reveal>. Configured by the `content=` token string on the element
- * itself OR any ancestor (custom properties inherit down). Parts are styled by
- * [data-part], never by tag — so the same part renders in a <summary> (phrasing)
- * and a revealed panel (flow). See content.md.
- *
- * The TYPE LAYER (scale stops, scl(), the eb/hl/tx/mt styling groups, fnt())
- * lives in content.typography.css — this file keeps spacing, container, scroll
- * and the parts. Parts read the group base props written over there:
- * --ui-content-body-fs (Body group) and --ui-content-meta-base (Meta group).
  */
 @layer bs-component {
-
-	/* hl(grad) — clip the WHOLE headline to the gradient (styled with the parts below,
-	   next to the inner-<b> gradient it reuses --ui-content-headline-gradient). */
 
 	/* pad() — content padding. ~= (whole token) so base doesn't match md:/lg: forms */
 	:where([content~="pad(none)"]) { --ui-content-p: 0; }
@@ -28,11 +18,8 @@
 	:where([content~="pad(xl)"])   { --ui-content-p: var(--spacing-xl); }
 	:where([content~="pad(2xl)"])  { --ui-content-p: var(--spacing-2xl); }
 
-	/* AXIS + SIDE padding — one slot each. Precedence (side > axis > all) is
-	   resolved in the var() chain on the longhands below, NOT by the cascade.
-	   ~= (whole token) so base doesn't match the md:/lg: forms in ui-card.css.
-	   See content.md § Internals — "Padding: the precedence lives in the var()
-	   chain". */
+	/* AXIS + SIDE padding — one slot each; precedence resolves in the var() chain
+	   on the longhands below, not by the cascade */
 	:where([content~="pb(none)"]) { --ui-content-pb: 0; }
 	:where([content~="pb(xs)"])   { --ui-content-pb: var(--spacing-xs); }
 	:where([content~="pb(sm)"])   { --ui-content-pb: var(--spacing-sm); }
@@ -88,9 +75,7 @@
 	:where([content~="gap(md)"])   { --ui-content-gap: var(--spacing-md); }
 	:where([content~="gap(lg)"])   { --ui-content-gap: var(--spacing-lg); }
 
-	/* plc(<cell>) — 3×3 placement of the content rows: flex alignment, NOT absolute
-	   positioning, and it never touches text-align (that's tal()). See content.md
-	   § Internals — "plc() is flex alignment, not positioning". */
+	/* plc(<cell>) — flex alignment of the content rows, not positioning */
 	:where([content~="plc(ts)"]) { --ui-content-place-block: start;  --ui-content-place-inline: start; }
 	:where([content~="plc(tc)"]) { --ui-content-place-block: start;  --ui-content-place-inline: center; }
 	:where([content~="plc(te)"]) { --ui-content-place-block: start;  --ui-content-place-inline: end; }
@@ -101,32 +86,20 @@
 	:where([content~="plc(bc)"]) { --ui-content-place-block: end;    --ui-content-place-inline: center; }
 	:where([content~="plc(be)"]) { --ui-content-place-block: end;    --ui-content-place-inline: end; }
 
-	/* wid(<size>) — text measure: caps each content row's inline size. The
-	   no-token default is the prose measure --width-prose (65ch); 2xl lifts the
-	   cap. The ch values stay un-tokenized by design (content-relative). No xs
-	   step — the type ladders (scl/hl/eb/tx/mt) start at sm; only the spacing
-	   scale (pad/gap) has an xs. */
+	/* wid(<size>) — text measure; no-token default is --width-prose (65ch) */
 	:where([content~="wid(sm)"])  { --ui-content-max: 35ch; }
 	:where([content~="wid(md)"])  { --ui-content-max: 50ch; }
 	:where([content~="wid(lg)"])  { --ui-content-max: 65ch; }
 	:where([content~="wid(xl)"])  { --ui-content-max: 80ch; }
 	:where([content~="wid(2xl)"]) { --ui-content-max: 100%; }
 
-	/* tal(<kw>) — explicit text alignment; start is the no-token default.
-	   Sits UNDER the ovr() slot like plc(): content= inherits freely, so a
-	   group-level tal(ctr) must not override a nested overlay card's
-	   cell-derived text alignment (the old ctr/end flags had the same rank). */
+	/* tal(<kw>) — explicit text alignment; sits UNDER the ovr() slot like plc() */
 	:where([content~="tal(start)"]) { --ui-content-text-align: start; }
 	:where([content~="tal(ctr)"])   { --ui-content-text-align: center; }
 	:where([content~="tal(end)"])   { --ui-content-text-align: end; }
 
-	/* ============================================================
-	   CORNERS — rds(): round (global scale) or -sq (bespoke squircle)
-	   ------------------------------------------------------------
-	   rds() scale — KEEP IN LOCK-STEP with ui-card.css (--ui-card-*) and media.css
-	   (--ui-media-*). Serves a STANDALONE <ui-content> given a surface; inside a card
-	   the host's clipping owns the corners, so the default 0 is inert there.
-	   See ui-card-tokens.md § Corners — "Three rds() blocks, one scale". */
+	/* === CORNERS — rds(). KEEP IN LOCK-STEP with ui-card.css and media.css.
+	   Serves a STANDALONE <ui-content> given a surface; inert inside a card. === */
 	:where([content*="rds(non)"]) { --ui-content-radius: 0; }
 	:where([content*="rds(sm)"])   { --ui-content-radius: var(--radius-sm); }
 	:where([content*="rds(md)"])   { --ui-content-radius: var(--radius-md); }
@@ -143,9 +116,7 @@
 	:where([content*="-sq)"]) ui-content,
 	:where(ui-content[content*="-sq)"]) { corner-shape: superellipse(var(--ui-content-squircle-exp, 1.8)); }
 
-	/* ============================================================
-	   CONTAINER — flex column; ov() placement/ink read from props
-	   ============================================================ */
+	/* === CONTAINER — flex column; ov() placement/ink read from props === */
 	:where(ui-content) {
 		align-items: var(--ui-content-ov-align, var(--ui-content-place-inline, normal));
 		border-radius: var(--ui-content-radius, 0); /* rds(); inert (0) unless set — a card host clips its own corners */
@@ -156,10 +127,8 @@
 		font-size: var(--ui-content-fs, var(--ui-content-fs-md));
 		gap: var(--ui-content-gap, 1em);
 		justify-content: var(--ui-content-ov-justify, var(--ui-content-place-block, normal));
-		/* PADDING — four longhands, each resolving side → axis → all-sides. The
-		   precedence lives in this var() chain, NOT the cascade; a breakpoint
-		   changes the VALUE in a slot, never the slot order. Do not flatten these
-		   into a shorthand. See content.md § Internals — "Padding". */
+		/* PADDING — four longhands, side → axis → all-sides. The precedence lives in
+		   this var() chain, NOT the cascade. Do not flatten into a shorthand. */
 		padding-block-start:  var(--ui-content-pbs, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
 		padding-block-end:    var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
 		padding-inline-start: var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
@@ -167,32 +136,20 @@
 		text-align: var(--ui-content-ov-text, var(--ui-content-text-align, start));
 		z-index: var(--ui-content-ov-z, auto);
 
-		/* wid() text measure — the cap rides the rows, not the column box, so
-		   plc()'s inline letter can still place the capped rows within it */
+		/* wid() — the cap rides the rows, not the column box */
 		& > * { margin: 0; max-inline-size: var(--ui-content-max, var(--width-prose, 65ch)); text-box: cap alphabetic; }
 
-		/* theme= — the shared colour axis (base/theme.css). <ui-content> is the
-		   system's text PLATE, so it paints the resolved surface directly instead of
-		   re-publishing into a token the way a container host does. This is the
-		   background rds() has been waiting for, and it is how a <ui-reveal> back
-		   panel gets its own colour independent of the front face.
-		   SURFACE ink (--color-text, re-toned by the light/dark modifiers through
-		   color-scheme), not the badge pair --_theme-ink — see base/theme.md § Ink.
-		   NOT :where()-wrapped: at (0,1,0) it must out-specify the reveal's back-face
-		   ovr() ink counter-reset, `:where(ui-reveal) > details > ui-content` (0,0,2)
-		   in ui-reveal.css. */
+		/* theme= — <ui-content> is a PLATE: it paints the resolved surface directly.
+		   (0,1,0), NOT :where()-wrapped, so it out-specifies ui-reveal.css's back-face
+		   ovr() ink counter-reset (0,0,2). Docs: content.md § Theme surface. */
 		&[theme] {
 			background: var(--_theme-bg, transparent);
 			color: var(--_theme-c, var(--color-text));
 		}
 	}
 
-	/* ============================================================
-	   SCROLL — content="scr": scrollable content with masked edges. The @property/
-	   @keyframes and the --ui-scroll-fade-mask gradient are the shared primitive in
-	   ui/base/scroll.css. ~= (whole token) so scr, scr(x), scr(y) stay distinct.
-	   See content.md § Internals — "scr reuses the shared scroll-fade primitive".
-	   ============================================================ */
+	/* === SCROLL — content="scr": scrollable content with masked edges; the fade
+	   primitive is shared, in ui/base/scroll.css === */
 	:where([content~="scr"]) ui-content, :where([content~="scr(y)"]) ui-content,
 	:where(ui-content[content~="scr"]), :where(ui-content[content~="scr(y)"]) {
 		max-block-size: var(--ui-content-scroll-bs, 100%);
@@ -200,9 +157,8 @@
 		overscroll-behavior: contain;
 		scrollbar-width: thin;
 	}
-	/* horizontal — a scrolling row (thumbnails, tags, chips) that overflows the card.
-	   Children must NOT shrink or wrap, or they'd reflow to fit instead of
-	   overflowing: row nowrap + flex:0 0 auto on the items + nowrap text. */
+	/* horizontal — children must NOT shrink or wrap, or they reflow instead of
+	   overflowing */
 	:where([content~="scr(x)"]) ui-content,
 	:where(ui-content[content~="scr(x)"]) {
 		--ui-scroll-fade-dir: to right;
@@ -217,7 +173,7 @@
 	:where([content~="scr(x)"]) ui-content > *,
 	:where(ui-content[content~="scr(x)"]) > * { flex: 0 0 auto; max-inline-size: none; /* a scrolling row must overflow — the wid()/prose cap would clamp it */ }
 	/* the tags <ul> nowrap override lives AFTER the tags part rule (below) so it
-	   wins the cascade at equal specificity — see the scr(x) block there. */
+	   wins at equal specificity */
 	@supports (animation-timeline: scroll()) {
 		@media (prefers-reduced-motion: no-preference) {
 			:where([content~="scr"]) ui-content, :where([content~="scr(y)"]) ui-content,
@@ -237,14 +193,10 @@
 		}
 	}
 
-	/* ============================================================
-	   PARTS — styled by [data-part], never by tag
-	   ============================================================ */
+	/* === PARTS — styled by [data-part], never by tag === */
 
-	/* eyebrow — Eyebrow group. ink/weight fall back to eb() group props (the
-	   eyebrow part IS the eyebrow group's representative, so the group prop and
-	   the part hook share a name). The legacy `-color` alias slots were REMOVED
-	   in v5 across every part — `-ink` is the single ink hook (F-09). */
+	/* eyebrow — Eyebrow group; the part IS the group's representative, so the group
+	   prop and the part hook share a name */
 	:where(ui-content) [data-part="eyebrow"] {
 		color: var(--ui-content-eyebrow-ink, var(--color-accent));
 		font-size: var(--ui-content-eyebrow-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.78));
@@ -254,11 +206,8 @@
 		text-transform: var(--ui-content-eyebrow-transform, uppercase); /* eb(flat) → none */
 	}
 
-	/* headline (and bare h2–h6) — Headings group. Rhythm defaults are mathematical
-	   (constant leading + modular margin) so they hold from sm to poster; this rule
-	   carries attribute/type specificity, which is what beats the container's
-	   `& > * { margin: 0 }` reset at (0,0,0). See content.md § Internals —
-	   "Headline rhythm is mathematical". */
+	/* headline (and bare h2–h6) — Headings group. Rhythm is mathematical; the
+	   attribute/type specificity is what beats the container's `& > * { margin: 0 }` */
 	:where(ui-content) :is([data-part="headline"], h2, h3, h4, h5, h6) {
 		color: var(--ui-content-headline-ink, var(--ui-content-heading-ink, inherit));
 		font-family: var(--ui-content-heading-font, var(--font-heading, inherit)); /* --font-heading = inherit → follows fnt() unless hl(<font>) sets it */
@@ -290,8 +239,7 @@
 		text-wrap: var(--ui-content-summary-wrap, pretty);
 	}
 
-	/* meta / caption (caption may also sit inside <ui-media>) — Meta group; the
-	   meta part is the group's representative, so its ink hook is the group prop. */
+	/* meta / caption (caption may also sit inside <ui-media>) — Meta group */
 	:where(ui-content, ui-media) :is([data-part="meta"], [data-part="caption"]) {
 		color: var(--ui-content-meta-ink, var(--ui-content-muted));
 		font-size: var(--ui-content-meta-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.75));
@@ -299,9 +247,7 @@
 		text-shadow: var(--ui-content-meta-text-shadow, none);
 	}
 
-	/* byline (author row; inner <img> becomes a round avatar) — Meta group.
-	   Now defaults to muted via the group (matches content.md's stated behaviour;
-	   the CSS previously left it at full ink — intentional consistency fix). */
+	/* byline (author row; inner <img> becomes a round avatar) — Meta group */
 	:where(ui-content) [data-part="byline"] {
 		align-items: center;
 		color: var(--ui-content-byline-ink, var(--ui-content-meta-ink, var(--ui-content-muted)));
@@ -320,9 +266,8 @@
 		}
 	}
 
-	/* tags (pill/chip list) — Meta group. The bespoke pill below is the FALLBACK for
-	   a plain link, scoped to links NOT inside a <ui-chip> so it never leaks onto
-	   the chip's own <a>. See content.md § Internals — "Tags". */
+	/* tags (pill/chip list) — Meta group. The pill below is the FALLBACK for a plain
+	   link, scoped to links NOT inside a <ui-chip>. */
 	:where(ui-content) [data-part="tags"] {
 		display: flex;
 		flex-wrap: wrap;
@@ -342,17 +287,12 @@
 			padding: var(--ui-content-tag-padding, 0.2em 0.7em);
 			text-decoration: none;
 		}
-		/* Only the rendered leaf becomes the pill box — the wrapper stays
-		   display:contents (above), so a <li><a> pair is ONE pill, not two. */
+		/* only the rendered leaf becomes the pill box — one pill per <li><a> pair */
 		& a:not(ui-chip *) { display: inline-grid; place-content: center; }
-		/* a link INSIDE a tag chip: the chip paints the pill, so the anchor stays
-		   transparent/flush and just carries the href — inherit the chip ink, drop
-		   the UA underline. Higher specificity than the bespoke `& a` pill, so it
-		   also neutralises any leaked pill background/padding. */
+		/* a link INSIDE a tag chip: the chip paints the pill, the anchor stays flush */
 		& ui-chip a { background: none; color: inherit; padding: 0; text-decoration: none; }
 	}
-	/* scr(x) tags override — must follow the tags rule above so the nowrap wins at
-	   equal specificity (a horizontal strip must not wrap; pills/chips hold width). */
+	/* scr(x) tags override — must follow the tags rule to win at equal specificity */
 	:where([content~="scr(x)"]) [data-part="tags"],
 	:where(ui-content[content~="scr(x)"]) [data-part="tags"] { flex-wrap: nowrap; }
 	:where([content~="scr(x)"]) [data-part="tags"] :is(a, li, ui-chip),
@@ -376,9 +316,7 @@
 		text-shadow: var(--ui-content-footer-text-shadow, var(--ui-content-meta-text-shadow, none));
 	}
 
-	/* cover — a link that covers the whole card (the classic stretched-link).
-	   Lives inside the headline (no nested anchors); its ::after stretches over
-	   the card. Other links (tags, actions) stay clickable above via z-index. */
+	/* cover — stretched link; lives inside the headline, its ::after covers the card */
 	:where(ui-card):has([data-part~="cover"]) { position: relative; }
 	:where(ui-content) [data-part~="cover"] {
 		color: inherit;
@@ -395,8 +333,7 @@
 		z-index: 2;
 	}
 
-	/* gradient highlight — <b> inside a headline. Authored in the CMS as a short
-	   rich headline (≤256 chars); the renderer only lets <b> through. */
+	/* gradient highlight — <b> inside a headline (the renderer only lets <b> through) */
 	:where(ui-content) :is([data-part="headline"], h2, h3, h4, h5, h6) b {
 		background: var(--ui-content-headline-gradient, linear-gradient(90deg, var(--color-accent), #c026d3));
 		-webkit-background-clip: text;
@@ -412,15 +349,10 @@
 		color: transparent;
 	}
 
-	/* ============================================================
-	   PROPOSED PARTS — now folded into the group system. Each reads its own
-	   --ui-content-{part}-* hook, then its group ink (Body or Meta), then a
-	   default. Only structural essentials here; visuals stay token-driven.
-	   ============================================================ */
+	/* === STRUCTURED PARTS — each reads its own hook, then its group ink (Body or
+	   Meta), then a default. Microdata + content types: content.md § Structured parts. === */
 
-	/* price — Body group (prominent). <p> with <data> current, <del> original,
-	   <small> discount. Carries Offer/PriceSpecification/MonetaryAmount microdata.
-	   Used by: product, course, booking, membership, software, job (salary). */
+	/* price — Body group (prominent) */
 	:where(ui-content) [data-part="price"] {
 		align-items: baseline;
 		color: var(--ui-content-price-ink, var(--ui-content-body-ink, inherit));
@@ -434,8 +366,7 @@
 		& small { color: var(--ui-content-price-discount, var(--color-accent)); font-size: 0.7em; }
 	}
 
-	/* rating — Meta group. <div role="img" aria-label> star glyphs + count.
-	   Carries AggregateRating/Rating microdata. Used by: product, review, software. */
+	/* rating — Meta group */
 	:where(ui-content) [data-part="rating"] {
 		align-items: center;
 		color: var(--ui-content-rating-ink, var(--color-accent));
@@ -446,9 +377,7 @@
 		& small { color: var(--ui-content-meta-ink, var(--ui-content-muted)); }
 	}
 
-	/* list — Body group. <ul> check-list / <ol> ordered list. Features,
-	   qualifications, ingredients, amenities, steps.
-	   Used by: recipe, job, course, booking, location, membership. */
+	/* list — Body group */
 	:where(ui-content) [data-part="list"] {
 		color: var(--ui-content-list-ink, var(--ui-content-body-ink, inherit));
 		display: flex;
@@ -460,8 +389,7 @@
 		padding: 0;
 	}
 
-	/* address — Body group. <address> block, distinct from byline (no avatar).
-	   Carries PostalAddress microdata scope. Used by: business, location, event, contact. */
+	/* address — Body group (distinct from byline: no avatar) */
 	:where(ui-content) [data-part="address"] {
 		color: var(--ui-content-address-ink, var(--ui-content-body-ink, inherit));
 		font-size: var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9));
@@ -469,8 +397,7 @@
 		line-height: var(--ui-content-address-line-height, var(--line-height-normal, 1.5));
 	}
 
-	/* stat — Body group (prominent). <p> with <data> big number + <small> unit +
-	   trend <span>. Carries QuantitativeValue microdata. Used by: statistic. */
+	/* stat — Body group (prominent) */
 	:where(ui-content) [data-part="stat"] {
 		align-items: baseline;
 		color: var(--ui-content-stat-ink, var(--ui-content-body-ink, inherit));
@@ -486,8 +413,7 @@
 		& small { color: var(--ui-content-muted); }
 	}
 
-	/* timeline — Body group. <ol> of <li> with <time> + text.
-	   Each entry is subEvent → Event microdata. Used by: timeline. */
+	/* timeline — Body group */
 	:where(ui-content) [data-part="timeline"] {
 		color: var(--ui-content-timeline-ink, var(--ui-content-body-ink, inherit));
 		display: flex;
@@ -501,10 +427,7 @@
 		& time { color: var(--ui-content-muted); font-size: 0.85em; }
 	}
 
-	/* quote — Body group. <blockquote data-part="quote" data-variant> + <q>/<cite>.
-	   Composed with @browser.style/blockquote: data-variant (bigquote/breaker/code)
-	   carries the visual style from ui-blockquote.css — this hook is for card-scoped
-	   overrides only. Used by: quote (bigquote), review (default), social (plain). */
+	/* quote — Body group; composes with @browser.style/blockquote via data-variant */
 	:where(ui-content) [data-part="quote"] {
 		border-inline-start: var(--ui-content-quote-border, var(--border-width) solid var(--color-border, currentColor));
 		color: var(--ui-content-quote-ink, var(--ui-content-body-ink, inherit));
@@ -515,9 +438,7 @@
 		& cite { color: var(--ui-content-muted); font-size: 0.8em; font-style: normal; }
 	}
 
-	/* options — Meta group. <ul> of <li> with <label> + <progress> result bars.
-	   Poll answers (suggestedAnswer → Answer) / comparison rows (ListItem).
-	   Used by: poll, comparison. */
+	/* options — Meta group */
 	:where(ui-content) [data-part="options"] {
 		color: var(--ui-content-options-ink, var(--ui-content-meta-ink, inherit));
 		display: flex;

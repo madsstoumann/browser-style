@@ -1,22 +1,13 @@
 /**
- * ui-media — hov() hover effects
+ * ui-media — hov() hover effects, split out of media.css and imported by
+ * ui-card.css (so ui-reveal gets them too). Opt-in per token; the token may sit
+ * on the host or on <ui-media> itself. Same @layer as media.css.
+ *   CSS-only:    zoom pan shape gray blur bright dim sat rot-r rot-l tilt-out tilt-in
+ *   JS-assisted: track drift tilt (need --ui-media-mx/my from index.js)
+ * ONE ARM, VIA AN INHERITED FLAG — every flag is registered in the boundary-reset
+ * block at the top of media.css. Docs: media.md § Internals
  * @version 1.0.0
  * @author Mads Stoumann
- *
- * All <ui-media> hover flourishes, split out of media.css. Imported by ui-card.css
- * (so ui-reveal gets it too). Every effect is opt-in via a hov() token in media=,
- * and works whether the token sits on the host <ui-card>/<ui-reveal> (card-level
- * hover) or the <ui-media> itself (standalone). Same @layer as media.css.
- *
- * CSS-only: zoom pan shape gray blur bright dim sat rot-r rot-l tilt-out tilt-in
- * JS-assisted (need --ui-media-mx/my from index.js): track drift tilt
- *
- * ONE ARM, VIA AN INHERITED FLAG (R-14 step 4) — the whole family sets an
- * inheriting --_hv-* flag and applies its properties from a style query. The two
- * hover-state shapes, the (0,0,2) specificity contract vs shp(), the shared
- * transition list and the @property-registered filter vars are all explained in
- * media.md § Internals — "Where the hover state is read". Every flag is registered
- * in the boundary-reset block at the top of media.css.
  */
 @property --_f-gray   { syntax: "<number>"; inherits: true; initial-value: 0; }
 @property --_f-blur   { syntax: "<length>"; inherits: true; initial-value: 0px; }
@@ -89,8 +80,7 @@
 			}
 		}
 
-		/* drift — oversized image shrinks and drifts opposite the cursor. The hover
-		   state is the FRAME's, so :hover stays on the subject inside the query. */
+		/* drift — the hover state is the FRAME's, so :hover stays on the subject */
 		@container style(--_hv-drift: 1) {
 			ui-media :is(iframe, img, picture, video) { scale: var(--ui-media-hv-drift-rest, 1.3); }
 			ui-media:hover :is(iframe, img, picture, video) {
@@ -99,15 +89,11 @@
 			}
 		}
 
-		/* all tilt variants need perspective on the frame (matches hov(tilt), -in, -out).
-		   NOT MIGRATABLE — the subject IS <ui-media>, and a style query resolves
-		   against the subject's nearest ANCESTOR, so the self arm would have nothing
-		   to read. Keeps the folded two-arm selector. */
+		/* perspective for the tilt family — NOT migratable: the subject IS <ui-media>,
+		   so the self arm would have no ancestor to read. Keeps the two-arm form. */
 		ui-media:where([media*="hov(tilt"], [media*="hov(tilt"] *) { perspective: var(--ui-media-hv-tilt-persp, 600px); }
 
-		/* tilt — 3D rotate toward the CURSOR (needs JS). Keeps the flp() scale so tilt
-		   and flip compose; --ui-media-mx/my set by index.js. The overfill-on-hover
-		   rule is frame-hover, so :hover stays on the subject (see drift). */
+		/* tilt — 3D rotate toward the CURSOR (needs JS); keeps the flp() scale */
 		@container style(--_hv-tilt: 1) {
 			ui-media :is(iframe, img, picture, video) {
 				transform:
@@ -119,11 +105,8 @@
 			ui-media:hover :is(iframe, img, picture, video) { scale: var(--ui-media-hv-tilt-scale, 1.08); }
 		}
 
-		/* tilt-out / tilt-in — FIXED 3D tilt on hover (no JS). Driven by the rotate:/scale:
-		   longhands (NOT a transform list) so each interpolates its own value — a multi-
-		   function transform would fall back to matrix decomposition and jitter on the way
-		   out. flip stays in transform; perspective is on the frame (above).
-		   tilt-out = top edge toward the viewer (rotateX −), tilt-in = top edge away (+). */
+		/* tilt-out / tilt-in — FIXED 3D tilt, no JS. rotate:/scale: longhands, NOT a
+		   transform list (matrix decomposition would jitter on the way out). */
 		@container style(--_hv-tilt-out: 1) {
 			ui-media :is(iframe, img, picture, video) {
 				rotate: 1 0 0 calc(-1 * var(--ui-media-hv-tilt-fixed, 14deg));
@@ -137,8 +120,7 @@
 			}
 		}
 
-		/* rot-r / rot-l — a subtle whole-image rotation (rotate: longhand composes with
-		   flip). A slight scale overfills so the rotated corners don't expose the frame. */
+		/* rot-r / rot-l — whole-image rotation; a slight scale overfills the corners */
 		@container style(--_hv-rot-r: 1) {
 			ui-media :is(iframe, img, picture, video) {
 				rotate: var(--ui-media-hv-rotate, 3deg);
@@ -152,26 +134,21 @@
 			}
 		}
 
-		/* shape — morph the shp() clip-path to its --ui-shape-morph target on hover.
-		   The flag needle is the `hov(shape` prefix, so it covers hov(shape) AND
-		   hov(shape-rev) (the reverse direction is set up in media.shapes.css). Base
-		   clip lives in media.css; this only overrides on hover. Same (0,0,2) as that
-		   base rule and later in source, so it wins — see the header note. */
+		/* shape — morph the shp() clip to --ui-shape-morph on hover. Needle is the
+		   `hov(shape` prefix, so it covers shape and shape-rev. Same (0,0,2) as the base
+		   clip in media.css, later in source, so it wins. */
 		@container style(--_hv-shape: 1) {
 			ui-media :is(iframe, img, picture, video) { clip-path: var(--ui-shape-morph, var(--ui-media-shape)); }
 		}
 
-		/* filter family — composes via per-filter vars, so hov(gray) hov(blur) stack.
-		   Rest values set below; hover values override (higher specificity via :hover). */
+		/* filter family — composes via per-filter vars, so hov(gray) hov(blur) stack */
 		@container style(--_hv-filter: 1) {
 			ui-media :is(iframe, img, picture, video) {
 				filter: grayscale(var(--_f-gray, 0)) blur(var(--_f-blur, 0)) brightness(var(--_f-bright, 1)) saturate(var(--_f-sat, 1));
 			}
 		}
-		/* rest = degraded, hover = restored (gray/blur/sat/bright reveal on hover).
-		   dim is the exception: rest natural, hover darkens (for overlaid text).
-		   These are plain custom properties — they already inherit, so they never had
-		   a dual arm and need no flag. */
+		/* rest = degraded, hover = restored; dim is the exception (rest natural). Plain
+		   inheriting props — no flag needed. */
 		:where([media*="hov(gray)"])   { --_f-gray: 1; }
 		:where([media*="hov(blur)"])   { --_f-blur: var(--ui-media-hv-blur, 4px); }
 		:where([media*="hov(sat)"])    { --_f-sat: var(--ui-media-hv-sat-rest, 0.4); }

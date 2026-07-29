@@ -1,11 +1,10 @@
-/* ui-media carousel — ui-media-specific scroller box, furniture exclusions, focus, ui-play
- * placement, band/rail reservation. Generic controls live in /ui/base/carousel.css;
- * stagger engine AND its carousel trigger wiring in /ui/base/stagger.css.
- * Internals: media.carousel.md · tokens: carousel.md
+/* ui-media carousel — the ui-media-specific scroller box, furniture exclusions,
+ * focus, ui-play placement, band/rail reservation. Generic controls live in
+ * /ui/base/carousel.css; the stagger engine in /ui/base/stagger.css.
+ * Docs: media.carousel.md (internals) · carousel.md (tokens)
  *
- * DUAL ARM, ONE SELECTOR (R-14 step 1) — see media.carousel.md § Foundations.
- * `ui-media` stays OUTSIDE the :where() so every rule keeps the exact specificity
- * both arms had; everything inside stays zero-specificity. */
+ * DUAL ARM, ONE SELECTOR — `ui-media` stays OUTSIDE the :where() so every rule
+ * keeps the exact specificity both arms had. */
 @layer bs-component {
 	:where(ui-card, ui-reveal, ui-media):where([media*="nav"]) {
 		--ui-media-bg: #0000;
@@ -33,9 +32,8 @@
 		inset: auto;
 		position: static;
 	}
-	/* media="pages" — the grandchild slide/marker/stagger arms, viewport-scoped to
-	   the same query as the (unlayered) wrapper dissolve at the foot of this file.
-	   See media.carousel.md § `media="pages"` — the wrapper dissolve. */
+	/* media="pages" — grandchild arms, viewport-scoped to the same query as the
+	   (unlayered) wrapper dissolve at the foot of this file */
 	@media (width < 540px) {
 		ui-media:where([media~="pages"], :is(ui-card, ui-reveal)[media~="pages"] *) > lay-out > * {
 			block-size: 100%;
@@ -44,9 +42,8 @@
 			scroll-snap-align: start;
 		}
 	}
-	/* reserved band (nav/mrk/arw · blw or abv): round the image itself so the edge offset from the
-	   band matches the rds() frame — the outer clip only rounds the frame corners, not the image
-	   edge that sits inset from the band (image bottom for blw, image top for abv) */
+	/* reserved band: round the image itself so its edge offset from the band matches
+	   the rds() frame (the outer clip only rounds the frame corners) */
 	:where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media > :is(iframe, img, picture, video),
 	ui-media:where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) > :is(iframe, img, picture, video) {
 		border-radius: var(--ui-media-radius, 0);
@@ -73,10 +70,8 @@
 		scroll-snap-type: y mandatory;
 	}
 
-	/* NOT factored: the two arms are asymmetric on purpose — the host arm excludes
-	   nested frames (:not(ui-media ui-media)), the self arm doesn't.
-	   WHOLE-TOKEN needles, mirroring carousel.js's AUTO/LOOP.
-	   See media.carousel.md § Foundations — "One asymmetry that is NOT factored". */
+	/* NOT factored: the arms are asymmetric on purpose — the host arm excludes nested
+	   frames, the self arm doesn't. Whole-token needles, mirroring carousel.js. */
 	:where(ui-card, ui-reveal):where([media~="auto"], [media*="auto("], [media~="loop"]) ui-media:not(ui-media ui-media) > ui-play,
 	ui-media:where([media~="auto"], [media*="auto("], [media~="loop"]) > ui-play {
 		align-content: var(--_play-block, end);
@@ -98,9 +93,8 @@
 	ui-media:where([media*="play(bs)"], :is(ui-card, ui-reveal)[media*="play(bs)"] *) { --_play-block: end;    --_play-inline: var(--ui-media-overlay-gap, 0.75rem) auto; --_play-justify: start; }
 	ui-media:where([media*="play(be)"], :is(ui-card, ui-reveal)[media*="play(be)"] *) { --_play-block: end;    --_play-inline: auto var(--ui-media-overlay-gap, 0.75rem); --_play-justify: end; --_play-size: max-content; }
 
-	/* reserved control band — nav(blw/abv) = both controls, mrk(blw/abv) = dots only, arw(blw/abv) = arrows only.
-	   content-box so asr() sizes the IMAGE and the band is reserved OUTSIDE it (border-box would fold the
-	   band into the aspect-ratio box and squash the image — see media.carousel.md). */
+	/* reserved control band — nav = both controls, mrk = dots only, arw = arrows only.
+	   content-box so asr() sizes the IMAGE and the band is reserved OUTSIDE it. */
 	:where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"]) ui-media,
 	ui-media:where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"]) {
 		background: var(--ui-carousel-controls-bg, var(--ui-media-bg));
@@ -130,9 +124,8 @@
 		border-radius: var(--ui-media-radius, 0);
 	}
 
-	/* mrk(rail) — reserve inline space for the thumb rail beside axis(y) media; padding-inline-start
-	   (logical, RTL-aware) + shrunk content width keep the frame full-width and the image at asr()
-	   (content-box). Column parked in the rail by carousel.css. See media.carousel.md */
+	/* mrk(rail) — reserve inline space for the thumb rail beside axis(y) media
+	   (logical padding, RTL-aware; content-box keeps the image at asr()) */
 	ui-media:where([media*="axis(y)"][media*="mrk(rail)"], :is(ui-card, ui-reveal)[media*="axis(y)"][media*="mrk(rail)"] *) {
 		--ui-carousel-rail: calc(var(--ui-carousel-thumb-size, 2.25rem) * var(--ui-carousel-thumb-ratio-n, 1.3333) + 0.5rem);
 		background: var(--ui-carousel-controls-bg, var(--ui-media-bg));
@@ -149,19 +142,14 @@
 		) { scrollbar-width: none; }
 	}
 
-	/* mrk(sbr) — draggable "system bar": style the REAL scrollbar instead of drawing one, so it is
-	   natively draggable (+ click-track, snaps on release), zero JS. Full-width, bottom-pinned — no
-	   bar-span/edge positioning (that's mrk(bar)). Reuses the bar-* tokens. Declared after the nav
+	/* mrk(sbr) — draggable "system bar": style the REAL scrollbar instead of drawing
+	   one, so it is natively draggable with zero JS. Declared after the nav
 	   scrollbar-hide so it wins. WORK IN PROGRESS. */
 
-	/* 1. Central: set every sbr value ONCE. Custom props are engine-agnostic, so both the Firefox
-	   (standard) and WebKit (::-webkit-scrollbar) paths below read the same tokens — no repeated
-	   fallbacks. content-box so asr() sizes the image and the bar + gap sit OUTSIDE it. */
+	/* 1. Central: set every sbr value ONCE — both engine paths below read these */
 	:where(ui-card, ui-reveal):where([media*="mrk(sbr)"]) ui-media,
 	ui-media:where([media*="mrk(sbr)"]) {
-		/* Map each PUBLIC token (set on the host or frame) → an internal one, with its default set
-		   ONCE right here. The FF + WebKit paths below read only the internal --_sbr-* vars, so there
-		   are no repeated fallbacks, and any --ui-carousel-sbr-* set upstream wins. */
+		/* map each PUBLIC token → an internal one, with its default set ONCE here */
 		--_sbr-track: var(--ui-carousel-sbr-track, light-dark(#dcdcdc, #454545));
 		--_sbr-thumb: var(--ui-carousel-sbr-thumb, light-dark(#6e6e6e, #a2a2a2));
 		--_sbr-size: var(--ui-carousel-sbr-size, 8px);   /* bar thickness */
@@ -170,8 +158,7 @@
 		--_sbr-track-radius: var(--ui-carousel-sbr-track-radius, var(--ui-carousel-sbr-radius, 0px));
 		--_sbr-thumb-radius: var(--ui-carousel-sbr-thumb-radius, var(--ui-carousel-sbr-radius, 0px));
 		box-sizing: content-box;
-		/* gap between the media and the bar — 0 when full-width, otherwise a small gap capped at
-		   --spacing-sm (so it never grows with a large inset); override with --ui-carousel-sbr-gap */
+		/* gap between the media and the bar — 0 when full-width, else capped at sm */
 		padding-block-end: var(--ui-carousel-sbr-gap, min(var(--_sbr-inset), var(--spacing-sm, 0.5rem)));
 	}
 
@@ -220,10 +207,9 @@
 	}
 }
 
-/* media="pages" dissolve — OUTSIDE @layer on purpose: the wrapper's `display: grid`
-   comes from @layer layout.base, which outranks bs-component, so a layered arm here
-   could never flip it. Do not move this into the layer.
-   See media.carousel.md § `media="pages"` — the wrapper dissolve. */
+/* media="pages" dissolve — OUTSIDE @layer on purpose: the wrapper's display:grid
+   comes from @layer layout.base, which outranks bs-component. Do not move it into
+   the layer. See media.carousel.md. */
 @media (width < 540px) {
 	ui-media:where([media~="pages"], :is(ui-card, ui-reveal)[media~="pages"] *) > lay-out {
 		display: contents;
