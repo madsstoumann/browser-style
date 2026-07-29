@@ -35,9 +35,13 @@
 			gap: 2ch var(--spacing-md);
 			grid-template-columns: 1fr auto;
 			inset-block-start: 0;
+			/* empty header areas pass clicks through (to the backdrop below);
+			   children re-enable — logo, toggle and menu stay interactive */
+			pointer-events: none;
 			position: sticky;
 			z-index: var(--z-index-4);
 		}
+		header > * { pointer-events: auto; }
 		/* bg + shadow layer, faded in by the stuck query below — a scroll-state
 		   query can't style its own container, but its pseudos count as
 		   descendants */
