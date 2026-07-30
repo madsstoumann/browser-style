@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="ui-reveal.css">
 	<link rel="stylesheet" href="/ui/card/demo.layout.css">
 	<link rel="stylesheet" href="/ui/accordion/ui-accordion.css">
+	<link rel="stylesheet" href="/ui/tabs/ui-tabs.css">
 	<!-- typed attr() fallback for Safari/Firefox (layout gaps/spacing attributes) -->
 	<!-- <script type="module" src="/layout/polyfills/attr-fallback.js"></script> -->
 	<style>
@@ -38,6 +39,14 @@
 		.pop-starfall  { --ui-reveal-expand-fixed-bg: #6a69ab; }
 		.pop-frontier  { --ui-reveal-expand-fixed-bg: #664a31; }
 		.pop-imperium  { --ui-reveal-expand-fixed-bg: #6d6358; }
+
+		/* from ui/tabs/tabs-demo.css — indicator decoration only */
+		.tabs-fill-surface {
+			--ui-tabs-indicator-bg: var(--color-surface);
+			--ui-tabs-indicator-shadow: var(--shadow-md);
+			--ui-tabs-indicator-text: var(--color-text);
+		}
+		.tabs-offset { --ui-tabs-indicator-offset: var(--spacing-sm); }
 	</style>
 </head>
 <body>
@@ -475,6 +484,306 @@
 					<p>They record at dusk with the tape hiss left in, chasing the exact moment a melody starts to fade. Live, the stage vanishes behind haze and slow light, the band more felt than seen.</p>
 					<p>It's deliberate, all of it. The singer mixes her own vocals down until the words blur, because the feeling, she says, was always more honest than the sentence. Fans trade lyric sheets like rumours, half-sure they've invented the lines themselves.</p>
 					<p>Their records don't so much end as evaporate, each one a little further from solid ground than the last. Critics call it escapism; the band call it the truth, just softened enough to live with.</p>
+				</ui-content>
+			</details>
+		</ui-reveal>
+	</lay-out>
+
+	<!-- ============================================
+	     Two stagger hosts nested — <ui-tabs> cascades the cards in on every tab
+	     switch, each card's own panel cascades its tracklist in on open.
+	     ============================================ -->
+	<h2>Sounds of the season</h2>
+
+	<ui-tabs variant="ellipse" class="tabs-fill-surface tabs-offset" no-collapse>
+		<cq-box>
+			<details name="season" open>
+				<summary>After midnight</summary>
+				<lay-out xs="pbs(1)" md="grid(3a)" lg="columns(3)" stagger>
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) scm hov(zoom)">
+						<details name="season-night">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/assets/images/band_goth.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Gothic</small><strong>The Lure</strong></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<ui-content stagger="lft" theme="black dark" content="pad(lg) eb(drk)">
+								<small data-part="eyebrow">Basement Tapes · 2026</small>
+								<h3 data-part="headline">The Lure</h3>
+								<ol>
+									<li>Hairdresser's Floor</li>
+									<li>No Windows</li>
+									<li>Slow Water</li>
+									<li>Baritone, Falling</li>
+								</ol>
+							</ui-content>
+						</details>
+					</ui-reveal>
+
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) scm hov(pan)">
+						<details name="season-night">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/assets/images/band_dreampop.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Dream-Pop</small><strong>Halcyon Wash</strong></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<ui-content stagger="lft" theme="black dark" content="pad(lg) eb(drk)">
+								<small data-part="eyebrow">Past Good Taste · 2026</small>
+								<h3 data-part="headline">Halcyon Wash</h3>
+								<ol>
+									<li>Reverb Past Good Taste</li>
+									<li>Three Cities At Once</li>
+									<li>Nobody Scheduled This</li>
+									<li>Washed Out, Turned Up</li>
+								</ol>
+							</ui-content>
+						</details>
+					</ui-reveal>
+
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) scm hov(zoom)">
+						<details name="season-night">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/assets/images/band_techno.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Techno</small><strong>Pulse Theory</strong></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<ui-content stagger="lft" theme="black dark" content="pad(lg) eb(drk)">
+								<small data-part="eyebrow">White Label · 2026</small>
+								<h3 data-part="headline">Pulse Theory</h3>
+								<ol>
+									<li>Anonymous By Design</li>
+									<li>Concrete, Four To The Floor</li>
+									<li>The Hours Nobody Wants</li>
+									<li>Sunrise Set</li>
+								</ol>
+							</ui-content>
+						</details>
+					</ui-reveal>
+				</lay-out>
+			</details>
+
+			<details name="season">
+				<summary>Full volume</summary>
+				<lay-out xs="pbs(1)" md="grid(3a)" lg="columns(3)" stagger>
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) scm hov(zoom)">
+						<details name="season-loud">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/assets/images/band_glamrock.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Glam Rock</small><strong>Glitter Throne</strong></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<ui-content stagger="lft" theme="red ink" content="pad(lg) eb(inv)">
+								<small data-part="eyebrow">Load-Bearing · 2026</small>
+								<h3 data-part="headline">Glitter Throne</h3>
+								<ol>
+									<li>Gaffer Tape Cathedral</li>
+									<li>Platform Boots</li>
+									<li>Encore To An Empty Room</li>
+									<li>Spectacle Is Sincere</li>
+								</ol>
+							</ui-content>
+						</details>
+					</ui-reveal>
+
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) scm hov(pan)">
+						<details name="season-loud">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/assets/images/band_britpop.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Britpop</small><strong>Camden Court</strong></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<ui-content stagger="lft" theme="red ink" content="pad(lg) eb(inv)">
+								<small data-part="eyebrow">Back Room Circuit · 2026</small>
+								<h3 data-part="headline">Camden Court</h3>
+								<ol>
+									<li>Cheap Lager Summer</li>
+									<li>Swagger, Second Hand</li>
+									<li>Singalong For Nobody</li>
+									<li>Last Orders</li>
+								</ol>
+							</ui-content>
+						</details>
+					</ui-reveal>
+
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) scm hov(zoom)">
+						<details name="season-loud">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/assets/images/band_boys.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Pop</small><strong>Skyline Five</strong></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<ui-content stagger="lft" theme="red ink" content="pad(lg) eb(inv)">
+								<small data-part="eyebrow">Above The Tyre Shop · 2026</small>
+								<h3 data-part="headline">Skyline Five</h3>
+								<ol>
+									<li>Five Voices, One Room</li>
+									<li>Broke From The Handlers</li>
+									<li>Theatres, Not Arenas</li>
+									<li>Quieter Screaming</li>
+								</ol>
+							</ui-content>
+						</details>
+					</ui-reveal>
+				</lay-out>
+			</details>
+
+			<details name="season">
+				<summary>Open road</summary>
+				<lay-out xs="pbs(1)" md="grid(3a)" lg="columns(3)" stagger>
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) scm hov(pan)">
+						<details name="season-road">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/assets/images/band_country.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Country</small><strong>Red Dirt Road</strong></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<ui-content stagger="lft" theme="blue ink" content="pad(lg) eb(inv)">
+								<small data-part="eyebrow">Barn Doors Open · 2026</small>
+								<h3 data-part="headline">Red Dirt Road</h3>
+								<ol>
+									<li>Towns That Keep You</li>
+									<li>Steel Strings, Long Highway</li>
+									<li>Recorded Live, Doors Open</li>
+									<li>Tennessee In The Mirror</li>
+								</ol>
+							</ui-content>
+						</details>
+					</ui-reveal>
+
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) scm hov(zoom)">
+						<details name="season-road">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/assets/images/band_alternative.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Alternative</small><strong>Paper Mirror</strong></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<ui-content stagger="lft" theme="blue ink" content="pad(lg) eb(inv)">
+								<small data-part="eyebrow">Hand-Dubbed · 2026</small>
+								<h3 data-part="headline">Paper Mirror</h3>
+								<ol>
+									<li>A Memory You Can't Place</li>
+									<li>Spare Room, Two Winters</li>
+									<li>Three Hundred Copies</li>
+									<li>No Permission Needed</li>
+								</ol>
+							</ui-content>
+						</details>
+					</ui-reveal>
+
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) scm hov(pan)">
+						<details name="season-road">
+							<summary>
+								<ui-face>
+									<ui-media><img src="/assets/images/band_girls.png" alt="" loading="lazy"></ui-media>
+									<ui-content><small>Synth-Pop</small><strong>Neon Avenue</strong></ui-content>
+								</ui-face>
+								<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+							</summary>
+							<ui-content stagger="lft" theme="blue ink" content="pad(lg) eb(inv)">
+								<small data-part="eyebrow">Three Working Keys · 2026</small>
+								<h3 data-part="headline">Neon Avenue</h3>
+								<ol>
+									<li>Borrowed Keyboard</li>
+									<li>Uploaded At Two AM</li>
+									<li>Booked The Tour Ourselves</li>
+									<li>Sodium Light</li>
+								</ol>
+							</ui-content>
+						</details>
+					</ui-reveal>
+				</lay-out>
+			</details>
+		</cq-box>
+	</ui-tabs>
+
+	<!-- ============================================
+	     theme="… border" — the neutral ramp at one ring width, all rds(lg-sq).
+	     The host radius tracks card-radius + border-width so the ring stays
+	     concentric with > details (theme.md § Border).
+	     ============================================ -->
+	<h2>On the racks</h2>
+
+	<lay-out md="columns(2)" lg="columns(4)">
+		<ui-reveal theme="black border border(lg)" variant="ovr(bs) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) obp(tc) hov(pan)">
+			<details name="racks">
+				<summary>
+					<ui-face>
+						<ui-media><img src="/assets/images/band_techno.png" alt="" loading="lazy"></ui-media>
+						<ui-content><small>Techno</small><strong>Pulse Theory</strong></ui-content>
+					</ui-face>
+					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+				</summary>
+				<ui-content content="pad(lg)">
+					<small data-part="eyebrow">black · border(lg)</small>
+					<h3 data-part="headline">Black</h3>
+					<p data-part="summary">Transparent fill — the ring carries the whole card.</p>
+				</ui-content>
+			</details>
+		</ui-reveal>
+
+		<ui-reveal theme="slate border border(lg)" variant="ovr(bs) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) obp(tc) hov(zoom)">
+			<details name="racks">
+				<summary>
+					<ui-face>
+						<ui-media><img src="/assets/images/band_dreampop.png" alt="" loading="lazy"></ui-media>
+						<ui-content><small>Dream-Pop</small><strong>Halcyon Wash</strong></ui-content>
+					</ui-face>
+					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+				</summary>
+				<ui-content content="pad(lg)">
+					<small data-part="eyebrow">slate · border(lg)</small>
+					<h3 data-part="headline">Slate</h3>
+					<p data-part="summary">One step up the neutral ramp, same hollow treatment.</p>
+				</ui-content>
+			</details>
+		</ui-reveal>
+
+		<ui-reveal theme="slate pale border border(lg)" variant="ovr(bs) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) obp(tc) hov(pan)">
+			<details name="racks">
+				<summary>
+					<ui-face>
+						<ui-media><img src="/assets/images/band_glamrock.png" alt="" loading="lazy"></ui-media>
+						<ui-content><small>Glam Rock</small><strong>Glitter Throne</strong></ui-content>
+					</ui-face>
+					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+				</summary>
+				<ui-content content="pad(lg)">
+					<small data-part="eyebrow">slate pale · border(lg)</small>
+					<h3 data-part="headline">Pale slate</h3>
+					<p data-part="summary"><code>pale</code> re-establishes a tinted fill under the ring.</p>
+				</ui-content>
+			</details>
+		</ui-reveal>
+
+		<ui-reveal theme="black pale border border(lg)" variant="ovr(bs) rds(lg-sq) flp scr ico(te) ico(sm) icc(drk)" media="asr(1/1) obp(tc) hov(zoom)">
+			<details name="racks">
+				<summary>
+					<ui-face>
+						<ui-media><img src="/assets/images/band_britpop.png" alt="" loading="lazy"></ui-media>
+						<ui-content><small>Britpop</small><strong>Camden Court</strong></ui-content>
+					</ui-face>
+					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+				</summary>
+				<ui-content content="pad(lg)">
+					<small data-part="eyebrow">black pale · border(lg)</small>
+					<h3 data-part="headline">Pale black</h3>
+					<p data-part="summary">The darkest ring the neutral ramp offers, over its softest fill.</p>
 				</ui-content>
 			</details>
 		</ui-reveal>
