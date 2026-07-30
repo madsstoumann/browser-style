@@ -337,13 +337,21 @@
 			padding-inline-start: var(--ui-reveal-icon-clear);
 		}
 
-		/* scr — lock the panel to the closed-card frame, scroll the overflow */
+	}
+
+	/* scr — ::details-content is the frame, the panel element is the scroller
+	   (readme.md § scr). grw brings its own frame, so it is excluded here. */
+	@container bs-rvl style(--_rvl: flp) or style(--_rvl: sld) {
 		:where(ui-reveal[variant~="scr"]) > details::details-content {
 			block-size: var(--ui-reveal-content-bs, auto);
 			inset: 0;
+			overflow: hidden;
+			position: absolute;
+		}
+		:where(ui-reveal[variant~="scr"]) > details > :where(:not(summary)) {
+			block-size: 100%;
 			overflow-y: auto;
 			overscroll-behavior: contain;
-			position: absolute;
 			scrollbar-color: var(--ui-reveal-scrollbar-color, color-mix(in oklab, currentColor 40%, transparent)) transparent;
 			scrollbar-gutter: auto;
 			scrollbar-width: thin;
@@ -364,11 +372,12 @@
 	@keyframes ui-reveal-icon-dip      { 0% { opacity: 1; } 40% { opacity: 0; } 100% { opacity: 1; } }
 	@keyframes ui-reveal-icon-dip-open { 0% { opacity: 1; } 40% { opacity: 0; } 100% { opacity: 1; } }
 
-	/* scroll fade-shadow — shared primitive in ui/base/scroll.css */
+	/* scroll fade-shadow — shared primitive in ui/base/scroll.css. Rides the
+	   panel element, not ::details-content (readme.md § scr). */
 	@supports (animation-timeline: scroll()) {
 		@media (prefers-reduced-motion: no-preference) {
-			@container bs-rvl style(--_rvl: flp) {
-				:where(ui-reveal[variant~="scr"]) > details[open]::details-content {
+			@container bs-rvl style(--_rvl: flp) or style(--_rvl: sld) {
+				:where(ui-reveal[variant~="scr"]) > details[open] > :where(:not(summary)) {
 					animation: ui-scroll-fade linear;
 					animation-timeline: --ui-reveal-scroll;
 					mask: var(--ui-scroll-fade-mask);

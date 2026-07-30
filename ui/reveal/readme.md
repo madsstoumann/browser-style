@@ -133,7 +133,7 @@ the same file `render.js` and the token lint read, so this list cannot drift fro
 | `lg:` animation | `lg:grw` | Swaps to the grow-morph at the `lg` width (≥ 44rem container), overriding the base one. **`grw` is the only animation with an `lg:` form** — there is no `lg:exp`, `lg:flp` or `lg:sld`. |
 | `trg(card)` | `card` | Whole card toggles, front and back — and **no `<ui-icon>` is rendered**. |
 | `pop` | *(bare flag)* | `exp` only — opens the card as a fixed, centered popup with a backdrop and pop-in. |
-| `scr` | *(bare flag)* | Locks a long panel to the card frame and scrolls the overflow. `flp` (any width) and the grow-morph — `grw` or `lg:grw` — whenever it is the active animation. |
+| `scr` | *(bare flag)* | Locks a long panel to the card frame and scrolls the overflow. `flp` and `sld` (both with the [edge fade](#scr--panel-scroll)), plus the grow-morph — `grw` or `lg:grw` — whenever it is the active animation. |
 | `ico()` | corner + style + size words, one per token | Positions and styles the toggle icon (see below). |
 | `icc()` | same words as `ico()` | Same words, applied only while the card is **open** (re-place / re-colour the icon on the back). |
 | `bdr` / `bdr()` | shade `lgt` `drk` · width `sm` `md` `lg` | The card engine's hairline border. On a reveal it paints on the direct-child **`> details`** — the rounded surface — not on the `<ui-reveal>` host box, so it follows `rds()` corners and the flip/grow transforms. Same tokens as the card ([ui-card-tokens.md](../card/ui-card-tokens.md#border--bdr)). |
@@ -160,6 +160,35 @@ Every deprecated `variant=` spelling a reveal can carry, generated from the mani
 <!-- /tokens -->
 
 `ovr()`'s six physical aliases (`ovr(tl)` `ovr(tr)` `ovr(cl)` `ovr(cr)` `ovr(bl)` `ovr(br)`) were **removed in v5** — use the logical `ovr(ts)` `ovr(te)` `ovr(cs)` `ovr(ce)` `ovr(bs)` `ovr(be)`. There were six, not nine: `ovr(tc)` / `ovr(cc)` / `ovr(bc)` are spelled identically in both grids and are unaffected. `ico()` / `icc()` were always logical-only.
+
+### `scr` — panel scroll
+
+`scr` clamps a long panel to the closed-card frame and scrolls the overflow. It is
+implemented on **two boxes**, not one:
+
+| Box | Role |
+|---|---|
+| `::details-content` | the **frame** — `position: absolute; inset: 0; overflow: hidden` |
+| the panel element (the one node after `</summary>`) | the **scroller** — `block-size: 100%; overflow-y: auto`, plus the scroll-driven edge fade |
+
+The split is required by the fade. A scroll-timeline declared on `::details-content`
+does not drive an animation on that pseudo — the registered properties
+`--ui-scroll-fade-start` / `--ui-scroll-fade-end` stay at their `0px` initial values
+and the mask paints nothing. Scroller and timeline therefore have to sit on the same
+**real** element, which is how `content="scr"` has always done it
+([content.css](../card/content.css)).
+
+**Per animation:**
+
+| Animation | Frame | Scroller | Edge fade |
+|---|---|---|---|
+| `flp` | `::details-content` | panel element | yes |
+| `sld` | `::details-content` | panel element | yes |
+| `grw` / `lg:grw` | its own — the morph animates the pseudo's insets and `block-size`, so `inset: 0` would break it | `::details-content` | no — the scroller is the pseudo |
+| `exp` / `pop` | — | — | — the panel grows in flow, nothing to clamp |
+
+Enabling the fade for `grw` means giving the morph a real inner scroller, which its
+current geometry does not have.
 
 ### `ico()` / `icc()` — toggle icon
 

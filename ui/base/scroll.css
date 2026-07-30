@@ -3,7 +3,7 @@
  * @author Mads Stoumann
  *
  * Shared scroll-driven edge-fade primitive. Consumed by content="scr"
- * (ui/card/content.css) and ui-reveal[scroll] (ui/reveal/ui-reveal.css): both
+ * (ui/card/content.css) and ui-reveal variant="scr" (ui/reveal/ui-reveal.css): both
  * animate --ui-scroll-fade-start/-end on a scroll-timeline and paint the same
  * --ui-scroll-fade-mask gradient. Extracted here so the two scrollers share one
  * source of truth (was duplicated inline in both sheets).
