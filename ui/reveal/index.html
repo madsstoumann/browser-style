@@ -17,25 +17,13 @@
 	<!-- <script type="module" src="/layout/polyfills/attr-fallback.js"></script> -->
 	<style>
 		.hero {
-			/* display: block; */
 			margin-block-end: var(--spacing-2xl);
-			/* No content= token covers either of these: the DSL has no leading
-			   arg (content.css:217 reads the property directly), and gap() sets
-			   --ui-content-gap, which ui-reveal.css:89 outranks on the panel. */
-			/* --ui-content-headline-line-height: 0.9; */
-			/* --ui-reveal-content-gap: 1.25em; */
+
 		}
 		ui-reveal ui-accordion { font-size: var(--font-size-sm); }
 
-		/* A themed panel retones its ink ramp, but NOT links — core.css pins
-		   <a> to --color-link, so the page blue survives onto a blue surface.
-		   No lnk() token exists in the content DSL; retone it per panel. */
 		ui-content[theme] { --color-link: currentColor; --color-link-visited: currentColor; }
 
-		/* exp pop — the tint left behind in the grid cell while the card is
-		   lifted out. Artwork-sampled per card, so it's content data, not a
-		   theme: it must NOT touch the popup panel, the icon chrome or the
-		   color-scheme the way theme= would. */
 		.pop-starfall  { --ui-reveal-expand-fixed-bg: #6a69ab; }
 		.pop-frontier  { --ui-reveal-expand-fixed-bg: #664a31; }
 		.pop-imperium  { --ui-reveal-expand-fixed-bg: #6d6358; }
