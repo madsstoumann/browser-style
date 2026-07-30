@@ -302,6 +302,8 @@ Combine variants via space-separated values. These only override custom properti
 
 ### Hide summary on open (`variant="hide-summary"`)
 
+Open items get an extra `padding-block` (`--ui-accordion-padding-block`) on the `<details>` itself, so the open card has more breathing room than a plain row.
+
 Collapses the summary of the open item, revealing only its content. Closed items keep their summaries, so the group reads as a list of labels with one expanded panel.
 
 **Required pairing:** `no-collapse` + a group (`group` on `<ui-accordion>`, or native `name` on `<details>`). Because the open item's summary is hidden, there is no toggle left to close it — you switch panels by opening another item. `no-collapse` keeps one item always open and the group makes it exclusive. Omit either and the open item becomes a dead end with no summary to click. The variant is purely visual and composes with any layout, including `type="split"` (hide the summary, keep the media-on-right) and `separate pill filled` (chip column).
@@ -468,7 +470,40 @@ or per-instance:
 <ui-accordion indent style="--ui-accordion-padding-inline: 0.5rem">…</ui-accordion>
 ```
 
+With variants that don't pad the details themselves (no `bordered`/`breakout`), nested leaf rows also get a `padding-inline-end` of one step, so their icons align with the parent summaries'.
+
 ---
+
+## Staggered panel content
+
+Panel children can cascade in via the shared engine in `ui/base/stagger.css`. Two forms:
+
+```html
+<!-- native wrapper: data-stagger on the element after <summary> -->
+<details name="faq">
+  <summary>Shipping</summary>
+  <div data-stagger>
+    <p>First paragraph…</p>
+    <p>Second paragraph…</p>
+  </div>
+</details>
+
+<!-- nested accordion: bare stagger on the component — the engine staggers
+     the items inside its <cq-box> -->
+<details name="mega">
+  <summary>Products</summary>
+  <ui-accordion variant="divided" group="products" stagger>…</ui-accordion>
+</details>
+```
+
+- Children must be **elements** — bare text nodes aren't staggered.
+- Effect tokens as attribute values: `rise` (default) · `fall` · `lft` · `rgt` · `zom` · `blr` · `fde`.
+- Tune via the global `--stagger-*` tokens (`ui/base/tokens.css`).
+- In plain accordion mode the cascade plays on first open (the panel collapse caches rendering, so re-opens don't replay — the height expansion is the reveal). In tabs mode (`tabs="… panel"`) staggered panels stay rendered while closed and **replay on every switch**.
+
+## Panel spacing — edge-margin trim
+
+`::details-content`'s `padding-block` owns the panel spacing. The component zeroes content blocks' own block margins and trims the wrapper's first/last-child edge margins, so a `<p>`'s default margin never stacks on top of the padding (margins *between* paragraphs are preserved). In `type="split"`, the trailing `[data-split]` media is out of flow when open, so the trim targets the last **non-split** child instead.
 
 ## Morph into tabs
 
@@ -505,6 +540,8 @@ Load `@browser.style/tabs` alongside `@browser.style/accordion` and add a `tabs`
 Any value the tabs component accepts (`pill`, `rounded`, `bordered`, `compact`, `ellipse`, `panel`, `bleed`) works on the `tabs="…"` attribute — see the tabs readme. One additional accordion-specific token is also recognised: `expanded`, which turns the tabs renderer into a mega-menu (see below).
 
 ### Mega-menu with `tabs="… expanded"`
+
+> Full working example — sticky header, mobile slide-in drawer, scroll-direction hide/reveal, click-outside dismiss: [`menu.html`](./menu.html).
 
 Add `expanded` to the `tabs="…"` token list to turn the active tab panel into a mega-menu: every nested `<ui-accordion>` inside the panel renders fully expanded (all `::details-content` visible), nested summaries become static labels (no cursor, no clicks, no expand/collapse icons), and the whole subtree of the active tab is shown at once.
 

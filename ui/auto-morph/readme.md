@@ -88,6 +88,27 @@ auto-morph[render="tabs"] {
 
 The auto-morph package is a convenience for the common case.
 
+## Slide-in panel — `slide-from="right|left"`
+
+Below 650px viewport width, the wrapper becomes a fixed, full-viewport (100vw × 100dvh) panel, slid offscreen toward the given edge — the classic mobile menu drawer. CSS-only open contract: a **preceding sibling** checked input (bare, or wrapped in a label) opens it:
+
+```html
+<label aria-label="Toggle menu">
+  <input type="checkbox" id="menu-toggle">
+  <ui-icon type="burger-menu"></ui-icon>
+</label>
+<auto-morph render="tabs" slide-from="right">
+  <ui-accordion tabs="bleed compact expanded panel">…</ui-accordion>
+</auto-morph>
+```
+
+- Closed = `display: none` + translated offscreen + `visibility: hidden` — no layout box (a transformed ancestor would otherwise pull the fixed panel into layout as horizontal overflow), content unfocusable while hidden.
+- Slide in/out both animate (`allow-discrete` display transition + a standalone `@starting-style` that re-fires on every open).
+- The offscreen shift overshoots by 2rem — with `scrollbar-gutter` the panel is narrower than `100vw`, and a plain `100%` shift would leave a gutter-wide sliver.
+- The toggle input must live **outside** the panel to stay keyboard-reachable.
+- Tokens: `--auto-morph-bg` (default `--color-surface`), `--auto-morph-duration` (default `--duration-slow`).
+- Full demo: [`ui/accordion/menu.html`](../accordion/menu.html) — sticky header, scroll-direction hide/reveal, click-outside dismiss.
+
 ## Composition with cascade layers
 
 Rules sit inside `@layer bs-component`, matching the rest of `@browser.style/*`. Authored overrides outside any layer (or in a later layer) win without specificity gymnastics.

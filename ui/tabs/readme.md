@@ -94,7 +94,7 @@ Space-separated tokens. Combinable.
 
 | Attribute | Effect |
 |---|---|
-| `no-collapse` | Clicking the active tab does nothing — one tab is always open. |
+| `no-collapse` | Clicking the active tab does nothing — one tab is always open. Pointer-only guard: a keyboard user can still focus the active tab and close it with Space/Enter (native `<details>` toggle). |
 
 ### Decoration via classes
 
@@ -159,11 +159,9 @@ All tokens are scoped to `:where(ui-tabs)` — low specificity, easy to override
 | `--ui-tabs-rounded-radius` | `var(--radius-lg)` | Radius used by `variant="rounded"`. |
 | `--ui-tabs-squircle-exp` | `2` | Superellipse curvature (log2 scale) for `variant="ellipse"`. `1` = round; `2` = squircle; higher = squarer corners. |
 | `--ui-tabs-squircle-radius` | `1em` | Corner radius for `variant="ellipse"`. |
-| `--ui-tabs-stagger-distance` | `2rem` | How far staggered children rise from on entry (`translate`). |
-| `--ui-tabs-stagger-duration` | `0.5s` | Per-child enter transition duration. |
-| `--ui-tabs-stagger-easing` | `cubic-bezier(0.16, 1, 0.3, 1)` | Per-child enter easing. |
-| `--ui-tabs-stagger-step` | `0.07s` | Delay added per child (child *n* starts at `(n − 1) × step`). |
 | `--ui-tabs-tab-gap` | `1ch` | Gap between tab label and any inline icon. |
+
+Stagger timing/distance is tuned via the **global** `--stagger-*` tokens (`ui/base/tokens.css`): `--stagger-begin`, `--stagger-distance`, `--stagger-duration`, `--stagger-easing`, `--stagger-step` — the engine lives in `ui/base/stagger.css`.
 
 ---
 
@@ -288,7 +286,9 @@ Opt in by adding `data-stagger` to the panel wrapper (the element after `<summar
 </ui-tabs>
 ```
 
-- **Any number of children** — each child is offset from the previous by `--ui-tabs-stagger-step`, computed with `sibling-index()`.
+- **Any number of children** — each child is offset from the previous by the global `--stagger-step`, computed with `sibling-index()`.
+- **Effect tokens** — `data-stagger` defaults to `rise`; other values: `fall`, `lft`, `rgt`, `zom`, `blr`, `fde` (e.g. `data-stagger="zom"` for bordered/panel frames where a rise would start outside the box).
+- **Custom-element hosts** — a component whose only child is a `<cq-box>` (e.g. a nested `<ui-accordion stagger>`) works too: the engine staggers the cq-box's children.
 - **`data-stagger` is the wrapper, not the items** — it goes on the single element after `<summary>`; the things that animate are that element's direct children.
 - **Layout is yours** — `data-stagger` only drives the entry animation. Make the wrapper a grid/flex container yourself (e.g. a `.grid` class). The stagger doesn't impose layout.
 
@@ -296,10 +296,10 @@ Opt in by adding `data-stagger` to the panel wrapper (the element after `<summar
 
 ```css
 .my-tabs {
-  --ui-tabs-stagger-step: 0.05s;     /* tighter cascade            */
-  --ui-tabs-stagger-duration: 0.6s;  /* slower per-child move       */
-  --ui-tabs-stagger-distance: 1rem;  /* shorter rise                */
-  --ui-tabs-stagger-easing: ease-out;
+  --stagger-step: 0.05s;     /* tighter cascade       */
+  --stagger-duration: 0.6s;  /* slower per-child move */
+  --stagger-distance: 1rem;  /* shorter rise          */
+  --stagger-easing: ease-out;
 }
 ```
 
