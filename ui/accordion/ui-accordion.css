@@ -70,7 +70,8 @@
 					}
 					/* staggered panel children (ui/base/stagger.css) — hold their boxes
 					   through the block-size collapse so close still animates */
-					&:not([open]) > :where([stagger], [data-stagger]) > * {
+					&:not([open]) > :where([stagger], [data-stagger]) > :not(cq-box),
+					&:not([open]) > :where([stagger], [data-stagger]) > cq-box > * {
 						transition: display var(--ui-accordion-duration) allow-discrete;
 					}
 					&:has(> summary:focus-visible) {

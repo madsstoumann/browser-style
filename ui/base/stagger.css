@@ -91,10 +91,15 @@
 		details:has(> :is([stagger], [data-stagger]))::details-content {
 			content-visibility: visible;
 		}
-		details:not([open]) > :is([stagger], [data-stagger]) > * {
+		/* subjects are the host's direct children — or, when the host is a
+		   component whose only child is a <cq-box> wrapper (e.g. a nested
+		   <ui-accordion stagger>), the cq-box's children instead */
+		details:not([open]) > :is([stagger], [data-stagger]) > :not(cq-box),
+		details:not([open]) > :is([stagger], [data-stagger]) > cq-box > * {
 			display: none;
 		}
-		details[open] > :is([stagger], [data-stagger]) > * {
+		details[open] > :is([stagger], [data-stagger]) > :not(cq-box),
+		details[open] > :is([stagger], [data-stagger]) > cq-box > * {
 			filter: none;
 			opacity: 1;
 			scale: 1;
@@ -109,7 +114,8 @@
 		}
 		/* standalone @starting-style — the form that re-fires on each re-open */
 		@starting-style {
-			details[open] > :is([stagger], [data-stagger]) > * {
+			details[open] > :is([stagger], [data-stagger]) > :not(cq-box),
+			details[open] > :is([stagger], [data-stagger]) > cq-box > * {
 				filter: var(--_stg-fl, none);
 				opacity: 0;
 				scale: var(--_stg-sc, 1);

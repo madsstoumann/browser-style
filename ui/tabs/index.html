@@ -6,6 +6,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="Tabs component: A tabbed interface built on native details/summary elements with a sliding indicator.">
+	<!-- layer order: layout first, so bs-component rules (e.g. tabs panel padding)
+	     outrank lay-out's own var-driven padding (layer order beats specificity) -->
+	<style>@layer layout, bs-core, bs-component;</style>
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="ui-tabs.css">
@@ -29,26 +32,26 @@
 		<cq-box>
 			<details name="tabs-default" open>
 				<summary>Shipping</summary>
-				<div>
-					The shipping time depends on your location, the method chosen, and product availability. We aim to process and ship orders within 1–2 business days.
+				<div data-stagger>
+					<p>The shipping time depends on your location, the method chosen, and product availability. We aim to process and ship orders within 1–2 business days.</p>
 				</div>
 			</details>
 			<details name="tabs-default">
 				<summary>Payment</summary>
-				<div>
-					We accept major credit cards (Visa, Mastercard, American Express) plus PayPal, Apple Pay, and Google Pay.
+				<div data-stagger>
+					<p>We accept major credit cards (Visa, Mastercard, American Express) plus PayPal, Apple Pay, and Google Pay.</p>
 				</div>
 			</details>
 			<details name="tabs-default">
 				<summary>Returns</summary>
-				<div>
-					Not satisfied? Return within 30 days for a full refund. Items must be in their original condition and packaging.
+				<div data-stagger>
+					<p>Not satisfied? Return within 30 days for a full refund. Items must be in their original condition and packaging.</p>
 				</div>
 			</details>
 			<details name="tabs-default">
 				<summary>Support</summary>
-				<div>
-					Our support team is here by phone, email, or live chat during business hours.
+				<div data-stagger>
+					<p>Our support team is here by phone, email, or live chat during business hours.</p>
 				</div>
 			</details>
 		</cq-box>
@@ -59,19 +62,19 @@
 		<cq-box>
 			<details name="tabs-subtle">
 				<summary>Shipping</summary>
-				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+				<div data-stagger><p>The shipping time depends on your location, the method chosen, and product availability.</p></div>
 			</details>
 			<details name="tabs-subtle" open>
 				<summary>Payment</summary>
-				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+				<div data-stagger><p>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</p></div>
 			</details>
 			<details name="tabs-subtle">
 				<summary>Returns</summary>
-				<div>Return within 30 days for a full refund.</div>
+				<div data-stagger><p>Return within 30 days for a full refund.</p></div>
 			</details>
 			<details name="tabs-subtle">
 				<summary>Support</summary>
-				<div>Support via phone, email, or live chat.</div>
+				<div data-stagger><p>Support via phone, email, or live chat.</p></div>
 			</details>
 		</cq-box>
 	</ui-tabs>
@@ -81,19 +84,19 @@
 		<cq-box>
 			<details name="tabs-accent">
 				<summary>Shipping</summary>
-				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+				<div data-stagger><p>The shipping time depends on your location, the method chosen, and product availability.</p></div>
 			</details>
 			<details name="tabs-accent" open>
 				<summary>Payment</summary>
-				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+				<div data-stagger><p>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</p></div>
 			</details>
 			<details name="tabs-accent">
 				<summary>Returns</summary>
-				<div>Return within 30 days for a full refund.</div>
+				<div data-stagger><p>Return within 30 days for a full refund.</p></div>
 			</details>
 			<details name="tabs-accent">
 				<summary>Support</summary>
-				<div>Support via phone, email, or live chat.</div>
+				<div data-stagger><p>Support via phone, email, or live chat.</p></div>
 			</details>
 		</cq-box>
 	</ui-tabs>
@@ -103,19 +106,19 @@
 		<cq-box>
 			<details name="tabs-line-above">
 				<summary>Shipping</summary>
-				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+				<div data-stagger><p>The shipping time depends on your location, the method chosen, and product availability.</p></div>
 			</details>
 			<details name="tabs-line-above">
 				<summary>Payment</summary>
-				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+				<div data-stagger><p>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</p></div>
 			</details>
 			<details name="tabs-line-above" open>
 				<summary>Returns</summary>
-				<div>Return within 30 days for a full refund.</div>
+				<div data-stagger><p>Return within 30 days for a full refund.</p></div>
 			</details>
 			<details name="tabs-line-above">
 				<summary>Support</summary>
-				<div>Support via phone, email, or live chat.</div>
+				<div data-stagger><p>Support via phone, email, or live chat.</p></div>
 			</details>
 		</cq-box>
 	</ui-tabs>
@@ -125,19 +128,19 @@
 		<cq-box>
 			<details name="tabs-fill-accent">
 				<summary>Shipping</summary>
-				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+				<div data-stagger><p>The shipping time depends on your location, the method chosen, and product availability.</p></div>
 			</details>
 			<details name="tabs-fill-accent" open>
 				<summary>Payment</summary>
-				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+				<div data-stagger><p>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</p></div>
 			</details>
 			<details name="tabs-fill-accent">
 				<summary>Returns</summary>
-				<div>Return within 30 days for a full refund.</div>
+				<div data-stagger><p>Return within 30 days for a full refund.</p></div>
 			</details>
 			<details name="tabs-fill-accent">
 				<summary>Support</summary>
-				<div>Support via phone, email, or live chat.</div>
+				<div data-stagger><p>Support via phone, email, or live chat.</p></div>
 			</details>
 		</cq-box>
 	</ui-tabs>
@@ -147,19 +150,19 @@
 		<cq-box>
 			<details name="tabs-fill-accent-ellipse" open>
 				<summary>Shipping</summary>
-				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+				<div data-stagger><p>The shipping time depends on your location, the method chosen, and product availability.</p></div>
 			</details>
 			<details name="tabs-fill-accent-ellipse">
 				<summary>Payment</summary>
-				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+				<div data-stagger><p>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</p></div>
 			</details>
 			<details name="tabs-fill-accent-ellipse">
 				<summary>Returns</summary>
-				<div>Return within 30 days for a full refund.</div>
+				<div data-stagger><p>Return within 30 days for a full refund.</p></div>
 			</details>
 			<details name="tabs-fill-accent-ellipse">
 				<summary>Support</summary>
-				<div>Support via phone, email, or live chat.</div>
+				<div data-stagger><p>Support via phone, email, or live chat.</p></div>
 			</details>
 		</cq-box>
 	</ui-tabs>
@@ -169,19 +172,19 @@
 		<cq-box>
 			<details name="tabs-fill-accent-pill" open>
 				<summary>Shipping</summary>
-				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+				<div data-stagger><p>The shipping time depends on your location, the method chosen, and product availability.</p></div>
 			</details>
 			<details name="tabs-fill-accent-pill">
 				<summary>Payment</summary>
-				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+				<div data-stagger><p>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</p></div>
 			</details>
 			<details name="tabs-fill-accent-pill">
 				<summary>Returns</summary>
-				<div>Return within 30 days for a full refund.</div>
+				<div data-stagger><p>Return within 30 days for a full refund.</p></div>
 			</details>
 			<details name="tabs-fill-accent-pill">
 				<summary>Support</summary>
-				<div>Support via phone, email, or live chat.</div>
+				<div data-stagger><p>Support via phone, email, or live chat.</p></div>
 			</details>
 		</cq-box>
 	</ui-tabs>
@@ -191,19 +194,19 @@
 		<cq-box>
 			<details name="tabs-pill" open>
 				<summary>Shipping</summary>
-				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+				<div data-stagger><p>The shipping time depends on your location, the method chosen, and product availability.</p></div>
 			</details>
 			<details name="tabs-pill">
 				<summary>Payment</summary>
-				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+				<div data-stagger><p>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</p></div>
 			</details>
 			<details name="tabs-pill">
 				<summary>Returns</summary>
-				<div>Return within 30 days for a full refund.</div>
+				<div data-stagger><p>Return within 30 days for a full refund.</p></div>
 			</details>
 			<details name="tabs-pill">
 				<summary>Support</summary>
-				<div>Support via phone, email, or live chat.</div>
+				<div data-stagger><p>Support via phone, email, or live chat.</p></div>
 			</details>
 		</cq-box>
 	</ui-tabs>
@@ -213,19 +216,19 @@
 		<cq-box>
 			<details name="tabs-squircle">
 				<summary>Shipping</summary>
-				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+				<div data-stagger><p>The shipping time depends on your location, the method chosen, and product availability.</p></div>
 			</details>
 			<details name="tabs-squircle">
 				<summary>Payment</summary>
-				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+				<div data-stagger><p>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</p></div>
 			</details>
 			<details name="tabs-squircle">
 				<summary>Returns</summary>
-				<div>Return within 30 days for a full refund.</div>
+				<div data-stagger><p>Return within 30 days for a full refund.</p></div>
 			</details>
 			<details name="tabs-squircle" open>
 				<summary>Support</summary>
-				<div>Support via phone, email, or live chat.</div>
+				<div data-stagger><p>Support via phone, email, or live chat.</p></div>
 			</details>
 		</cq-box>
 	</ui-tabs>
@@ -237,19 +240,19 @@
 		<cq-box>
 			<details name="tabs-outline">
 				<summary>Shipping</summary>
-				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+				<div data-stagger><p>The shipping time depends on your location, the method chosen, and product availability.</p></div>
 			</details>
 			<details name="tabs-outline" open>
 				<summary>Payment</summary>
-				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+				<div data-stagger><p>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</p></div>
 			</details>
 			<details name="tabs-outline">
 				<summary>Returns</summary>
-				<div>Return within 30 days for a full refund.</div>
+				<div data-stagger><p>Return within 30 days for a full refund.</p></div>
 			</details>
 			<details name="tabs-outline">
 				<summary>Support</summary>
-				<div>Support via phone, email, or live chat.</div>
+				<div data-stagger><p>Support via phone, email, or live chat.</p></div>
 			</details>
 		</cq-box>
 	</ui-tabs>
@@ -260,19 +263,19 @@
 		<cq-box>
 			<details name="tabs-rounded" open>
 				<summary>Shipping</summary>
-				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+				<div data-stagger="zom"><p>The shipping time depends on your location, the method chosen, and product availability.</p></div>
 			</details>
 			<details name="tabs-rounded">
 				<summary>Payment</summary>
-				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+				<div data-stagger="zom"><p>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</p></div>
 			</details>
 			<details name="tabs-rounded">
 				<summary>Returns</summary>
-				<div>Return within 30 days for a full refund.</div>
+				<div data-stagger="zom"><p>Return within 30 days for a full refund.</p></div>
 			</details>
 			<details name="tabs-rounded">
 				<summary>Support</summary>
-				<div>Support via phone, email, or live chat.</div>
+				<div data-stagger="zom"><p>Support via phone, email, or live chat.</p></div>
 			</details>
 		</cq-box>
 	</ui-tabs>
@@ -282,15 +285,15 @@
 		<cq-box>
 			<details name="tabs-compact" open>
 				<summary>Shipping</summary>
-				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
+				<div data-stagger="zom"><p>The shipping time depends on your location, the method chosen, and product availability.</p></div>
 			</details>
 			<details name="tabs-compact">
 				<summary>Payment</summary>
-				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+				<div data-stagger="zom"><p>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</p></div>
 			</details>
 			<details name="tabs-compact">
 				<summary>Returns</summary>
-				<div>Return within 30 days for a full refund.</div>
+				<div data-stagger="zom"><p>Return within 30 days for a full refund.</p></div>
 			</details>
 		</cq-box>
 	</ui-tabs>
@@ -300,19 +303,19 @@
 		<cq-box>
 			<details name="tabs-minimal" open>
 				<summary>Overview</summary>
-				<div>A clean, minimal tab strip — just text labels with a sliding underline to mark the active section.</div>
+				<div data-stagger><p>A clean, minimal tab strip — just text labels with a sliding underline to mark the active section.</p></div>
 			</details>
 			<details name="tabs-minimal">
 				<summary>Features</summary>
-				<div>Built on native <code>&lt;details&gt;</code> + <code>&lt;summary&gt;</code>, enhanced with CSS anchor positioning for the indicator.</div>
+				<div data-stagger><p>Built on native <code>&lt;details&gt;</code> + <code>&lt;summary&gt;</code>, enhanced with CSS anchor positioning for the indicator.</p></div>
 			</details>
 			<details name="tabs-minimal">
 				<summary>Pricing</summary>
-				<div>Free and open source under MIT.</div>
+				<div data-stagger><p>Free and open source under MIT.</p></div>
 			</details>
 			<details name="tabs-minimal">
 				<summary>FAQ</summary>
-				<div>Frequently asked questions go here.</div>
+				<div data-stagger><p>Frequently asked questions go here.</p></div>
 			</details>
 		</cq-box>
 	</ui-tabs>
@@ -324,44 +327,58 @@
 		<cq-box>
 			<details name="tabs-panel" open>
 				<summary>Shipping</summary>
-				<div>The shipping time depends on your location, the method chosen, and product availability. We aim to process and ship orders within 1–2 business days.</div>
+				<div data-stagger="zom"><p>The shipping time depends on your location, the method chosen, and product availability. We aim to process and ship orders within 1–2 business days.</p></div>
 			</details>
 			<details name="tabs-panel">
 				<summary>Payment</summary>
-				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
+				<div data-stagger="zom"><p>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</p></div>
 			</details>
 			<details name="tabs-panel">
 				<summary>Returns</summary>
-				<div>Return within 30 days for a full refund.</div>
+				<div data-stagger="zom"><p>Return within 30 days for a full refund.</p></div>
 			</details>
 			<details name="tabs-panel">
 				<summary>Support</summary>
-				<div>Support via phone, email, or live chat.</div>
+				<div data-stagger="zom"><p>Support via phone, email, or live chat.</p></div>
 			</details>
 		</cq-box>
 	</ui-tabs>
 
+
+	<br>
+	<h2>Bleed</h2>
+	<p>Header and panel bleed to the viewport edges; the text keeps its column:</p>
+	<ui-tabs variant="bleed panel">
+		<cq-box>
+			<details name="tabs-bleed-panel">
+				<summary>Shipping</summary>
+				<div data-stagger="lft"><p>The shipping time depends on your location, the method chosen, and product availability.</p></div>
+			</details>
+			<details name="tabs-bleed-panel">
+				<summary>Payment</summary>
+				<div data-stagger="lft"><p>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</p></div>
+			</details>
+			<details name="tabs-bleed-panel">
+				<summary>Returns</summary>
+				<div data-stagger="lft"><p>Return within 30 days for a full refund.</p></div>
+			</details>
+			<details name="tabs-bleed-panel">
+				<summary>Support</summary>
+				<div data-stagger="lft"><p>Support via phone, email, or live chat.</p></div>
+			</details>
+		</cq-box>
+	</ui-tabs>
+	<p>See also: <a href="/ui/accordion/menu.html">Full-bleed mega-menu example</a>.</p>
+
 	<br><hr>
 	<h2>Staggered reveal</h2>
-	<p>
-		Panel content animates in when its tab opens — powered by the shared engine in
-		<code>ui/base/stagger.css</code>. Mark the grid with the <code>stagger</code>
-		attribute (bare on custom elements like <code>&lt;lay-out&gt;</code>;
-		<code>data-stagger</code> on native elements) — each direct child is offset by
-		<code>sibling-index()</code>, so the cards cascade into place. Switching tabs
-		replays the stagger every time — re-opening an already-shown tab restarts it.
-		Effect tokens: <code>rise</code> (default) · <code>fall</code> · <code>lft</code> ·
-		<code>rgt</code> · <code>zom</code> · <code>blr</code> · <code>fde</code> — the
-		third tab uses <code>stagger="zom"</code>. Reduced-motion users get an instant
-		show. Cards are <code>&lt;ui-reveal&gt;</code> components; layout is a
-		<code>&lt;lay-out md="columns(3)"&gt;</code>.
-	</p>
+	<p>Cards cascade in on every tab switch — mark the grid with <code>stagger</code> (the third tab uses <code>stagger="zom"</code>):</p>
 	<ui-tabs class="tabs-line" no-collapse>
 		<cq-box>
 			<details name="tabs-stagger" open>
 				<summary>Games</summary>
 				<lay-out xs="pbs(1)" md="grid(3a)" lg="columns(3)" stagger>
-					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm)" media="asr(3/4) obp(cc) scm hov(zoom)">
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) ico(drk) icc(drk)" media="asr(3/4) obp(cc) scm hov(zoom)">
 						<details name="stagger-games">
 							<summary>
 								<ui-face>
@@ -378,7 +395,7 @@
 							</ui-content>
 						</details>
 					</ui-reveal>
-					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm)" media="asr(3/4) obp(cc) hov(pan)">
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) hov(pan)">
 						<details name="stagger-games">
 							<summary>
 								<ui-face>
@@ -395,7 +412,7 @@
 							</ui-content>
 						</details>
 					</ui-reveal>
-					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm)" media="asr(3/4) obp(cc) scm hov(zoom)">
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) ico(drk) icc(drk)" media="asr(3/4) obp(cc) scm hov(zoom)">
 						<details name="stagger-games">
 							<summary>
 								<ui-face>
@@ -417,7 +434,7 @@
 			<details name="tabs-stagger">
 				<summary>Bands</summary>
 				<lay-out xs="pbs(1)" md="grid(3a)" lg="columns(3)" stagger>
-					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm)" media="asr(3/4) obp(cc) hov(pan)">
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) hov(pan)">
 						<details name="stagger-bands">
 							<summary>
 								<ui-face>
@@ -434,7 +451,7 @@
 							</ui-content>
 						</details>
 					</ui-reveal>
-					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm)" media="asr(3/4) obp(cc) hov(zoom)">
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) hov(zoom)">
 						<details name="stagger-bands">
 							<summary>
 								<ui-face>
@@ -451,7 +468,7 @@
 							</ui-content>
 						</details>
 					</ui-reveal>
-					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm)" media="asr(3/4) obp(cc) scm hov(pan)">
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) ico(drk) icc(drk)" media="asr(3/4) obp(cc) scm hov(pan)">
 						<details name="stagger-bands">
 							<summary>
 								<ui-face>
@@ -473,7 +490,7 @@
 			<details name="tabs-stagger">
 				<summary>Movies</summary>
 				<lay-out xs="pbs(1)" md="grid(3a)" lg="columns(3)" stagger>
-					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm)" media="asr(3/4) obp(cc) scm hov(zoom)">
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) scm hov(zoom)">
 						<details name="stagger-movies">
 							<summary>
 								<ui-face>
@@ -503,7 +520,7 @@
 							</ui-content>
 						</details>
 					</ui-reveal>
-					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm)" media="asr(3/4) obp(cc) scm hov(pan)">
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) scm hov(pan)">
 						<details name="stagger-movies">
 							<summary>
 								<ui-face>
@@ -533,7 +550,7 @@
 							</ui-content>
 						</details>
 					</ui-reveal>
-					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm)" media="asr(3/4) obp(cc) scm hov(zoom)">
+					<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) scm hov(zoom)">
 						<details name="stagger-movies">
 							<summary>
 								<ui-face>
@@ -564,52 +581,6 @@
 						</details>
 					</ui-reveal>
 				</lay-out>
-			</details>
-		</cq-box>
-	</ui-tabs>
-
-	<br>
-	<h2>Bleed</h2>
-	<p>Header background extends to the viewport edges, escaping the centered column:</p>
-	<ui-tabs variant="bleed">
-		<cq-box>
-			<details name="tabs-bleed">
-				<summary>Shipping</summary>
-				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
-			</details>
-			<details name="tabs-bleed">
-				<summary>Payment</summary>
-				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
-			</details>
-			<details name="tabs-bleed">
-				<summary>Returns</summary>
-				<div>Return within 30 days for a full refund.</div>
-			</details>
-			<details name="tabs-bleed">
-				<summary>Support</summary>
-				<div>Support via phone, email, or live chat.</div>
-			</details>
-		</cq-box>
-	</ui-tabs>
-
-	<p>Both header and panel bleed; text stays columned:</p>
-	<ui-tabs variant="bleed panel">
-		<cq-box>
-			<details name="tabs-bleed-panel">
-				<summary>Shipping</summary>
-				<div>The shipping time depends on your location, the method chosen, and product availability.</div>
-			</details>
-			<details name="tabs-bleed-panel">
-				<summary>Payment</summary>
-				<div>We accept major credit cards plus PayPal, Apple Pay, and Google Pay.</div>
-			</details>
-			<details name="tabs-bleed-panel">
-				<summary>Returns</summary>
-				<div>Return within 30 days for a full refund.</div>
-			</details>
-			<details name="tabs-bleed-panel">
-				<summary>Support</summary>
-				<div>Support via phone, email, or live chat.</div>
 			</details>
 		</cq-box>
 	</ui-tabs>

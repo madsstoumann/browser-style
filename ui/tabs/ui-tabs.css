@@ -120,7 +120,15 @@
 				grid-template-rows: subgrid;
 				pointer-events: none;
 
-				& > :not(summary) { padding: var(--ui-tabs-panel-padding-block) var(--ui-tabs-panel-padding-inline); }
+				/* panel padding owns the spacing — trim the wrapper's own block
+				   margins and its children's edge margins (a p's default margin
+				   would otherwise stack on top of the padding) */
+				& > :not(summary) {
+					margin-block: 0;
+					padding: var(--ui-tabs-panel-padding-block) var(--ui-tabs-panel-padding-inline);
+					> :first-child { margin-block-start: 0; }
+					> :last-child { margin-block-end: 0; }
+				}
 
 				&::details-content {
 					grid-column: 1 / -1;
@@ -258,7 +266,8 @@
 			/* staggered panel children (ui/base/stagger.css) — hold their boxes
 			   through the height collapse/switch morph, else the stagger adapter's
 			   instant display:none zeroes the closing panel's height mid-motion */
-			> cq-box > details:not([open]) > :is([stagger], [data-stagger]) > * {
+			> cq-box > details:not([open]) > :is([stagger], [data-stagger]) > :not(cq-box),
+			> cq-box > details:not([open]) > :is([stagger], [data-stagger]) > cq-box > * {
 				transition: display calc(2 * var(--ui-tabs-panel-duration)) allow-discrete;
 			}
 			> cq-box > details[open] > :not(summary) {
@@ -331,6 +340,15 @@
 
 		/* no-collapse — one tab stays open; scoped to the tab's own summary. */
 		:is(ui-tabs[no-collapse], [tabs][no-collapse]) > cq-box > details[open] > summary { pointer-events: none; }
+	}
+
+	/* stagger subjects inside a NESTED accordion sit where --_render is `none`
+	   (the expanded lift), so the in-gate hold rule above can't reach them —
+	   repeat it through the named outer container (see ui-accordion.css) */
+	@container tabs-expanded style(--_render: tabs) {
+		:where(ui-accordion[tabs~="panel"][tabs~="expanded"]) > cq-box > details:not([open]) > :is([stagger], [data-stagger]) > cq-box > * {
+			transition: display calc(2 * var(--ui-tabs-panel-duration)) allow-discrete;
+		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
