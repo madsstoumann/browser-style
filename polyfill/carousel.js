@@ -27,7 +27,11 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 // Whole-token needles, mirroring carousel.js: a bare [media*="nav"] substring would
 // also fire on any future token that merely CONTAINS "nav".
 const NAV = ':is([media~="nav"], [media*="nav("])';
-const SEL = `ui-media${NAV}, :is(ui-card${NAV}, ui-reveal${NAV}) ui-media`;
+// scrollers: a <ui-media> (own token or via its card host) AND a <lay-out overflow>,
+// which is its own scroller and carries the same media= vocabulary (see
+// layout/AGENTS.md § "Carousel controls"). The native sheet has always matched
+// `:where(ui-media, lay-out[overflow])`; this is the polyfill catching up.
+const SEL = `ui-media${NAV}, :is(ui-card${NAV}, ui-reveal${NAV}) ui-media, lay-out[overflow]${NAV}`;
 // mirrors the core slide filter (NOT_SLIDE in ui/card/shared.js) + our own injected
 // element. Kept LOCAL on purpose: this polyfill imports nothing, so it can be loaded
 // standalone behind a @supports gate. The copy is safe because drift is a build
