@@ -55,15 +55,16 @@ Or via CSS `@import`:
 <ui-sticker fill="#3E9355" ink="#fff">Best value</ui-sticker>
 ```
 
-### Web Component
+### JavaScript (optional — adds nothing)
 
-Import the module to register `<ui-sticker>`:
+`<ui-sticker>` is CSS-only. There is no JS-enhanced version:
 
 ```js
 import '@browser.style/sticker';
 ```
 
-The web component uses the **exact same** HTML structure as CSS-only — the JS only registers the element.
+only registers the tag — the class body is empty. The entry point exists so the
+import resolves; markup, styling and behaviour are identical without it.
 
 #### Attributes
 

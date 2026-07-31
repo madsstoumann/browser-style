@@ -3,6 +3,18 @@
 		--min: attr(min type(<number>), 1);
 		--max: attr(max type(<number>), 5);
 		--value: attr(value type(<number>), 3);
+		/* Typed attr() fallback — Safari/Firefox. A custom property PARSES the
+		   literal `attr(…)` stream, so these never go guaranteed-invalid; --_x's
+		   calc() then dies at computed-value time and the gradient stop collapses,
+		   i.e. the rating renders EMPTY regardless of value=. Restore the attr()
+		   defaults; ../base/polyfills/attr-fallback.js upgrades to the element's
+		   own min/max/value. Detect on a REAL property — `--x: attr(…)` is true in
+		   Safari too. */
+		@supports not (background-color: attr(x type(<color>), red)) {
+			--min: 1;
+			--max: 5;
+			--value: 3;
+		}
 
 		--_bgi: linear-gradient(to var(--_dir, right), var(--ui-rating-c, gold) 0 var(--_x), var(--ui-rating-bg, var(--ButtonFace)) 0 var(--_x));
 		--_mask: repeat left center/var(--input-bs) var(--ui-rating-symbol, url('/assets/svg/star.svg'));

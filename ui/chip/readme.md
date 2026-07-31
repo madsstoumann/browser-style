@@ -53,15 +53,16 @@ Or via CSS `@import`:
 <ui-chip variant="outline" theme="blue">Premium</ui-chip>
 ```
 
-### Web Component
+### JavaScript (optional — adds nothing)
 
-Import the module to register `<ui-chip>`:
+`<ui-chip>` is CSS-only. There is no JS-enhanced version:
 
 ```js
 import '@browser.style/chip';
 ```
 
-The web component uses the **exact same** HTML structure as CSS-only — the JS only registers the element.
+only registers the tag — the class body is empty. The entry point exists so the
+import resolves; markup, styling and behaviour are identical without it.
 
 #### Attributes
 

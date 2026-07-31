@@ -6,6 +6,22 @@
 		--mega-menu-view-width: attr(mobile-view-width type(<length>), 60vw);
 		--mega-menu-z-index: attr(z-index type(<integer>), 1000);
 
+		/* Typed attr() fallback — Safari/Firefox. A custom property PARSES the
+		   literal `attr(…)` stream, so these never go guaranteed-invalid: the
+		   menubar height, panel width, max-width and z-index all die at
+		   computed-value time, which collapses the menubar and drops the panel
+		   below other content. Restore the attr() defaults;
+		   ../base/polyfills/attr-fallback.js upgrades to the element's own
+		   attributes. Detect on a REAL property — `--x: attr(…)` is true in Safari
+		   too. */
+		@supports not (background-color: attr(x type(<color>), red)) {
+			--mega-menu-margin-inline: 0;
+			--mega-menu-max-width: none;
+			--mega-menu-menubar-height: 3rem;
+			--mega-menu-view-width: 60vw;
+			--mega-menu-z-index: 1000;
+		}
+
 		* { box-sizing: border-box; }
 
 		[data-menu="menubar"] {

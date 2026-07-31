@@ -9,7 +9,11 @@
 	 * variant "underline" or "strike" — default is a full-block marker sweep.
 	 */
 	:where(high-light) {
-		/* -- Marker color: real default first, then typed attr() (dropped where unsupported) -- */
+		/* -- Marker color. NB: the plain declaration below does NOT act as a
+		   fallback — a custom property parses ANY token stream, so where typed
+		   attr() is unsupported the second declaration still wins and holds the
+		   literal `attr(…)` text. It is kept only as documentation of the default;
+		   the real fallback is the @supports block at the end of this rule. -- */
 		--_fill: #82ffad;
 		--_fill: attr(fill type(<color>), #82ffad);
 
@@ -62,6 +66,23 @@
 		&[fill="yellow"] { --_fill: #fdfa8c; }
 		&[fill="orange"] { --_fill: #ffbe7b; }
 		&[fill="pink"] { --_fill: #ff9dc9; }
+
+		/* -- Typed attr() fallback — Safari/Firefox. The four presets above are
+		   safe (they re-declare --_fill with a real colour), so only an ARBITRARY
+		   fill/ink breaks: --_fill keeps the literal `attr(…)` stream, every
+		   color-mix() consuming it dies at computed-value time, and the marker
+		   disappears (background-image: none). Restore the defaults here so the
+		   highlight always paints; ../base/polyfills/attr-fallback.js upgrades to
+		   the element's own fill/ink. Detect on a REAL property — the
+		   `--x: attr(…)` form is true in Safari too. Placed after the presets so a
+		   named fill still wins. -- */
+		@supports not (background-color: attr(x type(<color>), red)) {
+			& { --_fill: #82ffad; --_ink: var(--_ink-auto); }
+			&[fill="green"] { --_fill: #82ffad; }
+			&[fill="yellow"] { --_fill: #fdfa8c; }
+			&[fill="orange"] { --_fill: #ffbe7b; }
+			&[fill="pink"] { --_fill: #ff9dc9; }
+		}
 
 		/* -- Variants: reshape the sweep into a stroke, drop the block padding/ghost -- */
 		&[variant~="underline"] {

@@ -80,6 +80,16 @@
 		--_ring-width: var(--ui-avatar-ring-width, var(--ring-width));
 		--_ring: var(--ui-avatar-ring, attr(ring type(<color>), var(--color-accent)));
 
+		/* Typed attr() fallback — Safari/Firefox. A custom property PARSES the
+		   literal `attr(…)` stream, so --_ring never goes guaranteed-invalid and
+		   the ::before ring loses its background at computed-value time. Restore
+		   the default; ../base/polyfills/attr-fallback.js upgrades to the
+		   element's own ring=. Detect on a REAL property — `--x: attr(…)` is true
+		   in Safari too. */
+		@supports not (background-color: attr(x type(<color>), red)) {
+			--_ring: var(--ui-avatar-ring, var(--color-accent));
+		}
+
 		&::before {
 			background: var(--_ring);
 			border-radius: inherit;
@@ -115,6 +125,11 @@
 	/* `max` — overflow handling */
 	:where(ui-avatar-group[max]) {
 		--_max: attr(max type(<number>), 0);
+		/* Typed attr() fallback — see the ring block above. Without it --_max keeps
+		   the `attr(…)` stream and every clamp()/counter calc below it collapses,
+		   so the +N overflow chip mis-renders. 0 = no overflow handling, which is
+		   the attr() default; the polyfill restores the real max=. */
+		@supports not (background-color: attr(x type(<color>), red)) { --_max: 0; }
 		counter-reset: overflow 0;
 		&  > :where(ui-avatar) {
 			--_has-overflow: clamp(0, sibling-count() - var(--_max), 1);

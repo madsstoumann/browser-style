@@ -22,6 +22,11 @@
 		look: <em>unsaved</em> = outline + idle ink, <em>saved</em> = filled + active ink. Flipping
 		<code>aria-pressed</code> is wired in script via the invoker command (not shown here).
 	</p>
+	<p>
+		The component itself is <strong>CSS-only</strong> — there is no JavaScript version.
+		<code>index.js</code> exists purely so <code>import '@browser.style/save'</code> resolves; it
+		registers the tag and adds no behaviour.
+	</p>
 
 	<h3>Unsaved / saved (heart, default)</h3>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">

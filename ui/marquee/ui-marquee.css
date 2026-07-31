@@ -127,6 +127,16 @@
 		/* arbitrary colour — fill overrides hue, ink auto-contrasts from fill */
 		&[fill] { --ui-marquee-bg: attr(fill type(<color>), var(--color-surface)); --ui-marquee-c: contrast-color(var(--ui-marquee-bg)); }
 		&[ink]  { --ui-marquee-c: attr(ink type(<color>), hsl(0, 0%, 100%)); }
+		/* Typed attr() fallback — Safari/Firefox. A custom property PARSES the
+		   literal `attr(…)` stream, so it never goes guaranteed-invalid and no
+		   var() fallback fires; the band loses its background at computed-value
+		   time instead. Restore the attr() defaults; ../base/polyfills/attr-fallback.js
+		   upgrades to the element's own fill/ink. Detect on a REAL property — the
+		   `--x: attr(…)` form is true in Safari too. Keep after the hue rules. */
+		@supports not (background-color: attr(x type(<color>), red)) {
+			&[fill] { --ui-marquee-bg: var(--color-surface); }
+			&[ink]  { --ui-marquee-c: hsl(0, 0%, 100%); }
+		}
 
 		/* size — md (1em) = default */
 		&[size~="sm"],  :where([media*="marquee(sm)"])  & { --ui-marquee-font-size: 0.75em; }

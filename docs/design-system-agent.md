@@ -261,6 +261,7 @@ Components with hardcoded `max-width`/`max-inline-size` should use `--width-*` t
 8. **Don't use `querySelectorAll` without scoping** — leaks into nested components. Use `:scope >` or iterate `this.children`
 9. **Don't define variant tokens in multiple selectors** — consolidate class-based and attribute-based into one rule
 10. **Don't remove legacy aliases from core.css** — they stay until all components are migrated
+11. **Don't trust typed `attr()`'s fallback value** — `--x: attr(fill type(<color>), red)` does NOT fall back to `red` in Safari/Firefox. A custom property parses any token stream, so `--x` holds the literal `attr(…)` text; it is never guaranteed-invalid, so a `var(--x, …)` fallback doesn't fire either, and the *consuming* property dies at computed-value time (no background, no ring, empty rating). Declaring a real value first doesn't help — the `attr()` declaration still wins. Every component using typed `attr()` ships an `@supports not (background-color: attr(x type(<color>), red))` block restoring the defaults, and pages load `ui/base/polyfills/attr-fallback.js` to restore per-element values. Feature-detect on a REAL property: `CSS.supports('--x', 'attr(…)')` is `true` in Safari. See `ui/base/polyfills/readme.md`.
 
 ---
 

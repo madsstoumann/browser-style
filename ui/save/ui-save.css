@@ -117,6 +117,17 @@
 		   disc. After the hue rules so an explicit ink=/fill= wins. */
 		&[ink]  { --ui-save-c: attr(ink type(<color>), var(--color-text)); --ui-save-c-active: attr(ink type(<color>), var(--color-error)); }
 		&[fill] { --ui-save-circle-bg: attr(fill type(<color>), Canvas); }
+		/* Typed attr() fallback — Safari/Firefox. A custom property PARSES the
+		   literal `attr(…)` stream, so it never goes guaranteed-invalid and no
+		   var() fallback fires; the glyph ink and the disc fill die at
+		   computed-value time instead. Restore the attr() defaults;
+		   ../base/polyfills/attr-fallback.js upgrades to the element's own
+		   ink/fill. Detect on a REAL property — `--x: attr(…)` is true in Safari
+		   too. Keep after the hue rules. */
+		@supports not (background-color: attr(x type(<color>), red)) {
+			&[ink]  { --ui-save-c: var(--color-text); --ui-save-c-active: var(--color-error); }
+			&[fill] { --ui-save-circle-bg: Canvas; }
+		}
 
 		/* size — em-based, from size= or the card's save(<size>). md = default. */
 		&[size~="sm"], :where([media*="save(sm)"]) & { --ui-save-sz: 0.8em; }

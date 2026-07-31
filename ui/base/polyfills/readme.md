@@ -1,0 +1,87 @@
+# Typed `attr()` fallback
+
+```html
+<script type="module" src="/ui/base/polyfills/attr-fallback.js"></script>
+```
+
+Load it on any page that uses a component reading author values from attributes —
+`ui-sticker fill=`, `ui-chip ink=`, `ui-avatar ring=`, `high-light fill=`,
+`ui-rating value=`, `mega-menu menubar-height=`, `ui-gradient-text gradient=`,
+`[data-view]`. It is a **no-op** where typed `attr()` is supported, so it is safe
+to load unconditionally.
+
+`<lay-out>` has its own equivalent (`layout/polyfills/attr-fallback.js`) because it
+ships a companion stylesheet — that one is not replaced by this.
+
+---
+
+## The trap this exists for
+
+Components read values straight from attributes:
+
+```css
+:where(ui-chip) {
+  &[fill] { --ui-chip-accent: attr(fill type(<color>), var(--color-button)); }
+}
+```
+
+Typed `attr()` is Chromium-only today. **In Safari and Firefox this does not fall
+back to `var(--color-button)`** — and that is the part that surprises everyone:
+
+- A custom property parses **any** token stream, so the declaration is perfectly
+  valid and `--ui-chip-accent` literally holds the text `attr(fill type(<color>), …)`.
+- Because it holds *something*, it is **not** guaranteed-invalid — so a defensive
+  `var(--ui-chip-accent, hotpink)` never reaches its fallback either.
+- The failure surfaces one level down: the property that *consumes* it becomes
+  invalid at computed-value time and resets to its initial value.
+
+The result is not a wrong colour, it's a missing one: no background, no ring, an
+empty rating, a collapsed menubar. Confirmed in Safari 26.5 — a filled
+`<ui-sticker>` computed `background-color: rgba(0, 0, 0, 0)`.
+
+Two corollaries worth knowing:
+
+- **Declaring a real value first does not help.** `--_fill: red; --_fill: attr(…);`
+  still ends up holding the `attr()` text — the second declaration is valid, so it
+  wins. Verified identical in WebKit to having no fallback at all.
+- **Detect on a real property.** `CSS.supports('--x', 'attr(…)')` returns `true`
+  in Safari for exactly the reason above. Use a real property in CSS
+  (`@supports not (background-color: attr(x type(<color>), red))`) and, in JS,
+  set the property and read the computed value back — which is what this polyfill
+  does.
+
+## Two layers, both required
+
+| | Layer | Gives you |
+|---|---|---|
+| 1 | `@supports not (…)` block **in each component's CSS** | The component always renders something sane, with **no JavaScript**. This is the real fallback. |
+| 2 | This polyfill | Each element's **own** attribute value on top, so `fill="#c9b8ff"` is that colour and not the component default. |
+
+Layer 1 is not optional: a component installed on its own must not depend on an
+app-level script to be usable.
+
+## Adding a component to the registry
+
+`ATTR_MAP` maps `selector → { CSS property: [attribute, default, presets?] }`:
+
+```js
+'ui-chip[fill]': { '--ui-chip-accent': ['fill', 'var(--color-button)'] },
+```
+
+- `default` — used when the attribute is present but **empty**.
+- `presets` — *optional*. Values the component resolves **itself** in CSS, which
+  the polyfill must leave alone. Two components need this, because one attribute
+  accepts either a keyword the stylesheet maps or any CSS colour:
+  - `high-light fill="green|yellow|orange|pink"` — highlighter colours, **not** the
+    CSS keywords (`green` is `#82ffad`, not `#008000`).
+  - `ui-avatar ring="error|info|success|warning"` — not colours at all; writing the
+    raw value would be invalid and the ring would disappear.
+
+  This list duplicates knowledge that lives in the component's CSS. If you add a
+  preset there, add it here too.
+
+Keep the map in sync with the `attr(… type(…))` declarations in each component's
+CSS, and add the matching `@supports` block on the CSS side at the same time.
+
+A `MutationObserver` covers elements added or re-attributed after load, so
+SSR'd/rendered content and carousel clones are handled.

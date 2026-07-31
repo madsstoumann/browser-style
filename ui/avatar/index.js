@@ -1,9 +1,20 @@
 /**
  * <ui-avatar> and <ui-avatar-group>
  * Light DOM web component wrappers for the CSS-first avatar.
- * CSS handles all visual behavior. JS adds overflow counting (max attribute).
- * @version 4.0.0
+ * CSS handles all visual behavior, `max` overflow counting included.
+ * @version 4.1.0
  */
+
+/**
+ * `max` is owned by ui-avatar.css: sibling-index()/sibling-count() hide the
+ * overflow and a style query paints the +N face. The JS below is ONLY a polyfill
+ * for engines without those functions — the two must never both run, because
+ * this one injects an extra <ui-avatar overflow> child, which shifts
+ * sibling-count() and makes the CSS undercount by one.
+ */
+const CSS_OWNS_MAX =
+	CSS.supports('width', 'calc(sibling-index() * 1px)') &&
+	CSS.supports('width', 'calc(sibling-count() * 1px)');
 
 class UiAvatar extends HTMLElement {}
 
@@ -20,6 +31,8 @@ class UiAvatarGroup extends HTMLElement {
 	}
 
 	applyMax() {
+		if (CSS_OWNS_MAX) return;
+
 		const max = parseInt(this.getAttribute('max'));
 		if (!max || max < 1) return;
 

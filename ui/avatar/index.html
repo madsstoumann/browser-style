@@ -363,13 +363,9 @@
 		</ui-avatar>
 	</ui-avatar-group>
 
-	<script type="module">
-		import attrFallback from '/assets/js/attr_fallback.js';
-		attrFallback({
-			'ui-avatar[ring]': { '--_ring': ['ring', 'hsl(211, 100%, 50%)'] },
-			'ui-avatar-group[max]': { '--_max': 'max' },
-		});
-	</script>
-
+	<!-- Typed attr() polyfill — Safari/Firefox. No-op where typed attr() is
+	     supported; each component's own @supports block already covers the no-JS
+	     case, this restores per-element attribute values on top. -->
+	<script type="module" src="/ui/base/polyfills/attr-fallback.js"></script>
 </body>
 </html>

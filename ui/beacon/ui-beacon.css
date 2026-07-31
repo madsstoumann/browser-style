@@ -109,6 +109,17 @@
 			--ui-beacon-c: contrast-color(var(--ui-beacon-accent));
 		}
 		&[ink] { --ui-beacon-c: attr(ink type(<color>), hsl(0, 0%, 100%)); }
+		/* Typed attr() fallback — Safari/Firefox. A custom property PARSES the
+		   literal `attr(…)` stream, so it never goes guaranteed-invalid and no
+		   var() fallback fires; the dot/plated faces lose their accent at
+		   computed-value time instead. Restore the attr() defaults;
+		   ../base/polyfills/attr-fallback.js upgrades to the element's own
+		   fill/ink. Detect on a REAL property — `--x: attr(…)` is true in Safari
+		   too. Keep after the hue rules. */
+		@supports not (background-color: attr(x type(<color>), red)) {
+			&[fill] { --ui-beacon-accent: var(--color-text); }
+			&[ink]  { --ui-beacon-c: hsl(0, 0%, 100%); }
+		}
 
 		/* size — em-based, aligned with ui-chip; the dot tracks font-size.
 		   md (0.875em) = default; xs is a beacon extra. */
