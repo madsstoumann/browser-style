@@ -37,18 +37,18 @@
 
 		aspect-ratio: 1 / 1;
 		background: var(--ui-sticker-bg, var(--color-accent));
+		block-size: var(--ui-sticker-sz, 4em);
 		border-radius: var(--ui-sticker-radius, var(--radius-circle, 50%));
 		color: var(--ui-sticker-c, hsl(0, 0%, 100%));
-		corner-shape: var(--ui-sticker-corner, round);
 		container-type: inline-size;
+		corner-shape: var(--ui-sticker-corner, round);
 		display: grid;
 		filter: var(--ui-sticker-shadow, none);
 		font-family: var(--ui-sticker-font-family);
 		font-size: var(--font-size-sm);
 		font-weight: var(--ui-sticker-font-weight, var(--font-weight-bold, 700));
+		inline-size: var(--ui-sticker-sz, 4em);
 		line-height: 1;
-		min-block-size: var(--ui-sticker-sz, 4em);
-		min-inline-size: var(--ui-sticker-sz, 4em);
 		padding: var(--ui-sticker-p);
 		place-content: center;
 		pointer-events: none;
