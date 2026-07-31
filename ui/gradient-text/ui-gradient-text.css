@@ -44,6 +44,23 @@
 		}
 	}
 
+	/* Typed attr() fallback — Safari/Firefox. Without typed attr() the --_* props
+	   keep the literal `attr(…)` token stream (a custom property parses anything),
+	   so they are NOT guaranteed-invalid and a var() fallback can't rescue them:
+	   `background` goes invalid at computed-value time → background-image: none +
+	   color: #0000 = INVISIBLE text. Re-declaring the defaults here restores the
+	   default gradient with no JS. Detection must use a real property — the custom-
+	   property form (`--x: attr(…)`) is true in Safari too. Per-element attribute
+	   values are restored by /assets/js/attr_fallback.js (opt-in, feature-detected). */
+	@supports not (background-size: attr(size type(<length-percentage>), 150%)) {
+		:where(ui-gradient-text) {
+			--_dir: 90deg;
+			--_dur: 5s;
+			--_gradient: var(--GradientText, #0077ff, #00e7df, #0077ff);
+			--_size: 150%;
+		}
+	}
+
 	@keyframes ui-slide-bg { to { background-position: calc(2 * var(--_size)) 0; } }
 	@keyframes ui-breathe-bg {
 		0% { background-size: 100% 100%; }

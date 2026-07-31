@@ -357,5 +357,20 @@
 	</lay-out>
 	</section>
 
+	<!-- Safari/Firefox: no typed attr(). The CSS @supports block already restores
+	     the DEFAULT gradient; this restores each element's own attribute values.
+	     No-op in Chrome (the helper feature-detects first). -->
+	<script type="module">
+		import attrFallback from '/assets/js/attr_fallback.js';
+		attrFallback({
+			'ui-gradient-text': {
+				'--_dir': ['dir', '90deg'],
+				'--_dur': ['duration', '5s'],
+				'--_gradient': ['gradient', '#0077ff, #00e7df, #0077ff'],
+				'--_size': ['size', '150%'],
+			},
+		});
+	</script>
+
 </body>
 </html>
