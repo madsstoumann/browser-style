@@ -68,5 +68,18 @@
 	<script type="module">
 		import './index.js';
 	</script>
+	<!-- Safari/Firefox: no typed attr(). The CSS @supports block already keeps the
+	     sticker painted (accent disc, white ink); this restores each element's own
+	     fill/ink/angle. No-op in Chrome (the helper feature-detects first). -->
+	<script type="module">
+		import attrFallback from '/assets/js/attr_fallback.js';
+		attrFallback({
+			'ui-sticker': {
+				'--ui-sticker-bg': ['fill', 'var(--color-accent)'],
+				'--ui-sticker-c': ['ink', 'hsl(0, 0%, 100%)'],
+				'--_angle': ['angle', '0deg'],
+			},
+		});
+	</script>
 </body>
 </html>

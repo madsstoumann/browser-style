@@ -142,5 +142,19 @@
 		<ui-sticker fill="#7B5EA7" font="fit" font-lead="fit" ink="#fff" size="3xl"><small>SAVE</small><strong>50%</strong></ui-sticker>
 	</div>
 
+	<!-- Safari/Firefox: no typed attr(). The CSS @supports block already keeps the
+	     sticker painted (accent disc, white ink); this restores each element's own
+	     fill/ink/angle. No-op in Chrome (the helper feature-detects first). -->
+	<script type="module">
+		import attrFallback from '/assets/js/attr_fallback.js';
+		attrFallback({
+			'ui-sticker': {
+				'--ui-sticker-bg': ['fill', 'var(--color-accent)'],
+				'--ui-sticker-c': ['ink', 'hsl(0, 0%, 100%)'],
+				'--_angle': ['angle', '0deg'],
+			},
+		});
+	</script>
+
 </body>
 </html>

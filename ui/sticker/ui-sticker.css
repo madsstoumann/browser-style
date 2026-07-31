@@ -31,6 +31,8 @@
 		--ui-sticker-strong-scale: 1.1;
 		--ui-sticker-text-shadow-color: contrast-color(var(--ui-sticker-c, hsl(0, 0%, 100%)));
 
+		--_angle: attr(angle type(<angle>), 0deg); /* read by variant="text"; via a
+			custom property so the typed-attr() fallback below can restore it */
 		--_size: calc(var(--ui-sticker-fs) * var(--ui-sticker-fs-scale));
 		--_size-lg: calc(var(--_size) * var(--ui-sticker-strong-scale));
 		--_size-sm: calc(var(--_size) * var(--ui-sticker-small-scale));
@@ -314,7 +316,7 @@
 			min-block-size: auto;
 			min-inline-size: auto;
 			padding: 0.12em;
-			rotate: attr(angle type(<angle>), 0deg);
+			rotate: var(--_angle);
 			text-box: normal;
 		}
 		&[variant~="text"] > *, :where([media*="sticker(text)"]) & > * {
@@ -327,6 +329,25 @@
 			paint-order: stroke fill;
 			text-box: normal;
 			white-space: nowrap;
+		}
+
+		/* ───────── Typed attr() fallback — Safari/Firefox ─────────
+		   fill=/ink=/angle= are typed attr(). Where it is unsupported a custom
+		   property still PARSES the literal `attr(…)` token stream, so it is not
+		   guaranteed-invalid and no var() fallback can rescue it — every consumer
+		   of --ui-sticker-bg dies at computed-value time instead: the disc
+		   background, the sh: silhouette's ::before fill, the text variant's
+		   outline drop-shadows and -webkit-text-fill-color. The demo page renders
+		   as bare text. Restoring the attr() defaults keeps stickers painted with
+		   no JS; /assets/js/attr_fallback.js then upgrades to each element's own
+		   fill/ink/angle. Card furniture is unaffected — media="sticker(<hue>)"
+		   routes through --_theme-*, never attr().
+		   Detect on a REAL property: the `--x: attr(…)` form is true in Safari too.
+		   Placed last so it still beats the hue rules, exactly as [fill]/[ink] do. */
+		@supports not (background-color: attr(fill type(<color>), red)) {
+			& { --_angle: 0deg; }
+			&[fill] { --ui-sticker-bg: var(--color-accent); }
+			&[ink]  { --ui-sticker-c: hsl(0, 0%, 100%); }
 		}
 	}
 
