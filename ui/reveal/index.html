@@ -13,6 +13,9 @@
 	<link rel="stylesheet" href="/ui/card/demo.layout.css">
 	<link rel="stylesheet" href="/ui/accordion/ui-accordion.css">
 	<link rel="stylesheet" href="/ui/tabs/ui-tabs.css">
+	<!-- tnt() is an OPT-IN sheet — ui-card.css does not bundle it. Needed by the
+	     "In the crates" row at the end of this page. -->
+	<link rel="stylesheet" href="/ui/card/media.tint.css">
 	<!-- typed attr() fallback for Safari/Firefox (layout gaps/spacing attributes) -->
 	<!-- <script type="module" src="/layout/polyfills/attr-fallback.js"></script> -->
 	<style>
@@ -922,6 +925,70 @@
 					<small data-part="eyebrow">Pop</small>
 					<h3 data-part="headline">Skyline Five</h3>
 					<p data-part="summary">Five voices, one harmony — the boy band that broke free to write its own songs.</p>
+				</ui-content>
+			</details>
+		</ui-reveal>
+	</lay-out>
+
+	<!-- ============================================
+	     Tinted front faces — same card as "Now showing" (flp + scr + ico), with
+	     media="tnt(<hue>) hov(tint)": the frame paints a colour wash over the
+	     image, and hovering fades it out to the true-colour photo. tnt() lives in
+	     the opt-in media.tint.css, linked in <head>.
+	     ============================================ -->
+	<h2>In the crates</h2>
+
+	<lay-out lg="columns(3)">
+		<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) scm tnt(green) hov(tint)">
+			<details name="crates">
+				<summary>
+					<ui-face>
+						<ui-media><img src="/assets/images/band_goth.png" alt="" loading="lazy"></ui-media>
+						<ui-content><small>Gothic</small><strong>The Lure</strong></ui-content>
+					</ui-face>
+					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+				</summary>
+				<ui-content tabindex="0" theme="gray ink" content="pad(lg)">
+					<h3>The Lure</h3>
+					<p><strong>Cold, slow darkwave conjured in a basement full of smoke.</strong> Four records deep and still allergic to daylight, The Lure trade in reverb, dread and the kind of hooks that only surface after midnight.</p>
+					<p>Their early demos still circulate on hand-dubbed cassettes passed between basement shows — a scene that refuses to sit still.</p>
+					<p><a href="#">Listen &rarr;</a></p>
+				</ui-content>
+			</details>
+		</ui-reveal>
+
+		<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) scm tnt(blue) hov(tint)">
+			<details name="crates">
+				<summary>
+					<ui-face>
+						<ui-media><img src="/assets/images/band_alternative.png" alt="" loading="lazy"></ui-media>
+						<ui-content><small>Alternative</small><strong>Paper Mirror</strong></ui-content>
+					</ui-face>
+					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+				</summary>
+				<ui-content tabindex="0" theme="gray ink" content="pad(lg)">
+					<h3>Paper Mirror</h3>
+					<p><strong>Reverb-soaked guitars and bittersweet hooks, built on hand-dubbed cassettes.</strong> Recorded to tape in a spare room and passed hand to hand, Paper Mirror's songs sound like a memory you can't quite place.</p>
+					<p>No two tracks reach for the same trick, yet they share a stubborn refusal to wait for permission.</p>
+					<p><a href="#">Listen &rarr;</a></p>
+				</ui-content>
+			</details>
+		</ui-reveal>
+
+		<ui-reveal variant="ovr(bs) flp scr ico(te) ico(sm) icc(drk)" media="asr(3/4) obp(cc) scm tnt(red) hov(tint)">
+			<details name="crates">
+				<summary>
+					<ui-face>
+						<ui-media><img src="/assets/images/band_girls.png" alt="" loading="lazy"></ui-media>
+						<ui-content><small>Girl Group</small><strong>Neon Avenue</strong></ui-content>
+					</ui-face>
+					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
+				</summary>
+				<ui-content tabindex="0" theme="gray ink" content="pad(lg)">
+					<h3>Neon Avenue</h3>
+					<p><strong>Bedroom demos turned stadium choruses, one second-hand synth at a time.</strong> Neon Avenue built arena-sized harmonies in a unit above a tyre shop, and never lost the glitter along the way.</p>
+					<p>Synth-pop with a midnight sheen — the sound of a scene making its own permission slips.</p>
+					<p><a href="#">Listen &rarr;</a></p>
 				</ui-content>
 			</details>
 		</ui-reveal>

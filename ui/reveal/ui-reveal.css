@@ -139,6 +139,26 @@
 				grid-column: 1 / -1;
 			}
 
+		/* An overlay front face fills its row instead of being sized BY the frame.
+		   WebKit does not re-run grid row sizing when an aspect-ratio child's inline
+		   size changes in a LATER layout pass — and that pass is routine: the page
+		   grows, a classic (non-overlay) scrollbar appears, every column narrows.
+		   <ui-media> re-resolves its height from the new width, the summary row keeps
+		   the height from the first pass, and the difference paints as a white strip
+		   under the card. Measured on this page in Safari 26.5: columns 319.656 (with
+		   scrollbar) but rows still 433.766 — the height for the 325.328 columns of
+		   the scrollbar-less first pass, a 7.56px gap. Chromium re-resolves the row.
+		   Stretching the frame makes the row's height the source of truth, so the two
+		   can't disagree; in a correct pass the row is still the frame's own
+		   aspect-ratio height, so nothing changes. Only ovr() — a col/col-r face
+		   stacks media above content and must NOT have the frame eat the row.
+		   (ui-card.css does the same for row/row-r.) */
+			:where(ui-reveal[variant*="ovr("]) & ui-media {
+				block-size: 100%;
+				inline-size: 100%;
+				min-block-size: 0;
+			}
+
 			ui-icon {
 				background: var(--ui-reveal-icon-bg, var(--color-button));
 				border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
