@@ -79,7 +79,16 @@ function measure(scroller) {
 	controls.style.setProperty('--_h', scroller.clientHeight + 'px');
 	controls.style.setProperty('--_ch', ch + 'px');
 }
-const ro = new ResizeObserver((entries) => entries.forEach(({ target }) => measure(target)));
+// each scroller's sync(), so a resize can refresh the arrow dead-end state too
+const syncs = new WeakMap();
+// Re-sync on resize, not just re-measure: at init() the scroller has not been laid
+// out yet, so scrollWidth === clientWidth and `next` would latch DISABLED (a dead
+// next arrow on load, until the first scroll). The first RO callback lands after
+// layout, which is where the real dead-end state becomes knowable.
+const ro = new ResizeObserver((entries) => entries.forEach(({ target }) => {
+	measure(target);
+	syncs.get(target)?.();
+}));
 
 function button(kind, label) {
 	const b = document.createElement('button');
@@ -142,7 +151,21 @@ function init(scroller) {
 	// live lead offset: the loop behavior in ui/card/index.js prepends a
 	// [data-clone] — whether that ran before or after this init
 	const lead = () => scroller.querySelector(':scope > [data-clone]') ? 1 : 0;
-	const size = () => axisY ? scroller.clientHeight : scroller.clientWidth;
+	// Scroll STEP = the real distance between two slides, not the scrollport size.
+	// A <ui-media> carousel has one 100%-wide slide per view, so the two agree —
+	// but a <lay-out overflow> card row shows N cards per view, and a gapped
+	// carousel adds --ui-media-gap between them. Using clientWidth there made
+	// every dot past the second scroll past the end and clamp, so only the first
+	// two markers appeared to work. Measured pitch covers all three cases.
+	const size = () => {
+		const s = slidesOf(scroller);
+		if (s.length > 1) {
+			const a = s[0].getBoundingClientRect(), b = s[1].getBoundingClientRect();
+			const d = axisY ? b.top - a.top : Math.abs(b.left - a.left);
+			if (d > 1) return d;
+		}
+		return axisY ? scroller.clientHeight : scroller.clientWidth;
+	};
 	const rawPos = () => axisY ? scroller.scrollTop : Math.abs(scroller.scrollLeft);
 	const pos = () => { const s = size(); return s ? Math.round(rawPos() / s) : 0; };
 	const scrollToPos = (p) => {
@@ -173,6 +196,7 @@ function init(scroller) {
 
 	scroller.prepend(controls);
 	measure(scroller);   // synchronous first sizing — no unsized first paint
+	syncs.set(scroller, sync);
 	ro.observe(scroller);
 	sync();
 }

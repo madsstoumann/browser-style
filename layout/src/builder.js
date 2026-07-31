@@ -211,10 +211,16 @@ export class LayoutBuilder {
 	// how a project trims generated CSS: only list the tokens each breakpoint
 	// actually needs. Steps come from `spacing.steps` (the multiplier values).
 	//
+	// Steps are numbers (multipliers, spelled literally: `cg(2)`) or labeled
+	// objects `{label, value}` for word sizes (`cg(2xs)` -> 0.125). Both write the
+	// same multiplier custom props; word labels follow the content-DSL ladder.
+	//
 	// Selectors target BOTH the layout element and its `-group` sibling via :is(),
 	// so <lay-out-group> spacing uses the same token vocabulary. `*=` (contains)
 	// matching is collision-safe here because every value is delimited as `token(N)`
-	// and no token name is a prefix of another up to its `(`.
+	// and no token name is a prefix of another up to its `(`. Step spellings can't
+	// cross-fire either: the needle includes the closing paren, so `cg(2)` is not
+	// a substring of `cg(2xs)`.
 	generateSpacingCSS(breakpointName, mediaQuery, breakpointConfig = {}) {
 		const spacing = this.config.spacing
 		if (!spacing) return
@@ -253,11 +259,13 @@ export class LayoutBuilder {
 				console.warn(`⚠ Unknown spacing token '${token}' in breakpoint '${breakpointName}'`)
 				continue
 			}
-			for (const value of steps) {
-				const selector = `${scope}[${breakpointName}*="${token}(${value})"]`
+			for (const step of steps) {
+				const label = typeof step === 'object' ? step.label : step
+				const value = typeof step === 'object' ? step.value : step
+				const selector = `${scope}[${breakpointName}*="${token}(${label})"]`
 				const properties = {}
 				for (const prop of props) properties[prop] = value
-				this.addRule(mediaQuery, selector, properties, breakpointName, { kind: 'feature', variantKey: `${token}(${value})` })
+				this.addRule(mediaQuery, selector, properties, breakpointName, { kind: 'feature', variantKey: `${token}(${label})` })
 			}
 		}
 	}

@@ -118,7 +118,7 @@ Available: `columns(1)` through `columns(6)`
 
 ### Breakpoint Spacing Tokens
 
-Spacing is **token-only** — card-style tokens embedded alongside layout tokens in the breakpoint attributes. **There are no bare `pad-inline` / `pad-top` / `col-gap` etc. attributes** (removed in v4); every spacing value lives inside a breakpoint attribute. Tokens use a multiplier (default steps `0`–`4`) applied to `--layout-space-unit`, writing the `--layout-*` custom props that `base.css`/`group.css` compose into padding/margin/gap.
+Spacing is **token-only** — card-style tokens embedded alongside layout tokens in the breakpoint attributes. **There are no bare `pad-inline` / `pad-top` / `col-gap` etc. attributes** (removed in v4); every spacing value lives inside a breakpoint attribute. Tokens are multipliers of `--layout-space-unit` in two spellings: **numbers** (`0`–`4`, e.g. `cg(2)`) and **word sizes** on the content-DSL ladder — `2xs` 0.125 · `xs` 0.25 · `sm` 0.5 · `md` 1 · `lg` 1.5 · `xl` 2 · `2xl` 3 (`cg(2xs)` = a 2px hairline at the default 1rem unit; the collision-safe needle includes the closing paren, so `cg(2)` never matches `cg(2xs)`). Both write the `--layout-*` custom props that `base.css`/`group.css` compose into padding/margin/gap. Tokens are generated at the breakpoints in the `spacing.breakpoints` allowlist — shipped config: `["xs","lg"]` (`xs` = the mobile-first base) — so gaps can change per allowlisted breakpoint: `xs="columns(2) cg(sm)" lg="grid(3a) cg(2xs)"`. Add a breakpoint (e.g. `xl` for mosaic tiers) to the allowlist to author spacing there.
 
 | Token | CSS Custom Property(ies) | CSS Property |
 |-------|-------------------|--------------|
@@ -427,7 +427,7 @@ Provides:
 | `element` | HTML element name for layout containers |
 | `core` | Core CSS files to include |
 | `common` | Common CSS files to include |
-| `spacing.steps` | Multiplier values generated for each spacing token (e.g. `[0,1,2,3,4]`) |
+| `spacing.steps` | Steps generated for each spacing token: numbers (`[0,1,2,3,4]`) and/or labeled word sizes (`{"label":"2xs","value":0.125}` → `cg(2xs)`) |
 | `spacing.tokens` | Default spacing-token vocabulary emitted for every breakpoint (`p`, `pi`, `pb`, `pbs`, `pbe`, `mbs`, `mbe`, `cg`, `rg`) |
 | `spacing.breakpoints` | Optional allowlist — generate spacing tokens only for these breakpoints (e.g. `["xs","lg"]`); omit for all |
 | `layoutContainer.maxWidth` | Max container width (generates `--layout-bleed-mw`) |

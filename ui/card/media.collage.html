@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>UI: Media — Product cards</title>
+	<title>UI: Media — Collage</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
@@ -16,7 +16,7 @@
 	<script type="module" src="/layout/polyfills/attr-fallback.js"></script>
 </head>
 <body>
-	<h1>UI: Media — Product cards</h1>
+	<h1>UI: Media — Collage</h1>
 	<p>A product card whose <code>&lt;ui-media&gt;</code> holds a <em>collage</em> instead of a single image: a nested <code>&lt;lay-out lg="grid(3c)"&gt;</code> with one nested <code>&lt;ui-media&gt;</code> frame per shot (a nested frame is always a plain frame — never a scroller, never absolutely-positioned into the outer box). With flush gaps (<code>cg(0) rg(0)</code>) and square frames the pattern tiles exactly: one <code>asr(1/1)</code> at <code>2fr</code> equals two stacked <code>asr(1/1)</code> at <code>1fr</code>. Each frame carries <code>hov(zoom)</code> for a per-tile hover zoom. Chip and sticker ride the <em>outer</em> frame's furniture grid: chip defaults to top-start, sticker to top-end. Price and buy-button are the stock <code>price</code> / <code>actions</code> content parts. No custom CSS on this page.</p>
 	<p>The collage is viewport-driven (<code>lay-out</code> breakpoints): <code>grid(3c)</code> from 720px, a <code>columns(3)</code> strip from 540–719px, stacked below. See the other <a href="media.html">&lt;ui-media&gt;</a> demo pages.</p>
 
@@ -24,16 +24,17 @@
 	     The pattern — one product card
 	     ============================================================ -->
 	<h2>The pattern</h2>
+	<p>This first card uses the word-size spacing tokens — <code>xs="cg(sm) rg(sm) p(sm)"</code> — for 8px gutters and a matching frame inset. With visible gutters the tiles carry <strong>no <code>asr()</code></strong>: the large tile spans two rows <em>plus</em> the row-gap between them, which a fixed-ratio image can never fill — an aspect-less frame instead stretches to fill its grid area exactly (the frame's built-in minimum gives rows their height), so bottoms stay flush at any gap size. The flush-gap cards further down use <code>cg(0) rg(0)</code> + <code>asr(1/1)</code>, where square tiling is exact.</p>
 	<lay-out width="sm">
 		<ui-card variant="bdr bdr(lgt) rds(lg)" media="chip(red) sticker(red)" content="scl(sm) pad(md)">
 			<cq-box>
 				<ui-media>
 					<ui-chip>Deal</ui-chip>
 					<ui-sticker size="lg"><small>Save</small><strong>10%</strong></ui-sticker>
-					<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
-						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-1.png" alt="Goose bucket bag — product shot"></ui-media>
-						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-3.png" alt="Model carrying the goose bucket bag"></ui-media>
-						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-2.png" alt="Goose drawstring bag — detail"></ui-media>
+					<lay-out xs="cg(xs) rg(xs) p(xs)" md="columns(3)" lg="grid(3c)" theme="gray">
+						<ui-media media="hov(zoom)"><img src="assets/goose-1.png" alt="Goose bucket bag — product shot"></ui-media>
+						<ui-media media="hov(zoom)"><img src="assets/goose-3.png" alt="Model carrying the goose bucket bag"></ui-media>
+						<ui-media media="hov(zoom)"><img src="assets/goose-2.png" alt="Goose drawstring bag — detail"></ui-media>
 					</lay-out>
 				</ui-media>
 				<ui-content>
@@ -166,11 +167,7 @@
 	     ============================================================ -->
 	<h2>Framed carousel</h2>
 	<p>The reference design: a bordered card with a small header, its products swiping one at a time between symmetric side peeks — the <code>overflow="preview-xs frame"</code> pattern from the carousel page. CSS-only.</p>
-	<!-- NOTE: no `bleed` here on purpose — [bleed] sets --layout-w (100dvi-based) and the
-	     custom property inherits into DEEP nested lay-outs (the collage inside each slide),
-	     blowing it up to viewport width. --layout-w is not in the lay-out isolation
-	     re-declare list; see the leak note in the session summary. -->
-	<lay-out theme="muted gray" xs="pbs(3) pbe(3)">
+	<lay-out bleed theme="muted gray" xs="pbs(3) pbe(3)">
 		<lay-out lg="items(start)" width="sm">
 			<ui-card variant="bdr bdr(lgt)">
 				<lay-out-group style="--layout-group-gap: 0">

@@ -428,14 +428,15 @@ ui-carousel-controls[data-media*="arw(set)"]:is([data-media*="arw(tc)"], [data-m
 	inset-inline-end: auto;
 }
 
+/* dots-only band (declared BEFORE the nav/arw band rules, mirroring native:
+   a media string with arw(abv) AND mrk(blw) must let the ARROW band win): the arrows stay ON the media, re-centred on the visible image */
+ui-carousel-controls[data-media*="mrk(blw)"] { --_pf-arrow-top: calc(50% - (var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band)) / 2 - var(--ui-carousel-arrow-size) / 2); }
+ui-carousel-controls[data-media*="mrk(abv)"] { --_pf-arrow-top: calc(50% + (var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band)) / 2 - var(--ui-carousel-arrow-size) / 2); }
 /* ---- arrows · band placement (mirrors the native --ui-carousel-arrow-top set) ---- */
 ui-carousel-controls[data-media*="nav(blw)"],
 ui-carousel-controls[data-media*="arw(blw)"] { --_pf-arrow-top: calc(100% - var(--ui-carousel-band) / 2 - var(--ui-carousel-arrow-size) / 2); }
 ui-carousel-controls[data-media*="nav(abv)"],
 ui-carousel-controls[data-media*="arw(abv)"] { --_pf-arrow-top: calc(var(--ui-carousel-band) / 2 - var(--ui-carousel-arrow-size) / 2); }
-/* dots-only band: the arrows stay ON the media, re-centred on the visible image */
-ui-carousel-controls[data-media*="mrk(blw)"] { --_pf-arrow-top: calc(50% - (var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band)) / 2 - var(--ui-carousel-arrow-size) / 2); }
-ui-carousel-controls[data-media*="mrk(abv)"] { --_pf-arrow-top: calc(50% + (var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band)) / 2 - var(--ui-carousel-arrow-size) / 2); }
 
 /* ---- dots · band placement for the dots-only bands (nav(blw|abv) already above) ---- */
 ui-carousel-controls[data-media*="mrk(blw)"] [data-dots] {
@@ -594,4 +595,60 @@ ui-carousel-controls[data-media*="axis(y)"][data-media*="mrk(rail)"] [data-dots]
 ui-carousel-controls[data-media*="axis(y)"][data-media*="mrk(rail)"] [data-dot] {
 	flex: 0 1 auto;
 	min-block-size: var(--ui-carousel-thumb-min, 2.5rem);
+}
+
+/* ---- pill dots sit in a marker-size SLOT. Native pins the group's top at
+   `anchor(bottom) - overlay-gap - marker-size`, so a pill (--ui-carousel-pill-height,
+   0.35rem) inside a 0.6rem slot rides ~4px higher than a plain bottom offset would
+   put it. Re-add that slack instead of top-pinning the group, which would fight the
+   band rules that set inset-block-end. Circular dots need no rule: their height IS
+   marker-size, so the two formulations agree. ---- */
+ui-carousel-controls[data-media*="mrk(pll)"] [data-dots] {
+	inset-block-end: calc(var(--ui-carousel-overlay-gap) + var(--ui-carousel-marker-size) - var(--ui-carousel-pill-height));
+}
+
+/* ---- thumbnails are sized like a ::scroll-marker, i.e. CONTENT-box: block-size is
+   the image box and the 2px border sits outside it (84px wide at 3.75rem/4:3, not
+   80). base/core.css's reset makes every element border-box, which shrank every
+   thumb by its border. ---- */
+ui-carousel-controls[data-media*="mrk(tmb)"] [data-dot] {
+	box-sizing: content-box;
+}
+
+/* ---- in-band dot alignment (nav(blw)/nav(abv) + a dot cell). The inline letter
+   pins the dots inside the BAND, and they must clear the split arrows: without
+   this, mrk(be) in a band drops the dots straight on top of the next arrow.
+   Declared after the corner-placement rules so the band cell wins. Mirrors the
+   native "in-band dot alignment" block, with anchor(left|right)+X → inset-inline. ---- */
+/* vertical: pin to the band centre (the corner rules put them on the media edge) */
+ui-carousel-controls:is([data-media*="nav(blw)"], [data-media*="mrk(blw)"]):is([data-media*="mrk(bs)"], [data-media*="mrk(bc)"], [data-media*="mrk(be)"]) [data-dots] {
+	block-size: var(--ui-carousel-band);
+	inset-block: auto 0;
+}
+ui-carousel-controls:is([data-media*="nav(abv)"], [data-media*="mrk(abv)"]):is([data-media*="mrk(ts)"], [data-media*="mrk(tc)"], [data-media*="mrk(te)"]) [data-dots] {
+	block-size: var(--ui-carousel-band);
+	inset-block: 0 auto;
+}
+/* start — mrk(bs) in blw / mrk(ts) in abv: clear the prev arrow */
+ui-carousel-controls:is([data-media*="nav(blw)"][data-media*="mrk(bs)"], [data-media*="nav(abv)"][data-media*="mrk(ts)"]) [data-dots] {
+	inset-inline: calc(2 * var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size)) auto;
+	justify-content: start;
+}
+/* …but arw(set) moves BOTH arrows off the start edge, so only one gap is needed */
+ui-carousel-controls:is([data-media*="nav(blw)"][data-media*="mrk(bs)"][data-media*="arw(set)"], [data-media*="nav(abv)"][data-media*="mrk(ts)"][data-media*="arw(set)"]) [data-dots] {
+	inset-inline: var(--ui-carousel-overlay-gap) auto;
+}
+/* centre — mrk(bc)/mrk(tc); also resets the arw(set) start-shift */
+ui-carousel-controls:is([data-media*="nav(blw)"][data-media*="mrk(bc)"], [data-media*="nav(abv)"][data-media*="mrk(tc)"]) [data-dots] {
+	inset-inline: 0;
+	justify-content: center;
+}
+/* end — mrk(be) in blw / mrk(te) in abv: clear the next arrow */
+ui-carousel-controls:is([data-media*="nav(blw)"][data-media*="mrk(be)"], [data-media*="nav(abv)"][data-media*="mrk(te)"]) [data-dots] {
+	inset-inline: auto calc(2 * var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size));
+	justify-content: end;
+}
+/* …with arw(set) the pair sits at the end, so clear both arrows plus their gap */
+ui-carousel-controls:is([data-media*="nav(blw)"][data-media*="mrk(be)"][data-media*="arw(set)"], [data-media*="nav(abv)"][data-media*="mrk(te)"][data-media*="arw(set)"]) [data-dots] {
+	inset-inline: auto calc(2 * var(--ui-carousel-overlay-gap) + 2 * var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
 }

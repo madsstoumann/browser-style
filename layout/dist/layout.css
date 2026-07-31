@@ -12,6 +12,13 @@
    guaranteed-invalid initial simply never matches the style query). */
 @property --_subgrid { syntax: "*"; inherits: false; }
 
+/* width knob — [bleed] sets it to a 100dvi-based calc for its OWN width.
+   NON-inheriting on purpose: a nested <lay-out> anywhere inside a bleed section
+   (e.g. a collage grid inside a card slide) must not pick up the ancestor's
+   viewport-based width — `width: var(--layout-w, 100%)` falls back to 100%.
+   Still a per-element knob: set it ON the lay-out you want to size. */
+@property --layout-w { syntax: "*"; inherits: false; }
+
 @layer layout.base {
 	/* Page wrapper — mark the element that DIRECTLY contains the top-level
 	   <lay-out> sections (usually <body>, sometimes <main>) with `data-layout-root`
@@ -558,19 +565,22 @@
     --layout-pbe: 0;
   }
 
-  :is(lay-out, lay-out-group)[xs*="p(1)"] {
+  :is(lay-out, lay-out-group)[xs*="p(1)"],
+  :is(lay-out, lay-out-group)[xs*="p(md)"] {
     --layout-pi: 1;
     --layout-pbs: 1;
     --layout-pbe: 1;
   }
 
-  :is(lay-out, lay-out-group)[xs*="p(2)"] {
+  :is(lay-out, lay-out-group)[xs*="p(2)"],
+  :is(lay-out, lay-out-group)[xs*="p(xl)"] {
     --layout-pi: 2;
     --layout-pbs: 2;
     --layout-pbe: 2;
   }
 
-  :is(lay-out, lay-out-group)[xs*="p(3)"] {
+  :is(lay-out, lay-out-group)[xs*="p(3)"],
+  :is(lay-out, lay-out-group)[xs*="p(2xl)"] {
     --layout-pi: 3;
     --layout-pbs: 3;
     --layout-pbe: 3;
@@ -582,19 +592,46 @@
     --layout-pbe: 4;
   }
 
+  :is(lay-out, lay-out-group)[xs*="p(2xs)"] {
+    --layout-pi: 0.125;
+    --layout-pbs: 0.125;
+    --layout-pbe: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="p(xs)"] {
+    --layout-pi: 0.25;
+    --layout-pbs: 0.25;
+    --layout-pbe: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="p(sm)"] {
+    --layout-pi: 0.5;
+    --layout-pbs: 0.5;
+    --layout-pbe: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="p(lg)"] {
+    --layout-pi: 1.5;
+    --layout-pbs: 1.5;
+    --layout-pbe: 1.5;
+  }
+
   :is(lay-out, lay-out-group)[xs*="pi(0)"] {
     --layout-pi: 0;
   }
 
-  :is(lay-out, lay-out-group)[xs*="pi(1)"] {
+  :is(lay-out, lay-out-group)[xs*="pi(1)"],
+  :is(lay-out, lay-out-group)[xs*="pi(md)"] {
     --layout-pi: 1;
   }
 
-  :is(lay-out, lay-out-group)[xs*="pi(2)"] {
+  :is(lay-out, lay-out-group)[xs*="pi(2)"],
+  :is(lay-out, lay-out-group)[xs*="pi(xl)"] {
     --layout-pi: 2;
   }
 
-  :is(lay-out, lay-out-group)[xs*="pi(3)"] {
+  :is(lay-out, lay-out-group)[xs*="pi(3)"],
+  :is(lay-out, lay-out-group)[xs*="pi(2xl)"] {
     --layout-pi: 3;
   }
 
@@ -602,22 +639,41 @@
     --layout-pi: 4;
   }
 
+  :is(lay-out, lay-out-group)[xs*="pi(2xs)"] {
+    --layout-pi: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="pi(xs)"] {
+    --layout-pi: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="pi(sm)"] {
+    --layout-pi: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="pi(lg)"] {
+    --layout-pi: 1.5;
+  }
+
   :is(lay-out, lay-out-group)[xs*="pb(0)"] {
     --layout-pbs: 0;
     --layout-pbe: 0;
   }
 
-  :is(lay-out, lay-out-group)[xs*="pb(1)"] {
+  :is(lay-out, lay-out-group)[xs*="pb(1)"],
+  :is(lay-out, lay-out-group)[xs*="pb(md)"] {
     --layout-pbs: 1;
     --layout-pbe: 1;
   }
 
-  :is(lay-out, lay-out-group)[xs*="pb(2)"] {
+  :is(lay-out, lay-out-group)[xs*="pb(2)"],
+  :is(lay-out, lay-out-group)[xs*="pb(xl)"] {
     --layout-pbs: 2;
     --layout-pbe: 2;
   }
 
-  :is(lay-out, lay-out-group)[xs*="pb(3)"] {
+  :is(lay-out, lay-out-group)[xs*="pb(3)"],
+  :is(lay-out, lay-out-group)[xs*="pb(2xl)"] {
     --layout-pbs: 3;
     --layout-pbe: 3;
   }
@@ -627,19 +683,42 @@
     --layout-pbe: 4;
   }
 
+  :is(lay-out, lay-out-group)[xs*="pb(2xs)"] {
+    --layout-pbs: 0.125;
+    --layout-pbe: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="pb(xs)"] {
+    --layout-pbs: 0.25;
+    --layout-pbe: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="pb(sm)"] {
+    --layout-pbs: 0.5;
+    --layout-pbe: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="pb(lg)"] {
+    --layout-pbs: 1.5;
+    --layout-pbe: 1.5;
+  }
+
   :is(lay-out, lay-out-group)[xs*="pbs(0)"] {
     --layout-pbs: 0;
   }
 
-  :is(lay-out, lay-out-group)[xs*="pbs(1)"] {
+  :is(lay-out, lay-out-group)[xs*="pbs(1)"],
+  :is(lay-out, lay-out-group)[xs*="pbs(md)"] {
     --layout-pbs: 1;
   }
 
-  :is(lay-out, lay-out-group)[xs*="pbs(2)"] {
+  :is(lay-out, lay-out-group)[xs*="pbs(2)"],
+  :is(lay-out, lay-out-group)[xs*="pbs(xl)"] {
     --layout-pbs: 2;
   }
 
-  :is(lay-out, lay-out-group)[xs*="pbs(3)"] {
+  :is(lay-out, lay-out-group)[xs*="pbs(3)"],
+  :is(lay-out, lay-out-group)[xs*="pbs(2xl)"] {
     --layout-pbs: 3;
   }
 
@@ -647,19 +726,38 @@
     --layout-pbs: 4;
   }
 
+  :is(lay-out, lay-out-group)[xs*="pbs(2xs)"] {
+    --layout-pbs: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="pbs(xs)"] {
+    --layout-pbs: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="pbs(sm)"] {
+    --layout-pbs: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="pbs(lg)"] {
+    --layout-pbs: 1.5;
+  }
+
   :is(lay-out, lay-out-group)[xs*="pbe(0)"] {
     --layout-pbe: 0;
   }
 
-  :is(lay-out, lay-out-group)[xs*="pbe(1)"] {
+  :is(lay-out, lay-out-group)[xs*="pbe(1)"],
+  :is(lay-out, lay-out-group)[xs*="pbe(md)"] {
     --layout-pbe: 1;
   }
 
-  :is(lay-out, lay-out-group)[xs*="pbe(2)"] {
+  :is(lay-out, lay-out-group)[xs*="pbe(2)"],
+  :is(lay-out, lay-out-group)[xs*="pbe(xl)"] {
     --layout-pbe: 2;
   }
 
-  :is(lay-out, lay-out-group)[xs*="pbe(3)"] {
+  :is(lay-out, lay-out-group)[xs*="pbe(3)"],
+  :is(lay-out, lay-out-group)[xs*="pbe(2xl)"] {
     --layout-pbe: 3;
   }
 
@@ -667,19 +765,38 @@
     --layout-pbe: 4;
   }
 
+  :is(lay-out, lay-out-group)[xs*="pbe(2xs)"] {
+    --layout-pbe: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="pbe(xs)"] {
+    --layout-pbe: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="pbe(sm)"] {
+    --layout-pbe: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="pbe(lg)"] {
+    --layout-pbe: 1.5;
+  }
+
   :is(lay-out, lay-out-group)[xs*="mbs(0)"] {
     --layout-mbs: 0;
   }
 
-  :is(lay-out, lay-out-group)[xs*="mbs(1)"] {
+  :is(lay-out, lay-out-group)[xs*="mbs(1)"],
+  :is(lay-out, lay-out-group)[xs*="mbs(md)"] {
     --layout-mbs: 1;
   }
 
-  :is(lay-out, lay-out-group)[xs*="mbs(2)"] {
+  :is(lay-out, lay-out-group)[xs*="mbs(2)"],
+  :is(lay-out, lay-out-group)[xs*="mbs(xl)"] {
     --layout-mbs: 2;
   }
 
-  :is(lay-out, lay-out-group)[xs*="mbs(3)"] {
+  :is(lay-out, lay-out-group)[xs*="mbs(3)"],
+  :is(lay-out, lay-out-group)[xs*="mbs(2xl)"] {
     --layout-mbs: 3;
   }
 
@@ -687,19 +804,38 @@
     --layout-mbs: 4;
   }
 
+  :is(lay-out, lay-out-group)[xs*="mbs(2xs)"] {
+    --layout-mbs: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="mbs(xs)"] {
+    --layout-mbs: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="mbs(sm)"] {
+    --layout-mbs: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="mbs(lg)"] {
+    --layout-mbs: 1.5;
+  }
+
   :is(lay-out, lay-out-group)[xs*="mbe(0)"] {
     --layout-mbe: 0;
   }
 
-  :is(lay-out, lay-out-group)[xs*="mbe(1)"] {
+  :is(lay-out, lay-out-group)[xs*="mbe(1)"],
+  :is(lay-out, lay-out-group)[xs*="mbe(md)"] {
     --layout-mbe: 1;
   }
 
-  :is(lay-out, lay-out-group)[xs*="mbe(2)"] {
+  :is(lay-out, lay-out-group)[xs*="mbe(2)"],
+  :is(lay-out, lay-out-group)[xs*="mbe(xl)"] {
     --layout-mbe: 2;
   }
 
-  :is(lay-out, lay-out-group)[xs*="mbe(3)"] {
+  :is(lay-out, lay-out-group)[xs*="mbe(3)"],
+  :is(lay-out, lay-out-group)[xs*="mbe(2xl)"] {
     --layout-mbe: 3;
   }
 
@@ -707,19 +843,38 @@
     --layout-mbe: 4;
   }
 
+  :is(lay-out, lay-out-group)[xs*="mbe(2xs)"] {
+    --layout-mbe: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="mbe(xs)"] {
+    --layout-mbe: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="mbe(sm)"] {
+    --layout-mbe: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="mbe(lg)"] {
+    --layout-mbe: 1.5;
+  }
+
   :is(lay-out, lay-out-group)[xs*="cg(0)"] {
     --layout-colmg: 0;
   }
 
-  :is(lay-out, lay-out-group)[xs*="cg(1)"] {
+  :is(lay-out, lay-out-group)[xs*="cg(1)"],
+  :is(lay-out, lay-out-group)[xs*="cg(md)"] {
     --layout-colmg: 1;
   }
 
-  :is(lay-out, lay-out-group)[xs*="cg(2)"] {
+  :is(lay-out, lay-out-group)[xs*="cg(2)"],
+  :is(lay-out, lay-out-group)[xs*="cg(xl)"] {
     --layout-colmg: 2;
   }
 
-  :is(lay-out, lay-out-group)[xs*="cg(3)"] {
+  :is(lay-out, lay-out-group)[xs*="cg(3)"],
+  :is(lay-out, lay-out-group)[xs*="cg(2xl)"] {
     --layout-colmg: 3;
   }
 
@@ -727,24 +882,59 @@
     --layout-colmg: 4;
   }
 
+  :is(lay-out, lay-out-group)[xs*="cg(2xs)"] {
+    --layout-colmg: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="cg(xs)"] {
+    --layout-colmg: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="cg(sm)"] {
+    --layout-colmg: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="cg(lg)"] {
+    --layout-colmg: 1.5;
+  }
+
   :is(lay-out, lay-out-group)[xs*="rg(0)"] {
     --layout-rg: 0;
   }
 
-  :is(lay-out, lay-out-group)[xs*="rg(1)"] {
+  :is(lay-out, lay-out-group)[xs*="rg(1)"],
+  :is(lay-out, lay-out-group)[xs*="rg(md)"] {
     --layout-rg: 1;
   }
 
-  :is(lay-out, lay-out-group)[xs*="rg(2)"] {
+  :is(lay-out, lay-out-group)[xs*="rg(2)"],
+  :is(lay-out, lay-out-group)[xs*="rg(xl)"] {
     --layout-rg: 2;
   }
 
-  :is(lay-out, lay-out-group)[xs*="rg(3)"] {
+  :is(lay-out, lay-out-group)[xs*="rg(3)"],
+  :is(lay-out, lay-out-group)[xs*="rg(2xl)"] {
     --layout-rg: 3;
   }
 
   :is(lay-out, lay-out-group)[xs*="rg(4)"] {
     --layout-rg: 4;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="rg(2xs)"] {
+    --layout-rg: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="rg(xs)"] {
+    --layout-rg: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="rg(sm)"] {
+    --layout-rg: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[xs*="rg(lg)"] {
+    --layout-rg: 1.5;
   }
 
   lay-out[xs*="items(start)"] {
@@ -1430,19 +1620,22 @@
     --layout-pbe: 0;
   }
 
-  :is(lay-out, lay-out-group)[lg*="p(1)"] {
+  :is(lay-out, lay-out-group)[lg*="p(1)"],
+  :is(lay-out, lay-out-group)[lg*="p(md)"] {
     --layout-pi: 1;
     --layout-pbs: 1;
     --layout-pbe: 1;
   }
 
-  :is(lay-out, lay-out-group)[lg*="p(2)"] {
+  :is(lay-out, lay-out-group)[lg*="p(2)"],
+  :is(lay-out, lay-out-group)[lg*="p(xl)"] {
     --layout-pi: 2;
     --layout-pbs: 2;
     --layout-pbe: 2;
   }
 
-  :is(lay-out, lay-out-group)[lg*="p(3)"] {
+  :is(lay-out, lay-out-group)[lg*="p(3)"],
+  :is(lay-out, lay-out-group)[lg*="p(2xl)"] {
     --layout-pi: 3;
     --layout-pbs: 3;
     --layout-pbe: 3;
@@ -1454,19 +1647,46 @@
     --layout-pbe: 4;
   }
 
+  :is(lay-out, lay-out-group)[lg*="p(2xs)"] {
+    --layout-pi: 0.125;
+    --layout-pbs: 0.125;
+    --layout-pbe: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="p(xs)"] {
+    --layout-pi: 0.25;
+    --layout-pbs: 0.25;
+    --layout-pbe: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="p(sm)"] {
+    --layout-pi: 0.5;
+    --layout-pbs: 0.5;
+    --layout-pbe: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="p(lg)"] {
+    --layout-pi: 1.5;
+    --layout-pbs: 1.5;
+    --layout-pbe: 1.5;
+  }
+
   :is(lay-out, lay-out-group)[lg*="pi(0)"] {
     --layout-pi: 0;
   }
 
-  :is(lay-out, lay-out-group)[lg*="pi(1)"] {
+  :is(lay-out, lay-out-group)[lg*="pi(1)"],
+  :is(lay-out, lay-out-group)[lg*="pi(md)"] {
     --layout-pi: 1;
   }
 
-  :is(lay-out, lay-out-group)[lg*="pi(2)"] {
+  :is(lay-out, lay-out-group)[lg*="pi(2)"],
+  :is(lay-out, lay-out-group)[lg*="pi(xl)"] {
     --layout-pi: 2;
   }
 
-  :is(lay-out, lay-out-group)[lg*="pi(3)"] {
+  :is(lay-out, lay-out-group)[lg*="pi(3)"],
+  :is(lay-out, lay-out-group)[lg*="pi(2xl)"] {
     --layout-pi: 3;
   }
 
@@ -1474,22 +1694,41 @@
     --layout-pi: 4;
   }
 
+  :is(lay-out, lay-out-group)[lg*="pi(2xs)"] {
+    --layout-pi: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="pi(xs)"] {
+    --layout-pi: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="pi(sm)"] {
+    --layout-pi: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="pi(lg)"] {
+    --layout-pi: 1.5;
+  }
+
   :is(lay-out, lay-out-group)[lg*="pb(0)"] {
     --layout-pbs: 0;
     --layout-pbe: 0;
   }
 
-  :is(lay-out, lay-out-group)[lg*="pb(1)"] {
+  :is(lay-out, lay-out-group)[lg*="pb(1)"],
+  :is(lay-out, lay-out-group)[lg*="pb(md)"] {
     --layout-pbs: 1;
     --layout-pbe: 1;
   }
 
-  :is(lay-out, lay-out-group)[lg*="pb(2)"] {
+  :is(lay-out, lay-out-group)[lg*="pb(2)"],
+  :is(lay-out, lay-out-group)[lg*="pb(xl)"] {
     --layout-pbs: 2;
     --layout-pbe: 2;
   }
 
-  :is(lay-out, lay-out-group)[lg*="pb(3)"] {
+  :is(lay-out, lay-out-group)[lg*="pb(3)"],
+  :is(lay-out, lay-out-group)[lg*="pb(2xl)"] {
     --layout-pbs: 3;
     --layout-pbe: 3;
   }
@@ -1499,19 +1738,42 @@
     --layout-pbe: 4;
   }
 
+  :is(lay-out, lay-out-group)[lg*="pb(2xs)"] {
+    --layout-pbs: 0.125;
+    --layout-pbe: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="pb(xs)"] {
+    --layout-pbs: 0.25;
+    --layout-pbe: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="pb(sm)"] {
+    --layout-pbs: 0.5;
+    --layout-pbe: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="pb(lg)"] {
+    --layout-pbs: 1.5;
+    --layout-pbe: 1.5;
+  }
+
   :is(lay-out, lay-out-group)[lg*="pbs(0)"] {
     --layout-pbs: 0;
   }
 
-  :is(lay-out, lay-out-group)[lg*="pbs(1)"] {
+  :is(lay-out, lay-out-group)[lg*="pbs(1)"],
+  :is(lay-out, lay-out-group)[lg*="pbs(md)"] {
     --layout-pbs: 1;
   }
 
-  :is(lay-out, lay-out-group)[lg*="pbs(2)"] {
+  :is(lay-out, lay-out-group)[lg*="pbs(2)"],
+  :is(lay-out, lay-out-group)[lg*="pbs(xl)"] {
     --layout-pbs: 2;
   }
 
-  :is(lay-out, lay-out-group)[lg*="pbs(3)"] {
+  :is(lay-out, lay-out-group)[lg*="pbs(3)"],
+  :is(lay-out, lay-out-group)[lg*="pbs(2xl)"] {
     --layout-pbs: 3;
   }
 
@@ -1519,19 +1781,38 @@
     --layout-pbs: 4;
   }
 
+  :is(lay-out, lay-out-group)[lg*="pbs(2xs)"] {
+    --layout-pbs: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="pbs(xs)"] {
+    --layout-pbs: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="pbs(sm)"] {
+    --layout-pbs: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="pbs(lg)"] {
+    --layout-pbs: 1.5;
+  }
+
   :is(lay-out, lay-out-group)[lg*="pbe(0)"] {
     --layout-pbe: 0;
   }
 
-  :is(lay-out, lay-out-group)[lg*="pbe(1)"] {
+  :is(lay-out, lay-out-group)[lg*="pbe(1)"],
+  :is(lay-out, lay-out-group)[lg*="pbe(md)"] {
     --layout-pbe: 1;
   }
 
-  :is(lay-out, lay-out-group)[lg*="pbe(2)"] {
+  :is(lay-out, lay-out-group)[lg*="pbe(2)"],
+  :is(lay-out, lay-out-group)[lg*="pbe(xl)"] {
     --layout-pbe: 2;
   }
 
-  :is(lay-out, lay-out-group)[lg*="pbe(3)"] {
+  :is(lay-out, lay-out-group)[lg*="pbe(3)"],
+  :is(lay-out, lay-out-group)[lg*="pbe(2xl)"] {
     --layout-pbe: 3;
   }
 
@@ -1539,19 +1820,38 @@
     --layout-pbe: 4;
   }
 
+  :is(lay-out, lay-out-group)[lg*="pbe(2xs)"] {
+    --layout-pbe: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="pbe(xs)"] {
+    --layout-pbe: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="pbe(sm)"] {
+    --layout-pbe: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="pbe(lg)"] {
+    --layout-pbe: 1.5;
+  }
+
   :is(lay-out, lay-out-group)[lg*="mbs(0)"] {
     --layout-mbs: 0;
   }
 
-  :is(lay-out, lay-out-group)[lg*="mbs(1)"] {
+  :is(lay-out, lay-out-group)[lg*="mbs(1)"],
+  :is(lay-out, lay-out-group)[lg*="mbs(md)"] {
     --layout-mbs: 1;
   }
 
-  :is(lay-out, lay-out-group)[lg*="mbs(2)"] {
+  :is(lay-out, lay-out-group)[lg*="mbs(2)"],
+  :is(lay-out, lay-out-group)[lg*="mbs(xl)"] {
     --layout-mbs: 2;
   }
 
-  :is(lay-out, lay-out-group)[lg*="mbs(3)"] {
+  :is(lay-out, lay-out-group)[lg*="mbs(3)"],
+  :is(lay-out, lay-out-group)[lg*="mbs(2xl)"] {
     --layout-mbs: 3;
   }
 
@@ -1559,19 +1859,38 @@
     --layout-mbs: 4;
   }
 
+  :is(lay-out, lay-out-group)[lg*="mbs(2xs)"] {
+    --layout-mbs: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="mbs(xs)"] {
+    --layout-mbs: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="mbs(sm)"] {
+    --layout-mbs: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="mbs(lg)"] {
+    --layout-mbs: 1.5;
+  }
+
   :is(lay-out, lay-out-group)[lg*="mbe(0)"] {
     --layout-mbe: 0;
   }
 
-  :is(lay-out, lay-out-group)[lg*="mbe(1)"] {
+  :is(lay-out, lay-out-group)[lg*="mbe(1)"],
+  :is(lay-out, lay-out-group)[lg*="mbe(md)"] {
     --layout-mbe: 1;
   }
 
-  :is(lay-out, lay-out-group)[lg*="mbe(2)"] {
+  :is(lay-out, lay-out-group)[lg*="mbe(2)"],
+  :is(lay-out, lay-out-group)[lg*="mbe(xl)"] {
     --layout-mbe: 2;
   }
 
-  :is(lay-out, lay-out-group)[lg*="mbe(3)"] {
+  :is(lay-out, lay-out-group)[lg*="mbe(3)"],
+  :is(lay-out, lay-out-group)[lg*="mbe(2xl)"] {
     --layout-mbe: 3;
   }
 
@@ -1579,19 +1898,38 @@
     --layout-mbe: 4;
   }
 
+  :is(lay-out, lay-out-group)[lg*="mbe(2xs)"] {
+    --layout-mbe: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="mbe(xs)"] {
+    --layout-mbe: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="mbe(sm)"] {
+    --layout-mbe: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="mbe(lg)"] {
+    --layout-mbe: 1.5;
+  }
+
   :is(lay-out, lay-out-group)[lg*="cg(0)"] {
     --layout-colmg: 0;
   }
 
-  :is(lay-out, lay-out-group)[lg*="cg(1)"] {
+  :is(lay-out, lay-out-group)[lg*="cg(1)"],
+  :is(lay-out, lay-out-group)[lg*="cg(md)"] {
     --layout-colmg: 1;
   }
 
-  :is(lay-out, lay-out-group)[lg*="cg(2)"] {
+  :is(lay-out, lay-out-group)[lg*="cg(2)"],
+  :is(lay-out, lay-out-group)[lg*="cg(xl)"] {
     --layout-colmg: 2;
   }
 
-  :is(lay-out, lay-out-group)[lg*="cg(3)"] {
+  :is(lay-out, lay-out-group)[lg*="cg(3)"],
+  :is(lay-out, lay-out-group)[lg*="cg(2xl)"] {
     --layout-colmg: 3;
   }
 
@@ -1599,24 +1937,59 @@
     --layout-colmg: 4;
   }
 
+  :is(lay-out, lay-out-group)[lg*="cg(2xs)"] {
+    --layout-colmg: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="cg(xs)"] {
+    --layout-colmg: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="cg(sm)"] {
+    --layout-colmg: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="cg(lg)"] {
+    --layout-colmg: 1.5;
+  }
+
   :is(lay-out, lay-out-group)[lg*="rg(0)"] {
     --layout-rg: 0;
   }
 
-  :is(lay-out, lay-out-group)[lg*="rg(1)"] {
+  :is(lay-out, lay-out-group)[lg*="rg(1)"],
+  :is(lay-out, lay-out-group)[lg*="rg(md)"] {
     --layout-rg: 1;
   }
 
-  :is(lay-out, lay-out-group)[lg*="rg(2)"] {
+  :is(lay-out, lay-out-group)[lg*="rg(2)"],
+  :is(lay-out, lay-out-group)[lg*="rg(xl)"] {
     --layout-rg: 2;
   }
 
-  :is(lay-out, lay-out-group)[lg*="rg(3)"] {
+  :is(lay-out, lay-out-group)[lg*="rg(3)"],
+  :is(lay-out, lay-out-group)[lg*="rg(2xl)"] {
     --layout-rg: 3;
   }
 
   :is(lay-out, lay-out-group)[lg*="rg(4)"] {
     --layout-rg: 4;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="rg(2xs)"] {
+    --layout-rg: 0.125;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="rg(xs)"] {
+    --layout-rg: 0.25;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="rg(sm)"] {
+    --layout-rg: 0.5;
+  }
+
+  :is(lay-out, lay-out-group)[lg*="rg(lg)"] {
+    --layout-rg: 1.5;
   }
 
   lay-out[lg~="subgrid"] {

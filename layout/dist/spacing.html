@@ -18,9 +18,16 @@
 	multiplier applied to <strong>--layout-space-unit</strong>. The lowest breakpoint (<strong>xs</strong>,
 	un-media-queried) is the <strong>mobile-first base</strong> that applies at all widths; larger
 	breakpoints override it. Resize the viewport to see the overrides.</p>
+	<p>Steps come in two spellings, both multipliers of <code>--layout-space-unit</code>:
+	<strong>numbers</strong> (<code>cg(0)</code>–<code>cg(4)</code>) and <strong>word sizes</strong>
+	following the content-DSL ladder — <code>2xs</code>&nbsp;0.125 · <code>xs</code>&nbsp;0.25 ·
+	<code>sm</code>&nbsp;0.5 · <code>md</code>&nbsp;1 · <code>lg</code>&nbsp;1.5 ·
+	<code>xl</code>&nbsp;2 · <code>2xl</code>&nbsp;3. At the default 1rem unit that makes
+	<code>cg(2xs)</code> a 2px hairline and <code>cg(xs)</code> 4px.</p>
 	<p><em>Note: this build generates spacing tokens for the <code>xs</code> and <code>lg</code>
-	breakpoints only (the <code>spacing.breakpoints</code> allowlist in <code>layout.config.json</code>).
-	Add more breakpoints there to author spacing at those tiers too.</em></p>
+	breakpoints (the <code>spacing.breakpoints</code> allowlist in <code>layout.config.json</code>) —
+	<code>xs</code> is the mobile-first base. Add breakpoints to the allowlist (e.g. <code>xl</code>
+	for mosaic tiers) to author spacing there too.</em></p>
 
 	<h2>All-sides padding — <code>p()</code></h2>
 	<section>
@@ -94,6 +101,42 @@
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Word sizes — <code>cg(2xs)</code> … <code>p(2xl)</code></h2>
+	<section>
+		<small>The word ladder on gaps: <strong>2xs</strong> (2px) at the base, <strong>sm</strong> (8px) at <strong>lg</strong>. Words and numbers mix freely.</small>
+		<code>&lt;lay-out xs="columns(3) cg(2xs) rg(2xs)" lg="columns(3) cg(sm) rg(sm)"&gt;</code>
+		<lay-out xs="columns(3) cg(2xs) rg(2xs)" lg="columns(3) cg(sm) rg(sm)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Hairlines — background color through tiny gaps</h2>
+	<section>
+		<small>A 2px gap (<strong>cg(2xs)</strong> / <strong>rg(2xs)</strong>) with matching padding (<strong>p(2xs)</strong>) lets <code>--layout-bg</code> read as hairlines between items — the mosaic-lines look. (For rules <em>inside</em> larger gaps, see the companion <code>gap-decorations</code> attribute.)</small>
+		<code>&lt;lay-out xs="columns(2) cg(2xs) rg(2xs) p(2xs)" lg="grid(3c) cg(2xs) rg(2xs) p(2xs)"&gt;</code>
+		<lay-out xs="columns(2) cg(2xs) rg(2xs) p(2xs)" lg="grid(3c) cg(2xs) rg(2xs) p(2xs)" style="--layout-bg: light-dark(#333, #ddd);">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Per-breakpoint gap change</h2>
+	<section>
+		<small>Allowlisted breakpoints can each set their own gap: <strong>xs</strong> (8px base) → <strong>lg</strong> (2px hairline with the pattern switch). Resize to watch the gap change with the layout.</small>
+		<code>&lt;lay-out xs="columns(2) cg(sm) rg(sm)" lg="grid(3a) cg(2xs) rg(2xs)"&gt;</code>
+		<lay-out xs="columns(2) cg(sm) rg(sm)" lg="grid(3a) cg(2xs) rg(2xs)" style="--layout-bg: light-dark(#333, #ddd);">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>

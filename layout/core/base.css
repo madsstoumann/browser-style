@@ -10,6 +10,13 @@
    guaranteed-invalid initial simply never matches the style query). */
 @property --_subgrid { syntax: "*"; inherits: false; }
 
+/* width knob — [bleed] sets it to a 100dvi-based calc for its OWN width.
+   NON-inheriting on purpose: a nested <lay-out> anywhere inside a bleed section
+   (e.g. a collage grid inside a card slide) must not pick up the ancestor's
+   viewport-based width — `width: var(--layout-w, 100%)` falls back to 100%.
+   Still a per-element knob: set it ON the lay-out you want to size. */
+@property --layout-w { syntax: "*"; inherits: false; }
+
 @layer layout.base {
 	/* Page wrapper — mark the element that DIRECTLY contains the top-level
 	   <lay-out> sections (usually <body>, sometimes <main>) with `data-layout-root`
