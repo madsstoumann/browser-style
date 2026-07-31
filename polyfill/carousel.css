@@ -26,7 +26,7 @@
    slide offsets stay exact multiples of the scrollport). It must be full-size,
    not a 0-width box with overflowing content: Chromium paints but does NOT
    hit-test content overflowing a sticky box inside a scroll container. ---- */
-ui-media > ui-carousel-controls {
+:is(ui-media, lay-out) > ui-carousel-controls {
 	display: block;
 	flex: 0 0 100%;
 	inset-inline-start: 0;
@@ -53,7 +53,7 @@ ui-media:where([media*="axis(y)"]) > ui-carousel-controls {
 
 /* full-scrollport overlay — --_h is the JS-measured clientHeight, so the layer
    also spans the nav(blw)/nav(abv) band padding below/above the flex content */
-ui-media > ui-carousel-controls > [data-layer] {
+:is(ui-media, lay-out) > ui-carousel-controls > [data-layer] {
 	block-size: var(--_h, 100%);
 	inline-size: 100%;
 	inset-block-start: 0;
@@ -69,7 +69,7 @@ ui-media:where([media*="nav(abv)"]) > ui-carousel-controls > [data-layer] {
 }
 
 /* controls present → hide the native scrollbar (mirrors the native gate rule) */
-ui-media:has(> ui-carousel-controls) { scrollbar-width: none; }
+:is(ui-media, lay-out):has(> ui-carousel-controls) { scrollbar-width: none; }
 
 /* button reset (native pseudos start unstyled) */
 ui-carousel-controls button {
@@ -199,7 +199,7 @@ ui-media:where([media*="mrk(tmb)"]) > ui-carousel-controls [data-dot][aria-curre
 ui-carousel-controls [data-nav] {
 	aspect-ratio: 1;
 	background: var(--ui-carousel-arrow-glyph) calc(50% + var(--ui-carousel-arrow-nudge)) center / var(--ui-carousel-arrow-glyph-size, 75%) no-repeat var(--ui-carousel-arrow-bg);
-	border: var(--ui-carousel-arrow-border, 1px solid rgb(255 255 255 / 0.6));
+	border: var(--ui-carousel-arrow-border, 0);   /* native default is 0 — a 1px ring here showed as a disc on transparent band arrows */
 	border-radius: var(--ui-carousel-arrow-radius, var(--radius-circle, 50%));
 	inline-size: var(--ui-carousel-arrow-size);
 	inset-block-start: var(--_pf-arrow-top, calc(50% - var(--ui-carousel-arrow-size) / 2));
@@ -210,12 +210,6 @@ ui-carousel-controls [data-nav]:hover { background-color: var(--ui-carousel-arro
 ui-carousel-controls [data-nav]:disabled { cursor: default; opacity: var(--ui-carousel-arrow-disabled-opacity, 0.4); pointer-events: none; }
 ui-carousel-controls [data-nav="prev"] { inset-inline-start: var(--ui-carousel-overlay-gap); --_arw-rot: 180deg; }
 ui-carousel-controls [data-nav="next"] { inset-inline-end: var(--ui-carousel-overlay-gap); }
-
-/* arrow placement (mid default) — anchor() vars become the polyfill's own var */
-:where(ui-card, ui-reveal):where([media*="arw(top)"]) ui-media > ui-carousel-controls,
-ui-media:where([media*="arw(top)"]) > ui-carousel-controls { --_pf-arrow-top: var(--ui-carousel-overlay-gap); }
-:where(ui-card, ui-reveal):where([media*="arw(bot)"]) ui-media > ui-carousel-controls,
-ui-media:where([media*="arw(bot)"]) > ui-carousel-controls { --_pf-arrow-top: calc(100% - var(--ui-carousel-overlay-gap) - var(--ui-carousel-arrow-size)); }
 
 /* arw(set) — both arrows as an adjacent pair at the inline-end */
 :where(ui-card, ui-reveal):where([media*="arw(set)"]) ui-media ui-carousel-controls [data-nav="prev"],
@@ -282,30 +276,6 @@ ui-media:where([media*="nav(blw)"][media*="arw(set)"]) > ui-carousel-controls [d
 	justify-content: start;
 	padding-inline-start: var(--ui-carousel-overlay-gap);
 }
-:where(ui-card, ui-reveal):where([media*="nav(blw)"][media*="mrk(sta)"]) ui-media ui-carousel-controls [data-dots],
-ui-media:where([media*="nav(blw)"][media*="mrk(sta)"]) > ui-carousel-controls [data-dots] {
-	justify-content: start;
-	padding-inline-start: calc(2 * var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size));
-}
-:where(ui-card, ui-reveal):where([media*="nav(blw)"][media*="mrk(sta)"][media*="arw(set)"]) ui-media ui-carousel-controls [data-dots],
-ui-media:where([media*="nav(blw)"][media*="mrk(sta)"][media*="arw(set)"]) > ui-carousel-controls [data-dots] {
-	padding-inline-start: var(--ui-carousel-overlay-gap);
-}
-:where(ui-card, ui-reveal):where([media*="nav(blw)"][media*="mrk(ctr)"]) ui-media ui-carousel-controls [data-dots],
-ui-media:where([media*="nav(blw)"][media*="mrk(ctr)"]) > ui-carousel-controls [data-dots] {
-	justify-content: center;
-	padding-inline: 0;
-}
-:where(ui-card, ui-reveal):where([media*="nav(blw)"][media*="mrk(end)"]) ui-media ui-carousel-controls [data-dots],
-ui-media:where([media*="nav(blw)"][media*="mrk(end)"]) > ui-carousel-controls [data-dots] {
-	justify-content: end;
-	padding-inline-start: 0;
-	padding-inline-end: calc(2 * var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size));
-}
-:where(ui-card, ui-reveal):where([media*="nav(blw)"][media*="mrk(end)"][media*="arw(set)"]) ui-media ui-carousel-controls [data-dots],
-ui-media:where([media*="nav(blw)"][media*="mrk(end)"][media*="arw(set)"]) > ui-carousel-controls [data-dots] {
-	padding-inline-end: calc(2 * var(--ui-carousel-overlay-gap) + 2 * var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
-}
 
 /* ============================================================
    VERTICAL controls — axis(y) / nav="y"
@@ -332,17 +302,6 @@ ui-media:where([media*="axis(y)"]) > ui-carousel-controls [data-nav="next"] {
 	inset-block-start: auto;
 	inset-block-end: var(--ui-carousel-overlay-gap);
 	inset-inline-end: var(--ui-carousel-overlay-gap);
-}
-/* axis(y) + arw(sta): arrows + dots on the inline-start edge */
-:where(ui-card, ui-reveal):where([media*="axis(y)"][media*="arw(sta)"]) ui-media ui-carousel-controls [data-nav],
-ui-media:where([media*="axis(y)"][media*="arw(sta)"]) > ui-carousel-controls [data-nav] {
-	inset-inline-start: var(--ui-carousel-overlay-gap);
-	inset-inline-end: auto;
-}
-:where(ui-card, ui-reveal):where([media*="axis(y)"][media*="arw(sta)"]) ui-media ui-carousel-controls [data-dots],
-ui-media:where([media*="axis(y)"][media*="arw(sta)"]) > ui-carousel-controls [data-dots] {
-	inset-inline-start: var(--ui-carousel-overlay-gap);
-	inset-inline-end: auto;
 }
 /* axis(y) + arw(set): stack the pair at the block-end */
 :where(ui-card, ui-reveal):where([media*="axis(y)"][media*="arw(set)"]) ui-media ui-carousel-controls [data-nav="prev"],
@@ -418,3 +377,221 @@ ui-media:where([media*="mrk(be)"]) > ui-carousel-controls [data-dots] { inset-bl
 ui-media:where([media*="mrk(tc)"]) > ui-carousel-controls [data-dots] { inset-block: var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)) auto; }
 :where(ui-card, ui-reveal):where([media*="mrk(bc)"]) ui-media ui-carousel-controls [data-dots],
 ui-media:where([media*="mrk(bc)"]) > ui-carousel-controls [data-dots] { inset-block: auto var(--ui-carousel-overlay-gap); }
+
+/* ============================================================
+   TOKEN SURFACE — single arm, keyed off [data-media]
+   ------------------------------------------------------------
+   carousel.js stamps the RESOLVED media string (own attribute, else the nearest
+   ui-card/ui-reveal host — the DSL's scoping rule, already applied in JS) onto
+   the controls element. So each token needs ONE selector here instead of the
+   host-arm + self-arm pair the rest of this file uses, and a <lay-out overflow>
+   scroller is covered by the same rules.
+
+   Coordinate map, native → here: the [data-layer] box IS the scrollport (it
+   spans the blw/abv band padding), so anchor(top)→0, anchor(bottom)→100%,
+   anchor(center)→50%. Every calc below is the native one with that substitution.
+   Ink/size/shape tokens (arw(lgt|drk|sm|lg|xl|sqr|sft|arr|hid), mrk(lgt|drk|
+   sm|md|lg|xl)) are NOT here on purpose: their setters live outside the native
+   @supports gate, so this path already inherits them.
+   ============================================================ */
+
+/* ---- arrows · block row (3×3 grid; cc/default = middle) ---- */
+ui-carousel-controls[data-media*="arw(ts)"],
+ui-carousel-controls[data-media*="arw(tc)"],
+ui-carousel-controls[data-media*="arw(te)"] { --_pf-arrow-top: var(--ui-carousel-overlay-gap); }
+ui-carousel-controls[data-media*="arw(bs)"],
+ui-carousel-controls[data-media*="arw(bc)"],
+ui-carousel-controls[data-media*="arw(be)"] { --_pf-arrow-top: calc(100% - var(--ui-carousel-overlay-gap) - var(--ui-carousel-arrow-size)); }
+
+/* ---- arrows · arw(set) cluster · inline side from the cell's inline letter ---- */
+/* default (end): prev sits one arrow + gap inside the next */
+ui-carousel-controls[data-media*="arw(set)"] [data-nav="prev"] {
+	inset-inline-start: auto;
+	inset-inline-end: calc(var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
+}
+/* inline-start cells (ts/cs/bs) */
+ui-carousel-controls[data-media*="arw(set)"]:is([data-media*="arw(ts)"], [data-media*="arw(cs)"], [data-media*="arw(bs)"]) [data-nav="prev"] {
+	inset-inline-start: var(--ui-carousel-overlay-gap);
+	inset-inline-end: auto;
+}
+ui-carousel-controls[data-media*="arw(set)"]:is([data-media*="arw(ts)"], [data-media*="arw(cs)"], [data-media*="arw(bs)"]) [data-nav="next"] {
+	inset-inline-start: calc(var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
+	inset-inline-end: auto;
+}
+/* inline-centre cells (tc/cc/bc) */
+ui-carousel-controls[data-media*="arw(set)"]:is([data-media*="arw(tc)"], [data-media*="arw(cc)"], [data-media*="arw(bc)"]) [data-nav="prev"] {
+	inset-inline-start: calc(50% - var(--ui-carousel-arrow-size) - var(--ui-carousel-arrow-gap) / 2);
+	inset-inline-end: auto;
+}
+ui-carousel-controls[data-media*="arw(set)"]:is([data-media*="arw(tc)"], [data-media*="arw(cc)"], [data-media*="arw(bc)"]) [data-nav="next"] {
+	inset-inline-start: calc(50% + var(--ui-carousel-arrow-gap) / 2);
+	inset-inline-end: auto;
+}
+
+/* ---- arrows · band placement (mirrors the native --ui-carousel-arrow-top set) ---- */
+ui-carousel-controls[data-media*="nav(blw)"],
+ui-carousel-controls[data-media*="arw(blw)"] { --_pf-arrow-top: calc(100% - var(--ui-carousel-band) / 2 - var(--ui-carousel-arrow-size) / 2); }
+ui-carousel-controls[data-media*="nav(abv)"],
+ui-carousel-controls[data-media*="arw(abv)"] { --_pf-arrow-top: calc(var(--ui-carousel-band) / 2 - var(--ui-carousel-arrow-size) / 2); }
+/* dots-only band: the arrows stay ON the media, re-centred on the visible image */
+ui-carousel-controls[data-media*="mrk(blw)"] { --_pf-arrow-top: calc(50% - (var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band)) / 2 - var(--ui-carousel-arrow-size) / 2); }
+ui-carousel-controls[data-media*="mrk(abv)"] { --_pf-arrow-top: calc(50% + (var(--ui-carousel-above-gap, 0.5rem) + var(--ui-carousel-band)) / 2 - var(--ui-carousel-arrow-size) / 2); }
+
+/* ---- dots · band placement for the dots-only bands (nav(blw|abv) already above) ---- */
+ui-carousel-controls[data-media*="mrk(blw)"] [data-dots] {
+	block-size: var(--ui-carousel-band);
+	inset-block-end: 0;
+}
+ui-carousel-controls[data-media*="mrk(abv)"] [data-dots] {
+	block-size: var(--ui-carousel-band);
+	inset-block-end: auto;
+	inset-block-start: 0;
+}
+/* arw(blw): arrows take the band, so the dots go back onto the media edge */
+ui-carousel-controls[data-media*="arw(blw)"] [data-dots] {
+	inset-block-end: calc(var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band) + var(--ui-carousel-overlay-gap));
+}
+
+/* the abv layer shift must follow mrk(abv)/arw(abv) too, not just nav(abv) */
+:is(ui-media, lay-out) > ui-carousel-controls:is([data-media*="mrk(abv)"], [data-media*="arw(abv)"]) > [data-layer] {
+	inset-block-start: calc(-1 * (var(--ui-carousel-above-gap) + var(--ui-carousel-band)));
+}
+
+/* ---- arw(rev) — hide every arrow until the scroller is hovered/focused.
+   Gated on (hover: hover) exactly like the native rule, so touch keeps them. ---- */
+@media (hover: hover) {
+	ui-carousel-controls[data-media*="arw(rev)"] [data-nav],
+	ui-carousel-controls[data-media*="arw(rev)"] [data-nav]:disabled { opacity: 0; }
+	:is(ui-media, lay-out):hover ui-carousel-controls[data-media*="arw(rev)"] [data-nav],
+	:is(ui-media, lay-out):focus-within ui-carousel-controls[data-media*="arw(rev)"] [data-nav],
+	ui-carousel-controls[data-media*="arw(rev)"] [data-nav]:focus-visible { opacity: 1; }
+	:is(ui-media, lay-out):hover ui-carousel-controls[data-media*="arw(rev)"] [data-nav]:disabled,
+	:is(ui-media, lay-out):focus-within ui-carousel-controls[data-media*="arw(rev)"] [data-nav]:disabled {
+		opacity: var(--ui-carousel-arrow-disabled-opacity, 0.5);
+	}
+}
+
+/* ---- mrk(bar) — thin styled scrollbar. The dot row becomes the track: each dot
+   is one seamless segment, the active one thickens. Native sizes the group with
+   anchor-size(); here the layer already IS the scrollport, so a percentage of it
+   is the same measurement. Declared last so its geometry wins. ---- */
+ui-carousel-controls[data-media*="mrk(bar)"] [data-dots] {
+	block-size: var(--ui-carousel-bar-hit, 0.875rem);
+	gap: 0;
+	inline-size: calc((100% - 2 * var(--ui-carousel-bar-inset, 0px)) * var(--ui-carousel-bar-span, 1));
+	inset-inline: 0;
+	margin-inline: auto;
+}
+ui-carousel-controls[data-media*="mrk(bar)"] [data-dot] {
+	background: linear-gradient(var(--ui-carousel-marker-bg) 0 0) no-repeat center / 100% var(--ui-carousel-bar-track-size, 1px);
+	block-size: 100%;
+	border: 0;
+	border-radius: 0;
+	flex: 1 1 0;
+	inline-size: auto;
+}
+ui-carousel-controls[data-media*="mrk(bar)"] [data-dot][aria-current] {
+	background: linear-gradient(var(--ui-carousel-marker-active) 0 0) no-repeat center / 100% var(--ui-carousel-bar-size, 3px);
+}
+ui-carousel-controls[data-media*="mrk(bar)"] [data-dot]:focus-visible {
+	outline: var(--ring-width, 2px) solid var(--ring-color, currentColor);
+	outline-offset: calc(-1 * var(--ring-width, 2px));
+}
+/* partial-span alignment — centred by default, pinned by the cell's inline letter */
+ui-carousel-controls[data-media*="mrk(bar)"]:is([data-media*="mrk(bs)"], [data-media*="mrk(ts)"]) [data-dots] {
+	margin-inline: var(--ui-carousel-bar-inset, 0px) auto;
+}
+ui-carousel-controls[data-media*="mrk(bar)"]:is([data-media*="mrk(be)"], [data-media*="mrk(te)"]) [data-dots] {
+	margin-inline: auto var(--ui-carousel-bar-inset, 0px);
+}
+/* bar in a band: sit in the band, not on the image */
+ui-carousel-controls[data-media*="mrk(bar)"]:is([data-media*="mrk(blw)"], [data-media*="nav(blw)"]) [data-dots] {
+	inset-block-end: calc(var(--ui-carousel-band) / 2 - var(--ui-carousel-bar-hit, 0.875rem) / 2);
+}
+
+/* ---- dots · middle row (cs/cc/ce) — the gap the old corner block flagged ---- */
+ui-carousel-controls[data-media*="mrk(cs)"] [data-dots],
+ui-carousel-controls[data-media*="mrk(cc)"] [data-dots],
+ui-carousel-controls[data-media*="mrk(ce)"] [data-dots] {
+	block-size: auto;
+	inline-size: max-content;
+	inset-block: 50% auto;
+	padding: 0;
+	translate: 0 -50%;
+}
+ui-carousel-controls[data-media*="mrk(cs)"] [data-dots] { inset-inline: var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)) auto; }
+ui-carousel-controls[data-media*="mrk(ce)"] [data-dots] { inset-inline: auto var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)); }
+ui-carousel-controls[data-media*="mrk(cc)"] [data-dots] { inset-inline: 0; justify-content: center; }
+
+/* ---- axis(y) + nav(abv): horizontal band ABOVE the vertical media
+   (mirror of the axis(y) + nav(blw) rule earlier in this file) ---- */
+ui-carousel-controls[data-media*="axis(y)"][data-media*="nav(abv)"] [data-dots] {
+	background: var(--ui-carousel-controls-bg, var(--color-surface, #fff));
+	block-size: calc(var(--ui-carousel-above-gap) + var(--ui-carousel-band));
+	flex-direction: row;
+	inline-size: auto;
+	inset-block-end: auto;
+	inset-block-start: 0;
+	inset-inline: 0;
+	justify-content: center;
+}
+ui-carousel-controls[data-media*="axis(y)"][data-media*="nav(abv)"] [data-nav] {
+	inset-block-start: calc(var(--ui-carousel-band) / 2 - var(--ui-carousel-arrow-size) / 2);
+	inset-block-end: auto;
+	z-index: 4;
+}
+ui-carousel-controls[data-media*="axis(y)"][data-media*="nav(abv)"] [data-nav="prev"] {
+	inset-inline-start: var(--ui-carousel-overlay-gap);
+	inset-inline-end: auto;
+}
+ui-carousel-controls[data-media*="axis(y)"][data-media*="nav(abv)"] [data-nav="next"] {
+	inset-inline-start: auto;
+	inset-inline-end: var(--ui-carousel-overlay-gap);
+}
+
+/* ---- axis(y) + a start-inline cell (ts/cs/bs): arrows AND dots move to the
+   inline-start edge. This replaces the removed arw(sta) spelling. ---- */
+ui-carousel-controls[data-media*="axis(y)"]:is([data-media*="arw(ts)"], [data-media*="arw(cs)"], [data-media*="arw(bs)"]) [data-nav],
+ui-carousel-controls[data-media*="axis(y)"]:is([data-media*="mrk(ts)"], [data-media*="mrk(cs)"], [data-media*="mrk(bs)"]) [data-nav] {
+	inset-inline-start: var(--ui-carousel-overlay-gap);
+	inset-inline-end: auto;
+}
+ui-carousel-controls[data-media*="axis(y)"]:is([data-media*="arw(ts)"], [data-media*="arw(cs)"], [data-media*="arw(bs)"]) [data-dots],
+ui-carousel-controls[data-media*="axis(y)"]:is([data-media*="mrk(ts)"], [data-media*="mrk(cs)"], [data-media*="mrk(bs)"]) [data-dots] {
+	inset-inline-start: var(--ui-carousel-overlay-gap);
+	inset-inline-end: auto;
+}
+
+/* ---- mrk(tmb) horizontal strip: never overflow the frame — cap to the
+   scrollport minus the overlay gaps and scroll instead (native caps with
+   anchor-size(); the layer already IS the scrollport, so 100% is the same
+   measurement). Excludes the rail, which is vertical and sized below. ---- */
+ui-carousel-controls[data-media*="mrk(tmb)"]:not([data-media*="mrk(rail)"]) [data-dots] {
+	max-inline-size: calc(100% - 2 * var(--ui-carousel-overlay-gap, 0.75rem));
+	overflow-x: auto;
+	overscroll-behavior-x: contain;
+	pointer-events: auto;
+	scrollbar-width: thin;
+}
+
+/* ---- axis(y) + mrk(rail): vertical thumbnail rail beside the media.
+   Native un-generates the arrows (content: none) and lets the thumbs shrink to
+   a floor before the rail itself scrolls. ---- */
+ui-carousel-controls[data-media*="axis(y)"][data-media*="mrk(rail)"] [data-nav] { display: none; }
+ui-carousel-controls[data-media*="axis(y)"][data-media*="mrk(rail)"] [data-dots] {
+	align-items: center;
+	flex-direction: column;
+	gap: var(--ui-carousel-marker-gap);
+	inline-size: var(--ui-carousel-rail);
+	inset-block: 0;
+	inset-inline: var(--ui-carousel-overlay-gap) auto;
+	justify-content: safe center;
+	overflow: hidden auto;
+	overscroll-behavior: contain;
+	pointer-events: auto;
+	scrollbar-width: thin;
+}
+ui-carousel-controls[data-media*="axis(y)"][data-media*="mrk(rail)"] [data-dot] {
+	flex: 0 1 auto;
+	min-block-size: var(--ui-carousel-thumb-min, 2.5rem);
+}

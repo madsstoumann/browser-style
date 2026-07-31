@@ -9,7 +9,9 @@
    because these pages link /ui/base/index.css BEFORE /layout/dist/layout.css.
    Keep that link order. */
 
-lay-out {
+/* Page-rhythm only — a lay-out INSIDE a card/reveal/media (e.g. a collage
+   inside <ui-media>) is component-internal and keeps the system defaults. */
+lay-out:not(:is(ui-card, ui-reveal, ui-media) lay-out) {
 	/* layout gaps are n × --layout-space-unit; match the old .grid rhythm */
 	--layout-space-unit: var(--spacing-lg, 1.5rem);
 	margin-block-end: var(--spacing-2xl);

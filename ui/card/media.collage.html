@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Media — Product cards</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="Product-card playground — a grid(3c) image collage inside a single ui-media, chip + sticker furniture, price/actions content parts, and a framed peek carousel. Markup + token DSL only, no custom CSS.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
+	<link rel="stylesheet" href="../chip/ui-chip.css">
+	<link rel="stylesheet" href="../sticker/ui-sticker.css">
+	<link rel="stylesheet" href="ui-card.css">
+	<link rel="stylesheet" href="demo.layout.css">
+	<!-- typed attr() fallback for Safari/Firefox (layout gaps/spacing attributes) -->
+	<script type="module" src="/layout/polyfills/attr-fallback.js"></script>
+</head>
+<body>
+	<h1>UI: Media — Product cards</h1>
+	<p>A product card whose <code>&lt;ui-media&gt;</code> holds a <em>collage</em> instead of a single image: a nested <code>&lt;lay-out lg="grid(3c)"&gt;</code> with one nested <code>&lt;ui-media&gt;</code> frame per shot (a nested frame is always a plain frame — never a scroller, never absolutely-positioned into the outer box). With flush gaps (<code>cg(0) rg(0)</code>) and square frames the pattern tiles exactly: one <code>asr(1/1)</code> at <code>2fr</code> equals two stacked <code>asr(1/1)</code> at <code>1fr</code>. Each frame carries <code>hov(zoom)</code> for a per-tile hover zoom. Chip and sticker ride the <em>outer</em> frame's furniture grid: chip defaults to top-start, sticker to top-end. Price and buy-button are the stock <code>price</code> / <code>actions</code> content parts. No custom CSS on this page.</p>
+	<p>The collage is viewport-driven (<code>lay-out</code> breakpoints): <code>grid(3c)</code> from 720px, a <code>columns(3)</code> strip from 540–719px, stacked below. See the other <a href="media.html">&lt;ui-media&gt;</a> demo pages.</p>
+
+	<!-- ============================================================
+	     The pattern — one product card
+	     ============================================================ -->
+	<h2>The pattern</h2>
+	<lay-out width="sm">
+		<ui-card variant="bdr bdr(lgt) rds(lg)" media="chip(red) sticker(red)" content="scl(sm) pad(md)">
+			<cq-box>
+				<ui-media>
+					<ui-chip>Deal</ui-chip>
+					<ui-sticker size="lg"><small>Save</small><strong>10%</strong></ui-sticker>
+					<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-1.png" alt="Goose bucket bag — product shot"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-3.png" alt="Model carrying the goose bucket bag"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-2.png" alt="Goose drawstring bag — detail"></ui-media>
+					</lay-out>
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Moschino</small>
+					<h3 data-part="headline">Handbag — multi-coloured</h3>
+					<p data-part="price"><data value="945">$945.00</data> <del>$1,050.00</del> <small>−10%</small></p>
+					<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy now</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+
+	<!-- ============================================================
+	     Two collages, one swipe — nav carousel of lay-out slides
+	     ============================================================ -->
+	<h2>Two collages, one swipe</h2>
+	<p>The frame is still a carousel host: with <code>nav</code>, each direct <code>&lt;lay-out&gt;</code> child becomes a slide — here two <code>grid(3c)</code> collages, six shots in one <code>&lt;ui-media&gt;</code>. The chip and sticker stay put while the collages swipe beneath them.</p>
+	<lay-out width="sm">
+		<ui-card variant="bdr bdr(lgt) rds(lg)" media="chip(red) sticker(red)" content="scl(sm) pad(md)">
+			<cq-box>
+				<ui-media media="nav">
+					<ui-chip>Deal</ui-chip>
+					<ui-sticker size="lg"><small>Save</small><strong>10%</strong></ui-sticker>
+					<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-1.png" alt="Goose bucket bag — product shot"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-3.png" alt="Model carrying the goose bucket bag"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-2.png" alt="Goose drawstring bag — detail"></ui-media>
+					</lay-out>
+					<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-1.png" alt="Swan bucket bag — product shot"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-3.png" alt="Model holding the swan bucket bag"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-2.png" alt="Swan bucket bag — alternate angle"></ui-media>
+					</lay-out>
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Moschino</small>
+					<h3 data-part="headline">Bucket bags — the collection</h3>
+					<p data-part="price"><data value="945">$945.00</data> <del>$1,050.00</del> <small>−10%</small></p>
+					<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy now</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+
+	<!-- ============================================================
+	     Grid of product cards
+	     ============================================================ -->
+	<h2>Product grid</h2>
+	<p>Four products, <code>md="columns(2)"</code>. The eye bag has only two shots, so its collage is a plain two-up <code>sm="columns(2)"</code> instead of <code>grid(3c)</code>.</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="bdr bdr(lgt) rds(lg)" media="chip(red) sticker(red)" content="scl(sm) pad(md)">
+			<cq-box>
+				<ui-media>
+					<ui-chip>Deal</ui-chip>
+					<ui-sticker size="lg"><small>Save</small><strong>10%</strong></ui-sticker>
+					<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-1.png" alt="Goose bucket bag — product shot"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-3.png" alt="Model carrying the goose bucket bag"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-2.png" alt="Goose drawstring bag — detail"></ui-media>
+					</lay-out>
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Moschino</small>
+					<h3 data-part="headline">Handbag — multi-coloured</h3>
+					<p data-part="price"><data value="945">$945.00</data> <del>$1,050.00</del> <small>−10%</small></p>
+					<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy now</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="bdr bdr(lgt) rds(lg)" media="chip(red) sticker(red)" content="scl(sm) pad(md)">
+			<cq-box>
+				<ui-media>
+					<ui-chip>Deal</ui-chip>
+					<ui-sticker size="lg"><small>Save</small><strong>15%</strong></ui-sticker>
+					<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/dali-1.png" alt="Melting-clock shoulder bag — product shot"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/dali-2.png" alt="Model by the coast"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/dali-4.png" alt="Model carrying the melting-clock bag"></ui-media>
+					</lay-out>
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Tempus</small>
+					<h3 data-part="headline">Melting Clock shoulder bag</h3>
+					<p data-part="price"><data value="1275">$1,275.00</data> <del>$1,500.00</del> <small>−15%</small></p>
+					<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy now</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="bdr bdr(lgt) rds(lg)" media="chip(red) sticker(red)" content="scl(sm) pad(md)">
+			<cq-box>
+				<ui-media>
+					<ui-chip>Deal</ui-chip>
+					<ui-sticker size="lg"><small>Save</small><strong>10%</strong></ui-sticker>
+					<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-1.png" alt="Swan bucket bag — product shot"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-3.png" alt="Model holding the swan bucket bag"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-2.png" alt="Swan bucket bag — alternate angle"></ui-media>
+					</lay-out>
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Cygne</small>
+					<h3 data-part="headline">Bucket bag — sky blue</h3>
+					<p data-part="price"><data value="720">$720.00</data> <del>$800.00</del> <small>−10%</small></p>
+					<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy now</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="bdr bdr(lgt) rds(lg)" media="chip(red) sticker(red)" content="scl(sm) pad(md)">
+			<cq-box>
+				<ui-media>
+					<ui-chip>Deal</ui-chip>
+					<ui-sticker size="lg"><small>Save</small><strong>20%</strong></ui-sticker>
+					<lay-out xs="cg(0) rg(0)" sm="columns(2)">
+						<ui-media media="asr(3/4) hov(zoom)"><img src="assets/eye-1.png" alt="Eye clutch — product shot"></ui-media>
+						<ui-media media="asr(3/4) hov(zoom)"><img src="assets/eye-2.png" alt="Model with the eye clutch"></ui-media>
+					</lay-out>
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Oculus</small>
+					<h3 data-part="headline">Evening bag — brown/gold</h3>
+					<p data-part="price"><data value="540">$540.00</data> <del>$675.00</del> <small>−20%</small></p>
+					<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy now</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+
+	<!-- ============================================================
+	     Ad recreation — framed peek carousel
+	     ============================================================ -->
+	<h2>Framed carousel</h2>
+	<p>The reference design: a bordered card with a small header, its products swiping one at a time between symmetric side peeks — the <code>overflow="preview-xs frame"</code> pattern from the carousel page. CSS-only.</p>
+	<!-- NOTE: no `bleed` here on purpose — [bleed] sets --layout-w (100dvi-based) and the
+	     custom property inherits into DEEP nested lay-outs (the collage inside each slide),
+	     blowing it up to viewport width. --layout-w is not in the lay-out isolation
+	     re-declare list; see the leak note in the session summary. -->
+	<lay-out theme="muted gray" xs="pbs(3) pbe(3)">
+		<lay-out lg="items(start)" width="sm">
+			<ui-card variant="bdr bdr(lgt)">
+				<lay-out-group style="--layout-group-gap: 0">
+					<ui-content style="padding: var(--spacing-md) var(--spacing-md) 0">
+						<small data-part="eyebrow">Sponsored</small>
+						<h2 data-part="headline">Explore the season's must-haves</h2>
+					</ui-content>
+					<lay-out xs="p(1)" md="columns(1)" overflow="preview-xs frame" media="nav(arw) arw(hid)">
+						<ui-card variant="bdr bdr(lgt) rds(lg)" media="chip(red) sticker(red)" content="scl(sm) pad(md)">
+							<cq-box>
+								<ui-media>
+									<ui-chip>Deal</ui-chip>
+									<ui-sticker size="lg"><small>Save</small><strong>10%</strong></ui-sticker>
+									<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
+										<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-1.png" alt="Goose bucket bag — product shot"></ui-media>
+										<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-3.png" alt="Model carrying the goose bucket bag"></ui-media>
+										<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-2.png" alt="Goose drawstring bag — detail"></ui-media>
+									</lay-out>
+								</ui-media>
+								<ui-content>
+									<small data-part="eyebrow">Moschino</small>
+									<h3 data-part="headline">Handbag — multi-coloured</h3>
+									<p data-part="price"><data value="945">$945.00</data> <del>$1,050.00</del> <small>−10%</small></p>
+									<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy now</a></nav>
+								</ui-content>
+							</cq-box>
+						</ui-card>
+						<ui-card variant="bdr bdr(lgt) rds(lg)" media="chip(red) sticker(red)" content="scl(sm) pad(md)">
+							<cq-box>
+								<ui-media>
+									<ui-chip>Deal</ui-chip>
+									<ui-sticker size="lg"><small>Save</small><strong>15%</strong></ui-sticker>
+									<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
+										<ui-media media="asr(1/1) hov(zoom)"><img src="assets/dali-1.png" alt="Melting-clock shoulder bag — product shot"></ui-media>
+										<ui-media media="asr(1/1) hov(zoom)"><img src="assets/dali-2.png" alt="Model by the coast"></ui-media>
+										<ui-media media="asr(1/1) hov(zoom)"><img src="assets/dali-4.png" alt="Model carrying the melting-clock bag"></ui-media>
+									</lay-out>
+								</ui-media>
+								<ui-content>
+									<small data-part="eyebrow">Tempus</small>
+									<h3 data-part="headline">Melting Clock shoulder bag</h3>
+									<p data-part="price"><data value="1275">$1,275.00</data> <del>$1,500.00</del> <small>−15%</small></p>
+									<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy now</a></nav>
+								</ui-content>
+							</cq-box>
+						</ui-card>
+						<ui-card variant="bdr bdr(lgt) rds(lg)" media="chip(red) sticker(red)" content="scl(sm) pad(md)">
+							<cq-box>
+								<ui-media>
+									<ui-chip>Deal</ui-chip>
+									<ui-sticker size="lg"><small>Save</small><strong>10%</strong></ui-sticker>
+									<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
+										<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-1.png" alt="Swan bucket bag — product shot"></ui-media>
+										<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-3.png" alt="Model holding the swan bucket bag"></ui-media>
+										<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-2.png" alt="Swan bucket bag — alternate angle"></ui-media>
+									</lay-out>
+								</ui-media>
+								<ui-content>
+									<small data-part="eyebrow">Cygne</small>
+									<h3 data-part="headline">Bucket bag — sky blue</h3>
+									<p data-part="price"><data value="720">$720.00</data> <del>$800.00</del> <small>−10%</small></p>
+									<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy now</a></nav>
+								</ui-content>
+							</cq-box>
+						</ui-card>
+						<ui-card variant="bdr bdr(lgt) rds(lg)" media="chip(red) sticker(red)" content="scl(sm) pad(md)">
+							<cq-box>
+								<ui-media>
+									<ui-chip>Deal</ui-chip>
+									<ui-sticker size="lg"><small>Save</small><strong>20%</strong></ui-sticker>
+									<lay-out xs="cg(0) rg(0)" sm="columns(2)">
+										<ui-media media="asr(3/4) hov(zoom)"><img src="assets/eye-1.png" alt="Eye clutch — product shot"></ui-media>
+										<ui-media media="asr(3/4) hov(zoom)"><img src="assets/eye-2.png" alt="Model with the eye clutch"></ui-media>
+									</lay-out>
+								</ui-media>
+								<ui-content>
+									<small data-part="eyebrow">Oculus</small>
+									<h3 data-part="headline">Evening bag — brown/gold</h3>
+									<p data-part="price"><data value="540">$540.00</data> <del>$675.00</del> <small>−20%</small></p>
+									<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy now</a></nav>
+								</ui-content>
+							</cq-box>
+						</ui-card>
+					</lay-out>
+				</lay-out-group>
+			</ui-card>
+		</lay-out>
+	</lay-out>
+</body>
+</html>

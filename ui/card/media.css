@@ -46,6 +46,10 @@
 	/* an explicit aspect-ratio drops the min-height floor (frame follows the ratio) */
 	:where([media*="asr("]) ui-media,
 	:where(ui-media[media*="asr("]) { min-block-size: 0; }
+	/* …and so does hosting a nested <lay-out> (collage frame): the layout's own
+	   cells own their heights, so the frame must size to content — without this
+	   the floor paints as a dead band under any collage shorter than 12.5rem */
+	:where(ui-media:has(> lay-out)) { min-block-size: 0; }
 
 	/* nested <ui-media> = always a plain frame, never a scroller */
 	ui-media ui-media {

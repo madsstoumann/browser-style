@@ -103,6 +103,13 @@ function init(scroller) {
 	scroller.dataset.uiCarouselPolyfill = '1';
 
 	const controls = document.createElement('ui-carousel-controls');
+	// Stamp the RESOLVED media string on the controls element. mediaStr() has
+	// already applied the DSL's scoping rule (own attribute, else the nearest
+	// ui-card/ui-reveal host — never a further ancestor), so carousel.css can key
+	// every token off ONE single-arm selector, `ui-carousel-controls[data-media*=…]`,
+	// instead of repeating a host arm + a self arm per token. It also means a
+	// <lay-out overflow> scroller is styled by the same rules for free.
+	controls.setAttribute('data-media', m);
 	const layer = document.createElement('div');
 	layer.setAttribute('data-layer', '');
 	controls.append(layer);

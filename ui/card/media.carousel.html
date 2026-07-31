@@ -16,7 +16,12 @@
 	<link rel="stylesheet" href="ui-card.css">
 	<link rel="stylesheet" href="../reveal/ui-reveal.css">
 	<link rel="stylesheet" href="../accordion/ui-accordion.css">
+	<link rel="preload" as="image" href="/assets/images/finance.png" fetchpriority="high">
 	<style>
+		section {
+			content-visibility: auto;
+			contain-intrinsic-size: auto 900px;
+		}
 		/* demo section grids are lay-out elements (md=columns(2) for two-up); this
 		   only adds the section rhythm — slide grids inside ui-media are untouched */
 		body > lay-out { margin-block-end: var(--spacing-2xl); }
@@ -168,10 +173,10 @@
 		<ui-card variant="col" media="asr(4/3) nav" content="scl(lg)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/finance.png" alt="">
-					<img src="/assets/images/river.png" alt="">
-					<img src="/assets/images/mindfulness.png" alt="">
-					<img src="/assets/images/gastronomy.png" alt="">
+					<img src="/assets/images/finance.png" alt="" decoding="async" fetchpriority="high">
+					<img src="/assets/images/river.png" alt="" decoding="async" fetchpriority="high">
+					<img src="/assets/images/mindfulness.png" alt="" decoding="async" fetchpriority="high">
+					<img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy">
 				</ui-media>
 				<ui-content><small data-part="eyebrow">Travel</small><h2 data-part="headline">Dots + arrows (default)</h2><p data-part="summary">Swipe, tap a dot, or click an arrow.</p></ui-content>
 			</cq-box>
@@ -179,9 +184,9 @@
 		<ui-card variant="row spl(4/3)" media="asr(4/3) nav" content="scl(md)">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/hubble.png" alt="">
-					<img src="/assets/images/quantum.png" alt="">
-					<img src="/assets/images/websummit.png" alt="">
+					<img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy">
+					<img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy">
+					<img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy">
 				</ui-media>
 				<ui-content><small data-part="eyebrow">Science</small><h2 data-part="headline">Carousel beside content</h2><p data-part="summary">A carousel works in any arrangement — here it is the media half of a <code>row</code> card.</p><nav data-part="actions"><a class="ui-button" href="#">Explore</a></nav></ui-content>
 			</cq-box>
@@ -192,19 +197,19 @@
 	<p><code>nav</code> both · <code>nav(mrk)</code> dots · <code>nav(arw)</code> arrows · <code>nav(non)</code> none.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(mrk)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">nav(mrk)</small><h2 data-part="headline">Dots only</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(arw)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/brewandbean.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/aurasoundpro.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">nav(arw)</small><h2 data-part="headline">Arrows only</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">nav</small><h2 data-part="headline">Both (default)</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(non) chip(te)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/government.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""><ui-chip>3 photos</ui-chip></ui-media>
+			<cq-box><ui-media><img src="/assets/images/popovers.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/government.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/fittrackpro.png" alt="" decoding="async" loading="lazy"><ui-chip>3 photos</ui-chip></ui-media>
 			<ui-content><small data-part="eyebrow">nav(non)</small><h2 data-part="headline">Bare swipe scroller</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
@@ -219,19 +224,19 @@
 	<p><code>arw(arr)</code> full-arrow glyph (default chevron); <code>arw(bare)</code> drops the circle.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(arw)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">arw(chv) · default</small><h2 data-part="headline">Chevron</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(arw) arw(arr)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">arw(arr)</small><h2 data-part="headline">Full arrow</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(arw) arw(bare)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">arw(bare) · dark images</small><h2 data-part="headline">Bare, white glyph</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(arw) arw(bare) arw(arr) arw(drk)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><img src="/assets/images/slimfold.png" alt=""><img src="/assets/images/cutmaster.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/slimfold.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/cutmaster.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">arw(bare) arw(arr) arw(drk) · light images</small><h2 data-part="headline">Bare, dark full-arrow</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
@@ -240,11 +245,11 @@
 	<p>Arrows <code>arw(sm|md|lg|xl)</code>, dots/pills <code>mrk(sm|md|lg|xl)</code>.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav arw(sm) mrk(sm)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">arw(sm) mrk(sm)</small><h2 data-part="headline">Small</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav arw(xl) mrk(xl)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/world.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">arw(xl) mrk(xl)</small><h2 data-part="headline">Extra-large</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
@@ -252,26 +257,26 @@
 	<h3 id="arrowshape">Shape — <code>arw(sqr)</code> / <code>arw(sft)</code></h3>
 	<p>Arrows are circles by default; <code>arw(sqr)</code> square, <code>arw(sft)</code> rounded.</p>
 	<lay-out md="columns(2)">
-		<ui-media media="asr(16/9) nav arw(sqr)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
-		<ui-media media="asr(16/9) rds(lg) clip nav arw(sft)"><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
+		<ui-media media="asr(16/9) nav arw(sqr)"><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
+		<ui-media media="asr(16/9) rds(lg) clip nav arw(sft)"><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/brewandbean.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/aurasoundpro.png" alt="" decoding="async" loading="lazy"></ui-media>
 	</lay-out>
 
 	<h3 id="arrowreveal">Reveal on hover — <code>arw(rev)</code></h3>
 	<p><code>arw(rev)</code> hides the arrows until the media is hovered or keyboard-focused (touch keeps them visible). Dots stay always-visible in a band below.</p>
 	<lay-out md="columns(2)">
-		<ui-media media="asr(16/9) rds(lg) clip nav mrk(blw) arw(rev)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
-		<ui-media media="asr(16/9) rds(lg) clip nav mrk(blw) arw(rev) arw(bare)"><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
+		<ui-media media="asr(16/9) rds(lg) clip nav mrk(blw) arw(rev)"><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
+		<ui-media media="asr(16/9) rds(lg) clip nav mrk(blw) arw(rev) arw(bare)"><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/brewandbean.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/aurasoundpro.png" alt="" decoding="async" loading="lazy"></ui-media>
 	</lay-out>
 
 	<h3 id="arrowplacement">Placement — <code>arw(tc/cc/bc)</code></h3>
 	<p>Edge arrows honor the block row: <code>arw(tc)</code> top · <code>arw(cc)</code> centre (default) · <code>arw(bc)</code> bottom.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(arw) arw(tc)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">arw(tc)</small><h2 data-part="headline">Arrows at top</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(arw) arw(bc)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/brewandbean.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/aurasoundpro.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">arw(bc)</small><h2 data-part="headline">Arrows at bottom</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
@@ -280,19 +285,19 @@
 	<p><code>arw(set)</code> pairs the arrows into one cluster, placeable in any cell: <code>arw(set) arw(&lt;cell&gt;)</code>.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(arw) arw(set) arw(arr) arw(be)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/government.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/popovers.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/government.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/fittrackpro.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">arw(set) arw(be)</small><h2 data-part="headline">Bottom-end set</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(arw) arw(set) arw(arr) arw(te)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">arw(set) arw(te)</small><h2 data-part="headline">Top-end set</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(arw) arw(set) arw(bs)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""><img src="/assets/images/slimfold.png" alt=""><img src="/assets/images/cutmaster.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/ergochair.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/slimfold.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/cutmaster.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">arw(set) arw(bs)</small><h2 data-part="headline">Bottom-start set</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(arw) arw(set) arw(cc)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/brewandbean.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/fittrackpro.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">arw(set) arw(cc)</small><h2 data-part="headline">Center set</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
@@ -301,11 +306,11 @@
 	<p><code>arw(hid)</code> hides a dead-end arrow (default dims it).</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(arw) arw(hid)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">nav(arw) arw(hid)</small><h2 data-part="headline">Auto-hide dead-end (circle)</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(blw) arw(bare) arw(hid)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/brewandbean.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/aurasoundpro.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">nav(blw) arw(bare) arw(hid)</small><h2 data-part="headline">Auto-hide dead-end (band)</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
@@ -320,49 +325,49 @@
 	<p>Move the controls into a band below / above the media.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(blw) arw(bare)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">nav(blw) arw(bare)</small><h2 data-part="headline">Band below</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(blw) arw(bare) arw(set)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">nav(blw) arw(set)</small><h2 data-part="headline">Dots left, arrow pair right</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
 	<lay-out md="columns(2)">
-		<ui-media media="asr(4/3) rds(lg) clip nav(abv)"><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
-		<ui-media media="asr(4/3) rds(lg) clip nav(abv) arw(set)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+		<ui-media media="asr(4/3) rds(lg) clip nav(abv)"><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
+		<ui-media media="asr(4/3) rds(lg) clip nav(abv) arw(set)"><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 	</lay-out>
 
 	<h3 id="bandposition">Position in the band — the cell's inline letter</h3>
 	<p>The band row is locked, so a dot cell's inline letter aligns it: below <code>mrk(bs/bc/be)</code>, above <code>mrk(ts/te)</code> — dots left, then right.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(blw) arw(set) mrk(bs)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/world.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">nav(blw) mrk(bs)</small><h2 data-part="headline">Below · dots left</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(blw) arw(set) mrk(be)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/brewandbean.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/aurasoundpro.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/fittrackpro.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">nav(blw) mrk(be)</small><h2 data-part="headline">Below · dots right</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
 	<lay-out md="columns(2)">
-		<ui-media media="asr(4/3) rds(lg) clip nav(abv) arw(set) mrk(ts)"><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""><img src="/assets/images/popovers.png" alt=""></ui-media>
-		<ui-media media="asr(4/3) rds(lg) clip nav(abv) arw(set) mrk(te)"><img src="/assets/images/river.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+		<ui-media media="asr(4/3) rds(lg) clip nav(abv) arw(set) mrk(ts)"><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/popovers.png" alt="" decoding="async" loading="lazy"></ui-media>
+		<ui-media media="asr(4/3) rds(lg) clip nav(abv) arw(set) mrk(te)"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/world.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 	</lay-out>
 
 	<h3 id="split">Split placement — <code>mrk(blw/abv)</code> · <code>arw(blw/abv)</code></h3>
 	<p>Band <strong>one</strong> control group only: <code>mrk(blw/abv)</code> puts the dots in a band while the arrows stay on the media; <code>arw(blw/abv)</code> mirrors it.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav mrk(blw)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">nav mrk(blw)</small><h2 data-part="headline">Dots below, arrows on media</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav arw(blw)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/brewandbean.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/aurasoundpro.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">nav arw(blw)</small><h2 data-part="headline">Arrows below, dots on media</h2></ui-content></cq-box>
 		</ui-card>
-		<ui-media media="asr(4/3) nav mrk(abv) rds(lg)"><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
-		<ui-media media="asr(4/3) nav arw(abv) rds(lg)"><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/government.png" alt=""><img src="/assets/images/fittrackpro.png" alt=""></ui-media>
+		<ui-media media="asr(4/3) nav mrk(abv) rds(lg)"><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
+		<ui-media media="asr(4/3) nav arw(abv) rds(lg)"><img src="/assets/images/popovers.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/government.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/fittrackpro.png" alt="" decoding="async" loading="lazy"></ui-media>
 	</lay-out>
 
 	<hr>
@@ -375,11 +380,11 @@
 	<p>Default light circle + dark chevron; <code>arw(drk)</code> = dark circle + white chevron.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">default</small><h2 data-part="headline">Frosted light circle</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav arw(drk)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">arw(drk)</small><h2 data-part="headline">Dark circle, white chevron</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
@@ -388,11 +393,11 @@
 	<p>Band default paints the glyph itself in the band ink (no circle); <code>arw(drk)</code> restores a dark circle + white chevron.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(blw)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">nav(blw) · default</small><h2 data-part="headline">Bare glyph in band ink</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(blw) arw(drk)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">nav(blw) arw(drk)</small><h2 data-part="headline">Dark circle, white chevron</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
@@ -404,15 +409,15 @@
 		still force a side.</p>
 	<lay-out md="columns(3)">
 		<ui-card variant="col" media="asr(4/3) nav(blw) mrk(lg)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">nav(blw) · default</small><h2 data-part="headline">Follows color-scheme</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card theme="black dark" variant="col" media="asr(4/3) nav(blw) mrk(lg)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">theme="black dark"</small><h2 data-part="headline">Follows the card theme</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(blw) mrk(lg)" content="scl(sm)" style="--ui-carousel-controls-ink: var(--color-accent)">
-			<cq-box><ui-media><img src="/assets/images/city.png" alt=""><img src="/assets/images/destinations.png" alt=""><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/city.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/destinations.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">--ui-carousel-controls-ink</small><h2 data-part="headline">Or set the ink yourself</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
@@ -427,11 +432,11 @@
 	<p><code>mrk(pll)</code> pill timers (fill over <code>--ui-carousel-autoplay</code>); <code>mrk(hyb)</code> keeps round dots but the active/focused one morphs into a pill.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(mrk) mrk(pll)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/world.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">mrk(pll)</small><h2 data-part="headline">Pill timer (5s)</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(mrk) mrk(hyb)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""><img src="/assets/images/popovers.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/popovers.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">mrk(hyb)</small><h2 data-part="headline">Hybrid — active pill</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
@@ -440,22 +445,22 @@
 	<p>A thin scrollbar: one hairline track, the current slide's stretch drawn thicker (the thumb). Click-to-jump, keyboard-navigable. The size scale sets the bar's width; overlay by default, or in a band with <code>mrk(blw)</code>.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav mrk(bar)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/world.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">nav mrk(bar)</small><h2 data-part="headline">Bar on the media</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav mrk(bar) mrk(blw)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""><img src="/assets/images/popovers.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/popovers.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">nav mrk(bar) mrk(blw)</small><h2 data-part="headline">Bar in a band below</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
 	<h4>Width &amp; edge alignment — <code>mrk(sm|md|lg|xl)</code></h4>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav mrk(bar) mrk(md) mrk(blw)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/world.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">mrk(bar) mrk(md)</small><h2 data-part="headline">Half width — 50%</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav mrk(bar) mrk(md) mrk(be) mrk(blw)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/river.png" alt=""><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/government.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/popovers.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/government.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">mrk(bar) mrk(sm) mrk(be)</small><h2 data-part="headline">Short bar, inline-end</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
@@ -464,37 +469,37 @@
 	<lay-out bleed xs="pi(1)" md="columns(2)" lg="columns(3)" overflow="preview-lg" media="nav arw(abv) arw(set) mrk(bar) mrk(sm) mrk(blw)">
 		<ui-card variant="ovr(bs) rds(lg)" media="asr(3/4) scm" content="scl(sm) pad(lg)">
 			<cq-box>
-				<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"></ui-media>
 				<ui-content><small data-part="eyebrow">Fredagsrock</small><h3 data-part="headline">Gastronomy live</h3><p data-part="summary">July 31, 10:00 PM</p><nav data-part="actions"><a class="ui-button" href="#">Buy ticket</a></nav></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="ovr(bs) rds(lg)" media="asr(3/4) scm" content="scl(sm) pad(lg)">
 			<cq-box>
-				<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 				<ui-content><small data-part="eyebrow">Fredagsrock</small><h3 data-part="headline">Web Summit</h3><p data-part="summary">August 7, 7:00 PM</p><nav data-part="actions"><a class="ui-button" href="#">Buy ticket</a></nav></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="ovr(bs) rds(lg)" media="asr(3/4) scm" content="scl(sm) pad(lg)">
 			<cq-box>
-				<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"></ui-media>
 				<ui-content><small data-part="eyebrow">Fredagsrock</small><h3 data-part="headline">Deep Field</h3><p data-part="summary">August 7, 10:00 PM</p><nav data-part="actions"><a class="ui-button" href="#">Buy ticket</a></nav></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="ovr(bs) rds(lg)" media="asr(3/4) scm" content="scl(sm) pad(lg)">
 			<cq-box>
-				<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"></ui-media>
 				<ui-content><small data-part="eyebrow">Fredagsrock</small><h3 data-part="headline">Downstream</h3><p data-part="summary">August 14, 7:00 PM</p><nav data-part="actions"><a class="ui-button" href="#">Buy ticket</a></nav></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="ovr(bs) rds(lg)" media="asr(3/4) scm" content="scl(sm) pad(lg)">
 			<cq-box>
-				<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"></ui-media>
 				<ui-content><small data-part="eyebrow">Fredagsrock</small><h3 data-part="headline">Entangled</h3><p data-part="summary">August 14, 10:00 PM</p><nav data-part="actions"><a class="ui-button" href="#">Buy ticket</a></nav></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="ovr(bs) rds(lg)" media="asr(3/4) scm" content="scl(sm) pad(lg)">
 			<cq-box>
-				<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 				<ui-content><small data-part="eyebrow">Fredagsrock</small><h3 data-part="headline">Stillness</h3><p data-part="summary">August 21, 7:00 PM</p><nav data-part="actions"><a class="ui-button" href="#">Buy ticket</a></nav></ui-content>
 			</cq-box>
 		</ui-card>
@@ -504,19 +509,19 @@
 	<p>Styles the <strong>real</strong> scrollbar — natively <strong>draggable</strong>. Full-width and square by default; tune per instance with <code>--ui-carousel-sbr-*</code> (inset, gap, radius, size, colours).</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav(arw) mrk(sbr)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">mrk(sbr)</small><h2 data-part="headline">Default — full-width, square</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(arw) mrk(sbr)" content="scl(sm)" style="--ui-carousel-sbr-inset: 1rem;">
-			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""><img src="/assets/images/popovers.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/popovers.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">--ui-carousel-sbr-inset: 1rem</small><h2 data-part="headline">Inset + gap</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(arw) mrk(sbr)" content="scl(sm)" style="--ui-carousel-sbr-inset: 1rem; --ui-carousel-sbr-radius: var(--radius-pill);">
-			<cq-box><ui-media><img src="/assets/images/river.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/world.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">--ui-carousel-sbr-radius: var(--radius-pill)</small><h2 data-part="headline">Inset + gap + rounded</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav(arw) mrk(sbr)" content="scl(sm)" style="--ui-carousel-sbr-inset: 1rem; --ui-carousel-sbr-radius: var(--radius-pill); --ui-carousel-sbr-thumb: var(--color-accent); --ui-carousel-sbr-track: color-mix(in oklab, var(--color-accent) 25%, transparent);">
-			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/finance.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">--ui-carousel-sbr-track / -thumb</small><h2 data-part="headline">Custom colours</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
@@ -525,109 +530,109 @@
 	<p><code>mrk(tmb)</code> turns dots into thumbnails — each slide sets <code>--ui-carousel-thumb-url</code>. Corner via <code>mrk(ts/te/bs/be)</code>, size via <code>mrk()</code>. (JS autoplay + video version below.)</p>
 	<lay-out>
 			<ui-media media="asr(16/9) rds(md) clip nav mrk(tmb) mrk(be) mrk(lg)">
-				<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')">
-				<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')">
-				<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')">
-				<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')">
-				<img src="/assets/images/finance.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/finance.png')">
-				<video src="/assets/video/city.mp4" poster="/assets/images/city.png" muted loop playsinline style="--ui-carousel-thumb-url: url('/assets/images/city.png')"></video>
+				<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')" decoding="async" loading="lazy">
+				<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')" decoding="async" loading="lazy">
+				<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')" decoding="async" loading="lazy">
+				<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')" decoding="async" loading="lazy">
+				<img src="/assets/images/finance.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/finance.png')" decoding="async" loading="lazy">
+				<video preload="none" src="/assets/video/city.mp4" poster="/assets/images/city.png" muted loop playsinline style="--ui-carousel-thumb-url: url('/assets/images/city.png')"></video>
 			</ui-media>
 	</lay-out>
 	<p>Top corners — <code>mrk(ts)</code> and <code>mrk(te)</code>:</p>
 	<lay-out md="columns(2)">
 		<ui-media media="asr(16/9) rds(md) clip nav mrk(tmb) mrk(ts)">
-			<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')">
-			<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')">
-			<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')">
-			<img src="/assets/images/popovers.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/popovers.png')">
+			<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/popovers.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/popovers.png')" decoding="async" loading="lazy">
 		</ui-media>
 		<ui-media media="asr(16/9) rds(md) clip nav mrk(tmb) mrk(te)">
-			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')">
-			<img src="/assets/images/brewandbean.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/brewandbean.png')">
-			<img src="/assets/images/aurasoundpro.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/aurasoundpro.png')">
-			<img src="/assets/images/government.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/government.png')">
+			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/brewandbean.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/brewandbean.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/aurasoundpro.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/aurasoundpro.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/government.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/government.png')" decoding="async" loading="lazy">
 		</ui-media>
 	</lay-out>
 	<h4>Aspect-ratio — <code>tmb(&lt;ratio&gt;)</code></h4>
 	<p>Default <code>4/3</code>. <code>tmb(1/1)</code> · <code>tmb(3/4)</code> · <code>tmb(16/9)</code> · <code>tmb(3/2)</code> · <code>tmb(2/3)</code> reshape them (slash, not colon).</p>
 	<lay-out md="columns(2)">
 		<ui-media media="asr(16/9) rds(md) clip nav mrk(tmb) mrk(be) mrk(lg) tmb(1/1)">
-			<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')">
-			<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')">
-			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')">
-			<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')">
+			<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')" decoding="async" loading="lazy">
 		</ui-media>
 		<ui-media media="asr(16/9) rds(md) clip nav mrk(tmb) mrk(be) mrk(lg) tmb(16/9)">
-			<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')">
-			<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')">
-			<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')">
-			<img src="/assets/images/popovers.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/popovers.png')">
+			<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/popovers.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/popovers.png')" decoding="async" loading="lazy">
 		</ui-media>
 	</lay-out>
 	<h4>Filmstrip below — <code>mrk(tmb) mrk(blw)</code></h4>
 	<p>Add <code>mrk(blw)</code> to drop the thumbnails into a reserved band below the image — a classic gallery filmstrip. The cell's inline letter aligns them (<code>mrk(bs/bc/be)</code>).</p>
 	<lay-out md="columns(2)">
 		<ui-media media="asr(16/9) rds(md) clip nav(mrk) mrk(tmb) mrk(blw) mrk(md)">
-			<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')">
-			<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')">
-			<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')">
-			<img src="/assets/images/popovers.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/popovers.png')">
+			<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/popovers.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/popovers.png')" decoding="async" loading="lazy">
 		</ui-media>
 		<ui-media media="asr(16/9) rds(md) clip nav mrk(tmb) mrk(blw) mrk(lg)">
-			<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')">
-			<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')">
-			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')">
-			<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')">
+			<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')" decoding="async" loading="lazy">
 		</ui-media>
 	</lay-out>
 	<p>Aligned left / right — <code>mrk(bs)</code> and <code>mrk(be)</code>:</p>
 	<lay-out md="columns(2)">
 		<ui-media media="asr(16/9) rds(md) clip nav mrk(tmb) mrk(blw) mrk(bs)">
-			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')">
-			<img src="/assets/images/brewandbean.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/brewandbean.png')">
-			<img src="/assets/images/aurasoundpro.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/aurasoundpro.png')">
+			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/brewandbean.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/brewandbean.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/aurasoundpro.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/aurasoundpro.png')" decoding="async" loading="lazy">
 		</ui-media>
 		<ui-media media="asr(16/9) rds(md) clip nav mrk(tmb) mrk(blw) mrk(be)">
-			<img src="/assets/images/finance.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/finance.png')">
-			<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')">
-			<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')">
+			<img src="/assets/images/finance.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/finance.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')" decoding="async" loading="lazy">
 		</ui-media>
 	</lay-out>
 	<h4>Rail beside — <code>axis(y) mrk(tmb) mrk(rail)</code></h4>
 	<p>The inline analogue of <code>mrk(blw)</code>: a vertical thumbnail rail beside the media (inline-start; right in RTL). The image keeps its full <code>asr()</code>; the rail is added outside it. Up/down arrows are dropped — the rail is the navigation.</p>
 	<lay-out md="columns(2)">
 		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(md)">
-			<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')">
-			<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')">
-			<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')">
-			<img src="/assets/images/popovers.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/popovers.png')">
+			<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/popovers.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/popovers.png')" decoding="async" loading="lazy">
 		</ui-media>
 		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(lg)">
-			<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')">
-			<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')">
-			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')">
-			<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')">
+			<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')" decoding="async" loading="lazy">
 		</ui-media>
 	</lay-out>
 	<p>Square thumbs, ratio-sized rail (<code>tmb(1/1)</code> vs <code>tmb(16/9)</code>):</p>
 	<lay-out md="columns(2)">
 		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(md) tmb(1/1)">
-			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')">
-			<img src="/assets/images/brewandbean.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/brewandbean.png')">
-			<img src="/assets/images/aurasoundpro.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/aurasoundpro.png')">
+			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/brewandbean.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/brewandbean.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/aurasoundpro.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/aurasoundpro.png')" decoding="async" loading="lazy">
 		</ui-media>
 		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(md) tmb(16/9)">
-			<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')">
-			<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')">
-			<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')">
+			<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')" decoding="async" loading="lazy">
 		</ui-media>
 	</lay-out>
 	<p>RTL — the rail flips to the right automatically (<code>dir="rtl"</code>):</p>
 	<lay-out>
 		<ui-media dir="rtl" media="asr(16/9) rds(lg) clip axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(md)">
-			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')">
-			<img src="/assets/images/brewandbean.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/brewandbean.png')">
-			<img src="/assets/images/aurasoundpro.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/aurasoundpro.png')">
+			<img src="/assets/images/gastronomy.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/brewandbean.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/brewandbean.png')" decoding="async" loading="lazy">
+			<img src="/assets/images/aurasoundpro.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/aurasoundpro.png')" decoding="async" loading="lazy">
 		</ui-media>
 	</lay-out>
 
@@ -635,57 +640,57 @@
 	<p><code>mrk(lbl)</code> renders each slide's <code>aria-label</code> as a text pill, styled with <code>--ui-carousel-label-*</code> custom properties. A long label set never spills past the frame — the group caps to the frame's inline size and scrolls (see below).</p>
 	<lay-out>
 		<ui-media class="label-frost" media="asr(16/9) rds(md) clip nav(mrk) mrk(lbl) mrk(tc)">
-			<img src="/assets/images/river.png" alt="" aria-label="River Walk">
-			<img src="/assets/images/mindfulness.png" alt="" aria-label="Mindful Living">
-			<img src="/assets/images/gastronomy.png" alt="" aria-label="Fine Dining">
-			<img src="/assets/images/world.png" alt="" aria-label="Our World">
+			<img src="/assets/images/river.png" alt="" aria-label="River Walk" decoding="async" loading="lazy">
+			<img src="/assets/images/mindfulness.png" alt="" aria-label="Mindful Living" decoding="async" loading="lazy">
+			<img src="/assets/images/gastronomy.png" alt="" aria-label="Fine Dining" decoding="async" loading="lazy">
+			<img src="/assets/images/world.png" alt="" aria-label="Our World" decoding="async" loading="lazy">
 		</ui-media>
 	</lay-out>
 	<p>Squared pills, no group background (<code>.label-square</code>, <code>mrk(te)</code>); frosted-white capsule (<code>.label-white</code>, <code>mrk(bs)</code>):</p>
 	<lay-out md="columns(2)">
 		<ui-media class="label-square" media="asr(16/9) rds(md) clip nav(mrk) mrk(lbl) mrk(te)">
-			<img src="/assets/images/hubble.png" alt="" aria-label="Deep field">
-			<img src="/assets/images/quantum.png" alt="" aria-label="Quantum lab">
-			<img src="/assets/images/websummit.png" alt="" aria-label="Web Summit">
+			<img src="/assets/images/hubble.png" alt="" aria-label="Deep field" decoding="async" loading="lazy">
+			<img src="/assets/images/quantum.png" alt="" aria-label="Quantum lab" decoding="async" loading="lazy">
+			<img src="/assets/images/websummit.png" alt="" aria-label="Web Summit" decoding="async" loading="lazy">
 		</ui-media>
 		<ui-media class="label-white" media="asr(16/9) rds(md) clip nav(mrk) mrk(lbl) mrk(bs)">
-			<img src="/assets/images/gastronomy.png" alt="" aria-label="Tasting menu">
-			<img src="/assets/images/brewandbean.png" alt="" aria-label="Brew &amp; Bean">
-			<img src="/assets/images/aurasoundpro.png" alt="" aria-label="AuraSound Pro">
+			<img src="/assets/images/gastronomy.png" alt="" aria-label="Tasting menu" decoding="async" loading="lazy">
+			<img src="/assets/images/brewandbean.png" alt="" aria-label="Brew &amp; Bean" decoding="async" loading="lazy">
+			<img src="/assets/images/aurasoundpro.png" alt="" aria-label="AuraSound Pro" decoding="async" loading="lazy">
 		</ui-media>
 	</lay-out>
 	<p>Labels are text, so a long set outgrows any frame. The group caps to the frame's inline size and becomes its own horizontal scroller — and because <code>::scroll-marker-group</code> is a scroll-target-group, the current label is scrolled into view for free. Twelve labels, unchanged markup:</p>
 	<lay-out>
 		<ui-media class="label-frost" media="asr(16/9) rds(md) clip nav(mrk) mrk(lbl) mrk(bc)">
-			<img src="/assets/images/river.png" alt="" aria-label="River Walk">
-			<img src="/assets/images/mindfulness.png" alt="" aria-label="Mindful Living">
-			<img src="/assets/images/gastronomy.png" alt="" aria-label="Fine Dining">
-			<img src="/assets/images/world.png" alt="" aria-label="World Report">
-			<img src="/assets/images/finance.png" alt="" aria-label="Market Watch">
-			<img src="/assets/images/city.png" alt="" aria-label="City Lights">
-			<img src="/assets/images/hubble.png" alt="" aria-label="Deep Field">
-			<img src="/assets/images/quantum.png" alt="" aria-label="Quantum Lab">
-			<img src="/assets/images/websummit.png" alt="" aria-label="Web Summit">
-			<img src="/assets/images/brewandbean.png" alt="" aria-label="Brew &amp; Bean">
-			<img src="/assets/images/aurasoundpro.png" alt="" aria-label="AuraSound Pro">
-			<img src="/assets/images/mindfulness.png" alt="" aria-label="Morning Meditation">
+			<img src="/assets/images/river.png" alt="" aria-label="River Walk" decoding="async" loading="lazy">
+			<img src="/assets/images/mindfulness.png" alt="" aria-label="Mindful Living" decoding="async" loading="lazy">
+			<img src="/assets/images/gastronomy.png" alt="" aria-label="Fine Dining" decoding="async" loading="lazy">
+			<img src="/assets/images/world.png" alt="" aria-label="World Report" decoding="async" loading="lazy">
+			<img src="/assets/images/finance.png" alt="" aria-label="Market Watch" decoding="async" loading="lazy">
+			<img src="/assets/images/city.png" alt="" aria-label="City Lights" decoding="async" loading="lazy">
+			<img src="/assets/images/hubble.png" alt="" aria-label="Deep Field" decoding="async" loading="lazy">
+			<img src="/assets/images/quantum.png" alt="" aria-label="Quantum Lab" decoding="async" loading="lazy">
+			<img src="/assets/images/websummit.png" alt="" aria-label="Web Summit" decoding="async" loading="lazy">
+			<img src="/assets/images/brewandbean.png" alt="" aria-label="Brew &amp; Bean" decoding="async" loading="lazy">
+			<img src="/assets/images/aurasoundpro.png" alt="" aria-label="AuraSound Pro" decoding="async" loading="lazy">
+			<img src="/assets/images/mindfulness.png" alt="" aria-label="Morning Meditation" decoding="async" loading="lazy">
 		</ui-media>
 	</lay-out>
 	<p>Prefer the whole set visible at once? <code>--ui-carousel-label-group-wrap: wrap</code> swaps the scroller for a wrapping block — still capped to the frame's inline size, but it grows in the block direction, so it suits short label sets or a band placement rather than a narrow overlay (<code>.label-wrap</code>, same twelve labels):</p>
 	<lay-out>
 		<ui-media class="label-frost label-wrap" media="asr(16/9) rds(md) clip nav(mrk) mrk(lbl) mrk(bc)">
-			<img src="/assets/images/river.png" alt="" aria-label="River Walk">
-			<img src="/assets/images/mindfulness.png" alt="" aria-label="Mindful Living">
-			<img src="/assets/images/gastronomy.png" alt="" aria-label="Fine Dining">
-			<img src="/assets/images/world.png" alt="" aria-label="World Report">
-			<img src="/assets/images/finance.png" alt="" aria-label="Market Watch">
-			<img src="/assets/images/city.png" alt="" aria-label="City Lights">
-			<img src="/assets/images/hubble.png" alt="" aria-label="Deep Field">
-			<img src="/assets/images/quantum.png" alt="" aria-label="Quantum Lab">
-			<img src="/assets/images/websummit.png" alt="" aria-label="Web Summit">
-			<img src="/assets/images/brewandbean.png" alt="" aria-label="Brew &amp; Bean">
-			<img src="/assets/images/aurasoundpro.png" alt="" aria-label="AuraSound Pro">
-			<img src="/assets/images/mindfulness.png" alt="" aria-label="Morning Meditation">
+			<img src="/assets/images/river.png" alt="" aria-label="River Walk" decoding="async" loading="lazy">
+			<img src="/assets/images/mindfulness.png" alt="" aria-label="Mindful Living" decoding="async" loading="lazy">
+			<img src="/assets/images/gastronomy.png" alt="" aria-label="Fine Dining" decoding="async" loading="lazy">
+			<img src="/assets/images/world.png" alt="" aria-label="World Report" decoding="async" loading="lazy">
+			<img src="/assets/images/finance.png" alt="" aria-label="Market Watch" decoding="async" loading="lazy">
+			<img src="/assets/images/city.png" alt="" aria-label="City Lights" decoding="async" loading="lazy">
+			<img src="/assets/images/hubble.png" alt="" aria-label="Deep Field" decoding="async" loading="lazy">
+			<img src="/assets/images/quantum.png" alt="" aria-label="Quantum Lab" decoding="async" loading="lazy">
+			<img src="/assets/images/websummit.png" alt="" aria-label="Web Summit" decoding="async" loading="lazy">
+			<img src="/assets/images/brewandbean.png" alt="" aria-label="Brew &amp; Bean" decoding="async" loading="lazy">
+			<img src="/assets/images/aurasoundpro.png" alt="" aria-label="AuraSound Pro" decoding="async" loading="lazy">
+			<img src="/assets/images/mindfulness.png" alt="" aria-label="Morning Meditation" decoding="async" loading="lazy">
 		</ui-media>
 	</lay-out>
 
@@ -697,38 +702,38 @@
 	<p><code>axis(y)</code> = vertical snap; up/down arrows, dot column inline-end. <code>arw(cs)</code> flips the edge; <code>arw(set)</code> stacks the pair.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) axis(y) nav" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">axis(y) nav</small><h2 data-part="headline">Dots + up/down (right)</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) axis(y) nav arw(cs)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/world.png" alt=""><img src="/assets/images/finance.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/world.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">axis(y) arw(cs)</small><h2 data-part="headline">Controls on the left</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) axis(y) nav(arw) arw(set)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/popovers.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/government.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/popovers.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/brewandbean.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/government.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">axis(y) arw(set)</small><h2 data-part="headline">Arrow pair, bottom-right</h2></ui-content></cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) axis(y) nav(arw) arw(set) arw(te)" content="scl(sm)">
-			<cq-box><ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+			<cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 			<ui-content><small data-part="eyebrow">axis(y) arw(set) arw(te)</small><h2 data-part="headline">Arrow pair, top-right</h2></ui-content></cq-box>
 		</ui-card>
 	</lay-out>
 	<p>Control bands read cleanest as standalone <code>&lt;ui-media&gt;</code> — <code>nav(blw)</code> below, <code>nav(abv)</code> above.</p>
 	<lay-out md="columns(2)">
-		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(blw)"><img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""></ui-media>
-		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(abv)"><img src="/assets/images/gastronomy.png" alt=""><img src="/assets/images/brewandbean.png" alt=""><img src="/assets/images/aurasoundpro.png" alt=""></ui-media>
+		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(blw)"><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
+		<ui-media media="asr(4/3) rds(lg) clip axis(y) nav(abv)"><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/brewandbean.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/aurasoundpro.png" alt="" decoding="async" loading="lazy"></ui-media>
 	</lay-out>
 	<p>Vertical thumbnails in a corner — <code>mrk(ts)</code> top-left, <code>mrk(bs)</code> bottom-left:</p>
 	<lay-out md="columns(2)">
 			<ui-media media="asr(4/3) rds(lg) clip axis(y) nav mrk(tmb) mrk(ts) mrk(md)">
-				<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')">
-				<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')">
-				<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')">
+				<img src="/assets/images/hubble.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/hubble.png')" decoding="async" loading="lazy">
+				<img src="/assets/images/quantum.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/quantum.png')" decoding="async" loading="lazy">
+				<img src="/assets/images/websummit.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/websummit.png')" decoding="async" loading="lazy">
 			</ui-media>
 			<ui-media media="asr(4/3) rds(lg) clip axis(y) nav mrk(tmb) mrk(bs) mrk(sm)">
-				<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')">
-				<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')">
-				<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')">
+				<img src="/assets/images/river.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/river.png')" decoding="async" loading="lazy">
+				<img src="/assets/images/mindfulness.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')" decoding="async" loading="lazy">
+				<img src="/assets/images/world.png" alt="" style="--ui-carousel-thumb-url: url('/assets/images/world.png')" decoding="async" loading="lazy">
 			</ui-media>
 	</lay-out>
 
@@ -741,15 +746,15 @@
 	<lay-out>
 			<ui-media media="asr(16/9) rds(lg) clip nav stagger">
 				<ui-card variant="ovr(bs) rds(non)" media="asr(16/9) obp(cc) scm" content="pad(lg)"><cq-box>
-					<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><small data-part="eyebrow">Space</small><h2 data-part="headline">Deep field</h2><p data-part="summary">Ten thousand galaxies in a grain of sky.</p><nav data-part="actions"><a class="ui-button" href="#">Explore</a></nav></ui-content>
 				</cq-box></ui-card>
 				<ui-card variant="ovr(bs) rds(non)" media="asr(16/9) obp(cc) scm" content="pad(lg)"><cq-box>
-					<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><small data-part="eyebrow">Physics</small><h2 data-part="headline">Entangled</h2><p data-part="summary">Spooky action, at a distance.</p><nav data-part="actions"><a class="ui-button" href="#">Discover</a></nav></ui-content>
 				</cq-box></ui-card>
 				<ui-card variant="ovr(bs) rds(non)" media="asr(16/9) obp(cc) scm" content="pad(lg)"><cq-box>
-					<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><small data-part="eyebrow">Tech</small><h2 data-part="headline">Web Summit</h2><p data-part="summary">Where the network meets in person.</p><nav data-part="actions"><a class="ui-button" href="#">Attend</a></nav></ui-content>
 				</cq-box></ui-card>
 			</ui-media>
@@ -760,29 +765,29 @@
 	<lay-out md="columns(2)">
 			<ui-media media="rds(non) clip nav(blw) stagger">
 				<ui-card variant="ovr(bs) rds(non)" media="asr(4/3) obp(cc) scm ani(rise)" content="pad(lg)"><cq-box>
-					<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><small data-part="eyebrow">ani(rise)</small><h2 data-part="headline">Rise up</h2><p data-part="summary">Copy lifts into place.</p></ui-content>
 				</cq-box></ui-card>
 				<ui-card variant="ovr(bs) rds(non)" media="asr(4/3) obp(cc) scm ani(lft)" content="pad(lg)"><cq-box>
-					<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><small data-part="eyebrow">ani(lft)</small><h2 data-part="headline">Slide in</h2><p data-part="summary">Enters from the inline-start.</p></ui-content>
 				</cq-box></ui-card>
 				<ui-card variant="ovr(bs) rds(non)" media="asr(4/3) obp(cc) scm ani(zom)" content="pad(lg)"><cq-box>
-					<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><small data-part="eyebrow">ani(zom)</small><h2 data-part="headline">Zoom in</h2><p data-part="summary">Scales up into place.</p></ui-content>
 				</cq-box></ui-card>
 			</ui-media>
 			<ui-media media="rds(non) clip nav(blw) stagger">
 				<ui-card variant="ovr(bs) rds(non)" media="asr(4/3) obp(cc) scm ani(fall)" content="pad(lg)"><cq-box>
-					<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><small data-part="eyebrow">ani(fall)</small><h2 data-part="headline">Drop down</h2><p data-part="summary">Descends into place.</p></ui-content>
 				</cq-box></ui-card>
 				<ui-card variant="ovr(bs) rds(non)" media="asr(4/3) obp(cc) scm ani(rgt)" content="pad(lg)"><cq-box>
-					<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><small data-part="eyebrow">ani(rgt)</small><h2 data-part="headline">Slide in</h2><p data-part="summary">Enters from the inline-end.</p></ui-content>
 				</cq-box></ui-card>
 				<ui-card variant="ovr(bs) rds(non)" media="asr(4/3) obp(cc) scm ani(blr)" content="pad(lg)"><cq-box>
-					<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><small data-part="eyebrow">ani(blr)</small><h2 data-part="headline">Unblur</h2><p data-part="summary">Sharpens into focus.</p></ui-content>
 				</cq-box></ui-card>
 			</ui-media>
@@ -803,7 +808,7 @@
 			<details name="stagger-games">
 				<summary>
 					<ui-face>
-						<ui-media><img src="/assets/images/game_01.png" alt="" loading="lazy"></ui-media>
+						<ui-media><img src="/assets/images/game_01.png" alt="" loading="lazy" decoding="async"></ui-media>
 						<ui-content><small>Fantasy RPG</small><strong>Starfall Legends</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
@@ -820,7 +825,7 @@
 			<details name="stagger-games">
 				<summary>
 					<ui-face>
-						<ui-media><img src="/assets/images/game_02.png" alt="" loading="lazy"></ui-media>
+						<ui-media><img src="/assets/images/game_02.png" alt="" loading="lazy" decoding="async"></ui-media>
 						<ui-content><small>Open-World Western</small><strong>Frontier Outlaws</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
@@ -837,7 +842,7 @@
 			<details name="stagger-games">
 				<summary>
 					<ui-face>
-						<ui-media><img src="/assets/images/game_03.png" alt="" loading="lazy"></ui-media>
+						<ui-media><img src="/assets/images/game_03.png" alt="" loading="lazy" decoding="async"></ui-media>
 						<ui-content><small>Historical Epic</small><strong>Imperium: Legions</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
@@ -854,7 +859,7 @@
 			<details name="stagger-bands">
 				<summary>
 					<ui-face>
-						<ui-media><img src="/assets/images/band_goth.png" alt="" loading="lazy"></ui-media>
+						<ui-media><img src="/assets/images/band_goth.png" alt="" loading="lazy" decoding="async"></ui-media>
 						<ui-content><small>Gothic</small><strong>The Lure</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
@@ -871,7 +876,7 @@
 			<details name="stagger-bands">
 				<summary>
 					<ui-face>
-						<ui-media><img src="/assets/images/band_alternative.png" alt="" loading="lazy"></ui-media>
+						<ui-media><img src="/assets/images/band_alternative.png" alt="" loading="lazy" decoding="async"></ui-media>
 						<ui-content><small>Alternative</small><strong>Paper Mirror</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
@@ -888,7 +893,7 @@
 			<details name="stagger-bands">
 				<summary>
 					<ui-face>
-						<ui-media><img src="/assets/images/band_girls.png" alt="" loading="lazy"></ui-media>
+						<ui-media><img src="/assets/images/band_girls.png" alt="" loading="lazy" decoding="async"></ui-media>
 						<ui-content><small>Girl Group</small><strong>Neon Avenue</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
@@ -905,7 +910,7 @@
 			<details name="stagger-movies">
 				<summary>
 					<ui-face>
-						<ui-media><img src="/assets/images/movie_01.png" alt="" loading="lazy"></ui-media>
+						<ui-media><img src="/assets/images/movie_01.png" alt="" loading="lazy" decoding="async"></ui-media>
 						<ui-content><small>Action Thriller</small><strong>Vault Zero</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
@@ -935,7 +940,7 @@
 			<details name="stagger-movies">
 				<summary>
 					<ui-face>
-						<ui-media><img src="/assets/images/movie_02.png" alt="" loading="lazy"></ui-media>
+						<ui-media><img src="/assets/images/movie_02.png" alt="" loading="lazy" decoding="async"></ui-media>
 						<ui-content><small>Fantasy Epic</small><strong>Realms of Eldarin</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
@@ -965,7 +970,7 @@
 			<details name="stagger-movies">
 				<summary>
 					<ui-face>
-						<ui-media><img src="/assets/images/movie_03.png" alt="" loading="lazy"></ui-media>
+						<ui-media><img src="/assets/images/movie_03.png" alt="" loading="lazy" decoding="async"></ui-media>
 						<ui-content><small>Romantic Comedy</small><strong>Two Left Feet</strong></ui-content>
 					</ui-face>
 					<ui-icon type="plus-cross" aria-hidden="true"></ui-icon>
@@ -1002,43 +1007,43 @@
 			<ui-media class="slide-gap" media="nav stagger crd(rise) pages">
 				<lay-out md="columns(3)" stagger>
 					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Space · ani(fall)</small><h3 data-part="headline">Hubble</h3></ui-content>
 					</cq-box></ui-card>
 					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Physics · ani(fall)</small><h3 data-part="headline">Quantum</h3></ui-content>
 					</cq-box></ui-card>
 					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Tech · ani(fall)</small><h3 data-part="headline">Web Summit</h3></ui-content>
 					</cq-box></ui-card>
 				</lay-out>
 				<lay-out md="columns(3)" stagger>
 					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Health · ani(fall)</small><h3 data-part="headline">Mindfulness</h3></ui-content>
 					</cq-box></ui-card>
 					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/world.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/world.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Travel · ani(fall)</small><h3 data-part="headline">World</h3></ui-content>
 					</cq-box></ui-card>
 					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/finance.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Money · ani(fall)</small><h3 data-part="headline">Finance</h3></ui-content>
 					</cq-box></ui-card>
 				</lay-out>
 				<lay-out md="columns(3)" stagger>
 					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Nature · ani(fall)</small><h3 data-part="headline">Wild waters</h3></ui-content>
 					</cq-box></ui-card>
 					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Food · ani(fall)</small><h3 data-part="headline">Gastronomy</h3></ui-content>
 					</cq-box></ui-card>
 					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Calm · ani(fall)</small><h3 data-part="headline">Stillness</h3></ui-content>
 					</cq-box></ui-card>
 				</lay-out>
@@ -1051,31 +1056,31 @@
 			<ui-media class="slide-gap shadow-room" media="nav(blw) arw(bare) stagger ani(lft) pages">
 				<lay-out md="columns(2)" stagger>
 					<ui-card variant="col" media="asr(4/3) crd(rise)" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Space</small><h3 data-part="headline">Hubble</h3><p data-part="summary">Deep-field imaging.</p></ui-content>
 					</cq-box></ui-card>
 					<ui-card variant="col" media="asr(4/3) crd(rise)" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Physics</small><h3 data-part="headline">Quantum</h3><p data-part="summary">Entangled states.</p></ui-content>
 					</cq-box></ui-card>
 				</lay-out>
 				<lay-out md="columns(2)" stagger>
 					<ui-card variant="col" media="asr(4/3) crd(rise)" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Tech</small><h3 data-part="headline">Web Summit</h3><p data-part="summary">Founders meet.</p></ui-content>
 					</cq-box></ui-card>
 					<ui-card variant="col" media="asr(4/3) crd(rise)" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Health</small><h3 data-part="headline">Mindfulness</h3><p data-part="summary">Breathe deep.</p></ui-content>
 					</cq-box></ui-card>
 				</lay-out>
 				<lay-out md="columns(2)" stagger>
 					<ui-card variant="col" media="asr(4/3) crd(rise)" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/world.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/world.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Travel</small><h3 data-part="headline">World</h3><p data-part="summary">Go far.</p></ui-content>
 					</cq-box></ui-card>
 					<ui-card variant="col" media="asr(4/3) crd(rise)" content="scl(sm) pad(md)"><cq-box>
-						<ui-media><img src="/assets/images/finance.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Money</small><h3 data-part="headline">Finance</h3><p data-part="summary">Grow it.</p></ui-content>
 					</cq-box></ui-card>
 				</lay-out>
@@ -1096,31 +1101,31 @@
 			<lay-out bleed md="columns(1)" overflow="preview-2xl center gaps" media="nav(blw) arw(set) arw(bare) arw(lgt) mrk(bc) mrk(lgt)">
 				<ui-card variant="ovr(bs) rds(non)" media="asr(3/4) md:asr(16/9) scm" content="scl(lg) pad(lg)">
 					<cq-box>
-						<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Drama</small><h2 data-part="headline">Your Friends &amp; Neighbours</h2><p data-part="summary">Stream now — is it so wrong to want more?</p></ui-content>
 					</cq-box>
 				</ui-card>
 				<ui-card variant="ovr(bs) rds(non)" media="asr(3/4) md:asr(16/9) scm" content="scl(lg) pad(lg)">
 					<cq-box>
-						<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Action</small><h2 data-part="headline">Long Way Home</h2><p data-part="summary">Stream now — the desert never forgets.</p></ui-content>
 					</cq-box>
 				</ui-card>
 				<ui-card variant="ovr(bs) rds(non)" media="asr(3/4) md:asr(16/9) scm" content="scl(lg) pad(lg)">
 					<cq-box>
-						<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Sci-Fi</small><h2 data-part="headline">Deep Field</h2><p data-part="summary">Stream now — look closer at the dark.</p></ui-content>
 					</cq-box>
 				</ui-card>
 				<ui-card variant="ovr(bs) rds(non)" media="asr(3/4) md:asr(16/9) scm" content="scl(lg) pad(lg)">
 					<cq-box>
-						<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Nature</small><h2 data-part="headline">Downstream</h2><p data-part="summary">Stream now — follow the current.</p></ui-content>
 					</cq-box>
 				</ui-card>
 				<ui-card variant="ovr(bs) rds(non)" media="asr(3/4) md:asr(16/9) scm" content="scl(lg) pad(lg)">
 					<cq-box>
-						<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+						<ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Wellness</small><h2 data-part="headline">Breathe</h2><p data-part="summary">Stream now — one moment at a time.</p></ui-content>
 					</cq-box>
 				</ui-card>
@@ -1140,31 +1145,31 @@
 		<lay-out bleed xs="pi(1)" md="columns(2)" overflow="preview-lg" media="nav(arw) arw(set) arw(blw)">
 			<ui-card variant="ovr(ts) rds(lg)" media="asr(3/4) md:asr(3/2) scm" content="scl(sm) pad(lg)">
 				<cq-box>
-					<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><h3 data-part="headline">Quantum computing you can almost touch.</h3></ui-content>
 				</cq-box>
 			</ui-card>
 			<ui-card variant="ovr(ts) rds(lg)" media="asr(3/4) md:asr(3/2) scm" content="scl(sm) pad(lg)">
 				<cq-box>
-					<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><h3 data-part="headline">Find your calm, deep in the forest.</h3></ui-content>
 				</cq-box>
 			</ui-card>
 			<ui-card variant="ovr(ts) rds(lg)" media="asr(3/4) md:asr(3/2) scm" content="scl(sm) pad(lg)">
 				<cq-box>
-					<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><h3 data-part="headline">Where great ideas connect and grow.</h3></ui-content>
 				</cq-box>
 			</ui-card>
 			<ui-card variant="ovr(ts) rds(lg)" media="asr(3/4) md:asr(3/2) scm" content="scl(sm) pad(lg)">
 				<cq-box>
-					<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><h3 data-part="headline">Look closer into the deep dark sky.</h3></ui-content>
 				</cq-box>
 			</ui-card>
 			<ui-card variant="ovr(ts) rds(lg)" media="asr(3/4) md:asr(3/2) scm" content="scl(sm) pad(lg)">
 				<cq-box>
-					<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><h3 data-part="headline">Taste the craft behind every plate.</h3></ui-content>
 				</cq-box>
 			</ui-card>
@@ -1184,11 +1189,11 @@
 						<h2 data-part="headline">Reels</h2>
 					</ui-content>
 					<lay-out xs="p(1)" md="columns(1)" overflow="preview-xs frame" media="nav(arw) arw(hid)">
-						<ui-card variant="ovr(bs) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Nature</small><h3 data-part="headline">Downstream</h3></ui-content></cq-box></ui-card>
-						<ui-card variant="ovr(bs) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/hubble.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Space</small><h3 data-part="headline">Deep Field</h3></ui-content></cq-box></ui-card>
-						<ui-card variant="ovr(bs) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Food</small><h3 data-part="headline">Kitchen</h3></ui-content></cq-box></ui-card>
-						<ui-card variant="ovr(bs) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Calm</small><h3 data-part="headline">Breathe</h3></ui-content></cq-box></ui-card>
-						<ui-card variant="ovr(bs) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/world.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Travel</small><h3 data-part="headline">Go Far</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bs) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"></ui-media><ui-content><small data-part="eyebrow">Nature</small><h3 data-part="headline">Downstream</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bs) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"></ui-media><ui-content><small data-part="eyebrow">Space</small><h3 data-part="headline">Deep Field</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bs) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"></ui-media><ui-content><small data-part="eyebrow">Food</small><h3 data-part="headline">Kitchen</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bs) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media><ui-content><small data-part="eyebrow">Calm</small><h3 data-part="headline">Breathe</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bs) rds(lg)" media="asr(6/7) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/world.png" alt="" decoding="async" loading="lazy"></ui-media><ui-content><small data-part="eyebrow">Travel</small><h3 data-part="headline">Go Far</h3></ui-content></cq-box></ui-card>
 					</lay-out>
 				</lay-out-group>
 			</ui-card>
@@ -1202,12 +1207,12 @@
 						<h2 data-part="headline">Games</h2>
 					</ui-content>
 					<lay-out xs="p(1)" md="columns(2)" overflow="preview-xs frame" media="nav(arw) arw(hid)">
-						<ui-card variant="ovr(bs) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/game_01.png" alt=""></ui-media><ui-content><small data-part="eyebrow">RPG</small><h3 data-part="headline">Starfall</h3></ui-content></cq-box></ui-card>
-						<ui-card variant="ovr(bs) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/game_02.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Western</small><h3 data-part="headline">Frontier</h3></ui-content></cq-box></ui-card>
-						<ui-card variant="ovr(bs) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/quantum.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Sci-Fi</small><h3 data-part="headline">Entangled</h3></ui-content></cq-box></ui-card>
-						<ui-card variant="ovr(bs) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/websummit.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Tech</small><h3 data-part="headline">Summit</h3></ui-content></cq-box></ui-card>
-						<ui-card variant="ovr(bs) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/finance.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Money</small><h3 data-part="headline">Grow It</h3></ui-content></cq-box></ui-card>
-						<ui-card variant="ovr(bs) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media><ui-content><small data-part="eyebrow">Nature</small><h3 data-part="headline">Current</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bs) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/game_01.png" alt="" decoding="async" loading="lazy"></ui-media><ui-content><small data-part="eyebrow">RPG</small><h3 data-part="headline">Starfall</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bs) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/game_02.png" alt="" decoding="async" loading="lazy"></ui-media><ui-content><small data-part="eyebrow">Western</small><h3 data-part="headline">Frontier</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bs) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"></ui-media><ui-content><small data-part="eyebrow">Sci-Fi</small><h3 data-part="headline">Entangled</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bs) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media><ui-content><small data-part="eyebrow">Tech</small><h3 data-part="headline">Summit</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bs) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"></ui-media><ui-content><small data-part="eyebrow">Money</small><h3 data-part="headline">Grow It</h3></ui-content></cq-box></ui-card>
+						<ui-card variant="ovr(bs) rds(lg)" media="asr(1/2) scm" content="scl(sm) pad(md)"><cq-box><ui-media><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"></ui-media><ui-content><small data-part="eyebrow">Nature</small><h3 data-part="headline">Current</h3></ui-content></cq-box></ui-card>
 					</lay-out>
 				</lay-out-group>
 			</ui-card>
@@ -1227,14 +1232,14 @@
 			<cq-box>
 				<ui-media>
 					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
-					<img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt="">
+					<img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy">
 				</ui-media>
 				<ui-content><small data-part="eyebrow">auto(3s) loop mrk(pll)</small><h2 data-part="headline">Autoplay + pill timer</h2><p data-part="summary">Advances every 3s, seamlessly wraps; pauses on hover/focus.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) nav loop" content="scl(sm)">
 			<cq-box>
-				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 				<ui-content><small data-part="eyebrow">loop</small><h2 data-part="headline">Seamless loop</h2><p data-part="summary">Next past the last smooth-scrolls into a cloned slide, then invisibly resets — no jump.</p></ui-content>
 			</cq-box>
 		</ui-card>
@@ -1245,7 +1250,7 @@
 			<cq-box>
 				<ui-media>
 					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
-					<img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt="">
+					<img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy">
 				</ui-media>
 				<ui-content><small data-part="eyebrow">nav(mrk) mrk(pll) auto(3s) loop play(bs)</small><h2 data-part="headline">Pills only — no arrows</h2><p data-part="summary">Arrows dropped; the pill timers and play/pause control remain.</p></ui-content>
 			</cq-box>
@@ -1254,7 +1259,7 @@
 			<cq-box>
 				<ui-media>
 					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
-					<img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""><img src="/assets/images/popovers.png" alt="">
+					<img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/popovers.png" alt="" decoding="async" loading="lazy">
 				</ui-media>
 				<ui-content><small data-part="eyebrow">nav(non) auto(3s) loop play(bs)</small><h2 data-part="headline">No navigation — play only</h2><p data-part="summary">No dots, no arrows; the play/pause button is the sole control.</p></ui-content>
 			</cq-box>
@@ -1266,14 +1271,14 @@
 			<cq-box>
 				<ui-media>
 					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
-					<img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt="">
+					<img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy">
 				</ui-media>
 				<ui-content><small data-part="eyebrow">axis(y) auto(3s) loop mrk(pll) mrk(bc)</small><h2 data-part="headline">Vertical autoplay + pill timer</h2><p data-part="summary">Advances down every 3s, seamlessly wraps; pill dots centered at the bottom.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="col" media="asr(4/3) axis(y) nav loop" content="scl(sm)">
 			<cq-box>
-				<ui-media><img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 				<ui-content><small data-part="eyebrow">axis(y) loop</small><h2 data-part="headline">Vertical seamless loop</h2><p data-part="summary">Down past the last smooth-scrolls into a cloned slide, then invisibly resets — up/down arrows + dots.</p></ui-content>
 			</cq-box>
 		</ui-card>
@@ -1286,7 +1291,7 @@
 			<cq-box>
 				<ui-media>
 					<ui-play size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
-					<img src="/assets/images/finance.png" alt=""><img src="/assets/images/river.png" alt=""><img src="/assets/images/mindfulness.png" alt=""><img src="/assets/images/gastronomy.png" alt="">
+					<img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy">
 				</ui-media>
 				<ui-content><small data-part="eyebrow">auto(4s) loop play(bs)</small><h2 data-part="headline">Pinned control (bottom-left)</h2></ui-content>
 			</cq-box>
@@ -1295,7 +1300,7 @@
 			<cq-box>
 				<ui-media>
 					<ui-play variant="reveal" size="sm"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
-					<img src="/assets/images/hubble.png" alt=""><img src="/assets/images/quantum.png" alt=""><img src="/assets/images/websummit.png" alt="">
+					<img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy">
 				</ui-media>
 				<ui-content><small data-part="eyebrow">play(be) variant="reveal"</small><h2 data-part="headline">Reveal on hover (bottom-right)</h2></ui-content>
 			</cq-box>
@@ -1308,31 +1313,31 @@
 			<ui-media media="asr(4/3) rds(2xl) clip nav auto loop mrk(tmb) mrk(te) mrk(xl) play(be) stagger">
 				<ui-play size="sm" variant="reveal"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				<ui-card variant="ovr(bs) rds(non)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-carousel-thumb-url: url('/assets/images/finance.png')"><cq-box>
-					<ui-media><img src="/assets/images/finance.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><small data-part="eyebrow">Travel</small><h2 data-part="headline">Far-flung destinations</h2><p data-part="summary">Places worth the journey.</p><nav data-part="actions"><a class="ui-button" href="#">Explore</a></nav></ui-content>
 				</cq-box></ui-card>
 				<ui-card variant="ovr(bs) rds(non)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-carousel-thumb-url: url('/assets/images/river.png')"><cq-box>
-					<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><small data-part="eyebrow">Nature</small><h2 data-part="headline">Wild waters</h2><p data-part="summary">Rivers, lakes and coastlines.</p><nav data-part="actions"><a class="ui-button" href="#">Discover</a></nav></ui-content>
 				</cq-box></ui-card>
 				<ui-card variant="ovr(bs) rds(non)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')"><cq-box>
-					<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><small data-part="eyebrow">Wellbeing</small><h2 data-part="headline">Find your calm</h2><p data-part="summary">Slow moments, deep breaths.</p><nav data-part="actions"><a class="ui-button" href="#">Begin</a></nav></ui-content>
 				</cq-box></ui-card>
 				<ui-card variant="ovr(bs) rds(non)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-carousel-thumb-url: url('/assets/images/world.png')"><cq-box>
-					<ui-media><img src="/assets/images/world.png" alt=""></ui-media>
+					<ui-media><img src="/assets/images/world.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><small data-part="eyebrow">Global</small><h2 data-part="headline">See the world</h2><p data-part="summary">One trip at a time.</p><nav data-part="actions"><a class="ui-button" href="#">Plan</a></nav></ui-content>
 				</cq-box></ui-card>
 				<ui-card variant="ovr(bs) rds(non)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-carousel-thumb-url: url('/assets/images/city.png')"><cq-box>
 					<ui-media>
-						<video src="/assets/video/city.mp4" poster="/assets/images/city.png" preload="auto" autoplay muted loop playsinline></video>
+						<video src="/assets/video/city.mp4" poster="/assets/images/city.png" preload="none" autoplay muted loop playsinline></video>
 						<ui-play size="lg"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					</ui-media>
 					<ui-content><small data-part="eyebrow">Video · autoplay</small><h2 data-part="headline">City in motion</h2><p data-part="summary">Silent background loop with a play/pause control.</p><nav data-part="actions"><a class="ui-button" href="#">Visit</a></nav></ui-content>
 				</cq-box></ui-card>
 				<ui-card variant="ovr(bs) rds(non)" media="asr(4/3) obp(cc) scm" content="pad(lg)" style="--ui-carousel-thumb-url: url('/assets/images/river.png')"><cq-box>
 					<ui-media>
-						<video src="/assets/video/river.mp4" poster="/assets/images/river.png" preload="metadata" muted loop playsinline></video>
+						<video src="/assets/video/river.mp4" poster="/assets/images/river.png" preload="none" muted loop playsinline></video>
 						<ui-play size="lg"><button type="button" aria-label="Play/pause"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					</ui-media>
 					<ui-content><small data-part="eyebrow">Video · manual</small><h2 data-part="headline">Down the river</h2><p data-part="summary">Click to play; pauses when you swipe away.</p><nav data-part="actions"><a class="ui-button" href="#">Discover</a></nav></ui-content>
@@ -1345,31 +1350,31 @@
 	<lay-out bleed md="columns(1)" overflow="preview-2xl center" media="loop auto(4s) nav(mrk) mrk(hyb) mrk(blw)">
 		<ui-card variant="ovr(bs) rds(non)" media="asr(16/9) scm" content="scl(lg)">
 			<cq-box>
-				<ui-media><img src="/assets/images/websummit.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 				<ui-content><small data-part="eyebrow">Drama</small><h2 data-part="headline">Your Friends &amp; Neighbours</h2><p data-part="summary">Stream now — is it so wrong to want more?</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="ovr(bs) rds(non)" media="asr(16/9) scm" content="scl(lg)">
 			<cq-box>
-				<ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"></ui-media>
 				<ui-content><small data-part="eyebrow">Action</small><h2 data-part="headline">Long Way Home</h2><p data-part="summary">Stream now — the desert never forgets.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="ovr(bs) rds(non)" media="asr(16/9) scm" content="scl(lg)">
 			<cq-box>
-				<ui-media><img src="/assets/images/hubble.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"></ui-media>
 				<ui-content><small data-part="eyebrow">Sci-Fi</small><h2 data-part="headline">Deep Field</h2><p data-part="summary">Stream now — look closer at the dark.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="ovr(bs) rds(non)" media="asr(16/9) scm" content="scl(lg)">
 			<cq-box>
-				<ui-media><img src="/assets/images/river.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"></ui-media>
 				<ui-content><small data-part="eyebrow">Nature</small><h2 data-part="headline">Downstream</h2><p data-part="summary">Stream now — follow the current.</p></ui-content>
 			</cq-box>
 		</ui-card>
 		<ui-card variant="ovr(bs) rds(non)" media="asr(16/9) scm" content="scl(lg)">
 			<cq-box>
-				<ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
+				<ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
 				<ui-content><small data-part="eyebrow">Wellness</small><h2 data-part="headline">Breathe</h2><p data-part="summary">Stream now — one moment at a time.</p></ui-content>
 			</cq-box>
 		</ui-card>
