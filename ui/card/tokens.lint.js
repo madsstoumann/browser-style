@@ -24,6 +24,7 @@ const MEDIA_ONLY = ['media'];
 const SHEETS = [
 	['ui/card/content.css', ALL], ['ui/card/content.typography.css', ALL], ['ui/card/demo.layout.css', ALL],
 	['ui/card/index.css', ALL], ['ui/card/media.carousel.css', ALL], ['ui/card/media.css', ALL],
+	['ui/card/media.lightbox.css', ALL],
 	['ui/card/media.hover.css', ALL], ['ui/card/media.shapes.css', ALL], ['ui/card/media.tint.css', ALL],
 	['ui/card/media.video.css', ALL], ['ui/card/ui-card.css', ALL],
 	['ui/reveal/ui-reveal.css', ALL], ['ui/reveal/index.css', ALL],

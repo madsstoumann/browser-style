@@ -1,0 +1,194 @@
+/* ui-media lightbox — popover promotion of the EXISTING frame. A static
+ * `popover` attribute on <ui-media> plus an invoker (<ui-lightbox>'s
+ * <button command="toggle-popover" commandfor="…">) lifts the same DOM into the
+ * top layer as a fullscreen gallery: no re-render, no attribute churn, and the
+ * top layer is immune to ui-card's container-type/overflow, lay-out's
+ * containment and lay-out-group clipping (the traps reveal's `exp pop` fights).
+ * Docs: media.md § Lightbox.
+ *
+ * CLOSED STATE relies on cascade ORIGIN, not specificity: the UA popover sheet
+ * ([popover] { position:fixed; inset:0; … } / :not(:popover-open) { display:none })
+ * is UA-origin NORMAL, so every author declaration — even zero-specificity
+ * :where() inside @layer — beats it. display/position/overflow/background are
+ * therefore already restored by media.css and media.carousel.css; only the
+ * properties no author rule sets (inset/margin/border/padding/size/color) need
+ * the reset below. Do not "fix" the closed state by re-declaring display here.
+ *
+ * OPEN-STATE tokens are the `open:` prefix family — WHOLE-token (~=) on purpose,
+ * like the md:/lg: asr() forms: an open: spelling must never contain a
+ * substring-matched stem (`open:nav` is an impossible spelling — [media*="nav"]
+ * would arm the closed carousel). Fullscreen CAROUSEL is the default open
+ * presentation of a nav frame; open:grid(Nc) is the alternative. */
+@layer bs-component {
+
+	/* === CLOSED STATE — UA popover reset (see header) === */
+	:where(ui-media[popover]) {
+		border: 0;
+		color: inherit;
+		margin: 0;
+		padding: 0;
+	}
+	:where(ui-media[popover]:not(:popover-open)) {
+		block-size: auto;
+		inline-size: auto;
+		inset: auto;
+	}
+
+	/* === OPEN STATE — fullscreen presentation ===
+	   Real specificity on purpose: must beat the base frame (aspect-ratio,
+	   min-block-size, radius) and the nav scroller's inline-size. position:fixed
+	   is REQUIRED — a top-layer element must stay out of flow; the UA sets it but
+	   media.css's position:relative would win on origin, so re-assert it here. */
+	ui-media[popover]:popover-open {
+		aspect-ratio: auto;
+		background: var(--ui-lightbox-surface, oklch(0.13 0 0 / 0.88));
+		block-size: 100dvb;
+		border-radius: 0;
+		clip-path: none;
+		inline-size: 100dvi;
+		inset: var(--ui-lightbox-inset, 0);
+		margin: 0;
+		min-block-size: 0;
+		overscroll-behavior: contain;
+		position: fixed;
+	}
+	/* the lightbox shows the WHOLE image by default (letterboxed on the surface
+	   above) — direct children only, so collage tiles keep their own cover */
+	ui-media[popover]:popover-open > :is(iframe, img, video),
+	ui-media[popover]:popover-open > picture img {
+		object-fit: var(--ui-lightbox-fit, contain);
+	}
+
+	ui-media[popover]::backdrop {
+		backdrop-filter: blur(var(--ui-lightbox-backdrop-blur, 8px));
+		background: var(--ui-lightbox-backdrop, oklch(0 0 0 / 0.55));
+	}
+
+	/* entry = keyframes, not transitions: the closed frame is ALWAYS rendered
+	   (display never flips), so @starting-style/transition would have nothing to
+	   fire from. Opacity only — a scale/translate entry would give the frame a
+	   transient containing block and yank position:fixed furniture. Close snaps,
+	   like reveal's pop. */
+	@media (prefers-reduced-motion: no-preference) {
+		ui-media[popover]:popover-open { animation: ui-lightbox-in var(--ui-lightbox-trs, 0.25s) var(--ease-out, ease-out); }
+		ui-media[popover]:popover-open::backdrop { animation: ui-lightbox-in var(--ui-lightbox-trs, 0.25s) var(--ease-out, ease-out); }
+	}
+
+	/* === FLOW PLACEHOLDER — the promoted frame leaves the cq-box grid; reserve
+	   its cell so neighbours don't reflow (reveal `exp pop` precedent). Mirrors
+	   the frame's own sizing: --ui-media-ar when the ratio sits on the HOST (the
+	   renderer's canonical placement), the 12.5rem floor otherwise — and the
+	   floor drops when the host carries asr(), exactly like media.css:47.
+	   A STANDALONE <ui-media popover> in a lay-out has no parent hook for a
+	   pseudo → documented limitation: the backdrop masks the reflow while open. */
+	:where(ui-card, ui-reveal):has(ui-media:popover-open) :is(cq-box, summary)::before {
+		aspect-ratio: var(--ui-media-ar, var(--ui-lightbox-placeholder-ar, 3 / 2));
+		background: var(--ui-lightbox-placeholder-bg, var(--color-overlay-light, #0000));
+		border-radius: var(--ui-media-radius, 0);
+		content: "";
+		min-block-size: var(--ui-media-min, 12.5rem);
+	}
+	:where(ui-card, ui-reveal):where([media*="asr("]):has(ui-media:popover-open) :is(cq-box, summary)::before {
+		min-block-size: 0;
+	}
+
+	/* === FURNITURE WHILE OPEN — markers/bands hide by default (chips, stickers,
+	   beacons, marquees and save rarely belong in a lightbox); the interactive
+	   pair stays: ui-play (video control) and ui-lightbox (now the close
+	   affordance). Opt out with the bare `open:furniture` flag. Direct-child
+	   scoped: collage tiles' own furniture is untouched. === */
+	ui-media[popover]:popover-open:not(:where(
+		[media~="open:furniture"],
+		:is(ui-card, ui-reveal)[media~="open:furniture"] *
+	)) > :is(ui-beacon, ui-chip, ui-marquee, ui-save, ui-sticker) {
+		display: none;
+	}
+
+	/* === open:grid(Nc) — present the SAME children as a scrollable grid while
+	   open ("view all" contact sheet). Also armed at runtime by
+	   data-lightbox="grid" (ui/lightbox/command.js) and overridden by
+	   data-lightbox="nav", so one button flips carousel ↔ grid. === */
+	:where(
+		[media~="open:grid(2c)"],
+		:is(ui-card, ui-reveal)[media~="open:grid(2c)"] *
+	) { --_lb-cols: 2; }
+	:where(
+		[media~="open:grid(3c)"],
+		:is(ui-card, ui-reveal)[media~="open:grid(3c)"] *
+	) { --_lb-cols: 3; }
+	:where(
+		[media~="open:grid(4c)"],
+		:is(ui-card, ui-reveal)[media~="open:grid(4c)"] *
+	) { --_lb-cols: 4; }
+
+	ui-media[popover]:popover-open:where(
+		[data-lightbox="grid"],
+		:is(
+			[media~="open:grid(2c)"], [media~="open:grid(3c)"], [media~="open:grid(4c)"],
+			:is(ui-card, ui-reveal):is([media~="open:grid(2c)"], [media~="open:grid(3c)"], [media~="open:grid(4c)"]) *
+		):not([data-lightbox="nav"])
+	) {
+		align-content: safe center;
+		display: grid;
+		gap: var(--ui-lightbox-grid-gap, 2px);
+		grid-template-columns: repeat(var(--_lb-cols, 2), 1fr);
+		overflow: hidden auto;
+		padding: var(--ui-lightbox-grid-pad, 2px);
+		scroll-marker-group: none;
+		scroll-snap-type: none;
+
+		&::scroll-button(*) { display: none; }
+
+		/* slides become tiles — undo the flex slide sizing; keep in sync with
+		   NOT_SLIDE in shared.js */
+		> :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker) {
+			aspect-ratio: var(--ui-lightbox-tile-ar, 3 / 2);
+			block-size: auto;
+			flex: none;
+			inline-size: auto;
+			min-block-size: 0;
+			scroll-snap-align: none;
+		}
+		/* tiles read better edge-to-edge — undo the open-state contain */
+		> :is(iframe, img, video), > picture img {
+			inset: auto;
+			object-fit: var(--ui-lightbox-tile-fit, cover);
+			position: static;
+		}
+		/* loop clones (carousel.js persists them — its init is one-shot) would
+		   duplicate tiles in the grid; they are already inert/aria-hidden */
+		> [data-clone] { display: none; }
+
+		/* stagger guard: grid mode removes snapping, so a scroll-state from-state
+		   would strand tiles at opacity 0 with nothing left to release them —
+		   real-specificity pin, mirroring the media="pages" escape in
+		   ui/base/stagger.css */
+		> :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker),
+		> :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker) ui-content > * {
+			filter: none;
+			opacity: 1;
+			scale: none;
+			translate: none;
+		}
+
+		/* the close affordance leaves the (now grid) flow and pins to the
+		   viewport — which IS the frame box while fullscreen. Grid mode forces
+		   the default bs corner (position tokens are a scroller/absolute
+		   vocabulary); the sticky nav treatment resumes on toggle back. */
+		> ui-lightbox {
+			align-content: initial;
+			display: inline-grid;
+			inline-size: auto;
+			inset-block: auto var(--_g, 0.75rem);
+			inset-inline: var(--_g, 0.75rem) auto;
+			justify-items: initial;
+			padding-block: 0;
+			position: fixed;
+			z-index: 3;
+		}
+	}
+}
+
+@keyframes ui-lightbox-in {
+	from { opacity: 0; }
+}

@@ -1479,6 +1479,40 @@ export default {
 						"ui/base/stagger.css:74"
 					],
 					"notes": "CARD channel — the cards inside a multi-card slide (<ui-slide> or an inner <lay-out>), independent of ani(). Same 7 effects. crd(zom) sets no --_stg-origin (ani(zom) does), so the card zoom uses the default 50% 50% origin."
+				},
+				"open:grid": {
+					"axis": "open-state",
+					"element": null,
+					"args": {
+						"cols": [
+							"2c",
+							"3c",
+							"4c"
+						]
+					},
+					"argAliases": {},
+					"bare": false,
+					"matching": "whole",
+					"writes": [
+						"--_lb-cols"
+					],
+					"realProperties": true,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-media",
+						"ui-card",
+						"ui-reveal"
+					],
+					"requiresJs": {},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/card/media.lightbox.css:112",
+						"ui/card/media.lightbox.css:127"
+					],
+					"notes": "OPEN-STATE prefix family (media.lightbox.css): arms only while the <ui-media popover> frame is :popover-open, presenting the SAME children as an N-column scrollable grid instead of the default fullscreen carousel. WHOLE-token on purpose, like md:/lg: asr() — an open: spelling must never contain a substring-matched stem, which is why there is no open:nav (the [media*=\"nav\"] needle would arm the closed carousel; fullscreen carousel is simply the default open presentation of a nav frame). The colon lives in the entry NAME so the needle audit and preset lint see the literal spellings; the cqPrefixes machinery is deliberately not reused (that is the container-query axis, and it would hide substring cross-fire from the shadow lint). Runtime carousel↔grid switching (data-lightbox attr) needs ui/lightbox/command.js."
 				}
 			},
 			"bareFlags": {
@@ -1604,6 +1638,31 @@ export default {
 						"ui/base/stagger.css:174"
 					],
 					"notes": "One word, one intent — 'this carousel navigates by pages, and adapts on mobile' — with the mechanism following from the markup shape. On <lay-out overflow> (flat children): math paging — snaps + emits one ::scroll-marker per PAGE of --_ci items instead of per item, via mod(sibling-index()-1, --_ci) + if(style(--_pg: 0)); the dot count auto-adapts per breakpoint because --_ci follows columns(N); degrades to per-item where sibling-index()/if() are unsupported. On a <ui-media> scroller (or its card host): the <lay-out> children are PAGE wrappers — below the layout system's md viewport breakpoint (540px) each wrapper dissolves via display:contents, so every card becomes its own full-width snap target with its own dot (grandchild markers collect into the scroller's group natively; a boxless wrapper generates none). ui-media context is CSS-only: slidesOf() still counts the wrapper as ONE slide, so auto/loop don't see through the dissolve; dot markers only (pll/hyb/tmb/lbl stay per-direct-slide). Stagger: each dissolved card becomes its own scroll-state inline-size container — ani() plays per-card, crd() is inert below md. Whole-token ([media~=\"pages\"])."
+				},
+				"open:furniture": {
+					"axis": "open-state",
+					"element": null,
+					"args": {},
+					"argAliases": {},
+					"bare": true,
+					"matching": "whole",
+					"writes": [],
+					"realProperties": true,
+					"cqPrefixes": [],
+					"cqArgs": [],
+					"selfArm": true,
+					"hosts": [
+						"ui-media",
+						"ui-card",
+						"ui-reveal"
+					],
+					"requiresJs": {},
+					"deprecated": false,
+					"canonical": null,
+					"sources": [
+						"ui/card/media.lightbox.css:101"
+					],
+					"notes": "OPT-OUT of the lightbox's default furniture hiding: while a frame is :popover-open, direct-child ui-chip/ui-sticker/ui-beacon/ui-marquee/ui-save are display:none unless this bare flag is present (ui-play and ui-lightbox always stay — video control and close affordance). Whole-token, open-state family — see open:grid."
 				}
 			}
 		},

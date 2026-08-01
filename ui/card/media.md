@@ -152,10 +152,12 @@ drift from the CSS. (`md:/lg:` is the container-query prefix column: only `asr()
 | `auto()` | carousel | **value** &lt;n&gt; &lt;n&gt;s &lt;n&gt;ms | — | yes | --ui-carousel-autoplay --ui-carousel-play-state --ui-carousel-thumb-timer-name --_play-block --_play-inline --_play-justify --_play-size | — | — |
 | `ani()` | carousel | **anim** rise fall lft rgt zom blr fde | — | — | --_stg-tr --_stg-sc --_stg-fl --_stg-origin | — | — |
 | `crd()` | carousel | **anim** rise fall lft rgt zom blr fde | — | — | --_stg-crd-tr --_stg-crd-sc --_stg-crd-fl | — | — |
+| `open:grid()` | open-state | **cols** 2c 3c 4c | — | — | --_lb-cols | — | — |
 | `clip` | corners | — | — | yes | --ui-media-radius | — | — |
 | `loop` | carousel | — | — | yes | --_play-block --_play-inline --_play-justify --_play-size | — | — |
 | `stagger` | carousel | — | — | yes | --_stg-base-i --_stg-crd-i | — | — |
 | `pages` | carousel | — | — | yes | --_pg | — | — |
+| `open:furniture` | open-state | — | — | yes | — | — | — |
 <!-- /tokens -->
 
 What each one is *for*:

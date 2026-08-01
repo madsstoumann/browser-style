@@ -10,7 +10,7 @@ sit on. Notes below each table carry the per-token caveats.
 
 ## `media=`
 
-26 stems · 4 bare flags
+27 stems · 5 bare flags
 
 | token | axis | args | aliases | bare | writes | md:/lg: | hosts | requiresJs | deprecated |
 |---|---|---|---|---|---|---|---|---|---|
@@ -40,10 +40,12 @@ sit on. Notes below each table carry the per-token caveats.
 | `auto()` | carousel | **value** &lt;n&gt; &lt;n&gt;s &lt;n&gt;ms | — | yes | --ui-carousel-autoplay --ui-carousel-play-state --ui-carousel-thumb-timer-name --_play-block --_play-inline --_play-justify --_play-size | — | ui-media ui-card ui-reveal lay-out[overflow] | carousel.js (*) | — |
 | `ani()` | carousel | **anim** rise fall lft rgt zom blr fde | — | — | --_stg-tr --_stg-sc --_stg-fl --_stg-origin | — | ui-media ui-card ui-reveal | — | — |
 | `crd()` | carousel | **anim** rise fall lft rgt zom blr fde | — | — | --_stg-crd-tr --_stg-crd-sc --_stg-crd-fl | — | ui-media ui-card ui-reveal | — | — |
+| `open:grid()` | open-state | **cols** 2c 3c 4c | — | — | --_lb-cols | — | ui-media ui-card ui-reveal | — | — |
 | `clip` | corners | — | — | yes | --ui-media-radius | — | ui-media | — | — |
 | `loop` | carousel | — | — | yes | --_play-block --_play-inline --_play-justify --_play-size | — | ui-media ui-card ui-reveal lay-out[overflow] | carousel.js (*) | — |
 | `stagger` | carousel | — | — | yes | --_stg-base-i --_stg-crd-i | — | ui-media ui-card ui-reveal | — | — |
 | `pages` | carousel | — | — | yes | --_pg | — | lay-out[overflow] ui-media ui-card ui-reveal | — | — |
+| `open:furniture` | open-state | — | — | yes | — | — | ui-media ui-card ui-reveal | — | — |
 
 ### Notes
 
@@ -125,6 +127,9 @@ sit on. Notes below each table carry the per-token caveats.
 **`crd`** *(substring-matched, self arm)* — CARD channel — the cards inside a multi-card slide (<ui-slide> or an inner <lay-out>), independent of ani(). Same 7 effects. crd(zom) sets no --_stg-origin (ani(zom) does), so the card zoom uses the default 50% 50% origin.
 <sub>ui/base/stagger.css:74</sub>
 
+**`open:grid`** *(whole-matched, self arm)* — OPEN-STATE prefix family (media.lightbox.css): arms only while the <ui-media popover> frame is :popover-open, presenting the SAME children as an N-column scrollable grid instead of the default fullscreen carousel. WHOLE-token on purpose, like md:/lg: asr() — an open: spelling must never contain a substring-matched stem, which is why there is no open:nav (the [media*="nav"] needle would arm the closed carousel; fullscreen carousel is simply the default open presentation of a nav frame). The colon lives in the entry NAME so the needle audit and preset lint see the literal spellings; the cqPrefixes machinery is deliberately not reused (that is the container-query axis, and it would hide substring cross-fire from the shadow lint). Runtime carousel↔grid switching (data-lightbox attr) needs ui/lightbox/command.js.
+<sub>ui/card/media.lightbox.css:112 · ui/card/media.lightbox.css:127</sub>
+
 **`clip`** *(substring-matched, self arm)* — SELF ARM ONLY — the clip-path rule is :where(ui-media[media*="clip"]) with no host arm, so media="clip" on a <ui-card>/<ui-reveal> is a silent no-op (the sibling rule at media.css:50, which zeroes a nested frame's radius, DOES use a host arm). Clips to the rds() radius (falling back to --ui-card-radius) because a plain border-radius is unreliable during scroll; -sq clips as plain round. Suppressed on :focus-visible so the dashed ring is not cut off.
 <sub>ui/card/media.css:127 · ui/card/media.css:50 · ui/card/media.carousel.css:54</sub>
 
@@ -136,6 +141,9 @@ sit on. Notes below each table carry the per-token caveats.
 
 **`pages`** *(whole-matched, self arm)* — One word, one intent — 'this carousel navigates by pages, and adapts on mobile' — with the mechanism following from the markup shape. On <lay-out overflow> (flat children): math paging — snaps + emits one ::scroll-marker per PAGE of --_ci items instead of per item, via mod(sibling-index()-1, --_ci) + if(style(--_pg: 0)); the dot count auto-adapts per breakpoint because --_ci follows columns(N); degrades to per-item where sibling-index()/if() are unsupported. On a <ui-media> scroller (or its card host): the <lay-out> children are PAGE wrappers — below the layout system's md viewport breakpoint (540px) each wrapper dissolves via display:contents, so every card becomes its own full-width snap target with its own dot (grandchild markers collect into the scroller's group natively; a boxless wrapper generates none). ui-media context is CSS-only: slidesOf() still counts the wrapper as ONE slide, so auto/loop don't see through the dissolve; dot markers only (pll/hyb/tmb/lbl stay per-direct-slide). Stagger: each dissolved card becomes its own scroll-state inline-size container — ani() plays per-card, crd() is inert below md. Whole-token ([media~="pages"]).
 <sub>layout/core/base.css:223 · ui/card/media.carousel.css:51 · ui/base/carousel.css:186 · ui/base/stagger.css:174</sub>
+
+**`open:furniture`** *(whole-matched, self arm)* — OPT-OUT of the lightbox's default furniture hiding: while a frame is :popover-open, direct-child ui-chip/ui-sticker/ui-beacon/ui-marquee/ui-save are display:none unless this bare flag is present (ui-play and ui-lightbox always stay — video control and close affordance). Whole-token, open-state family — see open:grid.
+<sub>ui/card/media.lightbox.css:101</sub>
 
 ## `variant=`
 
