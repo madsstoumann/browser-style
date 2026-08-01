@@ -48,6 +48,12 @@ In a `nav` scroller, place `<ui-lightbox>` **before the slides** (first child):
 it is sticky-pinned to the scrollport there, and a start-corner sticky pin only
 holds from the run's start — same contract as sticky `<ui-play>`.
 
+Give the slides `srcset` + `sizes="auto"` + `loading="lazy"` and the browser
+re-selects a **higher-resolution candidate automatically** when the frame goes
+fullscreen (verified; a static `sizes` tuned to the card never upgrades — cover
+the fullscreen case or use `auto`). The `ui-media-srcset.js` path already emits
+this by default.
+
 - `command="toggle-popover"` is a **built-in** invoker command (Baseline; see
   fallback below) — the platform opens/closes the popover and manages focus.
 - The button rides into the top layer *with* its frame, so while open it doubles

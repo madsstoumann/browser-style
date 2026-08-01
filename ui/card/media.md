@@ -675,6 +675,7 @@ A top-layer element leaves flow, so the frame's grid cell would collapse. While 
 | `media-open=` nav-style switch | swapped on toggle | closed nav style kept |
 | `open:grid()` / `open:furniture` / placeholder / animations | CSS | CSS (unchanged) |
 | grid tile → slide jump | tap-to-open at that slide | grid still browsable |
+| hi-res image upgrade on open | browser-native (`sizes="auto"`) — no JS in either column | same |
 | modality (`inert`), back-button close, pause-on-close, VT morph | active | non-modal popover; Esc still closes |
 
 ### Notes
@@ -682,6 +683,7 @@ A top-layer element leaves flow, so the frame's grid cell would collapse. While 
 - **Open/close animation, three mechanisms.** The frame's entry is a **keyframe** (clip-reveal + opacity; the frame is always rendered — `display` never flips — so `@starting-style` has nothing to fire from on it, and a scale/translate entry would create a transient containing block and yank `position: fixed` furniture). The **`::backdrop`** *does* start being rendered at open, so it fades in via a standalone `@starting-style` + fades out on close via `opacity`/`display`/`overlay allow-discrete` transitions, with an `overlay` transition on the frame retaining the top layer through the close. `command.js` upgrades button-invoked open/close to a **View Transition morph** (card ↔ fullscreen, both directions; `[data-lightbox-vt]` suppresses the keyframe so the two never double-animate; Esc/light-dismiss closes and reduced-motion users get the CSS fade only).
 - **`md:`/`lg:` container tiers still query the card's width** while the frame is in the top layer (DOM ancestry is unchanged) — the open-state rules override the size-critical properties instead.
 - **`stagger` + `open:grid`**: grid mode removes snapping, so slide-level and content-level subjects are pinned visible at real specificity (the `media="pages"` escape pattern) rather than stranded at their scroll-state from-state.
+- **Image resolution in fullscreen — `srcset` + `sizes="auto"` solves it, zero JS.** With `srcset` (w descriptors) + `sizes="auto"` + `loading="lazy"`, the browser derives the slot width from layout and **re-selects a larger candidate when the img's layout box grows** — opening the lightbox triggers an automatic hi-res re-fetch (verified in Chromium: 800w → 2200w on open; browsers never downgrade afterwards, so closing costs nothing). A **static `sizes`** tuned to the card (`33vw`, `500px`…) never upgrades — author it to cover the fullscreen case (worst-case `100vw`) or use `auto`. The system's own srcset path already does the right thing: `ui-media-srcset.js` defaults to `sizes: 'auto'` with lazy loading, so Cloudflare-upgraded galleries get lightbox-resolution images for free. A plain single-`src` image has no candidates to upgrade — that is an asset question, not a lightbox one.
 - **Support**: Popover is Baseline (Safari 17+/Firefox 125+); `command=`/`commandfor=` invokers are newer (Chrome/Edge 135+, Safari 26+) — hence the click fallback in `command.js`, or use `popovertarget`.
 
 ---

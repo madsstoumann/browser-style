@@ -36,7 +36,11 @@
 		children as a scrollable <strong>grid</strong>. Marker furniture (chips, stickers, beacons, marquees,
 		save) hides while open — opt out with the bare <code>open:furniture</code> flag; <code>ui-play</code>
 		always stays. See also <a href="media.carousel.html">carousel</a> and
-		<a href="media.collage.html">collage</a>.</p>
+		<a href="media.collage.html">collage</a>. One authoring note: give gallery images
+		<code>srcset</code> + <code>sizes="auto"</code> + <code>loading="lazy"</code> and the browser
+		re-selects a <strong>higher-resolution candidate automatically</strong> when the frame goes
+		fullscreen (a static <code>sizes</code> tuned to the card never upgrades) — the
+		<code>ui-media-srcset.js</code> Cloudflare path emits exactly this by default.</p>
 
 	<!-- ============================================================
 	     1. Carousel → fullscreen carousel (zero JS)
