@@ -76,7 +76,12 @@
   `open:` spelling must never contain a substring-matched stem (no `open:nav`).
   UI-LIGHTBOX is in every NOT_SLIDE transcription; in a `nav` scroller the
   element is sticky-pinned and must sit BEFORE the slides (first child, start
-  corners only — same contract as sticky ui-play). Docs: media.md § Lightbox;
+  corners only — same contract as sticky ui-play). Native scroll-control
+  pseudos do NOT follow a popover into the top layer (Chromium) — popover
+  carousels get real-DOM controls from /polyfill/carousel-controls.js (the
+  split-out core the Safari entry also uses) via ui/lightbox/command.js, with
+  native pseudos suppressed on those frames only; the grid-mode hide for them
+  is UNLAYERED (the polyfill sheet is unlayered). Docs: media.md § Lightbox;
   demo media.lightbox.html.
 - **The collage — a `<lay-out>` INSIDE a `<ui-media>`.** Besides arranging cards,
   `<lay-out>` can be the direct child of a media frame, making it a grid of nested

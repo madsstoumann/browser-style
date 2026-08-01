@@ -524,7 +524,9 @@ scrolling carousel they fall back to bottom-start.
 is sticky-pinned in *any* `nav` scroller — not just `auto`/`loop` — via the same
 zero-width flex-child trick and its own `--_lb-*` vars. Same contract: **before the
 slides** (first child), start corners only — there is no JS relocation for lightbox
-end corners (deferred; carousel.js only relocates `<ui-play>`).
+end corners (deferred; carousel.js only relocates `<ui-play>`). Note that on a
+**popover** frame the dots/arrows themselves are the injected DOM controls, not the
+native pseudos — see media.md § Lightbox § Carousel controls.
 
 Corner is driven by `play(*)` via three private vars set on the host/`<ui-media>`
 (`--_play-block` · `--_play-inline` · `--_play-justify` · `--_play-size`); the vars use

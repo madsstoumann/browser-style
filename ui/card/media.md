@@ -615,7 +615,7 @@ Any frame — a `nav` carousel, a [collage](#collage--a-lay-out-grid-inside-the-
     <ui-media id="gallery-1" popover>          <!-- 1. static popover + id -->
       <ui-lightbox>                            <!-- 2. the furniture invoker, BEFORE the slides -->
         <button type="button" command="toggle-popover" commandfor="gallery-1" aria-label="View gallery">
-          <ui-icon type="grid"></ui-icon>
+          <ui-icon><!-- /assets/svg/library-photo.svg, inlined (bare viewBox) --><svg viewBox="0 0 24 24"><path d="…"/></svg></ui-icon>
         </button>
       </ui-lightbox>
       <img src="…" alt="…"><img src="…" alt="…"><img src="…" alt="…">
@@ -626,7 +626,7 @@ Any frame — a `nav` carousel, a [collage](#collage--a-lay-out-grid-inside-the-
 ```
 
 1. **`popover` + `id` on the `<ui-media>`** — a static attribute; the closed frame renders exactly as without it (author CSS beats the UA popover sheet on cascade *origin*, and `media.lightbox.css` resets the few properties no author rule sets — see the header comment there before "fixing" anything).
-2. **`<ui-lightbox>`** — interactive furniture (default area `bs`), whose button carries the **built-in** `command="toggle-popover"`. Opening and closing is pure platform: Esc, light-dismiss, focus and `::backdrop` come free, and the **top layer** is immune to the card's `container-type`/`overflow`, `<lay-out>`'s containment and `<lay-out-group>` clipping — the traps reveal's `exp pop` has to fight. The button rides into the top layer with the frame and doubles as the **close** affordance (the grid glyph morphs to an ×). In a `nav` scroller it is sticky-pinned to the scrollport and must sit **before the slides** (first child, like sticky `<ui-play>`; start corners only — end corners are the deferred case).
+2. **`<ui-lightbox>`** — interactive furniture (default area `bs`), whose button carries the **built-in** `command="toggle-popover"`. Opening and closing is pure platform: Esc, light-dismiss, focus and `::backdrop` come free, and the **top layer** is immune to the card's `container-type`/`overflow`, `<lay-out>`'s containment and `<lay-out-group>` clipping — the traps reveal's `exp pop` has to fight. The button rides into the top layer with the frame and doubles as the **close** affordance (the svg hides and the icon draws ui-icon's `cross` bars — an animated twist to ×). The glyph is one of the two canonical `/assets/svg` icons, inlined per ui-icon's svg pattern: `library-photo.svg` "open gallery" (default; renderer `furniture.lightbox.shape: photos`) or `window-maximize.svg` "full screen" (`shape: maximize`). In a `nav` scroller it is sticky-pinned to the scrollport and must sit **before the slides** (first child, like sticky `<ui-play>`; start corners only — end corners are the deferred case).
 3. **`open:` tokens** describe the open-state presentation.
 
 Demo: [media.lightbox.html](media.lightbox.html).
@@ -637,11 +637,15 @@ Whole-token (`~=`) **state** prefix — like `md:`/`lg:` are the *container-tier
 
 | Token | While open |
 |---|---|
-| *(none)* | a `nav` frame opens as a **fullscreen carousel** — same dots, arrows, snapping, now viewport-sized; a collage re-tiers to its largest pattern (its `<lay-out>` breakpoints are viewport-keyed, and the frame now IS the viewport); a plain frame shows the image letterboxed (`object-fit: contain`, direct children only) |
+| *(none)* | a `nav` frame opens as a **fullscreen carousel** — snapping, swipe and keyboard now viewport-sized (dots + arrows are the DOM controls below); a collage re-tiers to its largest pattern (its `<lay-out>` breakpoints are viewport-keyed, and the frame now IS the viewport); a plain frame shows the image letterboxed (`object-fit: contain`, direct children only) |
 | `open:grid(2c\|3c\|4c)` | the same children as an N-column scrollable **grid** ("view all" contact sheet) — snapping/markers off, tiles edge-to-edge (`cover`), `loop` clones hidden |
 | `open:furniture` *(bare)* | keep chips/stickers/beacons/marquees/save visible while open (they hide by default; `<ui-play>` and `<ui-lightbox>` always stay) |
 
 > **There is deliberately no `open:nav`.** `nav` is substring-matched (`[media*="nav"]`), so the spelling `open:nav` would arm every *closed* carousel rule. The rule generalizes: **an `open:` spelling must never contain a substring-matched stem** — which is also why the family is whole-matched and named with the prefix in the manifest (so the shadow lint polices future additions). Fullscreen carousel is simply the default open presentation of a `nav` frame.
+
+### Carousel controls — real elements, not pseudos
+
+The native `::scroll-marker-group`/`::scroll-button()` boxes **do not follow a popover frame into the top layer** (current Chromium keeps them in the document layer, positioned against the card, behind the `::backdrop` — a browser limitation, not fixable by positioning; revisit if Chromium moves scroll-control pseudos into the top layer with their element). So a popover frame's dots + arrows are **real elements**: `ui/lightbox/command.js` injects the [`/polyfill/carousel-controls.js`](../../polyfill/readme.md) `<ui-carousel-controls>` — in **every** browser and in **both states**, so closed and open stay continuous — and `media.lightbox.css` suppresses the native pseudos on exactly those `[data-ui-carousel-polyfill]` frames (grid mode hides the DOM controls via an unlayered rule, since the polyfill sheet is unlayered). Without `command.js` the open carousel falls back to swipe, keyboard and a thin scrollbar.
 
 ### Runtime carousel ↔ grid — `--lightbox-layout`
 
@@ -653,7 +657,7 @@ A top-layer element leaves flow, so the frame's grid cell would collapse. While 
 
 ### Notes
 
-- **Entry animation is a keyframe, not a transition** — the closed frame is always rendered (`display` never flips), so `@starting-style` has nothing to fire from. Opacity-only on purpose: a scale/translate entry would create a transient containing block and yank `position: fixed` furniture. Close snaps, like reveal's `pop`.
+- **Open/close animation, three mechanisms.** The frame's entry is a **keyframe** (clip-reveal + opacity; the frame is always rendered — `display` never flips — so `@starting-style` has nothing to fire from on it, and a scale/translate entry would create a transient containing block and yank `position: fixed` furniture). The **`::backdrop`** *does* start being rendered at open, so it fades in via a standalone `@starting-style` + fades out on close via `opacity`/`display`/`overlay allow-discrete` transitions, with an `overlay` transition on the frame retaining the top layer through the close. `command.js` upgrades button-invoked open/close to a **View Transition morph** (card ↔ fullscreen, both directions; `[data-lightbox-vt]` suppresses the keyframe so the two never double-animate; Esc/light-dismiss closes and reduced-motion users get the CSS fade only).
 - **`md:`/`lg:` container tiers still query the card's width** while the frame is in the top layer (DOM ancestry is unchanged) — the open-state rules override the size-critical properties instead.
 - **`stagger` + `open:grid`**: grid mode removes snapping, so slide-level and content-level subjects are pinned visible at real specificity (the `media="pages"` escape pattern) rather than stranded at their scroll-state from-state.
 - **Support**: Popover is Baseline (Safari 17+/Firefox 125+); `command=`/`commandfor=` invokers are newer (Chrome/Edge 135+, Safari 26+) — hence the click fallback in `command.js`, or use `popovertarget`.
