@@ -11,7 +11,7 @@ A CSS-first **media primitive** — an image/video frame with overlay furniture 
 - Hover effects (zoom / pan / cursor-track) — media-only
 - Scrim gradients in **9 directions** (4 edges + 4 diagonals + a centered double-stop)
 - Native carousel via `::scroll-marker` / `::scroll-button` (markers + arrows)
-- A **3×3 overlay grid** for furniture: `<ui-chip>`, `<ui-beacon>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`
+- A **3×3 overlay grid** for furniture: `<ui-chip>`, `<ui-beacon>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`, `<ui-lightbox>`
 - Logical / RTL-aware positioning — geometry defined once, mirrors automatically
 - Reads its own inherited `--ui-media-*` namespace — no descendant-selector coupling, so it is **inert-proof standalone**
 - Works without JavaScript (CSS-only mode); markers need no JS at all
@@ -39,6 +39,7 @@ npm install @browser.style/chip      # <ui-chip>    — label marker
 npm install @browser.style/sticker   # <ui-sticker> — disc / burst marker (multi-line)
 npm install @browser.style/save      # <ui-save>    — favorite toggle  (card-only)
 npm install @browser.style/play      # <ui-play>    — play affordance  (card-only)
+npm install @browser.style/lightbox  # <ui-lightbox> — view-gallery / fullscreen toggle (card-only)
 ```
 
 `<ui-play>` additionally peer-deps `@browser.style/icon` (its glyph is a `<ui-icon type="play">` sub-element, not a pseudo-element).
@@ -291,13 +292,13 @@ Every `()` token is *sugar* over a custom property, so any value that has no tok
 
 ## Overlay furniture
 
-The media area hosts **five overlay elements** — `<ui-chip>`, `<ui-beacon>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`. They carry **only their text/glyph** — position and theme come from the parent `media=` string (so a `<ui-card>` can configure them and the config inherits down).
+The media area hosts **six overlay elements** — `<ui-chip>`, `<ui-beacon>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`, `<ui-lightbox>`. They carry **only their text/glyph** — position and theme come from the parent `media=` string (so a `<ui-card>` can configure them and the config inherits down).
 
 ### Furniture vs band — `<ui-marquee>` is not furniture
 
-A sixth element, **`<ui-marquee>`, is a *band*, not furniture**, and that distinction is why it is counted separately:
+A seventh element, **`<ui-marquee>`, is a *band*, not furniture**, and that distinction is why it is counted separately:
 
-| | Furniture (chip · beacon · sticker · save · play) | Band (`<ui-marquee>`) |
+| | Furniture (chip · beacon · sticker · save · play · lightbox) | Band (`<ui-marquee>`) |
 |---|---|---|
 | Sizing | intrinsic — as wide as its content | **full-width** (`inset-inline: 0`) |
 | Placement | any of the **nine** logical grid points | **top / bottom only** — a full-width strip has no `start`/`end`, and no centre row |
@@ -342,7 +343,7 @@ bs   bc   be        bottom-start bottom-center bottom-end
 
 Positions use **logical** insets (`inset-inline-start/-end`), so they **mirror automatically in RTL** — `ts` renders top-right in Arabic. An overlay element just *picks a position*; the geometry is keyed on the parent `media="el(pos)"` token, never duplicated per element instance. The `img` / `video` sit underneath (`position: absolute; inset: 0`).
 
-### The five elements & their default areas
+### The six elements & their default areas
 
 | Element | Role | Default area | Type | Valid in `<summary>`? |
 |---------|------|--------------|------|------------------------|
@@ -351,8 +352,9 @@ Positions use **logical** insets (`inset-inline-start/-end`), so they **mirror a
 | `<ui-sticker>` | callout disc / burst ("−20%") | `te` (top-end) | marker (non-interactive) | ✅ yes |
 | `<ui-save>` | favorite / wishlist toggle | `te` (top-end) | **control** (interactive) | ❌ card-only |
 | `<ui-play>` | play affordance | `cc` (center) | **control** (interactive) | ❌ card-only |
+| `<ui-lightbox>` | view-gallery / fullscreen toggle | `bs` (bottom-start) | **control** (interactive) | ❌ card-only |
 
-**Markers vs controls.** Markers (`<ui-chip>`, `<ui-beacon>`, `<ui-sticker>`) are non-interactive autonomous custom elements = valid **phrasing content**, so they parse inside a card *and* inside a reveal `<summary>` (the trigger face), with **no JS**. Controls (`<ui-save>`, `<ui-play>`) are interactive → **card-only**: a click inside `<summary>` toggles the `<details>`, and interactive content is invalid there.
+**Markers vs controls.** Markers (`<ui-chip>`, `<ui-beacon>`, `<ui-sticker>`) are non-interactive autonomous custom elements = valid **phrasing content**, so they parse inside a card *and* inside a reveal `<summary>` (the trigger face), with **no JS**. Controls (`<ui-save>`, `<ui-play>`, `<ui-lightbox>`) are interactive → **card-only**: a click inside `<summary>` toggles the `<details>`, and interactive content is invalid there.
 
 ### Position override
 
@@ -403,7 +405,7 @@ hue-taking token — use `black`, `white` and `gray`. `slate` was *not* removed:
 became a canonical hue (above). Nothing is left in the alias table, which is
 generated, so it stays empty until a new alias is declared:
 
-<!-- tokens:aliases attr=media stems=tnt,chip,sticker,beacon,marquee,save,play -->
+<!-- tokens:aliases attr=media stems=tnt,chip,sticker,beacon,marquee,save,play,lightbox -->
 | deprecated | canonical | on | kind |
 |---|---|---|---|
 <!-- /tokens -->
@@ -415,7 +417,7 @@ generated, so it stays empty until a new alias is declared:
 The furniture stems and the exact vocabulary each one accepts. A blank cell means that
 element has no such axis — `pos` and `hue` are universal; the rest differ per element.
 
-<!-- tokens:matrix attr=media stems=chip,sticker,beacon,marquee,save,play classes=pos,hue,mode,size,disc,face,anim,shape,flag,value -->
+<!-- tokens:matrix attr=media stems=chip,sticker,beacon,marquee,save,play,lightbox classes=pos,hue,mode,size,disc,face,anim,shape,flag,value -->
 | token | pos | hue | mode | size | disc | face | anim | shape | flag | value | deprecated aliases |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | `chip()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | pale muted | sm lg xl 2xl | non rnd pll crc sqr | — | — | — | — | — | — |
@@ -424,9 +426,10 @@ element has no such axis — `pos` and `hue` are universal; the rest differ per 
 | `marquee()` | top bot | red orange green blue accent black white gray slate | rpt seam fade pale muted | sm lg xl 2xl | non rnd pll crc sqr | — | — | — | — | right up down slow fast faster gap-sm gap-lg | — |
 | `save()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm lg xl | non rnd crc sqr | — | — | — | — | — | — |
 | `play()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm md lg xl | non rnd pll crc sqr | — | — | — | — | — | — |
+| `lightbox()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm lg xl | non rnd crc sqr | — | — | — | — | — | — |
 <!-- /tokens -->
 
-> **Honest gap: no `pale`/`muted` on `save`/`play`.** The `mode` column is empty for both — they are single-ink controls (`--ui-save-c`, `--ui-play-bg/-c`) with nothing to mix a tint into, so `media="save(pale)"` / `media="play(muted)"` are silently inert. Both *do* ship the full canonical nine, `slate` included (verified in `ui/save/ui-save.css` and `ui/play/ui-play.css`), so hue itself has no holes.
+> **Honest gap: no `pale`/`muted` on `save`/`play`/`lightbox`.** The `mode` column is empty for all three — they are single-ink controls (`--ui-save-c`, `--ui-play-bg/-c`, `--ui-lightbox-c`) with nothing to mix a tint into, so `media="save(pale)"` / `media="play(muted)"` are silently inert. All three *do* ship the full canonical nine, `slate` included (verified in `ui/save/ui-save.css` and `ui/play/ui-play.css`), so hue itself has no holes.
 
 > **Position and hue are disjoint vocabularies** (`ts…be` vs `red…gray`), so `chip(cc)` and `chip(black)` parse unambiguously. They are **two atomic tokens** — `media="chip(te) chip(black)"`, not a combined `chip(te black)` — so the pure-CSS substring parser can scope each arg to its element. Because position usually defaults by role, the common case is a single token (e.g. `chip(black)`).
 
@@ -439,6 +442,7 @@ element has no such axis — `pos` and `hue` are universal; the rest differ per 
 | `<ui-sticker>` | round disc; opt-in starburst via `variant="sh:burst"` (`--ui-sticker-clip-path`); **multi-line** | each direct child is a line; `--ui-sticker-gap` controls line-spacing, `text-box: cap alphabetic` trims leading |
 | `<ui-save>` | `<ui-save><button type="button" command="--save" commandfor="<media id>" aria-label="Save …"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>` | favorite ≈ wishlist ≈ bookmark. Composes an **invoker button** with `aria-pressed` for saved state (`aria-pressed="true"` = saved) — the same invoker shape `<ui-play>` uses. Glyph via the `<ui-icon shape>` (heart / bookmark / star). |
 | `<ui-play>` | see the invoker contract below | play affordance (default `cc`, sized with `play(sm\|md\|lg\|xl)`). `variant="reveal"` hides until media hover/focus. **In a scrolling carousel** (`auto`/`loop`) it becomes the play/pause control: `position:sticky`-pinned to the scrollport (plain furniture scrolls away) and wired by `carousel.js` — see [media.carousel.md](./media.carousel.md#playpause-control-ui-play). |
+| `<ui-lightbox>` | `<ui-lightbox><button type="button" command="toggle-popover" commandfor="<media id>" aria-label="View gallery"><ui-icon type="grid"></ui-icon></button></ui-lightbox>` | view-gallery / fullscreen toggle (default `bs`). The **built-in** `toggle-popover` command lifts a `<ui-media popover>` frame into the top layer — see [Lightbox](#lightbox--the-popover-fullscreen-gallery). In a `nav` scroller it is sticky-pinned like `<ui-play>` and must sit **before the slides** (first child); start corners only. |
 
 #### `<ui-play>` — one contract
 
@@ -475,7 +479,7 @@ Two shapes sit outside the invoker contract, both because their target isn't an 
 
 A single text node still works as one line: `<ui-sticker>-20%</ui-sticker>`.
 
-> **Removed:** `ribbon` and `counter` (and the diagonal-ribbon treatment). **Deferred:** a sold-out / `cover` full-bleed state, and a Popover-API video lightbox for `<ui-play>` (this round ships only the play *button*).
+> **Removed:** `ribbon` and `counter` (and the diagonal-ribbon treatment). **Deferred:** a sold-out / `cover` full-bleed state. *(The once-deferred Popover-API lightbox has landed as the frame-level [Lightbox](#lightbox--the-popover-fullscreen-gallery) + `<ui-lightbox>` furniture; the remaining `<ui-play>`-specific sugar — auto-play-on-open — is a ~5-line `command.js` extension.)*
 
 ---
 
@@ -598,6 +602,61 @@ Put `nav` on the **outer** frame and each direct `<lay-out>` child becomes a sli
 The slides are **CSS-only**, and that boundary is deliberate: `LAY-OUT` is on the JS `NOT_SLIDE` list, so `slidesOf()` never counts a `<lay-out>` slide. `loop`, `auto`, per-slide `<ui-play>` video control and the polyfill's dots all silently no-op on a collage carousel. Reach for `<ui-slide>` / `<div>` wrappers (with the grid *inside*) when you need those — see [carousel.md § Multiple items per slide](./carousel.md#multiple-items-per-slide--group-wrappers).
 
 Demo: [`media.collage.html`](./media.collage.html).
+
+---
+
+## Lightbox — the popover fullscreen gallery
+
+Any frame — a `nav` carousel, a [collage](#collage--a-lay-out-grid-inside-the-frame), or a plain image — can open **fullscreen as a lightbox**, with the **same DOM in both states**: no re-render, no attribute churn. Three ingredients:
+
+```html
+<ui-card variant="col" media="asr(4/3) nav lightbox(bs) open:grid(3c)">
+  <cq-box>
+    <ui-media id="gallery-1" popover>          <!-- 1. static popover + id -->
+      <ui-lightbox>                            <!-- 2. the furniture invoker, BEFORE the slides -->
+        <button type="button" command="toggle-popover" commandfor="gallery-1" aria-label="View gallery">
+          <ui-icon type="grid"></ui-icon>
+        </button>
+      </ui-lightbox>
+      <img src="…" alt="…"><img src="…" alt="…"><img src="…" alt="…">
+    </ui-media>
+    <ui-content>…</ui-content>
+  </cq-box>
+</ui-card>
+```
+
+1. **`popover` + `id` on the `<ui-media>`** — a static attribute; the closed frame renders exactly as without it (author CSS beats the UA popover sheet on cascade *origin*, and `media.lightbox.css` resets the few properties no author rule sets — see the header comment there before "fixing" anything).
+2. **`<ui-lightbox>`** — interactive furniture (default area `bs`), whose button carries the **built-in** `command="toggle-popover"`. Opening and closing is pure platform: Esc, light-dismiss, focus and `::backdrop` come free, and the **top layer** is immune to the card's `container-type`/`overflow`, `<lay-out>`'s containment and `<lay-out-group>` clipping — the traps reveal's `exp pop` has to fight. The button rides into the top layer with the frame and doubles as the **close** affordance (the grid glyph morphs to an ×). In a `nav` scroller it is sticky-pinned to the scrollport and must sit **before the slides** (first child, like sticky `<ui-play>`; start corners only — end corners are the deferred case).
+3. **`open:` tokens** describe the open-state presentation.
+
+Demo: [media.lightbox.html](media.lightbox.html).
+
+### The `open:` token family
+
+Whole-token (`~=`) **state** prefix — like `md:`/`lg:` are the *container-tier* prefix — arming only while the frame is `:popover-open`:
+
+| Token | While open |
+|---|---|
+| *(none)* | a `nav` frame opens as a **fullscreen carousel** — same dots, arrows, snapping, now viewport-sized; a collage re-tiers to its largest pattern (its `<lay-out>` breakpoints are viewport-keyed, and the frame now IS the viewport); a plain frame shows the image letterboxed (`object-fit: contain`, direct children only) |
+| `open:grid(2c\|3c\|4c)` | the same children as an N-column scrollable **grid** ("view all" contact sheet) — snapping/markers off, tiles edge-to-edge (`cover`), `loop` clones hidden |
+| `open:furniture` *(bare)* | keep chips/stickers/beacons/marquees/save visible while open (they hide by default; `<ui-play>` and `<ui-lightbox>` always stay) |
+
+> **There is deliberately no `open:nav`.** `nav` is substring-matched (`[media*="nav"]`), so the spelling `open:nav` would arm every *closed* carousel rule. The rule generalizes: **an `open:` spelling must never contain a substring-matched stem** — which is also why the family is whole-matched and named with the prefix in the manifest (so the shadow lint polices future additions). Fullscreen carousel is simply the default open presentation of a `nav` frame.
+
+### Runtime carousel ↔ grid — `--lightbox-layout`
+
+A second invoker inside `<ui-lightbox>` (hidden while closed) with the custom `command="--lightbox-layout"` flips the open frame between carousel and grid by toggling `data-lightbox="grid|nav"` — handled by the opt-in [`ui/lightbox/command.js`](../lightbox/command.js) (built on the shared `ui/common/command.js` router). Closing clears the attribute, so the frame always reopens on its `open:` tokens. The same module reflects `[open]`/`aria-expanded` and ships a `togglePopover()` click fallback for browsers without `command=` invokers (`popovertarget` is the wider-support no-JS alternative markup).
+
+### Layout shift — the placeholder
+
+A top-layer element leaves flow, so the frame's grid cell would collapse. While a card-hosted frame is open, a `::before` on `<cq-box>`/`<summary>` reserves the cell, mirroring the frame's sizing (`--ui-media-ar` from a host-placed `asr()`, a `:has()` mirror of the nine canonical ratios for the self-arm placement, the `12.5rem` floor otherwise). Verified: neighbouring cards do not move across open/close. A **standalone** `<ui-media popover>` directly in a `<lay-out>` has no parent hook for a placeholder — documented limitation: the backdrop masks the reflow while open, and closing restores flow.
+
+### Notes
+
+- **Entry animation is a keyframe, not a transition** — the closed frame is always rendered (`display` never flips), so `@starting-style` has nothing to fire from. Opacity-only on purpose: a scale/translate entry would create a transient containing block and yank `position: fixed` furniture. Close snaps, like reveal's `pop`.
+- **`md:`/`lg:` container tiers still query the card's width** while the frame is in the top layer (DOM ancestry is unchanged) — the open-state rules override the size-critical properties instead.
+- **`stagger` + `open:grid`**: grid mode removes snapping, so slide-level and content-level subjects are pinned visible at real specificity (the `media="pages"` escape pattern) rather than stranded at their scroll-state from-state.
+- **Support**: Popover is Baseline (Safari 17+/Firefox 125+); `command=`/`commandfor=` invokers are newer (Chrome/Edge 135+, Safari 26+) — hence the click fallback in `command.js`, or use `popovertarget`.
 
 ---
 

@@ -191,13 +191,14 @@ Argument vocabularies, **generated from `data/tokens.json`** so they can't drift
 
 Overlay furniture — position, hue and each element's own axes:
 
-<!-- tokens:matrix attr=media stems=chip,sticker,save,play classes=pos,hue,mode,size,disc -->
+<!-- tokens:matrix attr=media stems=chip,sticker,save,play,lightbox classes=pos,hue,mode,size,disc -->
 | token | pos | hue | mode | size | disc | deprecated aliases |
 |---|---|---|---|---|---|---|
 | `chip()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | pale muted | sm lg xl 2xl | non rnd pll crc sqr | — |
 | `sticker()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | pale muted | sm lg xl 2xl 3xl | non rnd pll crc sqr | — |
 | `save()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm lg xl | non rnd crc sqr | — |
 | `play()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm md lg xl | non rnd pll crc sqr | — |
+| `lightbox()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm lg xl | non rnd crc sqr | — |
 <!-- /tokens -->
 
 `<ui-beacon>` and `<ui-marquee>` take the same shape with extra axes of their own — full matrix in [media.md](media.md).

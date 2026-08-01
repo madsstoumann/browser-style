@@ -65,6 +65,19 @@
   never innerHTML with data. cq-box is hand-authored, never auto-inserted.
   slidesOf()/NOT_SLIDE in shared.js is mirrored in /polyfill/carousel.js by design —
   drift is a lint error.
+- **The lightbox — popover promotion of the SAME frame.** `<ui-media popover>` +
+  a `<ui-lightbox>` invoker (`command="toggle-popover"`, interactive furniture,
+  default bs) opens the existing gallery fullscreen in the top layer
+  (media.lightbox.css) — no DOM change, no attribute churn, immune to every
+  containment trap reveal's `exp pop` fights. Closed state works because author
+  origin beats the UA popover sheet — never "restore" `display` in the reset.
+  Open-state tokens are the `open:` family (`open:grid(2c|3c|4c)`, bare
+  `open:furniture`): WHOLE-matched, manifest names include the prefix, and an
+  `open:` spelling must never contain a substring-matched stem (no `open:nav`).
+  UI-LIGHTBOX is in every NOT_SLIDE transcription; in a `nav` scroller the
+  element is sticky-pinned and must sit BEFORE the slides (first child, start
+  corners only — same contract as sticky ui-play). Docs: media.md § Lightbox;
+  demo media.lightbox.html.
 - **The collage — a `<lay-out>` INSIDE a `<ui-media>`.** Besides arranging cards,
   `<lay-out>` can be the direct child of a media frame, making it a grid of nested
   `<ui-media>` tiles. **No new tokens exist for it**: lay-out breakpoint attributes

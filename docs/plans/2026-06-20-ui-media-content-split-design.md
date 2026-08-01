@@ -340,7 +340,7 @@ toggles the `<details>`, and interactive content is invalid in summary):
 | `<ui-save>` | `<ui-save><input type="checkbox" aria-label="Save"></ui-save>` | favorite ≈ wishlist ≈ bookmark toggle. State + a11y + keyboard from the checkbox, zero JS. Icon swappable via `--ui-save-icon` (heart default; bookmark/star). |
 | `<ui-play>` | `<ui-play><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>` | media play affordance (default center, `cc`). Glyph = a **`<ui-icon>` sub-element** (`type="play"`), not a pseudo-element — so `ui/play` peer-deps `@browser.style/icon`. **Visibility:** *(default)* always visible w/ subtle hover/focus color change, or `variant="reveal"` hidden until media hover/focus. **State:** the JS web component swaps the `<ui-icon type>` play↔pause and toggles `aria-pressed` (is-playing); emits `ui-play-toggle`; optional `for="videoId"` drives a `<video>` and syncs to its play/pause/ended. CSS-only fallback = plain styled button showing the authored icon. Themeable via `--ui-play-*` + `theme=`. |
 
-**Future (deferred):** enrich `<ui-play>` with **Popover-API video overlay** — a
+**Future (deferred):** *(the frame-level half of this landed 2026-08 as `<ui-lightbox>` + `ui/card/media.lightbox.css` — a popover promotion of the whole `<ui-media>`, see media.md § Lightbox; what remains deferred is only the `<ui-play>`-specific sugar below)* enrich `<ui-play>` with **Popover-API video overlay** — a
 play button (`popovertarget`) that opens a `<video controls>` in a `[popover]`
 lightbox, lifting the pattern from `ui/video-list` (`::backdrop` blur,
 `@starting-style` scale-in, + a ~6-line `toggle`→`play()/pause()` script with

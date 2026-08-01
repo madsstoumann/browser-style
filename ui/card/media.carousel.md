@@ -519,6 +519,13 @@ center-inline tokens (`play(tc)`/`play(cc)`/`play(bc)`) are for a **non-scrollin
 (a single centred play button, absolute furniture — see [media.md](./media.md)); on a
 scrolling carousel they fall back to bottom-start.
 
+**`<ui-lightbox>` gets the same pin, on plain `nav`.** The view-gallery invoker
+(default `lightbox(bs)`, see [media.md § Lightbox](./media.md#lightbox--the-popover-fullscreen-gallery))
+is sticky-pinned in *any* `nav` scroller — not just `auto`/`loop` — via the same
+zero-width flex-child trick and its own `--_lb-*` vars. Same contract: **before the
+slides** (first child), start corners only — there is no JS relocation for lightbox
+end corners (deferred; carousel.js only relocates `<ui-play>`).
+
 Corner is driven by `play(*)` via three private vars set on the host/`<ui-media>`
 (`--_play-block` · `--_play-inline` · `--_play-justify` · `--_play-size`); the vars use
 `--ui-media-overlay-gap` (not `--_g`, which is only defined on the `<ui-play>` itself).

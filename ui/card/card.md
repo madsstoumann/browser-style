@@ -132,13 +132,14 @@ hand-authored [`media.furniture.html`](media.furniture.html) is the reference sh
 one value per token, never `chip(ts red)`). The vocabulary is generated from
 `data/tokens.json`, so it can't drift from the element stylesheets:
 
-<!-- tokens:matrix attr=media stems=chip,sticker,save,play classes=pos,hue,mode,size,disc,shape,flag -->
+<!-- tokens:matrix attr=media stems=chip,sticker,save,play,lightbox classes=pos,hue,mode,size,disc,shape,flag -->
 | token | pos | hue | mode | size | disc | shape | flag | deprecated aliases |
 |---|---|---|---|---|---|---|---|---|
 | `chip()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | pale muted | sm lg xl 2xl | non rnd pll crc sqr | — | — | — |
 | `sticker()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | pale muted | sm lg xl 2xl 3xl | non rnd pll crc sqr | text spl spr sh:burst sh:blob sh:spark sh:sunburst sh:heart sh:&lt;custom&gt; | fit | — |
 | `save()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm lg xl | non rnd crc sqr | — | — | — |
 | `play()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm md lg xl | non rnd pll crc sqr | — | — | — |
+| `lightbox()` | ts tc te cs cc ce bs bc be | red orange green blue accent black white gray slate | — | sm lg xl | non rnd crc sqr | — | — | — |
 <!-- /tokens -->
 
 - **`pos`** — the 9-code logical grid, shared with `ovr()`, `scm()` and reveal's `ico()`.
@@ -173,9 +174,13 @@ resolves `media=` matches by source-order, not token-order). So one card can go
   (styled by `font=`), `"lead"` → `<strong>` (styled by `font-lead=`), `"plain"` → `<span>`
   (fluid). Optional `sup` renders a trailing `<sup>` (price cents, etc.). This structured shape
   replaces the old flat `sticker.text`, which could only ever emit one `<strong>` line.
-- **save / play** — no text; both accept a bare `true`. `save` takes `{shape, saved}` (the
-  glyph `heart|bookmark|star` is content, authored on the emitted `<ui-icon shape=…>` — never a
-  `media=` token; `saved` sets initial `aria-pressed`). `play` takes an optional `label`.
+- **save / play / lightbox** — no text; all accept a bare `true`. `save` takes `{shape, saved}`
+  (the glyph `heart|bookmark|star` is content, authored on the emitted `<ui-icon shape=…>` — never
+  a `media=` token; `saved` sets initial `aria-pressed`). `play` and `lightbox` take an optional
+  `label`. `lightbox` additionally makes the renderer mark the frame as a **popover** (`popover` +
+  id `<card-id>-media`) and emit the invoker **before the slides** (the sticky-pin contract); the
+  open-state presentation comes from the preset's `open:` tokens — see
+  [media.md § Lightbox](media.md#lightbox--the-popover-fullscreen-gallery).
 
 **Save state & interactivity.** The look is pure CSS off the button's `aria-pressed` — unsaved =
 outline + idle ink, saved = filled + active ink. The toggle is script: `command="--save"` is a
@@ -193,9 +198,11 @@ media.addEventListener('command', (e) => {
 });
 ```
 
-Save/play are **controls** (interactive) — card-only, never inside a reveal `<summary>`. Demos in
-[`media.furniture.html`](media.furniture.html); components: [`ui/chip`](../chip/) ·
-[`ui/sticker`](../sticker/) · [`ui/save`](../save/) · [`ui/play`](../play/).
+Save/play/lightbox are **controls** (interactive) — card-only, never inside a reveal `<summary>`.
+Demos in [`media.furniture.html`](media.furniture.html) and
+[`media.lightbox.html`](media.lightbox.html); components: [`ui/chip`](../chip/) ·
+[`ui/sticker`](../sticker/) · [`ui/save`](../save/) · [`ui/play`](../play/) ·
+[`ui/lightbox`](../lightbox/).
 
 ## Preset model — `card-preset`
 

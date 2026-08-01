@@ -37,7 +37,7 @@ They compose inside a host — `<ui-card>` (static) or `<ui-reveal>` (disclosure
 | `<ui-reveal>` | no | disclosure host built on `<details>/<summary>` (`ui/reveal`) |
 | `<ui-face>` | no | front-face wrapper inside `<summary>` for flip/scale/slide |
 | `<ui-chip>`, `<ui-sticker>`, `<ui-beacon>` | no | marker furniture (labels/badges/live indicators on media) — own packages `ui/chip`, `ui/sticker`, `ui/beacon`; all faces incl. the beacon ticker are markup-free CSS |
-| `<ui-save>`, `<ui-play>` | no | interactive furniture — `ui/save`, `ui/play` |
+| `<ui-save>`, `<ui-play>`, `<ui-lightbox>` | no | interactive furniture — `ui/save`, `ui/play`, `ui/lightbox` (view-gallery popover toggle) |
 | `<ui-icon>` | no | reveal toggle icon — `ui/icon` |
 
 Everything except `<ui-media>` is an **unregistered custom element** styled purely by CSS attribute selectors. Do not register elements CSS alone can drive.
@@ -50,7 +50,7 @@ Space-separated token strings; values flow down via CSS custom properties, so a 
 |---|---|---|---|---|
 | `variant=` | `ui-card` / `ui-reveal` | composition (+ all reveal config on `ui-reveal` — `exp`/`flp()`/`sld()`/`grw()` etc., see below) | `col` `row` `col-r` `row-r` `spl(1/2)` `vis(media)` `ovr(bs)` `rds(lg-sq)` | `ui-card-tokens.md` |
 | `theme=` | `ui-card` / `ui-reveal` | shared theme axis (colour + `pale`/`muted`/`light`/`dark`) | `black dark` `red pale` `gray` | `../base/theme.md` |
-| `media=` | `ui-media` or its card host (also `lay-out[overflow]` for its own scroller) | media frame + **all carousel controls (media-token-only — the old `nav=`/`arrow=`/`dot=`/`vid=`/`ply=`/`eager` attributes are removed)** | `asr(16/9)` `md:asr(4/3)` `obf()` `obp(cc)` `flp(h)` `hov(zoom)` `scm` `nav(mrk)` `arw(drk)` `mrk(pll)` `axis(y)` `auto` `loop` `stagger` `chip(ts)` `sticker(red)` `beacon(sld)` `marquee(bot)` `vid()` `play(lg)` `load(eager)` | `media.md`, `carousel.md`, `media.carousel.md` |
+| `media=` | `ui-media` or its card host (also `lay-out[overflow]` for its own scroller) | media frame + **all carousel controls (media-token-only — the old `nav=`/`arrow=`/`dot=`/`vid=`/`ply=`/`eager` attributes are removed)** | `asr(16/9)` `md:asr(4/3)` `obf()` `obp(cc)` `flp(h)` `hov(zoom)` `scm` `nav(mrk)` `arw(drk)` `mrk(pll)` `axis(y)` `auto` `loop` `stagger` `chip(ts)` `sticker(red)` `beacon(sld)` `marquee(bot)` `vid()` `play(lg)` `lightbox(bs)` `open:grid(3c)` `load(eager)` | `media.md`, `carousel.md`, `media.carousel.md` |
 | `content=` | `ui-content` (canonical) or ancestor | text column | `scl(lg)` `hl(3xl)` `eb(accent)` `tx(lgt)` `mt(med)` `pad(xl)` `lg:pbs(none)` `gap()` `rds(lg)` `scr` | `content.md` |
 
 ## Container-query model (how cards respond)
@@ -143,8 +143,9 @@ Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are 
 5. **Demos use `<lay-out>`** — do not reintroduce per-page `.grid` classes; use the mapping table in `layout/docs/card-integration.md`.
 6. **`ovr()` needs `scm`** (or a dark image) for contrast; themes go through the shared `theme=` axis ([base/theme.md](../base/theme.md)), not ad-hoc colors. (The old `variant="thm(…)"` spelling was removed in v4 — use `theme=`.)
 7. **One position grid.** `ovr()`, furniture, `scm()`, `mrk()`, `plc()` and reveal's `ico()` all use the logical `ts tc te · cs cc ce · bs bc be` set. The physical `tl…br` aliases were **removed in v5**; `obp()` is now the system's *only* physical vocabulary (`object-position` has no logical keywords), and it keeps both spellings by design.
-8. **One hue palette — nine hues.** `red orange green blue accent black white gray slate`: four hues plus the `white < gray < slate < black` neutral ramp. `slate` was promoted from alias to canonical in v5 (it always routed to its own `--ui-theme-slate-*` bundle, never to gray) and is implemented by all six furniture/band elements plus `tnt()`. The `dark`/`light`/`subtle` aliases were **removed** in the same round — no live alias remains. The real per-element gap is the `pale`/`muted` fill modifiers: `ui/save` and `ui/play` are single-ink controls and implement neither.
+8. **One hue palette — nine hues.** `red orange green blue accent black white gray slate`: four hues plus the `white < gray < slate < black` neutral ramp. `slate` was promoted from alias to canonical in v5 (it always routed to its own `--ui-theme-slate-*` bundle, never to gray) and is implemented by all six furniture/band elements plus `tnt()`. The `dark`/`light`/`subtle` aliases were **removed** in the same round — no live alias remains. The real per-element gap is the `pale`/`muted` fill modifiers: `ui/save`, `ui/play` and `ui/lightbox` are single-ink controls and implement none of them.
 9. **`<ui-play>` has one contract:** `command="play-pause" commandfor="<video id>"`, handled by `video.js`. No `ui-play-toggle` event. The carousel's control is the one target-less exception, auto-discovered by `carousel.js`.
+10. **`open:` is a whole-token STATE prefix, not a cq tier.** The family (`open:grid()`, bare `open:furniture`) arms only under `ui-media[popover]:popover-open` (the `<ui-lightbox>` lightbox, `media.lightbox.css`), is whole-matched, and lives in the manifest under names that *include* the prefix — deliberately not the `cqPrefixes` machinery. Never mint an `open:` spelling containing a substring-matched stem (`open:nav` would arm every closed carousel — fullscreen carousel is simply a `nav` frame's default open presentation). The popover's closed state relies on author-origin-beats-UA; do not "restore" `display` there.
 
 ## Doc map — read this when…
 
