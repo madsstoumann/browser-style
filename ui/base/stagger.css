@@ -131,8 +131,8 @@
 		   it can't group a page of flat cards under one snap target (pages makes only
 		   the page-start a snap target). It uses adapter 3 (scroll-driven) instead. */
 		/* the slide is the scroll-state container (snap target); exclude furniture */
-		:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) ui-media > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker),
-		ui-media:where([media*="stagger"]) > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker) {
+		:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) ui-media > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker),
+		ui-media:where([media*="stagger"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker) {
 			container-type: scroll-state;
 		}
 		/* multi-card slide: give each card its column index (inherits to its content) */
@@ -196,8 +196,8 @@
 			/* real specificity on purpose: outranks the card-channel from-state above
 			   (its :where() subjects sit at (0,0,2)) so a dissolved card is never
 			   stranded at opacity 0 with no ancestor container to release it */
-			ui-media[media~="pages"] > lay-out > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker),
-			:is(ui-card, ui-reveal)[media~="pages"] ui-media > lay-out > :not(ui-beacon, ui-chip, ui-play, ui-save, ui-sticker) {
+			ui-media[media~="pages"] > lay-out > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker),
+			:is(ui-card, ui-reveal)[media~="pages"] ui-media > lay-out > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker) {
 				filter: none;
 				opacity: 1;
 				scale: none;

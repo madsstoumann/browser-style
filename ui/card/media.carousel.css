@@ -22,7 +22,7 @@
 	}
 		/* slides = every direct child except overlay furniture and bands */
 		/* keep in sync with NOT_SLIDE in shared.js */
-	ui-media:where([media*="nav"], :is(ui-card, ui-reveal)[media*="nav"] *) > :not(ui-beacon, ui-chip, ui-marquee, ui-play, ui-save, ui-sticker) {
+	ui-media:where([media*="nav"], :is(ui-card, ui-reveal)[media*="nav"] *) > :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker) {
 		block-size: 100%;
 		flex: 0 0 100%;
 		inline-size: 100%;
@@ -51,8 +51,8 @@
 	   against the content box in both engines, so the band stays clear.
 	   NB: `calc(100% - band)` is NOT a fix — Chromium subtracts the band a second
 	   time (188px) because its percentage was already correct. */
-	:where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media > :not(ui-beacon, ui-chip, ui-marquee, ui-play, ui-save, ui-sticker, ui-carousel-controls),
-	:where(ui-media, lay-out[overflow]):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) > :not(ui-beacon, ui-chip, ui-marquee, ui-play, ui-save, ui-sticker, ui-carousel-controls) {
+	:where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media > :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, ui-carousel-controls),
+	:where(ui-media, lay-out[overflow]):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker, ui-carousel-controls) {
 		align-self: stretch;
 		block-size: auto;
 	}
@@ -107,6 +107,32 @@
 	ui-media:where([media*="play(ce)"], :is(ui-card, ui-reveal)[media*="play(ce)"] *) { --_play-block: center; --_play-inline: auto var(--ui-media-overlay-gap, 0.75rem); --_play-justify: end; --_play-size: max-content; }
 	ui-media:where([media*="play(bs)"], :is(ui-card, ui-reveal)[media*="play(bs)"] *) { --_play-block: end;    --_play-inline: var(--ui-media-overlay-gap, 0.75rem) auto; --_play-justify: start; }
 	ui-media:where([media*="play(be)"], :is(ui-card, ui-reveal)[media*="play(be)"] *) { --_play-block: end;    --_play-inline: auto var(--ui-media-overlay-gap, 0.75rem); --_play-justify: end; --_play-size: max-content; }
+
+	/* ui-lightbox in ANY nav scroller: plain furniture scrolls away with the slides,
+	   and a "view all" invoker that scrolls away is useless — same sticky scrollport
+	   pin as ui-play above, keyed on nav instead of auto/loop. Six edge cells; the
+	   default bs is a start corner (end corners would need the last-child relocation
+	   carousel.js does for ui-play — deferred, prefer start corners in scrollers). */
+	:where(ui-card, ui-reveal):where([media*="nav"]) ui-media:not(ui-media ui-media) > ui-lightbox,
+	ui-media:where([media*="nav"]) > ui-lightbox {
+		align-content: var(--_lb-block, end);
+		display: grid;
+		inline-size: var(--_lb-size, 0);
+		inset-block: 0;
+		inset-inline: var(--_lb-inline, var(--_g) auto);
+		justify-items: var(--_lb-justify, start);
+		overflow: visible;
+		padding-block: var(--_g);
+		position: sticky;
+		translate: none;
+		z-index: 3;
+	}
+	ui-media:where([media*="lightbox(ts)"], :is(ui-card, ui-reveal)[media*="lightbox(ts)"] *) { --_lb-block: start;  --_lb-inline: var(--ui-media-overlay-gap, 0.75rem) auto; --_lb-justify: start; }
+	ui-media:where([media*="lightbox(te)"], :is(ui-card, ui-reveal)[media*="lightbox(te)"] *) { --_lb-block: start;  --_lb-inline: auto var(--ui-media-overlay-gap, 0.75rem); --_lb-justify: end; --_lb-size: max-content; }
+	ui-media:where([media*="lightbox(cs)"], :is(ui-card, ui-reveal)[media*="lightbox(cs)"] *) { --_lb-block: center; --_lb-inline: var(--ui-media-overlay-gap, 0.75rem) auto; --_lb-justify: start; }
+	ui-media:where([media*="lightbox(ce)"], :is(ui-card, ui-reveal)[media*="lightbox(ce)"] *) { --_lb-block: center; --_lb-inline: auto var(--ui-media-overlay-gap, 0.75rem); --_lb-justify: end; --_lb-size: max-content; }
+	ui-media:where([media*="lightbox(bs)"], :is(ui-card, ui-reveal)[media*="lightbox(bs)"] *) { --_lb-block: end;    --_lb-inline: var(--ui-media-overlay-gap, 0.75rem) auto; --_lb-justify: start; }
+	ui-media:where([media*="lightbox(be)"], :is(ui-card, ui-reveal)[media*="lightbox(be)"] *) { --_lb-block: end;    --_lb-inline: auto var(--ui-media-overlay-gap, 0.75rem); --_lb-justify: end; --_lb-size: max-content; }
 
 	/* reserved control band — nav = both controls, mrk = dots only, arw = arrows only.
 	   content-box so asr() sizes the IMAGE and the band is reserved OUTSIDE it. */

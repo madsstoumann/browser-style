@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Lightbox</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="CSS-first view-gallery / fullscreen lightbox toggle with optional web component wrapper.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/ui/icon/ui-icon.css">
+	<link rel="stylesheet" href="ui-lightbox.css">
+</head>
+<body>
+	<h1>UI: Lightbox</h1>
+
+	<h2>CSS</h2>
+	<p>
+		<code>&lt;ui-lightbox&gt;</code> is a "view gallery" / fullscreen toggle. It wraps an
+		invoker <code>&lt;button command="toggle-popover" commandfor="&lt;frame id&gt;"&gt;</code> and a
+		<code>&lt;ui-icon type="grid"&gt;</code>. Pointed at a <code>&lt;ui-media popover&gt;</code>
+		frame, the button lifts the frame into the top layer — the platform's built-in
+		<code>toggle-popover</code> command needs <strong>no JavaScript</strong>. The full gallery
+		presentation (fullscreen carousel/grid, backdrop, furniture hiding) lives in the card system:
+		see <a href="/ui/card/media.lightbox.html">ui/card/media.lightbox.html</a>.
+	</p>
+	<p>
+		The component itself is <strong>CSS-only</strong>. <code>index.js</code> registers the tag and
+		adds no behaviour; the optional <code>command.js</code> adds the in-lightbox layout toggle
+		(<code>--lightbox-layout</code>), <code>[open]</code> reflection, and a click fallback for
+		browsers without native <code>command=</code> invokers.
+	</p>
+
+	<h3>Idle / open (grid glyph morphs to ×)</h3>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-lightbox>
+			<button type="button" command="toggle-popover" commandfor="g1" aria-label="View gallery">
+				<ui-icon type="grid"></ui-icon>
+			</button>
+		</ui-lightbox>
+		<ui-lightbox open>
+			<button type="button" command="toggle-popover" commandfor="g1" aria-label="Close gallery" aria-expanded="true">
+				<ui-icon type="grid"></ui-icon>
+			</button>
+		</ui-lightbox>
+	</div>
+
+	<h3>Sizes</h3>
+	<p>Use the <code>size</code> attribute: <code>sm</code>, <code>lg</code>, <code>xl</code> (<code>md</code> is the default). In a card: <code>lightbox(sm)</code> etc.</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-lightbox size="sm"><button type="button" command="toggle-popover" commandfor="z1" aria-label="View gallery"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
+		<ui-lightbox><button type="button" command="toggle-popover" commandfor="z2" aria-label="View gallery"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
+		<ui-lightbox size="lg"><button type="button" command="toggle-popover" commandfor="z3" aria-label="View gallery"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
+		<ui-lightbox size="xl"><button type="button" command="toggle-popover" commandfor="z4" aria-label="View gallery"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
+	</div>
+
+	<h3>Hues, disc shape, bare glyph</h3>
+	<p>Nine hues via <code>theme=</code> (in a card: <code>lightbox(blue)</code>); disc via
+		<code>radius="sqr|rnd|crc"</code>; <code>variant="non"</code> for a bare glyph.</p>
+	<div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; font-size: 1.5rem;">
+		<ui-lightbox theme="blue"><button type="button" command="toggle-popover" commandfor="c1" aria-label="View gallery"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
+		<ui-lightbox theme="red" radius="sqr"><button type="button" command="toggle-popover" commandfor="c2" aria-label="View gallery"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
+		<ui-lightbox radius="rnd"><button type="button" command="toggle-popover" commandfor="c3" aria-label="View gallery"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
+		<ui-lightbox variant="non"><button type="button" command="toggle-popover" commandfor="c4" aria-label="View gallery"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
+	</div>
+
+	<h3>Hover feedback — <code>hover=</code></h3>
+	<div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; font-size: 1.5rem;">
+		<ui-lightbox hover="press"><button type="button" command="toggle-popover" commandfor="h1" aria-label="press"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
+		<ui-lightbox hover="pop"><button type="button" command="toggle-popover" commandfor="h2" aria-label="pop"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
+		<ui-lightbox hover="press pop"><button type="button" command="toggle-popover" commandfor="h3" aria-label="press pop"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
+	</div>
+
+	<h3>A working popover target</h3>
+	<p>The button below points at a real <code>[popover]</code> — open/close is entirely native
+		(Esc and light-dismiss work too):</p>
+	<ui-lightbox>
+		<button type="button" command="toggle-popover" commandfor="demo-pop" aria-label="View gallery">
+			<ui-icon type="grid"></ui-icon>
+		</button>
+	</ui-lightbox>
+	<div id="demo-pop" popover style="padding: 2rem; border-radius: var(--radius-md);">
+		A popover, opened by the built-in <code>toggle-popover</code> command — zero JS.
+	</div>
+
+	<script type="module" src="command.js"></script>
+</body>
+</html>

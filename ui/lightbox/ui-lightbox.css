@@ -1,0 +1,145 @@
+/**
+ * ui-lightbox
+ * @version 1.0.0
+ * @date 2026-08-01
+ * @author Mads Stoumann
+ *
+ * "View gallery" / fullscreen toggle. Composes an invoker button
+ * (command="toggle-popover" commandfor="<ui-media id>") and a
+ * <ui-icon type="grid">. The circle backdrop is ON by default; hide it with
+ * variant="non" / lightbox(non). The frame-level popover mechanics (fullscreen
+ * presentation, backdrop, open: tokens) live in ui/card/media.lightbox.css.
+ *
+ * Sections: A. Base (tokens · host · button · open state) · B. Furniture axes
+ * (colour · ink/fill · size · corner · non) · C. Decoration (hover). Each axis
+ * matches BOTH the standalone attribute AND the card's lightbox(…) token in one
+ * nested rule, so there's no duplication with ui/card/media.css. Full docs:
+ * readme.md.
+ */
+@layer bs-component {
+	:where(ui-lightbox) {
+		/* ───────── A. Base ───────── */
+		--ui-lightbox-c: var(--color-text);
+		--ui-lightbox-sz: 1.2em;
+
+		--ui-lightbox-hover-duration: var(--duration-normal);
+		--ui-lightbox-hover-ease: var(--ease-out);
+		--ui-lightbox-hover-pop: 1.15;
+		--ui-lightbox-hover-press: 0.85;
+
+		/* circle backdrop — on by default (retune any token; hide with "non") */
+		--ui-lightbox-circle-bg: Canvas;
+		--ui-lightbox-circle-border-color: var(--color-border);
+		--ui-lightbox-circle-border-width: var(--border-width, 1px);
+		--ui-lightbox-circle-pad: 0.4em;
+		--ui-lightbox-circle-radius: var(--radius-circle);
+		--ui-lightbox-circle-shadow: var(--shadow-lg);
+
+		color: var(--ui-lightbox-c);
+		display: inline-grid;
+		font-size: var(--ui-lightbox-sz);
+		gap: 0.5em;
+
+		& button {
+			aspect-ratio: 1;
+			background: var(--ui-lightbox-circle-bg, none);
+			border: var(--ui-lightbox-circle-border-width, 0) solid var(--ui-lightbox-circle-border-color, transparent);
+			border-radius: var(--ui-lightbox-circle-radius, 0);
+			box-shadow: var(--ui-lightbox-circle-shadow, none);
+			box-sizing: border-box;
+			corner-shape: var(--ui-lightbox-circle-corner, round);
+			color: inherit;
+			cursor: pointer;
+			display: grid;
+			font: inherit; /* buttons don't inherit font-size; the em-based icon needs it */
+			margin: 0;
+			padding: var(--ui-lightbox-circle-pad, 0);
+			place-content: center;
+
+			@media (hover: hover) {
+				&:hover { color: var(--ui-lightbox-c-hover, var(--color-accent)); }
+			}
+		}
+
+		/* open — the button rides into the top layer with its frame, so it doubles
+		   as the close affordance: morph the grid glyph into an × (the same morph
+		   ui-icon runs from a host [open], duplicated here so it also fires from
+		   the frame's :popover-open with zero JS; ./command.js additionally
+		   reflects [open] onto the host for authors outside a popover frame). */
+		:where(ui-media:popover-open) & ui-icon[type=grid],
+		&[open] ui-icon[type=grid] {
+			rotate: 135deg;
+			&::after { box-shadow: -0.3em 0 0, 0 0.3em 0, 0 -0.3em 0, 0.3em 0 0; }
+		}
+
+		/* the optional layout-toggle invoker (--lightbox-layout, see ./command.js)
+		   only makes sense inside an OPEN lightbox — hide it while closed */
+		&:not(:where(ui-media:popover-open) *, [open]) button[command="--lightbox-layout"] { display: none; }
+
+		/* ───────── B. Furniture axes — colour · ink/fill · size · corner · non ─────────
+		   Each axis: `&[attr]` = standalone, `:where([media*="lightbox(…)"]) &` = card token. */
+
+		/* colour (hue) — like save, the glyph IS the ink, so the hue's vivid bg is the ink. */
+		&[theme~="red"],    :where([media*="lightbox(red)"])    & { --ui-lightbox-c: var(--ui-theme-red-bg); }
+		&[theme~="orange"], :where([media*="lightbox(orange)"]) & { --ui-lightbox-c: var(--ui-theme-orange-bg); }
+		&[theme~="green"],  :where([media*="lightbox(green)"])  & { --ui-lightbox-c: var(--ui-theme-green-bg); }
+		&[theme~="blue"],   :where([media*="lightbox(blue)"])   & { --ui-lightbox-c: var(--ui-theme-blue-bg); }
+		&[theme~="accent"], :where([media*="lightbox(accent)"]) & { --ui-lightbox-c: var(--ui-theme-accent-bg); }
+		&[theme~="black"],  :where([media*="lightbox(black)"])  & { --ui-lightbox-c: var(--ui-theme-black-bg); }
+		&[theme~="white"],  :where([media*="lightbox(white)"])  & { --ui-lightbox-c: var(--ui-theme-white-bg); }
+		&[theme~="gray"],   :where([media*="lightbox(gray)"])   & { --ui-lightbox-c: var(--ui-theme-gray-bg); }
+		&[theme~="slate"],  :where([media*="lightbox(slate)"])  & { --ui-lightbox-c: var(--ui-theme-slate-bg); }
+		/* HUE TRUTH SET (nine): red orange green blue accent black white gray slate.
+		   slate is a canonical hue in its own right (the fifth neutral, white < gray <
+		   slate < black), not an alias of gray. Single-ink control — no pale/muted
+		   fill arms (same gap as ui/save and ui/play, see ui/card/AGENTS.md #8). */
+
+		/* arbitrary colour (overrides theme) — ink = the glyph, fill = the circle
+		   disc. After the hue rules so an explicit ink=/fill= wins. */
+		&[ink]  { --ui-lightbox-c: attr(ink type(<color>), var(--color-text)); }
+		&[fill] { --ui-lightbox-circle-bg: attr(fill type(<color>), Canvas); }
+		/* Typed attr() fallback — Safari/Firefox. A custom property PARSES the
+		   literal `attr(…)` stream, so it never goes guaranteed-invalid and no
+		   var() fallback fires; the glyph ink and the disc fill die at
+		   computed-value time instead. Restore the attr() defaults;
+		   ../base/polyfills/attr-fallback.js upgrades to the element's own
+		   ink/fill. Detect on a REAL property — `--x: attr(…)` is true in Safari
+		   too. Keep after the hue rules. */
+		@supports not (background-color: attr(x type(<color>), red)) {
+			&[ink]  { --ui-lightbox-c: var(--color-text); }
+			&[fill] { --ui-lightbox-circle-bg: Canvas; }
+		}
+
+		/* size — em-based, from size= or the card's lightbox(<size>). md = default. */
+		&[size~="sm"], :where([media*="lightbox(sm)"]) & { --ui-lightbox-sz: 0.8em; }
+		&[size~="lg"], :where([media*="lightbox(lg)"]) & { --ui-lightbox-sz: 1.6em; }
+		&[size~="xl"], :where([media*="lightbox(xl)"]) & { --ui-lightbox-sz: 2.2em; }
+
+		/* corner — the disc shape. crc = default circle · sqr squircle · rnd rounded.
+		   (non hides the disc entirely — below.) */
+		&[radius~="sqr"], :where([media*="lightbox(sqr)"]) & { --ui-lightbox-circle-corner: superellipse(var(--squircle-md)); }
+		&[radius~="rnd"], :where([media*="lightbox(rnd)"]) & { --ui-lightbox-circle-radius: var(--radius-lg); }
+		&[radius~="crc"], :where([media*="lightbox(crc)"]) & { --ui-lightbox-circle-radius: var(--radius-circle); }
+
+		/* non — hide the circle (bare glyph) */
+		&[variant~="non"], :where([media*="lightbox(non)"]) & {
+			--ui-lightbox-circle-bg: none;
+			--ui-lightbox-circle-border-width: 0;
+			--ui-lightbox-circle-pad: 0;
+			--ui-lightbox-circle-radius: 0;
+			--ui-lightbox-circle-shadow: none;
+		}
+
+		/* ───────── C. Decoration — hover/press (opt-in via `hover`) ─────────
+		   `press` = scale down while held ("scale-as-you-click"); `pop` = scale up
+		   on hover. Combine: hover="press pop". */
+		&[hover] button { transition: scale var(--ui-lightbox-hover-duration) var(--ui-lightbox-hover-ease); }
+		&[hover~="pop"] button:hover    { scale: var(--ui-lightbox-hover-pop); }
+		&[hover~="press"] button:active { scale: var(--ui-lightbox-hover-press); }
+
+		@media (prefers-reduced-motion: reduce) {
+			&[hover] button { transition: none; }
+			&:is([hover~="pop"], [hover~="press"]) button:is(:hover, :active) { scale: none; }
+		}
+	}
+}

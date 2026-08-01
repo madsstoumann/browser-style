@@ -1,0 +1,50 @@
+{
+  "name": "@browser.style/lightbox",
+  "version": "1.0.0",
+  "description": "View-gallery / fullscreen lightbox toggle — an invoker button + ui-icon grid glyph that lifts a ui-media popover frame into the top layer",
+  "type": "module",
+  "module": "index.js",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./index.css"
+    },
+    "./command.js": "./command.js",
+    "./style": "./index.css",
+    "./index.css": "./index.css",
+    "./ui-lightbox.css": "./ui-lightbox.css"
+  },
+  "files": [
+    "index.js",
+    "command.js",
+    "index.css",
+    "ui-lightbox.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "lightbox",
+    "gallery",
+    "fullscreen",
+    "popover",
+    "css-first",
+    "web-components"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/lightbox"
+  },
+  "homepage": "https://browser.style/ui/lightbox",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11",
+    "@browser.style/common": "^1.0.13",
+    "@browser.style/icon": "^4.0.0"
+  }
+}
