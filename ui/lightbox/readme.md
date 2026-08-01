@@ -1,7 +1,10 @@
 # ui-lightbox
 
 A CSS-first **"view gallery" / fullscreen toggle**. `<ui-lightbox>` composes an
-invoker button and a `<ui-icon type="grid">` glyph. Pointed at a
+invoker button and a `<ui-icon>` glyph — one of the two canonical SVGs from
+`/assets/svg` (`library-photo.svg` = "open gallery", the default;
+`window-maximize.svg` = "full screen"), inlined with a bare `viewBox` so
+ui-icon's svg rules supply stroke and sizing. Pointed at a
 `<ui-media popover>` frame, the button lifts the *existing* gallery — carousel or
 collage, same DOM — into the top layer as a fullscreen lightbox, using the
 platform's built-in `toggle-popover` command: **zero JavaScript** to open,
@@ -32,7 +35,7 @@ import '@browser.style/lightbox';          /* registers the tag (no behaviour) *
 <ui-media id="gallery-1" popover media="asr(16/9) nav lightbox(bs)">
   <ui-lightbox>
     <button type="button" command="toggle-popover" commandfor="gallery-1" aria-label="View gallery">
-      <ui-icon type="grid"></ui-icon>
+      <ui-icon><!-- /assets/svg/library-photo.svg, inlined --><svg viewBox="0 0 24 24"><path d="…"/></svg></ui-icon>
     </button>
   </ui-lightbox>
   <img src="…" alt="…">
@@ -48,8 +51,8 @@ holds from the run's start — same contract as sticky `<ui-play>`.
 - `command="toggle-popover"` is a **built-in** invoker command (Baseline; see
   fallback below) — the platform opens/closes the popover and manages focus.
 - The button rides into the top layer *with* its frame, so while open it doubles
-  as the close affordance: the grid glyph morphs into an × via
-  `:popover-open` (pure CSS).
+  as the close affordance: the svg hides and the icon draws ui-icon's `cross`
+  bars — an animated twist to × — via `:popover-open` (pure CSS).
 - Inside a card, position/hue/size come from the `media=` DSL:
   `lightbox(bs)` (default area), `lightbox(white)`, `lightbox(lg)`, ….
 
@@ -70,7 +73,7 @@ holds from the run's start — same contract as sticky `<ui-play>`.
 <script type="module" src="…/lightbox/command.js"></script>
 ```
 
-Adds three runtime niceties (the baseline open/close needs none of them):
+Adds five runtime niceties (the baseline open/close needs none of them):
 
 1. **`--lightbox-layout`** — a custom command for a second button inside the
    lightbox that flips the open frame between fullscreen carousel and grid
@@ -81,6 +84,18 @@ Adds three runtime niceties (the baseline open/close needs none of them):
    support get a delegated click handler calling `togglePopover()`.
    (Alternatively use the older `popovertarget="<id>"` attribute, which has
    wider support and also needs no JS.)
+4. **DOM carousel controls** — the native `::scroll-marker`/`::scroll-button`
+   pseudos do **not** follow a popover frame into the top layer (a
+   current-Chromium limitation: they keep painting behind the `::backdrop`), so
+   every `ui-media[popover]` carousel gets real-element dots + arrows via
+   `/polyfill/carousel-controls.js` — in every browser, both states, so closed
+   and open stay continuous (`media.lightbox.css` suppresses the native pseudos
+   on exactly those frames). Without this module the open lightbox falls back
+   to swipe, keyboard and a thin scrollbar.
+5. **View Transition morph** — button-invoked open/close is wrapped in
+   `document.startViewTransition()` where supported, so the card morphs into
+   the fullscreen lightbox and back. Reduced-motion users and Esc/light-dismiss
+   closes skip the morph (the CSS backdrop fade still runs).
 
 ## CSS custom properties
 

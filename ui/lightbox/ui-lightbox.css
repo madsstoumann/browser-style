@@ -62,14 +62,31 @@
 		}
 
 		/* open — the button rides into the top layer with its frame, so it doubles
-		   as the close affordance: morph the grid glyph into an × (the same morph
-		   ui-icon runs from a host [open], duplicated here so it also fires from
-		   the frame's :popover-open with zero JS; ./command.js additionally
-		   reflects [open] onto the host for authors outside a popover frame). */
+		   as the close affordance: morph the glyph into an × with zero JS, keyed
+		   on the frame's :popover-open (./command.js additionally reflects [open]
+		   onto the host for authors outside a popover frame). Two glyph modes:
+		   - <ui-icon type="grid">: ui-icon's own [open] dots→× morph, duplicated
+		     here so it also fires from :popover-open;
+		   - <ui-icon><svg>…</svg></ui-icon> (the canonical glyphs —
+		     /assets/svg/library-photo.svg "open gallery", window-maximize.svg
+		     "full screen"): hide the svg and draw ui-icon's `type=cross` bars
+		     (same geometry, same animated host rotate). */
 		:where(ui-media:popover-open) & ui-icon[type=grid],
 		&[open] ui-icon[type=grid] {
 			rotate: 135deg;
 			&::after { box-shadow: -0.3em 0 0, 0 0.3em 0, 0 -0.3em 0, 0.3em 0 0; }
+		}
+		:where(ui-media:popover-open) & ui-icon:has(svg),
+		&[open] ui-icon:has(svg) {
+			rotate: 135deg;
+			& svg { display: none; }
+			&::before, &::after {
+				background-color: currentColor;
+				content: "";
+				height: var(--ui-icon-stroke, var(--border-width-thick, 2px));
+				width: 1em;
+			}
+			&::after { rotate: -90deg; }
 		}
 
 		/* the optional layout-toggle invoker (--lightbox-layout, see ./command.js)

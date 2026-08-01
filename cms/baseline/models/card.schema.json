@@ -446,6 +446,16 @@
               "localized": true,
               "default": "View gallery"
             },
+            "shape": {
+              "type": "select",
+              "title": "Glyph",
+              "localized": false,
+              "default": "photos",
+              "options": [
+                { "value": "photos", "label": "Photo library (open gallery)" },
+                { "value": "maximize", "label": "Window maximize (full screen)" }
+              ]
+            },
             "style": {
               "type": "string",
               "title": "Style override",

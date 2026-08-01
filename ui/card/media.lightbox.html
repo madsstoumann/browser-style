@@ -26,7 +26,11 @@
 		invoker — <code>command="toggle-popover" commandfor="&lt;id&gt;"</code> — so <strong>opening and closing
 		needs zero JavaScript</strong>: the platform handles Esc, light-dismiss, focus and
 		<code>::backdrop</code>. Same DOM in both states — no re-render, no attribute churn. While open the
-		button doubles as the close affordance (the grid glyph morphs to an ×).</p>
+		button doubles as the close affordance (the glyph morphs to an ×). Open/close is animated: a
+		clip-reveal + backdrop fade in pure CSS (<code>@starting-style</code> can only drive the
+		<code>::backdrop</code> — the frame itself is always rendered, so its entry is a keyframe and the
+		<code>overlay</code> transition carries the fade-out), upgraded to a full card ↔ fullscreen
+		<strong>View Transition morph</strong> when <code>command.js</code> is loaded.</p>
 	<p>Open-state presentation is the <code>open:</code> token family: a <code>nav</code> frame opens as a
 		<strong>fullscreen carousel</strong> by default; <code>open:grid(2c|3c|4c)</code> presents the same
 		children as a scrollable <strong>grid</strong>. Marker furniture (chips, stickers, beacons, marquees,
@@ -41,15 +45,23 @@
 	<p>The <a href="media.carousel.html">carousel-page</a> card plus three things: <code>popover</code> +
 		<code>id</code> on the frame, <code>lightbox(bs)</code> in the tokens, and the invoker button. While
 		closed the button is <code>position: sticky</code>-pinned to the scrollport (plain furniture scrolls
-		away with the slides); while open the same carousel — dots, arrows, snapping — is simply
-		viewport-sized. No JS on this section.</p>
+		away with the slides); while open the same carousel keeps snapping, swipe and keyboard — simply
+		viewport-sized. <strong>Dots and arrows are real elements here</strong>: the native
+		<code>::scroll-marker</code>/<code>::scroll-button</code> pseudos don't follow a popover into the top
+		layer (they'd paint behind the <code>::backdrop</code> — a current-Chromium limitation), so
+		<code>lightbox/command.js</code> injects the <code>/polyfill/carousel-controls.js</code> DOM controls
+		on popover frames — in both states, so closed and open stay continuous. Opening and closing itself
+		still needs no JS; without <code>command.js</code> the open carousel falls back to swipe, keyboard and
+		a thin scrollbar.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav lightbox(bs)" content="scl(md)">
 			<cq-box>
 				<ui-media id="lb-carousel" popover>
 					<ui-lightbox>
 						<button type="button" command="toggle-popover" commandfor="lb-carousel" aria-label="View gallery">
-							<ui-icon type="grid"></ui-icon>
+							<ui-icon>
+								<svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg>
+							</ui-icon>
 						</button>
 					</ui-lightbox>
 					<img src="/assets/images/finance.png" alt="City skyline at dusk" decoding="async" fetchpriority="high">
@@ -73,7 +85,9 @@
 				<ui-media id="lb-grid" popover>
 					<ui-lightbox>
 						<button type="button" command="toggle-popover" commandfor="lb-grid" aria-label="View all photos">
-							<ui-icon type="grid"></ui-icon>
+							<ui-icon>
+								<svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg>
+							</ui-icon>
 						</button>
 					</ui-lightbox>
 					<img src="/assets/images/finance.png" alt="City skyline at dusk" loading="lazy">
@@ -106,7 +120,9 @@
 				<ui-media id="lb-collage" popover>
 					<ui-lightbox>
 						<button type="button" command="toggle-popover" commandfor="lb-collage" aria-label="View gallery">
-							<ui-icon type="grid"></ui-icon>
+							<ui-icon>
+								<svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg>
+							</ui-icon>
 						</button>
 					</ui-lightbox>
 					<ui-chip>Deal</ui-chip>
@@ -139,7 +155,9 @@
 				<ui-media id="lb-furn-off" popover>
 					<ui-lightbox>
 						<button type="button" command="toggle-popover" commandfor="lb-furn-off" aria-label="View gallery">
-							<ui-icon type="grid"></ui-icon>
+							<ui-icon>
+								<svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg>
+							</ui-icon>
 						</button>
 					</ui-lightbox>
 					<ui-chip>3 photos</ui-chip>
@@ -160,7 +178,9 @@
 				<ui-media id="lb-furn-on" popover>
 					<ui-lightbox>
 						<button type="button" command="toggle-popover" commandfor="lb-furn-on" aria-label="View gallery">
-							<ui-icon type="grid"></ui-icon>
+							<ui-icon>
+								<svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg>
+							</ui-icon>
 						</button>
 					</ui-lightbox>
 					<ui-chip>3 photos</ui-chip>
@@ -192,7 +212,9 @@
 				<ui-media id="lb-toggle" popover>
 					<ui-lightbox>
 						<button type="button" command="toggle-popover" commandfor="lb-toggle" aria-label="View gallery">
-							<ui-icon type="grid"></ui-icon>
+							<ui-icon>
+								<svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg>
+							</ui-icon>
 						</button>
 						<button type="button" command="--lightbox-layout" commandfor="lb-toggle" aria-label="Toggle carousel or grid layout">
 							<ui-icon type="kebab"></ui-icon>
@@ -227,7 +249,9 @@
 				<ui-media id="lb-video" popover>
 					<ui-lightbox>
 						<button type="button" command="toggle-popover" commandfor="lb-video" aria-label="View gallery">
-							<ui-icon type="grid"></ui-icon>
+							<ui-icon>
+								<svg viewBox="0 0 24 24"><path d="M3 17a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v3a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1l0 -3" /><path d="M4 12v-6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-6" /><path d="M12 8h4v4" /><path d="M16 8l-5 5" /></svg>
+							</ui-icon>
 						</button>
 					</ui-lightbox>
 					<video id="lb-video-1" preload="metadata" src="/assets/video/city.mp4" poster="/assets/images/finance.png" muted loop playsinline aria-label="City timelapse"></video>

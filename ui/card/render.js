@@ -377,11 +377,21 @@ const buildFurniture = (furniture, fields, tokens, mediaId, videoId = null) => {
    sticky start-corner pin only holds from first-child position — the same
    contract as the hand-authored sticky <ui-play> (end corners are relocated by
    carousel.js for play; for lightbox they are documented as deferred). */
+
+/* the two canonical glyphs, inlined from /assets/svg (cleaned Tabler outlines:
+   bare viewBox, stroke styling comes from ui-icon's svg rules). `photos` =
+   library-photo.svg "open gallery" (the default), `maximize` =
+   window-maximize.svg "full screen" (single image / video frames). */
+const LIGHTBOX_GLYPHS = {
+	photos: '<svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"/><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1"/><path d="M17 7h.01"/><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644"/><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644"/></svg>',
+	maximize: '<svg viewBox="0 0 24 24"><path d="M3 17a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v3a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1l0 -3"/><path d="M4 12v-6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-6"/><path d="M12 8h4v4"/><path d="M16 8l-5 5"/></svg>'
+};
 const buildLightbox = (furniture, tokens, mediaId) => {
 	if (!furniture?.lightbox) return '';
 	const lightbox = furniture.lightbox === true ? {} : furniture.lightbox;
 	for (const token of styleTokens('lightbox', lightbox.style)) tokens.media.push(token);
-	return `<ui-lightbox><button type="button" command="toggle-popover"${mediaId ? ` commandfor="${esc(mediaId)}"` : ''} aria-label="${esc(lightbox.label || 'View gallery')}"><ui-icon type="grid"></ui-icon></button></ui-lightbox>`;
+	const glyph = LIGHTBOX_GLYPHS[lightbox.shape] || LIGHTBOX_GLYPHS.photos;
+	return `<ui-lightbox><button type="button" command="toggle-popover"${mediaId ? ` commandfor="${esc(mediaId)}"` : ''} aria-label="${esc(lightbox.label || 'View gallery')}"><ui-icon>${glyph}</ui-icon></button></ui-lightbox>`;
 };
 
 /**

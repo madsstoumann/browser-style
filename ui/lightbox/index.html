@@ -18,7 +18,7 @@
 	<p>
 		<code>&lt;ui-lightbox&gt;</code> is a "view gallery" / fullscreen toggle. It wraps an
 		invoker <code>&lt;button command="toggle-popover" commandfor="&lt;frame id&gt;"&gt;</code> and a
-		<code>&lt;ui-icon type="grid"&gt;</code>. Pointed at a <code>&lt;ui-media popover&gt;</code>
+		<code>&lt;ui-icon&gt;</code> holding one of the two canonical SVG glyphs (below). Pointed at a <code>&lt;ui-media popover&gt;</code>
 		frame, the button lifts the frame into the top layer — the platform's built-in
 		<code>toggle-popover</code> command needs <strong>no JavaScript</strong>. The full gallery
 		presentation (fullscreen carousel/grid, backdrop, furniture hiding) lives in the card system:
@@ -31,44 +31,55 @@
 		browsers without native <code>command=</code> invokers.
 	</p>
 
-	<h3>Idle / open (grid glyph morphs to ×)</h3>
+	<h3>Idle / open (glyph morphs to ×)</h3>
+	<p>The two canonical glyphs come from <code>/assets/svg</code> as inline SVG inside
+		<code>&lt;ui-icon&gt;</code> (bare <code>viewBox</code>; ui-icon's svg rules supply stroke and
+		sizing): <code>library-photo.svg</code> = "open gallery" (default), <code>window-maximize.svg</code> =
+		"full screen". While the target popover is open the svg hides and the icon draws ui-icon's
+		<code>cross</code> bars — an animated twist to ×.</p>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
 		<ui-lightbox>
 			<button type="button" command="toggle-popover" commandfor="g1" aria-label="View gallery">
-				<ui-icon type="grid"></ui-icon>
+				<ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon>
 			</button>
 		</ui-lightbox>
 		<ui-lightbox open>
 			<button type="button" command="toggle-popover" commandfor="g1" aria-label="Close gallery" aria-expanded="true">
-				<ui-icon type="grid"></ui-icon>
+				<ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon>
 			</button>
 		</ui-lightbox>
+	</div>
+
+	<h3>"Full screen" glyph — window-maximize</h3>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-lightbox><button type="button" command="toggle-popover" commandfor="m1" aria-label="Full screen"><ui-icon><svg viewBox="0 0 24 24"><path d="M3 17a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v3a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1l0 -3" /><path d="M4 12v-6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-6" /><path d="M12 8h4v4" /><path d="M16 8l-5 5" /></svg></ui-icon></button></ui-lightbox>
+		<ui-lightbox open><button type="button" command="toggle-popover" commandfor="m1" aria-label="Close" aria-expanded="true"><ui-icon><svg viewBox="0 0 24 24"><path d="M3 17a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v3a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1l0 -3" /><path d="M4 12v-6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-6" /><path d="M12 8h4v4" /><path d="M16 8l-5 5" /></svg></ui-icon></button></ui-lightbox>
 	</div>
 
 	<h3>Sizes</h3>
 	<p>Use the <code>size</code> attribute: <code>sm</code>, <code>lg</code>, <code>xl</code> (<code>md</code> is the default). In a card: <code>lightbox(sm)</code> etc.</p>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-		<ui-lightbox size="sm"><button type="button" command="toggle-popover" commandfor="z1" aria-label="View gallery"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
-		<ui-lightbox><button type="button" command="toggle-popover" commandfor="z2" aria-label="View gallery"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
-		<ui-lightbox size="lg"><button type="button" command="toggle-popover" commandfor="z3" aria-label="View gallery"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
-		<ui-lightbox size="xl"><button type="button" command="toggle-popover" commandfor="z4" aria-label="View gallery"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
+		<ui-lightbox size="sm"><button type="button" command="toggle-popover" commandfor="z1" aria-label="View gallery"><ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon></button></ui-lightbox>
+		<ui-lightbox><button type="button" command="toggle-popover" commandfor="z2" aria-label="View gallery"><ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon></button></ui-lightbox>
+		<ui-lightbox size="lg"><button type="button" command="toggle-popover" commandfor="z3" aria-label="View gallery"><ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon></button></ui-lightbox>
+		<ui-lightbox size="xl"><button type="button" command="toggle-popover" commandfor="z4" aria-label="View gallery"><ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon></button></ui-lightbox>
 	</div>
 
 	<h3>Hues, disc shape, bare glyph</h3>
 	<p>Nine hues via <code>theme=</code> (in a card: <code>lightbox(blue)</code>); disc via
 		<code>radius="sqr|rnd|crc"</code>; <code>variant="non"</code> for a bare glyph.</p>
 	<div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; font-size: 1.5rem;">
-		<ui-lightbox theme="blue"><button type="button" command="toggle-popover" commandfor="c1" aria-label="View gallery"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
-		<ui-lightbox theme="red" radius="sqr"><button type="button" command="toggle-popover" commandfor="c2" aria-label="View gallery"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
-		<ui-lightbox radius="rnd"><button type="button" command="toggle-popover" commandfor="c3" aria-label="View gallery"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
-		<ui-lightbox variant="non"><button type="button" command="toggle-popover" commandfor="c4" aria-label="View gallery"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
+		<ui-lightbox theme="blue"><button type="button" command="toggle-popover" commandfor="c1" aria-label="View gallery"><ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon></button></ui-lightbox>
+		<ui-lightbox theme="red" radius="sqr"><button type="button" command="toggle-popover" commandfor="c2" aria-label="View gallery"><ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon></button></ui-lightbox>
+		<ui-lightbox radius="rnd"><button type="button" command="toggle-popover" commandfor="c3" aria-label="View gallery"><ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon></button></ui-lightbox>
+		<ui-lightbox variant="non"><button type="button" command="toggle-popover" commandfor="c4" aria-label="View gallery"><ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon></button></ui-lightbox>
 	</div>
 
 	<h3>Hover feedback — <code>hover=</code></h3>
 	<div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; font-size: 1.5rem;">
-		<ui-lightbox hover="press"><button type="button" command="toggle-popover" commandfor="h1" aria-label="press"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
-		<ui-lightbox hover="pop"><button type="button" command="toggle-popover" commandfor="h2" aria-label="pop"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
-		<ui-lightbox hover="press pop"><button type="button" command="toggle-popover" commandfor="h3" aria-label="press pop"><ui-icon type="grid"></ui-icon></button></ui-lightbox>
+		<ui-lightbox hover="press"><button type="button" command="toggle-popover" commandfor="h1" aria-label="press"><ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon></button></ui-lightbox>
+		<ui-lightbox hover="pop"><button type="button" command="toggle-popover" commandfor="h2" aria-label="pop"><ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon></button></ui-lightbox>
+		<ui-lightbox hover="press pop"><button type="button" command="toggle-popover" commandfor="h3" aria-label="press pop"><ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon></button></ui-lightbox>
 	</div>
 
 	<h3>A working popover target</h3>
@@ -76,7 +87,7 @@
 		(Esc and light-dismiss work too):</p>
 	<ui-lightbox>
 		<button type="button" command="toggle-popover" commandfor="demo-pop" aria-label="View gallery">
-			<ui-icon type="grid"></ui-icon>
+			<ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon>
 		</button>
 	</ui-lightbox>
 	<div id="demo-pop" popover style="padding: 2rem; border-radius: var(--radius-md);">
