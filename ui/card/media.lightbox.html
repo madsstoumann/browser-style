@@ -107,6 +107,61 @@
 	</lay-out>
 
 	<!-- ============================================================
+	     2b. Change the nav style while open — media-open=
+	     ============================================================ -->
+	<h2>Change the nav style while open — <code>media-open=</code></h2>
+	<p>The open state can switch into <strong>any existing nav style</strong>. The control stems
+		(<code>nav</code>/<code>mrk()</code>/<code>arw()</code>/<code>tmb()</code>/<code>axis()</code>) are
+		substring-matched, so their spellings can't ride inside <code>media=</code> behind an
+		<code>open:</code> prefix — instead they live in the companion <code>media-open=</code> attribute
+		(same element as <code>media=</code>), and <code>command.js</code> swaps just the control words of
+		the media string on open, restoring them on close — with slide continuity across the swap. Left:
+		dots while closed → the <a href="media.carousel.html">carousel-page rail</a>
+		(<code>axis(y) nav(mrk) mrk(tmb) mrk(rail)</code>) fullscreen, thumbnails auto-derived from the
+		slides. Right: arrows-only while closed → dots + arrows while open (the controls are built as the
+		union of both states). Without JS the lightbox simply keeps the closed nav style.</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(4/3) nav(mrk) lightbox(bs)" media-open="axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(lg)" content="scl(sm)">
+			<cq-box>
+				<ui-media id="lb-rail" popover>
+					<ui-lightbox>
+						<button type="button" command="toggle-popover" commandfor="lb-rail" aria-label="View gallery">
+							<ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon>
+						</button>
+					</ui-lightbox>
+					<img src="/assets/images/finance.png" alt="City skyline at dusk" loading="lazy">
+					<img src="/assets/images/river.png" alt="River winding through a valley" loading="lazy">
+					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" loading="lazy">
+					<img src="/assets/images/gastronomy.png" alt="Plated dish in a restaurant" loading="lazy">
+				</ui-media>
+				<ui-content>
+					<h3 data-part="headline">Dots → thumbnail rail</h3>
+					<p data-part="summary"><code>media-open="axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(lg)"</code></p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(4/3) nav(arw) lightbox(bs)" media-open="nav mrk(lg)" content="scl(sm)">
+			<cq-box>
+				<ui-media id="lb-swap" popover>
+					<ui-lightbox>
+						<button type="button" command="toggle-popover" commandfor="lb-swap" aria-label="View gallery">
+							<ui-icon><svg viewBox="0 0 24 24"><path d="M7 5.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" /><path d="M4.012 7.26a2.005 2.005 0 0 0 -1.012 1.737v10c0 1.1 .9 2 2 2h10c.75 0 1.158 -.385 1.5 -1" /><path d="M17 7h.01" /><path d="M7 13l3.644 -3.644a1.21 1.21 0 0 1 1.712 0l3.644 3.644" /><path d="M15 12l1.644 -1.644a1.21 1.21 0 0 1 1.712 0l2.644 2.644" /></svg></ui-icon>
+						</button>
+					</ui-lightbox>
+					<img src="/assets/images/finance.png" alt="City skyline at dusk" loading="lazy">
+					<img src="/assets/images/river.png" alt="River winding through a valley" loading="lazy">
+					<img src="/assets/images/mindfulness.png" alt="Calm lakeside at dawn" loading="lazy">
+					<img src="/assets/images/gastronomy.png" alt="Plated dish in a restaurant" loading="lazy">
+				</ui-media>
+				<ui-content>
+					<h3 data-part="headline">Arrows-only → dots + arrows</h3>
+					<p data-part="summary"><code>media-open="nav mrk(lg)"</code> — union-built controls.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+
+	<!-- ============================================================
 	     3. Collage → fullscreen collage
 	     ============================================================ -->
 	<h2>Collage → fullscreen collage</h2>

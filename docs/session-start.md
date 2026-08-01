@@ -81,8 +81,14 @@
   carousels get real-DOM controls from /polyfill/carousel-controls.js (the
   split-out core the Safari entry also uses) via ui/lightbox/command.js, with
   native pseudos suppressed on those frames only; the grid-mode hide for them
-  is UNLAYERED (the polyfill sheet is unlayered). Docs: media.md § Lightbox;
-  demo media.lightbox.html.
+  is UNLAYERED (the polyfill sheet is unlayered). The open state switches into
+  ANY existing nav style via the companion `media-open=` ATTRIBUTE (never an
+  open: token — control stems are substring-matched); command.js swaps only
+  the control words of the resolved media string on toggle, restores on close,
+  keeps slide continuity (close-side re-assert after the overlay retention),
+  builds controls as the union of both states. command.js also owns modality
+  (inert), back-button close, grid-tile→slide jump and pause-on-close — all
+  optional. Docs: media.md § Lightbox; demo media.lightbox.html.
 - **The collage — a `<lay-out>` INSIDE a `<ui-media>`.** Besides arranging cards,
   `<lay-out>` can be the direct child of a media frame, making it a grid of nested
   `<ui-media>` tiles. **No new tokens exist for it**: lay-out breakpoint attributes

@@ -178,7 +178,9 @@ resolves `media=` matches by source-order, not token-order). So one card can go
   (the glyph `heart|bookmark|star` is content, authored on the emitted `<ui-icon shape=…>` — never
   a `media=` token; `saved` sets initial `aria-pressed`). `play` and `lightbox` take an optional
   `label`; `lightbox` also a `shape` (`photos` default | `maximize`) picking the
-  /assets/svg glyph. `lightbox` additionally makes the renderer mark the frame as a **popover** (`popover` +
+  /assets/svg glyph. A preset may carry **`media-open`** — ordinary carousel-control
+  spellings the lightbox swaps in while open (see media.md § Lightbox); emitted on the
+  frame only when the card has lightbox furniture, validated against the media vocabulary. `lightbox` additionally makes the renderer mark the frame as a **popover** (`popover` +
   id `<card-id>-media`) and emit the invoker **before the slides** (the sticky-pin contract); the
   open-state presentation comes from the preset's `open:` tokens — see
   [media.md § Lightbox](media.md#lightbox--the-popover-fullscreen-gallery).

@@ -73,7 +73,7 @@ holds from the run's start — same contract as sticky `<ui-play>`.
 <script type="module" src="…/lightbox/command.js"></script>
 ```
 
-Adds five runtime niceties (the baseline open/close needs none of them):
+Adds eight runtime niceties (the baseline open/close needs none of them):
 
 1. **`--lightbox-layout`** — a custom command for a second button inside the
    lightbox that flips the open frame between fullscreen carousel and grid
@@ -96,6 +96,18 @@ Adds five runtime niceties (the baseline open/close needs none of them):
    `document.startViewTransition()` where supported, so the card morphs into
    the fullscreen lightbox and back. Reduced-motion users and Esc/light-dismiss
    closes skip the morph (the CSS backdrop fade still runs).
+6. **`media-open=`** — swap the carousel into ANY existing nav style while
+   open (e.g. `media-open="axis(y) nav(mrk) mrk(tmb) mrk(rail)"` for the
+   vertical thumbnail rail): only the control words of the resolved media
+   string are replaced on open and restored on close, with slide continuity
+   both ways; controls are built as the union of both states' needs, and
+   thumbnails auto-derive from each slide's image.
+7. **Modality + history** — the rest of the page is `inert` while open (Tab
+   and assistive tech stay inside), and one history entry per open makes the
+   platform/hardware Back button close the lightbox (other closes consume the
+   entry, so the stack never grows).
+8. **Grid tile → slide jump** (tap a photo in the "view all" grid to open the
+   carousel at that slide) and **media pause on close**.
 
 ## CSS custom properties
 

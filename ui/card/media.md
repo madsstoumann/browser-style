@@ -647,6 +647,17 @@ Whole-token (`~=`) **state** prefix — like `md:`/`lg:` are the *container-tier
 
 The native `::scroll-marker-group`/`::scroll-button()` boxes **do not follow a popover frame into the top layer** (current Chromium keeps them in the document layer, positioned against the card, behind the `::backdrop` — a browser limitation, not fixable by positioning; revisit if Chromium moves scroll-control pseudos into the top layer with their element). So a popover frame's dots + arrows are **real elements**: `ui/lightbox/command.js` injects the [`/polyfill/carousel-controls.js`](../../polyfill/readme.md) `<ui-carousel-controls>` — in **every** browser and in **both states**, so closed and open stay continuous — and `media.lightbox.css` suppresses the native pseudos on exactly those `[data-ui-carousel-polyfill]` frames (grid mode hides the DOM controls via an unlayered rule, since the polyfill sheet is unlayered). Without `command.js` the open carousel falls back to swipe, keyboard and a thin scrollbar.
 
+### `media-open=` — ANY existing nav style while open
+
+The open state can switch the carousel into **any of the shipped nav styles** — dots → the vertical thumbnail rail, arrows-only → dots + arrows, a pills bar, an `axis(y)` flip… The control stems (`nav`/`mrk()`/`arw()`/`tmb()`/`axis()`) are **substring-matched**, so their spellings can never ride inside `media=` behind an `open:` prefix (they would arm the *closed* carousel) — instead they live in the companion **`media-open=`** attribute, on the same element `media=` sits on:
+
+```html
+<ui-card media="asr(4/3) nav(mrk) lightbox(bs)"
+         media-open="axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(lg)">
+```
+
+`command.js` swaps **only the control words** of the resolved media string on open (everything else — `asr()`, furniture, `open:` tokens, `loop`/`auto` bindings — is untouched) and restores them on close, re-stamping the DOM controls' `data-media` so every existing rule (rail padding, band reservation, thumbnail face, axis flip) applies unchanged. **Slide continuity** is kept across the swap in both directions (the index is captured on `beforetoggle`, re-asserted after the close-side `overlay` retention ends). Controls are built as the **union** of both states' needs, with per-state visibility keyed off the current `data-media` stamp. Thumbnails need no authoring: when a slide carries no `--ui-carousel-thumb-url`, the dot derives it from the slide's image. Preset field: `media-open` (validated against the media vocabulary by the preset lint). Without JS, the open lightbox simply keeps the closed nav style.
+
 ### Runtime carousel ↔ grid — `--lightbox-layout`
 
 A second invoker inside `<ui-lightbox>` (hidden while closed) with the custom `command="--lightbox-layout"` flips the open frame between carousel and grid by toggling `data-lightbox="grid|nav"` — handled by the opt-in [`ui/lightbox/command.js`](../lightbox/command.js) (built on the shared `ui/common/command.js` router). Closing clears the attribute, so the frame always reopens on its `open:` tokens. The same module reflects `[open]`/`aria-expanded` and ships a `togglePopover()` click fallback for browsers without `command=` invokers (`popovertarget` is the wider-support no-JS alternative markup).
@@ -654,6 +665,17 @@ A second invoker inside `<ui-lightbox>` (hidden while closed) with the custom `c
 ### Layout shift — the placeholder
 
 A top-layer element leaves flow, so the frame's grid cell would collapse. While a card-hosted frame is open, a `::before` on `<cq-box>`/`<summary>` reserves the cell, mirroring the frame's sizing (`--ui-media-ar` from a host-placed `asr()`, a `:has()` mirror of the nine canonical ratios for the self-arm placement, the `12.5rem` floor otherwise). Verified: neighbouring cards do not move across open/close. A **standalone** `<ui-media popover>` directly in a `<lay-out>` has no parent hook for a placeholder — documented limitation: the backdrop masks the reflow while open, and closing restores flow.
+
+### What works without JS — the degradation table
+
+| Feature | With `command.js` | Without JS |
+|---|---|---|
+| open/close, Esc, light-dismiss, `::backdrop`, focus return | platform | platform (unchanged) |
+| dots / arrows / thumbnails in the lightbox | DOM controls | swipe, keyboard, thin scrollbar |
+| `media-open=` nav-style switch | swapped on toggle | closed nav style kept |
+| `open:grid()` / `open:furniture` / placeholder / animations | CSS | CSS (unchanged) |
+| grid tile → slide jump | tap-to-open at that slide | grid still browsable |
+| modality (`inert`), back-button close, pause-on-close, VT morph | active | non-modal popover; Esc still closes |
 
 ### Notes
 
