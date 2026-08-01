@@ -16,8 +16,10 @@
  * carries the same shape in `detail` — read here transparently.
  *
  * Import for the side effect (auto-inits once), or call initPlayCommands() yourself.
- * @version 1.0.0
+ * @version 1.1.0
  */
+
+import { createCommandRouter } from '../common/command.js';
 
 const COMMANDS = new Set(['--toggle-play', '--play', '--pause']);
 
@@ -60,16 +62,10 @@ function handleAnimation(el, command, source) {
 	reflect(source, want);
 }
 
-function onCommand(event) {
-	const command = event.command ?? event.detail?.command;
-	if (!command || !COMMANDS.has(command)) return;
-	const source = event.source ?? event.detail?.source;
-	const target = event.target;
-	if (!target) return;
-
+const bind = createCommandRouter(COMMANDS, ({ command, source, target }) => {
 	if (target instanceof HTMLMediaElement) handleMedia(target, command, source);
 	else handleAnimation(target, command, source);
-}
+});
 
 let inited = false;
 
@@ -78,8 +74,7 @@ export function initPlayCommands(root = document) {
 		if (inited) return;
 		inited = true;
 	}
-	root.addEventListener('command', onCommand, true);   // capture: CommandEvent doesn't bubble
-	return () => root.removeEventListener('command', onCommand, true);
+	return bind(root);
 }
 
 // Auto-init for the common case (importing the module wires the page).
