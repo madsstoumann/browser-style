@@ -183,9 +183,12 @@ const lintPresets = (manifest, errors) => {
 		if (Array.isArray(node)) return node.forEach((item, index) => walk(item, file, `${path}[${index}]`));
 		if (!node || typeof node !== 'object') return;
 		for (const [key, value] of Object.entries(node)) {
-			if (['variant', 'media', 'content'].includes(key) && typeof value === 'string') {
+			/* media-open (the lightbox's open-state control vocabulary) carries
+			   ordinary media= spellings — validate it against the same set */
+			const attr = key === 'media-open' ? 'media' : key;
+			if (['variant', 'media', 'content'].includes(attr) && typeof value === 'string') {
 				for (const token of value.trim().split(/\s+/)) {
-					if (!token || valid[key].has(token) || OPEN_STEMS.test(token)) continue;
+					if (!token || valid[attr].has(token) || OPEN_STEMS.test(token)) continue;
 					errors.push(`${file} ${path}: ${key}= token "${token}" is not in the manifest — dead in the browser`);
 				}
 			} else walk(value, file, `${path}.${key}`);

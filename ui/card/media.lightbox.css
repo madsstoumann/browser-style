@@ -262,3 +262,17 @@ ui-media[popover]:popover-open:where(
 		:is(ui-card, ui-reveal):is([media~="open:grid(2c)"], [media~="open:grid(3c)"], [media~="open:grid(4c)"]) *
 	):not([data-lightbox="nav"])
 ) > ui-carousel-controls { display: none; }
+
+/* === per-state control visibility — UNLAYERED for the same reason. With
+   media-open= the controls are built as the UNION of both states' needs
+   (command.js), and command.js re-stamps data-media on toggle; these rules make
+   dots/arrows follow the CURRENT stamp (the whole-token spellings mirror
+   wanted() in /polyfill/carousel-controls.js). Popover frames only — the plain
+   Safari-polyfill path builds exactly what it shows and never needs this. === */
+ui-media[popover] > ui-carousel-controls:not(:where(
+	[data-media~="nav"], [data-media~="nav(blw)"], [data-media~="nav(abv)"], [data-media~="nav(mrk)"]
+)) [data-dots] { display: none; }
+ui-media[popover] > ui-carousel-controls[data-media~="mrk(non)"] [data-dots] { display: none; }
+ui-media[popover] > ui-carousel-controls:not(:where(
+	[data-media~="nav"], [data-media~="nav(blw)"], [data-media~="nav(abv)"], [data-media~="nav(arw)"]
+)) [data-nav] { display: none; }

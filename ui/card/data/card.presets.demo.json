@@ -319,10 +319,11 @@
     },
     "carousel-lightbox": {
       "name": "Carousel Lightbox",
-      "description": "Column card, 4:3 carousel with a view-gallery lightbox toggle (bottom-start) opening as a 3-column grid",
+      "description": "Column card, 4:3 carousel with a view-gallery lightbox toggle (bottom-start); opens fullscreen with the axis(y) thumbnail rail (media-open)",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3) nav lightbox(bs) open:grid(3c)",
+      "media": "asr(4/3) nav lightbox(bs)",
+      "media-open": "axis(y) nav(mrk) mrk(tmb) mrk(rail)",
       "content": "scl(lg)"
     },
     "carousel-row": {

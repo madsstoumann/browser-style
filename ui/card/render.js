@@ -448,6 +448,9 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 	const html = `<ui-media${attrs({
 		id: mediaId,
 		popover: fields.furniture?.lightbox ? true : null,
+		/* open-state control vocabulary (standard media spellings) — swapped in by
+		   ui/lightbox/command.js while the popover is open; inert without JS */
+		'media-open': (fields.furniture?.lightbox && preset['media-open']) || null,
 		...(embed || {}),
 		...frameAttrs
 	})}>${lightbox}${frames}${furniture}</ui-media>`;

@@ -52,9 +52,9 @@ export const mediaStr = (el) => {
 	return h && (h === el || h.matches('ui-card, ui-reveal')) ? (h.getAttribute('media') || '') : '';
 };
 
-// which controls do the tokens ask for? → { dots, arrows }
-export function wanted(scroller) {
-	const words = mediaStr(scroller).split(/\s+/);
+// which controls does a media string ask for? → { dots, arrows }
+export function wantedFromString(str) {
+	const words = String(str || '').split(/\s+/);
 	let dots = false, arrows = false;
 	for (const w of words) {
 		if (w === 'nav' || w === 'nav(blw)' || w === 'nav(abv)') dots = arrows = true;
@@ -65,13 +65,14 @@ export function wanted(scroller) {
 	if (words.includes('mrk(non)')) dots = false;
 	return { dots, arrows };
 }
+export const wanted = (scroller) => wantedFromString(mediaStr(scroller));
 
 // whole-token test — `loop` must never match marquee(loop) (mirrors hasToken in
 // ui/card/shared.js; kept local so this module stays dependency-free)
 export const hasToken = (str, name) => new RegExp(`(^|\\s)${name}(\\(|\\s|$)`).test(str);
 
 // real slides: direct children minus furniture, loop clones and our controls
-const slidesOf = (el) => [...el.children].filter(c => !NOT_SLIDE.test(c.tagName) && !c.hasAttribute('data-clone'));
+export const slidesOf = (el) => [...el.children].filter(c => !NOT_SLIDE.test(c.tagName) && !c.hasAttribute('data-clone'));
 
 // one shared observer keeps every controls box sized to its scrollport:
 // --_h = clientHeight (the [data-layer] spans the nav(blw)/nav(abv) band
@@ -105,9 +106,12 @@ function button(kind, label) {
 	return b;
 }
 
-export function initControls(scroller) {
+export function initControls(scroller, options = {}) {
 	if (scroller.dataset.uiCarouselPolyfill) return;                 // idempotent
-	const { dots, arrows } = wanted(scroller);
+	/* options.wanted overrides the token-derived set — the lightbox passes the
+	   UNION of the closed and media-open vocabularies so controls the open state
+	   needs exist from the start (per-state visibility is CSS off data-media) */
+	const { dots, arrows } = options.wanted || wanted(scroller);
 	if (!dots && !arrows) return;
 
 	const m = mediaStr(scroller);
@@ -148,6 +152,13 @@ export function initControls(scroller) {
 			for (const prop of ['--ui-carousel-thumb-url', '--ui-carousel-thumb-ratio']) {
 				const v = slide.style.getPropertyValue(prop);
 				if (v) dot.style.setProperty(prop, v);
+			}
+			// no authored thumb? derive it from the slide's image, so mrk(tmb) (and
+			// the lightbox's media-open swap into it) works with zero extra markup
+			if (!dot.style.getPropertyValue('--ui-carousel-thumb-url')) {
+				const img = slide.matches?.('img') ? slide : slide.querySelector?.('img');
+				const src = img?.currentSrc || img?.src;
+				if (src) dot.style.setProperty('--ui-carousel-thumb-url', `url("${src.replace(/["\\]/g, (m) => '\\' + m)}")`);
 			}
 			dot.addEventListener('click', () => scrollToPos(i + lead()));
 			return dot;

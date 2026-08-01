@@ -26,7 +26,7 @@
         "name": "Attributes",
         "description": "Token strings written verbatim to the element's attributes",
         "collapse": false,
-        "fields": ["variant", "theme", "media", "content", "text", "styles"]
+        "fields": ["variant", "theme", "media", "media-open", "content", "text", "styles"]
       },
       {
         "area": "main",
@@ -96,6 +96,12 @@
       "type": "string",
       "title": "media=",
       "description": "Media frame tokens: asr(16/9 …), obf(), obp(), hov(), scm, clip … Carousel controls live here too — the ONLY form (no nav=/arrow=/dot= attributes): bare nav (markers + arrows), nav(mrk|arw|blw|abv), arw(arr|sm|lg|xl|sqr|sft|hid|lgt|drk|bare|set|ts…be|blw|abv), mrk(sm|md|lg|xl|pll|hyb|tmb|non|lgt|drk|ts…be|blw|abv), axis(y), auto, auto(4s), loop, stagger. Furniture styling also lives here, as single-value tokens (the CSS matches them by substring, so combine one value per token, not chip(ts red)): position chip|sticker|save|play|beacon(ts…be); hue chip|sticker|save|beacon(red|orange|green|blue|accent|white|gray|slate|black); sticker shape sticker(sh:burst|sh:spark|sh:sunburst|sh:heart|sh:blob|text|spl|spr) — clip silhouettes use the sh: prefix, custom ones too (sticker(sh:myshape) + inline --ui-sticker-clip-path); chip variant chip(lgt|out) and size chip(sm|lg|xl|2xl); save size save(sm|lg|xl) and disc save(crc|sqr|rnd|non); play size play(sm|lg|xl); beacon face beacon(dts|pll|sld|tck), animation beacon(bln|pls|brt|non), size beacon(xs|sm|md|lg|xl|2xl) and corner beacon(rnd|sqr). The renderer emits the furniture elements from the card's content.furniture object and appends each item's optional style= override after these tokens (a same-axis override replaces the preset's token).",
+      "localized": false
+    },
+    "media-open": {
+      "type": "string",
+      "title": "media-open=",
+      "description": "Lightbox open-state control vocabulary — ordinary media= carousel-control spellings (nav/mrk/arw/tmb/axis tokens only) that REPLACE the media= control words while the popover lightbox is open, e.g. \"axis(y) nav(mrk) mrk(tmb) mrk(rail)\" for the vertical thumbnail rail. Swapped in by ui/lightbox/command.js and restored on close; without JS the open lightbox keeps the closed nav style. Only emitted when the preset's card carries lightbox furniture.",
       "localized": false
     },
     "content": {
