@@ -1,4 +1,4 @@
-# `/polyfill/carousel.js` — carousel controls where the native pseudos are missing
+# `/polyfill/` — DOM carousel controls where the native pseudos can't go
 
 ```html
 <script type="module">
@@ -19,11 +19,26 @@ This module puts the controls back as **real elements**. It injects exactly one
 tokens** the native path uses — those setters live *outside* the `@supports` gate,
 so a themed demo looks identical either way.
 
-It imports nothing, brings its own stylesheet along (one `<link>`, injected once),
-and is idempotent: `scan()` skips any scroller already carrying
-`[data-ui-carousel-polyfill]`. Load it behind the gate above, or force it in
-development with `?polyfill`. If the native features *are* available it neutralises
-the native pseudos, so a page never shows two sets of controls.
+The machinery is split in two since the lightbox round:
+
+- **`carousel-controls.js`** — the CORE: `initControls(scroller)`, `scan()`, the
+  token readers (`mediaStr`/`wanted`/`hasToken`) and the companion-stylesheet
+  loader. Imports nothing from `/ui/card/`, idempotent via
+  `[data-ui-carousel-polyfill]`.
+- **`carousel.js`** — the Safari fallback ENTRY (the file pages load, unchanged
+  contract): imports the core, auto-`scan()`s on idle, and — if the native
+  features *are* available (force-loaded in development with `?polyfill`) —
+  neutralises the native pseudos globally so a page never shows two sets of
+  controls.
+
+**The second consumer is the lightbox.** `ui/lightbox/command.js` calls
+`initControls()` on `ui-media[popover]` frames in **every** browser: the native
+`::scroll-marker-group`/`::scroll-button()` boxes do not follow an element into
+the **top layer** (verified in Chromium — they keep painting in the document
+layer, behind `::backdrop`), so DOM controls are the only carousel controls a
+fullscreen popover lightbox can have. `ui/card/media.lightbox.css` suppresses
+the native pseudos on those `[data-ui-carousel-polyfill]` popover frames only —
+scoped, unlike this entry's global kill.
 
 ---
 
@@ -40,7 +55,7 @@ and a self arm — because `media=` may sit on the `<ui-media>` or on its
 ui-media:where([media*="mrk(bc)"]) > …                       { … }
 ```
 
-The polyfill does not have to. `mediaStr()` in `carousel.js` has **already applied
+The polyfill does not have to. `mediaStr()` in `carousel-controls.js` has **already applied
 the DSL's scoping rule** in JS — own attribute, else the nearest
 `ui-card`/`ui-reveal`, never a further ancestor — so `init()` stamps the *resolved*
 string onto the injected element:
@@ -88,7 +103,8 @@ polyfill catching up.
 `NAV` is `:is([media~="nav"], [media*="nav("])` — whole-token, mirroring the core, so
 a future token merely *containing* "nav" cannot fire it. `scan()` then skips any
 scroller nested inside another `<ui-media>`, matching the native path, which disables
-controls on nested frames too.
+controls on nested frames too. (`initControls()` itself takes any single scroller —
+the lightbox path calls it directly on popover frames without going through `SEL`.)
 
 ## Slide pitch — why it measures instead of using `clientWidth`
 
@@ -149,11 +165,12 @@ no unsized first paint.
   additionally waits (bounded, 5 idle retries) for clones to exist before initialising
   a `loop` carousel, so the controls end up as the *first* child and the sticky pin
   sits at the scroll start.
-- **`NOT_SLIDE` is a local copy, by design.** The polyfill imports nothing, so it can
+- **`NOT_SLIDE` is a local copy, by design.** The core imports nothing, so it can
   be loaded standalone behind a `@supports` gate. Drift is not a risk because it is a
-  **build error**: `ui/card/tokens.lint.js` parses this literal and requires it to
-  equal `ui/card/shared.js`'s exactly (and the `:not()` list in `media.carousel.css`
-  to be a subset). If you change one, change both.
+  **build error**: `ui/card/tokens.lint.js` parses the literal in
+  `carousel-controls.js` and requires it to equal `ui/card/shared.js`'s exactly (and
+  the `:not()` list in `media.carousel.css` to be a subset). If you change one,
+  change both.
 - **`LAY-OUT` is in that list**, so a collage carousel — `<lay-out>` children of a
   `<ui-media nav>` — has zero JS slides and therefore gets **no polyfill dots**. It
   keeps native swipe + snap. That is the documented CSS-only boundary, not a gap to
@@ -163,7 +180,8 @@ no unsized first paint.
 
 | File | Role |
 |---|---|
-| `carousel.js` | detection, injection, slide math, scroll/resize sync; exports `scan()` (also `globalThis.uiMediaPolyfill.scan`) |
+| `carousel-controls.js` | the core — injection, slide math, scroll/resize sync; exports `initControls(scroller)`, `scan()`, `wanted()`, `mediaStr()`, `hasToken()` |
+| `carousel.js` | the Safari fallback entry — imports the core, idle auto-`scan()`, global native-pseudo kill when force-loaded; exports `scan()` (also `globalThis.uiMediaPolyfill.scan`) |
 | `carousel.css` | real-element port of the native `@supports` block; unlayered; `[data-media]` token surface |
 
 Related: [`ui/base/polyfills/readme.md`](../ui/base/polyfills/readme.md) (typed `attr()` —
