@@ -480,18 +480,16 @@ Open items carried forward: a `pop` reveal inside a `lay-out-group` is trapped b
 - **F-40.** `buildFurniture` renders the marquee band (`{text, style}`, manifest-validated, band axis joins the same-axis merge table); `card.schema.json` declares the matching furniture entry.
 - **Layout quick wins.** F-35 flat-config rename (`srcsetConfig`), F-36 demo repair + stale `.tmp` plan removal, F-37 generated container CSS layered into `@layer layout.base` with dist rebuilt. Two follow-ups surfaced and were then fixed (both verified against main, where `xs` still had a `min` and `index.js` was equally absent — the entry was always intended, never written): the root `layout/index.js` now exists (Node-safe srcset/map API + browser-only `registerLayOut()`, since the component's `extends HTMLElement` cannot be statically re-exported into Node), and `build:maps` keeps min-less base breakpoints via `srcsetMin` in the config (`xs: 240` regenerates byte-identically; the CSS builder ignores the field).
 
-# TODO — manual review (2026-07-27)
+# TODO — status ledger (2026-07-27, kept for history)
 
-Everything actionable above is implemented and machine-verified (tokens lint, 104-instance SSR snapshot, Playwright demo checks). What remains is eyeball review and the consciously-deferred items:
+Everything actionable above is implemented and machine-verified (tokens lint,
+104-instance SSR snapshot, Playwright demo checks).
 
-**Test these pages** (automated checks pass; taste calls are yours):
-
-- [ ] `ui/card/index.html` + `ui/reveal/index.html` — card + reveal system; **`bdr` on `<ui-reveal>` now paints on `> details`** (rounded surface, not the square host box)
-- [ ] `layout/dist/section.html` — **group headers now ride the responsive `scl()` ladder** (`hl(2xl)` etc. step with the `md:` container tier, same as inside cards); one-way bare `subgrid` demo at the bottom
-- [ ] `ui/card/media.carousel.html` + `media.furniture.html` — carousel incl. new `mrk(sbr)`/`mrk(lbl)`, marquee (only `marquee(rpt)` now — `marquee(loop)` is removed, no alias)
-- [ ] `layout/index.html` — repaired demo (real layout ids, `animate=` attributes)
-- [ ] `ui/card/render.html` — SSR renderer incl. the new `furniture.marquee: {text, style}` (schema entry in `card.schema.json`)
-- [ ] `node ui/card/build.js` — regenerates tokens.data.js/tokens.md **and the marker-injected doc tables**; lint runs inside
+> **The 2026-07-27 "test these pages" eyeball checklist has been dropped.** Those
+> pages have since been rewritten (collages, the word-size spacing ladder, the
+> reverted tint work), so the list described a tree that no longer exists and was
+> decaying rather than informing. Verify the demo pages you actually touch — the
+> browser gate in `docs/session-start.md` says how.
 
 **Deferred / open (decide when):**
 
@@ -500,9 +498,14 @@ Everything actionable above is implemented and machine-verified (tokens lint, 10
   > **Superseded in part — `tnt` and `hov(tint)` were reverted.** The Chromium finding above ("a `::before` resolves its style query against its originating element") does not hold in WebKit *at first paint*: the query matched nothing on load, so a tinted frame rendered untinted and the tint appeared on first hover — the inverse of `hov(tint)`, which stayed put. Declaring the flag on `<ui-media>` rather than the host does not help; only dropping the query does. Both are back on two arms in `media.tint.css` (which carries the guardrail comment) and **must not be re-migrated**. Still migrated: `marquee(top|bot)`, `shp()`'s clip, the `hov()` family in `media.hover.css`. This is the technique's **second** boundary, alongside "a container cannot restyle itself": a subject reached only through a pseudo-element is not reliably reachable either.
 - [x] **v5 batch, final sweep — DONE.** `rds(none)`, `scm(sheer)`, `scm(solid)`, `ply()` and reveal's `scl()`/`lg:scl()` are **removed** (manifest entries, every CSS selector arm, and — for `ply()` — the whole `STEM_ALIAS`/`normToken()` normalization path in `render.js`, which had no other consumer; `RVL_TOKEN`'s `scl: 'grw'` preset-input arm went with it, `scale: 'grw'` stays). Migration: `rds(none)`→`rds(non)` (all three attributes), `scm(sheer)`/`scm(solid)`→`scm(shr)`/`scm(sld)`, `ply(<size>)`→`play(<size>)`, `scl`/`scl(<corner>)`/`lg:scl`/`lg:scl(<corner>)`→the `grw` equivalents. Demo markup, the two `scm` demo presets and the `media-22`/`media-23` demo labels were migrated (the preset lint caught them). **No live alias remains anywhere in the system** — the generated alias tables in `media.md` and `reveal/readme.md` are empty.
 - [x] **F-38** `[L]` — card `sub` variant so subgrid reaches card parts without the demo-local `display: contents` hack. **Done:** `ui/card/ui-card.css` (arrangement section) implements a two-hop flag relay — hop 1's subject is the card, so `@container style(--_subgrid: on)` resolves against the `<lay-out>` and writes the *inheriting* `--_sub: 1`; hop 2 reads `--_sub` on `> cq-box` / `> cq-box > ui-content` and dissolves them. The single-hop form is impossible (a style query resolves against the subject's parent, and the card has no `--_subgrid` of its own — it is `inherits: false`). `sub` names **no breakpoint**: it follows the layout's live flag, so moving `subgrid` between breakpoint attributes needs no card-side change. `<ui-media>` stays a box (it is the row-1 item); `<ui-reveal>` is explicitly unsupported. `wpp.css`'s hack is gone (`wpp.html` + `dist/section.html` use `variant="sub"`); manifest entry in `ui/card/data/tokens.json`
-- [ ] **F-32** — popup escape hatch (`lay-out:has(…) { contain: inline-size }`) still ships unlayered from the card package; consider moving into layout's own sheet
+- [ ] **F-32** — popup escape hatch (`lay-out:has(…) { contain: inline-size }`) still ships unlayered from the reveal package; consider moving into layout's own sheet
 - [ ] **Downstream:** `content/card/build-layouts-map.js` still emits the old `layoutConfig` name; `LayOut.srcsetConfig` is a published-API rename — coordinate when touching content/card
 - [ ] **Publish prep:** `layout/package.json` now has a real entry (`index.js`), but a publish dry-run (`npm pack`) hasn't been done for any package on this branch
+- [ ] **`pll`/`non` per-element axis maps** — one merge class, several element meanings (R-13 extraction, item 3 of 3; the other two were resolved in the closeout round above)
+
+> These four are the live list, restated with their current file references and the
+> decision each one is waiting on in **[`open-items.md`](./open-items.md)**. Work from
+> that file; this section is the historical record of how they got here.
 
 ---
 
