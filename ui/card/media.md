@@ -272,7 +272,7 @@ Seventeen values in five families. All compose — the animated properties share
 
 > `hov(tilt)` is **not** gone in v4 — it ships, and it is the cursor-driven member of the tilt family. `tilt-out` / `tilt-in` are its JS-free fixed-angle siblings. (What *was* removed in v4 are the old card-level hovers `hv(lift)` / `hv(shrink)` / `hv(tilt)` — the `hv()` stem itself; hover is now media-only under `hov()`.)
 
-All hover effects are guarded by `@media (hover: hover)`. Under `prefers-reduced-motion: reduce` transitions are dropped, the cursor effects pin to their resting position, and the JS handler stops updating. The four filter vars are registered with `@property` so the filter **interpolates** instead of jumping. The token can sit on the host `<ui-card>`/`<ui-reveal>` or on the `<ui-media>` itself — one folded selector serves both arms.
+All hover effects are guarded by `@media (hover: hover)`. Under `prefers-reduced-motion: reduce` transitions are dropped, the cursor effects pin to their resting position, and the JS handler stops updating. The four filter vars are registered with `@property` so the filter **interpolates** instead of jumping. The token can sit on the host `<ui-card>`/`<ui-reveal>` or on the `<ui-media>` itself — one folded selector serves both arms (`hov(tint)` is the exception: it paints on `ui-media::before` and keeps two literal arms, see *v5 support posture* below).
 
 ### Arbitrary values — the `style=` escape hatch
 
@@ -551,6 +551,50 @@ Those four are the frame-level highlights. The **full** `mrk()` vocabulary — `
 ### Controls in a band — `nav(blw)` / `nav(abv)`
 
 `nav(blw)` shows **both** controls in a reserved, non-scrolling **bottom band** beneath the frame (the band is block-end padding on the flex scroller, so the absolute controls re-anchor into it without overlaying the image); `nav(abv)` is the mirror band above. Default layout: dots centered, arrows at the band's left/right ends. Combine with `arw(set)` to pin the dots to the start and pair the arrows at the end, or `mrk(pll)` for a timer bar across the band. Size the band with `--ui-carousel-band` (default `2.75rem`); colour it with `--ui-carousel-controls-bg`. The `arw(tc)/arw(cc)/arw(bc)` placement atoms are for the **overlay** variant — the bands own their own vertical placement.
+
+> **Band slides are sized by stretch, not by `block-size: 100%`.** The generic slide rule uses a percentage, and WebKit resolves a flex item's percentage block size against the scroller's **padding** box — which under `blw`/`abv` is the image box *plus* the reserved band, so every slide paints over the band and the controls land on top of the image. Band slides therefore get `align-self: stretch; block-size: auto` instead, which resolves against the content box in both engines (`media.carousel.css`). `calc(100% - band)` is **not** a fix: Chromium's percentage was already correct and would subtract the band twice.
+
+---
+
+## Collage — a `<lay-out>` grid inside the frame
+
+A frame does not have to hold one image. Give `<ui-media>` a `<lay-out>` child and it holds a **grid of nested frames** — the collage:
+
+```html
+<ui-media>
+  <lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
+    <ui-media media="asr(1/1) hov(zoom)"><img src="…/1" alt="…"></ui-media>
+    <ui-media media="asr(1/1) hov(zoom)"><img src="…/2" alt="…"></ui-media>
+    <ui-media media="asr(1/1) hov(zoom)"><img src="…/3" alt="…"></ui-media>
+  </lay-out>
+</ui-media>
+```
+
+**There are no collage tokens.** The vocabulary is entirely borrowed: `<lay-out>`'s own [breakpoint attributes](../../layout/readme.md#breakpoint-spacing-tokens) (`xs=` / `md=` / `lg=`) for the grid and its gutters — the word-size spacing steps (`cg(xs)`, `rg(2xs)`) exist precisely for gutters this tight — and ordinary `media=` on each tile. Nothing new was added to the DSL, and nothing about the outer card changes.
+
+Two mechanisms make it work, both already in place:
+
+- **The frame drops its height floor.** `:where(ui-media:has(> lay-out)) { min-block-size: 0 }` (`media.css`) — the grid's own cells own their heights, so the frame must size to content. Without it the default `--ui-media-min` (12.5rem) paints as a dead band under any collage shorter than that. This is the same escape `asr()` takes.
+- **The nested layout does not inherit a bleed width.** `--layout-w` is registered non-inheriting, so a collage inside a card inside a `bleed` section resolves its width from the frame rather than from the viewport — see [`layout/core/base.md` § bleed](../../layout/core/base.md#--layout-w--the-width-knob-bleed-writes-and-why-it-does-not-inherit).
+
+Tiles are nested `<ui-media>`, which the `ui-media ui-media` rule pins to a plain frame — a tile is never a scroller and never paints its own scrim/controls.
+
+### Two tile regimes — pick by gutter
+
+| Gutter | Tiles | Why |
+|---|---|---|
+| Flush (`cg(0) rg(0)`) | **`asr()` tiles** | Square tiling is exact: one `asr(1/1)` at `2fr` equals two stacked `asr(1/1)` at `1fr`. |
+| Visible (`cg(xs)` and up) | **aspect-less tiles** (no `asr()`) | A spanning tile covers N rows *plus* the row-gaps between them, which a fixed-ratio image can never fill — the slack renders as a double gap under it. An aspect-less tile stretches to fill its grid area, so bottoms stay flush at any gap size. |
+
+With aspect-less tiles the row height comes from the tiles' own floor: **`--ui-media-min`** (see [Frame tokens](#frame), default `12.5rem`) is the collage's row-height knob. Set it on the tiles, or on an ancestor to tune the whole collage.
+
+### Collage carousel — CSS-only
+
+Put `nav` on the **outer** frame and each direct `<lay-out>` child becomes a slide: a swipeable, snapping, dotted collage carousel with no JavaScript. Without `nav`, a lone `<lay-out>` child is just a grid — the scroller only activates on `nav`.
+
+The slides are **CSS-only**, and that boundary is deliberate: `LAY-OUT` is on the JS `NOT_SLIDE` list, so `slidesOf()` never counts a `<lay-out>` slide. `loop`, `auto`, per-slide `<ui-play>` video control and the polyfill's dots all silently no-op on a collage carousel. Reach for `<ui-slide>` / `<div>` wrappers (with the grid *inside*) when you need those — see [carousel.md § Multiple items per slide](./carousel.md#multiple-items-per-slide--group-wrappers).
+
+Demo: [`media.collage.html`](./media.collage.html).
 
 ---
 
@@ -891,10 +935,7 @@ simply a no-op). Migration is a find-and-replace, but it is now mandatory:
 ## Notes (media.css)
 
 - **Nested `<ui-media>`** (a layered frame used as a carousel slide) is always a plain frame, never a scroller. Raw `ui-media ui-media` (specificity 0,0,2) out-specifies the carousel's descendant rules (0,0,1) in `media.carousel.css`, so the frame wins regardless of import order — no `!important`.
-- **Collage** — a frame may host a nested `<lay-out>` grid of nested frames instead of a single image (`<ui-media><lay-out lg="grid(3c)"><ui-media><img>…`). A frame hosting a lay-out drops its 12.5rem `min-block-size` floor (`ui-media:has(> lay-out)`) so it sizes to the collage, exactly like `asr()` does. Two tile regimes, pick by gutter:
-  - **Flush gutters (`cg(0) rg(0)`) → `asr()` tiles.** Square tiling is exact: one `asr(1/1)` at `2fr` equals two stacked `asr(1/1)` at `1fr`.
-  - **Visible gutters → aspect-less tiles (no `asr()`).** A spanning tile covers N rows *plus* the row-gaps between them, which a fixed-ratio image can never fill — the slack renders as a double gap under the spanning tile. An aspect-less tile instead stretches to fill its grid area, so bottoms stay flush at any gap size; row height then comes from the tiles' `--ui-media-min` floor (12.5rem default — override that property to tune collage row height).
-  - Demo: `media.collage.html`. With `nav` on the outer frame each direct `<lay-out>` child becomes a slide (a collage carousel); without it a lone `<lay-out>` child is just a grid (`LAY-OUT` is in the JS `NOT_SLIDE` list, and the scroller only activates on `nav`).
+- **Collage** — `:where(ui-media:has(> lay-out)) { min-block-size: 0 }` is what lets a frame host a nested `<lay-out>` grid instead of a single image: the grid's cells own their heights, so the frame must size to content rather than to the `--ui-media-min` floor. Full pattern (tile regimes, row-height knob, the CSS-only collage carousel): [§ Collage](#collage--a-lay-out-grid-inside-the-frame).
 - **`clip`** applies `clip-path: inset(0 round …)` because a scroll container's `border-radius` can drop its corners mid-scroll (compositing); `clip-path` clips reliably. `round()` has no superellipse, so `-sq` squircles clip as a plain round.
 - **Scrim** has three orthogonal axes — direction (9 gradients, logical `ts…be` grid matching furniture, mirrored under `:dir(rtl)`), size (`sm md lg xl`, sets the shared stop positions), and intensity (`shr lgt med drk sld` — the `sheer`/`solid` aliases were removed in v5 — sets the dark-end opacity). The directional default is set by the host `ovr()` (`ui-card.css`) to match the overlay corner; `scm(<pos>)` overrides; bare `scm` paints the default. A mid colour stop holds the dark before fading so text spanning the frame stays legible, not just at the very corner.
 
@@ -932,11 +973,13 @@ both placements, and apply their properties from a single `@container style(--_f
 block. The mechanism is the same one `<ui-reveal>` already uses for `--_rvl` and the card
 uses for `variant="sub"`.
 
-**Migrated so far:** `marquee(top|bot)` position · `shp()`'s image clip · `tnt` paint and
-`hov(tint)` fade · the whole `hov()` family.
+**Migrated so far:** `marquee(top|bot)` position · `shp()`'s image clip · the `hov()` family
+in `media.hover.css` (14 rules). (`tnt`'s paint and `hov(tint)`'s fade were migrated and then
+**reverted** — they live in `media.tint.css` and are back on two arms; see *What did NOT
+migrate* below.)
 
 **What this costs:** style queries are **Chrome 111+, Safari 18+, Firefox 128+**. On older
-Firefox these five families now no-op — the frame renders in its default/un-hovered state.
+Firefox these three families now no-op — the frame renders in its default/un-hovered state.
 Nothing breaks structurally: the image, the aspect ratio, the scrim, the furniture and every
 carousel control are unaffected, because none of those go through a style query. This is an
 accepted v5 posture decision, consistent with the project already shipping `style()` queries
@@ -960,6 +1003,24 @@ Tokens that only write custom properties (`flp()`, `obf()`, `obp()`, the `rds()`
 scale, `asr()`'s ratio, the `scm()` scrim) never needed two arms in the first place — custom
 properties already inherit — and are untouched by this change.
 
+**And one class found the hard way: a pseudo-element's style query, in WebKit.** In theory a
+`::before`/`::after` resolves its style query against its **originating** element, so
+`@container style(--_tnt: 1) { ui-media::before { … } }` should see a flag set on
+`<ui-media>` itself — and in Chromium it does. **WebKit does not evaluate it at first
+paint.** The query matched nothing on load, so a tinted frame rendered *untinted* and the
+tint only appeared on the first hover — the exact inverse of `hov(tint)`, which stayed put
+instead of fading. Declaring `--_tnt` on `<ui-media>` rather than the host does not help
+(verified); only dropping the query does.
+
+So `tnt`'s paint and `hov(tint)`'s fade were migrated in R-14 step 4 and then **reverted to
+their two-arm form**. Both keep their `--_*` flags — `media.css`'s registry still resets
+them across nested hosts, and they remain the documented hook — but no `@container style()`
+gates the paint. **Do not re-migrate them.** The guardrail comment in `media.tint.css` says
+the same thing at the code.
+
+This is the second boundary of the technique, alongside "a container cannot restyle itself":
+a subject reached only through a pseudo-element is not reliably reachable either.
+
 ---
 
 ## Internals (`media.css`, `media.hover.css`, `media.tint.css`)
@@ -982,10 +1043,13 @@ Either way the query sees it, so one combinator-free `:where([media*="tok"])` se
 replaces the two selector arms — and it is cheap, because a combinator-free selector is
 the fastest shape the engine has.
 
-**Pseudo-elements are the friendly special case.** A `::before`/`::after` resolves its
-style query against its **originating** element, so `ui-media::before` sees a flag set on
-`<ui-media>` itself. That is what makes `tnt`'s paint migratable at all — verified in
-Chromium before the migration was written.
+**Pseudo-elements looked like the friendly special case — they are not.** On paper a
+`::before`/`::after` resolves its style query against its **originating** element, so
+`ui-media::before` should see a flag set on `<ui-media>` itself; that was verified in
+Chromium and is what made `tnt`'s paint look migratable. **WebKit does not evaluate that
+query at first paint**, so the migrated form rendered untinted until the first hover, and
+`tnt` + `hov(tint)` were reverted to two arms (`media.tint.css` carries the guardrail
+comment). Treat a pseudo-element subject as **not** reachable by a style query.
 
 ### The flag registry and the nesting boundary
 

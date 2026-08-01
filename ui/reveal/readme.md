@@ -356,6 +356,21 @@ Caveats:
   Workarounds: use `exp` without `pop` inside a group band, or place the popup-capable
   cards in a `<lay-out>` that is not wrapped in a `<lay-out-group>`.
 
+- **`ovr()` stretches its front-face `<ui-media>` — on purpose, for WebKit.** Under
+  `variant*="ovr("` the frame gets `block-size: 100%; inline-size: 100%; min-block-size: 0`
+  instead of being sized *by* its own aspect ratio. WebKit does not re-run grid row sizing
+  when an aspect-ratio child's inline size changes in a **later** layout pass — and that
+  pass is routine: the page grows, a classic (non-overlay) scrollbar appears, every column
+  narrows. `<ui-media>` re-resolves its height from the new width, the `<summary>` row keeps
+  the height from the first pass, and the difference paints as a white strip under the card.
+  Measured in Safari 26.5: columns at 319.656px but rows still 433.766px — the height for
+  the scrollbar-less first pass's 325.328px columns, a 7.56px gap. Chromium re-resolves the
+  row. Stretching the frame makes the **row's** height the source of truth, so the two
+  cannot disagree; in a correct pass the row is still the frame's own aspect-ratio height,
+  so nothing changes visually. Only `ovr()` — a `col`/`col-r` face stacks media above
+  content and must **not** have the frame eat the row. (`ui-card.css` does the same for
+  `row`/`row-r`.)
+
 ---
 
 ## Browser support

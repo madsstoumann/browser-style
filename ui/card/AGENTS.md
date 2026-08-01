@@ -44,7 +44,7 @@ Everything except `<ui-media>` is an **unregistered custom element** styled pure
 
 ## The three attribute DSLs
 
-Space-separated token strings; values flow down via CSS custom properties, so a token may sit on the host or the primitive itself. **Scoping differs per DSL:** `media=` inheritance **stops at the card host** — a `<ui-media>` reads `media=` from itself or its nearest `ui-card`/`ui-reveal` only, never from other ancestors (a `media=` on a `<lay-out overflow>` drives the *layout's own* carousel and never leaks into descendant `<ui-media>`). `content=` by contrast is pure custom-property inheritance and flows down freely — it works on `lay-out` / `lay-out-group` too.
+Space-separated token strings; values flow down via CSS custom properties, so a token may sit on the host or the primitive itself. **Scoping differs per DSL:** `media=` inheritance **stops at the card host** — a `<ui-media>` reads `media=` from itself or its nearest `ui-card`/`ui-reveal` only, never from other ancestors (a `media=` on a `<lay-out overflow>` drives the *layout's own* carousel and never leaks into descendant `<ui-media>`). Note what the rule does **not** stop: the boundary is the card host, not `<ui-media>`. In a **collage** (a `<lay-out>` grid of nested `<ui-media>` tiles inside a frame, see below) an outer `media="hov(zoom)"` still reaches the tiles — the flag setters match any `[media]` element and the flags inherit; only a nested `ui-card`/`ui-reveal` resets them. Put per-tile tokens on the tiles and expect frame-level ones to cascade. `content=` by contrast is pure custom-property inheritance and flows down freely — it works on `lay-out` / `lay-out-group` too.
 
 | Attribute | On | Controls | Example tokens | Doc |
 |---|---|---|---|---|
@@ -62,7 +62,7 @@ Two tiers, driven by the **card's own rendered width**, not the viewport:
 - `md:` → `@container bs-card (inline-size >= 25rem)` (400px)
 - `lg:` → `@container bs-card (inline-size >= 44rem)` (704px)
 
-The **name is load-bearing**: an unnamed size query resolves against the subject's nearest size container, so a self-armed primitive outside a card would switch tiers off an unrelated ancestor. A standalone `<ui-content>`/`<ui-media>` opts in with `<div style="container: bs-card / inline-size">`. `<lay-out>` deliberately stays a non-container so cards keep their own query root.
+The **name is load-bearing**: an unnamed size query resolves against the subject's nearest size container, so a self-armed primitive outside a card would switch tiers off an unrelated ancestor. A standalone `<ui-content>`/`<ui-media>` opts in with `<div style="container: bs-card / inline-size">`. `<lay-out>` deliberately stays a non-container so cards keep their own query root — which is also what lets a `<lay-out>` sit *inside* a `<ui-media>` (the collage, below) without stealing the card's tiers.
 
 Prefixable: `variant=` arrangement tokens, `content=` spacing (`gap()` + the seven padding tokens `pad() pb() pi() pbs() pbe() pis() pie()`), `content=` **size** (`scl()`, `hl(<size>)`), and `media=`'s `asr()`. Not prefixed: every other `media=` token and `content=` **tone/weight**.
 
@@ -116,6 +116,8 @@ Demo include pattern (see `index.html`):
 
 Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are `repeatable` — safe for any card count. `asym()` and some `bento()`/`mosaic()` variants hide children beyond their pattern — only use when the item count matches.
 
+**The third placement: a layout *inside* a frame (collage).** Besides arranging cards, `<lay-out>` can be a direct child of `<ui-media>`, turning one frame into a grid of nested `<ui-media>` tiles. No new tokens: `<lay-out>` breakpoint attributes (incl. the word-size spacing steps `2xs`…`2xl`) plus ordinary `media=` on the tiles. Two things make it hold together — `:where(ui-media:has(> lay-out)) { min-block-size: 0 }` drops the frame's height floor so it sizes to the grid, and `--layout-w` is registered non-inheriting so a nested layout never picks up an ancestor `bleed` section's viewport width. Adding `nav` to the outer frame makes each `<lay-out>` child a slide — a **CSS-only** collage carousel, since `slidesOf()` excludes `LAY-OUT`. Full pattern: [`media.md` § Collage](media.md#collage--a-lay-out-grid-inside-the-frame); demo `media.collage.html`.
+
 **The full integration roadmap** (remaining demo migration, srcset bridge, editor-ready section-preset JSON combining a layout config with per-item card-preset refs) lives in `layout/docs/card-integration.md`. Phase 1 is done: `ui/card/index.html` and `ui/reveal/index.html` use `<lay-out>`.
 
 ## JS modules (all optional, progressive enhancement)
@@ -126,7 +128,7 @@ Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are 
 | `hover.js` | cursor-tracked `hov(track\|drift\|tilt)` — standalone, zero imports. (`ui-media.js` is **deleted**; this replaced it) |
 | `carousel.js` | loop (seamless clones), autoplay, pause-on-slide-leave, per-slide `<ui-play>` video controls |
 | `video.js` | embed facades, media-command polyfill, `vid()` player tools, solo play, opt-in tracking |
-| `shared.js` | primitives shared by carousel.js/video.js — `reflectPlay`, `bindVideo`, token readers (`mediaStr`, `hasToken`), and the single exported slide-exclusion list `NOT_SLIDE`/`slidesOf` (cross-referenced from the `:not()` list in `media.carousel.css`) |
+| `shared.js` | primitives shared by carousel.js/video.js — `reflectPlay`, `bindVideo`, token readers (`mediaStr`, `hasToken`), and the single exported slide-exclusion list `NOT_SLIDE`/`slidesOf` (cross-referenced from the `:not()` list in `media.carousel.css`, which is a **subset**: `NOT_SLIDE` also drops `LAY-OUT`, so a collage `<lay-out>` slide snaps in CSS but is invisible to `loop`/`auto`/per-slide JS) |
 | `build.js` | `node build.js` → bundled+minified `*.min.js` per entry + gzip/brotli size table |
 | `ui-media-srcset.js` | registers `<ui-media>`; host-gated Cloudflare `srcset` + loading/decoding upgrades. **Transitional** — retire once srcset is SSR'd |
 | `srcset.js` | dependency-free Cloudflare Image Resizing URL builder |

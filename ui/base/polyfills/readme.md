@@ -10,8 +10,34 @@ Load it on any page that uses a component reading author values from attributes 
 `[data-view]`. It is a **no-op** where typed `attr()` is supported, so it is safe
 to load unconditionally.
 
-`<lay-out>` has its own equivalent (`layout/polyfills/attr-fallback.js`) because it
-ships a companion stylesheet — that one is not replaced by this.
+---
+
+## There are TWO of these, and a page may need both
+
+`<lay-out>` ships its own (`layout/polyfills/attr-fallback.js`). It is **not** a
+duplicate and neither replaces the other — they cover **disjoint** attribute sets:
+
+| | `ui/base/polyfills/attr-fallback.js` | `layout/polyfills/attr-fallback.js` |
+|---|---|---|
+| Covers | component attributes — `ui-sticker fill=`, `ui-chip ink=`, `ui-avatar ring=`, `high-light fill=`, `ui-rating value=`, `mega-menu menubar-height=`, `ui-gradient-text gradient=`, `[data-view]` | `<lay-out>` attributes — exactly `bleed=`, `columns=`, `rows=`, `max-width=`, `self=`, `size=` |
+| Shape | ES module (documented `ATTR_MAP`, exports nothing) | IIFE body, still loaded as `type="module"` (it resolves its stylesheet via `import.meta.url`) |
+| Companion CSS | none | yes — injects `attr-fallback.css` |
+| Maps to | one CSS custom property **per selector** | one custom property **per attribute name** |
+
+A page that uses `<lay-out>` *and* card components — which is most demo pages, and
+every page built on the section/card integration — needs **both** tags:
+
+```html
+<script type="module" src="/layout/polyfills/attr-fallback.js"></script>
+<!-- …page… -->
+<script type="module" src="/ui/base/polyfills/attr-fallback.js"></script>
+```
+
+Both are no-ops where typed `attr()` is supported and both are safe to load
+unconditionally, so "load both" is the default answer — loading only the layout one
+leaves stickers and chips unfilled, and loading only this one leaves `bleed`/`columns`
+inert. Spacing does **not** need either: it is token-only in v4 (`p()`/`cg()`/… inside
+the breakpoint attributes) and generated as literal values, with no `attr()` involved.
 
 ---
 

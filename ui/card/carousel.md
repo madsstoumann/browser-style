@@ -152,25 +152,34 @@ a group of items. The wrapper tag is not hardcoded: use `<ui-slide>` or a plain 
 behave identically (one slide, one marker, snaps the whole group). Give the wrapper its own
 `display` and the carousel leaves the inner layout alone.
 
-> **Excluded — furniture, bands, control chrome and `<lay-out>`.** The five overlay elements
+> **Excluded — furniture, bands and control chrome.** The five overlay elements
 > (`<ui-chip>`, `<ui-beacon>`, `<ui-sticker>`, `<ui-save>`, `<ui-play>`) and the
 > `<ui-marquee>` band never become slides: they stay absolutely positioned over the frame and
 > get no marker. The CSS selector is
 > `> :not(ui-beacon, ui-chip, ui-marquee, ui-play, ui-save, ui-sticker)`; the JS list
 > `NOT_SLIDE` in `shared.js` adds `UI-CAROUSEL-CONTROLS` (generated chrome) and **`LAY-OUT`**.
 >
-> **`<lay-out>` is therefore NOT a valid slide wrapper inside `<ui-media>`.** `slidesOf()`
-> deliberately excludes it, because a `<lay-out overflow>` is a scroller in its own right —
-> counting it as a slide would make `loop` clone counts and autoplay indexing disagree with
-> the markers. Use `<ui-slide>` or a `<div>` for a group of items, and put the grid *inside*
-> that wrapper (a `<lay-out>` nested one level down is fine — it just must not be the direct
-> child of `<ui-media>`). Multi-card decks arranged **by** the layout system belong on
-> `<lay-out overflow media="…">`, which runs the same control vocabulary on its own scroller.
+> **`<lay-out>` is a CSS slide, but not a JS slide — the two lists differ here on purpose.**
+> The CSS `:not()` does *not* exclude it, so a direct `<lay-out>` child snaps and gets its own
+> `::scroll-marker` like any other slide: that is the
+> [collage carousel](./media.md#collage--a-lay-out-grid-inside-the-frame), a swipeable deck of
+> grids with dots and **no JavaScript**. `slidesOf()` does exclude it, because a
+> `<lay-out overflow>` is a scroller in its own right and counting it would make `loop` clone
+> counts and autoplay indexing disagree with the markers.
+>
+> The consequence is a real limit, not a rough edge: on a `<lay-out>`-sliced carousel the
+> JS-driven features — `loop`, `auto()`, per-slide `<ui-play>` video control, and the
+> Safari controls polyfill's dots — find zero slides and **silently no-op**. Nothing breaks;
+> nothing extra happens either. When you need any of them, use `<ui-slide>` or a `<div>` as
+> the wrapper and put the grid *inside* it. Multi-card decks arranged **by** the layout system
+> belong on `<lay-out overflow media="…">`, which runs the same control vocabulary on its own
+> scroller.
 
 **The carousel does NOT lay out items inside a slide** — that grid is yours. The wrapper is
 just the snap-child container; it keeps its own `display`, so a `.slide-cols` class (or a
-`<lay-out>` nested *inside* the wrapper, never as the wrapper itself) controls the inner
-columns.
+`<lay-out>` nested *inside* the wrapper) controls the inner columns. Use a nested `<lay-out>`
+whenever the slide needs JS features; use `<lay-out>` *as* the slide only for the CSS-only
+collage carousel above.
 
 ```html
 <!-- you own the grid (here a demo class with --cols) -->
@@ -711,5 +720,5 @@ authored directly.
 <lay-out overflow media="nav(blw) arw(bare) pages"> … </lay-out>
 ```
 
-See [`carousel.html`](./carousel.html) for live, copy-pasteable examples of every
-configuration.
+See [`media.carousel.html`](./media.carousel.html) for live, copy-pasteable examples of
+every configuration.

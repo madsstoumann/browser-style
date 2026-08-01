@@ -215,9 +215,28 @@ ui-media:where(…) > :not(ui-beacon, ui-chip, ui-marquee, ui-play, ui-save, ui-
 The two lists are **cross-referenced, not identical** — deliberately. Both exclude the
 same six *painted* elements. `NOT_SLIDE` adds two more that only the counting side cares
 about: `UI-CAROUSEL-CONTROLS` (generated control chrome — it never appears in hand-authored
-markup the CSS rule has to size) and `LAY-OUT` (a scroller's own layout wrapper, which the
-JS must not count as a slide of its own). If you add a new overlay element, add it to
+markup the CSS rule has to size) and `LAY-OUT`. If you add a new overlay element, add it to
 **both**.
+
+**`LAY-OUT` covers two different arrangements, and the asymmetry is load-bearing in both.**
+A `<lay-out>` under a `<ui-media>` is either:
+
+1. **The scroller's own layout wrapper** — `media~="pages"` puts a `<lay-out>` between the
+   frame and the real slides, which become the snap children (the grandchild arms above and
+   in `carousel.css`). The wrapper itself is not a slide; counting it would give one dot for
+   a whole page set.
+2. **A collage slide** — a `<lay-out>` grid *is* the slide, one per swipe
+   ([media.md § Collage](./media.md#collage--a-lay-out-grid-inside-the-frame)). Here the CSS
+   deliberately treats it as a slide (it snaps and gets a `::scroll-marker`), and only the JS
+   declines to count it.
+
+Case 2 is why the CSS `:not()` must **not** grow a `lay-out` entry to "match" `NOT_SLIDE` —
+that would delete the collage carousel. The price of case 2 is that the JS features which
+enumerate slides (`loop` clones, `auto()` indexing, per-slide `<ui-play>` binding, and the
+Safari controls polyfill, whose local mirror carries the same `LAY-OUT`) find nothing and
+no-op on a collage carousel. That is documented as a limit in `carousel.md`, not a bug to
+fix here: a `<lay-out overflow>` is a scroller in its own right, and letting `slidesOf()`
+return one would make clone counts and marker indices disagree.
 
 **The carousel does NOT lay out the items inside a group** (columns/gap/object-fit) — the
 wrapper keeps its own `display`, so the **layout system** (or a `.slide-cols` class with a

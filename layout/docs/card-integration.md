@@ -37,6 +37,38 @@ Worked example (live on `ui/card/index.html`, "Layout system" section):
 
 At viewport ≥ 720px, `grid(3a)` gives the first two cards half-width cells (~below 44rem → they stay `col`, stacked) and the third card the full bottom row (crosses 44rem → `lg:row lg:spl(1/1)` kicks in, media beside content). All three cards have **identical markup**.
 
+### The third placement — a layout *inside* a card's media frame
+
+The two axes above describe `<lay-out>` **around** cards. There is one supported
+placement **inside** one: a `<lay-out>` as the direct child of a `<ui-media>`, turning a
+single frame into a grid of nested `<ui-media>` tiles — the **collage**.
+
+```html
+<ui-media>
+  <lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
+    <ui-media media="asr(1/1)"><img src="…" alt=""></ui-media>
+    …
+  </lay-out>
+</ui-media>
+```
+
+It needs no new vocabulary on either side — `<lay-out>` breakpoint attributes (including
+the word-size spacing steps `2xs`…`2xl`, which is where tight collage gutters like
+`cg(xs)` come from) plus ordinary card `media=` on the tiles. Two existing properties are
+what make it safe:
+
+- `:where(ui-media:has(> lay-out)) { min-block-size: 0 }` (`media.css`) drops the frame's
+  12.5rem height floor so it sizes to the grid.
+- `--layout-w` is registered **non-inheriting** (`core/base.css`), so a collage inside a
+  card inside a `bleed` section does not inherit the section's `100dvi` width.
+
+Adding `nav` to the outer frame makes each `<lay-out>` child a slide — a swipeable,
+dotted **CSS-only** collage carousel. `slidesOf()` excludes `LAY-OUT`, so the JS features
+(`loop`, `auto()`, per-slide `<ui-play>`, the Safari controls polyfill) no-op there.
+
+Full pattern: [`ui/card/media.md` § Collage](../../ui/card/media.md#collage--a-lay-out-grid-inside-the-frame);
+demo `ui/card/media.collage.html`.
+
 ### Why it doesn't collide
 
 - `lay-out` has `contain: layout inline-size` but **no `container-type`** — it never becomes a query container, so `cq-box`/`summary` still resolve to their `ui-card`/`ui-reveal` ancestor.

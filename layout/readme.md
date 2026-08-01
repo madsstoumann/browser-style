@@ -86,6 +86,15 @@ rebuild. Prefer a build-time default instead? Set `layoutContainer.maxWidth` /
 > browsers the container styles simply don't apply — content still renders, but
 > `<body>` keeps its own width and `bleed` won't break out.
 
+Those two are the only *project-level* knobs. `[bleed]` also writes a third,
+per-element one — `--layout-w`, the width the base rule composes
+(`width: var(--layout-w, 100%)`). It is registered **non-inheriting**
+(`@property --layout-w { syntax: "*"; inherits: false }`) so a bleed section's
+viewport-based width applies to that section and never leaks into a `<lay-out>`
+nested inside it — the prerequisite for grids nested in cards (see
+[`core/base.md` § bleed](core/base.md#--layout-w--the-width-knob-bleed-writes-and-why-it-does-not-inherit)).
+Don't set it on `:root`.
+
 ---
 
 ## Space between sections — `data-layout-root` + `data-page-gap`
@@ -337,7 +346,26 @@ styled by `ui/base/carousel.css` (load `@browser.style/base` alongside `layout.c
 Spacing is **token-only** — the same card-style tokens embedded alongside layout
 tokens in the breakpoint attributes. There are **no** bare `pad-inline` / `pad-top` /
 `col-gap` etc. attributes; every spacing value lives inside a breakpoint attribute.
-Tokens take a multiplier applied to `--layout-space-unit` (default steps `0`–`4`).
+Tokens take a multiplier applied to `--layout-space-unit` (default `1rem`).
+
+**Two spellings of the same ladder.** Every spacing token accepts either a **numeric
+step** or a **word size**, and they are one vocabulary, not two — each word is just a
+named multiplier:
+
+| Argument | Multiplier | Argument | Multiplier |
+|---|---|---|---|
+| `0` `1` `2` `3` `4` | itself | `md` | 1 |
+| `2xs` | 0.125 | `lg` | 1.5 |
+| `xs` | 0.25 | `xl` | 2 |
+| `sm` | 0.5 | `2xl` | 3 |
+
+So `cg(sm)` is `0.5rem` and `cg(1)` is `1rem` at the default unit. The word sizes exist
+because the integer ladder starts too coarse for gutters — `cg(xs)` (0.25) and `cg(2xs)`
+(0.125) are the collage/tile gaps the numbers can't express, and `md`/`lg`/`xl` read
+better than `1`/`1.5`/`2` alongside the rest of the token DSL. Both spellings are
+generated for every token listed below, so they mix freely inside one attribute
+(`xs="cg(xs) rg(xs) p(2)"`). The full list is `steps` in
+[`layout.config.json`](#spacing-configuration).
 
 | Token | Property | Default |
 |-------|----------|---------|
@@ -361,6 +389,13 @@ Tokens take a multiplier applied to `--layout-space-unit` (default steps `0`–`
   <div>Item 2</div>
   <div>Item 3</div>
   <div>Item 4</div>
+</lay-out>
+
+<!-- Word sizes for the sub-1rem end of the ladder (tight collage gutters) -->
+<lay-out xs="cg(xs) rg(xs) p(xs)" md="columns(3)">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
 </lay-out>
 ```
 
@@ -428,7 +463,8 @@ separate `pace` attribute: `animate="fade-up() slow exit"` (`very-slow`, `slow`,
 
 Items stagger automatically via nth-child `animation-range` offsets (up to 6 children). In browsers supporting `sibling-index()`, stagger scales to any number of children.
 
-See [animation demos](dist/animations.html) for visual examples.
+See the [`animate`](dist/animate.html) and [`animate-self`](dist/animate-self.html)
+demos for visual examples.
 
 ---
 
@@ -584,22 +620,41 @@ small.
 
 ```json
 "spacing": {
-  "steps": [0, 1, 2, 3, 4],
+  "steps": [0, 1, 2, 3, 4,
+    {"label": "2xs", "value": 0.125},
+    {"label": "xs",  "value": 0.25},
+    {"label": "sm",  "value": 0.5},
+    {"label": "md",  "value": 1},
+    {"label": "lg",  "value": 1.5},
+    {"label": "xl",  "value": 2},
+    {"label": "2xl", "value": 3}
+  ],
   "tokens": ["p", "pi", "pb", "pbs", "pbe", "mbs", "mbe", "cg", "rg"]
 }
 ```
 
-- `steps` — the multiplier values generated for each token (× `--layout-space-unit`).
+- `steps` — the arguments generated for each token, each a multiplier of
+  `--layout-space-unit`. A **bare number** is both the argument and the multiplier
+  (`4` → `p(4)` = 4 units). An **object** `{"label", "value"}` names a multiplier, which
+  is how the word sizes (`2xs`…`2xl`) get their fractional values — `{"label": "xs",
+  "value": 0.25}` generates `p(xs)` at 0.25 units. The two forms live in one array and
+  are generated identically (`src/builder.js`, `generateSpacingCSS`); add your own by
+  appending either form.
 - `tokens` — the **default** token vocabulary emitted for every breakpoint.
 - `breakpoints` *(optional)* — an **allowlist**: generate spacing tokens for only
   these breakpoints. Omit it to generate for all.
 
+> **Cost note:** every `token × step × breakpoint` is a generated rule, so the word
+> sizes roughly triple the spacing output versus the bare `0`–`4` ladder. The shipped
+> config offsets that with the `breakpoints` allowlist below.
+
 **Limit which breakpoints get spacing tokens.** Add a `breakpoints` allowlist — e.g.
-to generate padding/margin tokens for **only `xs` and `lg`**:
+to generate padding/margin tokens for **only `xs` and `lg`** (what the shipped config
+does):
 
 ```json
 "spacing": {
-  "steps": [0, 1, 2, 3, 4],
+  "steps": [0, 1, 2, 3, 4, {"label": "xs", "value": 0.25}],
   "tokens": ["p", "pi", "pb", "pbs", "pbe", "mbs", "mbe", "cg", "rg"],
   "breakpoints": ["xs", "lg"]
 }

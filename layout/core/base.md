@@ -19,6 +19,33 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
   - `bleed` (boolean presence) — enable bleed with default value 0
   - `bleed="10"` — set bleed to 10 (used as 10%)
 
+#### `--layout-w` — the width knob bleed writes, and why it does not inherit
+
+`[bleed]` does not set `width` directly. It sets a custom property —
+`--layout-w: calc(100dvi - var(--layout-mi, 0px))` — and the base rule composes it:
+
+```css
+@property --layout-w { syntax: "*"; inherits: false; }
+
+lay-out { width: var(--layout-w, 100%); }
+```
+
+The registration is what makes it safe. `--layout-w` is **non-inheriting**, so the
+viewport-based width applies to the bleed section **and stops there**: any `<lay-out>`
+nested anywhere inside it sees the property at its guaranteed-invalid initial value, the
+`var()` falls through to `100%`, and the nested layout sizes to its own cell.
+
+Without the registration a plain custom property would inherit, and every nested
+`<lay-out>` — a collage grid inside a card slide, a group band's inner sections —
+would silently become `100dvi` wide inside a container that is nowhere near that
+wide. That is the prerequisite for the
+[card collage pattern](../../ui/card/media.md#collage--a-lay-out-grid-inside-the-frame): a `<lay-out>` grid inside a
+`<ui-media>` inside a card inside a bleed section resolves its width from the frame,
+not from the viewport.
+
+It is still a per-element knob, not a private one: set `--layout-w` inline on the
+`<lay-out>` you want to size (it applies to that element only, by design).
+
 ### Removed in v4 — spacing attributes → breakpoint tokens
 
 The bare spacing attributes `col-gap`, `row-gap`, `pad-inline`, `pad-top`,

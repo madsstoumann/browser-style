@@ -84,6 +84,21 @@ from the vector to visible on `[open]`, staggered by delay.
   plays. They own only their animated properties, so nothing else competes.
 - A host that must *collapse* its panel (accordion sets `content-visibility: hidden` at
   higher specificity) can't replay — its block-size expand is the reveal instead.
+- **The `<cq-box>` hop.** Subjects are the stagger host's **direct children** — except when
+  the host is a component whose only child is a `<cq-box>` wrapper (a nested
+  `<ui-accordion stagger>`, a card), in which case a bare `> *` would stagger the *wrapper*:
+  one subject, one delay, nothing visibly staggered. Every rule in this adapter is therefore
+  written as a pair —
+
+  ```css
+  details[open] > :is([stagger], [data-stagger]) > :not(cq-box),
+  details[open] > :is([stagger], [data-stagger]) > cq-box > * { … }
+  ```
+
+  — so the subject set hops one level down through a `cq-box` and is otherwise unchanged.
+  The `:not(cq-box)` arm is what keeps the wrapper itself out of the set. Both arms must be
+  kept in sync across the closed state, the open state **and** the `@starting-style` block;
+  editing one and forgetting another leaves subjects stuck at the from-state.
 
 ### 2. `<ui-media>` snap carousel — reveal on snap (two-way)
 

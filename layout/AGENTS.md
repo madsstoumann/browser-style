@@ -251,6 +251,15 @@ from individual attributes into the `media=` token attribute**: the `nav`, `arro
   `<lay-out-group>` headers and beyond).
 - **`stagger` remains a standalone attribute** — it's the cross-component stagger
   engine, not a carousel control.
+- **Safari has no controls without the polyfill.** Dots and arrows are
+  `::scroll-marker` / `::scroll-button()`, gated on
+  `@supports (scroll-marker-group: after)` — Chromium-only today. `<lay-out overflow>`
+  is a first-class target of `/polyfill/carousel.js`, which injects real
+  `<button>` controls and styles them from the same tokens; it matches
+  `lay-out[overflow]` directly and measures the **slide pitch** rather than assuming
+  one slide per scrollport, which is what makes an N-up gapped card row page
+  correctly. Contract and pitfalls: [`/polyfill/readme.md`](../polyfill/readme.md).
+  Without it the carousel is still a native swipeable scroller, just uncontrolled.
 
 ### Animations
 
