@@ -435,6 +435,25 @@
             }
           }
         },
+        "lightbox": {
+          "type": "object",
+          "title": "Lightbox",
+          "description": "View-gallery / fullscreen toggle overlaid on the media (<ui-lightbox>). The renderer marks the frame as a popover and points the invoker at it (built-in toggle-popover command); the open-state presentation comes from the preset's open: tokens. The boolean value true is also accepted.",
+          "properties": {
+            "label": {
+              "type": "string",
+              "title": "Aria label",
+              "localized": true,
+              "default": "View gallery"
+            },
+            "style": {
+              "type": "string",
+              "title": "Style override",
+              "localized": false,
+              "description": "Extra lightbox() tokens appended after the preset, e.g. \"white sm\" or \"non\" (hide the disc)."
+            }
+          }
+        },
         "play": {
           "type": "object",
           "title": "Play",

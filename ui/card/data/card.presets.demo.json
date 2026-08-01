@@ -317,6 +317,14 @@
       "media": "asr(4/3) nav",
       "content": "scl(lg)"
     },
+    "carousel-lightbox": {
+      "name": "Carousel Lightbox",
+      "description": "Column card, 4:3 carousel with a view-gallery lightbox toggle (bottom-start) opening as a 3-column grid",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(4/3) nav lightbox(bs) open:grid(3c)",
+      "content": "scl(lg)"
+    },
     "carousel-row": {
       "name": "Carousel Row",
       "description": "Carousel as the media half of a row card",

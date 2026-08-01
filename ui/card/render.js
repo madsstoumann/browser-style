@@ -369,6 +369,14 @@ const buildFurniture = (furniture, fields, tokens, mediaId, videoId = null) => {
 		html += `<ui-save><button type="button" command="--save"${mediaId ? ` commandfor="${esc(mediaId)}"` : ''} aria-label="${label}"${save.saved ? ' aria-pressed="true"' : ''}><ui-icon type="shape" shape="${esc(save.shape || 'heart')}" variant="outline"></ui-icon></button></ui-save>`;
 		push('save', save.style);
 	}
+	if (furniture.lightbox) {
+		/* "view gallery" invoker — the BUILT-IN toggle-popover command lifts the
+		   popover frame (buildMedia sets the attribute + id) into the top layer;
+		   presentation is the open: token family (media.lightbox.css). */
+		const lightbox = furniture.lightbox === true ? {} : furniture.lightbox;
+		html += `<ui-lightbox><button type="button" command="toggle-popover"${mediaId ? ` commandfor="${esc(mediaId)}"` : ''} aria-label="${esc(lightbox.label || 'View gallery')}"><ui-icon type="grid"></ui-icon></button></ui-lightbox>`;
+		push('lightbox', lightbox.style);
+	}
 	return html;
 };
 
@@ -418,11 +426,13 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 			itemprop: NO_IMAGE_PROP.has(type) ? null : 'image'
 		})}>`;
 	}
-	/* save needs a command target — id the frame when a save toggle is present */
-	const mediaId = (fields.furniture?.save && cardId) ? `${cardId}-media` : null;
+	/* save/lightbox need a command target — id the frame when either is present;
+	   lightbox also marks the frame as the popover the invoker toggles */
+	const mediaId = ((fields.furniture?.save || fields.furniture?.lightbox) && cardId) ? `${cardId}-media` : null;
 	const furniture = buildFurniture(fields.furniture, fields, tokens, mediaId, videoId ? null : playId);
 	const html = `<ui-media${attrs({
 		id: mediaId,
+		popover: fields.furniture?.lightbox ? true : null,
 		...(embed || {}),
 		...frameAttrs
 	})}>${frames}${furniture}</ui-media>`;
