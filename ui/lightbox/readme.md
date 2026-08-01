@@ -30,16 +30,20 @@ import '@browser.style/lightbox';          /* registers the tag (no behaviour) *
 
 ```html
 <ui-media id="gallery-1" popover media="asr(16/9) nav lightbox(bs)">
-  <img src="…" alt="…">
-  <img src="…" alt="…">
-  <img src="…" alt="…">
   <ui-lightbox>
     <button type="button" command="toggle-popover" commandfor="gallery-1" aria-label="View gallery">
       <ui-icon type="grid"></ui-icon>
     </button>
   </ui-lightbox>
+  <img src="…" alt="…">
+  <img src="…" alt="…">
+  <img src="…" alt="…">
 </ui-media>
 ```
+
+In a `nav` scroller, place `<ui-lightbox>` **before the slides** (first child):
+it is sticky-pinned to the scrollport there, and a start-corner sticky pin only
+holds from the run's start — same contract as sticky `<ui-play>`.
 
 - `command="toggle-popover"` is a **built-in** invoker command (Baseline; see
   fallback below) — the platform opens/closes the popover and manages focus.

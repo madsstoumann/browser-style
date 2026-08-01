@@ -110,9 +110,11 @@
 
 	/* ui-lightbox in ANY nav scroller: plain furniture scrolls away with the slides,
 	   and a "view all" invoker that scrolls away is useless — same sticky scrollport
-	   pin as ui-play above, keyed on nav instead of auto/loop. Six edge cells; the
-	   default bs is a start corner (end corners would need the last-child relocation
-	   carousel.js does for ui-play — deferred, prefer start corners in scrollers). */
+	   pin as ui-play above, keyed on nav instead of auto/loop. Like sticky ui-play,
+	   the element must sit BEFORE the slides (first child — render.js emits it
+	   there): a start-corner sticky pin only holds from the run's start. Six edge
+	   cells; the default bs is a start corner (end corners would need the last-child
+	   relocation carousel.js does for ui-play — deferred, prefer start corners). */
 	:where(ui-card, ui-reveal):where([media*="nav"]) ui-media:not(ui-media ui-media) > ui-lightbox,
 	ui-media:where([media*="nav"]) > ui-lightbox {
 		align-content: var(--_lb-block, end);

@@ -369,15 +369,19 @@ const buildFurniture = (furniture, fields, tokens, mediaId, videoId = null) => {
 		html += `<ui-save><button type="button" command="--save"${mediaId ? ` commandfor="${esc(mediaId)}"` : ''} aria-label="${label}"${save.saved ? ' aria-pressed="true"' : ''}><ui-icon type="shape" shape="${esc(save.shape || 'heart')}" variant="outline"></ui-icon></button></ui-save>`;
 		push('save', save.style);
 	}
-	if (furniture.lightbox) {
-		/* "view gallery" invoker — the BUILT-IN toggle-popover command lifts the
-		   popover frame (buildMedia sets the attribute + id) into the top layer;
-		   presentation is the open: token family (media.lightbox.css). */
-		const lightbox = furniture.lightbox === true ? {} : furniture.lightbox;
-		html += `<ui-lightbox><button type="button" command="toggle-popover"${mediaId ? ` commandfor="${esc(mediaId)}"` : ''} aria-label="${esc(lightbox.label || 'View gallery')}"><ui-icon type="grid"></ui-icon></button></ui-lightbox>`;
-		push('lightbox', lightbox.style);
-	}
 	return html;
+};
+
+/* <ui-lightbox> is emitted SEPARATELY and placed BEFORE the slides: in a nav
+   scroller it is sticky-pinned to the scrollport (media.carousel.css), and a
+   sticky start-corner pin only holds from first-child position — the same
+   contract as the hand-authored sticky <ui-play> (end corners are relocated by
+   carousel.js for play; for lightbox they are documented as deferred). */
+const buildLightbox = (furniture, tokens, mediaId) => {
+	if (!furniture?.lightbox) return '';
+	const lightbox = furniture.lightbox === true ? {} : furniture.lightbox;
+	for (const token of styleTokens('lightbox', lightbox.style)) tokens.media.push(token);
+	return `<ui-lightbox><button type="button" command="toggle-popover"${mediaId ? ` commandfor="${esc(mediaId)}"` : ''} aria-label="${esc(lightbox.label || 'View gallery')}"><ui-icon type="grid"></ui-icon></button></ui-lightbox>`;
 };
 
 /**
@@ -429,13 +433,14 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 	/* save/lightbox need a command target — id the frame when either is present;
 	   lightbox also marks the frame as the popover the invoker toggles */
 	const mediaId = ((fields.furniture?.save || fields.furniture?.lightbox) && cardId) ? `${cardId}-media` : null;
+	const lightbox = buildLightbox(fields.furniture, tokens, mediaId);
 	const furniture = buildFurniture(fields.furniture, fields, tokens, mediaId, videoId ? null : playId);
 	const html = `<ui-media${attrs({
 		id: mediaId,
 		popover: fields.furniture?.lightbox ? true : null,
 		...(embed || {}),
 		...frameAttrs
-	})}>${frames}${furniture}</ui-media>`;
+	})}>${lightbox}${frames}${furniture}</ui-media>`;
 	return { html, extras };
 };
 

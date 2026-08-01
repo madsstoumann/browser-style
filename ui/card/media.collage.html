@@ -18,7 +18,7 @@
 <body>
 	<h1>UI: Media — Collage</h1>
 	<p>A product card whose <code>&lt;ui-media&gt;</code> holds a <em>collage</em> instead of a single image: a nested <code>&lt;lay-out lg="grid(3c)"&gt;</code> with one nested <code>&lt;ui-media&gt;</code> frame per shot (a nested frame is always a plain frame — never a scroller, never absolutely-positioned into the outer box). With flush gaps (<code>cg(0) rg(0)</code>) and square frames the pattern tiles exactly: one <code>asr(1/1)</code> at <code>2fr</code> equals two stacked <code>asr(1/1)</code> at <code>1fr</code>. Each frame carries <code>hov(zoom)</code> for a per-tile hover zoom. Chip and sticker ride the <em>outer</em> frame's furniture grid: chip defaults to top-start, sticker to top-end. Price and buy-button are the stock <code>price</code> / <code>actions</code> content parts. No custom CSS on this page.</p>
-	<p>The collage is viewport-driven (<code>lay-out</code> breakpoints): <code>grid(3c)</code> from 720px, a <code>columns(3)</code> strip from 540–719px, stacked below. See the other <a href="media.html">&lt;ui-media&gt;</a> demo pages.</p>
+	<p>The collage is viewport-driven (<code>lay-out</code> breakpoints): <code>grid(3c)</code> from 720px, a <code>columns(3)</code> strip from 540–719px, stacked below. See the other <a href="media.html">&lt;ui-media&gt;</a> demo pages — and <a href="media.lightbox.html">the lightbox page</a> for opening a collage fullscreen via a <code>&lt;ui-lightbox&gt;</code> popover toggle.</p>
 
 	<!-- ============================================================
 	     The pattern — one product card
