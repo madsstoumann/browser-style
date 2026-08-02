@@ -99,7 +99,7 @@ function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 	<section>
 		<h3>${iconSvg}${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${layoutId}</h3>
 		${description ? `<small>${description}</small>` : ''}
-		<code>${codeExample}</code>
+		<p><code>${codeExample}</code></p>
 		<lay-out${breakpointAttrs}${srcsetsAttr}${overflowAttr}>`
 
 			// Aspect ratios for lanes demo
@@ -160,146 +160,7 @@ function generateOverflowHTML(columnsData, iconsDir) {
 	<h1>${title}</h1>
 	<p>These layouts demonstrate the <strong>overflow</strong> attribute with column layouts.<br>
 		The <strong>overflow="preview"</strong> shows a partial preview of the next item.
-		Each carousel below pairs <code>stagger</code> (per-card reveal as you swipe) with a
-		<strong>wilder</strong> <code>animate-self="…() trigger-both"</code> container entry
-		(3D flips + clip-path reveals) — <code>trigger-both</code> replays it every time you
-		scroll away and back. The <strong>Pages</strong> demo at the end is <code>stagger</code>-only.
-		<em>(Big-translate effects like <code>bounce-in-up</code> can't drive an
-		<code>animate-self</code> container entry — the element translates out of its own
-		scroll-trigger's view range and deadlocks — so the wild set here is transform-in-place:
-		rotate / clip.)</em></p>
-
-	<div style="height: 80vh; display: grid; place-items: center;">
-		<p style="opacity: 0.5;">↓ Scroll down to see the carousels animate in ↓</p>
-	</div>`
-
-	// Carousel controls — shared styles from ui/base/carousel.css, loaded via the
-	// linked @browser.style/base (ui/base/index.css); opt-in via media= control tokens.
-	// (base also provides the animation @keyframes and stagger.css used below.)
-	html += `
-	<section>
-		<h3>Carousel controls — <code>media="nav"</code></h3>
-		<small>Shared carousel controls from <code>ui/base/carousel.css</code>: markers + arrows via the <code>media="nav"</code> token</small>
-		<code>&lt;lay-out overflow media="nav" stagger animate-self="flip-up() trigger-both"&gt;</code>
-		<lay-out overflow media="nav" stagger animate-self="flip-up() trigger-both">
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card repeat></item-card>
-			<item-card repeat></item-card>
-			<item-card repeat></item-card>
-		</lay-out>
-	</section>
-	<section>
-		<h3>Band below — <code>nav(blw)</code></h3>
-		<small>Controls in a reserved band below the items — bare arrows</small>
-		<code>&lt;lay-out overflow media="nav(blw) arw(bare)" stagger animate-self="flip-left() trigger-both"&gt;</code>
-		<lay-out overflow media="nav(blw) arw(bare)" stagger animate-self="flip-left() trigger-both">
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card repeat></item-card>
-			<item-card repeat></item-card>
-		</lay-out>
-	</section>
-	<section>
-		<h3>Band above — <code>nav(abv)</code> + <code>arw(set)</code></h3>
-		<small>Controls in a band above the items, arrow pair clustered at the inline-end</small>
-		<code>&lt;lay-out overflow media="nav(abv) arw(set)" stagger animate-self="flip-diagonal() trigger-both"&gt;</code>
-		<lay-out overflow media="nav(abv) arw(set)" stagger animate-self="flip-diagonal() trigger-both">
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card repeat></item-card>
-			<item-card repeat></item-card>
-		</lay-out>
-	</section>
-	<section>
-		<h3>Clustered arrows on media — <code>arw(set) arw(be)</code></h3>
-		<small>Arrow pair as one cluster in the bottom-end corner, dots bottom-center</small>
-		<code>&lt;lay-out overflow media="nav arw(set) arw(be)" stagger animate-self="reveal(polygon) trigger-both"&gt;</code>
-		<lay-out overflow media="nav arw(set) arw(be)" stagger animate-self="reveal(polygon) trigger-both">
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card repeat></item-card>
-			<item-card repeat></item-card>
-		</lay-out>
-	</section>
-	<section>
-		<h3>Dots below, arrows on media — <code>mrk(blw)</code></h3>
-		<small>Dots alone in a band below; arrows stay centered on the items</small>
-		<code>&lt;lay-out overflow media="nav mrk(blw)" stagger animate-self="flip-right() trigger-both"&gt;</code>
-		<lay-out overflow media="nav mrk(blw)" stagger animate-self="flip-right() trigger-both">
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card repeat></item-card>
-			<item-card repeat></item-card>
-		</lay-out>
-	</section>
-	<section>
-		<h3>Arrows below, dots on media — <code>arw(blw)</code></h3>
-		<small>Arrows alone in a band below; dots stay on the items</small>
-		<code>&lt;lay-out overflow media="nav arw(blw)" stagger animate-self="flip-down() trigger-both"&gt;</code>
-		<lay-out overflow media="nav arw(blw)" stagger animate-self="flip-down() trigger-both">
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card repeat></item-card>
-			<item-card repeat></item-card>
-		</lay-out>
-	</section>
-	<section>
-		<h3>Markers only, pill timer — <code>nav(mrk)</code> + <code>mrk(pll)</code></h3>
-		<small>No arrows; the current pill fills over <code>--ui-carousel-autoplay</code> (5s)</small>
-		<code>&lt;lay-out overflow media="nav(mrk) mrk(pll)" stagger animate-self="reveal(circle) trigger-both"&gt;</code>
-		<lay-out overflow media="nav(mrk) mrk(pll)" stagger animate-self="reveal(circle) trigger-both">
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card repeat></item-card>
-			<item-card repeat></item-card>
-		</lay-out>
-	</section>
-	<section>
-		<h3>Arrows only, dark — <code>nav(arw)</code> + <code>arw(drk)</code></h3>
-		<small>No dots; dark circles with white chevrons, auto-hidden at the dead end (<code>arw(hid)</code>)</small>
-		<code>&lt;lay-out overflow media="nav(arw) arw(drk) arw(hid)" stagger animate-self="reveal(inset) trigger-both"&gt;</code>
-		<lay-out overflow media="nav(arw) arw(drk) arw(hid)" stagger animate-self="reveal(inset) trigger-both">
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card repeat></item-card>
-			<item-card repeat></item-card>
-		</lay-out>
-	</section>
-	<section>
-		<h3>Preview + controls — <code>overflow="preview"</code> + <code>media="nav"</code></h3>
-		<small>Next-item preview composes with controls — arrows advance one item at a time; dots in a band below via <code>mrk(blw)</code>, full-arrow glyph via <code>arw(arr)</code>. (For a control-less swipe scroller, <code>overflow="stop"</code> gives the same one-item-per-fling stepping.)</small>
-		<code>&lt;lay-out md="columns(2)" overflow="preview" media="nav mrk(blw) arw(arr)"&gt;</code>
-		<lay-out md="columns(2)" overflow="preview" media="nav mrk(blw) arw(arr)">
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card repeat></item-card>
-			<item-card repeat></item-card>
-			<item-card repeat></item-card>
-		</lay-out>
-	</section>
-	<section>
-		<h3>Pages + stagger — <code>media="pages"</code> + <code>stagger</code></h3>
-		<small>Snap + dot per <strong>page</strong> of N items (dot count adapts per breakpoint), dots in a band below via <code>mrk(blw)</code>. <code>stagger</code> reveals the carousel as it scrolls into view and each card as you swipe — scroll-driven, so it re-runs on scroll back (add <code>trigger</code> for a one-shot). <code>stagger="rise|fall|lft|rgt|zom|blr|fde"</code> picks the effect (bare = rise).</small>
-		<code>&lt;lay-out md="columns(2)" lg="columns(3)" overflow media="nav pages mrk(blw)" stagger&gt;</code>
-		<lay-out md="columns(2)" lg="columns(3)" overflow media="nav pages mrk(blw)" stagger>
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card repeat></item-card>
-			<item-card repeat></item-card>
-			<item-card repeat></item-card>
-		</lay-out>
-	</section>`
+		Carousel controls live on the <code>media=</code> attribute — see <a href="carousel.html">carousel.html</a>.</p>`
 
 	const overflowType = 'preview'
 
@@ -346,7 +207,7 @@ function generateOverflowHTML(columnsData, iconsDir) {
 	<section>
 		<h3>${iconSvg}${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${layoutId}</h3>
 		${description ? `<small>${description}</small>` : ''}
-		<code>${codeExample}</code>
+		<p><code>${codeExample}</code></p>
 		<lay-out${breakpointAttrs} overflow="${overflowType}">`
 
 		for (let i = 0; i < itemCount; i++) {
@@ -376,7 +237,8 @@ function generateOverflowHTML(columnsData, iconsDir) {
 		{ size: 'preview-sm', label: 'Small', desc: '60px preview width' },
 		{ size: 'preview', label: 'Medium (default)', desc: '100px preview width' },
 		{ size: 'preview-lg', label: 'Large', desc: '150px preview width' },
-		{ size: 'preview-xl', label: 'Extra Large', desc: '200px preview width' }
+		{ size: 'preview-xl', label: 'Extra Large', desc: '200px preview width' },
+		{ size: 'preview-2xl', label: '2X Large', desc: 'Container-relative — 25% of the scroller width' }
 	]
 
 	for (const { size, label, desc } of previewSizes) {
@@ -384,7 +246,7 @@ function generateOverflowHTML(columnsData, iconsDir) {
 	<section>
 		<h3>${label}</h3>
 		<small>${desc}</small>
-		<code>&lt;lay-out md="columns(1)" overflow="${size}"&gt;</code>
+		<p><code>&lt;lay-out md="columns(1)" overflow="${size}"&gt;</code></p>
 		<lay-out md="columns(1)" overflow="${size}">
 			<item-card></item-card>
 			<item-card repeat></item-card>
@@ -411,12 +273,48 @@ function generateOverflowHTML(columnsData, iconsDir) {
 	<section>
 		<h3>${label}</h3>
 		<small>${desc}</small>
-		<code>&lt;lay-out md="columns(1)" overflow="${overflow}"&gt;</code>
+		<p><code>&lt;lay-out md="columns(1)" overflow="${overflow}"&gt;</code></p>
 		<lay-out md="columns(1)" overflow="${overflow}">
 			<item-card></item-card>
 			<item-card repeat></item-card>
 			<item-card repeat></item-card>
 			<item-card repeat></item-card>
+		</lay-out>
+	</section>`
+	}
+
+	// Overflow Modifiers section
+	html += `
+
+	<h2>Overflow Modifiers</h2>
+	<p>Snap behaviour and edge treatment. <strong>center</strong> and <strong>frame</strong> only take effect alongside a <strong>preview*</strong> token — they subtract a peek from <em>each</em> side.</p>`
+
+	const modifiers = [
+		{ attrs: ' md="columns(2)" lg="columns(3)"', overflow: 'stop', base: 3, desc: '<code>scroll-snap-stop: always</code> — one item per fling, no skipping' },
+		{ attrs: ' md="columns(3)"', overflow: 'none', base: 3, desc: 'Clipped, no scrolling — overflowing items are hidden' },
+		{ attrs: ' md="columns(2)"', overflow: 'preview gaps', base: 2, desc: 'Leading and trailing gutter equal to the column gap' },
+		{ attrs: ' md="columns(1)"', overflow: 'preview-2xl center', base: 1, desc: 'Centre-snapped with a peek on each side — the 50/25/25 cinematic hero' },
+		{ attrs: ' md="columns(1)" lg="columns(2)"', overflow: 'preview-sm frame', base: 2, desc: 'Start-snapped page framed between symmetric peeks — advances one item at a time, works multi-up' }
+	]
+
+	for (const { attrs, overflow, base, desc } of modifiers) {
+		html += `
+	<section>
+		<h3><code>overflow="${overflow}"</code></h3>
+		<small>${desc}</small>
+		<p><code>&lt;lay-out${attrs} overflow="${overflow}"&gt;</code></p>
+		<lay-out${attrs} overflow="${overflow}">`
+
+		for (let i = 0; i < base; i++) {
+			html += `
+			<item-card></item-card>`
+		}
+		for (let i = 0; i < 3; i++) {
+			html += `
+			<item-card repeat></item-card>`
+		}
+
+		html += `
 		</lay-out>
 	</section>`
 	}
@@ -507,8 +405,54 @@ function generateIconsHTML(iconsDir) {
 	return html
 }
 
+/* Index groups. Each entry is [file, label, blurb]; a file listed here but not
+   produced by this run is skipped, and anything produced but NOT listed falls into
+   "Other" at the end — so a new src/pages/*.html always shows up somewhere rather
+   than silently vanishing from the index. */
+const INDEX_GROUPS = [
+	['Layouts', 'The layout tokens themselves — one demo per pattern, generated from layouts/*.json.', [
+		['columns.html', 'Columns', 'Equal-width columns, 1–6'],
+		['ratios.html', 'Ratios', '9 proportional splits — columns at uneven widths'],
+		['asymmetrical.html', 'Asymmetrical', '6 sidebar/content splits'],
+		['autofit.html', 'Autofit', 'auto(fit) and auto(fill)'],
+		['grid.html', 'Grid', '19 mixed-size grid patterns'],
+		['bento.html', 'Bento', '10 dashboard-style box layouts'],
+		['mosaic.html', 'Mosaic', '5 patterns, including hex'],
+		['lanes.html', 'Lanes', 'Masonry via display: grid-lanes'],
+		['stack.html', 'Stack', 'Overlapping layers in one cell'],
+	]],
+	['Modifiers', 'Attributes that change how a layout behaves, on top of any layout token.', [
+		['overflow.html', 'Overflow', 'Horizontal scroller — preview, snap, fade, center/frame'],
+		['carousel.html', 'Carousel', 'media= controls: dots, arrows, paging, autoplay'],
+		['spacing.html', 'Spacing', 'Breakpoint padding, margin and gap tokens'],
+		['widths.html', 'Widths', 'width= max-width tokens'],
+		['bleed.html', 'Bleed', 'Escaping the page column, full-bleed bands'],
+		['gapdeco.html', 'Gap decorations', 'Rules drawn in the grid gaps'],
+	]],
+	['Motion', 'Scroll-driven animation. The engine lives in @browser.style/base; load it alongside layout.css.', [
+		['animate.html', 'Animate', 'animate= — the children animate, staggered'],
+		['animate-self.html', 'Animate-self', 'animate-self= — the container animates'],
+		['reveal.html', 'Reveal', 'clip-path reveals on scroll entry'],
+		['reveal-stack.html', 'Reveal stack', 'stack(reveal) — sticky, layered scroll scenes'],
+	]],
+	['Extras', null, [
+		['icons.html', 'Icons', 'SVG preview glyph for every layout variant'],
+	]],
+]
+
 function generateMainIndexHTML(generatedFiles) {
 	const title = 'Layout System Demos'
+	const listed = new Set(INDEX_GROUPS.flatMap(([, , items]) => items.map(([f]) => f)))
+	const groups = INDEX_GROUPS
+		.map(([name, desc, items]) => [name, desc, items.filter(([f]) => generatedFiles.has(f))])
+		.filter(([, , items]) => items.length)
+
+	// anything built this run but not placed in a group above
+	const ungrouped = Array.from(generatedFiles)
+		.filter(f => !listed.has(f) && f !== 'index.html')
+		.sort()
+		.map(f => [f, f.replace('.html', '').replace(/^./, c => c.toUpperCase()), ''])
+	if (ungrouped.length) groups.push(['Other', 'Not yet grouped — add them to INDEX_GROUPS in src/demo.js.', ungrouped])
 
 	let html = `<!DOCTYPE html>
 <html lang="en-US" dir="ltr">
@@ -520,25 +464,46 @@ function generateMainIndexHTML(generatedFiles) {
 	<meta name="description" content="A collection of layout system demos">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<style>
+		.index { margin-block: var(--spacing-lg); }
+		.index > section { break-inside: avoid; margin-block-end: var(--spacing-lg); }
+		.index h2 { font-size: 1rem; letter-spacing: 0.04em; margin: 0 0 0.25rem; text-transform: uppercase; }
+		.index p { color: GrayText; font-size: 0.875rem; margin: 0 0 0.5rem; }
+		.index ol { margin: 0; padding-inline-start: 1.25rem; }
+		.index li { margin-block-end: 0.25rem; }
+		.index small { color: GrayText; }
+		@media (min-width: 45rem) {
+			.index { columns: 2; column-gap: var(--spacing-xl); }
+		}
+		@media (min-width: 70rem) {
+			.index { columns: 3; }
+		}
+	</style>
 </head>
 <body>
-	<h1>UI: Components</h1>
-	<h2>Layouts</h2>
+	<h1>Layout System Demos</h1>
+	<p>Demos for <code>&lt;lay-out&gt;</code>. Every page here is build output — edit
+	<code>src/pages/*.html</code> or <code>src/demo.js</code>, then run <code>npm run build:demo</code>.</p>
 
-	<ol>`
+	<div class="index">`
 
-	const sortedFiles = Array.from(generatedFiles).sort()
-
-	for (const fileName of sortedFiles) {
-		const layoutName = fileName.replace('.html', '')
-		const displayName = layoutName.charAt(0).toUpperCase() + layoutName.slice(1)
-
+	for (const [name, desc, items] of groups) {
 		html += `
-		<li><a href="${fileName}">${displayName}</a></li>`
+		<section>
+			<h2>${name}</h2>${desc ? `
+			<p>${desc}</p>` : ''}
+			<ol>`
+		for (const [file, label, blurb] of items) {
+			html += `
+				<li><a href="${file}">${label}</a>${blurb ? `<br><small>${blurb}</small>` : ''}</li>`
+		}
+		html += `
+			</ol>
+		</section>`
 	}
 
 	html += `
-	</ol>
+	</div>
 </body>
 </html>`
 

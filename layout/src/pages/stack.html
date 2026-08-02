@@ -6,79 +6,118 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="Stack Layouts — overlapping children in the same grid cell">
+	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="layout.min.css">
 	<link rel="stylesheet" href="/ui/layout/demo.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
-	<!-- <style>
-		.stack-demo { position: relative; min-height: 200px; }
-		.stack-demo > * { display: grid; place-content: center; min-height: 200px; }
-		.stack-back { background: hsl(220 60% 85%); }
-		.stack-front { background: hsl(220 60% 50% / 0.6); color: white; }
-		.stack-hero-img { background: hsl(200 40% 70%); min-height: 300px; }
-		.stack-hero-text { background: linear-gradient(to top, hsl(0 0% 0% / 0.7), transparent); color: white; align-content: end; padding: 2rem; }
-		.stack-badge { background: hsl(350 70% 55%); color: white; width: 3rem; height: 3rem; border-radius: 50%; display: grid; place-content: center; font-weight: bold; margin: 1rem; justify-self: end; align-self: start; }
-	</style> -->
+	<style>
+		/* Demo-only layer styling. stack() supplies the overlap (--layout-ga: 1 / 1); the
+		   layers still need their own size and paint to be legible on top of each other. */
+		.layer {
+			display: grid;
+			padding: 1.5rem;
+			place-content: center;
+		}
+		.back  { background: hsl(220 60% 85%); min-block-size: 13rem; }
+		.mid   { background: hsl(220 60% 62%); color: white; }
+		.front { background: hsl(220 60% 42%); color: white; }
+		/* Inset the upper layers and park the lower layers' labels in the exposed band
+		   above them — centring every layer would pile all the text on one spot and hide
+		   everything but the top label. The block-start inset is the deepest so each
+		   band clears its own label. */
+		.inset-1 { margin: 2.75rem 2rem 2rem; }
+		.inset-2 { margin: 5.5rem 4rem 4rem; }
+		.back, .mid { padding: 0.6rem 1rem; place-content: start start; }
+		.hero-img  { background: hsl(200 40% 70%); min-block-size: 18rem; }
+		.hero-text {
+			background: linear-gradient(to top, hsl(0 0% 0% / 0.75), transparent);
+			color: white;
+			place-content: end start;
+		}
+		.hero-text h3 { font-size: 1.5rem; margin: 0; }
+		.hero-text p  { margin: 0.25rem 0 0; }
+		.card-body { background: hsl(220 20% 95%); place-content: center start; }
+		.badge {
+			align-self: start;
+			background: hsl(350 70% 55%);
+			block-size: 3rem;
+			border-radius: 50%;
+			color: white;
+			display: grid;
+			font-weight: bold;
+			inline-size: 3rem;
+			justify-self: end;
+			margin: 1rem;
+			place-content: center;
+		}
+	</style>
 </head>
 <body>
 	<h1>Stack Layouts</h1>
-	<p>The <strong>stack()</strong> layout overlaps all children in the same grid cell.<br>
-		Use any custom name — <code>stack(hero)</code>, <code>stack(overlay)</code>, <code>stack(my-thing)</code> — the CSS is always the same.</p>
+	<p>The <strong>stack()</strong> layout overlaps all children in the same grid cell
+	(<code>--layout-ga: 1 / 1</code>). Use any custom name — <code>stack(hero)</code>,
+	<code>stack(overlay)</code>, <code>stack(my-thing)</code> — the selector matches on
+	<code>stack(</code>, so the CSS is always the same. Layer order follows DOM order:
+	<strong>last child on top</strong>.</p>
+	<p><em>One name is special: <code>stack(reveal)</code> additionally turns the layout into a
+	sticky full-height cage and redirects an <code>animate-self="reveal(…)"</code> onto its last
+	child — see <a href="reveal-stack.html">reveal-stack.html</a>.</em></p>
 
 	<h2>Basic Stack</h2>
 	<section>
-		<small>Two children overlapping. The second child renders on top of the first.</small>
-		<code>&lt;lay-out lg="stack(basic)"&gt;</code>
-		<lay-out lg="stack(basic)" class="stack-demo">
-			<div class="stack-back">Back layer</div>
-			<div class="stack-front">Front layer</div>
+		<small>Two children overlapping. The second renders on top of the first.</small>
+		<p><code>&lt;lay-out xs="stack(basic)"&gt;</code></p>
+		<lay-out xs="stack(basic)">
+			<div class="layer back">Back layer</div>
+			<div class="layer front inset-1">Front layer</div>
 		</lay-out>
 	</section>
 
-	<!-- <h2>Hero with Text Overlay</h2>
+	<h2>Hero with Text Overlay</h2>
 	<section>
-		<small>Image area with gradient text overlay — a common hero pattern. Stacks at <strong>sm</strong> and up.</small>
-		<code>&lt;lay-out sm="stack(hero)"&gt;</code>
-		<lay-out sm="stack(hero)">
-			<div class="stack-hero-img" style="display:grid; place-content:center;">Image placeholder</div>
-			<div class="stack-hero-text">
-				<h3 style="margin:0; font-size:1.5rem;">Hero Title</h3>
-				<p style="margin:0.25rem 0 0;">Subtitle text layered on top of the image.</p>
+		<small>Image area with a gradient text overlay — the classic hero pattern.</small>
+		<p><code>&lt;lay-out xs="stack(hero)"&gt;</code></p>
+		<lay-out xs="stack(hero)">
+			<div class="layer hero-img">Image placeholder</div>
+			<div class="layer hero-text">
+				<h3>Hero Title</h3>
+				<p>Subtitle layered on top of the image.</p>
 			</div>
 		</lay-out>
 	</section>
 
 	<h2>Card with Badge</h2>
 	<section>
-		<small>A card with a floating badge — the badge is a sibling, not absolutely positioned.</small>
-		<code>&lt;lay-out xs="stack(card)"&gt;</code>
+		<small>The badge is a sibling in the same cell — no absolute positioning needed.</small>
+		<p><code>&lt;lay-out xs="stack(card)"&gt;</code></p>
 		<lay-out xs="stack(card)">
-			<div style="background: hsl(220 20% 95%); padding: 2rem; min-height: 150px;">
-				<h3 style="margin:0;">Product Card</h3>
-				<p style="margin:0.5rem 0 0;">Card content underneath the badge.</p>
+			<div class="layer card-body">
+				<h3 style="margin: 0;">Product Card</h3>
+				<p style="margin: 0.5rem 0 0;">Card content underneath the badge.</p>
 			</div>
-			<div class="stack-badge">3</div>
-		</lay-out>
-	</section>
-
-	<h2>Breakpoint Transition</h2>
-	<section>
-		<small>Two columns at <strong>md</strong>, stacked/overlapping at <strong>lg</strong>. Resize the viewport to see the switch.</small>
-		<code>&lt;lay-out md="columns(2)" lg="stack(transition)"&gt;</code>
-		<lay-out md="columns(2)" lg="stack(transition)" class="stack-demo">
-			<div class="stack-back">Column 1 → Back layer</div>
-			<div class="stack-front">Column 2 → Front layer</div>
+			<div class="badge">3</div>
 		</lay-out>
 	</section>
 
 	<h2>Three Layers</h2>
 	<section>
-		<small>Three children stacked. Layer order follows DOM order (last child on top).</small>
-		<code>&lt;lay-out sm="stack(layers)"&gt;</code>
-		<lay-out sm="stack(layers)" class="stack-demo">
-			<div style="background: hsl(220 60% 85%); min-height: 200px; display: grid; place-content: center;">Layer 1 (bottom)</div>
-			<div style="background: hsl(220 60% 65% / 0.7); color: white; min-height: 200px; display: grid; place-content: center;">Layer 2 (middle)</div>
-			<div style="background: hsl(220 60% 45% / 0.5); color: white; min-height: 200px; display: grid; place-content: center;">Layer 3 (top)</div>
+		<small>Three children stacked — each subsequent layer paints over the previous.</small>
+		<p><code>&lt;lay-out xs="stack(layers)"&gt;</code></p>
+		<lay-out xs="stack(layers)">
+			<div class="layer back">Layer 1 (bottom)</div>
+			<div class="layer mid inset-1">Layer 2 (middle)</div>
+			<div class="layer front inset-2">Layer 3 (top)</div>
 		</lay-out>
-	</section> -->
+	</section>
+
+	<h2>Breakpoint Transition</h2>
+	<section>
+		<small>Two columns at <strong>md</strong>, overlapping at <strong>lg</strong>. Resize to see the switch.</small>
+		<p><code>&lt;lay-out md="columns(2)" lg="stack(transition)"&gt;</code></p>
+		<lay-out md="columns(2)" lg="stack(transition)">
+			<div class="layer back">Column 1 &rarr; Back layer</div>
+			<div class="layer front inset-1">Column 2 &rarr; Front layer</div>
+		</lay-out>
+	</section>
 </body>
 </html>

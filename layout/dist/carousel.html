@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Carousel Controls</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="media= carousel control tokens on <lay-out overflow>">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="layout.min.css">
+	<link rel="stylesheet" href="/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
+	<script src="../polyfills/overflow-drag.js"></script>
+	<!-- loop / auto(): the shared carousel engine from @browser.style/card. Must load
+	     BEFORE the polyfill — the polyfill waits for its [data-clone] slides. -->
+	<script type="module" src="/ui/card/carousel.js"></script>
+	<!-- Safari/Firefox: no ::scroll-marker / ::scroll-button() — inject real buttons.
+	     `?polyfill` forces it in Chromium (dev). -->
+	<script type="module">
+		if (!CSS.supports('scroll-marker-group: after') || location.search.includes('polyfill'))
+			import('/polyfill/carousel.js');
+	</script>
+</head>
+<body>
+	<h1>Carousel Controls</h1>
+	<p>A <code>&lt;lay-out overflow&gt;</code> is a snapping scroller. <strong>Controls</strong> come
+	from the <code>media=</code> token attribute — the same vocabulary <code>&lt;ui-media&gt;</code>
+	uses, styled by <code>ui/base/carousel.css</code>. Dots are <code>::scroll-marker</code> and
+	arrows <code>::scroll-button()</code>, so they are native in Chromium only; elsewhere
+	<code>/polyfill/carousel.js</code> injects real buttons styled from the same tokens.
+	<code>loop</code> and <code>auto()</code> are JavaScript progressive enhancement — everything
+	else on this page is CSS-only.</p>
+	<p>The geometry tokens (<code>preview*</code>, <code>center</code>, <code>frame</code>,
+	<code>gaps</code>, <code>stop</code>) live on the <code>overflow</code> attribute — see
+	<a href="overflow.html">overflow.html</a>.</p>
+	<p><em>Note: <code>axis(y)</code> and <code>mrk(rail)</code> are <code>&lt;ui-media&gt;</code>-only —
+	a <code>&lt;lay-out overflow&gt;</code> scroller is always inline-axis.</em></p>
+
+	<h2>Modes — <code>nav()</code></h2>
+	<p>Which controls appear, and where. Bare <code>nav</code> = dots + arrows on the media; the parenthesised forms narrow or relocate the set.</p>
+	<section>
+		<h3><code>nav</code></h3>
+		<small>Dots and arrows, both anchored on the items</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>nav(mrk)</code></h3>
+		<small>Dots only — no arrows</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>nav(arw)</code></h3>
+		<small>Arrows only — no dots</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>nav(blw)</code></h3>
+		<small>Both controls in a reserved band below the items</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(blw)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(blw)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>nav(abv)</code></h3>
+		<small>Both controls in a reserved band above the items</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(abv)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(abv)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Split bands</h2>
+	<p>Move one control family into a band and leave the other on the media.</p>
+	<section>
+		<h3><code>nav mrk(blw)</code></h3>
+		<small>Dots below; arrows stay on the items</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav mrk(blw)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav mrk(blw)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>nav arw(blw)</code></h3>
+		<small>Arrows below; dots stay on the items</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav arw(blw)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav arw(blw)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>nav mrk(abv)</code></h3>
+		<small>Dots above; arrows stay on the items</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav mrk(abv)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav mrk(abv)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>nav arw(abv)</code></h3>
+		<small>Arrows above; dots stay on the items</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav arw(abv)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav arw(abv)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Arrows — <code>arw()</code></h2>
+	<p>Glyph, size, shape, theme and placement. Placement cells: <code>ts tc te cs cc bs bc be</code> — <strong>eight</strong>, there is no <code>ce</code> (that is <code>arw(set)</code>’s own default).</p>
+	<section>
+		<h3><code>arw(arr)</code></h3>
+		<small>Full arrow glyph instead of the default chevron</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw) arw(arr)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw) arw(arr)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>arw(sm)</code></h3>
+		<small>Small buttons</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw) arw(sm)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw) arw(sm)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>arw(lg)</code></h3>
+		<small>Large buttons</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw) arw(lg)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw) arw(lg)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>arw(xl)</code></h3>
+		<small>Extra-large buttons</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw) arw(xl)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw) arw(xl)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>arw(sqr)</code></h3>
+		<small>Square buttons</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw) arw(sqr)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw) arw(sqr)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>arw(sft)</code></h3>
+		<small>Soft — rounded-rect buttons</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw) arw(sft)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw) arw(sft)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>arw(bare)</code></h3>
+		<small>No button chrome — glyph only</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw) arw(bare)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw) arw(bare)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>arw(lgt)</code></h3>
+		<small>Light theme — white button, dark glyph</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw) arw(lgt)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw) arw(lgt)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>arw(drk)</code></h3>
+		<small>Dark theme — dark button, white glyph</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw) arw(drk)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw) arw(drk)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>arw(hid)</code></h3>
+		<small>Hide an arrow at its dead end instead of disabling it</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw) arw(hid)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw) arw(hid)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>arw(rev)</code></h3>
+		<small>Reversed — glyphs point outward</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw) arw(rev)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw) arw(rev)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>arw(set)</code></h3>
+		<small>The pair clustered as one set (default cell: inline-end, centre row)</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw) arw(set)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw) arw(set)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>arw(set) arw(bs)</code></h3>
+		<small>Cluster in the bottom-start corner</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw) arw(set) arw(bs)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw) arw(set) arw(bs)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>arw(set) arw(be)</code></h3>
+		<small>Cluster in the bottom-end corner</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw) arw(set) arw(be)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw) arw(set) arw(be)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>arw(set) arw(ts)</code></h3>
+		<small>Cluster in the top-start corner</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw) arw(set) arw(ts)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw) arw(set) arw(ts)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>arw(tc)</code></h3>
+		<small>Split pair on the top row</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw) arw(tc)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw) arw(tc)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>arw(bc)</code></h3>
+		<small>Split pair on the bottom row</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(arw) arw(bc)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(arw) arw(bc)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Markers — <code>mrk()</code></h2>
+	<p>Dot size, shape, theme and placement. Placement cells: <code>ts tc te cs cc ce bs bc be</code> — all <strong>nine</strong>.</p>
+	<section>
+		<h3><code>mrk(sm)</code></h3>
+		<small>Small dots</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(sm)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(sm)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>mrk(md)</code></h3>
+		<small>Medium dots (the default size)</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(md)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(md)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>mrk(lg)</code></h3>
+		<small>Large dots</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(lg)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(lg)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>mrk(xl)</code></h3>
+		<small>Extra-large dots</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(xl)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(xl)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>mrk(pll)</code></h3>
+		<small>Pill markers — the current pill fills over the autoplay duration</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(pll) auto(4s)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(pll) auto(4s)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>mrk(hyb)</code></h3>
+		<small>Hybrid — the current marker widens to a pill, the rest stay dots</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(hyb)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(hyb)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>mrk(bar)</code></h3>
+		<small>Thin styled scrollbar instead of dots</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(bar)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(bar)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>mrk(bar) mrk(xl)</code></h3>
+		<small>Size atoms are repurposed as the bar’s span fraction</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(bar) mrk(xl)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(bar) mrk(xl)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>mrk(lbl)</code></h3>
+		<small>Text pills — each slide’s <code>aria-label</code> becomes a marker</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(lbl)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(lbl)">
+			<item-card aria-label="One"></item-card>
+			<item-card aria-label="Two"></item-card>
+			<item-card aria-label="Three"></item-card>
+			<item-card aria-label="Four"></item-card>
+			<item-card aria-label="Five"></item-card>
+			<item-card aria-label="Six"></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>mrk(non)</code></h3>
+		<small>Suppress the dots — with <code>nav(blw)</code> that leaves an arrows-only band</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(blw) mrk(non)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(blw) mrk(non)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>mrk(lgt)</code></h3>
+		<small>Light theme markers</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(lgt)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(lgt)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>mrk(drk)</code></h3>
+		<small>Dark theme markers</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(drk)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(drk)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>mrk(ts) / mrk(te)</code></h3>
+		<small>Top-start and top-end corners</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(ts)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(ts)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>mrk(be)</code></h3>
+		<small>Bottom-end corner</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(be)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(be)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>mrk(cs)</code></h3>
+		<small>Centre row, inline-start</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(cs)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(cs)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>mrk(cc)</code></h3>
+		<small>Dead centre</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(cc)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(cc)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>mrk(ce)</code></h3>
+		<small>Centre row, inline-end</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(ce)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(ce)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Thumbnails — <code>mrk(tmb)</code> + <code>tmb()</code></h2>
+	<p>Markers become image thumbnails. Each slide supplies its own image via <code>--ui-carousel-thumb-url</code>; <code>tmb()</code> sets the aspect ratio.</p>
+	<section>
+		<h3><code>mrk(tmb)</code></h3>
+		<small>Thumbnail strip at the default ratio</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(tmb)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(tmb)">
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/river.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/world.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/finance.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/city.png')"></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>tmb(1/1)</code></h3>
+		<small>Square thumbnails</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(tmb) tmb(1/1)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(tmb) tmb(1/1)">
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/river.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/world.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/finance.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/city.png')"></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>tmb(4/3)</code></h3>
+		<small>Landscape 4:3</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(tmb) tmb(4/3)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(tmb) tmb(4/3)">
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/river.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/world.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/finance.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/city.png')"></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>tmb(3/4)</code></h3>
+		<small>Portrait 3:4</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(tmb) tmb(3/4)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(tmb) tmb(3/4)">
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/river.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/world.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/finance.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/city.png')"></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>tmb(16/9)</code></h3>
+		<small>Widescreen 16:9</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(tmb) tmb(16/9)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(tmb) tmb(16/9)">
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/river.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/world.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/finance.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/city.png')"></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>tmb(3/2)</code></h3>
+		<small>Landscape 3:2</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(tmb) tmb(3/2)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(tmb) tmb(3/2)">
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/river.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/world.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/finance.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/city.png')"></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>tmb(2/3)</code></h3>
+		<small>Portrait 2:3</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(tmb) tmb(2/3)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(tmb) tmb(2/3)">
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/river.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/world.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/finance.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/city.png')"></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>mrk(tmb) mrk(blw)</code></h3>
+		<small>Filmstrip in a band below the items</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(blw) mrk(tmb) tmb(16/9)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(blw) mrk(tmb) tmb(16/9)">
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/river.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/mindfulness.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/gastronomy.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/world.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/finance.png')"></item-card>
+			<item-card style="--ui-carousel-thumb-url: url('/assets/images/city.png')"></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Paging — <code>pages</code></h2>
+	<p>Every other section on this page is <code>columns(1)</code>, so one marker means one slide. Multi-column needs <code>pages</code>: it snaps and draws one dot per <strong>page</strong> of <code>--_ci</code> items instead of per item, so the dot count follows the <code>columns()</code> token and adapts per breakpoint. Without it the markers stay per-item and jump <code>--_ci</code> places per step. Resize to see the count change.</p>
+	<section>
+		<h3><code>pages</code></h3>
+		<small>2 columns at md, 3 at lg — 3 dots then 2</small>
+		<p><code>&lt;lay-out md="columns(2)" lg="columns(3)" overflow media="nav pages mrk(blw)"&gt;</code></p>
+		<lay-out md="columns(2)" lg="columns(3)" overflow media="nav pages mrk(blw)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>pages — 4-up</code></h3>
+		<small>4 columns at lg — 2 dots</small>
+		<p><code>&lt;lay-out md="columns(2)" lg="columns(4)" overflow media="nav pages"&gt;</code></p>
+		<lay-out md="columns(2)" lg="columns(4)" overflow media="nav pages">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Autoplay and loop — JS</h2>
+	<p><code>auto()</code> and <code>loop</code> are progressive enhancement, driven by the shared carousel engine in <code>@browser.style/card</code> (<code>ui/card/carousel.js</code>). Everything above is CSS-only.</p>
+	<section>
+		<h3><code>auto</code></h3>
+		<small>Autoplay at the default interval</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(pll) auto"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(pll) auto">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>auto(4s)</code></h3>
+		<small>Autoplay with an explicit interval</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav(mrk) mrk(pll) auto(4s)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav(mrk) mrk(pll) auto(4s)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>loop</code></h3>
+		<small>Seamless wrap-around — the engine clones the edge slides</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow media="nav loop"&gt;</code></p>
+		<lay-out md="columns(1)" overflow media="nav loop">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Composition with <code>overflow=</code></h2>
+	<p>Controls compose with the geometry tokens from <a href="overflow.html">overflow.html</a>.</p>
+	<section>
+		<h3><code>preview + nav</code></h3>
+		<small>Next-item peek; arrows advance one item at a time</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow="preview" media="nav mrk(blw) arw(arr)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow="preview" media="nav mrk(blw) arw(arr)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>center + nav(blw)</code></h3>
+		<small>Centre-snapped cinematic hero with a band below</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow="preview-2xl center" media="nav(blw) arw(bare)"&gt;</code></p>
+		<lay-out md="columns(1)" overflow="preview-2xl center" media="nav(blw) arw(bare)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><code>frame + nav + pages</code></h3>
+		<small>Reels-style multi-up framed between symmetric peeks — <code>pages</code> keeps one dot per page</small>
+		<p><code>&lt;lay-out md="columns(2)" overflow="preview-sm frame" media="nav pages"&gt;</code></p>
+		<lay-out md="columns(2)" overflow="preview-sm frame" media="nav pages">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Full-bleed hero</h2>
+	<p>The canonical cinematic carousel — full-bleed, centre-snapped, looping and autoplaying,
+	with a hybrid marker band below.</p>
+	<section>
+		<h3>bleed + center + loop + auto</h3>
+		<small>50/25/25 peek on each side, seamless wrap, 4s autoplay</small>
+		<p><code>&lt;lay-out bleed md="columns(1)" overflow="preview-2xl center" media="loop auto(4s) nav(mrk) mrk(hyb) mrk(blw)"&gt;</code></p>
+		<lay-out bleed md="columns(1)" overflow="preview-2xl center" media="loop auto(4s) nav(mrk) mrk(hyb) mrk(blw)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+</body>
+</html>
