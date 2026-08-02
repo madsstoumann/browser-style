@@ -42,10 +42,16 @@ Generates JavaScript srcset map:
 - Contains srcset data for all 57 layouts + config
 
 #### `npm run build:demo`
-Generates HTML demonstration files:
-- Input: `layouts/*.json`
-- Output: 9 HTML files in `dist/` + 63 SVG icons in `dist/icons/`
-- Showcases all layout patterns with visual examples
+Generates HTML demonstration files, in two halves:
+- **Generated** — input `layouts/*.json` → one demo per layout file, plus `overflow.html`
+  (from `columns.json`), `icons.html` and `index.html`
+- **Copied** — every `src/pages/*.html` is copied verbatim into `dist/`, applying one
+  rewrite (`/ui/layout/` → `/layout/`). These are the hand-authored pages:
+  `animate`, `animate-self`, `bleed`, `carousel`, `gapdeco`, `reveal`, `reveal-stack`,
+  `scroll-test`, `spacing`, `stack`, `widths`
+- Output: 22 HTML files in `dist/` + 70 SVG icons in `dist/icons/` (the script logs `23`
+  because `stack.html` is produced twice — generated, then overwritten by the copy)
+- **`dist/*.html` is build output — edit `src/pages/` or `src/demo.js`, never `dist/`**
 
 #### `npm run build:icons`
 Generates SVG icon files:

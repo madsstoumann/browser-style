@@ -131,6 +131,27 @@
   `<ui-play>` and the Safari controls polyfill find zero slides and silently no-op.
   Do not "fix" this by adding `lay-out` to the CSS list — that deletes the feature.
   Use `<ui-slide>`/`<div>` wrappers when JS features are needed.
+- **`bleed` vs the scrollbar (Safari).** The page column centres on `50cqw`
+  (container units — exclude a space-taking scrollbar) while every bleed calculation
+  uses `100dvi`/`50dvi` (viewport units — include it). They agree under overlay
+  scrollbars, so Chrome/macOS never shows it; under space-taking ones (Safari with
+  *Show scroll bars: Always*, or a mouse attached) they diverge by the scrollbar
+  width and a stray horizontal scrollbar appears. Worked around with a WebKit-gated
+  `overflow-x: clip` — **`clip`, not `hidden`**, so no scroll container is created
+  and `position: sticky` + scroll-driven timelines survive. Symptom fix; the cause
+  (two units for one quantity) is still there. layout/AGENTS.md § Browser quirks.
+- **Masonry ships in Safari only, and it exposed a grid bug.** Safari 26 has
+  `display: grid-lanes`; Chromium 145 has no masonry syntax at all (`item-flow`,
+  `grid-template-rows: masonry` — neither engine). Both `@supports` arms are
+  therefore live and must agree on lane count. Lane children need
+  `min-inline-size: 0` or anything with an `aspect-ratio`/`min-block-size`
+  transfers it into a min *width* and overflows the lane — plain `display: grid`
+  does the same, so don't file it as a grid-lanes quirk.
+- **Headless Playwright can't reproduce scrollbar bugs** — both bundled engines use
+  overlay scrollbars, and neither `::-webkit-scrollbar` styling nor
+  `scrollbar-gutter: stable` forces the space-taking kind. Also: check horizontal
+  overflow against `documentElement.clientWidth`, never `window.innerWidth` — the
+  latter *includes* the scrollbar, so it cannot detect this class of bug at all.
 - **Stagger's `<cq-box>` hop.** Stagger subjects are the host's direct children, so
   every rule in the `<details>` adapter is written as a PAIR — `> :not(cq-box)` and
   `> cq-box > *` — or a card/nested-accordion wrapper becomes the single subject and
