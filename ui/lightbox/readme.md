@@ -57,8 +57,12 @@ this by default.
 - `command="toggle-popover"` is a **built-in** invoker command (Baseline; see
   fallback below) — the platform opens/closes the popover and manages focus.
 - The button rides into the top layer *with* its frame, so while open it doubles
-  as the close affordance: the svg hides and the icon draws ui-icon's `cross`
-  bars — an animated twist to × — via `:popover-open` (pure CSS).
+  as the close affordance: it always pins **top-end** while open (the position
+  token only governs the closed state), the svg hides and the icon draws
+  ui-icon's `cross` bars — an animated twist to × — via `:popover-open` (pure CSS).
+- `<ui-icon>` styling comes from `ui/icon` — load the package entry
+  (`index.css` imports it) or link `../icon/ui-icon.css` alongside the raw
+  `ui-lightbox.css`; without it the svg glyph collapses to 0×0.
 - Inside a card, position/hue/size come from the `media=` DSL:
   `lightbox(bs)` (default area), `lightbox(white)`, `lightbox(lg)`, ….
 

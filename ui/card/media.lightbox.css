@@ -228,21 +228,28 @@
 			translate: none;
 		}
 
-		/* the close affordance leaves the (now grid) flow and pins to the
-		   viewport — which IS the frame box while fullscreen. Grid mode forces
-		   the default bs corner (position tokens are a scroller/absolute
-		   vocabulary); the sticky nav treatment resumes on toggle back. */
-		> ui-lightbox {
-			align-content: initial;
-			display: inline-grid;
-			inline-size: auto;
-			inset-block: auto var(--_g, 0.75rem);
-			inset-inline: var(--_g, 0.75rem) auto;
-			justify-items: initial;
-			padding-block: 0;
-			position: fixed;
-			z-index: 3;
-		}
+	}
+
+	/* === CLOSE BUTTON — while open, ui-lightbox IS the close affordance and
+	   always pins TOP-END (the universal close position), whatever cell the
+	   closed-state lightbox() token used and whatever presentation is active
+	   (carousel, grid, rail, media-open). position: fixed resolves against the
+	   viewport — which IS the frame while fullscreen; the entry animation is
+	   clip-path/opacity only, deliberately, so no transient containing block
+	   hijacks this. The secondary --lightbox-layout button stacks beneath via
+	   the host's own grid gap. Real specificity beats the sticky nav treatment
+	   and the position-token rows; both resume on close. === */
+	ui-media[popover]:popover-open > ui-lightbox {
+		align-content: initial;
+		display: inline-grid;
+		inline-size: auto;
+		inset-block: var(--_g, 0.75rem) auto;
+		inset-inline: auto var(--_g, 0.75rem);
+		justify-items: initial;
+		padding-block: 0;
+		position: fixed;
+		translate: none;
+		z-index: 3;
 	}
 }
 

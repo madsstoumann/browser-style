@@ -186,15 +186,25 @@ function onToggle(event) {
 		/* on CLOSE the frame's `overlay` transition (media.lightbox.css — it lets
 		   the ::backdrop fade out) retains it in the top layer with viewport-sized
 		   geometry for the transition's duration, so the restore above used the
-		   wrong pitch — re-assert once the frame re-enters flow. (Reduced-motion
-		   users have no overlay transition; for them the first restore is final
-		   and the timeout re-assert is an idempotent no-op.) */
+		   wrong pitch — and the browser's own snap re-alignment after the reflow
+		   can land LATER than any single re-assert (observed ~500ms), dragging the
+		   position a slide off. Deterministic fix: for a bounded window, correct
+		   the index after the overlay retention ends AND after every scrollend
+		   (our own instant corrections settle at the right index, so the loop
+		   terminates; a drifting browser re-snap gets corrected on its own
+		   scrollend). Reduced-motion users have no overlay transition — for them
+		   the immediate restore is final and every later fix() is a no-op. */
 		if (!open) {
-			let done = false;
-			const again = () => { if (done) return; done = true; frame.removeEventListener('transitionend', onEnd); scrollToIndex(frame, index); };
-			const onEnd = (e) => { if (e.propertyName === 'overlay') again(); };
+			const fix = () => { if (slideIndexOf(frame) !== index) scrollToIndex(frame, index); };
+			const onEnd = (e) => { if (e.propertyName === 'overlay') fix(); };
 			frame.addEventListener('transitionend', onEnd);
-			setTimeout(again, 450);
+			frame.addEventListener('scrollend', fix);
+			setTimeout(fix, 450);
+			setTimeout(() => {
+				frame.removeEventListener('transitionend', onEnd);
+				frame.removeEventListener('scrollend', fix);
+				fix();
+			}, 1000);
 		}
 	}
 	/* a fullscreen gallery pauses its media on close */
