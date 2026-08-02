@@ -79,14 +79,14 @@
   corners only — same contract as sticky ui-play). Native scroll-control
   pseudos do NOT follow a popover into the top layer (Chromium) — popover
   carousels get real-DOM controls from /polyfill/carousel-controls.js (the
-  split-out core the Safari entry also uses) via ui/lightbox/command.js, with
+  split-out core the Safari entry also uses) via ui/card/lightbox.js, with
   native pseudos suppressed on those frames only; the grid-mode hide for them
   is UNLAYERED (the polyfill sheet is unlayered). The open state switches into
   ANY existing nav style via the companion `media-open=` ATTRIBUTE (never an
-  open: token — control stems are substring-matched); command.js swaps only
+  open: token — control stems are substring-matched); lightbox.js swaps only
   the control words of the resolved media string on toggle, restores on close,
   keeps slide continuity (close-side re-assert after the overlay retention),
-  builds controls as the union of both states. command.js also owns modality
+  builds controls as the union of both states. lightbox.js also owns modality
   (inert), back-button close, grid-tile→slide jump and pause-on-close — all
   optional. Docs: media.md § Lightbox; demo media.lightbox.html.
 - **The collage — a `<lay-out>` INSIDE a `<ui-media>`.** Besides arranging cards,

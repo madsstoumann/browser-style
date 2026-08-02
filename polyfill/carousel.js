@@ -5,7 +5,7 @@
  * ::scroll-button() arrows behind `@supports (scroll-marker-group: after)`.
  * Where that's unsupported, this entry auto-scans the page and injects DOM
  * controls per carousel. The injection machinery lives in ./carousel-controls.js
- * (shared with ui/lightbox/command.js, which needs DOM controls in EVERY
+ * (shared with ui/card/lightbox.js, which needs DOM controls in EVERY
  * browser — native scroll-control pseudos don't join the top layer with a
  * popover frame).
  *

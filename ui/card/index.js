@@ -4,17 +4,20 @@
  *   hover.js     cursor-tracked hov(track|drift|tilt)
  *   carousel.js  loop (seamless clones) · autoplay · pause-on-slide-leave
  *   video.js     embed facades · media commands · vid() tools · <ui-play> · solo play · tracking
+ *   lightbox.js  popover-lightbox niceties (DOM controls · media-open= · modality · …)
  * No srcset here (ui-media-srcset.js). With JS off everything still renders and scrolls. */
 
 import { initHover, scanHover } from './hover.js';
 import { initLoop, initAuto, initCarousels, initCarouselVideoPause, scanCarousels } from './carousel.js';
 import { initMediaCommands, initEmbeds, initVideoTools, initSolo, initVideoTracking, scanVideo } from './video.js';
+import { initLightboxCommands } from './lightbox.js';
 import { onIdle, initVideoPlay } from './shared.js';
 
 export {
 	initHover, scanHover,
 	initLoop, initAuto, initCarousels, initCarouselVideoPause, scanCarousels,
 	initMediaCommands, initEmbeds, initVideoTools, initSolo, initVideoTracking, scanVideo,
+	initLightboxCommands,
 	initVideoPlay,
 };
 

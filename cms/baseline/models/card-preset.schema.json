@@ -101,7 +101,7 @@
     "media-open": {
       "type": "string",
       "title": "media-open=",
-      "description": "Lightbox open-state control vocabulary — ordinary media= carousel-control spellings (nav/mrk/arw/tmb/axis tokens only) that REPLACE the media= control words while the popover lightbox is open, e.g. \"axis(y) nav(mrk) mrk(tmb) mrk(rail)\" for the vertical thumbnail rail. Swapped in by ui/lightbox/command.js and restored on close; without JS the open lightbox keeps the closed nav style. Only emitted when the preset's card carries lightbox furniture.",
+      "description": "Lightbox open-state control vocabulary — ordinary media= carousel-control spellings (nav/mrk/arw/tmb/axis tokens only) that REPLACE the media= control words while the popover lightbox is open, e.g. \"axis(y) nav(mrk) mrk(tmb) mrk(rail)\" for the vertical thumbnail rail. Swapped in by ui/card/lightbox.js and restored on close; without JS the open lightbox keeps the closed nav style. Only emitted when the preset's card carries lightbox furniture.",
       "localized": false
     },
     "content": {

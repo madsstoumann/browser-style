@@ -9,7 +9,7 @@
  *  - /polyfill/carousel.js — the Safari fallback entry: auto-scans every carousel
  *    where `@supports (scroll-marker-group: after)` fails (today's behavior,
  *    unchanged — keep loading THAT file conditionally).
- *  - ui/lightbox/command.js — the popover-lightbox enhancer: calls initControls()
+ *  - ui/card/lightbox.js — the popover-lightbox enhancer: calls initControls()
  *    on `ui-media[popover]` frames in EVERY browser, because the native
  *    scroll-control pseudos do not join the top layer with a promoted popover
  *    (they keep painting in the document layer, behind ::backdrop — verified in

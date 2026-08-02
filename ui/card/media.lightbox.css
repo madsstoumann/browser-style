@@ -74,7 +74,7 @@
 	     transition on the frame keeps it in the top layer through close so the
 	     backdrop can fade OUT too (the frame itself re-enters flow immediately —
 	     painted above the dim while it fades).
-	   - ui/lightbox/command.js additionally drives button-invoked open/close
+	   - ui/card/lightbox.js additionally drives button-invoked open/close
 	     with a View Transition morph (card ↔ fullscreen) where supported; it
 	     stamps [data-lightbox-vt] so the keyframe doesn't double-animate. */
 	@media (prefers-reduced-motion: no-preference) {
@@ -132,7 +132,7 @@
 	   the document layer, positioned against the card, behind ::backdrop — a
 	   browser limitation, not fixable by positioning; revisit if Chromium moves
 	   scroll-control pseudos into the top layer with their element). So a
-	   popover frame's controls are REAL elements: ui/lightbox/command.js injects
+	   popover frame's controls are REAL elements: ui/card/lightbox.js injects
 	   the /polyfill/carousel-controls.js <ui-carousel-controls> (real children
 	   ride into the top layer), and the native pseudos are suppressed on exactly
 	   those frames — in BOTH states, so closed and open stay continuous and two
@@ -160,7 +160,7 @@
 
 	/* === open:grid(Nc) — present the SAME children as a scrollable grid while
 	   open ("view all" contact sheet). Also armed at runtime by
-	   data-lightbox="grid" (ui/lightbox/command.js) and overridden by
+	   data-lightbox="grid" (ui/card/lightbox.js) and overridden by
 	   data-lightbox="nav", so one button flips carousel ↔ grid. === */
 	:where(
 		[media~="open:grid(2c)"],

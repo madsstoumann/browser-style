@@ -479,7 +479,7 @@ Two shapes sit outside the invoker contract, both because their target isn't an 
 
 A single text node still works as one line: `<ui-sticker>-20%</ui-sticker>`.
 
-> **Removed:** `ribbon` and `counter` (and the diagonal-ribbon treatment). **Deferred:** a sold-out / `cover` full-bleed state. *(The once-deferred Popover-API lightbox has landed as the frame-level [Lightbox](#lightbox--the-popover-fullscreen-gallery) + `<ui-lightbox>` furniture; the remaining `<ui-play>`-specific sugar — auto-play-on-open — is a ~5-line `command.js` extension.)*
+> **Removed:** `ribbon` and `counter` (and the diagonal-ribbon treatment). **Deferred:** a sold-out / `cover` full-bleed state. *(The once-deferred Popover-API lightbox has landed as the frame-level [Lightbox](#lightbox--the-popover-fullscreen-gallery) + `<ui-lightbox>` furniture; the remaining `<ui-play>`-specific sugar — auto-play-on-open — is a ~5-line `lightbox.js` extension.)*
 
 ---
 
@@ -645,7 +645,7 @@ Whole-token (`~=`) **state** prefix — like `md:`/`lg:` are the *container-tier
 
 ### Carousel controls — real elements, not pseudos
 
-The native `::scroll-marker-group`/`::scroll-button()` boxes **do not follow a popover frame into the top layer** (current Chromium keeps them in the document layer, positioned against the card, behind the `::backdrop` — a browser limitation, not fixable by positioning; revisit if Chromium moves scroll-control pseudos into the top layer with their element). So a popover frame's dots + arrows are **real elements**: `ui/lightbox/command.js` injects the [`/polyfill/carousel-controls.js`](../../polyfill/readme.md) `<ui-carousel-controls>` — in **every** browser and in **both states**, so closed and open stay continuous — and `media.lightbox.css` suppresses the native pseudos on exactly those `[data-ui-carousel-polyfill]` frames (grid mode hides the DOM controls via an unlayered rule, since the polyfill sheet is unlayered). Without `command.js` the open carousel falls back to swipe, keyboard and a thin scrollbar.
+The native `::scroll-marker-group`/`::scroll-button()` boxes **do not follow a popover frame into the top layer** (current Chromium keeps them in the document layer, positioned against the card, behind the `::backdrop` — a browser limitation, not fixable by positioning; revisit if Chromium moves scroll-control pseudos into the top layer with their element). So a popover frame's dots + arrows are **real elements**: `ui/card/lightbox.js` injects the [`/polyfill/carousel-controls.js`](../../polyfill/readme.md) `<ui-carousel-controls>` — in **every** browser and in **both states**, so closed and open stay continuous — and `media.lightbox.css` suppresses the native pseudos on exactly those `[data-ui-carousel-polyfill]` frames (grid mode hides the DOM controls via an unlayered rule, since the polyfill sheet is unlayered). Without `lightbox.js` the open carousel falls back to swipe, keyboard and a thin scrollbar.
 
 ### `media-open=` — ANY existing nav style while open
 
@@ -656,11 +656,11 @@ The open state can switch the carousel into **any of the shipped nav styles** �
          media-open="axis(y) nav(mrk) mrk(tmb) mrk(rail) mrk(lg)">
 ```
 
-`command.js` swaps **only the control words** of the resolved media string on open (everything else — `asr()`, furniture, `open:` tokens, `loop`/`auto` bindings — is untouched) and restores them on close, re-stamping the DOM controls' `data-media` so every existing rule (rail padding, band reservation, thumbnail face, axis flip) applies unchanged. **Slide continuity** is kept across the swap in both directions (the index is captured on `beforetoggle`, re-asserted after the close-side `overlay` retention ends). Controls are built as the **union** of both states' needs, with per-state visibility keyed off the current `data-media` stamp. Thumbnails need no authoring: when a slide carries no `--ui-carousel-thumb-url`, the dot derives it from the slide's image. Preset field: `media-open` (validated against the media vocabulary by the preset lint). Without JS, the open lightbox simply keeps the closed nav style.
+`lightbox.js` swaps **only the control words** of the resolved media string on open (everything else — `asr()`, furniture, `open:` tokens, `loop`/`auto` bindings — is untouched) and restores them on close, re-stamping the DOM controls' `data-media` so every existing rule (rail padding, band reservation, thumbnail face, axis flip) applies unchanged. **Slide continuity** is kept across the swap in both directions (the index is captured on `beforetoggle`, re-asserted after the close-side `overlay` retention ends). Controls are built as the **union** of both states' needs, with per-state visibility keyed off the current `data-media` stamp. Thumbnails need no authoring: when a slide carries no `--ui-carousel-thumb-url`, the dot derives it from the slide's image. Preset field: `media-open` (validated against the media vocabulary by the preset lint). Without JS, the open lightbox simply keeps the closed nav style.
 
 ### Runtime carousel ↔ grid — `--lightbox-layout`
 
-A second invoker inside `<ui-lightbox>` (hidden while closed) with the custom `command="--lightbox-layout"` flips the open frame between carousel and grid by toggling `data-lightbox="grid|nav"` — handled by the opt-in [`ui/lightbox/command.js`](../lightbox/command.js) (built on the shared `ui/common/command.js` router). Closing clears the attribute, so the frame always reopens on its `open:` tokens. The same module reflects `[open]`/`aria-expanded` and ships a `togglePopover()` click fallback for browsers without `command=` invokers (`popovertarget` is the wider-support no-JS alternative markup).
+A second invoker inside `<ui-lightbox>` (hidden while closed) with the custom `command="--lightbox-layout"` flips the open frame between carousel and grid by toggling `data-lightbox="grid|nav"` — handled by the opt-in [`ui/card/lightbox.js`](../lightbox/command.js) (built on the shared `ui/common/command.js` router). Closing clears the attribute, so the frame always reopens on its `open:` tokens. The same module reflects `[open]`/`aria-expanded` and ships a `togglePopover()` click fallback for browsers without `command=` invokers (`popovertarget` is the wider-support no-JS alternative markup).
 
 ### Layout shift — the placeholder
 
@@ -668,7 +668,7 @@ A top-layer element leaves flow, so the frame's grid cell would collapse. While 
 
 ### What works without JS — the degradation table
 
-| Feature | With `command.js` | Without JS |
+| Feature | With `lightbox.js` | Without JS |
 |---|---|---|
 | open/close, Esc, light-dismiss, `::backdrop`, focus return | platform | platform (unchanged) |
 | dots / arrows / thumbnails in the lightbox | DOM controls | swipe, keyboard, thin scrollbar |
@@ -680,11 +680,11 @@ A top-layer element leaves flow, so the frame's grid cell would collapse. While 
 
 ### Notes
 
-- **Open/close animation, three mechanisms.** The frame's entry is a **keyframe** (clip-reveal + opacity; the frame is always rendered — `display` never flips — so `@starting-style` has nothing to fire from on it, and a scale/translate entry would create a transient containing block and yank `position: fixed` furniture). The **`::backdrop`** *does* start being rendered at open, so it fades in via a standalone `@starting-style` + fades out on close via `opacity`/`display`/`overlay allow-discrete` transitions, with an `overlay` transition on the frame retaining the top layer through the close. `command.js` upgrades button-invoked open/close to a **View Transition morph** (card ↔ fullscreen, both directions; `[data-lightbox-vt]` suppresses the keyframe so the two never double-animate; Esc/light-dismiss closes and reduced-motion users get the CSS fade only).
+- **Open/close animation, three mechanisms.** The frame's entry is a **keyframe** (clip-reveal + opacity; the frame is always rendered — `display` never flips — so `@starting-style` has nothing to fire from on it, and a scale/translate entry would create a transient containing block and yank `position: fixed` furniture). The **`::backdrop`** *does* start being rendered at open, so it fades in via a standalone `@starting-style` + fades out on close via `opacity`/`display`/`overlay allow-discrete` transitions, with an `overlay` transition on the frame retaining the top layer through the close. `lightbox.js` upgrades button-invoked open/close to a **View Transition morph** (card ↔ fullscreen, both directions; `[data-lightbox-vt]` suppresses the keyframe so the two never double-animate; Esc/light-dismiss closes and reduced-motion users get the CSS fade only).
 - **`md:`/`lg:` container tiers still query the card's width** while the frame is in the top layer (DOM ancestry is unchanged) — the open-state rules override the size-critical properties instead.
 - **`stagger` + `open:grid`**: grid mode removes snapping, so slide-level and content-level subjects are pinned visible at real specificity (the `media="pages"` escape pattern) rather than stranded at their scroll-state from-state.
 - **Image resolution in fullscreen — `srcset` + `sizes="auto"` solves it, zero JS.** With `srcset` (w descriptors) + `sizes="auto"` + `loading="lazy"`, the browser derives the slot width from layout and **re-selects a larger candidate when the img's layout box grows** — opening the lightbox triggers an automatic hi-res re-fetch (verified in Chromium: 800w → 2200w on open; browsers never downgrade afterwards, so closing costs nothing). A **static `sizes`** tuned to the card (`33vw`, `500px`…) never upgrades — author it to cover the fullscreen case (worst-case `100vw`) or use `auto`. The system's own srcset path already does the right thing: `ui-media-srcset.js` defaults to `sizes: 'auto'` with lazy loading, so Cloudflare-upgraded galleries get lightbox-resolution images for free. A plain single-`src` image has no candidates to upgrade — that is an asset question, not a lightbox one.
-- **Support**: Popover is Baseline (Safari 17+/Firefox 125+); `command=`/`commandfor=` invokers are newer (Chrome/Edge 135+, Safari 26+) — hence the click fallback in `command.js`, or use `popovertarget`.
+- **Support**: Popover is Baseline (Safari 17+/Firefox 125+); `command=`/`commandfor=` invokers are newer (Chrome/Edge 135+, Safari 26+) — hence the click fallback in `lightbox.js`, or use `popovertarget`.
 
 ---
 

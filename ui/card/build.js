@@ -8,7 +8,7 @@ import { execFileSync } from 'node:child_process';
 import { gzipSync, brotliCompressSync, constants } from 'node:zlib';
 import { buildTokens } from './tokens.build.js';
 
-const ENTRIES = ['index.js', 'carousel.js', 'hover.js', 'video.js'];
+const ENTRIES = ['index.js', 'carousel.js', 'hover.js', 'video.js', 'lightbox.js'];
 const dir = new URL('.', import.meta.url).pathname;
 
 const esbuild = (args) => execFileSync('npx', ['--yes', 'esbuild', ...args], { cwd: dir, stdio: ['ignore', 'pipe', 'inherit'] });

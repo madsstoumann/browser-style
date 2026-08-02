@@ -31,7 +31,7 @@ The machinery is split in two since the lightbox round:
   neutralises the native pseudos globally so a page never shows two sets of
   controls.
 
-**The second consumer is the lightbox.** `ui/lightbox/command.js` calls
+**The second consumer is the lightbox.** `ui/card/lightbox.js` calls
 `initControls()` on `ui-media[popover]` frames in **every** browser: the native
 `::scroll-marker-group`/`::scroll-button()` boxes do not follow an element into
 the **top layer** (verified in Chromium — they keep painting in the document

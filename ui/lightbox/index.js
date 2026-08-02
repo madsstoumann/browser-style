@@ -7,8 +7,10 @@
  *
  * Registration only — this class adds NO behaviour, and the component works
  * without it. It exists so `import '@browser.style/lightbox'` resolves. The
- * optional runtime extras (layout toggle, invoker fallback, [open] reflection)
- * live in ./command.js.
+ * optional runtime extras (layout toggle, invoker fallback, [open] reflection,
+ * DOM carousel controls, media-open=, modality, …) are frame behaviour and live
+ * with the card system: ui/card/lightbox.js (everything there is gated on
+ * ui-media[popover], like carousel.js/video.js).
  * @version 1.0.0
  */
 

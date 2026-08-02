@@ -46,6 +46,7 @@
     "carousel.js",
     "hover.js",
     "video.js",
+    "lightbox.js",
     "shared.js",
     "render.js",
     "data/",

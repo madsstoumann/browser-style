@@ -31,7 +31,7 @@
 		clip-reveal + backdrop fade in pure CSS (<code>@starting-style</code> can only drive the
 		<code>::backdrop</code> — the frame itself is always rendered, so its entry is a keyframe and the
 		<code>overlay</code> transition carries the fade-out), upgraded to a full card ↔ fullscreen
-		<strong>View Transition morph</strong> when <code>command.js</code> is loaded.</p>
+		<strong>View Transition morph</strong> when <code>lightbox.js</code> is loaded.</p>
 	<p>Open-state presentation is the <code>open:</code> token family: a <code>nav</code> frame opens as a
 		<strong>fullscreen carousel</strong> by default; <code>open:grid(2c|3c|4c)</code> presents the same
 		children as a scrollable <strong>grid</strong>. Marker furniture (chips, stickers, beacons, marquees,
@@ -54,9 +54,9 @@
 		viewport-sized. <strong>Dots and arrows are real elements here</strong>: the native
 		<code>::scroll-marker</code>/<code>::scroll-button</code> pseudos don't follow a popover into the top
 		layer (they'd paint behind the <code>::backdrop</code> — a current-Chromium limitation), so
-		<code>lightbox/command.js</code> injects the <code>/polyfill/carousel-controls.js</code> DOM controls
+		<code>lightbox.js</code> injects the <code>/polyfill/carousel-controls.js</code> DOM controls
 		on popover frames — in both states, so closed and open stay continuous. Opening and closing itself
-		still needs no JS; without <code>command.js</code> the open carousel falls back to swipe, keyboard and
+		still needs no JS; without <code>lightbox.js</code> the open carousel falls back to swipe, keyboard and
 		a thin scrollbar.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3) nav lightbox(bs)" content="scl(md)">
@@ -119,7 +119,7 @@
 		(<code>nav</code>/<code>mrk()</code>/<code>arw()</code>/<code>tmb()</code>/<code>axis()</code>) are
 		substring-matched, so their spellings can't ride inside <code>media=</code> behind an
 		<code>open:</code> prefix — instead they live in the companion <code>media-open=</code> attribute
-		(same element as <code>media=</code>), and <code>command.js</code> swaps just the control words of
+		(same element as <code>media=</code>), and <code>lightbox.js</code> swaps just the control words of
 		the media string on open, restoring them on close — with slide continuity across the swap. Left:
 		dots while closed → the <a href="media.carousel.html">carousel-page rail</a>
 		(<code>axis(y) nav(mrk) mrk(tmb) mrk(rail)</code>) fullscreen, thumbnails auto-derived from the
@@ -259,11 +259,11 @@
 	</lay-out>
 
 	<!-- ============================================================
-	     5. Runtime layout toggle — needs ../lightbox/command.js
+	     5. Runtime layout toggle — needs lightbox.js
 	     ============================================================ -->
 	<h2>Carousel ↔ grid, at runtime</h2>
 	<p>A second invoker inside <code>&lt;ui-lightbox&gt;</code> carries the custom
-		<code>command="--lightbox-layout"</code> (handled by <code>ui/lightbox/command.js</code> — the one
+		<code>command="--lightbox-layout"</code> (handled by <code>ui/card/lightbox.js</code> — the one
 		JS-enhanced section on this page). It only shows while the lightbox is open, and flips the frame
 		between fullscreen carousel and grid via <code>data-lightbox</code>; closing resets to the tokens.</p>
 	<lay-out width="sm">
@@ -329,7 +329,7 @@
 
 	<!-- section 5's layout toggle + [open]/aria-expanded reflection + the
 	     toggle-popover click fallback for browsers without command= invokers -->
-	<script type="module" src="../lightbox/command.js"></script>
+	<script type="module" src="lightbox.js"></script>
 	<!-- section 6's play-pause media-command polyfill -->
 	<script type="module" src="video.js"></script>
 	<!-- Typed attr() polyfill — Safari/Firefox. No-op where typed attr() is

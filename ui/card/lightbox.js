@@ -1,9 +1,11 @@
 /**
- * ui-lightbox command controller (OPT-IN — the baseline open/close needs no JS)
+ * Popover-lightbox frame behaviour (OPT-IN — the baseline open/close needs no JS)
  *
  * A `<ui-media popover>` frame opens into the top layer from a plain invoker
  * <button command="toggle-popover" commandfor="<frame id>"> — that path is pure
- * platform. This module adds the three runtime niceties on top:
+ * platform. Every hook here is gated on ui-media[popover], which is why this is
+ * a ui/card frame module (like carousel.js/video.js) and not part of the
+ * ui/lightbox element package. This module adds the runtime niceties on top:
  *
  *   1. `--lightbox-layout` — custom command that flips the OPEN frame's
  *      presentation between fullscreen carousel and grid by toggling
@@ -33,7 +35,7 @@
  *
  * ToggleEvent and CommandEvent don't bubble → both listeners are CAPTURE phase.
  * Import for the side effect (auto-inits once), or call initLightboxCommands().
- * @version 1.2.0
+ * @version 1.3.0 (moved from ui/lightbox/command.js)
  */
 
 import { createCommandRouter } from '../common/command.js';

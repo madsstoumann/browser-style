@@ -8,7 +8,7 @@
  * both shapes are read transparently (`event.command ?? event.detail?.command`).
  *
  * Consumers: ui/play/command.js (--toggle-play/--play/--pause),
- * ui/lightbox/command.js (--lightbox-layout). Pattern reference:
+ * ui/card/lightbox.js (--lightbox-layout). Pattern reference:
  * ui/video-embed/ui-video-embed.js implements the same shape standalone.
  *
  * @param {Set<string>} commands  commands this controller answers to

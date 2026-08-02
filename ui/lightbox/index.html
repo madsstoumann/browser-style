@@ -26,9 +26,9 @@
 	</p>
 	<p>
 		The component itself is <strong>CSS-only</strong>. <code>index.js</code> registers the tag and
-		adds no behaviour; the optional <code>command.js</code> adds the in-lightbox layout toggle
-		(<code>--lightbox-layout</code>), <code>[open]</code> reflection, and a click fallback for
-		browsers without native <code>command=</code> invokers.
+		adds no behaviour; the optional <code>ui/card/lightbox.js</code> frame module adds the
+		in-lightbox layout toggle (<code>--lightbox-layout</code>), <code>[open]</code> reflection,
+		and a click fallback for browsers without native <code>command=</code> invokers.
 	</p>
 
 	<h3>Idle / open (glyph morphs to ×)</h3>
@@ -94,6 +94,6 @@
 		A popover, opened by the built-in <code>toggle-popover</code> command — zero JS.
 	</div>
 
-	<script type="module" src="command.js"></script>
+	<script type="module" src="../card/lightbox.js"></script>
 </body>
 </html>

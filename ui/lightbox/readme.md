@@ -77,13 +77,17 @@ this by default.
 | ink/fill | `ink=` / `fill=` | — | any CSS color (typed `attr()`, polyfilled) |
 | hover | `hover=` | — | `pop` `press` |
 
-## Optional JS — `command.js`
+## Optional JS — `ui/card/lightbox.js`
 
 ```html
-<script type="module" src="…/lightbox/command.js"></script>
+<script type="module" src="…/card/lightbox.js"></script>
 ```
 
-Adds eight runtime niceties (the baseline open/close needs none of them):
+The runtime niceties are **frame behaviour, not element behaviour** — every hook
+is gated on `ui-media[popover]` — so they live with the card system's other
+frame modules (`carousel.js`, `video.js`), not in this package. The all-in-one
+`ui/card/index.js` entry includes them. Eight niceties (the baseline open/close
+needs none of them):
 
 1. **`--lightbox-layout`** — a custom command for a second button inside the
    lightbox that flips the open frame between fullscreen carousel and grid
