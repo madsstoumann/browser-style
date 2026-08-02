@@ -48,6 +48,33 @@
 	</lay-out>
 
 	<!-- ============================================================
+	     Even three-up — columns(3) instead of grid(3c)
+	     ============================================================ -->
+	<h2>Even three-up</h2>
+	<p>The same pattern with an <em>even</em> collage: <code>md="columns(3)"</code> gives three equal tiles instead of <code>grid(3c)</code>'s one-large-plus-two-stacked. It suits a set of shots that carry equal weight — a lookbook row rather than a hero plus details. The source images are 2:3 portraits, so <code>asr(2/3)</code> tiles them at their native ratio and nothing is cropped. <code>columns(3)</code> is generated from <strong>md</strong> up — this build's config ships only <code>columns(2)</code> at <code>sm</code> — so the strip stacks below 540px.</p>
+	<lay-out width="sm">
+		<ui-card variant="bdr bdr(lgt) rds(lg)" media="chip(green) sticker(green)" content="scl(sm) pad(md)">
+			<cq-box>
+				<ui-media>
+					<ui-chip>New in</ui-chip>
+					<ui-sticker size="lg"><small>Save</small><strong>20%</strong></ui-sticker>
+					<lay-out xs="cg(0) rg(0)" md="columns(3)">
+						<ui-media media="asr(2/3) hov(zoom)"><img src="/assets/images/dress-1.png" alt="Pale blue satin gown, worn in a gallery" loading="lazy" decoding="async"></ui-media>
+						<ui-media media="asr(2/3) hov(zoom)"><img src="/assets/images/dress-2.png" alt="Comic-print gown in front of a pop-art canvas" loading="lazy" decoding="async"></ui-media>
+						<ui-media media="asr(2/3) hov(zoom)"><img src="/assets/images/dress-3.png" alt="Gown in a repeated screen-print portrait pattern" loading="lazy" decoding="async"></ui-media>
+					</lay-out>
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Atelier Nord</small>
+					<h3 data-part="headline">Gallery gown — the pop-art edit</h3>
+					<p data-part="price"><data value="620">$620.00</data> <del>$775.00</del> <small>−20%</small></p>
+					<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy now</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+
+	<!-- ============================================================
 	     Two collages, one swipe — nav carousel of lay-out slides
 	     ============================================================ -->
 	<h2>Two collages, one swipe</h2>
@@ -247,6 +274,28 @@
 									<small data-part="eyebrow">Oculus</small>
 									<h3 data-part="headline">Evening bag — brown/gold</h3>
 									<p data-part="price"><data value="540">$540.00</data> <del>$675.00</del> <small>−20%</small></p>
+									<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy now</a></nav>
+								</ui-content>
+							</cq-box>
+						</ui-card>
+						<!-- Even three-up slide: columns(3) + asr(2/3) portraits, so the
+						     collage pattern varies between slides without any layout shift —
+						     each slide is still one card in the same frame. -->
+						<ui-card variant="bdr bdr(lgt) rds(lg)" media="chip(green) sticker(green)" content="scl(sm) pad(md)">
+							<cq-box>
+								<ui-media>
+									<ui-chip>New in</ui-chip>
+									<ui-sticker size="lg"><small>Save</small><strong>20%</strong></ui-sticker>
+									<lay-out xs="cg(0) rg(0)" md="columns(3)">
+										<ui-media media="asr(2/3) hov(zoom)"><img src="/assets/images/dress-1.png" alt="Pale blue satin gown, worn in a gallery" loading="lazy" decoding="async"></ui-media>
+										<ui-media media="asr(2/3) hov(zoom)"><img src="/assets/images/dress-2.png" alt="Comic-print gown in front of a pop-art canvas" loading="lazy" decoding="async"></ui-media>
+										<ui-media media="asr(2/3) hov(zoom)"><img src="/assets/images/dress-3.png" alt="Gown in a repeated screen-print portrait pattern" loading="lazy" decoding="async"></ui-media>
+									</lay-out>
+								</ui-media>
+								<ui-content>
+									<small data-part="eyebrow">Atelier Nord</small>
+									<h3 data-part="headline">Gallery gown — the pop-art edit</h3>
+									<p data-part="price"><data value="620">$620.00</data> <del>$775.00</del> <small>−20%</small></p>
 									<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy now</a></nav>
 								</ui-content>
 							</cq-box>
