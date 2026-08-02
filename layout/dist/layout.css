@@ -35,6 +35,27 @@
 		row-gap: calc(attr(data-page-gap type(<number>), attr(page-gap type(<number>), 1)) * var(--layout-space-unit, 1rem));
 	}
 
+	/* Safari-only: kill the sliver of horizontal scroll a bleed band can produce.
+	   The page column centres with 50cqw (container units, which EXCLUDE a
+	   space-taking scrollbar) while the bleed maths below uses 100dvi/50dvi
+	   (viewport units, which INCLUDE it). The two agree under overlay scrollbars —
+	   Chrome's default on macOS — and diverge by the scrollbar width under
+	   space-taking ones, which is when Safari (Show scroll bars: Always, or a mouse
+	   attached) gains a horizontal scrollbar.
+
+	   `clip`, not `hidden`: clip does NOT create a scroll container, so
+	   `position: sticky` (the stack(reveal) cage) and the scroll-driven
+	   view-timelines keep working. Only the inline axis is clipped; the block axis
+	   stays `visible`, which is the one combination allowed alongside clip.
+
+	   @supports (-webkit-hyphens: none) is the WebKit gate — true in Safari (and in
+	   any iOS browser, all of which are WebKit and share the behaviour), false in
+	   Chrome/Edge/Firefox. Scoped with :has() so the rule is inert on pages that
+	   never bleed. */
+	@supports (-webkit-hyphens: none) {
+		html:has(:is(lay-out, lay-out-group)[bleed]) { overflow-x: clip; }
+	}
+
 	lay-out {
 		--layout-col-rule-c: #CCC;
 		--layout-preview-size: 100px;
@@ -162,6 +183,15 @@
 			&:where([xs*="lanes("], [sm*="lanes("], [md*="lanes("], [lg*="lanes("], [xl*="lanes("], [xxl*="lanes("]) {
 				display: grid-lanes;
 				grid-template-columns: var(--layout-gtc, repeat(var(--_ci, 4), 1fr));
+				/* Lane items are grid items, so min-inline-size defaults to `auto` = the
+				   min-content size. Anything with an intrinsic aspect-ratio or a definite
+				   min-block-size transfers that through the ratio into a min WIDTH, which
+				   blows past the lane and overlaps its neighbours (a wide card in a narrow
+				   lane). Standard grid hygiene, not a grid-lanes quirk — plain `display:
+				   grid` does the same. The column-count fallback below never needed it
+				   because block boxes just fill the column, which is why this only surfaced
+				   once Safari 26 shipped grid-lanes. */
+				& > *:not(lay-out) { min-inline-size: 0; }
 			}
 		}
 		@supports not (display: grid-lanes) {
@@ -175,7 +205,16 @@
 				}
 			}
 			&:where([xs~="lanes(auto)"], [sm~="lanes(auto)"], [md~="lanes(auto)"], [lg~="lanes(auto)"], [xl~="lanes(auto)"], [xxl~="lanes(auto)"]) {
-				column-count: round(down, min(var(--layout-bleed-mw, 1024px), 100cqi - 2 * var(--layout-mi, 1rem)) / var(--layout-lanes-min, 15rem), 1);
+				/* Mirror what repeat(auto-fill, minmax(lanes-min, 1fr)) resolves to on the
+				   grid-lanes path, so both engines land on the same lane count:
+				     n = floor((W + gap) / (min + gap))
+				   Two things this has to get right — the 10rem default must match the one
+				   baked into lanes(auto)'s track list in layouts/lanes.json (it read 15rem),
+				   and the gap has to be in the maths at all (auto-fill counts n-1 gaps; this
+				   ignored them). With both wrong it gave 4 lanes where Safari gave 5. */
+				column-count: round(down,
+					(min(var(--layout-bleed-mw, 1024px), 100cqi - 2 * var(--layout-mi, 1rem)) + calc(var(--layout-colmg) * var(--layout-space-unit)))
+					/ (var(--layout-lanes-min, 10rem) + calc(var(--layout-colmg) * var(--layout-space-unit))), 1);
 			}
 		}
 

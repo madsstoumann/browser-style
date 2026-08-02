@@ -8,32 +8,71 @@
 	<meta name="description" content="A collection of layout system demos">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<style>
+		.index { margin-block: var(--spacing-lg); }
+		.index > section { break-inside: avoid; margin-block-end: var(--spacing-lg); }
+		.index h2 { font-size: 1rem; letter-spacing: 0.04em; margin: 0 0 0.25rem; text-transform: uppercase; }
+		.index p { color: GrayText; font-size: 0.875rem; margin: 0 0 0.5rem; }
+		.index ol { margin: 0; padding-inline-start: 1.25rem; }
+		.index li { margin-block-end: 0.25rem; }
+		.index small { color: GrayText; }
+		@media (min-width: 45rem) {
+			.index { columns: 2; column-gap: var(--spacing-xl); }
+		}
+		@media (min-width: 70rem) {
+			.index { columns: 3; }
+		}
+	</style>
 </head>
 <body>
-	<h1>UI: Components</h1>
-	<h2>Layouts</h2>
+	<h1>Layout System Demos</h1>
+	<p>Demos for <code>&lt;lay-out&gt;</code>. Every page here is build output — edit
+	<code>src/pages/*.html</code> or <code>src/demo.js</code>, then run <code>npm run build:demo</code>.</p>
 
-	<ol>
-		<li><a href="animate-self.html">Animate-self</a></li>
-		<li><a href="animate.html">Animate</a></li>
-		<li><a href="asymmetrical.html">Asymmetrical</a></li>
-		<li><a href="autofit.html">Autofit</a></li>
-		<li><a href="bento.html">Bento</a></li>
-		<li><a href="bleed.html">Bleed</a></li>
-		<li><a href="columns.html">Columns</a></li>
-		<li><a href="gapdeco.html">Gapdeco</a></li>
-		<li><a href="grid.html">Grid</a></li>
-		<li><a href="icons.html">Icons</a></li>
-		<li><a href="lanes.html">Lanes</a></li>
-		<li><a href="mosaic.html">Mosaic</a></li>
-		<li><a href="overflow.html">Overflow</a></li>
-		<li><a href="ratios.html">Ratios</a></li>
-		<li><a href="reveal-stack.html">Reveal-stack</a></li>
-		<li><a href="reveal.html">Reveal</a></li>
-		<li><a href="scroll-test.html">Scroll-test</a></li>
-		<li><a href="spacing.html">Spacing</a></li>
-		<li><a href="stack.html">Stack</a></li>
-		<li><a href="widths.html">Widths</a></li>
-	</ol>
+	<div class="index">
+		<section>
+			<h2>Layouts</h2>
+			<p>The layout tokens themselves — one demo per pattern, generated from layouts/*.json.</p>
+			<ol>
+				<li><a href="columns.html">Columns</a><br><small>Equal-width columns, 1–6</small></li>
+				<li><a href="ratios.html">Ratios</a><br><small>9 proportional splits — columns at uneven widths</small></li>
+				<li><a href="asymmetrical.html">Asymmetrical</a><br><small>6 sidebar/content splits</small></li>
+				<li><a href="autofit.html">Autofit</a><br><small>auto(fit) and auto(fill)</small></li>
+				<li><a href="grid.html">Grid</a><br><small>19 mixed-size grid patterns</small></li>
+				<li><a href="bento.html">Bento</a><br><small>10 dashboard-style box layouts</small></li>
+				<li><a href="mosaic.html">Mosaic</a><br><small>5 patterns, including hex</small></li>
+				<li><a href="lanes.html">Lanes</a><br><small>Masonry via display: grid-lanes</small></li>
+				<li><a href="stack.html">Stack</a><br><small>Overlapping layers in one cell</small></li>
+			</ol>
+		</section>
+		<section>
+			<h2>Modifiers</h2>
+			<p>Attributes that change how a layout behaves, on top of any layout token.</p>
+			<ol>
+				<li><a href="overflow.html">Overflow</a><br><small>Horizontal scroller — preview, snap, fade, center/frame</small></li>
+				<li><a href="carousel.html">Carousel</a><br><small>media= controls: dots, arrows, paging, autoplay</small></li>
+				<li><a href="spacing.html">Spacing</a><br><small>Breakpoint padding, margin and gap tokens</small></li>
+				<li><a href="widths.html">Widths</a><br><small>width= max-width tokens</small></li>
+				<li><a href="bleed.html">Bleed</a><br><small>Escaping the page column, full-bleed bands</small></li>
+				<li><a href="gapdeco.html">Gap decorations</a><br><small>Rules drawn in the grid gaps</small></li>
+			</ol>
+		</section>
+		<section>
+			<h2>Motion</h2>
+			<p>Scroll-driven animation. The engine lives in @browser.style/base; load it alongside layout.css.</p>
+			<ol>
+				<li><a href="animate.html">Animate</a><br><small>animate= — the children animate, staggered</small></li>
+				<li><a href="animate-self.html">Animate-self</a><br><small>animate-self= — the container animates</small></li>
+				<li><a href="reveal.html">Reveal</a><br><small>clip-path reveals on scroll entry</small></li>
+				<li><a href="reveal-stack.html">Reveal stack</a><br><small>stack(reveal) — sticky, layered scroll scenes</small></li>
+			</ol>
+		</section>
+		<section>
+			<h2>Extras</h2>
+			<ol>
+				<li><a href="icons.html">Icons</a><br><small>SVG preview glyph for every layout variant</small></li>
+			</ol>
+		</section>
+	</div>
 </body>
 </html>

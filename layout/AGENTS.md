@@ -116,6 +116,26 @@ Available: `columns(1)` through `columns(6)`
 ```
 6 variants for CSS `display: grid-lanes` masonry layouts. Uses CSS columns fallback for browsers without grid-lanes support. Supports `lanes-min` and `lanes-max` attributes for configurable column sizing.
 
+Two things to know when touching this:
+
+- **Safari 26 ships `display: grid-lanes`; Chromium does not** (verified — Chromium 145 supports no masonry syntax at all, and neither engine has `item-flow`/`grid-template-rows: masonry`). So both arms of the `@supports` are live in the wild and must agree. The fallback's `column-count` maths mirrors `repeat(auto-fill, minmax(lanes-min, 1fr))` — `floor((W + gap) / (min + gap))` — including the `10rem` default, which must stay in sync with the track list in `layouts/lanes.json`.
+- **Lane items carry `min-inline-size: 0`.** As grid items their automatic minimum is min-content, so anything with an `aspect-ratio` or a definite `min-block-size` transfers that into a minimum *width* and overflows its lane. The column-count fallback never needed this (block boxes just fill the column), which is why it only surfaced when Safari shipped grid-lanes.
+
+Config note: `lanes` is generated for `sm`/`md`/`lg` only (`layout.config.json`), but the static `@supports` selector matches all six breakpoints — so `xl="lanes(3)"` flips on `display: grid-lanes` with no track list and collapses to one lane. Add the breakpoint to the config before using it.
+
+#### Stack (Overlapping Layers)
+```html
+<lay-out xs="stack(hero)">
+  <div>Back layer</div>
+  <div>Front layer</div>
+</lay-out>
+```
+Stacks every direct child into the **same grid cell** (`--layout-gtc: 1fr` on the container, `--layout-ga: 1 / 1` on the children) so they overlap. Any name works — the selector is a substring match on `stack(`, so `stack(hero)`, `stack(overlay)`, `stack(my-thing)` are the same rule. Paint order is DOM order (last child on top, no `z-index` involved), the tallest child sets the height, and children keep normal grid-item alignment, so `place-self` / margins position them within the shared cell.
+
+`stack(reveal)` is the one reserved name: it additionally makes the layout a sticky full-height cage (`core/base.css`) and redirects an `animate-self="reveal(…)"` onto its last child (`core/animations.css`) — the scroll-driven layer-peel in `dist/reveal-stack.html`. It depends on the generic rule above for the overlap.
+
+For a badge or label over an image, prefer `<ui-media>` furniture (`ui-chip`/`ui-beacon`/`ui-sticker`/`ui-save`/`ui-play`) — it has a real 3×3 position grid and theming. `stack()` is for whole-layer composition, where the children are arbitrary.
+
 ### Breakpoint Spacing Tokens
 
 Spacing is **token-only** — card-style tokens embedded alongside layout tokens in the breakpoint attributes. **There are no bare `pad-inline` / `pad-top` / `col-gap` etc. attributes** (removed in v4); every spacing value lives inside a breakpoint attribute. Tokens are multipliers of `--layout-space-unit` in two spellings: **numbers** (`0`–`4`, e.g. `cg(2)`) and **word sizes** on the content-DSL ladder — `2xs` 0.125 · `xs` 0.25 · `sm` 0.5 · `md` 1 · `lg` 1.5 · `xl` 2 · `2xl` 3 (`cg(2xs)` = a 2px hairline at the default 1rem unit; the collision-safe needle includes the closing paren, so `cg(2)` never matches `cg(2xs)`). Both write the `--layout-*` custom props that `base.css`/`group.css` compose into padding/margin/gap. Tokens are generated at the breakpoints in the `spacing.breakpoints` allowlist — shipped config: `["xs","lg"]` (`xs` = the mobile-first base) — so gaps can change per allowlisted breakpoint: `xs="columns(2) cg(sm)" lg="grid(3a) cg(2xs)"`. Add a breakpoint (e.g. `xl` for mosaic tiers) to the allowlist to author spacing there.
@@ -240,10 +260,20 @@ from individual attributes into the `media=` token attribute**: the `nav`, `arro
 
 - **Shared vocabulary** with `<ui-media>` (styles in `ui/base/carousel.css`): bare
   `nav`, `nav(mrk|arw|blw|abv)`,
-  `arw(arr|sm|lg|xl|sqr|sft|hid|lgt|drk|bare|set|ts|tc|te|cs|cc|ce|bs|bc|be|blw|abv)`,
-  `mrk(sm|md|lg|xl|pll|hyb|tmb|non|lgt|drk|ts…be|blw|abv)`, `pages` (bare token, `~=`
-  matched), `auto` / `auto(4s)` and `loop`. `loop`/`auto` are progressive enhancement
-  driven by the shared carousel script in `@browser.style/card`.
+  `arw(arr|sm|lg|xl|sqr|sft|hid|lgt|drk|bare|set|rev|ts|tc|te|cs|cc|bs|bc|be|blw|abv)`,
+  `mrk(sm|md|lg|xl|pll|hyb|tmb|bar|lbl|non|lgt|drk|ts…be|blw|abv)`, `tmb(<ratio>)`,
+  `pages` (bare token, `~=` matched), `auto` / `auto(4s)` and `loop`. `loop`/`auto` are
+  progressive enhancement driven by the shared carousel script in `@browser.style/card`.
+  **The two placement grids differ by one cell**: `mrk()` has all nine
+  (`ts tc te cs cc ce bs bc be`), `arw()` has **eight** — there is no `arw(ce)`, that
+  cell is `arw(set)`'s own default.
+- **Not available on `<lay-out overflow>`:** `axis(y)` (the layout scroller is always
+  inline-axis) and therefore `mrk(rail)`, which requires `axis(y)` + `mrk(tmb)`. Both
+  are `<ui-media>`-only.
+- **Demo:** `dist/carousel.html` (source `src/pages/carousel.html`) covers the whole
+  control vocabulary. The geometry tokens (`preview*`/`center`/`frame`/`gaps`/`stop`)
+  are demoed separately in `dist/overflow.html` — that page is deliberately
+  control-free and animation-free.
 - **Scoping rule:** `media=` on a `<lay-out>` configures **only the lay-out's own
   scroller** — it never inherits into descendant `<ui-media>` inside cards (`media=`
   inheritance stops at the nearest `ui-card`/`ui-reveal` host). `content=`, by
@@ -301,7 +331,8 @@ Creates a named `view-timeline: --animate-tl` on the container; children animate
 | **Bounce** | `bounce()` `bounce-in-up()` `bounce-in-down()` `bounce-in-left()` `bounce-in-right()` |
 | **Fade** | `fade-in()` `fade-out()` `fade-up()` `fade-down()` `fade-left()` `fade-right()` `fade-up-left()` `fade-up-right()` `fade-down-left()` `fade-down-right()` |
 | **Flip** | `flip-up()` `flip-down()` `flip-left()` `flip-right()` `flip-diagonal()` |
-| **Reveal** | `reveal()` `reveal-circle()` `reveal-polygon()` |
+| **Reveal** (container only) | `reveal(circle)` `reveal(inset)` `reveal(polygon)` `reveal(superellipse)` — `[animate-self]` arm only, no child arm |
+| **Reveal** (shape, both arms) | `reveal(hex)` `reveal(star)` `reveal(rhomb)` `reveal(plus)` `reveal(circ)` — clip endpoints from the shared `--shp-*` catalog (`ui/base/shapes.css`) |
 | **Slide** | `slide-up()` `slide-down()` `slide-in()` `slide-out()` |
 | **Zoom** | `zoom-in()` `zoom-in-rotate()` `zoom-out()` `zoom-out-rotate()` |
 | **Other** | `opacity()` |
@@ -786,6 +817,9 @@ Each layout file follows this structure:
 ### Lanes (6 variants)
 `lanes(2)`, `lanes(3)`, `lanes(4)`, `lanes(5)`, `lanes(6)`, `lanes(auto)`
 
+### Stack (any name)
+`stack(<name>)` — overlapping layers in one grid cell. `stack(reveal)` is reserved (sticky cage + reveal redirect).
+
 ## File Structure (Detailed)
 
 ```
@@ -827,6 +861,92 @@ layout/
     └── RUN.md            # Run commands
 ```
 
+## Browser quirks & workarounds
+
+Engine-specific behaviour this package works around. Each one is a real, verified
+defect with a load-bearing fix in `core/base.css` — don't remove them as dead code.
+
+### Bleed can produce a horizontal scrollbar in Safari
+
+**Symptom:** a page with `bleed` gets a sliver of horizontal scroll in Safari; Chrome
+is fine.
+
+**Cause — two different references for "the viewport":**
+
+| | unit | includes a space-taking scrollbar? |
+|---|---|---|
+| Page column (`body:has(lay-out)`) | `50cqw` | **no** — container units measure the content box |
+| All bleed maths (`[bleed]`, `group.css`) | `100dvi` / `50dvi` | **yes** — viewport units span the full viewport |
+
+Under **overlay** scrollbars the two agree, which is why Chrome on macOS never shows
+it. Under **space-taking** scrollbars they diverge by the scrollbar width, so the
+bleed band is sized and offset against a wider reference than the column it is
+escaping. Safari uses space-taking scrollbars when *Show scroll bars: Always* is set,
+or when a mouse is attached.
+
+**Workaround** (`core/base.css`, near the top of `@layer layout.base`):
+
+```css
+@supports (-webkit-hyphens: none) {
+  html:has(:is(lay-out, lay-out-group)[bleed]) { overflow-x: clip; }
+}
+```
+
+- `-webkit-hyphens` is the WebKit gate — true in Safari and in every iOS browser
+  (all WebKit, same behaviour), false in Chrome/Edge/Firefox.
+- **`clip`, not `hidden`.** `clip` does not create a scroll container, so
+  `position: sticky` (the `stack(reveal)` cage) and the scroll-driven view-timelines
+  keep working. Only the inline axis is clipped; the block axis stays `visible`,
+  which is the one combination allowed alongside `clip`.
+- `:has()`-scoped so it is inert on pages that never bleed.
+
+**This treats the symptom, not the cause.** The principled fix is to make the bleed
+maths reference the same box as the column (subtract a measured scrollbar width, or
+move both onto one unit). That touches every bleed calculation plus `group.css`, so
+it needs verification in real Safari with space-taking scrollbars — headless
+Playwright uses overlay scrollbars in both engines and cannot reproduce the
+condition (`::-webkit-scrollbar` styling and `scrollbar-gutter: stable` both leave
+the gutter at 0).
+
+### Masonry: `display: grid-lanes` is Safari-only today
+
+Verified, not assumed — and note that general web-guidance sources still say masonry
+ships nowhere:
+
+| syntax | Safari 26 | Chromium 145 |
+|---|---|---|
+| `display: grid-lanes` | **yes**, and it applies | no |
+| `grid-template-rows: masonry` | no | no |
+| `item-flow` / `item-pack` / `item-slack` | no | no |
+
+So `display: grid-lanes` is the current spelling and **both arms of the `@supports`
+pair are live in the wild** — they must agree. Two things keep them in sync:
+
+- **`min-inline-size: 0` on lane children.** Lane items are grid items, so their
+  automatic minimum is min-content; an `aspect-ratio` or definite `min-block-size`
+  transfers that into a minimum *width* and the item overflows its lane, overlapping
+  its neighbours. This is ordinary grid behaviour — plain `display: grid` does the
+  same — and the column-count fallback never needed it because block boxes just fill
+  the column. That is why it only surfaced when Safari shipped grid-lanes.
+- **The fallback's `column-count` mirrors `auto-fill`:**
+  `floor((W + gap) / (min + gap))`, including the `10rem` `--layout-lanes-min`
+  default, which must match the track list in `layouts/lanes.json`. Getting either
+  wrong makes the engines disagree on lane count at the same width.
+
+**Config gap:** `lanes` is generated for `sm`/`md`/`lg` only, but the static
+`@supports` selector matches all six breakpoints — so `xl="lanes(3)"` flips on
+`display: grid-lanes` with no track list and collapses to one lane. Add the
+breakpoint to `layout.config.json` before using it.
+
+### Typed `attr()` has no fallback in Safari/Firefox
+
+Repo-wide sharp edge (see `ui/base/polyfills/readme.md`). For this package it means
+`lanes-min` / `lanes-max`, `bleed`, `columns`, `rows`, `max-width`, `self` and `size`
+only work in Safari because `polyfills/attr-fallback.js` writes them back as inline
+styles — a demo page that omits that script gets a *missing* value, not a wrong one,
+and the consuming property dies at computed-value time. `CSS.supports('--x', 'attr(…)')`
+is `true` in Safari, so feature-detect on a **real** property.
+
 ## Debugging Tips
 
 1. **Layout not applying?** Check breakpoint attribute matches viewport
@@ -835,3 +955,7 @@ layout/
 4. **Images not sized correctly?** Check srcsets attribute format
 5. **Build failing?** Check layout.config.json is valid JSON
 6. **Missing layout?** Ensure layout is referenced in config breakpoints
+7. **Stray horizontal scrollbar in Safari?** See *Browser quirks* above — a `bleed`
+   band against space-taking scrollbars
+8. **Masonry looks scrambled / items overlap?** Lane children need
+   `min-inline-size: 0`; see *Browser quirks* above

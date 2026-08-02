@@ -32,15 +32,42 @@
 					<ui-chip>Deal</ui-chip>
 					<ui-sticker size="lg"><small>Save</small><strong>10%</strong></ui-sticker>
 					<lay-out xs="cg(xs) rg(xs) p(xs)" md="columns(3)" lg="grid(3c)" theme="gray">
-						<ui-media media="hov(zoom)"><img src="assets/goose-1.png" alt="Goose bucket bag — product shot"></ui-media>
-						<ui-media media="hov(zoom)"><img src="assets/goose-2.png" alt="Model carrying the goose bucket bag"></ui-media>
-						<ui-media media="hov(zoom) flp(h)"><img src="assets/goose-1.png" alt="Goose drawstring bag — detail"></ui-media>
+						<ui-media media="hov(zoom)"><img src="/assets/images/goose-1.png" alt="Goose bucket bag — product shot" fetchpriority="high" decoding="async"></ui-media>
+						<ui-media media="hov(zoom)"><img src="/assets/images/goose-2.png" alt="Model carrying the goose bucket bag" decoding="async"></ui-media>
+						<ui-media media="hov(zoom) flp(h)"><img src="/assets/images/goose-1.png" alt="Goose drawstring bag — detail" decoding="async"></ui-media>
 					</lay-out>
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Moschino</small>
 					<h3 data-part="headline">Handbag — multi-coloured</h3>
 					<p data-part="price"><data value="945">$945.00</data> <del>$1,050.00</del> <small>−10%</small></p>
+					<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy now</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+
+	<!-- ============================================================
+	     Even three-up — columns(3) instead of grid(3c)
+	     ============================================================ -->
+	<h2>Even three-up</h2>
+	<p>The same pattern with an <em>even</em> collage: <code>md="columns(3)"</code> gives three equal tiles instead of <code>grid(3c)</code>'s one-large-plus-two-stacked. It suits a set of shots that carry equal weight — a lookbook row rather than a hero plus details. The source images are 2:3 portraits, so <code>asr(2/3)</code> tiles them at their native ratio and nothing is cropped. <code>columns(3)</code> is generated from <strong>md</strong> up — this build's config ships only <code>columns(2)</code> at <code>sm</code> — so the strip stacks below 540px.</p>
+	<lay-out width="sm">
+		<ui-card variant="bdr bdr(lgt) rds(lg)" media="chip(green) sticker(green)" content="scl(sm) pad(md)">
+			<cq-box>
+				<ui-media>
+					<ui-chip>New in</ui-chip>
+					<ui-sticker size="lg"><small>Save</small><strong>20%</strong></ui-sticker>
+					<lay-out xs="cg(0) rg(0)" md="columns(3)">
+						<ui-media media="asr(2/3) hov(zoom)"><img src="/assets/images/dress-1.png" alt="Pale blue satin gown, worn in a gallery" loading="lazy" decoding="async"></ui-media>
+						<ui-media media="asr(2/3) hov(zoom)"><img src="/assets/images/dress-2.png" alt="Comic-print gown in front of a pop-art canvas" loading="lazy" decoding="async"></ui-media>
+						<ui-media media="asr(2/3) hov(zoom)"><img src="/assets/images/dress-3.png" alt="Gown in a repeated screen-print portrait pattern" loading="lazy" decoding="async"></ui-media>
+					</lay-out>
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Atelier Nord</small>
+					<h3 data-part="headline">Gallery gown — the pop-art edit</h3>
+					<p data-part="price"><data value="620">$620.00</data> <del>$775.00</del> <small>−20%</small></p>
 					<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy now</a></nav>
 				</ui-content>
 			</cq-box>
@@ -59,14 +86,14 @@
 					<ui-chip>Deal</ui-chip>
 					<ui-sticker size="lg"><small>Save</small><strong>10%</strong></ui-sticker>
 					<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
-						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-1.png" alt="Goose bucket bag — product shot"></ui-media>
-						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-2.png" alt="Model carrying the goose bucket bag"></ui-media>
-						<ui-media media="asr(1/1) hov(zoom) flp(h)"><img src="assets/goose-1.png" alt="Goose drawstring bag — detail"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/goose-1.png" alt="Goose bucket bag — product shot" loading="lazy" decoding="async"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/goose-2.png" alt="Model carrying the goose bucket bag" loading="lazy" decoding="async"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom) flp(h)"><img src="/assets/images/goose-1.png" alt="Goose drawstring bag — detail" loading="lazy" decoding="async"></ui-media>
 					</lay-out>
 					<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
-						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-1.png" alt="Swan bucket bag — product shot"></ui-media>
-						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-3.png" alt="Model holding the swan bucket bag"></ui-media>
-						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-2.png" alt="Swan bucket bag — alternate angle"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/swan-1.png" alt="Swan bucket bag — product shot" loading="lazy" decoding="async"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/swan-3.png" alt="Model holding the swan bucket bag" loading="lazy" decoding="async"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/swan-2.png" alt="Swan bucket bag — alternate angle" loading="lazy" decoding="async"></ui-media>
 					</lay-out>
 				</ui-media>
 				<ui-content>
@@ -91,9 +118,9 @@
 					<ui-chip>Deal</ui-chip>
 					<ui-sticker size="lg"><small>Save</small><strong>10%</strong></ui-sticker>
 					<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
-						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-1.png" alt="Goose bucket bag — product shot"></ui-media>
-						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-2.png" alt="Model carrying the goose bucket bag"></ui-media>
-						<ui-media media="asr(1/1) hov(zoom) flp(h)"><img src="assets/goose-1.png" alt="Goose drawstring bag — detail"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/goose-1.png" alt="Goose bucket bag — product shot" loading="lazy" decoding="async"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/goose-2.png" alt="Model carrying the goose bucket bag" loading="lazy" decoding="async"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom) flp(h)"><img src="/assets/images/goose-1.png" alt="Goose drawstring bag — detail" loading="lazy" decoding="async"></ui-media>
 					</lay-out>
 				</ui-media>
 				<ui-content>
@@ -110,9 +137,9 @@
 					<ui-chip>Deal</ui-chip>
 					<ui-sticker size="lg"><small>Save</small><strong>15%</strong></ui-sticker>
 					<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
-						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/dali-1.png" alt="Melting-clock shoulder bag — product shot"></ui-media>
-						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/dali-2.png" alt="Model by the coast"></ui-media>
-						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/dali-4.png" alt="Model carrying the melting-clock bag"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/dali-1.png" alt="Melting-clock shoulder bag — product shot" loading="lazy" decoding="async"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/dali-2.png" alt="Model by the coast" loading="lazy" decoding="async"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/dali-4.png" alt="Model carrying the melting-clock bag" loading="lazy" decoding="async"></ui-media>
 					</lay-out>
 				</ui-media>
 				<ui-content>
@@ -129,9 +156,9 @@
 					<ui-chip>Deal</ui-chip>
 					<ui-sticker size="lg"><small>Save</small><strong>10%</strong></ui-sticker>
 					<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
-						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-1.png" alt="Swan bucket bag — product shot"></ui-media>
-						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-3.png" alt="Model holding the swan bucket bag"></ui-media>
-						<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-2.png" alt="Swan bucket bag — alternate angle"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/swan-1.png" alt="Swan bucket bag — product shot" loading="lazy" decoding="async"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/swan-3.png" alt="Model holding the swan bucket bag" loading="lazy" decoding="async"></ui-media>
+						<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/swan-2.png" alt="Swan bucket bag — alternate angle" loading="lazy" decoding="async"></ui-media>
 					</lay-out>
 				</ui-media>
 				<ui-content>
@@ -148,8 +175,8 @@
 					<ui-chip>Deal</ui-chip>
 					<ui-sticker size="lg"><small>Save</small><strong>20%</strong></ui-sticker>
 					<lay-out xs="cg(0) rg(0)" sm="columns(2)">
-						<ui-media media="asr(3/4) hov(zoom)"><img src="assets/eye-1.png" alt="Eye clutch — product shot"></ui-media>
-						<ui-media media="asr(3/4) hov(zoom)"><img src="assets/eye-2.png" alt="Model with the eye clutch"></ui-media>
+						<ui-media media="asr(3/4) hov(zoom)"><img src="/assets/images/eye-1.png" alt="Eye clutch — product shot" loading="lazy" decoding="async"></ui-media>
+						<ui-media media="asr(3/4) hov(zoom)"><img src="/assets/images/eye-2.png" alt="Model with the eye clutch" loading="lazy" decoding="async"></ui-media>
 					</lay-out>
 				</ui-media>
 				<ui-content>
@@ -182,9 +209,9 @@
 									<ui-chip>Deal</ui-chip>
 									<ui-sticker size="lg"><small>Save</small><strong>10%</strong></ui-sticker>
 									<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
-										<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-1.png" alt="Goose bucket bag — product shot"></ui-media>
-										<ui-media media="asr(1/1) hov(zoom)"><img src="assets/goose-1.png" alt="Model carrying the goose bucket bag"></ui-media>
-										<ui-media media="asr(1/1) hov(zoom) flp(h)"><img src="assets/goose-1.png" alt="Goose drawstring bag — detail"></ui-media>
+										<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/goose-1.png" alt="Goose bucket bag — product shot" loading="lazy" decoding="async"></ui-media>
+										<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/goose-1.png" alt="Model carrying the goose bucket bag" loading="lazy" decoding="async"></ui-media>
+										<ui-media media="asr(1/1) hov(zoom) flp(h)"><img src="/assets/images/goose-1.png" alt="Goose drawstring bag — detail" loading="lazy" decoding="async"></ui-media>
 									</lay-out>
 								</ui-media>
 								<ui-content>
@@ -201,9 +228,9 @@
 									<ui-chip>Deal</ui-chip>
 									<ui-sticker size="lg"><small>Save</small><strong>15%</strong></ui-sticker>
 									<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
-										<ui-media media="asr(1/1) hov(zoom)"><img src="assets/dali-1.png" alt="Melting-clock shoulder bag — product shot"></ui-media>
-										<ui-media media="asr(1/1) hov(zoom)"><img src="assets/dali-2.png" alt="Model by the coast"></ui-media>
-										<ui-media media="asr(1/1) hov(zoom)"><img src="assets/dali-4.png" alt="Model carrying the melting-clock bag"></ui-media>
+										<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/dali-1.png" alt="Melting-clock shoulder bag — product shot" loading="lazy" decoding="async"></ui-media>
+										<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/dali-2.png" alt="Model by the coast" loading="lazy" decoding="async"></ui-media>
+										<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/dali-4.png" alt="Model carrying the melting-clock bag" loading="lazy" decoding="async"></ui-media>
 									</lay-out>
 								</ui-media>
 								<ui-content>
@@ -220,9 +247,9 @@
 									<ui-chip>Deal</ui-chip>
 									<ui-sticker size="lg"><small>Save</small><strong>10%</strong></ui-sticker>
 									<lay-out xs="cg(0) rg(0)" md="columns(3)" lg="grid(3c)">
-										<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-1.png" alt="Swan bucket bag — product shot"></ui-media>
-										<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-3.png" alt="Model holding the swan bucket bag"></ui-media>
-										<ui-media media="asr(1/1) hov(zoom)"><img src="assets/swan-2.png" alt="Swan bucket bag — alternate angle"></ui-media>
+										<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/swan-1.png" alt="Swan bucket bag — product shot" loading="lazy" decoding="async"></ui-media>
+										<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/swan-3.png" alt="Model holding the swan bucket bag" loading="lazy" decoding="async"></ui-media>
+										<ui-media media="asr(1/1) hov(zoom)"><img src="/assets/images/swan-2.png" alt="Swan bucket bag — alternate angle" loading="lazy" decoding="async"></ui-media>
 									</lay-out>
 								</ui-media>
 								<ui-content>
@@ -239,14 +266,36 @@
 									<ui-chip>Deal</ui-chip>
 									<ui-sticker size="lg"><small>Save</small><strong>20%</strong></ui-sticker>
 									<lay-out xs="cg(0) rg(0)" sm="columns(2)">
-										<ui-media media="asr(3/4) hov(zoom)"><img src="assets/eye-1.png" alt="Eye clutch — product shot"></ui-media>
-										<ui-media media="asr(3/4) hov(zoom)"><img src="assets/eye-2.png" alt="Model with the eye clutch"></ui-media>
+										<ui-media media="asr(3/4) hov(zoom)"><img src="/assets/images/eye-1.png" alt="Eye clutch — product shot" loading="lazy" decoding="async"></ui-media>
+										<ui-media media="asr(3/4) hov(zoom)"><img src="/assets/images/eye-2.png" alt="Model with the eye clutch" loading="lazy" decoding="async"></ui-media>
 									</lay-out>
 								</ui-media>
 								<ui-content>
 									<small data-part="eyebrow">Oculus</small>
 									<h3 data-part="headline">Evening bag — brown/gold</h3>
 									<p data-part="price"><data value="540">$540.00</data> <del>$675.00</del> <small>−20%</small></p>
+									<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy now</a></nav>
+								</ui-content>
+							</cq-box>
+						</ui-card>
+						<!-- Even three-up slide: columns(3) + asr(2/3) portraits, so the
+						     collage pattern varies between slides without any layout shift —
+						     each slide is still one card in the same frame. -->
+						<ui-card variant="bdr bdr(lgt) rds(lg)" media="chip(green) sticker(green)" content="scl(sm) pad(md)">
+							<cq-box>
+								<ui-media>
+									<ui-chip>New in</ui-chip>
+									<ui-sticker size="lg"><small>Save</small><strong>20%</strong></ui-sticker>
+									<lay-out xs="cg(0) rg(0)" md="columns(3)">
+										<ui-media media="asr(2/3) hov(zoom)"><img src="/assets/images/dress-1.png" alt="Pale blue satin gown, worn in a gallery" loading="lazy" decoding="async"></ui-media>
+										<ui-media media="asr(2/3) hov(zoom)"><img src="/assets/images/dress-2.png" alt="Comic-print gown in front of a pop-art canvas" loading="lazy" decoding="async"></ui-media>
+										<ui-media media="asr(2/3) hov(zoom)"><img src="/assets/images/dress-3.png" alt="Gown in a repeated screen-print portrait pattern" loading="lazy" decoding="async"></ui-media>
+									</lay-out>
+								</ui-media>
+								<ui-content>
+									<small data-part="eyebrow">Atelier Nord</small>
+									<h3 data-part="headline">Gallery gown — the pop-art edit</h3>
+									<p data-part="price"><data value="620">$620.00</data> <del>$775.00</del> <small>−20%</small></p>
 									<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy now</a></nav>
 								</ui-content>
 							</cq-box>

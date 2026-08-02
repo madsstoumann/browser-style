@@ -89,19 +89,40 @@ export const srcsetConfig = {
 npm run build:demo
 ```
 
-**Output:** 9 HTML files + 63 SVG icons
+**Output:** 22 HTML files + 70 SVG icons (the script logs `23` — see the `stack.html` note below)
 
-**Generated files:**
+The step has **two halves**. Only the first is generated from JSON; the second copies
+hand-authored pages. **Never edit `dist/*.html` — it is overwritten on every run.**
+
+**Generated from `layouts/*.json`:**
 - `dist/asymmetrical.html`
 - `dist/autofit.html`
 - `dist/bento.html`
 - `dist/columns.html`
 - `dist/grid.html`
+- `dist/lanes.html`
 - `dist/mosaic.html`
 - `dist/ratios.html`
+- `dist/stack.html` *(immediately overwritten by the copy step below)*
+- `dist/overflow.html` (from `layouts/columns.json`, gated on its `overflowIcons` block;
+  markup lives in `generateOverflowHTML()` in `src/demo.js`)
 - `dist/icons.html` (icon gallery)
-- `dist/index.html` (main index)
-- `dist/icons/*.svg` (63 icon files)
+- `dist/index.html` (main index — built from the set of files this run produced, so a new
+  `src/pages/*.html` self-links)
+- `dist/icons/*.svg` (70 icon files)
+
+**Copied verbatim from `src/pages/` (edit these, not `dist/`):**
+`animate.html` · `animate-self.html` · `bleed.html` · `carousel.html` · `gapdeco.html` ·
+`reveal.html` · `reveal-stack.html` · `scroll-test.html` · `spacing.html` · `stack.html` ·
+`widths.html`
+
+The copy applies one rewrite: `/ui/layout/` → `/layout/`.
+
+> **Note on the count.** `stack.html` has two producers — `layouts/stack.json` generates it,
+> then `src/pages/stack.html` overwrites it (the copy runs later, so the hand-authored page
+> wins). The script's `demoCount` counts both, which is why it logs `23` for 22 distinct
+> files. `dist/` also holds two untracked orphans (`morph-stack.html`, `section.html`) that
+> no build step produces.
 
 ---
 

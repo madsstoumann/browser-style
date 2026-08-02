@@ -6,12 +6,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="Width Tokens using CSS layout system">
+	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="layout.min.css">
 	<link rel="stylesheet" href="/layout/demo.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
-	<style>
-		lay-out[width] { --layout-bg: hsl(220 60% 95%); }
-	</style>
 </head>
 <body>
 	<h1>Width Tokens</h1>
@@ -20,10 +18,16 @@
 
 	<h2>Width Tokens</h2>
 	<p>Each token maps to a CSS custom property for consistent sizing.</p>
+	<p><em><strong>lg</strong>, <strong>xl</strong> and <strong>xxl</strong> are wider than the page's
+	own content column (<code>--layout-bleed-mw</code>, 1024px by default), so on this page they would
+	all clamp to the same width and look identical. They are shown with <code>bleed</code> instead:
+	the band escapes the column and spans the viewport, while <code>width</code> keeps constraining
+	the content inside it. They also carry a <code>theme</code> and <code>p(2)</code> padding so each
+	band is visible.</em></p>
 	<section>
 		<h3>Width XS (20rem)</h3>
 		<small>Extra small container - 320px</small>
-		<code>&lt;lay-out md="columns(1)" width="xs"&gt;</code>
+		<p><code>&lt;lay-out md="columns(1)" width="xs"&gt;</code></p>
 		<lay-out md="columns(1)" width="xs">
 			<item-card></item-card>
 		</lay-out>
@@ -31,7 +35,7 @@
 	<section>
 		<h3>Width SM (30rem)</h3>
 		<small>Small container - 480px</small>
-		<code>&lt;lay-out md="columns(1)" width="sm"&gt;</code>
+		<p><code>&lt;lay-out md="columns(1)" width="sm"&gt;</code></p>
 		<lay-out md="columns(1)" width="sm">
 			<item-card></item-card>
 		</lay-out>
@@ -39,7 +43,7 @@
 	<section>
 		<h3>Width MD (48rem)</h3>
 		<small>Medium container - 768px</small>
-		<code>&lt;lay-out md="columns(2)" width="md"&gt;</code>
+		<p><code>&lt;lay-out md="columns(2)" width="md"&gt;</code></p>
 		<lay-out md="columns(2)" width="md">
 			<item-card></item-card>
 			<item-card></item-card>
@@ -48,8 +52,8 @@
 	<section>
 		<h3>Width LG (64rem)</h3>
 		<small>Large container - 1024px</small>
-		<code>&lt;lay-out md="columns(2)" width="lg"&gt;</code>
-		<lay-out md="columns(2)" width="lg">
+		<p><code>&lt;lay-out md="columns(2)" xs="p(2)" width="lg" bleed theme="slate"&gt;</code></p>
+		<lay-out md="columns(2)" xs="p(2)" width="lg" bleed theme="slate">
 			<item-card></item-card>
 			<item-card></item-card>
 		</lay-out>
@@ -57,8 +61,8 @@
 	<section>
 		<h3>Width XL (80rem)</h3>
 		<small>Extra large container - 1280px</small>
-		<code>&lt;lay-out md="columns(2)" width="xl"&gt;</code>
-		<lay-out md="columns(2)" width="xl">
+		<p><code>&lt;lay-out md="columns(2)" xs="p(2)" width="xl" bleed theme="slate pale"&gt;</code></p>
+		<lay-out md="columns(2)" xs="p(2)" width="xl" bleed theme="slate pale">
 			<item-card></item-card>
 			<item-card></item-card>
 		</lay-out>
@@ -66,8 +70,8 @@
 	<section>
 		<h3>Width XXL (96rem)</h3>
 		<small>Extra extra large container - 1536px</small>
-		<code>&lt;lay-out md="columns(2)" width="xxl"&gt;</code>
-		<lay-out md="columns(2)" width="xxl">
+		<p><code>&lt;lay-out md="columns(2)" xs="p(2)" width="xxl" bleed theme="black"&gt;</code></p>
+		<lay-out md="columns(2)" xs="p(2)" width="xxl" bleed theme="black">
 			<item-card></item-card>
 			<item-card></item-card>
 		</lay-out>

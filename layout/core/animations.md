@@ -37,7 +37,12 @@ Animations use a function-call syntax with an optional multiplier:
 `flip-up()` `flip-down()` `flip-left()` `flip-right()` `flip-diagonal()`
 
 ### Reveal
-`reveal()` `reveal-circle()` `reveal-polygon()`
+`reveal(circle)` `reveal(inset)` `reveal(polygon)` `reveal(superellipse)` — **container only**
+(`[animate-self]` arm, no child arm).
+
+`reveal(hex)` `reveal(star)` `reveal(rhomb)` `reveal(plus)` `reveal(circ)` — shape reveals,
+**both arms**; clip-path endpoints come from the shared `--shp-*` catalog
+(`ui/base/shapes.css`), so the same shape pair can drive a static media clip and a reveal.
 
 ### Slide
 `slide-up()` `slide-down()` `slide-in()` `slide-out()`
@@ -70,7 +75,7 @@ The multiplier scales each animation's spatial properties:
 | Zoom-in (zi) | 0.6 | 0.3 | 0.2 |
 | Zoom-out (zo) | 1.2 | 1.4 | 1.6 |
 
-Animations without spatial properties (`fade-in`, `fade-out`, `opacity`, `reveal`, `reveal-circle`, `reveal-polygon`) are unaffected by the multiplier.
+Animations without spatial properties (`fade-in`, `fade-out`, `opacity` and every `reveal(…)`) are unaffected by the multiplier.
 
 ## Custom Easings
 
@@ -427,7 +432,7 @@ A solid-color `::after` pseudo-element covers the `lay-out` and morphs away via 
 
 ### How It Differs From `reveal-*`
 
-The existing `reveal-*` animations (`reveal()`, `reveal-circle()`, `reveal-polygon()`) animate the element itself — the element starts invisible and clips open. Morph overlays work the opposite way: the element and its content are always present, but a solid overlay sits on top and morphs away. This creates seamless section-to-section transitions when the overlay color matches the previous section's background.
+The existing `reveal(…)` animations animate the element itself — the element starts invisible and clips open. Morph overlays work the opposite way: the element and its content are always present, but a solid overlay sits on top and morphs away. This creates seamless section-to-section transitions when the overlay color matches the previous section's background.
 
 | | `reveal-*` animations | `morph` overlay |
 |---|---|---|

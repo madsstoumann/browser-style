@@ -32,7 +32,7 @@
 	<h2>All-sides padding — <code>p()</code></h2>
 	<section>
 		<small>Base padding <strong>p(1)</strong> on all sides (from 0px up), growing to <strong>p(4)</strong> at <strong>lg</strong>.</small>
-		<code>&lt;lay-out xs="columns(2) p(1)" lg="columns(4) p(4)"&gt;</code>
+		<p><code>&lt;lay-out xs="columns(2) p(1)" lg="columns(4) p(4)"&gt;</code></p>
 		<lay-out xs="columns(2) p(1)" lg="columns(4) p(4)" style="--layout-bg: #e8e8e8;">
 			<item-card></item-card>
 			<item-card></item-card>
@@ -44,7 +44,7 @@
 	<h2>Padding-inline &amp; padding-block — <code>pi()</code> / <code>pb()</code></h2>
 	<section>
 		<small>Inline padding grows from <strong>pi(1)</strong> (base) to <strong>pi(4)</strong> at <strong>lg</strong>; block padding <strong>pb()</strong> sets top + bottom together.</small>
-		<code>&lt;lay-out xs="columns(2) pi(1) pb(1)" lg="columns(4) pi(4) pb(2)"&gt;</code>
+		<p><code>&lt;lay-out xs="columns(2) pi(1) pb(1)" lg="columns(4) pi(4) pb(2)"&gt;</code></p>
 		<lay-out xs="columns(2) pi(1) pb(1)" lg="columns(4) pi(4) pb(2)" style="--layout-bg: hsl(220 60% 92%);">
 			<item-card></item-card>
 			<item-card></item-card>
@@ -56,7 +56,7 @@
 	<h2>Asymmetric block padding — <code>pbs()</code> / <code>pbe()</code></h2>
 	<section>
 		<small>Block-start (<strong>pbs</strong>) and block-end (<strong>pbe</strong>) set independently — here more padding at the bottom.</small>
-		<code>&lt;lay-out xs="columns(2) pbs(1) pbe(2)" lg="columns(3) pbs(2) pbe(4)"&gt;</code>
+		<p><code>&lt;lay-out xs="columns(2) pbs(1) pbe(2)" lg="columns(3) pbs(2) pbe(4)"&gt;</code></p>
 		<lay-out xs="columns(2) pbs(1) pbe(2)" lg="columns(3) pbs(2) pbe(4)" style="--layout-bg: hsl(200 55% 90%);">
 			<item-card></item-card>
 			<item-card></item-card>
@@ -67,7 +67,7 @@
 	<h2>Margin spacing (block only) — <code>mbs()</code> / <code>mbe()</code></h2>
 	<section>
 		<small>Vertical separation between layouts using <strong>mbe</strong> (margin-block-end). The gap below the first grid grows at <strong>lg</strong>. (Margin is block-only — margin-inline stays <code>auto</code> for centering.)</small>
-		<code>&lt;lay-out xs="columns(2) pb(1) mbe(2)" lg="columns(2) pb(2) mbe(4)"&gt;</code>
+		<p><code>&lt;lay-out xs="columns(2) pb(1) mbe(2)" lg="columns(2) pb(2) mbe(4)"&gt;</code></p>
 		<lay-out xs="columns(2) pb(1) mbe(2)" lg="columns(2) pb(2) mbe(4)" style="--layout-bg: hsl(140 40% 90%);">
 			<item-card></item-card>
 			<item-card></item-card>
@@ -81,7 +81,7 @@
 	<h2>Gap control — <code>cg()</code> / <code>rg()</code></h2>
 	<section>
 		<small>Column gap and row gap controlled independently. Small gaps at the base, wider at <strong>lg</strong>.</small>
-		<code>&lt;lay-out xs="columns(2) cg(1) rg(1)" lg="columns(3) cg(2) rg(3)"&gt;</code>
+		<p><code>&lt;lay-out xs="columns(2) cg(1) rg(1)" lg="columns(3) cg(2) rg(3)"&gt;</code></p>
 		<lay-out xs="columns(2) cg(1) rg(1)" lg="columns(3) cg(2) rg(3)">
 			<item-card></item-card>
 			<item-card></item-card>
@@ -94,7 +94,7 @@
 
 	<section>
 		<small>Zero gaps — removing all spacing between items.</small>
-		<code>&lt;lay-out xs="columns(3) cg(0) rg(0)" lg="columns(4) cg(0) rg(0)"&gt;</code>
+		<p><code>&lt;lay-out xs="columns(3) cg(0) rg(0)" lg="columns(4) cg(0) rg(0)"&gt;</code></p>
 		<lay-out xs="columns(3) cg(0) rg(0)" lg="columns(4) cg(0) rg(0)">
 			<item-card></item-card>
 			<item-card></item-card>
@@ -110,7 +110,7 @@
 	<h2>Word sizes — <code>cg(2xs)</code> … <code>p(2xl)</code></h2>
 	<section>
 		<small>The word ladder on gaps: <strong>2xs</strong> (2px) at the base, <strong>sm</strong> (8px) at <strong>lg</strong>. Words and numbers mix freely.</small>
-		<code>&lt;lay-out xs="columns(3) cg(2xs) rg(2xs)" lg="columns(3) cg(sm) rg(sm)"&gt;</code>
+		<p><code>&lt;lay-out xs="columns(3) cg(2xs) rg(2xs)" lg="columns(3) cg(sm) rg(sm)"&gt;</code></p>
 		<lay-out xs="columns(3) cg(2xs) rg(2xs)" lg="columns(3) cg(sm) rg(sm)">
 			<item-card></item-card>
 			<item-card></item-card>
@@ -124,7 +124,7 @@
 	<h2>Hairlines — background color through tiny gaps</h2>
 	<section>
 		<small>A 2px gap (<strong>cg(2xs)</strong> / <strong>rg(2xs)</strong>) with matching padding (<strong>p(2xs)</strong>) lets <code>--layout-bg</code> read as hairlines between items — the mosaic-lines look. (For rules <em>inside</em> larger gaps, see the companion <code>gap-decorations</code> attribute.)</small>
-		<code>&lt;lay-out xs="columns(2) cg(2xs) rg(2xs) p(2xs)" lg="grid(3c) cg(2xs) rg(2xs) p(2xs)"&gt;</code>
+		<p><code>&lt;lay-out xs="columns(2) cg(2xs) rg(2xs) p(2xs)" lg="grid(3c) cg(2xs) rg(2xs) p(2xs)"&gt;</code></p>
 		<lay-out xs="columns(2) cg(2xs) rg(2xs) p(2xs)" lg="grid(3c) cg(2xs) rg(2xs) p(2xs)" style="--layout-bg: light-dark(#333, #ddd);">
 			<item-card></item-card>
 			<item-card></item-card>
@@ -135,7 +135,7 @@
 	<h2>Per-breakpoint gap change</h2>
 	<section>
 		<small>Allowlisted breakpoints can each set their own gap: <strong>xs</strong> (8px base) → <strong>lg</strong> (2px hairline with the pattern switch). Resize to watch the gap change with the layout.</small>
-		<code>&lt;lay-out xs="columns(2) cg(sm) rg(sm)" lg="grid(3a) cg(2xs) rg(2xs)"&gt;</code>
+		<p><code>&lt;lay-out xs="columns(2) cg(sm) rg(sm)" lg="grid(3a) cg(2xs) rg(2xs)"&gt;</code></p>
 		<lay-out xs="columns(2) cg(sm) rg(sm)" lg="grid(3a) cg(2xs) rg(2xs)" style="--layout-bg: light-dark(#333, #ddd);">
 			<item-card></item-card>
 			<item-card></item-card>
@@ -146,7 +146,7 @@
 	<h2>Combined tokens</h2>
 	<section>
 		<small>Multiple spacing tokens in a single attribute — padding, gaps and margin, all set at the base and overridden at <strong>lg</strong>.</small>
-		<code>&lt;lay-out xs="columns(2) pi(1) pb(1) cg(1) rg(1)" lg="columns(3) pi(3) pb(2) cg(2) rg(2)"&gt;</code>
+		<p><code>&lt;lay-out xs="columns(2) pi(1) pb(1) cg(1) rg(1)" lg="columns(3) pi(3) pb(2) cg(2) rg(2)"&gt;</code></p>
 		<lay-out xs="columns(2) pi(1) pb(1) cg(1) rg(1)" lg="columns(3) pi(3) pb(2) cg(2) rg(2)" style="--layout-bg: hsl(30 60% 92%);">
 			<item-card></item-card>
 			<item-card></item-card>
@@ -160,7 +160,7 @@
 	<h2>Base (xs) + breakpoint override</h2>
 	<section>
 		<small>The <strong>xs</strong> tokens are the mobile-first base — they apply at <em>all</em> widths because <code>xs</code> has no media query. At <strong>lg</strong>, the <strong>pi(3)</strong> token overrides <code>pi(1)</code>.</small>
-		<code>&lt;lay-out xs="columns(2) pi(1) pb(1)" lg="columns(3) pi(3) pb(2)"&gt;</code>
+		<p><code>&lt;lay-out xs="columns(2) pi(1) pb(1)" lg="columns(3) pi(3) pb(2)"&gt;</code></p>
 		<lay-out xs="columns(2) pi(1) pb(1)" lg="columns(3) pi(3) pb(2)" style="--layout-bg: hsl(270 40% 92%);">
 			<item-card></item-card>
 			<item-card></item-card>
@@ -171,7 +171,7 @@
 	<h2>Grid layout with spacing</h2>
 	<section>
 		<small>A grid layout pattern with responsive spacing — compact at the base, spacious at <strong>lg</strong>.</small>
-		<code>&lt;lay-out xs="grid(3a) pi(1) pb(1) cg(1)" lg="grid(3a) pi(3) pb(2) cg(2) rg(2)"&gt;</code>
+		<p><code>&lt;lay-out xs="grid(3a) pi(1) pb(1) cg(1)" lg="grid(3a) pi(3) pb(2) cg(2) rg(2)"&gt;</code></p>
 		<lay-out xs="grid(3a) pi(1) pb(1) cg(1)" lg="grid(3a) pi(3) pb(2) cg(2) rg(2)" style="--layout-bg: hsl(180 30% 90%);">
 			<item-card></item-card>
 			<item-card></item-card>

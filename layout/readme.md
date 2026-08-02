@@ -303,6 +303,17 @@ Auto-fitting layouts (2 variants available)
 ```
 Masonry-style layouts using CSS `display: grid-lanes` (6 variants available). Falls back to CSS columns for browsers without grid-lanes support. Use `lanes-min` and `lanes-max` attributes to configure column sizing for `lanes(auto)`.
 
+**Stack (Overlapping Layers):**
+```html
+<lay-out xs="stack(hero)">
+  <div>Back layer</div>
+  <div>Front layer</div>
+</lay-out>
+```
+Stacks all direct children into the same grid cell so they overlap. Any name works (`stack(hero)`, `stack(overlay)`, `stack(my-thing)`) — the CSS is identical. Paint order is DOM order, last child on top; the tallest child sets the height; children keep normal grid alignment, so `place-self` and margins position them inside the shared cell.
+
+`stack(reveal)` is reserved: it also makes the layout a sticky, full-height cage and hands an `animate-self="reveal(…)"` to its last child — the scroll-driven layer peel in [reveal-stack demo](dist/reveal-stack.html).
+
 See [demos](dist/index.html) for visual examples of all layouts.
 
 ### Carousels — `overflow` + `media=` controls
