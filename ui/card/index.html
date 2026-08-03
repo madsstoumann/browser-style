@@ -1,495 +1,121 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>UI: Card</title>
+	<title>UI: Card — Demos</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
-	<meta name="description" content="CSS-first card composing &lt;ui-media&gt; + &lt;ui-content&gt;, configured with media=/content=/variant= token DSLs, a container-driven font scale, responsive layout tiers and themes.">
+	<meta name="description" content="Index of the @browser.style/card demo pages: the card gallery, the media frame and its furniture, carousels, lightbox, video, the text column and typography, schema.org markup, and the render.js SSR drivers.">
 	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="/ui/carousel/index.css">
 	<link rel="stylesheet" href="/layout/dist/layout.css">
-	<link rel="stylesheet" href="../chip/ui-chip.css">
-	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<link rel="stylesheet" href="demo.layout.css">
 	<!-- typed attr() fallback for Safari/Firefox (layout gaps/spacing attributes) -->
 	<script type="module" src="/layout/polyfills/attr-fallback.js"></script>
 	<style>
-		.hero { margin-block-end: var(--spacing-2xl); }
+		.toc ul { margin-block: 0 var(--spacing-lg); padding-inline-start: 1.25em; }
+		.toc li { margin-block-end: 0.35em; }
+		.toc li > a { font-weight: var(--font-weight-medium, 500); }
 		.note { color: var(--color-text-secondary, #666); }
+		.parked { opacity: 0.65; }
 	</style>
 </head>
-<body>
-	<h1>UI: Card</h1>
-	<p class="note">Every card composes <code>&lt;ui-media&gt;</code> + <code>&lt;ui-content&gt;</code> inside a <code>&lt;cq-box&gt;</code> grid layer. The media frame is configured with <code>media=</code>, the text column with <code>content=</code>, and the composition (arrangement, overlay, theme, corners) with <code>variant=</code>. No JavaScript.</p>
+<body data-layout-root page-gap="2">
+	<header>
+		<h1>UI: Card</h1>
+		<p>A CSS-first card engine. <code>&lt;ui-card&gt;</code> is the <strong>host</strong>; its two areas are the
+			<strong>media area</strong> (<code>&lt;ui-media&gt;</code>, configured with <code>media=</code>) and the
+			<strong>text area</strong> (<code>&lt;ui-content&gt;</code>, configured with <code>content=</code>).
+			Composition — arrangement, overlay, theme, corners — is <code>variant=</code> on the host.
+			Light DOM, no Shadow DOM, no JavaScript required.</p>
+		<p class="note">This page is an index. Every demo below lives in <code>demo/</code>; the prose docs live in
+			<code>docs/</code>.</p>
+	</header>
 
-	<!-- ============================================================
-	     Article cards — realistic content, stacked (col)
-	     ============================================================ -->
-	<h2>Article cards</h2>
-	<lay-out md="grid(3a)" lg="grid(3b)" bleed width="lg" xs="p(1)" style="--layout-bg: var(--color-surface-alt);">
-		<ui-card variant="col" media="asr(16/9)">
-			<cq-box>
-				<ui-media><img src="/assets/images/popovers.png" alt="" loading="lazy"></ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Web Development</small>
-					<h2 data-part="headline">Mastering Interactive Popovers in Modern Web Design</h2>
-					<p data-part="summary">Learn how to implement interactive popovers that enhance UX without compromising accessibility — best practices, patterns and real-world examples.</p>
-					<address data-part="byline"><span>Sarah Chen · <span data-part="meta">Dec 15, 2024 · 8 min read</span></span></address>
-					<ul data-part="tags">
-						<li><a href="#">UX Design</a></li>
-						<li><a href="#">Accessibility</a></li>
-					</ul>
-				</ui-content>
-			</cq-box>
-		</ui-card>
+	<div class="toc">
 
-		<ui-card variant="col" media="asr(16/9)">
-			<cq-box>
-				<ui-media><img src="/assets/images/quantum.png" alt="" loading="lazy"></ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Technology</small>
-					<h2 data-part="headline">The Future of Quantum Computing Takes a Major Leap Forward</h2>
-					<p data-part="summary">Scientists have made a breakthrough in quantum computing that could change everything we know about processing power.</p>
-					<address data-part="byline"><span>James Okoro · <span data-part="meta">Jul 16, 2025 · 4 min read</span></span></address>
-					<ul data-part="tags">
-						<li><a href="#">Quantum</a></li>
-						<li><a href="#">Research</a></li>
-					</ul>
-				</ui-content>
-			</cq-box>
-		</ui-card>
+	<lay-out md="columns(2)" lg="columns(2)">
+		<section>
+			<h2>Start here</h2>
+			<ul>
+				<li><a href="demo/cards.html">card gallery</a> — complete cards in realistic compositions: article, hero, overlay, profile, product</li>
+				<li><a href="demo/content.html">content</a> — the text area: <code>data-part</code> parts, <code>scl()</code>, padding, gap, alignment</li>
+				<li><a href="demo/content.typography.html">typography</a> — the container-driven type scale and the group sizes</li>
+				<li><a href="demo/schema.html">schema.org</a> — microdata markup per content type</li>
+			</ul>
 
-		<ui-card variant="col" media="asr(16/9)">
-			<cq-box>
-				<ui-media><img src="/assets/images/government.png" alt="" loading="lazy"></ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Politics</small>
-					<h2 data-part="headline">In-depth Analysis of the New International Trade Agreement</h2>
-					<p data-part="summary">The recently signed trade agreement is set to reshape global commerce, affecting everything from local businesses to multinational corporations.</p>
-					<address data-part="byline">
-						<img src="/assets/images/janesmith.png" alt="">
-						<span>Jane Smith · <span data-part="meta">Jul 16, 2025 · 12 min read</span></span>
-					</address>
-					<ul data-part="tags">
-						<li><a href="#">Trade</a></li>
-						<li><a href="#">Economy</a></li>
-					</ul>
-				</ui-content>
-			</cq-box>
-		</ui-card>
+			<h2>Media frame</h2>
+			<ul>
+				<li><a href="demo/media.html">media</a> — <code>asr()</code> ratio, <code>rds()</code> radius, <code>obf()</code>/<code>obp()</code> fit &amp; position, <code>flp()</code> flip, <code>scm</code> scrim</li>
+				<li><a href="demo/media.furniture.html">furniture</a> — chip / sticker / beacon / save / play / marquee overlays on the 9-cell grid</li>
+				<li><a href="demo/media.hover.html">hover</a> — <code>hov()</code> zoom / pan / tilt / track / filter effects</li>
+				<li><a href="demo/media.tint.html">tint</a> — <code>tnt()</code> image tint, colour and gradient</li>
+				<li><a href="demo/media.shape.html">shapes</a> — <code>shp()</code> clip shapes plus the <code>hov(shape)</code> morph</li>
+				<li><a href="demo/media.collage.html">collage</a> — a nested <code>&lt;lay-out&gt;</code> grid of tiles inside one frame</li>
+			</ul>
+		</section>
+
+		<section>
+			<h2>Carousel, lightbox &amp; video</h2>
+			<ul>
+				<li><a href="demo/media.carousel.html">carousel</a> — the CSS-only <code>nav</code> carousel: arrows, dots, pills, thumbnails, bands</li>
+				<li><a href="demo/media.carousel.builder.html">carousel builder</a> — interactive: compose a carousel's <code>media=</code> string live</li>
+				<li><a href="demo/media.lightbox.html">lightbox</a> — popover promotion of the same frame, fullscreen in the top layer</li>
+				<li><a href="demo/media.video.html">video</a> — <code>&lt;video&gt;</code>, <code>provider=</code> embed facades and the player tools</li>
+			</ul>
+
+			<h2>Rendered — <code>render.js</code></h2>
+			<p class="note">Same engine, built at runtime from UCF JSON in <code>data/</code> instead of hand-authored markup.</p>
+			<ul>
+				<li><a href="demo/render.html">render engine</a> — every content type, one preset each; the driver page</li>
+				<li><a href="demo/media.render.html">media</a> — the frame tokens, data-driven</li>
+				<li><a href="demo/carousel.render.html">carousel</a> — <code>demo/media.carousel.html</code> rebuilt from presets</li>
+				<li><a href="demo/reveal.render.html">reveal</a> — <code>&lt;ui-reveal&gt;</code> fronts and flipsides</li>
+				<li><a href="demo/video.render.html">video</a> — a full film &amp; exhibitions page</li>
+				<li><a href="demo/article.render.html">article</a> — cross-document view transitions</li>
+			</ul>
+		</section>
 	</lay-out>
 
-	<!-- ============================================================
-	     Responsive layout — row when wide, col when narrow (lg: prefix).
-	     SAME markup: variant="col lg:row lg:spl(1/1)".
-	     ============================================================ -->
-	<h2>Responsive layout — <code>lg:</code></h2>
-	<p class="note">Identical markup. Wide container → <code>lg:row</code> (media beside content); narrow grid cell → the default <code>col</code> (media above content). Driven by each card's own width.</p>
+	<section>
+		<h2>Docs</h2>
+		<lay-out md="columns(2)" lg="columns(3)">
+			<ul>
+				<li><a href="readme.md">readme.md</a> — public API and quick start</li>
+				<li><a href="AGENTS.md">AGENTS.md</a> — architecture orientation</li>
+				<li><a href="docs/card.md">card.md</a> — content model, presets, <code>render.js</code></li>
+				<li><a href="docs/media.md">media.md</a> — the <code>media=</code> DSL in full</li>
+			</ul>
+			<ul>
+				<li><a href="docs/content.md">content.md</a> — the <code>content=</code> DSL and the parts</li>
+				<li><a href="docs/typography.md">typography.md</a> — use-case guide to the type system</li>
+				<li><a href="docs/ui-card-tokens.md">ui-card-tokens.md</a> — <code>variant=</code> reference</li>
+				<li><a href="docs/tokens.md">tokens.md</a> — generated: every token, all three DSLs</li>
+			</ul>
+			<ul>
+				<li><a href="docs/carousel.md">carousel.md</a> — carousel token reference</li>
+				<li><a href="docs/media.carousel.md">media.carousel.md</a> — carousel internals</li>
+				<li><a href="docs/video.md">video.md</a> — providers, posters, facades</li>
+				<li><a href="docs/stagger.md">stagger.md</a> · <a href="docs/animations.md">animations.md</a> — the reveal engines</li>
+			</ul>
+		</lay-out>
+	</section>
 
-	<ui-card class="hero" variant="col lg:row lg:spl(1/1)" media="asr(16/9)">
-		<cq-box>
-			<ui-media><img src="/assets/images/aurasoundpro.png" alt="" loading="lazy"></ui-media>
-			<ui-content>
-				<small data-part="eyebrow">Review</small>
-				<h2 data-part="headline">AuraSound Pro — premium noise-cancelling, refined</h2>
-				<p data-part="summary">Crystal-clear audio, 30-hour battery and adaptive noise-cancellation. The same card renders side-by-side here because the container is wide.</p>
-				<nav data-part="actions"><a class="ui-button" href="#">Read review</a></nav>
-			</ui-content>
-		</cq-box>
-	</ui-card>
+	<section>
+		<h2>Related packages</h2>
+		<ul>
+			<li><a href="/ui/reveal/">ui/reveal</a> — the disclosure sibling, built on the same engine</li>
+			<li><a href="/ui/carousel/">ui/carousel</a> — the shared carousel controls + Safari polyfill</li>
+			<li><a href="/layout/">layout</a> — <code>&lt;lay-out&gt;</code>, which arranges cards into sections</li>
+			<li><a href="/ui/chip/">chip</a> · <a href="/ui/sticker/">sticker</a> · <a href="/ui/beacon/">beacon</a> ·
+				<a href="/ui/save/">save</a> · <a href="/ui/play/">play</a> · <a href="/ui/lightbox/">lightbox</a> ·
+				<a href="/ui/marquee/">marquee</a> — the media furniture</li>
+		</ul>
+		<ul class="parked">
+			<li><a href="demo/_parked.quick-info.html">_parked.quick-info</a> — parked experiment, kept for reference</li>
+		</ul>
+	</section>
 
-	<lay-out lg="columns(3)">
-		<ui-card variant="col lg:row lg:spl(1/1)" media="asr(16/9)">
-			<cq-box>
-				<ui-media><img src="/assets/images/destinations.png" alt="" loading="lazy"></ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Travel</small>
-					<h2 data-part="headline">12 destinations redefining slow travel</h2>
-					<p data-part="summary">Same responsive card — too narrow here, so it stays stacked.</p>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-		<ui-card variant="col lg:row lg:spl(1/1)" media="asr(16/9)">
-			<cq-box>
-				<ui-media><img src="/assets/images/river.png" alt="" loading="lazy"></ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Nature</small>
-					<h2 data-part="headline">Why the world's rivers are running quieter</h2>
-					<p data-part="summary">Same responsive card — too narrow here, so it stays stacked.</p>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-		<ui-card variant="col lg:row lg:spl(1/1)" media="asr(16/9)">
-			<cq-box>
-				<ui-media><img src="/assets/images/gastronomy.png" alt="" loading="lazy"></ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Dining</small>
-					<h2 data-part="headline">The new wave of farm-to-table kitchens</h2>
-					<p data-part="summary">Same responsive card — too narrow here, so it stays stacked.</p>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-	</lay-out>
-
-	<!-- ============================================================
-	     Layout system — <lay-out> from /layout wrapping cards.
-	     grid(3a): two half-width cells on top, one full-width below —
-	     a pattern the old .grid classes could never express. The full-width
-	     card crosses its own lg container tier (44rem) and flips to lg:row,
-	     while the half-width copies stay stacked. Two systems, one markup.
-	     ============================================================ -->
-	<h2>Layout system — <code>&lt;lay-out&gt;</code></h2>
-	<p class="note">The section layout comes from <code>/layout</code> (<code>md="columns(2)" lg="grid(3a)"</code>, viewport-driven); each card still adapts to its own cell width via container queries. All three cards share identical <code>variant="col lg:row lg:spl(1/1)"</code> markup — only the full-width one flips to a row.</p>
-	<lay-out md="columns(2)" lg="grid(3a)">
-		<ui-card variant="col lg:row lg:spl(1/1)" media="asr(16/9)">
-			<cq-box>
-				<ui-media><img src="/assets/images/popovers.png" alt="" loading="lazy"></ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Web Development</small>
-					<h2 data-part="headline">Half-width cell — stays stacked</h2>
-					<p data-part="summary">This card sits in a 1-of-2 cell, below its own <code>lg</code> tier, so the default <code>col</code> arrangement applies.</p>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-		<ui-card variant="col lg:row lg:spl(1/1)" media="asr(16/9)">
-			<cq-box>
-				<ui-media><img src="/assets/images/quantum.png" alt="" loading="lazy"></ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Technology</small>
-					<h2 data-part="headline">Half-width cell — stays stacked</h2>
-					<p data-part="summary">Identical markup to its neighbours; the cell width decides the arrangement.</p>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-		<ui-card variant="col lg:row lg:spl(1/1)" media="asr(16/9)">
-			<cq-box>
-				<ui-media><img src="/assets/images/websummit.png" alt="" loading="lazy"></ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Featured</small>
-					<h2 data-part="headline">Full-width cell — flips to a row</h2>
-					<p data-part="summary">The <code>grid(3a)</code> pattern gives this card the whole bottom row. Its own width crosses the card's <code>lg</code> container tier (44rem), so <code>lg:row lg:spl(1/1)</code> kicks in — media beside content.</p>
-					<nav data-part="actions"><a class="ui-button" href="#">Read more</a></nav>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-	</lay-out>
-
-	<!-- ============================================================
-	     Hero — overlay (static). Content stacked over media with a scrim.
-	     ============================================================ -->
-	<h2>Hero — overlay</h2>
-	<p class="note">Content stacked over the media (<code>ovr(bs)</code>) with a scrim (<code>scm</code>); the headline scales to display size with <code>scl(xl)</code>. (Per-breakpoint media changes aren't responsive this round, so the overlay is applied at all widths.)</p>
-	<ui-card class="hero" variant="ovr(bs)" media="asr(16/9) obp(cc) scm" content="scl(xl)">
-		<cq-box>
-			<ui-media><img src="/assets/images/websummit.png" alt="" loading="lazy"></ui-media>
-			<ui-content>
-				<small data-part="eyebrow">Featured</small>
-				<strong data-part="headline">Web Innovators Summit 2025</strong>
-				<p data-part="summary">Two days exploring the future of web development and design — October 25–26, San Francisco Convention Center. Only the headline scales to display size; the eyebrow and summary stay readable.</p>
-				<nav data-part="actions"><a class="ui-button" href="#">View agenda</a></nav>
-			</ui-content>
-		</cq-box>
-	</ui-card>
-
-	<!-- ============================================================
-	     Overlay positions — realistic featured cards
-	     ============================================================ -->
-	<h2>Overlay — featured</h2>
-	<lay-out lg="columns(3)">
-		<ui-card variant="ovr(bs)" media="asr(3/4) obp(cc)" content="scl(lg)">
-			<cq-box>
-				<ui-media><img src="/assets/images/mindfulness.png" alt="" loading="lazy"></ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Wellbeing</small>
-					<strong data-part="headline">Small habits, calmer days</strong>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-		<ui-card variant="ovr(cc)" media="asr(3/4) obp(cc)" content="scl(lg)">
-			<cq-box>
-				<ui-media><img src="/assets/images/hubble.png" alt="" loading="lazy"></ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Science</small>
-					<strong data-part="headline">What Hubble still teaches us</strong>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-		<ui-card variant="ovr(be)" media="asr(3/4) obp(cc)" content="scl(lg)">
-			<cq-box>
-				<ui-media><img src="/assets/images/brewandbean.png" alt="" loading="lazy"></ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Food &amp; Drink</small>
-					<strong data-part="headline">The perfect pour-over</strong>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-	</lay-out>
-
-	<!-- ============================================================
-	     Media overlays — <ui-chip> label + <ui-sticker> callout
-	     ============================================================ -->
-	<h2>Media overlays — chip &amp; sticker</h2>
-	<p class="note">Overlay furniture lives inside <code>&lt;ui-media&gt;</code>; position and sub-theme come from the parent <code>media=</code> token (<code>chip(&lt;pos&gt;)</code> / <code>sticker(&lt;pos&gt;)</code>, <code>chip(&lt;hue&gt;)</code>). <code>&lt;ui-chip&gt;</code> is a pill label; <code>&lt;ui-sticker&gt;</code> is a disc, or a starburst with <code>variant="sh:burst"</code>.</p>
-	<lay-out lg="columns(3)">
-		<ui-card variant="col" media="asr(4/3) chip(be) chip(green) sticker(ts) sticker(red)">
-			<cq-box>
-				<ui-media>
-					<img src="https://browser.style/assets/images/aurasoundpro.png" alt="" loading="lazy">
-					<ui-sticker>Featured</ui-sticker>
-					<ui-chip>New</ui-chip>
-				</ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Audio</small>
-					<h2 data-part="headline">AuraSound Pro</h2>
-					<p data-part="summary">Sticker top-left, chip bottom-right.</p>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-
-		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(red)">
-			<cq-box>
-				<ui-media>
-					<img src="https://browser.style/assets/images/soundwavemini.png" alt="" loading="lazy">
-					<ui-sticker variant="sh:burst">-28%</ui-sticker>
-				</ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Speakers</small>
-					<h2 data-part="headline">SoundWave Mini</h2>
-					<p data-part="summary">Starburst discount sticker, top-right.</p>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-
-		<ui-card variant="col" media="asr(4/3) chip(bs) chip(accent) sticker(te) sticker(orange)">
-			<cq-box>
-				<ui-media>
-					<img src="https://browser.style/assets/images/quickboil.png" alt="" loading="lazy">
-					<ui-chip>Editor's pick</ui-chip>
-					<ui-sticker>Sale</ui-sticker>
-				</ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Kitchen</small>
-					<h2 data-part="headline">QuickBoil Kettle</h2>
-					<p data-part="summary">Chip bottom-left (accent), sticker top-right (orange).</p>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-	</lay-out>
-
-	<!-- Video + bare scroller -->
-	<h2>Video &amp; multi-source scroller</h2>
-	<p class="note"><code>&lt;ui-media&gt;</code> accepts a <code>&lt;video&gt;</code> (native controls/poster) just like an image. Add <code>media="nav"</code> for multiple sources — a flex scroll-snap row. <code>nav(non)</code> leaves it a bare swipe scroller, no JS.</p>
-	<lay-out lg="columns(2)">
-		<ui-card variant="col" media="asr(16/9) chip(ts) chip(blue)">
-			<cq-box>
-				<ui-media>
-					<video src="https://assets.stoumann.dk/video/river.mp4" poster="https://browser.style/assets/images/river.png" controls muted loop playsinline></video>
-					<ui-chip>Video</ui-chip>
-				</ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Nature</small>
-					<h2 data-part="headline">A quieter river</h2>
-					<p data-part="summary">Native <code>&lt;video&gt;</code> fills the media frame with the same <code>object-fit: cover</code> as an image.</p>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-
-		<ui-card variant="col" media="asr(16/9) nav(non) chip(te) chip(accent)">
-			<cq-box>
-				<ui-media>
-					<img src="https://browser.style/assets/images/destinations.png" alt="" loading="lazy">
-					<img src="https://browser.style/assets/images/river.png" alt="" loading="lazy">
-					<img src="https://browser.style/assets/images/mindfulness.png" alt="" loading="lazy">
-					<img src="https://browser.style/assets/images/gastronomy.png" alt="" loading="lazy">
-					<ui-chip>4 photos</ui-chip>
-				</ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Travel</small>
-					<h2 data-part="headline">Bare swipe scroller</h2>
-					<p data-part="summary">Four sources in a scroll-snap row — <code>nav(non)</code>, swipe only.</p>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-	</lay-out>
-
-	<!-- Carousel — CSS-only markers + arrows -->
-	<h2>Carousel — <code>media="nav"</code></h2>
-	<p class="note">A scroll-snap row of sources, plus CSS-only navigation dots (<code>::scroll-marker</code>) and prev/next arrows (<code>::scroll-button()</code>) shown by default. No JavaScript. Chromium-only for now — elsewhere it degrades to the plain swipe scroller.</p>
-	<lay-out lg="columns(2)">
-		<ui-card variant="col" media="asr(16/9) nav" content="scl(lg)">
-			<cq-box>
-				<ui-media>
-					<img src="https://browser.style/assets/images/destinations.png" alt="" loading="lazy">
-					<img src="https://browser.style/assets/images/river.png" alt="" loading="lazy">
-					<img src="https://browser.style/assets/images/mindfulness.png" alt="" loading="lazy">
-					<img src="https://browser.style/assets/images/gastronomy.png" alt="" loading="lazy">
-				</ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Travel</small>
-					<h2 data-part="headline">Slow-travel carousel</h2>
-					<p data-part="summary">Swipe, click an arrow or tap a dot — pure CSS scroll-markers.</p>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-
-		<ui-card variant="row spl(1/1)" media="asr(1/1) nav" content="scl(md)">
-			<cq-box>
-				<ui-media>
-					<img src="https://browser.style/assets/images/hubble.png" alt="" loading="lazy">
-					<img src="https://browser.style/assets/images/quantum.png" alt="" loading="lazy">
-					<img src="https://browser.style/assets/images/websummit.png" alt="" loading="lazy">
-				</ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Science</small>
-					<h2 data-part="headline">Carousel beside content</h2>
-					<p data-part="summary">A carousel works in any arrangement — here it's the media half of a <code>row</code> card.</p>
-					<nav data-part="actions"><a class="ui-button" href="#">Explore</a></nav>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-	</lay-out>
-
-	<!-- Carousel controls — pick pieces + theme them -->
-	<h2>Carousel controls &amp; theming</h2>
-	<p class="note">Pick controls with <code>nav(mrk)</code>, <code>nav(arw)</code>, bare <code>nav</code> (both), or <code>nav(non)</code>. Colours, dot size and the arrow glyphs are all tokens.</p>
-	<lay-out lg="columns(3)">
-		<ui-card variant="col" media="asr(4/3) nav(mrk)" content="scl(sm)">
-			<cq-box>
-				<ui-media>
-					<img src="https://browser.style/assets/images/destinations.png" alt="" loading="lazy">
-					<img src="https://browser.style/assets/images/river.png" alt="" loading="lazy">
-					<img src="https://browser.style/assets/images/mindfulness.png" alt="" loading="lazy">
-				</ui-media>
-				<ui-content><small data-part="eyebrow">nav(mrk)</small><h2 data-part="headline">Markers only</h2></ui-content>
-			</cq-box>
-		</ui-card>
-
-		<ui-card variant="col" media="asr(4/3) nav(arw)" content="scl(sm)">
-			<cq-box>
-				<ui-media>
-					<img src="https://browser.style/assets/images/gastronomy.png" alt="" loading="lazy">
-					<img src="https://browser.style/assets/images/brewandbean.png" alt="" loading="lazy">
-					<img src="https://browser.style/assets/images/quickboil.png" alt="" loading="lazy">
-				</ui-media>
-				<ui-content><small data-part="eyebrow">nav(arw)</small><h2 data-part="headline">Arrows only</h2></ui-content>
-			</cq-box>
-		</ui-card>
-
-		<ui-card variant="col" media="asr(4/3) nav" content="scl(sm)"
-			style="--ui-carousel-marker-bg: rgb(0 0 0 / 0.25); --ui-carousel-marker-active: var(--color-accent); --ui-carousel-arrow-bg: var(--color-accent);">
-			<cq-box>
-				<ui-media>
-					<img src="https://browser.style/assets/images/hubble.png" alt="" loading="lazy">
-					<img src="https://browser.style/assets/images/quantum.png" alt="" loading="lazy">
-					<img src="https://browser.style/assets/images/websummit.png" alt="" loading="lazy">
-				</ui-media>
-				<ui-content><small data-part="eyebrow">themed</small><h2 data-part="headline">Accent circle via <code>--ui-carousel-arrow-bg</code></h2></ui-content>
-			</cq-box>
-		</ui-card>
-	</lay-out>
-
-	<!-- ============================================================
-	     Themes — theme=
-	     ============================================================ -->
-	<h2>Themes — <code>theme=</code></h2>
-	<p class="note">The same card in default, <code>theme="black dark"</code> and <code>theme="black dark"</code> with a <code>--ui-card-dark-bg</code> accent override (the branded surface). The shared <code>theme=</code> axis remaps surface, ink, eyebrow and tag colours; the <code>dark</code> modifier flips <code>color-scheme</code>. Full docs: <a href="../base/theme.md">theme.md</a>.</p>
-	<lay-out lg="columns(3)">
-		<ui-card variant="col" media="asr(16/9)">
-			<cq-box>
-				<ui-media><img src="/assets/images/fittrackpro.png" alt="" loading="lazy"></ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Membership</small>
-					<h2 data-part="headline">FitTrack Pro</h2>
-					<p data-part="summary">Everything in Starter, plus unlimited workouts, coaching and priority support.</p>
-					<ul data-part="tags"><li><a href="#">Popular</a></li></ul>
-					<nav data-part="actions"><a class="ui-button" href="#">Choose plan</a></nav>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-
-		<ui-card variant="col" theme="black dark" media="asr(16/9)">
-			<cq-box>
-				<ui-media><img src="/assets/images/fittrackpro.png" alt="" loading="lazy"></ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Membership</small>
-					<h2 data-part="headline">FitTrack Pro</h2>
-					<p data-part="summary">Everything in Starter, plus unlimited workouts, coaching and priority support.</p>
-					<ul data-part="tags"><li><a href="#">Popular</a></li></ul>
-					<nav data-part="actions"><a class="ui-button" href="#">Choose plan</a></nav>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-
-		<ui-card variant="col" theme="black dark" media="asr(16/9)" style="--ui-card-dark-bg: var(--color-accent); --ui-card-dark-ink: #fff; --ui-card-dark-accent: rgb(255 255 255 / 0.75);">
-			<cq-box>
-				<ui-media><img src="/assets/images/fittrackpro.png" alt="" loading="lazy"></ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Membership</small>
-					<h2 data-part="headline">FitTrack Pro</h2>
-					<p data-part="summary">Everything in Starter, plus unlimited workouts, coaching and priority support.</p>
-					<ul data-part="tags"><li><a href="#">Popular</a></li></ul>
-					<nav data-part="actions"><a class="ui-button" href="#">Choose plan</a></nav>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-	</lay-out>
-
-	<!-- ============================================================
-	     Profile + product — row, realistic
-	     ============================================================ -->
-	<h2>Profile &amp; product</h2>
-	<lay-out lg="columns(2)">
-		<ui-card variant="row spl(1/2)" media="asr(1/1)">
-			<cq-box>
-				<ui-media><img src="/assets/images/janesmith.png" alt="" loading="lazy"></ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Chief Political Correspondent</small>
-					<h2 data-part="headline">Jane Smith</h2>
-					<p data-part="subheadline">Global affairs desk · London</p>
-					<p data-part="summary">Covering international trade and diplomacy for over a decade. Frequent speaker and award-winning columnist.</p>
-					<nav data-part="actions"><a class="ui-button" href="#">View profile</a></nav>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-
-		<ui-card variant="row spl(1/2)" media="asr(1/1)">
-			<cq-box>
-				<ui-media><img src="/assets/images/ergochair.png" alt="" loading="lazy"></ui-media>
-				<ui-content>
-					<small data-part="eyebrow">Best seller</small>
-					<h2 data-part="headline">ErgoChair Pro</h2>
-					<p data-part="subheadline">USD 349 · free shipping</p>
-					<p data-part="summary">Adaptive lumbar support, breathable mesh and a 12-year warranty. Built for long focused days.</p>
-					<nav data-part="actions"><a class="ui-button" href="#">Add to cart</a></nav>
-				</ui-content>
-			</cq-box>
-		</ui-card>
-	</lay-out>
-
-	<hr>
-	<h2>Card border — <code>variant="bdr"</code></h2>
-	<p>A <code>ui-card</code> uses the <code>surface</code> background, so its edges can vanish against a surface page even with the shadow. <code>bdr</code> adds an opt-in hairline. Shades: <code>bdr(lgt)</code> (super-light) · default · <code>bdr(drk)</code> (darker). Widths: <code>bdr(sm)</code> 1px · <code>bdr(md)</code> 2px · <code>bdr(lg)</code> 3px. Author overrides: <code>--ui-card-border-color</code> / <code>--ui-card-border-width</code> / <code>--ui-card-border-style</code> (e.g. dashed).</p>
-	<lay-out md="columns(2)" lg="columns(4)">
-		<ui-card variant="col bdr bdr(lgt) rds(md)" media="asr(4/3) scm" content="scl(sm) pad(md)">
-			<cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">bdr(lgt)</small><h3 data-part="headline">Super-light</h3></ui-content></cq-box>
-		</ui-card>
-		<ui-card variant="col bdr rds(md)" media="asr(4/3) scm" content="scl(sm) pad(md)">
-			<cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">bdr</small><h3 data-part="headline">Default</h3></ui-content></cq-box>
-		</ui-card>
-		<ui-card variant="col bdr bdr(drk) rds(md)" media="asr(4/3) scm" content="scl(sm) pad(md)">
-			<cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">bdr(drk)</small><h3 data-part="headline">Darker</h3></ui-content></cq-box>
-		</ui-card>
-		<ui-card variant="col bdr bdr(md) rds(md)" media="asr(4/3) scm" content="scl(sm) pad(md)" style="--ui-card-border-style: dashed; --ui-card-border-color: var(--color-accent);">
-			<cq-box><ui-media><img src="/assets/images/world.png" alt=""></ui-media>
-			<ui-content><small data-part="eyebrow">bdr(md) + dashed accent</small><h3 data-part="headline">Authored</h3></ui-content></cq-box>
-		</ui-card>
-	</lay-out>
-	<!-- cursor-tracked hover + loop/auto carousels (progressive enhancement) -->
-	<script type="module" src="index.js"></script>
+	</div>
 </body>
 </html>

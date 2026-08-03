@@ -164,7 +164,7 @@ Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are 
 
 **The third placement: a layout *inside* a frame (collage).** Besides arranging cards, `<lay-out>` can be a direct child of `<ui-media>`, turning one frame into a grid of nested `<ui-media>` tiles. No new tokens: `<lay-out>` breakpoint attributes (incl. the word-size spacing steps `2xs`…`2xl`) plus ordinary `media=` on the tiles. Two things make it hold together — `:where(ui-media:has(> lay-out)) { min-block-size: 0 }` drops the frame's height floor so it sizes to the grid, and `--layout-w` is registered non-inheriting so a nested layout never picks up an ancestor `bleed` section's viewport width. Adding `nav` to the outer frame makes each `<lay-out>` child a slide — a **CSS-only** collage carousel, since `slidesOf()` excludes `LAY-OUT`. Full pattern: [`docs/media.md` § Collage](docs/media.md#collage--a-lay-out-grid-inside-the-frame); demo `demo/media.collage.html`.
 
-**The full integration roadmap** (remaining demo migration, srcset bridge, editor-ready section-preset JSON combining a layout config with per-item card-preset refs) lives in `layout/docs/card-integration.md`. Phase 1 is done: `ui/card/index.html` and `ui/reveal/index.html` use `<lay-out>`.
+**The full integration roadmap** (remaining demo migration, srcset bridge, editor-ready section-preset JSON combining a layout config with per-item card-preset refs) lives in `layout/docs/card-integration.md`. Phase 1 is done: `ui/card/demo/cards.html` and `ui/reveal/index.html` use `<lay-out>`.
 
 ## JS modules (all optional, progressive enhancement)
 

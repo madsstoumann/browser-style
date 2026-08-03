@@ -2,7 +2,7 @@
 
 How the root-level **layout system** (`/layout`, `<lay-out>`) and the **card system** (`ui/card`, `ui/reveal`) compose — and the phased plan to make them one story, from demo grids to a shared, editor-ready JSON format.
 
-**Status:** Phase 1 (proof of concept) implemented — `ui/card/index.html` and `ui/reveal/index.html` use `<lay-out>` instead of hard-coded `.grid` classes. Phases 2–6 are specified below, not yet implemented.
+**Status:** Phase 1 (proof of concept) implemented — `ui/card/demo/cards.html` and `ui/reveal/index.html` use `<lay-out>` instead of hard-coded `.grid` classes. Phases 2–6 are specified below, not yet implemented.
 
 ## Why
 
@@ -12,7 +12,7 @@ Every card/reveal demo page used to define its own `.grid` / `.grid-2/3/4` class
 |---|---|---|
 | `ui/card/demo/render.html`, `article.render.html`, most `media.*.html` (13 pages) | `.grid-2/.grid-3` | 540px |
 | pages with `.grid-4` (9 pages, overlapping) | `.grid-4` | 540px → 2-col, 900px → 4-col |
-| `ui/card/index.html`, `ui/reveal/index.html` | `.grid-2/.grid-3` | 720px |
+| `ui/card/demo/cards.html`, `ui/reveal/index.html` | `.grid-2/.grid-3` | 720px |
 
 Duplicated, inconsistent, and expressible only as uniform columns. Meanwhile `/layout` generates exactly this kind of CSS from JSON (`layout.config.json` + `layouts/*.json` → `dist/layout.css`), with a far richer vocabulary (`grid()`, `bento()`, `mosaic()`, `asym()`, `ratios()` …), consistent breakpoints, and a format prepared for a visual editor.
 
@@ -25,7 +25,7 @@ The systems compose cleanly **by construction**:
 
 Chain of effects: viewport width → `lay-out` picks a pattern → each cell gets a width → each card's container queries react to that width. One markup, no coordination needed.
 
-Worked example (live on `ui/card/index.html`, "Layout system" section):
+Worked example (live on `ui/card/demo/cards.html`, "Layout system" section):
 
 ```html
 <lay-out md="columns(2)" lg="grid(3a)">
