@@ -64,6 +64,18 @@
 		background: var(--ui-lightbox-backdrop, oklch(0 0 0 / 0.55));
 	}
 
+	/* Page scroll lock — hide the root scrollbar while any lightbox is open, so
+	   the backdrop truly covers the viewport and wheel/touch can't scroll the
+	   page behind it. scrollbar-gutter keeps the viewport width identical on
+	   classic-scrollbar platforms (the gutter stays reserved, blank, under the
+	   backdrop), so nothing reflows behind the open frame; overlay scrollbars
+	   (macOS default, mobile) are zero-width either way. overflow:hidden — not
+	   clip — so the root stays a scroll container and keeps its offset. */
+	:where(html):has(ui-media[popover]:popover-open) {
+		overflow: hidden;
+		scrollbar-gutter: stable;
+	}
+
 	/* === OPEN/CLOSE ANIMATION — two mechanisms, split by what CAN fire:
 	   - The FRAME is always rendered (display never flips), so @starting-style
 	     has nothing to fire from on it → its entry is a KEYFRAME (opacity +

@@ -330,6 +330,18 @@
 	<!-- section 5's layout toggle + [open]/aria-expanded reflection + the
 	     toggle-popover click fallback for browsers without command= invokers -->
 	<script type="module" src="lightbox.js"></script>
+	<!-- Demo glue (same as ui/save/index.html): fill the heart on click by
+	     toggling aria-pressed — the attribute ui-save.css keys its active state
+	     on. Production code wires this to real persistence via the --save
+	     invoker command; lightbox.js's click fallback only matches
+	     command="toggle-popover" buttons, so the two never collide. -->
+	<script type="module">
+		document.addEventListener('click', (e) => {
+			const btn = e.target.closest('ui-save > button');
+			if (!btn) return;
+			btn.setAttribute('aria-pressed', btn.getAttribute('aria-pressed') !== 'true');
+		});
+	</script>
 	<!-- section 6's play-pause media-command polyfill -->
 	<script type="module" src="video.js"></script>
 	<!-- Typed attr() polyfill — Safari/Firefox. No-op where typed attr() is
