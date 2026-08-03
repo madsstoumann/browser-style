@@ -39,7 +39,7 @@ Without the registration a plain custom property would inherit, and every nested
 `<lay-out>` — a collage grid inside a card slide, a group band's inner sections —
 would silently become `100dvi` wide inside a container that is nowhere near that
 wide. That is the prerequisite for the
-[card collage pattern](../../ui/card/media.md#collage--a-lay-out-grid-inside-the-frame): a `<lay-out>` grid inside a
+[card collage pattern](../../ui/card/docs/media.md#collage--a-lay-out-grid-inside-the-frame): a `<lay-out>` grid inside a
 `<ui-media>` inside a card inside a bleed section resolves its width from the frame,
 not from the viewport.
 
@@ -117,10 +117,10 @@ attributes instead — e.g. `col-gap="2"` → `xs="cg(2)"`, `pad-inline="1"` →
   - `overflow="preview fade-end"` — adds fade mask to end edge only
   - `overflow="… stop"` — scrolls (arrows, fling) halt at every snap position — one item per step
 - Examples: `overflow="preview"`, `overflow="preview-lg fade"`, `overflow="preview fade-end"`, `overflow="preview-2xl center"`, `bleed md="columns(1)" overflow="preview-2xl center" media="nav(blw) arw(bare)"`
-- Related `media=` tokens — `loop` / `auto` (progressive enhancement, JS): add a bare `loop` token (seamless infinite wrap) and/or `auto` / `auto(4s)` (autoplay; `auto(N)` = seconds, `auto(800ms)` also accepted) to the `media=` attribute of an `overflow` carousel. These are driven by the **shared carousel script** in `@browser.style/card` — the same engine that loops/autoplays `<ui-media>` — so load it alongside `layout.css` for this behavior (the `nav()`/`arw()`/`mrk()` control CSS is already shared via `ui/base/carousel.css`). It clones the last slide before the first and the first after the last, then hops from a clone to its real twin on `scrollend`. Pairs naturally with `center` — the clones fill the side peeks at the ends, so the current slide stays centered with no blank edge and forward motion never dead-ends. Clone dots are suppressed by `carousel.css`. With JS off the carousel is an ordinary finite scroller. Example: `bleed md="columns(1)" overflow="preview-2xl center" media="loop auto(4s) nav(mrk) mrk(hyb) mrk(blw)"`.
+- Related `media=` tokens — `loop` / `auto` (progressive enhancement, JS): add a bare `loop` token (seamless infinite wrap) and/or `auto` / `auto(4s)` (autoplay; `auto(N)` = seconds, `auto(800ms)` also accepted) to the `media=` attribute of an `overflow` carousel. These are driven by the **shared carousel script** in `@browser.style/card` — the same engine that loops/autoplays `<ui-media>` — so load it alongside `layout.css` for this behavior (the `nav()`/`arw()`/`mrk()` control CSS is already shared via `ui/carousel/carousel.css`). It clones the last slide before the first and the first after the last, then hops from a clone to its real twin on `scrollend`. Pairs naturally with `center` — the clones fill the side peeks at the ends, so the current slide stays centered with no blank edge and forward motion never dead-ends. Clone dots are suppressed by `carousel.css`. With JS off the carousel is an ordinary finite scroller. Example: `bleed md="columns(1)" overflow="preview-2xl center" media="loop auto(4s) nav(mrk) mrk(hyb) mrk(blw)"`.
 
 ### media
-- Type: token list (space-separated tokens) — the **carousel-control DSL**, shared with `<ui-media>` in `@browser.style/card`; styles live in `ui/base/carousel.css` (load `@browser.style/base` alongside `layout.css`)
+- Type: token list (space-separated tokens) — the **carousel-control DSL**, shared with `<ui-media>` in `@browser.style/card`; styles live in `ui/carousel/carousel.css` (load `@browser.style/base` alongside `layout.css`)
 - Default: not present (an `overflow` carousel without `media=` is a plain scroller with no controls)
 - Description: Configures the controls of an `overflow` carousel. **Replaces the individual `nav`, `arrow=`, `dot=`, `pages`, `auto=` and carousel `loop` attributes, all removed in v4.** Accepted tokens:
   - `nav` (bare) — enable default controls; `nav(mrk|arw|blw|abv)` — dots only / arrows only / reserved control band below / above the scroller

@@ -11,7 +11,7 @@
     "build:demo": "node -e \"import('./src/demo.js').then(m => m.buildDemoFiles('./layouts', './dist'))\"",
     "build:icons": "node -e \"import('./src/icons.js').then(m => m.buildIcons('./layouts', './dist/icons'))\"",
     "build:all": "npm run build:maps && npm run build && npm run build:demo && npm run build:icons",
-    "test": "node -e \"import('./index.js').then(m => console.log('✅ Module exports working:', Object.keys(m)))\"",
+    "test": "node -e \"import('./index.js').then(m => console.log('\u2705 Module exports working:', Object.keys(m)))\"",
     "prepublishOnly": "npm run build:all && npm test"
   },
   "exports": {
@@ -75,6 +75,19 @@
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
   "homepage": "https://browser.style/layout",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11",
+    "@browser.style/carousel": "^1.0.0",
+    "@browser.style/card": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@browser.style/carousel": {
+      "optional": true
+    },
+    "@browser.style/card": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "cssnano": "^7.0.7",
     "cssnano-preset-advanced": "^7.0.7",

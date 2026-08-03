@@ -7,6 +7,7 @@
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="media= carousel control tokens on <lay-out overflow>">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/ui/carousel/index.css">
 	<link rel="stylesheet" href="layout.min.css">
 	<link rel="stylesheet" href="/layout/demo.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
@@ -18,16 +19,16 @@
 	     `?polyfill` forces it in Chromium (dev). -->
 	<script type="module">
 		if (!CSS.supports('scroll-marker-group: after') || location.search.includes('polyfill'))
-			import('/polyfill/carousel.js');
+			import('/ui/carousel/polyfill/carousel.js');
 	</script>
 </head>
 <body>
 	<h1>Carousel Controls</h1>
 	<p>A <code>&lt;lay-out overflow&gt;</code> is a snapping scroller. <strong>Controls</strong> come
 	from the <code>media=</code> token attribute — the same vocabulary <code>&lt;ui-media&gt;</code>
-	uses, styled by <code>ui/base/carousel.css</code>. Dots are <code>::scroll-marker</code> and
+	uses, styled by <code>ui/carousel/carousel.css</code>. Dots are <code>::scroll-marker</code> and
 	arrows <code>::scroll-button()</code>, so they are native in Chromium only; elsewhere
-	<code>/polyfill/carousel.js</code> injects real buttons styled from the same tokens.
+	<code>/ui/carousel/polyfill/carousel.js</code> injects real buttons styled from the same tokens.
 	<code>loop</code> and <code>auto()</code> are JavaScript progressive enhancement — everything
 	else on this page is CSS-only.</p>
 	<p>The geometry tokens (<code>preview*</code>, <code>center</code>, <code>frame</code>,
