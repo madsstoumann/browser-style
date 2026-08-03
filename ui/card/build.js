@@ -1,5 +1,5 @@
 /* Regenerates the tokens artifacts (data/tokens.data.js + tokens.md) from data/tokens.json,
- * lints the manifest against the CSS, then bundles + minifies each entry to <name>.min.js
+ * lints the manifest against the CSS, then bundles + minifies each JS entry to <name>.min.js, bundles the CSS to dist/,
  * (shared.js inlined) and prints a size table (source = bundled, unminified).
  * Exits nonzero if the tokens lint fails. Run: node build.js */
 
@@ -7,6 +7,7 @@ import { readFileSync, statSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { gzipSync, brotliCompressSync, constants } from 'node:zlib';
 import { buildTokens } from './tokens.build.js';
+import { bundleCss, reportCss } from '../../scripts/css-bundle.js';
 
 const ENTRIES = ['index.js', 'carousel.js', 'hover.js', 'video.js', 'lightbox.js'];
 const dir = new URL('.', import.meta.url).pathname;
@@ -34,4 +35,10 @@ for (const entry of ENTRIES) {
 	console.log(`${out.padEnd(16)}${kb(source)}${kb(min.length)}${kb(gzipSync(min, { level: 9 }).length)}${kb(brotli(min))}`);
 }
 console.log(`\nshared.js (source, inlined into carousel/video/index bundles): ${(statSync(dir + 'shared.js').size / 1024).toFixed(1)} kB`);
+
+/* CSS bundle — collapses the index.css -> ui-card.css -> 7-sheet @import chain into
+   one request. Peer-exclusive by construction; the helper throws if a cross-package
+   @import ever sneaks back in. Sources stay shipped and export-mapped for cherry-picking. */
+reportCss([['dist/card.css', bundleCss(dir, 'index.css', 'card')]]);
+
 if (lintErrors.length) process.exit(1);

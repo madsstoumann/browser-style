@@ -1,0 +1,507 @@
+/* ui-reveal.css */
+@property --_rvl { syntax: "*"; inherits: false; }
+@layer bs-component {
+  :where(ui-reveal) {
+    --ui-content-gap: var(--ui-reveal-row-gap, 1em);
+    --ui-reveal-bg: var(--color-surface);
+    --ui-reveal-icon-sz: var(--size-7);
+    --ui-reveal-p: var(--ui-content-p, var(--spacing-md));
+    --ui-reveal-icon-m: var(--spacing-md);
+    --ui-reveal-radius: var(--radius-2xl);
+    --_trs: var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
+    container-type: inline-size;
+    display: block;
+    interpolate-size: allow-keywords;
+    > details {
+      background: var(--ui-reveal-bg);
+      border-radius: var(--ui-card-radius, var(--ui-reveal-radius));
+      box-shadow: var(--ui-reveal-shadow, var(--shadow-xl));
+      container-name: bs-rvl;
+      display: grid;
+      overflow: hidden;
+      position: relative;
+    }
+    &:where([variant~=exp]) > details {
+      --_rvl: exp;
+    }
+    &:where([variant~=flp], [variant~="flp(top)"], [variant~="flp(btm)"], [variant~="flp(lft)"], [variant~="flp(rgt)"]) > details {
+      --_rvl: flp;
+    }
+    &:where([variant~=sld], [variant~="sld(top)"], [variant~="sld(btm)"], [variant~="sld(lft)"], [variant~="sld(rgt)"]) > details {
+      --_rvl: sld;
+    }
+    &:where([variant~=grw], [variant~="grw(ts)"], [variant~="grw(te)"], [variant~="grw(bs)"], [variant~="grw(be)"]) > details {
+      --_rvl: grw;
+    }
+    &[theme] {
+      --ui-reveal-bg: var(--_theme-bg, var(--color-surface));
+      color: var(--_theme-c, var(--color-text));
+    }
+    &[theme*=border] {
+      --ui-reveal-shadow: none;
+      border-radius: calc(var(--ui-card-radius, var(--ui-reveal-radius)) + var(--_theme-bw, var(--border-width, 1px)));
+    }
+    &[theme*=border][variant*="-sq)"] {
+      corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8));
+    }
+    > details > summary,
+    > details > summary > ui-face {
+      grid-template-columns: var(--ui-card-cols, 1fr);
+    }
+    > details[open]::details-content {
+      background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
+      color: var(--ui-reveal-content-c, inherit);
+      padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
+    }
+    > details::details-content {
+      font-size: var(--ui-reveal-content-fs, inherit);
+      transition-behavior: allow-discrete;
+    }
+    > details:not([open]) > :where([stagger], [data-stagger]) > * {
+      transition: display var(--ui-reveal-duration, var(--duration-slower)) allow-discrete;
+    }
+    > details > ui-content {
+      color: var(--ui-reveal-content-c, inherit);
+      align-items: normal;
+      display: flex;
+      gap: var(--ui-reveal-content-gap, 1em);
+      grid-area: auto;
+      justify-content: normal;
+      text-align: start;
+      z-index: auto;
+    }
+    > details[open]:has(> ui-content)::details-content {
+      padding: 0;
+    }
+    > details > :where(:not(summary))[theme] {
+      background: var(--_theme-bg, transparent);
+      color: var(--_theme-c, var(--color-text));
+      min-block-size: 100%;
+    }
+    > details > ui-content:not([content]) {
+      --ui-content-fs: var(--ui-reveal-content-fs, var(--font-size-base));
+      --ui-content-headline: var(--ui-reveal-content-headline, var(--ui-content-headline-md));
+      --ui-content-headline-line-height: var(--ui-reveal-content-headline-line-height, var(--line-height-tight, 1.15));
+    }
+    > details > ui-content[tabindex]:focus-visible {
+      outline: none;
+    }
+    > details[open]:has(> ui-content[tabindex]:focus-visible) > summary > ui-icon {
+      box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-ring-gap, var(--ui-reveal-content-bg, var(--ui-reveal-bg))), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ui-reveal-ring-active, var(--ui-reveal-content-c, var(--color-text)));
+    }
+    > details[open]:has(> :where(:not(summary))[theme~=dark]:focus-visible) > summary > ui-icon {
+      color-scheme: dark;
+    }
+    > details[open]:has(> :where(:not(summary))[theme~=light]:focus-visible) > summary > ui-icon {
+      color-scheme: light;
+    }
+    @container bs-rvl style(--_rvl: flp) or style(--_rvl: sld) or style(--_rvl: grw) {
+      > details::details-content {
+        background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
+        color: var(--ui-reveal-content-c, inherit);
+      }
+    }
+    > details > summary {
+      cursor: pointer;
+      display: grid;
+      grid-area: 1 / -1;
+      list-style: none;
+      position: relative;
+      ui-face {
+        display: grid;
+        grid-column: 1 / -1;
+      }
+      :where(ui-reveal[variant*="ovr("]) & ui-media {
+        block-size: 100%;
+        inline-size: 100%;
+        min-block-size: 0;
+      }
+      ui-icon {
+        background: var(--ui-reveal-icon-bg, var(--color-button));
+        border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
+        font-size: calc(var(--ui-reveal-icon-sz) / 2);
+        height: var(--ui-reveal-icon-sz);
+        justify-self: end;
+        width: var(--ui-reveal-icon-sz);
+      }
+      &:focus-visible {
+        outline: none;
+      }
+      &:focus-visible ui-icon {
+        box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-bg), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ring-color);
+      }
+    }
+    &:is([variant~="ico(ts)"], [variant~="ico(te)"], [variant~="ico(bs)"], [variant~="ico(be)"]) > details > summary > ui-icon {
+      margin: var(--ui-reveal-icon-m);
+      position: absolute;
+      z-index: 2;
+    }
+    &:is([variant~="ico(ts)"], [variant~="ico(te)"]) > details > summary > ui-icon {
+      inset-block: 0 auto;
+    }
+    &:is([variant~="ico(bs)"], [variant~="ico(be)"]) > details > summary > ui-icon {
+      inset-block: auto 0;
+    }
+    &:is([variant~="ico(ts)"], [variant~="ico(bs)"]) > details > summary > ui-icon {
+      inset-inline: 0 auto;
+    }
+    &:is([variant~="ico(te)"], [variant~="ico(be)"]) > details > summary > ui-icon {
+      inset-inline: auto 0;
+    }
+    &:is([variant~="icc(ts)"], [variant~="icc(te)"], [variant~="icc(bs)"], [variant~="icc(be)"]) > details[open] > summary > ui-icon {
+      position: absolute;
+      z-index: 2;
+    }
+    &:is([variant~="icc(ts)"], [variant~="icc(te)"]) > details[open] > summary > ui-icon {
+      inset-block: 0 auto;
+    }
+    &:is([variant~="icc(bs)"], [variant~="icc(be)"]) > details[open] > summary > ui-icon {
+      inset-block: auto 0;
+    }
+    &:is([variant~="icc(ts)"], [variant~="icc(bs)"]) > details[open] > summary > ui-icon {
+      inset-inline: 0 auto;
+    }
+    &:is([variant~="icc(te)"], [variant~="icc(be)"]) > details[open] > summary > ui-icon {
+      inset-inline: auto 0;
+    }
+    &[variant~="ico(drk)"] > details > summary > ui-icon,
+    &[variant~="icc(drk)"] > details[open] > summary > ui-icon {
+      --ui-reveal-icon-bg: var(--ui-theme-black-bg);
+      color: var(--ui-theme-black-c, #fff);
+    }
+    &[variant~="ico(sem)"] > details > summary > ui-icon,
+    &[variant~="icc(sem)"] > details[open] > summary > ui-icon {
+      opacity: var(--ui-reveal-icon-opacity, 0.6);
+    }
+    &[variant~="ico(sm)"] > details > summary > ui-icon,
+    &[variant~="icc(sm)"] > details[open] > summary > ui-icon {
+      --ui-reveal-icon-sz: var(--size-5);
+    }
+    &[variant~="ico(lg)"] > details > summary > ui-icon,
+    &[variant~="icc(lg)"] > details[open] > summary > ui-icon {
+      --ui-reveal-icon-sz: var(--size-8);
+    }
+    &[variant*="-sq)"] > details {
+      corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8));
+    }
+  }
+  @container bs-rvl style(--_rvl: exp) {
+    :where(ui-reveal) > details::details-content {
+      block-size: 0;
+      content-visibility: hidden;
+      overflow: hidden;
+      transition:
+        block-size var(--_trs),
+        content-visibility var(--_trs),
+        padding var(--_trs);
+      transition-behavior: allow-discrete;
+    }
+    :where(ui-reveal) > details[open]::details-content {
+      block-size: auto;
+      content-visibility: visible;
+    }
+    :where(ui-reveal[variant~=pop]) > details::details-content {
+      transition: none;
+    }
+    :where(ui-reveal[variant~=pop]) > details[open]::details-content {
+      transition:
+        block-size var(--_trs),
+        content-visibility var(--_trs),
+        padding var(--_trs);
+    }
+  }
+  :where(ui-reveal[variant~=exp]) {
+    &[variant~=pop]:has(> details[open]) {
+      --ui-reveal-expand-m: 2ch;
+      aspect-ratio: var(--ui-media-ar, 3/4);
+      background: var(--ui-reveal-expand-fixed-bg, transparent);
+      border-radius: var(--ui-card-radius, var(--ui-reveal-radius));
+      container-type: normal;
+      &[variant*="-sq)"] {
+        corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8));
+      }
+      &::before {
+        animation: ui-reveal-backdrop var(--_trs) both;
+        backdrop-filter: blur(8px);
+        background: var(--ui-reveal-expand-backdrop, color-mix(in srgb, var(--color-surface) 67%, transparent));
+        content: "";
+        inset: 0;
+        position: fixed;
+        z-index: var(--z-index-2);
+      }
+      > details {
+        --ui-media-ar: var(--ui-reveal-expand-aspect, 16/9);
+        --ui-reveal-content-fs: var(--ui-reveal-expand-content-fs, var(--font-size-base));
+        align-content: start;
+        animation: ui-reveal-pop var(--_trs) both;
+        background: var(--ui-reveal-expand-bg, var(--ui-reveal-bg));
+        inset: var(--ui-reveal-expand-m) 0 auto;
+        margin-inline: auto;
+        max-height: calc(100dvh - calc(var(--ui-reveal-expand-m) * 2));
+        max-inline-size: var(--ui-reveal-expand-max-is, 65ch);
+        overflow-y: auto;
+        position: fixed;
+        scrollbar-gutter: auto;
+        z-index: var(--z-index-3);
+      }
+      > details[open]::details-content {
+        background: transparent;
+      }
+    }
+  }
+  @keyframes ui-reveal-backdrop {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes ui-reveal-pop {
+    from {
+      opacity: 0;
+      scale: var(--ui-reveal-pop-scale, 0.92);
+    }
+    to {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+  :where(ui-reveal) {
+    --_persp: perspective(var(--ui-reveal-perspective, 1000px));
+    --_face-closed: rotateY(0deg);
+    --_face-open: rotateY(180deg);
+    --_panel-closed: rotateY(-180deg);
+    --_panel-open: rotateY(0deg);
+    --ui-reveal-icon-clear: calc(var(--ui-reveal-icon-sz) + var(--ui-reveal-icon-m));
+    &[variant~="flp(lft)"] {
+      --_face-open: rotateY(-180deg);
+      --_panel-closed: rotateY(180deg);
+    }
+    &[variant~="flp(top)"] {
+      --_face-closed: rotateX(0deg);
+      --_face-open: rotateX(-180deg);
+      --_panel-closed: rotateX(180deg);
+      --_panel-open: rotateX(0deg);
+    }
+    &[variant~="flp(btm)"] {
+      --_face-closed: rotateX(0deg);
+      --_face-open: rotateX(180deg);
+      --_panel-closed: rotateX(-180deg);
+      --_panel-open: rotateX(0deg);
+    }
+  }
+  @container bs-rvl style(--_rvl: flp) {
+    :where(ui-reveal) > details > summary > ui-face {
+      backface-visibility: hidden;
+      transform: var(--_persp) var(--_face-closed);
+      transition: transform var(--_trs);
+    }
+    :where(ui-reveal) > details[open] > summary > ui-face {
+      transform: var(--_persp) var(--_face-open);
+    }
+    :where(ui-reveal) > details > summary > ui-icon {
+      z-index: 2;
+    }
+    :where(ui-reveal) > details::details-content {
+      backface-visibility: hidden;
+      grid-area: 1 / -1;
+      transform: var(--_persp) var(--_panel-closed);
+      transition: transform var(--_trs), content-visibility var(--_trs);
+    }
+    :where(ui-reveal) > details[open]::details-content {
+      transform: var(--_persp) var(--_panel-open);
+    }
+    :where(ui-reveal:is([variant~="ico(te)"], [variant~="icc(te)"])) > details[open]::details-content > * > :first-child {
+      padding-inline-end: var(--ui-reveal-icon-clear);
+    }
+    :where(ui-reveal:is([variant~="ico(ts)"], [variant~="icc(ts)"])) > details[open]::details-content > * > :first-child {
+      padding-inline-start: var(--ui-reveal-icon-clear);
+    }
+  }
+  @container bs-rvl style(--_rvl: flp) or style(--_rvl: sld) {
+    :where(ui-reveal[variant~=scr]) > details::details-content {
+      block-size: var(--ui-reveal-content-bs, auto);
+      inset: 0;
+      overflow: hidden;
+      position: absolute;
+    }
+    :where(ui-reveal[variant~=scr]) > details > :where(:not(summary)) {
+      block-size: 100%;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-color: var(--ui-reveal-scrollbar-color, color-mix(in oklab, currentColor 40%, transparent)) transparent;
+      scrollbar-gutter: auto;
+      scrollbar-width: thin;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    @container bs-rvl style(--_rvl: flp) {
+      :where(ui-reveal) > details > summary > ui-icon {
+        animation: ui-reveal-icon-dip var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
+      }
+      :where(ui-reveal) > details[open] > summary > ui-icon {
+        animation-name: ui-reveal-icon-dip-open;
+      }
+    }
+  }
+  @keyframes ui-reveal-icon-dip {
+    0% {
+      opacity: 1;
+    }
+    40% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes ui-reveal-icon-dip-open {
+    0% {
+      opacity: 1;
+    }
+    40% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      @container bs-rvl style(--_rvl: flp) or style(--_rvl: sld) {
+        :where(ui-reveal[variant~=scr]) > details[open] > :where(:not(summary)) {
+          animation: ui-scroll-fade linear;
+          animation-timeline: --ui-reveal-scroll;
+          mask: var(--ui-scroll-fade-mask);
+          scroll-timeline: --ui-reveal-scroll block;
+        }
+      }
+    }
+  }
+  @container bs-rvl style(--_rvl: sld) {
+    :where(ui-reveal) > details::details-content {
+      grid-area: 1 / -1;
+      translate: 100% 0;
+      z-index: 1;
+      transition: translate var(--_trs), content-visibility var(--_trs);
+    }
+    :where(ui-reveal[variant~="sld(top)"]) > details::details-content {
+      translate: 0 -100%;
+    }
+    :where(ui-reveal[variant~="sld(btm)"]) > details::details-content {
+      translate: 0 100%;
+    }
+    :where(ui-reveal[variant~="sld(lft)"]) > details::details-content {
+      translate: -100% 0;
+    }
+    :where(ui-reveal[variant~="sld(rgt)"]) > details::details-content {
+      translate: 100% 0;
+    }
+    :where(ui-reveal) > details[open]::details-content {
+      translate: 0 0;
+    }
+  }
+  @container bs-rvl style(--_rvl: grw) {
+    :where(ui-reveal) > details::details-content {
+      block-size: var(--ui-reveal-icon-sz);
+      border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
+      box-sizing: border-box;
+      content-visibility: hidden;
+      inline-size: var(--ui-reveal-icon-sz);
+      inset-block: var(--_scale-bs, auto) var(--_scale-be, 0);
+      inset-inline: var(--_scale-is, auto) var(--_scale-ie, 0);
+      margin: var(--ui-reveal-p);
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+      transition:
+        block-size var(--_trs),
+        inline-size var(--_trs),
+        border-radius var(--_trs),
+        margin var(--_trs),
+        opacity var(--_trs),
+        content-visibility var(--_trs);
+      z-index: 1;
+    }
+    :where(ui-reveal) > details[open]::details-content {
+      block-size: 100%;
+      border-radius: 0;
+      content-visibility: visible;
+      inline-size: 100%;
+      margin: 0;
+      opacity: 1;
+    }
+    :where(ui-reveal[variant~=scr]) > details[open]::details-content {
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: none;
+    }
+  }
+  :where(ui-reveal) {
+    &:is([variant~="ico(ts)"], [variant~="ico(te)"]) {
+      --_scale-bs: 0;
+      --_scale-be: auto;
+    }
+    &:is([variant~="ico(bs)"], [variant~="ico(be)"]) {
+      --_scale-bs: auto;
+      --_scale-be: 0;
+    }
+    &:is([variant~="ico(ts)"], [variant~="ico(bs)"]) {
+      --_scale-is: 0;
+      --_scale-ie: auto;
+    }
+    &:is([variant~="ico(te)"], [variant~="ico(be)"]) {
+      --_scale-is: auto;
+      --_scale-ie: 0;
+    }
+    &:is([variant~="grw(ts)"], [variant~="grw(te)"], [variant~="lg:grw(ts)"], [variant~="lg:grw(te)"]) {
+      --_scale-bs: 0;
+      --_scale-be: auto;
+    }
+    &:is([variant~="grw(bs)"], [variant~="grw(be)"], [variant~="lg:grw(bs)"], [variant~="lg:grw(be)"]) {
+      --_scale-bs: auto;
+      --_scale-be: 0;
+    }
+    &:is([variant~="grw(ts)"], [variant~="grw(bs)"], [variant~="lg:grw(ts)"], [variant~="lg:grw(bs)"]) {
+      --_scale-is: 0;
+      --_scale-ie: auto;
+    }
+    &:is([variant~="grw(te)"], [variant~="grw(be)"], [variant~="lg:grw(te)"], [variant~="lg:grw(be)"]) {
+      --_scale-is: auto;
+      --_scale-ie: 0;
+    }
+  }
+  @container bs-rvl style(--_rvl: sld) or style(--_rvl: grw) {
+    :where(ui-reveal:not([variant~="trg(card)"])) > details[open] > summary {
+      pointer-events: none;
+    }
+    :where(ui-reveal) > details[open] > summary > ui-icon {
+      pointer-events: auto;
+    }
+  }
+  @container bs-card (inline-size >= 44rem) {
+    :where(ui-reveal:is([variant~="lg:grw"], [variant~="lg:grw(ts)"], [variant~="lg:grw(te)"], [variant~="lg:grw(bs)"], [variant~="lg:grw(be)"])) > details {
+      --_rvl: grw;
+    }
+  }
+  :where(ui-reveal[variant~="trg(card)"]) {
+    > details[open]::details-content {
+      pointer-events: none;
+    }
+    > details[open] :is(a, button, input, select, textarea, [tabindex]) {
+      pointer-events: auto;
+    }
+    > details:has(> summary:focus-visible) {
+      box-shadow:
+        0 0 0 var(--ring-offset) var(--ui-reveal-bg),
+        0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ring-color),
+        var(--ui-reveal-shadow, var(--shadow-xl));
+    }
+  }
+}
+lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
+  contain: inline-size;
+}
+
+/* index.css */
