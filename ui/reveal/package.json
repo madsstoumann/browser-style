@@ -3,15 +3,18 @@
   "version": "4.0.0",
   "description": "CSS-only reveal card built on details/summary with cover, flip, slide, and scale animations",
   "type": "module",
-  "style": "index.css",
+  "style": "./dist/reveal.css",
   "exports": {
     ".": {
-      "style": "./index.css"
+      "style": "./dist/reveal.css"
     },
-    "./style": "./index.css",
-    "./index.css": "./index.css"
+    "./style": "./dist/reveal.css",
+    "./index.css": "./index.css",
+    "./dist/reveal.css": "./dist/reveal.css",
+    "./dist/reveal.min.css": "./dist/reveal.min.css"
   },
   "files": [
+    "dist/",
     "index.css",
     "ui-reveal.css"
   ],
@@ -39,6 +42,9 @@
   "peerDependencies": {
     "@browser.style/base": "^1.0.11",
     "@browser.style/card": "^4.0.0",
-    "@browser.style/icon": "^1.0.11"
+    "@browser.style/icon": "^4.0.0"
+  },
+  "scripts": {
+    "build": "node ../../scripts/css-bundle.js . index.css reveal"
   }
 }

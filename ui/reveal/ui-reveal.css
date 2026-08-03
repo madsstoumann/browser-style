@@ -1,16 +1,21 @@
 /**
  * ui-reveal — CSS-only reveal card on <details>/<summary>.
  * Configured through variant= tokens (shared attribute with ui-card).
- * Docs: ../reveal/readme.md · ui/card/ui-card-tokens.md § Internals (ui-reveal.css)
+ * Docs: ../reveal/readme.md · ui/card/docs/ui-card-tokens.md § Internals (ui-reveal.css)
  * @version 2.0.0
  * @author Mads Stoumann
  */
-@import '../card/ui-card.css';
-@import '../icon/index.css';
+/* NO @import of the card engine or the icon sheet — both are declared peers and
+   must be loaded by the page, in this order:
+       @browser.style/base  ->  @browser.style/card  ->  @browser.style/icon  ->  this
+   Pulling '../card/ui-card.css' in here made every page that ALSO links the card
+   engine (the normal case — a reveal rarely appears alone) parse it twice, and it
+   would inline the whole engine into this package's bundle. This sheet contains
+   only reveal's own rules; it overrides card rules that ui-card.css already set. */
 
 /* CARD-RULE LEAK CHECKLIST — AUDIT MARKER, keep. A card rule whose subject sits
    inside `ui-reveal > details` without passing summary/ui-face needs a row — and
-   usually a counter-reset — in ui/card/ui-card-tokens.md § the leak checklist. */
+   usually a counter-reset — in ui/card/docs/ui-card-tokens.md § the leak checklist. */
 
 /* animation-dispatch flag; non-inheriting on purpose */
 @property --_rvl { syntax: "*"; inherits: false; }

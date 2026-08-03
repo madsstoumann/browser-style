@@ -4,15 +4,23 @@
   "description": "CSS-first card engine built on <ui-media> + <ui-content>, with variant tokens and a container-driven font scale. Shared base for ui-reveal.",
   "type": "module",
   "main": "index.js",
-  "style": "index.css",
+  "style": "./dist/card.css",
   "exports": {
     ".": {
-      "style": "./index.css",
+      "style": "./dist/card.css",
       "import": "./index.js"
     },
-    "./style": "./index.css",
+    "./style": "./dist/card.css",
     "./index.css": "./index.css",
     "./ui-card.css": "./ui-card.css",
+    "./media.css": "./media.css",
+    "./media.shapes.css": "./media.shapes.css",
+    "./media.hover.css": "./media.hover.css",
+    "./media.tint.css": "./media.tint.css",
+    "./media.carousel.css": "./media.carousel.css",
+    "./media.lightbox.css": "./media.lightbox.css",
+    "./media.video.css": "./media.video.css",
+    "./content.css": "./content.css",
     "./content.typography.css": "./content.typography.css",
     "./ui-media-srcset.js": "./ui-media-srcset.js",
     "./srcset.js": "./srcset.js",
@@ -20,6 +28,7 @@
     "./carousel.js": "./carousel.js",
     "./hover.js": "./hover.js",
     "./video.js": "./video.js",
+    "./lightbox.js": "./lightbox.js",
     "./shared.js": "./shared.js",
     "./render.js": "./render.js",
     "./data/tokens.json": "./data/tokens.json",
@@ -27,9 +36,12 @@
     "./index.min.js": "./index.min.js",
     "./carousel.min.js": "./carousel.min.js",
     "./hover.min.js": "./hover.min.js",
-    "./video.min.js": "./video.min.js"
+    "./video.min.js": "./video.min.js",
+    "./dist/card.css": "./dist/card.css",
+    "./dist/card.min.css": "./dist/card.min.css"
   },
   "files": [
+    "dist/",
     "index.css",
     "ui-card.css",
     "media.css",
@@ -37,6 +49,7 @@
     "media.hover.css",
     "media.tint.css",
     "media.carousel.css",
+    "media.lightbox.css",
     "media.video.css",
     "content.css",
     "content.typography.css",
@@ -50,7 +63,7 @@
     "shared.js",
     "render.js",
     "data/",
-    "tokens.md",
+    "docs/tokens.md",
     "*.min.js"
   ],
   "scripts": {
@@ -83,6 +96,44 @@
   },
   "homepage": "https://browser.style/ui/card",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.11"
+    "@browser.style/base": "^1.0.11",
+    "@browser.style/carousel": "^1.0.0",
+    "@browser.style/common": "^1.0.13",
+    "@browser.style/beacon": "^5.0.0",
+    "@browser.style/chip": "^4.0.0",
+    "@browser.style/lightbox": "^1.0.0",
+    "@browser.style/marquee": "^5.0.0",
+    "@browser.style/play": "^4.1.0",
+    "@browser.style/save": "^5.0.0",
+    "@browser.style/sticker": "^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@browser.style/carousel": {
+      "optional": true
+    },
+    "@browser.style/common": {
+      "optional": true
+    },
+    "@browser.style/beacon": {
+      "optional": true
+    },
+    "@browser.style/chip": {
+      "optional": true
+    },
+    "@browser.style/lightbox": {
+      "optional": true
+    },
+    "@browser.style/marquee": {
+      "optional": true
+    },
+    "@browser.style/play": {
+      "optional": true
+    },
+    "@browser.style/save": {
+      "optional": true
+    },
+    "@browser.style/sticker": {
+      "optional": true
+    }
   }
 }

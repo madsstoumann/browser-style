@@ -20,7 +20,7 @@
  *   4. DOM carousel controls — the native ::scroll-marker/::scroll-button
  *      pseudos do NOT follow a popover frame into the top layer (Chromium keeps
  *      them in the document layer, behind ::backdrop), so every ui-media[popover]
- *      carousel gets real-element controls via /polyfill/carousel-controls.js —
+ *      carousel gets real-element controls via @browser.style/carousel polyfill core —
  *      in EVERY browser, both states, for continuity. media.lightbox.css
  *      suppresses the native pseudos on those [data-ui-carousel-polyfill]
  *      frames only.
@@ -38,6 +38,9 @@
  * @version 1.3.0 (moved from ui/lightbox/command.js)
  */
 
+/* sibling package (@browser.style/common, an optional peer) — the relative form
+   resolves in this repo (ui/card/ -> ui/common/) and under npm's flat scoped
+   install (node_modules/@browser.style/card/ -> .../common/) alike */
 import { createCommandRouter } from '../common/command.js';
 
 const COMMANDS = new Set(['--lightbox-layout']);
@@ -270,18 +273,27 @@ function onClick(event) {
 
 /* DOM carousel controls for popover frames (nicety 4). Lazy-imported so pages
    without a lightbox never fetch the core; idempotent via the core's
-   [data-ui-carousel-polyfill] guard, so co-loading /polyfill/carousel.js (the
-   Safari entry) never doubles controls. Mirrors the entry's bounded clone-wait:
+   [data-ui-carousel-polyfill] guard, so co-loading @browser.style/carousel's
+   polyfill entry never doubles controls. Mirrors the entry's bounded clone-wait:
    a `loop` frame gets [data-clone] slides prepended by ui/card/carousel.js, and
    the controls must be injected AFTER them to end up first child (the sticky
-   pin sits at the scroll start). */
+   pin sits at the scroll start).
+
+   The core lives in a SIBLING package (@browser.style/carousel). The relative
+   specifier below resolves to the same file in both layouts that matter —
+   ui/card/ -> ui/carousel/ in this repo, and node_modules/@browser.style/card/
+   -> node_modules/@browser.style/carousel/ under npm's flat scoped install — so
+   it needs neither a bundler nor an import map. Layouts that isolate packages
+   (pnpm's default store, a CDN) can point it anywhere via
+   globalThis.uiCarouselPolyfillUrl. */
+const CONTROLS_URL = '../carousel/polyfill/carousel-controls.js';
 const idle = globalThis.requestIdleCallback || ((fn) => setTimeout(fn, 1));
 let core = null;   // the resolved controls-core module (slidesOf for the tile jump)
 function enhanceControls(root = document) {
 	const frames = [...root.querySelectorAll('ui-media[popover]')]
 		.filter((frame) => !frame.dataset.uiCarouselPolyfill);
 	if (!frames.length) return;
-	import('../../polyfill/carousel-controls.js').then((mod) => {
+	import(globalThis.uiCarouselPolyfillUrl || new URL(CONTROLS_URL, import.meta.url).href).then((mod) => {
 		core = mod;
 		const { initControls, mediaStr, hasToken, wantedFromString } = mod;
 		/* with media-open, build the UNION of both states' control sets so the
