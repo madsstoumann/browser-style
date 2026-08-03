@@ -264,7 +264,7 @@ summary {
   row-gap: 1ch;
 }
 
-/* Text children → content column */
+/* Text children → text column */
 summary > :not(img):not(ui-icon) {
   grid-column: 2;
 }
@@ -274,7 +274,7 @@ summary > img {
   grid-column: 1 / -1;
 }
 
-/* Icon in natural flow (no position tokens) → content column, end-aligned */
+/* Icon in natural flow (no position tokens) → text column, end-aligned */
 summary > ui-icon {
   grid-column: 2;
   justify-self: end;

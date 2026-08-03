@@ -67,7 +67,7 @@
     "element": {
       "type": "select",
       "title": "Element",
-      "description": "Host element the attributes are applied to. ui-media / ui-content render the bare primitive with no card chrome — a standalone media frame or prose column living directly in a layout.",
+      "description": "Host element the attributes are applied to. ui-card is the host; ui-media and ui-content are its two areas (media / text) and can also be used bare — a standalone media frame or text column living directly in a layout, with no card chrome. \"content\" names the text area, not the card.",
       "localized": false,
       "default": "ui-card",
       "validation": {
@@ -77,7 +77,7 @@
         { "value": "ui-card", "label": "<ui-card>" },
         { "value": "ui-reveal", "label": "<ui-reveal>" },
         { "value": "ui-media", "label": "<ui-media> (bare media frame)" },
-        { "value": "ui-content", "label": "<ui-content> (bare content column)" }
+        { "value": "ui-content", "label": "<ui-content> — text only, no media" }
       ]
     },
     "variant": {
@@ -107,13 +107,13 @@
     "content": {
       "type": "string",
       "title": "content=",
-      "description": "Content column tokens: scl(sm|md|lg|xl), pad(), gap(), scr",
+      "description": "Text column tokens: scl(sm|md|lg|xl), pad(), gap(), scr",
       "localized": false
     },
     "text": {
       "type": "select",
       "title": "Text mode",
-      "description": "Which long text the content column shows: summary (teaser — the default for cards), body (full view — the body replaces the summary; falls back to summary when no body exists), or both. Reveal back panels always render both.",
+      "description": "Which long text the text column shows: summary (teaser — the default for cards), body (full view — the body replaces the summary; falls back to summary when no body exists), or both. Reveal back panels always render both.",
       "localized": false,
       "default": "summary",
       "options": [
