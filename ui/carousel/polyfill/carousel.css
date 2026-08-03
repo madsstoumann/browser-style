@@ -1,7 +1,7 @@
-/* /polyfill/carousel.css — Safari fallback for the CSS-only <ui-media> carousel.
+/* ui/carousel/polyfill/carousel.css — Safari fallback for the CSS-only <ui-media> carousel.
  *
  * Real-element port of the `@supports (scroll-marker-group: after)` block in
- * ui/card/media.carousel.css: /polyfill/carousel.js injects ONE
+ * ui/card/media.carousel.css: ui/carousel/polyfill/carousel.js injects ONE
  * <ui-carousel-controls> child into each top-level carousel scroller, holding
  * real <button> dots ([data-dot], active = [aria-current]) and prev/next
  * arrows ([data-nav]). All --ui-media-* theming tokens are shared with the

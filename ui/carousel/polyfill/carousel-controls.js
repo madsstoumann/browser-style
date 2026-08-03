@@ -1,12 +1,12 @@
 /**
- * /polyfill/carousel-controls.js — the DOM-controls core for <ui-media> carousels.
+ * ui/carousel/polyfill/carousel-controls.js — the DOM-controls core for <ui-media> carousels.
  *
  * Injects ONE <ui-carousel-controls> element per carousel — real <button> dots
  * and prev/next arrows — styled by ./carousel.css via the SAME --ui-media-*
  * tokens the native ::scroll-marker/::scroll-button path uses.
  *
  * TWO consumers, one core:
- *  - /polyfill/carousel.js — the Safari fallback entry: auto-scans every carousel
+ *  - ui/carousel/polyfill/carousel.js — the Safari fallback entry: auto-scans every carousel
  *    where `@supports (scroll-marker-group: after)` fails (today's behavior,
  *    unchanged — keep loading THAT file conditionally).
  *  - ui/card/lightbox.js — the popover-lightbox enhancer: calls initControls()

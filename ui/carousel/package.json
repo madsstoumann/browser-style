@@ -1,0 +1,54 @@
+{
+  "name": "@browser.style/carousel",
+  "version": "1.0.0",
+  "description": "CSS-first carousel controls \u2014 arrows, dots, pills, thumbnails and bands \u2014 driven by the media= token DSL and built on native scroll-marker-group / scroll-button pseudos. Shared by ui-card, ui-reveal, ui-media and lay-out[overflow]. Ships a Safari/Chromium DOM-control polyfill.",
+  "type": "module",
+  "style": "./dist/carousel.css",
+  "exports": {
+    ".": {
+      "style": "./dist/carousel.css"
+    },
+    "./style": "./dist/carousel.css",
+    "./index.css": "./index.css",
+    "./carousel.css": "./carousel.css",
+    "./polyfill": "./polyfill/carousel.js",
+    "./polyfill/carousel.js": "./polyfill/carousel.js",
+    "./polyfill/carousel-controls.js": "./polyfill/carousel-controls.js",
+    "./polyfill/carousel.css": "./polyfill/carousel.css",
+    "./dist/carousel.css": "./dist/carousel.css",
+    "./dist/carousel.min.css": "./dist/carousel.min.css"
+  },
+  "files": [
+    "dist/",
+    "index.css",
+    "carousel.css",
+    "polyfill/"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "carousel",
+    "scroll-marker-group",
+    "scroll-button",
+    "scroll-snap",
+    "css-first",
+    "design-system"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/carousel"
+  },
+  "homepage": "https://browser.style/ui/card/media.carousel.html",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11"
+  },
+  "scripts": {
+    "build": "node ../../scripts/css-bundle.js . index.css carousel"
+  }
+}

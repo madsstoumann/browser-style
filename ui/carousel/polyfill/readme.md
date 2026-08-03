@@ -2,13 +2,13 @@
 
 ```html
 <script type="module">
-  if (!CSS.supports('scroll-marker-group: after')) import('/polyfill/carousel.js');
+  if (!CSS.supports('scroll-marker-group: after')) import('/ui/carousel/polyfill/carousel.js');
 </script>
 ```
 
 The CSS-only carousel draws its dots with `::scroll-marker` and its arrows with
 `::scroll-button()`, behind `@supports (scroll-marker-group: after)`
-(`ui/card/media.carousel.css` + `ui/base/carousel.css`). Those are Chromium-only
+(`ui/card/media.carousel.css` + `ui/carousel/carousel.css`). Those are Chromium-only
 today. Everywhere else the carousel still works — it stays a native, swipeable
 scroll-snap row — it just has no visible controls.
 
@@ -174,7 +174,7 @@ no unsized first paint.
 - **`LAY-OUT` is in that list**, so a collage carousel — `<lay-out>` children of a
   `<ui-media nav>` — has zero JS slides and therefore gets **no polyfill dots**. It
   keeps native swipe + snap. That is the documented CSS-only boundary, not a gap to
-  patch here (see [`ui/card/carousel.md`](../ui/card/carousel.md#multiple-items-per-slide--group-wrappers)).
+  patch here (see [`ui/card/docs/carousel.md`](../../card/docs/carousel.md#multiple-items-per-slide--group-wrappers)).
 
 ## Files
 
@@ -184,5 +184,5 @@ no unsized first paint.
 | `carousel.js` | the Safari fallback entry — imports the core, idle auto-`scan()`, global native-pseudo kill when force-loaded; exports `scan()` (also `globalThis.uiMediaPolyfill.scan`) |
 | `carousel.css` | real-element port of the native `@supports` block; unlayered; `[data-media]` token surface |
 
-Related: [`ui/base/polyfills/readme.md`](../ui/base/polyfills/readme.md) (typed `attr()` —
+Related: [`ui/base/polyfills/readme.md`](../../base/polyfills/readme.md) (typed `attr()` —
 a different polyfill for a different gap; a page may well need both).

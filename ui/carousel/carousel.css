@@ -1,8 +1,8 @@
 /*
  * carousel.css — shared CSS-carousel controls (arrows, dots, pills, thumbnails, bands).
  * Driven by the media= token DSL. Architecture, invariants (0-0-0 :where, polyfill
- * contract, token fallbacks, anchor() positioning) and internals: ui/card/media.carousel.md
- * Token reference: ui/card/carousel.md
+ * contract, token fallbacks, anchor() positioning) and internals: ui/card/docs/media.carousel.md
+ * Token reference: ui/card/docs/carousel.md
  */
 @layer bs-component {
 	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
@@ -419,7 +419,7 @@
 		      itself — no JS, no scroll-into-view call. The scrollbar is hidden by default (the
 		      current label already tracks the carousel); set --ui-carousel-label-group-scrollbar
 		      to `thin`/`auto` to show it, or --ui-carousel-label-group-wrap: wrap for a wrapping
-		      block of labels instead of a scroller. See ui/card/media.carousel.md § Labels. */
+		      block of labels instead of a scroller. See ui/card/docs/media.carousel.md § Labels. */
 		:where(ui-card, ui-reveal):where([media*="mrk(lbl)"]) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"])::scroll-marker-group {
 			backdrop-filter: var(--ui-carousel-label-group-backdrop, none);

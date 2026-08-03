@@ -1,5 +1,5 @@
 /**
- * /polyfill/carousel.js — Safari fallback ENTRY for the CSS-only <ui-media> carousel.
+ * ui/carousel/polyfill/carousel.js — Safari fallback ENTRY for the CSS-only <ui-media> carousel.
  *
  * The native carousel (ui/card/media.carousel.css) uses ::scroll-marker dots and
  * ::scroll-button() arrows behind `@supports (scroll-marker-group: after)`.
@@ -10,7 +10,7 @@
  * popover frame).
  *
  * Load it conditionally:
- *   if (!CSS.supports('scroll-marker-group: after')) import('/polyfill/carousel.js');
+ *   if (!CSS.supports('scroll-marker-group: after')) import('/ui/carousel/polyfill/carousel.js');
  */
 
 import { scan, idle } from './carousel-controls.js';
