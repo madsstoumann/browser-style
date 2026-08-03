@@ -1,6 +1,6 @@
 # The layout & card system — a user guide
 
-> **Guide, not reference.** This walks you through *using* the whole system, from a single card to a full page — sections, carousels, themes, reveals and motion. The full token references live with each package (see the table at the end); the type system has its own use-case guide in [ui/card/typography.md](../ui/card/typography.md). Everything here is pure CSS unless marked otherwise.
+> **Guide, not reference.** This walks you through *using* the whole system, from a single card to a full page — sections, carousels, themes, reveals and motion. The full token references live with each package (see the table at the end); the type system has its own use-case guide in [ui/card/docs/typography.md](../ui/card/docs/typography.md). Everything here is pure CSS unless marked otherwise.
 
 It's written to be read top to bottom: each section builds on the one before, and every example is real, working markup you can paste into a page.
 
@@ -145,7 +145,7 @@ One pairing to remember: `ovr()` puts (usually white) text on top of your image,
 
 Remember rule 1: `content=` can sit on any ancestor. Put `content="scl(sm)"` on a `<lay-out>` and every card in the section quiets down together.
 
-The full type system (the relational ladder, fluid sizing, all the parts) lives in [ui/card/content.md](../ui/card/content.md).
+The full type system (the relational ladder, fluid sizing, all the parts) lives in [ui/card/docs/content.md](../ui/card/docs/content.md).
 
 ---
 
@@ -385,15 +385,15 @@ Read it back and notice how much is *not* there: no classes, no media queries, n
 | You want… | Read |
 |---|---|
 | the `<ui-card>` API & quick-start | [ui/card/readme.md](../ui/card/readme.md) |
-| every `variant=` token + reveal tokens | [ui/card/ui-card-tokens.md](../ui/card/ui-card-tokens.md) |
-| to *use* the type system (use-case guide) | [ui/card/typography.md](../ui/card/typography.md) |
-| the type system reference | [ui/card/content.md](../ui/card/content.md) |
-| the media frame, furniture, video | [ui/card/media.md](../ui/card/media.md) |
-| every carousel token | [ui/card/carousel.md](../ui/card/carousel.md) |
+| every `variant=` token + reveal tokens | [ui/card/docs/ui-card-tokens.md](../ui/card/docs/ui-card-tokens.md) |
+| to *use* the type system (use-case guide) | [ui/card/docs/typography.md](../ui/card/docs/typography.md) |
+| the type system reference | [ui/card/docs/content.md](../ui/card/docs/content.md) |
+| the media frame, furniture, video | [ui/card/docs/media.md](../ui/card/docs/media.md) |
+| every carousel token | [ui/card/docs/carousel.md](../ui/card/docs/carousel.md) |
 | `<ui-reveal>` in depth | [ui/reveal/readme.md](../ui/reveal/readme.md) |
 | every layout pattern & attribute | [layout/core/base.md](../layout/core/base.md) |
-| keyframes & the animation engine | [ui/card/animations.md](../ui/card/animations.md) |
+| keyframes & the animation engine | [ui/card/docs/animations.md](../ui/card/docs/animations.md) |
 
-Driving pages from a CMS? Cards can be rendered from JSON: a **preset** (a named bundle of these same token strings) plus a content object, turned into HTML by a small Node-safe renderer — see [ui/card/card.md](../ui/card/card.md).
+Driving pages from a CMS? Cards can be rendered from JSON: a **preset** (a named bundle of these same token strings) plus a content object, turned into HTML by a small Node-safe renderer — see [ui/card/docs/card.md](../ui/card/docs/card.md).
 
 Happy building!

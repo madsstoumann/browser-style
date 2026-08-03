@@ -32,7 +32,7 @@ const SHEETS = [
 	['ui/save/ui-save.css', MEDIA_ONLY], ['ui/beacon/ui-beacon.css', MEDIA_ONLY],
 	['ui/marquee/ui-marquee.css', MEDIA_ONLY], ['ui/play/ui-play.css', MEDIA_ONLY],
 	['ui/lightbox/ui-lightbox.css', MEDIA_ONLY],
-	['ui/base/carousel.css', MEDIA_ONLY], ['ui/base/stagger.css', MEDIA_ONLY],
+	['ui/carousel/carousel.css', MEDIA_ONLY], ['ui/base/stagger.css', MEDIA_ONLY],
 	['layout/core/base.css', ALL]
 ];
 
@@ -60,18 +60,18 @@ const flatten = (group) => Object.entries({ ...group.tokens, ...group.bareFlags 
 /* ── slide-exclusion sync (R-01) ──
    "Which direct children of a scroller are NOT slides" is transcribed in three
    places by design, and the design call is that they stay transcribed:
-   /polyfill/carousel-controls.js keeps a LOCAL mirror so the polyfill core has zero imports
+   /ui/carousel/polyfill/carousel-controls.js keeps a LOCAL mirror so the polyfill core has zero imports
    from /ui/card/ (it must be loadable on its own, from a CDN, behind a
    `@supports` gate). A deliberate copy is only safe if drift is a build error —
    hence this check. The documented contract:
-     • polyfill/carousel-controls.js NOT_SLIDE  ==  ui/card/shared.js NOT_SLIDE   (exact)
+     • ui/carousel/polyfill/carousel-controls.js NOT_SLIDE  ==  ui/card/shared.js NOT_SLIDE   (exact)
      • media.carousel.css `> :not(…)`  ⊆   shared.js NOT_SLIDE           (subset)
    The CSS list is a subset, not an equal: <ui-carousel-controls> is injected by
    the polyfill (the native path has no such element) and <lay-out> is a JS-only
    wrapper exclusion, so neither needs the flex/snap reset the CSS rule applies. */
 const SLIDE_LISTS = {
 	'ui/card/shared.js': [/NOT_SLIDE\s*=\s*\/\^\(([^)]*)\)\$\//, (body) => body.split('|')],
-	'polyfill/carousel-controls.js': [/NOT_SLIDE\s*=\s*\/\^\(([^)]*)\)\$\//, (body) => body.split('|')],
+	'ui/carousel/polyfill/carousel-controls.js': [/NOT_SLIDE\s*=\s*\/\^\(([^)]*)\)\$\//, (body) => body.split('|')],
 	/* the slide rule: `ui-media…> :not(<tags>)` — anchored on ui-media so an
 	   unrelated `> :not()` elsewhere in the sheet can never be read as the list */
 	'ui/card/media.carousel.css': [/ui-media[^{;]*>\s*:not\(([^)]*)\)/, (body) => body.split(',').map((tag) => tag.trim().toUpperCase())]
@@ -86,13 +86,13 @@ const slideList = (file, errors) => {
 
 const lintSlideLists = (errors) => {
 	const shared = slideList('ui/card/shared.js', errors);
-	const polyfill = slideList('polyfill/carousel-controls.js', errors);
+	const polyfill = slideList('ui/carousel/polyfill/carousel-controls.js', errors);
 	const css = slideList('ui/card/media.carousel.css', errors);
 	if (!shared || !polyfill || !css) return;
 	const diff = (a, b) => [...a].filter((tag) => !b.has(tag)).sort();
 	/* polyfill == shared: an exact mirror, so name BOTH directions of any drift */
-	for (const tag of diff(polyfill, shared)) errors.push(`polyfill/carousel-controls.js: NOT_SLIDE has ${tag}, missing from ui/card/shared.js — the mirror has drifted`);
-	for (const tag of diff(shared, polyfill)) errors.push(`ui/card/shared.js: NOT_SLIDE has ${tag}, missing from polyfill/carousel-controls.js — the mirror has drifted`);
+	for (const tag of diff(polyfill, shared)) errors.push(`ui/carousel/polyfill/carousel-controls.js: NOT_SLIDE has ${tag}, missing from ui/card/shared.js — the mirror has drifted`);
+	for (const tag of diff(shared, polyfill)) errors.push(`ui/card/shared.js: NOT_SLIDE has ${tag}, missing from ui/carousel/polyfill/carousel-controls.js — the mirror has drifted`);
 	/* CSS ⊆ shared: extra CSS entries are the drift; missing ones are allowed */
 	for (const tag of diff(css, shared)) errors.push(`ui/card/media.carousel.css: :not() excludes ${tag}, which is not in ui/card/shared.js NOT_SLIDE`);
 };

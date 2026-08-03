@@ -166,7 +166,7 @@ The disc backdrop is **on by default** (`Canvas`). Standalone, use `theme=` (hue
 model as `chip`/`sticker`/`play`.
 
 `commandfor` points at the `<ui-card>` / `<ui-media>` so the handler has the card in context. Full
-token reference: [`ui/card/card.md` → Save furniture](../card/card.md).
+token reference: [`ui/card/docs/card.md` → Save furniture](../card/docs/card.md).
 
 ---
 

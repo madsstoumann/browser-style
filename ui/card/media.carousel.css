@@ -1,6 +1,6 @@
 /* ui-media carousel — the ui-media-specific scroller box, furniture exclusions,
  * focus, ui-play placement, band/rail reservation. Generic controls live in
- * /ui/base/carousel.css; the stagger engine in /ui/base/stagger.css.
+ * /ui/carousel/carousel.css; the stagger engine in /ui/base/stagger.css.
  * Docs: media.carousel.md (internals) · carousel.md (tokens)
  *
  * DUAL ARM, ONE SELECTOR — `ui-media` stays OUTSIDE the :where() so every rule

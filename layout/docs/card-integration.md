@@ -10,7 +10,7 @@ Every card/reveal demo page used to define its own `.grid` / `.grid-2/3/4` class
 
 | Pages | Classes | Breakpoints |
 |---|---|---|
-| `ui/card/render.html`, `article.render.html`, most `media.*.html` (13 pages) | `.grid-2/.grid-3` | 540px |
+| `ui/card/demo/render.html`, `article.render.html`, most `media.*.html` (13 pages) | `.grid-2/.grid-3` | 540px |
 | pages with `.grid-4` (9 pages, overlapping) | `.grid-4` | 540px → 2-col, 900px → 4-col |
 | `ui/card/index.html`, `ui/reveal/index.html` | `.grid-2/.grid-3` | 720px |
 
@@ -66,8 +66,8 @@ Adding `nav` to the outer frame makes each `<lay-out>` child a slide — a swipe
 dotted **CSS-only** collage carousel. `slidesOf()` excludes `LAY-OUT`, so the JS features
 (`loop`, `auto()`, per-slide `<ui-play>`, the Safari controls polyfill) no-op there.
 
-Full pattern: [`ui/card/media.md` § Collage](../../ui/card/media.md#collage--a-lay-out-grid-inside-the-frame);
-demo `ui/card/media.collage.html`.
+Full pattern: [`ui/card/docs/media.md` § Collage](../../ui/card/docs/media.md#collage--a-lay-out-grid-inside-the-frame);
+demo `ui/card/demo/media.collage.html`.
 
 ### Why it doesn't collide
 

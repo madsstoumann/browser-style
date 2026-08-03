@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Card — Content</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="Every &lt;ui-content&gt; text token in one place: the scl() scale, hl() headline sizes incl. the 3xl display step, the eb()/hl()/tx()/mt() group tone·weight·shadow families, theme= themes, all content parts, pad()/gap() spacing, responsive size, scrollable content and the core surface tokens.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
+	<link rel="stylesheet" href="../../chip/ui-chip.css">
+	<link rel="stylesheet" href="../ui-card.css">
+	<style>
+
+		/* Demo-only custom themes (navy + beige) — add your own theme by feeding the
+		   resolver's base pair (--_theme-base-bg/-c); see ui/base/theme.md. No change
+		   to the design system. Also re-alias --color-accent (eyebrow reads it) so the
+		   .bg-accent button re-picks the themed accent on the card. */
+		:where([theme~="navy"]) {
+			--_theme-base-bg: #0a0a4f; --_theme-base-c: #f7f3e3; color-scheme: dark;
+			--color-accent: #f7f3e3;      /* cream — eyebrow + button bg */
+			--color-accent-text: #0a0a4f; /* navy label on the cream button */
+			--AccentColor: var(--color-accent);
+			--AccentColorText: var(--color-accent-text);
+		}
+		:where([theme~="beige"]) {
+			--_theme-base-bg: #f7f3e3; --_theme-base-c: #0a0a4f;
+			--color-accent: #0a0a4f;      /* navy — eyebrow + button bg */
+			--color-accent-text: #f7f3e3; /* cream label on the navy button */
+			--AccentColor: var(--color-accent);
+			--AccentColorText: var(--color-accent-text);
+		}
+
+		/* Advanced contrast-color() (una.im/advanced-contrast-color): use contrast-color()
+		   as a light/dark detector, then if()+style() upgrade black/white to the custom
+		   navy/cream pair so each theme inks with the OTHER's colour. Experimental:
+		   contrast-color() Baseline (Chrome 147/FF 146/Safari 26); if()/style() Chrome 137+/
+		   Safari 26, no Firefox — degrades to the hardcoded colours above. */
+		@property --demo-ink { syntax: "<color>"; inherits: true; initial-value: #0a0a4f; }
+		@supports (color: contrast-color(white)) {
+			:where([theme~="navy"]), :where([theme~="beige"]) {
+				--demo-ink: contrast-color(var(--ui-card-bg));
+				color: if(style(--demo-ink: white): #f7f3e3; else: #0a0a4f);
+			}
+		}
+	</style>
+</head>
+<body data-layout-root data-page-gap="2">
+	<h1>UI: Card — <code>&lt;ui-content&gt;</code></h1>
+	<p class="note">Everything that controls the content column: the <code>scl()</code> scale (decoupled body + headline ramp), <code>hl()</code> headline sizes (incl. <code>3xl</code>), the four group families — <code>eb()</code> / <code>hl()</code> / <code>tx()</code> / <code>mt()</code> — for tone, weight and text-shadow, the <code>theme=</code> themes, every <code>data-part</code>, <code>pad()</code>/<code>gap()</code> spacing, responsive size, scrollable content, and the core surface tokens. All driven by <code>variant</code> / <code>content</code> tokens — no JavaScript. Media-backed treatments live in <a href="media.html">media.html</a>.</p>
+	<p class="note">See also: <a href="../index.html">index.html</a> (the full engine) · <a href="media.html">media.html</a> (the <code>&lt;ui-media&gt;</code> side) · <a href="../docs/ui-card-tokens.md">ui-card-tokens.md</a> (token reference).</p>
+
+	<!-- sub-pages (add more entries as sections graduate to their own page) -->
+	<ul>
+		<li><a href="content.typography.html">typography</a> — the type ramps (headline / body) and the per-part proportional scale</li>
+	</ul>
+
+	<!-- ============================================================
+	     scl() — typographic scale
+	     ============================================================ -->
+	<h2>Typographic scale — <code>scl()</code></h2>
+	<p class="note"><code>content="scl(sm | md | lg | xl)"</code> (default <code>md</code>) sets <strong>two</strong> container-driven <code>clamp()</code> ramps at once — a gentle <em>body</em> scale (eyebrow / summary / meta / tags) and a more aggressive <em>headline</em> scale. Decoupling them means a big card gets a display-size title while the body copy stays readable. Both also grow/shrink with the card's own width (<code>cqi</code>).</p>
+	<lay-out md="columns(2)" lg="columns(4)">
+		<ui-card variant="vis(content)" content="scl(sm)" style="--ui-media-min: 0;">
+			<cq-box><ui-content>
+				<small data-part="eyebrow">scl(sm)</small>
+				<h2 data-part="headline">Small &amp; tidy</h2>
+				<p data-part="summary">Body and headline both step down. Good for dense grids and metadata-heavy cards.</p>
+			</ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="vis(content)" content="scl(md)">
+			<cq-box><ui-content>
+				<small data-part="eyebrow">scl(md) — default</small>
+				<h2 data-part="headline">The comfortable default</h2>
+				<p data-part="summary">The baseline ramp used when no <code>scl()</code> is set.</p>
+			</ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="vis(content)" content="scl(lg)">
+			<cq-box><ui-content>
+				<small data-part="eyebrow">scl(lg)</small>
+				<h2 data-part="headline">Larger headline</h2>
+				<p data-part="summary">Headline jumps ahead of the body — note the gap widening between the two ramps.</p>
+			</ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="vis(content)" content="scl(xl)">
+			<cq-box><ui-content>
+				<small data-part="eyebrow">scl(xl)</small>
+				<strong data-part="headline">Display</strong>
+				<p data-part="summary">The hero tier — the headline goes display-size while the summary stays around 1.2rem.</p>
+			</ui-content></cq-box>
+		</ui-card>
+	</lay-out>
+	<p class="note">The same scale on a wide card shows how hard the headline ramp pushes at <code>scl(xl)</code> while the body stays readable. It also demonstrates <strong>responsive padding</strong>: <code>pad(md)</code> keeps things tight on narrow containers and <code>lg:pad(2xl)</code> opens the card up once it crosses <code>44rem</code> of its own width (a container query, not the viewport).</p>
+	<ui-card variant="vis(content)" content="scl(xl) pad(md) lg:pad(2xl)">
+		<cq-box><ui-content>
+			<small data-part="eyebrow">scl(xl) · pad(md) lg:pad(2xl)</small>
+			<strong data-part="headline">A display headline that scales with width</strong>
+			<p data-part="summary">Resize the window: the headline tracks the card's own inline-size via <code>cqi</code>, bounded by its <code>clamp()</code>. The summary barely moves — that is the decoupled ramp doing its job.</p>
+		</ui-content></cq-box>
+	</ui-card>
+
+	<!-- ============================================================
+	     Content parts — full anatomy
+	     ============================================================ -->
+	<h2>Content parts — the full anatomy</h2>
+	<p class="note">Parts are styled by the <code>data-part</code> attribute, not the tag name, so you pick the semantically correct element. Each part has its own font-size / colour / weight / gap tokens (all relative to <code>--ui-content-fs</code> by default). The caption over the image is a <code>&lt;ui-chip&gt;</code> positioned with <code>chip(bs)</code> on the card's <code>media=</code> (see <a href="media.furniture.html">media.furniture.html</a>). The second example is a <strong>bare <code>&lt;ui-content&gt;</code></strong> — no <code>&lt;ui-card&gt;</code>, no <code>&lt;cq-box&gt;</code> — showing the primitive works standalone with its own <code>content=</code> attribute.</p>
+	<p class="note"><strong>Tags</strong> (<code>data-part="tags"</code>) are a <code>&lt;ul&gt;</code>/<code>&lt;li&gt;</code> list whose items are either <strong>plain links</strong> — <code>&lt;li&gt;&lt;a&gt;</code>, rendered as the default pill (this is what <code>render.js</code> emits; see the horizontal strip below) — <em>or</em> <code>&lt;ui-chip&gt;</code> children. A <strong>default</strong> <code>&lt;ui-chip&gt;</code> (no attributes) is the same grey pill (grey on light, darker grey on dark — see the three theme cards below); add <code>theme=</code> (red/orange/green/blue/accent/dark/light/subtle) or <code>variant=</code> (light/outline) for the full palette (see <a href="../../chip/">ui/chip</a>), as on the two anatomy cards above.</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(16/9) chip(bs)">
+			<cq-box>
+				<ui-media>
+					<img src="/assets/images/popovers.png" alt="">
+					<ui-chip>Caption</ui-chip>
+				</ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Eyebrow</small>
+					<h2 data-part="headline">Headline part</h2>
+					<p data-part="subheadline">Subheadline — a muted secondary line</p>
+					<p data-part="summary">Summary is the body copy of the card. It uses the body font-size ramp and a comfortable line-height for reading.</p>
+					<address data-part="byline"><img src="/assets/images/janesmith.png" alt=""><span>Byline · <span data-part="meta">Jun 20, 2026 · 5 min</span></span></address>
+					<ul data-part="tags"><li><ui-chip theme="blue"><a href="#">tags</a></ui-chip></li><li><ui-chip variant="light" theme="green"><a href="#">pill list</a></ui-chip></li></ul>
+					<nav data-part="actions"><a class="ui-button bg-accent" href="#">Primary action</a></nav>
+					<footer data-part="footer">Footer — trailing meta</footer>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<!-- RAW ui-content — standalone, no ui-card / cq-box wrapper -->
+		<ui-content content="scl(md)">
+			<small data-part="eyebrow">Reference · raw &lt;ui-content&gt;</small>
+			<h2 data-part="headline">Each part, isolated</h2>
+			<p data-part="subheadline">subheadline → <code>--ui-content-muted</code></p>
+			<p data-part="summary">summary → inherits the body colour, <code>fs × 1</code>. This whole block is a bare <code>&lt;ui-content content="scl(md)"&gt;</code> in normal page flow.</p>
+			<p data-part="meta">meta → <code>fs × 0.75</code>, muted.</p>
+			<address data-part="byline"><span>byline → <code>fs × 0.82</code> (no avatar here)</span></address>
+			<ul data-part="tags"><li><ui-chip theme="blue"><a href="#">UX</a></ui-chip></li><li><ui-chip theme="green"><a href="#">CSS</a></ui-chip></li><li><ui-chip variant="outline" theme="accent"><a href="#">Cards</a></ui-chip></li></ul>
+			<nav data-part="actions"><a class="ui-button bg-accent" href="#">Buy</a> <a class="ui-button bg-accent --outline" href="#">Details</a></nav>
+			<footer data-part="footer">footer → <code>fs × 0.78</code>, muted</footer>
+		</ui-content>
+	</lay-out>
+
+	<!-- ============================================================
+	     theme= — themes
+	     ============================================================ -->
+	<h2>Themes — <code>theme=</code></h2>
+	<p class="note">The shared <code>theme=</code> axis remaps surface, ink, eyebrow and tag colours (text-only here — for media-backed themes see <a href="media.html">media.html</a>). The same card in default, <code>theme="gray"</code>, <code>theme="slate dark"</code> and <code>theme="black dark"</code> — a neutral ramp from light to dark: <strong>white &lt; gray &lt; slate &lt; black</strong>. The <code>dark</code> modifier sets <code>color-scheme: dark</code>, so ink / accent / pills / controls re-tone. Branded surface = <code>theme="black"</code> plus a <code>--ui-card-dark-bg</code> override. Full docs: <a href="../../base/theme.md">theme.md</a>.</p>
+	<lay-out md="columns(2)" lg="columns(4)">
+		<ui-card variant="vis(content)">
+			<cq-box><ui-content><small data-part="eyebrow">default</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Unlimited workouts, coaching and priority support.</p><ul data-part="tags"><li><ui-chip><a href="#">Popular</a></ui-chip></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="vis(content)" theme="gray">
+			<cq-box><ui-content><small data-part="eyebrow">gray</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Off-white surface, default dark ink.</p><ul data-part="tags"><li><ui-chip><a href="#">Popular</a></ui-chip></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="vis(content)" theme="slate dark">
+			<cq-box><ui-content><small data-part="eyebrow">slate dark</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Soft-dark slate — sits between gray and black.</p><ul data-part="tags"><li><ui-chip><a href="#">Popular</a></ui-chip></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="vis(content)" theme="black dark">
+			<cq-box><ui-content><small data-part="eyebrow">black dark</small><h2 data-part="headline">FitTrack Pro</h2><p data-part="summary">Dark surface, light ink, accent eyebrow.</p><ul data-part="tags"><li><ui-chip><a href="#">Popular</a></ui-chip></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box>
+		</ui-card>
+	</lay-out>
+
+	<!-- ============================================================
+	     Custom themes — contrast-color() investigation (DEMO-ONLY)
+	     ============================================================ -->
+	<h2>Custom themes</h2>
+	<p class="note">Custom themes defined in this page's styles — add your own by feeding the resolver's base pair on <code>[theme~="x"]</code> (see <a href="../../base/theme.md">theme.md</a>).</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="vis(content)" theme="navy"><cq-box><ui-content><small data-part="eyebrow">custom · navy</small><h2 data-part="headline">Midnight</h2><p data-part="summary">Custom surface via --ui-card-bg; ink auto-picked from the navy/cream pair with contrast-color() + if().</p><ul data-part="tags"><li><ui-chip><a href="#">Popular</a></ui-chip></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="beige"><cq-box><ui-content><small data-part="eyebrow">custom · beige</small><h2 data-part="headline">Parchment</h2><p data-part="summary">Beige surface, dark-navy ink — the cross-palette from the same contrast-color() rule.</p><ul data-part="tags"><li><ui-chip><a href="#">Popular</a></ui-chip></li></ul><nav data-part="actions"><a class="ui-button bg-accent" href="#">Choose</a></nav></ui-content></cq-box></ui-card>
+	</lay-out>
+
+	<!-- ============================================================
+	     pad() — content padding
+	     ============================================================ -->
+	<h2>Padding — <code>pad()</code></h2>
+	<p class="note"><code>content="pad(none | xs | sm | md | lg | xl | 2xl)"</code> sets the content padding (mapped to the global <code>--spacing-*</code> scale). Default is <code>md</code>.</p>
+	<lay-out md="columns(2)" lg="columns(4)">
+		<ui-card variant="vis(content)" theme="gray" content="pad(none)"><cq-box><ui-content><small data-part="eyebrow">pad(none)</small><h2 data-part="headline">Flush</h2><p data-part="summary">No padding at all.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="gray" content="pad(sm)"><cq-box><ui-content><small data-part="eyebrow">pad(sm)</small><h2 data-part="headline">Snug</h2><p data-part="summary">Small spacing.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="gray" content="pad(lg)"><cq-box><ui-content><small data-part="eyebrow">pad(lg)</small><h2 data-part="headline">Roomy</h2><p data-part="summary">Large spacing.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="gray" content="pad(2xl)"><cq-box><ui-content><small data-part="eyebrow">pad(2xl)</small><h2 data-part="headline">Generous</h2><p data-part="summary">Maximum spacing.</p></ui-content></cq-box></ui-card>
+	</lay-out>
+	<p class="note">The space between content rows is a separate knob — <code>--ui-content-gap</code> (default <code>1em</code>):</p>
+	<lay-out md="columns(3)">
+		<ui-card variant="vis(content)" theme="gray" style="--ui-content-gap: 0.25em;"><cq-box><ui-content><small data-part="eyebrow">gap 0.25em</small><h2 data-part="headline">Tight rows</h2><p data-part="summary">Rows pulled close together.</p><nav data-part="actions"><a class="ui-button bg-accent" href="#">Go</a></nav></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="gray"><cq-box><ui-content><small data-part="eyebrow">gap 1em</small><h2 data-part="headline">Default rows</h2><p data-part="summary">The baseline rhythm.</p><nav data-part="actions"><a class="ui-button bg-accent" href="#">Go</a></nav></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="gray" style="--ui-content-gap: 2em;"><cq-box><ui-content><small data-part="eyebrow">gap 2em</small><h2 data-part="headline">Airy rows</h2><p data-part="summary">Rows pushed apart.</p><nav data-part="actions"><a class="ui-button bg-accent" href="#">Go</a></nav></ui-content></cq-box></ui-card>
+	</lay-out>
+
+	<!-- ============================================================
+	     Arrangement & spl() splits
+	     ============================================================ -->
+	<h2>Arrangement &amp; split — <code>row</code> / <code>spl()</code></h2>
+	<p class="note">Beyond <code>col</code> (default), content can sit beside the media (<code>row</code>), before it (<code>col-r</code> / <code>row-r</code>), and the column ratio is set with <code>spl(1/1 | 1/2 | 2/1 | 1/3 | 3/1)</code>.</p>
+	<div>
+		<ui-card variant="row spl(1/2)" media="asr(1/1)">
+			<cq-box>
+				<ui-media><img src="/assets/images/ergochair.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">row spl(1/2)</small><h2 data-part="headline">ErgoChair Pro</h2><p data-part="subheadline">USD 349 · free shipping</p><p data-part="summary">Media takes one third, content two thirds. Adaptive lumbar support and a 12-year warranty.</p><nav data-part="actions"><a class="ui-button bg-accent" href="#">Add to cart</a></nav></ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="row-r spl(2/1)" media="asr(1/1)">
+			<cq-box>
+				<ui-media><img src="/assets/images/janesmith.png" alt=""></ui-media>
+				<ui-content><small data-part="eyebrow">row-r spl(2/1)</small><h2 data-part="headline">Jane Smith</h2><p data-part="subheadline">Chief Political Correspondent</p><p data-part="summary">Content first, media second (reversed), content twice as wide.</p><nav data-part="actions"><a class="ui-button bg-accent" href="#">View profile</a></nav></ui-content>
+			</cq-box>
+		</ui-card>
+	</div>
+
+	<p class="note">For overlay (<code>ovr()</code>), scrim (<code>scm</code>), squircle corners (<code>rds(*-sq)</code>) and other media-backed treatments, see <a href="media.html">media.html</a> — this page is the text-only side.</p>
+
+	<!-- ============================================================
+	     Placement — plc(<cell>): the 3×3 grid, via flex alignment
+	     ============================================================ -->
+	<h2>Placement — <code>plc(&lt;cell&gt;)</code></h2>
+	<p class="note">The same nine logical cells as the media furniture grid (<code>ts tc te · cs cc ce · bs bc be</code>), but via <strong>align/justify</strong>, not absolute positioning: the block letter drives <code>justify-content</code>, the inline letter <code>align-items</code>. The full-width row cards below (media <code>asr(1/1)</code>, content beside it — alternating <code>row-r</code>/<code>row</code>) give the column room on both axes so every cell is visible; each also sets <code>rds(non)</code> (square card) and <code>wid(sm)</code>, whose 35ch measure lands at roughly half to two-thirds of the column — narrow enough that the inline letter has somewhere to move the text. The text alignment follows the column: centered cells add <code>tal(ctr)</code>, end cells <code>tal(end)</code>, start cells keep the default. <code>lg:pad(lg)</code> opens the inner padding up once the card crosses the <code>lg:</code> container tier. All system tokens, no inline styles.</p>
+	<div>
+		<ui-card variant="row-r rds(non)" media="asr(1/1)" content="plc(ts) wid(sm) lg:pad(lg)"><cq-box><ui-media><img src="/assets/images/river.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(ts)</small><h2 data-part="headline">Top start</h2><p data-part="summary">Rows gather at the block start, each aligned to the inline start. This is closest to the no-token default.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row rds(non)" media="asr(1/1)" content="plc(tc) wid(sm) tal(ctr) lg:pad(lg)"><cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(tc)</small><h2 data-part="headline">Top center</h2><p data-part="summary">Rows gather at the block start, each centred on the inline axis. Note the text itself still reads start-aligned.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row-r rds(non)" media="asr(1/1)" content="plc(te) wid(sm) tal(end) lg:pad(lg)"><cq-box><ui-media><img src="/assets/images/gastronomy.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(te)</small><h2 data-part="headline">Top end</h2><p data-part="summary">Rows gather at the block start, pushed to the inline end. In RTL every cell mirrors automatically.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row rds(non)" media="asr(1/1)" content="plc(cs) wid(sm) lg:pad(lg)"><cq-box><ui-media><img src="/assets/images/world.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(cs)</small><h2 data-part="headline">Center start</h2><p data-part="summary">The column centres vertically beside the square media. A common editorial look for side-by-side cards.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row-r rds(non)" media="asr(1/1)" content="plc(cc) wid(sm) tal(ctr) lg:pad(lg)"><cq-box><ui-media><img src="/assets/images/finance.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(cc)</small><h2 data-part="headline">Dead center</h2><p data-part="summary">Centred on both axes. Combine with tal(ctr) below when the text should centre too.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row rds(non)" media="asr(1/1)" content="plc(ce) wid(sm) tal(end) lg:pad(lg)"><cq-box><ui-media><img src="/assets/images/hubble.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(ce)</small><h2 data-part="headline">Center end</h2><p data-part="summary">Vertically centred, hugging the inline end. Pairs naturally with a row card whose media sits at the start.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row-r rds(non)" media="asr(1/1)" content="plc(bs) wid(sm) lg:pad(lg)"><cq-box><ui-media><img src="/assets/images/quantum.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(bs)</small><h2 data-part="headline">Bottom start</h2><p data-part="summary">Rows sink to the block end, aligned to the inline start. The classic caption position.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row rds(non)" media="asr(1/1)" content="plc(bc) wid(sm) tal(ctr) lg:pad(lg)"><cq-box><ui-media><img src="/assets/images/websummit.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(bc)</small><h2 data-part="headline">Bottom center</h2><p data-part="summary">Sunk to the block end and centred inline. The block letter only bites when the column is taller than its rows.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row-r rds(non)" media="asr(1/1)" content="plc(be) wid(sm) tal(end) lg:pad(lg)"><cq-box><ui-media><img src="/assets/images/destinations.png" alt=""></ui-media><ui-content><small data-part="eyebrow">plc(be)</small><h2 data-part="headline">Bottom end</h2><p data-part="summary">Both axes at their end. The ninth cell completes the same grid the furniture and ovr() use.</p></ui-content></cq-box></ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Width — wid(<size>): text measure, default 65ch prose
+	     ============================================================ -->
+	<h2>Width — <code>wid(&lt;size&gt;)</code></h2>
+	<p class="note">Caps the text measure — each content row's <code>max-inline-size</code>. The no-token default is the prose measure <code>--width-prose</code> (65ch); the ladder is <code>sm</code> 35ch · <code>md</code> 50ch · <code>lg</code> 65ch · <code>xl</code> 80ch · <code>2xl</code> 100% (no cap). No <code>xs</code> step — the type ladders start at <code>sm</code>; only the spacing scale has an <code>xs</code>. The cap rides the rows, not the column, so <code>plc()</code>'s inline letter still places a narrow measure within a wide column.</p>
+	<div>
+		<ui-card variant="row-r" media="asr(1/1)" content="wid(sm)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""></ui-media><ui-content><small data-part="eyebrow">wid(sm)</small><h2 data-part="headline">35ch measure</h2><p data-part="summary">The tightest step — sidebar notes and captions, where a long line would dwarf the type.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row" media="asr(1/1)" content="wid(md)"><cq-box><ui-media><img src="/assets/images/aurasoundpro.png" alt=""></ui-media><ui-content><small data-part="eyebrow">wid(md)</small><h2 data-part="headline">50ch measure</h2><p data-part="summary">A compact reading column — short summaries stay comfortable without spanning the card.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row-r" media="asr(1/1)"><cq-box><ui-media><img src="/assets/images/ergochair.png" alt=""></ui-media><ui-content><small data-part="eyebrow">default · wid(lg)</small><h2 data-part="headline">65ch prose</h2><p data-part="summary">The no-token default — the classic prose measure from --width-prose, also reachable explicitly as wid(lg).</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row" media="asr(1/1)" content="wid(xl)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""></ui-media><ui-content><small data-part="eyebrow">wid(xl)</small><h2 data-part="headline">80ch measure</h2><p data-part="summary">A wide editorial column — leadier text for hero rows where the default would feel narrow.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row-r" media="asr(1/1)" content="wid(2xl)"><cq-box><ui-media><img src="/assets/images/city.png" alt=""></ui-media><ui-content><small data-part="eyebrow">wid(2xl)</small><h2 data-part="headline">Full width</h2><p data-part="summary">No cap at all — every row spans the column. Use sparingly; long lines cost readability.</p></ui-content></cq-box></ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Text alignment — tal(): start / ctr / end
+	     ============================================================ -->
+	<h2 id="tal">Text alignment — <code>tal()</code></h2>
+	<p class="note"><code>tal(start)</code> (the no-token default) · <code>tal(ctr)</code> · <code>tal(end)</code>. Pure <code>text-align</code> — combine with <code>plc()</code> to move the block and align the text independently. (The old combined <code>ctr</code>/<code>end</code> bare flags are removed: <code>ctr</code> ≈ <code>plc(tc) tal(ctr)</code>, <code>end</code> ≈ <code>plc(te) tal(end)</code>.) Like <code>plc()</code>, <code>tal()</code> sits under the <code>ovr()</code> slot, so an inherited group-level alignment never overrides an overlay card's cell-derived one.</p>
+	<div>
+		<ui-card variant="row-r" media="asr(1/1)" content="tal(start) plc(cs)"><cq-box><ui-media><img src="/assets/images/game_01.png" alt=""></ui-media><ui-content><small data-part="eyebrow">tal(start) · plc(cs)</small><h2 data-part="headline">Start aligned</h2><p data-part="summary">The reading default — ragged-right in LTR, ragged-left in RTL. Explicit tal(start) also resets an inherited centre.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row" media="asr(1/1)" content="tal(ctr) plc(cc)"><cq-box><ui-media><img src="/assets/images/game_02.png" alt=""></ui-media><ui-content><small data-part="eyebrow">tal(ctr) · plc(cc)</small><h2 data-part="headline">Centered text</h2><p data-part="summary">Centred type over a centred block — the symmetric hero treatment, without touching the overlay system.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="row-r" media="asr(1/1)" content="tal(end) plc(ce)"><cq-box><ui-media><img src="/assets/images/janesmith.png" alt=""></ui-media><ui-content><small data-part="eyebrow">tal(end) · plc(ce)</small><h2 data-part="headline">End aligned</h2><p data-part="summary">Type ragged toward the media — a mirrored look for alternating rows like these.</p></ui-content></cq-box></ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Headline sizes — hl(<size>) incl. 3xl
+	     ============================================================ -->
+	<h2>Headline sizes — <code>hl(&lt;size&gt;)</code></h2>
+	<p class="note"><code>hl(sm | md | lg | xl | 2xl | 3xl)</code> swaps the <strong>headline stop only</strong> — the body copy stays put. Unlike <code>scl()</code> (which moves both ramps together), <code>hl()</code> decouples a display-size title from readable body. <code>3xl</code> is the display step (formerly <code>poster</code>).</p>
+	<lay-out md="columns(3)">
+		<ui-card variant="vis(content)" theme="gray" content="hl(sm)"><cq-box><ui-content><small data-part="eyebrow">hl(sm)</small><h2 data-part="headline">Small headline</h2><p data-part="summary">The body copy is unchanged across every card in this row.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="gray" content="hl(lg)"><cq-box><ui-content><small data-part="eyebrow">hl(lg)</small><h2 data-part="headline">Large headline</h2><p data-part="summary">The body copy is unchanged across every card in this row.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="gray" content="hl(2xl)"><cq-box><ui-content><small data-part="eyebrow">hl(2xl)</small><h2 data-part="headline">2xl headline</h2><p data-part="summary">The body copy is unchanged across every card in this row.</p></ui-content></cq-box></ui-card>
+	</lay-out>
+	<p class="note">A <code>hl(3xl)</code> display headline on a wide card (tracks the card width via <code>cqi</code>):</p>
+	<ui-card variant="vis(content)" theme="black dark" content="hl(3xl)">
+		<cq-box><ui-content>
+			<small data-part="eyebrow">hl(3xl)</small>
+			<strong data-part="headline">Poster display headline</strong>
+			<p data-part="summary">The headline reaches the 3xl display clamp while the summary stays at a comfortable reading size — the decoupled ramp doing its job.</p>
+		</ui-content></cq-box>
+	</ui-card>
+
+	<!-- ============================================================
+	     Tones — eb() / hl() / tx() / mt() ink
+	     ============================================================ -->
+	<h2>Tones — group ink (<code>eb()</code> / <code>hl()</code> / <code>tx()</code> / <code>mt()</code>)</h2>
+	<p class="note">Each group takes a tone arg: <code>shr</code> (30%) · <code>lgt</code> (45%) · <code>med</code> (65%) · <code>drk</code> (85%) · <code>sld</code> (100%) · <code>accent</code> · <code>inv</code>. A group token restyles the whole group; a per-part <code>style="--ui-content-*-ink"</code> still overrides one part.</p>
+	<lay-out md="columns(2)" lg="columns(4)">
+		<ui-card variant="vis(content)" theme="gray" content="eb(lgt)"><cq-box><ui-content><small data-part="eyebrow">eb(lgt)</small><h2 data-part="headline">Light eyebrow</h2><p data-part="summary">Eyebrow ink dropped to 45%.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="gray" content="eb(accent)"><cq-box><ui-content><small data-part="eyebrow">eb(accent)</small><h2 data-part="headline">Accent eyebrow</h2><p data-part="summary">Eyebrow ink set to the accent hue.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="gray" content="eb(drk)"><cq-box><ui-content><small data-part="eyebrow">eb(drk)</small><h2 data-part="headline">Dark eyebrow</h2><p data-part="summary">Eyebrow ink pushed to 85%.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="gray" content="hl(accent)"><cq-box><ui-content><small data-part="eyebrow">hl(accent)</small><h2 data-part="headline">Accent headline</h2><p data-part="summary">The headings group ink is the accent hue.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="gray" content="tx(drk)"><cq-box><ui-content><small data-part="eyebrow">tx(drk)</small><h2 data-part="headline">Dark body</h2><p data-part="summary">The body group (summary here) darkens to 85% ink.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="gray" content="tx(lgt)"><cq-box><ui-content><small data-part="eyebrow">tx(lgt)</small><h2 data-part="headline">Light body</h2><p data-part="summary">The body group lightens to 45% ink.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="gray" content="mt(med)"><cq-box><ui-content><small data-part="eyebrow">mt(med)</small><h2 data-part="headline">Muted meta</h2><p data-part="summary">Meta row below.</p><p data-part="meta">meta → mt(med) ink</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="black dark" content="eb(inv) tx(lgt)"><cq-box><ui-content><small data-part="eyebrow">eb(inv) tx(lgt)</small><h2 data-part="headline">Inverse on dark</h2><p data-part="summary">White eyebrow, lightened body — overlay-style ink on a dark theme.</p></ui-content></cq-box></ui-card>
+	</lay-out>
+
+	<!-- ============================================================
+	     Weights — 300–900
+	     ============================================================ -->
+	<h2>Weights — <code>300</code>–<code>900</code></h2>
+	<p class="note">Numeric args set <code>--font-weight-*</code> per group (<code>800</code> is a literal). Disjoint from tone and size, so <code>hl(900)</code>, <code>hl(accent)</code> and <code>hl(lg)</code> compose freely.</p>
+	<lay-out md="columns(2)" lg="columns(4)">
+		<ui-card variant="vis(content)" theme="gray" content="hl(300)"><cq-box><ui-content><small data-part="eyebrow">hl(300)</small><h2 data-part="headline">Light title</h2><p data-part="summary">Headline weight 300.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="gray" content="hl(500)"><cq-box><ui-content><small data-part="eyebrow">hl(500)</small><h2 data-part="headline">Medium title</h2><p data-part="summary">Headline weight 500.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="gray" content="hl(900)"><cq-box><ui-content><small data-part="eyebrow">hl(900)</small><h2 data-part="headline">Black title</h2><p data-part="summary">Headline weight 900.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="gray" content="eb(700) eb(flat)"><cq-box><ui-content><small data-part="eyebrow">eb(700) eb(flat)</small><h2 data-part="headline">Bold flat eyebrow</h2><p data-part="summary"><code>eb(flat)</code> also drops the default uppercase.</p></ui-content></cq-box></ui-card>
+	</lay-out>
+
+	<!-- ============================================================
+	     Text-shadow — shd (overlay legibility)
+	     ============================================================ -->
+	<h2>Text-shadow — <code>shd</code> (overlay legibility)</h2>
+	<p class="note">The <code>shd</code> flag adds a legibility text-shadow to a group. Its main job is overlaid text over a scrim: a host <code>ovr()</code> <strong>automatically</strong> shadows the headline + eyebrow, and <code>hl(shd)</code>/<code>eb(shd)</code> opt any group in explicitly. (This is the only media-backed example on this page — for the rest of the overlay/scrim system see <a href="media.html">media.html</a>.) Retune with <code>--ui-content-text-shadow</code> or disable via <code>style="--ui-content-heading-text-shadow: none"</code>.</p>
+	<lay-out md="columns(3)">
+		<ui-card variant="ovr(bs)" media="asr(3/4) obp(cc) scm" content="scl(lg)"><cq-box><ui-media><img src="/assets/images/mindfulness.png" alt=""></ui-media><ui-content><small data-part="eyebrow">ovr() — auto shadow</small><strong data-part="headline">Legible by default</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(bs)" media="asr(3/4) obp(cc) scm" content="scl(lg) hl(3xl)" style="--ui-content-heading-text-shadow: none;"><cq-box><ui-media><img src="/assets/images/hubble.png" alt=""></ui-media><ui-content><small data-part="eyebrow">shadow disabled</small><strong data-part="headline">No shadow</strong></ui-content></cq-box></ui-card>
+		<ui-card variant="ovr(bs)" media="asr(3/4) obp(cc) scm(shr)" content="scl(lg) hl(shd) eb(shd)"><cq-box><ui-media><img src="/assets/images/brewandbean.png" alt=""></ui-media><ui-content><small data-part="eyebrow">hl(shd) eb(shd) · sheer scrim</small><strong data-part="headline">Shadow carries it</strong></ui-content></cq-box></ui-card>
+	</lay-out>
+
+	<!-- ============================================================
+	     Responsive size — lg:scl() / lg:hl()
+	     ============================================================ -->
+	<h2>Responsive size — <code>lg:scl()</code> / <code>lg:hl()</code></h2>
+	<p class="note"><strong>Resize the window</strong> (or the card's container) across the <strong>lg breakpoint (44rem / 704px)</strong>: below it the base size applies, at/above it the <code>lg:</code>-prefixed size takes over. Only size tokens are prefixable — tone and weight stay static.</p>
+	<div>
+		<ui-card variant="vis(content)" theme="gray" content="scl(sm) lg:scl(lg)"><cq-box><ui-content><small data-part="eyebrow">scl(sm) lg:scl(lg)</small><h2 data-part="headline">Body + headline both jump at lg</h2><p data-part="summary"><code>scl()</code> moves both ramps together — this whole block steps up once the card is at least 44rem wide.</p></ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="black dark" content="hl(md) lg:hl(3xl)"><cq-box><ui-content><small data-part="eyebrow">hl(md) lg:hl(3xl)</small><strong data-part="headline">Headline alone jumps to 3xl at lg</strong><p data-part="summary"><code>hl()</code> decouples the title: the summary size is unchanged, only the headline leaps to the 3xl display clamp when wide.</p></ui-content></cq-box></ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Parts gallery — the folded-in parts
+	     ============================================================ -->
+	<h2>Parts gallery — the folded-in parts</h2>
+	<p class="note">The eight parts that were previously spec-only are now styled and assigned to a group (Body or Meta), so they inherit the tone / weight system. Each keeps its own <code>--ui-content-{part}-*</code> hook.</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="vis(content)" theme="gray"><cq-box><ui-content>
+			<small data-part="eyebrow">Body group parts</small>
+			<h2 data-part="headline">ErgoChair Pro</h2>
+			<p data-part="price"><data value="349">$349</data> <del>$429</del> <small>save 19%</small></p>
+			<p data-part="summary">Adaptive lumbar support and a 12-year warranty.</p>
+			<ul data-part="list"><li>Adaptive lumbar</li><li>Breathable mesh</li><li>12-year warranty</li></ul>
+			<address data-part="address">42 Market Street<br>Copenhagen, DK</address>
+			<blockquote data-part="quote"><q>The best chair I have owned.</q> <cite>— A. Reviewer</cite></blockquote>
+			<ol data-part="timeline"><li><time>2024</time> — Launched</li><li><time>2026</time> — v2 shipped</li></ol>
+		</ui-content></cq-box></ui-card>
+		<ui-card variant="vis(content)" theme="gray"><cq-box><ui-content>
+			<small data-part="eyebrow">Body + Meta group parts</small>
+			<h2 data-part="headline">Quarterly report</h2>
+			<p data-part="stat"><data value="1240">1,240</data> <small>signups</small> <span>▲ 12%</span></p>
+			<div data-part="rating" role="img" aria-label="Rated 4 out of 5">★★★★☆ <small>(128)</small></div>
+			<p data-part="summary">Poll results from the latest survey:</p>
+			<ul data-part="options">
+				<li><label>Option A</label> <progress value="0.62"></progress></li>
+				<li><label>Option B</label> <progress value="0.38"></progress></li>
+			</ul>
+			<footer data-part="footer">Updated Jul 12, 2026</footer>
+		</ui-content></cq-box></ui-card>
+	</lay-out>
+
+	<!-- ============================================================
+	     Scrollable content — content="scr"
+	     ============================================================ -->
+	<h2>Scrollable content — <code>content="scr"</code></h2>
+	<p class="note">Add <code>content="scr"</code> to cap the content height and make it scroll, with a CSS-only fade-shadow on the masked edges (a scroll-driven animation). Cap the height with <code>--ui-content-scroll-bs</code>.</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="row spl(1/1)" media="asr(1/1)" content="scr" style="--ui-content-scroll-bs: 18rem;">
+			<cq-box>
+				<ui-media><img src="/assets/images/quantum.png" alt=""></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">scr</small>
+					<h2 data-part="headline">A long read</h2>
+					<p data-part="summary">Scientists have made a breakthrough in quantum computing that could change everything we know about processing power.</p>
+					<p data-part="summary">The implications stretch across cryptography, materials science and drug discovery — fields long bottlenecked by classical compute.</p>
+					<p data-part="summary">As you scroll, the top and bottom edges fade via a <code>mask</code> animated on a <code>scroll-timeline</code> — no JavaScript.</p>
+					<p data-part="summary">When you reach the bottom, the trailing fade lifts so the final line is fully visible.</p>
+					<p data-part="summary">Resize the card and the cap still holds at <code>--ui-content-scroll-bs</code>.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="vis(content)" content="scr" style="--ui-content-scroll-bs: 18rem;">
+			<cq-box>
+				<ui-content>
+					<small data-part="eyebrow">vis(content) · scr</small>
+					<h2 data-part="headline">Terms &amp; conditions</h2>
+					<p data-part="summary">1. The card body is the only column here — no media frame.</p>
+					<p data-part="summary">2. The same fade-shadow applies; the mask follows the scroll position.</p>
+					<p data-part="summary">3. Long policy text, changelogs and FAQs fit this pattern well.</p>
+					<p data-part="summary">4. Everything stays within the card's rounded clip.</p>
+					<p data-part="summary">5. Scroll on to confirm the bottom fade releases at the end.</p>
+					<p data-part="summary">6. The end.</p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	<p class="note"><code>content="scr(x)"</code> flips the axis: a <strong>horizontal</strong> scrolling row with a left/right fade — for a strip of chips, tags or thumbnails that overflows the card. Bare <code>scr</code> (= <code>scr(y)</code>) stays vertical. This strip is deliberately made of <strong>plain-link tags</strong> (<code>&lt;li&gt;&lt;a&gt;</code>) — the default-pill fallback (exactly what <code>render.js</code> outputs today) — to prove it still renders and scrolls without <code>&lt;ui-chip&gt;</code>.</p>
+	<div>
+		<ui-card variant="vis(content)" theme="gray" content="scr(x) gap(sm)">
+			<cq-box><ui-content>
+				<small data-part="eyebrow">scr(x) · horizontal · plain-link fallback</small>
+				<ul data-part="tags">
+					<li><a href="#">Design</a></li><li><a href="#">CSS</a></li><li><a href="#">Container Queries</a></li>
+					<li><a href="#">Scroll-driven</a></li><li><a href="#">Cards</a></li><li><a href="#">Primitives</a></li>
+					<li><a href="#">Tokens</a></li><li><a href="#">Light DOM</a></li><li><a href="#">No JavaScript</a></li>
+					<li><a href="#">Accessibility</a></li><li><a href="#">RTL-safe</a></li><li><a href="#">Responsive</a></li>
+				</ul>
+			</ui-content></cq-box>
+		</ui-card>
+	</div>
+
+	<!-- ============================================================
+	     Core surface tokens
+	     ============================================================ -->
+	<h2>Core surface tokens</h2>
+	<p class="note">The card surface itself is tokenised: <code>--ui-card-bg</code>, <code>--ui-card-radius</code> and <code>--ui-card-shadow</code>. Override globally or per instance.</p>
+	<lay-out md="columns(3)">
+		<ui-card variant="vis(content)" theme="gray" style="--ui-card-radius: 0; --ui-card-shadow: none; border: 1px solid var(--color-border, #ddd);">
+			<cq-box><ui-content><small data-part="eyebrow">flat</small><h2 data-part="headline">No radius, no shadow</h2><p data-part="summary">A square, bordered card.</p></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="vis(content)" style="--ui-card-radius: var(--radius-md, 0.5rem); --ui-card-shadow: var(--shadow-sm);">
+			<cq-box><ui-content><small data-part="eyebrow">soft</small><h2 data-part="headline">Small radius + shadow</h2><p data-part="summary">A lighter, subtler surface.</p></ui-content></cq-box>
+		</ui-card>
+		<ui-card variant="vis(content)" style="--ui-card-bg: linear-gradient(135deg, #6366f1, #ec4899); color: #fff;">
+			<cq-box><ui-content><small data-part="eyebrow" style="--ui-content-eyebrow-ink: rgb(255 255 255 / 0.8);">gradient bg</small><h2 data-part="headline">Custom background</h2><p data-part="summary"><code>--ui-card-bg</code> takes any background value — including a gradient.</p></ui-content></cq-box>
+		</ui-card>
+	</lay-out>
+</body>
+</html>

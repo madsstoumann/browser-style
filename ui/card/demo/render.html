@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Card — Render Engine</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="All 26 card types rendered client-side by render.js from UCF data files in data/ — same markup and microdata as the hand-authored schema.html.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
+	<link rel="stylesheet" href="../../chip/ui-chip.css">
+	<link rel="stylesheet" href="../../sticker/ui-sticker.css">
+	<link rel="stylesheet" href="../../play/ui-play.css">
+	<link rel="stylesheet" href="../../save/ui-save.css">
+	<link rel="stylesheet" href="../../beacon/ui-beacon.css">
+	<link rel="stylesheet" href="../../icon/index.css">
+	<link rel="stylesheet" href="../../reveal/ui-reveal.css">
+	<link rel="stylesheet" href="../../accordion/ui-accordion.css">
+	<link rel="stylesheet" href="../../blockquote/ui-blockquote.css">
+	<link rel="stylesheet" href="../ui-card.css">
+	<style>
+		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
+		code { font-size: 0.9em; }
+	</style>
+</head>
+<body>
+	<h1>UI: Card — Render Engine</h1>
+	<p class="note">Every card on this page is built at runtime by <a href="../render.js"><code>render.js</code></a> from the UCF data files in <a href="../data/"><code>data/</code></a> — the envelope + <code>details</code> model defined in <code>cms/baseline/models/card.schema.json</code>. Each card references a <strong>preset</strong> from <a href="../data/card.presets.json"><code>card.presets.json</code></a> (model: <code>card-preset</code>) that owns the element attributes — swap the reference to restyle. Markup and microdata match the hand-authored reference in <a href="schema.html">schema.html</a>. All DOM is built with <code>createElement</code>/<code>textContent</code> — no <code>innerHTML</code>. Full docs: <a href="../docs/card.md"><code>card.md</code></a>.</p>
+
+	<main data-layout-root page-gap="2"></main>
+
+	<script type="module">
+		import { renderCard as renderCardHtml, loadPresets, SCHEMA_TYPES } from '../render.js';
+
+		/* render.js returns an HTML string (SSR engine — all data escaped at
+		   interpolation); parse it into a fragment for the DOM append sites below */
+		const frag = (html) => document.createRange().createContextualFragment(html);
+		const renderCard = (...args) => frag(renderCardHtml(...args));
+
+		const main = document.querySelector('main');
+		const presets = await loadPresets('../data/card.presets.json');
+		const manifest = await (await fetch('../data/index.json')).json();
+
+		/* load everything (renderable + shared reference targets) into an id-keyed map */
+		const cards = {};
+		const docs = {};
+		for (const name of [...manifest.cards, ...manifest.shared]) {
+			const ucf = await (await fetch(`../data/${name}.json`)).json();
+			cards[ucf.id] = ucf;
+			docs[name] = ucf;
+		}
+
+		for (const name of manifest.cards) {
+			const ucf = docs[name];
+
+			const heading = document.createElement('h2');
+			const code = document.createElement('code');
+			const presetId = (ucf.fields.preset?.$ref || '').split('/').pop() || 'default';
+			code.textContent = `${SCHEMA_TYPES[ucf.fields.schemaType] || 'CreativeWork'} · ${presetId}`;
+			heading.append(`${name} — `, code);
+
+			const grid = document.createElement('lay-out');
+			grid.setAttribute('md', 'columns(2)');
+			grid.append(renderCard(ucf, presets, cards));
+
+			main.append(heading, grid);
+		}
+	</script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 {
   "$schema": "../../../cms/baseline/models/card-preset.schema.json",
   "model": "card-preset",
-  "description": "Demo presets extracted from the original demo pages: ui/card/media.html, carousel.html, video.html and ui/reveal/index.html. Referenced by the *.render.html recreations. Keys are prefixed by source page.",
+  "description": "Demo presets extracted from the original demo pages: ui/card/demo/media.html, carousel.html, video.html and ui/reveal/index.html. Referenced by the *.render.html recreations. Keys are prefixed by source page.",
   "presets": {
     "media-asr-1x1": {
       "name": "Media Aspect 1:1",

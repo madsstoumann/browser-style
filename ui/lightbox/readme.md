@@ -13,7 +13,7 @@ platform's built-in `toggle-popover` command: **zero JavaScript** to open,
 The element itself is furniture (a sibling of `ui-save` / `ui-play` in the card
 system); the frame-level lightbox presentation — fullscreen sizing, backdrop,
 `open:` tokens, furniture hiding — lives in `ui/card/media.lightbox.css` and is
-documented in [`ui/card/media.md`](../card/media.md).
+documented in [`ui/card/docs/media.md`](../card/docs/media.md).
 
 ## Install
 
@@ -102,7 +102,7 @@ needs none of them):
    pseudos do **not** follow a popover frame into the top layer (a
    current-Chromium limitation: they keep painting behind the `::backdrop`), so
    every `ui-media[popover]` carousel gets real-element dots + arrows via
-   `/polyfill/carousel-controls.js` — in every browser, both states, so closed
+   `/ui/carousel/polyfill/carousel-controls.js` — in every browser, both states, so closed
    and open stay continuous (`media.lightbox.css` suppresses the native pseudos
    on exactly those frames). Without this module the open lightbox falls back
    to swipe, keyboard and a thin scrollbar.
