@@ -34,3 +34,9 @@ ui/card/youtube-data/
 
 # transient agent worktrees
 .claude/worktrees/
+
+# Demo video fixtures — large binaries fetched/generated for the ui/card video
+# demos (posters, preview clips, full-length sources). Kept local on purpose:
+# ~23 MB, and nothing but the demo pages reads them.
+ui/card/demo/vimeo-data/
+ui/card/demo/youtube-data/

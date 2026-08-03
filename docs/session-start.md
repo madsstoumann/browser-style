@@ -8,6 +8,11 @@
 
 ## Read first (in this order)
 
+0. **Structure changed 2026-08-03** — `ui/card/` demos live in `demo/`, docs in
+   `docs/` (readme/AGENTS stay at root); the carousel engine moved from
+   `ui/base/carousel.css` + `/polyfill/` into a new `@browser.style/carousel`
+   package at `ui/carousel/`; every package ships a peer-exclusive `dist/` bundle.
+   Decisions + rationale: `docs/plans/2026-08-03-card-system-structure-decision.md`.
 1. `ui/card/AGENTS.md` — the card system's architecture: the three attribute DSLs
    (variant= / media= / content=), their different scoping rules, the bs-card
    container-query model (host arm via cq-box/summary + self arm), presets/renderer,
@@ -63,7 +68,7 @@
   `<lay-out overflow>`, wrapper-dissolve-below-md on a `<ui-media>` scroller.
 - **Renderer**: render.js is Node-safe string SSR; everything escapes via esc();
   never innerHTML with data. cq-box is hand-authored, never auto-inserted.
-  slidesOf()/NOT_SLIDE in shared.js is mirrored in /polyfill/carousel.js by design —
+  slidesOf()/NOT_SLIDE in shared.js is mirrored in /ui/carousel/polyfill/carousel.js by design —
   drift is a lint error.
 - **The lightbox — popover promotion of the SAME frame.** `<ui-media popover>` +
   a `<ui-lightbox>` invoker (`command="toggle-popover"`, interactive furniture,
@@ -78,7 +83,7 @@
   element is sticky-pinned and must sit BEFORE the slides (first child, start
   corners only — same contract as sticky ui-play). Native scroll-control
   pseudos do NOT follow a popover into the top layer (Chromium) — popover
-  carousels get real-DOM controls from /polyfill/carousel-controls.js (the
+  carousels get real-DOM controls from /ui/carousel/polyfill/carousel-controls.js (the
   split-out core the Safari entry also uses) via ui/card/lightbox.js, with
   native pseudos suppressed on those frames only; the grid-mode hide for them
   is UNLAYERED (the polyfill sheet is unlayered). The open state switches into
@@ -98,7 +103,7 @@
   `--layout-w` is `@property`-registered non-inheriting so a nested lay-out never
   picks up a `bleed` ancestor's 100dvi width. With `nav` on the outer frame each
   `<lay-out>` child is a slide — a **CSS-only** carousel (see sharp edges).
-  Docs: ui/card/media.md § Collage; demo ui/card/media.collage.html.
+  Docs: ui/card/docs/media.md § Collage; demo ui/card/demo/media.collage.html.
 
 ## Working discipline (the gates — run them, don't skip)
 

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Parked: Quick info cards</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="Parked demo — plain <ui-card> 'Quick info' row, moved out of ui/reveal/index.html.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
+	<link rel="stylesheet" href="../ui-card.css">
+	<link rel="stylesheet" href="../demo.layout.css">
+</head>
+<body>
+	<h1>Parked: Quick info</h1>
+	<p>
+		Moved out of <a href="/ui/reveal/index.html">ui/reveal/index.html</a> so that page stays
+		focused on <code>&lt;ui-reveal&gt;</code>. These are plain <code>&lt;ui-card&gt;</code>s —
+		no reveal — kept here in case the row is wanted back or belongs in a card demo.
+	</p>
+
+	<!-- ============================================
+	     Quick info — plain <ui-card>s; the middle one reverses the
+	     media/content order with col-r.
+	     ============================================ -->
+	<h2>Quick info</h2>
+
+	<lay-out lg="columns(3)">
+		<ui-card media="asr(6/7) obp(tc)">
+			<cq-box>
+				<ui-media><img src="/assets/images/band_britpop.png" alt="Camden Court" loading="lazy"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Britpop</small>
+					<h3 data-part="headline">Camden Court</h3>
+					<p data-part="summary">Swaggering guitars and singalong choruses — kings of the back-room pub circuit.</p>
+					<small data-part="meta">Camden, London · Formed 1994 · For fans of a cheap-lager summer</small>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+
+		<ui-card variant="col-r" theme="gray" media="asr(3/4) obp(cc)">
+			<cq-box>
+				<ui-media><img src="/assets/images/band_country.png" alt="Red Dirt Road" loading="lazy"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Country</small>
+					<h3 data-part="headline">Red Dirt Road</h3>
+					<p data-part="summary">Steel strings and long highways, recorded live in a barn with the doors thrown open.</p>
+					<small data-part="meta">Tennessee · Formed 2009 · For fans of towns that never let you leave</small>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+
+		<ui-card media="asr(1/1) obp(tc)">
+			<cq-box>
+				<ui-media><img src="/assets/images/band_techno.png" alt="Pulse Theory" loading="lazy"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Techno</small>
+					<h3 data-part="headline">Pulse Theory</h3>
+					<p data-part="summary">Concrete basements and four-to-the-floor — warehouse sets that run till sunrise. No faces, no interviews, just white-label twelve-inches that turn up in the right bags at the right hour, the machines doing all the talking.</p>
+					<small data-part="meta">Berlin · Anonymous by design · For fans of the hours nobody else wants</small>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+</body>
+</html>

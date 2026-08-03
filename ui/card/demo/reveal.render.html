@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Card — Reveal Demo, Rendered</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="The ui/reveal demo page recreated section-by-section by render.js from UCF data files in data/demo/ and presets in data/card.presets.demo.json.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
+	<link rel="stylesheet" href="../../reveal/ui-reveal.css">
+	<link rel="stylesheet" href="../../icon/index.css">
+	<link rel="stylesheet" href="../../chip/ui-chip.css">
+	<link rel="stylesheet" href="../../sticker/ui-sticker.css">
+	<link rel="stylesheet" href="../ui-card.css">
+	<style>
+		.hero {
+			display: block;
+			margin-block-end: var(--spacing-2xl);
+		}
+		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
+		code { font-size: 0.9em; }
+	</style>
+</head>
+<body>
+	<h1>UI: Card — Reveal Demo, Rendered</h1>
+	<p class="note">This page recreates <a href="../../reveal/index.html"><code>ui/reveal/index.html</code></a> section-by-section — but every card is built at runtime by <a href="../render.js"><code>render.js</code></a> from UCF data files in <a href="../data/demo/"><code>data/demo/</code></a>. The looks come from <a href="../data/card.presets.demo.json"><code>presets.demo.reveal.json</code></a> merged over the base <a href="../data/card.presets.json"><code>card.presets.json</code></a>; sections that share content but change the look simply swap the preset reference. Back panels are either derived from the card's own envelope or come from a referenced <code>flipside</code> card. All DOM via <code>createElement</code>/<code>textContent</code> — no <code>innerHTML</code>.</p>
+
+	<main data-layout-root page-gap="2"></main>
+
+	<script type="module">
+		import { renderCard as renderCardHtml, loadPresets } from '../render.js';
+
+		/* render.js returns an HTML string (SSR engine — all data escaped at
+		   interpolation); parse it into a fragment for the DOM append sites below */
+		const frag = (html) => document.createRange().createContextualFragment(html);
+		const renderCard = (...args) => frag(renderCardHtml(...args));
+
+		const main = document.querySelector('main');
+		const [base, demo] = await Promise.all([
+			loadPresets('../data/card.presets.json'),
+			loadPresets('../data/card.presets.demo.json')
+		]);
+		const presets = { ...base, ...demo };
+
+		/* load every demo UCF (flipsides included) into an id-keyed map */
+		const names = [
+			'reveal-01', 'reveal-01-flipside',
+			'reveal-02', 'reveal-02-flipside',
+			'reveal-03', 'reveal-03-flipside',
+			'reveal-04', 'reveal-04-flipside',
+			'reveal-05', 'reveal-06', 'reveal-07',
+			'reveal-08', 'reveal-09', 'reveal-10', 'reveal-11', 'reveal-12',
+			'reveal-13', 'reveal-14', 'reveal-15', 'reveal-16',
+			'reveal-17', 'reveal-18', 'reveal-19',
+			'reveal-20', 'reveal-21', 'reveal-22', 'reveal-23'
+		];
+		const cards = {};
+		const docs = {};
+		for (const name of names) {
+			const ucf = await (await fetch(`../data/demo/${name}.json`)).json();
+			cards[ucf.id] = ucf;
+			docs[name] = ucf;
+		}
+
+		/* render the same card with a different look — swap the preset reference */
+		const withPreset = (ucf, id) => ({ ...ucf, fields: { ...ucf.fields, preset: { $ref: `card-preset/${id}` } } });
+
+		const el = (tag, text, cls) => {
+			const node = document.createElement(tag);
+			if (text) node.textContent = text;
+			if (cls) node.className = cls;
+			return node;
+		};
+
+		/* h2 (optional trailing <code>ui-reveal</code>) + condensed note + card container */
+		const section = (title, note, container, tagged = false) => {
+			const heading = el('h2', title);
+			if (tagged) {
+				heading.append(' ');
+				heading.append(el('code', '<ui-reveal>'));
+			}
+			main.append(heading);
+			if (note) main.append(el('p', note, 'note'));
+			main.append(container);
+		};
+
+		const grid = (cls, nodes) => {
+			const node = document.createElement('lay-out');
+			if (cls === 'grid grid-3') { node.setAttribute('md', 'columns(2)'); node.setAttribute('lg', 'columns(3)'); }
+			else if (cls === 'grid grid-2') node.setAttribute('md', 'columns(2)');
+			node.append(...nodes);
+			return node;
+		};
+
+		const render = (name) => renderCard(docs[name], presets, cards).firstElementChild;
+		const renderAs = (name, preset) => renderCard(withPreset(docs[name], preset), presets, cards).firstElementChild;
+
+		/* ── New releases — plain <ui-card> baseline: same UCF, static preset ── */
+		section(
+			'New releases',
+			'The static front face as a plain card — the same three UCF files as the next section, rendered with the reveal-poster-static preset instead of their own expand preset.',
+			grid('grid grid-3', ['reveal-01', 'reveal-02', 'reveal-03'].map((name) => renderAs(name, 'reveal-poster-static')))
+		);
+
+		/* ── New releases — <ui-reveal> expand → viewport popup ── */
+		section(
+			'New releases',
+			'The same three cards with their own presets: type="expand" to="viewport" morphs each card into a fixed popup. The back panel comes from a referenced flipside card.',
+			grid('grid grid-3', ['reveal-01', 'reveal-02', 'reveal-03'].map(render)),
+			true
+		);
+
+		/* ── Cover story — plain hero card ── */
+		const heroStatic = renderAs('reveal-04', 'reveal-hero-static');
+		heroStatic.classList.add('hero');
+		section(
+			'Cover story',
+			'The hero as a plain overlay card — mirrored media via flp(h), text bottom-right over a scrim. Same UCF as the reveal below, preset swapped.',
+			heroStatic
+		);
+
+		/* ── Cover story — <ui-reveal> expand, scale at lg ── */
+		const heroReveal = render('reveal-04');
+		heroReveal.classList.add('hero');
+		section(
+			'Cover story —',
+			'type="expand" type-lg="scale" — grows in place when narrow, morphs when wide. Dark panel via preset styles; the feature text comes from the flipside card.',
+			heroReveal,
+			true
+		);
+
+		/* ── Quick info — plain cards ── */
+		section(
+			'Quick info',
+			'Plain cards; the middle one reverses the media/content order with col-r.',
+			grid('grid grid-3', ['reveal-05', 'reveal-06', 'reveal-07'].map(render))
+		);
+
+		/* ── What we're listening to — nine flip cards, derived backs ── */
+		section(
+			"What we're listening to",
+			'Nine flip cards — the overlay position walks through all nine ovr() anchors while each preset carries a back-face palette pulled from the band photo. The back panel is derived from the card’s own envelope: no flipside files needed.',
+			grid('grid grid-3', ['reveal-08', 'reveal-09', 'reveal-10', 'reveal-11', 'reveal-12', 'reveal-13', 'reveal-14', 'reveal-15', 'reveal-16'].map(render))
+		);
+
+		/* ── Tap the whole card — trigger="card" ── */
+		section(
+			'Tap the whole card',
+			'Three from the lineup, up close — tap anywhere, front or back, to turn the card over. Links on the back still work.',
+			grid('grid grid-3', ['reveal-17', 'reveal-18', 'reveal-19'].map(render))
+		);
+
+		/* ── However you frame it — slide reveals ── */
+		section(
+			'However you frame it',
+			'The same lineup, framed four ways — image above, below, left or right of the words. type="slide" with from= matching the media edge.',
+			grid('grid grid-2', ['reveal-20', 'reveal-21', 'reveal-22', 'reveal-23'].map(render))
+		);
+
+		/* ── fidelity notes ── */
+		const notes = el('p', null, 'note');
+		notes.append(el('strong', 'Not expressible via UCF/render.js: '));
+		notes.append([
+			'the multi-paragraph band biographies and bold lead-in sentences (back panels carry at most subheadline + summary — the extra narrative paragraphs are condensed away)',
+			'the cover story’s back-panel element attributes (theme="black dark" content="scl(lg) pad(xl)") — approximated with --ui-reveal-content-* preset styles',
+			'the directional arrow-cross toggle icons in "However you frame it" (the renderer always emits plus-cross)',
+			'icon-less trigger="card" cards (the renderer always emits a toggle icon, defaulting to top right sm)',
+			'per-section details grouping (the renderer names every reveal render-reveal, so exclusivity is page-wide instead of per-grid)',
+			'the Quick info small meta lines ("Camden, London · Formed 1994 · …" — envelope meta derives only from published/readingTime)',
+			'plain text links inside back panels (mapped to action buttons instead)'
+		].join('; ') + '. Front faces always render media + eyebrow + headline only, matching the originals here. The page-local flip palettes (.thelure etc.) were trivially translated into per-preset styles objects.');
+		main.append(notes);
+	</script>
+
+	<!-- optional responsive-image upgrade (host-gated Cloudflare srcset; transitional until SSR) -->
+	<script type="module" src="/ui/card/ui-media-srcset.js"></script>
+	<!-- cursor-tracked hover for hov(track)/hov(drift) — delegated, idle until hovered -->
+	<script type="module" src="/ui/card/index.js"></script>
+</body>
+</html>

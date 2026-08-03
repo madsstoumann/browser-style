@@ -12,8 +12,11 @@ import { pathToFileURL } from 'node:url';
 const dir = new URL('.', import.meta.url).pathname;
 const SRC = dir + 'data/tokens.json';
 const DATA = dir + 'data/tokens.data.js';
-const DOC = dir + 'tokens.md';
-const DOC_DIRS = [dir, dir + '../reveal/'];
+const DOC = dir + 'docs/tokens.md';
+/* Marker-injection scan roots. `dir` itself stays in the list for readme.md and
+   AGENTS.md, which live at the package root; everything else moved to docs/.
+   A missing root here fails SILENTLY — the tables just stop updating. */
+const DOC_DIRS = [dir, dir + 'docs/', dir + '../reveal/'];
 
 export const readManifest = () => JSON.parse(readFileSync(SRC, 'utf8'));
 

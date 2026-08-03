@@ -145,7 +145,7 @@
 	   browser limitation, not fixable by positioning; revisit if Chromium moves
 	   scroll-control pseudos into the top layer with their element). So a
 	   popover frame's controls are REAL elements: ui/card/lightbox.js injects
-	   the /polyfill/carousel-controls.js <ui-carousel-controls> (real children
+	   the /ui/carousel/polyfill/carousel-controls.js <ui-carousel-controls> (real children
 	   ride into the top layer), and the native pseudos are suppressed on exactly
 	   those frames — in BOTH states, so closed and open stay continuous and two
 	   control sets never coexist. === */
@@ -225,7 +225,7 @@
 		   duplicate tiles in the grid; they are already inert/aria-hidden */
 		> [data-clone] { display: none; }
 		/* the injected DOM controls hide in grid mode too — but that rule is
-		   UNLAYERED at the foot of this file: /polyfill/carousel.css is unlayered
+		   UNLAYERED at the foot of this file: /ui/carousel/polyfill/carousel.css is unlayered
 		   (it must beat bs-component), so a layered hide loses to it */
 
 		/* stagger guard: grid mode removes snapping, so a scroll-state from-state
@@ -271,7 +271,7 @@
 }
 
 /* === grid-mode hide for the injected DOM controls — UNLAYERED on purpose:
-   /polyfill/carousel.css is unlayered (it must beat bs-component's slide rule),
+   /ui/carousel/polyfill/carousel.css is unlayered (it must beat bs-component's slide rule),
    so a layered hide loses to it. Mirrors the grid-presentation arm above.
    Do not move it into the layer. === */
 ui-media[popover]:popover-open:where(
@@ -286,7 +286,7 @@ ui-media[popover]:popover-open:where(
    media-open= the controls are built as the UNION of both states' needs
    (command.js), and command.js re-stamps data-media on toggle; these rules make
    dots/arrows follow the CURRENT stamp (the whole-token spellings mirror
-   wanted() in /polyfill/carousel-controls.js). Popover frames only — the plain
+   wanted() in /ui/carousel/polyfill/carousel-controls.js). Popover frames only — the plain
    Safari-polyfill path builds exactly what it shows and never needs this. === */
 ui-media[popover] > ui-carousel-controls:not(:where(
 	[data-media~="nav"], [data-media~="nav(blw)"], [data-media~="nav(abv)"], [data-media~="nav(mrk)"]

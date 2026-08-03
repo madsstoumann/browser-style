@@ -9,7 +9,9 @@
 @import './utility.css'; /* REWORK ? */
 @import './webcomponents.css'; /* NEEDED ? */
 @import './scroll.css';
-@import './carousel.css';
+/* carousel.css moved to @browser.style/carousel — it selected ui-card/ui-reveal/
+   ui-media/lay-out[overflow], i.e. components above base. Load that package
+   alongside base when you use a carousel. */
 @import './stagger.css';
 @import './animations.css';
 @import './animate.css';

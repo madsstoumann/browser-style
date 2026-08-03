@@ -344,7 +344,7 @@
 			& > *:not(lay-out):first-child { margin-inline-start: calc(var(--layout-colmg) * var(--layout-space-unit)); }
 			& > *:not(lay-out):last-child { margin-inline-end: calc(var(--layout-colmg) * var(--layout-space-unit)); }
 		}
-		/* === carousel controls (media= tokens — styles in ui/base/carousel.css) ===
+		/* === carousel controls (media= tokens — styles in ui/carousel/carousel.css) ===
 		   controls replace the scrollbar; a visible scrollbar would consume block-end space
 		   and push the anchored dots/arrows off the visual card edge/center */
 		@supports (scroll-marker-group: after) {
@@ -354,7 +354,7 @@
 		   (or one page with media="pages") per arrow click / fling */
 		&[overflow][media*="nav"] > *:not(lay-out) { scroll-snap-stop: always; }
 		/* reserved control band (controls themselves are anchor-positioned into it by
-		   ui/base/carousel.css) — nav() = both controls, mrk() = dots only, arw() = arrows only */
+		   ui/carousel/carousel.css) — nav() = both controls, mrk() = dots only, arw() = arrows only */
 		&[overflow]:is([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"]) {
 			background: var(--ui-carousel-controls-bg, #0000);
 			padding-block-end: calc(var(--ui-carousel-below-gap, 0.5rem) + var(--ui-carousel-band, 2.75rem));

@@ -1,0 +1,41 @@
+{
+  "name": "@browser.style/gradient-text",
+  "version": "1.0.0",
+  "description": "CSS-first gradient text: paints a background gradient through the glyphs via background-clip, with animated and static modes. Zero JavaScript.",
+  "type": "module",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css",
+    "./ui-gradient-text.css": "./ui-gradient-text.css"
+  },
+  "files": [
+    "index.css",
+    "ui-gradient-text.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "gradient",
+    "text",
+    "background-clip",
+    "css-first"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/gradient-text"
+  },
+  "homepage": "https://browser.style/ui/gradient-text",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11"
+  }
+}

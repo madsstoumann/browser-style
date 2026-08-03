@@ -2,7 +2,7 @@
 
 A CSS-first **disclosure** built on native `<details>` / `<summary>`, composed over the same card engine as `<ui-card>`. The `<summary>` is the trigger face; the revealed panel is `::details-content` (everything after `</summary>`). Four reveal animations — `exp`, `flp`, `sld`, `grw` — plus a full-card trigger (`trg(card)`) and an expand-to-popup mode (`pop`), all configured through the same `variant=` token attribute `<ui-card>` uses. No JavaScript required.
 
-`<ui-reveal>` `@import`s `ui-card.css`, so it shares the card primitives and DSLs verbatim: the **`media=`** frame ([media.md](../card/media.md)), the **`content=`** text column ([content.md](../card/content.md)), and the **`variant=`** arrangement / overlay / theme / corners ([ui-card-tokens.md](../card/ui-card-tokens.md)). This package adds only the reveal-specific parts: the `<details>` / `<summary>` wiring, `<ui-icon>`, `<ui-face>`, and the reveal `variant=` tokens (`exp`, `flp()`, `sld()`, `grw()`, `ico()`, …) that drive the animations.
+`<ui-reveal>` `@import`s `ui-card.css`, so it shares the card primitives and DSLs verbatim: the **`media=`** frame ([media.md](../card/docs/media.md)), the **`content=`** text column ([content.md](../card/docs/content.md)), and the **`variant=`** arrangement / overlay / theme / corners ([ui-card-tokens.md](../card/docs/ui-card-tokens.md)). This package adds only the reveal-specific parts: the `<details>` / `<summary>` wiring, `<ui-icon>`, `<ui-face>`, and the reveal `variant=` tokens (`exp`, `flp()`, `sld()`, `grw()`, `ico()`, …) that drive the animations.
 
 > The grow-morph animation is spelled **`grw()`**. The old `scl` / `scl(ts|te|bs|be)` / `lg:scl` / `lg:scl(ts|te|bs|be)` spellings were **removed in v5** — migrate them to `grw` / `grw(ts|te|bs|be)` / `lg:grw` / `lg:grw(ts|te|bs|be)`. `scl()` is `content=`'s type-scale token, and one spelling should mean one thing even across attributes.
 
@@ -60,7 +60,7 @@ npm install @browser.style/base @browser.style/card @browser.style/icon
 </ui-reveal>
 ```
 
-> **Phrasing vs flow — the content model differs between the two faces.** Inside `<summary>` only **phrasing** content is valid (`<b data-part="headline">`, `<span data-part="summary">`, `<small data-part="eyebrow">`); the revealed panel allows **flow / semantic** tags (`<h2 data-part="headline">`, `<p data-part="summary">`, `<address data-part="byline">`). Because styling keys off `data-part` and never the tag, the same part renders identically in both. See [content.md — Tag choice by context](../card/content.md).
+> **Phrasing vs flow — the content model differs between the two faces.** Inside `<summary>` only **phrasing** content is valid (`<b data-part="headline">`, `<span data-part="summary">`, `<small data-part="eyebrow">`); the revealed panel allows **flow / semantic** tags (`<h2 data-part="headline">`, `<p data-part="summary">`, `<address data-part="byline">`). Because styling keys off `data-part` and never the tag, the same part renders identically in both. See [content.md — Tag choice by context](../card/docs/content.md).
 
 ### Reveal with media + overlay marker
 
@@ -136,7 +136,7 @@ the same file `render.js` and the token lint read, so this list cannot drift fro
 | `scr` | *(bare flag)* | Locks a long panel to the card frame and scrolls the overflow. `flp` and `sld` (both with the [edge fade](#scr--panel-scroll)), plus the grow-morph — `grw` or `lg:grw` — whenever it is the active animation. |
 | `ico()` | corner + style + size words, one per token | Positions and styles the toggle icon (see below). |
 | `icc()` | same words as `ico()` | Same words, applied only while the card is **open** (re-place / re-colour the icon on the back). |
-| `bdr` / `bdr()` | shade `lgt` `drk` · width `sm` `md` `lg` | The card engine's hairline border. On a reveal it paints on the direct-child **`> details`** — the rounded surface — not on the `<ui-reveal>` host box, so it follows `rds()` corners and the flip/grow transforms. Same tokens as the card ([ui-card-tokens.md](../card/ui-card-tokens.md#border--bdr)). |
+| `bdr` / `bdr()` | shade `lgt` `drk` · width `sm` `md` `lg` | The card engine's hairline border. On a reveal it paints on the direct-child **`> details`** — the rounded surface — not on the `<ui-reveal>` host box, so it follows `rds()` corners and the flip/grow transforms. Same tokens as the card ([ui-card-tokens.md](../card/docs/ui-card-tokens.md#border--bdr)). |
 
 > `name` is the native `<details>` attribute (set on the inner `<details>`), not a reveal token. With `exp pop`, the in-flow `<ui-reveal>` stays as a placeholder (reserves the cell via `aspect-ratio`) and only the inner `<details>` goes `position: fixed`, so the surrounding grid never reflows.
 
@@ -271,9 +271,9 @@ Scoped to `:where(ui-reveal)` — low specificity, easy to override.
 
 | DSL | On | Documents | Reference |
 |---|---|---|---|
-| `media=` | `<ui-media>` / any ancestor | frame, scrim, overlay markers, carousel — `asr()` `obp()` `obf()` `flp()` `hov()` `scm()` `nav()` `chip()` `sticker()` | [media.md](../card/media.md) |
-| `content=` | `<ui-content>` / any ancestor | text column + parts — `scl()` `hl()` `gap()` · padding `pad()` `pb()` `pi()` `pbs()` `pbe()` `pis()` `pie()` · `rds()` `scr` | [content.md](../card/content.md) |
-| `variant=` | `<ui-reveal>` | arrangement, overlay, corners — `col` `col-r` `row` `row-r` `spl()` `vis()` `ovr()` `rds()` `bdr` | [ui-card-tokens.md](../card/ui-card-tokens.md) |
+| `media=` | `<ui-media>` / any ancestor | frame, scrim, overlay markers, carousel — `asr()` `obp()` `obf()` `flp()` `hov()` `scm()` `nav()` `chip()` `sticker()` | [media.md](../card/docs/media.md) |
+| `content=` | `<ui-content>` / any ancestor | text column + parts — `scl()` `hl()` `gap()` · padding `pad()` `pb()` `pi()` `pbs()` `pbe()` `pis()` `pie()` · `rds()` `scr` | [content.md](../card/docs/content.md) |
+| `variant=` | `<ui-reveal>` | arrangement, overlay, corners — `col` `col-r` `row` `row-r` `spl()` `vis()` `ovr()` `rds()` `bdr` | [ui-card-tokens.md](../card/docs/ui-card-tokens.md) |
 | `theme=` | `<ui-reveal>` (card) · the **back element** (panel) | colour — one hue + optional `pale` / `muted` / `ink` / `light` / `dark` / `border` | [base/theme.md](../base/theme.md), [Two sides, two themes](#two-sides-two-themes) |
 
 ```html

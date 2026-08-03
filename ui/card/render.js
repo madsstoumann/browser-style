@@ -6,7 +6,7 @@
  * SSR rendering engine for the universal card model (cms/baseline/models/card.schema.json).
  * Takes a UCF content instance (or its `fields` object) and returns an HTML STRING —
  * a fully composed <ui-card>, <ui-reveal>, or bare <ui-media>/<ui-content>, with
- * inline schema.org microdata matching ui/card/schema.html.
+ * inline schema.org microdata matching ui/card/demo/schema.html.
  *
  * Security: every interpolated value passes through esc() — the output is safe to
  * insert with insertAdjacentHTML/innerHTML or stream from a server. The single,

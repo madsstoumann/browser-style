@@ -1,8 +1,38 @@
 {
   "name": "@browser.style/base",
   "version": "1.0.11",
-  "style": "index.css",
+  "style": "./dist/base.css",
+  "exports": {
+    ".": {
+      "style": "./dist/base.css"
+    },
+    "./style": "./dist/base.css",
+    "./dist/base.css": "./dist/base.css",
+    "./dist/base.min.css": "./dist/base.min.css",
+    "./animate.css": "./animate.css",
+    "./animations.css": "./animations.css",
+    "./button.css": "./button.css",
+    "./core.css": "./core.css",
+    "./easings.css": "./easings.css",
+    "./form.css": "./form.css",
+    "./index.css": "./index.css",
+    "./scroll.css": "./scroll.css",
+    "./shapes-glyphs.css": "./shapes-glyphs.css",
+    "./shapes.css": "./shapes.css",
+    "./stagger.css": "./stagger.css",
+    "./theme.css": "./theme.css",
+    "./tint.css": "./tint.css",
+    "./tokens.css": "./tokens.css",
+    "./utility.css": "./utility.css",
+    "./webcomponents.css": "./webcomponents.css",
+    "./assets/*": "./assets/*",
+    "./polyfills/*": "./polyfills/*"
+  },
+  "scripts": {
+    "build": "node ../../scripts/css-bundle.js . index.css base"
+  },
   "files": [
+    "dist/",
     "*.css",
     "assets/**/*"
   ],

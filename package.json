@@ -5,7 +5,6 @@
   "workspaces": [
     "ui/*",
     "layout",
-    "content/*",
     "ui/weather/*",
     "ui/gui/*",
     "ui/data/*",

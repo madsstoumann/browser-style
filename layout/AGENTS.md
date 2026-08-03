@@ -233,7 +233,7 @@ subgrid engine's `container-type: normal` on the child suspends the card's own
 `md:`/`lg:` **container** tiers for as long as the flag is on. `<ui-media>` is
 deliberately *not* flattened — it is the row-1 grid item. `<ui-reveal>` is **not**
 supported (`details > summary` cannot be dissolved without destroying the disclosure).
-Full token reference: `ui/card/ui-card-tokens.md`.
+Full token reference: `ui/card/docs/ui-card-tokens.md`.
 
 ### Item alignment — `items()` breakpoint token
 
@@ -258,7 +258,7 @@ from individual attributes into the `media=` token attribute**: the `nav`, `arro
          media="nav(blw) arw(bare) mrk(pll) pages auto(4s) loop">
 ```
 
-- **Shared vocabulary** with `<ui-media>` (styles in `ui/base/carousel.css`): bare
+- **Shared vocabulary** with `<ui-media>` (styles in `ui/carousel/carousel.css`): bare
   `nav`, `nav(mrk|arw|blw|abv)`,
   `arw(arr|sm|lg|xl|sqr|sft|hid|lgt|drk|bare|set|rev|ts|tc|te|cs|cc|bs|bc|be|blw|abv)`,
   `mrk(sm|md|lg|xl|pll|hyb|tmb|bar|lbl|non|lgt|drk|ts…be|blw|abv)`, `tmb(<ratio>)`,
@@ -284,11 +284,11 @@ from individual attributes into the `media=` token attribute**: the `nav`, `arro
 - **Safari has no controls without the polyfill.** Dots and arrows are
   `::scroll-marker` / `::scroll-button()`, gated on
   `@supports (scroll-marker-group: after)` — Chromium-only today. `<lay-out overflow>`
-  is a first-class target of `/polyfill/carousel.js`, which injects real
+  is a first-class target of `/ui/carousel/polyfill/carousel.js`, which injects real
   `<button>` controls and styles them from the same tokens; it matches
   `lay-out[overflow]` directly and measures the **slide pitch** rather than assuming
   one slide per scrollport, which is what makes an N-up gapped card row page
-  correctly. Contract and pitfalls: [`/polyfill/readme.md`](../polyfill/readme.md).
+  correctly. Contract and pitfalls: [`/polyfill/readme.md`](../ui/carousel/polyfill/readme.md).
   Without it the carousel is still a native swipeable scroller, just uncontrolled.
 
 ### Animations
@@ -477,10 +477,27 @@ Provides:
 | `breakpoints.<bp>.spacing` | Per-breakpoint override of the token list (array; `[]` disables spacing tokens for that breakpoint) |
 
 **No `include` option any more** — the layout package no longer bundles base CSS
-(`ui/base/carousel.css`, `animations.css`, `stagger.css`). Load `@browser.style/base`
-alongside `layout.css`; it provides the animation `@keyframes`, the `media=` carousel
-controls (`nav()`/`arw()`/`mrk()`, styled by `ui/base/carousel.css`) and the `stagger`
-engine that the layout wiring references.
+(`animations.css`, `stagger.css`) or the carousel controls. Load `@browser.style/base`
+alongside `layout.css` for the animation `@keyframes` and the `stagger` engine, and
+`@browser.style/carousel` for the `media=` carousel controls (`nav()`/`arw()`/`mrk()`).
+
+### The dependency contract (declared since 2026-08-03)
+
+`layout/package.json` used to declare **zero** dependencies while relying on two things it
+could not see. Both are now `peerDependencies` — `@browser.style/base` (required) plus
+`@browser.style/carousel` and `@browser.style/card` (optional, needed only for carousels).
+What the contract actually consists of:
+
+1. **Four custom properties owned by another package.** `layout/core/base.css` reads
+   `--ui-carousel-controls-bg`, `--ui-carousel-below-gap`, `--ui-carousel-band` and
+   `--ui-carousel-above-gap` to reserve the control band, each with a **hardcoded fallback**
+   (`0.5rem`, `2.75rem`) that must be kept in sync **by hand** with
+   `ui/carousel/carousel.css`. Change a default there and this file does not follow.
+   Layout renders without the carousel package — it just falls back to those literals.
+2. **Load order, not layer order.** The `[animate]`/`[animate-self]`/`[easing]` engine and
+   the `@keyframes` library live in `@browser.style/base` (`@layer bs-core`); layout keeps
+   only the `stack(reveal)` redirect, which wins **because base is loaded first**. Load
+   layout before base and the redirect loses.
 
 ## Creating Custom Layouts
 

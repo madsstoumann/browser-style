@@ -323,7 +323,7 @@ Add the `overflow` attribute to turn any layout into a horizontal scroller/carou
 `core/base.md` for the full reference). Carousel **controls** (arrows, dots, page
 markers, autoplay, seamless loop) are configured with tokens in the **`media=`**
 attribute — the same control vocabulary as `<ui-media>` in `@browser.style/card`,
-styled by `ui/base/carousel.css` (load `@browser.style/base` alongside `layout.css`):
+styled by `ui/carousel/carousel.css` (load `@browser.style/base` alongside `layout.css`):
 
 ```html
 <lay-out bleed md="columns(1)" overflow="preview-2xl center"

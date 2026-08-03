@@ -18,8 +18,8 @@
   ],
   "peerDependencies": {
     "@browser.style/base": "^1.0.11",
-    "@browser.style/icon": "^1.0.11",
-    "@browser.style/table": "^1.0.10",
+    "@browser.style/icon": "^4.0.0",
+    "@browser.style/table": "^4.0.0",
     "@browser.style/print-preview": "^1.0.11",
     "@browser.style/table-expand": "^1.0.10"
   },
