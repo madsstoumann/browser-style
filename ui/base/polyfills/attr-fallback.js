@@ -79,7 +79,7 @@ export const ATTR_MAP = {
 	'ui-play[ink]': { '--ui-play-c': ['ink', 'hsl(0 0% 100%)'] },
 	'.ui-rating': { '--min': ['min', '1'], '--max': ['max', '5'], '--value': ['value', '3'] },
 	'ui-save[fill]': { '--ui-save-circle-bg': ['fill', 'Canvas'] },
-	'ui-save[ink]': { '--ui-save-c': ['ink', 'var(--color-text)'], '--ui-save-c-active': ['ink', 'var(--color-error)'] },
+	'ui-save[ink]': { '--ui-save-c': ['ink', 'var(--color-text)'] },
 	'ui-sticker': {
 		'--ui-sticker-bg': ['fill', 'var(--color-accent)'],
 		'--ui-sticker-c': ['ink', 'hsl(0, 0%, 100%)'],

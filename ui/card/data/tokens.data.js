@@ -672,7 +672,6 @@ export default {
 					"matching": "substring",
 					"writes": [
 						"--ui-save-c",
-						"--ui-save-c-active",
 						"--ui-save-sz",
 						"--ui-save-circle-*"
 					],

@@ -224,7 +224,10 @@
 		<strong>circle backdrop is on by default</strong>; hide it with <code>save(non)</code>. The
 		glyph is a <code>&lt;ui-icon type="shape" shape="heart|bookmark|star" variant="outline"&gt;</code>
 		inside an invoker <code>&lt;button command="--save" commandfor="&lt;card id&gt;"&gt;</code>; saved
-		state = the button's <code>aria-pressed</code>. Bookmark defaults to the accent colour.</p>
+		state = the button's <code>aria-pressed</code>. Bookmark defaults to the accent colour.
+		Saving <strong>fills the glyph in the same ink</strong> — the hue survives the toggle, so
+		<code>save(orange)</code> is an orange outline and an orange fill. For a two-colour toggle set
+		<code>--ui-save-c-active</code> on the <code>&lt;ui-save&gt;</code>.</p>
 	<p>Full component: <a href="../../save/">ui/save</a>.</p>
 	<lay-out md="columns(2)" lg="columns(3)">
 		<ui-card id="card-heart" variant="col" media="asr(4/3) save(be)">

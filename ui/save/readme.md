@@ -8,7 +8,7 @@ A save / favorite / wishlist / bookmark toggle, designed to sit over a card or p
 - One shape per state — outline when unsaved, filled when saved — using `border-shape` + a `background` toggle (no second path, no attribute swap)
 - State read from the button's `aria-pressed` (native, accessible)
 - Toggle wired with the **Invoker Commands API** (`command` / `commandfor`) so a script can grab it
-- Three sizes; token-driven idle and active ink colors
+- Three sizes; token-driven ink — the saved fill uses the **same** colour as the outline by default (black outline → black fill, red → red); opt into a two-colour toggle with `--ui-save-c-active`
 - Light/dark support via design tokens
 
 ---
@@ -115,9 +115,11 @@ It's a true circle by default; for an `rds(*-sq)`-style squircle set
 
 | Token | Default | Description |
 |-------|---------|-------------|
-| `--ui-save-c` | `var(--color-text)` | Idle (unsaved) ink |
-| `--ui-save-c-active` | `var(--color-error)` | Saved ink (also on hover) |
-| `--ui-save-sz` | `1.6em` | Icon size |
+| `--ui-save-c` | `var(--color-text)` | Idle (unsaved) ink (`var(--color-accent)` for `bookmark`) |
+| `--ui-save-c-active` | `var(--ui-save-c)` | Saved ink (also on hover) — tracks the idle ink, so filling the glyph *is* the state change |
+| `--ui-save-c-idle` | `var(--color-text-muted)` | Idle ink in browsers without `border-shape` only — where the outline glyph paints solid, so hue is the only state cue |
+| `--ui-save-sz` | `1.2em` | Icon size |
+| `--ui-save-stroke` | `0.1em` | Outline thickness — em-based, so it tracks `--ui-save-sz` |
 | `--ui-save-circle-bg` | `Canvas`¹ | Disc colour (¹ `Canvas` once the circle is enabled) |
 | `--ui-save-circle-radius` | `0` | Disc radius (`--radius-circle` when enabled) |
 | `--ui-save-circle-pad` | `0` | Space between glyph and disc edge |
@@ -131,7 +133,33 @@ It's a true circle by default; for an `rds(*-sq)`-style squircle set
 </ui-save>
 ```
 
-Outline thickness follows the icon's `stroke` attribute (it's a real `border`).
+### One ink or two
+
+By default there is **one ink**: `--ui-save-c-active` resolves to `var(--ui-save-c)`, so the hue
+survives the toggle and only the *fill* changes — outline heart → filled heart in the same colour.
+Every `theme=` / `save(<hue>)` already behaved this way; `ink="<css-color>"` does too.
+
+For the classic two-colour toggle (neutral outline → red fill), set the active ink yourself:
+
+```html
+<ui-save style="--ui-save-c-active: var(--color-error);">…</ui-save>
+```
+
+## Outline width
+
+The outline is a real `border` on the glyph, and its thickness **follows the size**:
+`--ui-save-stroke` is `0.1em`, not the absolute `2px` `ui-icon` defaults to (right at `md`, chunky
+at `sm`, thin at `xl`). There is no separate stroke scale — one token, and it scales with `size=`
+(`size="sm"` nudges it to `0.125em`, since `0.1em` of a `0.8em` glyph lands on a 1px hairline):
+
+```html
+<ui-save style="--ui-save-stroke: 0.05em;">…</ui-save>   <!-- hairline -->
+<ui-save>…</ui-save>                                     <!-- 0.1em (default) -->
+<ui-save style="--ui-save-stroke: 0.2em;">…</ui-save>    <!-- heavy -->
+```
+
+A `stroke=` on the **`<ui-icon>`** still wins, if you need an absolute px value.
+
 
 ---
 
@@ -156,7 +184,7 @@ stays on the `<ui-icon>`:
 | Token | Standalone equivalent | Effect |
 |-------|----------------------|--------|
 | `save(<pos>)` | — | Position — `ts tc te · cs cc ce · bs bc be` |
-| `save(<hue>)` | `theme="<hue>"` | Ink from the 8 theme hues `red orange green blue accent dark light subtle` |
+| `save(<hue>)` | `theme="<hue>"` | Ink from the nine theme hues `red orange green blue accent black white gray slate` (idle **and** saved) |
 | `save(<size>)` | `size="<size>"` | Scale — `sm lg xl` (`md` = default) |
 | `save(<corner>)` | `radius="<corner>"` | Disc shape — `crc` circle (default) · `sqr` squircle · `rnd` rounded |
 | `save(non)` | `variant="non"` | Hide the disc (bare glyph) |

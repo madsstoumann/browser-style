@@ -19,7 +19,8 @@
 		<code>&lt;ui-save&gt;</code> is a save / favorite / wishlist / bookmark toggle. It wraps an
 		invoker <code>&lt;button command="--save"&gt;</code> and a
 		<code>&lt;ui-icon type="shape"&gt;</code>. The button's <code>aria-pressed</code> drives the
-		look: <em>unsaved</em> = outline + idle ink, <em>saved</em> = filled + active ink. Flipping
+		look: <em>unsaved</em> = outline, <em>saved</em> = filled — in the <strong>same ink</strong>,
+		since <code>--ui-save-c-active</code> defaults to <code>--ui-save-c</code>. Flipping
 		<code>aria-pressed</code> is wired in script via the invoker command (not shown here).
 	</p>
 	<p>
@@ -37,6 +38,22 @@
 		</ui-save>
 		<ui-save id="s1">
 			<button type="button" command="--save" commandfor="s1" aria-label="Remove from favorites" aria-pressed="true">
+				<ui-icon type="shape" shape="heart" variant="outline"></ui-icon>
+			</button>
+		</ui-save>
+	</div>
+
+	<h3>Two-colour toggle — <code>--ui-save-c-active</code></h3>
+	<p>One ink is the default. For the classic neutral outline → red fill, set the active ink per
+		instance: <code>style="--ui-save-c-active: var(--color-error)"</code>.</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-save style="--ui-save-c-active: var(--color-error);">
+			<button type="button" command="--save" commandfor="s1b" aria-label="Add to favorites">
+				<ui-icon type="shape" shape="heart" variant="outline"></ui-icon>
+			</button>
+		</ui-save>
+		<ui-save style="--ui-save-c-active: var(--color-error);">
+			<button type="button" command="--save" commandfor="s1c" aria-label="Remove from favorites" aria-pressed="true">
 				<ui-icon type="shape" shape="heart" variant="outline"></ui-icon>
 			</button>
 		</ui-save>
@@ -81,6 +98,27 @@
 		<ui-save><button type="button" command="--save" commandfor="z2" aria-label="Favorite" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 		<ui-save size="lg"><button type="button" command="--save" commandfor="z3" aria-label="Favorite" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 		<ui-save size="xl"><button type="button" command="--save" commandfor="z4" aria-label="Favorite" aria-pressed="true"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+	</div>
+
+	<h3>Outline width</h3>
+	<p>The outline is a real <code>border</code> on the glyph, and its thickness
+		<strong>follows the size</strong>: <code>--ui-save-stroke</code> is <code>0.1em</code>, not the
+		absolute <code>2px</code> <code>ui-icon</code> defaults to — that one reads right at
+		<code>md</code>, chunky at <code>sm</code> and thin at <code>xl</code>. Unsaved glyphs across the
+		size scale, same relative weight:</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-save size="sm"><button type="button" command="--save" commandfor="k1" aria-label="sm"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save><button type="button" command="--save" commandfor="k2" aria-label="md (default)"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save size="lg"><button type="button" command="--save" commandfor="k3" aria-label="lg"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save size="xl"><button type="button" command="--save" commandfor="k4" aria-label="xl"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+	</div>
+	<p>Retune globally or per instance with the token — <code>style="--ui-save-stroke: 0.05em"</code>
+		for a hairline, <code>0.2em</code> for a heavy outline (both still scale with
+		<code>size=</code>):</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+		<ui-save size="lg" style="--ui-save-stroke: 0.05em;"><button type="button" command="--save" commandfor="k5" aria-label="hairline"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save size="lg"><button type="button" command="--save" commandfor="k6" aria-label="default"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
+		<ui-save size="lg" style="--ui-save-stroke: 0.2em;"><button type="button" command="--save" commandfor="k7" aria-label="heavy"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 	</div>
 
 	<h3>Without the circle — <code>variant="non"</code></h3>
