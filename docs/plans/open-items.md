@@ -3,7 +3,7 @@
 > What is **actually still open**, extracted from the implementation ledger in
 > [`2026-07-26-v4-card-system-architecture-analysis.md`](./2026-07-26-v4-card-system-architecture-analysis.md)
 > (now an archive — read it for the *why* behind any F-xx/R-xx, not for what to do next).
-> Five open items plus one closed decision on record. Each open one is waiting on a
+> Six open items plus one closed decision on record. Each open one is waiting on a
 > decision or on coordination, not on typing.
 >
 > Everything else from that report is implemented and machine-verified: the v5 alias
@@ -183,7 +183,72 @@ works; or (c) accept it, document `stagger=` as LTR-only on horizontal scrollers
 wait for the engine. (b) looks cheapest and keeps the no-JS contract — it needs someone
 to confirm the two adapters produce the same visual result.
 
-## 6. Closed — `<ui-content>` → `<ui-text>` rename (decided against, 2026-08-03)
+## 6. `carousel.js` still lives in `ui/card` — work item C left half-done
+
+**Where:** `ui/card/carousel.js` + `ui/card/shared.js` vs `ui/carousel/`
+
+Work item C (`2026-08-03-card-system-structure-decision.md`) extracted the carousel
+**controls** — `ui/base/carousel.css` plus the polyfill — into `@browser.style/carousel`.
+The **engine** stayed behind: `carousel.js` (seamless-loop clones, autoplay,
+`initCarousels`/`scanCarousels`, `CAROUSEL_SEL`) is still a card module, even though its
+selectors treat `lay-out[overflow]` as a first-class host alongside `ui-media`. Three
+consequences, all measured 2026-08-04:
+
+**The dependency is inverted at runtime.** `ui/carousel/polyfill/carousel-controls.js:231-235`
+does not create clones — it *waits* for card's idle scan to produce them:
+
+```js
+// loop carousels get [data-clone] slides from the core's idle scan; wait for them (bounded)
+const needsClones = hasToken(mediaStr(scroller), 'loop') && !scroller.querySelector(':scope > [data-clone]');
+if (needsClones && retries < 5) { deferred.push(scroller); continue; }
+```
+
+So `@browser.style/carousel` needs `@browser.style/card` at runtime while the declared
+peer points the other way. The 5-retry deferral is a timing workaround for the split.
+
+**The primitives are duplicated verbatim, under lint guard.** `carousel-controls.js`
+re-implements `mediaStr`, `hasToken`, `NOT_SLIDE` and `slidesOf` as byte-copies of
+`ui/card/shared.js`; `lintSlideLists` in `tokens.lint.js` polices both directions of
+drift. The copy exists only because it cannot import across packages — but the repo
+already has a working mechanism for exactly that: `ui/card/lightbox.js:44` imports
+`../common/command.js` as a sibling package, documented as resolving both in-repo and
+under npm's flat scoped install.
+
+**`layout` pulls the whole card package for this one file.** `layout/package.json`
+peer-depends on `@browser.style/card` and `layout/src/pages/carousel.html:15` loads
+`/ui/card/carousel.js`. Layout's CSS mentions `ui-card` in **two comments only** (the
+`bs-card` namespace note in `core/group.css:11`, `core/base.css:26`) — no selectors, no
+JS imports. That peer exists solely for `carousel.js`. This is verbatim the complaint
+that motivated work item C: "a consumer who only wanted `ui/button` pulls the whole card
+carousel."
+
+**Not a wholesale move — two parts are genuinely card-coupled:**
+
+| stays in card | why |
+|---|---|
+| `initCarouselVideoPause` | IntersectionObserver pausing slide `<video>`s; uses `isDecoration`. Video is card's domain (`video.js`, `media.video.css`) |
+| `initAuto`'s `<ui-play>` wiring (`reflectPlay`) | the sticky `--_play-*` positioning CSS lives in card's `media.carousel.css` |
+
+`mediaStr`'s "inheritance stops at `ui-card`/`ui-reveal`" is a card concept, but that
+boundary is already crossed: `carousel.css` selects `ui-card`/`ui-reveal` throughout and
+the polyfill already carries its own copy of the rule.
+
+**The call to make.** Proposed shape: `ui/carousel/carousel.js` takes `geom`, `initLoop`,
+`initAuto`, `initCarousels`, `scanCarousels`, `CAROUSEL_SEL`, and becomes the single
+source of `mediaStr`/`hasToken`/`slidesOf`/`NOT_SLIDE`/`reduce`/`onIdle`.
+`carousel-controls.js` then imports them instead of copying — which deletes the polyfill
+half of the lint mirror and lets clone-then-controls be a direct call instead of a retry
+loop. Card keeps the video half, with `shared.js` re-exporting the carousel primitives so
+nothing else churns.
+
+Costs: `@browser.style/carousel` gains JS (needs `main`/`exports`/`files` and a `min.js`
+build — it has a CSS-only build script today); card's published `./carousel.js` export
+needs a re-export shim or it is a breaking change on a 4.0.0 package; `ui/card/build.js`
+`ENTRIES` and the `lintSlideLists` mirror both change. Payoff: `layout` drops its
+`@browser.style/card` peer entirely, the runtime inversion goes away, and there is one
+copy of the slide vocabulary instead of two plus a linter to keep them equal.
+
+## 7. Closed — `<ui-content>` → `<ui-text>` rename (decided against, 2026-08-03)
 
 Recorded so it is not rediscovered as an open question. The proposal was to rename
 `<ui-content>` (the text area) to `<ui-text>`, recycle `<ui-content>` for the host, move

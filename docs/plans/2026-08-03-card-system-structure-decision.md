@@ -82,6 +82,14 @@ imports the card engine rather than competing with it.
 
 ### Work item C — extract the carousel engine
 
+> **Update 2026-08-04 — the title overstates what shipped.** Only the *controls*
+> moved (`carousel.css` + polyfill). The **engine** — `ui/card/carousel.js`: loop
+> clones, autoplay, `scanCarousels` — is still a card module, so the polyfill waits
+> on card's idle scan for `[data-clone]` slides, `carousel-controls.js` keeps a
+> lint-guarded verbatim copy of four `shared.js` primitives, and `layout` still
+> peer-depends on the whole of `@browser.style/card` for that one file. Finish-the-job
+> proposal + costs: [`open-items.md` §6](./open-items.md).
+
 `ui/base/carousel.css` is **65.7 KB — the largest file in the system** — and
 selects `:where(ui-card, ui-reveal, ui-media, lay-out[overflow])`
 (`ui/base/carousel.css:8`). Its own header points at `ui/card/media.carousel.md`
