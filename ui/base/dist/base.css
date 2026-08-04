@@ -142,6 +142,13 @@
     --stagger-duration: 0.75s;
     --stagger-easing: cubic-bezier(0.16, 1, 0.3, 1);
     --stagger-step: 0.07s;
+    --stagger-shimmer-angle: 90deg;
+    --stagger-shimmer-sweep-angle: 110deg;
+    --stagger-shimmer-color: var(--color-accent);
+    --stagger-shimmer-duration: 1s;
+    --stagger-shimmer-ink: CanvasText;
+    --stagger-shimmer-spread: 12ch;
+    --stagger-shimmer-step: calc(var(--stagger-shimmer-duration) * 0.6);
     --blur-sm: 4px;
     --blur-md: 12px;
     --blur-lg: 24px;
@@ -460,8 +467,13 @@
   *::after {
     box-sizing: border-box;
   }
-  [dir=rtl] * {
-    --_dir: left;
+  :where(:root, [dir]:dir(ltr)) {
+    --_dir-s: left;
+    --_dir-e: right;
+  }
+  :where([dir]:dir(rtl)) {
+    --_dir-s: right;
+    --_dir-e: left;
   }
   [hidden] {
     display: none;
@@ -768,7 +780,7 @@
     border-radius: var(--input-range-height);
     background-image:
       linear-gradient(
-        to var(--_dir, right),
+        to var(--_dir-e, right),
         var(--color-accent) var(--_x, 0),
         var(--color-button) 0 var(--_x));
     height: var(--input-range-height);
@@ -1544,6 +1556,14 @@
   :where([stagger~=fde], [data-stagger~=fde]) {
     --_stg-tr: 0 0;
   }
+  :where([stagger~=shimmer], [data-stagger~=shimmer]) {
+    --_stg-tr: 0 0;
+    --_stg-shim-angle: var(--stagger-shimmer-angle, 90deg);
+  }
+  :where([stagger~=sweep], [data-stagger~=sweep]) {
+    --_stg-shim-flow: block;
+    --_stg-shim-angle: var(--stagger-shimmer-sweep-angle, 110deg);
+  }
   :where([media*="ani(rise)"]) {
     --_stg-tr: 0 var(--stagger-distance, 5rem);
   }
@@ -1727,6 +1747,50 @@
           animation-duration: var(--stagger-duration, 0.75s);
           animation-trigger: --stg-block play-forwards;
           animation-delay: calc((sibling-index() - 1) * var(--animate-stagger, 10) * var(--animate-delay, 0.005s));
+        }
+      }
+    }
+    @supports (background-clip: text) or (-webkit-background-clip: text) {
+      :where([stagger~=shimmer], [data-stagger~=shimmer]) > :not(cq-box, ui-carousel-controls),
+      :where([stagger~=shimmer], [data-stagger~=shimmer]) > cq-box > * {
+        --_stg-shim-dur: var(--stagger-shimmer-duration, 1s);
+        --_stg-shim-ink: var(--stagger-shimmer-ink, CanvasText);
+        --_stg-shim-spread: var(--stagger-shimmer-spread, 12ch);
+        --_stg-shim-delay: calc(var(--stagger-begin, 0s) + (var(--_stg-base-i) + sibling-index() - 1) * var(--stagger-shimmer-step, 0.9s));
+        display: var(--_stg-shim-flow, inline);
+        background-image:
+          linear-gradient(
+            var(--_stg-shim-angle, 90deg),
+            #0000 0 calc(100% - var(--_stg-shim-spread)),
+            var(--stagger-shimmer-color, var(--color-accent, CanvasText)) calc(100% - var(--_stg-shim-spread)) 100%),
+          linear-gradient(var(--_stg-shim-ink) 0 100%),
+          linear-gradient(var(--stagger-shimmer-ghost, color-mix(in oklab, var(--_stg-shim-ink) 15%, transparent)) 0 100%);
+        background-position:
+          100% 0,
+          100% 0,
+          0 0;
+        background-repeat: no-repeat;
+        background-size:
+          200% 100%,
+          200% 100%,
+          100% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+      details[open] > :is([stagger~=shimmer], [data-stagger~=shimmer]) > :not(cq-box, ui-carousel-controls),
+      details[open] > :is([stagger~=shimmer], [data-stagger~=shimmer]) > cq-box > * {
+        opacity: 1;
+        transition: background-position var(--_stg-shim-dur) linear var(--_stg-shim-delay), color var(--duration-fast, 100ms) linear calc(var(--_stg-shim-delay) + var(--_stg-shim-dur));
+      }
+      @starting-style {
+        details[open] > :is([stagger~=shimmer], [data-stagger~=shimmer]) > :not(cq-box, ui-carousel-controls),
+        details[open] > :is([stagger~=shimmer], [data-stagger~=shimmer]) > cq-box > * {
+          background-position:
+            200% 0,
+            200% 0,
+            0 0;
+          color: #0000;
+          opacity: 1;
         }
       }
     }

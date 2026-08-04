@@ -1,7 +1,10 @@
 @layer bs-core {
 	/* Global */
 	*, *::before, *::after { box-sizing: border-box; }
-	[dir=rtl] * { --_dir: left; } /* for direction-aware gradients */
+	/* direction resolver — logical start/end as physical keywords, for gradients and
+	   object-position, which have no logical form. rtl arm MUST stay last. */
+	:where(:root, [dir]:dir(ltr)) { --_dir-s: left;  --_dir-e: right; }
+	:where([dir]:dir(rtl))        { --_dir-s: right; --_dir-e: left;  }
 	[hidden] { display: none; }
 	[data-sr] {
 		border: 0;

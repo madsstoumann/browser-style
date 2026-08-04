@@ -169,7 +169,7 @@
 		background-color: var(--color-button);
 		border: 0;
 		border-radius: var(--input-range-height);
-		background-image: linear-gradient(to var(--_dir, right), var(--color-accent) var(--_x, 0), var(--color-button) 0 var(--_x));
+		background-image: linear-gradient(to var(--_dir-e, right), var(--color-accent) var(--_x, 0), var(--color-button) 0 var(--_x));
 		height: var(--input-range-height);
 		margin-block: calc((var(--input-thumb-size) - var(--input-range-height)) / 2);
 		&::-webkit-slider-thumb {

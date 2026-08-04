@@ -7,11 +7,11 @@
 		& span {
 			--_x: calc(100% * (var(--value) - var(--min, 0)) / (var(--max, 100) - var(--min, 0)));
 			aspect-ratio: var(--ui-range-mask-asr, 3 / 1);
-			background-image: linear-gradient(to var(--_dir, right), var(--AccentColor) var(--_x, 0), var(--ButtonFace) 0 var(--_x));
+			background-image: linear-gradient(to var(--_dir-e, right), var(--AccentColor) var(--_x, 0), var(--ButtonFace) 0 var(--_x));
 			mask: var(--ui-range-mask);
 			-webkit-mask: var(--ui-range-mask);
 			[dir=rtl] & {
-				--_dir: right;
+				--_dir-e: right; /* cancel the swap — scale below already mirrors */
 				scale: -1 1;
 			}
 		}
