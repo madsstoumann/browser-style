@@ -497,8 +497,11 @@ Panel children can cascade in via the shared engine in `ui/base/stagger.css`. Tw
 ```
 
 - Children must be **elements** — bare text nodes aren't staggered.
-- Effect tokens as attribute values: `rise` (default) · `fall` · `lft` · `rgt` · `zom` · `blr` · `fde`.
-- Tune via the global `--stagger-*` tokens (`ui/base/tokens.css`).
+- Effect tokens as attribute values: `rise` (default) · `fall` · `lft` · `rgt` · `zom` · `blr` · `fde` · `shimmer` (+ `sweep`).
+- `shimmer` is the one **text** effect — nothing moves; a coloured band reads **down the block one line at a time**, leaving solid ink behind it and a faint ghost ahead. It works by setting the text to `display: inline`, so it needs a panel holding a **single** block of text in a flow (non-flex/grid) wrapper — several inline children would run together onto one line.
+- `shimmer sweep` is the multi-child form: children stay blocks and one tilted band crosses every line at once. Layout is untouched, so any number of children is safe.
+- Subjects must be text-level elements either way, since the effect paints text rather than boxes. Details: [ui/card/docs/stagger.md § Shimmer](../card/docs/stagger.md#shimmer).
+- Tune via the global `--stagger-*` tokens (`ui/base/tokens.css`); `shimmer` adds its own `--stagger-shimmer-*` set.
 - In plain accordion mode the cascade plays on first open (the panel collapse caches rendering, so re-opens don't replay — the height expansion is the reveal). In tabs mode (`tabs="… panel"`) staggered panels stay rendered while closed and **replay on every switch**.
 
 ## Panel spacing — edge-margin trim

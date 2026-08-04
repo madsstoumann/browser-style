@@ -8,6 +8,9 @@
  * zom · blr · fde. The vector tokens set inherited custom props (--_stg-tr/sc/fl),
  * so a token may also sit on any ancestor — or on a single child for a per-child
  * vector (note: that child then also acts as a nested stagger host).
+ * An 8th token, shimmer (+ its `sweep` modifier), is a TEXT effect rather than a
+ * box vector — own --stagger-shimmer-* tokens, own section at the bottom of this
+ * file, <details> hosts only. See ui/card/docs/stagger.md § Shimmer.
  *
  * Per-child delay = --stagger-begin + (--_stg-base-i + sibling-index() - 1) * --stagger-step.
  * --_stg-base-i (registered, non-inherited, initial 0) lets a host offset the
@@ -62,6 +65,9 @@
 	:where([stagger~="zom"],  [data-stagger~="zom"])  { --_stg-tr: 0 0; --_stg-sc: 0.65; --_stg-origin: 0 50%; }
 	:where([stagger~="blr"],  [data-stagger~="blr"])  { --_stg-tr: 0 0; --_stg-fl: blur(12px); }
 	:where([stagger~="fde"],  [data-stagger~="fde"])  { --_stg-tr: 0 0; }
+	/* shimmer paints text, so it zeroes the box vector the way fde does */
+	:where([stagger~="shimmer"], [data-stagger~="shimmer"]) { --_stg-tr: 0 0; --_stg-shim-angle: var(--stagger-shimmer-angle, 90deg); }
+	:where([stagger~="sweep"],   [data-stagger~="sweep"])   { --_stg-shim-flow: block; --_stg-shim-angle: var(--stagger-shimmer-sweep-angle, 110deg); }
 	/* media-DSL forms (card carousel) — content channel */
 	:where([media*="ani(rise)"]) { --_stg-tr: 0 var(--stagger-distance, 5rem); }
 	:where([media*="ani(fall)"]) { --_stg-tr: 0 calc(-1 * var(--stagger-distance, 5rem)); }
@@ -70,6 +76,7 @@
 	:where([media*="ani(zom)"])  { --_stg-tr: 0 0; --_stg-sc: 0.65; --_stg-origin: 0 50%; }
 	:where([media*="ani(blr)"])  { --_stg-tr: 0 0; --_stg-fl: blur(12px); }
 	:where([media*="ani(fde)"])  { --_stg-tr: 0 0; }
+	/* No ani(shimmer)/ani(sweep): shimmer is a <details>-host effect only. */
 	/* media-DSL forms (card carousel) — card channel */
 	:where([media*="crd(rise)"]) { --_stg-crd-tr: 0 var(--stagger-distance, 5rem); }
 	:where([media*="crd(fall)"]) { --_stg-crd-tr: 0 calc(-1 * var(--stagger-distance, 5rem)); }
@@ -285,6 +292,46 @@
 					animation-duration: var(--stagger-duration, 0.75s);
 					animation-trigger: --stg-block play-forwards;
 					animation-delay: calc((sibling-index() - 1) * var(--animate-stagger, 10) * var(--animate-delay, 0.005s));
+				}
+			}
+		}
+
+		/* === shimmer — TEXT effect, <details> hosts only (docs: ui/card/docs/stagger.md § Shimmer)
+		   Do not resize the 200% layers or declare `color` on the resting state —
+		   both are load-bearing; the doc explains why. */
+		@supports (background-clip: text) or (-webkit-background-clip: text) {
+			:where([stagger~="shimmer"], [data-stagger~="shimmer"]) > :not(cq-box, ui-carousel-controls),
+			:where([stagger~="shimmer"], [data-stagger~="shimmer"]) > cq-box > * {
+				--_stg-shim-dur: var(--stagger-shimmer-duration, 1s);
+				--_stg-shim-ink: var(--stagger-shimmer-ink, CanvasText);
+				--_stg-shim-spread: var(--stagger-shimmer-spread, 12ch);
+				--_stg-shim-delay: calc(var(--stagger-begin, 0s) + (var(--_stg-base-i) + sibling-index() - 1) * var(--stagger-shimmer-step, 0.9s));
+				display: var(--_stg-shim-flow, inline);
+				background-image:
+					linear-gradient(var(--_stg-shim-angle, 90deg),
+						#0000 0 calc(100% - var(--_stg-shim-spread)),
+						var(--stagger-shimmer-color, var(--color-accent, CanvasText)) calc(100% - var(--_stg-shim-spread)) 100%),
+					linear-gradient(var(--_stg-shim-ink) 0 100%),
+					linear-gradient(var(--stagger-shimmer-ghost, color-mix(in oklab, var(--_stg-shim-ink) 15%, transparent)) 0 100%);
+				background-position: 100% 0, 100% 0, 0 0;
+				background-repeat: no-repeat;
+				background-size: 200% 100%, 200% 100%, 100% 100%;
+				-webkit-background-clip: text;
+				background-clip: text;
+			}
+			details[open] > :is([stagger~="shimmer"], [data-stagger~="shimmer"]) > :not(cq-box, ui-carousel-controls),
+			details[open] > :is([stagger~="shimmer"], [data-stagger~="shimmer"]) > cq-box > * {
+				opacity: 1;
+				transition:
+					background-position var(--_stg-shim-dur) linear var(--_stg-shim-delay),
+					color var(--duration-fast, 100ms) linear calc(var(--_stg-shim-delay) + var(--_stg-shim-dur));
+			}
+			@starting-style {
+				details[open] > :is([stagger~="shimmer"], [data-stagger~="shimmer"]) > :not(cq-box, ui-carousel-controls),
+				details[open] > :is([stagger~="shimmer"], [data-stagger~="shimmer"]) > cq-box > * {
+					background-position: 200% 0, 200% 0, 0 0;
+					color: #0000;
+					opacity: 1;
 				}
 			}
 		}

@@ -36,6 +36,7 @@ Tokens are attribute **values**, matched with `~=` (whole word). Bare `stagger`
 | `zom` | `scale: 0.65`, origin `0 50%` | zoom up (grows from the inline-start so left-aligned text stays put) |
 | `blr` | `filter: blur(12px)` | blur + fade |
 | `fde` | — (opacity only) | plain fade |
+| `shimmer` (+ `sweep`) | *(text effect, `<details>` hosts only — see [Shimmer](#shimmer))* | the text lights up, line by line |
 
 `<d>` = `var(--stagger-distance)`. Each token sets **inherited** private vectors —
 `--_stg-tr` (translate) · `--_stg-sc` (scale) · `--_stg-fl` (filter) · `--_stg-origin`
@@ -158,6 +159,187 @@ Every stagger token maps to a keyframe in the `[animate]` library, so the two sy
 one visual language:
 
 `rise → fade-up` · `fall → fade-down` · `lft → fade-left` · `rgt → fade-right` ·
-`zom → zoom-in` · `fde → fade-in` · `blr` = stagger-only. Reverse (bounce / flip / reveal /
-slide) = keyframe-only — reach them via `[animate]` / `animate-self`, not stagger tokens.
-See [animations.md](./animations.md).
+`zom → zoom-in` · `fde → fade-in` · `blr` and `shimmer` = stagger-only, and `shimmer` has no
+keyframe at all — it runs on a transition, so it exists only on the `<details>` adapter.
+Reverse (bounce / flip / reveal / slide) = keyframe-only — reach them via `[animate]` /
+`animate-self`, not stagger tokens. See [animations.md](./animations.md).
+
+---
+
+## Shimmer
+
+`stagger="shimmer"` is the one token that is **not** a box vector. Nothing moves: the text
+itself lights up as a coloured band sweeps it. It has two forms, and the difference is
+**per-line timing**:
+
+| | reveal | layout | children |
+|---|---|---|---|
+| `shimmer` | reads **down the block, one line at a time** | sets `display: inline` | **one** text child |
+| `shimmer sweep` | one tilted band crosses **every line at once** | untouched | any number |
+
+```html
+<!-- default: line by line, the way an eye moves — single text child -->
+<div data-stagger="shimmer">
+  <p>…</p>
+</div>
+
+<!-- sweep: all lines together, layout untouched — safe for several children -->
+<div data-stagger="shimmer sweep">
+  <p>…</p>
+  <p>…</p>
+</div>
+```
+
+### How it works
+
+Three `background-clip: text` layers on the subject, all swept by one
+`background-position` transition. Bottom to top:
+
+| layer | size | closed → open | role |
+|-------|------|---------------|------|
+| ghost | `100% 100%` | `0 0` (static) | faint wash — the text not yet reached |
+| ink | `200% 100%` | `200% 0` → `100% 0` | solid text colour, fills in behind the band |
+| band | `200% 100%` | `200% 0` → `100% 0` | hard-stop coloured leading edge, `--stagger-shimmer-spread` wide |
+
+There is **no per-word markup and no text splitting** — the repo has no splitter and needs
+none. The line-by-line reveal falls out of inline fragmentation: under the default
+`box-decoration-break: slice`, an inline box paints its background across the box it
+*would* have been if unbroken, then slices that painting per line. So a single horizontal
+gradient walks the first line to its end, continues onto the second, and so on. That is all
+the default does — set `display: inline`.
+
+`sweep` opts out of that. Children stay blocks, and the band — tilted by
+`--stagger-shimmer-sweep-angle` — crosses every line of a child at once, the tilt being the
+only thing that separates the lines in time. It changes no layout, which is why it is the
+form to use when a panel has more than one child: `display: inline` on several children
+collapses them into one run-on line box.
+
+Two things are easy to get backwards when writing demos:
+
+- **On a one-line child the two are indistinguishable**, because sweeping a single line
+  left-to-right *is* reading it. Only multi-line copy shows the difference.
+- **`sweep` spans the child's box width, not its text width**, so a short line finishes
+  early. The default has no such problem: an inline box hugs its text.
+
+The default also needs a **flow** host. A flex or grid container blockifies its children,
+so `display: inline` computes to `block` and the slice silently never happens — you get
+`sweep` behaviour without asking for it.
+
+**Geometry.** Band and ink are sized to exactly `200%`. This is not arbitrary: a
+`background-position` percentage resolves against *(positioning area − image size)*, so
+`200%` is the one width at which 1% of position equals 1% of the subject's own width.
+`200%` parks the image entirely before the subject (ghost only); `100%` lands its trailing
+edge on the subject's inline-end. Travel is therefore exactly one subject-width and the
+whole duration reveals — sweeping on to `0`, as the original technique does, leaves the
+back half of the transition idle. Oversizing the image and anchoring to `right` looks like
+an improvement and is not: once the image outgrows the box that reference goes negative,
+`right 100%` normalises to `left 0%`, and the subject starts fully revealed.
+
+**Colour.** The resting state declares no `color` at all, so the subject keeps its natural
+inherited colour and its opaque glyphs paint over the clipped background — an untriggered
+host, or a browser without `background-clip: text`, just shows plain text. Only the
+from-states set `color: #0000`. The transition then gives `color` a short duration delayed
+to the *end* of the sweep, so it holds transparent throughout and settles once the band
+reaches the inline-end. That settle is also what resolves the band still sitting on the
+last `--stagger-shimmer-spread` of text at `100%`. It is why `--stagger-shimmer-ink` only
+has to *approximate* the text colour: it is never the resting value, so there is nothing
+to keep in sync.
+
+### Tokens
+
+| Token | Default | Purpose |
+|-------|---------|---------|
+| `--stagger-shimmer-angle` | `90deg` | Band angle, default (line-by-line) form |
+| `--stagger-shimmer-sweep-angle` | `110deg` | Band angle under `sweep` — the tilt is what separates its lines in time |
+| `--stagger-shimmer-color` | `var(--color-accent)` | The leading band |
+| `--stagger-shimmer-duration` | `1s` | One child's sweep, start to finish |
+| `--stagger-shimmer-ink` | `CanvasText` | Text behind the band |
+| `--stagger-shimmer-ghost` | 15% of the ink | Unrevealed text |
+| `--stagger-shimmer-spread` | `12ch` | Band width |
+| `--stagger-shimmer-step` | `calc(--stagger-shimmer-duration * 0.6)` | Delay added per child |
+
+Shimmer uses its **own step**, not `--stagger-step` (`0.07s`): second-long sweeps starting
+0.07s apart would all run at once. At `0.6 ×` duration each child starts as the previous one
+finishes reading. Both are ordinary inherited custom properties, so they can sit on the host,
+any ancestor, or `:root`:
+
+```html
+<div data-stagger="shimmer" style="--stagger-shimmer-duration: 3s">…</div>
+```
+
+**Duration is fixed, not length-proportional.** A short paragraph and a long one both take
+`--stagger-shimmer-duration`, so the short one reads faster per word. The original technique
+paced it as `--char-count / --cps`, which needs a per-element character count written from
+JS; this engine is CSS-only by design, so the trade is a fixed clock. Set the duration per
+panel where the copy lengths differ a lot.
+
+`--stagger-shimmer-ghost` is deliberately **not** declared in `tokens.css`. It defaults to
+15% of the ink, and that derivation only holds at the *use site*: declared on `:root` it
+would resolve `var(--stagger-shimmer-ink)` against `:root` and inherit that one frozen
+colour, so a card overriding the ink would keep a black ghost over white text. Set it
+explicitly only to break the 15% relationship — otherwise just set the ink and the ghost
+follows.
+
+### Choosing where to use it
+
+Two things decide whether the effect is *perceptible*, and both are easy to get wrong:
+
+- **Contrast for the ghost.** Unrevealed text is only 15% of the ink. Over a photo — a
+  scrimmed `ovr(bs)` card, say — that contrast disappears and the copy just looks solid.
+  Prefer a flat background.
+- **Copy that fills its box** — under `sweep`. It spans the child's **box** width, not its
+  text, so a three-word headline in a wide box is revealed almost before the sweep starts.
+  Real sentences read far better than labels. (The default form is immune: an inline box
+  hugs its text.)
+
+### Constraints
+
+- **It never combines with a box move.** The `shimmer` setter zeroes `--_stg-tr` the way
+  `fde` does, so the subject only ever paints — writing `stagger="shimmer rise"` gives you
+  the sweep, not a sweep plus a rise.
+- **Text-level leaves only.** `color: #0000` inherits. Inline descendants (`<b>`, `<a>`
+  with no colour of their own) are fine — they sit inside the parent's text clip. Block
+  descendants with their own background or image paint over the effect, so do not put
+  `shimmer` on a host whose children are cards. Inline elements that set their own colour
+  or background (`<code>`) opt themselves out and stay visible from the start.
+- **Bare `shimmer` needs a single text child in a flow host**, for the two reasons above.
+  Use `sweep` for a panel with several children.
+- **Set `--stagger-shimmer-ink` on themed text.** It is the colour that fills in behind the
+  band, and it cannot be derived: `currentColor` in a custom property (even a registered
+  `<color>` one) stays a keyword and resolves against the subject, which is transparent
+  mid-sweep. The `CanvasText` default assumes dark-on-light. The ghost follows the ink.
+- Everything is inside `@supports (background-clip: text) or (-webkit-background-clip: text)`
+  and inside the `prefers-reduced-motion: no-preference` gate, so neither an unsupporting
+  browser nor a reduce-motion user can be left with invisible text.
+
+### Adapter 1 only
+
+Shimmer is wired to the **`<details>` adapter only** — accordion, tabs, `ui-reveal`, plain
+`<details>`. It uses that adapter's `@starting-style` + transition, with one difference: its
+`transition` shorthand carries per-property delays (the sweep, then the colour settle), so it
+must *replace* the base `transition-delay` longhand rather than merge with it. The arms are
+therefore duplicated after the base rules at equal specificity.
+
+Two invariants in `stagger.css` are load-bearing and look like tidy-ups:
+
+- **Band and ink must stay sized `200%`** — see *Geometry* above. Any other size silently
+  inverts the reveal.
+- **The resting rule must not declare `color`** — see *Colour* above. Declaring it is what
+  would leave an unsupported browser showing invisible text.
+
+The repeated token reads (duration, ink, spread) are resolved once into private
+`--_stg-shim-*` properties at the top of the paint rule, so each fallback is written in
+exactly one place; the transition and the gradients then read the private form.
+
+It is deliberately **not** wired to the other two adapters:
+
+- **Snap carousel.** The from-state is itself reached by a transition, so a quick swipe out
+  and back rewinds only part way and the return plays a *fragment* of a sweep. The box
+  effects get away with this (0.75s at 0.07s steps is over before you look away); a 1.5s
+  sweep at 0.9s steps does not.
+- **Scroll-driven `<lay-out stagger>`.** A scrubbed sweep is tied to scroll position rather
+  than to a clock, so it advances and rewinds with every flick of the wheel — legible as
+  motion on a card, incoherent on text you are trying to read.
+
+On either host the copy still *paints* (the shared paint rule) but never sweeps: it renders
+at its resting state, indistinguishable from plain text.

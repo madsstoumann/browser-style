@@ -1051,7 +1051,7 @@
 
 	<br>
 	<h2>Staggered panel content — <code>data-stagger</code></h2>
-	<p>Wrap panel content in a <code>&lt;div data-stagger&gt;</code> (shared engine in <code>ui/base/stagger.css</code>) — its children cascade in as the panel opens, while the panel's own block-size animation runs. Effect tokens: <code>rise</code> (default) · <code>fall</code> · <code>lft</code> · <code>rgt</code> · <code>zom</code> · <code>blr</code> · <code>fde</code>. (Not for <code>type="split"</code>/<code>type="horizontal"</code> — those have their own panel choreography.)</p>
+	<p>Wrap panel content in a <code>&lt;div data-stagger&gt;</code> (shared engine in <code>ui/base/stagger.css</code>) — its children cascade in as the panel opens, while the panel's own block-size animation runs. Effect tokens: <code>rise</code> (default) · <code>fall</code> · <code>lft</code> · <code>rgt</code> · <code>zom</code> · <code>blr</code> · <code>fde</code> · <code>shimmer</code> (+ <code>sweep</code>). (Not for <code>type="split"</code>/<code>type="horizontal"</code> — those have their own panel choreography.)</p>
 	<ui-accordion variant="bordered divided" group="accordion-stagger">
 		<cq-box>
 			<details name="accordion-stagger">
@@ -1108,6 +1108,20 @@
 					<p><strong>Children simply fade in.</strong></p>
 					<p>Opacity only — no movement, scale or blur.</p>
 					<p>The most restrained of the seven tokens.</p>
+				</div>
+			</details>
+			<details name="accordion-stagger">
+				<summary>Shimmer<ui-icon type="plus-minus"></ui-icon></summary>
+				<div data-stagger="shimmer">
+					<p>Nothing moves — the text itself lights up. A coloured band reads down the block one line at a time, the way an eye moves through a paragraph. No per-word markup, no text splitting: it just sets the text to display inline. That means one block of text per panel — for several children, use the sweep variant below.</p>
+				</div>
+			</details>
+			<details name="accordion-stagger">
+				<summary>Shimmer sweep — for several children<ui-icon type="plus-minus"></ui-icon></summary>
+				<div data-stagger="shimmer sweep">
+					<p><strong>One band, crossing every line at once.</strong></p>
+					<p>Children stay blocks and the band is tilted, so a whole box lights up together rather than being read through.</p>
+					<p>Layout is untouched, so any number of children is safe.</p>
 				</div>
 			</details>
 		</cq-box>

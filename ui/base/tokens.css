@@ -159,6 +159,22 @@
 		--stagger-easing: cubic-bezier(0.16, 1, 0.3, 1);
 		--stagger-step: 0.07s;
 
+		/* Shimmer stagger token (stagger="shimmer") — a background-clip:text sweep
+		   instead of a box vector. Its own step: 1.5s sweeps 0.07s apart would all
+		   run at once, so the cascade paces off the sweep duration itself. */
+		--stagger-shimmer-angle: 90deg;
+		--stagger-shimmer-sweep-angle: 110deg;
+		--stagger-shimmer-color: var(--color-accent);
+		--stagger-shimmer-duration: 1s;
+		--stagger-shimmer-ink: CanvasText;
+		/* NOT declared here: --stagger-shimmer-ghost defaults to 15% of the ink, and
+		   that derivation only works at the USE site (stagger.css). Declared on
+		   :root it would resolve var(--stagger-shimmer-ink) against :root and
+		   inherit that one frozen colour, so a card overriding the ink would keep a
+		   black ghost. Set it explicitly only to break the 15% relationship. */
+		--stagger-shimmer-spread: 12ch;
+		--stagger-shimmer-step: calc(var(--stagger-shimmer-duration) * 0.6);
+
 		/* Blur */
 		--blur-sm: 4px;
 		--blur-md: 12px;
