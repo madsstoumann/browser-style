@@ -1,26 +1,8 @@
 /**
- * ui-marquee
- * @version 5.0.0
- * @date 2026-07-25
- * @author Mads Stoumann
- *
- * CSS-only scrolling content strip — card-furniture family (ui-chip / ui-beacon /
- * ui-sticker). Modes: fade (default) · loop · seam (seamless).
- *
- * Content (no wrapper needed):
- *   • direct children — one for fade, two identical for loop, N for seam/logos
- *   • aria-label — zero-markup text: fills ::before (+ ::after for loop) when the
- *     marquee is :empty. Also the accessible name.
- *
- *   <ui-marquee><span>Breaking news …</span></ui-marquee>
- *   <ui-marquee aria-label="Breaking news …"></ui-marquee>
- *   <ui-marquee variant="seam"><img><img><img></ui-marquee>
- *
- * Animation is var-driven: the host sets --_name (keyframes) and --_dir
- * (direction); every item — child OR pseudo — reads them. Full docs: readme.md.
- *
- * Sections: A. Base · B. Items · C. Direction · C2. Loop · D. Furniture axes ·
- * E. Edge-fade · F. Pause · G. Seamless · H. Reduced motion · I. Keyframes.
+ * ui-marquee — CSS-only scrolling strip; modes fade (default) · loop · seam.
+ * Content is direct children OR aria-label (zero markup). Animation is var-driven:
+ * the host sets --_name + --_dir, every item reads them. Docs: readme.md
+ * @version 5.0.0 · @author Mads Stoumann
  */
 @layer bs-component {
 	:where(ui-marquee) {
@@ -46,9 +28,7 @@
 		padding-inline: var(--ui-marquee-padding-inline, 0);
 		user-select: none;
 
-		/* B. Items — direct children, or ::before/::after from aria-label.
-		   --_name (keyframes) and --_dir (direction) are set on the host by the
-		   mode/direction rules and inherited here. */
+		/* B. Items — direct children, or ::before/::after from aria-label */
 		& > *, &::before, &::after {
 			align-items: center;
 			animation: var(--_name, ui-marquee-x) var(--ui-marquee-duration) linear infinite;
@@ -85,24 +65,15 @@
 		}
 		&[direction~="down"], :where([media*="marquee(down)"]) & { --_dir: reverse; }
 
-		/* C2. Loop — two identical copies (or aria-label ::before+::after) shifted
-		   by exactly -100% each (own width) → seamless. gap 0 keeps the shift exact.
-		   The card token is marquee(rpt) — named to never substring-collide with the
-		   carousel's own bare `loop` token (the old marquee(loop) spelling is removed).
-		   The element's standalone variant="loop" is a different attribute, no collision. */
+		/* C2. Loop — two copies shifted -100% each; gap 0 keeps the shift exact.
+		   The card token is marquee(rpt): `loop` would collide with the carousel's. */
 		&[variant~="loop"], :where([media*="marquee(rpt)"]) & { --_name: ui-marquee-loop-x; gap: 0; }
 		&[variant~="loop"]:is([direction~="up"], [direction~="down"]),
 		:where([media*="marquee(rpt)"]) &:is([direction~="up"], [direction~="down"]) { --_name: ui-marquee-loop-y; }
 
 		/* D. Furniture axes — `&[attr]` standalone + `[media*="marquee(…)"] &` card token */
 
-		/* colour — hue + pale/muted modifiers.
-		   Standalone theme= flows through base/theme.css directly. Card
-		   media="marquee(<hue>)" feeds the SAME resolver: the hue sets --_theme-base-*,
-		   the pale/muted arms transform it (hue-agnostic — 2 rules, not 9×2), and one
-		   consumer reads the result. Don't combine theme= with a media hue on the same
-		   element — both write --_theme-*. (Other theme.css modifiers — border/light/
-		   dark/ink — are attribute-only; they're geometry/color-scheme, not a plate.) */
+		/* colour — theme= and media="marquee(<hue>)" share one resolver; don't combine */
 		&[theme] { --ui-marquee-bg: var(--_theme-bg); --ui-marquee-c: var(--_theme-c, var(--_theme-ink)); }
 		:where([media*="marquee(red)"])    & { --_theme-base-bg: var(--ui-theme-red-bg);    --_theme-base-c: var(--ui-theme-red-c); }
 		:where([media*="marquee(orange)"]) & { --_theme-base-bg: var(--ui-theme-orange-bg); --_theme-base-c: var(--ui-theme-orange-c); }
@@ -113,11 +84,7 @@
 		:where([media*="marquee(slate)"])  & { --_theme-base-bg: var(--ui-theme-slate-bg);  --_theme-base-c: var(--ui-theme-slate-c); }
 		:where([media*="marquee(black)"])  & { --_theme-base-bg: var(--ui-theme-black-bg);  --_theme-base-c: var(--ui-theme-black-c); }
 		:where([media*="marquee(white)"])  & { --_theme-base-bg: var(--ui-theme-white-bg);  --_theme-base-c: var(--ui-theme-white-c); }
-		/* HUE TRUTH SET (nine): red orange green blue accent black white gray slate.
-		   slate is a canonical hue in its own right (the fifth neutral, white < gray <
-		   slate < black), not an alias of gray. The doc-era marquee(dark)/marquee(light)/
-		   marquee(subtle) aliases were REMOVED in v5 — use marquee(black)/marquee(white)/
-		   marquee(gray). */
+
 		/* pale = light tint + hue ink · muted = translucent plate (hue-agnostic) */
 		:where([media*="marquee(pale)"])  & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), var(--color-surface) 80%); --_theme-c: var(--_theme-base-bg); }
 		:where([media*="marquee(muted)"]) & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), transparent 50%); --_theme-c: var(--_theme-base-c); }
@@ -127,12 +94,7 @@
 		/* arbitrary colour — fill overrides hue, ink auto-contrasts from fill */
 		&[fill] { --ui-marquee-bg: attr(fill type(<color>), var(--color-surface)); --ui-marquee-c: contrast-color(var(--ui-marquee-bg)); }
 		&[ink]  { --ui-marquee-c: attr(ink type(<color>), hsl(0, 0%, 100%)); }
-		/* Typed attr() fallback — Safari/Firefox. A custom property PARSES the
-		   literal `attr(…)` stream, so it never goes guaranteed-invalid and no
-		   var() fallback fires; the band loses its background at computed-value
-		   time instead. Restore the attr() defaults; ../base/polyfills/attr-fallback.js
-		   upgrades to the element's own fill/ink. Detect on a REAL property — the
-		   `--x: attr(…)` form is true in Safari too. Keep after the hue rules. */
+		/* typed attr() has NO fallback in Safari/FF. Docs: ../base/polyfills/readme.md */
 		@supports not (background-color: attr(x type(<color>), red)) {
 			&[fill] { --ui-marquee-bg: var(--color-surface); }
 			&[ink]  { --ui-marquee-c: hsl(0, 0%, 100%); }
@@ -191,9 +153,7 @@
 		&:is(:hover, :focus-within)::after { animation-play-state: paused; }
 	}
 
-	/* G. Seamless — css-tip offset technique (Chrome-only; else fade). Horizontal
-	   only, direct children (logos). Host sets --_name; items get the path + a
-	   sibling-index() stagger. Direction still rides --_dir. */
+	/* G. Seamless — offset-path technique (Chrome only; else fade). Horizontal only. */
 	@supports (offset-path: shape(from 0% 0%, hline by 10px)) {
 		@media (prefers-reduced-motion: no-preference) {
 			:where(ui-marquee[variant~="seam"], [media*="marquee(seam)"] ui-marquee):not(:is([direction~="up"], [direction~="down"])) {

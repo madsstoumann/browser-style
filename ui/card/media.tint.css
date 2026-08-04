@@ -1,26 +1,15 @@
 /**
- * ui-media — tnt() image tint: wash the image in a solid colour with a blended
- * overlay on ui-media::before. OPT-IN sheet, NOT bundled by ui-card.css (see
- * media.tint.html). Same @layer as media.css. Docs: media.md § Internals
- * @version 1.1.0
- * @author Mads Stoumann
+ * ui-media — tnt() image tint: a blended overlay on ui-media::before. Opt-in,
+ * NOT bundled by ui-card.css. Docs: docs/media.md § Internals
+ * @version 1.1.0 · @author Mads Stoumann
  */
 @layer bs-component {
-	/* `[media*="tnt"]` matches bare tnt AND tnt(<key>). isolation:isolate keeps its
-	   two-arm form (its subject IS <ui-media>). */
+	/* `[media*="tnt"]` matches bare tnt AND tnt(<key>) */
 	:where([media*="tnt"]) { --_tnt: 1; }
 	:where([media*="tnt"]) ui-media,
 	:where(ui-media[media*="tnt"]) { isolation: isolate; }
 
-	/* PAINT — two-arm selector, NOT the R-14 flag + @container style() form.
-	   WebKit does not evaluate a style query for a pseudo-element against its
-	   originating element at first paint: `@container style(--_tnt: 1) {
-	   ui-media::before { … } }` matched nothing on load, so the page rendered
-	   UNTINTED and the tint appeared on the first hover — the inverse of hov(tint).
-	   Declaring --_tnt on <ui-media> itself does not help (verified); only dropping
-	   the query does. Chromium renders both forms identically.
-	   --_tnt is kept above: media.css's flag registry resets it across nested hosts,
-	   and it is the documented hook for the token. */
+	/* PAINT — two-arm, NOT flag + style(): WebKit skips it at first paint. Do NOT migrate. */
 	:where([media*="tnt"]) ui-media::before,
 	:where(ui-media[media*="tnt"])::before {
 		background: var(--ui-media-tint-color, var(--color-accent));
@@ -34,10 +23,7 @@
 	}
 	/* a nested frame (carousel slide etc.) must not paint a second tint over itself */
 	ui-media ui-media::before { content: none; }
-	/* …and the descendant arm above crosses a nested HOST, which the flag form
-	   never did (media.css's registry resets --_tnt on an inner ui-card/ui-reveal).
-	   Re-assert that boundary: an inner host that didn't ask for a tint gets none,
-	   wherever it sits — inside the outer frame or in its content column. */
+	/* the descendant arm crosses a nested HOST — re-assert the boundary */
 	:where(ui-card, ui-reveal) :where(ui-card, ui-reveal):not([media*="tnt"]) ui-media::before { content: none; }
 
 	/* named presets — mirror chip(<hue>) routing, map to the nine theme colours */
@@ -51,9 +37,7 @@
 	:where([media*="tnt(gray)"])   { --ui-media-tint-color: var(--ui-theme-gray-bg); }
 	:where([media*="tnt(slate)"])  { --ui-media-tint-color: var(--ui-theme-slate-bg); }
 
-	/* hov(tint) — fade the tint out on hover/focus. Same two-arm form and the same
-	   reason: the style-query arm never fired on ::before in WebKit, so the tint
-	   stayed put on hover. --_hv-tint is still set (registry + docs). */
+	/* hov(tint) — fade the tint out on hover/focus; two-arm for the reason above */
 	:where([media*="hov(tint)"]) { --_hv-tint: idle; }
 	:where([media*="hov(tint)"]:is(:hover, :focus-within)) { --_hv-tint: on; }
 	@media (hover: hover) {

@@ -1,15 +1,11 @@
 /**
- * ui-media — media primitive: image/video frame + overlay furniture. Standalone
- * or nested in <ui-card>/<ui-reveal>; configured by media= on the element or its
- * card host. Docs: media.md
- * @version 1.0.0
- * @author Mads Stoumann
+ * ui-media — image/video frame + overlay furniture; configured by media= on the
+ * element or its card host. Docs: docs/media.md
+ * @version 1.0.0 · @author Mads Stoumann
  */
 @layer bs-component {
-	/* === INHERITED FLAGS + @container style() (R-14 step 4). Docs: media.md === */
-	/* BOUNDARY + FLAG REGISTRY — every migrated flag MUST be listed here, or it
-	   leaks across host nesting. Declared BEFORE any setter so an inner host re-wins
-	   on source order. */
+	/* === FLAG REGISTRY + HOST BOUNDARY — list every inherited --_* flag here, before
+	   any setter, or it leaks across host nesting. Docs: docs/media.md § Internals === */
 	:where(ui-card, ui-reveal) :where(ui-card, ui-reveal) {
 		--_mrq: initial;                                                    /* media.css   — marquee(top|bot) */
 		--_shp-clip: initial;                                               /* media.css   — shp() image clip */
@@ -43,12 +39,9 @@
 			user-select: none;
 		}
 	}
-	/* an explicit aspect-ratio drops the min-height floor (frame follows the ratio) */
+	/* floor drops when the height comes from elsewhere: asr(), or a collage lay-out */
 	:where([media*="asr("]) ui-media,
-	:where(ui-media[media*="asr("]) { min-block-size: 0; }
-	/* …and so does hosting a nested <lay-out> (collage frame): the layout's own
-	   cells own their heights, so the frame must size to content — without this
-	   the floor paints as a dead band under any collage shorter than 12.5rem */
+	:where(ui-media[media*="asr("]),
 	:where(ui-media:has(> lay-out)) { min-block-size: 0; }
 
 	/* nested <ui-media> = always a plain frame, never a scroller */
@@ -57,11 +50,12 @@
 		inline-size: auto;
 		overflow: hidden;
 		scroll-snap-type: none;
-	}
-	ui-media ui-media > :is(iframe, img, picture, video) {
-		flex: initial;
-		inset: 0;
-		position: absolute;
+
+		& > :is(iframe, img, picture, video) {
+			flex: initial;
+			inset: 0;
+			position: absolute;
+		}
 	}
 	/* a nested frame inside a clip= scroller must not inherit its rds() radius */
 	:where([media*="clip"] ui-media) { --ui-media-radius: 0; }
@@ -79,8 +73,7 @@
 	:where([media~="asr(16/9)"])  { --ui-media-ar: 16 / 9; }
 	:where([media~="asr(21/9)"])  { --ui-media-ar: 21 / 9; }
 
-	/* obp() — object-position (9-grid). TWO spellings on purpose: logical (mirrors
-	   in rtl) and physical (never mirrors, NOT deprecated) */
+	/* obp() — object-position. Two spellings: physical (never mirrors) + logical */
 	:where([media*="obp(tl)"]) { --ui-media-op: left top; }
 	:where([media*="obp(tc)"]) { --ui-media-op: center top; }
 	:where([media*="obp(tr)"]) { --ui-media-op: right top; }
@@ -90,7 +83,7 @@
 	:where([media*="obp(bl)"]) { --ui-media-op: left bottom; }
 	:where([media*="obp(bc)"]) { --ui-media-op: center bottom; }
 	:where([media*="obp(br)"]) { --ui-media-op: right bottom; }
-	/* logical spellings — ltr resolution (start = left) */
+	/* logical — ltr resolution (start = left) */
 	:where([media*="obp(ts)"]) { --ui-media-op: left top; }
 	:where([media*="obp(te)"]) { --ui-media-op: right top; }
 	:where([media*="obp(cs)"]) { --ui-media-op: left center; }
@@ -105,8 +98,7 @@
 	:where([media*="obp(bs)"]:dir(rtl)) { --ui-media-op: right bottom; }
 	:where([media*="obp(be)"]:dir(rtl)) { --ui-media-op: left bottom; }
 
-	/* rds() — KEEP IN LOCK-STEP with ui-card.css and content.css. Serves the
-	   STANDALONE frame; inside a card the host's clipping owns the corners. */
+	/* rds() — KEEP IN LOCK-STEP with ui-card.css + content.css. Standalone frame only */
 	:where([media*="rds(non)"]) { --ui-media-radius: 0; }
 	:where([media*="rds(sm)"])   { --ui-media-radius: var(--radius-sm); }
 	:where([media*="rds(md)"])   { --ui-media-radius: var(--radius-md); }
@@ -115,7 +107,7 @@
 	:where([media*="rds(2xl)"])  { --ui-media-radius: var(--radius-2xl); }
 	:where([media*="rds(full)"]) { --ui-media-radius: var(--radius-circle, 50%); }
 	:where([media*="rds(pill)"]) { --ui-media-radius: var(--radius-pill, 100px); }
-	/* -sq: bespoke radius + superellipse corner-shape (squircle tokens in tokens.css) */
+	/* -sq: bespoke radius + superellipse corner-shape */
 	:where([media*="rds(sm-sq)"]) { --ui-media-radius: var(--radius-sm-sq); --ui-media-squircle-exp: var(--squircle-sm); }
 	:where([media*="rds(md-sq)"]) { --ui-media-radius: var(--radius-md-sq); --ui-media-squircle-exp: var(--squircle-md); }
 	:where([media*="rds(lg-sq)"]) { --ui-media-radius: var(--radius-lg-sq); --ui-media-squircle-exp: var(--squircle-lg); }
@@ -137,11 +129,7 @@
 	:where([media*="flp(v)"])  { --ui-media-fl-y: -1; }
 	:where([media*="flp(hv)"]) { --ui-media-fl-x: -1; --ui-media-fl-y: -1; }
 
-	/* shp() — static clip MECHANISM. The shape LIBRARY is the opt-in
-	   media.shapes.css; the hover MORPH lives in media.hover.css. */
-	/* the CLIP is flag-driven (subject = the image); the frame's transparent
-	   background keeps the two-arm form (a container can't restyle itself). Stays at
-	   (0,0,2) — the specificity hov(shape) must beat to morph the clip. */
+	/* shp() — clip MECHANISM only; stays at (0,0,2), which hov(shape) must beat */
 	:where([media*="shp("]) { --_shp-clip: 1; }
 	:where([media*="shp("]) ui-media,
 	:where(ui-media[media*="shp("]) { background: #0000; }
@@ -149,25 +137,21 @@
 		ui-media :is(iframe, img, picture, video) { clip-path: var(--ui-media-shape, none); }
 	}
 
-	/* hov() hover effects live in media.hover.css (imported by ui-card.css). */
-
-	/* === OVERLAY FURNITURE — <ui-chip> <ui-sticker> <ui-save> <ui-play> <ui-beacon>
-		 <ui-lightbox>. Absolute-positioned; default area by role, override via
-		 media= token. === */
-	:where(ui-media) :is(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker) {
-		--_g: var(--ui-media-overlay-gap, 0.75rem);
-		position: absolute;
-		z-index: 2;
+	/* === OVERLAY FURNITURE — absolute, default cell by role, override via media= === */
+	:where(ui-media) {
+		& :is(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker) {
+			--_g: var(--ui-media-overlay-gap, 0.75rem);
+			position: absolute;
+			z-index: 2;
+		}
+		/* chip and beacon share ts — position one explicitly when a frame carries both */
+		& :is(ui-beacon, ui-chip)  { inset-block-start: var(--_g); inset-inline-start: var(--_g); }   /* ts */
+		& :is(ui-sticker, ui-save) { inset-block-start: var(--_g); inset-inline-end:   var(--_g); }   /* te */
+		& ui-play                  { inset-block-start: 50%; inset-inline-start: 50%; translate: -50% -50%; } /* cc */
+		& ui-lightbox              { inset-block-end: var(--_g); inset-inline-start: var(--_g); }     /* bs */
 	}
 
-	/* default area by role — chip and beacon share ts; position one explicitly when
-	   a frame carries both */
-	:where(ui-media) :is(ui-beacon, ui-chip)     { inset-block-start: var(--_g); inset-inline-start: var(--_g); }   /* ts */
-	:where(ui-media) :is(ui-sticker, ui-save)    { inset-block-start: var(--_g); inset-inline-end:   var(--_g); }   /* te */
-	:where(ui-media) ui-play                      { inset-block-start: 50%; inset-inline-start: 50%; translate: -50% -50%; } /* cc */
-	:where(ui-media) ui-lightbox                  { inset-block-end: var(--_g); inset-inline-start: var(--_g); }   /* bs */
-
-	/* position override — media="el(pos)"; 9 logical positions × chip/sticker/save/play/beacon/lightbox */
+	/* position override — media="el(pos)"; 9 logical cells × 6 furniture elements */
 	:where([media*="chip(ts)"]) ui-chip, :where([media*="sticker(ts)"]) ui-sticker, :where([media*="save(ts)"]) ui-save, :where([media*="play(ts)"]) ui-play, :where([media*="beacon(ts)"]) ui-beacon, :where([media*="lightbox(ts)"]) ui-lightbox { inset-block: var(--_g) auto; inset-inline: var(--_g) auto; translate: none; }
 	:where([media*="chip(tc)"]) ui-chip, :where([media*="sticker(tc)"]) ui-sticker, :where([media*="save(tc)"]) ui-save, :where([media*="play(tc)"]) ui-play, :where([media*="beacon(tc)"]) ui-beacon, :where([media*="lightbox(tc)"]) ui-lightbox { inset-block: var(--_g) auto; inset-inline: 50% auto; translate: -50% 0; }
 	:where([media*="chip(te)"]) ui-chip, :where([media*="sticker(te)"]) ui-sticker, :where([media*="save(te)"]) ui-save, :where([media*="play(te)"]) ui-play, :where([media*="beacon(te)"]) ui-beacon, :where([media*="lightbox(te)"]) ui-lightbox { inset-block: var(--_g) auto; inset-inline: auto var(--_g); translate: none; }
@@ -178,9 +162,7 @@
 	:where([media*="chip(bc)"]) ui-chip, :where([media*="sticker(bc)"]) ui-sticker, :where([media*="save(bc)"]) ui-save, :where([media*="play(bc)"]) ui-play, :where([media*="beacon(bc)"]) ui-beacon, :where([media*="lightbox(bc)"]) ui-lightbox { inset-block: auto var(--_g); inset-inline: 50% auto; translate: -50% 0; }
 	:where([media*="chip(be)"]) ui-chip, :where([media*="sticker(be)"]) ui-sticker, :where([media*="save(be)"]) ui-save, :where([media*="play(be)"]) ui-play, :where([media*="beacon(be)"]) ui-beacon, :where([media*="lightbox(be)"]) ui-lightbox { inset-block: auto var(--_g); inset-inline: auto var(--_g); translate: none; }
 
-	/* --- Marquee — full-width band (top/bot only, z-1, below the z-2 furniture).
-	   `:where(ui-media)` stays on the subject: it holds the (0,0,1) this rule must
-	   beat on source order. --- */
+	/* marquee — full-width band; `:where(ui-media)` stays on the subject for its (0,0,1) */
 	:where(ui-media) ui-marquee { position: absolute; inset-inline: 0; inset-block: 0 auto; z-index: 1; }
 	:where([media*="marquee(top)"]) { --_mrq: top; }
 	:where([media*="marquee(bot)"]) { --_mrq: bot; }
@@ -194,20 +176,14 @@
 		translate: -50% -50%;
 	}
 
-	/* play(<size>), the player tools and the CC <select> live in media.video.css;
-		 play()'s size and position args are disjoint, so one stem parses unambiguously */
+	/* play() sizes + tools: media.video.css. Furniture sub-theming: its own package. */
 
-	/* === SUB-THEME ROUTING lives in the components (ui/{chip,sticker,save}); only
-		 the shared positions stay here === */
-
-	/* === SCRIM — scm(): direction × extent × intensity, freely composable; bare scm
-		 paints the host ovr()-matched default. Declaration scope is F-12-tightened to
-		 the three subjects that read the gradients. === */
+	/* === SCRIM — scm(): direction × extent × intensity. Docs: docs/media.md === */
 	:where(ui-media), :where([media*="scm"]), :where([variant*="ovr("]) {
 		--ui-media-scrim-c: var(--ui-media-scrim-color, rgb(0 0 0 / 0.78));
 		/* mid stop holds the dark before fading, so spanning text stays legible */
 		--ui-media-scrim-m: color-mix(in srgb, var(--ui-media-scrim-c), transparent var(--ui-media-scrim-fade, 55%));
-		/* size axis — shared stop positions (defaults = md = original look) */
+		/* size axis — shared stop positions (defaults = md) */
 		--ui-media-scrim-mid: var(--ui-media-scrim-mid-stop, 40%);
 		--ui-media-scrim-end: var(--ui-media-scrim-end-stop, 80%);
 		/* concave interpolation hint — long soft tail into transparent, eases banding */
@@ -222,8 +198,7 @@
 		--ui-media-scrim-bc: linear-gradient(to top,          var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 		--ui-media-scrim-be: linear-gradient(to top left,     var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 	}
-	/* RTL — linear-gradient() has no logical directions, so the six gradients with a
-	   left/right component are re-baked mirrored here (tc/bc/cc are axis-pure) */
+	/* RTL — linear-gradient() has no logical directions, so re-bake the six mirrored */
 	:where(ui-media:dir(rtl)), :where([media*="scm"]:dir(rtl)), :where([variant*="ovr("]:dir(rtl)) {
 		--ui-media-scrim-ts: linear-gradient(to bottom left,  var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 		--ui-media-scrim-te: linear-gradient(to bottom right, var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
@@ -232,7 +207,7 @@
 		--ui-media-scrim-bs: linear-gradient(to top left,     var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 		--ui-media-scrim-be: linear-gradient(to top right,    var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 	}
-	/* explicit scm(pos) overrides the ov-matched default */
+	/* explicit scm(pos) overrides the ovr()-matched default */
 	:where([media*="scm(ts)"]) { --ui-media-scrim: var(--ui-media-scrim-ts); }
 	:where([media*="scm(tc)"]) { --ui-media-scrim: var(--ui-media-scrim-tc); }
 	:where([media*="scm(te)"]) { --ui-media-scrim: var(--ui-media-scrim-te); }
@@ -242,17 +217,16 @@
 	:where([media*="scm(bs)"]) { --ui-media-scrim: var(--ui-media-scrim-bs); }
 	:where([media*="scm(bc)"]) { --ui-media-scrim: var(--ui-media-scrim-bc); }
 	:where([media*="scm(be)"]) { --ui-media-scrim: var(--ui-media-scrim-be); }
-	/* scm() size — sets the shared stop positions the gradients read (default md) */
+	/* scm() size — the shared stop positions the gradients read (default md) */
 	:where([media*="scm(sm)"]) { --ui-media-scrim-mid-stop: 22%; --ui-media-scrim-end-stop: 48%; --ui-media-scrim-cc-a: 38%; --ui-media-scrim-cc-b: 62%; }
 	:where([media*="scm(md)"]) { --ui-media-scrim-mid-stop: 40%; --ui-media-scrim-end-stop: 80%; --ui-media-scrim-cc-a: 25%; --ui-media-scrim-cc-b: 75%; }
 	:where([media*="scm(lg)"]) { --ui-media-scrim-mid-stop: 58%; --ui-media-scrim-end-stop: 100%; --ui-media-scrim-cc-a: 8%; --ui-media-scrim-cc-b: 92%; }
 	:where([media*="scm(xl)"]) { --ui-media-scrim-mid-stop: 74%; --ui-media-scrim-end-stop: 100%; --ui-media-scrim-cc-a: 0%; --ui-media-scrim-cc-b: 100%; }
-	/* scm() intensity — sets the scrim colour the gradients read (default med);
-	   sld also pulls the mid stop to the full colour */
+	/* scm() intensity — scrim colour (default med); sld also pulls the mid stop */
 	:where([media*="scm(shr)"]) { --ui-media-scrim-color: rgb(0 0 0 / 0.35); }
-	:where([media*="scm(lgt)"])   { --ui-media-scrim-color: rgb(0 0 0 / 0.55); }
-	:where([media*="scm(med)"])   { --ui-media-scrim-color: rgb(0 0 0 / 0.78); }
-	:where([media*="scm(drk)"])   { --ui-media-scrim-color: rgb(0 0 0 / 0.92); }
+	:where([media*="scm(lgt)"]) { --ui-media-scrim-color: rgb(0 0 0 / 0.55); }
+	:where([media*="scm(med)"]) { --ui-media-scrim-color: rgb(0 0 0 / 0.78); }
+	:where([media*="scm(drk)"]) { --ui-media-scrim-color: rgb(0 0 0 / 0.92); }
 	:where([media*="scm(sld)"]) { --ui-media-scrim-color: rgb(0 0 0 / 1); --ui-media-scrim-fade: 0%; }
 	/* bare scm paints; auto-matches the ovr() position via --ui-media-scrim-default */
 	:where([media*="scm"]) { --ui-media-scrim-paint: var(--ui-media-scrim, var(--ui-media-scrim-default, var(--ui-media-scrim-bc))); }

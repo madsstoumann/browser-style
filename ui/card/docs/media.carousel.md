@@ -643,3 +643,55 @@ Requires a snapping carousel (`nav`); needs no JavaScript at all.
 ## Tokens
 
 All `--ui-media-*` custom properties are listed in [carousel.md](./carousel.md#custom-properties).
+
+
+## System bar — `mrk(sbr)` internals
+
+**The gap rides inside the scrollbar box as a transparent leading BORDER on the parts.**
+`--ui-carousel-sbr-gap` (default `min(inset, sm)`) is `border-block-start` on
+`::-webkit-scrollbar-track` / `-thumb` with `background-clip: padding-box`, and the
+`::-webkit-scrollbar` box is `size + gap` tall, so the painted box is `--_sbr-size`.
+
+### Which lever each engine honours
+
+Established by testing all three in Chrome and Safari:
+
+| mechanism | Blink | WebKit |
+|---|---|---|
+| `padding-block-end` on the scroller | gap shows | **ignored** — the bar paints over the padding |
+| `border-block-start` on the parts | gap shows | **gap shows** ← what we use |
+| `margin-block-start` on the parts | gap shows | **ignored** — parts fill the whole scrollbar box |
+
+### The radius has to be pre-loaded with the gap
+
+`border-radius` applies to the **border box**, and a corner's inner radius is
+`outer − border-width` **per axis**. With a one-sided `gap` border the top corners lose
+`gap` vertically, so a naive `border-radius: <r>` paints square-on-top / round-on-bottom
+— a half-pill. Two corrections:
+
+1. `--radius-pill` is `calc(infinity * 1px)`; `∞ − gap` is still `∞`, and the clamp then
+   resolves it against the *border* box. Reduce it first:
+   `--_sbr-r-*: min(<radius>, calc(var(--_sbr-size) / 2))` — a finite pill for the
+   painted height.
+2. Pre-load the vertical radius on the top corners only, via the slash form:
+
+   ```css
+   border-radius: r / calc(r + gap) calc(r + gap) r r;
+   ```
+
+   Inner radii then land at `r` on all four corners. The left-edge vertical sum is
+   `(r + gap) + r ≤ size + gap`, i.e. never more than the box height, so it never clamps.
+
+At `size: 8px, gap: 8px, radius: pill` → `r = 4px`, declared `4px / 12px 12px 4px 4px`,
+painted as a uniform 4px radius on an 8px box: an exact pill.
+
+**Rule: never inset a scrollbar part with a one-sided border without pre-loading the
+per-axis radius, and never let `calc(infinity * 1px)` reach it.**
+
+### Also load-bearing
+
+The `@supports selector(::-webkit-scrollbar)` arm resetting `scrollbar-color` /
+`scrollbar-width` to `initial`: an `mrk(sbr)` carousel is also a `nav` carousel, so the
+controls-present rule sets `scrollbar-width: none`, and Chrome supports *both*
+`::-webkit-scrollbar` and `scroll-marker-group` — without the reset the bar is
+suppressed entirely (verified: `none` without it, `auto` with it).

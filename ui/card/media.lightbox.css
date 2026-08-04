@@ -1,27 +1,12 @@
-/* ui-media lightbox — popover promotion of the EXISTING frame. A static
- * `popover` attribute on <ui-media> plus an invoker (<ui-lightbox>'s
- * <button command="toggle-popover" commandfor="…">) lifts the same DOM into the
- * top layer as a fullscreen gallery: no re-render, no attribute churn, and the
- * top layer is immune to ui-card's container-type/overflow, lay-out's
- * containment and lay-out-group clipping (the traps reveal's `exp pop` fights).
- * Docs: media.md § Lightbox.
- *
- * CLOSED STATE relies on cascade ORIGIN, not specificity: the UA popover sheet
- * ([popover] { position:fixed; inset:0; … } / :not(:popover-open) { display:none })
- * is UA-origin NORMAL, so every author declaration — even zero-specificity
- * :where() inside @layer — beats it. display/position/overflow/background are
- * therefore already restored by media.css and media.carousel.css; only the
- * properties no author rule sets (inset/margin/border/padding/size/color) need
- * the reset below. Do not "fix" the closed state by re-declaring display here.
- *
- * OPEN-STATE tokens are the `open:` prefix family — WHOLE-token (~=) on purpose,
- * like the md:/lg: asr() forms: an open: spelling must never contain a
- * substring-matched stem (`open:nav` is an impossible spelling — [media*="nav"]
- * would arm the closed carousel). Fullscreen CAROUSEL is the default open
- * presentation of a nav frame; open:grid(Nc) is the alternative. */
+/**
+ * ui-media lightbox — popover promotion of the EXISTING frame into the top layer.
+ * Closed state relies on cascade ORIGIN, not specificity; `open:` tokens are
+ * whole-token (~=) on purpose. Docs: docs/media.md § Lightbox
+ * @author Mads Stoumann
+ */
 @layer bs-component {
 
-	/* === CLOSED STATE — UA popover reset (see header) === */
+	/* === CLOSED STATE — UA popover reset; never re-declare display here === */
 	:where(ui-media[popover]) {
 		border: 0;
 		color: inherit;
@@ -34,11 +19,8 @@
 		inset: auto;
 	}
 
-	/* === OPEN STATE — fullscreen presentation ===
-	   Real specificity on purpose: must beat the base frame (aspect-ratio,
-	   min-block-size, radius) and the nav scroller's inline-size. position:fixed
-	   is REQUIRED — a top-layer element must stay out of flow; the UA sets it but
-	   media.css's position:relative would win on origin, so re-assert it here. */
+	/* === OPEN STATE — fullscreen. Real specificity, and position:fixed re-asserted,
+	   both on purpose: media.css would otherwise win on origin. === */
 	ui-media[popover]:popover-open {
 		aspect-ratio: auto;
 		background: var(--ui-lightbox-surface, oklch(0.13 0 0 / 0.88));
@@ -52,8 +34,7 @@
 		overscroll-behavior: contain;
 		position: fixed;
 	}
-	/* the lightbox shows the WHOLE image by default (letterboxed on the surface
-	   above) — direct children only, so collage tiles keep their own cover */
+	/* whole image by default; direct children only, so collage tiles keep their cover */
 	ui-media[popover]:popover-open > :is(iframe, img, video),
 	ui-media[popover]:popover-open > picture img {
 		object-fit: var(--ui-lightbox-fit, contain);
@@ -64,31 +45,14 @@
 		background: var(--ui-lightbox-backdrop, oklch(0 0 0 / 0.55));
 	}
 
-	/* Page scroll lock — hide the root scrollbar while any lightbox is open, so
-	   the backdrop truly covers the viewport and wheel/touch can't scroll the
-	   page behind it. scrollbar-gutter keeps the viewport width identical on
-	   classic-scrollbar platforms (the gutter stays reserved, blank, under the
-	   backdrop), so nothing reflows behind the open frame; overlay scrollbars
-	   (macOS default, mobile) are zero-width either way. overflow:hidden — not
-	   clip — so the root stays a scroll container and keeps its offset. */
+	/* page scroll lock — `hidden`, not `clip`, so the root stays a scroll container */
 	:where(html):has(ui-media[popover]:popover-open) {
 		overflow: hidden;
 		scrollbar-gutter: stable;
 	}
 
-	/* === OPEN/CLOSE ANIMATION — two mechanisms, split by what CAN fire:
-	   - The FRAME is always rendered (display never flips), so @starting-style
-	     has nothing to fire from on it → its entry is a KEYFRAME (opacity +
-	     clip-path reveal; no scale/translate — a transform entry would give the
-	     frame a transient containing block and yank position:fixed furniture).
-	   - The ::backdrop DOES start being rendered at open → the standard popover
-	     @starting-style + transition pair fades it in, and the `overlay`
-	     transition on the frame keeps it in the top layer through close so the
-	     backdrop can fade OUT too (the frame itself re-enters flow immediately —
-	     painted above the dim while it fades).
-	   - ui/card/lightbox.js additionally drives button-invoked open/close
-	     with a View Transition morph (card ↔ fullscreen) where supported; it
-	     stamps [data-lightbox-vt] so the keyframe doesn't double-animate. */
+	/* === OPEN/CLOSE — the frame gets a KEYFRAME (it is always rendered), the
+	   ::backdrop the standard @starting-style pair. Docs: docs/media.md === */
 	@media (prefers-reduced-motion: no-preference) {
 		ui-media[popover]:popover-open { animation: ui-lightbox-in var(--ui-lightbox-trs, 0.3s) var(--ease-out, ease-out); }
 		ui-media[popover][data-lightbox-vt]:popover-open { animation: none; }
@@ -101,20 +65,14 @@
 				overlay var(--ui-lightbox-trs, 0.3s) allow-discrete;
 		}
 		ui-media[popover]:not(:popover-open)::backdrop { opacity: 0; }
-		/* standalone at-rule on purpose — a NESTED @starting-style does not
-		   re-fire (see ui/base/stagger.css header) */
+		/* standalone on purpose — a NESTED @starting-style does not re-fire */
 		@starting-style {
 			ui-media[popover]:popover-open::backdrop { opacity: 0; }
 		}
 	}
 
-	/* === FLOW PLACEHOLDER — the promoted frame leaves the cq-box grid; reserve
-	   its cell so neighbours don't reflow (reveal `exp pop` precedent). Mirrors
-	   the frame's own sizing: --ui-media-ar when the ratio sits on the HOST (the
-	   renderer's canonical placement), the 12.5rem floor otherwise — and the
-	   floor drops when the host carries asr(), exactly like media.css:47.
-	   A STANDALONE <ui-media popover> in a lay-out has no parent hook for a
-	   pseudo → documented limitation: the backdrop masks the reflow while open. */
+	/* === FLOW PLACEHOLDER — reserve the promoted frame's cell so neighbours don't
+	   reflow; mirrors the frame's own sizing. Docs: docs/media.md § Lightbox === */
 	:where(ui-card, ui-reveal):has(ui-media:popover-open) :is(cq-box, summary)::before {
 		aspect-ratio: var(--ui-media-ar, var(--ui-lightbox-placeholder-ar, 3 / 2));
 		background: var(--ui-lightbox-placeholder-bg, var(--color-overlay-light, #0000));
@@ -125,9 +83,8 @@
 	:where(ui-card, ui-reveal):where([media*="asr("]):has(ui-media:popover-open) :is(cq-box, summary)::before {
 		min-block-size: 0;
 	}
-	/* SELF-ARM asr() (the renderer's canonical placement puts media= on the frame):
-	   --ui-media-ar then lives on the promoted frame where the ::before can't read
-	   it — mirror the nine canonical ratios via :has(), matching media.css:72-80 */
+	/* SELF-ARM asr() — --ui-media-ar sits on the promoted frame, out of the ::before's
+	   reach, so mirror the nine canonical ratios via :has() */
 	:where(ui-card, ui-reveal):has(ui-media[media*="asr("]:popover-open) :is(cq-box, summary)::before { min-block-size: 0; }
 	:where(ui-card, ui-reveal):has(ui-media[media~="asr(1/1)"]:popover-open)  :is(cq-box, summary)::before { --ui-lightbox-placeholder-ar: 1 / 1; }
 	:where(ui-card, ui-reveal):has(ui-media[media~="asr(1/2)"]:popover-open)  :is(cq-box, summary)::before { --ui-lightbox-placeholder-ar: 1 / 2; }
@@ -139,30 +96,16 @@
 	:where(ui-card, ui-reveal):has(ui-media[media~="asr(16/9)"]:popover-open) :is(cq-box, summary)::before { --ui-lightbox-placeholder-ar: 16 / 9; }
 	:where(ui-card, ui-reveal):has(ui-media[media~="asr(21/9)"]:popover-open) :is(cq-box, summary)::before { --ui-lightbox-placeholder-ar: 21 / 9; }
 
-	/* === CAROUSEL CONTROLS — native ::scroll-marker-group/::scroll-button()
-	   boxes do NOT follow the frame into the top layer (Chromium keeps them in
-	   the document layer, positioned against the card, behind ::backdrop — a
-	   browser limitation, not fixable by positioning; revisit if Chromium moves
-	   scroll-control pseudos into the top layer with their element). So a
-	   popover frame's controls are REAL elements: ui/card/lightbox.js injects
-	   the /ui/carousel/polyfill/carousel-controls.js <ui-carousel-controls> (real children
-	   ride into the top layer), and the native pseudos are suppressed on exactly
-	   those frames — in BOTH states, so closed and open stay continuous and two
-	   control sets never coexist. === */
+	/* === CAROUSEL CONTROLS — native pseudos don't follow the frame into the top
+	   layer, so lightbox.js injects real elements. Docs: docs/media.md === */
 	ui-media[popover][data-ui-carousel-polyfill] { scroll-marker-group: none; }
 	ui-media[popover][data-ui-carousel-polyfill]::scroll-button(*) { display: none; }
 
-	/* zero-JS affordance: without command.js there are no DOM controls and the
-	   native pseudos are unreachable in the top layer — surface the scrollbar
-	   (swipe and keyboard still work; out-specifies the controls-present
-	   scrollbar hide in media.carousel.css) */
+	/* zero-JS affordance — no DOM controls, so surface the scrollbar instead */
 	ui-media[popover]:popover-open:not([data-ui-carousel-polyfill]) { scrollbar-width: thin; }
 
-	/* === FURNITURE WHILE OPEN — markers/bands hide by default (chips, stickers,
-	   beacons, marquees and save rarely belong in a lightbox); the interactive
-	   pair stays: ui-play (video control) and ui-lightbox (now the close
-	   affordance). Opt out with the bare `open:furniture` flag. Direct-child
-	   scoped: collage tiles' own furniture is untouched. === */
+	/* === FURNITURE WHILE OPEN — markers hide, ui-play/ui-lightbox stay; opt out with
+	   the bare `open:furniture` flag. Direct-child scoped. === */
 	ui-media[popover]:popover-open:not(:where(
 		[media~="open:furniture"],
 		:is(ui-card, ui-reveal)[media~="open:furniture"] *
@@ -170,10 +113,8 @@
 		display: none;
 	}
 
-	/* === open:grid(Nc) — present the SAME children as a scrollable grid while
-	   open ("view all" contact sheet). Also armed at runtime by
-	   data-lightbox="grid" (ui/card/lightbox.js) and overridden by
-	   data-lightbox="nav", so one button flips carousel ↔ grid. === */
+	/* === open:grid(Nc) — the same children as a "view all" grid; lightbox.js flips it
+	   at runtime via data-lightbox="grid"/"nav" === */
 	:where(
 		[media~="open:grid(2c)"],
 		:is(ui-card, ui-reveal)[media~="open:grid(2c)"] *
@@ -205,8 +146,7 @@
 
 		&::scroll-button(*) { display: none; }
 
-		/* slides become tiles — undo the flex slide sizing; keep in sync with
-		   NOT_SLIDE in shared.js */
+		/* slides become tiles — undo the flex sizing. KEEP IN SYNC with NOT_SLIDE. */
 		> :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker) {
 			aspect-ratio: var(--ui-lightbox-tile-ar, 3 / 2);
 			block-size: auto;
@@ -221,17 +161,10 @@
 			object-fit: var(--ui-lightbox-tile-fit, cover);
 			position: static;
 		}
-		/* loop clones (carousel.js persists them — its init is one-shot) would
-		   duplicate tiles in the grid; they are already inert/aria-hidden */
+		/* loop clones would duplicate tiles here; they are already inert/aria-hidden */
 		> [data-clone] { display: none; }
-		/* the injected DOM controls hide in grid mode too — but that rule is
-		   UNLAYERED at the foot of this file: /ui/carousel/polyfill/carousel.css is unlayered
-		   (it must beat bs-component), so a layered hide loses to it */
-
-		/* stagger guard: grid mode removes snapping, so a scroll-state from-state
-		   would strand tiles at opacity 0 with nothing left to release them —
-		   real-specificity pin, mirroring the media="pages" escape in
-		   ui/base/stagger.css */
+		/* stagger guard — grid mode drops snapping, which would strand tiles at
+		   opacity 0; real-specificity pin, mirroring stagger.css's pages escape */
 		> :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker),
 		> :not(ui-beacon, ui-chip, ui-lightbox, ui-marquee, ui-play, ui-save, ui-sticker) ui-content > * {
 			filter: none;
@@ -242,15 +175,8 @@
 
 	}
 
-	/* === CLOSE BUTTON — while open, ui-lightbox IS the close affordance and
-	   always pins TOP-END (the universal close position), whatever cell the
-	   closed-state lightbox() token used and whatever presentation is active
-	   (carousel, grid, rail, media-open). position: fixed resolves against the
-	   viewport — which IS the frame while fullscreen; the entry animation is
-	   clip-path/opacity only, deliberately, so no transient containing block
-	   hijacks this. The secondary --lightbox-layout button stacks beneath via
-	   the host's own grid gap. Real specificity beats the sticky nav treatment
-	   and the position-token rows; both resume on close. === */
+	/* === CLOSE BUTTON — while open, ui-lightbox pins TOP-END whatever the closed
+	   state used; position:fixed resolves against the fullscreen frame. === */
 	ui-media[popover]:popover-open > ui-lightbox {
 		align-content: initial;
 		display: inline-grid;
@@ -270,10 +196,7 @@
 	to { clip-path: inset(0 round 0); opacity: 1; }
 }
 
-/* === grid-mode hide for the injected DOM controls — UNLAYERED on purpose:
-   /ui/carousel/polyfill/carousel.css is unlayered (it must beat bs-component's slide rule),
-   so a layered hide loses to it. Mirrors the grid-presentation arm above.
-   Do not move it into the layer. === */
+/* grid-mode hide for the injected DOM controls — UNLAYERED: the polyfill sheet is */
 ui-media[popover]:popover-open:where(
 	[data-lightbox="grid"],
 	:is(
@@ -282,12 +205,7 @@ ui-media[popover]:popover-open:where(
 	):not([data-lightbox="nav"])
 ) > ui-carousel-controls { display: none; }
 
-/* === per-state control visibility — UNLAYERED for the same reason. With
-   media-open= the controls are built as the UNION of both states' needs
-   (command.js), and command.js re-stamps data-media on toggle; these rules make
-   dots/arrows follow the CURRENT stamp (the whole-token spellings mirror
-   wanted() in /ui/carousel/polyfill/carousel-controls.js). Popover frames only — the plain
-   Safari-polyfill path builds exactly what it shows and never needs this. === */
+/* per-state control visibility — UNLAYERED too; mirrors wanted() in the polyfill */
 ui-media[popover] > ui-carousel-controls:not(:where(
 	[data-media~="nav"], [data-media~="nav(blw)"], [data-media~="nav(abv)"], [data-media~="nav(mrk)"]
 )) [data-dots] { display: none; }

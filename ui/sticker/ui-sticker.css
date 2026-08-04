@@ -1,17 +1,11 @@
 /**
- * ui-sticker
- * @version 1.0.6
- * @date 2026-07-09
- * @author Mads Stoumann
- *
- * Sections: A. Base · B. Furniture axes (theme/fill/ink/size/corner) ·
- * C. Typography (font/font-lead/fit) · D. Decoration (shadow/hover) ·
- * E. Shape variants · F. Keyframes. Full docs: readme.md.
+ * ui-sticker — badge/disc furniture with shape variants. Docs: readme.md
+ * @version 1.0.6 · @author Mads Stoumann
  */
-@import '../base/shapes-glyphs.css'; /* --shape-* badge silhouettes (opt-in, not in base's default chain) */
+@import '../base/shapes-glyphs.css'; /* --shape-* silhouettes — opt-in, not in base's default chain */
 @layer bs-component {
 	:where(ui-sticker) {
-		/* ───────── A. Base ───────── */
+		/* ── A. Base ── */
 		--ui-sticker-font-family: var(--font-body);
 		--ui-sticker-fs-scale: 1;
 		--ui-sticker-fs: 40cqi;
@@ -31,8 +25,7 @@
 		--ui-sticker-strong-scale: 1.1;
 		--ui-sticker-text-shadow-color: contrast-color(var(--ui-sticker-c, hsl(0, 0%, 100%)));
 
-		--_angle: attr(angle type(<angle>), 0deg); /* read by variant="text"; via a
-			custom property so the typed-attr() fallback below can restore it */
+		--_angle: attr(angle type(<angle>), 0deg); /* variant="text"; via a prop so the fallback can restore it */
 		--_size: calc(var(--ui-sticker-fs) * var(--ui-sticker-fs-scale));
 		--_size-lg: calc(var(--_size) * var(--ui-sticker-strong-scale));
 		--_size-sm: calc(var(--_size) * var(--ui-sticker-small-scale));
@@ -63,27 +56,17 @@
 			margin: 0;
 			text-box: cap alphabetic;
 			text-shadow: var(--ui-sticker-text-shadow, none);
-		}
 
-		& > * + * {
-			margin-block-start: calc(var(--_size) * var(--ui-sticker-gap, 0));
+			& + * { margin-block-start: calc(var(--_size) * var(--ui-sticker-gap, 0)); }
 		}
 
 		& > small  { font-size: max(10px, var(--_size-sm)); font-weight: var(--font-weight-medium, 500); font-family: var(--ui-sticker-small-font, var(--ui-sticker-font-family)); }
 		& > strong { font-size: max(10px, var(--_size-lg)); font-family: var(--ui-sticker-strong-font, var(--ui-sticker-font-family)); color: var(--ui-sticker-lead-c, inherit); }
 		& :is(sup, sub) { font-size: 0.5em; }
 
-		/* ───────── B. Furniture axes — theme · fill/ink · size · corner ─────────
-		   Each axis: `&[attr]` = standalone, `:where([media*="sticker(…)"]) &` = card token. */
+		/* ── B. Furniture axes — `&[attr]` standalone · `[media*="sticker(…)"] &` card ── */
 
-		/* colour — hue. Standalone theme= resolves via base/theme.css into --_theme-*
-		   (incl. pale/muted modifiers); the light/dark modifiers set color-scheme on
-		   the sticker directly. Card-routed media="sticker(<hue>)" feeds the
-		   --ui-theme-* bundle. */
-		/* Standalone theme= flows through base/theme.css. Card media="sticker(<hue>)"
-		   feeds the SAME resolver: hue → --_theme-base-*, pale/muted transform it
-		   (hue-agnostic), consumer maps the result to the disc/ink. Don't combine
-		   theme= with a media hue — both write --_theme-*. */
+		/* colour — theme= and media="sticker(<hue>)" share one resolver; don't combine */
 		&[theme] { --ui-sticker-bg: var(--_theme-bg); --ui-sticker-c: var(--_theme-c, var(--_theme-ink)); }
 		:where([media*="sticker(red)"])    & { --_theme-base-bg: var(--ui-theme-red-bg);    --_theme-base-c: var(--ui-theme-red-c); }
 		:where([media*="sticker(orange)"]) & { --_theme-base-bg: var(--ui-theme-orange-bg); --_theme-base-c: var(--ui-theme-orange-c); }
@@ -94,43 +77,34 @@
 		:where([media*="sticker(slate)"])  & { --_theme-base-bg: var(--ui-theme-slate-bg);  --_theme-base-c: var(--ui-theme-slate-c); }
 		:where([media*="sticker(black)"])  & { --_theme-base-bg: var(--ui-theme-black-bg);  --_theme-base-c: var(--ui-theme-black-c); }
 		:where([media*="sticker(white)"])  & { --_theme-base-bg: var(--ui-theme-white-bg);  --_theme-base-c: var(--ui-theme-white-c); }
-		/* HUE TRUTH SET (nine): red orange green blue accent black white gray slate.
-		   slate is a canonical hue in its own right (the fifth neutral, white < gray <
-		   slate < black), not an alias of gray. The doc-era sticker(dark)/sticker(light)/
-		   sticker(subtle) aliases were REMOVED in v5 — use sticker(black)/sticker(white)/
-		   sticker(gray). */
 		/* pale = light tint + hue ink · muted = translucent disc (hue-agnostic) */
 		:where([media*="sticker(pale)"])  & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), var(--color-surface) 80%); --_theme-c: var(--_theme-base-bg); }
 		:where([media*="sticker(muted)"]) & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), transparent 50%); --_theme-c: var(--_theme-base-c); }
 		/* consumer — media hue → disc/ink (no-hue tokens keep the defaults) */
 		:where([media*="sticker("]) & { --ui-sticker-bg: var(--_theme-bg, var(--_theme-base-bg, var(--color-accent))); --ui-sticker-c: var(--_theme-c, var(--_theme-base-c, hsl(0, 0%, 100%))); }
 
-		/* arbitrary colour — fill = disc, ink = text (auto-contrasts from fill).
-		   After the hues so an explicit fill/ink wins; ink after fill. */
+		/* arbitrary colour — after the hues so it wins; ink after fill */
 		&[fill] {
 			--ui-sticker-bg: attr(fill type(<color>), var(--color-accent));
 			--ui-sticker-c: contrast-color(var(--ui-sticker-bg));
 		}
 		&[ink] { --ui-sticker-c: attr(ink type(<color>), hsl(0, 0%, 100%)); }
 
-		/* size — from size= or the card's sticker(<size>). md (4em) = default. */
+		/* size — md (4em) = default */
 		&[size~="sm"],  :where([media*="sticker(sm)"])  & { --ui-sticker-sz: 3em; }
 		&[size~="lg"],  :where([media*="sticker(lg)"])  & { --ui-sticker-sz: 5em; }
 		&[size~="xl"],  :where([media*="sticker(xl)"])  & { --ui-sticker-sz: 6em; }
 		&[size~="2xl"], :where([media*="sticker(2xl)"]) & { --ui-sticker-sz: 8em; }
 		&[size~="3xl"], :where([media*="sticker(3xl)"]) & { --ui-sticker-sz: 10em; }
 
-		/* corner — from radius= or the card's sticker(<corner>). circle = default.
-		   non sharp · rnd rounded · pll pill · crc circle · sqr squircle. */
+		/* corner — non sharp · rnd rounded · pll pill · crc circle (default) · sqr squircle */
 		&[radius~="non"], :where([media*="sticker(non)"]) & { --ui-sticker-radius: 0; }
 		&[radius~="rnd"], :where([media*="sticker(rnd)"]) & { --ui-sticker-radius: var(--radius-lg); }
 		&[radius~="pll"], :where([media*="sticker(pll)"]) & { --ui-sticker-radius: var(--radius-pill); }
 		&[radius~="crc"], :where([media*="sticker(crc)"]) & { --ui-sticker-radius: var(--radius-circle); }
 		&[radius~="sqr"], :where([media*="sticker(sqr)"]) & { --ui-sticker-radius: var(--radius-circle); --ui-sticker-corner: superellipse(var(--squircle-md)); }
 
-		/* ───────── C. Typography — font / font-lead ─────────
-		   `font` targets the non-strong lines (<small>/<span>), `font-lead` the
-		   <strong> lead line — comma pairs, no common subject to :is()-merge. */
+		/* ── C. Typography — `font` = the non-strong lines, `font-lead` = <strong> ── */
 
 		/* family */
 		&[font~="body"] > :not(strong), &[font-lead~="body"] > strong       { font-family: var(--font-body); }
@@ -155,19 +129,19 @@
 		&[font~="bold"] > :not(strong), &[font-lead~="bold"] > strong         { font-weight: var(--font-weight-bold, 700); }
 		&[font~="black"] > :not(strong), &[font-lead~="black"] > strong       { font-weight: var(--font-weight-black, 900); }
 
-		/* text-shadow per group — comma form required (no common subject to :is()-merge) */
+		/* text-shadow per group */
 		&[font~="shadow(sm)"] > :not(strong), &[font-lead~="shadow(sm)"] > strong { --ui-sticker-text-shadow: 0 1cqi 1cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 35%, transparent); }
 		&[font~="shadow(md)"] > :not(strong), &[font-lead~="shadow(md)"] > strong { --ui-sticker-text-shadow: 0 1.5cqi 2cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 42%, transparent); }
 		&[font~="shadow(lg)"] > :not(strong), &[font-lead~="shadow(lg)"] > strong { --ui-sticker-text-shadow: 0 2cqi 3cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 48%, transparent); }
 		&[font~="shadow(xl)"] > :not(strong), &[font-lead~="shadow(xl)"] > strong { --ui-sticker-text-shadow: 0 3cqi 4.5cqi color-mix(in srgb, var(--ui-sticker-text-shadow-color) 55%, transparent); }
-		/* solid — hard offset, zero blur (retro/comic); cqi so it scales with the box. Graded sm…xl; bare `solid` = md */
+		/* solid — hard offset, zero blur (retro/comic); cqi so it scales with the box */
 		&[font~="shadow(solid-sm)"] > :not(strong), &[font-lead~="shadow(solid-sm)"] > strong { --ui-sticker-text-shadow: 1.5cqi 1.5cqi 0 var(--ui-sticker-text-shadow-color); }
 		&[font~="shadow(solid)"] > :not(strong), &[font-lead~="shadow(solid)"] > strong,
 		&[font~="shadow(solid-md)"] > :not(strong), &[font-lead~="shadow(solid-md)"] > strong { --ui-sticker-text-shadow: 2.5cqi 2.5cqi 0 var(--ui-sticker-text-shadow-color); }
 		&[font~="shadow(solid-lg)"] > :not(strong), &[font-lead~="shadow(solid-lg)"] > strong { --ui-sticker-text-shadow: 4cqi   4cqi   0 var(--ui-sticker-text-shadow-color); }
 		&[font~="shadow(solid-xl)"] > :not(strong), &[font-lead~="shadow(solid-xl)"] > strong { --ui-sticker-text-shadow: 6cqi   6cqi   0 var(--ui-sticker-text-shadow-color); }
 
-		/* fit — native text-fit grows each line to fill the box width. */
+		/* fit — native text-fit grows each line to fill the box width */
 		@supports (text-fit: grow) {
 			&:is([font~="fit"], [font-lead~="fit"]), :where([media*="sticker(fit)"]) & {
 				padding: var(--ui-sticker-fit-pad, 1.5ch);
@@ -176,7 +150,7 @@
 			}
 		}
 
-		/* ───────── D. Decoration ───────── */
+		/* ── D. Decoration ── */
 
 		/* box drop-shadow */
 		&[shadow~="sm"]  { --ui-sticker-shadow: drop-shadow(0 1px 1px rgb(0 0 0 / 0.18)); }
@@ -184,9 +158,7 @@
 		&[shadow~="lg"]  { --ui-sticker-shadow: drop-shadow(0 4px 6px rgb(0 0 0 / 0.28)); }
 		&[shadow~="xl"]  { --ui-sticker-shadow: drop-shadow(0 8px 10px rgb(0 0 0 / 0.32)); }
 		&[shadow~="2xl"] { --ui-sticker-shadow: drop-shadow(0 14px 18px rgb(0 0 0 / 0.36)); }
-		&[shadow~="solid"] {
-			--ui-sticker-shadow: drop-shadow(var(--ui-sticker-shadow-x) var(--ui-sticker-shadow-y) 0 var(--ui-sticker-shadow-color));
-		}
+		&[shadow~="solid"] { --ui-sticker-shadow: drop-shadow(var(--ui-sticker-shadow-x) var(--ui-sticker-shadow-y) 0 var(--ui-sticker-shadow-color)); }
 		/* offset steps for the solid shadow; -off() flips x negative → shadow to the left */
 		&:is([shadow*="off("]) { --ui-sticker-shadow-y: var(--_o); --ui-sticker-shadow-x: var(--_ox, var(--_o)); }
 		&:is([shadow~="off(sm)"], [shadow~="-off(sm)"]) { --_o: 0.15em; }
@@ -223,11 +195,8 @@
 			}
 		}
 
-		/* ───────── E. Shape variants ─────────
-		   Clipped silhouettes carry the `sh:` prefix. This one generic rule sets up
-		   the ::before fill (substring match), so a custom `sh:<name>` + a
-		   --ui-sticker-clip-path needs no edit here. Zero-spec so an external
-		   placement wins. See readme "Adding your own shapes". */
+		/* ── E. Shape variants — `sh:` prefix; one generic ::before fill, so a custom
+		   sh:<name> + --ui-sticker-clip-path needs no edit. Docs: readme.md ── */
 		&:where([variant*="sh:"]), :where([media*="sticker(sh:"]) & {
 			background: none;
 			border-radius: 0;
@@ -244,31 +213,27 @@
 			}
 		}
 
-		/* built-in shapes — each just sets its clip-path + per-shape sizing. */
+		/* built-in shapes — clip-path + per-shape sizing */
 		&[variant~="sh:burst"], :where([media*="sticker(sh:burst)"]) & {
 			--ui-sticker-clip-path: var(--shape-burst);
 			--ui-sticker-fs: 30cqi;
 			--ui-sticker-p: 0.6em;
 		}
-
 		&[variant~="sh:blob"], :where([media*="sticker(sh:blob)"]) & {
 			--ui-sticker-clip-path: var(--shape-blob);
 			--ui-sticker-fs: 34cqi;
 			--ui-sticker-p: 0.7em;
 		}
-
 		&[variant~="sh:spark"], :where([media*="sticker(sh:spark)"]) & {
 			--ui-sticker-clip-path: var(--shape-spark);
 			--ui-sticker-fs: 26cqi;
 			--ui-sticker-p: 0.6em;
 		}
-
 		&[variant~="sh:sunburst"], :where([media*="sticker(sh:sunburst)"]) & {
 			--ui-sticker-clip-path: var(--shape-sunburst);
 			--ui-sticker-fs: 32cqi;
 			--ui-sticker-p: 0.5em;
 		}
-
 		&[variant~="sh:heart"], :where([media*="sticker(sh:heart)"]) & {
 			--ui-sticker-clip-path: var(--shape-heart-badge);
 			--ui-sticker-fs: 26cqi;
@@ -331,19 +296,8 @@
 			white-space: nowrap;
 		}
 
-		/* ───────── Typed attr() fallback — Safari/Firefox ─────────
-		   fill=/ink=/angle= are typed attr(). Where it is unsupported a custom
-		   property still PARSES the literal `attr(…)` token stream, so it is not
-		   guaranteed-invalid and no var() fallback can rescue it — every consumer
-		   of --ui-sticker-bg dies at computed-value time instead: the disc
-		   background, the sh: silhouette's ::before fill, the text variant's
-		   outline drop-shadows and -webkit-text-fill-color. The demo page renders
-		   as bare text. Restoring the attr() defaults keeps stickers painted with
-		   no JS; /assets/js/attr_fallback.js then upgrades to each element's own
-		   fill/ink/angle. Card furniture is unaffected — media="sticker(<hue>)"
-		   routes through --_theme-*, never attr().
-		   Detect on a REAL property: the `--x: attr(…)` form is true in Safari too.
-		   Placed last so it still beats the hue rules, exactly as [fill]/[ink] do. */
+		/* typed attr() has NO fallback in Safari/FF — without this the sticker renders
+		   as bare text. Keep LAST. Docs: ../base/polyfills/readme.md */
 		@supports not (background-color: attr(fill type(<color>), red)) {
 			& { --_angle: 0deg; }
 			&[fill] { --ui-sticker-bg: var(--color-accent); }
@@ -351,6 +305,6 @@
 		}
 	}
 
-	/* ───────── F. Keyframes ───────── */
+	/* ── F. Keyframes ── */
 	@keyframes ui-sticker-spin { from { rotate: 0deg; } to { rotate: 360deg; } }
 }

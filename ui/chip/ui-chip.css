@@ -1,11 +1,6 @@
 /**
- * ui-chip
- * @version 4.1.0
- * @date 2026-07-09
- * @author Mads Stoumann
- *
- * Sections: A. Base · B. Furniture axes (theme/fill/ink · variant · size ·
- * corner) · C. Inline badge. Full docs: readme.md.
+ * ui-chip — label/badge furniture. Docs: readme.md
+ * @version 4.1.0 · @author Mads Stoumann
  */
 @layer bs-component {
 	:where(ui-chip) {
@@ -33,15 +28,9 @@
 		user-select: none;
 		white-space: nowrap;
 
-		/* ───────── B. Furniture axes — theme/fill/ink · variant · size · corner ─────────
-		   Each axis: `&[attr]` = standalone, `:where([media*="chip(…)"]) &` = card token. */
+		/* ── B. Furniture axes — `&[attr]` standalone · `[media*="chip(…)"] &` card token ── */
 
-		/* colour — --ui-chip-accent is the single input; theme=/fill= both feed it,
-		   so solid / pale / outline all read it. Solid bg falls back to accent
-		   (base rule), so a hue only sets accent + the curated ink.
-		   Standalone theme= resolves via base/theme.css into --_theme-* (incl. the
-		   pale/muted modifiers); the light/dark modifiers set color-scheme on the chip
-		   directly. Card-routed media="chip(<hue>)" feeds the --ui-theme-* bundle. */
+		/* colour — --ui-chip-accent is the single input. Docs: readme.md § Colour */
 		&[theme] { --ui-chip-accent: var(--_theme-bg); --ui-chip-c: var(--_theme-c, var(--_theme-ink)); }
 		:where([media*="chip(red)"])    & { --_theme-base-bg: var(--ui-theme-red-bg);    --_theme-base-c: var(--ui-theme-red-c); }
 		:where([media*="chip(orange)"]) & { --_theme-base-bg: var(--ui-theme-orange-bg); --_theme-base-c: var(--ui-theme-orange-c); }
@@ -52,38 +41,22 @@
 		:where([media*="chip(slate)"])  & { --_theme-base-bg: var(--ui-theme-slate-bg);  --_theme-base-c: var(--ui-theme-slate-c); }
 		:where([media*="chip(black)"])  & { --_theme-base-bg: var(--ui-theme-black-bg);  --_theme-base-c: var(--ui-theme-black-c); }
 		:where([media*="chip(white)"])  & { --_theme-base-bg: var(--ui-theme-white-bg);  --_theme-base-c: var(--ui-theme-white-c); }
-		/* HUE TRUTH SET (nine): red orange green blue accent black white gray slate.
-		   slate is a canonical hue in its own right (the fifth neutral, white < gray <
-		   slate < black), not an alias of gray. The doc-era chip(dark)/chip(light)/
-		   chip(subtle) aliases were REMOVED in v5 — use chip(black)/chip(white)/
-		   chip(gray). Note chip(lgt) below is the light VARIANT, a different axis with
-		   a different spelling — no substring overlap with any hue. */
-		/* pale = light tint + hue ink · muted = translucent plate (hue-agnostic).
-		   Distinct from chip(lgt): pale follows the shared theme pale ratio. */
+		/* pale = light tint + hue ink · muted = translucent plate (hue-agnostic) */
 		:where([media*="chip(pale)"])  & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), var(--color-surface) 80%); --_theme-c: var(--_theme-base-bg); }
 		:where([media*="chip(muted)"]) & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), transparent 50%); --_theme-c: var(--_theme-base-c); }
-		/* consumer — media hue → accent/ink (no-hue tokens keep the defaults;
-		   the light/outline variants below still override via later source order) */
+		/* consumer — media hue → accent/ink (no-hue tokens keep the defaults) */
 		:where([media*="chip("]) & { --ui-chip-accent: var(--_theme-bg, var(--_theme-base-bg, var(--color-button))); --ui-chip-c: var(--_theme-c, var(--_theme-base-c, var(--color-text))); }
 
-		/* arbitrary colour (overrides the hue) — fill = surface, ink = text; ink
-		   auto-contrasts from fill when omitted. */
+		/* arbitrary colour (overrides the hue) — ink auto-contrasts from fill */
 		&[fill] { --ui-chip-accent: attr(fill type(<color>), var(--color-button)); --ui-chip-c: contrast-color(var(--ui-chip-accent)); }
 		&[ink]  { --ui-chip-c: attr(ink type(<color>), hsl(0, 0%, 100%)); }
-		/* Typed attr() fallback — Safari/Firefox. A custom property PARSES the
-		   literal `attr(…)` stream, so it never goes guaranteed-invalid and no
-		   var() fallback fires; the consumer dies at computed-value time instead
-		   (unstyled chip). Restore the attr() defaults; ../base/polyfills/attr-fallback.js
-		   upgrades to the element's own fill/ink. Detect on a REAL property — the
-		   `--x: attr(…)` form is true in Safari too. Keep after the hue rules. */
+		/* typed attr() has NO fallback in Safari/FF. Docs: ../base/polyfills/readme.md */
 		@supports not (background-color: attr(x type(<color>), red)) {
 			&[fill] { --ui-chip-accent: var(--color-button); }
 			&[ink]  { --ui-chip-c: hsl(0, 0%, 100%); }
 		}
 
-		/* variant — light (tinted surface) / outline. From variant= or the card's
-		   chip(lgt)/chip(out). Ink = the accent (falls back to text when no
-		   theme/fill), so both work coloured or plain. After the hues so they win. */
+		/* variant — ink = the accent, so both work coloured or plain. After the hues. */
 		&[variant~="light"], :where([media*="chip(lgt)"]) & {
 			--ui-chip-bg: color-mix(in oklch, var(--ui-chip-c) 15%, var(--color-surface, hsl(0, 0%, 100%)));
 			--ui-chip-c: var(--ui-chip-accent, var(--color-text));
@@ -94,22 +67,20 @@
 			--ui-chip-c: var(--ui-chip-accent, var(--color-text));
 		}
 
-		/* size — em-based, from size= or the card's chip(<size>). md (0.875em) = default. */
+		/* size — em-based; md (0.875em) = default */
 		&[size~="sm"],  :where([media*="chip(sm)"])  & { --ui-chip-font-size: 0.625em; }
 		&[size~="lg"],  :where([media*="chip(lg)"])  & { --ui-chip-font-size: 1em; }
 		&[size~="xl"],  :where([media*="chip(xl)"])  & { --ui-chip-font-size: 1.15em; }
 		&[size~="2xl"], :where([media*="chip(2xl)"]) & { --ui-chip-font-size: 1.4em; }
 
-		/* corner — from radius= or the card's chip(<corner>). pill = default.
-		   non sharp · rnd rounded · pll pill · crc circle · sqr squircle.
-		   (variant="square"/"squircle" kept as aliases for rnd/sqr.) */
+		/* corner — non sharp · rnd rounded · pll pill (default) · crc circle · sqr squircle */
 		&[radius~="non"], :where([media*="chip(non)"]) & { --ui-chip-radius: 0; }
 		&[radius~="rnd"], &[variant~="square"], :where([media*="chip(rnd)"]) & { --ui-chip-radius: var(--radius-md); }
 		&[radius~="pll"], :where([media*="chip(pll)"]) & { --ui-chip-radius: var(--radius-pill); }
 		&[radius~="crc"], :where([media*="chip(crc)"]) & { --ui-chip-radius: var(--radius-circle); }
 		&[radius~="sqr"], &[variant~="squircle"], :where([media*="chip(sqr)"]) & { --ui-chip-radius: 0.75em; --ui-chip-corner: superellipse(var(--squircle-md)); }
 
-		/* ───────── C. Inline badge — auto-push a nested ui-badge to the inline end ───────── */
+		/* ───────── C. Inline badge — push a nested ui-badge to the inline end ───────── */
 		&:has(> ui-badge[variant~="inline"]) {
 			--ui-chip-padding-inline-end: 0.5em;
 			--ui-chip-column-gap: 0.75em;

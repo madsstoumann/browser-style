@@ -1,21 +1,10 @@
 /**
- * ui-reveal — CSS-only reveal card on <details>/<summary>.
- * Configured through variant= tokens (shared attribute with ui-card).
- * Docs: ../reveal/readme.md · ui/card/docs/ui-card-tokens.md § Internals (ui-reveal.css)
- * @version 2.0.0
- * @author Mads Stoumann
+ * ui-reveal — CSS-only reveal card on <details>/<summary>, configured by variant=.
+ * NO @import here: base -> card -> icon -> this are peers, loaded by the page.
+ * Docs: readme.md · ../card/docs/ui-card-tokens.md § Internals
+ * @version 2.0.0 · @author Mads Stoumann
  */
-/* NO @import of the card engine or the icon sheet — both are declared peers and
-   must be loaded by the page, in this order:
-       @browser.style/base  ->  @browser.style/card  ->  @browser.style/icon  ->  this
-   Pulling '../card/ui-card.css' in here made every page that ALSO links the card
-   engine (the normal case — a reveal rarely appears alone) parse it twice, and it
-   would inline the whole engine into this package's bundle. This sheet contains
-   only reveal's own rules; it overrides card rules that ui-card.css already set. */
-
-/* CARD-RULE LEAK CHECKLIST — AUDIT MARKER, keep. A card rule whose subject sits
-   inside `ui-reveal > details` without passing summary/ui-face needs a row — and
-   usually a counter-reset — in ui/card/docs/ui-card-tokens.md § the leak checklist. */
+/* CARD-RULE LEAK CHECKLIST — AUDIT MARKER, keep. Docs: ../card/docs/ui-card-tokens.md */
 
 /* animation-dispatch flag; non-inheriting on purpose */
 @property --_rvl { syntax: "*"; inherits: false; }
@@ -26,11 +15,11 @@
 		--ui-reveal-bg: var(--color-surface);
 		--ui-reveal-icon-sz: var(--size-7);
 		--ui-reveal-p: var(--ui-content-p, var(--spacing-md));
-		--ui-reveal-icon-m: var(--spacing-md); /* icon chrome â decoupled from content padding */
+		--ui-reveal-icon-m: var(--spacing-md); /* icon chrome — decoupled from content padding */
 		--ui-reveal-radius: var(--radius-2xl);
 		--_trs: var(--ui-reveal-duration, var(--duration-slower)) var(--ui-reveal-easing, var(--ease-in-out));
 
-		container-type: inline-size; /* enable ui-card's responsive tiers (md:/lg:) on the front face */
+		container-type: inline-size; /* enables ui-card's md:/lg: tiers on the front face */
 		display: block;
 		interpolate-size: allow-keywords;
 
@@ -38,12 +27,104 @@
 			background: var(--ui-reveal-bg);
 			border-radius: var(--ui-card-radius, var(--ui-reveal-radius));
 			box-shadow: var(--ui-reveal-shadow, var(--shadow-xl));
-			/* style-query container for the dispatch flag */
-			container-name: bs-rvl;
+			container-name: bs-rvl; /* style-query container for the dispatch flag */
 			display: grid;
 			overflow: hidden;
-			/* anchor for the absolutely-positioned panels */
-			position: relative;
+			position: relative; /* anchor for the absolutely-positioned panels */
+
+			/* consume shared --ui-card-cols (horizontal/split tokens) */
+			> summary,
+			> summary > ui-face { grid-template-columns: var(--ui-card-cols, 1fr); }
+
+			&::details-content {
+				font-size: var(--ui-reveal-content-fs, inherit);
+				transition-behavior: allow-discrete;
+			}
+			&[open]::details-content {
+				background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
+				color: var(--ui-reveal-content-c, inherit);
+				padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
+			}
+
+			/* stagger — hold the boxes through the close animation */
+			&:not([open]) > :where([stagger], [data-stagger]) > * {
+				transition: display var(--ui-reveal-duration, var(--duration-slower)) allow-discrete;
+			}
+
+			/* back content — leak-checklist counter-resets (items 1-3) */
+			> ui-content {
+				color: var(--ui-reveal-content-c, inherit); /* neutralise the ovr() white */
+				align-items: normal;
+				display: flex; /* vis(media)'s ui-content{display:none} leaks via descendant match */
+				gap: var(--ui-reveal-content-gap, 1em);
+				grid-area: auto;
+				justify-content: normal;
+				text-align: start;
+				z-index: auto;
+			}
+			/* a ui-content back self-pads — drop the panel padding so it isn't doubled */
+			&[open]:has(> ui-content)::details-content { padding: 0; }
+
+			/* theme= — panel side: the back element paints itself and fills the panel */
+			> :where(:not(summary))[theme] {
+				background: var(--_theme-bg, transparent);
+				color: var(--_theme-c, var(--color-text));
+				min-block-size: 100%;
+			}
+
+			/* leak-checklist item 5 — type-scale decoupling */
+			> ui-content:not([content]) {
+				--ui-content-fs: var(--ui-reveal-content-fs, var(--font-size-base));
+				--ui-content-headline: var(--ui-reveal-content-headline, var(--ui-content-headline-md));
+				--ui-content-headline-line-height: var(--ui-reveal-content-headline-line-height, var(--line-height-tight, 1.15));
+			}
+
+			/* focusable back face ([tabindex]) — the second tab stop */
+			> ui-content[tabindex]:focus-visible { outline: none; }
+			&[open]:has(> ui-content[tabindex]:focus-visible) > summary > ui-icon {
+				/* ring = panel ink, gap = panel surface (currentColor here is the glyph) */
+				box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-ring-gap, var(--ui-reveal-content-bg, var(--ui-reveal-bg))), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ui-reveal-ring-active, var(--ui-reveal-content-c, var(--color-text)));
+			}
+			/* a dark/light back takes the ring with it, via color-scheme */
+			&[open]:has(> :where(:not(summary))[theme~="dark"]:focus-visible) > summary > ui-icon { color-scheme: dark; }
+			&[open]:has(> :where(:not(summary))[theme~="light"]:focus-visible) > summary > ui-icon { color-scheme: light; }
+
+			> summary {
+				cursor: pointer;
+				display: grid;
+				grid-area: 1 / -1;
+				list-style: none;
+				position: relative;
+
+				ui-face {
+					display: grid;
+					grid-column: 1 / -1;
+				}
+
+				/* an overlay face fills its row instead of being sized BY the frame —
+				   WebKit won't re-run row sizing on a later pass. ovr() only. */
+				:where(ui-reveal[variant*="ovr("]) & ui-media {
+					block-size: 100%;
+					inline-size: 100%;
+					min-block-size: 0;
+				}
+
+				ui-icon {
+					background: var(--ui-reveal-icon-bg, var(--color-button));
+					border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
+					font-size: calc(var(--ui-reveal-icon-sz) / 2); /* padding between icon and circle */
+					height: var(--ui-reveal-icon-sz);
+					justify-self: end;
+					width: var(--ui-reveal-icon-sz);
+				}
+
+				&:focus-visible {
+					outline: none;
+					& ui-icon {
+						box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-bg), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ring-color);
+					}
+				}
+			}
 		}
 
 		/* animation dispatch — one setter per family */
@@ -61,68 +142,9 @@
 		&[theme*="border"] {
 			--ui-reveal-shadow: none;
 			border-radius: calc(var(--ui-card-radius, var(--ui-reveal-radius)) + var(--_theme-bw, var(--border-width, 1px)));
-		}
-		&[theme*="border"][variant*="-sq)"] {
-			corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8));
-		}
 
-		/* consume shared --ui-card-cols (horizontal/split tokens) */
-		> details > summary,
-		> details > summary > ui-face { grid-template-columns: var(--ui-card-cols, 1fr); }
-
-		> details[open]::details-content {
-			background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
-			color: var(--ui-reveal-content-c, inherit);
-			padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
+			&[variant*="-sq)"] { corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8)); }
 		}
-
-		> details::details-content {
-			font-size: var(--ui-reveal-content-fs, inherit);
-			transition-behavior: allow-discrete;
-		}
-
-		/* stagger — hold the boxes through the close animation */
-		> details:not([open]) > :where([stagger], [data-stagger]) > * {
-			transition: display var(--ui-reveal-duration, var(--duration-slower)) allow-discrete;
-		}
-
-		/* back content — leak-checklist counter-resets (items 1-3) */
-		> details > ui-content {
-			color: var(--ui-reveal-content-c, inherit); /* neutralise the ov() white; palette or inherit (dark) */
-			align-items: normal;
-			display: flex; /* vis(media)'s ui-content{display:none} leaks via descendant match */
-			gap: var(--ui-reveal-content-gap, 1em); /* roomier than the tight overlay-face row-gap */
-			grid-area: auto;
-			justify-content: normal;
-			text-align: start;
-			z-index: auto;
-		}
-		/* a ui-content back self-pads â drop the panel padding so it isn't doubled */
-		> details[open]:has(> ui-content)::details-content { padding: 0; }
-
-		/* theme= — panel side: the back element paints itself and fills the panel */
-		> details > :where(:not(summary))[theme] {
-			background: var(--_theme-bg, transparent);
-			color: var(--_theme-c, var(--color-text));
-			min-block-size: 100%;
-		}
-
-		/* leak-checklist item 5 — type-scale decoupling */
-		> details > ui-content:not([content]) {
-			--ui-content-fs: var(--ui-reveal-content-fs, var(--font-size-base));
-			--ui-content-headline: var(--ui-reveal-content-headline, var(--ui-content-headline-md));
-			--ui-content-headline-line-height: var(--ui-reveal-content-headline-line-height, var(--line-height-tight, 1.15));
-		}
-
-		/* focusable back face ([tabindex]) — the second tab stop */
-		> details > ui-content[tabindex]:focus-visible { outline: none; }
-		> details[open]:has(> ui-content[tabindex]:focus-visible) > summary > ui-icon {
-			/* ring = panel ink, gap = panel surface (currentColor here is the glyph) */
-			box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-ring-gap, var(--ui-reveal-content-bg, var(--ui-reveal-bg))), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ui-reveal-ring-active, var(--ui-reveal-content-c, var(--color-text)));
-		}
-		/* a dark/light back takes the ring with it, via color-scheme */
-		> details[open]:has(> :where(:not(summary))[theme~="dark"]:focus-visible) > summary > ui-icon { color-scheme: dark; }
-		> details[open]:has(> :where(:not(summary))[theme~="light"]:focus-visible) > summary > ui-icon { color-scheme: light; }
 
 		/* flp/sld/grw panels paint from the START of the reveal */
 		@container bs-rvl style(--_rvl: flp) or style(--_rvl: sld) or style(--_rvl: grw) {
@@ -132,56 +154,9 @@
 			}
 		}
 
-		> details > summary {
-			cursor: pointer;
-			display: grid;
-			grid-area: 1 / -1;
-			list-style: none;
-			position: relative;
+		/* === variants, asr(), obp(), ar() and op() are inherited from ui-card.css === */
 
-			ui-face {
-				display: grid;
-				grid-column: 1 / -1;
-			}
-
-		/* An overlay front face fills its row instead of being sized BY the frame.
-		   WebKit does not re-run grid row sizing when an aspect-ratio child's inline
-		   size changes in a LATER layout pass — and that pass is routine: the page
-		   grows, a classic (non-overlay) scrollbar appears, every column narrows.
-		   <ui-media> re-resolves its height from the new width, the summary row keeps
-		   the height from the first pass, and the difference paints as a white strip
-		   under the card. Measured on this page in Safari 26.5: columns 319.656 (with
-		   scrollbar) but rows still 433.766 — the height for the 325.328 columns of
-		   the scrollbar-less first pass, a 7.56px gap. Chromium re-resolves the row.
-		   Stretching the frame makes the row's height the source of truth, so the two
-		   can't disagree; in a correct pass the row is still the frame's own
-		   aspect-ratio height, so nothing changes. Only ovr() — a col/col-r face
-		   stacks media above content and must NOT have the frame eat the row.
-		   (ui-card.css does the same for row/row-r.) */
-			:where(ui-reveal[variant*="ovr("]) & ui-media {
-				block-size: 100%;
-				inline-size: 100%;
-				min-block-size: 0;
-			}
-
-			ui-icon {
-				background: var(--ui-reveal-icon-bg, var(--color-button));
-				border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
-				font-size: calc(var(--ui-reveal-icon-sz) / 2); /* padding between icon and circle */
-				height: var(--ui-reveal-icon-sz);
-				justify-self: end;
-				width: var(--ui-reveal-icon-sz);
-			}
-
-			&:focus-visible { outline: none; }
-			&:focus-visible ui-icon {
-				box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-bg), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ring-color);
-			}
-		}
-
-		/* === variants, asr() and obp() are inherited from ui-card.css === */
-
-		/* === ico() — toggle-icon corner placement (ts te bs be, logical) === */
+		/* ico() — toggle-icon corner placement · icc() — same spellings, open state */
 		&:is([variant~="ico(ts)"],[variant~="ico(te)"],[variant~="ico(bs)"],[variant~="ico(be)"]) > details > summary > ui-icon {
 			margin: var(--ui-reveal-icon-m);
 			position: absolute;
@@ -192,7 +167,6 @@
 		&:is([variant~="ico(ts)"],[variant~="ico(bs)"]) > details > summary > ui-icon { inset-inline: 0 auto; }
 		&:is([variant~="ico(te)"],[variant~="ico(be)"]) > details > summary > ui-icon { inset-inline: auto 0; }
 
-		/* === icc() â open-state icon corner (same spellings) === */
 		&:is([variant~="icc(ts)"],[variant~="icc(te)"],[variant~="icc(bs)"],[variant~="icc(be)"]) > details[open] > summary > ui-icon {
 			position: absolute;
 			z-index: 2;
@@ -202,10 +176,9 @@
 		&:is([variant~="icc(ts)"],[variant~="icc(bs)"]) > details[open] > summary > ui-icon { inset-inline: 0 auto; }
 		&:is([variant~="icc(te)"],[variant~="icc(be)"]) > details[open] > summary > ui-icon { inset-inline: auto 0; }
 
-		/* === icon style: drk (default is light) + sem (opacity) â both === */
+		/* icon style: drk (the `black` bundle, so it stays dark in both schemes) + sem */
 		&[variant~="ico(drk)"] > details > summary > ui-icon,
 		&[variant~="icc(drk)"] > details[open] > summary > ui-icon {
-			/* dark chrome — the `black` bundle, so it stays dark in both schemes */
 			--ui-reveal-icon-bg: var(--ui-theme-black-bg);
 			color: var(--ui-theme-black-c, #fff);
 		}
@@ -214,32 +187,24 @@
 			opacity: var(--ui-reveal-icon-opacity, 0.6);
 		}
 
-		/* === icon size: sm / lg (md = default --size-7) â both === */
+		/* icon size: sm / lg (md = default --size-7) */
 		&[variant~="ico(sm)"] > details > summary > ui-icon,
-		&[variant~="icc(sm)"] > details[open] > summary > ui-icon {
-			--ui-reveal-icon-sz: var(--size-5);
-		}
+		&[variant~="icc(sm)"] > details[open] > summary > ui-icon { --ui-reveal-icon-sz: var(--size-5); }
 		&[variant~="ico(lg)"] > details > summary > ui-icon,
-		&[variant~="icc(lg)"] > details[open] > summary > ui-icon {
-			--ui-reveal-icon-sz: var(--size-8);
-		}
+		&[variant~="icc(lg)"] > details[open] > summary > ui-icon { --ui-reveal-icon-sz: var(--size-8); }
 
-		/* === ar() and op() are inherited from ui-card.css === */
-
-		/* === squircle — reveal only applies corner-shape to its <details> === */
-		&[variant*="-sq)"] > details {
-			corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8));
-		}
+		/* squircle — reveal only applies corner-shape to its <details> */
+		&[variant*="-sq)"] > details { corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8)); }
 	}
 
-	/* === exp â expand === */
+	/* === exp — expand === */
 	@container bs-rvl style(--_rvl: exp) {
 		:where(ui-reveal) > details::details-content {
 			block-size: 0;
 			content-visibility: hidden;
 			overflow: hidden;
 			transition: block-size var(--_trs), content-visibility var(--_trs), padding var(--_trs);
-			transition-behavior: allow-discrete; /* keep content rendered while closing so block-size animates autoâ0 (shorthand above resets it) */
+			transition-behavior: allow-discrete; /* keep content rendered while closing so block-size animates auto→0 (the shorthand above resets it) */
 		}
 		:where(ui-reveal) > details[open]::details-content {
 			block-size: auto;
@@ -251,17 +216,15 @@
 		:where(ui-reveal[variant~="pop"]) > details[open]::details-content { transition: block-size var(--_trs), content-visibility var(--_trs), padding var(--_trs); }
 	}
 
-	/* exp pop — host-side popup styling (attribute-keyed: a container can't style itself) */
+	/* exp pop — host-side popup; only the INNER <details> goes fixed */
 	:where(ui-reveal[variant~="exp"]) {
-		/* only the INNER <details> goes fixed; the backdrop sits on ui-reveal::before */
 		&[variant~="pop"]:has(> details[open]) {
 			--ui-reveal-expand-m: 2ch;
 			aspect-ratio: var(--ui-media-ar, 3/4);
-			background: var(--ui-reveal-expand-fixed-bg, transparent); /* solid fill on the in-flow placeholder â the cell the card lifted out of */
-			border-radius: var(--ui-card-radius, var(--ui-reveal-radius)); /* match the card so the placeholder keeps the same corners (bg clips to radius) */
-			container-type: normal; /* the host's inline-size container implies contain:layout, which would trap the fixed popup + backdrop inside the host â release it while open (front-face md:/lg: tiers pause, but the popup styles own the open state) */
+			background: var(--ui-reveal-expand-fixed-bg, transparent); /* fills the in-flow placeholder — the cell the card lifted out of */
+			border-radius: var(--ui-card-radius, var(--ui-reveal-radius)); /* placeholder keeps the card's corners (bg clips to radius) */
+			container-type: normal; /* the host's inline-size container implies contain:layout, which would trap the fixed popup + backdrop — release it while open */
 
-			/* squircle: same corner-shape as the card when rds(-sq) is used */
 			&[variant*="-sq)"] { corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8)); }
 
 			&::before {
@@ -279,8 +242,8 @@
 				--ui-reveal-content-fs: var(--ui-reveal-expand-content-fs, var(--font-size-base));
 				align-content: start;
 				animation: ui-reveal-pop var(--_trs) both;
-				background: var(--ui-reveal-expand-bg, var(--ui-reveal-bg)); /* popup card panel bg â dedicated prop, doesn't touch the closed card's --ui-reveal-bg */
-				inset: var(--ui-reveal-expand-m) 0 auto; /* top margin + inline 0; bottom auto so height = content (capped by max-height), not stretched full */
+				background: var(--ui-reveal-expand-bg, var(--ui-reveal-bg)); /* dedicated prop — doesn't touch the closed card's --ui-reveal-bg */
+				inset: var(--ui-reveal-expand-m) 0 auto; /* bottom auto so height = content, capped by max-height */
 				margin-inline: auto;
 				max-height: calc(100dvh - calc(var(--ui-reveal-expand-m) * 2));
 				max-inline-size: var(--ui-reveal-expand-max-is, 65ch);
@@ -288,14 +251,13 @@
 				position: fixed;
 				scrollbar-gutter: auto;
 				z-index: var(--z-index-3);
-			}
 
-			/* back panel transparent so the popup card bg (--ui-reveal-expand-bg) shows behind the text */
-			> details[open]::details-content { background: transparent; }
+				/* back panel transparent so the popup card bg shows behind the text */
+				&[open]::details-content { background: transparent; }
+			}
 		}
 	}
 
-	/* === exp pop popup entry animations === */
 	@keyframes ui-reveal-backdrop {
 		from { opacity: 0; }
 		to   { opacity: 1; }
@@ -305,8 +267,7 @@
 		to   { opacity: 1; scale: 1; }
 	}
 
-	/* === flp — flip (direction in the value; bare = right). Rotation vars ride the
-	   host because a container can't style itself. === */
+	/* === flp — flip; the rotation vars ride the host (a container can't style itself) === */
 	:where(ui-reveal) {
 		--_persp: perspective(var(--ui-reveal-perspective, 1000px));
 		/* closed/open pairs share one rotation axis */
@@ -361,11 +322,9 @@
 		:where(ui-reveal:is([variant~="ico(ts)"], [variant~="icc(ts)"])) > details[open]::details-content > * > :first-child {
 			padding-inline-start: var(--ui-reveal-icon-clear);
 		}
-
 	}
 
-	/* scr — ::details-content is the frame, the panel element is the scroller
-	   (readme.md § scr). grw brings its own frame, so it is excluded here. */
+	/* scr — ::details-content is the frame, the panel is the scroller (readme.md § scr) */
 	@container bs-rvl style(--_rvl: flp) or style(--_rvl: sld) {
 		:where(ui-reveal[variant~="scr"]) > details::details-content {
 			block-size: var(--ui-reveal-content-bs, auto);
@@ -393,12 +352,11 @@
 		}
 	}
 
-	/* asymmetric: quick fade-out (to 40%), slower fade back in (remaining 60%) */
+	/* asymmetric: quick fade-out (to 40%), slower fade back in */
 	@keyframes ui-reveal-icon-dip      { 0% { opacity: 1; } 40% { opacity: 0; } 100% { opacity: 1; } }
 	@keyframes ui-reveal-icon-dip-open { 0% { opacity: 1; } 40% { opacity: 0; } 100% { opacity: 1; } }
 
-	/* scroll fade-shadow — shared primitive in ui/base/scroll.css. Rides the
-	   panel element, not ::details-content (readme.md § scr). */
+	/* scroll fade-shadow — ../base/scroll.css; rides the panel, not ::details-content */
 	@supports (animation-timeline: scroll()) {
 		@media (prefers-reduced-motion: no-preference) {
 			@container bs-rvl style(--_rvl: flp) or style(--_rvl: sld) {
@@ -412,7 +370,7 @@
 		}
 	}
 
-	/* === sld — slide (direction in the value: sld(top|btm|lft|rgt); bare = right) === */
+	/* === sld — slide (sld(top|btm|lft|rgt); bare = right) === */
 	@container bs-rvl style(--_rvl: sld) {
 		:where(ui-reveal) > details::details-content {
 			grid-area: 1 / -1;
@@ -427,8 +385,7 @@
 		:where(ui-reveal) > details[open]::details-content { translate: 0 0; }
 	}
 
-	/* === grw — grow/scale-morph (origin follows ico(), or grw(ts|te|bs|be)).
-	   ONE geometry block serves the grw tokens and the lg:grw tier swap. === */
+	/* === grw — grow/scale-morph; one geometry block serves grw() and the lg:grw swap === */
 	@container bs-rvl style(--_rvl: grw) {
 		:where(ui-reveal) > details::details-content {
 			block-size: var(--ui-reveal-icon-sz);
@@ -487,7 +444,7 @@
 		)) > details { --_rvl: grw; }
 	}
 
-	/* === trg(card) — whole card toggles (no ui-icon) === */
+	/* === trg(card) — the whole card toggles (no ui-icon) === */
 	:where(ui-reveal[variant~="trg(card)"]) {
 		> details[open]::details-content { pointer-events: none; }
 		> details[open] :is(a, button, input, select, textarea, [tabindex]) { pointer-events: auto; }
@@ -498,8 +455,7 @@
 	}
 }
 
-/* === popup escape hatch — UNLAYERED on purpose: it must beat <lay-out>'s
-   containment regardless of stylesheet order. Do not move it into a layer. === */
+/* popup escape hatch — UNLAYERED: it must beat <lay-out>'s containment */
 lay-out:has(ui-reveal[variant~="exp"][variant~="pop"] > details[open]) {
 	contain: inline-size;
 }

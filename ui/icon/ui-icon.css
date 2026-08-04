@@ -191,39 +191,19 @@
 			&::before {
 				aspect-ratio: var(--_ar, 1);
 				background: currentColor;
-				/* Fit the glyph INSIDE the 1em icon box. A bare `block-size: 1em`
-				   sizes the block axis, so any --_ar > 1 makes the glyph wider than
-				   the box it lives in (heart, ar 1.133 → 1.133em in a 1em box) and
-				   leaves it relying on overflow painting — which any ancestor clip
-				   eats: ui-media's overflow:hidden, a card's, contain:paint, or a
-				   native-appearance <button> in WebKit. Dividing by max(ar, 1) caps
-				   the INLINE axis at 1em instead, so wide glyphs scale down to fit
-				   and tall/square ones (bookmark 0.72, star 1, badges) are untouched. */
+				/* fit the glyph INSIDE the 1em box — max(ar, 1) caps the INLINE axis, so
+				   wide glyphs never rely on overflow painting an ancestor clip would eat */
 				block-size: calc(var(--ui-icon-glyph-size, 1em) / max(var(--_ar, 1), 1));
-				/* …and clip against the CONTENT box, so the silhouette is never
-				   tangent to the paint edge. The shapes span the full 0–100% of
-				   their reference box, so with the default border-box the extreme
-				   points sit exactly ON the boundary and Safari's compositor shaves
-				   the outermost column — a flat chunk off the heart's right lobe,
-				   varying with size and sub-pixel offset. 1px of slack is enough
-				   (the error is sub-pixel); shrinking the GLYPH instead does not
-				   help, since the path would still fill its own box. */
+				/* …and clip against the CONTENT box: on border-box the extreme points sit
+				   ON the boundary and Safari's compositor shaves the outermost column */
 				box-sizing: border-box;
 				clip-path: var(--_shape) content-box;
 				inline-size: auto;
 				padding: var(--ui-icon-glyph-inset, 1px);
 				place-self: center;
 			}
-			/* Outline — gated on border-shape (Chrome 150+). UNGATED this rule is a
-			   hard break, not a soft one: `clip-path: none` + `background: none`
-			   leaves the plain BORDER BOX, so Safari/Firefox draw a square around
-			   nothing (and ui-save's pressed state fills that square). Without
-			   support the filled `clip-path: var(--_shape)` silhouette above stands,
-			   which is the same shape() geometry, just solid — ui-save still reads
-			   as saved/unsaved through --ui-save-c-active. A true hollow outline
-			   can't be built from these tokens in CSS: a hole needs an evenodd ring
-			   path (outer + inner subpath, per shape) or SVG — masks take images,
-			   not <basic-shape>, so no var()-driven knockout exists. */
+			/* outline — MUST stay gated on border-shape: ungated, Safari/FF would draw a
+			   square around nothing. Without support the filled silhouette stands. */
 			@supports (border-shape: circle(50%)) {
 				&[variant=outline]::before {
 					background: none;

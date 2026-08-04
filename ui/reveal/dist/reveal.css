@@ -20,6 +20,87 @@
       display: grid;
       overflow: hidden;
       position: relative;
+      > summary,
+      > summary > ui-face {
+        grid-template-columns: var(--ui-card-cols, 1fr);
+      }
+      &::details-content {
+        font-size: var(--ui-reveal-content-fs, inherit);
+        transition-behavior: allow-discrete;
+      }
+      &[open]::details-content {
+        background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
+        color: var(--ui-reveal-content-c, inherit);
+        padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
+      }
+      &:not([open]) > :where([stagger], [data-stagger]) > * {
+        transition: display var(--ui-reveal-duration, var(--duration-slower)) allow-discrete;
+      }
+      > ui-content {
+        color: var(--ui-reveal-content-c, inherit);
+        align-items: normal;
+        display: flex;
+        gap: var(--ui-reveal-content-gap, 1em);
+        grid-area: auto;
+        justify-content: normal;
+        text-align: start;
+        z-index: auto;
+      }
+      &[open]:has(> ui-content)::details-content {
+        padding: 0;
+      }
+      > :where(:not(summary))[theme] {
+        background: var(--_theme-bg, transparent);
+        color: var(--_theme-c, var(--color-text));
+        min-block-size: 100%;
+      }
+      > ui-content:not([content]) {
+        --ui-content-fs: var(--ui-reveal-content-fs, var(--font-size-base));
+        --ui-content-headline: var(--ui-reveal-content-headline, var(--ui-content-headline-md));
+        --ui-content-headline-line-height: var(--ui-reveal-content-headline-line-height, var(--line-height-tight, 1.15));
+      }
+      > ui-content[tabindex]:focus-visible {
+        outline: none;
+      }
+      &[open]:has(> ui-content[tabindex]:focus-visible) > summary > ui-icon {
+        box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-ring-gap, var(--ui-reveal-content-bg, var(--ui-reveal-bg))), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ui-reveal-ring-active, var(--ui-reveal-content-c, var(--color-text)));
+      }
+      &[open]:has(> :where(:not(summary))[theme~=dark]:focus-visible) > summary > ui-icon {
+        color-scheme: dark;
+      }
+      &[open]:has(> :where(:not(summary))[theme~=light]:focus-visible) > summary > ui-icon {
+        color-scheme: light;
+      }
+      > summary {
+        cursor: pointer;
+        display: grid;
+        grid-area: 1 / -1;
+        list-style: none;
+        position: relative;
+        ui-face {
+          display: grid;
+          grid-column: 1 / -1;
+        }
+        :where(ui-reveal[variant*="ovr("]) & ui-media {
+          block-size: 100%;
+          inline-size: 100%;
+          min-block-size: 0;
+        }
+        ui-icon {
+          background: var(--ui-reveal-icon-bg, var(--color-button));
+          border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
+          font-size: calc(var(--ui-reveal-icon-sz) / 2);
+          height: var(--ui-reveal-icon-sz);
+          justify-self: end;
+          width: var(--ui-reveal-icon-sz);
+        }
+        &:focus-visible {
+          outline: none;
+          & ui-icon {
+            box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-bg), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ring-color);
+          }
+        }
+      }
     }
     &:where([variant~=exp]) > details {
       --_rvl: exp;
@@ -40,95 +121,14 @@
     &[theme*=border] {
       --ui-reveal-shadow: none;
       border-radius: calc(var(--ui-card-radius, var(--ui-reveal-radius)) + var(--_theme-bw, var(--border-width, 1px)));
-    }
-    &[theme*=border][variant*="-sq)"] {
-      corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8));
-    }
-    > details > summary,
-    > details > summary > ui-face {
-      grid-template-columns: var(--ui-card-cols, 1fr);
-    }
-    > details[open]::details-content {
-      background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
-      color: var(--ui-reveal-content-c, inherit);
-      padding: var(--ui-reveal-content-p, var(--ui-reveal-p));
-    }
-    > details::details-content {
-      font-size: var(--ui-reveal-content-fs, inherit);
-      transition-behavior: allow-discrete;
-    }
-    > details:not([open]) > :where([stagger], [data-stagger]) > * {
-      transition: display var(--ui-reveal-duration, var(--duration-slower)) allow-discrete;
-    }
-    > details > ui-content {
-      color: var(--ui-reveal-content-c, inherit);
-      align-items: normal;
-      display: flex;
-      gap: var(--ui-reveal-content-gap, 1em);
-      grid-area: auto;
-      justify-content: normal;
-      text-align: start;
-      z-index: auto;
-    }
-    > details[open]:has(> ui-content)::details-content {
-      padding: 0;
-    }
-    > details > :where(:not(summary))[theme] {
-      background: var(--_theme-bg, transparent);
-      color: var(--_theme-c, var(--color-text));
-      min-block-size: 100%;
-    }
-    > details > ui-content:not([content]) {
-      --ui-content-fs: var(--ui-reveal-content-fs, var(--font-size-base));
-      --ui-content-headline: var(--ui-reveal-content-headline, var(--ui-content-headline-md));
-      --ui-content-headline-line-height: var(--ui-reveal-content-headline-line-height, var(--line-height-tight, 1.15));
-    }
-    > details > ui-content[tabindex]:focus-visible {
-      outline: none;
-    }
-    > details[open]:has(> ui-content[tabindex]:focus-visible) > summary > ui-icon {
-      box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-ring-gap, var(--ui-reveal-content-bg, var(--ui-reveal-bg))), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ui-reveal-ring-active, var(--ui-reveal-content-c, var(--color-text)));
-    }
-    > details[open]:has(> :where(:not(summary))[theme~=dark]:focus-visible) > summary > ui-icon {
-      color-scheme: dark;
-    }
-    > details[open]:has(> :where(:not(summary))[theme~=light]:focus-visible) > summary > ui-icon {
-      color-scheme: light;
+      &[variant*="-sq)"] {
+        corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8));
+      }
     }
     @container bs-rvl style(--_rvl: flp) or style(--_rvl: sld) or style(--_rvl: grw) {
       > details::details-content {
         background: var(--ui-reveal-content-bg, var(--ui-reveal-bg));
         color: var(--ui-reveal-content-c, inherit);
-      }
-    }
-    > details > summary {
-      cursor: pointer;
-      display: grid;
-      grid-area: 1 / -1;
-      list-style: none;
-      position: relative;
-      ui-face {
-        display: grid;
-        grid-column: 1 / -1;
-      }
-      :where(ui-reveal[variant*="ovr("]) & ui-media {
-        block-size: 100%;
-        inline-size: 100%;
-        min-block-size: 0;
-      }
-      ui-icon {
-        background: var(--ui-reveal-icon-bg, var(--color-button));
-        border-radius: var(--ui-reveal-icon-radius, var(--radius-circle));
-        font-size: calc(var(--ui-reveal-icon-sz) / 2);
-        height: var(--ui-reveal-icon-sz);
-        justify-self: end;
-        width: var(--ui-reveal-icon-sz);
-      }
-      &:focus-visible {
-        outline: none;
-      }
-      &:focus-visible ui-icon {
-        box-shadow: 0 0 0 var(--ring-offset) var(--ui-reveal-bg), 0 0 0 calc(var(--ring-offset) + var(--ring-width)) var(--ring-color);
       }
     }
     &:is([variant~="ico(ts)"], [variant~="ico(te)"], [variant~="ico(bs)"], [variant~="ico(be)"]) > details > summary > ui-icon {
@@ -243,9 +243,9 @@
         position: fixed;
         scrollbar-gutter: auto;
         z-index: var(--z-index-3);
-      }
-      > details[open]::details-content {
-        background: transparent;
+        &[open]::details-content {
+          background: transparent;
+        }
       }
     }
   }

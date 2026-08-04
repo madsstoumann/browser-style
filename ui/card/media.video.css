@@ -1,11 +1,9 @@
 /**
- * ui-media — video layer, split from media.css. Import after media.css, before
- * media.carousel.css (ui-card.css). Docs: media.md § Video layer
- * @version 4.0.0
- * @author Mads Stoumann
+ * ui-media — video layer. Import after media.css, before media.carousel.css.
+ * Docs: docs/media.md § Video layer
+ * @version 4.0.0 · @author Mads Stoumann
  */
 @layer bs-component {
-
 	/* preview overlay + no-JS :playing reveal */
 	:where(ui-media) > [data-preview] { pointer-events: none; z-index: 1; }
 	:where(ui-media:has(> video:not([data-preview]):playing)) > [data-preview] { display: none; }
@@ -21,8 +19,7 @@
 		opacity: 1;
 	}
 
-	/* play(<size>) — size the <ui-play> control (mirrors ui-play size=); disjoint
-	   from play()'s position args, so one stem parses unambiguously */
+	/* play(<size>) — size the <ui-play> control; disjoint from play()'s position args */
 	:where([media*="play(sm)"]) { --ui-play-sz: 2.25em; --ui-play-icon-sz: 1em; }
 	:where([media*="play(md)"]) { --ui-play-sz: 3em;    --ui-play-icon-sz: 1.5em; }
 	:where([media*="play(lg)"]) { --ui-play-sz: 4em;    --ui-play-icon-sz: 2em; }
@@ -42,8 +39,7 @@
 	:where([media*="vid(lg)"]) { --ui-media-tool-size: 3rem; }
 	:where([media*="vid(xl)"]) { --ui-media-tool-size: 3.5rem; }
 
-	/* --_g is declared here, not read across files — private --_* vars stay
-	   single-file: one gap, one fallback */
+	/* --_g is declared here, not read across files — private --_* vars stay single-file */
 	:where(ui-media) .ui-media-tools {
 		--_g: var(--ui-media-overlay-gap, 0.75rem);
 		align-items: center;
@@ -55,26 +51,28 @@
 		padding: 0;
 		position: absolute;
 		z-index: 2;
+
+		& button {
+			aspect-ratio: 1;
+			background: var(--_glyph) center / 55% no-repeat var(--ui-media-tool-bg);
+			border: 0;
+			border-radius: var(--radius-circle, 50%);
+			box-sizing: border-box;
+			cursor: pointer;
+			inline-size: var(--ui-media-tool-size, 2.5rem);
+			padding: 0;
+			transition: background-color var(--ui-media-tool-trsdu, 0.2s);
+
+			&:is(:hover, :focus-visible) { background-color: var(--ui-media-tool-bg-hover); }
+			&:is([command="--pip"], [command="--fullscreen"], [command="--cc"])[aria-pressed="true"] { background-color: var(--color-accent, hsl(211, 100%, 50%)); }
+			&[command="--fullscreen"] { --_glyph: var(--ui-media-tool-fullscreen); }
+			&[command="--pip"]        { --_glyph: var(--ui-media-tool-pip); }
+			&[command="--cc"]         { --_glyph: var(--ui-media-tool-cc); }
+		}
 	}
-	:where(ui-media) .ui-media-tools button {
-		aspect-ratio: 1;
-		background: var(--_glyph) center / 55% no-repeat var(--ui-media-tool-bg);
-		border: 0;
-		border-radius: var(--radius-circle, 50%);
-		box-sizing: border-box;
-		cursor: pointer;
-		inline-size: var(--ui-media-tool-size, 2.5rem);
-		padding: 0;
-		transition: background-color var(--ui-media-tool-trsdu, 0.2s);
-	}
-	:where(ui-media) .ui-media-tools button:is(:hover, :focus-visible) { background-color: var(--ui-media-tool-bg-hover); }
-	:where(ui-media) .ui-media-tools button:is([command="--pip"], [command="--fullscreen"], [command="--cc"])[aria-pressed="true"] { background-color: var(--color-accent, hsl(211, 100%, 50%)); }
-	:where(ui-media) .ui-media-tools button[command="--fullscreen"] { --_glyph: var(--ui-media-tool-fullscreen); }
-	:where(ui-media) .ui-media-tools button[command="--pip"]        { --_glyph: var(--ui-media-tool-pip); }
-	:where(ui-media) .ui-media-tools button[command="--cc"]         { --_glyph: var(--ui-media-tool-cc); }
 	:where(ui-media:not(:has(:is(ui-play[open], ui-play button[aria-pressed="true"])))) .ui-media-tools button[command="--pip"] { display: none; }
 
-	/* CC language switcher — customizable <select> styled as a disc (appearance: base-select) */
+	/* CC language switcher — customizable <select> styled as a disc */
 	:where(ui-media) .ui-media-tools .ui-media-cc,
 	:where(ui-media) .ui-media-tools .ui-media-cc::picker(select) { appearance: base-select; }
 	:where(ui-media) .ui-media-tools .ui-media-cc {
@@ -85,47 +83,52 @@
 		min-inline-size: 0;
 		outline: none;
 		padding: 0;
-	}
-	:where(ui-media) .ui-media-tools .ui-media-cc::picker-icon { display: none; }
-	:where(ui-media) .ui-media-tools .ui-media-cc selectedcontent { display: none; }
-	:where(ui-media) .ui-media-tools .ui-media-cc button {
-		background: var(--ui-media-tool-cc) center / 55% no-repeat var(--ui-media-tool-bg);
-		block-size: var(--ui-media-tool-size, 2.5rem);
-		border: 0;
-		border-radius: var(--radius-circle, 50%);
-		box-sizing: border-box;
-		color: transparent;
-		cursor: pointer;
-		inline-size: var(--ui-media-tool-size, 2.5rem);
-		padding: 0;
-		transition: background-color var(--ui-media-tool-trsdu, 0.2s);
-	}
-	/* focus/hover land on the <select> wrapper, so drive the button's hover bg + ring from it */
-	:where(ui-media) .ui-media-tools .ui-media-cc:is(:hover, :focus-visible) button,
-	:where(ui-media) .ui-media-tools .ui-media-cc button:focus-visible {
-		background-color: var(--ui-media-tool-bg-hover);
-		box-shadow: var(--button-bxsh--hover);
-	}
-	:where(ui-media) .ui-media-tools .ui-media-cc:focus-visible button,
-	:where(ui-media) .ui-media-tools .ui-media-cc button:focus-visible { outline: var(--ring-width, 2px) solid var(--ring-color, hsl(211, 100%, 50%)); outline-offset: var(--ring-offset, 2px); }
-	:where(ui-media) .ui-media-tools .ui-media-cc button:focus:not(:focus-visible) { outline: none; }
-	:where(ui-media) .ui-media-cc::picker(select) {
-		background: var(--ui-media-tool-bg);
-		border: 0;
-		border-radius: var(--radius-md, 0.5rem);
-		margin-block-end: 0.5rem;
-		min-inline-size: 8rem;
-		position-area: block-start span-inline-start;
-	}
-	:where(ui-media) .ui-media-cc option {
-		background-color: transparent;
-		border-block-end-color: #ffffff66;
-		color: #fff;
-		font-size: 0.875rem;
-		padding: 0.4rem 0.6rem;
-	}
-	:where(ui-media) .ui-media-cc option:last-child { border-block-end: 0; }
-	:where(ui-media) .ui-media-cc option:is(:hover, :focus) { background-color: var(--ui-media-tool-bg-hover); }
-	:where(ui-media) .ui-media-cc option:checked { color: var(--color-accent, hsl(211, 100%, 50%)); font-weight: var(--font-weight-medium, 500); }
 
+		&::picker-icon { display: none; }
+		& selectedcontent { display: none; }
+
+		& button {
+			background: var(--ui-media-tool-cc) center / 55% no-repeat var(--ui-media-tool-bg);
+			block-size: var(--ui-media-tool-size, 2.5rem);
+			border: 0;
+			border-radius: var(--radius-circle, 50%);
+			box-sizing: border-box;
+			color: transparent;
+			cursor: pointer;
+			inline-size: var(--ui-media-tool-size, 2.5rem);
+			padding: 0;
+			transition: background-color var(--ui-media-tool-trsdu, 0.2s);
+		}
+		/* focus/hover land on the <select> wrapper, so drive the button's ring from it */
+		&:is(:hover, :focus-visible) button,
+		& button:focus-visible {
+			background-color: var(--ui-media-tool-bg-hover);
+			box-shadow: var(--button-bxsh--hover);
+		}
+		&:focus-visible button,
+		& button:focus-visible { outline: var(--ring-width, 2px) solid var(--ring-color, hsl(211, 100%, 50%)); outline-offset: var(--ring-offset, 2px); }
+		& button:focus:not(:focus-visible) { outline: none; }
+	}
+
+	:where(ui-media) .ui-media-cc {
+		&::picker(select) {
+			background: var(--ui-media-tool-bg);
+			border: 0;
+			border-radius: var(--radius-md, 0.5rem);
+			margin-block-end: 0.5rem;
+			min-inline-size: 8rem;
+			position-area: block-start span-inline-start;
+		}
+		& option {
+			background-color: transparent;
+			border-block-end-color: #ffffff66;
+			color: #fff;
+			font-size: 0.875rem;
+			padding: 0.4rem 0.6rem;
+
+			&:last-child { border-block-end: 0; }
+			&:is(:hover, :focus) { background-color: var(--ui-media-tool-bg-hover); }
+			&:checked { color: var(--color-accent, hsl(211, 100%, 50%)); font-weight: var(--font-weight-medium, 500); }
+		}
+	}
 }

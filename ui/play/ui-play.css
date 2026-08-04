@@ -1,57 +1,49 @@
 /**
- * ui-play
- * @version 4.0.0
- * @date 2026-06-22
- * @author Mads Stoumann
- *
- * Interactive media play affordance — a round button wrapping a <ui-icon>:
- *   <ui-play><button type="button" aria-label="Play"><ui-icon type="play"></ui-icon></button></ui-play>
- * The web component swaps the icon type play<->pause and toggles aria-pressed.
- * Requires @browser.style/icon for the glyph.
+ * ui-play — round play affordance wrapping a <ui-icon>. Requires @browser.style/icon.
+ * Docs: readme.md
+ * @version 4.0.0 · @author Mads Stoumann
  */
 @layer bs-component {
-	:where(ui-play) button {
-		aspect-ratio: 1;
-		/* dark translucent disc + light glyph — visible over any media or page bg */
-		background: var(--ui-play-bg, rgb(0 0 0 / 0.55));
-		border: 0;
-		border-radius: var(--ui-play-radius, var(--radius-circle, 50%));
-		corner-shape: var(--ui-play-corner, round);
-		color: var(--ui-play-c, hsl(0 0% 100%));
-		cursor: pointer;
-		display: grid;
-		inline-size: var(--ui-play-sz, 3em);
-		padding: 0;
-		place-content: center;
-		transition:
-			background var(--ui-play-trsdu, .2s),
-			opacity var(--ui-play-trsdu, .2s),
-			color var(--ui-play-trsdu, .2s);
+	:where(ui-play) {
+		& button {
+			aspect-ratio: 1;
+			background: var(--ui-play-bg, rgb(0 0 0 / 0.55));
+			border: 0;
+			border-radius: var(--ui-play-radius, var(--radius-circle, 50%));
+			corner-shape: var(--ui-play-corner, round);
+			color: var(--ui-play-c, hsl(0 0% 100%));
+			cursor: pointer;
+			display: grid;
+			inline-size: var(--ui-play-sz, 3em);
+			padding: 0;
+			place-content: center;
+			transition:
+				background var(--ui-play-trsdu, .2s),
+				opacity var(--ui-play-trsdu, .2s),
+				color var(--ui-play-trsdu, .2s);
 
-		&:is(:hover, :focus-visible) {
-			background: var(--ui-play-bg-hover, rgb(0 0 0 / 0.78));
+			&:is(:hover, :focus-visible) { background: var(--ui-play-bg-hover, rgb(0 0 0 / 0.78)); }
+		}
+
+		/* glyph — clicks pass through to the button */
+		& ui-icon {
+			font-size: var(--ui-play-icon-sz, 1.5em);
+			pointer-events: none;
 		}
 	}
 
-	/* glyph = <ui-icon> sub-element (type="play" | "pause"); clicks pass through to the button */
-	:where(ui-play) ui-icon {
-		font-size: var(--ui-play-icon-sz, 1.5em);
-		pointer-events: none;
-	}
-
-	/* reveal variant — hidden until the parent container is hovered/focused */
+	/* reveal — hidden until the parent container is hovered/focused */
 	:where(ui-play[variant~="reveal"]) {
 		opacity: 0;
 		transition: opacity var(--ui-play-trsdu, .2s);
-	}
-	:where(:hover) > :where(ui-play[variant~="reveal"]),
-	:where(ui-play[variant~="reveal"]):focus-within {
-		opacity: 1;
+
+		:where(:hover) > &,
+		&:focus-within { opacity: 1; }
 	}
 
-	/* colour — hue (theme= or the card's play(<hue>)) sets the disc bg + glyph ink;
-	   arbitrary fill=/ink= override. Set on the host; the button reads
-	   --ui-play-bg/-c. */
+	/* === Furniture axes — standalone attribute + the card's play(…) token === */
+
+	/* hue — disc bg + glyph ink */
 	:where(ui-play[theme~="red"],    [media*="play(red)"]    ui-play) { --ui-play-bg: var(--ui-theme-red-bg);    --ui-play-c: var(--ui-theme-red-c); }
 	:where(ui-play[theme~="orange"], [media*="play(orange)"] ui-play) { --ui-play-bg: var(--ui-theme-orange-bg); --ui-play-c: var(--ui-theme-orange-c); }
 	:where(ui-play[theme~="green"],  [media*="play(green)"]  ui-play) { --ui-play-bg: var(--ui-theme-green-bg);  --ui-play-c: var(--ui-theme-green-c); }
@@ -61,95 +53,74 @@
 	:where(ui-play[theme~="white"],  [media*="play(white)"]  ui-play) { --ui-play-bg: var(--ui-theme-white-bg);  --ui-play-c: var(--ui-theme-white-c); }
 	:where(ui-play[theme~="gray"],   [media*="play(gray)"]   ui-play) { --ui-play-bg: var(--ui-theme-gray-bg);   --ui-play-c: var(--ui-theme-gray-c); }
 	:where(ui-play[theme~="slate"],  [media*="play(slate)"]  ui-play) { --ui-play-bg: var(--ui-theme-slate-bg);  --ui-play-c: var(--ui-theme-slate-c); }
-	/* HUE TRUTH SET (nine): red orange green blue accent black white gray slate.
-	   slate is a canonical hue in its own right (the fifth neutral, white < gray <
-	   slate < black), not an alias of gray. The doc-era play(dark)/play(light)/
-	   play(subtle) aliases were REMOVED in v5 — use play(black)/play(white)/
-	   play(gray). */
+
+	/* arbitrary colour — overrides the hue, so it stays after it */
 	:where(ui-play[fill]) { --ui-play-bg: attr(fill type(<color>), rgb(0 0 0 / 0.55)); --ui-play-c: contrast-color(var(--ui-play-bg)); }
 	:where(ui-play[ink])  { --ui-play-c: attr(ink type(<color>), hsl(0 0% 100%)); }
-	/* Typed attr() fallback — Safari/Firefox. A custom property PARSES the literal
-	   `attr(…)` stream, so it never goes guaranteed-invalid and no var() fallback
-	   fires; the disc loses its background at computed-value time instead. Restore
-	   the attr() defaults; ../base/polyfills/attr-fallback.js upgrades to the
-	   element's own fill/ink. Detect on a REAL property — `--x: attr(…)` is true
-	   in Safari too. Keep after the hue rules. */
+	/* typed attr() has NO fallback in Safari/FF. Docs: ../base/polyfills/readme.md */
 	@supports not (background-color: attr(x type(<color>), red)) {
 		:where(ui-play[fill]) { --ui-play-bg: rgb(0 0 0 / 0.55); }
 		:where(ui-play[ink])  { --ui-play-c: hsl(0 0% 100%); }
 	}
 
-	/* size — from size= or the card's play(<size>). md (3em) = default. */
+	/* size — md (3em) = default */
 	:where(ui-play[size="sm"], [media*="play(sm)"] ui-play) button { --ui-play-sz: 2.25em; --ui-play-icon-sz: 1em; }
 	:where(ui-play[size="lg"], [media*="play(lg)"] ui-play) button { --ui-play-sz: 4em;    --ui-play-icon-sz: 2em; }
 	:where(ui-play[size="xl"], [media*="play(xl)"] ui-play) button { --ui-play-sz: 5em;    --ui-play-icon-sz: 2.5em; }
 
-	/* corner — from radius= or the card's play(<corner>). circle = default.
-	   non sharp · rnd rounded · pll pill · crc circle · sqr squircle. */
+	/* corner — non sharp · rnd rounded · pll pill · crc circle (default) · sqr squircle */
 	:where(ui-play[radius~="non"], [media*="play(non)"] ui-play) { --ui-play-radius: 0; }
 	:where(ui-play[radius~="rnd"], [media*="play(rnd)"] ui-play) { --ui-play-radius: var(--radius-lg); }
 	:where(ui-play[radius~="pll"], [media*="play(pll)"] ui-play) { --ui-play-radius: var(--radius-pill); }
 	:where(ui-play[radius~="crc"], [media*="play(crc)"] ui-play) { --ui-play-radius: var(--radius-circle); }
 	:where(ui-play[radius~="sqr"], [media*="play(sqr)"] ui-play) { --ui-play-radius: var(--radius-circle); --ui-play-corner: superellipse(var(--squircle-md)); }
 
-	/* brand shapes — recolor the disc into a platform badge, keeping the
-	   white <ui-icon> arrow on top. corner-shape: superellipse() carves the
-	   YouTube squircle; where unsupported it degrades to plain border-radius.
-	   Triggered by the explicit `variant` OR, when nested, an ancestor's
-	   `provider=` (e.g. <ui-media provider="youtube">) — so a plain <ui-play>
-	   inside a provider frame brands itself, no redundant variant needed. */
+	/* === Brand shapes — variant= OR an ancestor provider= (<ui-media provider>) === */
+
+	/* youtube — gap comes from a smaller glyph, NOT padding (which would break the ratio) */
 	:where(ui-play[variant~="youtube"], [provider="youtube"] ui-play) button {
-		/* Gap comes from a smaller glyph (NOT padding — padding would overflow the
-		   box and break the ratio). Width follows --ui-play-sz via the ratio, so
-		   the badge scales with `size` and font-size like every other variant. */
 		--ui-play-icon-sz: calc(var(--ui-play-sz) / 3);
 		aspect-ratio: 1.422;
 		background: var(--ui-play-bg, #ff0033);
 		border-radius: var(--ui-play-radius, var(--ui-play-sz, 3em));
 		corner-shape: var(--ui-play-corner, superellipse(var(--squircle-md)));
-	}
-	:where(ui-play[variant~="youtube"], [provider="youtube"] ui-play) button:is(:hover, :focus-visible) {
-		background: var(--ui-play-bg-hover, #d10029);
+
+		&:is(:hover, :focus-visible) { background: var(--ui-play-bg-hover, #d10029); }
 	}
 
-	/* vimeo — cyan disc; keeps the <ui-icon> arrow (base button is already a circle) */
+	/* vimeo — cyan disc (the base button is already a circle) */
 	:where(ui-play[variant~="vimeo"], [provider="vimeo"] ui-play) button {
 		background: var(--ui-play-bg, #1ab7ea);
-	}
-	:where(ui-play[variant~="vimeo"], [provider="vimeo"] ui-play) button:is(:hover, :focus-visible) {
-		background: var(--ui-play-bg-hover, #138fb8);
+
+		&:is(:hover, :focus-visible) { background: var(--ui-play-bg-hover, #138fb8); }
 	}
 
-	/* rounded — clip the disc into a right-pointing play triangle. The shape() IS
-	   the arrow, so the <ui-icon> glyph is hidden. Corner rounding is driven by a
-	   single radius (--ui-play-round); the tip backs off further on X and matches
-	   the slope on Y so it stays un-squished. variant="rounded(sm|md|lg)" sets the
-	   radius; plain "rounded" = md. */
-	:where(ui-play[variant*="rounded"]) button {
-		--ui-play-round: 4.5%;
-		--_wf: 0.85;             /* width factor (triangle length) */
-		--_shift: 10%;           /* optical centering nudge */
-		--_left: calc(25% + var(--_shift));
-		--_right: calc((25% + (50% * var(--_wf))) + var(--_shift));
-		--_top: 25%;
-		--_bottom: 75%;
-		--_mid: 50%;
-		--_rtx: calc(var(--ui-play-round) * 1.6);   /* slope-corrected tip X */
-		--_rty: calc(var(--ui-play-round) * 0.94);  /* slope-corrected tip Y */
-		border-radius: 0;
-		clip-path: var(--ui-play-shape, shape(
-			from var(--_left) calc(var(--_bottom) - var(--ui-play-round)),
-			curve to calc(var(--_left) + var(--ui-play-round)) var(--_bottom) with var(--_left) var(--_bottom),
-			line to calc(var(--_right) - var(--_rtx)) calc(var(--_mid) + var(--_rty)),
-			curve to calc(var(--_right) - var(--_rtx)) calc(var(--_mid) - var(--_rty)) with var(--_right) var(--_mid),
-			line to calc(var(--_left) + var(--ui-play-round)) var(--_top),
-			curve to var(--_left) calc(var(--_top) + var(--ui-play-round)) with var(--_left) var(--_top),
-			line to var(--_left) calc(var(--_bottom) - var(--ui-play-round)),
-			close
-		));
-	}
-	:where(ui-play[variant*="rounded"]) ui-icon {
-		display: none;
+	/* rounded — the clip IS the arrow, so the glyph is hidden */
+	:where(ui-play[variant*="rounded"]) {
+		& button {
+			--ui-play-round: 4.5%;
+			--_wf: 0.85;             /* triangle length */
+			--_shift: 10%;           /* optical centering nudge */
+			--_left: calc(25% + var(--_shift));
+			--_right: calc((25% + (50% * var(--_wf))) + var(--_shift));
+			--_top: 25%;
+			--_bottom: 75%;
+			--_mid: 50%;
+			--_rtx: calc(var(--ui-play-round) * 1.6);   /* slope-corrected tip X */
+			--_rty: calc(var(--ui-play-round) * 0.94);  /* slope-corrected tip Y */
+			border-radius: 0;
+			clip-path: var(--ui-play-shape, shape(
+				from var(--_left) calc(var(--_bottom) - var(--ui-play-round)),
+				curve to calc(var(--_left) + var(--ui-play-round)) var(--_bottom) with var(--_left) var(--_bottom),
+				line to calc(var(--_right) - var(--_rtx)) calc(var(--_mid) + var(--_rty)),
+				curve to calc(var(--_right) - var(--_rtx)) calc(var(--_mid) - var(--_rty)) with var(--_right) var(--_mid),
+				line to calc(var(--_left) + var(--ui-play-round)) var(--_top),
+				curve to var(--_left) calc(var(--_top) + var(--ui-play-round)) with var(--_left) var(--_top),
+				line to var(--_left) calc(var(--_bottom) - var(--ui-play-round)),
+				close
+			));
+		}
+		& ui-icon { display: none; }
 	}
 	:where(ui-play[variant~="rounded(sm)"]) button { --ui-play-round: 2.5%; }
 	:where(ui-play[variant~="rounded(md)"]) button { --ui-play-round: 4.5%; }

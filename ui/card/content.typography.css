@@ -1,13 +1,9 @@
 /**
- * ui-content — typography: scale stops, the master step scl(), the relational
- * ladders, the four styling groups (eb/hl/tx/mt) and fnt().
- *
- * SOURCE ORDER IS LOAD-BEARING — everything ties at :where() specificity, so the
- * cascade is decided by order within this file:
+ * ui-content — type scale, scl(), the relational ladders, the eb/hl/tx/mt groups.
+ * SOURCE ORDER IS LOAD-BEARING (everything ties at :where() specificity):
  *   base scl() < md:scl() < lg:scl() < base hl() < md:hl() < lg:hl()
- * Do not reorder these blocks. Docs: content.md § Internals
- * @version 4.0.0
- * @author Mads Stoumann
+ * Do not reorder. Docs: docs/content.md § Internals
+ * @version 4.0.0 · @author Mads Stoumann
  */
 @layer bs-component {
 
@@ -26,8 +22,7 @@
 		--ui-content-headline-fluid-2xl: clamp(2.25rem, 1.20rem + 7cqi, 5.50rem);
 		--ui-content-headline-fluid-3xl: clamp(2.50rem, 1.00rem + 11cqi, 8.00rem);
 
-		/* body — the active props are set by scl() and inherit down; defining them on
-		   ui-content here would block that inheritance */
+		/* body — scl() sets the active props; defining them here would block inheritance */
 		--ui-content-fs-sm: var(--ui-content-fs-fluid-sm);
 		--ui-content-fs-md: var(--ui-content-fs-fluid-md);
 		--ui-content-fs-lg: var(--ui-content-fs-fluid-lg);
@@ -52,9 +47,7 @@
 		--ui-content-text-shadow: 0 1px 3px color-mix(in oklab, #000 55%, transparent);
 	}
 
-	/* === scl(fix) / scl(fluid) — static scale MODE (not a step). :is() NOT :where()
-	   on purpose, so a nested host's own mode token doesn't lose to an ancestor's
-	   descendant rule; fluid comes after fix, so on a tie fluid wins. === */
+	/* === scl(fix) / scl(fluid) — scale MODE. :is() NOT :where(), deliberately. === */
 	:is([content~="scl(fix)"]),
 	:where([content~="scl(fix)"]) :is(ui-content, [content]) {
 		--ui-content-fs-sm: var(--font-size-sm);
@@ -261,8 +254,7 @@
 		}
 	}
 
-	/* === TYPE STYLING — four groups (eb / hl / tx / mt), each with four disjoint
-	   arg vocabularies (tone / size / weight / flag) === */
+	/* === TYPE STYLING — eb/hl/tx/mt, each with four disjoint arg vocabularies === */
 
 	/* eb() — eyebrow group: tone / weight / size / flat flag */
 	:where([content~="eb(shr)"])    { --ui-content-eyebrow-ink: var(--ui-content-shr); }
@@ -349,8 +341,7 @@
 	:where([content~="mt(800)"])    { --ui-content-meta-weight: 800; }
 	:where([content~="mt(900)"])    { --ui-content-meta-weight: var(--font-weight-black); }
 	:where([content~="mt(shd)"])    { --ui-content-meta-text-shadow: var(--ui-content-text-shadow); }
-	/* mt(<size>) — meta-group base size; the meta parts multiply their factor onto
-	   --ui-content-meta-base */
+	/* mt(<size>) — meta-group base; the meta parts multiply their factor onto it */
 	:where([content~="mt(sm)"]),
 	:where(ui-card[content~="mt(sm)"]) > cq-box,
 	:where(lay-out-group[content~="mt(sm)"]) > cq-box,

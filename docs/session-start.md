@@ -123,7 +123,19 @@
 4. Docs are part of the change: manifest `notes` feed generated docs; hand-written
    prose near a changed token must be updated in the same commit. New/renamed
    tokens get demo coverage in the relevant ui/card/*.html page.
-5. All work on the v4 line; commit per logical change with descriptive messages.
+5. **NEVER write long comments in CSS — prose belongs in the markdown docs.**
+   A CSS comment is a one-line marker, and it points at the doc that carries the
+   reasoning (`docs/media.md`, `docs/media.carousel.md`, `readme.md`, …). Rules:
+   - one line, two only when the invariant genuinely needs it; never a paragraph
+   - file headers are ~4 lines: what the sheet is, `Docs:` pointer, version/author
+   - keep the terse *marker* for load-bearing invariants — "KEEP IN SYNC with
+     NOT_SLIDE", "UNLAYERED on purpose", "Do NOT re-migrate", "Keep last" — and
+     move the *explanation* behind them into the doc
+   - measurements, browser-bug write-ups, rationale and history go to the doc,
+     never inline. If it can't be said in one line, it isn't a CSS comment.
+   The tokens lint strips comments before its needle audit, so trimming a comment
+   can never break it — there is no reason to keep prose in the sheet.
+6. All work on the v4 line; commit per logical change with descriptive messages.
 
 ## Known sharp edges
 

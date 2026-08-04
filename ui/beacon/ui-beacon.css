@@ -1,35 +1,15 @@
 /**
- * ui-beacon
- * @version 5.0.0
- * @date 2026-07-23
- * @author Mads Stoumann
- *
- * Live/status indicator — the chip's animated counterpart. Marker-class
- * furniture: plain text-only markup, valid inside a reveal <summary>.
- *
- * Sections: A. Base · B. Furniture axes (theme/fill/ink · size) · C. Faces
- * (pill · solid · ticker · dots) · D. Animations · E. Corner axis · F. Keyframes.
- * Full docs: readme.md.
+ * ui-beacon — live/status indicator, the chip's animated counterpart. Marker-class
+ * furniture: text-only markup, valid inside a reveal <summary>. Docs: readme.md
+ * @version 5.0.0 · @author Mads Stoumann
  */
 @property --_slide { syntax: "<percentage>"; inherits: true; initial-value: 0%; }
 @property --_fade  { syntax: "<number>"; inherits: true; initial-value: 1; }
 
 @layer bs-component {
 	:where(ui-beacon) {
-		/* ───────── A. Base ─────────
-		   Colour is three slots, same model as ui-chip:
-		     --ui-beacon-accent  the hue input — dot, solid plate, ticker panel
-		     --ui-beacon-bg      the plate (left unset; each face supplies its own
-		                         default through var(--ui-beacon-bg, <fallback>))
-		     --ui-beacon-c       the ink, read ONLY by the plated faces (solid/
-		                         ticker). The bare dot and the pill have no opaque
-		                         plate, so their label ink is the accent itself —
-		                         a theme's curated ink (white) would vanish on the
-		                         page background. Same split as the chip's
-		                         light/outline variants.
-
-		   Only tokens read from more than one place are declared below; single-use
-		   ones carry their default inline at the use site, as var(--token, <fb>). */
+		/* ── A. Base — colour is three slots (accent / bg / c), as ui-chip. Only
+		   multi-use tokens are declared here. Docs: readme.md § Colour ── */
 		--ui-beacon-accent: var(--color-text);
 		--ui-beacon-c: contrast-color(var(--ui-beacon-accent));
 
@@ -73,14 +53,8 @@
 		/* ───────── B. Furniture axes — theme/fill/ink · size ─────────
 		   Each axis: `&[attr]` = standalone, `:where([media*="beacon(…)"]) &` = card token. */
 
-		/* colour — hue. Standalone theme= resolves via base/theme.css into --_theme-*
-		   (incl. the pale/muted modifiers); the light/dark modifiers set color-scheme
-		   on the beacon directly. Card-routed media="beacon(<hue>)" feeds the
-		   --ui-theme-* bundle. */
-		/* Standalone theme= flows through base/theme.css. Card media="beacon(<hue>)"
-		   feeds the SAME resolver: hue → --_theme-base-*, pale/muted transform it
-		   (hue-agnostic), consumer maps the result to accent/ink. Don't combine
-		   theme= with a media hue — both write --_theme-*. */
+
+		/* colour — theme= and media="beacon(<hue>)" share one resolver; don't combine */
 		&[theme] { --ui-beacon-accent: var(--_theme-bg); --ui-beacon-c: var(--_theme-c, var(--_theme-ink)); }
 		:where([media*="beacon(red)"])    & { --_theme-base-bg: var(--ui-theme-red-bg);    --_theme-base-c: var(--ui-theme-red-c); }
 		:where([media*="beacon(orange)"]) & { --_theme-base-bg: var(--ui-theme-orange-bg); --_theme-base-c: var(--ui-theme-orange-c); }
@@ -91,11 +65,7 @@
 		:where([media*="beacon(slate)"])  & { --_theme-base-bg: var(--ui-theme-slate-bg);  --_theme-base-c: var(--ui-theme-slate-c); }
 		:where([media*="beacon(black)"])  & { --_theme-base-bg: var(--ui-theme-black-bg);  --_theme-base-c: var(--ui-theme-black-c); }
 		:where([media*="beacon(white)"])  & { --_theme-base-bg: var(--ui-theme-white-bg);  --_theme-base-c: var(--ui-theme-white-c); }
-		/* HUE TRUTH SET (nine): red orange green blue accent black white gray slate.
-		   slate is a canonical hue in its own right (the fifth neutral, white < gray <
-		   slate < black), not an alias of gray. The doc-era beacon(dark)/beacon(light)/
-		   beacon(subtle) aliases were REMOVED in v5 — use beacon(black)/beacon(white)/
-		   beacon(gray). */
+
 		/* pale = light tint + hue ink · muted = translucent plate (hue-agnostic) */
 		:where([media*="beacon(pale)"])  & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), var(--color-surface) 80%); --_theme-c: var(--_theme-base-bg); }
 		:where([media*="beacon(muted)"]) & { --_theme-bg: color-mix(in srgb, var(--_theme-base-bg), transparent 50%); --_theme-c: var(--_theme-base-c); }
@@ -109,13 +79,7 @@
 			--ui-beacon-c: contrast-color(var(--ui-beacon-accent));
 		}
 		&[ink] { --ui-beacon-c: attr(ink type(<color>), hsl(0, 0%, 100%)); }
-		/* Typed attr() fallback — Safari/Firefox. A custom property PARSES the
-		   literal `attr(…)` stream, so it never goes guaranteed-invalid and no
-		   var() fallback fires; the dot/plated faces lose their accent at
-		   computed-value time instead. Restore the attr() defaults;
-		   ../base/polyfills/attr-fallback.js upgrades to the element's own
-		   fill/ink. Detect on a REAL property — `--x: attr(…)` is true in Safari
-		   too. Keep after the hue rules. */
+		/* typed attr() has NO fallback in Safari/FF. Docs: ../base/polyfills/readme.md */
 		@supports not (background-color: attr(x type(<color>), red)) {
 			&[fill] { --ui-beacon-accent: var(--color-text); }
 			&[ink]  { --ui-beacon-c: hsl(0, 0%, 100%); }
@@ -133,9 +97,7 @@
 
 	/* ───────── C. Faces — pill · solid · ticker ───────── */
 
-	/* pill — chip-like tinted plate + accent dot; label ink stays the accent.
-	   --ui-beacon-radius is never declared, only ever set by the corner axis, so
-	   each face keeps its own default here and an explicit radius= wins outright. */
+	/* pill — tinted plate + accent dot; label ink stays the accent */
 	:where(ui-beacon[variant~="pill"], [media*="beacon(pll)"] ui-beacon) {
 		background: var(--ui-beacon-bg, color-mix(in oklch, var(--ui-beacon-accent) var(--ui-beacon-tint), var(--color-surface)));
 		border-radius: var(--ui-beacon-radius, var(--radius-pill));
@@ -170,13 +132,8 @@
 		}
 	}
 
-	/* ticker — sliding accent panel over a tinted track + a trailing dot loader.
-	   Markup-free: both are pseudo-elements riding the registered --_slide clock.
-
-	   Always LTR: the slide is driven by signed percentages on text-indent and
-	   translate, which flip meaning under `direction: rtl` and desynchronise the
-	   text from the panel it rides on. Pinning direction keeps the choreography
-	   intact on RTL pages; the label's own bidi run still shapes correctly. */
+	/* ticker — markup-free sliding panel + dot loader, pinned LTR (signed
+	   percentages desynchronise under rtl). Docs: readme.md § Ticker */
 	:where(ui-beacon[variant~="ticker"], [media*="beacon(tck)"] ui-beacon) {
 		background: var(--ui-beacon-bg, color-mix(in oklch, var(--ui-beacon-accent) var(--ui-beacon-tint), var(--color-surface)));
 		border-radius: var(--ui-beacon-radius, var(--radius-sm));
@@ -229,16 +186,8 @@
 		}
 	}
 
-	/* dots — chat-style "someone is typing": three dots hopping in sequence.
-	   Still one element and zero markup. Three background layers, each a fixed-
-	   size circle; the hop animates each layer's background-position Y
-	   independently (background-size stays put — that's the ticker loader's
-	   trick, and it fades rather than moves).
-
-	   Geometry: the box is one dot tall plus a jump's worth of clearance above
-	   AND below, so resting at y=50% lands the dots on the line's centre with no
-	   nudging, and y=0% is exactly one --ui-beacon-dots-jump higher.
-	   The strip replaces the dot, not the label — a text label still works. */
+	/* dots — three background layers hopping via background-position Y; the box
+	   carries a jump's clearance both sides. Docs: readme.md § Dots */
 	:where(ui-beacon[variant~="dots"], [media*="beacon(dts)"] ui-beacon)::before {
 		--_g: no-repeat radial-gradient(circle closest-side, currentColor 90%, transparent);
 		background: var(--_g), var(--_g), var(--_g);
@@ -249,10 +198,7 @@
 		inline-size: var(--ui-beacon-dots-width);
 	}
 
-	/* ───────── D. Animations — bare dot / dots / pill (solid + ticker own theirs) ─────────
-	   The dots face animates by default (it *is* a live indicator), so its rule
-	   comes first: the explicit animation= rules below are attribute-gated and
-	   later in source order, so an author's choice still wins. */
+	/* ── D. Animations — the dots face animates by default, so it comes FIRST ── */
 	@media (prefers-reduced-motion: no-preference) {
 		:where(ui-beacon[variant~="dots"], [media*="beacon(dts)"] ui-beacon)::before {
 			animation: beacon-bounce var(--ui-beacon-bounce-duration, 1.1s) var(--ui-beacon-delay) infinite linear;
@@ -282,19 +228,8 @@
 		animation-play-state: paused;
 	}
 
-	/* ───────── E. Corner axis — from radius= or the card's beacon(<corner>).
-	   The ONLY place --ui-beacon-radius is set, so each face above keeps its own
-	   default (pill = pill, solid/ticker = sm) and an explicit radius= overrides
-	   all three regardless of source order. `pll` and `non` are NOT part of this
-	   axis — beacon already spends them on the pill face and animation-off; `crc`
-	   is omitted too (a circle makes no sense on a text-bearing plate).
-
-	   `radius="pll"` is the one asymmetric member: as an ATTRIBUTE it is free
-	   (`radius=` and `variant=` are separate namespaces), so radius="pll" rounds
-	   the solid/ticker plate fully — a pill ticker. There is no beacon(pll) card
-	   arm for it, because in the card's flat token namespace beacon(pll) already
-	   means the pill face. From a card, reach it with an inline
-	   --ui-beacon-radius instead. ───────── */
+	/* ── E. Corner axis — the ONLY place --ui-beacon-radius is set. `pll`/`non`/`crc`
+	   are deliberately not members. Docs: readme.md § Corners ── */
 	:where(ui-beacon[radius~="rnd"], [media*="beacon(rnd)"] ui-beacon) { --ui-beacon-radius: var(--radius-md); }
 	:where(ui-beacon[radius~="sqr"], [media*="beacon(sqr)"] ui-beacon) { --ui-beacon-radius: 0.75em; --ui-beacon-corner: superellipse(var(--squircle-md)); }
 	:where(ui-beacon[radius~="pll"]) { --ui-beacon-radius: var(--radius-pill); }
@@ -321,11 +256,7 @@
 		90%  { --_slide: 120%; color: #0000; }
 		100% { --_slide: 0%; color: #0000; }
 	}
-	/* Staggered hop, then a rest beat. Each dot's arc is sin², which has zero
-	   velocity at BOTH ends — so it settles onto the line instead of snapping,
-	   and the pause after the third dot (75%–100%) reads as a beat rather than
-	   a stall. Sampled every 4% and run `linear`: an easing function would ease
-	   between every keyframe pair and stutter: the curve does the easing. */
+	/* staggered sin² hop + a rest beat; sampled every 4% and run `linear` on purpose */
 	@keyframes beacon-bounce {
 		0%    { background-position: 0% 50%, 50% 50%, 100% 50%; }
 		4%    { background-position: 0% 45.7%, 50% 50%, 100% 50%; }

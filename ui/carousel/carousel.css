@@ -42,9 +42,8 @@
 			--ui-carousel-marker-inset: var(--ui-carousel-thumb-gap, 1rem);
 			--ui-carousel-marker-size: var(--ui-carousel-thumb-size, 2.25rem);
 		}
-		/* filmstrip / rail: thumbs sit in a band (page bg, not the image), so the white active
-		   border vanishes. Default the active border to a page-contrasting ink; still overridable
-		   via --ui-carousel-thumb-border-color-active. */
+		/* filmstrip / rail: thumbs sit on the page bg, so default the active border to
+		   a contrasting ink (still overridable) */
 		&:where([media*="mrk(tmb)"]:is([media*="mrk(blw)"], [media*="mrk(abv)"], [media*="nav(blw)"], [media*="nav(abv)"], [media*="mrk(rail)"])) {
 			--ui-carousel-thumb-border-color-active: color-mix(in oklab, CanvasText 70%, transparent);
 		}
@@ -85,11 +84,8 @@
 		anchor-name: --ui-carousel-thumbs;
 		anchor-scope: --ui-carousel-thumbs;
 	}
-	/* mrk(lbl) scroller arm — same mechanism as the thumb strip above, for the same reason: the
-	   pill row is TEXT, so a handful of labels outgrows any frame. A NAMED anchor is required —
-	   a plain %, a both-edge inset pair and the implicit (nameless) anchor-size() all fail to
-	   constrain a ::scroll-marker-group. Scoped so carousels don't cross-bind; skipped when tmb
-	   owns the marker family (it declares its own name on the same element). */
+	/* mrk(lbl) scroller arm — a NAMED anchor is required to constrain a
+	   ::scroll-marker-group. Docs: ui/card/docs/media.carousel.md § Labels */
 	:where(ui-card, ui-reveal):where([media*="mrk(lbl)"]:not([media*="mrk(tmb)"])) ui-media,
 	:where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]:not([media*="mrk(tmb)"])) {
 		anchor-name: --ui-carousel-labels;
@@ -117,14 +113,8 @@
 		&:where([media*="arw(sft)"]) { --ui-carousel-arrow-radius: var(--radius-sm, 0.25rem); }
 		/* arw(hid) — auto-hide the dead-end arrow */
 		&:where([media*="arw(hid)"]) { --ui-carousel-arrow-disabled-opacity: 0; }
-		/* nav(blw)/nav(abv) — control band. The band is TRANSPARENT (--ui-media-bg is #0000 for
-		   every nav carousel), so it shows the surface behind it: --ui-card-bg in a card, the page
-		   surface standalone — both light-dark() pairs. That surface always carries its own ink
-		   (`color` on ui-card = --color-text, or --_theme-c when themed), so the dot/pill ink is
-		   derived from currentColor and follows color-scheme + theme= for free. Override the whole
-		   set with --ui-carousel-controls-ink, one value at a time with the --ui-carousel-marker-
-		   and --ui-carousel-pill- properties, or force a side with mrk(lgt)/mrk(drk) (declared
-		   below, so they win). */
+		/* nav(blw)/nav(abv) control band — transparent, so control ink derives from
+		   currentColor and follows color-scheme + theme= for free. Docs: ui/card/docs/media.carousel.md */
 		&:where([media*="nav(blw)"], [media*="nav(abv)"]) {
 			--ui-carousel-arrow-bg: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 8%, transparent);
 			--ui-carousel-arrow-bg-hover: color-mix(in oklab, var(--ui-carousel-controls-ink, currentColor) 16%, transparent);
@@ -187,12 +177,8 @@
 				top: calc(anchor(bottom) - var(--ui-carousel-overlay-gap) - var(--ui-carousel-marker-size));
 				z-index: 3;
 			}
-			/* one dot per slide — furniture (chip/sticker/play/save) excluded.
-			   `color: inherit` is load-bearing, not cosmetic: the UA styles a ::scroll-marker like
-			   an anchor, so its `color` defaults to LinkText (blue). The band ink is built on
-			   currentColor, which resolves against the PSEUDO — inheriting the slide's colour is
-			   what makes it the card's ink instead of the UA link blue. (Same reason mrk(lbl)
-			   sets an explicit colour + text-decoration.) */
+			/* one dot per slide. `color: inherit` is load-bearing: the UA styles a
+			   ::scroll-marker like an anchor, so it would default to LinkText. */
 			& > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
 				background: var(--ui-carousel-marker-bg);
 				block-size: var(--ui-carousel-marker-size);
@@ -208,15 +194,7 @@
 			}
 		}
 
-		/* media="pages" on a ui-media scroller (below the md viewport breakpoint):
-		   the <lay-out> page wrappers dissolve (display:contents —
-		   media.carousel.css), so their cards are the slides and each gets its own
-		   dot. Grandchild markers collect into the scroller's group automatically;
-		   the boxless wrapper generates none. Viewport-scoped: above 540px the page
-		   is a real slide with one dot, and its children must NOT add markers.
-		   Dots only — the pll/hyb/tmb/lbl marker families stay per-direct-slide.
-		   Deliberately NOT the lay-out[overflow] arm: there `pages` means math
-		   paging over flat children (layout/core/base.css), never wrappers. */
+		/* media="pages" below md — dots only, and NOT the lay-out[overflow] arm. Docs: ui/card/docs/media.carousel.md */
 		@media (width < 540px) {
 			:where(ui-card, ui-reveal):where([media~="pages"]) :where(ui-media) > lay-out > *::scroll-marker,
 			ui-media:where([media~="pages"]) > lay-out > *::scroll-marker {
@@ -303,12 +281,7 @@
 		:where(ui-card, ui-reveal):where([media*="mrk(non)"]) :where(ui-media),
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(non)"]) { scroll-marker-group: none; }
 
-		/* mrk(tmb) horizontal thumb strips (overlay corners + blw/abv bands, NOT the rail)
-		   must never overflow the frame: cap to the scroller width and scroll instead. Wide
-		   thumbs (tmb(16/9)) or many thumbs would otherwise spill past the edge / neighbour.
-		   The cap uses anchor-size() (the scroller declares --ui-carousel-thumbs below) — a
-		   plain `%` max-inline-size resolves against the wrong containing block for a
-		   ::scroll-marker-group and does not constrain it. */
+		/* mrk(tmb) strips cap via anchor-size() (a `%` won't). Docs: ui/card/docs/media.carousel.md */
 		:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]:not([media*="mrk(rail)"])) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]:not([media*="mrk(rail)"]))::scroll-marker-group {
 			max-inline-size: calc(anchor-size(--ui-carousel-thumbs inline) - 2 * var(--ui-carousel-overlay-gap, 0.75rem));
@@ -347,9 +320,7 @@
 			}
 		}
 
-		/* mrk(tmb): play badge on thumbnails whose slide is (or contains) a <video> — a purely visual
-		   overlay (no controls). Auto-detected; glyph via --ui-carousel-thumb-play, size via
-		   --ui-carousel-thumb-play-size. Layered ON TOP of the poster (and the active timer stripe). */
+		/* mrk(tmb) play badge — a visual overlay on video thumbs, auto-detected */
 		:where(ui-card, ui-reveal):where([media*="mrk(tmb)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker):is(video, :has(video))::scroll-marker,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(tmb)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker):is(video, :has(video))::scroll-marker {
 			background:
@@ -364,9 +335,7 @@
 				var(--ui-carousel-thumb-url) center / cover no-repeat var(--ui-carousel-thumb-bg, rgb(0 0 0 / 0.2));
 		}
 
-		/* mrk(lbl) — text-label markers: each slide's aria-label becomes a pill.
-		   Look-and-feel is exposed as --ui-carousel-label-* custom properties (not tokens);
-		   positioning reuses the 9-grid mrk() cells below (with a height fix — labels are auto-height). */
+		/* mrk(lbl) — each slide's aria-label becomes a pill; styled via --ui-carousel-label-* */
 		:where(ui-card, ui-reveal):where([media*="mrk(lbl)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
 			align-items: center;
@@ -390,9 +359,8 @@
 				color var(--duration-fast, 100ms) var(--ease-default, ease);
 			white-space: nowrap;
 		}
-		/* :target-current repeats the full geometry (not just colours) — some Chrome builds don't
-		   cascade the plain ::scroll-marker rule into the :target-current state, so the current pill
-		   would otherwise drop to UA defaults (big radius, no padding). Self-contained = browser-proof. */
+		/* :target-current repeats the FULL geometry — some Chrome builds don't cascade
+		   the plain ::scroll-marker rule into this state */
 		:where(ui-card, ui-reveal):where([media*="mrk(lbl)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
 			align-items: center;
@@ -410,16 +378,7 @@
 			text-decoration: none;
 			white-space: nowrap;
 		}
-		/* The group box. Two jobs:
-		   1. optional background / shadow (transparent + zero-padding by default, so the group
-		      geometry is unchanged until a dev opts in);
-		   2. the OVERFLOW GUARD — the group caps to the frame's inline size and becomes its own
-		      horizontal scroller instead of spilling past the frame edges. ::scroll-marker-group
-		      is a scroll-target-group, so it keeps the :target-current pill scrolled into view by
-		      itself — no JS, no scroll-into-view call. The scrollbar is hidden by default (the
-		      current label already tracks the carousel); set --ui-carousel-label-group-scrollbar
-		      to `thin`/`auto` to show it, or --ui-carousel-label-group-wrap: wrap for a wrapping
-		      block of labels instead of a scroller. See ui/card/docs/media.carousel.md § Labels. */
+		/* the group box — optional plate + the OVERFLOW GUARD. Docs: ui/card/docs/media.carousel.md § Labels */
 		:where(ui-card, ui-reveal):where([media*="mrk(lbl)"]) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"])::scroll-marker-group {
 			backdrop-filter: var(--ui-carousel-label-group-backdrop, none);
@@ -497,11 +456,8 @@
 			left: auto;
 			right: calc(anchor(right) + var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
 		}
-		/* arw(set) inline-start — cells ts/cs/bs. BOTH arms are required: the ancestor arm for a
-		   card/reveal host, the self arm for a standalone <ui-media> or <lay-out overflow>. The
-		   self arm was lost when the legacy [arrow~="…"] attributes were dropped (it had never
-		   been given a [media*="arw(…)"] spelling), which left the inline letter dead on every
-		   non-card host — the cluster fell through to the inline-end default below. */
+		/* arw(set) inline-start — BOTH arms required: the ancestor arm for a card host,
+		   the self arm for a standalone <ui-media> / <lay-out overflow> */
 		:where(ui-card, ui-reveal):where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"])) :where(ui-media)::scroll-button(left),
 		:where(ui-media, lay-out[overflow]):where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"]))::scroll-button(left) {
 			left: calc(anchor(left) + var(--ui-carousel-overlay-gap)); right: auto;
@@ -530,15 +486,7 @@
 			right: calc(anchor(right) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
 		}
 
-		/* arw(bare) — drop the circle, paint the glyph as a recolourable shape.
-		   BAND ARROWS JOIN THIS RENDERING BY DEFAULT. The glyph is a baked data-URI SVG, and
-		   nothing (not light-dark(), which is colours-only) can recolour a url() per scheme — so
-		   the only way a band arrow can follow the band ink is to paint the glyph itself, from
-		   --ui-carousel-arrow-color. In mask mode the SVG's own stroke colour is irrelevant (only
-		   its alpha is read), which is what makes one glyph work in both schemes. The 8% circle it
-		   replaces was near-invisible anyway; --ui-carousel-arrow-bg still tints the hit area for
-		   anyone who raises it. arw(lgt)/arw(drk) opt OUT — those presets are a matched
-		   circle+glyph pair and keep the image rendering. */
+		/* arw(bare) — mask the glyph so it follows the band ink. Docs: ui/card/docs/media.carousel.md § Arrows */
 		:where(ui-card, ui-reveal):where([media*="arw(bare)"]) :where(ui-media),
 		:where(ui-media, lay-out[overflow]):where([media*="arw(bare)"]),
 		:where(ui-card, ui-reveal):where(:is([media*="nav(blw)"], [media*="nav(abv)"], [media*="arw(blw)"], [media*="arw(abv)"]):not([media*="arw(lgt)"], [media*="arw(drk)"])) :where(ui-media),
@@ -552,9 +500,7 @@
 			}
 			&::scroll-button(*):hover { background-color: var(--ui-carousel-arrow-color-hover, var(--ui-carousel-arrow-color)); --_arw-scale: var(--ui-carousel-arrow-hover-scale, 1.18); }
 			&::scroll-button(*):focus-visible { --_arw-scale: var(--ui-carousel-arrow-hover-scale, 1.18); }
-			/* disabled — keep the masked shape in the SAME ink, just dim it (a white bare arrow
-			   stays white, faded; the old glyph-dim swap repainted a fixed dark SVG → invisible
-			   on a dark page). */
+			/* disabled — dim the masked shape in the SAME ink, never swap the glyph */
 			&::scroll-button(*):disabled {
 				background-color: var(--ui-carousel-arrow-color);
 				opacity: var(--ui-carousel-arrow-disabled-opacity, 0.5);
@@ -563,10 +509,8 @@
 			}
 		}
 
-		/* arw(rev) — hide EVERY arrow (incl. disabled dead-ends) until the media is hovered or
-		   keyboard-focused. Declared after the nav/bare :disabled rules so its opacity:0 wins by
-		   source order; on reveal, enabled arrows go full, disabled ones show dimmed. Gated on
-		   @media (hover: hover) so touch — which never hovers — keeps them visible. */
+		/* arw(rev) — hide arrows until hover/focus. After the :disabled rules so it wins
+		   on source order; gated on (hover: hover) so touch keeps them visible. */
 		@media (hover: hover) {
 			:where(ui-card, ui-reveal):where([media*="arw(rev)"]) :where(ui-media),
 			:where(ui-media, lay-out[overflow]):where([media*="arw(rev)"]) {
@@ -700,9 +644,8 @@
 			&::scroll-button(up)   { left: calc(anchor(left) + var(--ui-carousel-overlay-gap)); right: auto; }
 			&::scroll-button(down) { left: auto; right: calc(anchor(right) + var(--ui-carousel-overlay-gap)); }
 		}
-		/* axis(y) + mrk(rail): vertical thumbnail rail beside the media (see media.carousel.md).
-		   Group positioned via anchor() on BOTH axes (per-scroller — plain insets collide across
-		   groups); arrows un-generated with content:none; thumbs shrink to a floor then scroll. */
+		/* axis(y) + mrk(rail) — vertical thumb rail; anchor() on BOTH axes, per-scroller
+		   (plain insets collide across groups). Docs: ui/card/docs/media.carousel.md */
 		:where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(rail)"]) :where(ui-media),
 		:where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(rail)"]) {
 			&::scroll-button(*) { content: none; }
@@ -830,10 +773,8 @@
 			right: calc(anchor(right) + 2 * var(--ui-carousel-overlay-gap) + 2 * var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
 		}
 
-		/* ---- mrk(lbl) height-agnostic vertical placement ----
-		   Dot cells anchor the group by its TOP edge + --ui-carousel-marker-size (a dot's height ==
-		   marker-size). Labels are auto-height, so re-anchor bottom/center cells by the group's own
-		   edges. Top-row cells (ts/tc/te) already anchor by anchor(top) and need no override. */
+		/* mrk(lbl) height-agnostic placement — labels are auto-height, so re-anchor the
+		   bottom/center cells by the group's own edges (top-row cells need no override) */
 		:where(ui-card, ui-reveal):where([media*="mrk(lbl)"]:not([media*="mrk(ts)"], [media*="mrk(tc)"], [media*="mrk(te)"], [media*="mrk(cs)"], [media*="mrk(cc)"], [media*="mrk(ce)"])) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]:not([media*="mrk(ts)"], [media*="mrk(tc)"], [media*="mrk(te)"], [media*="mrk(cs)"], [media*="mrk(cc)"], [media*="mrk(ce)"]))::scroll-marker-group {
 			top: auto;
@@ -845,14 +786,7 @@
 			bottom: auto;
 			transform: translateY(-50%);
 		}
-		/* NOTE (was: "clamping the pill group is not possible") — it is, with ONE caveat: the
-		   anchor-size() must name an anchor. `max-inline-size: <%>` resolves against the group's
-		   containing block (the card / lay-out, not the frame), a both-edge inset pair does not
-		   size the pseudo at all, and the implicit anchor-size(inline) does not resolve on a
-		   ::scroll-marker-group. `anchor-size(--name inline)` against an anchor-name declared on
-		   the scroller does — which is what the scroller arm above and the group rule now use.
-		   getComputedStyle() is NOT a witness here: it reports `none`/`auto` for any value holding
-		   an anchor function, which is what the old note misread as "the paint ignores it". */
+		/* clamping the pill group needs a NAMED anchor-size(). Docs: ui/card/docs/media.carousel.md § Labels */
 
 		/* ---- mrk(bar) — thin styled scrollbar (declared LAST so its geometry wins) ---- */
 		:where(ui-card, ui-reveal):where([media*="mrk(bar)"]) :where(ui-media)::scroll-marker-group,
@@ -904,21 +838,15 @@
 		to   { background-size: 100% 100%; }
 	}
 
-	/* mrk(tmb) active timer — animate the stripe's WIDTH as a registered custom property, not
-	   background-size. A background-size keyframe has to spell out every layer, and the layer
-	   count is not fixed: a plain thumb has 2 (stripe + image), a video thumb has 3 (play badge
-	   + stripe + image). CSS repeats a short size list over the extra layers, so the 2-value
-	   version put `cover` on the WHITE stripe of a video thumb and painted the whole marker
-	   white. One animated length keeps every layer's size where its own rule declared it. */
+	/* mrk(tmb) active timer — animate a registered LENGTH, not background-size: the
+	   layer count varies (2 plain, 3 with a play badge) and a short list repeats */
 	@keyframes ui-carousel-thumb-timer {
 		from { --ui-carousel-thumb-timer-progress: 0%; }
 		to   { --ui-carousel-thumb-timer-progress: 100%; }
 	}
 }
 
-/* Registered so the keyframe above can interpolate it (unregistered custom properties
-   animate discretely — the stripe would jump 0% → 100% at the end). Outside the layer:
-   @property is not a style rule and takes no layer scoping. */
+/* registered so the keyframe can interpolate it; @property takes no layer scoping */
 @property --ui-carousel-thumb-timer-progress {
 	syntax: "<length-percentage>";
 	inherits: false;

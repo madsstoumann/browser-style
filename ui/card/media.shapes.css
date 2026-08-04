@@ -1,14 +1,10 @@
 /**
- * ui-media — shp() shape LIBRARY. Opt-in: NOT bundled by ui-card.css, link it on
- * pages that use shp() (see media.shape.html). Each rule sets two neutral vars,
- * --_shp and --_shp-full, which a shared bridge wires into the clip + hover-morph
- * mechanism in media.css. Same @layer as media.css. Docs: media.md § Internals
- * @version 1.0.0
- * @author Mads Stoumann
+ * ui-media — shp() shape LIBRARY. Opt-in, NOT bundled by ui-card.css. Each rule
+ * sets --_shp + --_shp-full for media.css's clip/morph. Docs: docs/media.md
+ * @version 1.0.0 · @author Mads Stoumann
  */
 @layer bs-component {
-	/* private morph targets — full-bleed rects matched by vertex count so the shape
-	   interpolates cleanly */
+	/* morph targets — full-bleed rects matched by vertex count, so shapes interpolate */
 	:where([media*="shp("]) {
 		--_r4:  polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
 		--_r5:  polygon(100% 0%, 100% 100%, 50% 100%, 0% 100%, 0% 0%);
@@ -17,8 +13,7 @@
 		/* ellipse target for the curve shapes — 75% radii clear all 4 corners */
 		--_ell: ellipse(75% 75% at 50% 50%);
 
-		/* wire the neutral vars into the mechanism: FORWARD = clip to the shape at rest,
-		   morph to the full frame on hover */
+		/* FORWARD: clip to the shape at rest, morph to the full frame on hover */
 		--ui-media-shape: var(--_shp);
 		--ui-shape-morph: var(--_shp-full);
 	}

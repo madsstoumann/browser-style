@@ -1,10 +1,8 @@
 /**
- * ui-card — composition layer over the <ui-media> + <ui-content> primitives.
- * Owns the host surface, the media↔content arrangement (variant=), the overlay
- * bridge (ovr()), themes (theme=), corners (rds()) and the responsive tiers.
- * Docs: ui-card-tokens.md (+ media.md / content.md for the primitives).
- * @version 4.0.0
- * @author Mads Stoumann
+ * ui-card — composition over <ui-media> + <ui-content>: host surface, arrangement
+ * (variant=), overlay bridge (ovr()), theme=, rds(), responsive tiers.
+ * Docs: docs/ui-card-tokens.md · docs/media.md · docs/content.md
+ * @version 4.0.0 · @author Mads Stoumann
  */
 @import './media.css';
 @import './media.hover.css';
@@ -27,24 +25,22 @@
 		border-radius: var(--ui-card-radius);
 		box-shadow: var(--ui-card-shadow);
 		color: var(--color-text);
-		container-name: bs-card; /* the md:/lg: tier namespace — see the RESPONSIVE block */
+		container-name: bs-card; /* the md:/lg: tier namespace — see § RESPONSIVE */
 		container-type: inline-size;
 		display: grid;
 		overflow: hidden;
+
+		/* the grid layer — the queryable descendant container queries need */
+		> cq-box {
+			display: grid;
+			gap: 0;
+			grid-template-columns: var(--ui-card-cols, 1fr);
+		}
 	}
-	/* named here so the name and the @container rules that consume it stay in one
-	   file; <ui-reveal> declares its own container-type but joins this namespace */
+	/* <ui-reveal> declares its own container-type but joins this namespace */
 	:where(ui-reveal) { container-name: bs-card; }
 
-	/* layout grid layer (queryable descendant for container queries) */
-	:where(ui-card) > cq-box {
-		display: grid;
-		gap: 0;
-		grid-template-columns: var(--ui-card-cols, 1fr);
-	}
-
-	/* === CORNERS — rds(): round (global scale) or -sq (squircle) === */
-	/* KEEP IN LOCK-STEP with media.css and content.css — see ui-card-tokens.md */
+	/* === CORNERS — rds(). KEEP IN LOCK-STEP with media.css and content.css === */
 	:where([variant~="rds(non)"]) { --ui-card-radius: 0; }
 	:where([variant~="rds(sm)"])   { --ui-card-radius: var(--radius-sm); }
 	:where([variant~="rds(md)"])   { --ui-card-radius: var(--radius-md); }
@@ -53,15 +49,14 @@
 	:where([variant~="rds(2xl)"])  { --ui-card-radius: var(--radius-2xl); }
 	:where([variant~="rds(full)"]) { --ui-card-radius: var(--radius-circle, 50%); }
 	:where([variant~="rds(pill)"]) { --ui-card-radius: var(--radius-pill, 100px); }
-	/* squircle — radius + per-size exponent; --ui-card-squircle-exp is read by ui-reveal */
+	/* squircle — radius + per-size exponent (--ui-card-squircle-exp is read by ui-reveal) */
 	:where([variant~="rds(sm-sq)"]) { --ui-card-radius: var(--radius-sm-sq); --ui-card-squircle-exp: var(--squircle-sm); }
 	:where([variant~="rds(md-sq)"]) { --ui-card-radius: var(--radius-md-sq); --ui-card-squircle-exp: var(--squircle-md); }
 	:where([variant~="rds(lg-sq)"]) { --ui-card-radius: var(--radius-lg-sq); --ui-card-squircle-exp: var(--squircle-lg); }
 	:where([variant~="rds(xl-sq)"]) { --ui-card-radius: var(--radius-xl-sq); --ui-card-squircle-exp: var(--squircle-xl); }
 	:where(ui-card[variant*="-sq)"]) { corner-shape: superellipse(var(--ui-card-squircle-exp, 1.8)); }
 
-	/* === BORDER — bdr: opt-in hairline. Two arms: the card arm stays (0,0,0), the
-	   reveal arm names `> details` (0,0,1) — the surface a reveal actually shows. === */
+	/* === BORDER — bdr: opt-in hairline; the reveal arm names the surface it shows === */
 	:where([variant*="bdr"]:not(ui-reveal)) {
 		border: var(--ui-card-border-width, var(--border-width, 1px)) var(--ui-card-border-style, solid) var(--ui-card-border-color, var(--color-border));
 	}
@@ -95,10 +90,9 @@
 	:where([variant~="vis(media)"]) ui-content { display: none; }
 	:where([variant~="vis(content)"]) ui-media { display: none; }
 
-	/* === SUB — the card joins its parent <lay-out>'s subgrid rows (F-38).
-	   Two-hop flag relay, no breakpoint named here. See ui-card-tokens.md. === */
-	/* boundary — declared BEFORE the setter so the setter re-wins for a genuine
-	   direct child (both :where(), so source order decides) */
+	/* === SUB — the card joins its <lay-out>'s subgrid rows via a two-hop flag relay.
+	   Docs: docs/ui-card-tokens.md === */
+	/* boundary — BEFORE the setter, so the setter re-wins for a genuine direct child */
 	:where(ui-card, ui-reveal) :where(ui-card, ui-reveal) { --_sub: 0; }
 
 	/* hop 1 — the card reads its parent layout's live flag */
@@ -111,8 +105,7 @@
 		:where(ui-card[variant~="sub"]) > cq-box > ui-content { display: contents; }
 	}
 
-	/* === ALIGN-CONTENT — stacked layouts collect slack at the edge; row / overlay /
-	   single-part layouts stretch. Subject is :is(cq-box, summary) (F-14). === */
+	/* === ALIGN-CONTENT — stacked layouts collect slack; row/overlay/single stretch === */
 	:where([variant]) :is(cq-box, summary) { align-content: start; }
 	:where([variant~="col-r"]) :is(cq-box, summary) { align-content: space-between; }
 	:where(
@@ -121,8 +114,7 @@
 		[variant~="lg:row"], [variant~="lg:row-r"], [variant~="lg:vis(media)"], [variant~="lg:vis(content)"]
 	) :is(cq-box, summary) { align-content: stretch; }
 
-	/* === ovr() — stack content over media + place it; writes into the primitive
-	   namespaces so they stay self-contained. === */
+	/* === ovr() — stack content over media; writes into the primitive namespaces === */
 	:where([variant]) :is(ui-media, ui-content) { grid-area: var(--ui-card-stack, auto); }
 	:where([variant*="ovr("]) {
 		--ui-card-stack: 1 / 1;
@@ -152,10 +144,10 @@
 		color: var(--_theme-c, var(--color-text));
 	}
 
-	/* === RESPONSIVE — md:/lg: prefixes, two arms per token. content= SIZE lives in
-	   content.typography.css, where its source order is load-bearing. === */
+	/* === RESPONSIVE — md:/lg:, two arms per token; the container NAME is load-bearing.
+	   content= SIZE lives in content.typography.css. Docs: docs/ui-card-tokens.md === */
 
-	/* md (>= 25rem) — the container NAME is load-bearing (F-42) */
+	/* md (>= 25rem) */
 	@container bs-card (inline-size >= 25rem) {
 		:where([variant~="md:col"]) :is(cq-box, summary),
 		:where([variant~="md:col-r"]) :is(cq-box, summary)   { --ui-card-cols: 1fr; }
@@ -253,7 +245,7 @@
 		:where([media~="md:asr(21/9)"]) :is(cq-box, summary), :where(ui-media[media~="md:asr(21/9)"]) { --ui-media-ar: 21 / 9; }
 	}
 
-	/* lg (>= 44rem) — same two-arm + named-container model as md above */
+	/* lg (>= 44rem) — same two-arm model as md above */
 	@container bs-card (inline-size >= 44rem) {
 		:where([variant~="lg:col"]) :is(cq-box, summary),
 		:where([variant~="lg:col-r"]) :is(cq-box, summary)   { --ui-card-cols: 1fr; }
@@ -280,7 +272,7 @@
 		:where([content~="lg:gap(md)"])   :is(cq-box, summary), :where(ui-content[content~="lg:gap(md)"])   { --ui-content-gap: var(--spacing-md); }
 		:where([content~="lg:gap(lg)"])   :is(cq-box, summary), :where(ui-content[content~="lg:gap(lg)"])   { --ui-content-gap: var(--spacing-lg); }
 
-		/* padding: side > axis > all — see the md tier's note (R-17) */
+		/* padding: side > axis > all — see the md tier */
 		:where([content~="lg:pad(none)"]) :is(cq-box, summary), :where(ui-content[content~="lg:pad(none)"]) { --ui-content-p: 0; }
 		:where([content~="lg:pad(xs)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pad(xs)"])   { --ui-content-p: var(--spacing-xs); }
 		:where([content~="lg:pad(sm)"])   :is(cq-box, summary), :where(ui-content[content~="lg:pad(sm)"])   { --ui-content-p: var(--spacing-sm); }
@@ -352,8 +344,7 @@
 	}
 }
 
-/* === CROSS-DOCUMENT VIEW TRANSITIONS — OUTSIDE @layer on purpose
-   (@view-transition is a top-level at-rule). See ui-card-tokens.md. === */
+/* === CROSS-DOCUMENT VIEW TRANSITIONS — outside @layer (top-level at-rule) === */
 @view-transition { navigation: auto; }
 
 /* MANDATORY safety: no navigation transitions when reduced motion is asked for */

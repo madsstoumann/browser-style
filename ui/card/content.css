@@ -1,11 +1,8 @@
 /**
- * ui-content — the text column primitive. Standalone or nested in
- * <ui-card>/<ui-reveal>; configured by content= on the element or any ancestor.
- * Parts are styled by [data-part], never by tag. The TYPE LAYER (scl(), the
- * eb/hl/tx/mt groups, fnt()) lives in content.typography.css.
- * Docs: content.md
- * @version 4.0.0
- * @author Mads Stoumann
+ * ui-content — the text column; configured by content= on the element or any
+ * ancestor. Parts are styled by [data-part], never by tag. The TYPE LAYER lives
+ * in content.typography.css. Docs: docs/content.md
+ * @version 4.0.0 · @author Mads Stoumann
  */
 @layer bs-component {
 
@@ -18,8 +15,7 @@
 	:where([content~="pad(xl)"])   { --ui-content-p: var(--spacing-xl); }
 	:where([content~="pad(2xl)"])  { --ui-content-p: var(--spacing-2xl); }
 
-	/* AXIS + SIDE padding — one slot each; precedence resolves in the var() chain
-	   on the longhands below, not by the cascade */
+	/* AXIS + SIDE padding — precedence resolves in the § CONTAINER var() chain */
 	:where([content~="pb(none)"]) { --ui-content-pb: 0; }
 	:where([content~="pb(xs)"])   { --ui-content-pb: var(--spacing-xs); }
 	:where([content~="pb(sm)"])   { --ui-content-pb: var(--spacing-sm); }
@@ -98,8 +94,7 @@
 	:where([content~="tal(ctr)"])   { --ui-content-text-align: center; }
 	:where([content~="tal(end)"])   { --ui-content-text-align: end; }
 
-	/* === CORNERS — rds(). KEEP IN LOCK-STEP with ui-card.css and media.css.
-	   Serves a STANDALONE <ui-content> given a surface; inert inside a card. === */
+	/* === CORNERS — rds(). KEEP IN LOCK-STEP with ui-card.css and media.css === */
 	:where([content*="rds(non)"]) { --ui-content-radius: 0; }
 	:where([content*="rds(sm)"])   { --ui-content-radius: var(--radius-sm); }
 	:where([content*="rds(md)"])   { --ui-content-radius: var(--radius-md); }
@@ -108,7 +103,7 @@
 	:where([content*="rds(2xl)"])  { --ui-content-radius: var(--radius-2xl); }
 	:where([content*="rds(full)"]) { --ui-content-radius: var(--radius-circle, 50%); }
 	:where([content*="rds(pill)"]) { --ui-content-radius: var(--radius-pill, 100px); }
-	/* -sq: bespoke radius + superellipse corner-shape (squircle tokens in tokens.css) */
+	/* -sq: bespoke radius + superellipse corner-shape */
 	:where([content*="rds(sm-sq)"]) { --ui-content-radius: var(--radius-sm-sq); --ui-content-squircle-exp: var(--squircle-sm); }
 	:where([content*="rds(md-sq)"]) { --ui-content-radius: var(--radius-md-sq); --ui-content-squircle-exp: var(--squircle-md); }
 	:where([content*="rds(lg-sq)"]) { --ui-content-radius: var(--radius-lg-sq); --ui-content-squircle-exp: var(--squircle-lg); }
@@ -119,7 +114,7 @@
 	/* === CONTAINER — flex column; ov() placement/ink read from props === */
 	:where(ui-content) {
 		align-items: var(--ui-content-ov-align, var(--ui-content-place-inline, normal));
-		border-radius: var(--ui-content-radius, 0); /* rds(); inert (0) unless set — a card host clips its own corners */
+		border-radius: var(--ui-content-radius, 0); /* rds(); inert unless set — a card host clips its own corners */
 		color: var(--ui-content-ov-ink, inherit);
 		display: flex;
 		flex-direction: column;
@@ -127,8 +122,7 @@
 		font-size: var(--ui-content-fs, var(--ui-content-fs-md));
 		gap: var(--ui-content-gap, 1em);
 		justify-content: var(--ui-content-ov-justify, var(--ui-content-place-block, normal));
-		/* PADDING — four longhands, side → axis → all-sides. The precedence lives in
-		   this var() chain, NOT the cascade. Do not flatten into a shorthand. */
+		/* PADDING — side → axis → all. Precedence is this var() chain, NOT the cascade. */
 		padding-block-start:  var(--ui-content-pbs, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
 		padding-block-end:    var(--ui-content-pbe, var(--ui-content-pb, var(--ui-content-p, var(--spacing-md))));
 		padding-inline-start: var(--ui-content-pis, var(--ui-content-pi, var(--ui-content-p, var(--spacing-md))));
@@ -139,17 +133,14 @@
 		/* wid() — the cap rides the rows, not the column box */
 		& > * { margin: 0; max-inline-size: var(--ui-content-max, var(--width-prose, 65ch)); text-box: cap alphabetic; }
 
-		/* theme= — <ui-content> is a PLATE: it paints the resolved surface directly.
-		   (0,1,0), NOT :where()-wrapped, so it out-specifies ui-reveal.css's back-face
-		   ovr() ink counter-reset (0,0,2). Docs: content.md § Theme surface. */
+		/* theme= — a PLATE. NOT :where()-wrapped: it must out-specify ui-reveal.css */
 		&[theme] {
 			background: var(--_theme-bg, transparent);
 			color: var(--_theme-c, var(--color-text));
 		}
 	}
 
-	/* === SCROLL — content="scr": scrollable content with masked edges; the fade
-	   primitive is shared, in ui/base/scroll.css === */
+	/* === SCROLL — content="scr"; the fade primitive lives in ../base/scroll.css === */
 	:where([content~="scr"]) ui-content, :where([content~="scr(y)"]) ui-content,
 	:where(ui-content[content~="scr"]), :where(ui-content[content~="scr(y)"]) {
 		max-block-size: var(--ui-content-scroll-bs, 100%);
@@ -157,8 +148,7 @@
 		overscroll-behavior: contain;
 		scrollbar-width: thin;
 	}
-	/* horizontal — children must NOT shrink or wrap, or they reflow instead of
-	   overflowing */
+	/* horizontal — children must NOT shrink or wrap, or they reflow instead of overflowing */
 	:where([content~="scr(x)"]) ui-content,
 	:where(ui-content[content~="scr(x)"]) {
 		--ui-scroll-fade-dir: to right;
@@ -172,8 +162,6 @@
 	}
 	:where([content~="scr(x)"]) ui-content > *,
 	:where(ui-content[content~="scr(x)"]) > * { flex: 0 0 auto; max-inline-size: none; /* a scrolling row must overflow — the wid()/prose cap would clamp it */ }
-	/* the tags <ul> nowrap override lives AFTER the tags part rule (below) so it
-	   wins at equal specificity */
 	@supports (animation-timeline: scroll()) {
 		@media (prefers-reduced-motion: no-preference) {
 			:where([content~="scr"]) ui-content, :where([content~="scr(y)"]) ui-content,
@@ -195,51 +183,237 @@
 
 	/* === PARTS — styled by [data-part], never by tag === */
 
-	/* eyebrow — Eyebrow group; the part IS the group's representative, so the group
-	   prop and the part hook share a name */
-	:where(ui-content) [data-part="eyebrow"] {
-		color: var(--ui-content-eyebrow-ink, var(--color-accent));
-		font-size: var(--ui-content-eyebrow-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.78));
-		font-weight: var(--ui-content-eyebrow-weight, var(--font-weight-medium, 500));
-		letter-spacing: var(--tracking-wide, 0.05em);
-		text-shadow: var(--ui-content-eyebrow-text-shadow, none); /* eb(shd) / host ovr() */
-		text-transform: var(--ui-content-eyebrow-transform, uppercase); /* eb(flat) → none */
+	/* eyebrow — Eyebrow group (the part IS the group's representative) */
+	:where(ui-content) {
+		& [data-part="eyebrow"] {
+			color: var(--ui-content-eyebrow-ink, var(--color-accent));
+			font-size: var(--ui-content-eyebrow-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.78));
+			font-weight: var(--ui-content-eyebrow-weight, var(--font-weight-medium, 500));
+			letter-spacing: var(--tracking-wide, 0.05em);
+			text-shadow: var(--ui-content-eyebrow-text-shadow, none); /* eb(shd) / host ovr() */
+			text-transform: var(--ui-content-eyebrow-transform, uppercase); /* eb(flat) → none */
+		}
+
+		/* headline (and bare h2–h6) — Headings group; beats `& > * { margin: 0 }` */
+		& :is([data-part="headline"], h2, h3, h4, h5, h6) {
+			color: var(--ui-content-headline-ink, var(--ui-content-heading-ink, inherit));
+			font-family: var(--ui-content-heading-font, var(--font-heading, inherit)); /* --font-heading = inherit → follows fnt() unless hl(<font>) sets it */
+			font-size: var(--ui-content-headline, var(--ui-content-headline-md));
+			font-weight: var(--ui-content-headline-weight, var(--ui-content-heading-weight, var(--font-weight-bold, 700)));
+			letter-spacing: var(--tracking-tight, -0.01em);
+			line-height: var(--ui-content-headline-line-height, calc(1em + 0.25rem));
+			margin-block-end: var(--ui-content-headline-rhythm, 0.25em);
+			text-shadow: var(--ui-content-headline-text-shadow, var(--ui-content-heading-text-shadow, none)); /* hl(shd) / host ovr() */
+			text-wrap: var(--ui-content-headline-wrap, balance); /* override to pretty for long poster copy */
+
+			/* gradient highlight — <b> inside a headline (the renderer only lets <b> through) */
+			& b {
+				background: var(--ui-content-headline-gradient, linear-gradient(90deg, var(--color-accent), #c026d3));
+				-webkit-background-clip: text;
+				background-clip: text;
+				color: transparent;
+			}
+		}
+
+		/* subheadline — Headings group; muted unless hl() sets the group ink */
+		& [data-part="subheadline"] {
+			color: var(--ui-content-subheadline-ink, var(--ui-content-heading-ink, var(--ui-content-muted)));
+			font-size: var(--ui-content-subheadline-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.88));
+			font-weight: var(--ui-content-subheadline-weight, var(--font-weight-normal, 400));
+			text-shadow: var(--ui-content-subheadline-text-shadow, var(--ui-content-heading-text-shadow, none));
+			text-wrap: pretty;
+		}
+
+		/* summary — Body group */
+		& [data-part="summary"] {
+			color: var(--ui-content-summary-ink, var(--ui-content-body-ink, inherit));
+			font-size: var(--ui-content-summary-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
+			font-weight: var(--ui-content-summary-weight, var(--ui-content-body-weight, var(--font-weight-normal, 400)));
+			line-height: var(--ui-content-summary-line-height, var(--line-height-normal, 1.5));
+			text-shadow: var(--ui-content-summary-text-shadow, var(--ui-content-body-text-shadow, none));
+			text-wrap: var(--ui-content-summary-wrap, pretty);
+		}
+
+		/* byline (author row; inner <img> becomes a round avatar) — Meta group */
+		& [data-part="byline"] {
+			align-items: center;
+			color: var(--ui-content-byline-ink, var(--ui-content-meta-ink, var(--ui-content-muted)));
+			display: flex;
+			font-size: var(--ui-content-byline-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.82));
+			font-style: normal;
+			font-weight: var(--ui-content-byline-weight, var(--ui-content-meta-weight, inherit));
+			gap: var(--ui-content-byline-gap, var(--spacing-sm));
+			text-shadow: var(--ui-content-byline-text-shadow, var(--ui-content-meta-text-shadow, none));
+
+			& img {
+				aspect-ratio: 1;
+				border-radius: var(--radius-circle);
+				inline-size: var(--ui-content-avatar-size, 2.25em);
+				object-fit: cover;
+			}
+		}
+
+		/* tags — Meta group; the pill is the FALLBACK for links NOT inside a <ui-chip> */
+		& [data-part="tags"] {
+			display: flex;
+			flex-wrap: wrap;
+			font-size: var(--ui-content-tags-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.72));
+			font-weight: var(--ui-content-tags-weight, var(--ui-content-meta-weight, inherit));
+			gap: var(--ui-content-tags-gap, var(--spacing-xs, 0.35rem));
+			list-style: none;
+			margin: 0;
+			padding: 0;
+
+			& > * { display: contents; }
+			/* bespoke pill — plain links only (a <ui-chip> styles its own inner <a>) */
+			& a:not(ui-chip *), & li {
+				background: var(--ui-content-tag-bg, var(--color-button, hsl(0, 0%, 90%)));
+				border-radius: var(--ui-content-tag-radius, var(--radius-pill, 100px));
+				color: var(--ui-content-tag-color, inherit);
+				padding: var(--ui-content-tag-padding, 0.2em 0.7em);
+				text-decoration: none;
+			}
+			/* only the rendered leaf becomes the pill box — one pill per <li><a> pair */
+			& a:not(ui-chip *) { display: inline-grid; place-content: center; }
+			/* a link INSIDE a tag chip: the chip paints the pill, the anchor stays flush */
+			& ui-chip a { background: none; color: inherit; padding: 0; text-decoration: none; }
+		}
+
+		/* actions (button / link row) */
+		& [data-part="actions"] {
+			display: flex;
+			flex-wrap: wrap;
+			gap: var(--ui-content-actions-gap, var(--spacing-sm));
+		}
+
+		/* footer (trailing meta) — Meta group */
+		& [data-part="footer"] {
+			color: var(--ui-content-footer-ink, var(--ui-content-meta-ink, var(--ui-content-muted)));
+			display: flex;
+			flex-wrap: wrap;
+			font-size: var(--ui-content-footer-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.78));
+			font-weight: var(--ui-content-footer-weight, var(--ui-content-meta-weight, inherit));
+			gap: var(--ui-content-footer-gap, var(--spacing-sm));
+			text-shadow: var(--ui-content-footer-text-shadow, var(--ui-content-meta-text-shadow, none));
+		}
+
+		/* cover — stretched link; lives inside the headline, its ::after covers the card */
+		& [data-part~="cover"] {
+			color: inherit;
+			text-decoration: none;
+
+			&::after {
+				content: '';
+				inset: 0;
+				position: absolute;
+				z-index: 1;
+			}
+		}
+
+		/* === STRUCTURED PARTS — hook → group ink → default. Docs: docs/content.md === */
+
+		/* price — Body group (prominent) */
+		& [data-part="price"] {
+			align-items: baseline;
+			color: var(--ui-content-price-ink, var(--ui-content-body-ink, inherit));
+			display: flex;
+			flex-wrap: wrap;
+			font-size: var(--ui-content-price-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 1.35));
+			font-weight: var(--ui-content-price-weight, var(--font-weight-bold, 700));
+			gap: var(--ui-content-price-gap, var(--spacing-xs));
+
+			& del   { color: var(--ui-content-muted); font-weight: var(--font-weight-normal, 400); }
+			& small { color: var(--ui-content-price-discount, var(--color-accent)); font-size: 0.7em; }
+		}
+
+		/* rating — Meta group */
+		& [data-part="rating"] {
+			align-items: center;
+			color: var(--ui-content-rating-ink, var(--color-accent));
+			display: inline-flex;
+			font-size: var(--ui-content-rating-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9));
+			gap: var(--ui-content-rating-gap, var(--spacing-xs));
+
+			& small { color: var(--ui-content-meta-ink, var(--ui-content-muted)); }
+		}
+
+		/* list — Body group */
+		& [data-part="list"] {
+			color: var(--ui-content-list-ink, var(--ui-content-body-ink, inherit));
+			display: flex;
+			flex-direction: column;
+			font-size: var(--ui-content-list-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
+			gap: var(--ui-content-list-gap, var(--spacing-xs));
+			list-style-position: inside;
+			margin: 0;
+			padding: 0;
+		}
+
+		/* address — Body group (distinct from byline: no avatar) */
+		& [data-part="address"] {
+			color: var(--ui-content-address-ink, var(--ui-content-body-ink, inherit));
+			font-size: var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9));
+			font-style: normal;
+			line-height: var(--ui-content-address-line-height, var(--line-height-normal, 1.5));
+		}
+
+		/* stat — Body group (prominent) */
+		& [data-part="stat"] {
+			align-items: baseline;
+			color: var(--ui-content-stat-ink, var(--ui-content-body-ink, inherit));
+			display: flex;
+			flex-wrap: wrap;
+			gap: var(--ui-content-stat-gap, var(--spacing-xs));
+
+			& data, & > :first-child {
+				font-size: var(--ui-content-stat-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 2));
+				font-weight: var(--ui-content-stat-weight, var(--font-weight-bold, 700));
+				line-height: 1;
+			}
+			& small { color: var(--ui-content-muted); }
+		}
+
+		/* timeline — Body group */
+		& [data-part="timeline"] {
+			color: var(--ui-content-timeline-ink, var(--ui-content-body-ink, inherit));
+			display: flex;
+			flex-direction: column;
+			font-size: var(--ui-content-timeline-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
+			gap: var(--ui-content-timeline-gap, var(--spacing-sm));
+			list-style: none;
+			margin: 0;
+			padding: 0;
+
+			& time { color: var(--ui-content-muted); font-size: 0.85em; }
+		}
+
+		/* quote — Body group; composes with @browser.style/blockquote via data-variant */
+		& [data-part="quote"] {
+			border-inline-start: var(--ui-content-quote-border, var(--border-width) solid var(--color-border, currentColor));
+			color: var(--ui-content-quote-ink, var(--ui-content-body-ink, inherit));
+			font-size: var(--ui-content-quote-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 1.1));
+			margin: 0;
+			padding-inline-start: var(--ui-content-quote-indent, var(--spacing-md));
+
+			& cite { color: var(--ui-content-muted); font-size: 0.8em; font-style: normal; }
+		}
+
+		/* options — Meta group */
+		& [data-part="options"] {
+			color: var(--ui-content-options-ink, var(--ui-content-meta-ink, inherit));
+			display: flex;
+			flex-direction: column;
+			font-size: var(--ui-content-options-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9));
+			gap: var(--ui-content-options-gap, var(--spacing-sm));
+			list-style: none;
+			margin: 0;
+			padding: 0;
+
+			& progress { inline-size: 100%; }
+		}
 	}
 
-	/* headline (and bare h2–h6) — Headings group. Rhythm is mathematical; the
-	   attribute/type specificity is what beats the container's `& > * { margin: 0 }` */
-	:where(ui-content) :is([data-part="headline"], h2, h3, h4, h5, h6) {
-		color: var(--ui-content-headline-ink, var(--ui-content-heading-ink, inherit));
-		font-family: var(--ui-content-heading-font, var(--font-heading, inherit)); /* --font-heading = inherit → follows fnt() unless hl(<font>) sets it */
-		font-size: var(--ui-content-headline, var(--ui-content-headline-md));
-		font-weight: var(--ui-content-headline-weight, var(--ui-content-heading-weight, var(--font-weight-bold, 700)));
-		letter-spacing: var(--tracking-tight, -0.01em);
-		line-height: var(--ui-content-headline-line-height, calc(1em + 0.25rem));
-		margin-block-end: var(--ui-content-headline-rhythm, 0.25em);
-		text-shadow: var(--ui-content-headline-text-shadow, var(--ui-content-heading-text-shadow, none)); /* hl(shd) / host ovr() */
-		text-wrap: var(--ui-content-headline-wrap, balance); /* balance short titles; override to pretty for long poster copy */
-	}
-
-	/* subheadline — Headings group; default stays muted unless hl() sets the group ink */
-	:where(ui-content) [data-part="subheadline"] {
-		color: var(--ui-content-subheadline-ink, var(--ui-content-heading-ink, var(--ui-content-muted)));
-		font-size: var(--ui-content-subheadline-fs, calc(var(--ui-content-fs, var(--ui-content-fs-md)) * 0.88));
-		font-weight: var(--ui-content-subheadline-weight, var(--font-weight-normal, 400));
-		text-shadow: var(--ui-content-subheadline-text-shadow, var(--ui-content-heading-text-shadow, none));
-		text-wrap: pretty;
-	}
-
-	/* summary — Body group */
-	:where(ui-content) [data-part="summary"] {
-		color: var(--ui-content-summary-ink, var(--ui-content-body-ink, inherit));
-		font-size: var(--ui-content-summary-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
-		font-weight: var(--ui-content-summary-weight, var(--ui-content-body-weight, var(--font-weight-normal, 400)));
-		line-height: var(--ui-content-summary-line-height, var(--line-height-normal, 1.5));
-		text-shadow: var(--ui-content-summary-text-shadow, var(--ui-content-body-text-shadow, none));
-		text-wrap: var(--ui-content-summary-wrap, pretty);
-	}
-
-	/* meta / caption (caption may also sit inside <ui-media>) — Meta group */
+	/* meta / caption — Meta group; caption may also sit inside <ui-media> */
 	:where(ui-content, ui-media) :is([data-part="meta"], [data-part="caption"]) {
 		color: var(--ui-content-meta-ink, var(--ui-content-muted));
 		font-size: var(--ui-content-meta-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.75));
@@ -247,208 +421,27 @@
 		text-shadow: var(--ui-content-meta-text-shadow, none);
 	}
 
-	/* byline (author row; inner <img> becomes a round avatar) — Meta group */
-	:where(ui-content) [data-part="byline"] {
-		align-items: center;
-		color: var(--ui-content-byline-ink, var(--ui-content-meta-ink, var(--ui-content-muted)));
-		display: flex;
-		font-size: var(--ui-content-byline-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.82));
-		font-style: normal;
-		font-weight: var(--ui-content-byline-weight, var(--ui-content-meta-weight, inherit));
-		gap: var(--ui-content-byline-gap, var(--spacing-sm));
-		text-shadow: var(--ui-content-byline-text-shadow, var(--ui-content-meta-text-shadow, none));
-
-		& img {
-			aspect-ratio: 1;
-			border-radius: var(--radius-circle);
-			inline-size: var(--ui-content-avatar-size, 2.25em);
-			object-fit: cover;
-		}
-	}
-
-	/* tags (pill/chip list) — Meta group. The pill below is the FALLBACK for a plain
-	   link, scoped to links NOT inside a <ui-chip>. */
-	:where(ui-content) [data-part="tags"] {
-		display: flex;
-		flex-wrap: wrap;
-		font-size: var(--ui-content-tags-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.72));
-		font-weight: var(--ui-content-tags-weight, var(--ui-content-meta-weight, inherit));
-		gap: var(--ui-content-tags-gap, var(--spacing-xs, 0.35rem));
-		list-style: none;
-		margin: 0;
-		padding: 0;
-
-		& > * { display: contents; }
-		/* bespoke pill — plain links only (a <ui-chip> styles its own inner <a>) */
-		& a:not(ui-chip *), & li {
-			background: var(--ui-content-tag-bg, var(--color-button, hsl(0, 0%, 90%)));
-			border-radius: var(--ui-content-tag-radius, var(--radius-pill, 100px));
-			color: var(--ui-content-tag-color, inherit);
-			padding: var(--ui-content-tag-padding, 0.2em 0.7em);
-			text-decoration: none;
-		}
-		/* only the rendered leaf becomes the pill box — one pill per <li><a> pair */
-		& a:not(ui-chip *) { display: inline-grid; place-content: center; }
-		/* a link INSIDE a tag chip: the chip paints the pill, the anchor stays flush */
-		& ui-chip a { background: none; color: inherit; padding: 0; text-decoration: none; }
-	}
-	/* scr(x) tags override — must follow the tags rule to win at equal specificity */
+	/* scr(x) tags override — MUST follow the tags rule to win at equal specificity */
 	:where([content~="scr(x)"]) [data-part="tags"],
 	:where(ui-content[content~="scr(x)"]) [data-part="tags"] { flex-wrap: nowrap; }
 	:where([content~="scr(x)"]) [data-part="tags"] :is(a, li, ui-chip),
 	:where(ui-content[content~="scr(x)"]) [data-part="tags"] :is(a, li, ui-chip) { flex: 0 0 auto; white-space: nowrap; }
 
-	/* actions (button / link row) */
-	:where(ui-content) [data-part="actions"] {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--ui-content-actions-gap, var(--spacing-sm));
-	}
-
-	/* footer (trailing meta) — Meta group */
-	:where(ui-content) [data-part="footer"] {
-		color: var(--ui-content-footer-ink, var(--ui-content-meta-ink, var(--ui-content-muted)));
-		display: flex;
-		flex-wrap: wrap;
-		font-size: var(--ui-content-footer-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.78));
-		font-weight: var(--ui-content-footer-weight, var(--ui-content-meta-weight, inherit));
-		gap: var(--ui-content-footer-gap, var(--spacing-sm));
-		text-shadow: var(--ui-content-footer-text-shadow, var(--ui-content-meta-text-shadow, none));
-	}
-
-	/* cover — stretched link; lives inside the headline, its ::after covers the card */
-	:where(ui-card):has([data-part~="cover"]) { position: relative; }
-	:where(ui-content) [data-part~="cover"] {
-		color: inherit;
-		text-decoration: none;
-	}
-	:where(ui-content) [data-part~="cover"]::after {
-		content: '';
-		inset: 0;
-		position: absolute;
-		z-index: 1;
-	}
-	:where(ui-card):has([data-part~="cover"]) :is([data-part="tags"], [data-part="actions"]) a {
+	/* cover — the host anchors the stretched ::after; interactive parts stay above it */
+	:where(ui-card):has([data-part~="cover"]) {
 		position: relative;
-		z-index: 2;
+
+		& :is([data-part="tags"], [data-part="actions"]) a {
+			position: relative;
+			z-index: 2;
+		}
 	}
 
-	/* gradient highlight — <b> inside a headline (the renderer only lets <b> through) */
-	:where(ui-content) :is([data-part="headline"], h2, h3, h4, h5, h6) b {
-		background: var(--ui-content-headline-gradient, linear-gradient(90deg, var(--color-accent), #c026d3));
-		-webkit-background-clip: text;
-		background-clip: text;
-		color: transparent;
-	}
-
-	/* hl(grad) — the same gradient clip applied to the ENTIRE headline (not just <b>) */
+	/* hl(grad) — the <b> gradient over the whole headline; MUST follow the headline rule */
 	:where([content~="hl(grad)"]) :is([data-part="headline"], h2, h3, h4, h5, h6) {
 		background: var(--ui-content-headline-gradient, linear-gradient(90deg, var(--color-accent), #c026d3));
 		-webkit-background-clip: text;
 		background-clip: text;
 		color: transparent;
-	}
-
-	/* === STRUCTURED PARTS — each reads its own hook, then its group ink (Body or
-	   Meta), then a default. Microdata + content types: content.md § Structured parts. === */
-
-	/* price — Body group (prominent) */
-	:where(ui-content) [data-part="price"] {
-		align-items: baseline;
-		color: var(--ui-content-price-ink, var(--ui-content-body-ink, inherit));
-		display: flex;
-		flex-wrap: wrap;
-		font-size: var(--ui-content-price-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 1.35));
-		font-weight: var(--ui-content-price-weight, var(--font-weight-bold, 700));
-		gap: var(--ui-content-price-gap, var(--spacing-xs));
-
-		& del   { color: var(--ui-content-muted); font-weight: var(--font-weight-normal, 400); }
-		& small { color: var(--ui-content-price-discount, var(--color-accent)); font-size: 0.7em; }
-	}
-
-	/* rating — Meta group */
-	:where(ui-content) [data-part="rating"] {
-		align-items: center;
-		color: var(--ui-content-rating-ink, var(--color-accent));
-		display: inline-flex;
-		font-size: var(--ui-content-rating-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9));
-		gap: var(--ui-content-rating-gap, var(--spacing-xs));
-
-		& small { color: var(--ui-content-meta-ink, var(--ui-content-muted)); }
-	}
-
-	/* list — Body group */
-	:where(ui-content) [data-part="list"] {
-		color: var(--ui-content-list-ink, var(--ui-content-body-ink, inherit));
-		display: flex;
-		flex-direction: column;
-		font-size: var(--ui-content-list-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
-		gap: var(--ui-content-list-gap, var(--spacing-xs));
-		list-style-position: inside;
-		margin: 0;
-		padding: 0;
-	}
-
-	/* address — Body group (distinct from byline: no avatar) */
-	:where(ui-content) [data-part="address"] {
-		color: var(--ui-content-address-ink, var(--ui-content-body-ink, inherit));
-		font-size: var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9));
-		font-style: normal;
-		line-height: var(--ui-content-address-line-height, var(--line-height-normal, 1.5));
-	}
-
-	/* stat — Body group (prominent) */
-	:where(ui-content) [data-part="stat"] {
-		align-items: baseline;
-		color: var(--ui-content-stat-ink, var(--ui-content-body-ink, inherit));
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--ui-content-stat-gap, var(--spacing-xs));
-
-		& data, & > :first-child {
-			font-size: var(--ui-content-stat-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 2));
-			font-weight: var(--ui-content-stat-weight, var(--font-weight-bold, 700));
-			line-height: 1;
-		}
-		& small { color: var(--ui-content-muted); }
-	}
-
-	/* timeline — Body group */
-	:where(ui-content) [data-part="timeline"] {
-		color: var(--ui-content-timeline-ink, var(--ui-content-body-ink, inherit));
-		display: flex;
-		flex-direction: column;
-		font-size: var(--ui-content-timeline-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
-		gap: var(--ui-content-timeline-gap, var(--spacing-sm));
-		list-style: none;
-		margin: 0;
-		padding: 0;
-
-		& time { color: var(--ui-content-muted); font-size: 0.85em; }
-	}
-
-	/* quote — Body group; composes with @browser.style/blockquote via data-variant */
-	:where(ui-content) [data-part="quote"] {
-		border-inline-start: var(--ui-content-quote-border, var(--border-width) solid var(--color-border, currentColor));
-		color: var(--ui-content-quote-ink, var(--ui-content-body-ink, inherit));
-		font-size: var(--ui-content-quote-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 1.1));
-		margin: 0;
-		padding-inline-start: var(--ui-content-quote-indent, var(--spacing-md));
-
-		& cite { color: var(--ui-content-muted); font-size: 0.8em; font-style: normal; }
-	}
-
-	/* options — Meta group */
-	:where(ui-content) [data-part="options"] {
-		color: var(--ui-content-options-ink, var(--ui-content-meta-ink, inherit));
-		display: flex;
-		flex-direction: column;
-		font-size: var(--ui-content-options-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9));
-		gap: var(--ui-content-options-gap, var(--spacing-sm));
-		list-style: none;
-		margin: 0;
-		padding: 0;
-
-		& progress { inline-size: 100%; }
 	}
 }

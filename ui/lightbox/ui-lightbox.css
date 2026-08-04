@@ -1,20 +1,8 @@
 /**
- * ui-lightbox
- * @version 1.0.0
- * @date 2026-08-01
- * @author Mads Stoumann
- *
- * "View gallery" / fullscreen toggle. Composes an invoker button
- * (command="toggle-popover" commandfor="<ui-media id>") and a
- * <ui-icon type="grid">. The circle backdrop is ON by default; hide it with
- * variant="non" / lightbox(non). The frame-level popover mechanics (fullscreen
- * presentation, backdrop, open: tokens) live in ui/card/media.lightbox.css.
- *
- * Sections: A. Base (tokens · host · button · open state) · B. Furniture axes
- * (colour · ink/fill · size · corner · non) · C. Decoration (hover). Each axis
- * matches BOTH the standalone attribute AND the card's lightbox(…) token in one
- * nested rule, so there's no duplication with ui/card/media.css. Full docs:
- * readme.md.
+ * ui-lightbox — "view gallery" toggle: an invoker button + <ui-icon type="grid">.
+ * The frame-level popover mechanics live in ../card/media.lightbox.css.
+ * Docs: readme.md
+ * @version 1.0.0 · @author Mads Stoumann
  */
 @layer bs-component {
 	:where(ui-lightbox) {
@@ -61,16 +49,8 @@
 			}
 		}
 
-		/* open — the button rides into the top layer with its frame, so it doubles
-		   as the close affordance: morph the glyph into an × with zero JS, keyed
-		   on the frame's :popover-open (./command.js additionally reflects [open]
-		   onto the host for authors outside a popover frame). Two glyph modes:
-		   - <ui-icon type="grid">: ui-icon's own [open] dots→× morph, duplicated
-		     here so it also fires from :popover-open;
-		   - <ui-icon><svg>…</svg></ui-icon> (the canonical glyphs —
-		     /assets/svg/library-photo.svg "open gallery", window-maximize.svg
-		     "full screen"): hide the svg and draw ui-icon's `type=cross` bars
-		     (same geometry, same animated host rotate). */
+		/* open — the button rides into the top layer, so it doubles as the close
+		   affordance: morph the glyph into an × with zero JS. Docs: readme.md */
 		:where(ui-media:popover-open) & ui-icon[type=grid],
 		&[open] ui-icon[type=grid] {
 			rotate: 135deg;
@@ -106,22 +86,13 @@
 		&[theme~="white"],  :where([media*="lightbox(white)"])  & { --ui-lightbox-c: var(--ui-theme-white-bg); }
 		&[theme~="gray"],   :where([media*="lightbox(gray)"])   & { --ui-lightbox-c: var(--ui-theme-gray-bg); }
 		&[theme~="slate"],  :where([media*="lightbox(slate)"])  & { --ui-lightbox-c: var(--ui-theme-slate-bg); }
-		/* HUE TRUTH SET (nine): red orange green blue accent black white gray slate.
-		   slate is a canonical hue in its own right (the fifth neutral, white < gray <
-		   slate < black), not an alias of gray. Single-ink control — no pale/muted
-		   fill arms (same gap as ui/save and ui/play, see ui/card/AGENTS.md #8). */
+		/* single-ink control — no pale/muted arms, as ui/save and ui/play */
 
 		/* arbitrary colour (overrides theme) — ink = the glyph, fill = the circle
 		   disc. After the hue rules so an explicit ink=/fill= wins. */
 		&[ink]  { --ui-lightbox-c: attr(ink type(<color>), var(--color-text)); }
 		&[fill] { --ui-lightbox-circle-bg: attr(fill type(<color>), Canvas); }
-		/* Typed attr() fallback — Safari/Firefox. A custom property PARSES the
-		   literal `attr(…)` stream, so it never goes guaranteed-invalid and no
-		   var() fallback fires; the glyph ink and the disc fill die at
-		   computed-value time instead. Restore the attr() defaults;
-		   ../base/polyfills/attr-fallback.js upgrades to the element's own
-		   ink/fill. Detect on a REAL property — `--x: attr(…)` is true in Safari
-		   too. Keep after the hue rules. */
+		/* typed attr() has NO fallback in Safari/FF. Docs: ../base/polyfills/readme.md */
 		@supports not (background-color: attr(x type(<color>), red)) {
 			&[ink]  { --ui-lightbox-c: var(--color-text); }
 			&[fill] { --ui-lightbox-circle-bg: Canvas; }
@@ -147,9 +118,7 @@
 			--ui-lightbox-circle-shadow: none;
 		}
 
-		/* ───────── C. Decoration — hover/press (opt-in via `hover`) ─────────
-		   `press` = scale down while held ("scale-as-you-click"); `pop` = scale up
-		   on hover. Combine: hover="press pop". */
+		/* ── C. Decoration — opt-in via `hover`; combine: hover="press pop" ── */
 		&[hover] button { transition: scale var(--ui-lightbox-hover-duration) var(--ui-lightbox-hover-ease); }
 		&[hover~="pop"] button:hover    { scale: var(--ui-lightbox-hover-pop); }
 		&[hover~="press"] button:active { scale: var(--ui-lightbox-hover-press); }
