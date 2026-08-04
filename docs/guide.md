@@ -156,7 +156,7 @@ The full type system (the relational ladder, fluid sizing, all the parts) lives 
 | Token | Effect |
 |---|---|
 | `asr(16/9 · 4/3 · 1/1 · 3/4 · 21/9 …)` | aspect ratio |
-| `obp(tl … br)` | object-position — which part of the image survives the crop |
+| `obp(ts … be)` | object-position — which part of the image survives the crop |
 | `obf(con)` | object-fit contain (cover is the default) |
 | `flp(h · v · hv)` | mirror the image |
 | `scm` | scrim gradient for overlaid text |

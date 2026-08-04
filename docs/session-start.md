@@ -60,10 +60,16 @@
   `loop`/`auto`/`pages` are whole-token so they can't cross-fire with parameterized
   or substring cousins). The manifest records each token's matching mode.
 - **One position grid** (ts tc te / cs cc ce / bs bc be) across furniture, ovr(),
-  scm(), mrk(), arw(), plc(), reveal ico() — obp() is the ONLY physical (tl…br)
-  vocabulary left, by design. One hue palette of nine (red orange green blue
-  accent black white gray slate); dark/light/subtle were removed in v5, slate was
-  promoted to canonical.
+  scm(), mrk(), arw(), plc(), obp(), reveal ico() — no physical (tl…br) vocabulary
+  remains; obp() was the last and lost it in v5. Where the property has no logical
+  form (object-position, linear-gradient directions, and formerly the carousel's
+  ::scroll-button/anchor()) the inline letter resolves through ONE shared pair,
+  `--_dir-s`/`--_dir-e` in ui/base/core.css — never a per-family :dir(rtl) arm.
+  Adding one is the regression. Escape hatch for a non-mirroring focal point:
+  set --ui-media-op directly. Still on invented direction words, not yet migrated:
+  marquee(top|bot), flp/sld(top|btm|lft|rgt). One hue palette of nine (red orange
+  green blue accent black white gray slate); dark/light/subtle were removed in v5,
+  slate was promoted to canonical.
   `pages` means "paged carousel" in both contexts: math paging on
   `<lay-out overflow>`, wrapper-dissolve-below-md on a `<ui-media>` scroller.
 - **Renderer**: render.js is Node-safe string SSR; everything escapes via esc();
@@ -138,6 +144,23 @@
 6. All work on the v4 line; commit per logical change with descriptive messages.
 
 ## Known sharp edges
+
+- **Direction is a two-column demo, not a guess.** `ui/card/demo/media.rtl.html` is the
+  regression target for every logical position family (obp/scm/furniture/mrk/arw) — it puts
+  `dir="ltr"` and `dir="rtl"` side by side, and an `s` cell must swap edges between them.
+  Before it existed, `mrk()`/`arw()` shipped physical `left`/`right` + `anchor(left|right)` +
+  `::scroll-button(left|right)` for months: in Arabic the back-button was labelled "Next".
+  The `::scroll-button()` keyword names the **scroll action, not a location** — `inline-end`
+  is "advance" in both directions, which is why the labels are now correct by construction.
+  Note `/ui/carousel/polyfill/carousel.css` was already logical throughout; the native path
+  was the outlier, so Safari rendered RTL carousels correctly and Chrome did not. They agree
+  now — keep them agreeing.
+- **Browser-verifying a CSS edit? Use a fresh port.** `python3 -m http.server` sends
+  `Last-Modified` with no `Cache-Control`, and Chromium will serve a stale `@import`ed sheet
+  even after a query-string reload of the HTML (the query busts the page, not its imports).
+  A CSS change appearing to have no effect is this, not a broken selector. Restart on a new
+  port to get a new cache partition — and confirm with `curl` what the server actually serves.
+
 
 - Regenerating `layout/layouts-map.js` requires the `srcsetMin` mechanism in
   layout.config.json (min-less base breakpoints); `srcsetConfig` (flat) vs

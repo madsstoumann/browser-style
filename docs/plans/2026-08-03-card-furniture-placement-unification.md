@@ -1,5 +1,28 @@
 # Unify `ui/card` furniture placement on one logical grid
 
+> **Status 2026-08-04 — Changes 1, 3, 4 and 5 are DONE; Change 1 landed INVERTED.**
+> `obp()` went **logical-only** (`ts…be`), not physical-only. This doc's census read
+> `obp(cc)` (×103) and `obp(tc)` (×22) as physical usage, but both are spelled
+> *identically* in the two vocabularies; the physical-**only** corners had 2 authored
+> uses each, all in demos documenting `obp` itself, and the logical-only spellings had 0.
+> The "a portrait's face does not move in RTL" argument stands, but its remedy is the
+> public `--ui-media-op` (percentages, strictly more expressive) or `flp(h)`.
+>
+> Also corrected: §"Answer to the `object-fit`…" claims CSS `<position>` "has no logical
+> keywords at all". It has them in css-values-4 (`x-start`, `block-start`, `inline-start`,
+> bare `start`/`end`) — they are simply **unimplemented** (Chromium 151 rejects all of
+> them and computes `50% 50%`). Conclusion unchanged, premise wrong.
+>
+> **Change 3's browser gate PASSED** and it shipped: `::scroll-button(inline-start|
+> inline-end|block-start|block-end)`, `anchor(start|end)` on `inset-inline-*` and
+> `anchor(center)` on a logical inset all work in Chromium 151. The inverted
+> Previous/Next labels are fixed. The `mrk(rail)` `:dir(rtl)` arm was deleted, not kept.
+>
+> The RTL mechanism was additionally factored into ONE shared `--_dir-s`/`--_dir-e` pair
+> in `ui/base/core.css`, which also deleted the scrim's six-gradient `:dir(rtl)` re-bake
+> — a de-duplication this doc had listed under "Not in scope (offered, declined)".
+> **Change 2** (`marquee`/`flp`/`sld` invented direction words) is the only part still open.
+
 ## Context
 
 The card system claims "one position grid" (`ui/card/AGENTS.md` §7), but the
