@@ -13,11 +13,11 @@
     "internalName": "Demo — Media: government frame (object-position)",
     "schemaType": "content",
     "preset": {
-      "$ref": "card-preset/media-obp-tl"
+      "$ref": "card-preset/media-obp-ts"
     },
     "furniture": {
       "chip": {
-        "text": "obp(tl)"
+        "text": "obp(ts)"
       }
     },
     "media": [

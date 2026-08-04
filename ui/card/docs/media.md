@@ -63,7 +63,7 @@ Or via CSS `@import`:
 ```
 
 ```html
-<ui-media media="asr(16/9) obp(tl) hov(zoom) scm">
+<ui-media media="asr(16/9) obp(ts) hov(zoom) scm">
   <img src="https://picsum.photos/800/450" alt="Mountain trail at dawn">
 </ui-media>
 ```
@@ -128,7 +128,7 @@ drift from the CSS. (`md:/lg:` is the container-query prefix column: only `asr()
 | token | axis | args | aliases | bare | writes | md:/lg: | deprecated |
 |---|---|---|---|---|---|---|---|
 | `asr()` | aspect | **ratio** 1/1 1/2 6/7 3/4 4/3 3/2 2/3 16/9 21/9 | — | — | --ui-media-ar | md: lg: (ratio) | — |
-| `obp()` | position | **pos** ts tc te cs cc ce bs bc be tl tr cl cr bl br | — | — | --ui-media-op | — | — |
+| `obp()` | position | **pos** ts tc te cs cc ce bs bc be | — | — | --ui-media-op | — | — |
 | `rds()` | corners | **size** non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | — | — | --ui-media-radius --ui-media-squircle-exp | — | — |
 | `obf()` | fit | **mode** cover contain fill none | — | — | --ui-media-fit | — | — |
 | `flp()` | flip | **mode** h v hv | — | — | --ui-media-fl-x --ui-media-fl-y | — | — |
@@ -231,18 +231,35 @@ Add **`clip`** to also apply `clip-path: inset(0 round …)` at that same radius
 
 #### `obp()` — object-position 9-grid
 
-Two spellings, **both current** — this is the one place in the system where a physical vocabulary is kept on purpose.
+The same nine logical cells the rest of the system uses — furniture, `scm()`, `ovr()`, `mrk()`, `arw()`, `plc()`, reveal's `ico()`.
 
 ```
-LOGICAL    ts  tc  te  ·  cs  cc  ce  ·  bs  bc  be     ← canonical; mirrors in RTL
-PHYSICAL   tl  tc  tr  ·  cl  cc  cr  ·  bl  bc  br     ← never mirrors
+ts  tc  te   ·   cs  cc  ce   ·   bs  bc  be     ← s/e follow the writing direction
 ```
 
-- **Logical** (`ts…be`) is the canonical grid, shared with furniture, `scm()`, `ovr()` and reveal's `ico()`. `s`/`e` follow the writing direction: `obp(ts)` is `left top` in LTR and `right top` under `:dir(rtl)`.
-- **Physical** (`tl…br`) is **not deprecated**. `object-position` has no logical keywords, and "crop to the left edge" is a real direction-independent intent — e.g. a subject baked into the left of the frame. These never mirror.
-- The centre column (`tc` `cc` `bc`) is spelled identically in both and is axis-pure.
+`s`/`e` mirror: `obp(ts)` is `left top` in LTR and `right top` under `dir="rtl"`. The centre
+column (`tc` `cc` `bc`) is axis-pure and never moves. Default (no token) is `center`.
 
-The RTL flip is done with `:dir(rtl)`, which matches the token holder's own resolved directionality — so it works whether `dir` sits on the element or an ancestor. Default (no token) is `center`.
+**Why this needs machinery.** `object-position` has **no logical keywords in any engine**.
+The css-values-4 `<position>` grammar does list `x-start`, `y-end`, `block-start`,
+`inline-start` and bare `start`/`end`, but none of them are implemented — Chromium 151
+rejects every one and computes `50% 50%`. So the cell is resolved in two axes: the block
+letter sets `--_obp-b` (`top`/`center`/`bottom`), the inline letter sets `--_obp-i` from
+base's `--_dir-s`/`--_dir-e` pair, which flips once per direction for the whole system
+instead of once per family.
+
+**For a focal point that must *not* mirror** — a subject baked into the left of the frame,
+where the photo's own geometry is what matters and the page's reading direction is
+irrelevant — set the public custom property directly. It takes the full `object-position`
+grammar, so it is strictly more expressive than the six physical corner keywords it
+replaced (`obp(tl…br)`, removed in v5):
+
+```html
+<ui-media style="--ui-media-op: 30% 20%">
+```
+
+It wins over any `obp()` token on the same element. `flp(h)` covers the other case — mirroring
+the asset itself.
 
 #### `flp()` — mirror
 
@@ -503,7 +520,7 @@ The `nav()` token **is the trigger** — there is no separate `crs` flag. Any `n
 </ui-media>
 ```
 
-Controls use native `::scroll-marker` (dots) and `::scroll-button(left|right)` (arrows), `@supports`-gated and anchor-positioned to each scroller — they **degrade to a bare swipeable scroller** where unsupported. Smooth scroll is enabled under `prefers-reduced-motion: no-preference`.
+Controls use native `::scroll-marker` (dots) and `::scroll-button(inline-start|inline-end)` (arrows — the keyword names the scroll *action*, so Previous/Next stay correct in RTL), `@supports`-gated and anchor-positioned to each scroller — they **degrade to a bare swipeable scroller** where unsupported. Smooth scroll is enabled under `prefers-reduced-motion: no-preference`.
 
 The full marker/arrow token surface is token-driven (see *Tokens* — `--ui-carousel-marker-*`, `--ui-carousel-arrow-*`, and `--ui-carousel-overlay-gap` which drives the control inset). Arrows ship with **built-in glyph sets** — `--ui-carousel-chevron-{light,dark,grey}` and `--ui-carousel-arrow-{light,dark,grey}` — selected by `arw(lgt)`/`arw(drk)`/`arw(arr)`; colour the circle with `--ui-carousel-arrow-bg`, or point the single `--ui-carousel-arrow-glyph` at your own `url()` to fully customise.
 
@@ -712,7 +729,7 @@ The scrim `::after` stays out of grid flow (`position: absolute; inset: 0`).
 
 Combine axes freely, e.g. `scm(bc) scm(lg) scm(drk)`. `scm` works **standalone** too (a darkened image, no overlay content needed).
 
-**RTL — scrims mirror.** `linear-gradient()` has no logical directions, so the six gradients carrying a left/right component are **re-baked mirrored** under `:dir(rtl)`:
+**RTL — scrims mirror.** `linear-gradient()` has no logical directions, so the six gradients carrying an inline-axis component take their direction keyword from base's `--_dir-s`/`--_dir-e` — `linear-gradient(to bottom var(--_dir-e), …)` computes to `to right bottom` in LTR and `to left bottom` in RTL:
 
 | Position | LTR | RTL |
 |---|---|---|
@@ -723,7 +740,7 @@ Combine axes freely, e.g. `scm(bc) scm(lg) scm(drk)`. `scm` works **standalone**
 | `bs` | `to top right` | `to top left` |
 | `be` | `to top left` | `to top right` |
 
-`tc`, `bc` and `cc` are axis-pure (`to bottom` / `to top` / a vertical band) and never flip. This is what keeps a `chip(ts)` and its matching `scm(ts)` in agreement: before this round the chip mirrored in RTL and the scrim didn't. `:dir(rtl)` matches the token holder's own resolved directionality, so it works whether `dir` sits on the element or an ancestor, and the override sits at the same `0-0-0` specificity later in source.
+`tc`, `bc` and `cc` are axis-pure (`to bottom` / `to top` / a vertical band) and never flip. This is what keeps a `chip(ts)` and its matching `scm(ts)` in agreement: before this round the chip mirrored in RTL and the scrim didn't. The resolver is defined once in `ui/base/core.css` against `:dir()`, so it follows the token holder's own resolved directionality — `dir` on the element or on any ancestor — and nested direction islands reset correctly.
 
 ---
 
@@ -845,7 +862,7 @@ Overlay positions are **not tokens** — each element has a default position by 
 ### Standalone media
 
 ```html
-<ui-media media="asr(16/9) obp(tl) hov(zoom) scm">
+<ui-media media="asr(16/9) obp(ts) hov(zoom) scm">
   <img src="https://picsum.photos/800/450" alt="Lake at sunrise">
 </ui-media>
 ```
@@ -1011,7 +1028,7 @@ simply a no-op). Migration is a find-and-replace, but it is now mandatory:
 | `ply(sm\|md\|lg\|xl)` | `play(sm\|md\|lg\|xl)` | `media=` |
 | `scl` `scl(ts…be)` `lg:scl` `lg:scl(ts…be)` | `grw` `grw(ts…be)` `lg:grw` `lg:grw(ts…be)` | `variant=` |
 
-- **`ovr(tl…br)` → `ovr(ts…be)`** — the implementation was **already logical**: `ovr(tl)` rendered top-*end* in RTL, so the physical names were mislabels, not behaviour. Six spellings went, not nine: `ovr(tc)`/`ovr(cc)`/`ovr(bc)` are identical in both grids. With these gone, **`obp()` is the only physical position vocabulary left in the system** — everywhere else `ts tc te · cs cc ce · bs bc be` is the single spelling.
+- **`ovr(tl…br)` → `ovr(ts…be)`** — the implementation was **already logical**: `ovr(tl)` rendered top-*end* in RTL, so the physical names were mislabels, not behaviour. Six spellings went, not nine: `ovr(tc)`/`ovr(cc)`/`ovr(bc)` are identical in both grids. `obp(tl…br)` followed in a later v5 round, so `ts tc te · cs cc ce · bs bc be` is now the single spelling everywhere.
 - **`…(dark)`/`…(light)`/`…(subtle)` → `…(black)`/`…(white)`/`…(gray)`** — one hue palette (see *The canonical nine hues*). `slate` was **not** removed with them: it routes to its own `--ui-theme-slate-*` bundle, so it was promoted to a canonical hue instead.
 - **`marquee(loop)` → `marquee(rpt)`** — `loop` is also the bare carousel autoplay-with-clones flag in the same attribute; the substring match collided, and keeping an alias would have kept the collision surface alive.
 - **`rds(none)` → `rds(non)`** (all three attributes) — three-letter args everywhere; `non` matches the `non`/`rnd`/`pll`/`crc`/`sqr` corner vocabulary the furniture already uses.
@@ -1019,7 +1036,7 @@ simply a no-op). Migration is a find-and-replace, but it is now mandatory:
 - **`ply(<size>)` → `play(<size>)`** — folds the system's only two-stem element into one. Position args (`ts…be`) and size args are disjoint, so one stem parses unambiguously. `render.js` used to normalize `ply(` → `play(` on preset and override input; that code path is gone too, so a stale `ply()` now reaches `media=` verbatim and matches nothing.
 - **`scl` / `scl(ts…be)` / `lg:scl` → `grw` / `grw(ts…be)` / `lg:grw`** (`variant=` on `<ui-reveal>`) — reveal's scale-morph animation collided by name with `content=`'s `scl()` type scale. Different attributes, but one spelling should mean one thing; `scl()` now means the type scale and nothing else. The reveal preset word `"type": "scale"` still folds to `grw` — only the token spelling `scl` was dropped.
 
-**Physical by design, not by legacy:** `obp()`'s `tl…br`. `object-position` has no logical keywords and "crop to the left edge" is a genuine direction-independent intent — see [`obp()`](#obp--object-position-9-grid). It is the sole exception to the one-position-grid rule.
+- **`obp(tl…br)` → `obp(ts…be)`** — the last physical position vocabulary, removed in the same v5 line. Unlike `ovr()`'s rename this one *does* change behaviour: an `s`/`e` cell now mirrors under `dir="rtl"` where `tl…br` never did. Direction-independent focal points move to the `--ui-media-op` custom property, which takes percentages and is strictly more expressive — see [`obp()`](#obp--object-position-9-grid). No exception to the one-position-grid rule remains.
 
 ---
 
@@ -1199,18 +1216,17 @@ would jump.
 `hov(track|drift|tilt)` are the three effects that need JS (`--ui-media-mx/my` from
 `index.js`); the other eleven are CSS-only.
 
-### `obp()` — two spellings, on purpose
+### `obp()` — logical cells over a physical property
 
-`obp()` is the one place the system keeps a **physical** position vocabulary:
+`obp()` uses the one grid (`ts tc te · cs cc ce · bs bc be`) like everything else, but
+`object-position` accepts only physical keywords — the css-values-4 logical `<position>`
+spellings are unimplemented everywhere. It is therefore written in **two axes**: the block
+letter sets `--_obp-b`, the inline letter sets `--_obp-i` from base's `--_dir-s`/`--_dir-e`,
+and one rule composes them into `--ui-media-op`. No per-family `:dir(rtl)` arm.
 
-- **Logical** `ts tc te · cs cc ce · bs bc be` — canonical, and the one grid the rest of
-  the system uses (furniture, `scm()`, `ovr()`, reveal's `ico()`). `s`/`e` follow the
-  writing direction, so they mirror under `dir="rtl"`.
-- **Physical** `tl tc tr · cl cc cr · bl bc br` — **not** deprecated. `object-position`
-  has no logical keywords, and "crop to the left edge" is a real direction-independent
-  intent (a subject baked into the left of the frame). These never mirror.
-
-The centre column (`tc`/`cc`/`bc`) is spelled identically in both and is axis-pure.
+`--_obp-b`/`--_obp-i` inherit but are read only inside the `[media*="obp("]` rule, so they
+are deliberately **not** in the host-boundary flag registry. The physical `tl…br` spellings
+were removed in v5; the escape hatch is `--ui-media-op` itself.
 
 ### The marquee band's position args
 
@@ -1225,7 +1241,7 @@ whose subject is `<ui-marquee>`, a *child* of the frame — so the query reads t
 rule stays scoped to frames and at the same `(0,0,1)` specificity as the base rule it must
 beat on source order.
 
-### Scrim — declaration scope and the RTL re-bake
+### Scrim — declaration scope and the RTL resolver
 
 `scm()` composes three orthogonal axes on the furniture 3×3 grid — direction
 (`scm(<pos>)`), extent (`scm(sm|md|lg|xl)`, `md` default) and intensity
@@ -1248,12 +1264,13 @@ exactly the three subjects that can read them, never on every `[media]`/`[varian
 A card that uses neither `scm` nor `ovr()` no longer carries 13 custom-property
 declarations for nothing.
 
-**RTL re-bake.** The scrim positions are spelled logically, but `linear-gradient()` has no
-logical directions — so the six gradients that carry a left/right component are re-baked
-mirrored in a `:dir(rtl)` block at the same `(0,0,0)` specificity, later in source. Without
-it a `chip(ts)` would mirror in RTL and its matching `scm(ts)` would not. `tc`/`bc`/`cc` are
-axis-pure (to bottom / to top / a vertical band) and never flip. The `:dir(rtl)` block's
-subjects mirror the declaration scope above exactly.
+**RTL via the shared resolver.** The scrim positions are spelled logically, but
+`linear-gradient()` has no logical directions — so the six gradients that carry an inline-axis
+component interpolate their direction keyword from `--_dir-s`/`--_dir-e` (`ui/base/core.css`).
+Without it a `chip(ts)` would mirror in RTL and its matching `scm(ts)` would not. `tc`/`bc`/`cc`
+are axis-pure (to bottom / to top / a vertical band) and never flip. This replaced a twin
+`:dir(rtl)` block that re-baked all six gradients verbatim — two copies of nine gradients that
+had to be kept in sync by hand. The same pair drives `obp()`'s inline axis.
 
 ### Sub-theme routing lives in the components
 

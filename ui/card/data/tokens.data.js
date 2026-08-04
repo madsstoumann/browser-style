@@ -65,13 +65,7 @@ export default {
 							"ce",
 							"bs",
 							"bc",
-							"be",
-							"tl",
-							"tr",
-							"cl",
-							"cr",
-							"bl",
-							"br"
+							"be"
 						]
 					},
 					"argAliases": {},
@@ -93,11 +87,9 @@ export default {
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
-						"ui/card/media.css:77",
-						"ui/card/media.css:87",
-						"ui/card/media.css:96"
+						"ui/card/media.css:76"
 					],
-					"notes": "TWO deliberate vocabularies, neither deprecated: logical ts/te/cs/ce/bs/be mirror under :dir(rtl) (media.css); physical tl/tr/cl/cr/bl/br never mirror (object-position has no logical keywords). tc/cc/bc are spelled identically in both. Since v5 removed ovr()'s physical aliases, obp() is the system's ONLY physical position vocabulary — everywhere else the logical ts…be grid is the single spelling."
+					"notes": "The one logical position grid, same spelling as furniture/ovr()/scm()/plc(). Written two-axis: the block letter sets --_obp-b, the inline letter sets --_obp-i from base's --_dir-s/--_dir-e, so s/e mirror under dir=rtl with no :dir() arm of its own. object-position has no logical keywords in any engine (the css-values-4 spellings x-start/inline-start/start are unimplemented), which is why the resolver exists. The physical tl/tr/cl/cr/bl/br spellings were REMOVED in v5 — for an image-space focal point that must not mirror, set the public --ui-media-op directly (it also takes percentages: style=\"--ui-media-op: 30% 20%\"), or mirror the asset with flp(h)."
 				},
 				"rds": {
 					"axis": "corners",
@@ -1888,7 +1880,7 @@ export default {
 						"ui/card/media.css:219-255",
 						"ui/reveal/ui-reveal.css:129-138"
 					],
-					"notes": "SUBSTRING matched (`[variant*=\"ovr(\"]` for the bridge, `[variant*=\"ovr(ts)\"]` per position) — the only card arrangement axis that is not whole-token. The six physical aliases (tl tr cl cr bl br) were REMOVED in v5 — logical ts…be is the only spelling. The centre column tc/cc/bc was always spelled identically in both vocabularies and is unaffected. obp() is now the system's only physical position vocabulary. The implementation was always logical (justify/align/text-align: start|center|end), so ovr(tl) already rendered top-END in rtl — the rename fixes the label, not the behaviour. Real properties: `grid-area: var(--ui-card-stack, auto)` on :is(ui-media, ui-content) (ui/card/ui-card.css:139, armed by the bare [variant] presence), `align-content: stretch` on the queryable descendant, and `color` on a plain .ui-button (ui/card/ui-card.css:168). --ui-media-scrim-default is consumed by bare `scm` on media=; the nine gradients are defined on `:where([variant*=\"ovr(\"])` (among other subjects) in media.css and re-baked mirrored under :dir(rtl). ovr()'s ink/placement/z leak into a reveal panel and are counter-reset at ui/reveal/ui-reveal.css:129-138 (leak-checklist items 1 + 3). variant= is host-only by design — it arranges the two children, so there is no self arm on <ui-media>/<ui-content>."
+					"notes": "SUBSTRING matched (`[variant*=\"ovr(\"]` for the bridge, `[variant*=\"ovr(ts)\"]` per position) — the only card arrangement axis that is not whole-token. The six physical aliases (tl tr cl cr bl br) were REMOVED in v5 — logical ts…be is the only spelling. The centre column tc/cc/bc was always spelled identically in both vocabularies and is unaffected. obp() dropped its physical spellings in the same way (v5, later round), so no physical position vocabulary remains. The implementation was always logical (justify/align/text-align: start|center|end), so ovr(tl) already rendered top-END in rtl — the rename fixes the label, not the behaviour. Real properties: `grid-area: var(--ui-card-stack, auto)` on :is(ui-media, ui-content) (ui/card/ui-card.css:139, armed by the bare [variant] presence), `align-content: stretch` on the queryable descendant, and `color` on a plain .ui-button (ui/card/ui-card.css:168). --ui-media-scrim-default is consumed by bare `scm` on media=; the nine gradients are defined on `:where([variant*=\"ovr(\"])` (among other subjects) in media.css and mirror themselves through base's --_dir-s/--_dir-e. ovr()'s ink/placement/z leak into a reveal panel and are counter-reset at ui/reveal/ui-reveal.css:129-138 (leak-checklist items 1 + 3). variant= is host-only by design — it arranges the two children, so there is no self arm on <ui-media>/<ui-content>."
 				},
 				"flp": {
 					"axis": "reveal-animation",

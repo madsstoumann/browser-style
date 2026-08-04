@@ -75,12 +75,12 @@
       "element": "ui-media",
       "media": "asr(4/3) rds(lg-sq)"
     },
-    "media-obp-tl": {
-      "name": "Media Position Top Left",
-      "description": "Media-only square card, object-position top left",
+    "media-obp-ts": {
+      "name": "Media Position Top Start",
+      "description": "Media-only square card, object-position top inline-start",
       "element": "ui-card",
       "variant": "vis(media)",
-      "media": "asr(1/1) obp(tl) chip(tc)"
+      "media": "asr(1/1) obp(ts) chip(tc)"
     },
     "media-obp-tc": {
       "name": "Media Position Top Center",
@@ -89,19 +89,19 @@
       "variant": "vis(media)",
       "media": "asr(1/1) obp(tc)"
     },
-    "media-obp-tr": {
-      "name": "Media Position Top Right",
-      "description": "Media-only square card, object-position top right",
+    "media-obp-te": {
+      "name": "Media Position Top End",
+      "description": "Media-only square card, object-position top inline-end",
       "element": "ui-card",
       "variant": "vis(media)",
-      "media": "asr(1/1) obp(tr)"
+      "media": "asr(1/1) obp(te)"
     },
-    "media-obp-cl": {
-      "name": "Media Position Center Left",
-      "description": "Media-only square card, object-position center left",
+    "media-obp-cs": {
+      "name": "Media Position Center Start",
+      "description": "Media-only square card, object-position center inline-start",
       "element": "ui-card",
       "variant": "vis(media)",
-      "media": "asr(1/1) obp(cl)"
+      "media": "asr(1/1) obp(cs)"
     },
     "media-obp-cc": {
       "name": "Media Position Center",
@@ -110,19 +110,19 @@
       "variant": "vis(media)",
       "media": "asr(1/1) obp(cc)"
     },
-    "media-obp-cr": {
-      "name": "Media Position Center Right",
-      "description": "Media-only square card, object-position center right",
+    "media-obp-ce": {
+      "name": "Media Position Center End",
+      "description": "Media-only square card, object-position center inline-end",
       "element": "ui-card",
       "variant": "vis(media)",
-      "media": "asr(1/1) obp(cr)"
+      "media": "asr(1/1) obp(ce)"
     },
-    "media-obp-bl": {
-      "name": "Media Position Bottom Left",
-      "description": "Media-only square card, object-position bottom left",
+    "media-obp-bs": {
+      "name": "Media Position Bottom Start",
+      "description": "Media-only square card, object-position bottom inline-start",
       "element": "ui-card",
       "variant": "vis(media)",
-      "media": "asr(1/1) obp(bl)"
+      "media": "asr(1/1) obp(bs)"
     },
     "media-obp-bc": {
       "name": "Media Position Bottom Center",
@@ -131,12 +131,12 @@
       "variant": "vis(media)",
       "media": "asr(1/1) obp(bc)"
     },
-    "media-obp-br": {
-      "name": "Media Position Bottom Right",
-      "description": "Media-only square card, object-position bottom right",
+    "media-obp-be": {
+      "name": "Media Position Bottom End",
+      "description": "Media-only square card, object-position bottom inline-end",
       "element": "ui-card",
       "variant": "vis(media)",
-      "media": "asr(1/1) obp(br)"
+      "media": "asr(1/1) obp(be)"
     },
     "media-vis-1x1": {
       "name": "Media-only Square",

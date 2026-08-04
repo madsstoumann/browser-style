@@ -86,68 +86,26 @@
   :where([media~="asr(21/9)"]) {
     --ui-media-ar: 21 / 9;
   }
-  :where([media*="obp(tl)"]) {
-    --ui-media-op: left top;
+  :where([media*="obp(t"]) {
+    --_obp-b: top;
   }
-  :where([media*="obp(tc)"]) {
-    --ui-media-op: center top;
+  :where([media*="obp(c"]) {
+    --_obp-b: center;
   }
-  :where([media*="obp(tr)"]) {
-    --ui-media-op: right top;
+  :where([media*="obp(b"]) {
+    --_obp-b: bottom;
   }
-  :where([media*="obp(cl)"]) {
-    --ui-media-op: left center;
+  :where([media*="obp(ts)"], [media*="obp(cs)"], [media*="obp(bs)"]) {
+    --_obp-i: var(--_dir-s, left);
   }
-  :where([media*="obp(cc)"]) {
-    --ui-media-op: center center;
+  :where([media*="obp(tc)"], [media*="obp(cc)"], [media*="obp(bc)"]) {
+    --_obp-i: center;
   }
-  :where([media*="obp(cr)"]) {
-    --ui-media-op: right center;
+  :where([media*="obp(te)"], [media*="obp(ce)"], [media*="obp(be)"]) {
+    --_obp-i: var(--_dir-e, right);
   }
-  :where([media*="obp(bl)"]) {
-    --ui-media-op: left bottom;
-  }
-  :where([media*="obp(bc)"]) {
-    --ui-media-op: center bottom;
-  }
-  :where([media*="obp(br)"]) {
-    --ui-media-op: right bottom;
-  }
-  :where([media*="obp(ts)"]) {
-    --ui-media-op: left top;
-  }
-  :where([media*="obp(te)"]) {
-    --ui-media-op: right top;
-  }
-  :where([media*="obp(cs)"]) {
-    --ui-media-op: left center;
-  }
-  :where([media*="obp(ce)"]) {
-    --ui-media-op: right center;
-  }
-  :where([media*="obp(bs)"]) {
-    --ui-media-op: left bottom;
-  }
-  :where([media*="obp(be)"]) {
-    --ui-media-op: right bottom;
-  }
-  :where([media*="obp(ts)"]:dir(rtl)) {
-    --ui-media-op: right top;
-  }
-  :where([media*="obp(te)"]:dir(rtl)) {
-    --ui-media-op: left top;
-  }
-  :where([media*="obp(cs)"]:dir(rtl)) {
-    --ui-media-op: right center;
-  }
-  :where([media*="obp(ce)"]:dir(rtl)) {
-    --ui-media-op: left center;
-  }
-  :where([media*="obp(bs)"]:dir(rtl)) {
-    --ui-media-op: right bottom;
-  }
-  :where([media*="obp(be)"]:dir(rtl)) {
-    --ui-media-op: left bottom;
+  :where([media*="obp("]) {
+    --ui-media-op: var(--_obp-i, center) var(--_obp-b, center);
   }
   :where([media*="rds(non)"]) {
     --ui-media-radius: 0;
@@ -381,7 +339,7 @@
     --ui-media-scrim-hint: calc(var(--ui-media-scrim-mid) + (var(--ui-media-scrim-end) - var(--ui-media-scrim-mid)) * 0.4);
     --ui-media-scrim-ts:
       linear-gradient(
-        to bottom right,
+        to bottom var(--_dir-e, right),
         var(--ui-media-scrim-c),
         var(--ui-media-scrim-m) var(--ui-media-scrim-mid),
         var(--ui-media-scrim-hint),
@@ -395,14 +353,14 @@
         #0000 var(--ui-media-scrim-end));
     --ui-media-scrim-te:
       linear-gradient(
-        to bottom left,
+        to bottom var(--_dir-s, left),
         var(--ui-media-scrim-c),
         var(--ui-media-scrim-m) var(--ui-media-scrim-mid),
         var(--ui-media-scrim-hint),
         #0000 var(--ui-media-scrim-end));
     --ui-media-scrim-cs:
       linear-gradient(
-        to right,
+        to var(--_dir-e, right),
         var(--ui-media-scrim-c),
         var(--ui-media-scrim-m) var(--ui-media-scrim-mid),
         var(--ui-media-scrim-hint),
@@ -415,14 +373,14 @@
         #0000 var(--ui-media-scrim-cc-b, 75%));
     --ui-media-scrim-ce:
       linear-gradient(
-        to left,
+        to var(--_dir-s, left),
         var(--ui-media-scrim-c),
         var(--ui-media-scrim-m) var(--ui-media-scrim-mid),
         var(--ui-media-scrim-hint),
         #0000 var(--ui-media-scrim-end));
     --ui-media-scrim-bs:
       linear-gradient(
-        to top right,
+        to top var(--_dir-e, right),
         var(--ui-media-scrim-c),
         var(--ui-media-scrim-m) var(--ui-media-scrim-mid),
         var(--ui-media-scrim-hint),
@@ -436,53 +394,7 @@
         #0000 var(--ui-media-scrim-end));
     --ui-media-scrim-be:
       linear-gradient(
-        to top left,
-        var(--ui-media-scrim-c),
-        var(--ui-media-scrim-m) var(--ui-media-scrim-mid),
-        var(--ui-media-scrim-hint),
-        #0000 var(--ui-media-scrim-end));
-  }
-  :where(ui-media:dir(rtl)),
-  :where([media*=scm]:dir(rtl)),
-  :where([variant*="ovr("]:dir(rtl)) {
-    --ui-media-scrim-ts:
-      linear-gradient(
-        to bottom left,
-        var(--ui-media-scrim-c),
-        var(--ui-media-scrim-m) var(--ui-media-scrim-mid),
-        var(--ui-media-scrim-hint),
-        #0000 var(--ui-media-scrim-end));
-    --ui-media-scrim-te:
-      linear-gradient(
-        to bottom right,
-        var(--ui-media-scrim-c),
-        var(--ui-media-scrim-m) var(--ui-media-scrim-mid),
-        var(--ui-media-scrim-hint),
-        #0000 var(--ui-media-scrim-end));
-    --ui-media-scrim-cs:
-      linear-gradient(
-        to left,
-        var(--ui-media-scrim-c),
-        var(--ui-media-scrim-m) var(--ui-media-scrim-mid),
-        var(--ui-media-scrim-hint),
-        #0000 var(--ui-media-scrim-end));
-    --ui-media-scrim-ce:
-      linear-gradient(
-        to right,
-        var(--ui-media-scrim-c),
-        var(--ui-media-scrim-m) var(--ui-media-scrim-mid),
-        var(--ui-media-scrim-hint),
-        #0000 var(--ui-media-scrim-end));
-    --ui-media-scrim-bs:
-      linear-gradient(
-        to top left,
-        var(--ui-media-scrim-c),
-        var(--ui-media-scrim-m) var(--ui-media-scrim-mid),
-        var(--ui-media-scrim-hint),
-        #0000 var(--ui-media-scrim-end));
-    --ui-media-scrim-be:
-      linear-gradient(
-        to top right,
+        to top var(--_dir-s, left),
         var(--ui-media-scrim-c),
         var(--ui-media-scrim-m) var(--ui-media-scrim-mid),
         var(--ui-media-scrim-hint),

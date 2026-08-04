@@ -73,30 +73,15 @@
 	:where([media~="asr(16/9)"])  { --ui-media-ar: 16 / 9; }
 	:where([media~="asr(21/9)"])  { --ui-media-ar: 21 / 9; }
 
-	/* obp() — object-position. Two spellings: physical (never mirrors) + logical */
-	:where([media*="obp(tl)"]) { --ui-media-op: left top; }
-	:where([media*="obp(tc)"]) { --ui-media-op: center top; }
-	:where([media*="obp(tr)"]) { --ui-media-op: right top; }
-	:where([media*="obp(cl)"]) { --ui-media-op: left center; }
-	:where([media*="obp(cc)"]) { --ui-media-op: center center; }
-	:where([media*="obp(cr)"]) { --ui-media-op: right center; }
-	:where([media*="obp(bl)"]) { --ui-media-op: left bottom; }
-	:where([media*="obp(bc)"]) { --ui-media-op: center bottom; }
-	:where([media*="obp(br)"]) { --ui-media-op: right bottom; }
-	/* logical — ltr resolution (start = left) */
-	:where([media*="obp(ts)"]) { --ui-media-op: left top; }
-	:where([media*="obp(te)"]) { --ui-media-op: right top; }
-	:where([media*="obp(cs)"]) { --ui-media-op: left center; }
-	:where([media*="obp(ce)"]) { --ui-media-op: right center; }
-	:where([media*="obp(bs)"]) { --ui-media-op: left bottom; }
-	:where([media*="obp(be)"]) { --ui-media-op: right bottom; }
-	/* rtl — swap start/end for the LOGICAL spellings only */
-	:where([media*="obp(ts)"]:dir(rtl)) { --ui-media-op: right top; }
-	:where([media*="obp(te)"]:dir(rtl)) { --ui-media-op: left top; }
-	:where([media*="obp(cs)"]:dir(rtl)) { --ui-media-op: right center; }
-	:where([media*="obp(ce)"]:dir(rtl)) { --ui-media-op: left center; }
-	:where([media*="obp(bs)"]:dir(rtl)) { --ui-media-op: right bottom; }
-	:where([media*="obp(be)"]:dir(rtl)) { --ui-media-op: left bottom; }
+	/* obp() — object-position on the 9-cell grid; inline axis via base's --_dir-*.
+	   --_obp-* are read only inside the obp( rule below, so they need no boundary entry. */
+	:where([media*="obp(t"]) { --_obp-b: top; }
+	:where([media*="obp(c"]) { --_obp-b: center; }
+	:where([media*="obp(b"]) { --_obp-b: bottom; }
+	:where([media*="obp(ts)"], [media*="obp(cs)"], [media*="obp(bs)"]) { --_obp-i: var(--_dir-s, left); }
+	:where([media*="obp(tc)"], [media*="obp(cc)"], [media*="obp(bc)"]) { --_obp-i: center; }
+	:where([media*="obp(te)"], [media*="obp(ce)"], [media*="obp(be)"]) { --_obp-i: var(--_dir-e, right); }
+	:where([media*="obp("]) { --ui-media-op: var(--_obp-i, center) var(--_obp-b, center); }
 
 	/* rds() — KEEP IN LOCK-STEP with ui-card.css + content.css. Standalone frame only */
 	:where([media*="rds(non)"]) { --ui-media-radius: 0; }
@@ -188,24 +173,17 @@
 		--ui-media-scrim-end: var(--ui-media-scrim-end-stop, 80%);
 		/* concave interpolation hint — long soft tail into transparent, eases banding */
 		--ui-media-scrim-hint: calc(var(--ui-media-scrim-mid) + (var(--ui-media-scrim-end) - var(--ui-media-scrim-mid)) * 0.4);
-		--ui-media-scrim-ts: linear-gradient(to bottom right, var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+		/* inline-axis direction comes from base's --_dir-*; the six mirrored variants
+		   used to be re-baked in a :dir(rtl) twin block. Docs: docs/media.md */
+		--ui-media-scrim-ts: linear-gradient(to bottom var(--_dir-e, right), var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 		--ui-media-scrim-tc: linear-gradient(to bottom,       var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
-		--ui-media-scrim-te: linear-gradient(to bottom left,  var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
-		--ui-media-scrim-cs: linear-gradient(to right,        var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+		--ui-media-scrim-te: linear-gradient(to bottom var(--_dir-s, left), var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+		--ui-media-scrim-cs: linear-gradient(to var(--_dir-e, right), var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 		--ui-media-scrim-cc: linear-gradient(to bottom, #0000 var(--ui-media-scrim-cc-a, 25%), var(--ui-media-scrim-c) 50%, #0000 var(--ui-media-scrim-cc-b, 75%));
-		--ui-media-scrim-ce: linear-gradient(to left,         var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
-		--ui-media-scrim-bs: linear-gradient(to top right,    var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+		--ui-media-scrim-ce: linear-gradient(to var(--_dir-s, left), var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+		--ui-media-scrim-bs: linear-gradient(to top var(--_dir-e, right), var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 		--ui-media-scrim-bc: linear-gradient(to top,          var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
-		--ui-media-scrim-be: linear-gradient(to top left,     var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
-	}
-	/* RTL — linear-gradient() has no logical directions, so re-bake the six mirrored */
-	:where(ui-media:dir(rtl)), :where([media*="scm"]:dir(rtl)), :where([variant*="ovr("]:dir(rtl)) {
-		--ui-media-scrim-ts: linear-gradient(to bottom left,  var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
-		--ui-media-scrim-te: linear-gradient(to bottom right, var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
-		--ui-media-scrim-cs: linear-gradient(to left,         var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
-		--ui-media-scrim-ce: linear-gradient(to right,        var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
-		--ui-media-scrim-bs: linear-gradient(to top left,     var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
-		--ui-media-scrim-be: linear-gradient(to top right,    var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
+		--ui-media-scrim-be: linear-gradient(to top var(--_dir-s, left), var(--ui-media-scrim-c), var(--ui-media-scrim-m) var(--ui-media-scrim-mid), var(--ui-media-scrim-hint), #0000 var(--ui-media-scrim-end));
 	}
 	/* explicit scm(pos) overrides the ovr()-matched default */
 	:where([media*="scm(ts)"]) { --ui-media-scrim: var(--ui-media-scrim-ts); }

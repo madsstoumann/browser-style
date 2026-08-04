@@ -92,15 +92,16 @@ media.md.)
 
 These belong to the base `<ui-media>` frame ([media.css](../media.css), docs in
 [media.md](./media.md)) and work with or without a carousel. Listed by family
-(`obp()`'s `<pos>` accepts **both** the logical grid `ts tc te cs cc ce bs bc be` — canonical,
-mirrors in RTL — and the physical grid `tl tc tr cl cc cr bl bc br`, which is kept on purpose
-because `object-position` has no logical keywords. Furniture uses the logical set only.)
+(every `<pos>` here — `obp()`, furniture, `scm()`, `mrk()`, `arw()` — is the one logical grid
+`ts tc te · cs cc ce · bs bc be`, mirroring under `dir="rtl"`. `object-position` and
+`linear-gradient()` have no logical keywords, so those two resolve the inline letter through
+base's `--_dir-s`/`--_dir-e` pair.)
 
 | Token | Layer | Effect |
 |-------|-------|--------|
 | `asr(1/1 · 1/2 · 6/7 · 3/4 · 4/3 · 3/2 · 2/3 · 16/9 · 21/9)` | CSS | Aspect ratio of the frame — nine ratios, and the one `media=` token that takes `md:`/`lg:` prefixes |
 | `obf(cover · contain · fill · none)` | CSS | `object-fit` (default cover) |
-| `obp(<pos>)` | CSS | `object-position` (9-grid, logical **or** physical spelling) |
+| `obp(<pos>)` | CSS | `object-position` on the logical 9-grid. Arbitrary focal point: `--ui-media-op` |
 | `rds(non · sm · md · lg · xl · 2xl · full · pill)` | CSS | Corner radius (standalone frame); `-sq` variants add a squircle corner. The old `rds(none)` spelling was removed in v5 |
 | `clip` | CSS | `clip-path: inset(0 round …)` at the `rds()` radius — keeps rounded corners while a carousel scrolls (border-radius alone can drop them mid-scroll). Reuses `--ui-media-radius`; no superellipse |
 | `flp(h · v · hv)` | CSS | Flip the image horizontally / vertically / both |
@@ -374,8 +375,8 @@ mechanism follows from the markup shape.
   default · xl 1), a **fraction** that multiplies the `anchor-size()` term in the
   group's `inline-size` calc (fraction, not percentage: `calc(<length> * <percentage>)`
   is invalid). A partial-span strip stays centered via `justify-self: anchor-center`;
-  the cell's inline letter re-pins it (`mrk(bs)`/`mrk(ts)` → `left: anchor(left)`,
-  `mrk(be)`/`mrk(te)` → `right: anchor(right)`) — rules declared after the geometry
+  the cell's inline letter re-pins it (`mrk(bs)`/`mrk(ts)` → `inset-inline-start: anchor(start)`,
+  `mrk(be)`/`mrk(te)` → `inset-inline-end: anchor(end)`) — rules declared after the geometry
   block so they win on source order. (A continuous gliding thumb is possible —
   scroll-driven animation on the scroller + an inherited custom property, since
   `scroll(nearest)` does **not** resolve from the group's own box — but the segmented
@@ -480,7 +481,8 @@ bottom of the scrollport — it covers the peek; the rotated up/down arrows sit 
   page positioned with plain/logical insets (`inset-inline-start`, `inset-block`) collide — the
   insets resolve against a **shared** containing block, so a second rail renders over the first.
   The rail group must use `anchor()` on both axes (per-scroller, like the corner rules).
-  `anchor(left)`/`anchor(right)` are physical, so RTL is an explicit `:dir(rtl)` flip.
+  Use the **logical** `anchor(start)`/`anchor(end)` on `inset-inline-*` — they mirror on their
+  own, so the rail's old explicit `:dir(rtl)` flip was deleted. Re-adding one double-flips it.
 - **Arrows dropped.** The rail is the navigation; `::scroll-button(*) { content: none }`
   un-generates the arrows (must be `content: none`, not `display: none`).
 - **Overflow:** thumbs `flex: 0 1 auto` with `min-block-size: --ui-carousel-thumb-min` shrink to

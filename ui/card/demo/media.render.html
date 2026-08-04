@@ -49,7 +49,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Object-position — <code>obp()</code></h2>
-	<p class="note">When the frame's ratio crops the image, <code>obp()</code> picks <em>which</em> part stays in view — the same 9-code grid used everywhere else: <code>tl tc tr · cl cc cr · bl bc br</code>. All nine below share one square frame and one wide image — one UCF file (<code>media-03</code>), nine <code>media-obp-*</code> presets.</p>
+	<p class="note">When the frame's ratio crops the image, <code>obp()</code> picks <em>which</em> part stays in view — the same 9-code grid used everywhere else: <code>ts tc te · cs cc ce · bs bc be</code>. All nine below share one square frame and one wide image — one UCF file (<code>media-03</code>), nine <code>media-obp-*</code> presets.</p>
 	<lay-out md="columns(2)" lg="columns(3)" id="obp"></lay-out>
 	</section>
 
@@ -125,16 +125,22 @@
 
 		/* Clone a UCF instance with a different preset reference (and optional
 		   content-field overrides — used for the token-label chips/stickers). */
+		/* overrides merge into fields.furniture — the UCF shape render.js reads.
+		   Position/hue come from the preset's media= tokens, not from here. */
 		const withPreset = (ucf, presetId, overrides = {}) => ({
 			...ucf,
-			fields: { ...ucf.fields, ...overrides, preset: { $ref: `card-preset/${presetId}` } }
+			fields: {
+				...ucf.fields,
+				furniture: { ...ucf.fields.furniture, ...overrides },
+				preset: { $ref: `card-preset/${presetId}` }
+			}
 		});
 
 		/* asr() — one UCF frame, eight presets; the chip label names each preset */
 		const frame = await load('01');
 		for (const ratio of ['1/1', '6/7', '3/4', '2/3', '4/3', '3/2', '16/9', '21/9']) {
 			grid('asr').append(renderCard(withPreset(frame, `media-asr-${ratio.replace('/', 'x')}`, {
-				chip: { text: `asr(${ratio})`, position: 'bs' }
+				chip: { text: `asr(${ratio})` }
 			}), presets));
 		}
 
@@ -142,33 +148,33 @@
 		const river = await load('02');
 		for (const size of ['sm', 'lg', '2xl', 'lg-sq']) {
 			grid('rds').append(renderCard(withPreset(river, `media-rds-${size}`, {
-				chip: { text: `rds(${size})`, position: 'bs' }
+				chip: { text: `rds(${size})` }
 			}), presets));
 		}
 
 		/* obp() — one UCF frame, nine presets */
 		const government = await load('03');
-		for (const pos of ['tl', 'tc', 'tr', 'cl', 'cc', 'cr', 'bl', 'bc', 'br']) {
+		for (const pos of ['ts', 'tc', 'te', 'cs', 'cc', 'ce', 'bs', 'bc', 'be']) {
 			grid('obp').append(renderCard(withPreset(government, `media-obp-${pos}`, {
-				chip: { text: `obp(${pos})`, position: 'tc' }
+				chip: { text: `obp(${pos})` }
 			}), presets));
 		}
 
 		/* obf() — one UCF frame, three presets */
 		const chair = await load('04');
 		grid('obf').append(
-			renderCard(withPreset(chair, 'media-vis-1x1', { chip: { text: 'cover (default)', position: 'bs' } }), presets),
-			renderCard(withPreset(chair, 'media-obf-contain', { chip: { text: 'contain', position: 'bs' } }), presets),
-			renderCard(withPreset(chair, 'media-obf-fill', { chip: { text: 'fill', position: 'bs' } }), presets)
+			renderCard(withPreset(chair, 'media-vis-1x1', { chip: { text: 'cover (default)' } }), presets),
+			renderCard(withPreset(chair, 'media-obf-contain', { chip: { text: 'contain' } }), presets),
+			renderCard(withPreset(chair, 'media-obf-fill', { chip: { text: 'fill' } }), presets)
 		);
 
 		/* flp() — same UCF frame as rds(), four presets */
 		grid('flp').append(renderCard(withPreset(river, 'media-vis-4x3', {
-			chip: { text: 'original', position: 'bs' }
+			chip: { text: 'original' }
 		}), presets));
 		for (const axis of ['h', 'v', 'hv']) {
 			grid('flp').append(renderCard(withPreset(river, `media-flp-${axis}`, {
-				chip: { text: `flp(${axis})`, position: 'bs' }
+				chip: { text: `flp(${axis})` }
 			}), presets));
 		}
 

@@ -128,7 +128,7 @@ solid CTA button inside an overlay keeps **dark** text — it still paints its l
 so inheriting the overlay's white would make it vanish. Colour button variants (`accent`,
 `text`, …) set their own `--button-c` and are left untouched.
 
-> **The physical spellings `ovr(tl) ovr(tr) ovr(cl) ovr(cr) ovr(bl) ovr(br)` were removed in v5** — they no longer resolve. They were always *mislabelled* rather than wrong: the implementation has been logical all along, so `ovr(tl)` already rendered top-**end** under `dir="rtl"`, and the migration is a pure find-and-replace (`tl`→`ts`, `tr`→`te`, `cl`→`cs`, `cr`→`ce`, `bl`→`bs`, `br`→`be`). `ovr(tc)`, `ovr(cc)` and `ovr(bc)` are spelled identically in both grids and are unaffected. With `ovr()` converted, **`obp()` is the system's only physical position vocabulary** — see [media.md](media.md#obp--object-position-9-grid).
+> **The physical spellings `ovr(tl) ovr(tr) ovr(cl) ovr(cr) ovr(bl) ovr(br)` were removed in v5** — they no longer resolve. They were always *mislabelled* rather than wrong: the implementation has been logical all along, so `ovr(tl)` already rendered top-**end** under `dir="rtl"`, and the migration is a pure find-and-replace (`tl`→`ts`, `tr`→`te`, `cl`→`cs`, `cr`→`ce`, `bl`→`bs`, `br`→`be`). `ovr(tc)`, `ovr(cc)` and `ovr(bc)` are spelled identically in both grids and are unaffected. `obp()` dropped its own physical spellings in a later v5 round, so no physical position vocabulary remains — see [media.md](media.md#obp--object-position-9-grid).
 
 ## Corners — `rds()`
 

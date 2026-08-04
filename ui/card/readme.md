@@ -199,7 +199,7 @@ Configures `<ui-media>`: aspect-ratio, fit/position, hover, scrim, carousel, and
 |-------|----------|
 | `asr()` | aspect-ratio — the **only** `media=` token that takes `md:`/`lg:` prefixes |
 | `obf()` | object-fit |
-| `obp()` | object-position (9-grid) — logical `ts…be` **and** physical `tl…br`, both current |
+| `obp()` | object-position — the logical 9-grid `ts…be`, mirroring under `dir="rtl"`. For an image-space focal point that must *not* mirror, set `--ui-media-op` directly (it also takes percentages) |
 | `flp()` | mirror the image |
 | `hov()` | hover effect (image-only) — 17 values; only `track`/`drift`/`tilt` need JS |
 | `rds()` | corners on a **standalone** `<ui-media>` (inside a card the card owns the radius) |
@@ -214,7 +214,7 @@ Argument vocabularies, **generated from `data/tokens.json`** so they can't drift
 |---|---|---|---|
 | `asr()` | **ratio** | 1/1 1/2 6/7 3/4 4/3 3/2 2/3 16/9 21/9 | — |
 | `obf()` | **mode** | cover contain fill none | — |
-| `obp()` | **pos** | ts tc te cs cc ce bs bc be tl tr cl cr bl br | — |
+| `obp()` | **pos** | ts tc te cs cc ce bs bc be | — |
 | `flp()` | **mode** | h v hv | — |
 | `hov()` | **mode** | zoom pan track drift tilt tilt-out tilt-in rot-r rot-l shape shape-rev gray blur bright sat dim tint | — |
 | `rds()` | **size** | non sm md lg xl 2xl full pill sm-sq md-sq lg-sq xl-sq | — |
