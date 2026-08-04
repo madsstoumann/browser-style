@@ -191,8 +191,12 @@
   :where(ui-media) {
     & :is(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker) {
       --_g: var(--ui-media-overlay-gap, 0.75rem);
+      --_fx: -50%;
       position: absolute;
       z-index: 2;
+    }
+    &:dir(rtl) :is(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker) {
+      --_fx: 50%;
     }
     & :is(ui-beacon, ui-chip) {
       inset-block-start: var(--_g);
@@ -205,7 +209,7 @@
     & ui-play {
       inset-block-start: 50%;
       inset-inline-start: 50%;
-      translate: -50% -50%;
+      translate: var(--_fx) -50%;
     }
     & ui-lightbox {
       inset-block-end: var(--_g);
@@ -230,7 +234,7 @@
   :where([media*="lightbox(tc)"]) ui-lightbox {
     inset-block: var(--_g) auto;
     inset-inline: 50% auto;
-    translate: -50% 0;
+    translate: var(--_fx) 0;
   }
   :where([media*="chip(te)"]) ui-chip,
   :where([media*="sticker(te)"]) ui-sticker,
@@ -260,7 +264,7 @@
   :where([media*="lightbox(cc)"]) ui-lightbox {
     inset-block: 50% auto;
     inset-inline: 50% auto;
-    translate: -50% -50%;
+    translate: var(--_fx) -50%;
   }
   :where([media*="chip(ce)"]) ui-chip,
   :where([media*="sticker(ce)"]) ui-sticker,
@@ -290,7 +294,7 @@
   :where([media*="lightbox(bc)"]) ui-lightbox {
     inset-block: auto var(--_g);
     inset-inline: 50% auto;
-    translate: -50% 0;
+    translate: var(--_fx) 0;
   }
   :where([media*="chip(be)"]) ui-chip,
   :where([media*="sticker(be)"]) ui-sticker,
@@ -327,7 +331,7 @@
   ui-media ui-media > ui-play {
     inset-block: 50% auto;
     inset-inline: 50% auto;
-    translate: -50% -50%;
+    translate: var(--_fx, -50%) -50%;
   }
   :where(ui-media),
   :where([media*=scm]),

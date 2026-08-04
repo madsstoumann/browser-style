@@ -126,25 +126,29 @@
 	:where(ui-media) {
 		& :is(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker) {
 			--_g: var(--ui-media-overlay-gap, 0.75rem);
+			/* centre cells pull back half their own size; translate is PHYSICAL, so the
+			   inline sign flips with direction — a keyword resolver can't carry a sign */
+			--_fx: -50%;
 			position: absolute;
 			z-index: 2;
 		}
+		&:dir(rtl) :is(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker) { --_fx: 50%; }
 		/* chip and beacon share ts — position one explicitly when a frame carries both */
 		& :is(ui-beacon, ui-chip)  { inset-block-start: var(--_g); inset-inline-start: var(--_g); }   /* ts */
 		& :is(ui-sticker, ui-save) { inset-block-start: var(--_g); inset-inline-end:   var(--_g); }   /* te */
-		& ui-play                  { inset-block-start: 50%; inset-inline-start: 50%; translate: -50% -50%; } /* cc */
+		& ui-play                  { inset-block-start: 50%; inset-inline-start: 50%; translate: var(--_fx) -50%; } /* cc */
 		& ui-lightbox              { inset-block-end: var(--_g); inset-inline-start: var(--_g); }     /* bs */
 	}
 
 	/* position override — media="el(pos)"; 9 logical cells × 6 furniture elements */
 	:where([media*="chip(ts)"]) ui-chip, :where([media*="sticker(ts)"]) ui-sticker, :where([media*="save(ts)"]) ui-save, :where([media*="play(ts)"]) ui-play, :where([media*="beacon(ts)"]) ui-beacon, :where([media*="lightbox(ts)"]) ui-lightbox { inset-block: var(--_g) auto; inset-inline: var(--_g) auto; translate: none; }
-	:where([media*="chip(tc)"]) ui-chip, :where([media*="sticker(tc)"]) ui-sticker, :where([media*="save(tc)"]) ui-save, :where([media*="play(tc)"]) ui-play, :where([media*="beacon(tc)"]) ui-beacon, :where([media*="lightbox(tc)"]) ui-lightbox { inset-block: var(--_g) auto; inset-inline: 50% auto; translate: -50% 0; }
+	:where([media*="chip(tc)"]) ui-chip, :where([media*="sticker(tc)"]) ui-sticker, :where([media*="save(tc)"]) ui-save, :where([media*="play(tc)"]) ui-play, :where([media*="beacon(tc)"]) ui-beacon, :where([media*="lightbox(tc)"]) ui-lightbox { inset-block: var(--_g) auto; inset-inline: 50% auto; translate: var(--_fx) 0; }
 	:where([media*="chip(te)"]) ui-chip, :where([media*="sticker(te)"]) ui-sticker, :where([media*="save(te)"]) ui-save, :where([media*="play(te)"]) ui-play, :where([media*="beacon(te)"]) ui-beacon, :where([media*="lightbox(te)"]) ui-lightbox { inset-block: var(--_g) auto; inset-inline: auto var(--_g); translate: none; }
 	:where([media*="chip(cs)"]) ui-chip, :where([media*="sticker(cs)"]) ui-sticker, :where([media*="save(cs)"]) ui-save, :where([media*="play(cs)"]) ui-play, :where([media*="beacon(cs)"]) ui-beacon, :where([media*="lightbox(cs)"]) ui-lightbox { inset-block: 50% auto; inset-inline: var(--_g) auto; translate: 0 -50%; }
-	:where([media*="chip(cc)"]) ui-chip, :where([media*="sticker(cc)"]) ui-sticker, :where([media*="save(cc)"]) ui-save, :where([media*="play(cc)"]) ui-play, :where([media*="beacon(cc)"]) ui-beacon, :where([media*="lightbox(cc)"]) ui-lightbox { inset-block: 50% auto; inset-inline: 50% auto; translate: -50% -50%; }
+	:where([media*="chip(cc)"]) ui-chip, :where([media*="sticker(cc)"]) ui-sticker, :where([media*="save(cc)"]) ui-save, :where([media*="play(cc)"]) ui-play, :where([media*="beacon(cc)"]) ui-beacon, :where([media*="lightbox(cc)"]) ui-lightbox { inset-block: 50% auto; inset-inline: 50% auto; translate: var(--_fx) -50%; }
 	:where([media*="chip(ce)"]) ui-chip, :where([media*="sticker(ce)"]) ui-sticker, :where([media*="save(ce)"]) ui-save, :where([media*="play(ce)"]) ui-play, :where([media*="beacon(ce)"]) ui-beacon, :where([media*="lightbox(ce)"]) ui-lightbox { inset-block: 50% auto; inset-inline: auto var(--_g); translate: 0 -50%; }
 	:where([media*="chip(bs)"]) ui-chip, :where([media*="sticker(bs)"]) ui-sticker, :where([media*="save(bs)"]) ui-save, :where([media*="play(bs)"]) ui-play, :where([media*="beacon(bs)"]) ui-beacon, :where([media*="lightbox(bs)"]) ui-lightbox { inset-block: auto var(--_g); inset-inline: var(--_g) auto; translate: none; }
-	:where([media*="chip(bc)"]) ui-chip, :where([media*="sticker(bc)"]) ui-sticker, :where([media*="save(bc)"]) ui-save, :where([media*="play(bc)"]) ui-play, :where([media*="beacon(bc)"]) ui-beacon, :where([media*="lightbox(bc)"]) ui-lightbox { inset-block: auto var(--_g); inset-inline: 50% auto; translate: -50% 0; }
+	:where([media*="chip(bc)"]) ui-chip, :where([media*="sticker(bc)"]) ui-sticker, :where([media*="save(bc)"]) ui-save, :where([media*="play(bc)"]) ui-play, :where([media*="beacon(bc)"]) ui-beacon, :where([media*="lightbox(bc)"]) ui-lightbox { inset-block: auto var(--_g); inset-inline: 50% auto; translate: var(--_fx) 0; }
 	:where([media*="chip(be)"]) ui-chip, :where([media*="sticker(be)"]) ui-sticker, :where([media*="save(be)"]) ui-save, :where([media*="play(be)"]) ui-play, :where([media*="beacon(be)"]) ui-beacon, :where([media*="lightbox(be)"]) ui-lightbox { inset-block: auto var(--_g); inset-inline: auto var(--_g); translate: none; }
 
 	/* marquee — full-width band; `:where(ui-media)` stays on the subject for its (0,0,1) */
@@ -158,7 +162,7 @@
 	ui-media ui-media > ui-play {
 		inset-block: 50% auto;
 		inset-inline: 50% auto;
-		translate: -50% -50%;
+		translate: var(--_fx, -50%) -50%;
 	}
 
 	/* play() sizes + tools: media.video.css. Furniture sub-theming: its own package. */

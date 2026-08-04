@@ -375,8 +375,8 @@ mechanism follows from the markup shape.
   default · xl 1), a **fraction** that multiplies the `anchor-size()` term in the
   group's `inline-size` calc (fraction, not percentage: `calc(<length> * <percentage>)`
   is invalid). A partial-span strip stays centered via `justify-self: anchor-center`;
-  the cell's inline letter re-pins it (`mrk(bs)`/`mrk(ts)` → `inset-inline-start: anchor(start)`,
-  `mrk(be)`/`mrk(te)` → `inset-inline-end: anchor(end)`) — rules declared after the geometry
+  the cell's inline letter re-pins it (`mrk(bs)`/`mrk(ts)` → `inset-inline-start: anchor(self-start)`,
+  `mrk(be)`/`mrk(te)` → `inset-inline-end: anchor(self-end)`) — rules declared after the geometry
   block so they win on source order. (A continuous gliding thumb is possible —
   scroll-driven animation on the scroller + an inherited custom property, since
   `scroll(nearest)` does **not** resolve from the group's own box — but the segmented
@@ -481,8 +481,12 @@ bottom of the scrollport — it covers the peek; the rotated up/down arrows sit 
   page positioned with plain/logical insets (`inset-inline-start`, `inset-block`) collide — the
   insets resolve against a **shared** containing block, so a second rail renders over the first.
   The rail group must use `anchor()` on both axes (per-scroller, like the corner rules).
-  Use the **logical** `anchor(start)`/`anchor(end)` on `inset-inline-*` — they mirror on their
-  own, so the rail's old explicit `:dir(rtl)` flip was deleted. Re-adding one double-flips it.
+  Use `anchor(self-start)`/`anchor(self-end)` on `inset-inline-*` — they mirror on their own,
+  so the rail's old explicit `:dir(rtl)` flip was deleted. Re-adding one double-flips it.
+  **It must be `self-`**: plain `anchor(start)`/`anchor(end)` resolve against the *containing
+  block's* writing mode, not the anchored element's, so on an LTR page they stay pinned to the
+  left edge while `inset-inline-start` flips to the right — value computed for one edge,
+  applied to the other, control lands outside the frame.
 - **Arrows dropped.** The rail is the navigation; `::scroll-button(*) { content: none }`
   un-generates the arrows (must be `content: none`, not `display: none`).
 - **Overflow:** thumbs `flex: 0 1 auto` with `min-block-size: --ui-carousel-thumb-min` shrink to

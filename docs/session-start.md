@@ -62,8 +62,8 @@
 - **One position grid** (ts tc te / cs cc ce / bs bc be) across furniture, ovr(),
   scm(), mrk(), arw(), plc(), obp(), reveal ico() — no physical (tl…br) vocabulary
   remains; obp() was the last and lost it in v5. Where the property has no logical
-  form (object-position, linear-gradient directions, and formerly the carousel's
-  ::scroll-button/anchor()) the inline letter resolves through ONE shared pair,
+  form (object-position, linear-gradient directions) the inline letter resolves
+  through ONE shared pair,
   `--_dir-s`/`--_dir-e` in ui/base/core.css — never a per-family :dir(rtl) arm.
   Adding one is the regression. Escape hatch for a non-mirroring focal point:
   set --ui-media-op directly. Still on invented direction words, not yet migrated:
@@ -154,7 +154,10 @@
   is "advance" in both directions, which is why the labels are now correct by construction.
   Note `/ui/carousel/polyfill/carousel.css` was already logical throughout; the native path
   was the outlier, so Safari rendered RTL carousels correctly and Chrome did not. They agree
-  now — keep them agreeing.
+  now — keep them agreeing. In `anchor()`, always use `self-start`/`self-end`: plain
+  `start`/`end` resolve against the CONTAINING BLOCK's writing mode, so paired with a
+  logical `inset-inline-*` on an LTR page they compute for one edge and apply to the
+  other, throwing the control outside the frame. Nothing catches this but the RTL demo.
 - **Browser-verifying a CSS edit? Use a fresh port.** `python3 -m http.server` sends
   `Last-Modified` with no `Cache-Control`, and Chromium will serve a stale `@import`ed sheet
   even after a query-string reload of the HTML (the query busts the page, not its imports).
