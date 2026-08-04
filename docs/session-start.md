@@ -174,7 +174,11 @@
   pattern-match from them.
 - The stagger engine has three adapters (details / snap-carousel scroll-state /
   scroll-driven view-timeline) — see ui/base/stagger.css header before touching;
-  a scroll-state container can't restyle itself from its own query.
+  a scroll-state container can't restyle itself from its own query. The **view-timeline**
+  adapter (the `stagger=` ATTRIBUTE on a `<lay-out overflow>`) does not fire under
+  `dir="rtl"`: Chromium reports 0% progress forever for slides already in view, so the
+  section renders blank. The `media="… stagger"` token adapter is unaffected. Pre-existing,
+  NOT a position-grid bug — repro and the three rejected CSS levers in open-items.md §5.
 - **Typed `attr()` has no fallback in Safari/Firefox** — not a wrong value, a
   *missing* one. A custom property parses any token stream, so `--x: attr(fill
   type(<color>), red)` holds the literal `attr(…)` text: it is never

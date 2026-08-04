@@ -3,7 +3,7 @@
 > What is **actually still open**, extracted from the implementation ledger in
 > [`2026-07-26-v4-card-system-architecture-analysis.md`](./2026-07-26-v4-card-system-architecture-analysis.md)
 > (now an archive — read it for the *why* behind any F-xx/R-xx, not for what to do next).
-> Four open items plus one closed decision on record. Each open one is waiting on a
+> Five open items plus one closed decision on record. Each open one is waiting on a
 > decision or on coordination, not on typing.
 >
 > Everything else from that report is implemented and machine-verified: the v5 alias
@@ -134,7 +134,56 @@ calls surfaced by the R-13 extraction; the other two — `bdr` on `<ui-reveal>` 
 `> details`, and group-header base sizes riding the responsive `scl()` ladder — were both
 resolved in the 2026-07-27 closeout round. This one was not.
 
-## 5. Closed — `<ui-content>` → `<ui-text>` rename (decided against, 2026-08-03)
+## 5. `stagger=` never fires in RTL — the view-timeline adapter only
+
+**Where:** `ui/base/stagger.css`, the scroll-driven view-timeline adapter (third of the
+three; see the file header). Repro: `ui/card/demo/media.carousel.html` § *Carousels in
+`<lay-out>`* with `dir="rtl"` on `<html>`.
+
+```html
+<lay-out class="reveal-cards" md="columns(2)" lg="columns(3)"
+         overflow media="nav(blw) arw(bare) pages" stagger="rise">
+```
+
+Under `dir="rtl"` every card stays at the keyframe start — `opacity: 0`,
+`translate: 0 80px` — so the section renders as a blank band. The cards are **there**
+and correct (326×434, right-to-left order, `scrollWidth` 3059 > `clientWidth` 1009, snap
+and controls all fine); they simply never animate in.
+
+**Cause: Chromium misreports view-progress on an RTL horizontal scroller.** Slides that
+are *already in view at rest* are treated as "not yet entered" and sit at 0% progress
+forever. Scroll the carousel and the slides arriving from the far side animate in
+normally (measured 0.988) while the initially-visible ones stay at 0. Confirmed
+Chromium 151.
+
+**Not the axis keyword and not the range.** `view(inline)`, `view(x)` and an explicit
+`animation-range: entry 0% cover 30%` all fail identically in RTL and all work in LTR.
+The timeline is UA-computed, so there is no CSS lever left.
+
+**Exactly one adapter is affected.** Sweeping all 13 stagger hosts on that page under
+`dir="rtl"`:
+
+| adapter | `animation-timeline` | RTL |
+|---|---|---|
+| `media="… stagger"` — snap-carousel scroll-state (6 carousels) | `auto` | works |
+| `<lay-out>` block stagger (5 instances) | `auto` | works |
+| **`stagger=` attribute — scroll-driven view timeline (1)** | `view(inline)` | **broken** |
+
+**Pre-existing, not a regression.** Byte-identical at `94d7fa4f`, i.e. before the
+2026-08-04 logical-position work — that round is what surfaced it, by adding the first
+RTL demo. It is *not* a position-grid or carousel-control bug: those all mirror
+correctly on the same page.
+
+**The call to make.** Either (a) give this adapter an IntersectionObserver fallback that
+marks in-view subjects done — reintroduces JS into a CSS-only engine, and stagger is
+deliberately progressive-enhancement; (b) drop the view timeline for inline-axis
+scrollers and route `stagger=` on a `<lay-out overflow>` through the same scroll-state
+adapter the `media=` token already uses in RTL, which is the one that demonstrably
+works; or (c) accept it, document `stagger=` as LTR-only on horizontal scrollers, and
+wait for the engine. (b) looks cheapest and keeps the no-JS contract — it needs someone
+to confirm the two adapters produce the same visual result.
+
+## 6. Closed — `<ui-content>` → `<ui-text>` rename (decided against, 2026-08-03)
 
 Recorded so it is not rediscovered as an open question. The proposal was to rename
 `<ui-content>` (the text area) to `<ui-text>`, recycle `<ui-content>` for the host, move
