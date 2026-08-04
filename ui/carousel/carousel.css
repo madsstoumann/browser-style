@@ -423,20 +423,27 @@
 				outline-offset: var(--ring-offset, 3px);
 			}
 			&::scroll-button(*):disabled { cursor: default; opacity: var(--ui-carousel-arrow-disabled-opacity, 0.4); pointer-events: none; }
-			&::scroll-button(left) {
+			/* logical pseudos — the keyword names the SCROLL ACTION, so Previous/Next stay
+			   correct in rtl. Glyph angle still needs a :dir arm. Docs: ui/card/docs/media.carousel.md */
+			&::scroll-button(inline-start) {
 				content: "" / "Previous";
-				left: calc(anchor(left) + var(--ui-carousel-overlay-gap));
+				inset-inline-start: calc(anchor(start) + var(--ui-carousel-overlay-gap));
 				--_arw-rot: 180deg;
 			}
-			&::scroll-button(right) {
+			&::scroll-button(inline-end) {
 				content: "" / "Next";
-				right: calc(anchor(right) + var(--ui-carousel-overlay-gap));
+				inset-inline-end: calc(anchor(end) + var(--ui-carousel-overlay-gap));
+				--_arw-rot: 0deg;
 			}
-			&::scroll-button(up) {
+			&:dir(rtl) {
+				&::scroll-button(inline-start) { --_arw-rot: 0deg; }
+				&::scroll-button(inline-end)   { --_arw-rot: 180deg; }
+			}
+			&::scroll-button(block-start) {
 				content: "" / "Previous";
 				--_arw-rot: -90deg;
 			}
-			&::scroll-button(down) {
+			&::scroll-button(block-end) {
 				content: "" / "Next";
 				--_arw-rot: 90deg;
 			}
@@ -451,39 +458,39 @@
 		}
 
 		/* arw(set) — cluster both arrows; inline side from the cell's inline letter (end = default) */
-		:where(ui-card, ui-reveal):where([media*="arw(set)"]) :where(ui-media)::scroll-button(left),
-		:where(ui-media, lay-out[overflow]):where([media*="arw(set)"])::scroll-button(left) {
-			left: auto;
-			right: calc(anchor(right) + var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
+		:where(ui-card, ui-reveal):where([media*="arw(set)"]) :where(ui-media)::scroll-button(inline-start),
+		:where(ui-media, lay-out[overflow]):where([media*="arw(set)"])::scroll-button(inline-start) {
+			inset-inline-start: auto;
+			inset-inline-end: calc(anchor(end) + var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
 		}
 		/* arw(set) inline-start — BOTH arms required: the ancestor arm for a card host,
 		   the self arm for a standalone <ui-media> / <lay-out overflow> */
-		:where(ui-card, ui-reveal):where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"])) :where(ui-media)::scroll-button(left),
-		:where(ui-media, lay-out[overflow]):where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"]))::scroll-button(left) {
-			left: calc(anchor(left) + var(--ui-carousel-overlay-gap)); right: auto;
+		:where(ui-card, ui-reveal):where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"])) :where(ui-media)::scroll-button(inline-start),
+		:where(ui-media, lay-out[overflow]):where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"]))::scroll-button(inline-start) {
+			inset-inline-start: calc(anchor(start) + var(--ui-carousel-overlay-gap)); inset-inline-end: auto;
 		}
-		:where(ui-card, ui-reveal):where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"])) :where(ui-media)::scroll-button(right),
-		:where(ui-media, lay-out[overflow]):where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"]))::scroll-button(right) {
-			left: calc(anchor(left) + var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap)); right: auto;
+		:where(ui-card, ui-reveal):where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"])) :where(ui-media)::scroll-button(inline-end),
+		:where(ui-media, lay-out[overflow]):where([media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(cs)"], [media*="arw(bs)"]))::scroll-button(inline-end) {
+			inset-inline-start: calc(anchor(start) + var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap)); inset-inline-end: auto;
 		}
 		/* arw(set) inline-center — cells tc/cc/bc (same dual-arm requirement) */
-		:where(ui-card, ui-reveal):where([media*="arw(set)"]:is([media*="arw(tc)"], [media*="arw(cc)"], [media*="arw(bc)"])) :where(ui-media)::scroll-button(left),
-		:where(ui-media, lay-out[overflow]):where([media*="arw(set)"]:is([media*="arw(tc)"], [media*="arw(cc)"], [media*="arw(bc)"]))::scroll-button(left) {
-			left: calc(anchor(center) - var(--ui-carousel-arrow-size) - var(--ui-carousel-arrow-gap) / 2); right: auto;
+		:where(ui-card, ui-reveal):where([media*="arw(set)"]:is([media*="arw(tc)"], [media*="arw(cc)"], [media*="arw(bc)"])) :where(ui-media)::scroll-button(inline-start),
+		:where(ui-media, lay-out[overflow]):where([media*="arw(set)"]:is([media*="arw(tc)"], [media*="arw(cc)"], [media*="arw(bc)"]))::scroll-button(inline-start) {
+			inset-inline-start: calc(anchor(center) - var(--ui-carousel-arrow-size) - var(--ui-carousel-arrow-gap) / 2); inset-inline-end: auto;
 		}
-		:where(ui-card, ui-reveal):where([media*="arw(set)"]:is([media*="arw(tc)"], [media*="arw(cc)"], [media*="arw(bc)"])) :where(ui-media)::scroll-button(right),
-		:where(ui-media, lay-out[overflow]):where([media*="arw(set)"]:is([media*="arw(tc)"], [media*="arw(cc)"], [media*="arw(bc)"]))::scroll-button(right) {
-			left: calc(anchor(center) + var(--ui-carousel-arrow-gap) / 2); right: auto;
+		:where(ui-card, ui-reveal):where([media*="arw(set)"]:is([media*="arw(tc)"], [media*="arw(cc)"], [media*="arw(bc)"])) :where(ui-media)::scroll-button(inline-end),
+		:where(ui-media, lay-out[overflow]):where([media*="arw(set)"]:is([media*="arw(tc)"], [media*="arw(cc)"], [media*="arw(bc)"]))::scroll-button(inline-end) {
+			inset-inline-start: calc(anchor(center) + var(--ui-carousel-arrow-gap) / 2); inset-inline-end: auto;
 		}
 
 		/* nav(abv) + arw(set) — flush the pair to the inline-end edge (no overlay-gap) */
-		:where(ui-card, ui-reveal):where([media*="nav(abv)"][media*="arw(set)"]) :where(ui-media)::scroll-button(right),
-		:where(ui-media, lay-out[overflow]):where([media*="nav(abv)"][media*="arw(set)"])::scroll-button(right) {
-			right: anchor(right);
+		:where(ui-card, ui-reveal):where([media*="nav(abv)"][media*="arw(set)"]) :where(ui-media)::scroll-button(inline-end),
+		:where(ui-media, lay-out[overflow]):where([media*="nav(abv)"][media*="arw(set)"])::scroll-button(inline-end) {
+			inset-inline-end: anchor(end);
 		}
-		:where(ui-card, ui-reveal):where([media*="nav(abv)"][media*="arw(set)"]) :where(ui-media)::scroll-button(left),
-		:where(ui-media, lay-out[overflow]):where([media*="nav(abv)"][media*="arw(set)"])::scroll-button(left) {
-			right: calc(anchor(right) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
+		:where(ui-card, ui-reveal):where([media*="nav(abv)"][media*="arw(set)"]) :where(ui-media)::scroll-button(inline-start),
+		:where(ui-media, lay-out[overflow]):where([media*="nav(abv)"][media*="arw(set)"])::scroll-button(inline-start) {
+			inset-inline-end: calc(anchor(end) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
 		}
 
 		/* arw(bare) — mask the glyph so it follows the band ink. Docs: ui/card/docs/media.carousel.md § Arrows */
@@ -549,8 +556,8 @@
 		/* ---- VERTICAL controls (axis(y)) ---- */
 		:where(ui-card, ui-reveal):where([media*="axis(y)"]) :where(ui-media),
 		:where(ui-media, lay-out[overflow]):where([media*="axis(y)"]) {
-			&::scroll-button(left),
-			&::scroll-button(right) { display: none; }
+			&::scroll-button(inline-start),
+			&::scroll-button(inline-end) { display: none; }
 			&::scroll-marker-group {
 				align-items: center;
 				align-self: anchor-center;
@@ -560,39 +567,39 @@
 				justify-self: end;
 				margin-inline: var(--ui-carousel-overlay-gap);
 			}
-			&::scroll-button(up) {
+			&::scroll-button(block-start) {
 				top: calc(anchor(top) + var(--ui-carousel-overlay-gap));
-				right: calc(anchor(right) + var(--ui-carousel-overlay-gap));
-				left: auto;
+				inset-inline-end: calc(anchor(end) + var(--ui-carousel-overlay-gap));
+				inset-inline-start: auto;
 			}
-			&::scroll-button(down) {
+			&::scroll-button(block-end) {
 				top: auto;
 				bottom: calc(anchor(bottom) + var(--ui-carousel-overlay-gap));
-				right: calc(anchor(right) + var(--ui-carousel-overlay-gap));
-				left: auto;
+				inset-inline-end: calc(anchor(end) + var(--ui-carousel-overlay-gap));
+				inset-inline-start: auto;
 			}
 		}
 		/* hide the unused cross-axis buttons on a HORIZONTAL scroller */
 		:where(ui-card, ui-reveal):where([media*="nav"]:not([media*="axis(y)"])) :where(ui-media),
 		:where(ui-media, lay-out[overflow]):where([media*="nav"]:not([media*="axis(y)"])) {
-			&::scroll-button(up), &::scroll-button(down) { display: none; }
+			&::scroll-button(block-start), &::scroll-button(block-end) { display: none; }
 		}
 		/* axis(y): a start-inline cell (cs/ts/bs) puts arrows + dots on the inline-start edge */
 		:where(ui-card, ui-reveal):where([media*="axis(y)"]:is([media*="arw(cs)"], [media*="arw(ts)"], [media*="arw(bs)"])) :where(ui-media),
 		:where(ui-media, lay-out[overflow]):where([media*="axis(y)"]:is([media*="arw(cs)"], [media*="arw(ts)"], [media*="arw(bs)"])) {
-			&::scroll-button(up), &::scroll-button(down) { left: calc(anchor(left) + var(--ui-carousel-overlay-gap)); right: auto; }
+			&::scroll-button(block-start), &::scroll-button(block-end) { inset-inline-start: calc(anchor(start) + var(--ui-carousel-overlay-gap)); inset-inline-end: auto; }
 			&::scroll-marker-group { justify-self: start; }
 		}
 		/* axis(y) + arw(set): stack the pair at the block-end (a top-row cell → block-start) */
-		:where(ui-card, ui-reveal):where([media*="axis(y)"][media*="arw(set)"]) :where(ui-media)::scroll-button(up),
-		:where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="arw(set)"])::scroll-button(up) {
+		:where(ui-card, ui-reveal):where([media*="axis(y)"][media*="arw(set)"]) :where(ui-media)::scroll-button(block-start),
+		:where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="arw(set)"])::scroll-button(block-start) {
 			top: auto;
 			bottom: calc(anchor(bottom) + var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
 		}
 		:where(ui-card, ui-reveal):where([media*="axis(y)"][media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(te)"])) :where(ui-media),
 		:where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="arw(set)"]:is([media*="arw(ts)"], [media*="arw(te)"])) {
-			&::scroll-button(up)   { top: calc(anchor(top) + var(--ui-carousel-overlay-gap)); bottom: auto; }
-			&::scroll-button(down) { top: calc(anchor(top) + var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap)); bottom: auto; }
+			&::scroll-button(block-start)   { top: calc(anchor(top) + var(--ui-carousel-overlay-gap)); bottom: auto; }
+			&::scroll-button(block-end) { top: calc(anchor(top) + var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap)); bottom: auto; }
 		}
 		/* axis(y) + nav(blw): horizontal control band below the vertical media */
 		:where(ui-card, ui-reveal):where([media*="nav(blw)"][media*="axis(y)"]) :where(ui-media),
@@ -606,18 +613,18 @@
 				inline-size: auto;
 				justify-content: center;
 				justify-self: auto;
-				left: anchor(left);
+				inset-inline-start: anchor(start);
 				margin-inline: 0;
-				right: anchor(right);
+				inset-inline-end: anchor(end);
 				top: calc(anchor(bottom) - var(--ui-carousel-below-gap) - var(--ui-carousel-band));
 			}
-			&::scroll-button(up), &::scroll-button(down) {
+			&::scroll-button(block-start), &::scroll-button(block-end) {
 				bottom: auto;
 				top: calc(anchor(bottom) - var(--ui-carousel-band) / 2 - var(--ui-carousel-arrow-size) / 2);
 				z-index: 4;
 			}
-			&::scroll-button(up)   { left: calc(anchor(left) + var(--ui-carousel-overlay-gap)); right: auto; }
-			&::scroll-button(down) { left: auto; right: calc(anchor(right) + var(--ui-carousel-overlay-gap)); }
+			&::scroll-button(block-start)   { inset-inline-start: calc(anchor(start) + var(--ui-carousel-overlay-gap)); inset-inline-end: auto; }
+			&::scroll-button(block-end) { inset-inline-start: auto; inset-inline-end: calc(anchor(end) + var(--ui-carousel-overlay-gap)); }
 		}
 		/* axis(y) + nav(abv): horizontal control band ABOVE the vertical media (mirror of nav(blw)) */
 		:where(ui-card, ui-reveal):where([media*="nav(abv)"][media*="axis(y)"]) :where(ui-media),
@@ -631,18 +638,18 @@
 				inline-size: auto;
 				justify-content: center;
 				justify-self: auto;
-				left: anchor(left);
+				inset-inline-start: anchor(start);
 				margin-inline: 0;
-				right: anchor(right);
+				inset-inline-end: anchor(end);
 				top: anchor(top);
 			}
-			&::scroll-button(up), &::scroll-button(down) {
+			&::scroll-button(block-start), &::scroll-button(block-end) {
 				bottom: auto;
 				top: calc(anchor(top) + var(--ui-carousel-band) / 2 - var(--ui-carousel-arrow-size) / 2);
 				z-index: 4;
 			}
-			&::scroll-button(up)   { left: calc(anchor(left) + var(--ui-carousel-overlay-gap)); right: auto; }
-			&::scroll-button(down) { left: auto; right: calc(anchor(right) + var(--ui-carousel-overlay-gap)); }
+			&::scroll-button(block-start)   { inset-inline-start: calc(anchor(start) + var(--ui-carousel-overlay-gap)); inset-inline-end: auto; }
+			&::scroll-button(block-end) { inset-inline-start: auto; inset-inline-end: calc(anchor(end) + var(--ui-carousel-overlay-gap)); }
 		}
 		/* axis(y) + mrk(rail) — vertical thumb rail; anchor() on BOTH axes, per-scroller
 		   (plain insets collide across groups). Docs: ui/card/docs/media.carousel.md */
@@ -658,11 +665,11 @@
 				inline-size: var(--ui-carousel-rail);
 				justify-content: safe center;
 				justify-self: auto;
-				left: calc(anchor(left) + var(--ui-carousel-overlay-gap));
+				inset-inline-start: calc(anchor(start) + var(--ui-carousel-overlay-gap));
 				margin-inline: 0;
 				overflow: hidden auto;
 				overscroll-behavior: contain;
-				right: auto;
+				inset-inline-end: auto;
 				scrollbar-width: thin;
 				top: anchor(top);
 			}
@@ -672,12 +679,6 @@
 		:where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(rail)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
 			flex: 0 1 auto;
 			min-block-size: var(--ui-carousel-thumb-min, 2.5rem);
-		}
-		/* RTL — flip the rail to the inline-end (right) edge (physical anchors → explicit :dir) */
-		:where(ui-card, ui-reveal):where([media*="axis(y)"][media*="mrk(rail)"]) :where(ui-media):dir(rtl)::scroll-marker-group,
-		:where(ui-media, lay-out[overflow]):where([media*="axis(y)"][media*="mrk(rail)"]):dir(rtl)::scroll-marker-group {
-			left: auto;
-			right: calc(anchor(right) + var(--ui-carousel-overlay-gap));
 		}
 
 		/* dot corners — ts/te/bs/be */
@@ -690,13 +691,13 @@
 			margin-inline: 0;
 		}
 		:where(ui-card, ui-reveal):where([media*="mrk(ts)"]) :where(ui-media)::scroll-marker-group,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(ts)"])::scroll-marker-group { top: calc(anchor(top) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); bottom: auto; left: calc(anchor(left) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); right: auto; justify-self: start; }
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(ts)"])::scroll-marker-group { top: calc(anchor(top) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); bottom: auto; inset-inline-start: calc(anchor(start) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); inset-inline-end: auto; justify-self: start; }
 		:where(ui-card, ui-reveal):where([media*="mrk(te)"]) :where(ui-media)::scroll-marker-group,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(te)"])::scroll-marker-group { top: calc(anchor(top) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); bottom: auto; right: calc(anchor(right) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); left: auto; justify-self: end; }
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(te)"])::scroll-marker-group { top: calc(anchor(top) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); bottom: auto; inset-inline-end: calc(anchor(end) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); inset-inline-start: auto; justify-self: end; }
 		:where(ui-card, ui-reveal):where([media*="mrk(bs)"]) :where(ui-media)::scroll-marker-group,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(bs)"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); left: calc(anchor(left) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); right: auto; justify-self: start; }
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(bs)"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); inset-inline-start: calc(anchor(start) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); inset-inline-end: auto; justify-self: start; }
 		:where(ui-card, ui-reveal):where([media*="mrk(be)"]) :where(ui-media)::scroll-marker-group,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(be)"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); right: calc(anchor(right) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); left: auto; justify-self: end; }
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(be)"])::scroll-marker-group { top: auto; bottom: calc(anchor(bottom) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); inset-inline-end: calc(anchor(end) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); inset-inline-start: auto; justify-self: end; }
 
 		/* dot edge-centers — tc/bc */
 		:where(ui-card, ui-reveal):where([media*="mrk(tc)"]) :where(ui-media)::scroll-marker-group, :where(ui-media, lay-out[overflow]):where([media*="mrk(tc)"])::scroll-marker-group,
@@ -725,11 +726,11 @@
 			top: calc(anchor(center) - var(--ui-carousel-marker-size) / 2); bottom: auto;
 		}
 		:where(ui-card, ui-reveal):where([media*="mrk(cs)"]) :where(ui-media)::scroll-marker-group,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(cs)"])::scroll-marker-group { left: calc(anchor(left) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); right: auto; justify-self: start; }
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(cs)"])::scroll-marker-group { inset-inline-start: calc(anchor(start) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); inset-inline-end: auto; justify-self: start; }
 		:where(ui-card, ui-reveal):where([media*="mrk(cc)"]) :where(ui-media)::scroll-marker-group,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(cc)"])::scroll-marker-group { justify-self: anchor-center; left: auto; right: auto; }
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(cc)"])::scroll-marker-group { justify-self: anchor-center; inset-inline-start: auto; inset-inline-end: auto; }
 		:where(ui-card, ui-reveal):where([media*="mrk(ce)"]) :where(ui-media)::scroll-marker-group,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(ce)"])::scroll-marker-group { right: calc(anchor(right) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); left: auto; justify-self: end; }
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(ce)"])::scroll-marker-group { inset-inline-end: calc(anchor(end) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap))); inset-inline-start: auto; justify-self: end; }
 
 		/* ---- in-band dot alignment (nav(blw)/nav(abv)) — after the corner rules so the band cell wins ---- */
 		/* vertical: pin dots to the band centre */
@@ -745,32 +746,32 @@
 		:where(ui-card, ui-reveal):where([media*="nav(blw)"][media*="arw(set)"], [media*="nav(abv)"][media*="arw(set)"]) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="nav(blw)"][media*="arw(set)"], [media*="nav(abv)"][media*="arw(set)"])::scroll-marker-group {
 			justify-self: start;
-			left: calc(anchor(left) + var(--ui-carousel-overlay-gap));
+			inset-inline-start: calc(anchor(start) + var(--ui-carousel-overlay-gap));
 		}
 		/* start — mrk(bs) in blw / mrk(ts) in abv */
 		:where(ui-card, ui-reveal):where([media*="nav(blw)"][media*="mrk(bs)"], [media*="nav(abv)"][media*="mrk(ts)"]) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="nav(blw)"][media*="mrk(bs)"], [media*="nav(abv)"][media*="mrk(ts)"])::scroll-marker-group {
-			justify-self: start; right: auto;
-			left: calc(anchor(left) + 2 * var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size));
+			justify-self: start; inset-inline-end: auto;
+			inset-inline-start: calc(anchor(start) + 2 * var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size));
 		}
 		:where(ui-card, ui-reveal):where([media*="nav(blw)"][media*="mrk(bs)"][media*="arw(set)"], [media*="nav(abv)"][media*="mrk(ts)"][media*="arw(set)"]) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="nav(blw)"][media*="mrk(bs)"][media*="arw(set)"], [media*="nav(abv)"][media*="mrk(ts)"][media*="arw(set)"])::scroll-marker-group {
-			left: calc(anchor(left) + var(--ui-carousel-overlay-gap));
+			inset-inline-start: calc(anchor(start) + var(--ui-carousel-overlay-gap));
 		}
 		/* centre — mrk(bc)/mrk(tc) (default; also resets the arw(set) start-shift) */
 		:where(ui-card, ui-reveal):where([media*="nav(blw)"][media*="mrk(bc)"], [media*="nav(abv)"][media*="mrk(tc)"]) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="nav(blw)"][media*="mrk(bc)"], [media*="nav(abv)"][media*="mrk(tc)"])::scroll-marker-group {
-			justify-self: anchor-center; left: auto; right: auto;
+			justify-self: anchor-center; inset-inline-start: auto; inset-inline-end: auto;
 		}
 		/* end — mrk(be) in blw / mrk(te) in abv */
 		:where(ui-card, ui-reveal):where([media*="nav(blw)"][media*="mrk(be)"], [media*="nav(abv)"][media*="mrk(te)"]) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="nav(blw)"][media*="mrk(be)"], [media*="nav(abv)"][media*="mrk(te)"])::scroll-marker-group {
-			justify-self: end; left: auto;
-			right: calc(anchor(right) + 2 * var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size));
+			justify-self: end; inset-inline-start: auto;
+			inset-inline-end: calc(anchor(end) + 2 * var(--ui-carousel-overlay-gap) + var(--ui-carousel-arrow-size));
 		}
 		:where(ui-card, ui-reveal):where([media*="nav(blw)"][media*="mrk(be)"][media*="arw(set)"], [media*="nav(abv)"][media*="mrk(te)"][media*="arw(set)"]) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="nav(blw)"][media*="mrk(be)"][media*="arw(set)"], [media*="nav(abv)"][media*="mrk(te)"][media*="arw(set)"])::scroll-marker-group {
-			right: calc(anchor(right) + 2 * var(--ui-carousel-overlay-gap) + 2 * var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
+			inset-inline-end: calc(anchor(end) + 2 * var(--ui-carousel-overlay-gap) + 2 * var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
 		}
 
 		/* mrk(lbl) height-agnostic placement — labels are auto-height, so re-anchor the
@@ -822,14 +823,14 @@
 		:where(ui-card, ui-reveal):where([media*="mrk(bar)"]:is([media*="mrk(bs)"], [media*="mrk(ts)"])) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"]:is([media*="mrk(bs)"], [media*="mrk(ts)"]))::scroll-marker-group {
 			justify-self: start;
-			left: calc(anchor(left) + var(--ui-carousel-bar-inset, 0px));
-			right: auto;
+			inset-inline-start: calc(anchor(start) + var(--ui-carousel-bar-inset, 0px));
+			inset-inline-end: auto;
 		}
 		:where(ui-card, ui-reveal):where([media*="mrk(bar)"]:is([media*="mrk(be)"], [media*="mrk(te)"])) :where(ui-media)::scroll-marker-group,
 		:where(ui-media, lay-out[overflow]):where([media*="mrk(bar)"]:is([media*="mrk(be)"], [media*="mrk(te)"]))::scroll-marker-group {
 			justify-self: end;
-			left: auto;
-			right: calc(anchor(right) + var(--ui-carousel-bar-inset, 0px));
+			inset-inline-start: auto;
+			inset-inline-end: calc(anchor(end) + var(--ui-carousel-bar-inset, 0px));
 		}
 	}
 

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Card — RTL</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="color-scheme" content="light dark">
+	<meta name="description" content="Direction regression target: every logical position family shown side by side under dir=ltr and dir=rtl — obp(), scm(), furniture, mrk() and arw(). An inline-start cell must resolve to the left edge on the left and the right edge on the right.">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="/ui/carousel/index.css">
+	<link rel="stylesheet" href="/layout/dist/layout.css">
+	<link rel="stylesheet" href="../../chip/ui-chip.css">
+	<link rel="stylesheet" href="../../sticker/ui-sticker.css">
+	<link rel="stylesheet" href="../ui-card.css">
+	<style>
+		/* two columns, one per direction — the whole point is reading them side by side */
+		.dirs { display: grid; gap: var(--spacing-xl); grid-template-columns: 1fr; }
+		@media (min-width: 60rem) { .dirs { grid-template-columns: 1fr 1fr; } }
+		.dirs > section { min-inline-size: 0; }
+		.dirs > section > h3 { position: sticky; top: 0; z-index: 4; background: var(--color-surface); padding-block: var(--spacing-sm); }
+		.row { display: grid; gap: var(--spacing-md); grid-template-columns: repeat(3, 1fr); margin-block-end: var(--spacing-lg); }
+		.scroller > * { flex: 0 0 100%; scroll-snap-align: start; }
+	</style>
+</head>
+<body>
+	<h1>UI: Card — direction</h1>
+	<p>Regression target for the one logical position grid. Every family below uses the same
+	cells (<code>ts tc te · cs cc ce · bs bc be</code>); an <code>s</code> cell must sit at the
+	<strong>left</strong> edge in the LTR column and the <strong>right</strong> edge in the RTL
+	column. Anything that stays put is a bug. Docs: <a href="../docs/media.md">media.md</a>.</p>
+
+	<div class="dirs">
+		<section dir="ltr" id="col-ltr">
+			<h3><code>dir="ltr"</code></h3>
+
+			<h4>obp() — object-position</h4>
+			<div class="row">
+				<ui-card variant="vis(media)" media="asr(1/1) obp(ts) chip(tc)" id="ltr-obp-ts"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(ts)</ui-chip></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(1/1) obp(cc) chip(tc)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(cc)</ui-chip></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(1/1) obp(be) chip(tc)" id="ltr-obp-be"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(be)</ui-chip></ui-media></cq-box></ui-card>
+			</div>
+
+			<h4>scm() — scrim</h4>
+			<div class="row">
+				<ui-card variant="vis(media)" media="asr(1/1) scm scm(ts)" id="ltr-scm-ts"><cq-box><ui-media><img src="/assets/images/city.png" alt=""></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(1/1) scm scm(cs)"><cq-box><ui-media><img src="/assets/images/city.png" alt=""></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(1/1) scm scm(be)" id="ltr-scm-be"><cq-box><ui-media><img src="/assets/images/city.png" alt=""></ui-media></cq-box></ui-card>
+			</div>
+
+			<h4>Furniture</h4>
+			<div class="row">
+				<ui-card variant="vis(media)" media="asr(1/1) chip(ts)" id="ltr-chip-ts"><cq-box><ui-media><img src="/assets/images/city.png" alt=""><ui-chip>chip(ts)</ui-chip></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(1/1) sticker(te)" id="ltr-sticker-te"><cq-box><ui-media><img src="/assets/images/city.png" alt=""><ui-sticker><small>PLACE</small><strong>TE</strong></ui-sticker></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(1/1) chip(bs)"><cq-box><ui-media><img src="/assets/images/city.png" alt=""><ui-chip>chip(bs)</ui-chip></ui-media></cq-box></ui-card>
+			</div>
+
+			<h4>mrk(ts) — dots</h4>
+			<ui-media media="nav mrk(ts)" id="ltr-mrk" class="scroller">
+				<div><img src="/assets/images/government.png" alt=""></div>
+				<div><img src="/assets/images/city.png" alt=""></div>
+				<div><img src="/assets/images/government.png" alt=""></div>
+			</ui-media>
+
+			<h4>arw(set) arw(cs) — clustered arrows</h4>
+			<ui-media media="nav(arw) arw(set) arw(cs)" id="ltr-arw" class="scroller">
+				<div><img src="/assets/images/city.png" alt=""></div>
+				<div><img src="/assets/images/government.png" alt=""></div>
+				<div><img src="/assets/images/city.png" alt=""></div>
+			</ui-media>
+		</section>
+
+		<section dir="rtl" id="col-rtl">
+			<h3><code>dir="rtl"</code></h3>
+
+			<h4>obp() — object-position</h4>
+			<div class="row">
+				<ui-card variant="vis(media)" media="asr(1/1) obp(ts) chip(tc)" id="rtl-obp-ts"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(ts)</ui-chip></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(1/1) obp(cc) chip(tc)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(cc)</ui-chip></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(1/1) obp(be) chip(tc)" id="rtl-obp-be"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>obp(be)</ui-chip></ui-media></cq-box></ui-card>
+			</div>
+
+			<h4>scm() — scrim</h4>
+			<div class="row">
+				<ui-card variant="vis(media)" media="asr(1/1) scm scm(ts)" id="rtl-scm-ts"><cq-box><ui-media><img src="/assets/images/city.png" alt=""></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(1/1) scm scm(cs)"><cq-box><ui-media><img src="/assets/images/city.png" alt=""></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(1/1) scm scm(be)" id="rtl-scm-be"><cq-box><ui-media><img src="/assets/images/city.png" alt=""></ui-media></cq-box></ui-card>
+			</div>
+
+			<h4>Furniture</h4>
+			<div class="row">
+				<ui-card variant="vis(media)" media="asr(1/1) chip(ts)" id="rtl-chip-ts"><cq-box><ui-media><img src="/assets/images/city.png" alt=""><ui-chip>chip(ts)</ui-chip></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(1/1) sticker(te)" id="rtl-sticker-te"><cq-box><ui-media><img src="/assets/images/city.png" alt=""><ui-sticker><small>PLACE</small><strong>TE</strong></ui-sticker></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(1/1) chip(bs)"><cq-box><ui-media><img src="/assets/images/city.png" alt=""><ui-chip>chip(bs)</ui-chip></ui-media></cq-box></ui-card>
+			</div>
+
+			<h4>mrk(ts) — dots</h4>
+			<ui-media media="nav mrk(ts)" id="rtl-mrk" class="scroller">
+				<div><img src="/assets/images/government.png" alt=""></div>
+				<div><img src="/assets/images/city.png" alt=""></div>
+				<div><img src="/assets/images/government.png" alt=""></div>
+			</ui-media>
+
+			<h4>arw(set) arw(cs) — clustered arrows</h4>
+			<ui-media media="nav(arw) arw(set) arw(cs)" id="rtl-arw" class="scroller">
+				<div><img src="/assets/images/city.png" alt=""></div>
+				<div><img src="/assets/images/government.png" alt=""></div>
+				<div><img src="/assets/images/city.png" alt=""></div>
+			</ui-media>
+		</section>
+	</div>
+
+	<script type="module" src="/ui/base/polyfills/attr-fallback.js"></script>
+	<script type="module" src="/layout/polyfills/attr-fallback.js"></script>
+</body>
+</html>
