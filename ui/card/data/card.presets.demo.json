@@ -1157,6 +1157,22 @@
         "from": "left"
       }
     },
+    "parts-quote-breaker": {
+      "name": "Parts Demo — Quote Breaker",
+      "description": "Panel-subtle quote card; parts.quote swaps the default bigquote for the breaker treatment",
+      "element": "ui-card",
+      "variant": "vis(content)",
+      "theme": "gray",
+      "content": "scl(lg)",
+      "parts": { "quote": "breaker" }
+    },
+    "parts-faq-bordered": {
+      "name": "Parts Demo — FAQ Bordered",
+      "description": "Panel FAQ card; parts.accordion renders the nested accordion bordered and divided",
+      "element": "ui-card",
+      "variant": "vis(content)",
+      "parts": { "accordion": "bordered divided" }
+    },
     "reveal-slide-right": {
       "name": "Reveal Demo — Slide (media right)",
       "description": "Reversed row slide reveal, 2:3 media trailing, pan hover, grey surface",

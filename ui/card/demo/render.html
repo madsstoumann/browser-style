@@ -67,6 +67,24 @@
 
 			main.append(heading, grid);
 		}
+
+		/* preset parts= — sub-component variants (demo presets + demo data) */
+		const demoPresets = { ...presets, ...(await loadPresets('../data/card.presets.demo.json')) };
+		for (const name of ['parts-quote-01', 'parts-faq-01']) {
+			const ucf = await (await fetch(`../data/demo/${name}.json`)).json();
+
+			const heading = document.createElement('h2');
+			const code = document.createElement('code');
+			const preset = demoPresets[(ucf.fields.preset?.$ref || '').split('/').pop()] || {};
+			code.textContent = `parts: ${JSON.stringify(preset.parts || {})}`;
+			heading.append(`${name} — `, code);
+
+			const grid = document.createElement('lay-out');
+			grid.setAttribute('md', 'columns(2)');
+			grid.append(renderCard(ucf, demoPresets, cards));
+
+			main.append(heading, grid);
+		}
 	</script>
 </body>
 </html>

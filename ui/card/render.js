@@ -173,8 +173,8 @@ const quotePart = (text, { itemprop = 'text', variant = null, cite = null } = {}
 	`<ui-quote data-part="quote"${attrs({ variant })}><blockquote itemprop="${esc(itemprop)}"><q>${esc(text)}</q>${cite ? `<cite>${esc(cite)}</cite>` : ''}</blockquote></ui-quote>`;
 
 /* nested <ui-accordion> — cq-box is hand-authored so the CSS-only form styles without JS */
-const accordion = (group, items) =>
-	`<ui-accordion group="${esc(group)}"><cq-box>${items.map(({ summary, body, scopeAttrs = '' }) =>
+const accordion = (group, items, variant = null) =>
+	`<ui-accordion${attrs({ group, variant })}><cq-box>${items.map(({ summary, body, scopeAttrs = '' }) =>
 		`<details name="${esc(group)}"${scopeAttrs}>
 			<summary>${summary}<ui-icon type="plus-minus"></ui-icon></summary>
 			${body}
@@ -497,7 +497,7 @@ const bodyHtml = (fields, type, textTag = 'p') => {
  */
 const DETAILS_OWNS_SUMMARY = new Set(['review']);
 
-const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary') => {
+const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', parts = {}) => {
 	const headlineTag = overlay ? 'strong' : 'h3';
 	const textTag = overlay ? 'span' : 'p';
 	const body = textMode !== 'summary' ? bodyHtml(fields, type, textTag) : '';
@@ -513,9 +513,9 @@ const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary') =
 	if (fields.summary && showSummary && !DETAILS_OWNS_SUMMARY.has(type)) {
 		const prop = SUMMARY_PROP[type] || 'description';
 		if (type === 'quote') {
-			html += quotePart(fields.summary, { itemprop: prop, variant: 'bigquote', cite: fields.authors?.[0]?.name });
+			html += quotePart(fields.summary, { itemprop: prop, variant: parts.quote || 'bigquote', cite: fields.authors?.[0]?.name });
 		} else if (type === 'social') {
-			html += quotePart(fields.summary, { itemprop: prop });
+			html += quotePart(fields.summary, { itemprop: prop, variant: parts.quote || null });
 		} else {
 			html += `<${textTag} data-part="summary" itemprop="${prop}">${esc(fields.summary)}</${textTag}>`;
 		}
@@ -601,7 +601,7 @@ const DETAILS = {
 		return html;
 	},
 
-	recipe(d) {
+	recipe(d, fields, parts = {}) {
 		let html = meta('prepTime', d.prepTime) + meta('cookTime', d.cookTime) + meta('recipeYield', d.servings);
 		html += `<p data-part="meta">Prep ${esc(duration(d.prepTime))} · Cook ${esc(duration(d.cookTime))} · Serves ${esc(d.servings)}</p>`;
 		if (d.ingredients?.length) {
@@ -613,15 +613,15 @@ const DETAILS = {
 				body: `<div${scope('recipeInstructions', 'ItemList')}><ol>${d.instructions.map((step, index) =>
 					`<li${scope('itemListElement', 'HowToStep')}>${meta('position', index + 1)}<span itemprop="text">${esc(step)}</span></li>`
 				).join('')}</ol></div>`
-			}]);
+			}], parts.accordion);
 		}
 		return html;
 	},
 
-	review(d, fields) {
+	review(d, fields, parts = {}) {
 		let html = ratingPart('reviewRating', 'Rating', d.rating);
 		if (fields.summary) {
-			html += quotePart(fields.summary, { itemprop: 'reviewBody' });
+			html += quotePart(fields.summary, { itemprop: 'reviewBody', variant: parts.quote || null });
 		}
 		if (d.reviewer?.name) {
 			html += `<address data-part="byline"${scope('author', 'Person')}>${avatarPart(d.reviewer)}<span><span itemprop="name">${esc(d.reviewer.name)}</span>${d.reviewer.verified ? ' ✓ Verified purchase' : ''}</span></address>`;
@@ -635,7 +635,7 @@ const DETAILS = {
 		return html;
 	},
 
-	job(d) {
+	job(d, fields, parts = {}) {
 		let html = meta('industry', d.industry) + meta('employmentType', d.employmentType) + meta('validThrough', d.applicationDeadline);
 		html += `<p data-part="meta"><span${scope('hiringOrganization', 'Organization')}><span itemprop="name">${esc(d.company)}</span></span> · <span${scope('jobLocation', 'Place')}><span itemprop="name">${esc(d.location)}</span></span>${d.employmentTypeDisplay ? ` · ${esc(d.employmentTypeDisplay)}` : ''}${d.applicationDeadlineDisplay ? ` · Apply by ${esc(d.applicationDeadlineDisplay)}` : ''}</p>`;
 		const salary = d.salaryRange;
@@ -648,7 +648,7 @@ const DETAILS = {
 		const sections = [];
 		if (d.qualifications?.length) sections.push({ summary: 'Requirements', body: `<div>${listPart(d.qualifications, { itemprop: 'qualifications' })}</div>` });
 		if (d.benefits?.length) sections.push({ summary: 'Benefits', body: `<div>${listPart(d.benefits, { itemprop: 'jobBenefits' })}</div>` });
-		if (sections.length) html += accordion('job-acc', sections);
+		if (sections.length) html += accordion('job-acc', sections, parts.accordion);
 		return html;
 	},
 
@@ -703,13 +703,13 @@ const DETAILS = {
 		return html;
 	},
 
-	faq(d) {
+	faq(d, fields, parts = {}) {
 		if (!d.items?.length) return '';
 		return accordion('faq-render', d.items.map((item) => ({
 			summary: `<span itemprop="name">${esc(item.question)}</span>`,
 			body: `<div${scope('acceptedAnswer', 'Answer')}><p itemprop="text">${esc(item.answer)}</p></div>`,
 			scopeAttrs: scope('mainEntity', 'Question')
-		})));
+		})), parts.accordion);
 	},
 
 	timeline(d) {
@@ -845,13 +845,13 @@ const profileSubheadline = (d, textTag) =>
 		: '';
 
 /* full content column for a card (envelope + details + trailers) */
-const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary') => {
+const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary', parts = {}) => {
 	const slots = {};
 	if (type === 'profile' && fields.details) {
 		slots.subheadline = profileSubheadline(fields.details, overlay ? 'span' : 'p');
 	}
-	let html = buildContent(fields, type, overlay, slots, textMode);
-	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields);
+	let html = buildContent(fields, type, overlay, slots, textMode, parts);
+	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields, parts);
 	html += buildTail(fields, type);
 	return html + extras;
 };
@@ -993,7 +993,7 @@ export function renderCard(ucf, presets = {}, cards = {}) {
 			style: styleAttr(preset.styles),
 			itemscope: true,
 			itemtype
-		})}>${contentColumn(fields, type, false, '', preset.text || 'summary')}</ui-content>`;
+		})}>${contentColumn(fields, type, false, '', preset.text || 'summary', preset.parts || {})}</ui-content>`;
 	}
 
 	const media = buildMedia(fields, type, tokens, preset, {}, cardId);
@@ -1008,7 +1008,7 @@ export function renderCard(ucf, presets = {}, cards = {}) {
 	})}>
 		<cq-box>
 			${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
-			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary')}</ui-content>
+			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {})}</ui-content>
 		</cq-box>
 	</ui-card>`;
 }
