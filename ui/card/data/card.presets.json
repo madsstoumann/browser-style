@@ -51,6 +51,53 @@
       "element": "ui-card",
       "variant": "vis(content)"
     },
+    "panel-accordion": {
+      "name": "Panel Accordion Preset",
+      "description": "Content-only card whose nested accordion is divided — FAQ-style lists",
+      "element": "ui-card",
+      "variant": "vis(content)",
+      "parts": { "accordion": "divided" }
+    },
+    "panel-accordion-boxed": {
+      "name": "Panel Accordion Boxed Preset",
+      "description": "Content-only card whose nested accordion is a bordered, rounded, divided box",
+      "element": "ui-card",
+      "variant": "vis(content)",
+      "parts": { "accordion": "bordered rounded divided" }
+    },
+    "stack-subtle": {
+      "name": "Stack Subtle Preset",
+      "description": "Column card on an off-white surface, large type — quotes",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(16/9)",
+      "theme": "gray",
+      "content": "scl(lg)"
+    },
+    "stack-brand": {
+      "name": "Stack Brand Preset",
+      "description": "Column card on a dark surface — stats, pricing tiers, announcements",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(16/9)",
+      "theme": "black dark"
+    },
+    "stack-accordion-divided": {
+      "name": "Stack Accordion Divided Preset",
+      "description": "Column card whose nested accordion is divided — FAQ-style lists",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(16/9)",
+      "parts": { "accordion": "divided" }
+    },
+    "stack-accordion": {
+      "name": "Stack Accordion Preset",
+      "description": "Default column card whose nested accordion is a bordered, rounded, divided box",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(16/9)",
+      "parts": { "accordion": "bordered rounded divided" }
+    },
     "panel-subtle": {
       "name": "Panel Subtle Preset",
       "description": "Content-only, off-white surface, large type — quotes",
@@ -107,7 +154,7 @@
       "description": "Column card whose media items scroll-snap with dot navigation — galleries",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(16/9) nav(mrk)"
+      "media": "asr(16/9) nav(mrk) nav(arw)"
     },
     "flip": {
       "name": "Flip Preset",

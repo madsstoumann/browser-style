@@ -1,7 +1,7 @@
 /**
  * SSR build for the per-article pages.
  *
- *   node ui/card/articles/build.js
+ *   node ui/card/demo/articles/build.js
  *
  * Renders each article UCF through render.js (the same engine the browser
  * demos use — it returns plain HTML strings, no DOM required) and writes a
@@ -14,10 +14,10 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { renderCard } from '../render.js';
+import { renderCard } from '../../render.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const data = (file) => JSON.parse(readFileSync(join(here, '../data', file), 'utf8'));
+const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
 
 const presets = data('card.presets.json').presets;
 
@@ -49,12 +49,13 @@ const page = (ucf) => {
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="${esc(ucf.fields.summary || title)}">
 	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="../../chip/ui-chip.css">
-	<link rel="stylesheet" href="../../sticker/ui-sticker.css">
-	<link rel="stylesheet" href="../../icon/index.css">
-	<link rel="stylesheet" href="../../quote/ui-quote.css">
-	<link rel="stylesheet" href="../../avatar/ui-avatar.css">
-	<link rel="stylesheet" href="../ui-card.css">
+	<link rel="stylesheet" href="../../../chip/ui-chip.css">
+	<link rel="stylesheet" href="../../../sticker/ui-sticker.css">
+	<link rel="stylesheet" href="../../../icon/index.css">
+	<link rel="stylesheet" href="../../../quote/ui-quote.css">
+	<link rel="stylesheet" href="../../../avatar/ui-avatar.css">
+	<link rel="stylesheet" href="../../../gradient-text/ui-gradient-text.css">
+	<link rel="stylesheet" href="../../ui-card.css">
 	<!-- Block first paint (and the view-transition snapshot) until the hero is
 	     parsed, so the card/hero morph targets exist when the browser captures
 	     the incoming page. Without this the snapshot races HTML parsing and the
@@ -101,12 +102,13 @@ const gridPage = (cards) => `<!DOCTYPE html>
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Teaser cards linking to per-article pages — a cross-document view transition morphs the whole card into the full article. Fully static: pre-rendered by articles/build.js.">
 	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="../chip/ui-chip.css">
-	<link rel="stylesheet" href="../sticker/ui-sticker.css">
-	<link rel="stylesheet" href="../icon/index.css">
-	<link rel="stylesheet" href="../quote/ui-quote.css">
-	<link rel="stylesheet" href="../avatar/ui-avatar.css">
-	<link rel="stylesheet" href="ui-card.css">
+	<link rel="stylesheet" href="../../chip/ui-chip.css">
+	<link rel="stylesheet" href="../../sticker/ui-sticker.css">
+	<link rel="stylesheet" href="../../icon/index.css">
+	<link rel="stylesheet" href="../../quote/ui-quote.css">
+	<link rel="stylesheet" href="../../avatar/ui-avatar.css">
+	<link rel="stylesheet" href="../../gradient-text/ui-gradient-text.css">
+	<link rel="stylesheet" href="../ui-card.css">
 	<!-- Block first paint (and the incoming snapshot on Back) until the card
 	     grid is parsed, so every card/hero morph target exists when the browser
 	     captures this page. Without it the reverse morph races HTML parsing. -->

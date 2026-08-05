@@ -13,9 +13,16 @@
     "internalName": "Demo — Membership",
     "schemaType": "membership",
     "preset": {
-      "$ref": "card-preset/panel-brand"
+      "$ref": "card-preset/stack-brand"
     },
     "eyebrow": "Most popular",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/fittrackpro.png",
+        "alt": "Fitness tracker on a wrist"
+      }
+    ],
     "headline": "FitTrack Pro",
     "summary": "Unlimited workouts, personal coaching and priority support.",
     "actions": [

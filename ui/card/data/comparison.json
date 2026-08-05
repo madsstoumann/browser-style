@@ -13,9 +13,16 @@
     "internalName": "Demo — Comparison",
     "schemaType": "comparison",
     "preset": {
-      "$ref": "card-preset/panel"
+      "$ref": "card-preset/stack"
     },
     "eyebrow": "Buyer’s guide",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/speakers.png",
+        "alt": "Three portable speakers side by side"
+      }
+    ],
     "headline": "Portable speakers compared",
     "details": {
       "items": [

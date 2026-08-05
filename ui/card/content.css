@@ -205,14 +205,6 @@
 			margin-block-end: var(--ui-content-headline-rhythm, 0.25em);
 			text-shadow: var(--ui-content-headline-text-shadow, var(--ui-content-heading-text-shadow, none)); /* hl(shd) / host ovr() */
 			text-wrap: var(--ui-content-headline-wrap, balance); /* override to pretty for long poster copy */
-
-			/* gradient highlight — <b> inside a headline (the renderer only lets <b> through) */
-			& b {
-				background: var(--ui-content-headline-gradient, linear-gradient(90deg, var(--color-accent), #c026d3));
-				-webkit-background-clip: text;
-				background-clip: text;
-				color: transparent;
-			}
 		}
 
 		/* subheadline — Headings group; muted unless hl() sets the group ink */
@@ -245,17 +237,20 @@
 			gap: var(--ui-content-byline-gap, var(--spacing-sm));
 			text-shadow: var(--ui-content-byline-text-shadow, var(--ui-content-meta-text-shadow, none));
 
-			& img {
-				aspect-ratio: 1;
-				border-radius: var(--radius-circle);
-				inline-size: var(--ui-content-avatar-size, 2.25em);
-				object-fit: cover;
+			/* two blocks beside the avatar: name over role, then date over reading
+			   time pushed to the inline end. Each block stacks its own lines. */
+			& :is([data-part="byline-who"], [data-part="dateline"]) {
+				display: grid;
+				row-gap: var(--ui-content-byline-row-gap, 0.15em);
 			}
-
-			/* @browser.style/avatar handoff — card scales it, component styles it */
-			& ui-avatar {
-				--ui-avatar-border-width: 0;
-				--ui-avatar-size: var(--ui-content-avatar-size, 2.25em);
+			& [data-part="jobTitle"], & [itemprop="jobTitle"] {
+				color: var(--ui-content-byline-role-ink, var(--ui-content-muted));
+			}
+			& [data-part="dateline"] {
+				color: var(--ui-content-dateline-ink, var(--ui-content-muted));
+				font-size: inherit;
+				margin-inline-start: auto;
+				text-align: end;
 			}
 		}
 
@@ -301,13 +296,17 @@
 		}
 
 		/* footer (trailing meta) — Meta group */
+		/* footer — engagement/totals row; a rule above the text column closes the card */
 		& [data-part="footer"] {
+			border-block-start: var(--ui-content-footer-border, var(--border-width) var(--ui-content-footer-border-style, dotted) currentColor);
 			color: var(--ui-content-footer-ink, var(--ui-content-meta-ink, var(--ui-content-muted)));
 			display: flex;
 			flex-wrap: wrap;
 			font-size: var(--ui-content-footer-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.78));
 			font-weight: var(--ui-content-footer-weight, var(--ui-content-meta-weight, inherit));
 			gap: var(--ui-content-footer-gap, var(--spacing-sm));
+			max-inline-size: 100%; /* the rule spans the column — not the prose measure */
+			padding-block-start: var(--ui-content-footer-pbs, var(--spacing-sm));
 			text-shadow: var(--ui-content-footer-text-shadow, var(--ui-content-meta-text-shadow, none));
 		}
 
@@ -340,14 +339,15 @@
 			& small { color: var(--ui-content-price-discount, var(--color-accent)); font-size: 0.7em; }
 		}
 
-		/* rating — Meta group */
+		/* rating — Meta group; the symbol row is @browser.style/rating, display-only */
 		& [data-part="rating"] {
 			align-items: center;
-			color: var(--ui-content-rating-ink, var(--color-accent));
+			color: var(--ui-content-rating-ink, var(--ui-content-meta-ink, var(--ui-content-muted)));
 			display: inline-flex;
 			font-size: var(--ui-content-rating-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9));
-			gap: var(--ui-content-rating-gap, var(--spacing-xs));
+			gap: var(--ui-content-rating-gap, var(--spacing-sm));
 
+			& .ui-rating { --ui-rating-size: var(--ui-content-rating-size, 1.15em); }
 			& small { color: var(--ui-content-meta-ink, var(--ui-content-muted)); }
 		}
 
@@ -388,17 +388,11 @@
 		}
 
 		/* timeline — Body group */
+		/* timeline — Body group; the rail/dots are @browser.style/timeline */
 		& [data-part="timeline"] {
 			color: var(--ui-content-timeline-ink, var(--ui-content-body-ink, inherit));
-			display: flex;
-			flex-direction: column;
 			font-size: var(--ui-content-timeline-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
-			gap: var(--ui-content-timeline-gap, var(--spacing-sm));
-			list-style: none;
-			margin: 0;
-			padding: 0;
-
-			& time { color: var(--ui-content-muted); font-size: 0.85em; }
+			--ui-timeline-gap: var(--ui-content-timeline-gap, var(--spacing-md));
 		}
 
 		/* quote — Body group; composes with @browser.style/quote via variant on the <ui-quote> wrapper */
@@ -433,7 +427,25 @@
 			margin: 0;
 			padding: 0;
 
+			& > li {
+				display: grid;
+				gap: var(--ui-content-options-row-gap, var(--spacing-xs));
+			}
 			& progress { inline-size: 100%; }
+
+			/* poll answers — bigger hit area; the check glyph survives the radio's dot clip */
+			& label:has([type="radio"], [type="checkbox"]) {
+				font-size: var(--ui-content-options-label-fs, 1.15em);
+				gap: var(--ui-content-options-label-gap, 0.6em);
+			}
+			& :is([type="radio"], [type="checkbox"]) {
+				font-size: var(--ui-content-options-input-fs, 1.5em);
+			}
+			& [type="radio"] {
+				--input-check-bga--checked: #fff;
+				&:checked { box-shadow: none; }
+				&::after { clip-path: none; }
+			}
 		}
 	}
 
@@ -461,11 +473,4 @@
 		}
 	}
 
-	/* hl(grad) — the <b> gradient over the whole headline; MUST follow the headline rule */
-	:where([content~="hl(grad)"]) :is([data-part="headline"], h2, h3, h4, h5, h6) {
-		background: var(--ui-content-headline-gradient, linear-gradient(90deg, var(--color-accent), #c026d3));
-		-webkit-background-clip: text;
-		background-clip: text;
-		color: transparent;
-	}
 }

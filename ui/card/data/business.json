@@ -13,7 +13,7 @@
     "internalName": "Demo — Business",
     "schemaType": "business",
     "preset": {
-      "$ref": "card-preset/split"
+      "$ref": "card-preset/stack"
     },
     "eyebrow": "Café",
     "headline": "Brew & Bean",

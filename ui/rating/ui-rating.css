@@ -1,5 +1,11 @@
+/**
+ * ui-rating — symbol rating over a native range input. Docs: readme.md
+ * @version 4.0.0
+ * @date 2026-08-05
+ * @author Mads Stoumann
+ */
 @layer bs-component {
-	:where(.ui-rating) {
+	:where(ui-rating, .ui-rating) {
 		--min: attr(min type(<number>), 1);
 		--max: attr(max type(<number>), 5);
 		--value: attr(value type(<number>), 3);
@@ -16,30 +22,44 @@
 			--value: 3;
 		}
 
-		--_bgi: linear-gradient(to var(--_dir-e, right), var(--ui-rating-c, gold) 0 var(--_x), var(--ui-rating-bg, var(--ButtonFace)) 0 var(--_x));
-		--_mask: repeat left center/var(--input-bs) var(--ui-rating-symbol, url('/assets/svg/star.svg'));
+		--ui-rating-size: var(--size-5);
+		--_bgi: linear-gradient(to var(--_dir-e, right), var(--ui-rating-c, var(--color-warning, gold)) 0 var(--_x), var(--ui-rating-bg, var(--color-border)) 0 var(--_x));
+		--_mask: repeat left center/var(--ui-rating-size) var(--ui-rating-symbol, url('/assets/svg/star.svg'));
 		--_x: calc(100% * (var(--value) / var(--max)));
 
 		background: none;
-		block-size: var(--input-bs);
-		inline-size: calc(var(--input-bs) * var(--max));
+		block-size: var(--ui-rating-size);
+		display: inline-block;
+		inline-size: calc(var(--ui-rating-size) * var(--max));
 
-		&.--heart {
+		/* symbol — class form kept for the legacy markup */
+		&:is([symbol="heart"], .--heart) {
 			--ui-rating-symbol: url('/assets/svg/heart.svg');
-			--ui-rating-c: #C8102E;
+			--ui-rating-c: var(--color-error, #c8102e);
 		}
-		&.--like {
+		&:is([symbol="like"], .--like) {
 			--ui-rating-symbol: url('/assets/svg/thumb.svg');
-			--ui-rating-c: #007bff;
+			--ui-rating-c: var(--color-accent);
 		}
-		&.--dots {
+		&:is([symbol="dots"], .--dots) {
 			--ui-rating-symbol: radial-gradient(circle, #000 45%, #0000 46%);
-			--ui-rating-c: #7f7f7f;
+			--ui-rating-c: var(--color-text-muted);
+		}
+
+		/* size */
+		&[size~="sm"] { --ui-rating-size: var(--size-4); }
+		&[size~="lg"] { --ui-rating-size: var(--size-7); }
+		&[size~="xl"] { --ui-rating-size: var(--size-8); }
+
+		/* display-only: no pointer, no focus, no keyboard — the read-only rating */
+		&[readonly] {
+			interactivity: inert;
+			pointer-events: none;
 		}
 
 		&::-webkit-slider-runnable-track {
 			background: var(--_bgi);
-			height: 100%;
+			block-size: 100%;
 			mask: var(--_mask);
 			-webkit-mask: var(--_mask);
 		}
@@ -48,7 +68,7 @@
 		&::-moz-range-thumb { opacity: 0; }
 		&::-moz-range-track {
 			background: var(--_bgi);
-			height: 100%;
+			block-size: 100%;
 			mask: var(--_mask);
 		}
 	}

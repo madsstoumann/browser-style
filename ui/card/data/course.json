@@ -13,7 +13,7 @@
     "internalName": "Demo — Course",
     "schemaType": "course",
     "preset": {
-      "$ref": "card-preset/split"
+      "$ref": "card-preset/stack"
     },
     "eyebrow": "Wellness",
     "headline": "Mindfulness Foundations",

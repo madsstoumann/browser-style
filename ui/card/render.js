@@ -98,11 +98,15 @@ const meta = (prop, content) =>
 const scope = (prop, type) =>
 	` itemprop="${esc(prop)}" itemscope itemtype="${SCHEMA + type}"`;
 
-/* Inline-rich text (headline): plain string or UCF richtext object.
-   Escapes everything, then re-allows <b>/</b> ONLY — the gradient-highlight marker. */
+/* Inline-rich text (headline): plain string or UCF richtext object. Escapes
+   everything, then re-allows an ALLOWLIST: <b> (emphasis) and <ui-gradient-text>
+   (@browser.style/gradient-text). The gradient element accepts only
+   animate="slide|breathe" — never a free attribute string. Docs: docs/content.md */
+const INLINE_TAGS = /&lt;(\/?)(b)&gt;|&lt;(\/?)ui-gradient-text(?: animate=&quot;(slide|breathe)&quot;)?&gt;/g;
 const renderInline = (value) => {
 	const text = typeof value === 'string' ? value : value?.$richtext ? value.content : value ?? '';
-	return esc(text).replace(/&lt;(\/?)b&gt;/g, '<$1b>');
+	return esc(text).replace(INLINE_TAGS, (match, bSlash, bTag, gSlash, animate) =>
+		bTag ? `<${bSlash}b>` : `<${gSlash}ui-gradient-text${!gSlash && animate ? ` animate="${animate}"` : ''}>`);
 };
 
 /* plain text from a possibly-rich headline (for aria/meta contexts) */
@@ -112,8 +116,6 @@ const plain = (value) => {
 };
 
 const num = (value) => (typeof value === 'number' ? value.toLocaleString('en-US') : value);
-
-const stars = (value, max = 5) => '★'.repeat(Math.round(value)) + '☆'.repeat(max - Math.round(value));
 
 /* "PT15M" → "15 min", "P6W" → "6 weeks", "P14D" → "14 days" */
 const duration = (iso) => {
@@ -139,11 +141,14 @@ const ratingPart = (prop, ratingType, rating) => {
 	if (!rating?.value) return '';
 	const max = rating.max ?? 5;
 	const label = `Rated ${rating.value} out of ${max} stars${rating.count ? ` from ${num(rating.count)} ratings` : ''}`;
-	return `<div data-part="rating"${scope(prop, ratingType)} role="img" aria-label="${esc(label)}">
+	/* @browser.style/rating — a readonly range input masked with stars; the
+	   value is machine-readable via the metas, the input is display-only */
+	return `<div data-part="rating"${scope(prop, ratingType)}>
 		${meta('ratingValue', rating.value)}
 		${rating.count != null ? meta('ratingCount', rating.count) : ''}
 		${meta('bestRating', max)}${meta('worstRating', 1)}
-		<span aria-hidden="true">${stars(rating.value, max)}</span> <span>${esc(rating.value)} / ${max}${rating.count ? ` (${num(rating.count)} ratings)` : ''}</span>
+		<input class="ui-rating" type="range" min="1" max="${esc(max)}" value="${esc(rating.value)}" step="0.01" readonly tabindex="-1" role="img" aria-label="${esc(label)}">
+		<span>${esc(rating.value)} / ${max}${rating.count ? ` (${num(rating.count)} ratings)` : ''}</span>
 	</div>`;
 };
 
@@ -155,6 +160,14 @@ const contactLink = ({ type, value, label }, primary = false) => {
 	const prop = type === 'phone' ? 'telephone' : type === 'email' ? null : 'url';
 	return `${type === 'email' ? meta('email', value) : ''}<a class="ui-button"${primary ? ' data-variant="accent"' : ''}${prop ? ` itemprop="${prop}"` : ''} href="${esc(href)}">${esc(label || value)}</a>`;
 };
+
+/* map link — `geo:lat,lng` (RFC 5870) is the standards answer and hands off to the
+   OS map app on Android/desktop Linux, but iOS Safari and desktop browsers ignore
+   it. The https Apple/Google form is what actually opens an app everywhere, so the
+   href is author-supplied (details.geo.url) and geo: is the fallback. Docs: card.md */
+const mapUrl = (geo) => geo?.url || (geo?.latitude != null && geo?.longitude != null
+	? `geo:${geo.latitude},${geo.longitude}`
+	: null);
 
 /* eligibleDuration is QuantitativeValue-typed — expand ISO P<n><unit>, not Duration text */
 const DURATION_UNIT = { D: 'DAY', W: 'WEE', M: 'MON', Y: 'ANN' };
@@ -177,11 +190,12 @@ const avatarPart = ({ avatar, name }) => avatar
 	? `<ui-avatar><img src="${esc(avatar)}" alt=""></ui-avatar>`
 	: (name ? `<ui-avatar><abbr aria-hidden="true">${esc(initials(name))}</abbr></ui-avatar>` : '');
 
-/* byline rows from authors[] */
-const byline = (authors, prop = 'author') =>
-	(authors || []).map((author) => `<address data-part="byline"${scope(prop, 'Person')}>
+/* byline rows from authors[] — the dateline rides the FIRST author as a second
+   line (avatar · name/role over date · reading time), the common editorial shape */
+const byline = (authors, prop = 'author', dateline = '') =>
+	(authors || []).map((author, index) => `<address data-part="byline"${scope(prop, 'Person')}>
 		${avatarPart(author)}
-		<span><span itemprop="name">${esc(author.name)}</span>${author.role ? ` · <span itemprop="jobTitle">${esc(author.role)}</span>` : ''}</span>
+		<span data-part="byline-who"><span itemprop="name">${esc(author.name)}</span>${author.role ? `<span itemprop="jobTitle">${esc(author.role)}</span>` : ''}</span>${index === 0 ? dateline : ''}
 	</address>`).join('');
 
 /* quote part via @browser.style/quote — variant on the <ui-quote> wrapper styles it, data-part stays the card hook */
@@ -189,10 +203,10 @@ const quotePart = (text, { itemprop = 'text', variant = null, cite = null } = {}
 	`<ui-quote data-part="quote"${attrs({ variant })}><blockquote itemprop="${esc(itemprop)}"><q>${esc(text)}</q>${cite ? `<cite>${esc(cite)}</cite>` : ''}</blockquote></ui-quote>`;
 
 /* nested <ui-accordion> — cq-box is hand-authored so the CSS-only form styles without JS */
-const accordion = (group, items, variant = null) =>
-	`<ui-accordion${attrs({ group, variant })}><cq-box>${items.map(({ summary, body, scopeAttrs = '' }) =>
+const accordion = (group, items, variant = null, hostAttrs = '') =>
+	`<ui-accordion${attrs({ group, variant })}${hostAttrs}><cq-box>${items.map(({ summary, body, scopeAttrs = '', icon = 'plus-minus' }) =>
 		`<details name="${esc(group)}"${scopeAttrs}>
-			<summary>${summary}<ui-icon type="plus-minus"></ui-icon></summary>
+			<summary>${summary}<ui-icon type="${esc(icon)}"></ui-icon></summary>
 			${body}
 		</details>`
 	).join('')}</cq-box></ui-accordion>`;
@@ -549,13 +563,15 @@ const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', p
 /* byline, tags, actions, engagement — envelope trailers, appended after details */
 const buildTail = (fields, type) => {
 	let html = '';
-	if (fields.authors?.length) html += byline(fields.authors, type === 'quote' ? 'creator' : 'author');
-	if (fields.readingTime || fields.published) {
-		const date = fields.published
-			? `<time datetime="${esc(fields.published)}">${new Date(fields.published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</time>`
-			: '';
-		html += `<p data-part="meta">${date}${fields.readingTime ? ` · ${esc(fields.readingTime)}` : ''}</p>`;
-	}
+	const date = fields.published
+		? `<time datetime="${esc(fields.published)}">${new Date(fields.published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</time>`
+		: '';
+	/* dateline — its own block in the byline row: date over reading time, end-aligned */
+	const dateline = date || fields.readingTime
+		? `<small data-part="dateline">${date}${fields.readingTime ? `<span>${esc(fields.readingTime)}</span>` : ''}</small>`
+		: '';
+	if (fields.authors?.length) html += byline(fields.authors, type === 'quote' ? 'creator' : 'author', dateline);
+	else if (dateline) html += `<p data-part="meta">${dateline}</p>`;
 	if (fields.tags?.length) {
 		/* itemprop sits ON the chip (microdata value = textContent) so a nested <a> never leaks its href */
 		html += `<span data-part="tags">${fields.tags.map((tag) => `<ui-chip itemprop="${TAGS_PROP[type] || 'keywords'}">${esc(tag)}</ui-chip>`).join('')}</span>`;
@@ -585,6 +601,10 @@ const buildTail = (fields, type) => {
 
 /* ── type-specific detail renderers — return part strings ── */
 
+/* stock state → theme hue: green in stock · orange low/limited · red out */
+const availabilityHue = (availability) =>
+	/(in)/i.test(availability || '') ? 'green' : /(low|limited|few)/i.test(availability || '') ? 'orange' : 'red';
+
 const availabilityUrl = (availability) =>
 	SCHEMA + (/(in)/i.test(availability || '') ? 'InStock' : /(low|limited)/i.test(availability || '') ? 'LimitedAvailability' : 'OutOfStock');
 
@@ -598,8 +618,8 @@ const DETAILS = {
 			</p>`;
 		}
 		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
-		const bits = [d.availability, d.sku ? `SKU ${d.sku}` : null].filter(Boolean).join(' · ');
-		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		if (d.availability) html += `<p data-part="meta"><ui-chip theme="pale ${availabilityHue(d.availability)}">${esc(d.availability)}</ui-chip>${d.sku ? ` <span>SKU ${esc(d.sku)}</span>` : ''}</p>`;
+		else if (d.sku) html += `<p data-part="meta">SKU ${esc(d.sku)}</p>`;
 		if (d.sku) html += meta('sku', d.sku);
 		return html;
 	},
@@ -625,12 +645,14 @@ const DETAILS = {
 			html += `<ul data-part="list">${d.ingredients.map((item) => `<li itemprop="recipeIngredient">${esc(item)}</li>`).join('')}</ul>`;
 		}
 		if (d.instructions?.length) {
-			html += accordion('recipe-acc', [{
-				summary: 'Instructions',
-				body: `<div${scope('recipeInstructions', 'ItemList')}><ol>${d.instructions.map((step, index) =>
-					`<li${scope('itemListElement', 'HowToStep')}>${meta('position', index + 1)}<span itemprop="text">${esc(step)}</span></li>`
-				).join('')}</ol></div>`
-			}], parts.accordion);
+			/* one collapsible per step — a nested accordion inside the Instructions panel */
+			const steps = accordion('recipe-step', d.instructions.map((step, index) => ({
+				summary: `Step ${index + 1}`,
+				body: `<div>${meta('position', index + 1)}<p itemprop="text">${esc(step)}</p></div>`,
+				scopeAttrs: scope('itemListElement', 'HowToStep'),
+				icon: 'chevron right'
+			})), 'divided', scope('recipeInstructions', 'ItemList'));
+			html += accordion('recipe-acc', [{ summary: 'Instructions', body: steps }], parts.accordion);
 		}
 		return html;
 	},
@@ -641,10 +663,10 @@ const DETAILS = {
 			html += quotePart(fields.summary, { itemprop: 'reviewBody', variant: parts.quote || null });
 		}
 		if (d.reviewer?.name) {
-			html += `<address data-part="byline"${scope('author', 'Person')}>${avatarPart(d.reviewer)}<span><span itemprop="name">${esc(d.reviewer.name)}</span>${d.reviewer.verified ? ' ✓ Verified purchase' : ''}</span></address>`;
-		}
-		if (d.reviewDate) {
-			html += `<p data-part="meta"><time itemprop="datePublished" datetime="${esc(d.reviewDate)}">${esc(d.reviewDateDisplay || d.reviewDate)}</time></p>`;
+			html += `<address data-part="byline"${scope('author', 'Person')}>${avatarPart(d.reviewer)}<span data-part="byline-who"><span itemprop="name">${esc(d.reviewer.name)}</span>${d.reviewer.verified ? '<span>✓ Verified purchase</span>' : ''}</span>${d.reviewDate ? `<small data-part="dateline"><time datetime="${esc(d.reviewDate)}">${esc(d.reviewDateDisplay || d.reviewDate)}</time></small>` : ''}</address>`;
+			/* the visible time sits inside the Person scope, so the machine-readable
+			   date rides a meta on the Review itself */
+			if (d.reviewDate) html += meta('datePublished', d.reviewDate);
 		}
 		if (d.productReviewed) {
 			html += `<div${scope('itemReviewed', 'Product')} hidden>${meta('name', d.productReviewed)}</div>`;
@@ -711,7 +733,7 @@ const DETAILS = {
 		let html = '';
 		if (d.location) html += `<p data-part="meta" itemprop="address">${esc(d.location)}</p>`;
 		if (d.contacts?.length) {
-			html += `<nav data-part="actions">${d.contacts.map((contact) => contactLink(contact)).join(' ')}</nav>`;
+			html += `<nav data-part="actions">${d.contacts.map((contact, index) => contactLink(contact, index === 0)).join(' ')}</nav>`;
 		}
 		return html;
 	},
@@ -728,7 +750,7 @@ const DETAILS = {
 	timeline(d) {
 		if (!d.items?.length) return '';
 		return `<ol data-part="timeline">${d.items.map((item) =>
-			`<li${scope('subEvent', 'Event')}><time itemprop="name" datetime="${esc(item.date)}">${esc(item.headline || item.date)}</time> <span itemprop="description">${esc(item.text)}</span></li>`
+			`<li${scope('subEvent', 'Event')}${item.state ? ` data-state="${esc(item.state)}"` : ''}><time itemprop="name" datetime="${esc(item.date)}">${esc(item.headline || item.date)}</time> <span itemprop="description">${esc(item.text)}</span></li>`
 		).join('')}</ol>`;
 	},
 
@@ -815,7 +837,9 @@ const DETAILS = {
 		if (d.address) {
 			html += `<address data-part="address"${scope('address', 'PostalAddress')}>${d.address.addressLocality ? `<span itemprop="addressLocality">${esc(d.address.addressLocality)}</span>` : ''}${d.address.addressCountry ? `, <span itemprop="addressCountry">${esc(d.address.addressCountry)}</span>` : ''}</address>`;
 		}
-		if (d.hours) html += `<span data-part="meta">${esc(d.hours)}</span>`;
+		if (d.hours) html += `<p data-part="meta">${esc(d.hours)}</p>`;
+		const map = mapUrl(d.geo);
+		if (map) html += `<nav data-part="actions"><a class="ui-button" data-variant="accent" href="${esc(map)}"${/^geo:/.test(map) ? '' : ' target="_blank" rel="noopener"'}>Open in Maps</a></nav>`;
 		return html;
 	},
 

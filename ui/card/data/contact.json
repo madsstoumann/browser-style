@@ -13,7 +13,7 @@
     "internalName": "Demo — Contact",
     "schemaType": "contact",
     "preset": {
-      "$ref": "card-preset/split-reverse"
+      "$ref": "card-preset/stack"
     },
     "eyebrow": "Support",
     "headline": "Talk to a human",
@@ -21,8 +21,8 @@
     "media": [
       {
         "mediaType": "image",
-        "src": "/assets/images/world.png",
-        "alt": "Illustrated world map"
+        "src": "/assets/images/support.png",
+        "alt": "Support agent at a headset"
       }
     ],
     "details": {

@@ -30,11 +30,11 @@
         "lines": [
           { "role": "lead", "text": "-20%" }
         ],
-        "style": "te red sh:burst"
+        "style": "te red xl sh:burst"
       },
       "save": {
         "shape": "heart",
-        "style": "ts"
+        "style": "be"
       }
     },
     "actions": [

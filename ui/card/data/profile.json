@@ -13,7 +13,7 @@
     "internalName": "Demo — Profile",
     "schemaType": "profile",
     "preset": {
-      "$ref": "card-preset/portrait-top"
+      "$ref": "card-preset/stack"
     },
     "eyebrow": "Team",
     "headline": "Jane Smith",

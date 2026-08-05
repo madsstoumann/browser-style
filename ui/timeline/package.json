@@ -1,0 +1,38 @@
+{
+  "name": "@browser.style/timeline",
+  "version": "4.0.0",
+  "description": "CSS-first timeline — dated entries on a rail with a dot each, vertical or horizontal, with done/current states",
+  "type": "module",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css"
+  },
+  "files": [
+    "index.css",
+    "ui-timeline.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "timeline",
+    "css-first"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/timeline"
+  },
+  "homepage": "https://browser.style/ui/timeline",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11"
+  }
+}

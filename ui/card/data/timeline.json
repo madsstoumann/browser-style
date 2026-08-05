@@ -13,9 +13,16 @@
     "internalName": "Demo — Timeline",
     "schemaType": "timeline",
     "preset": {
-      "$ref": "card-preset/panel"
+      "$ref": "card-preset/stack"
     },
     "eyebrow": "Company history",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/world.png",
+        "alt": "World map lit at night"
+      }
+    ],
     "headline": "A decade of browser.style",
     "details": {
       "items": [
@@ -28,8 +35,17 @@
           "text": "Design token system and 100th component."
         },
         {
+          "date": "2018",
+          "text": "Container queries land; the layout system is rebuilt."
+        },
+        {
+          "date": "2023",
+          "text": "Cascade layers adopted across every component."
+        },
+        {
           "date": "2026",
-          "text": "v4: the unified card engine ships."
+          "text": "v4: the unified card engine ships.",
+          "state": "current"
         }
       ]
     }

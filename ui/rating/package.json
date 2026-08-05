@@ -1,0 +1,39 @@
+{
+  "name": "@browser.style/rating",
+  "version": "4.0.0",
+  "description": "CSS-first symbol rating — a native range input masked with stars, hearts, thumbs or dots; interactive or read-only",
+  "type": "module",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css"
+  },
+  "files": [
+    "index.css",
+    "ui-rating.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "rating",
+    "stars",
+    "css-first"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/rating"
+  },
+  "homepage": "https://browser.style/ui/rating",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11"
+  }
+}

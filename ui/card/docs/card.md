@@ -396,9 +396,11 @@ emission in [`content/card/dist/`](../../../content/card/dist)):
   `<div itemprop="articleBody">`. Teaser/full is a preset decision — the `text`
   field: cards show the `summary` only; a `text: "body"` preset (e.g. `prose`)
   shows the body *instead*, keeping the summary as a hidden `description` meta
-- **Gradient headline**: `headline` is short rich text (≤256 chars, model-enforced);
-  inline `<b>` renders as gradient text via `--ui-content-headline-gradient`
-  (rule in content.css); all other markup is escaped
+- **Gradient headline**: `headline` is short rich text (≤256 chars, model-enforced).
+  `renderInline()` escapes everything, then re-allows a two-tag ALLOWLIST: `<b>`
+  (emphasis) and `<ui-gradient-text>` (@browser.style/gradient-text — the gradient
+  treatment, optionally `animate="slide|breathe"`; no other attribute passes). All
+  other markup is escaped. The card owns no gradient CSS — `hl(grad)` was removed in v5
 - **Quote**: quote parts compose with `@browser.style/quote` —
   `<ui-quote data-part="quote" variant="bigquote"><blockquote><q>…</q><cite>…</cite></blockquote></ui-quote>`
   (quote), plain wrapper (review, social); pages import

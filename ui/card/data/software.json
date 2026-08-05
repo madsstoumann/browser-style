@@ -13,7 +13,7 @@
     "internalName": "Demo — Software",
     "schemaType": "software",
     "preset": {
-      "$ref": "card-preset/flip"
+      "$ref": "card-preset/stack"
     },
     "flipside": {
       "$ref": "card/software-flipside-1"

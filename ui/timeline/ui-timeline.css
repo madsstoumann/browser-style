@@ -1,74 +1,97 @@
+/**
+ * ui-timeline — dated entries on a rail: a dot per entry, a line between them.
+ * Vertical by default, horizontal with variant="horizontal". Docs: readme.md
+ * @version 4.0.0
+ * @date 2026-08-05
+ * @author Mads Stoumann
+ */
 @layer bs-component {
-	:where(.ui-timeline) {
-		--ui-scroll-gap: 2ch;
-		--ui-timeline-bdw: 2px;
-		--ui-timeline-dot-sz: 1em;
-		--ui-timeline-dot-gap: 1.5ch;
-		--ui-timeline-pi: 1.5ch;
+	:where(ui-timeline, .ui-timeline, [data-part="timeline"]) {
+		--ui-timeline-dot-size: 0.85em;
+		--ui-timeline-line-width: var(--border-width-thick, 2px);
+		--ui-timeline-rail: var(--color-border);
+		--ui-timeline-dot: var(--color-accent);
+		--ui-timeline-gap: var(--spacing-md);
+		--ui-timeline-dot-offset: 0.25em;
+		--_rail: calc(var(--ui-timeline-dot-size) / 2 - var(--ui-timeline-line-width) / 2);
+		--_centre: calc(var(--ui-timeline-dot-offset) + var(--ui-timeline-dot-size) / 2);
 
-		& li {
-			align-content: start;
-			border-radius: var(--input-bdrs);
-			display: grid;
-			list-style: none;
-			margin-block-start: calc(var(--ui-timeline-dot-gap) + var(--ui-timeline-dot-sz));
-			padding: var(--ui-timeline-pb, var(--ui-timeline-pi)) var(--ui-timeline-pi);
+		display: flex;
+		flex-direction: column;
+		gap: var(--ui-timeline-gap);
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		/* one entry — dot in the inline-start gutter, line running to the next */
+		& > li {
+			padding-inline-start: calc(var(--ui-timeline-dot-size) + var(--ui-timeline-gap));
 			position: relative;
-			& a {
-				--VisitedText: currentColor;
-				color: currentColor;
-			}
-			& >* { margin: 0; }
-			&::after {
-				border-radius: 50%;
-				border: var(--ui-timeline-bdw) solid var(--AccentColor);
+
+			&::before {
+				background: var(--ui-timeline-dot-bg, var(--color-surface));
+				block-size: var(--ui-timeline-dot-size);
+				border: var(--ui-timeline-line-width) solid var(--ui-timeline-dot);
+				border-radius: var(--radius-circle, 50%);
 				content: "";
-				display: block;
-				height: var(--ui-timeline-dot-sz);
-				inset-block-start: calc(0px - var(--ui-timeline-dot-sz) - var(--ui-timeline-dot-gap));
-				inset-inline-start: var(--ui-timeline-pi);
+				inline-size: var(--ui-timeline-dot-size);
+				inset-block-start: var(--ui-timeline-dot-offset);
+				inset-inline-start: 0;
 				position: absolute;
-				width: var(--ui-timeline-dot-sz);
+				z-index: 1;
 			}
-			&:not(:last-of-type)::before {
-				--_l: calc(0px - var(--ui-timeline-dot-gap) - (var(--ui-timeline-dot-sz) / 2) - (var(--ui-timeline-bdw) / 2));
-				--_w: calc(100% + var(--ui-timeline-bdw));
-				background-color: var(--AccentColor);
+			/* the rail runs dot-centre to dot-centre — the opaque dot paints over it,
+			   so the line reads as one continuous stroke through every entry */
+			&:not(:last-child)::after {
+				background: var(--ui-timeline-rail);
 				content: "";
-				display: block;
-				height: var(--ui-timeline-bdw);
-				inset-block-start: var(--_l);
-				inset-inline-start: calc(var(--ui-timeline-dot-sz) + var(--ui-timeline-pi));
+				inline-size: var(--ui-timeline-line-width);
+				inset-block: var(--_centre) calc(-1 * (var(--ui-timeline-gap) + var(--_centre)));
+				inset-inline-start: var(--_rail);
 				position: absolute;
-				width: var(--_w);
-				/* width: calc(100% - var(--ui-timeline-pi) - var(--ui-timeline-dot-sz)); */
 			}
-			&.--accent {
-				&::after { background: var(--AccentColor); }
+
+			/* done/current — filled dot with a surface ring, the radio-button look */
+			&:is([data-state="done"], [data-state="current"])::before {
+				background: var(--ui-timeline-dot);
+				box-shadow: inset 0 0 0 var(--ui-timeline-line-width) var(--color-surface);
 			}
+			/* entries after the current one are still ahead — mute their dots */
+			&[data-state="current"] ~ li::before { --ui-timeline-dot: var(--ui-timeline-rail); }
 		}
-		&, & ul {
-			margin: 0;
-			padding: 0;
+
+		& time {
+			color: var(--ui-timeline-time-ink, var(--color-text-muted));
+			display: block;
+			font-size: var(--ui-timeline-time-fs, 0.85em);
 		}
-		/* Vertical: class set directly on `<ul>` */
-		&:is(ul) {
-			display: grid;
-			gap: var(--ui-scroll-gap);
-			& li {
-				border-block-end: 1px solid var(--CanvasGray);
-				margin-block-start: 0;
-				margin-inline-start: calc(var(--ui-timeline-dot-sz) + var(--ui-timeline-dot-gap));
-				&::after {
-					inset-block-start: 0;
-					inset-inline-start: calc(0px - var(--ui-timeline-dot-sz) - var(--ui-timeline-dot-gap));
-				}
-				&:not(:last-of-type)::before {
-					height: calc(var(--_w) + var(--ui-timeline-bdw));
-					inset-block-start: var(--ui-timeline-dot-sz);
-					inset-inline-start: var(--_l);
-					width: var(--ui-timeline-bdw);
-				}
+	}
+
+	/* horizontal — the rail runs inline; entries share one scrolling row.
+	   Edge fade is NOT the component's job: use the existing scroll-fade hooks
+	   (card content="scr(x)", lay-out overflow="preview fade", reveal variant="scr"). */
+	:where(ui-timeline[variant~="horizontal"], .ui-timeline[variant~="horizontal"], [data-part="timeline"][variant~="horizontal"]) {
+		flex-direction: row;
+		/* a flex/grid item won't shrink below min-content without this — the row
+		   would push past its container instead of scrolling */
+		min-inline-size: 0;
+		max-inline-size: 100%;
+		overflow-x: auto;
+		overscroll-behavior-inline: contain;
+		scrollbar-width: thin;
+
+		& > li {
+			flex: 1 0 var(--ui-timeline-col, 12rem);
+			padding-block-start: calc(var(--ui-timeline-dot-size) + var(--ui-timeline-gap));
+			padding-inline-start: 0;
+
+			--_centre: calc(var(--ui-timeline-dot-size) / 2);
+			&::before { inset-block-start: 0; }
+			&:not(:last-child)::after {
+				block-size: var(--ui-timeline-line-width);
+				inline-size: auto;
+				inset-block: var(--_rail) auto;
+				inset-inline: calc(var(--ui-timeline-dot-size) / 2) calc(-1 * (var(--ui-timeline-gap) + var(--ui-timeline-dot-size) / 2));
 			}
 		}
 	}

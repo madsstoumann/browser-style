@@ -13,9 +13,16 @@
     "internalName": "Demo — FAQ",
     "schemaType": "faq",
     "preset": {
-      "$ref": "card-preset/panel"
+      "$ref": "card-preset/stack-accordion-divided"
     },
     "eyebrow": "Support",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/faq.png",
+        "alt": "Illustration of question marks and answer panels"
+      }
+    ],
     "headline": "Frequently asked questions",
     "details": {
       "items": [

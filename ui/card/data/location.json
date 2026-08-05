@@ -13,7 +13,7 @@
     "internalName": "Demo — Location",
     "schemaType": "location",
     "preset": {
-      "$ref": "card-preset/poster"
+      "$ref": "card-preset/stack"
     },
     "eyebrow": "Destination",
     "headline": "Hammershus Point",
@@ -21,8 +21,8 @@
     "media": [
       {
         "mediaType": "image",
-        "src": "/assets/images/destinations.png",
-        "alt": "Coastal viewpoint with turquoise water"
+        "src": "/assets/images/hammershus.png",
+        "alt": "Hammershus castle ruin on the cliffs"
       }
     ],
     "details": {
@@ -32,7 +32,8 @@
       },
       "geo": {
         "latitude": 55.0603,
-        "longitude": 14.7009
+        "longitude": 14.7009,
+        "url": "https://www.google.com/maps/search/?api=1&query=55.0603,14.7009"
       },
       "hours": "Open all year · Free entry · Visitor centre 10–17"
     }

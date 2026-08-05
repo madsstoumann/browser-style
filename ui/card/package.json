@@ -104,14 +104,17 @@
     "@browser.style/badge": "^4.0.0",
     "@browser.style/beacon": "^5.0.0",
     "@browser.style/chip": "^4.0.0",
+    "@browser.style/gradient-text": "^1.0.0",
     "@browser.style/icon": "^4.0.0",
     "@browser.style/lightbox": "^1.0.0",
     "@browser.style/marquee": "^5.0.0",
     "@browser.style/play": "^4.1.0",
     "@browser.style/progress": "^4.0.0",
     "@browser.style/quote": "^5.0.0",
+    "@browser.style/rating": "^4.0.0",
     "@browser.style/save": "^5.0.0",
-    "@browser.style/sticker": "^5.0.0"
+    "@browser.style/sticker": "^5.0.0",
+    "@browser.style/timeline": "^4.0.0"
   },
   "peerDependenciesMeta": {
     "@browser.style/carousel": {
@@ -135,6 +138,9 @@
     "@browser.style/chip": {
       "optional": true
     },
+    "@browser.style/gradient-text": {
+      "optional": true
+    },
     "@browser.style/icon": {
       "optional": true
     },
@@ -153,10 +159,16 @@
     "@browser.style/quote": {
       "optional": true
     },
+    "@browser.style/rating": {
+      "optional": true
+    },
     "@browser.style/save": {
       "optional": true
     },
     "@browser.style/sticker": {
+      "optional": true
+    },
+    "@browser.style/timeline": {
       "optional": true
     }
   }

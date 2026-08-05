@@ -13,9 +13,16 @@
     "internalName": "Demo — Poll",
     "schemaType": "poll",
     "preset": {
-      "$ref": "card-preset/panel"
+      "$ref": "card-preset/stack"
     },
     "eyebrow": "Community poll",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/csspoll.png",
+        "alt": "Illustration of CSS layout features"
+      }
+    ],
     "headline": "Which CSS feature changed your workflow the most?",
     "details": {
       "options": [

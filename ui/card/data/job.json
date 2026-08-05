@@ -13,9 +13,16 @@
     "internalName": "Demo — Job",
     "schemaType": "job",
     "preset": {
-      "$ref": "card-preset/panel"
+      "$ref": "card-preset/stack-accordion"
     },
     "eyebrow": "Engineering",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/jobposting.png",
+        "alt": "Team collaborating in a bright office"
+      }
+    ],
     "headline": "Senior Frontend Engineer",
     "summary": "Own the design system of a product used by two million people. CSS depth valued over framework trivia.",
     "published": "2026-06-15T08:00:00Z",

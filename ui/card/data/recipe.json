@@ -13,7 +13,7 @@
     "internalName": "Demo — Recipe",
     "schemaType": "recipe",
     "preset": {
-      "$ref": "card-preset/stack"
+      "$ref": "card-preset/stack-accordion"
     },
     "eyebrow": "Pasta",
     "headline": "Classic Spaghetti Carbonara",

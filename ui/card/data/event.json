@@ -13,7 +13,7 @@
     "internalName": "Demo — Event",
     "schemaType": "event",
     "preset": {
-      "$ref": "card-preset/hero"
+      "$ref": "card-preset/stack"
     },
     "eyebrow": "Conference",
     "headline": "Web Summit 2026",
@@ -23,6 +23,12 @@
         "mediaType": "image",
         "src": "/assets/images/websummit.png",
         "alt": "Conference stage with purple lights"
+      }
+    ],
+    "actions": [
+      {
+        "link": { "url": "#", "text": "Participate" },
+        "style": "primary"
       }
     ],
     "details": {

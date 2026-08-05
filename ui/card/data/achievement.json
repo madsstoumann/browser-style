@@ -21,16 +21,14 @@
     "media": [
       {
         "mediaType": "image",
-        "src": "/assets/images/hubble.png",
-        "alt": "Deep space photograph"
+        "src": "/assets/images/a11y.png",
+        "alt": "Accessibility symbol on a screen"
       }
     ],
     "furniture": {
-      "sticker": {
-        "lines": [
-          { "role": "lead", "text": "Certified" }
-        ],
-        "style": "te green sh:burst"
+      "chip": {
+        "text": "Certified",
+        "style": "te green"
       }
     },
     "actions": [
@@ -39,7 +37,7 @@
           "url": "#",
           "text": "Verify credential"
         },
-        "style": "ghost"
+        "style": "primary"
       }
     ],
     "details": {

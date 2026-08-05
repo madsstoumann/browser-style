@@ -13,9 +13,16 @@
     "internalName": "Demo — Announcement",
     "schemaType": "announcement",
     "preset": {
-      "$ref": "card-preset/panel-dark"
+      "$ref": "card-preset/stack-brand"
     },
     "eyebrow": "High priority",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/maintainance.png",
+        "alt": "Maintenance work in progress"
+      }
+    ],
     "headline": "Scheduled maintenance — July 5",
     "summary": "The API will be unavailable Saturday July 5, 02:00–04:00 UTC while we migrate the primary database.",
     "published": "2026-07-01T00:00:00Z",

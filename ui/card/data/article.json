@@ -16,7 +16,7 @@
       "$ref": "card-preset/stack"
     },
     "eyebrow": "Science",
-    "headline": "Quantum computing reaches a <b>practical milestone</b>",
+    "headline": "Quantum computing reaches a <ui-gradient-text>practical milestone</ui-gradient-text>",
     "summary": "Researchers demonstrate error-corrected logical qubits running a chemistry simulation faster than any classical supercomputer.",
     "published": "2026-06-20T14:30:00Z",
     "modified": "2026-06-21T09:00:00Z",

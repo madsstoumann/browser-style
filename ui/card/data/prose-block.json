@@ -16,7 +16,7 @@
       "$ref": "card-preset/prose"
     },
     "eyebrow": "About",
-    "headline": "Content <b>without a card</b>",
+    "headline": "Content <ui-gradient-text>without a card</ui-gradient-text>",
     "summary": "The same envelope, rendered as a bare <ui-content> column — no surface, no radius, no shadow. For text sections that live directly in a layout, between full cards.",
     "actions": [
       {

@@ -110,7 +110,7 @@ Argument vocabularies, the custom properties each token writes, and which tokens
 | `pie()` | padding | **size** none xs sm md lg xl 2xl | — | — | --ui-content-pie | md: lg: (size) | — |
 | `gap()` | spacing | **size** none xs sm md lg | — | — | --ui-content-gap | md: lg: (size) | — |
 | `scl()` | type-scale | **size** sm md lg xl · **mode** fix fluid | — | — | --ui-content-fs --ui-content-headline --ui-content-tx-sm --ui-content-tx-md --ui-content-tx-lg --ui-content-tx-xl --ui-content-hl-sm --ui-content-hl-md --ui-content-hl-lg --ui-content-hl-xl --ui-content-hl-2xl --ui-content-hl-3xl --ui-content-fs-sm --ui-content-fs-md --ui-content-fs-lg --ui-content-fs-xl --ui-content-fs-2xl --ui-content-headline-sm --ui-content-headline-md --ui-content-headline-lg --ui-content-headline-xl --ui-content-headline-2xl --ui-content-headline-3xl | md: lg: (size) | — |
-| `hl()` | type-group | **size** sm md lg xl 2xl 3xl · **tone** shr lgt med drk sld accent inv · **weight** 300 400 500 600 700 800 900 · **font** body head serif mono form · **flag** grad shd | — | — | --ui-content-heading-ink --ui-content-heading-weight --ui-content-heading-text-shadow --ui-content-heading-font --ui-content-headline | md: lg: (size) | — |
+| `hl()` | type-group | **size** sm md lg xl 2xl 3xl · **tone** shr lgt med drk sld accent inv · **weight** 300 400 500 600 700 800 900 · **font** body head serif mono form · **flag** shd | — | — | --ui-content-heading-ink --ui-content-heading-weight --ui-content-heading-text-shadow --ui-content-heading-font --ui-content-headline | md: lg: (size) | — |
 | `eb()` | type-group | **size** sm md lg xl · **tone** shr lgt med drk sld accent inv · **weight** 300 400 500 600 700 800 900 · **flag** flat shd | — | — | --ui-content-eyebrow-ink --ui-content-eyebrow-weight --ui-content-eyebrow-transform --ui-content-eyebrow-text-shadow --ui-content-eyebrow-fs | — | — |
 | `tx()` | type-group | **size** sm md lg xl · **tone** shr lgt med drk sld accent inv · **weight** 300 400 500 600 700 800 900 · **flag** shd | — | — | --ui-content-body-ink --ui-content-body-weight --ui-content-body-text-shadow --ui-content-body-fs | — | — |
 | `mt()` | type-group | **size** sm md lg xl · **tone** shr lgt med drk sld accent inv · **weight** 300 400 500 600 700 800 900 · **flag** shd | — | — | --ui-content-meta-ink --ui-content-meta-weight --ui-content-meta-text-shadow --ui-content-meta-base | — | — |
@@ -292,7 +292,7 @@ Every part belongs to one of **four logical groups**. A group family token write
 - **size** (all four families + `scl()`): `sm` `md` `lg` `xl` (+ `2xl` `3xl` on `hl()`). `scl()` is the master step (body **and** headline, `sm`–`xl`); `hl()` sizes the **headline only** (`sm`–`3xl`) so a display title can decouple from readable body copy; `eb()`/`tx()`/`mt()` size their group off the body ramp. All sizes are **relational** — they shift with `scl()` (see *Relational scale*). `3xl` is the display step (`clamp(2.5rem, 1rem + 11cqi, 8rem)`, the token formerly called `poster`).
 - **weight**: `300`–`900` → `--font-weight-*` (`800` is a literal; there is no `--font-weight-extrabold`). Offered on `eb()`, `hl()`, `tx()`, `mt()`.
 
-Plus flags: **`eb(flat)`** drops the eyebrow's default uppercase; **`hl(grad)`** clips the whole headline to `--ui-content-headline-gradient` (the same gradient an inner `<b>` gets); **`shd`** on any family (`hl(shd)` `eb(shd)` `tx(shd)` `mt(shd)`) adds a legibility **text-shadow** to that group.
+Plus flags: **`eb(flat)`** drops the eyebrow's default uppercase; **`shd`** on any family (`hl(shd)` `eb(shd)` `tx(shd)` `mt(shd)`) adds a legibility **text-shadow** to that group.
 
 ### `shd` — text-shadow for legibility
 
@@ -398,7 +398,8 @@ In rendered cards the wrapper's variant is **preset-authored**: the preset's
 defaults to `bigquote`, review/social to none), and `parts.accordion` does the same
 for the `<ui-accordion>` emitted by faq/recipe/job. `byline` avatars render through
 `@browser.style/avatar` (`<ui-avatar>` with an `<abbr>` initials fallback — the card
-sets scale via `--ui-avatar-size` from `--ui-content-avatar-size`), and the `options`
+sets no avatar styling at all; size it with the component's own `size=` attribute or
+`--ui-avatar-size`), and the `options`
 part's bare `<progress>` is styled by `@browser.style/progress`. See card.md
 § Sub-components for the full mapping and the deliberate non-goals (`rating` stays
 hand-rolled until a v4 `ui-rating` display rewrite exists; `timeline` stays card-local).
@@ -652,7 +653,6 @@ All tokens live in the `--ui-content-*` namespace. Override per instance, per ho
 | `--ui-content-meta-fs` | `calc(var(--ui-content-fs) * 0.75)` | meta / caption size |
 | `--ui-content-byline-fs` | `calc(var(--ui-content-fs) * 0.82)` | byline size |
 | `--ui-content-byline-gap` | `var(--spacing-sm)` | byline gap |
-| `--ui-content-avatar-size` | `2.25em` | byline avatar size |
 | `--ui-content-tags-fs` | `calc(var(--ui-content-fs) * 0.72)` | tags size |
 | `--ui-content-tags-gap` | `var(--spacing-xs, 0.35rem)` | tags gap |
 | `--ui-content-tag-bg` | `var(--color-button, hsl(0, 0%, 90%))` | tag pill background |
@@ -948,8 +948,8 @@ token restyles the whole group while a per-part `style=` still overrides one par
 
 Four **disjoint** arg vocabularies, so whole-token matching can never confuse them: tone
 (`shr lgt med drk sld accent inv`), size (`sm md lg xl`, plus `2xl 3xl` on `hl`), weight
-(`300`–`900`), plus the flags `eb(flat)` (drops uppercase) and `hl(grad)` (gradient
-headline). Size args read the ladder with an absolute fallback — fixed without `scl()`,
+(`300`–`900`), plus the flag `eb(flat)` (drops uppercase). Size args read the ladder
+with an absolute fallback — fixed without `scl()`,
 shifted with it.
 
 `scl(md)` writes the identity ladder **explicitly**, so a nested `scl(md)` resets an

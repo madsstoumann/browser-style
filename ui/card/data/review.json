@@ -13,7 +13,7 @@
     "internalName": "Demo — Review",
     "schemaType": "review",
     "preset": {
-      "$ref": "card-preset/portrait"
+      "$ref": "card-preset/stack"
     },
     "eyebrow": "Verified review",
     "headline": "Punches far above its size",
@@ -32,6 +32,7 @@
       },
       "reviewer": {
         "name": "Alex Chen",
+        "avatar": "https://assets.stoumann.dk/img/avatar3.webp",
         "verified": true
       },
       "reviewDate": "2026-05-14",

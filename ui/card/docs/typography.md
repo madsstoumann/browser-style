@@ -25,7 +25,7 @@ Every token just writes a `--ui-content-*` custom property, and `content=` works
 | `tx()` | Body | summary, quote, list, address, timeline, price, stat |
 | `mt()` | Meta | meta, caption, byline, footer, tags, rating, options |
 
-Each family takes **size** (`sm`–`xl`, plus `2xl`/`3xl` on `hl()`), **tone** (`shr` 30% → `lgt` 45% → `med` 65% → `drk` 85% → `sld` 100% · `accent` · `inv`), **weight** (`300`–`900`) and flags (`shd` text-shadow; `eb(flat)` drops uppercase; `hl(grad)` gradient; `hl(serif)` etc. heading font). The vocabularies are disjoint, so `hl(3xl) hl(accent) hl(900)` compose freely on one attribute.
+Each family takes **size** (`sm`–`xl`, plus `2xl`/`3xl` on `hl()`), **tone** (`shr` 30% → `lgt` 45% → `med` 65% → `drk` 85% → `sld` 100% · `accent` · `inv`), **weight** (`300`–`900`) and flags (`shd` text-shadow; `eb(flat)` drops uppercase; `hl(serif)` etc. heading font). The vocabularies are disjoint, so `hl(3xl) hl(accent) hl(900)` compose freely on one attribute.
 
 ### The ladder at a glance
 
@@ -248,17 +248,17 @@ The quote part sits in the Body group at ×1.1 with a border-inline-start; `<cit
 ### 11 · Gradient billboard
 
 ```html
-<ui-card variant="vis(content)" theme="black dark" content="hl(3xl) hl(grad) hl(900) ctr">
+<ui-card variant="vis(content)" theme="black dark" content="hl(3xl) hl(900) ctr">
   <cq-box>
     <ui-content>
       <small data-part="eyebrow">Launch</small>
-      <strong data-part="headline">Ship the scale</strong>
+      <strong data-part="headline"><ui-gradient-text>Ship the scale</ui-gradient-text></strong>
     </ui-content>
   </cq-box>
 </ui-card>
 ```
 
-`hl(grad)` clips the whole headline to `--ui-content-headline-gradient` (retune via that property). Prefer a partial highlight? Skip the token and wrap words in `<b>` inside the headline — inner `<b>` gets the same gradient on its own.
+Gradient headlines are [`@browser.style/gradient-text`](../../gradient-text/), not a card token — the `hl(grad)` flag was removed in v5. Wrap the whole headline (above) or only the words you want highlighted; tune per element with `gradient=`, `dir=`, `size=`, and add `animate="slide"`/`"breathe"` to move it. Link the sheet where you use it.
 
 ### 12 · Monospace / changelog card
 

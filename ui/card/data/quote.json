@@ -13,16 +13,23 @@
     "internalName": "Demo — Quote",
     "schemaType": "quote",
     "preset": {
-      "$ref": "card-preset/panel-subtle"
+      "$ref": "card-preset/stack-subtle"
     },
     "eyebrow": "Quote of the day",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/quote.png",
+        "alt": "Open book on a quiet desk"
+      }
+    ],
     "headline": "Maria Lindgren on simplicity",
     "summary": "Simplicity is the ultimate sophistication — every element you remove makes the remaining ones stronger.",
     "authors": [
       {
         "name": "Maria Lindgren",
         "role": "Design Director",
-        "avatar": "/assets/images/janesmith.png"
+        "avatar": "https://assets.stoumann.dk/img/avatar1.webp"
       }
     ]
   }

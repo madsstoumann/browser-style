@@ -21,15 +21,15 @@
     "media": [
       {
         "mediaType": "image",
-        "src": "/assets/images/elephant.png",
-        "alt": "Elephant crossing a savanna road"
+        "src": "/assets/images/elephants.png",
+        "alt": "Elephants crossing at a waterhole"
       }
     ],
     "authors": [
       {
         "name": "@wildlifewatch",
         "role": "Jun 28",
-        "avatar": "/assets/images/janesmith.png"
+        "avatar": "https://assets.stoumann.dk/img/avatar2.webp"
       }
     ],
     "tags": [

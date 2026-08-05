@@ -4,15 +4,14 @@
 	<title>UI: Card — Article View Transition</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="Teaser cards linking to per-article pages — a cross-document view transition morphs the whole card into the full article. Fully static: pre-rendered by articles/build.js.">
 	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="/layout/dist/layout.css">
 	<link rel="stylesheet" href="../../chip/ui-chip.css">
 	<link rel="stylesheet" href="../../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../../icon/index.css">
 	<link rel="stylesheet" href="../../quote/ui-quote.css">
 	<link rel="stylesheet" href="../../avatar/ui-avatar.css">
+	<link rel="stylesheet" href="../../gradient-text/ui-gradient-text.css">
 	<link rel="stylesheet" href="../ui-card.css">
 	<!-- Block first paint (and the incoming snapshot on Back) until the card
 	     grid is parsed, so every card/hero morph target exists when the browser
@@ -21,6 +20,15 @@
 	<style>
 		/* cross-document view transitions (@view-transition, the [data-view]
 		   attr() naming rule and group timing) come from ui-card.css */
+		.grid {
+			display: grid;
+			gap: var(--spacing-lg);
+			grid-template-columns: 1fr;
+			margin-block-end: var(--spacing-2xl);
+		}
+		@media (min-width: 540px) {
+			.grid-2 { grid-template-columns: repeat(2, 1fr); }
+		}
 		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
 		code { font-size: 0.9em; }
 
@@ -32,31 +40,27 @@
 	<h1>UI: Card — Article View Transition</h1>
 	<p class="note">Each teaser card links to its <em>own page</em> under <a href="articles/"><code>articles/</code></a>. Both documents opt in with <code>@view-transition { navigation: auto }</code> and carry the same per-article <code>view-transition-name</code>s — set via <code>data-view</code> attributes and the CSS <code>attr()</code> rule, no inline styles — so the whole card morphs into the full article across the navigation, and morphs back via the “← All articles” link or the browser Back button. Every page here is pre-rendered by <code>articles/build.js</code> (the SSR engine): static markup on both sides is what makes the capture reliable in both directions. The full view renders the <code>body</code> as <code>itemprop="articleBody"</code> instead of the teaser summary, from the <em>same UCF instance</em>.</p>
 
-	<main data-layout-root page-gap="2">
-		<lay-out md="columns(2)" id="cards">
-			<ui-card data-view="card-article-1" variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Article">
+	<main>
+		<div class="grid grid-2" id="cards">
+			<ui-card data-view="card-article-1" variant="col" itemscope itemtype="https://schema.org/Article">
 		<cq-box>
-			<ui-media><img data-view="hero-article-1" src="/assets/images/quantum.png" alt="Stylised quantum processor" loading="lazy" itemprop="image"></ui-media>
-			<ui-content><small data-part="eyebrow" itemprop="articleSection">Science</small><h3 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/article.html">Quantum computing reaches a <b>practical milestone</b></a></h3><p data-part="summary" itemprop="description">Researchers demonstrate error-corrected logical qubits running a chemistry simulation faster than any classical supercomputer.</p><meta itemprop="datePublished" content="2026-06-20T14:30:00Z"><meta itemprop="dateModified" content="2026-06-21T09:00:00Z"><address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
-		<img src="/assets/images/janesmith.png" alt="">
-		<span><span itemprop="name">Jane Smith</span> · <span itemprop="jobTitle">Science Editor</span></span>
-	</address><p data-part="meta"><time datetime="2026-06-20T14:30:00Z">Jun 20, 2026</time> · 5 min read</p><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/LikeAction"><meta itemprop="userInteractionCount" content="892"></div><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/ShareAction"><meta itemprop="userInteractionCount" content="245"></div><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/CommentAction"><meta itemprop="userInteractionCount" content="45"></div><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/WatchAction"><meta itemprop="userInteractionCount" content="15420"></div><footer data-part="footer">15,420 views · 892 likes · 245 shares · 45 comments</footer></ui-content>
+			<ui-media media="asr(16/9)"><img data-view="hero-article-1" src="/assets/images/quantum.png" alt="Stylised quantum processor" loading="lazy" itemprop="image"></ui-media>
+			<ui-content><small data-part="eyebrow" itemprop="articleSection">Science</small><h3 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/article.html">Quantum computing reaches a <ui-gradient-text>practical milestone</ui-gradient-text></a></h3><p data-part="summary" itemprop="description">Researchers demonstrate error-corrected logical qubits running a chemistry simulation faster than any classical supercomputer.</p><meta itemprop="datePublished" content="2026-06-20T14:30:00Z"><meta itemprop="dateModified" content="2026-06-21T09:00:00Z"><address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+		<ui-avatar><img src="/assets/images/janesmith.png" alt=""></ui-avatar>
+		<span itemprop="name">Jane Smith</span><span itemprop="jobTitle">Science Editor</span><small data-part="dateline"><time datetime="2026-06-20T14:30:00Z">Jun 20, 2026</time> · 5 min read</small>
+	</address><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/LikeAction"><meta itemprop="userInteractionCount" content="892"></div><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/ShareAction"><meta itemprop="userInteractionCount" content="245"></div><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/CommentAction"><meta itemprop="userInteractionCount" content="45"></div><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/WatchAction"><meta itemprop="userInteractionCount" content="15420"></div><footer data-part="footer">15,420 views · 892 likes · 245 shares · 45 comments</footer></ui-content>
 		</cq-box>
 	</ui-card>
-			<ui-card data-view="card-news-1" media="asr(4/3) chip(ts) chip(red)" itemscope itemtype="https://schema.org/NewsArticle">
+			<ui-card data-view="card-news-1" variant="col" itemscope itemtype="https://schema.org/NewsArticle">
 		<cq-box>
-			<ui-media><img data-view="hero-news-1" src="/assets/images/government.png" alt="Parliament building at dusk" loading="lazy" itemprop="image"><ui-chip>Breaking</ui-chip></ui-media>
+			<ui-media media="asr(16/9) chip(ts) chip(red)"><img data-view="hero-news-1" src="/assets/images/government.png" alt="Parliament building at dusk" loading="lazy" itemprop="image"><ui-chip>Breaking</ui-chip></ui-media>
 			<ui-content><small data-part="eyebrow" itemprop="articleSection">Politics</small><h3 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/news.html">Coalition agrees on sweeping climate package</a></h3><p data-part="summary" itemprop="description">The agreement includes a carbon border tariff and a national retrofit programme, ending months of negotiation.</p><meta itemprop="datePublished" content="2026-07-01T06:15:00Z"><meta itemprop="dateModified" content="2026-07-01T08:40:00Z"><address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
-		
-		<span><span itemprop="name">Staff Writer</span> · <span itemprop="jobTitle">Newsroom</span></span>
-	</address><p data-part="meta"><time datetime="2026-07-01T06:15:00Z">Jul 1, 2026</time> · 3 min read</p></ui-content>
+		<ui-avatar><abbr aria-hidden="true">SW</abbr></ui-avatar>
+		<span itemprop="name">Thomas Berg</span><span itemprop="jobTitle">Newsroom</span><small data-part="dateline"><time datetime="2026-07-01T06:15:00Z">Jul 1, 2026</time> · 3 min read</small>
+	</address></ui-content>
 		</cq-box>
 	</ui-card>
-		</lay-out>
+		</div>
 	</main>
-	<!-- Typed attr() polyfill — Safari/Firefox. No-op where typed attr() is
-	     supported; each component's own @supports block already covers the no-JS
-	     case, this restores per-element attribute values on top. -->
-	<script type="module" src="/ui/base/polyfills/attr-fallback.js"></script>
 </body>
 </html>

@@ -13,9 +13,16 @@
     "internalName": "Demo — Statistic",
     "schemaType": "statistic",
     "preset": {
-      "$ref": "card-preset/panel-brand"
+      "$ref": "card-preset/stack-brand"
     },
     "eyebrow": "This quarter",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/finance.png",
+        "alt": "Trading charts on a dark screen"
+      }
+    ],
     "headline": "Monthly active users",
     "details": {
       "metricName": "Monthly active users",

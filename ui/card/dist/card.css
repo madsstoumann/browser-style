@@ -1603,12 +1603,6 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       margin-block-end: var(--ui-content-headline-rhythm, 0.25em);
       text-shadow: var(--ui-content-headline-text-shadow, var(--ui-content-heading-text-shadow, none));
       text-wrap: var(--ui-content-headline-wrap, balance);
-      & b {
-        background: var(--ui-content-headline-gradient, linear-gradient(90deg, var(--color-accent), #c026d3));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-      }
     }
     & [data-part=subheadline] {
       color: var(--ui-content-subheadline-ink, var(--ui-content-heading-ink, var(--ui-content-muted)));
@@ -1634,11 +1628,19 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       font-weight: var(--ui-content-byline-weight, var(--ui-content-meta-weight, inherit));
       gap: var(--ui-content-byline-gap, var(--spacing-sm));
       text-shadow: var(--ui-content-byline-text-shadow, var(--ui-content-meta-text-shadow, none));
-      & img {
-        aspect-ratio: 1;
-        border-radius: var(--radius-circle);
-        inline-size: var(--ui-content-avatar-size, 2.25em);
-        object-fit: cover;
+      & :is([data-part=byline-who], [data-part=dateline]) {
+        display: grid;
+        row-gap: var(--ui-content-byline-row-gap, 0.15em);
+      }
+      & [data-part=jobTitle],
+      & [itemprop=jobTitle] {
+        color: var(--ui-content-byline-role-ink, var(--ui-content-muted));
+      }
+      & [data-part=dateline] {
+        color: var(--ui-content-dateline-ink, var(--ui-content-muted));
+        font-size: inherit;
+        margin-inline-start: auto;
+        text-align: end;
       }
     }
     & [data-part=tags] {
@@ -1650,8 +1652,14 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       list-style: none;
       margin: 0;
       padding: 0;
-      & > * {
+      & > li {
         display: contents;
+      }
+      & ui-chip {
+        --ui-chip-font-size: 1em;
+        --ui-chip-font-weight: var(--ui-content-tags-weight, var(--font-weight-normal, 400));
+        --ui-chip-padding-block: 0.2em;
+        --ui-chip-padding-inline: 0.7em;
       }
       & a:not(ui-chip *),
       & li {
@@ -1678,12 +1686,15 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       gap: var(--ui-content-actions-gap, var(--spacing-sm));
     }
     & [data-part=footer] {
+      border-block-start: var(--ui-content-footer-border, var(--border-width) var(--ui-content-footer-border-style, dotted) currentColor);
       color: var(--ui-content-footer-ink, var(--ui-content-meta-ink, var(--ui-content-muted)));
       display: flex;
       flex-wrap: wrap;
       font-size: var(--ui-content-footer-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.78));
       font-weight: var(--ui-content-footer-weight, var(--ui-content-meta-weight, inherit));
       gap: var(--ui-content-footer-gap, var(--spacing-sm));
+      max-inline-size: 100%;
+      padding-block-start: var(--ui-content-footer-pbs, var(--spacing-sm));
       text-shadow: var(--ui-content-footer-text-shadow, var(--ui-content-meta-text-shadow, none));
     }
     & [data-part~=cover] {
@@ -1715,10 +1726,13 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     }
     & [data-part=rating] {
       align-items: center;
-      color: var(--ui-content-rating-ink, var(--color-accent));
+      color: var(--ui-content-rating-ink, var(--ui-content-meta-ink, var(--ui-content-muted)));
       display: inline-flex;
       font-size: var(--ui-content-rating-fs, calc(var(--ui-content-meta-base, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9));
-      gap: var(--ui-content-rating-gap, var(--spacing-xs));
+      gap: var(--ui-content-rating-gap, var(--spacing-sm));
+      & .ui-rating {
+        --ui-rating-size: var(--ui-content-rating-size, 1.15em);
+      }
       & small {
         color: var(--ui-content-meta-ink, var(--ui-content-muted));
       }
@@ -1757,24 +1771,21 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
     }
     & [data-part=timeline] {
       color: var(--ui-content-timeline-ink, var(--ui-content-body-ink, inherit));
-      display: flex;
-      flex-direction: column;
       font-size: var(--ui-content-timeline-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
-      gap: var(--ui-content-timeline-gap, var(--spacing-sm));
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      & time {
-        color: var(--ui-content-muted);
-        font-size: 0.85em;
-      }
+      --ui-timeline-gap: var(--ui-content-timeline-gap, var(--spacing-md));
     }
     & [data-part=quote] {
-      border-inline-start: var(--ui-content-quote-border, var(--border-width) solid var(--color-border, currentColor));
       color: var(--ui-content-quote-ink, var(--ui-content-body-ink, inherit));
       font-size: var(--ui-content-quote-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 1.1));
-      margin: 0;
-      padding-inline-start: var(--ui-content-quote-indent, var(--spacing-md));
+      &:where(:not([variant], [data-variant])) {
+        border-inline-start: var(--ui-content-quote-border, var(--border-width) solid var(--color-border, currentColor));
+        margin: 0;
+        padding-inline-start: var(--ui-content-quote-indent, var(--spacing-md));
+      }
+      &:where([variant], [data-variant]) {
+        margin-block: 0;
+        margin-inline: auto;
+      }
       & cite {
         color: var(--ui-content-muted);
         font-size: 0.8em;
@@ -1790,8 +1801,28 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       list-style: none;
       margin: 0;
       padding: 0;
+      & > li {
+        display: grid;
+        gap: var(--ui-content-options-row-gap, var(--spacing-xs));
+      }
       & progress {
         inline-size: 100%;
+      }
+      & label:has([type=radio], [type=checkbox]) {
+        font-size: var(--ui-content-options-label-fs, 1.15em);
+        gap: var(--ui-content-options-label-gap, 0.6em);
+      }
+      & :is([type=radio], [type=checkbox]) {
+        font-size: var(--ui-content-options-input-fs, 1.5em);
+      }
+      & [type=radio] {
+        --input-check-bga--checked: #fff;
+        &:checked {
+          box-shadow: none;
+        }
+        &::after {
+          clip-path: none;
+        }
       }
     }
   }
@@ -1816,12 +1847,6 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       position: relative;
       z-index: 2;
     }
-  }
-  :where([content~="hl(grad)"]) :is([data-part=headline], h2, h3, h4, h5, h6) {
-    background: var(--ui-content-headline-gradient, linear-gradient(90deg, var(--color-accent), #c026d3));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
   }
 }
 
