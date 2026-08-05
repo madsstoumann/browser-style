@@ -149,10 +149,10 @@ const ratingPart = (prop, ratingType, rating) => {
 /* check/ordered list — part "list" */
 /* contact button — schema.org email is Text, but itemprop on an <a> reads the
    href (mailto:…), so email rides a <meta> and the link stays plain */
-const contactLink = ({ type, value, label }, className) => {
+const contactLink = ({ type, value, label }, primary = false) => {
 	const href = type === 'email' ? `mailto:${value}` : type === 'phone' ? `tel:${value.replace(/\s/g, '')}` : value;
 	const prop = type === 'phone' ? 'telephone' : type === 'email' ? null : 'url';
-	return `${type === 'email' ? meta('email', value) : ''}<a class="${className}"${prop ? ` itemprop="${prop}"` : ''} href="${esc(href)}">${esc(label || value)}</a>`;
+	return `${type === 'email' ? meta('email', value) : ''}<a class="ui-button"${primary ? ' data-variant="accent"' : ''}${prop ? ` itemprop="${prop}"` : ''} href="${esc(href)}">${esc(label || value)}</a>`;
 };
 
 /* eligibleDuration is QuantitativeValue-typed — expand ISO P<n><unit>, not Duration text */
@@ -560,7 +560,7 @@ const buildTail = (fields, type) => {
 	}
 	if (fields.actions?.length) {
 		html += `<nav data-part="actions">${fields.actions.map((action) =>
-			`<a class="${action.style === 'primary' ? 'ui-button' : 'ui-button --ghost'}" href="${esc(action.link?.url || '#')}">${esc(action.link?.text || '')}</a>`
+			`<a class="ui-button"${action.style === 'primary' ? ' data-variant="accent"' : ''} href="${esc(action.link?.url || '#')}">${esc(action.link?.text || '')}</a>`
 		).join(' ')}</nav>`;
 	}
 	const eng = fields.engagement;
@@ -709,7 +709,7 @@ const DETAILS = {
 		let html = '';
 		if (d.location) html += `<p data-part="meta" itemprop="address">${esc(d.location)}</p>`;
 		if (d.contacts?.length) {
-			html += `<nav data-part="actions">${d.contacts.map((contact) => contactLink(contact, 'ui-button --ghost')).join(' ')}</nav>`;
+			html += `<nav data-part="actions">${d.contacts.map((contact) => contactLink(contact)).join(' ')}</nav>`;
 		}
 		return html;
 	},
@@ -774,8 +774,8 @@ const DETAILS = {
 			html += `<p data-part="meta">${d.openingHours.map((hours) => meta('openingHours', hours.schema)).join('')}${esc(d.openingHours.map((hours) => hours.display).join(' · '))}</p>`;
 		}
 		const links = [];
-		if (d.telephone) links.push(`<a class="ui-button --ghost" itemprop="telephone" href="tel:${esc(d.telephone.replace(/\s/g, ''))}">${esc(d.telephone)}</a>`);
-		if (d.email) links.push(`${meta('email', d.email)}<a class="ui-button --ghost" href="mailto:${esc(d.email)}">Email</a>`);
+		if (d.telephone) links.push(`<a class="ui-button" itemprop="telephone" href="tel:${esc(d.telephone.replace(/\s/g, ''))}">${esc(d.telephone)}</a>`);
+		if (d.email) links.push(`${meta('email', d.email)}<a class="ui-button" href="mailto:${esc(d.email)}">Email</a>`);
 		if (links.length) html += `<nav data-part="actions">${links.join(' ')}</nav>`;
 		return html;
 	},
@@ -800,7 +800,7 @@ const DETAILS = {
 		const bits = [d.availableHoursDisplay, d.languages].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
 		if (d.contactMethods?.length) {
-			html += `<nav data-part="actions">${d.contactMethods.map((method, index) => contactLink(method, index === 0 ? 'ui-button' : 'ui-button --ghost')).join(' ')}</nav>`;
+			html += `<nav data-part="actions">${d.contactMethods.map((method, index) => contactLink(method, index === 0)).join(' ')}</nav>`;
 		}
 		return html;
 	},

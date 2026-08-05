@@ -1003,6 +1003,10 @@
         border-width: 2px;
       }
     }
+    &[data-variant~=accent] {
+      --button-bg: var(--color-accent, hsl(211, 100%, 50%));
+      --button-c: var(--color-accent-text, hsl(211, 100%, 95%));
+    }
     &[data-variant~=rounded] {
       border-radius: var(--radius-pill, 3em);
     }
