@@ -395,11 +395,21 @@
 
 		/* quote — Body group; composes with @browser.style/quote via variant on the <ui-quote> wrapper */
 		& [data-part="quote"] {
-			border-inline-start: var(--ui-content-quote-border, var(--border-width) solid var(--color-border, currentColor));
 			color: var(--ui-content-quote-ink, var(--ui-content-body-ink, inherit));
 			font-size: var(--ui-content-quote-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 1.1));
-			margin: 0;
-			padding-inline-start: var(--ui-content-quote-indent, var(--spacing-md));
+
+			/* default treatment only — a variant (preset parts=) owns its own geometry */
+			&:where(:not([variant], [data-variant])) {
+				border-inline-start: var(--ui-content-quote-border, var(--border-width) solid var(--color-border, currentColor));
+				margin: 0;
+				padding-inline-start: var(--ui-content-quote-indent, var(--spacing-md));
+			}
+
+			/* variant quotes: let the component's margin-inline: auto win over `& > * { margin: 0 }` */
+			&:where([variant], [data-variant]) {
+				margin-block: 0;
+				margin-inline: auto;
+			}
 
 			& cite { color: var(--ui-content-muted); font-size: 0.8em; font-style: normal; }
 		}
