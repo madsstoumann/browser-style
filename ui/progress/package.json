@@ -1,0 +1,38 @@
+{
+  "name": "@browser.style/progress",
+  "version": "4.0.0",
+  "description": "CSS-first styling for the native <progress> element",
+  "type": "module",
+  "style": "index.css",
+  "exports": {
+    ".": {
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css"
+  },
+  "files": [
+    "index.css",
+    "ui-progress.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "progress",
+    "css-first"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/progress"
+  },
+  "homepage": "https://browser.style/ui/progress",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.11"
+  }
+}
