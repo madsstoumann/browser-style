@@ -90,6 +90,14 @@
       "media": "asr(16/9)",
       "parts": { "accordion": "divided" }
     },
+    "stack-offer": {
+      "name": "Stack Offer Preset",
+      "description": "Column card on a muted grey surface — membership and pricing offers",
+      "element": "ui-card",
+      "variant": "col",
+      "media": "asr(16/9)",
+      "theme": "muted gray"
+    },
     "stack-accordion": {
       "name": "Stack Accordion Preset",
       "description": "Default column card whose nested accordion is a bordered, rounded, divided box",

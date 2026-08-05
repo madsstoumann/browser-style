@@ -618,8 +618,8 @@ const DETAILS = {
 			</p>`;
 		}
 		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
-		if (d.availability) html += `<p data-part="meta"><ui-chip theme="pale ${availabilityHue(d.availability)}">${esc(d.availability)}</ui-chip>${d.sku ? ` <span>SKU ${esc(d.sku)}</span>` : ''}</p>`;
-		else if (d.sku) html += `<p data-part="meta">SKU ${esc(d.sku)}</p>`;
+		if (d.availability) html += `<p data-part="meta"><ui-chip theme="pale ${availabilityHue(d.availability)}">${esc(d.availability)}</ui-chip></p>`;
+		/* sku is machine-readable only — no visible number on the card */
 		if (d.sku) html += meta('sku', d.sku);
 		return html;
 	},

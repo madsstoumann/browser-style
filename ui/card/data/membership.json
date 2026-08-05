@@ -13,7 +13,7 @@
     "internalName": "Demo — Membership",
     "schemaType": "membership",
     "preset": {
-      "$ref": "card-preset/stack-brand"
+      "$ref": "card-preset/stack-offer"
     },
     "eyebrow": "Most popular",
     "media": [
