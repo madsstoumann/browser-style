@@ -147,6 +147,21 @@ const ratingPart = (prop, ratingType, rating) => {
 };
 
 /* check/ordered list — part "list" */
+/* contact button — schema.org email is Text, but itemprop on an <a> reads the
+   href (mailto:…), so email rides a <meta> and the link stays plain */
+const contactLink = ({ type, value, label }, className) => {
+	const href = type === 'email' ? `mailto:${value}` : type === 'phone' ? `tel:${value.replace(/\s/g, '')}` : value;
+	const prop = type === 'phone' ? 'telephone' : type === 'email' ? null : 'url';
+	return `${type === 'email' ? meta('email', value) : ''}<a class="${className}"${prop ? ` itemprop="${prop}"` : ''} href="${esc(href)}">${esc(label || value)}</a>`;
+};
+
+/* eligibleDuration is QuantitativeValue-typed — expand ISO P<n><unit>, not Duration text */
+const DURATION_UNIT = { D: 'DAY', W: 'WEE', M: 'MON', Y: 'ANN' };
+const eligibleDuration = (iso) => {
+	const m = /^P(\d+)([DWMY])$/.exec(iso || '');
+	return m ? `<span${scope('eligibleDuration', 'QuantitativeValue')} hidden>${meta('value', m[1])}${meta('unitCode', DURATION_UNIT[m[2]])}</span>` : '';
+};
+
 const listPart = (items, { ordered = false, itemprop = null } = {}) =>
 	items?.length
 		? `<${ordered ? 'ol' : 'ul'} data-part="list"${itemprop ? ` itemprop="${esc(itemprop)}"` : ''}>${items.map((item) => `<li>${esc(item)}</li>`).join('')}</${ordered ? 'ol' : 'ul'}>`
@@ -694,11 +709,7 @@ const DETAILS = {
 		let html = '';
 		if (d.location) html += `<p data-part="meta" itemprop="address">${esc(d.location)}</p>`;
 		if (d.contacts?.length) {
-			html += `<nav data-part="actions">${d.contacts.map((contact) => {
-				const href = contact.type === 'email' ? `mailto:${contact.value}` : contact.type === 'phone' ? `tel:${contact.value}` : contact.value;
-				const prop = contact.type === 'email' ? 'email' : contact.type === 'phone' ? 'telephone' : 'url';
-				return `<a class="ui-button --ghost" itemprop="${prop}" href="${esc(href)}">${esc(contact.label || contact.value)}</a>`;
-			}).join(' ')}</nav>`;
+			html += `<nav data-part="actions">${d.contacts.map((contact) => contactLink(contact, 'ui-button --ghost')).join(' ')}</nav>`;
 		}
 		return html;
 	},
@@ -764,7 +775,7 @@ const DETAILS = {
 		}
 		const links = [];
 		if (d.telephone) links.push(`<a class="ui-button --ghost" itemprop="telephone" href="tel:${esc(d.telephone.replace(/\s/g, ''))}">${esc(d.telephone)}</a>`);
-		if (d.email) links.push(`<a class="ui-button --ghost" itemprop="email" href="mailto:${esc(d.email)}">Email</a>`);
+		if (d.email) links.push(`${meta('email', d.email)}<a class="ui-button --ghost" href="mailto:${esc(d.email)}">Email</a>`);
 		if (links.length) html += `<nav data-part="actions">${links.join(' ')}</nav>`;
 		return html;
 	},
@@ -789,11 +800,7 @@ const DETAILS = {
 		const bits = [d.availableHoursDisplay, d.languages].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
 		if (d.contactMethods?.length) {
-			html += `<nav data-part="actions">${d.contactMethods.map((method, index) => {
-				const href = method.type === 'email' ? `mailto:${method.value}` : method.type === 'phone' ? `tel:${method.value}` : method.value;
-				const prop = method.type === 'email' ? 'email' : method.type === 'phone' ? 'telephone' : 'url';
-				return `<a class="${index === 0 ? 'ui-button' : 'ui-button --ghost'}" itemprop="${prop}" href="${esc(href)}">${esc(method.label || method.value)}</a>`;
-			}).join(' ')}</nav>`;
+			html += `<nav data-part="actions">${d.contactMethods.map((method, index) => contactLink(method, index === 0 ? 'ui-button' : 'ui-button --ghost')).join(' ')}</nav>`;
 		}
 		return html;
 	},
@@ -811,7 +818,7 @@ const DETAILS = {
 	},
 
 	membership(d) {
-		let html = meta('eligibleDuration', d.trialPeriod);
+		let html = eligibleDuration(d.trialPeriod);
 		if (d.price) {
 			html += `<p data-part="price"${scope('priceSpecification', 'PriceSpecification')}>${meta('priceCurrency', d.price.currency)}<data itemprop="price" value="${esc(d.price.monthly)}">${esc(d.price.currency)} ${esc(d.price.monthly)}</data>/mo ${d.price.yearly ? `<small>or ${esc(d.price.currency)} ${esc(d.price.yearly)}/yr${d.price.savings ? ` — ${esc(d.price.savings)}` : ''}</small>` : ''}</p>`;
 		}

@@ -488,7 +488,7 @@
 					<p data-part="meta" itemprop="address">Copenhagen, Denmark</p>
 					<ul data-part="tags"><li><a href="#" itemprop="knowsAbout">Elections</a></li><li><a href="#" itemprop="knowsAbout">EU policy</a></li><li><a href="#" itemprop="knowsAbout">Data journalism</a></li></ul>
 					<nav data-part="actions">
-						<a class="ui-button --ghost" itemprop="email" href="mailto:jane@dailyledger.example">Email</a>
+						<meta itemprop="email" content="jane@dailyledger.example"><a class="ui-button --ghost" href="mailto:jane@dailyledger.example">Email</a>
 						<a class="ui-button --ghost" itemprop="url" href="#">Portfolio</a>
 					</nav>
 				</ui-content>
@@ -715,7 +715,7 @@
 					</p>
 					<nav data-part="actions">
 						<a class="ui-button --ghost" itemprop="telephone" href="tel:+4533221100">+45 33 22 11 00</a>
-						<a class="ui-button --ghost" itemprop="email" href="mailto:hello@brewandbean.example">Email</a>
+						<meta itemprop="email" content="hello@brewandbean.example"><a class="ui-button --ghost" href="mailto:hello@brewandbean.example">Email</a>
 					</nav>
 				</ui-content>
 			</cq-box>
@@ -778,7 +778,7 @@
 					<p data-part="summary" itemprop="description">Real people, no phone trees. Average response under 2 hours.</p>
 					<p data-part="meta">Mon–Fri 9–17 CET · English, Danish, German</p>
 					<nav data-part="actions">
-						<a class="ui-button" itemprop="email" href="mailto:support@example.com">support@example.com</a>
+						<meta itemprop="email" content="support@example.com"><a class="ui-button" href="mailto:support@example.com">support@example.com</a>
 						<a class="ui-button --ghost" itemprop="telephone" href="tel:+4570203040">+45 70 20 30 40</a>
 					</nav>
 				</ui-content>
@@ -825,7 +825,7 @@
 		<ui-card variant="vis(content)" theme="black dark" itemscope itemtype="https://schema.org/Offer">
 			<cq-box>
 				<ui-content>
-					<meta itemprop="eligibleDuration" content="P14D">
+					<span itemprop="eligibleDuration" itemscope itemtype="https://schema.org/QuantitativeValue" hidden><meta itemprop="value" content="14"><meta itemprop="unitCode" content="DAY"></span>
 					<small data-part="eyebrow">Most popular</small>
 					<h3 data-part="headline" itemprop="name">FitTrack Pro</h3>
 					<p data-part="summary" itemprop="description">Unlimited workouts, personal coaching and priority support.</p>
