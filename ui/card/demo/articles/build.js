@@ -52,7 +52,8 @@ const page = (ucf) => {
 	<link rel="stylesheet" href="../../chip/ui-chip.css">
 	<link rel="stylesheet" href="../../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../../icon/index.css">
-	<link rel="stylesheet" href="../../blockquote/ui-blockquote.css">
+	<link rel="stylesheet" href="../../quote/ui-quote.css">
+	<link rel="stylesheet" href="../../avatar/ui-avatar.css">
 	<link rel="stylesheet" href="../ui-card.css">
 	<!-- Block first paint (and the view-transition snapshot) until the hero is
 	     parsed, so the card/hero morph targets exist when the browser captures
@@ -103,7 +104,8 @@ const gridPage = (cards) => `<!DOCTYPE html>
 	<link rel="stylesheet" href="../chip/ui-chip.css">
 	<link rel="stylesheet" href="../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../icon/index.css">
-	<link rel="stylesheet" href="../blockquote/ui-blockquote.css">
+	<link rel="stylesheet" href="../quote/ui-quote.css">
+	<link rel="stylesheet" href="../avatar/ui-avatar.css">
 	<link rel="stylesheet" href="ui-card.css">
 	<!-- Block first paint (and the incoming snapshot on Back) until the card
 	     grid is parsed, so every card/hero morph target exists when the browser

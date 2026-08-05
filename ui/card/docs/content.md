@@ -364,7 +364,7 @@ Content parts are **semantic children** marked with `data-part`. They are auto-s
 | `list` | `<ul>`/`<ol data-part="list">` | **Body group** — feature / step list; flex column |
 | `address` | `<address data-part="address">` | **Body group** — postal block, no avatar (distinct from byline) |
 | `timeline` | `<ol data-part="timeline">` | **Body group** — dated entries; muted `<time>` |
-| `quote` | `<blockquote data-part="quote">` | **Body group** — indented; composes with `@browser.style/blockquote` `data-variant` |
+| `quote` | `<ui-quote data-part="quote">` wrapping `<blockquote>` | **Body group** — indented; composes with `@browser.style/quote` via `variant` |
 | `rating` | `<div data-part="rating">` | **Meta group** — inline star row + count |
 | `options` | `<ul data-part="options">` | **Meta group** — poll / comparison rows with `<progress>` |
 
@@ -386,12 +386,22 @@ only structural essentials — visuals stay token-driven.
 | `address` | `<address>` block (no avatar — that's `byline`) | `PostalAddress` | business, location, event, contact |
 | `stat` | `<p>` + `<data>` number, `<small>` unit, trend `<span>` | `QuantitativeValue` | statistic |
 | `timeline` | `<ol>` of `<li>` with `<time>` + text | `subEvent` → `Event` | timeline |
-| `quote` | `<blockquote data-variant>` + `<q>`/`<cite>` | — | quote (`bigquote`), review (default), social (plain) |
+| `quote` | `<ui-quote variant>` wrapping `<blockquote>` + `<q>`/`<cite>` | — | quote (`bigquote`), review + social (plain) |
 | `options` | `<ul>` of `<li>` with `<label>` + `<progress>` | `suggestedAnswer` → `Answer` / `ListItem` | poll, comparison |
 
-`quote` composes with `@browser.style/blockquote`: `data-variant` (`bigquote` / `breaker` /
-`code`) carries the visual style from `ui-blockquote.css`, and the card-side hook is for
-card-scoped overrides only.
+`quote` composes with `@browser.style/quote`: `variant` on the `<ui-quote>` wrapper
+(`bigquote` / `breaker` / `code`) carries the visual style from `ui-quote.css`, and the
+card-side hook is for card-scoped overrides only.
+
+In rendered cards the wrapper's variant is **preset-authored**: the preset's
+`parts.quote` value is written verbatim to the emitted `<ui-quote>` (the quote type
+defaults to `bigquote`, review/social to none), and `parts.accordion` does the same
+for the `<ui-accordion>` emitted by faq/recipe/job. `byline` avatars render through
+`@browser.style/avatar` (`<ui-avatar>` with an `<abbr>` initials fallback — the card
+sets scale via `--ui-avatar-size` from `--ui-content-avatar-size`), and the `options`
+part's bare `<progress>` is styled by `@browser.style/progress`. See card.md
+§ Sub-components for the full mapping and the deliberate non-goals (`rating` stays
+hand-rolled until a v4 `ui-rating` display rewrite exists; `timeline` stays card-local).
 
 ### Tags — plain links or `<ui-chip>`
 

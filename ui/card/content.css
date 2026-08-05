@@ -251,6 +251,12 @@
 				inline-size: var(--ui-content-avatar-size, 2.25em);
 				object-fit: cover;
 			}
+
+			/* @browser.style/avatar handoff — card scales it, component styles it */
+			& ui-avatar {
+				--ui-avatar-border-width: 0;
+				--ui-avatar-size: var(--ui-content-avatar-size, 2.25em);
+			}
 		}
 
 		/* tags — Meta group; the pill is the FALLBACK for links NOT inside a <ui-chip> */
@@ -387,7 +393,7 @@
 			& time { color: var(--ui-content-muted); font-size: 0.85em; }
 		}
 
-		/* quote — Body group; composes with @browser.style/blockquote via data-variant */
+		/* quote — Body group; composes with @browser.style/quote via variant on the <ui-quote> wrapper */
 		& [data-part="quote"] {
 			border-inline-start: var(--ui-content-quote-border, var(--border-width) solid var(--color-border, currentColor));
 			color: var(--ui-content-quote-ink, var(--ui-content-body-ink, inherit));

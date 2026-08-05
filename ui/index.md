@@ -67,7 +67,6 @@
 
 ## Surfaces
 - Accordion (`accordion`)
-- Blockquote (`blockquote`)
 - Card (`card`)
 - Card Expand (`card-expand`)
 - Card Flip (`card-flip`)
@@ -76,6 +75,7 @@
 - Feature Compare (`feature-compare`)
 - Price Card (`price-card`)
 - Product Card (`product-card`)
+- Quote (`quote`)
 - Testimonial (`testimonial`)
 
 ## Navigation

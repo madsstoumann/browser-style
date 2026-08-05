@@ -42,7 +42,7 @@ JSON-LD). This system carries all of that forward onto the v4 primitives.
 | [`render.js`](../render.js) | Rendering engine: UCF + presets → DOM with microdata |
 | [`render.html`](../demo/render.html) | Live demo — all 26 cards rendered from data |
 | [`schema.html`](../demo/schema.html) | Hand-authored reference markup for every type (the spec render.js follows) |
-| [`content.css`](../content.css) | `<ui-content>` parts — includes commented stubs for the 8 proposed parts |
+| [`content.css`](../content.css) | `<ui-content>` parts — all parts styled (incl. the 8 once-proposed structured parts) |
 
 ## Content model — `card`
 
@@ -221,6 +221,7 @@ Demos in [`media.furniture.html`](../demo/media.furniture.html) and
 | `media` | both | `asr() obf() obp() flp() rds() shp() hov() tnt() scm clip …` — plus **all carousel controls as tokens, the only form** (`nav`/`nav()`, `arw()`, `mrk()`, `axis(y)`, `auto`, `loop`, `stagger`, `load()`; the schema has no `nav`/`arrow`/`dot` fields) and the furniture look tokens (`chip/sticker/save/play` position/hue/size/shape). The renderer appends each furniture item's optional `style=` override after these |
 | `content` | both | `scl() hl() gap() scr` · padding `pad() pb() pi() pbs() pbe() pis() pie()` · `rds()` — plus their `md:`/`lg:` forms |
 | `text` | both | which long text the text column shows: `summary` (teaser — default), `body` (full view — body **instead of** summary, with the summary kept as a hidden `description` meta), `both`. Reveal back panels always render both |
+| `parts` | both | sub-component variants, written verbatim as the emitted element's `variant` attribute: `parts.quote` → `<ui-quote>` (`bigquote` / `breaker` / `code`; the quote type defaults to `bigquote`, review/social to none), `parts.accordion` → `<ui-accordion>` (`bordered divided rounded pill separate filled`, space-separable) for faq items, recipe instructions, job requirements/benefits. Values are validated by `tokens.lint.js` against the component vocabularies |
 | `styles` | both | object of CSS custom properties → `style` attribute (e.g. `--ui-reveal-content-bg`) |
 | `reveal` | ui-reveal | nested object grouping the reveal-only config: `{ type, typeLg, to, icon, iconType, iconClose, from, trigger, scroll, name }`. The structured object stays in the schema, but the renderer **folds it into `variant=` tokens** at render time: `type`+`from` → one animation token (`exp`, `flp(top)`, `sld(lft)`, `grw`), `typeLg` → `lg:`-prefixed swap (`lg:grw`), `to` → `pop`, `trigger` → `trg(card)`, `scroll` → `scr`, `icon` → one `ico()` per word (default `ico(te) ico(sm)`), `iconClose` → one `icc()` per word. Three fields stay **markup**, not tokens: `iconType` sets the toggle glyph on the emitted `<ui-icon>` (`plus-cross` default, or directional `{up,down,left,right}-arrow-cross` pairing with slide direction — panel from top → `down-arrow-cross`); `name` becomes the native `<details name>`; and `trigger` additionally **suppresses the `<ui-icon>` entirely** |
 
@@ -366,10 +367,9 @@ use it when a whole section should share type scale or padding. (`media=` is dif
 inheritance deliberately **stops at the card host**, so a `media=` on a `<lay-out overflow>`
 configures that layout's own scroller and never leaks into a descendant `<ui-media>`.)
 
-> **Renderer gap — `<ui-marquee>`.** `buildFurniture` emits five elements: `play`, `chip`,
-> `beacon`, `sticker`, `save`. There is **no `furniture.marquee`** — the band is stylable
-> from `media=` (`marquee(bot)`, hue, size…) but must be hand-authored in the markup;
-> presets cannot generate it yet.
+> **`<ui-marquee>` from data.** `buildFurniture` emits six elements: `marquee` (a band —
+> `furniture.marquee.text` goes on `aria-label`, `style` words map to `marquee()` tokens),
+> `play`, `chip`, `beacon`, `sticker`, `save`.
 
 ## Microdata conventions
 
@@ -399,15 +399,14 @@ emission in [`content/card/dist/`](../../../content/card/dist)):
 - **Gradient headline**: `headline` is short rich text (≤256 chars, model-enforced);
   inline `<b>` renders as gradient text via `--ui-content-headline-gradient`
   (rule in content.css); all other markup is escaped
-- **Blockquote**: quote parts compose with `@browser.style/blockquote` —
-  `<blockquote data-part="quote" data-variant="bigquote"><q>…</q><cite>…</cite></blockquote>`
-  (quote), bare `data-variant` (review), plain (social); pages import
-  `../blockquote/ui-blockquote.css`
+- **Quote**: quote parts compose with `@browser.style/quote` —
+  `<ui-quote data-part="quote" variant="bigquote"><blockquote><q>…</q><cite>…</cite></blockquote></ui-quote>`
+  (quote), plain wrapper (review, social); pages import
+  `../quote/ui-quote.css`
 
-## Proposed `data-part` vocabulary
+## Structured `data-part` vocabulary
 
-Eight parts used by the demos but not yet styled — commented stubs sit at the end
-of [`content.css`](../content.css):
+Eight parts added for the typed cards, all styled in [`content.css`](../content.css):
 
 | part | Element | Used by |
 |------|---------|---------|
@@ -417,7 +416,7 @@ of [`content.css`](../content.css):
 | `address` | `<address>` | business, location, event, contact |
 | `stat` | `<p>` + `<data>` + unit + trend | statistic |
 | `timeline` | `<ol>` of `<time>` + text | timeline |
-| `quote` | `<blockquote>` + `<cite>` | quote, review, social |
+| `quote` | `<ui-quote>` wrapping `<blockquote>` + `<cite>` | quote, review, social |
 | `options` | `<ul>` of `<label>` + `<progress>` | poll, comparison |
 
 Everything else reuses existing parts: `meta` (salaries, hours, dates), `tags`
@@ -427,6 +426,29 @@ Two parts are already **implemented** in content.css: the gradient-headline `b`
 rule, and `cover` — an `<a data-part="cover">` inside the headline whose
 `::after` covers the whole card (the clickable-card link; see the Article
 pattern below).
+
+## Sub-components — which packages the typed cards reuse
+
+The renderer delegates parts to standalone `ui/*` packages where one earns its
+place; everything else stays card-local `data-part` styling. All are **optional
+peers** of `@browser.style/card` — pages link only the sheets their types need.
+
+| schemaType(s) | Sub-component | Emitted markup |
+|---|---|---|
+| quote, review, social | [`ui/quote`](../../quote/) | `<ui-quote data-part="quote" variant?>` wrapping `<blockquote itemprop>` — variant from `parts.quote` (quote defaults to `bigquote`) |
+| faq, recipe, job | [`ui/accordion`](../../accordion/) | `<ui-accordion group variant?><cq-box><details>…` — the `cq-box` is hand-authored by the renderer so the CSS-only form styles without the accordion JS; variant from `parts.accordion` |
+| any card with `authors[]`, review | [`ui/avatar`](../../avatar/) | `<ui-avatar><img></ui-avatar>` in byline rows, `<abbr>` initials fallback when no image; the card sets scale via `--ui-avatar-size` |
+| poll, comparison | [`ui/progress`](../../progress/) | bare `<progress>` — the package styles the native element, no markup contract |
+| faq/recipe/job summaries, reveal toggles | [`ui/icon`](../../icon/) | `<ui-icon type="plus-minus">` etc. |
+
+**Deliberate non-goals** (card-local `data-part` styling stays):
+
+- `rating` — the star row stays hand-rolled (`ratingPart()`); legacy `ui/rating`
+  is a pre-v4 range-input form control, the wrong tool for read-only display.
+  Follow-up: a v4 display-mode `ui-rating` rewrite, then delegate.
+- `table` for comparison/nutrition — wrong density at card widths; the
+  `options` progress list is the card-scale rendering.
+- `timeline` — legacy `.ui-timeline` is pre-v4; the card-local `timeline` part stays.
 
 ## Navigation models and ui-accordion / ui-tabs (assessment)
 
@@ -597,7 +619,7 @@ python3 -m http.server 8000 -d .
 - [x] Content model, preset model, presets, UCF instances, SSR renderer, demos
 - [x] Video/YouTube/Vimeo media items + `VideoObject` microdata
 - [x] `body` → `articleBody`, gradient headlines, blockquote composition
-- [ ] Style the remaining proposed parts in `content.css` (gradient-headline `b` and quote are done/composed)
+- [x] Style the structured parts in `content.css`; sub-component alignment (quote wrapper, SSR accordion cq-box, avatar bylines, progress package, preset `parts=`)
 - [ ] Sync models to a CMS via [UCM](../../../cms/baseline) (`cd cms/unified-content-model && npm run validate`)
 - [ ] `editor-card` widget update for the new `details` shapes
 - [ ] `renderNavigation()` if the navigation → accordion/tabs mapping gets adopted

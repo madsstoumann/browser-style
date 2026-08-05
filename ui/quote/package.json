@@ -1,7 +1,7 @@
 {
-  "name": "@browser.style/blockquote",
-  "version": "4.0.0",
-  "description": "CSS-first blockquote component with optional web component wrapper",
+  "name": "@browser.style/quote",
+  "version": "5.0.0",
+  "description": "CSS-first quote component: <ui-quote> wrapper or styled <blockquote> with decorative variants",
   "type": "module",
   "module": "index.js",
   "style": "index.css",
@@ -16,7 +16,7 @@
   "files": [
     "index.js",
     "index.css",
-    "ui-blockquote.css"
+    "ui-quote.css"
   ],
   "publishConfig": {
     "access": "public",
@@ -24,6 +24,7 @@
   },
   "keywords": [
     "browser.style",
+    "quote",
     "blockquote",
     "css-first",
     "web-components"
@@ -33,9 +34,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madsstoumann/browser-style.git",
-    "directory": "ui/blockquote"
+    "directory": "ui/quote"
   },
-  "homepage": "https://browser.style/ui/blockquote",
+  "homepage": "https://browser.style/ui/quote",
   "peerDependencies": {
     "@browser.style/base": "^1.0.11"
   }

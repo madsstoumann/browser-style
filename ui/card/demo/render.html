@@ -16,7 +16,9 @@
 	<link rel="stylesheet" href="../../icon/index.css">
 	<link rel="stylesheet" href="../../reveal/ui-reveal.css">
 	<link rel="stylesheet" href="../../accordion/ui-accordion.css">
-	<link rel="stylesheet" href="../../blockquote/ui-blockquote.css">
+	<link rel="stylesheet" href="../../quote/ui-quote.css">
+	<link rel="stylesheet" href="../../avatar/ui-avatar.css">
+	<link rel="stylesheet" href="../../progress/ui-progress.css">
 	<link rel="stylesheet" href="../ui-card.css">
 	<style>
 		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
@@ -62,6 +64,24 @@
 			const grid = document.createElement('lay-out');
 			grid.setAttribute('md', 'columns(2)');
 			grid.append(renderCard(ucf, presets, cards));
+
+			main.append(heading, grid);
+		}
+
+		/* preset parts= — sub-component variants (demo presets + demo data) */
+		const demoPresets = { ...presets, ...(await loadPresets('../data/card.presets.demo.json')) };
+		for (const name of ['parts-quote-01', 'parts-faq-01']) {
+			const ucf = await (await fetch(`../data/demo/${name}.json`)).json();
+
+			const heading = document.createElement('h2');
+			const code = document.createElement('code');
+			const preset = demoPresets[(ucf.fields.preset?.$ref || '').split('/').pop()] || {};
+			code.textContent = `parts: ${JSON.stringify(preset.parts || {})}`;
+			heading.append(`${name} — `, code);
+
+			const grid = document.createElement('lay-out');
+			grid.setAttribute('md', 'columns(2)');
+			grid.append(renderCard(ucf, demoPresets, cards));
 
 			main.append(heading, grid);
 		}

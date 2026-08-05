@@ -1,13 +1,21 @@
+/**
+ * ui-progress — styles the native <progress> element. Docs: readme.md
+ * @version 4.0.0
+ * @date 2026-08-05
+ * @author Mads Stoumann
+ */
 @layer bs-component {
 	:where(progress) {
 		--ui-progress-bs: .6em;
+		--ui-progress-bg: var(--color-border);
+		--ui-progress-fill: var(--color-accent);
 		--ui-progress-anim: progress 1.2s linear alternate infinite;
-		background-color: var(--ButtonBorder);
+		background-color: var(--ui-progress-bg);
 		block-size: var(--ui-progress-bs);
 		border: 0;
 		border-radius: calc(2 * var(--ui-progress-bs));
 		display: grid;
-		width: 100%;
+		inline-size: 100%;
 		&::-webkit-progress-bar {
 			background: transparent;
 			border-radius: inherit;
@@ -16,9 +24,9 @@
 			border-radius: inherit;
 		}
 		&::-webkit-progress-value {
-			background: var(--AccentColor);
+			background: var(--ui-progress-fill);
 			border-radius: inherit;
-			transition: inline-size .33s linear;
+			transition: inline-size var(--duration-slow) linear;
 		}
 		&:indeterminate {
 			background-image: linear-gradient(45deg,
@@ -32,27 +40,26 @@
 			background-size: 10px 10px;
 		}
 		&:indeterminate::-moz-progress-bar {
-			width: 20%;
+			inline-size: 20%;
 		}
 		&::-moz-progress-bar {
-			background-color: var(--AccentColor);
+			background-color: var(--ui-progress-fill);
 			border-radius: inherit;
 		}
 	}
 	@media (prefers-reduced-motion: no-preference) {
 		progress:indeterminate::after {
 			animation: var(--ui-progress-anim);
-			background-color: var(--AccentColor);
+			background-color: var(--ui-progress-fill);
 			border-radius: inherit;
+			block-size: var(--ui-progress-bs);
 			content: "";
-			height: var(--ui-progress-bs);
-			width: 20%;
-			
+			inline-size: 20%;
 		}
 		progress:indeterminate::-moz-progress-bar {
 			animation: var(--ui-progress-anim);
 		}
-		[dir=rtl] progress { 
+		[dir=rtl] progress {
 			--ui-progress-anim: progress-rtl 1.2s linear alternate infinite;
 		}
 	}

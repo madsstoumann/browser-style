@@ -99,11 +99,17 @@
     "@browser.style/base": "^1.0.11",
     "@browser.style/carousel": "^1.0.0",
     "@browser.style/common": "^1.0.13",
+    "@browser.style/accordion": "^5.0.0",
+    "@browser.style/avatar": "^4.0.0",
+    "@browser.style/badge": "^4.0.0",
     "@browser.style/beacon": "^5.0.0",
     "@browser.style/chip": "^4.0.0",
+    "@browser.style/icon": "^4.0.0",
     "@browser.style/lightbox": "^1.0.0",
     "@browser.style/marquee": "^5.0.0",
     "@browser.style/play": "^4.1.0",
+    "@browser.style/progress": "^4.0.0",
+    "@browser.style/quote": "^5.0.0",
     "@browser.style/save": "^5.0.0",
     "@browser.style/sticker": "^5.0.0"
   },
@@ -114,10 +120,22 @@
     "@browser.style/common": {
       "optional": true
     },
+    "@browser.style/accordion": {
+      "optional": true
+    },
+    "@browser.style/avatar": {
+      "optional": true
+    },
+    "@browser.style/badge": {
+      "optional": true
+    },
     "@browser.style/beacon": {
       "optional": true
     },
     "@browser.style/chip": {
+      "optional": true
+    },
+    "@browser.style/icon": {
       "optional": true
     },
     "@browser.style/lightbox": {
@@ -127,6 +145,12 @@
       "optional": true
     },
     "@browser.style/play": {
+      "optional": true
+    },
+    "@browser.style/progress": {
+      "optional": true
+    },
+    "@browser.style/quote": {
       "optional": true
     },
     "@browser.style/save": {

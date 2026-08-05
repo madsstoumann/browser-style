@@ -172,6 +172,11 @@ export const lintTokens = () => {
 const PRESET_FILES = ['data/card.presets.json', 'data/card.presets.demo.json'];
 /* stems whose args are free-form numbers/ratios the manifest lists as placeholders */
 const OPEN_STEMS = /^(?:md:|lg:)?(?:asr|spl|auto|tmb)\([\d/.:a-z%]+\)$/;
+/* preset parts= vocabularies — KEEP IN SYNC with ui/quote/ui-quote.css and ui/accordion/ui-accordion.css */
+const PART_VARIANTS = {
+	quote: new Set(['bigquote', 'breaker', 'code']),
+	accordion: new Set(['bordered', 'divided', 'rounded', 'pill', 'separate', 'filled'])
+};
 const lintPresets = (manifest, errors) => {
 	const valid = {};
 	for (const [attr, group] of Object.entries(manifest.attributes)) {
@@ -183,6 +188,19 @@ const lintPresets = (manifest, errors) => {
 		if (Array.isArray(node)) return node.forEach((item, index) => walk(item, file, `${path}[${index}]`));
 		if (!node || typeof node !== 'object') return;
 		for (const [key, value] of Object.entries(node)) {
+			/* parts= carries per-sub-component variant words, not DSL tokens */
+			if (key === 'parts' && value && typeof value === 'object' && !Array.isArray(value)) {
+				for (const [part, words] of Object.entries(value)) {
+					if (!PART_VARIANTS[part]) {
+						errors.push(`${file} ${path}: parts.${part} is not a known part (expected: ${Object.keys(PART_VARIANTS).join(', ')})`);
+						continue;
+					}
+					for (const word of String(words).trim().split(/\s+/)) {
+						if (word && !PART_VARIANTS[part].has(word)) errors.push(`${file} ${path}: parts.${part} word "${word}" is not in the ${part} variant vocabulary — dead in the browser`);
+					}
+				}
+				continue;
+			}
 			/* media-open (the lightbox's open-state control vocabulary) carries
 			   ordinary media= spellings — validate it against the same set */
 			const attr = key === 'media-open' ? 'media' : key;

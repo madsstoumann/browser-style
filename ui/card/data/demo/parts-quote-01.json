@@ -1,0 +1,27 @@
+{
+	"$schema": "../../../../cms/baseline/models/card.schema.json",
+	"id": "parts-demo-quote-1",
+	"model": "card",
+	"meta": {
+		"createdAt": "2026-08-05T10:00:00Z",
+		"updatedAt": "2026-08-05T10:00:00Z",
+		"locale": "en-US",
+		"status": "published",
+		"folder": "Cards/Demo"
+	},
+	"fields": {
+		"internalName": "Parts Demo — Quote (breaker)",
+		"schemaType": "quote",
+		"preset": { "$ref": "card-preset/parts-quote-breaker" },
+		"eyebrow": "Quote of the day",
+		"headline": "Maria Lindgren on simplicity",
+		"summary": "Simplicity is the ultimate sophistication — every element you remove makes the remaining ones stronger.",
+		"authors": [
+			{
+				"name": "Maria Lindgren",
+				"role": "Design Director",
+				"avatar": "/assets/images/janesmith.png"
+			}
+		]
+	}
+}
