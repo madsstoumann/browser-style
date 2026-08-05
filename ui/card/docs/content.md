@@ -119,7 +119,7 @@ Argument vocabularies, the custom properties each token writes, and which tokens
 | `plc()` | placement | **pos** ts tc te cs cc ce bs bc be | — | — | --ui-content-place-block --ui-content-place-inline | — | — |
 | `wid()` | measure | **size** sm md lg xl 2xl | — | — | --ui-content-max | — | — |
 | `tal()` | alignment | **value** start ctr end | — | — | --ui-content-text-align | — | — |
-| `scr()` | scroll | **value** x y | — | yes | --ui-scroll-fade-dir | — | — |
+| `scr()` | scroll | **value** x y | — | yes | --ui-scroll-fade-dir --ui-scroll-fade-start --ui-scroll-fade-end | — | — |
 <!-- /tokens -->
 
 What each one is *for*:
@@ -812,7 +812,7 @@ A group is viewport-wide, so the card-scale thresholds (25rem / 44rem) act as a 
 
 Content **tone/weight** (`eb()`/`hl()`/`tx()`/`mt()` ink + weight), group **sizes** (`eb()`/`tx()`/`mt()` `sm`–`xl`), `fnt()`, `plc()`, `wid()`, `tal()`, `scr` and `rds()` have no `md:`/`lg:` forms. Tone/weight would cost a rule per token × tier × arm and is deferred; group sizes don't need prefixes at all, since a responsive `scl()` shifts them via the relational ladder. On the `media=` side only `asr()` is prefixable — see [media.md](./media.md#responsive).
 
-**Axis:** bare `scr` (alias `scr(y)`) is a **vertical** scrolling column with a top/bottom fade; **`scr(x)`** is a **horizontal** scrolling row (`flex-direction: row`, `overflow-x: auto`) with a left/right fade — handy for a strip of thumbnails, tags or chips that overflows the card. Both share the one `ui-scroll-fade` primitive; `scr(x)` just flips the mask direction (`--ui-scroll-fade-dir: to right`) and the scroll-timeline axis (`inline`). Cap the scroll extent with `--ui-content-scroll-bs` (block) as usual.
+**Axis:** bare `scr` (alias `scr(y)`) is a **vertical** scrolling column with a top/bottom fade; **`scr(x)`** is a **horizontal** scrolling row (`flex-direction: row`, `overflow-x: auto`) with a start/end fade — handy for a strip of thumbnails, tags or chips that overflows the card. Both drive the one scroll-edge-fade engine; `scr(x)` just flips the mask direction (`--ui-scroll-fade-dir: to var(--_dir-e)`, so it **mirrors under `dir="rtl"`**) and the timeline axis (`scroll(self inline)`). Cap the scroll extent with `--ui-content-scroll-bs` (block) as usual.
 
 ```html
 <ui-content content="scr(x) gap(sm)">
@@ -998,13 +998,43 @@ spacing tokens (`p`/`pi`/`pb`/`pbs`/`pbe`/…) — same names, named `--spacing-
 of layout's numeric unit multiples. All are whole-token (`~=`) matched so the base rules
 never substring-match the `md:`/`lg:` forms declared in `ui-card.css`.
 
-### `scr` reuses the shared scroll-fade primitive
+### `scr` drives the shared scroll-edge-fade engine
 
 `content="scr"` / `scr(y)` scroll the block axis (`scr` is the back-compat default);
-`scr(x)` scrolls the inline axis as a row. The `@property`/`@keyframes` and the
-`--ui-scroll-fade-mask` gradient are **not** defined here — they are the shared primitive in
-`ui/base/scroll.css`, also used by `<ui-reveal>`; the mask direction follows
+`scr(x)` scrolls the inline axis as a row. The `@property` registrations, the
+`ui-scroll-fade-s` / `ui-scroll-fade-e` keyframes and the `--ui-scroll-fade-mask` gradient are
+**not** defined here — they are the shared engine in `ui/base/scroll.css`, also driven by
+`<ui-reveal variant="scr">` and `<lay-out overflow="fade*">`; the mask direction follows
 `--ui-scroll-fade-dir`. Whole-token matched so `scr`, `scr(x)` and `scr(y)` stay distinct.
+
+**Four declarations, and their order is load-bearing.** Each arm inside the
+`@supports (animation-timeline: scroll())` + `prefers-reduced-motion` gate reads:
+
+```css
+animation: ui-scroll-fade-s both linear, ui-scroll-fade-e both linear;
+animation-timeline: scroll(self block);   /* scroll(self inline) for scr(x) */
+animation-range: 0 var(--ui-scroll-fade-ramp-s), calc(100% - var(--ui-scroll-fade-ramp-e)) 100%;
+mask: var(--ui-scroll-fade-mask);
+```
+
+`animation-timeline` and `animation-range-*` **must follow** the `animation` shorthand — the
+shorthand resets both, so putting either first silently drops it. Two keyframes rather than
+one because the per-edge ramp now rides `animation-range` instead of plateau keyframe stops
+(`0 10%` + `both` fill is equivalent to the old `0%` / `10%,100%` plateau), and because the
+two animations must write **disjoint** properties or they would compete for one value.
+
+**Why the axis is spelled out twice.** `scr`/`scr(y)` and `scr(x)` cannot share one rule: a
+`var()` is not allowed inside `scroll()`, so the axis has to be a literal. Every consumer's
+axis is a compile-time constant anyway, which is what let the old **named** scroll timelines
+(`--ui-scroll`, `--ui-reveal-scroll`) go away — `scroll(self …)` needs no name and no
+`scroll-timeline` declaration on the scroller.
+
+**Knobs are per-scroller, by design.** All eight engine properties are registered
+`inherits: false`, so `--ui-scroll-fade-size-s`/`-e` (edge width, default `3rem`) and
+`--ui-scroll-fade-ramp-s`/`-e` (how much scroll the ramp spans, default `10%`) must be set
+**on the scrolling element itself** — setting them on `<ui-card>` or any other ancestor has
+no effect. That is deliberate: it is what stops a `<lay-out overflow="fade">` carousel from
+leaking its `100px` edge into a `content="scr"` column nested inside one of its slides.
 
 `scr(x)` needs its children to refuse to shrink or wrap — `row nowrap` on the container,
 `flex: 0 0 auto` on the items, `nowrap` text — or they reflow to fit instead of overflowing.

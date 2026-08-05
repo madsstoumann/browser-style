@@ -18,6 +18,7 @@
 		@media (min-width: 60rem) { .dirs { grid-template-columns: 1fr 1fr; } }
 		.dirs > section { min-inline-size: 0; }
 		.dirs > section > h3 { position: sticky; top: 0; z-index: 4; background: var(--color-surface); padding-block: var(--spacing-sm); }
+		.scrollers { max-inline-size: 22rem; margin-block-end: var(--spacing-lg); }
 		.row { display: grid; gap: var(--spacing-md); grid-template-columns: repeat(3, 1fr); margin-block-end: var(--spacing-lg); }
 	</style>
 </head>
@@ -26,7 +27,11 @@
 	<p>Regression target for the one logical position grid. Every family below uses the same
 	cells (<code>ts tc te · cs cc ce · bs bc be</code>); an <code>s</code> cell must sit at the
 	<strong>left</strong> edge in the LTR column and the <strong>right</strong> edge in the RTL
-	column. Anything that stays put is a bug. Docs: <a href="../docs/media.md">media.md</a>.</p>
+	column. Anything that stays put is a bug. The last two families are the <strong>scroll-edge
+	fade</strong> (<code>content="scr(x)"</code> and <code>&lt;lay-out overflow="fade"&gt;</code>):
+	both resolve their gradient direction through the same <code>--_dir-s</code>/<code>--_dir-e</code>
+	pair, so the <em>faded</em> edge must swap between the columns too — scroll each one to its
+	start and the fade must sit on the trailing edge. Docs: <a href="../docs/media.md">media.md</a>.</p>
 
 	<div class="dirs">
 		<section dir="ltr" id="col-ltr">
@@ -66,6 +71,24 @@
 				<img src="/assets/images/government.png" alt="" decoding="async" loading="lazy">
 				<img src="/assets/images/city.png" alt="" decoding="async" loading="lazy">
 			</ui-media>
+
+			<h4><code>content="scr(x)"</code> — scroll-edge fade, inline axis</h4>
+			<div class="scrollers">
+				<ui-card variant="vis(content)" theme="gray" content="scr(x) gap(sm)" id="ltr-scr-x"><cq-box>
+					<ui-content>
+						<small data-part="eyebrow">scr(x)</small>
+						<ul data-part="tags"><li><a href="#">alpha</a></li><li><a href="#">bravo</a></li><li><a href="#">charlie</a></li><li><a href="#">delta</a></li><li><a href="#">echo</a></li><li><a href="#">foxtrot</a></li><li><a href="#">golf</a></li><li><a href="#">hotel</a></li></ul>
+					</ui-content>
+				</cq-box></ui-card>
+			</div>
+
+			<h4><code>&lt;lay-out overflow="preview fade"&gt;</code> — scroll-edge fade, carousel</h4>
+			<lay-out md="columns(1)" overflow="preview fade" id="ltr-lay-fade">
+				<ui-card variant="vis(media)" media="asr(16/9) chip(ts)"><cq-box><ui-media><img src="/assets/images/city.png" alt=""><ui-chip>1</ui-chip></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(16/9) chip(ts)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>2</ui-chip></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(16/9) chip(ts)"><cq-box><ui-media><img src="/assets/images/city.png" alt=""><ui-chip>3</ui-chip></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(16/9) chip(ts)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>4</ui-chip></ui-media></cq-box></ui-card>
+			</lay-out>
 		</section>
 
 		<section dir="rtl" id="col-rtl">
@@ -105,6 +128,24 @@
 				<img src="/assets/images/government.png" alt="" decoding="async" loading="lazy">
 				<img src="/assets/images/city.png" alt="" decoding="async" loading="lazy">
 			</ui-media>
+
+			<h4><code>content="scr(x)"</code> — scroll-edge fade, inline axis</h4>
+			<div class="scrollers">
+				<ui-card variant="vis(content)" theme="gray" content="scr(x) gap(sm)" id="rtl-scr-x"><cq-box>
+					<ui-content>
+						<small data-part="eyebrow">scr(x)</small>
+						<ul data-part="tags"><li><a href="#">alpha</a></li><li><a href="#">bravo</a></li><li><a href="#">charlie</a></li><li><a href="#">delta</a></li><li><a href="#">echo</a></li><li><a href="#">foxtrot</a></li><li><a href="#">golf</a></li><li><a href="#">hotel</a></li></ul>
+					</ui-content>
+				</cq-box></ui-card>
+			</div>
+
+			<h4><code>&lt;lay-out overflow="preview fade"&gt;</code> — scroll-edge fade, carousel</h4>
+			<lay-out md="columns(1)" overflow="preview fade" id="rtl-lay-fade">
+				<ui-card variant="vis(media)" media="asr(16/9) chip(ts)"><cq-box><ui-media><img src="/assets/images/city.png" alt=""><ui-chip>1</ui-chip></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(16/9) chip(ts)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>2</ui-chip></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(16/9) chip(ts)"><cq-box><ui-media><img src="/assets/images/city.png" alt=""><ui-chip>3</ui-chip></ui-media></cq-box></ui-card>
+				<ui-card variant="vis(media)" media="asr(16/9) chip(ts)"><cq-box><ui-media><img src="/assets/images/government.png" alt=""><ui-chip>4</ui-chip></ui-media></cq-box></ui-card>
+			</lay-out>
 		</section>
 	</div>
 

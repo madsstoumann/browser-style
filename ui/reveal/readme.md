@@ -171,12 +171,22 @@ implemented on **two boxes**, not one:
 | `::details-content` | the **frame** — `position: absolute; inset: 0; overflow: hidden` |
 | the panel element (the one node after `</summary>`) | the **scroller** — `block-size: 100%; overflow-y: auto`, plus the scroll-driven edge fade |
 
-The split is required by the fade. A scroll-timeline declared on `::details-content`
+The split is required by the fade. A scroll timeline declared on `::details-content`
 does not drive an animation on that pseudo — the registered properties
 `--ui-scroll-fade-start` / `--ui-scroll-fade-end` stay at their `0px` initial values
 and the mask paints nothing. Scroller and timeline therefore have to sit on the same
 **real** element, which is how `content="scr"` has always done it
 ([content.css](../card/content.css)).
+
+**The panel can be any element.** The fade's gradient comes from
+`--ui-scroll-fade-mask`, which the engine ([ui/base/scroll.css](../base/scroll.css))
+declares on `ui-reveal > details > *` — the element that actually animates. That
+matters because a `var()` inside a custom property substitutes at the **declaring**
+element: the gradient must be declared where the two lengths are being animated, or it
+freezes. It used to be declared on `:where(ui-content, ui-reveal)`, so a panel that was
+a plain `<div>` rather than a `<ui-content>` inherited a gradient computed on
+`<ui-reveal>` — where both lengths are permanently `0px` — and its mask was silently
+dead. Every demo used a `<ui-content>` panel, which is why nobody saw it.
 
 **Per animation:**
 
@@ -286,7 +296,7 @@ Notes:
 - **Squircle corners** — `rds(*-sq)` sets the card radius and `--ui-card-squircle-exp`; reveal reads that exponent to apply the same `corner-shape: superellipse()` to its `<details>`.
 - **Overlay markers only in `<summary>`** — `<ui-chip>` / `<ui-sticker>` are valid in the trigger face; `<ui-save>` / `<ui-play>` are interactive controls and stay **card-only** (never inside `<summary>`).
 - **Responsive front face** — `<ui-reveal>` is a `bs-card`-named container, so the card engine's `md:` / `lg:` prefixes apply to the front face. The **host arm** targets `<summary>` (reveal's queryable descendant, standing in for the card's `<cq-box>`); the **self arm** lets a `content=`/`media=` token sit on the `<ui-content>`/`<ui-media>` itself. Prefixable: `variant=` arrangement, `content=` size (`scl()`, `hl()`) and spacing (`gap()` + all seven padding tokens), and `media=`'s `asr()`.
-- **`content="scr"` vs reveal `variant="… scr"`** — `content="scr"` is the content-column scroll (scrollable text + edge mask); the `scr` token on `variant=` is reveal's own panel scroll for `flp` / `lg:grw`. They are different mechanisms on different targets, but share **one** fade primitive — the `@property` / `@keyframes ui-scroll-fade` and the `--ui-scroll-fade-mask` gradient live in [`ui/base/scroll.css`](../base/scroll.css) and both scrollers consume it.
+- **`content="scr"` vs reveal `variant="… scr"`** — `content="scr"` is the content-column scroll (scrollable text + edge mask); the `scr` token on `variant=` is reveal's own panel scroll for `flp` / `lg:grw`. They are different mechanisms on different targets, but share **one** fade engine — the `@property` registrations, the `@keyframes ui-scroll-fade-s` / `ui-scroll-fade-e` pair and the `--ui-scroll-fade-mask` gradient live in [`ui/base/scroll.css`](../base/scroll.css), and `<lay-out overflow="fade*">` drives the same engine. Each scroller carries its own knobs (every engine property is registered `inherits: false`), so `--ui-scroll-fade-size-s`/`-e` and `--ui-scroll-fade-ramp-s`/`-e` must be set on the scrolling element itself, never on an ancestor.
 
 ### Two sides, two themes
 

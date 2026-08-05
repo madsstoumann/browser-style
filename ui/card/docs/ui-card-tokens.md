@@ -492,10 +492,17 @@ ring, with no hand-set colour. Arbitrary back colours set the two properties dir
 
 - **`scr`** takes the panel out of grid track sizing (`position: absolute; inset: 0`) so a
   long flipside can't grow the card; default height is the closed face, overridable with
-  `--ui-reveal-content-bs`. Its scroll fade-shadow reuses the shared primitive in
-  `ui/base/scroll.css` (`@keyframes ui-scroll-fade` + `--ui-scroll-fade-mask`, also used by
-  `content="scr"`); the mask cuts the panel's own paint, so the faded edges reveal whatever
-  is *behind* it — the `<details>` background.
+  `--ui-reveal-content-bs`. Its scroll fade-shadow drives the shared engine in
+  `ui/base/scroll.css` (`@keyframes ui-scroll-fade-s`/`-e` + `--ui-scroll-fade-mask`, also
+  driven by `content="scr"` and `<lay-out overflow="fade*">`); the mask cuts the panel's own
+  paint, so the faded edges reveal whatever is *behind* it — the `<details>` background.
+  **The panel does not have to be a `<ui-content>`.** The engine declares
+  `--ui-scroll-fade-mask` on `ui-reveal > details > *`, i.e. on the element that actually
+  animates, so a plain `<div>` panel is masked identically. It used to be declared on
+  `:where(ui-content, ui-reveal)` — and because a `var()` inside a custom property
+  substitutes at the *declaring* element, a non-`<ui-content>` panel inherited a gradient
+  computed on `<ui-reveal>`, where both lengths are permanently `0px`: the mask was silently
+  dead. Nothing but a non-`<ui-content>` panel exposes this, which is why it survived.
 - **`icc()` clearance** indents only the panel's first child out from under a top close-icon,
   with logical padding so it flips in rtl. The active side is `icc()` if set, else `ico()`.
 - **`grw` origin** follows the icon corner unless a `grw(ts|te|bs|be)` pins it; the setters
