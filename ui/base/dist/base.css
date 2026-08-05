@@ -504,7 +504,7 @@
   :where(a) {
     color: var(--color-link);
     -webkit-tap-highlight-color: transparent;
-    &:visited {
+    &:where(:visited) {
       color: var(--color-link-visited);
     }
   }
@@ -972,6 +972,9 @@
     text-decoration: none;
     transition: all var(--duration-normal, .2s) ease-in-out;
     user-select: none;
+    &:where(:visited) {
+      color: var(--button-c, inherit);
+    }
     &:where([disabled], [data-variant~=disabled]) {
       cursor: not-allowed;
       opacity: .33;
