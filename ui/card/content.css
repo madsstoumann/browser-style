@@ -434,18 +434,13 @@
 			}
 			& progress { inline-size: 100%; }
 
-			/* poll answers — bigger hit area; the check glyph survives the radio's dot clip */
+			/* poll answers — bigger hit area; the check glyph comes from the radio's `--check` modifier */
 			& label:has([type="radio"], [type="checkbox"]) {
 				font-size: var(--ui-content-options-label-fs, 1.15em);
 				gap: var(--ui-content-options-label-gap, 0.6em);
 			}
 			& :is([type="radio"], [type="checkbox"]) {
 				font-size: var(--ui-content-options-input-fs, 1.5em);
-			}
-			& [type="radio"] {
-				--input-check-bga--checked: #fff;
-				&:checked { box-shadow: none; }
-				&::after { clip-path: none; }
 			}
 		}
 	}

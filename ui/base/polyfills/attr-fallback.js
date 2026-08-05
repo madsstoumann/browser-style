@@ -80,6 +80,9 @@ export const ATTR_MAP = {
 	'.ui-rating': { '--min': ['min', '1'], '--max': ['max', '5'], '--value': ['value', '3'] },
 	'ui-save[fill]': { '--ui-save-circle-bg': ['fill', 'Canvas'] },
 	'ui-save[ink]': { '--ui-save-c': ['ink', 'var(--color-text)'] },
+	// data-fill, not fill: the target is an <li>, where a bare attribute is invalid HTML
+	// (same reason the named palette is data-theme= there, but that needs no polyfill)
+	':is(ui-timeline, .ui-timeline, [data-part="timeline"]) > li[data-fill]': { '--ui-timeline-dot': ['data-fill', 'inherit'] },
 	'ui-sticker': {
 		'--ui-sticker-bg': ['fill', 'var(--color-accent)'],
 		'--ui-sticker-c': ['ink', 'hsl(0, 0%, 100%)'],

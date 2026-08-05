@@ -720,7 +720,7 @@ const DETAILS = {
 			html += `<ul data-part="options">${d.options.map((option) => {
 				const pct = total ? Math.round((option.votes / total) * 100) : 0;
 				return `<li${scope('suggestedAnswer', 'Answer')}>
-					<label><input type="radio" name="poll-render"> <span itemprop="text">${esc(option.headline)}</span></label>
+					<label><input type="radio" class="--check" name="poll-render"> <span itemprop="text">${esc(option.headline)}</span></label>
 					<progress max="100" value="${pct}"></progress> <span>${pct}%</span>
 				</li>`;
 			}).join('')}</ul>`;
@@ -750,7 +750,7 @@ const DETAILS = {
 	timeline(d) {
 		if (!d.items?.length) return '';
 		return `<ol data-part="timeline">${d.items.map((item) =>
-			`<li${scope('subEvent', 'Event')}${item.state ? ` data-state="${esc(item.state)}"` : ''}><time itemprop="name" datetime="${esc(item.date)}">${esc(item.headline || item.date)}</time> <span itemprop="description">${esc(item.text)}</span></li>`
+			`<li${scope('subEvent', 'Event')}${item.theme ? ` data-theme="${esc(item.theme)}"` : ''}><time itemprop="name" datetime="${esc(item.date)}">${esc(item.headline || item.date)}</time> <span itemprop="description">${esc(item.text)}</span></li>`
 		).join('')}</ol>`;
 	},
 

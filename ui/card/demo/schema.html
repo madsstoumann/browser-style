@@ -482,15 +482,15 @@
 					<h3 data-part="headline" itemprop="name">Which CSS feature changed your workflow the most?</h3>
 					<ul data-part="options">
 						<li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer">
-							<label><input type="radio" name="poll-css"> <span itemprop="text">Container queries</span></label>
+							<label><input type="radio" class="--check" name="poll-css"> <span itemprop="text">Container queries</span></label>
 							<progress max="100" value="52"></progress> <span>52%</span>
 						</li>
 						<li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer">
-							<label><input type="radio" name="poll-css"> <span itemprop="text">:has()</span></label>
+							<label><input type="radio" class="--check" name="poll-css"> <span itemprop="text">:has()</span></label>
 							<progress max="100" value="31"></progress> <span>31%</span>
 						</li>
 						<li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer">
-							<label><input type="radio" name="poll-css"> <span itemprop="text">Cascade layers</span></label>
+							<label><input type="radio" class="--check" name="poll-css"> <span itemprop="text">Cascade layers</span></label>
 							<progress max="100" value="17"></progress> <span>17%</span>
 						</li>
 					</ul>
@@ -572,7 +572,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Timeline — <code>EventSeries</code></h2>
-	<p class="note">Part <code>timeline</code> — styled by <code>@browser.style/timeline</code>: a dot per entry on a continuous rail, <code>data-state="current"</code> fills the dot. Each entry is <code>subEvent</code> → <code>Event</code>. Add <code>variant="horizontal"</code> for the inline rail (second card).</p>
+	<p class="note">Part <code>timeline</code> — styled by <code>@browser.style/timeline</code>: a dot per entry on a continuous rail. Each entry is <code>subEvent</code> → <code>Event</code>. Add <code>variant="horizontal"</code> for the inline rail (second card). Colour a single entry with <code>data-theme="accent"</code> (the <code>theme=</code> palette names) or an arbitrary <code>data-fill="#c9b8ff"</code> — <code>data-</code> prefixed, because a bare attribute is invalid on a built-in <code>&lt;li&gt;</code>. A coloured dot is filled; in <code>variant="minimal"</code> the bullets default to the rail grey.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/EventSeries">
 			<cq-box>
@@ -597,7 +597,7 @@
 							<time itemprop="name" datetime="2023">2023</time>
 							<span itemprop="description">Cascade layers adopted across every component.</span>
 						</li>
-						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event" data-state="current">
+						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event" data-theme="accent">
 							<time itemprop="name" datetime="2026">2026</time>
 							<span itemprop="description">v4: the unified card engine ships.</span>
 						</li>
@@ -628,7 +628,7 @@
 							<time itemprop="name" datetime="2023">2023</time>
 							<span itemprop="description">Cascade layers adopted across every component.</span>
 						</li>
-						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event" data-state="current">
+						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event" data-theme="accent">
 							<time itemprop="name" datetime="2026">2026</time>
 							<span itemprop="description">v4: the unified card engine ships.</span>
 						</li>

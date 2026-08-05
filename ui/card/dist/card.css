@@ -1815,15 +1815,6 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       & :is([type=radio], [type=checkbox]) {
         font-size: var(--ui-content-options-input-fs, 1.5em);
       }
-      & [type=radio] {
-        --input-check-bga--checked: #fff;
-        &:checked {
-          box-shadow: none;
-        }
-        &::after {
-          clip-path: none;
-        }
-      }
     }
   }
   :where(ui-content, ui-media) :is([data-part=meta], [data-part=caption]) {

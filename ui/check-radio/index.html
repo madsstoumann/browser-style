@@ -170,6 +170,53 @@
 
 	</fieldset>
 
+	<h3>Radio with <code>--check</code></h3>
+	<p>
+		Shows the glyph instead of the dot. Unvoted groups are <code>:indeterminate</code> — a plain radio renders the grey minus, a <code>--check</code> radio previews its own glyph in the same grey.
+	</p>
+
+	<fieldset>
+		<legend>Unvoted (<code>:indeterminate</code>)</legend>
+
+		<label class="fs-lg">
+			<input type="radio" name="check-unvoted" value="1" class="--check">
+			<span>Radio with <code>--check</code></span>
+		</label>
+
+		<label class="fs-lg">
+			<input type="radio" name="check-unvoted" value="2" class="--check">
+			<span>Radio with <code>--check</code></span>
+		</label>
+
+		<label class="fs-lg">
+			<input type="radio" name="check-unvoted" value="3" class="--check --cross">
+			<span>Radio with <code>--check --cross</code></span>
+		</label>
+
+	</fieldset>
+
+	<br>
+
+	<fieldset>
+		<legend>Voted</legend>
+
+		<label class="fs-lg">
+			<input type="radio" name="check-voted" value="1" class="--check" checked>
+			<span>Radio with <code>--check</code>, checked</span>
+		</label>
+
+		<label class="fs-lg">
+			<input type="radio" name="check-voted" value="2" class="--check">
+			<span>Radio with <code>--check</code></span>
+		</label>
+
+		<label class="fs-lg">
+			<input type="radio" name="check-voted" value="3" class="--check">
+			<span>Radio with <code>--check</code></span>
+		</label>
+
+	</fieldset>
+
 	<br>
 
 	<fieldset>

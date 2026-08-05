@@ -60,7 +60,8 @@
 
 	/* CHECKBOX / RADIO V.2.0 */
 	:where([type=checkbox], [type=radio]) {
-		--icon: url('./assets/svg/check.svg');
+		--input-check-icon: url('./assets/svg/check.svg');
+		--icon: var(--input-check-icon);
 		--input-border-width: calc(1em * (4/3) / 13.333333);
 		appearance: none;
 		background: var(--input-check-bg, var(--color-surface));
@@ -90,7 +91,7 @@
 		}
 
 		/* Modifiers */
-		&.--cross { --icon: url('./assets/svg/cross.svg'); }
+		&.--cross { --input-check-icon: url('./assets/svg/cross.svg'); }
 		&.--round {
 			--input-check-bdrs: 50%;
 			--input-check-mask-size: 85%;
@@ -122,6 +123,14 @@
 		&:checked { box-shadow: inset 0 0 0 .125em var(--color-surface); }
 		&::after {
 			clip-path: inset(.125em round var(--input-check-bdrs));
+		}
+
+		/* glyph instead of dot — the icon is always there, the dot look just hides it */
+		&.--check {
+			--input-check-bga--checked: #fff;
+			&:checked { box-shadow: none; }
+			&::after { clip-path: none; }
+			&:indeterminate { --icon: var(--input-check-icon); }
 		}
 	}
 	:where([type=checkbox]) {

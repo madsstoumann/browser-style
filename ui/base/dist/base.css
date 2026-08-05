@@ -664,7 +664,8 @@
     }
   }
   :where([type=checkbox], [type=radio]) {
-    --icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke="%239e9e9e" fill="none" stroke-linecap="round" stroke-linejoin="round">%0A  <path d="M5 12l5 5l10 -10" />%0A</svg>');
+    --input-check-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke="%239e9e9e" fill="none" stroke-linecap="round" stroke-linejoin="round">%0A  <path d="M5 12l5 5l10 -10" />%0A</svg>');
+    --icon: var(--input-check-icon);
     --input-border-width: calc(1em * (4/3) / 13.333333);
     appearance: none;
     background: var(--input-check-bg, var(--color-surface));
@@ -692,7 +693,7 @@
       --input-check-bga: var(--input-check-bdc, var(--color-border));
     }
     &.--cross {
-      --icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">%0A    <line x1="18" y1="6" x2="6" y2="18" />%0A  <line x1="6" y1="6" x2="18" y2="18" />%0A</svg>');
+      --input-check-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">%0A    <line x1="18" y1="6" x2="6" y2="18" />%0A  <line x1="6" y1="6" x2="18" y2="18" />%0A</svg>');
     }
     &.--round {
       --input-check-bdrs: 50%;
@@ -730,6 +731,18 @@
     }
     &::after {
       clip-path: inset(.125em round var(--input-check-bdrs));
+    }
+    &.--check {
+      --input-check-bga--checked: #fff;
+      &:checked {
+        box-shadow: none;
+      }
+      &::after {
+        clip-path: none;
+      }
+      &:indeterminate {
+        --icon: var(--input-check-icon);
+      }
     }
   }
   :where([type=checkbox]) {

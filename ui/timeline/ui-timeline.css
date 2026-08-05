@@ -10,7 +10,7 @@
 		--ui-timeline-dot-size: 0.85em;
 		--ui-timeline-line-width: var(--border-width-thick, 2px);
 		--ui-timeline-rail: var(--color-border);
-		--ui-timeline-dot: var(--color-accent);
+		--ui-timeline-dot: var(--ui-timeline-rail); /* colour one entry with data-theme=/data-fill= */
 		--ui-timeline-gap: var(--spacing-md);
 		--ui-timeline-dot-offset: 0.25em;
 		--_rail: calc(var(--ui-timeline-dot-size) / 2 - var(--ui-timeline-line-width) / 2);
@@ -51,13 +51,28 @@
 				position: absolute;
 			}
 
-			/* done/current — filled dot with a surface ring, the radio-button look */
-			&:is([data-state="done"], [data-state="current"])::before {
+			/* a coloured entry is filled, with a surface ring — the radio-button look */
+			&:is([data-theme], [data-fill])::before {
 				background: var(--ui-timeline-dot);
 				box-shadow: inset 0 0 0 var(--ui-timeline-line-width) var(--color-surface);
 			}
-			/* entries after the current one are still ahead — mute their dots */
-			&[data-state="current"] ~ li::before { --ui-timeline-dot: var(--ui-timeline-rail); }
+
+			/* per-entry dot colour, declared on the li so ::before inherits it. The theme=
+			   palette under data- names, since a bare attribute is invalid on <li>. Docs: readme.md */
+			&[data-theme~="accent"] { --ui-timeline-dot: var(--ui-theme-accent-bg); }
+			&[data-theme~="black"]  { --ui-timeline-dot: var(--ui-theme-black-bg); }
+			&[data-theme~="blue"]   { --ui-timeline-dot: var(--ui-theme-blue-bg); }
+			&[data-theme~="gray"]   { --ui-timeline-dot: var(--ui-theme-gray-bg); }
+			&[data-theme~="green"]  { --ui-timeline-dot: var(--ui-theme-green-bg); }
+			&[data-theme~="orange"] { --ui-timeline-dot: var(--ui-theme-orange-bg); }
+			&[data-theme~="red"]    { --ui-timeline-dot: var(--ui-theme-red-bg); }
+			&[data-theme~="slate"]  { --ui-timeline-dot: var(--ui-theme-slate-bg); }
+			&[data-theme~="white"]  { --ui-timeline-dot: var(--ui-theme-white-bg); }
+			&[data-fill] { --ui-timeline-dot: attr(data-fill type(<color>), var(--ui-timeline-rail)); }
+			/* typed attr() has NO fallback in Safari/FF. Docs: ../base/polyfills/readme.md */
+			@supports not (background-color: attr(x type(<color>), red)) {
+				&[data-fill] { --ui-timeline-dot: inherit; }
+			}
 		}
 
 		& time {
@@ -81,7 +96,7 @@
 
 			/* solid bullet — no ring */
 			&::before {
-				background: var(--ui-timeline-minimal-dot, var(--color-text));
+				background: var(--ui-timeline-minimal-dot, var(--ui-timeline-dot));
 				border: 0;
 			}
 			/* the rail is a STUB, not a continuous stroke: it breathes away from the
@@ -92,11 +107,11 @@
 					calc(-1 * (var(--ui-timeline-gap) + var(--ui-timeline-dot-offset) - var(--ui-timeline-minimal-rail-gap)));
 				inset-inline-start: calc(var(--ui-timeline-dot-size) / 2 - var(--ui-timeline-line-width) / 2);
 			}
-			&:is([data-state="done"], [data-state="current"])::before {
-				background: var(--ui-timeline-minimal-dot, var(--color-text));
+			/* no ring here either — a coloured bullet is just a coloured bullet */
+			&:is([data-theme], [data-fill])::before {
+				background: var(--ui-timeline-minimal-dot, var(--ui-timeline-dot));
 				box-shadow: none;
 			}
-			&[data-state="current"] ~ li::before { background: var(--ui-timeline-minimal-dot, var(--color-text)); }
 		}
 
 		& time {
