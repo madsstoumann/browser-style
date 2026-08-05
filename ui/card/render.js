@@ -163,14 +163,14 @@ const byline = (authors, prop = 'author') =>
 const quotePart = (text, { itemprop = 'text', variant = null, cite = null } = {}) =>
 	`<blockquote data-part="quote"${variant != null ? attrs({ 'data-variant': variant }) : ''} itemprop="${esc(itemprop)}"><q>${esc(text)}</q>${cite ? `<cite>${esc(cite)}</cite>` : ''}</blockquote>`;
 
-/* nested <ui-accordion> (CSS-only form) */
+/* nested <ui-accordion> — cq-box is hand-authored so the CSS-only form styles without JS */
 const accordion = (group, items) =>
-	`<ui-accordion group="${esc(group)}">${items.map(({ summary, body, scopeAttrs = '' }) =>
-		`<details class="ui-accordion" name="${esc(group)}"${scopeAttrs}>
+	`<ui-accordion group="${esc(group)}"><cq-box>${items.map(({ summary, body, scopeAttrs = '' }) =>
+		`<details name="${esc(group)}"${scopeAttrs}>
 			<summary>${summary}<ui-icon type="plus-minus"></ui-icon></summary>
 			${body}
 		</details>`
-	).join('')}</ui-accordion>`;
+	).join('')}</cq-box></ui-accordion>`;
 
 /* VideoObject metas for a native <video> item (placed INSIDE the element — valid fallback content) */
 const videoMetas = (item, src) =>
@@ -612,7 +612,7 @@ const DETAILS = {
 	review(d, fields) {
 		let html = ratingPart('reviewRating', 'Rating', d.rating);
 		if (fields.summary) {
-			html += quotePart(fields.summary, { itemprop: 'reviewBody', variant: '' });
+			html += quotePart(fields.summary, { itemprop: 'reviewBody' });
 		}
 		if (d.reviewer?.name) {
 			html += `<address data-part="byline"${scope('author', 'Person')}><span><span itemprop="name">${esc(d.reviewer.name)}</span>${d.reviewer.verified ? ' ✓ Verified purchase' : ''}</span></address>`;
