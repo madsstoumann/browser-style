@@ -29,6 +29,24 @@
 		code { font-size: 0.9em; }
 		table { border-collapse: collapse; display: block; margin-block-end: var(--spacing-2xl); max-inline-size: 100%; overflow-x: auto; }
 		th, td { border: 1px solid var(--color-border, #ddd); padding: 0.4em 0.75em; text-align: start; font-size: 0.9em; }
+
+		/* a horizontal scroller child overflows unless its card ancestors may shrink below min-content */
+		ui-card:has([data-part="timeline"][variant~="horizontal"]) :is(cq-box, ui-content) { min-inline-size: 0; }
+		/* horizontal timeline edge fade — consumes the shared primitive (ui/base/scroll.css) */
+		[data-part="timeline"][variant~="horizontal"] {
+			--ui-scroll-fade-dir: to var(--_dir-e);
+			--ui-scroll-fade-mask: linear-gradient(var(--ui-scroll-fade-dir, to bottom), #0000, #000 var(--ui-scroll-fade-start) calc(100% - var(--ui-scroll-fade-end)), #0000);
+		}
+		@supports (animation-timeline: scroll()) {
+			@media (prefers-reduced-motion: no-preference) {
+				[data-part="timeline"][variant~="horizontal"] {
+					animation: ui-scroll-fade-s both linear, ui-scroll-fade-e both linear;
+					animation-timeline: scroll(self inline);
+					animation-range: 0 var(--ui-scroll-fade-ramp-s), calc(100% - var(--ui-scroll-fade-ramp-e)) 100%;
+					mask: var(--ui-scroll-fade-mask);
+				}
+			}
+		}
 	</style>
 </head>
 <body data-layout-root page-gap="2">
@@ -564,7 +582,7 @@
 				<ui-content>
 					<small data-part="eyebrow">Company history</small>
 					<h3 data-part="headline" itemprop="name">A decade of browser.style</h3>
-					<ol data-part="timeline">
+					<ol data-part="timeline" variant="minimal">
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
 							<time itemprop="name" datetime="2016">2016</time>
 							<span itemprop="description">First CSS-only component published.</span>

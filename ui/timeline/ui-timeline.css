@@ -67,6 +67,45 @@
 		}
 	}
 
+	/* minimal — liveblog/update feed: a small solid bullet, a hairline stub between
+	   entries, and an accent time label above each update. Docs: readme.md */
+	:where(ui-timeline[variant~="minimal"], .ui-timeline[variant~="minimal"], [data-part="timeline"][variant~="minimal"]) {
+		--ui-timeline-dot-size: 0.45em;
+		--ui-timeline-dot-offset: 0.45em;
+		--ui-timeline-line-width: var(--border-width, 1px);
+		--ui-timeline-gap: var(--spacing-md);
+		--ui-timeline-minimal-rail-gap: 0.35em;
+
+		& > li {
+			padding-inline-start: calc(var(--ui-timeline-dot-size) + var(--ui-timeline-gap));
+
+			/* solid bullet — no ring */
+			&::before {
+				background: var(--ui-timeline-minimal-dot, var(--color-text));
+				border: 0;
+			}
+			/* the rail is a STUB, not a continuous stroke: it breathes away from the
+			   bullet above it and stops short of the next one */
+			&:not(:last-child)::after {
+				inset-block:
+					calc(var(--ui-timeline-dot-offset) + var(--ui-timeline-dot-size) + var(--ui-timeline-minimal-rail-gap))
+					calc(-1 * (var(--ui-timeline-gap) + var(--ui-timeline-dot-offset) - var(--ui-timeline-minimal-rail-gap)));
+				inset-inline-start: calc(var(--ui-timeline-dot-size) / 2 - var(--ui-timeline-line-width) / 2);
+			}
+			&:is([data-state="done"], [data-state="current"])::before {
+				background: var(--ui-timeline-minimal-dot, var(--color-text));
+				box-shadow: none;
+			}
+			&[data-state="current"] ~ li::before { background: var(--ui-timeline-minimal-dot, var(--color-text)); }
+		}
+
+		& time {
+			color: var(--ui-timeline-minimal-time-ink, var(--color-accent));
+			font-size: var(--ui-timeline-minimal-time-fs, 0.95em);
+			font-weight: var(--font-weight-bold, 700);
+		}
+	}
+
 	/* horizontal — the rail runs inline; entries share one scrolling row.
 	   Edge fade is NOT the component's job: use the existing scroll-fade hooks
 	   (card content="scr(x)", lay-out overflow="preview fade", reveal variant="scr"). */
