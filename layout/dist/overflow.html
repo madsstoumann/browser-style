@@ -7,7 +7,6 @@
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="Overflow Layouts using CSS layout system">
 	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="/ui/carousel/index.css">
 	<link rel="stylesheet" href="layout.min.css">
 	<link rel="stylesheet" href="/layout/demo.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
@@ -231,6 +230,17 @@
 
 	<h2>Fade Masks</h2>
 	<p>Add fade effects to the overflow edges. Masks animate based on scroll position. All examples use <strong>columns(1)</strong>.</p>
+	<section>
+		<h3>Fade (standalone)</h3>
+		<small>Bare fade — no preview token; the edge falls back to the 100px default</small>
+		<p><code>&lt;lay-out md="columns(1)" overflow="fade"&gt;</code></p>
+		<lay-out md="columns(1)" overflow="fade">
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
 	<section>
 		<h3>Fade Both</h3>
 		<small>Fade masks on both start and end edges</small>

@@ -498,6 +498,24 @@ What the contract actually consists of:
    the `@keyframes` library live in `@browser.style/base` (`@layer bs-core`); layout keeps
    only the `stack(reveal)` redirect, which wins **because base is loaded first**. Load
    layout before base and the redirect loses.
+3. **Two more things base owns outright, both required by `overflow="fade*"`.** Since the
+   scroll-edge fade was unified (v4), `core/base.css` no longer defines its own keyframes or
+   mask layers — it only sets knobs and points four declarations at base's engine:
+   - **`ui/base/scroll.css`** — the eight `@property` registrations plus the
+     `ui-scroll-fade-s` / `ui-scroll-fade-e` keyframes and the `--ui-scroll-fade-mask`
+     gradient. Without base loaded the keyframes don't exist and `fade*` paints nothing (the
+     `mask` resolves to `none`), so the carousel degrades to a plain scroller — no error, just
+     no fade. There is **no hardcoded fallback** for this one, unlike the four carousel
+     properties above.
+   - **`--_dir-s` / `--_dir-e`** (`ui/base/core.css`) — the direction resolver the fade's
+     gradient reads (`--ui-scroll-fade-dir: to var(--_dir-e)`). Absent it, the gradient
+     direction is invalid and the mask dies at computed-value time. Never add a per-family
+     `:dir(rtl)` arm here; that pair is the one resolver.
+   Both are shared with the card system, so the engine's defaults (`3rem` edge, `10%` ramp)
+   are the card-side ones — layout overrides all four knobs to `--layout-preview-size` and
+   `1rem`/`2rem`. Every engine property is registered `inherits: false`, which is what keeps a
+   fading carousel from leaking its edge width into a `content="scr"` scroller nested inside
+   one of its slides.
 
 ## Creating Custom Layouts
 

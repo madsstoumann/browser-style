@@ -360,11 +360,12 @@
 	@supports (animation-timeline: scroll()) {
 		@media (prefers-reduced-motion: no-preference) {
 			@container bs-rvl style(--_rvl: flp) or style(--_rvl: sld) {
+				/* animation-timeline / -range MUST follow the shorthand — it resets both */
 				:where(ui-reveal[variant~="scr"]) > details[open] > :where(:not(summary)) {
-					animation: ui-scroll-fade linear;
-					animation-timeline: --ui-reveal-scroll;
+					animation: ui-scroll-fade-s both linear, ui-scroll-fade-e both linear;
+					animation-timeline: scroll(self block);
+					animation-range: 0 var(--ui-scroll-fade-ramp-s), calc(100% - var(--ui-scroll-fade-ramp-e)) 100%;
 					mask: var(--ui-scroll-fade-mask);
-					scroll-timeline: --ui-reveal-scroll block;
 				}
 			}
 		}

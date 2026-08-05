@@ -2323,11 +2323,11 @@ export default {
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
-						"ui/reveal/ui-reveal.css:406-415",
-						"ui/reveal/ui-reveal.css:441-446",
-						"ui/reveal/ui-reveal.css:497-501"
+						"ui/reveal/ui-reveal.css:327-343",
+						"ui/reveal/ui-reveal.css:359-372",
+						"ui/reveal/ui-reveal.css:414-419"
 					],
-					"notes": "Reveal PANEL scroll — only active under flp (panel goes `position: absolute; inset: 0` so a long flipside can't grow the card, with the shared ui-scroll-fade edge mask) and under grw / lg:grw (overflow-y auto, scrollbar hidden). Inert under exp and sld. Reads --ui-reveal-content-bs / --ui-reveal-scrollbar-color; writes no custom property. HOMONYM of content='s `scr` — different attribute, different target (content= scrolls the text column inside <ui-content>). Both share the one ui-scroll-fade primitive in ui/base/scroll.css."
+					"notes": "Reveal PANEL scroll — only active under flp / sld (panel goes `position: absolute; inset: 0` so a long flipside can't grow the card, with the shared scroll-edge-fade mask) and under grw / lg:grw (overflow-y auto, scrollbar hidden). Inert under exp. Reads --ui-reveal-content-bs / --ui-reveal-scrollbar-color; writes no custom property of its own — the fade knobs (--ui-scroll-fade-size-s/-e, --ui-scroll-fade-ramp-s/-e) all take their defaults (3rem edge, 10% ramp). The panel gets --ui-scroll-fade-mask from the engine's own `ui-reveal > details > *` rule, so ANY panel element works — a plain <div> panel is masked identically to a <ui-content> one. Gated on @supports (animation-timeline: scroll()) + prefers-reduced-motion. HOMONYM of content='s `scr` — different attribute, different target (content= scrolls the text column inside <ui-content>). Both drive the one engine in ui/base/scroll.css."
 				},
 				"sub": {
 					"axis": "subgrid",
@@ -3283,7 +3283,9 @@ export default {
 					"bare": true,
 					"matching": "whole",
 					"writes": [
-						"--ui-scroll-fade-dir"
+						"--ui-scroll-fade-dir",
+						"--ui-scroll-fade-start",
+						"--ui-scroll-fade-end"
 					],
 					"realProperties": true,
 					"cqPrefixes": [],
@@ -3300,13 +3302,13 @@ export default {
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
-						"ui/card/content.css:168-174",
-						"ui/card/content.css:178-190",
-						"ui/card/content.css:193-210",
-						"ui/card/content.css:334-337",
+						"ui/card/content.css:143-149",
+						"ui/card/content.css:151-164",
+						"ui/card/content.css:165-183",
+						"ui/card/content.css:461-465",
 						"ui/base/scroll.css"
 					],
-					"notes": "Scrollable text column with a masked fade edge. Bare `scr` == `scr(y)` (vertical, back-compat default) sets max-block-size / overflow-y / overscroll-behavior / scrollbar-width; `scr(x)` is a horizontal row — it flips --ui-scroll-fade-dir to `to right`, sets flex-flow: row nowrap + white-space: nowrap and forces `flex: 0 0 auto` on the children (they must not shrink or they would reflow instead of overflowing), with an extra flex-wrap: nowrap override for [data-part=\"tags\"] placed AFTER the tags rule so it wins at equal specificity. Whole-token (~=) so scr, scr(x) and scr(y) stay distinct. TWO ARMS everywhere (ancestor arm `:where([content~=\"scr\"]) ui-content` + self arm `:where(ui-content[content~=\"scr\"])`) because the effect is real properties on the <ui-content> box. The animation-timeline / mask half is gated on @supports (animation-timeline: scroll()) and prefers-reduced-motion; the @property, @keyframes ui-scroll-fade and --ui-scroll-fade-mask are the shared primitive in ui/base/scroll.css (also used by reveal's variant=scr). HOMONYM of variant='s reveal `scr`."
+					"notes": "Scrollable text column with a masked fade edge. Bare `scr` == `scr(y)` (vertical, back-compat default) sets max-block-size / overflow-y / overscroll-behavior / scrollbar-width; `scr(x)` is a horizontal row — it flips --ui-scroll-fade-dir to `to var(--_dir-e)` (the shared direction resolver in ui/base/core.css, so the fade mirrors under dir=rtl), sets flex-flow: row nowrap + white-space: nowrap and forces `flex: 0 0 auto` on the children (they must not shrink or they would reflow instead of overflowing), with an extra flex-wrap: nowrap override for [data-part=\"tags\"] placed AFTER the tags rule so it wins at equal specificity. Whole-token (~=) so scr, scr(x) and scr(y) stay distinct. TWO ARMS everywhere (ancestor arm `:where([content~=\"scr\"]) ui-content` + self arm `:where(ui-content[content~=\"scr\"])`) because the effect is real properties on the <ui-content> box. The animation / mask half is gated on @supports (animation-timeline: scroll()) and prefers-reduced-motion, and is two arms again there because the axis is a compile-time literal — `scroll(self block)` for scr/scr(y), `scroll(self inline)` for scr(x); a var() is not allowed inside scroll(). The @property registrations, the ui-scroll-fade-s / ui-scroll-fade-e keyframes and --ui-scroll-fade-mask are the shared engine in ui/base/scroll.css (also driven by reveal's variant=scr and lay-out overflow=fade*). Every knob is registered inherits:false, so the 3rem edge / 10% ramp defaults are per-scroller and an outer scroller can never leak its own into a nested one — set --ui-scroll-fade-size-s/-e or -ramp-s/-e ON the <ui-content> itself, not on an ancestor. HOMONYM of variant='s reveal `scr`."
 				}
 			},
 			"bareFlags": {}
