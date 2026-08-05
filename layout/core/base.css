@@ -278,34 +278,33 @@
 			& > *:not(lay-out) {
 				flex: 0 0 calc((100% - var(--layout-preview-size) - (var(--_ci, 1) - 1) * calc(var(--layout-colmg) * var(--layout-space-unit))) / var(--_ci, 1));
 			}
-			/* === fade masks === */
-			&[overflow*="fade"] { 
-				--_fade-end: var(--layout-preview-size);
-				--_fade-start: var(--layout-preview-size);
-				animation: fade-start both linear, fade-end both linear;
-				animation-duration: 1s;
-				animation-timeline: scroll(inline self);
-				animation-range: entry 1rem, exit 2rem;
-				mask:
-					linear-gradient(90deg, #FFF, #0000) 0 50% / 0 100% no-repeat,
-					linear-gradient(90deg, #FFF, #FFF) 50% 50% / 100% 100% no-repeat,
-					linear-gradient(90deg, #0000, #FFF) calc(100% + 2px) 50% / var(--_fade-end) 100% no-repeat;
-				mask-composite: exclude;
-			}
-			&[overflow~="fade-end"] { 
-				--_fade-end: var(--layout-preview-size);
-				--_fade-start: 0px;
-			}
-			&[overflow~="fade-start"] { 
-				--_fade-end: 0px;
-				--_fade-start: var(--layout-preview-size);
-			}
-			/* === preview sizes === */
+			/* === preview sizes — nested here on purpose, so bare `fade` keeps the 100px default === */
 			&[overflow*="preview-xs"] { --layout-preview-size: var(--layout-preview-xs-size); }
 			&[overflow*="preview-sm"] { --layout-preview-size: var(--layout-preview-sm-size); }
 			&[overflow*="preview-lg"] { --layout-preview-size: var(--layout-preview-lg-size); }
 			&[overflow*="preview-xl"] { --layout-preview-size: var(--layout-preview-xl-size); }
 			&[overflow*="preview-2xl"] { --layout-preview-size: var(--layout-preview-2xl-size); }
+		}
+		/* === fade masks — engine is @browser.style/base (ui/base/scroll.css); load base FIRST.
+		   Un-nested from preview* on purpose: bare `fade` is documented standalone (base.md). */
+		@supports (animation-timeline: scroll()) {
+			@media (prefers-reduced-motion: no-preference) {
+				&[overflow*="fade"] {
+					--ui-scroll-fade-size-s: var(--layout-preview-size);
+					--ui-scroll-fade-size-e: var(--layout-preview-size);
+					--ui-scroll-fade-ramp-s: 1rem;
+					--ui-scroll-fade-ramp-e: 2rem;
+					--ui-scroll-fade-dir: to var(--_dir-e);
+					/* animation-timeline / -range MUST follow the shorthand — it resets both */
+					animation: ui-scroll-fade-s both linear, ui-scroll-fade-e both linear;
+					animation-timeline: scroll(self inline);
+					animation-range: 0 var(--ui-scroll-fade-ramp-s), calc(100% - var(--ui-scroll-fade-ramp-e)) 100%;
+					mask: var(--ui-scroll-fade-mask);
+				}
+				/* per-edge opt-out — MUST follow the rule above (equal specificity) */
+				&[overflow~="fade-start"] { --ui-scroll-fade-size-e: 0px; }
+				&[overflow~="fade-end"]   { --ui-scroll-fade-size-s: 0px; }
+			}
 		}
 		/* === center / frame: a peek on EACH side (previous + next) ===
 		   Both subtract 2 × preview from the item width (a peek per side) and pair with a
@@ -397,13 +396,6 @@
 				grid-template-rows: subgrid;
 			}
 		}
-	}
-
-	@keyframes fade-start {
-		to { mask-size: var(--_fade-start) 100%, 100% 100%, var(--_fade-end) 100%; }
-	}
-	@keyframes fade-end {
-		to { mask-size: var(--_fade-start) 100%, 100% 100%, 0 100%; }
 	}
 }
 

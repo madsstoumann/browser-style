@@ -263,6 +263,7 @@ function generateOverflowHTML(columnsData, iconsDir) {
 	<p>Add fade effects to the overflow edges. Masks animate based on scroll position. All examples use <strong>columns(1)</strong>.</p>`
 
 	const fadeMasks = [
+		{ overflow: 'fade', label: 'Fade (standalone)', desc: 'Bare fade — no preview token; the edge falls back to the 100px default' },
 		{ overflow: 'preview fade', label: 'Fade Both', desc: 'Fade masks on both start and end edges' },
 		{ overflow: 'preview fade-start', label: 'Fade Start', desc: 'Fade mask on start edge only' },
 		{ overflow: 'preview fade-end', label: 'Fade End', desc: 'Fade mask on end edge only' }
