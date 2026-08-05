@@ -1,0 +1,78 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "organization-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-05T12:00:00Z",
+    "updatedAt": "2026-08-05T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Places"
+  },
+  "fields": {
+    "internalName": "Demo — Organization",
+    "schemaType": "organization",
+    "preset": {
+      "$ref": "card-preset/stack"
+    },
+    "eyebrow": "Consulting",
+    "headline": "Northwind Group",
+    "summary": "Engineering and design consultancy — headquartered in Copenhagen, with local offices across Northern Europe.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/techpeople.png",
+        "alt": "Northwind Group team at the Copenhagen headquarters"
+      }
+    ],
+    "details": {
+      "foundingDate": "1998-03-01",
+      "foundingDateDisplay": "1998",
+      "numberOfEmployees": 1240,
+      "sameAs": [
+        "https://www.linkedin.com/company/northwind-group",
+        "https://x.com/northwindgroup"
+      ],
+      "headquarters": {
+        "address": {
+          "streetAddress": "Havnegade 44",
+          "postalCode": "1058",
+          "addressLocality": "Copenhagen",
+          "addressCountry": "DK"
+        }
+      },
+      "offices": [
+        {
+          "name": "Aarhus office",
+          "address": {
+            "streetAddress": "Åboulevarden 21",
+            "addressLocality": "Aarhus",
+            "addressCountry": "DK"
+          },
+          "telephone": "+45 86 12 34 56",
+          "openingHours": [
+            {
+              "schema": "Mo-Fr 09:00-17:00",
+              "display": "Mon–Fri 9–17"
+            }
+          ]
+        },
+        {
+          "name": "Berlin office",
+          "address": {
+            "streetAddress": "Torstraße 140",
+            "addressLocality": "Berlin",
+            "addressCountry": "DE"
+          },
+          "telephone": "+49 30 901820",
+          "openingHours": [
+            {
+              "schema": "Mo-Fr 08:30-16:30",
+              "display": "Mon–Fri 8:30–16:30"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

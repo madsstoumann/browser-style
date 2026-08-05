@@ -2,7 +2,11 @@
 
 One content model, one preset model, one renderer — recreating all 25 schema.org card
 types from the legacy `content/card` package with the modern v4 card engine
-(`<ui-card>` + `<ui-media>` + `<ui-content>`), full inline microdata included.
+(`<ui-card>` + `<ui-media>` + `<ui-content>`), full inline microdata included — and
+extending the taxonomy with nine additional high-usage types (organization, video,
+howto, qa, podcast, movie, book, dataset, claim; model v1.3, 35 `schemaType` values).
+Rationale + the web-usage research behind the picks:
+[`docs/plans/2026-08-05-card-schema-coverage.md`](../../../docs/plans/2026-08-05-card-schema-coverage.md).
 
 ```
 ┌─────────────────────────┐     ┌──────────────────────────────┐
@@ -29,19 +33,21 @@ types from the legacy `content/card` package with the modern v4 card engine
 | UCM / UCF specs | [`cms/baseline/docs/UCM/`](../../../cms/baseline/docs/UCM) · [`cms/baseline/docs/UCF/`](../../../cms/baseline/docs/UCF) | Unified Content Model (type definitions) and Unified Content Format (content instances) |
 
 Both legacy systems agree on the 25-type taxonomy and emit **microdata only** (no
-JSON-LD). This system carries all of that forward onto the v4 primitives.
+JSON-LD). This system carries all of that forward onto the v4 primitives, then
+extends the taxonomy (v1.3) with the nine types above that the legacy systems
+never had.
 
 ## The pieces
 
 | File | Role |
 |------|------|
-| [`cms/baseline/models/card.schema.json`](../../../cms/baseline/models/card.schema.json) | **Content model** (UCM). Structured envelope + `schemaType` select (26 values) + `preset` reference + one `details` object per type |
+| [`cms/baseline/models/card.schema.json`](../../../cms/baseline/models/card.schema.json) | **Content model** (UCM). Structured envelope + `schemaType` select (35 values) + `preset` reference + one `details` object per type |
 | [`cms/baseline/models/card-preset.schema.json`](../../../cms/baseline/models/card-preset.schema.json) | **Preset model** (UCM). The attributes on the host element itself |
-| [`data/card.presets.json`](../data/card.presets.json) | Preset instances — **17** named looks |
-| [`data/*.json`](../data) | 26 UCF card instances (one per schemaType) + [`index.json`](../data/index.json) manifest |
+| [`data/card.presets.json`](../data/card.presets.json) | Preset instances — **25** named looks |
+| [`data/*.json`](../data) | 37 UCF card instances (one per schemaType + two presentation-only blocks) + [`index.json`](../data/index.json) manifest |
 | [`render.js`](../render.js) | Rendering engine: UCF + presets → DOM with microdata |
-| [`render.html`](../demo/render.html) | Live demo — all 26 cards rendered from data |
-| [`schema.html`](../demo/schema.html) | Hand-authored reference markup for every type (the spec render.js follows) |
+| [`render.html`](../demo/render.html) | Live demo — all 35 typed cards rendered from data |
+| [`schema.html`](../demo/schema.html) | Hand-authored reference markup (the spec render.js follows — covers the original 26 types) |
 | [`content.css`](../content.css) | `<ui-content>` parts — all parts styled (incl. the 8 once-proposed structured parts) |
 
 ## Content model — `card`
@@ -54,7 +60,7 @@ lives in one `details` object discriminated by `schemaType`.
 | Field | Type | Notes |
 |-------|------|-------|
 | `internalName` | string | CMS editor label (required, invariant) |
-| `schemaType` | select | 26 values — drives itemtype + microdata mapping |
+| `schemaType` | select | 35 values — drives itemtype + microdata mapping |
 | `preset` | reference → `card-preset` | The look & feel. Swap to restyle |
 | `eyebrow` | string | Kicker; → `articleSection`/`category`/`recipeCategory`/`about`/`industry` |
 | `headline` | string | → `headline` (article/news), `title` (job), `name` (rest) |
@@ -100,7 +106,11 @@ Documented in full in the model's `details` description. Examples:
 - **recipe** `{ prepTime, cookTime, servings, ingredients[], instructions[] }` (ISO 8601 durations)
 - **faq** `{ items:[{question,answer}] }` — rendered as a nested `<ui-accordion>`
 - **poll** `{ options:[{headline,votes}], totalVotes }` — percentages computed by the renderer
-- **business** `{ address{…}, telephone, email, website, geo{…}, openingHours:[{schema,display}] }`
+- **business** `{ businessType?, address{…}, telephone, email, website, priceRange?, rating{…}?, sameAs[]?, foundingDate?, geo{…}, openingHours:[{schema,display}] }` — an allowlisted `businessType` (Restaurant, CafeOrCoffeeShop, …) sharpens the root itemtype; each parsable `openingHours.schema` string also emits a structured `OpeningHoursSpecification`
+- **organization** `{ foundingDate, numberOfEmployees, sameAs[], headquarters:{address{…}}, offices:[{name, address{…}, telephone, openingHours[]}] }` — the multi-office shape; every office emits `department` → `LocalBusiness`
+- **howto** `{ totalTime, estimatedCost:{value,currency}, difficulty, supplies[], tools[], steps:[{name,text}] }` — steps render as the recipe-style nested `<ui-accordion>`
+- **qa** `{ question, upvotes, answers:[{text,author,upvotes,accepted}] }` — `mainEntity` → `Question` with `acceptedAnswer`/`suggestedAnswer`
+- **claim** `{ claim, claimant, reviewDate, verdict:{value,max,label} }` — `claimReviewed` quote + `reviewRating` → `Rating` with `alternateName` verdict chip
 
 Machine values stay schema-ready (`PT15M`, salary numbers, geo coordinates);
 `*Display` keys carry pre-formatted strings only where formatting is not derivable.
@@ -279,8 +289,8 @@ content and belong in the card's `media[]` items. Bare booleans like `clip`, `au
 
 | id | Element | Look | Used by (demo data) |
 |----|---------|------|---------------------|
-| `stack` | ui-card | `col` · 16:9 | content, article, recipe, booking, achievement, social |
-| `showcase` | ui-card | `col` · 4:3 | product |
+| `stack` | ui-card | `col` · 16:9 | content, article, recipe, booking, achievement, social, organization, video, qa, podcast, dataset, claim |
+| `showcase` | ui-card | `col` · 4:3 | product, movie, book |
 | `split` | ui-card | `row spl(1/2)` · 4:3 | news, course, business |
 | `split-reverse` | ui-card | `row-r spl(2/1)` · 1:1 | contact |
 | `portrait` | ui-card | `row spl(1/2)` · 1:1 | review |
@@ -304,7 +314,7 @@ Restyling any card = changing its reference:
 ```
 
 A second collection, [`data/card.presets.demo.json`](../data/card.presets.demo.json),
-holds **126 demo presets** extracted 1:1 from the original demo pages
+holds **129 demo presets** extracted 1:1 from the original demo pages
 (`media-*`, `carousel-*`, `video-*`, `reveal-*` key prefixes) — every distinct
 attribute combination those pages use, powering the `*.render.html` recreations.
 
@@ -384,14 +394,40 @@ emission in [`content/card/dist/`](../../../content/card/dist)):
   FAQ→`Question`+`acceptedAnswer`→`Answer`, engagement→`InteractionCounter`
 - Type-dependent props: headline → `title` (job) / `headline` (article, news) /
   `name` (rest); summary → `reviewBody` (review) / `text` (quote, announcement,
-  social) / `description` (rest); published → `datePosted` (job, announcement)
+  social) / `description` (rest); published → `datePosted` (job, announcement) /
+  `uploadDate` (video); eyebrow → `genre` (video, movie, book)
+- **Business subtype**: `details.businessType` sharpens the root itemtype from
+  `LocalBusiness` to an ALLOWLISTED subtype (`BUSINESS_SUBTYPES` in render.js —
+  never verbatim data, mirroring the old dynamic-schema pattern safely). Opening
+  hours emit both forms: the flat `openingHours` meta AND, for parsable
+  `"Mo-Fr 07:00-18:00"` strings, a hidden `OpeningHoursSpecification` scope with
+  `dayOfWeek`/`opens`/`closes` (`hoursSpec()`)
+- **Organization offices**: each office emits `department` →
+  `LocalBusiness` (name, `PostalAddress`, `telephone`, opening hours — both
+  forms), the Google-documented multi-location pattern;
+  `numberOfEmployees` rides a hidden `QuantitativeValue`
 - Reveal cards keep metas on the root/back panel so microdata survives either face
 - **VideoObject** (matching the legacy emission): native video items carry the
   scope on the `<video>` element itself with `<meta>` children as fallback
   content — `name` (alt), `contentUrl`, `thumbnailUrl` (poster), `uploadDate`,
   `duration`, `description`. Provider embeds (youtube/vimeo) emit a hidden
   `<div itemprop="video" itemscope …VideoObject>` in the text column with
-  `embedUrl` + `thumbnailUrl` (`i.ytimg.com/vi/{id}/hqdefault.jpg` for YouTube)
+  `embedUrl` + `thumbnailUrl` (`i.ytimg.com/vi/{id}/hqdefault.jpg` for YouTube).
+  **Exception — the `video` type**: its ROOT is the VideoObject
+  (`ROOT_VIDEO_TYPES`), so media facts emit as root-level props
+  (`contentUrl`/`embedUrl`, `thumbnailUrl`, `uploadDate`, `duration`) and no
+  nested scope is created; `name`/`description` ride the envelope
+- New-type nested scopes: howto steps → repeated `step` → `HowToStep` (plus
+  `supply` → `HowToSupply`, `tool` → `HowToTool`, `estimatedCost` →
+  `MonetaryAmount`); qa → `mainEntity` → `Question` with
+  `acceptedAnswer`/`suggestedAnswer` → `Answer` (`upvoteCount` on both);
+  podcast → `partOfSeries` → `PodcastSeries` + `associatedMedia` → `AudioObject`;
+  movie → `director`/`actor` → `Person`; book → `publisher` → `Organization` +
+  `offers` → `Offer` (`bookFormat` emits only for schema.org `BookFormatType`
+  members); dataset → repeated `distribution` → `DataDownload`
+  (`encodingFormat` + `contentUrl` on the download link); claim →
+  `claimReviewed` text + `reviewRating` → `Rating` whose `alternateName` is the
+  visible verdict chip
 - **articleBody**: for `article`/`news` the `body` paragraphs are wrapped in
   `<div itemprop="articleBody">`. Teaser/full is a preset decision — the `text`
   field: cards show the `summary` only; a `text: "body"` preset (e.g. `prose`)
@@ -412,13 +448,13 @@ Eight parts added for the typed cards, all styled in [`content.css`](../content.
 
 | part | Element | Used by |
 |------|---------|---------|
-| `price` | `<p>` + `<data>`/`<del>`/`<small>` | product, course, booking, membership, software, job |
-| `rating` | `<div role="img">` stars + count | product, review, software |
-| `list` | `<ul>` check / `<ol>` ordered | recipe, job, course, booking, location, membership |
-| `address` | `<address>` | business, location, event, contact |
+| `price` | `<p>` + `<data>`/`<del>`/`<small>` | product, course, booking, membership, software, job, book |
+| `rating` | `<div role="img">` stars + count | product, review, software, business, movie, book |
+| `list` | `<ul>` check / `<ol>` ordered | recipe, job, course, booking, location, membership, howto, qa, dataset |
+| `address` | `<address>` | business, location, event, contact, organization |
 | `stat` | `<p>` + `<data>` + unit + trend | statistic |
 | `timeline` | `<ol>` of `<time>` + text | timeline |
-| `quote` | `<ui-quote>` wrapping `<blockquote>` + `<cite>` | quote, review, social |
+| `quote` | `<ui-quote>` wrapping `<blockquote>` + `<cite>` | quote, review, social, claim |
 | `options` | `<ul>` of `<label>` + `<progress>` | poll, comparison |
 
 Everything else reuses existing parts: `meta` (salaries, hours, dates), `tags`
@@ -437,8 +473,8 @@ peers** of `@browser.style/card` — pages link only the sheets their types need
 
 | schemaType(s) | Sub-component | Emitted markup |
 |---|---|---|
-| quote, review, social | [`ui/quote`](../../quote/) | `<ui-quote data-part="quote" variant?>` wrapping `<blockquote itemprop>` — variant from `parts.quote` (quote defaults to `bigquote`) |
-| faq, recipe, job | [`ui/accordion`](../../accordion/) | `<ui-accordion group variant?><cq-box><details>…` — the `cq-box` is hand-authored by the renderer so the CSS-only form styles without the accordion JS; variant from `parts.accordion` |
+| quote, review, social, claim | [`ui/quote`](../../quote/) | `<ui-quote data-part="quote" variant?>` wrapping `<blockquote itemprop>` — variant from `parts.quote` (quote defaults to `bigquote`) |
+| faq, recipe, job, howto | [`ui/accordion`](../../accordion/) | `<ui-accordion group variant?><cq-box><details>…` — the `cq-box` is hand-authored by the renderer so the CSS-only form styles without the accordion JS; variant from `parts.accordion` |
 | any card with `authors[]`, review | [`ui/avatar`](../../avatar/) | `<ui-avatar><img></ui-avatar>` in byline rows, `<abbr>` initials fallback when no image; the card sets scale via `--ui-avatar-size` |
 | poll, comparison | [`ui/progress`](../../progress/) | bare `<progress>` — the package styles the native element, no markup contract |
 | faq/recipe/job summaries, reveal toggles | [`ui/icon`](../../icon/) | `<ui-icon type="plus-minus">` etc. |
@@ -602,9 +638,9 @@ navigation; `prefers-reduced-motion` keeps default timing.
 
 | Page | Shows |
 |------|-------|
-| [`schema.html`](../demo/schema.html) | Hand-authored reference — all 26 types with microdata |
-| [`render.html`](../demo/render.html) | Same 26 cards rendered by `render.js` from UCF data + presets |
-| [`media.render.html`](../demo/media.render.html) · [`carousel.render.html`](../demo/carousel.render.html) · [`video.render.html`](../demo/video.render.html) · [`reveal.render.html`](../demo/reveal.render.html) | The original demo pages recreated data-driven: presets from [`data/card.presets.demo.json`](../data/card.presets.demo.json) (121 presets extracted from the originals) + UCF instances in [`data/demo/`](../data/demo). Each page lists its not-expressible demos in a bottom note |
+| [`schema.html`](../demo/schema.html) | Hand-authored reference — the original 26 types with microdata |
+| [`render.html`](../demo/render.html) | All 35 typed cards rendered by `render.js` from UCF data + presets |
+| [`media.render.html`](../demo/media.render.html) · [`carousel.render.html`](../demo/carousel.render.html) · [`video.render.html`](../demo/video.render.html) · [`reveal.render.html`](../demo/reveal.render.html) | The original demo pages recreated data-driven: presets from [`data/card.presets.demo.json`](../data/card.presets.demo.json) (129 presets extracted from the originals) + UCF instances in [`data/demo/`](../data/demo). Each page lists its not-expressible demos in a bottom note |
 | [`article.render.html`](../demo/article.render.html) + [`articles/`](../demo/articles/) | The article pattern above, live and **fully static** (pre-rendered by `articles/build.js`): teaser cards with stretched-link headlines → cross-document view transition morphs the whole card into the per-article page and back (`card-{id}` + nested `hero-{id}` names via `data-view` + CSS `attr()`), body-instead-of-summary via the `prose` preset, plain `<a>` navigation, zero runtime JS |
 | [`index.html`](../index.html) · [`media.html`](../demo/media.html) · [`content.html`](../demo/content.html) · [`carousel.html`](../demo/media.carousel.html) · [`video.html`](../demo/media.video.html) | The card engine itself (hand-authored originals) |
 | [`../reveal/index.html`](../../reveal/index.html) | Reveal types incl. the hero (source of `hero-reveal` preset) |
@@ -622,6 +658,7 @@ python3 -m http.server 8000 -d .
 - [x] Video/YouTube/Vimeo media items + `VideoObject` microdata
 - [x] `body` → `articleBody`, gradient headlines, blockquote composition
 - [x] Style the structured parts in `content.css`; sub-component alignment (quote wrapper, SSR accordion cq-box, avatar bylines, progress package, preset `parts=`)
+- [x] Taxonomy extension v1.3 — nine new types (organization, video, howto, qa, podcast, movie, book, dataset, claim) + LocalBusiness depth (subtype itemtype, `OpeningHoursSpecification`, priceRange, aggregateRating). Analysis: [`docs/plans/2026-08-05-card-schema-coverage.md`](../../../docs/plans/2026-08-05-card-schema-coverage.md)
 - [ ] Sync models to a CMS via [UCM](../../../cms/baseline) (`cd cms/unified-content-model && npm run validate`)
 - [ ] `editor-card` widget update for the new `details` shapes
 - [ ] `renderNavigation()` if the navigation → accordion/tabs mapping gets adopted

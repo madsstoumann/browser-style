@@ -56,8 +56,31 @@ export const SCHEMA_TYPES = {
 	location: 'Place',
 	membership: 'Offer',
 	social: 'SocialMediaPosting',
-	software: 'SoftwareApplication'
+	software: 'SoftwareApplication',
+	organization: 'Organization',
+	video: 'VideoObject',
+	howto: 'HowTo',
+	qa: 'QAPage',
+	podcast: 'PodcastEpisode',
+	movie: 'Movie',
+	book: 'Book',
+	dataset: 'Dataset',
+	claim: 'ClaimReview'
 };
+
+/* business may sharpen LocalBusiness to a subtype — allowlisted, never verbatim data */
+const BUSINESS_SUBTYPES = new Set([
+	'Restaurant', 'CafeOrCoffeeShop', 'Bakery', 'BarOrPub', 'Store', 'Hotel',
+	'BeautySalon', 'HealthClub', 'AutoRepair', 'Dentist', 'MedicalClinic',
+	'RealEstateAgent', 'TravelAgency', 'Library', 'Museum'
+]);
+const resolveItemtype = (type, fields) =>
+	type === 'business' && BUSINESS_SUBTYPES.has(fields.details?.businessType)
+		? fields.details.businessType
+		: SCHEMA_TYPES[type];
+
+/* schema.org BookFormatType members — bookFormat emits only for these */
+const BOOK_FORMATS = new Set(['Hardcover', 'Paperback', 'EBook', 'AudiobookFormat', 'GraphicNovel']);
 
 /* Fallback when a card references no preset (or an unknown one).
    Real presets live in data/card.presets.json — instances of the
@@ -69,13 +92,15 @@ const HEADLINE_PROP = { job: 'title', article: 'headline', news: 'headline' };
 /* summary itemprop: review → reviewBody, quote/announcement/social → text, rest → description */
 const SUMMARY_PROP = { review: 'reviewBody', quote: 'text', announcement: 'text', social: 'text' };
 /* eyebrow itemprop (only where a sensible property exists) */
-const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', job: 'industry' };
-/* published itemprop: JobPosting/SpecialAnnouncement use datePosted */
-const PUBLISHED_PROP = { job: 'datePosted', announcement: 'datePosted' };
+const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', job: 'industry', video: 'genre', movie: 'genre', book: 'genre' };
+/* published itemprop: JobPosting/SpecialAnnouncement use datePosted, VideoObject uploadDate */
+const PUBLISHED_PROP = { job: 'datePosted', announcement: 'datePosted', video: 'uploadDate' };
 /* types whose `body` is the article text → wrapped in itemprop="articleBody" */
 const ARTICLE_BODY_TYPES = new Set(['article', 'news']);
 /* types where the image/video belongs to another scope — skip itemprop */
 const NO_IMAGE_PROP = new Set(['review', 'contact']);
+/* types whose ROOT is the VideoObject — media props emit at root, never a nested scope */
+const ROOT_VIDEO_TYPES = new Set(['video']);
 const TAGS_PROP = { profile: 'knowsAbout' }; /* Person has no keywords property */
 
 /* ── string helpers (all data flows through esc) ── */
@@ -176,6 +201,22 @@ const eligibleDuration = (iso) => {
 	return m ? `<span${scope('eligibleDuration', 'QuantitativeValue')} hidden>${meta('value', m[1])}${meta('unitCode', DURATION_UNIT[m[2]])}</span>` : '';
 };
 
+/* "Mo-Fr 07:00-18:00" → hidden OpeningHoursSpecification; unparsable strings stay flat-only */
+const DAY_NAMES = { Mo: 'Monday', Tu: 'Tuesday', We: 'Wednesday', Th: 'Thursday', Fr: 'Friday', Sa: 'Saturday', Su: 'Sunday' };
+const DAY_ORDER = Object.keys(DAY_NAMES);
+const hoursSpec = (spec) => {
+	const m = /^([A-Z][a-z])(?:-([A-Z][a-z]))?\s+(\d\d:\d\d)-(\d\d:\d\d)$/.exec(spec || '');
+	if (!m || !DAY_NAMES[m[1]] || (m[2] && !DAY_NAMES[m[2]])) return '';
+	const days = DAY_ORDER.slice(DAY_ORDER.indexOf(m[1]), (m[2] ? DAY_ORDER.indexOf(m[2]) : DAY_ORDER.indexOf(m[1])) + 1);
+	return days.length
+		? `<span${scope('openingHoursSpecification', 'OpeningHoursSpecification')} hidden>${days.map((day) => meta('dayOfWeek', SCHEMA + DAY_NAMES[day])).join('')}${meta('opens', m[3])}${meta('closes', m[4])}</span>`
+		: '';
+};
+
+/* machine + human opening hours — flat openingHours meta AND the structured spec per entry */
+const openingHoursMetas = (hours) =>
+	(hours || []).map((entry) => meta('openingHours', entry.schema) + hoursSpec(entry.schema)).join('');
+
 const listPart = (items, { ordered = false, itemprop = null } = {}) =>
 	items?.length
 		? `<${ordered ? 'ol' : 'ul'} data-part="list"${itemprop ? ` itemprop="${esc(itemprop)}"` : ''}>${items.map((item) => `<li>${esc(item)}</li>`).join('')}</${ordered ? 'ol' : 'ul'}>`
@@ -216,18 +257,31 @@ const videoMetas = (item, src) =>
 	meta('name', item.alt) + meta('contentUrl', src) + meta('thumbnailUrl', item.poster)
 	+ meta('uploadDate', item.uploadDate) + meta('duration', item.duration) + meta('description', item.description);
 
+/* provider embed URLs (shared by the nested VideoObject block and root-video metas) */
+const embedInfo = (item) => ({
+	embedUrl: item.mediaType === 'youtube'
+		? `https://www.youtube.com/embed/${item.src}`
+		: `https://player.vimeo.com/video/${item.src}`,
+	thumb: item.mediaType === 'youtube'
+		? `https://i.ytimg.com/vi/${item.src}/hqdefault.jpg`
+		: item.poster
+});
+
 /* VideoObject block for a provider embed (hidden — appended to the content column) */
 const embedVideoObject = (item) => {
-	const embedUrl = item.mediaType === 'youtube'
-		? `https://www.youtube.com/embed/${item.src}`
-		: `https://player.vimeo.com/video/${item.src}`;
-	const thumb = item.mediaType === 'youtube'
-		? `https://i.ytimg.com/vi/${item.src}/hqdefault.jpg`
-		: item.poster;
+	const { embedUrl, thumb } = embedInfo(item);
 	return `<div${scope('video', 'VideoObject')} hidden>
 		${meta('name', item.alt)}${meta('embedUrl', embedUrl)}${meta('thumbnailUrl', thumb)}${meta('uploadDate', item.uploadDate)}
 	</div>`;
 };
+
+/* root-VideoObject card: same media facts, but as ROOT props (name/description ride the envelope) */
+const rootEmbedMetas = (item) => {
+	const { embedUrl, thumb } = embedInfo(item);
+	return meta('embedUrl', embedUrl) + meta('thumbnailUrl', thumb) + meta('uploadDate', item.uploadDate) + meta('duration', item.duration);
+};
+const rootVideoMetas = (item, src) =>
+	meta('contentUrl', src) + meta('thumbnailUrl', item.poster) + meta('uploadDate', item.uploadDate) + meta('duration', item.duration);
 
 /* ── media column ── */
 
@@ -447,12 +501,13 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 	/* a <ui-play> commands the frame's FIRST native <video> — id it for commandfor */
 	const playId = (fields.furniture?.play && cardId) ? `${cardId}-video` : null;
 	let videoId = playId;
+	const rootVideo = ROOT_VIDEO_TYPES.has(type);
 	for (const item of fields.media) {
 		const src = item.asset?.$asset ? item.asset.$asset : item.src;
 		if (item.mediaType === 'youtube' || item.mediaType === 'vimeo') {
 			/* lite embed — provider/video attributes on the frame itself (index.js wires it) */
 			embed = { provider: item.mediaType, video: src };
-			extras += embedVideoObject(item);
+			extras += rootVideo ? rootEmbedMetas(item) : embedVideoObject(item);
 			continue;
 		}
 		if (item.mediaType === 'video') {
@@ -469,7 +524,7 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 				poster: item.poster || null,
 				preload: item.autoplay ? 'auto' : 'metadata',
 				'aria-label': item.alt || null
-			})}${NO_IMAGE_PROP.has(type) ? '' : scope('video', 'VideoObject')}>${NO_IMAGE_PROP.has(type) ? '' : videoMetas(item, src)}</video>`;
+			})}${rootVideo || NO_IMAGE_PROP.has(type) ? '' : scope('video', 'VideoObject')}>${rootVideo ? rootVideoMetas(item, src) : NO_IMAGE_PROP.has(type) ? '' : videoMetas(item, src)}</video>`;
 			continue;
 		}
 		frames += `<img${attrs({
@@ -785,7 +840,8 @@ const DETAILS = {
 	},
 
 	business(d) {
-		let html = meta('url', d.website);
+		let html = meta('url', d.website) + meta('priceRange', d.priceRange) + meta('foundingDate', d.foundingDate)
+			+ (d.sameAs || []).map((url) => meta('sameAs', url)).join('');
 		if (d.geo) {
 			html += `<div${scope('geo', 'GeoCoordinates')} hidden>${meta('latitude', d.geo.latitude)}${meta('longitude', d.geo.longitude)}</div>`;
 		}
@@ -794,8 +850,11 @@ const DETAILS = {
 				${d.address.streetAddress ? `<span itemprop="streetAddress">${esc(d.address.streetAddress)}</span>, ` : ''}${d.address.postalCode ? `<span itemprop="postalCode">${esc(d.address.postalCode)}</span> ` : ''}${d.address.addressLocality ? `<span itemprop="addressLocality">${esc(d.address.addressLocality)}</span>` : ''}${meta('addressCountry', d.address.addressCountry)}
 			</address>`;
 		}
+		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		if (d.openingHours?.length) {
-			html += `<p data-part="meta">${d.openingHours.map((hours) => meta('openingHours', hours.schema)).join('')}${esc(d.openingHours.map((hours) => hours.display).join(' · '))}</p>`;
+			html += `<p data-part="meta">${openingHoursMetas(d.openingHours)}${esc(d.openingHours.map((hours) => hours.display).join(' · '))}${d.priceRange ? ` · ${esc(d.priceRange)}` : ''}</p>`;
+		} else if (d.priceRange) {
+			html += `<p data-part="meta">${esc(d.priceRange)}</p>`;
 		}
 		const links = [];
 		if (d.telephone) links.push(`<a class="ui-button" itemprop="telephone" href="tel:${esc(d.telephone.replace(/\s/g, ''))}">${esc(d.telephone)}</a>`);
@@ -866,6 +925,129 @@ const DETAILS = {
 		}
 		if (d.price) {
 			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${esc(d.price.currency)} ${esc(d.price.current)}</data>${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`;
+		}
+		return html;
+	},
+
+	organization(d) {
+		let html = meta('foundingDate', d.foundingDate)
+			+ (d.sameAs || []).map((url) => meta('sameAs', url)).join('')
+			+ (d.numberOfEmployees != null ? `<span${scope('numberOfEmployees', 'QuantitativeValue')} hidden>${meta('value', d.numberOfEmployees)}</span>` : '');
+		const bits = [d.numberOfEmployees != null ? `${num(d.numberOfEmployees)} employees` : null, d.foundingDateDisplay ? `Founded ${d.foundingDateDisplay}` : null].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		if (d.headquarters?.address) {
+			const a = d.headquarters.address;
+			html += `<address data-part="address"${scope('address', 'PostalAddress')}>
+				${a.streetAddress ? `<span itemprop="streetAddress">${esc(a.streetAddress)}</span>, ` : ''}${a.postalCode ? `<span itemprop="postalCode">${esc(a.postalCode)}</span> ` : ''}${a.addressLocality ? `<span itemprop="addressLocality">${esc(a.addressLocality)}</span>` : ''}${meta('addressCountry', a.addressCountry)}
+			</address>`;
+		}
+		/* each local office is a department → LocalBusiness (Google's multi-location pattern) */
+		for (const office of d.offices || []) {
+			const a = office.address;
+			html += `<address data-part="address"${scope('department', 'LocalBusiness')}>
+				<strong itemprop="name">${esc(office.name)}</strong>${a ? ` <span${scope('address', 'PostalAddress')}>${a.streetAddress ? `<span itemprop="streetAddress">${esc(a.streetAddress)}</span>, ` : ''}${a.addressLocality ? `<span itemprop="addressLocality">${esc(a.addressLocality)}</span>` : ''}${meta('addressCountry', a.addressCountry)}</span>` : ''}${office.telephone ? ` <a itemprop="telephone" href="tel:${esc(office.telephone.replace(/\s/g, ''))}">${esc(office.telephone)}</a>` : ''}${openingHoursMetas(office.openingHours)}${office.openingHours?.length ? ` <small>${esc(office.openingHours.map((hours) => hours.display).join(' · '))}</small>` : ''}
+			</address>`;
+		}
+		return html;
+	},
+
+	video(d) {
+		/* machine duration/uploadDate ride the media item (rootVideoMetas) — details are display + creator */
+		let html = '';
+		const bits = [d.durationDisplay, d.viewsDisplay].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		if (d.creator?.name) html += `<p data-part="meta"${scope('creator', 'Person')}>By <span itemprop="name">${esc(d.creator.name)}</span></p>`;
+		return html;
+	},
+
+	howto(d, fields, parts = {}) {
+		let html = meta('totalTime', d.totalTime)
+			+ (d.estimatedCost ? `<span${scope('estimatedCost', 'MonetaryAmount')} hidden>${meta('currency', d.estimatedCost.currency)}${meta('value', d.estimatedCost.value)}</span>` : '');
+		const bits = [d.totalTime ? `Takes ${duration(d.totalTime)}` : null, d.estimatedCost ? `~${d.estimatedCost.currency} ${d.estimatedCost.value}` : null, d.difficulty].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		if (d.supplies?.length || d.tools?.length) {
+			html += `<ul data-part="list">${(d.supplies || []).map((item) => `<li${scope('supply', 'HowToSupply')}><span itemprop="name">${esc(item)}</span></li>`).join('')}${(d.tools || []).map((item) => `<li${scope('tool', 'HowToTool')}><span itemprop="name">${esc(item)}</span></li>`).join('')}</ul>`;
+		}
+		if (d.steps?.length) {
+			const steps = accordion('howto-step', d.steps.map((step, index) => ({
+				summary: step.name ? `<span itemprop="name">${esc(step.name)}</span>` : `Step ${index + 1}`,
+				body: `<div>${meta('position', index + 1)}<p itemprop="text">${esc(step.text)}</p></div>`,
+				scopeAttrs: scope('step', 'HowToStep'),
+				icon: 'chevron right'
+			})), 'divided');
+			html += accordion('howto-acc', [{ summary: 'Steps', body: steps }], parts.accordion);
+		}
+		return html;
+	},
+
+	qa(d) {
+		const answers = d.answers || [];
+		if (!d.question && !answers.length) return '';
+		const accepted = answers.find((answer) => answer.accepted);
+		let html = `<div${scope('mainEntity', 'Question')}>${meta('name', d.question)}${meta('answerCount', answers.length)}${d.upvotes != null ? meta('upvoteCount', d.upvotes) : ''}`;
+		if (answers.length) {
+			html += `<ul data-part="list">${answers.map((answer) =>
+				`<li${scope(answer === accepted ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${answer.upvotes != null ? meta('upvoteCount', answer.upvotes) : ''}<p itemprop="text">${esc(answer.text)}</p><small>${answer === accepted ? '✓ Accepted' : ''}${answer.author ? `${answer === accepted ? ' · ' : ''}<span${scope('author', 'Person')}><span itemprop="name">${esc(answer.author)}</span></span>` : ''}${answer.upvotes != null ? ` · ▲ ${num(answer.upvotes)}` : ''}</small></li>`
+			).join('')}</ul>`;
+		}
+		return html + '</div>';
+	},
+
+	podcast(d) {
+		let html = meta('episodeNumber', d.episodeNumber) + meta('duration', d.duration)
+			+ (d.seriesName ? `<div${scope('partOfSeries', 'PodcastSeries')} hidden>${meta('name', d.seriesName)}</div>` : '')
+			+ (d.audioUrl ? `<div${scope('associatedMedia', 'AudioObject')} hidden>${meta('contentUrl', d.audioUrl)}</div>` : '');
+		const bits = [d.seriesName, d.episodeNumber != null ? `Episode ${d.episodeNumber}` : null, d.durationDisplay || (d.duration ? duration(d.duration) : null)].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		return html;
+	},
+
+	movie(d) {
+		let html = meta('duration', d.duration) + meta('contentRating', d.contentRating) + meta('dateCreated', d.dateReleased);
+		const bits = [d.dateReleasedDisplay, d.durationDisplay || (d.duration ? duration(d.duration) : null), d.contentRating].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		if (d.director?.name) html += `<p data-part="meta"${scope('director', 'Person')}>Director: <span itemprop="name">${esc(d.director.name)}</span></p>`;
+		if (d.actors?.length) html += `<p data-part="meta">Starring: ${d.actors.map((name) => `<span${scope('actor', 'Person')}><span itemprop="name">${esc(name)}</span></span>`).join(', ')}</p>`;
+		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
+		return html;
+	},
+
+	book(d) {
+		let html = meta('isbn', d.isbn) + meta('numberOfPages', d.numberOfPages)
+			+ (BOOK_FORMATS.has(d.bookFormat) ? meta('bookFormat', SCHEMA + d.bookFormat) : '');
+		const bits = [d.numberOfPages ? `${num(d.numberOfPages)} pages` : null, d.bookFormatDisplay || d.bookFormat, d.isbn ? `ISBN ${d.isbn}` : null].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		if (d.publisher) html += `<p data-part="meta"${scope('publisher', 'Organization')}>Publisher: <span itemprop="name">${esc(d.publisher)}</span></p>`;
+		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
+		if (d.price) {
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${esc(d.price.currency)} ${esc(d.price.current)}</data></p>`;
+		}
+		return html;
+	},
+
+	dataset(d) {
+		let html = meta('license', d.license) + meta('temporalCoverage', d.temporalCoverage) + meta('spatialCoverage', d.spatialCoverage)
+			+ (d.variableMeasured || []).map((variable) => meta('variableMeasured', variable)).join('');
+		const bits = [d.temporalCoverage, d.spatialCoverage, d.licenseDisplay].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		html += listPart(d.variableMeasured);
+		if (d.distribution?.length) {
+			html += `<nav data-part="actions">${d.distribution.map((dist, index) =>
+				`<span${scope('distribution', 'DataDownload')}>${meta('encodingFormat', dist.format)}<a class="ui-button"${index === 0 ? ' data-variant="accent"' : ''} itemprop="contentUrl" href="${esc(dist.url)}">${esc(dist.format)}</a></span>`
+			).join(' ')}</nav>`;
+		}
+		return html;
+	},
+
+	claim(d) {
+		const verdict = d.verdict || {};
+		let html = meta('datePublished', d.reviewDate);
+		if (d.claim) html += quotePart(d.claim, { itemprop: 'claimReviewed', cite: d.claimant });
+		if (verdict.label) {
+			const hue = verdict.value != null
+				? verdict.value >= 4 ? 'green' : verdict.value >= 3 ? 'orange' : 'red'
+				: /false|incorrect/i.test(verdict.label) ? 'red' : /true|correct/i.test(verdict.label) ? 'green' : 'orange';
+			html += `<p data-part="meta"${scope('reviewRating', 'Rating')}>${verdict.value != null ? meta('ratingValue', verdict.value) : ''}${meta('bestRating', verdict.max ?? 5)}${meta('worstRating', 1)}<ui-chip theme="pale ${hue}"><span itemprop="alternateName">${esc(verdict.label)}</span></ui-chip></p>`;
 		}
 		return html;
 	}
@@ -995,7 +1177,7 @@ export function renderCard(ucf, presets = {}, cards = {}) {
 	const fields = ucf?.fields ?? ucf ?? {};
 	const cardId = ucf?.id || null;
 	const type = SCHEMA_TYPES[fields.schemaType] ? fields.schemaType : 'content';
-	const itemtype = SCHEMA + SCHEMA_TYPES[type];
+	const itemtype = SCHEMA + resolveItemtype(type, fields);
 	const preset = resolvePreset(fields, presets);
 	const tokens = { media: [] };
 

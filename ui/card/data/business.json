@@ -26,6 +26,17 @@
       }
     ],
     "details": {
+      "businessType": "CafeOrCoffeeShop",
+      "priceRange": "$$",
+      "rating": {
+        "value": 4.7,
+        "count": 412,
+        "max": 5
+      },
+      "sameAs": [
+        "https://instagram.com/brewandbean"
+      ],
+      "foundingDate": "2015-05-01",
       "address": {
         "streetAddress": "Kaffegade 12",
         "postalCode": "1455",
