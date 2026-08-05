@@ -35,6 +35,8 @@
 			display: grid;
 			gap: 0;
 			grid-template-columns: var(--ui-card-cols, 1fr);
+			min-inline-size: 0; /* a wide child (horizontal scroller/table) must not inflate past the card */
+			> ui-content { min-inline-size: 0; }
 		}
 	}
 	/* <ui-reveal> declares its own container-type but joins this namespace */

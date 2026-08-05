@@ -2484,6 +2484,10 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       display: grid;
       gap: 0;
       grid-template-columns: var(--ui-card-cols, 1fr);
+      min-inline-size: 0;
+      > ui-content {
+        min-inline-size: 0;
+      }
     }
   }
   :where(ui-reveal) {

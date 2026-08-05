@@ -30,8 +30,6 @@
 		table { border-collapse: collapse; display: block; margin-block-end: var(--spacing-2xl); max-inline-size: 100%; overflow-x: auto; }
 		th, td { border: 1px solid var(--color-border, #ddd); padding: 0.4em 0.75em; text-align: start; font-size: 0.9em; }
 
-		/* a horizontal scroller child overflows unless its card ancestors may shrink below min-content */
-		ui-card:has([data-part="timeline"][variant~="horizontal"]) :is(cq-box, ui-content) { min-inline-size: 0; }
 		/* horizontal timeline edge fade — consumes the shared primitive (ui/base/scroll.css) */
 		[data-part="timeline"][variant~="horizontal"] {
 			--ui-scroll-fade-dir: to var(--_dir-e);
