@@ -84,7 +84,8 @@ thumbnails, bands) plus the Safari/Chromium DOM-control polyfill. It used to liv
 | `<ui-face>` | no | front-face wrapper inside `<summary>` for flip/scale/slide |
 | `<ui-chip>`, `<ui-sticker>`, `<ui-beacon>` | no | marker furniture (labels/badges/live indicators on media) — own packages `ui/chip`, `ui/sticker`, `ui/beacon`; all faces incl. the beacon ticker are markup-free CSS |
 | `<ui-save>`, `<ui-play>`, `<ui-lightbox>` | no | interactive furniture — `ui/save`, `ui/play`, `ui/lightbox` (view-gallery popover toggle) |
-| `<ui-icon>` | no | reveal toggle icon — `ui/icon` |
+| `<ui-icon>` | no | reveal + accordion toggle icon — `ui/icon` |
+| `<ui-quote>`, `<ui-accordion>`, `<ui-avatar>` | quote no; accordion/avatar optional JS in their packages | **text-area sub-components** — `ui/quote` (quote/review/social blockquotes), `ui/accordion` (faq/recipe/job; render.js hand-authors the inner `<cq-box>` so SSR output styles without the accordion JS), `ui/avatar` (byline images + initials). Bare `<progress>` (poll/comparison) is styled by `ui/progress`. Look chosen per preset via `parts=` (see Presets) |
 
 Everything except `<ui-media>` is an **unregistered custom element** styled purely by CSS attribute selectors. Do not register elements CSS alone can drive.
 
@@ -125,7 +126,7 @@ A **preset** is a named look-&-feel bundle written verbatim to the host attribut
 }
 ```
 
-Shape: `{ element, variant, media, content, text?, styles?, reveal?{type, typeLg, icon, iconClose, scroll…} }` — the structured `reveal{}` object stays, but `render.js` folds it into `variant=` tokens (`exp`/`flp()`/`sld()`/`grw()` — type+from fold into ONE token — plus the `lg:grw` swap, `pop`, `trg(card)`, `scr`, `ico()`, `icc()`) at render time; the preset schema has no `nav`/`arrow`/`dot` fields (carousel controls are `media=` tokens). Collections: `data/card.presets.json` (canonical) and `data/card.presets.demo.json`. Content instances reference one via `"preset": { "$ref": "card-preset/hero" }` — swap the ref to restyle without touching content. Schemas live in `cms/baseline/models/` (`card.schema.json`, `card-preset.schema.json`).
+Shape: `{ element, variant, media, content, text?, parts?{quote, accordion}, styles?, reveal?{type, typeLg, icon, iconClose, scroll…} }` — `parts` carries sub-component variant words written verbatim to the emitted `<ui-quote>`/`<ui-accordion>` `variant=` attribute (validated by `tokens.lint.js` against the component vocabularies) — the structured `reveal{}` object stays, but `render.js` folds it into `variant=` tokens (`exp`/`flp()`/`sld()`/`grw()` — type+from fold into ONE token — plus the `lg:grw` swap, `pop`, `trg(card)`, `scr`, `ico()`, `icc()`) at render time; the preset schema has no `nav`/`arrow`/`dot` fields (carousel controls are `media=` tokens). Collections: `data/card.presets.json` (canonical) and `data/card.presets.demo.json`. Content instances reference one via `"preset": { "$ref": "card-preset/hero" }` — swap the ref to restyle without touching content. Schemas live in `cms/baseline/models/` (`card.schema.json`, `card-preset.schema.json`).
 
 `render.js` is a **string-producing SSR engine** — no `document`, runs unchanged in Node. `renderCard(ucf, presets, cards)` resolves the preset, dispatches on `preset.element` (`ui-card` | `ui-reveal` | `ui-media` | `ui-content`), and appends furniture tokens from the content (e.g. a `chip` field → `chip(ts) chip(green)` on `media=`). Everything passes through `esc()`. Demo data: `data/demo/*.json`, manifest `data/index.json`, driver `demo/render.html`. Full walkthrough: `docs/card.md`.
 

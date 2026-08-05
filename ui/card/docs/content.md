@@ -393,6 +393,16 @@ only structural essentials — visuals stay token-driven.
 (`bigquote` / `breaker` / `code`) carries the visual style from `ui-quote.css`, and the
 card-side hook is for card-scoped overrides only.
 
+In rendered cards the wrapper's variant is **preset-authored**: the preset's
+`parts.quote` value is written verbatim to the emitted `<ui-quote>` (the quote type
+defaults to `bigquote`, review/social to none), and `parts.accordion` does the same
+for the `<ui-accordion>` emitted by faq/recipe/job. `byline` avatars render through
+`@browser.style/avatar` (`<ui-avatar>` with an `<abbr>` initials fallback — the card
+sets scale via `--ui-avatar-size` from `--ui-content-avatar-size`), and the `options`
+part's bare `<progress>` is styled by `@browser.style/progress`. See card.md
+§ Sub-components for the full mapping and the deliberate non-goals (`rating` stays
+hand-rolled until a v4 `ui-rating` display rewrite exists; `timeline` stays card-local).
+
 ### Tags — plain links or `<ui-chip>`
 
 `data-part="tags"` hosts two kinds of child, and they compose in the same list:
