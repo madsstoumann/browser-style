@@ -76,6 +76,7 @@ const PUBLISHED_PROP = { job: 'datePosted', announcement: 'datePosted' };
 const ARTICLE_BODY_TYPES = new Set(['article', 'news']);
 /* types where the image/video belongs to another scope — skip itemprop */
 const NO_IMAGE_PROP = new Set(['review', 'contact']);
+const TAGS_PROP = { profile: 'knowsAbout' }; /* Person has no keywords property */
 
 /* ── string helpers (all data flows through esc) ── */
 
@@ -556,7 +557,8 @@ const buildTail = (fields, type) => {
 		html += `<p data-part="meta">${date}${fields.readingTime ? ` · ${esc(fields.readingTime)}` : ''}</p>`;
 	}
 	if (fields.tags?.length) {
-		html += `<ul data-part="tags">${fields.tags.map((tag) => `<li><a href="#">${esc(tag)}</a></li>`).join('')}</ul>`;
+		/* itemprop sits ON the chip (microdata value = textContent) so a nested <a> never leaks its href */
+		html += `<span data-part="tags">${fields.tags.map((tag) => `<ui-chip itemprop="${TAGS_PROP[type] || 'keywords'}">${esc(tag)}</ui-chip>`).join('')}</span>`;
 	}
 	if (fields.actions?.length) {
 		html += `<nav data-part="actions">${fields.actions.map((action) =>

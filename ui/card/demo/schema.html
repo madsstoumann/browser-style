@@ -68,7 +68,7 @@
 					<small data-part="eyebrow" itemprop="genre">Design</small>
 					<h3 data-part="headline" itemprop="name">A generic piece of content</h3>
 					<p data-part="summary" itemprop="description">Anything without a dedicated schema type renders as CreativeWork — headline, summary, tags and actions straight from the envelope.</p>
-					<ul data-part="tags"><li><a href="#" itemprop="keywords">generic</a></li><li><a href="#" itemprop="keywords">fallback</a></li></ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">generic</ui-chip><ui-chip itemprop="keywords">fallback</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#" itemprop="url">Read more</a></nav>
 				</ui-content>
 			</cq-box>
@@ -486,7 +486,7 @@
 					<p data-part="subheadline"><span itemprop="jobTitle">Chief Political Correspondent</span> · <span itemprop="worksFor" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">The Daily Ledger</span></span></p>
 					<p data-part="summary" itemprop="description">Covers elections and policy across Europe. Two decades on the beat, one Pulitzer nomination.</p>
 					<p data-part="meta" itemprop="address">Copenhagen, Denmark</p>
-					<ul data-part="tags"><li><a href="#" itemprop="knowsAbout">Elections</a></li><li><a href="#" itemprop="knowsAbout">EU policy</a></li><li><a href="#" itemprop="knowsAbout">Data journalism</a></li></ul>
+					<span data-part="tags"><ui-chip itemprop="knowsAbout">Elections</ui-chip><ui-chip itemprop="knowsAbout">EU policy</ui-chip><ui-chip itemprop="knowsAbout">Data journalism</ui-chip></span>
 					<nav data-part="actions">
 						<meta itemprop="email" content="jane@dailyledger.example"><a class="ui-button" href="mailto:jane@dailyledger.example">Email</a>
 						<a class="ui-button" itemprop="url" href="#">Portfolio</a>
@@ -586,7 +586,7 @@
 					<small data-part="eyebrow">Photo album</small>
 					<h3 data-part="headline" itemprop="name">Four seasons</h3>
 					<p data-part="summary" itemprop="description">One year, one forest — 4 of 48 photos.</p>
-					<ul data-part="tags"><li><a href="#" itemprop="keywords">nature</a></li><li><a href="#" itemprop="keywords">seasons</a></li></ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">nature</ui-chip><ui-chip itemprop="keywords">seasons</ui-chip></span>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -866,7 +866,7 @@
 						<span><span itemprop="name">@wildlifewatch</span> · Jun 28</span>
 					</address>
 					<ui-quote data-part="quote"><blockquote itemprop="text">Waited four hours at the waterhole for this crossing. Worth every minute. 🐘</blockquote></ui-quote>
-					<ul data-part="tags"><li><a href="#">#wildlife</a></li><li><a href="#">#safari</a></li><li><a href="#">#photography</a></li></ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">#wildlife</ui-chip><ui-chip itemprop="keywords">#safari</ui-chip><ui-chip itemprop="keywords">#photography</ui-chip></span>
 					<div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden>
 						<meta itemprop="interactionType" content="https://schema.org/LikeAction">
 						<meta itemprop="userInteractionCount" content="3200">

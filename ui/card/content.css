@@ -270,7 +270,15 @@
 			margin: 0;
 			padding: 0;
 
-			& > * { display: contents; }
+			/* li only — a direct-child <ui-chip> must keep its own box */
+			& > li { display: contents; }
+			/* <ui-chip> children — pill metrics; chip attrs (theme/fill/variant) add the options */
+			& ui-chip {
+				--ui-chip-font-size: 1em;
+				--ui-chip-font-weight: var(--ui-content-tags-weight, var(--font-weight-normal, 400));
+				--ui-chip-padding-block: 0.2em;
+				--ui-chip-padding-inline: 0.7em;
+			}
 			/* bespoke pill — plain links only (a <ui-chip> styles its own inner <a>) */
 			& a:not(ui-chip *), & li {
 				background: var(--ui-content-tag-bg, var(--color-button, hsl(0, 0%, 90%)));

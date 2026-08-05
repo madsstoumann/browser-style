@@ -405,14 +405,12 @@ hand-rolled until a v4 `ui-rating` display rewrite exists; `timeline` stays card
 
 ### Tags — plain links or `<ui-chip>`
 
-`data-part="tags"` hosts two kinds of child, and they compose in the same list:
+`data-part="tags"` hosts two kinds of child, and they compose in the same container:
 
-- **Plain links** — `<li><a href="…">Tag</a></li>` render as the built-in **pill** (`--ui-content-tag-bg` / `-color` / `-radius` / `-padding`). This is the default and the current `render.js` output.
-- **`<ui-chip>` children** — `<li><ui-chip><a href="…">Tag</a></ui-chip></li>` style themselves via `@browser.style/chip`. A **bare `<ui-chip>` (no attributes) is the default grey pill** (grey on light surfaces, darker grey on dark — same `--color-button` as the plain-link default), so it's a drop-in upgrade; add `theme=` (red/orange/green/blue/accent/dark/light/subtle) or `variant="light"` / `variant="outline"` (plus `size=`, `radius=`) for the full palette. See [ui/chip](../../chip).
+- **`<ui-chip>` children** — the canonical form and the `render.js` output: `<span data-part="tags"><ui-chip itemprop="keywords">Tag</ui-chip>…</span>` (flat — no `<ul>`/`<li>`; `keywords`, or `knowsAbout` on Person). A **bare `<ui-chip>` is the default grey pill**, sized to the tag row (the card sets `--ui-chip-font-size`/`-padding-*` to the pill metrics); add `theme=`, `variant="light"`/`"outline"`, `size=`, `radius=`, `fill=` for the options. A linked tag wraps the anchor: `<ui-chip itemprop="keywords"><a href="…">Tag</a></ui-chip>` — the itemprop stays **on the chip** (microdata value = textContent), so the href never leaks into the extracted keyword.
+- **Plain links** — `<li><a href="…">Tag</a></li>` or direct `<a>` children render as the built-in **pill fallback** (`--ui-content-tag-bg` / `-color` / `-radius` / `-padding`). Hand-authored lists keep working; `<li>` wrappers dissolve via `display: contents` (scoped to `li` only — a direct-child chip keeps its box).
 
-The bespoke pill is scoped to `& a:not(ui-chip *)`, so it is a **fallback** that never leaks onto a chip's own `<a>` — a `<ui-chip>` always styles itself. Mixing both in one list is fine.
-
-> **Renderer:** `render.js` currently emits the plain-link form (`<li><a>`), which keeps working as the default pill. Emitting `<ui-chip>` from tag/category data is **deferred to the render rework** — the CSS + demos support chips now; `render.js` is intentionally not changed in this pass.
+The bespoke pill is scoped to `& a:not(ui-chip *)`, so it never leaks onto a chip's own `<a>` — a `<ui-chip>` always styles itself. Mixing both in one container is fine.
 
 ---
 
