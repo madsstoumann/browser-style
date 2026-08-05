@@ -251,6 +251,12 @@
 				inline-size: var(--ui-content-avatar-size, 2.25em);
 				object-fit: cover;
 			}
+
+			/* @browser.style/avatar handoff — card scales it, component styles it */
+			& ui-avatar {
+				--ui-avatar-border-width: 0;
+				--ui-avatar-size: var(--ui-content-avatar-size, 2.25em);
+			}
 		}
 
 		/* tags — Meta group; the pill is the FALLBACK for links NOT inside a <ui-chip> */

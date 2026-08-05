@@ -152,10 +152,19 @@ const listPart = (items, { ordered = false, itemprop = null } = {}) =>
 		? `<${ordered ? 'ol' : 'ul'} data-part="list"${itemprop ? ` itemprop="${esc(itemprop)}"` : ''}>${items.map((item) => `<li>${esc(item)}</li>`).join('')}</${ordered ? 'ol' : 'ul'}>`
 		: '';
 
+/* author image via @browser.style/avatar — initials fallback when no image */
+const initials = (name) => {
+	const parts = (name || '').trim().split(/\s+/).filter(Boolean);
+	return parts.length ? (parts[0][0] + (parts.length > 1 ? parts.at(-1)[0] : '')).toUpperCase() : '';
+};
+const avatarPart = ({ avatar, name }) => avatar
+	? `<ui-avatar><img src="${esc(avatar)}" alt=""></ui-avatar>`
+	: (name ? `<ui-avatar><abbr aria-hidden="true">${esc(initials(name))}</abbr></ui-avatar>` : '');
+
 /* byline rows from authors[] */
 const byline = (authors, prop = 'author') =>
 	(authors || []).map((author) => `<address data-part="byline"${scope(prop, 'Person')}>
-		${author.avatar ? `<img src="${esc(author.avatar)}" alt="">` : ''}
+		${avatarPart(author)}
 		<span><span itemprop="name">${esc(author.name)}</span>${author.role ? ` · <span itemprop="jobTitle">${esc(author.role)}</span>` : ''}</span>
 	</address>`).join('');
 
@@ -615,7 +624,7 @@ const DETAILS = {
 			html += quotePart(fields.summary, { itemprop: 'reviewBody' });
 		}
 		if (d.reviewer?.name) {
-			html += `<address data-part="byline"${scope('author', 'Person')}><span><span itemprop="name">${esc(d.reviewer.name)}</span>${d.reviewer.verified ? ' ✓ Verified purchase' : ''}</span></address>`;
+			html += `<address data-part="byline"${scope('author', 'Person')}>${avatarPart(d.reviewer)}<span><span itemprop="name">${esc(d.reviewer.name)}</span>${d.reviewer.verified ? ' ✓ Verified purchase' : ''}</span></address>`;
 		}
 		if (d.reviewDate) {
 			html += `<p data-part="meta"><time itemprop="datePublished" datetime="${esc(d.reviewDate)}">${esc(d.reviewDateDisplay || d.reviewDate)}</time></p>`;
