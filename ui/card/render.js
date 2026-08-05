@@ -159,9 +159,9 @@ const byline = (authors, prop = 'author') =>
 		<span><span itemprop="name">${esc(author.name)}</span>${author.role ? ` · <span itemprop="jobTitle">${esc(author.role)}</span>` : ''}</span>
 	</address>`).join('');
 
-/* blockquote via @browser.style/blockquote — data-variant styles it, data-part stays the card hook */
+/* quote part via @browser.style/quote — variant on the <ui-quote> wrapper styles it, data-part stays the card hook */
 const quotePart = (text, { itemprop = 'text', variant = null, cite = null } = {}) =>
-	`<blockquote data-part="quote"${variant != null ? attrs({ 'data-variant': variant }) : ''} itemprop="${esc(itemprop)}"><q>${esc(text)}</q>${cite ? `<cite>${esc(cite)}</cite>` : ''}</blockquote>`;
+	`<ui-quote data-part="quote"${attrs({ variant })}><blockquote itemprop="${esc(itemprop)}"><q>${esc(text)}</q>${cite ? `<cite>${esc(cite)}</cite>` : ''}</blockquote></ui-quote>`;
 
 /* nested <ui-accordion> — cq-box is hand-authored so the CSS-only form styles without JS */
 const accordion = (group, items) =>

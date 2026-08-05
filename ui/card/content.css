@@ -387,7 +387,7 @@
 			& time { color: var(--ui-content-muted); font-size: 0.85em; }
 		}
 
-		/* quote — Body group; composes with @browser.style/blockquote via data-variant */
+		/* quote — Body group; composes with @browser.style/quote via variant on the <ui-quote> wrapper */
 		& [data-part="quote"] {
 			border-inline-start: var(--ui-content-quote-border, var(--border-width) solid var(--color-border, currentColor));
 			color: var(--ui-content-quote-ink, var(--ui-content-body-ink, inherit));

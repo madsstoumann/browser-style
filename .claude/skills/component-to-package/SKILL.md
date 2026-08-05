@@ -261,7 +261,7 @@ Use `:is()` to combine related variant selectors that share rules. Never define 
 **`data-variant` fallback for native elements:** When a component wraps a native HTML element (e.g., `<blockquote>`, `<table>`) rather than a custom element, use `data-variant` instead of `variant` to avoid validation warnings. Target both in CSS:
 
 ```css
-:where(ui-blockquote):is([variant~="bordered"], [data-variant~="bordered"]) {
+:where(ui-quote):is([variant~="bordered"], [data-variant~="bordered"]) {
   /* variant styles */
 }
 ```

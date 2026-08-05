@@ -399,10 +399,10 @@ emission in [`content/card/dist/`](../../../content/card/dist)):
 - **Gradient headline**: `headline` is short rich text (≤256 chars, model-enforced);
   inline `<b>` renders as gradient text via `--ui-content-headline-gradient`
   (rule in content.css); all other markup is escaped
-- **Blockquote**: quote parts compose with `@browser.style/blockquote` —
-  `<blockquote data-part="quote" data-variant="bigquote"><q>…</q><cite>…</cite></blockquote>`
-  (quote), bare `data-variant` (review), plain (social); pages import
-  `../blockquote/ui-blockquote.css`
+- **Quote**: quote parts compose with `@browser.style/quote` —
+  `<ui-quote data-part="quote" variant="bigquote"><blockquote><q>…</q><cite>…</cite></blockquote></ui-quote>`
+  (quote), plain wrapper (review, social); pages import
+  `../quote/ui-quote.css`
 
 ## Proposed `data-part` vocabulary
 
@@ -417,7 +417,7 @@ of [`content.css`](../content.css):
 | `address` | `<address>` | business, location, event, contact |
 | `stat` | `<p>` + `<data>` + unit + trend | statistic |
 | `timeline` | `<ol>` of `<time>` + text | timeline |
-| `quote` | `<blockquote>` + `<cite>` | quote, review, social |
+| `quote` | `<ui-quote>` wrapping `<blockquote>` + `<cite>` | quote, review, social |
 | `options` | `<ul>` of `<label>` + `<progress>` | poll, comparison |
 
 Everything else reuses existing parts: `meta` (salaries, hours, dates), `tags`

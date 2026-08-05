@@ -99,7 +99,7 @@ Each component follows a consistent structure:
 `layout`, `accordion`, `tabs`, `tab-cordion`, `breadcrumbs`, `menu`, `nav-compass`, `carousel`, `bento`
 
 ### Cards & Content
-`card`, `card-expand`, `card-flip`, `content-card`, `product-card`, `article`, `blockquote`, `chat`
+`card`, `card-expand`, `card-flip`, `content-card`, `product-card`, `article`, `quote`, `chat`
 
 ### Design Token System (`ui/design-tokens/`)
 `core`, `editors`, `utils`, `styles`

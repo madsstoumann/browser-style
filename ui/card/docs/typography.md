@@ -243,7 +243,7 @@ Make the number bigger without touching anything else: `tx(lg)` (the ×2 rides t
 </ui-card>
 ```
 
-The quote part sits in the Body group at ×1.1 with a border-inline-start; `<cite>` auto-mutes. For the big pull-quote treatment, compose with `@browser.style/blockquote` (`data-variant="bigquote"`) — the card hook is for card-scoped overrides only.
+The quote part sits in the Body group at ×1.1 with a border-inline-start; `<cite>` auto-mutes. For the big pull-quote treatment, compose with `@browser.style/quote` (`<ui-quote variant="bigquote">`) — the card hook is for card-scoped overrides only.
 
 ### 11 · Gradient billboard
 

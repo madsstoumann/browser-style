@@ -16,7 +16,7 @@
 	<link rel="stylesheet" href="../../icon/index.css">
 	<link rel="stylesheet" href="../../reveal/ui-reveal.css">
 	<link rel="stylesheet" href="../../accordion/ui-accordion.css">
-	<link rel="stylesheet" href="../../blockquote/ui-blockquote.css">
+	<link rel="stylesheet" href="../../quote/ui-quote.css">
 	<link rel="stylesheet" href="../ui-card.css">
 	<style>
 		.stack { display: grid; gap: var(--spacing-lg); margin-block-end: var(--spacing-2xl); }
@@ -46,7 +46,7 @@
 			<tr><td><code>address</code></td><td><code>&lt;address&gt;</code></td><td>Postal address (PostalAddress scope)</td><td>business, location, event, contact</td></tr>
 			<tr><td><code>stat</code></td><td><code>&lt;p&gt;</code> + <code>&lt;data&gt;</code> value + unit + trend</td><td>Big-number display</td><td>statistic</td></tr>
 			<tr><td><code>timeline</code></td><td><code>&lt;ol&gt;</code> of <code>&lt;time&gt;</code> + text</td><td>Vertical milestone list</td><td>timeline</td></tr>
-			<tr><td><code>quote</code></td><td><code>&lt;blockquote&gt;</code> + <code>&lt;cite&gt;</code></td><td>Pull-quote</td><td>quote, review, social</td></tr>
+			<tr><td><code>quote</code></td><td><code>&lt;ui-quote&gt;</code> + <code>&lt;cite&gt;</code></td><td>Pull-quote</td><td>quote, review, social</td></tr>
 			<tr><td><code>options</code></td><td><code>&lt;ul&gt;</code> of <code>&lt;label&gt;</code> + <code>&lt;progress&gt;</code></td><td>Poll answers / comparison rows with bars</td><td>poll, comparison</td></tr>
 		</tbody>
 	</table>
@@ -141,13 +141,13 @@
 	     ============================================================ -->
 	<section>
 	<h2>Quote — <code>Quotation</code></h2>
-	<p class="note">Envelope <code>summary</code> as <code>&lt;blockquote itemprop="text"&gt;</code> + author. Proposed part: <code>quote</code>.</p>
+	<p class="note">Envelope <code>summary</code> as <code>&lt;ui-quote&gt;</code> wrapping <code>&lt;blockquote itemprop="text"&gt;</code> + author. Proposed part: <code>quote</code>.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="vis(content)" theme="gray" content="scl(lg)" itemscope itemtype="https://schema.org/Quotation">
 			<cq-box>
 				<ui-content>
 					<small data-part="eyebrow">Quote of the day</small>
-					<blockquote data-part="quote" data-variant="bigquote" itemprop="text"><q>Simplicity is the ultimate sophistication — every element you remove makes the remaining ones stronger.</q><cite>Maria Lindgren</cite></blockquote>
+					<ui-quote data-part="quote" variant="bigquote"><blockquote itemprop="text"><q>Simplicity is the ultimate sophistication — every element you remove makes the remaining ones stronger.</q><cite>Maria Lindgren</cite></blockquote></ui-quote>
 					<address data-part="byline" itemprop="creator" itemscope itemtype="https://schema.org/Person">
 						<img src="/assets/images/janesmith.png" alt="">
 						<span><cite itemprop="name">Maria Lindgren</cite> · <span itemprop="jobTitle">Design Director</span></span>
@@ -288,7 +288,7 @@
 						<meta itemprop="worstRating" content="1">
 						<span aria-hidden="true">★★★★☆</span> <span>4/5</span>
 					</div>
-					<blockquote data-part="quote" data-variant itemprop="reviewBody"><q>Astonishing bass for a speaker this small. Battery easily lasts a weekend trip — the app is the only weak point.</q></blockquote>
+					<ui-quote data-part="quote"><blockquote itemprop="reviewBody"><q>Astonishing bass for a speaker this small. Battery easily lasts a weekend trip — the app is the only weak point.</q></blockquote></ui-quote>
 					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
 						<span><span itemprop="name">Alex Chen</span> ✓ Verified purchase</span>
 					</address>
@@ -861,7 +861,7 @@
 						<img src="/assets/images/janesmith.png" alt="">
 						<span><span itemprop="name">@wildlifewatch</span> · Jun 28</span>
 					</address>
-					<blockquote data-part="quote" itemprop="text">Waited four hours at the waterhole for this crossing. Worth every minute. 🐘</blockquote>
+					<ui-quote data-part="quote"><blockquote itemprop="text">Waited four hours at the waterhole for this crossing. Worth every minute. 🐘</blockquote></ui-quote>
 					<ul data-part="tags"><li><a href="#">#wildlife</a></li><li><a href="#">#safari</a></li><li><a href="#">#photography</a></li></ul>
 					<div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden>
 						<meta itemprop="interactionType" content="https://schema.org/LikeAction">
