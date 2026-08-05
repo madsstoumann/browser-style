@@ -1510,22 +1510,30 @@
 /* scroll.css */
 @property --ui-scroll-fade-start { syntax: "<length>"; inherits: false; initial-value: 0px; }
 @property --ui-scroll-fade-end { syntax: "<length>"; inherits: false; initial-value: 0px; }
-@keyframes ui-scroll-fade {
-  0% {
+@property --ui-scroll-fade-size-s { syntax: "*"; inherits: false; }
+@property --ui-scroll-fade-size-e { syntax: "*"; inherits: false; }
+@property --ui-scroll-fade-ramp-s { syntax: "<length-percentage>"; inherits: false; initial-value: 10%; }
+@property --ui-scroll-fade-ramp-e { syntax: "<length-percentage>"; inherits: false; initial-value: 10%; }
+@property --ui-scroll-fade-dir { syntax: "*"; inherits: false; }
+@property --ui-scroll-fade-mask { syntax: "*"; inherits: false; }
+@keyframes ui-scroll-fade-s {
+  from {
     --ui-scroll-fade-start: 0px;
   }
-  10%, 100% {
-    --ui-scroll-fade-start: var(--ui-scroll-fade-size, 3rem);
+  to {
+    --ui-scroll-fade-start: var(--ui-scroll-fade-size-s, 3rem);
   }
-  0%, 90% {
-    --ui-scroll-fade-end: var(--ui-scroll-fade-size, 3rem);
+}
+@keyframes ui-scroll-fade-e {
+  from {
+    --ui-scroll-fade-end: var(--ui-scroll-fade-size-e, 3rem);
   }
-  100% {
+  to {
     --ui-scroll-fade-end: 0px;
   }
 }
 @layer bs-core {
-  :where(ui-content, ui-reveal) {
+  :where(ui-content, lay-out, ui-reveal > details > *) {
     --ui-scroll-fade-mask:
       linear-gradient(
         var(--ui-scroll-fade-dir, to bottom),

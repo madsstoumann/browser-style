@@ -1,29 +1,35 @@
 /**
- * scroll-fade
- * @author Mads Stoumann
- *
- * Shared scroll-driven edge-fade primitive. Consumed by content="scr"
- * (ui/card/content.css) and ui-reveal variant="scr" (ui/reveal/ui-reveal.css): both
- * animate --ui-scroll-fade-start/-end on a scroll-timeline and paint the same
- * --ui-scroll-fade-mask gradient. Extracted here so the two scrollers share one
- * source of truth (was duplicated inline in both sheets).
+ * scroll-edge-fade engine — a registered <length> pair animated on a scroll timeline.
+ * Consumers: content="scr" · ui-reveal variant="scr" · lay-out overflow="fade*".
+ * Docs: ../card/docs/content.md § scr · ../../layout/core/base.md § overflow
+ * @version 2.0.0 · @author Mads Stoumann
  */
-@property --ui-scroll-fade-start { syntax: "<length>"; inherits: false; initial-value: 0px; }
-@property --ui-scroll-fade-end   { syntax: "<length>"; inherits: false; initial-value: 0px; }
+/* ALL non-inheriting on purpose — a nested scroller must not inherit an outer one's knobs */
+@property --ui-scroll-fade-start  { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --ui-scroll-fade-end    { syntax: "<length>"; inherits: false; initial-value: 0px; }
+/* size: no initial-value — a `rem` one is REJECTED (must be computationally independent) */
+@property --ui-scroll-fade-size-s { syntax: "*"; inherits: false; }
+@property --ui-scroll-fade-size-e { syntax: "*"; inherits: false; }
+@property --ui-scroll-fade-ramp-s { syntax: "<length-percentage>"; inherits: false; initial-value: 10%; }
+@property --ui-scroll-fade-ramp-e { syntax: "<length-percentage>"; inherits: false; initial-value: 10%; }
+/* no initial-value: the guaranteed-invalid initial keeps the var() fallbacks below firing */
+@property --ui-scroll-fade-dir  { syntax: "*"; inherits: false; }
+@property --ui-scroll-fade-mask { syntax: "*"; inherits: false; }
 
-@keyframes ui-scroll-fade {
-	0%        { --ui-scroll-fade-start: 0px; }
-	10%, 100% { --ui-scroll-fade-start: var(--ui-scroll-fade-size, 3rem); }
-	0%, 90%   { --ui-scroll-fade-end: var(--ui-scroll-fade-size, 3rem); }
-	100%      { --ui-scroll-fade-end: 0px; }
+/* disjoint properties, so the two animations never compete for one value */
+@keyframes ui-scroll-fade-s {
+	from { --ui-scroll-fade-start: 0px; }
+	to   { --ui-scroll-fade-start: var(--ui-scroll-fade-size-s, 3rem); }
+}
+@keyframes ui-scroll-fade-e {
+	from { --ui-scroll-fade-end: var(--ui-scroll-fade-size-e, 3rem); }
+	to   { --ui-scroll-fade-end: 0px; }
 }
 
 @layer bs-core {
-	/* Declared on the two scroller hosts so the nested var(--ui-scroll-fade-start)
-	   resolves in the scroller's own context, where the animation drives it.
-	   --ui-scroll-fade-dir picks the axis (default vertical); content="scr(x)"
-	   overrides it to "to right" so the one gradient/keyframes serve both axes. */
-	:where(ui-content, ui-reveal) {
+	/* declared ON the elements that animate — a var() in a custom property substitutes at the
+	   DECLARING element, so an inherited mask would freeze both lengths at their initial 0px */
+	:where(ui-content, lay-out, ui-reveal > details > *) {
 		--ui-scroll-fade-mask: linear-gradient(var(--ui-scroll-fade-dir, to bottom), #0000, #000 var(--ui-scroll-fade-start) calc(100% - var(--ui-scroll-fade-end)), #0000);
 	}
 }
