@@ -151,7 +151,7 @@
 	/* horizontal — children must NOT shrink or wrap, or they reflow instead of overflowing */
 	:where([content~="scr(x)"]) ui-content,
 	:where(ui-content[content~="scr(x)"]) {
-		--ui-scroll-fade-dir: to right;
+		--ui-scroll-fade-dir: to var(--_dir-e);
 		flex-flow: row nowrap;
 		max-inline-size: 100%;
 		overflow-x: auto;
@@ -164,19 +164,20 @@
 	:where(ui-content[content~="scr(x)"]) > * { flex: 0 0 auto; max-inline-size: none; /* a scrolling row must overflow — the wid()/prose cap would clamp it */ }
 	@supports (animation-timeline: scroll()) {
 		@media (prefers-reduced-motion: no-preference) {
+			/* animation-timeline / -range MUST follow the shorthand — it resets both */
 			:where([content~="scr"]) ui-content, :where([content~="scr(y)"]) ui-content,
 			:where(ui-content[content~="scr"]), :where(ui-content[content~="scr(y)"]) {
-				animation: ui-scroll-fade linear;
-				animation-timeline: --ui-scroll;
+				animation: ui-scroll-fade-s both linear, ui-scroll-fade-e both linear;
+				animation-timeline: scroll(self block);
+				animation-range: 0 var(--ui-scroll-fade-ramp-s), calc(100% - var(--ui-scroll-fade-ramp-e)) 100%;
 				mask: var(--ui-scroll-fade-mask);
-				scroll-timeline: --ui-scroll block;
 			}
 			:where([content~="scr(x)"]) ui-content,
 			:where(ui-content[content~="scr(x)"]) {
-				animation: ui-scroll-fade linear;
-				animation-timeline: --ui-scroll;
+				animation: ui-scroll-fade-s both linear, ui-scroll-fade-e both linear;
+				animation-timeline: scroll(self inline);
+				animation-range: 0 var(--ui-scroll-fade-ramp-s), calc(100% - var(--ui-scroll-fade-ramp-e)) 100%;
 				mask: var(--ui-scroll-fade-mask);
-				scroll-timeline: --ui-scroll inline;
 			}
 		}
 	}

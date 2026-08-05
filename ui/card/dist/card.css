@@ -1550,7 +1550,7 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
   }
   :where([content~="scr(x)"]) ui-content,
   :where(ui-content[content~="scr(x)"]) {
-    --ui-scroll-fade-dir: to right;
+    --ui-scroll-fade-dir: to var(--_dir-e);
     flex-flow: row nowrap;
     max-inline-size: 100%;
     overflow-x: auto;
@@ -1570,17 +1570,17 @@ ui-media[popover] > ui-carousel-controls:not(:where([data-media~=nav], [data-med
       :where([content~="scr(y)"]) ui-content,
       :where(ui-content[content~=scr]),
       :where(ui-content[content~="scr(y)"]) {
-        animation: ui-scroll-fade linear;
-        animation-timeline: --ui-scroll;
+        animation: ui-scroll-fade-s both linear, ui-scroll-fade-e both linear;
+        animation-timeline: scroll(self block);
+        animation-range: 0 var(--ui-scroll-fade-ramp-s), calc(100% - var(--ui-scroll-fade-ramp-e)) 100%;
         mask: var(--ui-scroll-fade-mask);
-        scroll-timeline: --ui-scroll block;
       }
       :where([content~="scr(x)"]) ui-content,
       :where(ui-content[content~="scr(x)"]) {
-        animation: ui-scroll-fade linear;
-        animation-timeline: --ui-scroll;
+        animation: ui-scroll-fade-s both linear, ui-scroll-fade-e both linear;
+        animation-timeline: scroll(self inline);
+        animation-range: 0 var(--ui-scroll-fade-ramp-s), calc(100% - var(--ui-scroll-fade-ramp-e)) 100%;
         mask: var(--ui-scroll-fade-mask);
-        scroll-timeline: --ui-scroll inline;
       }
     }
   }
