@@ -1,0 +1,46 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "qa-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-05T12:00:00Z",
+    "updatedAt": "2026-08-05T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Community"
+  },
+  "fields": {
+    "internalName": "Demo — Q&A",
+    "schemaType": "qa",
+    "preset": {
+      "$ref": "card-preset/stack"
+    },
+    "eyebrow": "CSS",
+    "headline": "How do I center a div in 2026?",
+    "summary": "Community answers, ranked by votes.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/support.png",
+        "alt": "Developer community forum illustration"
+      }
+    ],
+    "details": {
+      "question": "How do I center a div in 2026?",
+      "upvotes": 312,
+      "answers": [
+        {
+          "text": "Give the parent `display: grid; place-items: center` — two lines, handles both axes, works everywhere.",
+          "author": "Lena Fischer",
+          "upvotes": 481,
+          "accepted": true
+        },
+        {
+          "text": "If it's a single item, `margin: auto` inside a flex or grid parent also centers on both axes.",
+          "author": "Tomás Rivera",
+          "upvotes": 217
+        }
+      ]
+    }
+  }
+}

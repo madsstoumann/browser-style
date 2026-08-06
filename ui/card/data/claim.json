@@ -1,0 +1,39 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "claim-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-05T12:00:00Z",
+    "updatedAt": "2026-08-05T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/News"
+  },
+  "fields": {
+    "internalName": "Demo — Fact check",
+    "schemaType": "claim",
+    "preset": {
+      "$ref": "card-preset/stack"
+    },
+    "eyebrow": "Fact check",
+    "headline": "Did the harbour bridge cost twice its budget?",
+    "summary": "Public records show the final cost came in 18% over the approved budget — high, but nowhere near double.",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/government.png",
+        "alt": "City hall press briefing"
+      }
+    ],
+    "details": {
+      "claim": "The new harbour bridge cost twice its approved budget.",
+      "claimant": "Social media posts",
+      "reviewDate": "2026-07-28",
+      "verdict": {
+        "value": 2,
+        "max": 5,
+        "label": "Mostly false"
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "video-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-05T12:00:00Z",
+    "updatedAt": "2026-08-05T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media"
+  },
+  "fields": {
+    "internalName": "Demo — Video",
+    "schemaType": "video",
+    "preset": {
+      "$ref": "card-preset/stack"
+    },
+    "eyebrow": "Documentary",
+    "headline": "The River, Slowly",
+    "summary": "A quiet study of a lowland river through one summer — shot at water level.",
+    "published": "2026-05-14T10:00:00Z",
+    "media": [
+      {
+        "mediaType": "video",
+        "src": "/assets/video/river.mp4",
+        "poster": "/assets/images/river.png",
+        "alt": "Slow drone shot following a river between meadows",
+        "uploadDate": "2026-05-14T10:00:00Z",
+        "duration": "PT3M24S"
+      }
+    ],
+    "engagement": {
+      "viewCount": 48211
+    },
+    "details": {
+      "durationDisplay": "3:24",
+      "creator": {
+        "name": "Nørre Films"
+      }
+    }
+  }
+}

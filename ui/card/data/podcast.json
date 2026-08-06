@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../cms/baseline/models/card.schema.json",
+  "id": "podcast-1",
+  "model": "card",
+  "meta": {
+    "createdAt": "2026-08-05T12:00:00Z",
+    "updatedAt": "2026-08-05T12:00:00Z",
+    "locale": "en-US",
+    "status": "published",
+    "folder": "Cards/Media"
+  },
+  "fields": {
+    "internalName": "Demo — Podcast",
+    "schemaType": "podcast",
+    "preset": {
+      "$ref": "card-preset/stack"
+    },
+    "eyebrow": "Podcast",
+    "headline": "Digital minimalism, revisited",
+    "summary": "What actually stuck three years after the digital-declutter wave — with researcher Ida Månsson.",
+    "published": "2026-07-30T06:00:00Z",
+    "media": [
+      {
+        "mediaType": "image",
+        "src": "/assets/images/mindfulness.png",
+        "alt": "The Calm Mind podcast cover art"
+      }
+    ],
+    "details": {
+      "seriesName": "The Calm Mind",
+      "episodeNumber": 42,
+      "duration": "PT48M",
+      "durationDisplay": "48 min",
+      "audioUrl": "https://cdn.example.com/calm-mind/ep42.mp3"
+    }
+  }
+}
