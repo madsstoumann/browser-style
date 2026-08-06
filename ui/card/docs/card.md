@@ -47,7 +47,7 @@ never had.
 | [`data/*.json`](../data) | 37 UCF card instances (one per schemaType + two presentation-only blocks) + [`index.json`](../data/index.json) manifest |
 | [`render.js`](../render.js) | Rendering engine: UCF + presets → DOM with microdata |
 | [`render.html`](../demo/render.html) | Live demo — all 35 typed cards rendered from data |
-| [`schema.html`](../demo/schema.html) | Hand-authored reference markup (the spec render.js follows — covers the original 26 types) |
+| [`schema.html`](../demo/schema.html) | Hand-authored reference markup for every type (the spec render.js follows) |
 | [`content.css`](../content.css) | `<ui-content>` parts — all parts styled (incl. the 8 once-proposed structured parts) |
 
 ## Content model — `card`
@@ -638,7 +638,7 @@ navigation; `prefers-reduced-motion` keeps default timing.
 
 | Page | Shows |
 |------|-------|
-| [`schema.html`](../demo/schema.html) | Hand-authored reference — the original 26 types with microdata |
+| [`schema.html`](../demo/schema.html) | Hand-authored reference — all 35 types with microdata |
 | [`render.html`](../demo/render.html) | All 35 typed cards rendered by `render.js` from UCF data + presets |
 | [`media.render.html`](../demo/media.render.html) · [`carousel.render.html`](../demo/carousel.render.html) · [`video.render.html`](../demo/video.render.html) · [`reveal.render.html`](../demo/reveal.render.html) | The original demo pages recreated data-driven: presets from [`data/card.presets.demo.json`](../data/card.presets.demo.json) (129 presets extracted from the originals) + UCF instances in [`data/demo/`](../data/demo). Each page lists its not-expressible demos in a bottom note |
 | [`article.render.html`](../demo/article.render.html) + [`articles/`](../demo/articles/) | The article pattern above, live and **fully static** (pre-rendered by `articles/build.js`): teaser cards with stretched-link headlines → cross-document view transition morphs the whole card into the per-article page and back (`card-{id}` + nested `hero-{id}` names via `data-view` + CSS `attr()`), body-instead-of-summary via the `prose` preset, plain `<a>` navigation, zero runtime JS |

@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
-	<meta name="description" content="All 25 legacy content-card schema.org types re-created with the modern &lt;ui-card&gt; engine — inline microdata (itemscope/itemtype/itemprop), no JSON-LD, no JavaScript.">
+	<meta name="description" content="All 34 schema.org card types — the 25 legacy content-card types plus the v1.3 additions — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD, no JavaScript.">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="/ui/carousel/index.css">
 	<link rel="stylesheet" href="/layout/dist/layout.css">
@@ -50,7 +50,7 @@
 <body data-layout-root page-gap="2">
 	<header>
 	<h1>UI: Card — Schema.org</h1>
-	<p class="note">Every card type from the legacy <code>content/card</code> package, re-created with the modern engine: <code>&lt;ui-card&gt;</code> + <code>&lt;ui-media&gt;</code> + <code>&lt;ui-content&gt;</code>, with satellites <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-sticker&gt;</code>, <code>&lt;ui-save&gt;</code>, <code>&lt;ui-avatar&gt;</code>, <code>&lt;ui-quote&gt;</code> and <code>&lt;ui-accordion&gt;</code>. Every card uses the same composition: media on top, text below. Structured data is inline <strong>microdata</strong> (<code>itemscope</code>/<code>itemtype</code>/<code>itemprop</code> + hidden <code>&lt;meta&gt;</code> values) — no JSON-LD, no JavaScript.</p>
+	<p class="note">Every card type from the legacy <code>content/card</code> package — plus the nine types added in model v1.3 (organization, video, howto, qa, podcast, movie, book, dataset, claim) — re-created with the modern engine: <code>&lt;ui-card&gt;</code> + <code>&lt;ui-media&gt;</code> + <code>&lt;ui-content&gt;</code>, with satellites <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-sticker&gt;</code>, <code>&lt;ui-save&gt;</code>, <code>&lt;ui-avatar&gt;</code>, <code>&lt;ui-quote&gt;</code> and <code>&lt;ui-accordion&gt;</code>. Every card uses the same composition: media on top, text below. Structured data is inline <strong>microdata</strong> (<code>itemscope</code>/<code>itemtype</code>/<code>itemprop</code> + hidden <code>&lt;meta&gt;</code> values) — no JSON-LD, no JavaScript.</p>
 	<p class="note">The matching CMS content model is <a href="../../../cms/baseline/models/card.schema.json"><code>cms/baseline/models/card.schema.json</code></a>: a structured envelope + <code>schemaType</code> discriminator + one <code>details</code> object per type. See also: <a href="cards.html">cards.html</a> · <a href="media.html">media.html</a> · <a href="content.html">content.html</a>.</p>
 
 	</header>
@@ -762,14 +762,17 @@
 	     business — LocalBusiness
 	     ============================================================ -->
 	<section>
-	<h2>Business — <code>LocalBusiness</code></h2>
-	<p class="note">Part <code>address</code> (<code>PostalAddress</code> scope), geo metas, opening hours, and a map CTA — <code>geo:</code> (RFC 5870) or an author-supplied maps URL.</p>
+	<h2>Business — <code>LocalBusiness</code> (subtype <code>CafeOrCoffeeShop</code>)</h2>
+	<p class="note">Part <code>address</code> (<code>PostalAddress</code> scope), geo metas, opening hours (flat <code>openingHours</code> + structured <code>OpeningHoursSpecification</code>), rating, price range and a map CTA. <code>details.businessType</code> sharpens the itemtype to an allowlisted <code>LocalBusiness</code> subtype.</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/LocalBusiness">
+		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/CafeOrCoffeeShop">
 			<cq-box>
 				<ui-media><img src="/assets/images/brewandbean.png" alt="Brew &amp; Bean café storefront" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="url" content="https://brewandbean.example">
+					<meta itemprop="priceRange" content="$$">
+					<meta itemprop="foundingDate" content="2015-05-01">
+					<meta itemprop="sameAs" content="https://instagram.com/brewandbean">
 					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
 						<meta itemprop="latitude" content="55.6761">
 						<meta itemprop="longitude" content="12.5683">
@@ -783,10 +786,25 @@
 						<span itemprop="addressLocality">Copenhagen</span>
 						<meta itemprop="addressCountry" content="DK">
 					</address>
+					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+						<meta itemprop="ratingValue" content="4.7">
+						<meta itemprop="ratingCount" content="412">
+						<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+						<input class="ui-rating" type="range" min="1" max="5" value="4.7" step="0.01" readonly tabindex="-1" role="img" aria-label="Rated 4.7 out of 5 stars from 412 ratings">
+						<span>4.7 / 5 (412 ratings)</span>
+					</div>
 					<p data-part="meta">
 						<meta itemprop="openingHours" content="Mo-Fr 07:00-18:00">
+						<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+							<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+							<meta itemprop="opens" content="07:00"><meta itemprop="closes" content="18:00">
+						</span>
 						<meta itemprop="openingHours" content="Sa-Su 08:00-16:00">
-						Mon–Fri 7–18 · Sat–Sun 8–16
+						<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+							<meta itemprop="dayOfWeek" content="https://schema.org/Saturday"><meta itemprop="dayOfWeek" content="https://schema.org/Sunday">
+							<meta itemprop="opens" content="08:00"><meta itemprop="closes" content="16:00">
+						</span>
+						Mon–Fri 7–18 · Sat–Sun 8–16 · $$
 					</p>
 					<nav data-part="actions">
 						<a class="ui-button" itemprop="telephone" href="tel:+4533221100">+45 33 22 11 00</a>
@@ -991,6 +1009,337 @@
 						<data itemprop="price" value="29">USD 29</data> <small>one-time purchase</small>
 					</p>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Play demo</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	</section>
+
+	<!-- ============================================================
+	     organization — Organization (v1.3)
+	     ============================================================ -->
+	<section>
+	<h2>Organization — <code>Organization</code></h2>
+	<p class="note">The multi-office shape: HQ address, employees, <code>sameAs</code> — and each local office as <code>department</code> → <code>LocalBusiness</code> with its own address, phone and opening hours (both flat and structured).</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Organization">
+			<cq-box>
+				<ui-media><img src="/assets/images/techpeople.png" alt="Northwind Group team at the Copenhagen headquarters" itemprop="image"></ui-media>
+				<ui-content>
+					<meta itemprop="foundingDate" content="1998-03-01">
+					<meta itemprop="sameAs" content="https://www.linkedin.com/company/northwind-group">
+					<meta itemprop="sameAs" content="https://x.com/northwindgroup">
+					<span itemprop="numberOfEmployees" itemscope itemtype="https://schema.org/QuantitativeValue" hidden><meta itemprop="value" content="1240"></span>
+					<small data-part="eyebrow">Consulting</small>
+					<h3 data-part="headline" itemprop="name">Northwind Group</h3>
+					<p data-part="summary" itemprop="description">Engineering and design consultancy — headquartered in Copenhagen, with local offices across Northern Europe.</p>
+					<p data-part="meta">1,240 employees · Founded 1998</p>
+					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+						<span itemprop="streetAddress">Havnegade 44</span>,
+						<span itemprop="postalCode">1058</span>
+						<span itemprop="addressLocality">Copenhagen</span>
+						<meta itemprop="addressCountry" content="DK">
+					</address>
+					<address data-part="address" itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">
+						<strong itemprop="name">Aarhus office</strong>
+						<span itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"><span itemprop="streetAddress">Åboulevarden 21</span>, <span itemprop="addressLocality">Aarhus</span><meta itemprop="addressCountry" content="DK"></span>
+						<a itemprop="telephone" href="tel:+4586123456">+45 86 12 34 56</a>
+						<meta itemprop="openingHours" content="Mo-Fr 09:00-17:00">
+						<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+							<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+							<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="17:00">
+						</span>
+						<small>Mon–Fri 9–17</small>
+					</address>
+					<address data-part="address" itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">
+						<strong itemprop="name">Berlin office</strong>
+						<span itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"><span itemprop="streetAddress">Torstraße 140</span>, <span itemprop="addressLocality">Berlin</span><meta itemprop="addressCountry" content="DE"></span>
+						<a itemprop="telephone" href="tel:+4930901820">+49 30 901820</a>
+						<meta itemprop="openingHours" content="Mo-Fr 08:30-16:30">
+						<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+							<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+							<meta itemprop="opens" content="08:30"><meta itemprop="closes" content="16:30">
+						</span>
+						<small>Mon–Fri 8:30–16:30</small>
+					</address>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	</section>
+
+	<!-- ============================================================
+	     video — VideoObject (v1.3)
+	     ============================================================ -->
+	<section>
+	<h2>Video — <code>VideoObject</code></h2>
+	<p class="note">The card ROOT is the VideoObject, so media facts (<code>contentUrl</code>, <code>thumbnailUrl</code>, <code>uploadDate</code>, <code>duration</code>) emit as root-level props — no nested <code>video</code> scope. Eyebrow → <code>genre</code>, published → <code>uploadDate</code>.</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/VideoObject">
+			<cq-box>
+				<ui-media><video src="/assets/video/river.mp4" playsinline controls poster="/assets/images/river.png" preload="metadata" aria-label="Slow drone shot following a river between meadows"><meta itemprop="contentUrl" content="/assets/video/river.mp4"><meta itemprop="thumbnailUrl" content="/assets/images/river.png"><meta itemprop="uploadDate" content="2026-05-14T10:00:00Z"><meta itemprop="duration" content="PT3M24S"></video></ui-media>
+				<ui-content>
+					<small data-part="eyebrow" itemprop="genre">Documentary</small>
+					<h3 data-part="headline" itemprop="name">The River, Slowly</h3>
+					<p data-part="summary" itemprop="description">A quiet study of a lowland river through one summer — shot at water level.</p>
+					<p data-part="meta">3:24</p>
+					<p data-part="meta" itemprop="creator" itemscope itemtype="https://schema.org/Person">By <span itemprop="name">Nørre Films</span></p>
+					<div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden>
+						<meta itemprop="interactionType" content="https://schema.org/WatchAction">
+						<meta itemprop="userInteractionCount" content="48211">
+					</div>
+					<footer data-part="footer">48,211 views</footer>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	</section>
+
+	<!-- ============================================================
+	     howto — HowTo (v1.3)
+	     ============================================================ -->
+	<section>
+	<h2>How-to — <code>HowTo</code></h2>
+	<p class="note">Recipe's sibling: supplies/tools as part <code>list</code> (<code>HowToSupply</code>/<code>HowToTool</code>), steps as a nested <code>&lt;ui-accordion&gt;</code> of <code>HowToStep</code>, plus <code>totalTime</code> and <code>estimatedCost</code> → <code>MonetaryAmount</code>.</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/HowTo">
+			<cq-box>
+				<ui-media><img src="/assets/images/maintainance.png" alt="Hand holding a radiator key against a valve" itemprop="image"></ui-media>
+				<ui-content>
+					<meta itemprop="totalTime" content="PT10M">
+					<span itemprop="estimatedCost" itemscope itemtype="https://schema.org/MonetaryAmount" hidden><meta itemprop="currency" content="EUR"><meta itemprop="value" content="5"></span>
+					<small data-part="eyebrow">Home maintenance</small>
+					<h3 data-part="headline" itemprop="name">Bleed a radiator in four steps</h3>
+					<p data-part="summary" itemprop="description">Cold at the top, warm at the bottom? Trapped air. Ten minutes and a radiator key fix it.</p>
+					<p data-part="meta">Takes 10 min · ~EUR 5 · Easy</p>
+					<ul data-part="list">
+						<li itemprop="supply" itemscope itemtype="https://schema.org/HowToSupply"><span itemprop="name">Cloth</span></li>
+						<li itemprop="supply" itemscope itemtype="https://schema.org/HowToSupply"><span itemprop="name">Small bowl</span></li>
+						<li itemprop="tool" itemscope itemtype="https://schema.org/HowToTool"><span itemprop="name">Radiator key</span></li>
+					</ul>
+					<ui-accordion variant="bordered rounded divided" group="howto-acc"><cq-box>
+						<details name="howto-acc">
+							<summary>Steps<ui-icon type="plus-minus"></ui-icon></summary>
+							<ui-accordion variant="divided" group="howto-step"><cq-box>
+									<details name="howto-step" itemprop="step" itemscope itemtype="https://schema.org/HowToStep">
+										<summary><span itemprop="name">Turn the heating off</span><ui-icon type="chevron right"></ui-icon></summary>
+										<div><meta itemprop="position" content="1"><p itemprop="text">Switch the central heating off and let the radiator cool completely.</p></div>
+									</details>
+									<details name="howto-step" itemprop="step" itemscope itemtype="https://schema.org/HowToStep">
+										<summary><span itemprop="name">Open the bleed valve</span><ui-icon type="chevron right"></ui-icon></summary>
+										<div><meta itemprop="position" content="2"><p itemprop="text">Hold the bowl under the valve and turn the key counter-clockwise a quarter turn — you'll hear a hiss.</p></div>
+									</details>
+									<details name="howto-step" itemprop="step" itemscope itemtype="https://schema.org/HowToStep">
+										<summary><span itemprop="name">Wait for water</span><ui-icon type="chevron right"></ui-icon></summary>
+										<div><meta itemprop="position" content="3"><p itemprop="text">When the hissing stops and a steady trickle of water appears, all the air is out.</p></div>
+									</details>
+									<details name="howto-step" itemprop="step" itemscope itemtype="https://schema.org/HowToStep">
+										<summary><span itemprop="name">Close and check pressure</span><ui-icon type="chevron right"></ui-icon></summary>
+										<div><meta itemprop="position" content="4"><p itemprop="text">Close the valve, turn the heating back on and top up the boiler pressure if it dropped below 1 bar.</p></div>
+									</details>
+							</cq-box></ui-accordion>
+						</details>
+					</cq-box></ui-accordion>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	</section>
+
+	<!-- ============================================================
+	     qa — QAPage (v1.3)
+	     ============================================================ -->
+	<section>
+	<h2>Q&amp;A — <code>QAPage</code></h2>
+	<p class="note">Distinct from FAQ: one <code>mainEntity</code> → <code>Question</code> with community answers — <code>acceptedAnswer</code> / <code>suggestedAnswer</code> → <code>Answer</code>, each with author and <code>upvoteCount</code>.</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/QAPage">
+			<cq-box>
+				<ui-media><img src="/assets/images/support.png" alt="Developer community forum illustration" itemprop="image"></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">CSS</small>
+					<h3 data-part="headline" itemprop="name">How do I center a div in 2026?</h3>
+					<p data-part="summary" itemprop="description">Community answers, ranked by votes.</p>
+					<div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+						<meta itemprop="name" content="How do I center a div in 2026?">
+						<meta itemprop="answerCount" content="2">
+						<meta itemprop="upvoteCount" content="312">
+						<ul data-part="list">
+							<li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+								<meta itemprop="upvoteCount" content="481">
+								<p itemprop="text">Give the parent `display: grid; place-items: center` — two lines, handles both axes, works everywhere.</p>
+								<small>✓ Accepted · <span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Lena Fischer</span></span> · ▲ 481</small>
+							</li>
+							<li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer">
+								<meta itemprop="upvoteCount" content="217">
+								<p itemprop="text">If it's a single item, `margin: auto` inside a flex or grid parent also centers on both axes.</p>
+								<small><span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Tomás Rivera</span></span> · ▲ 217</small>
+							</li>
+						</ul>
+					</div>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	</section>
+
+	<!-- ============================================================
+	     podcast — PodcastEpisode (v1.3)
+	     ============================================================ -->
+	<section>
+	<h2>Podcast — <code>PodcastEpisode</code></h2>
+	<p class="note">Episode metas plus hidden <code>partOfSeries</code> → <code>PodcastSeries</code> and <code>associatedMedia</code> → <code>AudioObject</code> (the audio URL).</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/PodcastEpisode">
+			<cq-box>
+				<ui-media><img src="/assets/images/mindfulness.png" alt="The Calm Mind podcast cover art" itemprop="image"></ui-media>
+				<ui-content>
+					<meta itemprop="episodeNumber" content="42">
+					<meta itemprop="duration" content="PT48M">
+					<div itemprop="partOfSeries" itemscope itemtype="https://schema.org/PodcastSeries" hidden><meta itemprop="name" content="The Calm Mind"></div>
+					<div itemprop="associatedMedia" itemscope itemtype="https://schema.org/AudioObject" hidden><meta itemprop="contentUrl" content="https://cdn.example.com/calm-mind/ep42.mp3"></div>
+					<small data-part="eyebrow">Podcast</small>
+					<h3 data-part="headline" itemprop="name">Digital minimalism, revisited</h3>
+					<p data-part="summary" itemprop="description">What actually stuck three years after the digital-declutter wave — with researcher Ida Månsson.</p>
+					<p data-part="meta">The Calm Mind · Episode 42 · 48 min</p>
+					<meta itemprop="datePublished" content="2026-07-30T06:00:00Z">
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	</section>
+
+	<!-- ============================================================
+	     movie — Movie (v1.3)
+	     ============================================================ -->
+	<section>
+	<h2>Movie — <code>Movie</code></h2>
+	<p class="note">Director and cast as <code>Person</code> scopes, <code>contentRating</code>, release date and an <code>AggregateRating</code> star row. Eyebrow → <code>genre</code>.</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(4/3)" itemscope itemtype="https://schema.org/Movie">
+			<cq-box>
+				<ui-media><img src="/assets/images/movie_01.png" alt="Echoes of Tomorrow film poster" itemprop="image"></ui-media>
+				<ui-content>
+					<meta itemprop="duration" content="PT2H14M">
+					<meta itemprop="contentRating" content="PG-13">
+					<meta itemprop="dateCreated" content="2026-02-12">
+					<small data-part="eyebrow" itemprop="genre">Science fiction</small>
+					<h3 data-part="headline" itemprop="name">Echoes of Tomorrow</h3>
+					<p data-part="summary" itemprop="description">A signal from a decommissioned satellite starts predicting tomorrow's news — one broadcast at a time.</p>
+					<p data-part="meta">Feb 2026 · 2 h 14 min · PG-13</p>
+					<p data-part="meta" itemprop="director" itemscope itemtype="https://schema.org/Person">Director: <span itemprop="name">Sofia Lindqvist</span></p>
+					<p data-part="meta">Starring: <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Jonas Beck</span></span>, <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Amara Okafor</span></span></p>
+					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+						<meta itemprop="ratingValue" content="4.2">
+						<meta itemprop="ratingCount" content="8817">
+						<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+						<input class="ui-rating" type="range" min="1" max="5" value="4.2" step="0.01" readonly tabindex="-1" role="img" aria-label="Rated 4.2 out of 5 stars from 8,817 ratings">
+						<span>4.2 / 5 (8,817 ratings)</span>
+					</div>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	</section>
+
+	<!-- ============================================================
+	     book — Book (v1.3)
+	     ============================================================ -->
+	<section>
+	<h2>Book — <code>Book</code></h2>
+	<p class="note"><code>isbn</code>, pages, allowlisted <code>bookFormat</code> (schema.org <code>BookFormatType</code>), publisher → <code>Organization</code>, author byline, rating and an <code>Offer</code>.</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(4/3)" itemscope itemtype="https://schema.org/Book">
+			<cq-box>
+				<ui-media><img src="/assets/images/gastronomy.png" alt="The Nordic Pantry book cover" itemprop="image"></ui-media>
+				<ui-content>
+					<meta itemprop="isbn" content="978-87-12345-67-8">
+					<meta itemprop="numberOfPages" content="312">
+					<meta itemprop="bookFormat" content="https://schema.org/Hardcover">
+					<small data-part="eyebrow" itemprop="genre">Cookbook</small>
+					<h3 data-part="headline" itemprop="name">The Nordic Pantry</h3>
+					<p data-part="summary" itemprop="description">120 recipes built on what a northern larder actually holds — rye, root vegetables, brine and smoke.</p>
+					<p data-part="meta">312 pages · Hardcover · ISBN 978-87-12345-67-8</p>
+					<p data-part="meta" itemprop="publisher" itemscope itemtype="https://schema.org/Organization">Publisher: <span itemprop="name">Kbh Press</span></p>
+					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+						<meta itemprop="ratingValue" content="4.6">
+						<meta itemprop="ratingCount" content="923">
+						<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+						<input class="ui-rating" type="range" min="1" max="5" value="4.6" step="0.01" readonly tabindex="-1" role="img" aria-label="Rated 4.6 out of 5 stars from 923 ratings">
+						<span>4.6 / 5 (923 ratings)</span>
+					</div>
+					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+						<meta itemprop="priceCurrency" content="EUR">
+						<meta itemprop="availability" content="https://schema.org/InStock">
+						<data itemprop="price" value="34">EUR 34</data>
+					</p>
+					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+						<ui-avatar><abbr aria-hidden="true">MH</abbr></ui-avatar>
+						<span data-part="byline-who"><span itemprop="name">Mette Holm</span></span>
+					</address>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	</section>
+
+	<!-- ============================================================
+	     dataset — Dataset (v1.3)
+	     ============================================================ -->
+	<section>
+	<h2>Dataset — <code>Dataset</code></h2>
+	<p class="note">License, temporal/spatial coverage and <code>variableMeasured</code> metas; each download is <code>distribution</code> → <code>DataDownload</code> with <code>encodingFormat</code> + <code>contentUrl</code> on the button.</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Dataset">
+			<cq-box>
+				<ui-media><img src="/assets/images/hubble.png" alt="Space telescope imagery of a star field" itemprop="image"></ui-media>
+				<ui-content>
+					<meta itemprop="license" content="https://creativecommons.org/licenses/by/4.0/">
+					<meta itemprop="temporalCoverage" content="2019-01/2025-12">
+					<meta itemprop="spatialCoverage" content="Kepler field">
+					<meta itemprop="variableMeasured" content="Transit depth">
+					<meta itemprop="variableMeasured" content="Orbital period">
+					<meta itemprop="variableMeasured" content="Stellar magnitude">
+					<small data-part="eyebrow">Open data</small>
+					<h3 data-part="headline" itemprop="name">Exoplanet transit observations 2019–2025</h3>
+					<p data-part="summary" itemprop="description">Light-curve measurements for 1,142 confirmed exoplanet transits, cleaned and de-trended.</p>
+					<p data-part="meta">2019-01/2025-12 · Kepler field · CC BY 4.0</p>
+					<ul data-part="list">
+						<li>Transit depth</li>
+						<li>Orbital period</li>
+						<li>Stellar magnitude</li>
+					</ul>
+					<nav data-part="actions">
+						<span itemprop="distribution" itemscope itemtype="https://schema.org/DataDownload"><meta itemprop="encodingFormat" content="CSV"><a class="ui-button" data-variant="accent" itemprop="contentUrl" href="https://data.example.com/exoplanets.csv">CSV</a></span>
+						<span itemprop="distribution" itemscope itemtype="https://schema.org/DataDownload"><meta itemprop="encodingFormat" content="JSON"><a class="ui-button" itemprop="contentUrl" href="https://data.example.com/exoplanets.json">JSON</a></span>
+					</nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+	</lay-out>
+	</section>
+
+	<!-- ============================================================
+	     claim — ClaimReview (v1.3)
+	     ============================================================ -->
+	<section>
+	<h2>Fact check — <code>ClaimReview</code></h2>
+	<p class="note">The claim as a <code>&lt;ui-quote&gt;</code> carrying <code>claimReviewed</code>; the verdict is <code>reviewRating</code> → <code>Rating</code> whose <code>alternateName</code> is the visible chip (hue from the rating value).</p>
+	<lay-out md="columns(2)">
+		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/ClaimReview">
+			<cq-box>
+				<ui-media><img src="/assets/images/government.png" alt="City hall press briefing" itemprop="image"></ui-media>
+				<ui-content>
+					<meta itemprop="datePublished" content="2026-07-28">
+					<small data-part="eyebrow">Fact check</small>
+					<h3 data-part="headline" itemprop="name">Did the harbour bridge cost twice its budget?</h3>
+					<p data-part="summary" itemprop="description">Public records show the final cost came in 18% over the approved budget — high, but nowhere near double.</p>
+					<ui-quote data-part="quote"><blockquote itemprop="claimReviewed"><q>The new harbour bridge cost twice its approved budget.</q><cite>Social media posts</cite></blockquote></ui-quote>
+					<p data-part="meta" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+						<meta itemprop="ratingValue" content="2">
+						<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+						<ui-chip theme="pale red"><span itemprop="alternateName">Mostly false</span></ui-chip>
+					</p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
