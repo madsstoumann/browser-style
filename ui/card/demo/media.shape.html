@@ -14,7 +14,7 @@
 	<style>
 	</style>
 </head>
-<body data-layout-root page-gap="2">
+<body data-layout-root data-page-gap="2">
 	<header>
 	<h1>UI: Card — Media <code>shp()</code> shapes</h1>
 	<p>Clip a <code>&lt;ui-media&gt;</code> image (or video/iframe) to a shape via <code>clip-path</code>. Names are kept short: direction suffixes are <code>-l</code>/<code>-r</code> (left/right), <code>-d</code>/<code>-u</code> (down/up). The full set (32), from the opt-in <code>media.shapes.css</code> sheet. Every shape carries a matching-vertex morph target (<code>--ui-shape-morph</code>); add <code>hov(shape)</code> (all the tiles below) to animate it back to a full frame on hover — the base clip is static without it. The clip <em>mechanism</em> ships in <code>media.css</code>, the hover <em>morph</em> in <code>media.hover.css</code>, so both work with your own <code>--ui-media-shape</code> / <code>--ui-shape-morph</code> too.</p>

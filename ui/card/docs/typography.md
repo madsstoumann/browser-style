@@ -201,7 +201,7 @@ Price and rating are Body/Meta group members — they ride the same system:
       <small data-part="eyebrow">New</small>
       <h3 data-part="headline">Field jacket</h3>
       <p data-part="price"><data value="129">€129</data> <del>€189</del> <small>−32%</small></p>
-      <div data-part="rating" role="img" aria-label="4.5 of 5 stars">★★★★½ <small>(212)</small></div>
+      <div data-part="rating"><span data-sr>Rated 4.5 out of 5 stars</span> <span aria-hidden="true">★★★★½ <small>(212)</small></span></div>
       <ul data-part="tags"><li><a href="#">Outdoor</a></li><li><a href="#">Recycled</a></li></ul>
     </ui-content>
   </cq-box>

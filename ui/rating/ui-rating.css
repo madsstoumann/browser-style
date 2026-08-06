@@ -51,8 +51,9 @@
 		&[size~="lg"] { --ui-rating-size: var(--size-7); }
 		&[size~="xl"] { --ui-rating-size: var(--size-8); }
 
-		/* display-only: no pointer, no focus, no keyboard — the read-only rating */
-		&[readonly] {
+		/* display-only: no pointer, no focus, no keyboard — disabled is the valid
+		   spelling on type=range; [readonly] kept for legacy markup */
+		&:is([disabled], [readonly]) {
 			interactivity: inert;
 			pointer-events: none;
 		}

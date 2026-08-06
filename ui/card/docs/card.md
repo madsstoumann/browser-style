@@ -449,7 +449,7 @@ Eight parts added for the typed cards, all styled in [`content.css`](../content.
 | part | Element | Used by |
 |------|---------|---------|
 | `price` | `<p>` + `<data>`/`<del>`/`<small>` | product, course, booking, membership, software, job, book |
-| `rating` | `<div role="img">` stars + count | product, review, software, business, movie, book |
+| `rating` | `<div>` + decorative `<input class="ui-rating">` + `[data-sr]` label + visible count | product, review, software, business, movie, book |
 | `list` | `<ul>` check / `<ol>` ordered | recipe, job, course, booking, location, membership, howto, qa, dataset |
 | `address` | `<address>` | business, location, event, contact, organization |
 | `stat` | `<p>` + `<data>` + unit + trend | statistic |

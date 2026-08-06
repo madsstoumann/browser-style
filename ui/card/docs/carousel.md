@@ -528,7 +528,7 @@ import '@browser.style/card/carousel.js'; // just this chunk
 > **No `ui-play-toggle` event.** The carousel control is auto-discovered by
 > `carousel.js`, which binds the click directly and mirrors state back onto the
 > `<ui-play>`. Elsewhere `<ui-play>` uses the invoker contract
-> (`command="play-pause" commandfor="…"`, handled by `video.js`). Either way the
+> (`command="--play-pause" commandfor="…"`, handled by `video.js`). Either way the
 > card system never listens for a `ui-play-toggle` event — see
 > [media.md](./media.md#ui-play--one-contract).
 

@@ -31,10 +31,10 @@
 		th, td { border: 1px solid var(--color-border, #ddd); padding: 0.4em 0.75em; text-align: start; font-size: 0.9em; }
 	</style>
 </head>
-<body data-layout-root page-gap="2">
+<body data-layout-root data-page-gap="2">
 	<header>
 	<h1>UI: Card — Schema.org</h1>
-	<p class="note">Every card type from the legacy <code>content/card</code> package — plus the nine types added in model v1.3 (organization, video, howto, qa, podcast, movie, book, dataset, claim) — re-created with the modern engine: <code>&lt;ui-card&gt;</code> + <code>&lt;ui-media&gt;</code> + <code>&lt;ui-content&gt;</code>, with satellites <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-sticker&gt;</code>, <code>&lt;ui-save&gt;</code>, <code>&lt;ui-avatar&gt;</code>, <code>&lt;ui-quote&gt;</code> and <code>&lt;ui-accordion&gt;</code>. Every card uses the same composition: media on top, text below. Structured data is inline <strong>microdata</strong> (<code>itemscope</code>/<code>itemtype</code>/<code>itemprop</code> + hidden <code>&lt;meta&gt;</code> values) — no JSON-LD. The single script on this page is optional: <code>video.js</code> polyfills the proposed media invoker commands (<code>command="play-pause"</code>) behind the podcast play button; every card renders identically without it.</p>
+	<p class="note">Every card type from the legacy <code>content/card</code> package — plus the nine types added in model v1.3 (organization, video, howto, qa, podcast, movie, book, dataset, claim) — re-created with the modern engine: <code>&lt;ui-card&gt;</code> + <code>&lt;ui-media&gt;</code> + <code>&lt;ui-content&gt;</code>, with satellites <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-sticker&gt;</code>, <code>&lt;ui-save&gt;</code>, <code>&lt;ui-avatar&gt;</code>, <code>&lt;ui-quote&gt;</code> and <code>&lt;ui-accordion&gt;</code>. Every card uses the same composition: media on top, text below. Structured data is inline <strong>microdata</strong> (<code>itemscope</code>/<code>itemtype</code>/<code>itemprop</code> + hidden <code>&lt;meta&gt;</code> values) — no JSON-LD. The single script on this page is optional: <code>video.js</code> polyfills the proposed media invoker commands (<code>command="--play-pause"</code>) behind the podcast play button; every card renders identically without it.</p>
 	<p class="note">The matching CMS content model is <a href="../../../cms/baseline/models/card.schema.json"><code>cms/baseline/models/card.schema.json</code></a>: a structured envelope + <code>schemaType</code> discriminator + one <code>details</code> object per type. See also: <a href="cards.html">cards.html</a> · <a href="media.html">media.html</a> · <a href="content.html">content.html</a>.</p>
 
 	</header>
@@ -46,7 +46,7 @@
 		<thead><tr><th>data-part</th><th>Element</th><th>Purpose</th><th>Used by</th></tr></thead>
 		<tbody>
 			<tr><td><code>price</code></td><td><code>&lt;p&gt;</code> + <code>&lt;data&gt;</code>/<code>&lt;del&gt;</code>/<code>&lt;small&gt;</code></td><td>Price row (Offer microdata)</td><td>product, course, booking, membership, software</td></tr>
-			<tr><td><code>rating</code></td><td><code>&lt;div role="img"&gt;</code> stars + count</td><td>Star rating (AggregateRating / Rating)</td><td>product, review, software</td></tr>
+			<tr><td><code>rating</code></td><td><code>&lt;div&gt;</code> + masked <code>&lt;input&gt;</code> + count</td><td>Star rating (AggregateRating / Rating)</td><td>product, review, software</td></tr>
 			<tr><td><code>list</code></td><td><code>&lt;ul&gt;</code> check / <code>&lt;ol&gt;</code> ordered</td><td>Features, qualifications, ingredients, steps</td><td>recipe, job, course, booking, location, membership</td></tr>
 			<tr><td><code>address</code></td><td><code>&lt;address&gt;</code></td><td>Postal address (PostalAddress scope)</td><td>business, location, event, contact</td></tr>
 			<tr><td><code>stat</code></td><td><code>&lt;p&gt;</code> + <code>&lt;data&gt;</code> value + unit + trend</td><td>Big-number display</td><td>statistic</td></tr>
@@ -196,8 +196,9 @@
 						<meta itemprop="ratingCount" content="1247">
 						<meta itemprop="bestRating" content="5">
 						<meta itemprop="worstRating" content="1">
-						<input class="ui-rating" type="range" min="1" max="5" value="4.5" step="0.01" readonly tabindex="-1" role="img" aria-label="Rated 4.5 out of 5 stars from 1,247 ratings">
-						<span>4.5 / 5 (1,247 ratings)</span>
+						<input class="ui-rating" type="range" min="1" max="5" value="4.5" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 4.5 out of 5 stars from 1,247 ratings</span>
+						<span aria-hidden="true">4.5 / 5 (1,247 ratings)</span>
 					</div>
 					<p data-part="meta"><ui-chip theme="pale green">In stock</ui-chip></p>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Add to cart</a> <a class="ui-button" href="#">Details</a></nav>
@@ -301,8 +302,9 @@
 						<meta itemprop="ratingValue" content="4">
 						<meta itemprop="bestRating" content="5">
 						<meta itemprop="worstRating" content="1">
-						<input class="ui-rating" type="range" min="1" max="5" value="4" step="0.01" readonly tabindex="-1" role="img" aria-label="Rated 4 out of 5 stars">
-						<span>4 / 5</span>
+						<input class="ui-rating" type="range" min="1" max="5" value="4" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 4 out of 5 stars</span>
+						<span aria-hidden="true">4 / 5</span>
 					</div>
 					<ui-quote data-part="quote"><blockquote itemprop="reviewBody"><q>Astonishing bass for a speaker this small. Battery easily lasts a weekend trip — the app is the only weak point.</q></blockquote></ui-quote>
 					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
@@ -564,7 +566,7 @@
 				<ui-content>
 					<small data-part="eyebrow">Company history</small>
 					<h3 data-part="headline" itemprop="name">A decade of browser.style</h3>
-					<ol data-part="timeline" variant="minimal">
+					<ol data-part="timeline" data-variant="minimal">
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
 							<time itemprop="name" datetime="2016">2016</time>
 							<span itemprop="description">First CSS-only component published.</span>
@@ -595,7 +597,7 @@
 				<ui-content>
 					<small data-part="eyebrow">Company history</small>
 					<h3 data-part="headline" itemprop="name">Horizontal — <code>variant="horizontal"</code></h3>
-					<ol data-part="timeline" variant="horizontal">
+					<ol data-part="timeline" data-variant="horizontal">
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
 							<time itemprop="name" datetime="2016">2016</time>
 							<span itemprop="description">First CSS-only component published.</span>
@@ -774,8 +776,9 @@
 						<meta itemprop="ratingValue" content="4.7">
 						<meta itemprop="ratingCount" content="412">
 						<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
-						<input class="ui-rating" type="range" min="1" max="5" value="4.7" step="0.01" readonly tabindex="-1" role="img" aria-label="Rated 4.7 out of 5 stars from 412 ratings">
-						<span>4.7 / 5 (412 ratings)</span>
+						<input class="ui-rating" type="range" min="1" max="5" value="4.7" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 4.7 out of 5 stars from 412 ratings</span>
+						<span aria-hidden="true">4.7 / 5 (412 ratings)</span>
 					</div>
 					<p data-part="meta">
 						<meta itemprop="openingHours" content="Mo-Fr 07:00-18:00">
@@ -1172,14 +1175,14 @@
 	     ============================================================ -->
 	<section>
 	<h2>Podcast — <code>PodcastEpisode</code></h2>
-	<p class="note">Episode metas plus hidden <code>partOfSeries</code> → <code>PodcastSeries</code>. The episode audio is a chromeless <code>&lt;audio&gt;</code> inside <code>&lt;ui-media&gt;</code> (scoped <code>associatedMedia</code> → <code>AudioObject</code>) — the poster stays the visual, and <code>&lt;ui-play&gt;</code> drives playback via <code>command="play-pause"</code> (video.js polyfills the media invoker commands until browsers ship them).</p>
+	<p class="note">Episode metas plus hidden <code>partOfSeries</code> → <code>PodcastSeries</code>. The episode audio is a chromeless <code>&lt;audio&gt;</code> inside <code>&lt;ui-media&gt;</code> (scoped <code>associatedMedia</code> → <code>AudioObject</code>) — the poster stays the visual, and <code>&lt;ui-play&gt;</code> drives playback via <code>command="--play-pause"</code> (video.js polyfills the media invoker commands until browsers ship them).</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/PodcastEpisode">
 			<cq-box>
 				<ui-media>
 					<img src="/assets/images/podcast.png" alt="The Calm Mind podcast cover art" itemprop="image">
 					<audio id="podcast-ep42" src="/assets/audio/podcast.m4a" preload="metadata" aria-label="Digital minimalism, revisited — Episode 42" itemprop="associatedMedia" itemscope itemtype="https://schema.org/AudioObject"><meta itemprop="contentUrl" content="/assets/audio/podcast.m4a"><meta itemprop="name" content="Digital minimalism, revisited — Episode 42"></audio>
-					<ui-play><button type="button" command="play-pause" commandfor="podcast-ep42" aria-label="Play episode"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+					<ui-play><button type="button" command="--play-pause" commandfor="podcast-ep42" aria-label="Play episode"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				</ui-media>
 				<ui-content>
 					<meta itemprop="episodeNumber" content="42">
@@ -1220,8 +1223,9 @@
 						<meta itemprop="ratingValue" content="4.2">
 						<meta itemprop="ratingCount" content="8817">
 						<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
-						<input class="ui-rating" type="range" min="1" max="5" value="4.2" step="0.01" readonly tabindex="-1" role="img" aria-label="Rated 4.2 out of 5 stars from 8,817 ratings">
-						<span>4.2 / 5 (8,817 ratings)</span>
+						<input class="ui-rating" type="range" min="1" max="5" value="4.2" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 4.2 out of 5 stars from 8,817 ratings</span>
+						<span aria-hidden="true">4.2 / 5 (8,817 ratings)</span>
 					</div>
 				</ui-content>
 			</cq-box>
@@ -1252,8 +1256,9 @@
 						<meta itemprop="ratingValue" content="4.6">
 						<meta itemprop="ratingCount" content="923">
 						<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
-						<input class="ui-rating" type="range" min="1" max="5" value="4.6" step="0.01" readonly tabindex="-1" role="img" aria-label="Rated 4.6 out of 5 stars from 923 ratings">
-						<span>4.6 / 5 (923 ratings)</span>
+						<input class="ui-rating" type="range" min="1" max="5" value="4.6" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 4.6 out of 5 stars from 923 ratings</span>
+						<span aria-hidden="true">4.6 / 5 (923 ratings)</span>
 					</div>
 					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
 						<meta itemprop="priceCurrency" content="EUR">

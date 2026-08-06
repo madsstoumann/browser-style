@@ -463,13 +463,13 @@ element has no such axis — `pos` and `hue` are universal; the rest differ per 
 
 #### `<ui-play>` — one contract
 
-Over a `<video>` — or a chromeless `<audio>` (podcast cards) — `<ui-play>` is driven **declaratively** by the native Invoker Commands API. The inner `<button>` carries `command="play-pause"` and `commandfor="<video id>"`:
+Over a `<video>` — or a chromeless `<audio>` (podcast cards) — `<ui-play>` is driven **declaratively** by the Invoker Commands API. The inner `<button>` carries `command="--play-pause"` and `commandfor="<video id>"` — the `--` prefix is the spec's custom-command namespace, used because the proposed bare `play-pause` value does not validate yet; `video.js` handles both spellings:
 
 ```html
 <ui-media media="play(cc) play(lg)">
   <video id="reel" src="/media/reel.mp4" playsinline poster="/media/reel.jpg"></video>
   <ui-play>
-    <button type="button" command="play-pause" commandfor="reel" aria-label="Play">
+    <button type="button" command="--play-pause" commandfor="reel" aria-label="Play">
       <ui-icon type="play-pause" aria-hidden="true"></ui-icon>
     </button>
   </ui-play>

@@ -100,7 +100,7 @@ until browsers ship them natively):
 <ui-media media="play(cc) play(lg)">
   <video id="film" src="…1080p.mp4" playsinline poster="…thumb.jpg"></video>
   <ui-play>
-    <button type="button" command="play-pause" commandfor="film" aria-label="Play">
+    <button type="button" command="--play-pause" commandfor="film" aria-label="Play">
       <ui-icon type="play-pause" aria-hidden="true"></ui-icon>
     </button>
   </ui-play>

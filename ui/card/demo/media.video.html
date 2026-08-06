@@ -24,7 +24,7 @@
 		.split { margin-block-end: var(--spacing-2xl); }
 	</style>
 </head>
-<body data-layout-root page-gap="2">
+<body data-layout-root data-page-gap="2">
 
 	<section>
 	<h2>Native video</h2>
@@ -54,7 +54,7 @@
 
 	<section>
 	<h2>YouTube — <code>provider="youtube"</code></h2>
-	<p class="note">Same facade as the Vimeo embeds — <code>data-preview</code> is provider-agnostic: here a static <code>&lt;img data-preview&gt;</code> poster (Vimeo uses an animated <code>&lt;video data-preview&gt;</code> loop) sits over a lazy <code>&lt;iframe&gt;</code>, lifted by <code>z-index</code> so source order doesn't matter. The <code>&lt;ui-play&gt;</code> click drops the poster, appends <code>autoplay=1</code> and hands off to the YouTube player. (An iframe isn't an <code>HTMLMediaElement</code>, so it uses the click facade, not <code>command="play-pause"</code> — that's native <code>&lt;video&gt;</code> only.)</p>
+	<p class="note">Same facade as the Vimeo embeds — <code>data-preview</code> is provider-agnostic: here a static <code>&lt;img data-preview&gt;</code> poster (Vimeo uses an animated <code>&lt;video data-preview&gt;</code> loop) sits over a lazy <code>&lt;iframe&gt;</code>, lifted by <code>z-index</code> so source order doesn't matter. The <code>&lt;ui-play&gt;</code> click drops the poster, appends <code>autoplay=1</code> and hands off to the YouTube player. (An iframe isn't an <code>HTMLMediaElement</code>, so it uses the click facade, not <code>command="--play-pause"</code> — that's native <code>&lt;video&gt;</code> only.)</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9) play(lg) chip(red)" content="pad(md) md:pad(lg)">
 			<cq-box>
@@ -179,7 +179,7 @@
 					<source src="vimeo-data/previews/696468083.mp4" type="video/mp4">
 				</video>
 				<video id="film-696468083" data-track="featured-film" preload="none" src="vimeo-data/previews/696468083.full.mp4" poster="vimeo-data/previews/696468083.jpg" playsinline></video>
-				<ui-play><button type="button" command="play-pause" commandfor="film-696468083" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				<ui-play><button type="button" command="--play-pause" commandfor="film-696468083" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				<ui-chip>vimeo native · track</ui-chip>
 			</ui-media>
 			<ui-content>
@@ -201,7 +201,7 @@
 				<video id="film-1012727854" data-track="autumn" preload="none" src="vimeo-data/previews/1012727854.full.mp4" poster="vimeo-data/previews/1012727854.jpg" playsinline>
 					<track kind="subtitles" srclang="da" label="Dansk" src="vimeo-data/subtitles/1012727854.da.vtt" default>
 				</video>
-				<ui-play><button type="button" command="play-pause" commandfor="film-1012727854" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				<ui-play><button type="button" command="--play-pause" commandfor="film-1012727854" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<ui-chip>vimeo native · track</ui-chip>
 				<menu class="ui-media-tools">
 					<select class="ui-media-cc" aria-label="Subtitles">
@@ -297,7 +297,7 @@
 					<track kind="subtitles" srclang="da" label="Dansk" src="vimeo-data/subtitles/746542514.da.vtt" default>
 					<track kind="captions" srclang="en" label="English" src="vimeo-data/subtitles/746542514.en-x-autogen.vtt">
 				</video>
-				<ui-play><button type="button" command="play-pause" commandfor="cc-746542514" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				<ui-play><button type="button" command="--play-pause" commandfor="cc-746542514" aria-label="Play film"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 					<ui-chip>vimeo native · track</ui-chip>
 				<menu class="ui-media-tools">
 					<select class="ui-media-cc" aria-label="Subtitles">

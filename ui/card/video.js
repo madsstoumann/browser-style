@@ -35,9 +35,13 @@ export function initMediaCommands(root = document) {
 		const el = document.getElementById(btn.getAttribute('commandfor'));
 		if (!(el instanceof HTMLMediaElement)) return;
 		if (cmd.startsWith('--track-')) { setTextTrack(el, btn); return; }
-		if (nativeMediaCommands || !MEDIA_COMMANDS.has(cmd)) return;
-		if (cmd === 'toggle-muted') { el.muted = !el.muted; return; }
-		if (cmd === 'pause' || (cmd === 'play-pause' && !el.paused)) el.pause();
+		/* accept both spellings: the proposed bare form and the valid-HTML custom
+		   form (--play-pause) render.js emits; native only ever handles the bare one */
+		const bare = cmd.startsWith('--') ? cmd.slice(2) : cmd;
+		if (!MEDIA_COMMANDS.has(bare)) return;
+		if (nativeMediaCommands && bare === cmd) return;
+		if (bare === 'toggle-muted') { el.muted = !el.muted; return; }
+		if (bare === 'pause' || (bare === 'play-pause' && !el.paused)) el.pause();
 		else el.play()?.catch?.(() => {});
 	});
 }
@@ -89,7 +93,7 @@ export function initEmbeds(frames) {
 		const realVideo = media.querySelector(':scope > :is(video, audio):not([data-preview])');
 		const realIframe = media.querySelector(':scope > iframe');
 
-		// native <video>: driven declaratively via command="play-pause" — only mirror state
+		// native <video>/<audio>: driven declaratively via command="--play-pause" — only mirror state
 		if (realVideo) {
 			realVideo.addEventListener('play', () => { dropPreview(); reflectPlay(play, true); });
 			realVideo.addEventListener('pause', () => reflectPlay(play, false));

@@ -381,7 +381,7 @@ only structural essentials — visuals stay token-driven.
 | Part | Markup | Microdata | Used by |
 |---|---|---|---|
 | `price` | `<p>` + `<data>` current, `<del>` original, `<small>` discount | `Offer` / `PriceSpecification` / `MonetaryAmount` | product, course, booking, membership, software, job (salary) |
-| `rating` | `<div role="img" aria-label>` star glyphs + count | `AggregateRating` / `Rating` | product, review, software |
+| `rating` | `<div>` + `<input class="ui-rating" disabled aria-hidden>` masked stars, `[data-sr]` full label, visible `<span aria-hidden>` count | `AggregateRating` / `Rating` | product, review, software |
 | `list` | `<ul>` check-list / `<ol>` ordered | — | recipe, job, course, booking, location, membership |
 | `address` | `<address>` block (no avatar — that's `byline`) | `PostalAddress` | business, location, event, contact |
 | `stat` | `<p>` + `<data>` number, `<small>` unit, trend `<span>` | `QuantitativeValue` | statistic |

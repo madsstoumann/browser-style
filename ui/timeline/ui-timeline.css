@@ -1,6 +1,6 @@
 /**
  * ui-timeline — dated entries on a rail: a dot per entry, a line between them.
- * Vertical by default, horizontal with variant="horizontal". Docs: readme.md
+ * Vertical by default, horizontal with variant="horizontal" (data-variant on native lists). Docs: readme.md
  * @version 4.0.0
  * @date 2026-08-05
  * @author Mads Stoumann
@@ -84,7 +84,7 @@
 
 	/* minimal — liveblog/update feed: a small solid bullet, a hairline stub between
 	   entries, and an accent time label above each update. Docs: readme.md */
-	:where(ui-timeline[variant~="minimal"], .ui-timeline[variant~="minimal"], [data-part="timeline"][variant~="minimal"]) {
+	:where(ui-timeline[variant~="minimal"], .ui-timeline[variant~="minimal"], [data-part="timeline"][variant~="minimal"], [data-part="timeline"][data-variant~="minimal"]) {
 		--ui-timeline-dot-size: 0.45em;
 		--ui-timeline-dot-offset: 0.45em;
 		--ui-timeline-line-width: var(--border-width, 1px);
@@ -123,7 +123,7 @@
 
 	/* horizontal — the rail runs inline; entries share one scrolling row with a
 	   scroll-driven edge fade off the shared primitive. Docs: readme.md */
-	:where(ui-timeline[variant~="horizontal"], .ui-timeline[variant~="horizontal"], [data-part="timeline"][variant~="horizontal"]) {
+	:where(ui-timeline[variant~="horizontal"], .ui-timeline[variant~="horizontal"], [data-part="timeline"][variant~="horizontal"], [data-part="timeline"][data-variant~="horizontal"]) {
 		flex-direction: row;
 		/* min-inline-size:0 so the row scrolls instead of pushing past its container */
 		min-inline-size: 0;

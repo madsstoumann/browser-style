@@ -166,14 +166,16 @@ const ratingPart = (prop, ratingType, rating) => {
 	if (!rating?.value) return '';
 	const max = rating.max ?? 5;
 	const label = `Rated ${rating.value} out of ${max} stars${rating.count ? ` from ${num(rating.count)} ratings` : ''}`;
-	/* @browser.style/rating — a readonly range input masked with stars; the
-	   value is machine-readable via the metas, the input is display-only */
+	/* @browser.style/rating — a disabled range input masked with stars. It is
+	   DECORATIVE (aria-hidden): a role="img" wrapper may not contain an input, so
+	   the <span> carries the accessible text and the metas carry the machine value */
 	return `<div data-part="rating"${scope(prop, ratingType)}>
 		${meta('ratingValue', rating.value)}
 		${rating.count != null ? meta('ratingCount', rating.count) : ''}
 		${meta('bestRating', max)}${meta('worstRating', 1)}
-		<input class="ui-rating" type="range" min="1" max="${esc(max)}" value="${esc(rating.value)}" step="0.01" readonly tabindex="-1" role="img" aria-label="${esc(label)}">
-		<span>${esc(rating.value)} / ${max}${rating.count ? ` (${num(rating.count)} ratings)` : ''}</span>
+		<input class="ui-rating" type="range" min="1" max="${esc(max)}" value="${esc(rating.value)}" step="0.01" disabled aria-hidden="true">
+		<span data-sr>${esc(label)}</span>
+		<span aria-hidden="true">${esc(rating.value)} / ${max}${rating.count ? ` (${num(rating.count)} ratings)` : ''}</span>
 	</div>`;
 };
 
@@ -426,7 +428,7 @@ const buildFurniture = (furniture, fields, tokens, mediaId, videoId = null) => {
 		html += `<ui-play><button${attrs({
 			type: 'button',
 			'aria-label': play.label || 'Play',
-			command: videoId ? 'play-pause' : null,
+			command: videoId ? '--play-pause' : null,
 			commandfor: videoId
 		})}><ui-icon type="play-pause"></ui-icon></button></ui-play>`;
 		push('play', play.style);
@@ -529,7 +531,7 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 		}
 		if (item.mediaType === 'audio') {
 			/* chromeless <audio> — renders nothing; the poster img stays the visual and
-			   <ui-play> drives playback via command="play-pause" (video.js mirrors state) */
+			   <ui-play> drives playback via command="--play-pause" (video.js mirrors state) */
 			const id = videoId;
 			videoId = null;
 			frames += `<audio${attrs({ id, src, preload: 'metadata', 'aria-label': item.alt || null })}${NO_IMAGE_PROP.has(type) ? '' : scope('associatedMedia', 'AudioObject')}>${NO_IMAGE_PROP.has(type) ? '' : meta('contentUrl', src) + meta('name', item.alt)}</audio>`;
