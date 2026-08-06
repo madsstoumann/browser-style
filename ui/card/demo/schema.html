@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
-	<meta name="description" content="All 34 schema.org card types — the 25 legacy content-card types plus the v1.3 additions — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD, no JavaScript.">
+	<meta name="description" content="All 34 schema.org card types — the 25 legacy content-card types plus the v1.3 additions — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
 	<link rel="stylesheet" href="/ui/base/index.css">
 	<link rel="stylesheet" href="/ui/carousel/index.css">
 	<link rel="stylesheet" href="/layout/dist/layout.css">
@@ -34,7 +34,7 @@
 <body data-layout-root page-gap="2">
 	<header>
 	<h1>UI: Card — Schema.org</h1>
-	<p class="note">Every card type from the legacy <code>content/card</code> package — plus the nine types added in model v1.3 (organization, video, howto, qa, podcast, movie, book, dataset, claim) — re-created with the modern engine: <code>&lt;ui-card&gt;</code> + <code>&lt;ui-media&gt;</code> + <code>&lt;ui-content&gt;</code>, with satellites <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-sticker&gt;</code>, <code>&lt;ui-save&gt;</code>, <code>&lt;ui-avatar&gt;</code>, <code>&lt;ui-quote&gt;</code> and <code>&lt;ui-accordion&gt;</code>. Every card uses the same composition: media on top, text below. Structured data is inline <strong>microdata</strong> (<code>itemscope</code>/<code>itemtype</code>/<code>itemprop</code> + hidden <code>&lt;meta&gt;</code> values) — no JSON-LD, no JavaScript.</p>
+	<p class="note">Every card type from the legacy <code>content/card</code> package — plus the nine types added in model v1.3 (organization, video, howto, qa, podcast, movie, book, dataset, claim) — re-created with the modern engine: <code>&lt;ui-card&gt;</code> + <code>&lt;ui-media&gt;</code> + <code>&lt;ui-content&gt;</code>, with satellites <code>&lt;ui-chip&gt;</code>, <code>&lt;ui-sticker&gt;</code>, <code>&lt;ui-save&gt;</code>, <code>&lt;ui-avatar&gt;</code>, <code>&lt;ui-quote&gt;</code> and <code>&lt;ui-accordion&gt;</code>. Every card uses the same composition: media on top, text below. Structured data is inline <strong>microdata</strong> (<code>itemscope</code>/<code>itemtype</code>/<code>itemprop</code> + hidden <code>&lt;meta&gt;</code> values) — no JSON-LD. The single script on this page is optional: <code>video.js</code> polyfills the proposed media invoker commands (<code>command="play-pause"</code>) behind the podcast play button; every card renders identically without it.</p>
 	<p class="note">The matching CMS content model is <a href="../../../cms/baseline/models/card.schema.json"><code>cms/baseline/models/card.schema.json</code></a>: a structured envelope + <code>schemaType</code> discriminator + one <code>details</code> object per type. See also: <a href="cards.html">cards.html</a> · <a href="media.html">media.html</a> · <a href="content.html">content.html</a>.</p>
 
 	</header>
@@ -1008,7 +1008,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Organization">
 			<cq-box>
-				<ui-media><img src="/assets/images/techpeople.png" alt="Northwind Group team at the Copenhagen headquarters" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/coorperation.png" alt="Northwind Group team at the Copenhagen headquarters" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="foundingDate" content="1998-03-01">
 					<meta itemprop="sameAs" content="https://www.linkedin.com/company/northwind-group">
@@ -1088,7 +1088,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/HowTo">
 			<cq-box>
-				<ui-media><img src="/assets/images/maintainance.png" alt="Hand holding a radiator key against a valve" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/howto.png" alt="Hand holding a radiator key against a valve" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="totalTime" content="PT10M">
 					<span itemprop="estimatedCost" itemscope itemtype="https://schema.org/MonetaryAmount" hidden><meta itemprop="currency" content="EUR"><meta itemprop="value" content="5"></span>
@@ -1139,7 +1139,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/QAPage">
 			<cq-box>
-				<ui-media><img src="/assets/images/support.png" alt="Developer community forum illustration" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/qa.png" alt="Developer community forum illustration" itemprop="image"></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">CSS</small>
 					<h3 data-part="headline" itemprop="name">How do I center a div in 2026?</h3>
@@ -1172,16 +1172,19 @@
 	     ============================================================ -->
 	<section>
 	<h2>Podcast — <code>PodcastEpisode</code></h2>
-	<p class="note">Episode metas plus hidden <code>partOfSeries</code> → <code>PodcastSeries</code> and <code>associatedMedia</code> → <code>AudioObject</code> (the audio URL).</p>
+	<p class="note">Episode metas plus hidden <code>partOfSeries</code> → <code>PodcastSeries</code>. The episode audio is a chromeless <code>&lt;audio&gt;</code> inside <code>&lt;ui-media&gt;</code> (scoped <code>associatedMedia</code> → <code>AudioObject</code>) — the poster stays the visual, and <code>&lt;ui-play&gt;</code> drives playback via <code>command="play-pause"</code> (video.js polyfills the media invoker commands until browsers ship them).</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/PodcastEpisode">
 			<cq-box>
-				<ui-media><img src="/assets/images/mindfulness.png" alt="The Calm Mind podcast cover art" itemprop="image"></ui-media>
+				<ui-media>
+					<img src="/assets/images/podcast.png" alt="The Calm Mind podcast cover art" itemprop="image">
+					<audio id="podcast-ep42" src="/assets/audio/podcast.m4a" preload="metadata" aria-label="Digital minimalism, revisited — Episode 42" itemprop="associatedMedia" itemscope itemtype="https://schema.org/AudioObject"><meta itemprop="contentUrl" content="/assets/audio/podcast.m4a"><meta itemprop="name" content="Digital minimalism, revisited — Episode 42"></audio>
+					<ui-play><button type="button" command="play-pause" commandfor="podcast-ep42" aria-label="Play episode"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				</ui-media>
 				<ui-content>
 					<meta itemprop="episodeNumber" content="42">
 					<meta itemprop="duration" content="PT48M">
 					<div itemprop="partOfSeries" itemscope itemtype="https://schema.org/PodcastSeries" hidden><meta itemprop="name" content="The Calm Mind"></div>
-					<div itemprop="associatedMedia" itemscope itemtype="https://schema.org/AudioObject" hidden><meta itemprop="contentUrl" content="https://cdn.example.com/calm-mind/ep42.mp3"></div>
 					<small data-part="eyebrow">Podcast</small>
 					<h3 data-part="headline" itemprop="name">Digital minimalism, revisited</h3>
 					<p data-part="summary" itemprop="description">What actually stuck three years after the digital-declutter wave — with researcher Ida Månsson.</p>
@@ -1329,5 +1332,7 @@
 		</ui-card>
 	</lay-out>
 	</section>
+	<!-- optional: media invoker-command polyfill for the podcast <ui-play> button -->
+	<script type="module" src="../video.js"></script>
 </body>
 </html>

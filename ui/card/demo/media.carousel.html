@@ -84,6 +84,14 @@
 			--ui-carousel-label-group-wrap: wrap;
 			--ui-carousel-label-group-radius: var(--radius-lg);
 		}
+		/* mrk(tml) demo look — the current node picks up the theme accent */
+		.tml-accent {
+			--ui-carousel-tml-col: 8rem;
+			--ui-carousel-tml-dot-current: var(--color-accent);
+			--ui-carousel-tml-color-current: var(--color-accent);
+		}
+		/* a text slide centres its rows in the frame (ui-content's own place-block hook) */
+		.tml-slide { --ui-content-place-block: center; }
 	</style>
 </head>
 <body>
@@ -134,6 +142,7 @@
 				<li><a href="#markersbr">System bar</a></li>
 				<li><a href="#markerthumb">Thumbnails</a></li>
 				<li><a href="#markerlabel">Labels</a></li>
+				<li><a href="#markertimeline">Timeline</a></li>
 			</ol>
 		</div>
 		<div>
@@ -692,6 +701,31 @@
 			<img src="/assets/images/brewandbean.png" alt="" aria-label="Brew &amp; Bean" decoding="async" loading="lazy">
 			<img src="/assets/images/aurasoundpro.png" alt="" aria-label="AuraSound Pro" decoding="async" loading="lazy">
 			<img src="/assets/images/mindfulness.png" alt="" aria-label="Morning Meditation" decoding="async" loading="lazy">
+		</ui-media>
+	</lay-out>
+
+	<h3 id="markertimeline">Timeline — <code>mrk(tml)</code></h3>
+	<p><code>mrk(tml)</code> turns the markers into a timeline: a dot per slide on one continuous rail, labelled with the slide's <code>data-date</code>. The <code>aria-label</code> stays the accessible name, so a node shows <code>2016</code> while a screen reader hears the whole entry. Slides are tag-agnostic — mix images, video and themed <code>&lt;ui-content&gt;</code> plates.</p>
+	<lay-out>
+		<ui-media class="tml-accent" media="asr(16/9) rds(md) clip nav(mrk) mrk(tml) mrk(blw)">
+			<ui-content class="tml-slide" theme="slate ink" content="pad(xl) scl(lg) eb(med)" data-date="2016" aria-label="2016 — Founded in a shared office in Copenhagen">
+				<small data-part="eyebrow">Founded</small>
+				<h4 data-part="headline">Two people, one stylesheet</h4>
+				<p data-part="summary">A shared office in Copenhagen, a single CSS file, and a stubborn conviction that the platform was enough.</p>
+			</ui-content>
+			<img src="/assets/images/websummit.png" alt="First conference booth" data-date="2018" aria-label="2018 — First conference talk" decoding="async" loading="lazy">
+			<video src="/assets/video/city.mp4" poster="/assets/images/city.png" preload="none" muted loop playsinline data-date="2020" aria-label="2020 — The team goes fully remote"></video>
+			<ui-content class="tml-slide" theme="accent ink" content="pad(xl) scl(lg) eb(med)" data-date="2022" aria-label="2022 — The design token system ships">
+				<small data-part="eyebrow">Milestone</small>
+				<h4 data-part="headline">One vocabulary, 148 components</h4>
+				<p data-part="summary">The token system lands and every component is rebuilt on it — the first release where the parts genuinely share a language.</p>
+			</ui-content>
+			<img src="/assets/images/hubble.png" alt="Deep field image" data-date="2024" aria-label="2024 — The layout system is rewritten" decoding="async" loading="lazy">
+			<ui-content class="tml-slide" theme="green ink" content="pad(xl) scl(lg) eb(med)" data-date="2026" aria-label="2026 — v4: the unified card engine ships">
+				<small data-part="eyebrow">Today</small>
+				<h4 data-part="headline">v4 — one card engine</h4>
+				<p data-part="summary">Articles, products, events and recipes all render from the same two primitives. No JavaScript required.</p>
+			</ui-content>
 		</ui-media>
 	</lay-out>
 

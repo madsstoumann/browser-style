@@ -42,6 +42,26 @@
 			--ui-carousel-marker-inset: var(--ui-carousel-thumb-gap, 1rem);
 			--ui-carousel-marker-size: var(--ui-carousel-thumb-size, 2.25rem);
 		}
+		/* mrk(tml) — timeline nodes are auto-height text, so the band is a TOKEN, not a measure */
+		&:where([media*="mrk(tml)"]) {
+			--ui-carousel-band: var(--ui-carousel-tml-band, 4.25rem);
+			--ui-carousel-marker-inset: var(--ui-carousel-tml-inset, var(--ui-carousel-overlay-gap));
+
+			/* the shared size scale, read as ONE step for node + dot + label (md = the defaults) */
+			&:where([media*="mrk(sm)"]) { --ui-carousel-tml-col: 5.5rem; --ui-carousel-tml-dot-size: 0.55rem; --ui-carousel-tml-font-size: var(--font-size-xs, 0.75rem); }
+			&:where([media*="mrk(md)"]) { --ui-carousel-tml-col: 7rem;   --ui-carousel-tml-dot-size: 0.7rem;  --ui-carousel-tml-font-size: var(--font-size-sm, 0.875rem); }
+			&:where([media*="mrk(lg)"]) { --ui-carousel-tml-col: 9rem;   --ui-carousel-tml-dot-size: 0.9rem;  --ui-carousel-tml-font-size: var(--font-size-base, 1rem); }
+			&:where([media*="mrk(xl)"]) { --ui-carousel-tml-col: 11rem;  --ui-carousel-tml-dot-size: 1.1rem;  --ui-carousel-tml-font-size: var(--font-size-lg, 1.125rem); --ui-carousel-tml-line-width: var(--border-width-heavy, 3px); }
+		}
+		/* in a band the nodes sit on the page bg — default the ink to CanvasText */
+		&:where([media*="mrk(tml)"]:is([media*="mrk(blw)"], [media*="mrk(abv)"], [media*="nav(blw)"], [media*="nav(abv)"])) {
+			--ui-carousel-tml-color: color-mix(in oklab, CanvasText 65%, transparent);
+			--ui-carousel-tml-color-current: CanvasText;
+			--ui-carousel-tml-dot: color-mix(in oklab, CanvasText 45%, transparent);
+			--ui-carousel-tml-dot-bg: Canvas;
+			--ui-carousel-tml-dot-current: CanvasText;
+			--ui-carousel-tml-rail: color-mix(in oklab, CanvasText 25%, transparent);
+		}
 		/* filmstrip / rail: thumbs sit on the page bg, so default the active border to
 		   a contrasting ink (still overridable) */
 		&:where([media*="mrk(tmb)"]:is([media*="mrk(blw)"], [media*="mrk(abv)"], [media*="nav(blw)"], [media*="nav(abv)"], [media*="mrk(rail)"])) {
@@ -90,6 +110,13 @@
 	:where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]:not([media*="mrk(tmb)"])) {
 		anchor-name: --ui-carousel-labels;
 		anchor-scope: --ui-carousel-labels;
+	}
+	/* mrk(tml) scroller arm — same NAMED-anchor requirement as mrk(lbl).
+	   Docs: ui/card/docs/media.carousel.md § Timeline */
+	:where(ui-card, ui-reveal):where([media*="mrk(tml)"]) ui-media,
+	:where(ui-media, lay-out[overflow]):where([media*="mrk(tml)"]) {
+		anchor-name: --ui-carousel-timeline;
+		anchor-scope: --ui-carousel-timeline;
 	}
 	/* arrows present: base glyph vars */
 	:where(ui-card, ui-reveal, ui-media, lay-out[overflow]) {
@@ -394,6 +421,106 @@
 			padding: var(--ui-carousel-label-group-padding, 0);
 			scroll-padding-inline: var(--ui-carousel-label-group-gap, var(--ui-carousel-marker-gap));
 			scrollbar-width: var(--ui-carousel-label-group-scrollbar, none);
+		}
+
+		/* mrk(tml) — a timeline: dot + rail are two BACKGROUND layers (a pseudo has no
+		   pseudos of its own), the label is the slide's data-date. Docs: ui/card/docs/media.carousel.md § Timeline */
+		:where(ui-card, ui-reveal):where([media*="mrk(tml)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(tml)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker {
+			/* dot centre and rail edge SNAP to whole pixels — a gradient at a fractional
+			   offset renders as a blurred smear, not a line. Docs: ui/card/docs/media.carousel.md */
+			--_tml-c: round(calc(var(--ui-carousel-tml-dot-size, 0.7rem) / 2), 1px);
+			--_tml-r: calc(var(--_tml-c) - var(--ui-carousel-tml-line-width, 2px));
+			--_tml-rail-y: round(calc(var(--_tml-c) - var(--ui-carousel-tml-line-width, 2px) / 2), 1px);
+			--_tml-rail-img: linear-gradient(var(--ui-carousel-tml-rail, rgb(255 255 255 / 0.35)) 0 0);
+			background:
+				/* the ±0.5px ramps ARE the antialiasing: Chromium does not AA a hard
+				   colour stop, so a 0-width edge steps visibly on a 11px circle */
+				radial-gradient(circle at 50% var(--_tml-c),
+					var(--ui-carousel-tml-dot-bg, #0000) 0 calc(var(--_tml-r) - 0.25px),
+					var(--ui-carousel-tml-dot, rgb(255 255 255 / 0.6)) calc(var(--_tml-r) + 0.25px) calc(var(--_tml-c) - 0.25px),
+					#0000 calc(var(--_tml-c) + 0.25px)) no-repeat,
+				/* +1px kills the sub-pixel seam where two segments abut */
+				var(--_tml-rail-img) no-repeat 0 var(--_tml-rail-y) / calc(100% + 1px) var(--ui-carousel-tml-line-width, 2px);
+			/* border-box, or the block padding below would push both layers off the dot line */
+			background-origin: border-box;
+			block-size: auto;
+			border: 0;
+			border-radius: var(--ui-carousel-tml-radius, 0);
+			color: var(--ui-carousel-tml-color, rgb(255 255 255 / 0.75));
+			content: attr(data-date);
+			cursor: pointer;
+			/* no grow: the node width IS --ui-carousel-tml-col, so both this and the
+			   polyfill's stretched flex row land on identical dot-to-dot spacing */
+			flex: 0 0 var(--ui-carousel-tml-col, 7rem);
+			font-size: var(--ui-carousel-tml-font-size, var(--font-size-sm, 0.875rem));
+			font-style: normal;
+			font-weight: var(--ui-carousel-tml-font-weight, 500);
+			inline-size: auto;
+			padding-block-start: calc(var(--ui-carousel-tml-dot-size, 0.7rem) + var(--ui-carousel-tml-gap, 0.5rem));
+			padding-inline: var(--ui-carousel-tml-padding-inline, 0.25rem);
+			text-align: center;
+			text-decoration: none;
+			transition: color var(--duration-fast, 100ms) var(--ease-default, ease);
+			white-space: nowrap;
+		}
+		/* the rail starts and ends AT a dot, not at the frame edge. Only the image var
+		   changes — if furniture holds :first-child the trim just doesn't apply. */
+		:where(ui-card, ui-reveal):where([media*="mrk(tml)"]) :where(ui-media) > :first-child::scroll-marker,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(tml)"]) > :first-child::scroll-marker {
+			--_tml-rail-img: linear-gradient(to var(--_dir-e, right), #0000 50%, var(--ui-carousel-tml-rail, rgb(255 255 255 / 0.35)) 50%);
+		}
+		:where(ui-card, ui-reveal):where([media*="mrk(tml)"]) :where(ui-media) > :last-child::scroll-marker,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(tml)"]) > :last-child::scroll-marker {
+			--_tml-rail-img: linear-gradient(to var(--_dir-e, right), var(--ui-carousel-tml-rail, rgb(255 255 255 / 0.35)) 50%, #0000 50%);
+		}
+		:where(ui-card, ui-reveal):where([media*="mrk(tml)"]) :where(ui-media) > :only-child::scroll-marker,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(tml)"]) > :only-child::scroll-marker {
+			--_tml-rail-img: none;
+		}
+		/* :target-current repeats the FULL geometry — see the mrk(lbl) note above */
+		:where(ui-card, ui-reveal):where([media*="mrk(tml)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(tml)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:target-current {
+			--_tml-c: round(calc(var(--ui-carousel-tml-dot-size, 0.7rem) / 2), 1px);
+			--_tml-rail-y: round(calc(var(--_tml-c) - var(--ui-carousel-tml-line-width, 2px) / 2), 1px);
+			background:
+				/* the current node is FILLED — one stop instead of the ring's two */
+				radial-gradient(circle at 50% var(--_tml-c),
+					var(--ui-carousel-tml-dot-current, #fff) 0 calc(var(--_tml-c) - 0.25px),
+					#0000 calc(var(--_tml-c) + 0.25px)) no-repeat,
+				var(--_tml-rail-img) no-repeat 0 var(--_tml-rail-y) / calc(100% + 1px) var(--ui-carousel-tml-line-width, 2px);
+			background-origin: border-box;
+			block-size: auto;
+			border: 0;
+			border-radius: var(--ui-carousel-tml-radius, 0);
+			color: var(--ui-carousel-tml-color-current, #fff);
+			font-style: normal;
+			font-weight: var(--ui-carousel-tml-font-weight-current, var(--font-weight-bold, 700));
+			inline-size: auto;
+			padding-block-start: calc(var(--ui-carousel-tml-dot-size, 0.7rem) + var(--ui-carousel-tml-gap, 0.5rem));
+			padding-inline: var(--ui-carousel-tml-padding-inline, 0.25rem);
+			text-align: center;
+			text-decoration: none;
+			white-space: nowrap;
+		}
+		/* nodes are seamless like mrk(bar) segments, so focus needs its own ring */
+		:where(ui-card, ui-reveal):where([media*="mrk(tml)"]) :where(ui-media) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(tml)"]) > :not(ui-beacon, ui-chip, ui-lightbox, ui-play, ui-save, ui-sticker)::scroll-marker:focus-visible {
+			outline: var(--ring-width, 2px) solid var(--ring-color, currentColor);
+			outline-offset: calc(-1 * var(--ring-width, 2px));
+		}
+		/* gap:0 is load-bearing — a gap breaks the rail into dashes */
+		:where(ui-card, ui-reveal):where([media*="mrk(tml)"]) :where(ui-media)::scroll-marker-group,
+		:where(ui-media, lay-out[overflow]):where([media*="mrk(tml)"])::scroll-marker-group {
+			background: var(--ui-carousel-tml-group-bg, transparent);
+			border-radius: var(--ui-carousel-tml-group-radius, 0);
+			gap: 0;
+			max-inline-size: var(--ui-carousel-tml-group-max-inline-size,
+				calc(anchor-size(--ui-carousel-timeline inline) - 2 * var(--ui-carousel-overlay-gap, 0.75rem)));
+			overflow-x: auto;
+			overscroll-behavior-x: contain;
+			padding: var(--ui-carousel-tml-group-padding, 0);
+			scrollbar-width: var(--ui-carousel-tml-group-scrollbar, none);
 		}
 
 		:where(ui-card, ui-reveal):where([media*="nav"]:not([media*="nav("]), [media*="nav(arw)"], [media*="nav(blw)"], [media*="nav(abv)"]) :where(ui-media),
@@ -774,15 +901,15 @@
 			inset-inline-end: calc(anchor(self-end) + 2 * var(--ui-carousel-overlay-gap) + 2 * var(--ui-carousel-arrow-size) + var(--ui-carousel-arrow-gap));
 		}
 
-		/* mrk(lbl) height-agnostic placement — labels are auto-height, so re-anchor the
+		/* mrk(lbl)/mrk(tml) height-agnostic placement — both are auto-height, so re-anchor the
 		   bottom/center cells by the group's own edges (top-row cells need no override) */
-		:where(ui-card, ui-reveal):where([media*="mrk(lbl)"]:not([media*="mrk(ts)"], [media*="mrk(tc)"], [media*="mrk(te)"], [media*="mrk(cs)"], [media*="mrk(cc)"], [media*="mrk(ce)"])) :where(ui-media)::scroll-marker-group,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]:not([media*="mrk(ts)"], [media*="mrk(tc)"], [media*="mrk(te)"], [media*="mrk(cs)"], [media*="mrk(cc)"], [media*="mrk(ce)"]))::scroll-marker-group {
+		:where(ui-card, ui-reveal):where(:is([media*="mrk(lbl)"], [media*="mrk(tml)"]):not([media*="mrk(ts)"], [media*="mrk(tc)"], [media*="mrk(te)"], [media*="mrk(cs)"], [media*="mrk(cc)"], [media*="mrk(ce)"])) :where(ui-media)::scroll-marker-group,
+		:where(ui-media, lay-out[overflow]):where(:is([media*="mrk(lbl)"], [media*="mrk(tml)"]):not([media*="mrk(ts)"], [media*="mrk(tc)"], [media*="mrk(te)"], [media*="mrk(cs)"], [media*="mrk(cc)"], [media*="mrk(ce)"]))::scroll-marker-group {
 			top: auto;
 			bottom: calc(anchor(bottom) + var(--ui-carousel-marker-inset, var(--ui-carousel-overlay-gap)));
 		}
-		:where(ui-card, ui-reveal):where([media*="mrk(lbl)"]:is([media*="mrk(cs)"], [media*="mrk(cc)"], [media*="mrk(ce)"])) :where(ui-media)::scroll-marker-group,
-		:where(ui-media, lay-out[overflow]):where([media*="mrk(lbl)"]:is([media*="mrk(cs)"], [media*="mrk(cc)"], [media*="mrk(ce)"]))::scroll-marker-group {
+		:where(ui-card, ui-reveal):where(:is([media*="mrk(lbl)"], [media*="mrk(tml)"]):is([media*="mrk(cs)"], [media*="mrk(cc)"], [media*="mrk(ce)"])) :where(ui-media)::scroll-marker-group,
+		:where(ui-media, lay-out[overflow]):where(:is([media*="mrk(lbl)"], [media*="mrk(tml)"]):is([media*="mrk(cs)"], [media*="mrk(cc)"], [media*="mrk(ce)"]))::scroll-marker-group {
 			top: anchor(center);
 			bottom: auto;
 			transform: translateY(-50%);

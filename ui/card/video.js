@@ -85,8 +85,8 @@ export function initEmbeds(frames) {
 			media.querySelector(':scope > [data-preview]')?.remove();
 		};
 
-		// SSR'd real player already in the markup
-		const realVideo = media.querySelector(':scope > video:not([data-preview])');
+		// SSR'd real player already in the markup — <video> or a chromeless <audio>
+		const realVideo = media.querySelector(':scope > :is(video, audio):not([data-preview])');
 		const realIframe = media.querySelector(':scope > iframe');
 
 		// native <video>: driven declaratively via command="play-pause" — only mirror state

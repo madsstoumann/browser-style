@@ -36,6 +36,7 @@
 
 	<script type="module">
 		import { renderCard as renderCardHtml, loadPresets, SCHEMA_TYPES } from '../render.js';
+		import { scanVideo } from '../video.js';
 
 		/* render.js returns an HTML string (SSR engine — all data escaped at
 		   interpolation); parse it into a fragment for the DOM append sites below */
@@ -88,6 +89,9 @@
 
 			main.append(heading, grid);
 		}
+
+		/* wire play buttons / media commands now that all cards are in the DOM */
+		scanVideo();
 	</script>
 </body>
 </html>

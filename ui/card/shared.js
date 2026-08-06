@@ -17,7 +17,7 @@ export const hasToken = (str, name) => new RegExp(`(^|\\s)${name}(\\(|\\s|$)`).t
 
 // slides = direct children minus overlay furniture, bands and nested <lay-out> wrappers
 // (keep in sync with the :not() list in media.carousel.css)
-export const NOT_SLIDE = /^(UI-BEACON|UI-CHIP|UI-LIGHTBOX|UI-MARQUEE|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS|LAY-OUT)$/;
+export const NOT_SLIDE = /^(AUDIO|UI-BEACON|UI-CHIP|UI-LIGHTBOX|UI-MARQUEE|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS|LAY-OUT)$/;
 export const slidesOf = (el) => [...el.children].filter(c => !NOT_SLIDE.test(c.tagName));
 
 // muted + autoplay = silent background loop; never coordinated/paused
@@ -49,11 +49,11 @@ export function bindVideo(uiPlay, video) {
 	sync();
 }
 
-// <ui-play> over a native <video> (standalone frame or per-slide inside a carousel)
+// <ui-play> over a native <video>/<audio> (standalone frame or per-slide inside a carousel)
 export function initVideoPlay(uiPlays) {
 	for (const play of uiPlays) {
 		if (play.dataset.uiVideo) continue;
-		const video = play.closest('ui-media')?.querySelector(':scope > video');
+		const video = play.closest('ui-media')?.querySelector(':scope > :is(video, audio)');
 		if (!video) continue;
 		play.dataset.uiVideo = '1';
 		bindVideo(play, video);
@@ -65,7 +65,7 @@ export function videoPlayNodes() {
 	return [...document.querySelectorAll('ui-media:not([provider]) > ui-play')]
 		.filter(play => {
 			const media = play.parentElement;
-			if (!media.querySelector(':scope > video')) return false;
+			if (!media.querySelector(':scope > :is(video, audio)')) return false;
 			const nested = !!media.parentElement?.closest('ui-media');
 			const m = mediaStr(media);
 			return nested || !(hasToken(m, 'nav') || hasToken(m, 'auto') || hasToken(m, 'loop'));

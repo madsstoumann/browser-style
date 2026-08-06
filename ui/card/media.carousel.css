@@ -44,9 +44,10 @@
 		block-size: auto;
 	}
 
-	/* reserved band: round the image itself — the outer clip only rounds the frame */
-	:where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media > :is(iframe, img, picture, video),
-	ui-media:where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) > :is(iframe, img, picture, video) {
+	/* reserved band: round the slide itself — the outer clip only rounds the frame.
+	   ui-content is in the list because a themed slide paints its own plate */
+	:where(ui-card, ui-reveal):where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) ui-media > :is(iframe, img, picture, video, ui-content),
+	ui-media:where([media*="nav(blw)"], [media*="mrk(blw)"], [media*="arw(blw)"], [media*="nav(abv)"], [media*="mrk(abv)"], [media*="arw(abv)"]) > :is(iframe, img, picture, video, ui-content) {
 		border-radius: var(--ui-media-radius, 0);
 	}
 

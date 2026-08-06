@@ -43,7 +43,7 @@ const SEL = `ui-media${NAV}, :is(ui-card${NAV}, ui-reveal${NAV}) ui-media, lay-o
 // standalone behind a @supports gate. The copy is safe because drift is a build
 // error — ui/card/tokens.lint.js parses this literal and requires it to equal
 // shared.js's exactly (and the :not() list in media.carousel.css to be a subset).
-const NOT_SLIDE = /^(UI-BEACON|UI-CHIP|UI-LIGHTBOX|UI-MARQUEE|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS|LAY-OUT)$/;
+const NOT_SLIDE = /^(AUDIO|UI-BEACON|UI-CHIP|UI-LIGHTBOX|UI-MARQUEE|UI-PLAY|UI-SAVE|UI-STICKER|UI-CAROUSEL-CONTROLS|LAY-OUT)$/;
 
 // the effective media string — own attr, else the ui-card/ui-reveal host
 // (media= inheritance stops at the card)
@@ -159,6 +159,14 @@ export function initControls(scroller, options = {}) {
 				const img = slide.matches?.('img') ? slide : slide.querySelector?.('img');
 				const src = img?.currentSrc || img?.src;
 				if (src) dot.style.setProperty('--ui-carousel-thumb-url', `url("${src.replace(/["\\]/g, (m) => '\\' + m)}")`);
+			}
+			// mrk(tml): the node's visible text is the slide's data-date, and the
+			// slide's aria-label is the accessible name — as on the native path
+			const date = slide.getAttribute?.('data-date');
+			if (date) {
+				dot.textContent = date;
+				const label = slide.getAttribute('aria-label');
+				if (label) dot.setAttribute('aria-label', label);
 			}
 			dot.addEventListener('click', () => scrollToPos(i + lead()));
 			return dot;

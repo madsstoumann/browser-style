@@ -498,7 +498,7 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 	let frames = '';
 	let embed = null;
 	let extras = '';
-	/* a <ui-play> commands the frame's FIRST native <video> — id it for commandfor */
+	/* a <ui-play> commands the frame's FIRST native <video>/<audio> — id it for commandfor */
 	const playId = (fields.furniture?.play && cardId) ? `${cardId}-video` : null;
 	let videoId = playId;
 	const rootVideo = ROOT_VIDEO_TYPES.has(type);
@@ -525,6 +525,14 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 				preload: item.autoplay ? 'auto' : 'metadata',
 				'aria-label': item.alt || null
 			})}${rootVideo || NO_IMAGE_PROP.has(type) ? '' : scope('video', 'VideoObject')}>${rootVideo ? rootVideoMetas(item, src) : NO_IMAGE_PROP.has(type) ? '' : videoMetas(item, src)}</video>`;
+			continue;
+		}
+		if (item.mediaType === 'audio') {
+			/* chromeless <audio> — renders nothing; the poster img stays the visual and
+			   <ui-play> drives playback via command="play-pause" (video.js mirrors state) */
+			const id = videoId;
+			videoId = null;
+			frames += `<audio${attrs({ id, src, preload: 'metadata', 'aria-label': item.alt || null })}${NO_IMAGE_PROP.has(type) ? '' : scope('associatedMedia', 'AudioObject')}>${NO_IMAGE_PROP.has(type) ? '' : meta('contentUrl', src) + meta('name', item.alt)}</audio>`;
 			continue;
 		}
 		frames += `<img${attrs({

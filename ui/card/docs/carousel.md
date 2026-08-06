@@ -77,7 +77,7 @@ inventory cannot drift from the CSS. The prose tables under it explain what the 
 |---|---|---|---|---|---|---|---|
 | `nav()` | carousel | **mode** mrk arw blw abv non | — | yes | --ui-media-bg --ui-carousel-* | — | — |
 | `arw()` | arrows | **variant** arr bare sqr sft lgt drk hid rev set · **size** sm lg xl · **pos** ts tc te cs cc bs bc be · **mode** blw abv | — | — | --ui-carousel-arrow-glyph --ui-carousel-arrow-size --ui-carousel-arrow-radius --ui-carousel-arrow-bg --ui-carousel-arrow-bg-hover --ui-carousel-arrow-color --ui-carousel-arrow-color-hover --ui-carousel-arrow-shadow --ui-carousel-arrow-hover-ring --ui-carousel-arrow-nudge --ui-carousel-arrow-disabled-opacity --ui-carousel-arrow-top --_arw-rot --_arw-scale | — | — |
-| `mrk()` | markers | **variant** pll hyb bar tmb rail non lgt drk sbr lbl · **size** sm md lg xl · **pos** ts tc te cs cc ce bs bc be · **mode** blw abv | — | — | --ui-carousel-marker-size --ui-carousel-marker-bg --ui-carousel-marker-active --ui-carousel-marker-inset --ui-carousel-pill-width --ui-carousel-pill-height --ui-carousel-pill-track --ui-carousel-pill-fill --ui-carousel-thumb-size --ui-carousel-bar-* --ui-carousel-band --ui-carousel-rail --ui-carousel-sbr-* --ui-carousel-label-* | — | — |
+| `mrk()` | markers | **variant** pll hyb bar tmb tml rail non lgt drk sbr lbl · **size** sm md lg xl · **pos** ts tc te cs cc ce bs bc be · **mode** blw abv | — | — | --ui-carousel-marker-size --ui-carousel-marker-bg --ui-carousel-marker-active --ui-carousel-marker-inset --ui-carousel-pill-width --ui-carousel-pill-height --ui-carousel-pill-track --ui-carousel-pill-fill --ui-carousel-thumb-size --ui-carousel-bar-* --ui-carousel-band --ui-carousel-rail --ui-carousel-sbr-* --ui-carousel-label-* --ui-carousel-tml-* | — | — |
 | `tmb()` | thumbs | **ratio** 1/1 4/3 3/4 16/9 3/2 2/3 | — | — | --ui-carousel-thumb-ratio --ui-carousel-thumb-ratio-n | — | — |
 | `axis()` | carousel | **value** y | — | — | — | — | — |
 | `auto()` | carousel | **value** &lt;n&gt; &lt;n&gt;s &lt;n&gt;ms | — | yes | --ui-carousel-autoplay --ui-carousel-play-state --ui-carousel-thumb-timer-name --_play-block --_play-inline --_play-justify --_play-size | — | — |
@@ -282,6 +282,7 @@ Contract and limits (ui-media context):
 | `mrk(ts)` `mrk(te)` `mrk(bs)` `mrk(be)` | **Corner placement** for the overlay marker-group — top-start / top-end / bottom-start / bottom-end (logical, RTL-safe). Center row `mrk(cs)` `mrk(cc)` `mrk(ce)` completes the 9-grid. Inset via `--ui-carousel-marker-inset`. |
 | `mrk(rail)` | With `axis(y)` + `mrk(tmb)`: a **vertical thumbnail rail beside** the media (inline-start; **right in RTL**). Image keeps `asr()`, rail added outside; arrows dropped; overflow shrinks-to-floor then scrolls. See below. |
 | `mrk(lbl)` | **Text-label pills** — each slide's `aria-label` becomes a pill (`content: attr(aria-label)`, the label analogue of `mrk(tmb)`'s per-slide image). Same nine placement cells; styled via the `--ui-carousel-label-*` custom properties (incl. an optional group plate). A long label set never spills: the group caps to the frame and **scrolls**, keeping the current label in view — see below |
+| `mrk(tml)` | **Timeline** — a dot per slide on one continuous rail, labelled with the slide's `data-date` (`content: attr(data-date)`; the `aria-label` stays the accessible name, so a node can show `2016` while a screen reader hears the whole entry). Same nine placement cells; styled via `--ui-carousel-tml-*`. Pair with `mrk(blw)`/`nav(blw)` for a band, where the ink defaults to `CanvasText`. Like `mrk(lbl)`, a long series caps to the frame and **scrolls**, keeping the current node in view — see below |
 | `mrk(sbr)` | **System bar (WIP)** — styles the scroller's **real** scrollbar as a full-width bottom bar instead of drawing a fake one, so it is natively draggable with zero JS. Central `--ui-carousel-sbr-*` tokens (`-track`, `-thumb`, `-size`, `-inset`, `-radius`, `-gap`) feed both the standard (Firefox `scrollbar-color`) and `::-webkit-scrollbar` paths; `content-box` like `mrk(tmb)`. See [media.carousel.md](./media.carousel.md) |
 | `tmb(<ratio>)` | **Thumbnail aspect-ratio** (default `4/3`) — `tmb(1/1)` · `tmb(4/3)` · `tmb(3/4)` · `tmb(16/9)` · `tmb(3/2)` · `tmb(2/3)` (slash, mirrors `asr()`). In a `mrk(rail)` the rail width tracks the ratio. Or set `--ui-carousel-thumb-ratio` directly. |
 
@@ -639,6 +640,57 @@ On the group (the plate the pills sit in — off by default):
 | `--ui-carousel-label-group-max-inline-size` | `anchor-size(--ui-carousel-labels inline) - 2 × overlay-gap` | **Overflow cap** — the group never grows past the frame |
 | `--ui-carousel-label-group-scrollbar` | `none` | `scrollbar-width` for the group scroller — set `thin` / `auto` to show it |
 | `--ui-carousel-label-group-wrap` | `nowrap` | Set `wrap` to stack a long label set into rows instead of scrolling it |
+
+### Timeline (`mrk(tml)`)
+
+**Sizing, the short answer:** add a size atom — `mrk(tml) mrk(lg)` — and the node width,
+the dot and the label all move one step together (`xl` also thickens the rail):
+
+| Step | `-col` | `-dot-size` | `-font-size` |
+|------|--------|-------------|--------------|
+| `mrk(sm)` | `5.5rem` | `0.55rem` | `--font-size-xs` |
+| `mrk(md)` *(default)* | `7rem` | `0.7rem` | `--font-size-sm` |
+| `mrk(lg)` | `9rem` | `0.9rem` | `--font-size-base` |
+| `mrk(xl)` | `11rem` | `1.1rem` | `--font-size-lg` (+ `3px` rail) |
+
+Any single property still overrides the step — the atoms are declared at 0-0-0, so a class
+or inline `--ui-carousel-tml-col` wins. Set the three below independently when the scale's
+proportions aren't what you want.
+
+Per node. Overlay defaults are the light pair (white on the image); in a band they
+re-derive from `CanvasText`.
+
+| Property | Default | Purpose |
+|----------|---------|---------|
+| `--ui-carousel-tml-col` | `7rem` | Node width (the `flex-basis` — also the dot-to-dot spacing) |
+| `--ui-carousel-tml-dot-size` | `0.7rem` | Dot diameter |
+| `--ui-carousel-tml-line-width` | `2px` | Rail thickness **and** the dot's ring width (`3px` at `mrk(xl)`) |
+| `--ui-carousel-tml-gap` | `0.5rem` | Dot → label gap |
+| `--ui-carousel-tml-rail` | `rgb(255 255 255 / 0.35)` | Rail colour |
+| `--ui-carousel-tml-dot` | `rgb(255 255 255 / 0.6)` | Dot ring colour, idle |
+| `--ui-carousel-tml-dot-bg` | `#0000` | Dot fill, idle — transparent, so an idle node reads as a ring |
+| `--ui-carousel-tml-dot-current` | `#fff` | Current dot — **filled**, not ringed |
+| `--ui-carousel-tml-color` / `-color-current` | `rgb(255 255 255 / 0.75)` / `#fff` | Label ink, idle / current |
+| `--ui-carousel-tml-font-size` | `--font-size-sm` | Label type size |
+| `--ui-carousel-tml-font-weight` / `-font-weight-current` | `500` / `--font-weight-bold` | Label type weight, idle / current |
+| `--ui-carousel-tml-padding-inline` | `0.25rem` | Label side padding (does **not** inset the rail — the layers are `border-box`-origined) |
+| `--ui-carousel-tml-radius` | `0` | Node corner radius (clips the background layers) |
+| `--ui-carousel-tml-band` | `4.25rem` | Reserved band height under `mrk(blw)`/`mrk(abv)` — a token, since auto-height text can't be measured |
+| `--ui-carousel-tml-inset` | `--ui-carousel-overlay-gap` | Corner inset |
+
+On the group:
+
+| Property | Default | Purpose |
+|----------|---------|---------|
+| `--ui-carousel-tml-group-bg` | `transparent` | Group plate fill — set one when overlaying a photo |
+| `--ui-carousel-tml-group-radius` | `0` | Group corner radius |
+| `--ui-carousel-tml-group-padding` | `0` | Group padding |
+| `--ui-carousel-tml-group-max-inline-size` | `anchor-size(--ui-carousel-timeline inline) - 2 × overlay-gap` | **Overflow cap** — the group never grows past the frame |
+| `--ui-carousel-tml-group-scrollbar` | `none` | `scrollbar-width` for the group scroller |
+
+There is no group `gap` token: the group is pinned to `gap: 0` because the rail is drawn
+per node, and any gap would break the stroke into dashes. Space nodes with
+`--ui-carousel-tml-col`.
 
 > **Long label sets never spill.** Labels are text, so a dozen of them outgrow any frame.
 > The group therefore caps to the frame's inline size and becomes its own horizontal

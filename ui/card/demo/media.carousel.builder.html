@@ -122,6 +122,7 @@
 						<option value="bar">bar — progress bar</option>
 						<option value="tmb">tmb — thumbnails</option>
 						<option value="lbl">lbl — text labels (aria-label)</option>
+						<option value="tml">tml — timeline (data-date)</option>
 						<option value="sbr">sbr — system scrollbar (WIP)</option>
 						<option value="non">non — no markers</option>
 					</select>
@@ -300,6 +301,7 @@
 			sbr: 'mrk(sbr) styles the real scrollbar (natively draggable, WIP) — always full-width at the bottom, so marker position/size/tone are ignored.',
 			tmb: 'mrk(tmb) reads each slide’s --ui-carousel-thumb-url; the video slide gets the play badge on its thumbnail. Frame → Thumb ratio writes tmb(<ratio>) — the strip caps to the frame width and scrolls.',
 			lbl: 'mrk(lbl) renders each slide’s aria-label as a text pill.',
+			tml: 'mrk(tml) draws a timeline — a dot per slide on one continuous rail, labelled with the slide’s data-date (aria-label stays the accessible name). Pair it with a band position (blw/abv), or a plate if you overlay it.',
 			bar: 'mrk(bar) spans a progress bar; combine with a band position (blw/abv) or a corner.',
 		};
 

@@ -193,6 +193,72 @@ ui-media:where([media*="mrk(tmb)"]) > ui-carousel-controls [data-dot][aria-curre
 	}
 }
 
+/* mrk(tml) — timeline nodes. Real elements here, so the rail and the dot are a
+   ::before/::after pair rather than the native path's two background layers.
+   carousel-controls.js writes the label text from the slide's data-date.
+   Docs: ui/card/docs/media.carousel.md § Timeline */
+ui-carousel-controls[data-media*="mrk(tml)"] [data-dots] {
+	align-items: stretch;
+	gap: 0;
+	max-inline-size: calc(100% - 2 * var(--ui-carousel-overlay-gap, 0.75rem));
+	overflow-x: auto;
+	overscroll-behavior-x: contain;
+	pointer-events: auto;
+	scrollbar-width: var(--ui-carousel-tml-group-scrollbar, none);
+}
+ui-carousel-controls[data-media*="mrk(tml)"] [data-dot] {
+	background: none;
+	block-size: auto;
+	border-radius: var(--ui-carousel-tml-radius, 0);
+	color: var(--ui-carousel-tml-color, rgb(255 255 255 / 0.75));
+	flex: 0 0 var(--ui-carousel-tml-col, 7rem);
+	font-size: var(--ui-carousel-tml-font-size, var(--font-size-sm, 0.875rem));
+	font-weight: var(--ui-carousel-tml-font-weight, 500);
+	inline-size: auto;
+	padding-block-start: calc(var(--ui-carousel-tml-dot-size, 0.7rem) + var(--ui-carousel-tml-gap, 0.5rem));
+	padding-inline: var(--ui-carousel-tml-padding-inline, 0.25rem);
+	position: relative;
+	text-align: center;
+	transition: color var(--duration-fast, 100ms) var(--ease-default, ease);
+	white-space: nowrap;
+}
+/* the rail — segments abut (gap:0) into one stroke, and the dot paints over it */
+ui-carousel-controls[data-media*="mrk(tml)"] [data-dot]::before {
+	background: var(--ui-carousel-tml-rail, rgb(255 255 255 / 0.35));
+	block-size: var(--ui-carousel-tml-line-width, 2px);
+	content: "";
+	/* snapped, like the native path — a rail on a half pixel renders as a grey smear */
+	inset-block-start: round(calc(var(--ui-carousel-tml-dot-size, 0.7rem) / 2 - var(--ui-carousel-tml-line-width, 2px) / 2), 1px);
+	inset-inline: 0;
+	position: absolute;
+}
+ui-carousel-controls[data-media*="mrk(tml)"] [data-dot]::after {
+	background: var(--ui-carousel-tml-dot-bg, #0000);
+	block-size: var(--ui-carousel-tml-dot-size, 0.7rem);
+	border: var(--ui-carousel-tml-line-width, 2px) solid var(--ui-carousel-tml-dot, rgb(255 255 255 / 0.6));
+	border-radius: var(--radius-circle, 50%);
+	box-sizing: border-box;
+	content: "";
+	inline-size: var(--ui-carousel-tml-dot-size, 0.7rem);
+	inset-block-start: 0;
+	inset-inline-start: 50%;
+	position: absolute;
+	translate: -50% 0;
+	z-index: 1;
+}
+/* the rail starts and ends AT a dot, not at the frame edge */
+ui-carousel-controls[data-media*="mrk(tml)"] [data-dot]:first-child::before { inset-inline-start: 50%; }
+ui-carousel-controls[data-media*="mrk(tml)"] [data-dot]:last-child::before { inset-inline-end: 50%; }
+ui-carousel-controls[data-media*="mrk(tml)"] [data-dot]:only-child::before { display: none; }
+ui-carousel-controls[data-media*="mrk(tml)"] [data-dot][aria-current] {
+	color: var(--ui-carousel-tml-color-current, #fff);
+	font-weight: var(--ui-carousel-tml-font-weight-current, var(--font-weight-bold, 700));
+}
+ui-carousel-controls[data-media*="mrk(tml)"] [data-dot][aria-current]::after {
+	background: var(--ui-carousel-tml-dot-current, #fff);
+	border-color: var(--ui-carousel-tml-dot-current, #fff);
+}
+
 /* ============================================================
    ARROWS — port of ::scroll-button(*)
    ============================================================ */

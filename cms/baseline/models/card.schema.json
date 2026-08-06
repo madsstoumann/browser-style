@@ -198,7 +198,8 @@
               { "value": "image", "label": "Image" },
               { "value": "video", "label": "Video" },
               { "value": "youtube", "label": "YouTube" },
-              { "value": "vimeo", "label": "Vimeo" }
+              { "value": "vimeo", "label": "Vimeo" },
+              { "value": "audio", "label": "Audio" }
             ]
           },
           "src": {

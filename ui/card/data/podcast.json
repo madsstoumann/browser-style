@@ -22,16 +22,25 @@
     "media": [
       {
         "mediaType": "image",
-        "src": "/assets/images/mindfulness.png",
+        "src": "/assets/images/podcast.png",
         "alt": "The Calm Mind podcast cover art"
+      },
+      {
+        "mediaType": "audio",
+        "src": "/assets/audio/podcast.m4a",
+        "alt": "Digital minimalism, revisited — Episode 42"
       }
     ],
     "details": {
       "seriesName": "The Calm Mind",
       "episodeNumber": 42,
       "duration": "PT48M",
-      "durationDisplay": "48 min",
-      "audioUrl": "https://cdn.example.com/calm-mind/ep42.mp3"
+      "durationDisplay": "48 min"
+    },
+    "furniture": {
+      "play": {
+        "label": "Play episode"
+      }
     }
   }
 }

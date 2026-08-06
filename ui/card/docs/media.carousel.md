@@ -73,6 +73,7 @@ media.md.)
 | `mrk(sm)`   | CSS | Marker size 0.45rem |
 | `mrk(bs)` `mrk(ts)` | CSS | `nav(blw)`/`nav(abv)`: dots at the inline-start — `bs` below, `ts` above |
 | `mrk(non)`  | CSS | No dots (keeps arrows) — arrows-only band |
+| `mrk(tml)`  | CSS | **Timeline** markers — a dot per slide on one continuous rail, labelled with the slide's `data-date` (`content: attr(data-date)`; the slide's `aria-label` stays the accessible name). Dot + rail are two background layers on the marker. Positions with the same 9-grid cells; styled via `--ui-carousel-tml-*`. Pair with `mrk(blw)`/`nav(blw)` for a band (the ink then defaults to `CanvasText`) |
 | `mrk(tmb)`| CSS | Image thumbnails; per-slide `--ui-carousel-thumb-url`; active thumb has a bottom timer stripe. Overlay in a corner, or `+ mrk(blw)`/`nav(blw)` for a gallery **filmstrip band** below — band auto-sizes to the thumb; image keeps `asr()` (`box-sizing: content-box`) and is rounded on all 4 corners to `rds()` |
 | `mrk(ts)` `mrk(te)` `mrk(bs)` `mrk(be)` | CSS | Corner placement for the overlay marker-group — logical (top-start / top-end / bottom-start / bottom-end). Center row `mrk(cs)` `mrk(cc)` `mrk(ce)` completes the 9-grid. Inset via `--ui-carousel-marker-inset` |
 | `mrk(rail)` | CSS | With `axis(y)` + `mrk(tmb)`: vertical thumbnail rail **beside** the media (inline-start; right in RTL). Reserves inline space (`padding-inline-start` + `content-box`) so the image keeps `asr()`; arrows dropped; thumbs shrink to `--ui-carousel-thumb-min` then the rail scrolls. Width `--ui-carousel-rail` |
@@ -345,6 +346,53 @@ mechanism follows from the markup shape.
   own — no JS. Knobs, all optional: `--ui-carousel-label-group-max-inline-size` (override the cap),
   `-group-scrollbar` (`none` by default — set `thin`/`auto` to show it), `-group-wrap` (`nowrap`
   by default — set `wrap` to get a wrapping block of labels instead of a scroller).
+- **`mrk(tml)` — timeline nodes.** A dot per slide sitting on one continuous rail, with the
+  slide's `data-date` as the label. The interesting constraint: a `::scroll-marker` is a
+  pseudo-element, so it has **no pseudos of its own** — dot and rail cannot be a
+  `::before`/`::after` pair the way `ui/timeline/ui-timeline.css` draws them. They are two
+  **background layers** on the marker itself: a `radial-gradient` dot (fill + ring in one
+  layer, `circle at 50% <half the dot size>`) painted over a `linear-gradient` rail sized
+  `100% × --ui-carousel-tml-line-width` and positioned on the dot's centre line. Two things
+  make that read as one stroke rather than N dashes:
+  **(1) the group runs `gap: 0`** — load-bearing, since any gap opens a hole between two
+  segments; **(2) `background-origin: border-box`** — the node's `padding-block-start`
+  reserves the band above the text, and the default `padding-box` origin would push both
+  layers down off the dot line and shrink the rail's `100%` below the node's width. The rail
+  is sized `calc(100% + 1px)` to kill the sub-pixel seam where two segments abut.
+  **Crispness costs two tricks, and both are needed.** (a) *Snapping*: `--_tml-c` (the dot
+  centre) and the rail's y offset go through `round(…, 1px)`. Unrounded, a 0.7rem dot puts
+  the centre at 5.6px and the 2px rail at 4.6px — straddling the pixel grid, which paints a
+  blurred grey smear instead of a line. (b) *Feathering*: Chromium does **not** antialias a
+  hard gradient colour stop, so a zero-width edge on an 11px circle steps visibly. Each dot
+  boundary therefore ramps over ±0.25px. The width is a real trade-off, not a magic number —
+  the ring is only `--ui-carousel-tml-line-width` (2px) thick, so ±0.5px ramps at both
+  boundaries leave ~1px of solid colour and the dot reads soft; ±0.25px keeps ~1.5px solid
+  while still giving the curve its antialiasing. Retune both if you change the dot size
+  scale. First and
+  last nodes swap only the rail's gradient (`--_tml-rail-img`) for a half-transparent one so
+  the stroke starts and ends **at a dot** instead of at the frame edge, using base's
+  `--_dir-e` so it flips in RTL; a `:only-child` drops the rail entirely. If furniture (a
+  required-first `<ui-lightbox>`) holds `:first-child`, the trim silently doesn't apply and
+  the rail is full-bleed — a cosmetic degrade, not a break.
+  Nodes are `flex: 1 0 --ui-carousel-tml-col` and, like `mrk(lbl)`, auto-height and text —
+  so they reuse the same two mechanisms: the **named anchor** (`--ui-carousel-timeline`) for
+  the `anchor-size()` width cap plus `overflow-x: auto`, and the **height-agnostic
+  re-anchoring** of the bottom/centre cells. The band is a plain token
+  (`--ui-carousel-tml-band`) because auto-height text can't be measured. Segments are
+  visually seamless like `mrk(bar)`'s, so a focused node gets its own inset ring, and
+  `:target-current` repeats the **full** geometry (same Chrome cascade quirk as `mrk(lbl)`)
+  while swapping the ring dot for a filled one.
+  **Only one string of text per node** — `content:` cannot be styled in parts, so a
+  date-plus-note node in two type styles is not possible; put the full sentence in
+  `aria-label` and the short form in `data-date`. The polyfill has it easier: real
+  `<button>`s, so there the dot and rail *are* a `::before`/`::after` pair.
+  **Sizing** reads the shared `mrk()` size scale as one step — `mrk(tml) mrk(lg)` moves the
+  node width, the dot and the label together (`sm` 5.5rem/0.55rem/xs · `md` 7rem/0.7rem/sm ·
+  `lg` 9rem/0.9rem/base · `xl` 11rem/1.1rem/lg, `xl` also thickening the rail to `3px`). The
+  atoms are 0-0-0, so any single `--ui-carousel-tml-*` still overrides its step.
+  Because a themed `<ui-content>` slide paints its own plate, it joins the replaced elements
+  in the band's slide-radius rule (`media.carousel.css`) — otherwise the frame's outer clip
+  rounds only the frame and the plate keeps square corners inside a `nav(blw)`-style band.
 - **Corner placement.** `mrk(ts|te|bs|be)` re-anchor the whole marker-group to a corner
   (overlay), inset by `--ui-carousel-marker-inset` (defaults to the overlay gap; `mrk(tmb)`
   bumps it to `1rem`). The centre row `mrk(cs|cc|ce)` completes the same nine-cell logical
@@ -431,6 +479,11 @@ defaults to the (light) card surface, so the marker/arrow ink defaults flip to d
 
 - **Band size:** `--ui-carousel-band` (2.75rem) + a gap above it, `--ui-carousel-below-gap`
   (`--spacing-sm`), so card-shadow/elevation has room inside the clipped scrollport.
+- **Slide radius:** the frame's own clip rounds the frame, which in a band means frame *plus*
+  band — so each slide re-applies `--ui-media-radius` itself. The rule covers the replaced
+  elements **and `ui-content`**: a slide that paints its own background (a themed
+  `<ui-content>` plate) needs it for exactly the same reason an image does. A slide that
+  paints nothing doesn't care either way.
 - **Marker position:** centered by default; the row cell's inline letter moves them —
   start = after the left arrow, end = before the right arrow (or the `arw(set)` pair).
   In `nav(blw)` use the bottom-row cells `mrk(bs|bc|be)`; in `nav(abv)` the top-row
