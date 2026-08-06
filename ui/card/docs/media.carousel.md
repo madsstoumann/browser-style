@@ -384,7 +384,13 @@ mechanism follows from the markup shape.
   while swapping the ring dot for a filled one.
   **Only one string of text per node** — `content:` cannot be styled in parts, so a
   date-plus-note node in two type styles is not possible; put the full sentence in
-  `aria-label` and the short form in `data-date`. The polyfill has it easier: real
+  `aria-label` and the short form in `data-date`.
+  **Where that sentence lives depends on the slide element**, and getting it wrong is an HTML
+  validation error, not just a style nit. An `<img>` slide already has `alt` — use it and drop
+  the `aria-label` (an `aria-label` would silently override the `alt` anyway). A `<video>`
+  slide takes `aria-label` directly. A `<ui-content>` slide is an unknown element, so it maps
+  to role `generic`, and ARIA forbids `aria-label` on `generic` — give it `role="group"`
+  (also the WAI-ARIA carousel-slide idiom) or the label is both invalid and ignored by AT. The polyfill has it easier: real
   `<button>`s, so there the dot and rail *are* a `::before`/`::after` pair.
   **Sizing** reads the shared `mrk()` size scale as one step — `mrk(tml) mrk(lg)` moves the
   node width, the dot and the label together (`sm` 5.5rem/0.55rem/xs · `md` 7rem/0.7rem/sm ·
