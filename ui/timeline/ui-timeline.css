@@ -121,18 +121,30 @@
 		}
 	}
 
-	/* horizontal — the rail runs inline; entries share one scrolling row.
-	   Edge fade is NOT the component's job: use the existing scroll-fade hooks
-	   (card content="scr(x)", lay-out overflow="preview fade", reveal variant="scr"). */
+	/* horizontal — the rail runs inline; entries share one scrolling row with a
+	   scroll-driven edge fade off the shared primitive. Docs: readme.md */
 	:where(ui-timeline[variant~="horizontal"], .ui-timeline[variant~="horizontal"], [data-part="timeline"][variant~="horizontal"]) {
 		flex-direction: row;
-		/* a flex/grid item won't shrink below min-content without this — the row
-		   would push past its container instead of scrolling */
+		/* min-inline-size:0 so the row scrolls instead of pushing past its container */
 		min-inline-size: 0;
 		max-inline-size: 100%;
 		overflow-x: auto;
 		overscroll-behavior-inline: contain;
 		scrollbar-width: thin;
+
+		/* the <ol> is the scroller, not in base's mask-var selector list, so declare it here */
+		--ui-scroll-fade-dir: to var(--_dir-e);
+		--ui-scroll-fade-mask: linear-gradient(var(--ui-scroll-fade-dir, to bottom), #0000, #000 var(--ui-scroll-fade-start) calc(100% - var(--ui-scroll-fade-end)), #0000);
+		@supports (animation-timeline: scroll()) {
+			@media (prefers-reduced-motion: no-preference) {
+				& {
+					animation: ui-scroll-fade-s both linear, ui-scroll-fade-e both linear;
+					animation-timeline: scroll(self inline);
+					animation-range: 0 var(--ui-scroll-fade-ramp-s), calc(100% - var(--ui-scroll-fade-ramp-e)) 100%;
+					mask: var(--ui-scroll-fade-mask);
+				}
+			}
+		}
 
 		& > li {
 			flex: 1 0 var(--ui-timeline-col, 12rem);
