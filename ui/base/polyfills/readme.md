@@ -7,8 +7,9 @@
 Load it on any page that uses a component reading author values from attributes —
 `ui-sticker fill=`, `ui-chip ink=`, `ui-avatar ring=`, `high-light fill=`,
 `ui-rating value=`, `mega-menu menubar-height=`, `ui-gradient-text gradient=`,
-`[data-view]`. It is a **no-op** where typed `attr()` is supported, so it is safe
-to load unconditionally.
+`[data-view]`, and the stagger per-child overrides `stagger-index=` /
+`stagger-step=` (+ their `data-` forms). It is a **no-op** where typed `attr()`
+is supported, so it is safe to load unconditionally.
 
 ---
 
@@ -19,7 +20,7 @@ duplicate and neither replaces the other — they cover **disjoint** attribute s
 
 | | `ui/base/polyfills/attr-fallback.js` | `layout/polyfills/attr-fallback.js` |
 |---|---|---|
-| Covers | component attributes — `ui-sticker fill=`, `ui-chip ink=`, `ui-avatar ring=`, `high-light fill=`, `ui-rating value=`, `mega-menu menubar-height=`, `ui-gradient-text gradient=`, `[data-view]` | `<lay-out>` attributes — exactly `bleed=`, `columns=`, `rows=`, `max-width=`, `self=`, `size=` |
+| Covers | component attributes — `ui-sticker fill=`, `ui-chip ink=`, `ui-avatar ring=`, `high-light fill=`, `ui-rating value=`, `mega-menu menubar-height=`, `ui-gradient-text gradient=`, `[data-view]`, `stagger-index=`/`stagger-step=` (+ `data-` forms) | `<lay-out>` attributes — exactly `bleed=`, `columns=`, `rows=`, `max-width=`, `self=`, `size=` |
 | Shape | ES module (documented `ATTR_MAP`, exports nothing) | IIFE body, still loaded as `type="module"` (it resolves its stylesheet via `import.meta.url`) |
 | Companion CSS | none | yes — injects `attr-fallback.css` |
 | Maps to | one CSS custom property **per selector** | one custom property **per attribute name** |
@@ -85,6 +86,20 @@ Two corollaries worth knowing:
 
 Layer 1 is not optional: a component installed on its own must not depend on an
 app-level script to be usable.
+
+The stagger overrides degrade CSS-only along exactly these two layers:
+
+- `stagger-index=` — `--_stg-i` is a **registered** `<integer>`, so in Safari/Firefox
+  both the `sibling-index()` default and the un-substituted `attr()` text fail the
+  syntax check and fall to `initial-value: 1`: a uniform cascade (`delay =
+  --stagger-begin`), which is what those browsers already get today without
+  `sibling-index()`. No `@supports` block needed — registration is the layer 1.
+- `stagger-step=` — `--_stg-step` is unregistered (registering would kill the
+  `--stagger-step` theming fallback), so its layer 1 is an explicit `@supports not
+  (transition-delay: attr(x type(<time>), 0s))` guard in `stagger.css` that resets
+  it to the default `--stagger-step`. The child cascades at the default pace, and
+  this polyfill restores the exact authored values on top — an enhancement, not
+  load-bearing.
 
 ## Adding a component to the registry
 

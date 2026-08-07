@@ -152,11 +152,14 @@
 		--ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
 		/* Staggered child reveal (shared: tabs, media carousel, …).
-		   Per-child delay = --stagger-begin + (sibling-index() - 1) * --stagger-step. */
+		   Per-child delay = --stagger-begin + (--_stg-i - 1) * --_stg-step (index/step
+		   default to sibling-index() / --stagger-step, overridable per child). */
 		--stagger-begin: 0s;
 		--stagger-distance: 5rem;
 		--stagger-duration: 0.75s;
 		--stagger-easing: cubic-bezier(0.16, 1, 0.3, 1);
+		/* from-opacity of the reveal; semi/full write the per-channel private forms */
+		--stagger-opacity: 0;
 		--stagger-step: 0.07s;
 
 		/* Shimmer stagger token (stagger="shimmer") — a background-clip:text sweep
