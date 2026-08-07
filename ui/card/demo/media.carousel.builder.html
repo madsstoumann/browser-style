@@ -190,6 +190,11 @@
 						<option value="set ts">set ts</option><option value="set tc">set tc</option><option value="set te">set te</option>
 						<option value="set cs">set cs</option><option value="set cc">set cc</option>
 						<option value="set bs">set bs</option><option value="set bc">set bc</option><option value="set be">set be</option>
+					</select>
+				</label>
+				<label>Band — <code>arw()</code>
+					<select id="c-arw-band">
+						<option value="" selected>none — on the media</option>
 						<option value="blw">blw — band below</option>
 						<option value="abv">abv — band above</option>
 					</select>
@@ -254,7 +259,7 @@
 
 		const $ = (id) => document.getElementById(id);
 		const stage = $('stage'), out = $('out'), note = $('note');
-		const controls = ['c-asr', 'c-rds', 'c-tmb', 'c-nav', 'c-mrk-type', 'c-mrk-pos', 'c-mrk-size', 'c-mrk-tone', 'c-mrk-color', 'c-arw-style', 'c-arw-size', 'c-arw-pos', 'c-arw-tone', 'c-arw-vis', 'c-auto', 'c-loop', 'c-play'];
+		const controls = ['c-asr', 'c-rds', 'c-tmb', 'c-nav', 'c-mrk-type', 'c-mrk-pos', 'c-mrk-size', 'c-mrk-tone', 'c-mrk-color', 'c-arw-style', 'c-arw-size', 'c-arw-pos', 'c-arw-band', 'c-arw-tone', 'c-arw-vis', 'c-auto', 'c-loop', 'c-play'];
 
 		/* Curated colour bundles per marker family — the tool writes custom
 		   properties inline on the frame, exactly what a page author would do. */
@@ -288,6 +293,9 @@
 				if ($('c-arw-style').value) for (const w of $('c-arw-style').value.split(' ')) t.push(`arw(${w})`);
 				if ($('c-arw-size').value) t.push(`arw(${$('c-arw-size').value})`);
 				if ($('c-arw-pos').value) for (const w of $('c-arw-pos').value.split(' ')) t.push(`arw(${w})`);
+				// band is independent of the cluster: arw(set) arw(blw) is a valid pair
+
+				if ($('c-arw-band').value) t.push(`arw(${$('c-arw-band').value})`);
 				if ($('c-arw-tone').value) t.push(`arw(${$('c-arw-tone').value})`);
 				if ($('c-arw-vis').value) t.push(`arw(${$('c-arw-vis').value})`);
 			}
