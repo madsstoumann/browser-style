@@ -12,10 +12,13 @@
  * box vector — own --stagger-shimmer-* tokens, own section at the bottom of this
  * file, <details> hosts only. See ui/card/docs/stagger.md § Shimmer.
  *
- * Per-child delay = --stagger-begin + (--_stg-base-i + sibling-index() - 1) * --stagger-step.
+ * Per-child delay = --stagger-begin + (--_stg-base-i + --_stg-i - 1) * --_stg-step.
  * --_stg-base-i (registered, non-inherited, initial 0) lets a host offset the
  * cascade (the card carousel bridges its card index into it).
+ * --_stg-i defaults to sibling-index(); stagger-index=/data-stagger-index= and
+ * stagger-step=/data-stagger-step= override index/step per child (typed attr()).
  * Tokens: --stagger-{begin,distance,duration,easing,step} — ui/base/tokens.css.
+ * Docs: ui/card/docs/stagger.md.
  *
  * Two trigger adapters:
  *  1. <details> hosts (ui-tabs, ui-reveal, ui-accordion, plain <details>) —
@@ -45,6 +48,13 @@
 		syntax: "<integer>";
 		inherits: false;
 		initial-value: 0;
+	}
+	/* per-child cascade index — sibling-index() or a stagger-index attribute;
+	   non-inherited so a nested stagger host starts its own cascade */
+	@property --_stg-i {
+		syntax: "<integer>";
+		inherits: false;
+		initial-value: 1;
 	}
 	/* carousel card-index carrier — inherits so a slide's cards pass their column
 	   index down to their own content (see adapter 2) */
@@ -86,6 +96,24 @@
 	:where([media*="crd(blr)"])  { --_stg-crd-tr: 0 0; --_stg-crd-fl: blur(12px); }
 	:where([media*="crd(fde)"])  { --_stg-crd-tr: 0 0; }
 
+	/* per-child index/step — defaults first, attribute readers after (source order resolves) */
+	:where([stagger], [data-stagger]) > :where(:not(cq-box)),
+	:where([stagger], [data-stagger]) > :where(cq-box) > *,
+	:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) :where(ui-media) > :where(ui-slide, lay-out) > *,
+	:where(ui-media[media*="stagger"]) > :where(ui-slide, lay-out) > *,
+	:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) :where(ui-media) :where(ui-content) > *,
+	:where(ui-media[media*="stagger"]) :where(ui-content) > * {
+		--_stg-i: sibling-index();
+	}
+	:where([stagger-index])      { --_stg-i: attr(stagger-index type(<integer>), sibling-index()); }
+	:where([data-stagger-index]) { --_stg-i: attr(data-stagger-index type(<integer>), sibling-index()); }
+	:where([stagger-step])       { --_stg-step: attr(stagger-step type(<time>), var(--stagger-step, 0.07s)); }
+	:where([data-stagger-step])  { --_stg-step: attr(data-stagger-step type(<time>), var(--stagger-step, 0.07s)); }
+	/* typed attr() absent (Safari/FF): keep the step readable — docs: ui/base/polyfills/readme.md */
+	@supports not (transition-delay: attr(x type(<time>), 0s)) {
+		:where([stagger-step], [data-stagger-step]) { --_stg-step: var(--stagger-step, 0.07s); }
+	}
+
 	@media (prefers-reduced-motion: no-preference) {
 		/* === adapter 1: <details> hosts — replay on every [open] ===
 		   Panel forced content-visibility:visible so it stays rendered while closed;
@@ -117,7 +145,7 @@
 				translate var(--stagger-duration, 0.75s) var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1)),
 				scale var(--stagger-duration, 0.75s) var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1)),
 				filter var(--stagger-duration, 0.75s) var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1));
-			transition-delay: calc(var(--stagger-begin, 0s) + (var(--_stg-base-i) + sibling-index() - 1) * var(--stagger-step, 0.07s));
+			transition-delay: calc(var(--stagger-begin, 0s) + (var(--_stg-base-i) + var(--_stg-i) - 1) * var(--_stg-step, var(--stagger-step, 0.07s)));
 		}
 		/* standalone @starting-style — the form that re-fires on each re-open */
 		@starting-style {
@@ -145,7 +173,7 @@
 		/* multi-card slide: give each card its column index (inherits to its content) */
 		:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) ui-media > :where(ui-slide, lay-out) > *,
 		ui-media:where([media*="stagger"]) > :where(ui-slide, lay-out) > * {
-			--_stg-crd-i: calc(sibling-index() - 1);
+			--_stg-crd-i: calc(var(--_stg-i) - 1);
 		}
 		/* content children consume the card index as their delay base */
 		:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) ui-media ui-content > *,
@@ -163,7 +191,7 @@
 				translate var(--stagger-duration, 0.75s) var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1)),
 				scale var(--stagger-duration, 0.75s) var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1)),
 				filter var(--stagger-duration, 0.75s) var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1));
-			transition-delay: calc(var(--stagger-begin, 0s) + (var(--_stg-base-i) + sibling-index() - 1) * var(--stagger-step, 0.07s));
+			transition-delay: calc(var(--stagger-begin, 0s) + (var(--_stg-base-i) + var(--_stg-i) - 1) * var(--_stg-step, var(--stagger-step, 0.07s)));
 		}
 		/* from-state — held until the slide snaps into the inline viewport */
 		@container not scroll-state(snapped: inline) {
@@ -253,7 +281,7 @@
 				transform-origin: var(--_stg-origin, 50% 50%);
 				animation: ui-stagger-in both var(--stagger-easing, cubic-bezier(0.16, 1, 0.3, 1));
 				animation-timeline: --stg-tl;
-				animation-range: entry calc((sibling-index() - 1) * 20%) entry calc(75% + (sibling-index() - 1) * 20%);
+				animation-range: entry calc((var(--_stg-i) - 1) * 20%) entry calc(75% + (var(--_stg-i) - 1) * 20%);
 			}
 
 			/* --- stagger="… trigger" → one-shot on entry (plays once at full
@@ -280,7 +308,7 @@
 					animation-range: normal;
 					animation-duration: var(--stagger-duration, 0.75s);
 					animation-trigger: --stg-card play-forwards;
-					animation-delay: calc((sibling-index() - 1) * var(--animate-stagger, 10) * var(--animate-delay, 0.005s));
+					animation-delay: calc((var(--_stg-i) - 1) * var(--animate-stagger, 10) * var(--animate-delay, 0.005s));
 				}
 				lay-out[stagger~="trigger"]:not([overflow]):not(:where(details *, ui-media *)) {
 					timeline-trigger: --stg-block view() entry 25% exit 0%;
@@ -291,7 +319,7 @@
 					animation-range: normal;
 					animation-duration: var(--stagger-duration, 0.75s);
 					animation-trigger: --stg-block play-forwards;
-					animation-delay: calc((sibling-index() - 1) * var(--animate-stagger, 10) * var(--animate-delay, 0.005s));
+					animation-delay: calc((var(--_stg-i) - 1) * var(--animate-stagger, 10) * var(--animate-delay, 0.005s));
 				}
 			}
 		}
@@ -305,7 +333,7 @@
 				--_stg-shim-dur: var(--stagger-shimmer-duration, 1s);
 				--_stg-shim-ink: var(--stagger-shimmer-ink, CanvasText);
 				--_stg-shim-spread: var(--stagger-shimmer-spread, 12ch);
-				--_stg-shim-delay: calc(var(--stagger-begin, 0s) + (var(--_stg-base-i) + sibling-index() - 1) * var(--stagger-shimmer-step, 0.9s));
+				--_stg-shim-delay: calc(var(--stagger-begin, 0s) + (var(--_stg-base-i) + var(--_stg-i) - 1) * var(--stagger-shimmer-step, 0.9s));
 				display: var(--_stg-shim-flow, inline);
 				background-image:
 					linear-gradient(var(--_stg-shim-angle, 90deg),

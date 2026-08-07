@@ -83,6 +83,11 @@ export const ATTR_MAP = {
 	// data-fill, not fill: the target is an <li>, where a bare attribute is invalid HTML
 	// (same reason the named palette is data-theme= there, but that needs no polyfill)
 	':is(ui-timeline, .ui-timeline, [data-part="timeline"]) > li[data-fill]': { '--ui-timeline-dot': ['data-fill', 'inherit'] },
+	// stagger per-child overrides — KEEP IN SYNC with ui/base/stagger.css
+	'[stagger-index]':      { '--_stg-i':    ['stagger-index', '1'] },
+	'[data-stagger-index]': { '--_stg-i':    ['data-stagger-index', '1'] },
+	'[stagger-step]':       { '--_stg-step': ['stagger-step', 'var(--stagger-step, 0.07s)'] },
+	'[data-stagger-step]':  { '--_stg-step': ['data-stagger-step', 'var(--stagger-step, 0.07s)'] },
 	'ui-sticker': {
 		'--ui-sticker-bg': ['fill', 'var(--color-accent)'],
 		'--ui-sticker-c': ['ink', 'hsl(0, 0%, 100%)'],
