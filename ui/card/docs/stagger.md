@@ -37,12 +37,36 @@ Tokens are attribute **values**, matched with `~=` (whole word). Bare `stagger`
 | `blr` | `filter: blur(12px)` | blur + fade |
 | `fde` | — (opacity only) | plain fade |
 | `shimmer` (+ `sweep`) | *(text effect, `<details>` hosts only — see [Shimmer](#shimmer))* | the text lights up, line by line |
+| `semi` | *(modifier — from `opacity: 0.5`)* | start semi-opaque; composes with any effect |
+| `full` | *(modifier — from `opacity: 0`)* | the explicit spelling of the default |
 
 `<d>` = `var(--stagger-distance)`. Each token sets **inherited** private vectors —
 `--_stg-tr` (translate) · `--_stg-sc` (scale) · `--_stg-fl` (filter) · `--_stg-origin`
 (transform-origin). Because they inherit, a token may sit on the group **or any
 ancestor**, and every adapter's from-state reads the same three vars — that's why one
 vocabulary drives all three triggers.
+
+### Fade-in opacity (`semi` / `full`)
+
+`semi` and `full` are **modifiers, not effects**: they set only the from-opacity of the
+reveal — `semi` starts children at `opacity: 0.5`, `full` at `0` (the explicit spelling of
+the default). They compose with any effect word; the canonical pairing is the
+element-by-element fade:
+
+```html
+<div data-stagger="fde semi">
+  <p>…</p>
+  <p>…</p>
+</div>
+```
+
+In the media DSL they mirror 1:1 as `ani(semi)` / `ani(full)` (content channel) and
+`crd(semi)` / `crd(full)` (card channel) — `media="… stagger ani(fde) ani(semi)"`. Under
+the hood the modifiers write per-channel private forms (`--_stg-op` content,
+`--_stg-crd-op` card) over the shared public token `--stagger-opacity`, which every
+adapter's from-state (and the `ui-stagger-in` keyframe) reads — so an arbitrary
+from-opacity can also be themed directly: `--stagger-opacity: 0.25`. Shimmer is
+unaffected (its from-states keep `opacity: 1` — it paints, it doesn't fade).
 
 ## Tokens
 
@@ -55,13 +79,75 @@ engine survives the token-less `layout.css` bundle):
 | `--stagger-distance` | `5rem` | Travel distance for the translate tokens |
 | `--stagger-duration` | `0.75s` | Per-child duration |
 | `--stagger-easing` | `cubic-bezier(0.16, 1, 0.3, 1)` | Easing |
+| `--stagger-opacity` | `0` | From-opacity of the reveal (`semi`/`full` write the per-channel private forms) |
 | `--stagger-step` | `0.07s` | Delay added per child |
 
-**Per-child delay** = `--stagger-begin + (--_stg-base-i + sibling-index() - 1) * --stagger-step`.
+**Per-child delay** = `--stagger-begin + (--_stg-base-i + --_stg-i - 1) * --_stg-step`.
 
-`--_stg-base-i` (registered `<integer>`, non-inherited, initial `0`) lets a host offset
-the cascade — the card carousel bridges its **card index** into it so a card's content
-picks up where the card left off (see adapter 2).
+- `--_stg-base-i` (registered `<integer>`, non-inherited, initial `0`) lets a host offset
+  the cascade — the card carousel bridges its **card index** into it so a card's content
+  picks up where the card left off (see adapter 2).
+- `--_stg-i` (registered `<integer>`, non-inherited, initial `1`) is the child's cascade
+  index — `sibling-index()` unless overridden by attribute.
+- `--_stg-step` (unregistered) is the child's step — `--stagger-step` unless overridden
+  by attribute.
+
+## Per-child overrides
+
+Two attributes on a **child** override its slot in the cascade, read in CSS via typed
+`attr()` (same mechanism as `tint=` — bare spelling on custom elements, `data-` on
+native ones):
+
+| Attribute | Type | Overrides | Effect |
+|---|---|---|---|
+| `stagger-index` / `data-stagger-index` | `<integer>` | `sibling-index()` | reorder — delay slot only, DOM/paint order unchanged |
+| `stagger-step` / `data-stagger-step` | `<time>` | `--stagger-step` | pace — `delay = begin + (index - 1) × own step` |
+
+```html
+<!-- cascade order 2, 1, 3 -->
+<div data-stagger>
+  <p data-stagger-index="2">appears second</p>
+  <p data-stagger-index="1">appears first</p>
+  <p data-stagger-index="3">appears third</p>
+</div>
+
+<!-- mixed pace: quick · default · extremely slow -->
+<div data-stagger>
+  <p data-stagger-step="0.02s">…</p>
+  <p>…</p>
+  <p data-stagger-step="0.6s">…</p>
+</div>
+```
+
+A child's step scales its **own** whole delay, so a big step on a late child lands it
+after everyone (extremely slow), and a child with a large index but tiny step can still
+arrive early — the two compose, they don't fight.
+
+**Adapter coverage.** The index override applies everywhere a sibling term exists; the
+step override only where the delay is a real `<time>`:
+
+| Site | `stagger-index` | `stagger-step` |
+|---|---|---|
+| adapter 1 (`<details>`) transition delay | ✓ | ✓ |
+| adapter 2 (snap carousel) — cards **and** content | ✓ | ✓ |
+| adapter 3 (`<lay-out stagger>`) scrubbed `animation-range` | ✓ | — (percent-based, no time term) |
+| adapter 3 `stagger="… trigger"` one-shot delay | ✓ | — (paced by `--animate-stagger`/`--animate-delay`) |
+| shimmer delay | ✓ | — (shimmer keeps `--stagger-shimmer-step`) |
+
+Details that matter:
+
+- **`--_stg-i` does not inherit** (registered, `inherits: false`) — a nested stagger
+  host's children compute their own indices; a parent's override never leaks in. On an
+  adapter-2 **card**, `stagger-index` reorders the card *and* re-bases its content
+  (`--_stg-crd-i` derives from it).
+- **`--_stg-step` does inherit** (unregistered by necessity — registering would kill the
+  `--stagger-step` theming fallback). A step attribute on a group therefore also paces
+  nested subjects, consistent with the engine's "a token may sit on any ancestor" design.
+- **Safari/Firefox** (no typed `attr()`, no `sibling-index()`): the index degrades to a
+  uniform cascade (`--_stg-i` self-heals to its initial `1` — same as those browsers get
+  today), the step falls back to the default `--stagger-step` via a CSS-only `@supports`
+  guard, and `ui/base/polyfills/attr-fallback.js` restores the exact authored values on
+  top. See [`ui/base/polyfills/readme.md`](../../base/polyfills/readme.md).
 
 ---
 

@@ -811,6 +811,39 @@
 	</auto-morph>
 
 	<br>
+	<h2>Stagger: per-child overrides + fade opacity</h2>
+	<p>Per-child overrides on the shared stagger engine, read via typed <code>attr()</code>: <code>data-stagger-index</code> reorders the cascade, <code>data-stagger-step</code> paces a single child, and <code>data-stagger="fde semi"</code> fades in element by element from half opacity.</p>
+
+	<ui-accordion group="accordion-overrides" variant="bordered divided rounded">
+		<cq-box>
+			<details name="accordion-overrides" open>
+				<summary>Reordered cascade (2, 1, 3)<ui-icon type="plus-minus"></ui-icon></summary>
+				<div data-stagger>
+					<p data-stagger-index="2">Second to appear — although it is the first paragraph in the DOM, its <code>data-stagger-index="2"</code> puts it in the middle of the cascade.</p>
+					<p data-stagger-index="1">First to appear — <code>data-stagger-index="1"</code> pulls it ahead of the paragraph above it.</p>
+					<p data-stagger-index="3">Third to appear — <code>data-stagger-index="3"</code> keeps it last, exactly where the DOM would have put it anyway.</p>
+				</div>
+			</details>
+			<details name="accordion-overrides">
+				<summary>Per-child pace<ui-icon type="plus-minus"></ui-icon></summary>
+				<div data-stagger>
+					<p data-stagger-step="0.02s">Quick — <code>data-stagger-step="0.02s"</code> makes this child's whole delay tiny.</p>
+					<p>Default — no attribute, so this child paces off the shared <code>--stagger-step</code>.</p>
+					<p data-stagger-step="0.6s">Extremely slow — <code>data-stagger-step="0.6s"</code> scales this child's delay to 1.2s.</p>
+				</div>
+			</details>
+			<details name="accordion-overrides">
+				<summary>Fade in from half opacity<ui-icon type="plus-minus"></ui-icon></summary>
+				<div data-stagger="fde semi">
+					<p>These lines fade in one after another — no movement, just opacity.</p>
+					<p>The <code>semi</code> modifier starts them at <code>opacity: 0.5</code> instead of fully hidden.</p>
+					<p>Drop the modifier (or spell it <code>full</code>) for the default fade from <code>opacity: 0</code>.</p>
+				</div>
+			</details>
+		</cq-box>
+	</ui-accordion>
+
+	<br>
 	<p>With <code>tabs="ellipse"</code> and classes <code>tabs-fill-surface tabs-offset</code> — panels stagger with <code>data-stagger="fall"</code>:</p>
 	<auto-morph render="tabs">
 		<ui-accordion group="accordion-tabs-ellipse" class="tabs-fill-surface tabs-offset" variant="bordered divided rounded" tabs="ellipse">

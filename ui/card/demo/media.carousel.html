@@ -777,7 +777,7 @@
 	     STAGGER — content reveal
 	     ════════════════════════════════════════════════════════════ -->
 	<h2 id="stagger">Stagger — content reveal</h2>
-	<p>A card's content reveals on snap; type via <code>ani()</code>: <code>rise</code> · <code>fall</code> · <code>lft</code> · <code>rgt</code> · <code>zom</code> · <code>blr</code> · <code>fde</code>.</p>
+	<p>A card's content reveals on snap; type via <code>ani()</code>: <code>rise</code> · <code>fall</code> · <code>lft</code> · <code>rgt</code> · <code>zom</code> · <code>blr</code> · <code>fde</code> — plus the opacity modifiers <code>semi</code> · <code>full</code>.</p>
 	<lay-out>
 			<ui-media media="asr(16/9) rds(lg) clip nav stagger">
 				<ui-card variant="ovr(bs) rds(non)" media="asr(16/9) obp(cc) scm" content="pad(lg)"><cq-box>
@@ -824,6 +824,21 @@
 				<ui-card variant="ovr(bs) rds(non)" media="asr(4/3) obp(cc) scm ani(blr)" content="pad(lg)"><cq-box>
 					<ui-media><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"></ui-media>
 					<ui-content><small data-part="eyebrow">ani(blr)</small><h3 data-part="headline">Unblur</h3><p data-part="summary">Sharpens into focus.</p></ui-content>
+				</cq-box></ui-card>
+			</ui-media>
+	</lay-out>
+
+	<h3>Fade-in from half opacity — <code>ani(fde) ani(semi)</code> · per-child order — <code>data-stagger-index</code></h3>
+	<p>The whole carousel fades its copy in element by element from <code>opacity: 0.5</code>. On the second slide, <code>data-stagger-index</code> reorders the cascade: summary first, headline second, eyebrow last.</p>
+	<lay-out>
+			<ui-media media="asr(16/9) rds(lg) clip nav stagger ani(fde) ani(semi)">
+				<ui-card variant="ovr(bs) rds(non)" media="asr(16/9) obp(cc) scm" content="pad(lg)"><cq-box>
+					<ui-media><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"></ui-media>
+					<ui-content><small data-part="eyebrow">ani(fde) ani(semi)</small><h3 data-part="headline">Half fade</h3><p data-part="summary">No movement — lines settle from semi-opaque to solid, one by one.</p></ui-content>
+				</cq-box></ui-card>
+				<ui-card variant="ovr(bs) rds(non)" media="asr(16/9) obp(cc) scm" content="pad(lg)"><cq-box>
+					<ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
+					<ui-content><small data-part="eyebrow" data-stagger-index="3">Appears last</small><h3 data-part="headline" data-stagger-index="2">Appears second</h3><p data-part="summary" data-stagger-index="1">Appears first — the cascade reads bottom-up here.</p></ui-content>
 				</cq-box></ui-card>
 			</ui-media>
 	</lay-out>
@@ -1037,19 +1052,19 @@
 	<p>Each page is its own <code>&lt;lay-out&gt;</code> grid inside a <code>stagger pages</code> scroller — a whole grid reveals per snap. Below <code>md</code> (540px) the pages dissolve and every card becomes its own slide; narrow the window to watch the dot count jump.</p>
 
 	<h4>Two channels — <code>crd()</code> + <code>ani()</code></h4>
-	<p><code>crd()</code> animates the cards, <code>ani()</code> their content; both cascade.</p>
+	<p><code>crd()</code> animates the cards, <code>ani()</code> their content; both cascade. On the first page the cards carry a bare <code>stagger-index</code> (custom elements take the bare spelling), so the middle card leads the card cascade.</p>
 	<lay-out>
 			<ui-media class="slide-gap" media="nav stagger crd(rise) pages">
 				<lay-out md="columns(3)" stagger>
-					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
+					<ui-card stagger-index="2" variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Space · ani(fall)</small><h3 data-part="headline">Hubble</h3></ui-content>
 					</cq-box></ui-card>
-					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
+					<ui-card stagger-index="1" variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Physics · ani(fall)</small><h3 data-part="headline">Quantum</h3></ui-content>
 					</cq-box></ui-card>
-					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
+					<ui-card stagger-index="3" variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Tech · ani(fall)</small><h3 data-part="headline">Web Summit</h3></ui-content>
 					</cq-box></ui-card>
