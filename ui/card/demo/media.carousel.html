@@ -777,7 +777,7 @@
 	     STAGGER — content reveal
 	     ════════════════════════════════════════════════════════════ -->
 	<h2 id="stagger">Stagger — content reveal</h2>
-	<p>A card's content reveals on snap; type via <code>ani()</code>: <code>rise</code> · <code>fall</code> · <code>lft</code> · <code>rgt</code> · <code>zom</code> · <code>blr</code> · <code>fde</code> — plus the opacity modifiers <code>semi</code> · <code>full</code>.</p>
+	<p>A card's content reveals on snap; type via <code>ani()</code>: <code>rise</code> · <code>fall</code> · <code>lft</code> · <code>rgt</code> · <code>zom</code> · <code>blr</code> · <code>fde</code>.</p>
 	<lay-out>
 			<ui-media media="asr(16/9) rds(lg) clip nav stagger">
 				<ui-card variant="ovr(bs) rds(non)" media="asr(16/9) obp(cc) scm" content="pad(lg)"><cq-box>
@@ -828,13 +828,13 @@
 			</ui-media>
 	</lay-out>
 
-	<h3>Fade-in from half opacity — <code>ani(fde) ani(semi)</code> · per-child order — <code>data-stagger-index</code></h3>
-	<p>The whole carousel fades its copy in element by element from <code>opacity: 0.5</code>. On the second slide, <code>data-stagger-index</code> reorders the cascade: summary first, headline second, eyebrow last.</p>
+	<h3>Fade — <code>ani(fde)</code> · per-child order — <code>data-stagger-index</code></h3>
+	<p>The whole carousel fades its copy in element by element. On the second slide, <code>data-stagger-index</code> reorders the cascade: summary first, headline second, eyebrow last.</p>
 	<lay-out>
-			<ui-media media="asr(16/9) rds(lg) clip nav stagger ani(fde) ani(semi)">
+			<ui-media media="asr(16/9) rds(lg) clip nav stagger ani(fde)">
 				<ui-card variant="ovr(bs) rds(non)" media="asr(16/9) obp(cc) scm" content="pad(lg)"><cq-box>
 					<ui-media><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"></ui-media>
-					<ui-content><small data-part="eyebrow">ani(fde) ani(semi)</small><h3 data-part="headline">Half fade</h3><p data-part="summary">No movement — lines settle from semi-opaque to solid, one by one.</p></ui-content>
+					<ui-content><small data-part="eyebrow">ani(fde)</small><h3 data-part="headline">Plain fade</h3><p data-part="summary">No movement — lines settle into place one by one.</p></ui-content>
 				</cq-box></ui-card>
 				<ui-card variant="ovr(bs) rds(non)" media="asr(16/9) obp(cc) scm" content="pad(lg)"><cq-box>
 					<ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>

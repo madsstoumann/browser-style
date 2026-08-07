@@ -40,8 +40,8 @@ media.md.)
 
 | `media=` token | Layer | Effect |
 |----------------|-------|--------|
-| `ani(<type>)` | CSS | `stagger` **content** reveal type: `rise` (default) · `fall` · `lft` · `rgt` · `zom` · `blr` · `fde` — plus the modifiers `semi` · `full` (see "Staggered content reveal") |
-| `crd(<type>)` | CSS | `stagger` **card** reveal type (multi-card slides) — same vocabulary (+ modifiers), independent of `ani()` |
+| `ani(<type>)` | CSS | `stagger` **content** reveal type: `rise` (default) · `fall` · `lft` · `rgt` · `zom` · `blr` · `fde` (see "Staggered content reveal") |
+| `crd(<type>)` | CSS | `stagger` **card** reveal type (multi-card slides) — same vocabulary, independent of `ani()` |
 | `arw(arr)`  | CSS | Full-arrow glyph (default is chevron — no token) |
 | `arw(bare)` | CSS | Drop the circle — glyph painted as a recolourable shape (`--ui-carousel-arrow-color`) |
 | `arw(bc)`   | CSS | Split arrows, bottom band (block row) |
@@ -658,7 +658,6 @@ Shares the global tokens from `ui/base/tokens.css`:
 | `--stagger-distance` | `5rem` | Travel distance (`translate` start for rise/fall/lft/rgt) |
 | `--stagger-duration` | `0.75s` | Per-child fade/rise duration |
 | `--stagger-easing` | `cubic-bezier(0.16, 1, 0.3, 1)` | Easing |
-| `--stagger-opacity` | `0` | From-opacity of the reveal (both channels) |
 | `--stagger-step` | `0.07s` | Delay added per child |
 
 Per-child delay = `--stagger-begin + (index - 1) * step` — index defaults to
@@ -680,14 +679,6 @@ the content rule already transitions `opacity`/`translate`/`scale`/`filter`. Com
 | `ani(zom)` | `scale: 0.65` | zoom / scale up |
 | `ani(blr)` | `filter: blur(12px)` | blur + fade |
 | `ani(fde)` | — (opacity only) | plain fade |
-
-**Opacity modifiers — `ani(semi)` / `ani(full)`.** Not effects: they set only the
-channel's from-opacity — `semi` starts children semi-opaque (`opacity: 0.5`), `full`
-is the explicit spelling of the default (`0`). Compose with any effect word; the
-canonical pairing is the element-by-element fade,
-`media="… stagger ani(fde) ani(semi)"`. The card channel mirrors them as
-`crd(semi)` / `crd(full)`. Both write private forms over the shared
-`--stagger-opacity` token.
 
 Set `ani()` on the **carousel** for one shared reveal, or on an **individual slide's**
 `media=` for a per-slide reveal — the setter is element-level (`:where([media*="ani(x)"])`),

@@ -37,36 +37,12 @@ Tokens are attribute **values**, matched with `~=` (whole word). Bare `stagger`
 | `blr` | `filter: blur(12px)` | blur + fade |
 | `fde` | — (opacity only) | plain fade |
 | `shimmer` (+ `sweep`) | *(text effect, `<details>` hosts only — see [Shimmer](#shimmer))* | the text lights up, line by line |
-| `semi` | *(modifier — from `opacity: 0.5`)* | start semi-opaque; composes with any effect |
-| `full` | *(modifier — from `opacity: 0`)* | the explicit spelling of the default |
 
 `<d>` = `var(--stagger-distance)`. Each token sets **inherited** private vectors —
 `--_stg-tr` (translate) · `--_stg-sc` (scale) · `--_stg-fl` (filter) · `--_stg-origin`
 (transform-origin). Because they inherit, a token may sit on the group **or any
 ancestor**, and every adapter's from-state reads the same three vars — that's why one
 vocabulary drives all three triggers.
-
-### Fade-in opacity (`semi` / `full`)
-
-`semi` and `full` are **modifiers, not effects**: they set only the from-opacity of the
-reveal — `semi` starts children at `opacity: 0.5`, `full` at `0` (the explicit spelling of
-the default). They compose with any effect word; the canonical pairing is the
-element-by-element fade:
-
-```html
-<div data-stagger="fde semi">
-  <p>…</p>
-  <p>…</p>
-</div>
-```
-
-In the media DSL they mirror 1:1 as `ani(semi)` / `ani(full)` (content channel) and
-`crd(semi)` / `crd(full)` (card channel) — `media="… stagger ani(fde) ani(semi)"`. Under
-the hood the modifiers write per-channel private forms (`--_stg-op` content,
-`--_stg-crd-op` card) over the shared public token `--stagger-opacity`, which every
-adapter's from-state (and the `ui-stagger-in` keyframe) reads — so an arbitrary
-from-opacity can also be themed directly: `--stagger-opacity: 0.25`. Shimmer is
-unaffected (its from-states keep `opacity: 1` — it paints, it doesn't fade).
 
 ## Tokens
 
@@ -79,7 +55,6 @@ engine survives the token-less `layout.css` bundle):
 | `--stagger-distance` | `5rem` | Travel distance for the translate tokens |
 | `--stagger-duration` | `0.75s` | Per-child duration |
 | `--stagger-easing` | `cubic-bezier(0.16, 1, 0.3, 1)` | Easing |
-| `--stagger-opacity` | `0` | From-opacity of the reveal (`semi`/`full` write the per-channel private forms) |
 | `--stagger-step` | `0.07s` | Delay added per child |
 
 **Per-child delay** = `--stagger-begin + (--_stg-base-i + --_stg-i - 1) * --_stg-step`.

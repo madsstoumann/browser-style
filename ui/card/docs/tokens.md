@@ -38,8 +38,8 @@ sit on. Notes below each table carry the per-token caveats.
 | `tmb()` | thumbs | **ratio** 1/1 4/3 3/4 16/9 3/2 2/3 | — | — | --ui-carousel-thumb-ratio --ui-carousel-thumb-ratio-n | — | ui-media ui-card ui-reveal lay-out[overflow] | — | — |
 | `axis()` | carousel | **value** y | — | — | — | — | ui-media ui-card ui-reveal lay-out[overflow] | — | — |
 | `auto()` | carousel | **value** &lt;n&gt; &lt;n&gt;s &lt;n&gt;ms | — | yes | --ui-carousel-autoplay --ui-carousel-play-state --ui-carousel-thumb-timer-name --_play-block --_play-inline --_play-justify --_play-size | — | ui-media ui-card ui-reveal lay-out[overflow] | carousel.js (*) | — |
-| `ani()` | carousel | **anim** rise fall lft rgt zom blr fde semi full | — | — | --_stg-tr --_stg-sc --_stg-fl --_stg-origin --_stg-op | — | ui-media ui-card ui-reveal | — | — |
-| `crd()` | carousel | **anim** rise fall lft rgt zom blr fde semi full | — | — | --_stg-crd-tr --_stg-crd-sc --_stg-crd-fl --_stg-crd-op | — | ui-media ui-card ui-reveal | — | — |
+| `ani()` | carousel | **anim** rise fall lft rgt zom blr fde | — | — | --_stg-tr --_stg-sc --_stg-fl --_stg-origin | — | ui-media ui-card ui-reveal | — | — |
+| `crd()` | carousel | **anim** rise fall lft rgt zom blr fde | — | — | --_stg-crd-tr --_stg-crd-sc --_stg-crd-fl | — | ui-media ui-card ui-reveal | — | — |
 | `open:grid()` | open-state | **cols** 2c 3c 4c | — | — | --_lb-cols | — | ui-media ui-card ui-reveal | — | — |
 | `clip` | corners | — | — | yes | --ui-media-radius | — | ui-media | — | — |
 | `loop` | carousel | — | — | yes | --_play-block --_play-inline --_play-justify --_play-size | — | ui-media ui-card ui-reveal lay-out[overflow] | carousel.js (*) | — |
@@ -121,11 +121,11 @@ sit on. Notes below each table carry the per-token caveats.
 **`auto`** *(substring-matched, self arm)* — Matched as :is([media~="auto"], [media*="auto("]) in BOTH the CSS sticky-<ui-play> rule (media.carousel.css:75-76) and carousel.js — the stem-scoped `auto(` needle is the parameterized half, the bare half is whole-token. JS parses the duration with /(?:^|\s)auto(?:\((\d+(?:\.\d+)?)(m?s)?\))?/, so a bare number means SECONDS. Default 5s. No-ops under prefers-reduced-motion and with <2 slides. The three --ui-carousel-* writes are inline styles set by carousel.js, not CSS. The CSS arm is deliberately NOT factored: the host arm excludes nested frames (:not(ui-media ui-media)), the self arm doesn't.
 <sub>ui/card/media.carousel.css:75 · ui/card/carousel.js:82 · ui/card/carousel.js:160</sub>
 
-**`ani`** *(substring-matched, self arm)* — CONTENT channel of the stagger engine; inert without the `stagger` flag. rise is the unspelled default. The setters are UNSCOPED (:where([media*="ani(rise)"])), so the token also works on a per-slide/per-card element or any ancestor — it only writes inherited custom properties. Mirrors the generic [stagger~=…] word vocabulary 1:1. semi/full are MODIFIERS, not effects — they set only the channel's from-opacity (0.5 / 0, the explicit spelling of the default) via --stagger-opacity's private form and compose with any effect word.
-<sub>ui/base/stagger.css:83</sub>
+**`ani`** *(substring-matched, self arm)* — CONTENT channel of the stagger engine; inert without the `stagger` flag. rise is the unspelled default. The setters are UNSCOPED (:where([media*="ani(rise)"])), so the token also works on a per-slide/per-card element or any ancestor — it only writes inherited custom properties. Mirrors the generic [stagger~=…] word vocabulary 1:1.
+<sub>ui/base/stagger.css:82</sub>
 
-**`crd`** *(substring-matched, self arm)* — CARD channel — the cards inside a multi-card slide (<ui-slide> or an inner <lay-out>), independent of ani(). Same 7 effects. crd(zom) sets no --_stg-origin (ani(zom) does), so the card zoom uses the default 50% 50% origin. semi/full mirror ani(semi)/ani(full): from-opacity modifiers (0.5 / 0), not effects.
-<sub>ui/base/stagger.css:92</sub>
+**`crd`** *(substring-matched, self arm)* — CARD channel — the cards inside a multi-card slide (<ui-slide> or an inner <lay-out>), independent of ani(). Same 7 effects. crd(zom) sets no --_stg-origin (ani(zom) does), so the card zoom uses the default 50% 50% origin.
+<sub>ui/base/stagger.css:91</sub>
 
 **`open:grid`** *(whole-matched, self arm)* — OPEN-STATE prefix family (media.lightbox.css): arms only while the <ui-media popover> frame is :popover-open, presenting the SAME children as an N-column scrollable grid instead of the default fullscreen carousel. WHOLE-token on purpose, like md:/lg: asr() — an open: spelling must never contain a substring-matched stem, which is why there is no open:nav (the [media*="nav"] needle would arm the closed carousel; fullscreen carousel is simply the default open presentation of a nav frame). The colon lives in the entry NAME so the needle audit and preset lint see the literal spellings; the cqPrefixes machinery is deliberately not reused (that is the container-query axis, and it would hide substring cross-fire from the shadow lint). Runtime carousel↔grid switching (data-lightbox attr) needs ui/card/lightbox.js.
 <sub>ui/card/media.lightbox.css:112 · ui/card/media.lightbox.css:127</sub>
@@ -137,10 +137,10 @@ sit on. Notes below each table carry the per-token caveats.
 <sub>ui/card/media.carousel.css:75 · ui/card/carousel.js:44 · ui/card/carousel.js:161</sub>
 
 **`stagger`** *(substring-matched, self arm)* — Bare-only in the media= DSL (the equivalent on a <lay-out> is the separate `stagger`/`data-stagger` ATTRIBUTE, which also takes the effect words + `trigger`). Dual arm. Makes each slide a container-type: scroll-state box and holds cards/content at a from-state until @container scroll-state(snapped: inline). Two channels: cards (--_stg-crd-*) and content (--_stg-*). Whole engine is inside @media (prefers-reduced-motion: no-preference). ani()/crd() are separate stems that hang off the same engine.
-<sub>ui/base/stagger.css:180 · ui/base/stagger.css:185 · ui/base/stagger.css:190</sub>
+<sub>ui/base/stagger.css:171 · ui/base/stagger.css:176 · ui/base/stagger.css:181</sub>
 
 **`pages`** *(whole-matched, self arm)* — One word, one intent — 'this carousel navigates by pages, and adapts on mobile' — with the mechanism following from the markup shape. On <lay-out overflow> (flat children): math paging — snaps + emits one ::scroll-marker per PAGE of --_ci items instead of per item, via mod(sibling-index()-1, --_ci) + if(style(--_pg: 0)); the dot count auto-adapts per breakpoint because --_ci follows columns(N); degrades to per-item where sibling-index()/if() are unsupported. On a <ui-media> scroller (or its card host): the <lay-out> children are PAGE wrappers — below the layout system's md viewport breakpoint (540px) each wrapper dissolves via display:contents, so every card becomes its own full-width snap target with its own dot (grandchild markers collect into the scroller's group natively; a boxless wrapper generates none). ui-media context is CSS-only: slidesOf() still counts the wrapper as ONE slide, so auto/loop don't see through the dissolve; dot markers only (pll/hyb/tmb/lbl stay per-direct-slide). Stagger: each dissolved card becomes its own scroll-state inline-size container — ani() plays per-card, crd() is inert below md. Whole-token ([media~="pages"]).
-<sub>layout/core/base.css:223 · ui/card/media.carousel.css:51 · ui/carousel/carousel.css:186 · ui/base/stagger.css:237</sub>
+<sub>layout/core/base.css:223 · ui/card/media.carousel.css:51 · ui/carousel/carousel.css:186 · ui/base/stagger.css:228</sub>
 
 **`open:furniture`** *(whole-matched, self arm)* — OPT-OUT of the lightbox's default furniture hiding: while a frame is :popover-open, direct-child ui-chip/ui-sticker/ui-beacon/ui-marquee/ui-save are display:none unless this bare flag is present (ui-play and ui-lightbox always stay — video control and close affordance). Whole-token, open-state family — see open:grid.
 <sub>ui/card/media.lightbox.css:101</sub>

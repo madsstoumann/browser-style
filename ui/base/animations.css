@@ -273,7 +273,7 @@
 	   on the element rule, not here). */
 	@keyframes ui-stagger-in {
 		from {
-			opacity: var(--_stg-op, var(--stagger-opacity, 0));
+			opacity: 0;
 			translate: var(--_stg-tr, 0 var(--stagger-distance, 5rem));
 			scale: var(--_stg-sc, 1);
 			filter: var(--_stg-fl, none);

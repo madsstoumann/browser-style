@@ -1141,11 +1141,11 @@
 				</div>
 			</details>
 			<details name="accordion-stagger">
-				<summary>Fade in from half opacity<ui-icon type="plus-minus"></ui-icon></summary>
-				<div data-stagger="fde semi" style="--stagger-step: 0.6s">
+				<summary>Fade — one line at a time<ui-icon type="plus-minus"></ui-icon></summary>
+				<div data-stagger="fde" style="--stagger-step: 0.6s">
 					<p>These lines fade in one after another — no movement, just opacity.</p>
-					<p>The <code>semi</code> modifier starts them at <code>opacity: 0.5</code> instead of fully hidden.</p>
-					<p>Drop the modifier (or spell it <code>full</code>) for the default fade from <code>opacity: 0</code>.</p>
+					<p>A <code>--stagger-step</code> of <code>0.6s</code> pulls them well apart, so each line arrives on its own.</p>
+					<p>At the default <code>0.07s</code> the three would land almost together.</p>
 				</div>
 			</details>
 		</cq-box>

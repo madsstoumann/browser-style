@@ -17,8 +17,7 @@
  * cascade (the card carousel bridges its card index into it).
  * --_stg-i defaults to sibling-index(); stagger-index=/data-stagger-index= and
  * stagger-step=/data-stagger-step= override index/step per child (typed attr()).
- * semi/full (+ ani()/crd() forms) set the from-opacity via --stagger-opacity.
- * Tokens: --stagger-{begin,distance,duration,easing,step,opacity} — ui/base/tokens.css.
+ * Tokens: --stagger-{begin,distance,duration,easing,step} — ui/base/tokens.css.
  * Docs: ui/card/docs/stagger.md.
  *
  * Two trigger adapters:
@@ -97,14 +96,6 @@
 	:where([media*="crd(blr)"])  { --_stg-crd-tr: 0 0; --_stg-crd-fl: blur(12px); }
 	:where([media*="crd(fde)"])  { --_stg-crd-tr: 0 0; }
 
-	/* fade-from-opacity modifiers — compose with any effect (docs: ui/card/docs/stagger.md) */
-	:where([stagger~="semi"], [data-stagger~="semi"]) { --_stg-op: 0.5; }
-	:where([stagger~="full"], [data-stagger~="full"]) { --_stg-op: 0; }
-	:where([media*="ani(semi)"]) { --_stg-op: 0.5; }
-	:where([media*="ani(full)"]) { --_stg-op: 0; }
-	:where([media*="crd(semi)"]) { --_stg-crd-op: 0.5; }
-	:where([media*="crd(full)"]) { --_stg-crd-op: 0; }
-
 	/* per-child index/step — defaults first, attribute readers after (source order resolves) */
 	:where([stagger], [data-stagger]) > :where(:not(cq-box)),
 	:where([stagger], [data-stagger]) > :where(cq-box) > *,
@@ -161,7 +152,7 @@
 			details[open] > :is([stagger], [data-stagger]) > :not(cq-box),
 			details[open] > :is([stagger], [data-stagger]) > cq-box > * {
 				filter: var(--_stg-fl, none);
-				opacity: var(--_stg-op, var(--stagger-opacity, 0));
+				opacity: 0;
 				scale: var(--_stg-sc, 1);
 				translate: var(--_stg-tr, 0 var(--stagger-distance, 5rem));
 			}
@@ -206,14 +197,14 @@
 		@container not scroll-state(snapped: inline) {
 			:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) ui-media > :where(ui-slide, lay-out) > *,
 			ui-media:where([media*="stagger"]) > :where(ui-slide, lay-out) > * {
-				opacity: var(--_stg-crd-op, var(--stagger-opacity, 0));
+				opacity: 0;
 				translate: var(--_stg-crd-tr, 0 var(--stagger-distance, 5rem));
 				scale: var(--_stg-crd-sc, 1);
 				filter: var(--_stg-crd-fl, none);
 			}
 			:where(ui-card[media*="stagger"], ui-reveal[media*="stagger"]) ui-media ui-content > *,
 			ui-media:where([media*="stagger"]) ui-content > * {
-				opacity: var(--_stg-op, var(--stagger-opacity, 0));
+				opacity: 0;
 				translate: var(--_stg-tr, 0 var(--stagger-distance, 5rem));
 				scale: var(--_stg-sc, 1);
 				filter: var(--_stg-fl, none);

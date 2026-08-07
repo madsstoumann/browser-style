@@ -1410,9 +1410,7 @@ export default {
 							"rgt",
 							"zom",
 							"blr",
-							"fde",
-							"semi",
-							"full"
+							"fde"
 						]
 					},
 					"argAliases": {},
@@ -1422,8 +1420,7 @@ export default {
 						"--_stg-tr",
 						"--_stg-sc",
 						"--_stg-fl",
-						"--_stg-origin",
-						"--_stg-op"
+						"--_stg-origin"
 					],
 					"realProperties": false,
 					"cqPrefixes": [],
@@ -1438,9 +1435,9 @@ export default {
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
-						"ui/base/stagger.css:83"
+						"ui/base/stagger.css:82"
 					],
-					"notes": "CONTENT channel of the stagger engine; inert without the `stagger` flag. rise is the unspelled default. The setters are UNSCOPED (:where([media*=\"ani(rise)\"])), so the token also works on a per-slide/per-card element or any ancestor — it only writes inherited custom properties. Mirrors the generic [stagger~=…] word vocabulary 1:1. semi/full are MODIFIERS, not effects — they set only the channel's from-opacity (0.5 / 0, the explicit spelling of the default) via --stagger-opacity's private form and compose with any effect word."
+					"notes": "CONTENT channel of the stagger engine; inert without the `stagger` flag. rise is the unspelled default. The setters are UNSCOPED (:where([media*=\"ani(rise)\"])), so the token also works on a per-slide/per-card element or any ancestor — it only writes inherited custom properties. Mirrors the generic [stagger~=…] word vocabulary 1:1."
 				},
 				"crd": {
 					"axis": "carousel",
@@ -1453,9 +1450,7 @@ export default {
 							"rgt",
 							"zom",
 							"blr",
-							"fde",
-							"semi",
-							"full"
+							"fde"
 						]
 					},
 					"argAliases": {},
@@ -1464,8 +1459,7 @@ export default {
 					"writes": [
 						"--_stg-crd-tr",
 						"--_stg-crd-sc",
-						"--_stg-crd-fl",
-						"--_stg-crd-op"
+						"--_stg-crd-fl"
 					],
 					"realProperties": false,
 					"cqPrefixes": [],
@@ -1480,9 +1474,9 @@ export default {
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
-						"ui/base/stagger.css:92"
+						"ui/base/stagger.css:91"
 					],
-					"notes": "CARD channel — the cards inside a multi-card slide (<ui-slide> or an inner <lay-out>), independent of ani(). Same 7 effects. crd(zom) sets no --_stg-origin (ani(zom) does), so the card zoom uses the default 50% 50% origin. semi/full mirror ani(semi)/ani(full): from-opacity modifiers (0.5 / 0), not effects."
+					"notes": "CARD channel — the cards inside a multi-card slide (<ui-slide> or an inner <lay-out>), independent of ani(). Same 7 effects. crd(zom) sets no --_stg-origin (ani(zom) does), so the card zoom uses the default 50% 50% origin."
 				},
 				"open:grid": {
 					"axis": "open-state",
@@ -1606,9 +1600,9 @@ export default {
 					"deprecated": false,
 					"canonical": null,
 					"sources": [
-						"ui/base/stagger.css:180",
-						"ui/base/stagger.css:185",
-						"ui/base/stagger.css:190"
+						"ui/base/stagger.css:171",
+						"ui/base/stagger.css:176",
+						"ui/base/stagger.css:181"
 					],
 					"notes": "Bare-only in the media= DSL (the equivalent on a <lay-out> is the separate `stagger`/`data-stagger` ATTRIBUTE, which also takes the effect words + `trigger`). Dual arm. Makes each slide a container-type: scroll-state box and holds cards/content at a from-state until @container scroll-state(snapped: inline). Two channels: cards (--_stg-crd-*) and content (--_stg-*). Whole engine is inside @media (prefers-reduced-motion: no-preference). ani()/crd() are separate stems that hang off the same engine."
 				},
@@ -1639,7 +1633,7 @@ export default {
 						"layout/core/base.css:223",
 						"ui/card/media.carousel.css:51",
 						"ui/carousel/carousel.css:186",
-						"ui/base/stagger.css:237"
+						"ui/base/stagger.css:228"
 					],
 					"notes": "One word, one intent — 'this carousel navigates by pages, and adapts on mobile' — with the mechanism following from the markup shape. On <lay-out overflow> (flat children): math paging — snaps + emits one ::scroll-marker per PAGE of --_ci items instead of per item, via mod(sibling-index()-1, --_ci) + if(style(--_pg: 0)); the dot count auto-adapts per breakpoint because --_ci follows columns(N); degrades to per-item where sibling-index()/if() are unsupported. On a <ui-media> scroller (or its card host): the <lay-out> children are PAGE wrappers — below the layout system's md viewport breakpoint (540px) each wrapper dissolves via display:contents, so every card becomes its own full-width snap target with its own dot (grandchild markers collect into the scroller's group natively; a boxless wrapper generates none). ui-media context is CSS-only: slidesOf() still counts the wrapper as ONE slide, so auto/loop don't see through the dissolve; dot markers only (pll/hyb/tmb/lbl stay per-direct-slide). Stagger: each dissolved card becomes its own scroll-state inline-size container — ani() plays per-card, crd() is inert below md. Whole-token ([media~=\"pages\"])."
 				},
