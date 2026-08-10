@@ -4,6 +4,10 @@
 @property --_theme-base-c  { syntax: "*"; inherits: false; }
 @property --_theme-pale-bg { syntax: "*"; inherits: false; }
 @property --_theme-pale-c  { syntax: "*"; inherits: false; }
+@property --_theme-tone-bg { syntax: "*"; inherits: false; }
+@property --_theme-tone-c  { syntax: "*"; inherits: false; }
+@property --_theme-glass   { syntax: "*"; inherits: false; }
+@property --_theme-bdf     { syntax: "*"; inherits: false; }
 @property --_theme-bg      { syntax: "*"; inherits: false; }
 @property --_theme-ink     { syntax: "*"; inherits: false; }
 @property --_theme-c       { syntax: "*"; inherits: false; }
@@ -21,22 +25,44 @@
 	:where([theme~="slate"])  { --_theme-base-bg: var(--ui-theme-slate-bg);  --_theme-base-c: var(--ui-theme-slate-c); }
 	:where([theme~="white"])  { --_theme-base-bg: var(--ui-theme-white-bg);  --_theme-base-c: var(--ui-theme-white-c); }
 
+	/* chain: base -> pale -> tone -> bg. The tone stage is what lets `muted` feed `glass` */
 	:where([theme]) {
 		--_theme-pale-bg: var(--_theme-base-bg);
 		--_theme-pale-c:  var(--_theme-base-c);
-		--_theme-bg: var(--_theme-pale-bg);
-		--_theme-ink: var(--_theme-pale-c);
+		--_theme-tone-bg: var(--_theme-pale-bg);
+		--_theme-tone-c:  var(--_theme-pale-c);
+		--_theme-bg: var(--_theme-tone-bg);
+		--_theme-ink: var(--_theme-tone-c);
 		--_theme-border: var(--_theme-base-bg);
 		--_theme-bw: var(--border-width, 1px);
 	}
 	:where([theme~="ink"]) { --_theme-c: var(--_theme-ink); }
 	:where([theme~="muted"]) {
-		--_theme-bg:  color-mix(in srgb, var(--_theme-pale-bg), transparent 50%);
-		--_theme-ink: color-mix(in srgb, var(--_theme-pale-c),  transparent 50%);
+		--_theme-tone-bg: color-mix(in srgb, var(--_theme-pale-bg), transparent 50%);
+		--_theme-tone-c:  color-mix(in srgb, var(--_theme-pale-c),  transparent 50%);
 	}
 	:where([theme~="pale"]) {
 		--_theme-pale-bg: color-mix(in srgb, var(--_theme-base-bg), var(--color-surface) 80%);
 		--_theme-pale-c:  var(--_theme-base-bg);
+	}
+
+	/* --- glass — translucent fill + backdrop material. Docs: theme.md § Glass --- */
+	/* no colour token => --_theme-glass is guaranteed-invalid => the frost fallback */
+	:where([theme~="glass"]) {
+		--_theme-glass:  color-mix(in srgb, var(--_theme-tone-bg), transparent var(--ui-theme-glass-fade));
+		--_theme-bg:     var(--_theme-glass, var(--ui-theme-glass-bg));
+		--_theme-ink:    var(--_theme-base-bg, var(--color-text));
+		--_theme-border: var(--ui-theme-glass-edge);
+		--_theme-bdf:    blur(var(--ui-theme-glass-blur)) saturate(var(--ui-theme-glass-saturate));
+		backdrop-filter: var(--_theme-bdf);
+	}
+	/* null --_theme-bdf, not backdrop-filter — republishers (ui-reveal) read the var */
+	@media (prefers-reduced-transparency: reduce) {
+		:where([theme~="glass"]) {
+			--ui-theme-glass-fade: 0%;
+			--ui-theme-glass-bg: var(--color-surface);
+			--_theme-bdf: none;
+		}
 	}
 
 	/* --- color-scheme --- */
@@ -49,7 +75,7 @@
 		border-style: var(--_theme-bs, solid);
 		border-width: 0;
 	}
-	:where([theme*="border"]:not([theme~="pale"])) {
+	:where([theme*="border"]:not([theme~="pale"], [theme~="glass"])) {
 		--_theme-bg: #0000;
 		--_theme-ink: var(--_theme-base-bg);
 	}

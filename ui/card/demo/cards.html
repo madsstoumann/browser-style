@@ -18,6 +18,15 @@
 	<style>
 		.hero { margin-block-end: var(--spacing-2xl); }
 		.note { color: var(--color-text-secondary, #666); }
+		/* backdrop for the glass section — a material needs something to filter.
+		   color-scheme is pinned because the backdrop is a bright photo whatever
+		   the page scheme is; see the note in the section. */
+		.glass-stage {
+			background: url('/assets/images/autumn.jpg') center / cover no-repeat;
+			border-radius: var(--radius-lg);
+			color-scheme: light;
+			padding: var(--spacing-xl);
+		}
 	</style>
 </head>
 <body>
@@ -435,6 +444,106 @@
 			</cq-box>
 		</ui-card>
 	</lay-out>
+
+	<!-- ============================================================
+	     Themes — glass
+	     ============================================================ -->
+	<h2>Themes — <code>theme="… glass"</code></h2>
+	<p class="note">The <code>glass</code> modifier turns any theme colour into a material: a translucent fill plus a backdrop blur and saturation boost. With no colour token it is a neutral frost that takes its hue from whatever it sits over — hence the photo behind this section. <code>glass</code> composes with <code>pale</code>, <code>muted</code>, <code>ink</code>, <code>dark</code> and <code>border</code> (which draws the specular rim and, unlike a plain <code>border</code>, keeps the fill). Reach for <code>pale glass</code> whenever text is involved — a bare <code>green glass</code> puts the hue's ink on a translucent version of that same hue. That goes double for badges, which always show their ink. Note this stage pins <code>color-scheme: light</code>: <code>pale</code> mixes toward <code>--color-surface</code>, the <em>page</em> surface, so a region whose real backdrop is a bright photo has to say so — that is what the <code>light</code>/<code>dark</code> modifiers are for. Full docs: <a href="../../base/theme.md#glass">theme.md § Glass</a>.</p>
+	<div class="glass-stage">
+		<lay-out md="columns(2)" lg="columns(4)">
+			<ui-card variant="col" theme="glass" content="pad(md)">
+				<cq-box>
+					<ui-content>
+						<small data-part="eyebrow">No colour token</small>
+						<h2 data-part="headline">Frost</h2>
+						<p data-part="summary"><code>theme="glass"</code> — the colourless material. Set <code>--ui-theme-glass-bg</code> to <code>#0000</code> for fully clear.</p>
+					</ui-content>
+				</cq-box>
+			</ui-card>
+
+			<ui-card variant="col" theme="green glass" content="pad(md)">
+				<cq-box>
+					<ui-content>
+						<small data-part="eyebrow">Coloured</small>
+						<h2 data-part="headline">Green glass</h2>
+						<p data-part="summary"><code>theme="green glass"</code> — the hue at ~38% alpha over the blur.</p>
+					</ui-content>
+				</cq-box>
+			</ui-card>
+
+			<ui-card variant="col" theme="green pale glass" content="pad(md)">
+				<cq-box>
+					<ui-content>
+						<small data-part="eyebrow">Softened</small>
+						<h2 data-part="headline">Pale green glass</h2>
+						<p data-part="summary"><code>theme="green pale glass"</code> — <code>pale</code> tints first, so the gentlest form.</p>
+					</ui-content>
+				</cq-box>
+			</ui-card>
+
+			<ui-card variant="col" theme="green muted glass" content="pad(md)">
+				<cq-box>
+					<ui-content>
+						<small data-part="eyebrow">Fainter</small>
+						<h2 data-part="headline">Muted green glass</h2>
+						<p data-part="summary"><code>theme="green muted glass"</code> — <code>muted</code>'s fade feeds the glass fade.</p>
+					</ui-content>
+				</cq-box>
+			</ui-card>
+
+			<ui-card variant="col" theme="blue glass border" content="pad(md)">
+				<cq-box>
+					<ui-content>
+						<small data-part="eyebrow">Specular rim</small>
+						<h2 data-part="headline">Glass + border</h2>
+						<p data-part="summary"><code>theme="blue glass border"</code> — the bright hairline is the existing <code>border</code> token, and the fill survives.</p>
+					</ui-content>
+				</cq-box>
+			</ui-card>
+
+			<ui-card variant="col" theme="glass border(bs) border(md)" content="pad(md)">
+				<cq-box>
+					<ui-content>
+						<small data-part="eyebrow">One edge</small>
+						<h2 data-part="headline">Top rule only</h2>
+						<p data-part="summary"><code>theme="glass border(bs) border(md)"</code> — every side/width/style arg works unchanged.</p>
+					</ui-content>
+				</cq-box>
+			</ui-card>
+
+			<ui-card variant="col" theme="slate glass dark" content="pad(md)">
+				<cq-box>
+					<ui-content>
+						<small data-part="eyebrow">Dark scheme</small>
+						<h2 data-part="headline">Slate glass</h2>
+						<p data-part="summary"><code>theme="slate glass dark"</code> — <code>dark</code> re-tones the descendants as usual.</p>
+					</ui-content>
+				</cq-box>
+			</ui-card>
+
+			<ui-card variant="col" theme="blue pale glass ink" content="pad(md)">
+				<cq-box>
+					<ui-content>
+						<small data-part="eyebrow">Hue ink</small>
+						<h2 data-part="headline">Glass + ink</h2>
+						<p data-part="summary"><code>theme="blue pale glass ink"</code> — text takes the <em>base colour</em>, never the paired white. Pair <code>ink</code> with <code>pale</code> over busy imagery, or the hue sits on itself.</p>
+					</ui-content>
+				</cq-box>
+			</ui-card>
+		</lay-out>
+
+		<p style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+			<ui-chip theme="glass">frost</ui-chip>
+			<ui-chip theme="red pale glass">red pale glass</ui-chip>
+			<ui-chip theme="green pale glass">green pale glass</ui-chip>
+			<ui-chip theme="blue pale glass border">rimmed</ui-chip>
+		</p>
+
+		<lay-out theme="glass" style="border-radius: var(--radius-md); padding: var(--spacing-md);">
+			<p>A <code>&lt;lay-out theme="glass"&gt;</code> band — the axis is the same on layouts, groups, cards, chips and stickers.</p>
+		</lay-out>
+	</div>
 
 	<!-- ============================================================
 	     Profile + product — row, realistic
