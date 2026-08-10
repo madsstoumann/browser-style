@@ -56,6 +56,7 @@ const page = (ucf) => {
 	<link rel="stylesheet" href="../../../quote/ui-quote.css">
 	<link rel="stylesheet" href="../../../avatar/ui-avatar.css">
 	<link rel="stylesheet" href="../../../gradient-text/ui-gradient-text.css">
+	<link rel="stylesheet" href="../../../highlight/ui-highlight.css">
 	<link rel="stylesheet" href="../../ui-card.css">
 	<!-- Block first paint (and the view-transition snapshot) until the hero is
 	     parsed, so the card/hero morph targets exist when the browser captures

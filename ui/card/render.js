@@ -136,11 +136,25 @@ const scope = (prop, type) =>
    everything, then re-allows an ALLOWLIST: <b> (emphasis) and <ui-gradient-text>
    (@browser.style/gradient-text). The gradient element accepts only
    animate="slide|breathe" — never a free attribute string. Docs: docs/content.md */
-const INLINE_TAGS = /&lt;(\/?)(b)&gt;|&lt;(\/?)ui-gradient-text(?: animate=&quot;(slide|breathe)&quot;)?&gt;/g;
+const INLINE_TAGS = /&lt;(\/?)(b)&gt;|&lt;(\/?)ui-gradient-text(?: animate=&quot;(slide|breathe)&quot;)?&gt;|&lt;(\/?)high-light((?: (?:fill|ink)=&quot;[#\w(),.%\s-]{1,32}&quot;| variant=&quot;(?:underline|strike)&quot;){0,3})&gt;/g;
+/* high-light's attribute payload is re-validated per pair — the group match above only
+   bounds the shape, this rebuilds it from an allowlist so nothing else can ride along */
+const HL_ATTR = /(fill|ink|variant)=&quot;([#\w(),.%\s-]{1,32})&quot;/g;
+const highLightAttrs = (raw) => {
+	let out = '';
+	for (const [, name, value] of String(raw || '').matchAll(HL_ATTR)) {
+		if (name === 'variant' && !/^(underline|strike)$/.test(value)) continue;
+		out += ` ${name}="${esc(value)}"`;
+	}
+	return out;
+};
 const renderInline = (value) => {
 	const text = typeof value === 'string' ? value : value?.$richtext ? value.content : value ?? '';
-	return esc(text).replace(INLINE_TAGS, (match, bSlash, bTag, gSlash, animate) =>
-		bTag ? `<${bSlash}b>` : `<${gSlash}ui-gradient-text${!gSlash && animate ? ` animate="${animate}"` : ''}>`);
+	return esc(text).replace(INLINE_TAGS, (match, bSlash, bTag, gSlash, animate, hSlash, hAttrs) => {
+		if (bTag) return `<${bSlash}b>`;
+		if (hSlash !== undefined) return `<${hSlash}high-light${hSlash ? '' : highLightAttrs(hAttrs)}>`;
+		return `<${gSlash}ui-gradient-text${!gSlash && animate ? ` animate="${animate}"` : ''}>`;
+	});
 };
 
 /* plain text from a possibly-rich headline (for aria/meta contexts) */
@@ -645,7 +659,9 @@ const bodyHtml = (fields, type, textTag = 'p') => {
 	const paragraphs = String(text).split(/\n{2,}/)
 		.map((paragraph) => paragraph.trim())
 		.filter(Boolean)
-		.map((paragraph) => `<${textTag}>${esc(paragraph)}</${textTag}>`)
+		/* same allowlist as the headline (<b>, <ui-gradient-text>, <high-light>) — every
+		   other tag stays escaped, so body copy can mark up a phrase without raw HTML */
+		.map((paragraph) => `<${textTag}>${renderInline(paragraph)}</${textTag}>`)
 		.join('');
 	return ARTICLE_BODY_TYPES.has(type) ? `<div itemprop="articleBody">${paragraphs}</div>` : paragraphs;
 };
