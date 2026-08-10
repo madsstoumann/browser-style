@@ -101,7 +101,10 @@ const ARTICLE_BODY_TYPES = new Set(['article', 'news']);
 const NO_IMAGE_PROP = new Set(['review', 'contact']);
 /* types whose ROOT is the VideoObject — media props emit at root, never a nested scope */
 const ROOT_VIDEO_TYPES = new Set(['video']);
-const TAGS_PROP = { profile: 'knowsAbout' }; /* Person has no keywords property */
+/* Person has no keywords property. Intangible-rooted types (JobPosting, Offer,
+   Reservation, ContactPoint, ItemList, Observation) have none either —
+   null = visible chips only, no itemprop */
+const TAGS_PROP = { profile: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, statistic: null };
 
 /* ── string helpers (all data flows through esc) ── */
 
@@ -647,7 +650,8 @@ const buildTail = (fields, type) => {
 	else if (dateline) html += `<p data-part="meta">${dateline}</p>`;
 	if (fields.tags?.length) {
 		/* itemprop sits ON the chip (microdata value = textContent) so a nested <a> never leaks its href */
-		html += `<span data-part="tags">${fields.tags.map((tag) => `<ui-chip itemprop="${TAGS_PROP[type] || 'keywords'}">${esc(tag)}</ui-chip>`).join('')}</span>`;
+		const tagProp = type in TAGS_PROP ? TAGS_PROP[type] : 'keywords';
+		html += `<span data-part="tags">${fields.tags.map((tag) => `<ui-chip${tagProp ? ` itemprop="${tagProp}"` : ''}>${esc(tag)}</ui-chip>`).join('')}</span>`;
 	}
 	if (fields.actions?.length) {
 		html += `<nav data-part="actions">${fields.actions.map((action) =>
@@ -697,8 +701,10 @@ const DETAILS = {
 				${meta('priceCurrency', d.price.currency)}${meta('availability', availabilityUrl(d.availability))}${meta('itemCondition', SCHEMA + 'NewCondition')}${d.validUntil ? meta('priceValidUntil', d.validUntil) : ''}
 				<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data>${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}${d.price.discountText ? ` <ui-chip theme="pale green">${esc(d.price.discountText)}</ui-chip>` : ''}
 			</p>`;
+			/* the validity belongs to the offer — directly under the price, not the stock row */
+			if (d.validUntilDisplay) html += `<p data-part="meta"><small>Valid until ${esc(d.validUntilDisplay)}</small></p>`;
 		}
-		if (d.availability) html += `<p data-part="meta"><ui-chip theme="pale ${availabilityHue(d.availability)}">${esc(d.availability)}</ui-chip>${d.validUntilDisplay ? ` <small>Valid until ${esc(d.validUntilDisplay)}</small>` : ''}</p>`;
+		if (d.availability) html += `<p data-part="meta"><ui-chip theme="pale ${availabilityHue(d.availability)}">${esc(d.availability)}</ui-chip></p>`;
 		/* sku is machine-readable only — no visible number on the card */
 		if (d.sku) html += meta('sku', d.sku);
 		return html;

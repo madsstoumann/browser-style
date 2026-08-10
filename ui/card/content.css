@@ -334,10 +334,12 @@
 			flex-wrap: wrap;
 			font-size: var(--ui-content-price-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 1.35));
 			font-weight: var(--ui-content-price-weight, var(--font-weight-bold, 700));
-			gap: var(--ui-content-price-gap, var(--spacing-xs));
+			gap: var(--ui-content-price-gap, var(--spacing-sm));
 
 			& del   { color: var(--ui-content-muted); font-weight: var(--font-weight-normal, 400); }
 			& small { color: var(--ui-content-price-discount, var(--color-accent)); font-size: 0.7em; }
+			/* chip rides the price row at label size, not price size */
+			& ui-chip { align-self: center; font-size: 0.55em; font-weight: var(--font-weight-normal, 400); }
 		}
 
 		/* rating — Meta group; the symbol row is @browser.style/rating, display-only */
