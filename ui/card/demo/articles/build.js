@@ -62,6 +62,11 @@ const page = (ucf) => {
 	     the incoming page. Without this the snapshot races HTML parsing and the
 	     morph degrades to a plain cross-fade on repeat/bfcache navigations. -->
 	<link rel="expect" href="#hero" blocking="render">
+	<!-- Names the morph targets where typed attr() is unsupported (Safari). MUST be
+	     render-blocking in <head>: the incoming page is snapshotted at first paint,
+	     so a deferred script names the targets too late and the forward morph
+	     degrades to a cross-fade. Docs: ui/base/polyfills/readme.md -->
+	<script type="module" src="/ui/base/polyfills/attr-fallback.js" blocking="render"></script>
 	<style>
 		/* cross-document view transitions (@view-transition, the [data-view]
 		   attr() naming rule and group timing) come from ui-card.css */
@@ -80,8 +85,6 @@ const page = (ucf) => {
 		${hero}
 		${prose}
 	</article>
-	<!-- names the morph targets where typed attr() is unsupported (Safari). Docs: ui/base/polyfills/readme.md -->
-	<script type="module" src="/ui/base/polyfills/attr-fallback.js"></script>
 </body>
 </html>
 `;
@@ -114,6 +117,11 @@ const gridPage = (cards) => `<!DOCTYPE html>
 	     grid is parsed, so every card/hero morph target exists when the browser
 	     captures this page. Without it the reverse morph races HTML parsing. -->
 	<link rel="expect" href="#cards" blocking="render">
+	<!-- Names the morph targets where typed attr() is unsupported (Safari). MUST be
+	     render-blocking in <head>: the incoming page is snapshotted at first paint,
+	     so a deferred script names the targets too late and the forward morph
+	     degrades to a cross-fade. Docs: ui/base/polyfills/readme.md -->
+	<script type="module" src="/ui/base/polyfills/attr-fallback.js" blocking="render"></script>
 	<style>
 		/* cross-document view transitions (@view-transition, the [data-view]
 		   attr() naming rule and group timing) come from ui-card.css */
@@ -144,8 +152,6 @@ const gridPage = (cards) => `<!DOCTYPE html>
 			${cards.join('\n\t\t\t')}
 		</div>
 	</main>
-	<!-- names the morph targets where typed attr() is unsupported (Safari). Docs: ui/base/polyfills/readme.md -->
-	<script type="module" src="/ui/base/polyfills/attr-fallback.js"></script>
 </body>
 </html>
 `;

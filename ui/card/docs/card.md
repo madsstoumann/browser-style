@@ -609,6 +609,15 @@ rest ([`article.render.html`](../demo/article.render.html) is the working demo):
   whose `[data-view]` entry restores the names there — **a page that opts into
   the morph but omits that script is the "view transitions don't work" bug.**
   Firefox has no cross-document transitions and navigates instantly.
+
+  **The polyfill must be render-blocking, in `<head>`.** The browser snapshots the
+  *incoming* page at first paint; a deferred module script runs after that, so the
+  morph targets are unnamed at snapshot time and the transition degrades to a
+  cross-fade. The symptom is an asymmetry that looks like a browser bug: forward
+  navigation doesn't morph, **Back does** — the page you return to was already
+  patched (bfcache). Hence
+  `<script type="module" src="…/attr-fallback.js" blocking="render">` next to the
+  `rel="expect"` link on every page in this flow.
   `prefers-reduced-motion: reduce` disables them by design, and the pages must be
   **served over http** — from `file://` there is no transition at all (and the
   root-absolute base CSS 404s, which is the visible tell).
