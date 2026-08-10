@@ -405,14 +405,26 @@
 			}
 		}
 
-		/* contact links read at body size even inside a meta row, and get a decorative
-		   glyph — alt "" keeps it out of the accessible name (the number/address is the link text) */
+		/* contact links read at body size even inside a meta row, and carry base's
+		   phone/email svg as a MASK — a mask takes currentColor, background-image
+		   would bake the asset's own grey. No text content, so nothing reaches the
+		   accessible name; the number/address is the link */
 		& :is(a[href^="tel:"], a[href^="mailto:"]) {
 			font-size: var(--ui-content-contact-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
-			&::before { margin-inline-end: var(--ui-content-contact-icon-gap, 0.35em); }
+
+			&::before {
+				background-color: currentColor;
+				block-size: var(--ui-content-contact-icon-size, 1em);
+				content: '';
+				display: inline-block;
+				inline-size: var(--ui-content-contact-icon-size, 1em);
+				margin-inline-end: var(--ui-content-contact-icon-gap, 0.35em);
+				mask: var(--ui-content-contact-icon) no-repeat center / contain;
+				vertical-align: -0.15em;
+			}
 		}
-		& a[href^="tel:"]::before { content: var(--ui-content-tel-icon, '☎') / ''; }
-		& a[href^="mailto:"]::before { content: var(--ui-content-mail-icon, '✉') / ''; }
+		& a[href^="tel:"]::before { --ui-content-contact-icon: var(--ui-content-tel-icon, url('../base/assets/svg/phone.svg')); }
+		& a[href^="mailto:"]::before { --ui-content-contact-icon: var(--ui-content-mail-icon, url('../base/assets/svg/email.svg')); }
 
 		/* address — Body group (distinct from byline: no avatar). Lines stack: street · postal + locality · country */
 		& [data-part="address"] {

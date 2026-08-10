@@ -1037,7 +1037,7 @@ const DETAILS = {
 			].filter(Boolean);
 			html += `<div data-part="office"${scope('department', 'LocalBusiness')}>
 				<strong itemprop="name">${esc(office.name)}</strong>
-				${geoPart(office.geo)}${addressPart(office.address)}${contacts.length ? `<p data-part="meta">${contacts.join(' ')}</p>` : ''}${hoursPart(office.openingHours)}
+				${geoPart(office.geo)}${addressPart(office.address)}${contacts.length ? `<p data-part="meta">${contacts.join('<br>')}</p>` : ''}${hoursPart(office.openingHours)}
 			</div>`;
 		}
 		return html;
