@@ -835,8 +835,10 @@ const DETAILS = {
 		if (d.instructions?.length) {
 			/* one collapsible per step — a nested accordion inside the Instructions panel */
 			const steps = accordion('recipe-step', d.instructions.map((step, index) => ({
-				summary: `Step ${index + 1}`,
-				body: `<div>${meta('position', index + 1)}<p itemprop="text">${esc(step)}</p></div>`,
+				/* position rides the SUMMARY: the accordion zeroes the panel's first and
+				   last child margins, and a box-less <meta> at either end absorbs one */
+				summary: `Step ${index + 1}${meta('position', index + 1)}`,
+				body: `<div><p itemprop="text">${esc(step)}</p></div>`,
 				scopeAttrs: scope('itemListElement', 'HowToStep'),
 				icon: 'chevron right'
 			})), 'divided', scope('recipeInstructions', 'ItemList'));
@@ -1139,8 +1141,8 @@ const DETAILS = {
 		}
 		if (d.steps?.length) {
 			const steps = accordion('howto-step', d.steps.map((step, index) => ({
-				summary: step.name ? `<span itemprop="name">${esc(step.name)}</span>` : `Step ${index + 1}`,
-				body: `<div>${meta('position', index + 1)}<p itemprop="text">${esc(step.text)}</p></div>`,
+				summary: `${step.name ? `<span itemprop="name">${esc(step.name)}</span>` : `Step ${index + 1}`}${meta('position', index + 1)}`,
+				body: `<div><p itemprop="text">${esc(step.text)}</p></div>`,
 				scopeAttrs: scope('step', 'HowToStep'),
 				icon: 'chevron right'
 			})), 'divided');
