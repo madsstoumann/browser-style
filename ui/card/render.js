@@ -79,6 +79,9 @@ const resolveItemtype = (type, fields) =>
 		? fields.details.businessType
 		: SCHEMA_TYPES[type];
 
+/* schema.org EventAttendanceModeEnumeration stems */
+const ATTENDANCE_MODES = new Set(['Offline', 'Online', 'Mixed']);
+
 /* schema.org BookFormatType members — bookFormat emits only for these */
 const BOOK_FORMATS = new Set(['Hardcover', 'Paperback', 'EBook', 'AudiobookFormat', 'GraphicNovel']);
 
@@ -769,8 +772,11 @@ const DETAILS = {
 	},
 
 	event(d) {
+		/* attendanceMode is data-driven through an ALLOWLIST — the same discipline as
+		   business.businessType; anything else falls back to the offline default */
+		const mode = ATTENDANCE_MODES.has(d.attendanceMode) ? d.attendanceMode : 'Offline';
 		let html = meta('eventStatus', d.status ? SCHEMA + 'Event' + d.status : null)
-			+ meta('eventAttendanceMode', SCHEMA + 'OfflineEventAttendanceMode')
+			+ meta('eventAttendanceMode', `${SCHEMA}${mode}EventAttendanceMode`)
 			+ meta('startDate', d.startDate) + meta('endDate', d.endDate);
 		const location = d.location?.name
 			? `<span${scope('location', 'Place')}><span itemprop="name">${esc(d.location.name)}</span>${d.location.address ? `<span${scope('address', 'PostalAddress')}>, <span itemprop="addressLocality">${esc(d.location.address)}</span></span>` : ''}</span>`
@@ -778,6 +784,10 @@ const DETAILS = {
 		html += `<span data-part="meta">${esc(d.dateDisplay || d.startDate || '')}${location ? ' · ' : ''}${location}</span>`;
 		if (d.organizer?.name) {
 			html += `<span data-part="meta"${scope('organizer', 'Organization')}>Organizer: <span itemprop="name">${esc(d.organizer.name)}</span></span>`;
+		}
+		/* ticket tiers — one Offer scope each (Google reads these for event rich results) */
+		for (const offer of d.offers || []) {
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', offer.currency)}${meta('availability', availabilityUrl(offer.availability || 'in stock'))}${offer.validThrough ? meta('validThrough', offer.validThrough) : ''}${offer.name ? `<span itemprop="name">${esc(offer.name)}</span> ` : ''}<data itemprop="price" value="${esc(offer.price)}">${fmtPrice(offer.currency, offer.price)}</data></p>`;
 		}
 		return html;
 	},
@@ -813,7 +823,10 @@ const DETAILS = {
 			if (d.reviewDate) html += meta('datePublished', d.reviewDate);
 		}
 		if (d.productReviewed) {
-			html += `<div${scope('itemReviewed', 'Product')} hidden>${meta('name', d.productReviewed)}</div>`;
+			/* the reviewed thing owns its aggregate rating and offer — Google reads both
+			   from itemReviewed, not from the Review */
+			const agg = d.aggregateRating;
+			html += `<div${scope('itemReviewed', 'Product')} hidden>${meta('name', d.productReviewed)}${d.productImage ? meta('image', d.productImage) : ''}${agg ? `<span${scope('aggregateRating', 'AggregateRating')}>${meta('ratingValue', agg.value ?? agg.ratingValue)}${meta('ratingCount', agg.count ?? agg.ratingCount)}${meta('bestRating', agg.max ?? 5)}${meta('worstRating', 1)}</span>` : ''}${d.productPrice ? `<span${scope('offers', 'Offer')}>${meta('priceCurrency', d.productPrice.currency)}${meta('price', d.productPrice.amount ?? d.productPrice.current)}${meta('availability', SCHEMA + 'InStock')}</span>` : ''}</div>`;
 		}
 		return html;
 	},
@@ -846,6 +859,7 @@ const DETAILS = {
 		if (d.price) {
 			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data>${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}</p>`;
 		}
+		html += listPart(d.learningOutcomes, { itemprop: 'teaches' });
 		html += listPart(d.prerequisites);
 		return html;
 	},
@@ -858,6 +872,7 @@ const DETAILS = {
 			html += `<p data-part="price"><data value="${esc(d.price.hourlyRate)}">${fmtPrice(d.price.currency, d.price.hourlyRate)}</data>/hour</p>`;
 		}
 		html += listPart(d.amenities);
+		if (d.specialRequests) html += `<footer data-part="footer">${esc(d.specialRequests)}</footer>`;
 		return html;
 	},
 
@@ -880,6 +895,11 @@ const DETAILS = {
 	profile(d) {
 		let html = '';
 		if (d.location) html += `<p data-part="meta" itemprop="address">${esc(d.location)}</p>`;
+		/* profile URLs double as sameAs — the identity claim Google reads. ABSOLUTE
+		   http(s) only: a relative or placeholder href is not an identity anywhere. */
+		for (const contact of d.contacts || []) {
+			if (/^https?:\/\/\S+/.test(contact.value || '')) html += meta('sameAs', contact.value);
+		}
 		if (d.contacts?.length) {
 			html += `<nav data-part="actions">${d.contacts.map((contact, index) => contactLink(contact, index === 0)).join(' ')}</nav>`;
 		}
@@ -914,7 +934,8 @@ const DETAILS = {
 			${meta('name', d.metricName)}
 			<data itemprop="value" value="${esc(d.currentValue)}">${esc(d.displayValue ?? String(d.currentValue))}</data>${d.unit ? `<small itemprop="unitText">${esc(d.unit)}</small>` : ''}${d.trend ? `<span> ${d.trend === 'up' ? '▲' : d.trend === 'down' ? '▼' : '►'} ${esc(d.trendPercentage)}%</span>` : ''}
 		</p>`;
-		if (d.note) html += `<p data-part="meta">${esc(d.note)}</p>`;
+		const foot = [d.comparisonPeriod ? `vs ${d.comparisonPeriod}` : null, d.note].filter(Boolean).join(' · ');
+		if (foot) html += `<p data-part="meta">${esc(foot)}</p>`;
 		return html;
 	},
 
@@ -928,6 +949,9 @@ const DETAILS = {
 
 	announcement(d) {
 		let html = meta('datePosted', d.effectiveDate?.start) + meta('expires', d.effectiveDate?.end) + meta('spatialCoverage', 'Global');
+		const range = [d.effectiveDate?.startDisplay || d.effectiveDate?.start, d.effectiveDate?.endDisplay || d.effectiveDate?.end].filter(Boolean).join(' – ');
+		const head = [d.announcementType, range].filter(Boolean).join(' · ');
+		if (head) html += `<p data-part="meta">${esc(head)}</p>`;
 		if (d.priority) {
 			const hue = /high|critical/i.test(d.priority) ? 'red' : /medium/i.test(d.priority) ? 'orange' : 'gray';
 			html += `<p data-part="meta"><ui-chip theme="pale ${hue}">${esc(d.priorityDisplay || d.priority)}</ui-chip></p>`;
@@ -960,7 +984,7 @@ const DETAILS = {
 			html += `<ul data-part="options">${d.items.map((item, index) =>
 				`<li${scope('itemListElement', 'ListItem')}>
 					${meta('position', index + 1)}
-					<label><span itemprop="name">${esc(item.name)}</span>${item.price ? ` — ${esc(item.price)}` : ''}</label>
+					${item.image ? `<img src="${esc(item.image)}" alt="" itemprop="image" loading="lazy" width="48" height="48">` : ''}<label><span itemprop="name">${esc(item.name)}</span>${item.price ? ` — ${esc(item.price)}` : ''}</label>
 					${item.score != null ? `<progress max="100" value="${esc(item.score)}"></progress>` : ''}${item.scoreDisplay ? ` <span>${esc(item.scoreDisplay)}</span>` : ''}
 				</li>`
 			).join('')}</ul>`;
@@ -989,8 +1013,10 @@ const DETAILS = {
 		/* Place has openingHoursSpecification but NOT the flat openingHours string */
 		if (d.openingHours?.length) html += hoursPart(d.openingHours, { flat: false });
 		else if (d.hours) html += `<p data-part="meta">${esc(d.hours)}</p>`;
+		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		/* amenityFeature wants LocationFeatureSpecification scopes — plain list, no itemprop */
 		html += listPart(d.amenities);
+		if (d.contact) html += `<p data-part="meta"><a itemprop="telephone" href="tel:${esc(String(d.contact).replace(/\s/g, ''))}">${esc(d.contact)}</a></p>`;
 		const map = mapUrl(d.geo);
 		if (map) html += `<nav data-part="actions"><a class="ui-button" data-variant="accent" href="${esc(map)}"${/^geo:/.test(map) ? '' : ' target="_blank" rel="noopener"'}>Open in Maps</a></nav>`;
 		return html;
@@ -1023,6 +1049,12 @@ const DETAILS = {
 		html += `<p data-part="meta">${esc((d.operatingSystem || []).join(' · '))}${d.fileSize ? ` · ${esc(d.fileSize)}` : ''}</p>`;
 		if (d.developer?.name) {
 			html += `<p data-part="meta"${scope('author', 'Organization')}>Developer: <span itemprop="name">${esc(d.developer.name)}</span>${d.developer.website ? meta('url', d.developer.website) : ''}</p>`;
+		}
+		const req = d.systemRequirements;
+		if (req) {
+			/* softwareRequirements is free text in schema.org — one readable line */
+			const line = typeof req === 'string' ? req : [req.processor, req.ram ? `${req.ram} RAM` : null, req.storage ? `${req.storage} free` : null].filter(Boolean).join(' · ');
+			if (line) html += meta('softwareRequirements', line) + `<p data-part="meta">Requires ${esc(line)}</p>`;
 		}
 		if (d.price) {
 			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data>${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`;

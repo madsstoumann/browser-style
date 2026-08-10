@@ -32,7 +32,9 @@
       "priorityDisplay": "High priority",
       "effectiveDate": {
         "start": "2026-07-01",
-        "end": "2026-07-06"
+        "end": "2026-07-06",
+        "startDisplay": "Jul 5, 02:00 UTC",
+        "endDisplay": "04:00 UTC"
       },
       "targetAudience": "API customers",
       "actionRequired": "re-authenticate integrations after the window."

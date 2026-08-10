@@ -42,8 +42,8 @@
         },
         {
           "type": "url",
-          "value": "#",
-          "label": "Portfolio"
+          "value": "https://www.linkedin.com/in/jane-doe-journalist",
+          "label": "LinkedIn"
         }
       ]
     }

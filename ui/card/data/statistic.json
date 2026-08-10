@@ -31,7 +31,8 @@
       "unit": "M",
       "trend": "up",
       "trendPercentage": 12,
-      "note": "vs. previous quarter"
+      "note": "Monthly active accounts, rolling 30 days",
+      "comparisonPeriod": "last quarter"
     }
   }
 }

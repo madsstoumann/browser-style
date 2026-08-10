@@ -240,7 +240,7 @@
 				<ui-media><img src="/assets/images/websummit.png" alt="Conference stage with purple lights" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="eventStatus" content="https://schema.org/EventScheduled">
-					<meta itemprop="eventAttendanceMode" content="https://schema.org/OfflineEventAttendanceMode">
+					<meta itemprop="eventAttendanceMode" content="https://schema.org/MixedEventAttendanceMode">
 					<meta itemprop="startDate" content="2026-11-09T09:00:00+00:00">
 					<meta itemprop="endDate" content="2026-11-12T18:00:00+00:00">
 					<small data-part="eyebrow">Conference</small>
@@ -248,6 +248,14 @@
 					<p data-part="summary" itemprop="description">Four days of talks on the future of the web platform.</p>
 					<p data-part="meta">Nov 9–12, 2026 · <span itemprop="location" itemscope itemtype="https://schema.org/Place"><span itemprop="name">Altice Arena</span><span itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">, <span itemprop="addressLocality">Lisbon</span></span></span></p>
 					<p data-part="meta" itemprop="organizer" itemscope itemtype="https://schema.org/Organization">Organizer: <span itemprop="name">Web Summit Ltd.</span></p>
+					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+						<meta itemprop="priceCurrency" content="EUR"><meta itemprop="availability" content="https://schema.org/InStock"><meta itemprop="validThrough" content="2026-09-01">
+						<span itemprop="name">Early bird</span> <data itemprop="price" value="299">€299</data>
+					</p>
+					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+						<meta itemprop="priceCurrency" content="EUR"><meta itemprop="availability" content="https://schema.org/InStock">
+						<span itemprop="name">Standard</span> <data itemprop="price" value="449">€449</data>
+					</p>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Participate</a></nav>
 				</ui-content>
 			</cq-box>
@@ -335,7 +343,7 @@
 					<meta itemprop="datePublished" content="2026-05-14">
 					<div itemprop="itemReviewed" itemscope itemtype="https://schema.org/Product" hidden>
 						<meta itemprop="name" content="SoundWave Mini">
-					</div>
+					<span itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating"><meta itemprop="ratingValue" content="4.6"><meta itemprop="ratingCount" content="1847"><meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1"></span><span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="USD"><meta itemprop="price" content="279"><meta itemprop="availability" content="https://schema.org/InStock"></span></div>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -432,6 +440,11 @@
 						<meta itemprop="availability" content="https://schema.org/InStock">
 						<data itemprop="price" value="89">$89</data> <del>$129</del>
 					</p>
+					<ul data-part="list" itemprop="teaches">
+						<li>Sustain attention for 20 minutes</li>
+						<li>Build a daily sitting habit</li>
+						<li>Apply body scans to stress</li>
+					</ul>
 					<ul data-part="list">
 						<li>No prior experience needed</li>
 						<li>10 minutes a day</li>
@@ -470,6 +483,7 @@
 						<li>Whiteboard wall</li>
 						<li>Coffee &amp; water included</li>
 					</ul>
+					<footer data-part="footer">Tell us about allergies or accessibility needs when booking.</footer>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Check availability</a></nav>
 				</ui-content>
 			</cq-box>
@@ -529,6 +543,7 @@
 					<p data-part="summary" itemprop="description">Covers elections and policy across Europe. Two decades on the beat, one Pulitzer nomination.</p>
 					<p data-part="meta" itemprop="address">Copenhagen, Denmark</p>
 					<span data-part="tags"><ui-chip itemprop="knowsAbout">Elections</ui-chip><ui-chip itemprop="knowsAbout">EU policy</ui-chip><ui-chip itemprop="knowsAbout">Data journalism</ui-chip></span>
+					<meta itemprop="sameAs" content="https://www.linkedin.com/in/jane-doe-journalist">
 					<nav data-part="actions">
 						<meta itemprop="email" content="jane@dailyledger.example"><a class="ui-button" data-variant="accent" href="mailto:jane@dailyledger.example">Email</a>
 						<a class="ui-button" itemprop="url" href="#">Portfolio</a>
@@ -701,7 +716,7 @@
 						<data itemprop="value" value="2400000">2.4</data><small itemprop="unitText">M</small>
 						<span>▲ 12%</span>
 					</p>
-					<p data-part="meta">vs. previous quarter</p>
+					<p data-part="meta">vs last quarter · Monthly active accounts, rolling 30 days</p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -769,6 +784,7 @@
 					<small data-part="eyebrow">Maintenance</small>
 					<h3 data-part="headline" itemprop="name">Scheduled maintenance — July 5</h3>
 					<p data-part="summary" itemprop="text">The API will be unavailable Saturday July 5, 02:00–04:00 UTC while we migrate the primary database.</p>
+					<p data-part="meta">Maintenance · Jul 5, 02:00 UTC – 04:00 UTC</p>
 					<p data-part="meta"><ui-chip theme="pale red">High priority</ui-chip></p>
 					<p data-part="meta" itemprop="audience" itemscope itemtype="https://schema.org/Audience">Audience: <span itemprop="audienceType">API customers</span></p>
 					<footer data-part="footer">Action required: re-authenticate integrations after the window.</footer>
@@ -862,17 +878,17 @@
 					<ul data-part="options">
 						<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 							<meta itemprop="position" content="1">
-							<label><span itemprop="name">SoundWave Mini</span> — USD 79</label>
+							<img src="/assets/images/quickboil.png" alt="" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">SoundWave Mini</span> — USD 79</label>
 							<progress max="100" value="92"></progress> <span>9.2</span>
 						</li>
 						<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 							<meta itemprop="position" content="2">
-							<label><span itemprop="name">AuraSound Go</span> — USD 99</label>
+							<img src="/assets/images/soundwavemini.png" alt="" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">AuraSound Go</span> — USD 99</label>
 							<progress max="100" value="85"></progress> <span>8.5</span>
 						</li>
 						<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 							<meta itemprop="position" content="3">
-							<label><span itemprop="name">QuickBoom 2</span> — USD 69</label>
+							<img src="/assets/images/slimfold.png" alt="" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">QuickBoom 2</span> — USD 69</label>
 							<progress max="100" value="78"></progress> <span>7.8</span>
 						</li>
 					</ul>
@@ -945,6 +961,13 @@
 							6:00–22:00
 						</dd>
 					</dl>
+					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+						<meta itemprop="ratingValue" content="4.7"><meta itemprop="ratingCount" content="950">
+						<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+						<input class="ui-rating" type="range" min="1" max="5" value="4.7" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 4.7 out of 5 stars from 950 ratings</span>
+						<span aria-hidden="true">4.7 / 5 (950 ratings)</span>
+					</div>
 					<ul data-part="list">
 						<li>Free parking</li>
 						<li>Guided tours</li>
@@ -1061,6 +1084,8 @@
 						<meta itemprop="availability" content="https://schema.org/InStock">
 						<data itemprop="price" value="29">$29</data> <small>one-time purchase</small>
 					</p>
+					<meta itemprop="softwareRequirements" content="Apple M1 or Intel i5 · 8 GB RAM · 4 GB free">
+					<p data-part="meta">Requires Apple M1 or Intel i5 · 8 GB RAM · 4 GB free</p>
 					<span data-part="tags"><ui-chip itemprop="keywords">Game</ui-chip><ui-chip itemprop="keywords">Co-op</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Play demo</a></nav>
 				</ui-content>
