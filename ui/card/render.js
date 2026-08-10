@@ -227,8 +227,58 @@ const hoursSpec = (spec) => {
 };
 
 /* machine + human opening hours — flat openingHours meta AND the structured spec per entry */
-const openingHoursMetas = (hours) =>
-	(hours || []).map((entry) => meta('openingHours', entry.schema) + hoursSpec(entry.schema)).join('');
+/* one tabular row per entry — days/time read from the MACHINE string so a single
+   day ("Th 09:00-16:00") and a range ("Mo-We 09:00-17:00") both work; explicit
+   days/time keys win for locales the derivation can't spell */
+const DAY_ABBR = { Mo: 'Mon', Tu: 'Tue', We: 'Wed', Th: 'Thu', Fr: 'Fri', Sa: 'Sat', Su: 'Sun' };
+const hoursRow = (entry) => {
+	if (entry.days || entry.time) return { days: entry.days || '', time: entry.time || '' };
+	const m = /^([A-Z][a-z])(?:-([A-Z][a-z]))?\s+(\d\d:\d\d)-(\d\d:\d\d)$/.exec(entry.schema || '');
+	if (!m) return { days: '', time: entry.display || '' };
+	const clock = (time) => time.replace(/^0/, '');
+	return {
+		days: m[2] ? `${DAY_ABBR[m[1]]}–${DAY_ABBR[m[2]]}` : DAY_ABBR[m[1]],
+		time: `${clock(m[3])}–${clock(m[4])}`
+	};
+};
+
+/* opening hours as a two-column <dl> — each row carries its own flat openingHours
+   meta AND structured OpeningHoursSpecification */
+const hoursPart = (hours) =>
+	hours?.length
+		? `<dl data-part="hours">${hours.map((entry) => {
+			const { days, time } = hoursRow(entry);
+			return `<dt>${esc(days)}</dt><dd>${meta('openingHours', entry.schema)}${hoursSpec(entry.schema)}${esc(time)}</dd>`;
+		}).join('')}</dl>`
+		: '';
+
+/* GeoCoordinates — machine-only (the visible affordance is the map link) */
+const geoPart = (geo) =>
+	geo?.latitude != null || geo?.longitude != null
+		? `<div${scope('geo', 'GeoCoordinates')} hidden>${meta('latitude', geo.latitude)}${meta('longitude', geo.longitude)}</div>`
+		: '';
+
+/* Organization has no geo property (Place does) — coordinates ride location → Place */
+const geoViaPlace = (geo) =>
+	geo?.latitude != null || geo?.longitude != null
+		? `<div${scope('location', 'Place')} hidden>${geoPart(geo)}</div>`
+		: '';
+
+/* PostalAddress as stacked lines: street · postal + locality · country.
+   A 2-letter country code stays machine-only — "DK" reads as noise in a card */
+const addressPart = (address, prop = 'address') => {
+	if (!address) return '';
+	const country = address.addressCountry || '';
+	const lines = [
+		address.streetAddress ? `<span itemprop="streetAddress">${esc(address.streetAddress)}</span>` : '',
+		[
+			address.postalCode ? `<span itemprop="postalCode">${esc(address.postalCode)}</span>` : '',
+			address.addressLocality ? `<span itemprop="addressLocality">${esc(address.addressLocality)}</span>` : ''
+		].filter(Boolean).join(' '),
+		country.length > 2 ? `<span itemprop="addressCountry">${esc(country)}</span>` : ''
+	].filter(Boolean).map((line) => `<span>${line}</span>`).join('');
+	return `<address data-part="address"${scope(prop, 'PostalAddress')}>${lines}${country.length > 2 ? '' : meta('addressCountry', country)}</address>`;
+};
 
 const listPart = (items, { ordered = false, itemprop = null, crossed = false } = {}) =>
 	items?.length
@@ -878,20 +928,11 @@ const DETAILS = {
 	business(d) {
 		let html = meta('url', d.website) + meta('priceRange', d.priceRange) + meta('foundingDate', d.foundingDate)
 			+ (d.sameAs || []).map((url) => meta('sameAs', url)).join('');
-		if (d.geo) {
-			html += `<div${scope('geo', 'GeoCoordinates')} hidden>${meta('latitude', d.geo.latitude)}${meta('longitude', d.geo.longitude)}</div>`;
-		}
-		if (d.address) {
-			html += `<address data-part="address"${scope('address', 'PostalAddress')}>
-				${d.address.streetAddress ? `<span itemprop="streetAddress">${esc(d.address.streetAddress)}</span>, ` : ''}${d.address.postalCode ? `<span itemprop="postalCode">${esc(d.address.postalCode)}</span> ` : ''}${d.address.addressLocality ? `<span itemprop="addressLocality">${esc(d.address.addressLocality)}</span>` : ''}${meta('addressCountry', d.address.addressCountry)}
-			</address>`;
-		}
+		html += geoPart(d.geo);
+		html += addressPart(d.address);
 		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
-		if (d.openingHours?.length) {
-			html += `<p data-part="meta">${openingHoursMetas(d.openingHours)}${esc(d.openingHours.map((hours) => hours.display).join(' · '))}${d.priceRange ? ` · ${esc(d.priceRange)}` : ''}</p>`;
-		} else if (d.priceRange) {
-			html += `<p data-part="meta">${esc(d.priceRange)}</p>`;
-		}
+		if (d.priceRange) html += `<p data-part="meta">${esc(d.priceRange)}</p>`;
+		html += hoursPart(d.openingHours);
 		const links = [];
 		if (d.telephone) links.push(`<a class="ui-button" itemprop="telephone" href="tel:${esc(d.telephone.replace(/\s/g, ''))}">${esc(d.telephone)}</a>`);
 		if (d.email) links.push(`${meta('email', d.email)}<a class="ui-button" href="mailto:${esc(d.email)}">Email</a>`);
@@ -926,13 +967,10 @@ const DETAILS = {
 
 	location(d) {
 		let html = '';
-		if (d.geo) {
-			html += `<div${scope('geo', 'GeoCoordinates')} hidden>${meta('latitude', d.geo.latitude)}${meta('longitude', d.geo.longitude)}</div>`;
-		}
-		if (d.address) {
-			html += `<address data-part="address"${scope('address', 'PostalAddress')}>${d.address.addressLocality ? `<span itemprop="addressLocality">${esc(d.address.addressLocality)}</span>` : ''}${d.address.addressCountry ? `, <span itemprop="addressCountry">${esc(d.address.addressCountry)}</span>` : ''}</address>`;
-		}
-		if (d.hours) html += `<p data-part="meta">${esc(d.hours)}</p>`;
+		html += geoPart(d.geo);
+		html += addressPart(d.address);
+		if (d.openingHours?.length) html += hoursPart(d.openingHours);
+		else if (d.hours) html += `<p data-part="meta">${esc(d.hours)}</p>`;
 		/* amenityFeature wants LocationFeatureSpecification scopes — plain list, no itemprop */
 		html += listPart(d.amenities);
 		const map = mapUrl(d.geo);
@@ -962,6 +1000,7 @@ const DETAILS = {
 	software(d) {
 		let html = meta('applicationCategory', d.applicationCategory)
 			+ (d.operatingSystem || []).map((os) => meta('operatingSystem', os)).join('');
+		if (d.version) html += `<p data-part="meta"><ui-chip theme="pale accent">v<span itemprop="softwareVersion">${esc(d.version)}</span></ui-chip></p>`;
 		html += `<p data-part="meta">${esc((d.operatingSystem || []).join(' · '))}${d.fileSize ? ` · ${esc(d.fileSize)}` : ''}</p>`;
 		if (d.developer?.name) {
 			html += `<p data-part="meta"${scope('author', 'Organization')}>Developer: <span itemprop="name">${esc(d.developer.name)}</span>${d.developer.website ? meta('url', d.developer.website) : ''}</p>`;
@@ -978,18 +1017,19 @@ const DETAILS = {
 			+ (d.numberOfEmployees != null ? `<span${scope('numberOfEmployees', 'QuantitativeValue')} hidden>${meta('value', d.numberOfEmployees)}</span>` : '');
 		const bits = [d.numberOfEmployees != null ? `${num(d.numberOfEmployees)} employees` : null, d.foundingDateDisplay ? `Founded ${d.foundingDateDisplay}` : null].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
-		if (d.headquarters?.address) {
-			const a = d.headquarters.address;
-			html += `<address data-part="address"${scope('address', 'PostalAddress')}>
-				${a.streetAddress ? `<span itemprop="streetAddress">${esc(a.streetAddress)}</span>, ` : ''}${a.postalCode ? `<span itemprop="postalCode">${esc(a.postalCode)}</span> ` : ''}${a.addressLocality ? `<span itemprop="addressLocality">${esc(a.addressLocality)}</span>` : ''}${meta('addressCountry', a.addressCountry)}
-			</address>`;
-		}
-		/* each local office is a department → LocalBusiness (Google's multi-location pattern) */
+		html += geoViaPlace(d.headquarters?.geo) + addressPart(d.headquarters?.address);
+		if (d.email) html += `<p data-part="meta">${meta('email', d.email)}<a href="mailto:${esc(d.email)}">${esc(d.email)}</a></p>`;
+		/* each local office is a department → LocalBusiness (Google's multi-location pattern),
+		   with its own coordinates so each branch geocodes independently */
 		for (const office of d.offices || []) {
-			const a = office.address;
-			html += `<address data-part="address"${scope('department', 'LocalBusiness')}>
-				<strong itemprop="name">${esc(office.name)}</strong>${a ? ` <span${scope('address', 'PostalAddress')}>${a.streetAddress ? `<span itemprop="streetAddress">${esc(a.streetAddress)}</span>, ` : ''}${a.addressLocality ? `<span itemprop="addressLocality">${esc(a.addressLocality)}</span>` : ''}${meta('addressCountry', a.addressCountry)}</span>` : ''}${office.telephone ? ` <a itemprop="telephone" href="tel:${esc(office.telephone.replace(/\s/g, ''))}">${esc(office.telephone)}</a>` : ''}${openingHoursMetas(office.openingHours)}${office.openingHours?.length ? ` <small>${esc(office.openingHours.map((hours) => hours.display).join(' · '))}</small>` : ''}
-			</address>`;
+			const contacts = [
+				office.telephone ? `<a itemprop="telephone" href="tel:${esc(office.telephone.replace(/\s/g, ''))}">${esc(office.telephone)}</a>` : '',
+				office.email ? `${meta('email', office.email)}<a href="mailto:${esc(office.email)}">${esc(office.email)}</a>` : ''
+			].filter(Boolean);
+			html += `<div data-part="office"${scope('department', 'LocalBusiness')}>
+				<strong itemprop="name">${esc(office.name)}</strong>
+				${geoPart(office.geo)}${addressPart(office.address)}${contacts.length ? `<p data-part="meta">${contacts.join(' ')}</p>` : ''}${hoursPart(office.openingHours)}
+			</div>`;
 		}
 		return html;
 	},
@@ -997,8 +1037,9 @@ const DETAILS = {
 	video(d) {
 		/* machine duration/uploadDate ride the media item (rootVideoMetas) — details are display + creator */
 		let html = '';
-		const bits = [d.durationDisplay, d.viewsDisplay].filter(Boolean).join(' · ');
-		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		if (d.durationDisplay || d.viewsDisplay) {
+			html += `<p data-part="meta">${d.durationDisplay ? `<ui-chip theme="pale accent">${esc(d.durationDisplay)}</ui-chip>` : ''}${d.viewsDisplay ? ` ${esc(d.viewsDisplay)}` : ''}</p>`;
+		}
 		if (d.creator?.name) html += `<p data-part="meta"${scope('creator', 'Person')}>By <span itemprop="name">${esc(d.creator.name)}</span></p>`;
 		return html;
 	},
@@ -1131,7 +1172,8 @@ const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary',
 /* Back panel derived from the host card's own envelope + details. */
 const derivedBack = (fields, type) => {
 	let html = fields.eyebrow ? `<small data-part="eyebrow">${esc(fields.eyebrow)}</small>` : '';
-	html += `<h3 data-part="headline">${renderInline(fields.headline)}${fields.details?.version ? ` ${esc(fields.details.version)}` : ''}</h3>`;
+	/* version rides the details chip, not the headline */
+	html += `<h3 data-part="headline">${renderInline(fields.headline)}</h3>`;
 	if (fields.summary) html += `<p data-part="summary" itemprop="${SUMMARY_PROP[type] || 'description'}">${esc(fields.summary)}</p>`;
 	html += bodyHtml(fields, type);
 	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields);
@@ -1173,7 +1215,7 @@ const renderReveal = (fields, type, itemtype, tokens, preset, flipside, cardId =
 		<ui-content${attrs({ content: preset.content || null })}>
 			${fields.eyebrow ? `<small data-part="eyebrow">${esc(fields.eyebrow)}</small>` : ''}
 			<strong data-part="headline" itemprop="${HEADLINE_PROP[type] || 'name'}">${renderInline(fields.headline)}</strong>
-			${fields.details?.version ? `<span data-part="meta">v<span itemprop="softwareVersion">${esc(fields.details.version)}</span></span>` : ''}
+			${fields.details?.version ? `<span data-part="meta"><ui-chip theme="pale accent">v<span itemprop="softwareVersion">${esc(fields.details.version)}</span></ui-chip></span>` : ''}
 		</ui-content>`;
 	/* <ui-face> only where the animation transforms the front face; exp animates the host */
 	const front = RVL_FACED.has(anim) ? `<ui-face>${inner}</ui-face>` : inner;

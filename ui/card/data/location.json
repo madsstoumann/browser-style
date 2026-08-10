@@ -35,11 +35,15 @@
         "longitude": 14.7009,
         "url": "https://www.google.com/maps/search/?api=1&query=55.0603,14.7009"
       },
-      "hours": "Open all year · Free entry · Visitor centre 10–17",
       "amenities": [
         "Free parking",
         "Guided tours",
         "Coastal viewpoint"
+      ],
+      "openingHours": [
+        {
+          "schema": "Mo-Su 06:00-22:00"
+        }
       ]
     },
     "tags": [

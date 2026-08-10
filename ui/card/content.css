@@ -405,12 +405,43 @@
 			}
 		}
 
-		/* address — Body group (distinct from byline: no avatar) */
+		/* contact links read at body size even inside a meta row, and get a decorative
+		   glyph — alt "" keeps it out of the accessible name (the number/address is the link text) */
+		& :is(a[href^="tel:"], a[href^="mailto:"]) {
+			font-size: var(--ui-content-contact-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
+			&::before { margin-inline-end: var(--ui-content-contact-icon-gap, 0.35em); }
+		}
+		& a[href^="tel:"]::before { content: var(--ui-content-tel-icon, '☎') / ''; }
+		& a[href^="mailto:"]::before { content: var(--ui-content-mail-icon, '✉') / ''; }
+
+		/* address — Body group (distinct from byline: no avatar). Lines stack: street · postal + locality · country */
 		& [data-part="address"] {
 			color: var(--ui-content-address-ink, var(--ui-content-body-ink, inherit));
+			display: flex;
+			flex-direction: column;
 			font-size: var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9));
 			font-style: normal;
 			line-height: var(--ui-content-address-line-height, var(--line-height-normal, 1.5));
+		}
+
+		/* hours — Body group: two-column day/time table (opening hours per day) */
+		& [data-part="hours"] {
+			column-gap: var(--ui-content-hours-column-gap, var(--spacing-md));
+			display: grid;
+			font-size: var(--ui-content-hours-fs, var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9)));
+			grid-template-columns: auto 1fr;
+			margin: 0;
+			row-gap: var(--ui-content-hours-row-gap, var(--spacing-xs));
+			& dt { color: var(--ui-content-hours-day-ink, var(--ui-content-muted)); }
+			& dd { margin: 0; }
+		}
+
+		/* office — Body group: one local branch (organization department) */
+		& [data-part="office"] {
+			display: flex;
+			flex-direction: column;
+			gap: var(--ui-content-office-gap, var(--spacing-xs));
+			& strong { font-size: var(--ui-content-office-name-fs, 1em); }
 		}
 
 		/* stat — Body group (prominent) */

@@ -444,7 +444,7 @@ emission in [`content/card/dist/`](../../../content/card/dist)):
 
 ## Structured `data-part` vocabulary
 
-Nine parts added for the typed cards, all styled in [`content.css`](../content.css):
+Eleven parts added for the typed cards, all styled in [`content.css`](../content.css):
 
 | part | Element | Used by |
 |------|---------|---------|
@@ -452,7 +452,9 @@ Nine parts added for the typed cards, all styled in [`content.css`](../content.c
 | `rating` | `<div>` + decorative `<input class="ui-rating">` + `[data-sr]` label + visible count | product, review, software, business, movie, book |
 | `list` | `<ul>` check / `<ol>` ordered; `data-variant="crossed"` = muted ✗ rows (excluded items). Marker themes via `--ui-content-list-marker` (any `list-style-type` string, e.g. `"→ "`; `none` for block-content rows) + `--ui-content-list-marker-ink` (`::marker` color) — string markers ride `list-style-type` because `::marker` `content` never shipped in Safari | recipe, job, course, booking, location, membership, howto, qa, dataset |
 | `links` | `<ul>` of plain related-link rows (default bullet, hairline dividers) — the envelope `links[]` field; deliberately not buttons, no itemprop. Marker via `--ui-content-links-marker` (e.g. `'"→ "'`), ink via `--ui-content-links-mark` | any type |
-| `address` | `<address>` | business, location, event, contact, organization |
+| `address` | `<address>` of stacked lines: street · postal + locality · country (a 2-letter country code stays machine-only) | business, location, event, contact, organization |
+| `hours` | two-column `<dl>` — `<dt>` day range, `<dd>` time; one row per opening pattern, each carrying its flat `openingHours` + structured `OpeningHoursSpecification`. Days/times derive from the machine string (`Mo-We 09:00-17:00` → "Mon–Wed 9:00–17:00", `Th 09:00-16:00` → "Thu"), overridable per entry with `days`/`time` | business, location, organization offices |
+| `office` | `<div>` wrapping one `department` → `LocalBusiness`: name, address, phone, own `hours` table | organization |
 | `stat` | `<p>` + `<data>` + unit + trend | statistic |
 | `timeline` | `<ol>` of `<time>` + text | timeline |
 | `quote` | `<ui-quote>` wrapping `<blockquote>` + `<cite>` | quote, review, social, claim, qa |

@@ -779,9 +779,8 @@
 					<h3 data-part="headline" itemprop="name">Brew &amp; Bean</h3>
 					<p data-part="summary" itemprop="description">Specialty coffee, fresh pastry and the city’s calmest workspace corner.</p>
 					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
-						<span itemprop="streetAddress">Kaffegade 12</span>,
-						<span itemprop="postalCode">1455</span>
-						<span itemprop="addressLocality">Copenhagen</span>
+						<span><span itemprop="streetAddress">Kaffegade 12</span></span>
+						<span><span itemprop="postalCode">1455</span> <span itemprop="addressLocality">Copenhagen</span></span>
 						<meta itemprop="addressCountry" content="DK">
 					</address>
 					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
@@ -792,19 +791,27 @@
 						<span data-sr>Rated 4.7 out of 5 stars from 412 ratings</span>
 						<span aria-hidden="true">4.7 / 5 (412 ratings)</span>
 					</div>
-					<p data-part="meta">
-						<meta itemprop="openingHours" content="Mo-Fr 07:00-18:00">
-						<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
-							<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
-							<meta itemprop="opens" content="07:00"><meta itemprop="closes" content="18:00">
-						</span>
-						<meta itemprop="openingHours" content="Sa-Su 08:00-16:00">
-						<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
-							<meta itemprop="dayOfWeek" content="https://schema.org/Saturday"><meta itemprop="dayOfWeek" content="https://schema.org/Sunday">
-							<meta itemprop="opens" content="08:00"><meta itemprop="closes" content="16:00">
-						</span>
-						Mon–Fri 7–18 · Sat–Sun 8–16 · $$
-					</p>
+					<p data-part="meta">$$</p>
+					<dl data-part="hours">
+						<dt>Mon–Fri</dt>
+						<dd>
+							<meta itemprop="openingHours" content="Mo-Fr 07:00-18:00">
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+								<meta itemprop="opens" content="07:00"><meta itemprop="closes" content="18:00">
+							</span>
+							7:00–18:00
+						</dd>
+						<dt>Sat–Sun</dt>
+						<dd>
+							<meta itemprop="openingHours" content="Sa-Su 08:00-16:00">
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Saturday"><meta itemprop="dayOfWeek" content="https://schema.org/Sunday">
+								<meta itemprop="opens" content="08:00"><meta itemprop="closes" content="16:00">
+							</span>
+							8:00–16:00
+						</dd>
+					</dl>
 					<span data-part="tags"><ui-chip itemprop="keywords">Coffee</ui-chip><ui-chip itemprop="keywords">Bakery</ui-chip></span>
 					<nav data-part="actions">
 						<a class="ui-button" itemprop="telephone" href="tel:+4533221100">+45 33 22 11 00</a>
@@ -900,9 +907,20 @@
 					<h3 data-part="headline" itemprop="name">Hammershus Point</h3>
 					<p data-part="summary" itemprop="description">Northern Europe’s largest castle ruin, perched on Bornholm’s granite cliffs.</p>
 					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
-						<span itemprop="addressLocality">Allinge</span>, <span itemprop="addressCountry">Denmark</span>
+						<span><span itemprop="addressLocality">Allinge</span></span>
+						<span><span itemprop="addressCountry">Denmark</span></span>
 					</address>
-					<p data-part="meta">Open all year · Free entry · Visitor centre 10–17</p>
+					<dl data-part="hours">
+						<dt>Mon–Sun</dt>
+						<dd>
+							<meta itemprop="openingHours" content="Mo-Su 06:00-22:00">
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday"><meta itemprop="dayOfWeek" content="https://schema.org/Saturday"><meta itemprop="dayOfWeek" content="https://schema.org/Sunday">
+								<meta itemprop="opens" content="06:00"><meta itemprop="closes" content="22:00">
+							</span>
+							6:00–22:00
+						</dd>
+					</dl>
 					<ul data-part="list">
 						<li>Free parking</li>
 						<li>Guided tours</li>
@@ -1009,7 +1027,7 @@
 					<meta itemprop="operatingSystem" content="Switch">
 					<small data-part="eyebrow">Adventure game</small>
 					<h3 data-part="headline" itemprop="name">Pixel Raiders</h3>
-					<p data-part="meta">v<span itemprop="softwareVersion">2.1</span></p>
+					<p data-part="meta"><ui-chip theme="pale accent">v<span itemprop="softwareVersion">2.1</span></ui-chip></p>
 					<p data-part="summary" itemprop="description">Co-op dungeon crawling for up to four raiders — new Sky Fortress season, cross-play everywhere.</p>
 					<p data-part="meta">macOS · Windows · Switch · 2.4 GB</p>
 					<p data-part="meta" itemprop="author" itemscope itemtype="https://schema.org/Organization">Developer: <span itemprop="name">Bitburrow Studio</span><meta itemprop="url" content="https://bitburrow.example"></p>
@@ -1031,7 +1049,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Organization — <code>Organization</code></h2>
-	<p class="note">The multi-office shape: HQ address, employees, <code>sameAs</code> — and each local office as <code>department</code> → <code>LocalBusiness</code> with its own address, phone and opening hours (both flat and structured).</p>
+	<p class="note">The multi-office shape: HQ address, employees, <code>sameAs</code> — and each local office as <code>department</code> → <code>LocalBusiness</code> (part <code>office</code>) with its own address, phone and <strong>per-day opening hours</strong> in the tabular <code>hours</code> part (a two-column <code>&lt;dl&gt;</code>). Each row carries both the flat <code>openingHours</code> string and a structured <code>OpeningHoursSpecification</code>, so single days (<code>Th 09:00-16:00</code>) and ranges (<code>Mo-We 09:00-17:00</code>) both work.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Organization">
 			<cq-box>
@@ -1045,34 +1063,93 @@
 					<h3 data-part="headline" itemprop="name">Northwind Group</h3>
 					<p data-part="summary" itemprop="description">Engineering and design consultancy — headquartered in Copenhagen, with local offices across Northern Europe.</p>
 					<p data-part="meta">1,240 employees · Founded 1998</p>
+					<div itemprop="location" itemscope itemtype="https://schema.org/Place" hidden>
+						<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates">
+							<meta itemprop="latitude" content="55.6759">
+							<meta itemprop="longitude" content="12.5926">
+						</div>
+					</div>
 					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
-						<span itemprop="streetAddress">Havnegade 44</span>,
-						<span itemprop="postalCode">1058</span>
-						<span itemprop="addressLocality">Copenhagen</span>
+						<span><span itemprop="streetAddress">Havnegade 44</span></span>
+						<span><span itemprop="postalCode">1058</span> <span itemprop="addressLocality">Copenhagen</span></span>
 						<meta itemprop="addressCountry" content="DK">
 					</address>
-					<address data-part="address" itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">
+					<p data-part="meta"><meta itemprop="email" content="contact@northwind.example"><a href="mailto:contact@northwind.example">contact@northwind.example</a></p>
+					<div data-part="office" itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">
 						<strong itemprop="name">Aarhus office</strong>
-						<span itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"><span itemprop="streetAddress">Åboulevarden 21</span>, <span itemprop="addressLocality">Aarhus</span><meta itemprop="addressCountry" content="DK"></span>
-						<a itemprop="telephone" href="tel:+4586123456">+45 86 12 34 56</a>
-						<meta itemprop="openingHours" content="Mo-Fr 09:00-17:00">
-						<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
-							<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
-							<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="17:00">
-						</span>
-						<small>Mon–Fri 9–17</small>
-					</address>
-					<address data-part="address" itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">
+						<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+							<meta itemprop="latitude" content="56.1567">
+							<meta itemprop="longitude" content="10.2108">
+						</div>
+						<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+							<span><span itemprop="streetAddress">Åboulevarden 21</span></span>
+							<span><span itemprop="addressLocality">Aarhus</span></span>
+							<meta itemprop="addressCountry" content="DK">
+						</address>
+						<p data-part="meta"><a itemprop="telephone" href="tel:+4586123456">+45 86 12 34 56</a> <meta itemprop="email" content="aarhus@northwind.example"><a href="mailto:aarhus@northwind.example">aarhus@northwind.example</a></p>
+						<dl data-part="hours">
+							<dt>Mon–Wed</dt>
+							<dd>
+								<meta itemprop="openingHours" content="Mo-We 09:00-17:00">
+								<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+									<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday">
+									<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="17:00">
+								</span>
+								9:00–17:00
+							</dd>
+							<dt>Thu</dt>
+							<dd>
+								<meta itemprop="openingHours" content="Th 09:00-16:00">
+								<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+									<meta itemprop="dayOfWeek" content="https://schema.org/Thursday">
+									<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="16:00">
+								</span>
+								9:00–16:00
+							</dd>
+							<dt>Fri</dt>
+							<dd>
+								<meta itemprop="openingHours" content="Fr 09:00-14:00">
+								<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+									<meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+									<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="14:00">
+								</span>
+								9:00–14:00
+							</dd>
+						</dl>
+					</div>
+					<div data-part="office" itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">
 						<strong itemprop="name">Berlin office</strong>
-						<span itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"><span itemprop="streetAddress">Torstraße 140</span>, <span itemprop="addressLocality">Berlin</span><meta itemprop="addressCountry" content="DE"></span>
-						<a itemprop="telephone" href="tel:+4930901820">+49 30 901820</a>
-						<meta itemprop="openingHours" content="Mo-Fr 08:30-16:30">
-						<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
-							<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
-							<meta itemprop="opens" content="08:30"><meta itemprop="closes" content="16:30">
-						</span>
-						<small>Mon–Fri 8:30–16:30</small>
-					</address>
+						<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+							<meta itemprop="latitude" content="52.5296">
+							<meta itemprop="longitude" content="13.4062">
+						</div>
+						<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+							<span><span itemprop="streetAddress">Torstraße 140</span></span>
+							<span><span itemprop="addressLocality">Berlin</span></span>
+							<meta itemprop="addressCountry" content="DE">
+						</address>
+						<p data-part="meta"><a itemprop="telephone" href="tel:+4930901820">+49 30 901820</a> <meta itemprop="email" content="berlin@northwind.example"><a href="mailto:berlin@northwind.example">berlin@northwind.example</a></p>
+						<dl data-part="hours">
+							<dt>Mon–Thu</dt>
+							<dd>
+								<meta itemprop="openingHours" content="Mo-Th 08:30-17:00">
+								<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+									<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday">
+									<meta itemprop="opens" content="08:30"><meta itemprop="closes" content="17:00">
+								</span>
+								8:30–17:00
+							</dd>
+							<dt>Fri</dt>
+							<dd>
+								<meta itemprop="openingHours" content="Fr 08:30-15:00">
+								<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+									<meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+									<meta itemprop="opens" content="08:30"><meta itemprop="closes" content="15:00">
+								</span>
+								8:30–15:00
+							</dd>
+						</dl>
+					</div>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -1093,7 +1170,7 @@
 					<small data-part="eyebrow" itemprop="genre">Documentary</small>
 					<h3 data-part="headline" itemprop="name">The River, Slowly</h3>
 					<p data-part="summary" itemprop="description">A quiet study of a lowland river through one summer — shot at water level.</p>
-					<p data-part="meta">3:24</p>
+					<p data-part="meta"><ui-chip theme="pale accent">3:24</ui-chip></p>
 					<p data-part="meta" itemprop="creator" itemscope itemtype="https://schema.org/Person">By <span itemprop="name">Nørre Films</span></p>
 					<div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden>
 						<meta itemprop="interactionType" content="https://schema.org/WatchAction">
