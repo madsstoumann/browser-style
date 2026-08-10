@@ -303,7 +303,8 @@ content and belong in the card's `media[]` items. Bare booleans like `clip`, `au
 | `poster` | ui-card | `ovr(bs)` · 3:4 · scrim | location |
 | `carousel` | ui-card | `nav(mrk)` | gallery |
 | `media` | ui-media | bare frame · 21:9 · `rds(lg)` | media-block |
-| `prose` | ui-content | bare text column | prose-block |
+| `prose` | ui-content | bare text column · `text: body` | prose-block |
+| `prose-article` | ui-content | full-article column · `scl(lg)` · `text: body` · `byline: lede` · larger avatar | the `articles/` full views |
 | `flip` | ui-reveal | flip · `ovr(bs) rds(lg-sq)` · `scroll` | software |
 | `hero-reveal` | ui-reveal | expand → scale at lg · 21:9 · dark panel via `styles` | — (from the ui/reveal hero demo) |
 
@@ -444,21 +445,31 @@ emission in [`content/card/dist/`](../../../content/card/dist)):
 
 ## Structured `data-part` vocabulary
 
-Eight parts added for the typed cards, all styled in [`content.css`](../content.css):
+Eleven parts added for the typed cards, all styled in [`content.css`](../content.css):
 
 | part | Element | Used by |
 |------|---------|---------|
 | `price` | `<p>` + `<data>`/`<del>`/`<small>` | product, course, booking, membership, software, job, book |
 | `rating` | `<div>` + decorative `<input class="ui-rating">` + `[data-sr]` label + visible count | product, review, software, business, movie, book |
-| `list` | `<ul>` check / `<ol>` ordered | recipe, job, course, booking, location, membership, howto, qa, dataset |
-| `address` | `<address>` | business, location, event, contact, organization |
+| `list` | `<ul>` check / `<ol>` ordered; `data-variant="crossed"` = muted ✗ rows (excluded items). Marker themes via `--ui-content-list-marker` (any `list-style-type` string, e.g. `"→ "`; `none` for block-content rows) + `--ui-content-list-marker-ink` (`::marker` color) — string markers ride `list-style-type` because `::marker` `content` never shipped in Safari | recipe, job, course, booking, location, membership, howto, qa, dataset |
+| `links` | `<ul>` of plain related-link rows (default bullet, hairline dividers) — the envelope `links[]` field; deliberately not buttons, no itemprop. Marker via `--ui-content-links-marker` (e.g. `'"→ "'`), ink via `--ui-content-links-mark` | any type |
+| `address` | `<address>` of stacked lines: street · postal + locality · country (a 2-letter country code stays machine-only) | business, location, event, contact, organization |
+| `hours` | two-column `<dl>` — `<dt>` day range, `<dd>` time; one row per opening pattern. Days/times derive from the machine string (`Mo-We 09:00-17:00` → "Mon–Wed 9:00–17:00", `Th 09:00-16:00` → "Thu"), overridable per entry with `days`/`time`. Every row emits a structured `OpeningHoursSpecification`; the flat `openingHours` string only where the type owns it — it is a `LocalBusiness`/`CivicStructure` property, so `location` (plain `Place`) passes `flat: false` | business, location, organization offices |
+| `office` | `<div>` wrapping one `department` → `LocalBusiness`: name, address, phone, own `hours` table | organization |
 | `stat` | `<p>` + `<data>` + unit + trend | statistic |
 | `timeline` | `<ol>` of `<time>` + text | timeline |
-| `quote` | `<ui-quote>` wrapping `<blockquote>` + `<cite>` | quote, review, social, claim |
+| `quote` | `<ui-quote>` wrapping `<blockquote>` + `<cite>` | quote, review, social, claim, qa |
 | `options` | `<ul>` of `<label>` + `<progress>` | poll, comparison |
 
 Everything else reuses existing parts: `meta` (salaries, hours, dates), `tags`
 (skills, hashtags), `byline` (people), `footer` (totals, recommendations).
+
+Ordering conventions: offer prices display via `fmtPrice()` (Intl currency —
+`$279`, `€34`; machine values stay raw in `value=`/`content=`); `discountText`
+renders as a green `<ui-chip>`; `BYLINE_EARLY` types (book) place the author
+byline right after the summary instead of in the tail; qa sorts the accepted
+answer first, claim leads with the verdict chip, product/movie lead with the
+rating.
 
 Two parts are already **implemented** in content.css: the gradient-headline `b`
 rule, and `cover` — an `<a data-part="cover">` inside the headline whose
@@ -473,9 +484,9 @@ peers** of `@browser.style/card` — pages link only the sheets their types need
 
 | schemaType(s) | Sub-component | Emitted markup |
 |---|---|---|
-| quote, review, social, claim | [`ui/quote`](../../quote/) | `<ui-quote data-part="quote" variant?>` wrapping `<blockquote itemprop>` — variant from `parts.quote` (quote defaults to `bigquote`) |
+| quote, review, social, claim, qa | [`ui/quote`](../../quote/) | `<ui-quote data-part="quote" variant?>` wrapping `<blockquote itemprop>` — variant from `parts.quote` (quote defaults to `bigquote`) |
 | faq, recipe, job, howto | [`ui/accordion`](../../accordion/) | `<ui-accordion group variant?><cq-box><details>…` — the `cq-box` is hand-authored by the renderer so the CSS-only form styles without the accordion JS; variant from `parts.accordion` |
-| any card with `authors[]`, review | [`ui/avatar`](../../avatar/) | `<ui-avatar><img></ui-avatar>` in byline rows, `<abbr>` initials fallback when no image; the card sets scale via `--ui-avatar-size` |
+| any card with `authors[]`, review | [`ui/avatar`](../../avatar/) | `<ui-avatar><img></ui-avatar>` in byline rows, `<abbr>` initials fallback when no image. The card sets **no** avatar size — the package's own `--ui-avatar-size` (4em, `em`-relative so it tracks the byline font-size) governs; a preset overrides it per look via `styles` (see `prose-article`) |
 | poll, comparison | [`ui/progress`](../../progress/) | bare `<progress>` — the package styles the native element, no markup contract |
 | faq/recipe/job summaries, reveal toggles | [`ui/icon`](../../icon/) | `<ui-icon type="plus-minus">` etc. |
 
@@ -535,18 +546,26 @@ rest ([`article.render.html`](../demo/article.render.html) is the working demo):
 
 - **Teaser (grid).** The card's preset defaults to `text: "summary"` — the short
   description shows, the `body` never renders.
-- **Full view.** The *same UCF* re-renders through the two bare presets:
-  `media` (hero frame) + `prose` (`text: "body"` — the body renders **instead
-  of** the summary, wrapped in `itemprop="articleBody"`; the summary survives as
-  a hidden `description` meta). Zero article-specific renderer code.
+- **Full view.** The *same UCF* re-renders through two bare presets: `media`
+  (hero frame) + **`prose-article`** — the editorial order. `text: "body"` keeps
+  the *teaser* summary out of the article (it is a grid-card affordance; it
+  survives as a hidden `description` meta) and renders the body wrapped in
+  `itemprop="articleBody"`; `byline: "lede"` puts the byline above the body
+  carrying the dateline instead of trailing the article; `scl(lg)` + a larger
+  avatar (`styles`) give reading scale. Result: hero → kicker → headline →
+  byline → body → engagement. Zero article-specific renderer code.
+  (`prose` — `text: "body"`, tail byline — remains the plain text-column preset.)
+- **`byline` is a preset field**, not content: `tail` (default, the teaser shape)
+  or `lede`. `contentColumn()` reads it; the `book` type opts in by type via
+  `BYLINE_EARLY`. When `lede` wins, the tail renders neither byline nor
+  dateline — they move together.
 - **Morph — cross-document, both directions.** Every article has its *own page*
   under [`articles/`](../demo/articles/). Both documents opt in with
   `@view-transition { navigation: auto; }` and carry matching per-article
   `view-transition-name`s, nested: `card-{id}` on the grid `<ui-card>` *and* on
   the article page's `<article>` container, `hero-{id}` on the media `<img>` in
   both — the whole card morphs into the page across the navigation while the
-  image morphs within it, and morphs back on the “← All articles” link or the
-  browser Back button. The article surface gets card chrome
+  image morphs within it, and morphs back on the browser Back button. The article surface gets card chrome
   (`--ui-card-bg`/`--ui-card-radius` + padding) so it reads as the card
   growing. Non-clicked cards have unique names and simply fade.
 - **Names via `data-view` + CSS `attr()` — built into ui-card.css, no inline
@@ -578,10 +597,35 @@ rest ([`article.render.html`](../demo/article.render.html) is the working demo):
   > lets one attribute yield two names (or if media-only morph is acceptable).
 
   Group timing is tokenized: `--ui-card-vt-duration` (0.4s) and
-  `--ui-card-vt-easing`, gated behind `prefers-reduced-motion`. Advanced
-  `attr()` is Chromium 133+; where unsupported the name resolves to `none` and
-  the navigation degrades to a plain crossfade/instant swap. Markup stays
+  `--ui-card-vt-easing`, gated behind `prefers-reduced-motion`. Markup stays
   strict-CSP clean — no `style=` attributes anywhere.
+
+  **Browser matrix — and the one thing that must be on the page.** Typed
+  `attr()` is Chromium 133+. Safari 18.2+ *does* support cross-document
+  transitions but not typed `attr()`, so the declaration is dropped and the name
+  resolves to nothing: the navigation still transitions, but as a plain
+  cross-fade with no morph. Every page in this flow therefore loads
+  [`ui/base/polyfills/attr-fallback.js`](../../base/polyfills/attr-fallback.js),
+  whose `[data-view]` entry restores the names there — **a page that opts into
+  the morph but omits that script is the "view transitions don't work" bug.**
+  Firefox has no cross-document transitions and navigates instantly.
+
+  **The polyfill must be render-blocking, in `<head>`.** The browser snapshots the
+  *incoming* page at first paint; a deferred module script runs after that, so the
+  morph targets are unnamed at snapshot time and the transition degrades to a
+  cross-fade. The symptom is an asymmetry that looks like a browser bug: forward
+  navigation doesn't morph, **Back does** — the page you return to was already
+  patched (bfcache). Hence
+  `<script type="module" src="…/attr-fallback.js" blocking="render">` next to the
+  `rel="expect"` link on every page in this flow.
+  `prefers-reduced-motion: reduce` disables them by design, and the pages must be
+  **served over http** — from `file://` there is no transition at all (and the
+  root-absolute base CSS 404s, which is the visible tell).
+
+  Pages that carry the morph today: `demo/article.render.html` (the grid),
+  `demo/articles/{article,news}.html` (the full views), and the Article + News
+  sections of `demo/schema.html`, which share the same `card-{id}`/`hero-{id}`
+  names and cover links so the reference page morphs into the same articles.
 - **Static markup + render-blocking — this is what makes the morph reliable.**
   [`articles/build.js`](../demo/articles/build.js) (`node ui/card/articles/build.js`)
   pre-renders the grid page *and* every article page through `render.js` — the
@@ -624,10 +668,10 @@ rest ([`article.render.html`](../demo/article.render.html) is the working demo):
   /* tags/actions links sit above the cover surface (z-index: 2) */
   ```
 
-  The article page carries a plain “← All articles” backlink to
-  `article.render.html`; browser Back morphs in reverse. Keyboard,
-  middle-click and prefetching all behave — the whole demo cluster contains
-  **zero runtime JavaScript**.
+  Return is the browser Back button, which morphs in reverse (the article pages
+  carry no backlink — the reference pages they morph from are several, so there
+  is no single “up” target). Keyboard, middle-click and prefetching all behave;
+  the only script in the cluster is the `attr()` fallback for Safari.
 - **Furniture rides along.** Chips/stickers come from content, not the preset —
   the news card's "Breaking" chip appears in the full view automatically.
 

@@ -11,6 +11,28 @@ Load it on any page that uses a component reading author values from attributes 
 `stagger-step=` (+ their `data-` forms). It is a **no-op** where typed `attr()`
 is supported, so it is safe to load unconditionally.
 
+It applies **immediately** on execution (never on `DOMContentLoaded`) and observes
+`document.documentElement`, so it can run from `<head>` before `<body>` exists and
+name nodes as the parser adds them.
+
+## `[data-view]` needs it BEFORE first paint
+
+A page taking part in a **cross-document view transition** must load it
+render-blocking, in `<head>`:
+
+```html
+<script type="module" src="/ui/base/polyfills/attr-fallback.js" blocking="render"></script>
+```
+
+The browser snapshots the **incoming** page at first paint. A deferred module
+script (`<head>` without `blocking`, or end of `<body>`) runs *after* that, so the
+morph targets are still unnamed when the snapshot is taken and the transition
+silently degrades to a cross-fade. The tell is an **asymmetry**: forward
+navigation doesn't morph but the Back button does — the page you return to was
+already patched. Chromium is unaffected (it names them from CSS), so this only
+shows up in Safari. Pattern: `ui/card/demo/schema.html`, `demo/article.render.html`,
+`demo/articles/*.html`.
+
 ---
 
 ## There are TWO of these, and a page may need both

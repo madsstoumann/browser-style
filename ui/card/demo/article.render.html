@@ -17,6 +17,11 @@
 	     grid is parsed, so every card/hero morph target exists when the browser
 	     captures this page. Without it the reverse morph races HTML parsing. -->
 	<link rel="expect" href="#cards" blocking="render">
+	<!-- Names the morph targets where typed attr() is unsupported (Safari). MUST be
+	     render-blocking in <head>: the incoming page is snapshotted at first paint,
+	     so a deferred script names the targets too late and the forward morph
+	     degrades to a cross-fade. Docs: ui/base/polyfills/readme.md -->
+	<script type="module" src="/ui/base/polyfills/attr-fallback.js" blocking="render"></script>
 	<style>
 		/* cross-document view transitions (@view-transition, the [data-view]
 		   attr() naming rule and group timing) come from ui-card.css */
@@ -38,7 +43,9 @@
 </head>
 <body>
 	<h1>UI: Card — Article View Transition</h1>
-	<p class="note">Each teaser card links to its <em>own page</em> under <a href="articles/"><code>articles/</code></a>. Both documents opt in with <code>@view-transition { navigation: auto }</code> and carry the same per-article <code>view-transition-name</code>s — set via <code>data-view</code> attributes and the CSS <code>attr()</code> rule, no inline styles — so the whole card morphs into the full article across the navigation, and morphs back via the “← All articles” link or the browser Back button. Every page here is pre-rendered by <code>articles/build.js</code> (the SSR engine): static markup on both sides is what makes the capture reliable in both directions. The full view renders the <code>body</code> as <code>itemprop="articleBody"</code> instead of the teaser summary, from the <em>same UCF instance</em>.</p>
+	<p class="note">Each teaser card links to its <em>own page</em>: <a href="articles/article.html"><code>articles/article.html</code></a> and <a href="articles/news.html"><code>articles/news.html</code></a>. Both documents opt in with <code>@view-transition { navigation: auto }</code> and carry the same per-article <code>view-transition-name</code>s — set via <code>data-view</code> attributes and the CSS <code>attr()</code> rule, no inline styles — so the whole card morphs into the full article across the navigation, and morphs back via the browser Back button. Every page here is pre-rendered by <code>articles/build.js</code> (the SSR engine): static markup on both sides is what makes the capture reliable in both directions. The full view renders the <code>body</code> as <code>itemprop="articleBody"</code> instead of the teaser summary, from the <em>same UCF instance</em>. The full view uses the <code>prose-article</code> preset: the summary stays visible as the standfirst and the byline moves up under it (<code>byline: lede</code>), at reading scale.</p>
+
+	<p class="note"><strong>Browser support.</strong> Chromium 133+ morphs natively. Safari 18.2+ supports cross-document transitions but not typed <code>attr()</code>, so the names come from <code>ui/base/polyfills/attr-fallback.js</code> (loaded at the end of this page) — without it the navigation still transitions, just as a plain cross-fade. Firefox has no cross-document transitions and navigates instantly. <code>prefers-reduced-motion: reduce</code> disables navigation transitions by design, and the pages must be <strong>served over http</strong> — opened from <code>file://</code> there is no transition (and the root-absolute base CSS 404s).</p>
 
 	<main>
 		<div class="grid grid-2" id="cards">
@@ -47,7 +54,7 @@
 			<ui-media media="asr(16/9)"><img data-view="hero-article-1" src="/assets/images/quantum.png" alt="Stylised quantum processor" loading="lazy" itemprop="image"></ui-media>
 			<ui-content><small data-part="eyebrow" itemprop="articleSection">Science</small><h3 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/article.html">Quantum computing reaches a <ui-gradient-text>practical milestone</ui-gradient-text></a></h3><p data-part="summary" itemprop="description">Researchers demonstrate error-corrected logical qubits running a chemistry simulation faster than any classical supercomputer.</p><meta itemprop="datePublished" content="2026-06-20T14:30:00Z"><meta itemprop="dateModified" content="2026-06-21T09:00:00Z"><address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
 		<ui-avatar><img src="/assets/images/janesmith.png" alt=""></ui-avatar>
-		<span itemprop="name">Jane Smith</span><span itemprop="jobTitle">Science Editor</span><small data-part="dateline"><time datetime="2026-06-20T14:30:00Z">Jun 20, 2026</time> · 5 min read</small>
+		<span data-part="byline-who"><span itemprop="name">Jane Smith</span><span itemprop="jobTitle">Science Editor</span></span><small data-part="dateline"><time datetime="2026-06-20T14:30:00Z">Jun 20, 2026</time><span>5 min read</span></small>
 	</address><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/LikeAction"><meta itemprop="userInteractionCount" content="892"></div><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/ShareAction"><meta itemprop="userInteractionCount" content="245"></div><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/CommentAction"><meta itemprop="userInteractionCount" content="45"></div><div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden><meta itemprop="interactionType" content="https://schema.org/WatchAction"><meta itemprop="userInteractionCount" content="15420"></div><footer data-part="footer">15,420 views · 892 likes · 245 shares · 45 comments</footer></ui-content>
 		</cq-box>
 	</ui-card>
@@ -55,8 +62,8 @@
 		<cq-box>
 			<ui-media media="asr(16/9) chip(ts) chip(red)"><img data-view="hero-news-1" src="/assets/images/government.png" alt="Parliament building at dusk" loading="lazy" itemprop="image"><ui-chip>Breaking</ui-chip></ui-media>
 			<ui-content><small data-part="eyebrow" itemprop="articleSection">Politics</small><h3 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/news.html">Coalition agrees on sweeping climate package</a></h3><p data-part="summary" itemprop="description">The agreement includes a carbon border tariff and a national retrofit programme, ending months of negotiation.</p><meta itemprop="datePublished" content="2026-07-01T06:15:00Z"><meta itemprop="dateModified" content="2026-07-01T08:40:00Z"><address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
-		<ui-avatar><abbr aria-hidden="true">SW</abbr></ui-avatar>
-		<span itemprop="name">Thomas Berg</span><span itemprop="jobTitle">Newsroom</span><small data-part="dateline"><time datetime="2026-07-01T06:15:00Z">Jul 1, 2026</time> · 3 min read</small>
+		<ui-avatar><img src="https://assets.stoumann.dk/img/avatar2.webp" alt=""></ui-avatar>
+		<span data-part="byline-who"><span itemprop="name">Thomas Berg</span><span itemprop="jobTitle">Newsroom</span></span><small data-part="dateline"><time datetime="2026-07-01T06:15:00Z">Jul 1, 2026</time><span>3 min read</span></small>
 	</address></ui-content>
 		</cq-box>
 	</ui-card>

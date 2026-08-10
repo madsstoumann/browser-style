@@ -67,7 +67,9 @@
         "max": 5
       },
       "sku": "WH-1000XM5",
-      "validUntil": "2026-08-01"
-    }
+      "validUntil": "2026-08-01",
+      "validUntilDisplay": "Aug 1, 2026"
+    },
+    "tags": ["Wireless", "Noise Cancelling"]
   }
 }

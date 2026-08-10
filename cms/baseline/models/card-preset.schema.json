@@ -4,7 +4,7 @@
   "title": "🎨 Card Preset",
   "description": "A named look & feel for a card: the combined attributes placed on the <ui-card> or <ui-reveal> element itself (variant, media, content token strings — plus reveal-specific attributes). Cards reference a preset instead of owning presentation, so restyling any card is a single reference swap. Presets are design-system data: invariant, not localized.",
   "metadata": {
-    "version": "1.0.0",
+    "version": "1.1.0",
     "lastModified": "2026-07-05",
     "displayField": "internalName"
   },
@@ -26,7 +26,7 @@
         "name": "Attributes",
         "description": "Token strings written verbatim to the element's attributes",
         "collapse": false,
-        "fields": ["variant", "theme", "media", "media-open", "content", "text", "parts", "styles"]
+        "fields": ["variant", "theme", "media", "media-open", "content", "text", "byline", "parts", "styles"]
       },
       {
         "area": "main",
@@ -120,6 +120,17 @@
         { "value": "summary", "label": "Summary (teaser)" },
         { "value": "body", "label": "Body (full — instead of summary)" },
         { "value": "both", "label": "Summary + body" }
+      ]
+    },
+    "byline": {
+      "type": "select",
+      "title": "Byline placement",
+      "description": "Where the author byline sits in the text column: tail (default — after the summary/body and details, the teaser shape) or lede (right after the summary, carrying the dateline — the full-article shape; the tail then renders neither byline nor dateline). The book type places its byline early regardless.",
+      "localized": false,
+      "default": "tail",
+      "options": [
+        { "value": "tail", "label": "Tail (teaser)" },
+        { "value": "lede", "label": "Lede (full article — under the standfirst)" }
       ]
     },
     "parts": {

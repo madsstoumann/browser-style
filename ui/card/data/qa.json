@@ -30,13 +30,13 @@
       "upvotes": 312,
       "answers": [
         {
-          "text": "Give the parent `display: grid; place-items: center` — two lines, handles both axes, works everywhere.",
+          "text": "Give the parent display: grid with place-items: center — two lines, handles both axes, works everywhere.",
           "author": "Lena Fischer",
           "upvotes": 481,
           "accepted": true
         },
         {
-          "text": "If it's a single item, `margin: auto` inside a flex or grid parent also centers on both axes.",
+          "text": "If it's a single item, margin: auto inside a flex or grid parent also centers on both axes.",
           "author": "Tomás Rivera",
           "upvotes": 217
         }

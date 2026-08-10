@@ -23,6 +23,14 @@
 	<link rel="stylesheet" href="../../timeline/ui-timeline.css">
 	<link rel="stylesheet" href="../../gradient-text/ui-gradient-text.css">
 	<link rel="stylesheet" href="../ui-card.css">
+	<!-- Block first paint (and the incoming snapshot on Back) until the morphing
+	     article card is parsed. Docs: docs/card.md § Article pattern -->
+	<link rel="expect" href="#schema-article" blocking="render">
+	<!-- Names the morph targets where typed attr() is unsupported (Safari). MUST be
+	     render-blocking in <head>: the incoming page is snapshotted at first paint,
+	     so a deferred script names the targets too late and the forward morph
+	     degrades to a cross-fade. Docs: ui/base/polyfills/readme.md -->
+	<script type="module" src="/ui/base/polyfills/attr-fallback.js" blocking="render"></script>
 	<style>
 		.stack { display: grid; gap: var(--spacing-lg); margin-block-end: var(--spacing-2xl); }
 		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
@@ -40,19 +48,23 @@
 	</header>
 
 	<section>
-	<h2>Proposed <code>data-part</code> vocabulary</h2>
-	<p class="note">Rebuilding all 25 types needs a few parts <code>&lt;ui-content&gt;</code> does not style yet. This page uses them as a <strong>spec</strong> — they render with default typography until <code>content.css</code> catches up. Everything else reuses existing parts (<code>meta</code> for salaries/hours/dates, <code>tags</code> for skills/hashtags, <code>byline</code> for people, <code>footer</code> for totals).</p>
+	<h2>Structured <code>data-part</code> vocabulary</h2>
+	<p class="note">The eleven parts the typed cards add on top of the envelope. All are <strong>styled</strong> in <a href="../content.css"><code>content.css</code></a> — this page is the reference markup <code>render.js</code> follows, not a wish list. Envelope parts carry the rest: <code>eyebrow</code>, <code>headline</code>, <code>subheadline</code>, <code>summary</code>, <code>meta</code> (salaries, specs, dates), <code>byline</code> + <code>byline-who</code> + <code>dateline</code> (people), <code>tags</code>, <code>actions</code> and <code>footer</code> (totals, recommendations). <code>caption</code> belongs to the media frame — see <a href="media.html">media.html</a>.</p>
 	<table>
 		<thead><tr><th>data-part</th><th>Element</th><th>Purpose</th><th>Used by</th></tr></thead>
 		<tbody>
-			<tr><td><code>price</code></td><td><code>&lt;p&gt;</code> + <code>&lt;data&gt;</code>/<code>&lt;del&gt;</code>/<code>&lt;small&gt;</code></td><td>Price row (Offer microdata)</td><td>product, course, booking, membership, software</td></tr>
-			<tr><td><code>rating</code></td><td><code>&lt;div&gt;</code> + masked <code>&lt;input&gt;</code> + count</td><td>Star rating (AggregateRating / Rating)</td><td>product, review, software</td></tr>
-			<tr><td><code>list</code></td><td><code>&lt;ul&gt;</code> check / <code>&lt;ol&gt;</code> ordered</td><td>Features, qualifications, ingredients, steps</td><td>recipe, job, course, booking, location, membership</td></tr>
-			<tr><td><code>address</code></td><td><code>&lt;address&gt;</code></td><td>Postal address (PostalAddress scope)</td><td>business, location, event, contact</td></tr>
+			<tr><td><code>price</code></td><td><code>&lt;p&gt;</code> + <code>&lt;data&gt;</code>/<code>&lt;del&gt;</code>/<code>&lt;ui-chip&gt;</code></td><td>Price row (Offer / MonetaryAmount microdata), currency-formatted</td><td>product, job, course, booking, membership, software, book</td></tr>
+			<tr><td><code>rating</code></td><td><code>&lt;div&gt;</code> + readonly <code>.ui-rating</code> + <code>[data-sr]</code> label + count</td><td>Star rating (AggregateRating / Rating)</td><td>product, review, business, movie, book</td></tr>
+			<tr><td><code>list</code></td><td><code>&lt;ul&gt;</code> / <code>&lt;ol&gt;</code>; marker via <code>--ui-content-list-marker</code>, <code>data-variant="crossed"</code> for excluded items</td><td>Ingredients, qualifications, features, amenities, answers</td><td>recipe, job, course, booking, location, membership, how-to, Q&amp;A, dataset</td></tr>
+			<tr><td><code>links</code></td><td><code>&lt;ul&gt;</code> of plain link rows</td><td>Related links — the envelope <code>links[]</code>, deliberately not buttons</td><td>any type</td></tr>
+			<tr><td><code>address</code></td><td><code>&lt;address&gt;</code> of stacked lines</td><td>Postal address (PostalAddress scope); a 2-letter country code stays machine-only</td><td>business, location, organization</td></tr>
+			<tr><td><code>hours</code></td><td>two-column <code>&lt;dl&gt;</code></td><td>Opening hours, one row per pattern (<code>openingHoursSpecification</code>; the flat string only where the type owns it)</td><td>business, location, organization offices</td></tr>
+			<tr><td><code>office</code></td><td><code>&lt;div&gt;</code> wrapping name + address + contacts + hours</td><td>One local branch (<code>department</code> → LocalBusiness)</td><td>organization</td></tr>
 			<tr><td><code>stat</code></td><td><code>&lt;p&gt;</code> + <code>&lt;data&gt;</code> value + unit + trend</td><td>Big-number display</td><td>statistic</td></tr>
-			<tr><td><code>timeline</code></td><td><code>&lt;ol&gt;</code> of <code>&lt;time&gt;</code> + text</td><td>Vertical milestone list</td><td>timeline</td></tr>
-			<tr><td><code>quote</code></td><td><code>&lt;ui-quote&gt;</code> + <code>&lt;cite&gt;</code></td><td>Pull-quote</td><td>quote, review, social</td></tr>
+			<tr><td><code>timeline</code></td><td><code>&lt;ol&gt;</code> of <code>&lt;time&gt;</code> + text</td><td>Milestone list (<code>subEvent</code> scopes)</td><td>timeline</td></tr>
+			<tr><td><code>quote</code></td><td><code>&lt;ui-quote&gt;</code> + <code>&lt;blockquote&gt;</code> (+ <code>&lt;cite&gt;</code>)</td><td>Third-party voice: pull-quote, review body, post, answer, reviewed claim</td><td>quote, review, social, Q&amp;A, fact check</td></tr>
 			<tr><td><code>options</code></td><td><code>&lt;ul&gt;</code> of <code>&lt;label&gt;</code> + <code>&lt;progress&gt;</code></td><td>Poll answers / comparison rows with bars</td><td>poll, comparison</td></tr>
+			<tr><td><code>cover</code></td><td><code>&lt;a&gt;</code> inside the headline, <code>::after</code> covering the card</td><td>Clickable card — one link, no nested anchors; tag/action links stay above it</td><td>article, news (→ the <a href="articles/article.html">full-article pages</a>)</td></tr>
 		</tbody>
 	</table>
 	</section>
@@ -62,7 +74,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Content — <code>CreativeWork</code> (fallback)</h2>
-	<p class="note">The plain envelope, no <code>details</code>: eyebrow, headline, summary, tags, actions. Unknown <code>schemaType</code> values fall back to this.</p>
+	<p class="note">The plain envelope, no <code>details</code>: eyebrow, headline, summary, tags, actions, plus <code>links</code> — plain related-link rows (part <code>links</code>), deliberately not buttons. Unknown <code>schemaType</code> values fall back to this.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/CreativeWork">
 			<cq-box>
@@ -73,6 +85,12 @@
 					<p data-part="summary" itemprop="description">Anything without a dedicated schema type renders as CreativeWork — headline, summary, tags and actions straight from the envelope.</p>
 					<span data-part="tags"><ui-chip itemprop="keywords">generic</ui-chip><ui-chip itemprop="keywords">fallback</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#" itemprop="url">Read more</a></nav>
+					<ul data-part="links">
+						<li><a href="#">Design principles</a></li>
+						<li><a href="#">Component gallery</a></li>
+						<li><a href="#">Release notes</a></li>
+						<li><a href="#">Support</a></li>
+					</ul>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -82,18 +100,18 @@
 	<!-- ============================================================
 	     article — Article
 	     ============================================================ -->
-	<section>
+	<section id="schema-article">
 	<h2>Article — <code>Article</code></h2>
-	<p class="note">Envelope only: byline (author → <code>Person</code>), published date, reading time, engagement (<code>InteractionCounter</code>).</p>
+	<p class="note">Envelope only: byline (author → <code>Person</code>), published date, reading time, engagement (<code>InteractionCounter</code>). The headline is a stretched <code>cover</code> link into the full article — the <code>data-view</code> names morph the card into <a href="articles/article.html">that page</a> across the navigation (see <a href="article.render.html">article.render.html</a>).</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Article">
+		<ui-card data-view="card-article-1" variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Article">
 			<cq-box>
-				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" itemprop="image"></ui-media>
+				<ui-media><img data-view="hero-article-1" src="/assets/images/quantum.png" alt="Stylised quantum processor" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="articleSection" content="Science">
 					<meta itemprop="dateModified" content="2026-06-21T09:00:00Z">
 					<small data-part="eyebrow">Science</small>
-					<h3 data-part="headline" itemprop="headline">Quantum computing reaches a <ui-gradient-text>practical milestone</ui-gradient-text></h3>
+					<h3 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/article.html">Quantum computing reaches a <ui-gradient-text>practical milestone</ui-gradient-text></a></h3>
 					<p data-part="summary" itemprop="description">Researchers demonstrate error-corrected logical qubits running a chemistry simulation faster than any classical supercomputer.</p>
 					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
 						<ui-avatar><img src="/assets/images/janesmith.png" alt=""></ui-avatar>
@@ -116,12 +134,12 @@
 	     ============================================================ -->
 	<section>
 	<h2>News — <code>NewsArticle</code></h2>
-	<p class="note">As Article, plus a “Breaking” <code>&lt;ui-chip&gt;</code> on the media and <code>dateModified</code>.</p>
+	<p class="note">As Article, plus a “Breaking” <code>&lt;ui-chip&gt;</code> on the media and <code>dateModified</code>. Same <code>cover</code> link + <code>data-view</code> morph into <a href="articles/news.html">its full page</a>.</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(16/9) chip(ts) chip(red)" itemscope itemtype="https://schema.org/NewsArticle">
+		<ui-card data-view="card-news-1" variant="col" media="asr(16/9) chip(ts) chip(red)" itemscope itemtype="https://schema.org/NewsArticle">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/government.png" alt="Parliament building at dusk" itemprop="image">
+					<img data-view="hero-news-1" src="/assets/images/government.png" alt="Parliament building at dusk" itemprop="image">
 					<ui-chip>Breaking</ui-chip>
 				</ui-media>
 				<ui-content>
@@ -129,10 +147,10 @@
 					<meta itemprop="datePublished" content="2026-07-01T06:15:00Z">
 					<meta itemprop="dateModified" content="2026-07-01T08:40:00Z">
 					<small data-part="eyebrow">Politics</small>
-					<h3 data-part="headline" itemprop="headline">Coalition agrees on sweeping climate package</h3>
+					<h3 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/news.html">Coalition agrees on sweeping climate package</a></h3>
 					<p data-part="summary" itemprop="description">The agreement includes a carbon border tariff and a national retrofit programme, ending months of negotiation.</p>
 					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
-						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar4.webp" alt=""></ui-avatar>
+						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar2.webp" alt=""></ui-avatar>
 						<span data-part="byline-who"><span itemprop="name">Thomas Berg</span><span itemprop="jobTitle">Newsroom</span></span><small data-part="dateline"><time datetime="2026-07-01T06:15:00Z">Jul 1, 2026</time><span>3 min read</span></small>
 					</address>
 				</ui-content>
@@ -155,7 +173,7 @@
 					<small data-part="eyebrow">Quote of the day</small>
 					<ui-quote data-part="quote" variant="bigquote"><blockquote itemprop="text"><q>Simplicity is the ultimate sophistication — every element you remove makes the remaining ones stronger.</q><cite>Maria Lindgren</cite></blockquote></ui-quote>
 					<address data-part="byline" itemprop="creator" itemscope itemtype="https://schema.org/Person">
-						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar1.webp" alt=""></ui-avatar>
+						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar4.webp" alt=""></ui-avatar>
 						<span data-part="byline-who"><cite itemprop="name">Maria Lindgren</cite><span itemprop="jobTitle">Design Director</span></span>
 					</address>
 				</ui-content>
@@ -184,13 +202,6 @@
 					<small data-part="eyebrow">Electronics</small>
 					<h3 data-part="headline" itemprop="name">AuraSound Pro Wireless Headphones</h3>
 					<p data-part="summary" itemprop="description">Industry-leading noise cancellation, 30-hour battery and multipoint pairing.</p>
-					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-						<meta itemprop="priceCurrency" content="USD">
-						<meta itemprop="availability" content="https://schema.org/InStock">
-						<meta itemprop="itemCondition" content="https://schema.org/NewCondition">
-						<meta itemprop="priceValidUntil" content="2026-08-01">
-						<data itemprop="price" value="279">USD 279</data> <del>USD 349</del> <small>Save 20%</small>
-					</p>
 					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
 						<meta itemprop="ratingValue" content="4.5">
 						<meta itemprop="ratingCount" content="1247">
@@ -200,7 +211,16 @@
 						<span data-sr>Rated 4.5 out of 5 stars from 1,247 ratings</span>
 						<span aria-hidden="true">4.5 / 5 (1,247 ratings)</span>
 					</div>
+					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+						<meta itemprop="priceCurrency" content="USD">
+						<meta itemprop="availability" content="https://schema.org/InStock">
+						<meta itemprop="itemCondition" content="https://schema.org/NewCondition">
+						<meta itemprop="priceValidUntil" content="2026-08-01">
+						<data itemprop="price" value="279">$279</data> <del>$349</del> <ui-chip theme="pale green">Save 20%</ui-chip>
+					</p>
+					<p data-part="meta"><small>Valid until Aug 1, 2026</small></p>
 					<p data-part="meta"><ui-chip theme="pale green">In stock</ui-chip></p>
+					<span data-part="tags"><ui-chip itemprop="keywords">Wireless</ui-chip><ui-chip itemprop="keywords">Noise Cancelling</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Add to cart</a> <a class="ui-button" href="#">Details</a></nav>
 				</ui-content>
 			</cq-box>
@@ -279,6 +299,7 @@
 							</cq-box></ui-accordion>
 						</details>
 					</cq-box></ui-accordion>
+					<span data-part="tags"><ui-chip itemprop="keywords">Pasta</ui-chip><ui-chip itemprop="keywords">Italian</ui-chip><ui-chip itemprop="keywords">Quick</ui-chip></span>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -375,6 +396,7 @@
 							</div>
 						</details>
 					</cq-box></ui-accordion>
+					<span data-part="tags"><ui-chip>Remote</ui-chip><ui-chip>Full-time</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Apply now</a></nav>
 				</ui-content>
 			</cq-box>
@@ -406,12 +428,13 @@
 					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
 						<meta itemprop="priceCurrency" content="USD">
 						<meta itemprop="availability" content="https://schema.org/InStock">
-						<data itemprop="price" value="89">USD 89</data> <del>USD 129</del>
+						<data itemprop="price" value="89">$89</data> <del>$129</del>
 					</p>
 					<ul data-part="list">
 						<li>No prior experience needed</li>
 						<li>10 minutes a day</li>
 					</ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Mindfulness</ui-chip><ui-chip itemprop="keywords">Wellbeing</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Enroll</a></nav>
 				</ui-content>
 			</cq-box>
@@ -439,7 +462,7 @@
 					<h3 data-part="headline" itemprop="name">Book the Loft meeting room</h3>
 					<p data-part="summary" itemprop="description">A quiet 8-person room above the café — whiteboard wall, 4K display and bottomless filter coffee.</p>
 					<p data-part="meta"><span itemprop="provider" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">Brew &amp; Bean</span></span> · Capacity 8 · Min. 1 hour · Free cancellation up to 24 h</p>
-					<p data-part="price"><data value="45">USD 45</data>/hour</p>
+					<p data-part="price"><data value="45">$45</data>/hour</p>
 					<ul data-part="list">
 						<li>4K display + HDMI/USB-C</li>
 						<li>Whiteboard wall</li>
@@ -723,7 +746,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Announcement — <code>SpecialAnnouncement</code></h2>
-	<p class="note">Dark theme + priority chip pattern via eyebrow; audience → <code>Audience</code>.</p>
+	<p class="note">Dark theme; priority as a hue-mapped <code>&lt;ui-chip&gt;</code> (low=gray · medium=orange · high/critical=red); audience → <code>Audience</code>.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" theme="black dark" itemscope itemtype="https://schema.org/SpecialAnnouncement">
 			<cq-box>
@@ -733,9 +756,10 @@
 					<meta itemprop="datePublished" content="2026-07-01">
 					<meta itemprop="expires" content="2026-07-06">
 					<meta itemprop="spatialCoverage" content="Global">
-					<small data-part="eyebrow">High priority</small>
+					<small data-part="eyebrow">Maintenance</small>
 					<h3 data-part="headline" itemprop="name">Scheduled maintenance — July 5</h3>
 					<p data-part="summary" itemprop="text">The API will be unavailable Saturday July 5, 02:00–04:00 UTC while we migrate the primary database.</p>
+					<p data-part="meta"><ui-chip theme="pale red">High priority</ui-chip></p>
 					<p data-part="meta" itemprop="audience" itemscope itemtype="https://schema.org/Audience">Audience: <span itemprop="audienceType">API customers</span></p>
 					<footer data-part="footer">Action required: re-authenticate integrations after the window.</footer>
 				</ui-content>
@@ -767,9 +791,8 @@
 					<h3 data-part="headline" itemprop="name">Brew &amp; Bean</h3>
 					<p data-part="summary" itemprop="description">Specialty coffee, fresh pastry and the city’s calmest workspace corner.</p>
 					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
-						<span itemprop="streetAddress">Kaffegade 12</span>,
-						<span itemprop="postalCode">1455</span>
-						<span itemprop="addressLocality">Copenhagen</span>
+						<span><span itemprop="streetAddress">Kaffegade 12</span></span>
+						<span><span itemprop="postalCode">1455</span> <span itemprop="addressLocality">Copenhagen</span></span>
 						<meta itemprop="addressCountry" content="DK">
 					</address>
 					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
@@ -780,19 +803,28 @@
 						<span data-sr>Rated 4.7 out of 5 stars from 412 ratings</span>
 						<span aria-hidden="true">4.7 / 5 (412 ratings)</span>
 					</div>
-					<p data-part="meta">
-						<meta itemprop="openingHours" content="Mo-Fr 07:00-18:00">
-						<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
-							<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
-							<meta itemprop="opens" content="07:00"><meta itemprop="closes" content="18:00">
-						</span>
-						<meta itemprop="openingHours" content="Sa-Su 08:00-16:00">
-						<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
-							<meta itemprop="dayOfWeek" content="https://schema.org/Saturday"><meta itemprop="dayOfWeek" content="https://schema.org/Sunday">
-							<meta itemprop="opens" content="08:00"><meta itemprop="closes" content="16:00">
-						</span>
-						Mon–Fri 7–18 · Sat–Sun 8–16 · $$
-					</p>
+					<p data-part="meta">$$</p>
+					<dl data-part="hours">
+						<dt>Mon–Fri</dt>
+						<dd>
+							<meta itemprop="openingHours" content="Mo-Fr 07:00-18:00">
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+								<meta itemprop="opens" content="07:00"><meta itemprop="closes" content="18:00">
+							</span>
+							7:00–18:00
+						</dd>
+						<dt>Sat–Sun</dt>
+						<dd>
+							<meta itemprop="openingHours" content="Sa-Su 08:00-16:00">
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Saturday"><meta itemprop="dayOfWeek" content="https://schema.org/Sunday">
+								<meta itemprop="opens" content="08:00"><meta itemprop="closes" content="16:00">
+							</span>
+							8:00–16:00
+						</dd>
+					</dl>
+					<span data-part="tags"><ui-chip itemprop="keywords">Coffee</ui-chip><ui-chip itemprop="keywords">Bakery</ui-chip></span>
 					<nav data-part="actions">
 						<a class="ui-button" itemprop="telephone" href="tel:+4533221100">+45 33 22 11 00</a>
 						<meta itemprop="email" content="hello@brewandbean.example"><a class="ui-button" href="mailto:hello@brewandbean.example">Email</a>
@@ -873,7 +905,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Location — <code>Place</code></h2>
-	<p class="note">Overlay over a destination shot; address + geo, amenities as <code>list</code>.</p>
+	<p class="note">Overlay over a destination shot; address + geo, amenities as <code>list</code>, hours in the tabular <code>hours</code> part. <strong>Place-only hours:</strong> the flat <code>openingHours</code> string is a <code>LocalBusiness</code>/<code>CivicStructure</code> property, so a plain <code>Place</code> emits <em>only</em> <code>openingHoursSpecification</code> (business and organization offices emit both).</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Place">
 			<cq-box>
@@ -887,9 +919,25 @@
 					<h3 data-part="headline" itemprop="name">Hammershus Point</h3>
 					<p data-part="summary" itemprop="description">Northern Europe’s largest castle ruin, perched on Bornholm’s granite cliffs.</p>
 					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
-						<span itemprop="addressLocality">Allinge</span>, <span itemprop="addressCountry">Denmark</span>
+						<span><span itemprop="addressLocality">Allinge</span></span>
+						<span><span itemprop="addressCountry">Denmark</span></span>
 					</address>
-					<p data-part="meta">Open all year · Free entry · Visitor centre 10–17</p>
+					<dl data-part="hours">
+						<dt>Mon–Sun</dt>
+						<dd>
+							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday"><meta itemprop="dayOfWeek" content="https://schema.org/Saturday"><meta itemprop="dayOfWeek" content="https://schema.org/Sunday">
+								<meta itemprop="opens" content="06:00"><meta itemprop="closes" content="22:00">
+							</span>
+							6:00–22:00
+						</dd>
+					</dl>
+					<ul data-part="list">
+						<li>Free parking</li>
+						<li>Guided tours</li>
+						<li>Coastal viewpoint</li>
+					</ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Bornholm</ui-chip><ui-chip itemprop="keywords">Landmark</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.0603,14.7009" target="_blank" rel="noopener">Open in Maps</a></nav>
 				</ui-content>
 			</cq-box>
@@ -914,12 +962,16 @@
 					<p data-part="summary" itemprop="description">Unlimited workouts, personal coaching and priority support.</p>
 					<p data-part="price" itemprop="priceSpecification" itemscope itemtype="https://schema.org/PriceSpecification">
 						<meta itemprop="priceCurrency" content="USD">
-						<data itemprop="price" value="19">USD 19</data>/mo <small>or USD 190/yr — save 17%</small>
+						<data itemprop="price" value="19">$19</data>/mo <small>or $190/yr — save 17%</small>
 					</p>
 					<ul data-part="list" itemprop="includesObject">
 						<li>Unlimited workout library</li>
 						<li>1:1 coaching sessions</li>
 						<li>Advanced sleep analytics</li>
+					</ul>
+					<ul data-part="list" data-variant="crossed">
+						<li>No personal coaching</li>
+						<li>Max 2 connected devices</li>
 					</ul>
 					<p data-part="meta">14-day free trial · cancel anytime</p>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Start free trial</a></nav>
@@ -986,15 +1038,16 @@
 					<meta itemprop="operatingSystem" content="Switch">
 					<small data-part="eyebrow">Adventure game</small>
 					<h3 data-part="headline" itemprop="name">Pixel Raiders</h3>
-					<p data-part="meta">v<span itemprop="softwareVersion">2.1</span></p>
+					<p data-part="meta"><ui-chip theme="pale accent">v<span itemprop="softwareVersion">2.1</span></ui-chip></p>
 					<p data-part="summary" itemprop="description">Co-op dungeon crawling for up to four raiders — new Sky Fortress season, cross-play everywhere.</p>
 					<p data-part="meta">macOS · Windows · Switch · 2.4 GB</p>
 					<p data-part="meta" itemprop="author" itemscope itemtype="https://schema.org/Organization">Developer: <span itemprop="name">Bitburrow Studio</span><meta itemprop="url" content="https://bitburrow.example"></p>
 					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
 						<meta itemprop="priceCurrency" content="USD">
 						<meta itemprop="availability" content="https://schema.org/InStock">
-						<data itemprop="price" value="29">USD 29</data> <small>one-time purchase</small>
+						<data itemprop="price" value="29">$29</data> <small>one-time purchase</small>
 					</p>
+					<span data-part="tags"><ui-chip itemprop="keywords">Game</ui-chip><ui-chip itemprop="keywords">Co-op</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Play demo</a></nav>
 				</ui-content>
 			</cq-box>
@@ -1007,7 +1060,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Organization — <code>Organization</code></h2>
-	<p class="note">The multi-office shape: HQ address, employees, <code>sameAs</code> — and each local office as <code>department</code> → <code>LocalBusiness</code> with its own address, phone and opening hours (both flat and structured).</p>
+	<p class="note">The multi-office shape: HQ address, employees, <code>sameAs</code> — and each local office as <code>department</code> → <code>LocalBusiness</code> (part <code>office</code>) with its own address, phone and <strong>per-day opening hours</strong> in the tabular <code>hours</code> part (a two-column <code>&lt;dl&gt;</code>). Each row carries both the flat <code>openingHours</code> string and a structured <code>OpeningHoursSpecification</code>, so single days (<code>Th 09:00-16:00</code>) and ranges (<code>Mo-We 09:00-17:00</code>) both work.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Organization">
 			<cq-box>
@@ -1021,34 +1074,93 @@
 					<h3 data-part="headline" itemprop="name">Northwind Group</h3>
 					<p data-part="summary" itemprop="description">Engineering and design consultancy — headquartered in Copenhagen, with local offices across Northern Europe.</p>
 					<p data-part="meta">1,240 employees · Founded 1998</p>
+					<div itemprop="location" itemscope itemtype="https://schema.org/Place" hidden>
+						<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates">
+							<meta itemprop="latitude" content="55.6759">
+							<meta itemprop="longitude" content="12.5926">
+						</div>
+					</div>
 					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
-						<span itemprop="streetAddress">Havnegade 44</span>,
-						<span itemprop="postalCode">1058</span>
-						<span itemprop="addressLocality">Copenhagen</span>
+						<span><span itemprop="streetAddress">Havnegade 44</span></span>
+						<span><span itemprop="postalCode">1058</span> <span itemprop="addressLocality">Copenhagen</span></span>
 						<meta itemprop="addressCountry" content="DK">
 					</address>
-					<address data-part="address" itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">
+					<p data-part="meta"><meta itemprop="email" content="contact@northwind.example"><a href="mailto:contact@northwind.example">contact@northwind.example</a></p>
+					<div data-part="office" itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">
 						<strong itemprop="name">Aarhus office</strong>
-						<span itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"><span itemprop="streetAddress">Åboulevarden 21</span>, <span itemprop="addressLocality">Aarhus</span><meta itemprop="addressCountry" content="DK"></span>
-						<a itemprop="telephone" href="tel:+4586123456">+45 86 12 34 56</a>
-						<meta itemprop="openingHours" content="Mo-Fr 09:00-17:00">
-						<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
-							<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
-							<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="17:00">
-						</span>
-						<small>Mon–Fri 9–17</small>
-					</address>
-					<address data-part="address" itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">
+						<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+							<meta itemprop="latitude" content="56.1567">
+							<meta itemprop="longitude" content="10.2108">
+						</div>
+						<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+							<span><span itemprop="streetAddress">Åboulevarden 21</span></span>
+							<span><span itemprop="addressLocality">Aarhus</span></span>
+							<meta itemprop="addressCountry" content="DK">
+						</address>
+						<p data-part="meta"><a itemprop="telephone" href="tel:+4586123456">+45 86 12 34 56</a><br><meta itemprop="email" content="aarhus@northwind.example"><a href="mailto:aarhus@northwind.example">aarhus@northwind.example</a></p>
+						<dl data-part="hours">
+							<dt>Mon–Wed</dt>
+							<dd>
+								<meta itemprop="openingHours" content="Mo-We 09:00-17:00">
+								<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+									<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday">
+									<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="17:00">
+								</span>
+								9:00–17:00
+							</dd>
+							<dt>Thu</dt>
+							<dd>
+								<meta itemprop="openingHours" content="Th 09:00-16:00">
+								<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+									<meta itemprop="dayOfWeek" content="https://schema.org/Thursday">
+									<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="16:00">
+								</span>
+								9:00–16:00
+							</dd>
+							<dt>Fri</dt>
+							<dd>
+								<meta itemprop="openingHours" content="Fr 09:00-14:00">
+								<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+									<meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+									<meta itemprop="opens" content="09:00"><meta itemprop="closes" content="14:00">
+								</span>
+								9:00–14:00
+							</dd>
+						</dl>
+					</div>
+					<div data-part="office" itemprop="department" itemscope itemtype="https://schema.org/LocalBusiness">
 						<strong itemprop="name">Berlin office</strong>
-						<span itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"><span itemprop="streetAddress">Torstraße 140</span>, <span itemprop="addressLocality">Berlin</span><meta itemprop="addressCountry" content="DE"></span>
-						<a itemprop="telephone" href="tel:+4930901820">+49 30 901820</a>
-						<meta itemprop="openingHours" content="Mo-Fr 08:30-16:30">
-						<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
-							<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday">
-							<meta itemprop="opens" content="08:30"><meta itemprop="closes" content="16:30">
-						</span>
-						<small>Mon–Fri 8:30–16:30</small>
-					</address>
+						<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
+							<meta itemprop="latitude" content="52.5296">
+							<meta itemprop="longitude" content="13.4062">
+						</div>
+						<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+							<span><span itemprop="streetAddress">Torstraße 140</span></span>
+							<span><span itemprop="addressLocality">Berlin</span></span>
+							<meta itemprop="addressCountry" content="DE">
+						</address>
+						<p data-part="meta"><a itemprop="telephone" href="tel:+4930901820">+49 30 901820</a><br><meta itemprop="email" content="berlin@northwind.example"><a href="mailto:berlin@northwind.example">berlin@northwind.example</a></p>
+						<dl data-part="hours">
+							<dt>Mon–Thu</dt>
+							<dd>
+								<meta itemprop="openingHours" content="Mo-Th 08:30-17:00">
+								<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+									<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday">
+									<meta itemprop="opens" content="08:30"><meta itemprop="closes" content="17:00">
+								</span>
+								8:30–17:00
+							</dd>
+							<dt>Fri</dt>
+							<dd>
+								<meta itemprop="openingHours" content="Fr 08:30-15:00">
+								<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
+									<meta itemprop="dayOfWeek" content="https://schema.org/Friday">
+									<meta itemprop="opens" content="08:30"><meta itemprop="closes" content="15:00">
+								</span>
+								8:30–15:00
+							</dd>
+						</dl>
+					</div>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -1069,7 +1181,7 @@
 					<small data-part="eyebrow" itemprop="genre">Documentary</small>
 					<h3 data-part="headline" itemprop="name">The River, Slowly</h3>
 					<p data-part="summary" itemprop="description">A quiet study of a lowland river through one summer — shot at water level.</p>
-					<p data-part="meta">3:24</p>
+					<p data-part="meta"><ui-chip theme="pale accent">3:24</ui-chip></p>
 					<p data-part="meta" itemprop="creator" itemscope itemtype="https://schema.org/Person">By <span itemprop="name">Nørre Films</span></p>
 					<div itemprop="interactionStatistic" itemscope itemtype="https://schema.org/InteractionCounter" hidden>
 						<meta itemprop="interactionType" content="https://schema.org/WatchAction">
@@ -1098,7 +1210,7 @@
 					<small data-part="eyebrow">Home maintenance</small>
 					<h3 data-part="headline" itemprop="name">Bleed a radiator in four steps</h3>
 					<p data-part="summary" itemprop="description">Cold at the top, warm at the bottom? Trapped air. Ten minutes and a radiator key fix it.</p>
-					<p data-part="meta">Takes 10 min · ~EUR 5 · Easy</p>
+					<p data-part="meta">Takes 10 min · ~€5 · Easy</p>
 					<ul data-part="list">
 						<li itemprop="supply" itemscope itemtype="https://schema.org/HowToSupply"><span itemprop="name">Cloth</span></li>
 						<li itemprop="supply" itemscope itemtype="https://schema.org/HowToSupply"><span itemprop="name">Small bowl</span></li>
@@ -1138,7 +1250,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Q&amp;A — <code>QAPage</code></h2>
-	<p class="note">Distinct from FAQ: one <code>mainEntity</code> → <code>Question</code> with community answers — <code>acceptedAnswer</code> / <code>suggestedAnswer</code> → <code>Answer</code>, each with author and <code>upvoteCount</code>.</p>
+	<p class="note">Distinct from FAQ: one <code>mainEntity</code> → <code>Question</code> with community answers as <code>&lt;ui-quote&gt;</code> (third-party voice, same convention as review/social) — accepted answer first (green <code>&lt;ui-chip&gt;</code>), then by votes; <code>acceptedAnswer</code> / <code>suggestedAnswer</code> → <code>Answer</code> with author and <code>upvoteCount</code>.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/QAPage">
 			<cq-box>
@@ -1154,12 +1266,12 @@
 						<ul data-part="list">
 							<li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
 								<meta itemprop="upvoteCount" content="481">
-								<p itemprop="text">Give the parent `display: grid; place-items: center` — two lines, handles both axes, works everywhere.</p>
-								<small>✓ Accepted · <span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Lena Fischer</span></span> · ▲ 481</small>
+								<ui-quote data-part="quote"><blockquote itemprop="text"><q>Give the parent display: grid with place-items: center — two lines, handles both axes, works everywhere.</q></blockquote></ui-quote>
+								<small><ui-chip theme="pale green">Accepted</ui-chip> <span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Lena Fischer</span></span> · ▲ 481</small>
 							</li>
 							<li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer">
 								<meta itemprop="upvoteCount" content="217">
-								<p itemprop="text">If it's a single item, `margin: auto` inside a flex or grid parent also centers on both axes.</p>
+								<ui-quote data-part="quote"><blockquote itemprop="text"><q>If it's a single item, margin: auto inside a flex or grid parent also centers on both axes.</q></blockquote></ui-quote>
 								<small><span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Tomás Rivera</span></span> · ▲ 217</small>
 							</li>
 						</ul>
@@ -1217,8 +1329,6 @@
 					<h3 data-part="headline" itemprop="name">Echoes of Tomorrow</h3>
 					<p data-part="summary" itemprop="description">A signal from a decommissioned satellite starts predicting tomorrow's news — one broadcast at a time.</p>
 					<p data-part="meta">Feb 2026 · 2 h 14 min · PG-13</p>
-					<p data-part="meta" itemprop="director" itemscope itemtype="https://schema.org/Person">Director: <span itemprop="name">Sofia Lindqvist</span></p>
-					<p data-part="meta">Starring: <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Jonas Beck</span></span>, <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Amara Okafor</span></span></p>
 					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
 						<meta itemprop="ratingValue" content="4.2">
 						<meta itemprop="ratingCount" content="8817">
@@ -1227,6 +1337,8 @@
 						<span data-sr>Rated 4.2 out of 5 stars from 8,817 ratings</span>
 						<span aria-hidden="true">4.2 / 5 (8,817 ratings)</span>
 					</div>
+					<p data-part="meta" itemprop="director" itemscope itemtype="https://schema.org/Person">Director: <span itemprop="name">Sofia Lindqvist</span></p>
+					<p data-part="meta">Starring: <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Jonas Beck</span></span>, <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Amara Okafor</span></span></p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -1238,7 +1350,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Book — <code>Book</code></h2>
-	<p class="note"><code>isbn</code>, pages, allowlisted <code>bookFormat</code> (schema.org <code>BookFormatType</code>), publisher → <code>Organization</code>, author byline, rating and an <code>Offer</code>.</p>
+	<p class="note">Author byline leads (photo via <code>&lt;ui-avatar&gt;</code>); then facts, rating, <code>Offer</code> — publisher is the colophon. <code>isbn</code>, pages, allowlisted <code>bookFormat</code> (schema.org <code>BookFormatType</code>).</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3)" itemscope itemtype="https://schema.org/Book">
 			<cq-box>
@@ -1250,8 +1362,11 @@
 					<small data-part="eyebrow" itemprop="genre">Cookbook</small>
 					<h3 data-part="headline" itemprop="name">The Nordic Pantry</h3>
 					<p data-part="summary" itemprop="description">120 recipes built on what a northern larder actually holds — rye, root vegetables, brine and smoke.</p>
+					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar4.webp" alt=""></ui-avatar>
+						<span data-part="byline-who"><span itemprop="name">Mette Holm</span></span>
+					</address>
 					<p data-part="meta">312 pages · Hardcover · ISBN 978-87-12345-67-8</p>
-					<p data-part="meta" itemprop="publisher" itemscope itemtype="https://schema.org/Organization">Publisher: <span itemprop="name">Kbh Press</span></p>
 					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
 						<meta itemprop="ratingValue" content="4.6">
 						<meta itemprop="ratingCount" content="923">
@@ -1263,12 +1378,9 @@
 					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
 						<meta itemprop="priceCurrency" content="EUR">
 						<meta itemprop="availability" content="https://schema.org/InStock">
-						<data itemprop="price" value="34">EUR 34</data>
+						<data itemprop="price" value="34">€34</data>
 					</p>
-					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
-						<ui-avatar><abbr aria-hidden="true">MH</abbr></ui-avatar>
-						<span data-part="byline-who"><span itemprop="name">Mette Holm</span></span>
-					</address>
+					<p data-part="meta" itemprop="publisher" itemscope itemtype="https://schema.org/Organization">Publisher: <span itemprop="name">Kbh Press</span></p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -1316,7 +1428,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Fact check — <code>ClaimReview</code></h2>
-	<p class="note">The claim as a <code>&lt;ui-quote&gt;</code> carrying <code>claimReviewed</code>; the verdict is <code>reviewRating</code> → <code>Rating</code> whose <code>alternateName</code> is the visible chip (hue from the rating value).</p>
+	<p class="note">The verdict chip leads — it is the answer (<code>reviewRating</code> → <code>Rating</code>, <code>alternateName</code> visible, hue from the rating value); the quoted claim (<code>claimReviewed</code>) follows.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/ClaimReview">
 			<cq-box>
@@ -1326,12 +1438,12 @@
 					<small data-part="eyebrow">Fact check</small>
 					<h3 data-part="headline" itemprop="name">Did the harbour bridge cost twice its budget?</h3>
 					<p data-part="summary" itemprop="description">Public records show the final cost came in 18% over the approved budget — high, but nowhere near double.</p>
-					<ui-quote data-part="quote"><blockquote itemprop="claimReviewed"><q>The new harbour bridge cost twice its approved budget.</q><cite>Social media posts</cite></blockquote></ui-quote>
 					<p data-part="meta" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
 						<meta itemprop="ratingValue" content="2">
 						<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
 						<ui-chip theme="pale red"><span itemprop="alternateName">Mostly false</span></ui-chip>
 					</p>
+					<ui-quote data-part="quote"><blockquote itemprop="claimReviewed"><q>The new harbour bridge cost twice its approved budget.</q><cite>Social media posts</cite></blockquote></ui-quote>
 				</ui-content>
 			</cq-box>
 		</ui-card>

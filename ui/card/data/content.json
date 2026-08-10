@@ -37,6 +37,12 @@
         },
         "style": "primary"
       }
+    ],
+    "links": [
+      { "url": "#", "text": "Design principles" },
+      { "url": "#", "text": "Component gallery" },
+      { "url": "#", "text": "Release notes" },
+      { "url": "#", "text": "Support" }
     ]
   }
 }

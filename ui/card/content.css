@@ -334,10 +334,12 @@
 			flex-wrap: wrap;
 			font-size: var(--ui-content-price-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 1.35));
 			font-weight: var(--ui-content-price-weight, var(--font-weight-bold, 700));
-			gap: var(--ui-content-price-gap, var(--spacing-xs));
+			gap: var(--ui-content-price-gap, var(--spacing-sm));
 
 			& del   { color: var(--ui-content-muted); font-weight: var(--font-weight-normal, 400); }
 			& small { color: var(--ui-content-price-discount, var(--color-accent)); font-size: 0.7em; }
+			/* chip rides the price row at label size, not price size */
+			& ui-chip { align-self: center; font-size: 0.55em; font-weight: var(--font-weight-normal, 400); }
 		}
 
 		/* rating — Meta group; the symbol row is @browser.style/rating, display-only */
@@ -352,7 +354,8 @@
 			& small { color: var(--ui-content-meta-ink, var(--ui-content-muted)); }
 		}
 
-		/* list — Body group */
+		/* list — Body group. Marker themes via --ui-content-list-marker (string values
+		   ride list-style-type — Baseline; ::marker content is not, Safari) */
 		& [data-part="list"] {
 			color: var(--ui-content-list-ink, var(--ui-content-body-ink, inherit));
 			display: flex;
@@ -360,16 +363,97 @@
 			font-size: var(--ui-content-list-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
 			gap: var(--ui-content-list-gap, var(--spacing-xs));
 			list-style-position: inside;
+			list-style-type: var(--ui-content-list-marker, disc);
 			margin: 0;
 			padding: 0;
+			& li::marker { color: var(--ui-content-list-marker-ink, currentColor); }
+		}
+		& ol[data-part="list"] { list-style-type: var(--ui-content-list-marker, decimal); }
+		/* block-content rows (qa answers): no marker — inside-position bullets wrap onto their own line */
+		& [data-part="list"]:has(> li > :is(p, ui-quote)) {
+			--ui-content-list-marker: none;
+			gap: var(--ui-content-list-answers-gap, var(--spacing-md));
+		}
+		& [data-part="list"] li:has(> p, > ui-quote) {
+			display: flex;
+			flex-direction: column;
+			gap: var(--ui-content-list-answer-gap, var(--spacing-sm));
+		}
+		/* crossed list — excluded items (membership limitations) */
+		& [data-part="list"][data-variant="crossed"] {
+			--ui-content-list-marker: '✗  ';
+			--ui-content-list-marker-ink: var(--ui-content-list-crossed-mark, var(--color-error, currentColor));
+			& li { color: var(--ui-content-list-crossed-ink, var(--ui-content-muted)); }
 		}
 
-		/* address — Body group (distinct from byline: no avatar) */
+		/* links — Trailer group: plain related-link rows, not buttons; marker rides the li */
+		& [data-part="links"] {
+			font-size: var(--ui-content-links-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
+			list-style-position: inside;
+			list-style-type: var(--ui-content-links-marker, disc);
+			margin: 0;
+			padding: 0;
+			& li {
+				padding-block: var(--ui-content-links-pb, var(--spacing-xs));
+				&:not(:last-child) { border-block-end: var(--border-width) solid var(--ui-content-links-border, var(--color-border)); }
+				&::marker { color: var(--ui-content-links-mark, currentColor); }
+			}
+			& a {
+				color: var(--ui-content-links-ink, inherit);
+				text-decoration: none;
+				&:hover { text-decoration: underline; }
+			}
+		}
+
+		/* contact links read at body size even inside a meta row, and carry base's
+		   phone/email svg as a MASK — a mask takes currentColor, background-image
+		   would bake the asset's own grey. No text content, so nothing reaches the
+		   accessible name; the number/address is the link */
+		& :is(a[href^="tel:"], a[href^="mailto:"]) {
+			font-size: var(--ui-content-contact-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
+
+			&::before {
+				background-color: currentColor;
+				block-size: var(--ui-content-contact-icon-size, 1em);
+				content: '';
+				display: inline-block;
+				inline-size: var(--ui-content-contact-icon-size, 1em);
+				margin-inline-end: var(--ui-content-contact-icon-gap, 0.35em);
+				mask: var(--ui-content-contact-icon) no-repeat center / contain;
+				vertical-align: -0.15em;
+			}
+		}
+		& a[href^="tel:"]::before { --ui-content-contact-icon: var(--ui-content-tel-icon, url('../base/assets/svg/phone.svg')); }
+		& a[href^="mailto:"]::before { --ui-content-contact-icon: var(--ui-content-mail-icon, url('../base/assets/svg/email.svg')); }
+
+		/* address — Body group (distinct from byline: no avatar). Lines stack: street · postal + locality · country */
 		& [data-part="address"] {
 			color: var(--ui-content-address-ink, var(--ui-content-body-ink, inherit));
+			display: flex;
+			flex-direction: column;
 			font-size: var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9));
 			font-style: normal;
 			line-height: var(--ui-content-address-line-height, var(--line-height-normal, 1.5));
+		}
+
+		/* hours — Body group: two-column day/time table (opening hours per day) */
+		& [data-part="hours"] {
+			column-gap: var(--ui-content-hours-column-gap, var(--spacing-md));
+			display: grid;
+			font-size: var(--ui-content-hours-fs, var(--ui-content-address-fs, calc(var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))) * 0.9)));
+			grid-template-columns: auto 1fr;
+			margin: 0;
+			row-gap: var(--ui-content-hours-row-gap, var(--spacing-xs));
+			& dt { color: var(--ui-content-hours-day-ink, var(--ui-content-muted)); }
+			& dd { margin: 0; }
+		}
+
+		/* office — Body group: one local branch (organization department) */
+		& [data-part="office"] {
+			display: flex;
+			flex-direction: column;
+			gap: var(--ui-content-office-gap, var(--spacing-xs));
+			& strong { font-size: var(--ui-content-office-name-fs, 1em); }
 		}
 
 		/* stat — Body group (prominent) */

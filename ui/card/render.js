@@ -101,7 +101,10 @@ const ARTICLE_BODY_TYPES = new Set(['article', 'news']);
 const NO_IMAGE_PROP = new Set(['review', 'contact']);
 /* types whose ROOT is the VideoObject — media props emit at root, never a nested scope */
 const ROOT_VIDEO_TYPES = new Set(['video']);
-const TAGS_PROP = { profile: 'knowsAbout' }; /* Person has no keywords property */
+/* Person has no keywords property. Intangible-rooted types (JobPosting, Offer,
+   Reservation, ContactPoint, ItemList, Observation) have none either —
+   null = visible chips only, no itemprop */
+const TAGS_PROP = { profile: 'knowsAbout', job: null, membership: null, booking: null, contact: null, comparison: null, statistic: null };
 
 /* ── string helpers (all data flows through esc) ── */
 
@@ -141,6 +144,14 @@ const plain = (value) => {
 };
 
 const num = (value) => (typeof value === 'number' ? value.toLocaleString('en-US') : value);
+
+/* display price via Intl — machine values stay raw in value=/content= attrs */
+const fmtPrice = (currency, value) => {
+	if (value == null || value === '') return '';
+	const number = Number(value);
+	if (!currency || Number.isNaN(number)) return `${currency || ''} ${value}`.trim();
+	return new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: Number.isInteger(number) ? 0 : 2 }).format(number);
+};
 
 /* "PT15M" → "15 min", "P6W" → "6 weeks", "P14D" → "14 days" */
 const duration = (iso) => {
@@ -216,12 +227,64 @@ const hoursSpec = (spec) => {
 };
 
 /* machine + human opening hours — flat openingHours meta AND the structured spec per entry */
-const openingHoursMetas = (hours) =>
-	(hours || []).map((entry) => meta('openingHours', entry.schema) + hoursSpec(entry.schema)).join('');
+/* one tabular row per entry — days/time read from the MACHINE string so a single
+   day ("Th 09:00-16:00") and a range ("Mo-We 09:00-17:00") both work; explicit
+   days/time keys win for locales the derivation can't spell */
+const DAY_ABBR = { Mo: 'Mon', Tu: 'Tue', We: 'Wed', Th: 'Thu', Fr: 'Fri', Sa: 'Sat', Su: 'Sun' };
+const hoursRow = (entry) => {
+	if (entry.days || entry.time) return { days: entry.days || '', time: entry.time || '' };
+	const m = /^([A-Z][a-z])(?:-([A-Z][a-z]))?\s+(\d\d:\d\d)-(\d\d:\d\d)$/.exec(entry.schema || '');
+	if (!m) return { days: '', time: entry.display || '' };
+	const clock = (time) => time.replace(/^0/, '');
+	return {
+		days: m[2] ? `${DAY_ABBR[m[1]]}–${DAY_ABBR[m[2]]}` : DAY_ABBR[m[1]],
+		time: `${clock(m[3])}–${clock(m[4])}`
+	};
+};
 
-const listPart = (items, { ordered = false, itemprop = null } = {}) =>
+/* opening hours as a two-column <dl>. Each row carries a structured
+   OpeningHoursSpecification (valid on Place and below) plus, where the type allows
+   it, the flat openingHours string — that one is a LocalBusiness/CivicStructure
+   property, so a plain Place (location) must pass flat: false */
+const hoursPart = (hours, { flat = true } = {}) =>
+	hours?.length
+		? `<dl data-part="hours">${hours.map((entry) => {
+			const { days, time } = hoursRow(entry);
+			return `<dt>${esc(days)}</dt><dd>${flat ? meta('openingHours', entry.schema) : ''}${hoursSpec(entry.schema)}${esc(time)}</dd>`;
+		}).join('')}</dl>`
+		: '';
+
+/* GeoCoordinates — machine-only (the visible affordance is the map link) */
+const geoPart = (geo) =>
+	geo?.latitude != null || geo?.longitude != null
+		? `<div${scope('geo', 'GeoCoordinates')} hidden>${meta('latitude', geo.latitude)}${meta('longitude', geo.longitude)}</div>`
+		: '';
+
+/* Organization has no geo property (Place does) — coordinates ride location → Place */
+const geoViaPlace = (geo) =>
+	geo?.latitude != null || geo?.longitude != null
+		? `<div${scope('location', 'Place')} hidden>${geoPart(geo)}</div>`
+		: '';
+
+/* PostalAddress as stacked lines: street · postal + locality · country.
+   A 2-letter country code stays machine-only — "DK" reads as noise in a card */
+const addressPart = (address, prop = 'address') => {
+	if (!address) return '';
+	const country = address.addressCountry || '';
+	const lines = [
+		address.streetAddress ? `<span itemprop="streetAddress">${esc(address.streetAddress)}</span>` : '',
+		[
+			address.postalCode ? `<span itemprop="postalCode">${esc(address.postalCode)}</span>` : '',
+			address.addressLocality ? `<span itemprop="addressLocality">${esc(address.addressLocality)}</span>` : ''
+		].filter(Boolean).join(' '),
+		country.length > 2 ? `<span itemprop="addressCountry">${esc(country)}</span>` : ''
+	].filter(Boolean).map((line) => `<span>${line}</span>`).join('');
+	return `<address data-part="address"${scope(prop, 'PostalAddress')}>${lines}${country.length > 2 ? '' : meta('addressCountry', country)}</address>`;
+};
+
+const listPart = (items, { ordered = false, itemprop = null, crossed = false } = {}) =>
 	items?.length
-		? `<${ordered ? 'ol' : 'ul'} data-part="list"${itemprop ? ` itemprop="${esc(itemprop)}"` : ''}>${items.map((item) => `<li>${esc(item)}</li>`).join('')}</${ordered ? 'ol' : 'ul'}>`
+		? `<${ordered ? 'ol' : 'ul'} data-part="list"${crossed ? ' data-variant="crossed"' : ''}${itemprop ? ` itemprop="${esc(itemprop)}"` : ''}>${items.map((item) => `<li>${esc(item)}</li>`).join('')}</${ordered ? 'ol' : 'ul'}>`
 		: '';
 
 /* author image via @browser.style/avatar — initials fallback when no image */
@@ -619,6 +682,8 @@ const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', p
 		/* body replaced the visible summary — keep the description machine-readable */
 		html += meta(SUMMARY_PROP[type] || 'description', fields.summary);
 	}
+	/* the lede byline sits between the standfirst and the body (slots.byline) */
+	html += slots.byline || '';
 	html += body;
 	if (fields.published) html += meta(PUBLISHED_PROP[type] || 'datePublished', fields.published);
 	if (fields.modified) html += meta('dateModified', fields.modified);
@@ -626,25 +691,37 @@ const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', p
 };
 
 /* byline, tags, actions, engagement — envelope trailers, appended after details */
-const buildTail = (fields, type) => {
-	let html = '';
+/* dateline — its own block in the byline row: date over reading time, end-aligned */
+const datelinePart = (fields) => {
 	const date = fields.published
 		? `<time datetime="${esc(fields.published)}">${new Date(fields.published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</time>`
 		: '';
-	/* dateline — its own block in the byline row: date over reading time, end-aligned */
-	const dateline = date || fields.readingTime
+	return date || fields.readingTime
 		? `<small data-part="dateline">${date}${fields.readingTime ? `<span>${esc(fields.readingTime)}</span>` : ''}</small>`
 		: '';
+};
+
+const buildTail = (fields, type) => {
+	let html = '';
+	const dateline = datelinePart(fields);
 	if (fields.authors?.length) html += byline(fields.authors, type === 'quote' ? 'creator' : 'author', dateline);
 	else if (dateline) html += `<p data-part="meta">${dateline}</p>`;
 	if (fields.tags?.length) {
 		/* itemprop sits ON the chip (microdata value = textContent) so a nested <a> never leaks its href */
-		html += `<span data-part="tags">${fields.tags.map((tag) => `<ui-chip itemprop="${TAGS_PROP[type] || 'keywords'}">${esc(tag)}</ui-chip>`).join('')}</span>`;
+		const tagProp = type in TAGS_PROP ? TAGS_PROP[type] : 'keywords';
+		html += `<span data-part="tags">${fields.tags.map((tag) => `<ui-chip${tagProp ? ` itemprop="${tagProp}"` : ''}>${esc(tag)}</ui-chip>`).join('')}</span>`;
 	}
 	if (fields.actions?.length) {
 		html += `<nav data-part="actions">${fields.actions.map((action) =>
 			`<a class="ui-button"${action.style === 'primary' ? ' data-variant="accent"' : ''} href="${esc(action.link?.url || '#')}">${esc(action.link?.text || '')}</a>`
 		).join(' ')}</nav>`;
+	}
+	if (fields.links?.length) {
+		/* plain related links — a text-link list, deliberately not buttons (no itemprop:
+		   multiple url values on the card scope would misdeclare the card's own url) */
+		html += `<ul data-part="links">${fields.links.map((link) =>
+			`<li><a href="${esc(link.url || '#')}">${esc(link.text || link.url || '')}</a></li>`
+		).join('')}</ul>`;
 	}
 	const eng = fields.engagement;
 	if (eng && Object.keys(eng).length) {
@@ -675,14 +752,16 @@ const availabilityUrl = (availability) =>
 
 const DETAILS = {
 	product(d) {
-		let html = '';
+		/* PDP order: rating under the title, then price, then stock state */
+		let html = ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		if (d.price) {
 			html += `<p data-part="price"${scope('offers', 'Offer')}>
 				${meta('priceCurrency', d.price.currency)}${meta('availability', availabilityUrl(d.availability))}${meta('itemCondition', SCHEMA + 'NewCondition')}${d.validUntil ? meta('priceValidUntil', d.validUntil) : ''}
-				<data itemprop="price" value="${esc(d.price.current)}">${esc(d.price.currency || '')} ${esc(d.price.current)}</data>${d.price.original ? ` <del>${esc(d.price.currency || '')} ${esc(d.price.original)}</del>` : ''}${d.price.discountText ? ` <small>${esc(d.price.discountText)}</small>` : ''}
+				<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data>${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}${d.price.discountText ? ` <ui-chip theme="pale green">${esc(d.price.discountText)}</ui-chip>` : ''}
 			</p>`;
+			/* the validity belongs to the offer — directly under the price, not the stock row */
+			if (d.validUntilDisplay) html += `<p data-part="meta"><small>Valid until ${esc(d.validUntilDisplay)}</small></p>`;
 		}
-		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		if (d.availability) html += `<p data-part="meta"><ui-chip theme="pale ${availabilityHue(d.availability)}">${esc(d.availability)}</ui-chip></p>`;
 		/* sku is machine-readable only — no visible number on the card */
 		if (d.sku) html += meta('sku', d.sku);
@@ -761,7 +840,7 @@ const DETAILS = {
 			+ `<div${scope('hasCourseInstance', 'CourseInstance')} hidden>${meta('courseMode', 'Online')}</div>`;
 		html += `<p data-part="meta">${esc(duration(d.duration))} · ${esc(d.difficultyLevel)} · Instructor: <span${scope('provider', 'Organization')}><span itemprop="name">${esc(d.instructor?.name)}</span></span></p>`;
 		if (d.price) {
-			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${esc(d.price.currency)} ${esc(d.price.current)}</data>${d.price.original ? ` <del>${esc(d.price.currency)} ${esc(d.price.original)}</del>` : ''}</p>`;
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data>${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}</p>`;
 		}
 		html += listPart(d.prerequisites);
 		return html;
@@ -772,7 +851,7 @@ const DETAILS = {
 			+ (d.serviceName ? `<div${scope('reservationFor', 'Service')} hidden>${meta('name', d.serviceName)}</div>` : '');
 		html += `<p data-part="meta"><span${scope('provider', 'Organization')}><span itemprop="name">${esc(d.venue)}</span></span>${d.capacity ? ` · Capacity ${esc(d.capacity)}` : ''}${d.duration ? ` · ${esc(d.duration)}` : ''}${d.cancellationPolicy ? ` · ${esc(d.cancellationPolicy)}` : ''}</p>`;
 		if (d.price?.hourlyRate != null) {
-			html += `<p data-part="price"><data value="${esc(d.price.hourlyRate)}">${esc(d.price.currency)} ${esc(d.price.hourlyRate)}</data>/hour</p>`;
+			html += `<p data-part="price"><data value="${esc(d.price.hourlyRate)}">${fmtPrice(d.price.currency, d.price.hourlyRate)}</data>/hour</p>`;
 		}
 		html += listPart(d.amenities);
 		return html;
@@ -837,11 +916,16 @@ const DETAILS = {
 		let html = meta('dateCreated', d.dateEarned) + meta('expires', d.expirationDate)
 			+ meta('educationalLevel', d.skillLevel) + meta('identifier', d.credentialId);
 		html += `<p data-part="meta">Issued by <span${scope('recognizedBy', 'Organization')}><span itemprop="name">${esc(d.issuingOrganization)}</span></span>${d.dateEarnedDisplay ? ` · ${esc(d.dateEarnedDisplay)}` : ''}${d.expirationDateDisplay ? ` · Expires ${esc(d.expirationDateDisplay)}` : ''}${d.credentialId ? ` · ID ${esc(d.credentialId)}` : ''}</p>`;
+		if (d.verificationUrl) html += `<nav data-part="actions"><a class="ui-button" href="${esc(d.verificationUrl)}" target="_blank" rel="noopener">Verify credential</a></nav>`;
 		return html;
 	},
 
 	announcement(d) {
 		let html = meta('datePosted', d.effectiveDate?.start) + meta('expires', d.effectiveDate?.end) + meta('spatialCoverage', 'Global');
+		if (d.priority) {
+			const hue = /high|critical/i.test(d.priority) ? 'red' : /medium/i.test(d.priority) ? 'orange' : 'gray';
+			html += `<p data-part="meta"><ui-chip theme="pale ${hue}">${esc(d.priorityDisplay || d.priority)}</ui-chip></p>`;
+		}
 		if (d.targetAudience) {
 			html += `<p data-part="meta"${scope('audience', 'Audience')}>Audience: <span itemprop="audienceType">${esc(d.targetAudience)}</span></p>`;
 		}
@@ -852,20 +936,11 @@ const DETAILS = {
 	business(d) {
 		let html = meta('url', d.website) + meta('priceRange', d.priceRange) + meta('foundingDate', d.foundingDate)
 			+ (d.sameAs || []).map((url) => meta('sameAs', url)).join('');
-		if (d.geo) {
-			html += `<div${scope('geo', 'GeoCoordinates')} hidden>${meta('latitude', d.geo.latitude)}${meta('longitude', d.geo.longitude)}</div>`;
-		}
-		if (d.address) {
-			html += `<address data-part="address"${scope('address', 'PostalAddress')}>
-				${d.address.streetAddress ? `<span itemprop="streetAddress">${esc(d.address.streetAddress)}</span>, ` : ''}${d.address.postalCode ? `<span itemprop="postalCode">${esc(d.address.postalCode)}</span> ` : ''}${d.address.addressLocality ? `<span itemprop="addressLocality">${esc(d.address.addressLocality)}</span>` : ''}${meta('addressCountry', d.address.addressCountry)}
-			</address>`;
-		}
+		html += geoPart(d.geo);
+		html += addressPart(d.address);
 		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
-		if (d.openingHours?.length) {
-			html += `<p data-part="meta">${openingHoursMetas(d.openingHours)}${esc(d.openingHours.map((hours) => hours.display).join(' · '))}${d.priceRange ? ` · ${esc(d.priceRange)}` : ''}</p>`;
-		} else if (d.priceRange) {
-			html += `<p data-part="meta">${esc(d.priceRange)}</p>`;
-		}
+		if (d.priceRange) html += `<p data-part="meta">${esc(d.priceRange)}</p>`;
+		html += hoursPart(d.openingHours);
 		const links = [];
 		if (d.telephone) links.push(`<a class="ui-button" itemprop="telephone" href="tel:${esc(d.telephone.replace(/\s/g, ''))}">${esc(d.telephone)}</a>`);
 		if (d.email) links.push(`${meta('email', d.email)}<a class="ui-button" href="mailto:${esc(d.email)}">Email</a>`);
@@ -900,13 +975,13 @@ const DETAILS = {
 
 	location(d) {
 		let html = '';
-		if (d.geo) {
-			html += `<div${scope('geo', 'GeoCoordinates')} hidden>${meta('latitude', d.geo.latitude)}${meta('longitude', d.geo.longitude)}</div>`;
-		}
-		if (d.address) {
-			html += `<address data-part="address"${scope('address', 'PostalAddress')}>${d.address.addressLocality ? `<span itemprop="addressLocality">${esc(d.address.addressLocality)}</span>` : ''}${d.address.addressCountry ? `, <span itemprop="addressCountry">${esc(d.address.addressCountry)}</span>` : ''}</address>`;
-		}
-		if (d.hours) html += `<p data-part="meta">${esc(d.hours)}</p>`;
+		html += geoPart(d.geo);
+		html += addressPart(d.address);
+		/* Place has openingHoursSpecification but NOT the flat openingHours string */
+		if (d.openingHours?.length) html += hoursPart(d.openingHours, { flat: false });
+		else if (d.hours) html += `<p data-part="meta">${esc(d.hours)}</p>`;
+		/* amenityFeature wants LocationFeatureSpecification scopes — plain list, no itemprop */
+		html += listPart(d.amenities);
 		const map = mapUrl(d.geo);
 		if (map) html += `<nav data-part="actions"><a class="ui-button" data-variant="accent" href="${esc(map)}"${/^geo:/.test(map) ? '' : ' target="_blank" rel="noopener"'}>Open in Maps</a></nav>`;
 		return html;
@@ -915,26 +990,32 @@ const DETAILS = {
 	membership(d) {
 		let html = eligibleDuration(d.trialPeriod);
 		if (d.price) {
-			html += `<p data-part="price"${scope('priceSpecification', 'PriceSpecification')}>${meta('priceCurrency', d.price.currency)}<data itemprop="price" value="${esc(d.price.monthly)}">${esc(d.price.currency)} ${esc(d.price.monthly)}</data>/mo ${d.price.yearly ? `<small>or ${esc(d.price.currency)} ${esc(d.price.yearly)}/yr${d.price.savings ? ` — ${esc(d.price.savings)}` : ''}</small>` : ''}</p>`;
+			html += `<p data-part="price"${scope('priceSpecification', 'PriceSpecification')}>${meta('priceCurrency', d.price.currency)}<data itemprop="price" value="${esc(d.price.monthly)}">${fmtPrice(d.price.currency, d.price.monthly)}</data>/mo ${d.price.yearly ? `<small>or ${fmtPrice(d.price.currency, d.price.yearly)}/yr${d.price.savings ? ` — ${esc(d.price.savings)}` : ''}</small>` : ''}</p>`;
 		}
 		html += listPart(d.features, { itemprop: 'includesObject' });
+		html += listPart(d.limitations, { crossed: true });
 		if (d.trialText) html += `<p data-part="meta">${esc(d.trialText)}</p>`;
 		return html;
 	},
 
 	social(d) {
-		return d.platform ? `<div${scope('publisher', 'Organization')} hidden>${meta('name', d.platform)}</div>` : '';
+		let html = d.platform ? `<div${scope('publisher', 'Organization')} hidden>${meta('name', d.platform)}</div>` : '';
+		if (d.author) {
+			html += `<p data-part="meta"><span${scope('author', 'Person')}><span itemprop="name">${esc(d.author)}</span></span>${d.platform ? ` · ${esc(d.platform)}` : ''}</p>`;
+		}
+		return html;
 	},
 
 	software(d) {
 		let html = meta('applicationCategory', d.applicationCategory)
 			+ (d.operatingSystem || []).map((os) => meta('operatingSystem', os)).join('');
+		if (d.version) html += `<p data-part="meta"><ui-chip theme="pale accent">v<span itemprop="softwareVersion">${esc(d.version)}</span></ui-chip></p>`;
 		html += `<p data-part="meta">${esc((d.operatingSystem || []).join(' · '))}${d.fileSize ? ` · ${esc(d.fileSize)}` : ''}</p>`;
 		if (d.developer?.name) {
 			html += `<p data-part="meta"${scope('author', 'Organization')}>Developer: <span itemprop="name">${esc(d.developer.name)}</span>${d.developer.website ? meta('url', d.developer.website) : ''}</p>`;
 		}
 		if (d.price) {
-			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${esc(d.price.currency)} ${esc(d.price.current)}</data>${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`;
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data>${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`;
 		}
 		return html;
 	},
@@ -945,18 +1026,19 @@ const DETAILS = {
 			+ (d.numberOfEmployees != null ? `<span${scope('numberOfEmployees', 'QuantitativeValue')} hidden>${meta('value', d.numberOfEmployees)}</span>` : '');
 		const bits = [d.numberOfEmployees != null ? `${num(d.numberOfEmployees)} employees` : null, d.foundingDateDisplay ? `Founded ${d.foundingDateDisplay}` : null].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
-		if (d.headquarters?.address) {
-			const a = d.headquarters.address;
-			html += `<address data-part="address"${scope('address', 'PostalAddress')}>
-				${a.streetAddress ? `<span itemprop="streetAddress">${esc(a.streetAddress)}</span>, ` : ''}${a.postalCode ? `<span itemprop="postalCode">${esc(a.postalCode)}</span> ` : ''}${a.addressLocality ? `<span itemprop="addressLocality">${esc(a.addressLocality)}</span>` : ''}${meta('addressCountry', a.addressCountry)}
-			</address>`;
-		}
-		/* each local office is a department → LocalBusiness (Google's multi-location pattern) */
+		html += geoViaPlace(d.headquarters?.geo) + addressPart(d.headquarters?.address);
+		if (d.email) html += `<p data-part="meta">${meta('email', d.email)}<a href="mailto:${esc(d.email)}">${esc(d.email)}</a></p>`;
+		/* each local office is a department → LocalBusiness (Google's multi-location pattern),
+		   with its own coordinates so each branch geocodes independently */
 		for (const office of d.offices || []) {
-			const a = office.address;
-			html += `<address data-part="address"${scope('department', 'LocalBusiness')}>
-				<strong itemprop="name">${esc(office.name)}</strong>${a ? ` <span${scope('address', 'PostalAddress')}>${a.streetAddress ? `<span itemprop="streetAddress">${esc(a.streetAddress)}</span>, ` : ''}${a.addressLocality ? `<span itemprop="addressLocality">${esc(a.addressLocality)}</span>` : ''}${meta('addressCountry', a.addressCountry)}</span>` : ''}${office.telephone ? ` <a itemprop="telephone" href="tel:${esc(office.telephone.replace(/\s/g, ''))}">${esc(office.telephone)}</a>` : ''}${openingHoursMetas(office.openingHours)}${office.openingHours?.length ? ` <small>${esc(office.openingHours.map((hours) => hours.display).join(' · '))}</small>` : ''}
-			</address>`;
+			const contacts = [
+				office.telephone ? `<a itemprop="telephone" href="tel:${esc(office.telephone.replace(/\s/g, ''))}">${esc(office.telephone)}</a>` : '',
+				office.email ? `${meta('email', office.email)}<a href="mailto:${esc(office.email)}">${esc(office.email)}</a>` : ''
+			].filter(Boolean);
+			html += `<div data-part="office"${scope('department', 'LocalBusiness')}>
+				<strong itemprop="name">${esc(office.name)}</strong>
+				${geoPart(office.geo)}${addressPart(office.address)}${contacts.length ? `<p data-part="meta">${contacts.join('<br>')}</p>` : ''}${hoursPart(office.openingHours)}
+			</div>`;
 		}
 		return html;
 	},
@@ -964,8 +1046,9 @@ const DETAILS = {
 	video(d) {
 		/* machine duration/uploadDate ride the media item (rootVideoMetas) — details are display + creator */
 		let html = '';
-		const bits = [d.durationDisplay, d.viewsDisplay].filter(Boolean).join(' · ');
-		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		if (d.durationDisplay || d.viewsDisplay) {
+			html += `<p data-part="meta">${d.durationDisplay ? `<ui-chip theme="pale accent">${esc(d.durationDisplay)}</ui-chip>` : ''}${d.viewsDisplay ? ` ${esc(d.viewsDisplay)}` : ''}</p>`;
+		}
 		if (d.creator?.name) html += `<p data-part="meta"${scope('creator', 'Person')}>By <span itemprop="name">${esc(d.creator.name)}</span></p>`;
 		return html;
 	},
@@ -973,7 +1056,7 @@ const DETAILS = {
 	howto(d, fields, parts = {}) {
 		let html = meta('totalTime', d.totalTime)
 			+ (d.estimatedCost ? `<span${scope('estimatedCost', 'MonetaryAmount')} hidden>${meta('currency', d.estimatedCost.currency)}${meta('value', d.estimatedCost.value)}</span>` : '');
-		const bits = [d.totalTime ? `Takes ${duration(d.totalTime)}` : null, d.estimatedCost ? `~${d.estimatedCost.currency} ${d.estimatedCost.value}` : null, d.difficulty].filter(Boolean).join(' · ');
+		const bits = [d.totalTime ? `Takes ${duration(d.totalTime)}` : null, d.estimatedCost ? `~${fmtPrice(d.estimatedCost.currency, d.estimatedCost.value)}` : null, d.difficulty].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
 		if (d.supplies?.length || d.tools?.length) {
 			html += `<ul data-part="list">${(d.supplies || []).map((item) => `<li${scope('supply', 'HowToSupply')}><span itemprop="name">${esc(item)}</span></li>`).join('')}${(d.tools || []).map((item) => `<li${scope('tool', 'HowToTool')}><span itemprop="name">${esc(item)}</span></li>`).join('')}</ul>`;
@@ -990,14 +1073,16 @@ const DETAILS = {
 		return html;
 	},
 
-	qa(d) {
-		const answers = d.answers || [];
+	qa(d, fields, parts = {}) {
+		/* accepted answer leads, rest by votes; answers are third-party voice → ui-quote
+		   (same convention as review/social/claim), the chip carries the accepted state */
+		const answers = [...(d.answers || [])].sort((a, b) =>
+			(b.accepted ? 1 : 0) - (a.accepted ? 1 : 0) || (b.upvotes || 0) - (a.upvotes || 0));
 		if (!d.question && !answers.length) return '';
-		const accepted = answers.find((answer) => answer.accepted);
 		let html = `<div${scope('mainEntity', 'Question')}>${meta('name', d.question)}${meta('answerCount', answers.length)}${d.upvotes != null ? meta('upvoteCount', d.upvotes) : ''}`;
 		if (answers.length) {
 			html += `<ul data-part="list">${answers.map((answer) =>
-				`<li${scope(answer === accepted ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${answer.upvotes != null ? meta('upvoteCount', answer.upvotes) : ''}<p itemprop="text">${esc(answer.text)}</p><small>${answer === accepted ? '✓ Accepted' : ''}${answer.author ? `${answer === accepted ? ' · ' : ''}<span${scope('author', 'Person')}><span itemprop="name">${esc(answer.author)}</span></span>` : ''}${answer.upvotes != null ? ` · ▲ ${num(answer.upvotes)}` : ''}</small></li>`
+				`<li${scope(answer.accepted ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${answer.upvotes != null ? meta('upvoteCount', answer.upvotes) : ''}${quotePart(answer.text, { itemprop: 'text', variant: parts.quote || null })}<small>${answer.accepted ? '<ui-chip theme="pale green">Accepted</ui-chip> ' : ''}${answer.author ? `<span${scope('author', 'Person')}><span itemprop="name">${esc(answer.author)}</span></span>` : ''}${answer.upvotes != null ? ` · ▲ ${num(answer.upvotes)}` : ''}</small></li>`
 			).join('')}</ul>`;
 		}
 		return html + '</div>';
@@ -1016,22 +1101,23 @@ const DETAILS = {
 		let html = meta('duration', d.duration) + meta('contentRating', d.contentRating) + meta('dateCreated', d.dateReleased);
 		const bits = [d.dateReleasedDisplay, d.durationDisplay || (d.duration ? duration(d.duration) : null), d.contentRating].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		if (d.director?.name) html += `<p data-part="meta"${scope('director', 'Person')}>Director: <span itemprop="name">${esc(d.director.name)}</span></p>`;
 		if (d.actors?.length) html += `<p data-part="meta">Starring: ${d.actors.map((name) => `<span${scope('actor', 'Person')}><span itemprop="name">${esc(name)}</span></span>`).join(', ')}</p>`;
-		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		return html;
 	},
 
 	book(d) {
+		/* author byline renders EARLY via BYLINE_EARLY — rating and price follow, publisher is the colophon */
 		let html = meta('isbn', d.isbn) + meta('numberOfPages', d.numberOfPages)
 			+ (BOOK_FORMATS.has(d.bookFormat) ? meta('bookFormat', SCHEMA + d.bookFormat) : '');
 		const bits = [d.numberOfPages ? `${num(d.numberOfPages)} pages` : null, d.bookFormatDisplay || d.bookFormat, d.isbn ? `ISBN ${d.isbn}` : null].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
-		if (d.publisher) html += `<p data-part="meta"${scope('publisher', 'Organization')}>Publisher: <span itemprop="name">${esc(d.publisher)}</span></p>`;
 		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		if (d.price) {
-			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${esc(d.price.currency)} ${esc(d.price.current)}</data></p>`;
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data></p>`;
 		}
+		if (d.publisher) html += `<p data-part="meta"${scope('publisher', 'Organization')}>Publisher: <span itemprop="name">${esc(d.publisher)}</span></p>`;
 		return html;
 	},
 
@@ -1050,15 +1136,16 @@ const DETAILS = {
 	},
 
 	claim(d) {
+		/* verdict leads — it is the answer; the quoted claim follows */
 		const verdict = d.verdict || {};
 		let html = meta('datePublished', d.reviewDate);
-		if (d.claim) html += quotePart(d.claim, { itemprop: 'claimReviewed', cite: d.claimant });
 		if (verdict.label) {
 			const hue = verdict.value != null
 				? verdict.value >= 4 ? 'green' : verdict.value >= 3 ? 'orange' : 'red'
 				: /false|incorrect/i.test(verdict.label) ? 'red' : /true|correct/i.test(verdict.label) ? 'green' : 'orange';
 			html += `<p data-part="meta"${scope('reviewRating', 'Rating')}>${verdict.value != null ? meta('ratingValue', verdict.value) : ''}${meta('bestRating', verdict.max ?? 5)}${meta('worstRating', 1)}<ui-chip theme="pale ${hue}"><span itemprop="alternateName">${esc(verdict.label)}</span></ui-chip></p>`;
 		}
+		if (d.claim) html += quotePart(d.claim, { itemprop: 'claimReviewed', cite: d.claimant });
 		return html;
 	}
 };
@@ -1069,15 +1156,29 @@ const profileSubheadline = (d, textTag) =>
 		? `<${textTag} data-part="subheadline"><span itemprop="jobTitle">${esc(d.jobTitle)}</span>${d.organization ? ` · <span${scope('worksFor', 'Organization')}><span itemprop="name">${esc(d.organization)}</span></span>` : ''}</${textTag}>`
 		: '';
 
+/* byline-early types: author identity precedes the commerce details (book).
+   A preset's byline: "lede" opts any type in — the full-article shape. */
+const BYLINE_EARLY = new Set(['book']);
+
 /* full content column for a card (envelope + details + trailers) */
-const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary', parts = {}) => {
+const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary', parts = {}, bylineMode = 'tail') => {
 	const slots = {};
 	if (type === 'profile' && fields.details) {
 		slots.subheadline = profileSubheadline(fields.details, overlay ? 'span' : 'p');
 	}
-	let html = buildContent(fields, type, overlay, slots, textMode, parts);
+	let tailFields = fields;
+	const lede = bylineMode === 'lede';
+	if ((lede || BYLINE_EARLY.has(type)) && fields.authors?.length) {
+		/* lede: above the body, carrying the dateline. book: after the envelope,
+		   before the commerce details. Either way the tail keeps neither. */
+		const early = byline(fields.authors, 'author', lede ? datelinePart(fields) : '');
+		if (lede) slots.byline = early;
+		tailFields = lede ? { ...fields, authors: null, published: null, readingTime: null } : { ...fields, authors: null };
+		if (!lede) slots.after = early;
+	}
+	let html = buildContent(fields, type, overlay, slots, textMode, parts) + (slots.after || '');
 	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields, parts);
-	html += buildTail(fields, type);
+	html += buildTail(tailFields, type);
 	return html + extras;
 };
 
@@ -1086,7 +1187,8 @@ const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary',
 /* Back panel derived from the host card's own envelope + details. */
 const derivedBack = (fields, type) => {
 	let html = fields.eyebrow ? `<small data-part="eyebrow">${esc(fields.eyebrow)}</small>` : '';
-	html += `<h3 data-part="headline">${renderInline(fields.headline)}${fields.details?.version ? ` ${esc(fields.details.version)}` : ''}</h3>`;
+	/* version rides the details chip, not the headline */
+	html += `<h3 data-part="headline">${renderInline(fields.headline)}</h3>`;
 	if (fields.summary) html += `<p data-part="summary" itemprop="${SUMMARY_PROP[type] || 'description'}">${esc(fields.summary)}</p>`;
 	html += bodyHtml(fields, type);
 	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields);
@@ -1128,7 +1230,7 @@ const renderReveal = (fields, type, itemtype, tokens, preset, flipside, cardId =
 		<ui-content${attrs({ content: preset.content || null })}>
 			${fields.eyebrow ? `<small data-part="eyebrow">${esc(fields.eyebrow)}</small>` : ''}
 			<strong data-part="headline" itemprop="${HEADLINE_PROP[type] || 'name'}">${renderInline(fields.headline)}</strong>
-			${fields.details?.version ? `<span data-part="meta">v<span itemprop="softwareVersion">${esc(fields.details.version)}</span></span>` : ''}
+			${fields.details?.version ? `<span data-part="meta"><ui-chip theme="pale accent">v<span itemprop="softwareVersion">${esc(fields.details.version)}</span></ui-chip></span>` : ''}
 		</ui-content>`;
 	/* <ui-face> only where the animation transforms the front face; exp animates the host */
 	const front = RVL_FACED.has(anim) ? `<ui-face>${inner}</ui-face>` : inner;
@@ -1218,7 +1320,7 @@ export function renderCard(ucf, presets = {}, cards = {}) {
 			style: styleAttr(preset.styles),
 			itemscope: true,
 			itemtype
-		})}>${contentColumn(fields, type, false, '', preset.text || 'summary', preset.parts || {})}</ui-content>`;
+		})}>${contentColumn(fields, type, false, '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail')}</ui-content>`;
 	}
 
 	const media = buildMedia(fields, type, tokens, preset, {}, cardId);
@@ -1233,7 +1335,7 @@ export function renderCard(ucf, presets = {}, cards = {}) {
 	})}>
 		<cq-box>
 			${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
-			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {})}</ui-content>
+			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail')}</ui-content>
 		</cq-box>
 	</ui-card>`;
 }

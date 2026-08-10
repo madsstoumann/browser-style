@@ -39,6 +39,10 @@
           "postalCode": "1058",
           "addressLocality": "Copenhagen",
           "addressCountry": "DK"
+        },
+        "geo": {
+          "latitude": 55.6759,
+          "longitude": 12.5926
         }
       },
       "offices": [
@@ -52,10 +56,20 @@
           "telephone": "+45 86 12 34 56",
           "openingHours": [
             {
-              "schema": "Mo-Fr 09:00-17:00",
-              "display": "Mon–Fri 9–17"
+              "schema": "Mo-We 09:00-17:00"
+            },
+            {
+              "schema": "Th 09:00-16:00"
+            },
+            {
+              "schema": "Fr 09:00-14:00"
             }
-          ]
+          ],
+          "geo": {
+            "latitude": 56.1567,
+            "longitude": 10.2108
+          },
+          "email": "aarhus@northwind.example"
         },
         {
           "name": "Berlin office",
@@ -67,12 +81,20 @@
           "telephone": "+49 30 901820",
           "openingHours": [
             {
-              "schema": "Mo-Fr 08:30-16:30",
-              "display": "Mon–Fri 8:30–16:30"
+              "schema": "Mo-Th 08:30-17:00"
+            },
+            {
+              "schema": "Fr 08:30-15:00"
             }
-          ]
+          ],
+          "geo": {
+            "latitude": 52.5296,
+            "longitude": 13.4062
+          },
+          "email": "berlin@northwind.example"
         }
-      ]
+      ],
+      "email": "contact@northwind.example"
     }
   }
 }

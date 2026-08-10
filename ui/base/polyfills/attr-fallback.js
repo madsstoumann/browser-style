@@ -107,7 +107,8 @@ function isTypedAttrSupported() {
 	const el = document.createElement('div');
 	el.dataset.t = '1';
 	el.style.setProperty('--t', 'attr(data-t type(<number>), 0)');
-	document.body.append(el);
+	/* may run from <head> (render-blocking, before <body> exists) — see init() */
+	(document.body ?? document.documentElement).append(el);
 	const supported = getComputedStyle(el).getPropertyValue('--t').trim() === '1';
 	el.remove();
 	return supported;
@@ -160,7 +161,9 @@ function observe() {
 			}
 		}
 	});
-	observer.observe(document.body, {
+	/* documentElement, not body: a render-blocking <head> load has no body yet, and
+	   the nodes must be named as the parser adds them — before first paint */
+	observer.observe(document.documentElement, {
 		attributeFilter: watchedAttributes(),
 		attributes: true,
 		childList: true,
@@ -175,10 +178,11 @@ function init() {
 	observe();
 }
 
-if (document.readyState === 'loading') {
-	document.addEventListener('DOMContentLoaded', init, { once: true });
-} else {
-	init();
-}
+/* Run NOW, never on DOMContentLoaded: a cross-document view transition snapshots
+   the incoming page at FIRST PAINT, which is earlier — waiting means the morph
+   targets are unnamed and the transition degrades to a cross-fade (forward only;
+   Back looked fine because that page came back already patched). Pages that need
+   this before paint load the script in <head> with blocking="render". */
+init();
 
 export { apply, isTypedAttrSupported };
