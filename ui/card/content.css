@@ -354,7 +354,8 @@
 			& small { color: var(--ui-content-meta-ink, var(--ui-content-muted)); }
 		}
 
-		/* list — Body group */
+		/* list — Body group. Marker themes via --ui-content-list-marker (string values
+		   ride list-style-type — Baseline; ::marker content is not, Safari) */
 		& [data-part="list"] {
 			color: var(--ui-content-list-ink, var(--ui-content-body-ink, inherit));
 			display: flex;
@@ -362,23 +363,27 @@
 			font-size: var(--ui-content-list-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
 			gap: var(--ui-content-list-gap, var(--spacing-xs));
 			list-style-position: inside;
+			list-style-type: var(--ui-content-list-marker, disc);
 			margin: 0;
 			padding: 0;
+			& li::marker { color: var(--ui-content-list-marker-ink, currentColor); }
 		}
-		/* block-content items (qa answers) drop the marker — inside-position bullets wrap onto their own line */
+		& ol[data-part="list"] { list-style-type: var(--ui-content-list-marker, decimal); }
+		/* block-content rows (qa answers): no marker — inside-position bullets wrap onto their own line */
+		& [data-part="list"]:has(> li > :is(p, ui-quote)) {
+			--ui-content-list-marker: none;
+			gap: var(--ui-content-list-answers-gap, var(--spacing-md));
+		}
 		& [data-part="list"] li:has(> p, > ui-quote) {
 			display: flex;
 			flex-direction: column;
 			gap: var(--ui-content-list-answer-gap, var(--spacing-sm));
-			list-style: none;
 		}
-		/* answer rows breathe more than plain list rows */
-		& [data-part="list"]:has(> li > ui-quote) { gap: var(--ui-content-list-answers-gap, var(--spacing-md)); }
-		/* crossed list — excluded items (membership limitations): muted ✗ prefix */
-		& [data-part="list"][data-variant="crossed"] li {
-			color: var(--ui-content-list-crossed-ink, var(--ui-content-muted));
-			list-style: none;
-			&::before { content: '✗ '; color: var(--ui-content-list-crossed-mark, var(--color-error, currentColor)); }
+		/* crossed list — excluded items (membership limitations) */
+		& [data-part="list"][data-variant="crossed"] {
+			--ui-content-list-marker: '✗  ';
+			--ui-content-list-marker-ink: var(--ui-content-list-crossed-mark, var(--color-error, currentColor));
+			& li { color: var(--ui-content-list-crossed-ink, var(--ui-content-muted)); }
 		}
 
 		/* links — Trailer group: plain related-link rows, not buttons */
