@@ -81,7 +81,7 @@ import resolves; markup, styling and behaviour are identical without it.
 | `hover` | string | Opt-in hover effects (composable): `lift`, `pop`, `tilt`, `spin`, `press` (+ `-tilt`/`-spin`) |
 | `angle` | angle | Rotation for `variant="text"` (e.g. `-3deg`) |
 
-> **Migrating from 1.x:** `color` → `fill`; the `color-end`/`angle` gradient → a custom class; `variant`'s `fs()` → `font`/`font-lead` size, `fw()` → weight, `gap()` → `gap`, `sh()` → `shadow`, `shadow()` → `font="shadow()"`, `fit` → `font="fit"`, `ink()` → `ink`. (`glass` was removed.) `--ui-sticker-text-font` → `--ui-sticker-font-family`.
+> **Migrating from 1.x:** `color` → `fill`; the `color-end`/`angle` gradient → a custom class; `variant`'s `fs()` → `font`/`font-lead` size, `fw()` → weight, `gap()` → `gap`, `sh()` → `shadow`, `shadow()` → `font="shadow()"`, `fit` → `font="fit"`, `ink()` → `ink`. (`glass` moved to the shared axis — `theme="… glass"`, see [theme.md](../base/theme.md#glass).) `--ui-sticker-text-font` → `--ui-sticker-font-family`.
 
 ---
 
