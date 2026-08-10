@@ -38,6 +38,7 @@ grouped by role. Paths are relative to `ui/`, matching how the demos link them
 | `ui/accordion` | `<ui-accordion>` — faq / recipe / job presets | `accordion/ui-accordion.css` |
 | `ui/avatar` | `<ui-avatar>` — byline images + initials | `avatar/ui-avatar.css` |
 | `ui/gradient-text` | `<ui-gradient-text>` | `gradient-text/ui-gradient-text.css` |
+| `ui/highlight` | `<high-light>` — pen-marker highlight on inline text | `highlight/ui-highlight.css` |
 | `ui/icon` | `<ui-icon>` — reveal + accordion toggles | `icon/index.css` |
 | `ui/progress` | bare `<progress>` — poll / comparison parts | `progress/ui-progress.css` |
 | `ui/quote` | `<ui-quote>`, `data-part="quote"` | `quote/ui-quote.css` |
@@ -60,5 +61,10 @@ grouped by role. Paths are relative to `ui/`, matching how the demos link them
 - **JS is optional** — demos load `card/index.js` (or `video.js` alone) plus the two
   typed-`attr()` polyfills (`base/polyfills/attr-fallback.js`,
   `layout/polyfills/attr-fallback.js`). Every demo renders without them.
-- The richest single reference is [`demo/schema.html`](./demo/schema.html), which links
-  all fourteen optional packages at once.
+- **Package name ≠ element name in two places:** `ui/highlight` registers `<high-light>`
+  (stylesheet `ui-highlight.css`), and `ui/gradient-text` registers `<ui-gradient-text>`.
+- **No single demo links everything.** The two widest are
+  [`demo/schema.html`](./demo/schema.html) — the text-area set (quote, accordion, avatar,
+  timeline, rating, progress, gradient-text, icon, reveal) — and
+  [`demo/media.furniture.html`](./demo/media.furniture.html) — the media-furniture set
+  (beacon, chip, play, save, sticker, marquee). Neither links the other's packages.

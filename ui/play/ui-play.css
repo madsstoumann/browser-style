@@ -6,7 +6,14 @@
 @layer bs-component {
 	:where(ui-play) {
 		& button {
+			/* base's ring is 0-blur and em-based, so it never tracks --ui-play-sz — restate
+			   it as a soft glow proportional to the disc. Docs: ../base/button.css */
+			--button-bxsh--hover:
+				color-mix(in srgb, var(--ui-play-bg, rgb(0 0 0 / 0.55)), transparent 55%)
+				0 0 calc(var(--ui-play-sz, 3em) * 0.2) calc(var(--ui-play-sz, 3em) * 0.05);
+
 			aspect-ratio: 1;
+			backdrop-filter: var(--ui-play-bdf, none); /* theme="… glass" — the disc is the plate */
 			background: var(--ui-play-bg, rgb(0 0 0 / 0.55));
 			border: 0;
 			border-radius: var(--ui-play-radius, var(--radius-circle, 50%));
@@ -53,6 +60,17 @@
 	:where(ui-play[theme~="white"],  [media*="play(white)"]  ui-play) { --ui-play-bg: var(--ui-theme-white-bg);  --ui-play-c: var(--ui-theme-white-c); }
 	:where(ui-play[theme~="gray"],   [media*="play(gray)"]   ui-play) { --ui-play-bg: var(--ui-theme-gray-bg);   --ui-play-c: var(--ui-theme-gray-c); }
 	:where(ui-play[theme~="slate"],  [media*="play(slate)"]  ui-play) { --ui-play-bg: var(--ui-theme-slate-bg);  --ui-play-c: var(--ui-theme-slate-c); }
+
+	/* glass — the BUTTON is the plate, not the host: republish into the inheriting
+	   --ui-play-* tokens (--_theme-* don't inherit) and null the host's own blur, or a
+	   square blur shows behind the round disc. Docs: ../base/theme.md § Universal paint */
+	:where(ui-play[theme~="glass"], ui-play[data-theme~="glass"]) {
+		backdrop-filter: none;
+		--ui-play-bg: var(--_theme-bg);
+		--ui-play-bg-hover: color-mix(in srgb, var(--_theme-bg), CanvasText 12%);
+		--ui-play-bdf: var(--_theme-bdf);
+		--ui-play-c: hsl(0 0% 100%); /* glyph keeps the default ink — glass tints the disc only */
+	}
 
 	/* arbitrary colour — overrides the hue, so it stays after it */
 	:where(ui-play[fill]) { --ui-play-bg: attr(fill type(<color>), rgb(0 0 0 / 0.55)); --ui-play-c: contrast-color(var(--ui-play-bg)); }
