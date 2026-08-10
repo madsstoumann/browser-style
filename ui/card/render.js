@@ -998,6 +998,7 @@ const DETAILS = {
 
 	membership(d) {
 		let html = eligibleDuration(d.trialPeriod);
+		if (d.isPopular) html += `<p data-part="meta"><ui-chip theme="pale accent">${esc(d.popularText || 'Most popular')}</ui-chip></p>`;
 		if (d.price) {
 			html += `<p data-part="price"${scope('priceSpecification', 'PriceSpecification')}>${meta('priceCurrency', d.price.currency)}<data itemprop="price" value="${esc(d.price.monthly)}">${fmtPrice(d.price.currency, d.price.monthly)}</data>/mo ${d.price.yearly ? `<small>or ${fmtPrice(d.price.currency, d.price.yearly)}/yr${d.price.savings ? ` — ${esc(d.price.savings)}` : ''}</small>` : ''}</p>`;
 		}

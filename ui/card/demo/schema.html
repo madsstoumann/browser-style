@@ -963,15 +963,16 @@
 	     ============================================================ -->
 	<section>
 	<h2>Membership — <code>Offer</code></h2>
-	<p class="note">Dark theme, <code>PriceSpecification</code>, features as check-<code>list</code>.</p>
+	<p class="note">Dark theme, <code>PriceSpecification</code>, features as check-<code>list</code> with the excluded ones as a <code>crossed</code> list. <code>details.isPopular</code> renders the promotional chip — a state, so it keeps the eyebrow free for the actual category.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" theme="muted gray" itemscope itemtype="https://schema.org/Offer">
 			<cq-box>
 				<ui-media><img src="/assets/images/fittrackpro.png" alt="Fitness tracker on a wrist" itemprop="image"></ui-media>
 				<ui-content>
 					<span itemprop="eligibleDuration" itemscope itemtype="https://schema.org/QuantitativeValue" hidden><meta itemprop="value" content="14"><meta itemprop="unitCode" content="DAY"></span>
-					<small data-part="eyebrow">Most popular</small>
+					<small data-part="eyebrow">Membership</small>
 					<h3 data-part="headline" itemprop="name">FitTrack Pro</h3>
+					<p data-part="meta"><ui-chip theme="pale accent">Most popular</ui-chip></p>
 					<p data-part="summary" itemprop="description">Unlimited workouts, personal coaching and priority support.</p>
 					<p data-part="price" itemprop="priceSpecification" itemscope itemtype="https://schema.org/PriceSpecification">
 						<meta itemprop="priceCurrency" content="USD">
