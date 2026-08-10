@@ -48,19 +48,23 @@
 	</header>
 
 	<section>
-	<h2>Proposed <code>data-part</code> vocabulary</h2>
-	<p class="note">Rebuilding all 25 types needs a few parts <code>&lt;ui-content&gt;</code> does not style yet. This page uses them as a <strong>spec</strong> — they render with default typography until <code>content.css</code> catches up. Everything else reuses existing parts (<code>meta</code> for salaries/hours/dates, <code>tags</code> for skills/hashtags, <code>byline</code> for people, <code>footer</code> for totals).</p>
+	<h2>Structured <code>data-part</code> vocabulary</h2>
+	<p class="note">The eleven parts the typed cards add on top of the envelope. All are <strong>styled</strong> in <a href="../content.css"><code>content.css</code></a> — this page is the reference markup <code>render.js</code> follows, not a wish list. Envelope parts carry the rest: <code>eyebrow</code>, <code>headline</code>, <code>subheadline</code>, <code>summary</code>, <code>meta</code> (salaries, specs, dates), <code>byline</code> + <code>byline-who</code> + <code>dateline</code> (people), <code>tags</code>, <code>actions</code> and <code>footer</code> (totals, recommendations). <code>caption</code> belongs to the media frame — see <a href="media.html">media.html</a>.</p>
 	<table>
 		<thead><tr><th>data-part</th><th>Element</th><th>Purpose</th><th>Used by</th></tr></thead>
 		<tbody>
-			<tr><td><code>price</code></td><td><code>&lt;p&gt;</code> + <code>&lt;data&gt;</code>/<code>&lt;del&gt;</code>/<code>&lt;small&gt;</code></td><td>Price row (Offer microdata)</td><td>product, course, booking, membership, software</td></tr>
-			<tr><td><code>rating</code></td><td><code>&lt;div&gt;</code> + masked <code>&lt;input&gt;</code> + count</td><td>Star rating (AggregateRating / Rating)</td><td>product, review, software</td></tr>
-			<tr><td><code>list</code></td><td><code>&lt;ul&gt;</code> check / <code>&lt;ol&gt;</code> ordered</td><td>Features, qualifications, ingredients, steps</td><td>recipe, job, course, booking, location, membership</td></tr>
-			<tr><td><code>address</code></td><td><code>&lt;address&gt;</code></td><td>Postal address (PostalAddress scope)</td><td>business, location, event, contact</td></tr>
+			<tr><td><code>price</code></td><td><code>&lt;p&gt;</code> + <code>&lt;data&gt;</code>/<code>&lt;del&gt;</code>/<code>&lt;ui-chip&gt;</code></td><td>Price row (Offer / MonetaryAmount microdata), currency-formatted</td><td>product, job, course, booking, membership, software, book</td></tr>
+			<tr><td><code>rating</code></td><td><code>&lt;div&gt;</code> + readonly <code>.ui-rating</code> + <code>[data-sr]</code> label + count</td><td>Star rating (AggregateRating / Rating)</td><td>product, review, business, movie, book</td></tr>
+			<tr><td><code>list</code></td><td><code>&lt;ul&gt;</code> / <code>&lt;ol&gt;</code>; marker via <code>--ui-content-list-marker</code>, <code>data-variant="crossed"</code> for excluded items</td><td>Ingredients, qualifications, features, amenities, answers</td><td>recipe, job, course, booking, location, membership, how-to, Q&amp;A, dataset</td></tr>
+			<tr><td><code>links</code></td><td><code>&lt;ul&gt;</code> of plain link rows</td><td>Related links — the envelope <code>links[]</code>, deliberately not buttons</td><td>any type</td></tr>
+			<tr><td><code>address</code></td><td><code>&lt;address&gt;</code> of stacked lines</td><td>Postal address (PostalAddress scope); a 2-letter country code stays machine-only</td><td>business, location, organization</td></tr>
+			<tr><td><code>hours</code></td><td>two-column <code>&lt;dl&gt;</code></td><td>Opening hours, one row per pattern (<code>openingHoursSpecification</code>; the flat string only where the type owns it)</td><td>business, location, organization offices</td></tr>
+			<tr><td><code>office</code></td><td><code>&lt;div&gt;</code> wrapping name + address + contacts + hours</td><td>One local branch (<code>department</code> → LocalBusiness)</td><td>organization</td></tr>
 			<tr><td><code>stat</code></td><td><code>&lt;p&gt;</code> + <code>&lt;data&gt;</code> value + unit + trend</td><td>Big-number display</td><td>statistic</td></tr>
-			<tr><td><code>timeline</code></td><td><code>&lt;ol&gt;</code> of <code>&lt;time&gt;</code> + text</td><td>Vertical milestone list</td><td>timeline</td></tr>
-			<tr><td><code>quote</code></td><td><code>&lt;ui-quote&gt;</code> + <code>&lt;cite&gt;</code></td><td>Pull-quote</td><td>quote, review, social</td></tr>
+			<tr><td><code>timeline</code></td><td><code>&lt;ol&gt;</code> of <code>&lt;time&gt;</code> + text</td><td>Milestone list (<code>subEvent</code> scopes)</td><td>timeline</td></tr>
+			<tr><td><code>quote</code></td><td><code>&lt;ui-quote&gt;</code> + <code>&lt;blockquote&gt;</code> (+ <code>&lt;cite&gt;</code>)</td><td>Third-party voice: pull-quote, review body, post, answer, reviewed claim</td><td>quote, review, social, Q&amp;A, fact check</td></tr>
 			<tr><td><code>options</code></td><td><code>&lt;ul&gt;</code> of <code>&lt;label&gt;</code> + <code>&lt;progress&gt;</code></td><td>Poll answers / comparison rows with bars</td><td>poll, comparison</td></tr>
+			<tr><td><code>cover</code></td><td><code>&lt;a&gt;</code> inside the headline, <code>::after</code> covering the card</td><td>Clickable card — one link, no nested anchors; tag/action links stay above it</td><td>article, news (→ the <a href="articles/article.html">full-article pages</a>)</td></tr>
 		</tbody>
 	</table>
 	</section>
