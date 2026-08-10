@@ -836,9 +836,13 @@ const DETAILS = {
 	},
 
 	course(d) {
+		/* the teacher is CourseInstance.instructor → Person; Course.provider is the
+		   ORGANISATION offering it. Emitting the instructor as provider misdeclares both. */
 		let html = meta('timeRequired', d.duration) + meta('educationalLevel', d.difficultyLevel)
-			+ `<div${scope('hasCourseInstance', 'CourseInstance')} hidden>${meta('courseMode', 'Online')}</div>`;
-		html += `<p data-part="meta">${esc(duration(d.duration))} · ${esc(d.difficultyLevel)} · Instructor: <span${scope('provider', 'Organization')}><span itemprop="name">${esc(d.instructor?.name)}</span></span></p>`;
+			+ `<div${scope('hasCourseInstance', 'CourseInstance')} hidden>${meta('courseMode', 'Online')}${meta('courseWorkload', d.courseWorkload)}${d.instructor?.name ? `<span${scope('instructor', 'Person')}>${meta('name', d.instructor.name)}</span>` : ''}</div>`
+			+ (d.provider ? `<span${scope('provider', 'Organization')} hidden>${meta('name', d.provider)}</span>` : '');
+		const facts = [d.duration ? duration(d.duration) : null, d.difficultyLevel, d.courseWorkload ? duration(d.courseWorkload) + ' of study' : null].filter(Boolean).join(' · ');
+		html += `<p data-part="meta">${esc(facts)}${d.instructor?.name ? ` · Instructor: ${esc(d.instructor.name)}${d.instructor.title ? `, ${esc(d.instructor.title)}` : ''}` : ''}</p>`;
 		if (d.price) {
 			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data>${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}</p>`;
 		}
@@ -893,8 +897,10 @@ const DETAILS = {
 
 	timeline(d) {
 		if (!d.items?.length) return '';
+		/* Event REQUIRES startDate — the visible <time> is the label, so the date also
+		   rides a startDate meta (name falls back to the date only when there is no headline) */
 		return `<ol data-part="timeline">${d.items.map((item) =>
-			`<li${scope('subEvent', 'Event')}${item.theme ? ` data-theme="${esc(item.theme)}"` : ''}><time itemprop="name" datetime="${esc(item.date)}">${esc(item.headline || item.date)}</time> <span itemprop="description">${esc(item.text)}</span></li>`
+			`<li${scope('subEvent', 'Event')}${item.theme ? ` data-theme="${esc(item.theme)}"` : ''}>${meta('startDate', item.date)}${meta('endDate', item.endDate)}${item.location ? meta('location', item.location) : ''}<time${item.headline ? '' : ' itemprop="name"'} datetime="${esc(item.date)}">${esc(item.headline || item.date)}</time>${item.headline ? meta('name', item.headline) : ''} <span itemprop="description">${esc(item.text)}</span></li>`
 		).join('')}</ol>`;
 	},
 
@@ -964,8 +970,11 @@ const DETAILS = {
 	},
 
 	contact(d) {
-		let html = meta('contactType', d.contactType) + meta('hoursAvailable', d.availableHours);
-		const bits = [d.availableHoursDisplay, d.languages].filter(Boolean).join(' · ');
+		/* languages are a LIST — one availableLanguage each, not a joined string */
+		const langs = Array.isArray(d.languages) ? d.languages : String(d.languages || '').split(/,\s*/).filter(Boolean);
+		let html = meta('contactType', d.contactType) + meta('hoursAvailable', d.availableHours)
+			+ langs.map((lang) => meta('availableLanguage', lang)).join('');
+		const bits = [d.department, d.availableHoursDisplay, langs.join(', '), d.responseTime ? `Replies ${d.responseTime}` : null].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
 		if (d.contactMethods?.length) {
 			html += `<nav data-part="actions">${d.contactMethods.map((method, index) => contactLink(method, index === 0)).join(' ')}</nav>`;
