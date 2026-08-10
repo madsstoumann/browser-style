@@ -13,6 +13,7 @@
     display: block;
     interpolate-size: allow-keywords;
     > details {
+      backdrop-filter: var(--ui-reveal-bdf, none);
       background: var(--ui-reveal-bg);
       border-radius: var(--ui-card-radius, var(--ui-reveal-radius));
       box-shadow: var(--ui-reveal-shadow, var(--shadow-xl));
@@ -117,6 +118,10 @@
     &[theme] {
       --ui-reveal-bg: var(--_theme-bg, var(--color-surface));
       color: var(--_theme-c, var(--color-text));
+    }
+    &[theme~=glass] {
+      --ui-reveal-bdf: var(--_theme-bdf);
+      backdrop-filter: none;
     }
     &[theme*=border] {
       --ui-reveal-shadow: none;
@@ -502,6 +507,7 @@
 }
 lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
   contain: inline-size;
+  backdrop-filter: none;
 }
 
 /* index.css */
