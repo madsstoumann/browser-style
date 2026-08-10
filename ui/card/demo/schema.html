@@ -1162,7 +1162,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Q&amp;A — <code>QAPage</code></h2>
-	<p class="note">Distinct from FAQ: one <code>mainEntity</code> → <code>Question</code> with community answers — accepted answer first (green <code>&lt;ui-chip&gt;</code>), then by votes; <code>acceptedAnswer</code> / <code>suggestedAnswer</code> → <code>Answer</code> with author and <code>upvoteCount</code>.</p>
+	<p class="note">Distinct from FAQ: one <code>mainEntity</code> → <code>Question</code> with community answers as <code>&lt;ui-quote&gt;</code> (third-party voice, same convention as review/social) — accepted answer first (green <code>&lt;ui-chip&gt;</code>), then by votes; <code>acceptedAnswer</code> / <code>suggestedAnswer</code> → <code>Answer</code> with author and <code>upvoteCount</code>.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/QAPage">
 			<cq-box>
@@ -1178,12 +1178,12 @@
 						<ul data-part="list">
 							<li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
 								<meta itemprop="upvoteCount" content="481">
-								<p itemprop="text">Give the parent display: grid with place-items: center — two lines, handles both axes, works everywhere.</p>
+								<ui-quote data-part="quote"><blockquote itemprop="text"><q>Give the parent display: grid with place-items: center — two lines, handles both axes, works everywhere.</q></blockquote></ui-quote>
 								<small><ui-chip theme="pale green">Accepted</ui-chip> <span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Lena Fischer</span></span> · ▲ 481</small>
 							</li>
 							<li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer">
 								<meta itemprop="upvoteCount" content="217">
-								<p itemprop="text">If it's a single item, margin: auto inside a flex or grid parent also centers on both axes.</p>
+								<ui-quote data-part="quote"><blockquote itemprop="text"><q>If it's a single item, margin: auto inside a flex or grid parent also centers on both axes.</q></blockquote></ui-quote>
 								<small><span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Tomás Rivera</span></span> · ▲ 217</small>
 							</li>
 						</ul>

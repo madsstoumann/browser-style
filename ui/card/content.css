@@ -366,7 +366,14 @@
 			padding: 0;
 		}
 		/* block-content items (qa answers) drop the marker — inside-position bullets wrap onto their own line */
-		& [data-part="list"] li:has(> p) { list-style: none; }
+		& [data-part="list"] li:has(> p, > ui-quote) {
+			display: flex;
+			flex-direction: column;
+			gap: var(--ui-content-list-answer-gap, var(--spacing-sm));
+			list-style: none;
+		}
+		/* answer rows breathe more than plain list rows */
+		& [data-part="list"]:has(> li > ui-quote) { gap: var(--ui-content-list-answers-gap, var(--spacing-md)); }
 		/* crossed list — excluded items (membership limitations): muted ✗ prefix */
 		& [data-part="list"][data-variant="crossed"] li {
 			color: var(--ui-content-list-crossed-ink, var(--ui-content-muted));

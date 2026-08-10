@@ -1023,15 +1023,16 @@ const DETAILS = {
 		return html;
 	},
 
-	qa(d) {
-		/* accepted answer leads, rest by votes; the chip carries the accepted state */
+	qa(d, fields, parts = {}) {
+		/* accepted answer leads, rest by votes; answers are third-party voice → ui-quote
+		   (same convention as review/social/claim), the chip carries the accepted state */
 		const answers = [...(d.answers || [])].sort((a, b) =>
 			(b.accepted ? 1 : 0) - (a.accepted ? 1 : 0) || (b.upvotes || 0) - (a.upvotes || 0));
 		if (!d.question && !answers.length) return '';
 		let html = `<div${scope('mainEntity', 'Question')}>${meta('name', d.question)}${meta('answerCount', answers.length)}${d.upvotes != null ? meta('upvoteCount', d.upvotes) : ''}`;
 		if (answers.length) {
 			html += `<ul data-part="list">${answers.map((answer) =>
-				`<li${scope(answer.accepted ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${answer.upvotes != null ? meta('upvoteCount', answer.upvotes) : ''}<p itemprop="text">${esc(answer.text)}</p><small>${answer.accepted ? '<ui-chip theme="pale green">Accepted</ui-chip> ' : ''}${answer.author ? `<span${scope('author', 'Person')}><span itemprop="name">${esc(answer.author)}</span></span>` : ''}${answer.upvotes != null ? ` · ▲ ${num(answer.upvotes)}` : ''}</small></li>`
+				`<li${scope(answer.accepted ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${answer.upvotes != null ? meta('upvoteCount', answer.upvotes) : ''}${quotePart(answer.text, { itemprop: 'text', variant: parts.quote || null })}<small>${answer.accepted ? '<ui-chip theme="pale green">Accepted</ui-chip> ' : ''}${answer.author ? `<span${scope('author', 'Person')}><span itemprop="name">${esc(answer.author)}</span></span>` : ''}${answer.upvotes != null ? ` · ▲ ${num(answer.upvotes)}` : ''}</small></li>`
 			).join('')}</ul>`;
 		}
 		return html + '</div>';

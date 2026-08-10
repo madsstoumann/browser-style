@@ -455,7 +455,7 @@ Nine parts added for the typed cards, all styled in [`content.css`](../content.c
 | `address` | `<address>` | business, location, event, contact, organization |
 | `stat` | `<p>` + `<data>` + unit + trend | statistic |
 | `timeline` | `<ol>` of `<time>` + text | timeline |
-| `quote` | `<ui-quote>` wrapping `<blockquote>` + `<cite>` | quote, review, social, claim |
+| `quote` | `<ui-quote>` wrapping `<blockquote>` + `<cite>` | quote, review, social, claim, qa |
 | `options` | `<ul>` of `<label>` + `<progress>` | poll, comparison |
 
 Everything else reuses existing parts: `meta` (salaries, hours, dates), `tags`
@@ -481,7 +481,7 @@ peers** of `@browser.style/card` — pages link only the sheets their types need
 
 | schemaType(s) | Sub-component | Emitted markup |
 |---|---|---|
-| quote, review, social, claim | [`ui/quote`](../../quote/) | `<ui-quote data-part="quote" variant?>` wrapping `<blockquote itemprop>` — variant from `parts.quote` (quote defaults to `bigquote`) |
+| quote, review, social, claim, qa | [`ui/quote`](../../quote/) | `<ui-quote data-part="quote" variant?>` wrapping `<blockquote itemprop>` — variant from `parts.quote` (quote defaults to `bigquote`) |
 | faq, recipe, job, howto | [`ui/accordion`](../../accordion/) | `<ui-accordion group variant?><cq-box><details>…` — the `cq-box` is hand-authored by the renderer so the CSS-only form styles without the accordion JS; variant from `parts.accordion` |
 | any card with `authors[]`, review | [`ui/avatar`](../../avatar/) | `<ui-avatar><img></ui-avatar>` in byline rows, `<abbr>` initials fallback when no image; the card sets scale via `--ui-avatar-size` |
 | poll, comparison | [`ui/progress`](../../progress/) | bare `<progress>` — the package styles the native element, no markup contract |
