@@ -23,6 +23,9 @@
 	<link rel="stylesheet" href="../../timeline/ui-timeline.css">
 	<link rel="stylesheet" href="../../gradient-text/ui-gradient-text.css">
 	<link rel="stylesheet" href="../ui-card.css">
+	<!-- Block first paint (and the incoming snapshot on Back) until the morphing
+	     article card is parsed. Docs: docs/card.md § Article pattern -->
+	<link rel="expect" href="#schema-article" blocking="render">
 	<style>
 		.stack { display: grid; gap: var(--spacing-lg); margin-block-end: var(--spacing-2xl); }
 		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
@@ -88,18 +91,18 @@
 	<!-- ============================================================
 	     article — Article
 	     ============================================================ -->
-	<section>
+	<section id="schema-article">
 	<h2>Article — <code>Article</code></h2>
-	<p class="note">Envelope only: byline (author → <code>Person</code>), published date, reading time, engagement (<code>InteractionCounter</code>).</p>
+	<p class="note">Envelope only: byline (author → <code>Person</code>), published date, reading time, engagement (<code>InteractionCounter</code>). The headline is a stretched <code>cover</code> link into the full article — the <code>data-view</code> names morph the card into <a href="articles/article.html">that page</a> across the navigation (see <a href="article.render.html">article.render.html</a>).</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Article">
+		<ui-card data-view="card-article-1" variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Article">
 			<cq-box>
-				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" itemprop="image"></ui-media>
+				<ui-media><img data-view="hero-article-1" src="/assets/images/quantum.png" alt="Stylised quantum processor" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="articleSection" content="Science">
 					<meta itemprop="dateModified" content="2026-06-21T09:00:00Z">
 					<small data-part="eyebrow">Science</small>
-					<h3 data-part="headline" itemprop="headline">Quantum computing reaches a <ui-gradient-text>practical milestone</ui-gradient-text></h3>
+					<h3 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/article.html">Quantum computing reaches a <ui-gradient-text>practical milestone</ui-gradient-text></a></h3>
 					<p data-part="summary" itemprop="description">Researchers demonstrate error-corrected logical qubits running a chemistry simulation faster than any classical supercomputer.</p>
 					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
 						<ui-avatar><img src="/assets/images/janesmith.png" alt=""></ui-avatar>
@@ -122,12 +125,12 @@
 	     ============================================================ -->
 	<section>
 	<h2>News — <code>NewsArticle</code></h2>
-	<p class="note">As Article, plus a “Breaking” <code>&lt;ui-chip&gt;</code> on the media and <code>dateModified</code>.</p>
+	<p class="note">As Article, plus a “Breaking” <code>&lt;ui-chip&gt;</code> on the media and <code>dateModified</code>. Same <code>cover</code> link + <code>data-view</code> morph into <a href="articles/news.html">its full page</a>.</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(16/9) chip(ts) chip(red)" itemscope itemtype="https://schema.org/NewsArticle">
+		<ui-card data-view="card-news-1" variant="col" media="asr(16/9) chip(ts) chip(red)" itemscope itemtype="https://schema.org/NewsArticle">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/government.png" alt="Parliament building at dusk" itemprop="image">
+					<img data-view="hero-news-1" src="/assets/images/government.png" alt="Parliament building at dusk" itemprop="image">
 					<ui-chip>Breaking</ui-chip>
 				</ui-media>
 				<ui-content>
@@ -135,7 +138,7 @@
 					<meta itemprop="datePublished" content="2026-07-01T06:15:00Z">
 					<meta itemprop="dateModified" content="2026-07-01T08:40:00Z">
 					<small data-part="eyebrow">Politics</small>
-					<h3 data-part="headline" itemprop="headline">Coalition agrees on sweeping climate package</h3>
+					<h3 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/news.html">Coalition agrees on sweeping climate package</a></h3>
 					<p data-part="summary" itemprop="description">The agreement includes a carbon border tariff and a national retrofit programme, ending months of negotiation.</p>
 					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
 						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar4.webp" alt=""></ui-avatar>
@@ -1437,6 +1440,8 @@
 		</ui-card>
 	</lay-out>
 	</section>
+	<!-- names the cover cards' morph targets where typed attr() is unsupported (Safari). Docs: ui/base/polyfills/readme.md -->
+	<script type="module" src="/ui/base/polyfills/attr-fallback.js"></script>
 	<!-- optional: media invoker-command polyfill for the podcast <ui-play> button -->
 	<script type="module" src="../video.js"></script>
 </body>

@@ -157,6 +157,18 @@
       "content": "scl(md)",
       "text": "body"
     },
+    "prose-article": {
+      "name": "Prose Article Preset",
+      "description": "Full-article text column: the editorial order — kicker, headline, standfirst (summary), byline with the dateline, then the body. text: both keeps the summary visible as the standfirst; byline: lede lifts the byline out of the tail; a larger avatar and byline size give the author presence at reading scale.",
+      "element": "ui-content",
+      "content": "scl(lg)",
+      "text": "both",
+      "byline": "lede",
+      "styles": {
+        "--ui-content-avatar-size": "2.75em",
+        "--ui-content-byline-fs": "1em"
+      }
+    },
     "carousel": {
       "name": "Carousel Preset",
       "description": "Column card whose media items scroll-snap with dot navigation — galleries",

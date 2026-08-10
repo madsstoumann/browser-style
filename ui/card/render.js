@@ -689,15 +689,19 @@ const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', p
 };
 
 /* byline, tags, actions, engagement — envelope trailers, appended after details */
-const buildTail = (fields, type) => {
-	let html = '';
+/* dateline — its own block in the byline row: date over reading time, end-aligned */
+const datelinePart = (fields) => {
 	const date = fields.published
 		? `<time datetime="${esc(fields.published)}">${new Date(fields.published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</time>`
 		: '';
-	/* dateline — its own block in the byline row: date over reading time, end-aligned */
-	const dateline = date || fields.readingTime
+	return date || fields.readingTime
 		? `<small data-part="dateline">${date}${fields.readingTime ? `<span>${esc(fields.readingTime)}</span>` : ''}</small>`
 		: '';
+};
+
+const buildTail = (fields, type) => {
+	let html = '';
+	const dateline = datelinePart(fields);
 	if (fields.authors?.length) html += byline(fields.authors, type === 'quote' ? 'creator' : 'author', dateline);
 	else if (dateline) html += `<p data-part="meta">${dateline}</p>`;
 	if (fields.tags?.length) {
@@ -1150,20 +1154,23 @@ const profileSubheadline = (d, textTag) =>
 		? `<${textTag} data-part="subheadline"><span itemprop="jobTitle">${esc(d.jobTitle)}</span>${d.organization ? ` · <span${scope('worksFor', 'Organization')}><span itemprop="name">${esc(d.organization)}</span></span>` : ''}</${textTag}>`
 		: '';
 
-/* byline-early types: author identity precedes the commerce details (book) */
+/* byline-early types: author identity precedes the commerce details (book).
+   A preset's byline: "lede" opts any type in — the full-article shape. */
 const BYLINE_EARLY = new Set(['book']);
 
 /* full content column for a card (envelope + details + trailers) */
-const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary', parts = {}) => {
+const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary', parts = {}, bylineMode = 'tail') => {
 	const slots = {};
 	if (type === 'profile' && fields.details) {
 		slots.subheadline = profileSubheadline(fields.details, overlay ? 'span' : 'p');
 	}
 	let html = buildContent(fields, type, overlay, slots, textMode, parts);
 	let tailFields = fields;
-	if (BYLINE_EARLY.has(type) && fields.authors?.length) {
-		html += byline(fields.authors, 'author');
-		tailFields = { ...fields, authors: null };
+	const lede = bylineMode === 'lede';
+	if ((lede || BYLINE_EARLY.has(type)) && fields.authors?.length) {
+		/* the standfirst byline carries the dateline; the tail then has neither */
+		html += byline(fields.authors, 'author', lede ? datelinePart(fields) : '');
+		tailFields = lede ? { ...fields, authors: null, published: null, readingTime: null } : { ...fields, authors: null };
 	}
 	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields, parts);
 	html += buildTail(tailFields, type);
@@ -1308,7 +1315,7 @@ export function renderCard(ucf, presets = {}, cards = {}) {
 			style: styleAttr(preset.styles),
 			itemscope: true,
 			itemtype
-		})}>${contentColumn(fields, type, false, '', preset.text || 'summary', preset.parts || {})}</ui-content>`;
+		})}>${contentColumn(fields, type, false, '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail')}</ui-content>`;
 	}
 
 	const media = buildMedia(fields, type, tokens, preset, {}, cardId);
@@ -1323,7 +1330,7 @@ export function renderCard(ucf, presets = {}, cards = {}) {
 	})}>
 		<cq-box>
 			${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
-			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {})}</ui-content>
+			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail')}</ui-content>
 		</cq-box>
 	</ui-card>`;
 }

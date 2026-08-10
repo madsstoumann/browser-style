@@ -303,7 +303,8 @@ content and belong in the card's `media[]` items. Bare booleans like `clip`, `au
 | `poster` | ui-card | `ovr(bs)` · 3:4 · scrim | location |
 | `carousel` | ui-card | `nav(mrk)` | gallery |
 | `media` | ui-media | bare frame · 21:9 · `rds(lg)` | media-block |
-| `prose` | ui-content | bare text column | prose-block |
+| `prose` | ui-content | bare text column · `text: body` | prose-block |
+| `prose-article` | ui-content | full-article column · `scl(lg)` · `text: both` (standfirst) · `byline: lede` · larger avatar | the `articles/` full views |
 | `flip` | ui-reveal | flip · `ovr(bs) rds(lg-sq)` · `scroll` | software |
 | `hero-reveal` | ui-reveal | expand → scale at lg · 21:9 · dark panel via `styles` | — (from the ui/reveal hero demo) |
 
@@ -485,7 +486,7 @@ peers** of `@browser.style/card` — pages link only the sheets their types need
 |---|---|---|
 | quote, review, social, claim, qa | [`ui/quote`](../../quote/) | `<ui-quote data-part="quote" variant?>` wrapping `<blockquote itemprop>` — variant from `parts.quote` (quote defaults to `bigquote`) |
 | faq, recipe, job, howto | [`ui/accordion`](../../accordion/) | `<ui-accordion group variant?><cq-box><details>…` — the `cq-box` is hand-authored by the renderer so the CSS-only form styles without the accordion JS; variant from `parts.accordion` |
-| any card with `authors[]`, review | [`ui/avatar`](../../avatar/) | `<ui-avatar><img></ui-avatar>` in byline rows, `<abbr>` initials fallback when no image; the card sets scale via `--ui-avatar-size` |
+| any card with `authors[]`, review | [`ui/avatar`](../../avatar/) | `<ui-avatar><img></ui-avatar>` in byline rows, `<abbr>` initials fallback when no image; the byline rule in `content.css` sets `--ui-avatar-size` from `--ui-content-avatar-size` (2.25em default, `em`-relative so it tracks the byline size) — the avatar package's own default is 4em |
 | poll, comparison | [`ui/progress`](../../progress/) | bare `<progress>` — the package styles the native element, no markup contract |
 | faq/recipe/job summaries, reveal toggles | [`ui/icon`](../../icon/) | `<ui-icon type="plus-minus">` etc. |
 
@@ -545,10 +546,18 @@ rest ([`article.render.html`](../demo/article.render.html) is the working demo):
 
 - **Teaser (grid).** The card's preset defaults to `text: "summary"` — the short
   description shows, the `body` never renders.
-- **Full view.** The *same UCF* re-renders through the two bare presets:
-  `media` (hero frame) + `prose` (`text: "body"` — the body renders **instead
-  of** the summary, wrapped in `itemprop="articleBody"`; the summary survives as
-  a hidden `description` meta). Zero article-specific renderer code.
+- **Full view.** The *same UCF* re-renders through two bare presets: `media`
+  (hero frame) + **`prose-article`** — the editorial order, `text: "both"` so the
+  summary stays visible as the **standfirst** above the body (wrapped in
+  `itemprop="articleBody"`), `byline: "lede"` so the byline sits under the
+  standfirst carrying the dateline instead of trailing the article, and
+  `scl(lg)` + a larger avatar for reading scale. Result: kicker → headline →
+  standfirst → byline → body → engagement. Zero article-specific renderer code.
+  (`prose` — `text: "body"`, tail byline — remains the plain text-column preset.)
+- **`byline` is a preset field**, not content: `tail` (default, the teaser shape)
+  or `lede`. `contentColumn()` reads it; the `book` type opts in by type via
+  `BYLINE_EARLY`. When `lede` wins, the tail renders neither byline nor
+  dateline — they move together.
 - **Morph — cross-document, both directions.** Every article has its *own page*
   under [`articles/`](../demo/articles/). Both documents opt in with
   `@view-transition { navigation: auto; }` and carry matching per-article
@@ -588,10 +597,26 @@ rest ([`article.render.html`](../demo/article.render.html) is the working demo):
   > lets one attribute yield two names (or if media-only morph is acceptable).
 
   Group timing is tokenized: `--ui-card-vt-duration` (0.4s) and
-  `--ui-card-vt-easing`, gated behind `prefers-reduced-motion`. Advanced
-  `attr()` is Chromium 133+; where unsupported the name resolves to `none` and
-  the navigation degrades to a plain crossfade/instant swap. Markup stays
+  `--ui-card-vt-easing`, gated behind `prefers-reduced-motion`. Markup stays
   strict-CSP clean — no `style=` attributes anywhere.
+
+  **Browser matrix — and the one thing that must be on the page.** Typed
+  `attr()` is Chromium 133+. Safari 18.2+ *does* support cross-document
+  transitions but not typed `attr()`, so the declaration is dropped and the name
+  resolves to nothing: the navigation still transitions, but as a plain
+  cross-fade with no morph. Every page in this flow therefore loads
+  [`ui/base/polyfills/attr-fallback.js`](../../base/polyfills/attr-fallback.js),
+  whose `[data-view]` entry restores the names there — **a page that opts into
+  the morph but omits that script is the "view transitions don't work" bug.**
+  Firefox has no cross-document transitions and navigates instantly.
+  `prefers-reduced-motion: reduce` disables them by design, and the pages must be
+  **served over http** — from `file://` there is no transition at all (and the
+  root-absolute base CSS 404s, which is the visible tell).
+
+  Pages that carry the morph today: `demo/article.render.html` (the grid),
+  `demo/articles/{article,news}.html` (the full views), and the Article + News
+  sections of `demo/schema.html`, which share the same `card-{id}`/`hero-{id}`
+  names and cover links so the reference page morphs into the same articles.
 - **Static markup + render-blocking — this is what makes the morph reliable.**
   [`articles/build.js`](../demo/articles/build.js) (`node ui/card/articles/build.js`)
   pre-renders the grid page *and* every article page through `render.js` — the
