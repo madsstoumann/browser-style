@@ -24,6 +24,7 @@
 		interpolate-size: allow-keywords;
 
 		> details {
+			backdrop-filter: var(--ui-reveal-bdf, none); /* theme="… glass" — the panel is the plate, not the host */
 			background: var(--ui-reveal-bg);
 			border-radius: var(--ui-card-radius, var(--ui-reveal-radius));
 			box-shadow: var(--ui-reveal-shadow, var(--shadow-xl));
@@ -137,6 +138,11 @@
 		&[theme] {
 			--ui-reveal-bg: var(--_theme-bg, var(--color-surface));
 			color: var(--_theme-c, var(--color-text));
+		}
+		/* theme="… glass" — re-publish the material; the host must not blur a square */
+		&[theme~="glass"] {
+			--ui-reveal-bdf: var(--_theme-bdf);
+			backdrop-filter: none;
 		}
 		/* theme="… border" — the ring is drawn on the host, so match the card radius */
 		&[theme*="border"] {
@@ -456,7 +462,9 @@
 	}
 }
 
-/* popup escape hatch — UNLAYERED: it must beat <lay-out>'s containment */
+/* popup escape hatch — UNLAYERED: it must beat <lay-out>'s containment.
+   backdrop-filter is here because theme="… glass" would re-establish the containing block */
 lay-out:has(ui-reveal[variant~="exp"][variant~="pop"] > details[open]) {
 	contain: inline-size;
+	backdrop-filter: none;
 }
