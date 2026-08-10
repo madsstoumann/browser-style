@@ -1,4 +1,6 @@
-/* Theme Resolver — the shared cross-component `theme=` axis. Docs: theme.md */
+/* Theme Resolver — the shared cross-component `theme=` axis. Docs: theme.md
+   Every selector is a PAIR: theme= (custom elements) and data-theme= (native
+   elements, where a bare attribute is invalid HTML). Keep both arms in sync. */
 
 @property --_theme-base-bg { syntax: "*"; inherits: false; }
 @property --_theme-base-c  { syntax: "*"; inherits: false; }
@@ -15,18 +17,18 @@
 @property --_theme-bw      { syntax: "*"; inherits: false; }
 
 @layer bs-core {
-	:where([theme~="accent"]) { --_theme-base-bg: var(--ui-theme-accent-bg); --_theme-base-c: var(--ui-theme-accent-c); }
-	:where([theme~="black"])  { --_theme-base-bg: var(--ui-theme-black-bg);  --_theme-base-c: var(--ui-theme-black-c); }
-	:where([theme~="blue"])   { --_theme-base-bg: var(--ui-theme-blue-bg);   --_theme-base-c: var(--ui-theme-blue-c); }
-	:where([theme~="gray"])   { --_theme-base-bg: var(--ui-theme-gray-bg);   --_theme-base-c: var(--ui-theme-gray-c); }
-	:where([theme~="green"])  { --_theme-base-bg: var(--ui-theme-green-bg);  --_theme-base-c: var(--ui-theme-green-c); }
-	:where([theme~="orange"]) { --_theme-base-bg: var(--ui-theme-orange-bg); --_theme-base-c: var(--ui-theme-orange-c); }
-	:where([theme~="red"])    { --_theme-base-bg: var(--ui-theme-red-bg);    --_theme-base-c: var(--ui-theme-red-c); }
-	:where([theme~="slate"])  { --_theme-base-bg: var(--ui-theme-slate-bg);  --_theme-base-c: var(--ui-theme-slate-c); }
-	:where([theme~="white"])  { --_theme-base-bg: var(--ui-theme-white-bg);  --_theme-base-c: var(--ui-theme-white-c); }
+	:where([theme~="accent"], [data-theme~="accent"]) { --_theme-base-bg: var(--ui-theme-accent-bg); --_theme-base-c: var(--ui-theme-accent-c); }
+	:where([theme~="black"],  [data-theme~="black"])  { --_theme-base-bg: var(--ui-theme-black-bg);  --_theme-base-c: var(--ui-theme-black-c); }
+	:where([theme~="blue"],   [data-theme~="blue"])   { --_theme-base-bg: var(--ui-theme-blue-bg);   --_theme-base-c: var(--ui-theme-blue-c); }
+	:where([theme~="gray"],   [data-theme~="gray"])   { --_theme-base-bg: var(--ui-theme-gray-bg);   --_theme-base-c: var(--ui-theme-gray-c); }
+	:where([theme~="green"],  [data-theme~="green"])  { --_theme-base-bg: var(--ui-theme-green-bg);  --_theme-base-c: var(--ui-theme-green-c); }
+	:where([theme~="orange"], [data-theme~="orange"]) { --_theme-base-bg: var(--ui-theme-orange-bg); --_theme-base-c: var(--ui-theme-orange-c); }
+	:where([theme~="red"],    [data-theme~="red"])    { --_theme-base-bg: var(--ui-theme-red-bg);    --_theme-base-c: var(--ui-theme-red-c); }
+	:where([theme~="slate"],  [data-theme~="slate"])  { --_theme-base-bg: var(--ui-theme-slate-bg);  --_theme-base-c: var(--ui-theme-slate-c); }
+	:where([theme~="white"],  [data-theme~="white"])  { --_theme-base-bg: var(--ui-theme-white-bg);  --_theme-base-c: var(--ui-theme-white-c); }
 
 	/* chain: base -> pale -> tone -> bg. The tone stage is what lets `muted` feed `glass` */
-	:where([theme]) {
+	:where([theme], [data-theme]) {
 		--_theme-pale-bg: var(--_theme-base-bg);
 		--_theme-pale-c:  var(--_theme-base-c);
 		--_theme-tone-bg: var(--_theme-pale-bg);
@@ -36,19 +38,19 @@
 		--_theme-border: var(--_theme-base-bg);
 		--_theme-bw: var(--border-width, 1px);
 	}
-	:where([theme~="ink"]) { --_theme-c: var(--_theme-ink); }
-	:where([theme~="muted"]) {
+	:where([theme~="ink"], [data-theme~="ink"]) { --_theme-c: var(--_theme-ink); }
+	:where([theme~="muted"], [data-theme~="muted"]) {
 		--_theme-tone-bg: color-mix(in srgb, var(--_theme-pale-bg), transparent 50%);
 		--_theme-tone-c:  color-mix(in srgb, var(--_theme-pale-c),  transparent 50%);
 	}
-	:where([theme~="pale"]) {
+	:where([theme~="pale"], [data-theme~="pale"]) {
 		--_theme-pale-bg: color-mix(in srgb, var(--_theme-base-bg), var(--color-surface) 80%);
 		--_theme-pale-c:  var(--_theme-base-bg);
 	}
 
 	/* --- glass — translucent fill + backdrop material. Docs: theme.md § Glass --- */
 	/* no colour token => --_theme-glass is guaranteed-invalid => the frost fallback */
-	:where([theme~="glass"]) {
+	:where([theme~="glass"], [data-theme~="glass"]) {
 		--_theme-glass:  color-mix(in srgb, var(--_theme-tone-bg), transparent var(--ui-theme-glass-fade));
 		--_theme-bg:     var(--_theme-glass, var(--ui-theme-glass-bg));
 		--_theme-ink:    var(--_theme-base-bg, var(--color-text));
@@ -58,48 +60,69 @@
 	}
 	/* null --_theme-bdf, not backdrop-filter — republishers (ui-reveal) read the var */
 	@media (prefers-reduced-transparency: reduce) {
-		:where([theme~="glass"]) {
+		:where([theme~="glass"], [data-theme~="glass"]) {
 			--ui-theme-glass-fade: 0%;
 			--ui-theme-glass-bg: var(--color-surface);
 			--_theme-bdf: none;
 		}
 	}
 
+	/* --- universal paint — the axis fills its own box. Docs: theme.md § Universal paint
+	   Components that paint themselves override this from @layer bs-component (declared
+	   later, so it outranks bs-core). The exclusions never paint their own box: the
+	   icon-only controls are transparent by design, ui-beacon draws its dot in ::before
+	   (only variant="pill|solid" fills the host), and ui-reveal routes its surface to
+	   the inner <details>. Add a component here only if it must NOT fill. */
+	:where([theme], [data-theme]):not(ui-save, ui-play, ui-lightbox, ui-beacon, ui-reveal) {
+		background-color: var(--_theme-bg, transparent);
+		color: var(--_theme-c, var(--color-text));
+	}
+
 	/* --- color-scheme --- */
-	:where([theme~="light"]) { color-scheme: light; }
-	:where([theme~="dark"])  { color-scheme: dark; }
+	:where([theme~="light"], [data-theme~="light"]) { color-scheme: light; }
+	:where([theme~="dark"],  [data-theme~="dark"])  { color-scheme: dark; }
 
 	/* --- border —-- */
-	:where([theme*="border"]) {
+	:where([theme*="border"], [data-theme*="border"]) {
 		border-color: var(--_theme-border);
 		border-style: var(--_theme-bs, solid);
 		border-width: 0;
 	}
-	:where([theme*="border"]:not([theme~="pale"], [theme~="glass"])) {
+	:where(
+		[theme*="border"]:not([theme~="pale"], [theme~="glass"]),
+		[data-theme*="border"]:not([data-theme~="pale"], [data-theme~="glass"])
+	) {
 		--_theme-bg: #0000;
 		--_theme-ink: var(--_theme-base-bg);
 	}
 
-	:where([theme*="border(sm)"])  { --_theme-bw: var(--border-width); }
-	:where([theme*="border(md)"])  { --_theme-bw: var(--border-width-thick); }
-	:where([theme*="border(lg)"])  { --_theme-bw: var(--border-width-heavy); }
-	:where([theme*="border(xl)"])  { --_theme-bw: var(--border-width-xl); }
-	:where([theme*="border(2xl)"]) { --_theme-bw: var(--border-width-2xl); }
+	:where([theme*="border(sm)"],  [data-theme*="border(sm)"])  { --_theme-bw: var(--border-width); }
+	:where([theme*="border(md)"],  [data-theme*="border(md)"])  { --_theme-bw: var(--border-width-thick); }
+	:where([theme*="border(lg)"],  [data-theme*="border(lg)"])  { --_theme-bw: var(--border-width-heavy); }
+	:where([theme*="border(xl)"],  [data-theme*="border(xl)"])  { --_theme-bw: var(--border-width-xl); }
+	:where([theme*="border(2xl)"], [data-theme*="border(2xl)"]) { --_theme-bw: var(--border-width-2xl); }
 
-	:where([theme*="border(dashed)"]) { --_theme-bs: dashed; }
-	:where([theme*="border(dotted)"]) { --_theme-bs: dotted; }
-	:where([theme*="border(double)"]) { --_theme-bs: double; }
+	:where([theme*="border(dashed)"], [data-theme*="border(dashed)"]) { --_theme-bs: dashed; }
+	:where([theme*="border(dotted)"], [data-theme*="border(dotted)"]) { --_theme-bs: dotted; }
+	:where([theme*="border(double)"], [data-theme*="border(double)"]) { --_theme-bs: double; }
 
-	:where([theme*="border"]:not(
-		[theme*="border(bs)"], [theme*="border(be)"],
-		[theme*="border(is)"], [theme*="border(ie)"],
-		[theme*="border(bk)"], [theme*="border(in)"]
-	)) { border-width: var(--_theme-bw); }
+	:where(
+		[theme*="border"]:not(
+			[theme*="border(bs)"], [theme*="border(be)"],
+			[theme*="border(is)"], [theme*="border(ie)"],
+			[theme*="border(bk)"], [theme*="border(in)"]
+		),
+		[data-theme*="border"]:not(
+			[data-theme*="border(bs)"], [data-theme*="border(be)"],
+			[data-theme*="border(is)"], [data-theme*="border(ie)"],
+			[data-theme*="border(bk)"], [data-theme*="border(in)"]
+		)
+	) { border-width: var(--_theme-bw); }
 	/* explicit sides (additive) */
-	:where([theme*="border(bs)"]) { border-block-start-width:  var(--_theme-bw); }
-	:where([theme*="border(be)"]) { border-block-end-width:    var(--_theme-bw); }
-	:where([theme*="border(is)"]) { border-inline-start-width: var(--_theme-bw); }
-	:where([theme*="border(ie)"]) { border-inline-end-width:   var(--_theme-bw); }
-	:where([theme*="border(bk)"]) { border-block-width:  var(--_theme-bw); }
-	:where([theme*="border(in)"]) { border-inline-width: var(--_theme-bw); }
+	:where([theme*="border(bs)"], [data-theme*="border(bs)"]) { border-block-start-width:  var(--_theme-bw); }
+	:where([theme*="border(be)"], [data-theme*="border(be)"]) { border-block-end-width:    var(--_theme-bw); }
+	:where([theme*="border(is)"], [data-theme*="border(is)"]) { border-inline-start-width: var(--_theme-bw); }
+	:where([theme*="border(ie)"], [data-theme*="border(ie)"]) { border-inline-end-width:   var(--_theme-bw); }
+	:where([theme*="border(bk)"], [data-theme*="border(bk)"]) { border-block-width:  var(--_theme-bw); }
+	:where([theme*="border(in)"], [data-theme*="border(in)"]) { border-inline-width: var(--_theme-bw); }
 }

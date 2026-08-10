@@ -2,10 +2,10 @@
 
 `theme=` is one **generic, cross-component color axis**. The same vocabulary works
 on `<ui-card>`, `<ui-reveal>`, `<ui-content>`, `<ui-chip>`, `<ui-sticker>`,
-`<lay-out>`/`<lay-out-group>` and any other component that opts in — so a layout can
-be `gray` while the cards inside it are `black`, `red pale`, etc. Each element
-resolves its own `theme=` independently; a themed ancestor never leaks its theme onto
-un-themed descendants.
+`<lay-out>`/`<lay-out-group>`, on **any native element** via `data-theme=`, and on any
+other component that opts in — so a layout can be `gray` while the cards inside it are
+`black`, `red pale`, etc. Each element resolves its own theme independently; a themed
+ancestor never leaks its theme onto un-themed descendants.
 
 That independence is what makes **two-sided** components work: a `<ui-reveal>` carries
 the card's theme, and the back panel element carries its own — see
@@ -26,6 +26,30 @@ number of **modifier** tokens.
 <ui-chip  theme="red pale muted">quiet</ui-chip>
 <lay-out  theme="gray" bleed>…</lay-out>
 ```
+
+### `theme=` or `data-theme=`
+
+Both spellings resolve identically — every rule in `theme.css` is a pair. Pick by
+element type:
+
+| Spelling | Use on | Why |
+|---|---|---|
+| `theme=` | custom elements (`<ui-card>`, `<ui-chip>`, `<lay-out>`…) | shortest, and a bare attribute is valid on a custom element |
+| `data-theme=` | **native** elements (`<div>`, `<section>`, `<li>`, `<blockquote>`…) | a bare `theme` attribute is **invalid HTML** on a built-in element |
+
+```html
+<section data-theme="slate glass">…</section>
+<blockquote data-theme="blue pale">…</blockquote>
+```
+
+Mixing both on one element is pointless but harmless — they set the same properties,
+so the later rule simply wins.
+
+> **Note on the wider `data-theme` convention.** Many sites (and Docusaurus) use
+> `data-theme="light|dark"` on `<html>` for scheme switching. Those two words happen to
+> line up with this axis' `light`/`dark` modifiers, so the effect is the same
+> (`color-scheme`). Any other value from such a system (`data-theme="corporate"`) names
+> no bundle here and is simply inert.
 
 ### Color tokens (pick one)
 
@@ -219,12 +243,12 @@ not a swap to a transparent box.
 **Caveats:**
 - **It needs something behind it.** Over a flat page surface a glass panel is just a
   tint — the blur has nothing to show. Put it over imagery, a gradient, or content.
-- **The fill still follows the opt-in path.** `theme.css` applies the *material*
-  (the `backdrop-filter` and the edge colour) universally, the same way `border`
-  works, but the translucent **fill** is painted by the component that consumes
-  `--_theme-bg`. A plain `<div theme="glass">` therefore blurs its backdrop without a
-  scrim; add `background: var(--_theme-bg)` if you want one. See
-  [How a component opts in](#how-a-component-opts-in).
+- **The excluded elements get the material without the fill.** `theme.css` applies the
+  *material* (the `backdrop-filter` and the edge colour) to everything, and the
+  translucent **fill** to everything except the elements listed under
+  [Universal paint](#universal-paint). On one of those — `<ui-play theme="glass">` — you
+  get a blur with no scrim, which is usually not what you want; theme the frame or a
+  wrapper instead.
 - **Not with `bleed`.** `<lay-out [bleed]>` / `<lay-out-group [bleed]>` paint their
   band with a `border-image` conic-gradient, while `backdrop-filter` only filters the
   element's own box — so the bled edges will not be glass. Same caveat as `border`.
@@ -242,7 +266,52 @@ not a swap to a transparent box.
   opaque and the blur is dropped. An explicit `muted` is left alone: that is an
   author's colour choice, not the glass effect.
 
+## Universal paint
+
+The resolver **fills its own box by default**. Any element carrying the axis gets
+
+```css
+background-color: var(--_theme-bg, transparent);
+color:            var(--_theme-c, var(--color-text));
+```
+
+so `<div data-theme="red">`, `<section data-theme="slate glass">` or a brand-new
+component works with no wiring at all. This is why `glass` on an arbitrary element is
+a real frosted pane and not just a bare backdrop blur.
+
+Two things keep that from trampling existing components:
+
+- **Components that paint themselves win.** The rule sits in `@layer bs-core`, and
+  component CSS is `@layer bs-component`, declared later — so `<ui-card>`, `<ui-chip>`,
+  `<ui-content>`, `<ui-sticker>`, `<ui-marquee>` and `<lay-out>` keep painting through
+  their own tokens exactly as before. Nothing to change when a component opts in.
+- **Elements whose host is not the surface are excluded**, by name, in `theme.css`:
+
+  | Excluded | Why |
+  |---|---|
+  | `ui-save` · `ui-play` · `ui-lightbox` | icon-only controls — transparent by design |
+  | `ui-beacon` | draws its dot in `::before`; only `variant="pill\|solid"` fills the host |
+  | `ui-reveal` | routes its surface to the inner `<details>` (a square fill would show behind the rounded panel) |
+
+  Add a component to that list **only** if it must not fill. A component that paints
+  its own box needs no entry — the layer order already covers it.
+
+A component with its own per-element meaning for the attribute opts out in **its own**
+sheet, which also wins on layer order. `ui/timeline` does this: there `data-theme=`
+colours one entry's **dot**, not the entry, so it resets the fill:
+
+```css
+& > li {
+  &[data-theme] { background-color: transparent; color: inherit; }   /* ui-timeline.css */
+  &[data-theme~="accent"] { --ui-timeline-dot: var(--ui-theme-accent-bg); }
+}
+```
+
 ## How a component opts in
+
+Universal paint covers the common case; a component only needs its own wiring when the
+surface is **not** the element carrying the attribute, or when it maps the theme onto a
+token of its own.
 
 The resolver turns `theme=` into private, **non-inheriting** vars — `--_theme-bg`,
 `--_theme-c`. A component reads them as the fallback source for its own surface

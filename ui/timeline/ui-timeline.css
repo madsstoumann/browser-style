@@ -57,6 +57,10 @@
 				box-shadow: inset 0 0 0 var(--ui-timeline-line-width) var(--color-surface);
 			}
 
+			/* here data-theme= colours the DOT, not the entry — opt out of the resolver's
+			   universal paint (base/theme.css). Docs: readme.md, ../base/theme.md */
+			&[data-theme] { background-color: transparent; color: inherit; }
+
 			/* per-entry dot colour, declared on the li so ::before inherits it. The theme=
 			   palette under data- names, since a bare attribute is invalid on <li>. Docs: readme.md */
 			&[data-theme~="accent"] { --ui-timeline-dot: var(--ui-theme-accent-bg); }

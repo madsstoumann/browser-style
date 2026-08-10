@@ -23,26 +23,26 @@ grouped by role. Paths are relative to `ui/`, matching how the demos link them
 
 | Package | Element | Stylesheet |
 |---|---|---|
-| `ui/chip` | `<ui-chip>` | `chip/ui-chip.css` |
-| `ui/sticker` | `<ui-sticker>` | `sticker/ui-sticker.css` |
 | `ui/beacon` | `<ui-beacon>` | `beacon/ui-beacon.css` |
-| `ui/save` | `<ui-save>` | `save/ui-save.css` |
-| `ui/play` | `<ui-play>` | `play/ui-play.css` |
+| `ui/chip` | `<ui-chip>` | `chip/ui-chip.css` |
 | `ui/lightbox` | `<ui-lightbox>` | `lightbox/ui-lightbox.css` |
 | `ui/marquee` | `<ui-marquee>` | `marquee/ui-marquee.css` |
+| `ui/play` | `<ui-play>` | `play/ui-play.css` |
+| `ui/save` | `<ui-save>` | `save/ui-save.css` |
+| `ui/sticker` | `<ui-sticker>` | `sticker/ui-sticker.css` |
 
 ## Text-area sub-components — inside `<ui-content>`
 
 | Package | Element / usage | Stylesheet |
 |---|---|---|
-| `ui/icon` | `<ui-icon>` — reveal + accordion toggles | `icon/index.css` |
-| `ui/quote` | `<ui-quote>`, `data-part="quote"` | `quote/ui-quote.css` |
 | `ui/accordion` | `<ui-accordion>` — faq / recipe / job presets | `accordion/ui-accordion.css` |
 | `ui/avatar` | `<ui-avatar>` — byline images + initials | `avatar/ui-avatar.css` |
-| `ui/timeline` | `data-part="timeline"` on an `<ol>` | `timeline/ui-timeline.css` |
-| `ui/rating` | `.ui-rating`, `data-part="rating"` | `rating/ui-rating.css` |
-| `ui/progress` | bare `<progress>` — poll / comparison parts | `progress/ui-progress.css` |
 | `ui/gradient-text` | `<ui-gradient-text>` | `gradient-text/ui-gradient-text.css` |
+| `ui/icon` | `<ui-icon>` — reveal + accordion toggles | `icon/index.css` |
+| `ui/progress` | bare `<progress>` — poll / comparison parts | `progress/ui-progress.css` |
+| `ui/quote` | `<ui-quote>`, `data-part="quote"` | `quote/ui-quote.css` |
+| `ui/rating` | `.ui-rating`, `data-part="rating"` | `rating/ui-rating.css` |
+| `ui/timeline` | `data-part="timeline"` on an `<ol>` | `timeline/ui-timeline.css` |
 
 ## Structural — no package of their own
 
