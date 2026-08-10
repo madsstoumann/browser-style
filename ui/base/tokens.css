@@ -232,6 +232,12 @@
 		--ui-theme-gray-bg:   light-dark(hsl(0 0% 93%),  hsl(0 0% 84%)); --ui-theme-gray-c:  light-dark(hsl(0 0% 15%), hsl(0 0% 10%));
 		--ui-theme-slate-bg:  var(--ui-card-muted-bg, light-dark(hsl(215 19% 27%), hsl(215 16% 38%))); --ui-theme-slate-c: light-dark(hsl(0 0% 96%), hsl(0 0% 88%));
 		--ui-theme-black-bg:  var(--ui-card-dark-bg,   light-dark(hsl(215 28% 17%), hsl(215 22% 27%))); --ui-theme-black-c: light-dark(hsl(0 0% 96%), hsl(0 0% 88%));
+		/* Glass — the `glass` MODIFIER's material, not a bundle. Docs: theme.md § Glass */
+		--ui-theme-glass-bg:       light-dark(hsl(0 0% 100% / .18), hsl(0 0% 100% / .08)); /* colourless fill — #0000 for fully clear */
+		--ui-theme-glass-edge:     light-dark(hsl(0 0% 100% / .55), hsl(0 0% 100% / .22));
+		--ui-theme-glass-fade:     62%;
+		--ui-theme-glass-blur:     var(--blur-md);
+		--ui-theme-glass-saturate: 180%;
 
 		/* Fluid Font Size (responsive, no breakpoints) */
 		--font-size-fluid-xs: clamp(0.75rem, 0.65rem + 0.25vw, 0.875rem);
