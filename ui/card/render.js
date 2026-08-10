@@ -142,6 +142,14 @@ const plain = (value) => {
 
 const num = (value) => (typeof value === 'number' ? value.toLocaleString('en-US') : value);
 
+/* display price via Intl — machine values stay raw in value=/content= attrs */
+const fmtPrice = (currency, value) => {
+	if (value == null || value === '') return '';
+	const number = Number(value);
+	if (!currency || Number.isNaN(number)) return `${currency || ''} ${value}`.trim();
+	return new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: Number.isInteger(number) ? 0 : 2 }).format(number);
+};
+
 /* "PT15M" → "15 min", "P6W" → "6 weeks", "P14D" → "14 days" */
 const duration = (iso) => {
 	const match = /^PT?(\d+)([MHWDY])$/.exec(iso || '');
@@ -219,9 +227,9 @@ const hoursSpec = (spec) => {
 const openingHoursMetas = (hours) =>
 	(hours || []).map((entry) => meta('openingHours', entry.schema) + hoursSpec(entry.schema)).join('');
 
-const listPart = (items, { ordered = false, itemprop = null } = {}) =>
+const listPart = (items, { ordered = false, itemprop = null, crossed = false } = {}) =>
 	items?.length
-		? `<${ordered ? 'ol' : 'ul'} data-part="list"${itemprop ? ` itemprop="${esc(itemprop)}"` : ''}>${items.map((item) => `<li>${esc(item)}</li>`).join('')}</${ordered ? 'ol' : 'ul'}>`
+		? `<${ordered ? 'ol' : 'ul'} data-part="list"${crossed ? ' data-variant="crossed"' : ''}${itemprop ? ` itemprop="${esc(itemprop)}"` : ''}>${items.map((item) => `<li>${esc(item)}</li>`).join('')}</${ordered ? 'ol' : 'ul'}>`
 		: '';
 
 /* author image via @browser.style/avatar — initials fallback when no image */
@@ -646,6 +654,13 @@ const buildTail = (fields, type) => {
 			`<a class="ui-button"${action.style === 'primary' ? ' data-variant="accent"' : ''} href="${esc(action.link?.url || '#')}">${esc(action.link?.text || '')}</a>`
 		).join(' ')}</nav>`;
 	}
+	if (fields.links?.length) {
+		/* plain related links — a text-link list, deliberately not buttons (no itemprop:
+		   multiple url values on the card scope would misdeclare the card's own url) */
+		html += `<ul data-part="links">${fields.links.map((link) =>
+			`<li><a href="${esc(link.url || '#')}">${esc(link.text || link.url || '')}</a></li>`
+		).join('')}</ul>`;
+	}
 	const eng = fields.engagement;
 	if (eng && Object.keys(eng).length) {
 		const counters = [['likeCount', 'LikeAction'], ['shareCount', 'ShareAction'], ['commentCount', 'CommentAction'], ['viewCount', 'WatchAction']];
@@ -675,15 +690,15 @@ const availabilityUrl = (availability) =>
 
 const DETAILS = {
 	product(d) {
-		let html = '';
+		/* PDP order: rating under the title, then price, then stock state */
+		let html = ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		if (d.price) {
 			html += `<p data-part="price"${scope('offers', 'Offer')}>
 				${meta('priceCurrency', d.price.currency)}${meta('availability', availabilityUrl(d.availability))}${meta('itemCondition', SCHEMA + 'NewCondition')}${d.validUntil ? meta('priceValidUntil', d.validUntil) : ''}
-				<data itemprop="price" value="${esc(d.price.current)}">${esc(d.price.currency || '')} ${esc(d.price.current)}</data>${d.price.original ? ` <del>${esc(d.price.currency || '')} ${esc(d.price.original)}</del>` : ''}${d.price.discountText ? ` <small>${esc(d.price.discountText)}</small>` : ''}
+				<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data>${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}${d.price.discountText ? ` <ui-chip theme="pale green">${esc(d.price.discountText)}</ui-chip>` : ''}
 			</p>`;
 		}
-		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
-		if (d.availability) html += `<p data-part="meta"><ui-chip theme="pale ${availabilityHue(d.availability)}">${esc(d.availability)}</ui-chip></p>`;
+		if (d.availability) html += `<p data-part="meta"><ui-chip theme="pale ${availabilityHue(d.availability)}">${esc(d.availability)}</ui-chip>${d.validUntilDisplay ? ` <small>Valid until ${esc(d.validUntilDisplay)}</small>` : ''}</p>`;
 		/* sku is machine-readable only — no visible number on the card */
 		if (d.sku) html += meta('sku', d.sku);
 		return html;
@@ -761,7 +776,7 @@ const DETAILS = {
 			+ `<div${scope('hasCourseInstance', 'CourseInstance')} hidden>${meta('courseMode', 'Online')}</div>`;
 		html += `<p data-part="meta">${esc(duration(d.duration))} · ${esc(d.difficultyLevel)} · Instructor: <span${scope('provider', 'Organization')}><span itemprop="name">${esc(d.instructor?.name)}</span></span></p>`;
 		if (d.price) {
-			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${esc(d.price.currency)} ${esc(d.price.current)}</data>${d.price.original ? ` <del>${esc(d.price.currency)} ${esc(d.price.original)}</del>` : ''}</p>`;
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data>${d.price.original ? ` <del>${fmtPrice(d.price.currency, d.price.original)}</del>` : ''}</p>`;
 		}
 		html += listPart(d.prerequisites);
 		return html;
@@ -772,7 +787,7 @@ const DETAILS = {
 			+ (d.serviceName ? `<div${scope('reservationFor', 'Service')} hidden>${meta('name', d.serviceName)}</div>` : '');
 		html += `<p data-part="meta"><span${scope('provider', 'Organization')}><span itemprop="name">${esc(d.venue)}</span></span>${d.capacity ? ` · Capacity ${esc(d.capacity)}` : ''}${d.duration ? ` · ${esc(d.duration)}` : ''}${d.cancellationPolicy ? ` · ${esc(d.cancellationPolicy)}` : ''}</p>`;
 		if (d.price?.hourlyRate != null) {
-			html += `<p data-part="price"><data value="${esc(d.price.hourlyRate)}">${esc(d.price.currency)} ${esc(d.price.hourlyRate)}</data>/hour</p>`;
+			html += `<p data-part="price"><data value="${esc(d.price.hourlyRate)}">${fmtPrice(d.price.currency, d.price.hourlyRate)}</data>/hour</p>`;
 		}
 		html += listPart(d.amenities);
 		return html;
@@ -837,11 +852,16 @@ const DETAILS = {
 		let html = meta('dateCreated', d.dateEarned) + meta('expires', d.expirationDate)
 			+ meta('educationalLevel', d.skillLevel) + meta('identifier', d.credentialId);
 		html += `<p data-part="meta">Issued by <span${scope('recognizedBy', 'Organization')}><span itemprop="name">${esc(d.issuingOrganization)}</span></span>${d.dateEarnedDisplay ? ` · ${esc(d.dateEarnedDisplay)}` : ''}${d.expirationDateDisplay ? ` · Expires ${esc(d.expirationDateDisplay)}` : ''}${d.credentialId ? ` · ID ${esc(d.credentialId)}` : ''}</p>`;
+		if (d.verificationUrl) html += `<nav data-part="actions"><a class="ui-button" href="${esc(d.verificationUrl)}" target="_blank" rel="noopener">Verify credential</a></nav>`;
 		return html;
 	},
 
 	announcement(d) {
 		let html = meta('datePosted', d.effectiveDate?.start) + meta('expires', d.effectiveDate?.end) + meta('spatialCoverage', 'Global');
+		if (d.priority) {
+			const hue = /high|critical/i.test(d.priority) ? 'red' : /medium/i.test(d.priority) ? 'orange' : 'gray';
+			html += `<p data-part="meta"><ui-chip theme="pale ${hue}">${esc(d.priorityDisplay || d.priority)}</ui-chip></p>`;
+		}
 		if (d.targetAudience) {
 			html += `<p data-part="meta"${scope('audience', 'Audience')}>Audience: <span itemprop="audienceType">${esc(d.targetAudience)}</span></p>`;
 		}
@@ -907,6 +927,8 @@ const DETAILS = {
 			html += `<address data-part="address"${scope('address', 'PostalAddress')}>${d.address.addressLocality ? `<span itemprop="addressLocality">${esc(d.address.addressLocality)}</span>` : ''}${d.address.addressCountry ? `, <span itemprop="addressCountry">${esc(d.address.addressCountry)}</span>` : ''}</address>`;
 		}
 		if (d.hours) html += `<p data-part="meta">${esc(d.hours)}</p>`;
+		/* amenityFeature wants LocationFeatureSpecification scopes — plain list, no itemprop */
+		html += listPart(d.amenities);
 		const map = mapUrl(d.geo);
 		if (map) html += `<nav data-part="actions"><a class="ui-button" data-variant="accent" href="${esc(map)}"${/^geo:/.test(map) ? '' : ' target="_blank" rel="noopener"'}>Open in Maps</a></nav>`;
 		return html;
@@ -915,15 +937,20 @@ const DETAILS = {
 	membership(d) {
 		let html = eligibleDuration(d.trialPeriod);
 		if (d.price) {
-			html += `<p data-part="price"${scope('priceSpecification', 'PriceSpecification')}>${meta('priceCurrency', d.price.currency)}<data itemprop="price" value="${esc(d.price.monthly)}">${esc(d.price.currency)} ${esc(d.price.monthly)}</data>/mo ${d.price.yearly ? `<small>or ${esc(d.price.currency)} ${esc(d.price.yearly)}/yr${d.price.savings ? ` — ${esc(d.price.savings)}` : ''}</small>` : ''}</p>`;
+			html += `<p data-part="price"${scope('priceSpecification', 'PriceSpecification')}>${meta('priceCurrency', d.price.currency)}<data itemprop="price" value="${esc(d.price.monthly)}">${fmtPrice(d.price.currency, d.price.monthly)}</data>/mo ${d.price.yearly ? `<small>or ${fmtPrice(d.price.currency, d.price.yearly)}/yr${d.price.savings ? ` — ${esc(d.price.savings)}` : ''}</small>` : ''}</p>`;
 		}
 		html += listPart(d.features, { itemprop: 'includesObject' });
+		html += listPart(d.limitations, { crossed: true });
 		if (d.trialText) html += `<p data-part="meta">${esc(d.trialText)}</p>`;
 		return html;
 	},
 
 	social(d) {
-		return d.platform ? `<div${scope('publisher', 'Organization')} hidden>${meta('name', d.platform)}</div>` : '';
+		let html = d.platform ? `<div${scope('publisher', 'Organization')} hidden>${meta('name', d.platform)}</div>` : '';
+		if (d.author) {
+			html += `<p data-part="meta"><span${scope('author', 'Person')}><span itemprop="name">${esc(d.author)}</span></span>${d.platform ? ` · ${esc(d.platform)}` : ''}</p>`;
+		}
+		return html;
 	},
 
 	software(d) {
@@ -934,7 +961,7 @@ const DETAILS = {
 			html += `<p data-part="meta"${scope('author', 'Organization')}>Developer: <span itemprop="name">${esc(d.developer.name)}</span>${d.developer.website ? meta('url', d.developer.website) : ''}</p>`;
 		}
 		if (d.price) {
-			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${esc(d.price.currency)} ${esc(d.price.current)}</data>${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`;
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data>${d.price.note ? ` <small>${esc(d.price.note)}</small>` : ''}</p>`;
 		}
 		return html;
 	},
@@ -973,7 +1000,7 @@ const DETAILS = {
 	howto(d, fields, parts = {}) {
 		let html = meta('totalTime', d.totalTime)
 			+ (d.estimatedCost ? `<span${scope('estimatedCost', 'MonetaryAmount')} hidden>${meta('currency', d.estimatedCost.currency)}${meta('value', d.estimatedCost.value)}</span>` : '');
-		const bits = [d.totalTime ? `Takes ${duration(d.totalTime)}` : null, d.estimatedCost ? `~${d.estimatedCost.currency} ${d.estimatedCost.value}` : null, d.difficulty].filter(Boolean).join(' · ');
+		const bits = [d.totalTime ? `Takes ${duration(d.totalTime)}` : null, d.estimatedCost ? `~${fmtPrice(d.estimatedCost.currency, d.estimatedCost.value)}` : null, d.difficulty].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
 		if (d.supplies?.length || d.tools?.length) {
 			html += `<ul data-part="list">${(d.supplies || []).map((item) => `<li${scope('supply', 'HowToSupply')}><span itemprop="name">${esc(item)}</span></li>`).join('')}${(d.tools || []).map((item) => `<li${scope('tool', 'HowToTool')}><span itemprop="name">${esc(item)}</span></li>`).join('')}</ul>`;
@@ -991,13 +1018,14 @@ const DETAILS = {
 	},
 
 	qa(d) {
-		const answers = d.answers || [];
+		/* accepted answer leads, rest by votes; the chip carries the accepted state */
+		const answers = [...(d.answers || [])].sort((a, b) =>
+			(b.accepted ? 1 : 0) - (a.accepted ? 1 : 0) || (b.upvotes || 0) - (a.upvotes || 0));
 		if (!d.question && !answers.length) return '';
-		const accepted = answers.find((answer) => answer.accepted);
 		let html = `<div${scope('mainEntity', 'Question')}>${meta('name', d.question)}${meta('answerCount', answers.length)}${d.upvotes != null ? meta('upvoteCount', d.upvotes) : ''}`;
 		if (answers.length) {
 			html += `<ul data-part="list">${answers.map((answer) =>
-				`<li${scope(answer === accepted ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${answer.upvotes != null ? meta('upvoteCount', answer.upvotes) : ''}<p itemprop="text">${esc(answer.text)}</p><small>${answer === accepted ? '✓ Accepted' : ''}${answer.author ? `${answer === accepted ? ' · ' : ''}<span${scope('author', 'Person')}><span itemprop="name">${esc(answer.author)}</span></span>` : ''}${answer.upvotes != null ? ` · ▲ ${num(answer.upvotes)}` : ''}</small></li>`
+				`<li${scope(answer.accepted ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${answer.upvotes != null ? meta('upvoteCount', answer.upvotes) : ''}<p itemprop="text">${esc(answer.text)}</p><small>${answer.accepted ? '<ui-chip theme="pale green">Accepted</ui-chip> ' : ''}${answer.author ? `<span${scope('author', 'Person')}><span itemprop="name">${esc(answer.author)}</span></span>` : ''}${answer.upvotes != null ? ` · ▲ ${num(answer.upvotes)}` : ''}</small></li>`
 			).join('')}</ul>`;
 		}
 		return html + '</div>';
@@ -1016,22 +1044,23 @@ const DETAILS = {
 		let html = meta('duration', d.duration) + meta('contentRating', d.contentRating) + meta('dateCreated', d.dateReleased);
 		const bits = [d.dateReleasedDisplay, d.durationDisplay || (d.duration ? duration(d.duration) : null), d.contentRating].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		if (d.director?.name) html += `<p data-part="meta"${scope('director', 'Person')}>Director: <span itemprop="name">${esc(d.director.name)}</span></p>`;
 		if (d.actors?.length) html += `<p data-part="meta">Starring: ${d.actors.map((name) => `<span${scope('actor', 'Person')}><span itemprop="name">${esc(name)}</span></span>`).join(', ')}</p>`;
-		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		return html;
 	},
 
 	book(d) {
+		/* author byline renders EARLY via BYLINE_EARLY — rating and price follow, publisher is the colophon */
 		let html = meta('isbn', d.isbn) + meta('numberOfPages', d.numberOfPages)
 			+ (BOOK_FORMATS.has(d.bookFormat) ? meta('bookFormat', SCHEMA + d.bookFormat) : '');
 		const bits = [d.numberOfPages ? `${num(d.numberOfPages)} pages` : null, d.bookFormatDisplay || d.bookFormat, d.isbn ? `ISBN ${d.isbn}` : null].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
-		if (d.publisher) html += `<p data-part="meta"${scope('publisher', 'Organization')}>Publisher: <span itemprop="name">${esc(d.publisher)}</span></p>`;
 		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		if (d.price) {
-			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${esc(d.price.currency)} ${esc(d.price.current)}</data></p>`;
+			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data></p>`;
 		}
+		if (d.publisher) html += `<p data-part="meta"${scope('publisher', 'Organization')}>Publisher: <span itemprop="name">${esc(d.publisher)}</span></p>`;
 		return html;
 	},
 
@@ -1050,15 +1079,16 @@ const DETAILS = {
 	},
 
 	claim(d) {
+		/* verdict leads — it is the answer; the quoted claim follows */
 		const verdict = d.verdict || {};
 		let html = meta('datePublished', d.reviewDate);
-		if (d.claim) html += quotePart(d.claim, { itemprop: 'claimReviewed', cite: d.claimant });
 		if (verdict.label) {
 			const hue = verdict.value != null
 				? verdict.value >= 4 ? 'green' : verdict.value >= 3 ? 'orange' : 'red'
 				: /false|incorrect/i.test(verdict.label) ? 'red' : /true|correct/i.test(verdict.label) ? 'green' : 'orange';
 			html += `<p data-part="meta"${scope('reviewRating', 'Rating')}>${verdict.value != null ? meta('ratingValue', verdict.value) : ''}${meta('bestRating', verdict.max ?? 5)}${meta('worstRating', 1)}<ui-chip theme="pale ${hue}"><span itemprop="alternateName">${esc(verdict.label)}</span></ui-chip></p>`;
 		}
+		if (d.claim) html += quotePart(d.claim, { itemprop: 'claimReviewed', cite: d.claimant });
 		return html;
 	}
 };
@@ -1069,6 +1099,9 @@ const profileSubheadline = (d, textTag) =>
 		? `<${textTag} data-part="subheadline"><span itemprop="jobTitle">${esc(d.jobTitle)}</span>${d.organization ? ` · <span${scope('worksFor', 'Organization')}><span itemprop="name">${esc(d.organization)}</span></span>` : ''}</${textTag}>`
 		: '';
 
+/* byline-early types: author identity precedes the commerce details (book) */
+const BYLINE_EARLY = new Set(['book']);
+
 /* full content column for a card (envelope + details + trailers) */
 const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary', parts = {}) => {
 	const slots = {};
@@ -1076,8 +1109,13 @@ const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary',
 		slots.subheadline = profileSubheadline(fields.details, overlay ? 'span' : 'p');
 	}
 	let html = buildContent(fields, type, overlay, slots, textMode, parts);
+	let tailFields = fields;
+	if (BYLINE_EARLY.has(type) && fields.authors?.length) {
+		html += byline(fields.authors, 'author');
+		tailFields = { ...fields, authors: null };
+	}
 	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields, parts);
-	html += buildTail(fields, type);
+	html += buildTail(tailFields, type);
 	return html + extras;
 };
 

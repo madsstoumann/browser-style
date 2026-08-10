@@ -62,7 +62,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Content — <code>CreativeWork</code> (fallback)</h2>
-	<p class="note">The plain envelope, no <code>details</code>: eyebrow, headline, summary, tags, actions. Unknown <code>schemaType</code> values fall back to this.</p>
+	<p class="note">The plain envelope, no <code>details</code>: eyebrow, headline, summary, tags, actions, plus <code>links</code> — plain related-link rows (part <code>links</code>), deliberately not buttons. Unknown <code>schemaType</code> values fall back to this.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/CreativeWork">
 			<cq-box>
@@ -73,6 +73,12 @@
 					<p data-part="summary" itemprop="description">Anything without a dedicated schema type renders as CreativeWork — headline, summary, tags and actions straight from the envelope.</p>
 					<span data-part="tags"><ui-chip itemprop="keywords">generic</ui-chip><ui-chip itemprop="keywords">fallback</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#" itemprop="url">Read more</a></nav>
+					<ul data-part="links">
+						<li><a href="#">Design principles</a></li>
+						<li><a href="#">Component gallery</a></li>
+						<li><a href="#">Release notes</a></li>
+						<li><a href="#">Support</a></li>
+					</ul>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -184,13 +190,6 @@
 					<small data-part="eyebrow">Electronics</small>
 					<h3 data-part="headline" itemprop="name">AuraSound Pro Wireless Headphones</h3>
 					<p data-part="summary" itemprop="description">Industry-leading noise cancellation, 30-hour battery and multipoint pairing.</p>
-					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-						<meta itemprop="priceCurrency" content="USD">
-						<meta itemprop="availability" content="https://schema.org/InStock">
-						<meta itemprop="itemCondition" content="https://schema.org/NewCondition">
-						<meta itemprop="priceValidUntil" content="2026-08-01">
-						<data itemprop="price" value="279">USD 279</data> <del>USD 349</del> <small>Save 20%</small>
-					</p>
 					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
 						<meta itemprop="ratingValue" content="4.5">
 						<meta itemprop="ratingCount" content="1247">
@@ -200,7 +199,15 @@
 						<span data-sr>Rated 4.5 out of 5 stars from 1,247 ratings</span>
 						<span aria-hidden="true">4.5 / 5 (1,247 ratings)</span>
 					</div>
-					<p data-part="meta"><ui-chip theme="pale green">In stock</ui-chip></p>
+					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+						<meta itemprop="priceCurrency" content="USD">
+						<meta itemprop="availability" content="https://schema.org/InStock">
+						<meta itemprop="itemCondition" content="https://schema.org/NewCondition">
+						<meta itemprop="priceValidUntil" content="2026-08-01">
+						<data itemprop="price" value="279">$279</data> <del>$349</del> <ui-chip theme="pale green">Save 20%</ui-chip>
+					</p>
+					<p data-part="meta"><ui-chip theme="pale green">In stock</ui-chip> <small>Valid until Aug 1, 2026</small></p>
+					<span data-part="tags"><ui-chip itemprop="keywords">Wireless</ui-chip><ui-chip itemprop="keywords">Noise Cancelling</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Add to cart</a> <a class="ui-button" href="#">Details</a></nav>
 				</ui-content>
 			</cq-box>
@@ -279,6 +286,7 @@
 							</cq-box></ui-accordion>
 						</details>
 					</cq-box></ui-accordion>
+					<span data-part="tags"><ui-chip itemprop="keywords">Pasta</ui-chip><ui-chip itemprop="keywords">Italian</ui-chip><ui-chip itemprop="keywords">Quick</ui-chip></span>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -375,6 +383,7 @@
 							</div>
 						</details>
 					</cq-box></ui-accordion>
+					<span data-part="tags"><ui-chip itemprop="keywords">Remote</ui-chip><ui-chip itemprop="keywords">Full-time</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Apply now</a></nav>
 				</ui-content>
 			</cq-box>
@@ -406,12 +415,13 @@
 					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
 						<meta itemprop="priceCurrency" content="USD">
 						<meta itemprop="availability" content="https://schema.org/InStock">
-						<data itemprop="price" value="89">USD 89</data> <del>USD 129</del>
+						<data itemprop="price" value="89">$89</data> <del>$129</del>
 					</p>
 					<ul data-part="list">
 						<li>No prior experience needed</li>
 						<li>10 minutes a day</li>
 					</ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Mindfulness</ui-chip><ui-chip itemprop="keywords">Wellbeing</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Enroll</a></nav>
 				</ui-content>
 			</cq-box>
@@ -439,7 +449,7 @@
 					<h3 data-part="headline" itemprop="name">Book the Loft meeting room</h3>
 					<p data-part="summary" itemprop="description">A quiet 8-person room above the café — whiteboard wall, 4K display and bottomless filter coffee.</p>
 					<p data-part="meta"><span itemprop="provider" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">Brew &amp; Bean</span></span> · Capacity 8 · Min. 1 hour · Free cancellation up to 24 h</p>
-					<p data-part="price"><data value="45">USD 45</data>/hour</p>
+					<p data-part="price"><data value="45">$45</data>/hour</p>
 					<ul data-part="list">
 						<li>4K display + HDMI/USB-C</li>
 						<li>Whiteboard wall</li>
@@ -723,7 +733,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Announcement — <code>SpecialAnnouncement</code></h2>
-	<p class="note">Dark theme + priority chip pattern via eyebrow; audience → <code>Audience</code>.</p>
+	<p class="note">Dark theme; priority as a hue-mapped <code>&lt;ui-chip&gt;</code> (low=gray · medium=orange · high/critical=red); audience → <code>Audience</code>.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" theme="black dark" itemscope itemtype="https://schema.org/SpecialAnnouncement">
 			<cq-box>
@@ -733,9 +743,10 @@
 					<meta itemprop="datePublished" content="2026-07-01">
 					<meta itemprop="expires" content="2026-07-06">
 					<meta itemprop="spatialCoverage" content="Global">
-					<small data-part="eyebrow">High priority</small>
+					<small data-part="eyebrow">Maintenance</small>
 					<h3 data-part="headline" itemprop="name">Scheduled maintenance — July 5</h3>
 					<p data-part="summary" itemprop="text">The API will be unavailable Saturday July 5, 02:00–04:00 UTC while we migrate the primary database.</p>
+					<p data-part="meta"><ui-chip theme="pale red">High priority</ui-chip></p>
 					<p data-part="meta" itemprop="audience" itemscope itemtype="https://schema.org/Audience">Audience: <span itemprop="audienceType">API customers</span></p>
 					<footer data-part="footer">Action required: re-authenticate integrations after the window.</footer>
 				</ui-content>
@@ -793,6 +804,7 @@
 						</span>
 						Mon–Fri 7–18 · Sat–Sun 8–16 · $$
 					</p>
+					<span data-part="tags"><ui-chip itemprop="keywords">Coffee</ui-chip><ui-chip itemprop="keywords">Bakery</ui-chip></span>
 					<nav data-part="actions">
 						<a class="ui-button" itemprop="telephone" href="tel:+4533221100">+45 33 22 11 00</a>
 						<meta itemprop="email" content="hello@brewandbean.example"><a class="ui-button" href="mailto:hello@brewandbean.example">Email</a>
@@ -890,6 +902,12 @@
 						<span itemprop="addressLocality">Allinge</span>, <span itemprop="addressCountry">Denmark</span>
 					</address>
 					<p data-part="meta">Open all year · Free entry · Visitor centre 10–17</p>
+					<ul data-part="list">
+						<li>Free parking</li>
+						<li>Guided tours</li>
+						<li>Coastal viewpoint</li>
+					</ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Bornholm</ui-chip><ui-chip itemprop="keywords">Landmark</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="https://www.google.com/maps/search/?api=1&amp;query=55.0603,14.7009" target="_blank" rel="noopener">Open in Maps</a></nav>
 				</ui-content>
 			</cq-box>
@@ -914,12 +932,16 @@
 					<p data-part="summary" itemprop="description">Unlimited workouts, personal coaching and priority support.</p>
 					<p data-part="price" itemprop="priceSpecification" itemscope itemtype="https://schema.org/PriceSpecification">
 						<meta itemprop="priceCurrency" content="USD">
-						<data itemprop="price" value="19">USD 19</data>/mo <small>or USD 190/yr — save 17%</small>
+						<data itemprop="price" value="19">$19</data>/mo <small>or $190/yr — save 17%</small>
 					</p>
 					<ul data-part="list" itemprop="includesObject">
 						<li>Unlimited workout library</li>
 						<li>1:1 coaching sessions</li>
 						<li>Advanced sleep analytics</li>
+					</ul>
+					<ul data-part="list" data-variant="crossed">
+						<li>No personal coaching</li>
+						<li>Max 2 connected devices</li>
 					</ul>
 					<p data-part="meta">14-day free trial · cancel anytime</p>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Start free trial</a></nav>
@@ -993,8 +1015,9 @@
 					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
 						<meta itemprop="priceCurrency" content="USD">
 						<meta itemprop="availability" content="https://schema.org/InStock">
-						<data itemprop="price" value="29">USD 29</data> <small>one-time purchase</small>
+						<data itemprop="price" value="29">$29</data> <small>one-time purchase</small>
 					</p>
+					<span data-part="tags"><ui-chip itemprop="keywords">Game</ui-chip><ui-chip itemprop="keywords">Co-op</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Play demo</a></nav>
 				</ui-content>
 			</cq-box>
@@ -1098,7 +1121,7 @@
 					<small data-part="eyebrow">Home maintenance</small>
 					<h3 data-part="headline" itemprop="name">Bleed a radiator in four steps</h3>
 					<p data-part="summary" itemprop="description">Cold at the top, warm at the bottom? Trapped air. Ten minutes and a radiator key fix it.</p>
-					<p data-part="meta">Takes 10 min · ~EUR 5 · Easy</p>
+					<p data-part="meta">Takes 10 min · ~€5 · Easy</p>
 					<ul data-part="list">
 						<li itemprop="supply" itemscope itemtype="https://schema.org/HowToSupply"><span itemprop="name">Cloth</span></li>
 						<li itemprop="supply" itemscope itemtype="https://schema.org/HowToSupply"><span itemprop="name">Small bowl</span></li>
@@ -1138,7 +1161,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Q&amp;A — <code>QAPage</code></h2>
-	<p class="note">Distinct from FAQ: one <code>mainEntity</code> → <code>Question</code> with community answers — <code>acceptedAnswer</code> / <code>suggestedAnswer</code> → <code>Answer</code>, each with author and <code>upvoteCount</code>.</p>
+	<p class="note">Distinct from FAQ: one <code>mainEntity</code> → <code>Question</code> with community answers — accepted answer first (green <code>&lt;ui-chip&gt;</code>), then by votes; <code>acceptedAnswer</code> / <code>suggestedAnswer</code> → <code>Answer</code> with author and <code>upvoteCount</code>.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/QAPage">
 			<cq-box>
@@ -1154,12 +1177,12 @@
 						<ul data-part="list">
 							<li itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
 								<meta itemprop="upvoteCount" content="481">
-								<p itemprop="text">Give the parent `display: grid; place-items: center` — two lines, handles both axes, works everywhere.</p>
-								<small>✓ Accepted · <span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Lena Fischer</span></span> · ▲ 481</small>
+								<p itemprop="text">Give the parent display: grid with place-items: center — two lines, handles both axes, works everywhere.</p>
+								<small><ui-chip theme="pale green">Accepted</ui-chip> <span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Lena Fischer</span></span> · ▲ 481</small>
 							</li>
 							<li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer">
 								<meta itemprop="upvoteCount" content="217">
-								<p itemprop="text">If it's a single item, `margin: auto` inside a flex or grid parent also centers on both axes.</p>
+								<p itemprop="text">If it's a single item, margin: auto inside a flex or grid parent also centers on both axes.</p>
 								<small><span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Tomás Rivera</span></span> · ▲ 217</small>
 							</li>
 						</ul>
@@ -1217,8 +1240,6 @@
 					<h3 data-part="headline" itemprop="name">Echoes of Tomorrow</h3>
 					<p data-part="summary" itemprop="description">A signal from a decommissioned satellite starts predicting tomorrow's news — one broadcast at a time.</p>
 					<p data-part="meta">Feb 2026 · 2 h 14 min · PG-13</p>
-					<p data-part="meta" itemprop="director" itemscope itemtype="https://schema.org/Person">Director: <span itemprop="name">Sofia Lindqvist</span></p>
-					<p data-part="meta">Starring: <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Jonas Beck</span></span>, <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Amara Okafor</span></span></p>
 					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
 						<meta itemprop="ratingValue" content="4.2">
 						<meta itemprop="ratingCount" content="8817">
@@ -1227,6 +1248,8 @@
 						<span data-sr>Rated 4.2 out of 5 stars from 8,817 ratings</span>
 						<span aria-hidden="true">4.2 / 5 (8,817 ratings)</span>
 					</div>
+					<p data-part="meta" itemprop="director" itemscope itemtype="https://schema.org/Person">Director: <span itemprop="name">Sofia Lindqvist</span></p>
+					<p data-part="meta">Starring: <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Jonas Beck</span></span>, <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Amara Okafor</span></span></p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -1238,7 +1261,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Book — <code>Book</code></h2>
-	<p class="note"><code>isbn</code>, pages, allowlisted <code>bookFormat</code> (schema.org <code>BookFormatType</code>), publisher → <code>Organization</code>, author byline, rating and an <code>Offer</code>.</p>
+	<p class="note">Author byline leads (photo via <code>&lt;ui-avatar&gt;</code>); then facts, rating, <code>Offer</code> — publisher is the colophon. <code>isbn</code>, pages, allowlisted <code>bookFormat</code> (schema.org <code>BookFormatType</code>).</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3)" itemscope itemtype="https://schema.org/Book">
 			<cq-box>
@@ -1250,8 +1273,11 @@
 					<small data-part="eyebrow" itemprop="genre">Cookbook</small>
 					<h3 data-part="headline" itemprop="name">The Nordic Pantry</h3>
 					<p data-part="summary" itemprop="description">120 recipes built on what a northern larder actually holds — rye, root vegetables, brine and smoke.</p>
+					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar1.webp" alt=""></ui-avatar>
+						<span data-part="byline-who"><span itemprop="name">Mette Holm</span></span>
+					</address>
 					<p data-part="meta">312 pages · Hardcover · ISBN 978-87-12345-67-8</p>
-					<p data-part="meta" itemprop="publisher" itemscope itemtype="https://schema.org/Organization">Publisher: <span itemprop="name">Kbh Press</span></p>
 					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
 						<meta itemprop="ratingValue" content="4.6">
 						<meta itemprop="ratingCount" content="923">
@@ -1263,12 +1289,9 @@
 					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
 						<meta itemprop="priceCurrency" content="EUR">
 						<meta itemprop="availability" content="https://schema.org/InStock">
-						<data itemprop="price" value="34">EUR 34</data>
+						<data itemprop="price" value="34">€34</data>
 					</p>
-					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
-						<ui-avatar><abbr aria-hidden="true">MH</abbr></ui-avatar>
-						<span data-part="byline-who"><span itemprop="name">Mette Holm</span></span>
-					</address>
+					<p data-part="meta" itemprop="publisher" itemscope itemtype="https://schema.org/Organization">Publisher: <span itemprop="name">Kbh Press</span></p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -1316,7 +1339,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Fact check — <code>ClaimReview</code></h2>
-	<p class="note">The claim as a <code>&lt;ui-quote&gt;</code> carrying <code>claimReviewed</code>; the verdict is <code>reviewRating</code> → <code>Rating</code> whose <code>alternateName</code> is the visible chip (hue from the rating value).</p>
+	<p class="note">The verdict chip leads — it is the answer (<code>reviewRating</code> → <code>Rating</code>, <code>alternateName</code> visible, hue from the rating value); the quoted claim (<code>claimReviewed</code>) follows.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/ClaimReview">
 			<cq-box>
@@ -1326,12 +1349,12 @@
 					<small data-part="eyebrow">Fact check</small>
 					<h3 data-part="headline" itemprop="name">Did the harbour bridge cost twice its budget?</h3>
 					<p data-part="summary" itemprop="description">Public records show the final cost came in 18% over the approved budget — high, but nowhere near double.</p>
-					<ui-quote data-part="quote"><blockquote itemprop="claimReviewed"><q>The new harbour bridge cost twice its approved budget.</q><cite>Social media posts</cite></blockquote></ui-quote>
 					<p data-part="meta" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
 						<meta itemprop="ratingValue" content="2">
 						<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
 						<ui-chip theme="pale red"><span itemprop="alternateName">Mostly false</span></ui-chip>
 					</p>
+					<ui-quote data-part="quote"><blockquote itemprop="claimReviewed"><q>The new harbour bridge cost twice its approved budget.</q><cite>Social media posts</cite></blockquote></ui-quote>
 				</ui-content>
 			</cq-box>
 		</ui-card>

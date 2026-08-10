@@ -444,13 +444,14 @@ emission in [`content/card/dist/`](../../../content/card/dist)):
 
 ## Structured `data-part` vocabulary
 
-Eight parts added for the typed cards, all styled in [`content.css`](../content.css):
+Nine parts added for the typed cards, all styled in [`content.css`](../content.css):
 
 | part | Element | Used by |
 |------|---------|---------|
 | `price` | `<p>` + `<data>`/`<del>`/`<small>` | product, course, booking, membership, software, job, book |
 | `rating` | `<div>` + decorative `<input class="ui-rating">` + `[data-sr]` label + visible count | product, review, software, business, movie, book |
-| `list` | `<ul>` check / `<ol>` ordered | recipe, job, course, booking, location, membership, howto, qa, dataset |
+| `list` | `<ul>` check / `<ol>` ordered; `data-variant="crossed"` = muted ✗ rows (excluded items) | recipe, job, course, booking, location, membership, howto, qa, dataset |
+| `links` | `<ul>` of plain related-link rows (→ prefix, hairline dividers) — the envelope `links[]` field; deliberately not buttons, no itemprop | any type |
 | `address` | `<address>` | business, location, event, contact, organization |
 | `stat` | `<p>` + `<data>` + unit + trend | statistic |
 | `timeline` | `<ol>` of `<time>` + text | timeline |
@@ -459,6 +460,13 @@ Eight parts added for the typed cards, all styled in [`content.css`](../content.
 
 Everything else reuses existing parts: `meta` (salaries, hours, dates), `tags`
 (skills, hashtags), `byline` (people), `footer` (totals, recommendations).
+
+Ordering conventions: offer prices display via `fmtPrice()` (Intl currency —
+`$279`, `€34`; machine values stay raw in `value=`/`content=`); `discountText`
+renders as a green `<ui-chip>`; `BYLINE_EARLY` types (book) place the author
+byline right after the summary instead of in the tail; qa sorts the accepted
+answer first, claim leads with the verdict chip, product/movie lead with the
+rating.
 
 Two parts are already **implemented** in content.css: the gradient-headline `b`
 rule, and `cover` — an `<a data-part="cover">` inside the headline whose

@@ -15,7 +15,7 @@
     "preset": {
       "$ref": "card-preset/stack-brand"
     },
-    "eyebrow": "High priority",
+    "eyebrow": "Maintenance",
     "media": [
       {
         "mediaType": "image",
@@ -29,6 +29,7 @@
     "details": {
       "announcementType": "Maintenance",
       "priority": "high",
+      "priorityDisplay": "High priority",
       "effectiveDate": {
         "start": "2026-07-01",
         "end": "2026-07-06"

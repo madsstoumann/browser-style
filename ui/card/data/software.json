@@ -55,6 +55,10 @@
         "currency": "USD",
         "note": "one-time purchase"
       }
-    }
+    },
+    "tags": [
+      "Game",
+      "Co-op"
+    ]
   }
 }
