@@ -365,6 +365,8 @@
 			margin: 0;
 			padding: 0;
 		}
+		/* block-content items (qa answers) drop the marker — inside-position bullets wrap onto their own line */
+		& [data-part="list"] li:has(> p) { list-style: none; }
 		/* crossed list — excluded items (membership limitations): muted ✗ prefix */
 		& [data-part="list"][data-variant="crossed"] li {
 			color: var(--ui-content-list-crossed-ink, var(--ui-content-muted));
