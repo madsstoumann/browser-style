@@ -175,7 +175,8 @@
       "styles": {
         "--ui-avatar-size": "3.25em",
         "--ui-content-byline-fs": "1em"
-      }
+      },
+      "headingTag": "h2"
     },
     "carousel": {
       "name": "Carousel Preset",

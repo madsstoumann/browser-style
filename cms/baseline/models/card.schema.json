@@ -5,7 +5,7 @@
   "description": "A universal, schema.org-driven card. One structured envelope (headline, summary, media, authors, actions, engagement…) shared by every card, a `schemaType` discriminator covering 25 schema.org types, and a single `details` object for type-specific data. Presentation (variant/media/content tokens for <ui-card>/<ui-reveal>) deliberately lives OUTSIDE this model — in a referenced card-preset — so the same card can render as hero, grid item, overlay or flip by swapping one reference.",
   "metadata": {
     "localized": true,
-    "version": "1.3.3",
+    "version": "1.4.0",
     "lastModified": "2026-07-06",
     "displayField": "internalName"
   },
@@ -301,7 +301,7 @@
     "links": {
       "type": "array",
       "title": "Links",
-      "description": "Plain related links (rendered as text links, not buttons)",
+      "description": "Plain related links (rendered as text links, not buttons). Envelope tags accept a string or {name, url} — a linked tag renders an anchor inside the chip. An action with no link.url renders a real button element (with optional ariaLabel); modifiedDisplay adds a visible Updated line beside the machine dateModified",
       "items": {
         "type": "link",
         "title": "Link",

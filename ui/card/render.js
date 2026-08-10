@@ -98,6 +98,9 @@ const SUMMARY_PROP = { review: 'reviewBody', quote: 'text', announcement: 'text'
 const EYEBROW_PROP = { article: 'articleSection', news: 'articleSection', product: 'category', recipe: 'recipeCategory', course: 'about', job: 'industry', video: 'genre', movie: 'genre', book: 'genre' };
 /* published itemprop: JobPosting/SpecialAnnouncement use datePosted, VideoObject uploadDate */
 const PUBLISHED_PROP = { job: 'datePosted', announcement: 'datePosted', video: 'uploadDate' };
+/* preset headingTag allowlist — heading LEVEL is placement, so it lives on the preset */
+const HEADING_TAGS = new Set(['h2', 'h3', 'h4', 'h5']);
+
 /* types whose `body` is the article text → wrapped in itemprop="articleBody" */
 const ARTICLE_BODY_TYPES = new Set(['article', 'news']);
 /* types where the image/video belongs to another scope — skip itemprop */
@@ -658,8 +661,9 @@ const bodyHtml = (fields, type, textTag = 'p') => {
  */
 const DETAILS_OWNS_SUMMARY = new Set(['review']);
 
-const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', parts = {}) => {
-	const headlineTag = overlay ? 'strong' : 'h3';
+const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', parts = {}, headingTag = 'h3') => {
+	/* overlay cards keep <strong>: an overlay headline is a label, not a section heading */
+	const headlineTag = overlay ? 'strong' : (HEADING_TAGS.has(headingTag) ? headingTag : 'h3');
 	const textTag = overlay ? 'span' : 'p';
 	const body = textMode !== 'summary' ? bodyHtml(fields, type, textTag) : '';
 	const showSummary = textMode !== 'body' || !body;
@@ -709,15 +713,29 @@ const buildTail = (fields, type) => {
 	const dateline = datelinePart(fields);
 	if (fields.authors?.length) html += byline(fields.authors, type === 'quote' ? 'creator' : 'author', dateline);
 	else if (dateline) html += `<p data-part="meta">${dateline}</p>`;
+	if (fields.modifiedDisplay) html += `<p data-part="meta"><small>Updated ${esc(fields.modifiedDisplay)}</small></p>`;
 	if (fields.tags?.length) {
 		/* itemprop sits ON the chip (microdata value = textContent) so a nested <a> never leaks its href */
 		const tagProp = type in TAGS_PROP ? TAGS_PROP[type] : 'keywords';
-		html += `<span data-part="tags">${fields.tags.map((tag) => `<ui-chip${tagProp ? ` itemprop="${tagProp}"` : ''}>${esc(tag)}</ui-chip>`).join('')}</span>`;
+		/* a tag may be a string or {name, url}: the anchor sits INSIDE the chip so the
+		   itemprop still reads the text, and content.css raises it above a cover link */
+		html += `<span data-part="tags">${fields.tags.map((tag) => {
+			const label = typeof tag === 'string' ? tag : tag?.name ?? '';
+			const url = typeof tag === 'object' ? tag?.url : null;
+			const text = url ? `<a href="${esc(url)}">${esc(label)}</a>` : esc(label);
+			return `<ui-chip${tagProp ? ` itemprop="${tagProp}"` : ''}>${text}</ui-chip>`;
+		}).join('')}</span>`;
 	}
 	if (fields.actions?.length) {
-		html += `<nav data-part="actions">${fields.actions.map((action) =>
-			`<a class="ui-button"${action.style === 'primary' ? ' data-variant="accent"' : ''} href="${esc(action.link?.url || '#')}">${esc(action.link?.text || '')}</a>`
-		).join(' ')}</nav>`;
+		html += `<nav data-part="actions">${fields.actions.map((action) => {
+			const variant = action.style === 'primary' ? ' data-variant="accent"' : '';
+			const label = action.link?.text || '';
+			const aria = action.ariaLabel ? ` aria-label="${esc(action.ariaLabel)}"` : '';
+			/* no href ⇒ a real <button>: an anchor without one is not a control */
+			return action.link?.url
+				? `<a class="ui-button"${variant}${aria} href="${esc(action.link.url)}">${esc(label)}</a>`
+				: `<button class="ui-button" type="button"${variant}${aria}>${esc(label)}</button>`;
+		}).join(' ')}</nav>`;
 	}
 	if (fields.links?.length) {
 		/* plain related links — a text-link list, deliberately not buttons (no itemprop:
@@ -1203,7 +1221,7 @@ const profileSubheadline = (d, textTag) =>
 const BYLINE_EARLY = new Set(['book']);
 
 /* full content column for a card (envelope + details + trailers) */
-const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary', parts = {}, bylineMode = 'tail') => {
+const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary', parts = {}, bylineMode = 'tail', headingTag = 'h3') => {
 	const slots = {};
 	if (type === 'profile' && fields.details) {
 		slots.subheadline = profileSubheadline(fields.details, overlay ? 'span' : 'p');
@@ -1218,7 +1236,7 @@ const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary',
 		tailFields = lede ? { ...fields, authors: null, published: null, readingTime: null } : { ...fields, authors: null };
 		if (!lede) slots.after = early;
 	}
-	let html = buildContent(fields, type, overlay, slots, textMode, parts) + (slots.after || '');
+	let html = buildContent(fields, type, overlay, slots, textMode, parts, headingTag) + (slots.after || '');
 	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields, parts);
 	html += buildTail(tailFields, type);
 	return html + extras;
@@ -1362,7 +1380,7 @@ export function renderCard(ucf, presets = {}, cards = {}) {
 			style: styleAttr(preset.styles),
 			itemscope: true,
 			itemtype
-		})}>${contentColumn(fields, type, false, '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail')}</ui-content>`;
+		})}>${contentColumn(fields, type, false, '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail', preset.headingTag)}</ui-content>`;
 	}
 
 	const media = buildMedia(fields, type, tokens, preset, {}, cardId);
@@ -1377,7 +1395,7 @@ export function renderCard(ucf, presets = {}, cards = {}) {
 	})}>
 		<cq-box>
 			${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
-			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail')}</ui-content>
+			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail', preset.headingTag)}</ui-content>
 		</cq-box>
 	</ui-card>`;
 }

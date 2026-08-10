@@ -74,7 +74,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Content — <code>CreativeWork</code> (fallback)</h2>
-	<p class="note">The plain envelope, no <code>details</code>: eyebrow, headline, summary, tags, actions, plus <code>links</code> — plain related-link rows (part <code>links</code>), deliberately not buttons. Unknown <code>schemaType</code> values fall back to this.</p>
+	<p class="note">The plain envelope, no <code>details</code>: eyebrow, headline, summary, tags, actions, plus <code>links</code> — plain related-link rows (part <code>links</code>), deliberately not buttons. Unknown <code>schemaType</code> values fall back to this. A tag may be a string or <code>{name, url}</code> — the linked one renders an anchor inside the chip; an action with no <code>link.url</code> renders a real <code>&lt;button&gt;</code>.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/CreativeWork">
 			<cq-box>
@@ -83,7 +83,7 @@
 					<small data-part="eyebrow" itemprop="genre">Design</small>
 					<h3 data-part="headline" itemprop="name">A generic piece of content</h3>
 					<p data-part="summary" itemprop="description">Anything without a dedicated schema type renders as CreativeWork — headline, summary, tags and actions straight from the envelope.</p>
-					<span data-part="tags"><ui-chip itemprop="keywords">generic</ui-chip><ui-chip itemprop="keywords">fallback</ui-chip></span>
+					<span data-part="tags"><ui-chip itemprop="keywords"><a href="/tags/generic">generic</a></ui-chip><ui-chip itemprop="keywords">fallback</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#" itemprop="url">Read more</a></nav>
 					<ul data-part="links">
 						<li><a href="#">Design principles</a></li>
@@ -113,6 +113,7 @@
 					<small data-part="eyebrow">Science</small>
 					<h3 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/article.html">Quantum computing reaches a <ui-gradient-text>practical milestone</ui-gradient-text></a></h3>
 					<p data-part="summary" itemprop="description">Researchers demonstrate error-corrected logical qubits running a chemistry simulation faster than any classical supercomputer.</p>
+					<p data-part="meta"><small>Updated Jun 21, 2026</small></p>
 					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
 						<ui-avatar><img src="/assets/images/janesmith.png" alt=""></ui-avatar>
 						<span data-part="byline-who"><span itemprop="name">Jane Smith</span><span itemprop="jobTitle">Science Editor</span></span><small data-part="dateline"><time datetime="2026-06-20T14:30:00Z">Jun 20, 2026</time><span>5 min read</span></small>
@@ -221,7 +222,7 @@
 					<p data-part="meta"><small>Valid until Aug 1, 2026</small></p>
 					<p data-part="meta"><ui-chip theme="pale green">In stock</ui-chip></p>
 					<span data-part="tags"><ui-chip itemprop="keywords">Wireless</ui-chip><ui-chip itemprop="keywords">Noise Cancelling</ui-chip></span>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Add to cart</a> <a class="ui-button" href="#">Details</a></nav>
+					<nav data-part="actions"><button class="ui-button" type="button" data-variant="accent" aria-label="Add AuraSound Pro to cart">Add to cart</button> <a class="ui-button" href="#">Details</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>

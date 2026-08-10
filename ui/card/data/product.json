@@ -28,7 +28,10 @@
     "furniture": {
       "sticker": {
         "lines": [
-          { "role": "lead", "text": "-20%" }
+          {
+            "role": "lead",
+            "text": "-20%"
+          }
         ],
         "style": "te red xl sh:burst"
       },
@@ -40,10 +43,10 @@
     "actions": [
       {
         "link": {
-          "url": "#",
           "text": "Add to cart"
         },
-        "style": "primary"
+        "style": "primary",
+        "ariaLabel": "Add AuraSound Pro to cart"
       },
       {
         "link": {
@@ -70,6 +73,9 @@
       "validUntil": "2026-08-01",
       "validUntilDisplay": "Aug 1, 2026"
     },
-    "tags": ["Wireless", "Noise Cancelling"]
+    "tags": [
+      "Wireless",
+      "Noise Cancelling"
+    ]
   }
 }
