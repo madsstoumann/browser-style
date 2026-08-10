@@ -220,6 +220,35 @@
 	</lay-out>
 
 	<!-- ============================================
+	     theme="… glass" — the host re-publishes the material as --ui-reveal-bdf
+	     so the rounded <details> blurs, not the square host. Docs: base/theme.md § Glass
+	     ============================================ -->
+	<h2>Glass panels — <code>theme="… glass"</code></h2>
+	<p>The <code>glass</code> modifier is a material: translucent fill + backdrop blur. A reveal paints its inner <code>&lt;details&gt;</code>, so the host routes the blur there — otherwise a square blur would show behind the rounded panel. Docs: <a href="../base/theme.md#glass">theme.md § Glass</a>.</p>
+
+	<div style="background: url('/assets/images/autumn.jpg') center / cover no-repeat; border-radius: 1rem; padding: 1.5rem;">
+		<lay-out md="columns(2)">
+			<ui-reveal theme="slate glass dark" variant="exp rds(md-sq) ico(te)" content="pad(lg)">
+				<details name="glass">
+					<summary>Slate glass</summary>
+					<ui-content>
+						<p><code>theme="slate glass dark"</code> — the panel is translucent slate over a blurred backdrop, and <code>dark</code> re-tones the text inside it.</p>
+					</ui-content>
+				</details>
+			</ui-reveal>
+
+			<ui-reveal theme="glass border" variant="exp rds(md-sq) ico(te)" content="pad(lg)">
+				<details name="glass">
+					<summary>Frost + rim</summary>
+					<ui-content>
+						<p><code>theme="glass border"</code> — no colour token, so the neutral frost, plus the specular hairline from the existing <code>border</code> token.</p>
+					</ui-content>
+				</details>
+			</ui-reveal>
+		</lay-out>
+	</div>
+
+	<!-- ============================================
 	     Cover story — mirrored media via flp(h), text placed bottom-end
 	     (ovr(be)) over a scrim, toggle at bottom-start (ico(bs)) so the two
 	     never meet. wid(2xl) lifts the 65ch prose cap to full width, since
