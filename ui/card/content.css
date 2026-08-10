@@ -390,7 +390,7 @@
 		& [data-part="links"] {
 			font-size: var(--ui-content-links-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
 			list-style-position: inside;
-			list-style-type: var(--ui-content-links-marker, '→  ');
+			list-style-type: var(--ui-content-links-marker, disc);
 			margin: 0;
 			padding: 0;
 			& li {
