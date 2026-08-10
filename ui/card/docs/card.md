@@ -304,7 +304,7 @@ content and belong in the card's `media[]` items. Bare booleans like `clip`, `au
 | `carousel` | ui-card | `nav(mrk)` | gallery |
 | `media` | ui-media | bare frame · 21:9 · `rds(lg)` | media-block |
 | `prose` | ui-content | bare text column · `text: body` | prose-block |
-| `prose-article` | ui-content | full-article column · `scl(lg)` · `text: both` (standfirst) · `byline: lede` · larger avatar | the `articles/` full views |
+| `prose-article` | ui-content | full-article column · `scl(lg)` · `text: body` · `byline: lede` · larger avatar | the `articles/` full views |
 | `flip` | ui-reveal | flip · `ovr(bs) rds(lg-sq)` · `scroll` | software |
 | `hero-reveal` | ui-reveal | expand → scale at lg · 21:9 · dark panel via `styles` | — (from the ui/reveal hero demo) |
 
@@ -547,12 +547,13 @@ rest ([`article.render.html`](../demo/article.render.html) is the working demo):
 - **Teaser (grid).** The card's preset defaults to `text: "summary"` — the short
   description shows, the `body` never renders.
 - **Full view.** The *same UCF* re-renders through two bare presets: `media`
-  (hero frame) + **`prose-article`** — the editorial order, `text: "both"` so the
-  summary stays visible as the **standfirst** above the body (wrapped in
-  `itemprop="articleBody"`), `byline: "lede"` so the byline sits under the
-  standfirst carrying the dateline instead of trailing the article, and
-  `scl(lg)` + a larger avatar for reading scale. Result: kicker → headline →
-  standfirst → byline → body → engagement. Zero article-specific renderer code.
+  (hero frame) + **`prose-article`** — the editorial order. `text: "body"` keeps
+  the *teaser* summary out of the article (it is a grid-card affordance; it
+  survives as a hidden `description` meta) and renders the body wrapped in
+  `itemprop="articleBody"`; `byline: "lede"` puts the byline above the body
+  carrying the dateline instead of trailing the article; `scl(lg)` + a larger
+  avatar (`styles`) give reading scale. Result: hero → kicker → headline →
+  byline → body → engagement. Zero article-specific renderer code.
   (`prose` — `text: "body"`, tail byline — remains the plain text-column preset.)
 - **`byline` is a preset field**, not content: `tail` (default, the teaser shape)
   or `lede`. `contentColumn()` reads it; the `book` type opts in by type via

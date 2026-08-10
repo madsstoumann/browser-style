@@ -56,14 +56,18 @@
       "description": "Content-only card whose nested accordion is divided — FAQ-style lists",
       "element": "ui-card",
       "variant": "vis(content)",
-      "parts": { "accordion": "divided" }
+      "parts": {
+        "accordion": "divided"
+      }
     },
     "panel-accordion-boxed": {
       "name": "Panel Accordion Boxed Preset",
       "description": "Content-only card whose nested accordion is a bordered, rounded, divided box",
       "element": "ui-card",
       "variant": "vis(content)",
-      "parts": { "accordion": "bordered rounded divided" }
+      "parts": {
+        "accordion": "bordered rounded divided"
+      }
     },
     "stack-subtle": {
       "name": "Stack Subtle Preset",
@@ -88,7 +92,9 @@
       "element": "ui-card",
       "variant": "col",
       "media": "asr(16/9)",
-      "parts": { "accordion": "divided" }
+      "parts": {
+        "accordion": "divided"
+      }
     },
     "stack-offer": {
       "name": "Stack Offer Preset",
@@ -104,7 +110,9 @@
       "element": "ui-card",
       "variant": "col",
       "media": "asr(16/9)",
-      "parts": { "accordion": "bordered rounded divided" }
+      "parts": {
+        "accordion": "bordered rounded divided"
+      }
     },
     "panel-subtle": {
       "name": "Panel Subtle Preset",
@@ -159,10 +167,10 @@
     },
     "prose-article": {
       "name": "Prose Article Preset",
-      "description": "Full-article text column: the editorial order — kicker, headline, standfirst (summary), byline with the dateline, then the body. text: both keeps the summary visible as the standfirst; byline: lede lifts the byline out of the tail; a larger avatar and byline size give the author presence at reading scale.",
+      "description": "Full-article text column: the editorial order — kicker, headline, byline with the dateline, then the body. text: body keeps the teaser summary out of the article (it survives as a hidden description meta); byline: lede lifts the byline above the body; a larger avatar and byline size give the author presence at reading scale.",
       "element": "ui-content",
       "content": "scl(lg)",
-      "text": "both",
+      "text": "body",
       "byline": "lede",
       "styles": {
         "--ui-avatar-size": "3.25em",
