@@ -893,7 +893,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Location — <code>Place</code></h2>
-	<p class="note">Overlay over a destination shot; address + geo, amenities as <code>list</code>.</p>
+	<p class="note">Overlay over a destination shot; address + geo, amenities as <code>list</code>, hours in the tabular <code>hours</code> part. <strong>Place-only hours:</strong> the flat <code>openingHours</code> string is a <code>LocalBusiness</code>/<code>CivicStructure</code> property, so a plain <code>Place</code> emits <em>only</em> <code>openingHoursSpecification</code> (business and organization offices emit both).</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Place">
 			<cq-box>
@@ -913,7 +913,6 @@
 					<dl data-part="hours">
 						<dt>Mon–Sun</dt>
 						<dd>
-							<meta itemprop="openingHours" content="Mo-Su 06:00-22:00">
 							<span itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification" hidden>
 								<meta itemprop="dayOfWeek" content="https://schema.org/Monday"><meta itemprop="dayOfWeek" content="https://schema.org/Tuesday"><meta itemprop="dayOfWeek" content="https://schema.org/Wednesday"><meta itemprop="dayOfWeek" content="https://schema.org/Thursday"><meta itemprop="dayOfWeek" content="https://schema.org/Friday"><meta itemprop="dayOfWeek" content="https://schema.org/Saturday"><meta itemprop="dayOfWeek" content="https://schema.org/Sunday">
 								<meta itemprop="opens" content="06:00"><meta itemprop="closes" content="22:00">

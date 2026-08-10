@@ -242,13 +242,15 @@ const hoursRow = (entry) => {
 	};
 };
 
-/* opening hours as a two-column <dl> — each row carries its own flat openingHours
-   meta AND structured OpeningHoursSpecification */
-const hoursPart = (hours) =>
+/* opening hours as a two-column <dl>. Each row carries a structured
+   OpeningHoursSpecification (valid on Place and below) plus, where the type allows
+   it, the flat openingHours string — that one is a LocalBusiness/CivicStructure
+   property, so a plain Place (location) must pass flat: false */
+const hoursPart = (hours, { flat = true } = {}) =>
 	hours?.length
 		? `<dl data-part="hours">${hours.map((entry) => {
 			const { days, time } = hoursRow(entry);
-			return `<dt>${esc(days)}</dt><dd>${meta('openingHours', entry.schema)}${hoursSpec(entry.schema)}${esc(time)}</dd>`;
+			return `<dt>${esc(days)}</dt><dd>${flat ? meta('openingHours', entry.schema) : ''}${hoursSpec(entry.schema)}${esc(time)}</dd>`;
 		}).join('')}</dl>`
 		: '';
 
@@ -969,7 +971,8 @@ const DETAILS = {
 		let html = '';
 		html += geoPart(d.geo);
 		html += addressPart(d.address);
-		if (d.openingHours?.length) html += hoursPart(d.openingHours);
+		/* Place has openingHoursSpecification but NOT the flat openingHours string */
+		if (d.openingHours?.length) html += hoursPart(d.openingHours, { flat: false });
 		else if (d.hours) html += `<p data-part="meta">${esc(d.hours)}</p>`;
 		/* amenityFeature wants LocationFeatureSpecification scopes — plain list, no itemprop */
 		html += listPart(d.amenities);
