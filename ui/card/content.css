@@ -386,21 +386,21 @@
 			& li { color: var(--ui-content-list-crossed-ink, var(--ui-content-muted)); }
 		}
 
-		/* links — Trailer group: plain related-link rows, not buttons */
+		/* links — Trailer group: plain related-link rows, not buttons; marker rides the li */
 		& [data-part="links"] {
-			display: flex;
-			flex-direction: column;
 			font-size: var(--ui-content-links-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
-			list-style: none;
+			list-style-position: inside;
+			list-style-type: var(--ui-content-links-marker, '→  ');
 			margin: 0;
 			padding: 0;
-			& li { border-block-end: var(--border-width) solid var(--ui-content-links-border, var(--color-border)); }
+			& li {
+				border-block-end: var(--border-width) solid var(--ui-content-links-border, var(--color-border));
+				padding-block: var(--ui-content-links-pb, var(--spacing-xs));
+				&::marker { color: var(--ui-content-links-mark, var(--color-accent)); }
+			}
 			& a {
 				color: var(--ui-content-links-ink, inherit);
-				display: block;
-				padding-block: var(--ui-content-links-pb, var(--spacing-xs));
 				text-decoration: none;
-				&::before { content: '→ '; color: var(--ui-content-links-mark, var(--color-accent)); }
 				&:hover { color: var(--ui-content-links-hover-ink, var(--color-accent)); }
 			}
 		}
