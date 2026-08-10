@@ -828,21 +828,6 @@
 			</ui-media>
 	</lay-out>
 
-	<h3>Fade — <code>ani(fde)</code> · per-child order — <code>data-stagger-index</code></h3>
-	<p>The whole carousel fades its copy in element by element. On the second slide, <code>data-stagger-index</code> reorders the cascade: summary first, headline second, eyebrow last.</p>
-	<lay-out>
-			<ui-media media="asr(16/9) rds(lg) clip nav stagger ani(fde)">
-				<ui-card variant="ovr(bs) rds(non)" media="asr(16/9) obp(cc) scm" content="pad(lg)"><cq-box>
-					<ui-media><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"></ui-media>
-					<ui-content><small data-part="eyebrow">ani(fde)</small><h3 data-part="headline">Plain fade</h3><p data-part="summary">No movement — lines settle into place one by one.</p></ui-content>
-				</cq-box></ui-card>
-				<ui-card variant="ovr(bs) rds(non)" media="asr(16/9) obp(cc) scm" content="pad(lg)"><cq-box>
-					<ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
-					<ui-content><small data-part="eyebrow" data-stagger-index="3">Appears last</small><h3 data-part="headline" data-stagger-index="2">Appears second</h3><p data-part="summary" data-stagger-index="1">Appears first — the cascade reads bottom-up here.</p></ui-content>
-				</cq-box></ui-card>
-			</ui-media>
-	</lay-out>
-
 	<hr>
 	<!-- ════════════════════════════════════════════════════════════
 	     STAGGER-BASED SLIDES — layered / multi-card (all use stagger)
@@ -1052,21 +1037,70 @@
 	<p>Each page is its own <code>&lt;lay-out&gt;</code> grid inside a <code>stagger pages</code> scroller — a whole grid reveals per snap. Below <code>md</code> (540px) the pages dissolve and every card becomes its own slide; narrow the window to watch the dot count jump.</p>
 
 	<h4>Two channels — <code>crd()</code> + <code>ani()</code></h4>
-	<p><code>crd()</code> animates the cards, <code>ani()</code> their content; both cascade. On the first page the cards carry a bare <code>stagger-index</code> (custom elements take the bare spelling), so the middle card leads the card cascade.</p>
+	<p><code>crd()</code> animates the cards, <code>ani()</code> their content; both cascade. Default pacing (<code>--stagger-step: 0.07s</code>) and document order — the cascade is over almost as soon as the page snaps.</p>
 	<lay-out>
 			<ui-media class="slide-gap" media="nav stagger crd(rise) pages">
 				<lay-out md="columns(3)" stagger>
-					<ui-card stagger-index="2" variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
+					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Space · ani(fall)</small><h3 data-part="headline">Hubble</h3></ui-content>
 					</cq-box></ui-card>
-					<ui-card stagger-index="1" variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
+					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Physics · ani(fall)</small><h3 data-part="headline">Quantum</h3></ui-content>
 					</cq-box></ui-card>
-					<ui-card stagger-index="3" variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
+					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
 						<ui-media><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
 						<ui-content><small data-part="eyebrow">Tech · ani(fall)</small><h3 data-part="headline">Web Summit</h3></ui-content>
+					</cq-box></ui-card>
+				</lay-out>
+				<lay-out md="columns(3)" stagger>
+					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
+						<ui-content><small data-part="eyebrow">Health · ani(fall)</small><h3 data-part="headline">Mindfulness</h3></ui-content>
+					</cq-box></ui-card>
+					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/world.png" alt="" decoding="async" loading="lazy"></ui-media>
+						<ui-content><small data-part="eyebrow">Travel · ani(fall)</small><h3 data-part="headline">World</h3></ui-content>
+					</cq-box></ui-card>
+					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/finance.png" alt="" decoding="async" loading="lazy"></ui-media>
+						<ui-content><small data-part="eyebrow">Money · ani(fall)</small><h3 data-part="headline">Finance</h3></ui-content>
+					</cq-box></ui-card>
+				</lay-out>
+				<lay-out md="columns(3)" stagger>
+					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/river.png" alt="" decoding="async" loading="lazy"></ui-media>
+						<ui-content><small data-part="eyebrow">Nature · ani(fall)</small><h3 data-part="headline">Wild waters</h3></ui-content>
+					</cq-box></ui-card>
+					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/gastronomy.png" alt="" decoding="async" loading="lazy"></ui-media>
+						<ui-content><small data-part="eyebrow">Food · ani(fall)</small><h3 data-part="headline">Gastronomy</h3></ui-content>
+					</cq-box></ui-card>
+					<ui-card variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/mindfulness.png" alt="" decoding="async" loading="lazy"></ui-media>
+						<ui-content><small data-part="eyebrow">Calm · ani(fall)</small><h3 data-part="headline">Stillness</h3></ui-content>
+					</cq-box></ui-card>
+				</lay-out>
+			</ui-media>
+	</lay-out>
+
+	<h4>Same grid, per-child overrides — <code>stagger-index</code> + <code>--stagger-step</code></h4>
+	<p>Identical markup, two overrides. The first page's cards carry a bare <code>stagger-index</code> (custom elements take the bare spelling) so the middle card leads, and the scroller sets <code>--stagger-step: 0.4s</code> so the cascade outlasts the snap. Compare with the carousel above — same effect, only the pacing and order differ.</p>
+	<lay-out>
+			<ui-media class="slide-gap" media="nav stagger crd(rise) pages" style="--stagger-step: 0.4s">
+				<lay-out md="columns(3)" stagger>
+					<ui-card stagger-index="2" variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/hubble.png" alt="" decoding="async" loading="lazy"></ui-media>
+						<ui-content><small data-part="eyebrow">stagger-index="2"</small><h3 data-part="headline">Hubble</h3></ui-content>
+					</cq-box></ui-card>
+					<ui-card stagger-index="1" variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/quantum.png" alt="" decoding="async" loading="lazy"></ui-media>
+						<ui-content><small data-part="eyebrow">stagger-index="1" · leads</small><h3 data-part="headline">Quantum</h3></ui-content>
+					</cq-box></ui-card>
+					<ui-card stagger-index="3" variant="ovr(bs) rds(md-sq)" media="asr(3/4) obp(cc) scm ani(fall)" content="scl(sm) pad(md)"><cq-box>
+						<ui-media><img src="/assets/images/websummit.png" alt="" decoding="async" loading="lazy"></ui-media>
+						<ui-content><small data-part="eyebrow">stagger-index="3"</small><h3 data-part="headline">Web Summit</h3></ui-content>
 					</cq-box></ui-card>
 				</lay-out>
 				<lay-out md="columns(3)" stagger>
