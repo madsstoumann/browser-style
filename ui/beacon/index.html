@@ -195,17 +195,6 @@
 		<ui-beacon theme="blue" variant="solid" animation="none">Base</ui-beacon>
 	</p>
 
-	<h3>Glass — <code>theme="… glass"</code></h3>
-	<p><code>glass</code> is a material, not a colour — it needs something behind it, so these sit on a photo. Without a colour token it is a neutral frost.</p>
-	<p><strong>Use it on the plate variants</strong> (<code>pill</code>, <code>solid</code>, <code>ticker</code>), which paint a box the material can fill. The bare dot draws itself in <code>::before</code> and has no plate, so <code>glass</code> there blurs the host's <em>square</em> box behind a tiny dot — colour it with a hue instead.</p>
-	<p style="padding: 1.5rem; border-radius: 0.5rem; background: url('/assets/images/autumn.jpg') center / cover no-repeat;">
-		<ui-beacon theme="glass" variant="solid">LIVE</ui-beacon>&nbsp;
-		<ui-beacon theme="red pale glass" variant="solid">REC</ui-beacon>&nbsp;
-		<ui-beacon theme="blue pale glass" variant="pill">Streaming</ui-beacon>&nbsp;
-		<ui-beacon theme="green pale glass" variant="pill">Online</ui-beacon>&nbsp;
-		<ui-beacon theme="black glass" variant="solid" animation="none">Base</ui-beacon>
-	</p>
-
 	<hr>
 	<h2>Arbitrary colors — <code>fill=</code> / <code>ink=</code></h2>
 	<p>
@@ -278,6 +267,24 @@
 		<ui-beacon variant="solid" theme="red">LIVE</ui-beacon>&nbsp;
 		<ui-beacon variant="ticker" theme="red">Live</ui-beacon>
 	</p>
+	<h2>Glass — <code>theme="… glass"</code></h2>
+	<p><code>glass</code> is a material, not a colour — it needs something behind it, so these sit on a photo. Without a colour token it is a neutral frost.</p>
+	<p><strong>Use it on the plate variants</strong> (<code>pill</code>, <code>solid</code>, <code>ticker</code>), which paint a box the material can fill. The bare dot draws itself in <code>::before</code> and has no plate, so <code>glass</code> there blurs the host's <em>square</em> box behind a tiny dot — colour it with a hue instead.</p>
+	<p style="padding: 1.5rem; border-radius: 0.5rem; background: url('/assets/images/autumn.jpg') center / cover no-repeat;">
+		<ui-beacon theme="glass" variant="solid">LIVE</ui-beacon>&nbsp;
+		<ui-beacon theme="red pale glass" variant="solid">REC</ui-beacon>&nbsp;
+		<ui-beacon theme="blue pale glass" variant="pill">Streaming</ui-beacon>&nbsp;
+		<ui-beacon theme="green pale glass" variant="pill">Online</ui-beacon>&nbsp;
+		<ui-beacon theme="black glass" variant="solid" animation="none">Base</ui-beacon>
+	</p>
+	<p style="margin-block-start: 1rem; padding: 1.5rem; border-radius: 0.5rem; background: url('/assets/images/spring.jpg') center / cover no-repeat;">
+		<ui-beacon theme="glass" variant="solid">LIVE</ui-beacon>&nbsp;
+		<ui-beacon theme="red pale glass" variant="solid">REC</ui-beacon>&nbsp;
+		<ui-beacon theme="blue pale glass" variant="pill">Streaming</ui-beacon>&nbsp;
+		<ui-beacon theme="green pale glass" variant="pill">Online</ui-beacon>&nbsp;
+		<ui-beacon theme="black glass" variant="solid" animation="none">Base</ui-beacon>
+	</p>
+
 	<!-- Typed attr() polyfill — Safari/Firefox. No-op where typed attr() is
 	     supported; each component's own @supports block already covers the no-JS
 	     case, this restores per-element attribute values on top. -->

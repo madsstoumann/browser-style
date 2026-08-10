@@ -105,16 +105,6 @@
 		<ui-play theme="subtle"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 	</div>
 
-	<h3>Glass — <code>theme="… glass"</code></h3>
-	<p><code>glass</code> is a material, not a colour — it needs something behind it, so these sit on a photo. Without a colour token it is a neutral frost; add a hue (best with <code>pale</code>) to tint the pane. Unlike the other furniture, the <strong>disc</strong> is the plate here, not the host: <code>ui-play</code> re-publishes the material onto its <code>&lt;button&gt;</code> via <code>--ui-play-bdf</code>, so the blur is round and does not show as a square behind it. The glyph keeps its own ink — <code>glass</code> tints only the disc — so it is set per pane with <code>ink=</code>: black on the light frosts (8.7–10.9:1 against the composited disc), white on the dark one (5.3:1, where black would be 4.0:1).</p>
-	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; padding: 1.5rem; border-radius: 0.5rem; background: url('/assets/images/autumn.jpg') center / cover no-repeat;">
-		<ui-play theme="glass" ink="#000"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
-		<ui-play theme="blue pale glass" ink="#000"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
-		<ui-play theme="red pale glass" ink="#000"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
-		<ui-play theme="black glass" ink="#fff" size="lg"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
-		<ui-play theme="glass" ink="#000" radius="sqr" size="lg"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
-	</div>
-
 	<h3>Custom tokens</h3>
 	<p>Override <code>--ui-play-bg</code>, <code>--ui-play-c</code>, <code>--ui-play-sz</code>, and <code>--ui-play-icon-sz</code>.</p>
 	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
@@ -158,6 +148,23 @@
 		<ui-play theme="accent" radius="sqr"><button type="button" aria-label="sqr"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 		<ui-play theme="accent" radius="rnd"><button type="button" aria-label="rnd"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 		<ui-play theme="accent" radius="non"><button type="button" aria-label="non"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+	</div>
+
+	<h3>Glass — <code>theme="… glass"</code></h3>
+	<p><code>glass</code> is a material, not a colour — it needs something behind it, so these sit on a photo. Without a colour token it is a neutral frost; add a hue (best with <code>pale</code>) to tint the pane. Unlike the other furniture, the <strong>disc</strong> is the plate here, not the host: <code>ui-play</code> re-publishes the material onto its <code>&lt;button&gt;</code> via <code>--ui-play-bdf</code>, so the blur is round and does not show as a square behind it. The glyph keeps its own ink — <code>glass</code> tints only the disc — so it is set per pane with <code>ink=</code>.</p>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; padding: 1.5rem; border-radius: 0.5rem; background: url('/assets/images/autumn.jpg') center / cover no-repeat;">
+		<ui-play theme="glass" ink="#000"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play theme="blue pale glass" ink="#000"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play theme="red pale glass" ink="#000"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play theme="black glass" ink="#fff" size="lg"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play theme="glass" ink="#000" radius="sqr" size="lg"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+	</div>
+	<div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-block-start: 1rem; padding: 1.5rem; border-radius: 0.5rem; background: url('/assets/images/spring.jpg') center / cover no-repeat;">
+		<ui-play theme="glass" ink="#000"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play theme="blue pale glass" ink="#000"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play theme="red pale glass" ink="#000"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play theme="black glass" ink="#fff" size="lg"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+		<ui-play theme="glass" ink="#000" radius="sqr" size="lg"><button type="button" aria-label="Play"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 	</div>
 
 	<script type="module">

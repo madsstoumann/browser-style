@@ -7,9 +7,10 @@
 	:where(ui-play) {
 		& button {
 			/* base's ring is 0-blur and em-based, so it never tracks --ui-play-sz — restate
-			   it as a soft glow proportional to the disc. Docs: ../base/button.css */
+			   it as a soft glow proportional to the disc. Stays white: base only looked
+			   white because play never sets --button-bg. Docs: ../base/button.css */
 			--button-bxsh--hover:
-				color-mix(in srgb, var(--ui-play-bg, rgb(0 0 0 / 0.55)), transparent 55%)
+				color-mix(in srgb, var(--ui-play-ring, hsl(0 0% 100%)), transparent 55%)
 				0 0 calc(var(--ui-play-sz, 3em) * 0.2) calc(var(--ui-play-sz, 3em) * 0.05);
 
 			aspect-ratio: 1;

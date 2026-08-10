@@ -52,17 +52,6 @@
 		<!-- <ui-sticker variant="clip" fill="#d4763a" font-lead="lg" ink="#fff" size="2xl" style="--ui-sticker-clip-path: shape(from 55.44% 3.52%,curve to 49.99% 0% with 54.44% 1.37%/52.32% 0%,smooth by -5.45% 3.52% with -4.43% 1.37%,line to 32.36% 29.35%,line to 5.16% 33.49%,curve by -4.87% 4.24% with -2.27% 0.35%/-4.17% 1.99%,smooth by 1.5% 6.39% with -0.13% 4.73%,line to 21.52% 64.25%,line to 16.86% 92.7%,curve by 2.44% 6.11% with -0.38% 2.34%/0.57% 4.73%,smooth by 6.4% 0.45% with 4.36% 1.56%,line by 24.3% -13.38%,line by 24.3% 13.38%,curve by 6.4% -0.45% with 2.05% 1.11%/4.53% 0.96%,smooth by 2.44% -6.11% with 2.82% -3.77%,line to 78.47% 64.25%,line to 98.2% 44.12%,curve by 1.5% -6.39% with 1.63% -1.66%/2.22% -4.14%,smooth by -4.87% -4.24% with -2.59% -3.89%,line to 67.62% 29.35%,line to 55.44% 3.52%,close);"><strong>$$</strong></ui-sticker> -->
 	</div>
 
-	<h3>Glass — <code>theme="… glass"</code></h3>
-	<p><code>glass</code> is a material, not a colour — it needs something behind it, so these sit on a photo. Without a colour token it is a neutral frost; <code>pale</code> first gives the gentlest tint. The sticker's own box is the plate, so the fill and the backdrop blur land together.</p>
-	<p>Ink is pinned with <code>ink="#000"</code> rather than left to the theme: over a translucent pane the glass ink (the hue itself) drops to ~2:1 against the composited disc, while black measures 9–11:1. A four-character lead also needs <code>font-lead="sm"</code> so it clears the circle's edge.</p>
-	<div class="row" style="padding: 1.5rem; border-radius: 0.5rem; background: url('/assets/images/autumn.jpg') center / cover no-repeat;">
-		<ui-sticker theme="glass" ink="#000" font-lead="sm" size="2xl"><small>NEW</small><strong>2026</strong></ui-sticker>
-		<ui-sticker theme="red pale glass" ink="#000" size="2xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
-		<ui-sticker theme="blue pale glass" ink="#000" size="2xl"><small>UP TO</small><strong>50%</strong></ui-sticker>
-		<ui-sticker theme="green pale glass" ink="#000" radius="sqr" size="2xl"><small>ONLY</small><strong>$9</strong></ui-sticker>
-		<ui-sticker theme="black glass" ink="#000" font-lead="sm" size="2xl"><small>LAST</small><strong>CALL</strong></ui-sticker>
-	</div>
-
 	<h3>Corners — <code>radius</code></h3>
 	<p>Reshape the disc: <code>non</code> sharp, <code>rnd</code> rounded, <code>pll</code> pill,
 		<code>crc</code> circle (default), <code>sqr</code> squircle. In a card: <code>sticker(&lt;corner&gt;)</code>.
@@ -151,6 +140,24 @@
 		<ui-sticker fill="#2F75BC" font="fit" font-lead="fit" ink="#fff" size="lg"><small>UP TO</small><strong>40%</strong></ui-sticker>
 		<ui-sticker fill="#3E9355" font="fit" font-lead="fit" ink="#fff" size="2xl"><small>FROM</small><strong>$9</strong><small>/mo</small></ui-sticker>
 		<ui-sticker fill="#7B5EA7" font="fit" font-lead="fit" ink="#fff" size="3xl"><small>SAVE</small><strong>50%</strong></ui-sticker>
+	</div>
+
+	<h3>Glass — <code>theme="… glass"</code></h3>
+	<p><code>glass</code> is a material, not a colour — it needs something behind it, so these sit on a photo. Without a colour token it is a neutral frost; <code>pale</code> first gives the gentlest tint. The sticker's own box is the plate, so the fill and the backdrop blur land together.</p>
+	<p>Ink is pinned with <code>ink=</code> rather than left to the theme: over a translucent pane the glass ink (the hue itself) drops to ~2:1 against the composited disc. A four-character lead also needs <code>font-lead="sm"</code> so it clears the circle's edge.</p>
+	<div class="row" style="padding: 1.5rem; border-radius: 0.5rem; background: url('/assets/images/autumn.jpg') center / cover no-repeat;">
+		<ui-sticker theme="glass" ink="#000" font-lead="sm" size="2xl"><small>NEW</small><strong>2026</strong></ui-sticker>
+		<ui-sticker theme="red pale glass" ink="#000" size="2xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
+		<ui-sticker theme="blue pale glass" ink="#000" size="2xl"><small>UP TO</small><strong>50%</strong></ui-sticker>
+		<ui-sticker theme="green pale glass" ink="#000" radius="sqr" size="2xl"><small>ONLY</small><strong>$9</strong></ui-sticker>
+		<ui-sticker theme="black glass" ink="#000" font-lead="sm" size="2xl"><small>LAST</small><strong>CALL</strong></ui-sticker>
+	</div>
+	<div class="row" style="margin-block-start: 1rem; padding: 1.5rem; border-radius: 0.5rem; background: url('/assets/images/spring.jpg') center / cover no-repeat;">
+		<ui-sticker theme="glass" ink="#000" font-lead="sm" size="2xl"><small>NEW</small><strong>2026</strong></ui-sticker>
+		<ui-sticker theme="red pale glass" ink="#000" size="2xl"><small>SAVE</small><strong>20%</strong></ui-sticker>
+		<ui-sticker theme="blue pale glass" ink="#000" size="2xl"><small>UP TO</small><strong>50%</strong></ui-sticker>
+		<ui-sticker theme="green pale glass" ink="#000" radius="sqr" size="2xl"><small>ONLY</small><strong>$9</strong></ui-sticker>
+		<ui-sticker theme="black glass" ink="#000" font-lead="sm" size="2xl"><small>LAST</small><strong>CALL</strong></ui-sticker>
 	</div>
 
 	<!-- Typed attr() polyfill — Safari/Firefox. No-op where typed attr() is
