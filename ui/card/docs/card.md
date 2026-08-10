@@ -486,7 +486,7 @@ peers** of `@browser.style/card` — pages link only the sheets their types need
 |---|---|---|
 | quote, review, social, claim, qa | [`ui/quote`](../../quote/) | `<ui-quote data-part="quote" variant?>` wrapping `<blockquote itemprop>` — variant from `parts.quote` (quote defaults to `bigquote`) |
 | faq, recipe, job, howto | [`ui/accordion`](../../accordion/) | `<ui-accordion group variant?><cq-box><details>…` — the `cq-box` is hand-authored by the renderer so the CSS-only form styles without the accordion JS; variant from `parts.accordion` |
-| any card with `authors[]`, review | [`ui/avatar`](../../avatar/) | `<ui-avatar><img></ui-avatar>` in byline rows, `<abbr>` initials fallback when no image; the byline rule in `content.css` sets `--ui-avatar-size` from `--ui-content-avatar-size` (2.25em default, `em`-relative so it tracks the byline size) — the avatar package's own default is 4em |
+| any card with `authors[]`, review | [`ui/avatar`](../../avatar/) | `<ui-avatar><img></ui-avatar>` in byline rows, `<abbr>` initials fallback when no image. The card sets **no** avatar size — the package's own `--ui-avatar-size` (4em, `em`-relative so it tracks the byline font-size) governs; a preset overrides it per look via `styles` (see `prose-article`) |
 | poll, comparison | [`ui/progress`](../../progress/) | bare `<progress>` — the package styles the native element, no markup contract |
 | faq/recipe/job summaries, reveal toggles | [`ui/icon`](../../icon/) | `<ui-icon type="plus-minus">` etc. |
 
@@ -564,8 +564,7 @@ rest ([`article.render.html`](../demo/article.render.html) is the working demo):
   `view-transition-name`s, nested: `card-{id}` on the grid `<ui-card>` *and* on
   the article page's `<article>` container, `hero-{id}` on the media `<img>` in
   both — the whole card morphs into the page across the navigation while the
-  image morphs within it, and morphs back on the “← All articles” link or the
-  browser Back button. The article surface gets card chrome
+  image morphs within it, and morphs back on the browser Back button. The article surface gets card chrome
   (`--ui-card-bg`/`--ui-card-radius` + padding) so it reads as the card
   growing. Non-clicked cards have unique names and simply fade.
 - **Names via `data-view` + CSS `attr()` — built into ui-card.css, no inline
@@ -659,10 +658,10 @@ rest ([`article.render.html`](../demo/article.render.html) is the working demo):
   /* tags/actions links sit above the cover surface (z-index: 2) */
   ```
 
-  The article page carries a plain “← All articles” backlink to
-  `article.render.html`; browser Back morphs in reverse. Keyboard,
-  middle-click and prefetching all behave — the whole demo cluster contains
-  **zero runtime JavaScript**.
+  Return is the browser Back button, which morphs in reverse (the article pages
+  carry no backlink — the reference pages they morph from are several, so there
+  is no single “up” target). Keyboard, middle-click and prefetching all behave;
+  the only script in the cluster is the `attr()` fallback for Safari.
 - **Furniture rides along.** Chips/stickers come from content, not the preset —
   the news card's "Breaking" chip appears in the full view automatically.
 

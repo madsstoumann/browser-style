@@ -682,6 +682,8 @@ const buildContent = (fields, type, overlay, slots = {}, textMode = 'summary', p
 		/* body replaced the visible summary — keep the description machine-readable */
 		html += meta(SUMMARY_PROP[type] || 'description', fields.summary);
 	}
+	/* the lede byline sits between the standfirst and the body (slots.byline) */
+	html += slots.byline || '';
 	html += body;
 	if (fields.published) html += meta(PUBLISHED_PROP[type] || 'datePublished', fields.published);
 	if (fields.modified) html += meta('dateModified', fields.modified);
@@ -1164,14 +1166,17 @@ const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary',
 	if (type === 'profile' && fields.details) {
 		slots.subheadline = profileSubheadline(fields.details, overlay ? 'span' : 'p');
 	}
-	let html = buildContent(fields, type, overlay, slots, textMode, parts);
 	let tailFields = fields;
 	const lede = bylineMode === 'lede';
 	if ((lede || BYLINE_EARLY.has(type)) && fields.authors?.length) {
-		/* the standfirst byline carries the dateline; the tail then has neither */
-		html += byline(fields.authors, 'author', lede ? datelinePart(fields) : '');
+		/* lede: above the body, carrying the dateline. book: after the envelope,
+		   before the commerce details. Either way the tail keeps neither. */
+		const early = byline(fields.authors, 'author', lede ? datelinePart(fields) : '');
+		if (lede) slots.byline = early;
 		tailFields = lede ? { ...fields, authors: null, published: null, readingTime: null } : { ...fields, authors: null };
+		if (!lede) slots.after = early;
 	}
+	let html = buildContent(fields, type, overlay, slots, textMode, parts) + (slots.after || '');
 	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields, parts);
 	html += buildTail(tailFields, type);
 	return html + extras;

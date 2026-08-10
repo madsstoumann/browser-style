@@ -165,7 +165,7 @@
       "text": "both",
       "byline": "lede",
       "styles": {
-        "--ui-content-avatar-size": "2.75em",
+        "--ui-avatar-size": "3.25em",
         "--ui-content-byline-fs": "1em"
       }
     },

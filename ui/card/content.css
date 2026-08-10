@@ -238,9 +238,6 @@
 			gap: var(--ui-content-byline-gap, var(--spacing-sm));
 			text-shadow: var(--ui-content-byline-text-shadow, var(--ui-content-meta-text-shadow, none));
 
-			/* the card owns byline avatar scale — @browser.style/avatar defaults to 4em */
-			& ui-avatar { --ui-avatar-size: var(--ui-content-avatar-size, 2.25em); }
-
 			/* two blocks beside the avatar: name over role, then date over reading
 			   time pushed to the inline end. Each block stacks its own lines. */
 			& :is([data-part="byline-who"], [data-part="dateline"]) {

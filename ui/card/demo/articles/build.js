@@ -66,7 +66,6 @@ const page = (ucf) => {
 		/* cross-document view transitions (@view-transition, the [data-view]
 		   attr() naming rule and group timing) come from ui-card.css */
 		body { margin-inline: auto; max-inline-size: var(--width-prose, 65ch); }
-		.back { margin-block: var(--spacing-lg); }
 		.article-view {
 			background: var(--ui-card-bg, var(--color-surface, #fff));
 			border-radius: var(--ui-card-radius, var(--radius-2xl));
@@ -77,7 +76,6 @@ const page = (ucf) => {
 	</style>
 </head>
 <body>
-	<p class="back"><a href="../article.render.html">← All articles</a></p>
 	<article class="article-view" data-view="card-${ucf.id}">
 		${hero}
 		${prose}
@@ -137,7 +135,7 @@ const gridPage = (cards) => `<!DOCTYPE html>
 </head>
 <body>
 	<h1>UI: Card — Article View Transition</h1>
-	<p class="note">Each teaser card links to its <em>own page</em>: <a href="articles/article.html"><code>articles/article.html</code></a> and <a href="articles/news.html"><code>articles/news.html</code></a>. Both documents opt in with <code>@view-transition { navigation: auto }</code> and carry the same per-article <code>view-transition-name</code>s — set via <code>data-view</code> attributes and the CSS <code>attr()</code> rule, no inline styles — so the whole card morphs into the full article across the navigation, and morphs back via the “← All articles” link or the browser Back button. Every page here is pre-rendered by <code>articles/build.js</code> (the SSR engine): static markup on both sides is what makes the capture reliable in both directions. The full view renders the <code>body</code> as <code>itemprop="articleBody"</code> instead of the teaser summary, from the <em>same UCF instance</em>. The full view uses the <code>prose-article</code> preset: the summary stays visible as the standfirst and the byline moves up under it (<code>byline: lede</code>), at reading scale.</p>
+	<p class="note">Each teaser card links to its <em>own page</em>: <a href="articles/article.html"><code>articles/article.html</code></a> and <a href="articles/news.html"><code>articles/news.html</code></a>. Both documents opt in with <code>@view-transition { navigation: auto }</code> and carry the same per-article <code>view-transition-name</code>s — set via <code>data-view</code> attributes and the CSS <code>attr()</code> rule, no inline styles — so the whole card morphs into the full article across the navigation, and morphs back via the browser Back button. Every page here is pre-rendered by <code>articles/build.js</code> (the SSR engine): static markup on both sides is what makes the capture reliable in both directions. The full view renders the <code>body</code> as <code>itemprop="articleBody"</code> instead of the teaser summary, from the <em>same UCF instance</em>. The full view uses the <code>prose-article</code> preset: the summary stays visible as the standfirst and the byline moves up under it (<code>byline: lede</code>), at reading scale.</p>
 
 	<p class="note"><strong>Browser support.</strong> Chromium 133+ morphs natively. Safari 18.2+ supports cross-document transitions but not typed <code>attr()</code>, so the names come from <code>ui/base/polyfills/attr-fallback.js</code> (loaded at the end of this page) — without it the navigation still transitions, just as a plain cross-fade. Firefox has no cross-document transitions and navigates instantly. <code>prefers-reduced-motion: reduce</code> disables navigation transitions by design, and the pages must be <strong>served over http</strong> — opened from <code>file://</code> there is no transition (and the root-absolute base CSS 404s).</p>
 
