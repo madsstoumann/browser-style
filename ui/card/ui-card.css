@@ -80,7 +80,8 @@
 		inline-size: 100%;
 		min-block-size: 0;
 	}
-	:where([variant~="col-r"], [variant~="row-r"]) ui-content { order: -1; }
+	/* reading-order keeps a11y/tab order with the DOM while order flips the visual */
+	:where([variant~="col-r"], [variant~="row-r"]) ui-content { order: -1; reading-order: 1; }
 
 	:where([variant~="spl(1/1)"]) { --ui-card-split: 1fr 1fr; }
 	:where([variant~="spl(1/2)"]) { --ui-card-split: 1fr 2fr; }
@@ -160,7 +161,7 @@
 		:where([variant~="md:col"]) :is(cq-box, summary) ui-content,
 		:where([variant~="md:row"]) :is(cq-box, summary) ui-content { order: 0; }
 		:where([variant~="md:col-r"]) :is(cq-box, summary) ui-content,
-		:where([variant~="md:row-r"]) :is(cq-box, summary) ui-content { order: -1; }
+		:where([variant~="md:row-r"]) :is(cq-box, summary) ui-content { order: -1; reading-order: 1; }
 		:where([variant~="md:vis(media)"]) :is(cq-box, summary) ui-content { display: none; }
 		:where([variant~="md:vis(content)"]) :is(cq-box, summary) ui-media { display: none; }
 
@@ -258,7 +259,7 @@
 		:where([variant~="lg:col"]) :is(cq-box, summary) ui-content,
 		:where([variant~="lg:row"]) :is(cq-box, summary) ui-content { order: 0; }
 		:where([variant~="lg:col-r"]) :is(cq-box, summary) ui-content,
-		:where([variant~="lg:row-r"]) :is(cq-box, summary) ui-content { order: -1; }
+		:where([variant~="lg:row-r"]) :is(cq-box, summary) ui-content { order: -1; reading-order: 1; }
 		:where([variant~="lg:vis(media)"]) :is(cq-box, summary) ui-content { display: none; }
 		:where([variant~="lg:vis(content)"]) :is(cq-box, summary) ui-media { display: none; }
 

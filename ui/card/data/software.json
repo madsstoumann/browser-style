@@ -54,6 +54,11 @@
         "current": 29,
         "currency": "USD",
         "note": "one-time purchase"
+      },
+      "systemRequirements": {
+        "processor": "Apple M1 or Intel i5",
+        "ram": "8 GB",
+        "storage": "4 GB"
       }
     },
     "tags": [

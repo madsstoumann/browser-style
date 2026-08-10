@@ -15,7 +15,7 @@
     "preset": {
       "$ref": "card-preset/stack-offer"
     },
-    "eyebrow": "Most popular",
+    "eyebrow": "Membership",
     "media": [
       {
         "mediaType": "image",

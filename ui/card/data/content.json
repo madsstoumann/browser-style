@@ -26,7 +26,10 @@
       }
     ],
     "tags": [
-      "generic",
+      {
+        "name": "generic",
+        "url": "/tags/generic"
+      },
       "fallback"
     ],
     "actions": [
@@ -39,10 +42,22 @@
       }
     ],
     "links": [
-      { "url": "#", "text": "Design principles" },
-      { "url": "#", "text": "Component gallery" },
-      { "url": "#", "text": "Release notes" },
-      { "url": "#", "text": "Support" }
+      {
+        "url": "#",
+        "text": "Design principles"
+      },
+      {
+        "url": "#",
+        "text": "Component gallery"
+      },
+      {
+        "url": "#",
+        "text": "Release notes"
+      },
+      {
+        "url": "#",
+        "text": "Support"
+      }
     ]
   }
 }

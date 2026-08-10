@@ -225,6 +225,21 @@
 			line-height: var(--ui-content-summary-line-height, var(--line-height-normal, 1.5));
 			text-shadow: var(--ui-content-summary-text-shadow, var(--ui-content-body-text-shadow, none));
 			text-wrap: var(--ui-content-summary-wrap, pretty);
+
+			/* opt-in teaser truncation: set --ui-content-summary-clamp to a line count.
+			   Unset = no clamp (line-clamp: none), so nothing truncates by default */
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: var(--ui-content-summary-clamp, none);
+			display: var(--ui-content-summary-display, block);
+			line-clamp: var(--ui-content-summary-clamp, none);
+			overflow: var(--ui-content-summary-overflow, visible);
+		}
+		/* the clamp needs the flex-box formatting context + hidden overflow; scoped to
+		   cards that actually opt in, so an unclamped summary keeps display: block */
+		& [data-part="summary"][style*="--ui-content-summary-clamp"],
+		:where([style*="--ui-content-summary-clamp"]) & [data-part="summary"] {
+			--ui-content-summary-display: -webkit-box;
+			--ui-content-summary-overflow: hidden;
 		}
 
 		/* byline (author row; inner <img> becomes a round avatar) — Meta group */

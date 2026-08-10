@@ -74,7 +74,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Content — <code>CreativeWork</code> (fallback)</h2>
-	<p class="note">The plain envelope, no <code>details</code>: eyebrow, headline, summary, tags, actions, plus <code>links</code> — plain related-link rows (part <code>links</code>), deliberately not buttons. Unknown <code>schemaType</code> values fall back to this.</p>
+	<p class="note">The plain envelope, no <code>details</code>: eyebrow, headline, summary, tags, actions, plus <code>links</code> — plain related-link rows (part <code>links</code>), deliberately not buttons. Unknown <code>schemaType</code> values fall back to this. A tag may be a string or <code>{name, url}</code> — the linked one renders an anchor inside the chip; an action with no <code>link.url</code> renders a real <code>&lt;button&gt;</code>.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/CreativeWork">
 			<cq-box>
@@ -83,7 +83,7 @@
 					<small data-part="eyebrow" itemprop="genre">Design</small>
 					<h3 data-part="headline" itemprop="name">A generic piece of content</h3>
 					<p data-part="summary" itemprop="description">Anything without a dedicated schema type renders as CreativeWork — headline, summary, tags and actions straight from the envelope.</p>
-					<span data-part="tags"><ui-chip itemprop="keywords">generic</ui-chip><ui-chip itemprop="keywords">fallback</ui-chip></span>
+					<span data-part="tags"><ui-chip itemprop="keywords"><a href="/tags/generic">generic</a></ui-chip><ui-chip itemprop="keywords">fallback</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#" itemprop="url">Read more</a></nav>
 					<ul data-part="links">
 						<li><a href="#">Design principles</a></li>
@@ -113,6 +113,7 @@
 					<small data-part="eyebrow">Science</small>
 					<h3 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/article.html">Quantum computing reaches a <ui-gradient-text>practical milestone</ui-gradient-text></a></h3>
 					<p data-part="summary" itemprop="description">Researchers demonstrate error-corrected logical qubits running a chemistry simulation faster than any classical supercomputer.</p>
+					<p data-part="meta"><small>Updated Jun 21, 2026</small></p>
 					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
 						<ui-avatar><img src="/assets/images/janesmith.png" alt=""></ui-avatar>
 						<span data-part="byline-who"><span itemprop="name">Jane Smith</span><span itemprop="jobTitle">Science Editor</span></span><small data-part="dateline"><time datetime="2026-06-20T14:30:00Z">Jun 20, 2026</time><span>5 min read</span></small>
@@ -221,7 +222,7 @@
 					<p data-part="meta"><small>Valid until Aug 1, 2026</small></p>
 					<p data-part="meta"><ui-chip theme="pale green">In stock</ui-chip></p>
 					<span data-part="tags"><ui-chip itemprop="keywords">Wireless</ui-chip><ui-chip itemprop="keywords">Noise Cancelling</ui-chip></span>
-					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Add to cart</a> <a class="ui-button" href="#">Details</a></nav>
+					<nav data-part="actions"><button class="ui-button" type="button" data-variant="accent" aria-label="Add AuraSound Pro to cart">Add to cart</button> <a class="ui-button" href="#">Details</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -240,7 +241,7 @@
 				<ui-media><img src="/assets/images/websummit.png" alt="Conference stage with purple lights" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="eventStatus" content="https://schema.org/EventScheduled">
-					<meta itemprop="eventAttendanceMode" content="https://schema.org/OfflineEventAttendanceMode">
+					<meta itemprop="eventAttendanceMode" content="https://schema.org/MixedEventAttendanceMode">
 					<meta itemprop="startDate" content="2026-11-09T09:00:00+00:00">
 					<meta itemprop="endDate" content="2026-11-12T18:00:00+00:00">
 					<small data-part="eyebrow">Conference</small>
@@ -248,6 +249,14 @@
 					<p data-part="summary" itemprop="description">Four days of talks on the future of the web platform.</p>
 					<p data-part="meta">Nov 9–12, 2026 · <span itemprop="location" itemscope itemtype="https://schema.org/Place"><span itemprop="name">Altice Arena</span><span itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">, <span itemprop="addressLocality">Lisbon</span></span></span></p>
 					<p data-part="meta" itemprop="organizer" itemscope itemtype="https://schema.org/Organization">Organizer: <span itemprop="name">Web Summit Ltd.</span></p>
+					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+						<meta itemprop="priceCurrency" content="EUR"><meta itemprop="availability" content="https://schema.org/InStock"><meta itemprop="validThrough" content="2026-09-01">
+						<span itemprop="name">Early bird</span> <data itemprop="price" value="299">€299</data>
+					</p>
+					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+						<meta itemprop="priceCurrency" content="EUR"><meta itemprop="availability" content="https://schema.org/InStock">
+						<span itemprop="name">Standard</span> <data itemprop="price" value="449">€449</data>
+					</p>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Participate</a></nav>
 				</ui-content>
 			</cq-box>
@@ -285,16 +294,16 @@
 							<summary>Instructions<ui-icon type="plus-minus"></ui-icon></summary>
 							<ui-accordion variant="divided" group="recipe-step" itemprop="recipeInstructions" itemscope itemtype="https://schema.org/ItemList"><cq-box>
 									<details name="recipe-step" itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep">
-										<summary>Step 1<ui-icon type="chevron right"></ui-icon></summary>
-										<div><meta itemprop="position" content="1"><p itemprop="text">Crisp the guanciale in a dry pan.</p></div>
+										<summary>Step 1<meta itemprop="position" content="1"><ui-icon type="chevron right"></ui-icon></summary>
+										<div><p itemprop="text">Crisp the guanciale in a dry pan.</p></div>
 									</details>
 									<details name="recipe-step" itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep">
-										<summary>Step 2<ui-icon type="chevron right"></ui-icon></summary>
-										<div><meta itemprop="position" content="2"><p itemprop="text">Whisk yolks with grated pecorino and pepper.</p></div>
+										<summary>Step 2<meta itemprop="position" content="2"><ui-icon type="chevron right"></ui-icon></summary>
+										<div><p itemprop="text">Whisk yolks with grated pecorino and pepper.</p></div>
 									</details>
 									<details name="recipe-step" itemprop="itemListElement" itemscope itemtype="https://schema.org/HowToStep">
-										<summary>Step 3<ui-icon type="chevron right"></ui-icon></summary>
-										<div><meta itemprop="position" content="3"><p itemprop="text">Toss hot pasta with guanciale, then the egg mixture, off the heat.</p></div>
+										<summary>Step 3<meta itemprop="position" content="3"><ui-icon type="chevron right"></ui-icon></summary>
+										<div><p itemprop="text">Toss hot pasta with guanciale, then the egg mixture, off the heat.</p></div>
 									</details>
 							</cq-box></ui-accordion>
 						</details>
@@ -335,7 +344,7 @@
 					<meta itemprop="datePublished" content="2026-05-14">
 					<div itemprop="itemReviewed" itemscope itemtype="https://schema.org/Product" hidden>
 						<meta itemprop="name" content="SoundWave Mini">
-					</div>
+					<span itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating"><meta itemprop="ratingValue" content="4.6"><meta itemprop="ratingCount" content="1847"><meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1"></span><span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="USD"><meta itemprop="price" content="279"><meta itemprop="availability" content="https://schema.org/InStock"></span></div>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -409,7 +418,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Course — <code>Course</code></h2>
-	<p class="note"><code>timeRequired</code>/<code>educationalLevel</code> metas, provider → <code>Organization</code>, offer with proposed part <code>price</code>.</p>
+	<p class="note"><code>timeRequired</code>/<code>educationalLevel</code> metas; the teacher is <code>CourseInstance.instructor</code> → <code>Person</code> (<code>Course.provider</code> is the <em>organisation</em>, so naming the instructor there misdeclares both), <code>courseWorkload</code> rides the same instance; offer uses part <code>price</code>.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Course">
 			<cq-box>
@@ -420,16 +429,23 @@
 					<meta itemprop="educationalLevel" content="Beginner">
 					<div itemprop="hasCourseInstance" itemscope itemtype="https://schema.org/CourseInstance" hidden>
 						<meta itemprop="courseMode" content="Online">
+						<meta itemprop="courseWorkload" content="PT3H">
+						<span itemprop="instructor" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Calm Academy"></span>
 					</div>
 					<small data-part="eyebrow">Wellness</small>
 					<h3 data-part="headline" itemprop="name">Mindfulness Foundations</h3>
 					<p data-part="summary" itemprop="description">A six-week guided programme: attention training, body scans and everyday practice.</p>
-					<p data-part="meta">6 weeks · Beginner · Instructor: <span itemprop="provider" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">Calm Academy</span></span></p>
+					<p data-part="meta">6 weeks · Beginner · 3 hr of study · Instructor: Calm Academy</p>
 					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
 						<meta itemprop="priceCurrency" content="USD">
 						<meta itemprop="availability" content="https://schema.org/InStock">
 						<data itemprop="price" value="89">$89</data> <del>$129</del>
 					</p>
+					<ul data-part="list" itemprop="teaches">
+						<li>Sustain attention for 20 minutes</li>
+						<li>Build a daily sitting habit</li>
+						<li>Apply body scans to stress</li>
+					</ul>
 					<ul data-part="list">
 						<li>No prior experience needed</li>
 						<li>10 minutes a day</li>
@@ -468,6 +484,7 @@
 						<li>Whiteboard wall</li>
 						<li>Coffee &amp; water included</li>
 					</ul>
+					<footer data-part="footer">Tell us about allergies or accessibility needs when booking.</footer>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Check availability</a></nav>
 				</ui-content>
 			</cq-box>
@@ -527,6 +544,7 @@
 					<p data-part="summary" itemprop="description">Covers elections and policy across Europe. Two decades on the beat, one Pulitzer nomination.</p>
 					<p data-part="meta" itemprop="address">Copenhagen, Denmark</p>
 					<span data-part="tags"><ui-chip itemprop="knowsAbout">Elections</ui-chip><ui-chip itemprop="knowsAbout">EU policy</ui-chip><ui-chip itemprop="knowsAbout">Data journalism</ui-chip></span>
+					<meta itemprop="sameAs" content="https://www.linkedin.com/in/jane-doe-journalist">
 					<nav data-part="actions">
 						<meta itemprop="email" content="jane@dailyledger.example"><a class="ui-button" data-variant="accent" href="mailto:jane@dailyledger.example">Email</a>
 						<a class="ui-button" itemprop="url" href="#">Portfolio</a>
@@ -591,22 +609,27 @@
 					<h3 data-part="headline" itemprop="name">A decade of browser.style</h3>
 					<ol data-part="timeline" data-variant="minimal">
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
+							<meta itemprop="startDate" content="2016">
 							<time itemprop="name" datetime="2016">2016</time>
 							<span itemprop="description">First CSS-only component published.</span>
 						</li>
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
+							<meta itemprop="startDate" content="2021">
 							<time itemprop="name" datetime="2021">2021</time>
 							<span itemprop="description">Design token system and 100th component.</span>
 						</li>
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
+							<meta itemprop="startDate" content="2018">
 							<time itemprop="name" datetime="2018">2018</time>
 							<span itemprop="description">Container queries land; the layout system is rebuilt.</span>
 						</li>
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
+							<meta itemprop="startDate" content="2023">
 							<time itemprop="name" datetime="2023">2023</time>
 							<span itemprop="description">Cascade layers adopted across every component.</span>
 						</li>
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event" data-theme="accent">
+							<meta itemprop="startDate" content="2026">
 							<time itemprop="name" datetime="2026">2026</time>
 							<span itemprop="description">v4: the unified card engine ships.</span>
 						</li>
@@ -622,22 +645,27 @@
 					<h3 data-part="headline" itemprop="name">Horizontal — <code>variant="horizontal"</code></h3>
 					<ol data-part="timeline" data-variant="horizontal">
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
+							<meta itemprop="startDate" content="2016">
 							<time itemprop="name" datetime="2016">2016</time>
 							<span itemprop="description">First CSS-only component published.</span>
 						</li>
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
+							<meta itemprop="startDate" content="2021">
 							<time itemprop="name" datetime="2021">2021</time>
 							<span itemprop="description">Design token system and 100th component.</span>
 						</li>
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
+							<meta itemprop="startDate" content="2018">
 							<time itemprop="name" datetime="2018">2018</time>
 							<span itemprop="description">Container queries land; the layout system is rebuilt.</span>
 						</li>
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
+							<meta itemprop="startDate" content="2023">
 							<time itemprop="name" datetime="2023">2023</time>
 							<span itemprop="description">Cascade layers adopted across every component.</span>
 						</li>
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event" data-theme="accent">
+							<meta itemprop="startDate" content="2026">
 							<time itemprop="name" datetime="2026">2026</time>
 							<span itemprop="description">v4: the unified card engine ships.</span>
 						</li>
@@ -691,7 +719,7 @@
 						<data itemprop="value" value="2400000">2.4</data><small itemprop="unitText">M</small>
 						<span>▲ 12%</span>
 					</p>
-					<p data-part="meta">vs. previous quarter</p>
+					<p data-part="meta">vs last quarter · Monthly active accounts, rolling 30 days</p>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -759,6 +787,7 @@
 					<small data-part="eyebrow">Maintenance</small>
 					<h3 data-part="headline" itemprop="name">Scheduled maintenance — July 5</h3>
 					<p data-part="summary" itemprop="text">The API will be unavailable Saturday July 5, 02:00–04:00 UTC while we migrate the primary database.</p>
+					<p data-part="meta">Maintenance · Jul 5, 02:00 UTC – 04:00 UTC</p>
 					<p data-part="meta"><ui-chip theme="pale red">High priority</ui-chip></p>
 					<p data-part="meta" itemprop="audience" itemscope itemtype="https://schema.org/Audience">Audience: <span itemprop="audienceType">API customers</span></p>
 					<footer data-part="footer">Action required: re-authenticate integrations after the window.</footer>
@@ -852,17 +881,17 @@
 					<ul data-part="options">
 						<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 							<meta itemprop="position" content="1">
-							<label><span itemprop="name">SoundWave Mini</span> — USD 79</label>
+							<img src="/assets/images/quickboil.png" alt="" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">SoundWave Mini</span> — USD 79</label>
 							<progress max="100" value="92"></progress> <span>9.2</span>
 						</li>
 						<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 							<meta itemprop="position" content="2">
-							<label><span itemprop="name">AuraSound Go</span> — USD 99</label>
+							<img src="/assets/images/soundwavemini.png" alt="" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">AuraSound Go</span> — USD 99</label>
 							<progress max="100" value="85"></progress> <span>8.5</span>
 						</li>
 						<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 							<meta itemprop="position" content="3">
-							<label><span itemprop="name">QuickBoom 2</span> — USD 69</label>
+							<img src="/assets/images/slimfold.png" alt="" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">QuickBoom 2</span> — USD 69</label>
 							<progress max="100" value="78"></progress> <span>7.8</span>
 						</li>
 					</ul>
@@ -878,7 +907,7 @@
 	     ============================================================ -->
 	<section>
 	<h2>Contact — <code>ContactPoint</code></h2>
-	<p class="note"><code>contactType</code>/<code>hoursAvailable</code> metas; each method a real <code>mailto:</code>/<code>tel:</code> link.</p>
+	<p class="note"><code>contactType</code>/<code>hoursAvailable</code> metas, one <code>availableLanguage</code> per language (a list, not a joined string); department and response time ride the meta row. Each method is a real <code>mailto:</code>/<code>tel:</code> link.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/ContactPoint">
 			<cq-box>
@@ -886,10 +915,13 @@
 				<ui-content>
 					<meta itemprop="contactType" content="customer support">
 					<meta itemprop="hoursAvailable" content="Mo-Fr 09:00-17:00">
+					<meta itemprop="availableLanguage" content="English">
+					<meta itemprop="availableLanguage" content="Danish">
+					<meta itemprop="availableLanguage" content="German">
 					<small data-part="eyebrow">Support</small>
 					<h3 data-part="headline">Talk to a human</h3>
 					<p data-part="summary" itemprop="description">Real people, no phone trees. Average response under 2 hours.</p>
-					<p data-part="meta">Mon–Fri 9–17 CET · English, Danish, German</p>
+					<p data-part="meta">Customer Success · Mon–Fri 9–17 CET · English, Danish, German · Replies within 2 hours</p>
 					<nav data-part="actions">
 						<meta itemprop="email" content="support@example.com"><a class="ui-button" data-variant="accent" href="mailto:support@example.com">support@example.com</a>
 						<a class="ui-button" itemprop="telephone" href="tel:+4570203040">+45 70 20 30 40</a>
@@ -932,6 +964,13 @@
 							6:00–22:00
 						</dd>
 					</dl>
+					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+						<meta itemprop="ratingValue" content="4.7"><meta itemprop="ratingCount" content="950">
+						<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+						<input class="ui-rating" type="range" min="1" max="5" value="4.7" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 4.7 out of 5 stars from 950 ratings</span>
+						<span aria-hidden="true">4.7 / 5 (950 ratings)</span>
+					</div>
 					<ul data-part="list">
 						<li>Free parking</li>
 						<li>Guided tours</li>
@@ -950,15 +989,16 @@
 	     ============================================================ -->
 	<section>
 	<h2>Membership — <code>Offer</code></h2>
-	<p class="note">Dark theme, <code>PriceSpecification</code>, features as check-<code>list</code>.</p>
+	<p class="note">Dark theme, <code>PriceSpecification</code>, features as check-<code>list</code> with the excluded ones as a <code>crossed</code> list. <code>details.isPopular</code> renders the promotional chip — a state, so it keeps the eyebrow free for the actual category.</p>
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" theme="muted gray" itemscope itemtype="https://schema.org/Offer">
 			<cq-box>
 				<ui-media><img src="/assets/images/fittrackpro.png" alt="Fitness tracker on a wrist" itemprop="image"></ui-media>
 				<ui-content>
 					<span itemprop="eligibleDuration" itemscope itemtype="https://schema.org/QuantitativeValue" hidden><meta itemprop="value" content="14"><meta itemprop="unitCode" content="DAY"></span>
-					<small data-part="eyebrow">Most popular</small>
+					<small data-part="eyebrow">Membership</small>
 					<h3 data-part="headline" itemprop="name">FitTrack Pro</h3>
+					<p data-part="meta"><ui-chip theme="pale accent">Most popular</ui-chip></p>
 					<p data-part="summary" itemprop="description">Unlimited workouts, personal coaching and priority support.</p>
 					<p data-part="price" itemprop="priceSpecification" itemscope itemtype="https://schema.org/PriceSpecification">
 						<meta itemprop="priceCurrency" content="USD">
@@ -1047,6 +1087,8 @@
 						<meta itemprop="availability" content="https://schema.org/InStock">
 						<data itemprop="price" value="29">$29</data> <small>one-time purchase</small>
 					</p>
+					<meta itemprop="softwareRequirements" content="Apple M1 or Intel i5 · 8 GB RAM · 4 GB free">
+					<p data-part="meta">Requires Apple M1 or Intel i5 · 8 GB RAM · 4 GB free</p>
 					<span data-part="tags"><ui-chip itemprop="keywords">Game</ui-chip><ui-chip itemprop="keywords">Co-op</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Play demo</a></nav>
 				</ui-content>
@@ -1221,20 +1263,20 @@
 							<summary>Steps<ui-icon type="plus-minus"></ui-icon></summary>
 							<ui-accordion variant="divided" group="howto-step"><cq-box>
 									<details name="howto-step" itemprop="step" itemscope itemtype="https://schema.org/HowToStep">
-										<summary><span itemprop="name">Turn the heating off</span><ui-icon type="chevron right"></ui-icon></summary>
-										<div><meta itemprop="position" content="1"><p itemprop="text">Switch the central heating off and let the radiator cool completely.</p></div>
+										<summary><span itemprop="name">Turn the heating off</span><meta itemprop="position" content="1"><ui-icon type="chevron right"></ui-icon></summary>
+										<div><p itemprop="text">Switch the central heating off and let the radiator cool completely.</p></div>
 									</details>
 									<details name="howto-step" itemprop="step" itemscope itemtype="https://schema.org/HowToStep">
-										<summary><span itemprop="name">Open the bleed valve</span><ui-icon type="chevron right"></ui-icon></summary>
-										<div><meta itemprop="position" content="2"><p itemprop="text">Hold the bowl under the valve and turn the key counter-clockwise a quarter turn — you'll hear a hiss.</p></div>
+										<summary><span itemprop="name">Open the bleed valve</span><meta itemprop="position" content="2"><ui-icon type="chevron right"></ui-icon></summary>
+										<div><p itemprop="text">Hold the bowl under the valve and turn the key counter-clockwise a quarter turn — you'll hear a hiss.</p></div>
 									</details>
 									<details name="howto-step" itemprop="step" itemscope itemtype="https://schema.org/HowToStep">
-										<summary><span itemprop="name">Wait for water</span><ui-icon type="chevron right"></ui-icon></summary>
-										<div><meta itemprop="position" content="3"><p itemprop="text">When the hissing stops and a steady trickle of water appears, all the air is out.</p></div>
+										<summary><span itemprop="name">Wait for water</span><meta itemprop="position" content="3"><ui-icon type="chevron right"></ui-icon></summary>
+										<div><p itemprop="text">When the hissing stops and a steady trickle of water appears, all the air is out.</p></div>
 									</details>
 									<details name="howto-step" itemprop="step" itemscope itemtype="https://schema.org/HowToStep">
-										<summary><span itemprop="name">Close and check pressure</span><ui-icon type="chevron right"></ui-icon></summary>
-										<div><meta itemprop="position" content="4"><p itemprop="text">Close the valve, turn the heating back on and top up the boiler pressure if it dropped below 1 bar.</p></div>
+										<summary><span itemprop="name">Close and check pressure</span><meta itemprop="position" content="4"><ui-icon type="chevron right"></ui-icon></summary>
+										<div><p itemprop="text">Close the valve, turn the heating back on and top up the boiler pressure if it dropped below 1 bar.</p></div>
 									</details>
 							</cq-box></ui-accordion>
 						</details>

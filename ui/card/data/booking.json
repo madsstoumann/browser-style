@@ -48,7 +48,8 @@
         "Whiteboard wall",
         "Coffee & water included"
       ],
-      "cancellationPolicy": "Free cancellation up to 24 h"
+      "cancellationPolicy": "Free cancellation up to 24 h",
+      "specialRequests": "Tell us about allergies or accessibility needs when booking."
     }
   }
 }

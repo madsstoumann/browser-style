@@ -27,7 +27,10 @@
     ],
     "actions": [
       {
-        "link": { "url": "#", "text": "Participate" },
+        "link": {
+          "url": "#",
+          "text": "Participate"
+        },
         "style": "primary"
       }
     ],
@@ -42,7 +45,21 @@
       },
       "organizer": {
         "name": "Web Summit Ltd."
-      }
+      },
+      "attendanceMode": "Mixed",
+      "offers": [
+        {
+          "name": "Early bird",
+          "price": 299,
+          "currency": "EUR",
+          "validThrough": "2026-09-01"
+        },
+        {
+          "name": "Standard",
+          "price": 449,
+          "currency": "EUR"
+        }
+      ]
     }
   }
 }

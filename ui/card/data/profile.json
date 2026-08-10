@@ -34,11 +34,6 @@
       "jobTitle": "Chief Political Correspondent",
       "organization": "The Daily Ledger",
       "location": "Copenhagen, Denmark",
-      "skills": [
-        "Elections",
-        "EU policy",
-        "Data journalism"
-      ],
       "contacts": [
         {
           "type": "email",
@@ -47,8 +42,8 @@
         },
         {
           "type": "url",
-          "value": "#",
-          "label": "Portfolio"
+          "value": "https://www.linkedin.com/in/jane-doe-journalist",
+          "label": "LinkedIn"
         }
       ]
     }
