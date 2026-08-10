@@ -649,6 +649,7 @@ All tokens live in the `--ui-content-*` namespace. Override per instance, per ho
 | `--ui-content-subheadline-weight` | `var(--font-weight-normal, 400)` | subheadline weight |
 | `--ui-content-summary-ink` | `inherit` | summary ink |
 | `--ui-content-summary-fs` | `var(--ui-content-fs)` | summary size |
+| `--ui-content-summary-clamp` | `none` | teaser truncation — set a line count (e.g. `3`) to clamp the summary. Unset means no clamp; the flex-box formatting context and `overflow: hidden` only switch on for cards that set it |
 | `--ui-content-meta-ink` | `var(--ui-content-muted)` | meta / caption ink |
 | `--ui-content-meta-fs` | `calc(var(--ui-content-fs) * 0.75)` | meta / caption size |
 | `--ui-content-byline-fs` | `calc(var(--ui-content-fs) * 0.82)` | byline size |
