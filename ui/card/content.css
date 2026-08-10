@@ -394,14 +394,14 @@
 			margin: 0;
 			padding: 0;
 			& li {
-				border-block-end: var(--border-width) solid var(--ui-content-links-border, var(--color-border));
 				padding-block: var(--ui-content-links-pb, var(--spacing-xs));
-				&::marker { color: var(--ui-content-links-mark, var(--color-accent)); }
+				&:not(:last-child) { border-block-end: var(--border-width) solid var(--ui-content-links-border, var(--color-border)); }
+				&::marker { color: var(--ui-content-links-mark, currentColor); }
 			}
 			& a {
 				color: var(--ui-content-links-ink, inherit);
 				text-decoration: none;
-				&:hover { color: var(--ui-content-links-hover-ink, var(--color-accent)); }
+				&:hover { text-decoration: underline; }
 			}
 		}
 
