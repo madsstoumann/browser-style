@@ -8,6 +8,9 @@
 @property --_f-blur   { syntax: "<length>"; inherits: true; initial-value: 0px; }
 @property --_f-bright { syntax: "<number>"; inherits: true; initial-value: 1; }
 @property --_f-sat    { syntax: "<number>"; inherits: true; initial-value: 1; }
+/* cursor position, written per rAF by hover.js — typed so the write is not re-parsed */
+@property --ui-media-mx { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --ui-media-my { syntax: "<number>"; inherits: true; initial-value: 0; }
 
 @layer bs-component {
 	:where([media*="hov("]) {

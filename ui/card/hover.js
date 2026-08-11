@@ -12,6 +12,10 @@ export function initHover(nodes) {
 	// events over the overlay never reach the frame and the effect stays dead.
 	// Coordinates are still normalised against the FRAME's box — that's the geometry
 	// the CSS animates against.
+	// Write the vars onto the FRAME'S MEDIA CHILDREN, not the frame: they are the only
+	// consumers, and an inherited custom property on the frame invalidates every piece of
+	// overlaid furniture (chip/sticker/beacon/play, the scrim pseudo) on every rAF too.
+	const SUBJ = ':scope > :is(iframe, img, picture, video)';
 	const hosts = new Map();
 	for (const el of nodes) {
 		const frames = el.matches('ui-media') ? [el] : [...el.querySelectorAll('ui-media')];
@@ -23,6 +27,7 @@ export function initHover(nodes) {
 		if (host.dataset.uiHover) continue;
 		host.dataset.uiHover = '1';
 		let rects = null;
+		const subjects = frames.map((f) => [...f.querySelectorAll(SUBJ)]);
 		const measure = () => frames.map((f) => f.getBoundingClientRect());
 
 		host.addEventListener('pointerenter', () => { rects = measure(); }, { passive: true });
@@ -37,16 +42,18 @@ export function initHover(nodes) {
 					if (!rect?.width || !rect.height) return;
 					const mx = Math.max(-1, Math.min(1, (e.clientX - rect.left) / rect.width * 2 - 1));
 					const my = Math.max(-1, Math.min(1, (e.clientY - rect.top) / rect.height * 2 - 1));
-					frame.style.setProperty('--ui-media-mx', mx.toFixed(3));
-					frame.style.setProperty('--ui-media-my', my.toFixed(3));
+					for (const subject of subjects[i]) {
+						subject.style.setProperty('--ui-media-mx', mx.toFixed(3));
+						subject.style.setProperty('--ui-media-my', my.toFixed(3));
+					}
 				});
 			});
 		}, { passive: true });
 
 		host.addEventListener('pointerleave', () => {
-			for (const frame of frames) {
-				frame.style.removeProperty('--ui-media-mx');
-				frame.style.removeProperty('--ui-media-my');
+			for (const list of subjects) for (const subject of list) {
+				subject.style.removeProperty('--ui-media-mx');
+				subject.style.removeProperty('--ui-media-my');
 			}
 			rects = null;
 		}, { passive: true });
