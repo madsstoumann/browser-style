@@ -431,10 +431,8 @@
 			}
 		}
 
-		/* contact links read at body size even inside a meta row, and carry base's
-		   phone/email svg as a MASK — a mask takes currentColor, background-image
-		   would bake the asset's own grey. No text content, so nothing reaches the
-		   accessible name; the number/address is the link */
+		/* contact links read at body size even inside a meta row; phone/email icons are
+		   inline data-URI MASKS (peer-exclusive bundle — no ../base url) taking currentColor */
 		& :is(a[href^="tel:"], a[href^="mailto:"]) {
 			font-size: var(--ui-content-contact-fs, var(--ui-content-body-fs, var(--ui-content-fs, var(--ui-content-fs-md))));
 
@@ -449,8 +447,8 @@
 				vertical-align: -0.15em;
 			}
 		}
-		& a[href^="tel:"]::before { --ui-content-contact-icon: var(--ui-content-tel-icon, url('../base/assets/svg/phone.svg')); }
-		& a[href^="mailto:"]::before { --ui-content-contact-icon: var(--ui-content-mail-icon, url('../base/assets/svg/email.svg')); }
+		& a[href^="tel:"]::before { --ui-content-contact-icon: var(--ui-content-tel-icon, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2'/%3E%3C/svg%3E")); }
+		& a[href^="mailto:"]::before { --ui-content-contact-icon: var(--ui-content-mail-icon, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Cpolyline points='3 7 12 13 21 7'/%3E%3C/svg%3E")); }
 
 		/* address — Body group (distinct from byline: no avatar). Lines stack: street · postal + locality · country */
 		& [data-part="address"] {
