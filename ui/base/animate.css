@@ -382,4 +382,12 @@
 		:is([animate~="very-fast"], [animate-self~="very-fast"]) { --animate-dur: var(--animate-dur-very-fast); }
 	}
 
+
+	/* reduced motion: the engine is progressive enhancement — drop what it attaches
+	   so elements render in their natural state. Docs: docs/gpu-performance.md */
+	@media (prefers-reduced-motion: reduce) {
+		:where([animate], [animate-self]),
+		:where([animate]) > *,
+		:where([animate~="deep"]) > * > * { animation: none; }
+	}
 }

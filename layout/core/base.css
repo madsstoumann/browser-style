@@ -110,10 +110,12 @@
 		padding-inline: calc(var(--layout-pi) * var(--layout-space-unit));
 		place-self: var(--layout-ps, auto);
 		row-gap: calc(var(--layout-rg) * var(--layout-space-unit));
-		scroll-behavior: var(--layout-sb, smooth);
+		scroll-behavior: var(--layout-sb, auto);
 		scrollbar-color: var(--layout-scrollbar-c, #0000 #0000);
 		scrollbar-width: var(--layout-scroll-w, thin);
 		width: var(--layout-w, 100%);
+
+		@media (prefers-reduced-motion: no-preference) { scroll-behavior: var(--layout-sb, smooth); }
 
 		&:focus-visible {
 			outline: var(--layout-ol, 1px dotted #CCC);

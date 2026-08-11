@@ -332,6 +332,7 @@
 	.ar-cover { --animrs: entry 25%; --animre: cover 50%; }
 	.ar-exit { --animrs: exit 0%; --animre: exit 100%; }
 
+	@media (prefers-reduced-motion: no-preference) {
 	@supports (view-transition-name: none) {
 		:where([class*="an-"]) {
 			animation:
@@ -341,5 +342,6 @@
 			animation-timeline: var(--animtl, view());
 			animation-range: var(--animrs, entry 0%) var(--animre, entry 90%);
 		}
+	}
 	}
 }

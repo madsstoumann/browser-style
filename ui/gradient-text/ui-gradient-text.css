@@ -27,7 +27,11 @@
 		--_gradient: attr(gradient type(*), var(--GradientText, #0077ff, #00e7df, #0077ff));
 		--_size: attr(size type(<length-percentage>), 150%);
 
-		animation: var(--_anim) var(--_dur) infinite alternate linear;
+		@media (prefers-reduced-motion: no-preference) {
+			animation: var(--_anim) var(--_dur) infinite alternate linear;
+		}
+		/* explicit pause hook — mirrors ui-marquee / ui-beacon */
+		&[paused] { animation-play-state: paused; }
 		background: linear-gradient(var(--_dir), var(--_gradient)) 0 0 / var(--_size) 100%;
 		background-clip: text;
 		color: #0000;
