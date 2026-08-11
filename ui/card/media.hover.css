@@ -3,10 +3,14 @@
  * media.css). track/drift/tilt need index.js. Docs: docs/media.md § Internals
  * @version 1.0.0 · @author Mads Stoumann
  */
+/* substituted into filter, never transitioned themselves — see docs/media.md § Internals */
 @property --_f-gray   { syntax: "<number>"; inherits: true; initial-value: 0; }
 @property --_f-blur   { syntax: "<length>"; inherits: true; initial-value: 0px; }
 @property --_f-bright { syntax: "<number>"; inherits: true; initial-value: 1; }
 @property --_f-sat    { syntax: "<number>"; inherits: true; initial-value: 1; }
+/* cursor position, written per rAF by hover.js — typed so the write is not re-parsed */
+@property --ui-media-mx { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --ui-media-my { syntax: "<number>"; inherits: true; initial-value: 0; }
 
 @layer bs-component {
 	:where([media*="hov("]) {
@@ -40,7 +44,8 @@
 		/* ONE subject, one @container per effect — the blocks stay in source order, so
 		   overlapping effects (zoom + rot-r) resolve exactly as before */
 		ui-media :is(iframe, img, picture, video) {
-			/* one transition list → any combination of effects composes cleanly */
+			/* one transition list → any combination of effects composes cleanly.
+			   filter, NOT the four --_f-* vars: a custom property never composites. */
 			@container style(--_hv-any: 1) {
 				transition:
 					scale     var(--_hv-dur) var(--_hv-ease),
@@ -48,10 +53,7 @@
 					rotate    var(--_hv-dur) var(--_hv-ease),
 					clip-path var(--ui-media-morph-dur, var(--_hv-dur)) var(--_hv-ease),
 					transform var(--_hv-t, var(--_hv-dur)) var(--_hv-ease),
-					--_f-gray   var(--_hv-dur) var(--_hv-ease),
-					--_f-blur   var(--_hv-dur) var(--_hv-ease),
-					--_f-bright var(--_hv-dur) var(--_hv-ease),
-					--_f-sat    var(--_hv-dur) var(--_hv-ease);
+					filter    var(--_hv-dur) var(--_hv-ease);
 			}
 
 			/* zoom — scale up inside the frame */

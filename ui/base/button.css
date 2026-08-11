@@ -24,7 +24,7 @@
 		padding: var(--button-p, 1ch 2.5ch);
 		place-content: center;
 		text-decoration: none;
-		transition: all var(--duration-normal, .2s) ease-in-out;
+		@media (prefers-reduced-motion: no-preference) { transition: all var(--duration-normal, .2s) ease-in-out; }
 		user-select: none;
 		/* <a class="ui-button"> — keep button ink on visited links */
 		&:where(:visited) { color: var(--button-c, inherit); }

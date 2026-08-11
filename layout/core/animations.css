@@ -16,6 +16,7 @@
 	   first), this override wins over the engine's animation-name on the container.
 	   ========================================================================== */
 
+	@media (prefers-reduced-motion: no-preference) {
 	@supports (view-transition-name: none) {
 		/* stack(reveal): redirect the container's reveal to its last child via a
 		   named timeline (so a stacked section reveals its final card on scroll). */
@@ -48,6 +49,7 @@
 				cover 25% cover 60%,
 				cover 60% cover 75%;
 		}
+	}
 	}
 
 }

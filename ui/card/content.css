@@ -253,6 +253,17 @@
 			gap: var(--ui-content-byline-gap, var(--spacing-sm));
 			text-shadow: var(--ui-content-byline-text-shadow, var(--ui-content-meta-text-shadow, none));
 
+			/* the round avatar the comment above promises — a bare <img> is the
+			   package-free fallback for <ui-avatar>, and matches its 4em circle */
+			& > img {
+				aspect-ratio: 1;
+				block-size: var(--ui-content-byline-avatar-size, 4em);
+				border-radius: var(--ui-content-byline-avatar-radius, var(--radius-circle, 50%));
+				flex: none;
+				inline-size: var(--ui-content-byline-avatar-size, 4em);
+				object-fit: cover;
+			}
+
 			/* two blocks beside the avatar: name over role, then date over reading
 			   time pushed to the inline end. Each block stacks its own lines. */
 			& :is([data-part="byline-who"], [data-part="dateline"]) {

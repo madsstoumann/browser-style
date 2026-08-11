@@ -700,6 +700,10 @@ Phase 4).
 
 ## Performance
 
+Rendering-performance policy — which properties composite, the `will-change` rules and
+the measured cost of the scroll-fade mask and `stack(reveal)`: `docs/gpu-performance.md`
+(repo root).
+
 - **Zero JavaScript**: Pure CSS, no runtime overhead
 - **Small Bundle**: ~12 KB gzipped
 - **No Layout Shift**: Grid-based, prevents CLS

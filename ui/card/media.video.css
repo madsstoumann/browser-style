@@ -11,7 +11,7 @@
 	/* native <video> play control — fade while playing, reveal on hover/focus */
 	:where(ui-media:has(> video)) > ui-play[open] {
 		opacity: 0;
-		transition: opacity var(--duration-normal, 0.2s) var(--ease-in-out, ease-in-out);
+		@media (prefers-reduced-motion: no-preference) { transition: opacity var(--duration-normal, 0.2s) var(--ease-in-out, ease-in-out); }
 	}
 	:where(ui-media:has(> video):hover) > ui-play[open],
 	:where(:hover) > ui-media:has(> video) > ui-play[open],
@@ -61,7 +61,7 @@
 			cursor: pointer;
 			inline-size: var(--ui-media-tool-size, 2.5rem);
 			padding: 0;
-			transition: background-color var(--ui-media-tool-trsdu, 0.2s);
+			@media (prefers-reduced-motion: no-preference) { transition: background-color var(--ui-media-tool-trsdu, 0.2s); }
 
 			&:is(:hover, :focus-visible) { background-color: var(--ui-media-tool-bg-hover); }
 			&:is([command="--pip"], [command="--fullscreen"], [command="--cc"])[aria-pressed="true"] { background-color: var(--color-accent, hsl(211, 100%, 50%)); }
@@ -97,7 +97,7 @@
 			cursor: pointer;
 			inline-size: var(--ui-media-tool-size, 2.5rem);
 			padding: 0;
-			transition: background-color var(--ui-media-tool-trsdu, 0.2s);
+			@media (prefers-reduced-motion: no-preference) { transition: background-color var(--ui-media-tool-trsdu, 0.2s); }
 		}
 		/* focus/hover land on the <select> wrapper, so drive the button's ring from it */
 		&:is(:hover, :focus-visible) button,
