@@ -526,7 +526,7 @@ const buildFurniture = (furniture, fields, tokens, mediaId, videoId = null) => {
 		   safe); look comes from beacon(…) tokens: position/hue/size/face
 		   (pll|sld|tck)/animation (bln|pls|brt|non — reduced-motion-gated in CSS).
 		   Every face incl. the tck ticker is markup-free (pseudo-element panel +
-		   dot loader riding a registered --_slide clock in ui-beacon.css). */
+		   dot loader riding a registered --_bcn-slide clock in ui-beacon.css). */
 		const beacon = furniture.beacon;
 		html += `<ui-beacon>${esc(beacon.text)}</ui-beacon>`;
 		push('beacon', beacon.style);

@@ -3,8 +3,10 @@
  * furniture: text-only markup, valid inside a reveal <summary>. Docs: readme.md
  * @version 5.0.0 · @author Mads Stoumann
  */
-@property --_slide { syntax: "<percentage>"; inherits: true; initial-value: 0%; }
-@property --_fade  { syntax: "<number>"; inherits: true; initial-value: 1; }
+/* namespaced: an @property registration is document-wide, so a generic
+   --_fade would retype (and break) any other package using that name */
+@property --_bcn-slide { syntax: "<percentage>"; inherits: true; initial-value: 0%; }
+@property --_bcn-fade  { syntax: "<number>"; inherits: true; initial-value: 1; }
 
 @layer bs-component {
 	:where(ui-beacon) {
@@ -145,7 +147,7 @@
 		/* reserve the dot-loader area at the inline end */
 		padding-inline: var(--ui-beacon-padding-inline) calc(var(--ui-beacon-dots-inset) + var(--ui-beacon-padding-inline) + var(--ui-beacon-dots-width));
 		position: relative;
-		text-indent: var(--_slide);
+		text-indent: var(--_bcn-slide);
 
 		/* sliding coloured panel */
 		&::before {
@@ -154,9 +156,9 @@
 			content: "";
 			height: auto;
 			inset: 0;
-			opacity: var(--_fade);
+			opacity: var(--_bcn-fade);
 			position: absolute;
-			translate: var(--_slide) 0;
+			translate: var(--_bcn-slide) 0;
 			width: auto;
 			z-index: -1;
 		}
@@ -174,9 +176,9 @@
 			inset-block: 0;
 			inset-inline-end: var(--ui-beacon-dots-inset);
 			margin-block: auto;
-			opacity: var(--_fade);
+			opacity: var(--_bcn-fade);
 			position: absolute;
-			translate: var(--_slide) 0;
+			translate: var(--_bcn-slide) 0;
 			width: var(--ui-beacon-dots-width);
 		}
 
@@ -249,12 +251,12 @@
 	@keyframes beacon-slide {
 		0%   { color: #0000; }
 		5%   { color: var(--ui-beacon-c); }
-		70%  { --_slide: 0%; --_fade: 1; color: var(--ui-beacon-c); }
-		80%  { --_slide: -120%; color: var(--ui-beacon-c); }
-		81%  { --_slide: 120%; --_fade: 0; color: #0000; }
-		82%  { --_fade: 1; color: #0000; }
-		90%  { --_slide: 120%; color: #0000; }
-		100% { --_slide: 0%; color: #0000; }
+		70%  { --_bcn-slide: 0%; --_bcn-fade: 1; color: var(--ui-beacon-c); }
+		80%  { --_bcn-slide: -120%; color: var(--ui-beacon-c); }
+		81%  { --_bcn-slide: 120%; --_bcn-fade: 0; color: #0000; }
+		82%  { --_bcn-fade: 1; color: #0000; }
+		90%  { --_bcn-slide: 120%; color: #0000; }
+		100% { --_bcn-slide: 0%; color: #0000; }
 	}
 	/* staggered sin² hop + a rest beat; sampled every 4% and run `linear` on purpose */
 	@keyframes beacon-bounce {
