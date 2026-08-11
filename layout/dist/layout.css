@@ -112,10 +112,12 @@
 		padding-inline: calc(var(--layout-pi) * var(--layout-space-unit));
 		place-self: var(--layout-ps, auto);
 		row-gap: calc(var(--layout-rg) * var(--layout-space-unit));
-		scroll-behavior: var(--layout-sb, smooth);
+		scroll-behavior: var(--layout-sb, auto);
 		scrollbar-color: var(--layout-scrollbar-c, #0000 #0000);
 		scrollbar-width: var(--layout-scroll-w, thin);
 		width: var(--layout-w, 100%);
+
+		@media (prefers-reduced-motion: no-preference) { scroll-behavior: var(--layout-sb, smooth); }
 
 		&:focus-visible {
 			outline: var(--layout-ol, 1px dotted #CCC);
@@ -528,6 +530,7 @@
 	   first), this override wins over the engine's animation-name on the container.
 	   ========================================================================== */
 
+	@media (prefers-reduced-motion: no-preference) {
 	@supports (view-transition-name: none) {
 		/* stack(reveal): redirect the container's reveal to its last child via a
 		   named timeline (so a stacked section reveals its final card on scroll). */
@@ -560,6 +563,7 @@
 				cover 25% cover 60%,
 				cover 60% cover 75%;
 		}
+	}
 	}
 
 }
