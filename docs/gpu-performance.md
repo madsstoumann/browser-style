@@ -64,8 +64,11 @@ layout or paint. Before adding one, find out which of those you are paying.
 6. **Verify layer count at rest does not grow.** That is the failure mode of an
    over-broad hint, and it is what `LayerTree.layerTreeDidChange` is for.
 
-There are, as a result, still **zero `will-change` declarations in this codebase**. That is
-a measured conclusion, not an oversight.
+There are, as a result, still **zero `will-change` declarations in `layout/`, `ui/card/` and
+the twenty packages in `ui/card/components.md`** — a measured conclusion, not an oversight.
+(Repo-wide the count is three, all pre-existing and all outside that scope:
+`ui/countdown/ui-countdown.css:35`, `ui/mega-menu/scroll.css:50`,
+`ui/number-spinner/index.css:21`.)
 
 ## What was changed, and what it bought
 
@@ -136,6 +139,30 @@ element to translate without changing the component's markup. `beacon-bounce`, t
 - **`ui-card.css:26`** — `--shadow-xl` on every card by default, while nearly all other
   paint in the system is off-by-default. The largest always-on per-card paint cost.
 
+## Backlog — main-thread animation that *could* be composited
+
+The section above is the **cannot** list. This is the **could** list: animations that are on
+the main thread today, are not inherently so, and were simply never attempted.
+
+It matters more than its length suggests. Of ~260 ms of idle main-thread work on
+`demo/media.furniture.html`, `ui-beacon` is ~56% — and only `blink` + `breathe` (~26 ms of
+~148 ms) are on composited properties. **Roughly 85% of the heaviest always-running
+component in the system is still main-thread paint**, and nearly all of it is listed here.
+
+| Item | Animates today | Composited form | Cost |
+|---|---|---|---|
+| `ui-carousel-pill-fill` — `ui/carousel/carousel.css:964` | `background-size` 0→100% | `scaleX()` on a pseudo with `transform-origin: inline-start` | untested; runs 5 s per slide on **every** autoplay carousel |
+| `ui-carousel-thumb-timer` — `carousel.css:971` | a registered `<length-percentage>` fed into a background layer | same | untested. The `@property` was chosen because the layer count varies (2 plain, 3 with a play badge) — that is a *correctness* reason, not a perf one, so a pseudo may be free to take over |
+| `beacon-pulse` — `ui/beacon/ui-beacon.css:243` | `box-shadow` ring, **infinite** | a pseudo scaling `1 → 1 + 2·spread/size` while `opacity` goes 1→0 | **~24 ms** |
+| `beacon-dots` + `beacon-bounce` | `background-size` / `background-position` across three radial-gradient layers, **infinite** | three real boxes animating `translate`/`scale` | **~45 ms combined** |
+| `beacon-slide` | `color` + `text-indent`, driven by two inheriting registered custom properties | attempted and reverted — see § Where the time actually goes | **~87 ms**, the single largest item. The revert was measured under software rasterisation and should be re-run first |
+| `mrk(hyb)` — `carousel.css:279` | `inline-size` + `border-radius` on `::scroll-marker` | `scaleX()` — but note it would distort the pill's radius, so this one may not be expressible | untested |
+| `ui/icon` `transition: all` — `ui-icon.css:31`, `:48` | catches `clip-path`, `width`, `height`, `box-shadow` on every icon **and both pseudos** | an explicit property list | deliberately skipped — the glyph morphs genuinely animate layout properties; see § Deliberately not changed |
+
+**Precondition: do not start any of these without a real-GPU baseline.** Each one trades
+main-thread paint for composited layers, and that trade cannot be evaluated under software
+rasterisation — see § Method. Take the before/after with the recipe there, on hardware.
+
 ## Open — found while measuring, needs a decision
 
 None of these were changed; each is a judgement call that belongs to the author.
@@ -146,14 +173,15 @@ None of these were changed; each is a judgement call that belongs to the author.
   overlay (`ui-media ui-media::before { content: none }` plus a nested-host boundary rule);
   scrim has no equivalent. Whether per-slide scrims are wanted is a design call, so the
   gating commit deliberately left the behaviour as it was.
-- **`node ui/card/build.js` fails**, and did so before this work: the peer-exclusivity gate
-  in `scripts/css-bundle.js` rejects two cross-package assets pulled in by
-  `content.css`'s contact-icon mask (`../base/assets/svg/{phone,email}.svg`).
-- **Every `dist/` bundle is stale.** Regenerating `ui/card`, `ui/base` and `ui/carousel`
-  sweeps in unrelated source changes that were never published — a `[data-theme~=…]`
-  selector batch in base's theme, a summary line-clamp block and a price-gap change in
-  card. They need a deliberate release commit, not a drive-by one, so `dist/` is untouched
-  here and the source changes in this pass have **not** reached the bundles.
+- ~~**`node ui/card/build.js` fails**: the peer-exclusivity gate in `scripts/css-bundle.js`
+  rejects two cross-package assets pulled in by `content.css`'s contact-icon mask.~~
+  **Resolved in `174c14e5`** — both SVGs are inline data URIs now; the build is green and
+  a second run is a no-op.
+- ~~**Every `dist/` bundle is stale.**~~ **Resolved in `174c14e5`** — regenerated in one
+  deliberate release commit, which also flushed the backlog of unpublished source changes
+  (a `[data-theme~=…]` selector batch in base's theme, a summary line-clamp block and a
+  price-gap change in card). Keep them regenerated: source-only commits leave consumers of
+  `dist/` on the old CSS.
 - **`ovr()`'s legibility shadow is half-applied.** `ui-card.css:127-128` sets
   `--ui-content-heading-text-shadow` and `--ui-content-eyebrow-text-shadow`, but
   `content.css` also reads `--ui-content-body-text-shadow` (summary) and
@@ -163,6 +191,24 @@ None of these were changed; each is a judgement call that belongs to the author.
   `demo/media.hover.html` carries the token.
 
 ## Method — how to re-run this
+
+### First: know what your renderer is
+
+Every number in this file was taken in a container with **no GPU** — Chromium fell back to
+SwiftShader (software rasterisation; check with `WEBGL_debug_renderer_info`, or read
+`chrome://gpu`). That bounds the conclusions unevenly:
+
+| | Affected by software rasterisation? |
+|---|---|
+| Main-thread timings — style recalc, layout, paint-record | **No.** That work is on the CPU either way. |
+| Composited-layer counts | **No.** Compositing *decisions* are backend-independent. |
+| `will-change` was a no-op on `hov(track)` | **No.** The cost was 129 style recalcs; no GPU hint touches style recalc. |
+| The `beacon-slide` split wasn't worth it (+6 layers, no gain) | **Yes — re-test on real hardware.** Extra composited layers cost real time in software and are close to free on a GPU, so this revert may be wrong. |
+
+The rule of thumb: trust the main-thread numbers, distrust anything whose verdict turns on
+**layer count versus paint**. Every item in the backlog above turns on exactly that, which
+is why none of them were attempted.
+
 
 Serve on a **fresh port each round** (`python3 -m http.server 89xx`): the dev server sends
 `Last-Modified` with no `Cache-Control`, and a query-string reload busts the page but not
