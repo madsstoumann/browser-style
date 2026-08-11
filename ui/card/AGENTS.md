@@ -205,6 +205,7 @@ Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are 
 | `docs/media.carousel.md` | working on carousel internals (scroll-markers, dots, arrows) |
 | `docs/stagger.md` | working on the stagger reveal engine (details / snap-carousel / scroll-driven adapters) |
 | `docs/animations.md` | working on the keyframe library or the `[animate]`/`animate-self` scroll API |
+| `/docs/gpu-performance.md` | adding a transition, a keyframe or a `will-change` — the CPU/GPU split, the four de-optimisations, and the measured cost of every always-running animation |
 | `docs/content.md` | working on the text column, `scl()`, `data-part`s, tag choice |
 | `docs/typography.md` | you want to *use* the type system — use-case guide to `scl()`, the relational size ladder, group sizes, fonts |
 | `docs/ui-card-tokens.md` | you need the `variant=` token / custom-property reference |

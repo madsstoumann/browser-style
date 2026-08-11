@@ -35,7 +35,11 @@
 5. Per-topic docs when relevant: ui/card/{carousel,media,content,card,stagger}.md,
    media.carousel.md (internals), ui-card-tokens.md, ui/reveal/readme.md,
    layout/docs/card-integration.md, polyfill/readme.md (Safari carousel controls).
-6. `docs/plans/2026-07-26-v4-card-system-architecture-analysis.md` — **archive.**
+6. `docs/gpu-performance.md` — the CPU/GPU split: which properties composite, the four
+   ways this codebase de-optimises one, the `will-change` policy (and why there are still
+   zero of them), and the measured cost of every always-running animation. Read it before
+   adding a transition, a keyframe, or a `will-change`.
+7. `docs/plans/2026-07-26-v4-card-system-architecture-analysis.md` — **archive.**
    History and rationale for every F-xx/R-xx; read it for *why*, not for *what's
    next*. Parts are superseded (marked inline).
 
