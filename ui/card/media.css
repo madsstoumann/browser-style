@@ -212,7 +212,11 @@
 	:where([media*="scm(sld)"]) { --ui-media-scrim-color: rgb(0 0 0 / 1); --ui-media-scrim-fade: 0%; }
 	/* bare scm paints; auto-matches the ovr() position via --ui-media-scrim-default */
 	:where([media*="scm"]) { --ui-media-scrim-paint: var(--ui-media-scrim, var(--ui-media-scrim-default, var(--ui-media-scrim-bc))); }
-	:where(ui-media)::after {
+	/* only scm paints — ovr() just picks the position via --ui-media-scrim-default.
+	   Two-arm like tint's ::before, NOT flag + style(): WebKit skips a pseudo's
+	   style query at first paint. Do NOT migrate. Docs: docs/media.md § Scrim */
+	:where([media*="scm"]) ui-media::after,
+	:where(ui-media[media*="scm"])::after {
 		background: var(--ui-media-scrim-paint, #0000);
 		content: "";
 		inset: 0;
