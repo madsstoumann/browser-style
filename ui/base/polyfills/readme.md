@@ -94,10 +94,12 @@ Two corollaries worth knowing:
   still ends up holding the `attr()` text — the second declaration is valid, so it
   wins. Verified identical in WebKit to having no fallback at all.
 - **Detect on a real property.** `CSS.supports('--x', 'attr(…)')` returns `true`
-  in Safari for exactly the reason above. Use a real property in CSS
-  (`@supports not (background-color: attr(x type(<color>), red))`) and, in JS,
-  set the property and read the computed value back — which is what this polyfill
-  does.
+  in Safari for exactly the reason above. Use a real property in both layers:
+  `@supports not (background-color: attr(x type(<color>), red))` in CSS, and the
+  same expression via `CSS.supports('background-color', …)` in this polyfill —
+  parser-level, so both layers flip together. (It used to probe by substitution —
+  append a div, read the computed value back — which forced a full-document
+  style pass from a render-blocking script: 618 ms on the schema demo.)
 
 ## Two layers, both required
 

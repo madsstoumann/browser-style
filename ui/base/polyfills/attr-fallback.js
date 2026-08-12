@@ -98,20 +98,16 @@ export const ATTR_MAP = {
 };
 
 /**
- * Detect by SUBSTITUTION, not CSS.supports(): `CSS.supports('--x: attr(…)')`
- * returns true even in Safari, because a custom property accepts any token
- * stream. Setting it and reading the computed value back is what actually tells
- * the two apart.
+ * Detect on a REAL property: `CSS.supports('--x: attr(…)')` is true even in
+ * Safari (a custom property accepts any token stream), but a real property
+ * only parses typed attr() where it's implemented — the same expression the
+ * components' own `@supports not (…)` fallback blocks gate on, so both layers
+ * flip together. Parser-level, no DOM: the old substitution probe
+ * (append div + getComputedStyle) forced a full-document style pass — 618 ms
+ * on the schema demo (throttled mobile).
  */
 function isTypedAttrSupported() {
-	const el = document.createElement('div');
-	el.dataset.t = '1';
-	el.style.setProperty('--t', 'attr(data-t type(<number>), 0)');
-	/* may run from <head> (render-blocking, before <body> exists) — see init() */
-	(document.body ?? document.documentElement).append(el);
-	const supported = getComputedStyle(el).getPropertyValue('--t').trim() === '1';
-	el.remove();
-	return supported;
+	return CSS.supports('background-color', 'attr(x type(<color>), red)');
 }
 
 function applyTo(element, attrs) {
