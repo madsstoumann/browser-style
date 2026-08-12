@@ -6,23 +6,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="color-scheme" content="light dark">
 	<meta name="description" content="All 34 schema.org card types — the 25 legacy content-card types plus the v1.3 additions — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
-	<link rel="stylesheet" href="/ui/base/index.css">
-	<link rel="stylesheet" href="/ui/carousel/index.css">
-	<link rel="stylesheet" href="/layout/dist/layout.css">
-	<link rel="stylesheet" href="../../chip/ui-chip.css">
-	<link rel="stylesheet" href="../../sticker/ui-sticker.css">
-	<link rel="stylesheet" href="../../play/ui-play.css">
-	<link rel="stylesheet" href="../../save/ui-save.css">
-	<link rel="stylesheet" href="../../icon/index.css">
-	<link rel="stylesheet" href="../../reveal/ui-reveal.css">
-	<link rel="stylesheet" href="../../accordion/ui-accordion.css">
-	<link rel="stylesheet" href="../../quote/ui-quote.css">
-	<link rel="stylesheet" href="../../avatar/ui-avatar.css">
-	<link rel="stylesheet" href="../../progress/ui-progress.css">
-	<link rel="stylesheet" href="../../rating/ui-rating.css">
-	<link rel="stylesheet" href="../../timeline/ui-timeline.css">
-	<link rel="stylesheet" href="../../gradient-text/ui-gradient-text.css">
-	<link rel="stylesheet" href="../ui-card.css">
+	<!-- One bundle for every card-demo package (source list: ui/card/components.md).
+	     Build: npm run build:demo-css (entry demo.css, output /dist/demo.min.css) -->
+	<link rel="stylesheet" href="/dist/demo.min.css">
 	<!-- Block first paint (and the incoming snapshot on Back) until the morphing
 	     article card is parsed. Docs: docs/card.md § Article pattern -->
 	<link rel="expect" href="#schema-article" blocking="render">
@@ -31,13 +17,7 @@
 	     so a deferred script names the targets too late and the forward morph
 	     degrades to a cross-fade. Docs: ui/base/polyfills/readme.md -->
 	<script type="module" src="/ui/base/polyfills/attr-fallback.js" blocking="render"></script>
-	<style>
-		.stack { display: grid; gap: var(--spacing-lg); margin-block-end: var(--spacing-2xl); }
-		.note { color: var(--color-text-secondary, #666); max-inline-size: 70ch; }
-		code { font-size: 0.9em; }
-		table { border-collapse: collapse; display: block; margin-block-end: var(--spacing-2xl); max-inline-size: 100%; overflow-x: auto; }
-		th, td { border: 1px solid var(--color-border, #ddd); padding: 0.4em 0.75em; text-align: start; font-size: 0.9em; }
-	</style>
+
 </head>
 <body data-layout-root data-page-gap="2">
 	<header>
@@ -47,7 +27,7 @@
 
 	</header>
 
-	<section>
+	<!-- <section>
 	<h2>Structured <code>data-part</code> vocabulary</h2>
 	<p class="note">The eleven parts the typed cards add on top of the envelope. All are <strong>styled</strong> in <a href="../content.css"><code>content.css</code></a> — this page is the reference markup <code>render.js</code> follows, not a wish list. Envelope parts carry the rest: <code>eyebrow</code>, <code>headline</code>, <code>subheadline</code>, <code>summary</code>, <code>meta</code> (salaries, specs, dates), <code>byline</code> + <code>byline-who</code> + <code>dateline</code> (people), <code>tags</code>, <code>actions</code> and <code>footer</code> (totals, recommendations). <code>caption</code> belongs to the media frame — see <a href="media.html">media.html</a>.</p>
 	<table>
@@ -67,7 +47,7 @@
 			<tr><td><code>cover</code></td><td><code>&lt;a&gt;</code> inside the headline, <code>::after</code> covering the card</td><td>Clickable card — one link, no nested anchors; tag/action links stay above it</td><td>article, news (→ the <a href="articles/article.html">full-article pages</a>)</td></tr>
 		</tbody>
 	</table>
-	</section>
+	</section> -->
 
 	<!-- ============================================================
 	     content — CreativeWork (fallback)
@@ -76,9 +56,9 @@
 	<h2>Content — <code>CreativeWork</code> (fallback)</h2>
 	<p class="note">The plain envelope, no <code>details</code>: eyebrow, headline, summary, tags, actions, plus <code>links</code> — plain related-link rows (part <code>links</code>), deliberately not buttons. Unknown <code>schemaType</code> values fall back to this. A tag may be a string or <code>{name, url}</code> — the linked one renders an anchor inside the chip; an action with no <code>link.url</code> renders a real <code>&lt;button&gt;</code>.</p>
 	<lay-out md="columns(2)">
-		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/CreativeWork">
+		<ui-card variant="col" media="asr(16/9) load(eager)" itemscope itemtype="https://schema.org/CreativeWork">
 			<cq-box>
-				<ui-media><img src="/assets/images/popovers.png" alt="Abstract illustration of layered UI panels" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/popovers.png" alt="Abstract illustration of layered UI panels" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/popovers.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/popovers.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/popovers.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/popovers.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/popovers.png 1200w" sizes="(min-width: 540px) min(50vw, 512px), 100vw" loading="eager" fetchpriority="high" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<small data-part="eyebrow" itemprop="genre">Design</small>
 					<h3 data-part="headline" itemprop="name">A generic piece of content</h3>
@@ -106,7 +86,7 @@
 	<lay-out md="columns(2)">
 		<ui-card data-view="card-article-1" variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Article">
 			<cq-box>
-				<ui-media><img data-view="hero-article-1" src="/assets/images/quantum.png" alt="Stylised quantum processor" itemprop="image"></ui-media>
+				<ui-media><img data-view="hero-article-1" src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="articleSection" content="Science">
 					<meta itemprop="dateModified" content="2026-06-21T09:00:00Z">
@@ -115,7 +95,7 @@
 					<p data-part="summary" itemprop="description">Researchers demonstrate error-corrected logical qubits running a chemistry simulation faster than any classical supercomputer.</p>
 					<p data-part="meta"><small>Updated Jun 21, 2026</small></p>
 					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
-						<ui-avatar><img src="/assets/images/janesmith.png" alt=""></ui-avatar>
+						<ui-avatar><img src="/assets/images/janesmith.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=64,height=64/assets/images/janesmith.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=128,height=128/assets/images/janesmith.png 2x" loading="lazy" decoding="async"></ui-avatar>
 						<span data-part="byline-who"><span itemprop="name">Jane Smith</span><span itemprop="jobTitle">Science Editor</span></span><small data-part="dateline"><time datetime="2026-06-20T14:30:00Z">Jun 20, 2026</time><span>5 min read</span></small>
 					</address>
 					<meta itemprop="datePublished" content="2026-06-20T14:30:00Z">
@@ -140,7 +120,7 @@
 		<ui-card data-view="card-news-1" variant="col" media="asr(16/9) chip(ts) chip(red)" itemscope itemtype="https://schema.org/NewsArticle">
 			<cq-box>
 				<ui-media>
-					<img data-view="hero-news-1" src="/assets/images/government.png" alt="Parliament building at dusk" itemprop="image">
+					<img data-view="hero-news-1" src="/assets/images/government.png" alt="Parliament building at dusk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/government.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/government.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/government.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/government.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/government.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image">
 					<ui-chip>Breaking</ui-chip>
 				</ui-media>
 				<ui-content>
@@ -169,7 +149,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" theme="gray" content="scl(lg)" itemscope itemtype="https://schema.org/Quotation">
 			<cq-box>
-				<ui-media><img src="/assets/images/quote.png" alt="Open book on a quiet desk" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/quote.png" alt="Open book on a quiet desk" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quote.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quote.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quote.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quote.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quote.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Quote of the day</small>
 					<ui-quote data-part="quote" variant="bigquote"><blockquote itemprop="text"><q>Simplicity is the ultimate sophistication — every element you remove makes the remaining ones stronger.</q><cite>Maria Lindgren</cite></blockquote></ui-quote>
@@ -193,7 +173,7 @@
 		<ui-card variant="col" media="asr(4/3) sticker(te) sticker(red) sticker(xl) sticker(sh:burst) save(be)" itemscope itemtype="https://schema.org/Product">
 			<cq-box>
 				<ui-media id="product-1-media">
-					<img src="/assets/images/aurasoundpro.png" alt="AuraSound Pro wireless headphones" itemprop="image">
+					<img src="/assets/images/aurasoundpro.png" alt="AuraSound Pro wireless headphones" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/aurasoundpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/aurasoundpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/aurasoundpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/aurasoundpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/aurasoundpro.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image">
 					<ui-sticker><strong>-20%</strong></ui-sticker>
 					<ui-save><button type="button" command="--save" commandfor="product-1-media" aria-label="Save AuraSound Pro to favorites"><ui-icon type="shape" shape="heart" variant="outline"></ui-icon></button></ui-save>
 				</ui-media>
@@ -238,7 +218,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Event">
 			<cq-box>
-				<ui-media><img src="/assets/images/websummit.png" alt="Conference stage with purple lights" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/websummit.png" alt="Conference stage with purple lights" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/websummit.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/websummit.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/websummit.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/websummit.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/websummit.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="eventStatus" content="https://schema.org/EventScheduled">
 					<meta itemprop="eventAttendanceMode" content="https://schema.org/MixedEventAttendanceMode">
@@ -273,7 +253,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Recipe">
 			<cq-box>
-				<ui-media><img src="/assets/images/carbonara.png" alt="Plate of spaghetti carbonara" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/carbonara.png" alt="Plate of spaghetti carbonara" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/carbonara.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/carbonara.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/carbonara.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/carbonara.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/carbonara.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="recipeCategory" content="Pasta">
 					<meta itemprop="prepTime" content="PT15M">
@@ -324,7 +304,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Review">
 			<cq-box>
-				<ui-media><img src="/assets/images/soundwavemini.png" alt="SoundWave Mini speaker"></ui-media>
+				<ui-media><img src="/assets/images/soundwavemini.png" alt="SoundWave Mini speaker" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/soundwavemini.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/soundwavemini.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/soundwavemini.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/soundwavemini.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/soundwavemini.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Verified review</small>
 					<h3 data-part="headline">Punches far above its size</h3>
@@ -360,7 +340,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/JobPosting">
 			<cq-box>
-				<ui-media><img src="/assets/images/jobposting.png" alt="Team collaborating in a bright office" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/jobposting.png" alt="Team collaborating in a bright office" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/jobposting.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/jobposting.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/jobposting.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/jobposting.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/jobposting.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="industry" content="Software">
 					<meta itemprop="datePosted" content="2026-06-15">
@@ -422,7 +402,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Course">
 			<cq-box>
-				<ui-media><img src="/assets/images/mindfulness.png" alt="Person meditating at sunrise" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/mindfulness.png" alt="Person meditating at sunrise" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="about" content="Wellness">
 					<meta itemprop="timeRequired" content="P6W">
@@ -467,7 +447,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Reservation">
 			<cq-box>
-				<ui-media><img src="/assets/images/brewandbean.png" alt="Bright café interior with workspace tables" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/brewandbean.png" alt="Bright café interior with workspace tables" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="totalPrice" content="45">
 					<meta itemprop="priceCurrency" content="USD">
@@ -501,7 +481,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Question">
 			<cq-box>
-				<ui-media><img src="/assets/images/csspoll.png" alt="Illustration of CSS layout features" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/csspoll.png" alt="Illustration of CSS layout features" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/csspoll.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/csspoll.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/csspoll.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/csspoll.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/csspoll.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="answerCount" content="3">
 					<small data-part="eyebrow">Community poll</small>
@@ -536,7 +516,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Person">
 			<cq-box>
-				<ui-media><img src="/assets/images/janesmith.png" alt="Portrait of Jane Smith" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/janesmith.png" alt="Portrait of Jane Smith" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/janesmith.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/janesmith.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/janesmith.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/janesmith.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/janesmith.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Team</small>
 					<h3 data-part="headline" itemprop="name">Jane Smith</h3>
@@ -564,7 +544,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/FAQPage">
 			<cq-box>
-				<ui-media><img src="/assets/images/faq.png" alt="Illustration of question marks and answer panels" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/faq.png" alt="Illustration of question marks and answer panels" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/faq.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/faq.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/faq.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/faq.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/faq.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Support</small>
 					<h3 data-part="headline" itemprop="name">Frequently asked questions</h3>
@@ -603,7 +583,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/EventSeries">
 			<cq-box>
-				<ui-media><img src="/assets/images/world.png" alt="World map lit at night" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/world.png" alt="World map lit at night" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/world.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/world.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/world.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/world.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/world.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Company history</small>
 					<h3 data-part="headline" itemprop="name">A decade of browser.style</h3>
@@ -639,7 +619,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/EventSeries">
 			<cq-box>
-				<ui-media><img src="/assets/images/world.png" alt="World map lit at night" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/world.png" alt="World map lit at night" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/world.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/world.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/world.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/world.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/world.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Company history</small>
 					<h3 data-part="headline" itemprop="name">Horizontal — <code>variant="horizontal"</code></h3>
@@ -686,10 +666,10 @@
 		<ui-card variant="col" media="asr(16/9) nav(mrk) nav(arw)" itemscope itemtype="https://schema.org/ImageGallery">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/spring.jpg" alt="Blooming cherry trees in spring" itemprop="image">
-					<img src="/assets/images/summer.jpg" alt="Sunlit meadow in summer" itemprop="image">
-					<img src="/assets/images/autumn.jpg" alt="Golden forest in autumn" itemprop="image">
-					<img src="/assets/images/winter.jpg" alt="Snow-covered pines in winter" itemprop="image">
+					<img src="/assets/images/spring.jpg" alt="Blooming cherry trees in spring" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/spring.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/spring.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/spring.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/spring.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/spring.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image">
+					<img src="/assets/images/summer.jpg" alt="Sunlit meadow in summer" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/summer.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/summer.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/summer.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/summer.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/summer.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image">
+					<img src="/assets/images/autumn.jpg" alt="Golden forest in autumn" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/autumn.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/autumn.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/autumn.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/autumn.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/autumn.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image">
+					<img src="/assets/images/winter.jpg" alt="Snow-covered pines in winter" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/winter.jpg 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/winter.jpg 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/winter.jpg 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/winter.jpg 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/winter.jpg 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image">
 				</ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Photo album</small>
@@ -711,7 +691,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" theme="black dark" itemscope itemtype="https://schema.org/Observation">
 			<cq-box>
-				<ui-media><img src="/assets/images/finance.png" alt="Trading charts on a dark screen" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/finance.png" alt="Trading charts on a dark screen" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/finance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">This quarter</small>
 					<h3 data-part="headline" itemprop="name">Monthly active users</h3>
@@ -725,7 +705,7 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9)" theme="black dark" itemscope itemtype="https://schema.org/Observation">
 			<cq-box>
-				<ui-media><img src="/assets/images/finance.png" alt="Trading charts on a dark screen" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/finance.png" alt="Trading charts on a dark screen" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/finance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Core Web Vitals</small>
 					<h3 data-part="headline" itemprop="name">Median LCP</h3>
@@ -750,7 +730,7 @@
 		<ui-card variant="col" media="asr(16/9) chip(te) chip(green)" itemscope itemtype="https://schema.org/EducationalOccupationalCredential">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/a11y.png" alt="Accessibility symbol on a screen" itemprop="image">
+					<img src="/assets/images/a11y.png" alt="Accessibility symbol on a screen" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/a11y.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/a11y.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/a11y.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/a11y.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/a11y.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image">
 					<ui-chip>Certified</ui-chip>
 				</ui-media>
 				<ui-content>
@@ -778,7 +758,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" theme="black dark" itemscope itemtype="https://schema.org/SpecialAnnouncement">
 			<cq-box>
-				<ui-media><img src="/assets/images/maintainance.png" alt="Maintenance work in progress" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/maintainance.png" alt="Maintenance work in progress" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/maintainance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/maintainance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/maintainance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/maintainance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/maintainance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="datePosted" content="2026-07-01">
 					<meta itemprop="datePublished" content="2026-07-01">
@@ -806,7 +786,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/CafeOrCoffeeShop">
 			<cq-box>
-				<ui-media><img src="/assets/images/brewandbean.png" alt="Brew &amp; Bean café storefront" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/brewandbean.png" alt="Brew &amp; Bean café storefront" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="url" content="https://brewandbean.example">
 					<meta itemprop="priceRange" content="$$">
@@ -873,7 +853,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/ItemList">
 			<cq-box>
-				<ui-media><img src="/assets/images/speakers.png" alt="Three portable speakers side by side" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/speakers.png" alt="Three portable speakers side by side" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/speakers.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/speakers.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/speakers.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/speakers.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/speakers.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="numberOfItems" content="3">
 					<small data-part="eyebrow">Buyer’s guide</small>
@@ -881,17 +861,17 @@
 					<ul data-part="options">
 						<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 							<meta itemprop="position" content="1">
-							<img src="/assets/images/quickboil.png" alt="" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">SoundWave Mini</span> — USD 79</label>
+							<img src="/assets/images/quickboil.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=48,height=48/assets/images/quickboil.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=96,height=96/assets/images/quickboil.png 2x" decoding="async" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">SoundWave Mini</span> — USD 79</label>
 							<progress max="100" value="92"></progress> <span>9.2</span>
 						</li>
 						<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 							<meta itemprop="position" content="2">
-							<img src="/assets/images/soundwavemini.png" alt="" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">AuraSound Go</span> — USD 99</label>
+							<img src="/assets/images/soundwavemini.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=48,height=48/assets/images/soundwavemini.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=96,height=96/assets/images/soundwavemini.png 2x" decoding="async" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">AuraSound Go</span> — USD 99</label>
 							<progress max="100" value="85"></progress> <span>8.5</span>
 						</li>
 						<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 							<meta itemprop="position" content="3">
-							<img src="/assets/images/slimfold.png" alt="" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">QuickBoom 2</span> — USD 69</label>
+							<img src="/assets/images/slimfold.png" alt="" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=48,height=48/assets/images/slimfold.png 1x, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=96,height=96/assets/images/slimfold.png 2x" decoding="async" itemprop="image" loading="lazy" width="48" height="48"><label><span itemprop="name">QuickBoom 2</span> — USD 69</label>
 							<progress max="100" value="78"></progress> <span>7.8</span>
 						</li>
 					</ul>
@@ -911,7 +891,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/ContactPoint">
 			<cq-box>
-				<ui-media><img src="/assets/images/support.png" alt="Support agent at a headset"></ui-media>
+				<ui-media><img src="/assets/images/support.png" alt="Support agent at a headset" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/support.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/support.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/support.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/support.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/support.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"></ui-media>
 				<ui-content>
 					<meta itemprop="contactType" content="customer support">
 					<meta itemprop="hoursAvailable" content="Mo-Fr 09:00-17:00">
@@ -941,7 +921,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Place">
 			<cq-box>
-				<ui-media><img src="/assets/images/hammershus.png" alt="Hammershus castle ruin on the cliffs" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/hammershus.png" alt="Hammershus castle ruin on the cliffs" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/hammershus.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/hammershus.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/hammershus.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/hammershus.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/hammershus.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates" hidden>
 						<meta itemprop="latitude" content="55.0603">
@@ -993,7 +973,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" theme="muted gray" itemscope itemtype="https://schema.org/Offer">
 			<cq-box>
-				<ui-media><img src="/assets/images/fittrackpro.png" alt="Fitness tracker on a wrist" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/fittrackpro.png" alt="Fitness tracker on a wrist" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/fittrackpro.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/fittrackpro.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/fittrackpro.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/fittrackpro.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/fittrackpro.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<span itemprop="eligibleDuration" itemscope itemtype="https://schema.org/QuantitativeValue" hidden><meta itemprop="value" content="14"><meta itemprop="unitCode" content="DAY"></span>
 					<small data-part="eyebrow">Membership</small>
@@ -1030,7 +1010,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/SocialMediaPosting">
 			<cq-box>
-				<ui-media><img src="/assets/images/elephants.png" alt="Elephants crossing at a waterhole" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/elephants.png" alt="Elephants crossing at a waterhole" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/elephants.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/elephants.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/elephants.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/elephants.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/elephants.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="datePublished" content="2026-06-28T16:20:00Z">
 					<div itemprop="publisher" itemscope itemtype="https://schema.org/Organization" hidden>
@@ -1070,7 +1050,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/SoftwareApplication">
 			<cq-box>
-				<ui-media><img src="/assets/images/game_01.png" alt="Pixel Raiders key art — chibi heroes charging into battle" itemprop="image" loading="lazy"></ui-media>
+				<ui-media><img src="/assets/images/game_01.png" alt="Pixel Raiders key art — chibi heroes charging into battle" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/game_01.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/game_01.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/game_01.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/game_01.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/game_01.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="applicationCategory" content="GameApplication">
 					<meta itemprop="operatingSystem" content="macOS">
@@ -1106,7 +1086,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Organization">
 			<cq-box>
-				<ui-media><img src="/assets/images/coorperation.png" alt="Northwind Group team at the Copenhagen headquarters" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/coorperation.png" alt="Northwind Group team at the Copenhagen headquarters" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/coorperation.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/coorperation.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/coorperation.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/coorperation.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/coorperation.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="foundingDate" content="1998-03-01">
 					<meta itemprop="sameAs" content="https://www.linkedin.com/company/northwind-group">
@@ -1218,7 +1198,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/VideoObject">
 			<cq-box>
-				<ui-media><video src="/assets/video/river.mp4" playsinline controls poster="/assets/images/river.png" preload="metadata" aria-label="Slow drone shot following a river between meadows"><meta itemprop="contentUrl" content="/assets/video/river.mp4"><meta itemprop="thumbnailUrl" content="/assets/images/river.png"><meta itemprop="uploadDate" content="2026-05-14T10:00:00Z"><meta itemprop="duration" content="PT3M24S"></video></ui-media>
+				<ui-media><video src="/assets/video/river.mp4" playsinline controls poster="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/river.png" preload="metadata" aria-label="Slow drone shot following a river between meadows"><meta itemprop="contentUrl" content="/assets/video/river.mp4"><meta itemprop="thumbnailUrl" content="/assets/images/river.png"><meta itemprop="uploadDate" content="2026-05-14T10:00:00Z"><meta itemprop="duration" content="PT3M24S"></video></ui-media>
 				<ui-content>
 					<small data-part="eyebrow" itemprop="genre">Documentary</small>
 					<h3 data-part="headline" itemprop="name">The River, Slowly</h3>
@@ -1245,7 +1225,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/HowTo">
 			<cq-box>
-				<ui-media><img src="/assets/images/howto.png" alt="Hand holding a radiator key against a valve" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/howto.png" alt="Hand holding a radiator key against a valve" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/howto.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/howto.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/howto.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/howto.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/howto.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="totalTime" content="PT10M">
 					<span itemprop="estimatedCost" itemscope itemtype="https://schema.org/MonetaryAmount" hidden><meta itemprop="currency" content="EUR"><meta itemprop="value" content="5"></span>
@@ -1296,7 +1276,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/QAPage">
 			<cq-box>
-				<ui-media><img src="/assets/images/qa.png" alt="Developer community forum illustration" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/qa.png" alt="Developer community forum illustration" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/qa.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/qa.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/qa.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/qa.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/qa.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">CSS</small>
 					<h3 data-part="headline" itemprop="name">How do I center a div in 2026?</h3>
@@ -1334,7 +1314,7 @@
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/PodcastEpisode">
 			<cq-box>
 				<ui-media>
-					<img src="/assets/images/podcast.png" alt="The Calm Mind podcast cover art" itemprop="image">
+					<img src="/assets/images/podcast.png" alt="The Calm Mind podcast cover art" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/podcast.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/podcast.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/podcast.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/podcast.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/podcast.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image">
 					<audio id="podcast-ep42" src="/assets/audio/podcast.m4a" preload="metadata" aria-label="Digital minimalism, revisited — Episode 42" itemprop="associatedMedia" itemscope itemtype="https://schema.org/AudioObject"><meta itemprop="contentUrl" content="/assets/audio/podcast.m4a"><meta itemprop="name" content="Digital minimalism, revisited — Episode 42"></audio>
 					<ui-play><button type="button" command="--play-pause" commandfor="podcast-ep42" aria-label="Play episode"><ui-icon type="play-pause"></ui-icon></button></ui-play>
 				</ui-media>
@@ -1362,7 +1342,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3)" itemscope itemtype="https://schema.org/Movie">
 			<cq-box>
-				<ui-media><img src="/assets/images/movie_01.png" alt="Echoes of Tomorrow film poster" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/movie_01.png" alt="Echoes of Tomorrow film poster" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/movie_01.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/movie_01.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/movie_01.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/movie_01.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/movie_01.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="duration" content="PT2H14M">
 					<meta itemprop="contentRating" content="PG-13">
@@ -1396,7 +1376,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(4/3)" itemscope itemtype="https://schema.org/Book">
 			<cq-box>
-				<ui-media><img src="/assets/images/gastronomy.png" alt="The Nordic Pantry book cover" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/gastronomy.png" alt="The Nordic Pantry book cover" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=180/assets/images/gastronomy.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=240/assets/images/gastronomy.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=360/assets/images/gastronomy.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=540/assets/images/gastronomy.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=900/assets/images/gastronomy.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="isbn" content="978-87-12345-67-8">
 					<meta itemprop="numberOfPages" content="312">
@@ -1438,7 +1418,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/Dataset">
 			<cq-box>
-				<ui-media><img src="/assets/images/hubble.png" alt="Space telescope imagery of a star field" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/hubble.png" alt="Space telescope imagery of a star field" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/hubble.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/hubble.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/hubble.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/hubble.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/hubble.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="license" content="https://creativecommons.org/licenses/by/4.0/">
 					<meta itemprop="temporalCoverage" content="2019-01/2025-12">
@@ -1474,7 +1454,7 @@
 	<lay-out md="columns(2)">
 		<ui-card variant="col" media="asr(16/9)" itemscope itemtype="https://schema.org/ClaimReview">
 			<cq-box>
-				<ui-media><img src="/assets/images/government.png" alt="City hall press briefing" itemprop="image"></ui-media>
+				<ui-media><img src="/assets/images/government.png" alt="City hall press briefing" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/government.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/government.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/government.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/government.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/government.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"></ui-media>
 				<ui-content>
 					<meta itemprop="datePublished" content="2026-07-28">
 					<small data-part="eyebrow">Fact check</small>

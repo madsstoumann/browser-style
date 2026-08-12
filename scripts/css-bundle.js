@@ -48,8 +48,9 @@ export function bundleCss(pkgDir, entry, outName) {
 	   them totalling ~4 kB, and a relative url() would otherwise break — the bundle
 	   sits in dist/, one level below the sheet that wrote the path. Inlining also
 	   keeps the bundle a single self-contained request, which is the whole point.
-	   A binary asset (woff2/png) would fail here loudly and needs its own decision. */
-	const loaders = ['--loader:.svg=dataurl'];
+	   A binary asset (woff2/png) would fail here loudly and needs its own decision.
+	   Root-absolute /assets/* URLs are SITE references (ui/rating's star.svg) — left as-is. */
+	const loaders = ['--loader:.svg=dataurl', '--external:/assets/*'];
 	esbuild(root, [entry, '--bundle', ...loaders, `--outfile=dist/${outName}.css`, `--metafile=${meta}`, '--log-level=warning']);
 	esbuild(root, [entry, '--bundle', ...loaders, '--minify', `--outfile=dist/${outName}.min.css`, '--log-level=warning']);
 

@@ -1,0 +1,25 @@
+/* All-demo CSS bundle entry — every package in ui/card/components.md, in page <link> order.
+ * Build: npm run build:demo-css  ->  /dist/demo{,.min}.css (repo root). Docs: ui/card/components.md
+ * @author Mads Stoumann
+ */
+@import '../../base/index.css';
+@import '../../carousel/index.css';
+@import '../../../layout/dist/layout.css';
+@import '../../chip/ui-chip.css';
+@import '../../sticker/ui-sticker.css';
+@import '../../beacon/ui-beacon.css';
+@import '../../play/ui-play.css';
+@import '../../save/ui-save.css';
+@import '../../lightbox/ui-lightbox.css';
+@import '../../marquee/ui-marquee.css';
+@import '../../icon/index.css';
+@import '../../reveal/ui-reveal.css';
+@import '../../accordion/ui-accordion.css';
+@import '../../quote/ui-quote.css';
+@import '../../avatar/ui-avatar.css';
+@import '../../progress/ui-progress.css';
+@import '../../rating/ui-rating.css';
+@import '../../timeline/ui-timeline.css';
+@import '../../gradient-text/ui-gradient-text.css';
+@import '../../highlight/ui-highlight.css';
+@import '../ui-card.css';
