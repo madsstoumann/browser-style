@@ -8,14 +8,16 @@
       "description": "Default column card — media on top, 16:9",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(16/9)"
+      "media": "asr(16/9)",
+      "headingTag": "h2"
     },
     "showcase": {
       "name": "Showcase Preset",
       "description": "Column card with a taller 4:3 media frame — products, credentials",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(4/3)"
+      "media": "asr(4/3)",
+      "headingTag": "h2"
     },
     "split": {
       "name": "Split Preset",
@@ -76,7 +78,8 @@
       "variant": "col",
       "media": "asr(16/9)",
       "theme": "gray",
-      "content": "scl(lg)"
+      "content": "scl(lg)",
+      "headingTag": "h2"
     },
     "stack-brand": {
       "name": "Stack Brand Preset",
@@ -84,7 +87,8 @@
       "element": "ui-card",
       "variant": "col",
       "media": "asr(16/9)",
-      "theme": "black dark"
+      "theme": "black dark",
+      "headingTag": "h2"
     },
     "stack-accordion-divided": {
       "name": "Stack Accordion Divided Preset",
@@ -94,7 +98,8 @@
       "media": "asr(16/9)",
       "parts": {
         "accordion": "divided"
-      }
+      },
+      "headingTag": "h2"
     },
     "stack-offer": {
       "name": "Stack Offer Preset",
@@ -102,7 +107,8 @@
       "element": "ui-card",
       "variant": "col",
       "media": "asr(16/9)",
-      "theme": "muted gray"
+      "theme": "muted gray",
+      "headingTag": "h2"
     },
     "stack-accordion": {
       "name": "Stack Accordion Preset",
@@ -112,7 +118,8 @@
       "media": "asr(16/9)",
       "parts": {
         "accordion": "bordered rounded divided"
-      }
+      },
+      "headingTag": "h2"
     },
     "panel-subtle": {
       "name": "Panel Subtle Preset",
@@ -163,7 +170,8 @@
       "description": "Bare <ui-content> column, no card chrome — standalone text sections and full article views. text: body — the long-form body renders instead of the teaser summary (summary as fallback when no body exists).",
       "element": "ui-content",
       "content": "scl(md)",
-      "text": "body"
+      "text": "body",
+      "headingTag": "h2"
     },
     "prose-article": {
       "name": "Prose Article Preset",
@@ -183,7 +191,8 @@
       "description": "Column card whose media items scroll-snap with dot navigation — galleries",
       "element": "ui-card",
       "variant": "col",
-      "media": "asr(16/9) nav(mrk) nav(arw)"
+      "media": "asr(16/9) nav(mrk) nav(arw)",
+      "headingTag": "h2"
     },
     "flip": {
       "name": "Flip Preset",

@@ -30,6 +30,8 @@
 			/* 85%: double-application (byline > dateline) still clears 4.5:1, gray theme included */
 			--ui-content-muted: color-mix(in oklab, currentColor 85%, transparent);
 		}
+		/* type chips keep one look on themed cards too (the theme relay's #666 plate is 4.06:1) */
+		ui-chip[data-type] { --ui-chip-bg: hsl(0, 0%, 95%); --ui-chip-c: hsl(0, 0%, 13%); }
 	</style>
 	<!-- Block first paint (and the incoming snapshot on Back) until the morphing
 	     article card is parsed. Docs: docs/card.md § Article pattern -->
@@ -63,7 +65,7 @@
 				<ui-media><img src="/assets/images/popovers.png" alt="Abstract illustration of layered UI panels" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/popovers.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/popovers.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/popovers.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/popovers.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/popovers.png 1200w" sizes="(min-width: 540px) min(50vw, 512px), 100vw" loading="eager" fetchpriority="high" decoding="async" itemprop="image"><ui-chip data-type>CreativeWork</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow" itemprop="genre">Design</small>
-					<h3 data-part="headline" itemprop="name">A generic piece of content</h3>
+					<h2 data-part="headline" itemprop="name">A generic piece of content</h2>
 					<p data-part="summary" itemprop="description">Anything without a dedicated schema type renders as CreativeWork — headline, summary, tags and actions straight from the envelope.</p>
 					<span data-part="tags"><ui-chip itemprop="keywords"><a href="/tags/generic">generic</a></ui-chip><ui-chip itemprop="keywords">fallback</ui-chip></span>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#" itemprop="url">Read more</a></nav>
@@ -83,7 +85,7 @@
 					<meta itemprop="articleSection" content="Science">
 					<meta itemprop="dateModified" content="2026-06-21T09:00:00Z">
 					<small data-part="eyebrow">Science</small>
-					<h3 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/article.html">Quantum computing reaches a <ui-gradient-text>practical milestone</ui-gradient-text></a></h3>
+					<h2 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/article.html">Quantum computing reaches a <ui-gradient-text>practical milestone</ui-gradient-text></a></h2>
 					<p data-part="summary" itemprop="description">Researchers demonstrate error-corrected logical qubits running a chemistry simulation faster than any classical supercomputer.</p>
 					<p data-part="meta"><small>Updated Jun 21, 2026</small></p>
 					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
@@ -110,7 +112,7 @@
 					<meta itemprop="datePublished" content="2026-07-01T06:15:00Z">
 					<meta itemprop="dateModified" content="2026-07-01T08:40:00Z">
 					<small data-part="eyebrow">Politics</small>
-					<h3 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/news.html">Coalition agrees on sweeping climate package</a></h3>
+					<h2 data-part="headline" itemprop="headline"><a data-part="cover" href="articles/news.html">Coalition agrees on sweeping climate package</a></h2>
 					<p data-part="summary" itemprop="description">The agreement includes a carbon border tariff and a national retrofit programme, ending months of negotiation.</p>
 					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
 						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar2.webp" alt=""></ui-avatar>
@@ -143,7 +145,7 @@
 					<meta itemprop="category" content="Electronics">
 					<meta itemprop="sku" content="WH-1000XM5">
 					<small data-part="eyebrow">Electronics</small>
-					<h3 data-part="headline" itemprop="name">AuraSound Pro Wireless Headphones</h3>
+					<h2 data-part="headline" itemprop="name">AuraSound Pro Wireless Headphones</h2>
 					<p data-part="summary" itemprop="description">Industry-leading noise cancellation, 30-hour battery and multipoint pairing.</p>
 					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
 						<meta itemprop="ratingValue" content="4.5">
@@ -177,7 +179,7 @@
 					<meta itemprop="startDate" content="2026-11-09T09:00:00+00:00">
 					<meta itemprop="endDate" content="2026-11-12T18:00:00+00:00">
 					<small data-part="eyebrow">Conference</small>
-					<h3 data-part="headline" itemprop="name">Web Summit 2026</h3>
+					<h2 data-part="headline" itemprop="name">Web Summit 2026</h2>
 					<p data-part="summary" itemprop="description">Four days of talks on the future of the web platform.</p>
 					<p data-part="meta">Nov 9–12, 2026 · <span itemprop="location" itemscope itemtype="https://schema.org/Place"><span itemprop="name">Altice Arena</span><span itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">, <span itemprop="addressLocality">Lisbon</span></span></span></p>
 					<p data-part="meta" itemprop="organizer" itemscope itemtype="https://schema.org/Organization">Organizer: <span itemprop="name">Web Summit Ltd.</span></p>
@@ -202,7 +204,7 @@
 					<meta itemprop="cookTime" content="PT20M">
 					<meta itemprop="recipeYield" content="4">
 					<small data-part="eyebrow">Pasta</small>
-					<h3 data-part="headline" itemprop="name">Classic Spaghetti Carbonara</h3>
+					<h2 data-part="headline" itemprop="name">Classic Spaghetti Carbonara</h2>
 					<p data-part="summary" itemprop="description">The Roman original — guanciale, pecorino, eggs and pepper. No cream.</p>
 					<p data-part="meta">Prep 15 min · Cook 20 min · Serves 4</p>
 					<ul data-part="list">
@@ -239,7 +241,7 @@
 				<ui-media><img src="/assets/images/soundwavemini.png" alt="SoundWave Mini speaker" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/soundwavemini.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/soundwavemini.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/soundwavemini.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/soundwavemini.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/soundwavemini.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async"><ui-chip data-type>Review</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Verified review</small>
-					<h3 data-part="headline">Punches far above its size</h3>
+					<h2 data-part="headline">Punches far above its size</h2>
 					<div data-part="rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
 						<meta itemprop="ratingValue" content="4">
 						<meta itemprop="bestRating" content="5">
@@ -269,7 +271,7 @@
 					<meta itemprop="validThrough" content="2026-08-15">
 					<meta itemprop="employmentType" content="FULL_TIME">
 					<small data-part="eyebrow">Engineering</small>
-					<h3 data-part="headline" itemprop="title">Senior Frontend Engineer</h3>
+					<h2 data-part="headline" itemprop="title">Senior Frontend Engineer</h2>
 					<p data-part="summary" itemprop="description">Own the design system of a product used by two million people. CSS depth valued over framework trivia.</p>
 					<p data-part="meta">
 						<span itemprop="hiringOrganization" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">Nordlys ApS</span></span> ·
@@ -325,7 +327,7 @@
 						<span itemprop="instructor" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Calm Academy"></span>
 					</div>
 					<small data-part="eyebrow">Wellness</small>
-					<h3 data-part="headline" itemprop="name">Mindfulness Foundations</h3>
+					<h2 data-part="headline" itemprop="name">Mindfulness Foundations</h2>
 					<p data-part="summary" itemprop="description">A six-week guided programme: attention training, body scans and everyday practice.</p>
 					<p data-part="meta">6 weeks · Beginner · 3 hr of study · Instructor: Calm Academy</p>
 					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
@@ -357,7 +359,7 @@
 						<meta itemprop="name" content="Meeting Room Rental">
 					</div>
 					<small data-part="eyebrow">Workspace</small>
-					<h3 data-part="headline" itemprop="name">Book the Loft meeting room</h3>
+					<h2 data-part="headline" itemprop="name">Book the Loft meeting room</h2>
 					<p data-part="summary" itemprop="description">A quiet 8-person room above the café — whiteboard wall, 4K display and bottomless filter coffee.</p>
 					<p data-part="meta"><span itemprop="provider" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">Brew &amp; Bean</span></span> · Capacity 8 · Min. 1 hour · Free cancellation up to 24 h</p>
 					<p data-part="price"><data value="45">$45</data>/hour</p>
@@ -377,7 +379,7 @@
 				<ui-content>
 					<meta itemprop="answerCount" content="3">
 					<small data-part="eyebrow">Community poll</small>
-					<h3 data-part="headline" itemprop="name">Which CSS feature changed your workflow the most?</h3>
+					<h2 data-part="headline" itemprop="name">Which CSS feature changed your workflow the most?</h2>
 					<ul data-part="options">
 						<li itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer">
 							<label><input type="radio" class="--check" name="poll-css"> <span itemprop="text">Container queries</span></label>
@@ -401,7 +403,7 @@
 				<ui-media><img src="/assets/images/janesmith.png" alt="Portrait of Jane Smith" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/janesmith.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/janesmith.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/janesmith.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/janesmith.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/janesmith.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Person</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Team</small>
-					<h3 data-part="headline" itemprop="name">Jane Smith</h3>
+					<h2 data-part="headline" itemprop="name">Jane Smith</h2>
 					<p data-part="subheadline"><span itemprop="jobTitle">Chief Political Correspondent</span> · <span itemprop="worksFor" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">The Daily Ledger</span></span></p>
 					<p data-part="summary" itemprop="description">Covers elections and policy across Europe. Two decades on the beat, one Pulitzer nomination.</p>
 					<p data-part="meta" itemprop="address">Copenhagen, Denmark</p>
@@ -419,7 +421,7 @@
 				<ui-media><img src="/assets/images/faq.png" alt="Illustration of question marks and answer panels" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/faq.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/faq.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/faq.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/faq.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/faq.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>FAQPage</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Support</small>
-					<h3 data-part="headline" itemprop="name">Frequently asked questions</h3>
+					<h2 data-part="headline" itemprop="name">Frequently asked questions</h2>
 					<ui-accordion variant="divided" group="faq-demo"><cq-box>
 						<details name="faq-demo" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
 							<summary><span itemprop="name">How do I reset my password?</span><ui-icon type="plus-minus"></ui-icon></summary>
@@ -448,7 +450,7 @@
 				<ui-media><img src="/assets/images/world.png" alt="World map lit at night" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/world.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/world.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/world.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/world.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/world.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>EventSeries</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Company history</small>
-					<h3 data-part="headline" itemprop="name">A decade of browser.style</h3>
+					<h2 data-part="headline" itemprop="name">A decade of browser.style</h2>
 					<ol data-part="timeline" data-variant="minimal">
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
 							<meta itemprop="startDate" content="2016">
@@ -484,7 +486,7 @@
 				<ui-media><img src="/assets/images/world.png" alt="World map lit at night" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/world.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/world.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/world.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/world.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/world.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>EventSeries</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Company history</small>
-					<h3 data-part="headline" itemprop="name">Horizontal — <code>variant="horizontal"</code></h3>
+					<h2 data-part="headline" itemprop="name">Horizontal — <code>variant="horizontal"</code></h2>
 					<ol data-part="timeline" data-variant="horizontal">
 						<li itemprop="subEvent" itemscope itemtype="https://schema.org/Event">
 							<meta itemprop="startDate" content="2016">
@@ -525,7 +527,7 @@
 				<ui-chip data-type>ImageGallery</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Photo album</small>
-					<h3 data-part="headline" itemprop="name">Four seasons</h3>
+					<h2 data-part="headline" itemprop="name">Four seasons</h2>
 					<p data-part="summary" itemprop="description">One year, one forest — 4 of 48 photos.</p>
 					<span data-part="tags"><ui-chip itemprop="keywords">nature</ui-chip><ui-chip itemprop="keywords">seasons</ui-chip></span>
 				</ui-content>
@@ -536,7 +538,7 @@
 				<ui-media><img src="/assets/images/finance.png" alt="Trading charts on a dark screen" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/finance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Observation</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">This quarter</small>
-					<h3 data-part="headline" itemprop="name">Monthly active users</h3>
+					<h2 data-part="headline" itemprop="name">Monthly active users</h2>
 					<p data-part="stat" itemprop="value" itemscope itemtype="https://schema.org/QuantitativeValue">
 						<data itemprop="value" value="2400000">2.4</data><small itemprop="unitText">M</small>
 						<span>▲ 12%</span>
@@ -550,7 +552,7 @@
 				<ui-media><img src="/assets/images/finance.png" alt="Trading charts on a dark screen" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/finance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/finance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/finance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/finance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/finance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Observation</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">Core Web Vitals</small>
-					<h3 data-part="headline" itemprop="name">Median LCP</h3>
+					<h2 data-part="headline" itemprop="name">Median LCP</h2>
 					<p data-part="stat" itemprop="value" itemscope itemtype="https://schema.org/QuantitativeValue">
 						<data itemprop="value" value="1.4">1.4</data><small itemprop="unitText">s</small>
 						<span>▼ 0.3s</span>
@@ -570,7 +572,7 @@
 					<meta itemprop="educationalLevel" content="Advanced">
 					<meta itemprop="identifier" content="AWA-2026-8841">
 					<small data-part="eyebrow">Credential</small>
-					<h3 data-part="headline" itemprop="name">Advanced Web Accessibility</h3>
+					<h2 data-part="headline" itemprop="name">Advanced Web Accessibility</h2>
 					<p data-part="summary" itemprop="description">Demonstrated expertise in WCAG 2.2, ARIA patterns and assistive technology testing.</p>
 					<p data-part="meta"><ui-chip theme="pale green">Certified</ui-chip></p>
 					<p data-part="meta">Issued by <span itemprop="recognizedBy" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">IAAP</span></span> · Mar 2026 · Expires Mar 2029 · ID AWA-2026-8841</p>
@@ -587,7 +589,7 @@
 					<meta itemprop="expires" content="2026-07-06">
 					<meta itemprop="spatialCoverage" content="Global">
 					<small data-part="eyebrow">Maintenance</small>
-					<h3 data-part="headline" itemprop="name">Scheduled maintenance — July 5</h3>
+					<h2 data-part="headline" itemprop="name">Scheduled maintenance — July 5</h2>
 					<p data-part="summary" itemprop="text">The API will be unavailable Saturday July 5, 02:00–04:00 UTC while we migrate the primary database.</p>
 					<p data-part="meta">Maintenance · Jul 5, 02:00 UTC – 04:00 UTC</p>
 					<p data-part="meta"><ui-chip theme="pale red">High priority</ui-chip></p>
@@ -609,7 +611,7 @@
 						<meta itemprop="longitude" content="12.5683">
 					</div>
 					<small data-part="eyebrow">Café</small>
-					<h3 data-part="headline" itemprop="name">Brew &amp; Bean</h3>
+					<h2 data-part="headline" itemprop="name">Brew &amp; Bean</h2>
 					<p data-part="summary" itemprop="description">Specialty coffee, fresh pastry and the city’s calmest workspace corner.</p>
 					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
 						<span><span itemprop="streetAddress">Kaffegade 12</span></span>
@@ -659,7 +661,7 @@
 				<ui-content>
 					<meta itemprop="numberOfItems" content="3">
 					<small data-part="eyebrow">Buyer’s guide</small>
-					<h3 data-part="headline" itemprop="name">Portable speakers compared</h3>
+					<h2 data-part="headline" itemprop="name">Portable speakers compared</h2>
 					<ul data-part="options">
 						<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 							<meta itemprop="position" content="1">
@@ -691,7 +693,7 @@
 					<meta itemprop="availableLanguage" content="Danish">
 					<meta itemprop="availableLanguage" content="German">
 					<small data-part="eyebrow">Support</small>
-					<h3 data-part="headline">Talk to a human</h3>
+					<h2 data-part="headline">Talk to a human</h2>
 					<p data-part="summary" itemprop="description">Real people, no phone trees. Average response under 2 hours.</p>
 					<p data-part="meta">Customer Success · Mon–Fri 9–17 CET · English, Danish, German · Replies within 2 hours</p>
 					<nav data-part="actions">
@@ -710,7 +712,7 @@
 						<meta itemprop="longitude" content="14.7009">
 					</div>
 					<small data-part="eyebrow">Destination</small>
-					<h3 data-part="headline" itemprop="name">Hammershus Point</h3>
+					<h2 data-part="headline" itemprop="name">Hammershus Point</h2>
 					<p data-part="summary" itemprop="description">Northern Europe’s largest castle ruin, perched on Bornholm’s granite cliffs.</p>
 					<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
 						<span><span itemprop="addressLocality">Allinge</span></span>
@@ -749,7 +751,7 @@
 				<ui-content>
 					<span itemprop="eligibleDuration" itemscope itemtype="https://schema.org/QuantitativeValue" hidden><meta itemprop="value" content="14"><meta itemprop="unitCode" content="DAY"></span>
 					<small data-part="eyebrow">Membership</small>
-					<h3 data-part="headline" itemprop="name">FitTrack Pro</h3>
+					<h2 data-part="headline" itemprop="name">FitTrack Pro</h2>
 					<p data-part="meta"><ui-chip theme="pale accent">Most popular</ui-chip></p>
 					<p data-part="summary" itemprop="description">Unlimited workouts, personal coaching and priority support.</p>
 					<p data-part="price" itemprop="priceSpecification" itemscope itemtype="https://schema.org/PriceSpecification">
@@ -809,7 +811,7 @@
 					<meta itemprop="operatingSystem" content="Windows">
 					<meta itemprop="operatingSystem" content="Switch">
 					<small data-part="eyebrow">Adventure game</small>
-					<h3 data-part="headline" itemprop="name">Pixel Raiders</h3>
+					<h2 data-part="headline" itemprop="name">Pixel Raiders</h2>
 					<p data-part="meta"><ui-chip theme="pale accent">v<span itemprop="softwareVersion">2.1</span></ui-chip></p>
 					<p data-part="summary" itemprop="description">Co-op dungeon crawling for up to four raiders — new Sky Fortress season, cross-play everywhere.</p>
 					<p data-part="meta">macOS · Windows · Switch · 2.4 GB</p>
@@ -835,7 +837,7 @@
 					<meta itemprop="sameAs" content="https://x.com/northwindgroup">
 					<span itemprop="numberOfEmployees" itemscope itemtype="https://schema.org/QuantitativeValue" hidden><meta itemprop="value" content="1240"></span>
 					<small data-part="eyebrow">Consulting</small>
-					<h3 data-part="headline" itemprop="name">Northwind Group</h3>
+					<h2 data-part="headline" itemprop="name">Northwind Group</h2>
 					<p data-part="summary" itemprop="description">Engineering and design consultancy — headquartered in Copenhagen, with local offices across Northern Europe.</p>
 					<p data-part="meta">1,240 employees · Founded 1998</p>
 					<div itemprop="location" itemscope itemtype="https://schema.org/Place" hidden>
@@ -933,7 +935,7 @@
 				<ui-media><video src="/assets/video/river.mp4" playsinline controls poster="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/river.png" preload="metadata" aria-label="Slow drone shot following a river between meadows"><meta itemprop="contentUrl" content="/assets/video/river.mp4"><meta itemprop="thumbnailUrl" content="/assets/images/river.png"><meta itemprop="uploadDate" content="2026-05-14T10:00:00Z"><meta itemprop="duration" content="PT3M24S"></video><ui-chip data-type>VideoObject</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow" itemprop="genre">Documentary</small>
-					<h3 data-part="headline" itemprop="name">The River, Slowly</h3>
+					<h2 data-part="headline" itemprop="name">The River, Slowly</h2>
 					<p data-part="summary" itemprop="description">A quiet study of a lowland river through one summer — shot at water level.</p>
 					<p data-part="meta"><ui-chip theme="pale accent">3:24</ui-chip></p>
 					<p data-part="meta" itemprop="creator" itemscope itemtype="https://schema.org/Person">By <span itemprop="name">Nørre Films</span></p>
@@ -952,7 +954,7 @@
 					<meta itemprop="totalTime" content="PT10M">
 					<span itemprop="estimatedCost" itemscope itemtype="https://schema.org/MonetaryAmount" hidden><meta itemprop="currency" content="EUR"><meta itemprop="value" content="5"></span>
 					<small data-part="eyebrow">Home maintenance</small>
-					<h3 data-part="headline" itemprop="name">Bleed a radiator in four steps</h3>
+					<h2 data-part="headline" itemprop="name">Bleed a radiator in four steps</h2>
 					<p data-part="summary" itemprop="description">Cold at the top, warm at the bottom? Trapped air. Ten minutes and a radiator key fix it.</p>
 					<p data-part="meta">Takes 10 min · ~€5 · Easy</p>
 					<ul data-part="list">
@@ -991,7 +993,7 @@
 				<ui-media><img src="/assets/images/qa.png" alt="Developer community forum illustration" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/qa.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/qa.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/qa.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/qa.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/qa.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>QAPage</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow">CSS</small>
-					<h3 data-part="headline" itemprop="name">How do I center a div in 2026?</h3>
+					<h2 data-part="headline" itemprop="name">How do I center a div in 2026?</h2>
 					<p data-part="summary" itemprop="description">Community answers, ranked by votes.</p>
 					<div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
 						<meta itemprop="name" content="How do I center a div in 2026?">
@@ -1025,7 +1027,7 @@
 					<meta itemprop="duration" content="PT2M49S">
 					<div itemprop="partOfSeries" itemscope itemtype="https://schema.org/PodcastSeries" hidden><meta itemprop="name" content="The Calm Mind"></div>
 					<small data-part="eyebrow">Podcast</small>
-					<h3 data-part="headline" itemprop="name">Digital minimalism, revisited</h3>
+					<h2 data-part="headline" itemprop="name">Digital minimalism, revisited</h2>
 					<p data-part="summary" itemprop="description">What actually stuck three years after the digital-declutter wave — with researcher Ida Månsson.</p>
 					<p data-part="meta">The Calm Mind · Episode 42 · 2:49</p>
 					<meta itemprop="datePublished" content="2026-07-30T06:00:00Z">
@@ -1040,7 +1042,7 @@
 					<meta itemprop="contentRating" content="PG-13">
 					<meta itemprop="dateCreated" content="2026-02-12">
 					<small data-part="eyebrow" itemprop="genre">Science fiction</small>
-					<h3 data-part="headline" itemprop="name">Echoes of Tomorrow</h3>
+					<h2 data-part="headline" itemprop="name">Echoes of Tomorrow</h2>
 					<p data-part="summary" itemprop="description">A signal from a decommissioned satellite starts predicting tomorrow's news — one broadcast at a time.</p>
 					<p data-part="meta">Feb 2026 · 2 h 14 min · PG-13</p>
 					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
@@ -1064,7 +1066,7 @@
 					<meta itemprop="numberOfPages" content="312">
 					<meta itemprop="bookFormat" content="https://schema.org/Hardcover">
 					<small data-part="eyebrow" itemprop="genre">Cookbook</small>
-					<h3 data-part="headline" itemprop="name">The Nordic Pantry</h3>
+					<h2 data-part="headline" itemprop="name">The Nordic Pantry</h2>
 					<p data-part="summary" itemprop="description">120 recipes built on what a northern larder actually holds — rye, root vegetables, brine and smoke.</p>
 					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
 						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar4.webp" alt=""></ui-avatar>
@@ -1099,7 +1101,7 @@
 					<meta itemprop="variableMeasured" content="Orbital period">
 					<meta itemprop="variableMeasured" content="Stellar magnitude">
 					<small data-part="eyebrow">Open data</small>
-					<h3 data-part="headline" itemprop="name">Exoplanet transit observations 2019–2025</h3>
+					<h2 data-part="headline" itemprop="name">Exoplanet transit observations 2019–2025</h2>
 					<p data-part="summary" itemprop="description">Light-curve measurements for 1,142 confirmed exoplanet transits, cleaned and de-trended.</p>
 					<p data-part="meta">2019-01/2025-12 · Kepler field · CC BY 4.0</p>
 					<ul data-part="list">
@@ -1120,7 +1122,7 @@
 				<ui-content>
 					<meta itemprop="datePublished" content="2026-07-28">
 					<small data-part="eyebrow">Fact check</small>
-					<h3 data-part="headline" itemprop="name">Did the harbour bridge cost twice its budget?</h3>
+					<h2 data-part="headline" itemprop="name">Did the harbour bridge cost twice its budget?</h2>
 					<p data-part="summary" itemprop="description">Public records show the final cost came in 18% over the approved budget — high, but nowhere near double.</p>
 					<p data-part="meta" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
 						<meta itemprop="ratingValue" content="2">
