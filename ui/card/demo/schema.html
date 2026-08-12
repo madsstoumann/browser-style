@@ -1474,7 +1474,8 @@
 		</ui-card>
 	</lay-out>
 	</section>
-	<!-- optional: media invoker-command polyfill for the podcast <ui-play> button -->
-	<script type="module" src="../video.js"></script>
+	<!-- optional: media invoker-command polyfill for the podcast <ui-play> button.
+	     The bundled build — the source's shared.js import adds a sequential request chain -->
+	<script type="module" src="../video.min.js"></script>
 </body>
 </html>
