@@ -12,6 +12,22 @@
 	<!-- One bundle for every card-demo package (source list: ui/card/components.md).
 	     Build: npm run build:demo-css (entry demo.css, output /dist/demo.min.css) -->
 	<link rel="stylesheet" href="/dist/demo.min.css">
+	<style>
+		/* Page-scoped WCAG AA contrast overrides — pending a token retune in ui/base/tokens.css.
+		   Unlayered on purpose: beats the bs-core layer. Pale chip ink = the raw hue token
+		   (theme.css pale chain), so darkening a hue fixes pale ink + white-on-solid together. */
+		:root {
+			--color-link: light-dark(hsl(221, 100%, 44%), hsl(221, 70%, 70%));
+			--color-accent: light-dark(hsl(211, 100%, 38%), hsl(211, 70%, 72%));
+			--color-success: light-dark(hsl(136, 45%, 30%), hsl(136, 25%, 60%));
+			--color-error: light-dark(hsl(360, 65%, 41%), hsl(360, 45%, 62%));
+			--color-text-muted: light-dark(hsl(0, 0%, 42%), hsl(0, 0%, 65%));
+		}
+		ui-content {
+			/* 85%: double-application (byline > dateline) still clears 4.5:1, gray theme included */
+			--ui-content-muted: color-mix(in oklab, currentColor 85%, transparent);
+		}
+	</style>
 	<!-- Block first paint (and the incoming snapshot on Back) until the morphing
 	     article card is parsed. Docs: docs/card.md § Article pattern -->
 	<link rel="expect" href="#schema-article" blocking="render">
@@ -29,6 +45,10 @@
 	<p class="note">The matching CMS content model is <a href="../../../cms/baseline/models/card.schema.json"><code>cms/baseline/models/card.schema.json</code></a>: a structured envelope + <code>schemaType</code> discriminator + one <code>details</code> object per type. See also: <a href="cards.html">cards.html</a> · <a href="media.html">media.html</a> · <a href="content.html">content.html</a>.</p>
 
 	</header>
+
+	<!-- data-layout-root repeats here: row-gap only reaches direct grid children,
+	     so the sections need the grid on <main> itself (body keeps header ↔ main gap) -->
+	<main data-layout-root data-page-gap="2">
 
 	<!-- <section>
 	<h2>Structured <code>data-part</code> vocabulary</h2>
@@ -205,7 +225,7 @@
 					<p data-part="meta"><small>Valid until Aug 1, 2026</small></p>
 					<p data-part="meta"><ui-chip theme="pale green">In stock</ui-chip></p>
 					<span data-part="tags"><ui-chip itemprop="keywords">Wireless</ui-chip><ui-chip itemprop="keywords">Noise Cancelling</ui-chip></span>
-					<nav data-part="actions"><button class="ui-button" type="button" data-variant="accent" aria-label="Add AuraSound Pro to cart">Add to cart</button> <a class="ui-button" href="#">Details</a></nav>
+					<nav data-part="actions"><button class="ui-button" type="button" data-variant="accent" aria-label="Add to cart: AuraSound Pro">Add to cart</button> <a class="ui-button" href="#">Details</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -1474,6 +1494,7 @@
 		</ui-card>
 	</lay-out>
 	</section>
+	</main>
 	<!-- optional: media invoker-command polyfill for the podcast <ui-play> button.
 	     The bundled build — the source's shared.js import adds a sequential request chain -->
 	<script type="module" src="../video.min.js"></script>
