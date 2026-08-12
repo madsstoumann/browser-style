@@ -6747,29 +6747,12 @@
       }
     }
   }
-  :where(ui-beacon[variant~=ticker], [media*="beacon(tck)"] ui-beacon) {
-    background: var(--ui-beacon-bg, color-mix(in oklch, var(--ui-beacon-accent) var(--ui-beacon-tint), var(--color-surface)));
+  :where(ui-beacon[variant~=ticker], [media*="beacon(tck)"] ui-beacon, ui-beacon[variant~=loader], [media*="beacon(ldr)"] ui-beacon) {
     border-radius: var(--ui-beacon-radius, var(--radius-sm));
     color: var(--ui-beacon-c);
-    direction: ltr;
-    isolation: isolate;
-    overflow: hidden;
     padding-block: var(--ui-beacon-padding-block);
     padding-inline: var(--ui-beacon-padding-inline) calc(var(--ui-beacon-dots-inset) + var(--ui-beacon-padding-inline) + var(--ui-beacon-dots-width));
     position: relative;
-    text-indent: var(--_bcn-slide);
-    &::before {
-      background: var(--ui-beacon-accent);
-      border-radius: inherit;
-      content: "";
-      height: auto;
-      inset: 0;
-      opacity: var(--_bcn-fade);
-      position: absolute;
-      translate: var(--_bcn-slide) 0;
-      width: auto;
-      z-index: -1;
-    }
     &::after {
       --_g:
         no-repeat radial-gradient(
@@ -6792,12 +6775,39 @@
       width: var(--ui-beacon-dots-width);
     }
     @media (prefers-reduced-motion: no-preference) {
-      & {
-        animation: beacon-slide var(--ui-beacon-slide-duration, 5s) var(--ui-beacon-delay) infinite linear;
-      }
       &::after {
         animation: beacon-dots var(--ui-beacon-dots-duration, 1.5s) var(--ui-beacon-delay) infinite linear;
       }
+    }
+  }
+  :where(ui-beacon[variant~=ticker], [media*="beacon(tck)"] ui-beacon) {
+    background: var(--ui-beacon-bg, color-mix(in oklch, var(--ui-beacon-accent) var(--ui-beacon-tint), var(--color-surface)));
+    direction: ltr;
+    isolation: isolate;
+    overflow: hidden;
+    text-indent: var(--_bcn-slide);
+    &::before {
+      background: var(--ui-beacon-accent);
+      border-radius: inherit;
+      content: "";
+      height: auto;
+      inset: 0;
+      opacity: var(--_bcn-fade);
+      position: absolute;
+      translate: var(--_bcn-slide) 0;
+      width: auto;
+      z-index: -1;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      & {
+        animation: beacon-slide var(--ui-beacon-slide-duration, 5s) var(--ui-beacon-delay) infinite linear;
+      }
+    }
+  }
+  :where(ui-beacon[variant~=loader], [media*="beacon(ldr)"] ui-beacon) {
+    background: var(--ui-beacon-bg, var(--ui-beacon-accent));
+    &::before {
+      display: none;
     }
   }
   :where(ui-beacon[variant~=dots], [media*="beacon(dts)"] ui-beacon)::before {

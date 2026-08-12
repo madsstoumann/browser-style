@@ -136,6 +136,19 @@ Slide-out / slide-in compound animation with a trailing 3-dot loader.
 <ui-beacon variant="ticker" theme="red">Live</ui-beacon>
 ```
 
+### Loader — `variant="loader"`
+
+The ticker's static twin: the same solid plate and trailing 3-dot loader, **without the
+slide**. Use it where tickers would multiply (feeds, dashboards): the slide clock is the
+expensive part (a registered custom property driving `text-indent` — per-frame style +
+layout on the main thread, ~87 ms/2.5 s idle); the dot loader alone is paint-only
+(~37 ms/2.5 s). See `docs/gpu-performance.md` for the measured ladder.
+
+```html
+<ui-beacon variant="loader" theme="red">Live</ui-beacon>
+<!-- media token form: media="beacon(red) beacon(ldr)" -->
+```
+
 ---
 
 ## Animations
@@ -292,7 +305,7 @@ one axis per token):
 | position | `beacon(ts…be)` | 9-cell furniture grid; default `ts` — same cell as the chip, so position one explicitly when a frame carries both |
 | hue | `beacon(red\|orange\|green\|blue\|accent\|white\|gray\|slate\|black)` | same `--ui-theme-*` bundles as `chip()`/`sticker()` |
 | hue modifier | `beacon(pale)` · `beacon(muted)` | pale = light tint + hue ink · muted = translucent plate; add alongside a hue, e.g. `beacon(red) beacon(pale)` |
-| face | `beacon(dts)` dots · `beacon(pll)` pill · `beacon(sld)` solid · `beacon(tck)` ticker | over imagery prefer these — the bare dot has no contrast plate |
+| face | `beacon(dts)` dots · `beacon(pll)` pill · `beacon(sld)` solid · `beacon(tck)` ticker · `beacon(ldr)` loader (ticker minus the slide) | over imagery prefer these — the bare dot has no contrast plate |
 | animation | `beacon(bln)` blink · `beacon(pls)` pulse · `beacon(brt)` breathe · `beacon(non)` off | solid defaults to blink |
 | size | `beacon(xs\|sm\|md\|lg\|xl\|2xl)` | same em scale as the `size=` attribute |
 | corner | `beacon(rnd\|sqr)` | plated faces only; `pll`/`non` belong to the face and animation axes |

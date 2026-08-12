@@ -802,6 +802,7 @@ export default {
 						"face": [
 							"sld",
 							"tck",
+							"ldr",
 							"dts"
 						],
 						"anim": [

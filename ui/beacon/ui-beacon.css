@@ -134,34 +134,17 @@
 		}
 	}
 
-	/* ticker — markup-free sliding panel + dot loader, pinned LTR (signed
-	   percentages desynchronise under rtl). Docs: readme.md § Ticker */
-	:where(ui-beacon[variant~="ticker"], [media*="beacon(tck)"] ui-beacon) {
-		background: var(--ui-beacon-bg, color-mix(in oklch, var(--ui-beacon-accent) var(--ui-beacon-tint), var(--color-surface)));
+	/* ticker + loader — shared plate geometry and trailing 3-dot loader. The
+	   --_bcn-* hooks sit at their inert initial values (1 / 0%) in the loader;
+	   only the ticker animates them. Docs: readme.md § Ticker, § Loader */
+	:where(ui-beacon[variant~="ticker"], [media*="beacon(tck)"] ui-beacon,
+	       ui-beacon[variant~="loader"], [media*="beacon(ldr)"] ui-beacon) {
 		border-radius: var(--ui-beacon-radius, var(--radius-sm));
 		color: var(--ui-beacon-c);
-		direction: ltr;
-		isolation: isolate;
-		overflow: hidden;
 		padding-block: var(--ui-beacon-padding-block);
 		/* reserve the dot-loader area at the inline end */
 		padding-inline: var(--ui-beacon-padding-inline) calc(var(--ui-beacon-dots-inset) + var(--ui-beacon-padding-inline) + var(--ui-beacon-dots-width));
 		position: relative;
-		text-indent: var(--_bcn-slide);
-
-		/* sliding coloured panel */
-		&::before {
-			background: var(--ui-beacon-accent);
-			border-radius: inherit;
-			content: "";
-			height: auto;
-			inset: 0;
-			opacity: var(--_bcn-fade);
-			position: absolute;
-			translate: var(--_bcn-slide) 0;
-			width: auto;
-			z-index: -1;
-		}
 
 		/* 3-dot loader — currentColor, pinned inline-end */
 		&::after {
@@ -183,9 +166,44 @@
 		}
 
 		@media (prefers-reduced-motion: no-preference) {
-			& { animation: beacon-slide var(--ui-beacon-slide-duration, 5s) var(--ui-beacon-delay) infinite linear; }
 			&::after { animation: beacon-dots var(--ui-beacon-dots-duration, 1.5s) var(--ui-beacon-delay) infinite linear; }
 		}
+	}
+
+	/* ticker — the sliding panel + text, pinned LTR (signed percentages
+	   desynchronise under rtl). Docs: readme.md § Ticker */
+	:where(ui-beacon[variant~="ticker"], [media*="beacon(tck)"] ui-beacon) {
+		background: var(--ui-beacon-bg, color-mix(in oklch, var(--ui-beacon-accent) var(--ui-beacon-tint), var(--color-surface)));
+		direction: ltr;
+		isolation: isolate;
+		overflow: hidden;
+		text-indent: var(--_bcn-slide);
+
+		/* sliding coloured panel */
+		&::before {
+			background: var(--ui-beacon-accent);
+			border-radius: inherit;
+			content: "";
+			height: auto;
+			inset: 0;
+			opacity: var(--_bcn-fade);
+			position: absolute;
+			translate: var(--_bcn-slide) 0;
+			width: auto;
+			z-index: -1;
+		}
+
+		@media (prefers-reduced-motion: no-preference) {
+			& { animation: beacon-slide var(--ui-beacon-slide-duration, 5s) var(--ui-beacon-delay) infinite linear; }
+		}
+	}
+
+	/* loader — the ticker's static twin: solid plate, no slide clock (paint-only
+	   dots, no per-frame layout). Docs: readme.md § Loader */
+	:where(ui-beacon[variant~="loader"], [media*="beacon(ldr)"] ui-beacon) {
+		background: var(--ui-beacon-bg, var(--ui-beacon-accent));
+
+		&::before { display: none; }
 	}
 
 	/* dots — three background layers hopping via background-position Y; the box
