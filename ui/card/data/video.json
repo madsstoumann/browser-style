@@ -24,11 +24,17 @@
         "mediaType": "video",
         "src": "/assets/video/river.mp4",
         "poster": "/assets/images/river.png",
+        "controls": false,
         "alt": "Slow drone shot following a river between meadows",
         "uploadDate": "2026-05-14T10:00:00Z",
         "duration": "PT3M24S"
       }
     ],
+    "furniture": {
+      "play": {
+        "label": "Play video"
+      }
+    },
     "engagement": {
       "viewCount": 48211
     },

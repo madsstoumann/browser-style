@@ -110,6 +110,37 @@ the 85% mix survives one compounding step, but the real fix is stopping the doub
 in `content.css`. Structural: `<main data-layout-root>` landmark (row-gap needs the direct
 parent), and the cart button's visible text made a contiguous part of its `aria-label`.
 
+## The ticker beacon — a knowingly-paid animation cost
+
+The NewsArticle card's "Live" indicator (`beacon(red) beacon(tck)`) is the catalog's most
+expensive always-running animation: **~35 ms/s of main-thread time** (`beacon-slide` ~87 ms +
+`beacon-dots` ~37 ms per 2.5 s idle — `docs/gpu-performance.md`). Why: the ticker is markup-free,
+so the element's *own text* must move — only `text-indent` (a **layout** property) can do that —
+and text, panel (`::before`) and dot-loader (`::after`) are phase-locked through a registered,
+inheriting custom property (`--_bcn-slide`). Custom-property animations can't be composited: the
+main thread interpolates the clock and re-resolves every dependent declaration each frame
+(style → layout → paint). PSI reports it as "non-composited animations".
+
+**The cost scales linearly with instance count** — each ticker is its own per-frame invalidation
+island, and off-screen tickers still pay style+layout (only paint is skipped). One hero ticker
+per view is the intended shape; for live badges across a feed use `bln` (~4 ms/s, composited
+`opacity`) or `non` (0), and put `content-visibility: auto` on off-screen rows.
+
+**Possible upgrade (not built): a composited dual-mode ticker.** With a real child —
+`<ui-beacon><span>Live</span></ui-beacon>` — all three movers become plain `transform`/`opacity`
+keyframes (same duration/easing = frame-locked without the shared variable; the `color: #0000`
+hide becomes span `opacity`), and the main-thread cost drops to ~0. Gate the fast path on
+`ui-beacon:has(> span)`, keep bare text on the current engine, teach `render.js` to emit the
+span — old markup keeps working, heavy pages opt in. Worth building the day beacons appear in
+multiples; over-engineering for this page's single instance.
+
+## Validator noise (not bugs)
+
+- `<link rel="expect" href="#schema-article" blocking="render">` — the W3C validator flags
+  "blocking requires rel=stylesheet". Stale rule: `rel=expect` + `blocking=render` is in the
+  WHATWG HTML spec (whatwg/html #9970) and is what keeps the article-morph snapshot correct.
+  Keep the element; ignore the validator until it catches up.
+
 ## Still open
 
 - Port the contrast values into the global tokens; fix muted compounding in `content.css`.

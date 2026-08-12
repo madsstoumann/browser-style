@@ -932,7 +932,10 @@
 		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/VideoObject">
 			<cq-box>
-				<ui-media><video src="/assets/video/river.mp4" playsinline controls poster="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/river.png" preload="metadata" aria-label="Slow drone shot following a river between meadows"><meta itemprop="contentUrl" content="/assets/video/river.mp4"><meta itemprop="thumbnailUrl" content="/assets/images/river.png"><meta itemprop="uploadDate" content="2026-05-14T10:00:00Z"><meta itemprop="duration" content="PT3M24S"></video><ui-chip data-type>VideoObject</ui-chip></ui-media>
+				<ui-media>
+					<video id="video-river" src="/assets/video/river.mp4" playsinline poster="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/river.png" preload="metadata" aria-label="Slow drone shot following a river between meadows"><meta itemprop="contentUrl" content="/assets/video/river.mp4"><meta itemprop="thumbnailUrl" content="/assets/images/river.png"><meta itemprop="uploadDate" content="2026-05-14T10:00:00Z"><meta itemprop="duration" content="PT3M24S"></video>
+					<ui-play><button type="button" command="--play-pause" commandfor="video-river" aria-label="Play video"><ui-icon type="play-pause"></ui-icon></button></ui-play>
+				<ui-chip data-type>VideoObject</ui-chip></ui-media>
 				<ui-content>
 					<small data-part="eyebrow" itemprop="genre">Documentary</small>
 					<h2 data-part="headline" itemprop="name">The River, Slowly</h2>
