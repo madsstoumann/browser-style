@@ -8,6 +8,9 @@
 	<!-- srcset uses absolute v4.browser.style CDN URLs; the zone's Hotlink Protection
 	     403s any cross-origin Referer (pages.dev, localhost) — no-referrer passes -->
 	<meta name="referrer" content="no-referrer">
+	<!-- srcset origin: handshake in parallel with the CSS download (~3 RTTs off the
+	     eager LCP image on pages.dev/localhost; same-origin no-op on v4.browser.style) -->
+	<link rel="preconnect" href="https://v4.browser.style">
 	<meta name="description" content="All 34 schema.org card types — the 25 legacy content-card types plus the v1.3 additions — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
 	<!-- One bundle for every card-demo package (source list: ui/card/components.md).
 	     Build: npm run build:demo-css (entry demo.css, output /dist/demo.min.css) -->
@@ -36,6 +39,13 @@
 	     so a deferred script names the targets too late and the forward morph
 	     degrades to a cross-fade. Docs: ui/base/polyfills/readme.md -->
 	<script type="module" src="/ui/base/polyfills/attr-fallback.js" blocking="render"></script>
+	<!-- Prerender the morph targets on hover — prerender + cross-document view
+	     transitions make the article morph instant. Chromium-only, inert elsewhere -->
+	<script type="speculationrules">
+	{
+		"prerender": [{ "urls": ["articles/article.html", "articles/news.html"], "eagerness": "moderate" }]
+	}
+	</script>
 
 </head>
 <body data-layout-root data-page-gap="2">
