@@ -135,6 +135,9 @@ let IMG = null;
 const setImages = (images) => {
 	IMG = images ? { ...IMG_DEFAULTS, ...images, base: images.cdnBase ?? images.base ?? '' } : null;
 };
+/* demo affordance (options.typeChip): a <ui-chip data-type> naming the card's resolved
+   schema.org type on each frame — top end unless other furniture already claims te */
+let TYPE_CHIP = false;
 /* same eligibility as ui-media-srcset.js #eligible(): local paths only */
 const cdnEligible = (src) => !!(IMG && src && !/^https?:\/\//i.test(src) && !src.startsWith('data:') && !src.startsWith('blob:'));
 /* fixed-size images (thumbs, avatars): square 1x/2x pair instead of a width ladder */
@@ -664,6 +667,14 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 	const mediaId = ((fields.furniture?.save || fields.furniture?.lightbox) && cardId) ? `${cardId}-media` : null;
 	const lightbox = buildLightbox(fields.furniture, tokens, mediaId);
 	const furniture = buildFurniture(fields.furniture, fields, tokens, mediaId, videoId ? null : playId);
+	let typeChip = '';
+	if (TYPE_CHIP && !fields.furniture?.chip) {
+		/* one chip family per frame: an existing furniture chip owns the tokens — skip.
+		   te is taken when any furniture style names it (product's sticker) — chip default (ts) then */
+		const teTaken = Object.values(fields.furniture || {}).some((f) => ` ${f?.style || ''} `.includes(' te '));
+		if (!teTaken) tokens.media.push('chip(te)');
+		typeChip = `<ui-chip data-type>${esc(resolveItemtype(type, fields))}</ui-chip>`;
+	}
 	const html = `<ui-media${attrs({
 		id: mediaId,
 		popover: fields.furniture?.lightbox ? true : null,
@@ -672,7 +683,7 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 		'media-open': (fields.furniture?.lightbox && preset['media-open']) || null,
 		...(embed || {}),
 		...frameAttrs
-	})}>${lightbox}${frames}${furniture}</ui-media>`;
+	})}>${lightbox}${frames}${furniture}${typeChip}</ui-media>`;
 	return { html, extras };
 };
 
@@ -1008,7 +1019,8 @@ const DETAILS = {
 	},
 
 	achievement(d) {
-		let html = meta('dateCreated', d.dateEarned) + meta('expires', d.expirationDate)
+		let html = d.status ? `<p data-part="meta"><ui-chip theme="pale green">${esc(d.status)}</ui-chip></p>` : '';
+		html += meta('dateCreated', d.dateEarned) + meta('expires', d.expirationDate)
 			+ meta('educationalLevel', d.skillLevel) + meta('identifier', d.credentialId);
 		html += `<p data-part="meta">Issued by <span${scope('recognizedBy', 'Organization')}><span itemprop="name">${esc(d.issuingOrganization)}</span></span>${d.dateEarnedDisplay ? ` · ${esc(d.dateEarnedDisplay)}` : ''}${d.expirationDateDisplay ? ` · Expires ${esc(d.expirationDateDisplay)}` : ''}${d.credentialId ? ` · ID ${esc(d.credentialId)}` : ''}</p>`;
 		if (d.verificationUrl) html += `<nav data-part="actions"><a class="ui-button" href="${esc(d.verificationUrl)}" target="_blank" rel="noopener">Verify credential</a></nav>`;
@@ -1393,13 +1405,15 @@ export async function loadPresets(url) {
  * @param {object} ucf — UCF file content ({ fields }) or the fields object itself
  * @param {object} [presets] — id → preset map (from data/card.presets.json)
  * @param {object} [cards] — id → UCF map for resolving card references (flipside)
- * @param {object} [options] — { images: { cdnBase?, breakpoints?, format?, quality?, fit?, sizes? } }
- *        arms the Cloudflare srcset pipeline; omit it and images render exactly as before.
+ * @param {object} [options] — { images: { cdnBase?, breakpoints?, format?, quality?, fit?, sizes? }, typeChip?: boolean }
+ *        `images` arms the Cloudflare srcset pipeline; omit it and images render exactly as before.
  *        `sizes` is the computed fallback list (lazy frames get `auto, ` prepended).
+ *        `typeChip` adds a <ui-chip data-type> naming the resolved schema.org type on each frame.
  * @returns {string} HTML for <ui-card>, <ui-reveal>, or a bare primitive
  */
 export function renderCard(ucf, presets = {}, cards = {}, options = null) {
 	setImages(options?.images);
+	TYPE_CHIP = !!options?.typeChip;
 	const fields = ucf?.fields ?? ucf ?? {};
 	const cardId = ucf?.id || null;
 	const type = SCHEMA_TYPES[fields.schemaType] ? fields.schemaType : 'content';

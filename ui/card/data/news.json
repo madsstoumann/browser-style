@@ -36,9 +36,9 @@
       }
     ],
     "furniture": {
-      "chip": {
-        "text": "Breaking",
-        "style": "ts red"
+      "beacon": {
+        "text": "Live",
+        "style": "red tck"
       }
     },
     "body": {

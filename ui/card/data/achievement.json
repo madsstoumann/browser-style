@@ -25,12 +25,6 @@
         "alt": "Accessibility symbol on a screen"
       }
     ],
-    "furniture": {
-      "chip": {
-        "text": "Certified",
-        "style": "te green"
-      }
-    },
     "actions": [
       {
         "link": {
@@ -41,6 +35,7 @@
       }
     ],
     "details": {
+      "status": "Certified",
       "issuingOrganization": "IAAP",
       "dateEarned": "2026-03-12",
       "dateEarnedDisplay": "Mar 2026",

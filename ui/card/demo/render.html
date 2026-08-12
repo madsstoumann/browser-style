@@ -54,7 +54,7 @@
 		/* render.js returns an HTML string (SSR engine — all data escaped at
 		   interpolation); parse it into a fragment for the DOM append sites below */
 		const frag = (html) => document.createRange().createContextualFragment(html);
-		const renderCard = (ucf, presetMap, cardMap) => frag(renderCardHtml(ucf, presetMap, cardMap, { images }));
+		const renderCard = (ucf, presetMap, cardMap) => frag(renderCardHtml(ucf, presetMap, cardMap, { images, typeChip: true }));
 
 		const main = document.querySelector('main');
 		const presets = await loadPresets('../data/card.presets.json');
@@ -79,7 +79,7 @@
 			heading.append(`${name} — `, code);
 
 			const grid = document.createElement('lay-out');
-			grid.setAttribute('md', 'columns(2)');
+			grid.setAttribute('md', 'columns(2) items(start)');
 			grid.append(renderCard(ucf, presets, cards));
 
 			main.append(heading, grid);
@@ -97,7 +97,7 @@
 			heading.append(`${name} — `, code);
 
 			const grid = document.createElement('lay-out');
-			grid.setAttribute('md', 'columns(2)');
+			grid.setAttribute('md', 'columns(2) items(start)');
 			grid.append(renderCard(ucf, demoPresets, cards));
 
 			main.append(heading, grid);
