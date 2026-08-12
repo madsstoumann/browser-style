@@ -26,6 +26,7 @@
    renderer, the generated tokens.md and tokens.lint.js all read. tokens.data.js is its
    generated ES-module mirror — a plain import, so this module stays Node+browser safe. */
 import TOKENS from './data/tokens.data.js';
+import { buildCfUrl, buildSrcset } from './srcset.js';
 
 const SCHEMA = 'https://schema.org/';
 
@@ -125,6 +126,25 @@ const attrs = (obj) => Object.entries(obj)
 	.filter(([, value]) => value != null && value !== false && value !== '')
 	.map(([key, value]) => value === true ? ` ${key}` : ` ${key}="${esc(value)}"`)
 	.join('');
+
+/* ── image pipeline (SSR srcset) — armed per renderCard() call via options.images.
+   Off by default: /cdn-cgi/image/ only resolves on the Cloudflare zone and a failed
+   srcset candidate does NOT fall back to src. Docs: docs/media.md § srcset ── */
+const IMG_DEFAULTS = { breakpoints: [240, 320, 480, 720, 1200], format: 'auto', quality: 80, fit: 'cover', base: '' };
+let IMG = null;
+const setImages = (images) => {
+	IMG = images ? { ...IMG_DEFAULTS, ...images, base: images.cdnBase ?? images.base ?? '' } : null;
+};
+/* same eligibility as ui-media-srcset.js #eligible(): local paths only */
+const cdnEligible = (src) => !!(IMG && src && !/^https?:\/\//i.test(src) && !src.startsWith('data:') && !src.startsWith('blob:'));
+/* fixed-size images (thumbs, avatars): square 1x/2x pair instead of a width ladder */
+const fixedSrcset = (src, size) => {
+	if (!cdnEligible(src)) return null;
+	const t = (w) => buildCfUrl(src, { format: IMG.format, quality: IMG.quality, fit: IMG.fit, width: w, height: w }, IMG.base);
+	return `${t(size)} 1x, ${t(size * 2)} 2x`;
+};
+/* sizes: `auto` is spec-invalid on eager images; Safari ignores it, so lazy gets the fallback list too */
+const sizesFor = (eager) => !IMG ? null : eager ? IMG.sizes || null : IMG.sizes ? `auto, ${IMG.sizes}` : 'auto';
 
 const meta = (prop, content) =>
 	content == null || content === '' ? '' : `<meta itemprop="${esc(prop)}" content="${esc(content)}">`;
@@ -313,7 +333,7 @@ const initials = (name) => {
 	return parts.length ? (parts[0][0] + (parts.length > 1 ? parts.at(-1)[0] : '')).toUpperCase() : '';
 };
 const avatarPart = ({ avatar, name }) => avatar
-	? `<ui-avatar><img src="${esc(avatar)}" alt=""></ui-avatar>`
+	? `<ui-avatar><img src="${esc(avatar)}" alt=""${IMG ? attrs({ srcset: fixedSrcset(avatar, 64), loading: 'lazy', decoding: 'async' }) : ''}></ui-avatar>`
 	: (name ? `<ui-avatar><abbr aria-hidden="true">${esc(initials(name))}</abbr></ui-avatar>` : '');
 
 /* byline rows from authors[] — the dateline rides the FIRST author as a second
@@ -587,6 +607,12 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 	const playId = (fields.furniture?.play && cardId) ? `${cardId}-video` : null;
 	let videoId = playId;
 	const rootVideo = ROOT_VIDEO_TYPES.has(type);
+	/* srcset geometry + loading from the preset's media= string — same contract as
+	   ui-media-srcset.js (#resolveRatio + the load(eager|lazy) token) */
+	const ratioMatch = IMG && /asr\((\d+)\/(\d+)\)/.exec(preset.media || '');
+	const ratio = ratioMatch ? +ratioMatch[1] / +ratioMatch[2] : null;
+	const eager = /load\(eager\)/.test(preset.media || '');
+	let firstImg = true;
 	for (const item of fields.media) {
 		const src = item.asset?.$asset ? item.asset.$asset : item.src;
 		if (item.mediaType === 'youtube' || item.mediaType === 'vimeo') {
@@ -620,12 +646,18 @@ const buildMedia = (fields, type, tokens, preset = {}, frameAttrs = {}, cardId =
 			frames += `<audio${attrs({ id, src, preload: 'metadata', 'aria-label': item.alt || null })}${NO_IMAGE_PROP.has(type) ? '' : scope('associatedMedia', 'AudioObject')}>${NO_IMAGE_PROP.has(type) ? '' : meta('contentUrl', src) + meta('name', item.alt)}</audio>`;
 			continue;
 		}
+		const cdn = cdnEligible(src);
 		frames += `<img${attrs({
 			src,
 			alt: item.alt || '',
-			loading: 'lazy',
+			srcset: cdn ? buildSrcset(src, { ...IMG, ratio }) : null,
+			sizes: cdn ? sizesFor(eager) : null,
+			loading: eager ? 'eager' : 'lazy',
+			fetchpriority: eager && firstImg ? 'high' : null,
+			decoding: IMG ? 'async' : null,
 			itemprop: NO_IMAGE_PROP.has(type) ? null : 'image'
 		})}>`;
+		firstImg = false;
 	}
 	/* save/lightbox need a command target — id the frame when either is present;
 	   lightbox also marks the frame as the popover the invoker toggles */
@@ -1020,7 +1052,7 @@ const DETAILS = {
 			html += `<ul data-part="options">${d.items.map((item, index) =>
 				`<li${scope('itemListElement', 'ListItem')}>
 					${meta('position', index + 1)}
-					${item.image ? `<img src="${esc(item.image)}" alt="" itemprop="image" loading="lazy" width="48" height="48">` : ''}<label><span itemprop="name">${esc(item.name)}</span>${item.price ? ` — ${esc(item.price)}` : ''}</label>
+					${item.image ? `<img src="${esc(item.image)}" alt=""${IMG ? attrs({ srcset: fixedSrcset(item.image, 48), decoding: 'async' }) : ''} itemprop="image" loading="lazy" width="48" height="48">` : ''}<label><span itemprop="name">${esc(item.name)}</span>${item.price ? ` — ${esc(item.price)}` : ''}</label>
 					${item.score != null ? `<progress max="100" value="${esc(item.score)}"></progress>` : ''}${item.scoreDisplay ? ` <span>${esc(item.scoreDisplay)}</span>` : ''}
 				</li>`
 			).join('')}</ul>`;
@@ -1361,9 +1393,13 @@ export async function loadPresets(url) {
  * @param {object} ucf — UCF file content ({ fields }) or the fields object itself
  * @param {object} [presets] — id → preset map (from data/card.presets.json)
  * @param {object} [cards] — id → UCF map for resolving card references (flipside)
+ * @param {object} [options] — { images: { cdnBase?, breakpoints?, format?, quality?, fit?, sizes? } }
+ *        arms the Cloudflare srcset pipeline; omit it and images render exactly as before.
+ *        `sizes` is the computed fallback list (lazy frames get `auto, ` prepended).
  * @returns {string} HTML for <ui-card>, <ui-reveal>, or a bare primitive
  */
-export function renderCard(ucf, presets = {}, cards = {}) {
+export function renderCard(ucf, presets = {}, cards = {}, options = null) {
+	setImages(options?.images);
 	const fields = ucf?.fields ?? ucf ?? {};
 	const cardId = ucf?.id || null;
 	const type = SCHEMA_TYPES[fields.schemaType] ? fields.schemaType : 'content';
@@ -1423,12 +1459,13 @@ export function renderCard(ucf, presets = {}, cards = {}) {
  * @param {string} url
  * @param {object} [presets] — id → preset map
  * @param {object} [cards] — id → UCF map for card references
+ * @param {object} [options] — see renderCard()
  * @returns {Promise<string>}
  */
-export async function renderCardFrom(url, presets = {}, cards = {}) {
+export async function renderCardFrom(url, presets = {}, cards = {}, options = null) {
 	const response = await fetch(url);
 	if (!response.ok) throw new Error(`Failed to load ${url}: ${response.status}`);
-	return renderCard(await response.json(), presets, cards);
+	return renderCard(await response.json(), presets, cards, options);
 }
 
 export default renderCard;

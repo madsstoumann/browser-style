@@ -126,6 +126,14 @@ Then delete each page's inline `.grid*` styles and add the includes above.
 
 ## Phase 3 — srcset bridge
 
+> **Status 2026-08-12: the SSR half shipped first.** `renderCard(ucf, presets, cards, { images })`
+> emits Cloudflare `srcset` + a layout-computed `sizes` fallback directly (`ui/card/docs/media.md`
+> § Responsive images); `ui/card/demo/render.html` shows the wiring (`generateSrcsets` +
+> `calculateSizes` from this package, injected per the coupling rule below). `calculateSizes`' final
+> fallback entry was fixed to `100vw` (it used to repeat the largest breakpoint's fraction). The
+> runtime `#layoutSizes()` bridge below remains unbuilt — only needed for pages that use the client
+> upgrader instead of SSR markup.
+
 Both systems compute responsive-image hints, differently:
 
 - **layout:** each variant's `srcset` field (% width per item) is compiled into `layouts-map.js`; `src/srcsets.js` `generateSrcsets()` produces a `srcsets="540:50%;720:50%,50%,100%@1024"` attribute and `calculateSizes(srcsets, childIndex)` turns it into a real `sizes` string per child.

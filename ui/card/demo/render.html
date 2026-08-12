@@ -37,11 +37,21 @@
 	<script type="module">
 		import { renderCard as renderCardHtml, loadPresets, SCHEMA_TYPES } from '../render.js';
 		import { scanVideo } from '../video.js';
+		import { generateSrcsets, calculateSizes } from '/layout/src/srcsets.js';
+		import { srcsetMap, srcsetConfig } from '/layout/layouts-map.js';
+
+		/* image pipeline: Cloudflare srcset (absolute base — /cdn-cgi/image/ only resolves
+		   on the zone) + a sizes fallback from the layout srcset bridge. Every grid on this
+		   page is md="columns(2)", so one computed sizes string covers all frames. */
+		const images = {
+			cdnBase: 'https://v4.browser.style',
+			sizes: calculateSizes(generateSrcsets({ md: 'columns(2)' }, srcsetMap, srcsetConfig), 0)
+		};
 
 		/* render.js returns an HTML string (SSR engine — all data escaped at
 		   interpolation); parse it into a fragment for the DOM append sites below */
 		const frag = (html) => document.createRange().createContextualFragment(html);
-		const renderCard = (...args) => frag(renderCardHtml(...args));
+		const renderCard = (ucf, presetMap, cardMap) => frag(renderCardHtml(ucf, presetMap, cardMap, { images }));
 
 		const main = document.querySelector('main');
 		const presets = await loadPresets('../data/card.presets.json');

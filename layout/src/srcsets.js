@@ -66,13 +66,8 @@ export function calculateSizes(srcsets, childIndex) {
 		return `(min-width: ${breakpoint}px) min(${percent}vw, ${pxValue}px)`
 	})
 
-	if (rules.length > 0) {
-		const firstPercent = parseFloat(rules[0].width)
-		const firstPx = Math.round(maxWidth * (firstPercent / 100))
-		sizesParts.push(`min(${firstPercent}vw, ${firstPx}px)`)
-	} else {
-		sizesParts.push('100vw')
-	}
+	/* below the smallest declared breakpoint the layout is a single column — full width */
+	sizesParts.push('100vw')
 
 	return sizesParts.join(', ')
 }

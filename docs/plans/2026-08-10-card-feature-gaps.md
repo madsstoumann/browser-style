@@ -30,24 +30,26 @@ visible effective-date range; `booking.specialRequests`; `comparison` item thumb
 an action with no `link.url` renders a real `<button>` with optional `ariaLabel`; `modifiedDisplay`
 gives a visible "Updated …" line; `--ui-content-summary-clamp` opts a teaser into line-clamping.
 
-## Deferred — the image pipeline (do this next; it is the one substantial gap left)
-The legacy pipeline did four things v4 does not. All of it is documented here so the next pass
-starts from evidence, not archaeology:
+## The image pipeline — SSR'd 2026-08-12 (was: the one substantial gap left)
+`renderCard(ucf, presets, cards, { images })` now emits `srcset`/`sizes`/`loading`/`decoding`/
+`fetchpriority` server-side (docs/media.md § Responsive images); `demo/schema.html` carries the
+hand-authored reference markup and `demo/render.html` the SSR wiring. Status of the four legacy
+deficits:
 
-1. **Per-breakpoint format + quality ladder** — webp/q65 at 240w … avif/q85 at 1200w
-   (`content/card/config.json:58-65`, `src/js/base/utils.js:608-650`). `ui/card/srcset.js:33-43`
-   applies a single format+quality to every width.
-2. **Real `sizes` from the grid slot** — `layout/src/srcsets.js` `calculateSizes` + the
-   `<lay-out srcsets>` attribute produced `sizes="(min-width:720px) min(66.67vw,800px)…"`.
-   `ui-media-srcset.js:27` hardcodes `sizes: 'auto'`. Note `auto` is *better* than a computed value
-   for lazy images in Chromium 130+; the gap is Safari/Firefox (fall back to 100vw and over-fetch)
-   and eager/LCP images, which cannot use it at all. So: emit a computed `sizes` as the fallback and
-   let `auto` win where supported. The layout-side code already exists.
-3. **Document-position priority** — first N cards got `loading="eager" fetchpriority="high"`
-   (`config.json:6`, `utils.js:214-227`); v4 only honours a `load(eager)` token, and only for the
-   first slide of one carousel.
-4. **`width`/`height` on fixed-dimension images + avatar `dpr:2`** (`utils.js:42-58,73-74`,
-   `config.json:66-71`) — v4 emits no dimensions (CLS) and never CDN-transforms avatars.
+1. **Per-breakpoint format + quality ladder** — STILL OPEN. The SSR path applies one
+   format+quality to every width (`format=auto` lets Cloudflare negotiate avif/webp per request,
+   which covers most of the ladder's win; a per-width quality ramp remains unbuilt).
+2. **Real `sizes` from the grid slot** — DONE. `options.images.sizes` takes the computed fallback
+   list (layout's `generateSrcsets`/`calculateSizes`); lazy frames get `auto, ` prepended so
+   Chromium/Firefox use layout width and Safari uses the list; eager frames get the list alone
+   (`auto` is spec-invalid on eager). `calculateSizes`' unconditional fallback was fixed to `100vw`
+   (it used to repeat the largest breakpoint's fraction — 2× under-request below the smallest bp).
+3. **Document-position priority** — DONE at token level: `load(eager)` on a card's `media=` makes
+   its frames eager with `fetchpriority="high"` on the first (SSR + client agree). "First N cards
+   automatically" remains a consumer-side choice (set the token on the cards above the fold).
+4. **`width`/`height` on fixed-dimension images + avatar transforms** — avatars and comparison
+   thumbs now get fixed-size 1x/2x CDN pairs (64px avatars, 48px thumbs). `width`/`height` on
+   frame images STILL OPEN (needs UCF model fields; CLS is already 0 via `asr()`).
 
 Lower value from the same tier: a provider-abstracted transform builder (obsolete unless multi-CDN
 becomes a goal) and a default aspect ratio when the layout declares none.

@@ -178,9 +178,9 @@ Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are 
 | `lightbox.js` | popover-lightbox niceties, all gated on `ui-media[popover]` (moved from `ui/lightbox/command.js`): DOM carousel controls via `/ui/carousel/polyfill/carousel-controls.js`, `media-open=` swap, `--lightbox-layout`, View Transition morph, modality, back-button close, tile jump, pause-on-close |
 | `shared.js` | primitives shared by carousel.js/video.js — `reflectPlay`, `bindVideo`, token readers (`mediaStr`, `hasToken`), and the single exported slide-exclusion list `NOT_SLIDE`/`slidesOf` (cross-referenced from the `:not()` list in `media.carousel.css`, which is a **subset**: `NOT_SLIDE` also drops `LAY-OUT`, so a collage `<lay-out>` slide snaps in CSS but is invisible to `loop`/`auto`/per-slide JS) |
 | `build.js` | `node build.js` → bundled+minified `*.min.js` per entry + gzip/brotli size table |
-| `ui-media-srcset.js` | registers `<ui-media>`; host-gated Cloudflare `srcset` + loading/decoding upgrades. **Transitional** — retire once srcset is SSR'd |
-| `srcset.js` | dependency-free Cloudflare Image Resizing URL builder |
-| `render.js` | Node-safe SSR: JSON (UCF) → HTML string. Published (in `package.json` `files`/`exports`) together with `data/` |
+| `ui-media-srcset.js` | registers `<ui-media>`; host-gated Cloudflare `srcset` + loading/decoding upgrades. **Transitional** — the SSR path exists (`renderCard` `options.images`, docs/media.md § Responsive images); load this only on pages whose markup wasn't SSR'd |
+| `srcset.js` | dependency-free Cloudflare Image Resizing URL builder (optional absolute `base` for hosts off the zone) |
+| `render.js` | Node-safe SSR: JSON (UCF) → HTML string. Published (in `package.json` `files`/`exports`) together with `data/`. Optional 4th arg `{ images }` arms the Cloudflare srcset pipeline (off = byte-identical legacy output) |
 
 ## Conventions & pitfalls
 

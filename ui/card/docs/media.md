@@ -957,9 +957,13 @@ On the `content=` side the prefixes cover rather more — size (`scl()`, `hl()`)
 
 The parse layer is purely additive, so prefixing further media tokens later is a non-breaking generation step — `asr()` is the template (a rule per value × tier × arm).
 
-### Responsive images — Cloudflare `srcset` (optional JS)
+### Responsive images — Cloudflare `srcset`
 
-Loading the srcset module (`import '@browser.style/card/ui-media-srcset.js'`) upgrades each `<img>` child as **progressive enhancement** (this is the transitional, SSR-replaceable module — deliberately kept **outside** `index.js`, which owns the hover/carousel/video enhancements):
+Two delivery paths share one contract (widths `240,320,480,720,1200`, `asr()`-derived heights, the `load(eager|lazy)` token, `fetchpriority="high"` on an eager first frame):
+
+**SSR (preferred): `renderCard(ucf, presets, cards, { images })`.** Passing an `images` options bag makes `render.js` emit `srcset`/`sizes`/`loading`/`decoding`/`fetchpriority` directly on every eligible `<img>` (frames via `buildSrcset`, avatars and comparison thumbs as fixed-size `1x/2x` pairs). Omit the bag and the output is byte-identical to the pre-srcset renderer — that keeps local/off-zone pages free of dead `/cdn-cgi/` URLs. `images.cdnBase` prefixes an absolute origin (e.g. `https://v4.browser.style`) so the markup also works on hosts off the zone (pages.dev, localhost); `images.sizes` is the computed fallback list — lazy frames get `auto, ` prepended (Safari has no `sizes="auto"`, eager frames must not use it), typically from layout's `generateSrcsets`/`calculateSizes` bridge (see `layout/docs/card-integration.md` Phase 3). `demo/render.html` and the hand-authored `demo/schema.html` carry the reference output.
+
+**Client (transitional): `import '@browser.style/card/ui-media-srcset.js'`** upgrades each `<img>` child at runtime as **progressive enhancement** — for pages whose markup wasn't SSR'd. Deliberately kept **outside** `index.js` (which owns the hover/carousel/video enhancements); stop loading it on pages that render srcset server-side:
 
 - **Always:** sets `loading="lazy"`, `decoding="async"`, and `sizes="auto"` if absent. (`sizes="auto"` needs `loading="lazy"`; the browser then picks the candidate from the image's real rendered width — Chrome 121+/Firefox, graceful elsewhere.) The `load(eager)` media token makes every image load eagerly, with `fetchpriority="high"` on the first for a hero.
 - **On the deployed `*.browser.style` host only:** injects a [Cloudflare Image Resizing](https://developers.cloudflare.com/images/transform-images/) `srcset`, deriving each candidate's height from the element's `asr()` token:
