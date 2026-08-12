@@ -1,0 +1,6 @@
+# Cloudflare Pages cache policy (ignored by GitHub Pages).
+# Demo assets are content-stable; HTML revalidates via Pages defaults.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+/dist/*
+  Cache-Control: public, max-age=86400
