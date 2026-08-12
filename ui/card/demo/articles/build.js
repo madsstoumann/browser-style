@@ -14,7 +14,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { renderCard } from '../../render.js';
+import { renderCard, SCHEMA_TYPES } from '../../render.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const data = (file) => JSON.parse(readFileSync(join(here, '../../data', file), 'utf8'));
@@ -29,18 +29,24 @@ const withPreset = (ucf, presetId) => ({
 const esc = (value) => String(value)
 	.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-const page = (ucf) => {
+const page = (ucf, name) => {
 	const title = String(ucf.fields.headline).replace(/<[^>]+>/g, '');
+	const itemtype = SCHEMA_TYPES[ucf.fields.schemaType] || 'CreativeWork';
+	/* ONE microdata scope on the <article> root — the bare-primitive renders each
+	   carry their own itemscope, which would split the page into partial items */
+	const descope = (html) => html.replace(/ itemscope itemtype="https:\/\/schema\.org\/\w+"/, '');
 	/* hero frame — tag the image with its view-transition-name via data-view
 	   (first <img> only). CSS advanced attr() turns it into the name — no
 	   inline style attribute, so a strict CSP (no unsafe-inline styles) holds.
 	   id="hero" is the render-blocking anchor (see <link rel="expect">): by the
 	   time this <img> is parsed, the wrapping <article data-view="card-…"> start
-	   tag already is too, so BOTH morph-named elements exist at snapshot. */
-	const hero = renderCard(withPreset(ucf, 'media'), presets)
-		.replace('<img', `<img id="hero" data-view="hero-${ucf.id}"`);
+	   tag already is too, so BOTH morph-named elements exist at snapshot.
+	   The hero is the page's LCP element and morph target — always eager. */
+	const hero = descope(renderCard(withPreset(ucf, 'media'), presets))
+		.replace('<img', `<img id="hero" data-view="hero-${ucf.id}"`)
+		.replace(' loading="lazy"', ' loading="eager" fetchpriority="high"');
 	/* prose-article: text both (summary becomes the standfirst) + byline lede */
-	const prose = renderCard(withPreset(ucf, 'prose-article'), presets);
+	const prose = descope(renderCard(withPreset(ucf, 'prose-article'), presets));
 
 	return `<!DOCTYPE html>
 <html lang="en-US" dir="ltr">
@@ -50,6 +56,7 @@ const page = (ucf) => {
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="${esc(ucf.fields.summary || title)}">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../../../beacon/ui-beacon.css">
 	<link rel="stylesheet" href="../../../chip/ui-chip.css">
 	<link rel="stylesheet" href="../../../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../../../icon/index.css">
@@ -82,7 +89,11 @@ const page = (ucf) => {
 	</style>
 </head>
 <body>
-	<article class="article-view" data-view="card-${ucf.id}">
+	<article class="article-view" data-view="card-${ucf.id}" itemscope itemtype="https://schema.org/${itemtype}">
+		<link itemprop="mainEntityOfPage" href="${name}.html">
+		<div itemprop="publisher" itemscope itemtype="https://schema.org/Organization" hidden>
+			<meta itemprop="name" content="The Daily Ledger">
+		</div>
 		${hero}
 		${prose}
 	</article>
@@ -96,7 +107,7 @@ const page = (ucf) => {
 const teaser = (ucf, name) => renderCard(ucf, presets)
 	.replace('<ui-card', `<ui-card data-view="card-${ucf.id}"`)
 	.replace('<img', `<img data-view="hero-${ucf.id}"`)
-	.replace(/(<h3 data-part="headline"[^>]*>)([\s\S]*?)(<\/h3>)/,
+	.replace(/(<h[23] data-part="headline"[^>]*>)([\s\S]*?)(<\/h[23]>)/,
 		`$1<a data-part="cover" href="articles/${name}.html">$2</a>$3`);
 
 const gridPage = (cards) => `<!DOCTYPE html>
@@ -107,6 +118,7 @@ const gridPage = (cards) => `<!DOCTYPE html>
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Teaser cards linking to per-article pages — a cross-document view transition morphs the whole card into the full article. Fully static: pre-rendered by articles/build.js.">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<link rel="stylesheet" href="../../beacon/ui-beacon.css">
 	<link rel="stylesheet" href="../../chip/ui-chip.css">
 	<link rel="stylesheet" href="../../sticker/ui-sticker.css">
 	<link rel="stylesheet" href="../../icon/index.css">
@@ -160,7 +172,7 @@ const gridPage = (cards) => `<!DOCTYPE html>
 const teasers = [];
 for (const name of ['article', 'news']) {
 	const ucf = data(`${name}.json`);
-	writeFileSync(join(here, `${name}.html`), page(ucf));
+	writeFileSync(join(here, `${name}.html`), page(ucf, name));
 	teasers.push(teaser(ucf, name));
 	console.log(`articles/${name}.html ← data/${name}.json (${ucf.id})`);
 }
