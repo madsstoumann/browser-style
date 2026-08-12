@@ -1,0 +1,12 @@
+# browser.style
+
+> CSS-first component library and design system. Its card system renders 34 schema.org content types as semantic HTML with inline microdata (itemscope/itemtype/itemprop) — no JSON-LD required.
+
+## Structured content
+
+- [Schema.org card reference](https://v4.browser.style/ui/card/demo/schema): all 34 schema.org card types with complete inline microdata — Article, NewsArticle, Product, Event, Recipe, Review, JobPosting, Course, Person, FAQPage, LocalBusiness, Organization, VideoObject, HowTo, QAPage, PodcastEpisode, Movie, Book, Dataset, ClaimReview and more. Machine-readable reference markup.
+- [Card content model](https://v4.browser.style/cms/baseline/models/card.schema.json): JSON Schema for the universal card format every card type is rendered from.
+
+## Documentation
+
+- [Component library](https://v4.browser.style/): demos and docs for the full component collection.

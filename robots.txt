@@ -161,4 +161,7 @@ User-agent: YandexAdditionalBot
 User-agent: YiyanBot
 User-agent: YouBot
 User-agent: ZanistaBot
+Allow: /llms.txt
+Allow: /ui/card/demo/schema
+Allow: /cms/baseline/models/
 Disallow: /
