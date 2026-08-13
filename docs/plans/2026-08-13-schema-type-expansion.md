@@ -652,6 +652,13 @@ Per `docs/session-start.md`:
 
 Task 1 first because nothing else is testable without it. Task 2 next because it is the cheapest coverage in the plan and later tasks depend on its allowlists (real estate reuses `location`, TV/music lean on `organization`). Phase 2 before Phase 3 because those four are live Google features with real deadlines attached to their value, and two of them are extensions of existing renderers rather than new types — lower risk, faster feedback on the workflow. Phase 3 is ordered by how much existing machinery each type reuses: `service` and `realestate` lean hardest on existing helpers, `glossary`/`podcastseries` are the smallest and make good last tasks. Documentation last, when the counts are final.
 
+## Follow-ups discovered during execution
+
+Recorded here rather than fixed inline — each is real, each is outside the file scope of the task that surfaced it. Scope discipline mid-run is worth more than the convenience of fixing them where they were found.
+
+1. **Root `npm test` cannot reach the new suite** (found in Task 1). The root script is `npm run test --workspaces`, which aborts with `Missing script: "test"` across the editor workspaces; with `--if-present` it still fails, because at least one workspace carries npm's default `echo "Error: no test specified" && exit 1`. This was already broken before Task 1 — no package had a `test` script at all — but there is now something real to run and no top-level command that runs it. **Fix before Task 17**, which needs a single verification command.
+2. **`ui/card/dist/card.css` and `card.min.css` are stale relative to source** (found in Task 1). Running `npm run build` in `ui/card` produces uncommitted changes — `font-variant-numeric: tabular-nums` and a `--_theme-ink` fallback — both originating from earlier commits in this session, not from the plan's work. Rebuild and commit the `dist/` bundles as a standalone commit, separate from any task here.
+
 ## Risks
 
 - **`SUBTYPES` is an itemtype allowlist — it is a security boundary.** A subtype value lands inside `itemtype="…"`. It must never be interpolated from unvalidated data. Task 2's test suite includes the hostile-string case; keep it.
