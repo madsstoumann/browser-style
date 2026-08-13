@@ -24,6 +24,34 @@ the page is optional: `video.js` polyfills the proposed media invoker commands
 without it. Each media frame also carries a `<ui-chip data-type>` naming the card's schema.org
 type — a demo affordance, emitted by `render.js` only when `renderCard` gets `{ typeChip: true }`.
 
+## Rich results vs. structured data
+
+Google has withdrawn or narrowed the search feature behind six of the types on this page.
+`FAQPage` results stopped appearing on **2026-05-07** and the documentation was removed on
+**2026-06-15**. `HowTo` was deprecated in **August 2023**, its documentation removed
+**2023-09-14**. `SpecialAnnouncement` was deprecated **2025-07-31**, documentation removed
+**2025-09-09**. `ClaimReview` is phasing out of Search, though it still powers the Fact Check
+Explorer. `Dataset` only ever reached Dataset Search, never a mainstream result. And `Course`
+lost *Course info* on **2025-09-09** — only **Course list** survives, which needs three or more
+courses in an `ItemList`.
+
+**All six stay, deliberately.** What Google withdrew is a rendering promise, not a vocabulary:
+every one of these is still valid schema.org. A SERP feature is one consumer among several — AI
+agents, answer engines and GEO pipelines parse the microdata straight off the page and never ask
+whether Google would have drawn a box around it. A machine-readable FAQ or how-to is arguably
+*more* useful to them than it ever was to a search result.
+
+So describe them accurately in both directions: **not** as rich-result features, because the
+feature is gone; and **not** as deprecated markup, because it is not. Neither the types nor their
+renderers get "cleaned up" because a Google help page disappeared.
+
+Two riders. `HowTo` remains fully supported **inside** `Recipe` — `recipeInstructions` →
+`ItemList` of `HowToStep` — which is exactly how the recipe renderer uses it. And the graded
+multiple-choice [Quiz card](#quiz--quiz-two-cards-one-type-different-eligibility) is the same
+story one step further on: Google's Practice Problems feature consumed that shape and was retired
+in January 2026, leaving valid markup with no live rich result. The eligibility split between the
+two Quiz cards — flashcards eligible, multiple choice not — is documented in that section.
+
 ## Structured `data-part` vocabulary
 
 The twelve parts the typed cards add on top of the envelope. All are **styled** in [`content.css`](../content.css) — this page is the reference markup `render.js` follows, not a wish list. Envelope parts carry the rest: `eyebrow`, `headline`, `subheadline`, `summary`, `meta` (salaries, specs, dates), `byline` + `byline-who` + `dateline` (people), `tags`, `actions` and `footer` (totals, recommendations). `caption` belongs to the media frame — see [media.html](../demo/media.html).
@@ -480,9 +508,8 @@ with *opposite* rich-result status, and nothing in the markup says so:
   that feature was **retired in January 2026**; the documentation page now redirects to Education
   Q&A. The **markup is not deprecated** — `eduQuestionType` is core schema.org, which documents
   exactly three spellings ("Multiple choice", "Open ended", "Flashcard"). We keep the card for the
-  same reason we keep `FAQPage`, `HowTo` and `ClaimReview`: see
-  [the type-expansion plan § Deprecated rich results](../../../docs/plans/2026-08-13-schema-type-expansion.md)
-  — SERP features are one consumer among several.
+  same reason we keep `FAQPage`, `HowTo` and `ClaimReview` — see
+  [§ Rich results vs. structured data](#rich-results-vs-structured-data).
 
 **In the renderer**, `details.format` picks the shape — `flashcard` or `multiple-choice` — and it
 is deliberately **explicit rather than inferred** from whether questions carry options: the same
