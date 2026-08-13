@@ -1,16 +1,30 @@
 # Schema.org cards — type-by-type notes
 
 > Companion to [`demo/schema.html`](../demo/schema.html) — the hand-authored reference markup
-> for all 48 schema.org card types (the markup `render.js` reproduces). The intro prose, the
+> for every schema.org card type (the markup `render.js` reproduces). The intro prose, the
 > per-type notes and the structured-part vocabulary used to live inline on that page; they moved
 > here so the demo stays one card grid.
 
-**The count is mechanical:** 48 = distinct `itemtype` values on the page's `<ui-card>` roots
-(`grep -o '<ui-card[^>]*itemtype="[^"]*"' | sort -u`). It counts sharpened
-[subtypes](#subtypes) — `ProductGroup`, `CafeOrCoffeeShop`, `DiscussionForumPosting` — as their
-own entry, which is why it runs ahead of the model's `schemaType` list. A 49th type,
-`EmployerAggregateRating`, appears on the job card as a **second top-level item** rather than a
-card of its own.
+**Three counts, three different quantities — do not conflate them.** The page carries **52
+cards** with **48 distinct root itemtypes**; the renderer knows **46 `schemaType` keys**.
+
+| Count | What it measures | Reproduce it |
+|---|---|---|
+| **52** | `<ui-card>` roots on the page — one per card | `grep -c '<ui-card[^>]*itemtype=' ui/card/demo/schema.html` |
+| **48** | distinct root `itemtype` values | `grep -o '<ui-card[^>]*itemtype="[^"]*"' ui/card/demo/schema.html \| grep -o 'itemtype="[^"]*"' \| sort -u \| wc -l` |
+| **46** | `schemaType` keys `render.js` supports (`SCHEMA_TYPES`) | `node -e "import('./ui/card/render.js').then(m => console.log(Object.keys(m.SCHEMA_TYPES).length))"` |
+
+**Cards ≠ types.** Four types appear on two cards each — `Review`, `Observation`, `EventSeries`
+and `Quiz` — so 52 − 4 = 48. Note the second `grep` in that command: **reduce to the `itemtype=`
+substring before `sort -u`**. Uniquing the whole `<ui-card …>` match counts one type twice
+whenever its two cards differ in any other attribute (an `id`, a `style`) — that is how this
+count once read 50.
+
+**Types ≠ renderer keys.** The 48 is the 46 base itemtypes, minus `LocalBusiness` (never shown
+plain — the business card is always sharpened), plus the three sharpened [subtypes](#subtypes)
+`ProductGroup`, `CafeOrCoffeeShop` and `DiscussionForumPosting`, which `details.subtype` produces
+with no key of their own. A 49th type, `EmployerAggregateRating`, appears on the job card as a
+**second top-level item** (`itemscope`, no `itemprop`) rather than a card of its own.
 
 Every card type from the legacy `content/card` package — plus the nine types added in model
 v1.3 (organization, video, howto, qa, podcast, movie, book, dataset, claim), plus the eleven
