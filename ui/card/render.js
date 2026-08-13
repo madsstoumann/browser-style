@@ -214,14 +214,20 @@ const plain = (value) => {
 	return String(text).replace(/<[^>]+>/g, '');
 };
 
-const num = (value) => (typeof value === 'number' ? value.toLocaleString('en-US') : value);
+/* Display formatters. Both fall through to raw author data, and every call site
+   interpolates them into a TEXT NODE, so they return HTML-safe strings — do NOT
+   esc() their output again. Docs: ui/card/AGENTS.md § conventions */
+const num = (value) => esc(typeof value === 'number' ? value.toLocaleString('en-US') : value);
 
 /* display price via Intl — machine values stay raw in value=/content= attrs */
+const CURRENCY_CODE = /^[A-Za-z]{3}$/;
 const fmtPrice = (currency, value) => {
 	if (value == null || value === '') return '';
 	const number = Number(value);
-	if (!currency || Number.isNaN(number)) return `${currency || ''} ${value}`.trim();
-	return new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: Number.isInteger(number) ? 0 : 2 }).format(number);
+	/* Intl throws RangeError on any code that is not three ASCII letters — one typo'd
+	   currency must never crash a whole page render in an engine that degrades */
+	if (!CURRENCY_CODE.test(currency || '') || Number.isNaN(number)) return esc(`${currency || ''} ${value}`.trim());
+	return esc(new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: Number.isInteger(number) ? 0 : 2 }).format(number));
 };
 
 /* "PT15M" → "15 min", "P6W" → "6 weeks", "P14D" → "14 days" */
@@ -247,7 +253,8 @@ const styleAttr = (styles) => {
 const ratingPart = (prop, ratingType, rating) => {
 	if (!rating?.value) return '';
 	const max = rating.max ?? 5;
-	const label = `Rated ${rating.value} out of ${max} stars${rating.count ? ` from ${num(rating.count)} ratings` : ''}`;
+	/* built from already-escaped pieces — num() escapes, so no outer esc() here */
+	const label = `Rated ${esc(rating.value)} out of ${esc(max)} stars${rating.count ? ` from ${num(rating.count)} ratings` : ''}`;
 	/* @browser.style/rating — a disabled range input masked with stars. It is
 	   DECORATIVE (aria-hidden): a role="img" wrapper may not contain an input, so
 	   the <span> carries the accessible text and the metas carry the machine value */
@@ -256,8 +263,8 @@ const ratingPart = (prop, ratingType, rating) => {
 		${rating.count != null ? meta('ratingCount', rating.count) : ''}
 		${meta('bestRating', max)}${meta('worstRating', 1)}
 		<input class="ui-rating" type="range" min="1" max="${esc(max)}" value="${esc(rating.value)}" step="0.01" disabled aria-hidden="true">
-		<span data-sr>${esc(label)}</span>
-		<span aria-hidden="true">${esc(rating.value)} / ${max}${rating.count ? ` (${num(rating.count)} ratings)` : ''}</span>
+		<span data-sr>${label}</span>
+		<span aria-hidden="true">${esc(rating.value)} / ${esc(max)}${rating.count ? ` (${num(rating.count)} ratings)` : ''}</span>
 	</div>`;
 };
 
@@ -1201,8 +1208,9 @@ const DETAILS = {
 		let html = meta('foundingDate', d.foundingDate)
 			+ (d.sameAs || []).map((url) => meta('sameAs', url)).join('')
 			+ (d.numberOfEmployees != null ? `<span${scope('numberOfEmployees', 'QuantitativeValue')} hidden>${meta('value', d.numberOfEmployees)}</span>` : '');
-		const bits = [d.numberOfEmployees != null ? `${num(d.numberOfEmployees)} employees` : null, d.foundingDateDisplay ? `Founded ${d.foundingDateDisplay}` : null].filter(Boolean).join(' · ');
-		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		/* escaped per component — num() already returns HTML-safe output */
+		const bits = [d.numberOfEmployees != null ? `${num(d.numberOfEmployees)} employees` : null, d.foundingDateDisplay ? `Founded ${esc(d.foundingDateDisplay)}` : null].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
 		html += geoViaPlace(d.headquarters?.geo) + addressPart(d.headquarters?.address);
 		if (d.email) html += `<p data-part="meta">${meta('email', d.email)}<a href="mailto:${esc(d.email)}">${esc(d.email)}</a></p>`;
 		/* each local office is a department → LocalBusiness (Google's multi-location pattern),
@@ -1233,8 +1241,9 @@ const DETAILS = {
 	howto(d, fields, parts = {}) {
 		let html = meta('totalTime', d.totalTime)
 			+ (d.estimatedCost ? `<span${scope('estimatedCost', 'MonetaryAmount')} hidden>${meta('currency', d.estimatedCost.currency)}${meta('value', d.estimatedCost.value)}</span>` : '');
-		const bits = [d.totalTime ? `Takes ${duration(d.totalTime)}` : null, d.estimatedCost ? `~${fmtPrice(d.estimatedCost.currency, d.estimatedCost.value)}` : null, d.difficulty].filter(Boolean).join(' · ');
-		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		/* escaped per component — fmtPrice() already returns HTML-safe output */
+		const bits = [d.totalTime ? `Takes ${esc(duration(d.totalTime))}` : null, d.estimatedCost ? `~${fmtPrice(d.estimatedCost.currency, d.estimatedCost.value)}` : null, d.difficulty ? esc(d.difficulty) : null].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
 		if (d.supplies?.length || d.tools?.length) {
 			html += `<ul data-part="list">${(d.supplies || []).map((item) => `<li${scope('supply', 'HowToSupply')}><span itemprop="name">${esc(item)}</span></li>`).join('')}${(d.tools || []).map((item) => `<li${scope('tool', 'HowToTool')}><span itemprop="name">${esc(item)}</span></li>`).join('')}</ul>`;
 		}
@@ -1289,8 +1298,10 @@ const DETAILS = {
 		let html = meta('isbn', d.isbn) + meta('numberOfPages', d.numberOfPages)
 			+ (BOOK_FORMATS.has(d.bookFormat) ? meta('bookFormat', SCHEMA + d.bookFormat) : '');
 		/* U+2060 word joiners defeat iOS tel data detectors — docs/schema.md § Book */
-		const bits = [d.numberOfPages ? `${num(d.numberOfPages)} pages` : null, d.bookFormatDisplay || d.bookFormat, d.isbn ? `ISBN ${d.isbn.replace(/-/g, '-\u2060')}` : null].filter(Boolean).join(' · ');
-		if (bits) html += `<p data-part="meta">${esc(bits)}</p>`;
+		/* escaped per component — num() already returns HTML-safe output */
+		const format = d.bookFormatDisplay || d.bookFormat;
+		const bits = [d.numberOfPages ? `${num(d.numberOfPages)} pages` : null, format ? esc(format) : null, d.isbn ? `ISBN ${esc(d.isbn.replace(/-/g, '-\u2060'))}` : null].filter(Boolean).join(' · ');
+		if (bits) html += `<p data-part="meta">${bits}</p>`;
 		html += ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		if (d.price) {
 			html += `<p data-part="price"${scope('offers', 'Offer')}>${meta('priceCurrency', d.price.currency)}${meta('availability', SCHEMA + 'InStock')}<data itemprop="price" value="${esc(d.price.current)}">${fmtPrice(d.price.currency, d.price.current)}</data></p>`;

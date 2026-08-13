@@ -185,7 +185,7 @@ Variant guidance for card lists: all `columns(N)` and `grid(N…)` variants are 
 ## Conventions & pitfalls
 
 1. **Hand-author `<cq-box>`** inside `<ui-card>` — nothing auto-inserts it.
-2. **Never `innerHTML` with data** — `render.js` escapes everything via `esc()`; only `<b>` in headlines survives. Keep it that way.
+2. **Never `innerHTML` with data** — `render.js` escapes everything via `esc()`; only `<b>` in headlines survives. Keep it that way. The two **display formatters** `num()` and `fmtPrice()` return **already-escaped** strings (both fall through to raw author data on unformattable input, and all ~16 call sites interpolate them into text nodes) — interpolate them bare and never `esc()` them again, or you double-escape. When composing them into a joined string, escape the *other* components individually rather than wrapping the join.
 3. **Direct-child scoping** — reveal rules use `> details > summary` so nested `<details>` don't inherit chrome; follow the same discipline (`:scope >`) in JS.
 4. **Don't register elements CSS can drive** — only `<ui-media>` needs JS, and only for srcset.
 5. **Demos use `<lay-out>`** — do not reintroduce per-page `.grid` classes; use the mapping table in `layout/docs/card-integration.md`.

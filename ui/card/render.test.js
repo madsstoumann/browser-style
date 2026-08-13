@@ -125,12 +125,14 @@ describe('product variants', () => {
 		assert.ok(!render({ schemaType: 'product', headline: 'Coat', details: { sku: 'X' } }).includes('variants ignored'));
 	});
 
+	/* name/sku/productGroupID all route through esc() and were never at risk; price and
+	   currency reach a TEXT NODE through fmtPrice() and are the fields that can bite */
 	test('escapes hostile input in a variant field', () => {
 		const html = group({
 			variants: {
 				...variants,
 				productGroupID: '"><script>alert(1)</script>',
-				items: [{ name: '"><img src=x onerror=alert(1)>', sku: '</ul><script>x</script>', color: 'Green', price: 1, currency: 'USD' }]
+				items: [{ name: '"><img src=x onerror=alert(1)>', sku: '</ul><script>x</script>', color: 'Green', price: '<img src=x onerror=alert(1)>', currency: '<script>alert(2)</script>' }]
 			}
 		});
 		assert.ok(!html.includes('<script>'), 'raw <script> must never reach output');
@@ -139,6 +141,92 @@ describe('product variants', () => {
 		assert.match(html, /itemprop="name">&quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;</, 'name present and escaped');
 		assert.match(html, /content="&lt;\/ul&gt;&lt;script&gt;x&lt;\/script&gt;"/, 'sku present and escaped');
 		assert.match(html, /content="&quot;&gt;&lt;script&gt;alert\(1\)&lt;\/script&gt;"/, 'productGroupID present and escaped');
+		/* the price TEXT NODE beside the escaped value= attribute */
+		assert.match(html, /<data itemprop="price" value="[^"]*">&lt;script&gt;alert\(2\)&lt;\/script&gt; &lt;img src=x onerror=alert\(1\)&gt;<\/data>/, 'price text node present and escaped');
+	});
+});
+
+/* fmtPrice()/num() are DISPLAY formatters whose output lands in text nodes. Their
+   fallback branches echo author data verbatim, so every call site was an injection
+   point. They now return HTML-safe strings — see ui/card/AGENTS.md § conventions. */
+describe('price and number formatters', () => {
+	const render_ = render;
+	const XSS = '<img src=x onerror=alert(1)>';
+	const noRaw = (html, where) => {
+		assert.ok(!html.includes('<img'), `${where}: raw <img must never reach output`);
+		assert.ok(!html.includes('<script>'), `${where}: raw <script> must never reach output`);
+	};
+
+	/* one case per distinct sink SHAPE, not per call site */
+	test('a hostile price is escaped in every price row shape', () => {
+		const rows = [
+			['variant offer', { schemaType: 'product', headline: 'X', details: { subtype: 'ProductGroup', variants: { variesBy: ['color'], productGroupID: 'G', items: [{ name: 'V', sku: 'S', price: XSS, currency: '' }] } } }],
+			['main product', { schemaType: 'product', headline: 'X', details: { price: { current: XSS, original: XSS, currency: '' } } }],
+			['event offer', { schemaType: 'event', headline: 'X', details: { offers: [{ price: XSS, currency: '' }] } }],
+			['membership', { schemaType: 'membership', headline: 'X', details: { price: { monthly: XSS, yearly: XSS, currency: '' } } }],
+			['booking rate', { schemaType: 'booking', headline: 'X', details: { price: { hourlyRate: XSS, currency: '' } } }],
+			['howto cost', { schemaType: 'howto', headline: 'X', details: { estimatedCost: { value: XSS, currency: '' } } }]
+		];
+		for (const [where, fields] of rows) {
+			const html = render_(fields);
+			noRaw(html, where);
+			assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt;/, `${where}: the price must still render, escaped`);
+		}
+	});
+
+	test('a hostile number is escaped in every num() row shape', () => {
+		const rows = [
+			['rating count', { schemaType: 'product', headline: 'X', details: { rating: { value: 4, count: XSS } } }],
+			['rating max', { schemaType: 'product', headline: 'X', details: { rating: { value: 4, max: XSS } } }],
+			['engagement', { schemaType: 'article', headline: 'X', engagement: { viewCount: XSS } }],
+			['salary', { schemaType: 'job', headline: 'X', details: { company: 'C', location: 'L', salaryRange: { min: XSS, max: 2, currency: 'USD' } } }],
+			['poll votes', { schemaType: 'poll', headline: 'X', details: { options: [{ headline: 'a', votes: 1 }], totalVotes: XSS } }],
+			['qa upvotes', { schemaType: 'qa', headline: 'X', details: { question: 'q', answers: [{ text: 'a', upvotes: XSS }] } }]
+		];
+		for (const [where, fields] of rows) {
+			const html = render_(fields);
+			noRaw(html, where);
+			assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt;/, `${where}: the number must still render, escaped`);
+		}
+	});
+
+	/* the formatters escape, so a caller that ALSO escapes would double-escape —
+	   these are the three joined-"bits" rows plus the rating label that do exactly that */
+	test('formatter output is escaped exactly once', () => {
+		const once = [
+			['howto', { schemaType: 'howto', headline: 'X', details: { estimatedCost: { value: XSS, currency: '' }, difficulty: 'Easy' } }],
+			['organization', { schemaType: 'organization', headline: 'X', details: { numberOfEmployees: XSS } }],
+			['book', { schemaType: 'book', headline: 'X', details: { numberOfPages: XSS } }],
+			['rating label', { schemaType: 'product', headline: 'X', details: { rating: { value: 4, count: XSS } } }]
+		];
+		for (const [where, fields] of once) {
+			const html = render_(fields);
+			assert.ok(!html.includes('&amp;lt;'), `${where}: double-escaped output`);
+			assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt;/, `${where}: single-escaped output`);
+		}
+		/* …and the sibling fields in those joined rows are still escaped exactly once */
+		const html = render_({ schemaType: 'book', headline: 'X', details: { numberOfPages: 3, bookFormatDisplay: '<b>Hardcover</b>' } });
+		assert.match(html, /&lt;b&gt;Hardcover&lt;\/b&gt;/, 'sibling bits field escaped');
+		assert.ok(!html.includes('&amp;lt;'), 'sibling bits field not double-escaped');
+	});
+
+	/* Intl.NumberFormat throws RangeError on anything that is not a 3-letter code.
+	   One typo'd currency must not crash a whole page render. */
+	test('a malformed currency degrades instead of throwing', () => {
+		for (const currency of ['$', 'US', 'USDD', '978', '', null, '<img>', 'U$D']) {
+			const fields = { schemaType: 'product', headline: 'X', details: { price: { current: 10, currency } } };
+			const html = assert.doesNotThrow(() => render_(fields)) ?? render_(fields);
+			assert.match(html, /data-part="price"/, `${currency}: the price row must still render`);
+			assert.match(html, /10/, `${currency}: the amount must survive`);
+		}
+		assert.ok(!render_({ schemaType: 'product', headline: 'X', details: { price: { current: 10, currency: '<img src=x>' } } }).includes('<img'));
+	});
+
+	/* the guard must not swallow real currencies — pin the formatted output */
+	test('well-formed currencies still format through Intl', () => {
+		assert.match(render_({ schemaType: 'product', headline: 'X', details: { price: { current: 279, currency: 'USD' } } }), />\$279</);
+		assert.match(render_({ schemaType: 'product', headline: 'X', details: { price: { current: 279, currency: 'usd' } } }), />\$279</, 'lowercase is a valid code');
+		assert.match(render_({ schemaType: 'product', headline: 'X', details: { rating: { value: 4.5, count: 1247 } } }), /1,247 ratings/, 'thousands separator survives escaping');
 	});
 });
 
