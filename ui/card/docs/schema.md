@@ -75,18 +75,23 @@ the base type. Add to a list only after checking the same.
 | `product` | `Product` | ProductGroup, ProductModel, IndividualProduct, Vehicle, Car, Motorcycle, Drug, DietarySupplement |
 | `social` | `SocialMediaPosting` | DiscussionForumPosting, BlogPosting, LiveBlogPosting |
 
-**Two values appear on two lists, and they are the complete set.** Both are deliberate —
-schema.org gives each of them two truthful parents — but they differ in what the choice costs:
+**Two values appear on two lists — `Campground` and `BlogPosting` — and they are the complete
+set.** Both are deliberate: schema.org gives each of them two truthful parents.
 
-- **`Campground`** (`business` + `location`) is the easy one. Its parents are unrelated
-  branches, `LodgingBusiness` and `CivicStructure`, so the two spellings emit genuinely
-  different itemtypes. Pick by what the card *is*: a business that rents pitches, or a place.
-- **`BlogPosting`** (`article` + `social`) is the confusing one. `SocialMediaPosting` is itself
-  a descendant of `Article`, so **both spellings emit the same `itemtype`** — but from
-  different renderers, so the *properties* differ. `article` emits `headline` + `description`;
-  `social` emits `name` + `text`, plus the platform as `publisher` and the post `author`.
-  Neither is wrong, so nothing guards this. Choose `social` when the card has a platform, an
-  author handle or hashtags; `article` otherwise.
+**The choice never changes the `itemtype`.** Once a value is allowlisted the resolver returns
+*the subtype*, so the base type never reaches the output — `Campground` under `business` and
+under `location` both emit `itemtype="https://schema.org/Campground"`. What the choice changes
+is which `DETAILS` renderer runs, and therefore **which properties the card carries**:
+
+| Value | Pick this | …to also get | vs. the other spelling |
+|---|---|---|---|
+| `Campground` | `business` | `priceRange`, `telephone` | `location` emits the shared set only |
+| `BlogPosting` | `social` | `name` + `text`, the platform as `publisher`, `details.author` as `author` | `article` emits `headline` + `description` |
+
+So pick by the property set, not by the type name: `business` for a campground you want to
+carry commercial properties, `location` for one you do not; `social` for a post that has a
+platform or a `details.author` handle, `article` otherwise. Neither spelling is wrong in
+either case, which is why nothing guards this.
 
 Note the near miss: `Museum` is **only** a `CivicStructure`, never a `LocalBusiness`, so it
 sharpens `location` and is absent from `business`.

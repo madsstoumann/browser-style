@@ -57,9 +57,23 @@ describe('subtype sharpening', () => {
 		assert.match(html, /itemtype="https:\/\/schema\.org\/Event"/);
 		assert.ok(!html.includes('<script>'));
 	});
+	test('subtype wins when both spellings are set', () => {
+		const html = render({ schemaType: 'business', headline: 'Brew', details: { subtype: 'Bakery', businessType: 'CafeOrCoffeeShop' } });
+		assert.match(html, /itemtype="https:\/\/schema\.org\/Bakery"/);
+	});
+	/* the two cross-list values (docs/schema.md § Subtypes) resolve under EITHER
+	   base type — same itemtype, different DETAILS renderer */
+	test('a cross-list subtype resolves under both its base types', () => {
+		for (const schemaType of ['business', 'location'])
+			assert.match(render({ schemaType, headline: 'Pine Ridge', details: { subtype: 'Campground' } }),
+				/itemtype="https:\/\/schema\.org\/Campground"/);
+		for (const schemaType of ['article', 'social'])
+			assert.match(render({ schemaType, headline: 'Post', details: { subtype: 'BlogPosting' } }),
+				/itemtype="https:\/\/schema\.org\/BlogPosting"/);
+	});
 
 	/* the exported resolver is the seam every other itemtype producer calls
-	   (articles/build.js, demo/render.html) — it must never hand back undefined */
+	   (articles/build.js, demo/render.html) — it always returns a plain schema.org type name */
 	test('the exported resolver normalises an unknown schemaType', () => {
 		assert.equal(resolveItemtype({ schemaType: 'nonesuch', headline: 'X' }), 'CreativeWork');
 		assert.equal(resolveItemtype({ headline: 'X' }), 'CreativeWork');
