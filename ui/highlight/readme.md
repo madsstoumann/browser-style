@@ -89,6 +89,12 @@ The whole gradient — including its faded, uneven edges — is derived from the
 
 > Presets are matched with a higher-specificity attribute selector, so a preset name always wins over the same name being read as a raw CSS color.
 
+### Dark mode
+
+The marker colour is the same in both schemes — what changes is how much the sweep is washed out. Paper thins highlighter ink; a dark page cannot, so a washed fill there just mixes toward black and the marker muddies into the background. Each wash step is therefore a `light-dark()` pair (`--_w-soft`, `--_w-body`, `--_w-tail`, `--_w-streak`, `--_w-ghost`): light keeps the original ink-running-out fade, dark paints near-solid. `contrast-color()` then picks the same dark ink in both. Because the pairs are `light-dark()` and not a `prefers-color-scheme` query, a `color-scheme: light` island inside a dark page still gets the paper treatment.
+
+Stroke variants (`underline`, `strike`) opt out of auto-contrast ink — their text sits on the page, not on the fill, so it stays `currentColor`.
+
 ---
 
 ## Ink (text color)

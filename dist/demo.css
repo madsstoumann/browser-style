@@ -10023,8 +10023,8 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
 /* ui/highlight/ui-highlight.css */
 @layer bs-component {
   :where(high-light) {
-    --_fill: light-dark(#82ffad, #34a05e);
-    --_fill: attr(fill type(<color>), light-dark(#82ffad, #34a05e));
+    --_fill: #82ffad;
+    --_fill: attr(fill type(<color>), #82ffad);
     --_ink-auto: currentColor;
     --_ink: currentColor;
     --_ink: attr(ink type(<color>), var(--_ink-auto));
@@ -10035,6 +10035,12 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     --_bg-size: 100% 100%;
     --_bg-pos: 0 0;
     --_radius: 0.4em;
+    --_w-clear: color-mix(in oklab, var(--_fill), transparent 100%);
+    --_w-soft: light-dark(color-mix(in oklab, var(--_fill), transparent 45%), color-mix(in oklab, var(--_fill), transparent 14%));
+    --_w-body: light-dark(color-mix(in oklab, var(--_fill), transparent 88%), color-mix(in oklab, var(--_fill), transparent 12%));
+    --_w-tail: light-dark(color-mix(in oklab, var(--_fill), transparent 25%), color-mix(in oklab, var(--_fill), transparent 10%));
+    --_w-streak: light-dark(color-mix(in oklab, var(--_fill), transparent 70%), color-mix(in oklab, var(--_fill), transparent 55%));
+    --_w-ghost: light-dark(color-mix(in oklab, var(--_fill), transparent 45%), color-mix(in oklab, var(--_fill), transparent 65%));
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
     border-radius: var(--_radius);
@@ -10044,49 +10050,49 @@ lay-out:has(ui-reveal[variant~=exp][variant~=pop] > details[open]) {
     background-image:
       linear-gradient(
         var(--_angle),
-        color-mix(in oklab, var(--_fill), transparent 100%) 1%,
-        color-mix(in oklab, var(--_fill), transparent 0%) 3%,
-        color-mix(in oklab, var(--_fill), transparent 45%) 6%,
-        color-mix(in oklab, var(--_fill), transparent 35%) 92%,
-        color-mix(in oklab, var(--_fill), transparent 25%) 96%,
-        color-mix(in oklab, var(--_fill), transparent 100%) 99%),
+        var(--_w-clear) 1%,
+        var(--_fill) 3%,
+        var(--_w-soft) 6%,
+        var(--_w-body) 92%,
+        var(--_w-tail) 96%,
+        var(--_w-clear) 99%),
       linear-gradient(
         183deg,
-        color-mix(in oklab, var(--_fill), transparent 100%) 0%,
-        color-mix(in oklab, var(--_fill), transparent 70%) 8%,
-        color-mix(in oklab, var(--_fill), transparent 100%) 15%);
+        var(--_w-clear) 0%,
+        var(--_w-streak) 8%,
+        var(--_w-clear) 15%);
     background-position: var(--_bg-pos);
     background-repeat: no-repeat;
     background-size: var(--_bg-size);
-    text-shadow: var(--_shadow-x) var(--_shadow-y) var(--_shadow-blur) color-mix(in oklab, var(--_fill), transparent 45%);
+    text-shadow: var(--_shadow-x) var(--_shadow-y) var(--_shadow-blur) var(--_w-ghost);
     &[fill=green] {
-      --_fill: light-dark(#82ffad, #34a05e);
+      --_fill: #82ffad;
     }
     &[fill=yellow] {
-      --_fill: light-dark(#fdfa8c, #c2ad24);
+      --_fill: #fdfa8c;
     }
     &[fill=orange] {
-      --_fill: light-dark(#ffbe7b, #c8762a);
+      --_fill: #ffbe7b;
     }
     &[fill=pink] {
-      --_fill: light-dark(#ff9dc9, #c74d84);
+      --_fill: #ff9dc9;
     }
     @supports not (background-color: attr(x type(<color>), red)) {
       & {
-        --_fill: light-dark(#82ffad, #34a05e);
+        --_fill: #82ffad;
         --_ink: var(--_ink-auto);
       }
       &[fill=green] {
-        --_fill: light-dark(#82ffad, #34a05e);
+        --_fill: #82ffad;
       }
       &[fill=yellow] {
-        --_fill: light-dark(#fdfa8c, #c2ad24);
+        --_fill: #fdfa8c;
       }
       &[fill=orange] {
-        --_fill: light-dark(#ffbe7b, #c8762a);
+        --_fill: #ffbe7b;
       }
       &[fill=pink] {
-        --_fill: light-dark(#ff9dc9, #c74d84);
+        --_fill: #ff9dc9;
       }
     }
     &[variant~=underline] {
