@@ -882,7 +882,7 @@ const variantsPart = (variants) =>
 	+ `<ul data-part="list">${variants.items.map((item) => `<li${scope('hasVariant', 'Product')}><span itemprop="name">${esc(item.name)}</span>${meta('sku', item.sku)}${VARIANT_AXES.map((axis) => meta(axis, item[axis])).join('')}${item.price == null ? '' : `<span${scope('offers', 'Offer')}>${meta('priceCurrency', item.currency)}${meta('availability', availabilityUrl(item.availability || 'in stock'))} <data itemprop="price" value="${esc(item.price)}">${fmtPrice(item.currency, item.price)}</data></span>`}</li>`).join('')}</ul>`;
 
 const DETAILS = {
-	product(d, fields) {
+	product(d, fields, parts, itemtype) {
 		/* PDP order: rating under the title, then price, then stock state */
 		let html = ratingPart('aggregateRating', 'AggregateRating', d.rating);
 		if (d.price) {
@@ -897,12 +897,13 @@ const DETAILS = {
 		/* sku is machine-readable only — no visible number on the card */
 		if (d.sku) html += meta('sku', d.sku);
 		/* hasVariant/variesBy/productGroupID are ProductGroup-ONLY properties, so the gate is
-		   the RESOLVED itemtype — never d.subtype, which could disagree with it and hang them
-		   on a plain Product. Skipping stays visible. Docs: docs/schema.md § Product */
+		   the itemtype WRITTEN on the enclosing scope — never d.subtype, and never a fresh
+		   resolveItemtype(fields) either: on the flipside path these details render into the
+		   HOST's itemscope. Skipping stays visible. Docs: docs/schema.md § Product */
 		if (d.variants?.items?.length) {
-			html += resolveItemtype(fields) === 'ProductGroup'
+			html += itemtype === 'ProductGroup'
 				? variantsPart(d.variants)
-				: '<!-- variants ignored: details.subtype is not ProductGroup -->';
+				: '<!-- variants ignored: itemtype did not resolve to ProductGroup -->';
 		}
 		return html;
 	},
@@ -1351,7 +1352,11 @@ const profileSubheadline = (d, textTag) =>
 const BYLINE_EARLY = new Set(['book']);
 
 /* full content column for a card (envelope + details + trailers) */
-const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary', parts = {}, bylineMode = 'tail', headingTag = 'h3') => {
+/* `itemtype` is the bare schema.org name ACTUALLY WRITTEN on the enclosing scope —
+   threaded down so a DETAILS renderer can gate subtype-only properties on it. It is
+   not always resolveItemtype(fields): a flipside column renders into the HOST's
+   scope. Docs: docs/schema.md § Product */
+const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary', parts = {}, bylineMode = 'tail', headingTag = 'h3', itemtype = null) => {
 	const slots = {};
 	if (type === 'profile' && fields.details) {
 		slots.subheadline = profileSubheadline(fields.details, overlay ? 'span' : 'p');
@@ -1367,7 +1372,7 @@ const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary',
 		if (!lede) slots.after = early;
 	}
 	let html = buildContent(fields, type, overlay, slots, textMode, parts, headingTag) + (slots.after || '');
-	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields, parts);
+	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields, parts, itemtype);
 	html += buildTail(tailFields, type);
 	return html + extras;
 };
@@ -1375,13 +1380,13 @@ const contentColumn = (fields, type, overlay, extras = '', textMode = 'summary',
 /* ── reveal composition (<ui-reveal>) — used when preset.element is ui-reveal ── */
 
 /* Back panel derived from the host card's own envelope + details. */
-const derivedBack = (fields, type) => {
+const derivedBack = (fields, type, itemtype) => {
 	let html = fields.eyebrow ? `<small data-part="eyebrow">${esc(fields.eyebrow)}</small>` : '';
 	/* version rides the details chip, not the headline */
 	html += `<h3 data-part="headline">${renderInline(fields.headline)}</h3>`;
 	if (fields.summary) html += `<p data-part="summary" itemprop="${SUMMARY_PROP[type] || 'description'}">${esc(fields.summary)}</p>`;
 	html += bodyHtml(fields, type);
-	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields);
+	if (DETAILS[type] && fields.details) html += DETAILS[type](fields.details, fields, {}, itemtype);
 	html += buildTail({ ...fields, published: null, readingTime: null }, type);
 	return html;
 };
@@ -1389,15 +1394,17 @@ const derivedBack = (fields, type) => {
 /* Back panel from a referenced flipside card — a content column only, never
    another reveal, so flipside chains cannot recurse. Shares the host's itemscope.
    Backs are the "full" face: summary + body both render. */
-const flipsideBack = (flipside) => {
+const flipsideBack = (flipside, itemtype) => {
 	const fields = flipside?.fields ?? flipside ?? {};
 	const type = baseType(fields);
-	return contentColumn(fields, type, false, '', 'both');
+	/* itemtype is the HOST's — this column shares the host's itemscope */
+	return contentColumn(fields, type, false, '', 'both', {}, 'tail', 'h3', itemtype);
 };
 
-const renderReveal = (fields, type, itemtype, tokens, preset, flipside, cardId = null) => {
+const renderReveal = (fields, type, schemaType, tokens, preset, flipside, cardId = null) => {
+	const itemtype = SCHEMA + schemaType;
 	const media = buildMedia(fields, type, tokens, preset, {}, cardId);
-	const back = flipside ? flipsideBack(flipside) : derivedBack(fields, type);
+	const back = flipside ? flipsideBack(flipside, schemaType) : derivedBack(fields, type, schemaType);
 	const reveal = preset.reveal || {};
 	/* reveal config → variant tokens. The preset keeps friendly editor values
 	   ("slide", "left", "top right sm"); the emitted animation token carries its
@@ -1485,12 +1492,14 @@ export function renderCard(ucf, presets = {}, cards = {}, options = null) {
 	const fields = ucf?.fields ?? ucf ?? {};
 	const cardId = ucf?.id || null;
 	const type = baseType(fields);
-	const itemtype = SCHEMA + resolveItemtype(fields);
+	/* resolved ONCE: schemaType is what gets written, and what DETAILS renderers gate on */
+	const schemaType = resolveItemtype(fields);
+	const itemtype = SCHEMA + schemaType;
 	const preset = resolvePreset(fields, presets);
 	const tokens = { media: [] };
 
 	if (preset.element === 'ui-reveal') {
-		return renderReveal(fields, type, itemtype, tokens, preset, resolveCard(fields.flipside, cards), cardId);
+		return renderReveal(fields, type, schemaType, tokens, preset, resolveCard(fields.flipside, cards), cardId);
 	}
 
 	/* Bare <ui-media> — a standalone media frame, no card chrome. The media
@@ -1516,7 +1525,7 @@ export function renderCard(ucf, presets = {}, cards = {}, options = null) {
 			style: styleAttr(preset.styles),
 			itemscope: true,
 			itemtype
-		})}>${contentColumn(fields, type, false, '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail', preset.headingTag)}</ui-content>`;
+		})}>${contentColumn(fields, type, false, '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail', preset.headingTag, schemaType)}</ui-content>`;
 	}
 
 	const media = buildMedia(fields, type, tokens, preset, {}, cardId);
@@ -1531,7 +1540,7 @@ export function renderCard(ucf, presets = {}, cards = {}, options = null) {
 	})}>
 		<cq-box>
 			${withMedia(media?.html || '', mergeMediaTokens(preset.media, tokens.media))}
-			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail', preset.headingTag)}</ui-content>
+			<ui-content${attrs({ content: preset.content || null })}>${contentColumn(fields, type, overlay, media?.extras || '', preset.text || 'summary', preset.parts || {}, preset.byline || 'tail', preset.headingTag, schemaType)}</ui-content>
 		</cq-box>
 	</ui-card>`;
 }

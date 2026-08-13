@@ -69,12 +69,13 @@ Two shapes of difference exist, and both resolve from the itemtype — neither r
 | The subtype needs… | Seam | Case |
 |---|---|---|
 | a different **property spelling** for something the base already emits | `HEADLINE_PROP_BY_ITEMTYPE` | `DiscussionForumPosting` → `headline` |
-| **additional properties** that are invalid on the base type | a gate on `resolveItemtype(fields)` inside the `DETAILS` renderer | `ProductGroup` → `hasVariant` ([§ Product](#product--product-subtype-productgroup)) |
+| **additional properties** that are invalid on the base type | a gate on the `itemtype` threaded into the `DETAILS` renderer | `ProductGroup` → `hasVariant` ([§ Product](#product--product-subtype-productgroup)) |
 
 The second shape is the dangerous one: emitting a subtype-only property while the `itemtype`
-stayed on the base is *invalid markup*, not merely unspecific. Gating it on the resolved
-itemtype — the same call that wrote the attribute — is what makes the two impossible to
-disagree.
+stayed on the base is *invalid markup*, not merely unspecific. Gate it on the itemtype the
+renderer **wrote**, which `contentColumn` threads down as the last argument to
+`DETAILS[type](d, fields, parts, itemtype)` — not on a fresh `resolveItemtype(fields)`, which
+on the flipside path resolves a different object than the one that produced the attribute.
 
 **The value is allowlisted, never taken verbatim.** Two reasons, both load-bearing:
 
@@ -182,19 +183,36 @@ cannot carry would advertise a property that appears nowhere in the markup, so u
 dropped. (Google also documents `suggestedAge`/`suggestedGender`; they describe an audience rather
 than a per-item property, and the variant shape has no field for them.)
 
-**The gate is the resolved itemtype, never `details.subtype`.** `hasVariant`, `variesBy` and
+**The gate is the WRITTEN itemtype, never `details.subtype`.** `hasVariant`, `variesBy` and
 `productGroupID` are `ProductGroup`-**only** properties. `details.subtype` and `details.variants`
 are two independently typo-able fields that must agree, so nothing checks them against each other —
-the renderer instead gates the block on `resolveItemtype(fields) === 'ProductGroup'`, the same call
-that wrote the `itemtype` attribute. No input can therefore hang these properties on an
-`itemtype="…/Product"`.
+the renderer instead threads the itemtype it actually wrote on the enclosing scope down through
+`contentColumn` into `DETAILS[type](d, fields, parts, itemtype)`, and gates on
+`itemtype === 'ProductGroup'`.
 
-When `variants` is present but the type did not sharpen, the block is dropped — but **not
+**Threading it beats re-deriving it**, and `<ui-reveal>` is why. A reveal's back panel renders the
+*flipside's* content column into the **host's** itemscope — one scope, two content objects. A gate
+that called `resolveItemtype(fields)` for itself would consult the flipside's fields, whose itemtype
+was never written anywhere: an `article` host with a `ProductGroup` flipside emitted `hasVariant`
+under `itemtype="…/Article"`. Threading the written value makes the gate literally what this
+paragraph claims, on every path, so no input can hang these properties on a non-`ProductGroup`
+scope.
+
+⚠️ **The itemscope sharing itself is broader than this one property, and is not fixed.** Any
+flipside renders its `DETAILS` into the host's scope, so an `article` host with a plain `product`
+flipside still emits `itemprop="offers"` under `Article`. `ProductGroup` is the sharpest instance —
+`hasVariant` on a `Product` is *invalid*, where a stray `offers` on an `Article` is merely ignored —
+and the `itemtype` parameter now threaded through `contentColumn` is the seam a general fix would
+use. Until then, prefer a flipside whose type matches its host.
+
+When `variants` is present but the scope is not a group, the block is dropped — but **not
 silently**: a fixed comment takes its place, so an author whose variants vanished can see why in
-view-source instead of guessing.
+view-source instead of guessing. It names the *itemtype*, not `details.subtype`, because the
+itemtype is what the gate consults — and on the flipside path the subtype and the itemtype belong
+to two different objects.
 
 ```html
-<!-- variants ignored: details.subtype is not ProductGroup -->
+<!-- variants ignored: itemtype did not resolve to ProductGroup -->
 ```
 
 The comment is a fixed string with no interpolated data, and it ships only in the mis-authored

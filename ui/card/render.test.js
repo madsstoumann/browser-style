@@ -35,19 +35,25 @@ describe('review', () => {
 	});
 });
 
+const VARIANTS = {
+	variesBy: ['color', 'size'],
+	productGroupID: 'AB123',
+	items: [
+		{ name: 'Small green coat', sku: 'AB123-S-GRN', color: 'Green', size: 'small', price: 39.99, currency: 'USD' },
+		{ name: 'Large green coat', sku: 'AB123-L-GRN', color: 'Green', size: 'large', price: 44.99, currency: 'USD', availability: 'Out of stock' }
+	]
+};
+/* the message names the ITEMTYPE, because the itemtype is what the gate consults —
+   naming details.subtype would misdirect on the flipside path, where the subtype is
+   the flipside's but the itemtype is the host's */
+const VARIANTS_IGNORED = '<!-- variants ignored: itemtype did not resolve to ProductGroup -->';
+const count = (html, needle) => html.split(needle).length - 1;
+
 /* ProductGroup is the `product` type + subtype + a variants block — not a new card type.
    Docs: docs/schema.md § Product */
 describe('product variants', () => {
-	const variants = {
-		variesBy: ['color', 'size'],
-		productGroupID: 'AB123',
-		items: [
-			{ name: 'Small green coat', sku: 'AB123-S-GRN', color: 'Green', size: 'small', price: 39.99, currency: 'USD' },
-			{ name: 'Large green coat', sku: 'AB123-L-GRN', color: 'Green', size: 'large', price: 44.99, currency: 'USD', availability: 'Out of stock' }
-		]
-	};
+	const variants = VARIANTS;
 	const group = (extra = {}) => render({ schemaType: 'product', headline: 'Wool coat', details: { subtype: 'ProductGroup', variants, ...extra } });
-	const count = (html, needle) => html.split(needle).length - 1;
 
 	test('the subtype sharpens the itemtype to ProductGroup', () => {
 		assert.match(group(), /itemtype="https:\/\/schema\.org\/ProductGroup"/);
@@ -90,7 +96,7 @@ describe('product variants', () => {
 	/* THE gate. hasVariant/variesBy/productGroupID are ProductGroup-ONLY properties, so the
 	   block is gated on the RESOLVED itemtype — details.subtype and details.variants can
 	   never disagree. Skipping is not silent: a fixed comment says why they vanished. */
-	const IGNORED = '<!-- variants ignored: details.subtype is not ProductGroup -->';
+	const IGNORED = VARIANTS_IGNORED;
 	test('variants on a plain Product are skipped, with a diagnostic', () => {
 		const html = render({ schemaType: 'product', headline: 'Wool coat', details: { variants } });
 		assert.match(html, /itemtype="https:\/\/schema\.org\/Product"/);
@@ -143,6 +149,55 @@ describe('product variants', () => {
 		assert.match(html, /content="&quot;&gt;&lt;script&gt;alert\(1\)&lt;\/script&gt;"/, 'productGroupID present and escaped');
 		/* the price TEXT NODE beside the escaped value= attribute */
 		assert.match(html, /<data itemprop="price" value="[^"]*">&lt;script&gt;alert\(2\)&lt;\/script&gt; &lt;img src=x onerror=alert\(1\)&gt;<\/data>/, 'price text node present and escaped');
+	});
+});
+
+/* A <ui-reveal> back panel renders the FLIPSIDE's content column into the HOST's
+   itemscope, so a subtype-only property must be gated on the itemtype that was
+   actually written — the host's. Docs: docs/schema.md § Product */
+describe('flipside itemscope', () => {
+	const presets = { rev: { element: 'ui-reveal', variant: 'col' } };
+	const flip = { id: 'f', fields: { schemaType: 'product', headline: 'Coat', details: { subtype: 'ProductGroup', variants: VARIANTS } } };
+	const host = (schemaType, details) => renderCard(
+		{ fields: { schemaType, headline: 'Host', details, preset: { $ref: 'card-preset/rev' }, flipside: { $ref: 'card/f' } } },
+		presets, { f: flip });
+
+	test('a ProductGroup flipside cannot hang hasVariant on a non-group host', () => {
+		for (const [schemaType, itemtype] of [['article', 'Article'], ['product', 'Product'], ['event', 'Event']]) {
+			const html = host(schemaType);
+			assert.match(html, new RegExp(`itemtype="https://schema\\.org/${itemtype}"`), schemaType);
+			assert.ok(!html.includes('hasVariant'), `${schemaType}: hasVariant is not a ${itemtype} property`);
+			assert.ok(!html.includes('variesBy'), `${schemaType}: variesBy is not a ${itemtype} property`);
+			assert.ok(!html.includes('productGroupID'), `${schemaType}: productGroupID is not a ${itemtype} property`);
+			assert.ok(html.includes(VARIANTS_IGNORED), `${schemaType}: the skip must leave a signal`);
+			/* the host scope is the only scope — nothing re-opened a ProductGroup inside it */
+			assert.ok(!html.includes('schema.org/ProductGroup'), `${schemaType}: no nested group scope`);
+		}
+	});
+
+	test('a ProductGroup host does render its flipside variants', () => {
+		const html = host('product', { subtype: 'ProductGroup' });
+		assert.match(html, /itemtype="https:\/\/schema\.org\/ProductGroup"/);
+		assert.equal(count(html, 'itemprop="hasVariant"'), 2);
+		assert.ok(!html.includes(VARIANTS_IGNORED));
+	});
+
+	/* the derived back panel (no flipside) renders the HOST's own details — same gate */
+	test('a derived reveal back panel renders variants for a group host', () => {
+		const html = renderCard(
+			{ fields: { schemaType: 'product', headline: 'Coat', details: { subtype: 'ProductGroup', variants: VARIANTS }, preset: { $ref: 'card-preset/rev' } } },
+			presets);
+		assert.match(html, /itemtype="https:\/\/schema\.org\/ProductGroup"/);
+		assert.equal(count(html, 'itemprop="hasVariant"'), 2);
+		assert.ok(!html.includes(VARIANTS_IGNORED));
+	});
+	test('a derived reveal back panel on a plain Product host does not', () => {
+		const html = renderCard(
+			{ fields: { schemaType: 'product', headline: 'Coat', details: { variants: VARIANTS }, preset: { $ref: 'card-preset/rev' } } },
+			presets);
+		assert.match(html, /itemtype="https:\/\/schema\.org\/Product"/);
+		assert.ok(!html.includes('hasVariant'));
+		assert.ok(html.includes(VARIANTS_IGNORED));
 	});
 });
 
