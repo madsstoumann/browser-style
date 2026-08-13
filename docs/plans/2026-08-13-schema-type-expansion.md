@@ -658,6 +658,26 @@ Per `docs/session-start.md`:
 
 Task 1 first because nothing else is testable without it. Task 2 next because it is the cheapest coverage in the plan and later tasks depend on its allowlists (real estate reuses `location`, TV/music lean on `organization`). Phase 2 before Phase 3 because those four are live Google features with real deadlines attached to their value, and two of them are extensions of existing renderers rather than new types — lower risk, faster feedback on the workflow. Phase 3 is ordered by how much existing machinery each type reuses: `service` and `realestate` lean hardest on existing helpers, `glossary`/`podcastseries` are the smallest and make good last tasks. Documentation last, when the counts are final.
 
+## Open gate: the `baseType()` call sites are pinned by nothing
+
+Found by the review of `503c8355`/`70c36804`, and mutation-confirmed independently. `baseType()` is routed through three sites — `render.js:93` (inside `resolveItemtype`), `:1363` (`flipsideBack`), `:1456` (`renderCard`). **Reverting the latter two to the old truthiness form leaves all 14 tests green.** Two-thirds of the hardening can therefore regress silently.
+
+It is not theoretical. With those two reverted and `schemaType: "constructor"`, the `itemtype` stays clean — the resolver is still guarded — but the poisoned `type` flows into the sibling type-keyed maps (`HEADLINE_PROP`, `TAGS_PROP`, `DETAILS`, …), and rendering a real UCF emits **four** attributes reading `itemprop="function Object() { [native code] }"`. The defect is relocated from `itemtype` to `itemprop`, not removed.
+
+Fix inside the existing prototype-key loop in `render.test.js`:
+
+```js
+assert.match(html, /data-part="headline" itemprop="name"/, schemaType);      // pins renderCard's type
+assert.doesNotMatch(html, /\[native code\]|\[object Object\]/, schemaType);  // pins the whole family
+```
+
+The `doesNotMatch` is the important one: it closes every current **and future** type-keyed map at once, which matters because the remaining tasks add more of them. Land this before Task 5.
+
+Three further items from the same review, worth doing while each table still holds one entry:
+- **`WATCHABLE` should be a `Map`, not a `Set`.** The vocabulary is not binary: `Book` currently gets `ViewAction` where schema.org has `ReadAction`, and `PodcastEpisode` wants `ListenAction`. A `Map` of itemtype → action with `?? 'ViewAction'` costs the same lines and drops in for whatever audio/episode types later tasks add. "No podcast data carries `viewCount`" is not a contract — `card.schema.json` puts `engagement.viewCount` on every type.
+- **Lint the itemtype-override tables against `SUBTYPES`.** `HEADLINE_PROP_BY_ITEMTYPE` is keyed by resolved itemtype, so it structurally cannot express "only when sharpened from `social`" — yet `BlogPosting` deliberately resolves to `name` under `social` and `headline` under `article`. A contributor following the § Subtypes rule literally would add `['BlogPosting', 'headline']` and break the documented contract. Add to `tokens.lint.js`: no key of an itemtype-keyed override table may appear in more than one `SUBTYPES` list.
+- **Doc drift from commit 2**: `cms/baseline/models/card.schema.json` still describes the engagement counters as `WatchAction/LikeAction/ShareAction/CommentAction`, and `ui/card/docs/card.md` still states the pre-commit headline rule verbatim — the file `AGENTS.md` points contributors at for renderer work.
+
 ## Follow-ups discovered during execution
 
 Recorded here rather than fixed inline — each is real, each is outside the file scope of the task that surfaced it. Scope discipline mid-run is worth more than the convenience of fixing them where they were found.
