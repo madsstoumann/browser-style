@@ -12,7 +12,9 @@
   "fields": {
     "internalName": "Demo — Quiz",
     "schemaType": "quiz",
-    "preset": { "$ref": "card-preset/stack-accordion" },
+    "preset": {
+      "$ref": "card-preset/stack-accordion"
+    },
     "eyebrow": "Flashcards",
     "headline": "Quantum computing — flashcards",
     "summary": "Three cards on the vocabulary every explainer assumes you already know. Open a card to check yourself.",
@@ -24,6 +26,7 @@
       }
     ],
     "details": {
+      "format": "flashcard",
       "subject": "Quantum computing",
       "pace": "self-paced",
       "cards": [
@@ -41,6 +44,9 @@
         }
       ]
     },
-    "tags": ["Flashcards", "Physics"]
+    "tags": [
+      "Flashcards",
+      "Physics"
+    ]
   }
 }

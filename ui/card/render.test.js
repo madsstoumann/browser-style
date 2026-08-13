@@ -498,6 +498,71 @@ describe('quiz — Quiz', () => {
 	});
 });
 
+/* The SECOND Quiz shape. `Question` accepts suggestedAnswer AND acceptedAnswer at
+   once, so a Quiz is either a flashcard deck (one acceptedAnswer, revealed) or a
+   graded multiple-choice set. `details.format` chooses — explicitly, never inferred
+   from the presence of options. Docs: docs/schema.md § Quiz */
+describe('quiz — multiple choice', () => {
+	const cards = [{
+		question: 'What can a qubit hold that a classical bit cannot?',
+		options: [{ text: 'Two values at once' }, { text: 'A superposition', correct: true }, { text: 'Nothing' }]
+	}];
+	const card = (extra = {}) => render({ schemaType: 'quiz', headline: 'Check yourself', details: { format: 'multiple-choice', subject: 'Quantum computing', cards, ...extra } });
+	/* one card in the fixture, so the meta row must read "1 question", not "1 questions" */
+
+	/* schema.org documents exactly three eduQuestionType spellings; Google's retired
+	   Practice Problems feature read "Multiple choice" with a "Practice problem" resource */
+	test('the graded shape uses the Multiple choice / Practice problem wording', () => {
+		const html = card();
+		assert.match(html, /itemtype="https:\/\/schema\.org\/Quiz"/);
+		assert.match(html, /<meta itemprop="learningResourceType" content="Practice problem">/);
+		assert.match(html, /<meta itemprop="eduQuestionType" content="Multiple choice">/);
+		assert.ok(!html.includes('Flashcard'), 'the flashcard wording must not leak into the graded deck');
+		assert.match(html, /· 1 question(?!s)/, 'and the noun follows the shape, singular included');
+	});
+
+	/* the correct option is the acceptedAnswer, the rest suggestedAnswer — the same
+	   shape DETAILS.qa uses, and the one Google's Practice Problems example had */
+	test('one acceptedAnswer, the rest suggestedAnswer, each positioned', () => {
+		const html = card();
+		assert.equal(count(html, 'itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer"'), 1);
+		assert.equal(count(html, 'itemprop="suggestedAnswer" itemscope itemtype="https://schema.org/Answer"'), 2);
+		assert.match(html, /itemprop="acceptedAnswer"[^>]*><meta itemprop="position" content="2">/);
+		assert.match(html, /<span itemprop="text">A superposition<\/span><\/label> <ui-chip theme="pale green">Correct<\/ui-chip>/);
+	});
+
+	/* CSS-only: one radio group per question, named off the deck so two graded decks
+	   on one page cannot share a group */
+	test('radios group per question, off a slugged deck name', () => {
+		const html = card({ cards: [...cards, { question: 'Second?', options: [{ text: 'a', correct: true }] }] });
+		assert.equal(count(html, 'name="quiz-check-yourself-q1"'), 3);
+		assert.equal(count(html, 'name="quiz-check-yourself-q2"'), 1);
+		assert.match(html, /<input type="radio" class="--check" name="quiz-check-yourself-q1">/);
+		/* a hostile headline cannot reach the attribute: plain() drops the tag and the
+		   slug allowlist drops what is left, so the group falls back to a fixed word */
+		const hostile = render({ schemaType: 'quiz', headline: '"><img src=x>', details: { format: 'multiple-choice', cards } });
+		assert.ok(!hostile.includes('<img src=x'), 'the slug allowlist keeps markup out of the name');
+		assert.match(hostile, /name="quiz-card-q1"/);
+	});
+
+	/* the format is the switch, not the incidental presence of options */
+	test('format chooses the shape, and a mismatch is loud', () => {
+		/* options under a flashcard deck are dropped WITH a diagnostic */
+		const mismatch = render({ schemaType: 'quiz', headline: 'X', details: { format: 'flashcard', cards } });
+		assert.ok(mismatch.includes('<!-- options ignored: details.format is not multiple-choice -->'));
+		assert.ok(!mismatch.includes('suggestedAnswer'), 'and they never render');
+		assert.match(mismatch, /content="Flashcard"/);
+		/* an unknown format falls back to the flashcard deck, same diagnostic */
+		const unknown = render({ schemaType: 'quiz', headline: 'X', details: { format: 'true-false', cards } });
+		assert.match(unknown, /content="Flashcard"/);
+		assert.ok(!unknown.includes('true-false'), 'an invented format never reaches the markup');
+		assert.ok(unknown.includes('<!-- options ignored'));
+		/* a clean deck of either shape carries no diagnostic */
+		assert.ok(!card().includes('options ignored'));
+		assert.ok(!render({ schemaType: 'quiz', headline: 'X', details: { cards: [{ question: 'q', answer: 'a' }] } }).includes('options ignored'));
+	});
+});
+
 describe('service — Service', () => {
 	const details = {
 		serviceType: 'Managed cloud hosting', provider: 'Northwind Group', areaServed: 'Denmark',

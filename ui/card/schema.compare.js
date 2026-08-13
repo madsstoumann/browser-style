@@ -12,7 +12,7 @@
  *   node ui/card/schema.compare.js TVSeries   # one type
  *   node ui/card/schema.compare.js --raw      # without the H2 normalisation below
  *
- * TWO declared canonicalisations, applied to BOTH sides. Each is a PAGE convention
+ * THREE declared canonicalisations, applied to BOTH sides. Each is a PAGE convention
  * that pre-dates these types and holds for every card, and each was demonstrated on
  * already-transcribed cards (movie and how-to reduce to an exact match under them)
  * before being trusted:
@@ -23,6 +23,11 @@
  *                          eyebrow; the renderer emits it after the summary, because
  *                          DETAILS runs after the envelope and has no reorder hook.
  *                          Stable-partitioned to the front of <ui-content>.
+ *   H3  root identity      id= / data-view= on the <ui-card> root are page-authoring
+ *                          hooks — anchor targets, view-transition names, and the
+ *                          selector this script uses to tell two cards of one type
+ *                          apart. The renderer never emits either on the root, so
+ *                          both are dropped. Nothing inside the card is touched.
  *
  * Everything else — itemtypes, itemprops, nesting, order, attribute values, and the
  * difference between U+0020 and U+00A0 — is a real difference and is reported.
@@ -47,6 +52,8 @@ const images = { cdnBase: 'https://v4.browser.style', sizes: '(min-width: 540px)
 const PAIRS = [
 	['MemberProgram', 'ui/card/data/loyalty.json'],
 	['Quiz', 'ui/card/data/quiz.json'],
+	/* the graded sibling — two Quiz cards on the page, so this one matches by id */
+	['Quiz#schema-quiz-mc', 'ui/card/data/quiz-mc.json'],
 	['Service', 'ui/card/data/service.json'],
 	['RealEstateListing', 'ui/card/data/realestate.json'],
 	['Menu', 'ui/card/data/menu.json'],
@@ -124,6 +131,15 @@ function hoistMedia(tree) {
 	return tree;
 }
 
+/* H3 — page-authoring identity on the card root, never renderer output */
+const ROOT_IDENTITY = new Set(['id', 'data-view']);
+function dropRootIdentity(tree) {
+	walk(tree, (n) => {
+		if (n.tag === 'ui-card' || n.tag === 'ui-reveal') n.attrs = n.attrs.filter(([k]) => !ROOT_IDENTITY.has(k));
+	});
+	return tree;
+}
+
 /* H2 */
 const isMachine = (n) => n.tag && (n.tag === 'meta' || hasAttr(n, 'hidden'));
 function hoistMachineMetas(tree) {
@@ -148,22 +164,27 @@ function serialise(node, out = [], depth = 0) {
 
 const canon = (html) => {
 	/* the page carries explanatory comments the renderer has no reason to emit */
-	let tree = hoistMedia(parse(html.replace(/<!--[\s\S]*?-->/g, '')));
+	let tree = dropRootIdentity(hoistMedia(parse(html.replace(/<!--[\s\S]*?-->/g, ''))));
 	if (!raw) tree = hoistMachineMetas(tree);
 	return serialise(tree);
 };
 
-/* pull one <ui-card …itemtype="…/{type}"> … </ui-card> block off the page */
-function referenceCard(itemtype) {
-	const m = new RegExp(`<ui-card[^>]*itemtype="https://schema\\.org/${itemtype}"[^>]*>`).exec(page);
-	if (!m) throw new Error(`no reference card for ${itemtype}`);
+/* pull one <ui-card …itemtype="…/{type}"> … </ui-card> block off the page.
+   `Type#id` disambiguates when the page carries more than one card of a type. */
+function referenceCard(spec) {
+	const [itemtype, id] = spec.split('#');
+	const open = id
+		? `<ui-card[^>]*id="${id}"[^>]*itemtype="https://schema\\.org/${itemtype}"[^>]*>`
+		: `<ui-card(?![^>]*\\bid=)[^>]*itemtype="https://schema\\.org/${itemtype}"[^>]*>`;
+	const m = new RegExp(open).exec(page);
+	if (!m) throw new Error(`no reference card for ${spec}`);
 	const tag = /<\/?ui-card\b[^>]*>/g;
 	tag.lastIndex = m.index;
 	let depth = 0, t;
 	while ((t = tag.exec(page)))
 		if (t[0].startsWith('</')) { if (--depth === 0) return page.slice(m.index, t.index + t[0].length); }
 		else depth++;
-	throw new Error(`unclosed reference card for ${itemtype}`);
+	throw new Error(`unclosed reference card for ${spec}`);
 }
 
 /* line-level LCS diff */

@@ -14,7 +14,7 @@ card of its own.
 
 Every card type from the legacy `content/card` package — plus the nine types added in model
 v1.3 (organization, video, howto, qa, podcast, movie, book, dataset, claim), plus the eleven
-[authored ahead of the renderer](#types-authored-ahead-of-the-renderer) — re-created with
+[authored markup-first](#types-authored-markup-first) — re-created with
 the modern engine: `<ui-card>` + `<ui-media>` + `<ui-content>`, with satellites `<ui-chip>`,
 `<ui-sticker>`, `<ui-save>`, `<ui-avatar>`, `<ui-quote>` and `<ui-accordion>`. Every card uses
 the same composition: media on top, text below. Structured data is inline **microdata**
@@ -451,19 +451,51 @@ renderer takes `tiers[].url` for that, and these three demo tiers simply have no
 tier's `@id`. When the programme is the card's own subject that link can only run the other way,
 so the card emits `hostingOrganization` → `Organization` instead.
 
-### Quiz — `Quiz`
+### Quiz — `Quiz` (two cards, one type, different eligibility)
 
-Google's Education Q&A feature is **flashcards only**. `Quiz` has *no properties of its own* — it
-is a `LearningResource`, and everything comes from there or from `CreativeWork`.
+`Quiz` has *no properties of its own* — it is a `LearningResource`, and everything comes from
+there or from `CreativeWork`. ⚠️ **`eduQuestionType` is a property of `Question`, not of `Quiz`**
+(its domain is `Question` and `SolveMathAction`).
 
-⚠️ **`eduQuestionType` is a property of `Question`, not of `Quiz`** (its domain is `Question` and
-`SolveMathAction`). One flashcard = one `hasPart` → `Question` carrying
-`eduQuestionType: "Flashcard"` (any other value makes the card ineligible), `text` for the prompt,
-and exactly one `acceptedAnswer` → `Answer` with its own `text`. Google requires only `hasPart`;
-`about` → `Thing` and `educationalAlignment` → `AlignmentObject` are recommended, and Google reads
-just two of `AlignmentObject`'s properties — `alignmentType` and `targetName`. Both are here.
-`learningResourceType: "Flashcard"` on the `Quiz` is valid `LearningResource` vocabulary that
-Google never mentions — it is semantic value only, not a requirement.
+The thing that makes two cards out of one type: **`Question` accepts `suggestedAnswer` and
+`acceptedAnswer` at the same time**, so three shapes exist and the page shows all three.
+
+| shape | properties on the `Question` | interaction | card |
+|---|---|---|---|
+| Flashcard | one `acceptedAnswer` | reveal | Quiz — *flashcards* |
+| Multiple choice | several `suggestedAnswer` **+** one `acceptedAnswer` | select, then check the key | Quiz — *check yourself* |
+| Poll | several `suggestedAnswer`, no accepted one | select, see results | the [`Question` card](#poll--question) |
+
+**Read the eligibility difference before copying either.** The two Quiz cards are markup siblings
+with *opposite* rich-result status, and nothing in the markup says so:
+
+- **Flashcards are Google-eligible.** Education Q&A is live and still expanding by language.
+  `eduQuestionType: "Flashcard"` is required — any other value makes the card ineligible. Google
+  requires only `hasPart`; `about` → `Thing` and `educationalAlignment` → `AlignmentObject` are
+  recommended, and Google reads just two of `AlignmentObject`'s properties, `alignmentType` and
+  `targetName`. Both are here. `learningResourceType: "Flashcard"` is valid `LearningResource`
+  vocabulary that Google never mentions — semantic value only, not a requirement.
+- **Multiple choice has no live rich result.** It is the shape Google's *Practice Problems* feature
+  consumed (`eduQuestionType: "Multiple choice"`, `learningResourceType: "Practice problem"`), and
+  that feature was **retired in January 2026**; the documentation page now redirects to Education
+  Q&A. The **markup is not deprecated** — `eduQuestionType` is core schema.org, which documents
+  exactly three spellings ("Multiple choice", "Open ended", "Flashcard"). We keep the card for the
+  same reason we keep `FAQPage`, `HowTo` and `ClaimReview`: see
+  [the type-expansion plan § Deprecated rich results](../../../docs/plans/2026-08-13-schema-type-expansion.md)
+  — SERP features are one consumer among several.
+
+**In the renderer**, `details.format` picks the shape — `flashcard` or `multiple-choice` — and it
+is deliberately **explicit rather than inferred** from whether questions carry options: the same
+`details` shape must not silently produce a flashcard when the author meant a graded question. An
+unrecognised format falls back to `flashcard`, and options under an ungraded deck are dropped with
+an HTML comment, the same loud-skip discipline as [`ProductGroup` variants](#product--product-subtype-productgroup).
+
+The graded card marks the correct option with a visible **answer key** (a `pale green` chip) rather
+than hiding it behind a `<details>`. Two reasons: the cards are CSS-only with no JS to grade with,
+and the flashcard deck already owns the reveal idiom — reusing it here would blur exactly the
+distinction the pair exists to draw. Options reuse the poll card's `options` part unchanged: one
+`<input type="radio" class="--check">` per answer, one shared `name` per question (the renderer
+slugs it from the deck headline, so two graded decks on a page cannot share a group).
 
 ### Service — `Service`
 

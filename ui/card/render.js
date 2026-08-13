@@ -143,6 +143,17 @@ const MEDICAL_ASPECTS = { signOrSymptom: 'MedicalSignOrSymptom', riskFactor: 'Me
    similarly named MedicalAudienceType enumeration (Clinician/MedicalResearcher) */
 const MEDICAL_AUDIENCES = new Set(['MedicalAudience', 'Patient']);
 
+/* Quiz question shapes. `Question` accepts suggestedAnswer AND acceptedAnswer at
+   once, so a Quiz can be a flashcard deck (one acceptedAnswer, revealed) or a graded
+   multiple-choice set (several suggestedAnswer + the acceptedAnswer). The format is
+   an EXPLICIT field, not inferred from the presence of options, and it picks both
+   itemprop values. schema.org documents exactly three eduQuestionType spellings —
+   "Multiple choice", "Open ended", "Flashcard". Docs: docs/schema.md § Quiz */
+const QUIZ_FORMATS = {
+	flashcard: { question: 'Flashcard', resource: 'Flashcard' },
+	'multiple-choice': { question: 'Multiple choice', resource: 'Practice problem' }
+};
+
 /* Fallback when a card references no preset (or an unknown one).
    Real presets live in data/card.presets.json — instances of the
    card-preset model (cms/baseline/models/card-preset.schema.json). */
@@ -958,6 +969,10 @@ const variantsPart = (variants) => {
 /* leading year of an ISO date — "since 2023" in a series meta row */
 const startYear = (iso) => /^\d{4}/.exec(iso || '')?.[0] || null;
 
+/* text → an attribute-safe token, for grouping names the renderer mints itself
+   (radio groups). Strict allowlist, so it can never break out of the attribute. */
+const slug = (text) => String(text ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'card';
+
 /* A list of ALREADY-BUILT scoped <li> rows (each carries its own itemscope, so
    listPart's plain-string shape does not fit). Ordered vs unordered is DATA
    (`details.ordered`), because the answer is per list, not per type: album tracks
@@ -1487,26 +1502,53 @@ const DETAILS = {
 		return html;
 	},
 
-	/* Google's Education Q&A feature is flashcards only, and eduQuestionType is a
-	   QUESTION property — Quiz owns none of its own. Both values are fixed, not data:
-	   any other spelling makes the card ineligible. Docs: docs/schema.md § Quiz */
+	/* eduQuestionType is a QUESTION property — Quiz owns none of its own. Two shapes
+	   share this renderer and `details.format` chooses between them EXPLICITLY: a
+	   flashcard deck (Google Education Q&A, live) or a graded multiple-choice set
+	   (Google Practice Problems, retired January 2026 — still valid schema.org).
+	   Docs: docs/schema.md § Quiz */
 	quiz(d, fields, parts = {}) {
 		const cards = d.cards || [];
-		let html = meta('learningResourceType', 'Flashcard')
+		const format = Object.hasOwn(QUIZ_FORMATS, d.format) ? d.format : 'flashcard';
+		const words = QUIZ_FORMATS[format];
+		const graded = format === 'multiple-choice';
+		let html = meta('learningResourceType', words.resource)
 			+ (d.subject ? `<div${scope('educationalAlignment', 'AlignmentObject')} hidden>${meta('alignmentType', 'educationalSubject')}${meta('targetName', d.subject)}</div>` : '');
+		const noun = graded ? 'question' : 'card';
 		const bits = [
 			d.subject ? `Subject: <span${scope('about', 'Thing')}><span itemprop="name">${esc(d.subject)}</span></span>` : null,
-			cards.length ? `${cards.length} card${cards.length === 1 ? '' : 's'}` : null,
+			cards.length ? `${cards.length} ${noun}${cards.length === 1 ? '' : 's'}` : null,
 			d.pace ? esc(d.pace) : null
 		].filter(Boolean).join(' · ');
 		if (bits) html += `<p data-part="meta">${bits}</p>`;
-		if (cards.length) {
-			html += accordion('quiz-card', cards.map((card) => ({
-				summary: `<span itemprop="text">${esc(card.question)}</span>${meta('eduQuestionType', 'Flashcard')}`,
+		if (!cards.length) return html;
+		if (!graded) {
+			/* an ungraded deck that carries options means the author meant the graded
+			   shape and forgot to say so — skipping is loud, as with product variants */
+			if (cards.some((card) => card.options?.length)) html += '<!-- options ignored: details.format is not multiple-choice -->';
+			return html + accordion('quiz-card', cards.map((card) => ({
+				summary: `<span itemprop="text">${esc(card.question)}</span>${meta('eduQuestionType', words.question)}`,
 				body: `<div${scope('acceptedAnswer', 'Answer')}><p itemprop="text">${esc(card.answer)}</p></div>`,
 				scopeAttrs: scope('hasPart', 'Question')
 			})), parts.accordion);
 		}
+		/* Graded: every option is an Answer — the correct one as acceptedAnswer, the
+		   rest as suggestedAnswer (the shape DETAILS.qa already uses). The radios are
+		   CSS-only, so the accepted option is marked with a visible answer KEY rather
+		   than a reveal: the flashcard deck already owns the reveal idiom, and a key
+		   is what reads as "graded". One radio group per question, named off the deck. */
+		const group = `quiz-${slug(plain(fields.headline))}`;
+		cards.forEach((card, index) => {
+			const name = `${group}-q${index + 1}`;
+			const options = (card.options || []).map((option, position) =>
+				`<li${scope(option.correct ? 'acceptedAnswer' : 'suggestedAnswer', 'Answer')}>${meta('position', position + 1)}
+					<label><input type="radio" class="--check" name="${esc(name)}"> <span itemprop="text">${esc(option.text)}</span></label>${option.correct ? ' <ui-chip theme="pale green">Correct</ui-chip>' : ''}
+				</li>`).join('');
+			html += `<div${scope('hasPart', 'Question')}>${meta('eduQuestionType', words.question)}
+				<p data-part="meta"><strong itemprop="text">${esc(card.question)}</strong></p>
+				${options ? `<ul data-part="options">${options}</ul>` : ''}
+			</div>`;
+		});
 		return html;
 	},
 
