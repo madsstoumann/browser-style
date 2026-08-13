@@ -85,6 +85,56 @@ describe('product variants', () => {
 		assert.ok(!html.includes('flavour'), 'an unknown axis never reaches the output');
 	});
 
+	/* the allowlist drives BOTH sides — this is the item half (variesBy is tested above) */
+	test('an item property outside the axis allowlist is never emitted', () => {
+		const html = group({ variants: { ...variants, items: [{ ...variants.items[0], flavour: 'mint', brand: 'Acme' }] } });
+		assert.ok(!html.includes('flavour'), 'an unknown item axis never reaches the output');
+		assert.ok(!html.includes('mint'), 'nor its value');
+		assert.ok(!html.includes('Acme'), 'the item is not spread wholesale into metas');
+		assert.match(html, /<meta itemprop="color" content="Green">/, 'allowlisted axes still emit');
+	});
+
+	/* one of the two live-docs corrections: nested hasVariant must NOT repeat the group id.
+	   `productGroupID` is not a substring of `inProductGroupWithID`, so this needs its own test */
+	test('nested variants never carry inProductGroupWithID', () => {
+		const html = group();
+		assert.ok(!html.includes('inProductGroupWithID'), 'that property is for the unnested isVariantOf form');
+		assert.match(html, /<meta itemprop="productGroupID" content="AB123">/, 'the group id rides the group alone');
+	});
+
+	/* `item.price == null` is deliberate: a free variant has a price of 0, which is falsy */
+	test('a zero-priced variant still renders an offer', () => {
+		const html = group({ variants: { ...variants, items: [{ name: 'Free sample', sku: 'S0', color: 'Green', price: 0, currency: 'USD' }] } });
+		assert.equal(count(html, 'itemprop="offers" itemscope itemtype="https://schema.org/Offer"'), 1);
+		assert.match(html, /<data itemprop="price" value="0">\$0<\/data>/);
+	});
+
+	/* Google: "The site must have the ability to preselect each variant directly with a
+	   distinct URL" — a real anchor, not a meta, is what makes that crawlable */
+	test('a variant url becomes a real crawlable anchor', () => {
+		const html = group({ variants: { ...variants, items: [{ ...variants.items[0], url: '/coat?size=s&color=green' }] } });
+		assert.match(html, /<a itemprop="url" href="\/coat\?size=s&amp;color=green"><span itemprop="name">Small green coat<\/span><\/a>/);
+		/* no url → a bare name, no empty anchor */
+		assert.ok(!group().includes('<a itemprop="url"'));
+		assert.match(group(), /<li[^>]*><span itemprop="name">Small green coat<\/span>/);
+	});
+
+	test('a hostile variant url cannot break out of the href', () => {
+		const html = group({ variants: { ...variants, items: [{ ...variants.items[0], url: '"><img src=x onerror=alert(1)>' } ] } });
+		assert.ok(!html.includes('<img'), 'attribute breakout must be escaped');
+		assert.match(html, /href="&quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;"/, 'url present and escaped');
+	});
+
+	/* the block-level skip is loud; an unknown axis was silently deleted — including
+	   suggestedGender, a Google-documented axis this renderer deliberately excludes */
+	test('a dropped axis leaves a diagnostic too', () => {
+		const html = group({ variants: { ...variants, variesBy: ['color', 'suggestedGender'] } });
+		assert.ok(html.includes('<!-- variesBy axes ignored: not one of color, size, material, pattern -->'));
+		assert.equal(count(html, 'itemprop="variesBy"'), 1);
+		/* and never on a clean group */
+		assert.ok(!group().includes('variesBy axes ignored'));
+	});
+
 	test('each variant offer carries currency, availability and a machine price', () => {
 		const html = group();
 		assert.equal(count(html, 'itemprop="offers" itemscope itemtype="https://schema.org/Offer"'), 2);
@@ -370,7 +420,14 @@ describe('subtype sharpening', () => {
 		   stringified into the itemtype attribute (and threw on `__proto__`) */
 		for (const schemaType of ['constructor', 'toString', '__proto__', 'hasOwnProperty', 'valueOf']) {
 			assert.equal(resolveItemtype({ schemaType, headline: 'X' }), 'CreativeWork', schemaType);
-			assert.match(render({ schemaType, headline: 'X' }), /itemtype="https:\/\/schema\.org\/CreativeWork"/, schemaType);
+			const html = render({ schemaType, headline: 'X' });
+			assert.match(html, /itemtype="https:\/\/schema\.org\/CreativeWork"/, schemaType);
+			/* resolveItemtype is not the only consumer: baseType() also keys the type-keyed
+			   maps (HEADLINE_PROP, SUMMARY_PROP, EYEBROW_PROP, PUBLISHED_PROP…). A truthiness
+			   test there returns Object.prototype members, which stringify INTO an attribute —
+			   the raw-JS-in-an-attribute defect relocated from itemtype to itemprop. */
+			assert.match(html, /data-part="headline" itemprop="name"/, schemaType);
+			assert.doesNotMatch(html, /\[native code\]|\[object Object\]/, schemaType);
 		}
 	});
 });

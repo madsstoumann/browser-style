@@ -161,7 +161,7 @@ variant group carries every property the plain product card already emits. Demo 
   "variants": {
     "variesBy": ["color", "size"],
     "productGroupID": "NL-COAT",
-    "items": [{ "name": "Northline Wool Coat — Forest, S", "sku": "NL-COAT-FRS-S", "color": "Forest", "size": "S", "price": 249, "currency": "USD", "availability": "Out of stock" }]
+    "items": [{ "name": "…, Ivory, S", "url": "/gown?color=ivory&size=s", "sku": "PSG-01-IVY-S", "color": "Ivory", "size": "S", "price": 249, "currency": "USD", "availability": "Out of stock" }]
   }
 }
 ```
@@ -176,12 +176,27 @@ Three points follow Google's live documentation rather than intuition:
    emits `inProductGroupWithID`. (That property is for the *unnested* form, which this engine does
    not produce.)
 3. **Each variant needs its own `sku`** (or `gtin`) and carries the varying properties itself.
+4. **Each variant needs a distinct URL.** Google: "The site must have the ability to preselect each
+   variant directly with a distinct URL (using URL query parameters)… This allows Google to crawl
+   and identify each variant." An optional `item.url` therefore renders as a **real `<a>` around
+   the variant name**, not a `<meta>` — only a link is crawlable. Google's own example puts the URL
+   on `offers.url`; the docs confirm individual `Product` entities may carry `url` too, and the
+   Product level is where the anchor can wrap the variant's own name.
 
 The axis vocabulary is an allowlist — `color`, `size`, `material`, `pattern` — and it is the **same
-list on both sides**: what `variesBy` may name is exactly what an item may emit. An axis a variant
-cannot carry would advertise a property that appears nowhere in the markup, so unknown axes are
-dropped. (Google also documents `suggestedAge`/`suggestedGender`; they describe an audience rather
-than a per-item property, and the variant shape has no field for them.)
+list on both sides**: what `variesBy` may name is exactly what an item may emit, and an item
+property outside it is never turned into a `<meta>`. An axis a variant cannot carry would advertise
+a property appearing nowhere in the markup, so unknown axes are dropped with their own comment:
+
+```html
+<!-- variesBy axes ignored: not one of color, size, material, pattern -->
+```
+
+(Google also documents `suggestedAge`/`suggestedGender`. They describe an audience rather than a
+per-item property and the variant shape has no field for them — which is exactly why dropping them
+needed a signal rather than silence.)
+
+`item.price` is tested with `== null`, not truthiness: a free variant prices at **0**.
 
 **The gate is the WRITTEN itemtype, never `details.subtype`.** `hasVariant`, `variesBy` and
 `productGroupID` are `ProductGroup`-**only** properties. `details.subtype` and `details.variants`

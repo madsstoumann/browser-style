@@ -47,11 +47,15 @@
         "max": 5
       },
       "variants": {
-        "variesBy": ["color", "size"],
+        "variesBy": [
+          "color",
+          "size"
+        ],
         "productGroupID": "PSG-01",
         "items": [
           {
             "name": "Persistence Silk Gown — Ivory, S",
+            "url": "/products/persistence-silk-gown?color=ivory&size=s",
             "sku": "PSG-01-IVY-S",
             "color": "Ivory",
             "size": "S",
@@ -60,6 +64,7 @@
           },
           {
             "name": "Persistence Silk Gown — Ivory, M",
+            "url": "/products/persistence-silk-gown?color=ivory&size=m",
             "sku": "PSG-01-IVY-M",
             "color": "Ivory",
             "size": "M",
@@ -68,6 +73,7 @@
           },
           {
             "name": "Persistence Silk Gown — Midnight, M",
+            "url": "/products/persistence-silk-gown?color=midnight&size=m",
             "sku": "PSG-01-MDN-M",
             "color": "Midnight",
             "size": "M",
@@ -76,6 +82,7 @@
           },
           {
             "name": "Persistence Silk Gown — Midnight, L",
+            "url": "/products/persistence-silk-gown?color=midnight&size=l",
             "sku": "PSG-01-MDN-L",
             "color": "Midnight",
             "size": "L",
@@ -86,6 +93,9 @@
         ]
       }
     },
-    "tags": ["Silk", "Eveningwear"]
+    "tags": [
+      "Silk",
+      "Eveningwear"
+    ]
   }
 }

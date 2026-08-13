@@ -874,12 +874,34 @@ const availabilityUrl = (availability) =>
    Allowlisted for the same two reasons as details.subtype — docs/schema.md § Subtypes. */
 const VARIANT_AXES = ['color', 'size', 'material', 'pattern'];
 
+/* One hasVariant row. `item.url` becomes a real anchor, not a meta: Google requires each
+   variant be "preselectable directly with a distinct URL", and only a link is crawlable.
+   `price == null` (not falsy) — a free variant prices at 0. Docs: docs/schema.md § Product */
+const variantItem = (item) => {
+	const name = `<span itemprop="name">${esc(item.name)}</span>`;
+	const offer = item.price == null ? '' : `<span${scope('offers', 'Offer')}>`
+		+ meta('priceCurrency', item.currency)
+		+ meta('availability', availabilityUrl(item.availability || 'in stock'))
+		+ ` <data itemprop="price" value="${esc(item.price)}">${fmtPrice(item.currency, item.price)}</data></span>`;
+	return `<li${scope('hasVariant', 'Product')}>`
+		+ (item.url ? `<a itemprop="url" href="${esc(item.url)}">${name}</a>` : name)
+		+ meta('sku', item.sku)
+		+ VARIANT_AXES.map((axis) => meta(axis, item[axis])).join('')
+		+ offer
+		+ '</li>';
+};
+
 /* Nested hasVariant needs no inProductGroupWithID, and variesBy takes FULL schema.org
    URLs, not bare property names. Docs: docs/schema.md § Product */
-const variantsPart = (variants) =>
-	meta('productGroupID', variants.productGroupID)
-	+ (variants.variesBy || []).filter((axis) => VARIANT_AXES.includes(axis)).map((axis) => meta('variesBy', SCHEMA + axis)).join('')
-	+ `<ul data-part="list">${variants.items.map((item) => `<li${scope('hasVariant', 'Product')}><span itemprop="name">${esc(item.name)}</span>${meta('sku', item.sku)}${VARIANT_AXES.map((axis) => meta(axis, item[axis])).join('')}${item.price == null ? '' : `<span${scope('offers', 'Offer')}>${meta('priceCurrency', item.currency)}${meta('availability', availabilityUrl(item.availability || 'in stock'))} <data itemprop="price" value="${esc(item.price)}">${fmtPrice(item.currency, item.price)}</data></span>`}</li>`).join('')}</ul>`;
+const variantsPart = (variants) => {
+	const wanted = variants.variesBy || [];
+	const axes = wanted.filter((axis) => VARIANT_AXES.includes(axis));
+	return meta('productGroupID', variants.productGroupID)
+		+ axes.map((axis) => meta('variesBy', SCHEMA + axis)).join('')
+		/* an unknown axis is dropped — say so, for the same reason the block-level skip does */
+		+ (axes.length < wanted.length ? `<!-- variesBy axes ignored: not one of ${VARIANT_AXES.join(', ')} -->` : '')
+		+ `<ul data-part="list">${variants.items.map(variantItem).join('')}</ul>`;
+};
 
 const DETAILS = {
 	product(d, fields, parts, itemtype) {
