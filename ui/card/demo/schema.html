@@ -13,7 +13,7 @@
 	<!-- srcset origin: handshake in parallel with the CSS download (~3 RTTs off the
 	     eager LCP image on pages.dev/localhost; same-origin no-op on v4.browser.style) -->
 	<link rel="preconnect" href="https://v4.browser.style">
-	<meta name="description" content="All 34 schema.org card types — the 25 legacy content-card types plus the v1.3 additions — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
+	<meta name="description" content="All 48 schema.org card types — one per distinct itemtype on the &lt;ui-card&gt; roots — re-created with the modern &lt;ui-card&gt; engine: inline microdata (itemscope/itemtype/itemprop), no JSON-LD. The job card carries a 49th type as a second top-level item: EmployerAggregateRating. One optional script: video.js polyfills the media invoker commands behind the podcast play button.">
 	<!-- One bundle for every card-demo package (source list: ui/card/components.md).
 	     Build: npm run build:demo-css (entry demo.css, output /dist/demo.min.css) -->
 	<link rel="stylesheet" href="/dist/demo.min.css">
@@ -361,6 +361,16 @@
 							DKK 720,000–840,000 <small>annually</small>
 						</span>
 					</p>
+					<!-- separate top-level item (itemscope, no itemprop): the rating is of the COMPANY, and JobPosting has no aggregateRating — docs/schema.md § Employer rating -->
+					<div data-part="rating" itemscope itemtype="https://schema.org/EmployerAggregateRating">
+						<span itemprop="itemReviewed" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Nordlys ApS"><meta itemprop="sameAs" content="https://nordlys.example"></span>
+						<meta itemprop="ratingValue" content="4.3">
+						<meta itemprop="ratingCount" content="268">
+						<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+						<input class="ui-rating" type="range" min="1" max="5" value="4.3" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Nordlys ApS rated 4.3 out of 5 by 268 employees</span>
+						<span aria-hidden="true">4.3 / 5 employer rating (268 reviews)</span>
+					</div>
 					<ui-accordion variant="bordered rounded divided" group="job-acc"><cq-box>
 						<details name="job-acc">
 							<summary>Requirements<ui-icon type="plus-minus"></ui-icon></summary>
@@ -423,6 +433,44 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
+		<!-- Google's Education Q&A feature is flashcards only: eduQuestionType lives on the QUESTION — docs/schema.md § Quiz -->
+		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Quiz">
+			<cq-box>
+				<ui-media><img src="/assets/images/quantum.png" alt="Stylised quantum processor" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/quantum.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/quantum.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/quantum.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/quantum.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/quantum.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Quiz</ui-chip></ui-media>
+				<ui-content>
+					<meta itemprop="learningResourceType" content="Flashcard">
+					<div itemprop="educationalAlignment" itemscope itemtype="https://schema.org/AlignmentObject" hidden>
+						<meta itemprop="alignmentType" content="educationalSubject">
+						<meta itemprop="targetName" content="Quantum computing">
+					</div>
+					<small data-part="eyebrow">Flashcards</small>
+					<h2 data-part="headline" itemprop="name">Quantum computing — flashcards</h2>
+					<p data-part="summary" itemprop="description">Three cards on the vocabulary every explainer assumes you already know. Open a card to check yourself.</p>
+					<p data-part="meta">Subject: <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><span itemprop="name">Quantum computing</span></span> · 3 cards · self-paced</p>
+					<ui-accordion variant="bordered rounded divided" group="quiz-card"><cq-box>
+						<details name="quiz-card" itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
+							<summary><span itemprop="text">What is a qubit?</span><meta itemprop="eduQuestionType" content="Flashcard"><ui-icon type="plus-minus"></ui-icon></summary>
+							<div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+								<p itemprop="text">The quantum unit of information. Unlike a bit it can hold a superposition of 0 and 1, and only collapses to one of them when measured.</p>
+							</div>
+						</details>
+						<details name="quiz-card" itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
+							<summary><span itemprop="text">What does quantum entanglement mean?</span><meta itemprop="eduQuestionType" content="Flashcard"><ui-icon type="plus-minus"></ui-icon></summary>
+							<div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+								<p itemprop="text">Two or more qubits share a single state, so measuring one instantly fixes the outcome of the others — however far apart they are.</p>
+							</div>
+						</details>
+						<details name="quiz-card" itemprop="hasPart" itemscope itemtype="https://schema.org/Question">
+							<summary><span itemprop="text">Why does a quantum computer need error correction?</span><meta itemprop="eduQuestionType" content="Flashcard"><ui-icon type="plus-minus"></ui-icon></summary>
+							<div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+								<p itemprop="text">Physical qubits decohere in microseconds. Many of them are combined into one <em>logical</em> qubit whose errors can be detected and corrected faster than they accumulate.</p>
+							</div>
+						</details>
+					</cq-box></ui-accordion>
+					<span data-part="tags"><ui-chip itemprop="keywords">Flashcards</ui-chip><ui-chip itemprop="keywords">Physics</ui-chip></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Reservation">
 			<cq-box>
 				<ui-media><img src="/assets/images/brewandbean.png" alt="Bright café interior with workspace tables" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/brewandbean.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/brewandbean.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/brewandbean.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/brewandbean.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/brewandbean.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Reservation</ui-chip></ui-media>
@@ -444,6 +492,44 @@
 					</ul>
 					<footer data-part="footer">Tell us about allergies or accessibility needs when booking.</footer>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Check availability</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Service">
+			<cq-box>
+				<ui-media><img src="/assets/images/maintainance.png" alt="Engineer patching a switch in a server rack" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/maintainance.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/maintainance.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/maintainance.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/maintainance.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/maintainance.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Service</ui-chip></ui-media>
+				<ui-content>
+					<meta itemprop="serviceType" content="Managed cloud hosting">
+					<small data-part="eyebrow">Managed hosting</small>
+					<h2 data-part="headline" itemprop="name">Always-On Managed Hosting</h2>
+					<p data-part="summary" itemprop="description">Monitored infrastructure with hourly backups, security patching inside 24 hours and a one-hour incident response — every day of the year.</p>
+					<p data-part="meta"><span itemprop="provider" itemscope itemtype="https://schema.org/Organization"><span itemprop="name">Northwind Group</span></span> · serving <span itemprop="areaServed" itemscope itemtype="https://schema.org/Place"><span itemprop="name">Denmark, Sweden and Norway</span></span></p>
+					<div itemprop="hasOfferCatalog" itemscope itemtype="https://schema.org/OfferCatalog">
+						<meta itemprop="name" content="Hosting plans">
+						<ul data-part="list">
+							<li itemprop="itemListElement" itemscope itemtype="https://schema.org/Offer">
+								<meta itemprop="priceCurrency" content="EUR">
+								<span itemprop="itemOffered" itemscope itemtype="https://schema.org/Service"><span itemprop="name">Managed Kubernetes</span></span> — <data itemprop="price" value="450">€450</data>/month
+							</li>
+							<li itemprop="itemListElement" itemscope itemtype="https://schema.org/Offer">
+								<meta itemprop="priceCurrency" content="EUR">
+								<span itemprop="itemOffered" itemscope itemtype="https://schema.org/Service"><span itemprop="name">Backup &amp; restore</span></span> — <data itemprop="price" value="120">€120</data>/month
+							</li>
+							<li itemprop="itemListElement" itemscope itemtype="https://schema.org/Offer">
+								<meta itemprop="priceCurrency" content="EUR">
+								<span itemprop="itemOffered" itemscope itemtype="https://schema.org/Service"><span itemprop="name">24/7 incident response</span></span> — <data itemprop="price" value="900">€900</data>/month
+							</li>
+						</ul>
+					</div>
+					<div itemprop="availableChannel" itemscope itemtype="https://schema.org/ServiceChannel">
+						<meta itemprop="availableLanguage" content="English">
+						<meta itemprop="availableLanguage" content="Danish">
+						<meta itemprop="processingTime" content="PT1H">
+						<nav data-part="actions">
+							<a class="ui-button" data-variant="accent" itemprop="serviceUrl" href="#">Request a quote</a>
+							<span itemprop="servicePhone" itemscope itemtype="https://schema.org/ContactPoint"><meta itemprop="contactType" content="technical support"><a class="ui-button" itemprop="telephone" href="tel:+4570809000">+45 70 80 90 00</a></span>
+						</nav>
+					</div>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -516,6 +602,36 @@
 							</div>
 						</details>
 					</cq-box></ui-accordion>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<!-- the reviewedBy byline is the E-E-A-T signal, so it is visible markup, never a hidden meta -->
+		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/MedicalWebPage">
+			<cq-box>
+				<ui-media><img src="/assets/images/mindfulness.png" alt="Person sitting quietly under a tree in a forest" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/mindfulness.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/mindfulness.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/mindfulness.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/mindfulness.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/mindfulness.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>MedicalWebPage</ui-chip></ui-media>
+				<ui-content>
+					<meta itemprop="specialty" content="https://schema.org/PrimaryCare">
+					<meta itemprop="lastReviewed" content="2026-05-02">
+					<div itemprop="medicalAudience" itemscope itemtype="https://schema.org/Patient" hidden>
+						<meta itemprop="name" content="Adults with persistent sleep problems">
+					</div>
+					<small data-part="eyebrow">Health library</small>
+					<h2 data-part="headline" itemprop="name">Chronic insomnia: what actually helps</h2>
+					<p data-part="summary" itemprop="description">Why sleeping tablets are no longer first-line treatment, and what a course of CBT-I involves week by week.</p>
+					<div itemprop="about" itemscope itemtype="https://schema.org/MedicalCondition">
+						<meta itemprop="name" content="Chronic insomnia">
+						<ul data-part="list">
+							<li itemprop="signOrSymptom" itemscope itemtype="https://schema.org/MedicalSignOrSymptom"><span itemprop="name">Trouble falling asleep three or more nights a week, for three months or longer</span></li>
+							<li itemprop="signOrSymptom" itemscope itemtype="https://schema.org/MedicalSignOrSymptom"><span itemprop="name">Waking in the early hours and being unable to get back to sleep</span></li>
+							<li itemprop="riskFactor" itemscope itemtype="https://schema.org/MedicalRiskFactor"><span itemprop="name">Shift work, chronic pain, anxiety, late caffeine</span></li>
+							<li itemprop="possibleTreatment" itemscope itemtype="https://schema.org/MedicalTherapy"><span itemprop="name">Cognitive behavioural therapy for insomnia (CBT-I), 6–8 weeks</span></li>
+						</ul>
+					</div>
+					<address data-part="byline" itemprop="reviewedBy" itemscope itemtype="https://schema.org/Person">
+						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar1.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
+						<span data-part="byline-who"><span itemprop="name">Dr Astrid Hovgaard</span><span itemprop="jobTitle">Consultant in sleep medicine</span></span><small data-part="dateline"><span>Medically reviewed</span><time datetime="2026-05-02">May 2, 2026</time></small>
+					</address>
+					<footer data-part="footer">General information only — it does not replace advice from your own doctor.</footer>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -729,6 +845,59 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
+		<!-- the café's menu. Menu/MenuSection are CreativeWorks; MenuItem is an Intangible — docs/schema.md § Menu -->
+		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/Menu">
+			<cq-box>
+				<ui-media><img src="/assets/images/spicycurry.png" alt="Bowl of coconut chicken curry with mint and coriander" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/spicycurry.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/spicycurry.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/spicycurry.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/spicycurry.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/spicycurry.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>Menu</ui-chip></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Dinner menu</small>
+					<h2 data-part="headline" itemprop="name">Brew &amp; Bean kitchen</h2>
+					<p data-part="summary" itemprop="description">Served 17:00–21:30, Wednesday to Sunday. Everything is cooked to order, so allow a little time.</p>
+					<ui-accordion variant="bordered rounded divided" group="menu-section"><cq-box>
+						<details name="menu-section" itemprop="hasMenuSection" itemscope itemtype="https://schema.org/MenuSection">
+							<summary><span itemprop="name">Small plates</span><ui-icon type="plus-minus"></ui-icon></summary>
+							<div>
+								<ul data-part="list">
+									<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+										<p><strong itemprop="name">Charred hispi cabbage</strong> · <span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><data itemprop="price" value="85">DKK 85</data></span> <ui-chip theme="pale green">Vegetarian</ui-chip></p>
+										<span itemprop="description">Brown butter, toasted hazelnut and aged pecorino.</span>
+										<meta itemprop="suitableForDiet" content="https://schema.org/VegetarianDiet">
+										<meta itemprop="suitableForDiet" content="https://schema.org/GlutenFreeDiet">
+										<span itemprop="nutrition" itemscope itemtype="https://schema.org/NutritionInformation" hidden><meta itemprop="calories" content="310 calories"><meta itemprop="servingSize" content="1 plate"></span>
+									</li>
+									<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+										<p><strong itemprop="name">Cured trout, rye crisp</strong> · <span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><data itemprop="price" value="95">DKK 95</data></span></p>
+										<span itemprop="description">Beetroot, horseradish cream and dill oil.</span>
+										<span itemprop="nutrition" itemscope itemtype="https://schema.org/NutritionInformation" hidden><meta itemprop="calories" content="280 calories"><meta itemprop="servingSize" content="1 plate"></span>
+									</li>
+								</ul>
+							</div>
+						</details>
+						<details name="menu-section" itemprop="hasMenuSection" itemscope itemtype="https://schema.org/MenuSection">
+							<summary><span itemprop="name">Mains</span><ui-icon type="plus-minus"></ui-icon></summary>
+							<div>
+								<ul data-part="list">
+									<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+										<p><strong itemprop="name">Coconut chicken curry</strong> · <span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><data itemprop="price" value="145">DKK 145</data></span> <ui-chip theme="pale green">Gluten free</ui-chip></p>
+										<span itemprop="description">Mild, with mint, coriander and steamed basmati.</span>
+										<meta itemprop="suitableForDiet" content="https://schema.org/GlutenFreeDiet">
+										<span itemprop="nutrition" itemscope itemtype="https://schema.org/NutritionInformation" hidden><meta itemprop="calories" content="620 calories"><meta itemprop="proteinContent" content="42 g"><meta itemprop="servingSize" content="1 bowl"></span>
+									</li>
+									<li itemprop="hasMenuItem" itemscope itemtype="https://schema.org/MenuItem">
+										<p><strong itemprop="name">Barley risotto, wild mushroom</strong> · <span itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="DKK"><data itemprop="price" value="135">DKK 135</data></span> <ui-chip theme="pale green">Vegan</ui-chip></p>
+										<span itemprop="description">Pearl barley, chanterelle, thyme and a hazelnut crumb.</span>
+										<meta itemprop="suitableForDiet" content="https://schema.org/VeganDiet">
+										<meta itemprop="suitableForDiet" content="https://schema.org/VegetarianDiet">
+										<span itemprop="nutrition" itemscope itemtype="https://schema.org/NutritionInformation" hidden><meta itemprop="calories" content="540 calories"><meta itemprop="servingSize" content="1 bowl"></span>
+									</li>
+								</ul>
+							</div>
+						</details>
+					</cq-box></ui-accordion>
+					<footer data-part="footer">Tell us about allergies when you order — the kitchen adapts most dishes.</footer>
+				</ui-content>
+			</cq-box>
+		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/ItemList">
 			<cq-box>
 				<ui-media><img src="/assets/images/speakers.png" alt="Three portable speakers side by side" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/speakers.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/speakers.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/speakers.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/speakers.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/speakers.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>ItemList</ui-chip></ui-media>
@@ -819,6 +988,43 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
+		<!-- RealEstateListing is a WebPage: the home is nested under mainEntity, and `offers` rides the
+		     LISTING because Accommodation/Place have no offers property — docs/schema.md § Real estate -->
+		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/RealEstateListing">
+			<cq-box>
+				<ui-media><img src="/assets/images/coorperation.png" alt="The harbourfront block at Havnegade 44, Copenhagen" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/coorperation.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/coorperation.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/coorperation.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/coorperation.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/coorperation.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>RealEstateListing</ui-chip></ui-media>
+				<ui-content>
+					<meta itemprop="datePosted" content="2026-07-18">
+					<small data-part="eyebrow">For sale</small>
+					<h2 data-part="headline" itemprop="name">Top-floor apartment, Havnegade 44</h2>
+					<p data-part="summary" itemprop="description">Three bedrooms and a south-facing terrace over the canal, five minutes from Kongens Nytorv.</p>
+					<p data-part="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+						<meta itemprop="priceCurrency" content="DKK">
+						<meta itemprop="availability" content="https://schema.org/InStock">
+						<data itemprop="price" value="7250000">DKK 7,250,000</data> <small>DKK 61,441 per m²</small>
+					</p>
+					<div itemprop="mainEntity" itemscope itemtype="https://schema.org/Apartment">
+						<meta itemprop="name" content="Top-floor apartment, Havnegade 44">
+						<meta itemprop="floorLevel" content="5">
+						<meta itemprop="petsAllowed" content="true">
+						<p data-part="meta"><span itemprop="floorSize" itemscope itemtype="https://schema.org/QuantitativeValue"><meta itemprop="unitCode" content="MTK"><meta itemprop="value" content="118">118 m²</span> · <meta itemprop="numberOfBedrooms" content="3">3 bedrooms · <meta itemprop="numberOfBathroomsTotal" content="2">2 bathrooms · <meta itemprop="numberOfRooms" content="5">5 rooms · <meta itemprop="yearBuilt" content="2018">built 2018</p>
+						<address data-part="address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+							<span><span itemprop="streetAddress">Havnegade 44, 5th floor</span></span>
+							<span><span itemprop="postalCode">1058</span> <span itemprop="addressLocality">Copenhagen</span></span>
+							<meta itemprop="addressCountry" content="DK">
+						</address>
+						<ul data-part="list">
+							<li itemprop="amenityFeature" itemscope itemtype="https://schema.org/LocationFeatureSpecification"><meta itemprop="value" content="true"><span itemprop="name">South-facing terrace, 14 m²</span></li>
+							<li itemprop="amenityFeature" itemscope itemtype="https://schema.org/LocationFeatureSpecification"><meta itemprop="value" content="true"><span itemprop="name">Lift to every floor</span></li>
+							<li itemprop="amenityFeature" itemscope itemtype="https://schema.org/LocationFeatureSpecification"><meta itemprop="value" content="true"><span itemprop="name">Underground parking, one space</span></li>
+							<li itemprop="amenityFeature" itemscope itemtype="https://schema.org/LocationFeatureSpecification"><meta itemprop="value" content="true"><span itemprop="name">District heating, energy label B</span></li>
+						</ul>
+					</div>
+					<p data-part="meta">Listed Jul 18, 2026 · Nordlys Estate · viewings Saturdays</p>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Book a viewing</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
 		<!-- plain gray: `muted` washes ink 50% too — unreadable at card scale in dark mode -->
 		<ui-card variant="col" media="asr(16/9) chip(te)" theme="gray" itemscope itemtype="https://schema.org/Offer">
 			<cq-box>
@@ -844,6 +1050,56 @@
 					</ul>
 					<p data-part="meta">14-day free trial · cancel anytime</p>
 					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Start free trial</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<!-- the loyalty SCHEME (tiers + benefits). The Offer card above is a subscription PRICE —
+		     both are "membership" in English, neither is the other. docs/schema.md § Loyalty -->
+		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/MemberProgram">
+			<cq-box>
+				<ui-media><img src="/assets/images/slimfold.png" alt="Slim leather card wallet on a white surface" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/slimfold.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/slimfold.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/slimfold.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/slimfold.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/slimfold.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>MemberProgram</ui-chip></ui-media>
+				<ui-content>
+					<small data-part="eyebrow">Loyalty programme</small>
+					<h2 data-part="headline" itemprop="name">Nordlys Rewards</h2>
+					<p data-part="summary" itemprop="description">Earn points on everything you buy, unlock member prices as you climb, and keep your points as long as the account stays active.</p>
+					<p data-part="meta" itemprop="hostingOrganization" itemscope itemtype="https://schema.org/Organization">Run by <span itemprop="name">Nordlys Retail</span></p>
+					<ui-accordion variant="bordered rounded divided" group="member-tier"><cq-box>
+						<details name="member-tier" itemprop="hasTiers" itemscope itemtype="https://schema.org/MemberProgramTier">
+							<summary><span itemprop="name">Blue</span><meta itemprop="membershipPointsEarned" content="1"><ui-icon type="plus-minus"></ui-icon></summary>
+							<div>
+								<p data-part="meta">Joining: <span itemprop="hasTierRequirement">free, no minimum spend</span></p>
+								<ul data-part="list">
+									<li><meta itemprop="hasTierBenefit" content="https://schema.org/TierBenefitLoyaltyPoints">1 point per €1 spent</li>
+									<li><meta itemprop="hasTierBenefit" content="https://schema.org/TierBenefitLoyaltyReturns">30-day returns</li>
+								</ul>
+							</div>
+						</details>
+						<details name="member-tier" itemprop="hasTiers" itemscope itemtype="https://schema.org/MemberProgramTier">
+							<summary><span itemprop="name">Silver</span><meta itemprop="membershipPointsEarned" content="2"><ui-icon type="plus-minus"></ui-icon></summary>
+							<div>
+								<p data-part="meta">Joining: <span itemprop="hasTierRequirement" itemscope itemtype="https://schema.org/MonetaryAmount"><meta itemprop="currency" content="EUR"><meta itemprop="value" content="500">€500</span> spent in a calendar year</p>
+								<ul data-part="list">
+									<li><meta itemprop="hasTierBenefit" content="https://schema.org/TierBenefitLoyaltyPoints">2 points per €1 spent</li>
+									<li><meta itemprop="hasTierBenefit" content="https://schema.org/TierBenefitLoyaltyPrice">5% off every member price</li>
+									<li><meta itemprop="hasTierBenefit" content="https://schema.org/TierBenefitLoyaltyShipping">Free standard shipping</li>
+									<li><meta itemprop="hasTierBenefit" content="https://schema.org/TierBenefitLoyaltyReturns">60-day returns</li>
+								</ul>
+							</div>
+						</details>
+						<details name="member-tier" itemprop="hasTiers" itemscope itemtype="https://schema.org/MemberProgramTier">
+							<summary><span itemprop="name">Gold</span><meta itemprop="membershipPointsEarned" content="3"><ui-icon type="plus-minus"></ui-icon></summary>
+							<div>
+								<p data-part="meta">Joining: <span itemprop="hasTierRequirement" itemscope itemtype="https://schema.org/MonetaryAmount"><meta itemprop="currency" content="EUR"><meta itemprop="value" content="2000">€2,000</span> spent in a calendar year</p>
+								<ul data-part="list">
+									<li><meta itemprop="hasTierBenefit" content="https://schema.org/TierBenefitLoyaltyPoints">3 points per €1 spent</li>
+									<li><meta itemprop="hasTierBenefit" content="https://schema.org/TierBenefitLoyaltyPrice">12% off every member price</li>
+									<li><meta itemprop="hasTierBenefit" content="https://schema.org/TierBenefitLoyaltyShipping">Free next-day shipping and returns</li>
+									<li><meta itemprop="hasTierBenefit" content="https://schema.org/TierBenefitLoyaltyReturns">120-day returns, collected from your door</li>
+								</ul>
+							</div>
+						</details>
+					</cq-box></ui-accordion>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" itemprop="url" href="#">Join Nordlys Rewards</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -1122,6 +1378,38 @@
 				</ui-content>
 			</cq-box>
 		</ui-card>
+		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/DefinedTermSet">
+			<cq-box>
+				<ui-media><img src="/assets/images/popovers.png" alt="Abstract illustration of layered UI panels" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/popovers.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/popovers.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/popovers.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/popovers.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/popovers.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>DefinedTermSet</ui-chip></ui-media>
+				<ui-content>
+					<div itemprop="about" itemscope itemtype="https://schema.org/Thing" hidden>
+						<meta itemprop="name" content="Design systems">
+					</div>
+					<small data-part="eyebrow">Glossary</small>
+					<h2 data-part="headline" itemprop="name">Design-system glossary</h2>
+					<p data-part="summary" itemprop="description">The words this documentation uses in a specific sense, so a sentence means the same thing on every page. Four of them below.</p>
+					<ui-accordion variant="divided" group="glossary"><cq-box>
+						<details name="glossary" itemprop="hasDefinedTerm" itemscope itemtype="https://schema.org/DefinedTerm">
+							<summary><span itemprop="name">Design token</span><meta itemprop="termCode" content="design-token"><ui-icon type="plus-minus"></ui-icon></summary>
+							<div><p itemprop="description">A named value — a colour, a spacing step, a duration — stored once and referenced everywhere, so a change lands in one place instead of two hundred.</p></div>
+						</details>
+						<details name="glossary" itemprop="hasDefinedTerm" itemscope itemtype="https://schema.org/DefinedTerm">
+							<summary><span itemprop="name">Container query</span><meta itemprop="termCode" content="container-query"><ui-icon type="plus-minus"></ui-icon></summary>
+							<div><p itemprop="description">A style rule that reacts to the width of an element's own container rather than the viewport, which is what lets one card work as a hero and as a sidebar item.</p></div>
+						</details>
+						<details name="glossary" itemprop="hasDefinedTerm" itemscope itemtype="https://schema.org/DefinedTerm">
+							<summary><span itemprop="name">Cascade layer</span><meta itemprop="termCode" content="cascade-layer"><ui-icon type="plus-minus"></ui-icon></summary>
+							<div><p itemprop="description">An explicit priority band in the cascade. Rules in a later layer beat earlier ones regardless of specificity, which removes most reasons to write <code>!important</code>.</p></div>
+						</details>
+						<details name="glossary" itemprop="hasDefinedTerm" itemscope itemtype="https://schema.org/DefinedTerm">
+							<summary><span itemprop="name">Light DOM component</span><meta itemprop="termCode" content="light-dom-component"><ui-icon type="plus-minus"></ui-icon></summary>
+							<div><p itemprop="description">A custom element that keeps its children in the ordinary document tree instead of a shadow root, so page CSS, form submission and search engines all still see them.</p></div>
+						</details>
+					</cq-box></ui-accordion>
+					<footer data-part="footer">40 terms · last revised Jun 2026</footer>
+				</ui-content>
+			</cq-box>
+		</ui-card>
 		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/PodcastEpisode">
 			<cq-box>
 				<ui-media>
@@ -1138,6 +1426,32 @@
 					<p data-part="summary" itemprop="description">What actually stuck three years after the digital-declutter wave — with researcher Ida Månsson.</p>
 					<p data-part="meta">The Calm Mind · Episode 42 · 2:49</p>
 					<meta itemprop="datePublished" content="2026-07-30T06:00:00Z">
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<!-- the SERIES as card subject (the card above is one episode). No numberOfEpisodes: it is not a
+		     PodcastSeries property — the count is prose, the episodes are hasPart. docs/schema.md § Podcast series -->
+		<ui-card variant="col" media="asr(1/1) chip(te)" itemscope itemtype="https://schema.org/PodcastSeries">
+			<cq-box>
+				<ui-media><img src="/assets/images/podcast.png" alt="The Calm Mind podcast cover art" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/podcast.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/podcast.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/podcast.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/podcast.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=1200/assets/images/podcast.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>PodcastSeries</ui-chip></ui-media>
+				<ui-content>
+					<meta itemprop="startDate" content="2022-01-11">
+					<small data-part="eyebrow">Podcast series</small>
+					<h2 data-part="headline" itemprop="name">The Calm Mind</h2>
+					<p data-part="summary" itemprop="description">A fortnightly conversation about attention, rest, and the parts of modern life that quietly eat both.</p>
+					<p data-part="meta">Fortnightly · 42 episodes since 2022 · <a itemprop="webFeed" href="https://calmmind.example/feed.xml">RSS feed</a></p>
+					<address data-part="byline" itemprop="author" itemscope itemtype="https://schema.org/Person">
+						<ui-avatar><img src="https://assets.stoumann.dk/img/avatar4.webp" alt="" loading="lazy" decoding="async"></ui-avatar>
+						<span data-part="byline-who"><span itemprop="name">Ida Månsson</span><span itemprop="jobTitle">Host</span></span>
+					</address>
+					<ul data-part="list">
+						<li itemprop="hasPart" itemscope itemtype="https://schema.org/PodcastEpisode"><meta itemprop="episodeNumber" content="42"><meta itemprop="duration" content="PT2M49S"><span itemprop="name">Digital minimalism, revisited</span> <small>2:49</small></li>
+						<li itemprop="hasPart" itemscope itemtype="https://schema.org/PodcastEpisode"><meta itemprop="episodeNumber" content="41"><meta itemprop="duration" content="PT48M10S"><span itemprop="name">The four-day week, two years on</span> <small>48:10</small></li>
+						<li itemprop="hasPart" itemscope itemtype="https://schema.org/PodcastEpisode"><meta itemprop="episodeNumber" content="40"><meta itemprop="duration" content="PT39M02S"><span itemprop="name">What silence does to a room</span> <small>39:02</small></li>
+					</ul>
+					<span data-part="tags"><ui-chip itemprop="keywords">Wellbeing</ui-chip><ui-chip itemprop="keywords">Attention</ui-chip></span>
+					<footer data-part="footer">New episodes every other Thursday.</footer>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Subscribe</a></nav>
 				</ui-content>
 			</cq-box>
 		</ui-card>
@@ -1162,6 +1476,80 @@
 					</div>
 					<p data-part="meta" itemprop="director" itemscope itemtype="https://schema.org/Person">Director: <span itemprop="name">Sofia Lindqvist</span></p>
 					<p data-part="meta">Starring: <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Jonas Beck</span></span>, <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Amara Okafor</span></span></p>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/TVSeries">
+			<cq-box>
+				<ui-media><img src="/assets/images/techpeople.png" alt="Nordlight key art — the research team against a future skyline" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/techpeople.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/techpeople.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/techpeople.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/techpeople.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/techpeople.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>TVSeries</ui-chip></ui-media>
+				<ui-content>
+					<meta itemprop="numberOfSeasons" content="3">
+					<meta itemprop="numberOfEpisodes" content="24">
+					<meta itemprop="startDate" content="2023-09-14">
+					<meta itemprop="contentRating" content="15">
+					<small data-part="eyebrow" itemprop="genre">Science fiction</small>
+					<h2 data-part="headline" itemprop="name">Nordlight</h2>
+					<p data-part="summary" itemprop="description">A Copenhagen research lab wakes something in the aurora — and the people who built it have to decide what the world gets told.</p>
+					<p data-part="meta">3 seasons · 24 episodes · since 2023 · rated 15</p>
+					<div data-part="rating" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+						<meta itemprop="ratingValue" content="4.4">
+						<meta itemprop="ratingCount" content="12904">
+						<meta itemprop="bestRating" content="5"><meta itemprop="worstRating" content="1">
+						<input class="ui-rating" type="range" min="1" max="5" value="4.4" step="0.01" disabled aria-hidden="true">
+						<span data-sr>Rated 4.4 out of 5 stars from 12,904 ratings</span>
+						<span aria-hidden="true">4.4 / 5 (12,904 ratings)</span>
+					</div>
+					<p data-part="meta" itemprop="director" itemscope itemtype="https://schema.org/Person">Created and directed by <span itemprop="name">Freja Nyholm</span></p>
+					<p data-part="meta">Starring: <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Ingrid Solberg</span></span>, <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Mattias Vogel</span></span></p>
+					<ol data-part="list">
+						<li itemprop="containsSeason" itemscope itemtype="https://schema.org/TVSeason"><meta itemprop="seasonNumber" content="1"><meta itemprop="numberOfEpisodes" content="8"><span itemprop="name">First Light</span> — 8 episodes, 2023</li>
+						<li itemprop="containsSeason" itemscope itemtype="https://schema.org/TVSeason"><meta itemprop="seasonNumber" content="2"><meta itemprop="numberOfEpisodes" content="8"><span itemprop="name">The Quiet Band</span> — 8 episodes, 2024</li>
+						<li itemprop="containsSeason" itemscope itemtype="https://schema.org/TVSeason"><meta itemprop="seasonNumber" content="3"><meta itemprop="numberOfEpisodes" content="8"><span itemprop="name">Terminus</span> — 8 episodes, 2026</li>
+					</ol>
+					<span data-part="tags"><ui-chip itemprop="keywords">Nordic noir</ui-chip><ui-chip itemprop="keywords">Sci-fi</ui-chip></span>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(16/9) chip(te)" itemscope itemtype="https://schema.org/TVEpisode">
+			<cq-box>
+				<ui-media><img src="/assets/images/techpeople.png" alt="Still from Nordlight — the team around a holographic console" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=135/assets/images/techpeople.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=180/assets/images/techpeople.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=270/assets/images/techpeople.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=405/assets/images/techpeople.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=675/assets/images/techpeople.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>TVEpisode</ui-chip></ui-media>
+				<ui-content>
+					<meta itemprop="episodeNumber" content="4">
+					<meta itemprop="duration" content="PT58M">
+					<meta itemprop="datePublished" content="2026-03-05">
+					<div itemprop="partOfSeries" itemscope itemtype="https://schema.org/TVSeries" hidden><meta itemprop="name" content="Nordlight"></div>
+					<div itemprop="partOfSeason" itemscope itemtype="https://schema.org/TVSeason" hidden><meta itemprop="seasonNumber" content="3"><meta itemprop="name" content="Terminus"></div>
+					<small data-part="eyebrow">Nordlight · S3 E4</small>
+					<h2 data-part="headline" itemprop="name">The Long Dark Between</h2>
+					<p data-part="summary" itemprop="description">Ingrid takes the array offline for ninety seconds. It is enough.</p>
+					<p data-part="meta">Season 3, episode 4 · 58 min · Mar 5, 2026</p>
+					<p data-part="meta" itemprop="director" itemscope itemtype="https://schema.org/Person">Directed by <span itemprop="name">Freja Nyholm</span></p>
+					<p data-part="meta">Starring: <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Ingrid Solberg</span></span>, <span itemprop="actor" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Mattias Vogel</span></span></p>
+					<nav data-part="actions"><a class="ui-button" data-variant="accent" href="#">Watch episode</a></nav>
+				</ui-content>
+			</cq-box>
+		</ui-card>
+		<ui-card variant="col" media="asr(1/1) chip(te)" itemscope itemtype="https://schema.org/MusicAlbum">
+			<cq-box>
+				<ui-media><img src="/assets/images/band_dreampop.png" alt="Halvmørke — band portrait in violet light" srcset="https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=240,height=240/assets/images/band_dreampop.png 240w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=320,height=320/assets/images/band_dreampop.png 320w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=480,height=480/assets/images/band_dreampop.png 480w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=720,height=720/assets/images/band_dreampop.png 720w, https://v4.browser.style/cdn-cgi/image/format=auto,quality=80,fit=cover,width=1200,height=1200/assets/images/band_dreampop.png 1200w" sizes="auto, (min-width: 540px) min(50vw, 512px), 100vw" loading="lazy" decoding="async" itemprop="image"><ui-chip data-type>MusicAlbum</ui-chip></ui-media>
+				<ui-content>
+					<meta itemprop="numTracks" content="9">
+					<meta itemprop="datePublished" content="2026-04-17">
+					<meta itemprop="albumProductionType" content="https://schema.org/StudioAlbum">
+					<meta itemprop="albumReleaseType" content="https://schema.org/AlbumRelease">
+					<small data-part="eyebrow" itemprop="genre">Dream pop</small>
+					<h2 data-part="headline" itemprop="name">Slow Weather</h2>
+					<p data-part="subheadline" itemprop="byArtist" itemscope itemtype="https://schema.org/MusicGroup"><span itemprop="name">Halvmørke</span></p>
+					<p data-part="summary" itemprop="description">Nine tracks recorded live to tape in a Bornholm chapel over one November week, with the doors open.</p>
+					<p data-part="meta">9 tracks · 41 min · released Apr 17, 2026</p>
+					<ol data-part="list">
+						<li itemprop="track" itemscope itemtype="https://schema.org/MusicRecording"><meta itemprop="position" content="1"><meta itemprop="duration" content="PT4M12S"><span itemprop="name">Slow Weather</span> <small>4:12</small></li>
+						<li itemprop="track" itemscope itemtype="https://schema.org/MusicRecording"><meta itemprop="position" content="2"><meta itemprop="duration" content="PT3M48S"><span itemprop="name">Kastellet</span> <small>3:48</small></li>
+						<li itemprop="track" itemscope itemtype="https://schema.org/MusicRecording"><meta itemprop="position" content="3"><meta itemprop="duration" content="PT6M05S"><span itemprop="name">Everything Kept Falling</span> <small>6:05</small></li>
+						<li itemprop="track" itemscope itemtype="https://schema.org/MusicRecording"><meta itemprop="position" content="4"><meta itemprop="duration" content="PT4M31S"><span itemprop="name">November, Open Doors</span> <small>4:31</small></li>
+					</ol>
+					<footer data-part="footer">…and five more.</footer>
+					<span data-part="tags"><ui-chip itemprop="keywords">Dream pop</ui-chip><ui-chip itemprop="keywords">Live to tape</ui-chip></span>
 				</ui-content>
 			</cq-box>
 		</ui-card>

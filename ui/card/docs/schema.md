@@ -1,12 +1,20 @@
 # Schema.org cards — type-by-type notes
 
 > Companion to [`demo/schema.html`](../demo/schema.html) — the hand-authored reference markup
-> for all 34 schema.org card types (the markup `render.js` reproduces). The intro prose, the
+> for all 48 schema.org card types (the markup `render.js` reproduces). The intro prose, the
 > per-type notes and the structured-part vocabulary used to live inline on that page; they moved
 > here so the demo stays one card grid.
 
+**The count is mechanical:** 48 = distinct `itemtype` values on the page's `<ui-card>` roots
+(`grep -o '<ui-card[^>]*itemtype="[^"]*"' | sort -u`). It counts sharpened
+[subtypes](#subtypes) — `ProductGroup`, `CafeOrCoffeeShop`, `DiscussionForumPosting` — as their
+own entry, which is why it runs ahead of the model's `schemaType` list. A 49th type,
+`EmployerAggregateRating`, appears on the job card as a **second top-level item** rather than a
+card of its own.
+
 Every card type from the legacy `content/card` package — plus the nine types added in model
-v1.3 (organization, video, howto, qa, podcast, movie, book, dataset, claim) — re-created with
+v1.3 (organization, video, howto, qa, podcast, movie, book, dataset, claim), plus the eleven
+[authored ahead of the renderer](#types-authored-ahead-of-the-renderer) — re-created with
 the modern engine: `<ui-card>` + `<ui-media>` + `<ui-content>`, with satellites `<ui-chip>`,
 `<ui-sticker>`, `<ui-save>`, `<ui-avatar>`, `<ui-quote>` and `<ui-accordion>`. Every card uses
 the same composition: media on top, text below. Structured data is inline **microdata**
@@ -250,7 +258,7 @@ Summary emits `reviewBody`; rating → `Rating`, reviewer → `Person` (`reviewe
 
 ### Job — `JobPosting`
 
-Headline emits `title`. Salary → `MonetaryAmount` → `QuantitativeValue`; requirements/benefits in a nested `<ui-accordion>`.
+Headline emits `title`. Salary → `MonetaryAmount` → `QuantitativeValue`; requirements/benefits in a nested `<ui-accordion>`. The card also carries a **second top-level item** — see [Employer rating](#employer-rating--employeraggregaterating).
 
 ### Course — `Course`
 
@@ -365,4 +373,173 @@ License, temporal/spatial coverage and `variableMeasured` metas; each download i
 ### Fact check — `ClaimReview`
 
 The verdict chip leads — it is the answer (`reviewRating` → `Rating`, `alternateName` visible, hue from the rating value); the quoted claim (`claimReviewed`) follows.
+
+## Types authored ahead of the renderer
+
+The eleven types below — plus `EmployerAggregateRating` on the job card — were authored **markup
+first**: `demo/schema.html` is the specification and `render.js` transcribes it, not the other way
+round. They have no `schemaType` key and no instance in `data/` yet. Every `itemprop` below was
+checked mechanically against the schema.org vocabulary dump (`domainIncludes` walked up the
+`rdfs:subClassOf` chain), not by eye.
+
+They reuse the existing `data-part` vocabulary unchanged — no new part was needed. Where a scope
+needs several rows (`mainEntity`, `hasOfferCatalog`, `about`), it wraps them in a bare `<div>`,
+which is the shape the `QAPage` card already uses for `mainEntity` → `Question`.
+
+### Loyalty programme — `MemberProgram`
+
+The loyalty **scheme**, deliberately placed next to the [`Offer`](#membership--offer) membership
+card, which is a subscription **price**. Both are "membership" in English; neither is the other.
+
+`MemberProgram` owns exactly two properties — `hasTiers` and `hostingOrganization`; the visible
+copy is all `Thing` (`name`, `description`, `url`, `image`). Each tier is a `<details>` in a
+`<ui-accordion>` carrying `hasTiers` → `MemberProgramTier`:
+
+- `hasTierBenefit` accepts **`TierBenefitEnumeration` members only**, and the complete set is four:
+  `TierBenefitLoyaltyPoints`, `TierBenefitLoyaltyPrice`, `TierBenefitLoyaltyReturns`,
+  `TierBenefitLoyaltyShipping`. One URL-valued `<meta>` per benefit, same spelling as `availability`.
+- `hasTierRequirement` is polymorphic — free text on Blue, a nested `MonetaryAmount` on Silver and
+  Gold. Both are legal (`CreditCard` / `MonetaryAmount` / `Text` / `UnitPriceSpecification`).
+- `membershipPointsEarned` belongs to the **tier**, and sits inside the `<summary>`: `<summary>`
+  must be the first child of `<details>`, so a `<meta>` cannot precede it.
+
+**Google** (loyalty program, live since June 2025) requires `name`, `description` and `hasTiers`
+on the programme and `name` + `hasTierBenefit` on every tier — all satisfied — plus the
+recommended `url`, `hasTierRequirement` and `membershipPointsEarned`, also all present.
+⚠️ **Placement differs from this card.** Google wants the programme nested under the site's
+`Organization` via `hasMemberProgram`, and member *prices* on product pages as
+`Offer.priceSpecification` → `UnitPriceSpecification` with `validForMemberTier` pointing at a
+tier's `@id`. When the programme is the card's own subject that link can only run the other way,
+so the card emits `hostingOrganization` → `Organization` instead.
+
+### Quiz — `Quiz`
+
+Google's Education Q&A feature is **flashcards only**. `Quiz` has *no properties of its own* — it
+is a `LearningResource`, and everything comes from there or from `CreativeWork`.
+
+⚠️ **`eduQuestionType` is a property of `Question`, not of `Quiz`** (its domain is `Question` and
+`SolveMathAction`). One flashcard = one `hasPart` → `Question` carrying
+`eduQuestionType: "Flashcard"` (any other value makes the card ineligible), `text` for the prompt,
+and exactly one `acceptedAnswer` → `Answer` with its own `text`. Google requires only `hasPart`;
+`about` → `Thing` and `educationalAlignment` → `AlignmentObject` are recommended, and Google reads
+just two of `AlignmentObject`'s properties — `alignmentType` and `targetName`. Both are here.
+
+### Service — `Service`
+
+`serviceType`, `provider` → `Organization`, `areaServed` → `Place`. The catalogue is
+`hasOfferCatalog` → `OfferCatalog` → `itemListElement` → `Offer` → `itemOffered` → `Service`:
+`OfferCatalog` is an `ItemList`, so `itemListElement` is the nesting property. The scope is a bare
+`<div>` around the `<ul data-part="list">` because a `<meta itemprop="name">` cannot be a child of
+`<ul>`. `availableChannel` → `ServiceChannel` wraps the actions row — ⚠️ **`servicePhone` expects a
+`ContactPoint`, not a phone string**, so the `tel:` link carries `telephone` inside that scope,
+while `serviceUrl` sits directly on the CTA.
+
+### Real estate — `RealEstateListing`
+
+Two structural traps, both worth knowing before writing a renderer:
+
+1. **It is a `WebPage` subtype.** The home is not the card's subject; it hangs off `mainEntity` →
+   `Apartment` (or `House` / `SingleFamilyResidence` / `Accommodation`), which carries `floorSize`
+   → `QuantitativeValue` (`unitCode` `MTK`), `numberOfBedrooms`, `numberOfBathroomsTotal`,
+   `numberOfRooms`, `yearBuilt`, `floorLevel`, `petsAllowed`, `address` → `PostalAddress` and
+   `amenityFeature` → `LocationFeatureSpecification` (`name` + boolean `value`).
+2. ⚠️ **`offers` is not valid on `Accommodation`, `Place` or `Residence`.** Its domain is
+   `AggregateOffer`, `CreativeWork`, `EducationalOccupationalProgram`, `Event`, `MenuItem`,
+   `Product`, `Service`, `Trip` — so the price rides the **listing** (a `CreativeWork`), *outside*
+   the `mainEntity` scope. Putting it on the residence is invalid markup, not merely unread.
+
+`datePosted` and `leaseLength` are the listing's only two own properties. Note also that
+`SingleFamilyResidence` descends from `House` → `Accommodation`, **not** from `Residence`.
+
+### Menu — `Menu`
+
+Sections are `<details>` in a `<ui-accordion>` — `hasMenuSection` → `MenuSection` — each holding a
+`<ul data-part="list">` of `hasMenuItem` → `MenuItem`. ⚠️ **`MenuItem` is an `Intangible`**, while
+`Menu` and `MenuSection` are `CreativeWork`s; the split matters because `MenuItem` gets `offers`,
+`nutrition` and `suitableForDiet`, none of which the two containers have.
+
+`suitableForDiet` takes `RestrictedDiet` members by URL (11 of them: `DiabeticDiet`,
+`GlutenFreeDiet`, `HalalDiet`, `HinduDiet`, `KosherDiet`, `LowCalorieDiet`, `LowFatDiet`,
+`LowLactoseDiet`, `LowSaltDiet`, `VeganDiet`, `VegetarianDiet`) — each one that is visible also
+gets a `<ui-chip>`, so the machine value and the reader's value agree. `nutrition` →
+`NutritionInformation` is hidden; its `calories` is an `Energy` and `servingSize` is **`Text`**,
+so both are written as unit-bearing strings ("620 calories", "1 bowl"). A restaurant links to a
+menu with `hasMenu` (`menu` is the older synonym).
+
+### TV series — `TVSeries`
+
+`numberOfSeasons`, `numberOfEpisodes`, `startDate` (from `CreativeWorkSeries`), `contentRating`,
+`aggregateRating`, `director` → `Person` and one `actor` scope per name — `actor` accepts
+`Person` **or** `PerformingGroup`. Seasons are `containsSeason` → `TVSeason` list items, each with
+its own `seasonNumber` and `numberOfEpisodes`; the property's range is `CreativeWorkSeason`, which
+`TVSeason` satisfies. Do not emit the superseded `actors` / `episodes` / `seasons` spellings.
+
+### TV episode — `TVEpisode`
+
+`TVEpisode` adds almost nothing of its own — `episodeNumber`, `partOfSeason` → `TVSeason`,
+`partOfSeries` → `TVSeries` and `duration` are all inherited from **`Episode`**, so a renderer that
+looks them up on `TVEpisode` will not find them documented there. `duration` is an ISO 8601
+`Duration` literal (`PT58M`). The series and season are hidden scopes; the visible eyebrow
+(`Nordlight · S3 E4`) is prose. Same shape as [Podcast](#podcast--podcastepisode), which is also an
+`Episode`.
+
+### Health — `MedicalWebPage`
+
+`MedicalWebPage` owns exactly one usable property, `medicalAudience` (the other, `aspect`, is
+superseded by `mainContentOfPage`). ⚠️ **`specialty`, `reviewedBy` and `lastReviewed` are `WebPage`
+properties** that `MedicalWebPage` merely inherits — `specialty` takes a `Specialty`, and
+`MedicalSpecialty` members (`PrimaryCare`, `Psychiatric`, `Cardiovascular`…) qualify.
+`medicalAudience` accepts the **type** `MedicalAudience` (subtype `Patient` — used here) or the
+**enumeration** `MedicalAudienceType`, whose only two members are `Clinician` and
+`MedicalResearcher`; they are different things with confusingly similar names.
+
+`about` → `MedicalCondition` carries `signOrSymptom` → `MedicalSignOrSymptom`, `riskFactor` →
+`MedicalRiskFactor` and `possibleTreatment` → `MedicalTherapy` (`Drug` and `MedicalProcedure` are
+the other two `about` shapes). **The `reviewedBy` byline is visible markup, never a hidden
+`<meta>`:** it is the E-E-A-T signal, and a signal a reader cannot see is not one. Google has no
+medical rich result — this markup is semantic value only.
+
+### Album — `MusicAlbum`
+
+`byArtist` → `MusicGroup` in the `subheadline` part, `numTracks`, `datePublished`, plus the two
+enumerations `albumProductionType` (`StudioAlbum`) and `albumReleaseType` (`AlbumRelease`).
+Tracks are `track` → `MusicRecording` in an `<ol data-part="list">`, each with `position` (valid:
+its domain is `CreativeWork`, which `MusicRecording` is) and an ISO `duration`. `numTracks` and
+`track` come from `MusicPlaylist`, the album's parent — `tracks` is superseded.
+
+### Glossary — `DefinedTermSet`
+
+`hasDefinedTerm` → `DefinedTerm` per `<details>`: `name` in the summary, `description` in the
+panel, `termCode` as the slug. `DefinedTerm` is an **`Intangible`**, `DefinedTermSet` a
+`CreativeWork`; both are `pending.schema.org`, stable enough to ship but not core vocabulary.
+`about` → `Thing` names the domain the set belongs to.
+
+### Podcast series — `PodcastSeries`
+
+The series as the card's subject — the [podcast card](#podcast--podcastepisode) is one episode with
+a nested series. `webFeed` (range `DataFeed` or `URL`) rides a real `<a href>` so the feed is
+crawlable, `author` → `Person` is the visible host byline, and episodes are `hasPart` →
+`PodcastEpisode`.
+
+⚠️ **There is no episode-count property.** `numberOfEpisodes` is used on `CreativeWorkSeason`,
+`RadioSeries`, `TVSeries` and `VideoGameSeries` — `PodcastSeries` and `CreativeWorkSeries` are not
+in its domain. The count ("42 episodes since 2022") is therefore prose in the `meta` and `footer`
+parts, and the machine-readable answer is the `hasPart` cardinality. `startDate` comes from
+`CreativeWorkSeries`.
+
+### Employer rating — `EmployerAggregateRating`
+
+Not a card: a **second top-level item inside the [job card](#job--jobposting)** — an element with
+`itemscope itemtype` and **no `itemprop`**, which is what makes microdata treat it as its own item
+rather than a property of the enclosing `JobPosting`. `itemReviewed` → `Organization` is the
+hiring company (the same `Nordlys ApS`), and `ratingValue` plus `ratingCount` are required;
+`bestRating` / `worstRating` are recommended and default to 5 / 1.
+
+**Why not `aggregateRating` on the `JobPosting`:** the rating is of the *employer*, not of the
+posting, and Google's `JobPosting` documentation does not list `aggregateRating` among the
+supported properties at all — a nested rating is simply ignored. Google's own example is a
+standalone top-level item, and it requires the rating to be **visible** to the reader ("It must be
+immediately obvious to users that the page has rating content"), which is why the card renders a
+real star row rather than hidden `<meta>`s. Google states no explicit prohibition on nesting; the
+separate-item shape follows from its example and its property list, not from a rule.
 
